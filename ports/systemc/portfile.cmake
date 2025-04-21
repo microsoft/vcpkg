@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO accellera-official/systemc
     REF "${VERSION}"
-    SHA512 3ef4b5e9c05b8d03e856598ddc27ad50a0a39a7f9334cd00faefeacdf954b6527104d3238c4e8bfa88c00dc382f4da5a50efbd845fe0b6cc2f5a025c993deefd
+    SHA512 baeadd0318b9ab47fc559a2ab6bd880ac506ac5d858cdcf081a7544ca01688f2e798549655ff7546d02feba120c084951f834b69678a0bb984299bff25a4e21b
     HEAD_REF main
     PATCHES
         install.patch
@@ -23,6 +23,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/SystemCTLM PACKAGE_NAME systemc
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/sysc/packages/boost")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/sysc/packages/qt/time")
 
 file(INSTALL "${SOURCE_PATH}/NOTICE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

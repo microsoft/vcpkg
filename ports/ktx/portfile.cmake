@@ -23,11 +23,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
             bash
         DIRECT_PACKAGES
             # Required for "getopt"
-            "https://repo.msys2.org/msys/x86_64/util-linux-2.35.2-3-x86_64.pkg.tar.zst"
-            da26540881cd5734072717133307e5d1a27a60468d3656885507833b80f24088c5382eaa0234b30bdd9e8484a6638b4514623f5327f10b19eed36f12158e8edb
+            "https://repo.msys2.org/msys/x86_64/util-linux-2.40.2-2-x86_64.pkg.tar.zst"
+            bf45b16cd470f8d82a9fe03842a09da2e6c60393c11f4be0bab354655072c7a461afc015b9c07f9f5c87a0e382cd867e4f079ede0d42f1589aa99ebbb3f76309
             # Required for "dos2unix"
-            "https://mirror.msys2.org/msys/x86_64/dos2unix-7.5.1-1-x86_64.pkg.tar.zst"
-            83d85e6ccea746ef9e8153a0d605e774dbe7efc0ee952804acfee4ffd7e3b0386a353b45ff989dd99bc3ce75968209fea3d246ad2af88bbb5c4eca12fc5a8f92
+            "https://mirror.msys2.org/msys/x86_64/dos2unix-7.5.2-1-x86_64.pkg.tar.zst"
+            e5e949f01b19c82630131e338a4642da75e42f84220f5af4a97a11dd618e363396567b233d2adab79e05422660a0000abcbbabcd17efcadf37f07fe7565f041e
     )
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
     vcpkg_list(APPEND OPTIONS "-DBASH_EXECUTABLE=${MSYS_ROOT}/usr/bin/bash.exe")
