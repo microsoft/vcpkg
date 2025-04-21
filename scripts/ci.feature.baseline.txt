@@ -924,6 +924,7 @@ gmsh[mpi]:x64-windows = cascade
 gmsh[mpi]:x64-windows-static = cascade
 gmsh[mpi]:x64-windows-static-md = cascade
 gmsh[mpi,occ]:x86-windows = cascade
+gobject-introspection(!native & !windows) = cascade # from python3
 google-cloud-cpp-common:arm64-uwp = cascade
 google-cloud-cpp-common:x64-uwp = cascade
 google-cloud-cpp-spanner:arm64-uwp = cascade
