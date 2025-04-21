@@ -31,13 +31,15 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/zziplib")
 vcpkg_fixup_pkgconfig()
 
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/zzipfseeko.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipfseeko.pc")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/zziplib.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zziplib.pc")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/zzipmmapped.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipmmapped.pc")
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/zzipfseeko.pc"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/zzipmmapped.pc"
-    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipfseeko.pc"
-    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipmmapped.pc"
+    "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
 )
 
 file(STRINGS "${CURRENT_PACKAGES_DIR}/include/zzip/_config.h" have_stdint_h REGEX "^#define ZZIP_HAVE_STDINT_H 1")
