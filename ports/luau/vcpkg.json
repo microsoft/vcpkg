@@ -16,7 +16,8 @@
   ],
   "features": {
     "tool": {
-      "description": "Builds luau executable"
+      "description": "Builds luau executable",
+      "supports": "!uwp"
     }
   }
 }
