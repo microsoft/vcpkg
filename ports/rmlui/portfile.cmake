@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 44a336f1d1d17a71ffccf7456b44c76b9d5e590159f534a62e26378933cdcb4b78bdf5b0f9e9c3a7185c767accde1439f3cc6179b72a4c9901e36d738903a7f1
     HEAD_REF master
     PATCHES
-        add-robin-hood.patch
+        add-itlib-and-robin-hood.patch
         skip-custom-find-modules.patch
 )
 
@@ -22,8 +22,8 @@ else()
     set(RMLUI_FONT_ENGINE "none")
 endif()
 
-# Remove built-in header, instead we use vcpkg version (from robin-hood-hashing port)
-file(REMOVE "${SOURCE_PATH}/Include/RmlUi/Core/Containers/robin_hood.h")
+# Remove built-in third-party dependencies (itlib and robin-hood), instead we use vcpkg ports.
+file(REMOVE_RECURSE "${SOURCE_PATH}/Include/RmlUi/Core/Containers")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -64,6 +64,5 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/
 vcpkg_install_copyright(
     FILE_LIST
     "${SOURCE_PATH}/LICENSE.txt"
-    "${SOURCE_PATH}/Include/RmlUi/Core/Containers/LICENSE.txt"
     "${SOURCE_PATH}/Source/Debugger/LICENSE.txt"
 )
