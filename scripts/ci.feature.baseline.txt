@@ -1972,6 +1972,7 @@ rtlsdr:x64-uwp = cascade
 ryml:arm64-uwp = cascade
 ryml:arm64-windows = cascade
 ryml:x64-uwp = cascade
+safetyhook:x64-linux=fail
 salome-configuration:arm64-uwp = cascade
 salome-configuration:arm64-windows = cascade
 salome-configuration:x64-uwp = cascade
