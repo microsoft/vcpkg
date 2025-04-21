@@ -9,6 +9,10 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED_LIB)
 
+if("libressl" IN_LIST FEATURES)
+    list(APPEND FEATURES "openssl")
+endif()  
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         wolfssl  ENABLE_WOLFSSL
