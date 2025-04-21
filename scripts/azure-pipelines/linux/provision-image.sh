@@ -48,6 +48,7 @@ APT_PACKAGES="git curl zip unzip tar"
 ## essentials
 APT_PACKAGES="$APT_PACKAGES \
   autoconf autoconf-archive \
+  autopoint \
   build-essential \
   cmake \
   gcc g++ gfortran \
