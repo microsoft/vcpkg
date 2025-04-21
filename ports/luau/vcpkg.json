@@ -1,6 +1,6 @@
 {
   "name": "luau",
-  "version": "0.669",
+  "version": "0.670",
   "description": "A fast, small, safe, gradually typed embeddable scripting language derived from Lua",
   "homepage": "https://github.com/luau-lang/luau",
   "license": "MIT",
@@ -16,7 +16,8 @@
   ],
   "features": {
     "tool": {
-      "description": "Builds luau executable"
+      "description": "Builds luau executable",
+      "supports": "!uwp"
     }
   }
 }
