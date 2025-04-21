@@ -4569,8 +4569,8 @@
       "port-version": 0
     },
     "libdshowcapture": {
-      "baseline": "0.6.0",
-      "port-version": 4
+      "baseline": "2025-02-08",
+      "port-version": 0
     },
     "libdvdcss": {
       "baseline": "1.4.3",
