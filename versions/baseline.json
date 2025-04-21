@@ -6645,7 +6645,7 @@
       "port-version": 0
     },
     "nvidia-cutlass": {
-      "baseline": "3.3.0",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "nvtt": {
