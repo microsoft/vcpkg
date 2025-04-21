@@ -59,6 +59,12 @@ endif()
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_DEBUG -Dgobject=enabled -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dgobject=enabled -Dintrospection=enabled)
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
+    x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3
+        PYTHON_EXECUTABLE "${PYTHON3}"
+        PYTHON_VERSION "3"
+        PACKAGES setuptools
+    )
 else()
     list(APPEND OPTIONS -Dintrospection=disabled)
 endif()
