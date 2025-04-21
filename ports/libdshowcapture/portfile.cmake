@@ -13,7 +13,7 @@ vcpkg_from_github(
     REPO elgatosf/capture-device-support
     REF fe9630974d47f51bf54826e72fb8b654e620aa93
     SHA512 971185ffaf0c5777c060d3cf49ee8f907aebc8191e3ada9c9f3c4c0d553c257d13e2828c991985b9d47a446d003b26664ecec2c18c0e6c66dfdba904baee0ae6
-    HEAD_REF master
+    HEAD_REF main
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/external/capture-device-support")
