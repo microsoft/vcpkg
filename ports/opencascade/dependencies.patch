@@ -1,83 +1,92 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8690528..834ca79 100644
+index 91517a5936..715adb7c2e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -605,7 +605,8 @@ if (CAN_USE_FREETYPE)
-   if (USE_FREETYPE)
-     message (STATUS "Info: FreeType is used by OCCT")
-     add_definitions (-DHAVE_FREETYPE)
--    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/freetype")
-+    find_package(Freetype MODULE REQUIRED)
-+    set(CSF_FREETYPE Freetype::Freetype)
-   else()
-     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_FREETYPE")
-     OCCT_CHECK_AND_UNSET ("3RDPARTY_FREETYPE_INCLUDE_DIR_freetype2")
-@@ -622,7 +623,9 @@ endif()
+@@ -524,8 +524,8 @@ endif()
+ if (CAN_USE_FREETYPE AND USE_FREETYPE)
+   message (STATUS "Info: FreeType is used by OCCT")
+   add_definitions (-DHAVE_FREETYPE)
+-  OCCT_ADD_VCPKG_FEATURE ("freetype")
+-  list (APPEND OCCT_3RDPARTY_CMAKE_LIST "adm/cmake/freetype")
++  find_package(Freetype MODULE REQUIRED)
++  set(CSF_FREETYPE Freetype::Freetype)
+ else()
+   if (NOT CAN_USE_FREETYPE)
+     OCCT_CHECK_AND_UNSET ("USE_FREETYPE")
+@@ -540,9 +540,10 @@ endif()
+ # VTK
  if (USE_VTK)
    add_definitions (-DHAVE_VTK)
+-  OCCT_ADD_VCPKG_FEATURE ("vtk")
    set (OCCT_VTK_USED_TARGETS "" CACHE INTERNAL "" FORCE)
--  OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/vtk")
+-  list (APPEND OCCT_3RDPARTY_CMAKE_LIST "adm/cmake/vtk")
 +  find_package(VTK REQUIRED)
 +  set(CSF_VTK VTK::CommonCore)
 +  set(IS_VTK_9XX 1)
  else()
    OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_VTK")
- 
-@@ -638,7 +641,8 @@ endif()
- if (CAN_USE_FREEIMAGE)
-   if (USE_FREEIMAGE)
-     add_definitions (-DHAVE_FREEIMAGE)
--    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/freeimage")
-+    find_package(freeimage CONFIG REQUIRED)
-+    set(CSF_FreeImagePlus freeimage::FreeImagePlus)
-   else()
-     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_FREEIMAGE")
-     OCCT_CHECK_AND_UNSET ("INSTALL_FREEIMAGE")
-@@ -739,7 +743,8 @@ endif()
- if (NOT DEFINED ANDROID AND CAN_USE_TBB)
-   if (USE_TBB)
-     add_definitions (-DHAVE_TBB)
--    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/tbb")
-+    find_package(TBB CONFIG REQUIRED)
-+    set(CSF_TBB TBB::tbb TBB::tbbmalloc)
-   else()
-     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBB")
-     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_TBBMALLOC")
-@@ -759,7 +764,8 @@ OCCT_IS_PRODUCT_REQUIRED (CSF_RapidJSON CAN_USE_RAPIDJSON)
- if (CAN_USE_RAPIDJSON)
-   if (USE_RAPIDJSON)
-     add_definitions (-DHAVE_RAPIDJSON)
--    OCCT_INCLUDE_CMAKE_FILE ("adm/cmake/rapidjson")
-+    find_package(RapidJSON CONFIG REQUIRED)
-+    set(CSF_RapidJSON rapidjson)
-   else()
-     OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_RAPIDJSON")
-     OCCT_CHECK_AND_UNSET ("INSTALL_RAPIDJSON")
+   OCCT_UNSET_VCPKG_FEATURE ("vtk")
+@@ -557,8 +558,8 @@ endif()
+ # FREEIMAGE
+ if (CAN_USE_FREEIMAGE AND USE_FREEIMAGE)
+   add_definitions (-DHAVE_FREEIMAGE)
+-  OCCT_ADD_VCPKG_FEATURE ("freeimage")
+-  list (APPEND OCCT_3RDPARTY_CMAKE_LIST "adm/cmake/freeimage")
++  find_package(freeimage CONFIG REQUIRED)
++  set(CSF_FreeImagePlus freeimage::FreeImagePlus)
+ elseif (NOT CAN_USE_FREEIMAGE)
+   OCCT_CHECK_AND_UNSET ("USE_FREEIMAGE")
+   OCCT_UNSET_VCPKG_FEATURE ("freeimage")
+@@ -653,8 +654,8 @@ endif()
+ # TBB
+ if (CAN_USE_TBB AND USE_TBB)
+   add_definitions (-DHAVE_TBB)
+-  OCCT_ADD_VCPKG_FEATURE ("tbb")
+-  list (APPEND OCCT_3RDPARTY_CMAKE_LIST "adm/cmake/tbb")
++  find_package(TBB CONFIG REQUIRED)
++  set(CSF_TBB TBB::tbb TBB::tbbmalloc)
+ elseif (NOT CAN_USE_TBB)
+   OCCT_CHECK_AND_UNSET ("USE_TBB")
+   OCCT_UNSET_VCPKG_FEATURE ("tbb")
+@@ -670,8 +671,8 @@ endif()
+ OCCT_IS_PRODUCT_REQUIRED (CSF_RapidJSON CAN_USE_RAPIDJSON)
+ if (CAN_USE_RAPIDJSON AND USE_RAPIDJSON)
+   add_definitions (-DHAVE_RAPIDJSON)
+-  OCCT_ADD_VCPKG_FEATURE ("rapidjson")
+-  list (APPEND OCCT_3RDPARTY_CMAKE_LIST "adm/cmake/rapidjson")
++  find_package(RapidJSON CONFIG REQUIRED)
++  set(CSF_RapidJSON rapidjson)
+ elseif (NOT CAN_USE_RAPIDJSON)
+   OCCT_CHECK_AND_UNSET ("USE_RAPIDJSON")
+   OCCT_UNSET_VCPKG_FEATURE ("rapidjson")
 diff --git a/adm/cmake/occt_toolkit.cmake b/adm/cmake/occt_toolkit.cmake
-index c939915..f707e00 100644
+index 36accf907f..5ef87f9bf0 100644
 --- a/adm/cmake/occt_toolkit.cmake
 +++ b/adm/cmake/occt_toolkit.cmake
-@@ -475,11 +475,11 @@ else()
+@@ -281,12 +281,11 @@ else()
    endif()
  endif()
  
 -if (BUILD_SHARED_LIBS OR EXECUTABLE_PROJECT)
-+if (1)
-   if(IS_VTK_9XX)
-     string (REGEX REPLACE "vtk" "VTK::" USED_TOOLKITS_BY_CURRENT_PROJECT "${USED_TOOLKITS_BY_CURRENT_PROJECT}")
-   endif()
--  target_link_libraries (${PROJECT_NAME} ${USED_TOOLKITS_BY_CURRENT_PROJECT} ${USED_EXTERNAL_LIBS_BY_CURRENT_PROJECT})
-+  target_link_libraries (${PROJECT_NAME} PRIVATE ${USED_TOOLKITS_BY_CURRENT_PROJECT} ${USED_EXTERNAL_LIBS_BY_CURRENT_PROJECT})
+-  if(IS_VTK_9XX)
+-    string (REGEX REPLACE "vtk" "VTK::" USED_TOOLKITS_BY_CURRENT_PROJECT "${USED_TOOLKITS_BY_CURRENT_PROJECT}")
+-  endif()
++if(IS_VTK_9XX)
++  string (REGEX REPLACE "vtk" "VTK::" USED_TOOLKITS_BY_CURRENT_PROJECT "${USED_TOOLKITS_BY_CURRENT_PROJECT}")
  endif()
+-target_link_libraries (${PROJECT_NAME} ${USED_TOOLKITS_BY_CURRENT_PROJECT} ${USED_EXTERNAL_LIBS_BY_CURRENT_PROJECT})
++
++target_link_libraries (${PROJECT_NAME} PRIVATE ${USED_TOOLKITS_BY_CURRENT_PROJECT} ${USED_EXTERNAL_LIBS_BY_CURRENT_PROJECT})
  
  if (USE_QT)
+   foreach (PROJECT_LIBRARY_DEBUG ${PROJECT_LIBRARIES_DEBUG})
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
-index e391ddf..9cc3d49 100644
+index c926c499ac..a7ad99990c 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
 +++ b/adm/templates/OpenCASCADEConfig.cmake.in
-@@ -5,6 +5,23 @@
- # This file is configured by OpenCASCADE.
- #
+@@ -71,6 +71,23 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
+ @SET_OpenCASCADE_WITH_D3D@
+ @SET_OpenCASCADE_WITH_GLX@
  
 +include(CMakeFindDependencyMacro)
 +if("@USE_FREEIMAGE@")
@@ -96,18 +105,21 @@ index e391ddf..9cc3d49 100644
 +  find_dependency(VTK REQUIRED)
 +endif()
 +
- if(OpenCASCADE_ALREADY_INCLUDED)
-   return()
- endif()
+ # Import OpenCASCADE compile definitions, C and C++ flags for each installed configuration.
+ file(GLOB CONFIG_FILES "${CMAKE_CURRENT_LIST_DIR}/OpenCASCADECompileDefinitionsAndFlags-*.cmake")
+ foreach(f ${CONFIG_FILES})
 diff --git a/src/Image/Image_AlienPixMap.cxx b/src/Image/Image_AlienPixMap.cxx
-index f869e8f..538d5b9 100644
+index 81289d953b..5ee49e9ff2 100644
 --- a/src/Image/Image_AlienPixMap.cxx
 +++ b/src/Image/Image_AlienPixMap.cxx
-@@ -21,7 +21,6 @@
+@@ -19,10 +19,6 @@
+ 
+ #ifdef HAVE_FREEIMAGE
    #include <FreeImage.h>
-
-   #ifdef _MSC_VER
--    #pragma comment( lib, "FreeImage.lib" )
-   #endif
+-
+-  #ifdef _MSC_VER
+-    #pragma comment(lib, "FreeImage.lib")
+-  #endif
  #elif defined(HAVE_WINCODEC)
    #include <wincodec.h>
+   // prevent warnings on MSVC10

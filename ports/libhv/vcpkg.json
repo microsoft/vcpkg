@@ -1,6 +1,6 @@
 {
   "name": "libhv",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Libhv is a C/C++ network library similar to libevent/libuv.",
   "homepage": "https://github.com/ithewei/libhv",
   "license": "BSD-3-Clause",

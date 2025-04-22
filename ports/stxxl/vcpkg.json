@@ -1,7 +1,7 @@
 {
   "name": "stxxl",
   "version-date": "2018-11-15",
-  "port-version": 8,
+  "port-version": 9,
   "description": "Standard Template Library for Extra Large Data Sets",
   "supports": "!uwp",
   "dependencies": [

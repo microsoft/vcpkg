@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6d03e7e..be416f5 100644
+index b7f97b0..2afd0e0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -7,6 +7,20 @@ set(SAMPLE_TARGET "test_tinyexr")
@@ -40,13 +40,13 @@ index 6d03e7e..be416f5 100644
 @@ -43,7 +54,7 @@ target_link_libraries(${BUILD_TARGET} ${TINYEXR_EXT_LIBRARIES} ${CMAKE_DL_LIBS})
  
  # Increase warning level for clang.
- IF (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
--  set_source_files_properties(${TINYEXR_SOURCES} PROPERTIES COMPILE_FLAGS "-Weverything -Werror -Wno-padded -Wno-c++98-compat-pedantic -Wno-documentation -Wno-unused-member-function")
-+  set_source_files_properties(${TINYEXR_SOURCES} PROPERTIES COMPILE_FLAGS "-Weverything -Wno-padded -Wno-c++98-compat-pedantic -Wno-documentation -Wno-unused-member-function")
- ENDIF ()
- 
- if (TINYEXR_BUILD_SAMPLE)
-@@ -72,3 +83,32 @@ if (TINYEXR_BUILD_SAMPLE)
+ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT MSVC)
+-  set(CLANG_COMPILE_FLAGS "-Weverything -Werror -Wno-padded -Wno-c++98-compat-pedantic -Wno-documentation -Wno-unused-member-function")
++  set(CLANG_COMPILE_FLAGS "-Weverything -Wno-padded -Wno-c++98-compat-pedantic -Wno-documentation -Wno-unused-member-function")
+   if (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER 16)
+     set(CLANG_COMPILE_FLAGS "${CLANG_COMPILE_FLAGS} -Wno-unsafe-buffer-usage")
+   endif()
+@@ -76,3 +87,32 @@ if (TINYEXR_BUILD_SAMPLE)
    endif(WIN32)
  
  endif (TINYEXR_BUILD_SAMPLE)

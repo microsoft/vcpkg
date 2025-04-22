@@ -1,6 +1,6 @@
 {
   "name": "imageinfo",
-  "version-date": "2024-08-05",
+  "version-date": "2024-12-02",
   "description": "Cross platform super fast single header c++ library to get image size and format without loading/decoding. Support avif, bmp, cur, dds, gif, hdr (pic), heic (heif), icns, ico, jp2, jpeg (jpg), jpx, ktx, png, psd, qoi, tga, tiff (tif), webp ...",
   "homepage": "https://github.com/xiaozhuai/imageinfo",
   "license": "MIT",

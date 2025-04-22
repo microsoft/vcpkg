@@ -17,8 +17,8 @@ vcpkg_add_to_path("${GO_EXE_PATH}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/boringssl
-  REF cfcb954901e264edb9915e501de64a81732c5edd
-  SHA512 6fc7fff24c85ed580fb362f788b216ef04ca16976656c68c75d3fd72c84e28ed39a3ab8fcb064b7c7061f93a4d37d5426e36d259e1714fa62d90b99659a3ddc2
+  REF 0.20240913.0
+  SHA512 bfb36d7d0a90bbede3f77967525cd9377e7488114c3d0fb576015d0361e7f4460801aab8ef8a470908541bc9d7f76cdbdd823af4fd6aaebb4cac711ee5b5b9fa
   HEAD_REF master
   PATCHES
     0001-static-gtest.patch

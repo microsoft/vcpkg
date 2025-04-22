@@ -1,6 +1,6 @@
 {
   "name": "directx-headers",
-  "version": "1.614.1",
+  "version": "1.615.0",
   "description": "Official DirectX 12 Headers",
   "homepage": "https://devblogs.microsoft.com/directx/",
   "documentation": "https://devblogs.microsoft.com/directx/gettingstarted-dx12agility/",

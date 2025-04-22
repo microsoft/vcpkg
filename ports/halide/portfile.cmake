@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF 8864e8ac1c0bb460f0034e9c46f7f944afad3a19 # unreleased version with LLVM 18 support
-    SHA512 286cbef25b5cc0f5095cbc80a2fd1cacf369948c58c14406ac6bcc28a7a37c81417d601975083f03670e22276a1886b8801bdc91aa6fe80049a276a1c8fd08b9
+    REF "v${VERSION}"
+    SHA512 ab684be4cb8bad7b46b8df5271efb37d3675344f689e37b7af1f12f584fba23318ed8f934156a8b99802b86bdebb55fac9cbcca193d58951ae0ace4816e4ec46
     HEAD_REF main
 )
 

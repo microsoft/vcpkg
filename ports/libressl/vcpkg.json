@@ -1,8 +1,13 @@
 {
   "name": "libressl",
-  "version": "3.9.2",
+  "version": "4.0.0",
   "port-version": 1,
-  "description": "LibreSSL is a version of the TLS/crypto stack forked from OpenSSL in 2014, with goals of modernizing the codebase, improving security, and applying best practice development processes.",
+  "description": [
+    "LibreSSL is a TLS/crypto stack.",
+    "It was forked from OpenSSL in 2014 by the OpenBSD project, with goals of modernizing the codebase, improving security, and applying best practice development processes.",
+    "LibreSSL provides much of the OpenSSL 1.1 API. Incompatibilities between the projects exist and are unavoidable since both evolve with different goals and priorities."
+  ],
+  "homepage": "https://www.libressl.org",
   "license": "ISC",
   "dependencies": [
     {

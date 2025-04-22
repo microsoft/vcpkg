@@ -1,7 +1,6 @@
 {
   "name": "libnice-gst",
-  "version": "0.1.21",
-  "port-version": 4,
+  "version": "0.1.22",
   "description": "Gstreamer Libnice plugins.",
   "homepage": "https://nice.freedesktop.org",
   "license": "LGPL-2.1-only AND MPL-1.1",

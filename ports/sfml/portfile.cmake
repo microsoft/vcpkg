@@ -2,17 +2,24 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 b376d3b00277ed60d107fe1268c210749b3aafcee618a8f924b181a9b476e92b9cb9baddecf70a8913b5910c471d53ea0260a876ad7b2db2b98b944d9f508714
+    SHA512 116b934950b02639aa0924cdf6ceaf34518be7f94037e77e52f374aa0a03403487ef58384137569d930961c7d65291a7f0bbddcf1eaf4260086f49afbfae1f27
     PATCHES
-        fix-dependencies.patch
+        01-fix-findudev-module.patch
+        02-fix-dependency-resolve.patch
 )
 
-# The embedded FindFreetype doesn't properly handle debug libraries
-file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules/FindFreetype.cmake")
-
 if(VCPKG_TARGET_IS_LINUX)
-    message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    libxcursor\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev")
+    message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxi\n    libxrandr\n    libxcursor\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxi-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev")
 endif()
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "network"  SFML_BUILD_NETWORK
+        "graphics" SFML_BUILD_GRAPHICS
+        "window"   SFML_BUILD_WINDOW
+        "audio"    SFML_BUILD_AUDIO
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -21,7 +28,9 @@ vcpkg_cmake_configure(
         -DSFML_USE_SYSTEM_DEPS=ON
         -DSFML_MISC_INSTALL_PREFIX=share/sfml
         -DSFML_GENERATE_PDB=OFF
-        -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        SFML_MISC_INSTALL_PREFIX
 )
 
 vcpkg_cmake_install()
@@ -43,6 +52,32 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
+set(SHOULD_REMOVE_SFML_ALL 0)
+if(NOT "audio" IN_LIST FEATURES)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-audio.pc")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-audio.pc")
+    set(SHOULD_REMOVE_SFML_ALL 1)
+endif()
+if(NOT "graphics" IN_LIST FEATURES)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-graphics.pc")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-graphics.pc")
+    set(SHOULD_REMOVE_SFML_ALL 1)
+endif()
+if(NOT "network" IN_LIST FEATURES)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-network.pc")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-network.pc")
+    set(SHOULD_REMOVE_SFML_ALL 1)
+endif()
+if(NOT "window" IN_LIST FEATURES)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-window.pc")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-window.pc")
+    set(SHOULD_REMOVE_SFML_ALL 1)
+endif()
+if(SHOULD_REMOVE_SFML_ALL)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-all.pc")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-all.pc")
+endif()
 
 vcpkg_fixup_pkgconfig()
 

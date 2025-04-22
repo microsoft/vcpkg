@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO morganstanley/modern-cpp-kafka
     REF "v${VERSION}"
-    SHA512 5071ba4aeb80d94fd078df054e3a36249e2e433bda2af4c26686cd5b0615d622cfd964c7193d075cc549a572cfa5b11bc4bbab9e00de7c80ea2bbf4a9d797201
+    SHA512 a6a921cc5037baaa0632fed350b4b5a3d5d47116397ae2638f9121997dbf7842d6406a889833ae551d738cd1bb189c5cec152b14f59644aec38ac9b6b5883a0b
     HEAD_REF main
 )
 

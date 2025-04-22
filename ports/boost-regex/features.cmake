@@ -4,3 +4,4 @@ vcpkg_check_features(
   FEATURES
     "icu" BOOST_REGEX_ENABLE_ICU
 )
+set(Z_VCPKG_BOOST_FORCE_HEADER_ONLY ON)

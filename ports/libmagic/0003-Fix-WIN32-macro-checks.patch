@@ -1,14 +1,5 @@
-From 2fffeb273ea46c1e91536f3d660982de785c8d49 Mon Sep 17 00:00:00 2001
-From: Long Nguyen <nguyen.long.908132@gmail.com>
-Date: Sat, 8 May 2021 20:52:59 +0700
-Subject: [PATCH 03/14] Fix WIN32 macro checks
-
----
- src/file.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
 diff --git a/src/file.h b/src/file.h
-index 299ac0c..2c365a6 100644
+index a67e8ff..9115c5b 100644
 --- a/src/file.h
 +++ b/src/file.h
 @@ -82,7 +82,7 @@
@@ -20,7 +11,7 @@ index 299ac0c..2c365a6 100644
  #include <sys/param.h>
  #endif
  /* Do this here and now, because struct stat gets re-defined on solaris */
-@@ -95,7 +95,7 @@
+@@ -99,7 +99,7 @@
  #define MAGIC "/etc/magic"
  #endif
  
@@ -29,15 +20,12 @@ index 299ac0c..2c365a6 100644
  #define PATHSEP	';'
  #else
  #define PATHSEP	':'
-@@ -103,7 +103,7 @@
- 
+@@ -108,7 +108,7 @@
  #define file_private static
  
--#if HAVE_VISIBILITY && !defined(WIN32)
-+#if HAVE_VISIBILITY && !defined(_WIN32)
- #define file_public  __attribute__ ((__visibility__("default")))
- #ifndef file_protected
- #define file_protected __attribute__ ((__visibility__("hidden")))
--- 
-2.29.2.windows.2
-
+ #if HAVE_VISIBILITY
+-# if defined(WIN32)
++# if defined(_WIN32)
+ #  define file_public  __declspec(dllexport)
+ #  ifndef file_protected
+ #   define file_protected

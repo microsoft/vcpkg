@@ -1,6 +1,7 @@
 {
   "name": "brpc",
-  "version": "1.10.0",
+  "version": "1.11.0",
+  "port-version": 1,
   "description": "Industrial-grade RPC framework used throughout Baidu, with 1,000,000+ instances and thousands kinds of services, called \"baidu-rpc\" inside Baidu.",
   "homepage": "https://github.com/apache/brpc",
   "license": "Apache-2.0",

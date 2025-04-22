@@ -1,0 +1,43 @@
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index b26f1ea31..afe3dc448 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -16,6 +16,8 @@ set(PXR_MINOR_VERSION "@PXR_MINOR_VERSION@")
+ set(PXR_PATCH_VERSION "@PXR_PATCH_VERSION@")
+ set(PXR_VERSION "@PXR_VERSION@")
+ 
++include(CMakeFindDependencyMacro)
++
+ # If Python support was enabled for this USD build, find the import
+ # targets by invoking the appropriate FindPython module. Use the same
+ # LIBRARY and INCLUDE_DIR settings from the original build if they
+@@ -41,9 +43,9 @@ if(@PXR_ENABLE_PYTHON_SUPPORT@)
+     endif()
+ 
+     if (NOT DEFINED Python3_VERSION)
+-        find_package(Python3 "@Python3_VERSION@" EXACT COMPONENTS Development REQUIRED)
++        find_dependency(Python3 "@Python3_VERSION@" EXACT COMPONENTS Development)
+     else()
+-        find_package(Python3 COMPONENTS Development REQUIRED)
++        find_dependency(Python3 COMPONENTS Development)
+     endif()
+ endif()
+ 
+@@ -57,7 +59,7 @@ if(@PXR_ENABLE_MATERIALX_SUPPORT@)
+             set(MaterialX_DIR [[@MaterialX_DIR@]])
+         endif()
+     endif()
+-    find_package(MaterialX REQUIRED)
++    find_dependency(MaterialX)
+ endif()
+ 
+ # Similar to MaterialX above, we are using Imath's cmake package config, so set
+@@ -71,7 +73,7 @@ if(@Imath_FOUND@)
+             set(Imath_DIR [[@Imath_DIR@]])
+         endif()
+     endif()
+-    find_package(Imath REQUIRED)
++    find_dependency(Imath)
+ endif()
+ 
+ include("${PXR_CMAKE_DIR}/cmake/pxrTargets.cmake")

@@ -1,0 +1,63 @@
+{
+  "name": "sdl3",
+  "version": "3.2.10",
+  "description": "Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.",
+  "homepage": "https://www.libsdl.org",
+  "license": "Zlib AND MIT AND Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "dbus",
+      "default-features": false,
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "ibus",
+      "platform": "linux"
+    },
+    {
+      "name": "wayland",
+      "platform": "linux"
+    },
+    {
+      "name": "x11",
+      "platform": "linux"
+    }
+  ],
+  "features": {
+    "alsa": {
+      "description": "Support for alsa audio",
+      "dependencies": [
+        {
+          "name": "alsa",
+          "platform": "linux"
+        }
+      ]
+    },
+    "ibus": {
+      "description": "Build with ibus IME support",
+      "supports": "linux"
+    },
+    "vulkan": {
+      "description": "Vulkan functionality for SDL"
+    },
+    "wayland": {
+      "description": "Build with Wayland support",
+      "supports": "linux"
+    },
+    "x11": {
+      "description": "Build with X11 support",
+      "supports": "!windows"
+    }
+  }
+}

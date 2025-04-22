@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 3ba02e8b979c80bf61d55f414bdac2c756578bb36498ed7486151755c6ccf8bd8ff2b8c7afa3c5d1acd862ce48314886a86a105613c05e36601984c334f8f6bf
+    SHA512 6b9a5ee501be41d6abc7579a106263b31f787321cbc45dedee97abf992bf8236cdb2394571dd256a74154f4a20018d429ae7e7f0409611ddc4d6f529d924d175
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -11,7 +11,6 @@ vcpkg_from_github(
         0004-dependencies.patch
         0005-fix-nasm.patch
         0007-fix-lib-naming.patch
-        0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
@@ -24,7 +23,7 @@ if(SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
     vcpkg_add_to_path("${NASM_EXE_PATH}")
@@ -151,9 +150,16 @@ if(VCPKG_DETECTED_CMAKE_STRIP)
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake)
     set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
-    list(APPEND prog_env "${MSYS_ROOT}/usr/bin" "${MSYS_ROOT}/usr/share/automake-1.16")
+    vcpkg_execute_required_process(
+        COMMAND "${SHELL}" -c "'/usr/bin/automake' --print-lib"
+        OUTPUT_VARIABLE automake_lib
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        WORKING_DIRECTORY "${MSYS_ROOT}"
+        LOGNAME automake-print-lib
+    )
+    list(APPEND prog_env "${MSYS_ROOT}/usr/bin" "${MSYS_ROOT}${automake_lib}")
 else()
     find_program(SHELL bash)
 endif()
@@ -839,34 +845,24 @@ endif()
 
 vcpkg_copy_pdbs()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(_dirs "/")
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        list(APPEND _dirs "/debug/")
-    endif()
-    foreach(_debug IN LISTS _dirs)
-        foreach(PKGCONFIG_MODULE IN LISTS FFMPEG_PKGCONFIG_MODULES)
-            set(PKGCONFIG_FILE "${CURRENT_PACKAGES_DIR}${_debug}lib/pkgconfig/${PKGCONFIG_MODULE}.pc")
-            file(READ "${PKGCONFIG_FILE}" PKGCONFIG_CONTENT)
-            # list libraries with -l flag (so pkgconf knows they are libraries and not just linker flags)
-            foreach(LIBS_ENTRY IN ITEMS Libs Libs.private)
-                string(REGEX MATCH "${LIBS_ENTRY}: [^\n]*" LIBS_VALUE "${PKGCONFIG_CONTENT}")
-                if(NOT LIBS_VALUE)
-                    message(FATAL_ERROR "failed to find pkgconfig entry ${LIBS_ENTRY}")
-                endif()
-                string(REPLACE "${LIBS_ENTRY}: " "" LIBS_VALUE "${LIBS_VALUE}")
-                if(LIBS_VALUE)
-                    set(LIBS_VALUE_OLD "${LIBS_VALUE}")
-                    string(REGEX REPLACE " ([^ ]+)[.]lib" " -l\\1" LIBS_VALUE "${LIBS_VALUE}")
-                    set(LIBS_VALUE_NEW "${LIBS_VALUE}")
-                    string(REPLACE "${LIBS_ENTRY}: ${LIBS_VALUE_OLD}" "${LIBS_ENTRY}: ${LIBS_VALUE_NEW}" PKGCONFIG_CONTENT "${PKGCONFIG_CONTENT}")
-                endif()
-            endforeach()
-            file(WRITE "${PKGCONFIG_FILE}" "${PKGCONFIG_CONTENT}")
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+    foreach(file IN LISTS pc_files)
+        # ffmpeg exports -libpath:foo and bar.lib for transitive deps.
+        # But CMake's pkg_check_modules cannot handle this properly.
+        # pc files generally use non-msvc syntax with -Lfoo -lbar.
+        file(READ "${file}" content)
+        foreach(entry IN ITEMS Libs Libs.private)
+            if(content MATCHES "${entry}: ([^\n]*)")
+                set(old_value "${CMAKE_MATCH_1}")
+                string(REGEX REPLACE "-libpath:" "-L" new_value "${old_value}")
+                string(REGEX REPLACE " ([^ /]+)[.]lib" " -l\\1" new_value "${new_value}")
+                string(REPLACE "${entry}: ${old_value}" "${entry}: ${new_value}" content "${content}")
+            endif()
         endforeach()
+        file(WRITE "${file}" "${content}")
     endforeach()
 endif()
-
 vcpkg_fixup_pkgconfig()
 
 # Handle dependencies
@@ -999,5 +995,15 @@ endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/FindFFMPEG.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindFFMPEG.cmake" @ONLY)
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "
+To use the static libraries to build your own shared library,
+you may need to add the following link option for your library:
+
+  -Wl,-Bsymbolic
+")
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/${LICENSE_FILE}")

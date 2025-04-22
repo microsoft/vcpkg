@@ -1,12 +1,11 @@
 {
   "name": "cppgraphqlgen",
   "version": "4.5.7",
-  "port-version": 1,
+  "port-version": 2,
   "description": "C++ GraphQL schema service generator",
   "homepage": "https://github.com/microsoft/cppgraphqlgen",
   "license": "MIT",
   "dependencies": [
-    "boost-program-options",
     "pegtl",
     {
       "name": "vcpkg-cmake",
@@ -21,10 +20,22 @@
     "rapidjson"
   ],
   "features": {
+    "clientgen": {
+      "description": "Build the clientgen CLI tool.",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
     "rapidjson": {
       "description": "Build the graphqljson library with RapidJSON.",
       "dependencies": [
         "rapidjson"
+      ]
+    },
+    "schemagen": {
+      "description": "Build the schemagen CLI tool.",
+      "dependencies": [
+        "boost-program-options"
       ]
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "libmysql",
-  "version": "8.0.39",
+  "version": "8.0.40",
   "description": "A MySQL client library for C development",
   "homepage": "https://github.com/mysql/mysql-server",
   "license": "GPL-2.0-or-later",
