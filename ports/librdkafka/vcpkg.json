@@ -25,7 +25,6 @@
     },
     "sasl": {
       "description": "Build with sasl/gssapi",
-      "supports": "linux | osx | (x64 & windows & !static & !uwp)",
       "dependencies": [
         "cyrus-sasl"
       ]

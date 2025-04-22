@@ -236,6 +236,7 @@ libopusenc:x64-uwp=fail
 libosip2:x64-windows-static-md=fail
 libplist:x64-windows-static=fail
 libqcow=skip # The developer of libqcow does not offer stable release archives
+librdkafka[sasl](android | (windows & (static | arm | x86))) = cascade
 libsoundio:arm-uwp=fail
 libsoundio:arm64-windows=fail
 libsoundio:x64-uwp=fail
