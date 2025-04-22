@@ -22,22 +22,32 @@ function(vcpkg_get_gobject_introspection_python out_var)
         set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
         set(VCPKG_HOST_EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
 
-        vcpkg_get_vcpkg_installed_python(target_python)
-        string(FIND "${target_python}" "${CURRENT_INSTALLED_DIR}/tools" index)
-        if(NOT index STREQUAL "0")
-            message(FATAL_ERROR "Not the target python: ${target_python}")
-        endif()
-
-        message("TRACE
+        foreach(try_reset IN ITEMS 1 0)
+            vcpkg_get_vcpkg_installed_python(target_python)
+            message("TRACE
 target_python:              ${target_python},
 CMAKE_HOST_WIN32:           ${CMAKE_HOST_WIN32},
 CURRENT_INSTALLED_DIR:      ${CURRENT_INSTALLED_DIR},
 CURRENT_HOST_INSTALLED_DIR: ${CURRENT_HOST_INSTALLED_DIR},
 DOWNLOADS:                  ${DOWNLOADS},
+PYTHON3:                    ${PYTHON3},
+CACHE{PYTHON3}:             $CACHE{PYTHON3},
 VCPKG_CROSSCOMPILING:       ${VCPKG_CROSSCOMPILING},
 VCPKG_HOST_EXECUTABLE_SUFFIX: ${VCPKG_HOST_EXECUTABLE_SUFFIX},
 VCPKG_TARGET_EXECUTABLE_SUFFIX: ${VCPKG_TARGET_EXECUTABLE_SUFFIX},
 ")
+
+            string(FIND "${target_python}" "${CURRENT_INSTALLED_DIR}/tools" index)
+            if(index STREQUAL "0")
+                break()
+            elseif(try_reset)
+                # Maybe fetch/restore package list?
+                unset(z_vcpkg_get_vcpkg_installed_python CACHE)
+                unset(PYTHON3 CACHE)
+            else()
+                message(FATAL_ERROR "Not the target python: ${target_python}")
+            endif()
+        endforeach()
 
         x_vcpkg_get_python_packages(OUT_PYTHON_VAR gobject_introspection_python
             PYTHON_EXECUTABLE "${target_python}"
@@ -66,7 +76,3 @@ function(vcpkg_get_gobject_introspection_programs)
         message(FATAL_ERROR "Unsupported arguments: ${ARGN}")
     endif()
 endfunction()
-
-if(NOT PYTHON3)
-    vcpkg_get_gobject_introspection_python(PYTHON3)
-endif()
