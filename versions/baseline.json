@@ -3729,7 +3729,7 @@
       "port-version": 1
     },
     "ifcopenshell": {
-      "baseline": "0.8.0",
+      "baseline": "0.7.0a10",
       "port-version": 0
     },
     "igloo": {
