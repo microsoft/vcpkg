@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  libsdl-org/SDL_ttf
-    REF "preview-${VERSION}"
-    SHA512 c6a2002d4a1227747a2986c257f3888ce4fc84b1c1d862142df5e2e7cbd9c9490c9c9b375dd16f8f0ecfc5313681d8cb5e267b907c0d52bd738a4c63695fd485 
+    REF "release-${VERSION}"
+    SHA512 b9adc28d584759b1cc1072d071caad95ade263a1fb24e294d66fc15e132d44bc62925875cb1f1b596089def9b47d7b73f42ffa4e120ee51982f993dc7a7d3bd7 
     HEAD_REF main
+    PATCHES
+        fix-findplutosvg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
