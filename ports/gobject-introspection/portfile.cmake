@@ -25,11 +25,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     message(STATUS "Static triplet. Not building introspection data.")
     list(APPEND options_release -Dbuild_introspection_data=false)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-elseif(VCPKG_CROSSCOMPILING)
-    message(STATUS "Cross build. Building introspection data supported only if the host can execute target binaries.")
 endif()
 
-vcpkg_get_vcpkg_installed_python(PYTHON3)
+include("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake")
+vcpkg_get_gobject_introspection_python(PYTHON3)
+
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 list(APPEND additional_binaries
@@ -42,12 +42,6 @@ if("cairo" IN_LIST FEATURES)
 else()
     list(APPEND options_release -Dcairo=disabled)
 endif()
-
-x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3
-    PYTHON_EXECUTABLE "${PYTHON3}"
-    PYTHON_VERSION "3"
-    PACKAGES setuptools
-)
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
