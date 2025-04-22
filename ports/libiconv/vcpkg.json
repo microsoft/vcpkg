@@ -1,7 +1,18 @@
 {
   "name": "libiconv",
   "version": "1.18",
-  "description": "GNU Unicode text conversion",
+  "port-version": 1,
+  "description": [
+    "iconv() text conversion.",
+    "This port installs GNU libiconv if the system C runtime doesn't provide a suitable iconv() implementation."
+  ],
   "homepage": "https://www.gnu.org/software/libiconv/",
-  "license": null
+  "license": null,
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true,
+      "platform": "android"
+    }
+  ]
 }

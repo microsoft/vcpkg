@@ -15,6 +15,7 @@ vcpkg_extract_source_archive(
         unix/no-server-tools.patch
         unix/mingw-install.patch
         unix/python.patch
+        unix/mac-15.4.patch # From https://www.postgresql.org/message-id/E1tziZ6-002AW9-2C%40gemulon.postgresql.org
         windows/macro-def.patch
         windows/win_bison_flex.patch
         windows/msbuild.patch

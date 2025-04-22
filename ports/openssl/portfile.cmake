@@ -7,17 +7,26 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+# Download fix for cert store crash on Windows
+vcpkg_download_distfile(
+    WINDOWS_CRASH_PATCH
+    URLS https://github.com/openssl/openssl/commit/2b5e7253b9a6a4cde64d3f2f22d71272f6ad32c5.patch?full_index=1
+    FILENAME openssl-certstore-crash-2b5e7253b9a6a4cde64d3f2f22d71272f6ad32c5.patch
+    SHA512 a13054a457ee72fd3d1760810b5323d04be5aaf18f199824515ca596a72e98154ace4fefd747e32a7cc32c6e4ed2363b100bf65a729cf2361fcc76715d5b7cd1
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 c66ac5bb4ba90cb62176e39dad1534963fc84fac3db9774d1ab4999ec3c4f796c63e13036c1f8b36f3077d7a1ee0db54d677de3dae32926c14af128cc3993e14
+    SHA512 a1ef09ecc810b761b3adcdb79b5746ba06244a10f626a40e495a3df19411546b98d75f6c7e7c13de7c15753caf3db87af7096ed0bb835afed8cc6dbc366b542f
     PATCHES
         cmake-config.patch
         command-line-length.patch
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
+        "${WINDOWS_CRASH_PATCH}"
         unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch

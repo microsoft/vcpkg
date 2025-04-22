@@ -1,3 +1,4 @@
-The package gz-cmake3 provides CMake integration:
+gz-cmake provides CMake integration:
 
-    find_package(gz-cmake3 CONFIG REQUIRED)
+  find_package(gz-cmake@VERSION_MAJOR@ REQUIRED)
+  gz_configure_project(...)

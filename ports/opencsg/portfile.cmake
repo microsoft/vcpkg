@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO floriankirsch/OpenCSG
     REF "opencsg-${VERSION_CSG}-release"
-    SHA512 ded016e6340b2dca479765bd638d353b1c4605cf7b579ab412cf8d789d56ce307a86576fc45307f87c7ea756bb9aff5db25c8a819352058ce4f7cf3e24056a07
+    SHA512 9c674553ff0bccd35b34475019f53f4dda900c4b26635e6f52871b81e974a9c6319891c1d42e387606ccb0a890dcbb286baa424ce240f78493ef6f920c0bcb3a
     HEAD_REF master
     PATCHES
         illegal_char.patch
