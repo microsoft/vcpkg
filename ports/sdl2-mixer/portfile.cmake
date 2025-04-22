@@ -25,10 +25,8 @@ vcpkg_check_features(
 
 if("fluidsynth" IN_LIST FEATURES OR "timidity" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DSDL2MIXER_MIDI=ON")
-    set(SDL2MIXER_MIDI ON)
 else()
     list(APPEND FEATURE_OPTIONS "-DSDL2MIXER_MIDI=OFF")
-    set(SDL2MIXER_MIDI OFF)
 endif()
 
 if("fluidsynth" IN_LIST FEATURES)
