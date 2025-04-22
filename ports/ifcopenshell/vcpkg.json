@@ -8,11 +8,13 @@
     "boost-date-time",
     "boost-filesystem",
     "boost-iostreams",
+    "boost-logic",
     "boost-program-options",
     "boost-regex",
     "boost-scope-exit",
     "boost-system",
     "boost-thread",
+    "boost-uuid",
     {
       "name": "vcpkg-cmake",
       "host": true
