@@ -10,45 +10,21 @@ function(vcpkg_get_gobject_introspection_python out_var)
     endif()
     include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/vcpkg-port-config.cmake")
     if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
-        # Engage host python include guards.
+        # Engage host python include guards. (Host python is not a dependency.)
         include("${CURRENT_HOST_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
     endif()
-    # Load target python config.
+    # Load target python config in global scope.
     include("${CURRENT_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
     block(SCOPE_FOR VARIABLES PROPAGATE gobject_introspection_python)
-        # Pretend native build, get vcpkg installed python for TARGET_TRIPLET.
-        set(VCPKG_CROSSCOMPILING 0)
-        set(HOST_TRIPLET "${TARGET_TRIPLET}")
-        set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
-        set(VCPKG_HOST_EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-
-        foreach(try_reset IN ITEMS 1 0)
-            vcpkg_get_vcpkg_installed_python(target_python)
-            message("TRACE
-target_python:              ${target_python},
-CMAKE_HOST_WIN32:           ${CMAKE_HOST_WIN32},
-CURRENT_INSTALLED_DIR:      ${CURRENT_INSTALLED_DIR},
-CURRENT_HOST_INSTALLED_DIR: ${CURRENT_HOST_INSTALLED_DIR},
-DOWNLOADS:                  ${DOWNLOADS},
-PYTHON3:                    ${PYTHON3},
-CACHE{PYTHON3}:             $CACHE{PYTHON3},
-VCPKG_CROSSCOMPILING:       ${VCPKG_CROSSCOMPILING},
-VCPKG_HOST_EXECUTABLE_SUFFIX: ${VCPKG_HOST_EXECUTABLE_SUFFIX},
-VCPKG_TARGET_EXECUTABLE_SUFFIX: ${VCPKG_TARGET_EXECUTABLE_SUFFIX},
-")
-
-            string(FIND "${target_python}" "${CURRENT_INSTALLED_DIR}/tools" index)
-            if(index STREQUAL "0")
-                break()
-            elseif(try_reset)
-                # Maybe fetch/restore package list?
-                unset(z_vcpkg_get_vcpkg_installed_python CACHE)
-                unset(PYTHON3 CACHE)
-            else()
-                message(FATAL_ERROR "Not the target python: ${target_python}")
-            endif()
-        endforeach()
-
+        if(VCPKG_CROSSCOMPILING)
+            # Pretend native build in order to use vcpkg installed python for TARGET_TRIPLET.
+            set(VCPKG_CROSSCOMPILING 0)
+            set(HOST_TRIPLET "${TARGET_TRIPLET}")
+            set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
+            set(VCPKG_HOST_EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+            unset(z_vcpkg_get_vcpkg_installed_python CACHE)
+        endif()
+        vcpkg_get_vcpkg_installed_python(target_python)
         x_vcpkg_get_python_packages(OUT_PYTHON_VAR gobject_introspection_python
             PYTHON_EXECUTABLE "${target_python}"
             PYTHON_VERSION "3"
