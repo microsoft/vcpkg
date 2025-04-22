@@ -5,10 +5,12 @@
   "homepage": "https://github.com/IfcOpenShell/IfcOpenShell",
   "license": "LGPL-3.0",
   "dependencies": [
+    "boost-circular-buffer",
     "boost-date-time",
     "boost-filesystem",
     "boost-iostreams",
     "boost-logic",
+    "boost-math",
     "boost-multi-index",
     "boost-program-options",
     "boost-property-tree",
