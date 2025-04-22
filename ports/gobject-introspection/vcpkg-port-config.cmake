@@ -28,6 +28,17 @@ function(vcpkg_get_gobject_introspection_python out_var)
             message(FATAL_ERROR "Not the target python: ${target_python}")
         endif()
 
+        message("TRACE
+target_python:              ${target_python},
+CMAKE_HOST_WIN32:           ${CMAKE_HOST_WIN32},
+CURRENT_INSTALLED_DIR:      ${CURRENT_INSTALLED_DIR},
+CURRENT_HOST_INSTALLED_DIR: ${CURRENT_HOST_INSTALLED_DIR},
+DOWNLOADS:                  ${DOWNLOADS},
+VCPKG_CROSSCOMPILING:       ${VCPKG_CROSSCOMPILING},
+VCPKG_HOST_EXECUTABLE_SUFFIX: ${VCPKG_HOST_EXECUTABLE_SUFFIX},
+VCPKG_TARGET_EXECUTABLE_SUFFIX: ${VCPKG_TARGET_EXECUTABLE_SUFFIX},
+")
+
         x_vcpkg_get_python_packages(OUT_PYTHON_VAR gobject_introspection_python
             PYTHON_EXECUTABLE "${target_python}"
             PYTHON_VERSION "3"
