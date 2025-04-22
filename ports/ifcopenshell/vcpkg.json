@@ -19,6 +19,7 @@
     "boost-system",
     "boost-thread",
     "boost-uuid",
+    "libxml2",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -47,10 +48,7 @@
       ]
     },
     "ifcxml": {
-      "description": "Build IfcParse with ifcXML support (requires libxml2)",
-      "dependencies": [
-        "libxml2"
-      ]
+      "description": "Build IfcParse with ifcXML support (requires libxml2)"
     },
     "minimal": {
       "description": "The build is to make a minimal version of IFC converter from OCCT into IFC"
