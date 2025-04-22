@@ -80,17 +80,10 @@
     },
     "introspection": {
       "description": "build with introspection",
+      "supports": "!static",
       "dependencies": [
         "glib",
-        "gobject-introspection",
-        {
-          "name": "python3",
-          "host": true
-        },
-        {
-          "name": "vcpkg-get-python-packages",
-          "host": true
-        }
+        "gobject-introspection"
       ]
     }
   }

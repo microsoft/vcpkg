@@ -8,17 +8,28 @@ function(vcpkg_get_gobject_introspection_python out_var)
             "Building and using ${PORT} will fail if the host cannot execute target binaries."
         )
     endif()
-    # Load scripts from host dir as usual, respect include guards.
-    include("${CURRENT_HOST_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
     include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-get-python-packages/vcpkg-port-config.cmake")
+    if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
+        # Engage host python include guards.
+        include("${CURRENT_HOST_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
+    endif()
+    # Load target python config.
+    include("${CURRENT_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
     block(SCOPE_FOR VARIABLES PROPAGATE gobject_introspection_python)
-        # Get vcpkg installed pyton for TARGET_TRIPLET
+        # Pretend native build, get vcpkg installed python for TARGET_TRIPLET.
+        set(VCPKG_CROSSCOMPILING 0)
         set(HOST_TRIPLET "${TARGET_TRIPLET}")
         set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
         set(VCPKG_HOST_EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-        vcpkg_get_vcpkg_installed_python(gobject_introspection_python)
+
+        vcpkg_get_vcpkg_installed_python(target_python)
+        string(FIND "${target_python}" "${CURRENT_INSTALLED_DIR}/tools" index)
+        if(NOT index STREQUAL "0")
+            message(FATAL_ERROR "Not the target python: ${target_python}")
+        endif()
+
         x_vcpkg_get_python_packages(OUT_PYTHON_VAR gobject_introspection_python
-            PYTHON_EXECUTABLE "${gobject_introspection_python}"
+            PYTHON_EXECUTABLE "${target_python}"
             PYTHON_VERSION "3"
             PACKAGES setuptools
         )

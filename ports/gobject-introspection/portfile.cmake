@@ -15,7 +15,8 @@ vcpkg_extract_source_archive(
         0004-fastcall.patch # https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/498
 )
 
-vcpkg_find_acquire_program(PKGCONFIG)
+include("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake")
+vcpkg_get_gobject_introspection_python(PYTHON3)
 
 set(additional_binaries "")
 set(options "")
@@ -27,9 +28,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-include("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake")
-vcpkg_get_gobject_introspection_python(PYTHON3)
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 list(APPEND additional_binaries
