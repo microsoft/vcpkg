@@ -1,0 +1,89 @@
+{
+  "name": "ifcopenshell",
+  "version": "0.8.0",
+  "description": "IfcOpenShell is an open source (LGPL) software library for working with Industry Foundation Classes (IFC).",
+  "homepage": "https://github.com/IfcOpenShell/IfcOpenShell",
+  "license": "LGPL-3.0",
+  "dependencies": [
+    "boost-date-time",
+    "boost-filesystem",
+    "boost-iostreams",
+    "boost-program-options",
+    "boost-regex",
+    "boost-scope-exit",
+    "boost-system",
+    "boost-thread",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "cgal": {
+      "description": "Enable geometry interpretation using CGAL",
+      "dependencies": [
+        "cgal"
+      ]
+    },
+    "hdf5": {
+      "description": "Enable HDF5 support (requires HDF5, zlib)",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "features": [
+            "cpp"
+          ]
+        }
+      ]
+    },
+    "ifcxml": {
+      "description": "Build IfcParse with ifcXML support (requires libxml2)",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "minimal": {
+      "description": "The build is to make a minimal version of IFC converter from OCCT into IFC"
+    },
+    "mmap": {
+      "description": "Adds a command line options to parse IFC files from memory mapped files using Boost.Iostreams"
+    },
+    "opencascade": {
+      "description": "Enable geometry interpretation using Open CASCADE",
+      "dependencies": [
+        "opencascade"
+      ]
+    },
+    "optimizations": {
+      "description": "Enable certain compiler and linker optimizations on RelWithDebInfo and Release builds"
+    },
+    "package": {
+      "description": "Build python package"
+    },
+    "parallel": {
+      "description": "Multi-threaded compilation in Microsoft Visual Studio (/MP)"
+    },
+    "proj": {
+      "description": "Enable output of Earth-Centered Earth-Fixed glTF output using the PROJ library",
+      "dependencies": [
+        "proj"
+      ]
+    },
+    "usd": {
+      "description": "Build IfcConvert with USD support (requires pixar's USD library)",
+      "dependencies": [
+        "usd"
+      ]
+    },
+    "vld": {
+      "description": "Use Visual Leak Detector for debugging memory leaks, MSVC-only"
+    },
+    "wasm": {
+      "description": "Build a WebAssembly binary"
+    }
+  }
+}
