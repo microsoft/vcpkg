@@ -2,15 +2,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
+
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flexible-collision-library/fcl
-    REF ${VERSION}
-    SHA512 95612476f4706fcd60812204ec7495a956c4e318cc6ace9526ac93dc765605ddf73b2d0d9ff9f4c9c739e43c5f8e24670113c86e02868a2949ab234c3bf82374
+    REF a3fbc9fe4f619d7bb1117dc137daa497d2de454b # updated to later master commit to facilitate c++ std alongside eigen3
+    SHA512 d04db55768d27cd191cf72ee3cc7ffeb5164c0d5db8bd38eb8ed523846e205340947f0b64473d567db0bc56bf8e8da330dc6e5e2929066e6d0f512fd5a7cbd92
     HEAD_REF master
-    PATCHES
-        dont-lower-c++-std.diff
-	fix-missing-cassert-include.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FCL_STATIC_LIBRARY)
