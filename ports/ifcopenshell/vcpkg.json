@@ -14,15 +14,15 @@
     "boost-multi-index",
     "boost-program-options",
     "boost-property-tree",
+    "boost-random",
     "boost-regex",
     "boost-scope-exit",
     "boost-system",
     "boost-thread",
     "boost-uuid",
-    "boost-random",
+    "cgal",
     "libxml2",
     "opencascade",
-    "cgal",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -54,9 +54,7 @@
       "description": "Adds a command line options to parse IFC files from memory mapped files using Boost.Iostreams"
     },
     "opencascade": {
-      "description": "Enable geometry interpretation using Open CASCADE",
-      "dependencies": [
-      ]
+      "description": "Enable geometry interpretation using Open CASCADE"
     },
     "optimizations": {
       "description": "Enable certain compiler and linker optimizations on RelWithDebInfo and Release builds"
