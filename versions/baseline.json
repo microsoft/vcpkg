@@ -2470,7 +2470,7 @@
     },
     "duilib": {
       "baseline": "2024-12-23",
-      "port-version": 0
+      "port-version": 1
     },
     "dukglue": {
       "baseline": "2022-11-08",
