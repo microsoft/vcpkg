@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 #set -x
 
 # to install add to ~/.bashrc:
