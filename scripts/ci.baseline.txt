@@ -1069,8 +1069,6 @@ vst3sdk:arm64-osx=fail
 vst3sdk:x64-osx=fail
 vulkan-extensionlayer:x64-windows-static=fail
 wasmedge:arm-neon-android=fail
-wavpack:arm-neon-android=fail
-wavpack:x64-android=fail
 # Collides with libpcap -> similar headers
 winpcap:x64-windows-release=skip
 winpcap:x64-windows=skip
