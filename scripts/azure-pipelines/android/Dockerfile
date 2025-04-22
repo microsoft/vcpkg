@@ -44,6 +44,10 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
 ## PowerShell
 ENV APT_PACKAGES="$APT_PACKAGES powershell"
 
+# The BUILD_DATE argument forces cache invalidation so we get updated apt dependencies
+ARG BUILD_DATE
+RUN echo "Build date: ${BUILD_DATE}"
+
 RUN <<END_OF_SCRIPT bash
 set -e
 
