@@ -2,9 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IfcOpenShell/IfcOpenShell
     REF "v${VERSION}"
-    SHA512 7edd84dcdad5ecf6413824dd28ce65884ab1e422fb708be3297e83f984c0a9ba633d6013d046543bf645f6fc43d80f4fa07c5558e3a152c087b213ba01603801
+    SHA512 4ae5f3f007de0f1bce34fb2d51bca53bad80e83243f9702f4bf5c5878eb9bf16d8d6b3954a5c361fa82800c85384ea97000188afbbb2fb3f5c1a5878a57fa705
     HEAD_REF master
-    PATCHES fix-build.patch
+    PATCHES
+        fix-dependencies.patch
+        fix-boost.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,10 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "vld" USE_VLD
         "mmap" USE_MMAP
         "package" BUILD_PACKAGE
-        "opencascade" WITH_OPENCASCADE
-        "cgal" WITH_CGAL
         "hdf5" HDF5_SUPPORT
-        "proj" WITH_PROJ
         "ifcxml" IFCXML_SUPPORT
         "usd" USD_SUPPORT
 )
@@ -35,14 +34,11 @@ vcpkg_cmake_configure(
         -DBUILD_GEOMSERVER=OFF
         -DBUILD_IFCPYTHON=OFF
         -DBUILD_QTVIEWER=OFF
-        -DCITYJSON_SUPPORT=OFF
         -DGLTF_SUPPORT=OFF
         -DCOLLADA_SUPPORT=OFF
         -DBUILD_IFCMAX=OFF
-        -DWITH_RELATIONSHIP_VALIDATION=OFF
         -DUSERSPACE_PYTHON_PREFIX=OFF
         -DADD_COMMIT_SHA=OFF
-        -DVERSION_OVERRIDE=OFF
 )
 
 vcpkg_cmake_install()

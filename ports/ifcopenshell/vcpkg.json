@@ -1,6 +1,6 @@
 {
   "name": "ifcopenshell",
-  "version": "0.8.0",
+  "version-string": "0.7.0a10",
   "description": "IfcOpenShell is an open source (LGPL) software library for working with Industry Foundation Classes (IFC).",
   "homepage": "https://github.com/IfcOpenShell/IfcOpenShell",
   "license": "LGPL-3.0-or-later",
@@ -19,7 +19,10 @@
     "boost-system",
     "boost-thread",
     "boost-uuid",
+    "boost-random",
     "libxml2",
+    "opencascade",
+    "cgal",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -30,12 +33,6 @@
     }
   ],
   "features": {
-    "cgal": {
-      "description": "Enable geometry interpretation using CGAL",
-      "dependencies": [
-        "cgal"
-      ]
-    },
     "hdf5": {
       "description": "Enable HDF5 support (requires HDF5, zlib)",
       "dependencies": [
@@ -59,7 +56,6 @@
     "opencascade": {
       "description": "Enable geometry interpretation using Open CASCADE",
       "dependencies": [
-        "opencascade"
       ]
     },
     "optimizations": {
@@ -70,12 +66,6 @@
     },
     "parallel": {
       "description": "Multi-threaded compilation in Microsoft Visual Studio (/MP)"
-    },
-    "proj": {
-      "description": "Enable output of Earth-Centered Earth-Fixed glTF output using the PROJ library",
-      "dependencies": [
-        "proj"
-      ]
     },
     "usd": {
       "description": "Build IfcConvert with USD support (requires pixar's USD library)",
