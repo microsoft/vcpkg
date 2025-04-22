@@ -1,7 +1,16 @@
 diff --git a/DuiLib/CMakeLists.txt b/DuiLib/CMakeLists.txt
-index 188f36f..5a679e9 100644
+index 188f36f..5c706fb 100644
 --- a/DuiLib/CMakeLists.txt
 +++ b/DuiLib/CMakeLists.txt
+@@ -30,7 +30,7 @@ add_library(duilib ${LINKAGE} ${Control_src} ${Core_src} ${Layout_src} ${Utils_s
+ 
+ add_definitions(-DUILIB_EXPORTS)
+ target_link_libraries(duilib comctl32 gdi32 user32)
+-target_include_directories(duilib PUBLIC $<INSTALL_INTERFACE:include>)
++target_include_directories(duilib PUBLIC $<INSTALL_INTERFACE:include/duilib>)
+ target_compile_definitions(duilib PRIVATE UILIB_EXPORTS)
+ set_target_properties(duilib PROPERTIES OUTPUT_NAME "duilib")
+ 
 @@ -41,11 +41,11 @@ file(GLOB DUILIB_UTILS_HDRS "${CMAKE_CURRENT_SOURCE_DIR}/Utils/*.h")
  file(GLOB DUILIB_CONTROL_HDRS "${CMAKE_CURRENT_SOURCE_DIR}/Control/*.h")
  file(GLOB DUILIB_LAYOUT_HDRS "${CMAKE_CURRENT_SOURCE_DIR}/Layout/*.h")
