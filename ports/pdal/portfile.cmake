@@ -1,5 +1,18 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+vcpkg_download_distfile(
+    gdal_3_11_diff
+    URLS "https://github.com/PDAL/PDAL/commit/0f6469d6a64b20a5554f8cfa9792361c3c055fcf.diff?full_index=1"
+    FILENAME "PDAL-PDAL-2.8.4-gdal-3.11-0f6469d.diff"
+    SHA512 e0aecd9e56d041b81c0c5ddd7a6a0f9b323cdcc806fdc44507fc8ee2001c605fe20a1b3b7502dd02905ec55f85fdabd7bfd29a6eac865e55c224b3ff263cd4f6
+)
+vcpkg_download_distfile(
+    gdal_3_11_diff_2
+    URLS "https://github.com/PDAL/PDAL/commit/6eab0d87c9bd550d59c08fa4496872f63ac62062.diff?full_index=1"
+    FILENAME "PDAL-PDAL-2.8.4-gdal-3.11-6eab0d8.diff"
+    SHA512 dea919c69f2c9d4b5a60d9fc969d6f0dc7b0ad3876a4599286987272af75ddf5d3f77a5d273208e4106c456cf7810ebdece2810d121d1f3e5d9adaa0416dd7b8
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PDAL/PDAL
@@ -14,6 +27,9 @@ vcpkg_from_github(
         external-dimbuilder.diff
         find-library-suffix.diff
         no-rpath.patch
+        "${gdal_3_11_diff}"
+        "${gdal_3_11_diff_2}"
+        gdal-3.11.diff # backport of https://github.com/PDAL/PDAL/commit/e840f5901010c513395c9f7f13e4001260e187d4
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/modules/FindCURL.cmake"
