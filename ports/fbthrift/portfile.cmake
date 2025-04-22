@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-deps.patch
+        fix-oss.patch
         fix-test.patch
         folly-has-liburing.diff
 )
