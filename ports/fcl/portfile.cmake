@@ -20,6 +20,8 @@ else()
     set(FCL_USE_X64_SSE OFF)
 endif()
 
+set(CMAKE_CXX_STANDARD 14) #eigen requires cpp14
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
