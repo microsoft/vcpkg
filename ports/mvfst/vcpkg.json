@@ -4,7 +4,7 @@
   "description": "mvfst (Pronounced move fast) is a client and server implementation of IETF QUIC protocol in C++ by Facebook.",
   "homepage": "https://github.com/facebook/mvfst",
   "license": "MIT",
-  "supports": "!(windows & !static)",
+  "supports": "(windows & x64 & static & !uwp & !mingw) | ((osx | linux) & (x64 | arm64))",
   "dependencies": [
     "boost-context",
     "boost-date-time",

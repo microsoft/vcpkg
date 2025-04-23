@@ -4,6 +4,7 @@
   "description": "a TLS 1.3 implementation by Facebook",
   "homepage": "https://github.com/facebookincubator/fizz",
   "license": "BSD-3-Clause",
+  "supports": "(windows & x64 & !uwp & !mingw) | ((osx | linux) & (x64 | arm64))",
   "dependencies": [
     "double-conversion",
     "fmt",
