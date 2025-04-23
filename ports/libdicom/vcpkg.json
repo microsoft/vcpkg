@@ -5,6 +5,7 @@
   "homepage": "https://github.com/ImagingDataCommons/libdicom",
   "documentation": "https://libdicom.readthedocs.io/en/latest/",
   "license": "MIT",
+  "supports": "!android & !uwp & !(arm64 & windows)",
   "dependencies": [
     "uthash",
     {
