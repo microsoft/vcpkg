@@ -1,9 +1,18 @@
+vcpkg_download_distfile(
+    gdal_3_11_diff
+    URLS "https://github.com/gwaldron/osgearth/commit/f17898acd34656144936ea7d00e980a89a2c5215.diff?full_index=1"
+    FILENAME "gwaldron-osgearth-3.7.2-gdal-3.11-f17898acd34656144936ea7d00e980a89a2c5215.diff"
+    SHA512 9c316a951cb2ba506221d3c07a7a31d2f95e7ceef20a94c555ce0f399882cabe547e99eb404d43187328085b57de48f737694da808cad71ccc5f7274f89df8a8
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
     REF "osgearth-${VERSION}"
     SHA512 4a2b80c907ebf2b56966598f9e134ad910d3271757496fb1d906cc413eb2ad09da366a96635f0195696efe16ef1a649e13b6ec1d901a39ced0465be797f14221
     HEAD_REF master
+    PATCHES
+        "${gdal_3_11_diff}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
