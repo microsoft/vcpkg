@@ -36,11 +36,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "art"            LIEF_ART               # Build LIEF with ART module
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(LIEF_FORCE_API_EXPORTS ON)
-else()
-    set(LIEF_FORCE_API_EXPORTS OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIEF_FORCE_API_EXPORTS)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
