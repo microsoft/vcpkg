@@ -36,7 +36,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "art"            LIEF_ART               # Build LIEF with ART module
 )
 
+set(extra_config)
+
+# set CMAKE_MSVC_RUNTIME_LIBRARY for dynamic linkage
+# https://github.com/lief-project/LIEF/blob/0.16.5/scripts/windows/package_sdk.py#L46-L63
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>DLL)
+    else()
+        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>)
+    endif()
+endif()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIEF_FORCE_API_EXPORTS)
+list(APPEND extra_config -DLIEF_FORCE_API_EXPORTS=${LIEF_FORCE_API_EXPORTS})
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -54,7 +67,7 @@ vcpkg_cmake_configure(
         -DLIEF_OPT_EXTERNAL_EXPECTED=ON
         -DLIEF_DISABLE_FROZEN=OFF
         -DLIEF_DISABLE_EXCEPTIONS=OFF
-        -DLIEF_FORCE_API_EXPORTS=${LIEF_FORCE_API_EXPORTS}
+        ${extra_config}
 
         "-DLIEF_EXTERNAL_SPAN_DIR=${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tcb"
 )
