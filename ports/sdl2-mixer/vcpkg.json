@@ -60,7 +60,6 @@
     },
     "wavpack": {
       "description": "Enable WavPack music.",
-      "supports": "!(windows & arm) & !(android & (arm32 | x64))",
       "dependencies": [
         "wavpack"
       ]
