@@ -15,7 +15,7 @@ vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_SUBDIR}")
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-iausofa")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-sofa")
 
 vcpkg_copy_pdbs()
 
