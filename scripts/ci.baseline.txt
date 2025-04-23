@@ -334,8 +334,6 @@ fluidlite:x64-windows=skip
 fluidlite:x86-windows=skip
 fmi4cpp:arm64-uwp=fail
 fmi4cpp:x64-uwp=fail
-folly:arm64-android=fail
-folly:x64-android=fail
 # unsupported option '-mfloat-abi='
 # ALooper_pollAll no longer available
 freeglut:arm-neon-android=fail
