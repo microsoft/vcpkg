@@ -10,6 +10,8 @@ vcpkg_from_github(
     REF a3fbc9fe4f619d7bb1117dc137daa497d2de454b # updated to later master commit to facilitate c++ std alongside eigen3
     SHA512 d04db55768d27cd191cf72ee3cc7ffeb5164c0d5db8bd38eb8ed523846e205340947f0b64473d567db0bc56bf8e8da330dc6e5e2929066e6d0f512fd5a7cbd92
     HEAD_REF master
+    PATCHES
+        std-14.patch # eigen requires cpp14
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FCL_STATIC_LIBRARY)
@@ -19,8 +21,6 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUA
 else()
     set(FCL_USE_X64_SSE OFF)
 endif()
-
-set(CMAKE_CXX_STANDARD 14) #eigen requires cpp14
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         "fix_dependencies.patch"
         "fix-CMakeInstall.patch"
+	fix-missing-cassert.patch
 )
 
 # Run npm install and npm run build on the cloned project    

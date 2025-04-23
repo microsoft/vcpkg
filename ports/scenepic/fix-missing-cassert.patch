@@ -1,0 +1,67 @@
+From 16337e7ed0a235095dcc91e3dcd8b95d5ef47784 Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Wed, 23 Apr 2025 14:50:18 -0400
+Subject: [PATCH] add missing cassert
+
+---
+ src/scenepic/mesh.cpp            | 2 +-
+ src/scenepic/mesh_primitives.cpp | 4 ++--
+ src/scenepic/mesh_update.cpp     | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/scenepic/mesh.cpp b/src/scenepic/mesh.cpp
+index 1d1c299..05c55a8 100644
+--- a/src/scenepic/mesh.cpp
++++ b/src/scenepic/mesh.cpp
+@@ -5,7 +5,7 @@
+  * primitives.cpp) */
+ 
+ #include "mesh.h"
+-
++#include <cassert>
+ #include "transforms.h"
+ #include "util.h"
+ 
+diff --git a/src/scenepic/mesh_primitives.cpp b/src/scenepic/mesh_primitives.cpp
+index 8b29ee5..ae15149 100644
+--- a/src/scenepic/mesh_primitives.cpp
++++ b/src/scenepic/mesh_primitives.cpp
+@@ -4,7 +4,7 @@
+ #define _USE_MATH_DEFINES
+ #include "mesh.h"
+ #include "transforms.h"
+-
++#include <cassert>
+ #include <Eigen/Geometry>
+ #include <cmath>
+ 
+@@ -796,4 +796,4 @@ namespace scenepic
+     this->append_mesh(m);
+   }
+ 
+-} // namespace scenepic
+\ No newline at end of file
++} // namespace scenepic
+diff --git a/src/scenepic/mesh_update.cpp b/src/scenepic/mesh_update.cpp
+index 5a46bd7..76055d0 100644
+--- a/src/scenepic/mesh_update.cpp
++++ b/src/scenepic/mesh_update.cpp
+@@ -2,7 +2,7 @@
+ // Licensed under the MIT License.
+ 
+ #include "mesh_update.h"
+-
++#include <cassert>
+ #include "base64.h"
+ #include "util.h"
+ 
+@@ -156,4 +156,4 @@ namespace scenepic
+   {
+     return this->to_json().to_string();
+   }
+-}
+\ No newline at end of file
++}
+-- 
+2.47.1.windows.2
+
