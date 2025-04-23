@@ -8,14 +8,14 @@
 ##    fail - The port build is expected to fail in the CI system.
 ##           This is not necessarily the same as if a port is expected to build
 ##           on a developers machine because it may fail due to the machine
-##           configuration. 
+##           configuration.
 ##    skip - Do not build this port in the CI system.
 ##           This is added to ports that may be flaky or conflict with other
 ##           ports. Please comment for why a port is skipped so it can be
 ##           removed when the issue is resolved.
 ## cascade - The port depends on a port that fails or is excluded by a supports
 ##           expression of a dependency but the port itself states that it can be build.
-##           This is added to ports to detect "hidden" not tested ports. 
+##           This is added to ports to detect "hidden" not tested ports.
 ##
 ## Additional States can be specified for specific features:
 ##            feature-fails - The listed feature do not build. They are therefore excluded
@@ -37,7 +37,7 @@
 ##    qt3d[extras] = options # extras will be always added to the test combination (it is currently a requirement)
 ##    curl[core,openssl,wolfssl] = options # openssl and wolfssl are exclusive ssl backends but none must be selected
 ##    libgit2[pcre,pcre2] = options # you have to select pcre xor pcre2
-## 
+##
 ##    libcanberra[gtk3](osx) = combination-fails # The feature works in the "combined" feature test
 ##    vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 ##
@@ -69,7 +69,7 @@ casclib(uwp)=fail
 cctag:x64-windows-static-md=fail
 cello:arm-uwp=fail
 cello:x64-uwp=fail
-chartdir=skip # chartdir does not offer stable download URLs  
+chartdir=skip # chartdir does not offer stable download URLs
 chromium-base:x64-linux=skip # broken on Linux because
 chromium-base:x64-osx=skip # broken on OSX for unknown reasons; it appears to be messing with some form of system-wide cache because the first attempt to build it fails, but subsequent attempts succeed
 chromium-base(windows) =skip # chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI broken on Windows because it does not yet support VS2022
@@ -236,6 +236,7 @@ libopusenc:x64-uwp=fail
 libosip2:x64-windows-static-md=fail
 libplist:x64-windows-static=fail
 libqcow=skip # The developer of libqcow does not offer stable release archives
+librdkafka[sasl](android | (windows & (static | arm | x86))) = cascade
 libsoundio:arm-uwp=fail
 libsoundio:arm64-windows=fail
 libsoundio:x64-uwp=fail
@@ -437,8 +438,8 @@ raylib:arm-uwp=fail
 raylib:x64-uwp=fail
 readline:arm-uwp=fail
 readline:x64-uwp=fail
-realsense[core](uwp) = combination-fails 
-realsense[tools](uwp) = feature-fails 
+realsense[core](uwp) = combination-fails
+realsense[tools](uwp) = feature-fails
 replxx:arm-uwp=fail
 replxx:x64-uwp=fail
 restbed:arm-uwp=fail
@@ -790,13 +791,13 @@ dartsim:x64-uwp = cascade
 dartsim:x64-windows-static = cascade
 daxa:x64-uwp = cascade
 dcmtk[icu](uwp) = cascade
-dcmtk[icu](uwp) = cascade 
+dcmtk[icu](uwp) = cascade
 devil[openexr]:arm64-uwp = cascade
 devil[openexr]:x64-uwp = cascade
 directxtex[openexr]:arm64-uwp = cascade
 directxtex[openexr]:x64-uwp = cascade
-directxtk[xaudio2redist]:x64-uwp = cascade
-directxtk12[xaudio2redist]:x64-uwp = cascade
+directxtk[xaudio2redist](uwp) = cascade
+directxtk12[xaudio2redist](uwp) = cascade
 dlib[cuda]:arm64-windows = cascade
 dlib[cuda]:x64-windows = cascade
 dlib[cuda]:x64-windows-static = cascade
@@ -1411,7 +1412,7 @@ libxkbcommon:arm64-uwp = cascade
 libxkbcommon:x64-uwp = cascade
 libxkbfile:arm64-uwp = cascade
 libxkbfile:x64-uwp = cascade
-libxml2[icu](uwp) = cascade 
+libxml2[icu](uwp) = cascade
 libxmlpp:arm64-uwp = cascade
 libxmlpp:x64-uwp = cascade
 libxmu:arm64-uwp = cascade
@@ -1499,9 +1500,7 @@ msix:arm64-uwp = cascade
 msix:x64-uwp = cascade
 mujoco:arm64-uwp = cascade
 mujoco:x64-uwp = cascade
-netcdf-c[hdf5]:arm64-uwp = cascade
-netcdf-c[hdf5]:arm64-windows = cascade
-netcdf-c[hdf5]:x64-uwp = cascade
+netcdf-c[hdf5](uwp) = cascade
 netcdf-cxx4:arm64-uwp = cascade
 netcdf-cxx4:arm64-windows = cascade
 netcdf-cxx4:x64-uwp = cascade
@@ -1958,6 +1957,8 @@ rhasheq:arm64-uwp = cascade
 rhasheq:x64-uwp = cascade
 rioki-glow:arm64-uwp = cascade
 rioki-glow:x64-uwp = cascade
+ripper37-libbase(uwp) = cascade
+ripper37-libbase[wx](android) = cascade
 rkcommon:x64-uwp = cascade
 rmqcpp(windows | android) = cascade
 rsocket:arm64-uwp = cascade
@@ -2171,7 +2172,7 @@ zyre:x64-uwp = cascade
 ableton-link[hut](linux) = feature-fails # libportaudiocpp0 must be installed in ci. See https://github.com/microsoft/vcpkg/pull/32144
 adios2[python](!uwp) = feature-fails # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
 arrayfire[opencl](windows & !uwp) = feature-fails # build errror: See https://github.com/microsoft/vcpkg/issues/33464
-ashes[core](windows) = combination-fails # CMake Error: INSTALL(EXPORT) given unknown export "AshesRenderers". One render backend must be selected 
+ashes[core](windows) = combination-fails # CMake Error: INSTALL(EXPORT) given unknown export "AshesRenderers". One render backend must be selected
 atk[introspection](windows & arm & !static) = feature-fails # ERROR: Dependency "gobject-introspection-1.0" not found. See https://github.com/microsoft/vcpkg/issues/33751
 azure-kinect-sensor-sdk[tool](windows & !uwp) = feature-fails # Waits for https://github.com/microsoft/vcpkg/pull/33231
 # boost-python[core](!linux) = combination-fails
@@ -2303,4 +2304,4 @@ qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](osx) = skip # no x11 on macO
 s2n = skip # builds too slow
 sciter = skip # The sciter port is deprecated by upstream and conflicts with upstream's replacement.
 shogun = skip # shogun is not compatible with c++17 because it uses dynamic exception specifications but the dependency abseil requires c++17
-winpcap = skip # Broken and merked for removal. See https://github.com/microsoft/vcpkg/pull/33215 
+winpcap = skip # Broken and merked for removal. See https://github.com/microsoft/vcpkg/pull/33215

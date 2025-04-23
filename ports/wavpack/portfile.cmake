@@ -2,10 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
     REF ${VERSION}
-    SHA512 7a0b00ee19a784b5a2ae40c1d86ddf47d989b0302ee32e6b2f4db828d632b877566f9bb8c1998d129b022f988966f29db05b7a2b59cefdd5b603292ea20464ec
-    PATCHES
-        CMakeLists-patch.diff
-        config-patch.diff
+    SHA512 bf833a4470625291a00022ae1a04ed1c6572a34c11b096bf3f4136066c77fde55c82994e8a3cee553c216539b7fdac996de9d97a5ddb7aed4904fee04d0df443
 )
 
 vcpkg_cmake_configure(
@@ -16,8 +13,6 @@ vcpkg_cmake_configure(
         -DWAVPACK_BUILD_COOLEDIT_PLUGIN=OFF
         -DWAVPACK_BUILD_WINAMP_PLUGIN=OFF
         -DBUILD_TESTING=OFF
-        -DWAVPACK_BUILD_DOCS=OFF
-        -DWAVPACK_ENABLE_LIBCRYPTO=OFF
 )
 
 vcpkg_cmake_install()
