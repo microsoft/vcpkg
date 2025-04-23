@@ -4,7 +4,7 @@
   "description": "Facebook's branch of Apache Thrift, including a new C++ server.",
   "homepage": "https://github.com/facebook/fbthrift",
   "license": "Apache-2.0",
-  "supports": "(windows & x64 & !uwp & !mingw) | ((osx | linux) & (x64 | arm64))",
+  "supports": "(windows & x64 & static & !uwp & !mingw) | ((osx | linux) & (x64 | arm64))",
   "dependencies": [
     "boost-context",
     "boost-filesystem",
