@@ -1,4 +1,4 @@
-set(PATCHES)
+vcpkg_list(SET PATCHES)
 
 if (VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND PATCHES "enable-asm.diff")
