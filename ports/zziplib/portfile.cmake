@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 bed63fa7d430bd197bb70084f28ae6edc4c4120655b882bc8367f968b32c03340bb6d9bf1b14a5fcc5a1160d91ccf00e7b1131a4123da5d52233a84840ba8b7e
     PATCHES
         no-release-postfix.patch
+        revert-pkgconfig-path.patch
 )
 
 string(COMPARE EQUAL VCPKG_CRT_LINKAGE "static" MSVC_STATIC_RUNTIME)
@@ -31,15 +32,12 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/zziplib")
 vcpkg_fixup_pkgconfig()
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/zzipfseeko.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipfseeko.pc")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/zziplib.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zziplib.pc")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/zzipmmapped.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipmmapped.pc")
-
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
-    "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/zzipfseeko.pc"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/zzipmmapped.pc"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipfseeko.pc"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/zzipmmapped.pc"
 )
 
 file(STRINGS "${CURRENT_PACKAGES_DIR}/include/zzip/_config.h" have_stdint_h REGEX "^#define ZZIP_HAVE_STDINT_H 1")
