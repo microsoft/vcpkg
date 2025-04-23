@@ -2,9 +2,8 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 116b934950b02639aa0924cdf6ceaf34518be7f94037e77e52f374aa0a03403487ef58384137569d930961c7d65291a7f0bbddcf1eaf4260086f49afbfae1f27
+    SHA512 cee56eef93728aef9b361f8b1080572532ce5247c80a9d1be53b30dab4d67e8588316890555d4c4ba423e87b09f954327d70615e1ba72d458d8238fa84e589f9
     PATCHES
-        01-fix-findudev-module.patch
         02-fix-dependency-resolve.patch
 )
 
