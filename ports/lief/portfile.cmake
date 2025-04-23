@@ -10,6 +10,8 @@ vcpkg_from_github(
         fix-vcpkg-includes.patch
         # Remove it when following issue will be solved. https://github.com/lief-project/LIEF/issues/1192
         include-cstdint.patch
+        # Fix compilation error with lief[core,enable-json]
+        include-json-header.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
