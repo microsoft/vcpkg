@@ -1,8 +1,15 @@
+vcpkg_list(SET PATCHES)
+
+if (VCPKG_TARGET_IS_ANDROID)
+    vcpkg_list(APPEND PATCHES "enable-asm.diff")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
     REF ${VERSION}
     SHA512 bf833a4470625291a00022ae1a04ed1c6572a34c11b096bf3f4136066c77fde55c82994e8a3cee553c216539b7fdac996de9d97a5ddb7aed4904fee04d0df443
+    PATCHES ${PATCHES}
 )
 
 vcpkg_cmake_configure(
