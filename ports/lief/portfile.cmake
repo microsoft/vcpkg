@@ -36,6 +36,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "art"            LIEF_ART               # Build LIEF with ART module
 )
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(LIEF_FORCE_API_EXPORTS ON)
+else()
+    set(LIEF_FORCE_API_EXPORTS OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -52,6 +58,7 @@ vcpkg_cmake_configure(
         -DLIEF_OPT_EXTERNAL_EXPECTED=ON
         -DLIEF_DISABLE_FROZEN=OFF
         -DLIEF_DISABLE_EXCEPTIONS=OFF
+        -DLIEF_FORCE_API_EXPORTS=${LIEF_FORCE_API_EXPORTS}
 
         "-DLIEF_EXTERNAL_SPAN_DIR=${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tcb"
 )
