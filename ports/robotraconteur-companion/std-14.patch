@@ -1,0 +1,25 @@
+From 3f712b9896955bcfd345d37bc535412b37297037 Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Wed, 23 Apr 2025 19:43:25 -0400
+Subject: [PATCH] bump to std14
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aec0a2c..3a802ef 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cmake_minimum_required(VERSION 3.3)
+ project(RobotRaconteurCompanion VERSION 0.4.1 LANGUAGES CXX)
+ 
+-set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD 14)
+ 
+ find_package(RobotRaconteur 0.17.0 REQUIRED)
+ find_package(yaml-cpp REQUIRED)
+-- 
+2.47.1.windows.2
+

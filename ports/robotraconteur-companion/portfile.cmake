@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 9df5fc4afe635b86cf150e59f06a809b856f17921507e75872f6afe723d2b9654cbb0ecc43533d3c7d673c11fb96545d627f4bbacdbd351a1a61d0ee65d71381
     HEAD_REF master
+    PATCHES
+        std-14.patch
 )
 
 vcpkg_from_github(
