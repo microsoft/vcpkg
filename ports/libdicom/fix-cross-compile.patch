@@ -1,0 +1,42 @@
+diff --git a/meson.build b/meson.build
+index 07fd96f..4405ca2 100644
+--- a/meson.build
++++ b/meson.build
+@@ -148,6 +148,13 @@ install_headers(
+ # src
+ library_includes = include_directories('include')
+ library_options = ['-DBUILDING_LIBDICOM']
++if get_option('pregenerated_dict') != ''
++  dict_lookup = files(
++    get_option('pregenerated_dict') / 'dicom-dict-lookup.c',
++    get_option('pregenerated_dict') / 'dicom-dict-lookup.h'
++  )
++  add_project_arguments('-I' + get_option('pregenerated_dict'), language: 'c')
++else
+ dict_build = executable(
+   'dicom-dict-build',
+   ['src/dicom-dict-build.c', 'src/dicom-dict-tables.c'],
+@@ -159,7 +166,10 @@ dict_lookup = custom_target(
+   'dicom-dict-lookup',
+   command : [dict_build, '@OUTPUT@'],
+   output : ['dicom-dict-lookup.c', 'dicom-dict-lookup.h'],
++  install: true,
++  install_dir: 'share/libdicom/dict-lookup',
+ )
++endif
+ library_sources = [
+   dict_lookup,
+   'src/getopt.c',
+diff --git a/meson_options.txt b/meson_options.txt
+index d289178..7f93238 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -9,3 +9,8 @@ option(
+   value : true,
+   description : 'build tests',
+ )
++option(
++  'pregenerated_dict',
++  type: 'string',
++  description: 'Path to pregenerated dicom-dict-lookup.c/h'
++)
