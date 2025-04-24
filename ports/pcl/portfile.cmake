@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-clang-cl.patch
         add-chrono-includes.patch
         "${NO_GLU_PATCH}"
+	add-cassert-includes.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)

@@ -1,0 +1,25 @@
+From 8e2466643a502b58beaff0710d61e059401d5477 Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Wed, 23 Apr 2025 20:15:09 -0400
+Subject: [PATCH] add cassert includes
+
+---
+ common/include/pcl/point_cloud.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/common/include/pcl/point_cloud.h b/common/include/pcl/point_cloud.h
+index f7b63ba7b..ce2ff55c3 100644
+--- a/common/include/pcl/point_cloud.h
++++ b/common/include/pcl/point_cloud.h
+@@ -51,7 +51,7 @@
+ #include <pcl/type_traits.h>
+ #include <pcl/types.h>
+ #include <pcl/console/print.h>  // for PCL_WARN
+-
++#include <cassert>
+ #include <utility>
+ #include <vector>
+ 
+-- 
+2.47.1.windows.2
+
