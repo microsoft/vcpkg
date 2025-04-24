@@ -1,6 +1,6 @@
 {
   "name": "librdkafka",
-  "version": "2.8.0",
+  "version": "2.10.0",
   "description": "The Apache Kafka C/C++ library",
   "homepage": "https://github.com/confluentinc/librdkafka",
   "license": null,
