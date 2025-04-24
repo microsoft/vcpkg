@@ -1444,6 +1444,7 @@ libzip[mbedtls]:arm64-uwp = cascade
 libzip[mbedtls]:x64-uwp = cascade
 llgl[vulkan](osx) = cascade # no vulkan sdk installed
 log4cxx:arm64-windows = cascade
+luajit[core]:arm-neon-android = cascade
 luasec:x64-linux = cascade
 luv:arm64-windows = cascade
 magma(uwp | osx) = cascade
