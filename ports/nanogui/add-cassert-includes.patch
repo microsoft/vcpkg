@@ -1,0 +1,89 @@
+From 93fa65c4ddb7dee169106ca7ee2a4011dacec1d6 Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Wed, 23 Apr 2025 21:01:44 -0400
+Subject: [PATCH] fix cassert includes
+
+---
+ src/glcanvas.cpp      | 1 +
+ src/imageview.cpp     | 1 +
+ src/stackedwidget.cpp | 1 +
+ src/tabheader.cpp     | 1 +
+ src/tabwidget.cpp     | 1 +
+ src/widget.cpp        | 1 +
+ 6 files changed, 6 insertions(+)
+
+diff --git a/src/glcanvas.cpp b/src/glcanvas.cpp
+index ec1ca4f..a27fff0 100644
+--- a/src/glcanvas.cpp
++++ b/src/glcanvas.cpp
+@@ -12,6 +12,7 @@
+     BSD-style license that can be found in the LICENSE.txt file.
+ */
+ 
++#include <cassert>
+ #include <nanogui/window.h>
+ #include <nanogui/screen.h>
+ #include <nanogui/glcanvas.h>
+diff --git a/src/imageview.cpp b/src/imageview.cpp
+index 80cdf9b..faff533 100644
+--- a/src/imageview.cpp
++++ b/src/imageview.cpp
+@@ -11,6 +11,7 @@
+     BSD-style license that can be found in the LICENSE.txt file.
+ */
+ 
++#include <cassert>
+ #include <nanogui/imageview.h>
+ #include <nanogui/window.h>
+ #include <nanogui/screen.h>
+diff --git a/src/stackedwidget.cpp b/src/stackedwidget.cpp
+index 0b56b31..891920d 100644
+--- a/src/stackedwidget.cpp
++++ b/src/stackedwidget.cpp
+@@ -12,6 +12,7 @@
+     BSD-style license that can be found in the LICENSE.txt file.
+ */
+ 
++#include <cassert>
+ #include <nanogui/stackedwidget.h>
+ 
+ NAMESPACE_BEGIN(nanogui)
+diff --git a/src/tabheader.cpp b/src/tabheader.cpp
+index e3a24ff..3c7685b 100644
+--- a/src/tabheader.cpp
++++ b/src/tabheader.cpp
+@@ -11,6 +11,7 @@
+     BSD-style license that can be found in the LICENSE.txt file.
+ */
+ 
++#include <cassert>
+ #include <nanogui/tabheader.h>
+ #include <nanogui/theme.h>
+ #include <nanogui/opengl.h>
+diff --git a/src/tabwidget.cpp b/src/tabwidget.cpp
+index e01b5c3..843f8f7 100644
+--- a/src/tabwidget.cpp
++++ b/src/tabwidget.cpp
+@@ -12,6 +12,7 @@
+     BSD-style license that can be found in the LICENSE.txt file.
+ */
+ 
++#include <cassert>
+ #include <nanogui/tabwidget.h>
+ #include <nanogui/tabheader.h>
+ #include <nanogui/stackedwidget.h>
+diff --git a/src/widget.cpp b/src/widget.cpp
+index 03af6b1..8af8434 100644
+--- a/src/widget.cpp
++++ b/src/widget.cpp
+@@ -9,6 +9,7 @@
+     BSD-style license that can be found in the LICENSE.txt file.
+ */
+ 
++#include <cassert>
+ #include <nanogui/widget.h>
+ #include <nanogui/layout.h>
+ #include <nanogui/theme.h>
+-- 
+2.47.1.windows.2
+

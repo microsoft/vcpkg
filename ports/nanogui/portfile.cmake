@@ -14,6 +14,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmakelists.patch
         fix-glad-dependence.patch
+	add-cassert-includes.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
