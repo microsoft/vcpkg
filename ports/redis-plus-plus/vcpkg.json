@@ -34,6 +34,21 @@
         }
       ]
     },
+	"async-boost": {
+      "description": "Build async with boost::future",
+      "dependencies": [
+        {
+          "name": "redis-plus-plus",
+          "default-features": false,
+          "features": [
+            "async"
+          ]
+        },
+		{
+          "name": "boost-thread"
+		}
+      ]
+    },
     "cxx17": {
       "description": "Build redis-plus-plus with cxx 17 standard"
     },
