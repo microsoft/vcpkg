@@ -424,7 +424,6 @@ qt5-x11extras(osx)=fail # Missing system libraries
 qt5-x11extras(windows)=fail # Missing libraries
 qtvirtualkeyboard[t9write] = skip # depends on the port 't9write' that does not exists
 qtwayland(osx)=fail # Missing system libraries
-quantlib:x64-windows-static-md=fail
 qwt-qt6:x64-osx=fail
 rapidstring:arm-uwp=fail
 rapidstring:arm64-windows=fail
