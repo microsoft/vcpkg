@@ -14,6 +14,7 @@ vcpkg_from_github(
         devendor-lodepng.diff
         disable_unit_tests_examples_and_tutorials.patch
         pkgconfig.diff
+	add-cassert-includes.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/dart/external/imgui")
 

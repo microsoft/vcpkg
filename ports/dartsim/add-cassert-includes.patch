@@ -1,0 +1,89 @@
+From 49e625861179eb5d581782cd86dccaea43e9d30e Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Wed, 23 Apr 2025 20:23:29 -0400
+Subject: [PATCH] add-missing-cassert-include
+
+---
+ dart/optimizer/GenericMultiObjectiveProblem.cpp | 2 +-
+ dart/optimizer/GradientDescentSolver.cpp        | 2 +-
+ dart/optimizer/MultiObjectiveProblem.cpp        | 2 +-
+ dart/optimizer/Population.cpp                   | 2 +-
+ dart/optimizer/Problem.cpp                      | 5 ++---
+ 5 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/dart/optimizer/GenericMultiObjectiveProblem.cpp b/dart/optimizer/GenericMultiObjectiveProblem.cpp
+index e58a57aa97..c4422ff500 100644
+--- a/dart/optimizer/GenericMultiObjectiveProblem.cpp
++++ b/dart/optimizer/GenericMultiObjectiveProblem.cpp
+@@ -35,7 +35,7 @@
+ #include "dart/common/Console.hpp"
+ #include "dart/math/Helpers.hpp"
+ #include "dart/optimizer/Function.hpp"
+-
++#include <cassert>
+ #include <algorithm>
+ #include <limits>
+ #include <numeric>
+diff --git a/dart/optimizer/GradientDescentSolver.cpp b/dart/optimizer/GradientDescentSolver.cpp
+index 6c92a32c30..e888ee5ee6 100644
+--- a/dart/optimizer/GradientDescentSolver.cpp
++++ b/dart/optimizer/GradientDescentSolver.cpp
+@@ -35,7 +35,7 @@
+ #include "dart/common/Console.hpp"
+ #include "dart/math/Helpers.hpp"
+ #include "dart/optimizer/Problem.hpp"
+-
++#include <cassert>
+ #include <iostream>
+ 
+ namespace dart {
+diff --git a/dart/optimizer/MultiObjectiveProblem.cpp b/dart/optimizer/MultiObjectiveProblem.cpp
+index 6e86f0ee1a..2133c376b8 100644
+--- a/dart/optimizer/MultiObjectiveProblem.cpp
++++ b/dart/optimizer/MultiObjectiveProblem.cpp
+@@ -35,7 +35,7 @@
+ #include "dart/common/Console.hpp"
+ #include "dart/math/Helpers.hpp"
+ #include "dart/optimizer/Function.hpp"
+-
++#include <cassert>
+ #include <algorithm>
+ #include <limits>
+ #include <numeric>
+diff --git a/dart/optimizer/Population.cpp b/dart/optimizer/Population.cpp
+index 0469683434..4bfa23cfc1 100644
+--- a/dart/optimizer/Population.cpp
++++ b/dart/optimizer/Population.cpp
+@@ -31,7 +31,7 @@
+  */
+ 
+ #include "dart/optimizer/Population.hpp"
+-
++#include <cassert>
+ #include "dart/common/Console.hpp"
+ #include "dart/math/Random.hpp"
+ 
+diff --git a/dart/optimizer/Problem.cpp b/dart/optimizer/Problem.cpp
+index 8bf3317777..fe289bd50e 100644
+--- a/dart/optimizer/Problem.cpp
++++ b/dart/optimizer/Problem.cpp
+@@ -1,6 +1,5 @@
+ /*
+- * Copyright (c) 2011-2024, The DART development contributors
+- * All rights reserved.
++
+  *
+  * The list of contributors can be found at:
+  *   https://github.com/dartsim/dart/blob/main/LICENSE
+@@ -35,7 +34,7 @@
+ #include "dart/common/Console.hpp"
+ #include "dart/math/Helpers.hpp"
+ #include "dart/optimizer/Function.hpp"
+-
++#include <cassert>
+ #include <algorithm>
+ #include <limits>
+ 
+-- 
+2.47.1.windows.2
+

@@ -4,6 +4,7 @@
   "description": "WPILib is the software library package for the FIRST Robotics Competition. The core install includes wpiutil, a common utilies library, and ntcore, the base NetworkTables library.",
   "homepage": "https://github.com/wpilibsuite/allwpilib",
   "license": null,
+  "supports": "!uwp",
   "dependencies": [
     "eigen3",
     "fmt",
