@@ -200,7 +200,7 @@
     },
     "vwebp": {
       "description": "Build the vwebp viewer tool.",
-      "supports": "!osx & !static",
+      "supports": "!osx & !(windows & static)",
       "dependencies": [
         "freeglut",
         "opengl"

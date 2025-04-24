@@ -1,0 +1,18 @@
+{
+  "name": "vcpkg-ci-libwebp",
+  "version-string": "ci",
+  "description": "Port to force features of libwebp within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    "libwebp",
+    {
+      "$comment": "x64-android NDK r27c crashes without simd",
+      "name": "libwebp",
+      "default-features": false,
+      "features": [
+        "simd"
+      ]
+    }
+  ]
+}
