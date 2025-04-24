@@ -67,17 +67,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openexr     BUILD_OSG_PLUGIN_EXR
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
         rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
-        rest-http-device CMAKE_REQUIRE_FIND_PACKAGE_Boost
+        rest-http-device VCPKG_LOCK_FIND_PACKAGE_Boost
         sdl1        BUILD_OSG_PLUGIN_SDL
-    INVERTED_FEATURES
-        sdl1        CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
-        rest-http-device CMAKE_DISABLE_FIND_PACKAGE_Boost
+        sdl1        VCPKG_LOCK_FIND_PACKAGE_SDL
 )
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
 # Possible values are GLCORE, GL2, GL3, GLES1, GLES2, GLES3, and GLES2+GLES3
 if(NOT DEFINED osg_OPENGL_PROFILE)
     set(osg_OPENGL_PROFILE "GL2")
+    if(VCPKG_TARGET_IS_ANDROID)
+        set(osg_OPENGL_PROFILE "GLES2")
+    endif()
 endif()
 
 # Plugin control variables are used only if prerequisites are satisfied.
