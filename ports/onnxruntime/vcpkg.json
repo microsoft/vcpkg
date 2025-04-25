@@ -65,7 +65,7 @@
       "description": "Build with CUDA support",
       "dependencies": [
         "cuda",
-        "nvidia-cudnn-frontend",
+        "cudnn-frontend",
         "nvidia-cutlass"
       ]
     },
