@@ -1,4 +1,4 @@
-The package iperf3 is compatible with built-in CMake targets:
+iperf3 provides CMake targets:
 
-    find_package(iperf REQUIRED)
-    target_link_libraries(main PRIVATE iperf)
+    find_package(unofficial-iperf3 CONFIG REQUIRED)
+	target_link_libraries(main PRIVATE unofficial::iperf3::iperf3)
