@@ -1847,6 +1847,8 @@ qtapplicationmanager:arm64-osx = cascade
 qtapplicationmanager:arm64-uwp = cascade
 qtapplicationmanager:x64-uwp = cascade
 qtbase[dbus]:x64-windows-static = cascade
+# qtbase[core] fails on android but the following 3 features cascade;
+# qtbase(android)=skip for now as we don't appear to have a great way to say that
 qtbase[dbus,doubleconversion,sql-mysql](android) = cascade
 qtbase[fontconfig](!linux) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31247
 qtbase[glib] = feature-fails
@@ -1855,7 +1857,7 @@ qtbase[sql-oci]:arm64-windows = cascade
 qtbase[sql-oci]:arm64-windows-static-md = cascade
 qtbase[sql-oci](!(arm & windows)) = feature-fails # see https://github.com/microsoft/vcpkg/issues/32052
 qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](osx) = skip # no x11 on macOS
-qtbase(android)=fail # qtbase requires ANDROID_SDK_ROOT to be set.  Consider adding it to the triplet.
+qtbase(android)=skip # qtbase requires ANDROID_SDK_ROOT to be set.  Consider adding it to the triplet.
 qtcharts:arm64-uwp = cascade
 qtcharts:x64-uwp = cascade
 qtcoap:arm64-uwp = cascade
