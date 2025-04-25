@@ -63,6 +63,7 @@
   "features": {
     "cuda": {
       "description": "Build with CUDA support",
+      "supports": "(x64 & windows) | (x64 & linux)",
       "dependencies": [
         "cuda",
         "cudnn-frontend",
