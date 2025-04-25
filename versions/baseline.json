@@ -8589,7 +8589,7 @@
       "port-version": 0
     },
     "shaderc": {
-      "baseline": "2023.8",
+      "baseline": "2025.2",
       "port-version": 0
     },
     "shaderwriter": {
