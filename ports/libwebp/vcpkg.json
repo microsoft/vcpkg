@@ -159,18 +159,6 @@
     "info": {
       "description": "Build the webpinfo command line tool."
     },
-    "libbwebpmux": {
-      "description": "Obsolete, use feature libwebpmux instead.",
-      "dependencies": [
-        {
-          "name": "libwebp",
-          "default-features": false,
-          "features": [
-            "libwebpmux"
-          ]
-        }
-      ]
-    },
     "libwebpmux": {
       "description": "Build the libwebpmux library"
     },
