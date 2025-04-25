@@ -19,9 +19,7 @@ file(GLOB_RECURSE HEADERS "${SOURCE_DIR}/*.h")
 add_library(iausofa ${SOURCES})
 
 # Sets properties on <targets>
-if(BUILD_SHARED_LIBS AND WIN32)
-        set_target_properties(iausofa PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-elseif(LINUX)
+if(LINUX)
         target_link_libraries(iausofa PRIVATE m)
 endif()
 

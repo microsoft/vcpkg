@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_download_distfile(
     ARCHIVE
     URLS "http://iausofa.org/2023_1011_C/sofa_c-${VERSION}.tar.gz"
