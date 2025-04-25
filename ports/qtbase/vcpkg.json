@@ -194,7 +194,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "network"
+            "network",
+            "thread"
           ]
         }
       ]
