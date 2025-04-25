@@ -144,7 +144,7 @@ function(z_vcpkg_make_get_configure_triplets out)
         set(build_triplet_opt "--build=${BUILD_ARCH}-pc-mingw32") 
     endif()
 
-    set(host_triplet "")
+    set(host_triplet_opt "")
     if(VCPKG_CROSSCOMPILING)
         if(VCPKG_TARGET_IS_WINDOWS)
             if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32)
