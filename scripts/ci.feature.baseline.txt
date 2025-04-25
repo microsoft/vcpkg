@@ -821,6 +821,7 @@ fastrtps:arm64-uwp = cascade
 fastrtps:x64-uwp = cascade
 fbgemm:arm64-osx = cascade
 fbgemm:arm64-windows = cascade
+fbthrift(android) = cascade
 fcl:arm64-uwp = cascade
 fcl:x64-uwp = cascade
 ffmpeg[all-nonfree,fdk-aac](android) = cascade
