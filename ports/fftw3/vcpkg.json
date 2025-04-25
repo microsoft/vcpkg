@@ -35,6 +35,10 @@
       "description": "Builds part of the library with sse2, sse",
       "supports": "!arm"
     },
+    "neon": {
+      "description": "Builds part of the library with neon",
+      "supports": "arm"
+    },
     "threads": {
       "description": "Enable threads in fftw3"
     }

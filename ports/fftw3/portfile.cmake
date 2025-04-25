@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
         fix-openmp.patch
         install-subtargets.patch
         fix-wrong-version.patch # https://github.com/FFTW/fftw3/commit/0842f00ae6b6e1f3aade155bc0edd17a7313fa6a
+        neon.patch # add neon
 )
 
 vcpkg_check_features(
@@ -27,12 +28,13 @@ vcpkg_check_features(
         avx     ENABLE_AVX
         sse2    ENABLE_SSE2
         sse     ENABLE_SSE
+        neon    ENABLE_NEON # add neon
 )
 
 set(package_names  fftw3 fftw3f fftw3l)
 set(fftw3_options  "")
 set(fftw3f_options -DENABLE_FLOAT=ON)
-set(fftw3l_options -DENABLE_LONG_DOUBLE=ON -DENABLE_AVX2=OFF -DENABLE_AVX=OFF -DENABLE_SSE2=OFF)
+set(fftw3l_options -DENABLE_LONG_DOUBLE=ON -DENABLE_AVX2=OFF -DENABLE_AVX=OFF -DENABLE_SSE2=OFF -DENABLE_NEON=OFF)
 
 foreach(package_name IN LISTS package_names)
     message(STATUS "${package_name}...")
