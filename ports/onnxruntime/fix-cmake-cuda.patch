@@ -9,7 +9,27 @@ index 795f019..25765dc 100644
 -    include(cutlass)
 -    target_include_directories(${target} PRIVATE ${cutlass_SOURCE_DIR}/include ${cutlass_SOURCE_DIR}/examples ${cutlass_SOURCE_DIR}/tools/util/include)
 +    find_package(NvidiaCutlass REQUIRED)
-+    target_link_libraries(${target} PRIVATE nvidia::cutlass::cutlass)
++    target_link_libraries(${target} PRIVATE nvidia::cutlass::cutlass nvidia::cutlass::tools::util)
      target_link_libraries(${target} PRIVATE Eigen3::Eigen)
      target_include_directories(${target} PRIVATE ${ONNXRUNTIME_ROOT} ${CMAKE_CURRENT_BINARY_DIR} PUBLIC ${CUDAToolkit_INCLUDE_DIRS})
      # ${CMAKE_CURRENT_BINARY_DIR} is so that #include "onnxruntime_config.h" inside tensor_shape.h is found
+diff --git a/cmake/external/cudnn_frontend.cmake b/cmake/external/cudnn_frontend.cmake
+index 8642607..b83a78a 100644
+--- a/cmake/external/cudnn_frontend.cmake
++++ b/cmake/external/cudnn_frontend.cmake
+@@ -1,3 +1,5 @@
++find_package(cudnn_frontend CONFIG REQUIRED) # cudnn-frontend 1.13.0+
++return()
+ 
+ onnxruntime_fetchcontent_declare(
+   cudnn_frontend
+diff --git a/cmake/external/cuDNN.cmake b/cmake/external/cuDNN.cmake
+index b428ccb..9b73acb 100644
+--- a/cmake/external/cuDNN.cmake
++++ b/cmake/external/cuDNN.cmake
+@@ -1,3 +1,5 @@
++find_package(CUDNN REQUIRED) # vcpkg port 'cudnn'
++get_filename_component(cudnn_LIBRARY "${CUDNN_LIBRARY}" ABSOLUTE)
+ add_library(CUDNN::cudnn_all INTERFACE IMPORTED)
+ 
+ find_path(
