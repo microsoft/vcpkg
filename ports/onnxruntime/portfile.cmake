@@ -1,5 +1,11 @@
 # https://github.com/microsoft/onnxruntime/blob/v1.21.0/tools/python/util/vcpkg_helpers.py
 message(WARNING "The port requires 'onnx' build with CMake option ONNX_DISABLE_STATIC_REGISTRATION=ON")
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    if("framework" IN_LIST FEATURES)
+        # The Objective-C API requires onnxruntime_BUILD_SHARED_LIB
+        vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    endif()
+endif()
 
 set(ORT_GIT_COMMIT "e0b66cad282043d4377cea5269083f17771b6dfc")
 set(ORT_GIT_BRANCH "v${VERSION}")
@@ -77,11 +83,6 @@ if("tensorrt" IN_LIST FEATURES)
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-    if("framework" IN_LIST FEATURES)
-        set(BUILD_SHARED ON) # The Objective-C API requires onnxruntime_BUILD_SHARED_LIB
-    endif()
-endif()
 
 # see tools/ci_build/build.py
 vcpkg_cmake_configure(
@@ -130,8 +131,11 @@ if("tensorrt" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET onnxruntime_providers_tensorrt LOGFILE_BASE build-tensorrt)
 endif()
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/onnxruntime PACKAGE_NAME onnxruntime)
 vcpkg_fixup_pkgconfig() # pkg_check_modules(libonnxruntime)
+
+if(BUILD_SHARED)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/onnxruntime)
+endif()
 
 # relocates the onnxruntime_providers_* binaries before vcpkg_copy_pdbs()
 function(reolocate_ort_providers)
