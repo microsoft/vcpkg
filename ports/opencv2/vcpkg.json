@@ -1,7 +1,7 @@
 {
   "name": "opencv2",
   "version": "2.4.13.7",
-  "port-version": 22,
+  "port-version": 24,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -18,7 +18,14 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "eigen",
+    "jpeg",
+    {
+      "name": "msmf",
+      "platform": "windows & !mingw"
+    },
+    "png",
+    "tiff"
   ],
   "features": {
     "dc1394": {
@@ -27,40 +34,10 @@
         "libdc1394"
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "opencv2",
-          "default-features": false,
-          "features": [
-            "eigen",
-            "jpeg",
-            "png",
-            "tiff"
-          ]
-        },
-        {
-          "name": "opencv2",
-          "default-features": false,
-          "features": [
-            "msmf"
-          ],
-          "platform": "windows & !mingw"
-        }
-      ]
-    },
     "eigen": {
       "description": "Eigen support for opencv",
       "dependencies": [
         "eigen3"
-      ]
-    },
-    "gtk": {
-      "description": "GTK support for opencv",
-      "supports": "linux",
-      "dependencies": [
-        "gtk3"
       ]
     },
     "jasper": {

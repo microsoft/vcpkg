@@ -21,11 +21,11 @@ vcpkg_check_features(
         "tools" OPENVDB_BUILD_TOOLS
         "ax"    OPENVDB_BUILD_AX
         "nanovdb" OPENVDB_BUILD_NANOVDB
+        "nanovdb-tools" NANOVDB_BUILD_TOOLS
 )
 
 if (OPENVDB_BUILD_NANOVDB)
     set(NANOVDB_OPTIONS
-    -DNANOVDB_BUILD_TOOLS=OFF
     -DNANOVDB_USE_INTRINSICS=ON
     -DNANOVDB_USE_CUDA=ON
     -DNANOVDB_CUDA_KEEP_PTX=ON
@@ -66,6 +66,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_
 
 if (OPENVDB_BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES vdb_print vdb_render vdb_view vdb_lod AUTO_CLEAN)
+endif()
+
+if (NANOVDB_BUILD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES nanovdb_convert nanovdb_print nanovdb_validate AUTO_CLEAN)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)

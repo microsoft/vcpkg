@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
       fix_install.patch
       fix_dependency.patch
+      fix_compile_options.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-bit7z-config.cmake.in" DESTINATION "${SOURCE_PATH}")

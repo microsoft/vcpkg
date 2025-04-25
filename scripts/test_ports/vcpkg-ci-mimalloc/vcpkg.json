@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-mimalloc",
-  "version": "2.1.7",
+  "version": "2.2.3",
   "description": "Validates mimalloc",
   "dependencies": [
     "mimalloc",
@@ -8,5 +8,26 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "ci": {
+      "description": "Test feature permutation",
+      "dependencies": [
+        {
+          "name": "mimalloc",
+          "features": [
+            "override"
+          ],
+          "platform": "native & !(windows & static)"
+        },
+        {
+          "name": "mimalloc",
+          "features": [
+            "secure"
+          ],
+          "platform": "arm64 & static"
+        }
+      ]
+    }
+  }
 }

@@ -1,16 +1,3 @@
-diff --git a/cpp/src/arrow/CMakeLists.txt b/cpp/src/arrow/CMakeLists.txt
-index 6dc8358..2b91efa 100644
---- a/cpp/src/arrow/CMakeLists.txt
-+++ b/cpp/src/arrow/CMakeLists.txt
-@@ -166,7 +166,7 @@ if(WIN32)
-   list(APPEND ARROW_SYSTEM_LINK_LIBS "ws2_32")
- endif()
-
--if(NOT WIN32 AND NOT APPLE)
-+if(NOT WIN32 AND NOT APPLE AND NOT ANDROID)
-   # Pass -lrt on Linux only
-   list(APPEND ARROW_SYSTEM_LINK_LIBS rt)
- endif()
 diff --git a/cpp/src/arrow/vendored/musl/strptime.c b/cpp/src/arrow/vendored/musl/strptime.c
 index 41912fd..0ea36e9 100644
 --- a/cpp/src/arrow/vendored/musl/strptime.c

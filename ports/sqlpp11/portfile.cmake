@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         ddl2cpp_path.patch
         dependencies.diff
+        fix-miss-header.patch
 )
 
 vcpkg_check_features(

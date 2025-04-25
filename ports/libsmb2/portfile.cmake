@@ -1,18 +1,33 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sahlberg/libsmb2
-    REF 99125c96750e192e2c50176548bf461e4a28f135
-    SHA512 30cdc9bbcdcd384868e5865706b41f683b977ece4056040a29bb3b81ffdf83788ba8a39426132810b8cbbb778ae7db8e5e1be0b7c0a82d8beed75040de708240
+    REF libsmb2-${VERSION}
+    SHA512 db3675d5b6d9242a23b2b259fd3140143edcf5aa8e203b5a4781ce8279046f7f9044a506d1323e9aa6a5ff52eaed4db93dc7a03954af735971ba933bccba6a3e
     HEAD_REF master
+)
+
+if(VCPKG_TARGET_IS_IOS)
+    list(TRANSFORM FEATURES REPLACE "krb5" "krb5_gssapi")
+endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        krb5        ENABLE_LIBKRB5
+        krb5_gssapi ENABLE_GSSAPI
+    INVERTED_FEATURES
+        krb5        CMAKE_DISABLE_FIND_PACKAGE_LibKrb5
+        krb5_gssapi CMAKE_DISABLE_FIND_PACKAGE_GSSAPI
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        # TODO: Add a feature to enable gssapi/krb5 support
-        -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI=ON
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_GSSAPI
+        CMAKE_DISABLE_FIND_PACKAGE_LibKrb5
+        ENABLE_GSSAPI
+        ENABLE_LIBKRB5
 )
 
 vcpkg_cmake_install()
