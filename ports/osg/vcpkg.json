@@ -55,6 +55,7 @@
     },
     "examples": {
       "description": "Enable to build OSG Examples",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "libiconv",
@@ -152,6 +153,7 @@
     },
     "tools": {
       "description": "Enable to build OSG Applications (e.g. osgviewer)",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "curl",

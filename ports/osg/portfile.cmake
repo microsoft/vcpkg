@@ -17,6 +17,7 @@ vcpkg_from_github(
         unofficial-export.patch
         fix-min-max-macro.patch
         fix-error-c3861.patch
+        android.diff
 )
 
 file(REMOVE
@@ -96,6 +97,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DBUILD_DASHBOARD_REPORTS=OFF
         -DCMAKE_CXX_STANDARD=11
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
         -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
         -DDYNAMIC_OPENTHREADS=${OSG_DYNAMIC}
         -DOPENGL_PROFILE=${osg_OPENGL_PROFILE}
