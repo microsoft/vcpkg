@@ -9,4 +9,6 @@ vcpkg_from_github(
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(INSTALL "${SOURCE_PATH}/cmdline.h"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/include/tanakh-cmdline"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/tanakh-cmdline"
+)
+
