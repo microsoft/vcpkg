@@ -1,7 +1,7 @@
 {
   "name": "fftw3",
   "version": "3.3.10",
-  "port-version": 9,
+  "port-version": 10,
   "description": "FFTW is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data (as well as of even/odd data, i.e. the discrete cosine/sine transforms or DCT/DST).",
   "homepage": "https://www.fftw.org/",
   "license": "GPL-2.0-or-later",
@@ -24,6 +24,10 @@
       "description": "Builds part of the library with avx2, fma, avx, sse2, sse",
       "supports": "!arm"
     },
+    "neon": {
+      "description": "Builds part of the library with neon",
+      "supports": "arm"
+    },
     "openmp": {
       "description": "Builds openmp enabled lib"
     },
@@ -34,10 +38,6 @@
     "sse2": {
       "description": "Builds part of the library with sse2, sse",
       "supports": "!arm"
-    },
-    "neon": {
-      "description": "Builds part of the library with neon",
-      "supports": "arm"
     },
     "threads": {
       "description": "Enable threads in fftw3"
