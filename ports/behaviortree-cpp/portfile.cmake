@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-x86_build.patch
+        remove-source-charset.diff
 )
 
 vcpkg_cmake_configure(
