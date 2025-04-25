@@ -1,0 +1,24 @@
+{
+  "name": "libcamera",
+  "version": "0.5.0",
+  "description": "A complex camera support library for Linux, Android, and ChromeOS",
+  "homepage": "https://git.libcamera.org/libcamera/libcamera.git/",
+  "supports": "linux",
+  "dependencies": [
+    "glib",
+    "gstreamer",
+    "libgnutls",
+    "libunwind",
+    "libyaml",
+    "libyuv",
+    "openssl",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
