@@ -239,3 +239,16 @@ index 8855d6ffbc..ed2b0f62e9 100644
  #include <DbgEng.h>
  #include <DbgModel.h>
  #include <Windows.h>
+
+diff --git a/testing/gmock/BUILD.gn b/testing/gmock/BUILD.gn
+--- a/testing/gmock/BUILD.gn
++++ b/testing/gmock/BUILD.gn
+@@ -18,7 +18,4 @@
+   deps = [ "//third_party/googletest:gmock" ]
+
+-  public_configs = [
+-    "//third_party/googletest:gmock_config",
+-    "//third_party/googletest:gtest_config",
+-  ]
++  public_configs = [ "//third_party/googletest:gmock_config" ]
+ }
