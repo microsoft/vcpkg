@@ -4,7 +4,6 @@
   "description": "Wangle is a framework providing a set of common client/server abstractions for building services in a consistent, modular, and composable way.",
   "homepage": "https://github.com/facebook/wangle",
   "license": "Apache-2.0",
-  "supports": "(windows & x64 & !uwp & !mingw) | ((osx | linux) & (x64 | arm64))",
   "dependencies": [
     "boost-context",
     "boost-filesystem",
