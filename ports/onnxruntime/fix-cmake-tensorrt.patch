@@ -1,0 +1,48 @@
+diff --git a/cmake/external/cudnn_frontend.cmake b/cmake/external/cudnn_frontend.cmake
+index 8642607..d37d112 100644
+--- a/cmake/external/cudnn_frontend.cmake
++++ b/cmake/external/cudnn_frontend.cmake
+@@ -1,3 +1,9 @@
++find_path(CUDNN_FRONTEND_INCLUDE_DIRS NAMES "NvInferVersion.h" "cudnn_frontend.h")
++if(CUDNN_FRONTEND_INCLUDE_DIRS)
++  add_library(cudnn_frontend INTERFACE)
++  target_include_directories(cudnn_frontend INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIRS})
++  return()
++endif()
+ 
+ onnxruntime_fetchcontent_declare(
+   cudnn_frontend
+diff --git a/cmake/onnxruntime_providers_tensorrt.cmake b/cmake/onnxruntime_providers_tensorrt.cmake
+index 7fa5ba5..a3e6b55 100644
+--- a/cmake/onnxruntime_providers_tensorrt.cmake
++++ b/cmake/onnxruntime_providers_tensorrt.cmake
+@@ -10,8 +10,13 @@
+   set(BUILD_LIBRARY_ONLY 1)
+   add_definitions("-DONNX_ML=1")
+   add_definitions("-DONNX_NAMESPACE=onnx")
+-  set(CUDA_INCLUDE_DIRS ${CUDAToolkit_INCLUDE_DIRS})
+-  set(TENSORRT_ROOT ${onnxruntime_TENSORRT_HOME})
++  if(DEFINED onnxruntime_TENSORRT_HOME)
++    set(TENSORRT_ROOT ${onnxruntime_TENSORRT_HOME}) # expect CMake configuration input
++  else()
++    find_package(CUDAToolkit REQUIRED)
++    get_filename_component(TENSORRT_ROOT "${CUDAToolkit_LIBRARY_ROOT}" ABSOLUTE)
++    message(STATUS "Guessing TensorRT with CUDAToolkit_LIBRARY_ROOT: ${TENSORRT_ROOT}")
++  endif()
+   set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+   set(PROTOBUF_LIBRARY ${PROTOBUF_LIB})
+   if (WIN32)
+@@ -31,11 +36,11 @@
+   # There is an issue when running "Debug build" TRT EP with "Release build" TRT builtin parser on Windows.
+   # We enforce following workaround for now until the real fix.
+   if (WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+-    set(onnxruntime_USE_TENSORRT_BUILTIN_PARSER OFF)
++    option(onnxruntime_USE_TENSORRT_BUILTIN_PARSER "Use tensorrt oss parser instead of TRT built-in parser" OFF)
+     MESSAGE(STATUS "[Note] There is an issue when running \"Debug build\" TRT EP with \"Release build\" TRT built-in parser on Windows. This build will use tensorrt oss parser instead.")
+   endif()
+ 
+-  find_path(TENSORRT_INCLUDE_DIR NvInfer.h
++  find_path(TENSORRT_INCLUDE_DIR NvInfer.h REQUIRED
+     HINTS ${TENSORRT_ROOT}
+     PATH_SUFFIXES include)
+ 
