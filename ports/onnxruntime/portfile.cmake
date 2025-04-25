@@ -1,17 +1,22 @@
-# https://github.com/microsoft/onnxruntime/blob/v1.21.0/tools/python/util/vcpkg_helpers.py
-message(WARNING "The port requires 'onnx' build with CMake option ONNX_DISABLE_STATIC_REGISTRATION=ON")
+# https://github.com/microsoft/onnxruntime/blob/v1.22.1/tools/python/util/vcpkg_helpers.py
+message(WARNING "The port requires 'onnx' port build with CMake option ONNX_DISABLE_STATIC_REGISTRATION=ON")
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    if("framework" IN_LIST FEATURES)
+        # The Objective-C API requires onnxruntime_BUILD_SHARED_LIB
+        vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    endif()
+endif()
 
-set(ORT_GIT_COMMIT "e0b66cad282043d4377cea5269083f17771b6dfc")
+set(ORT_GIT_COMMIT "89746dc19a0a1ae59ebf4b16df9acab8f99f3925")
 set(ORT_GIT_BRANCH "v${VERSION}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/onnxruntime
     REF ${ORT_GIT_BRANCH}
-    SHA512 028a7f48f41d2e8a453aae25ebc4cd769db389401937928b7d452fab5f8d7af8cb63eb4150daf79589845528f0e4c3bdfefa27af70d3630398990c9e8b85387b
+    SHA512 6fd9da2c9db62659ff10e011d02109262d9d494cc0594aa0a096146c5df907acced42e76ef409927899c856075dd4ba64a294442f65e7eabf7d4dc7049991b43
     PATCHES
-        fix-sources.patch
-        fix-cmake.patch
+        fix-cmake.patch # .framework install, external library workarounds(abseil-cpp, eigen3)
         fix-cmake-cuda.patch
         fix-cmake-tensorrt.patch
 )
@@ -62,26 +67,34 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         framework onnxruntime_BUILD_APPLE_FRAMEWORK
         framework onnxruntime_BUILD_OBJC
         nccl      onnxruntime_USE_NCCL
-        mpi       onnxruntime_USE_MPI
     INVERTED_FEATURES
         cuda      onnxruntime_USE_MEMORY_EFFICIENT_ATTENTION
 )
 
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+        # "-DCMAKE_CUDA_ARCHITECTURES=native"
+        # too much warnings about attribute
+        "-DCMAKE_CUDA_FLAGS=-Xcudafe --diag_suppress=2803 -Wno-deprecated-gpu-targets"
+    )
+endif()
+
 if("tensorrt" IN_LIST FEATURES)
+    if(DEFINED ENV{TENSORRT_HOME})
+        set(TENSORRT_HOME "$ENV{TENSORRT_HOME}")
+    endif()
     if(DEFINED TENSORRT_HOME)
         message(STATUS "Using TensorRT: ${TENSORRT_HOME}")
         list(APPEND FEATURE_OPTIONS "-Donnxruntime_TENSORRT_HOME:PATH=${TENSORRT_HOME}")
     else()
-        message(WARNING "Define TENSORRT_HOME in the triplet for onnxruntime_TENSORRT_HOME")
+        message(WARNING "Define TENSORRT_HOME for onnxruntime_TENSORRT_HOME")
     endif()
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-    if("framework" IN_LIST FEATURES)
-        set(BUILD_SHARED ON) # The Objective-C API requires onnxruntime_BUILD_SHARED_LIB
-    endif()
-endif()
 
 # see tools/ci_build/build.py
 vcpkg_cmake_configure(
@@ -111,10 +124,8 @@ vcpkg_cmake_configure(
         -DORT_GIT_BRANCH=${ORT_GIT_BRANCH}
         # some other customizations ...
         --compile-no-warning-as-error
-        "-DCMAKE_CUDA_FLAGS=-Xcudafe --diag_suppress=2803" # too much warnings about attribute
     OPTIONS_DEBUG
         -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
-        -Donnxruntime_ENABLE_MEMORY_PROFILE=OFF
         -Donnxruntime_DEBUG_NODE_INPUTS_OUTPUTS=1
     MAYBE_UNUSED_VARIABLES
         Python_EXECUTABLE
@@ -130,8 +141,11 @@ if("tensorrt" IN_LIST FEATURES)
     vcpkg_cmake_build(TARGET onnxruntime_providers_tensorrt LOGFILE_BASE build-tensorrt)
 endif()
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/onnxruntime PACKAGE_NAME onnxruntime)
 vcpkg_fixup_pkgconfig() # pkg_check_modules(libonnxruntime)
+
+if(BUILD_SHARED)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/onnxruntime)
+endif()
 
 # relocates the onnxruntime_providers_* binaries before vcpkg_copy_pdbs()
 function(reolocate_ort_providers)
