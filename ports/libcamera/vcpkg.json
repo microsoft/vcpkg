@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "description": "A complex camera support library for Linux, Android, and ChromeOS",
   "homepage": "https://git.libcamera.org/libcamera/libcamera.git/",
-  "supports": "linux",
+  "supports": "linux | android",
   "dependencies": [
     "glib",
     "gstreamer",
