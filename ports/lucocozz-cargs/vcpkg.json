@@ -1,0 +1,25 @@
+{
+  "name": "lucocozz-cargs",
+  "version": "1.0.2",
+  "description": "Modern C library for command-line argument parsing with an elegant, macro-based API",
+  "homepage": "https://github.com/lucocozz/cargs",
+  "license": "MIT",
+  "supports": "!windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "regex"
+  ],
+  "features": {
+    "regex": {
+      "description": "Enable regex validation support using PCRE2",
+      "dependencies": [
+        "pcre2"
+      ]
+    }
+  }
+}
