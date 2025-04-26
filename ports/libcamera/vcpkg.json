@@ -8,6 +8,7 @@
     "glib",
     "gstreamer",
     "libgnutls",
+    "liblttng-ust",
     "libunwind",
     "libyaml",
     "libyuv",
