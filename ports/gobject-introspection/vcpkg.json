@@ -15,10 +15,6 @@
     "libffi",
     "python3",
     {
-      "name": "vcpkg-get-python-packages",
-      "host": true
-    },
-    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
