@@ -1,6 +1,6 @@
 {
   "name": "shaderc",
-  "version": "2023.8",
+  "version": "2025.2",
   "description": "A collection of tools, libraries and tests for shader compilation.",
   "homepage": "https://github.com/google/shaderc",
   "license": "Apache-2.0",

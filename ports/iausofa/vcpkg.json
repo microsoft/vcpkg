@@ -1,8 +1,8 @@
 {
-  "name": "mysvac-jsonlib",
-  "version": "2.1.1",
-  "description": "A lightweight and efficient C++17 JSON library.",
-  "homepage": "https://github.com/Mysvac/cpp-jsonlib",
+  "name": "iausofa",
+  "version": "20231011",
+  "description": "This is C version of IAU sofa software.",
+  "homepage": "https://iausofa.org",
   "license": "MIT",
   "dependencies": [
     {
