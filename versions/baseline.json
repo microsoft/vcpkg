@@ -3278,7 +3278,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.82.0",
-      "port-version": 0
+      "port-version": 1
     },
     "godot-cpp": {
       "baseline": "4.4",
