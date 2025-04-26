@@ -1,3 +1,5 @@
+message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    liblttng-ust-dev\n    libudev-dev\n\nThese can be installed on Ubuntu systems via apt install liblttng-ust-dev libudev-dev.")
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.libcamera.org/libcamera/libcamera.git
