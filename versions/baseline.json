@@ -5490,7 +5490,7 @@
     },
     "libwebp": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libwebsockets": {
       "baseline": "4.3.5",
@@ -8454,7 +8454,7 @@
     },
     "sdl1": {
       "baseline": "1.2.15",
-      "port-version": 21
+      "port-version": 22
     },
     "sdl1-mixer": {
       "baseline": "2023-03-25",
