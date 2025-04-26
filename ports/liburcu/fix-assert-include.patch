@@ -1,0 +1,24 @@
+From e995bfac708836dfad2eaea8a6bf5c44ae6de839 Mon Sep 17 00:00:00 2001
+From: Adrien Bourdeaux <bourdeaux.adrien@gmail.com>
+Date: Sat, 26 Apr 2025 09:51:35 -0400
+Subject: [PATCH] fix-assert-include
+
+---
+ src/urcu-bp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/urcu-bp.c b/src/urcu-bp.c
+index 8e9afd8..b1edc5c 100644
+--- a/src/urcu-bp.c
++++ b/src/urcu-bp.c
+@@ -21,6 +21,7 @@
+ #include <unistd.h>
+ #include <stdbool.h>
+ #include <sys/mman.h>
++#include <assert.h>
+ 
+ #include <urcu/annotate.h>
+ #include <urcu/assert.h>
+-- 
+2.47.1.windows.2
+
