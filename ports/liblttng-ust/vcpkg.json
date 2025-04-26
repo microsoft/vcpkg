@@ -6,6 +6,7 @@
   "license": "LGPL-2.1-only",
   "supports": "linux",
   "dependencies": [
+    "libnuma",
     "liburcu",
     {
       "name": "vcpkg-make",
