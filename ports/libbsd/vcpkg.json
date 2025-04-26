@@ -1,0 +1,8 @@
+{
+  "name": "libbsd",
+  "version": "0.12.2",
+  "description": "Utility functions from BSD systems",
+  "homepage": "https://libbsd.freedesktop.org",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp & !windows"
+}
