@@ -1,14 +1,14 @@
 {
-	"name": "libnuma",
-	"version": "2.0.19",
-	"homepage": "https://github.com/numactl/numactl",
-	"description": "NUMA support for Linux",
-	"supports": "linux",
-	"license": "GPL-2.0",
-	"dependencies": [
-		{
-			"name": "vcpkg-make",
-			"host": true
-		}
-	]
+  "name": "libnuma",
+  "version": "2.0.19",
+  "description": "NUMA support for Linux",
+  "homepage": "https://github.com/numactl/numactl",
+  "license": "GPL-2.0",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
 }

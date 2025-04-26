@@ -9,8 +9,14 @@ vcpkg_from_github(
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
+    OPTIONS
+        --disable-man-pages
 )
 
-vcpkg_make_install()
+vcpkg_make_install(
+    OPTIONS
+        --ignore-errors # ignore werrors
+)
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
