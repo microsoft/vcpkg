@@ -1,6 +1,8 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n\nThis can be installed on Ubuntu systems via apt-get install autoconf")
-endif()
+    message("${PORT} currently requires the following tools and libraries from the system package manager:"
+            "\n    autoreconf libmd0\n\n"
+            "These can be installed on Ubuntu systems via apt-get install autoconf libmd0")
+endif(VCPKG_TARGET_IS_LINUX)
 
 vcpkg_download_distfile(
         LIBBSD_ARCHIVE

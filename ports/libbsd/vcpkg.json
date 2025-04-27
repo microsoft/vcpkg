@@ -6,6 +6,10 @@
   "license": "BSD-3-Clause",
   "supports": "!uwp & !windows & !android",
   "dependencies": [
-    "gettext"
+    "gettext",
+    {
+      "name": "libmd",
+      "platform": "linux"
+    }
   ]
 }
