@@ -89,6 +89,12 @@ foreach(script IN ITEMS g-ir-annotation-tool g-ir-scanner)
 endforeach()
 vcpkg_copy_tools(TOOL_NAMES g-ir-compiler g-ir-generate g-ir-inspect AUTO_CLEAN)
 
+file(GLOB pcfiles "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+foreach(file IN LISTS pcfiles)
+    vcpkg_replace_string("${file}" [[=${bindir}/g-ir-]] [[=${prefix}/tools/gobject-introspection/g-ir-]])
+endforeach()
+# No fixup for debug: Let it fail early as long as we lack debug builds for (windows) python.
+
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB _pyd_lib_files "${CURRENT_PACKAGES_DIR}/lib/gobject-introspection/giscanner/_giscanner.*.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/gobject-introspection/giscanner/_giscanner.*.lib")
     file(REMOVE ${_pyd_lib_files})
