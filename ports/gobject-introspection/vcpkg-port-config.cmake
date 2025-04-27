@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-function(vcpkg_get_gobject_introspection_python out_var)
+function(z_vcpkg_get_gobject_introspection_python out_var)
     if(VCPKG_CROSSCOMPILING)
         message(STATUS
             "Cross build. " 
@@ -68,7 +68,7 @@ endfunction()
 
 function(vcpkg_get_gobject_introspection_programs)
     if("PYTHON3" IN_LIST ARGN)
-        vcpkg_get_gobject_introspection_python(PYTHON3)
+        z_vcpkg_get_gobject_introspection_python(PYTHON3)
         set(PYTHON3 "${PYTHON3}" PARENT_SCOPE)
         list(REMOVE_ITEM ARGN "PYTHON3")
     endif()

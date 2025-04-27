@@ -16,7 +16,7 @@ vcpkg_extract_source_archive(
 )
 
 include("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake")
-vcpkg_get_gobject_introspection_python(PYTHON3)
+vcpkg_get_gobject_introspection_programs(PYTHON3)
 
 set(additional_binaries "")
 set(options "")
