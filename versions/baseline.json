@@ -4916,6 +4916,10 @@
       "baseline": "1.12.2",
       "port-version": 0
     },
+    "libmd": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "libmediainfo": {
       "baseline": "25.3",
       "port-version": 0
