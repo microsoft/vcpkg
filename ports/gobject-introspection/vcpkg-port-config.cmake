@@ -3,66 +3,49 @@ include_guard(GLOBAL)
 function(z_vcpkg_get_gobject_introspection_python out_var)
     if(VCPKG_CROSSCOMPILING)
         message(STATUS
-            "Cross build. " 
-            "Using ${TARGET_TRIPLET} python also for the host (${HOST_TRIPLET}). "
+            "Cross build with gobject-introspection. "
             "Building and using ${PORT} will fail if the host cannot execute target binaries."
         )
     endif()
-    if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
-        # Engage host python include guards. (Host python is not a dependency.)
-        include("${CURRENT_HOST_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
+
+    set(target_python "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(target_python "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python.exe")
     endif()
-    # Load target python config in global scope.
-    include("${CURRENT_INSTALLED_DIR}/share/python3/vcpkg-port-config.cmake")
-    block(SCOPE_FOR VARIABLES PROPAGATE gobject_introspection_python)
-        if(VCPKG_CROSSCOMPILING)
-            # Pretend native build in order to use vcpkg installed python for TARGET_TRIPLET.
-            set(VCPKG_CROSSCOMPILING 0)
-            set(HOST_TRIPLET "${TARGET_TRIPLET}")
-            set(CURRENT_HOST_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}")
-            set(VCPKG_HOST_EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-            unset(z_vcpkg_get_vcpkg_installed_python CACHE)
-        endif()
-        vcpkg_get_vcpkg_installed_python(target_python)
+    
+    # Varation of x_vcpkg_get_python_packages, but
+    # - providing the interpreter for the target
+    # - using venv also for windows
+    message(STATUS "Setting up ${TARGET_TRIPLET} python venv which provides setuptools...")
+    set(venv_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-gir-venv")
+    file(REMOVE_RECURSE "${venv_path}")
+    file(MAKE_DIRECTORY "${venv_path}")
 
-        # Varation of x_vcpkg_get_python_packages, using venv also for windows
-        message(STATUS "Setting up python virtual environment...")
-        set(venv_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-venv")
-        file(REMOVE_RECURSE "${venv_path}") # Remove old venv
-        file(MAKE_DIRECTORY "${venv_path}")
+    set(python_sub_path /bin)
+    set(python_venv_options --symlinks)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(python_sub_path /Scripts)
+        set(python_venv_options --copies)
+    endif()
 
-        set(python_sub_path /bin)
-        set(python_venv_options --symlinks)
-        if(CMAKE_HOST_WIN32)
-            set(python_sub_path /Scripts)
-            set(python_venv_options --copies)
+    set(ENV{PYTHONNOUSERSITE} "1")
+    vcpkg_execute_required_process(
+        COMMAND "${target_python}" -I -m venv ${python_venv_options} "${venv_path}"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME "venv-init-${TARGET_TRIPLET}"
+    )
 
-            get_filename_component(python_dir "${target_python}" DIRECTORY)
-            file(MAKE_DIRECTORY "${python_dir}/DLLs")
-            file(GLOB python_zipped_stdlib "${python_dir}/python3*.zip")
-            if(python_zipped_stdlib)
-                file(COPY ${python_zipped_stdlib} DESTINATION "${venv_path}/Scripts")
-            endif()
-        endif()
+    set(gobject_introspection_python "${venv_path}${python_sub_path}/python${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    set(ENV{VIRTUAL_ENV} "${venv_path}")
+    unset(ENV{PYTHONHOME})
+    unset(ENV{PYTHONPATH})
+    vcpkg_execute_required_process(
+        COMMAND "${gobject_introspection_python}" -I -m pip install setuptools
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME "venv-install-setuptools-${TARGET_TRIPLET}"
+    )
 
-        set(ENV{PYTHONNOUSERSITE} "1")
-        vcpkg_execute_required_process(
-            COMMAND "${target_python}" -I -m venv ${python_venv_options} "${venv_path}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-            LOGNAME "venv-setup-${TARGET_TRIPLET}"
-        )
-        set(gobject_introspection_python "${venv_path}${python_sub_path}/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-        set(ENV{VIRTUAL_ENV} "${venv_path}")
-        unset(ENV{PYTHONHOME})
-        unset(ENV{PYTHONPATH})
-        message(STATUS "Installing python packages: setuptools")
-        vcpkg_execute_required_process(
-            COMMAND "${gobject_introspection_python}" -I -m pip install setuptools
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-            LOGNAME "pip-install-packages-${TARGET_TRIPLET}"
-        )
-        message(STATUS "Setting up python virtual environment... finished.")
-    endblock()
+    message(STATUS "Finished (with ${out_var} at ${gobject_introspection_python})")
     set("${out_var}" "${gobject_introspection_python}" PARENT_SCOPE)
 endfunction()
 
