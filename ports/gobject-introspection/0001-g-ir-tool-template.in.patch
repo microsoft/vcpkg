@@ -1,15 +1,3 @@
-diff --git a/meson_options.txt b/meson_options.txt
-index dff9be8..828fd25 100644
---- a/meson_options.txt
-+++ b/meson_options.txt
-@@ -1,3 +1,7 @@
-+option('VCPKG_HOST_TRIPLET', type: 'string',
-+  description: 'vcpkg host triplet for pylibdir search'
-+)
-+
- option('cairo', type: 'feature', value : 'auto',
-   description: 'Use cairo for tests'
- )
 diff --git a/tools/g-ir-tool-template.in b/tools/g-ir-tool-template.in
 index 469af0c..f165a98 100755
 --- a/tools/g-ir-tool-template.in
@@ -20,7 +8,7 @@ index 469af0c..f165a98 100755
  # -*- Mode: Python -*-
  # GObject-Introspection - a framework for introspecting GObject libraries
  # Copyright (C) 2008  Johan Dahlin
-@@ -46,22 +46,21 @@ if debug:
+@@ -46,22 +46,20 @@ if debug:
  filedir = os.path.dirname(__file__)
  
  # Try using relative paths first so that the installation prefix is relocatable
@@ -45,16 +33,13 @@ index 469af0c..f165a98 100755
  # Again, relative paths first so that the installation prefix is relocatable
 -pylibdir = os.path.abspath(os.path.join(filedir, '..', 'lib', 'gobject-introspection'))
 +pylibdir = os.path.abspath(os.path.join(filedir, '..', '..', 'lib', 'gobject-introspection'))
-+host_pylibdir = os.path.abspath(os.path.join(filedir, '..', '..', '..', '@VCPKG_HOST_TRIPLET@', 'lib', 'gobject-introspection'))
  
  # EXT_SUFFIX for py3 SO for py2
  py_mod_suffix = sysconfig.get_config_var('EXT_SUFFIX') or sysconfig.get_config_var('SO')
-@@ -89,13 +88,21 @@ if not os.path.isfile(os.path.join(pylibdir, 'giscanner', '_giscanner' + py_mod_
+@@ -89,13 +87,19 @@ if not os.path.isfile(os.path.join(pylibdir, 'giscanner', '_giscanner' + py_mod_
          gdump_path = os.path.join(builddir, 'giscanner', 'gdump.c')
          if os.path.isfile(gdump_path):
              builtins.__dict__['GDUMP_PATH'] = gdump_path
-+    elif os.path.isfile(os.path.join(host_pylibdir, 'giscanner', '_giscanner' + py_mod_suffix)):
-+        pylibdir = host_pylibdir
      else:
 -        # Okay, we're not running uninstalled and the prefix is not
 -        # relocatable. Use hard-coded libdir.
@@ -74,15 +59,3 @@ index 469af0c..f165a98 100755
  from giscanner.utils import dll_dirs
  dll_dirs = dll_dirs()
  dll_dirs.add_dll_dirs(['gio-2.0'])
-diff --git a/tools/meson.build b/tools/meson.build
-index 7ac43cd..33eee12 100644
---- a/tools/meson.build
-+++ b/tools/meson.build
-@@ -23,6 +23,7 @@ foreach tool : tools
-   tools_conf.set('gir_dir_prefix', gir_dir_prefix)
-   tools_conf.set('GIR_DIR', girdir)
-   tools_conf.set('PYTHON_CMD', python_cmd)
-+  tools_conf.set('VCPKG_HOST_TRIPLET', get_option('VCPKG_HOST_TRIPLET'))
- 
-   tools_conf.set('TOOL_MODULE', tool[1])
-   tools_conf.set('TOOL_FUNCTION', tool[2])

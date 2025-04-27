@@ -11,7 +11,6 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-g-ir-tool-template.in.patch
-        0002-cross-build.patch
         0004-fastcall.patch # https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/498
 )
 
@@ -47,9 +46,6 @@ vcpkg_configure_meson(
     OPTIONS
         -Ddoctool=disabled
         -Dgtk_doc=false
-        # When running g-ir-scanner with host python,
-        # help it find the host giscanner python extension.
-        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
         ${options}
     OPTIONS_DEBUG
         -Dbuild_introspection_data=false
