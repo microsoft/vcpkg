@@ -1,5 +1,5 @@
 if(VCPKG_TARGET_IS_LINUX)
-    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoconf")
+    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n\nThis can be installed on Ubuntu systems via apt-get install autoconf")
 endif()
 
 vcpkg_download_distfile(
@@ -11,7 +11,6 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
         SOURCE_PATH
         ARCHIVE "${LIBBSD_ARCHIVE}"
-#        SOURCE_BASE "libbsd-0.12.2"
 )
 
 vcpkg_list(SET MAKE_OPTIONS)
@@ -28,4 +27,3 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
