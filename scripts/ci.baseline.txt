@@ -397,6 +397,7 @@ glfw3:x64-uwp=fail
 glibmm:arm64-windows-static-md=fail
 glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
+gobject-introspection(arm64 & windows & uwp)=fail # needs arm64 host
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
 # gsoap does not offer stable public source downloads
