@@ -4,12 +4,22 @@
   "description": "Utility functions from BSD systems",
   "homepage": "https://libbsd.freedesktop.org",
   "license": "BSD-3-Clause",
-  "supports": "!uwp & !windows & !android",
+  "supports": "!uwp & !windows & !android & !linux",
   "dependencies": [
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     {
       "name": "libmd",
       "platform": "linux"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
     }
   ]
 }
