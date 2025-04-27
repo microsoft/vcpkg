@@ -78,8 +78,14 @@
       "description": "build with introspection",
       "supports": "!static",
       "dependencies": [
-        "glib",
-        "gobject-introspection"
+        "gobject-introspection",
+        {
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
+        }
       ]
     }
   }
