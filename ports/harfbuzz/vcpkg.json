@@ -8,10 +8,6 @@
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "gettext",
-      "platform": "osx"
-    },
-    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
