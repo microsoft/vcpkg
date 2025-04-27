@@ -8,9 +8,9 @@ function(z_vcpkg_get_gobject_introspection_python out_var)
         )
     endif()
 
-    set(target_python "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    set(target_python "${CURRENT_INSTALLED_DIR}/tools/python3/python3${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     if(VCPKG_TARGET_IS_WINDOWS)
-        set(target_python "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python.exe")
+        set(target_python "${CURRENT_INSTALLED_DIR}/tools/python3/python.exe")
     endif()
     
     # Varation of x_vcpkg_get_python_packages, but
