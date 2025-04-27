@@ -1,18 +1,21 @@
 diff --git a/orocos_kdl/src/CMakeLists.txt b/orocos_kdl/src/CMakeLists.txt
-index ca63079..276aad5 100644
+index ca63079..c85b00f 100644
 --- a/orocos_kdl/src/CMakeLists.txt
 +++ b/orocos_kdl/src/CMakeLists.txt
-@@ -8,9 +8,6 @@ FILE( GLOB UTIL_HPPS utilities/[^.]*.h utilities/[^.]*.hpp)
+@@ -6,12 +6,6 @@ FILE( GLOB UTIL_HPPS utilities/[^.]*.h utilities/[^.]*.hpp)
+ #In Windows (Visual Studio) it is necessary to specify the postfix
+ #of the debug library name and no symbols are exported by kdl,
  #so it is necessary to compile it as a static library
- IF(MSVC)
-     SET(CMAKE_DEBUG_POSTFIX "d")
+-IF(MSVC)
+-    SET(CMAKE_DEBUG_POSTFIX "d")
 -    SET(LIB_TYPE STATIC)
 -ELSE(MSVC)
 -    SET(LIB_TYPE SHARED)
- ENDIF(MSVC)
+-ENDIF(MSVC)
  
  CONFIGURE_FILE(config.h.in config.h @ONLY)
-@@ -55,7 +52,7 @@ IF(NOT (CMAKE_VERSION VERSION_LESS 2.8.12))
+ 
+@@ -55,7 +49,7 @@ IF(NOT (CMAKE_VERSION VERSION_LESS 2.8.12))
  ENDIF()
  #####end RPATH
  
