@@ -43,6 +43,12 @@ else()
     list(APPEND OPTIONS -Dothers=disabled)
 endif()
 
+# Whether to enable application bundle relocation support.
+# Limitation cf. gdk-pixbuf/gdk-pixbuf-io.c
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS -Drelocatable=true)          
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     #list(APPEND OPTIONS -Dnative_windows_loaders=true) # Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option
 endif()
@@ -52,7 +58,6 @@ vcpkg_configure_meson(
         -Dman=false                 # Whether to generate man pages (requires xlstproc)
         -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
         -Ddocs=false
-        -Drelocatable=true          # Whether to enable application bundle relocation support
         -Dtests=false
         -Dinstalled_tests=false
         -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
