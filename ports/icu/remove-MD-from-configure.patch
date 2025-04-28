@@ -10,9 +10,9 @@ diff -urN a/source/runConfigureICU b/source/runConfigureICU
 -        DEBUG_CFLAGS='-FS -Zi -MDd'
 -        DEBUG_CXXFLAGS='-FS -Zi -MDd'
 +        RELEASE_CFLAGS='-Gy'
-+        RELEASE_CXXFLAGS='-Gy /std:c++17'
++        RELEASE_CXXFLAGS='-Gy'
 +        DEBUG_CFLAGS='-FS -Zi'
-+        DEBUG_CXXFLAGS='-FS -Zi /std:c++17'
++        DEBUG_CXXFLAGS='-FS -Zi'
          DEBUG_LDFLAGS='-DEBUG'
          ;;
      *BSD)

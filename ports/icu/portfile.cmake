@@ -22,6 +22,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         vcpkg-cross-data.patch
         darwin-rpath.patch
         cleanup_msvc.patch
+        msvc-use-cpp17.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
