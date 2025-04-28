@@ -18,11 +18,11 @@
   "default-features": [
     {
       "name": "ports",
-      "platform": "!static"
+      "platform": "!static & !(arm & windows)"
     },
     {
       "name": "run-test",
-      "platform": "!static"
+      "platform": "!static & !(arm & windows)"
     }
   ],
   "features": {
