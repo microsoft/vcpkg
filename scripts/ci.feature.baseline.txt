@@ -52,6 +52,7 @@ llvm = skip
 
 # Add new items alphabetically
 ace:x64-windows-static-md=fail
+ada-url:x64-linux=fail # ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
 allegro5:arm64-windows=fail # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
 apr:arm64-windows=fail # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 armadillo:arm64-android=cascade
