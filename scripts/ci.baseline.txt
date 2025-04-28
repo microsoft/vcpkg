@@ -734,7 +734,6 @@ ngspice:x64-windows-static=fail
 nrf-ble-driver:arm-neon-android=fail
 nrf-ble-driver:arm64-android=fail
 nrf-ble-driver:x64-android=fail
-nvtt:x64-android=fail
 oatpp-libressl:x64-android=fail
 offscale-libetcd-cpp:arm64-uwp=fail
 offscale-libetcd-cpp:x64-uwp=fail
