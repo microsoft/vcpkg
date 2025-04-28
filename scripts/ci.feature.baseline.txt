@@ -1846,9 +1846,8 @@ qtactiveqt:x64-uwp = cascade
 qtapplicationmanager:arm64-osx = cascade
 qtapplicationmanager:arm64-uwp = cascade
 qtapplicationmanager:x64-uwp = cascade
+qtbase[cups]:x64-linux = skip
 qtbase[dbus]:x64-windows-static = cascade
-# qtbase[core] fails on android but the following 3 features cascade;
-# qtbase(android)=skip for now as we don't appear to have a great way to say that
 qtbase[dbus,doubleconversion,sql-mysql](android) = cascade
 qtbase[fontconfig](!linux) = feature-fails # see https://github.com/microsoft/vcpkg/issues/31247
 qtbase[glib] = feature-fails
