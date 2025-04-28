@@ -69,6 +69,7 @@ function(vcpkg_make_install)
         execute_process(
             COMMAND "${Z_VCPKG_MAKE}" --help
             OUTPUT_VARIABLE make_help_output
+            ERROR_VARIABLE make_help_output
         )
         if(make_help_output MATCHES "--trace")
             set(trace_opts "--trace")
