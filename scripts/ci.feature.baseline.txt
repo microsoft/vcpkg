@@ -1856,6 +1856,7 @@ qtbase[gtk3]:x64-linux = feature-fails
 qtbase[sql-oci]:arm64-windows = cascade
 qtbase[sql-oci]:arm64-windows-static-md = cascade
 qtbase[sql-oci](!(arm & windows)) = feature-fails # see https://github.com/microsoft/vcpkg/issues/32052
+qtbase[vulkan](osx)=skip # fatal error: 'MoltenVK/mvk_vulkan.h' file not found
 qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](osx) = skip # no x11 on macOS
 qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](windows) = skip # X11_SUPPORTED == LINUX OR HPUX OR FREEBSD OR NETBSD OR OPENBSD OR SOLARIS OR HURD in qt's build system
 qtbase(android)=skip # qtbase requires ANDROID_SDK_ROOT to be set.  Consider adding it to the triplet.
