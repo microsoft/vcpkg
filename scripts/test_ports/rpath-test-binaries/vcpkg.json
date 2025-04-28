@@ -1,6 +1,7 @@
 {
   "name": "rpath-test-binaries",
   "version-string": "ci",
+  "port-version": 1,
   "description": "Provides installed binaries for rpath fixup test",
   "supports": "native & !windows",
   "dependencies": [
