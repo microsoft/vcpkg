@@ -9,13 +9,10 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
         0001-msvc-static-name.patch
-        0002-thrift.patch
-        0003-utf8proc.patch
-        0004-android-musl.patch
-        0005-android-datetime.patch
-        0006-cmake-msvcruntime.patch
-        0007-fix-path.patch # From https://github.com/apache/arrow/issues/39023#issuecomment-1835390089
-        0008-arrow-parquet-size-statistics-include.patch
+        0002-utf8proc.patch
+        0003-android-musl.patch
+        0004-android-datetime.patch
+        0005-cmake-msvcruntime.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
