@@ -644,7 +644,6 @@ arrow[cuda](!(windows & x64 & !uwp & !xbox) & !(linux & x64) & !(linux & arm64))
 arrow[mimalloc]:x64-windows-static-md = feature-fails
 arrow[orc]:arm64-android = cascade
 arrow[orc]:x64-android = cascade
-arrow[orc]:x64-windows = cascade
 arrow[orc]:x64-windows = feature-fails
 asio[coroutine]:arm64-uwp = cascade
 asio[coroutine]:arm64-windows = cascade
