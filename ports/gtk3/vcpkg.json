@@ -66,14 +66,6 @@
         },
         {
           "name": "gdk-pixbuf",
-          "host": true,
-          "default-features": false,
-          "features": [
-            "introspection"
-          ]
-        },
-        {
-          "name": "gdk-pixbuf",
           "default-features": false,
           "features": [
             "introspection"

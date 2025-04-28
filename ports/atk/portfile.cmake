@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
@@ -21,7 +19,7 @@ vcpkg_configure_meson(
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
     OPTIONS_DEBUG
-        -Dintrospection=disabled
+        -Dintrospection=false
     ADDITIONAL_BINARIES
         "glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
         "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
