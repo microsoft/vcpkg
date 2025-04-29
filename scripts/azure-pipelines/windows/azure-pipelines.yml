@@ -39,9 +39,9 @@ jobs:
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
   - script: |
-      ./vcpkg.exe format-manifest --all
-      ./vcpkg.exe format-feature-baseline scripts/ci.baseline.txt
-      ./vcpkg.exe format-feature-baseline scripts/ci.feature.baseline.txt
+      .\vcpkg.exe format-manifest --all
+      .\vcpkg.exe format-feature-baseline scripts\ci.baseline.txt
+      .\vcpkg.exe format-feature-baseline scripts\ci.feature.baseline.txt
     displayName: 'Format Manifests and Baselines'
     condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')
   - task: PowerShell@2
