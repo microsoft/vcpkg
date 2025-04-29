@@ -9028,6 +9028,18 @@
       "baseline": "2020-09-14",
       "port-version": 4
     },
+    "stub-gz-sim": {
+      "baseline": "1.0.0",
+      "port-version": 8
+    },
+    "stub-llvm": {
+      "baseline": "1.0.0",
+      "port-version": 8
+    },
+    "stub-mesa": {
+      "baseline": "1.0.0",
+      "port-version": 8
+    },
     "stx": {
       "baseline": "1.0.5",
       "port-version": 0
