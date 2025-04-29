@@ -7,6 +7,7 @@ vcpkg_from_sourceforge(
     PATCHES 
         fix-missing-dll.patch
         name_conflict.patch
+        find-openal.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

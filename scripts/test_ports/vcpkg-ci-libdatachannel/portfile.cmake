@@ -3,8 +3,8 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF v0.21.2
-    SHA512 fd0d66bb932e29abc01e9f1a8b16ccb79012a7e3901e2e0f882f56ab2f090260945e1556c85ad07ef897b8c70fcdd44cdeead9955a9bca7afe1dda8900c473cc
+    REF v0.22.4
+    SHA512 738bfa45b804cab178426301f97674af4d04b253f45c3caa41b9ec8f658672662e9a7e37a61ee1523b724f3888df85ece86105ae3951aac65a0f2b17fc5b4fac
     HEAD_REF master
     PATCHES 
         cmake-project.diff

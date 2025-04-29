@@ -1,8 +1,8 @@
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index a407271..a575642 100755
+index eaa5c6f..8a9ec44 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -572,6 +572,9 @@ else()
+@@ -811,6 +811,9 @@ else()
  endif()
  if(NOT MSVC)
      set_target_properties(x265-static PROPERTIES OUTPUT_NAME x265)
@@ -12,7 +12,7 @@ index a407271..a575642 100755
  endif()
  if(EXTRA_LIB)
      target_link_libraries(x265-static ${EXTRA_LIB})
-@@ -655,8 +658,10 @@ if(ENABLE_SHARED)
+@@ -906,8 +909,10 @@ if(ENABLE_SHARED)
      endif(SVTHEVC_FOUND)
      if(MSVC)
          set_target_properties(x265-shared PROPERTIES OUTPUT_NAME libx265)
@@ -23,9 +23,9 @@ index a407271..a575642 100755
      endif()
      if(UNIX)
          set_target_properties(x265-shared PROPERTIES VERSION ${X265_BUILD})
-@@ -693,7 +698,11 @@ endif()
+@@ -944,7 +949,11 @@ endif()
  
- if(X265_LATEST_TAG)
+ if(X265_LATEST_TAG OR NOT GIT_FOUND)
      # convert lists of link libraries into -lstdc++ -lm etc..
 +    cmake_policy(SET CMP0057 NEW)
      foreach(LIB ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES} ${PLATFORM_LIBS})

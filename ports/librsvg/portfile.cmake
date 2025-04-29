@@ -5,12 +5,14 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/librsvg/${MAJOR_MINOR}/librsvg-${VERSION}.tar.xz"
          "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/librsvg/${MAJOR_MINOR}/librsvg-${VERSION}.tar.xz"
     FILENAME "librsvg-${VERSION}.tar.xz"
-    SHA512 cdd8224deb4c3786e29f48ed02c32ed9dff5cb15aba574a5ef845801ad3669cfcc3eedb9d359c22213dc7a29de24c363248825adad5877c40abf73b3688ff12f
+    SHA512 db0563d8e0edaae642a6b2bcd239cf54191495058ac8c7ff614ebaf88c0e30bd58dbcd41f58d82a9d5ed200ced45fc5bae22f2ed3cf3826e9348a497009e1280
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        fix-libxml2-2.13.5.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${CMAKE_CURRENT_LIST_DIR}/config.h.linux" DESTINATION "${SOURCE_PATH}")

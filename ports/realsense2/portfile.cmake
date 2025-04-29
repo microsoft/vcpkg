@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix_openni2.patch
         fix-nlohmann_json.patch
         fix-android-prefix-path.patch
+        add-include-chrono.patch #https://github.com/IntelRealSense/librealsense/pull/13537
 )
 
 file(COPY "${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf" DESTINATION "${SOURCE_PATH}")
@@ -49,10 +50,11 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/realsense2)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/realsense2/realsense2Targets.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "\${_IMPORT_PREFIX}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/realsense2/realsense2Targets.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "\${_IMPORT_PREFIX}")
-	
-	file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/common/fw")
-	file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/common/fw/fw.res" DESTINATION "${CURRENT_PACKAGES_DIR}/common/fw")
+    if(NOT VCPKG_BUILD_TYPE)
+      vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/realsense2/realsense2Targets.cmake" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg" "\${_IMPORT_PREFIX}")
+    endif()
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/common/fw")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/common/fw/fw.res" DESTINATION "${CURRENT_PACKAGES_DIR}/common/fw")
 endif()
 vcpkg_copy_pdbs()
 

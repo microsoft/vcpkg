@@ -10,6 +10,7 @@ done
 vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgUseMuslC="OFF"
+vcpkgSkipDependencyChecks="OFF"
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
@@ -20,15 +21,18 @@ do
         echo "Warning: -allowAppleClang no longer has any effect; ignored."
     elif [ "$var" = "-buildTests" ]; then
         echo "Warning: -buildTests no longer has any effect; ignored."
+    elif [ "$var" = "-skipDependencyChecks" ]; then
+        vcpkgSkipDependencyChecks="OFF"
     elif [ "$var" = "-musl" ]; then
         vcpkgUseMuslC="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
         echo "Options:"
-        echo "    -help                Display usage help"
-        echo "    -disableMetrics      Mark this vcpkg root to disable metrics."
-        echo "    -musl                Use the musl binary rather than the glibc binary on Linux."
+        echo "    -help                 Display usage help"
+        echo "    -disableMetrics       Mark this vcpkg root to disable metrics."
+        echo "    -skipDependencyChecks Skip checks for vcpkg prerequisites. vcpkg may not run."
+        echo "    -musl                 Use the musl binary rather than the glibc binary on Linux."
         exit 1
     else
         echo "Unknown argument $var. Use '-help' for help."
@@ -66,22 +70,24 @@ fi
 vcpkgCheckRepoTool()
 {
     __tool=$1
-    if ! command -v "$__tool" >/dev/null 2>&1 ; then
-        echo "Could not find $__tool. Please install it (and other dependencies) with:"
-        echo "On Debian and Ubuntu derivatives:"
-        echo "  sudo apt-get install curl zip unzip tar"
-        echo "On recent Red Hat and Fedora derivatives:"
-        echo "  sudo dnf install curl zip unzip tar"
-        echo "On older Red Hat and Fedora derivatives:"
-        echo "  sudo yum install curl zip unzip tar"
-        echo "On SUSE Linux and derivatives:"
-        echo "  sudo zypper install curl zip unzip tar"
-        echo "On Arch Linux and derivatives:"
-        echo "  sudo pacman -Syu base-devel git curl zip unzip tar cmake ninja"
-        echo "On Alpine:"
-        echo "  apk add build-base cmake ninja zip unzip curl git"
-        echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
-        exit 1
+    if [ "$vcpkgSkipDependencyChecks" = "ON" ]; then
+        if ! command -v "$__tool" >/dev/null 2>&1 ; then
+            echo "Could not find $__tool. Please install it (and other dependencies) with:"
+            echo "On Debian and Ubuntu derivatives:"
+            echo "  sudo apt-get install curl zip unzip tar"
+            echo "On recent Red Hat and Fedora derivatives:"
+            echo "  sudo dnf install curl zip unzip tar"
+            echo "On older Red Hat and Fedora derivatives:"
+            echo "  sudo yum install curl zip unzip tar"
+            echo "On SUSE Linux and derivatives:"
+            echo "  sudo zypper install curl zip unzip tar"
+            echo "On Arch Linux and derivatives:"
+            echo "  sudo pacman -Syu base-devel git curl zip unzip tar cmake ninja"
+            echo "On Alpine:"
+            echo "  apk add build-base cmake ninja zip unzip curl git"
+            echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
+            exit 1
+        fi
     fi
 }
 
@@ -95,9 +101,7 @@ ARCH="$(uname -m)"
 
 if [ -e /etc/alpine-release ]; then
     vcpkgUseSystem="ON"
-    if [ "$ARCH" = "x86_64" ]; then
-        vcpkgUseMuslC="ON"
-    fi
+    vcpkgUseMuslC="ON"
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
@@ -163,6 +167,7 @@ vcpkgExtractTar()
 # Linux
 #   useMuslC -> download vcpkg-muslc
 #   amd64 -> download vcpkg-glibc
+#   arm64 -> download vcpkg-glibc-arm64
 # Otherwise
 #   Download and build from source
 
@@ -174,7 +179,7 @@ if [ "$UNAME" = "Darwin" ]; then
     echo "Downloading vcpkg-macos..."
     vcpkgToolReleaseSha=$VCPKG_MACOS_SHA
     vcpkgToolName="vcpkg-macos"
-elif [ "$vcpkgUseMuslC" = "ON" ]; then
+elif [ "$vcpkgUseMuslC" = "ON" ] && [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-muslc..."
     vcpkgToolReleaseSha=$VCPKG_MUSLC_SHA
     vcpkgToolName="vcpkg-muslc"
@@ -182,6 +187,10 @@ elif [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
     vcpkgToolName="vcpkg-glibc"
+elif [ "$vcpkgUseMuslC" = "OFF" ] && { [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; }; then
+    echo "Downloading vcpkg-arm64-glibc..."
+    vcpkgToolReleaseSha=$VCPKG_GLIBC_ARM64_SHA
+    vcpkgToolName="vcpkg-glibc-arm64"
 else
     echo "Unable to determine a binary release of vcpkg; attempting to build from source."
     vcpkgDownloadTool="OFF"

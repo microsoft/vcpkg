@@ -2,9 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
     REF "v${VERSION}"
-    SHA512 e90680128bfaac215e5eebd9c8e5ce08e5fe68a7258f65bfcf56377756e9dbf527a232dfaf9d217c7374e713660ec99eeaae05d6fee2b8c5c9b71ad1b0b4dd72
+    SHA512 cf3ca916fc3a762a194dac86718a5a7fe24f230e34172a48f9b3401ad72fbc1cf21b46ceaba956cdf6783d323e518d40f8632fff965943869819a1c26992a3c1
     HEAD_REF v1.x
-    PATCHES 
+    PATCHES
         fix-build-type.patch
         ssize_t.patch
 )
@@ -38,4 +38,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DI
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-

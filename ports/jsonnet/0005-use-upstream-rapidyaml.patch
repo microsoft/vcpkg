@@ -45,3 +45,12 @@ index e328df5..2cafbb7 100644
  #include "state.h"
  #include "static_analysis.h"
  #include "string_utils.h"
+@@ -1637,7 +1637,7 @@ class Interpreter {
+     }
+ 
+     const ryml::Tree treeFromString(const std::string& s) {
+-        return ryml::parse(c4::to_csubstr(s));
++        return ryml::parse_in_arena(ryml::to_csubstr(s));
+     }
+ 
+     const std::vector<std::string> split(const std::string& s, const std::string& delimiter) {

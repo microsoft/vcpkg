@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         acl.patch
+        add-include-chrono.patch # https://github.com/eclipse-iceoryx/iceoryx/pull/2378
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

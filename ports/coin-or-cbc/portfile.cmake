@@ -12,10 +12,8 @@ file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SO
 
 set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DETERMINE_BUILD_TRIPLET
-    USE_WRAPPERS
     OPTIONS
         --with-coinutils
         --with-clp
@@ -29,7 +27,7 @@ vcpkg_configure_make(
         --disable-readline
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

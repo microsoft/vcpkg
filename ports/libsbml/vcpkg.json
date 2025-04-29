@@ -1,9 +1,9 @@
 {
   "name": "libsbml",
-  "version": "5.20.2",
+  "version": "5.20.4",
   "description": "A library for reading / writing SBML files",
   "homepage": "https://github.com/sbmlteam/libsbml",
-  "license": "LGPL-2.1",
+  "license": null,
   "supports": "!uwp & !xbox",
   "dependencies": [
     {
@@ -51,7 +51,10 @@
     "libxml2": {
       "description": "libsbml using libxml2 parser",
       "dependencies": [
-        "libxml2"
+        {
+          "name": "libxml2",
+          "default-features": false
+        }
       ]
     },
     "multi": {

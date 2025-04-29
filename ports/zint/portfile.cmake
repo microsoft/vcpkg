@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zint/zint
-    REF 2.12.0
-    SHA512 398502efc1f07718e7c86a1e91f6e94c88b7f7c5e3c59fd507f3a5966488f4b0bb230ae9696515583aa536e2357c9a6295be7de6b4bc83daf5b4eb3be5e69b24
+    REF ${VERSION}
+    SHA512 70838fdc88aa8e157ce8a0099fe1184b98c8e5fd0a980a8ecdb40d7e4cbf1519b99a2326ffe7a1b3272dc58aa20fafa06fa0d3e6fb26f445eaa59b4b20be18cc
     HEAD_REF master
-    PATCHES
-        0004-windows-static-build.patch
-        0005-export-include-directories.patch
 )
 
 vcpkg_check_features(

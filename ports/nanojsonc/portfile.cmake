@@ -4,7 +4,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO open-source-patterns/nanojsonc
         REF "${VERSION}"
-        SHA512 306fce8f90c1e5b9031f3f2b1cec5430722477425766fc05e430cceb03bb85188f2c451c0c7d34aed49b506e6a2cd835e419792362f992acbafc0b099fbe4b5e
+        SHA512 4cb73a0dc42bc6dbc106ed7bf7d22dbbadf3d92d2055d4b96990b62822978c09e580a87ca1666cf0b915b994fada6a1f6b803eb98d8da6b021a0a2c410d538ff
         HEAD_REF main
 )
 

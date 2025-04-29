@@ -1,18 +1,3 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "${PORT} currently requires the following programs from the system package manager:
-    autoconf automake autoconf-archive
-On Debian and Ubuntu derivatives:
-    sudo apt-get install autoconf automake autoconf-archive
-On recent Red Hat and Fedora derivatives:
-    sudo dnf install autoconf automake autoconf-archive
-On Arch Linux and derivatives:
-    sudo pacman -S autoconf automake autoconf-archive
-On Alpine:
-    apk add autoconf automake autoconf-archive
-On macOS:
-    brew install autoconf automake autoconf-archive\n")
-endif()
-
 string(REGEX MATCH "^[0-9]*" ICU_VERSION_MAJOR "${VERSION}")
 string(REPLACE "." "_" VERSION2 "${VERSION}")
 string(REPLACE "." "-" VERSION3 "${VERSION}")
@@ -37,6 +22,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         vcpkg-cross-data.patch
         darwin-rpath.patch
         mingw-strict-ansi.diff # backport of https://github.com/unicode-org/icu/pull/3003
+        cleanup_msvc.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -47,12 +33,12 @@ vcpkg_list(SET BUILD_OPTIONS)
 
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-extras)
-    vcpkg_list(APPEND BUILD_OPTIONS "PKGDATA_OPTS=--without-assembly -O ../data/icupkg.inc")
+    vcpkg_list(APPEND BUILD_OPTIONS "\"PKGDATA_OPTS=--without-assembly -O ../data/icupkg.inc\"")
 elseif(VCPKG_TARGET_IS_UWP)
     vcpkg_list(APPEND CONFIGURE_OPTIONS --disable-extras ac_cv_func_tzset=no ac_cv_func__tzset=no)
     string(APPEND VCPKG_C_FLAGS " -DU_PLATFORM_HAS_WINUWP_API=1")
     string(APPEND VCPKG_CXX_FLAGS " -DU_PLATFORM_HAS_WINUWP_API=1")
-    vcpkg_list(APPEND BUILD_OPTIONS "PKGDATA_OPTS=--windows-uwp-build -O ../data/icupkg.inc")
+    vcpkg_list(APPEND BUILD_OPTIONS "\"PKGDATA_OPTS=--windows-uwp-build -O ../data/icupkg.inc\"")
 elseif(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_list(APPEND CONFIGURE_OPTIONS --enable-rpath)
     if(DEFINED CMAKE_INSTALL_NAME_DIR)
@@ -79,12 +65,9 @@ elseif(VCPKG_CROSSCOMPILING)
     list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
 endif()
 
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH source
-    AUTOCONFIG
-    DETERMINE_BUILD_TRIPLET
-    ADDITIONAL_MSYS_PACKAGES autoconf-archive
+vcpkg_make_configure(
+    SOURCE_PATH "${SOURCE_PATH}/source"
+    AUTORECONF
     OPTIONS
         ${CONFIGURE_OPTIONS}
         --disable-samples
@@ -97,7 +80,7 @@ vcpkg_configure_make(
         --enable-debug
         --disable-release
 )
-vcpkg_install_make(OPTIONS ${BUILD_OPTIONS})
+vcpkg_make_install(OPTIONS ${BUILD_OPTIONS})
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share"
@@ -158,6 +141,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/icu/bin/icu-config" "${CURRENT_HOST_INSTALLED_DIR}" "`dirname $0`/../../../../${_HOST_TRIPLET}/" IGNORE_UNCHANGED)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

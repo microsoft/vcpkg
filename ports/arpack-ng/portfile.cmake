@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
         -DICBEXMM=OFF
         -DEXAMPLES=OFF
         -DTESTS=OFF
+        -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_cmake_install()

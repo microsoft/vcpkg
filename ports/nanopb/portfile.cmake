@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
         -Dnanopb_BUILD_RUNTIME=ON
         -DBUILD_STATIC_LIBS=${nanopb_BUILD_STATIC_LIBS}
         -Dnanopb_MSVC_STATIC_RUNTIME=${nanopb_STATIC_LINKING}
-        -Dnanopb_PROTOC_PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-Dnanopb_PROTOC_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         ${FEATURE_OPTIONS}
         -DCMAKE_INSTALL_DATADIR=share/${PORT}
     MAYBE_UNUSED_VARIABLES

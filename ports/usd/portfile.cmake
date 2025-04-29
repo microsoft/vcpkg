@@ -10,25 +10,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 7d4404980579c4de3c155386184ca9d2eb96756ef6e090611bae7b4c21ad942c649f73a39b74ad84d0151ce6b9236c4b6c0c555e8e36fdd86304079e1c2e5cbe
+    SHA512 23f5a40c67ce0566cbb61a60a8d14ebb9fde5de0fb4921031f4d4eeb3a5a86d624955840f9f49ee36f32abc48e869d4910073189716e73ba997bb80f1e781d9b
     HEAD_REF release
     PATCHES
         001-fix_rename_find_package_to_find_dependency.patch # See PixarAnimationStudios/OpenUSD#3205
         002-vcpkg_find_tbb.patch # See PixarAnimationStudios/OpenUSD#3207
-        003-vcpkg_find_opensubdiv.patch
-        004-vcpkg_find_openimageio.patch
-        005-vcpkg_find_shaderc.patch
-        006-vcpkg_find_spirv-reflect.patch
-        007-vcpkg_find_vma.patch
-        008-fix_cmake_package.patch
-        009-fix_cmake_hgi_interop.patch
-        010-fix_missing_find_dependency_vulkan.patch
-        011-fix_clang8_compiler_error.patch
-        012-vcpkg_install_folder_conventions.patch
-        013-cmake_export_plugin_as_modules.patch
-        014-MaterialX_v1.38-39.patch # PixarAnimationStudios/OpenUSD#3159
-        015-fix_missing_find_dependency_opengl.patch
-        016-TBB-2022.patch # Accomodate oneapi-src/oneTBB#1345 changes
+        003-fix-dep.patch
+        004-fix_cmake_package.patch
+        007-fix_cmake_hgi_interop.patch
+        008-fix_clang8_compiler_error.patch
+        009-vcpkg_install_folder_conventions.patch
+        010-cmake_export_plugin_as_modules.patch
+        011-TBB-2022.patch
+        012-fix-find-vulkan.patch
 )
 
 # Changes accompanying 006-vcpkg_find_spirv-reflect.patch
@@ -118,8 +112,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # Move all dlls to bin
     file(GLOB RELEASE_DLL ${CURRENT_PACKAGES_DIR}/lib/*.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(GLOB DEBUG_DLL ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    if(NOT VCPKG_BUILD_TYPE)
+      file(GLOB DEBUG_DLL ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
+      file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
     foreach(CURRENT_FROM ${RELEASE_DLL} ${DEBUG_DLL})
         string(REPLACE "/lib/" "/bin/" CURRENT_TO ${CURRENT_FROM})
         file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
@@ -132,7 +128,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endfunction()
 
     # fix dll path for cmake
-    file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
+    if(NOT VCPKG_BUILD_TYPE)
+      file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
+    endif()
     file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
 
     # fix plugInfo.json for runtime

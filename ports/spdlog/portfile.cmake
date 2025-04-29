@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
     REF "v${VERSION}"
-    SHA512 3dd98409f4625ae4d46ef5f59a2fc22a6e151a13dba9d37433363e5d84eab7cca73b379eeb637d8f9b1f0f5a42221c0cc9a2a70414dc2b6af6a162e19fba0647
+    SHA512 4e86d79dea4f08b9e4755ada7c9395e03246d00cdc11df8951d32b5f5e823fec103091d11154f32b261a29574784b761efb32477ec6385ffdb2069413e2c91a0
     HEAD_REF v1.x
-    PATCHES
-        fix-msvc-utf8.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -39,6 +37,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/spdlog)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spdlog.pc" " -lspdlog" " -lspdlogd")
+endif()
 
 # add support for integration other than cmake
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h

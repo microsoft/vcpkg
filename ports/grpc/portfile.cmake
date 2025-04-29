@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
     REF "v${VERSION}"
-    SHA512 a930bd9d8d0308f62fdda7ca215321b69a0cca8d8e0ce654b6938cd71dfd568fe63b5dd6ab0ee537e67751211e240b19cc23e07f5927dac318cf9be778d9fec2
+    SHA512 25783f75295919d0a077e3d0ff70ea2e651eaf107da2ebe8af40a584540f2f56aae0e04c7b809f3b1eb7d5adc3892f84464662d80b1234a111836f454ba84a18 
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -16,8 +16,6 @@ vcpkg_from_github(
         00006-utf8-range.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
-        00017-fix-NAN-on-Win11.patch
-        00018-fix-windows-event-engine.patch
 )
 # Ensure de-vendoring
 file(REMOVE_RECURSE
@@ -69,6 +67,7 @@ vcpkg_cmake_configure(
         "-D_gRPC_PROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         "-DProtobuf_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DgRPC_BUILD_GRPCPP_OTEL_PLUGIN=OFF
+        -DgRPC_DOWNLOAD_ARCHIVES=OFF
     MAYBE_UNUSED_VARIABLES
         gRPC_MSVC_STATIC_RUNTIME
 )

@@ -1,5 +1,5 @@
 diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
-index c60177c..f9432ec 100644
+index cb536415..81824a45 100644
 --- a/fizz/CMakeLists.txt
 +++ b/fizz/CMakeLists.txt
 @@ -50,7 +50,7 @@ find_package(folly CONFIG REQUIRED)
@@ -61,7 +61,7 @@ index c60177c..f9432ec 100644
 -endif()
 +find_package(Libevent CONFIG REQUIRED)
  
- find_package(liboqs CONFIG)
+ find_package(liboqs 0.11.0 CONFIG)
  if (liboqs_FOUND)
 @@ -193,28 +173,24 @@ target_include_directories(
      $<BUILD_INTERFACE:${FIZZ_BASE_DIR}>
@@ -127,7 +127,7 @@ index c60177c..f9432ec 100644
    if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
      # GMOCK_MOCK_METHOD() will complain otherwise
 diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
-index 9d07110..a47bb99 100644
+index 9d07110a..a47bb998 100644
 --- a/fizz/cmake/fizz-config.cmake.in
 +++ b/fizz/cmake/fizz-config.cmake.in
 @@ -31,9 +31,18 @@ set(FIZZ_LIBRARIES fizz::fizz)

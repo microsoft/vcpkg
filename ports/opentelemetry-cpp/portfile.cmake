@@ -6,12 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 c89c4f7a73c11c020f8ea1cb836ccd222456f899ede8e81a1fd0024e0a88f17c44a66bada8ed3010b0d03ac052475edb34b855aeafcff50975d24c8859463d68
+    SHA512 db9745be96907431c32a69230b29a5bddba0654f3f379f6cd0827f44895ef39c9612381303ec239d6ad98920bcc4006a90e25b715ade9ddf30aff843d1931416
     HEAD_REF main
     PATCHES
         cmake-quirks.diff
-        # Missing find_dependency for Abseil
-        add-missing-find-dependency.patch
+        fix-target_link.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,17 +23,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         otlp-grpc WITH_OTLP_GRPC
         geneva WITH_GENEVA
         user-events WITH_USER_EVENTS
+        opentracing WITH_OPENTRACING
     INVERTED_FEATURES
         user-events BUILD_TRACEPOINTS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
 if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
-    set(OTEL_PROTO_VERSION "1.3.2")
+    set(OTEL_PROTO_VERSION "1.5.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 ac95bb70c5566bab5c9ec7b9c469414b013f2bcf1c5ea82e7b7466311c767de091be819ddbbb01de8ce6e49f163035fec2a9d691c19ae47645b3c4a27c227f2b
+        SHA512 8a3f95543c6093300f0c54f31bf050137d0c6f1d867a7cda7af066b83572643e636b33a9b53e297f8c309bc262dde63cf7c10f515e0fe0cbbce1d12fafbe2482
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")

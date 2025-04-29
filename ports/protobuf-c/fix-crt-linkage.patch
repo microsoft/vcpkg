@@ -2,33 +2,24 @@ diff --git a/build-cmake/CMakeLists.txt b/build-cmake/CMakeLists.txt
 index 98b51eb..0243b80 100644
 --- a/build-cmake/CMakeLists.txt
 +++ b/build-cmake/CMakeLists.txt
-@@ -66,11 +66,6 @@ if(MSVC)
-   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4267 /wd4244")
-   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267 /wd4244")
+@@ -74,11 +74,6 @@ if(MSVC)
+   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4267 /wd4244")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267 /wd4244")
  
 -  # Allow matching protobuf runtime dependency
 -  if(NOT BUILD_SHARED_LIBS)
 -    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 -  endif(NOT BUILD_SHARED_LIBS)
 -
- ENDIF()
+ endif()
  
  get_filename_component(MAIN_DIR ${CMAKE_CURRENT_SOURCE_DIR} PATH)
-@@ -103,7 +98,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}) # for generated files
+@@ -103,7 +98,7 @@ if(BUILD_PROTOC)
+   include_directories(${CMAKE_CURRENT_BINARY_DIR}) # for generated files
+ endif()
  
- ENDIF()
- 
--if (MSVC AND NOT BUILD_SHARED_LIBS)
+-if(MSVC AND NOT BUILD_SHARED_LIBS)
 +if (0)
- 	# In case we are building static libraries, link also the runtime library statically
- 	# so that MSVCR*.DLL is not required at runtime.
- 	# https://msdn.microsoft.com/en-us/library/2kzt1wy3.aspx
-@@ -118,7 +113,7 @@ if (MSVC AND NOT BUILD_SHARED_LIBS)
- 		string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
- 	  endif(${flag_var} MATCHES "/MD")
- 	endforeach(flag_var)
--endif (MSVC AND NOT BUILD_SHARED_LIBS)
-+endif ()
- 
- if(WIN32)
-     # Modify the environment to hint protoc where the plugin is
+   # In case we are building static libraries, link also the runtime library
+   # statically so that MSVCR*.DLL is not required at runtime.
+   # https://msdn.microsoft.com/en-us/library/2kzt1wy3.aspx This is achieved by

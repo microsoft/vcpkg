@@ -21,10 +21,7 @@ endif()
 
 set(python_ver "")
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
-    string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
-    set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
-    set(python_ver "3.${PYTHON_VERSION_MINOR}")
+    set(python_ver "3")
 endif()
 
 vcpkg_cmake_configure(
@@ -32,7 +29,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         ${ADDITIONAL_OPTIONS}
 )
 

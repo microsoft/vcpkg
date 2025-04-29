@@ -1,6 +1,6 @@
 {
   "name": "pugixml",
-  "version": "1.14",
+  "version": "1.15",
   "description": "Light-weight, simple and fast XML parser for C++ with XPath support",
   "homepage": "https://github.com/zeux/pugixml",
   "license": "MIT",
