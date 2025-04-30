@@ -1,4 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
