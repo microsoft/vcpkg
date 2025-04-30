@@ -6730,7 +6730,7 @@
     },
     "octave": {
       "baseline": "9.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "octomap": {
       "baseline": "1.10.0",
