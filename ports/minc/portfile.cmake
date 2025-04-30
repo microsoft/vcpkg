@@ -6,8 +6,10 @@ vcpkg_from_github(
     SHA512 78d5c14b82c8da5de7651de22fe47ae934925b27a626b8685b19554b7a35240eb5ab6d4da6232ce046e9e0f25619bbfae1d7c0fc34994d935986dc151d7b93a0
     HEAD_REF master
     PATCHES
+        avoid-try-run.diff
         build.patch
         cmake-config.patch
+        dllexport.diff
 )
 
 vcpkg_check_features(
@@ -27,10 +29,13 @@ vcpkg_cmake_configure(
         -DLIBMINC_USE_SYSTEM_NIFTI=ON
         ${FEATURE_OPTIONS}
 )
-
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake PACKAGE_NAME libminc)
+
+if(LIBMINC_BUILD_SHARED_LIBS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/minc_common_defs.h" "defined(LIBMINC_BUILDING_DLL)" "1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

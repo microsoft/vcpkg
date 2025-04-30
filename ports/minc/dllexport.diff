@@ -1,0 +1,51 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a357b90..f41ec0a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -100,6 +100,7 @@ ENDIF(NOT DEFINED CMAKE_MACOSX_RPATH)
+ 
+ # Configure libminc
+ IF(LIBMINC_BUILD_SHARED_LIBS)
++  add_definition(-DLIBMINC_BUILDING_DLL)
+   SET(LIBRARY_TYPE SHARED)
+   SET(LIBRARY_INSTALL LIBRARY)
+ ELSE(LIBMINC_BUILD_SHARED_LIBS)
+diff --git a/libcommon/minc_common_defs.h b/libcommon/minc_common_defs.h
+index ea49dc8..58bb2d1 100644
+--- a/libcommon/minc_common_defs.h
++++ b/libcommon/minc_common_defs.h
+@@ -3,7 +3,7 @@
+ #define MINC_COMMON_DEFS_H
+ 
+ #ifndef MNCAPI
+-#if defined(_MSC_VER)
++#if defined(_MSC_VER) && defined(LIBMINC_BUILDING_DLL)
+ /* If we are building on the Microsoft C compiler, we want to
+  * explicitly import all public functions from the DLL
+  */
+diff --git a/libsrc/minc.h b/libsrc/minc.h
+index 2da1677..8958f27 100644
+--- a/libsrc/minc.h
++++ b/libsrc/minc.h
+@@ -156,7 +156,7 @@
+ ---------------------------------------------------------------------------- */
+ 
+ #ifndef MNCAPI
+-#if defined(_MSC_VER)
++#if defined(_MSC_VER) && defined(LIBMINC_BUILDING_DLL)
+ /* If we are building on the Microsoft C compiler, we want to
+  * explicitly import all public functions from the DLL
+  */
+diff --git a/libsrc/minc_private.h b/libsrc/minc_private.h
+index 28d418b..fa24301 100644
+--- a/libsrc/minc_private.h
++++ b/libsrc/minc_private.h
+@@ -65,7 +65,7 @@
+ @RCSID      : $Header: /private-cvsroot/minc/libsrc/minc_private.h,v 6.4 2004-12-14 23:53:46 bert Exp $ MINC (MNI)
+ ---------------------------------------------------------------------------- */
+ 
+-#if defined(_MSC_VER)
++#if defined(_MSC_VER) && defined(LIBMINC_BUILDING_DLL)
+ /* If we are building on the Microsoft C compiler, we want to
+  * explicitly export all public functions from the DLL
+  */
