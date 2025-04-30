@@ -1,7 +1,7 @@
 {
   "name": "directxtk12",
   "version-date": "2025-03-20",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A collection of helper classes for writing DirectX 12 code in C++.",
   "homepage": "https://github.com/Microsoft/DirectXTK12",
   "documentation": "https://github.com/microsoft/DirectXTK12/wiki",

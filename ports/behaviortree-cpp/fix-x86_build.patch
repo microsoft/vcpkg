@@ -1,5 +1,5 @@
 diff --git a/3rdparty/lexy/include/lexy/_detail/swar.hpp b/3rdparty/lexy/include/lexy/_detail/swar.hpp
-index a268abb..d31bdaa 100644
+index d7734d0..7250912 100644
 --- a/3rdparty/lexy/include/lexy/_detail/swar.hpp
 +++ b/3rdparty/lexy/include/lexy/_detail/swar.hpp
 @@ -141,8 +141,13 @@ constexpr std::size_t swar_find_difference(swar_int lhs, swar_int rhs)
@@ -19,10 +19,10 @@ index a268abb..d31bdaa 100644
  #    error "unsupported compiler; please file an issue"
  #endif
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 295b317..0f1cd5c 100644
+index 6d463ba..90abc0e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -154,6 +154,10 @@ else()
+@@ -173,6 +173,10 @@ else()
      add_library(${BTCPP_LIBRARY} STATIC ${BT_SOURCE})
  endif()
  
