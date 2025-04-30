@@ -110,7 +110,7 @@
     },
     "amd-amf": {
       "baseline": "1.4.36",
-      "port-version": 0
+      "port-version": 1
     },
     "ampl-asl": {
       "baseline": "1.0.1",
