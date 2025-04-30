@@ -1,11 +1,9 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "nvidia-cutlass",
   "version": "3.8.0",
   "description": "CUDA Templates for Linear Algebra Subroutines",
   "homepage": "https://github.com/NVIDIA/cutlass",
   "license": "BSD-3-Clause",
-  "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
   "dependencies": [
     "cuda",
     "cudnn",
