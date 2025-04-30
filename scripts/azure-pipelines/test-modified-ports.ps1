@@ -149,11 +149,14 @@ if ($testFeatures) {
     if ($lastLastExitCode -ne 0)
     {
         Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$false"
-        Write-Error "vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. Check for failure logs attached to the run in Azure Pipelines."
-        exit $lastLastExitCode
+        Write-Host "##vso[task.logissue type=warning]vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. Check for failure logs attached to the run in Azure Pipelines."
+        Write-Host "This is not a fatal error for now while we improve the x-test-features experience, but you may wish to check the feature test results."
+        # exit $lastLastExitCode
     }
-
-    $knownFailuresFromArgs += "--known-failures-from=$knownFailingAbisFile"
+    else
+    {
+        $knownFailuresFromArgs += "--known-failures-from=$knownFailingAbisFile"
+    }
 }
 
 $ciBaselineFile = "$PSScriptRoot/../ci.baseline.txt"
