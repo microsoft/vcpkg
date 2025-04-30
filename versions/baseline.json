@@ -1501,7 +1501,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2025.04.14.00",
+      "baseline": "2025.04.21.00",
       "port-version": 0
     },
     "caf": {
@@ -2417,7 +2417,7 @@
       "port-version": 1
     },
     "doctest": {
-      "baseline": "2.4.11",
+      "baseline": "2.4.12",
       "port-version": 0
     },
     "double-conversion": {
@@ -2773,7 +2773,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2025.04.14.00",
+      "baseline": "2025.04.21.00",
       "port-version": 0
     },
     "fcl": {
@@ -2825,7 +2825,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.04.14.00",
+      "baseline": "2025.04.21.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2913,7 +2913,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2025.04.14.00",
+      "baseline": "2025.04.21.00",
       "port-version": 0
     },
     "font-chef": {
@@ -4053,7 +4053,7 @@
       "port-version": 0
     },
     "kealib": {
-      "baseline": "1.6.1",
+      "baseline": "1.6.2",
       "port-version": 0
     },
     "keccak-tiny": {
@@ -5105,7 +5105,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "9.0.3",
+      "baseline": "9.0.4",
       "port-version": 0
     },
     "libplist": {
@@ -6381,7 +6381,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.04.14.00",
+      "baseline": "2025.04.21.00",
       "port-version": 0
     },
     "mygui": {
@@ -7457,7 +7457,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2025.04.14.00",
+      "baseline": "2025.04.21.00",
       "port-version": 0
     },
     "psimd": {
@@ -7782,7 +7782,7 @@
     },
     "qtbase": {
       "baseline": "6.8.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qtcharts": {
       "baseline": "6.8.3",
@@ -8081,7 +8081,7 @@
       "port-version": 0
     },
     "readerwriterqueue": {
-      "baseline": "1.0.6",
+      "baseline": "1.0.7",
       "port-version": 0
     },
     "readline": {
@@ -9937,7 +9937,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.04.14.00",
+      "baseline": "2025.04.21.00",
       "port-version": 0
     },
     "wasmedge": {
