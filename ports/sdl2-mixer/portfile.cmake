@@ -10,7 +10,6 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fluidsynth SDL2MIXER_MIDI
         fluidsynth SDL2MIXER_MIDI_FLUIDSYNTH
         libflac SDL2MIXER_FLAC
         libflac SDL2MIXER_FLAC_LIBFLAC
@@ -18,10 +17,17 @@ vcpkg_check_features(
         libmodplug SDL2MIXER_MOD_MODPLUG
         mpg123 SDL2MIXER_MP3
         mpg123 SDL2MIXER_MP3_MPG123
+        timidity SDL2MIXER_MIDI_TIMIDITY
         wavpack SDL2MIXER_WAVPACK
         wavpack SDL2MIXER_WAVPACK_DSD
         opusfile SDL2MIXER_OPUS
 )
+
+if("fluidsynth" IN_LIST FEATURES OR "timidity" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DSDL2MIXER_MIDI=ON")
+else()
+    list(APPEND FEATURE_OPTIONS "-DSDL2MIXER_MIDI=OFF")
+endif()
 
 if("fluidsynth" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PKGCONFIG)
@@ -43,7 +49,6 @@ vcpkg_cmake_configure(
         -DSDL2MIXER_VORBIS="VORBISFILE"
         -DSDL2MIXER_FLAC_DRFLAC=OFF
         -DSDL2MIXER_MIDI_NATIVE=OFF
-        -DSDL2MIXER_MIDI_TIMIDITY=OFF
         -DSDL2MIXER_MP3_DRMP3=OFF
         -DSDL2MIXER_MOD_XMP_SHARED=${BUILD_SHARED}
     MAYBE_UNUSED_VARIABLES

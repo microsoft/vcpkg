@@ -1,6 +1,6 @@
 {
   "name": "wangle",
-  "version-string": "2025.04.14.00",
+  "version-string": "2025.04.21.00",
   "description": "Wangle is a framework providing a set of common client/server abstractions for building services in a consistent, modular, and composable way.",
   "homepage": "https://github.com/facebook/wangle",
   "license": "Apache-2.0",

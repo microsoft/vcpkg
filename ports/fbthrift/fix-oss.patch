@@ -1,0 +1,32 @@
+diff --git a/thrift/compiler/CMakeLists.txt b/thrift/compiler/CMakeLists.txt
+index 0d4e4104dcc..7a6c0ce05e5 100644
+--- a/thrift/compiler/CMakeLists.txt
++++ b/thrift/compiler/CMakeLists.txt
+@@ -162,6 +162,7 @@ add_library(
+ 
+   whisker/ast.cc
+   whisker/dsl.cc
++  whisker/detail/string.cc
+   whisker/eval_context.cc
+   whisker/lexer.cc
+   whisker/mstch_compat.cc
+@@ -231,6 +232,7 @@ install(
+     compiler_lib
+     compiler
+     whisker
++    shared
+   EXPORT fbthrift-exports
+   RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+   LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+diff --git a/thrift/shared/CMakeLists.txt b/thrift/shared/CMakeLists.txt
+index 7da0b95ca1b..34006fc21df 100644
+--- a/thrift/shared/CMakeLists.txt
++++ b/thrift/shared/CMakeLists.txt
+@@ -22,6 +22,6 @@ add_library(
+ )
+ 
+ target_link_libraries(
+-  compiler_base
++  shared
+   fmt::fmt
+ )
