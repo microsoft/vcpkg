@@ -2263,6 +2263,15 @@ opentelemetry-cpp[otlp](uwp) = feature-fails # --grpc_out: protoc-gen-grpc: The 
 openvdb[ax] = feature-fails # ax requires llvm version <= 14. Work when using a baseline + overwrite
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd](!(arm & windows)) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
+qt5-base:arm-neon-android=fail
+qt5-base:arm64-android=fail
+qt5-base:arm64-windows-static-md=fail
+qt5-base:x64-android=fail
+osg-qt:arm-neon-android=cascade
+osg-qt:arm64-android=cascade
+osg-qt:arm64-windows-static-md=cascade
+osg-qt:arm64-windows=cascade
+osg-qt:x64-android=cascade
 qt3d[animation] = options # is a requirement, see https://github.com/microsoft/vcpkg/issues/31336
 qt3d[extras] = options # is a requirement, see https://github.com/microsoft/vcpkg/issues/31336
 qt5compat[iconv](!uwp) = feature-fails # requires qtbase without icu
