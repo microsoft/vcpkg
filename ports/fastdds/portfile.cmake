@@ -8,6 +8,8 @@ vcpkg_from_github(
     PATCHES
         fix-find-package-asio.patch
         pdb-file.patch
+        disable-werror.patch
+        include-cstdint.patch
 )
 
 set(extra_opts "")
