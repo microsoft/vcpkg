@@ -362,6 +362,7 @@ ocilib:arm-uwp=fail
 ocilib:arm64-windows=fail
 ocilib:x64-uwp=fail
 ocilib:x64-windows-static-md=fail
+octave(android)=skip
 octomap:arm-uwp=fail
 octomap:x64-uwp=fail
 ode:arm-uwp=fail
