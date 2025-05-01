@@ -13,6 +13,7 @@ vcpkg_make_configure(
     AUTORECONF
     OPTIONS
         --disable-man-pages
+	--disable-symver
 )
 
 vcpkg_make_install()
