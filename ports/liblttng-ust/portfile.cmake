@@ -15,10 +15,7 @@ vcpkg_make_configure(
         --disable-man-pages
 )
 
-vcpkg_make_install(
-    OPTIONS
-        --ignore-errors # ignore werrors
-)
+vcpkg_make_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
