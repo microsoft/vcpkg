@@ -2276,7 +2276,6 @@ pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,rea
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
 qt5-base:arm-neon-android=fail
 qt5-base:arm64-android=fail
-qt5-base:arm64-osx=fail
 qt5-base:arm64-windows-static-md=fail
 qt5-base:x64-android=fail
 osg-qt:arm-neon-android=cascade
