@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         static-build.diff
+        include-stdint.patch
 )
 
 vcpkg_cmake_configure(
