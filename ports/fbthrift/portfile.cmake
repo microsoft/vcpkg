@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 88de262eefb383632be49e5676ebbc7df8706121303cacbe80e4847f8874001dc6b8fa28a7bcdf58d86ee0f8a3f06e32375b8d66071c3d7f2e8f415950fcac1e
+    SHA512 a3c7fb2ca5e1a731c2a71a49a139d3180a06979f1077fd4d5beaec81c2cfd1ffc2f04490aaebf48c64d49cebdc569d84e237c5e8fb26024abfa05dc0a03bbd7a
     HEAD_REF main
     PATCHES
         fix-deps.patch
-        fix-oss.patch
         fix-test.patch
         folly-has-liburing.diff
 )
