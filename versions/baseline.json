@@ -1405,8 +1405,8 @@
       "port-version": 0
     },
     "box2d": {
-      "baseline": "2.4.1",
-      "port-version": 3
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "braft": {
       "baseline": "2021-26-04",
