@@ -16,7 +16,7 @@ vcpkg_extract_source_archive(
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}Config.cmake" [[
     add_library(unofficial::livepp INTERFACE IMPORTED)
 	set_target_properties(unofficial::livepp PROPERTIES
-		INTERFACE_COMPILE_DEFINITIONS LIVEPP_PATH=L"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/livepp")
+		INTERFACE_COMPILE_DEFINITIONS LIVEPP_PATH="${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/livepp")
 ]])
 
 file(INSTALL "${SOURCE_PATH}/API" DESTINATION "${CURRENT_PACKAGES_DIR}/include/LivePP" PATTERN "*.txt" EXCLUDE)
