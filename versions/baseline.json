@@ -6029,7 +6029,7 @@
       "port-version": 0
     },
     "mdl-sdk": {
-      "baseline": "2024.1",
+      "baseline": "2024.1.1",
       "port-version": 0
     },
     "mdns": {
