@@ -1,7 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
-
-
 # Clang
 #
 # The MDL SDK includes a vendored copy of a specific LLVM version, to generate
@@ -71,14 +67,17 @@ endif()
 # MDL-SDK
 #
 # Note about "supports:" in vcpkg.json:
-# !x86, !(windows & (staticcrt | arm | uwp)), !android: not supported by the MDL SDK
+# !x86, !(windows & (arm | uwp)), !android: not supported by the MDL SDK
 # !(osx & arm): no precompiled clang 12 binaries available
+
+# Required for plugins.
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/MDL-SDK
     REF "${VERSION}"
-    SHA512 879566a5d70d181d090ae896e585a977ea5048c3e70c9da7058a8ce1b286132dab4e7ad6ccdb019a4d6e43dcc4195659cfbca504d93dbd0f58407001563b5315
+    SHA512 e4f32a8ee7a073f2518613126c0cee581f35108c01cbd2f3d9fe962abaa948f55de6e30e6f093a5117f9f429252b51d073a2246dac66363a6849b739c2ff8cc5
     HEAD_REF release/2024.1
 )
 
@@ -89,6 +88,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dds           MDL_BUILD_DDS_PLUGIN
         openimageio   MDL_BUILD_OPENIMAGEIO_PLUGIN
 )
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        set(MSVC_RUNTIME_OPTION "-DMDL_MSVC_DYNAMIC_RUNTIME:BOOL=OFF")
+    else()
+        set(MSVC_RUNTIME_OPTION "-DMDL_MSVC_DYNAMIC_RUNTIME:BOOL=ON")
+    endif()
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -103,6 +110,7 @@ vcpkg_cmake_configure(
         -DMDL_ENABLE_PYTHON_BINDINGS:BOOL=OFF
         -DMDL_TREAT_RUNTIME_DEPS_AS_BUILD_DEPS:BOOL=OFF
         ${FEATURE_OPTIONS}
+        ${MSVC_RUNTIME_OPTION}
         -Dpython_PATH:PATH=${PYTHON3}
         -Dclang_PATH:PATH=${LLVM_CLANG}
 )
