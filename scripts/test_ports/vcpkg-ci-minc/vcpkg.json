@@ -25,7 +25,8 @@
           "name": "minc",
           "features": [
             "minc1"
-          ]
+          ],
+          "platform": "native"
         }
       ]
     }
