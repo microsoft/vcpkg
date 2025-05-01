@@ -9549,7 +9549,7 @@
       "port-version": 0
     },
     "unicorn": {
-      "baseline": "2.1.1",
+      "baseline": "2.1.3",
       "port-version": 0
     },
     "unicorn-lib": {

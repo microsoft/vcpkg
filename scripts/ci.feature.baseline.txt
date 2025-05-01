@@ -550,7 +550,6 @@ torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
 treehopper:x64-linux=fail
 treehopper:x64-windows-static=fail
-unicorn:x64-windows-static-md=fail
 unicorn-lib:arm-uwp=fail
 unicorn-lib:x64-uwp=fail
 unittest-cpp:arm-uwp=fail
