@@ -21,24 +21,26 @@
       "host": true
     }
   ],
+  "default-features": [
+    "cscore",
+    "protobuf",
+    "simulation-modules"
+  ],
   "features": {
-    "allwpilib": {
-      "description": "Enables the simulation HAL, and the high level wpilibc library.",
-      "dependencies": [
-        "opencv",
-        {
-          "name": "wpilib",
-          "features": [
-            "cameraserver"
-          ]
-        }
-      ]
-    },
-    "cameraserver": {
-      "description": "Enables the CameraServer and CSCore libraries for manipulating USB Cameras and HTTP Camera Streams",
+    "cscore": {
+      "description": "Enables cscore and cameraserver",
       "dependencies": [
         "opencv"
       ]
+    },
+    "protobuf": {
+      "description": "Enables protobuf support",
+      "dependencies": [
+        "protobuf"
+      ]
+    },
+    "simulation-modules": {
+      "description": "Enables simulation modules."
     }
   }
 }
