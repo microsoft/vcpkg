@@ -24,7 +24,10 @@
   "default-features": [
     "cscore",
     "protobuf",
-    "simulation-modules"
+    {
+      "name": "simulation-modules",
+      "platform": "!static"
+    }
   ],
   "features": {
     "cscore": {
@@ -40,7 +43,8 @@
       ]
     },
     "simulation-modules": {
-      "description": "Enables simulation modules."
+      "description": "Enables simulation modules",
+      "supports": "!static"
     }
   }
 }
