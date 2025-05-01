@@ -17,13 +17,6 @@ vcpkg_check_features(
         "minc1" LIBMINC_MINC1_SUPPORT
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_HOST_IS_WINDOWS
-   AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86"
-   AND VCPKG_HOST_ARCHITECTURE STREQUAL "x64")
-    # enable try_run
-    list(APPEND FEATURE_OPTIONS -DCMAKE_CROSSCOMPILING=0)
-endif()
-
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Symbols are not properly exported
 endif()
