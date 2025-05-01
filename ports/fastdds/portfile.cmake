@@ -3,11 +3,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-DDS
     REF "v${VERSION}"
-    SHA512 9805ac6c099d9ac8c4a6aa339096a6d32f094cc214cb28f8c7858f1c7c99c7683f2318ac4c659bd0741527d9971c80b274c3081224335934c0381d0f1777d493
+    SHA512 ddef07c182d5d0b6096c8714595775d13fbbf9bedcd7e296c38f5b8ce0488d89b7a0048741143dbffbb9c21c3707b1084d1cd80ae7d019c0cac90e0f5eba5519
     HEAD_REF master
     PATCHES
         fix-find-package-asio.patch
         pdb-file.patch
+        disable-werror.patch
+        include-cstdint.patch
 )
 
 set(extra_opts "")
