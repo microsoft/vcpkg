@@ -18,9 +18,17 @@ x_vcpkg_get_python_packages(
 # Scripts are invoking 'openssl' by name
 vcpkg_host_path_list(APPEND ENV{PATH} "${CURRENT_HOST_INSTALLED_DIR}/tools/openssl")
 
+vcpkg_list(SET options)
+if("tracing" IN_LIST FEATURES)
+    list(APPEND options "-Dtracing=enabled")
+else()
+    list(APPEND options "-Dtracing=disabled")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         -Dcam=disabled # This is a test application
         -Ddocumentation=disabled
         -Dgstreamer=enabled
@@ -29,7 +37,6 @@ vcpkg_configure_meson(
         -Dqcam=disabled # Test application
         -Dtest=false # Unit tests
         -Dv4l2=enabled
-        -Dtracing=enabled
         -Dudev=enabled
 )
 

@@ -9,7 +9,6 @@
     "glib",
     "gstreamer",
     "libgnutls",
-    "liblttng-ust",
     "libunwind",
     "libyaml",
     "libyuv",
@@ -28,5 +27,13 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tracing": {
+      "description": "Enable tracing",
+      "dependencies": [
+        "liblttng-ust"
+      ]
+    }
+  }
 }
