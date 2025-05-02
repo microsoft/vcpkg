@@ -396,8 +396,8 @@ glibmm:arm64-windows-static-md=fail
 glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
 # needs arm64 host
-gobject-introspection:arm64-windows=fail
 gobject-introspection:arm64-windows-static-md=fail
+gobject-introspection:arm64-windows=fail
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
 # gsoap does not offer stable public source downloads
