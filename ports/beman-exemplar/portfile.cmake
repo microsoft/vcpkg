@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_CXX_STANDARD=17
         -DBEMAN_EXEMPLAR_BUILD_TESTS=OFF
         -DBEMAN_EXEMPLAR_BUILD_EXAMPLES=OFF
 )
