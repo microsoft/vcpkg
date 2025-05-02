@@ -1,6 +1,6 @@
 {
   "name": "ms-gdk",
-  "version": "2410.1.1897",
+  "version": "2410.2.1916",
   "description": "Microsoft Game Development Kit (GDK)",
   "homepage": "https://aka.ms/gdkx",
   "documentation": "https://aka.ms/gamedevdocs",
@@ -15,5 +15,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "playfab": {
+      "description": "Include PlayFab Extension Libraries"
+    }
+  }
 }
