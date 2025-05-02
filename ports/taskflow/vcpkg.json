@@ -1,7 +1,7 @@
 {
   "name": "taskflow",
-  "version": "3.9.0",
-  "description": "Fast Parallel Tasking Programming Library using Modern C++",
+  "version": "3.10.0",
+  "description": "A General-purpose Task-parallel Programming System using Modern C++",
   "homepage": "https://github.com/taskflow/taskflow",
   "license": "MIT",
   "dependencies": [
