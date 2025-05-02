@@ -17,6 +17,7 @@ vcpkg_from_github(
         install-examples.patch
         fix-clang-cl.patch
         add-chrono-includes.patch
+        add-cassert.patch
         "${NO_GLU_PATCH}"
 )
 
