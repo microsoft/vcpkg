@@ -3,7 +3,7 @@
   "version": "0.15.2",
   "description": "liburcu is a LGPLv2.1 userspace RCU (read-copy-update) library. This data synchronization library provides read-side access which scales linearly with the number of cores.",
   "homepage": "liburcu.org",
-  "license": "LGPL-2.1-or-later",
+  "license": null,
   "supports": "!windows",
   "dependencies": [
     {
