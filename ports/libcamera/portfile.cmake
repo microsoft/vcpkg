@@ -8,8 +8,6 @@ vcpkg_from_git(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-vcpkg_find_acquire_program(MESON)
-
 x_vcpkg_get_python_packages(
     PYTHON_VERSION 3
     PYTHON_EXECUTABLE "${PYTHON3}"
