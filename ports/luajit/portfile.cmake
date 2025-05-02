@@ -106,6 +106,6 @@ vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
 
-file(COPY "${SOURCE_PATH}/src/jit/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/luajit")
+file(COPY "${SOURCE_PATH}/src/jit/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/luajit/jit")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")

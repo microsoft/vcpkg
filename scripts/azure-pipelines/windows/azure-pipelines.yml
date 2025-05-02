@@ -38,8 +38,11 @@ jobs:
   - script: .\scripts\azure-pipelines\windows\bootstrap-from-source.cmd ${{ parameters.vcpkgToolSha }}
     displayName: "Build vcpkg with CMake"
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
-  - script: '.\vcpkg.exe format-manifest --all'
-    displayName: 'Format Manifests'
+  - script: |
+      .\vcpkg.exe format-manifest --all
+      .\vcpkg.exe format-feature-baseline scripts\ci.baseline.txt
+      .\vcpkg.exe format-feature-baseline scripts\ci.feature.baseline.txt
+    displayName: 'Format Manifests and Baselines'
     condition: eq('${{ replace(parameters.jobName, '_', '-') }}', '${{ variables.ExtraChecksTriplet }}')
   - task: PowerShell@2
     displayName: 'Create Diff'
