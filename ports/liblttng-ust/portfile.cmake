@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 4b41e4b80465f1e94178054430246b552f6b04e65682b1c943ac2e33d5e2c6eb24707fdaec8165855fd0f11ebc60a3afa9117fbaddd2d634d03cc76e74ee6381
     HEAD_REF master
+    PATCHES
+        fix-symver.patch
 )
 
 vcpkg_make_configure(
@@ -13,7 +15,8 @@ vcpkg_make_configure(
     AUTORECONF
     OPTIONS
         --disable-man-pages
-	--disable-symver
+	--disable-examples
+	--disable-numa
 )
 
 vcpkg_make_install()
