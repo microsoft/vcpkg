@@ -16,6 +16,9 @@ x_vcpkg_get_python_packages(
     PACKAGES "jinja2" "PyYaml" "ply"
 )
 
+# invoking 'openssl' by name
+vcpkg_host_path_list(APPEND ENV{PATH} "${CURRENT_HOST_INSTALLED_DIR}/tools/openssl")
+
 if(VCPKG_TARGET_IS_ANDROID)
     set(ANDROID_OPTIONS "-Dandroid=enabled")
 endif()
@@ -23,17 +26,17 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    ${ANDROID_OPTIONS}
-    -Dcam=disabled # This is a test application
-    -Ddocumentation=disabled
-    -Dgstreamer=enabled
-    -Dlc-compliance=disabled # Test appplication
-    -Dpycamera=disabled # experimental feature, going to leave for later
-    -Dqcam=disabled # Test application
-    -Dtest=false # Unit tests
-    -Dv4l2=enabled
-    -Dtracing=enabled
-    -Dudev=enabled
+        ${ANDROID_OPTIONS}
+        -Dcam=disabled # This is a test application
+        -Ddocumentation=disabled
+        -Dgstreamer=enabled
+        -Dlc-compliance=disabled # Test appplication
+        -Dpycamera=disabled # experimental feature, going to leave for later
+        -Dqcam=disabled # Test application
+        -Dtest=false # Unit tests
+        -Dv4l2=enabled
+        -Dtracing=enabled
+        -Dudev=enabled
 )
 
 vcpkg_install_meson()

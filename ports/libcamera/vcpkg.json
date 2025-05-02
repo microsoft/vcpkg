@@ -13,7 +13,13 @@
     "libunwind",
     "libyaml",
     "libyuv",
-    "openssl",
+    {
+      "name": "openssl",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
     {
       "name": "vcpkg-get-python-packages",
       "host": true
