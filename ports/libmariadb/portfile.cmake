@@ -19,6 +19,7 @@ vcpkg_from_github(
         library-linkage.diff
         cmake-export.diff
         no-abs-path.diff
+        android-patch.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindIconv.cmake"
