@@ -37,18 +37,11 @@ if ("utilities" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES
             ChangeIpUtility
-            change_ip_utility.py
-            device_info_utility.py
             ImageCalUtility
-            image_cal_utility.py
             PointCloudUtility
-            point_cloud_utility.py
             RectifiedFocalLengthUtility
-            rectified_focal_length_utility.py
             SaveImageUtility
-            save_image_utility.py
             VersionInfoUtility
-            version_info_utility.py
         AUTO_CLEAN
     )
 endif ()
