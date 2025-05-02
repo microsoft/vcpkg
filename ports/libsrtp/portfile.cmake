@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 eb42cc1755acd5677351fc058e2f45314ba66b590bce80944ea12aa3780953ce4c1c6211979729304d753e6c0fd325647adafc38c20c6af8482ce6f552022896
     PATCHES
+        cmake-config.diff
         fix-runtime-destination.patch
 )
 
@@ -21,8 +22,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libSRTP)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

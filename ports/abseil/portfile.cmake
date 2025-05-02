@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
     REF "${VERSION}"
-    SHA512 2a021faad807ee3e23548716ffa4785dc2409edbb4be676cc4bc01d47885760de340f0a4afdcbf0aaa835affd6d78f7bc319bbf7d337dbc30e7a559d0088e4bd
+    SHA512 8312acf0ed74fa28c6397f3e41ada656dbd5ca2bf8db484319d74b144ad19c0ebdc77f7f03436be6c6ca1cde706b9055079233cf0d6b5ada4ca48406f8a55dd8
     HEAD_REF master
 )
 

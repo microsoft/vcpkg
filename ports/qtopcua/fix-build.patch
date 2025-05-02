@@ -1,5 +1,5 @@
 diff --git a/cmake/FindOpen62541.cmake b/cmake/FindOpen62541.cmake
-index b4fcea410..91958e554 100644
+index b4fcea4..67e180f 100644
 --- a/cmake/FindOpen62541.cmake
 +++ b/cmake/FindOpen62541.cmake
 @@ -21,6 +21,7 @@
@@ -10,19 +10,31 @@ index b4fcea410..91958e554 100644
  find_path(Open62541_INCLUDE_DIRS
      NAMES open62541.h
      HINTS "${OPEN62541_INCDIR}")
-@@ -46,6 +47,15 @@ if (Open62541_FOUND)
+@@ -46,6 +47,11 @@ if (Open62541_FOUND)
  endif()
  
  mark_as_advanced(Open62541_INCLUDE_DIRS Open62541_LIBRARIES)
-+else()
-+    find_package(open62541 CONFIG REQUIRED)
-+    if(NOT TARGET open62541)
-+        add_library(open62541 INTERFACE IMPORTED)
-+        set_property(TARGET open62541 APPEND PROPERTY
-+            INTERFACE_LINK_LIBRARIES open62541::open62541)
-+    endif()
-+    set(Open62541_FOUND ON)
++endif()
++find_package(Open62541 NAMES open62541)
++if(Open62541_FOUND AND TARGET open62541::open62541 AND NOT TARGET open62541)
++    add_library(open62541 ALIAS open62541::open62541)
 +endif()
  
  include(FeatureSummary)
  set_package_properties(Open62541 PROPERTIES
+diff --git a/src/plugins/opcua/open62541/qopen62541.h b/src/plugins/opcua/open62541/qopen62541.h
+index a4f63df..877888b 100644
+--- a/src/plugins/opcua/open62541/qopen62541.h
++++ b/src/plugins/opcua/open62541/qopen62541.h
+@@ -18,7 +18,10 @@
+ #pragma clang diagnostic ignored "-Wunused-parameter"
+ #endif
+ 
+-#include <open62541.h>
++#include <open62541/client.h>
++#include <open62541/client_config_default.h>
++#include <open62541/client_subscriptions.h>
++#include <open62541/server.h>
+ 
+ #if defined(_MSC_VER)
+ #pragma warning(pop)

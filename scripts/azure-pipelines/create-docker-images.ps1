@@ -1,23 +1,44 @@
 # Create Docker images for vcpkg
 
+[CmdletBinding()]
+param(
+    [switch]$OnlyAndroid,
+    [switch]$OnlyLinux
+)
+
+if ($OnlyAndroid -and $OnlyLinux) {
+    Write-Error "At most one of {-OnlyAndroid, -OnlyLinux} may be set"
+    return 1
+}
+
+if ($OnlyAndroid) {
+    Write-Host "Only building Android"
+    $BuildAndroid = $true
+    $BuildLinux = $false
+} elseif ($OnlyLinux) {
+    Write-Host "Only building Linux"
+    $BuildAndroid = $false
+    $BuildLinux = $true
+} else {
+    $BuildAndroid = $true
+    $BuildLinux = $true
+}
+
 function Build-Image {
     param(
+    $AcrRegistry,
     [string]$Location,
     [string]$ImageName,
-    [string]$ContainerRegistryName,
     [string]$Date
     )
 
     Push-Location $Location
     try {
-
-        docker build . -t $ImageName
-
-        $remote = [string]::Format('{0}.azurecr.io/{1}:{2}', $ContainerRegistryName, $ImageName, $Date)
-        docker tag $ImageName $remote
+        docker build . -t $ImageName --build-arg BUILD_DATE=$Date
+        $remote = [string]::Format('{0}/{1}:{2}', $AcrRegistry.LoginServer, $ImageName, $Date)
+        docker image tag $ImageName $remote
 
         docker push $remote
-
         Write-Host "Remote: $remote"
     } finally {
         Pop-Location
@@ -32,14 +53,18 @@ $ErrorActionPreference = 'Stop'
 $registry = Get-AzContainerRegistry -ResourceGroupName $ResourceGroupName -Name $ContainerRegistryName
 Connect-AzContainerRegistry -Name $registry.Name
 
-docker builder prune -f --filter "until=24h"
-Build-Image -Location "$PSScriptRoot/android" `
-    -ImageName "vcpkg-android" `
-    -ContainerRegistryName $ContainerRegistryName `
-    -Date $Date
-Build-Image -Location "$PSScriptRoot/linux" `
-    -ImageName "vcpkg-linux" `
-    -ContainerRegistryName $ContainerRegistryName `
-    -Date $Date
+if ($BuildAndroid) {
+    Build-Image -AcrRegistry $registry `
+        -Location "$PSScriptRoot/android" `
+        -ImageName "vcpkg-android" `
+        -Date $Date
+}
 
-docker logout
+if ($BuildLinux) {
+    Build-Image -AcrRegistry $registry `
+        -Location "$PSScriptRoot/linux" `
+        -ImageName "vcpkg-linux" `
+        -Date $Date
+}
+
+docker logout $registry.LoginServer

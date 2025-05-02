@@ -1,6 +1,6 @@
 {
   "name": "sentry-native",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "license": "MIT",
@@ -36,6 +36,14 @@
           "name": "pkgconf",
           "host": true,
           "platform": "!android & !ios"
+        },
+        {
+          "$comment": "sentry-native[transport] is used by the crashpad backend.",
+          "name": "sentry-native",
+          "features": [
+            "transport"
+          ],
+          "platform": "!android & !ios & !windows"
         },
         {
           "$comment": "zlib is used by the crashpad backend.",
