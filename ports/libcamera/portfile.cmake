@@ -15,17 +15,12 @@ x_vcpkg_get_python_packages(
     PACKAGES "jinja2" "PyYaml" "ply"
 )
 
-# invoking 'openssl' by name
+# Scripts are invoking 'openssl' by name
 vcpkg_host_path_list(APPEND ENV{PATH} "${CURRENT_HOST_INSTALLED_DIR}/tools/openssl")
-
-if(VCPKG_TARGET_IS_ANDROID)
-    set(ANDROID_OPTIONS "-Dandroid=enabled")
-endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${ANDROID_OPTIONS}
         -Dcam=disabled # This is a test application
         -Ddocumentation=disabled
         -Dgstreamer=enabled
