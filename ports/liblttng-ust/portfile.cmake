@@ -20,6 +20,7 @@ vcpkg_make_configure(
 )
 
 vcpkg_make_install()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
