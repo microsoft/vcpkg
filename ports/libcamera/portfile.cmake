@@ -1,7 +1,8 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.libcamera.org/libcamera/libcamera.git
-    REF 058f589ae36170935e537910f2c303b1c3ea03b3 FETCH_REF "v${VERSION}"
+    REF 058f589ae36170935e537910f2c303b1c3ea03b3
+    FETCH_REF "v${VERSION}"
     HEAD_REF master
     PATCHES
         fix-absolute-paths.patch
