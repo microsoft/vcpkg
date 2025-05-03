@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         ${werror_patch}
         crt-linkage.diff
+        libm.diff
 )
 
 vcpkg_cmake_configure(
