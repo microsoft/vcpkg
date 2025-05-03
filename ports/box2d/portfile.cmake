@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_download_distfile(
     werror_patch
     URLS https://github.com/erincatto/Box2D/commit/0f2b0246f39594e93fcc8dde0fe0bb1b20b403f9.patch?full_index=1
@@ -14,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         ${werror_patch}
+        crt-linkage.diff
 )
 
 vcpkg_cmake_configure(
