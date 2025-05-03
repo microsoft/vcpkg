@@ -26,10 +26,15 @@
   ],
   "features": {
     "pipewire": {
-      "description": "Native support for Pipewire",
-      "supports": "linux",
+      "description": "Enable PipeWire backend",
       "dependencies": [
         "pipewire"
+      ]
+    },
+    "pulseaudio": {
+      "description": "Enable PulseAudio backend",
+      "dependencies": [
+        "pulseaudio"
       ]
     }
   }
