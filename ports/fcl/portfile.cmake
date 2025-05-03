@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF a3fbc9fe4f619d7bb1117dc137daa497d2de454b # unrelased (Mar 13, 2025)
     SHA512 d04db55768d27cd191cf72ee3cc7ffeb5164c0d5db8bd38eb8ed523846e205340947f0b64473d567db0bc56bf8e8da330dc6e5e2929066e6d0f512fd5a7cbd92
     HEAD_REF master
+    PATCHES
+        0001-fix-cxx-standard.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FCL_STATIC_LIBRARY)
