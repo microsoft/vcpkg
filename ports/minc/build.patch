@@ -26,7 +26,7 @@ index caf681a..58b7648 100644
  
 +if(WIN32)
 +  add_definitions(-DMNCAPI=)
-+  list(APPEND LIBMINC_LIBRARIES ws2_32)
++  list(APPEND LIBMINC_LIBRARIES_CONFIG ws2_32)
 +endif()
 +
  SET(minc_LIB_SRCS ${minc2_LIB_SRCS} ${minc_common_SRCS})
