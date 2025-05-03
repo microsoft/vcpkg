@@ -27,16 +27,15 @@ vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_find_acquire_program(SCONS)
-vcpkg_find_acquire_program(SWIG)
 vcpkg_find_acquire_program(YASM)
 
 if(NOT VCPKG_HOST_IS_OSX)
-    vcpkg_find_acquire_program(RUBY)
     vcpkg_find_acquire_program(MESON) # System python too old (3.9; meson needs 3.10)
+    vcpkg_find_acquire_program(RUBY)
+    vcpkg_find_acquire_program(SWIG)
 endif()
 
 if(VCPKG_HOST_IS_LINUX)
-    list(APPEND variables PATCHELF)
     vcpkg_find_acquire_program(PATCHELF)
 endif()
 
