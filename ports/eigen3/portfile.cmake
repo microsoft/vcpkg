@@ -7,6 +7,8 @@ vcpkg_from_gitlab(
     REF 729443409942a1816ddf74b95224003b83f4925c # unreleased v3.4.90 (Apr 25, 2025)
     SHA512 8a465111994c3b45316a534408365223524c0fb4d9738cb8d674a8496a66c4ea95afb22094d48d8ed716cd3b4a99f08741d1eb798d9cf6e0995047fecb9c11df
     HEAD_REF master
+    PATCHES
+        0001-add-cxx_std_14.patch
 )
 
 vcpkg_cmake_configure(
