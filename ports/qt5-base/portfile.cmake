@@ -14,6 +14,11 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
+set(WITH_SQLITE3_PLUGIN OFF)
+if("sqlite3plugin" IN_LIST FEATURES)
+    set(WITH_SQLITE3_PLUGIN ON)
+endif()
+
 set(WITH_PGSQL_PLUGIN OFF)
 if("postgresqlplugin" IN_LIST FEATURES)
     set(WITH_PGSQL_PLUGIN ON)
@@ -112,7 +117,6 @@ list(APPEND CORE_OPTIONS
     -system-freetype
     -system-pcre
     -system-doubleconversion
-    -system-sqlite
     -system-harfbuzz
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
@@ -128,6 +132,11 @@ else()
     list(APPEND CORE_OPTIONS -dbus-runtime)
 endif()
 
+if(WITH_SQLITE3_PLUGIN)
+    list(APPEND CORE_OPTIONS -system-sqlite)
+else()
+    list(APPEND CORE_OPTIONS -no-sql-sqlite)
+endif()
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
 else()
