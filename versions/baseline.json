@@ -693,7 +693,7 @@
       "port-version": 0
     },
     "bitserializer": {
-      "baseline": "0.75",
+      "baseline": "0.80",
       "port-version": 0
     },
     "bitsery": {
