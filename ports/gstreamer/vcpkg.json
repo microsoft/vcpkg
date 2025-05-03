@@ -325,13 +325,6 @@
         }
       ]
     },
-    "introspection": {
-      "description": "Generate introspection data",
-      "supports": "!windows | !static",
-      "dependencies": [
-        "gobject-introspection"
-      ]
-    },
     "jpeg": {
       "description": "Enable support for the JPEG file format",
       "dependencies": [

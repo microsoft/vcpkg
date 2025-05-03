@@ -42,7 +42,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ges             ges
         gpl             gpl
-        introspection   introspection
         libav           libav
         nls             nls
 
