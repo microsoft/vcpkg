@@ -5,7 +5,7 @@
   "description": "PulseAudio is a sound server, originally created to overcome the limitations of the Enlightened Sound Daemon (EsounD)",
   "homepage": "https://www.freedesktop.org/wiki/Software/PulseAudio/Documentation/User/Community/",
   "license": null,
-  "supports": "!windows & !osx",
+  "supports": "!android & !osx & !windows",
   "dependencies": [
     {
       "name": "alsa",
