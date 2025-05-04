@@ -945,6 +945,7 @@ gst-rtsp-server:arm64-uwp = cascade
 gst-rtsp-server:x64-uwp = cascade
 gstreamer[asio]:arm64-windows = cascade
 gstreamer[dc1394](android | osx) = cascade
+gstreamer[wayland](windows) = cascade
 gtk:arm64-uwp = cascade
 gtk:arm64-windows = cascade
 gtk:x64-uwp = cascade

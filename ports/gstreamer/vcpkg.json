@@ -746,7 +746,20 @@
             "plugins-bad"
           ]
         },
-        "vulkan"
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "wayland"
+          ],
+          "platform": "!android & !ios & !osx & !windows"
+        },
+        {
+          "name": "shaderc",
+          "host": true
+        },
+        "vulkan",
+        "wayland-protocols"
       ]
     },
     "wayland": {
