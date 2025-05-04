@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 66923cfc9..e85d9295c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,6 +27,12 @@ endforeach()
+ 
+ include(cmake/modules/CaptureCommandLine.cmake)
+ 
+ project(ROOT)
++macro(_find_package)
++  if(NOT "${ARGV0}" IN_LIST ROOT_BUILTINS)
++    __find_package(${ARGV})
++  endif()
++endmacro()
++
+ 
+ #---Set the locale to default C to prevent issued due to localization of commands---------------
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index 7232e66a2..e293a76a0 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -13,12 +13,6 @@ include(FindPackageHandleStandardArgs)
+ set(lcgpackages http://lcgpackages.web.cern.ch/lcgpackages/tarFiles/sources)
+ string(REPLACE "-Werror " "" ROOT_EXTERNAL_CXX_FLAGS "${CMAKE_CXX_FLAGS} ")
+ 
+-macro(find_package)
+-  if(NOT "${ARGV0}" IN_LIST ROOT_BUILTINS)
+-    _find_package(${ARGV})
+-  endif()
+-endmacro()
+-
+ #---On MacOSX, try to find frameworks after standard libraries or headers------------
+ set(CMAKE_FIND_FRAMEWORK LAST)
+ 

@@ -1,0 +1,114 @@
+diff --git a/cmake/modules/RootMacros.cmake b/cmake/modules/RootMacros.cmake
+index 4780d155ec01..64e60c216131 100644
+--- a/cmake/modules/RootMacros.cmake
++++ b/cmake/modules/RootMacros.cmake
+@@ -899,7 +899,7 @@ function(ROOT_LINKER_LIBRARY library)
+     set(library ${library}_new)
+   endif()
+   if(WIN32 AND ARG_TYPE STREQUAL SHARED AND NOT ARG_DLLEXPORT)
+-    if(CMAKE_GENERATOR MATCHES "Visual Studio")
++    if(MSVC)
+       set(library_name ${libprefix}${library})
+     endif()
+     #---create a shared library with the .def file------------------------
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index c44fca4da631..0fb982f25240 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -153,6 +153,10 @@ if(builtin_freetype)
+       set(freetypebuild "Debug")
+       set(freetypelib freetyped.lib)
+     endif()
++    set(freetypeoutputdir "")
++    if(CMAKE_GENERATOR MATCHES "Visual Studio")
++      set(freetypeoutputdir "${freetypebuild}/")
++    endif()
+     ExternalProject_Add(
+       FREETYPE
+       URL ${CMAKE_SOURCE_DIR}/graf2d/freetype/src/freetype-${freetype_version}.tar.gz
+@@ -160,7 +164,7 @@ if(builtin_freetype)
+       INSTALL_DIR ${CMAKE_BINARY_DIR}
+       CMAKE_ARGS -G ${CMAKE_GENERATOR} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DFT_DISABLE_BZIP2=TRUE
+       BUILD_COMMAND ${CMAKE_COMMAND} --build . --config ${freetypebuild}
+-      INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_if_different ${freetypebuild}/${freetypelib} ${FREETYPE_LIBRARY}
++      INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_if_different ${freetypeoutputdir}${freetypelib} ${FREETYPE_LIBRARY}
+       LOG_DOWNLOAD 1 LOG_CONFIGURE 1 LOG_BUILD 1 LOG_INSTALL 1 BUILD_IN_SOURCE 0
+       BUILD_BYPRODUCTS ${FREETYPE_LIBRARY}
+       TIMEOUT 600
+@@ -453,13 +457,17 @@ if(builtin_afterimage)
+     else()
+       set(astepbld "Release")
+     endif()
++    set(astepoutputdir)
++    if(CMAKE_GENERATOR MATCHES "Visual Studio")
++      set(astepoutputdir "${astepbld}/")
++    endif()
+     ExternalProject_Add(
+       AFTERIMAGE
+       DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/graf2d/asimage/src/libAfterImage AFTERIMAGE
+       INSTALL_DIR ${CMAKE_BINARY_DIR}
+       CMAKE_ARGS -G ${CMAKE_GENERATOR} -DCMAKE_VERBOSE_MAKEFILE=ON -DFREETYPE_INCLUDE_DIR=${FREETYPE_INCLUDE_DIR}
+       BUILD_COMMAND ${CMAKE_COMMAND} --build . --config ${astepbld}
+-      INSTALL_COMMAND  ${CMAKE_COMMAND} -E copy_if_different ${astepbld}/libAfterImage.lib <INSTALL_DIR>/lib/
++      INSTALL_COMMAND  ${CMAKE_COMMAND} -E copy_if_different ${astepoutputdir}libAfterImage.lib <INSTALL_DIR>/lib/
+       LOG_DOWNLOAD 1 LOG_CONFIGURE 1 LOG_BUILD 1 LOG_INSTALL 1 BUILD_IN_SOURCE 0
+       BUILD_BYPRODUCTS ${AFTERIMAGE_LIBRARIES}
+       TIMEOUT 600
+@@ -901,6 +909,10 @@ if(fitsio OR builtin_cfitsio)
+       else()
+         set(cfitsiobuild "Release")
+       endif()
++      set(cfitsiooutputdir "")
++      if(CMAKE_GENERATOR MATCHES "Visual Studio")
++        set(cfitsiooutputdir "${cfitsiobuild}/")
++      endif()
+       ExternalProject_Add(
+         CFITSIO
+         # ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio${cfitsio_version_no_dots}.tar.gz
+@@ -909,8 +921,8 @@ if(fitsio OR builtin_cfitsio)
+         INSTALL_DIR ${CMAKE_BINARY_DIR}
+         CMAKE_ARGS -G ${CMAKE_GENERATOR} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+         BUILD_COMMAND ${CMAKE_COMMAND} --build . --config ${cfitsiobuild}
+-        INSTALL_COMMAND ${CMAKE_COMMAND} -E copy ${cfitsiobuild}/cfitsio.dll <INSTALL_DIR>/bin
+-                COMMAND ${CMAKE_COMMAND} -E copy ${cfitsiobuild}/cfitsio.lib <INSTALL_DIR>/lib
++        INSTALL_COMMAND ${CMAKE_COMMAND} -E copy ${cfitsiooutputdir}cfitsio.dll <INSTALL_DIR>/bin
++                COMMAND ${CMAKE_COMMAND} -E copy ${cfitsiooutputdir}cfitsio.lib <INSTALL_DIR>/lib
+         LOG_DOWNLOAD 1 LOG_CONFIGURE 1 LOG_BUILD 1 LOG_INSTALL 1 BUILD_IN_SOURCE 0
+         BUILD_BYPRODUCTS ${CFITSIO_LIBRARIES}
+         TIMEOUT 600
+@@ -1363,6 +1375,10 @@ if(builtin_tbb)
+       set(tbbbuild "Debug")
+       set(tbbsuffix "_debug")
+     endif()
++    set(tbboutputdir "")
++    if(CMAKE_GENERATOR MATCHES "Visual Studio")
++      set(tbboutputdir "${tbbbuild}/")
++    endif()
+     set(TBB_LIBRARIES ${CMAKE_BINARY_DIR}/lib/tbb${tbbsuffix}.lib)
+     ExternalProject_Add(
+       TBB
+@@ -1371,15 +1387,15 @@ if(builtin_tbb)
+       INSTALL_DIR ${CMAKE_BINARY_DIR}
+       CONFIGURE_COMMAND devenv.exe /useenv /upgrade build/${vsdir}/makefile.sln
+       BUILD_COMMAND MSBuild.exe build/${vsdir}/makefile.sln /p:Configuration=${tbbbuild} /p:Platform=${tbb_arch}
+-      INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbb${tbbsuffix}.dll ${CMAKE_BINARY_DIR}/bin/
+-              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbbmalloc${tbbsuffix}.dll ${CMAKE_BINARY_DIR}/bin/
+-              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbbmalloc_proxy${tbbsuffix}.dll ${CMAKE_BINARY_DIR}/bin/
+-              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbb${tbbsuffix}.lib ${CMAKE_BINARY_DIR}/lib/
+-              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbbmalloc${tbbsuffix}.lib ${CMAKE_BINARY_DIR}/lib/
+-              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbbmalloc_proxy${tbbsuffix}.lib ${CMAKE_BINARY_DIR}/lib/
+-              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbb${tbbsuffix}.pdb ${CMAKE_BINARY_DIR}/bin/
+-              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbbmalloc${tbbsuffix}.pdb ${CMAKE_BINARY_DIR}/bin/
+-              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbbbuild}/tbbmalloc_proxy${tbbsuffix}.pdb ${CMAKE_BINARY_DIR}/bin/
++      INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbb${tbbsuffix}.dll ${CMAKE_BINARY_DIR}/bin/
++              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbbmalloc${tbbsuffix}.dll ${CMAKE_BINARY_DIR}/bin/
++              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbbmalloc_proxy${tbbsuffix}.dll ${CMAKE_BINARY_DIR}/bin/
++              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbb${tbbsuffix}.lib ${CMAKE_BINARY_DIR}/lib/
++              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbbmalloc${tbbsuffix}.lib ${CMAKE_BINARY_DIR}/lib/
++              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbbmalloc_proxy${tbbsuffix}.lib ${CMAKE_BINARY_DIR}/lib/
++              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbb${tbbsuffix}.pdb ${CMAKE_BINARY_DIR}/bin/
++              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbbmalloc${tbbsuffix}.pdb ${CMAKE_BINARY_DIR}/bin/
++              COMMAND ${CMAKE_COMMAND} -E copy_if_different build/${vsdir}/${tbb_arch}/${tbboutputdir}tbbmalloc_proxy${tbbsuffix}.pdb ${CMAKE_BINARY_DIR}/bin/
+               COMMAND ${CMAKE_COMMAND} -Dinstall_dir=<INSTALL_DIR> -Dsource_dir=<SOURCE_DIR>
+                                        -P ${CMAKE_SOURCE_DIR}/cmake/scripts/InstallTBB.cmake
+       BUILD_IN_SOURCE 1

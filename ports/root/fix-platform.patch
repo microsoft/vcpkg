@@ -1,0 +1,100 @@
+diff --git a/cmake/modules/RootCPack.cmake b/cmake/modules/RootCPack.cmake
+index a960eb81f..83c0830be 100644
+--- a/cmake/modules/RootCPack.cmake
++++ b/cmake/modules/RootCPack.cmake
+@@ -101,7 +101,7 @@ if(APPLE)
+                   OUTPUT_VARIABLE osvers OUTPUT_STRIP_TRAILING_WHITESPACE)
+   set(OS_NAME_VERSION macos-${osvers}-${CMAKE_SYSTEM_PROCESSOR})
+ elseif(WIN32)
+-  if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64")
++  if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+     set(OS_NAME_VERSION win64)
+   else()
+     set(OS_NAME_VERSION win32)
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index d0ec2c5d9..7bbd3e43f 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -233,7 +233,7 @@ if(builtin_lzma)
+   message(STATUS "Building LZMA version ${lzma_version} included in ROOT itself")
+   if(WIN32)
+     set(LIBLZMA_LIBRARIES ${CMAKE_BINARY_DIR}/LZMA/src/LZMA/lib/liblzma.lib)
+-    if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64")
++    if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+       set(LZMA_URL ${CMAKE_SOURCE_DIR}/core/lzma/src/xz-${lzma_version}-win64.tar.gz)
+       set(LZMA_URL_HASH SHA256=76ba7cdff547141f6d6810c8600a9d782feca343debde378fc8f6a307cbfd1d2)
+     else()
+@@ -1338,7 +1338,7 @@ if(builtin_tbb)
+   endif()
+   if(MSVC)
+     set(vsdir "vs2013")
+-    if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64")
++    if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+       set(tbb_arch x64)
+     else()
+       set(tbb_arch Win32)
+diff --git a/cmake/modules/SetUpWindows.cmake b/cmake/modules/SetUpWindows.cmake
+index 846ca8784..3f6080696 100644
+--- a/cmake/modules/SetUpWindows.cmake
++++ b/cmake/modules/SetUpWindows.cmake
+@@ -18,7 +18,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
+   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
+ 
+ elseif(MSVC)
+-  if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64")
++  if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+     set(ARCH "-wd4267 -D_WIN64")
+     set(ROOT_ARCHITECTURE win64)
+   else()
+diff --git a/core/metacling/src/CMakeLists.txt b/core/metacling/src/CMakeLists.txt
+index 1321ddd8f..83c1967ba 100644
+--- a/core/metacling/src/CMakeLists.txt
++++ b/core/metacling/src/CMakeLists.txt
+@@ -128,7 +128,7 @@ if(MSVC)
+       __std_terminate
+       cling_runtime_internal_throwIfInvalidPointer
+   )
+-  if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64")
++  if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+     set(cling_exports ${cling_exports}
+       ??2@YAPEAX_K@Z
+       ??3@YAXPEAX@Z
+diff --git a/graf2d/win32gdk/CMakeLists.txt b/graf2d/win32gdk/CMakeLists.txt
+index 76e572e9f..d820ca425 100644
+--- a/graf2d/win32gdk/CMakeLists.txt
++++ b/graf2d/win32gdk/CMakeLists.txt
+@@ -35,7 +35,7 @@ if(winrtdebug)
+ else()
+   set(nmcxxflags "${CMAKE_CXX_FLAGS_RELEASE}")
+ endif()
+-if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64")
++if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+   set(nmcxxflags "${nmcxxflags} -D_WIN64")
+ endif()
+ 
+diff --git a/hist/histv7/test/CMakeLists.txt b/hist/histv7/test/CMakeLists.txt
+index a300e55d0..1610611b7 100644
+--- a/hist/histv7/test/CMakeLists.txt
++++ b/hist/histv7/test/CMakeLists.txt
+@@ -12,7 +12,7 @@ if(MSVC)
+     # Try to remove those lines when upgrading Visual Studio
+     string(REPLACE "-Od -Z7" "-O2" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+   endif()
+-  if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64")
++  if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64")
+     set_source_files_properties(constructors.cxx COMPILE_FLAGS "/bigobj")
+   endif()
+ endif()
+diff --git a/tutorials/CMakeLists.txt b/tutorials/CMakeLists.txt
+index 9df6d5424..ab0abe77f 100644
+--- a/tutorials/CMakeLists.txt
++++ b/tutorials/CMakeLists.txt
+@@ -104,7 +104,7 @@ if(MACOSX_VERSION VERSION_EQUAL 10.13)
+    list(APPEND dataframe_veto dataframe/df103_NanoAODHiggsAnalysis.*)
+ endif()
+ 
+-if(MSVC AND "${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" AND NOT win_broken_tests)
++if(MSVC AND ("${CMAKE_GENERATOR_PLATFORM}" MATCHES "x64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64") AND NOT win_broken_tests)
+     list(APPEND dataframe_veto dataframe/df002_dataModel.C)
+     list(APPEND dataframe_veto dataframe/df016_vecOps.C)
+     list(APPEND dataframe_veto dataframe/df017_vecOpsHEP.C)
