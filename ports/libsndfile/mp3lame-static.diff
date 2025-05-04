@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b501f08..df8f6a1 100644
+index b501f08..946c321 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -236,6 +236,10 @@ if (INSTALL_PKGCONFIG_MODULE)
@@ -8,7 +8,7 @@ index b501f08..df8f6a1 100644
  		set (EXTERNAL_MPEG_LIBS "-lmp3lame")
 +		get_target_property(mp3lame_binary mp3lame::mp3lame IMPORTED_LOCATION_RELEASE)
 +		if(mp3lame_binary MATCHES "mp3lame-static")
-+			set (EXTERNAL_MPEG_LIBS "-lmp3lame-static")
++			set (EXTERNAL_MPEG_LIBS "-lmp3lame-static -lmpghip-static")
 +		endif()
  	endif ()
  
