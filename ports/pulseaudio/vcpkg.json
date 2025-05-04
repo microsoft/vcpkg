@@ -34,7 +34,6 @@
       "name": "openssl",
       "default-features": false
     },
-    "orc",
     "soxr",
     "speex",
     {

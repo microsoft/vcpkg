@@ -58,7 +58,7 @@ vcpkg_configure_meson(
       -Djack=enabled # jack2?
       -Dlirc=enabled # does this need a port?
       -Dopenssl=enabled
-      -Dorc=enabled # does this need a port? "orc" ?
+      -Dorc=disabled # not port orc
 
       -Dsoxr=enabled
       -Dspeex=enabled
