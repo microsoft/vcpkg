@@ -31,6 +31,12 @@
       "dependencies": [
         "pipewire"
       ]
+    },
+    "pulseaudio": {
+      "description": "Enable PulseAudio backend",
+      "dependencies": [
+        "pulseaudio"
+      ]
     }
   }
 }

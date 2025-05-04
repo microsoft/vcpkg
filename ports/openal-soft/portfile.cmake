@@ -13,6 +13,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         pipewire    ALSOFT_BACKEND_PIPEWIRE
         pipewire    ALSOFT_REQUIRE_PIPEWIRE
+        pulseaudio  ALSOFT_BACKEND_PULSEAUDIO
+        pulseaudio  ALSOFT_REQUIRE_PULSEAUDIO
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -60,7 +62,6 @@ vcpkg_cmake_configure(
         -DLIBTYPE=${OPENAL_LIBTYPE}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         # order by CMakeLists.txt
-        -DALSOFT_BACKEND_PULSEAUDIO=OFF # cycle with gstreamer[openal] pulseaudio
         -DALSOFT_BACKEND_ALSA=${ALSOFT_REQUIRE_LINUX}
         -DALSOFT_REQUIRE_ALSA=${ALSOFT_REQUIRE_LINUX}
         -DALSOFT_BACKEND_OSS=OFF
