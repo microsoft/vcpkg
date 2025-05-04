@@ -24,6 +24,11 @@ else()
     -Doss-output=disabled
   )
 endif()
+if("gstreamer" IN_LIST FEATURES)
+  list(APPEND opts -Dgstreamer=enabled)
+else()
+  list(APPEND opts -Dgstreamer=disabled)
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -49,7 +54,6 @@ vcpkg_configure_meson(
       -Dfftw=enabled
       -Dglib=enabled
       -Dgsettings=disabled
-      -Dgstreamer=enabled
       -Dgtk=disabled
       -Dhal-compat=false
       -Dipv6=true
