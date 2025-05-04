@@ -13,8 +13,9 @@ vcpkg_make_configure(
     AUTORECONF
     OPTIONS
         --disable-man-pages
-	--disable-examples
-	--disable-numa
+        --disable-examples
+        --disable-numa
+
 )
 
 vcpkg_make_install()
