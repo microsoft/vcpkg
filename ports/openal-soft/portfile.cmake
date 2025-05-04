@@ -109,4 +109,7 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(READ "${SOURCE_PATH}/common/pffft.cpp" pffft_license)
+string(REGEX REPLACE "[*]/.*" "*/\n" pffft_license "${pffft_license}")
+file(WRITE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pffft Notice" "${pffft_license}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pffft Notice")
