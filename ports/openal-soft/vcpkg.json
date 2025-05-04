@@ -15,6 +15,7 @@
       "name": "cppwinrt",
       "platform": "uwp"
     },
+    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -29,12 +30,6 @@
       "description": "Enable PipeWire backend",
       "dependencies": [
         "pipewire"
-      ]
-    },
-    "pulseaudio": {
-      "description": "Enable PulseAudio backend",
-      "dependencies": [
-        "pulseaudio"
       ]
     }
   }
