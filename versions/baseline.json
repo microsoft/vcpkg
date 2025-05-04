@@ -5266,7 +5266,7 @@
     },
     "libsndfile": {
       "baseline": "1.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
