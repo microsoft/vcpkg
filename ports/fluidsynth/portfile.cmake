@@ -14,6 +14,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         gentables.patch
+        pkgconfig-opensles.diff
 )
 
 vcpkg_check_features(
