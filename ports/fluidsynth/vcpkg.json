@@ -35,7 +35,9 @@
     },
     "pulseaudio": {
       "description": "Build with PulseAudio support",
-      "supports": "linux"
+      "dependencies": [
+        "pulseaudio"
+      ]
     },
     "sndfile": {
       "description": "Enable rendering to file and SF3 support",

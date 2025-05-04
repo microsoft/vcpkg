@@ -1,11 +1,3 @@
-if("pulseaudio" IN_LIST FEATURES)
-    message(
-    "${PORT} with pulseaudio feature currently requires the following from the system package manager:
-        libpulse-dev pulseaudio
-    These can be installed on Ubuntu systems via sudo apt install libpulse-dev pulseaudio"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
