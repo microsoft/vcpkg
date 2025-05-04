@@ -121,11 +121,11 @@ index 14773c8..178aa73 100644
      </PostBuildEvent>
    </ItemDefinitionGroup>
 diff --git a/visualc/vngspice.vcxproj b/visualc/vngspice.vcxproj
-index 7b6ac0b..7190c1e 100644
+index 8d1825a..b623b99 100644
 --- a/visualc/vngspice.vcxproj
 +++ b/visualc/vngspice.vcxproj
-@@ -242,7 +242,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -244,7 +244,7 @@
+       <AdditionalLibraryDirectories>KLU/Debug/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspiced.bat $(OutDir)</Command>
@@ -133,7 +133,7 @@ index 7b6ac0b..7190c1e 100644
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -293,7 +293,6 @@
+@@ -297,7 +297,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -141,7 +141,7 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -342,7 +341,6 @@
+@@ -348,7 +347,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -149,7 +149,7 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -399,7 +397,6 @@
+@@ -407,7 +405,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -157,8 +157,8 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -444,7 +441,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -454,7 +451,7 @@
+       <AdditionalLibraryDirectories>KLU/Debug/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspiced.bat $(OutDir)</Command>
@@ -166,8 +166,8 @@ index 7b6ac0b..7190c1e 100644
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -494,7 +491,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -506,7 +503,7 @@
+       <AdditionalLibraryDirectories>KLU/Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspice.bat $(OutDir)</Command>
@@ -175,7 +175,7 @@ index 7b6ac0b..7190c1e 100644
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -542,7 +539,6 @@
+@@ -556,7 +553,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -183,7 +183,7 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -597,7 +593,6 @@
+@@ -613,7 +609,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -191,8 +191,8 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -649,7 +644,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -666,7 +661,7 @@
+       <AdditionalLibraryDirectories>KLU/Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspice.bat $(OutDir)</Command>
@@ -200,7 +200,7 @@ index 7b6ac0b..7190c1e 100644
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -706,7 +701,6 @@
+@@ -726,7 +721,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -208,8 +208,8 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
-@@ -758,7 +752,7 @@
-       <LargeAddressAware>true</LargeAddressAware>
+@@ -779,7 +773,7 @@
+       <AdditionalLibraryDirectories>KLU/Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
      </Link>
      <PostBuildEvent>
 -      <Command>make-install-vngspice.bat $(OutDir)</Command>
@@ -217,7 +217,7 @@ index 7b6ac0b..7190c1e 100644
      </PostBuildEvent>
      <Manifest>
        <AdditionalManifestFiles>$(ProjectDir)ngspice-x86.exe.manifest</AdditionalManifestFiles>
-@@ -813,7 +807,6 @@
+@@ -837,7 +831,6 @@
      </Link>
      <PostBuildEvent>
        <Command>
@@ -225,6 +225,5 @@ index 7b6ac0b..7190c1e 100644
        </Command>
      </PostBuildEvent>
      <Manifest>
--- 
 2.32.0.windows.2
 
