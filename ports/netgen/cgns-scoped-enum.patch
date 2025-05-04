@@ -1,5 +1,5 @@
 diff --git a/libsrc/interface/rw_cgns.cpp b/libsrc/interface/rw_cgns.cpp
-index 096fbfdca..edf199cfd 100644
+index 458036e..4a487c9 100644
 --- a/libsrc/interface/rw_cgns.cpp
 +++ b/libsrc/interface/rw_cgns.cpp
 @@ -6,6 +6,37 @@
@@ -39,7 +39,7 @@ index 096fbfdca..edf199cfd 100644
 +
  namespace netgen::cg
  {
-   typedef ngcore::ClosedHashTable<ngcore::INT<3,size_t>, size_t> PointTable;
+   typedef ngcore::ClosedHashTable<ngcore::IVec<3,size_t>, size_t> PointTable;
 @@ -215,7 +246,7 @@ namespace netgen::cg
      if(codim==2) name += mesh.GetCD2Name(index);
  
