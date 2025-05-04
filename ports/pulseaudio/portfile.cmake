@@ -46,8 +46,6 @@ vcpkg_configure_meson(
       -Dasyncns=disabled # requires port?
       -Davahi=disabled
       -Dbluez5=disabled
-      -Dbluez5-native-headset=false
-      -Dbluez5-ofono-headset=false
       -Dconsolekit=disabled
       -Ddbus=enabled
       -Delogind=disabled
@@ -57,15 +55,15 @@ vcpkg_configure_meson(
       -Dgtk=disabled
       -Dhal-compat=false
       -Dipv6=true
-      -Dopenssl=enabled
       -Djack=enabled # jack2?
       -Dlirc=enabled # does this need a port?
+      -Dopenssl=enabled
       -Dorc=enabled # does this need a port? "orc" ?
 
       -Dsoxr=enabled
       -Dspeex=enabled
       -Dsystemd=disabled
-      -Dtcpwrap=enabled # dito
+      -Dtcpwrap=disabled
       -Dudev=disabled # port ?
       -Dvalgrind=disabled
       -Dx11=disabled
@@ -93,7 +91,6 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 vcpkg_copy_tools(TOOL_NAMES pacat pactl padsp pa-info pamon AUTO_CLEAN)
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
