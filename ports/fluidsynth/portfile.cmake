@@ -8,6 +8,16 @@ vcpkg_from_github(
         gentables.patch
         pkgconfig-opensles.diff
 )
+# Do not use or install FindSndFileLegacy.cmake and its deps
+file(REMOVE
+    "${SOURCE_PATH}/cmake_admin/FindFLAC.cmake"
+    "${SOURCE_PATH}/cmake_admin/Findmp3lame.cmake"
+    "${SOURCE_PATH}/cmake_admin/Findmpg123.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindOgg.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindOpus.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindSndFileLegacy.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindVorbis.cmake"
+)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
