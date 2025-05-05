@@ -8924,6 +8924,10 @@
       "baseline": "3.3.2",
       "port-version": 0
     },
+    "sqlitemap": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "sqlpp11": {
       "baseline": "0.64",
       "port-version": 3
