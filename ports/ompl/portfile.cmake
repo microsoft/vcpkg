@@ -18,6 +18,7 @@ vcpkg_from_github(
         0002_Fix_config.patch
         0003_disable-pkgconfig.patch
         0004_include_chrono.patch # https://github.com/ompl/ompl/pull/1201
+	0005_fix_eigen_config.patch
 )
 file(GLOB find_modules "${SOURCE_PATH}/CMakeModules/Find*.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/external" ${find_modules})
