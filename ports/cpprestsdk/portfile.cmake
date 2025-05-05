@@ -1,3 +1,9 @@
+vcpkg_download_distfile(PATCH_PR_1820
+    URLS https://github.com/microsoft/cpprestsdk/commit/396259a0f88e6f908c6d841f13c113d5f0d0ec26.patch
+    SHA512 2235feddc11633041eb27fadb154515c2270d2f187f3bab4cac3f0b73f7ff034a56d4540700ccae36be216f480915da5203b660f9401e371999dbce888a421bf
+    FILENAME char_traits.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cpprestsdk
@@ -11,6 +17,7 @@ vcpkg_from_github(
         fix-clang-dllimport.patch # workaround for https://github.com/microsoft/cpprestsdk/issues/1710
         silence-stdext-checked-array-iterators-warning.patch
         fix-asio-error.patch
+        ${PATCH_PR_1820}
 )
 
 vcpkg_check_features(

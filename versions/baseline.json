@@ -2022,7 +2022,7 @@
     },
     "cpprestsdk": {
       "baseline": "2.10.19",
-      "port-version": 3
+      "port-version": 4
     },
     "cppslippi": {
       "baseline": "1.4.3.16",
