@@ -1,9 +1,15 @@
 diff --git a/Release/include/cpprest/char_traits.h b/Release/include/cpprest/char_traits.h
 new file mode 100644
-index 0000000000..1e7d172bb0
+index 00000000..ba9ef01e
 --- /dev/null
 +++ b/Release/include/cpprest/char_traits.h
-@@ -0,0 +1,74 @@
+@@ -0,0 +1,82 @@
++#pragma once
++
++#include <cstddef>
++
++#if (_LIBCPP_VERSION >= 190000)
++
 +#include <cstdint>
 +#include <cstring>
 +#include <string>
@@ -78,8 +84,10 @@ index 0000000000..1e7d172bb0
 +    static int_type eof() noexcept { return static_cast<int_type>(-1); }
 +};
 +} // namespace std
++
++#endif // (_LIBCPP_VERSION >= 190000)
 diff --git a/Release/include/cpprest/streams.h b/Release/include/cpprest/streams.h
-index b6c3864028..e505c841ef 100644
+index b6c38640..704bfc92 100644
 --- a/Release/include/cpprest/streams.h
 +++ b/Release/include/cpprest/streams.h
 @@ -15,6 +15,7 @@
