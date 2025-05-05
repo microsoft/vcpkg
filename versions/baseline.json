@@ -9992,6 +9992,10 @@
       "baseline": "2019-08-13",
       "port-version": 2
     },
+    "wiiuse": {
+      "baseline": "0.15.6",
+      "port-version": 0
+    },
     "wil": {
       "baseline": "1.0.250325.1",
       "port-version": 0
