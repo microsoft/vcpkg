@@ -4565,7 +4565,7 @@
       "port-version": 0
     },
     "libdjinterop": {
-      "baseline": "0.24.3",
+      "baseline": "0.26.1",
       "port-version": 0
     },
     "libdmtx": {
