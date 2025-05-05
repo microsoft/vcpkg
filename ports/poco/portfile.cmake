@@ -30,10 +30,29 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        crypto      ENABLE_CRYPTO
-        netssl      ENABLE_NETSSL
-        pdf         ENABLE_PDF
-        postgresql  ENABLE_DATA_POSTGRESQL
+        crypto                  ENABLE_CRYPTO
+        netssl                  ENABLE_NETSSL
+        pdf                     ENABLE_PDF
+        postgresql              ENABLE_DATA_POSTGRESQL
+        encodings               ENABLE_ENCODINGS
+        encodings-compiler      ENABLE_ENCODINGS_COMPILER
+        xml                     ENABLE_XML
+        json                    ENABLE_JSON
+        mongodb                 ENABLE_MONGODB
+        redis                   ENABLE_REDIS
+        prometheus              ENABLE_PROMETHEUS
+        util                    ENABLE_UTIL
+        net                     ENABLE_NET
+        zip                     ENABLE_ZIP
+        pocodoc                 ENABLE_POCODOC
+        pagecompiler            ENABLE_PAGECOMPILER
+        pagecompiler-file2page  ENABLE_PAGECOMPILER_FILE2PAGE
+        jwt                     ENABLE_JWT
+        data                    ENABLE_DATA
+        sqlite                  ENABLE_DATA_SQLITE
+        odbc                    ENABLE_DATA_ODBC
+        activerecord            ENABLE_ACTIVERECORD
+        activerecord-compiler   ENABLE_ACTIVERECORD_COMPILER
 )
 
 # POCO_ENABLE_NETSSL_WIN: 
@@ -59,23 +78,11 @@ vcpkg_cmake_configure(
         # Define linking feature
         -DPOCO_MT=${POCO_MT}
         -DENABLE_TESTS=OFF
-        # Allow enabling and disabling components
-        -DENABLE_ENCODINGS=ON
-        -DENABLE_ENCODINGS_COMPILER=ON
-        -DENABLE_XML=ON
-        -DENABLE_JSON=ON
-        -DENABLE_MONGODB=ON
-        -DENABLE_REDIS=ON
-        -DENABLE_UTIL=ON
-        -DENABLE_NET=ON
-        -DENABLE_SEVENZIP=ON
-        -DENABLE_ZIP=ON
-        -DENABLE_CPPPARSER=ON
-        -DENABLE_POCODOC=ON
-        -DENABLE_PAGECOMPILER=ON
-        -DENABLE_PAGECOMPILER_FILE2PAGE=ON
+        -DENABLE_SAMPLES=OFF
+        # Allow enabling and disabling components done via features
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
         -DENABLE_APACHECONNECTOR=OFF
+        -DENABLE_CPPPARSER=OFF
         -DENABLE_DATA_MYSQL=${POCO_USE_MYSQL}
     MAYBE_UNUSED_VARIABLES # these are only used when if(MSVC)
         POCO_DISABLE_INTERNAL_OPENSSL
@@ -87,7 +94,25 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Move apps to the tools folder
-vcpkg_copy_tools(TOOL_NAMES cpspc f2cpsp PocoDoc tec poco-arc AUTO_CLEAN)
+set(tools)
+if (ENABLE_PAGECOMPILER)
+    list(APPEND tools "cpspc")
+endif()
+if (ENABLE_PAGECOMPILER_FILE2PAGE)
+    list(APPEND tools "f2cpsp")
+endif()
+if (ENABLE_POCODOC)
+    list(APPEND tools "PocoDoc")
+endif()
+if (ENABLE_ENCODINGS_COMPILER)
+    list(APPEND tools "tec")
+endif()
+if (ENABLE_ACTIVERECORD_COMPILER)
+    list(APPEND tools "poco-arc")
+endif()
+if (tools)
+    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
