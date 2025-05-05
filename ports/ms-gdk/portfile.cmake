@@ -1,4 +1,4 @@
-set(GDK_EDITION_NUMBER 241002)
+set(GDK_EDITION_NUMBER 250400)
 
 # The GDK contains a combination of static C++ libraries and DLL-based extension libraries.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -6,7 +6,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.GDK.PC/${VERSION}"
     FILENAME "ms-gdk.${VERSION}.zip"
-    SHA512 e9b40b1c904e1a082b0078f6d3654fad7f859f9676b169f2e2223b74b5d2546c69bd79c365d6f4b915fbe6a2afc1b664d2ce47c902b7fb59f9a038fe2a060f99
+    SHA512 3dd7b14b68b0f8869c556d72b91a1e79c102e5357d4ce83033f803c2e15681364de127c26cb23ab4a8946e676c75b6ddf69eb7f65e354800c30e7566c9a4fe39
 )
 
 vcpkg_extract_source_archive(
