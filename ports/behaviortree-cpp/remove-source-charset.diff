@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 90abc0e..d23ae7f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -205,7 +205,6 @@ target_compile_definitions(${BTCPP_LIBRARY} PUBLIC BTCPP_LIBRARY_VERSION="${CMAK
+ target_compile_features(${BTCPP_LIBRARY} PUBLIC cxx_std_17)
+ 
+ if(MSVC)
+-    target_compile_options(${BTCPP_LIBRARY} PRIVATE "/source-charset:utf-8")
+ else()
+     if(ENABLE_DEBUG)
+         target_compile_options(${BTCPP_LIBRARY} PRIVATE -Wall -Wextra -g3 -ggdb3 -O0 -fno-omit-frame-pointer)

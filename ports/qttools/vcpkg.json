@@ -1,6 +1,6 @@
 {
   "name": "qttools",
-  "version": "6.8.2",
+  "version": "6.8.3",
   "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -54,7 +54,8 @@
           "default-features": false,
           "features": [
             "network",
-            "png"
+            "png",
+            "widgets"
           ]
         }
       ]
