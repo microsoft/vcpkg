@@ -1,7 +1,8 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    message(FATAL_ERROR "kleidiai port only supports arm64 architecture.  Skipping build for ${VCPKG_TARGET_ARCHITECTURE}.")
+    message(STATUS "kleidiai only supports arm64 — skipping build for ${VCPKG_TARGET_ARCHITECTURE}.")
+    return()
 endif()
 
 vcpkg_from_github(
