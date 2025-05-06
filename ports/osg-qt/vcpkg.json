@@ -3,6 +3,7 @@
   "version-string": "Qt5",
   "port-version": 4,
   "description": "osgQt - Qt project for making use of OpenSceneGraph(OSG)",
+  "supports": "!(arm32 | x86 | wasm32 | xbox)",
   "dependencies": [
     "osg",
     {
