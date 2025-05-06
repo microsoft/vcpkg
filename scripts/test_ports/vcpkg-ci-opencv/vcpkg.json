@@ -136,6 +136,128 @@
       "platform": "!android & !uwp"
     },
     {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "ade",
+        "calib3d",
+        "contrib",
+        "eigen",
+        "ffmpeg",
+        "fs",
+        "highgui",
+        "intrinsics",
+        "jpeg",
+        "nonfree",
+        "png",
+        "quirc",
+        "thread",
+        "tiff"
+      ]
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "openmp"
+      ],
+      "platform": "!osx"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "jpegxl",
+        "openexr"
+      ],
+      "platform": "!uwp"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "opencl"
+      ],
+      "platform": "!uwp & !osx"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "dnn",
+        "webp"
+      ],
+      "platform": "!android"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "directml",
+        "dshow",
+        "msmf",
+        "win32ui"
+      ],
+      "platform": "windows & !uwp"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "tbb"
+      ],
+      "platform": "!uwp & !static"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "gapi",
+        "gstreamer"
+      ],
+      "platform": "!uwp & !(windows & static) & !android"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "ovis"
+      ],
+      "platform": "!uwp & !android & !(windows & static)"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "cuda",
+        "cudnn",
+        "dnn-cuda"
+      ],
+      "platform": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "freetype",
+        "gdcm",
+        "ipp",
+        "openjpeg",
+        "qt",
+        "sfm",
+        "vtk",
+        "vulkan"
+      ],
+      "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "aravis"
+      ],
+      "platform": "!android & !uwp"
+    },    {
       "name": "opencv2",
       "default-features": false,
       "features": [
