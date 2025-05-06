@@ -157,6 +157,7 @@
     },
     "odbc": {
       "description": "ODBC support for POCO",
+      "supports": "windows | osx | linux",
       "dependencies": [
         {
           "name": "poco",
@@ -164,6 +165,10 @@
           "features": [
             "data"
           ]
+        },
+        {
+          "name": "unixodbc",
+          "platform": "osx | linux"
         }
       ]
     },
