@@ -3382,7 +3382,7 @@
     },
     "gtest": {
       "baseline": "1.17.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gtk": {
       "baseline": "4.16.3",
