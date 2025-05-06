@@ -8,7 +8,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ARM-software/kleidiai
-    REF 81480ed1de6a3936b3b09ac071013e4afd445881
+    REF 60aaa7d75ebc461c6bd6a659d02da8235645220b
     SHA512 24d93bcc52b8529317c1f0c45cb6ffe892f459c5509966a033de79d35b9525ded23ebfdda9e4f17966c13b719d76f0278321dc21df28c630e4b370c92df9095a
     HEAD_REF master
 )
