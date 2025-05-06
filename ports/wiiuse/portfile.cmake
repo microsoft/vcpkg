@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/CHANGELOG.mkd")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
