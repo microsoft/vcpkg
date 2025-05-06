@@ -7205,7 +7205,7 @@
       "port-version": 3
     },
     "picosha2": {
-      "baseline": "2022-08-08",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "piex": {
