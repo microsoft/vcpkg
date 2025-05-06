@@ -4,6 +4,7 @@
   "description": "WiiUse \"feature complete\" cross-platform Wii Remote access library",
   "homepage": "https://github.com/wiiuse/wiiuse",
   "license": "GPL-3.0-only",
+  "supports": "!uwp & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
