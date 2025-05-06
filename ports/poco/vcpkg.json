@@ -44,6 +44,7 @@
     "activerecord": {
       "description": "Simple and lightweight object-relational mapping (ORM) framework built on top of the POCO Data",
       "dependencies": [
+        "expat",
         {
           "name": "poco",
           "default-features": false,
@@ -203,11 +204,31 @@
     "pdf": {
       "description": "Haru support for POCO",
       "dependencies": [
-        "libharu"
+        "libharu",
+        {
+          "name": "poco",
+          "default-features": false,
+          "features": [
+            "util",
+            "xml"
+          ]
+        }
       ]
     },
     "pocodoc": {
-      "description": "POCO documentation generator"
+      "description": "POCO documentation generator",
+      "dependencies": [
+        {
+          "name": "poco",
+          "default-features": false,
+          "features": [
+            "data",
+            "sqlite",
+            "util",
+            "xml"
+          ]
+        }
+      ]
     },
     "postgresql": {
       "description": "PostgreSQL support for POCO",
