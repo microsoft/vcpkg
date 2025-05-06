@@ -1,4 +1,3 @@
-
 sqlitemap is header-only and can be used from CMake via:
 
   find_path(SQLITEMAP_INCLUDE_DIRS "bw/sqlitemap/sqlitemap.hpp")
