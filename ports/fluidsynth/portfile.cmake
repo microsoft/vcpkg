@@ -81,13 +81,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fluidsynth)
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/fluidsynth.pc" " -lfluidsynth" " -lfluidsynth-3")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fluidsynth.pc" " -lfluidsynth" " -lfluidsynth-3")
-    endif()
-endif()
-
 set(tools fluidsynth)
 if("buildtools" IN_LIST FEATURES)
     list(APPEND tools make_tables)
