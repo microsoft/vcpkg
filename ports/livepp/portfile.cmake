@@ -2,21 +2,21 @@ string(REPLACE "." "_" VERSION_NAME ${VERSION})
 set(LIVEPP_FILE LPP_${VERSION_NAME}.zip)
 
 vcpkg_download_distfile(
-	ARCHIVE
+    ARCHIVE
     URLS https://liveplusplus.tech/downloads/${LIVEPP_FILE}
     FILENAME "${LIVEPP_FILE}"
     SHA512 07c5a9b30950d9c243d4fed671325e5e389e1e41e5c51feaa3d2cb7d64506f8baabf33f0c30851df8464a6c5f9fb15f11afac0c405ff8c4e513bc3034e63289d
 )
 
 vcpkg_extract_source_archive(
-	SOURCE_PATH
-	ARCHIVE "${ARCHIVE}"
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}Config.cmake" [[
     add_library(unofficial::livepp INTERFACE IMPORTED)
-	set_target_properties(unofficial::livepp PROPERTIES
-		INTERFACE_COMPILE_DEFINITIONS LIVEPP_PATH="${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/livepp")
+    set_target_properties(unofficial::livepp PROPERTIES
+        INTERFACE_COMPILE_DEFINITIONS LIVEPP_PATH="${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/livepp")
 ]])
 
 file(INSTALL "${SOURCE_PATH}/API" DESTINATION "${CURRENT_PACKAGES_DIR}/include/LivePP" PATTERN "*.txt" EXCLUDE)
