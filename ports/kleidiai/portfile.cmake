@@ -23,4 +23,9 @@ vcpkg_cmake_config_fixup(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share") # Avoids empty debug folder in the zip.
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES/Apache-2.0.txt")
+file(GLOB LICENSE_FILES
+    "${SOURCE_PATH}/LICENSES/*"
+)
+vcpkg_install_copyright(
+    FILE_LIST ${LICENSE_FILES}
+)
