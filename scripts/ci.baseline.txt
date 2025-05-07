@@ -303,7 +303,6 @@ elfutils:arm64-android=fail
 elfutils:arm64-osx=fail
 elfutils:x64-android=fail
 elfutils:x64-osx=fail
-fastdds:arm-neon-android=fail
 # clang rejects variable length arrays
 fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
@@ -361,9 +360,6 @@ gainput:x64-android=fail
 gamenetworkingsockets:arm-neon-android=fail
 gamenetworkingsockets:arm64-android=fail
 gamenetworkingsockets:x64-android=fail
-gdk-pixbuf:arm-neon-android=fail
-gdk-pixbuf:arm64-android=fail
-gdk-pixbuf:x64-android=fail
 gegl:arm64-osx=fail
 gegl:x64-osx=fail
 gemmlowp:arm-neon-android=fail
@@ -397,6 +393,9 @@ glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
+graphviz:arm-neon-android=fail
+graphviz:arm64-android=fail
+graphviz:x64-android=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-android=fail
 gsoap:x64-windows-release=skip
@@ -410,6 +409,12 @@ gstreamer:x64-android=fail
 # upstream issue https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1629.
 gstreamer:x64-windows-static-md=skip
 gstreamer:x64-windows-static=skip
+gtk:arm-neon-android=fail
+gtk:arm64-android=fail
+gtk:x64-android=fail
+gtk3:arm-neon-android=fail
+gtk3:arm64-android=fail
+gtk3:x64-android=fail
 gul14:arm-neon-android=fail
 gul14:arm64-android=fail
 gul14:x64-android=fail
@@ -508,6 +513,9 @@ libhdfs3:arm64-osx=fail
 libhdfs3:x64-android=fail
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
+libheif:arm-neon-android=fail
+libheif:arm64-android=fail
+libheif:x64-android=fail
 # 120 min build time for libjxl arm64-uwp-rel, reason unknown
 libjxl:arm64-uwp=skip
 liblo:arm64-uwp=fail
