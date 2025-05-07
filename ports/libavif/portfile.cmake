@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/libavif
     REF "v${VERSION}"
-    SHA512 ba72b8d02b098f361643a073361fccafd22eaac14e46dd06378d5e7acd9853538c5d166473e1de0b020de62dac25be83e42bd57ba51f675d11e2ddf155fbfa21
+    SHA512 13eb641a17c59d70c465995dca6f921e7a40867053b8d8f0792a68aeaf9dde029daacc77df2049ebb8235ae3b1a35651f5b38a37914bdafe3b8884c64822b1e8
     HEAD_REF master
     PATCHES
         dependencies.diff

@@ -23,6 +23,6 @@ foreach(idx RANGE 0 ${num_tests})
     list(GET test_cases ${output_idx} expected)
 
     set(result_arch)
-    z_vcpkg_make_determine_arch(result_arch ${input})
+    z_vcpkg_make_normalize_arch(result_arch ${input})
     unit_test_check_variable_equal([[]] result_arch "${expected}")
 endforeach()
