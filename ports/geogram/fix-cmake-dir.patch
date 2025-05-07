@@ -1,0 +1,32 @@
+diff --git a/src/lib/geogram_gfx/CMakeLists.txt b/src/lib/geogram_gfx/CMakeLists.txt
+index 391e607..4e03357 100755
+--- a/src/lib/geogram_gfx/CMakeLists.txt
++++ b/src/lib/geogram_gfx/CMakeLists.txt
+@@ -4,6 +4,10 @@ configure_file(geogram_gfx.pc.in ${PROJECT_BINARY_DIR}/geogram_gfx${VORPALINE_VE
+ 
+ add_definitions(-DIMGUI_USER_CONFIG="geogram_imconfig.h")
+ 
++if(GEOGRAM_USE_SYSTEM_GLFW3)
++add_definitions(-DGEO_USE_SYSTEM_GLFW3)
++endif()
++
+ add_subdirectory(third_party)
+ 
+ aux_source_directories(SOURCES "Source Files"                .)
+@@ -20,14 +24,9 @@ if(GEOGRAM_WITH_LUA)
+ aux_source_directories(SOURCES "Source Files\\lua"           lua)
+ endif()
+ 
+-if(GEOGRAM_USE_SYSTEM_GLFW3)
+-add_definitions(-DGEO_USE_SYSTEM_GLFW3)
+-endif()
+-
+ add_library(geogram_gfx ${SOURCES} $<TARGET_OBJECTS:geogram_gfx_third_party>)
+-
+-target_include_directories(geogram_gfx PUBLIC ${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party)
+-target_include_directories(geogram_gfx PRIVATE ${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party/imgui)
++target_include_directories(geogram_gfx PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party>)
++target_include_directories(geogram_gfx PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party/imgui>)
+ 
+ if(ANDROID)
+ target_include_directories(geogram_gfx PRIVATE
