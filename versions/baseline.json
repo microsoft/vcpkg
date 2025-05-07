@@ -4905,7 +4905,7 @@
       "port-version": 2
     },
     "libmariadb": {
-      "baseline": "3.4.1",
+      "baseline": "3.4.5",
       "port-version": 0
     },
     "libmatio-cpp": {
