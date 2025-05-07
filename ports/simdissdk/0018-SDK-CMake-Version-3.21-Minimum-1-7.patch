@@ -1,0 +1,58 @@
+From 373c7e5c20807f49005eac1462c207829ee4101c Mon Sep 17 00:00:00 2001
+From: Daniel Emminizer <daniel.m.emminizer.civ@us.navy.mil>
+Date: Mon, 7 Apr 2025 10:42:36 +0000
+Subject: [PATCH 18/29] SDK CMake Version 3.21 Minimum (1/7)
+
+**JIRA Issue:** SIM-18056
+
+**Description:** Require minimum of 3.21 instead of 3.20. Testing indicated that 3.20 did not fully support MSVC 2022.
+
+**Testing Performed:** Configure/generate/build on full solution.
+---
+ Doc/CMakeLists.txt                      | 4 ++--
+ share/ExternalSdkProject/CMakeLists.txt | 4 ++--
+ swig/Testing/CMakeLists.txt             | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Doc/CMakeLists.txt b/Doc/CMakeLists.txt
+index c7c61202..36f07935 100644
+--- a/Doc/CMakeLists.txt
++++ b/Doc/CMakeLists.txt
+@@ -1,5 +1,5 @@
+-# MSVC 2022 support in 3.20
+-cmake_minimum_required(VERSION 3.20)
++# MSVC 2022 support in 3.21
++cmake_minimum_required(VERSION 3.21)
+ 
+ # Install the code style guide and SDK footer for Doxygen
+ install(FILES CodeStyleGuide.pdf
+diff --git a/share/ExternalSdkProject/CMakeLists.txt b/share/ExternalSdkProject/CMakeLists.txt
+index 2844e665..9cc587f8 100644
+--- a/share/ExternalSdkProject/CMakeLists.txt
++++ b/share/ExternalSdkProject/CMakeLists.txt
+@@ -1,5 +1,5 @@
+-# MSVC 2022 support in 3.20
+-cmake_minimum_required(VERSION 3.20)
++# MSVC 2022 support in 3.21
++cmake_minimum_required(VERSION 3.21)
+ 
+ # Create a new project
+ project(ExternalSDKExamples)
+diff --git a/swig/Testing/CMakeLists.txt b/swig/Testing/CMakeLists.txt
+index 1680e31b..eae246e8 100644
+--- a/swig/Testing/CMakeLists.txt
++++ b/swig/Testing/CMakeLists.txt
+@@ -3,8 +3,8 @@ if(NOT ENABLE_CDASH_PROJECTS AND NOT ENABLE_UNIT_TESTING)
+     return()
+ endif()
+ 
+-# MSVC 2022 support in 3.20
+-cmake_minimum_required(VERSION 3.20)
++# MSVC 2022 support in 3.21
++cmake_minimum_required(VERSION 3.21)
+ 
+ if(WIN32)
+     # Windows has been picky about which versions can be mixed
+-- 
+2.47.1.windows.2
+

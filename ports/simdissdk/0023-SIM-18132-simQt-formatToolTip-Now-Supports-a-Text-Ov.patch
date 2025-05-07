@@ -1,0 +1,44 @@
+From 4f5905f45dc5678c8e6adbad5a8807a870e1db01 Mon Sep 17 00:00:00 2001
+From: George Ruhlmann <george.m.ruhlmann.ctr@us.navy.mil>
+Date: Mon, 21 Apr 2025 16:17:37 +0000
+Subject: [PATCH 23/29] SIM-18132 simQt::formatToolTip Now Supports a Text
+ Override Color (1/2 SDK)
+
+**JIRA Issue:** SIM-18132
+
+**Description:** Added the override color to handle an edge case of the default white text on a white foreground.  The caller can change the text color to black.
+
+**Testing Performed:** Tested with a SIMDIS plug-in
+---
+ SDK/simQt/QtFormatting.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/SDK/simQt/QtFormatting.h b/SDK/simQt/QtFormatting.h
+index 7551edf2..1b0ac701 100644
+--- a/SDK/simQt/QtFormatting.h
++++ b/SDK/simQt/QtFormatting.h
+@@ -34,12 +34,20 @@ static const QString HOT_KEY_TAG = "<hotkey />";
+  * Create a rich text tooltip from a title and description
+  * @param title  Title (emboldened) of tooltip
+  * @param desc  Description of the tooltip
++ * @prarm textColor Normally not set to get the default color. Only set if the default text color and the foreground color match
+  * @return Formatted rich-text tooltip
+  */
+-inline QString formatTooltip(const QString& title, const QString& desc)
++inline QString formatTooltip(const QString& title, const QString& desc, const QString& textColor="")
+ {
+   if (desc.isEmpty())
+     return QString("<strong>%1%2</strong>").arg(title, HOT_KEY_TAG);
++
++  if (!textColor.isEmpty())
++  {
++    const QString formatBlock("<strong><font color=\"%4\">%1</font>%2</strong><div style=\"margin-left: 1em; margin-right: 1em;\"><p><font color=\"%4\">%3</font></p></div>");
++    return formatBlock.arg(title, HOT_KEY_TAG, desc, textColor);
++  }
++
+   const QString formatBlock("<strong>%1%2</strong><div style=\"margin-left: 1em; margin-right: 1em;\"><p>%3</p></div>");
+   return formatBlock.arg(title, HOT_KEY_TAG, desc);
+ }
+-- 
+2.47.1.windows.2
+

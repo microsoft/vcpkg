@@ -1,0 +1,71 @@
+From 61e99e90412bfce4d40758a98651c7faa45e2023 Mon Sep 17 00:00:00 2001
+From: Daniel Emminizer <daniel.m.emminizer.civ@us.navy.mil>
+Date: Fri, 21 Mar 2025 10:58:02 +0000
+Subject: [PATCH 14/29] SDK: Action Registry Test Initializes Environment
+
+**Release Notes:** SDK NEW FEATURE: simCore::initializeSimdisEnvironmentVariables() gets a new convenience signature that takes no arguments, that initializes the environment using the default configuration.
+
+**JIRA Issue:** SIM-17750
+
+**Description:** Now initializing the environment variables when running the Action Registry Test, so it runs more easily from command line.
+
+**Testing Performed:** Reproduced qpa popup problem; no longer occurs after this patch.
+---
+ SDK/simCore/System/Utils.cpp         | 6 ++++++
+ SDK/simCore/System/Utils.h           | 3 +++
+ Testing/SimQt/ActionRegistryTest.cpp | 3 +++
+ 3 files changed, 12 insertions(+)
+
+diff --git a/SDK/simCore/System/Utils.cpp b/SDK/simCore/System/Utils.cpp
+index 1599ce45..7df873d8 100644
+--- a/SDK/simCore/System/Utils.cpp
++++ b/SDK/simCore/System/Utils.cpp
+@@ -348,4 +348,10 @@ int initializeSimdisEnvironmentVariables(const InitializeEnvironmentConfig& conf
+   return rv;
+ }
+ 
++int initializeSimdisEnvironmentVariables()
++{
++  const InitializeEnvironmentConfig defaults;
++  return simCore::initializeSimdisEnvironmentVariables(defaults);
++}
++
+ }
+diff --git a/SDK/simCore/System/Utils.h b/SDK/simCore/System/Utils.h
+index aedee8cd..170f90d4 100644
+--- a/SDK/simCore/System/Utils.h
++++ b/SDK/simCore/System/Utils.h
+@@ -102,6 +102,9 @@ struct InitializeEnvironmentConfig
+  */
+ SDKCORE_EXPORT int initializeSimdisEnvironmentVariables(const InitializeEnvironmentConfig& config);
+ 
++/** Initializes the SIMDIS environment variables using the default configuration. Convenience wrapper. */
++SDKCORE_EXPORT int initializeSimdisEnvironmentVariables();
++
+ } // namespace simCore
+ 
+ #endif /* SIMCORE_SYSTEM_UTILS_H */
+diff --git a/Testing/SimQt/ActionRegistryTest.cpp b/Testing/SimQt/ActionRegistryTest.cpp
+index 558956a7..d06860f1 100644
+--- a/Testing/SimQt/ActionRegistryTest.cpp
++++ b/Testing/SimQt/ActionRegistryTest.cpp
+@@ -25,6 +25,7 @@
+ #include <QApplication>
+ #include <QPushButton>
+ #include "simCore/Common/SDKAssert.h"
++#include "simCore/System/Utils.h"
+ #include "simVis/Headless.h"
+ #include "simQt/ActionRegistry.h"
+ 
+@@ -487,6 +488,8 @@ int ActionRegistryTest(int argc, char* argv[])
+     std::cerr << "Headless display detected; aborting test." << std::endl;
+     return 0;
+   }
++  simCore::initializeSimdisEnvironmentVariables();
++
+   int rv = 0;
+   QApplication app(argc, argv);
+   rv += testFind();
+-- 
+2.47.1.windows.2
+

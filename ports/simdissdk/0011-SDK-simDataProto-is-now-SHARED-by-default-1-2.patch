@@ -1,0 +1,69 @@
+From 59c8f0407307ee3d33372dd3612fb597fffef1be Mon Sep 17 00:00:00 2001
+From: Daniel Emminizer <daniel.m.emminizer.civ@us.navy.mil>
+Date: Tue, 18 Mar 2025 12:53:24 +0000
+Subject: [PATCH 11/29] SDK: simDataProto is now SHARED by default (1/2)
+
+**Release Notes:** SDK NEW FEATURE: SIMDATAPROTO_SHARED is a new option (defaulting to SIMDATA_SHARED value, ON by default) that controls whether simDataProto is built static or shared. If using simDataProto in another protobuf library on Windows, this should be shared.
+
+**JIRA Issue:** SIM-18053
+
+**Description:** Also applying versioning numbers to the output DLL.
+
+**Testing Performed:** Steps in JIRA issue to generate error with Remote Control no longer reproducible on MSVC 2022 and gcc 14.
+---
+ CMakeLists.txt             |  1 +
+ SDK/simData/CMakeLists.txt | 14 +++++++++++---
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1a4b411b..b823f37a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,6 +45,7 @@ option(SIMNOTIFY_SHARED "If off, simNotify SDK libraries are built statically; i
+ option(SIMCORE_SHARED "If off, simCore SDK libraries are built statically; if on, simCore SDK libraries are built dynamically" ON)
+ option(BUILD_SIMDATA "If off, simData SDK libraries are not compiled; if on, library is built if dependencies are satisfied." ON)
+ option(SIMDATA_SHARED "If off, simData SDK libraries are built statically; if on, simData SDK libraries are built dynamically" ON)
++option(SIMDATAPROTO_SHARED "If off, simData SDK Protobuf libraries are built statically; if on, simData SDK libraries are built dynamically" ${SIMDATA_SHARED})
+ option(BUILD_SIMVIS "If off, simVis SDK libraries are not compiled; if on, library is built if dependencies are satisfied." ON)
+ option(SIMVIS_SHARED "If off, simVis SDK libraries are built statically; if on, simVis SDK libraries are built dynamically" ON)
+ option(BUILD_SIMUTIL "If off, simUtil SDK libraries are not compiled; if on, library is built if dependencies are satisfied." ON)
+diff --git a/SDK/simData/CMakeLists.txt b/SDK/simData/CMakeLists.txt
+index 0002c748..8fcc2f5f 100644
+--- a/SDK/simData/CMakeLists.txt
++++ b/SDK/simData/CMakeLists.txt
+@@ -131,14 +131,15 @@ set(DATA_PROJECT_FILES
+     ${MEMORYTABLE_HEADERS} ${MEMORYTABLE_SOURCES} ${CATEGORY_DATA_HEADERS} ${CATEGORY_DATA_SOURCES} ${MESSAGEVISITOR_HEADERS} ${MESSAGEVISITOR_SOURCES}
+ )
+ 
+-# Fix the library for static or shared
++# Fix the library for static or shared (simDataProto). Default to shared if not defined,
++# because protobuf libraries can have problems on Windows when linked statically (SIM-18053).
+ set(STATIC_OR_SHARED STATIC)
+-if(SIMDATA_SHARED)
++if(SIMDATAPROTO_SHARED OR NOT DEFINED SIMDATAPROTO_SHARED)
+     set(STATIC_OR_SHARED SHARED)
+ endif()
+ 
+ include(AddProtoLibrary)
+-add_proto_library(simDataProto STATIC
++add_proto_library(simDataProto ${STATIC_OR_SHARED}
+     simData
+     NO_HEADER
+     APPEND_PATH
+@@ -149,6 +150,13 @@ set_target_properties(simDataProto PROPERTIES
+     FOLDER "SIMDIS SDK"
+     PROJECT_LABEL "simData Protobuf Library"
+ )
++ApplySDKVersion(simDataProto)
++
++# Fix the library for static or shared (simData)
++set(STATIC_OR_SHARED STATIC)
++if(SIMDATA_SHARED)
++    set(STATIC_OR_SHARED SHARED)
++endif()
+ 
+ add_library(simData ${STATIC_OR_SHARED} ${DATA_PROJECT_FILES})
+ set_target_properties(simData PROPERTIES
+-- 
+2.47.1.windows.2
+

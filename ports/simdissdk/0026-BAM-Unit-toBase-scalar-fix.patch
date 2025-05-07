@@ -1,0 +1,64 @@
+From bdba8740bf3188383ab192c12788f5632e35c043 Mon Sep 17 00:00:00 2001
+From: Martin Kinsey <martin.f.kinsey.civ@us.navy.mil>
+Date: Tue, 29 Apr 2025 13:09:41 +0000
+Subject: [PATCH 26/29] BAM Unit toBase scalar fix
+
+**Release Notes:** SDK BUG FIX: simCore::Units::BAM now uses the correct toBase scalar.
+
+**JIRA Issue:** SIM-18201
+
+**Description:** BAM Unit toBase scalar fix. Fixes SIM-18201
+
+**Notes:** seems likely to me that someone use M_2_PI thinking it was 2*pi, then generated the MIL "gold data" using that value. osgEarth and UTILS units code uses 2PI as the conversion factor.
+
+**Testing Performed:** debug, compared PXY Qt to PXY FOX, values match now. Updated unit tests pass
+---
+ SDK/simCore/Calc/Units.cpp    | 2 +-
+ Testing/SimCore/GogTest.cpp   | 4 ++--
+ Testing/SimCore/UnitsTest.cpp | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/SDK/simCore/Calc/Units.cpp b/SDK/simCore/Calc/Units.cpp
+index ccfe8275..8a41e7f7 100644
+--- a/SDK/simCore/Calc/Units.cpp
++++ b/SDK/simCore/Calc/Units.cpp
+@@ -55,7 +55,7 @@ const Units Units::DAYS("days", "d", SECPERDAY, simCore::ELAPSED_TIME_FAMILY);
+ const Units Units::RADIANS("radians", "rad", 1.0, simCore::ANGLE_FAMILY);
+ const Units Units::DEGREES("degrees", "deg", simCore::DEG2RAD, simCore::ANGLE_FAMILY);
+ const Units Units::MILLIRADIANS("milliradians", "mrad", 1e-3, simCore::ANGLE_FAMILY);
+-const Units Units::BAM("binary angle measurement", "bam", M_2_PI, simCore::ANGLE_FAMILY);
++const Units Units::BAM("binary angle measurement", "bam", M_TWOPI, simCore::ANGLE_FAMILY);
+ // Based on NATO definition of angular mils (6400 mils in a circle)
+ const Units Units::MIL("angular mil", "mil", 9.8174770424681038701957605727484e-4, simCore::ANGLE_FAMILY);
+ 
+diff --git a/Testing/SimCore/GogTest.cpp b/Testing/SimCore/GogTest.cpp
+index 1a119211..e5d31749 100644
+--- a/Testing/SimCore/GogTest.cpp
++++ b/Testing/SimCore/GogTest.cpp
+@@ -1348,8 +1348,8 @@ int testUnits()
+   rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 90\n angleunits degree\n end\n", testEllipticalAngleStartFunc);
+   rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 1.57079632679489661923\n angleunits rad\n end\n", testEllipticalAngleStartFunc);
+   rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 1.57079632679489661923\n angleunits radians\n end\n", testEllipticalAngleStartFunc);
+-  rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 2.467401100272329\n angleunits bam\n end\n", testEllipticalAngleStartFunc);
+-  rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 2.467401100272329\n angleunits binary angle measurement\n end\n", testEllipticalAngleStartFunc);
++  rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 0.25\n angleunits bam\n end\n", testEllipticalAngleStartFunc);
++  rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 0.25\n angleunits binary angle measurement\n end\n", testEllipticalAngleStartFunc);
+   rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 1599.999999999\n angleunits mil\n end\n", testEllipticalAngleStartFunc);
+   rv += testShapeFunction<simCore::GOG::Arc>("start\n arc\n anglestart 1599.999999999\n angleunits angular mil\n end\n", testEllipticalAngleStartFunc);
+ 
+diff --git a/Testing/SimCore/UnitsTest.cpp b/Testing/SimCore/UnitsTest.cpp
+index 963aaa35..dcfcc99c 100644
+--- a/Testing/SimCore/UnitsTest.cpp
++++ b/Testing/SimCore/UnitsTest.cpp
+@@ -489,7 +489,7 @@ int testAngleConvert()
+   // Convert various values
+   rv += SDK_ASSERT(simCore::areEqual(Units::RADIANS.convertTo(Units::DEGREES, 1.5), 85.9436692));
+   rv += SDK_ASSERT(simCore::areEqual(Units::DEGREES.convertTo(Units::RADIANS, 90), M_PI_2));
+-  rv += SDK_ASSERT(simCore::areEqual(Units::BAM.convertTo(Units::MIL, 0.5), 324.227788));
++  rv += SDK_ASSERT(simCore::areEqual(Units::BAM.convertTo(Units::MIL, 0.5), 3200));
+   rv += SDK_ASSERT(simCore::areEqual(Units::MIL.convertTo(Units::DEGREES, 3.0), 0.16875));
+   rv += SDK_ASSERT(simCore::areEqual(Units::RADIANS.convertTo(Units::MILLIRADIANS, 3.5), 3500.0));
+ 
+-- 
+2.47.1.windows.2
+

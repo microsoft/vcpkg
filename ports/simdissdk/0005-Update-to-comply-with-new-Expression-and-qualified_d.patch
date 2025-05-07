@@ -1,0 +1,117 @@
+From 07d4813460125ca1acaca445606955d6d158b096 Mon Sep 17 00:00:00 2001
+From: Glenn Waldron <gwaldron@gmail.com>
+Date: Mon, 10 Mar 2025 15:12:35 -0400
+Subject: [PATCH 05/29] Update to comply with new Expression and
+ qualified_double APIs in symbology
+
+---
+ Examples/GeoFencing/ExampleGeoFencing.cpp | 2 +-
+ Examples/Picking/ExamplePicking.cpp       | 2 +-
+ Examples/RadialLOS/ExampleRadialLOS.cpp   | 2 +-
+ SDK/simUtil/LayerFactory.cpp              | 2 +-
+ SDK/simVis/GOG/GogNodeInterface.cpp       | 8 ++++----
+ SDK/simVis/RangeTool.cpp                  | 2 +-
+ 6 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/Examples/GeoFencing/ExampleGeoFencing.cpp b/Examples/GeoFencing/ExampleGeoFencing.cpp
+index 51af71f6..151496ec 100644
+--- a/Examples/GeoFencing/ExampleGeoFencing.cpp
++++ b/Examples/GeoFencing/ExampleGeoFencing.cpp
+@@ -172,7 +172,7 @@ void styleAnnotation(osgEarth::Style& style, const simVis::Color& fillColor, boo
+   namespace sym = osgEarth;
+   style.getOrCreate<sym::PolygonSymbol>()->fill()->color() = simVis::Color(fillColor, 0.5f);
+   style.getOrCreate<sym::LineSymbol>()->stroke()->color() = simVis::Color::White;
+-  style.getOrCreate<sym::LineSymbol>()->stroke()->width() = 2.f;
++  style.getOrCreate<sym::LineSymbol>()->stroke()->width() = osgEarth::Distance(2.f, osgEarth::Units::PIXELS);
+   style.getOrCreate<sym::LineSymbol>()->tessellationSize()->set(100, osgEarth::Units::KILOMETERS);
+   style.getOrCreate<sym::AltitudeSymbol>()->verticalOffset() = 10000;
+   style.getOrCreate<sym::RenderSymbol>()->backfaceCulling() = false;
+diff --git a/Examples/Picking/ExamplePicking.cpp b/Examples/Picking/ExamplePicking.cpp
+index 35e76999..69812f05 100644
+--- a/Examples/Picking/ExamplePicking.cpp
++++ b/Examples/Picking/ExamplePicking.cpp
+@@ -244,7 +244,7 @@ public:
+     auto lineSymbol = style.getOrCreateSymbol<osgEarth::LineSymbol>();
+     // Change some line aspects to indicate we picked correctly
+     lineSymbol->stroke()->color() = randomColor();
+-    lineSymbol->stroke()->width() = randomBetween(1.0, 7.0);
++    lineSymbol->stroke()->width() = osgEarth::Distance(randomBetween(1.0, 7.0), osgEarth::Units::PIXELS);
+     anno->setStyle(style);
+     return true;
+   }
+diff --git a/Examples/RadialLOS/ExampleRadialLOS.cpp b/Examples/RadialLOS/ExampleRadialLOS.cpp
+index 205f6087..a0349549 100644
+--- a/Examples/RadialLOS/ExampleRadialLOS.cpp
++++ b/Examples/RadialLOS/ExampleRadialLOS.cpp
+@@ -396,7 +396,7 @@ private:
+     osgEarth::Style style;
+     osg::ref_ptr<osgEarth::LineSymbol> line = style.getOrCreate<osgEarth::LineSymbol>();
+     line->stroke()->color() = simVis::Color::Yellow;
+-    line->stroke()->width() = 5.0f;
++    line->stroke()->width() = osgEarth::Distance(5.0f, osgEarth::Units::PIXELS);
+     osg::ref_ptr<osgEarth::AltitudeSymbol> alt = style.getOrCreate<osgEarth::AltitudeSymbol>();
+     alt->clamping() = osgEarth::AltitudeSymbol::CLAMP_TO_TERRAIN;
+     alt->technique() = osgEarth::AltitudeSymbol::TECHNIQUE_SCENE;
+diff --git a/SDK/simUtil/LayerFactory.cpp b/SDK/simUtil/LayerFactory.cpp
+index 53acf3f3..7ab6716e 100644
+--- a/SDK/simUtil/LayerFactory.cpp
++++ b/SDK/simUtil/LayerFactory.cpp
+@@ -338,7 +338,7 @@ void ShapeFileLayerFactory::setLineColor(const osg::Vec4f& color)
+ void ShapeFileLayerFactory::setLineWidth(float width)
+ {
+   osgEarth::LineSymbol* ls = style_->getOrCreateSymbol<osgEarth::LineSymbol>();
+-  ls->stroke()->width() = width;
++  ls->stroke()->width() = osgEarth::Distance(width, osgEarth::Units::PIXELS);
+ }
+ 
+ void ShapeFileLayerFactory::setStipple(unsigned short pattern, unsigned int factor)
+diff --git a/SDK/simVis/GOG/GogNodeInterface.cpp b/SDK/simVis/GOG/GogNodeInterface.cpp
+index 4d89d278..ca420303 100644
+--- a/SDK/simVis/GOG/GogNodeInterface.cpp
++++ b/SDK/simVis/GOG/GogNodeInterface.cpp
+@@ -939,9 +939,9 @@ int GogNodeInterface::getLineState(bool& outlineState, osg::Vec4f& color, Utils:
+     return 0;
+ 
+   const osgEarth::LineSymbol* linePtr = style_.getSymbol<osgEarth::LineSymbol>();
+-  lineWidth = static_cast<int>(*(linePtr->stroke()->width()));
++  lineWidth = static_cast<int>(linePtr->stroke()->width()->literal().getValue());
+   // now figure out line style based on the stipple value
+-  unsigned short stipple = *(linePtr->stroke()->stipple());
++  unsigned short stipple = *(linePtr->stroke()->stipplePattern());
+   lineStyle = Utils::getLineStyleFromStipple(stipple);
+   return 0;
+ }
+@@ -1319,7 +1319,7 @@ void GogNodeInterface::setLineStyle(Utils::LineStyle style)
+   // use some default values to represent various draw styles
+   unsigned short lineStyle = Utils::getStippleFromLineStyle(style);
+   osgEarth::LineSymbol* lineSymbol = style_.getOrCreate<osgEarth::LineSymbol>();
+-  lineSymbol->stroke()->stipple() = lineStyle;
++  lineSymbol->stroke()->stipplePattern() = lineStyle;
+   setStyle_(style_);
+ 
+   simCore::GOG::FillableShape* fillable = dynamic_cast<simCore::GOG::FillableShape*>(shape_.get());
+@@ -1336,7 +1336,7 @@ void GogNodeInterface::setLineWidth(int lineWidth)
+   metaData_.setExplicitly(GOG_LINE_WIDTH_SET);
+ 
+   osgEarth::LineSymbol* lineSymbol = style_.getOrCreate<osgEarth::LineSymbol>();
+-  lineSymbol->stroke()->width() = static_cast<float>(lineWidth);
++  lineSymbol->stroke()->width() = osgEarth::Distance(static_cast<float>(lineWidth), osgEarth::Units::PIXELS);
+   setStyle_(style_);
+ 
+   simCore::GOG::FillableShape* fillable = dynamic_cast<simCore::GOG::FillableShape*>(shape_.get());
+diff --git a/SDK/simVis/RangeTool.cpp b/SDK/simVis/RangeTool.cpp
+index 8759d3b6..e5413b12 100644
+--- a/SDK/simVis/RangeTool.cpp
++++ b/SDK/simVis/RangeTool.cpp
+@@ -640,7 +640,7 @@ void RangeTool::Association::refresh_(EntityNode* obj0, EntityNode* obj1, const
+       {
+         ts->halo()->color() = textOptions.outlineColor_;
+         ts->haloOffset() = simVis::outlineThickness(static_cast<simData::TextOutline>(textOptions.outlineType_));
+-        ts->halo()->width() = simVis::outlineThickness(static_cast<simData::TextOutline>(textOptions.outlineType_));
++        ts->halo()->width() = osgEarth::Distance(simVis::outlineThickness(static_cast<simData::TextOutline>(textOptions.outlineType_)), osgEarth::Units::PIXELS);
+         ts->haloBackdropType() = osgText::Text::OUTLINE;
+       }
+       else
+-- 
+2.47.1.windows.2
+

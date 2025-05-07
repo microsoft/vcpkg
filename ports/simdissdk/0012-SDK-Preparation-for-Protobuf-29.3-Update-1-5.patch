@@ -1,0 +1,96 @@
+From 8ac57bfc2382b954f846def21663c4943f188b67 Mon Sep 17 00:00:00 2001
+From: Daniel Emminizer <daniel.m.emminizer.civ@us.navy.mil>
+Date: Tue, 18 Mar 2025 13:18:24 +0000
+Subject: [PATCH 12/29] SDK: Preparation for Protobuf 29.3 Update (1/5)
+
+**JIRA Issue:** SIM-15139
+
+**Description:** Updates to prepare for Protobuf 29.3 upgrade. Since this requires a CONFIG find_package and CONFIG can't be used on older Protobuf, there's a clean fall-back idiom used instead.
+
+**Testing Performed:** Full build on MSVC 2022 CMake 3.21 and gcc 14 CMake 4.0-rc2.
+---
+ CMakeUtilities/VsiPackages.json      | 12 +++++++++++-
+ SDK/simData/CMakeLists.txt           | 10 ++++++++--
+ SDK/simData/simDataConfig.cmake.in   |  1 -
+ SDK/simData/simDataProtoConfig.cmake | 10 ++++++++--
+ 4 files changed, 27 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeUtilities/VsiPackages.json b/CMakeUtilities/VsiPackages.json
+index e53aa67a..90b38332 100644
+--- a/CMakeUtilities/VsiPackages.json
++++ b/CMakeUtilities/VsiPackages.json
+@@ -49,7 +49,10 @@
+     {
+       "name": "PROTOBUF",
+       "dir": "protobuf",
+-      "version": "3.21.12",
++      "version": [
++          "29.3",
++          "3.21.12"
++      ],
+       "cmake_vars": [
+         {
+           "name": "Protobuf_USE_STATIC_LIBS",
+@@ -72,6 +75,13 @@
+         "4.3.0",
+         "4.2.1"
+       ]
++    },
++    {
++      "name": "ZLIB",
++      "version": [
++        "1.3.1",
++        "1.2.13"
++      ]
+     }
+   ]
+ }
+diff --git a/SDK/simData/CMakeLists.txt b/SDK/simData/CMakeLists.txt
+index 8fcc2f5f..611208ea 100644
+--- a/SDK/simData/CMakeLists.txt
++++ b/SDK/simData/CMakeLists.txt
+@@ -1,5 +1,11 @@
+-find_package(Protobuf QUIET)
+-find_package(EnTT QUIET)
++if(NOT Protobuf_FOUND)
++    # CONFIG mode needs 22+ to work well with protobuf_generate
++    find_package(Protobuf 5.22 CONFIG QUIET)
++    if(NOT Protobuf_FOUND)
++        find_package(Protobuf QUIET)
++    endif()
++endif()
++find_package(EnTT CONFIG QUIET)
+ 
+ if(NOT TARGET protobuf::libprotobuf)
+     message(STATUS "Skipping simData because of missing PROTOBUF dependencies.")
+diff --git a/SDK/simData/simDataConfig.cmake.in b/SDK/simData/simDataConfig.cmake.in
+index e0409571..a143dfb0 100644
+--- a/SDK/simData/simDataConfig.cmake.in
++++ b/SDK/simData/simDataConfig.cmake.in
+@@ -3,7 +3,6 @@ include(CMakeFindDependencyMacro)
+ find_dependency(simNotify)
+ find_dependency(simCore)
+ find_dependency(simDataProto)
+-find_dependency(Protobuf)
+ 
+ if(@SIMDATA_HAVE_ENTT@)
+     find_dependency(EnTT CONFIG)
+diff --git a/SDK/simData/simDataProtoConfig.cmake b/SDK/simData/simDataProtoConfig.cmake
+index e4d6b2aa..bfb874d6 100644
+--- a/SDK/simData/simDataProtoConfig.cmake
++++ b/SDK/simData/simDataProtoConfig.cmake
+@@ -1,3 +1,9 @@
+-include(CMakeFindDependencyMacro)
+-find_dependency(Protobuf)
++if(NOT Protobuf_FOUND)
++    # CONFIG mode needs 22+ to work well with protobuf_generate
++    find_package(Protobuf 5.22 CONFIG QUIET)
++    if(NOT Protobuf_FOUND)
++        include(CMakeFindDependencyMacro)
++        find_dependency(Protobuf)
++    endif()
++endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/simDataProtoTargets.cmake")
+-- 
+2.47.1.windows.2
+

@@ -1,0 +1,1290 @@
+From 364a56ef35519367cbf2e39171767653b07847e7 Mon Sep 17 00:00:00 2001
+From: George Ruhlmann <george.m.ruhlmann.ctr@us.navy.mil>
+Date: Tue, 15 Apr 2025 10:16:06 +0000
+Subject: [PATCH 20/29] SIM-18172 Merge Simple simData Updates Into Main (1/7
+ SDK)
+
+**Release Notes:** This is the first pass at removing Google protobuf from simData.  The update classes have been replaced with simple c++ classes.
+
+**JIRA Issue:** SIM-18172
+
+**Testing Performed:** SDK unit tests still pass, Ran S058 on Windows and Linux
+---
+ Examples/LOBTest/ExampleLOBTest.cpp           |  11 +-
+ .../PlatformSymbology/PlatformSymbology.cpp   |   6 +-
+ SDK/simData/DataTypes.h                       | 330 ++++++++++++++++--
+ SDK/simData/GeneratedCode/simData.proto       |  85 +----
+ SDK/simData/LinearInterpolator.cpp            |  20 +-
+ SDK/simData/LobGroupMemoryDataSlice.cpp       |  19 +-
+ SDK/simUtil/DataStoreTestHelper.cpp           |  28 +-
+ SDK/simVis/Beam.cpp                           |  10 +-
+ SDK/simVis/Gate.cpp                           |  18 +-
+ SDK/simVis/Laser.cpp                          |   9 +-
+ SDK/simVis/LobGroup.cpp                       |  17 +-
+ SDK/simVis/Projector.cpp                      |   1 +
+ Testing/SimData/TestInterpolation.cpp         |  30 +-
+ Testing/SimData/TestMemoryDataStore.cpp       | 216 ++++++------
+ 14 files changed, 512 insertions(+), 288 deletions(-)
+
+diff --git a/Examples/LOBTest/ExampleLOBTest.cpp b/Examples/LOBTest/ExampleLOBTest.cpp
+index e2de7d8d..4efe7763 100644
+--- a/Examples/LOBTest/ExampleLOBTest.cpp
++++ b/Examples/LOBTest/ExampleLOBTest.cpp
+@@ -144,11 +144,12 @@ void simulateLobGroup(simData::ObjectId lobID, simData::DataStore& ds)
+     simData::LobGroupUpdate* update = ds.addLobGroupUpdate(lobID, &xaction);
+     update->set_time(i*3.0);
+     {
+-      simData::LobGroupUpdatePoint* p = update->add_datapoints();
+-      p->set_time(i*3.0);
+-      p->set_range(100000.0);
+-      p->set_azimuth(-1.57 + (3.14*i/12.0));
+-      p->set_elevation(-.39 + (0.78*i/12.0));
++      simData::LobGroupUpdatePoint p;
++      p.set_time(i*3.0);
++      p.set_range(100000.0);
++      p.set_azimuth(-1.57 + (3.14*i/12.0));
++      p.set_elevation(-.39 + (0.78*i/12.0));
++      update->mutable_datapoints()->push_back(p);
+     }
+     xaction.complete(&update);
+   }
+diff --git a/Examples/PlatformSymbology/PlatformSymbology.cpp b/Examples/PlatformSymbology/PlatformSymbology.cpp
+index 30a28bc7..8ebebba1 100644
+--- a/Examples/PlatformSymbology/PlatformSymbology.cpp
++++ b/Examples/PlatformSymbology/PlatformSymbology.cpp
+@@ -879,9 +879,9 @@ simData::ObjectId addLaser(simData::ObjectId hostId, simData::DataStore &dataSto
+     simData::DataStore::Transaction xaction;
+     simData::LaserUpdate* update = dataStore.addLaserUpdate(id, &xaction);
+     update->set_time(0.0);
+-    update->mutable_orientation()->set_yaw(0.0);
+-    update->mutable_orientation()->set_pitch(0.0);
+-    update->mutable_orientation()->set_roll(0.0);
++    update->set_yaw(0.0);
++    update->set_pitch(0.0);
++    update->set_roll(0.0);
+     xaction.complete(&update);
+   }
+ 
+diff --git a/SDK/simData/DataTypes.h b/SDK/simData/DataTypes.h
+index f190d6d3..2acaef1a 100644
+--- a/SDK/simData/DataTypes.h
++++ b/SDK/simData/DataTypes.h
+@@ -55,6 +55,9 @@
+ 
+ namespace simData
+ {
++  constexpr double INVALID_UPDATE_DOUBLE = std::numeric_limits<double>::max();
++  constexpr float INVALID_UPDATE_FLOAT = std::numeric_limits<float>::max();
++
+   /** Platform TSPI
+    * (interface matches a Google protobuf message)
+    */
+@@ -62,13 +65,13 @@ namespace simData
+   {
+   public:
+     /// copy over this with 'from'
+-    void CopyFrom(const PlatformUpdate& from) { if (&from == this) return; *this = from; };
++    void CopyFrom(const PlatformUpdate& from) { if (&from == this) return; *this = from; }
+ 
+     /**@name accessors -------------------------------------------------------
+      *@{
+      */
+-    inline bool has_time() const { return time_ != std::numeric_limits<double>::max(); }
+-    inline void clear_time() { time_ = std::numeric_limits<double>::max(); }
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
+     inline double time() const { return time_; }
+     inline void set_time(double value) { time_ = value; }
+ 
+@@ -76,18 +79,18 @@ namespace simData
+     inline void position(simCore::Vec3& vec) const { vec.setX(x_); vec.setY(y_); vec.setZ(z_); }
+     inline void setPosition(const simCore::Vec3& vec) { x_ = vec.x(); y_ = vec.y(); z_ = vec.z(); }
+ 
+-    inline bool has_x() const { return x_ != std::numeric_limits<double>::max(); }
+-    inline void clear_x() { x_ = std::numeric_limits<double>::max(); }
++    inline bool has_x() const { return x_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_x() { x_ = INVALID_UPDATE_DOUBLE; }
+     inline double x() const { return x_; }
+     inline void set_x(double value) { x_ = value; }
+ 
+-    inline bool has_y() const { return y_ != std::numeric_limits<double>::max(); }
+-    inline void clear_y() { y_ = std::numeric_limits<double>::max(); }
++    inline bool has_y() const { return y_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_y() { y_ = INVALID_UPDATE_DOUBLE; }
+     inline double y() const { return y_; }
+     inline void set_y(double value) { y_ = value; }
+ 
+-    inline bool has_z() const { return z_ != std::numeric_limits<double>::max(); }
+-    inline void clear_z() { z_ = std::numeric_limits<double>::max(); }
++    inline bool has_z() const { return z_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_z() { z_ = INVALID_UPDATE_DOUBLE; }
+     inline double z() const { return z_; }
+     inline void set_z(double value) { z_ = value; }
+ 
+@@ -95,18 +98,18 @@ namespace simData
+     inline void orientation(simCore::Vec3& vec) const { vec.setPsi(static_cast<double>(psi_)); vec.setTheta(static_cast<double>(theta_)); vec.setPhi(static_cast<double>(phi_)); }
+     inline void setOrientation(const simCore::Vec3& vec) { psi_ = static_cast<float>(vec.psi()); theta_ = static_cast<float>(vec.theta()); phi_ = static_cast<float>(vec.phi()); }
+ 
+-    inline bool has_psi() const { return psi_ != std::numeric_limits<float>::max(); }
+-    inline void clear_psi() { psi_ = std::numeric_limits<float>::max(); }
++    inline bool has_psi() const { return psi_ != INVALID_UPDATE_FLOAT; }
++    inline void clear_psi() { psi_ = INVALID_UPDATE_FLOAT; }
+     inline double psi() const { return psi_; }
+     inline void set_psi(double value) { psi_ = static_cast<float>(value); }
+ 
+-    inline bool has_theta() const { return theta_ != std::numeric_limits<float>::max(); }
+-    inline void clear_theta() { theta_ = std::numeric_limits<float>::max(); }
++    inline bool has_theta() const { return theta_ != INVALID_UPDATE_FLOAT; }
++    inline void clear_theta() { theta_ = INVALID_UPDATE_FLOAT; }
+     inline double theta() const { return theta_; }
+     inline void set_theta(double value) { theta_ = static_cast<float>(value); }
+ 
+-    inline bool has_phi() const { return phi_ != std::numeric_limits<float>::max(); }
+-    inline void clear_phi() { phi_ = std::numeric_limits<float>::max(); }
++    inline bool has_phi() const { return phi_ != INVALID_UPDATE_FLOAT; }
++    inline void clear_phi() { phi_ = INVALID_UPDATE_FLOAT; }
+     inline double phi() const { return phi_; }
+     inline void set_phi(double value) { phi_ = static_cast<float>(value); }
+ 
+@@ -114,41 +117,306 @@ namespace simData
+     inline void velocity(simCore::Vec3& vec) const { vec.setV0(static_cast<double>(vx_)); vec.setV1(static_cast<double>(vy_)); vec.setV2(static_cast<double>(vz_)); }
+     inline void setVelocity(const simCore::Vec3& vec) { vx_ = static_cast<float>(vec.x()); vy_ = static_cast<float>(vec.y()); vz_ = static_cast<float>(vec.z()); }
+ 
+-    inline bool has_vx() const { return vx_ != std::numeric_limits<float>::max(); }
+-    inline void clear_vx() { vx_ = std::numeric_limits<float>::max(); }
++    inline bool has_vx() const { return vx_ != INVALID_UPDATE_FLOAT; }
++    inline void clear_vx() { vx_ = INVALID_UPDATE_FLOAT; }
+     inline double vx() const { return vx_; }
+     inline void set_vx(double value) { vx_ = static_cast<float>(value); }
+ 
+-    inline bool has_vy() const { return vy_ != std::numeric_limits<float>::max(); }
+-    inline void clear_vy() { vy_ = std::numeric_limits<float>::max(); }
++    inline bool has_vy() const { return vy_ != INVALID_UPDATE_FLOAT; }
++    inline void clear_vy() { vy_ = INVALID_UPDATE_FLOAT; }
+     inline double vy() const { return vy_; }
+     inline void set_vy(double value) { vy_ = static_cast<float>(value); }
+ 
+-    inline bool has_vz() const { return vz_ != std::numeric_limits<float>::max(); }
+-    inline void clear_vz() { vz_ = std::numeric_limits<float>::max(); }
++    inline bool has_vz() const { return vz_ != INVALID_UPDATE_FLOAT; }
++    inline void clear_vz() { vz_ = INVALID_UPDATE_FLOAT; }
+     inline double vz() const { return vz_; }
+     inline void set_vz(double value) { vz_ = static_cast<float>(value); }
+     ///@}
+ 
+   private:
+     /// Seconds since the reference year
+-    double time_ = std::numeric_limits<double>::max();
++    double time_ = INVALID_UPDATE_DOUBLE;
+ 
+     /// Position is in ECEF coordinates, meters
+-    double x_ = std::numeric_limits<double>::max();
+-    double y_ = std::numeric_limits<double>::max();
+-    double z_ = std::numeric_limits<double>::max();
++    double x_ = INVALID_UPDATE_DOUBLE;
++    double y_ = INVALID_UPDATE_DOUBLE;
++    double z_ = INVALID_UPDATE_DOUBLE;
+ 
+     /// The following are declared as floats to save space
+     /// Alignment of a body in 3D space, angles in radians; earth centric
+-    float psi_ = std::numeric_limits<float>::max();
+-    float theta_ = std::numeric_limits<float>::max();
+-    float phi_ = std::numeric_limits<float>::max();
++    float psi_ = INVALID_UPDATE_FLOAT;
++    float theta_ = INVALID_UPDATE_FLOAT;
++    float phi_ = INVALID_UPDATE_FLOAT;
+ 
+     /// 3D vector for velocity, m/s
+-    float vx_ = std::numeric_limits<float>::max();
+-    float vy_ = std::numeric_limits<float>::max();
+-    float vz_ = std::numeric_limits<float>::max();
++    float vx_ = INVALID_UPDATE_FLOAT;
++    float vy_ = INVALID_UPDATE_FLOAT;
++    float vz_ = INVALID_UPDATE_FLOAT;
++  };
++
++  /// Beam time and RAE data
++  class BeamUpdate
++  {
++  public:
++    void CopyFrom(const BeamUpdate& from) { if (&from == this) return; *this = from; }
++
++    void Clear() { clear_time(); clear_range(); clear_azimuth(); clear_elevation(); }
++
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++    inline bool has_range() const { return range_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_range() { range_ = INVALID_UPDATE_DOUBLE; }
++    inline double range() const { return range_; }
++    inline void set_range(double value) { range_ = value; }
++
++    inline bool has_azimuth() const { return azimuth_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_azimuth() { azimuth_ = INVALID_UPDATE_DOUBLE; }
++    inline double azimuth() const { return azimuth_; }
++    inline void set_azimuth(double value) { azimuth_ = value; }
++
++    inline bool has_elevation() const { return elevation_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_elevation() { elevation_ = INVALID_UPDATE_DOUBLE; }
++    inline double elevation() const { return elevation_; }
++    inline void set_elevation(double value) { elevation_ = value; }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++    /// Range in meters from the platform origin
++    double range_ = INVALID_UPDATE_DOUBLE;
++    /// Azimuth; relative to north for linear beams, or relative to platform orientation for body beams; radians
++    double azimuth_ = INVALID_UPDATE_DOUBLE;
++    /// Elevation; relative to horizon for linear beams, or relative to platform orientation for body beams; radians
++    double elevation_ = INVALID_UPDATE_DOUBLE;
++  };
++
++
++  /// Gate time and data
++  class GateUpdate
++  {
++  public:
++    void CopyFrom(const GateUpdate& from) { if (&from == this) return; *this = from; }
++
++    void Clear() { clear_time(); clear_azimuth(); clear_elevation(); clear_width(); clear_height();
++      clear_minrange(); clear_maxrange(); clear_centroid(); }
++
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++    inline bool has_azimuth() const { return azimuth_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_azimuth() { azimuth_ = INVALID_UPDATE_DOUBLE; }
++    inline double azimuth() const { return azimuth_; }
++    inline void set_azimuth(double value) { azimuth_ = value; }
++
++    inline bool has_elevation() const { return elevation_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_elevation() { elevation_ = INVALID_UPDATE_DOUBLE; }
++    inline double elevation() const { return elevation_; }
++    inline void set_elevation(double value) { elevation_ = value; }
++
++    inline bool has_width() const { return width_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_width() { width_ = INVALID_UPDATE_DOUBLE; }
++    inline double width() const { return width_; }
++    inline void set_width(double value) { width_ = value; }
++
++    inline bool has_height() const { return height_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_height() { height_ = INVALID_UPDATE_DOUBLE; }
++    inline double height() const { return height_; }
++    inline void set_height(double value) { height_ = value; }
++
++    inline bool has_minrange() const { return minRange_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_minrange() { minRange_ = INVALID_UPDATE_DOUBLE; }
++    inline double minrange() const { return minRange_; }
++    inline void set_minrange(double value) { minRange_ = value; }
++
++    inline bool has_maxrange() const { return maxRange_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_maxrange() { maxRange_ = INVALID_UPDATE_DOUBLE; }
++    inline double maxrange() const { return maxRange_; }
++    inline void set_maxrange(double value) { maxRange_ = value; }
++
++    inline bool has_centroid() const { return centroid_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_centroid() { centroid_ = INVALID_UPDATE_DOUBLE; }
++    inline double centroid() const { return centroid_; }
++    inline void set_centroid(double value) { centroid_ = value; }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++    /// Azimuth; relative to north for linear gates, or relative to platform orientation for body gates; radians
++    double azimuth_ = INVALID_UPDATE_DOUBLE;
++    /// Elevation; relative to horizon for linear gates, or relative to platform orientation for body gates; radians
++    double elevation_ = INVALID_UPDATE_DOUBLE;
++    /// Full width of the gate in radians
++    double width_ = INVALID_UPDATE_DOUBLE;
++    /// Full height of the gate in radians
++    double height_ = INVALID_UPDATE_DOUBLE;
++    /// Range in meters from the platform origin to start of gate
++    double minRange_ = INVALID_UPDATE_DOUBLE;
++    /// Range in meters from the platform origin to end of gate
++    double maxRange_ = INVALID_UPDATE_DOUBLE;
++    /// Range in meters from the platform origin to centroid; often the middle of start and end
++    double centroid_ = INVALID_UPDATE_DOUBLE;
++  };
++
++  /// Projector time and field of view values
++  class ProjectorUpdate
++  {
++  public:
++    void CopyFrom(const ProjectorUpdate& from) { if (&from == this) return; *this = from; };
++
++    void Clear() { clear_time(); clear_fov(); clear_hfov(); }
++
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++    inline bool has_fov() const { return fov_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_fov() { fov_ = INVALID_UPDATE_DOUBLE; }
++    inline double fov() const { return fov_; }
++    inline void set_fov(double value) { fov_ = value; }
++
++    inline bool has_hfov() const { return hFov_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_hfov() { hFov_ = INVALID_UPDATE_DOUBLE; }
++    inline double hfov() const { return hFov_; }
++    inline void set_hfov(double value) { hFov_ = value; }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++    /// Projector vertical field of view: radians
++    double fov_ = INVALID_UPDATE_DOUBLE;
++    /// Projector horizontal field of view: radians; <= 0 means to calculate from aspect ratio
++    double hFov_ = INVALID_UPDATE_DOUBLE;
++  };
++
++  /// Custom Rendering update; not used, just a placeholder for the templates
++  class CustomRenderingUpdate
++  {
++  public:
++    void CopyFrom(const CustomRenderingUpdate& from) { if (&from == this) return; *this = from; };
++
++    void Clear() { clear_time(); }
++
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++  };
++
++  /// Laser time and orientation values
++  class LaserUpdate
++  {
++  public:
++    void CopyFrom(const LaserUpdate& from) { if (&from == this) return; *this = from; };
++
++    void Clear() { clear_time(); clear_yaw(); clear_pitch(); clear_roll(); }
++
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++    inline bool has_yaw() const { return yaw_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_yaw() { yaw_ = INVALID_UPDATE_DOUBLE; }
++    inline double yaw() const { return yaw_; }
++    inline void set_yaw(double value) { yaw_ = value; }
++
++    inline bool has_pitch() const { return pitch_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_pitch() { pitch_ = INVALID_UPDATE_DOUBLE; }
++    inline double pitch() const { return pitch_; }
++    inline void set_pitch(double value) { pitch_ = value; }
++
++    inline bool has_roll() const { return roll_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_roll() { roll_ = INVALID_UPDATE_DOUBLE; }
++    inline double roll() const { return roll_; }
++    inline void set_roll(double value) { roll_ = value; }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++    /// Laser yaw: radians
++    double yaw_ = INVALID_UPDATE_DOUBLE;
++    /// Laser pitch: radians
++    double pitch_ = INVALID_UPDATE_DOUBLE;
++    /// Laser roll: radians
++    double roll_ = INVALID_UPDATE_DOUBLE;
++  };
++
++  /// LOB Group point for time and RAE data
++  class LobGroupUpdatePoint
++  {
++  public:
++    void CopyFrom(const LobGroupUpdatePoint& from) { if (&from == this) return; *this = from; }
++
++    void Clear() { clear_time(); clear_range(); clear_azimuth(); clear_elevation(); }
++
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++    inline bool has_range() const { return range_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_range() { range_ = INVALID_UPDATE_DOUBLE; }
++    inline double range() const { return range_; }
++    inline void set_range(double value) { range_ = value; }
++
++    inline bool has_azimuth() const { return azimuth_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_azimuth() { azimuth_ = INVALID_UPDATE_DOUBLE; }
++    inline double azimuth() const { return azimuth_; }
++    inline void set_azimuth(double value) { azimuth_ = value; }
++
++    inline bool has_elevation() const { return elevation_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_elevation() { elevation_ = INVALID_UPDATE_DOUBLE; }
++    inline double elevation() const { return elevation_; }
++    inline void set_elevation(double value) { elevation_ = value; }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++    /// Range in meters from the platform origin
++    double range_ = INVALID_UPDATE_DOUBLE;
++    /// Azimuth; radians
++    double azimuth_ = INVALID_UPDATE_DOUBLE;
++    /// Elevation; radians
++    double elevation_ = INVALID_UPDATE_DOUBLE;
++  };
++
++  /// LOB Group time and points
++  class LobGroupUpdate
++  {
++  public:
++    void CopyFrom(const LobGroupUpdate& from) { if (&from == this) return; *this = from; }
++
++    void Clear() { clear_time(); dataPoints_.clear(); }
++
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++    /// Returns the number of points for the update
++    int datapoints_size() const { return static_cast<int>(dataPoints_.size()); }
++    /// Returns true if the update has points
++    bool has_datapoints() const { return !dataPoints_.empty(); }
++    /// Constant version of the points
++    const std::vector<LobGroupUpdatePoint>& datapoints() const { return dataPoints_; }
++    /// Mutable version of the points
++    std::vector<LobGroupUpdatePoint>* mutable_datapoints() { return &dataPoints_; }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++    /// Points all at the same time
++    std::vector<LobGroupUpdatePoint> dataPoints_;
+   };
+ 
+   /// compare for inequality (required for protobuf utils)
+diff --git a/SDK/simData/GeneratedCode/simData.proto b/SDK/simData/GeneratedCode/simData.proto
+index ae02606b..23c5ac88 100644
+--- a/SDK/simData/GeneratedCode/simData.proto
++++ b/SDK/simData/GeneratedCode/simData.proto
+@@ -4,15 +4,16 @@ package simData;
+ /**
+  * simData.proto Defines the underlying data format for SIMDIS SDK's simData module.
+  *
+- * Entity types include platforms, beams, gates, lasers, projectors, and line of bearing (LOB) group.  Entities are
+- * generally broken up into 4 components:
++ * Entity types include platforms, beams, gates, lasers, projectors, line of bearing (LOB) group, and Custom Rendering
++ * Entities are generally broken up into 3 components:
+  *
+- *   Updates - A single data point, possibly with a high data rate
+  *   Properties - Settings for an entity, such as ID that are mostly unchanging
+  *   Preferences - Changeable settings for an entity, including Superform-like settings;
+  *                 can be time stamped by using Commands
+  *   Commands - A time stamp and a (likely) sparse list of preferences to apply at the time
+  *
++ * Updates are now defined in DataTypes.h
++ *
+  * Colors are encoded in fixed32, which is more efficient than uint32 when the MSB values are
+  * likely to be set.  Colors are defined as 0xRRGGBBAA, with the MSB as part of the red component.
+  *
+@@ -1174,18 +1175,6 @@ message BeamPrefs {
+   optional uint32 pulseStipple = 36 [default = 0x0F0F];
+ };
+ 
+-/// common update to beam data
+-message BeamUpdate {
+-  /// Seconds since scenario reference year for the data posit time
+-  optional double time = 1;
+-  /// Range in meters from the platform origin
+-  optional double range = 2;
+-  /// Azimuth; relative to north for linear beams, or relative to platform orientation for body beams; radians
+-  optional double azimuth = 3;
+-  /// Elevation; relative to horizon for linear beams, or relative to platform orientation for body beams; radians
+-  optional double elevation = 4;
+-};
+-
+ /// timed update to beam prefs; commands override prefs
+ message BeamCommand {
+   /// The time at which the command should be executed
+@@ -1273,32 +1262,12 @@ message GatePrefs {
+ 
+   /// Toggle drawing of the outline
+   optional bool drawOutline = 11 [default = true];
+-  
++
+   /// Color for the centroid
+   optional fixed32 centroidColor = 12 [default = 0xFFFFFFFF];
+ 
+ };
+ 
+-/// common update to gate data
+-message GateUpdate {
+-  /// Seconds since scenario reference year for the data posit time
+-  optional double time = 1;
+-  /// Azimuth; relative to north for linear gates, or relative to platform orientation for body gates; radians
+-  optional double azimuth = 2;
+-  /// Elevation; relative to horizon for linear gates, or relative to platform orientation for body gates; radians
+-  optional double elevation = 3;
+-  /// Full width of the gate in radians
+-  optional double width = 4;
+-  /// Full height of the gate in radians
+-  optional double height = 5;
+-  /// Range in meters from the platform origin to start of gate
+-  optional double minRange = 6;
+-  /// Range in meters from the platform origin to end of gate
+-  optional double maxRange = 7;
+-  /// Range in meters from the platform origin to centroid; often the middle of start and end
+-  optional double centroid = 8;
+-};
+-
+ /// timed update to gate prefs; commands override prefs
+ message GateCommand {
+   /// The time at which the command should be executed
+@@ -1341,13 +1310,6 @@ message LaserPrefs {
+   optional int32 laserWidth = 4 [default = 1];
+ };
+ 
+-/// common update to laser data
+-message LaserUpdate {
+-  optional double time = 1;
+-  /// Note that the orientation is affected by the LaserProperties azElRelativeToHostOri flag
+-  optional BodyOrientation orientation = 2;
+-};
+-
+ /// timed update to laser prefs; commands override prefs
+ message LaserCommand {
+   /// The time at which the command should be executed
+@@ -1410,11 +1372,6 @@ message CustomRenderingPrefs {
+   optional bool depthTest = 10 [default = true];
+ };
+ 
+-/// common update to Custom Rendering data
+-message CustomRenderingUpdate {
+-  optional double time = 1;
+-};
+-
+ /// timed update to Custom Rendering prefs; commands override prefs
+ message CustomRenderingCommand {
+   /// The time at which the command should be executed
+@@ -1470,16 +1427,6 @@ message ProjectorPrefs {
+   optional bool doubleSided = 10 [default = false];
+ };
+ 
+-/// common update to projector data
+-message ProjectorUpdate {
+-  optional double time = 1;
+-
+-  /// Projector vertical field of view: radians
+-  optional double fov = 2;
+-  /// Projector hovizontal field of view: radians; <= 0 means to calculate from aspect ratio
+-  optional double hFov = 3 [default = -1];
+-};
+-
+ /// timed update to projector prefs; commands override prefs
+ message ProjectorCommand {
+   /// The time at which the command should be executed
+@@ -1543,28 +1490,6 @@ message LobGroupPrefs {
+   optional AnimatedLineBend bending = 13 [default = ALB_AUTO];
+ };
+ 
+-/// update data point for line of bearing (LOB) group
+-message LobGroupUpdatePoint {
+-  /// time of the data point
+-  optional double time = 1;
+-  /// Range in meters from the host platform origin
+-  optional double range = 2;
+-  /// Azimuth; radians
+-  optional double azimuth = 3;
+-  /// Elevation; radians
+-  optional double elevation = 4;
+-};
+-
+-/**
+- common update to line of bearing (LOB) group data, holds a list of LobGroupUpdatePoints.
+- Note that when points are inserted, the time of the points inserted must match the time of the update.
+-*/
+-message LobGroupUpdate {
+-  /// time of the update
+-  optional double time = 1;
+-  repeated LobGroupUpdatePoint dataPoints = 2;
+-};
+-
+ /// timed update to line of bearing (LOB) group prefs; commands override prefs
+ message LobGroupCommand {
+   /// The time at which the command should be executed
+diff --git a/SDK/simData/LinearInterpolator.cpp b/SDK/simData/LinearInterpolator.cpp
+index ef158ef0..56b9cc8a 100644
+--- a/SDK/simData/LinearInterpolator.cpp
++++ b/SDK/simData/LinearInterpolator.cpp
+@@ -239,20 +239,16 @@ bool LinearInterpolator::interpolate(double time, const LaserUpdate &prev, const
+   result->set_time(time);
+ 
+   // compute time ratio
+-  double factor = simCore::getFactor(prev.time(), time, next.time());
+-
+-  const simData::BodyOrientation& prevOri = prev.orientation();
+-  const simData::BodyOrientation& nextOri = next.orientation();
++  const double factor = simCore::getFactor(prev.time(), time, next.time());
+ 
+   // apply Euler angle interpolation
+-  double yaw = simCore::angFix2PI(simCore::linearInterpolateAngle(prevOri.yaw(), nextOri.yaw(), factor));
+-  double pitch = simCore::angFixPI(simCore::linearInterpolateAngle(prevOri.pitch(), nextOri.pitch(), factor));
+-  double roll = simCore::angFixPI(simCore::linearInterpolateAngle(prevOri.roll(), nextOri.roll(), factor));
+-
+-  simData::BodyOrientation* ori = result->mutable_orientation();
+-  ori->set_yaw(yaw);
+-  ori->set_pitch(pitch);
+-  ori->set_roll(roll);
++  const double yaw = simCore::angFix2PI(simCore::linearInterpolateAngle(prev.yaw(), next.yaw(), factor));
++  const double pitch = simCore::angFixPI(simCore::linearInterpolateAngle(prev.pitch(), next.pitch(), factor));
++  const double roll = simCore::angFixPI(simCore::linearInterpolateAngle(prev.roll(), next.roll(), factor));
++
++  result->set_yaw(yaw);
++  result->set_pitch(pitch);
++  result->set_roll(roll);
+ 
+   return true;
+ }
+diff --git a/SDK/simData/LobGroupMemoryDataSlice.cpp b/SDK/simData/LobGroupMemoryDataSlice.cpp
+index a8ec332f..298faefc 100644
+--- a/SDK/simData/LobGroupMemoryDataSlice.cpp
++++ b/SDK/simData/LobGroupMemoryDataSlice.cpp
+@@ -83,10 +83,11 @@ void LobGroupMemoryDataSlice::update(double time)
+   for (; useIter != curTimeIter; ++useIter)
+   {
+     // copy all points from each update record to the new current update
+-    for (int pointIndex = 0; pointIndex < (*useIter)->datapoints().size(); pointIndex++)
++    for (int pointIndex = 0; pointIndex < static_cast<int>((*useIter)->datapoints().size()); pointIndex++)
+     {
+-      LobGroupUpdatePoint* newPoint = currentUpdate->add_datapoints();
+-      newPoint->CopyFrom((*useIter)->datapoints(pointIndex));
++      LobGroupUpdatePoint newPoint;
++      newPoint.CopyFrom((*useIter)->datapoints()[pointIndex]);
++      currentUpdate->mutable_datapoints()->push_back(newPoint);
+     }
+   }
+ 
+@@ -128,21 +129,17 @@ void LobGroupMemoryDataSlice::flush(double startTime, double endTime)
+ void LobGroupMemoryDataSlice::insert(LobGroupUpdate *data)
+ {
+   // first, ensure that all data points have the time of the LobGroupUpdate they are associated with
+-  for (int pointIndex = 0; pointIndex < data->datapoints().size(); pointIndex++)
++  for (int pointIndex = 0; pointIndex < static_cast<int>(data->datapoints().size()); pointIndex++)
+   {
+-    data->mutable_datapoints()->Mutable(pointIndex)->set_time(data->time());
++    (*data->mutable_datapoints())[pointIndex].set_time(data->time());
+   }
+ 
+   std::deque<LobGroupUpdate*>::iterator iter = std::lower_bound(updates_.begin(), updates_.end(), data, UpdateComp<LobGroupUpdate>());
+   if (iter != updates_.end() && (*iter)->time() == data->time())
+   {
+     // add to update record with same time
+-    for (int pointIndex = 0; pointIndex < data->datapoints().size(); pointIndex++)
+-    {
+-      LobGroupUpdatePoint* newPoint = (*iter)->add_datapoints();
+-      newPoint->CopyFrom(data->datapoints(pointIndex));
+-      data->mutable_datapoints()->RemoveLast();
+-    }
++    for (int pointIndex = 0; pointIndex < static_cast<int>(data->datapoints().size()); pointIndex++)
++      (*iter)->mutable_datapoints()->push_back(data->datapoints()[pointIndex]);
+     // done with data, since we added its points to an existing update record
+     delete data;
+   }
+diff --git a/SDK/simUtil/DataStoreTestHelper.cpp b/SDK/simUtil/DataStoreTestHelper.cpp
+index 4a58de20..e4546608 100644
+--- a/SDK/simUtil/DataStoreTestHelper.cpp
++++ b/SDK/simUtil/DataStoreTestHelper.cpp
+@@ -257,9 +257,9 @@ void DataStoreTestHelper::addLaserUpdate(double time, uint64_t id)
+   simData::LaserUpdate *u = dataStore_->addLaserUpdate(id, &t);
+   SDK_ASSERT(u != nullptr);
+   u->set_time(time);
+-  u->mutable_orientation()->set_yaw(0.0 + time);
+-  u->mutable_orientation()->set_pitch(1.0 + time);
+-  u->mutable_orientation()->set_roll(2.0 + time);
++  u->set_yaw(0.0 + time);
++  u->set_pitch(1.0 + time);
++  u->set_roll(2.0 + time);
+   t.commit();
+ }
+ 
+@@ -269,16 +269,18 @@ void DataStoreTestHelper::addLOBUpdate(double time, uint64_t id)
+   simData::LobGroupUpdate *u = dataStore_->addLobGroupUpdate(id, &t);
+   SDK_ASSERT(u != nullptr);
+   u->set_time(time);
+-  simData::LobGroupUpdatePoint *up = u->mutable_datapoints()->Add();
+-  up->set_time(time);
+-  up->set_azimuth(1.0 + time);
+-  up->set_elevation(10.0 + time);
+-  up->set_range(1000.0);
+-  simData::LobGroupUpdatePoint *up2 = u->mutable_datapoints()->Add();
+-  up2->set_time(time);
+-  up2->set_azimuth(20.0 + time);
+-  up2->set_elevation(5.0 + time);
+-  up2->set_range(1000.0);
++  simData::LobGroupUpdatePoint up;
++  up.set_time(time);
++  up.set_azimuth(1.0 + time);
++  up.set_elevation(10.0 + time);
++  up.set_range(1000.0);
++  u->mutable_datapoints()->push_back(up);
++  simData::LobGroupUpdatePoint up2;
++  up2.set_time(time);
++  up2.set_azimuth(20.0 + time);
++  up2.set_elevation(5.0 + time);
++  up2.set_range(1000.0);
++  u->mutable_datapoints()->push_back(up2);
+   t.commit();
+ }
+ 
+diff --git a/SDK/simVis/Beam.cpp b/SDK/simVis/Beam.cpp
+index 28208855..c783777d 100644
+--- a/SDK/simVis/Beam.cpp
++++ b/SDK/simVis/Beam.cpp
+@@ -671,7 +671,15 @@ void BeamNode::applyUpdateOverrides_(bool force)
+     simData::BeamUpdate accumulated(lastUpdateFromDS_);
+     for (std::map<std::string, simData::BeamUpdate>::const_iterator i = updateOverrides_.begin(); i != updateOverrides_.end(); ++i)
+     {
+-      accumulated.MergeFrom(i->second);
++      const auto& u = i->second;
++      if (u.has_time())
++        accumulated.set_time(u.time());
++      if (u.has_range())
++        accumulated.set_range(u.range());
++      if (u.has_azimuth())
++        accumulated.set_azimuth(u.azimuth());
++      if (u.has_elevation())
++        accumulated.set_elevation(u.elevation());
+     }
+     apply_(&accumulated, nullptr, force);
+     lastUpdateApplied_ = accumulated;
+diff --git a/SDK/simVis/Gate.cpp b/SDK/simVis/Gate.cpp
+index b9b6718f..f2092882 100644
+--- a/SDK/simVis/Gate.cpp
++++ b/SDK/simVis/Gate.cpp
+@@ -644,7 +644,23 @@ void GateNode::applyUpdateOverrides_(bool force)
+     simData::GateUpdate accumulated(lastUpdateFromDS_);
+     for (std::map<std::string, simData::GateUpdate>::iterator i = updateOverrides_.begin(); i != updateOverrides_.end(); ++i)
+     {
+-      accumulated.MergeFrom(i->second);
++      const auto& over = i->second;
++      if (over.has_time())
++        accumulated.set_time(over.time());
++      if (over.has_azimuth())
++        accumulated.set_azimuth(over.azimuth());
++      if (over.has_elevation())
++        accumulated.set_elevation(over.elevation());
++      if (over.has_height())
++        accumulated.set_height(over.height());
++      if (over.has_width())
++        accumulated.set_width(over.width());
++      if (over.has_minrange())
++        accumulated.set_minrange(over.minrange());
++      if (over.has_maxrange())
++        accumulated.set_maxrange(over.maxrange());
++      if (over.has_centroid())
++        accumulated.set_centroid(over.centroid());
+     }
+     apply_(&accumulated, nullptr, force);
+     lastUpdateApplied_ = accumulated;
+diff --git a/SDK/simVis/Laser.cpp b/SDK/simVis/Laser.cpp
+index 42961c46..f1969f36 100644
+--- a/SDK/simVis/Laser.cpp
++++ b/SDK/simVis/Laser.cpp
+@@ -25,6 +25,7 @@
+ #include "osgEarth/LineDrawable"
+ #include "osgEarth/ObjectIndex"
+ #include "simCore/Calc/Math.h"
++#include "simData/DataTypes.h"
+ #include "simNotify/Notify.h"
+ #include "simVis/EntityLabel.h"
+ #include "simVis/LabelContentManager.h"
+@@ -357,8 +358,8 @@ void LaserNode::updateLocator_(const simData::LaserUpdate* newUpdate, const simD
+ {
+   const bool locatorUpdateRequired = force ||
+     (newUpdate &&
+-      (newUpdate->orientation().yaw() != lastUpdate_.orientation().yaw() ||
+-      newUpdate->orientation().pitch() != lastUpdate_.orientation().pitch())) ||
++      (newUpdate->yaw() != lastUpdate_.yaw() ||
++      newUpdate->pitch() != lastUpdate_.pitch())) ||
+     (newPrefs &&
+       (PB_SUBFIELD_CHANGED(&lastPrefs_, newPrefs, laserxyzoffset, x) ||
+       PB_SUBFIELD_CHANGED(&lastPrefs_, newPrefs, laserxyzoffset, y) ||
+@@ -376,8 +377,8 @@ void LaserNode::updateLocator_(const simData::LaserUpdate* newUpdate, const simD
+                             activePrefs->laserxyzoffset().x(),
+                             activePrefs->laserxyzoffset().z());
+ 
+-    const simCore::Vec3 oriOffset(activeUpdate->orientation().yaw(),
+-                                  activeUpdate->orientation().pitch(),
++    const simCore::Vec3 oriOffset(activeUpdate->yaw(),
++                                  activeUpdate->pitch(),
+                                   0.0);
+ 
+     if (!lastProps_.has_azelrelativetohostori() || !lastProps_.azelrelativetohostori())
+diff --git a/SDK/simVis/LobGroup.cpp b/SDK/simVis/LobGroup.cpp
+index 3141fd6f..87479b41 100644
+--- a/SDK/simVis/LobGroup.cpp
++++ b/SDK/simVis/LobGroup.cpp
+@@ -30,6 +30,7 @@
+ #include "simCore/Calc/Math.h"
+ #include "simCore/Calc/MultiFrameCoordinate.h"
+ #include "simData/DataTable.h"
++#include "simData/DataTypes.h"
+ #include "simData/LinearInterpolator.h"
+ #include "simVis/AnimatedLine.h"
+ #include "simVis/EntityLabel.h"
+@@ -330,7 +331,7 @@ void LobGroupNode::setPrefs(const simData::LobGroupPrefs &prefs)
+     const simData::LobGroupUpdateSlice *updateSlice = ds_.lobGroupUpdateSlice(lastProps_.id());
+     if (updateSlice)
+     {
+-      const simData::LobGroupUpdate *currentUpdate = ds_.lobGroupUpdateSlice(lastProps_.id())->current();
++      const simData::LobGroupUpdate *currentUpdate = updateSlice->current();
+       if (currentUpdate)
+         updateCache_(*currentUpdate, prefs);
+     }
+@@ -422,15 +423,15 @@ void LobGroupNode::updateCache_(const simData::LobGroupUpdate &update, const sim
+   }
+ 
+   // prune the cache, since the data max values may adjust how much data is shown
+-  const double firstTime = update.datapoints(0).time();
+-  const double lastTime = update.datapoints(numLines-1).time();
++  const double firstTime = update.datapoints()[0].time();
++  const double lastTime = update.datapoints()[numLines-1].time();
+   lineCache_->pruneCache(this, firstTime, lastTime);
+ 
+   simData::Interpolator* li = ds_.interpolator();
+   for (int index = 0; index < numLines;) // Incremented in the for loop below
+   {
+     // handle all lines with this time (if time is not already in the cache)
+-    const double time = update.datapoints(index).time();
++    const double time = update.datapoints()[index].time();
+     if (lineCache_->hasTime(time))
+     {
+       ++index;
+@@ -486,10 +487,10 @@ void LobGroupNode::updateCache_(const simData::LobGroupUpdate &update, const sim
+     }
+ 
+     // process endpoints for all lines at same time; all share same host platform position just calc'd
+-    for (; index < numLines && update.datapoints(index).time() == time; ++index)
++    for (; index < numLines && update.datapoints()[index].time() == time; ++index)
+     {
+       // calculate end point based on update point RAE
+-      const simData::LobGroupUpdatePoint &curP = update.datapoints(index);
++      const simData::LobGroupUpdatePoint &curP = update.datapoints()[index];
+ 
+       // find the point relative to the start
+       simCore::Vec3 endPoint;
+@@ -527,7 +528,7 @@ void LobGroupNode::updateCache_(const simData::LobGroupUpdate &update, const sim
+     // set the local grid for LOB's position and az/el of the last of the lobs
+     if (index == numLines)
+     {
+-      const simData::LobGroupUpdatePoint &curP = update.datapoints(numLines-1);
++      const simData::LobGroupUpdatePoint &curP = update.datapoints()[numLines-1];
+       simCore::Vec3 lobAngles(curP.azimuth(), curP.elevation(), 0.0);
+       if (lastProps_.azelrelativetohostori())
+       {
+@@ -640,7 +641,7 @@ double LobGroupNode::range() const
+   if (lastUpdate_.datapoints_size() == 0)
+     return 0.0;
+ 
+-  const simData::LobGroupUpdatePoint &curP = lastUpdate_.datapoints(lastUpdate_.datapoints_size()-1);
++  const simData::LobGroupUpdatePoint &curP = lastUpdate_.datapoints()[lastUpdate_.datapoints_size()-1];
+   return curP.range();
+ }
+ 
+diff --git a/SDK/simVis/Projector.cpp b/SDK/simVis/Projector.cpp
+index 60d3411b..0cc7a6d5 100644
+--- a/SDK/simVis/Projector.cpp
++++ b/SDK/simVis/Projector.cpp
+@@ -40,6 +40,7 @@
+ #include "simCore/Calc/Angle.h"
+ #include "simCore/Calc/CoordinateConverter.h"
+ #include "simCore/String/Format.h"
++#include "simData/DataTypes.h"
+ #include "simVis/ClockOptions.h"
+ #include "simVis/EntityLabel.h"
+ #include "simVis/LabelContentManager.h"
+diff --git a/Testing/SimData/TestInterpolation.cpp b/Testing/SimData/TestInterpolation.cpp
+index e0d6f77f..20201670 100644
+--- a/Testing/SimData/TestInterpolation.cpp
++++ b/Testing/SimData/TestInterpolation.cpp
+@@ -306,9 +306,9 @@ void testInterpolation_linearAngle()
+     simData::LaserUpdate *u = ds->addLaserUpdate(laserId, &t);
+     assertTrue(u != nullptr);
+     u->set_time(1.0);
+-    u->mutable_orientation()->set_yaw(0.0);
+-    u->mutable_orientation()->set_pitch(0.0);
+-    u->mutable_orientation()->set_roll(0.0);
++    u->set_yaw(0.0);
++    u->set_pitch(0.0);
++    u->set_roll(0.0);
+     t.commit();
+   }
+ 
+@@ -318,9 +318,9 @@ void testInterpolation_linearAngle()
+     simData::LaserUpdate *u = ds->addLaserUpdate(laserId, &t);
+     assertTrue(u != nullptr);
+     u->set_time(2.0);
+-    u->mutable_orientation()->set_yaw(0.5);
+-    u->mutable_orientation()->set_pitch(0.5);
+-    u->mutable_orientation()->set_roll(0.5);
++    u->set_yaw(0.5);
++    u->set_pitch(0.5);
++    u->set_roll(0.5);
+     t.commit();
+   }
+ 
+@@ -330,9 +330,9 @@ void testInterpolation_linearAngle()
+     simData::LaserUpdate *u = ds->addLaserUpdate(laserId, &t);
+     assertTrue(u != nullptr);
+     u->set_time(3.0);
+-    u->mutable_orientation()->set_yaw(M_TWOPI - 0.5);
+-    u->mutable_orientation()->set_pitch(1.0);
+-    u->mutable_orientation()->set_roll(1.0);
++    u->set_yaw(M_TWOPI - 0.5);
++    u->set_pitch(1.0);
++    u->set_roll(1.0);
+     t.commit();
+   }
+ 
+@@ -383,9 +383,9 @@ void testInterpolation_linearAngle()
+   assertTrue(lslice->current() != nullptr);
+   assertEquals(lslice->isInterpolated(), true);
+   assertEquals(lslice->current()->time(), 1.5);
+-  assertTrue(simCore::areEqual(lslice->current()->orientation().yaw(), 0.25));
+-  assertTrue(simCore::areEqual(lslice->current()->orientation().pitch(), 0.25));
+-  assertTrue(simCore::areEqual(lslice->current()->orientation().roll(), 0.25));
++  assertTrue(simCore::areEqual(lslice->current()->yaw(), 0.25));
++  assertTrue(simCore::areEqual(lslice->current()->pitch(), 0.25));
++  assertTrue(simCore::areEqual(lslice->current()->roll(), 0.25));
+   // test that re-updating datastore at same time does not signal a changed dataslice update (interpolated case)
+   {
+     // insert platform to dirty the datastore (but not affect the original platform data slice)
+@@ -399,9 +399,9 @@ void testInterpolation_linearAngle()
+   assertTrue(lslice->current() != nullptr);
+   assertEquals(lslice->isInterpolated(), true);
+   assertEquals(lslice->current()->time(), 2.5);
+-  assertTrue(simCore::areEqual(lslice->current()->orientation().yaw(), 0.0));
+-  assertTrue(simCore::areEqual(lslice->current()->orientation().pitch(), 0.75));
+-  assertTrue(simCore::areEqual(lslice->current()->orientation().roll(), 0.75));
++  assertTrue(simCore::areEqual(lslice->current()->yaw(), 0.0));
++  assertTrue(simCore::areEqual(lslice->current()->pitch(), 0.75));
++  assertTrue(simCore::areEqual(lslice->current()->roll(), 0.75));
+ 
+ 
+   // disable interpolation
+diff --git a/Testing/SimData/TestMemoryDataStore.cpp b/Testing/SimData/TestMemoryDataStore.cpp
+index 51430929..e3d63a69 100644
+--- a/Testing/SimData/TestMemoryDataStore.cpp
++++ b/Testing/SimData/TestMemoryDataStore.cpp
+@@ -328,11 +328,12 @@ void testLobGroup_insert()
+   {
+     simData::LobGroupUpdate* u = ds->addLobGroupUpdate(lobId1, &t);
+     u->set_time(0.0);
+-    simData::LobGroupUpdatePoint *up = u->mutable_datapoints()->Add();
+-    up->set_time(0.0);
+-    up->set_azimuth(19.0);
+-    up->set_elevation(100.0);
+-    up->set_range(3450.0);
++    simData::LobGroupUpdatePoint up;
++    up.set_time(0.0);
++    up.set_azimuth(19.0);
++    up.set_elevation(100.0);
++    up.set_range(3450.0);
++    u->mutable_datapoints()->push_back(up);
+     t.commit();
+   }
+ 
+@@ -340,11 +341,12 @@ void testLobGroup_insert()
+   {
+     simData::LobGroupUpdate* u = ds->addLobGroupUpdate(lobId1, &t);
+     u->set_time(1.0);
+-    simData::LobGroupUpdatePoint *up = u->mutable_datapoints()->Add();
+-    up->set_time(1.0);
+-    up->set_azimuth(11.0);
+-    up->set_elevation(100.0);
+-    up->set_range(3000.0);
++    simData::LobGroupUpdatePoint up;
++    up.set_time(1.0);
++    up.set_azimuth(11.0);
++    up.set_elevation(100.0);
++    up.set_range(3000.0);
++    u->mutable_datapoints()->push_back(up);
+     t.commit();
+   }
+ 
+@@ -352,11 +354,12 @@ void testLobGroup_insert()
+   {
+     simData::LobGroupUpdate* u = ds->addLobGroupUpdate(lobId1, &t);
+     u->set_time(1.0);
+-    simData::LobGroupUpdatePoint *up2 = u->mutable_datapoints()->Add();
+-    up2->set_time(1.0);
+-    up2->set_azimuth(12.0);
+-    up2->set_elevation(100.0);
+-    up2->set_range(3000.0);
++    simData::LobGroupUpdatePoint up2;
++    up2.set_time(1.0);
++    up2.set_azimuth(12.0);
++    up2.set_elevation(100.0);
++    up2.set_range(3000.0);
++    u->mutable_datapoints()->push_back(up2);
+     t.commit();
+   }
+ 
+@@ -365,16 +368,18 @@ void testLobGroup_insert()
+   {
+     simData::LobGroupUpdate* u = ds->addLobGroupUpdate(lobId1, &t);
+     u->set_time(2.0);
+-    simData::LobGroupUpdatePoint *up = u->mutable_datapoints()->Add();
+-    up->set_time(2.0);
+-    up->set_azimuth(15.0);
+-    up->set_elevation(150.0);
+-    up->set_range(3000.0);
+-    simData::LobGroupUpdatePoint *up2 = u->mutable_datapoints()->Add();
+-    up2->set_time(2.0);
+-    up2->set_azimuth(16.0);
+-    up2->set_elevation(150.0);
+-    up2->set_range(3000.0);
++    simData::LobGroupUpdatePoint up;
++    up.set_time(2.0);
++    up.set_azimuth(15.0);
++    up.set_elevation(150.0);
++    up.set_range(3000.0);
++    u->mutable_datapoints()->push_back(up);
++    simData::LobGroupUpdatePoint up2;
++    up2.set_time(2.0);
++    up2.set_azimuth(16.0);
++    up2.set_elevation(150.0);
++    up2.set_range(3000.0);
++    u->mutable_datapoints()->push_back(up2);
+     t.commit();
+   }
+ 
+@@ -382,21 +387,24 @@ void testLobGroup_insert()
+   {
+     simData::LobGroupUpdate* u = ds->addLobGroupUpdate(lobId1, &t);
+     u->set_time(3.0);
+-    simData::LobGroupUpdatePoint *up = u->mutable_datapoints()->Add();
+-    up->set_time(3.0);
+-    up->set_azimuth(24.0);
+-    up->set_elevation(170.0);
+-    up->set_range(4000.0);
+-    simData::LobGroupUpdatePoint *up2 = u->mutable_datapoints()->Add();
+-    up2->set_time(4.0); // this time will be reset to 3.0 on insert
+-    up2->set_azimuth(35.0);
+-    up2->set_elevation(180.0);
+-    up2->set_range(4000.0);
+-    simData::LobGroupUpdatePoint *up3 = u->mutable_datapoints()->Add();
+-    up3->set_time(3.0);
+-    up3->set_azimuth(25.0);
+-    up3->set_elevation(175.0);
+-    up3->set_range(4000.0);
++    simData::LobGroupUpdatePoint up;
++    up.set_time(3.0);
++    up.set_azimuth(24.0);
++    up.set_elevation(170.0);
++    up.set_range(4000.0);
++    u->mutable_datapoints()->push_back(up);
++    simData::LobGroupUpdatePoint up2;
++    up2.set_time(4.0); // this time will be reset to 3.0 on insert
++    up2.set_azimuth(35.0);
++    up2.set_elevation(180.0);
++    up2.set_range(4000.0);
++    u->mutable_datapoints()->push_back(up2);
++    simData::LobGroupUpdatePoint up3;
++    up3.set_time(3.0);
++    up3.set_azimuth(25.0);
++    up3.set_elevation(175.0);
++    up3.set_range(4000.0);
++    u->mutable_datapoints()->push_back(up3);
+     t.commit();
+   }
+ 
+@@ -421,17 +429,17 @@ void testLobGroup_insert()
+ 
+   // verify data point values
+   mdsAssertEquals(lobSliceCopy.updates[1].datapoints_size(), 2);
+-  rv += SDK_ASSERT(lobSliceCopy.updates[1].datapoints(0).azimuth() == 12.0 ||
+-    lobSliceCopy.updates[1].datapoints(0).azimuth() == 11.0);
+-  mdsAssertEquals(lobSliceCopy.updates[1].datapoints(0).elevation(), 100.0);
+-  mdsAssertEquals(lobSliceCopy.updates[1].datapoints(0).range(), 3000.0);
+-  rv += SDK_ASSERT(lobSliceCopy.updates[1].datapoints(1).azimuth() == 11.0 ||
+-    lobSliceCopy.updates[1].datapoints(1).azimuth() == 12.0);
+-  rv += SDK_ASSERT(lobSliceCopy.updates[2].datapoints(0).azimuth() == 16.0 ||
+-    lobSliceCopy.updates[2].datapoints(0).azimuth() == 15.0);
+-  rv += SDK_ASSERT(lobSliceCopy.updates[2].datapoints(1).azimuth() == 16.0 ||
+-    lobSliceCopy.updates[2].datapoints(1).azimuth() == 15.0);
+-  mdsAssertEquals(lobSliceCopy.updates[2].datapoints(0).elevation(), 150.0);
++  rv += SDK_ASSERT(lobSliceCopy.updates[1].datapoints()[0].azimuth() == 12.0 ||
++    lobSliceCopy.updates[1].datapoints()[0].azimuth() == 11.0);
++  mdsAssertEquals(lobSliceCopy.updates[1].datapoints()[0].elevation(), 100.0);
++  mdsAssertEquals(lobSliceCopy.updates[1].datapoints()[0].range(), 3000.0);
++  rv += SDK_ASSERT(lobSliceCopy.updates[1].datapoints()[1].azimuth() == 11.0 ||
++    lobSliceCopy.updates[1].datapoints()[1].azimuth() == 12.0);
++  rv += SDK_ASSERT(lobSliceCopy.updates[2].datapoints()[0].azimuth() == 16.0 ||
++    lobSliceCopy.updates[2].datapoints()[0].azimuth() == 15.0);
++  rv += SDK_ASSERT(lobSliceCopy.updates[2].datapoints()[1].azimuth() == 16.0 ||
++    lobSliceCopy.updates[2].datapoints()[1].azimuth() == 15.0);
++  mdsAssertEquals(lobSliceCopy.updates[2].datapoints()[0].elevation(), 150.0);
+ 
+   // update to first time
+   ds->update(0.0);
+@@ -443,12 +451,12 @@ void testLobGroup_insert()
+   ds->update(1.0);
+   const simData::LobGroupUpdate *c1 = lobPointSlice->current();
+   mdsAssertEquals(c1->datapoints_size(), 3); // since only 1 second of data available, only 3 points from time 0.0 and 1.0
+-  rv += SDK_ASSERT(c1->datapoints(1).azimuth() == 12.0 ||
+-    c1->datapoints(1).azimuth() == 11.0);
+-  rv += SDK_ASSERT(c1->datapoints(1).azimuth() == 11.0 ||
+-    c1->datapoints(2).azimuth() == 12.0);
+-  mdsAssertEquals(c1->datapoints(1).elevation(), 100.0);
+-  mdsAssertEquals(c1->datapoints(1).range(), 3000.0);
++  rv += SDK_ASSERT(c1->datapoints()[1].azimuth() == 12.0 ||
++    c1->datapoints()[1].azimuth() == 11.0);
++  rv += SDK_ASSERT(c1->datapoints()[1].azimuth() == 11.0 ||
++    c1->datapoints()[2].azimuth() == 12.0);
++  mdsAssertEquals(c1->datapoints()[1].elevation(), 100.0);
++  mdsAssertEquals(c1->datapoints()[1].range(), 3000.0);
+ 
+   // test prefs
+   const simData::LobGroupCommand* com1 = cslice->current();
+@@ -463,17 +471,17 @@ void testLobGroup_insert()
+   ds->update(2.0);
+   const simData::LobGroupUpdate *c2 = lobPointSlice->current();
+   mdsAssertEquals(c2->datapoints_size(), 4); // only 2 seconds of data, and all point are within limits, so 4 points
+-  rv += SDK_ASSERT(c2->datapoints(0).azimuth() == 11.0 ||
+-    c2->datapoints(0).azimuth() == 12.0);
+-  mdsAssertEquals(c2->datapoints(0).elevation(), 100.0);
+-  mdsAssertEquals(c2->datapoints(0).range(), 3000.0);
+-  rv += SDK_ASSERT(c2->datapoints(1).azimuth() == 11.0 ||
+-    c2->datapoints(1).azimuth() == 12.0);
+-  rv += SDK_ASSERT(c2->datapoints(2).azimuth() == 15.0 ||
+-    c2->datapoints(2).azimuth() == 16.0);
+-  rv += SDK_ASSERT(c2->datapoints(3).azimuth() == 15.0 ||
+-    c2->datapoints(3).azimuth() == 16.0);
+-  mdsAssertEquals(c2->datapoints(2).elevation(), 150.0);
++  rv += SDK_ASSERT(c2->datapoints()[0].azimuth() == 11.0 ||
++    c2->datapoints()[0].azimuth() == 12.0);
++  mdsAssertEquals(c2->datapoints()[0].elevation(), 100.0);
++  mdsAssertEquals(c2->datapoints()[0].range(), 3000.0);
++  rv += SDK_ASSERT(c2->datapoints()[1].azimuth() == 11.0 ||
++    c2->datapoints()[1].azimuth() == 12.0);
++  rv += SDK_ASSERT(c2->datapoints()[2].azimuth() == 15.0 ||
++    c2->datapoints()[2].azimuth() == 16.0);
++  rv += SDK_ASSERT(c2->datapoints()[3].azimuth() == 15.0 ||
++    c2->datapoints()[3].azimuth() == 16.0);
++  mdsAssertEquals(c2->datapoints()[2].elevation(), 150.0);
+ 
+   // test prefs
+   const simData::LobGroupCommand* com2 = cslice->current();
+@@ -498,25 +506,25 @@ void testLobGroup_insert()
+   ds->update(2.0);
+   const simData::LobGroupUpdate *c3 = lobPointSlice->current();
+   mdsAssertEquals(c3->datapoints_size(), 2); // only 1 data point time set, so should only have the 2 points at time 2.0
+-  rv += SDK_ASSERT(c3->datapoints(0).azimuth() == 15.0 ||
+-    c3->datapoints(0).azimuth() == 16.0);
++  rv += SDK_ASSERT(c3->datapoints()[0].azimuth() == 15.0 ||
++    c3->datapoints()[0].azimuth() == 16.0);
+ 
+   // update time
+   ds->update(3.0);
+   const simData::LobGroupUpdate *c4 = lobPointSlice->current();
+   mdsAssertEquals(c4->datapoints_size(), 3); // only 1 data point time set, so should only have the 3 points at time 3.0
+-  mdsAssertEquals(c4->datapoints(0).time(), 3.0);
+-  mdsAssertEquals(c4->datapoints(1).time(), 3.0); // note that point added with time 4.0 should now be 3.0
+-  mdsAssertEquals(c4->datapoints(2).time(), 3.0);
+-  rv += SDK_ASSERT(c4->datapoints(0).azimuth() == 24.0 ||
+-   c4->datapoints(0).azimuth() == 25.0 ||
+-   c4->datapoints(0).azimuth() == 35.0);
+-  rv += SDK_ASSERT(c4->datapoints(1).azimuth() == 24.0 ||
+-   c4->datapoints(1).azimuth() == 25.0 ||
+-   c4->datapoints(1).azimuth() == 35.0);
+-  rv += SDK_ASSERT(c4->datapoints(0).elevation() == 170.0 ||
+-    c4->datapoints(0).elevation() == 175.0 ||
+-    c4->datapoints(0).elevation() == 180.0);
++  mdsAssertEquals(c4->datapoints()[0].time(), 3.0);
++  mdsAssertEquals(c4->datapoints()[1].time(), 3.0); // note that point added with time 4.0 should now be 3.0
++  mdsAssertEquals(c4->datapoints()[2].time(), 3.0);
++  rv += SDK_ASSERT(c4->datapoints()[0].azimuth() == 24.0 ||
++   c4->datapoints()[0].azimuth() == 25.0 ||
++   c4->datapoints()[0].azimuth() == 35.0);
++  rv += SDK_ASSERT(c4->datapoints()[1].azimuth() == 24.0 ||
++   c4->datapoints()[1].azimuth() == 25.0 ||
++   c4->datapoints()[1].azimuth() == 35.0);
++  rv += SDK_ASSERT(c4->datapoints()[0].elevation() == 170.0 ||
++    c4->datapoints()[0].elevation() == 175.0 ||
++    c4->datapoints()[0].elevation() == 180.0);
+ 
+   // now setting max data points to 3, but max data seconds is 2
+   {
+@@ -541,18 +549,18 @@ void testLobGroup_insert()
+   const simData::LobGroupUpdate *c5 = lobPointSlice->current();
+   mdsAssertEquals(c5->datapoints_size(), 5); //  should have data from [1.0+epsilon, 3.0+epsilon]
+   // data should be time ordered
+-  mdsAssertEquals(c5->datapoints(0).time(), 2.0);
+-  mdsAssertEquals(c5->datapoints(1).time(), 2.0);
+-  mdsAssertEquals(c5->datapoints(2).time(), 3.0);
+-  mdsAssertEquals(c5->datapoints(3).time(), 3.0);
+-  mdsAssertEquals(c5->datapoints(4).time(), 3.0);
+-  rv += SDK_ASSERT(c5->datapoints(0).azimuth() == 15.0 ||
+-    c5->datapoints(0).azimuth() == 16.0);
+-  rv += SDK_ASSERT(c5->datapoints(1).azimuth() == 15.0 ||
+-    c5->datapoints(1).azimuth() == 16.0);
+-  rv += SDK_ASSERT(c5->datapoints(2).azimuth() == 24.0 ||
+-   c5->datapoints(2).azimuth() == 25.0 ||
+-   c5->datapoints(2).azimuth() == 35.0);
++  mdsAssertEquals(c5->datapoints()[0].time(), 2.0);
++  mdsAssertEquals(c5->datapoints()[1].time(), 2.0);
++  mdsAssertEquals(c5->datapoints()[2].time(), 3.0);
++  mdsAssertEquals(c5->datapoints()[3].time(), 3.0);
++  mdsAssertEquals(c5->datapoints()[4].time(), 3.0);
++  rv += SDK_ASSERT(c5->datapoints()[0].azimuth() == 15.0 ||
++    c5->datapoints()[0].azimuth() == 16.0);
++  rv += SDK_ASSERT(c5->datapoints()[1].azimuth() == 15.0 ||
++    c5->datapoints()[1].azimuth() == 16.0);
++  rv += SDK_ASSERT(c5->datapoints()[2].azimuth() == 24.0 ||
++   c5->datapoints()[2].azimuth() == 25.0 ||
++   c5->datapoints()[2].azimuth() == 35.0);
+ 
+   // test prefs
+   const simData::LobGroupCommand* com3 = cslice->current();
+@@ -577,21 +585,21 @@ void testLobGroup_insert()
+   const simData::LobGroupUpdate *c6 = lobPointSlice->current();
+   mdsAssertEquals(c6->datapoints_size(), 8); //  should have data from time 0.0, 1.0, 2.0, and 3.0
+   // data should be time ordered
+-  mdsAssertEquals(c6->datapoints(0).time(), 0.0);
+-  mdsAssertEquals(c6->datapoints(1).time(), 1.0);
+-  mdsAssertEquals(c6->datapoints(2).time(), 1.0);
+-  mdsAssertEquals(c6->datapoints(3).time(), 2.0);
+-  mdsAssertEquals(c6->datapoints(4).time(), 2.0);
+-  mdsAssertEquals(c6->datapoints(5).time(), 3.0);
+-  mdsAssertEquals(c6->datapoints(6).time(), 3.0);
+-  mdsAssertEquals(c6->datapoints(7).time(), 3.0);
++  mdsAssertEquals(c6->datapoints()[0].time(), 0.0);
++  mdsAssertEquals(c6->datapoints()[1].time(), 1.0);
++  mdsAssertEquals(c6->datapoints()[2].time(), 1.0);
++  mdsAssertEquals(c6->datapoints()[3].time(), 2.0);
++  mdsAssertEquals(c6->datapoints()[4].time(), 2.0);
++  mdsAssertEquals(c6->datapoints()[5].time(), 3.0);
++  mdsAssertEquals(c6->datapoints()[6].time(), 3.0);
++  mdsAssertEquals(c6->datapoints()[7].time(), 3.0);
+ 
+   // test iterator
+   simData::LobGroupUpdateSlice::Iterator iter = lobPointSlice->lower_bound(2.0);
+   rv += SDK_ASSERT(iter.hasNext());
+   const simData::LobGroupUpdate* lobUpdate = iter.next();
+-  rv += SDK_ASSERT(lobUpdate->datapoints(0).azimuth() == 15 ||
+-                   lobUpdate->datapoints(1).azimuth() == 16);
++  rv += SDK_ASSERT(lobUpdate->datapoints()[0].azimuth() == 15 ||
++                   lobUpdate->datapoints()[1].azimuth() == 16);
+ 
+   MemDsTestListener *testListen = new MemDsTestListener;
+   simData::DataStore::ListenerPtr testListenShared(testListen);
+-- 
+2.47.1.windows.2
+

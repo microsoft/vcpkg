@@ -1,0 +1,69 @@
+From 43bdc993916e31bcbfb6b9d1daee007823790546 Mon Sep 17 00:00:00 2001
+From: George Ruhlmann <george.m.ruhlmann.ctr@us.navy.mil>
+Date: Mon, 24 Mar 2025 15:34:21 +0000
+Subject: [PATCH 15/29] SIM-18120 Expanded the use of Fast Update for
+ MemoryDataSlice<T>
+
+**JIRA Issue:** SIM-18120
+
+**Description:** Updated both MemoryDataSlice<T>::lower_bound() and MemoryDataSlice<T>::upper_bound() so that the Fast Update is available in other methods.   Need to make both member variables updates_ and fastUpdate_ mutable since both lower_bound() and upper_bound() are const methods.
+
+**Testing Performed:** The South China Sea benchmark now runs 4.5% faster.  The calculating the time delta is no longer the hot spot.  The SDK unit tests still pass.
+---
+ SDK/simData/MemoryDataSlice-inl.h | 6 ++++--
+ SDK/simData/MemoryDataSlice.h     | 8 ++++----
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/SDK/simData/MemoryDataSlice-inl.h b/SDK/simData/MemoryDataSlice-inl.h
+index aa8f2b66..b6ce26c4 100644
+--- a/SDK/simData/MemoryDataSlice-inl.h
++++ b/SDK/simData/MemoryDataSlice-inl.h
+@@ -275,7 +275,8 @@ template<typename T>
+ typename DataSlice<T>::Iterator MemoryDataSlice<T>::lower_bound(double timeValue) const
+ {
+   VectorIterator<T>* rv = new VectorIterator<T>(&updates_);
+-  typename std::deque<T*>::const_iterator iter =  computeLowerBound<typename std::deque<T*>::const_iterator, T>(updates_.begin(), fastUpdate_.get(), updates_.end(), timeValue);
++  typename std::deque<T*>::iterator iter =  computeLowerBound<typename std::deque<T*>::iterator, T>(updates_.begin(), fastUpdate_.get(), updates_.end(), timeValue);
++  fastUpdate_ = MemorySliceHelper::SafeDequeIterator<T*>(&updates_, iter);
+   rv->set(iter - updates_.begin());
+   return typename DataSlice<T>::Iterator(rv);
+ }
+@@ -284,7 +285,8 @@ template<typename T>
+ typename DataSlice<T>::Iterator MemoryDataSlice<T>::upper_bound(double timeValue) const
+ {
+   VectorIterator<T>* rv = new VectorIterator<T>(&updates_);
+-  typename std::deque<T*>::const_iterator iter = computeUpperBound<typename std::deque<T*>::const_iterator, T>(updates_.begin(), fastUpdate_.get(), updates_.end(), timeValue);
++  typename std::deque<T*>::iterator iter = computeUpperBound<typename std::deque<T*>::iterator, T>(updates_.begin(), fastUpdate_.get(), updates_.end(), timeValue);
++  fastUpdate_ = MemorySliceHelper::SafeDequeIterator<T*>(&updates_, iter);
+   rv->set(iter - updates_.begin());
+   return typename DataSlice<T>::Iterator(rv);
+ }
+diff --git a/SDK/simData/MemoryDataSlice.h b/SDK/simData/MemoryDataSlice.h
+index a0d3ef11..4e184dbb 100644
+--- a/SDK/simData/MemoryDataSlice.h
++++ b/SDK/simData/MemoryDataSlice.h
+@@ -289,8 +289,8 @@ protected:
+   bool mdsHasChanged_;
+   /// used to mark if this slice needs to be updated (i.e. the updates_ have been modified)
+   bool dirty_;
+-  /// list of state updates
+-  std::deque<T*> updates_;
++  /// list of state updates, mutable so that fastUpdate_ can be modified in const methods
++  mutable std::deque<T*> updates_;
+   /// the current state, can either point to a real state, or a "virtual" interpolated state
+   T *current_;
+   /// a cache of the interpolated state for the current time
+@@ -299,8 +299,8 @@ protected:
+   bool interpolated_;
+   /// specifies the interpolation bounds; the bounds will be nullptr if no interpolation is specified
+   typename DataSlice<T>::Bounds bounds_;
+-  /// Used to optimize updates by looking at data near the last update
+-  typename MemorySliceHelper::SafeDequeIterator<T*> fastUpdate_;
++  /// Used to optimize updates by looking at data near the last update; mutable so it can be modified in const methods
++  mutable typename MemorySliceHelper::SafeDequeIterator<T*> fastUpdate_;
+   /// Used to notify parent that the slice changed
+   std::function<void()> notifierFn_;
+ };
+-- 
+2.47.1.windows.2
+

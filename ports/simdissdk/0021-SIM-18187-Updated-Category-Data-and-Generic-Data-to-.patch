@@ -1,0 +1,281 @@
+From 9c8c3473c3b24f91604ba0121ba8a47dfd0a38cc Mon Sep 17 00:00:00 2001
+From: George Ruhlmann <george.m.ruhlmann.ctr@us.navy.mil>
+Date: Thu, 17 Apr 2025 14:03:19 +0000
+Subject: [PATCH 21/29] SIM-18187 Updated Category Data and Generic Data to
+ Simple C++ Classes (1/4 SDK)
+
+**JIRA Issue:** SIM-18187
+
+**Description:** Did the minimum necessary to get the SDK and SIMDIS-X to compile.
+
+**Testing Performed:** Unit tests still pass and Simple Server looks good
+---
+ SDK/simData/DataTypes.h                 | 101 ++++++++++++++++++++++++
+ SDK/simData/GeneratedCode/simData.proto |  30 -------
+ SDK/simUtil/DataStoreTestHelper.cpp     |   2 +-
+ Testing/SimData/TestMemRetrieval.cpp    |   8 +-
+ Testing/SimData/TestMemoryDataStore.cpp |  30 +++----
+ 5 files changed, 121 insertions(+), 50 deletions(-)
+
+diff --git a/SDK/simData/DataTypes.h b/SDK/simData/DataTypes.h
+index 2acaef1a..8fb39dfa 100644
+--- a/SDK/simData/DataTypes.h
++++ b/SDK/simData/DataTypes.h
+@@ -419,6 +419,107 @@ namespace simData
+     std::vector<LobGroupUpdatePoint> dataPoints_;
+   };
+ 
++
++  /// key,value data intended to categorize a platform
++  /// for example: friendly, hostile; ship, plane
++  class CategoryData
++  {
++  public:
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++    class Entry
++    {
++    public:
++      inline std::string key() const { return key_; }
++      inline void set_key(const std::string& value) { key_ = value; }
++
++      inline std::string value() const { return value_; }
++      inline void set_value(const std::string& value) { value_ = value; }
++
++    private:
++      std::string key_;
++      std::string value_;
++    };
++
++    /// Returns the number of entries for the update
++    int entry_size() const { return static_cast<int>(entries_.size()); }
++    /// Returns a vector of entries
++    const std::vector<Entry>& entry() const { return entries_; }
++    /// Returns the requested entry;
++    const Entry& entry(int index) const { return entries_[index]; }
++    /// Add an entry
++    Entry* add_entry() { entries_.push_back(Entry()); return &entries_.back(); }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++    /// Points all at the same time
++    std::vector<Entry> entries_;
++  };
++
++  // Backwards compatibility with protobuf
++  using CategoryData_Entry = CategoryData::Entry;
++
++  /// key,value data which is attached to time, but unrelated to spatial
++  /// location or orientation (display)
++  /// for example: fuel, or temperature
++  class GenericData
++  {
++  public:
++    void CopyFrom(const GenericData& from) { if (&from == this) return; *this = from; }
++
++    void Clear() { clear_time(); clear_duration();  entries_.clear(); }
++
++    inline bool has_time() const { return time_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_time() { time_ = INVALID_UPDATE_DOUBLE; }
++    inline double time() const { return time_; }
++    inline void set_time(double value) { time_ = value; }
++
++    inline bool has_duration() const { return duration_ != INVALID_UPDATE_DOUBLE; }
++    inline void clear_duration() { duration_ = INVALID_UPDATE_DOUBLE; }
++    inline double duration() const { return duration_; }
++    inline void set_duration(double value) { duration_ = value; }
++
++    class Entry
++    {
++    public:
++      inline std::string key() const { return key_; }
++      inline void set_key(const std::string& value) { key_ = value; }
++
++      inline std::string value() const { return value_; }
++      inline void set_value(const std::string& value) { value_ = value; }
++
++    private:
++      std::string key_;
++      std::string value_;
++    };
++
++    /// Returns the number of entries for the update
++    int entry_size() const { return static_cast<int>(entries_.size()); }
++    /// Returns a vector of entries
++    const std::vector<Entry>& entry() const { return entries_; }
++    /// Returns the requested entry;
++    const Entry& entry(int index) const { return entries_[index]; }
++    /// Remove all entries
++    void clear_entry() { return entries_.clear(); }
++    /// Add an entry
++    Entry* add_entry() { entries_.push_back(Entry()); return &entries_.back(); }
++
++  private:
++    /// Seconds since scenario reference year for the data posit time
++    double time_ = INVALID_UPDATE_DOUBLE;
++    /// Duration in seconds for the generic data
++    double duration_ = INVALID_UPDATE_DOUBLE;
++    /// Points all at the same time
++    std::vector<Entry> entries_;
++  };
++
++  // Backwards compatibility with protobuf
++  using GenericData_Entry = GenericData::Entry;
++
+   /// compare for inequality (required for protobuf utils)
+   SDKDATA_EXPORT bool operator!=(const Position &left, const Position &right);
+ 
+diff --git a/SDK/simData/GeneratedCode/simData.proto b/SDK/simData/GeneratedCode/simData.proto
+index 23c5ac88..b9eb361d 100644
+--- a/SDK/simData/GeneratedCode/simData.proto
++++ b/SDK/simData/GeneratedCode/simData.proto
+@@ -1500,33 +1500,3 @@ message LobGroupCommand {
+   optional bool isClearCommand = 3 [default = false];
+ };
+ 
+-//////////////////////////////////////////////////////////////////////////////////////////
+-
+-/// key,value data intended to categorize a platform
+-/// for example: friendly, hostile; ship, plane
+-message CategoryData {
+-  optional double time = 1;
+-
+-  message Entry {
+-    optional string key = 1;
+-    optional string value = 2;
+-  };
+-
+-  repeated Entry entry = 2;
+-};
+-
+-/// key,value data which is attached to time, but unrelated to spatial
+-/// location or orientation (display)
+-/// for example: fuel, or temperature
+-message GenericData {
+-  optional double time = 1;
+-  optional double duration = 2;
+-
+-  message Entry {
+-    optional string key = 2;
+-    optional string value = 3;
+-  };
+-
+-  repeated Entry entry = 3;
+-};
+-
+diff --git a/SDK/simUtil/DataStoreTestHelper.cpp b/SDK/simUtil/DataStoreTestHelper.cpp
+index e4546608..08eaf783 100644
+--- a/SDK/simUtil/DataStoreTestHelper.cpp
++++ b/SDK/simUtil/DataStoreTestHelper.cpp
+@@ -385,7 +385,7 @@ void DataStoreTestHelper::addGenericData(uint64_t id, const std::string& key, co
+   genData->set_time(static_cast<double>(startTime));
+   genData->set_duration(-1);
+ 
+-  simData::GenericData_Entry* entry = genData->mutable_entry()->Add();
++  simData::GenericData_Entry* entry = genData->add_entry();
+   entry->set_key(key);
+   entry->set_value(value);
+ 
+diff --git a/Testing/SimData/TestMemRetrieval.cpp b/Testing/SimData/TestMemRetrieval.cpp
+index 9d0b5c67..331028e7 100644
+--- a/Testing/SimData/TestMemRetrieval.cpp
++++ b/Testing/SimData/TestMemRetrieval.cpp
+@@ -56,15 +56,15 @@ bool isValidCategory(const simData::CategoryData* catData, size_t index)
+   if (catData->time() != static_cast<double>(index))
+     return false;
+ 
+-  if (catData->entry().size() != static_cast<int>(index+1))
++  if (catData->entry_size() != static_cast<int>(index+1))
+     return false;
+ 
+   for (size_t ii = 0; ii < (index+1); ii++)
+   {
+-    if (catData->entry().Get(static_cast<int>(ii)).key() != expectedValue("Some Key ", ii))
++    if (catData->entry(static_cast<int>(ii)).key() != expectedValue("Some Key ", ii))
+       return false;
+ 
+-    if (catData->entry().Get(static_cast<int>(ii)).value() != expectedValue("Some Value ", ii))
++    if (catData->entry(static_cast<int>(ii)).value() != expectedValue("Some Value ", ii))
+       return false;
+   }
+ 
+@@ -92,7 +92,7 @@ void addPlatformGenericData(simData::DataStore* dataStore, uint64_t id, size_t i
+   genData->set_duration(-1.0);
+   for (size_t ii = 0; ii < (index+1); ii++)
+   {
+-    simData::GenericData_Entry* entry = genData->mutable_entry()->Add();
++    simData::GenericData_Entry* entry = genData->add_entry();
+     entry->set_key(expectedValue("Some Tag ", ii));
+     entry->set_value(expectedValue("Some Data ", ii));
+   }
+diff --git a/Testing/SimData/TestMemoryDataStore.cpp b/Testing/SimData/TestMemoryDataStore.cpp
+index e3d63a69..8a7f41d4 100644
+--- a/Testing/SimData/TestMemoryDataStore.cpp
++++ b/Testing/SimData/TestMemoryDataStore.cpp
+@@ -618,12 +618,12 @@ void testLobGroup_insert()
+ bool findOnce(const simData::GenericData *g1, const std::string& key, const std::string& value)
+ {
+   int occurances = 0;
+-  for (int ii = 0; ii < g1->entry().size(); ii++)
++  for (int ii = 0; ii < g1->entry_size(); ii++)
+   {
+-    if (g1->entry().Get(ii).key() == key)
++    if (g1->entry(ii).key() == key)
+     {
+       occurances++;
+-      if (g1->entry().Get(ii).value() != value)
++      if (g1->entry(ii).value() != value)
+         return false;
+     }
+   }
+@@ -635,15 +635,15 @@ bool findOnce(const simData::GenericData *g1, const std::string& key, const std:
+ bool findMany(const simData::GenericData *g1, const std::string& key, const std::vector<std::string>& values)
+ {
+   size_t occurances = 0;
+-  for (int ii = 0; ii < g1->entry().size(); ii++)
++  for (int ii = 0; ii < g1->entry_size(); ii++)
+   {
+-    if (g1->entry().Get(ii).key() == key)
++    if (g1->entry(ii).key() == key)
+     {
+       occurances++;
+       bool found = false;
+       for (size_t jj = 0; jj < values.size(); jj++)
+       {
+-        if (g1->entry().Get(ii).value() == values[jj])
++        if (g1->entry(ii).value() == values[jj])
+         {
+           found = true;
+           break;
+@@ -1035,15 +1035,15 @@ int testCategoryData_insert()
+   rv += SDK_ASSERT(sc.updates.size() == 4 && sc.updates[0].entry_size() == 1);
+ 
+   // verify data point values
+-  rv += SDK_ASSERT(sc.updates[0].entry().Get(0).key() == "key1");
+-  rv += SDK_ASSERT(sc.updates[0].entry().Get(0).value() == "value1");
+-  rv += SDK_ASSERT(sc.updates[1].entry().Get(0).key() == "key2");
+-  rv += SDK_ASSERT(sc.updates[1].entry().Get(0).value() == "value2");
+-
+-  rv += SDK_ASSERT(sc.updates[2].entry().Get(0).key() == "key3");
+-  rv += SDK_ASSERT(sc.updates[2].entry().Get(0).value() == "value3");
+-  rv += SDK_ASSERT(sc.updates[3].entry().Get(0).key() == "key4");
+-  rv += SDK_ASSERT(sc.updates[3].entry().Get(0).value() == "value4");
++  rv += SDK_ASSERT(sc.updates[0].entry(0).key() == "key1");
++  rv += SDK_ASSERT(sc.updates[0].entry(0).value() == "value1");
++  rv += SDK_ASSERT(sc.updates[1].entry(0).key() == "key2");
++  rv += SDK_ASSERT(sc.updates[1].entry(0).value() == "value2");
++
++  rv += SDK_ASSERT(sc.updates[2].entry(0).key() == "key3");
++  rv += SDK_ASSERT(sc.updates[2].entry(0).value() == "value3");
++  rv += SDK_ASSERT(sc.updates[3].entry(0).key() == "key4");
++  rv += SDK_ASSERT(sc.updates[3].entry(0).value() == "value4");
+ 
+   return rv;
+ }
+-- 
+2.47.1.windows.2
+

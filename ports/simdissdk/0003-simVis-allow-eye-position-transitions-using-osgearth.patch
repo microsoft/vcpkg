@@ -1,0 +1,38 @@
+From deefe2eb46ff36c70e6e97aeb15ca5464cdfcb2c Mon Sep 17 00:00:00 2001
+From: Frank Bausch <francis.bausch@nrl.navy.mil>
+Date: Mon, 3 Mar 2025 12:02:58 +0000
+Subject: [PATCH 03/29] simVis:  allow eye position transitions using
+ osgearth's _auto_vp_duration  (SIM-17958)
+
+**JIRA Issue:** SIM-17958
+
+**Description:** implement osgearth's _auto_vp_duration as an option for eye pos transitions, using a -1 duration as sentinel val
+
+**Notes:** requires SIMDIS-X changes
+
+**Testing Performed:** various bookmarks files, manually in EyePositions ui
+---
+ SDK/simVis/View.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/SDK/simVis/View.cpp b/SDK/simVis/View.cpp
+index 73e73f3a..d6096f9b 100644
+--- a/SDK/simVis/View.cpp
++++ b/SDK/simVis/View.cpp
+@@ -1415,6 +1415,13 @@ void View::setViewpoint(const simVis::Viewpoint& vp, double transitionTime_s)
+       if (vp.name().isSet())
+         watchViewpoint_.name() = vp.name();
+     }
++    if (transitionTime_s < 0.)
++    {
++      // let osgearth calculate an automatic transition, use a dummy >0 value for duration
++      manip->getSettings()->setAutoViewpointDurationEnabled(true);
++      manip->setViewpoint(vp, 1.);
++      return;
++    }
+     // Disable auto duration so that our configured transition time is respected. osgEarth::EarthManipulator::Settings has this default to true,
+     // and regularly resets settings on various calls. Simplest way to make sure this value is off is to turn it off before transitioning viewpoints.
+     manip->getSettings()->setAutoViewpointDurationEnabled(false);
+-- 
+2.47.1.windows.2
+
