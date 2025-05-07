@@ -8645,7 +8645,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "6.1.148",
+      "baseline": "6.1.149",
       "port-version": 0
     },
     "simde": {
