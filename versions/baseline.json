@@ -7514,7 +7514,7 @@
     },
     "pulseaudio": {
       "baseline": "17.0",
-      "port-version": 2
+      "port-version": 3
     },
     "pulzed-mini": {
       "baseline": "0.9.18",
