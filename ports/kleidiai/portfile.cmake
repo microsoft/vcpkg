@@ -22,8 +22,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-# The following line of code doesn't work because kleidiai_arm64-windows/debug/share/kleidiai' does not exist.
-#vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH "lib/cmake/KleidiAI"
+)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share") # Avoids empty debug folder in the zip.
 
