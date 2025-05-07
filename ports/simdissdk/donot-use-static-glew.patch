@@ -1,0 +1,13 @@
+diff --git "a/CMakeUtilities/VsiPackages.json" "b/CMakeUtilities/VsiPackages.json"
+index efc7576f..4c086522 100644
+--- "a/CMakeUtilities/VsiPackages.json"
++++ "b/CMakeUtilities/VsiPackages.json"
+@@ -23,7 +23,7 @@
+       "cmake_vars": [
+         {
+           "name": "GLEW_USE_STATIC_LIBS",
+-          "value": "TRUE"
++          "value": "FALSE"
+         }
+       ]
+     },
