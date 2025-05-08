@@ -28,7 +28,6 @@ vcpkg_check_features(
         avx     ENABLE_AVX
         sse2    ENABLE_SSE2
         sse     ENABLE_SSE
-        neon    ENABLE_NEON
 )
 
 set(package_names  fftw3 fftw3f fftw3l)
