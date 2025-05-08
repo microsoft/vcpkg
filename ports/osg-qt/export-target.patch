@@ -1,5 +1,5 @@
 diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
-index 66e989a..6ac0686 100644
+index 66e989a..b9f4d33 100644
 --- "a/CMakeLists.txt"
 +++ "b/CMakeLists.txt"
 @@ -2,7 +2,7 @@ set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
@@ -11,13 +11,10 @@ index 66e989a..6ac0686 100644
  
  IF(APPLE)
    # Get OSX version in MAJOR.MINOR format
-@@ -926,3 +926,35 @@ ADD_CUSTOM_TARGET(uninstall
+@@ -926,3 +926,32 @@ ADD_CUSTOM_TARGET(uninstall
  
  #
  
-+add_library(osg-qt ALIAS osgQOpenGL)
-+add_library(osgqt ALIAS osgQOpenGL)
-+
 +install(TARGETS osgQOpenGL
 +    EXPORT osgQOpenGL-targets
 +)
