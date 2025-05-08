@@ -1,40 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO USNavalResearchLaboratory/simdissdk
-    REF "simdissdk-${VERSION}"
-    SHA512 0edef863aa1c62ff317ce15072f8b036fab7fa65d45325420ae4ec3ff807d7b43b90ade974bae760e0808db5c325af961b066719d3714440df312bfa7909f3c9
-    HEAD_REF master
+    HEAD_REF main
+    REF "34fad5a"
+    SHA512 494df2ee327036f5858fcc8a0bdc23c70951bd33a77e2e3a7691fce19e261a415d2cdeff7ca270d991a028ce5b864290d80ffd23a659dc64fd61c570bc1c8158
     PATCHES
-        0001-SIM-17983-Added-simCore-XmlWriter-writeTag-for-Doubl.patch
-        0002-simVis-protect-against-access-of-null-terrain-engine.patch
-        0003-simVis-allow-eye-position-transitions-using-osgearth.patch
-        0004-SDK-Update-SDK-Version-Number-2-4.patch
-        0005-Update-to-comply-with-new-Expression-and-qualified_d.patch
-        0006-SDK-Update-to-osgEarth-Expression-Syntax-1-2.patch
-        0007-SDK-simData-Protobuf-to-Library-1-3.patch
-        0008-SDK-Remove-CreateProtobufLibrary-1-4.patch
-        0009-SDK-Beam-Example-resolution-ImGui-sliders-use-int-in.patch
-        0010-SDK-Append-Path-for-protobuf-Library-1-2.patch
-        0011-SDK-simDataProto-is-now-SHARED-by-default-1-2.patch
-        0012-SDK-Preparation-for-Protobuf-29.3-Update-1-5.patch
-        0013-SDK-Install-Protobuf-Shared-Objects-1-2.patch
-        0014-SDK-Action-Registry-Test-Initializes-Environment.patch
-        0015-SIM-18120-Expanded-the-use-of-Fast-Update-for-Memory.patch
-        0016-SIM-18112-Fixed-Platforms-With-No-Interpolation.patch
-        0017-SDK-Install-of-GDAL-SO-optional.patch
-        0018-SDK-CMake-Version-3.21-Minimum-1-7.patch
-        0019-SIM-18169-Clean-Up-Pass-on-simData-PlatformUpdate.patch
-        0020-SIM-18172-Merge-Simple-simData-Updates-Into-Main-1-7.patch
-        0021-SIM-18187-Updated-Category-Data-and-Generic-Data-to-.patch
-        0022-SIM-18172-Updated-LobGroup-To-Better-Match-Initial-P.patch
-        0023-SIM-18132-simQt-formatToolTip-Now-Supports-a-Text-Ov.patch
-        0024-simCore-Add-GPKG-extension-to-GDAL-Image-file-lists.patch
-        0025-SDK-Fix-Invalid-Return-Statement.patch
-        0026-BAM-Unit-toBase-scalar-fix.patch
-        0027-SDK-Update-Examples-to-use-ImGui-1.90.9.patch
-        0028-SDK-Remove-GLEW-dependency.patch
-        0029-simUtil-DbConfigurationFile-s-use-of-setColorFilter-.patch
-
         add-fontconfig.patch
         change-install-dir.patch
         change-osgqt-to-osgQOpenGL.patch

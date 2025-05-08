@@ -1,6 +1,6 @@
 {
   "name": "simdissdk",
-  "version": "1.22",
+  "version": "2025-4-30",
   "description": "simdissdk - The SIMDIS Software Development Kit (SDK) is an open source C++ framework providing functionality to create 3D scenes consisting of objects, whose position and state change with time, that are placed relative to a geographic map.",
   "homepage": "https://github.com/USNavalResearchLaboratory/simdissdk",
   "license": "LGPL-3.0-or-later",
