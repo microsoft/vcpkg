@@ -1,6 +1,6 @@
 {
   "name": "rapidobj",
-  "version-string": "1.1",
+  "version": "1.1",
   "description": "A fast, header-only, C++17 library for parsing Wavefront .obj files",
   "license": "MIT",
   "dependencies": [
