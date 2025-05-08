@@ -14,7 +14,7 @@ vcpkg_extract_source_archive(
         fix-openmp.patch
         install-subtargets.patch
         fix-wrong-version.patch # https://github.com/FFTW/fftw3/commit/0842f00ae6b6e1f3aade155bc0edd17a7313fa6a
-        neon.patch # add neon
+        neon.patch # https://github.com/FFTW/fftw3/pull/275/commits/262f5cfe23af54930b119bd3653bc25bf2d881da
 )
 
 vcpkg_check_features(
@@ -28,11 +28,15 @@ vcpkg_check_features(
         avx     ENABLE_AVX
         sse2    ENABLE_SSE2
         sse     ENABLE_SSE
-        neon    ENABLE_NEON # add neon
+        neon    ENABLE_NEON
 )
 
 set(package_names  fftw3 fftw3f fftw3l)
-set(fftw3_options  "")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm32")
+    set(fftw3_options "-DENABLE_NEON=OFF") # neon for double precision is not supported on arm32
+else()
+    set(fftw3_options  "")
+endif()
 set(fftw3f_options -DENABLE_FLOAT=ON)
 set(fftw3l_options -DENABLE_LONG_DOUBLE=ON -DENABLE_AVX2=OFF -DENABLE_AVX=OFF -DENABLE_SSE2=OFF -DENABLE_NEON=OFF)
 
