@@ -5013,7 +5013,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2025.3.6",
+      "baseline": "2025.5.1",
       "port-version": 0
     },
     "libnoise": {
