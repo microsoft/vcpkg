@@ -21,12 +21,12 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FAudio)
+
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FAudio)
 
 vcpkg_install_copyright(
     COMMENT "FAudio is licensed under the Zlib license."
