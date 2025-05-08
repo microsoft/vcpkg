@@ -8056,6 +8056,10 @@
       "baseline": "2025-02-26",
       "port-version": 0
     },
+    "rapidobj": {
+      "baseline": "1.1",
+      "port-version": 0
+    },
     "rapidxml": {
       "baseline": "1.13",
       "port-version": 7
