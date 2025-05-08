@@ -108,12 +108,6 @@ vcpkg_cmake_config_fixup(
 )
 endif()
 
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME SIMDIS_SDK
-    CONFIG_PATH lib/cmake
-    DO_NOT_DELETE_PARENT_CONFIG_PATH
-)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -133,3 +127,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
 
 set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${SOURCE_PATH}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
