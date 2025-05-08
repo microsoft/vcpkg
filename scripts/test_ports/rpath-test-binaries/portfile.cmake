@@ -27,3 +27,7 @@ endif()
 vcpkg_copy_tools(TOOL_NAMES rpath-test-tool DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 vcpkg_copy_tools(TOOL_NAMES rpath-test-tool AUTO_CLEAN)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "This test port is part of vcpkg.")
+
+# Add script-level dependency on the fetch script for patchelf
+# vcpkg_find_acquire_program(PATCHELF)
+
