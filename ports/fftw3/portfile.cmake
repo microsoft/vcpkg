@@ -31,11 +31,7 @@ vcpkg_check_features(
 )
 
 set(package_names  fftw3 fftw3f fftw3l)
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm32")
-    set(fftw3_options "-DENABLE_NEON=OFF") # neon for double precision is not supported on arm32
-else()
-    set(fftw3_options  "")
-endif()
+set(fftw3_options  "")
 set(fftw3f_options -DENABLE_FLOAT=ON)
 set(fftw3l_options -DENABLE_LONG_DOUBLE=ON -DENABLE_AVX2=OFF -DENABLE_AVX=OFF -DENABLE_SSE2=OFF -DENABLE_NEON=OFF)
 
