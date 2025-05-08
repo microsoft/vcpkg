@@ -36,7 +36,7 @@ set(fftw3f_options -DENABLE_FLOAT=ON)
 set(fftw3l_options -DENABLE_LONG_DOUBLE=ON -DENABLE_AVX2=OFF -DENABLE_AVX=OFF -DENABLE_SSE2=OFF)
 
 if("neon" IN_LIST FEATURES)
-    list(APPEND fftw3l_options -DENABLE_NEON=ON)
+    list(APPEND fftw3f_options -DENABLE_NEON=ON)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         list(APPEND fftw3_options -DENABLE_NEON=ON)
     endif()
