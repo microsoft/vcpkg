@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 ee109564121c28472980ee0bad975918b81997a0b0d544030a7e5c0c717d8c2d7e8bdb29adef851802271ce8f97fd637a8fe993b9f1c0e176b3f24414a9f9af7
+    SHA512 a3c7fb2ca5e1a731c2a71a49a139d3180a06979f1077fd4d5beaec81c2cfd1ffc2f04490aaebf48c64d49cebdc569d84e237c5e8fb26024abfa05dc0a03bbd7a
     HEAD_REF main
     PATCHES
         fix-deps.patch
@@ -38,6 +38,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/async/metadata/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/debug_thrift_data_difference/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/detail/test"
+    "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/dynamic/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/folly_dynamic/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/frozen/test"
     "${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/patch/test"

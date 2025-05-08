@@ -1,6 +1,7 @@
 {
   "name": "duilib",
   "version-date": "2024-12-23",
+  "port-version": 1,
   "description": "Duilib is a free open source DirectUI interface library under Windows. It is widely accepted by major Internet companies due to its simple and easy to expand design and stable and efficient implementation. It is widely used in IM, video client, stock market software, navigation software, and mobile phone assistive software. Duilib is still evolving, and will continue to improve in many aspects such as documentation, examples, animations, and rendering engines.",
   "homepage": "https://github.com/duilib/duilib",
   "supports": "windows & !uwp",
