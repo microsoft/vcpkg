@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO symisc/unqlite
-    REF ddb1687036d207bbfc67b98cb470fe52ddf22f62 # 1.1.9
-    SHA512 eaabaf5f35662a6ea734c18878f55f5e6e956cd151bb941321f97247bbe0b7f402ceca39c191d31e87db1c04188ca0eaf69c9b202848babfe23d5ffee48df9a7
+    REF 5d951cd302c14cc6a4e7f8552b47f1e13a511d1d
+    SHA512 4b6507a2188dbbf76231748f3a6e990fe687a2a5e2ee8cca3bfc80605e5dbcef3f3e85b032685aa5cf490442d2b570dab8a4b8eb88b97ed84022bf74602c2dfb
     HEAD_REF master
 )
 
