@@ -1,0 +1,31 @@
+--- a/lib/jxl.cmake
++++ b/lib/jxl.cmake
+@@ -224,9 +224,9 @@ set_target_properties(jxl_dec PROPERTIES
+ # Check whether the linker support excluding libs
+ set(LINKER_EXCLUDE_LIBS_FLAG "-Wl,--exclude-libs=ALL")
+ include(CheckCSourceCompiles)
+-list(APPEND CMAKE_EXE_LINKER_FLAGS ${LINKER_EXCLUDE_LIBS_FLAG})
++list(APPEND CMAKE_REQUIRED_LINK_OPTIONS ${LINKER_EXCLUDE_LIBS_FLAG})
+ check_c_source_compiles("int main(){return 0;}" LINKER_SUPPORT_EXCLUDE_LIBS)
+-list(REMOVE_ITEM CMAKE_EXE_LINKER_FLAGS ${LINKER_EXCLUDE_LIBS_FLAG})
++list(REMOVE_ITEM CMAKE_REQUIRED_LINK_OPTIONS ${LINKER_EXCLUDE_LIBS_FLAG})
+ 
+ if(NOT BUILD_SHARED_LIBS)
+   target_compile_definitions(jxl PUBLIC -DJXL_STATIC_DEFINE)
+diff --git a/lib/jxl_cms.cmake b/lib/jxl_cms.cmake
+index 62d5b651fd5fcf25b8853a813f8e1c3098c2e93f..e23823c66d2b0d9c99138e52c44c7d3d02630a01 100644
+--- a/lib/jxl_cms.cmake
++++ b/lib/jxl_cms.cmake
+@@ -46,9 +46,9 @@ set_target_properties(jxl_cms PROPERTIES
+ # Check whether the linker support excluding libs
+ set(LINKER_EXCLUDE_LIBS_FLAG "-Wl,--exclude-libs=ALL")
+ include(CheckCSourceCompiles)
+-list(APPEND CMAKE_EXE_LINKER_FLAGS ${LINKER_EXCLUDE_LIBS_FLAG})
++list(APPEND CMAKE_REQUIRED_LINK_OPTIONS ${LINKER_EXCLUDE_LIBS_FLAG})
+ check_c_source_compiles("int main(){return 0;}" LINKER_SUPPORT_EXCLUDE_LIBS)
+-list(REMOVE_ITEM CMAKE_EXE_LINKER_FLAGS ${LINKER_EXCLUDE_LIBS_FLAG})
++list(REMOVE_ITEM CMAKE_REQUIRED_LINK_OPTIONS ${LINKER_EXCLUDE_LIBS_FLAG})
+ 
+ if(LINKER_SUPPORT_EXCLUDE_LIBS)
+   set_property(TARGET jxl_cms APPEND_STRING PROPERTY
+
