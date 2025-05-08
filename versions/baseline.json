@@ -1464,6 +1464,10 @@
       "baseline": "2019-05-08",
       "port-version": 4
     },
+    "bw-sqlitemap": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "bw-tempdir": {
       "baseline": "1.0.1",
       "port-version": 0
