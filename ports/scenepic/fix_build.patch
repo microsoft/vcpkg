@@ -1,0 +1,37 @@
+diff --git a/src/scenepic/mesh.cpp b/src/scenepic/mesh.cpp
+index 1d1c299..87cfc6b 100644
+--- a/src/scenepic/mesh.cpp
++++ b/src/scenepic/mesh.cpp
+@@ -11,6 +11,7 @@
+ 
+ #include <Eigen/Geometry>
+ #include <array>
++#include <cassert>
+ #include <climits>
+ #include <exception>
+ #include <map>
+diff --git a/src/scenepic/mesh_primitives.cpp b/src/scenepic/mesh_primitives.cpp
+index 8b29ee5..b77bbc6 100644
+--- a/src/scenepic/mesh_primitives.cpp
++++ b/src/scenepic/mesh_primitives.cpp
+@@ -6,6 +6,7 @@
+ #include "transforms.h"
+ 
+ #include <Eigen/Geometry>
++#include <cassert>
+ #include <cmath>
+ 
+ namespace
+diff --git a/src/scenepic/mesh_update.cpp b/src/scenepic/mesh_update.cpp
+index 5a46bd7..4020fe8 100644
+--- a/src/scenepic/mesh_update.cpp
++++ b/src/scenepic/mesh_update.cpp
+@@ -6,6 +6,8 @@
+ #include "base64.h"
+ #include "util.h"
+ 
++#include <cassert>
++
+ namespace
+ {
+   std::uint32_t NO_KEYFRAME = 0xFFFFFFFF;

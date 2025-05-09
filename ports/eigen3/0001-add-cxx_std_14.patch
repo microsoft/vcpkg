@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9f4f2c411..c6bbe6386 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -182,6 +182,7 @@ set(Eigen_BINARY_DIR ${Eigen3_BINARY_DIR})
+ 
+ # Imported target support
+ add_library (eigen INTERFACE)
++target_compile_features(eigen INTERFACE cxx_std_14) # Eigen requires at least c++14 support
+ add_library (Eigen3::Eigen ALIAS eigen)
+ target_include_directories (eigen INTERFACE
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
