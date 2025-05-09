@@ -412,12 +412,6 @@ gstreamer:x64-android=fail
 # upstream issue https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1629.
 gstreamer:x64-windows-static-md=skip
 gstreamer:x64-windows-static=skip
-gtk:arm-neon-android=fail
-gtk:arm64-android=fail
-gtk:x64-android=fail
-gtk3:arm-neon-android=fail
-gtk3:arm64-android=fail
-gtk3:x64-android=fail
 gul14:arm-neon-android=fail
 gul14:arm64-android=fail
 gul14:x64-android=fail
