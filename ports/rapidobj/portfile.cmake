@@ -17,7 +17,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
 
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(PACKAGE_NAME "RapidObj")
 
 file(
     REMOVE_RECURSE
