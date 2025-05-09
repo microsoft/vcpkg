@@ -3,7 +3,7 @@
   "version": "1.1",
   "description": "A fast, header-only, C++17 library for parsing Wavefront .obj files",
   "license": "MIT",
-  "supports": "!android",
+  "supports": "!android & !linux",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
