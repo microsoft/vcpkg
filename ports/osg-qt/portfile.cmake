@@ -9,7 +9,10 @@ vcpkg_from_github(
         fix-static-install.patch
         CMakeLists.patch
         use-lib.patch
+        export-target.patch
 )
+
+file(COPY "${CURRENT_PORT_DIR}/osgQOpenGLConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
 
 if(VCPKG_TARGET_IS_OSX)
     string(APPEND VCPKG_CXX_FLAGS " -stdlib=libc++")
@@ -31,7 +34,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH "share/cmake/osg-qt"
+    PACKAGE_NAME "osg-qt"
+)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${SOURCE_PATH}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)

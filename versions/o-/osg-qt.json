@@ -1,6 +1,11 @@
 {
   "versions": [
     {
+      "git-tree": "49ea2f2540d49ba94b943cb76a46c4bae6121978",
+      "version-string": "Qt5",
+      "port-version": 4
+    },
+    {
       "git-tree": "8e92c5f14fae6b6a69e0818bf1509e03a1389d3c",
       "version-string": "Qt5",
       "port-version": 3
