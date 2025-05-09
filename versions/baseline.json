@@ -1777,7 +1777,7 @@
       "port-version": 0
     },
     "cmark-gfm": {
-      "baseline": "0.29.0",
+      "baseline": "0.29.0.13",
       "port-version": 0
     },
     "cminpack": {
