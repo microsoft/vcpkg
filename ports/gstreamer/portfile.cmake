@@ -9,6 +9,8 @@ vcpkg_from_gitlab(
         fix-clang-cl.patch
         fix-bz2-windows-debug-dependency.patch
         fix-multiple-def.patch
+        x264-api-imports.diff
+        duplicate-unused.diff
 )
 
 vcpkg_find_acquire_program(FLEX)
