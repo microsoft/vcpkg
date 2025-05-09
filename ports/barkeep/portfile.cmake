@@ -4,7 +4,7 @@ vcpkg_from_github(
   REPO oir/barkeep
   REF "v${VERSION}"
   SHA512 b474bdae5e97b185daaf335193bf678e1dc57faa2000759f747a2c13e0a9e302f96927a81d8e26eb8227303b26148c2f0a005f984ea3271216416514fa14b9e1
-  HEAD_REF master
+  HEAD_REF main
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
