@@ -26,9 +26,10 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wildmidi.pc" " -lWildMIDI" " -llibWildMIDI")
+    string(REPLACE "-dynamic" "" lib_suffix "-${VCPKG_LIBRARY_LINKAGE}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/wildmidi.pc" " -lWildMidi" " -llibWildMidi${lib_suffix}")
     if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wildmidi.pc" " -lWildMIDI" " -llibWildMIDI")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/wildmidi.pc" " -lWildMidi" " -llibWildMidi${lib_suffix}")
     endif()
 endif()
 
