@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO github/cmark-gfm
     REF 0.29.0.gfm.13
-    SHA512 0c527e83664c65b17042cdb7ea2fee0e53dfb76e84800d15d5b3e45c3925464a2f392266b6e7a30cb19642b1fa719cc42fe7dde1340238841ffd9bffad13322b
+    SHA512 435298fcf782dfc5b64c578ac839759b9d5cd0c08eb90d6702f26278062a0f4887c65c18e89e2c9f6be23f10dd835c769a7e0f8c934be068b6754dcca30cdd7c
     HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         -DCMARK_TESTS=OFF
         -DCMARK_STATIC=ON
@@ -16,7 +15,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cmark-gfm)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")

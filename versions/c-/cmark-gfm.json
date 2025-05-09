@@ -1,7 +1,8 @@
 {
   "versions": [
     {
-      "version-semver": "0.29.0.gfm.13",
+      "git-tree": "1e25945b25c971eaa7ae50a9ba575bbb3ffbfde3",
+      "version": "0.29.0",
       "port-version": 0
     }
   ]
