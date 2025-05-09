@@ -190,7 +190,7 @@
     },
     "aravis": {
       "baseline": "0.8.34",
-      "port-version": 0
+      "port-version": 1
     },
     "arb": {
       "baseline": "2.21.1",
@@ -334,7 +334,7 @@
     },
     "atk": {
       "baseline": "2.38.0",
-      "port-version": 9
+      "port-version": 10
     },
     "atkmm": {
       "baseline": "2.36.3",
@@ -1464,6 +1464,10 @@
       "baseline": "2019-05-08",
       "port-version": 4
     },
+    "bw-sqlitemap": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "bw-tempdir": {
       "baseline": "1.0.1",
       "port-version": 0
@@ -1501,7 +1505,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "caf": {
@@ -1941,7 +1945,7 @@
       "port-version": 1
     },
     "cpp-kana": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "cpp-netlib": {
@@ -2761,7 +2765,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "24.09",
+      "baseline": "25.04",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -2773,7 +2777,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "fcl": {
@@ -2825,7 +2829,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2890,7 +2894,7 @@
     },
     "fluidsynth": {
       "baseline": "2.4.6",
-      "port-version": 0
+      "port-version": 1
     },
     "flux": {
       "baseline": "0.4.0",
@@ -2913,7 +2917,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3102,7 +3106,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.12",
-      "port-version": 3
+      "port-version": 4
     },
     "gegl": {
       "baseline": "0.4.54",
@@ -3201,7 +3205,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.1.2",
+      "baseline": "5.2.0",
       "port-version": 0
     },
     "glbinding": {
@@ -3278,7 +3282,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.82.0",
-      "port-version": 0
+      "port-version": 1
     },
     "godot-cpp": {
       "baseline": "4.4",
@@ -3330,7 +3334,7 @@
     },
     "graphene": {
       "baseline": "1.10.8",
-      "port-version": 4
+      "port-version": 5
     },
     "graphicsmagick": {
       "baseline": "1.3.41",
@@ -3365,7 +3369,7 @@
       "port-version": 1
     },
     "gsl-lite": {
-      "baseline": "0.42.0",
+      "baseline": "0.43.0",
       "port-version": 0
     },
     "gsoap": {
@@ -3382,15 +3386,15 @@
     },
     "gtest": {
       "baseline": "1.17.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gtk": {
       "baseline": "4.16.3",
-      "port-version": 2
+      "port-version": 3
     },
     "gtk3": {
       "baseline": "3.24.43",
-      "port-version": 0
+      "port-version": 1
     },
     "gtkmm": {
       "baseline": "4.14.0",
@@ -3566,7 +3570,7 @@
     },
     "harfbuzz": {
       "baseline": "10.2.0",
-      "port-version": 3
+      "port-version": 4
     },
     "hash-library": {
       "baseline": "8",
@@ -4001,8 +4005,8 @@
       "port-version": 1
     },
     "juce": {
-      "baseline": "8.0.4",
-      "port-version": 2
+      "baseline": "8.0.7",
+      "port-version": 0
     },
     "jwt-cpp": {
       "baseline": "0.7.0",
@@ -4242,6 +4246,10 @@
     },
     "kissnet": {
       "baseline": "2024-01-20",
+      "port-version": 0
+    },
+    "kleidiai": {
+      "baseline": "1.8.0",
       "port-version": 0
     },
     "klein": {
@@ -4770,7 +4778,7 @@
     },
     "libheif": {
       "baseline": "1.19.8",
-      "port-version": 0
+      "port-version": 1
     },
     "libhsplasma": {
       "baseline": "2024-03-07",
@@ -4846,7 +4854,7 @@
     },
     "libjxl": {
       "baseline": "0.11.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libkeyfinder": {
       "baseline": "2.2.8",
@@ -5113,7 +5121,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "9.0.4",
+      "baseline": "9.0.5",
       "port-version": 0
     },
     "libplist": {
@@ -5274,7 +5282,7 @@
     },
     "libsndfile": {
       "baseline": "1.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libsnoretoast": {
       "baseline": "0.8.0",
@@ -6393,7 +6401,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "mygui": {
@@ -7082,7 +7090,7 @@
     },
     "pango": {
       "baseline": "1.56.1",
-      "port-version": 1
+      "port-version": 2
     },
     "pangolin": {
       "baseline": "0.9.3",
@@ -7453,7 +7461,7 @@
       "port-version": 0
     },
     "protopuf": {
-      "baseline": "3.0.0",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "protozero": {
@@ -7469,7 +7477,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "psimd": {
@@ -7618,7 +7626,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.16",
-      "port-version": 2
+      "port-version": 3
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -9833,7 +9841,7 @@
       "port-version": 0
     },
     "vladimirshaleev-ipaddress": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "vlfeat": {
@@ -9949,7 +9957,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "wasmedge": {
@@ -10245,7 +10253,7 @@
       "port-version": 0
     },
     "xtensor-blas": {
-      "baseline": "0.21.0",
+      "baseline": "0.22.0",
       "port-version": 0
     },
     "xtensor-fftw": {
@@ -10278,7 +10286,7 @@
     },
     "yaml-cpp": {
       "baseline": "0.8.0",
-      "port-version": 2
+      "port-version": 3
     },
     "yara": {
       "baseline": "4.5.2",
@@ -10313,7 +10321,7 @@
       "port-version": 0
     },
     "yyjson": {
-      "baseline": "0.10.0",
+      "baseline": "0.11.0",
       "port-version": 0
     },
     "z3": {
