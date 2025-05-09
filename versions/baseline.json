@@ -10018,7 +10018,7 @@
     },
     "wildmidi": {
       "baseline": "0.4.6",
-      "port-version": 0
+      "port-version": 1
     },
     "wincrypt": {
       "baseline": "0.0",
