@@ -1,6 +1,33 @@
---- a/tools/g-ir-tool-template.in	2021-09-17 23:02:42.601052000 +0700
-+++ b/tools/g-ir-tool-template.in	2021-12-29 21:41:52.987141900 +0700
-@@ -59,7 +59,7 @@
+diff --git a/tools/g-ir-tool-template.in b/tools/g-ir-tool-template.in
+index 469af0c..f165a98 100755
+--- a/tools/g-ir-tool-template.in
++++ b/tools/g-ir-tool-template.in
+@@ -1,4 +1,4 @@
+-#!@PYTHON_CMD@
++#!/usr/bin/env python3
+ # -*- Mode: Python -*-
+ # GObject-Introspection - a framework for introspecting GObject libraries
+ # Copyright (C) 2008  Johan Dahlin
+@@ -46,22 +46,20 @@ if debug:
+ filedir = os.path.dirname(__file__)
+ 
+ # Try using relative paths first so that the installation prefix is relocatable
+-datadir = os.path.abspath(os.path.join(filedir, '..', 'share'))
++datadir = os.path.abspath(os.path.join(filedir, '..', '..', 'share'))
+ # Fallback to hard-coded paths if the relocatable paths are wrong
++datadir = os.getenv('VCPKG_GI_DATADIR', datadir)
+ if not os.path.isdir(os.path.join(datadir, 'gir-1.0')):
+-    datadir = "@datarootdir@"
++    raise Exception('Failed to determine datadir')
+ 
+ builtins.__dict__['DATADIR'] = datadir
+ 
+-gir_dir = os.path.abspath(os.path.join(filedir, '..', '@gir_dir_prefix@', 'gir-1.0'))
+-# Fallback to hard-coded paths if the relocatable paths are wrong
+-if not os.path.isdir(gir_dir):
+-    gir_dir = "@GIR_DIR@"
++gir_dir = os.path.abspath(os.path.join(datadir, 'gir-1.0'))
+ 
  builtins.__dict__['GIR_DIR'] = gir_dir
  
  # Again, relative paths first so that the installation prefix is relocatable
@@ -9,14 +36,25 @@
  
  # EXT_SUFFIX for py3 SO for py2
  py_mod_suffix = sysconfig.get_config_var('EXT_SUFFIX') or sysconfig.get_config_var('SO')
-@@ -91,6 +91,11 @@
+@@ -89,13 +87,19 @@ if not os.path.isfile(os.path.join(pylibdir, 'giscanner', '_giscanner' + py_mod_
+         gdump_path = os.path.join(builddir, 'giscanner', 'gdump.c')
+         if os.path.isfile(gdump_path):
+             builtins.__dict__['GDUMP_PATH'] = gdump_path
+     else:
+-        # Okay, we're not running uninstalled and the prefix is not
+-        # relocatable. Use hard-coded libdir.
+-        pylibdir = os.path.join('@libdir@', 'gobject-introspection')
++        raise Exception('Could not determine pylibdir')
  
  sys.path.insert(0, pylibdir)
  
-+pkg_config_path = os.getenv('PKG_CONFIG_PATH', '')
-+if pkg_config_path:
-+    pkg_config_path = os.pathsep + pkg_config_path 
-+os.environ['PKG_CONFIG_PATH'] = os.path.normpath(os.path.join(pylibdir, '..', 'pkgconfig')) + pkg_config_path
++vcpkg_gi_lib_path     = os.getenv('VCPKG_GI_LIBDIR', None)
++vcpkg_gi_lib_path_var = os.getenv('VCPKG_GI_LIBDIR_VAR', None)
++if vcpkg_gi_lib_path_var is not None and vcpkg_gi_lib_path is not None:
++    ld_lib_path = os.getenv(vcpkg_gi_lib_path_var, '')
++    if ld_lib_path != '':
++        ld_lib_path = os.pathsep + ld_lib_path
++    os.environ[vcpkg_gi_lib_path_var] = vcpkg_gi_lib_path + ld_lib_path
 +
  from giscanner.utils import dll_dirs
  dll_dirs = dll_dirs()
