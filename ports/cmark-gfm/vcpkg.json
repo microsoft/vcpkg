@@ -15,8 +15,9 @@
     }
   ],
   "features": {
-    "extensions": {
-      "description": "Build GitHub Flavored Markdown extensions"
+    "tools": {
+      "description": "Build tools",
+      "supports": "!uwp"
     }
   }
 }
