@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO github/cmark-gfm
     REF 0.29.0.gfm.13
-    SHA512 6e6603ccf8b06f0b59fd98dc8b52ff4bb82b63bd6eacb5d90b8efc37d3c9625f697d768d7f39756d726cc2a5f489e64cb67128cb13aeb1b5e5a4b87dd0ea99b0
+    SHA512 0c527e83664c65b17042cdb7ea2fee0e53dfb76e84800d15d5b3e45c3925464a2f392266b6e7a30cb19642b1fa719cc42fe7dde1340238841ffd9bffad13322b
     HEAD_REF main
 )
 
