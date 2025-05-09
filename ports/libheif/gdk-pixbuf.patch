@@ -3,7 +3,8 @@ index eeb2727..20a6b16 100644
 --- "a/gdk-pixbuf/CMakeLists.txt"
 +++ "b/gdk-pixbuf/CMakeLists.txt"
 @@ -1,12 +1,9 @@
- if(UNIX OR MINGW)
+-if(UNIX OR MINGW)
++if(WITH_GDKPIXBUF2 AND (UNIX OR MINGW))
    find_package(PkgConfig)
 -  pkg_check_modules(GDKPIXBUF2 gdk-pixbuf-2.0)
 +  pkg_check_modules(GDKPIXBUF2 gdk-pixbuf-2.0 IMPORTED_TARGET)
