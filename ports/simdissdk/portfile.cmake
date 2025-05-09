@@ -5,13 +5,11 @@ vcpkg_from_github(
     REF "34fad5a"
     SHA512 494df2ee327036f5858fcc8a0bdc23c70951bd33a77e2e3a7691fce19e261a415d2cdeff7ca270d991a028ce5b864290d80ffd23a659dc64fd61c570bc1c8158
     PATCHES
-        add-fontconfig.patch
+        add-using-vcpkg-option.patch
         change-install-dir.patch
         change-osgqt-to-osgQOpenGL.patch
         disable-add-executable.patch
-        disable-example-imgui.patch
         disable-plugin-webp.patch
-        donot-use-static-glew.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,6 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         simutil     BUILD_SIMUTIL
         simqt       BUILD_SIMQT
 )
+set(GLEW_USE_STATIC_LIBS FALSE)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

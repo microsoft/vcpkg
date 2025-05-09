@@ -1,16 +1,28 @@
 diff --git "a/CMakeUtilities/InstallCMakeExports.cmake" "b/CMakeUtilities/InstallCMakeExports.cmake"
-index bf7510ee..ee62a016 100644
+index bf7510ee..285136e9 100644
 --- "a/CMakeUtilities/InstallCMakeExports.cmake"
 +++ "b/CMakeUtilities/InstallCMakeExports.cmake"
-@@ -119,9 +119,9 @@ configure_file(CMakeUtilities/ImportSIMDIS_SDK.cmake.in
+@@ -117,6 +117,17 @@ configure_file(CMakeUtilities/ImportSIMDIS_SDK.cmake.in
+     ${CMAKE_CURRENT_BINARY_DIR}/cmake/ImportSIMDIS_SDK.cmake
+     @ONLY
  )
++
++if(USING_VCPKG)
++install(FILES
++        ${CMAKE_CURRENT_BINARY_DIR}/cmake/ImportSIMDIS_SDK.cmake
++    DESTINATION share/simdissdk/ExternalSdkProject/CMakeModules/
++    COMPONENT Exports
++)
++
++# Install files from the share folder
++install(DIRECTORY share/ DESTINATION share/simdissdk COMPONENT Exports)
++else()
  install(FILES
          ${CMAKE_CURRENT_BINARY_DIR}/cmake/ImportSIMDIS_SDK.cmake
--    DESTINATION share/ExternalSdkProject/CMakeModules/
-+    DESTINATION share/simdissdk/ExternalSdkProject/CMakeModules/
-     COMPONENT Exports
- )
+     DESTINATION share/ExternalSdkProject/CMakeModules/
+@@ -125,3 +136,4 @@ install(FILES
  
  # Install files from the share folder
--install(DIRECTORY share/ DESTINATION share COMPONENT Exports)
-+install(DIRECTORY share/ DESTINATION share/simdissdk COMPONENT Exports)
+ install(DIRECTORY share/ DESTINATION share COMPONENT Exports)
++endif()
+\ No newline at end of file

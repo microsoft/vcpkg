@@ -1,0 +1,30 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 3dc447de..9873bdbc 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -1,6 +1,13 @@
+ # MSVC 2022 support in 3.21
+ cmake_minimum_required(VERSION 3.21)
+ 
++# VCPKG customization ....................................................
++
++if (${CMAKE_TOOLCHAIN_FILE} MATCHES ".*vcpkg.cmake.*")
++    message(STATUS "Building with vcpkg toolchain.")
++    set(USING_VCPKG ON)
++endif()
++
+ # Disable in-source builds and avoid writing to source directories directly
+ set(CMAKE_DISABLE_SOURCE_CHANGES ON)
+ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
+@@ -137,8 +144,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+ # Include specific defaults for building with public release environment (third party packs)
+ include(PublicDefaults)
+ # Include specific defaults for building with VSI environment
++if(USING_VCPKG)
++else()
+ include(VsiDefaults)
+ vsi_process_packages_json(${CMAKE_SOURCE_DIR}/CMakeUtilities/VsiPackages.json)
++endif()
+ 
+ # Build Release mode by default on Linux, unless otherwise specified
+ include(DefaultToReleaseBuildType)

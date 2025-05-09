@@ -1,18 +1,19 @@
 diff --git "a/CMakeModules/AddExecutablePostfix.cmake" "b/CMakeModules/AddExecutablePostfix.cmake"
-index 62ed99f3..661e25e5 100644
+index 62ed99f3..cd33ea31 100644
 --- "a/CMakeModules/AddExecutablePostfix.cmake"
 +++ "b/CMakeModules/AddExecutablePostfix.cmake"
-@@ -1,5 +1,8 @@
+@@ -1,5 +1,9 @@
  # Provide an implementation of add_executable that applies a debug postfix
 -function(add_executable TARGET)
-+if (DEFINED CMAKE_TOOLCHAIN_FILE AND CMAKE_TOOLCHAIN_FILE MATCHES ".*vcpkg.*")
++
++if (USING_VCPKG)
 +    message(STATUS "VCPKG is enabled disable override of add_executable")
 +else()
 +    function(add_executable TARGET)
      _add_executable(${TARGET} ${ARGN})
      get_target_property(IS_IMPORTED ${TARGET} IMPORTED)
      if(NOT IS_IMPORTED)
-@@ -11,3 +14,5 @@ function(add_executable TARGET)
+@@ -11,3 +15,5 @@ function(add_executable TARGET)
          )
      endif()
  endfunction()
