@@ -558,6 +558,14 @@
           "features": [
             "plugins-base"
           ]
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "gl"
+          ],
+          "platform": "osx"
         }
       ]
     },
@@ -750,7 +758,8 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
-            "wayland"
+            "wayland",
+            "wayland-protocols"
           ],
           "platform": "!android & !ios & !osx & !windows"
         },
@@ -758,8 +767,7 @@
           "name": "shaderc",
           "host": true
         },
-        "vulkan",
-        "wayland-protocols"
+        "vulkan"
       ]
     },
     "wayland": {
