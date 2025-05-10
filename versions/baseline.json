@@ -4001,8 +4001,8 @@
       "port-version": 0
     },
     "jsonnet": {
-      "baseline": "0.20.0",
-      "port-version": 1
+      "baseline": "0.21.0",
+      "port-version": 0
     },
     "juce": {
       "baseline": "8.0.7",
