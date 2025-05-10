@@ -24,6 +24,7 @@ vcpkg_from_github(
         wrapping.patch
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
+        itk-config-build-tree.diff
         "${PYTHON_GPU_WRAPPING_PATCH}"
 )
 file(REMOVE_RECURSE
