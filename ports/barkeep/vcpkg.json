@@ -1,0 +1,7 @@
+{
+  "name": "barkeep",
+  "version": "0.1.5",
+  "description": "Small C++ header to display async animations, counters, progress bars, and status messages",
+  "homepage": "https://github.com/oir/barkeep",
+  "license": "Apache-2.0"
+}
