@@ -1,15 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 23a8114..f430146 100644
+index f02cba9..0c8f8ce 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -15,6 +15,7 @@ option(BUILD_STATIC_LIBS "Build a static libjsonnet." ON)
+@@ -14,6 +14,7 @@ option(BUILD_STATIC_LIBS "Build a static libjsonnet." ON)
  option(BUILD_SHARED_BINARIES "Link binaries to the shared libjsonnet instead of the static one." OFF)
  option(USE_SYSTEM_GTEST "Use system-provided gtest library" OFF)
  option(USE_SYSTEM_JSON "Use the system-provided json library" OFF)
 +option(USE_SYSTEM_RYML "Use the system-provided rapidyaml library" OFF)
+ # TODO: Support using a system Rapid YAML install.
  set(GLOBAL_OUTPUT_PATH_SUFFIX "" CACHE STRING
      "Output artifacts directory.")
- 
 @@ -104,6 +105,11 @@ if(USE_SYSTEM_JSON)
  else()
      add_subdirectory(third_party/json)
@@ -22,35 +22,25 @@ index 23a8114..f430146 100644
  
  # Look for libraries in global output path.
  link_directories(${GLOBAL_OUTPUT_PATH})
-@@ -124,7 +130,6 @@ endif()
+@@ -125,7 +131,6 @@ endif()
  add_subdirectory(include)
  add_subdirectory(stdlib)
  add_subdirectory(third_party/md5)
--add_subdirectory(third_party/rapidyaml/rapidyaml ryml)
+-add_subdirectory(third_party/rapidyaml)
  add_subdirectory(core)
  add_subdirectory(cpp)
  add_subdirectory(cmd)
 diff --git a/core/vm.cpp b/core/vm.cpp
-index e328df5..2cafbb7 100644
+index faf6d54..f14ddbe 100644
 --- a/core/vm.cpp
 +++ b/core/vm.cpp
-@@ -26,8 +26,8 @@ limitations under the License.
- #include "nlohmann/json.hpp"
+@@ -30,7 +30,8 @@ limitations under the License.
+ #include <nlohmann/json.hpp>
  #include "md5.h"
  #include "parser.h"
--#include "ryml_std.hpp" // include this before any other ryml header
--#include "ryml.hpp"
-+#include "ryml/ryml_std.hpp" // include this before any other ryml header
+-#include "ryml_all.hpp"
 +#include "ryml/ryml.hpp"
++#include "ryml/ryml_std.hpp"
  #include "state.h"
  #include "static_analysis.h"
  #include "string_utils.h"
-@@ -1637,7 +1637,7 @@ class Interpreter {
-     }
- 
-     const ryml::Tree treeFromString(const std::string& s) {
--        return ryml::parse(c4::to_csubstr(s));
-+        return ryml::parse_in_arena(ryml::to_csubstr(s));
-     }
- 
-     const std::vector<std::string> split(const std::string& s, const std::string& delimiter) {
