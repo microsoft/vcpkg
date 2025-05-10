@@ -66,12 +66,9 @@
       ]
     },
     "asio": {
-      "description": "Enable support for the Steinberg Audio Streaming Input Output (ASIO) library (Windows only)",
+      "description": "Enable support for the Steinberg Audio Streaming Input Output (ASIO) library",
       "dependencies": [
-        {
-          "name": "asiosdk",
-          "platform": "windows"
-        },
+        "asiosdk",
         {
           "name": "gstreamer",
           "default-features": false,
