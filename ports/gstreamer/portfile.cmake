@@ -1,9 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES
-        plugin-base-disable-no-unused.patch
-    )
-endif()
-
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -13,22 +7,21 @@ vcpkg_from_gitlab(
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
-        fix-clang-cl-gstreamer.patch
-        fix-clang-cl-base.patch
-        fix-clang-cl-good.patch
-        fix-clang-cl-bad.patch
-        fix-clang-cl-ugly.patch
-        gstreamer-disable-no-unused.patch
-        srtp_fix.patch
         fix-bz2-windows-debug-dependency.patch
-        no-downloads.patch
-        ${PATCHES}
         fix-multiple-def.patch
+        x264-api-imports.diff
+        duplicate-unused.diff
 )
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(NASM)
+
+# gstreamer/meson tends to pick host modules (e.g. libdrm),
+# so clean the search root unless explicitly set externally.
+if(VCPKG_CROSSCOMPILING AND "$ENV{PKG_CONFIG}$ENV{PKG_CONFIG_LIBDIR}" STREQUAL "")
+    set(ENV{PKG_CONFIG_LIBDIR} "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
+endif()
 
 if(VCPKG_TARGET_IS_OSX)
     # In Darwin platform, there can be an old version of `bison`,
@@ -49,23 +42,24 @@ endif()
 # General features
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        ges             ges
         gpl             gpl
         libav           libav
         nls             nls
-        ges             ges
 
         plugins-base    base
-        gl-graphene     gst-plugins-base:gl-graphene
         alsa            gst-plugins-base:alsa
+        gl              gst-plugins-base:gl
+        gl-graphene     gst-plugins-base:gl-graphene
         ogg             gst-plugins-base:ogg
         opus-base       gst-plugins-base:opus
         pango           gst-plugins-base:pango
         vorbis          gst-plugins-base:vorbis
-        x11-base        gst-plugins-base:x11
-        x11-base        gst-plugins-base:xshm
+        x11             gst-plugins-base:x11
+        x11             gst-plugins-base:xshm
 
         plugins-good    good
-        bzip2-good      gst-plugins-good:bz2
+        bzip2           gst-plugins-good:bz2
         cairo           gst-plugins-good:cairo
         flac            gst-plugins-good:flac
         gdk-pixbuf      gst-plugins-good:gdk-pixbuf
@@ -82,8 +76,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         plugins-bad     bad
         aes             gst-plugins-bad:aes
         aom             gst-plugins-bad:aom
+        asio            gst-plugins-bad:asio
         assrender       gst-plugins-bad:assrender
-        bzip2-bad       gst-plugins-bad:bz2
+        bzip2           gst-plugins-bad:bz2
         chromaprint     gst-plugins-bad:chromaprint
         closedcaption   gst-plugins-bad:closedcaption
         colormanagement gst-plugins-bad:colormanagement
@@ -93,6 +88,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         faad            gst-plugins-bad:faad
         fdkaac          gst-plugins-bad:fdkaac
         fluidsynth      gst-plugins-bad:fluidsynth
+        gl              gst-plugins-bad:gl
         libde265        gst-plugins-bad:libde265
         microdns        gst-plugins-bad:microdns
         modplug         gst-plugins-bad:modplug
@@ -107,21 +103,33 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         soundtouch      gst-plugins-bad:soundtouch
         srt             gst-plugins-bad:srt
         srtp            gst-plugins-bad:srtp
+        vulkan          gst-plugins-bad:vulkan
+        wayland         gst-plugins-bad:wayland
         webp            gst-plugins-bad:webp
         webrtc          gst-plugins-bad:webrtc
         wildmidi        gst-plugins-bad:wildmidi
-        x11-bad         gst-plugins-bad:x11
+        x11             gst-plugins-bad:x11
         x265            gst-plugins-bad:x265
-        asio            gst-plugins-bad:asio
 )
 
 string(REPLACE "OFF" "disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 string(REPLACE "ON" "enabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
 
-if(VCPKG_TARGET_IS_WINDOWS)
+# Align with dependencies of feature gl.
+if(NOT "gl" IN_LIST FEATURES)
+    set(PLUGIN_BASE_GL_API "")
+    set(PLUGIN_BASE_WINDOW_SYSTEM "")
+    set(PLUGIN_BASE_GL_PLATFORM "")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    set(PLUGIN_BASE_GL_API gles2)
+    set(PLUGIN_BASE_WINDOW_SYSTEM android,egl)
+    set(PLUGIN_BASE_GL_PLATFORM egl)
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    set(PLUGIN_BASE_GL_API opengl)
     set(PLUGIN_BASE_WINDOW_SYSTEM win32)
     set(PLUGIN_BASE_GL_PLATFORM wgl)
 else()
+    set(PLUGIN_BASE_GL_API opengl)
     set(PLUGIN_BASE_WINDOW_SYSTEM auto)
     set(PLUGIN_BASE_GL_PLATFORM auto)
 endif()
@@ -151,7 +159,9 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+
         # General options
+        -Dbuild-tools-source=system
         -Dpython=disabled
         -Dlibnice=disabled
         -Ddevtools=disabled
@@ -180,6 +190,7 @@ vcpkg_configure_meson(
         -Dgstreamer:gst_debug=true
         -Dgstreamer:ptp-helper=disabled  # needs rustc toolchain setup
         # gst-plugins-base
+        -Dgst-plugins-base:gl_api=${PLUGIN_BASE_GL_API}
         -Dgst-plugins-base:gl_winsys=${PLUGIN_BASE_WINDOW_SYSTEM}
         -Dgst-plugins-base:gl_platform=${PLUGIN_BASE_GL_PLATFORM}
         -Dgst-plugins-base:cdparanoia=disabled
@@ -200,7 +211,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:oss4=disabled
         -Dgst-plugins-good:osxaudio=auto
         -Dgst-plugins-good:osxvideo=auto
-        -Dgst-plugins-good:pulse=auto
+        -Dgst-plugins-good:pulse=disabled # Port pulseaudio depends on gstreamer
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:shout2=disabled
         #-Dgst-plugins-good:soup=disabled
@@ -271,7 +282,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:va=disabled
         -Dgst-plugins-bad:voaacenc=disabled
         -Dgst-plugins-bad:voamrwbenc=disabled
-        -Dgst-plugins-bad:vulkan=auto
         -Dgst-plugins-bad:wasapi=auto
         -Dgst-plugins-bad:wasapi2=auto
         -Dgst-plugins-bad:wayland=auto
@@ -294,6 +304,7 @@ vcpkg_configure_meson(
         nasm='${NASM}'
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        glslc='${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc/glslc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
 )
 
 vcpkg_install_meson()
@@ -303,50 +314,50 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/KHR"
                     "${CURRENT_PACKAGES_DIR}/include/GL"
 )
 
-if("plugins-base" IN_LIST FEATURES)
+if("gl" IN_LIST FEATURES)
     file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h"
                 "${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h"
     )
 endif()
 
-list(APPEND GST_BIN_TOOLS
-    gst-inspect-1.0
-    gst-launch-1.0
-    gst-stats-1.0
-    gst-typefind-1.0
-)
-list(APPEND GST_LIBEXEC_TOOLS
-    gst-plugin-scanner
-)
-
-if("ges" IN_LIST FEATURES)
-    list(APPEND GST_BIN_TOOLS ges-launch-1.0)
-endif()
-
-if("plugins-base" IN_LIST FEATURES)
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static") # AND tools
     list(APPEND GST_BIN_TOOLS
-        gst-device-monitor-1.0
-        gst-discoverer-1.0
-        gst-play-1.0
+        gst-inspect-1.0
+        gst-launch-1.0
+        gst-stats-1.0
+        gst-typefind-1.0
     )
+    list(APPEND GST_LIBEXEC_TOOLS
+        gst-completion-helper
+        gst-plugin-scanner
+    )
+    if("ges" IN_LIST FEATURES)
+        list(APPEND GST_BIN_TOOLS
+            ges-launch-1.0
+        )
+    endif()
+    if("plugins-base" IN_LIST FEATURES)
+        list(APPEND GST_BIN_TOOLS
+            gst-device-monitor-1.0
+            gst-discoverer-1.0
+            gst-play-1.0
+        )
+    endif()
+    if("plugins-bad" IN_LIST FEATURES)
+        list(APPEND GST_BIN_TOOLS
+            gst-transcoder-1.0
+        )
+    endif()
 endif()
 
-if("plugins-bad" IN_LIST FEATURES)
-    list(APPEND GST_BIN_TOOLS
-        gst-transcoder-1.0
-    )
+
+if(GST_BIN_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${GST_BIN_TOOLS} AUTO_CLEAN)
 endif()
 
-vcpkg_copy_tools(
-    TOOL_NAMES ${GST_BIN_TOOLS}
-    AUTO_CLEAN
-)
-
-vcpkg_copy_tools(
-    TOOL_NAMES ${GST_LIBEXEC_TOOLS}
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0"
-    AUTO_CLEAN
-)
+if(GST_LIBEXEC_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${GST_LIBEXEC_TOOLS} SEARCH_DIR "${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0" AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/libexec"
