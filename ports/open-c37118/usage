@@ -1,0 +1,4 @@
+open-c37118 provides CMake targets:
+
+find_package(open-c37118 CONFIG REQUIRED)
+target_link_libraries(main PRIVATE OpenC37118::open-c37118)
