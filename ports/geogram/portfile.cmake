@@ -2,9 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BrunoLevy/geogram
     REF "v${VERSION}"
-    SHA512 19cf5720496172a144b2c5725a0a9763fde730ee14af75d92598973ff84106619e564d34746fd7b3da7d56f0cf52654fa656e3228fb32c0897f3aba178421f28
+    SHA512 056ff12967b0aeba34fd662304a5945e2816bfbae46c8100101147330f473cc3a863c3a794ee83d4c88695490c1952ee755b70f184b7961767a0f1e7e7ce18f7
     PATCHES
         fix-vcpkg-install.patch
+        support-ansi-declarators.patch
+        fix-cmake-dir.patch
 )
 
 #third_party: amgcl
@@ -37,6 +39,16 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
 file(RENAME "${AMGCL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl")
 file(RENAME "${LIBMESHB_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb")
 file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+
+if("graphics" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH IMGUI_SOURCE_PATH
+        REPO ocornut/imgui
+        REF d80347613ab17bd6e96b508e8080c6fa60f2b1da
+        SHA512 dacdadab21b1a3f2f77b4ee8a27a361561d843531f3dbfa75a72a654c66215ea85264ac8df1e0e4afecdb735afbaf3a902f0f061e9ff495e1e48b8dd2c84d898
+    )
+    file(RENAME "${IMGUI_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram_gfx/third_party/imgui")
+endif()
 
 file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
