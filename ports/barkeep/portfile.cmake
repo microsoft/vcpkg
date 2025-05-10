@@ -1,4 +1,6 @@
 # Header-only library
+set(VCPKG_BUILD_TYPE release)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO oir/barkeep
@@ -7,7 +9,6 @@ vcpkg_from_github(
   HEAD_REF main
 )
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${SOURCE_PATH}/barkeep" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
