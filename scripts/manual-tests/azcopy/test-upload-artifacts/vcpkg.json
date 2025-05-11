@@ -1,0 +1,15 @@
+{
+  "name": "test-upload-artifacts",
+  "version-string": "ci",
+  "description": [
+    "Tests uploading artifacts of varying size.",
+    "Write suitable amounts of random data to the datafiles before installing the port."
+  ],
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "features": {
+    "large" : {
+      "description": "Install large.dat"
+    }
+  }
+}
