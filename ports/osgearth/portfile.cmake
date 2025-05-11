@@ -19,8 +19,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        controls OSGEARTH_BUILD_LEGACY_CONTROLS_API
-        tools OSGEARTH_BUILD_TOOLS
+        controls    OSGEARTH_BUILD_LEGACY_CONTROLS_API
+        tools       OSGEARTH_BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
@@ -62,6 +62,9 @@ if("tools" IN_LIST FEATURES)
         osgearth_clamp osgearth_conv osgearth_imgui osgearth_tfs osgearth_version osgearth_viewer
         AUTO_CLEAN
     )
+    if(OSGEARTH_BUILD_LEGACY_CONTROLS_API)
+        vcpkg_copy_tools(TOOL_NAMES osgearth_createtile AUTO_CLEAN)
+    endif()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
 endif()
 
