@@ -1,0 +1,47 @@
+From f921cfb4af82aa9dac72a909b764153789499d6b Mon Sep 17 00:00:00 2001
+From: Roman Lebedev <lebedev.ri@gmail.com>
+Date: Mon, 12 May 2025 13:10:05 +0300
+Subject: [PATCH] `MaybeReenterWithoutASLR()`: be more cautious about argument
+ types (#1983)
+
+It seems, on android the argument is narrower than on linux.
+Let's try to support that while not introducing any explicit lossy casts.
+
+Fixes https://github.com/google/benchmark/issues/1982
+---
+ src/benchmark.cc | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/src/benchmark.cc b/src/benchmark.cc
+index 48a2accdf..9a98f889d 100644
+--- a/src/benchmark.cc
++++ b/src/benchmark.cc
+@@ -815,6 +815,12 @@ int InitializeStreams() {
+   return 0;
+ }
+ 
++template <typename T>
++std::make_unsigned_t<T> get_as_unsigned(T v) {
++  using UnsignedT = std::make_unsigned_t<T>;
++  return static_cast<UnsignedT>(v);
++}
++
+ }  // end namespace internal
+ 
+ void MaybeReenterWithoutASLR(int /*argc*/, char** argv) {
+@@ -829,11 +835,12 @@ void MaybeReenterWithoutASLR(int /*argc*/, char** argv) {
+   if (curr_personality == -1) return;
+ 
+   // If ASLR is already disabled, we have nothing more to do.
+-  if (curr_personality & ADDR_NO_RANDOMIZE) return;
++  if (internal::get_as_unsigned(curr_personality) & ADDR_NO_RANDOMIZE) return;
+ 
+   // Try to change the personality to disable ASLR.
+-  const auto prev_personality = personality(
+-      static_cast<unsigned long>(curr_personality) | ADDR_NO_RANDOMIZE);
++  const auto proposed_personality =
++      internal::get_as_unsigned(curr_personality) | ADDR_NO_RANDOMIZE;
++  const auto prev_personality = personality(proposed_personality);
+ 
+   // Have we failed to change the personality? That may happen.
+   if (prev_personality == -1) return;
