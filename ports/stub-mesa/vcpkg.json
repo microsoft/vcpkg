@@ -1,0 +1,9 @@
+{
+  "name": "stub-mesa",
+  "version": "1.0.0",
+  "port-version": 8,
+  "description": "A stub to connect large ci library to upload them to cache binary.",
+  "dependencies": [
+    "mesa"
+  ]
+}
