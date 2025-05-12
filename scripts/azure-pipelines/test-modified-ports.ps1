@@ -129,22 +129,6 @@ if ($Triplet -eq 'x64-windows-release') {
 }
 
 # Test uploads with azcopy
-# Using portable binaries from
-# https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10?tabs=dnf#download-the-azcopy-portable-binary
-if ($Triplet -eq 'x64-windows')
-{
-    $local_name = 'azcopy_windows_amd64_10.29.0'
-    & $vcpkgExe x-download "$local_name.zip" "--url=https://aka.ms/downloadazcopy-v10-windows" "--sha512=fa2db4d722467eb0daebeddab20625198bbe7cd3102ac0fcec42a1b9f5f633e3d56cf4a02b2396c6ff3459eb291f5bfd5865cc97d4d731b6d05d0db1683c8a57" @cachingArgs
-    Expand-Archive -Path "$local_name.zip" -Destination azcopy
-    $env:PATH += ";$PWD\azcopy\$local_name"
-}
-elseif ($Triplet -eq 'x64-linux')
-{
-    $local_name = 'azcopy_linux_amd64_10.29.0'
-    & $vcpkgExe x-download "$local_name.tgz" "--url=https://aka.ms/downloadazcopy-v10-linux" "--sha512=c5f21fdf57066f9b4c17deb0b3649cb901863d8c6619f1a010abfde80ff7fdadf7ea9483bfa3820ae833e7953558294215b3a413b5efff75967fb368dcb1426a" @cachingArgs
-    & tar xvzf "$local_name.tgz"
-    $env:PATH += ":$PWD/$local_name"
-}
 $env:AZCOPY_LOG_LOCATION = Join-Path $ArtifactStagingDirectory 'azcopy-logs'
 $env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $ArtifactStagingDirectory 'azcopy-plans'
 & azcopy --version
@@ -154,8 +138,6 @@ if ($lastLastExitCode -ne 0)
     Write-Error 'Cannot run azcopy.'
     exit $lastLastExitCode
 }
-$env:VCPKG_DEFAULT_BINARY_CACHE = Join-Path $WorkingRoot 'archives-azcopy'
-New-Item -Type Directory -Path $env:VCPKG_DEFAULT_BINARY_CACHE
 # Build large artifacts with unique ABI hashes
 Get-Date | Out-File "scripts/manual-tests/azcopy/test-upload-artifacts/mutable"
 # 3 GB < single max write (5 GB) < 6 GB, in files of 1.5 GB random data
@@ -168,17 +150,17 @@ $data = New-Object byte[] 1.5GB
 [System.IO.File]::WriteAllBytes("scripts/manual-tests/azcopy/large-1.dat", $data)
 (New-Object System.Random).NextBytes($data)
 [System.IO.File]::WriteAllBytes("scripts/manual-tests/azcopy/large-2.dat", $data)
+Get-ChildItem -File scripts/manual-tests/azcopy
+# Build and upload [core], [core,large]
+$env:VCPKG_DEFAULT_BINARY_CACHE = Join-Path $WorkingRoot 'archives-azcopy'
+New-Item -Type Directory -Path $env:VCPKG_DEFAULT_BINARY_CACHE
 & $vcpkgExe x-test-features test-upload-artifacts --overlay-ports=scripts/manual-tests/azcopy $tripletArg @commonArgs @cachingArgs
 $lastLastExitCode = $LASTEXITCODE
+$env:VCPKG_DEFAULT_BINARY_CACHE = $null
 if ($lastLastExitCode -eq 0)
 {
-    # List artifacts
-    Get-ChildItem -Recurse $env:VCPKG_DEFAULT_BINARY_CACHE -File
-
-    # Try restore from non-local cache
-    $env:VCPKG_DEFAULT_BINARY_CACHE = $null
+    # Try restore from cache
     & $vcpkgExe remove test-upload-artifacts $tripletArg @commonArgs @cachingArgs
-
     $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
     $xunitArg = "--x-xunit=$xunitFile"
     & $vcpkgExe install --only-binarycaching "test-upload-artifacts[*]" --overlay-ports=scripts/manual-tests/azcopy $tripletArg $xunitArg @commonArgs @cachingArgs
