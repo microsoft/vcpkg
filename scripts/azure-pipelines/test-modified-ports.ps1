@@ -129,6 +129,17 @@ if ($Triplet -eq 'x64-windows-release') {
 }
 
 # Test uploads with azcopy
+# Using portable binaries from https://github.com/Azure/azure-storage-azcopy/releases, linked on
+# https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10?tabs=dnf#download-the-azcopy-portable-binary
+$azcopy = $( & $vcpkgExe fetch azcopy $cachingArgs )
+$lastLastExitCode = $LASTEXITCODE
+if ($lastLastExitCode -ne 0)
+{
+    Write-Error 'Cannot fetch azcopy.'
+    exit $lastLastExitCode
+}
+$azcopy
+$env:PATH += [IO.Path]::PathSeparator + ( Split-Path -Parent ( $azcopy | Select-Object -Last 1 ) )
 $env:AZCOPY_LOG_LOCATION = Join-Path $ArtifactStagingDirectory 'azcopy-logs'
 $env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $ArtifactStagingDirectory 'azcopy-plans'
 & azcopy --version
