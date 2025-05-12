@@ -3,8 +3,8 @@ set(VCPKG_BUILD_TYPE release)  # header-only
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alibaba/yalantinglibs
-    REF "${VERSION}"
-    SHA512 357b6789fe32ad4ca89933ba94d7f92ef65bc52497a918d76d7a3b5cc70b3f63efb26306de3783f6450d2d61e0ff2da6a23278a2d9862a2eec6287ca21396c23
+    REF 75b2c25eb591e0ee6dd94e3c764f99af761fb6f1 # Use commit id to avoid target to multiple commits
+    SHA512 8a5e01414389084a856c1ce07ae07991ecfe24b61fef9629aff531d303fd9dbb0da4fca4cd259a757788815cd8f3039fd115d5a2548845438665f6baed89163c
     HEAD_REF main
 )
 

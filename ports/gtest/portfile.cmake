@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
     REF "v${VERSION}"
-    SHA512 bec8dad2a5abbea8e9e5f0ceedd8c9dbdb8939e9f74785476b0948f21f5db5901018157e78387e106c6717326558d6642fc0e39379c62af57bf1205a9df8a18b
+    SHA512 0f57e9ef06925e5b7722df1eb92ef5850e8dce79220ea16a8aaff586a71c0b01460ef1713649ee24ffedb2e6ad5a51e9198c5a5ae1b2789e43feb1f494e7d45c
     HEAD_REF main
     PATCHES
         001-fix-UWP-death-test.patch
@@ -16,11 +16,17 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
 
+set(GTEST_USE_CXX17_OPTION "")
+if("cxx17" IN_LIST FEATURES)
+    set(GTEST_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DBUILD_GMOCK=ON
         -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
+        ${GTEST_USE_CXX17_OPTION}
 )
 
 vcpkg_cmake_install()
@@ -47,7 +53,7 @@ file(
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_fixup_pkgconfig()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gmock_main.pc" "libdir=\${prefix}/lib" "libdir=\${prefix}/lib/manual-link")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gtest_main.pc" "libdir=\${prefix}/lib" "libdir=\${prefix}/lib/manual-link")
 endif()

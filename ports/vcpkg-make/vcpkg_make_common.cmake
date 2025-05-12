@@ -41,8 +41,7 @@ macro(z_vcpkg_make_get_cmake_vars)
     include("${cmake_vars_file}")
 endmacro()
 
-### normalize architectures
-function(z_vcpkg_make_determine_arch out_var value)
+function(z_vcpkg_make_normalize_arch out_var value)
     if(${value} MATCHES "^(amd|AMD|x)64$")
         set(${out_var} x86_64 PARENT_SCOPE)
     elseif(${value} MATCHES "^(x|X)86$")
@@ -68,7 +67,7 @@ function(z_vcpkg_make_determine_host_arch out_var)
         z_vcpkg_make_get_cmake_vars(#[[ LANGUAGES .... ]])
         set(arch "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
     endif()
-    z_vcpkg_make_determine_arch("${out_var}" "${arch}")
+    z_vcpkg_make_normalize_arch("${out_var}" "${arch}")
     set("${out_var}" "${${out_var}}" PARENT_SCOPE)
 endfunction()
 
@@ -77,7 +76,7 @@ function(z_vcpkg_make_determine_target_arch out_var)
     if(osx_archs_num GREATER_EQUAL 2 AND VCPKG_TARGET_IS_OSX)
         set(${out_var} "universal")
     else()
-        z_vcpkg_make_determine_arch(${out_var} "${VCPKG_TARGET_ARCHITECTURE}")
+        z_vcpkg_make_normalize_arch(${out_var} "${VCPKG_TARGET_ARCHITECTURE}")
     endif()
     set("${out_var}" "${${out_var}}" PARENT_SCOPE)
 endfunction()
@@ -572,7 +571,7 @@ function(z_vcpkg_make_prepare_flags)
     endforeach()
     
     cmake_path(GET VCPKG_DETECTED_CMAKE_C_COMPILER FILENAME cname)
-    set("${C_COMPILER_NAME}" "${cname}" PARENT_SCOPE) # needed by z_vcpkg_make_get_configure_triplets
+    set("${arg_C_COMPILER_NAME}" "${cname}" PARENT_SCOPE) # needed by z_vcpkg_make_get_configure_triplets
     set("${arg_FRONTEND_VARIANT_OUT}" "${VCPKG_DETECTED_CMAKE_C_COMPILER_FRONTEND_VARIANT}" PARENT_SCOPE)
 endfunction()
 

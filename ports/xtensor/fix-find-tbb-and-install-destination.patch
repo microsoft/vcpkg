@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7535649..5c93655 100644
+index c7ec920..6f46641 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -75,8 +75,8 @@ if(XTENSOR_USE_XSIMD)
@@ -13,16 +13,16 @@ index 7535649..5c93655 100644
      message(STATUS "Found intel TBB: ${TBB_INCLUDE_DIRS}")
  endif()
  
-@@ -261,7 +261,7 @@ export(EXPORT ${PROJECT_NAME}-targets
- install(FILES ${XTENSOR_HEADERS}
-         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xtensor)
+@@ -260,7 +260,7 @@ export(EXPORT ${PROJECT_NAME}-targets
+ install(DIRECTORY ${XTENSOR_INCLUDE_DIR}/xtensor
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  
 -set(XTENSOR_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}" CACHE
 +set(XTENSOR_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE
      STRING "install path for xtensorConfig.cmake")
  
  configure_package_config_file(${PROJECT_NAME}Config.cmake.in
-@@ -288,7 +288,7 @@ configure_file(${PROJECT_NAME}.pc.in
+@@ -287,7 +287,7 @@ configure_file(${PROJECT_NAME}.pc.in
                 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
                  @ONLY)
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"

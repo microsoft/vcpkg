@@ -1,16 +1,12 @@
 {
   "name": "harfbuzz",
   "version": "10.2.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
   "supports": "!uwp",
   "dependencies": [
-    {
-      "name": "gettext",
-      "platform": "osx"
-    },
     {
       "name": "vcpkg-tool-meson",
       "host": true
@@ -80,9 +76,16 @@
     },
     "introspection": {
       "description": "build with introspection",
+      "supports": "!static",
       "dependencies": [
-        "glib",
-        "gobject-introspection"
+        "gobject-introspection",
+        {
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
+        }
       ]
     }
   }

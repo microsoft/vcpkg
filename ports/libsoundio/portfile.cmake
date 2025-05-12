@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO andrewrk/libsoundio
-    REF 2.0.0
-    SHA512 347a9be1789a41e778ea8d0efa1d00e03e725a4ab65e3aaf6c71e49138643f08a50a81bd60087d86a3b4d63beaeec617e47ba6b81f829ece8a3ac17418eb5309
+    REF "${VERSION}"
+    SHA512 e854f066087f72438c9f014336a611d73b55a7b932747f94464477bd9f7daf9da440bad820d9c8e3d90ae3679af62a051e9645f0e0a2ddaed9726245a81f1e66
     HEAD_REF master
     PATCHES
         fix_cmakelists.patch

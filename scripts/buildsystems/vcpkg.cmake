@@ -784,6 +784,37 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN "${ARGN}")
     set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "")
 
+    if(z_vcpkg_find_package_backup_id EQUAL "1")
+        # This is the top-level find_package call
+        if("${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+            # Avoid CMake warning when both REQUIRED and CMAKE_REQUIRE_FIND_PACKAGE_<Pkg> are used
+            if(NOT "REQUIRED" IN_LIST "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN")
+                list(APPEND "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars" "CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                if(DEFINED "CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                    set("z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" "${CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+                endif()
+                set("CMAKE_REQUIRE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" 1)
+            endif()
+            if(VCPKG_TRACE_FIND_PACKAGE)
+                message(STATUS "  (required by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}=${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}})")
+            endif()
+        elseif(DEFINED "VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+            list(APPEND "z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars" "CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+            if(DEFINED "CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}")
+                set("z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" "${CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}}")
+            endif()
+            # We don't need to worry about clearing this for transitive users because
+            # once this top level find_package is disabled, we immediately will return
+            # not found and not try to visit transitive dependencies in the first place.
+            set("CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name}" 1)
+            if(VCPKG_TRACE_FIND_PACKAGE)
+                message(STATUS "  (disabled by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}=${VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name}})")
+            endif()
+        elseif(VCPKG_TRACE_FIND_PACKAGE)
+            message(STATUS "  (could be controlled by VCPKG_LOCK_FIND_PACKAGE_${z_vcpkg_find_package_package_name})")
+        endif()
+    endif()
+
     # Workaround to set the ROOT_PATH until upstream CMake stops overriding
     # the ROOT_PATH at apple OS initialization phase.
     # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
@@ -799,7 +830,10 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     string(TOLOWER "${z_vcpkg_find_package_package_name}" z_vcpkg_find_package_lowercase_package_name)
     set(z_vcpkg_find_package_vcpkg_cmake_wrapper_path
         "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
-    if(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
+    if(CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name})
+        # Skip wrappers, fail if REQUIRED.
+        _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_ARGN})
+    elseif(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
         if(VCPKG_TRACE_FIND_PACKAGE)
             string(REPEAT "  " "${z_vcpkg_find_package_backup_id}" z_vcpkg_find_package_indent)
             message(STATUS "${z_vcpkg_find_package_indent}using share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")

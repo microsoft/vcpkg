@@ -1,10 +1,10 @@
 {
   "name": "mdl-sdk",
-  "version": "2024.1",
+  "version": "2024.1.1",
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "license": "BSD-3-Clause",
-  "supports": "!x86 & !(windows & (staticcrt | arm | uwp)) & !(osx & arm) & !android",
+  "supports": "!x86 & !(windows & (arm | uwp)) & !(osx & arm) & !android",
   "dependencies": [
     "boost-algorithm",
     "boost-core",

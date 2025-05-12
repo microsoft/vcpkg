@@ -29,6 +29,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
 endif()
 
+if("shared-mime-info" IN_LIST FEATURES)
+    list(APPEND ${PORT}_PATCHES use-shared-mime-info.patch)
+endif()
+
 list(APPEND ${PORT}_PATCHES 
         dont_force_cmakecache_latest.patch
     )
@@ -509,8 +513,8 @@ file(WRITE "${hostinfofile}" "${_contents}")
 
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake"
-                         "PACKAGE_PREFIX_DIR}/bin/syncqt"
-                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt"
+                         "CMAKE_CURRENT_LIST_DIR}/../../bin/syncqt"
+                         "CMAKE_CURRENT_LIST_DIR}/../../tools/Qt6/bin/syncqt"
                          IGNORE_UNCHANGED)
 endif()
 
