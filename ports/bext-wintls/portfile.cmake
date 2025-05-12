@@ -6,6 +6,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY "${SOURCE_PATH}/include/boost/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/boost/")
+if(EXISTS "${SOURCE_PATH}/include/wintls")
+    file(COPY "${SOURCE_PATH}/include/wintls/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/wintls/")
+else()
+    message(FATAL_ERROR "Directory ${SOURCE_PATH}/include/wintls does not exist")
+endif()
+
+if(EXISTS "${SOURCE_PATH}/include/wintls.hpp")
+    file(COPY "${SOURCE_PATH}/include/wintls.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
+else()
+    message(FATAL_ERROR "File ${SOURCE_PATH}/include/wintls.hpp does not exist")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
