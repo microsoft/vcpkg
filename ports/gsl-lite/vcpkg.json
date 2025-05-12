@@ -1,6 +1,6 @@
 {
   "name": "gsl-lite",
-  "version": "0.42.0",
+  "version": "0.43.0",
   "description": "A single-file header-only implementation of ISO C++ Guidelines Support Library (GSL) for C++98, C++11 and later.",
   "homepage": "https://github.com/gsl-lite/gsl-lite/",
   "dependencies": [
