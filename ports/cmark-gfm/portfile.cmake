@@ -24,6 +24,9 @@ vcpkg_cmake_configure(
         -DCMARK_TESTS=OFF
         -DCMARK_SHARED=${CMARK_SHARED}
         -DCMARK_STATIC=${CMARK_STATIC}
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
@@ -31,13 +34,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
 vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES cmark SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools/cmark" AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cmark-gfm AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
