@@ -1,7 +1,7 @@
 livepp provides CMake targets:
 
-  find_package(livepp CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE unofficial::livepp)
+  find_package(unofficial-livepp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::livepp::livepp)
 
 The macro LIVEPP_PATH is also set to point to the livepp installation folder and can be used to create agents:
 
