@@ -312,10 +312,6 @@
         }
       ]
     },
-    "system-libraries": {
-      "$supports": "!windows",
-      "description": "This feature does nothing. It is retained for compatibility."
-    },
     "tools": {
       "description": "Builds gdal and ogr executables"
     },
