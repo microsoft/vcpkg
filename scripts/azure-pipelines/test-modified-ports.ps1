@@ -164,7 +164,7 @@ $data = New-Object byte[] 1.5GB
 Get-ChildItem -File scripts/manual-tests/azcopy
 # Build and upload [core], [core,large]
 $env:VCPKG_DEFAULT_BINARY_CACHE = Join-Path $WorkingRoot 'archives-azcopy'
-New-Item -Type Directory -Path $env:VCPKG_DEFAULT_BINARY_CACHE
+New-Item -Type Directory -Path $env:VCPKG_DEFAULT_BINARY_CACHE -Force | Out-Null
 & $vcpkgExe x-test-features test-upload-artifacts --overlay-ports=scripts/manual-tests/azcopy $tripletArg @commonArgs @cachingArgs
 $lastLastExitCode = $LASTEXITCODE
 $env:VCPKG_DEFAULT_BINARY_CACHE = $null
