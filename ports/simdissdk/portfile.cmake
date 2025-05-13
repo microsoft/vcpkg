@@ -19,7 +19,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         simutil     BUILD_SIMUTIL
         simqt       BUILD_SIMQT
 )
-set(GLEW_USE_STATIC_LIBS FALSE)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -77,6 +76,12 @@ vcpkg_cmake_config_fixup(
 )
 endif()
 
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME simdissdk 
+    CONFIG_PATH lib/cmake
+    DO_NOT_DELETE_PARENT_CONFIG_PATH
+)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -94,8 +99,16 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
 #file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ExternalSdkProject")
 
-set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
+#set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
+#set(VCPKG_POLICY_SKIP_MISPLACED_CMAKE_FILES_CHECK enabled)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${SOURCE_PATH}")
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/INSTALL.md")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/LICENSE.txt")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.md")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/INSTALL.md")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/LICENSE.txt")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.md")
