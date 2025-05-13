@@ -16,6 +16,7 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
+        use-opencv4.patch
         ${FIX_LIBRAW_BUILD_PATCH}
 )
 

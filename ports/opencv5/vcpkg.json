@@ -1,7 +1,6 @@
 {
-  "name": "opencv4",
-  "version": "4.11.0",
-  "port-version": 1,
+  "name": "opencv5",
+  "version": "5.0.0-alpha",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -90,7 +89,7 @@
           "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         },
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "calib3d"
@@ -107,7 +106,7 @@
       "dependencies": [
         "cuda",
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "contrib"
@@ -120,7 +119,7 @@
       "dependencies": [
         "cudnn",
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "cuda"
@@ -155,7 +154,7 @@
       "description": "Build dnn module with CUDA support",
       "dependencies": [
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "cudnn",
@@ -241,11 +240,11 @@
       "dependencies": [
         "halide",
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false
         },
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "features": [
             "dnn"
           ]
@@ -316,7 +315,7 @@
       "supports": "!uwp & !x86",
       "dependencies": [
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "dnn"
@@ -347,7 +346,7 @@
       "dependencies": [
         "ogre",
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "contrib"
@@ -394,7 +393,7 @@
       "supports": "!uwp",
       "dependencies": [
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "contrib"
@@ -412,7 +411,7 @@
       "description": "Build opencv_rgbd module",
       "dependencies": [
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "contrib"
@@ -427,14 +426,14 @@
         "gflags",
         "glog",
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "contrib"
           ]
         },
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "eigen"
@@ -465,7 +464,7 @@
       "description": "vtk support for opencv",
       "dependencies": [
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "features": [
             "contrib"
           ]
@@ -480,7 +479,7 @@
       "description": "Vulkan support for opencv dnn",
       "dependencies": [
         {
-          "name": "opencv4",
+          "name": "opencv5",
           "default-features": false,
           "features": [
             "dnn"
