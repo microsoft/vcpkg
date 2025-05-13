@@ -112,6 +112,12 @@
         "expat"
       ]
     },
+    "exprtk": {
+      "description": "Enable exprtk support",
+      "dependencies": [
+        "exprtk"
+      ]
+    },
     "freexl": {
       "description": "Enable FREEXL support",
       "dependencies": [
@@ -198,6 +204,12 @@
       "description": "Use LZMA library",
       "dependencies": [
         "liblzma"
+      ]
+    },
+    "muparser": {
+      "description": "Enable muparser support",
+      "dependencies": [
+        "muparser"
       ]
     },
     "mysql-libmariadb": {
