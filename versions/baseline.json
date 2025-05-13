@@ -3889,8 +3889,8 @@
       "port-version": 0
     },
     "itk": {
-      "baseline": "5.4.0",
-      "port-version": 3
+      "baseline": "5.4.3",
+      "port-version": 0
     },
     "itlib": {
       "baseline": "1.11.7",
