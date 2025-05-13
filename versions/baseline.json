@@ -190,7 +190,7 @@
     },
     "aravis": {
       "baseline": "0.8.34",
-      "port-version": 0
+      "port-version": 1
     },
     "arb": {
       "baseline": "2.21.1",
@@ -334,7 +334,7 @@
     },
     "atk": {
       "baseline": "2.38.0",
-      "port-version": 9
+      "port-version": 10
     },
     "atkmm": {
       "baseline": "2.36.3",
@@ -592,6 +592,10 @@
       "baseline": "0.3.0",
       "port-version": 0
     },
+    "barkeep": {
+      "baseline": "0.1.5",
+      "port-version": 0
+    },
     "basisu": {
       "baseline": "1.50.0",
       "port-version": 0
@@ -621,7 +625,7 @@
       "port-version": 0
     },
     "benchmark": {
-      "baseline": "1.9.2",
+      "baseline": "1.9.3",
       "port-version": 0
     },
     "bento4": {
@@ -1505,7 +1509,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "caf": {
@@ -2765,7 +2769,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "24.09",
+      "baseline": "25.04",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -2777,7 +2781,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "fcl": {
@@ -2829,7 +2833,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2917,7 +2921,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3009,7 +3013,7 @@
       "port-version": 6
     },
     "ftxui": {
-      "baseline": "6.1.8",
+      "baseline": "6.1.9",
       "port-version": 0
     },
     "function2": {
@@ -3106,7 +3110,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.12",
-      "port-version": 3
+      "port-version": 4
     },
     "gegl": {
       "baseline": "0.4.54",
@@ -3282,7 +3286,7 @@
     },
     "gobject-introspection": {
       "baseline": "1.82.0",
-      "port-version": 0
+      "port-version": 1
     },
     "godot-cpp": {
       "baseline": "4.4",
@@ -3334,7 +3338,7 @@
     },
     "graphene": {
       "baseline": "1.10.8",
-      "port-version": 4
+      "port-version": 5
     },
     "graphicsmagick": {
       "baseline": "1.3.41",
@@ -3369,7 +3373,7 @@
       "port-version": 1
     },
     "gsl-lite": {
-      "baseline": "0.42.0",
+      "baseline": "0.43.0",
       "port-version": 0
     },
     "gsoap": {
@@ -3390,11 +3394,11 @@
     },
     "gtk": {
       "baseline": "4.16.3",
-      "port-version": 2
+      "port-version": 3
     },
     "gtk3": {
       "baseline": "3.24.43",
-      "port-version": 0
+      "port-version": 1
     },
     "gtkmm": {
       "baseline": "4.14.0",
@@ -3426,6 +3430,10 @@
     },
     "gul14": {
       "baseline": "2.11.2",
+      "port-version": 0
+    },
+    "gul17": {
+      "baseline": "25.4.1",
       "port-version": 0
     },
     "gumbo": {
@@ -3570,7 +3578,7 @@
     },
     "harfbuzz": {
       "baseline": "10.2.0",
-      "port-version": 3
+      "port-version": 4
     },
     "hash-library": {
       "baseline": "8",
@@ -3589,8 +3597,8 @@
       "port-version": 2
     },
     "hdf5": {
-      "baseline": "1.14.4.3",
-      "port-version": 4
+      "baseline": "1.14.6",
+      "port-version": 0
     },
     "hdr-histogram": {
       "baseline": "0.11.8",
@@ -4561,7 +4569,7 @@
       "port-version": 0
     },
     "libdeflate": {
-      "baseline": "1.23",
+      "baseline": "1.24",
       "port-version": 0
     },
     "libdicom": {
@@ -5121,7 +5129,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "9.0.4",
+      "baseline": "9.0.5",
       "port-version": 0
     },
     "libplist": {
@@ -5849,7 +5857,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.672",
+      "baseline": "0.673",
       "port-version": 0
     },
     "luminoengine": {
@@ -5929,7 +5937,7 @@
       "port-version": 13
     },
     "mailio": {
-      "baseline": "0.24.0",
+      "baseline": "0.25.1",
       "port-version": 0
     },
     "makeid": {
@@ -6401,7 +6409,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "mygui": {
@@ -7090,7 +7098,7 @@
     },
     "pango": {
       "baseline": "1.56.1",
-      "port-version": 1
+      "port-version": 2
     },
     "pangolin": {
       "baseline": "0.9.3",
@@ -7461,7 +7469,7 @@
       "port-version": 0
     },
     "protopuf": {
-      "baseline": "3.0.0",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "protozero": {
@@ -7477,7 +7485,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "psimd": {
@@ -8686,7 +8694,7 @@
     },
     "simonbrunel-qtpromise": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "simple-fft": {
       "baseline": "2020-06-14",
@@ -8873,7 +8881,7 @@
       "port-version": 3
     },
     "spdlog": {
-      "baseline": "1.15.2",
+      "baseline": "1.15.3",
       "port-version": 0
     },
     "spectra": {
@@ -9845,7 +9853,7 @@
       "port-version": 0
     },
     "vladimirshaleev-ipaddress": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "vlfeat": {
@@ -9961,7 +9969,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.04.28.00",
+      "baseline": "2025.05.05.00",
       "port-version": 0
     },
     "wasmedge": {
