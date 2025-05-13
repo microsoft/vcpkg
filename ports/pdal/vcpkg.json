@@ -5,6 +5,7 @@
   "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
   "homepage": "https://pdal.io/",
   "license": null,
+  "supports": "!(static & staticcrt)",
   "dependencies": [
     {
       "name": "curl",
