@@ -1,0 +1,13 @@
+{
+  "name": "libva",
+  "version": "2.22.0",
+  "description": "Libva is an implementation for VA-API (Video Acceleration API)",
+  "homepage": "https://github.com/intel/libva",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
