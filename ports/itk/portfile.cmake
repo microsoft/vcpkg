@@ -24,7 +24,7 @@ vcpkg_from_github(
         wrapping.patch
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
-        itk-config-build-tree.diff
+        msvc-static-crt.diff
         "${PYTHON_GPU_WRAPPING_PATCH}"
 )
 file(REMOVE_RECURSE
@@ -189,7 +189,6 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_MSVC_STATIC_RUNTIME_LIBRARY=ON
-        -DITK_MSVC_STATIC_CRT=ON
     )
 endif()
 
