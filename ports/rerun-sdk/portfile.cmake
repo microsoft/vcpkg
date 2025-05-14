@@ -12,6 +12,11 @@ vcpkg_extract_source_archive(
     PATCHES
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        list(APPEND ADDITIONAL_RERUN_OPTIONS "-DRERUN_STATIC_RUNTIME=ON")
+    endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
