@@ -9588,6 +9588,10 @@
       "baseline": "2022-01-24",
       "port-version": 2
     },
+    "unimail-cpp-sdk": {
+      "baseline": "0.0.6",
+      "port-version": 0
+    },
     "units": {
       "baseline": "2.3.3",
       "port-version": 1
