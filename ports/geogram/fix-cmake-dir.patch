@@ -1,8 +1,8 @@
 diff --git a/src/lib/geogram_gfx/CMakeLists.txt b/src/lib/geogram_gfx/CMakeLists.txt
-index 391e607..4e03357 100755
+index 13b6bcb..c51bede 100755
 --- a/src/lib/geogram_gfx/CMakeLists.txt
 +++ b/src/lib/geogram_gfx/CMakeLists.txt
-@@ -4,6 +4,10 @@ configure_file(geogram_gfx.pc.in ${PROJECT_BINARY_DIR}/geogram_gfx${VORPALINE_VE
+@@ -4,6 +4,12 @@ configure_file(geogram_gfx.pc.in ${PROJECT_BINARY_DIR}/geogram_gfx${VORPALINE_VE
  
  add_definitions(-DIMGUI_USER_CONFIG="geogram_imconfig.h")
  
@@ -10,10 +10,12 @@ index 391e607..4e03357 100755
 +add_definitions(-DGEO_USE_SYSTEM_GLFW3)
 +endif()
 +
++find_package(imgui CONFIG REQUIRED)
++
  add_subdirectory(third_party)
  
  aux_source_directories(SOURCES "Source Files"                .)
-@@ -20,14 +24,9 @@ if(GEOGRAM_WITH_LUA)
+@@ -20,15 +26,8 @@ if(GEOGRAM_WITH_LUA)
  aux_source_directories(SOURCES "Source Files\\lua"           lua)
  endif()
  
@@ -22,11 +24,154 @@ index 391e607..4e03357 100755
 -endif()
 -
  add_library(geogram_gfx ${SOURCES} $<TARGET_OBJECTS:geogram_gfx_third_party>)
--
+ 
 -target_include_directories(geogram_gfx PUBLIC ${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party)
 -target_include_directories(geogram_gfx PRIVATE ${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party/imgui)
-+target_include_directories(geogram_gfx PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party>)
-+target_include_directories(geogram_gfx PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party/imgui>)
- 
+-
  if(ANDROID)
  target_include_directories(geogram_gfx PRIVATE
+ ${ANDROID_NDK}/sources/android/native_app_glue
+@@ -41,6 +40,8 @@ VERSION ${VORPALINE_VERSION}
+ SOVERSION ${VORPALINE_VERSION_MAJOR}
+ FOLDER "GEOGRAM")
+ 
++target_link_libraries(geogram_gfx imgui::imgui)
++
+ if(NOT ANDROID)
+ target_link_libraries(geogram_gfx glfw)
+ endif()
+diff --git a/src/lib/geogram_gfx/gui/application.cpp b/src/lib/geogram_gfx/gui/application.cpp
+index 1b5208b..67e98a6 100644
+--- a/src/lib/geogram_gfx/gui/application.cpp
++++ b/src/lib/geogram_gfx/gui/application.cpp
+@@ -41,7 +41,7 @@
+ #include <geogram_gfx/gui/user_callback_android.h>
+ 
+ #include <geogram_gfx/imgui_ext/imgui_ext.h>
+-#include <geogram_gfx/third_party/imgui/backends/imgui_impl_opengl3.h>
++#include <imgui_impl_opengl3.h>
+ #include <geogram_gfx/imgui_ext/icon_font.h>
+ 
+ #include <geogram_gfx/lua/lua_glup.h>
+@@ -59,7 +59,7 @@
+ 
+ 
+ #if defined(GEO_GLFW)
+-#  include <geogram_gfx/third_party/imgui/backends/imgui_impl_glfw.h>
++#  include <imgui_impl_glfw.h>
+ // Too many documentation warnings in glfw
+ // (glfw uses tags that clang does not understand).
+ #  ifdef __clang__
+diff --git a/src/lib/geogram_gfx/imgui_ext/imgui_ext.cpp b/src/lib/geogram_gfx/imgui_ext/imgui_ext.cpp
+index 5697594..7b70cb1 100644
+--- a/src/lib/geogram_gfx/imgui_ext/imgui_ext.cpp
++++ b/src/lib/geogram_gfx/imgui_ext/imgui_ext.cpp
+@@ -51,7 +51,7 @@
+ #endif
+ #endif
+ 
+-#include <geogram_gfx/third_party/imgui/imgui_internal.h>
++#include <imgui_internal.h>
+ 
+ #if defined(GEO_COMPILER_GCC_FAMILY)
+ #pragma GCC diagnostic pop
+diff --git a/src/lib/geogram_gfx/imgui_ext/imgui_ext.h b/src/lib/geogram_gfx/imgui_ext/imgui_ext.h
+index e272fa1..e745146 100644
+--- a/src/lib/geogram_gfx/imgui_ext/imgui_ext.h
++++ b/src/lib/geogram_gfx/imgui_ext/imgui_ext.h
+@@ -53,8 +53,8 @@
+ #endif
+ #endif
+ 
+-#include <geogram_gfx/third_party/imgui/imgui.h>
+-#include <geogram_gfx/third_party/imgui/misc/cpp/imgui_stdlib.h>
++#include <imgui.h>
++#include <imgui_stdlib.h>
+ 
+ #if defined(GEO_COMPILER_GCC_FAMILY)
+ #pragma GCC diagnostic pop
+diff --git a/src/lib/geogram_gfx/third_party/CMakeLists.txt b/src/lib/geogram_gfx/third_party/CMakeLists.txt
+index b86d54c..2bb01dc 100644
+--- a/src/lib/geogram_gfx/third_party/CMakeLists.txt
++++ b/src/lib/geogram_gfx/third_party/CMakeLists.txt
+@@ -23,7 +23,6 @@ if(BUILD_SHARED_LIBS)
+    add_definitions(-Dgeogram_gfx_EXPORTS)
+ endif()
+ 
+-
+ aux_source_directories(SOURCES "Source Files"            .)
+ aux_source_directories(SOURCES "Source Files\\glad"      glad)
+ aux_source_directories(SOURCES "Source Files\\ImGuiColorTextEdit" ImGuiColorTextEdit )
+@@ -32,27 +31,10 @@ if(GEOGRAM_WITH_LUA)
+    aux_source_directories(SOURCES "Source Files\\imgui_lua_bindings" imgui_lua_bindings)
+ endif()
+ 
+-add_library(geogram_gfx_third_party OBJECT ${SOURCES})
+-
+-target_sources(
+-  geogram_gfx_third_party PRIVATE
+-    imgui/imgui.cpp
+-    imgui/imgui_demo.cpp
+-    imgui/imgui_draw.cpp
+-    imgui/imgui_tables.cpp
+-    imgui/imgui_widgets.cpp
+-    imgui/misc/cpp/imgui_stdlib.cpp
+-)
+-
+-target_sources(
+-  geogram_gfx_third_party PRIVATE
+-    imgui/backends/imgui_impl_opengl3.cpp
+-)
++find_package(imgui CONFIG REQUIRED)
+ 
+-target_include_directories(
+-  geogram_gfx_third_party PRIVATE
+-  ${PROJECT_SOURCE_DIR}/src/lib/geogram_gfx/third_party/imgui
+-)
++add_library(geogram_gfx_third_party OBJECT ${SOURCES})
++target_link_libraries(geogram_gfx_third_party PUBLIC imgui::imgui)
+ 
+ if(ANDROID)
+ #  target_sources(
+@@ -62,15 +44,6 @@ if(ANDROID)
+   target_include_directories(geogram_gfx_third_party PRIVATE
+     ${ANDROID_NDK}/sources/android/native_app_glue
+   )
+-else()
+-  target_sources(
+-    geogram_gfx_third_party PRIVATE
+-       imgui/backends/imgui_impl_glfw.cpp
+-  )
+-  target_include_directories(
+-    geogram_gfx_third_party PRIVATE
+-    ${PROJECT_SOURCE_DIR}/src/lib/third_party/glfw/include
+-  )
+ endif()
+ 
+ 
+diff --git a/src/lib/geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.cpp b/src/lib/geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.cpp
+index 8ac9d5c..6b5a959 100755
+--- a/src/lib/geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.cpp
++++ b/src/lib/geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.cpp
+@@ -14,7 +14,7 @@
+ 
+ // [Bruno Levy] include path redirected to geogram.
+ #include <geogram_gfx/third_party/ImGuiColorTextEdit/TextEditor.h>
+-#include <geogram_gfx/third_party/imgui/imgui_internal.h>
++#include <imgui_internal.h>
+ 
+ // [Bruno Levy] includes for GLFW, needed by pixelratio()
+ #ifndef __ANDROID__
+diff --git a/src/lib/geogram_gfx/third_party/imgui_lua_bindings/imgui_iterator.h b/src/lib/geogram_gfx/third_party/imgui_lua_bindings/imgui_iterator.h
+index 70806d9..55ce6cf 100644
+--- a/src/lib/geogram_gfx/third_party/imgui_lua_bindings/imgui_iterator.h
++++ b/src/lib/geogram_gfx/third_party/imgui_lua_bindings/imgui_iterator.h
+@@ -609,7 +609,7 @@ OPTIONAL_IM_VEC_2_ARG(uv0, 0, 0)
+ OPTIONAL_IM_VEC_2_ARG(uv1, 1, 1)
+ OPTIONAL_IM_VEC_4_ARG(tint_col, 1, 1, 1, 1)
+ OPTIONAL_IM_VEC_4_ARG(border_col, 0, 0, 0, 0)
+-CALL_FUNCTION_NO_RET(Image, user_texture_id, size, uv0, uv1, tint_col, border_col)
++CALL_FUNCTION_NO_RET(Image, user_texture_id, size, uv0, uv1)
+ END_IMGUI_FUNC
+ //    IMGUI_API bool          ImageButton(const char* str_id, ImTextureID user_texture_id, const ImVec2& size, const ImVec2& uv0 = ImVec2 0 0,  const ImVec2& uv1 = ImVec2 1 1, const ImVec4& bg_col = ImVec4 0 0 0 0, const ImVec4& tint_col = ImVec4 1 1 1 1);
+ 

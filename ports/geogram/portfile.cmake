@@ -40,16 +40,6 @@ file(RENAME "${AMGCL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/a
 file(RENAME "${LIBMESHB_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb")
 file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
 
-if("graphics" IN_LIST FEATURES)
-    vcpkg_from_github(
-        OUT_SOURCE_PATH IMGUI_SOURCE_PATH
-        REPO ocornut/imgui
-        REF d80347613ab17bd6e96b508e8080c6fa60f2b1da
-        SHA512 dacdadab21b1a3f2f77b4ee8a27a361561d843531f3dbfa75a72a654c66215ea85264ac8df1e0e4afecdb735afbaf3a902f0f061e9ff495e1e48b8dd2c84d898
-    )
-    file(RENAME "${IMGUI_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram_gfx/third_party/imgui")
-endif()
-
 file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

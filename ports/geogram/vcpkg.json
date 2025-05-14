@@ -21,7 +21,15 @@
     "graphics": {
       "description": "Build viewers and geogram_gfx library.",
       "dependencies": [
-        "glfw3"
+        "glfw3",
+        {
+          "name": "imgui",
+          "features": [
+            "docking-experimental",
+            "glfw-binding",
+            "opengl3-binding"
+          ]
+        }
       ]
     }
   }
