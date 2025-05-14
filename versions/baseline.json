@@ -6262,7 +6262,7 @@
     },
     "nanojsonc": {
       "baseline": "1.2.0",
-      "port-version": 0
+      "port-version": 2
     },
     "nanomsg": {
       "baseline": "1.2.1",
