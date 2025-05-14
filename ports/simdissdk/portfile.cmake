@@ -20,6 +20,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         simqt       BUILD_SIMQT
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(SIMNOTIFY_SHARED OFF)
+    set(SIMCORE_SHARED OFF)
+    set(SIMDATA_SHARED OFF)
+    set(SIMDATAPROTO_SHARED OFF)
+    set(SIMVIS_SHARED OFF)
+    set(SIMUTIL_SHARED OFF)
+    set(SIMQT_SHARED OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -83,16 +93,6 @@ vcpkg_cmake_config_fixup(
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(SIMNOTIFY_SHARED OFF)
-    set(SIMCORE_SHARED OFF)
-    set(SIMDATA_SHARED OFF)
-    set(SIMDATAPROTO_SHARED OFF)
-    set(SIMVIS_SHARED OFF)
-    set(SIMUTIL_SHARED OFF)
-    set(SIMQT_SHARED OFF)
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
