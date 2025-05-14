@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DRERUN_DOWNLOAD_AND_BUILD_ARROW=OFF # Disable downloading and building Arrow
+        ${ADDITIONAL_RERUN_OPTIONS}
 )
 
 vcpkg_cmake_install()
