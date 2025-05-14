@@ -2617,7 +2617,7 @@
       "port-version": 0
     },
     "elfutils": {
-      "baseline": "0.192",
+      "baseline": "0.193",
       "port-version": 0
     },
     "embree3": {
