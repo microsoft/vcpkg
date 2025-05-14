@@ -9604,6 +9604,10 @@
       "baseline": "2.3.11",
       "port-version": 2
     },
+    "unleash-client-cpp": {
+      "baseline": "1.3.0",
+      "port-version": 0
+    },
     "unordered-dense": {
       "baseline": "4.5.0",
       "port-version": 0
