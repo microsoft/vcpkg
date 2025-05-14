@@ -1,6 +1,6 @@
 {
   "name": "wolftpm",
-  "version": "3.4.0",
+  "version": "3.8.0",
   "description": "TPM library used with wolfSSL library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-2.0-or-later",

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/libphonenumber
     REF "v${VERSION}"
-    SHA512 8ee980c0734afc61972bac94e7e938922b7b4fc44695c175c24654a9c37c705b2d05892d7e93e1423ec02314847f3dcdbdef35dac1f6cdf08400f29b23d1845b
+    SHA512 965d4385027a07ed55cf01168530453e793ad5c8954ad5b94959396a4b7902e22f72d9f73c88a2e45f7502922783a0bae568040822e7bf4899bd26e6b0f86b2d
     HEAD_REF master
     PATCHES 
         # fix compilation error due to deprecated warnings in protobuf generated files

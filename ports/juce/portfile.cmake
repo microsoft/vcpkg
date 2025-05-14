@@ -4,7 +4,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO juce-framework/JUCE
   REF "${VERSION}"
-  SHA512 c1cb2f315c2b3b9c534d21b16d31e641661fbb9ad55b29a0949c038cb69cce65d35c8c669a400e33fdcedd7fc5ef578a1eba787826d525402330551c4d240fe6
+  SHA512 ca404d94f8f79d9644f391342807dde279d1d313ef597a5d7fa88760e0459f2639cb98b6523c3ae71b2641357df63353c1f32e9b33dd9f050f5651fba470ec33
   HEAD_REF master
   PATCHES
     0001-build-allow-setting-JUCE_PLUGINHOST_LADSPA.patch
@@ -13,7 +13,6 @@ vcpkg_from_github(
     devendor-oboe.diff
     install-extras.diff
     juceaide.diff
-    missing-modules.diff
     prefer-cmake.diff
     vcpkg-compile-definitions.diff
     avoid-macos-15-deprecations.patch
