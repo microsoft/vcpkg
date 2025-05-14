@@ -41,13 +41,6 @@
         "opengl"
       ]
     },
-    "x11": {
-      "description": "Build with X11 autolaunch support",
-      "supports": "!windows",
-      "dependencies": [
-        "libx11"
-      ]
-    },
     "python": {
       "description": "Enable Python bindings",
       "dependencies": [
@@ -56,6 +49,13 @@
           "name": "python3",
           "host": true
         }
+      ]
+    },
+    "x11": {
+      "description": "Build with X11 autolaunch support",
+      "supports": "!windows",
+      "dependencies": [
+        "libx11"
       ]
     }
   }
