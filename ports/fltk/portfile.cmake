@@ -7,9 +7,10 @@ vcpkg_from_github(
     REF "release-${VERSION}"
     SHA512 7630d0b02ff09c277d5641e10631514e5e3d8087e81f5254f38a8adb05c39ed0092ae81697085ed0dd859f0b826f94626d698090153c5e9a655f5e36263b2915
     PATCHES
-        dependencies.patch
-        config-path.patch
+        fix-options.patch
         fix-fluid-cmd.patch
+        fix-export.patch
+        config-path.patch
 )
 
 file(REMOVE_RECURSE
