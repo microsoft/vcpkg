@@ -14,7 +14,7 @@ vcpkg_extract_source_archive(
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND ADDITIONAL_RERUN_OPTIONS "-DRERUN_STATIC_RUNTIME=ON")
+        list(APPEND ADDITIONAL_RERUN_OPTIONS "-DBUILD_SHARED_LIBS=OFF")
     endif()
 endif()
 
