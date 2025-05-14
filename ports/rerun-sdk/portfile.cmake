@@ -10,8 +10,6 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        arrow-use-built-linkage.diff # https://github.com/rerun-io/rerun/pull/9550
-        arrow-use-find-dependency.diff # https://github.com/rerun-io/rerun/pull/9548
 )
 
 vcpkg_cmake_configure(
