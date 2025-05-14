@@ -18,7 +18,8 @@
         {
           "name": "curl",
           "default-features": false
-        }
+        },
+        "json-c"
       ]
     },
     "nls": {

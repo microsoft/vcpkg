@@ -23,7 +23,9 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 set(options "")
 
-if(NOT "libdebuginfod" IN_LIST FEATURES)
+if("libdebuginfod" IN_LIST FEATURES)
+    list(APPEND options "--enable-libdebuginfod=yes")
+else()
     list(APPEND options "--enable-libdebuginfod=no")
 endif()
 
