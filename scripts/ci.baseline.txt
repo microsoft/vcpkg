@@ -504,7 +504,6 @@ libhdfs3:arm64-osx=fail
 libhdfs3:x64-android=fail
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
-libheif:arm64-android=fail
 # 120 min build time for libjxl arm64-uwp-rel, reason unknown
 libjxl:arm64-uwp=skip
 liblo:arm64-uwp=fail
