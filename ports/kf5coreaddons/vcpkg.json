@@ -1,11 +1,15 @@
 {
   "name": "kf5coreaddons",
   "version": "5.98.0",
+  "port-version": 1,
   "description": "Addons to QtCore",
   "homepage": "https://api.kde.org/frameworks/kcoreaddons/html/index.html",
   "dependencies": [
     "ecm",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",

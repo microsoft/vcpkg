@@ -197,7 +197,7 @@
       "port-version": 2
     },
     "arcticdb-sparrow": {
-      "baseline": "0.7.0",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "arcus": {
@@ -1509,7 +1509,7 @@
       "port-version": 0
     },
     "cachelib": {
-      "baseline": "2025.05.05.00",
+      "baseline": "2025.05.12.00",
       "port-version": 0
     },
     "caf": {
@@ -1757,7 +1757,7 @@
       "port-version": 2
     },
     "clipper2": {
-      "baseline": "1.5.2",
+      "baseline": "1.5.3",
       "port-version": 0
     },
     "clockutils": {
@@ -2781,7 +2781,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2025.05.05.00",
+      "baseline": "2025.05.12.00",
       "port-version": 0
     },
     "fcl": {
@@ -2833,7 +2833,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.05.05.00",
+      "baseline": "2025.05.12.00",
       "port-version": 0
     },
     "flagpp": {
@@ -2921,7 +2921,7 @@
       "port-version": 1
     },
     "folly": {
-      "baseline": "2025.05.05.00",
+      "baseline": "2025.05.12.00",
       "port-version": 0
     },
     "font-chef": {
@@ -3889,8 +3889,8 @@
       "port-version": 0
     },
     "itk": {
-      "baseline": "5.4.0",
-      "port-version": 3
+      "baseline": "5.4.3",
+      "port-version": 0
     },
     "itlib": {
       "baseline": "1.11.7",
@@ -4009,8 +4009,8 @@
       "port-version": 0
     },
     "jsonnet": {
-      "baseline": "0.20.0",
-      "port-version": 1
+      "baseline": "0.21.0",
+      "port-version": 0
     },
     "juce": {
       "baseline": "8.0.7",
@@ -4118,7 +4118,7 @@
     },
     "kf5coreaddons": {
       "baseline": "5.98.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5crash": {
       "baseline": "5.98.0",
@@ -4453,7 +4453,7 @@
       "port-version": 0
     },
     "libavif": {
-      "baseline": "1.2.1",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "libb2": {
@@ -6141,7 +6141,7 @@
       "port-version": 1
     },
     "mimicpp": {
-      "baseline": "6",
+      "baseline": "7",
       "port-version": 0
     },
     "minc": {
@@ -6293,7 +6293,7 @@
       "port-version": 0
     },
     "mpfr": {
-      "baseline": "4.2.1",
+      "baseline": "4.2.2",
       "port-version": 0
     },
     "mpg123": {
@@ -6409,7 +6409,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.05.05.00",
+      "baseline": "2025.05.12.00",
       "port-version": 0
     },
     "mygui": {
@@ -6886,7 +6886,7 @@
     },
     "opencv4": {
       "baseline": "4.11.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -6977,7 +6977,7 @@
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
-      "baseline": "2025-04-15",
+      "baseline": "2025-05-12",
       "port-version": 0
     },
     "opentracing": {
@@ -7485,7 +7485,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2025.05.05.00",
+      "baseline": "2025.05.12.00",
       "port-version": 0
     },
     "psimd": {
@@ -8070,6 +8070,10 @@
     },
     "rapidjson": {
       "baseline": "2025-02-26",
+      "port-version": 0
+    },
+    "rapidobj": {
+      "baseline": "1.1",
       "port-version": 0
     },
     "rapidxml": {
@@ -8945,7 +8949,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.49.1",
+      "baseline": "3.49.2",
       "port-version": 0
     },
     "sqlitecpp": {
@@ -9481,7 +9485,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.25.3",
+      "baseline": "0.25.4",
       "port-version": 0
     },
     "tree-sitter-c": {
@@ -9965,7 +9969,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.05.05.00",
+      "baseline": "2025.05.12.00",
       "port-version": 0
     },
     "wasmedge": {

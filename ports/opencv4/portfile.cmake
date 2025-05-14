@@ -619,6 +619,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+    "-lharfbuzz::harfbuzz"
+    "-lharfbuzz"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/"
     "\${prefix}"
     IGNORE_UNCHANGED
@@ -649,6 +654,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
     "-lTesseract::libtesseract"
     "-ltesseract"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+    "-lharfbuzz::harfbuzz"
+    "-lharfbuzz"
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
