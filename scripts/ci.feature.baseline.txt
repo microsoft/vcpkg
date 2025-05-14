@@ -99,7 +99,6 @@ discord-rpc:x64-uwp=fail
 dmlc(uwp) = fail
 eastl:arm-uwp=fail
 ebml:arm-uwp=fail
-elfutils(osx) = fail # Checks for gnu extension so only works with gcc.
 epsilon(uwp)=fail
 faiss:arm64-windows=fail
 fastrtps:arm-uwp=fail

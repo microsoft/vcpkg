@@ -2617,7 +2617,7 @@
       "port-version": 0
     },
     "elfutils": {
-      "baseline": "0.192",
+      "baseline": "0.193",
       "port-version": 0
     },
     "embree3": {
@@ -4478,7 +4478,7 @@
     },
     "libcamera": {
       "baseline": "0.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libcanberra": {
       "baseline": "0.30",

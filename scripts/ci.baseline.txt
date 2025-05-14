@@ -297,12 +297,6 @@ ecal:x64-android=fail
 elfio:arm-neon-android=fail
 elfio:arm64-android=fail
 elfio:x64-android=fail
-# Checks for gnu extension so only works with gcc.
-elfutils:arm-neon-android=fail
-elfutils:arm64-android=fail
-elfutils:arm64-osx=fail
-elfutils:x64-android=fail
-elfutils:x64-osx=fail
 # clang rejects variable length arrays
 fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
