@@ -1,12 +1,11 @@
 diff --git a/CMake/export.cmake b/CMake/export.cmake
-index 5ae2b84da..aec18d1fe 100644
+index 5ae2b84da..328e383fb 100644
 --- a/CMake/export.cmake
 +++ b/CMake/export.cmake
-@@ -61,10 +61,7 @@ endif()
- 
+@@ -62,9 +62,7 @@ endif()
  # set fltk-options export names (built or not, Windows)
  if(FLTK_BUILD_FLTK_OPTIONS)
--  set(FLTK_OPTIONS_EXPORT fltk-options)
+   set(FLTK_OPTIONS_EXPORT fltk-options)
 -  if(WIN32)
 -    list(APPEND FLTK_OPTIONS_EXPORT fltk-options-cmd)
 -  endif()
