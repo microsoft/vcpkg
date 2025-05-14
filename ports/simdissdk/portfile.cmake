@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         add-using-vcpkg-option.patch
         change-install-dir.patch
+        disable-find-and-change-import.patch
         change-osgqt-to-osgQOpenGL.patch
         disable-add-executable.patch
         disable-plugin-webp.patch
@@ -112,3 +113,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.md")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/INSTALL.md")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/LICENSE.txt")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.md")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/sdk23-simCore.dll")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/sdk23-simNotify.dll")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/sdk23-simCore.dll")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/sdk23-simNotify.dll")
+endif()

@@ -1,21 +1,16 @@
-diff --git "a/CMakeModules/AddExecutablePostfix.cmake" "b/CMakeModules/AddExecutablePostfix.cmake"
-index 62ed99f3..cd33ea31 100644
---- "a/CMakeModules/AddExecutablePostfix.cmake"
-+++ "b/CMakeModules/AddExecutablePostfix.cmake"
-@@ -1,5 +1,9 @@
- # Provide an implementation of add_executable that applies a debug postfix
--function(add_executable TARGET)
-+
-+if (USING_VCPKG)
-+    message(STATUS "VCPKG is enabled disable override of add_executable")
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 9873bdbc..46eb668f 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -89,8 +89,11 @@ include(CheckOSGEarthMethodExists)
+ include(TestBigEndian)
+ test_big_endian(SDK_BIG_ENDIAN)
+ 
++if(USING_VCPKG)
 +else()
-+    function(add_executable TARGET)
-     _add_executable(${TARGET} ${ARGN})
-     get_target_property(IS_IMPORTED ${TARGET} IMPORTED)
-     if(NOT IS_IMPORTED)
-@@ -11,3 +15,5 @@ function(add_executable TARGET)
-         )
-     endif()
- endfunction()
+ # Defines an add_executable that respects CMAKE_<CONFIGURATION>_POSTFIX for non-imported executables
+ include(AddExecutablePostfix)
 +endif()
-+
+ 
+ # Set architecture identifiers
+ string(TOUPPER ${BUILD_SYSTEM_ARCH} ARCH)
