@@ -13,7 +13,7 @@ vcpkg_extract_source_archive(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND ADDITIONAL_RERUN_OPTIONS "-DRERUN_STATIC_RUNTIME=ON")
     endif()
 endif()
