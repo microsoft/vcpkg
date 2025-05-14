@@ -532,6 +532,8 @@ libmpeg2:arm-neon-android=fail
 libmpeg2:arm64-android=fail
 libmpeg2:x64-android=fail
 libmysql:x86-windows=skip
+# C++20 conformant compiler required
+libnick:x64-linux=fail
 libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
 libopensp:x64-android=fail
