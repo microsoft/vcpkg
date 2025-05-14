@@ -49,7 +49,7 @@ elseif(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 foreach(_option IN LISTS OPTIONS_TO_ENABLE)
-    list(APPEND ENABLED_OPTIONS "-D{_option}:BOOL=ON")
+    list(APPEND ENABLED_OPTIONS "-D${_option}:BOOL=ON")
 endforeach()
     
 foreach(_option IN LISTS OPTIONS_TO_DISABLE IGNORED_OPTIONS)
