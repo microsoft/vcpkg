@@ -3,7 +3,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/rerun-io/rerun/releases/download/${VERSION}/rerun_cpp_sdk.zip"
     FILENAME rerun_cpp_sdk.zip
-    SHA512 1351dd0937d6ddf73622b69a803a7233eb92e5ec52607fc1c775accd015d52eaf3259c0aea64cfac3109f1c55218fb6a4597bff5b067ccdd194cd8695b3f4c8c
+    SHA512 19e3c6d147782c7d4679b8c93adccb7ae3c1f5f1da8f0bf4a6a02dfb7b91f921fbaa0a5f72362af75dbe684595f6c4f17fd8c2ea110e6eb7dc867023c7145e76
 )
 
 vcpkg_extract_source_archive(
