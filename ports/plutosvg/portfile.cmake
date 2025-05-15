@@ -7,11 +7,12 @@ vcpkg_from_github(
     PATCHES
         # temporary patch. It should be removed once the new version of plutosvg is released.
         fix-plutovg.patch
+        pkgconfig.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        freetype PLUTOSVG_ENABLE_FREETYPE
+        freetype    PLUTOSVG_ENABLE_FREETYPE
 )
 
 vcpkg_cmake_configure(
@@ -24,6 +25,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/plutosvg)
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/plutosvg/plutosvg.h" "defined(PLUTOSVG_BUILD_STATIC)" "1")

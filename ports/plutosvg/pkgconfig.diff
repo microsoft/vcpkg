@@ -1,0 +1,66 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 459cb14..b323a6b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,7 +40,7 @@ target_link_libraries(plutosvg PUBLIC plutovg::plutovg)
+ 
+ find_library(MATH_LIBRARY m)
+ if(MATH_LIBRARY)
+-    target_link_libraries(plutosvg PUBLIC ${MATH_LIBRARY})
++    target_link_libraries(plutosvg PUBLIC m)
+ endif()
+ 
+ target_compile_definitions(plutosvg PRIVATE PLUTOSVG_BUILD)
+@@ -55,6 +55,8 @@ if(PLUTOSVG_ENABLE_FREETYPE)
+     target_link_libraries(plutosvg PUBLIC ${FREETYPE_LIBRARIES})
+ endif()
+ 
++include(GNUInstallDirs)
++
+ include(CMakePackageConfigHelpers)
+ configure_package_config_file(
+     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/plutosvgConfig.cmake.in"
+@@ -67,7 +69,6 @@ write_basic_package_version_file(plutosvgConfigVersion.cmake
+     COMPATIBILITY SameMajorVersion
+ )
+ 
+-include(GNUInstallDirs)
+ install(FILES
+     ${CMAKE_CURRENT_SOURCE_DIR}/source/plutosvg.h
+     ${CMAKE_CURRENT_SOURCE_DIR}/source/plutosvg-ft.h
+@@ -98,6 +99,35 @@ export(EXPORT plutosvgTargets
+     NAMESPACE plutosvg::
+ )
+ 
++file(RELATIVE_PATH pc_prefix_relative "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/pkgconfig" "${CMAKE_INSTALL_PREFIX}")
++set(pc_cflags "")
++set(pc_libs_private "")
++set(pc_requires "")
++if(MATH_LIBRARY)
++    string(APPEND pc_libs_private " -lm")
++endif()
++if(PLUTOSVG_ENABLE_FREETYPE)
++    string(APPEND pc_cflags " -DPLUTOSVG_HAS_FREETYPE")
++    string(APPEND pc_requires " freetype2 >= 2.12")
++endif()
++string(CONFIGURE [[
++prefix=${pcfiledir}/@pc_prefix_relative@
++includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
++libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
++
++Name: PlutoSVG
++Description: Tiny 2D vector graphics library in C
++Version: @PROJECT_VERSION@
++
++Requires:@pc_requires@
++Requires.private: plutovg
++Cflags: "-I${includedir}/plutosvg"@pc_cflags@
++Libs: "-L${libdir}" -lplutosvg
++Libs.private:@pc_libs_private@
++]] pkgconfig @ONLY)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/plutosvg.pc" "${pkgconfig}")
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/plutosvg.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
++
+ option(PLUTOSVG_BUILD_EXAMPLES "Build examples" ON)
+ if(PLUTOSVG_BUILD_EXAMPLES)
+     add_subdirectory(examples)
