@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 b9adc28d584759b1cc1072d071caad95ade263a1fb24e294d66fc15e132d44bc62925875cb1f1b596089def9b47d7b73f42ffa4e120ee51982f993dc7a7d3bd7 
     HEAD_REF main
     PATCHES
-        fix-findplutosvg.patch
         link-sdl3.diff
 )
 
