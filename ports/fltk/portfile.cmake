@@ -80,6 +80,9 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fluid${VCPKG_TARGET_EXECUTABLE_SUFFIX}" O
    EXISTS "${CURRENT_PACKAGES_DIR}/bin/fluid${VCPKG_TARGET_BUNDLE_SUFFIX}")
    file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/fluid.icns" "${CURRENT_PACKAGES_DIR}/debug/bin/fluid.icns")
    vcpkg_copy_tools(TOOL_NAMES fluid fluid-cmd fltk-options fltk-options-cmd AUTO_CLEAN)
+   if(WIN32)
+    vcpkg_copy_tools(TOOL_NAMES fltk-options-cmd AUTO_CLEAN)
+   endif()
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/debug/bin"
