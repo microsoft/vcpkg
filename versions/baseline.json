@@ -6514,7 +6514,7 @@
     },
     "ncurses": {
       "baseline": "6.4",
-      "port-version": 2
+      "port-version": 3
     },
     "ndis-driver-library": {
       "baseline": "1.2.0",
