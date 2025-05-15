@@ -156,6 +156,14 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
             OUTPUT_STRIP_TRAILING_WHITESPACE
             COMMAND_ERROR_IS_FATAL ANY)
 
+        if(CMAKE_HOST_SOLARIS)
+            execute_process(
+                COMMAND isainfo -k
+                OUTPUT_VARIABLE MACHINE
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                COMMAND_ERROR_IS_FATAL ANY)
+        endif()
+
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
