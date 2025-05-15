@@ -19,27 +19,6 @@
     },
     "zlib"
   ],
-  "default-features": [
-    "activerecord",
-    "activerecord-compiler",
-    "data",
-    "encodings",
-    "encodings-compiler",
-    "json",
-    "jwt",
-    "mongodb",
-    "net",
-    "odbc",
-    "pagecompiler",
-    "pagecompiler-file2page",
-    "pocodoc",
-    "prometheus",
-    "redis",
-    "sqlite",
-    "util",
-    "xml",
-    "zip"
-  ],
   "features": {
     "activerecord": {
       "description": "Simple and lightweight object-relational mapping (ORM) framework built on top of the POCO Data",
