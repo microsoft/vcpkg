@@ -226,9 +226,11 @@ foreach(executable IN LISTS cmake_commands)
         OPTIONS
             "-DCMAKE_BUILD_TYPE=Release"
     )
-    test_cmake_project(NAME "debug"
-        CMAKE_COMMAND "${executable}"
-        OPTIONS
-            "-DCMAKE_BUILD_TYPE=Debug"
-    )
+    if (NOT VCPKG_BUILD_TYPE)
+        test_cmake_project(NAME "debug"
+            CMAKE_COMMAND "${executable}"
+            OPTIONS
+                "-DCMAKE_BUILD_TYPE=Debug"
+        )
+    endif()
 endforeach()

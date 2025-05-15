@@ -1,7 +1,7 @@
 {
   "name": "vtk-dicom",
   "version": "0.8.16",
-  "port-version": 1,
+  "port-version": 2,
   "description": "DICOM for VTK",
   "homepage": "https://github.com/dgobbi/vtk-dicom",
   "license": "BSD-3-Clause",

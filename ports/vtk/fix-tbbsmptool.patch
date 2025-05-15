@@ -1,0 +1,15 @@
+diff --git a/Common/Core/SMP/TBB/vtkSMPToolsImpl.txx b/Common/Core/SMP/TBB/vtkSMPToolsImpl.txx
+index e5792ee..e81d5ed 100644
+--- a/Common/Core/SMP/TBB/vtkSMPToolsImpl.txx
++++ b/Common/Core/SMP/TBB/vtkSMPToolsImpl.txx
+@@ -190,6 +190,10 @@ int vtkSMPToolsImpl<BackendType::TBB>::GetEstimatedNumberOfThreads();
+ template <>
+ bool vtkSMPToolsImpl<BackendType::TBB>::GetSingleThread();
+ 
++//--------------------------------------------------------------------------------
++template <>
++VTKCOMMONCORE_EXPORT vtkSMPToolsImpl<BackendType::TBB>::vtkSMPToolsImpl();
++
+ VTK_ABI_NAMESPACE_END
+ } // namespace smp
+ } // namespace detail

@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BehaviorTree/BehaviorTree.CPP
     REF ${VERSION}
-    SHA512 f2ee647c734e39e50f92405c5dc9fd2876602ff074a86416959fbf6548e37130d35f312cafb084ca4a40da7ee81386502a75ad839ce99a2859c30ff187820fdf
+    SHA512 b2460f24915ab3aa803b95ca8a07a3d6d96c9e6d17f6b20297c45572162fe83f50e0cb51dd62da783ce6b962838bc0e74e7e137b8ef29a92f1805058beccc404
     HEAD_REF master
     PATCHES
         fix-x86_build.patch
+        remove-source-charset.diff
 )
 
 vcpkg_cmake_configure(
@@ -14,7 +15,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_ament_cmake=1
         -DCMAKE_DISABLE_FIND_PACKAGE_Curses=1
         -DBTCPP_EXAMPLES=OFF
-        -DBTCPP_UNIT_TESTS=OFF
+        -DBUILD_TESTING=OFF
         -DBTCPP_BUILD_TOOLS=OFF
         -DBTCPP_GROOT_INTERFACE=OFF
         -DBTCPP_SQLITE_LOGGING=OFF

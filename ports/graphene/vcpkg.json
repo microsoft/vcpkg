@@ -1,13 +1,20 @@
 {
   "name": "graphene",
   "version": "1.10.8",
-  "port-version": 2,
+  "port-version": 5,
   "description": "A thin layer of types for graphic libraries.",
   "homepage": "https://www.gtk.org/",
   "license": "MIT",
-  "supports": "!(arm & windows)",
   "dependencies": [
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "gettext-libintl",
     "glib",
     {
       "name": "glib",
@@ -21,15 +28,9 @@
   "features": {
     "introspection": {
       "description": "build with introspection",
+      "supports": "!static",
       "dependencies": [
-        {
-          "name": "gobject-introspection",
-          "host": true
-        },
-        {
-          "name": "gobject-introspection",
-          "platform": "windows & x86"
-        }
+        "gobject-introspection"
       ]
     }
   }

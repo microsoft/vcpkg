@@ -3,12 +3,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-DDS
     REF "v${VERSION}"
-    SHA512 c2b22f6355fc38ccf49d41f7fe074092c6962d2fa759351b37d83af863c60839d9579bfef0f96540276229bcdb2d3d218e18777db89cf16092d09c26f2e24533
+    SHA512 ddef07c182d5d0b6096c8714595775d13fbbf9bedcd7e296c38f5b8ce0488d89b7a0048741143dbffbb9c21c3707b1084d1cd80ae7d019c0cac90e0f5eba5519
     HEAD_REF master
     PATCHES
         fix-find-package-asio.patch
-        disable-symlink.patch
         pdb-file.patch
+        disable-werror.patch
+        include-cstdint.patch
 )
 
 set(extra_opts "")
@@ -33,13 +34,13 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/fastdds/cmake)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # copy tools from "bin" to "tools" folder
-    foreach(TOOL "fast-discovery-server-1.0.1.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+    foreach(TOOL "fast-discovery-server-1.0.1.exe" "fastdds.bat" "ros-discovery.bat")
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
     endforeach()
 
     # remove tools from debug builds
-    foreach(TOOL "fast-discovery-serverd-1.0.1.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+    foreach(TOOL "fast-discovery-serverd-1.0.1.exe" "fastdds.bat" "ros-discovery.bat")
         if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
             file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
         endif()
@@ -72,7 +73,11 @@ elseif(VCPKG_TARGET_IS_LINUX)
 endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/fastdds/discovery/parser.py" "tool_path / '../../../bin'" "tool_path / '../../${PORT}'")
+if( VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fastdds/fast-discovery-server-targets-debug.cmake" [[${_IMPORT_PREFIX}/tools/fastdds/fast-discovery-serverd-1.0.1]] [[${_IMPORT_PREFIX}/tools/fastdds/fast-discovery-server-1.0.1]])
+endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")

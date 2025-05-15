@@ -44,6 +44,13 @@ jobs:
               return await commentLabelClose(body, "category:question");
             }
 
+            // https://gitlab.freedesktop.org maintenance
+            reg = /error: https:\/\/gitlab\.freedesktop\.org\/.*: failed: status code 503/;
+            if (reg.test(issue_body)){
+              let body = "gitlab.freedesktop.org is undergoing maintenance until 2025-03-22. Tracking issue https://github.com/microsoft/vcpkg/issues/44429"
+              return await commentLabelClose(body, "category:question");
+            }
+
             regs = []
             // Issue text is: Copy issue body from .../issue_body.md
             regs.push( /^Copy issue body from .*issue_body.md$/ );

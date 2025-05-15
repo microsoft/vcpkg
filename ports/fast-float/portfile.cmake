@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fastfloat/fast_float
     REF "v${VERSION}"
-    SHA512 d2dbd2537f433329a76539c061238af080125526b7822fbfdf0f70ac0a6800114848b9be0fdf9c51dbb22211af3bdcf9829ed9cc4a47fd28ecdeecf7c5d4b663
+    SHA512 0475d4a9100fda4cf0ba3a5f90090d2b86f4a472dbc125db57101b75555a05148965432d8258dd2a0cdffe97c10b27efe45baf9a8fe129f71d7a58b0dc705b4e
     HEAD_REF master
 )
 

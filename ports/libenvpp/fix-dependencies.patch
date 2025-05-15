@@ -1,12 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dc57bb1..932cefc 100644
+index e1be3db..5fbd072 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -63,6 +63,7 @@ FetchContent_Declare(fmt
- 	GIT_TAG 9.1.0
- )
- FetchContent_MakeAvailable(fmt)
+@@ -77,7 +77,7 @@ macro(fetch_content_from_submodule DEPNAME RELPATH)
+ 	endif()
+ endmacro()
+ 
+-fetch_content_from_submodule(fmt external/fmt)
 +find_package(fmt CONFIG REQUIRED)
  
  if(LIBENVPP_TESTS)
- 	FetchContent_Declare(Catch2
+ 	fetch_content_from_submodule(Catch2 external/Catch2)

@@ -13,7 +13,7 @@ index 87e8962..bdfa797 100644
 +
  hb_subset_headers = files(
    'hb-subset.h',
-   'hb-subset-repacker.h'
+   'hb-subset-serialize.h'
 @@ -559,8 +564,7 @@ defs_list = [harfbuzz_def]
  
  version = '0.@0@.0'.format(hb_version_int)

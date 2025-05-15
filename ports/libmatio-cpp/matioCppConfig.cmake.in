@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# matio already included with targets
+find_dependency(unofficial-visit_struct)
+find_dependency(Eigen3)
+
+include("${CMAKE_CURRENT_LIST_DIR}/matioCppTargets.cmake")

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hosseinmoein/DataFrame
     REF "${VERSION}"
-    SHA512 0586c114091dcc030d25a16dfe5f8bc9eeaedd1f8d7be6ceeb14538fd848fab45515367de0bb095b8a91b4570111a76c37ffe1cb406b136afef2dcf0fd977ac7
+    SHA512 1649ddf7ba113103d7fb2886f94f0d2fd6727cb2657749d1b4a4c18f0617f9714255a135bffd096e8391d7d7393d622f6736922886a48658dfdca30e53166df2
     HEAD_REF master
 )
 vcpkg_cmake_configure(

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/regex
     REF boost-${VERSION}
-    SHA512 4c52620fd8f754e8053b5c70cab7a274e311751356c90546f7f54d2700d744638ffc0db0e974ae80ef15efc4564ce8c81a98c02604f8e6ed0a7cc9b94e0d8aae
+    SHA512 defce92c60eda0a187608940eace322d7b060698e014381f07b9da837cf7a4df6fee926d920d6c6939bd8cae97587d2277dca8d2b3c18eb10dd4fd5b2035d2e7
     HEAD_REF master
     PATCHES
         compat.diff

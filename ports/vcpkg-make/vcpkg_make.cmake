@@ -53,7 +53,7 @@ function(vcpkg_run_shell_as_build)
         "SHELL;COMMAND;NO_PARALLEL_COMMAND;SAVE_LOG_FILES"
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
-    z_vcpkg_required_args(SHELL WORKINK_DIRECTORY COMMAND LOGNAME)
+    z_vcpkg_required_args(SHELL WORKING_DIRECTORY COMMAND LOGNAME)
 
     set(extra_opts "")
     if(arg_SAVE_LOG_FILES)
@@ -62,9 +62,12 @@ function(vcpkg_run_shell_as_build)
 
     list(JOIN arg_COMMAND " " cmd)
     list(JOIN arg_NO_PARALLEL_COMMAND " " no_par_cmd)
+    if(NOT no_par_cmd STREQUAL "")
+        set(no_par_cmd NO_PARALLEL_COMMAND ${arg_SHELL} -c "${no_par_cmd}")
+    endif()
     vcpkg_execute_build_process(
         COMMAND ${arg_SHELL} -c "${cmd}"
-        NO_PARALLEL_COMMAND ${arg_SHELL} -c "${no_par_cmd}"
+        ${no_par_cmd}
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         LOGNAME "${arg_LOGNAME}"
         ${extra_opts}
@@ -98,7 +101,7 @@ function(vcpkg_run_autoreconf shell_cmd work_dir)
 endfunction()
 
 function(vcpkg_make_setup_win_msys msys_out)
-    list(APPEND msys_require_packages autoconf-wrapper automake-wrapper binutils libtool make which)
+    list(APPEND msys_require_packages autoconf-wrapper automake-wrapper autoconf-archive binutils libtool make which)
     vcpkg_insert_msys_into_path(msys PACKAGES ${msys_require_packages})
     find_program(PKGCONFIG NAMES pkgconf NAMES_PER_DIR PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" NO_DEFAULT_PATH)
     set("${msys_out}" "${msys}" PARENT_SCOPE)
@@ -106,10 +109,14 @@ endfunction()
 
 function(vcpkg_make_get_shell out_var)
     set(shell_options "")
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        vcpkg_make_setup_win_msys(msys_root)
-        set(shell_options --noprofile --norc --debug)
-        set(shell_cmd "${msys_root}/usr/bin/bash.exe")
+    if(CMAKE_HOST_WIN32)
+        if(NOT DEFINED VCPKG_MAKE_ACQUIRE_MSYS OR VCPKG_MAKE_ACQUIRE_MSYS)
+            vcpkg_make_setup_win_msys(msys_root)
+            set(shell_options --noprofile --norc --debug)
+            set(shell_cmd "${msys_root}/usr/bin/bash.exe")
+        else()
+            message(STATUS "Not acquiring msys, reason: VCPKG_MAKE_ACQUIRE_MSYS=${VCPKG_MAKE_ACQUIRE_MSYS}")
+        endif()
     endif()
     find_program(shell_cmd NAMES bash sh zsh REQUIRED)
     set("${out_var}" "${shell_cmd}" ${shell_options} PARENT_SCOPE)
@@ -137,26 +144,27 @@ function(z_vcpkg_make_get_configure_triplets out)
         set(build_triplet_opt "--build=${BUILD_ARCH}-pc-mingw32") 
     endif()
 
-    set(host_triplet "")
+    set(host_triplet_opt "")
     if(VCPKG_CROSSCOMPILING)
-        if(VCPKG_TARGET_IS_WINDOWS)
-            if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32)
-                set(host_triplet_opt "--host=${TARGET_ARCH}-pc-mingw32")
-            elseif(VCPKG_TARGET_IS_UWP)
-                # Needs to be different from --build to enable cross builds.
-                set(host_triplet_opt "--host=${TARGET_ARCH}-unknown-mingw32")
-            endif()
-        elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX AND NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
+        if(VCPKG_TARGET_IS_UWP)
+            # Needs to be different from --build to enable cross builds.
+            set(host_triplet_opt "--host=${TARGET_ARCH}-unknown-mingw32")
+        elseif(VCPKG_TARGET_IS_WINDOWS)
+            set(host_triplet_opt "--host=${TARGET_ARCH}-pc-mingw32")
+        elseif(VCPKG_TARGET_IS_IOS)
             set(host_triplet_opt "--host=${TARGET_ARCH}-apple-darwin")
-        elseif(VCPKG_TARGET_IS_LINUX) 
-            if("${arg_COMPILER_NAME}" MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1 AND NOT CMAKE_MATCH_1 MATCHES "^gcc")
-                set(host_triplet_opt "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
-            endif()
+        elseif(VCPKG_TARGET_IS_OSX AND NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
+            set(host_triplet_opt "--host=${TARGET_ARCH}-apple-darwin")
+        elseif("${arg_COMPILER_NAME}" MATCHES "([^/]+)-(gcc|clang)(-[0-9]+)?$")
+            # --host activates crosscompilation and provides the prefix of the host tools for the target.
+            set(host_triplet_opt "--host=${CMAKE_MATCH_1}")
+        elseif(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
+            message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL} "Unable to determine --host for cross-build.")
         endif()
     endif()
 
-    set(output "${build_triplet_opt};${host_triplet_opt}")
-    string(STRIP "${output}" output)
+    set(output "${build_triplet_opt}")
+    list(APPEND output ${host_triplet_opt})
     set("${out}" "${output}" PARENT_SCOPE)
 endfunction()
 
