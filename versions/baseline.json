@@ -9012,6 +9012,10 @@
       "baseline": "2024-07-29",
       "port-version": 1
     },
+    "stc": {
+      "baseline": "5.0",
+      "port-version": 0
+    },
     "stdexec": {
       "baseline": "2024-06-16",
       "port-version": 2
