@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-findplutosvg.patch
+        link-sdl3.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,12 +29,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
 else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME sdl3_ttf CONFIG_PATH lib/cmake/SDL3_ttf)
 endif()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/sdl3_ttf/SDL3_ttfConfig.cmake"
-"# sdl3_ttf cmake project-config input for CMakeLists.txt script"
-[[# sdl3_ttf cmake project-config input for CMakeLists.txt script
-include(CMakeFindDependencyMacro)
-find_dependency(SDL3 CONFIG)]])
 
 vcpkg_fixup_pkgconfig()
 
