@@ -18,8 +18,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSDLTTF_INSTALL_CMAKEDIR_ROOT=cmake
-        -DSDLTTF_VENDORED=OFF
         -DSDLTTF_SAMPLES=OFF
+        -DSDLTTF_STRICT=ON
+        -DSDLTTF_VENDORED=OFF
         ${FEATURE_OPTIONS}
 )
 
