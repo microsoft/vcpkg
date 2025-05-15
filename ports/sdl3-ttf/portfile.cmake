@@ -31,6 +31,12 @@ else()
 endif()
 
 vcpkg_fixup_pkgconfig()
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sdl3-ttf.pc" " -lSDL3_ttf" " -lSDL3_ttf-static")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl3-ttf.pc" " -lSDL3_ttf" " -lSDL3_ttf-static")
+    endif()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
