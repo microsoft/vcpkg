@@ -400,12 +400,6 @@ gsoap:x64-windows-static-md=skip
 gsoap:x64-windows-static=skip
 gsoap:x64-windows=skip
 gsoap:x86-windows=skip
-gstreamer:arm-neon-android=fail
-gstreamer:arm64-android=fail
-gstreamer:x64-android=fail
-# upstream issue https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/1629.
-gstreamer:x64-windows-static-md=skip
-gstreamer:x64-windows-static=skip
 gul14:arm-neon-android=fail
 gul14:arm64-android=fail
 gul14:x64-android=fail
