@@ -4,8 +4,8 @@
 
 PATH="$PATH:/usr/bin"
 
-case $MACHTYPE in
-    *-msys)
+case `uname -o` in
+    Msys)
         slash="-"
         ;;
     *)
