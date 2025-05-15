@@ -5,7 +5,6 @@
   "description": "Event-Driven JSON Parser for C",
   "homepage": "https://github.com/open-source-patterns/nanojsonc",
   "license": "BSD-3-Clause",
-  "supports": "windows | linux | osx | ios | android | uwp | xbox | emscripten | wasm32",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
