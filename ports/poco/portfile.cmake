@@ -15,6 +15,8 @@ vcpkg_from_github(
         0007-find-pcre2.patch
         # MSYS2 repo was used as a source. Thanks MSYS2 team: https://github.com/msys2/MINGW-packages/blob/6e7fba42b7f50e1111b7c0ef50048832243b0ac4/mingw-w64-poco/001-fix-build-on-mingw.patch
         0008-fix-mingw-compilation.patch
+        # Should be removed once https://github.com/pocoproject/poco/issues/4947 is resolved
+        0009-fix-zip-to-xml-dependency.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre2.h")
@@ -53,6 +55,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         odbc                    ENABLE_DATA_ODBC
         activerecord            ENABLE_ACTIVERECORD
         activerecord-compiler   ENABLE_ACTIVERECORD_COMPILER
+        sevenzip                ENABLE_SEVENZIP
+        cpp-parser              ENABLE_CPPPARSER
 )
 
 # POCO_ENABLE_NETSSL_WIN: 
@@ -82,7 +86,6 @@ vcpkg_cmake_configure(
         # Allow enabling and disabling components done via features
         -DPOCO_DISABLE_INTERNAL_OPENSSL=ON
         -DENABLE_APACHECONNECTOR=OFF
-        -DENABLE_CPPPARSER=OFF
         -DENABLE_DATA_MYSQL=${POCO_USE_MYSQL}
     MAYBE_UNUSED_VARIABLES # these are only used when if(MSVC)
         POCO_DISABLE_INTERNAL_OPENSSL

@@ -46,6 +46,9 @@
         }
       ]
     },
+    "cpp-parser": {
+      "description": "POCO C++ parser"
+    },
     "crypto": {
       "description": "Crypto support",
       "dependencies": [
@@ -201,6 +204,7 @@
           "name": "poco",
           "default-features": false,
           "features": [
+            "cpp-parser",
             "data",
             "sqlite",
             "util",
@@ -245,6 +249,9 @@
           ]
         }
       ]
+    },
+    "sevenzip": {
+      "description": "Support for parsing and creating 7Zip files"
     },
     "sqlite": {
       "description": "SQLite support for POCO",
