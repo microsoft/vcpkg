@@ -297,12 +297,6 @@ ecal:x64-android=fail
 elfio:arm-neon-android=fail
 elfio:arm64-android=fail
 elfio:x64-android=fail
-# Checks for gnu extension so only works with gcc.
-elfutils:arm-neon-android=fail
-elfutils:arm64-android=fail
-elfutils:arm64-osx=fail
-elfutils:x64-android=fail
-elfutils:x64-osx=fail
 # clang rejects variable length arrays
 fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
@@ -504,7 +498,6 @@ libhdfs3:arm64-osx=fail
 libhdfs3:x64-android=fail
 libhdfs3:x64-linux=fail
 libhdfs3:x64-osx=fail
-libheif:arm64-android=fail
 # 120 min build time for libjxl arm64-uwp-rel, reason unknown
 libjxl:arm64-uwp=skip
 liblo:arm64-uwp=fail
@@ -532,6 +525,8 @@ libmpeg2:arm-neon-android=fail
 libmpeg2:arm64-android=fail
 libmpeg2:x64-android=fail
 libmysql:x86-windows=skip
+# C++20 conformant compiler required
+libnick:x64-linux=fail
 libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
 libopensp:x64-android=fail
@@ -789,10 +784,6 @@ outcome:x64-android=fail
 paho-mqtt:arm64-uwp=fail
 paho-mqtt:x64-uwp=fail
 pcl:x64-android=fail
-pdal:arm-neon-android=fail
-pdal:arm64-android=fail
-pdal:x64-android=fail
-pdal:x64-windows-static=fail  # ONLY_DYNAMIC_LIBRARY
 platform-folders:arm64-uwp=fail
 platform-folders:x64-uwp=fail
 plib:arm-neon-android=fail
@@ -1186,6 +1177,9 @@ vcpkg-ci-freerdp:x64-windows=pass
 vcpkg-ci-freerdp:x86-windows=pass
 vcpkg-ci-gdal:arm-neon-android=pass
 vcpkg-ci-gdal:arm64-android=pass
+vcpkg-ci-gdal:arm64-osx=pass
+vcpkg-ci-gdal:arm64-windows-static-md=pass
+vcpkg-ci-gdal:arm64-windows=pass
 vcpkg-ci-gdal:x64-android=pass
 vcpkg-ci-gdal:x64-linux=pass
 vcpkg-ci-gdal:x64-osx=pass
