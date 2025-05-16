@@ -7313,8 +7313,8 @@
       "port-version": 5
     },
     "plutosvg": {
-      "baseline": "0.0.6",
-      "port-version": 2
+      "baseline": "0.0.7",
+      "port-version": 0
     },
     "plutovg": {
       "baseline": "1.1.0",
