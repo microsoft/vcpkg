@@ -27,7 +27,7 @@ jobs:
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
   - name: LINUX_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-04-21'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-05-14'
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
