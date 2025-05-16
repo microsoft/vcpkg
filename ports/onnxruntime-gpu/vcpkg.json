@@ -1,8 +1,17 @@
 {
   "name": "onnxruntime-gpu",
-  "version": "1.19.2",
+  "version": "1.21.0",
   "description": "onnxruntime (GPU)",
   "homepage": "https://github.com/microsoft/onnxruntime",
   "license": "MIT",
-  "supports": "windows & !x86 & !uwp & !static & !arm"
+  "supports": "windows & !x86 & !uwp & !static & !arm",
+  "dependencies": [
+    {
+      "name": "onnxruntime",
+      "features": [
+        "cuda",
+        "tensorrt"
+      ]
+    }
+  ]
 }
