@@ -1,0 +1,12 @@
+diff --git a/include/SQLiteCpp/Exception.h b/include/SQLiteCpp/Exception.h
+index aeb09dc..602f6dc 100644
+--- a/include/SQLiteCpp/Exception.h
++++ b/include/SQLiteCpp/Exception.h
+@@ -13,6 +13,7 @@
+ #include <SQLiteCpp/SQLiteCppExport.h>
+ #include <stdexcept>
+ #include <string>
++#include <cstdint>
+ 
+ // Forward declaration to avoid inclusion of <sqlite3.h> in a header
+ struct sqlite3;
