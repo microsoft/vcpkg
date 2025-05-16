@@ -35,6 +35,7 @@
       "host": true
     },
     "cairo",
+    "pango",
     "zlib"
   ],
   "default-features": [
