@@ -29,6 +29,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
+    {
+      "name": "libxft",
+      "platform": "!windows",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
