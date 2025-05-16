@@ -173,8 +173,8 @@
       "port-version": 0
     },
     "apr": {
-      "baseline": "1.7.5",
-      "port-version": 2
+      "baseline": "1.7.6",
+      "port-version": 0
     },
     "apr-util": {
       "baseline": "1.6.3",
