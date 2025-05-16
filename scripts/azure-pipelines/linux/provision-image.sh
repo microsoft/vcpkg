@@ -47,7 +47,7 @@ APT_PACKAGES="git curl zip unzip tar"
 
 ## common build dependencies
 APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
-  build-essential gcc g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
+  build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
   libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
   libxcursor-dev yasm libnuma1 libnuma-dev libtool-bin libltdl-dev \
   flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
