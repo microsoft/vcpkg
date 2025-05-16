@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SOCI/soci
     REF "v${VERSION}"
-    SHA512 d501f55e7e7408e46b4823fd8a97d6ef587f5db0f5b98434be8dfc5693c91b8c3b84a24454279c83142ab1cd1fa139c6e54d6d9a67397b2ead61650fcc88bcdb
+    SHA512 1b415d44fb5bc511b5a065da7cbb6c9a918a60498ff9acff701e30bccd5f740c91f0b91540418d68186a48653444e480bcff75cfbc8b4318457bc80bba18cca9
     HEAD_REF master
-    PATCHES
-        dependencies.diff
-        usage-requirements.diff
 )
 file(REMOVE
     "${SOURCE_PATH}/cmake/modules/FindPostgreSQL.cmake"
@@ -47,7 +44,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SOCI)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/soci-${VERSION})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/soci/soci-platform.h" "ifdef SOCI_DLL" "if 1")
