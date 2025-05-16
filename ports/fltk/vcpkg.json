@@ -29,21 +29,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "libxft",
-      "platform": "!windows",
-      "host": true
-    },
-    {
-      "name": "cairo",
-      "platform": "!windows",
-      "host": true
-    },
-    {
-      "name": "pango",
-      "platform": "!windows",
-      "host": true
-    },
     "zlib"
   ],
   "default-features": [
