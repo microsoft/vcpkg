@@ -2750,7 +2750,7 @@
     },
     "fastdds": {
       "baseline": "3.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "fastfeat": {
       "baseline": "391d5e9",
@@ -2945,8 +2945,8 @@
       "port-version": 0
     },
     "foonathan-memory": {
-      "baseline": "0.7.3",
-      "port-version": 2
+      "baseline": "0.7.4",
+      "port-version": 0
     },
     "forge": {
       "baseline": "1.0.8",
