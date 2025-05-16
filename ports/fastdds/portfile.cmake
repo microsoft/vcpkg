@@ -24,6 +24,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DFORCE_CXX=14 # foonathan memory debug needs C++14 constexpr
         ${extra_opts}
 )
 
