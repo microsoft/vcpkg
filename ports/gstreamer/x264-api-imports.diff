@@ -1,11 +1,11 @@
 diff --git a/subprojects/gst-plugins-ugly/ext/x264/gstx264enc.h b/subprojects/gst-plugins-ugly/ext/x264/gstx264enc.h
-index 6cbfc5c..16a564e 100644
+index b9c9f82..df96c4a 100644
 --- a/subprojects/gst-plugins-ugly/ext/x264/gstx264enc.h
 +++ b/subprojects/gst-plugins-ugly/ext/x264/gstx264enc.h
 @@ -36,7 +36,6 @@
   * leads to a segfault when you try to dereference any const values provided
   * by x264.dll. See: https://bugzilla.gnome.org/show_bug.cgi?id=779249 */
- #if defined(_WIN32) && !defined(X264_API_IMPORTS)
+ #if defined(_WIN32) && !defined(X264_API_IMPORTS) && !defined(GST_STATIC_COMPILATION)
 -# define X264_API_IMPORTS
  #endif
  #include <x264.h>
