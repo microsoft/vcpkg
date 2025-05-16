@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/CacheLib
     REF "v${VERSION}"
-    SHA512 44187042d78eb589735fd9e3c051d1f407eb47b0c29c5be0b95c03e0c6690b3f7868359884aa03439198b4906cb693563eb30fa5238bdf89fafa5c89e2c86485
+    SHA512 7218efe525b4e1afc0c560c7f6bf88665a8aaac156419743448f02cb7e36f3ede702e20ff76a7d90abe232f342544c41079a6c9c0ea375facb3ac84260de386c
     HEAD_REF main
     PATCHES
         fix-build.patch
@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_TESTS=OFF
         -DCMAKE_INSTALL_DIR=share/cachelib
+        -DVCPKG_LOCK_FIND_PACKAGE_uring=OFF
 )
 
 vcpkg_cmake_install()

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO strukturag/libde265
     REF "v${VERSION}"
-    SHA512 df380f1ea6345e20ed1f907df3c7cdaaac44358a6746e29e16699005783ce96524d30fec7bba457c9f9773a6373250aaaf0b9cd41224057b269798117964b8b5
+    SHA512 bda239b4827c81552855dc540724b74c86f6b02bcd0fe556650bc16d665a8eed1ddbde76ac0972d26b3002b14575bb9b6f70b367c39eb7de45c5c9df324e3d05
     HEAD_REF master
     PATCHES
         fix-interface-include.patch

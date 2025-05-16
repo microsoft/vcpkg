@@ -1,0 +1,194 @@
+diff --git a/configure b/configure
+index 8c8df505f70..c8b217e0132 100755
+--- a/configure
++++ b/configure
+@@ -15715,7 +15715,7 @@ fi
+ LIBS_including_readline="$LIBS"
+ LIBS=`echo "$LIBS" | sed -e 's/-ledit//g' -e 's/-lreadline//g'`
+ 
+-for ac_func in backtrace_symbols copyfile getifaddrs getpeerucred inet_pton kqueue mbstowcs_l memset_s posix_fallocate ppoll pthread_is_threaded_np setproctitle setproctitle_fast strchrnul strsignal syncfs sync_file_range uselocale wcstombs_l
++for ac_func in backtrace_symbols copyfile getifaddrs getpeerucred inet_pton kqueue mbstowcs_l memset_s posix_fallocate ppoll pthread_is_threaded_np setproctitle setproctitle_fast strsignal syncfs sync_file_range uselocale wcstombs_l
+ do :
+   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+ ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
+@@ -16279,6 +16279,18 @@ esac
+ 
+ fi
+ 
++ac_fn_c_check_decl "$LINENO" "strchrnul" "ac_cv_have_decl_strchrnul" "#include <string.h>
++"
++if test "x$ac_cv_have_decl_strchrnul" = xyes; then :
++  ac_have_decl=1
++else
++  ac_have_decl=0
++fi
++
++cat >>confdefs.h <<_ACEOF
++#define HAVE_DECL_STRCHRNUL $ac_have_decl
++_ACEOF
++
+ 
+ # This is probably only present on macOS, but may as well check always
+ ac_fn_c_check_decl "$LINENO" "F_FULLFSYNC" "ac_cv_have_decl_F_FULLFSYNC" "#include <fcntl.h>
+diff --git a/configure.ac b/configure.ac
+index e2d8ca9f1a0..e7cd4de0163 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1809,7 +1809,6 @@ AC_CHECK_FUNCS(m4_normalize([
+ 	pthread_is_threaded_np
+ 	setproctitle
+ 	setproctitle_fast
+-	strchrnul
+ 	strsignal
+ 	syncfs
+ 	sync_file_range
+@@ -1849,6 +1848,7 @@ AC_CHECK_DECLS([strlcat, strlcpy, strnlen])
+ # won't handle deployment target restrictions on macOS
+ AC_CHECK_DECLS([preadv], [], [AC_LIBOBJ(preadv)], [#include <sys/uio.h>])
+ AC_CHECK_DECLS([pwritev], [], [AC_LIBOBJ(pwritev)], [#include <sys/uio.h>])
++AC_CHECK_DECLS([strchrnul], [], [], [#include <string.h>])
+ 
+ # This is probably only present on macOS, but may as well check always
+ AC_CHECK_DECLS(F_FULLFSYNC, [], [], [#include <fcntl.h>])
+diff --git a/meson.build b/meson.build
+index 2a6e45b79a7..ce184c6dfb3 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2323,6 +2323,7 @@ decl_checks = [
+ decl_checks += [
+   ['preadv', 'sys/uio.h'],
+   ['pwritev', 'sys/uio.h'],
++  ['strchrnul', 'string.h'],
+ ]
+ 
+ foreach c : decl_checks
+@@ -2331,8 +2332,23 @@ foreach c : decl_checks
+   args = c.get(2, {})
+   varname = 'HAVE_DECL_' + func.underscorify().to_upper()
+ 
+-  found = cc.has_header_symbol(header, func,
+-    args: test_c_args, include_directories: postgres_inc,
++  found = cc.compiles('''
++#include <@0@>
++
++int main()
++{
++#ifndef @1@
++    (void) @1@;
++#endif
++
++return 0;
++}
++'''.format(header, func),
++    name: 'test whether @0@ is declared'.format(func),
++    # need to add cflags_warn to get at least
++    # -Werror=unguarded-availability-new if applicable
++    args: test_c_args + cflags_warn,
++    include_directories: postgres_inc,
+     kwargs: args)
+   cdata.set10(varname, found, description:
+ '''Define to 1 if you have the declaration of `@0@', and to 0 if you
+@@ -2579,7 +2595,6 @@ func_checks = [
+   ['shm_unlink', {'dependencies': [rt_dep], 'define': false}],
+   ['shmget', {'dependencies': [cygipc_dep], 'define': false}],
+   ['socket', {'dependencies': [socket_dep], 'define': false}],
+-  ['strchrnul'],
+   ['strerror_r', {'dependencies': [thread_dep]}],
+   ['strlcat'],
+   ['strlcpy'],
+diff --git a/src/include/pg_config.h.in b/src/include/pg_config.h.in
+index ce3063b2b22..a27cb325aa3 100644
+--- a/src/include/pg_config.h.in
++++ b/src/include/pg_config.h.in
+@@ -128,6 +128,10 @@
+    don't. */
+ #undef HAVE_DECL_PWRITEV
+ 
++/* Define to 1 if you have the declaration of `strchrnul', and to 0 if you
++   don't. */
++#undef HAVE_DECL_STRCHRNUL
++
+ /* Define to 1 if you have the declaration of `strlcat', and to 0 if you
+    don't. */
+ #undef HAVE_DECL_STRLCAT
+@@ -409,9 +413,6 @@
+ /* Define to 1 if you have the <stdlib.h> header file. */
+ #undef HAVE_STDLIB_H
+ 
+-/* Define to 1 if you have the `strchrnul' function. */
+-#undef HAVE_STRCHRNUL
+-
+ /* Define to 1 if you have the `strerror_r' function. */
+ #undef HAVE_STRERROR_R
+ 
+diff --git a/src/port/snprintf.c b/src/port/snprintf.c
+index e3e316e0498..bd5ec7dfad4 100644
+--- a/src/port/snprintf.c
++++ b/src/port/snprintf.c
+@@ -338,13 +338,22 @@ static void leading_pad(int zpad, int signvalue, int *padlen,
+ static void trailing_pad(int padlen, PrintfTarget *target);
+ 
+ /*
+- * If strchrnul exists (it's a glibc-ism), it's a good bit faster than the
+- * equivalent manual loop.  If it doesn't exist, provide a replacement.
++ * If strchrnul exists (it's a glibc-ism, but since adopted by some other
++ * platforms), it's a good bit faster than the equivalent manual loop.
++ * Use it if possible, and if it doesn't exist, use this replacement.
+  *
+  * Note: glibc declares this as returning "char *", but that would require
+  * casting away const internally, so we don't follow that detail.
++ *
++ * Note: macOS has this too as of Sequoia 15.4, but it's hidden behind
++ * a deployment-target check that causes compile errors if the deployment
++ * target isn't high enough.  So !HAVE_DECL_STRCHRNUL may mean "yes it's
++ * declared, but it doesn't compile".  To avoid failing in that scenario,
++ * use a macro to avoid matching <string.h>'s name.
+  */
+-#ifndef HAVE_STRCHRNUL
++#if !HAVE_DECL_STRCHRNUL
++
++#define strchrnul pg_strchrnul
+ 
+ static inline const char *
+ strchrnul(const char *s, int c)
+@@ -354,19 +363,7 @@ strchrnul(const char *s, int c)
+ 	return s;
+ }
+ 
+-#else
+-
+-/*
+- * glibc's <string.h> declares strchrnul only if _GNU_SOURCE is defined.
+- * While we typically use that on glibc platforms, configure will set
+- * HAVE_STRCHRNUL whether it's used or not.  Fill in the missing declaration
+- * so that this file will compile cleanly with or without _GNU_SOURCE.
+- */
+-#ifndef _GNU_SOURCE
+-extern char *strchrnul(const char *s, int c);
+-#endif
+-
+-#endif							/* HAVE_STRCHRNUL */
++#endif							/* !HAVE_DECL_STRCHRNUL */
+ 
+ 
+ /*
+diff --git a/src/tools/msvc/Solution.pm b/src/tools/msvc/Solution.pm
+index 2a4c4f3..1de8f2e 100644
+--- a/src/tools/msvc/Solution.pm
++++ b/src/tools/msvc/Solution.pm
+@@ -241,6 +241,7 @@ sub GenerateFiles
+                HAVE_DECL_POSIX_FADVISE => 0,
+                HAVE_DECL_PREADV => 0,
+                HAVE_DECL_PWRITEV => 0,
++               HAVE_DECL_STRCHRNUL => 0,
+                HAVE_DECL_STRLCAT => 0,
+                HAVE_DECL_STRLCPY => 0,
+                HAVE_DECL_STRNLEN => 1,
+@@ -333,7 +334,6 @@ sub GenerateFiles
+                HAVE_STDBOOL_H => 1,
+                HAVE_STDINT_H => 1,
+                HAVE_STDLIB_H => 1,
+-               HAVE_STRCHRNUL => undef,
+                HAVE_STRERROR_R => undef,
+                HAVE_STRINGS_H => undef,
+                HAVE_STRING_H => 1,
