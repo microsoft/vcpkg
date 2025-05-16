@@ -31,13 +31,11 @@
     },
     {
       "name": "cairo",
-      "platform": "!windows",
-      "host": true
+      "platform": "!windows"
     },
     {
       "name": "pango",
-      "platform": "!windows",
-      "host": true
+      "platform": "!windows"
     },
     "zlib"
   ],
