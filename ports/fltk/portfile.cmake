@@ -9,7 +9,6 @@ vcpkg_from_github(
     PATCHES
         fix-options.patch
         fix-fluid-cmd.patch
-        fix-export.patch
         config-path.patch
 )
 
