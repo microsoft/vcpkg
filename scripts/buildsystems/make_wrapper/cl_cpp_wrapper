@@ -2,22 +2,11 @@
 # cl_cpp_wrapper
 # Wrapper around MS's cl.exe to make it act more like Unix cpp
 
-PATH="$PATH:/usr/bin"
-
-case `uname -o` in
-    Msys)
-        slash="-"
-        ;;
-    *)
-        slash="/"
-        ;;
-esac
-
 # prog specifies the program that should be run cl.exe
 prog=cl.exe
 debug=
-cppopt=("${slash}nologo")
-cppopt+=("${slash}E")
+cppopt=("-nologo")
+cppopt+=("-E")
 verbose=
 shared_index=-1
 
@@ -42,15 +31,10 @@ while test $# -gt 0; do
     -*)
         # Remaining '-' options are passed to the compiler
         if test x$optarg != x ; then
-            cppopt+=("${slash}${1:1}=$optarg")
+            cppopt+=("-${1:1}=$optarg")
         else
-            cppopt+=("${slash}${1:1}")
+            cppopt+=("-${1:1}")
         fi
-        ;;
-
-    /*)
-        # All '/' options are assumed to be for cpp and are passed through
-        cppopt+=("${slash}${1:1}")
         ;;
 
     *)
