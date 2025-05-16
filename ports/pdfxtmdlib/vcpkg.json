@@ -1,6 +1,6 @@
 {
   "name": "pdfxtmdlib",
-  "version": "0.3.3",
+  "version": "0.3.5",
   "description": "PDFxTMD is a library for parton distribution functions (PDFs) that integrates both collinear PDFs (cPDFs) and transverse momentum-dependent PDFs (TMDs).",
   "homepage": "https://github.com/Raminkord92/PDFxTMD",
   "license": "GPL-3.0",
