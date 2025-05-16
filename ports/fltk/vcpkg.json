@@ -37,11 +37,13 @@
     {
       "name": "cairo",
       "platform": "!windows",
+      "default-features": false,
       "host": true
     },
     {
       "name": "pango",
       "platform": "!windows",
+      "default-features": false,
       "host": true
     },
     "zlib"
