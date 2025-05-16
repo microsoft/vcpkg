@@ -1,5 +1,10 @@
 # vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+# See:
+# https://github.com/bemanproject/exemplar/issues/161
+# https://github.com/bemanproject/exemplar/issues/163
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bemanproject/exemplar
