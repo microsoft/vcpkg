@@ -6,6 +6,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix_dependency.patch
         add_runtime_destination.patch
+        cstdint.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
