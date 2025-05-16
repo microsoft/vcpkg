@@ -34,8 +34,16 @@
       "platform": "!windows",
       "host": true
     },
-    "cairo",
-    "pango",
+    {
+      "name": "cairo",
+      "platform": "!windows",
+      "host": true
+    },
+    {
+      "name": "pango",
+      "platform": "!windows",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
