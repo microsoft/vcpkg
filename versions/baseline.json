@@ -7317,11 +7317,11 @@
       "port-version": 5
     },
     "plutosvg": {
-      "baseline": "0.0.6",
-      "port-version": 1
+      "baseline": "0.0.7",
+      "port-version": 0
     },
     "plutovg": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "pmdk": {
@@ -8542,7 +8542,7 @@
     },
     "sdl3-ttf": {
       "baseline": "3.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "seacas": {
       "baseline": "2022-11-22",
