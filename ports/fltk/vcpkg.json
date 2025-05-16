@@ -55,8 +55,7 @@
       "description": "Build with X11 autolaunch support",
       "supports": "!windows",
       "dependencies": [
-        "libx11",
-        "libxft"
+        "libx11"
       ]
     }
   }

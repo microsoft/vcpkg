@@ -24,6 +24,10 @@ vcpkg_check_features(
         opengl  FLTK_USE_GL
 )
 
+if ("x11" IN_LIST FEATURES)
+    message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
+endif()
+
 set(fluid_path_param "")
 if(VCPKG_CROSSCOMPILING)
     set(fluid_path_param "-DFLTK_FLUID_HOST=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
