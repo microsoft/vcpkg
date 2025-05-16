@@ -5402,7 +5402,7 @@
     },
     "libtorch": {
       "baseline": "2.1.2",
-      "port-version": 11
+      "port-version": 12
     },
     "libtorrent": {
       "baseline": "2.0.11",
