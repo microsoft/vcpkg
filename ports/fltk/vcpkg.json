@@ -30,8 +30,9 @@
       "host": true
     },
     {
-      "supports": "!windows",
-      "name": "libxft"
+      "name": "libxft",
+      "platform": "!windows",
+      "host": true
     },
     "zlib"
   ],
