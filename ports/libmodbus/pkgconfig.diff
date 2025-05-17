@@ -1,0 +1,35 @@
+diff --git a/configure.ac b/configure.ac
+index 06d5dfa..9f30d29 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -133,15 +133,18 @@ if test "$os_cygwin" = "false"; then
+     AC_CHECK_HEADERS([winsock2.h], HAVE_WINSOCK2_H=yes)
+     if test "x$HAVE_WINSOCK2_H" = "xyes"; then
+         LIBS="$LIBS -lws2_32"
+-    AC_SUBST(LIBS)
++        PC_LIBS_PRIVATE="$PC_LIBS_PRIVATE -lws2_32"
+     fi
+ fi
+ 
+ if test "$os_sunos" = "true"; then
+     LIBS="$LIBS -lnsl -lsocket"
+-    AC_SUBST(LIBS)
++    PC_LIBS_PRIVATE="$PC_LIBS_PRIVATE -lnsl -lsocket"
+ fi
+ 
++AC_SUBST(LIBS)
++AC_SUBST(PC_LIBS_PRIVATE)
++
+ # Check for RS485 support (Linux kernel version 2.6.28+)
+ AC_CHECK_DECLS([TIOCSRS485], [], [], [[#include <sys/ioctl.h>]])
+ # Check for RTS flags
+diff --git a/libmodbus.pc.in b/libmodbus.pc.in
+index f1a9cbf..f7b4d08 100644
+--- a/libmodbus.pc.in
++++ b/libmodbus.pc.in
+@@ -7,4 +7,5 @@ Name: modbus
+ Description: Modbus library
+ Version: @VERSION@
+ Libs: -L${libdir} -lmodbus
++Libs.private: @PC_LIBS_PRIVATE@
+ Cflags: -I${includedir}/modbus
