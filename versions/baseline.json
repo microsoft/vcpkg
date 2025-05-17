@@ -7061,7 +7061,7 @@
       "port-version": 7
     },
     "pdfxtmdlib": {
-      "baseline": "0.3.6",
+      "baseline": "0.3.7",
       "port-version": 0
     },
     "pdqsort": {
