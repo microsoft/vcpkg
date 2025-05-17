@@ -97,7 +97,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     message(STATUS "Generating MSBuild projects")
     vcpkg_execute_required_process(
         COMMAND
-            ${BASH} --noprofile --norc -c "make dist"
+            ${BASH} --noprofile --norc -c "gmake dist"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-tmp"
         LOGNAME generate-${TARGET_TRIPLET})
 
@@ -249,7 +249,7 @@ else()
         message(STATUS "Building libvpx for Release")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make -j${VCPKG_CONCURRENCY}"
+                ${BASH} --noprofile --norc -c "gmake -j${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
@@ -257,7 +257,7 @@ else()
         message(STATUS "Installing libvpx for Release")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make install"
+                ${BASH} --noprofile --norc -c "gmake install"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
             LOGNAME install-${TARGET_TRIPLET}-rel
         )
@@ -283,7 +283,7 @@ else()
         message(STATUS "Building libvpx for Debug")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make -j${VCPKG_CONCURRENCY}"
+                ${BASH} --noprofile --norc -c "gmake -j${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
@@ -291,7 +291,7 @@ else()
         message(STATUS "Installing libvpx for Debug")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make install"
+                ${BASH} --noprofile --norc -c "gmake install"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
             LOGNAME install-${TARGET_TRIPLET}-dbg
         )
