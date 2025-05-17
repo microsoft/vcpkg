@@ -6,7 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cflags.diff
+        library-linkage.diff
         pkgconfig.diff
+        ssize_t.diff
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -24,7 +26,11 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 file(COPY "${CURRENT_PORT_DIR}/libmodbusConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libmodbus")
 
-file(REMOVE_RECURSE
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/modbus/modbus.h" "defined(STATIC_LIBMODBUS)" "1")
+endif()
+
+ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
