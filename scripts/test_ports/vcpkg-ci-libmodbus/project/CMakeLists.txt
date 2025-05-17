@@ -7,8 +7,6 @@ add_library(imported::modbus ALIAS modbus)
 add_executable(main main.c)
 target_link_libraries(main PRIVATE imported::modbus)
 
-return()
-
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(libmodbus_pc libmodbus REQUIRED IMPORTED_TARGET)
 
