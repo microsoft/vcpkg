@@ -29,14 +29,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "cairo",
-      "platform": "!windows"
-    },
-    {
-      "name": "pango",
-      "platform": "!windows"
-    },
     "zlib"
   ],
   "default-features": [
