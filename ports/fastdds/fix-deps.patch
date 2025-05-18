@@ -47,3 +47,29 @@ index 44a74948c..7dea51104 100644
      $<$<BOOL:${LINK_SSL}>:OpenSSL::SSL$<SEMICOLON>OpenSSL::Crypto$<$<BOOL:${WIN32}>:$<SEMICOLON>crypt32.lib>>
      $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
      ${THIRDPARTY_BOOST_LINK_LIBS}
+diff --git a/src/cpp/rtps/RTPSDomainImpl.hpp b/src/cpp/rtps/RTPSDomainImpl.hpp
+index 49e161eae..9fb8d4d2d 100644
+--- a/src/cpp/rtps/RTPSDomainImpl.hpp
++++ b/src/cpp/rtps/RTPSDomainImpl.hpp
+@@ -21,7 +21,7 @@
+ #include <unordered_map>
+ 
+ #if defined(_WIN32) || defined(__unix__)
+-#include <FileWatch.hpp>
++#include <thomasmonkman-filewatch/FileWatch.hpp>
+ #endif // defined(_WIN32) || defined(__unix__)
+ 
+ #include <fastdds/rtps/attributes/ThreadSettings.hpp>
+diff --git a/src/cpp/utils/SystemInfo.hpp b/src/cpp/utils/SystemInfo.hpp
+index 709d24576..4943ce1d2 100644
+--- a/src/cpp/utils/SystemInfo.hpp
++++ b/src/cpp/utils/SystemInfo.hpp
+@@ -32,7 +32,7 @@
+ #include <utils/Host.hpp>
+ 
+ #if defined(_WIN32) || defined(__unix__)
+-#include <FileWatch.hpp>
++#include <thomasmonkman-filewatch/FileWatch.hpp>
+ #endif // defined(_WIN32) || defined(__unix__)
+ 
+ namespace eprosima {
