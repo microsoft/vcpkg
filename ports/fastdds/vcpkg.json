@@ -12,7 +12,6 @@
     "foonathan-memory",
     "nlohmann-json",
     "openssl",
-    "thomasmonkman-filewatch",
     "tinyxml2",
     {
       "name": "vcpkg-cmake",

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2ea15f4c..631c0be22 100644
+index b2ea15f4c..8996d18f1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -255,8 +255,8 @@ if(NOT BUILD_SHARED_LIBS)
@@ -13,30 +13,20 @@ index b2ea15f4c..631c0be22 100644
  
  find_package(foonathan_memory REQUIRED)
  message(STATUS "Found foonathan_memory: ${foonathan_memory_DIR}")
-@@ -268,8 +268,8 @@ if(ANDROID)
+@@ -268,7 +268,7 @@ if(ANDROID)
      endif()
  endif()
  
 -include_directories(thirdparty/nlohmann-json)
--include_directories(thirdparty/filewatch)
 +find_package(nlohmann_json CONFIG REQUIRED)
-+find_path(THOMASMONKMAN_FILEWATCH_INCLUDE_DIRS "thomasmonkman-filewatch/FileWatch.hpp")
+ include_directories(thirdparty/filewatch)
  
  ###############################################################################
- # Options
 diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
-index 44a74948c..7dea51104 100644
+index 44a74948c..09330717b 100644
 --- a/src/cpp/CMakeLists.txt
 +++ b/src/cpp/CMakeLists.txt
-@@ -485,6 +485,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
-     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}>
-     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/cpp>
-     $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
-+    ${THOMASMONKMAN_FILEWATCH_INCLUDE_DIRS}
-     PRIVATE
-     ${Asio_INCLUDE_DIR}
-     $<$<BOOL:${TINYXML2_INCLUDE_DIR}>:${TINYXML2_INCLUDE_DIR}>
-@@ -505,8 +506,9 @@ target_link_libraries(${PROJECT_NAME}
+@@ -505,8 +505,9 @@ target_link_libraries(${PROJECT_NAME}
      ${PRIVACY}
      fastcdr
      foonathan_memory
@@ -47,29 +37,3 @@ index 44a74948c..7dea51104 100644
      $<$<BOOL:${LINK_SSL}>:OpenSSL::SSL$<SEMICOLON>OpenSSL::Crypto$<$<BOOL:${WIN32}>:$<SEMICOLON>crypt32.lib>>
      $<$<BOOL:${WIN32}>:iphlpapi$<SEMICOLON>Shlwapi>
      ${THIRDPARTY_BOOST_LINK_LIBS}
-diff --git a/src/cpp/rtps/RTPSDomainImpl.hpp b/src/cpp/rtps/RTPSDomainImpl.hpp
-index 49e161eae..9fb8d4d2d 100644
---- a/src/cpp/rtps/RTPSDomainImpl.hpp
-+++ b/src/cpp/rtps/RTPSDomainImpl.hpp
-@@ -21,7 +21,7 @@
- #include <unordered_map>
- 
- #if defined(_WIN32) || defined(__unix__)
--#include <FileWatch.hpp>
-+#include <thomasmonkman-filewatch/FileWatch.hpp>
- #endif // defined(_WIN32) || defined(__unix__)
- 
- #include <fastdds/rtps/attributes/ThreadSettings.hpp>
-diff --git a/src/cpp/utils/SystemInfo.hpp b/src/cpp/utils/SystemInfo.hpp
-index 709d24576..4943ce1d2 100644
---- a/src/cpp/utils/SystemInfo.hpp
-+++ b/src/cpp/utils/SystemInfo.hpp
-@@ -32,7 +32,7 @@
- #include <utils/Host.hpp>
- 
- #if defined(_WIN32) || defined(__unix__)
--#include <FileWatch.hpp>
-+#include <thomasmonkman-filewatch/FileWatch.hpp>
- #endif // defined(_WIN32) || defined(__unix__)
- 
- namespace eprosima {
