@@ -1,7 +1,7 @@
 {
   "name": "fontconfig",
   "version": "2.15.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Library for configuring and customizing font access.",
   "homepage": "https://www.freedesktop.org/wiki/Software/fontconfig",
   "license": "MIT",

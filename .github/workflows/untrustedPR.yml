@@ -41,6 +41,8 @@ jobs:
             done || true; \
           done > .github-pr.deprecated-license
           ./vcpkg format-manifest --all --convert-control
+          ./vcpkg format-feature-baseline scripts/ci.baseline.txt
+          ./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt
           git diff > .github-pr.format-manifest
           git add -u
           git commit -m "tmp" --allow-empty
@@ -70,8 +72,10 @@ jobs:
             let approve = true;
             if (format !== "") {
               var format_output = '';
-              format_output += "All vcpkg.json files must be formatted. To fix this problem, run:\n";
+              format_output += "All vcpkg.json files and baselines must be formatted. To fix this problem, run:\n";
               format_output += "./vcpkg format-manifest ports/*/vcpkg.json\n";
+              format_output += "./vcpkg format-feature-baseline scripts/ci.baseline.txt\n";
+              format_output += "./vcpkg format-feature-baseline scripts/ci.feature.baseline.txt\n";
               format_output += "\n";
               format_output += "It should make the following changes:";
               format_output += "```diff\n" + format + "\n```";

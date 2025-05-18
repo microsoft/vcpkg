@@ -1,6 +1,7 @@
 {
   "name": "gstreamer",
   "version": "1.24.12",
+  "port-version": 1,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -10,10 +11,6 @@
     {
       "name": "glib",
       "host": true
-    },
-    {
-      "name": "opengl",
-      "platform": "windows | osx"
     },
     {
       "name": "vcpkg-tool-meson",
@@ -69,12 +66,9 @@
       ]
     },
     "asio": {
-      "description": "Enable support for the Steinberg Audio Streaming Input Output (ASIO) library (Windows only)",
+      "description": "Enable support for the Steinberg Audio Streaming Input Output (ASIO) library",
       "dependencies": [
-        {
-          "name": "asiosdk",
-          "platform": "windows"
-        },
+        "asiosdk",
         {
           "name": "gstreamer",
           "default-features": false,
@@ -97,30 +91,10 @@
         "libass"
       ]
     },
-    "bzip2-bad": {
-      "description": "Enable bzip2 stream compression in bad plugins",
+    "bzip2": {
+      "description": "Enable bzip2 stream compression in plugins",
       "dependencies": [
-        "bzip2",
-        {
-          "name": "gstreamer",
-          "default-features": false,
-          "features": [
-            "plugins-bad"
-          ]
-        }
-      ]
-    },
-    "bzip2-good": {
-      "description": "Enable bzip2 stream compression in good plugins",
-      "dependencies": [
-        "bzip2",
-        {
-          "name": "gstreamer",
-          "default-features": false,
-          "features": [
-            "plugins-good"
-          ]
-        }
+        "bzip2"
       ]
     },
     "cairo": {
@@ -303,6 +277,26 @@
         }
       ]
     },
+    "gl": {
+      "description": "Enable OpenGL integration library and OpenGL plugin",
+      "dependencies": [
+        {
+          "name": "egl",
+          "platform": "android"
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-base"
+          ]
+        },
+        {
+          "name": "opengl",
+          "platform": "!android"
+        }
+      ]
+    },
     "gl-graphene": {
       "description": "Use Graphene in OpenGL plugin",
       "dependencies": [
@@ -311,7 +305,7 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
-            "plugins-base"
+            "gl"
           ]
         }
       ]
@@ -437,7 +431,7 @@
     },
     "nvcodec": {
       "description": "Enable support for the NVCODEC encoders and decoders",
-      "supports": "!osx & !ios & !android & !emscripten",
+      "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
       "dependencies": [
         {
           "name": "gstreamer",
@@ -561,6 +555,14 @@
           "features": [
             "plugins-base"
           ]
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "gl"
+          ],
+          "platform": "osx"
         }
       ]
     },
@@ -739,6 +741,45 @@
         "libvpx"
       ]
     },
+    "vulkan": {
+      "description": "Enable Vulkan video sink plugin",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        },
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "wayland"
+          ],
+          "platform": "!android & !ios & !osx & !windows"
+        },
+        {
+          "name": "shaderc",
+          "host": true
+        },
+        "vulkan"
+      ]
+    },
+    "wayland": {
+      "description": "Enable Wayland plugin/library",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        },
+        "wayland",
+        "wayland-protocols"
+      ]
+    },
     "webp": {
       "description": "Enable support for WebP image format",
       "dependencies": [
@@ -778,23 +819,8 @@
         "wildmidi"
       ]
     },
-    "x11-bad": {
-      "description": "Enable support for X11 in bad plugins",
-      "supports": "!windows",
-      "dependencies": [
-        {
-          "name": "gstreamer",
-          "default-features": false,
-          "features": [
-            "plugins-bad"
-          ]
-        },
-        "libxkbcommon",
-        "xcb"
-      ]
-    },
-    "x11-base": {
-      "description": "Enable support for X11 in base plugins",
+    "x11": {
+      "description": "Enable X11 support in libraries and plugins",
       "supports": "!windows",
       "dependencies": [
         {
@@ -805,7 +831,9 @@
           ]
         },
         "libx11",
-        "libxext"
+        "libxext",
+        "libxkbcommon",
+        "xcb"
       ]
     },
     "x264": {

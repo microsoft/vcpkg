@@ -14,7 +14,7 @@
     }
   ],
   "default-features": [
-    "z-vcpkg-make-determine-arch",
+    "z-vcpkg-make-normalize-arch",
     "z-vcpkg-make-determine-host-arch",
     "z-vcpkg-make-determine-target-arch",
     "z-vcpkg-make-get-configure-triplets",
@@ -22,8 +22,8 @@
     "z-vcpkg-make-z-adapt-lib-link-names"
   ],
   "features": {
-    "z-vcpkg-make-determine-arch": {
-      "description": "Test the z_vcpkg_make_determine_arch function"
+    "z-vcpkg-make-normalize-arch": {
+      "description": "Test the z_vcpkg_make_normalize_arch function"
     },
     "z-vcpkg-make-determine-host-arch": {
       "description": "Test the z_vcpkg_make_determine_host_arch function"

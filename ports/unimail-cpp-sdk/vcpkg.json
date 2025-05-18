@@ -1,0 +1,19 @@
+{
+  "name": "unimail-cpp-sdk",
+  "version": "0.0.6",
+  "description": "This is a cpp SDK for Unimail. Quickly integrate into your project.",
+  "homepage": "https://github.com/unimails/unimail-cpp-sdk",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "nlohmann-json",
+    "restclient-cpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

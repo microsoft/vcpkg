@@ -8,6 +8,7 @@ vcpkg_from_github(
         "fix-arm-build.patch"
         "fix-encoding.patch"
         "enable-static.patch"
+        "fix-include-path.patch"
 )
 
 vcpkg_cmake_configure(
