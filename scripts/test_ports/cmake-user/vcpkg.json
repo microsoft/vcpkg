@@ -134,7 +134,7 @@
         {
           "$package": "GnuTLS",
           "name": "shiftmedia-libgnutls",
-          "platform": "windows & !arm & !mingw & !xbox"
+          "platform": "windows & !arm & !mingw & !uwp & !xbox"
         },
         {
           "$package": "SQLite3",
