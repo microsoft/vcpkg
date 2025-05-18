@@ -8917,7 +8917,7 @@
       "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.313.0",
       "port-version": 0
     },
     "spirv-reflect": {
