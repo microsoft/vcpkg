@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index c604389e..a0dfd219 100644
+--- a/meson.build
++++ b/meson.build
+@@ -57,7 +57,7 @@ cpp_lib = '-lstdc++'
+ libm_dep = cpp.find_library('m', required : false)
+ deps += [libm_dep]
+ 
+-if ['linux', 'android', 'ios', 'darwin'].contains(system)
++if ['linux', 'freebsd', 'openbsd', 'android', 'ios', 'darwin'].contains(system)
+   asm_format32 = 'elf'
+   asm_format64 = 'elf64'
+   if ['ios', 'darwin'].contains(system)
