@@ -229,6 +229,12 @@ else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
 
+    if (VCPKG_HOST_IS_OPENBSD OR VCPKG_HOST_IS_FREEBSD)
+        set(MAKE_BINARY "gmake")
+    else()
+        set(MAKE_BINARY "make")
+    endif()
+
     message(STATUS "Build info. Target: ${LIBVPX_TARGET}; Options: ${OPTIONS}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -249,7 +255,7 @@ else()
         message(STATUS "Building libvpx for Release")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make -j${VCPKG_CONCURRENCY}"
+                ${BASH} --noprofile --norc -c "${MAKE_BINARY} -j${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
@@ -257,7 +263,7 @@ else()
         message(STATUS "Installing libvpx for Release")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make install"
+                ${BASH} --noprofile --norc -c "${MAKE_BINARY} install"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
             LOGNAME install-${TARGET_TRIPLET}-rel
         )
@@ -283,7 +289,7 @@ else()
         message(STATUS "Building libvpx for Debug")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make -j${VCPKG_CONCURRENCY}"
+                ${BASH} --noprofile --norc -c "${MAKE_BINARY} -j${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
@@ -291,7 +297,7 @@ else()
         message(STATUS "Installing libvpx for Debug")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make install"
+                ${BASH} --noprofile --norc -c "${MAKE_BINARY} install"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
             LOGNAME install-${TARGET_TRIPLET}-dbg
         )
