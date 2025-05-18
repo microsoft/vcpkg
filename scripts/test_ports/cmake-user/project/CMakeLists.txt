@@ -94,6 +94,7 @@ foreach(package ${FIND_PACKAGES})
     endforeach()
 
     set(target "${package}::${package}")
+    string(REPLACE "SQLite3::" "SQLite::" target "${target}")
     if(TARGET "${target}")
         get_target_property(type "${target}" TYPE)
         message(STATUS "${target}: ${type}")
