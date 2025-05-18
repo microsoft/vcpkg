@@ -4,13 +4,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sqlcipher/sqlcipher
     REF "v${VERSION}"
-    SHA512 023b2fc7248fe38b758ef93dd8436677ff0f5d08b1061e7eab0adb9e38ad92d523e0ab69016ee69bd35c1fd53c10f61e99b01f7a2987a1f1d492e1f7216a0a9c
+    SHA512 4ab29986b1401f2d3ce64045e1762ec2fad7ac6635fe4847819cd08c46cfd89089bb261c58582849c58191e48c55b8c05a5acddc9c5598a20a60c4e9721ba5dc
     HEAD_REF master
 )
 
 # Don't use vcpkg_build_nmake, because it doesn't handle nmake targets correctly.
-find_program(NMAKE nmake REQUIRED)
-
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    find_program(NMAKE nmake REQUIRED)
+else()
+    find_program(MAKE make REQUIRED)
+endif()
 # Find tclsh Executable needed for Amalgamation of SQLite
 file(GLOB TCLSH_CMD
 		${CURRENT_INSTALLED_DIR}/tools/tcl/bin/tclsh*${VCPKG_HOST_EXECUTABLE_SUFFIX}
@@ -20,7 +23,9 @@ file(TO_NATIVE_PATH "${SOURCE_PATH}" SOURCE_PATH_NAT)
 
 # Determine TCL version (e.g. [path]tclsh90sx.exe -> 90)
 string(REGEX REPLACE ^.*tclsh "" TCLVERSION ${TCLSH_CMD})
-string(REGEX REPLACE [A-Za-z]*${VCPKG_HOST_EXECUTABLE_SUFFIX}$ "" TCLVERSION ${TCLVERSION})
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    string(REGEX REPLACE [A-Za-z]*${VCPKG_HOST_EXECUTABLE_SUFFIX}$ "" TCLVERSION ${TCLVERSION})
+endif()
 
 list(APPEND NMAKE_OPTIONS
 		TCLSH_CMD="${TCLSH_CMD}"
@@ -35,12 +40,21 @@ set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
 
 # Creating amalgamation files
 message(STATUS "Pre-building ${TARGET_TRIPLET}")
-vcpkg_execute_required_process(
-	COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean tcl
-	${NMAKE_OPTIONS}
-	WORKING_DIRECTORY "${SOURCE_PATH}"
-	LOGNAME pre-build-${TARGET_TRIPLET}
-)
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    vcpkg_execute_required_process(
+        COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean tcl
+        ${NMAKE_OPTIONS}
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME pre-build-${TARGET_TRIPLET}
+    )
+else()
+    vcpkg_execute_required_process(
+        COMMAND ${MAKE} -f Makefile.linux-generic sqlite3.c
+        ${NMAKE_OPTIONS}
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME pre-build-${TARGET_TRIPLET}
+    )
+endif()
 message(STATUS "Pre-building ${TARGET_TRIPLET} done")
 
 # The rest of the build process with the CMakeLists.txt is merely a copy of sqlite3

@@ -27,6 +27,10 @@ target_compile_definitions(
         -DSQLITE_ENABLE_COLUMN_METADATA
 		-DSQLITE_HAS_CODEC
 		-DSQLITE_TEMP_STORE=2
+        -DSQLITE_EXTRA_INIT=sqlcipher_extra_init 
+        -DSQLITE_EXTRA_SHUTDOWN=sqlcipher_extra_shutdown
+        # workaround for gcc 15 compilation error
+        -DHAVE_STDINT_H=1
 )
 
 if(WITH_GEOPOLY)
@@ -72,7 +76,9 @@ SET(exec_prefix "\${prefix}")
 SET(libdir "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
 SET(includedir "\${prefix}/include")
 SET(PACKAGE_VERSION ${SQLCIPHER_VERSION})
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/sqlcipher.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/sqlcipher.pc" @ONLY)
+# since 4.7.0, sqlcipher provides sqlite3.pc instead of sqlcipher.pc
+# To avoid conflicting sqlite3 ports, we have to rename it to sqlcipher.pc
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/sqlite3.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/sqlcipher.pc" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sqlcipher.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
 
 install(
