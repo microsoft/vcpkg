@@ -7,7 +7,7 @@ vcpkg_from_github(
     REF "release-${VERSION}"
     SHA512 7630d0b02ff09c277d5641e10631514e5e3d8087e81f5254f38a8adb05c39ed0092ae81697085ed0dd859f0b826f94626d698090153c5e9a655f5e36263b2915
     PATCHES
-        fix-options.patch
+        dependencies.patch
         fix-fluid-cmd.patch
         config-path.patch
 )
@@ -24,8 +24,9 @@ vcpkg_check_features(
         opengl  FLTK_USE_GL
 )
 
-if ("x11" IN_LIST FEATURES)
-    message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)    
+    message(WARNING "Building ${PORT} requires packages. please run the following command.\n
+        sudo apt-get update -y && sudo apt-get install -y libasound2-dev libglu1-mesa-dev libwayland-dev wayland-protocols libdbus-1-dev libxkbcommon-dev libegl-dev libopengl-dev libpango1.0-dev libgtk-3-dev")
 endif()
 
 set(fluid_path_param "")
