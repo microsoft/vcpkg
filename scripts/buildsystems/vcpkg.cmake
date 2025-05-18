@@ -201,6 +201,53 @@ function(z_vcpkg_set_powershell_path)
     endif() # Z_VCPKG_POWERSHELL_PATH
 endfunction()
 
+#[===[.md:
+# z_vcpkg_delete_vcpkg_executable_if_outdated
+
+Delete the vcpkg executable if it is older than the current vcpkg repository.
+This is used to ensure that the vcpkg executable is always up to date.
+It's useful in manifest mode, when a user updates a vcpkg submodule.
+#]===]
+function(z_vcpkg_delete_vcpkg_executable_if_outdated)
+    file(SHA512 "${Z_VCPKG_EXECUTABLE}" Z_VCPKG_EXECUTABLE_HASH)
+
+    # read tool metadata
+    file(READ "${Z_VCPKG_ROOT_DIR}/scripts/vcpkg-tool-metadata.txt" Z_VCPKG_TOOL_METADATA)
+
+    # exteact all env variables
+    string(REGEX MATCHALL "VCPKG_TOOL_RELEASE_TAG=([0-9a-zA-Z-]+)" Z_VCPKG_TOOL_RELEASE_TAG "${Z_VCPKG_TOOL_METADATA}")
+    string(REGEX REPLACE "VCPKG_MACOS_SHA=([0-9a-f]{64})" "\\1" Z_VCPKG_MACOS_SHA "${Z_VCPKG_TOOL_RELEASE_TAG}")
+    string(REGEX REPLACE "VCPKG_MUSLC_SHA=([0-9a-f]{64})" "\\1" Z_VCPKG_MUSLC_SHA "${Z_VCPKG_TOOL_RELEASE_TAG}")
+    string(REGEX REPLACE "VCPKG_GLIBC_SHA=([0-9a-f]{64})" "\\1" Z_VCPKG_GLIBC_SHA "${Z_VCPKG_TOOL_RELEASE_TAG}")
+    string(REGEX REPLACE "VCPKG_GLIBC_ARM64_SHA=([0-9a-f]{64})" "\\1" Z_VCPKG_GLIBC_ARM64_SHA "${Z_VCPKG_TOOL_RELEASE_TAG}")
+
+    # determine what sha to use
+    if("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+        set(Z_VCPKG_TOOL_RELEASE_SHA "${Z_VCPKG_MACOS_SHA}")
+    elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+        if(VCPKG_USE_MUSL)
+            set(Z_VCPKG_TOOL_RELEASE_SHA "${Z_VCPKG_MUSLC_SHA}")
+        else()
+            if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
+                set(Z_VCPKG_TOOL_RELEASE_SHA "${Z_VCPKG_GLIBC_ARM64_SHA}")
+            else()
+                set(Z_VCPKG_TOOL_RELEASE_SHA "${Z_VCPKG_GLIBC_SHA}")
+            endif()
+        endif()
+    else()
+        # not supported for tool src
+    endif()
+
+    # check if the vcpkg executable is up to date
+    if(NOT Z_VCPKG_TOOL_RELEASE_SHA)
+        message(STATUS "vcpkg: unable to determine vcpkg tool release sha")
+    elseif(Z_VCPKG_EXECUTABLE_HASH STREQUAL Z_VCPKG_TOOL_RELEASE_SHA)
+        message(STATUS "vcpkg: vcpkg executable is up to date")
+    else()
+        message(STATUS "vcpkg: vcpkg executable is outdated; deleting")
+        file(REMOVE "${Z_VCPKG_EXECUTABLE}")
+    endif()
+endfunction()
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
@@ -463,6 +510,7 @@ else()
 endif()
 
 if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE AND NOT Z_VCPKG_HAS_FATAL_ERROR)
+    z_vcpkg_delete_vcpkg_executable_if_outdated()
     if(NOT EXISTS "${Z_VCPKG_EXECUTABLE}" AND NOT Z_VCPKG_HAS_FATAL_ERROR)
         message(STATUS "Bootstrapping vcpkg before install")
 
