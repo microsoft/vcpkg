@@ -217,12 +217,14 @@
     },
     "fontconfig": {
       "description": "Use fontconfig",
+      "supports": "!osx & !windows",
       "dependencies": [
         "fontconfig",
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "freetype",
             "gui"
           ]
         }
