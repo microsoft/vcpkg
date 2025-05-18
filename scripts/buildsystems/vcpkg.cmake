@@ -45,6 +45,9 @@ include(CMakeDependentOption)
 option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
 mark_as_advanced(VCPKG_VERBOSE)
 
+option(VCPKG_DISABLE_EXECUTABLE_SHA_CHECK "Disable SHA512 check for vcpkg executable. Useful for vcpkg-tool development." OFF)
+mark_as_advanced(VCPKG_DISABLE_EXECUTABLE_SHA_CHECK)
+
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
 
@@ -510,7 +513,10 @@ else()
 endif()
 
 if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE AND NOT Z_VCPKG_HAS_FATAL_ERROR)
-    z_vcpkg_delete_vcpkg_executable_if_outdated()
+    if(NOT VCPKG_DISABLE_EXECUTABLE_SHA_CHECK)
+        z_vcpkg_delete_vcpkg_executable_if_outdated()
+    endif()
+
     if(NOT EXISTS "${Z_VCPKG_EXECUTABLE}" AND NOT Z_VCPKG_HAS_FATAL_ERROR)
         message(STATUS "Bootstrapping vcpkg before install")
 
