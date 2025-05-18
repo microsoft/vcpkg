@@ -1,6 +1,6 @@
 {
   "name": "numcpp",
-  "version": "2.14.0",
+  "version": "2.14.1",
   "description": "C++ implementation of the Python Numpy library",
   "homepage": "https://dpilger26.github.io/NumCpp",
   "license": "MIT",

@@ -1,7 +1,6 @@
 {
   "name": "wayland",
-  "version": "1.21.0",
-  "port-version": 1,
+  "version": "1.23.1",
   "description": "Core Wayland window system code and protocol",
   "homepage": "https://wayland.freedesktop.org",
   "license": "MIT",
@@ -15,10 +14,16 @@
       "dependencies": [
         "expat",
         "libffi",
-        "libxml2",
         {
           "name": "vcpkg-tool-meson",
           "host": true
+        },
+        {
+          "name": "wayland",
+          "host": true,
+          "features": [
+            "force-build"
+          ]
         }
       ]
     }

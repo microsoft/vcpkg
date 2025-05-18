@@ -36,7 +36,7 @@ index 4d416c589e..ede9868a8f 100644
 -    <Projects Include="pyshellext.vcxproj" />
 +    <Projects Include="pyshellext.vcxproj" Condition="false" />
      <!-- Extension modules -->
-     <ExtensionModules Include="_asyncio;_zoneinfo;_decimal;_elementtree;_msi;_multiprocessing;_overlapped;pyexpat;_queue;select;unicodedata;winsound;_uuid" />
+     <ExtensionModules Include="_asyncio;_zoneinfo;_decimal;_elementtree;_msi;_multiprocessing;_overlapped;pyexpat;_queue;select;unicodedata;winsound;_uuid;_wmi" />
      <ExtensionModules Include="_ctypes" Condition="$(IncludeCTypes)" />
      <!-- Extension modules that require external sources -->
      <ExternalModules Include="_bz2;_lzma;_sqlite3" />

@@ -7,12 +7,19 @@ vcpkg_from_github(
     PATCHES
         no-werror.patch
         pkgconfig.diff
+        rtti.diff
 )
 file(COPY "${CURRENT_PORT_DIR}/snappy.pc.in" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        rtti    SNAPPY_WITH_RTTI
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${options}
         -DSNAPPY_BUILD_TESTS=OFF
         -DSNAPPY_BUILD_BENCHMARKS=OFF
 

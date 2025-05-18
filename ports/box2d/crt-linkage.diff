@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4b62d3..f0ed3f6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,8 +18,6 @@ message(STATUS "CMake C++ compiler: ${CMAKE_CXX_COMPILER_ID}")
+ message(STATUS "CMake system name: ${CMAKE_SYSTEM_NAME}")
+ message(STATUS "CMake host system processor: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+ 
+-# static link
+-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+ 
+ if (MSVC OR APPLE)
+ 	option(BOX2D_SANITIZE "Enable sanitizers for some builds" OFF)
