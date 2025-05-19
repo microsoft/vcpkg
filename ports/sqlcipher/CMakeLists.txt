@@ -64,6 +64,9 @@ endif()
 if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlcipher-bin shell.c)
     target_link_libraries(sqlcipher-bin PRIVATE sqlcipher)
+    if (UNIX AND NOT APPLE)
+        target_link_libraries(sqlcipher-bin PRIVATE m)
+    endif()
     install(TARGETS sqlcipher-bin sqlcipher
       RUNTIME DESTINATION tools/sqlcipher
       LIBRARY DESTINATION lib
