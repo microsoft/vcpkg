@@ -7,9 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Copy all header files directly into the include directory of the package
-file(COPY "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/include" "${CURRENT_PACKAGES_DIR}/include/cinatra")
+file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/cinatra")
 
 # Install the license file(s)
 vcpkg_install_copyright(
