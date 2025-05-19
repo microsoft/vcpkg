@@ -13,6 +13,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 359d0cb8d1a1735d608c8e10bbb233d80fdcc7ec0314a0b7bcb6b611592d0c6ebdb9dcd4aaf8da2369754cf50cc38347d2634305bc430abc07d7b981360990cf
     HEAD_REF main
+    PATCHES
+        0001-disable-pkgconfig.patch
 )
 
 file(GLOB find_modules "${SOURCE_PATH}/CMakeModules/Find*.cmake")
