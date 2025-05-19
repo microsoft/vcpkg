@@ -34,7 +34,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME apriltag)
+
+# Remove apriltag CMake configs due to conflict with existing apriltag port
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/apriltag" "${CURRENT_PACKAGES_DIR}/debug/share/apriltag")
+
 if ("cscore" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(PACKAGE_NAME cameraserver)
     vcpkg_cmake_config_fixup(PACKAGE_NAME cscore)
