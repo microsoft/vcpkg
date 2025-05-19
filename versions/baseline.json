@@ -4973,7 +4973,7 @@
       "port-version": 13
     },
     "libmodbus": {
-      "baseline": "3.1.10",
+      "baseline": "3.1.11",
       "port-version": 0
     },
     "libmodman": {
