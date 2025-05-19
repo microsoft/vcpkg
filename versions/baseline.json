@@ -8533,7 +8533,7 @@
       "port-version": 11
     },
     "sdl3": {
-      "baseline": "3.2.12",
+      "baseline": "3.2.14",
       "port-version": 0
     },
     "sdl3-image": {
