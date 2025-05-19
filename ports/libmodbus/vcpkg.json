@@ -7,10 +7,6 @@
   "supports": "!uwp & !xbox",
   "dependencies": [
     {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
-    {
       "name": "vcpkg-make",
       "host": true
     }
