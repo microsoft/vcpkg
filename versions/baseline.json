@@ -2413,7 +2413,7 @@
       "port-version": 0
     },
     "dlib": {
-      "baseline": "19.24.6",
+      "baseline": "19.24.9",
       "port-version": 0
     },
     "dlpack": {
