@@ -5178,7 +5178,7 @@
     },
     "libqglviewer": {
       "baseline": "2.9.1",
-      "port-version": 3
+      "port-version": 4
     },
     "libqrencode": {
       "baseline": "4.1.1",
