@@ -37,14 +37,7 @@ function(vcpkg_qmake_configure)
     endif()
 
     function(qmake_append_program var qmake_var value)
-        get_filename_component(prog "${value}" NAME)
-        # QMake assumes everything is on PATH?
-        vcpkg_list(APPEND ${var} "${qmake_var}=${prog}")
-        find_program(${qmake_var} NAMES "${prog}")
-        cmake_path(COMPARE "${${qmake_var}}" EQUAL "${value}" correct_prog_on_path)
-        if(NOT correct_prog_on_path AND NOT "${value}" MATCHES "|:")
-            message(FATAL_ERROR "Detect path mismatch for '${qmake_var}'. '${value}' is not the same as '${${qmake_var}}'. Please correct your PATH!")
-        endif()
+        vcpkg_list(APPEND ${var} "${qmake_var}=\"${value}\"")
         unset(${qmake_var})
         unset(${qmake_var} CACHE)
         set(${var} "${${var}}" PARENT_SCOPE) # Is this correct? Or is there a vcpkg_list command for that?
