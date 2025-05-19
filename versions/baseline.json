@@ -9777,7 +9777,7 @@
       "port-version": 0
     },
     "vcpkg-qmake": {
-      "baseline": "2024-11-17",
+      "baseline": "2025-05-19",
       "port-version": 0
     },
     "vcpkg-tool-bazel": {

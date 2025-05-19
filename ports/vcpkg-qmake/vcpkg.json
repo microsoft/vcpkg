@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-qmake",
-  "version-date": "2024-11-17",
+  "version-date": "2025-05-19",
   "documentation": "https://learn.microsoft.com/vcpkg/maintainers/functions/vcpkg_qmake_configure",
   "license": "MIT",
   "supports": "native",

@@ -37,10 +37,25 @@ function(vcpkg_qmake_configure)
     endif()
 
     function(qmake_append_program var qmake_var value)
-        vcpkg_list(APPEND ${var} "${qmake_var}=\"${value}\"")
-        unset(${qmake_var})
-        unset(${qmake_var} CACHE)
-        set(${var} "${${var}}" PARENT_SCOPE) # Is this correct? Or is there a vcpkg_list command for that?
+        # Danger zone: qmake poorly handles tools in C:/Program Files etc.
+        # IOW for MSVC it expects short command names, found via PATH.
+        if(value MATCHES " ")
+            get_filename_component(prog "${value}" NAME)
+            find_program("z_vcpkg_qmake_${qmake_var}" NAMES "${prog}" PATHS ENV PATH NO_DEFAULT_PATH NO_CACHE)
+            cmake_path(COMPARE "${z_vcpkg_qmake_${qmake_var}}" EQUAL "${value}" expected_program_in_path)
+            if(NOT expected_program_in_path)
+                message(FATAL_ERROR
+                    "Detected path mismatch for '${qmake_var}=${prog}'.\n"
+                    "  Actual:   ${z_vcpkg_qmake_${qmake_var}}\n"
+                    "  Expected: ${value}\n"
+                    "Please correct environment variable PATH!"
+                )
+            endif()
+        else()
+            set(prog "${value}")
+        endif()
+        vcpkg_list(APPEND "${var}" "${qmake_var}=${prog}")
+        set("${var}" "${${var}}" PARENT_SCOPE)
     endfunction()
     # Setup Build tools
     if(NOT VCPKG_QMAKE_COMMAND) # For users using outside Qt6
