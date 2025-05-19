@@ -25,8 +25,7 @@ vcpkg_check_features(
 )
 
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)    
-    message(WARNING "Building ${PORT} requires packages. please run the following command.\n
-        sudo apt-get update -y && sudo apt-get install -y libasound2-dev libglu1-mesa-dev libwayland-dev wayland-protocols libdbus-1-dev libxkbcommon-dev libegl-dev libopengl-dev libpango1.0-dev libgtk-3-dev")
+    message(INFO "Building ${PORT} requires packages. Please run the following command.\nsudo apt-get update -y && sudo apt-get install -y libasound2-dev libglu1-mesa-dev libwayland-dev wayland-protocols libdbus-1-dev libxkbcommon-dev libegl-dev libopengl-dev libpango1.0-dev libgtk-3-dev")
 endif()
 
 set(fluid_path_param "")
