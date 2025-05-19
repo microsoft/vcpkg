@@ -4,7 +4,7 @@
   "description": "SQLCipher extends the SQLite database library to add security enhancements that make it more suitable for encrypted local data storage.",
   "homepage": "https://www.zetetic.net/sqlcipher",
   "license": null,
-  "supports": "(!windows & !uwp) | (windows & static)",
+  "supports": "(!windows & !uwp) | (windows & !static)",
   "dependencies": [
     "openssl",
     "tcl",
