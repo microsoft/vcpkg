@@ -6,10 +6,14 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 4ab29986b1401f2d3ce64045e1762ec2fad7ac6635fe4847819cd08c46cfd89089bb261c58582849c58191e48c55b8c05a5acddc9c5598a20a60c4e9721ba5dc
     HEAD_REF master
+    PATCHES
+        add-tcl-size.patch
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
+
+message(STATUS "CURRENT_INSTALLED_DIR: ${CURRENT_INSTALLED_DIR}")
 
 # Don't use vcpkg_build_nmake, because it doesn't handle nmake targets correctly.
 if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
