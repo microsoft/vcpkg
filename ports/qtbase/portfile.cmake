@@ -125,7 +125,7 @@ FEATURES
     "icu"                 FEATURE_icu
     "pcre2"               FEATURE_pcre2
     #"icu"                 CMAKE_REQUIRE_FIND_PACKAGE_ICU
-    "glib"                CMAKE_REQUIRE_FIND_PACKAGE_GLIB2
+    #"glib"                CMAKE_REQUIRE_FIND_PACKAGE_GLIB2
 INVERTED_FEATURES
     #"doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion # Required
     #"pcre2"                 CMAKE_DISABLE_FIND_PACKAGE_WrapSystemPCRE2 # Bug in qt cannot be deactivated
@@ -337,7 +337,6 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DFEATURE_force_debug_info:BOOL=ON
                         -DFEATURE_relocatable:BOOL=ON
                         -DQT_AUTODETECT_ANDROID:BOOL=ON # Use vcpkg toolchain as is
-                        -DQT_NO_OVERRIDE_PKG_CONFIG_LIBDIR:BOOL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                         -DFEATURE_debug:BOOL=ON
