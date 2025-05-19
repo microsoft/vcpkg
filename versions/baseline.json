@@ -5137,8 +5137,8 @@
       "port-version": 0
     },
     "libplist": {
-      "baseline": "2023-06-15",
-      "port-version": 1
+      "baseline": "2.7.0",
+      "port-version": 0
     },
     "libpmemobj-cpp": {
       "baseline": "1.13.0",
