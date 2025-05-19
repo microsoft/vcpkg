@@ -9217,8 +9217,8 @@
       "port-version": 0
     },
     "tcl": {
-      "baseline": "core-9-0-a1",
-      "port-version": 8
+      "baseline": "core-9-0-1",
+      "port-version": 0
     },
     "tclap": {
       "baseline": "1.2.5",
