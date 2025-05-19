@@ -8,6 +8,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
 # Don't use vcpkg_build_nmake, because it doesn't handle nmake targets correctly.
 if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     find_program(NMAKE nmake REQUIRED)
