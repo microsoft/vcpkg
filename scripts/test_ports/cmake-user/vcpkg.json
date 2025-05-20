@@ -12,6 +12,12 @@
     "find-package",
     "pkg-check-modules"
   ],
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
   "features": {
     "cmake-3-16": {
       "description": "Run the tests with CMake 3.16"
