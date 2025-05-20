@@ -6,8 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+file(INSTALL "${SOURCE_PATH}/spimpl.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-spimpl-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/spimpl.h")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "[*]/.*" "*/" REGEX)
 
-file(INSTALL "${SOURCE_PATH}/spimpl.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/spimpl")
-
-file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

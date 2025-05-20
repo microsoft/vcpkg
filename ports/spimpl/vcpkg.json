@@ -1,6 +1,6 @@
 {
   "name": "spimpl",
-  "version": "1.2.0",
+  "version-date": "2025-01-23",
   "description": "A single-header C++ library for PIMPLs without having to implement any special member functions.",
   "homepage": "https://github.com/oliora/samples",
   "license": "BSL-1.0",
