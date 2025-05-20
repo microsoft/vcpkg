@@ -2,7 +2,7 @@
   "default": {
     "3fd": {
       "baseline": "2.6.3",
-      "port-version": 4
+      "port-version": 5
     },
     "7zip": {
       "baseline": "24.09",
@@ -7350,7 +7350,7 @@
     },
     "poco": {
       "baseline": "1.14.1",
-      "port-version": 1
+      "port-version": 2
     },
     "podofo": {
       "baseline": "0.10.4",
