@@ -18,7 +18,6 @@
     "cxxopts",
     "date",
     "dlpack",
-    "eigen3",
     {
       "name": "flatbuffers",
       "host": true,

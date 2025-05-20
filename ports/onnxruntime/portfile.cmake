@@ -17,9 +17,18 @@ vcpkg_from_github(
     SHA512 028a7f48f41d2e8a453aae25ebc4cd769db389401937928b7d452fab5f8d7af8cb63eb4150daf79589845528f0e4c3bdfefa27af70d3630398990c9e8b85387b
     PATCHES
         fix-sources.patch
-        fix-cmake.patch
+        fix-cmake.patch # .framework install, external library workarounds(abseil-cpp, eigen3)
         fix-cmake-cuda.patch
         fix-cmake-tensorrt.patch
+)
+
+# see ${SOURCE_PATH}/cmake/vcpkg-ports/eigen3
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.com
+    OUT_SOURCE_PATH EIGEN_SOURCE_PATH
+    REPO libeigen/eigen
+    REF 1d8b82b0740839c0de7f1242a3585e3390ff5f33 # 2025-02-16
+    SHA512 26a0d86ece9a28c93d64ee3e6ff96276b096a80e34fa2f3c474638824ffa2c56e582d9b2b9ffbb73b18a28b4828b827654b65a3471bc83505c48feab26fb836d
 )
 
 find_program(PROTOC NAMES protoc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf" REQUIRED NO_DEFAULT_PATH NO_CMAKE_PATH)
@@ -89,6 +98,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DEIGEN3_INCLUDE_DIRS=${EIGEN_SOURCE_PATH}"
         "-DPython_EXECUTABLE:FILEPATH=${PYTHON3}"
         "-DProtobuf_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}"
         "-DONNX_CUSTOM_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}"
@@ -115,7 +125,6 @@ vcpkg_cmake_configure(
         "-DCMAKE_CUDA_FLAGS=-Xcudafe --diag_suppress=2803" # too much warnings about attribute
     OPTIONS_DEBUG
         -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
-        -Donnxruntime_ENABLE_MEMORY_PROFILE=OFF
         -Donnxruntime_DEBUG_NODE_INPUTS_OUTPUTS=1
     MAYBE_UNUSED_VARIABLES
         Python_EXECUTABLE
