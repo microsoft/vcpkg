@@ -119,17 +119,19 @@ function(test_cmake_project)
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
-        # Interface: vcpkg.cmake
+        # Interface: vcpkg.cmake and scripts/toolchains/*.cmake
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
         "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_MODE=OFF"
-        # Interface: scripts/toolchains/*.cmake
-        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
-        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
         # Interface: project/CMakeLists.txt
+        "-DCHECK_BUILD_TYPE=${VCPKG_BUILD_TYPE}"
         "-DCHECK_CMAKE_VERSION=${cmake_version}"
+        # Interface: generic override
+        ${VCPKG_CMAKE_CONFIGURE_OPTIONS}
     )
 
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
