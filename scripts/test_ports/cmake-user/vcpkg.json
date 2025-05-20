@@ -53,7 +53,7 @@
         {
           "$package": "GLUT",
           "name": "freeglut",
-          "platform": "!uwp & !osx"
+          "platform": "!android & !osx & !uwp"
         },
         {
           "$package": "Freetype",
