@@ -1,6 +1,6 @@
 {
   "name": "ifcopenshell",
-  "version-string": "0.7.1",
+  "version": "0.7.1",
   "description": "IfcOpenShell is an open source (LGPL) software library for working with Industry Foundation Classes (IFC).",
   "homepage": "https://github.com/IfcOpenShell/IfcOpenShell",
   "license": "LGPL-3.0-or-later",
