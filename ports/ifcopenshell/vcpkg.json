@@ -4,6 +4,7 @@
   "description": "IfcOpenShell is an open source (LGPL) software library for working with Industry Foundation Classes (IFC).",
   "homepage": "https://github.com/IfcOpenShell/IfcOpenShell",
   "license": "LGPL-3.0-or-later",
+  "supports": "!(windows & arm)",
   "dependencies": [
     "boost-circular-buffer",
     "boost-date-time",
