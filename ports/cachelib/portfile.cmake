@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/CacheLib
     REF "v${VERSION}"
-    SHA512 c041ed6b52cd45bb4d72d436424214657163eeafd5fec43c85914bb5f038e96ac1f23236191e6ceffa22c0467969d687ecd3bbead754746a4decc5c5c6c955db
+    SHA512 7218efe525b4e1afc0c560c7f6bf88665a8aaac156419743448f02cb7e36f3ede702e20ff76a7d90abe232f342544c41079a6c9c0ea375facb3ac84260de386c
     HEAD_REF main
     PATCHES
         fix-build.patch
         fix-glog.patch
-        fix-oss.patch
 )
 
 FIND_PATH(NUMA_INCLUDE_DIR NAME numa.h

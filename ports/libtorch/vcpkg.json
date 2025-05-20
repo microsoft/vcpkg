@@ -1,7 +1,7 @@
 {
   "name": "libtorch",
   "version": "2.1.2",
-  "port-version": 11,
+  "port-version": 12,
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -52,10 +52,6 @@
     "xnnpack"
   ],
   "default-features": [
-    {
-      "name": "cuda",
-      "platform": "windows & !x86"
-    },
     "opencv",
     "zstd"
   ],
