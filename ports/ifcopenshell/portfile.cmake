@@ -13,7 +13,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "wasm" WASM_BUILD
         "optimizations" ENABLE_BUILD_OPTIMIZATIONS
-        "parallel" MSVC_PARALLEL_BUILD
         "vld" USE_VLD
         "mmap" USE_MMAP
         "package" BUILD_PACKAGE
@@ -27,6 +26,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DMINIMAL_BUILD=ON
         -DSCHEMA_VERSIONS=2x3;4;4x3;4x3_add2
+        -DMSVC_PARALLEL_BUILD=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOCUMENTATION=OFF
         -DBUILD_IFCGEOM=OFF

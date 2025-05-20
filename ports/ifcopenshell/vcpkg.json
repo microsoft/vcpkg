@@ -9,7 +9,6 @@
     "boost-circular-buffer",
     "boost-date-time",
     "boost-filesystem",
-    "boost-iostreams",
     "boost-logic",
     "boost-math",
     "boost-multi-index",
@@ -35,18 +34,22 @@
   ],
   "features": {
     "hdf5": {
-      "description": "Enable HDF5 support (requires HDF5, zlib)",
+      "description": "Enable HDF5 support",
       "dependencies": [
         {
           "name": "hdf5",
           "features": [
             "cpp"
           ]
-        }
+        },
+        "zlib"
       ]
     },
     "mmap": {
-      "description": "Adds a command line options to parse IFC files from memory mapped files using Boost.Iostreams"
+      "description": "Adds a command line options to parse IFC files from memory mapped files using Boost.Iostreams",
+      "dependencies": [
+        "boost-iostreams"
+      ]
     },
     "opencascade": {
       "description": "Enable geometry interpretation using Open CASCADE"
@@ -56,9 +59,6 @@
     },
     "package": {
       "description": "Build python package"
-    },
-    "parallel": {
-      "description": "Multi-threaded compilation in Microsoft Visual Studio (/MP)"
     },
     "usd": {
       "description": "Build IfcConvert with USD support (requires pixar's USD library)",
