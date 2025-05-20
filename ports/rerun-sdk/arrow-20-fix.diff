@@ -19,5 +19,5 @@ index 91fd6f9..8777d8e 100644
 +        auto array_data = std::make_shared<arrow::ArrayData>(datatype, length, std::move(buffers));
 +        array = arrow::MakeArray(array_data);
      }
- 
-     TimeColumn TimeColumn::from_nanoseconds(
+
+     TimeColumn TimeColumn::from_seconds(
