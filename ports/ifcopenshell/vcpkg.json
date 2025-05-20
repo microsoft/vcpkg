@@ -1,6 +1,6 @@
 {
   "name": "ifcopenshell",
-  "version-string": "0.7.0a10",
+  "version-string": "0.7.1",
   "description": "IfcOpenShell is an open source (LGPL) software library for working with Industry Foundation Classes (IFC).",
   "homepage": "https://github.com/IfcOpenShell/IfcOpenShell",
   "license": "LGPL-3.0-or-later",
@@ -43,12 +43,6 @@
           ]
         }
       ]
-    },
-    "ifcxml": {
-      "description": "Build IfcParse with ifcXML support (requires libxml2)"
-    },
-    "minimal": {
-      "description": "The build is to make a minimal version of IFC converter from OCCT into IFC"
     },
     "mmap": {
       "description": "Adds a command line options to parse IFC files from memory mapped files using Boost.Iostreams"

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IfcOpenShell/IfcOpenShell
     REF "v${VERSION}"
-    SHA512 4ae5f3f007de0f1bce34fb2d51bca53bad80e83243f9702f4bf5c5878eb9bf16d8d6b3954a5c361fa82800c85384ea97000188afbbb2fb3f5c1a5878a57fa705
+    SHA512 ec94ac1557f47331312ac2f3fe7b9b88bd04d7c4f7477bd0283e52e57a34e434ca636ff2fe72b028f92cdf1d5391cd5aba8f62216038c57f1d099f61dad6ff3a
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -11,7 +11,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "minimal" MINIMAL_BUILD
         "wasm" WASM_BUILD
         "optimizations" ENABLE_BUILD_OPTIMIZATIONS
         "parallel" MSVC_PARALLEL_BUILD
@@ -19,7 +18,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "mmap" USE_MMAP
         "package" BUILD_PACKAGE
         "hdf5" HDF5_SUPPORT
-        "ifcxml" IFCXML_SUPPORT
         "usd" USD_SUPPORT
 )
 
@@ -27,6 +25,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cmake"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DMINIMAL_BUILD=ON
+        -DSCHEMA_VERSIONS=2x3;4;4x3;4x3_add2
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOCUMENTATION=OFF
         -DBUILD_IFCGEOM=OFF

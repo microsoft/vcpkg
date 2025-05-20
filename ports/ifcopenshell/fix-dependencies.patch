@@ -1,8 +1,8 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 39cdf8b..a28b198 100644
+index ebca949..5173308 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -182,6 +182,8 @@ if(NOT MINIMAL_BUILD AND USD_SUPPORT)
+@@ -196,6 +196,8 @@ if(USD_SUPPORT)
      UNIFY_ENVVARS_AND_CACHE(USD_INCLUDE_DIR)
      UNIFY_ENVVARS_AND_CACHE(USD_LIBRARY_DIR)
  
@@ -10,37 +10,37 @@ index 39cdf8b..a28b198 100644
 +    if(0)
      if("${USD_INCLUDE_DIR}" STREQUAL "")
          find_path(USD_INCLUDE_DIR pxr.h
-             [PATHS
-@@ -199,6 +201,7 @@ if(NOT MINIMAL_BUILD AND USD_SUPPORT)
+             PATHS
+@@ -212,6 +214,7 @@ if(USD_SUPPORT)
          set(USD_INCLUDE_DIR ${USD_INCLUDE_DIR} CACHE FILEPATH "USD header files")
          message(STATUS "Looking for USD include files in: ${USD_INCLUDE_DIR}")
      endif()
 +    endif()
  
      set(USD_LIBRARIES
-             usd_usd 
-@@ -336,6 +339,9 @@ IF(MSVC)
- ENDIF()
+             usd_usd
+@@ -359,6 +362,9 @@ if(BUILD_IFCGEOM)
+     endif()
  
- # Open CASCADE
-+find_package(OpenCASCADE CONFIG REQUIRED)
-+set(OCC_VERSION_STRING ${OpenCASCADE_VERSION})
-+if (0)
- IF("${OCC_INCLUDE_DIR}" STREQUAL "")
-     FIND_PATH(OCC_INCLUDE_DIR Standard_Version.hxx
-         [PATHS
-@@ -354,6 +360,7 @@ ELSE()
-     SET(OCC_INCLUDE_DIR ${OCC_INCLUDE_DIR} CACHE FILEPATH "Open CASCADE header files")
-     MESSAGE(STATUS "Looking for Open CASCADE include files in: ${OCC_INCLUDE_DIR}")
- ENDIF()
-+endif()
+     # Open CASCADE
++    find_package(OpenCASCADE CONFIG REQUIRED)
++    set(OCC_VERSION_STRING ${OpenCASCADE_VERSION})
++    if(0)
+     if("${OCC_INCLUDE_DIR}" STREQUAL "")
+         find_path(OCC_INCLUDE_DIR Standard_Version.hxx
+             PATHS
+@@ -393,6 +399,7 @@ if(BUILD_IFCGEOM)
+         string(REGEX MATCH "[0-9]+" OCC_MAINT ${OCC_MAINT})     
+         set(OCC_VERSION_STRING "${OCC_MAJOR}.${OCC_MINOR}.${OCC_MAINT}")
+     endif(OCC_INCLUDE_DIR)
++    endif()
  
- SET(OPENCASCADE_LIBRARY_NAMES
-     TKernel TKMath TKBRep TKGeomBase TKGeomAlgo TKG3d TKG2d TKShHealing TKTopAlgo TKMesh TKPrim TKBool TKBO
-@@ -519,6 +526,14 @@ IF(NOT MINIMAL_BUILD AND COLLADA_SUPPORT)
- ENDIF()
+     set(OPENCASCADE_LIBRARY_NAMES
+         TKernel TKMath TKBRep TKGeomBase TKGeomAlgo TKG3d TKG2d TKShHealing TKTopAlgo TKMesh TKPrim TKBool TKBO
+@@ -569,6 +576,14 @@ if(COLLADA_SUPPORT)
+ endif()
  
- if(NOT MINIMAL_BUILD AND HDF5_SUPPORT)
+ if(HDF5_SUPPORT)
 +    find_package(hdf5 CONFIG REQUIRED)
 +    if(BUILD_SHARED_LIBS)
 +        set(HDF5_LIBRARIES hdf5::hdf5-shared hdf5::hdf5_cpp-shared)
@@ -49,23 +49,14 @@ index 39cdf8b..a28b198 100644
 +    endif(BUILD_SHARED_LIBS)
 +    
 +    if(0)
-     IF("${HDF5_INCLUDE_DIR}" STREQUAL "")
- 		MESSAGE(STATUS "No HDF5 include directory specified")
- 	ElSE()
-@@ -595,6 +610,7 @@ if(NOT MINIMAL_BUILD AND HDF5_SUPPORT)
+     if("${HDF5_INCLUDE_DIR}" STREQUAL "")
+         message(STATUS "No HDF5 include directory specified")
+     else()
+@@ -649,6 +664,7 @@ if(HDF5_SUPPORT)
              z dl
          )
      endif()
 +    endif()
-     
-     add_definitions(-DWITH_HDF5)
- 	set(SWIG_DEFINES ${SWIG_DEFINES} -DWITH_HDF5)
-@@ -995,7 +1011,7 @@ ENDIF()
- IF(NOT MINIMAL_BUILD AND BUILD_IFCMAX)
- 	ADD_SUBDIRECTORY(../src/ifcmax ifcmax)
- ENDIF()
--if (NOT MINIMAL_BUILD)
-+if (0)
- ADD_SUBDIRECTORY(../src/svgfill svgfill)
- endif()
  
+     add_definitions(-DWITH_HDF5)
+     set(SWIG_DEFINES ${SWIG_DEFINES} -DWITH_HDF5)
