@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        arrow-20-fix.diff # https://github.com/rerun-io/rerun/commit/d620a649c18d333b02682b190d2b1b656b800746
 )
 
 vcpkg_cmake_configure(
