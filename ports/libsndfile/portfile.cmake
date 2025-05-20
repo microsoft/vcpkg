@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-avoid-installing-find-modules.patch
+        mp3lame-static.diff
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

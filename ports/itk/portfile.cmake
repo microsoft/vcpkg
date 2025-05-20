@@ -12,8 +12,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     #[[
         When updating the ITK version and SHA512, remember to update the remote module versions below.
+        Try `vcpkg install itk[core,cuda,rtk] --only-downloads` for suggestions and verification.
     #]]
-    SHA512 3a98ececf258aac545f094dd3e97918c93cc82bc623ddf793c4bf0162ab06c83fbfd4d08130bdec6e617bda85dd17225488bc1394bc91b17f1232126a5d990db
+    SHA512 426d7e9974951d3e48de3a38e02e4c4fab3b60657d4bac47642cab40b4a47bf5d7dbbead4d0761a89374c05ad55f50be8af70293f63d2516f4a98edce8634d51
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -23,6 +24,7 @@ vcpkg_from_github(
         wrapping.patch
         use-the-lrintf-intrinsic.patch
         dont-build-gtest.patch
+        msvc-static-crt.diff
         "${PYTHON_GPU_WRAPPING_PATCH}"
 )
 file(REMOVE_RECURSE
@@ -32,13 +34,18 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/Modules/ThirdParty/VNL/src"
 )
 
+set(cuda_common_ref 0c20c4ef10d81910c8b2ac4e8446a1544fce3b60)
+set(cuda_common_sha 0eb1a6fe85e695345a49887cdd65103bedab72e01ae85ed03e16a8a296c6cb69a8d889a57b22dde7fcc69df4f604c274b04234c8ece306d08361fac5db029069)
+file(STRINGS "${SOURCE_PATH}/Modules/Remote/CudaCommon.remote.cmake" cuda_common_git_tag REGEX "GIT_TAG")
+if(NOT cuda_common_git_tag MATCHES "${cuda_common_ref}")
+    message(FATAL_ERROR "cuda_common_ref/sha must be updated, new ${cuda_common_git_tag}")
+endif()
 if("cuda" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH RTK_SOURCE_PATH
         REPO RTKConsortium/ITKCudaCommon
-        # Cf. Modules/Remote/CudaCommon.remote.cmake
-        REF 0c20c4ef10d81910c8b2ac4e8446a1544fce3b60
-        SHA512 0eb1a6fe85e695345a49887cdd65103bedab72e01ae85ed03e16a8a296c6cb69a8d889a57b22dde7fcc69df4f604c274b04234c8ece306d08361fac5db029069
+        REF "${cuda_common_ref}"
+        SHA512 "${cuda_common_sha}"
         HEAD_REF master
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/CudaCommon")
@@ -46,15 +53,20 @@ if("cuda" IN_LIST FEATURES)
     file(COPY_FILE "${SOURCE_PATH}/Modules/Remote/CudaCommon/LICENSE" "${SOURCE_PATH}/CudaCommon LICENSE")
 endif()
 
+set(rtk_ref bfdca5b6b666b4f08f2f7d8039af11a15cc3f831)
+set(rtk_sha 10a21fb4b82aa820e507e81a6b6a3c1aaee2ea1edf39364dc1c8d54e6b11b91f22d9993c0b56c0e8e20b6d549fcd6104de4e1c5e664f9ff59f5f93935fb5225a)
+file(STRINGS "${SOURCE_PATH}/Modules/Remote/RTK.remote.cmake" rtk_git_tag REGEX "GIT_TAG")
+if(NOT rtk_git_tag MATCHES "${rtk_ref}")
+    message(FATAL_ERROR "rtk_ref/sha must be updated, new ${rtk_git_tag}")
+endif()
 if("rtk" IN_LIST FEATURES)
     # (old hint, not verified) RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes.
     # RTK's ITK module must be built with ITK.
     vcpkg_from_github(
         OUT_SOURCE_PATH RTK_SOURCE_PATH
         REPO RTKConsortium/RTK
-        # Cf. Modules/Remote/RTK.remote.cmake
-        REF bfdca5b6b666b4f08f2f7d8039af11a15cc3f831
-        SHA512 10a21fb4b82aa820e507e81a6b6a3c1aaee2ea1edf39364dc1c8d54e6b11b91f22d9993c0b56c0e8e20b6d549fcd6104de4e1c5e664f9ff59f5f93935fb5225a
+        REF "${rtk_ref}"
+        SHA512 "${rtk_sha}"
         HEAD_REF master
         PATCHES
             rtk/cmp0153.diff
@@ -177,7 +189,6 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND ADDITIONAL_OPTIONS
         -DITK_MSVC_STATIC_RUNTIME_LIBRARY=ON
-        -DITK_MSVC_STATIC_CRT=ON
     )
 endif()
 
