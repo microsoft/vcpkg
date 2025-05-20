@@ -125,6 +125,9 @@ function(test_cmake_project)
         "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_MODE=OFF"
+        # Interface: scripts/toolchains/*.cmake
+        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
         # Interface: project/CMakeLists.txt
         "-DCHECK_CMAKE_VERSION=${cmake_version}"
     )
