@@ -44,18 +44,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# set(TOOL_NAMES_LIST idyntree-model-info)
-# if ("assimp" IN_LIST FEATURES)
-#     list(APPEND TOOL_NAMES_LIST idyntree-model-simplify-shapes)
-# endif()
-# if ("irrlicht" IN_LIST FEATURES)
-#     list(APPEND TOOL_NAMES_LIST idyntree-model-view)
-# endif()
-# vcpkg_copy_tools(
-#     TOOL_NAMES ${TOOL_NAMES_LIST}
-#     AUTO_CLEAN
-# )
-
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
 )
