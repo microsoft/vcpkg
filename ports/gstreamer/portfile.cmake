@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 5ca978cad5a661b081528be0fa74e199115c186afa1a0c9f55a9238fb2b452b680e75e8721a54077b9f4d717da5ef5801c359a0a89a5a02056caea067adab88f
+    SHA512 60ca414d05e219b760c6b22c693a5d127b368736a160217919719ad99d7e0ec7bc7a10390edeb27cc65fc647fd41e4bd9edddb60cb429f81e267c6e78a229c60
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
@@ -134,12 +134,6 @@ else()
     set(PLUGIN_BASE_GL_PLATFORM auto)
 endif()
 
-if("asio" IN_LIST FEATURES)
-    set(PLUGIN_BAD_ASIO_SDK_PATH ${CURRENT_INSTALLED_DIR}/include/asiosdk)
-else()
-    set(PLUGIN_BAD_ASIO_SDK_PATH "")
-endif()
-
 #
 # References
 #   https://gitlab.freedesktop.org/gstreamer/gstreamer/-/blob/1.20.4/subprojects/gstreamer/meson_options.txt
@@ -160,25 +154,31 @@ vcpkg_configure_meson(
     OPTIONS
         ${FEATURE_OPTIONS}
 
-        # General options
-        -Dbuild-tools-source=system
-        -Dpython=disabled
-        -Dlibnice=disabled
+        # GStreamer subprojects
         -Ddevtools=disabled
         -Drtsp_server=disabled
-        -Dvaapi=disabled
-        -Dsharp=disabled
         -Drs=disabled
+        -Dvaapi=disabled
         -Dgst-examples=disabled
+        # Bindings
+        -Dpython=disabled
+        -Dsharp=disabled
+        # External subprojects
         -Dtls=disabled
+        -Dlibnice=disabled
+        # Other options
+        -Dbuild-tools-source=system
+        -Dbenchmarks=disabled
+        -Dorc=disabled # gstreamer requires a specific version of orc which is not available in vcpkg
         -Dqt5=disabled
+        -Dqt6=disabled
         # Common options
         -Dtests=disabled
         -Dexamples=disabled
         -Dintrospection=disabled
-        -Dorc=disabled # gstreamer requires a specific version of orc which is not available in vcpkg
         -Ddoc=disabled
         -Dgtk_doc=disabled
+
         # gstreamer
         -Dgstreamer:check=disabled
         -Dgstreamer:libunwind=disabled
@@ -186,8 +186,6 @@ vcpkg_configure_meson(
         -Dgstreamer:dbghelp=disabled
         -Dgstreamer:bash-completion=disabled
         -Dgstreamer:coretracers=disabled
-        -Dgstreamer:benchmarks=disabled
-        -Dgstreamer:gst_debug=true
         -Dgstreamer:ptp-helper=disabled  # needs rustc toolchain setup
         # gst-plugins-base
         -Dgst-plugins-base:gl_api=${PLUGIN_BASE_GL_API}
@@ -228,7 +226,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:avtp=disabled
         -Dgst-plugins-bad:androidmedia=auto
         -Dgst-plugins-bad:applemedia=auto
-        -Dgst-plugins-bad:asio-sdk-path=${PLUGIN_BAD_ASIO_SDK_PATH}
         -Dgst-plugins-bad:bluez=disabled
         -Dgst-plugins-bad:bs2b=disabled
         -Dgst-plugins-bad:curl=disabled # Error during plugin build
@@ -294,9 +291,10 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:v4l2codecs=disabled
         -Dgst-plugins-bad:isac=disabled
     OPTIONS_RELEASE
-        -Dgobject-cast-checks=disabled
-        -Dglib-asserts=disabled
-        -Dglib-checks=disabled
+        -Dglib_debug=disabled
+        -Dglib_assert=false
+        -Dglib_checks=false
+        -Dgstreamer:gst_debug=false
         -Dgstreamer:extra-checks=disabled
     ADDITIONAL_BINARIES
         flex='${FLEX}'
