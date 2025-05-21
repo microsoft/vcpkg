@@ -80,6 +80,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                 "${CURRENT_PACKAGES_DIR}/lib/tcl8/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*"
+                "${CURRENT_PACKAGES_DIR}/lib/registry1.3/*"
         )
         
         foreach(TOOL ${TOOLS})
@@ -92,6 +93,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8"
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0"
+                            "${CURRENT_PACKAGES_DIR}/lib/registry1.3"
         )
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
@@ -113,6 +115,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/registry1.3"
         )
     endif()
     
