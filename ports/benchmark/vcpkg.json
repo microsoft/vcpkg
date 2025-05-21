@@ -1,7 +1,7 @@
 {
   "$comment": "https://github.com/google/benchmark/issues/661 describes the missing UWP support upstream",
   "name": "benchmark",
-  "version-semver": "1.9.3",
+  "version-semver": "1.9.4",
   "description": "A library to benchmark code snippets, similar to unit tests.",
   "homepage": "https://github.com/google/benchmark",
   "license": "Apache-2.0",
