@@ -3,7 +3,9 @@ vcpkg_from_github(
     REPO tcltk/tcl
     REF ${VERSION}
     SHA512 962bdf298fd850682d4a8941fed80a7fe13827e741b5977cf63a802665396c0421c393a437033b9d31e00d3dfef4d55fdf6e8803f997a10f7e2bba08d8b406f5
-    PATCHES force-shell-install.patch
+    PATCHES 
+        force-shell-install.patch
+        remove-git-rev-parse.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
