@@ -2153,7 +2153,7 @@
       "port-version": 2
     },
     "ctre": {
-      "baseline": "3.9.0",
+      "baseline": "3.10.0",
       "port-version": 0
     },
     "ctstraffic": {
