@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         add-tcl-size.patch
+        set-init-shutdown.patch
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)
@@ -49,7 +50,7 @@ set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
 message(STATUS "Pre-building ${TARGET_TRIPLET}")
 if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     vcpkg_execute_required_process(
-        COMMAND cmd /C "set OPT_XTRA=-DSQLITE_EXTRA_INIT=sqlcipher_extra_init -DSQLITE_EXTRA_SHUTDOWN=sqlcipher_extra_shutdown && ${NMAKE} -f Makefile.msc /A /NOLOGO clean tcl"
+        COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean tcl
         ${NMAKE_OPTIONS}
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME pre-build-${TARGET_TRIPLET}
