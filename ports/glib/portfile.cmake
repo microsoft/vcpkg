@@ -53,6 +53,7 @@ vcpkg_configure_meson(
         -Dintrospection=disabled
         -Dlibelf=disabled
         -Dman-pages=disabled
+        -Dsysprof=disabled
         -Dtests=false
         -Dxattr=false
 )
