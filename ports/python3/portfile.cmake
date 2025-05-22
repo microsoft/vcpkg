@@ -1,4 +1,5 @@
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     message(STATUS "Warning: Dynamic library with static CRT is not supported. Building static library.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
@@ -276,9 +277,9 @@ else()
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             ${OPTIONS}
         OPTIONS_DEBUG
@@ -287,7 +288,7 @@ else()
         OPTIONS_RELEASE
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/lib"
     )
-    vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
+    vcpkg_make_install(TARGETS altinstall)
 
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
