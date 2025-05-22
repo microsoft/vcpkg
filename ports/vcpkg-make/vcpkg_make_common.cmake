@@ -94,6 +94,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         set(arg_LANGUAGES "C" "CXX")
     endif()
 
+    z_vcpkg_make_set_common_vars()
     set(var_suffix "${arg_CONFIG}")
     set(CFLAGS "")
     set(CXXFLAGS "")
