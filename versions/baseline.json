@@ -3765,8 +3765,8 @@
       "port-version": 1
     },
     "ijg-libjpeg": {
-      "baseline": "9e",
-      "port-version": 2
+      "baseline": "9f",
+      "port-version": 0
     },
     "im3d": {
       "baseline": "2022-10-11",
