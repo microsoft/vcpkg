@@ -2956,6 +2956,10 @@
       "baseline": "2021-02-21",
       "port-version": 2
     },
+    "fpzip": {
+      "baseline": "1.3.0",
+      "port-version": 0
+    },
     "freealut": {
       "baseline": "1.1.0",
       "port-version": 4
