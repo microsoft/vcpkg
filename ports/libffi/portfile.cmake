@@ -23,12 +23,12 @@ endif()
 ##### TODO: Make vcpkg-cmake-get-vars robust and open for options.
 list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS
     "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG"
-    "-DVCPKG_LANGUAGES=C\\;ASM"
+    "-DVCPKG_LANGUAGES=C\\;CXX\\;ASM"
 )
 #####
 #####
 
-set(languages C ASM)
+set(languages C CXX ASM)
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
