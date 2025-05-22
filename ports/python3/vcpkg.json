@@ -1,13 +1,14 @@
 {
   "name": "python3",
   "version": "3.12.9",
+  "port-version": 1,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
   "supports": "!uwp & !mingw",
   "dependencies": [
     {
-      "name": "gettext",
+      "name": "gettext-libintl",
       "platform": "osx"
     },
     {
@@ -33,6 +34,11 @@
     {
       "name": "vcpkg-get-python",
       "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows"
     },
     {
       "name": "vcpkg-msbuild",
