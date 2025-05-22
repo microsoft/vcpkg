@@ -19,13 +19,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${linkage_flag}")
 endif()
 
-set(ccas_options "")
+##### For vcpkg-make.
+##### TODO: Make vcpkg-cmake-get-vars robust and open for options.
+list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS
+    "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG"
+    "-DVCPKG_LANGUAGES=C\\;ASM"
+)
+#####
+#####
+
+set(languages C ASM)
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
-set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+    list(REMOVE_ITEM languages ASM) # using the following flags instead.
     vcpkg_add_to_path("${SOURCE_PATH}")
-    set(ccas "msvcc.sh")
+    vcpkg_list(APPEND options "CCAS=msvcc.sh")
+    set(ccas_options "")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         string(APPEND ccas_options " -m32")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -35,21 +45,14 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         string(APPEND ccas_options " -marm64")
     endif()
-endif()
-vcpkg_list(APPEND options "CCAS=${ccas}")
-if(ccas_options)
-    vcpkg_list(APPEND options "CCASFLAGS=\${CCASFLAGS}${ccas_options}")
-endif()
-
-set(configure_triplets DETERMINE_BUILD_TRIPLET)
-if(VCPKG_TARGET_IS_EMSCRIPTEN)
-    set(configure_triplets BUILD_TRIPLET "--host=wasm32-unknown-emscripten --build=\$(\$SHELL \"${SOURCE_PATH}/config.guess\")")
+    if(ccas_options)
+        vcpkg_list(APPEND options "CCASFLAGS=\${CCASFLAGS}${ccas_options}")
+    endif()
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    ${configure_triplets}
-    USE_WRAPPERS
+    LANGUAGES ${languages}
     OPTIONS
         --enable-portable-binary
         --disable-docs
@@ -57,7 +60,7 @@ vcpkg_configure_make(
         ${options}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
