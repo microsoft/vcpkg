@@ -1,3 +1,26 @@
+set(host "<unknown>")
+set(target "<unknown>")
+set(systems ANDROID LINUX OSX UWP WINDOWS)
+foreach(system IN LISTS systems)
+    if(VCPKG_HOST_IS_${system})
+        set(host "${system}")
+    endif()
+    if(VCPKG_TARGET_IS_${system})
+        set(target "${system}")
+    endif()
+endforeach()
+if(VCPKG_MAKE_BUILD_TRIPLET)
+    set(result "VCPKG_MAKE_BUILD_TRIPLET is '${VCPKG_MAKE_BUILD_TRIPLET}'")
+else()
+    z_vcpkg_make_get_configure_triplets(triplets COMPILER_NAME "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    set(result "result is '${triplets}'")
+endif()
+message(STATUS "
+VCPKG_HOST_IS_${host}
+  VCPKG_TARGET_IS_${target}
+    ${result}
+")
+
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 include("${CURRENT_HOST_INSTALLED_DIR}/share/unit-test-cmake/test-macros.cmake")
 
