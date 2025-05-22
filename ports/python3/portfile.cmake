@@ -1,4 +1,7 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     message(STATUS "Warning: Dynamic library with static CRT is not supported. Building static library.")
     set(VCPKG_LIBRARY_LINKAGE static)
@@ -268,6 +271,20 @@ else()
         list(APPEND OPTIONS "--with-readline")
     else()
         list(APPEND OPTIONS "--without-readline")
+    endif()
+
+    if(VCPKG_TARGET_IS_ANDROID)
+        list(APPEND OPTIONS "--without-static-libpython" )
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DANDROID_NO_UNDEFINED=OFF")
+        if(VCPKG_CROSSCOMPILING)
+            # Cannot not run target executables during configure
+            if(NOT PYTHON3_BUGGY_GETADDRINFO)
+                list(APPEND OPTIONS "ac_cv_buggy_getaddrinfo=no")
+            endif()
+            if(NOT PYTHON3_NO_PTMX)
+                list(APPEND OPTIONS "ac_cv_file__dev_ptmx=yes" "ac_cv_file__dev_ptc=no")
+            endif()
+        endif()
     endif()
 
     # The version of the build Python must match the version of the cross compiled host Python.

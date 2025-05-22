@@ -9,11 +9,11 @@
   "dependencies": [
     {
       "name": "gettext-libintl",
-      "platform": "osx"
+      "platform": "!windows"
     },
     {
       "name": "libiconv",
-      "platform": "osx"
+      "platform": "!windows"
     },
     {
       "name": "libuuid",
