@@ -191,9 +191,9 @@ function(vcpkg_resolve_deploy_object_dependencies)
         get_filename_component(current_target_dir_ ${current_target_} DIRECTORY)
         cmake_path(GET current_target_dir_ PARENT_PATH current_target_install_root_dir_)
 
-        # If the the directory name is debug or debug/, note that
+        # If the the directory name is debug or debug/ (trailing slash)
         set(current_target_install_root_dir_is_debug_ FALSE)
-        if (current_target_install_root_dir_ MATCHES "debug(*//)$")
+        if (current_target_install_root_dir_ MATCHES "[/\\]debug[/\\]?$")
             set(current_target_install_root_dir_is_debug_ TRUE)
         endif()
 
