@@ -14,6 +14,11 @@ vcpkg_from_github(
 
 file(COPY "${CURRENT_PORT_DIR}/osgQOpenGLConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
 
+vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} 
+    PATCHES 
+        fix-static-1.patch
+)
+
 if(VCPKG_TARGET_IS_OSX)
     string(APPEND VCPKG_CXX_FLAGS " -stdlib=libc++")
     string(APPEND VCPKG_C_FLAGS "") # both must be set
@@ -30,7 +35,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${OPTIONS}
         -DBUILD_OSG_EXAMPLES=OFF
-        -DOSG_BUILD_APPLICATION_BUNDLES=OFF
 )
 
 vcpkg_cmake_install()
