@@ -47,12 +47,7 @@ function(vcpkg_make_configure)
     z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
     z_vcpkg_make_prepare_flags(${prepare_flags_opts} ${escaping} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 
-    if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
-        set(BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
-    endif()
-    if(NOT DEFINED BUILD_TRIPLET)
-        z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME "${ccname}")
-    endif()
+    z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME "${ccname}")
 
     if(NOT arg_DISABLE_MSVC_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
         # Lets assume that wrappers are only required for MSVC like frontends.
