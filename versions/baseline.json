@@ -8069,7 +8069,7 @@
       "port-version": 0
     },
     "rapidhash": {
-      "baseline": "2.0",
+      "baseline": "2.2",
       "port-version": 0
     },
     "rapidjson": {
