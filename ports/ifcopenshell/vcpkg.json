@@ -54,10 +54,7 @@
     "opencascade": {
       "description": "Enable geometry interpretation using Open CASCADE"
     },
-    "optimizations": {
-      "description": "Enable certain compiler and linker optimizations on RelWithDebInfo and Release builds"
-    },
-    "package": {
+    "python": {
       "description": "Build python package"
     },
     "usd": {
