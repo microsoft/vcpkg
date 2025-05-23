@@ -17,3 +17,16 @@ index 4c3d681..7431a34 100644
  
  IfcParse::IfcGlobalId::IfcGlobalId() {
  	uuid_data = gen();
+diff --git a/src/ifcparse/IfcParse.cpp b/src/ifcparse/IfcParse.cpp
+index cad24a3..2920891 100644
+--- a/src/ifcparse/IfcParse.cpp
++++ b/src/ifcparse/IfcParse.cpp
+@@ -120,7 +120,7 @@ IfcSpfStream::IfcSpfStream(const std::string& fn)
+ 
+ #ifdef USE_MMAP
+ 	if (mmap) {
+-		mfs = boost::iostreams::mapped_file_source(boost::filesystem::wpath(fn_wide));
++		mfs = boost::iostreams::mapped_file_source(boost::filesystem::path(fn_wide));
+ 	} else {
+ #endif
+ 		stream = _wfopen(fn_wide, L"rb");
