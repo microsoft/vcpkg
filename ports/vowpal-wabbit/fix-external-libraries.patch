@@ -1,5 +1,5 @@
 diff --git a/ext_libs/ext_libs.cmake b/ext_libs/ext_libs.cmake
-index e03de8690..f8acddd7e 100644
+index e03de86..073db1c 100644
 --- a/ext_libs/ext_libs.cmake
 +++ b/ext_libs/ext_libs.cmake
 @@ -37,8 +37,6 @@ endif()
@@ -11,3 +11,13 @@ index e03de8690..f8acddd7e 100644
  else()
    add_library(RapidJSON INTERFACE)
    target_include_directories(RapidJSON SYSTEM INTERFACE "${CMAKE_CURRENT_LIST_DIR}/rapidjson/include")
+@@ -101,8 +99,7 @@ endif()
+ if(VW_EIGEN_SYS_DEP)
+   # Since EXACT is not specified, any version compatible with 3.4.0 is accepted (>= 3.4.0)
+   find_package(Eigen3 3.4.0 CONFIG REQUIRED)
+-  add_library(eigen INTERFACE)
+-  target_include_directories(eigen INTERFACE ${EIGEN3_INCLUDE_DIR})
++  add_library(eigen ALIAS Eigen3::Eigen)
+ else()
+   if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/eigen/CMakeLists.txt)
+   message(SEND_ERROR "The eigen git submodule is not available.\
