@@ -2,12 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
     REF ${VERSION}
-    SHA512 776d26bc5d8ec7bca823d1c0fc821b0efc2411976901e1fca0ffecbc64591798e9e21a483c1637e9877bdd921dc463ffaef4eeb6a76d9dd8463c97c5f50834d4
+    SHA512 6f9f879f21c9ef61315f133235517fbf1d9679846189d750068cb28e65325d1728924546c78105f7e6d5075e085206f3832f4210408a472557adb48a8429c822
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
         fix-liefconfig-cmake-in.patch
         fix-vcpkg-includes.patch
+        # Remove it when following issue will be solved. https://github.com/lief-project/LIEF/issues/1192
+        include-cstdint.patch
+        # Fix compilation error with lief[core,enable-json]
+        include-json-header.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
@@ -32,6 +36,21 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "art"            LIEF_ART               # Build LIEF with ART module
 )
 
+set(extra_config)
+
+# set CMAKE_MSVC_RUNTIME_LIBRARY for dynamic linkage
+# https://github.com/lief-project/LIEF/blob/0.16.5/scripts/windows/package_sdk.py#L46-L63
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>DLL)
+    else()
+        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>)
+    endif()
+endif()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIEF_FORCE_API_EXPORTS)
+list(APPEND extra_config -DLIEF_FORCE_API_EXPORTS=${LIEF_FORCE_API_EXPORTS})
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -48,6 +67,7 @@ vcpkg_cmake_configure(
         -DLIEF_OPT_EXTERNAL_EXPECTED=ON
         -DLIEF_DISABLE_FROZEN=OFF
         -DLIEF_DISABLE_EXCEPTIONS=OFF
+        ${extra_config}
 
         "-DLIEF_EXTERNAL_SPAN_DIR=${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tcb"
 )
