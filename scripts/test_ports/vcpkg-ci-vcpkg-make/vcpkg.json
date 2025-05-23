@@ -38,6 +38,9 @@
     "z-vcpkg-make-get-configure-triplets": {
       "description": "Test the z_vcpkg_make_get_configure_triplets function"
     },
+    "z-vcpkg-make-get-crosscompiling": {
+      "description": "Test the z_vcpkg_make_get_crosscompiling function"
+    },
     "z-vcpkg-make-prepare-compile-flags": {
       "description": "Test the z_vcpkg_make_prepare_compile_flags function"
     },
