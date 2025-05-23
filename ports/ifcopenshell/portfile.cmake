@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "wasm" WASM_BUILD
         "vld" USE_VLD
         "mmap" USE_MMAP
-        "package" BUILD_PACKAGE
+        "python" BUILD_PACKAGE
         "hdf5" HDF5_SUPPORT
         "usd" USD_SUPPORT
 )
