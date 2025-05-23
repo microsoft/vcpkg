@@ -2,22 +2,11 @@
 # cl_cpp_wrapper
 # Wrapper around MS's cl.exe to make it act more like Unix cpp
 
-PATH="$PATH:/usr/bin"
-
-case $MACHTYPE in
-    *-msys)
-        slash="-"
-        ;;
-    *)
-        slash="/"
-        ;;
-esac
-
 # prog specifies the program that should be run cl.exe
 prog=cl.exe
 debug=
-cppopt=("${slash}nologo")
-cppopt+=("${slash}E")
+cppopt=("-nologo")
+cppopt+=("-E")
 verbose=
 shared_index=-1
 
@@ -42,15 +31,10 @@ while test $# -gt 0; do
     -*)
         # Remaining '-' options are passed to the compiler
         if test x$optarg != x ; then
-            cppopt+=("${slash}${1:1}=$optarg")
+            cppopt+=("-${1:1}=$optarg")
         else
-            cppopt+=("${slash}${1:1}")
+            cppopt+=("-${1:1}")
         fi
-        ;;
-
-    /*)
-        # All '/' options are assumed to be for cpp and are passed through
-        cppopt+=("${slash}${1:1}")
         ;;
 
     *)
@@ -84,12 +68,21 @@ fi
 
 input_file="${file:-/proc/self/fd/0}"
 if [ "$input_file" == "/proc/self/fd/0" ]; then
+    #echo "STDIN"
     # CL does not support reading from STDIN so it is wrapped here. 
     tmpout=cpp_wrapper_$RANDOM.h
     /usr/bin/cp $input_file $tmpout
+    # from https://stackoverflow.com/questions/36313562/how-to-redirect-stdin-to-file-in-bash
+    #exec 3> cppstdtmp.h
+    #while IFS= read -r line; do
+    #  printf '%s' "$line"
+    #done
+    #exec 3<&-
+    #echo "$(</dev/stdin)" > cppstdtmp.h
     exec $prog ${cppopt[@]} $tmpout
     rm -f $tmpout
 else
+    #echo "FILE"
     exec $prog ${cppopt[@]} $input_file
 fi
 
