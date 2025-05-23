@@ -15,6 +15,20 @@ macro(z_vcpkg_make_set_common_vars)
     endif()
 endmacro()
 
+### Autotool's crosscompiling by autotool's triplets in ARGN
+function(z_vcpkg_make_get_crosscompiling out_var)
+    set(host "")
+    set(build "")
+    if(ARGN MATCHES "--host=([^;]*)")
+        set(host "${CMAKE_MATCH_1}")
+    endif()
+    if(ARGN MATCHES "--build=([^;]*)")
+        set(build "${CMAKE_MATCH_1}")
+    endif()
+    string(COMPARE NOTEQUAL "${host}" "${build}" is_crosscompiling)
+    set("${out_var}" "${is_crosscompiling}" PARENT_SCOPE)
+endfunction()
+
 ###
 macro(z_vcpkg_make_get_cmake_vars)
     cmake_parse_arguments(vmgcv_arg # Not just arg since macros don't define their own var scope. 
@@ -255,6 +269,7 @@ function(z_vcpkg_make_prepare_programs out_env)
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
     z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
+    z_vcpkg_make_get_crosscompiling(is_crosscompiling ${arg_BUILD_TRIPLET})
 
     macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
         # Allows to overwrite settings in custom triplets via the environment
@@ -284,12 +299,12 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
-            if(NOT arg_BUILD_TRIPLET MATCHES "--host") # TODO: Check if this generates problems with the new triplet approach
+            if(NOT is_crosscompiling)
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
             else()
-                # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated.
+                # Silly trick to make configure accept CC_FOR_BUILD but in reality CC_FOR_BUILD is deactivated.
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
@@ -309,7 +324,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
-            if(NOT arg_BUILD_TRIPLET MATCHES "--host")
+            if(NOT is_crosscompiling)
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
@@ -400,7 +415,7 @@ function(z_vcpkg_make_prepare_programs out_env)
 
         z_vcpkg_make_set_env(CC C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
         z_vcpkg_make_set_env(CXX CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
-        if(NOT arg_BUILD_TRIPLET MATCHES "--host")
+        if(NOT is_crosscompiling)
             z_vcpkg_make_set_env(CC_FOR_BUILD C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
             z_vcpkg_make_set_env(CPP_FOR_BUILD C_COMPILER "-E" ${ABIFLAGS_${arg_CONFIG}})
             z_vcpkg_make_set_env(CXX_FOR_BUILD CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
