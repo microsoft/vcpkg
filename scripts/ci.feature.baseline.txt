@@ -157,7 +157,6 @@ ignition-msgs1:x64-uwp=fail
 ignition-msgs5:arm-uwp=fail
 ignition-msgs5:arm64-windows=fail
 ignition-msgs5:x64-uwp=fail
-ijg-libjpeg:x64-windows-static-md=fail
 intel-mkl:arm-uwp=fail
 intel-mkl:arm64-osx=fail
 intel-mkl:arm64-windows=fail
