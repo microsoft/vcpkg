@@ -47,10 +47,6 @@ foreach(program_name IN LISTS required_programs)
 endforeach()
 
 if(VCPKG_DETECTED_MSVC)
-    if("nls" IN_LIST FEATURES)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES gettext)
-        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-    endif()
     if("xml" IN_LIST FEATURES)
         x_vcpkg_pkgconfig_get_modules(
             PREFIX PC_LIBXML2

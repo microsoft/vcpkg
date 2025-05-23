@@ -109,13 +109,9 @@
           "host": true,
           "features": [
             "tools"
-          ],
-          "platform": "!windows, mingw"
+          ]
         },
-        {
-          "name": "gettext-libintl",
-          "platform": "!windows, mingw"
-        }
+        "gettext-libintl"
       ]
     },
     "openssl": {
