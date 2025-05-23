@@ -26,7 +26,7 @@ function(vcpkg_max)
         set(vcpkg_max_TYPE "INTEGER") # default to INTEGER if not specified
     endif()
 
-    if (max_type_ STREQUAL "INTEGER")
+    if (vcpkg_max_TYPE STREQUAL "INTEGER")
         set(max_value_ 0)
         foreach (value_ IN LISTS vcpkg_max_VALUES)
             string(STRIP "${value_}" parsed_value_)
