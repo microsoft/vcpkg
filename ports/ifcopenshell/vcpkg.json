@@ -51,9 +51,6 @@
         "boost-iostreams"
       ]
     },
-    "opencascade": {
-      "description": "Enable geometry interpretation using Open CASCADE"
-    },
     "python": {
       "description": "Build python package"
     },
