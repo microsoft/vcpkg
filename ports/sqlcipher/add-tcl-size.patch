@@ -1,0 +1,14 @@
+diff --git a/src/tclsqlite.c b/src/tclsqlite.c
+index e95bf69..c8ac07f 100644
+--- a/src/tclsqlite.c
++++ b/src/tclsqlite.c
+@@ -47,7 +47,8 @@
+ /* Compatability between Tcl8.6 and Tcl9.0 */
+ #if TCL_MAJOR_VERSION==9
+ # define CONST const
+-#elif !defined(Tcl_Size)
++#endif
++#if !defined(Tcl_Size)
+   typedef int Tcl_Size;
+ #endif
+ /**** End copy of tclsqlite.h ****/
