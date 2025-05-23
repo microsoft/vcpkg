@@ -149,6 +149,11 @@ APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-8 cuda-libraries-dev-12-8 cuda-driv
   cuda-cudart-dev-12-8 libcublas-12-8 libcurand-dev-12-8 cuda-nvml-dev-12-8 libcudnn9-dev-cuda-12 \
   libnccl2 libnccl-dev"
 
+## required by fltk
+APT_PACKAGES="$APT_PACKAGES libasound2-dev libglu1-mesa-dev libwayland-dev \
+    wayland-protocols libdbus-1-dev libxkbcommon-dev libegl-dev libopengl-dev \
+    libpango1.0-dev libgtk-3-dev"
+
 ## PowerShell + Azure
 APT_PACKAGES="$APT_PACKAGES powershell azure-cli"
 
