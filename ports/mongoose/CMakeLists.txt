@@ -16,14 +16,14 @@ set_target_properties(mongoose PROPERTIES PUBLIC_HEADER mongoose.h)
 # OpenSSL support
 if (ENABLE_SSL)
     find_package(OpenSSL REQUIRED)
-    target_compile_definitions(mongoose PRIVATE MG_TLS_OPENSSL)
+    target_compile_definitions(mongoose PRIVATE MG_TLS=MG_TLS_OPENSSL)
     target_link_libraries(mongoose PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 endif()
 
 # mbedTLS support
 if (ENABLE_MBEDTLS)
     find_package(mbedtls REQUIRED)
-    target_compile_definitions(mongoose PRIVATE MG_TLS_MBED)
+    target_compile_definitions(mongoose PRIVATE MG_TLS=MG_TLS_MBED)
     target_link_libraries(mongoose PRIVATE mbedcrypto mbedx509 mbedtls)
 endif()
 
