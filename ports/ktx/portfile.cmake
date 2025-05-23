@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/KTX-Software
     REF "v${VERSION}"
-    SHA512 0077315fe2b4e676e97e3a158c2c6e1f6ba426e14ad23342592cd69be28cfce64c40614e0a84d58a9634877ab334e713b94d4c962132c98bfea308e91bc8a98a
+    SHA512 07c8564e1db57fea44ed565b1bc7d93ec82c29d1aa525cea0c1b1b42a8a587de0ab61b29e2c179fed4edd7cd539d13ee0112ce35728f3fe7e751de8640c679d2
     HEAD_REF master
     PATCHES
         0001-Use-vcpkg-zstd.patch
-        0002-Fix-versioning.patch
         0003-mkversion.patch
         0004-quirks.patch
         0005-no-vendored-libs.patch
@@ -33,7 +32,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND OPTIONS "-DBASH_EXECUTABLE=${MSYS_ROOT}/usr/bin/bash.exe")
 endif()
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -47,7 +46,7 @@ vcpkg_cmake_configure(
         -DKTX_VERSION_FULL=v${VERSION}
         -DKTX_FEATURE_TESTS=OFF
         -DKTX_FEATURE_LOADTEST_APPS=OFF
-        -DKTX_FEATURE_STATIC_LIBRARY=${ENABLE_STATIC}
+        -DBUILD_SHARED_LIBS=${ENABLE_SHARED}
         ${FEATURE_OPTIONS}
         ${OPTIONS}
     DISABLE_PARALLEL_CONFIGURE
