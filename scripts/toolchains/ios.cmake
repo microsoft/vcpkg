@@ -1,5 +1,9 @@
 if(NOT _VCPKG_IOS_TOOLCHAIN)
-    set(_VCPKG_IOS_TOOLCHAIN 1)
+    if ("$VCPKG_CMAKE_SYSTEM_NAME" STREQUAL "visionOS")
+        set(_VCPKG_VISIONOS_TOOLCHAIN 1)
+    else()
+        set(_VCPKG_IOS_TOOLCHAIN 1)
+    endif()
 
     if(POLICY CMP0056)
         cmake_policy(SET CMP0056 NEW)
@@ -29,7 +33,10 @@ if(NOT _VCPKG_IOS_TOOLCHAIN)
         unset(_vcpkg_ios_sysroot)
         unset(_vcpkg_ios_target_architecture)
 
-        if ("${arch}" STREQUAL "arm64")
+        if ("${_VCPKG_VISIONOS_TOOLCHAIN}" STREQUAL "visionOS")
+            set(_vcpkg_ios_system_processor "aarch64")
+            set(_vcpkg_ios_target_architecture "arm64")
+        elseif ("${arch}" STREQUAL "arm64")
             set(_vcpkg_ios_system_processor "aarch64")
             set(_vcpkg_ios_target_architecture "arm64")
         elseif("${arch}" STREQUAL "arm")
@@ -57,7 +64,7 @@ if(NOT _VCPKG_IOS_TOOLCHAIN)
     # If VCPKG_OSX_ARCHITECTURES or VCPKG_OSX_SYSROOT is set in the triplet, they will take priority,
     # so the following will be no-ops.
     set(CMAKE_OSX_ARCHITECTURES "${_vcpkg_ios_target_architecture}" CACHE STRING "Build architectures for iOS")
-    if(_vcpkg_ios_sysroot)
+    if(_vcpkg_ios_sysroot AND NOT _VCPKG_IOS_TOOLCHAIN)
         set(CMAKE_OSX_SYSROOT ${_vcpkg_ios_sysroot} CACHE STRING "iOS sysroot")
     endif()
 
