@@ -15,6 +15,10 @@
       "name": "libxslt",
       "host": true
     },
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "xcb",
     "xproto",
     "xtrans"
