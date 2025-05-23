@@ -52,7 +52,16 @@
     },
     "x11": {
       "description": "Build with X11 support",
-      "supports": "!windows"
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ]
+        }
+      ]
     }
   }
 }
