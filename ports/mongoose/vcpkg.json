@@ -17,10 +17,12 @@
   ],
   "features": {
     "ssl": {
-      "description": "Build with openssl",
-      "dependencies": [
-        "openssl"
-      ]
+      "description": "Enable OpenSSL support",
+      "dependencies": ["openssl"]
+    },
+    "mbedtls": {
+      "description": "Enable mbedTLS support",
+      "dependencies": ["mbedtls"]
     }
   }
 }
