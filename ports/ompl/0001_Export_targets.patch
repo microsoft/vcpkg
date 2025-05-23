@@ -1,0 +1,20 @@
+diff --git a/src/ompl/CMakeLists.txt b/src/ompl/CMakeLists.txt
+index 8e19b30..df38912 100644
+--- a/src/ompl/CMakeLists.txt
++++ b/src/ompl/CMakeLists.txt
+@@ -84,9 +84,15 @@ else (MSVC)
+ endif (MSVC)
+ 
+ # install the library
++target_include_directories(ompl PUBLIC $<INSTALL_INTERFACE:include>)
+ install(TARGETS ompl
++    EXPORT ompl
+     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT ompl)
++install(EXPORT ompl
++    DESTINATION "share/ompl"
++    FILE ompl-targets.cmake
++)
+ if (NOT MSVC)
+     add_custom_command(TARGET ompl POST_BUILD
+         COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:ompl>"
