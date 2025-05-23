@@ -19,6 +19,7 @@ vcpkg_extract_source_archive(
         windows/win_bison_flex.patch
         windows/msbuild.patch
         windows/spin_delay.patch
+        windows/tcl-9.0-alpha.patch
         android/unversioned_so.patch
 )
 
