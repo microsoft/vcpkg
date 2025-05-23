@@ -1,3 +1,5 @@
+block(SCOPE_FOR VARIABLES)
+
 # Test 1: Basic Transformation
 set(all_libs_list "libexample.dll;libutil.a;libutil2.lib;libutil3.so")
 set(expected "-llibexample.dll;-llibutil;-llibutil2;-llibutil3")
@@ -49,3 +51,5 @@ unit_test_check_variable_equal(
     all_libs_list
     "${expected}"
 )
+
+endblock()
