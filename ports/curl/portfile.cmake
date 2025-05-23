@@ -3,14 +3,14 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF ${curl_version}
-    SHA512 083591171202ea26fcb22ffa9c52286c76c7ff8dcea0a5e8a616737eee8672ab8bfffaa230e84b05450c0acb1f3e5f402d4f6aca46bd52fd6e812b68eadfca27
+    REF rc-8_14_0-3 #[[${curl_version}]]
+    SHA512 643c37adfba95f2e1d53d5ab73eea42eeec2e19c8f87c96631ec49eee87f1d11e36e52501e1b126df20ffd6436df87f461415d3e68cb5f6994b43d08566b4cdd
     HEAD_REF master
     PATCHES
         export-components.patch
         dependencies.patch
         pkgconfig-curl-config.patch
-        cmake-config.patch
+        # obsolete ? cmake-config.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
