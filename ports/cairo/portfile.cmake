@@ -50,10 +50,6 @@ else()
     list(APPEND OPTIONS -Dlzo=disabled)
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(ENV{CPP} "cl_cpp_wrapper")
-endif()
-
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
