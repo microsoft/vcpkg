@@ -42,7 +42,7 @@ if(VCPKG_HOST_IS_WINDOWS)
             CMAKE_MATCH_1 "unknown-mingw32"
         )
     else()
-        # maybe crosscompiling
+        # maybe there is --host
     endif()
 elseif(NOT VCPKG_CROSSCOMPILING)
     if(triplets)
@@ -58,7 +58,7 @@ elseif(NOT VCPKG_CROSSCOMPILING)
     endif()
 elseif(VCPKG_TARGET_IS_ANDROID)
     unit_test_check_variable_equal(
-        [[ string(REGEX MATCH "--host=[^;]*-([^-;]*-[^-;]*)" output "${triplets}") ]]
+        [[ string(REGEX MATCH "--host=[^;]*-([^-;]*-(android|[^-;]*))" output "${triplets}") ]]
         CMAKE_MATCH_1 "linux-android"
     )
     # expected bad: there is --host but not --build
@@ -68,7 +68,7 @@ elseif(VCPKG_TARGET_IS_ANDROID)
     )
 elseif(VCPKG_TARGET_IS_MINGW)
     unit_test_check_variable_equal(
-        [[ string(REGEX MATCH "--host=[^;]*-([^-;]*)" output "${triplets}") ]]
+        [[ string(REGEX MATCH "--host=[^;]*-(mingw32|[^-;]*)" output "${triplets}") ]]
         CMAKE_MATCH_1 "mingw32"
     )
     # expected bad: there is --host but not --build
