@@ -2229,7 +2229,7 @@ xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not
 # skip
 aravis[introspection]:arm64-windows = skip # needs arm64 host
 atk[introspection]:arm64-windows = skip # needs arm64 host
-cairo[x11](osx) = skip # No x11 on osx
+cairo[x11](android | osx) = skip # No x11 on osx
 entt[experimental] = skip # required head build
 freerdp[x11](osx) = skip # No x11 on osx
 gdk-pixbuf[introspection]:arm64-windows = skip # needs arm64 host
