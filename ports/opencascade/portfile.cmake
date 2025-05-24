@@ -11,6 +11,7 @@ vcpkg_from_github(
         dependencies.patch
         install-include-dir.patch
         remove-vcpkg-enabling.patch
+        csf-redifinition.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
