@@ -10,9 +10,6 @@ vcpkg_from_github(
 # Install only Cinatra’s own headers—not vendored dependencies
 file(INSTALL
     "${SOURCE_PATH}/include/cinatra"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/cinatra"
-)
-file(INSTALL
     "${SOURCE_PATH}/include/cinatra.hpp"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
