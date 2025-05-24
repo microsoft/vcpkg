@@ -1,0 +1,12 @@
+{
+  "name": "cinatra",
+  "version": "0.9.5",
+  "description": "Cinatra is a high performance HTTP framework with modern C++ features.",
+  "homepage": "https://github.com/qicosmos/cinatra",
+  "license": "MIT",
+  "supports": "!uwp & !android",
+  "dependencies": [
+    "asio",
+    "tanakh-cmdline"
+  ]
+}
