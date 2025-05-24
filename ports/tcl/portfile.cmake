@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES 
         force-shell-install.patch
         remove-git-rev-parse.patch
+        disable-wx.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
