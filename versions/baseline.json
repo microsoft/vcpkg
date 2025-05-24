@@ -10409,7 +10409,7 @@
       "port-version": 0
     },
     "zookeeper": {
-      "baseline": "3.5.6",
+      "baseline": "3.9.3",
       "port-version": 1
     },
     "zopfli": {
