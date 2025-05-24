@@ -9384,6 +9384,10 @@
       "baseline": "2.3.4",
       "port-version": 0
     },
+    "tinyproto": {
+      "baseline": "1.0.0-e0d5a3b",
+      "port-version": 0
+    },
     "tinyspline": {
       "baseline": "0.6.0",
       "port-version": 0
