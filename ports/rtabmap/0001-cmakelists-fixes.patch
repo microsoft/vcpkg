@@ -538,7 +538,7 @@
    # if successful this would set EIGEN3_INCLUDE_DIR and the rest of
    # the script will work as usual
 -  find_package(Eigen3 ${Eigen3_FIND_VERSION} NO_MODULE QUIET)
-+  find_package(Eigen3 ${Eigen3_FIND_VERSION} NO_MODULE REQUIRED)
++  find_package(Eigen3 CONFIG REQUIRED)
  
    if(NOT EIGEN3_INCLUDE_DIR)
      find_path(EIGEN3_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
