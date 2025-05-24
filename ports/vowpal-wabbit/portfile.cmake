@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES
         cmake_remove_bin_targets.patch
         fix-build-error-with-fmt11.patch
-        fix-rapidjson-target.patch
+        fix-external-libraries.patch
 )
 
 vcpkg_cmake_configure(

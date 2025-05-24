@@ -14,6 +14,7 @@ vcpkg_from_github(
         devendor-lodepng.diff
         disable_unit_tests_examples_and_tutorials.patch
         pkgconfig.diff
+        add-cassert.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/dart/external/imgui")
 
@@ -41,6 +42,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${options}
         -DDART_VERBOSE=ON
+        -DDART_TREAT_WARNINGS_AS_ERRORS=OFF
         -DDART_MSVC_DEFAULT_OPTIONS=ON
         -DDART_USE_SYSTEM_IMGUI=ON
         -DDART_BUILD_DARTPY=OFF
