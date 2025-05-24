@@ -1,28 +1,36 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index df5693d..e5723d0 100644
+index af1f251..02cde2a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -295,9 +295,9 @@ else (SQLITECPP_INTERNAL_SQLITE)
+@@ -285,7 +285,7 @@ if (SQLITECPP_INTERNAL_SQLITE)
+     option(SQLITE_ENABLE_DBSTAT_VTAB "Enable DBSTAT read-only eponymous virtual table extension when building internal sqlite3 library." OFF)
+     # build the SQLite3 C library (for ease of use/compatibility) versus Linux sqlite3-dev package
+     add_subdirectory(sqlite3)
+-    target_link_libraries(SQLiteCpp PUBLIC SQLite::SQLite3)
++    target_link_libraries(SQLiteCpp PUBLIC unofficial::sqlite3::sqlite3)
+ else (SQLITECPP_INTERNAL_SQLITE)
+     # When using the SQLite codec, we need to link against the sqlcipher lib & include <sqlcipher/sqlite3.h>
+     # So this gets the lib & header, and links/includes everything
+@@ -325,7 +325,7 @@ else (SQLITECPP_INTERNAL_SQLITE)
              target_link_libraries(SQLiteCpp PRIVATE ${sqlcipher_LIBRARY})
          endif()
      else()
 -        find_package (SQLite3 REQUIRED)
-+        find_package (unofficial-sqlite3 CONFIG)
-         message(STATUS "Link to sqlite3 system library")
--        target_link_libraries(SQLiteCpp PUBLIC SQLite::SQLite3)
-+        target_link_libraries(SQLiteCpp PRIVATE unofficial::sqlite3::sqlite3)
++        find_package (unofficial-sqlite3 REQUIRED)
+         message(STATUS "Link to sqlite3 system library ${SQLite3_VERSION}")
+         target_link_libraries(SQLiteCpp PUBLIC SQLite::SQLite3)
          if(SQLite3_VERSION VERSION_LESS "3.19")
-             set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
-         endif()
 diff --git a/cmake/SQLiteCppConfig.cmake.in b/cmake/SQLiteCppConfig.cmake.in
-index 2b48df4..d0feda9 100644
+index 7d0941c..ddfc897 100644
 --- a/cmake/SQLiteCppConfig.cmake.in
 +++ b/cmake/SQLiteCppConfig.cmake.in
-@@ -1,6 +1,6 @@
+@@ -1,7 +1,7 @@
  include(CMakeFindDependencyMacro)
  if(NOT @SQLITECPP_INTERNAL_SQLITE@)
 -    find_dependency(SQLite3 REQUIRED)
+-endif()
 +    find_dependency(unofficial-sqlite3 REQUIRED)
- endif()
++endif()
  if(@UNIX@)
      set(THREADS_PREFER_PTHREAD_FLAG @THREADS_PREFER_PTHREAD_FLAG@)
+     find_dependency(Threads REQUIRED)
