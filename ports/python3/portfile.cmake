@@ -273,24 +273,25 @@ else()
         list(APPEND OPTIONS "--without-readline")
     endif()
 
+    if(VCPKG_TARGET_IS_ANDROID)
+        list(APPEND OPTIONS "--without-static-libpython" )
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DANDROID_NO_UNDEFINED=OFF")
+        if(VCPKG_CROSSCOMPILING)
+            # Cannot not run target executables during configure
+            if(NOT PYTHON3_BUGGY_GETADDRINFO)
+                list(APPEND OPTIONS "ac_cv_buggy_getaddrinfo=no")
+            endif()
+            if(NOT PYTHON3_NO_PTMX)
+                list(APPEND OPTIONS "ac_cv_file__dev_ptmx=yes" "ac_cv_file__dev_ptc=no")
+            endif()
+        endif()
+    endif()
+
     # The version of the build Python must match the version of the cross compiled host Python.
     # https://docs.python.org/3/using/configure.html#cross-compiling-options
     if(VCPKG_CROSSCOMPILING)
         set(_python_for_build "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}")
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
-        
-        if(VCPKG_TARGET_IS_ANDROID)
-            list(APPEND OPTIONS "--without-static-libpython" "LDFLAGS=")
-            list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DANDROID_NO_UNDEFINED=OFF")
-        endif()
-
-        # Cannot not run target executables during configure
-        if(NOT PYTHON3_BUGGY_GETADDRINFO)
-            list(APPEND OPTIONS "ac_cv_buggy_getaddrinfo=no")
-        endif()
-        if(NOT PYTHON3_NO_PTMX)
-            list(APPEND OPTIONS "ac_cv_file__dev_ptmx=yes" "ac_cv_file__dev_ptc=no")
-        endif()
     endif()
 
     vcpkg_make_configure(
