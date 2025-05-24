@@ -4,6 +4,7 @@
   "description": "Tiny Software Protocol for communication over UART, SPI, etc",
   "homepage": "https://github.com/lexus2k/tinyproto",
   "license": "GPL-3.0-or-later",
+  "supports": "!(osx & arm64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
