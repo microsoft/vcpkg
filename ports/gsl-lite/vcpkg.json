@@ -3,6 +3,8 @@
   "version": "1.0.1",
   "description": "ISO C++ Core Guidelines Library implementation for C++98, C++11 up",
   "homepage": "https://github.com/gsl-lite/gsl-lite/",
+  "documentation": "https://gsl-lite.github.io/gsl-lite/",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

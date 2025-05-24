@@ -4,6 +4,8 @@
   "port-version": 1,
   "description": "Telnet++ is an implementation of the Telnet Session Layer protocol using C++17",
   "homepage": "https://github.com/KazDragon/telnetpp",
+  "documentation": "https://kazdragon.github.io/telnetpp/",
+  "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     "boost-algorithm",
