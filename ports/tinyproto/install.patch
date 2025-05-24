@@ -1,13 +1,15 @@
-﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cce1f46..7894073 100644
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cce1f46..1fa7aa1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -27,6 +27,13 @@ if (NOT DEFINED COMPONENT_DIR)
+@@ -27,6 +27,15 @@ if (NOT DEFINED COMPONENT_DIR)
          add_subdirectory(unittest)
      endif()
  
 +    install(DIRECTORY src/ DESTINATION include/tinyproto
-+            FILES_MATCHING PATTERN "*.h")
++            FILES_MATCHING
++            PATTERN "*.h"
++            PATTERN "single_core" EXCLUDE)
 +    install(TARGETS tinyproto
 +            LIBRARY DESTINATION lib
 +            ARCHIVE DESTINATION lib
