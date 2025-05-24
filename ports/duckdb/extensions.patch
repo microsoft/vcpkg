@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4496860..e1f58c3 100644
+index eecaf51..65dbfae 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1257,7 +1257,19 @@ endforeach()
+@@ -1280,7 +1280,19 @@ endforeach()
  # Load extensions passed through cmake config var
  foreach(EXT IN LISTS BUILD_EXTENSIONS)
    if(NOT "${EXT}" STREQUAL "")
@@ -28,7 +28,7 @@ index 7c5ce31..efb9ec3 100644
 --- a/DuckDBConfig.cmake.in
 +++ b/DuckDBConfig.cmake.in
 @@ -10,6 +10,14 @@ if(NOT @WITH_INTERNAL_ICU@)
-     find_dependency(ICU COMPONENTS i18n uc)
+     find_dependency(ICU COMPONENTS i18n uc data)
  endif()
  
 +set(EXTENSION_LIST "@BUILD_EXTENSIONS@")
