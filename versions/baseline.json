@@ -1638,7 +1638,7 @@
     },
     "cgns": {
       "baseline": "4.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "chaiscript": {
       "baseline": "6.1.0",
@@ -1678,7 +1678,7 @@
     },
     "chronoengine": {
       "baseline": "8.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cialloo-rcon": {
       "baseline": "1.0.0",
@@ -3902,7 +3902,7 @@
     },
     "itpp": {
       "baseline": "4.3.1",
-      "port-version": 12
+      "port-version": 13
     },
     "itsy-bitsy": {
       "baseline": "2022-08-02",
@@ -4926,7 +4926,7 @@
     },
     "libmad": {
       "baseline": "0.16.4",
-      "port-version": 3
+      "port-version": 4
     },
     "libmagic": {
       "baseline": "5.46",
@@ -5082,7 +5082,7 @@
     },
     "libopensp": {
       "baseline": "1.5.2",
-      "port-version": 3
+      "port-version": 4
     },
     "libopnmidi": {
       "baseline": "1.5.1",
@@ -5114,7 +5114,7 @@
     },
     "libosmscout": {
       "baseline": "1.1.1",
-      "port-version": 5
+      "port-version": 6
     },
     "libp7-baical": {
       "baseline": "replaced",
@@ -6294,7 +6294,7 @@
     },
     "mpc": {
       "baseline": "1.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mpfr": {
       "baseline": "4.2.2",
@@ -6874,7 +6874,7 @@
     },
     "openctm": {
       "baseline": "1.0.3",
-      "port-version": 1
+      "port-version": 2
     },
     "opencv": {
       "baseline": "4.11.0",
@@ -7066,7 +7066,7 @@
     },
     "otl": {
       "baseline": "4.0.481",
-      "port-version": 0
+      "port-version": 1
     },
     "outcome": {
       "baseline": "2.2.9",
@@ -7398,7 +7398,7 @@
     },
     "portaudio": {
       "baseline": "19.7",
-      "port-version": 6
+      "port-version": 7
     },
     "portmidi": {
       "baseline": "2.0.4",
@@ -9294,7 +9294,7 @@
     },
     "threadpool": {
       "baseline": "0.2.5",
-      "port-version": 3
+      "port-version": 4
     },
     "thrift": {
       "baseline": "0.20.0",
@@ -10378,7 +10378,7 @@
     },
     "zimpl": {
       "baseline": "3.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "zint": {
       "baseline": "2.15.0",
