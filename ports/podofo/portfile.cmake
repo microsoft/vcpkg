@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 1.0.0-rc1 # "${VERSION}"
     SHA512 544ac7b3dae700917c652fca9fc72e5987a488161dfc6edead8771845aabdccb76934ec8a04ec978d6919a92712577d73b8a46fe00801429908c5d8cd4fdcf22
     PATCHES
+        arm64-windows.diff
         cmake-config.diff
         mingw.diff
         pkgconfig.diff
@@ -28,6 +29,10 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/podofo)
+
+if(PODOFO_BUILD_STATIC)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/podofo/auxiliary/basedefs.h" "#ifdef PODOFO_STATIC" "#if 1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
