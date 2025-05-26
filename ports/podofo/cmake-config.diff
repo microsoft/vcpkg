@@ -1,0 +1,34 @@
+diff --git a/src/podofo/podofo-config.cmake.in b/src/podofo/podofo-config.cmake.in
+index a1b815e2..700619bb 100644
+--- a/src/podofo/podofo-config.cmake.in
++++ b/src/podofo/podofo-config.cmake.in
+@@ -1,5 +1,28 @@
+ @PACKAGE_INIT@
+ 
++if("@PODOFO_BUILD_STATIC@")
++    include(CMakeFindDependencyMacro)
++    if("@Fontconfig_FOUND@")
++        find_dependency(Fontconfig)
++    endif()
++    find_dependency(Freetype)
++    if("@JPEG_FOUND@")
++        find_dependency(JPEG)
++    endif()
++    if("@LCMS2_FOUND@")
++        find_dependency(LCMS2)
++    endif()
++    find_dependency(LibXml2)
++    find_dependency(OpenSSL)
++    if("@PNG_FOUND@")
++        find_dependency(PNG)
++    endif()
++    if("@TIFF_FOUND@")
++        find_dependency(TIFF)
++    endif()
++    find_dependency(ZLIB)
++endif()
++
+ include ("${CMAKE_CURRENT_LIST_DIR}/podofo-targets.cmake")
+ 
+ add_library(podofo::podofo ALIAS podofo::@PODOFO_TARGET@)
+\ No newline at end of file
