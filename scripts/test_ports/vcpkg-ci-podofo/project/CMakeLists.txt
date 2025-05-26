@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(podofo-test)
 
+set(CMAKE_CXX_STANDARD 17)
+
 find_package(podofo CONFIG REQUIRED)
 
 add_executable(main main.cxx)

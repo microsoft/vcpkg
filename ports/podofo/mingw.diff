@@ -1,0 +1,47 @@
+diff --git a/3rdparty/afdko/include/supportenvironment.h b/3rdparty/afdko/include/supportenvironment.h
+index cdba28a4..04a9d9a6 100644
+--- a/3rdparty/afdko/include/supportenvironment.h
++++ b/3rdparty/afdko/include/supportenvironment.h
+@@ -160,6 +160,8 @@ that changes to environment.h be upward-compatible, as described above.
+ #ifndef ISP
+ #if defined(_M_X64)
+ #define ISP isp_x64
++#elif defined(__x86_64__) /* for mingw */
++#define ISP isp_x64
+ #elif defined(_M_IX86)
+ #define ISP isp_i80486
+ #elif defined(_M_ARM)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f04949d3..4eb50e4c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -111,8 +111,8 @@ if(NOT DEFINED PLATFORM_SYSTEM_LIBRARIES)
+ endif()
+ 
+ if(WIN32)
+-    # We must explicitly link to the core win32 libraries
+-    list(APPEND PLATFORM_SYSTEM_LIBRARIES kernel32 user32 gdi32 winspool comdlg32 advapi32 shell32 ole32 oleaut32 uuid ws2_32 Crypt32)
++    # Core win32 libraries come with CMAKE_C(XX)_IMPLICIT_LINK_LIBRARIES
++    list(APPEND PLATFORM_SYSTEM_LIBRARIES ws2_32 crypt32)
+ endif()
+ 
+ if (MSVC)
+diff --git a/src/podofo/private/WindowsLeanMean.h b/src/podofo/private/WindowsLeanMean.h
+index 0f45dbeb..8b06dac5 100644
+--- a/src/podofo/private/WindowsLeanMean.h
++++ b/src/podofo/private/WindowsLeanMean.h
+@@ -2,9 +2,13 @@
+ 
+ // Include clean windows headers and undef most offending macros
+ 
++#ifndef WIN32_LEAN_AND_MEAN
+ #define WIN32_LEAN_AND_MEAN
++#endif
++#ifndef NOMINMAX
+ #define NOMINMAX
+-#include <Windows.h>
++#endif
++#include <windows.h>
+ #undef Yield
+ #undef DrawText
+ #undef GetObject
