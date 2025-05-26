@@ -1,0 +1,5 @@
+if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+ set(CMAKE_LIBRARY_ARCHITECTURE x86)
+endif()
+find_package(VPL REQUIRED)
+target_link_libraries(${TARGET} VPL::dispatcher)

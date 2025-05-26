@@ -1,0 +1,22 @@
+diff --git a/libvpl/cmake/VPLConfig.cmake.in b/libvpl/cmake/VPLConfig.cmake.in
+index 7a60974..e1d316c 100644
+--- a/libvpl/cmake/VPLConfig.cmake.in
++++ b/libvpl/cmake/VPLConfig.cmake.in
+@@ -18,13 +18,13 @@ get_filename_component(_vpl_config_file
+                        "${CMAKE_CURRENT_LIST_DIR}/VPLConfig.cmake" REALPATH)
+ get_filename_component(_vpl_config_dir "${_vpl_config_file}" DIRECTORY)
+ get_filename_component(_vpl_install_prefix
+-                       "${_vpl_config_dir}/@cmake_rel_prefix@" REALPATH)
++                       "${_vpl_config_dir}/../../../" REALPATH)
+ 
+-get_filename_component(VPL_LIB_DIR "${_vpl_config_dir}/@cmake_rel_libdir@"
++get_filename_component(VPL_LIB_DIR "${_vpl_config_dir}/../../lib"
+                        ABSOLUTE)
+-get_filename_component(VPL_INCLUDE_DIR "${_vpl_config_dir}/@cmake_rel_incdir@"
++get_filename_component(VPL_INCLUDE_DIR "${_vpl_config_dir}/../../include"
+                        ABSOLUTE)
+-get_filename_component(VPL_BIN_DIR "${_vpl_config_dir}/@cmake_rel_bindir@"
++get_filename_component(VPL_BIN_DIR "${_vpl_config_dir}/../../bin"
+                        ABSOLUTE)
+ 
+ if(CMAKE_SYSTEM_NAME MATCHES Windows)
