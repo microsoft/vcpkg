@@ -1,12 +1,12 @@
 diff --git a/3rdparty/afdko/include/supportenvironment.h b/3rdparty/afdko/include/supportenvironment.h
-index cdba28a4..04a9d9a6 100644
+index cdba28a4..4578fd8e 100644
 --- a/3rdparty/afdko/include/supportenvironment.h
 +++ b/3rdparty/afdko/include/supportenvironment.h
 @@ -160,6 +160,8 @@ that changes to environment.h be upward-compatible, as described above.
  #ifndef ISP
  #if defined(_M_X64)
  #define ISP isp_x64
-+#elif defined(__x86_64__) /* for mingw */
++#elif defined(__MINGW32__) && defined(__x86_64__)
 +#define ISP isp_x64
  #elif defined(_M_IX86)
  #define ISP isp_i80486
