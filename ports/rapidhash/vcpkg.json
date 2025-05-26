@@ -1,6 +1,6 @@
 {
   "name": "rapidhash",
-  "version": "2.0",
+  "version": "2.2",
   "description": "Very fast, high quality, platform independent hashing algorithm.",
   "homepage": "https://github.com/Nicoshev/rapidhash",
   "license": "BSD-2-Clause"

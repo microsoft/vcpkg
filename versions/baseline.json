@@ -3765,8 +3765,8 @@
       "port-version": 1
     },
     "ijg-libjpeg": {
-      "baseline": "9e",
-      "port-version": 2
+      "baseline": "9f",
+      "port-version": 0
     },
     "im3d": {
       "baseline": "2022-10-11",
@@ -4617,7 +4617,7 @@
       "port-version": 0
     },
     "libdwarf": {
-      "baseline": "0.12.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "libe57": {
@@ -8069,7 +8069,7 @@
       "port-version": 0
     },
     "rapidhash": {
-      "baseline": "2.0",
+      "baseline": "2.2",
       "port-version": 0
     },
     "rapidjson": {
