@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KazDragon/telnetpp
-  REF dec6d24c325a888f355c3e12b3a0f68ebe830a67
-  SHA512 dd2f9725042df285428018da0303f89779c66bd7ddda74de2de0e2af6dcbea3136bd5ef784501ec4ca6ccef3a4fa7df0e6bd982238e5bad45f2afbe1c82382e0
+  REF "v${VERSION}"
+  SHA512 0ff458675a44462655ff3869ff1c3390eec9d594a57a9ed95fb18f9b627b740b4f4be5e1fee3a5b9558553a05aae33134f8f8d26a85b8e4d2e01a927a8337c32
   HEAD_REF master
   PATCHES 
       fix-install-paths-v3.patch
