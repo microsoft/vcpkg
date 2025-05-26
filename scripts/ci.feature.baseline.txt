@@ -1503,7 +1503,6 @@ ompl:arm64-uwp = cascade
 ompl:x64-uwp = cascade
 omplapp:arm64-uwp = cascade
 omplapp:x64-uwp = cascade
-omplapp[ode]:arm64-windows = cascade
 onnx[pybind11]:arm64-windows = cascade
 onnx-optimizer:arm64-uwp = cascade
 onnx-optimizer:x64-uwp = cascade
