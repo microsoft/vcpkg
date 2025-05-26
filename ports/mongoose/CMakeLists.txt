@@ -22,9 +22,9 @@ endif()
 
 # mbedTLS support
 if (ENABLE_MBEDTLS)
-    find_package(mbedtls REQUIRED)
+    find_package(MbedTLS CONFIG REQUIRED)
     target_compile_definitions(mongoose PRIVATE MG_TLS=MG_TLS_MBED)
-    target_link_libraries(mongoose PRIVATE mbedcrypto mbedx509 mbedtls)
+    target_link_libraries(mongoose PRIVATE MbedTLS::mbedcrypto MbedTLS::mbedx509 MbedTLS::mbedtls)
 endif()
 
 install(TARGETS mongoose
