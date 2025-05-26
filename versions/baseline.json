@@ -9257,8 +9257,8 @@
       "port-version": 0
     },
     "tesseract": {
-      "baseline": "5.5.0",
-      "port-version": 1
+      "baseline": "5.5.1",
+      "port-version": 0
     },
     "tevclient": {
       "baseline": "2023-12-04",
