@@ -1,6 +1,7 @@
 {
   "name": "mongoose",
   "version": "7.18",
+  "port-version": 1,
   "description": "Embedded web server / embedded networking library",
   "homepage": "https://cesanta.com/",
   "license": null,
@@ -16,13 +17,17 @@
     }
   ],
   "features": {
-    "ssl": {
-      "description": "Enable OpenSSL support",
-      "dependencies": ["openssl"]
-    },
     "mbedtls": {
       "description": "Enable mbedTLS support",
-      "dependencies": ["mbedtls"]
+      "dependencies": [
+        "mbedtls"
+      ]
+    },
+    "ssl": {
+      "description": "Enable OpenSSL support",
+      "dependencies": [
+        "openssl"
+      ]
     }
   }
 }
