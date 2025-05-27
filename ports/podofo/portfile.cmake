@@ -4,10 +4,18 @@ vcpkg_from_github(
     REF 1.0.0-rc1 # "${VERSION}"
     SHA512 544ac7b3dae700917c652fca9fc72e5987a488161dfc6edead8771845aabdccb76934ec8a04ec978d6919a92712577d73b8a46fe00801429908c5d8cd4fdcf22
     PATCHES
-        arm64-windows.diff
-        cmake-config.diff
-        mingw.diff
-        pkgconfig.diff
+        arm64-windows.diff  # obsolete
+        cmake-config.diff   # upstreamed
+        mingw.diff          # obsolete
+        pkgconfig.diff      # upstreamed
+        dependencies.diff
+)
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/3rdparty/date"
+    "${SOURCE_PATH}/3rdparty/fast_float.h"
+    "${SOURCE_PATH}/3rdparty/fmt"
+    "${SOURCE_PATH}/3rdparty/utf8cpp"
+    "${SOURCE_PATH}/3rdparty/utf8proc"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
