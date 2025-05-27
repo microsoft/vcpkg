@@ -3194,7 +3194,7 @@
     },
     "giflib": {
       "baseline": "5.2.2",
-      "port-version": 1
+      "port-version": 2
     },
     "ginkgo": {
       "baseline": "1.9.0",
@@ -5158,7 +5158,7 @@
     },
     "libpq": {
       "baseline": "16.4",
-      "port-version": 1
+      "port-version": 2
     },
     "libpqxx": {
       "baseline": "7.10.1",
