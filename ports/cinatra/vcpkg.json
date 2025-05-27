@@ -7,7 +7,7 @@
   "supports": "!uwp & !android",
   "dependencies": [
     "asio",
-    "tanakh-cmdline",
-    "async-simple"
+    "async-simple",
+    "tanakh-cmdline"
   ]
 }
