@@ -17,12 +17,29 @@ RUN apt-get update && \
         gcc-aarch64-linux-gnu \
         g++-aarch64-linux-gnu \
         cmake \
+        autoconf \
+        autoconf-archive \
+        automake \
+        autopoint \
+        libtool \
+        libtool-bin \
+        libltdl-dev \
+        m4 \
+        gfortran \
+        libnuma1 \
+        libnuma-dev \
+        gettext \
         ninja-build \
         unzip \
         git \
         pkg-config \
+        bison \
+        flex \
+        nasm \
+        yasm \
+        gperf \
+        gnupg \
         zip \
         python3 \
         python3-pip && \
     rm -rf /var/lib/apt/lists/*
-    
