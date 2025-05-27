@@ -1,7 +1,7 @@
 {
   "name": "libpq",
   "version": "16.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The official database access API of postgresql",
   "homepage": "https://www.postgresql.org/",
   "license": "PostgreSQL",
@@ -104,15 +104,14 @@
       "description": "Native Language Support",
       "supports": "!osx",
       "dependencies": [
-        "gettext",
         {
           "name": "gettext",
           "host": true,
           "features": [
             "tools"
-          ],
-          "platform": "!windows, mingw"
-        }
+          ]
+        },
+        "gettext-libintl"
       ]
     },
     "openssl": {
