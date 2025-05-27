@@ -531,17 +531,6 @@ libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
 libopensp:x64-android=fail
 libp7client:x64-android=fail
-libpng-apng:arm64-uwp=skip
-libpng-apng:arm64-windows-static-md=skip
-libpng-apng:arm64-windows=skip
-libpng-apng:x64-linux=skip
-libpng-apng:x64-osx=skip
-libpng-apng:x64-uwp=skip
-libpng-apng:x64-windows-release=skip
-libpng-apng:x64-windows-static-md=skip
-libpng-apng:x64-windows-static=skip
-libpng-apng:x64-windows=skip
-libpng-apng:x86-windows=skip
 # The developer of libqcow does not offer stable release archives
 libqcow:arm-neon-android=skip
 libqcow:arm64-android=skip
