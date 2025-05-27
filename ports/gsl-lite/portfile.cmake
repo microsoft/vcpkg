@@ -14,12 +14,6 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH "share/cmake/gsl-lite"
 )
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/gsl-lite.hpp "#ifndef GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED
-#define GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED
-#pragma message(\"The header <gsl-lite.hpp> is deprecated and provided by Vcpkg for compatibility only; please include <gsl-lite/gsl-lite.hpp> instead.\")
-#include <gsl-lite/gsl-lite.hpp>
-#endif // GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED")
-
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib"
     "${CURRENT_PACKAGES_DIR}/debug"
@@ -31,4 +25,7 @@ file(INSTALL
     RENAME copyright
 )
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/usage"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
