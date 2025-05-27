@@ -1688,6 +1688,10 @@
       "baseline": "3.5.2",
       "port-version": 0
     },
+    "cinatra": {
+      "baseline": "0.9.5",
+      "port-version": 0
+    },
     "cista": {
       "baseline": "0.15",
       "port-version": 0
@@ -9191,6 +9195,10 @@
     "talib": {
       "baseline": "0.4.0",
       "port-version": 1
+    },
+    "tanakh-cmdline": {
+      "baseline": "2014-02-04",
+      "port-version": 0
     },
     "taocpp-json": {
       "baseline": "2020-09-14",
