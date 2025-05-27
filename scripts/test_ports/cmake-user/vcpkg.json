@@ -53,7 +53,7 @@
         {
           "$package": "GLUT",
           "name": "freeglut",
-          "platform": "!uwp & !osx"
+          "platform": "!android & !osx & !uwp"
         },
         {
           "$package": "Freetype",
@@ -82,7 +82,7 @@
         {
           "$package": "LAPACK",
           "name": "lapack",
-          "platform": "!(uwp & arm)"
+          "platform": "!android & !(uwp & arm)"
         },
         {
           "$package": "GnuTLS",
@@ -134,7 +134,7 @@
         {
           "$package": "GnuTLS",
           "name": "shiftmedia-libgnutls",
-          "platform": "windows & !arm & !mingw & !xbox"
+          "platform": "windows & !arm & !mingw & !uwp & !xbox"
         },
         {
           "$package": "SQLite3",
@@ -155,7 +155,7 @@
           "$package": "wxWidgets",
           "name": "wxwidgets",
           "default-features": false,
-          "platform": "!uwp"
+          "platform": "!android & !uwp"
         },
         {
           "$package": "ZLIB",
