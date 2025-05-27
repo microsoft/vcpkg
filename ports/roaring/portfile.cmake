@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RoaringBitmap/CRoaring
     REF "v${VERSION}"
-    SHA512 a4bf2a185b71be4854f4a7aba0cebbc511ad0c028c072b74b85c8f29aca2b5843fe75a70644b9e1480bd1537a8575ccae5d7487ec745b3a6ca6a7f0198c5c463
+    SHA512 8323fa32472f4c8ae697f83ada849caccecfcf0da6e9254507c5b4d28d0de43d3e31406c7fa3969beebb33276faec14ed180c714ba24a482cdcd03e99b22115e
     HEAD_REF master
 )
 
