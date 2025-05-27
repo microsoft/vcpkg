@@ -6841,7 +6841,7 @@
       "port-version": 3
     },
     "open62541pp": {
-      "baseline": "0.18.0",
+      "baseline": "0.19.0",
       "port-version": 0
     },
     "openal-soft": {
