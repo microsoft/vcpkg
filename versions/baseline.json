@@ -8908,6 +8908,10 @@
       "baseline": "2.5.0",
       "port-version": 0
     },
+    "spimpl": {
+      "baseline": "2025-01-23",
+      "port-version": 0
+    },
     "spine-runtimes": {
       "baseline": "4.1.0",
       "port-version": 0
