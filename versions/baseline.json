@@ -4482,7 +4482,7 @@
     },
     "libcamera": {
       "baseline": "0.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libcanberra": {
       "baseline": "0.30",
