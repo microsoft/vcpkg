@@ -28,7 +28,7 @@ vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE MATCHES "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/whisper/whisper-config.cmake"
-        "set_and_check(WHISPER_BIN_DIR     \"${PACKAGE_PREFIX_DIR}/bin\")"
+        "set_and_check(WHISPER_BIN_DIR     \"\${PACKAGE_PREFIX_DIR}/bin\")"
         ""
         IGNORE_UNCHANGED
     )
