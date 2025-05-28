@@ -28,6 +28,12 @@ RUN apt-get update && \
         gfortran \
         libnuma1 \
         libnuma-dev \
+        libudev-dev \
+        libx11-dev \
+        libxcursor-dev \
+        libxinerama-dev \
+        libglu1-mesa-dev \
+        mesa-common-dev \
         gettext \
         ninja-build \
         unzip \
@@ -38,8 +44,8 @@ RUN apt-get update && \
         nasm \
         yasm \
         gperf \
-        gnupg \
         zip \
         python3 \
+        python3-setuptools \
         python3-pip && \
     rm -rf /var/lib/apt/lists/*
