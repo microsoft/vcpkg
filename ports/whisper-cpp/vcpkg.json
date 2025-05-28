@@ -4,7 +4,7 @@
   "description": "Port of OpenAI's Whisper model in C/C++",
   "homepage": "https://github.com/ggml-org/whisper.cpp",
   "license": "MIT",
-  "supports": "!android",
+  "supports": "!(arm64 & osx)",
   "dependencies": [
     "ggml",
     {
