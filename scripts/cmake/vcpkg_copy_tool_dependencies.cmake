@@ -11,16 +11,20 @@
 # param UNRESOLVED_DEPENDENCIES_RESULT - list<string>, optional, output variable. list of unresolved dependencies
 function(vcpkg_resolve_deploy_object_dependencies)
 
+    message(STATUS "vcpkg_resolve_deploy_object_dependencies: Resolving dependencies for targets: ${ARGN}")
+
     set(one_value_args_ RESOLVED_DEPENDENCIES_RESULT UNRESOLVED_DEPENDENCIES_RESULT)
     set(multi_value_args_ TARGET_OBJECT_PATHS ADDITIONAL_SEARCH_PATHS)
     cmake_parse_arguments(vcpkg_resolve_deploy_object_dependencies "" "${one_value_args_}" "${multi_value_args_}" ${ARGN})
+
+    message(STATUS "vcpkg_resolve_deploy_object_dependencies: ADDITIONAL_SEARCH_PATHS: ${vcpkg_resolve_deploy_object_dependencies_ADDITIONAL_SEARCH_PATHS}")
 
     set(search_paths_ ${vcpkg_resolve_deploy_object_dependencies_ADDITIONAL_SEARCH_PATHS})
     set(to_be_resolved_stack_ "")
 
     foreach (target_ IN LISTS vcpkg_resolve_deploy_object_dependencies_TARGET_OBJECT_PATHS)
         get_filename_component(target_directory_ "${target_}" DIRECTORY)
-        list(PREPEND search_paths_ "${target_directory_}")
+        list(APPEND search_paths_ "${target_directory_}")
     endforeach()
     list(REMOVE_DUPLICATES search_paths_)
 
@@ -34,9 +38,12 @@ function(vcpkg_resolve_deploy_object_dependencies)
     # Get dependencies of each of the targets in the list.
     # If we're dealing with a special case, more items may be appended to the list.
     set(to_be_resolved_stack_ "${to_be_resolved_list_}")
+    message(STATUS "vcpkg_resolve_deploy_object_dependencies: Initial targets to resolve: ${to_be_resolved_list_}")
     while (to_be_resolved_stack_)
 
         list(POP_FRONT to_be_resolved_stack_ current_target_)
+
+        message(STATUS "vcpkg_resolve_deploy_object_dependencies: Processing target: ${current_target_}")
 
         if ("${current_target_}" IN_LIST processed_files_)
             message(STATUS "vcpkg_resolve_deploy_object_dependencies: ${current_target_} already processed, skipping")
@@ -45,6 +52,7 @@ function(vcpkg_resolve_deploy_object_dependencies)
 
         get_filename_component(current_target_filename_ ${current_target_} NAME)
         get_filename_component(current_target_extension_ ${current_target_} EXT)
+        string(TOLOWER "${current_target_extension_}" current_target_extension_)
         vcpkg_make_cmake_identifier(INPUT "${current_target_filename_}" OUTPUT_VARIABLE current_var_name_)
 
         # applocal.ps1 asserts that current_target_dir_ is some /bin directory.
@@ -176,20 +184,26 @@ function(vcpkg_resolve_deploy_object_dependencies)
         set(original_no_dev_warnings_ "$CACHE{CMAKE_SUPPRESS_DEVELOPER_WARNINGS}")
         set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS ON CACHE INTERNAL "" FORCE)
 
+        message(STATUS "vcpkg_resolve_deploy_object_dependencies: Searching for dependencies in ${search_paths_}")
         if (current_target_extension_ MATCHES "\\.dll$|\\.pyd$")
             file(GET_RUNTIME_DEPENDENCIES
                 LIBRARIES "${find_file_result_}"
-                DIRECTORIES "${search_paths_}"
+                DIRECTORIES ${search_paths_}
                 RESOLVED_DEPENDENCIES_VAR resolved_runtime_dependencies_
                 UNRESOLVED_DEPENDENCIES_VAR unresolved_runtime_dependencies_
+                POST_EXCLUDE_REGEXES ".*[Ss]ystem32.*"
             )
+            message(STATUS "vcpkg_resolve_deploy_object_dependencies: Resolved dependencies for library ${current_target_filename_}")
         elseif (current_target_extension_ MATCHES "\\.exe$")
+            message(STATUS "vcpkg_resolve_deploy_object_dependencies: Resolving dependencies for executable ${current_target_filename_}- search paths: ${search_paths_}")
             file(GET_RUNTIME_DEPENDENCIES
                 EXECUTABLES "${find_file_result_}"
-                DIRECTORIES "${search_paths_}"
+                DIRECTORIES ${search_paths_}
                 RESOLVED_DEPENDENCIES_VAR resolved_runtime_dependencies_
                 UNRESOLVED_DEPENDENCIES_VAR unresolved_runtime_dependencies_
+                POST_EXCLUDE_REGEXES ".*[Ss]ystem32.*"
             )
+            message(STATUS "vcpkg_resolve_deploy_object_dependencies: Resolved dependencies for executable ${current_target_filename_}")
         else()
             message(WARNING "vcpkg_resolve_deploy_object_dependencies: Unsupported file type for ${current_target_filename_}. Skipping.")
             set(resolved_runtime_dependencies_ "")
@@ -200,7 +214,9 @@ function(vcpkg_resolve_deploy_object_dependencies)
         set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS ${original_no_dev_warnings_} CACHE INTERNAL "" FORCE)
 
         list(APPEND resolved_files_ "${resolved_runtime_dependencies_}")
+        list(REMOVE_DUPLICATES resolved_files_)
         list(APPEND unresolved_files_ "${unresolved_runtime_dependencies_}")
+        list(REMOVE_DUPLICATES unresolved_files_)
 
         set(${current_var_name_}_resolved_dependencies_ "${resolved_runtime_dependencies_}")
         list(REMOVE_DUPLICATES ${current_var_name_}_resolved_dependencies_)
@@ -208,6 +224,8 @@ function(vcpkg_resolve_deploy_object_dependencies)
         list(REMOVE_DUPLICATES ${current_var_name_}_unresolved_dependencies_)
 
     endwhile()
+
+    message(STATUS "vcpkg_resolve_deploy_object_dependencies: Finished resolving dependencies for targets: ${to_be_resolved_list_}")
 
     # Reporting section, for debugging and info purposes
     # Code looks ugly to make the output look pretty
@@ -326,6 +344,7 @@ function(z_vcpkg_copy_tool_dependencies_search tool_dir path_to_search)
 endfunction()
 
 function(vcpkg_copy_tool_dependencies tool_dir)
+    message(STATUS "vcpkg_copy_tool_dependencies: Copying tool dependencies for ${tool_dir}")
     if(ARGC GREATER 1)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${ARGN}")
     endif()
