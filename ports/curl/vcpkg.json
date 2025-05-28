@@ -250,19 +250,6 @@
         }
       ]
     },
-    "winssl": {
-      "description": "Legacy name for schannel",
-      "supports": "windows & !uwp",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "schannel"
-          ]
-        }
-      ]
-    },
     "wolfssl": {
       "description": "SSL support (wolfSSL)",
       "dependencies": [
