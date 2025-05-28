@@ -1,0 +1,17 @@
+The package unqlite can be used by adding the following code to your CMakeLists.txt:
+
+    add_library(unqlite STATIC IMPORTED)
+    find_library(UNQLITE_LIBRARIES unqlite)
+    find_path(UNQLITE_INCLUDE_HEADER unqlite.h)
+    get_filename_component(UNQLITE_INCLUDE_DIRS "${UNQLITE_INCLUDE_HEADER}" DIRECTORY)
+    set_target_properties(unqlite PROPERTIES
+        IMPORTED_LOCATION "${UNQLITE_LIBRARIES}"
+        IMPORTED_LINK_INTERFACE_LIBRARIES "${UNQLITE_LIBRARIES}"
+        INTERFACE_INCLUDE_DIRECTORIES "${UNQLITE_INCLUDE_DIRS}"
+    )
+    # UNQLITE_ENABLE_THREADS must be defined before including unqlite.h
+    if(ENABLE_THREADS)
+        target_compile_definitions(unqlite INTERFACE UNQLITE_ENABLE_THREADS)
+    endif()
+
+    target_link_libraries(main PRIVATE unqlite)
