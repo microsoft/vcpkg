@@ -24,8 +24,8 @@ file(INSTALL
 
 # Install Iguana’s headers
 file(INSTALL
-    "${IGUANA_SOURCE_PATH}/include/iguana"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/iguana"
+    "${IGUANA_SOURCE_PATH}/iguana"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
