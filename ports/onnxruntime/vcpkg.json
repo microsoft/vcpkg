@@ -32,7 +32,7 @@
     "nlohmann-json",
     {
       "name": "onnx",
-      "version>=": "1.16.0"
+      "version>=": "1.16.2"
     },
     "optional-lite",
     {
