@@ -1,8 +1,9 @@
 {
   "name": "zimpl",
   "version": "3.6.1",
+  "port-version": 1,
   "description": "Zuse Institut Mathematical Programming Language",
-  "homepage": "http://zimpl.zib.de/",
+  "homepage": "https://zimpl.zib.de/",
   "license": "LGPL-3.0-or-later",
   "supports": "!uwp",
   "dependencies": [
