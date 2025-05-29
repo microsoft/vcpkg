@@ -12,8 +12,3 @@ pkg_check_modules(whisper-cpp whisper REQUIRED IMPORTED_TARGET)
 
 add_executable(main-pkconfig main.cxx)
 target_link_libraries(main-pkconfig PRIVATE PkgConfig::whisper-cpp)
-
-# Workarounds
-
-find_library(WORKAROUND_GGML_CPU_LIBRARY ggml-cpu REQUIRED)
-set_property(TARGET PkgConfig::whisper-cpp APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${WORKAROUND_GGML_CPU_LIBRARY}")

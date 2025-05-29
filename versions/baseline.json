@@ -10282,7 +10282,7 @@
     },
     "whisper-cpp": {
       "baseline": "1.7.6",
-      "port-version": 0
+      "port-version": 1
     },
     "wiiuse": {
       "baseline": "0.15.6",
