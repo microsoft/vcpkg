@@ -7,12 +7,25 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Install Cinatra’s headers plus the iguana folder
+vcpkg_from_github(
+    OUT_SOURCE_PATH IGUANA_SOURCE_PATH
+    REPO qicosmos/iguana
+    REF 1.0.9
+    SHA512 278d96bc3586104904c91bd62c5579b1db6a844ab5ef64ba3853f55bd04852cf7c035e4c88211bbab3348fba662edab5e6fd1df0d113d41cfed7b455467f9fb3
+    HEAD_REF master
+)
+
+# Install Cinatra’s headers
 file(INSTALL
     "${SOURCE_PATH}/include/cinatra"
     "${SOURCE_PATH}/include/cinatra.hpp"
-    "${SOURCE_PATH}/iguana"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+)
+
+# Install Iguana’s headers
+file(INSTALL
+    "${IGUANA_SOURCE_PATH}/include/iguana"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/iguana"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
