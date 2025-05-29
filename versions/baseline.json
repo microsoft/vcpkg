@@ -8624,6 +8624,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "sfl": {
+      "baseline": "1.9.2",
+      "port-version": 0
+    },
     "sfml": {
       "baseline": "3.0.0",
       "port-version": 1
