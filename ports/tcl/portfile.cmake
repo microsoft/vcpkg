@@ -1,9 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcltk/tcl
-    REF 0fa6a4e5aad821a5c34fdfa070c37c3f1ffc8c8e
-    SHA512 9d7f35309fe8b1a7c116639aaea50cc01699787c7afb432389bee2b9ad56a67034c45d90c9585ef1ccf15bdabf0951cbef86257c0c6aedbd2591bbfae3e93b76
-    PATCHES force-shell-install.patch
+    REF ${VERSION}
+    SHA512 962bdf298fd850682d4a8941fed80a7fe13827e741b5977cf63a802665396c0421c393a437033b9d31e00d3dfef4d55fdf6e8803f997a10f7e2bba08d8b406f5
+    PATCHES 
+        force-shell-install.patch
+        remove-git-rev-parse.patch
+        disable-wx.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -78,6 +81,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                 "${CURRENT_PACKAGES_DIR}/lib/tcl8/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*"
+                "${CURRENT_PACKAGES_DIR}/lib/registry1.3/*"
         )
         
         foreach(TOOL ${TOOLS})
@@ -90,13 +94,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8"
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0"
-        )
-        file(CHMOD_RECURSE
-                "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/tzdata"
-            PERMISSIONS
-                OWNER_READ OWNER_WRITE
-                GROUP_READ GROUP_WRITE
-                WORLD_READ WORLD_WRITE
+                            "${CURRENT_PACKAGES_DIR}/lib/registry1.3"
         )
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
@@ -118,14 +116,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0"
-        )
-
-        file(CHMOD_RECURSE
-                "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/tzdata"
-            PERMISSIONS
-                OWNER_READ OWNER_WRITE
-                GROUP_READ GROUP_WRITE
-                WORLD_READ WORLD_WRITE
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/registry1.3"
         )
     endif()
     
