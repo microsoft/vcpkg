@@ -17,6 +17,7 @@
     "z-vcpkg-make-normalize-arch",
     "z-vcpkg-make-determine-host-arch",
     "z-vcpkg-make-determine-target-arch",
+    "z-vcpkg-make-determine-target-triplet",
     "z-vcpkg-make-get-configure-triplets",
     "z-vcpkg-make-prepare-compile-flags",
     "z-vcpkg-make-z-adapt-lib-link-names"
@@ -31,8 +32,14 @@
     "z-vcpkg-make-determine-target-arch": {
       "description": "Test the z_vcpkg_make_determine_target_arch function"
     },
+    "z-vcpkg-make-determine-target-triplet": {
+      "description": "Test the z_vcpkg_make_determine_target_arch triplet"
+    },
     "z-vcpkg-make-get-configure-triplets": {
       "description": "Test the z_vcpkg_make_get_configure_triplets function"
+    },
+    "z-vcpkg-make-get-crosscompiling": {
+      "description": "Test the z_vcpkg_make_get_crosscompiling function"
     },
     "z-vcpkg-make-prepare-compile-flags": {
       "description": "Test the z_vcpkg_make_prepare_compile_flags function"
