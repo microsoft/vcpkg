@@ -45,14 +45,46 @@ apt-get -y upgrade
 ## vcpkg prerequisites
 APT_PACKAGES="git curl zip unzip tar"
 
-## common build dependencies
-APT_PACKAGES="$APT_PACKAGES at libxt-dev gperf libxaw7-dev cifs-utils \
-  build-essential g++ gfortran libx11-dev libxkbcommon-x11-dev libxi-dev \
-  libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxinerama-dev libxxf86vm-dev \
-  libxcursor-dev yasm libnuma1 libnuma-dev libtool-bin libltdl-dev \
-  flex bison libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
-  xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
-  pkg-config meson nasm cmake ninja-build"
+## essentials
+APT_PACKAGES="$APT_PACKAGES \
+  autoconf autoconf-archive \
+  autopoint \
+  build-essential \
+  cmake \
+  gcc g++ gfortran \
+  libnuma1 libnuma-dev \
+  libtool libtool-bin libltdl-dev \
+  libudev-dev \
+"
+
+## vcpkg_find_acquire_program
+APT_PACKAGES="$APT_PACKAGES \
+  bison libbison-dev \
+  flex \
+  gperf \
+  nasm \
+  ninja-build \
+  pkg-config \
+  python3 \
+  ruby-full \
+  swig \
+  yasm \
+"
+
+## mesa and X essentials
+APT_PACKAGES="$APT_PACKAGES \
+  mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev libgles2-mesa-dev \
+  libx11-dev \
+  libxaw7-dev \
+  libxcursor-dev \
+  libxi-dev \
+  libxinerama-dev \
+  libxkbcommon-x11-dev \
+  libxrandr-dev \
+  libxt-dev \
+  libxxf86vm-dev \
+  xutils-dev \
+"
 
 ## required by qt5-base
 APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
