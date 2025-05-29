@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
     REF "v${VERSION}"
-    SHA512 32a9ae3de113b8c94e2aed21ad8f58e5ed4419a6d4078e51f614f0fabbf3bfe6c4affc62c2c1326e030a54df0fdcc47bb715b45022191a363f17680ec651b68e
+    SHA512 67363bdbc9e5c52143ebd36a45b12aa38eb1785543c6781e75ef1036f1b892e39b3aa93e0ea76bd6c83faaa1e07097bccddd14406c7b43e9962195aeef7008b7
     HEAD_REF master
     PATCHES
         fix-static-build.patch
@@ -56,7 +56,8 @@ vcpkg_cmake_configure(
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
         -Dprotobuf_ABSL_PROVIDER=package
-        -Dprotobuf_BUILD_LIBUPB=OFF
+        # Issues: libupb is hard bound in cmake builds https://github.com/protocolbuffers/protobuf/issues/18307
+        -Dprotobuf_BUILD_LIBUPB=ON
         ${FEATURE_OPTIONS}
 )
 
@@ -64,12 +65,12 @@ vcpkg_cmake_install()
 
 if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc-gen-upb protoc-gen-upbdefs protoc AUTO_CLEAN)
     else()
         string(REPLACE "." ";" VERSION_LIST ${VERSION})
         list(GET VERSION_LIST 1 VERSION_MINOR)
         list(GET VERSION_LIST 2 VERSION_PATCH)
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${VERSION_MINOR}.${VERSION_PATCH}.0 AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc-gen-upb protoc-gen-upbdefs protoc protoc-${VERSION_MINOR}.${VERSION_PATCH}.0 AUTO_CLEAN)
     endif()
 else()
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
