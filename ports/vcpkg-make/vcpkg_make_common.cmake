@@ -31,27 +31,7 @@ endfunction()
 
 ###
 macro(z_vcpkg_make_get_cmake_vars)
-    cmake_parse_arguments(vmgcv_arg # Not just arg since macros don't define their own var scope. 
-        "" "" "LANGUAGES" ${ARGN}
-    )
-
-    z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
-
-    if(NOT has_cmake_vars_file)
-        if(vmgcv_arg_LANGUAGES)
-            # Escape semicolons to prevent CMake from splitting LANGUAGES list when passing as -D option.
-            string(REPLACE ";" "\;" vmgcv_arg_langs "${vmgcv_arg_LANGUAGES}")
-            list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${vmgcv_arg_langs}")
-            unset(langs)
-        endif()
-
-        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
-        vcpkg_cmake_get_vars(cmake_vars_file)
-        z_vcpkg_set_global_property(make_cmake_vars_file "${cmake_vars_file}")
-    else()
-        z_vcpkg_get_global_property(cmake_vars_file "make_cmake_vars_file")
-    endif()
-
+    vcpkg_cmake_get_vars(cmake_vars_file ${Z_VCPKG_MAKE_GET_CMAKE_VARS_OPTS})
     include("${cmake_vars_file}")
 endmacro()
 
@@ -78,7 +58,9 @@ function(z_vcpkg_make_determine_host_arch out_var)
     elseif(DEFINED ENV{PROCESSOR_ARCHITECTURE})
         set(arch $ENV{PROCESSOR_ARCHITECTURE})
     else()
-        z_vcpkg_make_get_cmake_vars(#[[ LANGUAGES .... ]])
+        if(NOT DEFINED VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR)
+            z_vcpkg_make_get_cmake_vars()
+        endif()
         set(arch "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
     endif()
     z_vcpkg_make_normalize_arch("${out_var}" "${arch}")
@@ -268,7 +250,7 @@ function(z_vcpkg_make_prepare_programs out_env)
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
-    z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
+    z_vcpkg_make_get_cmake_vars()
     z_vcpkg_make_get_crosscompiling(is_crosscompiling ${arg_BUILD_TRIPLET})
 
     macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
@@ -485,7 +467,7 @@ function(z_vcpkg_make_prepare_flags)
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
-    z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
+    z_vcpkg_make_get_cmake_vars()
 
     # ==== LIBS
     # TODO: Figure out what to do with other Languages like Fortran
