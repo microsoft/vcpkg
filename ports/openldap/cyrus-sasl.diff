@@ -1,0 +1,22 @@
+diff --git a/configure.ac b/configure.ac
+index f01b7e6..c4a6faa 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -2008,14 +2008,13 @@ WITH_SASL=no
+ ol_link_sasl=no
+ ol_link_spasswd=no
+ if test $ol_with_cyrus_sasl != no ; then
++	PKG_CHECK_MODULES(SASL, libsasl2, [have_openssl=yes], [AC_MSG_FAILURE([OpenSSL is required])])
++	CFLAGS="$CFLAGS $SASL_CFLAGS"
+ 	AC_CHECK_HEADERS(sasl/sasl.h sasl.h)
+ 
+ 	if test $ac_cv_header_sasl_sasl_h = yes ||
+ 	   test $ac_cv_header_sasl_h = yes; then
+-		AC_CHECK_LIB(sasl2, sasl_client_init,
+-			[ol_link_sasl="-lsasl2"],
+-			[AC_CHECK_LIB(sasl, sasl_client_init,
+-				[ol_link_sasl="-lsasl"])])
++		ol_link_sasl="$SASL_LIBS"
+ 	fi
+ 
+ 	if test $ol_link_sasl = no ; then
