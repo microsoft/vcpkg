@@ -2,27 +2,27 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF v${VERSION}
-    SHA512 a6493a96e911e4b67dd017125eedf6f3d794a8c931d897e3fdd050a8e65c20dcb84e9dfad207d1fcec6d2f019ad406954d1711827a74c1665fe24cc32f3b019f
+    SHA512 d4ff1b2df1f7df7e2e62e988796cfcdf0ddce2ea0b78eaca666524ab341f522fc4ca4f180de2b50faa59e112026c1fa4d25e1aba4afe0b671cc2e2d47f7db2fe
     HEAD_REF master
-    PATCHES
-        android-librt.diff
-        clang-sanitizer.diff
 )
 
-# disable docs
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
+# Manually fetch the required submodule
+vcpkg_from_github(
+    OUT_SOURCE_PATH MDNSD_SOURCE_PATH
+    REPO Pro/mdnsd
+    REF v0.8.4.1
+    SHA512 0862e4663014406675cf271136d775b3f007337e099784c8542f59a8800691f05760bc2b7350857c43b4f4ba358b728f5e4d76f4d00e35cf349f6ba73af2a132
+    HEAD_REF master
+)
 
-# do not enable LTO by default
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)" "")
-
-vcpkg_replace_string("${SOURCE_PATH}/tools/cmake/open62541Config.cmake.in" "find_dependency(PythonInterp REQUIRED)" "")
+file(COPY "${MDNSD_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/deps/mdnsd")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         diagnostics UA_ENABLE_DIAGNOSTICS
         discovery UA_ENABLE_DISCOVERY
+	discovery-multicast UA_ENABLE_DISCOVERY_MULTICAST
         historizing UA_ENABLE_HISTORIZING
         methodcalls UA_ENABLE_METHODCALLS
         subscriptions UA_ENABLE_SUBSCRIPTIONS
