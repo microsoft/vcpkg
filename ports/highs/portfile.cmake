@@ -3,12 +3,13 @@ vcpkg_from_github(
     REPO ERGO-Code/HiGHS
     # REF f06916c288543f77901321ce14f5b44b6be663ff
     # "v${VERSION}"
-    REF 9b8de43c566f5e875656d3f8b19e1562337603de 
-    SHA512 f45735f94324cff0a3e1b67a6dfe8a08763298a182d0fce24e04bd2450476daaf5265e9878dcfc594616cc9cbb2ab832035162b72a5d97a31a41625d18021494
-    # SHA512 0
+    # REF 9b8de43c566f5e875656d3f8b19e1562337603de 
+    REF aa1923bfafc513a799076febf3411f3c424da0f5
+    # SHA512 f45735f94324cff0a3e1b67a6dfe8a08763298a182d0fce24e04bd2450476daaf5265e9878dcfc594616cc9cbb2ab832035162b72a5d97a31a41625d18021494
+    SHA512 0
     HEAD_REF master
-    PATCHES
-        fix-hconfig-path.patch
+    # PATCHES
+    #     fix-hconfig-path.patch
         # fix-uwp.patch
         # fix-cuda.patch
 )
