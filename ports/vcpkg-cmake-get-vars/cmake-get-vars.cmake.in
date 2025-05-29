@@ -6,10 +6,9 @@ elseif(NOT Z_VCPKG_CMAKE_GET_VARS_FILE_LAST_LOADED STREQUAL "${CMAKE_CURRENT_LIS
     message(STATUS "Loading CMake variables from ${CMAKE_CURRENT_LIST_FILE}")
 endif()
 
-# Languages: @languages@
-if(NOT "@VCPKG_BUILD_TYPE@" OR "@VCPKG_BUILD_TYPE@" STREQUAL "release")
+if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL "release")
     include("${CMAKE_CURRENT_LIST_DIR}/cmake-get-vars@configuration_suffix@-@TARGET_TRIPLET@-rel.cmake.log")
 endif()
-if(NOT "@VCPKG_BUILD_TYPE@" OR "@VCPKG_BUILD_TYPE@" STREQUAL "debug")
+if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL "debug")
     include("${CMAKE_CURRENT_LIST_DIR}/cmake-get-vars@configuration_suffix@-@TARGET_TRIPLET@-dbg.cmake.log")
 endif()
