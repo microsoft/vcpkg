@@ -27,7 +27,7 @@ set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(ENV{CPP} "cl_cpp_wrapper")
+    set(ENV{CPP} "compile cl -E")
     list(APPEND OPTIONS 
                 --enable-loadable-i18n=no #Pointer conversion errors
                 --enable-unix-transport=no
@@ -61,9 +61,9 @@ if(VCPKG_TARGET_IS_OSX)
     set(ENV{LC_ALL} C)
 endif()
 vcpkg_find_acquire_program(PERL)
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS 
         ${OPTIONS}
 )
@@ -75,7 +75,7 @@ if(VCPKG_CROSSCOMPILING)
         file(COPY ${FOR_BUILD_FILES} DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/util")
     endif()
 endif()
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/X11/extensions/XKBgeom.h")
