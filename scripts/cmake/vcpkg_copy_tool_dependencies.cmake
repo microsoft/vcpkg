@@ -191,7 +191,6 @@ function(vcpkg_resolve_deploy_object_dependencies)
                 DIRECTORIES ${search_paths_}
                 RESOLVED_DEPENDENCIES_VAR resolved_runtime_dependencies_
                 UNRESOLVED_DEPENDENCIES_VAR unresolved_runtime_dependencies_
-                POST_EXCLUDE_REGEXES ".*[Ss]ystem32.*"
             )
             message(STATUS "vcpkg_resolve_deploy_object_dependencies: Resolved dependencies for library ${current_target_filename_}")
         elseif (current_target_extension_ MATCHES "\\.exe$")
@@ -201,7 +200,6 @@ function(vcpkg_resolve_deploy_object_dependencies)
                 DIRECTORIES ${search_paths_}
                 RESOLVED_DEPENDENCIES_VAR resolved_runtime_dependencies_
                 UNRESOLVED_DEPENDENCIES_VAR unresolved_runtime_dependencies_
-                POST_EXCLUDE_REGEXES ".*[Ss]ystem32.*"
             )
             message(STATUS "vcpkg_resolve_deploy_object_dependencies: Resolved dependencies for executable ${current_target_filename_}")
         else()
@@ -218,6 +216,14 @@ function(vcpkg_resolve_deploy_object_dependencies)
         list(APPEND unresolved_files_ "${unresolved_runtime_dependencies_}")
         list(REMOVE_DUPLICATES unresolved_files_)
 
+        set(system_resolved_dependencies_ "${resolved_runtime_dependencies_}")
+        list(FILTER system_resolved_dependencies_ INCLUDE REGEX ".*[Ss][Yy][Ss][Tt][Ee][Mm]32.*|.*[Ss][Yy][Ss][Ww][Oo][Ww]64.*")
+
+        set(nonsystem_resolved_dependencies_ "${resolved_runtime_dependencies_}")
+        list(FILTER nonsystem_resolved_dependencies_ EXCLUDE REGEX ".*[Ss][Yy][Ss][Tt][Ee][Mm]32.*|.*[Ss][Yy][Ss][Ww][Oo][Ww]64.*")
+
+        set(${current_var_name_}_system_resolved_dependencies_ "${system_resolved_dependencies_}")
+        set(${current_var_name_}_nonsystem_resolved_dependencies_ "${nonsystem_resolved_dependencies_}")
         set(${current_var_name_}_resolved_dependencies_ "${resolved_runtime_dependencies_}")
         list(REMOVE_DUPLICATES ${current_var_name_}_resolved_dependencies_)
         set(${current_var_name_}_unresolved_dependencies_ "${unresolved_runtime_dependencies_}")
@@ -235,14 +241,24 @@ function(vcpkg_resolve_deploy_object_dependencies)
         vcpkg_make_cmake_identifier(INPUT "${target_filename_}" OUTPUT_VARIABLE target_var_name_)
         set(target_resolved_dependencies_ "${${target_var_name_}_resolved_dependencies_}") # Will be a full path to file
         set(target_unresolved_dependencies_ "${${target_var_name_}_unresolved_dependencies_}")
+        set(target_system_resolved_dependencies_ "${${target_var_name_}_system_resolved_dependencies_}")
+        set(target_nonsystem_resolved_dependencies_ "${${target_var_name_}_nonsystem_resolved_dependencies_}")
         set(resolved_dependency_max_string_length_ 0)
         set(unresolved_dependency_max_string_length_ 0)
 
-        foreach (resolved_ IN LISTS target_resolved_dependencies_)
+        foreach (resolved_ IN LISTS target_system_resolved_dependencies_)
+            get_filename_component(resolved_filename_ "${resolved_}" NAME)
+            string(LENGTH "${resolved_filename_}" length_)
+            math(EXPR length_ "${length_} + 9") # +9 for " [SYSTEM]"
+            vcpkg_max(VALUES "${length_}" "${resolved_dependency_max_string_length_}"
+                OUTPUT_VARIABLE resolved_dependency_max_string_length_
+            )
+        endforeach()
+        foreach (resolved_ IN LISTS target_nonsystem_resolved_dependencies_)
             get_filename_component(resolved_filename_ "${resolved_}" NAME)
             string(LENGTH "${resolved_filename_}" length_)
             vcpkg_max(VALUES "${length_}" "${resolved_dependency_max_string_length_}"
-                OUTPUT_VARIABLE resolved_dependency_max_string_length_
+                    OUTPUT_VARIABLE resolved_dependency_max_string_length_
             )
         endforeach()
 
@@ -255,7 +271,7 @@ function(vcpkg_resolve_deploy_object_dependencies)
 
         message(STATUS "vcpkg_resolve_deploy_object_dependencies: ${target_filename_} - Dependency Resolution Summary")
         message(STATUS "  Resolved Dependencies:")
-        foreach (resolved_ IN LISTS target_resolved_dependencies_)
+        foreach (resolved_ IN LISTS target_nonsystem_resolved_dependencies_)
             get_filename_component(resolved_filename_ "${resolved_}" NAME)
             string(LENGTH "${resolved_filename_}" dependency_length_)
             math(EXPR string_padding_length_ "${resolved_dependency_max_string_length_} - ${dependency_length_}")
@@ -264,6 +280,18 @@ function(vcpkg_resolve_deploy_object_dependencies)
                 string(APPEND temp_str_ " ")
             endforeach()
             string(APPEND temp_str_ "-> ${resolved_}")
+            message(STATUS "${temp_str_}")
+        endforeach()
+
+        foreach (resolved_ IN LISTS target_system_resolved_dependencies_)
+            get_filename_component(resolved_filename_ "${resolved_}" NAME)
+            string(LENGTH "${resolved_filename_}" dependency_length_)
+            math(EXPR string_padding_length_ "${resolved_dependency_max_string_length_} - ${dependency_length_} - 9") # -9 for " [SYSTEM]"
+            set(temp_str_ "    ${resolved_filename_}")
+            foreach (it RANGE ${string_padding_length_})
+                string(APPEND temp_str_ " ")
+            endforeach()
+            string(APPEND temp_str_ "[SYSTEM] -> ${resolved_}")
             message(STATUS "${temp_str_}")
         endforeach()
 
@@ -292,8 +320,10 @@ function(vcpkg_resolve_deploy_object_dependencies)
 
         vcpkg_make_cmake_identifier(INPUT "${target_filename_}" OUTPUT_VARIABLE target_var_name_)
         set(target_resolved_dependencies_ "${${target_var_name_}_resolved_dependencies_}")
+        set(target_system_resolved_dependencies_ "${${target_var_name_}_system_resolved_dependencies_}")
+        set(target_nonsystem_resolved_dependencies_ "${${target_var_name_}_nonsystem_resolved_dependencies_}")
 
-        foreach (dependency_ IN LISTS target_resolved_dependencies_)
+        foreach (dependency_ IN LISTS target_nonsystem_resolved_dependencies_)
             get_filename_component(dependency_dir_ "${dependency_}" DIRECTORY)
             get_filename_component(dependency_filename_ "${dependency_}" NAME)
             cmake_path(APPEND target_dir_ "${dependency_filename_}" OUTPUT_VARIABLE new_location_)
@@ -312,7 +342,6 @@ function(vcpkg_resolve_deploy_object_dependencies)
                 message(WARNING "vcpkg_resolve_deploy_object_dependencies: Could not copy ${dependency_} to ${new_location_}.")
                 continue()
             endif()
-
         endforeach()
     endforeach()
 
@@ -350,10 +379,6 @@ function(vcpkg_copy_tool_dependencies tool_dir)
     endif()
 
     if(VCPKG_TARGET_IS_WINDOWS)
-        find_program(Z_VCPKG_POWERSHELL_CORE pwsh)
-        if (NOT Z_VCPKG_POWERSHELL_CORE)
-            message(FATAL_ERROR "Could not find PowerShell Core; please open an issue to report this.")
-        endif()
         cmake_path(RELATIVE_PATH tool_dir
             BASE_DIRECTORY "${CURRENT_PACKAGES_DIR}"
             OUTPUT_VARIABLE relative_tool_dir
