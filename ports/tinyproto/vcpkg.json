@@ -1,6 +1,6 @@
 {
   "name": "tinyproto",
-  "version": "1.0.0-dc7a6c2",
+  "version-date": "2025-05-26",
   "description": "Tiny Software Protocol for communication over UART, SPI, etc",
   "homepage": "https://github.com/lexus2k/tinyproto",
   "license": "GPL-3.0-or-later",
