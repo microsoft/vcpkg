@@ -19,20 +19,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${linkage_flag}")
 endif()
 
-##### For vcpkg-make.
-##### TODO: Make vcpkg-cmake-get-vars robust and open for options.
-list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS
-    "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG"
-    "-DVCPKG_LANGUAGES=C\\;CXX\\;ASM"
-)
-#####
-#####
-
-set(languages C CXX ASM)
-vcpkg_cmake_get_vars(cmake_vars_file)
+vcpkg_cmake_get_vars(cmake_vars_file ADDITIONAL_LANGUAGES ASM)
 include("${cmake_vars_file}")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    list(REMOVE_ITEM languages ASM) # using the following flags instead.
     vcpkg_add_to_path("${SOURCE_PATH}")
     vcpkg_list(APPEND options "CCAS=msvcc.sh")
     set(ccas_options "")
@@ -52,7 +41,7 @@ endif()
 
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    LANGUAGES ${languages}
+    LANGUAGES C CXX ASM
     OPTIONS
         --enable-portable-binary
         --disable-docs
