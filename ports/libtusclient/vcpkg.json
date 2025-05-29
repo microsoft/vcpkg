@@ -1,0 +1,50 @@
+{
+  "name": "libtusclient",
+  "license": "MIT",
+  "version": "1.0.0",
+  "description": "Library implementing the tus protocol for resumable uploads",
+  "homepage": "https://github.com/Cadons/libtusclient",
+  "dependencies": [
+    "vcpkg-cmake",
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name":"pkgconf"
+    },
+    {
+      "name": "curl"
+    },
+    {
+      "name": "boost-uuid"
+    },
+    {
+      "name":"boost-lexical-cast"
+    },
+    {
+      "name": "libzippp"
+    },
+    {
+      "name": "gtest",
+      "default-features": true
+    },
+    {
+      "name": "nlohmann-json"
+    },
+    {
+      "name": "glog"
+    },
+    "vcpkg-cmake",
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "shared": {
+      "description": "Build shared libraries"
+    }
+  }
+
+}
