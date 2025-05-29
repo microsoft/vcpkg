@@ -1,0 +1,12 @@
+diff --git a/ggml.pc.in b/ggml.pc.in
+index 58129f07..9be62dc3 100644
+--- a/ggml.pc.in
++++ b/ggml.pc.in
+@@ -6,5 +6,6 @@ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ Name: ggml
+ Description: The GGML Tensor Library for Machine Learning
+ Version: 0.0.0
+-Cflags: -I${includedir}/ggml
++Cflags: -I${includedir}
+ Libs: -L${libdir} -lggml
++Libs.private: -lggml-base
