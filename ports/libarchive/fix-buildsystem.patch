@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2634da6..0d846877 100644
+index 34ea588..38664d2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -148,10 +148,6 @@ IF (CMAKE_C_COMPILER_ID MATCHES "^XL$")
+@@ -168,10 +168,6 @@ IF (CMAKE_C_COMPILER_ID MATCHES "^XL$")
    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -qinfo=pro:use")
  ENDIF(CMAKE_C_COMPILER_ID MATCHES "^XL$")
  IF (MSVC)
@@ -13,7 +13,7 @@ index b2634da6..0d846877 100644
    #################################################################
    # Set compile flags for debug build.
    # This is added into CMAKE_C_FLAGS when CMAKE_BUILD_TYPE is "Debug"
-@@ -382,8 +378,6 @@ IF(DEFINED __GNUWIN32PATH AND EXISTS "${__GNUWIN32PATH}")
+@@ -409,8 +405,6 @@ IF(DEFINED __GNUWIN32PATH AND EXISTS "${__GNUWIN32PATH}")
    # Maybe DLL path is "C:/Program Files/GnuWin32/bin".
    # The zlib and the bzip2 Setup program have installed programs and DLLs into
    # "C:/Program Files/GnuWin32" by default.
@@ -22,7 +22,7 @@ index b2634da6..0d846877 100644
    #
    # If you didn't use Setup program or installed into nonstandard path,
    # cmake cannot find out your zlib or bzip2 libraries and include files,
-@@ -420,14 +414,7 @@ IF(ZLIB_FOUND)
+@@ -450,14 +444,7 @@ IF(ZLIB_FOUND)
    INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
    LIST(APPEND ADDITIONAL_LIBS ${ZLIB_LIBRARIES})
    IF(WIN32 AND NOT CYGWIN)
@@ -38,7 +38,7 @@ index b2634da6..0d846877 100644
      IF(ZLIB_WINAPI)
        ADD_DEFINITIONS(-DZLIB_WINAPI)
      ELSE(ZLIB_WINAPI)
-@@ -1356,7 +1341,7 @@ CHECK_FUNCTION_EXISTS_GLIBC(localtime_r HAVE_LOCALTIME_R)
+@@ -1504,7 +1491,7 @@ CHECK_FUNCTION_EXISTS_GLIBC(localtime_r HAVE_LOCALTIME_R)
  CHECK_FUNCTION_EXISTS_GLIBC(lstat HAVE_LSTAT)
  CHECK_FUNCTION_EXISTS_GLIBC(lutimes HAVE_LUTIMES)
  CHECK_FUNCTION_EXISTS_GLIBC(mbrtowc HAVE_MBRTOWC)
@@ -47,14 +47,14 @@ index b2634da6..0d846877 100644
  CHECK_FUNCTION_EXISTS_GLIBC(mkdir HAVE_MKDIR)
  CHECK_FUNCTION_EXISTS_GLIBC(mkfifo HAVE_MKFIFO)
  CHECK_FUNCTION_EXISTS_GLIBC(mknod HAVE_MKNOD)
-@@ -1388,10 +1373,10 @@ CHECK_FUNCTION_EXISTS_GLIBC(utime HAVE_UTIME)
+@@ -1540,11 +1527,11 @@ CHECK_FUNCTION_EXISTS_GLIBC(utime HAVE_UTIME)
  CHECK_FUNCTION_EXISTS_GLIBC(utimes HAVE_UTIMES)
  CHECK_FUNCTION_EXISTS_GLIBC(utimensat HAVE_UTIMENSAT)
  CHECK_FUNCTION_EXISTS_GLIBC(vfork HAVE_VFORK)
 -CHECK_FUNCTION_EXISTS_GLIBC(wcrtomb HAVE_WCRTOMB)
--CHECK_FUNCTION_EXISTS_GLIBC(wcscmp HAVE_WCSCMP)
--CHECK_FUNCTION_EXISTS_GLIBC(wcscpy HAVE_WCSCPY)
--CHECK_FUNCTION_EXISTS_GLIBC(wcslen HAVE_WCSLEN)
+-check_symbol_exists(wcscmp wchar.h HAVE_WCSCMP)
+-check_symbol_exists(wcscpy wchar.h HAVE_WCSCPY)
+-check_symbol_exists(wcslen wchar.h HAVE_WCSLEN)
 -CHECK_FUNCTION_EXISTS_GLIBC(wctomb HAVE_WCTOMB)
 +set(HAVE_WCRTOMB 1)
 +set(HAVE_WCSCMP 1)
@@ -63,7 +63,8 @@ index b2634da6..0d846877 100644
 +set(HAVE_WCTOMB 1)
  CHECK_FUNCTION_EXISTS_GLIBC(_fseeki64 HAVE__FSEEKI64)
  CHECK_FUNCTION_EXISTS_GLIBC(_get_timezone HAVE__GET_TIMEZONE)
-@@ -1405,10 +1390,10 @@ CHECK_FUNCTION_EXISTS(cygwin_conv_path HAVE_CYGWIN_CONV_PATH)
+ CHECK_SYMBOL_EXISTS(ctime_s "time.h" HAVE_CTIME_S)
+@@ -1557,10 +1544,10 @@ CHECK_FUNCTION_EXISTS(cygwin_conv_path HAVE_CYGWIN_CONV_PATH)
  CHECK_FUNCTION_EXISTS(fseeko HAVE_FSEEKO)
  CHECK_FUNCTION_EXISTS(strerror_r HAVE_STRERROR_R)
  CHECK_FUNCTION_EXISTS(strftime HAVE_STRFTIME)
@@ -78,20 +79,20 @@ index b2634da6..0d846877 100644
  
  CMAKE_POP_CHECK_STATE()	# Restore the state of the variables
  
-@@ -2018,7 +2007,7 @@ INCLUDE(CreatePkgConfigFile)
+@@ -2198,7 +2185,7 @@ INCLUDE(CreatePkgConfigFile)
  #
  # Register installation of PDF documents.
  #
--IF(WIN32 AND NOT CYGWIN)
+-IF(WIN32 AND NOT CYGWIN AND ENABLE_INSTALL)
 +IF(0)
    #
    # On Windows platform, It's better that we install PDF documents
    # on one's computer.
 diff --git a/libarchive/CMakeLists.txt b/libarchive/CMakeLists.txt
-index f7fdfb68a..98d287e8c 100644
+index 556710a..e4add0b 100644
 --- a/libarchive/CMakeLists.txt
 +++ b/libarchive/CMakeLists.txt
-@@ -267,11 +267,12 @@ IF(ENABLE_INSTALL)
+@@ -273,11 +273,12 @@ IF(ENABLE_INSTALL)
              RUNTIME DESTINATION bin
              LIBRARY DESTINATION lib
              ARCHIVE DESTINATION lib)
