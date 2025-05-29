@@ -10060,6 +10060,10 @@
       "baseline": "2019-08-13",
       "port-version": 2
     },
+    "whisper-cpp": {
+      "baseline": "1.7.5",
+      "port-version": 0
+    },
     "wiiuse": {
       "baseline": "0.15.6",
       "port-version": 0
