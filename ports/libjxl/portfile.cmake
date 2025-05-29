@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
+	avoid-exe-linker-flags.patch # https://github.com/libjxl/libjxl/pull/4229
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,19 +1,22 @@
-if("pulseaudio" IN_LIST FEATURES)
-    message(
-    "${PORT} with pulseaudio feature currently requires the following from the system package manager:
-        libpulse-dev pulseaudio
-    These can be installed on Ubuntu systems via sudo apt install libpulse-dev pulseaudio"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 a380bd710c4b7fe83fc6799c56f51c9d4c3d21516b9366f8381c7fdb899c195472fe4bded9c25ab9de9c76fc95a4e727a8b0305ab92b5ede025fd03585036aa3
+    SHA512 2d5424d80234742be45f1c7cdf696182c96b684232bb92b079edf270d726c5d1292c5fc42c8b580ae1a89642ad7b536245977928bbeecedd94443f6e1f47d5fd
     HEAD_REF master
     PATCHES
         gentables.patch
+        pkgconfig-opensles.diff
+)
+# Do not use or install FindSndFileLegacy.cmake and its deps
+file(REMOVE
+    "${SOURCE_PATH}/cmake_admin/FindFLAC.cmake"
+    "${SOURCE_PATH}/cmake_admin/Findmp3lame.cmake"
+    "${SOURCE_PATH}/cmake_admin/Findmpg123.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindOgg.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindOpus.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindSndFileLegacy.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindVorbis.cmake"
 )
 
 vcpkg_check_features(
@@ -74,9 +77,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fluidsynth)
-
 vcpkg_fixup_pkgconfig()
 
 set(tools fluidsynth)
@@ -85,13 +87,12 @@ if("buildtools" IN_LIST FEATURES)
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
-vcpkg_copy_pdbs()
-
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/share/man")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

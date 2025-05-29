@@ -1,6 +1,6 @@
 {
   "name": "gdal",
-  "version-semver": "3.10.3",
+  "version-semver": "3.11.0",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -53,7 +53,7 @@
     "lzma",
     {
       "name": "netcdf",
-      "platform": "!uwp & !(windows & arm64) & !android & !ios"
+      "platform": "!android & !ios & !(windows & arm64) & !uwp"
     },
     "openjpeg",
     "openssl",
@@ -93,6 +93,7 @@
     },
     "cfitsio": {
       "description": "Enable cfitsio support",
+      "supports": "!(android & arm32)",
       "dependencies": [
         "cfitsio"
       ]
@@ -311,10 +312,6 @@
           ]
         }
       ]
-    },
-    "system-libraries": {
-      "$supports": "!windows",
-      "description": "This feature does nothing. It is retained for compatibility."
     },
     "tools": {
       "description": "Builds gdal and ogr executables"

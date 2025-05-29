@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 060a740..d2a69d4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1379,6 +1379,15 @@ if(LIBTYPE STREQUAL "STATIC")
+             set(PKG_CONFIG_PRIVATE_LIBS "${PKG_CONFIG_PRIVATE_LIBS} -l${FLAG}")
+         endif()
+     endforeach()
++    foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++        if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++            continue()
++        elseif(EXISTS "${lib}")
++            string(APPEND PKG_CONFIG_PRIVATE_LIBS " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++        else()
++            string(APPEND PKG_CONFIG_PRIVATE_LIBS " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++        endif()
++    endforeach()
+ endif()
+ 
+ # End configuration

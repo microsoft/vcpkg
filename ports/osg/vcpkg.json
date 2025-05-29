@@ -1,7 +1,7 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 26,
+  "port-version": 27,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://www.openscenegraph.com/",
   "license": null,
@@ -35,7 +35,7 @@
     "freetype",
     {
       "name": "nvtt",
-      "platform": "!x86 & !(windows & arm64) & !uwp"
+      "platform": "x64 & (linux | osx | windows) & !uwp"
     },
     {
       "name": "openexr",
@@ -55,6 +55,7 @@
     },
     "examples": {
       "description": "Enable to build OSG Examples",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "libiconv",
@@ -152,6 +153,7 @@
     },
     "tools": {
       "description": "Enable to build OSG Applications (e.g. osgviewer)",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "curl",
