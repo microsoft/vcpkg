@@ -6009,8 +6009,8 @@
       "port-version": 0
     },
     "marisa-trie": {
-      "baseline": "0.2.6+20200926",
-      "port-version": 2
+      "baseline": "0.3.0",
+      "port-version": 0
     },
     "marl": {
       "baseline": "2023-06-28",
