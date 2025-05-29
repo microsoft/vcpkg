@@ -98,6 +98,7 @@ vcpkgCheckRepoTool tar
 
 UNAME="$(uname)"
 ARCH="$(uname -m)"
+TAR=tar
 
 if [ -e /etc/alpine-release ]; then
     vcpkgUseSystem="ON"
@@ -105,6 +106,12 @@ if [ -e /etc/alpine-release ]; then
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
+    vcpkgUseSystem="ON"
+fi
+
+if [ "$UNAME" = "SunOS" ]; then
+    [ -x /usr/bin/gtar ] && TAR=/usr/bin/gtar
+    [ -x /usr/gnu/bin/tar ] && TAR=/usr/gnu/bin/tar
     vcpkgUseSystem="ON"
 fi
 
@@ -158,7 +165,7 @@ vcpkgExtractTar()
     archive=$1; toPath=$2
     rm -rf "$toPath" "$toPath.partial"
     mkdir -p "$toPath.partial"
-    $(cd "$toPath.partial" && tar xzf "$archive")
+    $(cd "$toPath.partial" && "$TAR" xzf "$archive")
     mv "$toPath.partial" "$toPath"
 }
 
