@@ -2222,7 +2222,7 @@
     },
     "cxxopts": {
       "baseline": "3.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cyclonedds": {
       "baseline": "0.10.5",
