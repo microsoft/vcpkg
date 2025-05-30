@@ -8176,6 +8176,10 @@
       "baseline": "1.8.0",
       "port-version": 0
     },
+    "redgrapes": {
+      "baseline": "20241028",
+      "port-version": 0
+    },
     "redis-plus-plus": {
       "baseline": "1.3.14",
       "port-version": 0
