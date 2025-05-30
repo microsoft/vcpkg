@@ -1,7 +1,6 @@
 {
   "name": "curl",
-  "version": "8.13.0",
-  "port-version": 1,
+  "version": "8.14.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -247,19 +246,6 @@
           "default-features": false,
           "features": [
             "ldap"
-          ]
-        }
-      ]
-    },
-    "winssl": {
-      "description": "Legacy name for schannel",
-      "supports": "windows & !uwp",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "schannel"
           ]
         }
       ]
