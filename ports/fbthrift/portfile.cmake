@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 957b58b32b7cd7cbf58ebe1e65f8c9befbe5d48d8fa33ea36ff40a04f6c34f362d88c03d0060fa6681cd7fc8b5aa7063fbd9c16ded23df0fb091031bcb0668c1
+    SHA512 5b30770d17f0167b87f059d6c6813355fcccdd126f66c6111b768ca8082ab63e89512a1688b65f1979bdfd3f64c0fc373790ea92861a13228bebf223c3fd4476
     HEAD_REF main
     PATCHES
         fix-deps.patch
