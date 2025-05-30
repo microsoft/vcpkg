@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 64671fc6..4cf113c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -265,7 +265,7 @@ add_subdirectory(lin_sys)
+ # Static library
+ add_library (osqpstatic STATIC ${osqp_src} ${osqp_headers} ${linsys_solvers})
+ # Give same name to static library output
+-set_target_properties(osqpstatic PROPERTIES OUTPUT_NAME osqp)
++set_target_properties(osqpstatic PROPERTIES OUTPUT_NAME osqp EXPORT_NAME osqp)
+ 
+ # Include directories for linear system solvers
+ target_include_directories(osqpstatic PRIVATE ${linsys_solvers_includes})
+@@ -298,6 +298,7 @@ if (MATLAB)
+ target_link_libraries (osqpstatic ${Matlab_LIBRARIES})
+ endif (MATLAB)
+ 
++if(0)
+ # If we are building Python/Matlab/R interface:
+ #   - do not build shared library
+ #   - do not build demo
+@@ -326,6 +327,7 @@ if (NOT PYTHON AND NOT MATLAB AND NOT R_LANG AND NOT EMBEDDED)
+     target_link_libraries (osqp_demo osqpstatic)
+ 
+ endif (NOT PYTHON AND NOT MATLAB AND NOT R_LANG AND NOT EMBEDDED)
++endif()
+ 
+ # Create CMake packages for the build directory
+ # ----------------------------------------------
+@@ -355,6 +357,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/osqp-config.cmake
+ 
+ 
+ 
++if(0)
+ # Add uninstall command
+ # ----------------------------------------------
+ if(NOT TARGET uninstall)
+@@ -366,6 +369,7 @@ if(NOT TARGET uninstall)
+     add_custom_target(uninstall
+         COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+ endif()
++endif()
+ 
+ 
+ 
