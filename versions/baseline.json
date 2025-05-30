@@ -2353,15 +2353,15 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2025-02-20",
-      "port-version": 1
+      "baseline": "2025-05-30",
+      "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.615.0",
+      "baseline": "1.616.0",
       "port-version": 0
     },
     "directx12-agility": {
-      "baseline": "1.615.1",
+      "baseline": "1.616.0",
       "port-version": 0
     },
     "directxmath": {
