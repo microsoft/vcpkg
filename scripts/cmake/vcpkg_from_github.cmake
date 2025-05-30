@@ -1,6 +1,6 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "USE_TARBALL_API"
+        "USE_TARBALL_API;USE_ZIP"
         "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
         "PATCHES")
 
@@ -28,6 +28,11 @@ function(vcpkg_from_github)
     else()
         set(github_host "${arg_GITHUB_HOST}")
         set(github_api_url "${arg_GITHUB_HOST}/api/v3")
+    endif()
+
+    set(file_ext "tar.gz")
+    if(DEFINED arg_USE_ZIP AND arg_USE_ZIP)
+        set(file_ext "zip")
     endif()
 
     set(headers_param "")
@@ -98,9 +103,9 @@ Error was: ${head_version_err}
 
     string(REPLACE "/" "_-" sanitized_ref "${ref_to_use}")
     if(DEFINED arg_FILE_DISAMBIGUATOR AND NOT VCPKG_USE_HEAD_REF)
-        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}-${arg_FILE_DISAMBIGUATOR}.tar.gz")
+        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}-${arg_FILE_DISAMBIGUATOR}.${file_ext}")
     else()
-        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
+        set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.${file_ext}")
     endif()
 
     if(arg_USE_TARBALL_API)
@@ -110,9 +115,12 @@ Error was: ${head_version_err}
         set(download_url
             "${github_api_url}/repos/${org_name}/${repo_name}/tarball/${ref_to_use}"
         )
+        if(DEFINED arg_USE_ZIP AND arg_USE_ZIP)
+            message(FATAL_ERROR "The tarball API doesn't support ZIP file. Please use the default file type (tar.gz).")
+        endif()
     else()
         set(download_url
-            "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
+            "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.${file_ext}"
         )
     endif()
 
