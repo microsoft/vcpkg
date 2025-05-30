@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index be6db903..0419a8c2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -132,7 +132,7 @@ if (NOT TARGET ggml)
+         if (NOT ggml_FOUND)
+             message(FATAL_ERROR "System-installed GGML library not found.")
+         endif()
+-        add_library(ggml ALIAS ggml::ggml)
++        add_library(ggml ALIAS ggml::all)
+     else()
+         add_subdirectory(ggml)
+     endif()
