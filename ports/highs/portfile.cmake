@@ -8,10 +8,6 @@ vcpkg_from_github(
     # SHA512 f45735f94324cff0a3e1b67a6dfe8a08763298a182d0fce24e04bd2450476daaf5265e9878dcfc594616cc9cbb2ab832035162b72a5d97a31a41625d18021494
     SHA512 7bdfb3a90c0088a236fdcff40bdd30ac9677427d68cedc1b8743009c5f22599de42208bdf6db8aaeca60954b1fdc8de620b604125508b8b4afe0c87e4772d200
     HEAD_REF master
-    # PATCHES
-    #     fix-hconfig-path.patch
-        # fix-uwp.patch
-        # fix-cuda.patch
 )
 
 vcpkg_cmake_configure(
@@ -20,8 +16,7 @@ vcpkg_cmake_configure(
         -DFAST_BUILD=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        # -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
-        -DZLIB=OFF
+        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
 )
 
 vcpkg_cmake_install()
