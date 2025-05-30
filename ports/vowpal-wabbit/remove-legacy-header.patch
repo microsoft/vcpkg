@@ -1,0 +1,52 @@
+diff --git a/utl/flatbuffer/txt_to_flat.cc b/utl/flatbuffer/txt_to_flat.cc
+index d63141e..784d329 100644
+--- a/utl/flatbuffer/txt_to_flat.cc
++++ b/utl/flatbuffer/txt_to_flat.cc
+@@ -18,8 +18,6 @@
+ #include "vw/core/parse_regressor.h"
+ #include "vw_to_flat.h"
+ 
+-#include <sys/timeb.h>
+-
+ #include <fstream>
+ 
+ using namespace VW::config;
+diff --git a/utl/flatbuffer/vw_to_flat.cc b/utl/flatbuffer/vw_to_flat.cc
+index b56b5b7..8ae9978 100644
+--- a/utl/flatbuffer/vw_to_flat.cc
++++ b/utl/flatbuffer/vw_to_flat.cc
+@@ -13,8 +13,6 @@
+ #include "vw/core/reductions/cb/cb_algs.h"
+ #include "vw/core/shared_data.h"
+ 
+-#include <sys/timeb.h>
+-
+ #include <fstream>
+ #include <vector>
+ 
+diff --git a/vowpalwabbit/allreduce/src/allreduce_sockets.cc b/vowpalwabbit/allreduce/src/allreduce_sockets.cc
+index a61e560..27d6446 100644
+--- a/vowpalwabbit/allreduce/src/allreduce_sockets.cc
++++ b/vowpalwabbit/allreduce/src/allreduce_sockets.cc
+@@ -32,8 +32,6 @@ Alekh Agarwal and John Langford, with help Olivier Chapelle.
+ #include "vw/common/vw_exception.h"
+ #include "vw/io/logger.h"
+ 
+-#include <sys/timeb.h>
+-
+ // port is already in network order
+ socket_t VW::all_reduce_sockets::sock_connect(const uint32_t ip, const int port, VW::io::logger& logger)
+ {
+diff --git a/vowpalwabbit/core/src/reductions/bfgs.cc b/vowpalwabbit/core/src/reductions/bfgs.cc
+index 8b1e7ac..7728ea0 100644
+--- a/vowpalwabbit/core/src/reductions/bfgs.cc
++++ b/vowpalwabbit/core/src/reductions/bfgs.cc
+@@ -20,8 +20,6 @@ Implementation by Miro Dudik.
+ #include "vw/core/shared_data.h"
+ #include "vw/core/simple_label.h"
+ 
+-#include <sys/timeb.h>
+-
+ #include <cassert>
+ #include <cfloat>
+ #include <chrono>
