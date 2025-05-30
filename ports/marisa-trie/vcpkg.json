@@ -4,7 +4,7 @@
   "description": "Matching Algorithm with Recursively Implemented StorAge (MARISA) is a space-efficient trie data structure. This is a C++ library for an implementation of MARISA.",
   "homepage": "https://github.com/s-yata/marisa-trie",
   "license": "BSD-2-Clause OR LGPL-2.1-or-later",
-  "supports": "!windows | mingw | ((x86 | x64) & !staticcrt)",
+  "supports": "!windows | mingw | (windows & static)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
