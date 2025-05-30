@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         enable-debug.patch
+        fix-install.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
