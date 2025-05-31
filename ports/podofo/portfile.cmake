@@ -1,13 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO podofo/podofo
-    REF 1.0.0-rc1 # "${VERSION}"
-    SHA512 544ac7b3dae700917c652fca9fc72e5987a488161dfc6edead8771845aabdccb76934ec8a04ec978d6919a92712577d73b8a46fe00801429908c5d8cd4fdcf22
+    REF "${VERSION}"
+    SHA512 ab6975270f47d584ba8a8259bb5fe7edbaa8ae29dc0d9311685eab6f0923c62a895f3e42926608d8a7d93ddd23aad8f335aa6dbfb2fa3a115d2a5dcec50ff66c
     PATCHES
-        arm64-windows.diff  # obsolete
-        cmake-config.diff   # upstreamed
-        mingw.diff          # obsolete
-        pkgconfig.diff      # upstreamed
         dependencies.diff
 )
 file(REMOVE_RECURSE
