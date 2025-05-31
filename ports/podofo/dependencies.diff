@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0441083c..ff19fe8e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -246,6 +246,7 @@ if(JPEG_FOUND)
+     string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " libjpeg")
+ endif()
+ list(APPEND PODOFO_LIB_DEPENDS ZLIB::ZLIB)
++string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " libutf8proc")
+ string(APPEND PODOFO_PKGCONFIG_REQUIRES_PRIVATE " zlib")
+ list(APPEND PODOFO_LIB_DEPENDS ${PLATFORM_SYSTEM_LIBRARIES})
+ 
+@@ -276,6 +277,26 @@ add_subdirectory(3rdparty)
+ add_subdirectory(src/podofo)
+ include_directories(${PODOFO_INCLUDE_DIRS})
+ 
++find_package(date CONFIG REQUIRED)
++find_package(FastFloat CONFIG REQUIRED)
++find_package(fmt CONFIG REQUIRED)
++find_package(utf8cpp CONFIG REQUIRED)
++find_package(unofficial-utf8proc CONFIG REQUIRED)
++add_library(imported::utf8proc ALIAS utf8proc)
++
++target_link_libraries(podofo_private PRIVATE
++    $<COMPILE_ONLY:date::date>
++    $<COMPILE_ONLY:FastFloat::fast_float>
++    $<COMPILE_ONLY:fmt::fmt-header-only>
++    $<COMPILE_ONLY:utf8cpp::utf8cpp>
++    imported::utf8proc
++)
++if(PODOFO_BUILD_STATIC)
++    target_link_libraries(podofo_static $<COMPILE_ONLY:utf8cpp::utf8cpp>)
++else()
++    target_link_libraries(podofo_shared PRIVATE $<COMPILE_ONLY:utf8cpp::utf8cpp>)
++endif()
++
+ if(PODOFO_BUILD_TEST)
+     enable_testing()
+     add_subdirectory(test)
+diff --git a/src/podofo/podofo-config.cmake.in b/src/podofo/podofo-config.cmake.in
+index 700619bb..3ab4afce 100644
+--- a/src/podofo/podofo-config.cmake.in
++++ b/src/podofo/podofo-config.cmake.in
+@@ -2,6 +2,7 @@
+ 
+ if("@PODOFO_BUILD_STATIC@")
+     include(CMakeFindDependencyMacro)
++    find_dependency(unofficial-utf8proc CONFIG)
+     if("@Fontconfig_FOUND@")
+         find_dependency(Fontconfig)
+     endif()
+diff --git a/src/podofo/private/SASLprep.cpp b/src/podofo/private/SASLprep.cpp
+index a9c8a672..6899b9f0 100644
+--- a/src/podofo/private/SASLprep.cpp
++++ b/src/podofo/private/SASLprep.cpp
+@@ -8,7 +8,7 @@
+ #include <cassert>
+ #include <vector>
+ 
+-#include <utf8proc/utf8proc.h>
++#include <utf8proc.h>
+ #include <utf8cpp/utf8.h>
+ 
+ #include "SASLprepPrivate.h"
+diff --git a/src/podofo/private/charconv_compat.h b/src/podofo/private/charconv_compat.h
+index 1f72d9d9..b20c860b 100644
+--- a/src/podofo/private/charconv_compat.h
++++ b/src/podofo/private/charconv_compat.h
+@@ -15,7 +15,7 @@
+ #endif
+ 
+ #if defined(WANT_CHARS_FORMAT) || defined(WANT_FROM_CHARS)
+-#include <fast_float.h>
++#include <fast_float/fast_float.h>
+ #endif
+ 
+ #ifdef WANT_TO_CHARS
