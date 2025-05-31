@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fc2b679..4ec92b9 100644
+index 6df3378..5be4499 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -113,19 +113,7 @@ message(STATUS "CMAKE_CXX_IMPLICIT_LINK_LIBRARIES: ${CMAKE_CXX_IMPLICIT_LINK_LIB
@@ -22,7 +22,15 @@ index fc2b679..4ec92b9 100644
  
  # LIEF Source definition
  # ======================
-@@ -318,7 +306,9 @@ else()
+@@ -171,6 +159,7 @@ endif()
+ 
+ if(BUILD_SHARED_LIBS OR LIEF_FORCE_API_EXPORTS)
+   target_compile_definitions(LIB_LIEF PRIVATE -DLIEF_EXPORTS)
++  target_compile_definitions(LIB_LIEF INTERFACE -DLIEF_IMPORT)
+ else()
+   target_compile_definitions(LIB_LIEF PRIVATE -DLIEF_STATIC)
+ endif()
+@@ -322,7 +311,9 @@ else()
      ${CMAKE_CURRENT_BINARY_DIR}/include/LIEF/third-party/internal/span.hpp)
  endif()
  
@@ -33,7 +41,7 @@ index fc2b679..4ec92b9 100644
  
  if(ANDROID AND LIEF_LOGGING)
    target_link_libraries(LIB_LIEF PUBLIC log)
-@@ -507,11 +497,11 @@ if(LIEF_INSTALL)
+@@ -511,11 +502,11 @@ if(LIEF_INSTALL)
    endif()
  
    install(
