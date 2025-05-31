@@ -50,3 +50,24 @@ index 57a1beb9..204a432b 100644
  }
  
  } // namespace util
+diff --git a/cachelib/CMakeLists.txt b/cachelib/CMakeLists.txt
+index e17ff27..5d08e63 100644
+--- a/cachelib/CMakeLists.txt
++++ b/cachelib/CMakeLists.txt
+@@ -59,11 +59,11 @@ set(CONFIGS_INSTALL_DIR test_configs CACHE STRING
+     "The subdirectory where sample test configurations should be installed")
+ 
+ # CMake include directories
+-set(CMAKE_MODULE_PATH
+-  "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
+-  # For shipit-transformed builds
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../build/fbcode_builder/CMake"
+-  ${CMAKE_MODULE_PATH})
++# set(CMAKE_MODULE_PATH
++#   "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
++#   # For shipit-transformed builds
++#   "${CMAKE_CURRENT_SOURCE_DIR}/../build/fbcode_builder/CMake"
++#   ${CMAKE_MODULE_PATH})
+ 
+ include(FBThriftLibrary)
+ 
