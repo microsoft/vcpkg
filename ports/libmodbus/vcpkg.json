@@ -1,17 +1,13 @@
 {
   "name": "libmodbus",
-  "version": "3.1.10",
+  "version": "3.1.11",
   "description": "libmodbus is a free software library to send/receive data with a device which respects the Modbus protocol",
   "homepage": "https://github.com/stephane/libmodbus",
   "license": "LGPL-2.1-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
+      "name": "vcpkg-make",
       "host": true
     }
   ]
