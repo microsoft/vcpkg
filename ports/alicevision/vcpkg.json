@@ -1,0 +1,76 @@
+{
+  "name": "alicevision",
+  "version-semver": "3.2.0",
+  "description": "AliceVision is a Photogrammetric Computer Vision Framework which provides a 3D Reconstruction and Camera Tracking algorithms.",
+  "homepage": "https://alicevision.org/association/#",
+  "license": "MIT",
+  "supports": "!arm",
+  "dependencies": [
+    "boost-atomic",
+    "boost-container",
+    "boost-date-time",
+    "boost-filesystem",
+    "boost-graph",
+    "boost-json",
+    "boost-log",
+    "boost-program-options",
+    "boost-regex",
+    "boost-serialization",
+    "boost-system",
+    "boost-thread",
+    "boost-timer",
+    "eigen3",
+    "expat",
+    "nanoflann",
+    "openexr",
+    "openimageio",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "openmp",
+    "sfm"
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP parallelization"
+    },
+    "sfm": {
+      "description": "Build AliceVision SfM part",
+      "dependencies": [
+        {
+          "name": "assimp",
+          "default-features": false
+        },
+        {
+          "name": "ceres",
+          "default-features": false,
+          "features": [
+            "suitesparse"
+          ]
+        },
+        "coin-or-clp",
+        "coin-or-osi",
+        {
+          "name": "coinutils",
+          "default-features": false
+        },
+        {
+          "name": "flann",
+          "default-features": false
+        },
+        {
+          "name": "geogram",
+          "default-features": false
+        },
+        "liblemon"
+      ]
+    }
+  }
+}
