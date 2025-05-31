@@ -74,8 +74,13 @@ function(vcpkg_make_configure)
         C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
     # Used by cl
         INCLUDE LIB LIBPATH _CL_ _LINK_
+    # Used by emscripten
+        EMMAKEN_JUST_CONFIGURE
     )
     z_vcpkg_make_set_common_vars()
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        set(EMMAKEN_JUST_CONFIGURE 1) # as in emconfigure
+    endif()
 
     foreach(config IN LISTS buildtypes)
         string(TOUPPER "${config}" configup)
@@ -125,6 +130,7 @@ function(vcpkg_make_configure)
         ${cm_FLAGS} 
         C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
         INCLUDE LIB LIBPATH _CL_ _LINK_
+        EMMAKEN_JUST_CONFIGURE
     )
 
     find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
