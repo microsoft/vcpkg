@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_TCLAP=ON
         -DUSE_SYSTEM_DARTS=ON
         -DUSE_SYSTEM_MARISA=ON
-        -DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf
 )
 
 vcpkg_cmake_install(

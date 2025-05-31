@@ -26,7 +26,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build OpenCC command-line tools"
+      "description": "Build OpenCC command-line tools",
+      "supports": "!android"
     }
   }
 }
