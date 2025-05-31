@@ -1,9 +1,9 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+string(REGEX REPLACE "^([0-9]+)[.]([0-9][.])" "\\1.0\\2" LEXY_VERSION "${VERSION}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foonathan/lexy
-    REF "v${VERSION}"
+    REF "v${LEXY_VERSION}"
     SHA512 04eec38823ab7e6d67fe2017f9d09485ec0e2a2fa60182732e1b7a471944290934f10ded5ad209965efa0931a8f9db8bcf789ca8fb52a371b776d12edd8ca8f5
     HEAD_REF main
 )
