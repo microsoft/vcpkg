@@ -2,11 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF v${VERSION}
-    SHA512 a6493a96e911e4b67dd017125eedf6f3d794a8c931d897e3fdd050a8e65c20dcb84e9dfad207d1fcec6d2f019ad406954d1711827a74c1665fe24cc32f3b019f
+    SHA512 637f662a38b4d09288bbf9fc5cce3c3c8711a90a4afe570ef85bd30437353208a2cabc0e5a8edaac453e1b7b50ff97ce4757b1376ec1be248066cceda6362257
     HEAD_REF master
     PATCHES
-        android-librt.diff
-        clang-sanitizer.diff
 )
 
 # disable docs
@@ -15,8 +13,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "
 
 # do not enable LTO by default
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)" "")
-
-vcpkg_replace_string("${SOURCE_PATH}/tools/cmake/open62541Config.cmake.in" "find_dependency(PythonInterp REQUIRED)" "")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
