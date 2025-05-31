@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 1fce4fb..e56f0a2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -256,20 +256,19 @@ endif()
+@@ -256,20 +256,21 @@ endif()
  install(
    TARGETS marisa
    EXPORT MarisaTargets
@@ -15,30 +15,14 @@ index 1fce4fb..e56f0a2 100644
  install(
    DIRECTORY include/
    DESTINATION include
--  COMPONENT Library
+   COMPONENT Library
    FILES_MATCHING PATTERN "*.h"
  )
  
  if(ENABLE_TOOLS)
    install(
      TARGETS ${MARISA_TOOLS}
--    COMPONENT Binaries
+     COMPONENT Binaries
    )
  endif()
- 
-@@ -295,7 +294,6 @@ install(EXPORT MarisaTargets
-   FILE MarisaTargets.cmake
-   NAMESPACE Marisa::
-   DESTINATION ${ConfigPackageLocation}
--  COMPONENT Library
- )
- 
- install(
-@@ -304,7 +302,6 @@ install(
-     "${CMAKE_CURRENT_BINARY_DIR}/Marisa/MarisaConfigVersion.cmake"
-   DESTINATION
-     ${ConfigPackageLocation}
--  COMPONENT Library
- )
- 
- configure_file(marisa.pc.in ${CMAKE_CURRENT_BINARY_DIR}/marisa.pc @ONLY)
+
