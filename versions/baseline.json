@@ -3185,7 +3185,7 @@
       "port-version": 9
     },
     "ggml": {
-      "baseline": "2025-02-12",
+      "baseline": "2025-05-13",
       "port-version": 0
     },
     "ghc-filesystem": {
@@ -5750,7 +5750,7 @@
     },
     "llama-cpp": {
       "baseline": "4743",
-      "port-version": 0
+      "port-version": 1
     },
     "llfio": {
       "baseline": "2025-01-13",
@@ -10062,7 +10062,7 @@
     },
     "whisper-cpp": {
       "baseline": "1.7.5",
-      "port-version": 0
+      "port-version": 1
     },
     "wiiuse": {
       "baseline": "0.15.6",
