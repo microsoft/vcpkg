@@ -5,7 +5,7 @@ parameters:
   - name: vcpkgToolSha
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
     type: string
-    default:  'refs/pull/1689/merge'
+    default:  'use default'
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring'
     type: string
