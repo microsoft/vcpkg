@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-dependencies.patch
+        # marisa-trie/0.3.0 requires C++17, so we need to enable it
+        enable-cpp17.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -21,7 +23,6 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_TCLAP=ON
         -DUSE_SYSTEM_DARTS=ON
         -DUSE_SYSTEM_MARISA=ON
-        -DPKG_CONFIG_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf
 )
 
 vcpkg_cmake_install(
