@@ -31,7 +31,7 @@ index 0441083c..ff19fe8e 100644
 +if(PODOFO_BUILD_STATIC)
 +    target_link_libraries(podofo_static $<COMPILE_ONLY:utf8cpp::utf8cpp>)
 +else()
-+    target_link_libraries(podofo_shared $<COMPILE_ONLY:utf8cpp::utf8cpp>)
++    target_link_libraries(podofo_shared PRIVATE $<COMPILE_ONLY:utf8cpp::utf8cpp>)
 +endif()
 +
  if(PODOFO_BUILD_TEST)
