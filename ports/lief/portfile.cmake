@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-cmakelists.patch
         fix-liefconfig-cmake-in.patch
         fix-vcpkg-includes.patch
+        include-json.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
