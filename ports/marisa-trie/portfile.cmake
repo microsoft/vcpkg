@@ -30,7 +30,15 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Marisa)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+if ("tools" IN_LIST FEATURES)
+    set(TOOL_NAMES marisa-benchmark marisa-build marisa-common-prefix-search marisa-dump marisa-lookup marisa-predictive-search marisa-reverse-lookup)
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
