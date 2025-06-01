@@ -53,6 +53,12 @@ vcpkg_cmake_configure(
         "-DLIEF_EXTERNAL_SPAN_DIR=${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tcb"
 )
 
+# While paging.cpp refers to ELF, PE, MachO implementations, we have to enable these features on Windows dynamic builds
+# see https://github.com/lief-project/LIEF/blob/0.16.6/src/paging.cpp
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND FEATURE_OPTIONS "-DLIEF_ELF=ON" "-DLIEF_PE=ON" "-DLIEF_MACHO=ON")
+endif()
+
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/LIEF")
