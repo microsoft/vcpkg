@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 6c51c4b4757aecea3f713b2ee8fb08992c2bdcc203f8e44e307ab8bcd5ed575f154d438c1d036251441aedef1eae812dc7114f6ca5da8314b8e415d92f02f33d
     HEAD_REF master
     PATCHES
+        cmake-config.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
 )
@@ -74,48 +75,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ggml.h" "#ifdef GGML_SHARED" "#if 1")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ggml-backend.h" "#ifdef GGML_BACKEND_SHARED" "#if 1")
 endif()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "set_and_check(GGML_BIN_DIR \"\${PACKAGE_PREFIX_DIR}/bin\")"
-    ""
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "add_library(ggml::ggml UNKNOWN IMPORTED)"
-    "if (NOT TARGET ggml::ggml)
-    add_library(ggml::ggml UNKNOWN IMPORTED)
-endif()"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "add_library(ggml::ggml-base UNKNOWN IMPORTED)"
-    "if (NOT TARGET ggml::ggml-base)
-    add_library(ggml::ggml-base UNKNOWN IMPORTED)
-endif()"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "add_library(ggml::\${_ggml_backend} UNKNOWN IMPORTED)"
-    "if (NOT TARGET ggml::\${_ggml_backend})
-        add_library(ggml::\${_ggml_backend} UNKNOWN IMPORTED)
-    endif()"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "add_library(ggml::all INTERFACE IMPORTED)"
-    "if (NOT TARGET ggml::all)
-    add_library(ggml::all INTERFACE IMPORTED)
-endif()"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "if (NOT GGML_SHARED_LIB)"
-    "if (NOT GGML_SHARED_LIB)
-    if (GGML_OPENCL)
-        find_package(OpenCL REQUIRED)
-        list(APPEND GGML_CPU_INTERFACE_LINK_LIBRARIES OpenCL::OpenCL)
-    endif()"
-)
 
 if (NOT VCPKG_BUILD_TYPE)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
