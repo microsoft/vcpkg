@@ -33,6 +33,10 @@
       "platform": "!osx"
     },
     {
+      "name": "pkgconfig",
+      "platform": "!static | !(linux | (windows & x64))"
+    },
+    {
       "name": "vulkan",
       "platform": "!x86"
     }
@@ -99,6 +103,9 @@
           ]
         }
       ]
+    },
+    "pkgconfig": {
+      "description": "Test pkgconfig file. For static linkage not supported with CUDA, Vulkan ."
     },
     "vulkan": {
       "description": "Enable Vulkan support",
