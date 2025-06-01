@@ -1519,7 +1519,6 @@ opencascade[tbb]:x64-windows = cascade
 opencascade[tbb]:x64-windows-static = cascade
 opencascade[tbb]:x64-windows-static-md = cascade
 opencascade[tbb,vtk,freeimage](uwp) = cascade
-opencc:x64-windows-static = cascade
 opencv[cuda,cudnn](osx) = cascade
 opencv[cuda,cudnn,dc1394,dnn-cuda,freetype,gdcm,gstreamer,gtk,halide,openexr,opengl,ovis,python,qt,sfm,tbb,vtk]:arm64-uwp = cascade
 opencv[cuda,cudnn,dc1394,dnn-cuda,freetype,gdcm,gstreamer,gtk,openexr,opengl,ovis,qt,sfm,tbb,vtk]:x64-uwp = cascade
