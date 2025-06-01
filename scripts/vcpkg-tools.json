@@ -73,7 +73,7 @@
       "os": "windows",
       "arch": "arm64",
       "version": "2.7.4",
-      "executable": "mingw64/bin/git.exe",
+      "executable": "clangarm64/bin/git.exe",
       "url": "https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.2/PortableGit-2.47.1.2-arm64.7z.exe",
       "sha512": "2e57cebc1f567bbb63b92825e4b9625de24bc897c4ea9aa8d88f70b5ad69c53005e062f94b60d10269855f2edd0505d5d6233c6c067d6af1bbedde66c9b856c3",
       "archive": "PortableGit-2.47.1.2-arm64.7z.exe"
