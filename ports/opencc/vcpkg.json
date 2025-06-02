@@ -5,7 +5,7 @@
   "description": "A project for conversions between Traditional Chinese, Simplified Chinese and Japanese Kanji (Shinjitai)",
   "homepage": "https://github.com/BYVoid/OpenCC",
   "license": "Apache-2.0",
-  "supports": "!(arm | uwp | android)",
+  "supports": "!(arm | uwp)",
   "dependencies": [
     "darts-clone",
     "marisa-trie",
