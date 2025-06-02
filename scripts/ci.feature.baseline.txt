@@ -2120,7 +2120,6 @@ dcmtk[core,iconv,icu,openssl,png,tiff,tools,xml2,zlib](osx) = combination-fails 
 dcmtk[xml2](windows) = feature-fails # fatal error C1083: Cannot open include file: 'iconv.h'. See https://github.com/microsoft/vcpkg/issues/33473
 dcmtk(uwp) = fail # Please set the C++ runtime location (required for running applications targeting Windows). See https://github.com/microsoft/vcpkg/issues/35112
 dmlc[openmp](osx) = feature-fails # No openmp on osx
-duckdb[excel]=feature-fails
 dv-processing[tools](osx) = feature-fails # Broke with compiler version. See https://github.com/microsoft/vcpkg/issues/39852
 embree3[core,avx,avx2,avx512,default-features,sse2,sse42](osx) = combination-fails # CMake Error at CMakeLists.txt:447 (MESSAGE):   Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.  Please either build a shared library or enable only one ISA.
 ffmpeg[all,all-gpl](x64 & android) = feature-fails
