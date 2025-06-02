@@ -46,10 +46,18 @@ index cfedf6d..05e3d0d 100644
  template<class MATRIX>
  inline MATRIX prod(const MATRIX& A, const MATRIX&B) {
 diff --git a/gtsam/base/Vector.h b/gtsam/base/Vector.h
-index f7923ff..f9ed60d 100644
+index f7923ff..99573a5 100644
 --- a/gtsam/base/Vector.h
 +++ b/gtsam/base/Vector.h
-@@ -42,14 +42,14 @@ typedef Eigen::Matrix<double, 1, 1> Vector1;
+@@ -27,6 +27,7 @@
+ 
+ #include <gtsam/global_includes.h>
+ #include <Eigen/Core>
++#include <cassert>
+ #include <iosfwd>
+ #include <list>
+ 
+@@ -42,14 +43,14 @@ typedef Eigen::Matrix<double, 1, 1> Vector1;
  typedef Eigen::Vector2d Vector2;
  typedef Eigen::Vector3d Vector3;
  
