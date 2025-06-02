@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SOCI/soci
     REF "v${VERSION}"
-    SHA512 1b415d44fb5bc511b5a065da7cbb6c9a918a60498ff9acff701e30bccd5f740c91f0b91540418d68186a48653444e480bcff75cfbc8b4318457bc80bba18cca9
+    SHA512 96571776d7fcb814c2625ade92f1d5bbcbee2a654eb38a098c23d12d01e66ab2900fc82fdb2f1a37679f0091009f9c6880c80d939730c1bd67f3285418144eba
     HEAD_REF master
 )
 file(REMOVE
@@ -17,16 +17,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         boost       WITH_BOOST
         boost       CMAKE_REQUIRE_FIND_PACKAGE_Boost
         empty       SOCI_EMPTY
-        mysql       WITH_MYSQL
-        odbc        WITH_ODBC
+        mysql       SOCI_MYSQL
+        odbc        SOCI_ODBC
         odbc        CMAKE_REQUIRE_FIND_PACKAGE_ODBC
-        postgresql  WITH_POSTGRESQL
-        sqlite3     WITH_SQLITE3
+        postgresql  SOCI_POSTGRESQL
+        sqlite3     SOCI_SQLITE3
     INVERTED_FEATURES
-        core        WITH_DB2
-        core        WITH_FIREBIRD
-        core        WITH_ORACLE
-        core        WITH_VALGRIND
+        core        SOCI_DB2
+        core        SOCI_FIREBIRD
+        core        SOCI_ORACLE
 )
 
 vcpkg_cmake_configure(
