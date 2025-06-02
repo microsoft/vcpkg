@@ -1,0 +1,52 @@
+diff --git a/libtommath/makefile.msvc b/libtommath/makefile.msvc
+index a78080b..174a30c 100644
+--- a/libtommath/makefile.msvc
++++ b/libtommath/makefile.msvc
+@@ -14,7 +14,7 @@ PREFIX    = c:\devel
+ CFLAGS    = /Ox
+ 
+ #Compilation flags
+-LTM_CFLAGS  = /nologo /I./ /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE /D__STDC_WANT_SECURE_LIB__=1 /D_CRT_HAS_CXX17=0 /Wall /wd4146 /wd4127 /wd4668 /wd4710 /wd4711 /wd4820 /wd5045 /WX $(CFLAGS)
++LTM_CFLAGS  = /nologo /I./ /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE /D__STDC_WANT_SECURE_LIB__=1 /D_CRT_HAS_CXX17=0 /Wall /wd4146 /wd4127 /wd4668 /wd4710 /wd4711 /wd4820 /wd5045 $(CFLAGS)
+ LTM_LDFLAGS = advapi32.lib
+ 
+ #Libraries to be created (this makefile builds only static libraries)
+diff --git a/win/configure b/win/configure
+index b45db60..57ff4fa 100755
+--- a/win/configure
++++ b/win/configure
+@@ -4653,7 +4653,7 @@ printf "%s\n" "   Using 64-bit $MACHINE mode" >&6; }
+ 	    RC="rc"
+ 	    # -Od - no optimization
+ 	    # -WX - warnings as errors
+-	    CFLAGS_DEBUG="-nologo -Z7 -Od -WX ${runtime}d"
++	    CFLAGS_DEBUG="-nologo -Z7 -Od ${runtime}d"
+ 	    # -O2 - create fast code (/Og /Oi /Ot /Oy /Ob2 /Gs /GF /Gy)
+ 	    CFLAGS_OPTIMIZE="-nologo -O2 ${runtime}"
+ 	    lflags="${lflags} -nologo"
+diff --git a/win/rules.vc b/win/rules.vc
+index 57bc770..2a8bbaa 100644
+--- a/win/rules.vc
++++ b/win/rules.vc
+@@ -1525,7 +1525,7 @@ carch = $(carch) /DHAVE_CPUID=1
+ 
+ !if $(DEBUG)
+ # Turn warnings into errors
+-cwarn = $(cwarn) -WX
++# cwarn = $(cwarn) -WX
+ !endif
+ 
+ INCLUDES = $(TCL_INCLUDES) $(TK_INCLUDES) $(PRJ_INCLUDES)
+diff --git a/win/tcl.m4 b/win/tcl.m4
+index 3b7e582..d7de29d 100644
+--- a/win/tcl.m4
++++ b/win/tcl.m4
+@@ -836,7 +836,7 @@ AC_DEFUN([SC_CONFIG_CFLAGS], [
+ 	    RC="rc"
+ 	    # -Od - no optimization
+ 	    # -WX - warnings as errors
+-	    CFLAGS_DEBUG="-nologo -Z7 -Od -WX ${runtime}d"
++	    CFLAGS_DEBUG="-nologo -Z7 -Od ${runtime}d"
+ 	    # -O2 - create fast code (/Og /Oi /Ot /Oy /Ob2 /Gs /GF /Gy)
+ 	    CFLAGS_OPTIMIZE="-nologo -O2 ${runtime}"
+ 	    lflags="${lflags} -nologo"
