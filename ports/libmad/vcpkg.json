@@ -1,9 +1,9 @@
 {
   "name": "libmad",
   "version": "0.16.4",
-  "port-version": 3,
+  "port-version": 4,
   "description": "high-quality MPEG audio decoder",
-  "homepage": "http://codeberg.org/tenacityteam/libmad",
+  "homepage": "https://codeberg.org/tenacityteam/libmad",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
