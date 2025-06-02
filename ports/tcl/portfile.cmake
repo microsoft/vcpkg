@@ -14,6 +14,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         set(TCL_BUILD_MACHINE_STR MACHINE=AMD64)
     else()
         set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
+        set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
     endif()
     
     # Handle features
