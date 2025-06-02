@@ -1,0 +1,38 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 02895b0..c36650f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -566,7 +566,7 @@ endif()
+ 
+ if(KDDW_FRONTEND_QT)
+     install(
+-        TARGETS kddockwidgets kdbindings
++        TARGETS kddockwidgets
+         EXPORT kddockwidgetsTargets
+         RUNTIME DESTINATION ${INSTALL_RUNTIME_DIR}
+         LIBRARY DESTINATION ${INSTALL_LIBRARY_DIR}
+diff --git a/src/KDDockWidgetsConfig.cmake.in b/src/KDDockWidgetsConfig.cmake.in
+index fbec60a..31d45e5 100644
+--- a/src/KDDockWidgetsConfig.cmake.in
++++ b/src/KDDockWidgetsConfig.cmake.in
+@@ -24,5 +24,8 @@ if (NOT WIN32 AND NOT APPLE AND NOT EMSCRIPTEN AND NOT @KDDockWidgets_QT6@ AND @
+     find_dependency(Qt5X11Extras REQUIRED)
+ endif()
+ 
++find_dependency(KDBindings CONFIG)
++find_dependency(nlohmann_json)
++
+ # Add the targets file
+ include("${CMAKE_CURRENT_LIST_DIR}/KDDockWidgets@KDDockWidgets_LIBRARY_QTID@Targets.cmake")
+diff --git a/src/kdbindings.cmake b/src/kdbindings.cmake
+index c923cd9..da7ad32 100644
+--- a/src/kdbindings.cmake
++++ b/src/kdbindings.cmake
+@@ -11,5 +11,5 @@
+ # Use a separate target for our kdbindings/signal.h header as it doesn't compile
+ # with -Wweak-vtables
+ 
+-add_library(kdbindings INTERFACE)
+-target_include_directories(kdbindings SYSTEM INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/3rdparty>)
++find_package(KDBindings CONFIG REQUIRED GLOBAL)
++add_library(kdbindings ALIAS KDAB::KDBindings)

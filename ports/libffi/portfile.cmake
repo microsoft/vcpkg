@@ -1,30 +1,31 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libffi/libffi/releases/download/v${VERSION}/libffi-${VERSION}.tar.gz"
     FILENAME "libffi-${VERSION}.tar.gz"
-    SHA512 88680aeb0fa0dc0319e5cd2ba45b4b5a340bc9b4bcf20b1e0613b39cd898f177a3863aa94034d8e23a7f6f44d858a53dcd36d1bb8dee13b751ef814224061889
+    SHA512 05344c6c1a1a5b44704f6cf99277098d1ea3ac1dc11c2a691c501786a214f76184ec0637135588630db609ce79e49df3dbd00282dd61e7f21137afba70e24ffe
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         dll-bindir.diff
-        fix_undefind_func.patch
 )
 
 vcpkg_list(SET options)
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(extra_cflags "-DFFI_BUILDING")
+    set(linkage_flag "-DFFI_STATIC_BUILD")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(APPEND extra_cflags " -DFFI_BUILDING_DLL")
+        set(linkage_flag "-DFFI_BUILDING_DLL")
     endif()
-    vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${extra_cflags}")
+    vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${linkage_flag}")
 endif()
 
 set(ccas_options "")
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
+set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    set(ccas "${SOURCE_PATH}/msvcc.sh")
+    vcpkg_add_to_path("${SOURCE_PATH}")
+    set(ccas "msvcc.sh")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         string(APPEND ccas_options " -m32")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -34,17 +35,20 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         string(APPEND ccas_options " -marm64")
     endif()
-else()
-    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 endif()
-cmake_path(GET ccas PARENT_PATH ccas_dir)
-vcpkg_add_to_path("${ccas_dir}")
-cmake_path(GET ccas FILENAME ccas_command)
-vcpkg_list(APPEND options "CCAS=${ccas_command}${ccas_options}")
+vcpkg_list(APPEND options "CCAS=${ccas}")
+if(ccas_options)
+    vcpkg_list(APPEND options "CCASFLAGS=\${CCASFLAGS}${ccas_options}")
+endif()
+
+set(configure_triplets DETERMINE_BUILD_TRIPLET)
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(configure_triplets BUILD_TRIPLET "--host=wasm32-unknown-emscripten --build=\$(\$SHELL \"${SOURCE_PATH}/config.guess\")")
+endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
-    DETERMINE_BUILD_TRIPLET
+    ${configure_triplets}
     USE_WRAPPERS
     OPTIONS
         --enable-portable-binary
@@ -58,7 +62,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h" "!defined FFI_BUILDING" "0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h" "defined(FFI_STATIC_BUILD)" "1")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

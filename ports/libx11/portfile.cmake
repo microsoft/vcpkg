@@ -14,11 +14,13 @@ vcpkg_from_gitlab(
     REF  3a30ada60c5217ada37b143b541c8e6f6284c7fa
     SHA512 441f86ff8293d27459feaa93f85bcd4d02c6bd64fdb4d95199e5ee8a75340c2ce9b0fccd0b05840ce0de30ff3af3d21e6f37c81840e82b37dbddf082911b585d
     HEAD_REF master
-    PATCHES cl.build.patch
-            io_include.patch
-            ${PATCHES}
-            vcxserver.patch
-            add_dl_pc.patch
+    PATCHES
+        optimize-configure.patch
+        cl.build.patch
+        io_include.patch
+        ${PATCHES}
+        vcxserver.patch
+        add_dl_pc.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")

@@ -2,14 +2,16 @@ diff --git a/Configurations/windows-makefile.tmpl b/Configurations/windows-makef
 index 5946c89..f71f3bf 100644
 --- a/Configurations/windows-makefile.tmpl
 +++ b/Configurations/windows-makefile.tmpl
-@@ -556,6 +556,7 @@ install_dev: install_runtime_libs
+@@ -564,8 +564,9 @@
+ 				       "$(INSTALLTOP)\include\openssl"
  	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(libdir)"
  	@"$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_LIBS) "$(libdir)"
  	@if "$(SHLIBS)"=="" \
 +	 @if "$(INSTALL_PDBS)"=="ON" \
  	 "$(PERL)" "$(SRCDIR)\util\copy.pl" ossl_static.pdb "$(libdir)"
+ 	@"$(PERL)" "$(SRCDIR)\util\mkdir-p.pl" "$(CMAKECONFIGDIR)"
+ 	@"$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_EXPORTERS_CMAKE) "$(CMAKECONFIGDIR)"
  
- uninstall_dev:
 @@ -569,6 +570,7 @@ install_engines: _install_modules_deps
  	@if not "$(INSTALL_ENGINES)"=="" \
  	 "$(PERL)" "$(SRCDIR)\util\copy.pl" $(INSTALL_ENGINES) "$(ENGINESDIR)"

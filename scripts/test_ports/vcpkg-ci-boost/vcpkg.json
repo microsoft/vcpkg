@@ -3,13 +3,14 @@
   "version": "1",
   "description": "Boost features testing within CI.",
   "dependencies": [
+    "boost",
     {
       "name": "boost",
       "default-features": false,
       "features": [
         "mpi"
       ],
-      "platform": "!staticcrt & !(arm & windows) & !uwp"
+      "platform": "!staticcrt & !android & !(arm & windows) & !uwp"
     },
     {
       "name": "boost-asio",
@@ -40,11 +41,7 @@
       "features": [
         "python3"
       ],
-      "platform": "!staticcrt & !static & !uwp & !(arm & windows)"
-    },
-    {
-      "name": "boost-odeint",
-      "default-features": false
+      "platform": "!staticcrt & !static & !android & !(arm & windows) & !uwp"
     },
     {
       "name": "boost-odeint",
@@ -52,23 +49,12 @@
       "features": [
         "mpi"
       ],
-      "platform": "!staticcrt & !uwp & !(windows & arm)"
+      "platform": "!staticcrt & !android & !(windows & arm) & !uwp"
     },
     {
       "name": "boost-python",
       "default-features": false,
-      "features": [
-        "python3"
-      ],
       "platform": "!emscripten & !ios & !android & !uwp"
-    },
-    {
-      "name": "boost-python",
-      "default-features": false,
-      "features": [
-        "python2"
-      ],
-      "platform": "!android & !emscripten & !ios & !(arm & osx) & !(arm & windows) & !uwp"
     },
     {
       "name": "boost-regex",

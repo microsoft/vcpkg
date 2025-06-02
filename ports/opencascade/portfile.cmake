@@ -3,14 +3,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
     REF "${VERSION_STR}"
-    SHA512 af176cbd105c49949282c16bb6e30f69167bc6c00a50e0ae69aea555815d47ac3c4540c233e596c5add7cb846c2b33d7be267d8e02472286e758b662b4a652ab
+    SHA512 42ceb7ad4ba6848c334ca850c5caffefd262b82dd4432f069d7a986f796dc22f038f3af902c0f3fc4ce8c9dd4592c444674a271d31f744c1084bc5bfd775eadf
     HEAD_REF master
     PATCHES
-        dependencies.patch
-        drop-bin-letter-d.patch
-        fix-pdb-find.patch
         fix-install-prefix-path.patch
+        fix-pdb-find.patch
+        drop-bin-letter-d.patch
+        dependencies.patch
         install-include-dir.patch
+        remove-vcpkg-enabling.patch
+        file-filter-regex.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

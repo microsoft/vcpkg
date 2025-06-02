@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-    REF 2a28bc4b39b9b80dad909036442f629f570d7ae1
-    SHA512 cd83efc357171a5fd1ac65a566d1bf828f7de2b4c97adec92aaaf9cdfedf5a5525de3bd6eb84c453d1cd952c10c3542e6502ad4307a55b61690ce92b80dc4e2f
+    REF "v${VERSION}"
+    SHA512 deb5902ef8db0e329fbd5f3f4385eb0e26bdd9f14f3a2334823fb3fe18f36bc5d235d620d6e5f6fe3551ec3ea7038638899db8778c09f6d5c278f5ff95c3344b
     HEAD_REF master
 )
 
@@ -18,5 +18,7 @@ vcpkg_cmake_configure(
 
 )
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME VulkanMemoryAllocator CONFIG_PATH "share/cmake/VulkanMemoryAllocator")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

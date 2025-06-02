@@ -1,9 +1,0 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -92,4 +92,4 @@
- endif()
- 
--add_library(${PROJECT_NAME} STATIC ${LIBCORO_SOURCE_FILES})
-+add_library(${PROJECT_NAME} ${LIBCORO_SOURCE_FILES})
- set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX PREFIX "")

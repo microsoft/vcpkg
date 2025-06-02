@@ -1,0 +1,14 @@
+diff --git a/CMake/vtk-config.cmake.in b/CMake/vtk-config.cmake.in
+index 9f095ba..8cf7ee2 100644
+--- a/CMake/vtk-config.cmake.in
++++ b/CMake/vtk-config.cmake.in
+@@ -114,8 +114,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/vtk-prefix.cmake")
+ set("${CMAKE_FIND_PACKAGE_NAME}_PREFIX_PATH"
+   "${_vtk_module_import_prefix}")
+ unset(_vtk_module_import_prefix)
+-list(INSERT CMAKE_PREFIX_PATH 0
+-  "${${CMAKE_FIND_PACKAGE_NAME}_PREFIX_PATH}")
+ 
+ set("${CMAKE_FIND_PACKAGE_NAME}_VERSION" "@VTK_MAJOR_VERSION@.@VTK_MINOR_VERSION@.@VTK_BUILD_VERSION@")
+ set("${CMAKE_FIND_PACKAGE_NAME}_MAJOR_VERSION" "@VTK_MAJOR_VERSION@")
+

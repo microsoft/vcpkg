@@ -14,14 +14,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
         "0015-MSYS2-Remove-ioctl-call.patch"
         "0016-Fix-file_famagic-function.patch"
+        "0017-Change-bzlib-name-to-match-CMake-output.patch"
     )
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO file/file
-    REF FILE5_45
-    SHA512 fdd4c5d13d5ea1d25686c76d8ebc3252c54040c4871e3f0f623c4548b3841795d4e36050292a9453eedf0fbf932573890e9d6ac9fa63ccf577215598ae84b9ea
+    REF FILE5_46
+    SHA512 fb8157ee8065feaf57412ccdeee57cd8fc853b54ac49b0ddc818eeb1ca3555a7cfd25dea08996503f7c565dcba8c57fd7e4dc5fe3452872c617f5612a94a8f0e
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -31,9 +32,35 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -DBUILD_AS_WINDOWS_STATIC_LIBARAY")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -DBUILD_AS_WINDOWS_STATIC_LIBARAY")
+endif()
+
+set(FEATURE_OPTIONS)
+
+macro(enable_feature feature switch)
+    if("${feature}" IN_LIST FEATURES)
+        list(APPEND FEATURE_OPTIONS "--enable-${switch}")
+        set(has_${feature} 1)
+    else()
+        list(APPEND FEATURE_OPTIONS "--disable-${switch}")
+        set(has_${feature} 0)
+    endif()
+endmacro()
+
+enable_feature("bzip2" "bzlib")
+enable_feature("zlib" "zlib")
+enable_feature("lzma" "xzlib")
+enable_feature("zstd" "zstdlib")
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        "--disable-lzlib"
+        "--disable-libseccomp"
 )
 
 if(VCPKG_CROSSCOMPILING)

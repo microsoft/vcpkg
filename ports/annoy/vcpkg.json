@@ -1,6 +1,6 @@
 {
   "name": "annoy",
-  "version": "1.17.2",
+  "version": "1.17.3",
   "description": "Approximate Nearest Neighbors optimized for memory usage and loading/saving to disk",
   "homepage": "https://github.com/spotify/annoy",
   "license": "Apache-2.0",

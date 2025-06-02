@@ -1,0 +1,78 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 20e167d..93885c3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,13 +1,35 @@
+-cmake_minimum_required (VERSION 3.2)
++cmake_minimum_required (VERSION 3.2...3.5)
+ project(libOPNMIDI VERSION 1.5.1 LANGUAGES C CXX)
+ 
+ include(GNUInstallDirs)
++include(CheckCXXCompilerFlag)
+ 
+ # Prefer C90 standard
+ set(CMAKE_C_STANDARD 90)
+ # Prefer C++98 standard
+ set(CMAKE_CXX_STANDARD 98)
+ 
++if(MSVC)
++    check_cxx_compiler_flag("/std:c++14" COMPILER_SUPPORTS_CXX14)
++    if(COMPILER_SUPPORTS_CXX14)
++        set(FLAG_CPP14 "/std:c++14")
++    endif()
++    if(MSVC_VERSION LESS 1910)
++        unset(COMPILER_SUPPORTS_CXX14) # MSVC older than 2017 fails to build YMFM
++    endif()
++else()
++    check_cxx_compiler_flag("-std=c++14" COMPILER_SUPPORTS_CXX14)
++    if(COMPILER_SUPPORTS_CXX14)
++        set(FLAG_CPP14 "-std=c++14")
++    endif()
++endif()
++
++if(COMPILER_SUPPORTS_CXX14)
++    message("== Your C++ compiler supports C++14, YMFM emulator will be ENABLED")
++else()
++    message("== Your C++ compiler does NOT supports C++14, YMFM emulator will be DISABLED")
++endif()
++
+ if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+ endif()
+@@ -59,13 +81,24 @@ if(NOT MSVC AND NOT MSDOS)
+         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DVITA -DVITA=1 -fcompare-debug-second")
+         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVITA -DVITA=1 -fcompare-debug-second")
+     endif()
++    if(NINTENDO_3DS OR NINTENDO_WII OR NINTENDO_WIIU OR NINTENDO_SWITCH)
++        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcompare-debug-second")
++        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcompare-debug-second")
++    endif()
+ endif()
+ 
+-if(NOT CMAKE_BUILD_TYPE)
+-    set(CMAKE_BUILD_TYPE "Release")
++if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
++    if(NINTENDO_3DS OR NINTENDO_WII OR NINTENDO_WIIU OR NINTENDO_SWITCH)
++        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
++    else()
++        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c89")
++    endif()
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++98")
+ endif()
+ 
+-string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_LOWER)
++if(DEFINED CMAKE_BUILD_TYPE)
++    string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER)
++endif()
+ if(CMAKE_BUILD_TYPE_LOWER EQUAL "release")
+     add_definitions(-DNDEBUG)
+ ENDIF()
+@@ -88,7 +121,7 @@ function(set_legacy_standard destTarget)
+     if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+         # Turn on warnings and legacy C/C++ standards to support more compilers
+         target_compile_options(${destTarget} PRIVATE
+-            $<$<COMPILE_LANGUAGE:C>:-Wall -pedantic -std=c90>
++            $<$<COMPILE_LANGUAGE:C>:-Wall -pedantic -std=gnu90>
+             $<$<COMPILE_LANGUAGE:CXX>:-Wall -pedantic -std=gnu++98>
+         )
+     endif()

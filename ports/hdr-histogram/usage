@@ -1,0 +1,4 @@
+hdr_histogram provides CMake targets:
+
+  find_package(hdr_histogram CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:hdr_histogram::hdr_histogram>,hdr_histogram::hdr_histogram,hdr_histogram::hdr_histogram_static>)

@@ -1,0 +1,50 @@
+diff --git a/openvpn/mbedtls/mbedtls_compat.hpp b/openvpn/mbedtls/mbedtls_compat.hpp
+index 19e6f25..9db4e01 100644
+--- a/openvpn/mbedtls/mbedtls_compat.hpp
++++ b/openvpn/mbedtls/mbedtls_compat.hpp
+@@ -27,11 +27,11 @@
+ #include <mbedtls/version.h>
+ #include <mbedtls/pem.h>
+ 
+-#if not defined(MBEDTLS_ERR_SSL_BAD_PROTOCOL_VERSION)
++#if !defined(MBEDTLS_ERR_SSL_BAD_PROTOCOL_VERSION)
+ #define MBEDTLS_ERR_SSL_BAD_PROTOCOL_VERSION MBEDTLS_ERR_SSL_BAD_HS_PROTOCOL_VERSION
+ #endif
+ 
+-#if not defined(MBEDTLS_OID_X509_EXT_EXTENDED_KEY_USAGE)
++#if !defined(MBEDTLS_OID_X509_EXT_EXTENDED_KEY_USAGE)
+ #define MBEDTLS_OID_X509_EXT_EXTENDED_KEY_USAGE MBEDTLS_X509_EXT_KEY_USAGE
+ #endif
+ 
+diff --git a/openvpn/mbedtls/ssl/sslctx.hpp b/openvpn/mbedtls/ssl/sslctx.hpp
+index f6c3d28..83763e4 100644
+--- a/openvpn/mbedtls/ssl/sslctx.hpp
++++ b/openvpn/mbedtls/ssl/sslctx.hpp
+@@ -1589,10 +1589,13 @@ class MbedTLSContext : public SSLFactoryAPI
+                     digest_prefix_len = sizeof(PKCS1::DigestPrefix::SHA512);
+                     break;
+                 default:
++# if MBEDTLS_VERSION_NUMBER < 0x03000000
++#  define MAYBE_LOG_MODE << "mode=" << mode
++# else
++#  define MAYBE_LOG_MODE
++# endif
+                     OVPN_LOG_INFO("MbedTLSContext::epki_sign unrecognized hash_id"
+-#if MBEDTLS_VERSION_NUMBER < 0x03000000
+-                                  << "mode=" << mode
+-#endif
++                                  MAYBE_LOG_MODE
+                                   << " md_alg=" << md_alg << " hashlen=" << hashlen);
+                     return MBEDTLS_ERR_RSA_BAD_INPUT_DATA;
+                 }
+@@ -1627,9 +1630,7 @@ class MbedTLSContext : public SSLFactoryAPI
+             else
+             {
+                 OVPN_LOG_INFO("MbedTLSContext::epki_sign unrecognized parameters"
+-#if MBEDTLS_VERSION_NUMBER < 0x03000000
+-                              << "mode=" << mode
+-#endif
++                              MAYBE_LOG_MODE
+                               << " md_alg=" << md_alg << " hashlen=" << hashlen);
+                 return MBEDTLS_ERR_RSA_BAD_INPUT_DATA;
+             }

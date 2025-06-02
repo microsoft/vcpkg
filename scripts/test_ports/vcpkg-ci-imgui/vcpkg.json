@@ -1,0 +1,15 @@
+{
+  "name": "vcpkg-ci-imgui",
+  "version-date": "2024-05-17",
+  "description": "Force test-engine feature of imgui within vcpkg CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "imgui",
+      "features": [
+        "test-engine"
+      ]
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/type-lite
-    REF v0.1.0
-    SHA512  5a5ea623890af9c88c7f82869278af743e08b3dbda3c48c4523737244a7da76d2509501b4502efc2226aaef5df72b6ff69cd6b5b36c8cfc282b8c8406525016b
+    REF "v${VERSION}"
+    SHA512 f193f6c2afd89151b59d393e22da2c0d7c271c759f4e8a71f9f31eae1b547c5ce9d803b3d1688aa7ecb18bd37c18867f28d5686c6d48b4cd18e29ef16cfd96c6
     HEAD_REF master
 )
 

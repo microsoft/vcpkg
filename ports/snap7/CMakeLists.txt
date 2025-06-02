@@ -37,8 +37,6 @@ add_library(${PROJECT_NAME} SHARED "core/s7_client.cpp"
                                    "sys/sol_threads.h"
                                    "sys/unix_threads.h"
                                    "sys/win_threads.h"
-                                   "../release/Wrappers/c-cpp/snap7.h"
-                                   "../release/Wrappers/c-cpp/snap7.cpp"
                                    )
 
 if(MSVC)
@@ -51,7 +49,6 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core> $<INSTALL_INTERFACE:include>)
 target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib> $<INSTALL_INTERFACE:include>)
 target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/sys> $<INSTALL_INTERFACE:include>)
-target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../release/Wrappers/c-cpp> $<INSTALL_INTERFACE:include>)
 
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME})
 
@@ -66,5 +63,4 @@ if(NOT DISABLE_INSTALL_HEADERS)
   install(DIRECTORY "core/" DESTINATION include/${PROJECT_NAME} FILES_MATCHING PATTERN "*.h")
   install(DIRECTORY "lib/" DESTINATION include/${PROJECT_NAME} FILES_MATCHING PATTERN "*.h")
   install(DIRECTORY "sys/" DESTINATION include/${PROJECT_NAME} FILES_MATCHING PATTERN "*.h")
-  install(DIRECTORY "../release/Wrappers/c-cpp/" DESTINATION include/${PROJECT_NAME} FILES_MATCHING PATTERN "*.h")
 endif()

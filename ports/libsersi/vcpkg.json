@@ -1,0 +1,17 @@
+{
+  "name": "libsersi",
+  "version": "0.1.0",
+  "description": "C++ implementation of the IEEE 1278.1a-1998 Distributed Interactive Simulation (DIS) application protocol.",
+  "homepage": "https://github.com/crhowell3/libsersi",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

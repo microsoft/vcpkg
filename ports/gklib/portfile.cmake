@@ -1,26 +1,26 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KarypisLab/GKlib
-    REF b1cb3bd7f6bf4da641af901c8d455c0f858c816f
-    SHA512 e906c7af8b40ce1c4c4ea43cbfca3e3970e5595686333ac9ac80c6cbc558feb0e833f530f034161927030edac5272234c6ac9cad5287cb6edab0c0671ba3644c
+    REF 8bd6bad750b2b0d90800c632cf18e8ee93ad72d7
+    SHA512 128cd9a48047b18b8013288162556f0b0f1d81845f5445f7cc62590ab28c06ee0a6c602cc999ce268ab27237eca3e8295df6432d377e45071946b98558872997
     PATCHES
+        android.patch
         build-fixes.patch
-        fix-mingw.patch
 )
 
-# Delete files that are workarounds for very old copies of msvc.
-file(REMOVE "${SOURCE_PATH}/ms_inttypes.h" "${SOURCE_PATH}/ms_stdint.h")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DHINSTALL_PATH=GKlib
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" [=[
-gklib provides CMake targets:
-    find_package(GKlib CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE GKlib)
-]=])

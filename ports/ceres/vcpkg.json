@@ -1,7 +1,7 @@
 {
   "name": "ceres",
-  "version": "2.1.0",
-  "port-version": 4,
+  "version": "2.2.0",
+  "port-version": 2,
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
   "license": "Apache-2.0",
@@ -28,25 +28,20 @@
         "cuda"
       ]
     },
-    "cxsparse": {
-      "description": "CXSparse support for Ceres",
-      "dependencies": [
-        {
-          "name": "ceres",
-          "features": [
-            "suitesparse"
-          ]
-        }
-      ]
-    },
     "eigensparse": {
-      "description": "Use of Eigen as a sparse linear algebra library in Ceres"
+      "description": "Use of Eigen as a sparse linear algebra library in Ceres",
+      "dependencies": [
+        "metis"
+      ]
     },
     "lapack": {
       "description": "Use Lapack in Ceres",
       "dependencies": [
         "lapack"
       ]
+    },
+    "schur": {
+      "description": "Enable fixed-size Schur specializations in Ceres"
     },
     "suitesparse": {
       "description": "SuiteSparse support for Ceres",
@@ -58,9 +53,12 @@
           ]
         },
         {
-          "name": "suitesparse",
-          "default-features": false
-        }
+          "name": "suitesparse-cholmod",
+          "features": [
+            "matrixops"
+          ]
+        },
+        "suitesparse-spqr"
       ]
     },
     "tools": {

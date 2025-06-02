@@ -1,0 +1,13 @@
+diff --git a/nss/coreconf/config.gypi b/nss/coreconf/config.gypi
+index ae4c708..42633fc 100644
+--- a/nss/coreconf/config.gypi
++++ b/nss/coreconf/config.gypi
+@@ -622,7 +622,7 @@
+           'VCCLCompilerTool': {
+             'Optimization': '<(debug_optimization_level)',
+             'BasicRuntimeChecks': '3',
+-            'RuntimeLibrary': '2', # /MD
++            'RuntimeLibrary': '3', # /MDd
+             'DebugInformationFormat': '3',
+           },
+           'VCLinkerTool': {

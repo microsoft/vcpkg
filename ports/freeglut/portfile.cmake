@@ -2,13 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeGLUTProject/freeglut
     REF "v${VERSION}"
-    SHA512 4bb6d6c086bac7a9c0ec78062dce58987555785abe6375f462ee249f65210a964a28fb10ba7ee8a42d7fafb00eb8d196eb403d65d255f02f88467369c187228b
+    SHA512 9be8dcc266daacc21aa0e11261bfe864260de6802e98e7dc84964904df4a89e52960eba94d58f4c18fc1f0ff3f13810d59fc33313c2a6e3f07d18f0b50b95849
     HEAD_REF master
-    PATCHES 
+    PATCHES
+        android.patch
         x11-dependencies-export.patch
         fix-debug-macro.patch
-        no_x64_enforcement.patch
         windows-output-name.patch
+        cmake-version.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -36,14 +37,14 @@ vcpkg_fixup_pkgconfig()
 
 file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"  "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
 foreach(file IN LISTS pc_files)
-    vcpkg_replace_string("${file}" ";-D" " -D")
+    vcpkg_replace_string("${file}" ";-D" " -D" IGNORE_UNCHANGED)
 endforeach()
 
 if(NOT VCPKG_TARGET_IS_ANDROID)
     file(COPY_FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/freeglut.pc")
     if(NOT VCPKG_BUILD_TYPE)
         if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" " -lfreeglut" " -lfreeglutd")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" " -lfreeglut" " -lfreeglutd" IGNORE_UNCHANGED)
         endif()
         file(COPY_FILE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glut.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/freeglut.pc")
     endif()
@@ -63,4 +64,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/glut")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

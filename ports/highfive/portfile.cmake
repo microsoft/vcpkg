@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BlueBrain/HighFive
     REF "v${VERSION}"
-    SHA512 568fb58956ce8d218fd33a6fe5b519436ce296cdcf87b5620eb2af224b9e39f8f99008f3baff9a7024bbdb4052e5c47bb514091d2afd652abd28949e9096b6f1
+    SHA512 3daf16c2ced165ddc7a8f1e9a0d3bf3388836e3878c86f8bf3faf2c42996d5bfd449e71e75a871447c1e7ea9a3e87d4f4a80a2382f1b24095d6051b89f27d6d3
     HEAD_REF master
     PATCHES
         fix-error-C1128.patch

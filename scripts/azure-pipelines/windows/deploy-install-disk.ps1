@@ -1,7 +1,11 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-# REPLACE WITH UTILITY-PREFIX.ps1
+param([string]$SasToken)
+
+if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
+}
 
 <#
 .SYNOPSIS
@@ -23,7 +27,7 @@ Param(
     [string]$Label
 )
     if ($Letter.Length -ne 1) {
-        throw "Bad drive letter $Letter, expected only one letter. (Did you accidentially add a : ?)"
+        throw "Bad drive letter $Letter, expected only one letter. (Did you accidentally add a : ?)"
     }
 
     try {

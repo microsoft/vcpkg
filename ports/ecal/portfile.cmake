@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-ecal/ecal
-    REF v${VERSION}
-    SHA512 e9bc6c579a5331bdecc0384fb1cbac6bf63cb3910e26a4004d48c3a25528fed66413a2c80f4d866d3958d3800579c57a7298e61fca20adf9b24f5daa2e07ed3d
+    REF "v${VERSION}"
+    SHA512 8134873a3ac0ba48955fdb837aaeaccbd76b81cde6af0099060daedb26bca107cb472af39058358ad094da02ead8f735afb73acd627b19ab210c42039ffa92b8 
     HEAD_REF master
     PATCHES
         0001-disable-app-plugins.patch
@@ -16,6 +16,7 @@ vcpkg_from_github(
         0005-remove-install-prefix-macro-value.patch
         0006-use-find_dependency-in-cmake-config.patch
         0007-allow-static-build-of-core.patch
+        0008-protobuf-linkage.patch
 )
 
 vcpkg_cmake_configure(
@@ -35,7 +36,6 @@ vcpkg_cmake_configure(
         -DBUILD_ECAL_TESTS=OFF
         -DECAL_INCLUDE_PY_SAMPLES=OFF
         -DECAL_INSTALL_SAMPLE_SOURCES=OFF
-        -DECAL_JOIN_MULTICAST_TWICE=OFF
         -DECAL_NPCAP_SUPPORT=OFF
         -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON
         -DECAL_THIRDPARTY_BUILD_SPDLOG=OFF
@@ -52,7 +52,6 @@ vcpkg_cmake_configure(
         -DECAL_THIRDPARTY_BUILD_CURL=OFF
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF
         -DCPACK_PACK_WITH_INNOSETUP=OFF
-        -DDISABLE_FIND_PACKAGE_OVERLOAD=ON # From patch, disable find_package macro
         -DECAL_BUILD_VERSION="${VERSION}"
 )
 

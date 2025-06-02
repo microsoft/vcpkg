@@ -63,11 +63,11 @@ function(vcpkg_configure_qmake)
         vcpkg_list(APPEND arg_OPTIONS "CONFIG-=shared" "CONFIG*=static")
     else()
         vcpkg_list(APPEND arg_OPTIONS "CONFIG-=static" "CONFIG*=shared")
-        vcpkg_list(APPEND arg_OPTIONS_DEBUG "CONFIG*=separate_debug_info")
     endif()
+    vcpkg_list(APPEND arg_OPTIONS "CONFIG*=force_debug_info")
 
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
-        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=static-runtime")
+        vcpkg_list(APPEND arg_OPTIONS "CONFIG*=static_runtime")
     endif()
 
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
@@ -75,7 +75,7 @@ function(vcpkg_configure_qmake)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}" "${CURRENT_PACKAGES_DIR}")
+        z_vcpkg_setup_pkgconfig_path(CONFIG RELEASE)
 
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
@@ -120,7 +120,7 @@ function(vcpkg_configure_qmake)
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        z_vcpkg_setup_pkgconfig_path(BASE_DIRS "${CURRENT_INSTALLED_DIR}/debug" "${CURRENT_PACKAGES_DIR}/debug")
+        z_vcpkg_setup_pkgconfig_path(CONFIG DEBUG)
 
         set(current_binary_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 

@@ -1,0 +1,15 @@
+diff --git a/version.sh b/version.sh
+index 178fc952..06728796 100755
+--- a/version.sh
++++ b/version.sh
+@@ -3,8 +3,8 @@
+ cd "$(dirname "$0")" >/dev/null && [ -f x264.h ] || exit 1
+ 
+ api="$(grep '#define X264_BUILD' < x264.h | sed 's/^.* \([1-9][0-9]*\).*$/\1/')"
+-ver="x"
+-version=""
++ver="@revision@ @short_ref@"
++version=" r${ver} vcpkg"
+ 
+ if [ -d .git ] && command -v git >/dev/null 2>&1 ; then
+     localver="$(($(git rev-list HEAD | wc -l)))"

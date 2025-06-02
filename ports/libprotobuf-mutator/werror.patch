@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2e4b78e..4541d17 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -84,7 +84,7 @@ unset(CMAKE_REQUIRED_FLAGS)
+ check_cxx_compiler_flag(-Wstring-conversion LIB_PROTO_MUTATOR_HAS_WSTRING_CONVERSION)
+ 
+ if (NOT MSVC)
+-  set(EXTRA_FLAGS "-fno-exceptions -Werror -Wall")
++  set(EXTRA_FLAGS "-fno-exceptions")
+   if (LIB_PROTO_MUTATOR_HAS_WSTRING_CONVERSION)
+     set(EXTRA_FLAGS "${EXTRA_FLAGS} -Wstring-conversion")
+   endif()

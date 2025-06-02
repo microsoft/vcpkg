@@ -1,0 +1,13 @@
+diff --git a/CMake/FindExprTk.cmake b/CMake/FindExprTk.cmake
+index 2886e7ed71..cb8a875725 100644
+--- a/CMake/FindExprTk.cmake
++++ b/CMake/FindExprTk.cmake
+@@ -24,7 +24,7 @@ if (ExprTk_INCLUDE_DIR)
+   set(ExprTk_VERSION)
+   foreach (_exprtk_version_line IN LISTS _exprtk_version_header)
+     if ("${ExprTk_VERSION}" STREQUAL "")
+-      string(REGEX MATCH "version = \"(2\.7[0-9.]+)\".*$" _exprtk_version_match "${_exprtk_version_line}")
++      string(REGEX MATCH [[version = "(2\.7[0-9.]+)".*$]] _exprtk_version_match "${_exprtk_version_line}")
+       set(ExprTk_VERSION "${CMAKE_MATCH_1}")
+     else ()
+       string(REGEX MATCH "\"([0-9.]+)\".*$" _exprtk_version_match "${_exprtk_version_line}")

@@ -18,10 +18,6 @@ function(x_vcpkg_get_python_packages)
         endif()
     endif()
 
-    if(arg_PYTHON_VERSION STREQUAL "3")
-        set(PYTHON_VERSION_MINOR 11)
-    endif()
-
     if(NOT DEFINED arg_OUT_PYTHON_VAR)
         set(arg_OUT_PYTHON_VAR "PYTHON${arg_PYTHON_VERSION}")
     endif()
@@ -35,15 +31,18 @@ function(x_vcpkg_get_python_packages)
 
     get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
     set(ENV{PYTHONNOUSERSITE} "1")
-    if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})" AND CMAKE_HOST_WIN32) # inside vcpkg and windows host.
+    if(CMAKE_HOST_WIN32 AND
+        ("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})"
+        OR (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND ("${python_dir}" MATCHES "(${CURRENT_INSTALLED_DIR})"))
+        )) # inside vcpkg and windows host or compatible target.
         if(NOT EXISTS "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
             if(NOT EXISTS "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
                 if(arg_PYTHON_VERSION STREQUAL 3)
                     vcpkg_from_github(
                         OUT_SOURCE_PATH PYFILE_PATH
                         REPO pypa/get-pip
-                        REF 38e54e5de07c66e875c11a1ebbdb938854625dd8 #2022-03-07
-                        SHA512 431a9f66618a2f251db3a8c3311e7fc3af3ff7364ec1d14a99f1b9c237646b6146cef8b9471d83e1086dba2ed448bccc48d99b2bb375e4235d78e76d9970d3e5
+                        REF 24.2
+                        SHA512 7bcbc841564b7fc3cd2c109b9d3cfd34d853508edc9e040e9615fc0f9f18f74c7826d53671f65fa1abda3fd29a0a3f9f6114d9e9bdd6d120175ac207fd7ce321
                     )
                     vcpkg_execute_required_process(COMMAND "${arg_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/public/get-pip.py" --no-warn-script-location
                                                    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
@@ -75,8 +74,9 @@ function(x_vcpkg_get_python_packages)
         file(MAKE_DIRECTORY "${python_dir}/DLLs")
         set(python_sub_path /Scripts)
         set(python_venv virtualenv)
-        if(EXISTS "${python_dir}/python3${PYTHON_VERSION_MINOR}.zip")
-            file(COPY "${python_dir}/python3${PYTHON_VERSION_MINOR}.zip" DESTINATION "${venv_path}/Scripts")
+        file(GLOB python_zipped_stdlib "${python_dir}/python3*.zip")
+        if(python_zipped_stdlib)
+            file(COPY ${python_zipped_stdlib} DESTINATION "${venv_path}/Scripts")
         endif()
         set(python_venv_options "--app-data" "${venv_path}/data")
     else()

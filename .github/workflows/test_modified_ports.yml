@@ -1,0 +1,23 @@
+name: Test Modified Ports
+on:
+  push:
+    branches:
+      - onboard-actions
+jobs:
+  Windows:
+    runs-on:
+      - self-hosted
+      - "1ES.Pool=vcpkg-windows-wus"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # fetch-depth 50 tries to ensure we capture the whole history of the branch
+          fetch-depth: 50
+
+      - name: Bootstrap
+        run: ./bootstrap-vcpkg.sh
+      
+      - name: Example
+        shell: pwsh
+        run: Write-Host 'Running on 1ES Hosted GitHub Runners'

@@ -16,6 +16,8 @@ vcpkg_from_github(
         fix-dependency.patch
         export-target.patch
         "${GCC_11_PATCH}"
+        fix-glog.patch
+        protobuf.patch
 )
 
 vcpkg_cmake_configure(

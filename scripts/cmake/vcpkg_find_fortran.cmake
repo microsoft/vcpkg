@@ -10,11 +10,14 @@ function(vcpkg_find_fortran out_var)
     set(CMAKE_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     set(CMAKE_CURRENT_BINARY_DIR "${CMAKE_BINARY_DIR}")
     set(CMAKE_PLATFORM_INFO_DIR "${CMAKE_BINARY_DIR}/Platform")
+    macro(z_vcpkg_warn_ambiguous_system_variables)
+    # CMakeDetermineFortranCompiler is for project mode.
+    endmacro()
     include(CMakeDetermineFortranCompiler)
 
     if(NOT CMAKE_Fortran_COMPILER AND "${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" STREQUAL "")
         # If a user uses their own VCPKG_CHAINLOAD_TOOLCHAIN_FILE, they _must_ figure out fortran on their own.
-        if(WIN32)
+        if(CMAKE_HOST_WIN32)
             message(STATUS "No Fortran compiler found on the PATH. Using MinGW gfortran!")
             # If no Fortran compiler is on the path we switch to use gfortan from MinGW within vcpkg
             if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
@@ -68,43 +71,43 @@ endfunction()
 macro(z_vcpkg_find_fortran_msys_declare_packages)
     # primary package for x86
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-fortran-13.2.0-3-any.pkg.tar.zst"
-        SHA512 3f30692ebdbfa10d55f978ef05a8b8ae9b194d57f4e05dded6d4159186a62848109dabf4448b12d2b6fc734a19f61b47f3d8e25efb3bb3c318e9c27cd8d629fb
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-fortran-14.2.0-1-any.pkg.tar.zst"
+        SHA512 9de2c2de35519eecdf2b7fb8aed129e1f948663cc0ff8de3ec2da5159de2e9170e25de178a46f600cc1bde8fbbd80354840edf9ad45f22272dd8004a9cfc0e71
         PROVIDES mingw-w64-i686-fc
         DEPS mingw-w64-i686-gcc mingw-w64-i686-gcc-libgfortran
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-binutils-2.42-1-any.pkg.tar.zst"
-        SHA512 9f26be2ad7ff05e38c849e6c722eec817328d8604c753fbb6cc8e54bc8ae638a97beb59fc144fdd10cded4f626bb997892bde91d314b18c96ed35c4a4b3bde01
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-binutils-2.43.1-1-any.pkg.tar.zst"
+        SHA512 4ed8955e587162acd66ecbb3aeee0b990d3e3d9056139f6636a0d291220d41871848bd1f3069d7f9cf4eac7324760f0a34b38e2301042af9293dc70c12433aa1
         DEPS mingw-w64-i686-gettext-runtime mingw-w64-i686-zlib mingw-w64-i686-zstd
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-crt-git-11.0.0.r551.g86a5e0f41-1-any.pkg.tar.zst"
-        SHA512 5d862184baf667b357d156409552f6b72ad59db53972bdc7bea4b36775ab5c6bfc6cd5697f11be3ec5e58f6f733cc396984ee9cd0aa394cf28536a0a73881826
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-crt-git-12.0.0.r351.gcdf6b16b8-1-any.pkg.tar.zst"
+        SHA512 4a8d69cd68944e9439eb531026393663989b7ef62c6f3e8f8b855a74932fc5c09eceeb08acc5ed76781217487040c4f490838ca4cc988474c4d05f7122f69a3d
         PROVIDES mingw-w64-i686-crt
         DEPS mingw-w64-i686-headers-git
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-13.2.0-3-any.pkg.tar.zst"
-        SHA512 4d360d82ce0cef2cf3a5078419465fd502c2b6751f3cadc9bf362c8ef4e4c32a426495d59b8904fd46b2f6fe3feaad7e0f952fcc0152735eed70e083175a303d
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-14.2.0-1-any.pkg.tar.zst"
+        SHA512 6ae166f2b0c1bb63f9c28f1bf6ef6821453eb392bb628ab610a36027a51daae56e983f75f2dedc5e27e46d9024ea14f0f44a436f24f0300877af7455e21015f4
         PROVIDES mingw-w64-i686-gcc-base mingw-w64-i686-cc
         DEPS mingw-w64-i686-binutils mingw-w64-i686-crt mingw-w64-i686-gcc-libs mingw-w64-i686-gmp mingw-w64-i686-headers mingw-w64-i686-isl mingw-w64-i686-libiconv mingw-w64-i686-mpc mingw-w64-i686-mpfr mingw-w64-i686-windows-default-manifest mingw-w64-i686-winpthreads mingw-w64-i686-zlib mingw-w64-i686-zstd
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-libgfortran-13.2.0-3-any.pkg.tar.zst"
-        SHA512 6eefe2e1500f80a0484856847bee128b60fb16e54151b1e2b0f6627f8d7820521e9bc1c81f4cbccb68a42029ccee0cbcb72d448a31a780b222268e6be1ae6f97
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-libgfortran-14.2.0-1-any.pkg.tar.zst"
+        SHA512 d0ca414b78be235ef8a16e1d2c78d7aeb17d09dacf0a4af2cf91bef081790cfc7442ea6dd9109209b81d9074b9c65cafd33f363b9d2186ee2ba663d6bae8fca3
         PROVIDES mingw-w64-i686-fc-libs
         DEPS mingw-w64-i686-gcc-libs
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-libs-13.2.0-3-any.pkg.tar.zst"
-        SHA512 342d751cfc33539059d87d3de74048b5ec29139cd2aa757d18781381e5f16878a983dd76f5116ca66d6c7e1a64d1e6be56cc7ff4d5189e46746dbaca03bcbdac
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gcc-libs-14.2.0-1-any.pkg.tar.zst"
+        SHA512 4c884c3fa9edc042054e5ddb7bf6d9448182263f108ebffcc12f468f39d886ec75faab9ba260531d8d37676db7756e86ea5ea66dc793b4673246444546576f75
         PROVIDES mingw-w64-i686-omp
         DEPS mingw-w64-i686-libwinpthread
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gettext-runtime-0.22.4-5-any.pkg.tar.zst"
-        SHA512 db1c25c2e21e79791703e19ff7b1c92c95e7a7fba59140dd05ae5f3acedd2f5d9e34f5c20aae9fb2d360e1da268265f0d2405106d117abe14fc4c1db1cae122e
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-gettext-runtime-0.22.5-2-any.pkg.tar.zst"
+        SHA512 5835cba4839a154bd850410b7ff8157fe5e3c6744585acf572fb1b045339839d5426643951c210fe58f26eb588c9a4d6492aae1286db8f864d8c9d74ae686dd7
         DEPS mingw-w64-i686-gcc-libs mingw-w64-i686-libiconv
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -112,13 +115,13 @@ macro(z_vcpkg_find_fortran_msys_declare_packages)
         SHA512 4a9e0ace05ea441fe6cd69b1b1af4c29e35727069ab1f22d0da7febc7aaba219502b5b4dea8b1aa070cb2c8b731da112429c3339fd03fe77828d9fa262b4a818
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-headers-git-11.0.0.r551.g86a5e0f41-1-any.pkg.tar.zst"
-        SHA512 65c52c5ab7cb0c1238a116dcb730079369e7cf012b98c56a4214e0502045c0370f5e32abe658c190db7b9bcca78699401f7d76e5a457072c6464d067d6a5a8e9
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-headers-git-12.0.0.r351.gcdf6b16b8-1-any.pkg.tar.zst"
+        SHA512 5d2c83f6c5bc8b19154c60508ff127ddd7c8b220ece335c9178c63a34b43630cc68dfa007be38a736052dd76e0c2d42ec57a3cfe06dd46cf5a963667385acd83
         PROVIDES mingw-w64-i686-headers
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-isl-0.26-1-any.pkg.tar.zst"
-        SHA512 2011de9ac6ed85fa4346f9c9b39136854f049a9e21fb2fbd8db066ccf443301a65ab0c7aa7daed6730d5163ca70ebf25fd39209bd5226f2b70f000ce9de0df8d
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-isl-0.27-1-any.pkg.tar.zst"
+        SHA512 070e87552aa0ce77bb9db3b6104c7a3b0d9b5f3515dffc5d03d586693661a9c4681d54ffa6209203bdd568cf111ecae2b26df7472cf40144d6537d655d01b178
         DEPS mingw-w64-i686-gmp
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -126,8 +129,8 @@ macro(z_vcpkg_find_fortran_msys_declare_packages)
         SHA512 7b8c0861fe404e6a94e19e2f539c8b8eebd438ebd453960655478109c22cb1ace689031a5fc2ed2430df7bb204f83989726ea3552a58f7c323b150bb3f117578
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-libwinpthread-git-11.0.0.r551.g86a5e0f41-1-any.pkg.tar.zst"
-        SHA512 98c9b36bee8a6aef5f47eae6ecc4577859865aecc7b8fadfccbb5b6a2b6e5a26a3725b6017004004e2468773f1b9d7c0ac59b2940476c5af2f92c158f9c24880
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-libwinpthread-git-12.0.0.r351.gcdf6b16b8-1-any.pkg.tar.zst"
+        SHA512 3ea114a921a8bc10fcc4541b95a50280ec6ecf1ac605a3042f9d74e887c216d5c575621900ed1d4ee84c3e71b32ea16c6e4a7912279c0aef0966f230ad912c32
         PROVIDES mingw-w64-i686-libwinpthread
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -145,8 +148,8 @@ macro(z_vcpkg_find_fortran_msys_declare_packages)
         SHA512 103f8437e13fb2a839c5eb89f49f5888c71f7934771cf3b2dcca46d520277fe7f7d4841c9d415b454a6a581c6d1f806d6be7f614027df0484f2642ef2563e889
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-winpthreads-git-11.0.0.r551.g86a5e0f41-1-any.pkg.tar.zst"
-        SHA512 ff3220bc13e1e1931a013a72d030fa0e8a16c9c920256e33ab8fb0cef4d13c15e03b842e5299b81aaad873fad5a079fb828c65b708d6d79459601a817bc76750
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-winpthreads-git-12.0.0.r351.gcdf6b16b8-1-any.pkg.tar.zst"
+        SHA512 b0b06d20bbb2115ef3e19e27f906eca5aba3847ea6a39b234b55e71b231bf32ce401fe9a14bd4729dab06e4cf103469b868ee55f80fb9ca6655877d0bcb513fe
         PROVIDES mingw-w64-i686-winpthreads
         DEPS mingw-w64-i686-crt-git mingw-w64-i686-libwinpthread-git
     )
@@ -155,43 +158,43 @@ macro(z_vcpkg_find_fortran_msys_declare_packages)
         SHA512 881cf37f59bfbc3d8a6a6d16226360b63cf3d5abc82bb25fa1d9f871aa3e620fa22a8ae6b0cec619633d08550b72ad289f16b75d5819e3e117de0607125b0140
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-zstd-1.5.5-1-any.pkg.tar.zst"
-        SHA512 415be9f2ef78d72109f5888c31248b328ba96f1e2472d488bf45da4fe969875e0e3020a77ceb10cd885f50a18954105e06ce9d122d8c47dc9848944ea71ac49c
+        URL "https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-zstd-1.5.6-2-any.pkg.tar.zst"
+        SHA512 bc25f705ed77f3bdbc31ef6870d9cfe4a9e78cb62bc6938f326fb91ca30b9594bb73f2c23ae08532d1cd81b69ed9a0f56e1408454cd3c04204d4ead8d7c67764
         DEPS mingw-w64-i686-gcc-libs
     )
 
     # primary package for x64
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-fortran-13.2.0-3-any.pkg.tar.zst"
-        SHA512 8bb2beea8dc3dfa07db0be9294ae057205b122e018bba7c90a840dc73ab894339d91b0b801deff1e7d808d542af79cce211cdd9d16b06fe988a4be99a68a6b05
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-fortran-14.2.0-1-any.pkg.tar.zst"
+        SHA512 4fdcc70f8620e9963391b09d9a9d26bc7af72ae74630f67706115492085a03288865de0cb51b84ccb9eacac502d0030aeb024cabb2b78d24a3473315abd86bc3
         PROVIDES mingw-w64-x86_64-fc
         DEPS mingw-w64-x86_64-gcc mingw-w64-x86_64-gcc-libgfortran
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-binutils-2.42-1-any.pkg.tar.zst"
-        SHA512 6e26b960447a825ac08bec8fffc5288fae9c38fab4e065d4f6ebf977ef06fe503a10ad10e2581cb733400b1f41ca5f68b19ba7838a8ef0db132d54683b1ff827
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-binutils-2.43.1-1-any.pkg.tar.zst"
+        SHA512 39bf1d334d6618be851b1acf59ea1f9ef282d6cc22e9d60d40d37730a936b2226e5cfd9f4a9d5c7cd4cf0e3c314cdef6f4eecff62f2150533b5d70a50cf31e41
         DEPS mingw-w64-x86_64-gettext-runtime mingw-w64-x86_64-zlib mingw-w64-x86_64-zstd
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-crt-git-11.0.0.r551.g86a5e0f41-1-any.pkg.tar.zst"
-        SHA512 656cd64827f9a17fe1c49b6a84430d96ab81b382947aa412ea9c5545121aa1c07f4d342d23c9ddfa1d25e2221d57471c02a2fa1b97796396d5d0802394a0fd72
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-crt-git-12.0.0.r351.gcdf6b16b8-1-any.pkg.tar.zst"
+        SHA512 6c2abf10485e027947b5cf108e9299c57f20e56a9f236125bdaa1ee6074e6258e8296b6f4c297ae6a1b9c3c21e7d1d36aaf2579ab34530e499a4a54f8216d2f4
         PROVIDES mingw-w64-x86_64-crt
         DEPS mingw-w64-x86_64-headers-git
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-13.2.0-3-any.pkg.tar.zst"
-        SHA512 75cf55088a3ca09d9a53be7d5f390e26a3686d12b7172a9bf029c81b7055981fbc9ce9c3e353f5e2aa065144a6520bf499900d0cf2eef49dc637e37d68422e5a
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-gcc-14.2.0-1-any.pkg.tar.zst"
+        SHA512 bbf70beb6953e0a076d55e577d195fbde1e00132695464e6c1769b8f9d1580f0469a696e5dc1f8bc496a3a62ed24009637b958a5ae250576d333098c4b67f9e3
         PROVIDES mingw-w64-x86_64-gcc-base mingw-w64-x86_64-cc
         DEPS mingw-w64-x86_64-binutils mingw-w64-x86_64-crt mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-gmp mingw-w64-x86_64-headers mingw-w64-x86_64-isl mingw-w64-x86_64-libiconv mingw-w64-x86_64-mpc mingw-w64-x86_64-mpfr mingw-w64-x86_64-windows-default-manifest mingw-w64-x86_64-winpthreads mingw-w64-x86_64-zlib mingw-w64-x86_64-zstd
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-headers-git-11.0.0.r551.g86a5e0f41-1-any.pkg.tar.zst"
-        SHA512 a14e8249b202e31ca071d579fa23b2a668df0fd9fed4480c9071ba8489a5110c0c8fd84264676e1ebc922dfe73c720a9bb7514a7c1bf87aebefa7c99b2be8b98
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-headers-git-12.0.0.r351.gcdf6b16b8-1-any.pkg.tar.zst"
+        SHA512 a965625929e3e983df89aadf8da9652776519ffc1690775588619e4debe9743a1f0b004a79980baec3a3a020bd777fb85f901c167ea8364acd15a23c5e91b67a
         PROVIDES mingw-w64-x86_64-headers
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-isl-0.26-1-any.pkg.tar.zst"
-        SHA512 2c715b50807ea2c134784210553d0c725f8eeb1221d64f0510c76f7538098d8400ac1ef329656a2fcb0bda270f9e1d82917d00b9ba11a985ce64ae7c3bf24977
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-isl-0.27-1-any.pkg.tar.zst"
+        SHA512 879e3a6748f552b9c3574090b8d45fd83ff1cb843eae3924e6025464ecfc9d4883bd3d9e9dbcd54481820a6f5a01b33e3dc8e2c90bc812d8173412ee01a08110
         DEPS mingw-w64-x86_64-gmp
     )
     z_vcpkg_acquire_msys_declare_package(
@@ -199,14 +202,14 @@ macro(z_vcpkg_find_fortran_msys_declare_packages)
         SHA512 d7e1e4c79f6c7db3bd97305ff89e407a32d3ce9f2a18083b9674538d018651e889efb6fdef00cc79c78f8c07852eab63d7fc705e9567b1ad5684f0a704adeaf3
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-winpthreads-git-11.0.0.r551.g86a5e0f41-1-any.pkg.tar.zst"
-        SHA512 f3ed9c1c147d284fb684d54d8b045020047e44fc34159e2841ce13625b58879c5320b6606077db7a362559dea367c39ce794f69f4fd4af9c079baf70336e89c7
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-winpthreads-git-12.0.0.r351.gcdf6b16b8-1-any.pkg.tar.zst"
+        SHA512 b11a36b0624d651c2484e5baa06a1a5217e96361a19678da96ddd3e4b00d29cdefe4f76032ee8a55442ac49edd6c9609bc26651f9c6e32f8f8e169417da2c763
         PROVIDES mingw-w64-x86_64-winpthreads
         DEPS mingw-w64-x86_64-crt-git mingw-w64-x86_64-libwinpthread-git
     )
     z_vcpkg_acquire_msys_declare_package(
-        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-zstd-1.5.5-1-any.pkg.tar.zst"
-        SHA512 bc03e39ac48f40e53e2cbff9d48770d8267793608aa6698ddd01371872544e2c023f4be68c638aa349a4c006b6967ac9bf45ce927cf4e4a156c39fa7cb8c27d1
+        URL "https://mirror.msys2.org/mingw/mingw64/mingw-w64-x86_64-zstd-1.5.6-2-any.pkg.tar.zst"
+        SHA512 3cdf7056c7b477fec0333871c3b220f610706d74b8ae0325b8f84daa6e441cc96db0073a08fd56b9f42932d787c7356823ca11434556e2fec46f17898c432f5d
         DEPS mingw-w64-x86_64-gcc-libs
     )
 endmacro()

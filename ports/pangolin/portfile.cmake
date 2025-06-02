@@ -1,3 +1,8 @@
+vcpkg_download_distfile(INITIALISE_PAD_PATCH
+    URLS https://github.com/stevenlovegrove/Pangolin/commit/0bb8f1b4969f248254e4c4051c053304f86e3c6a.patch?full_index=1
+    FILENAME pangolin-initialise-pad_.patch
+    SHA512 8e82791467f8947d2d31718c9e00ab1273804afccb8f6ba259ed5ee4c626f9354055ee92b38e72d6ffa9e88b1468683cdc159767fad74a52c6707939e2a5c300
+)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -6,17 +11,16 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
-    REF v0.8
-    SHA512 d4ca405097e8c439a4f74495f374bc5d5e4febafcf59ee88d985a8764ed36da1753ca4a3a73476dfb74c7d92df31a99242df6e1b47c648e860eee835a6f4f434
+    REF "v${VERSION}"
+    SHA512 554a262bfba533926eb691cb41aa73d3b0af710fba324a877fddd9a7b7d89fb067cff04ee130c070c124740f0a84c42f83dfcc7da78ae6b5118e451d332fdc9b
     HEAD_REF master
     PATCHES
         devendor-palsigslot.patch
-        ffmpeg-vxmc.patch
+        ${INITIALISE_PAD_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        test        BUILD_TESTS
         tools       BUILD_TOOLS
         examples    BUILD_EXAMPLES
         pybind11    BUILD_PANGOLIN_PYTHON

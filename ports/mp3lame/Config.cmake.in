@@ -6,7 +6,9 @@ get_filename_component(_mp3lame_root "${_mp3lame_root}" PATH)
 set(_mp3lame_rel_lib "${_mp3lame_root}/lib/@MP3LAME_LIB@")
 set(_mp3lame_dbg_lib "${_mp3lame_root}/debug/lib/@MP3LAME_LIB@")
 
-if (EXISTS "${_mp3lame_rel_lib}" OR EXISTS "${_mp3lame_dbg_lib}")
+set(mp3lame_FOUND FALSE)
+
+if (EXISTS "${_mp3lame_rel_lib}" OR EXISTS "${_mp3lame_dbg_lib}" AND NOT TARGET mp3lame::mp3lame)
 
     add_library(mp3lame::mp3lame UNKNOWN IMPORTED)
     set_target_properties(mp3lame::mp3lame 
@@ -47,11 +49,10 @@ if (EXISTS "${_mp3lame_rel_lib}" OR EXISTS "${_mp3lame_dbg_lib}")
 
     unset(_mp3lame_mpghip_rel_lib)
     unset(_mp3lame_mpghip_dbg_lib)
+endif()
 
-else()
-
-    set(mp3lame_FOUND FALSE)
-
+if(TARGET mp3lame::mp3lame)
+  set(mp3lame_FOUND TRUE)
 endif()
 
 unset(_mp3lame_rel_lib)

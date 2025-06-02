@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2a58f19..7d0acf8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -375,7 +375,7 @@ IF(WIN32 AND NOT ANDROID)
+     #needed for net plugin
+     SET (OSG_SOCKET_LIBS wsock32)
+     # Both Cygwin and Msys need -DNOMINMAX ???
+-    IF(UNIX)
++    IF(UNIX OR WIN32)
+         ADD_DEFINITIONS(-DNOMINMAX)
+     ENDIF()
+ 

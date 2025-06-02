@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d145517..e8e1c90 100644
+index 985f5f5..bf6600e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -669,6 +669,10 @@ if (CYGWIN OR WIN32)
+@@ -476,6 +476,10 @@ if (CYGWIN OR WIN32)
    target_compile_definitions (glog PUBLIC GLOG_NO_ABBREVIATED_SEVERITIES)
  endif (CYGWIN OR WIN32)
  
@@ -10,6 +10,6 @@ index d145517..e8e1c90 100644
 +    target_compile_options(glog INTERFACE "$<$<NOT:$<COMPILE_LANGUAGE:CUDA>>:/Zc:__cplusplus>")
 +endif()
 +
- if (WITH_CUSTOM_PREFIX)
-   target_compile_definitions (glog PUBLIC GLOG_CUSTOM_PREFIX_SUPPORT)
- endif (WITH_CUSTOM_PREFIX)
+ set_target_properties (glog PROPERTIES PUBLIC_HEADER "${GLOG_PUBLIC_H}")
+ 
+ target_include_directories (glog BEFORE PUBLIC

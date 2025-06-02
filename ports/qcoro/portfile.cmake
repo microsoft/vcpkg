@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO danvratil/qcoro
+    REPO qcoro/qcoro
     REF "v${VERSION}"
-    SHA512 de2e55256d3c9d35fec3ef6dc78128801b70a5e5b8ff0f3a6f235dac17f349ea44207a7c9f35375215dbeea04cb67c3412d505d0a8a95f2b926775f804a02649
+    SHA512 f1da90c4a9bec5f52ec9f40caa30c8465658c6ff005c6c7e89aeb97acc4aefd5e34030493b7e51313a6d2b3fc59114f6ed6751f31f1c132ece173f0e22154c37
     HEAD_REF main
 )
 

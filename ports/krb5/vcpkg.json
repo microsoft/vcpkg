@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "krb5",
+  "version": "1.21.3",
+  "port-version": 2,
+  "description": [
+    "Kerberos is a network authentication protocol.",
+    "It is designed to provide strong authentication for client/server applications by using secret-key cryptography.",
+    "A free implementation of this protocol is available from the Massachusetts Institute of Technology.",
+    "Kerberos is available in many commercial products as well."
+  ],
+  "homepage": "https://web.mit.edu/kerberos/",
+  "license": "MIT",
+  "supports": "linux | osx | (x64 & windows & !static & !uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-if (NOT VCPKG_TARGET_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
@@ -6,27 +6,37 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
     REF "${VERSION}"
-    SHA512 14390380655c41483a98487e3b012110dd8d1743fdd68d8cde7e0d7c2730312d564b15726d8c9d2fff237d2fce3983bbbb5213f59612c7c6feaeb402dff9609f
+    SHA512 8312acf0ed74fa28c6397f3e41ada656dbd5ca2bf8db484319d74b144ad19c0ebdc77f7f03436be6c6ca1cde706b9055079233cf0d6b5ada4ca48406f8a55dd8
     HEAD_REF master
-)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        cxx17 ABSL_USE_CXX17
 )
 
 # With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
 # compiled with C++14 or C++17, and modifies the installed `absl/base/options.h`
 # header accordingly. This works even if CMAKE_CXX_STANDARD is not set. Abseil
 # uses the compiler default behavior to update `absl/base/options.h` as needed.
-if (ABSL_USE_CXX17)
+set(ABSL_USE_CXX17_OPTION "")
+if("cxx17" IN_LIST FEATURES)
     set(ABSL_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
-endif ()
+endif()
+
+set(ABSL_TEST_HELPERS_OPTIONS "")
+if("test-helpers" IN_LIST FEATURES)
+    set(ABSL_TEST_HELPERS_OPTIONS "-DABSL_BUILD_TEST_HELPERS=ON" "-DABSL_USE_EXTERNAL_GOOGLETEST=ON" "-DABSL_FIND_GOOGLETEST=ON")
+endif()
+
+set(ABSL_STATIC_RUNTIME_OPTION "")
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(ABSL_STATIC_RUNTIME_OPTION "-DABSL_MSVC_STATIC_RUNTIME=ON")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    OPTIONS -DABSL_PROPAGATE_CXX_STD=ON ${ABSL_USE_CXX17_OPTION}
+    OPTIONS
+        -DABSL_PROPAGATE_CXX_STD=ON
+        ${ABSL_USE_CXX17_OPTION}
+        ${ABSL_TEST_HELPERS_OPTIONS}
+        ${ABSL_STATIC_RUNTIME_OPTION}
 )
 
 vcpkg_cmake_install()
@@ -41,16 +51,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/include/absl/time/internal/cctz/testdata"
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB_RECURSE headers "${CURRENT_PACKAGES_DIR}/include/absl/*.h")
-    foreach(header IN LISTS ${headers})
-        vcpkg_replace_string("${header}"
-            "!defined(ABSL_CONSUME_DLL)" "0"
-        )
-        vcpkg_replace_string("${header}"
-            "defined(ABSL_CONSUME_DLL)" "1"
-        )
-    endforeach()
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/absl/base/config.h" "defined(ABSL_CONSUME_DLL)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/absl/base/internal/thread_identity.h" "defined(ABSL_CONSUME_DLL)" "1")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

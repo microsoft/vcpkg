@@ -54,10 +54,10 @@ index b4210d2..33198e4 100644
  namespace vsgImGui
  {
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 2226b13..1200b42 100644
+index 41d749d..919159e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -6,34 +6,15 @@ set(EXTRA_INCLUDES)
+@@ -6,40 +6,21 @@ set(EXTRA_INCLUDES)
  SET(HEADER_PATH ${VSGIMGUI_SOURCE_DIR}/include/vsgImGui)
  
  set(HEADERS
@@ -80,19 +80,25 @@ index 2226b13..1200b42 100644
      vsgImGui/SendEventsToImGui.cpp
      vsgImGui/Texture.cpp
 -    imgui/imgui.cpp
--    imgui/imgui_demo.cpp
 -    imgui/imgui_draw.cpp
 -    imgui/imgui_tables.cpp
 -    imgui/imgui_widgets.cpp
 -    imgui/backends/imgui_impl_vulkan.cpp
 -    imgui/misc/cpp/imgui_stdlib.cpp
 -    implot/implot.cpp
--    implot/implot_demo.cpp
 -    implot/implot_items.cpp
  )
  
+ OPTION(SHOW_DEMO_WINDOW "Toggle the build of the ImGui::ShowDemoWindow(bool*) and ImPlot::ShadowDemoWindow(bool*)" ON)
  
-@@ -63,6 +44,8 @@ target_include_directories(vsgImGui PUBLIC
+ if (SHOW_DEMO_WINDOW)
+     set(SOURCES ${SOURCES}
+-        imgui/imgui_demo.cpp
+-        implot/implot_demo.cpp
+     )
+ else()
+     set(SOURCES ${SOURCES}
+@@ -73,6 +54,8 @@ target_include_directories(vsgImGui PUBLIC
  target_link_libraries(vsgImGui
      PUBLIC
          vsg::vsg

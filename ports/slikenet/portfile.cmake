@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install.patch
+        fix-emscripten.patch
 )
 #Uses an outdated OpenSSL version and is in an experimental namespace any way. As such we delete it here
 file(REMOVE_RECURSE "${SOURCE_PATH}/Source/src/crypto" "${SOURCE_PATH}/Source/include/slikenet/crypto")

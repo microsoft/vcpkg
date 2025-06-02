@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
     REF "v${VERSION}"
-    SHA512 f1ba875e6dfa3970e6f03741573f96ac224a8d0bace5a4c44dcf95dd4e861031fe086e2dc4429c1c6bcb22d40656fc2c6c287abe0b4678eb9af9698691eda3d9
+    SHA512 5b41f550d1c774f5a83497eb2cb11b37c34113eedeb4f39e9c6328c7f4d32ba2ad4ac5acc22366e82bd1eb4e60ef21ef7651029e556d53e3fe1e3591afd4b8f9
     HEAD_REF master
     PATCHES
         install-layout.patch
@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
-        fix-glegl.patch
 )
 
 vcpkg_check_features(
@@ -20,6 +19,7 @@ vcpkg_check_features(
     FEATURES
         fonts   wxUSE_PRIVATE_FONTS
         media   wxUSE_MEDIACTRL
+        secretstore wxUSE_SECRETSTORE
         sound   wxUSE_SOUND
         webview wxUSE_WEBVIEW
         webview wxUSE_WEBVIEW_EDGE
@@ -41,6 +41,14 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS -DwxUSE_WEBREQUEST_CURL=OFF)
 else()
     list(APPEND OPTIONS -DwxUSE_WEBREQUEST_CURL=ON)
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        list(APPEND OPTIONS -DwxBUILD_USE_STATIC_RUNTIME=OFF)
+    else()
+        list(APPEND OPTIONS -DwxBUILD_USE_STATIC_RUNTIME=ON)
+    endif()
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -70,12 +78,12 @@ vcpkg_cmake_configure(
         -DwxUSE_GLCANVAS=ON
         -DwxUSE_LIBGNOMEVFS=OFF
         -DwxUSE_LIBNOTIFY=OFF
-        -DwxUSE_SECRETSTORE=OFF
         -DwxUSE_STL=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
         -DwxUSE_UIACTIONSIMULATOR=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_GSPELL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_MSPACK=ON
+        -DwxBUILD_INSTALL_RUNTIME_DIR:PATH=bin
         ${OPTIONS}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         # The minimum cmake version requirement for Cotire is 2.8.12.
@@ -138,13 +146,13 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/wx/setup.h")
     file(GLOB_RECURSE WX_SETUP_H_FILES_REL "${CURRENT_PACKAGES_DIR}/lib/*.h")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string("${WX_SETUP_H_FILES_REL}" "${CURRENT_PACKAGES_DIR}" "")
+        vcpkg_replace_string("${WX_SETUP_H_FILES_REL}" "${CURRENT_PACKAGES_DIR}" "" IGNORE_UNCHANGED)
 
         string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/" "" WX_SETUP_H_FILES_REL "${WX_SETUP_H_FILES_REL}")
         string(REPLACE "/setup.h" "" WX_SETUP_H_REL_RELATIVE "${WX_SETUP_H_FILES_REL}")
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        vcpkg_replace_string("${WX_SETUP_H_FILES_DBG}" "${CURRENT_PACKAGES_DIR}" "")
+        vcpkg_replace_string("${WX_SETUP_H_FILES_DBG}" "${CURRENT_PACKAGES_DIR}" "" IGNORE_UNCHANGED)
 
         string(REPLACE "${CURRENT_PACKAGES_DIR}/debug/lib/" "" WX_SETUP_H_FILES_DBG "${WX_SETUP_H_FILES_DBG}")
         string(REPLACE "/setup.h" "" WX_SETUP_H_DBG_RELATIVE "${WX_SETUP_H_FILES_DBG}")
@@ -188,6 +196,12 @@ if("example" IN_LIST FEATURES)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+
+file(REMOVE "${CURRENT_PACKAGES_DIR}/wxwidgets.props")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/wxwidgets.props")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/build")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/build")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/docs/licence.txt")

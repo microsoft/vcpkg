@@ -1,0 +1,71 @@
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index 5f2e1ea34..7258e4669 100644
+--- a/CMakeFilters.cmake
++++ b/CMakeFilters.cmake
+@@ -126,7 +126,7 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
+         endif ()
+         set (H5_ZLIB_INCLUDE_DIR_GEN ${ZLIB_INCLUDE_DIR})
+         set (H5_ZLIB_INCLUDE_DIRS ${H5_ZLIB_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIR})
+-        if (NOT WIN32) #windows has a list of names
++        if (0)
+           # The FindZLIB.cmake module does not set an OUTPUT_NAME
+           # on the target. The target returned is: ZLIB::ZLIB
+           get_filename_component (libname ${ZLIB_LIBRARIES} NAME_WLE)
+diff --git a/config/cmake/HDFMacros.cmake b/config/cmake/HDFMacros.cmake
+index 3be3e6a6a..177a51e87 100644
+--- a/config/cmake/HDFMacros.cmake
++++ b/config/cmake/HDFMacros.cmake
+@@ -483,7 +483,7 @@ macro (HDF_DIR_PATHS package_prefix)
+   endif ()
+ 
+   #set the default debug suffix for all library targets
+-  if(NOT CMAKE_DEBUG_POSTFIX)
++  if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+     if (WIN32)
+       set (CMAKE_DEBUG_POSTFIX "_D")
+     else ()
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 5bf8e1f82..fe212a092 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1195,22 +1195,36 @@ if (${HDF_CFG_NAME} MATCHES "Debug" OR ${HDF_CFG_NAME} MATCHES "Developer")
+   set (PKGCONFIG_LIBNAME "${PKGCONFIG_LIBNAME}${CMAKE_DEBUG_POSTFIX}")
+ endif ()
+ 
+-#foreach (libs ${LINK_LIBS})
+-#  set (_PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE} -l${libs}")
+-#endforeach ()
++foreach (libs ${LINK_LIBS})
++  set (_PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE} -l${libs}")
++endforeach ()
+ 
+ # The settings for the compression libs depends on if they have pkconfig support
+ # Assuming they don't
+ foreach (libs ${LINK_COMP_LIBS})
+ #  set (_PKG_CONFIG_REQUIRES_PRIVATE "${_PKG_CONFIG_REQUIRES_PRIVATE} -l${libs}")
++  if(libs STREQUAL "ZLIB::ZLIB")
++    string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " zlib")
++  elseif(libs STREQUAL "libaec::sz")
++    string(APPEND _PKG_CONFIG_LIBS_PRIVATE " ${libaec_LIBRARY}")
++  elseif(libs STREQUAL "libaec::aec")
++    string(APPEND _PKG_CONFIG_LIBS_PRIVATE " ${SZIP_LIBRARY}")
++  else()
+   get_target_property (libname ${libs} OUTPUT_NAME)
+   set (_PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE} -l${libname}")
++  endif()
+ endforeach ()
++if(UNIX AND H5_HAVE_PARALLEL)
++    foreach(_lib IN LISTS ${MPI_C_LIBRARIES})
++        string(REPLACE " -l${_lib} " " " _PKG_CONFIG_LIBS_PRIVATE " ${_PKG_CONFIG_LIBS_PRIVATE} ")
++    endforeach()
++    string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " ompi-c")
++endif()
+ 
+ #if (BUILD_STATIC_LIBS)
+ #  set (_PKG_CONFIG_LIBS "${_PKG_CONFIG_LIBS} -l${PKGCONFIG_LIBNAME}")
+ #endif ()
+-if (BUILD_SHARED_LIBS)
++if (1)
+   set (_PKG_CONFIG_SH_LIBS "${_PKG_CONFIG_SH_LIBS} -l${PKGCONFIG_LIBNAME}")
+ endif ()
+ 

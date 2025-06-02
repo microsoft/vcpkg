@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-ValidationLayers
     REF "vulkan-sdk-${VERSION}"
-    SHA512 755bdde7e7129b7a3ed06a4bebdaf11212288802119e0dc224aab63491de30c9b1c25972bdafd4fedbfea43bf6c29cdbc409374e57fbf0331798530a8ae94a70
+    SHA512 1f5f5ad537c56d8790b3f8ff87fb8ce145d83771832b2d03aa11dd2b4db2757bed3a9b5e41b3328ac13d6d296a6915a5cce256b8ae03db8b1ee006beab1d36c1
     HEAD_REF main
 )
 

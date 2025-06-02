@@ -1,6 +1,7 @@
 {
   "name": "libevent",
   "version": "2.1.12+20230128",
+  "port-version": 1,
   "description": "An event notification library",
   "homepage": "https://github.com/libevent/libevent",
   "license": "BSD-3-Clause",

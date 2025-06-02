@@ -1,7 +1,7 @@
 {
   "name": "nanosvg",
-  "version-date": "2022-12-04",
-  "description": "NanoSVG is a simple stupid single-header-file SVG parse. The output of the parser is a list of cubic bezier shapes..",
+  "version-date": "2023-12-29",
+  "description": "NanoSVG is a simple stupid single-header-file SVG parser. It is accompanied by a simple SVG rasterizer.",
   "homepage": "https://github.com/memononen/nanosvg",
   "license": "Zlib",
   "dependencies": [

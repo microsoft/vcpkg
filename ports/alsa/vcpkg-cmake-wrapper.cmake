@@ -22,10 +22,7 @@ find_library(
 include(SelectLibraryConfigurations)
 select_library_configurations(ALSA)
 unset(ALSA_FOUND)
-
-if(NOT ALSA_INCLUDE_DIR OR NOT ALSA_LIBRARY)
-  message(FATAL_ERROR "Broken installation of the alsa vcpkg port")
-endif()
+set(ALSA_LIBRARY "${ALSA_LIBRARY}" CACHE INTERNAL "")
 
 _find_package(${ARGS})
 

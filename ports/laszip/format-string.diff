@@ -1,0 +1,15 @@
+diff --git a/src/lasmessage.cpp b/src/lasmessage.cpp
+index c39d13a..a1e2d0d 100644
+--- a/src/lasmessage.cpp
++++ b/src/lasmessage.cpp
+@@ -139,8 +139,8 @@ void las_default_message_handler(LAS_MESSAGE_TYPE type, const char* msg, void* u
+ 	if (!prefix.empty())
+ 	{
+ 		format_message(message, (unsigned)prefix.size());
+-		fprintf(stderr, prefix.c_str());
+-		fprintf(stderr, message.c_str());
++		fprintf(stderr, "%s", prefix.c_str());
++		fprintf(stderr, "%s", message.c_str());
+ 	}
+ 	else
+ 	{

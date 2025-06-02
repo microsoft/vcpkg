@@ -1,6 +1,6 @@
 {
   "name": "expected-lite",
-  "version": "0.6.3",
+  "version": "0.8.0",
   "description": "Expected objects in C++11 and later in a single-file header-only library",
   "homepage": "https://github.com/martinmoene/expected-lite",
   "license": "BSL-1.0",

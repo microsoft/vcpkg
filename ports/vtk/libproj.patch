@@ -2,8 +2,9 @@ diff --git a/ThirdParty/libproj/CMakeLists.txt b/ThirdParty/libproj/CMakeLists.t
 index f8888876..d57c4c18 100644
 --- a/ThirdParty/libproj/CMakeLists.txt
 +++ b/ThirdParty/libproj/CMakeLists.txt
-@@ -4,10 +4,12 @@ vtk_module_third_party(
-     VERSION       "8.1.0"
+@@ -4,11 +4,13 @@ vtk_module_third_party(
+     VERSION
+       "8.1.0"
      STANDARD_INCLUDE_DIRS
    EXTERNAL
 -    PACKAGE LibPROJ

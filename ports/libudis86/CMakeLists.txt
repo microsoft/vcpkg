@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 3.9)
 
 project (udis86)
 
+add_definitions(-DHAVE_STRING_H)
 if (MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()

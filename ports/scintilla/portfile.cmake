@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://www.scintilla.org/scintilla446.zip"
-  FILENAME "scintilla446.zip"
-  SHA512 db6fa38283401497d8331f97dc5b57ea11d998988001f06b95892de769de5829b9f567635f3c1f2d9cfbc4384024d11666d28224ce90c5813ceef865b0dec255
+  URLS "https://www.scintilla.org/scintilla556.zip"
+  FILENAME "scintilla556.zip"
+  SHA512 8e845a94379fff88222fa9e4e5f534f62595420dd933166e4d9cc67b197c79f578405cb020892142ead1afd85bd42f1dc4361a339134a087e14760ff33d0a1cf
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -15,13 +15,13 @@ endif()
 vcpkg_extract_source_archive(
   SOURCE_PATH
   ARCHIVE ${ARCHIVE}
-  SOURCE_BASE 4.4.6
+  SOURCE_BASE 5.5.6
   PATCHES ${PATCHES}
 )
 
 vcpkg_install_msbuild(
   SOURCE_PATH "${SOURCE_PATH}"
-  PROJECT_SUBPATH Win32/SciLexer.vcxproj
+  PROJECT_SUBPATH Win32/Scintilla.vcxproj
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")

@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 1.3.2
     SHA512 f1581f2dfa262ffb1b3aec5a1e6d32493c322c94541fbacc98efff23b3b42b14c9abdcfb063a78b7c54fb1f9d8dbf59d8064099601de2175af6c6d830708324c
     HEAD_REF master
+    PATCHES
+        dev-SER_END_DECL-fix.patch # https://github.com/ingeniamc/sercomm/pull/3
 )
 
 vcpkg_check_features(
@@ -22,10 +24,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Fix CMake files
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sercomm)
-
-vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(
+	PACKAGE_NAME sercomm
+	CONFIG_PATH lib/cmake/sercomm
+)
 
 # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

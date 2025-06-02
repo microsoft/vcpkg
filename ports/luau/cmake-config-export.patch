@@ -1,0 +1,137 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 03f235c..75aa1ec 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -67,31 +67,31 @@ add_library(Luau.VM.Internals INTERFACE)
+ 
+ include(Sources.cmake)
+ 
+-target_include_directories(Luau.Common INTERFACE Common/include)
++target_include_directories(Luau.Common INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Common/include> $<INSTALL_INTERFACE:include/luau>)
+ 
+ target_compile_features(Luau.CLI.lib PUBLIC cxx_std_17)
+-target_include_directories(Luau.CLI.lib PUBLIC CLI/include)
++target_include_directories(Luau.CLI.lib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CLI/include> $<INSTALL_INTERFACE:include/luau>)
+ target_link_libraries(Luau.CLI.lib PRIVATE Luau.Common Luau.Config)
+ 
+ target_compile_features(Luau.Ast PUBLIC cxx_std_17)
+-target_include_directories(Luau.Ast PUBLIC Ast/include)
++target_include_directories(Luau.Ast PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Ast/include> $<INSTALL_INTERFACE:include/luau>)
+ target_link_libraries(Luau.Ast PUBLIC Luau.Common)
+ 
+ target_compile_features(Luau.Compiler PUBLIC cxx_std_17)
+-target_include_directories(Luau.Compiler PUBLIC Compiler/include)
++target_include_directories(Luau.Compiler PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Compiler/include> $<INSTALL_INTERFACE:include/luau>)
+ target_link_libraries(Luau.Compiler PUBLIC Luau.Ast)
+ 
+ target_compile_features(Luau.Config PUBLIC cxx_std_17)
+-target_include_directories(Luau.Config PUBLIC Config/include)
++target_include_directories(Luau.Config PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Config/include> $<INSTALL_INTERFACE:include/luau>)
+ target_link_libraries(Luau.Config PUBLIC Luau.Ast)
+ 
+ target_compile_features(Luau.Analysis PUBLIC cxx_std_17)
+-target_include_directories(Luau.Analysis PUBLIC Analysis/include)
++target_include_directories(Luau.Analysis PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Analysis/include> $<INSTALL_INTERFACE:include/luau>)
+ target_link_libraries(Luau.Analysis PUBLIC Luau.Ast Luau.EqSat Luau.Config)
+ target_link_libraries(Luau.Analysis PRIVATE Luau.Compiler Luau.VM)
+ 
+ target_compile_features(Luau.EqSat PUBLIC cxx_std_17)
+-target_include_directories(Luau.EqSat PUBLIC EqSat/include)
++target_include_directories(Luau.EqSat PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/EqSat/include> $<INSTALL_INTERFACE:include/luau>)
+ target_link_libraries(Luau.EqSat PUBLIC Luau.Common)
+ 
+ target_compile_features(Luau.CodeGen PRIVATE cxx_std_17)
+@@ -100,7 +100,7 @@ target_link_libraries(Luau.CodeGen PRIVATE Luau.VM Luau.VM.Internals) # Code gen
+ target_link_libraries(Luau.CodeGen PUBLIC Luau.Common)
+ 
+ target_compile_features(Luau.VM PRIVATE cxx_std_11)
+-target_include_directories(Luau.VM PUBLIC VM/include)
++target_include_directories(Luau.VM PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/VM/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ target_link_libraries(Luau.VM PUBLIC Luau.Common)
+ 
+ target_compile_features(Luau.Require PUBLIC cxx_std_17)
+@@ -194,22 +194,6 @@ if(MSVC AND LUAU_BUILD_CLI)
+     set_target_properties(Luau.Repl.CLI PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
+ endif()
+ 
+-# embed .natvis inside the library debug information
+-if(MSVC)
+-    target_link_options(Luau.Ast INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Ast.natvis)
+-    target_link_options(Luau.Analysis INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/Analysis.natvis)
+-    target_link_options(Luau.CodeGen INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/CodeGen.natvis)
+-    target_link_options(Luau.VM INTERFACE /NATVIS:${CMAKE_CURRENT_SOURCE_DIR}/tools/natvis/VM.natvis)
+-endif()
+-
+-# make .natvis visible inside the solution
+-if(MSVC_IDE)
+-    target_sources(Luau.Ast PRIVATE tools/natvis/Ast.natvis)
+-    target_sources(Luau.Analysis PRIVATE tools/natvis/Analysis.natvis)
+-    target_sources(Luau.CodeGen PRIVATE tools/natvis/CodeGen.natvis)
+-    target_sources(Luau.VM PRIVATE tools/natvis/VM.natvis)
+-endif()
+-
+ # On Windows and Android threads are provided, on Linux/Mac/iOS we use pthreads
+ add_library(osthreads INTERFACE)
+ if(CMAKE_SYSTEM_NAME MATCHES "Linux|Darwin|iOS")
+@@ -299,3 +283,54 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.EqSat Luau.Cod
+         endif()
+     endif()
+ endforeach()
++
++# luau package
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
++
++write_basic_package_version_file(
++  ${CMAKE_CURRENT_BINARY_DIR}/unofficial-luau-config-version.cmake
++  VERSION "${VERSION}"
++  COMPATIBILITY AnyNewerVersion
++)
++
++install(FILES
++  ${CMAKE_CURRENT_BINARY_DIR}/unofficial-luau-config-version.cmake
++  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/unofficial-luau-config.cmake
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-luau
++)
++
++install(
++  TARGETS Luau.Common Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.VM Luau.CLI.lib Luau.EqSat
++  EXPORT unofficial-luau-targets
++  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++)
++
++if (LUAU_BUILD_CLI)
++    install(
++        TARGETS Luau.Repl.CLI
++        EXPORT unofficial-luau-targets
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++    )
++endif()
++
++install(
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Common/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Ast/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Compiler/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Config/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/Analysis/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/VM/include/"
++    DIRECTORY "${CMAKE_SOURCE_DIR}/VM/src/"
++    DESTINATION "include/luau"
++    FILES_MATCHING
++    PATTERN "*.h"
++)
++
++install(
++    EXPORT unofficial-luau-targets
++    NAMESPACE unofficial::luau::
++    DESTINATION "${CMAKE_INSTALL_DATADIR}/unofficial-luau"
++)
+diff --git b/cmake/unofficial-luau-config.cmake b/cmake/unofficial-luau-config.cmake
+new file mode 100644
+index 0000000..13fd463
+--- /dev/null
++++ b/cmake/unofficial-luau-config.cmake
+@@ -0,0 +1 @@
++include(${CMAKE_CURRENT_LIST_DIR}/unofficial-luau-targets.cmake)

@@ -1,16 +1,12 @@
 {
   "name": "harfbuzz",
-  "version": "8.3.0",
-  "port-version": 3,
+  "version": "10.2.0",
+  "port-version": 4,
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
   "supports": "!uwp",
   "dependencies": [
-    {
-      "name": "gettext",
-      "platform": "osx"
-    },
     {
       "name": "vcpkg-tool-meson",
       "host": true
@@ -40,6 +36,9 @@
       "description": "Enable DirectWrite support on Windows",
       "supports": "windows"
     },
+    "experimental-api": {
+      "description": "Enable experimental api"
+    },
     "freetype": {
       "description": "Enable FreeType support",
       "dependencies": [
@@ -48,6 +47,10 @@
           "default-features": false
         }
       ]
+    },
+    "gdi": {
+      "description": "Enable GDI/Uniscribe support on Windows",
+      "supports": "windows"
     },
     "glib": {
       "description": "Glib Unicode callbacks support",
@@ -73,9 +76,16 @@
     },
     "introspection": {
       "description": "build with introspection",
+      "supports": "!static",
       "dependencies": [
-        "glib",
-        "gobject-introspection"
+        "gobject-introspection",
+        {
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
+        }
       ]
     }
   }

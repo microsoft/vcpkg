@@ -1,0 +1,15 @@
+harfbuzz provides CMake targets:
+
+  find_package(harfbuzz CONFIG REQUIRED)
+  # HarfBuzz font subsetter
+  target_link_libraries(main PRIVATE harfbuzz::harfbuzz-subset)
+  # HarfBuzz text shaping library
+  target_link_libraries(main PRIVATE harfbuzz::harfbuzz)
+
+harfbuzz provides pkg-config modules:
+
+  # HarfBuzz font subsetter
+  harfbuzz-subset
+
+  # HarfBuzz text shaping library
+  harfbuzz

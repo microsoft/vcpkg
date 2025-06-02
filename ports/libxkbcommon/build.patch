@@ -1,9 +1,8 @@
 diff --git a/tools/how-to-type.c b/tools/how-to-type.c
-index 0a6f79e68..c1205004d 100644
+index 72aea1b..783373a 100644
 --- a/tools/how-to-type.c
 +++ b/tools/how-to-type.c
-@@ -25,8 +25,10 @@
- 
+@@ -26,7 +26,9 @@
  #include <getopt.h>
  #include <stdbool.h>
  #include <stdlib.h>
@@ -14,11 +13,11 @@ index 0a6f79e68..c1205004d 100644
  
  #include "xkbcommon/xkbcommon.h"
 diff --git a/tools/tools-common.c b/tools/tools-common.c
-index 254499d8c..2465a88c2 100644
+index 8eb3f4b..8b22307 100644
 --- a/tools/tools-common.c
 +++ b/tools/tools-common.c
 @@ -42,6 +42,7 @@
- #ifdef _MSC_VER
+ #ifdef _WIN32
  #include <io.h>
  #include <windows.h>
 +#include <process.h>

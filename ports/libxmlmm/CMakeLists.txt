@@ -40,7 +40,7 @@ target_link_libraries (libxmlmm PUBLIC LibXml2::LibXml2)
 set_target_properties(libxmlmm PROPERTIES
     CXX_STANDARD 17
     PUBLIC_HEADER "${HEADERS_LIBXMLMM}"
-    PREFIX ""
+    OUTPUT_NAME xmlmm
 )
 
 target_include_directories(libxmlmm PUBLIC
@@ -58,3 +58,6 @@ install(EXPORT unofficial-libxmlmm-targets
     NAMESPACE unofficial::libxmlmm::
     DESTINATION share/unofficial-libxmlmm
 )
+
+configure_file(libxmlmm.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libxmlmm.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxmlmm.pc DESTINATION lib/pkgconfig)

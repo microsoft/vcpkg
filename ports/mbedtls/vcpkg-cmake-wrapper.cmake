@@ -1,29 +1,23 @@
-include(FindPackageHandleStandardArgs)
-
-find_path(MBEDTLS_INCLUDE_DIR mbedtls/ssl.h)
-
-find_library(MBEDTLS_CRYPTO_LIBRARY mbedcrypto)
-find_package(pthreads_windows QUIET)
-set(MBEDTLS_CRYPTO_LIBRARY ${MBEDTLS_CRYPTO_LIBRARY} ${PThreads4W_LIBRARY})
-find_library(MBEDTLS_X509_LIBRARY mbedx509)
-find_library(MBEDTLS_TLS_LIBRARY mbedtls)
-set(MBEDTLS_LIBRARIES ${MBEDTLS_CRYPTO_LIBRARY} ${MBEDTLS_X509_LIBRARY} ${MBEDTLS_TLS_LIBRARY})
-
-if (MBEDTLS_INCLUDE_DIR AND EXISTS "${MBEDTLS_INCLUDE_DIR}/mbedtls/version.h")
-    file(
-        STRINGS ${MBEDTLS_INCLUDE_DIR}/mbedtls/version.h _MBEDTLS_VERLINE
-        REGEX "^#define[ \t]+MBEDTLS_VERSION_STRING[\t ].*"
-    )
-    string(REGEX REPLACE ".*MBEDTLS_VERSION_STRING[\t ]+\"(.*)\"" "\\1" MBEDTLS_VERSION ${_MBEDTLS_VERLINE})
+_find_package(${ARGS})
+if(WIN32 AND NOT MINGW)
+    find_package(PThreads4W)
+    string(FIND "${MBEDTLS_CRYPTO_LIBRARY}" "${PThreads4W_LIBRARY}" pthreads_in_mbedtls)
+    if(pthreads_in_mbedtls EQUAL "-1")
+        list(APPEND MBEDTLS_CRYPTO_LIBRARY ${PThreads4W_LIBRARY})
+    endif()
+    string(FIND "${MBEDTLS_LIBRARIES}" "${PThreads4W_LIBRARY}" pthreads_in_mbedtls)
+    if(pthreads_in_mbedtls EQUAL "-1")
+        list(APPEND MBEDTLS_LIBRARIES ${PThreads4W_LIBRARY})
+    endif()
+else()
+    set(THREADS_PREFER_PTHREAD_FLAG 1)
+    find_package(Threads)
+    string(FIND "${MBEDTLS_CRYPTO_LIBRARY}" "${CMAKE_THREAD_LIBS_INIT}" pthreads_in_mbedtls)
+    if(pthreads_in_mbedtls EQUAL "-1")
+        list(APPEND MBEDTLS_CRYPTO_LIBRARY ${CMAKE_THREAD_LIBS_INIT})
+    endif()
+    string(FIND "${MBEDTLS_LIBRARIES}" "${CMAKE_THREAD_LIBS_INIT}" pthreads_in_mbedtls)
+    if(pthreads_in_mbedtls EQUAL "-1")
+        list(APPEND MBEDTLS_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+    endif()
 endif()
-
-find_package_handle_standard_args(
-    mbedTLS
-    REQUIRED_VARS
-        MBEDTLS_INCLUDE_DIR
-        MBEDTLS_CRYPTO_LIBRARY
-        MBEDTLS_X509_LIBRARY
-        MBEDTLS_TLS_LIBRARY
-        PThreads4W_FOUND
-    VERSION_VAR MBEDTLS_VERSION
-)

@@ -1,6 +1,7 @@
 {
   "name": "kf5kio",
   "version": "5.98.0",
+  "port-version": 1,
   "description": "Network transparent access to files and data",
   "homepage": "https://api.kde.org/frameworks/kio/html/index.html",
   "license": null,
@@ -47,7 +48,10 @@
       "name": "libmount",
       "platform": "linux"
     },
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     {
       "name": "qt5-macextras",
       "platform": "osx"

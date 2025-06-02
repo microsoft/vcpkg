@@ -22,11 +22,11 @@ vcpkg_from_github(
 vcpkg_find_acquire_program(PKGCONFIG)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
-  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
 else()
-  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/Qca)
-  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/lib/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/lib/Qca)
 endif()
 
 # According to:
@@ -47,9 +47,17 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Importing certstore done")
 
-set(PLUGINS gnupg logger softstore wincrypto)
+set(PLUGINS gnupg logger wincrypto)
 if("botan" IN_LIST FEATURES)
     list(APPEND PLUGINS botan)
+endif()
+if ("ossl" IN_LIST FEATURES)
+    list(APPEND PLUGINS ossl)
+endif()
+if (VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message(STATUS "Building with an osx-dynamic triplet: 'softstore' disabled.")
+else()
+    list(APPEND PLUGINS softstore)
 endif()
 
 # Configure and build
@@ -62,13 +70,13 @@ vcpkg_cmake_configure(
         -DBUILD_TOOLS=OFF
         -DBUILD_WITH_QT6=ON
         -DQCA_SUFFIX=OFF
-        -DQCA_FEATURE_INSTALL_DIR=share/qca/mkspecs/features
+        -DQCA_FEATURE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/qca/mkspecs/features
         -DOSX_FRAMEWORK=OFF
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     OPTIONS_DEBUG
-        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
+        -DQCA_PLUGINS_INSTALL_DIR=${QCA_PLUGIN_INSTALL_DIR_DEBUG}
     OPTIONS_RELEASE
-        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_RELEASE}
+        -DQCA_PLUGINS_INSTALL_DIR=${QCA_PLUGIN_INSTALL_DIR_RELEASE}
 )
 
 vcpkg_cmake_install()

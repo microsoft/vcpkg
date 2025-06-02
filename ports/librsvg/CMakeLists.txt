@@ -1,6 +1,21 @@
 cmake_minimum_required(VERSION 3.11)
 project(librsvg C)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(LIBCROCO libcroco-0.6 IMPORTED_TARGET)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
+pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
+pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0 IMPORTED_TARGET)
+pkg_check_modules(PANGO pango pangocairo IMPORTED_TARGET)
+find_package(LibXml2 REQUIRED)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+else()
+    pkg_check_modules(PANGO2 pangoft2 pangofc IMPORTED_TARGET)
+    set(PANGO_FT2_LIB PkgConfig::PANGO2)
+endif()
+
 set(RSVG_API_MAJOR_VERSION 2)
 set(RSVG_API_VERSION "2.0")
 Set(VERSION "2.40.20")
@@ -102,9 +117,22 @@ add_library(${LIBRSVG_TARGET} ${LIBRSVG_SOURCES})
 target_compile_definitions(${LIBRSVG_TARGET} PRIVATE
     -DRSVG_COMPILATION
     -D_CRT_SECURE_NO_WARNINGS
+    -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}" 
+    -DGDK_PIXBUF_ENABLE_BACKEND 
+    -DG_LOG_DOMAIN="libpixbufloader-svg"
     -DSRCDIR=""
     $<$<BOOL:${MINGW}>:HAVE_STRTOK_R>
 )
+
+target_link_libraries(${LIBRSVG_TARGET} PRIVATE
+    PkgConfig::GLIB2
+    ${LIBXML2_LIBRARIES}
+    PkgConfig::PANGO
+    PkgConfig::GDK_PIXBUF
+    ${PANGO_FT2_LIB}
+    PkgConfig::LIBCROCO
+)
+
 target_include_directories(${LIBRSVG_TARGET}
     PRIVATE
         "${CMAKE_CURRENT_BINARY_DIR}"
@@ -131,7 +159,6 @@ install(
         librsvg-enum-types.h
     DESTINATION include/librsvg-${RSVG_API_VERSION}/librsvg
 )
-
 
 set(gdk_pixbuf_pc_requires_private gdk-pixbuf-2.0)
 pkg_check_modules(GDK_PIXBUF ${gdk_pixbuf_pc_requires_private} IMPORTED_TARGET REQUIRED)
@@ -163,7 +190,6 @@ install(TARGETS pixbufloader-svg
     RUNTIME DESTINATION "${GDK_PIXBUF_MODULEDIR}"
     LIBRARY DESTINATION "${GDK_PIXBUF_MODULEDIR}"
 )
-
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/librsvg.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/librsvg.pc" @ONLY)
 file(READ "${CMAKE_CURRENT_BINARY_DIR}/librsvg.pc" librsvg_pc)

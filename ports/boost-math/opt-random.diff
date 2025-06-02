@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7965bd1..4e6c492 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,7 +38,7 @@ else()
+       Boost::integer
+       Boost::lexical_cast
+       Boost::predef
+-      Boost::random
++      $<TARGET_NAME_IF_EXISTS:Boost::random>
+       Boost::static_assert
+       Boost::throw_exception
+   )

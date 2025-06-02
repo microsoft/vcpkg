@@ -1,7 +1,7 @@
 {
   "name": "libcroco",
   "version": "0.6.13",
-  "port-version": 6,
+  "port-version": 7,
   "description": "A standalone css2 parsing and manipulation library",
   "license": "LGPL-2.0-only",
   "dependencies": [

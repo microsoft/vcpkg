@@ -1,16 +1,16 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-
 # Acquire Python and add it to PATH
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 
 # Acquire BDE Tools and add them to PATH
+set (BDE_TOOLS_VER 4.13.0.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
-    REF "${VERSION}"
-    SHA512 3aa64215c473ccecbd213234826b0c8cffd9491e7bf358e5947c80103e0723ef56da8ec7cc9cf51c6b7a887e5b0b52e80f3201d933accf7f6d5cc95fc1cb35dc
+    REF "${BDE_TOOLS_VER}"
+    SHA512 6a0eec25889a33fb0302af735ed2fcce38afa5ad2be9202d2589d76509f9fd85f9ddc0a73147df1b6471543f51df3b5b40e8c08d378ab1335d2703d89b5921e6
     HEAD_REF main
 )
 
@@ -23,7 +23,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 27e204e22883065e3ae9ab92d2c87d8e26a2871a36ede01367ee0e4d4a0e0de4f7b9452a0c219066dbb37a6f06ec3acabd6be029b8fdaab6c6ea4094300371d0
+    SHA512 d6d7e453cf22f6e28f3513b818ab3f4b597db3e1d109587e0e0a8957338483c475494f55d953dfe86de507a6c292d1492d9cbb3c8be359044ef368fe80595448
     HEAD_REF main
 )
 
@@ -56,8 +56,5 @@ endforeach()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${CMAKE_INSTALL_LIBDIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/${CMAKE_INSTALL_LIBDIR}/cmake")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/bde
-     RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_fixup_pkgconfig()

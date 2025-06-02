@@ -1,99 +1,42 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c708153..0e004da 100644
+index 78f6531..b7ea30b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -60,10 +60,11 @@ include(GNUInstallDirs)
+@@ -28,7 +28,9 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
+ include(GNUInstallDirs)
+ 
  include(CTest)
- include(FindThreads)
- 
-+find_package(ZLIB REQUIRED)
-+if (0)
- # Use pkg-config to create a PkgConfig::Ptex_ZLIB imported target
- find_package(PkgConfig REQUIRED)
- pkg_checK_modules(Ptex_ZLIB REQUIRED zlib IMPORTED_TARGET)
--
++if(0)
  enable_testing()
- 
- if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-@@ -77,6 +78,7 @@ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-         set(CMAKE_BUILD_TYPE "Release" CACHE STRING "type of build" FORCE)
-     endif ()
- endif ()
 +endif()
  
- if (NOT WIN32)
-     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
-@@ -99,7 +101,9 @@ endif ()
+ # Setup platform-specific threading flags.
+ find_package(Threads REQUIRED)
+@@ -113,9 +115,11 @@ endif ()
  include_directories(src/ptex)
  
  add_subdirectory(src/ptex)
-+if (0)
++if(0)
  add_subdirectory(src/utils)
  add_subdirectory(src/tests)
- add_subdirectory(src/doc)
-+endif()
+ if (PTEX_BUILD_DOCS)
+     add_subdirectory(src/doc)
+ endif ()
++endif ()
  add_subdirectory(src/build)
 diff --git a/src/ptex/CMakeLists.txt b/src/ptex/CMakeLists.txt
-index ba3a3cc..1619ff1 100644
+index 4dfe372..4572dd5 100644
 --- a/src/ptex/CMakeLists.txt
 +++ b/src/ptex/CMakeLists.txt
-@@ -1,6 +1,8 @@
--if (WIN32)
--    add_definitions(/DPTEX_EXPORTS)
--endif (WIN32)
-+if (BUILD_SHARED_LIBS)
-+    add_definitions(-DPTEX_EXPORTS)
-+else ()
-+    add_definitions(-DPTEX_STATIC)  
-+endif ()
- 
- configure_file(PtexVersion.h.in
-     ${CMAKE_CURRENT_SOURCE_DIR}/PtexVersion.h @ONLY)
-@@ -18,29 +20,35 @@ set(SRCS
-     PtexWriter.cpp)
- 
- if(PTEX_BUILD_STATIC_LIBS)
--    add_library(Ptex_static STATIC ${SRCS})
--    set_target_properties(Ptex_static PROPERTIES OUTPUT_NAME Ptex)
--    target_include_directories(Ptex_static
-+    add_library(Ptex STATIC ${SRCS})
-+    target_include_directories(Ptex
-     PUBLIC
-         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-     PRIVATE
-         ${CMAKE_CURRENT_SOURCE_DIR})
--    target_link_libraries(Ptex_static
--        PUBLIC ${CMAKE_THREAD_LIBS_INIT} PkgConfig::Ptex_ZLIB)
--    install(TARGETS Ptex_static EXPORT Ptex DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    target_link_libraries(Ptex
-+        PUBLIC ${CMAKE_THREAD_LIBS_INIT} ZLIB::ZLIB)
-+    install(TARGETS Ptex EXPORT Ptex
-+            RUNTIME DESTINATION bin
-+            LIBRARY DESTINATION lib
-+            ARCHIVE DESTINATION lib
-+    )
- endif()
- 
- if(PTEX_BUILD_SHARED_LIBS)
--    add_library(Ptex_dynamic SHARED ${SRCS})
--    set_target_properties(Ptex_dynamic PROPERTIES OUTPUT_NAME Ptex)
--    target_include_directories(Ptex_dynamic
-+    add_library(Ptex SHARED ${SRCS})
-+    target_include_directories(Ptex
-         PUBLIC
-             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-         PRIVATE
-             ${CMAKE_CURRENT_SOURCE_DIR})
--    target_link_libraries(Ptex_dynamic
--        PUBLIC ${CMAKE_THREAD_LIBS_INIT} PkgConfig::Ptex_ZLIB)
+@@ -40,7 +40,10 @@ if(PTEX_BUILD_SHARED_LIBS)
+     target_compile_definitions(Ptex_dynamic PRIVATE PTEX_EXPORTS)
+     target_link_libraries(Ptex_dynamic
+         PUBLIC Threads::Threads ZLIB::ZLIB)
 -    install(TARGETS Ptex_dynamic EXPORT Ptex DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+    target_link_libraries(Ptex
-+        PUBLIC ${CMAKE_THREAD_LIBS_INIT} ZLIB::ZLIB)
-+    install(TARGETS Ptex EXPORT Ptex
-+            RUNTIME DESTINATION bin
-+            LIBRARY DESTINATION lib
-+            ARCHIVE DESTINATION lib
-+    )
++    install(TARGETS Ptex_dynamic EXPORT Ptex
++                                 RUNTIME DESTINATION ${BIN_INSTALL_DIR}
++                                 LIBRARY DESTINATION ${LIB_INSTALL_DIR}
++                                 ARCHIVE DESTINATION ${LIB_INSTALL_DIR})
  endif()
  
  install(FILES

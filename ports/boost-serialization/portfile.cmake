@@ -4,16 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/serialization
     REF boost-${VERSION}
-    SHA512 d3b0aecbb6f30317a9e072ae4304dde3ceb101a75e1e501450dd5b423502d4e0d8a36d0f9525f56448bd5b4bd8d8ad3ef4518aa386acb25ca378cb2d08b8a633
+    SHA512 46c2142ca855d128346be5b3b17859dc15956b16dbe5b76b2443a30e3cf9a1c5405af4b0b13d39c45d5c42881d96594dc05e832272d8ebd63c84b1ffa7f92e43
     HEAD_REF master
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
-string(REPLACE "check-target-builds ../../config/checks//std_wstreambuf" "check-target-builds ../config/checks//std_wstreambuf" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

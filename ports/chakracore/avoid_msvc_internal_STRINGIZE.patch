@@ -1,0 +1,78 @@
+diff --git a/bin/NativeTests/stdafx.h b/bin/NativeTests/stdafx.h
+index c7a021c..77f8299 100644
+--- a/bin/NativeTests/stdafx.h
++++ b/bin/NativeTests/stdafx.h
+@@ -25,11 +25,16 @@
+ 
+ #define DebugOnly(x)          x
+ 
++#if !defined(CHAKRACORE_STRINGIZE)
++#define CHAKRACORE_STRINGIZE_IMPL(x) #x
++#define CHAKRACORE_STRINGIZE(x) CHAKRACORE_STRINGIZE_IMPL(x)
++#endif
++
+ #define AssertMsg(exp, comment)   \
+ do { \
+ if (!(exp)) \
+ { \
+-    fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, _STRINGIZE(exp), comment); \
++    fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp), comment); \
+     fflush(stderr); \
+     DebugBreak(); \
+ } \
+diff --git a/bin/ch/stdafx.h b/bin/ch/stdafx.h
+index 450a33d..7c5ecc2 100644
+--- a/bin/ch/stdafx.h
++++ b/bin/ch/stdafx.h
+@@ -57,16 +57,16 @@
+ 
+ #if defined(DBG)
+ 
+-#define _STRINGIZE_(x) #x
+-#if !defined(_STRINGIZE)
+-#define _STRINGIZE(x) _STRINGIZE_(x)
++#if !defined(CHAKRACORE_STRINGIZE)
++#define CHAKRACORE_STRINGIZE_IMPL(x) #x
++#define CHAKRACORE_STRINGIZE(x) CHAKRACORE_STRINGIZE_IMPL(x)
+ #endif
+ 
+ #define AssertMsg(exp, comment)   \
+ do { \
+ if (!(exp)) \
+ { \
+-    fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, _STRINGIZE(exp), comment); \
++    fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, CHAKRACORE_STRINGIZE(exp), comment); \
+     fflush(stderr); \
+     DebugBreak(); \
+ } \
+diff --git a/pal/inc/assert_only.h b/pal/inc/assert_only.h
+index eef0e62..644460c 100644
+--- a/pal/inc/assert_only.h
++++ b/pal/inc/assert_only.h
+@@ -6,20 +6,22 @@
+ // PAL free Assert definitions
+ #ifdef DEBUG
+ 
+-#define _QUOTE_(s) #s
+-#define _STRINGIZE_(s) _QUOTE_(s)
++#if !defined(CHAKRACORE_STRINGIZE)
++#define CHAKRACORE_STRINGIZE_IMPL(x) #x
++#define CHAKRACORE_STRINGIZE(x) CHAKRACORE_STRINGIZE_IMPL(x)
++#endif
+ 
+ #ifndef __ANDROID__
+ #define _ERR_OUTPUT_(condition, comment) \
+     fprintf(stderr, "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, \
+-      _STRINGIZE_(condition), comment); \
++      CHAKRACORE_STRINGIZE(condition), comment); \
+     fflush(stderr);
+ #else // ANDROID
+ #include <android/log.h>
+ #define _ERR_OUTPUT_(condition, comment) \
+     __android_log_print(ANDROID_LOG_ERROR, "chakracore-log", \
+       "ASSERTION (%s, line %d) %s %s\n", __FILE__, __LINE__, \
+-      _STRINGIZE_(condition), comment);
++      CHAKRACORE_STRINGIZE(condition), comment);
+ #endif
+ 
+ #define _Assert_(condition, comment)   \

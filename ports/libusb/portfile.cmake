@@ -2,12 +2,11 @@ if(VCPKG_TARGET_IS_LINUX)
     message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoconf libudev-dev")
 endif()
 
-set(VERSION 1.0.26)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/libusb
-    REF fcf0c710ef5911ae37fbbf1b39d48a89f6f14e8a # v1.0.26.11791 2023-03-12
-    SHA512 0aa6439f7988487adf2a3bff473fec80b5c722a47f117a60696d2aa25c87cc3f20fb6aaca7c66e49be25db6a35eb0bb5f71ed7b211d1b8ee064c5d7f1b985c73
+    REF "v${VERSION}"
+    SHA512 96ca1bb3ae77c2ed4468af4e0d1e67c8a1d2f770b49ca592c6a88e6d5b854ff92a1b4264faadb593868e5b8751d14979d52d08b562b4769092a4216b07ccd941
     HEAD_REF master
 )
 
@@ -64,6 +63,12 @@ else()
 endif()
 
 vcpkg_fixup_pkgconfig()
+
+# -Wl,-framework,... is poorly handled in CMake
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libusb-1.0.pc" " -Wl,-framework," " -framework " IGNORE_UNCHANGED)
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libusb-1.0.pc" " -Wl,-framework," " -framework " IGNORE_UNCHANGED)
+endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

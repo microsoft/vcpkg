@@ -7,8 +7,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libfs
-    REF 02de7390e58f00a3701f656a2b205dc6c8dafb58 # 1.0.8
-    SHA512  7395434c20cebc45213122c12dc272773d100ade606d6fb2cacf94e2d102c9869124a89dbd0ddf2fa9128e8b238cf2f52b89d356b296e8d95ff352be48a4bc54
+    REF "libFS-${VERSION}"
+    SHA512 8d21f82fb335b3ff2f09875a118e90ab1425ce3456ee5d9cbd319491c8def5b8318860d427e1bbb74eae8fbc8f6f199375d4765b2e409ea91a82ecb852a7bab4
     HEAD_REF master
 ) 
 

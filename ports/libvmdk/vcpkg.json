@@ -1,6 +1,7 @@
 {
   "name": "libvmdk",
   "version": "20221124",
+  "port-version": 1,
   "description": "Library and tools to access the VMware Virtual Disk (VMDK) format",
   "homepage": "https://github.com/libyal/libvmdk",
   "supports": "!uwp",

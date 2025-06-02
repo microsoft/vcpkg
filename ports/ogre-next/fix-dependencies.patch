@@ -40,8 +40,8 @@ index 74cb0f4..2cad26a 100644
  if (ZLIB_FOUND)
    # Find zziplib
 -  find_package(ZZip)
-+  find_package(ZZip NAMES unofficial-zziplib CONFIG REQUIRED)
-+  set(ZZip_LIBRARIES unofficial::zziplib::libzzip)
++  find_package(ZZip NAMES zziplib CONFIG REQUIRED)
++  set(ZZip_LIBRARIES zziplib::libzzip)
    macro_log_feature(ZZip_FOUND "zziplib" "Extract data from zip archives" "http://zziplib.sourceforge.net" FALSE "" "")
  endif ()
  

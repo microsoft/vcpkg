@@ -1,6 +1,6 @@
 {
   "name": "cxxgraph",
-  "version": "2.0.0",
+  "version": "4.1.0",
   "description": "CXXGraph is a header only comprehensive C++ graph library.",
   "homepage": "https://github.com/ZigRazor/CXXGraph",
   "dependencies": [

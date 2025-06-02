@@ -13,6 +13,7 @@ vcpkg_from_github(
         compile-features.patch
         Add-static-shared-handling.patch
         Export-unofficial-target.patch
+        use-cxx14-standard.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/rapidjson" "${SOURCE_PATH}/3rdparty/concurrentqueue")
