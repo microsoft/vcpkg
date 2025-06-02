@@ -9,7 +9,8 @@ RUN apt-get update && \
     dpkg -i packages-microsoft-prod.deb && \
     rm -f packages-microsoft-prod.deb
 
-RUN apt-get update && \
+RUN echo "Build date: ${BUILD_DATE}" && \
+    apt-get update && \
     apt-get upgrade -y && \
     apt-get install --no-install-recommends -y \
         powershell \
@@ -47,5 +48,6 @@ RUN apt-get update && \
         zip \
         python3 \
         python3-setuptools \
+        gnupg \
         python3-pip && \
     rm -rf /var/lib/apt/lists/*
