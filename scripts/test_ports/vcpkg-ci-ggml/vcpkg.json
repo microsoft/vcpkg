@@ -6,8 +6,15 @@
   "license": "MIT",
   "dependencies": [
     {
+      "$comment": "Lacks default (CPU) backend on arm64 windows",
       "name": "ggml",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        {
+          "name": "vulkan",
+          "platform": "windows & arm64"
+        }
+      ]
     },
     {
       "name": "vcpkg-cmake",
