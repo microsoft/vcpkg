@@ -44,6 +44,16 @@ if("opencl" IN_LIST FEATURES)
     )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    message(STATUS "The CPU backend is not supported for arm64 with MSVC.")
+    list(APPEND FEATURE_OPTIONS
+        "-DGGML_CPU=OFF"
+    )
+    if(FEATURES STREQUAL "core")
+        message(WARNING "No backend enabled!")
+    endif()
+endif()
+
 if("vulkan" IN_LIST FEATURES AND VCPKG_CROSSCOMPILING)
     list(APPEND FEATURE_OPTIONS
         "-DVulkan_GLSLC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc/glslc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
