@@ -1,5 +1,4 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://code.videolan.org
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/dav1d
     REF "${VERSION}"
