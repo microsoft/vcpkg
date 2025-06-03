@@ -234,7 +234,7 @@
     },
     "argtable3": {
       "baseline": "3.3.0.116da6c",
-      "port-version": 0
+      "port-version": 1
     },
     "argumentum": {
       "baseline": "0.3.2",
