@@ -37,6 +37,19 @@ index a61e560..27d6446 100644
  // port is already in network order
  socket_t VW::all_reduce_sockets::sock_connect(const uint32_t ip, const int port, VW::io::logger& logger)
  {
+diff --git a/vowpalwabbit/core/src/confidence_sequence.cc b/vowpalwabbit/core/src/confidence_sequence.cc
+index fc4b35d..0c2a40c 100644
+--- a/vowpalwabbit/core/src/confidence_sequence.cc
++++ b/vowpalwabbit/core/src/confidence_sequence.cc
+@@ -204,7 +204,7 @@ double confidence_sequence::approxpolygammaone(double b) const
+ 
+ double confidence_sequence::lblogwealth(double sumXt, double v, double eta, double s, double lb_alpha) const
+ {
+-#if !defined(__APPLE__) && !defined(_WIN32) && !defined(__EMSCRIPTEN__)
++#if !defined(__APPLE__) && !defined(_WIN32) && !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
+   double zeta_s = std::riemann_zeta(s);
+ #else
+   double zeta_s = 10.584448464950803;  // std::riemann_zeta(s) -- Assuming s=1.1 is constant
 diff --git a/vowpalwabbit/core/src/reductions/bfgs.cc b/vowpalwabbit/core/src/reductions/bfgs.cc
 index 8b1e7ac..7728ea0 100644
 --- a/vowpalwabbit/core/src/reductions/bfgs.cc
