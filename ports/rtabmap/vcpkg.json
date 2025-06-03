@@ -130,7 +130,8 @@
       ]
     },
     "openmp": {
-      "description": "Enable OpenMP parallel execution"
+      "description": "Enable OpenMP parallel execution",
+      "supports": "!osx"
     },
     "openni2": {
       "description": "Build RTAB-Map with OpenNI2 camera driver",
