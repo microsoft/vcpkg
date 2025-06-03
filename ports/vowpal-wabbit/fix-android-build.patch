@@ -50,6 +50,20 @@ index fc4b35d..0c2a40c 100644
    double zeta_s = std::riemann_zeta(s);
  #else
    double zeta_s = 10.584448464950803;  // std::riemann_zeta(s) -- Assuming s=1.1 is constant
+diff --git a/vowpalwabbit/core/src/parser.cc b/vowpalwabbit/core/src/parser.cc
+index 26b0ccd..ff249fb 100644
+--- a/vowpalwabbit/core/src/parser.cc
++++ b/vowpalwabbit/core/src/parser.cc
+@@ -53,9 +53,6 @@ int VW_GETPID() { return (int)::GetCurrentProcessId(); }
+ #else
+ #  include <netdb.h>
+ #  define VW_GETPID getpid
+-#endif
+-
+-#if defined(__FreeBSD__) || defined(__APPLE__)
+ #  include <netinet/in.h>
+ #endif
+ 
 diff --git a/vowpalwabbit/core/src/reductions/bfgs.cc b/vowpalwabbit/core/src/reductions/bfgs.cc
 index 8b1e7ac..7728ea0 100644
 --- a/vowpalwabbit/core/src/reductions/bfgs.cc
