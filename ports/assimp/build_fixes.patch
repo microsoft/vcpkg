@@ -37,6 +37,15 @@ index d45eb22..0b5da28 100644
    set(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-plain-config.cmake.in")
    string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
    set(NAMESPACE "${PROJECT_NAME_LOWERCASE}::")
+@@ -502,7 +502,7 @@
+ include(CMakePackageConfigHelpers)
+ 
+ # Note: PROJECT_VERSION is used as a VERSION
+-write_basic_package_version_file("${VERSION_CONFIG}" COMPATIBILITY SameMajorVersion)
++write_basic_package_version_file("${VERSION_CONFIG}" COMPATIBILITY AnyNewerVersion)
+ 
+ configure_package_config_file(
+     ${CMAKE_CONFIG_TEMPLATE_FILE}
 @@ -496,14 +494,13 @@ ENDIF()
  
  # Search for external dependencies, and build them from source if not found
