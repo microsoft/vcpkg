@@ -63,7 +63,13 @@
         "cuda",
         "cudnn",
         "magma",
-        "nvidia-cutlass"
+        "nvidia-cutlass",
+        {
+          "name": "tensorpipe",
+          "features": [
+            "cuda"
+          ]
+        }
       ]
     },
     "dist": {
