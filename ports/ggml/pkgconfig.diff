@@ -21,7 +21,7 @@ index 9be62dc3..292c1526 100644
 -Cflags: -I${includedir}/ggml
 -Libs: -L${libdir} -lggml
 +Cflags: -I${includedir} @GGML_PKGCONFIG_CFLAGS@
-+Libs: -L${libdir} -lggml -lggml-base
++Libs: -L${libdir} -lggml @GGML_PKGCONFIG_LIBS_BACKEND@
 +Libs.private: @GGML_PKGCONFIG_LIBS_PRIVATE@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 889d0f88..ff26e062 100644
@@ -82,13 +82,14 @@ index 889d0f88..ff26e062 100644
  endif()
  
  if(CMAKE_SYSTEM_NAME MATCHES "visionOS")
-@@ -345,3 +359,6 @@ if (BUILD_SHARED_LIBS)
+@@ -345,3 +359,7 @@ if (BUILD_SHARED_LIBS)
          target_compile_definitions(${target} PUBLIC  GGML_SHARED)
      endforeach()
  endif()
 +
 +set(GGML_PKGCONFIG_CFLAGS "${GGML_PKGCONFIG_CFLAGS}" PARENT_SCOPE)
-+set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_BACKEND}${GGML_PKGCONFIG_LIBS_PRIVATE}" PARENT_SCOPE)
++set(GGML_PKGCONFIG_LIBS_BACKEND "${GGML_PKGCONFIG_LIBS_BACKEND}" PARENT_SCOPE)
++set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE}" PARENT_SCOPE)
 diff --git a/src/ggml-cpu/CMakeLists.txt b/src/ggml-cpu/CMakeLists.txt
 index bf4fe79a..0d0895b2 100644
 --- a/src/ggml-cpu/CMakeLists.txt
