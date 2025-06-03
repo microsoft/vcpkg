@@ -2222,7 +2222,7 @@
     },
     "cxxopts": {
       "baseline": "3.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cyclonedds": {
       "baseline": "0.10.5",
@@ -2265,7 +2265,7 @@
       "port-version": 0
     },
     "date": {
-      "baseline": "3.0.3",
+      "baseline": "3.0.4",
       "port-version": 0
     },
     "datraw": {
@@ -2353,15 +2353,15 @@
       "port-version": 0
     },
     "directx-dxc": {
-      "baseline": "2025-02-20",
-      "port-version": 1
+      "baseline": "2025-05-30",
+      "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.615.0",
+      "baseline": "1.616.0",
       "port-version": 0
     },
     "directx12-agility": {
-      "baseline": "1.615.1",
+      "baseline": "1.616.0",
       "port-version": 0
     },
     "directxmath": {
@@ -2421,7 +2421,7 @@
       "port-version": 0
     },
     "dlib": {
-      "baseline": "19.24.9",
+      "baseline": "20.0",
       "port-version": 0
     },
     "dlpack": {
@@ -2749,7 +2749,7 @@
       "port-version": 0
     },
     "fastcdr": {
-      "baseline": "2.2.6",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "fastcgi": {
@@ -2949,7 +2949,7 @@
       "port-version": 4
     },
     "foonathan-lexy": {
-      "baseline": "2022.12.1",
+      "baseline": "2025.5.0",
       "port-version": 0
     },
     "foonathan-memory": {
@@ -3185,7 +3185,7 @@
       "port-version": 9
     },
     "ggml": {
-      "baseline": "2025-02-12",
+      "baseline": "2025-05-13",
       "port-version": 0
     },
     "ghc-filesystem": {
@@ -3221,7 +3221,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.3.0",
+      "baseline": "5.3.1",
       "port-version": 0
     },
     "glbinding": {
@@ -3641,7 +3641,7 @@
       "port-version": 0
     },
     "hfsm2": {
-      "baseline": "2.7.0",
+      "baseline": "2.7.1",
       "port-version": 0
     },
     "hidapi": {
@@ -5397,8 +5397,8 @@
       "port-version": 0
     },
     "libtheora": {
-      "baseline": "1.2.0alpha1-20170719",
-      "port-version": 8
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "libtins": {
       "baseline": "4.5",
@@ -5750,7 +5750,7 @@
     },
     "llama-cpp": {
       "baseline": "4743",
-      "port-version": 0
+      "port-version": 1
     },
     "llfio": {
       "baseline": "2025-01-13",
@@ -6585,7 +6585,7 @@
       "port-version": 2
     },
     "nghttp3": {
-      "baseline": "1.10.0",
+      "baseline": "1.10.1",
       "port-version": 0
     },
     "ngspice": {
@@ -6621,7 +6621,7 @@
       "port-version": 1
     },
     "nng": {
-      "baseline": "1.10.1",
+      "baseline": "1.11",
       "port-version": 0
     },
     "nngpp": {
@@ -6769,7 +6769,7 @@
       "port-version": 3
     },
     "ocilib": {
-      "baseline": "4.7.7",
+      "baseline": "4.8.0",
       "port-version": 0
     },
     "octave": {
@@ -7285,7 +7285,7 @@
       "port-version": 1
     },
     "plf-colony": {
-      "baseline": "7.41",
+      "baseline": "7.5.25",
       "port-version": 0
     },
     "plf-hive": {
@@ -9517,7 +9517,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.25.4",
+      "baseline": "0.25.5",
       "port-version": 0
     },
     "tree-sitter-c": {
@@ -10066,7 +10066,7 @@
     },
     "whisper-cpp": {
       "baseline": "1.7.5",
-      "port-version": 0
+      "port-version": 1
     },
     "wiiuse": {
       "baseline": "0.15.6",
