@@ -1,0 +1,117 @@
+{
+  "name": "vcpkg-ci-ggml",
+  "version-string": "ci",
+  "description": "Port to validate ggml",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "ggml",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "blas",
+      "platform": "!(windows & static)"
+    },
+    {
+      "name": "cuda",
+      "platform": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)"
+    },
+    {
+      "name": "metal",
+      "platform": "osx"
+    },
+    "opencl",
+    {
+      "name": "openmp",
+      "platform": "!osx"
+    },
+    {
+      "name": "vulkan",
+      "platform": "!x86"
+    }
+  ],
+  "features": {
+    "blas": {
+      "description": "Enable BLAS support",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "default-features": false,
+          "features": [
+            "blas"
+          ]
+        }
+      ]
+    },
+    "cuda": {
+      "description": "Enable CUDA support",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "default-features": false,
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "metal": {
+      "description": "Enable Metal support",
+      "supports": "osx",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "default-features": false,
+          "features": [
+            "metal"
+          ]
+        }
+      ]
+    },
+    "opencl": {
+      "description": "Enable OpenCL support",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "default-features": false,
+          "features": [
+            "opencl"
+          ]
+        }
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support",
+      "supports": "!osx",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "default-features": false,
+          "features": [
+            "openmp"
+          ]
+        }
+      ]
+    },
+    "vulkan": {
+      "description": "Enable Vulkan support",
+      "supports": "!x86",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        }
+      ]
+    }
+  }
+}

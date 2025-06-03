@@ -1,6 +1,6 @@
 {
   "name": "fast-double-parser",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Fast function to parse strings into double (binary64) floating-point values, enforces the RFC 7159 (JSON standard) grammar: 4x faster than strtod",
   "homepage": "https://github.com/lemire/fast_double_parser",
   "license": "Apache-2.0",
