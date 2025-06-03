@@ -3,7 +3,7 @@
   "version": "0.2",
   "description": "Recurrent neural network for audio noise reduction",
   "license": "BSD-3-Clause",
-  "supports": "!windows",
+  "supports": "!windows & !arm",
   "dependencies": [
     {
       "name": "vcpkg-make",
