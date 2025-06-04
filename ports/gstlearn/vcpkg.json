@@ -4,7 +4,6 @@
   "description": "The Geostatistics & Machine Learning C++ Library",
   "homepage": "https://gstlearn.org/",
   "license": "BSD-3-Clause",
-  "supports": "windows",
   "dependencies": [
     "boost",
     "eigen3",
