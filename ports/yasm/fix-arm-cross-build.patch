@@ -75,7 +75,7 @@ index e10a9dd1..b4b39558 100644
 -    COMMAND ${_tmp_GENVERSION_EXE} ${CMAKE_CURRENT_BINARY_DIR}/version.mac
 -    DEPENDS ${_tmp_GENVERSION_EXE}
 +    COMMAND $<IF:$<BOOL:${HAS_tmp_GENVERSION_EXE}>,${_tmp_GENVERSION_EXE},$<TARGET_FILE:genversion>> ${CMAKE_CURRENT_BINARY_DIR}/version.mac
-+    DEPENDS genversion
++    DEPENDS $<IF:$<BOOL:${HAS_tmp_GENVERSION_EXE}>,${_tmp_GENVERSION_EXE},$<TARGET_FILE:genversion>>
      )
 
  YASM_GENMACRO(
