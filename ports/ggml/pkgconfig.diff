@@ -21,7 +21,7 @@ index 9be62dc3..292c1526 100644
 -Cflags: -I${includedir}/ggml
 -Libs: -L${libdir} -lggml
 +Cflags: -I${includedir} @GGML_PKGCONFIG_CFLAGS@
-+Libs: -L${libdir} -lggml @GGML_PKGCONFIG_LIBS_BACKEND@
++Libs: -L${libdir} -lggml @GGML_PKGCONFIG_LIBS_BACKEND@ -lggml-base
 +Libs.private: @GGML_PKGCONFIG_LIBS_PRIVATE@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 889d0f88..ff26e062 100644
@@ -32,7 +32,7 @@ index 889d0f88..ff26e062 100644
  # ggml
  
 +set(GGML_PKGCONFIG_CFLAGS "")
-+set(GGML_PKGCONFIG_LIBS_BACKEND "") # before regular private link libs
++set(GGML_PKGCONFIG_LIBS_BACKEND "")
 +set(GGML_PKGCONFIG_LIBS_PRIVATE "")
 +
  if (GGML_BACKEND_DL AND NOT BUILD_SHARED_LIBS)
@@ -43,7 +43,7 @@ index 889d0f88..ff26e062 100644
  
  target_link_libraries(ggml PUBLIC ggml-base)
 +# Duplicates the entry in "Libs", but occurs after the backends in static linkage.
-+string(APPEND GGML_PKGCONFIG_LIBS_PRIVATE " -lggml-base")
++#string(APPEND GGML_PKGCONFIG_LIBS_PRIVATE " -lggml-base")
  
  if (CMAKE_SYSTEM_NAME MATCHES "Linux")
      target_link_libraries(ggml PRIVATE dl)
@@ -51,22 +51,24 @@ index 889d0f88..ff26e062 100644
  endif()
  
  function(ggml_add_backend_library backend)
-@@ -256,11 +263,14 @@ function(ggml_add_backend backend)
+@@ -256,11 +263,16 @@ function(ggml_add_backend backend)
      string(TOUPPER "GGML_${backend}" backend_id)
      if (${backend_id})
          string(TOLOWER "ggml-${backend}" backend_target)
-+        string(APPEND GGML_PKGCONFIG_LIBS_BACKEND "-l${backend_target} ") # this scope
++        string(APPEND GGML_PKGCONFIG_LIBS_BACKEND "-l${backend_target} ") # local scope
          add_subdirectory(${backend_target})
          message(STATUS "Including ${backend} backend")
          if (NOT GGML_BACKEND_DL)
              string(TOUPPER "GGML_USE_${backend}" backend_use)
              target_compile_definitions(ggml PUBLIC ${backend_use})
-+            set(GGML_PKGCONFIG_CFLAGS "${GGML_PKGCONFIG_CFLAGS} -D${backend_use}" PARENT_SCOPE)
-+            set(GGML_PKGCONFIG_LIBS_BACKEND "${GGML_PKGCONFIG_LIBS_BACKEND}" PARENT_SCOPE)
++            set(GGML_PKGCONFIG_CFLAGS "${GGML_PKGCONFIG_CFLAGS} -D${backend_use}") # local scope
          endif()
++        set(GGML_PKGCONFIG_CFLAGS "${GGML_PKGCONFIG_CFLAGS}" PARENT_SCOPE)
++        set(GGML_PKGCONFIG_LIBS_BACKEND "${GGML_PKGCONFIG_LIBS_BACKEND}" PARENT_SCOPE)
++        set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE}" PARENT_SCOPE)
      endif()
  endfunction()
-@@ -327,11 +337,15 @@ find_library(MATH_LIBRARY m)
+@@ -327,11 +339,15 @@ find_library(MATH_LIBRARY m)
  if (MATH_LIBRARY)
      if (NOT WIN32 OR NOT DEFINED ENV{ONEAPI_ROOT})
          target_link_libraries(ggml-base PRIVATE m)
@@ -82,7 +84,7 @@ index 889d0f88..ff26e062 100644
  endif()
  
  if(CMAKE_SYSTEM_NAME MATCHES "visionOS")
-@@ -345,3 +359,7 @@ if (BUILD_SHARED_LIBS)
+@@ -345,3 +361,7 @@ if (BUILD_SHARED_LIBS)
          target_compile_definitions(${target} PUBLIC  GGML_SHARED)
      endforeach()
  endif()
@@ -136,9 +138,9 @@ index bf4fe79a..0d0895b2 100644
 +    if(index EQUAL "-1")
 +        set(GGML_PKGCONFIG_CFLAGS "${GGML_PKGCONFIG_CFLAGS}${pkgconfig_cflags}" PARENT_SCOPE)
 +    endif()
-+    string(FIND "${GGML_PKGCONFIG_LIBS_BACKEND}" "${libs_private}" index)
++    string(FIND "${GGML_PKGCONFIG_LIBS_PRIVATE}" "${libs_private}" index)
 +    if(index EQUAL "-1")
-+        set(GGML_PKGCONFIG_LIBS_BACKEND "${GGML_PKGCONFIG_LIBS_BACKEND}${libs_private}" PARENT_SCOPE)
++        set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE}${libs_private}" PARENT_SCOPE)
      endif()
  
      if (CMAKE_OSX_ARCHITECTURES      STREQUAL "arm64" OR
@@ -150,8 +152,8 @@ index e2223278..4e4ec4e9 100644
                        ${METALKIT_FRAMEWORK}
                        )
  
-+set(GGML_PKGCONFIG_LIBS_BACKEND
-+    "${GGML_PKGCONFIG_LIBS_BACKEND} -framework Foundation -framework Metal -framework MetalKit"
++set(GGML_PKGCONFIG_LIBS_PRIVATE
++    "${GGML_PKGCONFIG_LIBS_PRIVATE} -framework Foundation -framework Metal -framework MetalKit"
 +    PARENT_SCOPE
 +)
 +
