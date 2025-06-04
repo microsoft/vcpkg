@@ -45,14 +45,11 @@
         "zlib"
       ]
     },
-    "mmap": {
-      "description": "Adds a command line options to parse IFC files from memory mapped files using Boost.Iostreams",
-      "dependencies": [
-        "boost-iostreams"
-      ]
-    },
     "python": {
-      "description": "Build python package"
+      "description": "Build python package",
+      "dependencies": [
+        "python3"
+      ]
     },
     "usd": {
       "description": "Build IfcConvert with USD support (requires pixar's USD library)",
@@ -62,9 +59,6 @@
     },
     "vld": {
       "description": "Use Visual Leak Detector for debugging memory leaks, MSVC-only"
-    },
-    "wasm": {
-      "description": "Build a WebAssembly binary"
     }
   }
 }

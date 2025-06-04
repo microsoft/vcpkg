@@ -11,9 +11,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "wasm" WASM_BUILD
         "vld" USE_VLD
-        "mmap" USE_MMAP
         "python" BUILD_PACKAGE
         "hdf5" HDF5_SUPPORT
         "usd" USD_SUPPORT
@@ -37,6 +35,8 @@ vcpkg_cmake_configure(
         -DGLTF_SUPPORT=OFF
         -DCOLLADA_SUPPORT=OFF
         -DBUILD_IFCMAX=OFF
+        -DUSE_MMAP=OFF
+        -DWASM_BUILD=OFF
         -DUSERSPACE_PYTHON_PREFIX=OFF
         -DADD_COMMIT_SHA=OFF
 )
