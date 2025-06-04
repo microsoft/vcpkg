@@ -1,22 +1,11 @@
-vcpkg_download_distfile(libunwind
-    URLS "https://github.com/dotnet/runtime/commit/d63c235756d4c46b061bd503a2c47207df6b3324.diff?full_index=1"
-    FILENAME "libunwind.diff"
-    SHA512 268af5d4aa3bec16e34c50024c0a3662e9a6fa7d273bb405c25f02066100e6bcbb9a68bd10556e3f420d983b586dac856fc45dbd182798889e5542217f953b27
-)
-
-file(READ "${libunwind}" contents)
-string(REPLACE "/src/native/external/libunwind" "" contents "${contents}")
-file(WRITE "${CURRENT_BUILDTREES_DIR}/src/libunwind.diff" "${contents}")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "libunwind/libunwind"
     REF "v${VERSION}"
     HEAD_REF master
-    SHA512 dd8332b7a2cbabb4716c01feea422f83b4a7020c1bee20551de139c3285ea0e0ceadfa4171c6f5187448c8ddc53e0ec4728697d0a985ee0c3ff4835b94f6af6f
+    SHA512 50bb802a821939d38e38ce9f906934eea6a4e815f9401c18d5de6205ae0b5c7594e94d37bbf8f9da4012c0adebac208077548771d21bb89a4dedeb27645ceb25
     PATCHES
         liblzma.diff
-        "${CURRENT_BUILDTREES_DIR}/src/libunwind.diff"
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
