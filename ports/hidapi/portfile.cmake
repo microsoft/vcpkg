@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF hidapi-${VERSION}
     SHA512 66a045144f90b41438898b82f0398e80223323ebfe6e4f197d2713696bb3ae60f36aea5a37a9999b34b12294783fd7e4c28c6e785462559cbe21276009da1eac
     HEAD_REF master
-    PATCHES
-        rename-pthread-polyfill.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

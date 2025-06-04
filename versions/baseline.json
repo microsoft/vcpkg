@@ -3638,7 +3638,7 @@
     },
     "hidapi": {
       "baseline": "0.14.0",
-      "port-version": 2
+      "port-version": 1
     },
     "highfive": {
       "baseline": "2.10.1",
