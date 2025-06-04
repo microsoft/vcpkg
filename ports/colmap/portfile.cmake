@@ -11,6 +11,7 @@ vcpkg_from_github(
         no-glu.diff
         fix-flann.patch
         fix-eigen3.patch
+        fix-glew.patch
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
