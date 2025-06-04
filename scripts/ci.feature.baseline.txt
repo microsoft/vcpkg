@@ -2184,6 +2184,8 @@ opentelemetry-cpp[otlp](uwp) = feature-fails # --grpc_out: protoc-gen-grpc: The 
 openvdb[ax] = feature-fails # ax requires llvm version <= 14. Work when using a baseline + overwrite
 osgearth[tools](osx) = feature-fails # Undefined _NSSearchPathForDirectoriesInDomains
 pangolin[core,eigen,examples,ffmpeg,gui,jpeg,lz4,module,openexr,png,pybind11,realsense,test,tiff,tools,vars,video,zstd](!(arm & windows)) = combination-fails # see https://github.com/microsoft/vcpkg/issues/31304
+pcl:x64-android = fail
+pcl[apps]:x64-windows-static-md = feature-fails # linker error
 pcl[opengl](android) = feature-fails # Could NOT find OpenGL
 poco[core,mariadb,mysql] = options # You can not install mariadb and mysql at the same time
 qt3d[animation] = options # is a requirement, see https://github.com/microsoft/vcpkg/issues/31336
