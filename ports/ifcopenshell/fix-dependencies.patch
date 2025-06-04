@@ -1,5 +1,5 @@
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index ebca949..5173308 100644
+index ebca949..8a2c3b4 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
 @@ -196,6 +196,8 @@ if(USD_SUPPORT)
@@ -29,15 +29,16 @@ index ebca949..5173308 100644
      if("${OCC_INCLUDE_DIR}" STREQUAL "")
          find_path(OCC_INCLUDE_DIR Standard_Version.hxx
              PATHS
-@@ -393,6 +399,7 @@ if(BUILD_IFCGEOM)
+@@ -393,6 +399,8 @@ if(BUILD_IFCGEOM)
          string(REGEX MATCH "[0-9]+" OCC_MAINT ${OCC_MAINT})     
          set(OCC_VERSION_STRING "${OCC_MAJOR}.${OCC_MINOR}.${OCC_MAINT}")
      endif(OCC_INCLUDE_DIR)
 +    endif()
++    set(OCC_INCLUDE_DIR "${OpenCASCADE_INCLUDE_DIR}")
  
      set(OPENCASCADE_LIBRARY_NAMES
          TKernel TKMath TKBRep TKGeomBase TKGeomAlgo TKG3d TKG2d TKShHealing TKTopAlgo TKMesh TKPrim TKBool TKBO
-@@ -569,6 +576,14 @@ if(COLLADA_SUPPORT)
+@@ -569,6 +577,14 @@ if(COLLADA_SUPPORT)
  endif()
  
  if(HDF5_SUPPORT)
@@ -52,7 +53,7 @@ index ebca949..5173308 100644
      if("${HDF5_INCLUDE_DIR}" STREQUAL "")
          message(STATUS "No HDF5 include directory specified")
      else()
-@@ -649,6 +664,7 @@ if(HDF5_SUPPORT)
+@@ -649,6 +665,7 @@ if(HDF5_SUPPORT)
              z dl
          )
      endif()

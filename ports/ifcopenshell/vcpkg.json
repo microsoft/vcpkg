@@ -45,6 +45,12 @@
         "zlib"
       ]
     },
+    "ifcgeom": {
+      "description": "Build IfcGeom",
+      "dependencies": [
+        "opencascade"
+      ]
+    },
     "python": {
       "description": "Build python package",
       "dependencies": [

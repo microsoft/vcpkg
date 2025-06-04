@@ -15,6 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "python" BUILD_PACKAGE
         "hdf5" HDF5_SUPPORT
         "usd" USD_SUPPORT
+        "ifcgeom" BUILD_IFCGEOM
 )
 
 vcpkg_cmake_configure(
@@ -27,7 +28,6 @@ vcpkg_cmake_configure(
         -DENABLE_BUILD_OPTIMIZATIONS=OFF # handled by vcpkg
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOCUMENTATION=OFF
-        -DBUILD_IFCGEOM=OFF
         -DBUILD_CONVERT=OFF
         -DBUILD_GEOMSERVER=OFF
         -DBUILD_IFCPYTHON=OFF
