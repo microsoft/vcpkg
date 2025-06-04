@@ -24,7 +24,7 @@ index ab1be00e..5a6600ca 100644
      add_custom_command(
          OUTPUT ${_out_NAME}
 -        COMMAND ${_tmp_GENPERF_EXE} ${_in_NAME} ${_out_NAME}
-+        COMMAND $<IF:$<BOOL:${HAS_tmp_GENPERF_EXE}>,${_tmp_GENPERF_EXE},$<TARGET_FILE:genperf>> ${_tmp_GENPERF_EXE} ${_in_NAME} ${_out_NAME}
++        COMMAND $<IF:$<BOOL:${HAS_tmp_GENPERF_EXE}>,${_tmp_GENPERF_EXE},$<TARGET_FILE:genperf>> ${_in_NAME} ${_out_NAME}
          DEPENDS ${_tmp_GENPERF_EXE}
          MAIN_DEPENDENCY ${_in_NAME}
          )
