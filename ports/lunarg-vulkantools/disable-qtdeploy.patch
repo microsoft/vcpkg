@@ -1,0 +1,35 @@
+diff --git a/vkconfig_gui/CMakeLists.txt b/vkconfig_gui/CMakeLists.txt
+index 2dbaabead..c5043238c 100644
+--- a/vkconfig_gui/CMakeLists.txt
++++ b/vkconfig_gui/CMakeLists.txt
+@@ -49,19 +49,19 @@ endif()
+ 
+     install(TARGETS vkconfig-gui DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+-    if(WIN32)
+-if(Qt6_FOUND)
+-        get_target_property(QMAKE_EXE Qt6::qmake IMPORTED_LOCATION)
+-elseif(Qt5_FOUND)
+-        get_target_property(QMAKE_EXE Qt5::qmake IMPORTED_LOCATION)
+-endif()
++#     if(WIN32)
++# if(Qt6_FOUND)
++#         get_target_property(QMAKE_EXE Qt6::qmake IMPORTED_LOCATION)
++# elseif(Qt5_FOUND)
++#         get_target_property(QMAKE_EXE Qt5::qmake IMPORTED_LOCATION)
++# endif()
+ 
+-        get_filename_component(QT_BIN_DIR "${QMAKE_EXE}" DIRECTORY)
+-        find_program(WINDEPLOYQT_EXE windeployqt HINTS "${QT_BIN_DIR}")
++#         get_filename_component(QT_BIN_DIR "${QMAKE_EXE}" DIRECTORY)
++#         find_program(WINDEPLOYQT_EXE windeployqt HINTS "${QT_BIN_DIR}")
+ 
+-        message(STATUS "Will run ${WINDEPLOYQT_EXE} at ${CMAKE_INSTALL_FULL_BINDIR}/vkconfig-gui.exe")
+-        install(CODE "execute_process(COMMAND ${WINDEPLOYQT_EXE} ${CMAKE_INSTALL_FULL_BINDIR}/vkconfig-gui.exe)")
+-    endif()
++#         message(STATUS "Will run ${WINDEPLOYQT_EXE} at ${CMAKE_INSTALL_FULL_BINDIR}/vkconfig-gui.exe")
++#         install(CODE "execute_process(COMMAND ${WINDEPLOYQT_EXE} ${CMAKE_INSTALL_FULL_BINDIR}/vkconfig-gui.exe)")
++#     endif()
+ else()
+     include(macOS/vkconfig.cmake)
+ endif()
