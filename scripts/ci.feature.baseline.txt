@@ -907,6 +907,7 @@ graphviz:arm64-uwp = cascade
 graphviz:x64-uwp = cascade
 grppi[tbb]:arm64-uwp = cascade
 grppi[tbb]:x64-uwp = cascade
+gstlearn:x64-uwp[hdf5] = cascade
 gst-rtsp-server:arm64-uwp = cascade
 gst-rtsp-server:x64-uwp = cascade
 gstreamer[asio](arm | !windows) = cascade
