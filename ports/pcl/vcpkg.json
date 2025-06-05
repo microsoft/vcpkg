@@ -63,6 +63,7 @@
       "description": "Build PCL examples",
       "dependencies": [
         "boost-format",
+        "cjson",
         {
           "name": "pcl",
           "features": [
