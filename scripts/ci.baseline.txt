@@ -116,6 +116,10 @@ clapack:x64-windows-static-md=skip
 clapack:x64-windows-static=skip
 clapack:x64-windows=skip
 clapack:x86-windows=skip
+# std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
+cpprestsdk:arm-neon-android=fail
+cpprestsdk:arm64-android=fail
+cpprestsdk:x64-android=fail
 lapack-reference:arm-neon-android=fail
 lapack-reference:arm64-android=fail
 lapack-reference:arm64-osx=skip
@@ -719,6 +723,10 @@ offscale-libetcd-cpp:x64-uwp=fail
 ogdf:arm64-android=fail
 ogre-next:arm-neon-android=fail
 ois:x64-android=fail
+# std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
+ogre-next:arm-neon-android=fail
+ogre-next:arm64-android=fail
+ogre-next:x64-android=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
@@ -770,7 +778,11 @@ orc:x64-android=fail
 outcome:arm-neon-android=fail
 outcome:arm64-android=fail
 outcome:x64-android=fail
+# std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
+paho-mqtt:arm-neon-android=fail
+paho-mqtt:arm64-android=fail
 paho-mqtt:arm64-uwp=fail
+paho-mqtt:x64-android=fail
 paho-mqtt:x64-uwp=fail
 pcl:x64-android=fail
 platform-folders:arm64-uwp=fail
@@ -781,6 +793,10 @@ plib:x64-android=fail
 pmdk:x64-android=fail
 pmdk:x64-osx=fail
 pmdk:x64-windows-static=fail
+# std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
+poppler:arm-neon-android=fail
+poppler:arm64-android=fail
+poppler:x64-android=fail
 # popsift is broken with CUDA 12.6 and later, and we test with 12.8, see https://github.com/alicevision/popsift/issues/161
 popsift:x64-windows-release=fail
 popsift:x64-windows-static-md=fail
@@ -948,6 +964,10 @@ sjpeg:x64-android=fail
 sleef:arm-neon-android=fail
 sleef:arm64-android=fail
 sleef:x86-windows=fail
+# std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
+sleepy-discord:arm-neon-android=fail
+sleepy-discord:arm64-android=fail
+sleepy-discord:x64-android=fail
 slikenet:arm-neon-android=fail
 slikenet:arm64-android=fail
 slikenet:x64-android=fail
@@ -991,7 +1011,9 @@ suitesparse-graphblas:x64-uwp=fail
 systemc:arm64-uwp=fail
 systemc:x64-uwp=fail
 teemo:x64-android=fail
-
+telnetpp:arm-neon-android=fail
+telnetpp:arm64-android=fail
+telnetpp:x64-android=fail
 # tensorflow does not support VS2022
 tensorflow:x64-android=skip
 tensorflow:x64-windows-release=skip
