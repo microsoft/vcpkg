@@ -60,6 +60,10 @@ RUN echo "Build date: ${BUILD_DATE}" && \
         libxkbcommon-x11-dev \
         libxinerama-dev \
         libglu1-mesa-dev \
+        libgl1-mesa-dev \
+        libgl-dev \
+        libxmu-dev \
+        xorg-dev \
         mesa-common-dev \
         gettext \
         ninja-build \
