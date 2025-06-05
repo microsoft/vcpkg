@@ -2,10 +2,10 @@ diff --git a/src/Covariances/CovMatern.cpp b/src/Covariances/CovMatern.cpp
 index b0897be65..07e327366 100644
 --- a/src/Covariances/CovMatern.cpp
 +++ b/src/Covariances/CovMatern.cpp
-@@ -17,6 +17,7 @@
+@@ -17,6 +17,6 @@
  #include "Basic/Utilities.hpp"
  
- #include "math.h"
+-#include "math.h"
 +#include <cmath>
  
  #define MAXTAB 100
