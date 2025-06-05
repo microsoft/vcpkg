@@ -21,13 +21,17 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/gstlearnd.dll")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/gstlearnd.dll" AND VCPKG_BUILD_TYPE STREQUAL "dynamic")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstlearnd.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/gstlearnd.dll")
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/gstlearn.dll")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstlearn.dll" "${CURRENT_PACKAGES_DIR}/bin/gstlearn.dll")
+endif()
+if(VCPKG_BUILD_TYPE STREQUAL "static")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
