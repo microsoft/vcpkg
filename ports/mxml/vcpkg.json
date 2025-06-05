@@ -9,7 +9,7 @@
     {
       "name": "vcpkg-msbuild",
       "host": true,
-      "platform": "windows & !mingw"
+      "platform": "!mingw"
     }
   ]
 }
