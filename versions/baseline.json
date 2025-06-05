@@ -5473,7 +5473,7 @@
       "port-version": 0
     },
     "libusb": {
-      "baseline": "1.0.28",
+      "baseline": "1.0.29",
       "port-version": 0
     },
     "libusb-win32": {
