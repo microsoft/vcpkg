@@ -86,6 +86,12 @@
         }
       ]
     },
+    "arrow-adbc": {
+      "description": "Arrow ADBC support",
+      "dependencies": [
+        "arrow-adbc"
+      ]
+    },
     "aws-ec2-windows": {
       "description": "Optimized detection of AWS EC2 Windows hosts",
       "dependencies": [
