@@ -6,7 +6,8 @@
   "license": "BSD-3-Clause",
   "supports": "!osx & !android",
   "dependencies": [
-    "boost",
+    "boost-core",
+    "boost-math",
     "eigen3",
     "nlopt",
     {
