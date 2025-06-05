@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 8573c29cde1297de1a6dc40349437e4ab18aeb73
-    SHA512 224bbd161378fc108ce3f7f785fdd9586e75a0564935063fe3ee966a8f2e12f862b1392c4f12c01868084950700d9abefa66941c2f3f887dfd89c0f4b894a65f
+    REF ef5c3cfc45e4158ab14441d75eda8b0713b4f590
+    SHA512 260c24a9390da72dca1532b815b97a6bff1cb7550c68a890d8d91f66c61c440c3e51f84e0f914238646c666230f5d1c87fb6b7be300e727b46083b5db3cee59c
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/keyvault/azure-security-keyvault-certificates")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/keyvault/_")
+if(EXISTS "${SOURCE_PATH}/sdk/template/azure-template")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/template/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/keyvault/azure-security-keyvault-certificates" "${SOURCE_PATH}/sdk/keyvault/_")
-  file(RENAME "${SOURCE_PATH}/sdk/keyvault" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template/azure-template" "${SOURCE_PATH}/sdk/template/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
