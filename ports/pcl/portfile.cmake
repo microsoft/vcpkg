@@ -33,6 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cuda            WITH_CUDA
         cuda            BUILD_CUDA
         cuda            BUILD_GPU
+        examples        WITH_SYSTEM_CJSON
         examples        BUILD_examples
         libusb          WITH_LIBUSB
         opengl          WITH_OPENGL
@@ -40,6 +41,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pcap            WITH_PCAP
         qt              WITH_QT
         simulation      BUILD_simulation
+        surface-on-nurbs WITH_SYSTEM_ZLIB
         surface-on-nurbs BUILD_surface_on_nurbs
         tools           BUILD_tools
         visualization   WITH_VTK
