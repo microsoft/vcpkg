@@ -44,7 +44,7 @@ vcpkg_from_github(
 )
 
 # =============================================================================
-#Overwrite outdated modules if they have not been patched:
+# Overwrite outdated modules if they have not been patched:
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindOGG.cmake")
@@ -145,8 +145,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
     "seacas" CMAKE_REQUIRE_FIND_PACKAGE_SEACASIoss
     "seacas" CMAKE_REQUIRE_FIND_PACKAGE_SEACASExodus
     "sql" CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
-    "proj" CMAKE_REQUIRE_FIND_PACKAGE_PROJ
-    "netcdf" CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
   INVERTED_FEATURES
     "libtheora" CMAKE_DISABLE_FIND_PACKAGE_THEORA
     "libharu" CMAKE_DISABLE_FIND_PACKAGE_LibHaru
@@ -154,8 +152,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
     "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
     "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
     "sql" CMAKE_DISABLE_FIND_PACKAGE_SQLite3
-    "proj" CMAKE_DISABLE_FIND_PACKAGE_PROJ
-    "netcdf" CMAKE_DISABLE_FIND_PACKAGE_NetCDF
 )
 
 # Replace common value to vtk value
@@ -257,17 +253,15 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    "cuda"         VTK_USE_CUDA
-    "mpi"          VTK_USE_MPI
-    "all"          VTK_BUILD_ALL_MODULES
-	"tbb"          VTK_SMP_ENABLE_TBB
-	"openmp"       VTK_SMP_ENABLE_OPENMP      
+        "cuda"         VTK_USE_CUDA
+        "mpi"          VTK_USE_MPI
+        "all"          VTK_BUILD_ALL_MODULES
+        "tbb"          VTK_SMP_ENABLE_TBB
+        "openmp"       VTK_SMP_ENABLE_OPENMP
 )
 
 # =============================================================================
 # Configure & Install
-
-
 
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
 vcpkg_cmake_configure(
@@ -286,6 +280,7 @@ vcpkg_cmake_configure(
         -DVTK_GROUP_ENABLE_Views=YES
         # Disable deps not in VCPKG
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
+        -DVTK_ENABLE_OSPRAY=OFF # Disable OSPRay RayTracing backend
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
@@ -306,16 +301,12 @@ vcpkg_cmake_configure(
         # When working properly these should be unused
         CMAKE_DISABLE_FIND_PACKAGE_CGNS
         CMAKE_DISABLE_FIND_PACKAGE_LibHaru
-        CMAKE_DISABLE_FIND_PACKAGE_NetCDF
-        CMAKE_DISABLE_FIND_PACKAGE_PROJ
         CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
         CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
         CMAKE_DISABLE_FIND_PACKAGE_SQLite3
         CMAKE_DISABLE_FIND_PACKAGE_THEORA
         CMAKE_REQUIRE_FIND_PACKAGE_CGNS
         CMAKE_REQUIRE_FIND_PACKAGE_LibHaru
-        CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
-        CMAKE_REQUIRE_FIND_PACKAGE_PROJ
         CMAKE_REQUIRE_FIND_PACKAGE_SEACASExodus
         CMAKE_REQUIRE_FIND_PACKAGE_SEACASIoss
         CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
