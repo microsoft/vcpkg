@@ -875,6 +875,7 @@ function(deploy_dependencies_qt_module)
             EXTENSIONS DLL
             COPIED_FILES_RESULT deployed_files_
         )
+
         list(APPEND all_copied_files_ "${deployed_files_}")
         list(APPEND still_to_resolve_files_ "${deployed_files_}")
 
