@@ -41,16 +41,14 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-set(EXTRA_BUILD_TOOLS "")
 if (NOT VCPKG_CROSSCOMPILING)
-    list(APPEND EXTRA_BUILD_TOOLS )
     vcpkg_copy_tools(TOOL_NAMES re2c genmacro genperf genversion AUTO_CLEAN
         DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
     )
 endif()
 
 if(BUILD_TOOLS)
-    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm ${EXTRA_BUILD_TOOLS} AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm AUTO_CLEAN)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY "${CURRENT_PACKAGES_DIR}/bin/yasmstd${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")

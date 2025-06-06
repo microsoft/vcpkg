@@ -25,6 +25,9 @@
       "platform": "!native"
     }
   ],
+  "default-features": [
+    "tools"
+  ],
   "features": {
     "tools": {
       "description": "Build yasm tools"
