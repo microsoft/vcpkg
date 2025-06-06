@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2af1e6f..a2c134c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,7 +10,7 @@ foreach(line ${CONFIGURE_AC_LINES})
+ endforeach()
+ set(VERSION "${LIBXML_MAJOR_VERSION}.${LIBXML_MINOR_VERSION}.${LIBXML_MICRO_VERSION}")
+ 
+-project(libxml2 VERSION ${VERSION} LANGUAGES C)
++project(libxml2 VERSION ${VERSION} LANGUAGES C CXX)
+ 
+ include(CheckCSourceCompiles)
+ include(CheckFunctionExists)
+@@ -373,7 +373,7 @@ if(LIBXML2_WITH_ICONV)
+ endif()
+ 
+ if(LIBXML2_WITH_ICU)
+-    target_link_libraries(LibXml2 PRIVATE ICU::data ICU::i18n ICU::uc)
++    target_link_libraries(LibXml2 PRIVATE ICU::i18n ICU::uc ICU::data)
+     if(WIN32)
+         set(ICU_LDFLAGS "-licudt -licuin -licuuc")
+     else()
+@@ -493,6 +493,9 @@ if(LIBXML2_WITH_PROGRAMS)
+         if(HAVE_LIBREADLINE)
+             target_link_libraries(${PROGRAM} readline)
+         endif()
++        if(LIBXML2_WITH_ICU)
++            set_target_properties(${PROGRAM} PROPERTIES LINKER_LANGUAGE CXX)
++        endif()
+         install(TARGETS    ${PROGRAM} EXPORT LibXml2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT programs)
+     endforeach()
+ endif()

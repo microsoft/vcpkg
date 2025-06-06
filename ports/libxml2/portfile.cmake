@@ -8,6 +8,7 @@ vcpkg_from_github(
         disable-docs.patch
         fix_cmakelist.patch
         fix_ios_compilation.patch
+        icu-cxx.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
