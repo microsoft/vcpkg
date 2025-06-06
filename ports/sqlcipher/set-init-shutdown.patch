@@ -1,0 +1,13 @@
+diff --git a/Makefile.msc b/Makefile.msc
+index 951d3e1..d5b8a3a 100644
+--- a/Makefile.msc
++++ b/Makefile.msc
+@@ -401,6 +401,8 @@ OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_ENABLE_DBSTAT_VTAB=1
+ OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_ENABLE_BYTECODE_VTAB=1
+ !ENDIF
+ OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_ENABLE_COLUMN_METADATA=1
++OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_EXTRA_INIT=sqlcipher_extra_init
++OPT_FEATURE_FLAGS = $(OPT_FEATURE_FLAGS) -DSQLITE_EXTRA_SHUTDOWN=sqlcipher_extra_shutdown
+ !ENDIF
+ 
+ # Additional feature-options above and beyond what are normally used can be
