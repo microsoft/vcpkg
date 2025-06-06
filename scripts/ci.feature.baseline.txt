@@ -2011,6 +2011,7 @@ vtk[all]:x64-uwp = cascade
 vtk[all]:x64-windows = cascade
 vtk[all](android) = cascade
 vtk[all,cuda,mpi,vtkm]:x86-windows = cascade
+vtk[all,cuda,openvr,mpi,paraview,vtkm](arm64 & windows) = cascade
 vtk[cuda](osx) = cascade
 vtk[openvr]:arm64-osx = cascade
 vtk[openvr]:x64-windows-static = cascade
