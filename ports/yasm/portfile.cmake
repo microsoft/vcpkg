@@ -6,7 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         add-feature-tools.patch
-        fix-arm-cross-build.patch
+        cmake-4.diff
+        fix-cross-build.patch
         fix-overlay-pdb.patch
 )
 
