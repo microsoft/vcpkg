@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
     REF "v${VERSION}"
-    SHA512 32a9ae3de113b8c94e2aed21ad8f58e5ed4419a6d4078e51f614f0fabbf3bfe6c4affc62c2c1326e030a54df0fdcc47bb715b45022191a363f17680ec651b68e
+    SHA512 67363bdbc9e5c52143ebd36a45b12aa38eb1785543c6781e75ef1036f1b892e39b3aa93e0ea76bd6c83faaa1e07097bccddd14406c7b43e9962195aeef7008b7
     HEAD_REF main
     PATCHES
         fix-cmake.patch
