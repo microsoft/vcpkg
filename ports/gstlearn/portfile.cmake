@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstlearn/gstlearn
@@ -28,10 +30,6 @@ endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/gstlearn.dll")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstlearn.dll" "${CURRENT_PACKAGES_DIR}/bin/gstlearn.dll")
-endif()
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
