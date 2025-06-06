@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/hexl
     REF "v${VERSION}"
-    SHA512 1a5e42fdeac877f3b4ef87ab75ffa8280697e941d7a8f0f6dc8c5066f2dd405470530dfabdf12d846362bd3e7e6cd30fd1f11d8dd99bee5086d09371ba1da196
+    SHA512 11cfbfbea70d8bb70bb1d5c5d741c18ce87adc9d1904ca30f603cd878eb6b29be0eaf78ca76a05ed2bdacab0370f89494851309cff1e847488d28ca79b891bce
     HEAD_REF development
 )
 
