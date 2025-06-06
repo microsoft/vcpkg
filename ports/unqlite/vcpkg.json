@@ -5,7 +5,6 @@
   "description": "An embedded NoSQL, transactional database engine",
   "homepage": "https://unqlite.symisc.net/",
   "license": "BSD-2-Clause",
-  "supports": "!(windows & arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 5d951cd302c14cc6a4e7f8552b47f1e13a511d1d
     SHA512 4b6507a2188dbbf76231748f3a6e990fe687a2a5e2ee8cca3bfc80605e5dbcef3f3e85b032685aa5cf490442d2b570dab8a4b8eb88b97ed84022bf74602c2dfb
     HEAD_REF master
+    PATCHES 
+    001-tests.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -17,6 +19,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        BUILD_TESTING OFF
 )
 
 vcpkg_cmake_install()
