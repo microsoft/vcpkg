@@ -1,7 +1,6 @@
 {
   "name": "unqlite",
-  "version": "1.1.9",
-  "port-version": 4,
+  "version-date": "2025-04-19",
   "description": "An embedded NoSQL, transactional database engine",
   "homepage": "https://unqlite.symisc.net/",
   "license": "BSD-2-Clause",

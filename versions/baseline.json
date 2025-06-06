@@ -9593,8 +9593,8 @@
       "port-version": 0
     },
     "unqlite": {
-      "baseline": "1.1.9",
-      "port-version": 4
+      "baseline": "2025-04-19",
+      "port-version": 0
     },
     "unrar": {
       "baseline": "7.0.7",
