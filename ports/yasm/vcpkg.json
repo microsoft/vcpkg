@@ -21,7 +21,8 @@
       "default-features": false,
       "features": [
         "tools"
-      ]
+      ],
+      "platform": "!native"
     }
   ],
   "features": {
