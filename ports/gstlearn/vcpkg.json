@@ -4,7 +4,7 @@
   "description": "The Geostatistics & Machine Learning C++ Library",
   "homepage": "https://gstlearn.org/",
   "license": "BSD-3-Clause",
-  "supports": "!osx & !android",
+  "supports": "!osx & !android & !(static & staticcrt)",
   "dependencies": [
     "boost-core",
     "boost-math",
