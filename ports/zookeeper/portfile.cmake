@@ -1,9 +1,9 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://archive.apache.org/dist/zookeeper/zookeeper-3.5.6/apache-zookeeper-3.5.6.tar.gz"
-    FILENAME "zookeeper-3.5.6.tar.gz"
-    SHA512 7f45817cbbc42aec5a7817fa2ae99656128e666dc58ace23d86bcfc5ca0dc49e418d1a7d1f082ad80ccb916f9f1b490167d16f836886af1a56fbcf720ad3b9d0
+    URLS "https://archive.apache.org/dist/zookeeper/zookeeper-3.9.3/apache-zookeeper-3.9.3.tar.gz"
+    FILENAME "zookeeper-3.9.3.tar.gz"
+    SHA512 7a8ffdc9e48f6e293ee5fde0dee73ffcdd1a4f1e554b4282ce403ffb09ff145b40987c272dec751993a83a5430972e0a535d18fa9818d6c84a69bfda8a03d216
 )
 
 vcpkg_extract_source_archive(
