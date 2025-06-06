@@ -3653,7 +3653,7 @@
       "port-version": 1
     },
     "highs": {
-      "baseline": "1.10.99",
+      "baseline": "1.10.0",
       "port-version": 0
     },
     "highway": {
