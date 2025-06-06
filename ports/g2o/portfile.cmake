@@ -8,6 +8,8 @@ vcpkg_from_github(
     PATCHES
         fix-absolute.patch
         0003-dependency-spdlog.diff
+        fix-upstream-37d17a9.patch
+        fix-upstream-100af05.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
