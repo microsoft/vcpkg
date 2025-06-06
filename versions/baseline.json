@@ -10486,7 +10486,7 @@
     },
     "ztd-static-containers": {
       "baseline": "2022-12-12",
-      "port-version": 1
+      "port-version": 2
     },
     "ztd-text": {
       "baseline": "2023-11-03",
