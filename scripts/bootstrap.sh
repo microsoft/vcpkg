@@ -66,6 +66,23 @@ else
 
 fi
 
+UNAME="$(uname)"
+ARCH="$(uname -m)"
+TAR=tar
+
+if [ -e /etc/alpine-release ]; then
+    vcpkgUseSystem="ON"
+    vcpkgUseMuslC="ON"
+fi
+
+if [ "$UNAME" = "OpenBSD" ]; then
+    vcpkgUseSystem="ON"
+fi
+
+if [ "$UNAME" = "SunOS" ]; then
+    vcpkgUseSystem="ON"
+fi
+
 # Check for minimal prerequisites.
 vcpkgCheckRepoTool()
 {
@@ -86,6 +103,8 @@ vcpkgCheckRepoTool()
             echo "On Alpine:"
             echo "  apk add build-base cmake ninja zip unzip curl git"
             echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
+            echo "On Solaris and illumos distributions:"
+            echo "  pkg install pkg:/web/curl pkg:/compress/zip pkg:/compress/unzip"
             exit 1
         fi
     fi
@@ -95,18 +114,6 @@ vcpkgCheckRepoTool curl
 vcpkgCheckRepoTool zip
 vcpkgCheckRepoTool unzip
 vcpkgCheckRepoTool tar
-
-UNAME="$(uname)"
-ARCH="$(uname -m)"
-
-if [ -e /etc/alpine-release ]; then
-    vcpkgUseSystem="ON"
-    vcpkgUseMuslC="ON"
-fi
-
-if [ "$UNAME" = "OpenBSD" ]; then
-    vcpkgUseSystem="ON"
-fi
 
 if [ "$vcpkgUseSystem" = "ON" ]; then
     vcpkgCheckRepoTool cmake
@@ -153,12 +160,12 @@ vcpkgDownloadFile()
     mv "$downloadPath.part" "$downloadPath"
 }
 
-vcpkgExtractTar()
+vcpkgExtractZip()
 {
     archive=$1; toPath=$2
     rm -rf "$toPath" "$toPath.partial"
     mkdir -p "$toPath.partial"
-    $(cd "$toPath.partial" && tar xzf "$archive")
+    unzip -qd "$toPath.partial" "$archive"
     mv "$toPath.partial" "$toPath"
 }
 
@@ -194,32 +201,32 @@ elif [ "$vcpkgUseMuslC" = "OFF" ] && { [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "a
 else
     echo "Unable to determine a binary release of vcpkg; attempting to build from source."
     vcpkgDownloadTool="OFF"
-    vcpkgToolReleaseSha=$VCPKG_TOOL_SOURCE_SHA
+    vcpkgToolReleaseSha=$VCPKG_TOOL_SOURCE_ZIP_SHA
 fi
 
 # Do the download or build.
 if [ "$vcpkgDownloadTool" = "ON" ]; then
     vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
 else
-    vcpkgToolReleaseTarball="$VCPKG_TOOL_RELEASE_TAG.tar.gz"
-    vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+    vcpkgToolReleaseZip="$VCPKG_TOOL_RELEASE_TAG.zip"
+    vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseZip"
     baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
     buildDir="$baseBuildDir/build"
-    tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
+    zipPath="$downloadsDir/$vcpkgToolReleaseZip"
     srcBaseDir="$baseBuildDir/src"
     srcDir="$srcBaseDir/vcpkg-tool-$VCPKG_TOOL_RELEASE_TAG"
 
-    if [ -e "$tarballPath" ]; then
-        vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+    if [ -e "$zipPath" ]; then
+        vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$zipPath" "$vcpkgToolReleaseSha"
     else
         echo "Downloading vcpkg tool sources"
-        vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+        vcpkgDownloadFile "$vcpkgToolUrl" "$zipPath" "$vcpkgToolReleaseSha"
     fi
 
     echo "Building vcpkg-tool..."
     rm -rf "$baseBuildDir"
     mkdir -p "$buildDir"
-    vcpkgExtractTar "$tarballPath" "$srcBaseDir"
+    vcpkgExtractZip "$zipPath" "$srcBaseDir"
     cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DVCPKG_DEVELOPMENT_WARNINGS=OFF"
 
     if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
