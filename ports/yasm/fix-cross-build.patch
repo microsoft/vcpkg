@@ -1,13 +1,14 @@
 diff --git a/cmake/modules/YasmMacros.cmake b/cmake/modules/YasmMacros.cmake
-index ab1be00..918f51b 100644
+index ab1be00..0bd347f 100644
 --- a/cmake/modules/YasmMacros.cmake
 +++ b/cmake/modules/YasmMacros.cmake
 @@ -58,7 +58,9 @@ macro (YASM_ADD_MODULE _module_NAME)
  endmacro (YASM_ADD_MODULE)
  
  macro (YASM_GENPERF _in_NAME _out_NAME)
+-    get_target_property(_tmp_GENPERF_EXE genperf LOCATION)
 +    if (NOT _tmp_GENPERF_EXE)
-     get_target_property(_tmp_GENPERF_EXE genperf LOCATION)
++        set(_tmp_GENPERF_EXE genperf)
 +    endif()
      add_custom_command(
          OUTPUT ${_out_NAME}
@@ -16,8 +17,9 @@ index ab1be00..918f51b 100644
  endmacro (YASM_GENPERF)
  
  macro (YASM_RE2C _in_NAME _out_NAME)
+-    get_target_property(_tmp_RE2C_EXE re2c LOCATION)
 +    if (NOT _tmp_RE2C_EXE)
-     get_target_property(_tmp_RE2C_EXE re2c LOCATION)
++        set(_tmp_RE2C_EXE re2c)
 +    endif()
      add_custom_command(
          OUTPUT ${_out_NAME}
@@ -26,21 +28,23 @@ index ab1be00..918f51b 100644
  endmacro (YASM_RE2C)
  
  macro (YASM_GENMACRO _in_NAME _out_NAME _var_NAME)
+-    get_target_property(_tmp_GENMACRO_EXE genmacro LOCATION)
 +    if (NOT _tmp_GENMACRO_EXE)
-     get_target_property(_tmp_GENMACRO_EXE genmacro LOCATION)
++        set(_tmp_GENMACRO_EXE genmacro)
 +    endif()
      add_custom_command(
          OUTPUT ${_out_NAME}
          COMMAND ${_tmp_GENMACRO_EXE} ${_out_NAME} ${_var_NAME} ${_in_NAME}
 diff --git a/modules/preprocs/nasm/CMakeLists.txt b/modules/preprocs/nasm/CMakeLists.txt
-index e10a9dd..e28ffbb 100644
+index e10a9dd..4d1bf15 100644
 --- a/modules/preprocs/nasm/CMakeLists.txt
 +++ b/modules/preprocs/nasm/CMakeLists.txt
 @@ -1,5 +1,8 @@
 +if (NOT _tmp_GENVERSION_EXE)
  add_executable(genversion preprocs/nasm/genversion.c)
+-get_target_property(_tmp_GENVERSION_EXE genversion LOCATION)
 +install(TARGETS genversion RUNTIME DESTINATION bin)
- get_target_property(_tmp_GENVERSION_EXE genversion LOCATION)
++set(_tmp_GENVERSION_EXE genversion)
 +endif()
  add_custom_command(
      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/version.mac
