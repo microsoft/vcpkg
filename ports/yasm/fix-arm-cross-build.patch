@@ -1,85 +1,60 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8df871cf..c47bc2a4 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -1,5 +1,5 @@
- PROJECT(yasm)
--CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
-+CMAKE_MINIMUM_REQUIRED(VERSION 3.8)
- if (COMMAND cmake_policy)
-     cmake_policy(SET CMP0003 NEW)
- endif (COMMAND cmake_policy)
 diff --git a/cmake/modules/YasmMacros.cmake b/cmake/modules/YasmMacros.cmake
-index ab1be00e..5a6600ca 100644
+index ab1be00e..9015014b 100644
 --- a/cmake/modules/YasmMacros.cmake
 +++ b/cmake/modules/YasmMacros.cmake
-@@ -58,32 +58,37 @@ macro (YASM_ADD_MODULE _module_NAME)
+@@ -58,7 +58,9 @@ macro (YASM_ADD_MODULE _module_NAME)
  endmacro (YASM_ADD_MODULE)
-
+ 
  macro (YASM_GENPERF _in_NAME _out_NAME)
 -    get_target_property(_tmp_GENPERF_EXE genperf LOCATION)
-+    if (_tmp_GENPERF_EXE)
-+        set(HAS_tmp_GENPERF_EXE 1)
++    if (NOT _tmp_GENPERF_EXE)
++    set(_tmp_GENPERF_EXE "$<TARGET_FILE:genperf>")
 +    endif()
      add_custom_command(
          OUTPUT ${_out_NAME}
--        COMMAND ${_tmp_GENPERF_EXE} ${_in_NAME} ${_out_NAME}
-+        COMMAND $<IF:$<BOOL:${HAS_tmp_GENPERF_EXE}>,${_tmp_GENPERF_EXE},$<TARGET_FILE:genperf>> ${_in_NAME} ${_out_NAME}
-         DEPENDS ${_tmp_GENPERF_EXE}
-         MAIN_DEPENDENCY ${_in_NAME}
-         )
+         COMMAND ${_tmp_GENPERF_EXE} ${_in_NAME} ${_out_NAME}
+@@ -68,7 +70,9 @@ macro (YASM_GENPERF _in_NAME _out_NAME)
  endmacro (YASM_GENPERF)
-
+ 
  macro (YASM_RE2C _in_NAME _out_NAME)
 -    get_target_property(_tmp_RE2C_EXE re2c LOCATION)
-+    if (_tmp_RE2C_EXE)
-+        set(HAS_tmp_RE2C_EXE 1)
++    if (NOT _tmp_RE2C_EXE)
++    set(_tmp_RE2C_EXE "$<TARGET_FILE:re2c>")
 +    endif()
      add_custom_command(
          OUTPUT ${_out_NAME}
--        COMMAND ${_tmp_RE2C_EXE} ${ARGN} -o ${_out_NAME} ${_in_NAME}
-+        COMMAND $<IF:$<BOOL:${HAS_tmp_RE2C_EXE}>,${_tmp_RE2C_EXE},$<TARGET_FILE:re2c>> ${ARGN} -o ${_out_NAME} ${_in_NAME}
-         DEPENDS ${_tmp_RE2C_EXE}
-         MAIN_DEPENDENCY ${_in_NAME}
-         )
+         COMMAND ${_tmp_RE2C_EXE} ${ARGN} -o ${_out_NAME} ${_in_NAME}
+@@ -78,7 +82,9 @@ macro (YASM_RE2C _in_NAME _out_NAME)
  endmacro (YASM_RE2C)
-
+ 
  macro (YASM_GENMACRO _in_NAME _out_NAME _var_NAME)
 -    get_target_property(_tmp_GENMACRO_EXE genmacro LOCATION)
-+    if (_tmp_GENMACRO_EXE)
-+        set(HAS_tmp_GENMACRO_EXE 1)
++    if (NOT _tmp_GENMACRO_EXE)
++    set(_tmp_GENMACRO_EXE "$<TARGET_FILE:genmacro>")
 +    endif()
      add_custom_command(
          OUTPUT ${_out_NAME}
--        COMMAND ${_tmp_GENMACRO_EXE} ${_out_NAME} ${_var_NAME} ${_in_NAME}
-+        COMMAND $<IF:$<BOOL:${HAS_tmp_GENMACRO_EXE}>,${_tmp_GENMACRO_EXE},$<TARGET_FILE:genmacro>> ${_out_NAME} ${_var_NAME} ${_in_NAME}
-         DEPENDS ${_tmp_GENMACRO_EXE}
+         COMMAND ${_tmp_GENMACRO_EXE} ${_out_NAME} ${_var_NAME} ${_in_NAME}
+@@ -86,4 +92,3 @@ macro (YASM_GENMACRO _in_NAME _out_NAME _var_NAME)
          MAIN_DEPENDENCY ${_in_NAME}
          )
  endmacro (YASM_GENMACRO)
 -
 diff --git a/modules/preprocs/nasm/CMakeLists.txt b/modules/preprocs/nasm/CMakeLists.txt
-index e10a9dd1..b4b39558 100644
+index e10a9dd1..7be86037 100644
 --- a/modules/preprocs/nasm/CMakeLists.txt
 +++ b/modules/preprocs/nasm/CMakeLists.txt
-@@ -1,9 +1,13 @@
-+if (_tmp_GENVERSION_EXE)
-+    set(HAS_tmp_GENVERSION_EXE 1)
-+else()
+@@ -1,5 +1,8 @@
++if (NOT _tmp_GENVERSION_EXE)
  add_executable(genversion preprocs/nasm/genversion.c)
 -get_target_property(_tmp_GENVERSION_EXE genversion LOCATION)
 +install(TARGETS genversion RUNTIME DESTINATION bin)
++set(_tmp_GENVERSION_EXE "$<TARGET_FILE:genversion>")
 +endif()
  add_custom_command(
      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/version.mac
--    COMMAND ${_tmp_GENVERSION_EXE} ${CMAKE_CURRENT_BINARY_DIR}/version.mac
--    DEPENDS ${_tmp_GENVERSION_EXE}
-+    COMMAND $<IF:$<BOOL:${HAS_tmp_GENVERSION_EXE}>,${_tmp_GENVERSION_EXE},$<TARGET_FILE:genversion>> ${CMAKE_CURRENT_BINARY_DIR}/version.mac
-+    DEPENDS $<IF:$<BOOL:${HAS_tmp_GENVERSION_EXE}>,${_tmp_GENVERSION_EXE},$<TARGET_FILE:genversion>>
-     )
-
- YASM_GENMACRO(
-@@ -22,4 +26,3 @@ YASM_ADD_MODULE(preproc_nasm
+     COMMAND ${_tmp_GENVERSION_EXE} ${CMAKE_CURRENT_BINARY_DIR}/version.mac
+@@ -22,4 +25,3 @@ YASM_ADD_MODULE(preproc_nasm
      preprocs/nasm/nasmlib.c
      preprocs/nasm/nasm-eval.c
      )
