@@ -4,7 +4,6 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 set(${PORT}_PATCHES 
       "clang-cl.patch"
       "fix-error2275-2672.patch"
-      "blink-include-fixes.patch"
       "nested-name-fix.patch"
 )
 
