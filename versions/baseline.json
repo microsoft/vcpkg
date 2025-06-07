@@ -8285,7 +8285,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.3.3",
+      "baseline": "4.3.5",
       "port-version": 0
     },
     "robin-hood-hashing": {
