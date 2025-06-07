@@ -359,6 +359,7 @@ offscale-libetcd-cpp:arm-uwp=fail
 offscale-libetcd-cpp:x64-uwp=fail
 open62541:x64-windows-static-md=fail
 opencc:arm64-windows=fail # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
+opencc:x64-android=fail
 opencc(uwp)=fail # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencl:arm-uwp=fail
 opencl:x64-uwp=fail
