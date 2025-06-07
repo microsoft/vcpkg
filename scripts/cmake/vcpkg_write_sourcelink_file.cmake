@@ -21,7 +21,7 @@ Specifies the local location of the sources used for build.
 Specified the permanent location of the corresponding sources.
 
 ### RAW_SEARCH_REPO_NAME
-Optional repo name to use during include-mapping search, if none is provided.
+Repo subdirectory name to use during include-mapping search, if no RAW_INCLUDE_MAPPING is provided.
 This is used to check for the existence of some directories below SOURCE_PATH,
 such as `include/${RAW_SEARCH_REPO_NAME}/`
 
@@ -40,6 +40,9 @@ not during the build of the port itself.  Therefore the on-disk location include
 placeholder of `__VCPKG_INSTALLED_TRIPLET_DIR__` that is expected to be replaced before including this
 into the target sourcelink.  It's harmless to have it included intermediate builds,
 because none of the embedded paths will match to that prefix.
+
+It is critical that the `from` paths are globally unique, because they are used as keys in the JSON file.
+Hence, these typically start with the port name (as installed under `include/`), except in rare cases where individual header names are specified.
 
 Common patterns include:
 ```cmake
@@ -84,16 +87,25 @@ function(vcpkg_write_sourcelink_file)
     endif()
 
     if(DEFINED arg_RAW_INCLUDE_MAPPING AND NOT "${arg_RAW_INCLUDE_MAPPING}" STREQUAL "")
+        # If the port provides these string pairs, then use them directly without further validation.
         set(raw_include_mapping "${arg_RAW_INCLUDE_MAPPING}")
     else()
         # Establish a sensible default if none was provided by searching the extracted source.
         # Because this is represented as JSON key/value pairs, there can be only one entry per key.
         #
-        # For example
+        # Note:
+        # - The FIRST string (key) *always* starts with the port name, which is the local
+        #   location of the headers during builds.  This is used during debugging to map filenames
+        #   embedded in the PDB or other debug files.
+        #     (This is always prefixed with `include/` when the file is written)
+        # - The SECOND string (value) is appended to the git repository RAW file URL, which is the permanent
+        #   location of the identified files in the repo.
+        #
+        # For example if `src` is found in the local clone, then the mapping will look like:
         #   From:
         #     (INSTALLED_TRIPLET)\include\${PORT}\* 
         #   To:
-        #     (SERVER_PATH)/include/${repo_name}/*
+        #     (SERVER_PATH)/include/src/*
 
         # The checks that include the repo name only make sense if it's populated
         if (DEFINED arg_RAW_SEARCH_REPO_NAME AND NOT "${arg_RAW_SEARCH_REPO_NAME}" STREQUAL "")
@@ -111,10 +123,15 @@ function(vcpkg_write_sourcelink_file)
             list(APPEND raw_include_mapping "${PORT}/*" "src/*")
         elseif(IS_DIRECTORY  "${arg_SOURCE_PATH}/source")
             list(APPEND raw_include_mapping "${PORT}/*" "source/*")
-        else()
-            # If all else fails, at least map to the top of the repo
-            list(APPEND raw_include_mapping "${PORT}/*" "*")
         endif()
+
+        # If the common patterns above do not find any matching directories, then the mapping for installed headers
+        # will be omitted. While it is possible to have a fallback mapping to the top of the repo from include/${PORT}/,
+        # it was not found to be useful in practice. 
+        #    list(APPEND raw_include_mapping "${PORT}/*" "*")
+        # 
+        # Port maintainers are encouraged to provide suitable mappings via RAW_INCLUDE_MAPPING as needed.
+
     endif()
 
     # Normalize and escape (for JSON) the source path.
@@ -126,6 +143,10 @@ function(vcpkg_write_sourcelink_file)
     string(REGEX REPLACE "\\\\" "\\\\\\\\" sourcelink_source_path "${sourcelink_source_path}")
 
     # Write the first line of the file, which is used for the immediate build of this port
+    # - These paths are fully known because the buildtree is directly using the original repo
+    #   contents when the port is built directly from the local source.
+    # - Of course if any local patches or modifications are applied, then the file hashes will never
+    #   match exactly.. but that is beyond the scope of this automatic sourcelink mechanism.
     file(WRITE "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" "{\"documents\":{ \"${sourcelink_source_path}\": \"${arg_SERVER_PATH}\"")
 
     # If specified, add the mappings

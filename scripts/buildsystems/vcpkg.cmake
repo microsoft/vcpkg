@@ -576,7 +576,7 @@ function(vcpkg_add_sourcelink_link_options target)
 
         # Discover the sourcelink information for the current build target itself.
         # - Unlike for dependencies, this file is not installed yet, so it must be picked up directly when linking each port.
-		# - This could be optionally specified via "VCPKG_SOURCELINK_FILE" (via vcpkg_cmake_configure and ports.cmake).
+        # - This could be optionally specified via "VCPKG_SOURCELINK_FILE" (via vcpkg_cmake_configure and ports.cmake).
         if(VCPKG_SOURCELINK_FILE)
             list(APPEND sourcelink_files "${VCPKG_SOURCELINK_FILE}")
         else()
@@ -598,8 +598,8 @@ function(vcpkg_add_sourcelink_link_options target)
         endif()
 
         # Using the identified sourcelink files, combine them into a single sourcelink JSON file, while updating
-		# the contents to reference the installed location of the files.
-		# - This substitution of __VCPKG_INSTALLED_TRIPLET_DIR__ is what allows inlined headers to later be resolved correctly.
+        # the contents to reference the installed location of the files.
+        # - This substitution of __VCPKG_INSTALLED_TRIPLET_DIR__ is what allows inlined headers to later be resolved correctly.
         if(sourcelink_files)
             # Set up the substitution to VCPKG_INSTALLED_DIR/VCPKG_TARGET_TRIPLET which will be used for each file below
             set(installed_triplet_dir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}")
@@ -647,7 +647,7 @@ function(vcpkg_add_sourcelink_link_options target)
             endforeach()
 
             # Output the combined sourcelink JSON file
-			# - The new contents are produced into a temporary file and then compared to the existing contents (if any),
+            # - The new contents are produced into a temporary file and then compared to the existing contents (if any),
             #   which avoids unnecessary updates if nothing changed.
             if (NOT "${sourcelink_fragments}" STREQUAL "")
                 if(EXISTS "${Z_VCPKG_SOURCELINK_JSON}")
