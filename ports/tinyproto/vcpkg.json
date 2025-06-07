@@ -1,10 +1,9 @@
 {
   "name": "tinyproto",
-  "version-date": "2025-05-26",
+  "version": "1.1.0",
   "description": "Tiny Software Protocol for communication over UART, SPI, etc",
   "homepage": "https://github.com/lexus2k/tinyproto",
   "license": "GPL-3.0-or-later",
-  "supports": "!osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
