@@ -572,7 +572,7 @@ function(vcpkg_add_sourcelink_link_options target)
         #   of sourcelink entries for each individual port.  This does leak some of the unrelated dependency
         #   information into the embedded sourcelink contents (which could be inserted into the binary cache).
         # - For MSBuild targets, see `vcpkg.targets` which handles this via a powershell script.
-        file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/sourcelink/*.json")
+        file(GLOB sourcelink_files "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/sourcelink/*.json")
 
         # Discover the sourcelink information for the current build target itself.
         # - Unlike for dependencies, this file is not installed yet, so it must be picked up directly when linking each port.
@@ -590,7 +590,7 @@ function(vcpkg_add_sourcelink_link_options target)
                 else()
                     set(xxx "${CMAKE_INSTALL_PREFIX}")
                 endif()
-                file(GLOB extra_sourcelink_files "${xxx}/sourcelink/*.json")
+                file(GLOB extra_sourcelink_files "${xxx}/share/sourcelink/*.json")
                 if (extra_sourcelink_files)
                     list(APPEND sourcelink_files "${extra_sourcelink_files}")
                 endif()

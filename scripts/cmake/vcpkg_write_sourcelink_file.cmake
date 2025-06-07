@@ -147,7 +147,7 @@ function(vcpkg_write_sourcelink_file)
     #   contents when the port is built directly from the local source.
     # - Of course if any local patches or modifications are applied, then the file hashes will never
     #   match exactly.. but that is beyond the scope of this automatic sourcelink mechanism.
-    file(WRITE "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" "{\"documents\":{ \"${sourcelink_source_path}\": \"${arg_SERVER_PATH}\"")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" "{\"documents\":{ \"${sourcelink_source_path}\": \"${arg_SERVER_PATH}\"")
 
     # If specified, add the mappings
     if (DEFINED raw_include_mapping)
@@ -162,12 +162,12 @@ function(vcpkg_write_sourcelink_file)
                 # SourceLink strings are allowed to have either 0 or 1 wildcards, so a simple replace is suitable.
                 string(REPLACE "*" "${item_to}" adjusted_item_to "${arg_SERVER_PATH}")
 
-                file(APPEND "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" ", \"${adjusted_item_from}\": \"${adjusted_item_to}\"")
+                file(APPEND "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" ", \"${adjusted_item_from}\": \"${adjusted_item_to}\"")
             endif()
         endforeach()
     endif()
 
     # Append the closing braces the the file
-    file(APPEND "${CURRENT_PACKAGES_DIR}/sourcelink/${PORT}.json" "}}")
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/sourcelink/${PORT}.json" "}}")
 
 endfunction()

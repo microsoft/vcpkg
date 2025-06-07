@@ -215,7 +215,7 @@
           Inputs="@(_ZVcpkgInstallManifestDependenciesInputs)"
           Outputs="$(_ZVcpkgSourceLinkInstalledPath)">
     <PropertyGroup>
-      <_ZVcpkgSourcelinkPowerShellArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)sourcelink_process_installed.ps1" -RelativeScan "sourcelink" -RelativeOutFile "..\$(_ZVcpkgSourceLinkFilename)" -InstalledTripletPath "$(_ZVcpkgInstalledDir)$(VcpkgTriplet)"</_ZVcpkgSourcelinkPowerShellArguments>
+      <_ZVcpkgSourcelinkPowerShellArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)sourcelink_process_installed.ps1" -RelativeScan "share\sourcelink" -RelativeOutFile "..\$(_ZVcpkgSourceLinkFilename)" -InstalledTripletPath "$(_ZVcpkgInstalledDir)$(VcpkgTriplet)"</_ZVcpkgSourcelinkPowerShellArguments>
     </PropertyGroup> 
     
     <Message Text="Processing vcpkg sourcelink files" Importance="high" />
