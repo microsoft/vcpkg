@@ -3,16 +3,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND EXTRA_PATCHES fix_clang-cl_build.patch)
 endif()
 
-list(APPEND EXTRA_PATCHES dw-extra.patch)
-
 vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     GITLAB_URL https://gitlab.freedesktop.org
     REPO cairo/cairo
     REF "${VERSION}"
-    SHA512 5731eaa48857561aad023214ebb7be70344579a4bc75d00c46f8c622b4d34be7f79ab02e2cd54a419086490a3bf31aafa2418d873833b475b9824e3f2f5b17b6
+    SHA512 663e6edf2718e8205e30ba309ac609ced9e88e6e1ec857fc48b345dfce82b044d58ec6b4a2d2b281fba30a659a368625ea7501f8b43fe26c137a7ebffdbaac91
     PATCHES
-        cairo_add_lzo_feature_option.patch
         msvc-convenience.diff
         ${EXTRA_PATCHES}
 )
