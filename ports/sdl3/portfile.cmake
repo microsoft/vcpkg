@@ -28,6 +28,10 @@ endif()
 if ("ibus" IN_LIST FEATURES)
     message(WARNING "You will need to install ibus dependencies to use feature ibus:\nsudo apt install libibus-1.0-dev\n")
 endif()
+# option for not need to show windows
+if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT "x11" IN_LIST FEATURES AND NOT "wayland" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DSDL_UNIX_CONSOLE_BUILD=ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
