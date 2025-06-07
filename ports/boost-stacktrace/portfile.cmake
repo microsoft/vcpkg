@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/stacktrace
     REF boost-${VERSION}
-    SHA512 ca4f40238f9a50ca3aeba7b87ad91da0e14998bea4a725ce0bbc6962d1f6592002abf60525741b337260fea13c35c317242242a338beb1896f1f81fd8fafa6c0
+    SHA512 2a4cee4187349cbdca302cc7feaac9ce15688185ebddbefe230f95167be3135a012ed9185d3c718aabb582cfb241aabd81dae62d29255c18c1f2ab927ac7510d
     HEAD_REF master
     PATCHES
         fix_config-check.diff

@@ -10,16 +10,15 @@ index d45eb22..0b5da28 100644
    # Allow user to disable PDBs
    if(ASSIMP_INSTALL_PDB)
      SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Zi")
-@@ -315,8 +314,7 @@ ELSEIF(MSVC)
+@@ -315,7 +314,7 @@ ELSEIF(MSVC)
    elseif((GENERATOR_IS_MULTI_CONFIG) OR (CMAKE_BUILD_TYPE MATCHES Release))
      message("-- MSVC PDB generation disabled. Release binary will not be debuggable.")
    endif()
--  # Source code is encoded in UTF-8
--  ADD_COMPILE_OPTIONS(/source-charset:utf-8)
-+
- ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
-   IF(NOT ASSIMP_HUNTER_ENABLED)
-     SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
+-  if(NOT /utf-8 IN_LIST CMAKE_CXX_FLAGS)
++  if(NOT CMAKE_CXX_FLAGS MATCHES /utf-8)
+     # Source code is encoded in UTF-8
+     ADD_COMPILE_OPTIONS(/source-charset:utf-8)
+   endif ()
 @@ -444,7 +442,7 @@ ENDIF()
  
  set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
@@ -38,6 +37,15 @@ index d45eb22..0b5da28 100644
    set(CMAKE_CONFIG_TEMPLATE_FILE "cmake-modules/assimp-plain-config.cmake.in")
    string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
    set(NAMESPACE "${PROJECT_NAME_LOWERCASE}::")
+@@ -502,7 +502,7 @@
+ include(CMakePackageConfigHelpers)
+ 
+ # Note: PROJECT_VERSION is used as a VERSION
+-write_basic_package_version_file("${VERSION_CONFIG}" COMPATIBILITY SameMajorVersion)
++write_basic_package_version_file("${VERSION_CONFIG}" COMPATIBILITY AnyNewerVersion)
+ 
+ configure_package_config_file(
+     ${CMAKE_CONFIG_TEMPLATE_FILE}
 @@ -496,14 +494,13 @@ ENDIF()
  
  # Search for external dependencies, and build them from source if not found
@@ -218,7 +226,7 @@ index 9b27086..b7c2ccb 100644
 +IF(1)
 +  #hunter_add_package(pugixml)
    find_package(pugixml CONFIG REQUIRED)
- ELSE()
+ ELSEIF(NOT TARGET pugixml::pugixml)
    SET( Pugixml_SRCS
 @@ -1063,30 +1063,30 @@ ELSE()
  ENDIF()
@@ -368,7 +376,7 @@ index 9b27086..b7c2ccb 100644
    INCLUDE_DIRECTORIES(
        ${IRRXML_INCLUDE_DIR}
        ../contrib/openddlparser/include
-@@ -1412,45 +1413,47 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1412,21 +1413,25 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
    $<INSTALL_INTERFACE:${ASSIMP_INCLUDE_INSTALL_DIR}>
@@ -380,9 +388,7 @@ index 9b27086..b7c2ccb 100644
 +IF(1)
    TARGET_LINK_LIBRARIES(assimp
 -      PUBLIC
--      #polyclipping::polyclipping
 -      openddlparser::openddl_parser
--      #poly2tri::poly2tri
 -      minizip::minizip
 -      ZLIB::zlib
 -      RapidJSON::rapidjson
@@ -406,17 +412,7 @@ index 9b27086..b7c2ccb 100644
    endif()
  
    if (ASSIMP_BUILD_DRACO)
-     target_link_libraries(assimp PRIVATE ${draco_LIBRARIES})
-   endif()
- ELSE()
--  TARGET_LINK_LIBRARIES(assimp ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES})
-+  TARGET_LINK_LIBRARIES(assimp PRIVATE ${ZLIB_LIBRARIES} ${OPENDDL_PARSER_LIBRARIES})
-   if (ASSIMP_BUILD_DRACO)
--    target_link_libraries(assimp ${draco_LIBRARIES})
-+    target_link_libraries(assimp PRIVATE ${draco_LIBRARIES})
-   endif()
- ENDIF()
- 
+@@ -1515,13 +1515,13 @@
  if(ASSIMP_ANDROID_JNIIOSYSTEM)
    set(ASSIMP_ANDROID_JNIIOSYSTEM_PATH port/AndroidJNI)
    add_subdirectory(../${ASSIMP_ANDROID_JNIIOSYSTEM_PATH}/ ../${ASSIMP_ANDROID_JNIIOSYSTEM_PATH}/)

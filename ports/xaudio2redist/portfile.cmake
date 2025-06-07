@@ -4,7 +4,7 @@ set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.XAudio2.Redist/${VERSION}"
     FILENAME "xaudio2redist.${VERSION}.zip"
-    SHA512 d9db1e64d31926af252f196238f9793710b53c894c47f2936c5fe3b7d37297711fe293d44f36da189bb6ee34855698569bc51a69cb03d81a49ff3c167cec43b9
+    SHA512 2d2a605cda22d2c6e7918d52cb673cb0b4f4e7c2b4b6ee3e1f988431f5cb6f945a17988574e0faca9465fc4370b222e9e8e23215525f3d6b5c276b1e3dc4476e
 )
 
 vcpkg_extract_source_archive(
@@ -13,10 +13,10 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(XAUDIO_ARCH x86)
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64|arm64ec")
+    set(XAUDIO_ARCH arm64)
 else()
-    set(XAUDIO_ARCH x64)
+    set(XAUDIO_ARCH ${VCPKG_TARGET_ARCHITECTURE})
 endif()
 
 file(GLOB HEADER_FILES "${PACKAGE_PATH}/build/native/include/*.h")

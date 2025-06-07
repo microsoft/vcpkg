@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
     REF "v${VERSION}"
-    SHA512 4738db84068d36face8caf61c0789178fdfc1310fa8e81ffb9b025e14183bde546b784d691c92438ab310a79ab7b75ab62ee0247d5f01e81ddf04fb94b7a9c0b
+    SHA512 6028ad18a27ab3f924ec0c3decae8cf2ba2d9c7b04677d71e258a1cf997e35279dc7cf235c32e1a16261e0e5fd1eea46aeeaac472d04358d73563b05cf32b708
     HEAD_REF master
     PATCHES
         build_fixes.patch
@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DASSIMP_BUILD_ZLIB=OFF
         -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
+        -DASSIMP_BUILD_VRML_IMPORTER=OFF # requires meshlab
         -DASSIMP_BUILD_TESTS=OFF
         -DASSIMP_WARNINGS_AS_ERRORS=OFF
         -DASSIMP_IGNORE_GIT_HASH=ON

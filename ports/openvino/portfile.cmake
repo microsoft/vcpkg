@@ -1,24 +1,11 @@
-vcpkg_download_distfile(PATCH_001_FIX_BUILD_WITH_ONEDNN_FROM_VCPKG # https://github.com/openvinotoolkit/openvino/pull/28816
-    URLS https://github.com/openvinotoolkit/openvino/commit/d51bcdb17ca9f010e761c1e55198743242c4e186.patch?full_index=1
-    SHA512 67c03d2e13ebeaa275dbe856a833032d478d125f5e6d19c3475f064bddf74225490960fabf159935a045bceb4f449983badd9e6fb0fc2b96f9faebea20d2f81f
-    FILENAME openvinotoolkit-openvino-d51bcdb17ca9f010e761c1e55198743242c4e186.patch
-)
-
-vcpkg_download_distfile(PATCH_002_FIX_BUILD_WITH_ONEDNN_FROM_VCPKG_PART_2 # https://github.com/openvinotoolkit/openvino/pull/28899
-    URLS https://github.com/openvinotoolkit/openvino/commit/66a612c7ba0077b72f7f035e90e0d1471add34ff.patch?full_index=1
-    SHA512 ae1e946438b86d6d6372ee034c7e468be9d64bd2b04a9d6f1c4946349cf7b60594e0e2caa2e1ca40e5d13bd9f13f12a27fb0bb02fd3b11e1715708f32680aac3
-    FILENAME openvinotoolkit-openvino-66a612c7ba0077b72f7f035e90e0d1471add34ff.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 a40636fbed5b306dc6eb26311ccd6298763a2ede28d8ccce75e6d99f13747d42d1bd9fede8fa225e23fd70f81fbb522ab5076edc08898ca33fc9ffa69b7c2e1a
+    SHA512 ae3432e9caf5df1ec292a029c3708a294447070fa02ef1be084264cdc1f21711d0ced8fdb198ea2597bb75f9742efcb4a978517e7bb4baa1bcd67d2c05395501
     HEAD_REF master
     PATCHES
-        "${PATCH_001_FIX_BUILD_WITH_ONEDNN_FROM_VCPKG}"
-        "${PATCH_002_FIX_BUILD_WITH_ONEDNN_FROM_VCPKG_PART_2}"
+        "ambient-onednn-fix.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -47,8 +34,8 @@ if(ENABLE_INTEL_GPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/oneDNN
-        REF 706a3ce3b391cf1d8a904a8efa981c70078719eb
-        SHA512 aebb705f9c785f5522f204a7cece95616c801d73e50b07ad5f5a53eec006a3259e92de59f81fbda9cd1b784916010cba738af76bd129dbca52ce5cf17d6b6594
+        REF fb61a91dd068f9f5abfe2629edbd7cdf53712c7a
+        SHA512 ab9cd014b00f3981a20684eb7b70a95e0352e3ffd895a38de685b2864481d130d7c712c003bd34db0174d8cfbe3f4aca202d0e0f9fe80bf4893985a874b48b2a
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
@@ -61,8 +48,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF 1789b1e0ae441de15d793123003a900a35d1dc71
-        SHA512 32ef59542d8e2286b9b201dc94254f4b3b0c561446f05720e9ce7ce14a08fc40b331d765764d85f953cc3ca774b3e1c4f9a75b505aea285c3e18cae1a3c117cc
+        REF 5baba714e16e11309774a62783f363cad30e97c7
+        SHA512 72f1a11623f8cabb2605eb734b891f36b16876ac7c940947807c4d574c7e6031dd064de5ebc7d2042c02989c1f38b55499d8c16d70a52d35dfbe74047d0ea3ce
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -94,6 +81,14 @@ if(ENABLE_INTEL_CPU)
             SHA512 c755da7d576b9bc1f33c9505efe4ce9e50cb927978f929d61f31b213904dca45ddb78b7c0cf9b215e37d2028e0404f4e3435678c120bba16263b55fd701eb4f1
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
+
+        vcpkg_from_github(
+            OUT_SOURCE_PATH DEP_SOURCE_PATH
+            REPO ARM-software/kleidiai
+            REF eaf63a6ae9a903fb4fa8a4d004a974995011f444
+            SHA512 2eed2183927037ab3841daeae2a0df3dfaa680ae4dea5db98247d6d7dd3f897d5109929098eb1b08e3a0797ddc03013acdb449642435df12a11cffbe4f5d2674
+        )
+        file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/kleidiai")
     endif()
 endif()
 
@@ -105,8 +100,8 @@ if(ENABLE_INTEL_NPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF 110f48ee8eda22d8b40daeeecdbbed0fc3b08f8b
-        SHA512 aaaeecad6c00489b652cd94d63ed0c1e59eb0eaed8b463198b40f1af3944004b072808ccc3074b71d825e9f0f37bf76fedf296961bb18959ef66a699b71fec41
+        REF c0156a3390ae39671ff8f2a6f5471f04bb65bb12
+        SHA512 33ebdaec13dd05d6cf51e79f0e91a3c68621c428061423e243eb998c9ebe123ee90f6b4edc749d7fa2206c729058afff945177e8c90a05d36220f076e067c22c
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 endif()

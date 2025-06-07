@@ -80,6 +80,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "netcdf" CONFIG_PATH "lib/cmake/netCDF")
 vcpkg_fixup_pkgconfig()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/netcdf.h" "defined(DLL_NETCDF)" "1")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/nc-config" "${CURRENT_PACKAGES_DIR}/bin/nc-config") # invalid
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
