@@ -13,12 +13,12 @@ endif()
 
 unit_test_ensure_fatal_error([[
     set(ENV{TEST_FLAGS} -DEXPECT_FAILURE)
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}" COPY_SOURCE)
+    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}" COPY_SOURCE USE_WRAPPERS)
 ]])
 
 unit_test_ensure_success([[
     set(ENV{TEST_FLAGS} -DEXPECT_SUCCESS)
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}" COPY_SOURCE)
+    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}" COPY_SOURCE USE_WRAPPERS)
 ]])
 
 vcpkg_restore_env_variables(VARS CPP TEST_FLAGS)
