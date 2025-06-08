@@ -1,6 +1,6 @@
 {
   "name": "wabt",
-  "version": "1.0.36",
+  "version": "1.0.37",
   "description": "The WebAssembly Binary Toolkit",
   "homepage": "https://github.com/WebAssembly/wabt/",
   "license": "Apache-2.0",
