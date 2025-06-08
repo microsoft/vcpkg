@@ -8025,7 +8025,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "9.0.3",
+      "baseline": "10.0.0",
       "port-version": 0
     },
     "quirc": {
