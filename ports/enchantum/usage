@@ -1,0 +1,4 @@
+enchantum provides CMake targets:
+
+    find_package(enchantum CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE enchantum::enchantum)
