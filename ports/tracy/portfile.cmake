@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
     REF "v${VERSION}"
-    SHA512 37acee1bd28362dfac1450ea01a509ad08cff3c5510efecfc798a2fc9b8557ec411cb606d74ceba2ef5728782bee6a4fe66280969f03236adc97169ee82d9938
+    SHA512 991ac48a00943b349b1bed9110fa7886d1378bf4e0f488b214aca244db988a9c39bfb8b4df6e60cea604fbb5d43120d6be68a0fcfbf41300547a4726a62a98d3
     HEAD_REF master
     PATCHES
         build-tools.patch
