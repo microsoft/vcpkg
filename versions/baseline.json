@@ -4453,7 +4453,7 @@
       "port-version": 0
     },
     "libass": {
-      "baseline": "0.17.3",
+      "baseline": "0.17.4",
       "port-version": 0
     },
     "libassert": {
