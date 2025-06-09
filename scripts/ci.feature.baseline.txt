@@ -1936,6 +1936,11 @@ realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core] only supports 
 redis-plus-plus[async-std,async]:arm64-uwp = cascade
 redis-plus-plus[async-std,async]:x64-uwp = cascade
 rerun-sdk:x64-uwp = cascade
+# rerun-sdk currently only supports the Dynamic Release build for Windows, and does not provide any other binary blobs.
+# Other blobs will be added in a future version of Rerun SDK.
+rerun-sdk:x64-windows = fail
+rerun-sdk:x64-windows-static = fail
+rerun-sdk:x64-windows-static-md = fail
 restc-cpp:arm64-uwp = cascade
 restc-cpp:arm64-windows = cascade
 restc-cpp:x64-uwp = cascade
