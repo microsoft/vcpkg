@@ -1437,7 +1437,6 @@ mosquitto:arm64-uwp = cascade
 mosquitto:x64-uwp = cascade
 mpi:arm64-windows = cascade
 mpi:x86-windows = cascade
-msdfgen[geometry-preprocessing]:arm64-windows = cascade
 msix:arm64-uwp = cascade
 msix:x64-uwp = cascade
 mujoco:arm64-uwp = cascade
