@@ -1,10 +1,11 @@
 # header-only library
+set(VCPKG_BUILD_TYPE release)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO adamstark/AudioFile
     REF "${VERSION}"
-    SHA512 ee8af7687fe420634ea8dacef7ecc0c4d3dd1de13c6131202710b3055fdc5ffb27ac1e8ff034690a3ce5d512b6182a788adfa5852a29ac532a08322b14083e8a
+    SHA512 a6fa2a9d7d7cd9f7e0ba96d073af79479dc8893aab68b0bcc5602aff0250a9ea707cf375166f9dc6411072496ae597c5a93bb7cebe21b9b89a8995a6e092659f
     HEAD_REF master
 )
 
