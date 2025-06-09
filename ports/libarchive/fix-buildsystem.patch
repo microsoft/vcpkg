@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 34ea588..38664d2 100644
+index 2917839..6cf7cec 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -168,10 +168,6 @@ IF (CMAKE_C_COMPILER_ID MATCHES "^XL$")
@@ -89,13 +89,13 @@ index 34ea588..38664d2 100644
    # On Windows platform, It's better that we install PDF documents
    # on one's computer.
 diff --git a/libarchive/CMakeLists.txt b/libarchive/CMakeLists.txt
-index 556710a..e4add0b 100644
+index fd997db..415bd89 100644
 --- a/libarchive/CMakeLists.txt
 +++ b/libarchive/CMakeLists.txt
-@@ -273,11 +273,12 @@ IF(ENABLE_INSTALL)
+@@ -277,11 +277,12 @@ IF(ENABLE_INSTALL)
              RUNTIME DESTINATION bin
-             LIBRARY DESTINATION lib
-             ARCHIVE DESTINATION lib)
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 +  ELSE()
 +    INSTALL(TARGETS archive_static
 +            RUNTIME DESTINATION bin
@@ -104,8 +104,8 @@ index 556710a..e4add0b 100644
    ENDIF(BUILD_SHARED_LIBS)
 -  INSTALL(TARGETS archive_static
 -          RUNTIME DESTINATION bin
--          LIBRARY DESTINATION lib
--          ARCHIVE DESTINATION lib)
+-          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
    INSTALL_MAN(${libarchive_MANS})
    INSTALL(FILES ${include_HEADERS} DESTINATION include)
  ENDIF()
