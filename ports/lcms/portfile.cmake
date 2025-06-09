@@ -1,5 +1,3 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(SHARED_LIBRARY_PATCH "fix-shared-library.patch")
 endif()
@@ -8,29 +6,48 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mm2/Little-CMS
     REF "lcms${VERSION}"
-    SHA512 fc45f2ce0bf752313369786b65b92443ef6d9ed7e264e22cfe2a4732b370f6bb6e5573b646d0e8edf1b0bf9b9bc5137c98aed5929ba75acdf157d2764bd838fa
+    SHA512 a7e15f9395eac15971dd6c9d8e33effaa2badc5cd8cfa6152d4b26d653a48ab91438a0f5a2b5faeea033d217f95e459f2659d27849fc110d0e0b5c427c7dcd79
     HEAD_REF master
     PATCHES
-        remove_library_directive.patch
         ${SHARED_LIBRARY_PATCH}
-        remove-register.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+if("fastfloat" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dfastfloat=true)
+else()
+    list(APPEND OPTIONS -Dfastfloat=false)
+endif()
+if("threaded" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dthreaded=true)
+else()
+    list(APPEND OPTIONS -Dthreaded=false)
+endif()
+if("tools" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dutils=true)
+else()
+    list(APPEND OPTIONS -Dutils=false)
+endif()
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
-vcpkg_cmake_install()
-
-vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME lcms2)
-vcpkg_cmake_config_fixup() # provides old PACKAGE_NAME lcms
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${OPTIONS}
+)
+vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/lcms/lcms-config.cmake" [[
-include(CMakeFindDependencyMacro)
-find_dependency(lcms2 CONFIG)
-include(${CMAKE_CURRENT_LIST_DIR}/lcms-targets.cmake)
-]])
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES jpgicc linkicc psicc tificc transicc
+        AUTO_CLEAN
+    )
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/lcms-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/lcms2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/lcms2")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

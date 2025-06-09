@@ -3,15 +3,17 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "e7bf161ff959268a2a2f37530a6ea61c27019d33"
-    SHA512 9cb0c39c6721c5e27a24bee97c93925b7b1f4dd774c08520384ccdf736ab5097e49692529a9fe46f50ae799e6aa9f3e8d7ec43cf9177914fcd6f6f01b76a52c4
+    REF "aefbd9403c1b3032ad4cd0281ef312ed262c7125"
+    SHA512 8d1af006d4974c919c5760f4e461331db5dcf8ad4c4ee91c12433a88b15ea186a8932b7cd241ce47b012eb0fa5ed28f5d5d9ad187abb2bfd45a6ece8edb48d19
     PATCHES
         disable-msvc-env-setup.patch
-        disable-dev-test.patch
+        # disable-dev-test.patch
         skia-include-string.patch
         bentleyottmann-build.patch
         graphite.patch
         vulkan-headers.patch
+        pdfsubsetfont-uwp.diff
+        skparagraph-dllexport.patch
 )
 
 # De-vendor
@@ -21,7 +23,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
 # to update, visit the DEPS file in Skia's root directory
 declare_external_from_git(abseil-cpp
     URL "https://github.com/abseil/abseil-cpp.git"
-    REF "334aca32051ef6ede2711487acf45d959e9bdffc"
+    REF "65a55c2ba891f6d2492477707f4a2e327a0b40dc"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(d3d12allocator
@@ -31,7 +33,7 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "bac513d0ae286600ea0f75a75223a5b52a198b9b"
+    REF "acd89d9f169a9d09b9ada09d1bd80350376b8544"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
@@ -49,6 +51,11 @@ declare_external_from_git(markupsafe
     REF "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
     LICENSE_FILE LICENSE
 )
+declare_external_from_git(partition_alloc
+    URL "https://chromium.googlesource.com/chromium/src/base/allocator/partition_allocator.git"
+    REF "ce13777cb731e0a60c606d1741091fd11a0574d7"
+    LICENSE_FILE LICENSE
+)
 declare_external_from_git(piex
     URL "https://android.googlesource.com/platform/external/piex.git"
     REF "bb217acdca1cc0c16b704669dd6f91a1b509c406"
@@ -61,12 +68,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "8b246ff75c6615ba4532fe4fde20f1be090c3764"
+    REF "e7294a8ebed84f8c5bd3686c68dbe12a4e65b644"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "f20663ca7fec48fdc88e4c4d7c5889f8b4cc5664"
+    REF "ce37fd67f83cd1e8793b988d2e4126bbf72b19dd"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
@@ -118,7 +125,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         string(APPEND OPTIONS " skia_enable_winuwp=true skia_enable_fontmgr_win=false skia_use_xps=false")
     endif()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(APPEND OPTIONS " skia_enable_skparagraph=false")
         string(APPEND OPTIONS " skia_enable_bentleyottmann=false")
     endif()
 endif()
@@ -166,7 +172,7 @@ endif()
 
 if("icu" IN_LIST FEATURES)
     list(APPEND required_externals icu)
-    string(APPEND OPTIONS " skia_use_icu=true")
+    string(APPEND OPTIONS " skia_use_icu=true skia_use_system_icu=true")
 else()
     string(APPEND OPTIONS " skia_use_icu=false")
 endif()
@@ -227,6 +233,7 @@ They can be installed on Debian based systems via
 ## Remove
         abseil-cpp
 ## REMOVE ^
+        partition_alloc
         dawn
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/externals/opengl-registry")
@@ -246,6 +253,12 @@ if(EXISTS "${SOURCE_PATH}/third_party/externals/dawn")
         "\"${GIT}\","
     )
 endif()
+if("icu" IN_LIST FEATURES)
+    vcpkg_replace_string("${SOURCE_PATH}/third_party/icu/BUILD.gn"
+        [[config("vcpkg_icu") {]]
+        [[import("icu.gni")
+config("vcpkg_icu")  {]])
+endif()
 
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
@@ -255,7 +268,9 @@ vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_TARGET_IS_WINDOWS)
     string(REGEX REPLACE "[\\]\$" "" WIN_VC "$ENV{VCINSTALLDIR}")
+    string(REGEX REPLACE "[\\]\$" "" WIN_SDK "$ENV{WindowsSdkDir}")
     string(APPEND OPTIONS " win_vc=\"${WIN_VC}\"")
+    string(APPEND OPTIONS " win_sdk=\"${WIN_SDK}\"")
 elseif(VCPKG_TARGET_IS_ANDROID)
     string(APPEND OPTIONS " ndk=\"${VCPKG_DETECTED_CMAKE_ANDROID_NDK}\" ndk_api=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}")
 else()
@@ -301,7 +316,7 @@ file(COPY "${SOURCE_PATH}/include"
 auto_clean("${CURRENT_PACKAGES_DIR}/include/skia")
 set(skia_dll_static "0")
 set(skia_dll_dynamic "1")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/core/SkTypes.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}" IGNORE_UNCHANGED)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/skia/include/private/base/SkAPI.h" "defined(SKIA_DLL)" "${skia_dll_${VCPKG_LIBRARY_LINKAGE}}")
 
 # vcpkg legacy layout omits "include/" component. Just duplicate.
 file(COPY "${CURRENT_PACKAGES_DIR}/include/skia/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/skia")

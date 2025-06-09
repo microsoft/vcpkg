@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 02adc2e..ccd5492 100644
+index 305198f..0b559b8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -110,6 +110,11 @@ if(NATS_BUILD_STREAMING)
@@ -15,24 +15,26 @@ index 02adc2e..ccd5492 100644
      SET(NATS_SODIUM_DIR "$ENV{NATS_SODIUM_DIR}")
    ENDIF()
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index ea536de..6198776 100644
+index 971ddf0..65fee5a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -63,7 +63,7 @@ if(NATS_BUILD_LIB_SHARED)
+@@ -65,7 +65,7 @@ if(NATS_BUILD_LIB_SHARED)
    install(TARGETS nats EXPORT cnats-targets DESTINATION ${NATS_LIBDIR})
    install(EXPORT cnats-targets
          NAMESPACE cnats::
 -        FILE cnats-config.cmake
 +        FILE cnats-targets.cmake
          DESTINATION ${NATS_LIBDIR}/cmake/cnats)
- endif(NATS_BUILD_LIB_SHARED)
- 
-@@ -75,10 +75,14 @@ if(NATS_BUILD_LIB_STATIC)
+   install(FILES "${PROJECT_BINARY_DIR}/cnats-config-version.cmake"
+         DESTINATION ${NATS_LIBDIR}/cmake/cnats)
+@@ -79,12 +79,16 @@ if(NATS_BUILD_LIB_STATIC)
    install(TARGETS nats_static EXPORT cnats-targets ARCHIVE DESTINATION ${NATS_LIBDIR})
    install(EXPORT cnats-targets
          NAMESPACE cnats::
 -        FILE cnats-config.cmake
 +        FILE cnats-targets.cmake
+         DESTINATION ${NATS_LIBDIR}/cmake/cnats)
+   install(FILES "${PROJECT_BINARY_DIR}/cnats-config-version.cmake"
          DESTINATION ${NATS_LIBDIR}/cmake/cnats)
  endif(NATS_BUILD_LIB_STATIC)
  

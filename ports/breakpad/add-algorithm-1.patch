@@ -1,0 +1,12 @@
+diff --git a/src/common/string_view.h b/src/common/string_view.h
+index a8e15922..bcaa7b96 100644
+--- a/src/common/string_view.h
++++ b/src/common/string_view.h
+@@ -29,6 +29,7 @@
+ #ifndef COMMON_STRING_VIEW_H__
+ #define COMMON_STRING_VIEW_H__
+ 
++#include <algorithm>
+ #include <cassert>
+ #include <cstring>
+ #include <ostream>

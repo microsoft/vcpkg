@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolftpm
-    REF v3.2.0
-    SHA512 8cd63e0b62a2a72838c4ffabe00802d1297989ffbe3fbf20fc523160fc463ab6653ecab4aafb784a3f32d46a5efc71479e29dc1ca2fe1362573deb5b43525773
+    REF v${VERSION}
+    SHA512 fc1d26e4144a496fef7ae7db27f11026132da1dc98f6f61de495b0b7c03ac59c65daccd307cc1449eeb55bc22e2ca552abd7ed607be448688127b2ed6d56867a
     HEAD_REF master
     )
 

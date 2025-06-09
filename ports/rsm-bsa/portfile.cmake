@@ -5,6 +5,8 @@ vcpkg_from_github(
     REF 4.1.0
     SHA512 c488a4f7cffa59064baafd429cf118a8f8a7b5594a0bd49a0ed468572b37af2e7428a83ad83cc7b13b556744a444cb7b8a4591c7018e49cadb1c5d42ae780f51
     HEAD_REF master
+    PATCHES
+        DirectXTexUint8Byte.patch
 )
 
 if (VCPKG_TARGET_IS_LINUX)

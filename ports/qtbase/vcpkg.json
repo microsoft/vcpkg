@@ -1,6 +1,7 @@
 {
   "name": "qtbase",
-  "version": "6.7.2",
+  "version": "6.8.3",
+  "port-version": 2,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -10,7 +11,10 @@
       "name": "libb2",
       "platform": "!windows"
     },
-    "pcre2",
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "qtbase",
       "host": true,
@@ -27,7 +31,8 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "cups"
+        "cups",
+        "thread"
       ],
       "platform": "osx"
     },
@@ -35,9 +40,10 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
+        "concurrent",
         "thread"
       ],
-      "platform": "osx"
+      "platform": "android"
     },
     {
       "name": "qtbase",
@@ -58,15 +64,35 @@
     "zlib"
   ],
   "default-features": [
+    {
+      "name": "appstore-compliant",
+      "platform": "uwp"
+    },
     "brotli",
     "concurrent",
     {
       "name": "dbus",
-      "platform": "!(static & windows)"
+      "platform": "!(static & windows) & !android"
     },
-    "default-features",
+    "dnslookup",
     "doubleconversion",
+    {
+      "name": "egl",
+      "platform": "linux"
+    },
+    {
+      "name": "egl",
+      "platform": "android"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "linux"
+    },
     "freetype",
+    {
+      "name": "gles2",
+      "platform": "android"
+    },
     "gui",
     "harfbuzz",
     "icu",
@@ -92,6 +118,18 @@
     "testlib",
     "thread",
     "widgets",
+    {
+      "name": "xcb",
+      "platform": "linux"
+    },
+    {
+      "name": "xcb-xlib",
+      "platform": "linux"
+    },
+    {
+      "name": "xrender",
+      "platform": "linux"
+    },
     "zstd"
   ],
   "features": {
@@ -151,37 +189,16 @@
         }
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
+    "dnslookup": {
+      "description": "Enable DNS lookup support",
       "dependencies": [
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "appstore-compliant"
-          ],
-          "platform": "uwp"
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "egl",
-            "fontconfig",
-            "xcb",
-            "xcb-xlib",
-            "xrender"
-          ],
-          "platform": "linux"
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "egl",
-            "gles2"
-          ],
-          "platform": "android"
+            "network",
+            "thread"
+          ]
         }
       ]
     },
@@ -193,19 +210,21 @@
     },
     "egl": {
       "description": "EGL",
-      "supports": "linux",
+      "supports": "android | linux",
       "dependencies": [
         "egl"
       ]
     },
     "fontconfig": {
       "description": "Use fontconfig",
+      "supports": "!osx & !windows",
       "dependencies": [
         "fontconfig",
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "freetype",
             "gui"
           ]
         }
@@ -296,6 +315,16 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "egl",
+            "gles2",
+            "opengl"
+          ],
+          "platform": "android"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
             "thread"
           ],
           "platform": "windows"
@@ -366,7 +395,10 @@
     "pcre2": {
       "description": "Enable PCRE2 support",
       "dependencies": [
-        "pcre2"
+        {
+          "name": "pcre2",
+          "default-features": false
+        }
       ]
     },
     "png": {
@@ -385,6 +417,12 @@
     "securetransport": {
       "description": "Enable Secure Transport",
       "supports": "ios | osx"
+    },
+    "shared-mime-info": {
+      "description": "Use GPL licensed shared-mime-info port from freedesktop.org",
+      "dependencies": [
+        "shared-mime-info"
+      ]
     },
     "sql": {
       "description": "Qt Sql",

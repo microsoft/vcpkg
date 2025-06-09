@@ -1,0 +1,18 @@
+{
+  "name": "blickfeld-qb2",
+  "version": "2.8.3",
+  "description": "Client library to communicate securely with Qb2 LiDAR devices of Blickfeld GmbH.",
+  "homepage": "https://github.com/Blickfeld/blickfeld-qb2",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "grpc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

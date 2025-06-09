@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4158267..64ad5b3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -135,7 +135,7 @@ endif ()
+ 
+ add_subdirectory(src)
+ if ( FTDIPP )
+-  project(libftdipp1 C CXX)
++  enable_language(CXX)
+   add_subdirectory(ftdipp)
+ endif ()
+ if ( PYTHON_BINDINGS )
+@@ -192,6 +192,7 @@ list ( APPEND LIBFTDI_STATIC_LIBRARIES ${LIBUSB_LIBRARIES} )
+ if ( FTDIPP )
+   set ( LIBFTDIPP_LIBRARY ftdipp1 )
+   set ( LIBFTDIPP_LIBRARIES ${LIBFTDIPP_LIBRARY} )
++  list ( APPEND LIBFTDI_INCLUDE_DIRS ${Boost_INCLUDE_DIRS} )
+   list ( APPEND LIBFTDIPP_LIBRARIES ${LIBUSB_LIBRARIES} )
+ endif ()
+ set ( LIBFTDI_LIBRARY_DIRS ${libdir} )
+@@ -203,6 +204,7 @@ set ( LIBFTDI_ROOT_DIR ${prefix} )
+ set ( LIBFTDI_VERSION_STRING ${VERSION_STRING} )
+ set ( LIBFTDI_VERSION_MAJOR ${MAJOR_VERSION} )
+ set ( LIBFTDI_VERSION_MINOR ${MINOR_VERSION} )
++set ( LIBFTDIPP_LIBRARIES ${LIBFTDIPP_LIBRARY} ${LIBFTDI_LIBRARIES})
+ 
+ set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI1.cmake )
+ 
+diff --git a/libftdipp1.pc.in b/libftdipp1.pc.in
+index 8158f38..b4fff0a 100644
+--- a/libftdipp1.pc.in
++++ b/libftdipp1.pc.in
+@@ -8,4 +8,4 @@ Description: C++ wrapper for libftdi1
+ Requires: libftdi1
+ Version: @VERSION@
+ Libs: -L${libdir} -lftdipp1
+-Cflags: -I${includedir}
++Cflags: -I${includedir} -I${prefix}/include

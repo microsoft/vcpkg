@@ -1,8 +1,8 @@
 diff --git a/Makefile.in b/Makefile.in
-index 964ba18..3194735 100644
+index 2bf7f1e8..c9607468 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -302,7 +302,7 @@ libhogweed.a: $(hogweed_OBJS)
+@@ -303,7 +303,7 @@ libhogweed.a: $(hogweed_OBJS)
  
  %.$(OBJEXT): %.asm $(srcdir)/m4-utils.m4 $(srcdir)/asm.m4 config.m4 machine.m4
  	$(M4) $(srcdir)/m4-utils.m4 $(srcdir)/asm.m4 config.m4 machine.m4 $< >$*.s
@@ -12,20 +12,20 @@ index 964ba18..3194735 100644
  %.$(OBJEXT): %.c
  	$(COMPILE) -c $< \
 diff --git a/aclocal.m4 b/aclocal.m4
-index 0d97388..98f6916 100644
+index 629db8a7..04ff4d31 100644
 --- a/aclocal.m4
 +++ b/aclocal.m4
-@@ -302,7 +302,7 @@ AC_DEFUN([GMP_TRY_ASSEMBLE],
+@@ -268,7 +268,7 @@ AC_DEFUN([GMP_TRY_ASSEMBLE],
  [cat >conftest.s <<EOF
  [$1]
  EOF
 -gmp_assemble="$CC $CFLAGS $CPPFLAGS $ASM_FLAGS -c conftest.s >conftest.out 2>&1"
 +gmp_assemble="$CCAS $CPPFLAGS $ASM_FLAGS -c conftest.s >conftest.out 2>&1"
  if AC_TRY_EVAL(gmp_assemble); then
-   cat conftest.out >&AC_FD_CC
+   cat conftest.out >&AS_MESSAGE_LOG_FD
    ifelse([$2],,:,[$2])
 diff --git a/config.make.in b/config.make.in
-index 6aec7c7..8bc5599 100644
+index 6aec7c73..8bc5599f 100644
 --- a/config.make.in
 +++ b/config.make.in
 @@ -74,6 +74,8 @@ TEST_SHLIB_DIR = ${abs_top_builddir}/.lib
@@ -38,7 +38,7 @@ index 6aec7c7..8bc5599 100644
  LINK = $(CC) $(CFLAGS) $(PRE_LDFLAGS) $(LDFLAGS)
  LINK_CXX = $(CXX) $(CXXFLAGS) $(PRE_LDFLAGS) $(LDFLAGS)
 diff --git a/configure.ac b/configure.ac
-index dad15f6..7a17853 100644
+index 4f27e663..324e4706 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -148,6 +148,9 @@ LSH_RPATH_INIT([`echo $with_lib_path | sed 's/:/ /g'` \
@@ -51,21 +51,21 @@ index dad15f6..7a17853 100644
  
  NETTLE_CHECK_IFUNC
  
-@@ -335,7 +338,7 @@ W64_ABI=no   # For x86_64 windows
+@@ -318,7 +321,7 @@ W64_ABI=no   # For x86_64 windows
  case "$host_cpu" in
    [x86_64 | amd64])
-     AC_TRY_COMPILE([
+     AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 -#if defined(__x86_64__) || defined(__arch64__)
 +#if defined(__x86_64__) || defined(__arch64__) || defined(_M_AMD64)
  #error 64-bit x86
  #endif
-     ], [], [
-@@ -388,7 +391,7 @@ case "$host_cpu" in
+     ]], [[]])], [
+@@ -371,7 +374,7 @@ case "$host_cpu" in
      ;;
    aarch64*)
-     AC_TRY_COMPILE([
+     AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
 -#if defined(__aarch64__)
 +#if defined(__aarch64__) || defined(_M_ARM64)
  #error 64-bit arm
  #endif
-     ], [], [
+     ]], [[]])], [

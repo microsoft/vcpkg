@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-package-and-install.patch
+        fix-linux.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -84,7 +85,7 @@ vcpkg_download_distfile(COPYRIGHT_PATH
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(RENAME "${COPYRIGHT_PATH}" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(INSTALL "${COPYRIGHT_PATH}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     if("metal" IN_LIST FEATURES)

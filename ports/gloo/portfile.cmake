@@ -1,12 +1,10 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebookincubator/gloo
-  REF 1da21174054eaabbbd189b7f657ea24842d821e2
-  SHA512 ebd8369e413aee739a3928f8e6738c15708f009e0cd5a3763b8cadbe6f6d0a9d758585a7a2b0f7dd6d39a12882ff2f9497ab2d4edcebd4eb2a7237ab857f317e
+  REF 81925d1c674c34f0dc34dd9a0f2151c1b6f701eb
+  SHA512 2783908e7e0d6bd7f8cf59f4e6a94c84908e459f394c294cdf34aa8d1943a193fb25d15a8662f5a32a82b23a2657e63b1aa562f3ad8953ef79c9f502d04fed20
   HEAD_REF master
-  PATCHES
-      fix-array.patch #https://github.com/facebookincubator/gloo/issues/332
-  )
+)
 
 # Determine which backend to build via specified feature
 vcpkg_check_features(

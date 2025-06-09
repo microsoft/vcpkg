@@ -1,0 +1,17 @@
+{
+  "name": "tomsolver",
+  "version": "1.0.1",
+  "description": "Simplest, Well-tested, Non-linear equations solver library.",
+  "homepage": "https://github.com/tomwillow/tomsolver",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -31,7 +31,7 @@ target_sources(
 
 install(
     TARGETS ${PROJECT_NAME}
-    EXPORT unofficial-${PROJECT_NAME}-target
+    EXPORT ${PROJECT_NAME}-target
     ARCHIVE DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
@@ -51,8 +51,8 @@ if (NOT IMGUIZMO_SKIP_HEADERS)
 endif()
 
 install(
-    EXPORT unofficial-${PROJECT_NAME}-target
-    NAMESPACE unofficial::${PROJECT_NAME}::
-    FILE unofficial-${PROJECT_NAME}-config.cmake
-    DESTINATION share/unofficial-${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-target
+    NAMESPACE ${PROJECT_NAME}::
+    FILE ${PROJECT_NAME}-config.cmake
+    DESTINATION share/${PROJECT_NAME}
 )

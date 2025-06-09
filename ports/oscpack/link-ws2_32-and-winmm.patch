@@ -1,0 +1,25 @@
+From d2a920a78f3b29df26d8e1e8ca6a0e93260999db Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20Sch=C3=BCrmann?= <daschuer@mixxx.org>
+Date: Wed, 15 Jan 2025 21:56:46 +0100
+Subject: [PATCH] link Ws2_32 and winmm
+
+---
+ CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1fc1fbe..1b3c4aa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,6 +43,8 @@ osc/OscOutboundPacketStream.cpp
+ 
+ )
+ 
++TARGET_LINK_LIBRARIES(oscpack PRIVATE ${LIBS})
++
+ set(IP_HEADERS 
+   ip/IpEndpointName.h
+   ip/NetworkingUtils.h
+-- 
+2.34.1
+

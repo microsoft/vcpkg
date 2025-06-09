@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52629d3..a93c7e8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -241,13 +241,13 @@ if(NOT WIN32)
+ endif()
+ 
+ if(gperftools_enable_libunwind)
+-  check_include_file("libunwind.h" HAVE_LIBUNWIND_H)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(PC_LIBUNWIND libunwind REQUIRED)
++  find_file(HAVE_LIBUNWIND_H "libunwind.h" PATHS ${PC_LIBUNWIND_INCLUDE_DIRS} NO_DEFAULT_PATH REQUIRED)
+   if(HAVE_LIBUNWIND_H)
+-    find_library(libunwind_location NAMES unwind)
+-    if(libunwind_location)
+-      check_library_exists(
+-        unwind backtrace ${libunwind_location} have_libunwind)
+-    endif()
++    include_directories(${PC_LIBUNWIND_INCLUDE_DIRS})
++    set(libunwind_location "${PC_LIBUNWIND_LINK_LIBRARIES}" CACHE INTERNAL "")
++    set(have_libunwind 1)
+     if(have_libunwind)
+       set(unwind_libs ${libunwind_location})
+       set(will_use_libunwind ON)

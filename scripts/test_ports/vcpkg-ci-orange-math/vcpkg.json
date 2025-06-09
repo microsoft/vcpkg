@@ -1,0 +1,13 @@
+{
+    "name": "vcpkg-ci-orange-math",
+    "version-string": "ci",
+    "description": "Testing packages which provide orange-math",
+    "license": null,
+    "dependencies": [
+    "orange-math",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

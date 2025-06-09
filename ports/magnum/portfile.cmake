@@ -9,6 +9,7 @@ vcpkg_from_github(
         003-fix-FindGLFW.patch
         004-fix-FindOpenAL.patch
         005-fix-find-sdl2.patch
+        006-fix-build.patch # From https://github.com/mosra/magnum/issues/642#issuecomment-2217261862
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

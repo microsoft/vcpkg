@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5712462..dd6c669 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -120,11 +120,14 @@ if(WIN32)
+ endif()
+ 
+ if (USE_NETTLE)
+-	find_package(Nettle REQUIRED)
++    find_path(NETTLE_INCLUDE_PATH "nettle/hmac.h" REQUIRED)
++    find_library(NETTLE_LIBRARY_PATH NAMES nettle libnettle NAMES_PER_DIR REQUIRED) 
++    target_include_directories(juice PRIVATE ${NETTLE_INCLUDE_PATH})
++    target_include_directories(juice-static PRIVATE ${NETTLE_INCLUDE_PATH})
+     target_compile_definitions(juice PRIVATE USE_NETTLE=1)
+-    target_link_libraries(juice PRIVATE Nettle::Nettle)
++    target_link_libraries(juice PRIVATE ${NETTLE_LIBRARY_PATH})
+     target_compile_definitions(juice-static PRIVATE USE_NETTLE=1)
+-    target_link_libraries(juice-static PRIVATE Nettle::Nettle)
++    target_link_libraries(juice-static PRIVATE ${NETTLE_LIBRARY_PATH})
+ else()
+     target_compile_definitions(juice PRIVATE USE_NETTLE=0)
+     target_compile_definitions(juice-static PRIVATE USE_NETTLE=0)
+@@ -137,8 +140,6 @@ endif()
+ 
+ if(APPLE)
+ 	# This seems to be necessary on MacOS
+-	target_include_directories(juice PRIVATE /usr/local/include)
+-	target_include_directories(juice-static PRIVATE /usr/local/include)
+ endif()
+ 
+ set_target_properties(juice PROPERTIES EXPORT_NAME LibJuice)
+diff --git a/cmake/LibJuiceConfig.cmake.in b/cmake/LibJuiceConfig.cmake.in
+index 247e53f..f049d9a 100644
+--- a/cmake/LibJuiceConfig.cmake.in
++++ b/cmake/LibJuiceConfig.cmake.in
+@@ -1,4 +1,8 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++set(THREADS_PREFER_PTHREAD_FLAG ON)
++find_dependency(Threads)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/LibJuiceTargets.cmake")
+ 

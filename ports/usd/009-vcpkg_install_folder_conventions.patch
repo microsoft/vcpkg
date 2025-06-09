@@ -1,0 +1,82 @@
+diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
+index 48fe107dd..79fdad022 100644
+--- a/cmake/macros/Private.cmake
++++ b/cmake/macros/Private.cmake
+@@ -1185,8 +1185,10 @@ function(_pxr_library NAME)
+             # XXX --- Why this difference?
+             _get_install_dir("plugin/usd" pluginInstallPrefix)
+         endif()
++    elseif(WIN32 AND args_TYPE STREQUAL "SHARED")
++        _get_install_dir("${CMAKE_INSTALL_BINDIR}/usd" pluginInstallPrefix)
+     else()
+-        _get_install_dir("lib/usd" pluginInstallPrefix)
++        _get_install_dir("${CMAKE_INSTALL_LIBDIR}/usd" pluginInstallPrefix)
+     endif()
+     if(args_SUBDIR)
+         set(pluginInstallPrefix "${pluginInstallPrefix}/${args_SUBDIR}")
+@@ -1266,17 +1268,25 @@ function(_pxr_library NAME)
+     # Where do we install library to?
+     _get_install_dir("include" headerInstallDir)
+     _get_install_dir("include/${PXR_PREFIX}/${NAME}" headerInstallPrefix)
+-    _get_install_dir("lib" libInstallPrefix)
++    if(WIN32 AND args_TYPE STREQUAL "SHARED")
++        _get_install_dir("${CMAKE_INSTALL_BINDIR}" libInstallPrefix)
++        _get_install_dir("${CMAKE_INSTALL_LIBDIR}" libInstallPrefixArchive)
++    else()
++        _get_install_dir("${CMAKE_INSTALL_LIBDIR}" libInstallPrefix)
++        _get_install_dir("${CMAKE_INSTALL_LIBDIR}" libInstallPrefixArchive)
++    endif()
+     if(isPlugin)
+         if(NOT isObject)
+             # A plugin embedded in the monolithic library is found in
+             # the usual library location, otherwise plugin libraries
+             # are in the plugin install location.
+             set(libInstallPrefix "${pluginInstallPrefix}")
++            set(libInstallPrefixArchive "${pluginInstallPrefix}")
+         endif()
+     endif()
+     if(args_SUBDIR)
+         set(libInstallPrefix "${libInstallPrefix}/${args_SUBDIR}")
++        set(libInstallPrefixArchive "${libInstallPrefixArchive}/${args_SUBDIR}")
+     endif()
+     # Return libInstallPrefix to caller.
+     if(args_LIB_INSTALL_PREFIX_RESULT)
+@@ -1408,8 +1418,8 @@ function(_pxr_library NAME)
+     # The former is for helper libraries for a third party application and
+     # the latter for core USD libraries.
+     _pxr_init_rpath(rpath "${libInstallPrefix}")
+-    _pxr_add_rpath(rpath "${CMAKE_INSTALL_PREFIX}/${PXR_INSTALL_SUBDIR}/lib")
+-    _pxr_add_rpath(rpath "${CMAKE_INSTALL_PREFIX}/lib")
++    _pxr_add_rpath(rpath "${CMAKE_INSTALL_PREFIX}/${PXR_INSTALL_SUBDIR}/${libInstallPrefix}")
++    _pxr_add_rpath(rpath "${CMAKE_INSTALL_PREFIX}/${libInstallPrefix}")
+     _pxr_install_rpath(rpath ${NAME})
+ 
+     #
+@@ -1450,14 +1460,14 @@ function(_pxr_library NAME)
+         if(isPlugin)
+             install(
+                 TARGETS ${NAME}
+-                LIBRARY DESTINATION ${libInstallPrefix}
+-                ARCHIVE DESTINATION ${libInstallPrefix}
+-                RUNTIME DESTINATION ${libInstallPrefix}
++                LIBRARY DESTINATION ${pluginInstallPrefix}
++                ARCHIVE DESTINATION ${pluginInstallPrefix}
++                RUNTIME DESTINATION ${pluginInstallPrefix}
+             )
+             if(WIN32)
+                 install(
+                     FILES $<TARGET_PDB_FILE:${NAME}>
+-                    DESTINATION ${libInstallPrefix}
++                    DESTINATION ${pluginInstallPrefix}
+                     OPTIONAL
+                 )
+             endif()
+@@ -1482,7 +1492,7 @@ function(_pxr_library NAME)
+                 TARGETS ${NAME}
+                 EXPORT pxrTargets
+                 LIBRARY DESTINATION ${libInstallPrefix}
+-                ARCHIVE DESTINATION ${libInstallPrefix}
++                ARCHIVE DESTINATION ${libInstallPrefixArchive}
+                 RUNTIME DESTINATION ${libInstallPrefix}
+             )
+         endif()

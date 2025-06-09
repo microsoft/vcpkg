@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dpilger26/NumCpp
     REF "Version_${VERSION}"
-    SHA512 ab038f74d7aa4836de4da3f8613cbabf0c1205f40ee9bf3de9692e8a943b16846a006d5885e2ddb22f9b893256dc4761994ad70f0fb5e8cf14612bc08644b30d
+    SHA512 1ff88cf4adbdd1ecd528578713c449e1a78d1f6a3683d07a5872ba2798e6c2db6e50fbefbfffae7a264f9aa3c4f69dcf52f161a99b818b9a9b049abece002f35
     HEAD_REF master
 )
 

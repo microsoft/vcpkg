@@ -1,6 +1,6 @@
 {
   "name": "libgcrypt",
-  "version": "1.10.2",
+  "version": "1.11.0",
   "description": "A general purpose cryptographic library",
   "homepage": "https://gnupg.org/software/libgcrypt/index.html",
   "license": null,
@@ -12,7 +12,7 @@
     },
     "libgpg-error",
     {
-      "name": "vcpkg-cmake-get-vars",
+      "name": "vcpkg-make",
       "host": true
     }
   ]

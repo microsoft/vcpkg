@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7040709..a4b8c61 100644
+index 2e65c4f..50bea50 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1872,12 +1872,30 @@ endif()
+@@ -1947,13 +1947,37 @@ endif()
  
  # mark targets as optional so we can install them separately if needed
  # (e.g. "make lib" or "make shared" followed by "make install/fast")
@@ -10,29 +10,37 @@ index 7040709..a4b8c61 100644
 +install(
 +  TARGETS gmsh
 +  RUNTIME DESTINATION bin
-+  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
 +  OPTIONAL
 +)
  if(ENABLE_BUILD_LIB)
 -  install(TARGETS lib DESTINATION ${GMSH_LIB} OPTIONAL)
 +  install(
 +    TARGETS lib
-+    RUNTIME DESTINATION bin
++    EXPORT unofficial-gmsh-config
 +    LIBRARY DESTINATION lib
 +    ARCHIVE DESTINATION lib
 +    OPTIONAL
 +  )
++  TARGET_INCLUDE_DIRECTORIES(lib PUBLIC $<INSTALL_INTERFACE:include>)
  endif()
  if(ENABLE_BUILD_SHARED OR ENABLE_BUILD_DYNAMIC)
 -  install(TARGETS shared DESTINATION ${GMSH_LIB} OPTIONAL)
+-endif()
 +  install(
 +    TARGETS shared
++    EXPORT unofficial-gmsh-config
 +    RUNTIME DESTINATION bin
 +    LIBRARY DESTINATION lib
 +    ARCHIVE DESTINATION lib
 +    OPTIONAL
 +  )
- endif()
++  TARGET_INCLUDE_DIRECTORIES(shared PUBLIC $<INSTALL_INTERFACE:include>)
++endif()
++install(
++  EXPORT unofficial-gmsh-config
++  NAMESPACE unofficial::gmsh:: 
++  DESTINATION share/unofficial-gmsh
++)
  
  if(ENABLE_ONELAB AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/contrib/onelab)
+   install(FILES ${ONELAB_PY} DESTINATION ${GMSH_BIN})

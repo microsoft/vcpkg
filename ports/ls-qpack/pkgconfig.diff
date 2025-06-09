@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 32eed1c..1369bd1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,6 +123,8 @@ endif()
+ 
+ include(GNUInstallDirs)
+ configure_file(lsqpack.pc.in lsqpack.pc @ONLY)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lsqpack.pc"
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+ configure_file(ls-qpack-config.cmake.in ls-qpack-config.cmake @ONLY)
+ install(TARGETS ls-qpack EXPORT ls-qpack-config
+@@ -149,7 +151,4 @@ endif()
+ 
+ if(WIN32)
+     install(DIRECTORY wincompat/sys DESTINATION include)
+-else()
+-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lsqpack.pc"
+-	    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ endif()
+diff --git a/lsqpack.pc.in b/lsqpack.pc.in
+index 7eac772..7c65072 100644
+--- a/lsqpack.pc.in
++++ b/lsqpack.pc.in
+@@ -7,6 +7,6 @@ Name: @PROJECT_NAME@
+ Description: @CMAKE_PROJECT_DESCRIPTION@
+ URL: @CMAKE_PROJECT_HOMEPAGE_URL@
+ Version: @PROJECT_VERSION@
+-Requires: @LSQPACK_DEPENDS@
++Requires.private: @LSQPACK_DEPENDS@
+ Cflags: -I"${includedir}"
+-Libs: -L"${libdir}" -llsqpack
++Libs: -L"${libdir}" -lls-qpack

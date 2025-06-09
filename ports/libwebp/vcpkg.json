@@ -1,6 +1,6 @@
 {
   "name": "libwebp",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "port-version": 1,
   "description": "WebP codec: library to encode and decode images in WebP format",
   "homepage": "https://github.com/webmproject/libwebp",
@@ -68,7 +68,7 @@
           "features": [
             "vwebp-sdl"
           ],
-          "platform": "!osx & !static & !uwp"
+          "platform": "!android & !osx & !uwp & !(windows & static)"
         }
       ]
     },
@@ -159,18 +159,6 @@
     "info": {
       "description": "Build the webpinfo command line tool."
     },
-    "libbwebpmux": {
-      "description": "Obsolete, use feature libwebpmux instead.",
-      "dependencies": [
-        {
-          "name": "libwebp",
-          "default-features": false,
-          "features": [
-            "libwebpmux"
-          ]
-        }
-      ]
-    },
     "libwebpmux": {
       "description": "Build the libwebpmux library"
     },
@@ -200,7 +188,7 @@
     },
     "vwebp": {
       "description": "Build the vwebp viewer tool.",
-      "supports": "!osx & !static",
+      "supports": "!osx & !(windows & static)",
       "dependencies": [
         "freeglut",
         "opengl"

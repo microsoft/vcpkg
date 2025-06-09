@@ -1,0 +1,12 @@
+diff --git a/cmake/FindGengetopt.cmake b/cmake/FindGengetopt.cmake
+index b7bbfcc..9011e41 100644
+--- a/cmake/FindGengetopt.cmake
++++ b/cmake/FindGengetopt.cmake
+@@ -72,6 +72,7 @@ macro (WRAP_GGO GGO_SRCS)
+   set_source_files_properties(${${GGO_SRCS}} PROPERTIES GENERATED TRUE)
+   if(CMAKE_COMPILER_IS_GNUCXX)
+     find_program(DEFAULT_GCC gcc)
++    cmake_policy(SET CMP0153 OLD)
+     exec_program(${DEFAULT_GCC} ARGS "-dumpversion" OUTPUT_VARIABLE GCCVER)
+     if("${GCCVER}" VERSION_GREATER "4.5.2")
+       set_source_files_properties(${${GGO_SRCS}} PROPERTIES COMPILE_FLAGS "-Wno-unused-but-set-variable")

@@ -51,8 +51,6 @@ EXPORTS
      nettle_ecc_point_get
      nettle_ecc_scalar_random
      _nettle_ecc_mod_random
-     _nettle_ecc_hash
-     _nettle_gost_hash
      _nettle_ecc_mul_a
      _nettle_ecc_mul_g
      _nettle_ecc_mul_m
@@ -280,3 +278,13 @@ EXPORTS
      nettle_sexp_iterator_check_type
      nettle_sexp_iterator_check_types
      nettle_sexp_iterator_assoc
+     _nettle_rsa_oaep_decrypt
+     _nettle_rsa_oaep_encrypt
+     nettle_rsa_oaep_sha256_decrypt
+     nettle_rsa_oaep_sha384_decrypt
+     nettle_rsa_oaep_sha512_decrypt     
+     nettle_rsa_oaep_sha256_encrypt
+     nettle_rsa_oaep_sha384_encrypt
+     nettle_rsa_oaep_sha512_encrypt
+     _nettle_oaep_decode_mgf1
+     _nettle_oaep_encode_mgf1

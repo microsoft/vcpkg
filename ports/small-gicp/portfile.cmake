@@ -2,15 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO koide3/small_gicp
     REF "v${VERSION}"
-    SHA512 bdd0d1e39d25877e58b2753addbad082f2fdf3962809fe646cab8ba63438eff05e2276afb2803aaed0a3905e0251208e2faaf8c1c416b551ffbdd54b9743ddb6
+    SHA512 b4d4b662d74b5492b7b89bcaf022e2d90262eecd3f1b6d3229edefbb00288a95910d486e66a9e884528f6f9c253a5e535ce7f96829fdc760f58ac001f6192790
     HEAD_REF master
-    PATCHES disable_openmp_osx.patch
+    PATCHES preprocessor_portability.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        pcl   BUILD_WITH_PCL
-        tbb   BUILD_WITH_TBB
+        pcl     BUILD_WITH_PCL
+        tbb     BUILD_WITH_TBB
+        openmp  BUILD_WITH_OPENMP
 )
 
 vcpkg_cmake_configure(

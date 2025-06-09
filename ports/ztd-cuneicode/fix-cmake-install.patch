@@ -77,10 +77,10 @@ index 00aa8b6..d49889b 100644
  	add_subdirectory(single)
  endif()
 diff --git a/cmake/ztd.cuneicode-config.cmake.in b/cmake/ztd.cuneicode-config.cmake.in
-index 4bfb041..823d50b 100644
+index 4bfb041..1b28918 100644
 --- a/cmake/ztd.cuneicode-config.cmake.in
 +++ b/cmake/ztd.cuneicode-config.cmake.in
-@@ -1,6 +1,11 @@
+@@ -1,8 +1,13 @@
  @PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
 +find_dependency(ztd.encoding_tables CONFIG)
@@ -91,5 +91,8 @@ index 4bfb041..823d50b 100644
 +if (TARGET ztd.cuneicode)
 +	add_library(ztd::cuneicode ALIAS ztd.cuneicode)
  	get_target_property(ZTD_CUNEICODE_INCLUDE_DIRS
- 		ztd.cuneicode.single INTERFACE_INCLUDE_DIRECTORIES)
+-		ztd.cuneicode.single INTERFACE_INCLUDE_DIRECTORIES)
++		ztd.cuneicode INTERFACE_INCLUDE_DIRECTORIES)
  	set_and_check(ZTD_CUNEICODE_INCLUDE_DIRS "${ZTD_CUNEICODE_INCLUDE_DIRS}")
+ endif()
+ 

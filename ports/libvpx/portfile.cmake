@@ -24,9 +24,11 @@ endif()
 
 find_program(BASH NAME bash HINTS ${MSYS_ROOT}/usr/bin REQUIRED NO_CACHE)
 
-vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-vcpkg_add_to_path(${NASM_EXE_PATH})
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    vcpkg_add_to_path(${NASM_EXE_PATH})
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
@@ -227,6 +229,12 @@ else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
 
+    if (VCPKG_HOST_IS_OPENBSD OR VCPKG_HOST_IS_FREEBSD)
+        set(MAKE_BINARY "gmake")
+    else()
+        set(MAKE_BINARY "make")
+    endif()
+
     message(STATUS "Build info. Target: ${LIBVPX_TARGET}; Options: ${OPTIONS}")
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -247,7 +255,7 @@ else()
         message(STATUS "Building libvpx for Release")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make -j${VCPKG_CONCURRENCY}"
+                ${BASH} --noprofile --norc -c "${MAKE_BINARY} -j${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
             LOGNAME build-${TARGET_TRIPLET}-rel
         )
@@ -255,7 +263,7 @@ else()
         message(STATUS "Installing libvpx for Release")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make install"
+                ${BASH} --noprofile --norc -c "${MAKE_BINARY} install"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
             LOGNAME install-${TARGET_TRIPLET}-rel
         )
@@ -281,7 +289,7 @@ else()
         message(STATUS "Building libvpx for Debug")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make -j${VCPKG_CONCURRENCY}"
+                ${BASH} --noprofile --norc -c "${MAKE_BINARY} -j${VCPKG_CONCURRENCY}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
@@ -289,7 +297,7 @@ else()
         message(STATUS "Installing libvpx for Debug")
         vcpkg_execute_required_process(
             COMMAND
-                ${BASH} --noprofile --norc -c "make install"
+                ${BASH} --noprofile --norc -c "${MAKE_BINARY} install"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
             LOGNAME install-${TARGET_TRIPLET}-dbg
         )

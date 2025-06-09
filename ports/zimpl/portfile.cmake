@@ -1,10 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # The latest version of ZIMPL is included in the SCIP Optimization Suite.
-set(scipoptsuite_version 8.0.4)
+set(scipoptsuite_version 9.1.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://scipopt.org/download/release/scipoptsuite-${scipoptsuite_version}.tgz"
-    SHA512 46b56b3a4a5fcb4d6d53b5ffd9320bdf37fb55b9b8450a065312aa1e4f88863d3c563a495cf2622ef70a80132149c7b8f36cdb9a9e43906f4cfcafcb9dd6d606
+    SHA512 03c1c49dd5e4dbc5bfd4f07305937079773f6912c87b0ba86166fc02996928e8d23332137a944f16f2488a88dc12a4a2c6ebde216eb4532135ed282a182bfdaf
     FILENAME "scipoptsuite-${scipoptsuite_version}.tgz"
 )
 vcpkg_extract_source_archive(

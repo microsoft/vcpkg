@@ -1,8 +1,10 @@
 {
   "name": "oatpp-mbedtls",
   "version": "1.3.0",
+  "port-version": 1,
   "description": "Oat++ Mbed TLS submodule providing secure server and client connection providers.",
-  "homepage": "https://github.com/oatpp/oatpp-mbedtls",
+  "homepage": "https://oatpp.io/docs/modules/oatpp-mbedtls/",
+  "license": "Apache-2.0",
   "dependencies": [
     "mbedtls",
     "oatpp",

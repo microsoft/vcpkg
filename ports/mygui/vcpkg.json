@@ -1,7 +1,7 @@
 {
   "name": "mygui",
   "version": "3.4.3",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Fast, flexible and simple GUI",
   "homepage": "http://mygui.info",
   "license": "MIT",
@@ -19,11 +19,17 @@
     }
   ],
   "features": {
+    "obsolete": {
+      "description": "Keep obsolete functions."
+    },
     "opengl": {
       "description": "Use OpenGL render system.",
       "dependencies": [
         "opengl"
       ]
+    },
+    "plugins": {
+      "description": "Build MyGUI plugins."
     },
     "tools": {
       "description": "Install MyGUI tools."

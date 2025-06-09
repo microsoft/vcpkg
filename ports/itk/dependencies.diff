@@ -1,0 +1,114 @@
+diff --git a/CMake/ITKConfig.cmake.in b/CMake/ITKConfig.cmake.in
+index 7a77ae3..6a565e8 100644
+--- a/CMake/ITKConfig.cmake.in
++++ b/CMake/ITKConfig.cmake.in
+@@ -1,3 +1,8 @@
++include(CMakeFindDependencyMacro)
++find_dependency(double-conversion CONFIG)
++find_dependency(OpenJPEG CONFIG)
++find_dependency(VXL CONFIG)
++include("${VXL_CMAKE_DIR}/UseVXL.cmake")
+ #-----------------------------------------------------------------------------
+ #
+ # ITKConfig.cmake - ITK CMake configuration file for external projects.
+diff --git a/CMake/itkOpenCL.cmake b/CMake/itkOpenCL.cmake
+index 21aab8c..f2bf8ae 100644
+--- a/CMake/itkOpenCL.cmake
++++ b/CMake/itkOpenCL.cmake
+@@ -1,5 +1,7 @@
+ if(ITK_USE_GPU)
+   find_package(OpenCL REQUIRED)
++  set(OPENCL_INCLUDE_DIRS "${OpenCL_INCLUDE_DIRS}")
++  set(OPENCL_LIBRARIES "${OpenCL_LIBRARIES}")
+   if(NOT ${OPENCL_FOUND})
+     message(FATAL "Could not find OpenCL")
+   endif()
+diff --git a/Modules/ThirdParty/DoubleConversion/CMakeLists.txt b/Modules/ThirdParty/DoubleConversion/CMakeLists.txt
+index 135c1d3..f644a32 100644
+--- a/Modules/ThirdParty/DoubleConversion/CMakeLists.txt
++++ b/Modules/ThirdParty/DoubleConversion/CMakeLists.txt
+@@ -7,9 +7,9 @@ option(ITK_USE_SYSTEM_DOUBLECONVERSION
+ mark_as_advanced(ITK_USE_SYSTEM_DOUBLECONVERSION)
+ 
+ if(ITK_USE_SYSTEM_DOUBLECONVERSION)
+-  find_package(double-conversion 3.1.6 REQUIRED)
++  find_package(double-conversion 3.1.6 REQUIRED GLOBAL)
+   get_target_property(ITKDoubleConversion_INCLUDE_DIRS double-conversion::double-conversion INTERFACE_INCLUDE_DIRECTORIES)
+-  get_target_property(ITKDoubleConversion_LIBRARIES double-conversion::double-conversion LOCATION)
++  set(ITKDoubleConversion_LIBRARIES double-conversion::double-conversion)
+ else()
+   set(ITKDoubleConversion_INCLUDE_DIRS
+     ${ITKDoubleConversion_SOURCE_DIR}/src
+diff --git a/Modules/ThirdParty/Eigen3/CMakeLists.txt b/Modules/ThirdParty/Eigen3/CMakeLists.txt
+index 8dbbb86..428d335 100644
+--- a/Modules/ThirdParty/Eigen3/CMakeLists.txt
++++ b/Modules/ThirdParty/Eigen3/CMakeLists.txt
+@@ -88,7 +88,7 @@ find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFI
+ # Eigen3 targets are not installed if ITK_USE_SYSTEM_EIGEN==True
+ itk_module_impl()
+ 
+-configure_file(src/itk_eigen.h.in src/itk_eigen.h)
++configure_file(src/itk_eigen.h.in src/itk_eigen.h @ONLY)
+ install(FILES ${ITKEigen3_BINARY_DIR}/src/itk_eigen.h
+   DESTINATION ${ITKEigen3_INSTALL_INCLUDE_DIR}
+   COMPONENT Development
+diff --git a/Modules/ThirdParty/MINC/CMakeLists.txt b/Modules/ThirdParty/MINC/CMakeLists.txt
+index 5644257..9744d7c 100644
+--- a/Modules/ThirdParty/MINC/CMakeLists.txt
++++ b/Modules/ThirdParty/MINC/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(ITKMINC_THIRD_PARTY 1)
+ set(ITKMINC_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/src)
+ if(ITK_USE_SYSTEM_MINC)
+ 
+-  find_package(LIBMINC REQUIRED)
++  find_package(LIBMINC REQUIRED GLOBAL)
+ 
+   set(ITKMINC_SYSTEM_INCLUDE_DIRS  ${LIBMINC_INCLUDE_DIRS} )
+   set(ITKMINC_SYSTEM_LIBRARY_DIRS  ${LIBMINC_LIBRARY_DIRS} )
+diff --git a/Modules/ThirdParty/OpenJPEG/CMakeLists.txt b/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
+index 103eaa9..b59eb81 100644
+--- a/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
++++ b/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
+@@ -1,12 +1,19 @@
+ project(ITKOpenJPEG)
+ set(ITKOpenJPEG_THIRD_PARTY 1)
+ 
++if(ITK_USE_SYSTEM_OpenJPEG)
++  find_package(OpenJPEG CONFIG REQUIRED GLOBAL)
++  set(ITKOpenJPEG_INCLUDE_DIRS "")
++  set(ITKOpenJPEG_LIBRARIES $<TARGET_NAME:openjp2>)
++  set(ITKOpenJPEG_NO_SRC 1)
++else()
+ set(ITKOpenJPEG_INCLUDE_DIRS
+   ${ITKOpenJPEG_BINARY_DIR}/src/openjpeg
+   ${ITKOpenJPEG_SOURCE_DIR}/src/openjpeg
+   )
+ set(ITKOpenJPEG_LIBRARIES itkopenjpeg)
+ set(ITK_LIBRARY_PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS FALSE)
++endif()
+ 
+ itk_module_impl()
+ 
+diff --git a/Modules/ThirdParty/VNL/CMakeLists.txt b/Modules/ThirdParty/VNL/CMakeLists.txt
+index c379a24..25fdb8d 100644
+--- a/Modules/ThirdParty/VNL/CMakeLists.txt
++++ b/Modules/ThirdParty/VNL/CMakeLists.txt
+@@ -5,7 +5,7 @@ option(ITK_USE_SYSTEM_VXL "Use an outside build of VXL." OFF)
+ mark_as_advanced(ITK_USE_SYSTEM_VXL)
+ 
+ if(ITK_USE_SYSTEM_VXL)
+-  find_package(VXL 3.0.0 REQUIRED)
++  find_package(VXL 3.0.0 REQUIRED GLOBAL)
+   # 3.0.0 is the first version of VXL that supports
+   # the requirement of front() and back() members
+   # in the vnl_vector and vnl_vector_fixed.
+@@ -17,7 +17,8 @@ if(ITK_USE_SYSTEM_VXL)
+     ${VXL_CORE_INCLUDE_DIR}
+     )
+   set(ITKVNL_LIBRARIES vnl_algo vnl v3p_netlib netlib vcl)
+-  set(ITKVNL_SYSTEM_LIBRARY_DIRS "${VXL_LIBRARY_DIR}")
++  list(TRANSFORM ITKVNL_LIBRARIES REPLACE "^(.+)\$" "\$<TARGET_NAME:\\1>")
++  set(ITKVNL_SYSTEM_LIBRARY_DIRS "")
+   set(ITKVNL_NO_SRC 1)
+ else()
+ 

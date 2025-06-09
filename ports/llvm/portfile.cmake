@@ -16,6 +16,7 @@ vcpkg_from_github(
         75711.patch # [clang] Add intrin0.h header to mimic intrin0.h used by MSVC STL for clang-cl #75711
         79694.patch # [SEH] Ignore EH pad check for internal intrinsics #79694
         82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
+        add-include-chrono.patch # https://github.com/llvm/llvm-project/pull/118059
 )
 
 vcpkg_check_features(
@@ -33,6 +34,7 @@ vcpkg_check_features(
         enable-ios COMPILER_RT_ENABLE_IOS
         enable-eh LLVM_ENABLE_EH
         enable-bindings LLVM_ENABLE_BINDINGS
+        export-symbols LLVM_EXPORT_SYMBOLS_FOR_PLUGINS
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)
@@ -193,6 +195,13 @@ if("libcxxabi" IN_LIST FEATURES)
 endif()
 if("libunwind" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libunwind")
+    list(APPEND FEATURE_OPTIONS
+        -DLIBCXXABI_USE_LLVM_UNWINDER=ON
+    )
+else()
+    list(APPEND FEATURE_OPTIONS
+        -DLIBCXXABI_USE_LLVM_UNWINDER=OFF
+    )
 endif()
 if("pstl" IN_LIST FEATURES)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
