@@ -475,6 +475,7 @@ shiva-sfml:x64-windows=fail
 shiva-sfml:x86-windows=fail
 signalrclient:arm-uwp=fail
 simbody:arm64-windows=fail
+simd(android)=fail
 sleef:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
