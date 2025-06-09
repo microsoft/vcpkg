@@ -1935,7 +1935,6 @@ realsense2[openni2]:x64-windows-static = cascade
 realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core] only supports native & windows
 redis-plus-plus[async-std,async]:arm64-uwp = cascade
 redis-plus-plus[async-std,async]:x64-uwp = cascade
-rerun-sdk:x64-uwp = cascade
 restc-cpp:arm64-uwp = cascade
 restc-cpp:arm64-windows = cascade
 restc-cpp:x64-uwp = cascade

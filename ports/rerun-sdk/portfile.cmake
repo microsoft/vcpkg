@@ -3,14 +3,12 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/rerun-io/rerun/releases/download/${VERSION}/rerun_cpp_sdk.zip"
     FILENAME rerun_cpp_sdk.zip
-    SHA512 19e3c6d147782c7d4679b8c93adccb7ae3c1f5f1da8f0bf4a6a02dfb7b91f921fbaa0a5f72362af75dbe684595f6c4f17fd8c2ea110e6eb7dc867023c7145e76
+    SHA512 5a60328f1d37692805d7dd8a4ec2dacdd47f205dae5270640e3cd4a9daf8ef202d68ca8539b44c7e69f7dd78915db9eb06ab7e3b4b99e87bf61eb7e75748d433
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
-        arrow-20-fix.diff # https://github.com/rerun-io/rerun/commit/d620a649c18d333b02682b190d2b1b656b800746
 )
 
 vcpkg_cmake_configure(
