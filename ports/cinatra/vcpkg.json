@@ -1,7 +1,7 @@
 {
   "name": "cinatra",
   "version": "0.9.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Cinatra is a high performance HTTP framework with modern C++ features.",
   "homepage": "https://github.com/qicosmos/cinatra",
   "license": "MIT",
@@ -9,6 +9,7 @@
   "dependencies": [
     "asio",
     "async-simple",
+    "iguana",
     "tanakh-cmdline"
   ]
 }
