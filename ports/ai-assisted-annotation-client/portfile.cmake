@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME NvidiaAIAAClient)
 
 # Remove debug files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
