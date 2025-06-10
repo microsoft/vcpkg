@@ -86,6 +86,7 @@ cpp-netlib(uwp)=fail
 cppcoro(uwp | linux | osx)=fail
 cppfs(uwp)=fail
 cppmicroservices(uwp | (windows & arm))=fail
+crashpad:x64-linux=fail
 crashpad:x86-windows=fail
 ctemplate:x64-linux=fail
 ctemplate:x64-osx=fail
