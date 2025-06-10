@@ -5456,6 +5456,10 @@
       "baseline": "0.4.0",
       "port-version": 0
     },
+    "libunistd": {
+      "baseline": "2025-03-26",
+      "port-version": 0
+    },
     "libunistring": {
       "baseline": "1.2",
       "port-version": 0
