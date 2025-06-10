@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO            robinrowe/libunistd
+    REPO            SamuelMarks/libunistd
     REF             8ab9bd613b15302e767003ff1841acfad5d8ac97
     SHA512          802fde13d16ba17a221121fca3c63d2829b65f54a382428f385f273a5978162e61b412a872e1a3c2ddc69094fb23f39422e365357706ccd62b592fbb5da62ba2
-    HEAD_REF        master
-    PATCHES         option-disble-subproject0.patch
+    HEAD_REF        branch-opt
 )
 
 vcpkg_cmake_configure(

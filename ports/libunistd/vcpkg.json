@@ -1,9 +1,10 @@
 {
   "name": "libunistd",
-  "version-date": "2025-03-26",
+  "version-date": "2025-06-09",
   "description": "lightweight Windows POSIX/Pthreads library implementation",
   "homepage": "https://github.com/robinrowe/libunistd",
   "license": "MIT",
+  "supports": "windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
