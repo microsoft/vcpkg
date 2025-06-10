@@ -56,6 +56,10 @@
       "baseline": "2020-06-26",
       "port-version": 0
     },
+    "ai-assisted-annotation-client": {
+      "baseline": "1.0.2",
+      "port-version": 0
+    },
     "air-ctl": {
       "baseline": "1.1.2",
       "port-version": 3
