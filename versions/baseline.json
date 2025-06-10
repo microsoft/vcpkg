@@ -373,7 +373,7 @@
       "port-version": 0
     },
     "audit": {
-      "baseline": "4.0.2",
+      "baseline": "4.0.5",
       "port-version": 0
     },
     "aurora": {
