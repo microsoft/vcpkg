@@ -1,12 +1,10 @@
 --- original/cpp-client/CMakeLists.txt	2025-06-10 21:40:59.278578565 +0000
 +++ simple/cpp-client/CMakeLists.txt	2025-06-10 21:46:40.476647358 +0000
-@@ -54,7 +54,8 @@
+@@ -54,7 +54,6 @@
      
  ####################################################################
  # 3rdParty Dependencies
 -include_directories(${THIRDPARTY_BINARY_DIR}/include)
-+# Note: When using vcpkg, dependencies are found via find_package()
-+# include_directories(${THIRDPARTY_BINARY_DIR}/include)
  
  # Poco
  find_package(Poco REQUIRED Foundation Util Net)

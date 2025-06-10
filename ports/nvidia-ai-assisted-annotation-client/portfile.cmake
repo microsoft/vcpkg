@@ -8,8 +8,6 @@ vcpkg_from_github(
         remove-thirdparty-include.patch
 )
 
-# The project uses a SuperBuild system by default, but we want to use vcpkg dependencies
-# We need to disable the SuperBuild and configure to use system packages
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -17,7 +15,7 @@ vcpkg_cmake_configure(
         -DAIAA_LOG_DEBUG_ENABLED=0
         -DAIAA_LOG_INFO_ENABLED=1
     MAYBE_UNUSED_VARIABLES
-        USE_SUPERBUILD
+        USE_SUPERBUILD  # Used when NOT DEFINED to enable SuperBuild, OFF bypasses SuperBuild
 )
 
 vcpkg_cmake_install()

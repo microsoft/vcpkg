@@ -1,11 +1,14 @@
 {
-  "name": "ai-assisted-annotation-client",
+  "name": "nvidia-ai-assisted-annotation-client",
   "version": "1.0.2",
   "description": "AI-Assisted Annotation is a cross-platform C++/Python Client API to communicate with AI-Assisted Annotation Server for NVIDIA",
   "homepage": "https://github.com/NVIDIA/ai-assisted-annotation-client",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "itk",
+    {
+      "name": "itk",
+      "default-features": false
+    },
     "nlohmann-json",
     {
       "name": "poco",
