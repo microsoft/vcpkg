@@ -237,6 +237,7 @@
           "name": "vtk",
           "default-features": false,
           "features": [
+            "netcdf",
             "qt"
           ]
         },
