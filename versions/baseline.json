@@ -4502,7 +4502,7 @@
     },
     "libcap": {
       "baseline": "2.73",
-      "port-version": 0
+      "port-version": 1
     },
     "libcbor": {
       "baseline": "0.12.0",
@@ -4694,7 +4694,7 @@
     },
     "libffi": {
       "baseline": "3.4.8",
-      "port-version": 0
+      "port-version": 1
     },
     "libfido2": {
       "baseline": "1.15.0",
@@ -7570,7 +7570,7 @@
     },
     "python3": {
       "baseline": "3.12.9",
-      "port-version": 0
+      "port-version": 1
     },
     "qca": {
       "baseline": "2.3.7",
@@ -9781,7 +9781,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2024-09-22",
+      "baseline": "2025-05-29",
       "port-version": 0
     },
     "vcpkg-get-python": {
@@ -9801,7 +9801,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-04-25",
+      "baseline": "2025-05-22",
       "port-version": 0
     },
     "vcpkg-msbuild": {
