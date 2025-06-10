@@ -2,10 +2,3 @@ The package teem provides CMake targets:
 
     find_package(teem CONFIG REQUIRED)
     target_link_libraries(main PRIVATE teem::teem)
-
-Alternatively, you can include the headers directly:
-
-    #include <teem/air.h>
-    #include <teem/biff.h>
-    #include <teem/hest.h>
-    #include <teem/nrrd.h>

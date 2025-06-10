@@ -1,13 +1,9 @@
-vcpkg_download_distfile(
-    ARCHIVE
-    URLS "https://sourceforge.net/projects/teem/files/teem/1.11.0/teem-1.11.0-src.tar.gz/download"
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO teem
+    REF teem/1.11.0
     FILENAME "teem-1.11.0-src.tar.gz"
     SHA512 48b171a12db0f02dcfdaa87aa84464c651d661fa66201dc966b3cd5a8134c5bad1dad8987ffcc5d7c21c5d14c2eb617d48200410a1bda19008ef743c093ed575
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
 )
 
 # Apply patches to CMakeLists.txt
@@ -29,36 +25,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Install headers manually since CMake install may not work correctly
-# Teem consists of multiple libraries, so install headers from all modules
-set(TEEM_MODULES air biff hest nrrd ell unrrdu dye gage hoover limn echo ten pull coil push seek mite meet)
-
-foreach(MODULE ${TEEM_MODULES})
-    # Look for headers in each module directory
-    file(GLOB MODULE_HEADERS "${SOURCE_PATH}/src/${MODULE}/*.h")
-    if(MODULE_HEADERS)
-        file(INSTALL ${MODULE_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem")
-    endif()
-endforeach()
-
-# Also install any main teem header if it exists
-if(EXISTS "${SOURCE_PATH}/src/teem.h")
-    file(INSTALL "${SOURCE_PATH}/src/teem.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem")
-endif()
-
-# Fallback: ensure at least the core headers are present
-set(CORE_HEADERS
-    "${SOURCE_PATH}/src/air/air.h"
-    "${SOURCE_PATH}/src/biff/biff.h"
-    "${SOURCE_PATH}/src/hest/hest.h"
-    "${SOURCE_PATH}/src/nrrd/nrrd.h"
-)
-
-foreach(HEADER ${CORE_HEADERS})
-    if(EXISTS "${HEADER}")
-        file(INSTALL "${HEADER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem")
-    endif()
-endforeach()
+# Install headers - teem has many headers (>12), use recursive glob as recommended
+file(GLOB_RECURSE TEEM_HEADERS "${SOURCE_PATH}/src/*.h")
+file(INSTALL ${TEEM_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
