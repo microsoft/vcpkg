@@ -1,8 +1,6 @@
-diff --git a/cpp-client/CMakeLists.txt b/cpp-client/CMakeLists.txt
-index 1234567..abcdefg 100644
---- a/cpp-client/CMakeLists.txt
-+++ b/cpp-client/CMakeLists.txt
-@@ -54,7 +54,8 @@ target_include_directories(NvidiaAIAAClient PUBLIC
+--- original/cpp-client/CMakeLists.txt	2025-06-10 21:40:59.278578565 +0000
++++ modified/cpp-client/CMakeLists.txt	2025-06-10 21:41:10.622612166 +0000
+@@ -54,7 +54,8 @@
      
  ####################################################################
  # 3rdParty Dependencies
@@ -12,8 +10,7 @@ index 1234567..abcdefg 100644
  
  # Poco
  find_package(Poco REQUIRED Foundation Util Net)
-@@ -66,6 +67,10 @@ endif()
- # ITK
+@@ -67,6 +68,10 @@
  find_package(ITK)
  include(${ITK_USE_FILE})
  target_link_libraries(NvidiaAIAAClient ${ITK_LIBRARIES})

@@ -16,6 +16,8 @@ vcpkg_cmake_configure(
         -DUSE_SUPERBUILD=OFF
         -DAIAA_LOG_DEBUG_ENABLED=0
         -DAIAA_LOG_INFO_ENABLED=1
+    MAYBE_UNUSED_VARIABLES
+        USE_SUPERBUILD
 )
 
 vcpkg_cmake_install()
