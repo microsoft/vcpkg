@@ -1,0 +1,28 @@
+{
+  "name": "ai-assisted-annotation-client",
+  "version": "1.0.2",
+  "description": "AI-Assisted Annotation is a cross-platform C++/Python Client API to communicate with AI-Assisted Annotation Server for NVIDIA",
+  "homepage": "https://github.com/NVIDIA/ai-assisted-annotation-client",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "itk",
+    "nlohmann-json",
+    {
+      "name": "poco",
+      "default-features": false,
+      "features": [
+        "crypto",
+        "net",
+        "util"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

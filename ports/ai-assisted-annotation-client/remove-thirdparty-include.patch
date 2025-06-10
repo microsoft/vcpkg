@@ -1,0 +1,14 @@
+diff --git a/cpp-client/CMakeLists.txt b/cpp-client/CMakeLists.txt
+index 1234567..abcdefg 100644
+--- a/cpp-client/CMakeLists.txt
++++ b/cpp-client/CMakeLists.txt
+@@ -54,7 +54,8 @@ target_include_directories(NvidiaAIAAClient PUBLIC
+     
+ ####################################################################
+ # 3rdParty Dependencies
+-include_directories(${THIRDPARTY_BINARY_DIR}/include)
++# Note: When using vcpkg, dependencies are found via find_package()
++# include_directories(${THIRDPARTY_BINARY_DIR}/include)
+ 
+ # Poco
+ find_package(Poco REQUIRED Foundation Util Net)
