@@ -26,7 +26,28 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rotor)
+# Fix the config file to reference the correct targets file
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/cmake/rotor/rotor-config.cmake" 
+                        "rotor-targets.cmake" 
+                        "rotor-static-targets.cmake")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/cmake/rotor/rotor-config.cmake" 
+                            "rotor-targets.cmake" 
+                            "rotor-static-targets.cmake")
+    endif()
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/cmake/rotor/rotor-config.cmake" 
+                        "rotor-targets.cmake" 
+                        "rotor-shared-targets.cmake")
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/cmake/rotor/rotor-config.cmake" 
+                            "rotor-targets.cmake" 
+                            "rotor-shared-targets.cmake")
+    endif()
+endif()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rotor PACKAGE_NAME rotor)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
