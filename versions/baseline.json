@@ -369,7 +369,7 @@
       "port-version": 0
     },
     "audiofile": {
-      "baseline": "1.1.2",
+      "baseline": "1.1.3",
       "port-version": 0
     },
     "audit": {
@@ -1413,8 +1413,8 @@
       "port-version": 0
     },
     "box2d": {
-      "baseline": "3.1.0",
-      "port-version": 1
+      "baseline": "3.1.1",
+      "port-version": 0
     },
     "braft": {
       "baseline": "2021-26-04",
@@ -1765,7 +1765,7 @@
       "port-version": 2
     },
     "clipper2": {
-      "baseline": "1.5.3",
+      "baseline": "1.5.4",
       "port-version": 0
     },
     "clockutils": {
@@ -2065,7 +2065,7 @@
       "port-version": 0
     },
     "cppwinrt": {
-      "baseline": "2.0.240405.15",
+      "baseline": "2.0.250303.1",
       "port-version": 0
     },
     "cppxaml": {
@@ -2274,7 +2274,7 @@
     },
     "dav1d": {
       "baseline": "1.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "daw-header-libraries": {
       "baseline": "2.123.2",
@@ -2669,7 +2669,7 @@
       "port-version": 3
     },
     "etl": {
-      "baseline": "20.41.2",
+      "baseline": "20.41.5",
       "port-version": 0
     },
     "eve": {
@@ -3221,7 +3221,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.3.1",
+      "baseline": "5.4.0",
       "port-version": 0
     },
     "glbinding": {
@@ -4453,7 +4453,7 @@
       "port-version": 0
     },
     "libass": {
-      "baseline": "0.17.3",
+      "baseline": "0.17.4",
       "port-version": 0
     },
     "libassert": {
@@ -4502,7 +4502,7 @@
     },
     "libcap": {
       "baseline": "2.73",
-      "port-version": 0
+      "port-version": 1
     },
     "libcbor": {
       "baseline": "0.12.0",
@@ -4694,7 +4694,7 @@
     },
     "libffi": {
       "baseline": "3.4.8",
-      "port-version": 0
+      "port-version": 1
     },
     "libfido2": {
       "baseline": "1.15.0",
@@ -5145,7 +5145,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "9.0.5",
+      "baseline": "9.0.6",
       "port-version": 0
     },
     "libplist": {
@@ -5558,7 +5558,7 @@
     },
     "libxcrypt": {
       "baseline": "4.4.38",
-      "port-version": 0
+      "port-version": 1
     },
     "libxcvt": {
       "baseline": "0.1.2",
@@ -5841,7 +5841,7 @@
       "port-version": 0
     },
     "lua": {
-      "baseline": "5.4.7",
+      "baseline": "5.4.8",
       "port-version": 0
     },
     "lua-compat53": {
@@ -5873,7 +5873,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.676",
+      "baseline": "0.677",
       "port-version": 0
     },
     "luminoengine": {
@@ -5965,7 +5965,7 @@
       "port-version": 0
     },
     "manifold": {
-      "baseline": "3.1.0",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "mapbox-geojson-cpp": {
@@ -6009,8 +6009,8 @@
       "port-version": 0
     },
     "marisa-trie": {
-      "baseline": "0.2.6+20200926",
-      "port-version": 2
+      "baseline": "0.3.0",
+      "port-version": 0
     },
     "marl": {
       "baseline": "2023-06-28",
@@ -6357,7 +6357,7 @@
       "port-version": 0
     },
     "msdfgen": {
-      "baseline": "1.12",
+      "baseline": "1.12.1",
       "port-version": 0
     },
     "msgpack": {
@@ -6866,7 +6866,7 @@
     },
     "opencc": {
       "baseline": "1.1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "opencensus-cpp": {
       "baseline": "2021-08-26",
@@ -7432,6 +7432,10 @@
       "baseline": "2020-07-03",
       "port-version": 2
     },
+    "ppqsort": {
+      "baseline": "1.0.5",
+      "port-version": 0
+    },
     "pprint": {
       "baseline": "2019-07-19",
       "port-version": 3
@@ -7457,7 +7461,7 @@
       "port-version": 0
     },
     "proj": {
-      "baseline": "9.6.1",
+      "baseline": "9.6.2",
       "port-version": 0
     },
     "projectm": {
@@ -7566,7 +7570,7 @@
     },
     "python3": {
       "baseline": "3.12.9",
-      "port-version": 0
+      "port-version": 1
     },
     "qca": {
       "baseline": "2.3.7",
@@ -8025,7 +8029,7 @@
       "port-version": 9
     },
     "quill": {
-      "baseline": "9.0.3",
+      "baseline": "10.0.0",
       "port-version": 0
     },
     "quirc": {
@@ -8285,7 +8289,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.3.3",
+      "baseline": "4.3.5",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -8517,7 +8521,7 @@
       "port-version": 6
     },
     "sdl2": {
-      "baseline": "2.32.6",
+      "baseline": "2.32.8",
       "port-version": 0
     },
     "sdl2-gfx": {
@@ -8585,7 +8589,7 @@
       "port-version": 1
     },
     "sentry-native": {
-      "baseline": "0.8.5",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "septag-dmon": {
@@ -8701,7 +8705,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "6.1.149",
+      "baseline": "6.1.150",
       "port-version": 0
     },
     "simde": {
@@ -8709,7 +8713,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "3.12.3",
+      "baseline": "3.13.0",
       "port-version": 0
     },
     "simdutf": {
@@ -9521,7 +9525,7 @@
       "port-version": 1
     },
     "tree-sitter": {
-      "baseline": "0.25.5",
+      "baseline": "0.25.6",
       "port-version": 0
     },
     "tree-sitter-c": {
@@ -9777,7 +9781,7 @@
       "port-version": 0
     },
     "vcpkg-cmake-get-vars": {
-      "baseline": "2024-09-22",
+      "baseline": "2025-05-29",
       "port-version": 0
     },
     "vcpkg-get-python": {
@@ -9797,7 +9801,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-04-25",
+      "baseline": "2025-05-22",
       "port-version": 0
     },
     "vcpkg-msbuild": {
@@ -10345,8 +10349,8 @@
       "port-version": 4
     },
     "yalantinglibs": {
-      "baseline": "0.4.0",
-      "port-version": 1
+      "baseline": "0.5.0",
+      "port-version": 0
     },
     "yaml-cpp": {
       "baseline": "0.8.0",
@@ -10362,7 +10366,7 @@
     },
     "yasm": {
       "baseline": "1.3.0",
-      "port-version": 6
+      "port-version": 7
     },
     "yasm-tool": {
       "baseline": "2021-12-14",
