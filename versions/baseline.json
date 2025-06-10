@@ -9433,7 +9433,7 @@
       "port-version": 0
     },
     "tinyproto": {
-      "baseline": "2025-05-26",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "tinyspline": {
