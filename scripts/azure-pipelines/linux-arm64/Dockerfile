@@ -78,6 +78,7 @@ RUN echo "Build date: ${BUILD_DATE}" && \
         zip \
         python3 \
         python3-setuptools \
+        python3-venv \
         gnupg \
         python3-pip && \
     rm -rf /var/lib/apt/lists/*
