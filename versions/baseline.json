@@ -2656,8 +2656,12 @@
       "baseline": "3.15.0",
       "port-version": 0
     },
+    "eraser": {
+      "baseline": "2.2.1",
+      "port-version": 0
+    },
     "ereignis": {
-      "baseline": "2.3",
+      "baseline": "4.3",
       "port-version": 0
     },
     "esaxx": {
@@ -5786,7 +5790,7 @@
     },
     "lockpp": {
       "baseline": "3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lodepng": {
       "baseline": "2021-12-04",
@@ -7392,6 +7396,10 @@
       "baseline": "3.0.0",
       "port-version": 5
     },
+    "poolparty": {
+      "baseline": "3.0.1",
+      "port-version": 0
+    },
     "poolstl": {
       "baseline": "0.3.5",
       "port-version": 0
@@ -8168,6 +8176,10 @@
       "baseline": "2.56.2",
       "port-version": 2
     },
+    "rebind": {
+      "baseline": "5.2.2",
+      "port-version": 0
+    },
     "recast": {
       "baseline": "deprecated",
       "port-version": 0
@@ -8449,8 +8461,8 @@
       "port-version": 1
     },
     "saucer": {
-      "baseline": "2.3.0",
-      "port-version": 1
+      "baseline": "6.0.1",
+      "port-version": 0
     },
     "sbp": {
       "baseline": "6.2.1",
@@ -10061,7 +10073,7 @@
       "port-version": 0
     },
     "webview2": {
-      "baseline": "1.0.2277.86",
+      "baseline": "1.0.3240.44",
       "port-version": 0
     },
     "wepoll": {
