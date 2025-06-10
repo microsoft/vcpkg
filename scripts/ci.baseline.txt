@@ -570,8 +570,6 @@ libtcod:x64-android=fail
 libtomcrypt:arm64-uwp=fail
 libtomcrypt:arm64-windows-static-md=fail
 libtomcrypt:arm64-windows=fail
-libusb-win32:arm64-uwp=fail
-libusb-win32:x64-uwp=fail
 # upstream issue https://github.com/microsoft/vcpkg/pull/13765#issuecomment-699710253
 libvmdk:arm-neon-android=skip
 libvmdk:arm64-android=skip
