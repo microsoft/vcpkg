@@ -73,7 +73,7 @@
       "os": "windows",
       "arch": "arm64",
       "version": "2.7.4",
-      "executable": "mingw64/bin/git.exe",
+      "executable": "clangarm64/bin/git.exe",
       "url": "https://github.com/git-for-windows/git/releases/download/v2.47.1.windows.2/PortableGit-2.47.1.2-arm64.7z.exe",
       "sha512": "2e57cebc1f567bbb63b92825e4b9625de24bc897c4ea9aa8d88f70b5ad69c53005e062f94b60d10269855f2edd0505d5d6233c6c067d6af1bbedde66c9b856c3",
       "archive": "PortableGit-2.47.1.2-arm64.7z.exe"
@@ -338,6 +338,46 @@
       "url": "https://nodejs.org/dist/v16.15.1/node-v16.15.1-darwin-x64.tar.gz",
       "sha512": "90d0612bbe5467b6cf385c91a68b8daad0057e3e0ccacea44567f5b95b14f7481cb79784185ab1463b4bd990e092ff0f9109576d1a1934b84e1c816582929611",
       "archive": "node-v16.15.1-darwin-x64.tar.gz"
+    },
+    {
+      "name": "azcopy",
+      "os": "linux",
+      "arch": "amd64",
+      "version": "10.29.0",
+      "executable": "azcopy_linux_amd64_10.29.0/azcopy",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.29.0/azcopy_linux_amd64_10.29.0.tar.gz",
+      "sha512": "31f9cb9b1c69e5e974142516ab91c73a0d15e793cafd86a545e4186d4fab0dd4e33600f3fdcc0ee01e3c893897843823fa9c9c2c3b3422388d988b2ecb2ad4fb",
+      "archive": "azcopy_linux_amd64_10.29.0.tar.gz"
+    },
+    {
+      "name": "azcopy",
+      "os": "osx",
+      "arch": "amd64",
+      "version": "10.29.0",
+      "executable": "azcopy_darwin_amd64_10.29.0/azcopy",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.29.0/azcopy_darwin_amd64_10.29.0.zip",
+      "sha512": "00ff3f4ac5abf173bb0349941f15a2b97441b57d4f2c05933a6a22b65a10695713d3ed546fcf999b72f18728f6de7bd3aef1254f1f34be82d627219d16e490fe",
+      "archive": "azcopy_darwin_amd64_10.29.0.zip"
+    },
+    {
+      "name": "azcopy",
+      "os": "osx",
+      "arch": "arm64",
+      "version": "10.29.0",
+      "executable": "azcopy_darwin_arm64_10.29.0/azcopy",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.29.0/azcopy_darwin_arm64_10.29.0.zip",
+      "sha512": "af3ea5b218e6eff07d8a1e2f04bd2f4d3ce18e8b5f4214135ae1810aa153c61593b5d55e619b4ea6c5afe78013fd9f41d80a161059323598d922b8aff0b219a0",
+      "archive": "azcopy_darwin_arm64_10.29.0.zip"
+    },
+    {
+      "name": "azcopy",
+      "os": "windows",
+      "arch": "amd64",
+      "version": "10.29.0",
+      "executable": "azcopy_windows_amd64_10.29.0/azcopy.exe",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.29.0/azcopy_windows_amd64_10.29.0.zip",
+      "sha512": "e3e4962150eb59f3e4f57119db003f31ec3b0a01668d9d7d2ceb20c7ef3c7f1bb06f300ed213d715b316de6ff4512acd2130b6613cc0a9c2ed12b30400aa6462",
+      "archive": "azcopy_windows_amd64_10.29.0.zip"
     }
   ]
 }
