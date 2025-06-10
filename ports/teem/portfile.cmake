@@ -29,18 +29,36 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Install headers manually (following user's approach since CMake install may not work correctly)
-file(INSTALL
-    FILES
-        "${SOURCE_PATH}/src/air/air.h"
-        "${SOURCE_PATH}/src/biff/biff.h"
-        "${SOURCE_PATH}/src/hest/hest.h"
-        "${SOURCE_PATH}/src/nrrd/nrrd.h"
-        "${SOURCE_PATH}/src/nrrd/nrrdDefines.h"
-        "${SOURCE_PATH}/src/nrrd/nrrdEnums.h"
-        "${SOURCE_PATH}/src/nrrd/nrrdMacros.h"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem"
+# Install headers manually since CMake install may not work correctly
+# Teem consists of multiple libraries, so install headers from all modules
+set(TEEM_MODULES air biff hest nrrd ell unrrdu dye gage hoover limn echo ten pull coil push seek mite meet)
+
+foreach(MODULE ${TEEM_MODULES})
+    # Look for headers in each module directory
+    file(GLOB MODULE_HEADERS "${SOURCE_PATH}/src/${MODULE}/*.h")
+    if(MODULE_HEADERS)
+        file(INSTALL ${MODULE_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem")
+    endif()
+endforeach()
+
+# Also install any main teem header if it exists
+if(EXISTS "${SOURCE_PATH}/src/teem.h")
+    file(INSTALL "${SOURCE_PATH}/src/teem.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem")
+endif()
+
+# Fallback: ensure at least the core headers are present
+set(CORE_HEADERS
+    "${SOURCE_PATH}/src/air/air.h"
+    "${SOURCE_PATH}/src/biff/biff.h"
+    "${SOURCE_PATH}/src/hest/hest.h"
+    "${SOURCE_PATH}/src/nrrd/nrrd.h"
 )
+
+foreach(HEADER ${CORE_HEADERS})
+    if(EXISTS "${HEADER}")
+        file(INSTALL "${HEADER}" DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem")
+    endif()
+endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
