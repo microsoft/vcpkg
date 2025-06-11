@@ -11,95 +11,140 @@ parameters:
     type: string
     default: '-'
 
-jobs:
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x86_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+stages:
+- stage: DetectBuildType
+  displayName: 'Detect Build Type'
+  jobs:
+  - job: DetectCopilot
+    displayName: 'Detect if Copilot Build'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: none
+    - script: |
+        echo "Checking build trigger and commit author..."
+        echo "Build.RequestedForEmail: $(Build.RequestedForEmail)"
+        echo "Build.RequestedFor: $(Build.RequestedFor)"  
+        echo "Build.SourceVersionMessage: $(Build.SourceVersionMessage)"
+        
+        IS_COPILOT=false
+        
+        # Check various indicators for Copilot builds
+        if [[ "$(Build.RequestedForEmail)" == *"copilot"* ]] || [[ "$(Build.RequestedForEmail)" == *"github.com"* ]]; then
+          IS_COPILOT=true
+          echo "Detected Copilot build via email: $(Build.RequestedForEmail)"
+        elif [[ "$(Build.SourceVersionMessage)" == *"copilot"* ]]; then
+          IS_COPILOT=true
+          echo "Detected Copilot build via commit message"
+        elif [[ "$(Build.RequestedFor)" == *"copilot"* ]]; then
+          IS_COPILOT=true
+          echo "Detected Copilot build via requested for"
+        fi
+        
+        echo "IsCopilotBuild: $IS_COPILOT"
+        echo "##vso[task.setvariable variable=IsCopilotBuild;isOutput=true]$IS_COPILOT"
+      name: detect
+      displayName: 'Detect Copilot Build'
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+- stage: BuildX64Linux
+  displayName: 'Build x64-linux (runs first for Copilot)'
+  dependsOn: DetectBuildType
+  jobs:
+  - template: linux/azure-pipelines.yml
+    parameters:
+      jobName: x64_linux
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_release
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+- stage: BuildAllOthers
+  displayName: 'Build All Other Triplets'
+  dependsOn: 
+  - DetectBuildType
+  - BuildX64Linux
+  condition: or(eq(dependencies.DetectBuildType.outputs['DetectCopilot.detect.IsCopilotBuild'], 'false'), succeeded('BuildX64Linux'))
+  jobs:
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: x86_windows
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_static
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: x64_windows
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_static_md
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: x64_windows_release
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_uwp
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: x64_windows_static
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: x64_windows_static_md
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_windows_static_md
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: x64_uwp
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_uwp
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: arm64_windows
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: osx/azure-pipelines.yml
-  parameters:
-    jobName: x64_osx
-    poolName: 'PrOsx-2025-01-24'
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: arm64_windows_static_md
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: osx/azure-pipelines.yml
-  parameters:
-    jobName: arm64_osx
-    poolName: 'PrOsx-2025-01-24-arm64'
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: windows/azure-pipelines.yml
+    parameters:
+      jobName: arm64_uwp
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: linux/azure-pipelines.yml
-  parameters:
-    jobName: x64_linux
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: osx/azure-pipelines.yml
+    parameters:
+      jobName: x64_osx
+      poolName: 'PrOsx-2025-01-24'
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: arm_neon_android
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: osx/azure-pipelines.yml
+    parameters:
+      jobName: arm64_osx
+      poolName: 'PrOsx-2025-01-24-arm64'
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: x64_android
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: android/azure-pipelines.yml
+    parameters:
+      jobName: arm_neon_android
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: arm64_android
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+  - template: android/azure-pipelines.yml
+    parameters:
+      jobName: x64_android
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
+
+  - template: android/azure-pipelines.yml
+    parameters:
+      jobName: arm64_android
+      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+      tripletPattern: ${{ parameters.tripletPattern }}
