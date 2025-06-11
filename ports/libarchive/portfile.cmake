@@ -2,14 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 5ce1fb0b0108a1f5a1547fbecc261e0438b449eee7253eec0b66452462c052b09c8e6cccd0ed9e7fd0c55e5862b334519b17da4f72b1e0196e73bc90ad97c983
+    SHA512 284da172cd5aef6a321f88a35ecd1f0400b885fea33d7c84139faa9ba67487b2673cbb244914f95c22b6c7e7cbfce773da4536c975844c8a156d6b4b3e58193f
     HEAD_REF master
     PATCHES
         disable-warnings.patch
         fix-buildsystem.patch
         fix-cpu-set.patch
         fix-deps.patch
-        fix-cmake-version.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
