@@ -29,8 +29,9 @@ if ("ibus" IN_LIST FEATURES)
     message(WARNING "You will need to install ibus dependencies to use feature ibus:\nsudo apt install libibus-1.0-dev\n")
 endif()
 # option for not need to show windows
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT "x11" IN_LIST FEATURES AND NOT "wayland" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DSDL_UNIX_CONSOLE_BUILD=ON)
+list(APPEND FEATURE_OPTIONS -DSDL_UNIX_CONSOLE_BUILD=ON)
+if (VCPKG_TARGET_IS_LINUX AND NOT "x11" IN_LIST FEATURES AND NOT "wayland" IN_LIST FEATURES)
+    message(WARNING "The selected features don't allow sdl3 to create windows, which is usually unintentional. You can get windowing support by installing the x11 and/or wayland features.")
 endif()
 
 vcpkg_cmake_configure(
