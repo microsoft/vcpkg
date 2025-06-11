@@ -43,12 +43,14 @@ vcpkg_cmake_install()
 
 # Avoid deleting debug/lib/cmake when fixing the first cmake
 if(NOT VCPKG_BUILD_TYPE)
-  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/share")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake" "${CURRENT_PACKAGES_DIR}/debug/share/azure-kinect-sensor-sdk_cmake")
 endif()
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/share")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share")
+file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake" "${CURRENT_PACKAGES_DIR}/share/azure-kinect-sensor-sdk_cmake")
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME k4a CONFIG_PATH share/k4a)
-vcpkg_cmake_config_fixup(PACKAGE_NAME k4arecord CONFIG_PATH share/k4arecord)
+vcpkg_cmake_config_fixup(PACKAGE_NAME k4a CONFIG_PATH share/azure-kinect-sensor-sdk_cmake/k4a)
+vcpkg_cmake_config_fixup(PACKAGE_NAME k4arecord CONFIG_PATH share/azure-kinect-sensor-sdk_cmake/k4arecord)
 
 vcpkg_copy_pdbs()
 
@@ -99,3 +101,5 @@ endif()
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/azure-kinect-sensor-sdk_cmake")
