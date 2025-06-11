@@ -2213,7 +2213,7 @@
       "port-version": 0
     },
     "cwapi3d": {
-      "baseline": "30.475.1",
+      "baseline": "32.219.1",
       "port-version": 0
     },
     "cxxgraph": {
@@ -3309,7 +3309,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "2.36.0",
+      "baseline": "2.37.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -7001,7 +7001,7 @@
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
-      "baseline": "2025-05-12",
+      "baseline": "2025-05-21",
       "port-version": 0
     },
     "opentracing": {
