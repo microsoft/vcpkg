@@ -7001,7 +7001,7 @@
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
-      "baseline": "2025-06-10",
+      "baseline": "2025-06-11",
       "port-version": 0
     },
     "opentracing": {
