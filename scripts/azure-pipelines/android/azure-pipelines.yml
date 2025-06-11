@@ -53,7 +53,7 @@ jobs:
     displayName: 'Build vcpkg with CMake'
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
     inputs:
-      azureSubscription: 'VcpkgPrFleet'
+      azureSubscription: 'vcpkg-pr-fleet-wus'
       scriptType: bash
       scriptLocation: 'inlineScript'
       inlineScript: |
@@ -72,7 +72,7 @@ jobs:
   - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
-      azureSubscription: 'VcpkgPrFleet'
+      azureSubscription: 'vcpkg-pr-fleet-wus'
       scriptType: bash
       scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |

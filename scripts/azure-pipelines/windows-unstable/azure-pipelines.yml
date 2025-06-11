@@ -61,7 +61,7 @@ jobs:
   - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
-      azureSubscription: 'VcpkgPrFleet'
+      azureSubscription: 'vcpkg-pr-fleet-wus'
       scriptType: 'pscore'
       failOnStandardError: true
       scriptLocation: 'inlineScript'
