@@ -3769,8 +3769,8 @@
       "port-version": 0
     },
     "igraph": {
-      "baseline": "0.10.15",
-      "port-version": 1
+      "baseline": "0.10.16",
+      "port-version": 0
     },
     "iir1": {
       "baseline": "1.9.5",
