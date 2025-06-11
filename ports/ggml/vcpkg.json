@@ -1,12 +1,11 @@
 {
   "name": "ggml",
-  "version-date": "2025-02-12",
+  "version-date": "2025-05-13",
   "description": "Tensor library for machine learning",
   "homepage": "https://github.com/ggml-org/ggml",
   "license": "MIT",
-  "supports": "!(windows & arm) & !uwp & !android",
+  "supports": "!(windows & arm) & !uwp",
   "dependencies": [
-    "blas",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -17,8 +16,16 @@
     }
   ],
   "features": {
+    "blas": {
+      "description": "Enable BLAS support",
+      "dependencies": [
+        "blas",
+        "cblas"
+      ]
+    },
     "cuda": {
       "description": "Enable CUDA support",
+      "supports": "!(windows & staticcrt)",
       "dependencies": [
         "cuda"
       ]
@@ -29,6 +36,7 @@
     },
     "opencl": {
       "description": "Enable OpenCL support",
+      "supports": "!arm32",
       "dependencies": [
         "opencl"
       ]
@@ -39,9 +47,20 @@
     },
     "vulkan": {
       "description": "Enable Vulkan support",
-      "supports": "!x86",
       "dependencies": [
-        "vulkan-sdk-components"
+        {
+          "name": "ggml",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        },
+        {
+          "name": "shaderc",
+          "host": true
+        },
+        "vulkan"
       ]
     }
   }
