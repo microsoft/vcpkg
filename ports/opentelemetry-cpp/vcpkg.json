@@ -92,7 +92,10 @@
       ]
     },
     "zipkin": {
-      "description": "Whether to include the Zipkin exporter in the SDK"
+      "description": "Whether to include the Zipkin exporter in the SDK",
+      "dependencies": [
+        "curl"
+      ]
     }
   }
 }
