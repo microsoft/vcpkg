@@ -13,4 +13,4 @@ index 4e65f049..fead44d4 100644
 +  endif()
    if(NOT OpenTracing_FOUND)
      set(OPENTRACING_DIR "third_party/opentracing-cpp")
-     message(STATUS "Trying to use local ${OPENTRACING_DIR} from submodule"
+     message(STATUS "Trying to use local ${OPENTRACING_DIR} from submodule")
