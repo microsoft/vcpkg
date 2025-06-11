@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libffi/libffi/releases/download/v${VERSION}/libffi-${VERSION}.tar.gz"
     FILENAME "libffi-${VERSION}.tar.gz"
-    SHA512 1d47980185abc91d81ba6dfa775b673e83d42bad31a5ca1407068b319113a1f7e79da241204e41f096e1d3072ada1364d64bb9641cfb0b82fbe3821da2feb6ac
+    SHA512 3da9e21fdb920e7962ceb01ee671ef36196df4d5dad62e0cdd8e87cc60e350f241c204350560ae26ea04cc898161b5585c8a5a5125bdbcc84508efbb7ea61eb8
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
