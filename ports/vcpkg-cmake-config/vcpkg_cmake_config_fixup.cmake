@@ -261,6 +261,22 @@ function(z_vcpkg_cmake_config_fixup_merge out_var release_var debug_var)
     list(FILTER debug_libs EXCLUDE REGEX [[^\\[$]<\\[$]<NOT:\\[$]<CONFIG:DEBUG>>:]])
     list(TRANSFORM debug_libs REPLACE [[^\\[$]<\\[$]<CONFIG:DEBUG>:(.*)>$]] "\\1")
 
+    # Fix hardcoded debug paths in release configuration
+    # Convert paths like "/debug/lib/library.lib" to proper generator expressions
+    set(fixed_release_libs "")
+    foreach(release_lib IN LISTS release_libs)
+        if(release_lib MATCHES "^(.*)[/\\\\]debug[/\\\\]lib[/\\\\](.*)$")
+            # Found a hardcoded debug path in release config - convert to release path
+            set(base_path "${CMAKE_MATCH_1}")
+            set(lib_name "${CMAKE_MATCH_2}")
+            set(release_path "${base_path}/lib/${lib_name}")
+            list(APPEND fixed_release_libs "${release_path}")
+        else()
+            list(APPEND fixed_release_libs "${release_lib}")
+        endif()
+    endforeach()
+    set(release_libs "${fixed_release_libs}")
+
     set(merged_libs "")
     foreach(release_lib debug_lib IN ZIP_LISTS release_libs debug_libs)
         if(release_lib STREQUAL debug_lib)

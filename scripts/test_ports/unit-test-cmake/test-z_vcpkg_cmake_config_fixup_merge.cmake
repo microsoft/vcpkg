@@ -54,3 +54,11 @@ unit_test_check_variable_equal(
     [[z_vcpkg_cmake_config_fixup_merge(merged release_libs debug_libs)]]
     merged [[\$<\$<CONFIG:DEBUG>:d2>;\$<\$<NOT:\$<CONFIG:DEBUG>>:o1>]]
 )
+
+# Test case for hardcoded debug paths in release configuration (GDAL issue)
+set(release_libs "C:/vcpkg/installed/x64-windows/debug/lib/sqlite3.lib;C:/vcpkg/installed/x64-windows/lib/normallib.lib")
+set(debug_libs   "C:/vcpkg/installed/x64-windows/debug/lib/sqlite3.lib;C:/vcpkg/installed/x64-windows/debug/lib/normallib.lib")
+unit_test_check_variable_equal(
+    [[z_vcpkg_cmake_config_fixup_merge(merged release_libs debug_libs)]]
+    merged [[\$<\$<NOT:\$<CONFIG:DEBUG>>:C:/vcpkg/installed/x64-windows/lib/sqlite3.lib>;\$<\$<CONFIG:DEBUG>:C:/vcpkg/installed/x64-windows/debug/lib/sqlite3.lib>;\$<\$<NOT:\$<CONFIG:DEBUG>>:C:/vcpkg/installed/x64-windows/lib/normallib.lib>;\$<\$<CONFIG:DEBUG>:C:/vcpkg/installed/x64-windows/debug/lib/normallib.lib>]]
+)
