@@ -1,6 +1,14 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 include("${CURRENT_HOST_INSTALLED_DIR}/share/unit-test-cmake/test-macros.cmake")
 
+if("scripts-cl-cpp-wrapper" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-scripts-cl_cpp_wrapper.cmake")
+endif()
+
+if("vcpkg-make-cl-cpp-wrapper" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg-make-cl_cpp_wrapper.cmake")
+endif()
+
 if("z-vcpkg-make-prepare-compile-flags" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_make_prepare_compile_flags.cmake")
 endif()
