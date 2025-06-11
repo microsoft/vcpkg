@@ -22,32 +22,52 @@ stages:
     steps:
     - checkout: none
     - script: |
+        echo "=== Copilot Build Detection ==="
         echo "Checking build trigger and commit author..."
         echo "Build.RequestedForEmail: $(Build.RequestedForEmail)"
         echo "Build.RequestedFor: $(Build.RequestedFor)"  
         echo "Build.SourceVersionMessage: $(Build.SourceVersionMessage)"
+        echo ""
         
         IS_COPILOT=false
         
         # Check various indicators for Copilot builds
-        if [[ "$(Build.RequestedForEmail)" == *"copilot"* ]] || [[ "$(Build.RequestedForEmail)" == *"github.com"* ]]; then
+        # 1. Check if the build was requested by Copilot (email contains copilot)
+        if [[ "$(Build.RequestedForEmail)" == *"copilot"* ]]; then
           IS_COPILOT=true
-          echo "Detected Copilot build via email: $(Build.RequestedForEmail)"
+          echo "✓ Detected Copilot build via email containing 'copilot': $(Build.RequestedForEmail)"
+        # 2. Check if the email is from GitHub (common for automated tools)
+        elif [[ "$(Build.RequestedForEmail)" == *"github.com"* ]]; then
+          IS_COPILOT=true
+          echo "✓ Detected Copilot build via GitHub email: $(Build.RequestedForEmail)"
+        # 3. Check if commit message mentions copilot
         elif [[ "$(Build.SourceVersionMessage)" == *"copilot"* ]]; then
           IS_COPILOT=true
-          echo "Detected Copilot build via commit message"
-        elif [[ "$(Build.RequestedFor)" == *"copilot"* ]]; then
+          echo "✓ Detected Copilot build via commit message containing 'copilot'"
+        # 4. Check if the build requester name contains copilot
+        elif [[ "$(Build.RequestedFor)" == *"copilot"* ]] || [[ "$(Build.RequestedFor)" == *"Copilot"* ]]; then
           IS_COPILOT=true
-          echo "Detected Copilot build via requested for"
+          echo "✓ Detected Copilot build via requester name containing 'copilot': $(Build.RequestedFor)"
+        else
+          echo "○ No Copilot indicators found - treating as regular user build"
         fi
         
+        echo ""
+        echo "=== Final Decision ==="
         echo "IsCopilotBuild: $IS_COPILOT"
+        
+        if [[ "$IS_COPILOT" == "true" ]]; then
+          echo "→ Will run x64-linux first, then other triplets only if x64-linux succeeds"
+        else
+          echo "→ Will run all triplets in parallel (existing behavior)"
+        fi
+        
         echo "##vso[task.setvariable variable=IsCopilotBuild;isOutput=true]$IS_COPILOT"
       name: detect
       displayName: 'Detect Copilot Build'
 
 - stage: BuildX64Linux
-  displayName: 'Build x64-linux (runs first for Copilot)'
+  displayName: 'Build x64-linux (runs first for Copilot builds)'
   dependsOn: DetectBuildType
   jobs:
   - template: linux/azure-pipelines.yml
@@ -61,6 +81,9 @@ stages:
   dependsOn: 
   - DetectBuildType
   - BuildX64Linux
+  # This stage runs if:
+  # 1. It's NOT a Copilot build (parallel execution like before), OR
+  # 2. It IS a Copilot build AND x64-linux succeeded (serial execution)
   condition: or(eq(dependencies.DetectBuildType.outputs['DetectCopilot.detect.IsCopilotBuild'], 'false'), succeeded('BuildX64Linux'))
   jobs:
   - template: windows/azure-pipelines.yml
