@@ -1,0 +1,23 @@
+redgrapes is header-only and can be used from CMake via:
+
+  find_path(REDGRAPES_INCLUDE_DIRS "redGrapes/SchedulerDescription.hpp")
+  target_include_directories(main PRIVATE ${REDGRAPES_INCLUDE_DIRS})
+
+then add dependencies
+  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  if(MSVC)
+    add_compile_options("/utf-8")
+  endif()
+
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(hwloc REQUIRED IMPORTED_TARGET hwloc)
+  find_package(fmt CONFIG REQUIRED)
+  find_package(Boost REQUIRED COMPONENTS context)
+
+  target_link_libraries(main PRIVATE 
+    unofficial::concurrentqueue::concurrentqueue
+    ${pkgcfg_lib_hwloc_hwloc}
+    fmt::fmt
+    Boost::context
+)
