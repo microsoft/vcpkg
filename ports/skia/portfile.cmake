@@ -3,14 +3,12 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "aefbd9403c1b3032ad4cd0281ef312ed262c7125"
-    SHA512 8d1af006d4974c919c5760f4e461331db5dcf8ad4c4ee91c12433a88b15ea186a8932b7cd241ce47b012eb0fa5ed28f5d5d9ad187abb2bfd45a6ece8edb48d19
+    REF "114d33c62998ce5c16f899b9123c22000ca06ddd"
+    SHA512 9c447ae6b2bc5784646412785aa5c5a8f8f45a44f2e0a65b53014aebbcde28e0f4a8ea1a7eff79a6ab76d2b25f6e526792128d4f6b33573bbbd023fb7da5b843
     PATCHES
         disable-msvc-env-setup.patch
-        # disable-dev-test.patch
         skia-include-string.patch
         bentleyottmann-build.patch
-        graphite.patch
         vulkan-headers.patch
         pdfsubsetfont-uwp.diff
         skparagraph-dllexport.patch
@@ -23,7 +21,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
 # to update, visit the DEPS file in Skia's root directory
 declare_external_from_git(abseil-cpp
     URL "https://github.com/abseil/abseil-cpp.git"
-    REF "65a55c2ba891f6d2492477707f4a2e327a0b40dc"
+    REF "04dc59d2c83238cb1fcb49083e5e416643a899ce"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(d3d12allocator
@@ -33,12 +31,12 @@ declare_external_from_git(d3d12allocator
 )
 declare_external_from_git(dawn
     URL "https://dawn.googlesource.com/dawn.git"
-    REF "acd89d9f169a9d09b9ada09d1bd80350376b8544"
+    REF "30e8f3c65d1708b5bfec3a6290c2b58a792d1899"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(dng_sdk
     URL "https://android.googlesource.com/platform/external/dng_sdk.git"
-    REF "c8d0c9b1d16bfda56f15165d39e0ffa360a11123"
+    REF "dbe0a676450d9b8c71bf00688bb306409b779e90"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(jinja2
@@ -68,12 +66,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "e7294a8ebed84f8c5bd3686c68dbe12a4e65b644"
+    REF "c9aad99f9276817f18f72a4696239237c83cb775"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "ce37fd67f83cd1e8793b988d2e4126bbf72b19dd"
+    REF "01021466b5e71deaac9054f56082566c782bfd51"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
