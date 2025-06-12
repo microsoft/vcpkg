@@ -1,0 +1,81 @@
+diff --git a/cmake/server.cmake b/cmake/server.cmake
+index d736de3..ef9d35c 100644
+--- a/cmake/server.cmake
++++ b/cmake/server.cmake
+@@ -30,7 +30,7 @@ list(TRANSFORM TRACY_SERVER_SOURCES PREPEND "${TRACY_SERVER_DIR}/")
+ 
+ add_library(TracyServer STATIC EXCLUDE_FROM_ALL ${TRACY_COMMON_SOURCES} ${TRACY_SERVER_SOURCES})
+ target_include_directories(TracyServer PUBLIC ${TRACY_COMMON_DIR} ${TRACY_SERVER_DIR})
+-target_link_libraries(TracyServer PUBLIC TracyCapstone libzstd PPQSort::PPQSort)
++target_link_libraries(TracyServer PUBLIC TracyCapstone zstd::libzstd PPQSort::PPQSort)
+ if(NO_STATISTICS)
+     target_compile_definitions(TracyServer PUBLIC TRACY_NO_STATISTICS)
+ endif()
+diff --git a/cmake/vendor.cmake b/cmake/vendor.cmake
+index d310f97..768fbc0 100644
+--- a/cmake/vendor.cmake
++++ b/cmake/vendor.cmake
+@@ -104,15 +104,7 @@ endif()
+ 
+ # Zstd
+ 
+-CPMAddPackage(
+-    NAME zstd
+-    GITHUB_REPOSITORY facebook/zstd
+-    GIT_TAG v1.5.7
+-    OPTIONS
+-        "ZSTD_BUILD_SHARED OFF"
+-    EXCLUDE_FROM_ALL TRUE
+-    SOURCE_SUBDIR build/cmake
+-)
++find_package(zstd CONFIG REQUIRED)
+ 
+ # Diff Template Library
+ 
+@@ -150,8 +142,12 @@ set(IMGUI_SOURCES
+     imgui_tables.cpp
+     misc/freetype/imgui_freetype.cpp
+     backends/imgui_impl_opengl3.cpp
++    backends/imgui_impl_glfw.cpp
+ )
+ 
++# Make ImGui_SOURCE_DIR available to the parent scope
++set(ImGui_SOURCE_DIR "${ImGui_SOURCE_DIR}" PARENT_SCOPE)
++
+ list(TRANSFORM IMGUI_SOURCES PREPEND "${ImGui_SOURCE_DIR}/")
+ 
+ add_library(TracyImGui STATIC EXCLUDE_FROM_ALL ${IMGUI_SOURCES})
+@@ -164,31 +160,7 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+ endif()
+ 
+ # NFD
+-
+-if(NOT NO_FILESELECTOR AND NOT EMSCRIPTEN)
+-    if(GTK_FILESELECTOR)
+-        set(NFD_PORTAL OFF)
+-    else()
+-        set(NFD_PORTAL ON)
+-    endif()
+-
+-    CPMAddPackage(
+-        NAME nfd
+-        GITHUB_REPOSITORY btzy/nativefiledialog-extended
+-        GIT_TAG v1.2.1
+-        EXCLUDE_FROM_ALL TRUE
+-        OPTIONS
+-            "NFD_PORTAL ${NFD_PORTAL}"
+-    )
+-endif()
++find_package(nfd CONFIG REQUIRED)
+ 
+ # PPQSort
+-
+-CPMAddPackage(
+-    NAME PPQSort
+-    GITHUB_REPOSITORY GabTux/PPQSort
+-    VERSION 1.0.5
+-    PATCHES
+-        "${CMAKE_CURRENT_LIST_DIR}/ppqsort-nodebug.patch"
+-    EXCLUDE_FROM_ALL TRUE
+-)
++find_package(PPQSort CONFIG REQUIRED)
