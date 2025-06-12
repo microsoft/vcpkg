@@ -10241,7 +10241,7 @@
       "port-version": 0
     },
     "xbyak": {
-      "baseline": "7.25",
+      "baseline": "7.26",
       "port-version": 0
     },
     "xcb": {
