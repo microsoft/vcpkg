@@ -403,6 +403,16 @@ gsoap:x64-windows-static-md=skip
 gsoap:x64-windows-static=skip
 gsoap:x64-windows=skip
 gsoap:x86-windows=skip
+# gtk3 randomly hangs during build on Windows
+gtk3:arm64-uwp=skip
+gtk3:arm64-windows-static-md=skip
+gtk3:arm64-windows=skip
+gtk3:x64-uwp=skip
+gtk3:x64-windows-release=skip
+gtk3:x64-windows-static-md=skip
+gtk3:x64-windows-static=skip
+gtk3:x64-windows=skip
+gtk3:x86-windows=skip
 gul14:arm-neon-android=fail
 gul14:arm64-android=fail
 gul14:x64-android=fail
