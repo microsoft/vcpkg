@@ -11,116 +11,125 @@ parameters:
     type: string
     default: '-'
 
-variables:
-  isCopilotBuild: ${{ startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}
+jobs:
+# For Copilot builds, x64_linux runs first and all other jobs depend on it
+# For regular builds, all jobs run in parallel
+- template: linux/azure-pipelines.yml
+  parameters:
+    jobName: x64_linux
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
 
-stages:
-- stage: Scouting
-  displayName: 'Scouting Stage'
-  condition: eq(variables.isCopilotBuild, true)
-  jobs:
-  - template: linux/azure-pipelines.yml
-    parameters:
-      jobName: x64_linux
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: x86_windows
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-- stage: Full
-  displayName: 'Full Build Stage'
-  dependsOn: Scouting
-  condition: or(eq(variables.isCopilotBuild, false), succeeded('Scouting'))
-  jobs:
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: x86_windows
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: x64_windows
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: x64_windows
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: x64_windows_release
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: x64_windows_release
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: x64_windows_static
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: x64_windows_static
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: x64_windows_static_md
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: x64_windows_static_md
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: x64_uwp
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: x64_uwp
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: arm64_windows
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: arm64_windows
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: arm64_windows_static_md
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: arm64_windows_static_md
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: windows/azure-pipelines.yml
+  parameters:
+    jobName: arm64_uwp
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: windows/azure-pipelines.yml
-    parameters:
-      jobName: arm64_uwp
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: osx/azure-pipelines.yml
+  parameters:
+    jobName: x64_osx
+    poolName: 'PrOsx-2025-01-24'
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: osx/azure-pipelines.yml
-    parameters:
-      jobName: x64_osx
-      poolName: 'PrOsx-2025-01-24'
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: osx/azure-pipelines.yml
+  parameters:
+    jobName: arm64_osx
+    poolName: 'PrOsx-2025-01-24-arm64'
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: osx/azure-pipelines.yml
-    parameters:
-      jobName: arm64_osx
-      poolName: 'PrOsx-2025-01-24-arm64'
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: android/azure-pipelines.yml
+  parameters:
+    jobName: arm_neon_android
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  # For Copilot builds, x64_linux is already built in Scouting stage
-  # For regular builds, we need to include it here
-  - template: linux/azure-pipelines.yml
-    condition: eq(variables.isCopilotBuild, false)
-    parameters:
-      jobName: x64_linux
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: android/azure-pipelines.yml
+  parameters:
+    jobName: x64_android
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
 
-  - template: android/azure-pipelines.yml
-    parameters:
-      jobName: arm_neon_android
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
-
-  - template: android/azure-pipelines.yml
-    parameters:
-      jobName: x64_android
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
-
-  - template: android/azure-pipelines.yml
-    parameters:
-      jobName: arm64_android
-      vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-      tripletPattern: ${{ parameters.tripletPattern }}
+- template: android/azure-pipelines.yml
+  parameters:
+    jobName: arm64_android
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/copilot/') }}:
+    dependsOn: x64_linux
