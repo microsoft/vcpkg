@@ -42,11 +42,9 @@ if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
     file(COPY "${src}/." DESTINATION "${SOURCE_PATH}/third_party/opentelemetry-proto")
     # Create empty .git directory to prevent opentelemetry from cloning it during build time
     file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/opentelemetry-proto/.git")
-    list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
     list(APPEND FEATURE_OPTIONS "-DgRPC_CPP_PLUGIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-elseif(APPLE)
-    list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
 endif()
+list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
 
 set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 
