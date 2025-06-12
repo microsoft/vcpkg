@@ -20,7 +20,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
 declare_external_from_git(abseil-cpp
-    URL "https://github.com/abseil/abseil-cpp.git"
+    URL "https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp"
     REF "04dc59d2c83238cb1fcb49083e5e416643a899ce"
     LICENSE_FILE LICENSE
 )
