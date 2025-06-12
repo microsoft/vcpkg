@@ -4,12 +4,12 @@
   "description": "A tiny xml parsing library",
   "homepage": "https://github.com/michaelrsweet/mxml",
   "license": "Apache-2.0",
-  "supports": "windows & !(uwp | static | staticcrt | arm)",
+  "supports": "!(uwp | static)",
   "dependencies": [
     {
       "name": "vcpkg-msbuild",
       "host": true,
-      "platform": "!mingw"
+      "platform": "windows & !mingw"
     }
   ]
 }
