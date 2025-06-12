@@ -68,7 +68,8 @@
           "name": "tensorpipe",
           "features": [
             "cuda"
-          ]
+          ],
+          "platform": "linux | osx"
         }
       ]
     },
