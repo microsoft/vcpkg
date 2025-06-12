@@ -5,17 +5,8 @@
   "description": "Sparse volume data structure and tools",
   "homepage": "https://github.com/dreamworksanimation/openvdb",
   "license": "MPL-2.0",
-  "supports": "!xbox",
   "dependencies": [
     "blosc",
-    "boost-any",
-    "boost-date-time",
-    "boost-interprocess",
-    "boost-iostreams",
-    "boost-ptr-container",
-    "boost-system",
-    "boost-thread",
-    "boost-uuid",
     "imath",
     "openexr",
     "tbb",
@@ -37,6 +28,20 @@
           "name": "llvm",
           "default-features": false
         }
+      ]
+    },
+    "delayload": {
+      "description": "Support async file io using boost",
+      "supports": "!xbox",
+      "dependencies": [
+        "boost-any",
+        "boost-date-time",
+        "boost-interprocess",
+        "boost-iostreams",
+        "boost-ptr-container",
+        "boost-system",
+        "boost-thread",
+        "boost-uuid"
       ]
     },
     "nanovdb": {
