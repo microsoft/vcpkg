@@ -6,6 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         build-tools.patch
+        unvendoring.patch
+        downgrade-capstone-5.patch
+        disable-git.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

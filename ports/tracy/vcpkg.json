@@ -17,7 +17,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zstd"
   ],
   "default-features": [
     "crash-handler"
@@ -42,10 +43,8 @@
         },
         "freetype",
         "glfw3",
-        {
-          "name": "tbb",
-          "platform": "!windows"
-        }
+        "nativefiledialog-extended",
+        "ppqsort"
       ]
     },
     "crash-handler": {
@@ -73,10 +72,8 @@
         },
         "freetype",
         "glfw3",
-        {
-          "name": "tbb",
-          "platform": "!windows"
-        }
+        "nativefiledialog-extended",
+        "ppqsort"
       ]
     },
     "on-demand": {
