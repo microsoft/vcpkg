@@ -1,0 +1,30 @@
+diff --git a/cmake/protobuf-generate.cmake b/cmake/protobuf-generate.cmake
+index 244407ee2..90c82f6b3 100644
+--- a/cmake/protobuf-generate.cmake
++++ b/cmake/protobuf-generate.cmake
+@@ -146,6 +146,25 @@ function(protobuf_generate)
+       set(_comment "${_comment}, plugin-options: ${_plugin_options}")
+     endif()
+ 
++    # Use windows paths on protoc
++    if(WIN32)
++      if(NOT _abs_file MATCHES "^\\w")
++        set(_abs_file "C:${_abs_file}")
++      endif()
++      file(TO_NATIVE_PATH "${_abs_file}" _abs_file)
++
++        foreach(_path ${_protobuf_include_path})
++          if(NOT _path STREQUAL "-I")
++            if(NOT _path MATCHES "^\\w")
++              set(WINDOWS_PATH_INCLUDE "C:${_path}")
++            endif()
++            file(TO_NATIVE_PATH "${WINDOWS_PATH_INCLUDE}" WINDOWS_PATH_INCLUDE)
++            list(APPEND _protobuf_aux_include_path -I ${WINDOWS_PATH_INCLUDE})
++          endif()
++        endforeach()
++        set(_protobuf_include_path ${_protobuf_aux_include_path})
++    endif(WIN32)
++
+     add_custom_command(
+       OUTPUT ${_generated_srcs}
+       COMMAND ${protobuf_generate_PROTOC_EXE}

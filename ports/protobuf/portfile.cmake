@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-default-proto-file-path.patch
         fix-utf8-range.patch
         fix-install-dirs.patch
+        fix-protobuf-generate.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
