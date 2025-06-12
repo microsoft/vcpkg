@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF #[[ "pkgconf-${VERSION}" ]] efdeb71de5eb22c5477da1626e8dbffeca6471c2
     SHA512 39ac07c54d1665817f4351291e39f3e6740c275591f6f1f5d88a7c16d5f18cd0cd6b1614b0bf21a24c5ecfb22aba876b725640ce4f03628cb0bac7fa6a60504e
     HEAD_REF master
+    PATCHES
+        dont_want_default_static.diff
 )
 
 vcpkg_configure_meson(
