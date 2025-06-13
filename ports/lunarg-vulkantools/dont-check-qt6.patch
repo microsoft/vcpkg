@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 987316cb1..17db0e2ee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,7 +40,7 @@ find_package(VulkanHeaders REQUIRED CONFIG)
+ find_package(VulkanLoader CONFIG)
+ find_package(VulkanUtilityLibraries REQUIRED CONFIG)
+ find_package(valijson REQUIRED CONFIG)
+-find_package(Qt6 COMPONENTS Core Gui Widgets Network QUIET)
++# find_package(Qt6 COMPONENTS Core Gui Widgets Network QUIET)
+ find_package(Qt5 COMPONENTS Core Gui Widgets Network QUIET)
+ 
+ option(BUILD_TESTS "Build tests")

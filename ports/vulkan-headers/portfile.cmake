@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Headers
     REF "vulkan-sdk-${VERSION}"
-    SHA512 5cc23875fc4f548e6669936d290a05a09da36c2e6b73f1c904fa8b750a3bb695c7ef197ef9a0b788d1bb51021d4dd464f847fcec9909cb867618558b34fbcd6b
+    SHA512 1199344dcfe8c074926cffad6b921730ba46802d39e70d7acc23d8764549cf1070432215095b7305f7b61397d14a5e48966ced87f1a39b93d5992c1d8e97ba35
     HEAD_REF main
-    PATCHES fix-headers.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
