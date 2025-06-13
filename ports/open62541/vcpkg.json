@@ -8,6 +8,13 @@
   "supports": "!xbox",
   "dependencies": [
     {
+      "name": "open62541",
+      "default-features": false,
+      "features": [
+        "methodcalls"
+      ]
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -34,7 +41,15 @@
       ]
     },
     "discovery": {
-      "description": "Enable Discovery Service (LDS)"
+      "description": "Enable Discovery Service (LDS)",
+      "dependencies": [
+        {
+          "name": "open62541",
+          "features": [
+            "methodcalls"
+          ]
+        }
+      ]
     },
     "historizing": {
       "description": "Enable basic support for historical access (client and server)",
@@ -50,7 +65,14 @@
     "mbedtls": {
       "description": "Enable encryption support (uses MbedTLS)",
       "dependencies": [
-        "mbedtls"
+        "mbedtls",
+        {
+          "name": "open62541",
+          "default-features": false,
+          "features": [
+            "methodcalls"
+          ]
+        }
       ]
     },
     "methodcalls": {
@@ -61,6 +83,7 @@
       "dependencies": [
         {
           "name": "open62541",
+          "default-features": false,
           "features": [
             "methodcalls"
           ]
@@ -70,6 +93,13 @@
     "openssl": {
       "description": "Enable encryption support (uses OpenSSL)",
       "dependencies": [
+        {
+          "name": "open62541",
+          "default-features": false,
+          "features": [
+            "methodcalls"
+          ]
+        },
         "openssl"
       ]
     },

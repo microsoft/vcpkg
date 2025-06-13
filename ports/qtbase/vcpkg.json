@@ -239,6 +239,13 @@
         {
           "name": "freetype",
           "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
         }
       ]
     },
@@ -294,13 +301,6 @@
         {
           "name": "opengl",
           "platform": "!ios"
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "freetype"
-          ]
         },
         {
           "name": "qtbase",

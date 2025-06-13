@@ -1769,11 +1769,15 @@ qt5-xmlpatterns:x64-uwp = cascade
 qt5compat:arm64-uwp = cascade
 qt5compat:x64-uwp = cascade
 qt5compat[iconv]:x64-uwp = cascade
+# Conflicts with qtbase[icu]
+qt5compat[iconv]:x64-windows = skip
 qtactiveqt:arm64-uwp = cascade
 qtactiveqt:x64-uwp = cascade
 qtapplicationmanager:arm64-osx = cascade
 qtapplicationmanager:arm64-uwp = cascade
 qtapplicationmanager:x64-uwp = cascade
+# This spec shouldn't be tested. The minimal spec for qtbase is [core,doubleconversion]
+qtbase[core] = skip
 qtbase[dbus](android) = cascade
 qtbase[sql-mysql]:x86-windows = cascade
 qtbase[sql-mysql](android) = cascade

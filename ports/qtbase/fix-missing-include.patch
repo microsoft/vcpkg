@@ -1,0 +1,12 @@
+diff --git a/src/corelib/compat/removed_api.cpp b/src/corelib/compat/removed_api.cpp
+index a06dcbb87f..324ff9373f 100644
+--- a/src/corelib/compat/removed_api.cpp
++++ b/src/corelib/compat/removed_api.cpp
+@@ -1296,6 +1296,7 @@ void QBasicMutex::destroyInternal(QMutexPrivate *d)
+ #include "qobject.h"
+ 
+ #ifdef Q_COMPILER_MANGLES_RETURN_TYPE
++#include <private/qobject_p.h>
+ QMetaObject *QObjectData::dynamicMetaObject() const
+ {
+     // ### keep in sync with the master version in qobject.cpp

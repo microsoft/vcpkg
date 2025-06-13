@@ -99,6 +99,13 @@
             "rhi"
           ]
         },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        },
         "vulkan"
       ]
     }
