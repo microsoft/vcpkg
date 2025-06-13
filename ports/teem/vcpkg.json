@@ -1,0 +1,21 @@
+{
+  "name": "teem",
+  "version": "1.11.0",
+  "description": "Teem is a coordinated group of libraries for representing, processing, and visualizing scientific raster data.",
+  "homepage": "https://teem.sourceforge.net/",
+  "documentation": "https://teem.sourceforge.net/",
+  "license": "LGPL-2.1-only",
+  "dependencies": [
+    "bzip2",
+    "libpng",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}
