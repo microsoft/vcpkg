@@ -12,7 +12,6 @@ vcpkg_from_github(
         abseil.diff
         cxxflags.diff
         linkage.diff
-        protobuf.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPM_ENABLE_SHARED)
@@ -24,6 +23,7 @@ vcpkg_cmake_configure(
         -DSPM_ENABLE_TCMALLOC=OFF
         -DSPM_ABSL_PROVIDER=package
         -DSPM_PROTOBUF_PROVIDER=package
+        -DPROTOBUF_LITE_LIBRARY=protobuf::libprotobuf-lite
 )
 
 vcpkg_cmake_install()

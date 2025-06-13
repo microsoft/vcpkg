@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:jammy-20250415.1
+FROM ubuntu:jammy-20250530
 ADD provision-image.sh /provision-image.sh
 RUN apt-get update && \
   apt-get install --no-install-recommends -y curl gnupg ca-certificates
