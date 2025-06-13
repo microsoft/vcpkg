@@ -9,6 +9,8 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/orocos_kdl"
+    OPTIONS
+        -DCMAKE_CXX_STANDARD=14
 )
 
 vcpkg_cmake_install()

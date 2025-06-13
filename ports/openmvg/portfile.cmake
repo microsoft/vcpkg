@@ -13,20 +13,15 @@ vcpkg_from_github(
     REF 01193a245ee3c36458e650b1cf4402caad8983ef  # v2.1
     SHA512 ee98ca26426e7129917c920cd59817cb5d4faf1f5aa12f4085f9ac431875e9ec23ffee7792d65286bad4b922c474c56d5c2f2008b38fddf1ede096644f13ad47
     PATCHES
-        build_fixes.patch
-        0001-eigen_3.4.0.patch
-        no-absolute-paths.patch
+        0001-fix-build.patch
+        0002-no-absolute-paths.patch
 )
-
-set(OpenMVG_USE_OPENMP OFF)
-if("openmp" IN_LIST FEATURES)
-    set(OpenMVG_USE_OPENMP ON)
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         opencv OpenMVG_USE_OPENCV
         opencv OpenMVG_USE_OCVSIFT
+        openmp OpenMVG_USE_OPENMP
         software OpenMVG_BUILD_SOFTWARES
         software OpenMVG_BUILD_GUI_SOFTWARES
 )
@@ -53,22 +48,15 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
-    OPTIONS ${FEATURE_OPTIONS}
-        -DOpenMVG_USE_OPENMP=${OpenMVG_USE_OPENMP}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DOpenMVG_BUILD_SHARED=OFF
         -DOpenMVG_BUILD_TESTS=OFF
         -DOpenMVG_BUILD_DOC=OFF
         -DOpenMVG_BUILD_EXAMPLES=OFF
         -DOpenMVG_BUILD_OPENGL_EXAMPLES=OFF
         -DOpenMVG_BUILD_COVERAGE=OFF
-        -DOpenMVG_USE_INTERNAL_CLP=OFF
-        -DOpenMVG_USE_INTERNAL_COINUTILS=OFF
-        -DOpenMVG_USE_INTERNAL_OSI=OFF
-        -DOpenMVG_USE_INTERNAL_EIGEN=OFF
-        -DOpenMVG_USE_INTERNAL_CEREAL=OFF
-        -DOpenMVG_USE_INTERNAL_CERES=OFF
-        -DOpenMVG_USE_INTERNAL_FLANN=OFF
-        -DOpenMVG_USE_INTERNAL_LEMON=OFF
+        -DOpenMVG_USE_LIGT=OFF
         "-DCOINUTILS_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
         "-DCLP_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
         "-DOSI_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
@@ -181,5 +169,4 @@ if("software" IN_LIST FEATURES)
     configure_file("${SOURCE_PATH}/src/software/SfM/SfM_SequentialPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_SequentialPipeline.py" @ONLY)
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         build-fixes.patch
         path-fixes.patch
+        eigen3-fixes.patch
 )
 
 vcpkg_cmake_configure(

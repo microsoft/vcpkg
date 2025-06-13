@@ -134,7 +134,6 @@ if("tools" IN_LIST FEATURES)
             rtabmap-calibration
             rtabmap-databaseViewer
             rtabmap-dataRecorder
-            rtabmap-lidar_viewer
             rtabmap-odometryViewer
             rtabmap-rgbd_camera
         AUTO_CLEAN

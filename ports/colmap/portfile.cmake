@@ -10,6 +10,8 @@ vcpkg_from_github(
     PATCHES
         no-glu.diff
         fix-flann.patch
+        fix-eigen3.patch
+        fix-glew.patch
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
@@ -33,7 +35,6 @@ endforeach()
 
 set(CUDA_ENABLED OFF)
 set(GUI_ENABLED OFF)
-set(TESTS_ENABLED OFF)
 set(CGAL_ENABLED OFF)
 set(OPENMP_ENABLED ON)
 
@@ -51,10 +52,6 @@ if("gui" IN_LIST FEATURES)
     set(GUI_ENABLED ON)
 endif()
 
-if("tests" IN_LIST FEATURES)
-    set(TESTS_ENABLED ON)
-endif()
-
 if("cgal" IN_LIST FEATURES)
     set(CGAL_ENABLED ON)
 endif()
@@ -70,11 +67,11 @@ vcpkg_cmake_configure(
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
         -DGUI_ENABLED=${GUI_ENABLED}
-        -DTESTS_ENABLED=${TESTS_ENABLED}
         -DGIT_COMMIT_ID=${GIT_COMMIT_ID}
         -DGIT_COMMIT_DATE=${COLMAP_GIT_COMMIT_DATE}
         -DOPENMP_ENABLED=${OPENMP_ENABLED}
         -DCGAL_ENABLED=${CGAL_ENABLED}
+        -DTESTS_ENABLED=OFF
         -DFETCH_POSELIB=OFF
 )
 
