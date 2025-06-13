@@ -457,7 +457,6 @@ sdformat9:x64-uwp=fail
 sdformat9:x64-windows-static-md=fail
 sdl2-mixer:arm-uwp=fail
 sdl2-net:arm-uwp=fail
-sentencepiece:x64-windows-static-md=fail
 septag-sx:arm-uwp=fail
 septag-sx:arm64-windows=fail
 septag-sx:x64-uwp=fail
