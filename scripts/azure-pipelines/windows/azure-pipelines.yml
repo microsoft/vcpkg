@@ -20,7 +20,7 @@ jobs:
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
     name: PrWin-WUS
-    demands: ImageVersionOverride -equals 2025.05.14
+    demands: ImageVersionOverride -equals 2025.06.12
   timeoutInMinutes: 2880 # 2 days
   variables:
   - name: WORKING_ROOT
@@ -60,7 +60,7 @@ jobs:
   - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
-      azureSubscription: 'VcpkgPrFleet'
+      azureSubscription: 'vcpkg-pr-fleet-wus'
       scriptType: 'pscore'
       scriptLocation: 'inlineScript'
       inlineScript: |
