@@ -6,6 +6,24 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 a9fc2252af9031c2cd46dde558c491aea8bc322fb80157a7760f300a44b759d4bfe866f030fbb974b80493057cfff4dd512498f99a100ed6d05bf620258ed37e
     HEAD_REF master
+    PATCHES
+        cmake-fixes.patch
+        more-fixes.patch
+        fix-build.patch
+        clang-cl.patch
+        cuda-adjustments.patch
+        fix-api-export.patch
+        fxdiv.patch
+        protoc.patch
+        fix-sleef.patch
+        fix-glog.patch
+        fix-msvc-ICE.patch
+        fix-calculate-minloglevel.patch
+        force-cuda-include.patch
+        fix-aten-cutlass.patch
+        fix-build-error-with-fmt11.patch
+        no-abs-path.patch
+        add-include-chrono.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
