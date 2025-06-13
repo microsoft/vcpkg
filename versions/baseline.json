@@ -9681,7 +9681,7 @@
       "port-version": 0
     },
     "upa-url": {
-      "baseline": "2.0.0",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "urdfdom": {
