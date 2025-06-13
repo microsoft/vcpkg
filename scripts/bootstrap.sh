@@ -22,7 +22,7 @@ do
     elif [ "$var" = "-buildTests" ]; then
         echo "Warning: -buildTests no longer has any effect; ignored."
     elif [ "$var" = "-skipDependencyChecks" ]; then
-        vcpkgSkipDependencyChecks="OFF"
+        vcpkgSkipDependencyChecks="ON"
     elif [ "$var" = "-musl" ]; then
         vcpkgUseMuslC="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
@@ -66,11 +66,37 @@ else
 
 fi
 
+UNAME="$(uname)"
+ARCH="$(uname -m)"
+TAR=tar
+
+if [ -e /etc/alpine-release ]; then
+    vcpkgUseSystem="ON"
+    vcpkgUseMuslC="ON"
+fi
+
+if [ "$UNAME" = "OpenBSD" ]; then
+    vcpkgUseSystem="ON"
+fi
+
+if [ "$UNAME" = "SunOS" ]; then
+    vcpkgUseSystem="ON"
+fi
+
 # Check for minimal prerequisites.
 vcpkgCheckRepoTool()
 {
     __tool=$1
-    if [ "$vcpkgSkipDependencyChecks" = "ON" ]; then
+    if [ "$vcpkgSkipDependencyChecks" != "ON" ]; then
+        # Check if tar supports pax extended header found in release tarballs
+        if [ "$__tool" = "tar" ]; then
+            for TAR in "tar" "gtar" "bsdtar" "star" "/usr/gnu/bin/tar"; do
+                if "$TAR" xf "$vcpkgRootDir/scripts/pax-test.tar" >/dev/null 2>&1 ; then
+                    __tool="$TAR"
+                    break
+                fi
+            done
+        fi
         if ! command -v "$__tool" >/dev/null 2>&1 ; then
             echo "Could not find $__tool. Please install it (and other dependencies) with:"
             echo "On Debian and Ubuntu derivatives:"
@@ -86,6 +112,8 @@ vcpkgCheckRepoTool()
             echo "On Alpine:"
             echo "  apk add build-base cmake ninja zip unzip curl git"
             echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
+            echo "On Solaris and illumos distributions:"
+            echo "  pkg install pkg:/web/curl pkg:/compress/zip pkg:/compress/unzip pkg:/archiver/gnu-tar"
             exit 1
         fi
     fi
@@ -95,18 +123,6 @@ vcpkgCheckRepoTool curl
 vcpkgCheckRepoTool zip
 vcpkgCheckRepoTool unzip
 vcpkgCheckRepoTool tar
-
-UNAME="$(uname)"
-ARCH="$(uname -m)"
-
-if [ -e /etc/alpine-release ]; then
-    vcpkgUseSystem="ON"
-    vcpkgUseMuslC="ON"
-fi
-
-if [ "$UNAME" = "OpenBSD" ]; then
-    vcpkgUseSystem="ON"
-fi
 
 if [ "$vcpkgUseSystem" = "ON" ]; then
     vcpkgCheckRepoTool cmake
@@ -158,7 +174,7 @@ vcpkgExtractTar()
     archive=$1; toPath=$2
     rm -rf "$toPath" "$toPath.partial"
     mkdir -p "$toPath.partial"
-    $(cd "$toPath.partial" && tar xzf "$archive")
+    $(cd "$toPath.partial" && "$TAR" xzf "$archive")
     mv "$toPath.partial" "$toPath"
 }
 
