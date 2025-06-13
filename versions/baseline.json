@@ -6997,11 +6997,11 @@
       "port-version": 3
     },
     "opentelemetry-cpp": {
-      "baseline": "1.20.0",
+      "baseline": "1.21.0",
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
-      "baseline": "2025-05-21",
+      "baseline": "2025-06-11",
       "port-version": 0
     },
     "opentracing": {

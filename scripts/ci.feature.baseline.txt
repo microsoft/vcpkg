@@ -1553,7 +1553,6 @@ opensubdiv[cuda]:x86-windows = cascade
 opensubdiv[dx]:x64-linux = cascade
 opentelemetry-cpp[jaeger,prometheus]:arm64-uwp = cascade
 opentelemetry-cpp[jaeger,prometheus]:x64-uwp = cascade
-opentelemetry-cpp[prometheus]:arm64-windows = cascade
 openturns:arm64-uwp = cascade
 openturns:arm64-windows = cascade
 openturns:x64-uwp = cascade
