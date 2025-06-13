@@ -28,7 +28,7 @@ file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Makefile" "${CUR
 file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcnary/Makefile" "${CURRENT_BUILDTREES_DIR}/Makefile-libcnary.log")
 vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libtool" "lt_ar_flags=([^\"\n]+)" "lt_ar_flags=\"\\1\"" REGEX)
 vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libtool" "lt_ar_flags=([^\"\n]+)" "lt_ar_flags=\"\\1\"" REGEX)
-vcpkg_make_install(OPTIONS "ARFLAGS=")
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
