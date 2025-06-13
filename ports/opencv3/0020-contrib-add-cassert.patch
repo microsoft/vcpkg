@@ -1,0 +1,13 @@
+diff --git a/modules/sfm/src/libmv_light/libmv/numeric/numeric.h b/modules/sfm/src/libmv_light/libmv/numeric/numeric.h
+index dde7e81..063b16a 100644
+--- a/modules/sfm/src/libmv_light/libmv/numeric/numeric.h
++++ b/modules/sfm/src/libmv_light/libmv/numeric/numeric.h
+@@ -33,6 +33,8 @@
+ #include <Eigen/QR>
+ #include <Eigen/SVD>
+ 
++#include <cassert>
++
+ #if !defined(__MINGW64__)
+ #  if defined(_WIN32) || defined(__APPLE__) || \
+       defined(__FreeBSD__) || defined(__NetBSD__)

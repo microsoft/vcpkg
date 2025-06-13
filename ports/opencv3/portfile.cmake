@@ -136,6 +136,7 @@ if("contrib" IN_LIST FEATURES)
       0007-contrib-fix-hdf5.patch
       0013-contrib-fix-tesseract.patch
       0016-contrib-fix-freetype.patch
+      0020-contrib-add-cassert.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
