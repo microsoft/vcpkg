@@ -386,8 +386,11 @@ glibmm:arm64-windows-static-md=fail
 glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
 # needs arm64 host
+gobject-introspection:arm-neon-android=fail
+gobject-introspection:arm64-android=fail
 gobject-introspection:arm64-windows-static-md=fail
 gobject-introspection:arm64-windows=fail
+gobject-introspection:x64-android=fail
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
 graphviz:arm-neon-android=fail
@@ -570,8 +573,6 @@ libtcod:x64-android=fail
 libtomcrypt:arm64-uwp=fail
 libtomcrypt:arm64-windows-static-md=fail
 libtomcrypt:arm64-windows=fail
-libusb-win32:arm64-uwp=fail
-libusb-win32:x64-uwp=fail
 # upstream issue https://github.com/microsoft/vcpkg/pull/13765#issuecomment-699710253
 libvmdk:arm-neon-android=skip
 libvmdk:arm64-android=skip
@@ -719,6 +720,9 @@ offscale-libetcd-cpp:x64-uwp=fail
 ogdf:arm64-android=fail
 ogre-next:arm-neon-android=fail
 ois:x64-android=fail
+omniorb:arm-neon-android=fail
+omniorb:arm64-android=fail
+omniorb:x64-android=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
@@ -786,9 +790,6 @@ popsift:x64-windows=fail
 python2:arm-neon-android=fail
 python2:arm64-android=fail
 python2:x64-android=fail
-python3:arm-neon-android=fail
-python3:arm64-android=fail
-python3:x64-android=fail
 qpid-proton:arm64-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
