@@ -1,7 +1,6 @@
 {
   "name": "libtorch",
-  "version": "2.1.2",
-  "port-version": 12,
+  "version": "2.7.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -10,7 +9,6 @@
     "blas",
     "cpuinfo",
     "eigen3",
-    "fftw3",
     "flatbuffers",
     {
       "name": "flatbuffers",

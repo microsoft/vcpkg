@@ -1,0 +1,366 @@
+[1mdiff --git a/ports/libtorch/cmake-fixes.patch b/ports/libtorch/cmake-fixes.patch[m
+[1mindex 8d61871..6a47221 100644[m
+[1m--- a/ports/libtorch/cmake-fixes.patch[m
+[1m+++ b/ports/libtorch/cmake-fixes.patch[m
+[36m@@ -1,8 +1,8 @@[m
+ diff --git a/CMakeLists.txt b/CMakeLists.txt[m
+[31m-index 3a48eaf..7b8bc7c 100644[m
+[32m+[m[32mindex 0000000..1111111 100644[m
+ --- a/CMakeLists.txt[m
+ +++ b/CMakeLists.txt[m
+[31m-@@ -1049,8 +1049,7 @@ if(USE_MIMALLOC)[m
+[32m+[m[32m@@ -1244,8 +1244,7 @@ if(USE_MIMALLOC)[m
+    set(MI_BUILD_OBJECT OFF)[m
+    set(MI_BUILD_TESTS OFF)[m
+    add_definitions(-DUSE_MIMALLOC)[m
+[36m@@ -11,244 +11,57 @@[m [mindex 3a48eaf..7b8bc7c 100644[m
+ +  find_package(mimalloc REQUIRED)[m
+  endif()[m
+  [m
+[31m- # ---[ Main build[m
+[31m-diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt[m
+[31m-index fd6b7ff..d185233 100644[m
+[31m---- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt[m
+[31m-+++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt[m
+[31m-@@ -368,7 +368,7 @@ elseif(NOT TARGET pthreadpool AND USE_SYSTEM_PTHREADPOOL)[m
+[31m-   if(NOT PTHREADPOOL_LIBRARY)[m
+[31m-     message(FATAL_ERROR "Cannot find pthreadpool")[m
+[31m-   endif()[m
+[31m--  message("-- Found pthreadpool: ${PTHREADPOOL_LIBRARY}")[m
+[31m-+  message("-- Found pthreadpool cpu qnnpack: ${PTHREADPOOL_LIBRARY}")[m
+[31m-   set_target_properties(pthreadpool PROPERTIES[m
+[31m-     IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")[m
+[31m-   add_library(pthreadpool_interface INTERFACE)[m
+[32m+[m[32m if(USE_MIMALLOC AND USE_MIMALLOC_ON_MKL)[m
+ diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt[m
+[31m-index feebad7..ad407e1 100644[m
+[32m+[m[32mindex 0000000..1111111 100644[m
+ --- a/c10/CMakeLists.txt[m
+ +++ b/c10/CMakeLists.txt[m
+[31m-@@ -109,8 +109,7 @@ else()[m
+[31m- endif()[m
+[32m+[m[32m@@ -123,8 +123,7 @@ else()[m
+[32m+[m[32m   endif()[m
+  [m
+[31m- if(USE_MIMALLOC)[m
+[31m--  target_link_libraries(c10 PRIVATE "mimalloc-static")[m
+[31m--  add_dependencies(c10 mimalloc-static)[m
+[31m-+  target_link_libraries(c10 PRIVATE "mimalloc")[m
+[31m- endif()[m
+[32m+[m[32m   if(USE_MIMALLOC)[m
+[32m+[m[32m-    target_link_libraries(c10 PRIVATE "mimalloc-static")[m
+[32m+[m[32m-    add_dependencies(c10 mimalloc-static)[m
+[32m+[m[32m+    target_link_libraries(c10 PRIVATE "mimalloc")[m
+[32m+[m[32m   endif()[m
+  [m
+[31m- if(ANDROID)[m
+[32m+[m[32m   if(LINUX)[m
+ diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake[m
+[31m-index c3abce5..63f665f 100644[m
+[32m+[m[32mindex 0000000..1111111 100644[m
+ --- a/cmake/Dependencies.cmake[m
+ +++ b/cmake/Dependencies.cmake[m
+[31m-@@ -285,7 +285,7 @@ endif()[m
+[31m- set(AT_FFTW_ENABLED 0)[m
+[31m- set(USE_FFTW OFF)[m
+[31m- if(USE_FFTW OR NOT MKL_FOUND)[m
+[31m--  find_library(LIBFFTW3 fftw3)[m
+[31m-+  find_library(LIBFFTW3 NAMES fftw3 REQUIRED)[m
+[31m-   if(LIBFFTW3)[m
+[31m-     find_path(FFTW3_INCLUDE_DIR NAMES fftw3.h ONLY_CMAKE_FIND_ROOT_PATH)[m
+[31m-     if(FFTW3_INCLUDE_DIR)[m
+[31m-@@ -415,8 +415,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)[m
+[31m- [m
+[32m+[m[32m@@ -381,8 +381,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)[m
+    if(NOT TARGET pthreadpool)[m
+      if(USE_SYSTEM_PTHREADPOOL)[m
+ -      add_library(pthreadpool SHARED IMPORTED)[m
+ -      find_library(PTHREADPOOL_LIBRARY pthreadpool)[m
+ +      add_library(pthreadpool UNKNOWN IMPORTED)[m
+[31m-+      find_library(PTHREADPOOL_LIBRARY pthreadpool PATH_SUFFIXES lib)[m
+[32m+[m[32m+      find_library(PTHREADPOOL_LIBRARY pthreadpool REQUIRED)[m
+        set_property(TARGET pthreadpool PROPERTY IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")[m
+        if(NOT PTHREADPOOL_LIBRARY)[m
+          message(FATAL_ERROR "Cannot find pthreadpool")[m
+[31m-@@ -450,13 +450,15 @@ endif()[m
+[31m- [m
+[31m- # ---[ Caffe2 uses cpuinfo library in the thread pool[m
+[31m- if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)[m
+[31m--  add_library(cpuinfo SHARED IMPORTED)[m
+[31m--  find_library(CPUINFO_LIBRARY cpuinfo)[m
+[31m-+  add_library(cpuinfo UNKNOWN IMPORTED)[m
+[31m-+  find_library(CPUINFO_LIBRARY NAMES cpuinfo REQUIRED)[m
+[31m-+  find_library(CLOG_LIBRARY NAMES clog REQUIRED)[m
+[31m-   if(NOT CPUINFO_LIBRARY)[m
+[31m-     message(FATAL_ERROR "Cannot find cpuinfo")[m
+[31m-   endif()[m
+[31m-   message("Found cpuinfo: ${CPUINFO_LIBRARY}")[m
+[31m-   set_target_properties(cpuinfo PROPERTIES IMPORTED_LOCATION "${CPUINFO_LIBRARY}")[m
+[31m-+  target_link_libraries(cpuinfo INTERFACE "${CLOG_LIBRARY}")[m
+[31m- elseif(NOT TARGET cpuinfo)[m
+[31m-   if(NOT DEFINED CPUINFO_SOURCE_DIR)[m
+[31m-     set(CPUINFO_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../third_party/cpuinfo" CACHE STRING "cpuinfo source directory")[m
+[31m-@@ -659,8 +661,8 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)[m
+[31m-   include_directories(SYSTEM ${XNNPACK_INCLUDE_DIR})[m
+[31m-   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK)[m
+[32m+[m[32m@@ -415,8 +415,9 @@ if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x|ppc64le)$")[m
+[32m+[m[32m   # ---[ But it doesn't support s390x/powerpc and thus not used on s390x/powerpc[m
+[32m+[m[32m   if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)[m
+[32m+[m[32m-    add_library(cpuinfo SHARED IMPORTED)[m
+[32m+[m[32m-    find_library(CPUINFO_LIBRARY cpuinfo)[m
+[32m+[m[32m+    add_library(cpuinfo UNKNOWN IMPORTED)[m
+[32m+[m[32m+    find_library(CPUINFO_LIBRARY NAMES cpuinfo REQUIRED)[m
+[32m+[m[32m+    find_library(CLOG_LIBRARY NAMES clog REQUIRED)[m
+[32m+[m[32m     if(NOT CPUINFO_LIBRARY)[m
+[32m+[m[32m       message(FATAL_ERROR "Cannot find cpuinfo")[m
+[32m+[m[32m     endif()[m
+[32m+[m[32m@@ -559,10 +560,10 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)[m
+[32m+[m[32m   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)[m
+  elseif(NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)[m
+ -  add_library(XNNPACK SHARED IMPORTED)[m
+[32m+[m[32m-  add_library(microkernels-prod SHARED IMPORTED)[m
+ -  find_library(XNNPACK_LIBRARY XNNPACK)[m
+[32m+[m[32m-  find_library(microkernels-prod_LIBRARY microkernels-prod)[m
+ +  add_library(XNNPACK UNKNOWN IMPORTED)[m
+[32m+[m[32m+  add_library(microkernels-prod UNKNOWN IMPORTED)[m
+ +  find_library(XNNPACK_LIBRARY NAMES XNNPACK REQUIRED)[m
+[32m+[m[32m+  find_library(microkernels-prod_LIBRARY NAMES microkernels-prod REQUIRED)[m
+    set_property(TARGET XNNPACK PROPERTY IMPORTED_LOCATION "${XNNPACK_LIBRARY}")[m
+[31m-   if(NOT XNNPACK_LIBRARY)[m
+[31m-     message(FATAL_ERROR "Cannot find XNNPACK")[m
+[31m-@@ -858,7 +860,7 @@ endif()[m
+[31m- [m
+[31m- # ---[ LMDB[m
+[31m- if(USE_LMDB)[m
+[31m--  find_package(LMDB)[m
+[31m-+  find_package(LMDB REQUIRED)[m
+[31m-   if(LMDB_FOUND)[m
+[31m-     include_directories(SYSTEM ${LMDB_INCLUDE_DIR})[m
+[31m-     list(APPEND Caffe2_DEPENDENCY_LIBS ${LMDB_LIBRARIES})[m
+[31m-@@ -1002,8 +1004,9 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)[m
+[31m-     "${FP16_SOURCE_DIR}"[m
+[31m-     "${CONFU_DEPENDENCIES_BINARY_DIR}/FP16")[m
+[31m- elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)[m
+[31m--  add_library(fp16 STATIC "/usr/include/fp16.h")[m
+[31m--  set_target_properties(fp16 PROPERTIES LINKER_LANGUAGE C)[m
+[31m-+  find_path(FP16_INCLUDE_DIR NAMES fp16.h PATH_SUFFIXES include)[m
+[31m-+  add_library(fp16 INTERFACE)[m
+[31m-+  target_include_directories(fp16 INTERFACE "${FP16_INCLUDE_DIR}")[m
+[31m- endif()[m
+[31m- list(APPEND Caffe2_DEPENDENCY_LIBS fp16)[m
+[31m- [m
+[31m-@@ -1127,7 +1130,7 @@ if(BUILD_PYTHON)[m
+[31m-     # Observers are required in the python build[m
+[31m-     caffe2_update_option(USE_OBSERVERS ON)[m
+[31m-   else()[m
+[31m--    message(WARNING "Python dependencies not met. Not compiling with python. Suppress this warning with -DBUILD_PYTHON=OFF")[m
+[31m-+    message(FATAL_ERROR "Python dependencies not met. Not compiling with python. Suppress this warning with -DBUILD_PYTHON=OFF")[m
+[31m-     caffe2_update_option(BUILD_PYTHON OFF)[m
+[31m-   endif()[m
+[31m- endif()[m
+[31m-@@ -1231,7 +1234,7 @@ endif()[m
+[31m- # ---[ LLVM[m
+[31m- if(USE_LLVM)[m
+[31m-   message(STATUS "Looking for LLVM in ${USE_LLVM}")[m
+[31m--  find_package(LLVM PATHS ${USE_LLVM} NO_DEFAULT_PATH)[m
+[31m-+  find_package(LLVM)[m
+[31m- [m
+[31m-   if(LLVM_FOUND)[m
+[31m-     message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")[m
+[31m-@@ -1244,8 +1247,10 @@ endif(USE_LLVM)[m
+[31m- [m
+[31m- # ---[ cuDNN[m
+[31m- if(USE_CUDNN)[m
+[31m-+  find_package(CUDNN REQUIRED)[m
+[31m-   set(CUDNN_FRONTEND_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../third_party/cudnn_frontend/include)[m
+[31m-   target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})[m
+[31m-+  target_include_directories(torch::cudnn INTERFACE "${CUDNN_INCLUDE_DIR}")[m
+[31m- endif()[m
+[31m- [m
+[31m- # ---[ HIP[m
+[31m-@@ -1555,7 +1560,10 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)[m
+[31m-       set_target_properties(onnx_proto PROPERTIES CXX_STANDARD 17)[m
+[31m-     endif()[m
+[31m-   endif()[m
+[31m--  add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../third_party/foxi EXCLUDE_FROM_ALL)[m
+[31m-+[m
+[31m-+  # setup foxi[m
+[31m-+  find_library(FOXI_LOADER_LIBPATH NAMES foxi_loader REQUIRED)[m
+[31m-+  list(APPEND Caffe2_DEPENDENCY_LIBS "${FOXI_LOADER_LIBPATH}")[m
+[31m- [m
+[31m-   add_definitions(-DONNX_NAMESPACE=${ONNX_NAMESPACE})[m
+[31m-   if(NOT USE_SYSTEM_ONNX)[m
+[31m-@@ -1573,23 +1581,13 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)[m
+[31m-       target_compile_options(onnx PRIVATE -Wno-deprecated-declarations)[m
+[31m-     endif()[m
+[31m-   else()[m
+[31m--    add_library(onnx SHARED IMPORTED)[m
+[31m--    find_library(ONNX_LIBRARY onnx)[m
+[31m--    if(NOT ONNX_LIBRARY)[m
+[31m--      message(FATAL_ERROR "Cannot find onnx")[m
+[31m--    endif()[m
+[31m--    set_property(TARGET onnx PROPERTY IMPORTED_LOCATION ${ONNX_LIBRARY})[m
+[31m--    add_library(onnx_proto SHARED IMPORTED)[m
+[31m--    find_library(ONNX_PROTO_LIBRARY onnx_proto)[m
+[31m--    if(NOT ONNX_PROTO_LIBRARY)[m
+[31m--      message(FATAL_ERROR "Cannot find onnx")[m
+[31m--    endif()[m
+[31m--    set_property(TARGET onnx_proto PROPERTY IMPORTED_LOCATION ${ONNX_PROTO_LIBRARY})[m
+[31m--    message("-- Found onnx: ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY}")[m
+[31m--    list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)[m
+[31m-+    find_package(ONNX CONFIG REQUIRED)[m
+[31m-+    set(ONNX_LIBRARY ONNX::onnx)[m
+[31m-+    set(ONNX_PROTO_LIBRARY ONNX::onnx_proto)[m
+[31m-+    list(APPEND Caffe2_DEPENDENCY_LIBS ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY})[m
+[31m-   endif()[m
+[31m-   include_directories(${FOXI_INCLUDE_DIRS})[m
+[31m--  list(APPEND Caffe2_DEPENDENCY_LIBS foxi_loader)[m
+[31m-+  list(APPEND Caffe2_DEPENDENCY_LIBS "${FOXI_LOADER_LIBPATH}")[m
+[31m-   # Recover the build shared libs option.[m
+[31m-   set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})[m
+[31m- endif()[m
+[31m-@@ -1834,8 +1832,8 @@ endif()[m
+[31m- #[m
+[31m- set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})[m
+[31m- set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)[m
+[31m--add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)[m
+[31m--[m
+[31m-+#add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)[m
+[31m-+find_package(fmt REQUIRED)[m
+[31m- # Disable compiler feature checks for `fmt`.[m
+[31m- #[m
+[31m- # CMake compiles a little program to check compiler features. Some of our build[m
+[31m-@@ -1843,7 +1841,6 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)[m
+[31m- # CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know[m
+[31m- # `fmt` is compatible with a superset of the compilers that PyTorch is, it[m
+[31m- # shouldn't be too bad to just disable the checks.[m
+[31m--set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")[m
+[31m- [m
+[31m- list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)[m
+[31m- set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)[m
+[31m-diff --git a/cmake/Modules/FindLMDB.cmake b/cmake/Modules/FindLMDB.cmake[m
+[31m-index 2f0adb1..8a817fd 100644[m
+[31m---- a/cmake/Modules/FindLMDB.cmake[m
+[31m-+++ b/cmake/Modules/FindLMDB.cmake[m
+[31m-@@ -12,12 +12,8 @@[m
+[31m- # Copyright 2013 Conrad Steenberg <conrad.steenberg@gmail.com>[m
+[31m- # Aug 31, 2013[m
+[31m- [m
+[31m--if(MSVC)[m
+[31m--  find_package(LMDB NO_MODULE)[m
+[31m--else()[m
+[31m--  find_path(LMDB_INCLUDE_DIR NAMES  lmdb.h PATHS "$ENV{LMDB_DIR}/include")[m
+[31m--  find_library(LMDB_LIBRARIES NAMES lmdb   PATHS "$ENV{LMDB_DIR}/lib" )[m
+[31m--endif()[m
+[31m-+find_path(LMDB_INCLUDE_DIR NAMES  lmdb.h PATHS "$ENV{LMDB_DIR}/include")[m
+[31m-+find_library(LMDB_LIBRARIES NAMES lmdb   PATHS "$ENV{LMDB_DIR}/lib" )[m
+[31m- [m
+[31m- include(FindPackageHandleStandardArgs)[m
+[31m- find_package_handle_standard_args(LMDB DEFAULT_MSG LMDB_INCLUDE_DIR LMDB_LIBRARIES)[m
+[31m-diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake[m
+[31m-index 32f3ba3..4112937 100644[m
+[31m---- a/cmake/public/cuda.cmake[m
+[31m-+++ b/cmake/public/cuda.cmake[m
+[31m-@@ -67,8 +67,8 @@ if(NOT CMAKE_CUDA_COMPILER_VERSION STREQUAL CUDAToolkit_VERSION OR[m
+[31m-                       "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIR}'")[m
+[31m- endif()[m
+[31m- [m
+[31m--if(NOT TARGET CUDA::nvToolsExt)[m
+[31m--  message(FATAL_ERROR "Failed to find nvToolsExt")[m
+[31m-+if(NOT TARGET CUDA::nvToolsExt AND TARGET CUDA::nvtx3)[m
+[31m-+  add_library(CUDA::nvToolsExt ALIAS CUDA::nvtx3)[m
+[31m- endif()[m
+[31m- [m
+[31m- message(STATUS "Caffe2: CUDA detected: " ${CUDA_VERSION})[m
+[31m-diff --git a/cmake/public/utils.cmake b/cmake/public/utils.cmake[m
+[31m-index 4d48c0f..ebdd39a 100644[m
+[31m---- a/cmake/public/utils.cmake[m
+[31m-+++ b/cmake/public/utils.cmake[m
+[31m-@@ -185,9 +185,9 @@ endfunction()[m
+[31m- macro(caffe2_update_option variable value)[m
+[31m-   if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO)[m
+[31m-     get_property(__help_string CACHE ${variable} PROPERTY HELPSTRING)[m
+[31m--    set(${variable} ${value} CACHE BOOL ${__help_string} FORCE)[m
+[31m-+    set("${variable}" "${value}" CACHE BOOL "${__help_string}" FORCE)[m
+[31m-   else()[m
+[31m--    set(${variable} ${value})[m
+[31m-+    set("${variable}" "${value}")[m
+[31m-   endif()[m
+[31m- endmacro()[m
+[31m- [m
+[32m+[m[32m   set_property(TARGET microkernels-prod PROPERTY IMPORTED_LOCATION "${microkernels-prod_LIBRARY}")[m
+[32m+[m[32m   if(NOT XNNPACK_LIBRARY)[m
+\ No newline at end of file[m
+[1mdiff --git a/ports/libtorch/portfile.cmake b/ports/libtorch/portfile.cmake[m
+[1mindex 24d5130..174404a 100644[m
+[1m--- a/ports/libtorch/portfile.cmake[m
+[1m+++ b/ports/libtorch/portfile.cmake[m
+[36m@@ -1,45 +1,11 @@[m
+[31m-vcpkg_download_distfile([m
+[31m-    CUDNN_9_FIX[m
+[31m-    URLS https://github.com/pytorch/pytorch/commit/e14026bc2a6cd80bedffead77a5d7b75a37f8e67.patch?full_index=1[m
+[31m-    SHA512 9569547b44b61f9559f0e7ab91f2be51657ece4f5462b6860cb5eae8d23d01187d6af046b369a77a228fe4d7153f5c683b686e84c1296a662f83e5f1f281bc7e[m
+[31m-    FILENAME libtorch-cudnn-9-fix-e14026bc2a6cd80bedffead77a5d7b75a37f8e67.patch[m
+[31m-)[m
+[31m-[m
+[31m-vcpkg_download_distfile([m
+[31m-    CUDA_THRUST_MISSING_HEADER_FIX[m
+[31m-    URLS https://github.com/pytorch/pytorch/commit/2a440348958b3f0a2b09458bd76fe5959b371c0c.patch?full_index=1[m
+[31m-    SHA512 eff10d81b1c635108ad1b95a430865a76ab3f2079be74e61e06876942ac1fd43a274fc1c73e43c2c01b9ce5aca648213ef75c13c28b8ffa40497e4e26d5e3b16[m
+[31m-    FILENAME libtorch-cuda-thrust-missing-header-2a440348958b3f0a2b09458bd76fe5959b371c0c.patch[m
+[31m-)[m
+[31m-[m
+ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)[m
+ [m
+ vcpkg_from_github([m
+     OUT_SOURCE_PATH SOURCE_PATH[m
+     REPO pytorch/pytorch[m
+     REF "v${VERSION}"[m
+[31m-    SHA512 a8961d78ad785b13c959a0612563a60e0de17a7c8bb9822ddea9a24072796354d07e81c47b6cc8761b21a6448845b088cf80e1661d9e889b0ed5474d3dc76756[m
+[31m-    HEAD_REF master[m
+[31m-    PATCHES[m
+[31m-        "${CUDNN_9_FIX}"[m
+[31m-        "${CUDA_THRUST_MISSING_HEADER_FIX}"[m
+[31m-        cmake-fixes.patch[m
+[31m-        more-fixes.patch[m
+[31m-        fix-build.patch[m
+[31m-        clang-cl.patch[m
+[31m-        cuda-adjustments.patch[m
+[31m-        fix-api-export.patch[m
+[31m-        fxdiv.patch[m
+[31m-        protoc.patch[m
+[31m-        fix-sleef.patch[m
+[31m-        fix-glog.patch[m
+[31m-        fix-msvc-ICE.patch[m
+[31m-        fix-calculate-minloglevel.patch[m
+[31m-        force-cuda-include.patch[m
+[31m-        fix-aten-cutlass.patch[m
+[31m-        fix-build-error-with-fmt11.patch[m
+[31m-        no-abs-path.patch[m
+[31m-        add-include-chrono.patch[m
+[32m+[m[32m    SHA512 a9fc2252af9031c2cd46dde558c491aea8bc322fb80157a7760f300a44b759d4bfe866f030fbb974b80493057cfff4dd512498f99a100ed6d05bf620258ed37e[m
+[32m+[m[32m    HEAD_REF master[m
+ )[m
+ [m
+ file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files[m
+[1mdiff --git a/ports/libtorch/vcpkg.json b/ports/libtorch/vcpkg.json[m
+[1mindex 927b56b..696a59e 100644[m
+[1m--- a/ports/libtorch/vcpkg.json[m
+[1m+++ b/ports/libtorch/vcpkg.json[m
+[36m@@ -1,7 +1,6 @@[m
+ {[m
+   "name": "libtorch",[m
+[31m-  "version": "2.1.2",[m
+[31m-  "port-version": 12,[m
+[32m+[m[32m  "version": "2.7.1",[m
+   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",[m
+   "homepage": "https://pytorch.org/",[m
+   "license": null,[m
+[36m@@ -10,7 +9,6 @@[m
+     "blas",[m
+     "cpuinfo",[m
+     "eigen3",[m
+[31m-    "fftw3",[m
+     "flatbuffers",[m
+     {[m
+       "name": "flatbuffers",[m
