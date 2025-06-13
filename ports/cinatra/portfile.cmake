@@ -7,7 +7,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Install only Cinatra’s own headers—not vendored dependencies
+# Install Cinatra’s headers
 file(INSTALL
     "${SOURCE_PATH}/include/cinatra"
     "${SOURCE_PATH}/include/cinatra.hpp"
