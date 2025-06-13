@@ -25,6 +25,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup()
+
 # Install headers - teem has many headers (>12), use recursive glob as recommended
 file(GLOB_RECURSE TEEM_HEADERS "${SOURCE_PATH}/src/*.h")
 file(INSTALL ${TEEM_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/teem")
