@@ -26,7 +26,7 @@ vcpkg_make_configure(
 file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libtool" "${CURRENT_BUILDTREES_DIR}/libtool.log")
 file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Makefile" "${CURRENT_BUILDTREES_DIR}/Makefile.log")
 file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcnary/Makefile" "${CURRENT_BUILDTREES_DIR}/Makefile-libcnary.log")
-vcpkg_make_install()
+vcpkg_make_install(OPTIONS "ARFLAGS=")
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
