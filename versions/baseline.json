@@ -7825,8 +7825,8 @@
       "port-version": 0
     },
     "qtbase": {
-      "baseline": "6.8.3",
-      "port-version": 2
+      "baseline": "6.9.1",
+      "port-version": 0
     },
     "qtcharts": {
       "baseline": "6.8.3",
