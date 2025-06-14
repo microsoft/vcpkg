@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001_fix_static_build.patch
+        msvc.diff
 )
 
 set(options "")
@@ -26,6 +27,7 @@ vcpkg_make_configure(
 file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libtool" "${CURRENT_BUILDTREES_DIR}/libtool.log")
 file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Makefile" "${CURRENT_BUILDTREES_DIR}/Makefile.log")
 file(COPY_FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcnary/Makefile" "${CURRENT_BUILDTREES_DIR}/Makefile-libcnary.log")
+# Should https://github.com/autotools-mirror/libtool/blob/5586070a7199737861f4647c1dd81cd028435b76/m4/libtool.m4#L1540 have '[1]' to do quoting?
 vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libtool" "lt_ar_flags=([^\"\n]+)" "lt_ar_flags=\"\\1\"" REGEX)
 vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libtool" "lt_ar_flags=([^\"\n]+)" "lt_ar_flags=\"\\1\"" REGEX)
 vcpkg_make_install()
