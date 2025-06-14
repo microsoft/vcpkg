@@ -65,7 +65,9 @@ elseif(0)
         --disable-acl
         --disable-csharp
         --disable-curses
+        --disable-d
         --disable-java
+        --disable-modula2
         --disable-openmp
         --disable-dependency-tracking
         # Avoiding system dependencies and unnecessary tests
@@ -78,6 +80,7 @@ elseif(0)
         --without-git
         --without-libcurses-prefix
         --without-libncurses-prefix
+        --without-selinux
         --without-libtermcap-prefix
         --without-libxcurses-prefix
         "INTLBISON=${BISON_NAME}"
@@ -162,6 +165,7 @@ set(msys_require_packages gzip)
     # - Avoid a subshell just to add comments, the build dir is temporary.
     # - Avoid cygpath -w when other tools handle this for us.
     file(GLOB_RECURSE makefiles "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}*/*Makefile")
+set(makefiles "")
     foreach(file IN LISTS makefiles)
         file(READ "${file}" rules)
         string(REGEX REPLACE "(\n\ttest -d [^ ]* [|][|] [\$][(]MKDIR_P[)][^\n;]*)(\n\t)" "\\1 || exit 1 ; \\\\\\2" rules "${rules}")
