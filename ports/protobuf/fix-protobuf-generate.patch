@@ -1,8 +1,37 @@
 diff --git a/cmake/protobuf-generate.cmake b/cmake/protobuf-generate.cmake
-index 244407ee2..90c82f6b3 100644
+index 244407ee2..b7a1a9e7e 100644
 --- a/cmake/protobuf-generate.cmake
 +++ b/cmake/protobuf-generate.cmake
-@@ -146,6 +146,25 @@ function(protobuf_generate)
+@@ -1,4 +1,5 @@
+ function(protobuf_generate)
++
+   include(CMakeParseArguments)
+ 
+   set(_options APPEND_PATH)
+@@ -100,6 +101,22 @@ function(protobuf_generate)
+     set(_protobuf_include_path -I ${CMAKE_CURRENT_SOURCE_DIR})
+   endif()
+ 
++  # Use windows paths on protoc
++  if(WIN32)
++      foreach(_path ${_protobuf_include_path})
++        if(NOT _path STREQUAL "-I")
++          get_filename_component(_windows_path_include ${_path} ABSOLUTE)
++          if(NOT _windows_path_include MATCHES "^[A-Za-z]:")
++            set(_windows_path_include "C:${_windows_path_include}")
++          endif()
++          file(TO_NATIVE_PATH "${_windows_path_include}" _windows_path_include)
++          list(APPEND _protobuf_proper_include_path -I ${_windows_path_include})
++        endif()
++      endforeach()
++  else(WIN32)
++      set(_protobuf_proper_include_path ${_protobuf_include_path})
++  endif(WIN32)
++
+   set(_generated_srcs_all)
+   foreach(_proto ${protobuf_generate_PROTOS})
+     get_filename_component(_abs_file ${_proto} ABSOLUTE)
+@@ -146,10 +163,18 @@ function(protobuf_generate)
        set(_comment "${_comment}, plugin-options: ${_plugin_options}")
      endif()
  
@@ -12,19 +41,13 @@ index 244407ee2..90c82f6b3 100644
 +        set(_abs_file "C:${_abs_file}")
 +      endif()
 +      file(TO_NATIVE_PATH "${_abs_file}" _abs_file)
-+
-+        foreach(_path ${_protobuf_include_path})
-+          if(NOT _path STREQUAL "-I")
-+            if(NOT _path MATCHES "^[A-Za-z]:")
-+              set(WINDOWS_PATH_INCLUDE "C:${_path}")
-+            endif()
-+            file(TO_NATIVE_PATH "${WINDOWS_PATH_INCLUDE}" WINDOWS_PATH_INCLUDE)
-+            list(APPEND _protobuf_aux_include_path -I ${WINDOWS_PATH_INCLUDE})
-+          endif()
-+        endforeach()
-+        set(_protobuf_include_path ${_protobuf_aux_include_path})
 +    endif(WIN32)
 +
      add_custom_command(
        OUTPUT ${_generated_srcs}
        COMMAND ${protobuf_generate_PROTOC_EXE}
+-      ARGS ${protobuf_generate_PROTOC_OPTIONS} --${protobuf_generate_LANGUAGE}_out ${_plugin_options}:${protobuf_generate_PROTOC_OUT_DIR} ${_plugin} ${_protobuf_include_path} ${_abs_file}
++      ARGS ${protobuf_generate_PROTOC_OPTIONS} --${protobuf_generate_LANGUAGE}_out ${_plugin_options}:${protobuf_generate_PROTOC_OUT_DIR} ${_plugin} ${_protobuf_proper_include_path} ${_abs_file}
+       DEPENDS ${_abs_file} ${protobuf_PROTOC_EXE} ${protobuf_generate_DEPENDENCIES}
+       COMMENT ${_comment}
+       VERBATIM )
