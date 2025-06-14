@@ -1,0 +1,35 @@
+diff --git a/configure.ac b/configure.ac
+index 6f574d9..2121899 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -175,10 +175,16 @@ if test "x$enable_static" = "xyes" -a "x$enable_shared" = "xno"; then
+ 	GLOBAL_CFLAGS+=" -DLIBPLIST_STATIC"
+ fi
+ 
++if test "x$win32" = "xtrue"; then
++  GLOBAL_CFLAGS += " -D_CRT_SECURE_NO_WARNINGS"
++fi
++
+ GLOBAL_CXXFLAGS=$GLOBAL_CFLAGS
++if test "x$win32" != "xtrue"; then
+ AS_COMPILER_FLAG([-fvisibility=hidden], [
+   GLOBAL_CFLAGS+=" -fvisibility=hidden"
+ ], [])
++fi
+ 
+ AC_SUBST(GLOBAL_CFLAGS)
+ AC_SUBST(GLOBAL_CXXFLAGS)
+diff --git a/src/plist.c b/src/plist.c
+index a33a6fb..683d834 100644
+--- a/src/plist.c
++++ b/src/plist.c
+@@ -49,6 +49,9 @@
+ #define MAC_EPOCH 978307200
+ 
+ #ifdef _MSC_VER
++# ifdef ssize_t
++#  undef ssize_t
++# endif
+ typedef SSIZE_T ssize_t;
+ #endif
+ 
