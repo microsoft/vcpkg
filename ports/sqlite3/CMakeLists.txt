@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(sqlite3 C CXX)
+project(sqlite3 C)
 
 option(WITH_ZLIB "Build sqlite3 with zlib support" OFF)
 option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
@@ -54,16 +54,7 @@ if(SQLITE_ENABLE_ICU)
 endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
-    # Define the sources for the executable
-    set(SQLITE3_BIN_SOURCES shell.c)
-
-    if(SQLITE_ENABLE_ICU)
-        # This will automatically make the executable target a C++ target,
-        # ensuring the C++ linker and its standard library are used.
-        set_source_files_properties(${SQLITE3_BIN_SOURCES} PROPERTIES LANGUAGE CXX)
-    endif()
-
-    add_executable(sqlite3-bin ${SQLITE3_BIN_SOURCES})
+    add_executable(sqlite3-bin shell.c)
 
     set_target_properties(sqlite3-bin PROPERTIES
         OUTPUT_NAME sqlite3
