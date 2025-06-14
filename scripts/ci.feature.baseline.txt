@@ -2188,6 +2188,7 @@ qtbase[gles3](android) = feature-fails
 qtbase[cups](linux) = skip # missing system dep cups
 qtbase[sql-oci](!arm) = feature-fails # see https://github.com/microsoft/vcpkg/issues/32052
 qtbase[sql-oci](arm) = cascade
+qtbase[vulkan](arm & osx) = feature-fails # Missing headers?
 qtmultimedia[core,ffmpeg,gstreamer,qml,widgets](osx) = combination-fails # Error: Qt will by default autolink both plugin backends in static builds leading to symbol collisions and a build failure in dependent ports! As such in static builds only one backend is allowed by default.
 realsense2:arm64-windows = fail # fw-update-device.h(1): warning C4828: The file contains a character starting at offset 0x4c3 that is illegal in the current source character set (codepage 65001). See https://github.com/microsoft/vcpkg/issues/35628
 realsense2[tools](osx) = feature-fails # Could NOT find Threads (missing: Threads_FOUND)
