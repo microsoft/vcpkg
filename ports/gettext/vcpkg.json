@@ -1,13 +1,16 @@
 {
   "name": "gettext",
-  "version": "0.22.5",
-  "port-version": 2,
+  "version": "0.25",
   "description": "A GNU framework to help produce multi-lingual messages.",
   "homepage": "https://www.gnu.org/software/gettext/",
   "license": "GPL-3.0-only",
   "supports": "!xbox",
   "dependencies": [
-    "gettext-libintl"
+    "gettext-libintl",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ],
   "features": {
     "nls": {

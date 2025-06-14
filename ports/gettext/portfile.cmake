@@ -13,22 +13,22 @@ set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
-         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
-    FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
+    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.xz"
+    FILENAME "gettext-${VERSION}.tar.xz"
+    SHA512 8fb6934c7603304ce1b8f23740e68a6d23252e71f3cb22849506230ad289c03dd1a4d9bf01387b9a7bc6413e37bda14ab9bf166eecd678373d896c08c016c9dd
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        assume-modern-darwin.patch
+        # assume-modern-darwin.patch
         uwp.patch
         rel_path.patch
         subdirs.patch
-        parallel-gettext-tools.patch
-        config-step-order.patch
-        0001-xgettext-Fix-some-test-failures-on-MSVC.patch
+        # parallel-gettext-tools.patch
+        # config-step-order.patch
+        # 0001-xgettext-Fix-some-test-failures-on-MSVC.patch
 )
 
 set(subdirs "")
@@ -47,6 +47,7 @@ if(subdirs)
     vcpkg_add_to_path("${BISON_PATH}")
 
     if(VCPKG_HOST_IS_WINDOWS)
+elseif(0)
         message(STATUS "Modifying build system for less forks")
         set(ENV{CONFIG_SHELL} "/usr/bin/bash")
         vcpkg_execute_required_process(
@@ -139,16 +140,22 @@ if(subdirs)
         endif()
     endif()
 
+set(msys_require_packages gzip)
     file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log")
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
-        DETERMINE_BUILD_TRIPLET
-        USE_WRAPPERS
-        ADDITIONAL_MSYS_PACKAGES gzip
+    vcpkg_make_configure(SOURCE_PATH "${SOURCE_PATH}"
+        #[[ADDITIONAL_MSYS_PACKAGES gzip]]
         OPTIONS
             ${OPTIONS}
         OPTIONS_RELEASE
             "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     )
+
+    foreach(subdir IN ITEMS gettext-runtime libtextstyle gettext-tools)
+        file(COPY_FILE
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${subdir}/config.log"
+            "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-${subdir}-config.log"
+        )
+    endforeach()
 
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.
@@ -164,7 +171,7 @@ if(subdirs)
         file(WRITE "${file}" "${rules}")
     endforeach()
 
-    vcpkg_install_make()
+    vcpkg_make_install()
     vcpkg_copy_pdbs()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(GLOB unix_runtime LIST_DIRECTORIES false
@@ -179,7 +186,8 @@ if(subdirs)
 endif()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/libexec/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/libexec/gettext")
 else()
     # A fast installation of the autopoint tool and data, needed for autoconfig
     include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
@@ -192,12 +200,13 @@ endif()
 file(INSTALL
     "${SOURCE_PATH}/gettext-runtime/m4/build-to-host.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/gettext.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/iconv.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/intlmacosx.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/glibc2.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/nls.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/po.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/progtest.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/host-cpu-c-abi.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/iconv.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/intlmacosx.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-ld.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-link.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-prefix.m4"
