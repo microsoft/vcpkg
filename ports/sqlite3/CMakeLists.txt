@@ -72,6 +72,18 @@ if(NOT SQLITE3_SKIP_TOOLS)
         target_link_libraries(sqlite3-bin PRIVATE m)
     endif()
 
+    if(SQLITE_ENABLE_ICU)
+        # Assuming ICU components uc and i18n are already found by find_package(ICU ...)
+        # Link the ICU libraries to the executable
+        target_link_libraries(sqlite3-bin PRIVATE ICU::uc ICU::i18n)
+
+        # IMPORTANT: Link the C++ standard library.
+        # Since sqlite3-bin is a C executable but links to C++ libraries (ICU),
+        # it needs to explicitly link the C++ runtime.
+        # CXX_STANDARD_LIBRARY is a portable way to do this in CMake.
+        target_link_libraries(sqlite3-bin PRIVATE CXX_STANDARD_LIBRARY)
+    endif()
+
     install(TARGETS sqlite3-bin sqlite3
       RUNTIME DESTINATION bin
       LIBRARY DESTINATION lib
