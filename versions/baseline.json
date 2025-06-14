@@ -10428,6 +10428,10 @@
       "baseline": "1.0",
       "port-version": 2
     },
+    "zcrc": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "zeroc-ice": {
       "baseline": "3.7.10",
       "port-version": 0
