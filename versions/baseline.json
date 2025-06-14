@@ -9220,6 +9220,10 @@
       "baseline": "0.11.2",
       "port-version": 2
     },
+    "syscalls-cpp": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "systemc": {
       "baseline": "3.0.1",
       "port-version": 0
