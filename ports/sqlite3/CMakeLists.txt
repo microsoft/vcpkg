@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(sqlite3 C)
+project(sqlite3 C CXX)
 
 option(WITH_ZLIB "Build sqlite3 with zlib support" OFF)
 option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
@@ -74,9 +74,10 @@ if(NOT SQLITE3_SKIP_TOOLS)
     endif()
 
     if(SQLITE_ENABLE_ICU)
-        # Now that sqlite3-bin is implicitly a C++ target, it will link against ICU
-        # and automatically pull in the C++ standard library.
         target_link_libraries(sqlite3-bin PRIVATE ICU::uc ICU::i18n)
+        set_target_properties(sqlite3-bin PROPERTIES
+            LINK_EXECUTABLE "${CMAKE_CXX_COMPILER}"
+        )
     endif()
 
     install(TARGETS sqlite3-bin sqlite3
