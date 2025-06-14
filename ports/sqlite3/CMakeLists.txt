@@ -47,7 +47,7 @@ if (NOT WIN32)
 endif()
 
 if(SQLITE_ENABLE_ICU)
-    find_package(ICU COMPONENTS uc i18n REQUIRED)
+    find_package(ICU COMPONENTS uc i18n data REQUIRED)
     target_link_libraries(sqlite3 PRIVATE ICU::uc ICU::i18n ICU::data)
 
     string(APPEND PKGCONFIG_REQUIRES_PRIVATE " icu-uc icu-i18n icu-data")
