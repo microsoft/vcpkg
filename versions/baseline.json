@@ -3173,8 +3173,8 @@
       "port-version": 2
     },
     "gettext-libintl": {
-      "baseline": "0.22.5",
-      "port-version": 3
+      "baseline": "0.25",
+      "port-version": 0
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
