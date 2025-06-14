@@ -1776,8 +1776,6 @@ qtactiveqt:x64-uwp = cascade
 qtapplicationmanager:arm64-osx = cascade
 qtapplicationmanager:arm64-uwp = cascade
 qtapplicationmanager:x64-uwp = cascade
-# This spec shouldn't be tested. The minimal spec for qtbase is [core,doubleconversion]
-qtbase[core] = skip
 qtbase[dbus](android) = cascade
 qtbase[sql-mysql]:x86-windows = cascade
 qtbase[sql-mysql](android) = cascade
