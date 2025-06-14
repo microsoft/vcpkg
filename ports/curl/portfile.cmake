@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 ef4bce702fa1049089422fe0e8d4ceeef38d42c5274ec4483adcda0373985a5754c7d19bf714f010b42f645b51898297c82c6ce169bb7fc3dc3974da031276e2
+    SHA512 c7dfb38fe317243b4b556c5f851042c8bd48ad8a062df73b75077df24328801c34b4e336bc1b76683e678e82cbc48b95571357f49a2385b5e4f93daadc428a0c
     HEAD_REF master
     PATCHES
         dependencies.patch

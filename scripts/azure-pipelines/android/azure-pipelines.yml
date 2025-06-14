@@ -28,9 +28,9 @@ jobs:
   - name: ANDROID_NDK_HOME
     value: /android-ndk-r27c
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-05-14'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-06-11'
   - name: LINUX_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-05-14'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-06-11'
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
@@ -53,7 +53,7 @@ jobs:
     displayName: 'Build vcpkg with CMake'
     condition: ne('use default', '${{ parameters.vcpkgToolSha }}')
     inputs:
-      azureSubscription: 'VcpkgPrFleet'
+      azureSubscription: 'vcpkg-pr-fleet-wus'
       scriptType: bash
       scriptLocation: 'inlineScript'
       inlineScript: |
@@ -72,7 +72,7 @@ jobs:
   - task: AzureCLI@2
     displayName: '*** Test Modified Ports'
     inputs:
-      azureSubscription: 'VcpkgPrFleet'
+      azureSubscription: 'vcpkg-pr-fleet-wus'
       scriptType: bash
       scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |

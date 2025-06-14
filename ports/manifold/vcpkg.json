@@ -1,6 +1,6 @@
 {
   "name": "manifold",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Geometry library for topological robustness.",
   "homepage": "https://github.com/elalish/manifold",
   "license": "Apache-2.0",
