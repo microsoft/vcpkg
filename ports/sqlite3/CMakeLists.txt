@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(sqlite3 C)
+project(sqlite3 C CXX)
 
 option(WITH_ZLIB "Build sqlite3 with zlib support" OFF)
 option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
@@ -47,14 +47,15 @@ if (NOT WIN32)
 endif()
 
 if(SQLITE_ENABLE_ICU)
-    find_package(ICU COMPONENTS uc i18n REQUIRED)
-    target_link_libraries(sqlite3 PRIVATE ICU::uc ICU::i18n)
+    find_package(ICU COMPONENTS uc i18n data REQUIRED)
+    target_link_libraries(sqlite3 PRIVATE ICU::uc ICU::i18n ICU::data)
 
-    string(APPEND PKGCONFIG_REQUIRES_PRIVATE " icu-uc icu-i18n")
+    string(APPEND PKGCONFIG_REQUIRES_PRIVATE " icu-uc icu-i18n icu-data")
 endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlite3-bin shell.c)
+
     set_target_properties(sqlite3-bin PROPERTIES
         OUTPUT_NAME sqlite3
         PDB_NAME "sqlite3${CMAKE_EXECUTABLE_SUFFIX}.pdb"
@@ -70,6 +71,11 @@ if(NOT SQLITE3_SKIP_TOOLS)
     find_library(HAVE_LIBM m)
     if(HAVE_LIBM)
         target_link_libraries(sqlite3-bin PRIVATE m)
+    endif()
+
+    if(SQLITE_ENABLE_ICU)
+        target_link_libraries(sqlite3-bin PRIVATE ICU::uc ICU::i18n ICU::data)
+        set_property(TARGET sqlite3-bin PROPERTY LINKER_LANGUAGE CXX)
     endif()
 
     install(TARGETS sqlite3-bin sqlite3
