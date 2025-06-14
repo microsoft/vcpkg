@@ -42,26 +42,26 @@ cd ..\..\..
 
 # Build lua modules
 cd buildtrees\openresty\lualocal
-.\luarocks.bat install lua-cjson 2.1.0.6-1
-.\luarocks.bat install lbase64 20120820-1
-.\luarocks.bat install inspect 3.1.1-0
-.\luarocks.bat install valua 0.3-1
-.\luarocks.bat install router 2.1-0
-.\luarocks.bat install lua-path 0.3.1-1
+.\luarocks.bat install lua-cjson 2.1.0.6-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install lbase64 20120820-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install inspect 3.1.1-0 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install valua 0.3-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install router 2.1-0 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install lua-path 0.3.1-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
 # moses must be pinned at 1.6.1-1, recent versions switch the order of arguments and completely break maxprofile
-.\luarocks.bat install moses 1.6.1-1
-.\luarocks.bat install uuid 0.2-1
-.\luarocks.bat install lua-resty-openssl 0.8.26-1
-.\luarocks.bat install lua-resty-jwt 0.2.3-0
-.\luarocks.bat install lua-resty-http 0.15-0
-.\luarocks.bat install lua-resty-session 3.10-1
-.\luarocks.bat install lua-resty-openidc 1.7.6-3
-.\luarocks.bat install luafilesystem 1.8.0-1
-.\luarocks.bat install lsqlite3 0.9.5-1 "SQLITE_INCDIR=$vcpkg\include" "SQLITE_LIBDIR=$vcpkg\lib"
-.\luarocks.bat install luasql-sqlite3 2.5.0-1 "SQLITE_INCDIR=$vcpkg\include" "SQLITE_LIBDIR=$vcpkg\lib"
-.\luarocks.bat install luaxxhash 1.0.0-1
+.\luarocks.bat install moses 1.6.1-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install uuid 0.2-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install lua-resty-openssl 0.8.26-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install lua-resty-jwt 0.2.3-0 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install lua-resty-http 0.15-0 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install lua-resty-session 3.10-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install lua-resty-openidc 1.7.6-3 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install luafilesystem 1.8.0-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install lsqlite3 0.9.5-1 "SQLITE_INCDIR=$vcpkg\include" "SQLITE_LIBDIR=$vcpkg\lib" --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install luasql-sqlite3 2.5.0-1 "SQLITE_INCDIR=$vcpkg\include" "SQLITE_LIBDIR=$vcpkg\lib" --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
+.\luarocks.bat install luaxxhash 1.0.0-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
 
-.\luarocks.bat unpack luaossl 20190731-0
+.\luarocks.bat unpack luaossl 20190731-0 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
 cd luaossl-20190731-0\luaossl-rel-20190731
 cp "$patches\luaossl\*" .\
 git init .
@@ -69,7 +69,7 @@ git apply --verbose 0001-fix-link-with-vcpkg-static-openssl.patch
 ..\..\luarocks.bat make "CRYPTO_DIR=$vcpkg" "OPENSSL_DIR=$vcpkg"
 cd ..\..
 
-.\luarocks.bat unpack lua-zip 0.2-0
+.\luarocks.bat unpack lua-zip 0.2-0 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
 cd lua-zip-0.2-0
 cp "$patches\lua-zip\*" .\
 git init .
@@ -78,7 +78,7 @@ cd lua-zip
 ..\..\luarocks.bat make "lua-zip-0.2-0.rockspec" "ZIP_DIR=$vcpkg"
 cd ..\..
 
-.\luarocks.bat unpack phpass 1.0-1
+.\luarocks.bat unpack phpass 1.0-1 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
 cd phpass-1.0-1
 cp "$patches\phpass\*" .\
 git init .
@@ -87,7 +87,7 @@ cd lua-phpass
 ..\..\luarocks.bat make
 cd ..\..
 
-.\luarocks.bat unpack luajwt 1.3-4
+.\luarocks.bat unpack luajwt 1.3-4 --only-server https://raw.githubusercontent.com/rocks-moonscript-org/moonrocks-mirror/daab2726276e3282dc347b89a42a5107c3500567
 cd luajwt-1.3-4
 cp "$patches\luajwt\*" .\
 git init .
