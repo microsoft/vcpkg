@@ -9,8 +9,7 @@ set(PKGCONFIG_LIBS_PRIVATE "")
 set(PKGCONFIG_REQUIRES_PRIVATE "")
 
 # Renamed the main sqlite3 library target to 'libsqlite3' to avoid LNK1149 error on Windows.
-# Explicitly set as STATIC, which is common for Vcpkg's default triplet linkage.
-add_library(libsqlite3 STATIC sqlite3.c sqlite3.rc)
+add_library(libsqlite3 sqlite3.c sqlite3.rc)
 
 target_include_directories(libsqlite3 PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}> $<INSTALL_INTERFACE:include>)
 
@@ -52,24 +51,10 @@ if(SQLITE_ENABLE_ICU)
     # Find ICU components uc (common) and i18n (internationalization).
     # The 'data' component often doesn't create a findable 'ICU::data' imported target
     # in some Vcpkg configurations, so we will find its library file directly.
-    find_package(ICU COMPONENTS uc i18n REQUIRED)
-
-    # Manually find the icudata library file, which is often a separate static archive.
-    # VCPKG_ROOT_DIR and VCPKG_TARGET_TRIPLET are Vcpkg-specific variables.
-    find_library(ICUDATA_LIBRARY NAMES icudata
-                 PATHS ${VCPKG_ROOT_DIR}/installed/${VCPKG_TARGET_TRIPLET}/lib
-                       ${VCPKG_ROOT_DIR}/installed/${VCPKG_TARGET_TRIPLET}/debug/lib
-                 NO_DEFAULT_PATH)
-
-    if(NOT ICUDATA_LIBRARY)
-        # This error indicates a problem with the ICU installation or Vcpkg environment
-        # if the data library cannot be found.
-        message(FATAL_ERROR "ICU data library (libicudata) not found for linking. "
-                            "It should be installed by the ICU vcpkg port.")
-    endif()
+    find_package(ICU COMPONENTS uc i18n data REQUIRED)
 
     # Link the main libsqlite3 with ICU components and the explicitly found icudata library.
-    target_link_libraries(libsqlite3 PRIVATE ICU::uc ICU::i18n ${ICUDATA_LIBRARY})
+    target_link_libraries(libsqlite3 PRIVATE ICU::uc ICU::i18n ICU::data)
 
     # Update pkgconfig requires: Exclude "icu-data" because the ICU vcpkg port
     # typically does not provide an 'icu-data.pc' file, which would cause pkg-config validation errors.
@@ -103,7 +88,7 @@ if(NOT SQLITE3_SKIP_TOOLS)
         target_link_libraries(sqlite3-bin PRIVATE
             ICU::i18n        # Depends on ICU::uc
             ICU::uc          # Depends on icudata
-            ${ICUDATA_LIBRARY} # Explicitly found icudata library path
+            ICU::data        # Explicitly found icudata library path
         )
         set_property(TARGET sqlite3-bin PROPERTY LINKER_LANGUAGE CXX)
     endif()
