@@ -33,13 +33,13 @@ vcpkg_extract_source_archive(SOURCE_PATH
 
 set(subdirs "")
 if("runtime-tools" IN_LIST FEATURES)
-    string(APPEND subdirs " gettext-runtime")
+    list(APPEND subdirs "gettext-runtime")
 endif()
 if("tools" IN_LIST FEATURES)
-    string(APPEND subdirs " libtextstyle gettext-tools")
+    list(APPEND subdirs "libtextstyle" "gettext-tools")
 endif()
 if(subdirs)
-    set(ENV{VCPKG_GETTEXT_SUBDIRS} "${subdirs}")
+    list(JOIN subdirs " " ENV{VCPKG_GETTEXT_SUBDIRS})
 
     vcpkg_find_acquire_program(BISON)
     cmake_path(GET BISON FILENAME BISON_NAME)
@@ -153,7 +153,7 @@ set(msys_require_packages gzip)
             "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     )
 
-    foreach(subdir IN ITEMS gettext-runtime libtextstyle gettext-tools)
+    foreach(subdir IN LISTS subdirs)
         file(COPY_FILE
             "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${subdir}/config.log"
             "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-${subdir}-config.log"
