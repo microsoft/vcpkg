@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AngusJohnson/Clipper2
     REF "Clipper2_${VERSION}"
-    SHA512 a56f1bf28a9baf8cbcf42d63e4c73f8b4a01eac9edfb59dafb752f67af7873bb46a256fc26f7bb839ee7051db69efb9a1c21c54b358cf55c84c4b137f7f2d804
+    SHA512 39153f35630ddc455ad4955a8b9b35f05bf3fad2a33c6e7232300b674a5172794a57c7bd18f96dd0a90d4607a44ecb32c92b0cacc7060d840d568032efaddf19
     HEAD_REF main
 )
 
