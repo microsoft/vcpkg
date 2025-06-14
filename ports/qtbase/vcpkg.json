@@ -1,7 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.8.3",
-  "port-version": 2,
+  "version": "6.9.0",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -163,7 +162,16 @@
     },
     "cups": {
       "description": "Provides support for the Common Unix Printing System.",
-      "supports": "linux | osx"
+      "supports": "linux | osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
     },
     "dbus": {
       "description": "Qt D-Bus",
@@ -240,6 +248,13 @@
         {
           "name": "freetype",
           "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
         }
       ]
     },
@@ -295,13 +310,6 @@
         {
           "name": "opengl",
           "platform": "!ios"
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "freetype"
-          ]
         },
         {
           "name": "qtbase",
@@ -510,6 +518,13 @@
     "vulkan": {
       "description": "Enable Vulkan support",
       "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
         "vulkan"
       ]
     },
