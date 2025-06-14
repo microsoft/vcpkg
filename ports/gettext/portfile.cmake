@@ -31,6 +31,10 @@ vcpkg_extract_source_archive(SOURCE_PATH
         # 0001-xgettext-Fix-some-test-failures-on-MSVC.patch
 )
 
+macro(execute_process)
+    _execute_process(TIMEOUT 900 ${ARGN})
+endmacro()
+
 set(subdirs "")
 if("runtime-tools" IN_LIST FEATURES)
     list(APPEND subdirs "gettext-runtime")
