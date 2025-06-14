@@ -1,0 +1,64 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index ebca949..b95d6be 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -196,6 +196,8 @@ if(USD_SUPPORT)
+     UNIFY_ENVVARS_AND_CACHE(USD_INCLUDE_DIR)
+     UNIFY_ENVVARS_AND_CACHE(USD_LIBRARY_DIR)
+ 
++    find_package(pxr CONFIG REQUIRED)
++    if(0)
+     if("${USD_INCLUDE_DIR}" STREQUAL "")
+         find_path(USD_INCLUDE_DIR pxr.h
+             PATHS
+@@ -212,6 +214,7 @@ if(USD_SUPPORT)
+         set(USD_INCLUDE_DIR ${USD_INCLUDE_DIR} CACHE FILEPATH "USD header files")
+         message(STATUS "Looking for USD include files in: ${USD_INCLUDE_DIR}")
+     endif()
++    endif()
+ 
+     set(USD_LIBRARIES
+             usd_usd
+@@ -359,6 +362,11 @@ if(BUILD_IFCGEOM)
+     endif()
+ 
+     # Open CASCADE
++    find_package(OpenCASCADE CONFIG REQUIRED)
++    set(OCC_VERSION_STRING ${OpenCASCADE_VERSION})
++    set(OCC_INCLUDE_DIR "${OpenCASCADE_INCLUDE_DIR}")
++    set(OPENCASCADE_LIBRARIES TKBO TKDE TKBin TKCAF)
++    if(0)
+     if("${OCC_INCLUDE_DIR}" STREQUAL "")
+         find_path(OCC_INCLUDE_DIR Standard_Version.hxx
+             PATHS
+@@ -481,6 +489,7 @@ if(BUILD_IFCGEOM)
+             set(OPENCASCADE_LIBRARIES ${OPENCASCADE_LIBRARIES} "dl")
+         endif()
+     endif()
++    endif()
+ 
+ endif(BUILD_IFCGEOM)
+ 
+@@ -569,6 +578,14 @@ if(COLLADA_SUPPORT)
+ endif()
+ 
+ if(HDF5_SUPPORT)
++    find_package(hdf5 CONFIG REQUIRED)
++    if(BUILD_SHARED_LIBS)
++        set(HDF5_LIBRARIES hdf5::hdf5-shared hdf5::hdf5_cpp-shared)
++    else()
++        set(HDF5_LIBRARIES hdf5::hdf5-static hdf5::hdf5_cpp-static)
++    endif(BUILD_SHARED_LIBS)
++    
++    if(0)
+     if("${HDF5_INCLUDE_DIR}" STREQUAL "")
+         message(STATUS "No HDF5 include directory specified")
+     else()
+@@ -649,6 +666,7 @@ if(HDF5_SUPPORT)
+             z dl
+         )
+     endif()
++    endif()
+ 
+     add_definitions(-DWITH_HDF5)
+     set(SWIG_DEFINES ${SWIG_DEFINES} -DWITH_HDF5)
