@@ -75,9 +75,7 @@ if(NOT SQLITE3_SKIP_TOOLS)
 
     if(SQLITE_ENABLE_ICU)
         target_link_libraries(sqlite3-bin PRIVATE ICU::uc ICU::i18n)
-        set_target_properties(sqlite3-bin PROPERTIES
-            LINK_EXECUTABLE "${CMAKE_CXX_COMPILER}"
-        )
+        set_property(TARGET sqlite3-bin PROPERTY LINKER_LANGUAGE CXX)
     endif()
 
     install(TARGETS sqlite3-bin sqlite3
