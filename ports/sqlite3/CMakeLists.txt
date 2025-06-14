@@ -55,6 +55,9 @@ endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlite3-bin shell.c)
+    if(SQLITE_ENABLE_ICU)
+        set_property(TARGET sqlite3-bin PROPERTY LINKER_LANGUAGE CXX)
+    endif()
     set_target_properties(sqlite3-bin PROPERTIES
         OUTPUT_NAME sqlite3
         PDB_NAME "sqlite3${CMAKE_EXECUTABLE_SUFFIX}.pdb"
@@ -76,12 +79,6 @@ if(NOT SQLITE3_SKIP_TOOLS)
         # Assuming ICU components uc and i18n are already found by find_package(ICU ...)
         # Link the ICU libraries to the executable
         target_link_libraries(sqlite3-bin PRIVATE ICU::uc ICU::i18n)
-
-        # IMPORTANT: Link the C++ standard library.
-        # Since sqlite3-bin is a C executable but links to C++ libraries (ICU),
-        # it needs to explicitly link the C++ runtime.
-        # CXX_STANDARD_LIBRARY is a portable way to do this in CMake.
-        target_link_libraries(sqlite3-bin PRIVATE CXX_STANDARD_LIBRARY)
     endif()
 
     install(TARGETS sqlite3-bin sqlite3
