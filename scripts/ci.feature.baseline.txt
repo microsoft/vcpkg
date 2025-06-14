@@ -1769,8 +1769,6 @@ qt5-xmlpatterns:x64-uwp = cascade
 qt5compat:arm64-uwp = cascade
 qt5compat:x64-uwp = cascade
 qt5compat[iconv]:x64-uwp = cascade
-# Conflicts with qtbase[icu]
-qt5compat[iconv]:x64-windows = skip
 qtactiveqt:arm64-uwp = cascade
 qtactiveqt:x64-uwp = cascade
 qtapplicationmanager:arm64-osx = cascade
