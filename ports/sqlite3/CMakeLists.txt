@@ -54,10 +54,17 @@ if(SQLITE_ENABLE_ICU)
 endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
-    add_executable(sqlite3-bin shell.c)
+    # Define the sources for the executable
+    set(SQLITE3_BIN_SOURCES shell.c)
+
     if(SQLITE_ENABLE_ICU)
-        set_property(TARGET sqlite3-bin PROPERTY LINKER_LANGUAGE CXX)
+        # This will automatically make the executable target a C++ target,
+        # ensuring the C++ linker and its standard library are used.
+        set_source_files_properties(${SQLITE3_BIN_SOURCES} PROPERTIES LANGUAGE CXX)
     endif()
+
+    add_executable(sqlite3-bin ${SQLITE3_BIN_SOURCES})
+
     set_target_properties(sqlite3-bin PROPERTIES
         OUTPUT_NAME sqlite3
         PDB_NAME "sqlite3${CMAKE_EXECUTABLE_SUFFIX}.pdb"
@@ -76,8 +83,8 @@ if(NOT SQLITE3_SKIP_TOOLS)
     endif()
 
     if(SQLITE_ENABLE_ICU)
-        # Assuming ICU components uc and i18n are already found by find_package(ICU ...)
-        # Link the ICU libraries to the executable
+        # Now that sqlite3-bin is implicitly a C++ target, it will link against ICU
+        # and automatically pull in the C++ standard library.
         target_link_libraries(sqlite3-bin PRIVATE ICU::uc ICU::i18n)
     endif()
 
