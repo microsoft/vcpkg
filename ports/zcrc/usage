@@ -1,0 +1,13 @@
+zcrc is header-only and can be used from CMake via:
+
+  find_package(zcrc CONFIG REQUIRED)
+
+  # To consume the library as a header (#include <zcrc/zcrc.hpp>):
+  target_link_libraries(main PRIVATE zcrc::zcrc)
+
+  # To consume the library as a module (import zcrc;):
+  target_link_libraries(main PRIVATE zcrc::zcrc-module)
+
+zcrc provides pkg-config modules:
+
+  zcrc
