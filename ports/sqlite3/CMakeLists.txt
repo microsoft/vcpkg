@@ -48,9 +48,9 @@ endif()
 
 if(SQLITE_ENABLE_ICU)
     find_package(ICU COMPONENTS uc i18n REQUIRED)
-    target_link_libraries(sqlite3 PRIVATE ICU::uc ICU::i18n)
+    target_link_libraries(sqlite3 PRIVATE ICU::uc ICU::i18n ICU::data)
 
-    string(APPEND PKGCONFIG_REQUIRES_PRIVATE " icu-uc icu-i18n")
+    string(APPEND PKGCONFIG_REQUIRES_PRIVATE " icu-uc icu-i18n icu-data")
 endif()
 
 if(NOT SQLITE3_SKIP_TOOLS)
@@ -74,7 +74,7 @@ if(NOT SQLITE3_SKIP_TOOLS)
     endif()
 
     if(SQLITE_ENABLE_ICU)
-        target_link_libraries(sqlite3-bin PRIVATE ICU::uc ICU::i18n)
+        target_link_libraries(sqlite3-bin PRIVATE ICU::uc ICU::i18n ICU::data)
         set_property(TARGET sqlite3-bin PROPERTY LINKER_LANGUAGE CXX)
     endif()
 
