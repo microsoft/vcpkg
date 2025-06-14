@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 41ce88d..0a552b4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -120,15 +120,15 @@ target_compile_features(npy PRIVATE cxx_std_11)
+ 
+ # -------------------- INSTALL ------------------------------------
+ 
+-set(INSTALL_CONFIGDIR "cmake")
++set(INSTALL_CONFIGDIR "share/libnpy")
+ 
+ install(TARGETS npy 
+   EXPORT npy-targets
+-  ARCHIVE DESTINATION "build/native/lib"
+-  LIBRARY DESTINATION "build/native/lib"
++  ARCHIVE DESTINATION "lib"
++  LIBRARY DESTINATION "lib"
+ )
+ 
+-install(DIRECTORY include/ DESTINATION "build/native/include")
++install(DIRECTORY include/ DESTINATION "include")
+ 
+ install(EXPORT npy-targets
+   FILE
+@@ -166,14 +166,6 @@ export(PACKAGE npy)
+ 
+ # -------------------- Package ------------------------------------
+ 
+-set( PROJECT_FILES
+-  README.md
+-  CHANGELOG.md
+-)
+-
+-# copy these files into the root of the distribution zip
+-install( FILES ${PROJECT_FILES} DESTINATION "." )
+-
+ if( MSVC )
+   # NuGet files
+   set( LIBNPY_NUGET_NAME "npy-${SYSTEM_TOOLKIT}-${SYSTEM_BITS}-${CMAKE_BUILD_TYPE}" CACHE STRING "npy NuGet Name" FORCE )
