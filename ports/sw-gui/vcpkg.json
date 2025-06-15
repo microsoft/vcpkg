@@ -4,7 +4,7 @@
   "description": "A C++ GUI framework for building Windows desktop applications.",
   "homepage": "https://github.com/Mzying2001/sw",
   "license": "MIT",
-  "supports": "windows",
+  "supports": "windows & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
