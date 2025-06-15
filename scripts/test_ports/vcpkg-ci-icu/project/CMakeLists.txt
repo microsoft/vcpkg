@@ -15,10 +15,6 @@ pkg_check_modules(icu_pc icu-i18n REQUIRED IMPORTED_TARGET)
 add_executable(main-pkconfig main.c)
 target_link_libraries(main-pkconfig PRIVATE PkgConfig::icu_pc)
 
-# Known issue: C++ linkage
-
-set_target_properties(main-pkconfig PROPERTIES LINKER_LANGUAGE CXX)
-
 # Validate other components
 
 vcpkg_check_cmake_package_find(ICU MODULE REQUIRED COMPONENTS data dt in io tu uc)
