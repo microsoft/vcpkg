@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 ce24a92d623c9e56666128e243bc58acdbff8f7dfac1f728fdbd97a2c3ec21135b8c2a79c3e13920ca0d52545819766b90fc6aca35318b754eedf5ae5329ff36 
     HEAD_REF next
     PATCHES
+        early-cxx.diff
         fix-dependencies.patch
 )
 
@@ -20,6 +21,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_CyrusSASL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=${VCPKG_TARGET_IS_WINDOWS} # match dependencies
         -DCMAKE_DISABLE_FIND_PACKAGE_opentelemetry-cpp=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
         -DENABLE_JSONCPP=ON
