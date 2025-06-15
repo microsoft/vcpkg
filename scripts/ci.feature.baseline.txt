@@ -1347,7 +1347,6 @@ libxkbcommon:arm64-uwp = cascade
 libxkbcommon:x64-uwp = cascade
 libxkbfile:arm64-uwp = cascade
 libxkbfile:x64-uwp = cascade
-libxml2[icu](uwp) = cascade
 libxmlpp:arm64-uwp = cascade
 libxmlpp:x64-uwp = cascade
 libxmu:arm64-uwp = cascade
