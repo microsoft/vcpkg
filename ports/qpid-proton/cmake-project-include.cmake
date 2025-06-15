@@ -1,0 +1,7 @@
+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    include(CheckCSourceCompiles)
+    check_c_source_compiles("#ifndef _WIN32_WINNT\n#error \"Nope\"\n#endif\n" HAVE_WIN32_WINNT)
+    if(NOT HAVE_WIN32_WINNT)
+        add_definitions(-D_WIN32_WINNT=0x0A00)
+    endif()
+endif()

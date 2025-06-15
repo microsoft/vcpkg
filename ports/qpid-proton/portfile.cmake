@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=${VCPKG_TARGET_IS_WINDOWS} # match dependencies
         -DCMAKE_DISABLE_FIND_PACKAGE_opentelemetry-cpp=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -DENABLE_JSONCPP=ON
         -DENABLE_LINKTIME_OPTIMIZATION=OFF
         -DENABLE_OPENTELEMETRYCPP=OFF
