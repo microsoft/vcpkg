@@ -14,6 +14,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 # gettext hates msys2. Turn off msys2 heurisics for command line arguments.
 set(ENV{MSYS2_ARG_CONV_EXCL} "*")
+include("${CURRENT_PORT_DIR}/vcpkg_make.cmake")
 include("${CURRENT_PORT_DIR}/vcpkg_make_common.cmake")
 
 vcpkg_download_distfile(ARCHIVE
@@ -94,7 +95,6 @@ elseif(0)
         --without-libxcurses-prefix
         "INTLBISON=${BISON_NAME}"
         "TOOLS_BISON=${BISON_NAME}"
-        "ARFLAGS="
     )
 
     if("nls" IN_LIST FEATURES)
