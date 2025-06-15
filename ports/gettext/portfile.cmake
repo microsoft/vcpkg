@@ -94,6 +94,7 @@ elseif(0)
         --without-libxcurses-prefix
         "INTLBISON=${BISON_NAME}"
         "TOOLS_BISON=${BISON_NAME}"
+        "ARFLAGS="
     )
 
     if("nls" IN_LIST FEATURES)
