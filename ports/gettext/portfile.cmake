@@ -14,6 +14,7 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 # gettext hates msys2. Turn off msys2 heurisics for command line arguments.
 set(ENV{MSYS2_ARG_CONV_EXCL} "*")
+include("${CURRENT_PORT_DIR}/vcpkg_make_common.cmake")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.xz"
