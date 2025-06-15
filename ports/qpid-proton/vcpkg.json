@@ -4,6 +4,7 @@
   "description": "Qpid Proton is a high-performance, lightweight messaging library.",
   "homepage": "https://github.com/apache/qpid-proton",
   "license": "Apache-2.0",
+  "supports": "!(static & staticcrt)",
   "dependencies": [
     "jsoncpp",
     {
