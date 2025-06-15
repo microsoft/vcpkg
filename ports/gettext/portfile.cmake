@@ -32,7 +32,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
 )
 
 macro(execute_process)
-    _execute_process(TIMEOUT 900 ${ARGN})
+    _execute_process(TIMEOUT 1800 ${ARGN})
 endmacro()
 
 set(subdirs "")
@@ -93,9 +93,9 @@ elseif(0)
     )
 
     if("nls" IN_LIST FEATURES)
-        vcpkg_list(APPEND options "--enable-nls")
+        vcpkg_list(APPEND OPTIONS "--enable-nls")
     else()
-        vcpkg_list(APPEND options "--disable-nls")
+        vcpkg_list(APPEND OPTIONS "--disable-nls")
     endif()
 
     if(VCPKG_TARGET_IS_LINUX)
