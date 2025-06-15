@@ -4,7 +4,7 @@
   "description": "Asynchronous logger with Dynamic Sinks",
   "homepage": "https://github.com/KjellKod/g3log",
   "license": "Unlicense",
-  "supports": "!uwp & !android",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
