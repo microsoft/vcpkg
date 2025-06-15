@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 6879c4c..6c5814b 100644
+index 6879c4c..99c221d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -104,6 +104,7 @@ else (OpenMVG_BUILD_SHARED)
@@ -32,27 +32,16 @@ index 6879c4c..6c5814b 100644
  
  # Folders
  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-@@ -281,6 +284,7 @@ endif()
+@@ -281,7 +284,7 @@ endif()
  # - external if EIGEN_INCLUDE_DIR_HINTS is defined
  # - internal if Eigen not found
  # ==============================================================================
-+if(0)
- find_package(Eigen3 QUIET)
+-find_package(Eigen3 QUIET)
++find_package(Eigen3 REQUIRED)
  if (NOT Eigen3_FOUND)
    set(EIGEN_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/eigen)
-@@ -289,7 +293,11 @@ if (NOT Eigen3_FOUND)
- else()
-   set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
- endif()
-+endif()
-+
- add_definitions(-DEIGEN_MPL2_ONLY)
-+find_package(Eigen3 REQUIRED)
-+set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
- 
- # ==============================================================================
- # Ceres
-@@ -297,7 +305,7 @@ add_definitions(-DEIGEN_MPL2_ONLY)
+   set(OpenMVG_USE_INTERNAL_EIGEN ON)
+@@ -297,7 +300,7 @@ add_definitions(-DEIGEN_MPL2_ONLY)
  # - external by default if CERES_DIR_HINTS or find_package found a valid Ceres
  # - internal if ceres not found (ceres-solver+cxsparse+miniglog)
  # ==============================================================================
@@ -61,25 +50,24 @@ index 6879c4c..6c5814b 100644
  if (NOT Ceres_FOUND)
    set(OpenMVG_USE_INTERNAL_CERES ON)
    set(CERES_INCLUDE_DIRS
-@@ -315,6 +323,7 @@ endif()
+@@ -315,6 +318,8 @@ endif()
  # - internal by default (flann),
  # - external if FLANN_INCLUDE_DIR_HINTS and a valid Flann setup is found
  # ==============================================================================
++find_package(flann REQUIRED)
 +if(0)
  if (NOT DEFINED FLANN_INCLUDE_DIR_HINTS)
    set(FLANN_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/flann/src/cpp)
    set(OpenMVG_USE_INTERNAL_FLANN ON)
-@@ -330,6 +339,9 @@ endif()
+@@ -330,6 +335,7 @@ endif()
  if (NOT FLANN_FOUND OR OpenMVG_USE_INTERNAL_FLANN)
    set(FLANN_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/flann/src/cpp)
  endif()
 +endif()
-+
-+find_package(flann REQUIRED)
  
  # ==============================================================================
  # CoinUtils
-@@ -356,13 +368,13 @@ endif()
+@@ -356,13 +362,13 @@ endif()
  if (NOT DEFINED CLP_INCLUDE_DIR_HINTS)
    set(CLP_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/Clp/src/)
    set(OpenMVG_USE_INTERNAL_CLP ON)
@@ -95,33 +83,33 @@ index 6879c4c..6c5814b 100644
  endif()
  
  # ==============================================================================
-@@ -398,6 +410,7 @@ endif()
+@@ -398,6 +404,8 @@ endif()
  # - internal by default (Lemon),
  # - external if LEMON_INCLUDE_DIR_HINTS and a valid Lemon setup is found
  # ==============================================================================
++find_package(LEMON REQUIRED)
 +if(0)
  if (NOT DEFINED LEMON_INCLUDE_DIR_HINTS)
    set(LEMON_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lemon)
    set(OpenMVG_USE_INTERNAL_LEMON ON)
-@@ -408,13 +421,16 @@ if (NOT LEMON_FOUND OR OpenMVG_USE_INTERNAL_LEMON)
+@@ -408,6 +416,7 @@ if (NOT LEMON_FOUND OR OpenMVG_USE_INTERNAL_LEMON)
      ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lemon
      ${PROJECT_BINARY_DIR}/third_party/lemon)
  endif()
 +endif()
-+
-+find_package(LEMON REQUIRED)
  
  # ==============================================================================
  # OpenCV
- # ==============================================================================
+@@ -415,7 +424,7 @@ endif()
  # - only external and enabled only if OpenMVG_USE_OPENCV is set to ON
  # ==============================================================================
--if (OpenMVG_USE_OPENCV)
-+if (0)
-   find_package( OpenCV QUIET )
+ if (OpenMVG_USE_OPENCV)
+-  find_package( OpenCV QUIET )
++  find_package(OpenCV REQUIRED)
    if (NOT OpenCV_FOUND OR OpenCV_VERSION VERSION_LESS "3.0.0")
      message(STATUS "OpenCV was not found (note that OpenCV version >= 3.0.0 is required). -> Disabling OpenCV support.")
-@@ -438,7 +454,6 @@ endif()
+     UPDATE_CACHE_VARIABLE(OpenMVG_USE_OPENCV OFF)
+@@ -438,7 +447,6 @@ endif()
  # Third-party libraries:
  # ==============================================================================
  add_subdirectory(third_party)
@@ -411,6 +399,3 @@ index 41e8e06..013f9c7 100644
 +target_link_libraries(domset PUBLIC Eigen3::Eigen)
  target_link_libraries(domset PRIVATE openMVG_matching)
  set_property(TARGET domset PROPERTY FOLDER OpenMVG/software/clustering)
--- 
-2.34.1.windows.1
-
