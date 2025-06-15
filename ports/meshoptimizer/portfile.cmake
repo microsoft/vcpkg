@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 d8342aadd48c0f51aa014ba56ff4c97f4780194eabf78d8a867876fb49f5d103597748ec4aa3613e236e2c42c5ca58d46a9ad3b7c458de5e1f01546d9951bfb4
     HEAD_REF master
     PATCHES
-      fix-threads.patch
+      fix-cmake.patch
 )
 
 # If we want basisu support in gltfpack we need a particular fork of basisu
