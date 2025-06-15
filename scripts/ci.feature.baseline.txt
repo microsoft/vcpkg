@@ -1276,6 +1276,7 @@ libnice:arm64-uwp = cascade
 libnice:x64-uwp = cascade
 libnice-gst:arm64-uwp = cascade
 libnice-gst:x64-uwp = cascade
+libnick:x64-linux = cascade
 libodb-boost:x64-linux = cascade
 libodb-mysql:arm64-uwp = cascade
 libodb-mysql:x64-linux = cascade
