@@ -12,6 +12,9 @@
 set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+# gettext hates msys2. Turn off msys2 heurisics for command line arguments.
+set(ENV{MSYS2_ARG_CONV_EXCL} "*")
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.xz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.xz"
