@@ -168,7 +168,10 @@ set(msys_require_packages gzip)
 # Considered for fixup in vcpkg-make:
 # https://savannah.gnu.org/support/?111257,
 # isolated in https://github.com/microsoft/vcpkg/pull/45913
-vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libtool" "lt_ar_flags=([^\"\n]+)" "lt_ar_flags=\"\\1\"" REGEX)
+file(GLOB_RECURSE libtool_scripts "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*libtool")
+foreach(script IN LISTS libtool_scripts)
+    vcpkg_replace_string("${script}" "lt_ar_flags=([^\"\n]+)" "lt_ar_flags=\"\\1\"" REGEX IGNORE_UNCHANGED)
+endforeach()
 
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.
