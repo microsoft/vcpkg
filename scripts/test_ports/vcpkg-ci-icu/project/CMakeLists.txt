@@ -17,6 +17,6 @@ target_link_libraries(main-pkconfig PRIVATE PkgConfig::icu_pc)
 
 # Validate other components
 
-vcpkg_check_cmake_package_find(ICU MODULE REQUIRED COMPONENTS data dt in io tu uc)
+vcpkg_check_cmake_package_find(ICU MODULE REQUIRED COMPONENTS data dt in io uc OPTIONAL_COMPONENTS tu)
 vcpkg_check_cmake_package_variables()
 vcpkg_check_cmake_package_targets()

@@ -13,20 +13,5 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ],
-  "default-features": [
-    "all"
-  ],
-  "features": {
-    "all": {
-      "description": "Test all features",
-      "dependencies": [
-        {
-          "name": "icu",
-          "features": [
-          ]
-        }
-      ]
-    }
-  }
+  ]
 }
