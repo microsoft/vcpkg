@@ -17,16 +17,10 @@ target_link_libraries(main-pkconfig PRIVATE PkgConfig::icu_pc)
 
 # Known issue: C++ linkage
 
-set_target_properties(main main-pkconfig PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(main-pkconfig PROPERTIES LINKER_LANGUAGE CXX)
 
-# Known issue: transitive usage requirements
+# Validate other components
 
-find_package(ICU MODULE REQUIRED COMPONENTS data uc)
-set_target_properties(ICU::i18n PROPERTIES INTERFACE_LINK_LIBRARIES ICU::uc)
-set_target_properties(ICU::uc PROPERTIES INTERFACE_LINK_LIBRARIES ICU::data)
-
-# Validate all expected components
-
-vcpkg_check_cmake_package_find(ICU MODULE REQUIRED COMPONENTS data dt i18n in io tu uc)
+vcpkg_check_cmake_package_find(ICU MODULE REQUIRED COMPONENTS data dt in io tu uc)
 vcpkg_check_cmake_package_variables()
 vcpkg_check_cmake_package_targets()
