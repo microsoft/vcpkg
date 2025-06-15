@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e0beed..fce83c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -141,9 +141,8 @@ if(MESHOPT_BUILD_GLTFPACK)
+             set_source_files_properties(gltf/basislib.cpp PROPERTIES COMPILE_OPTIONS -msse4.1)
+         endif()
+ 
+-        if(UNIX)
+-            target_link_libraries(gltfpack pthread)
+-        endif()
++        find_package(Threads REQUIRED)
++        target_link_libraries(gltfpack Threads::Threads)
+     endif()
+ endif()
+ 
