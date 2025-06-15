@@ -6117,7 +6117,7 @@
       "port-version": 6
     },
     "meshoptimizer": {
-      "baseline": "0.23",
+      "baseline": "0.24",
       "port-version": 0
     },
     "metis": {
