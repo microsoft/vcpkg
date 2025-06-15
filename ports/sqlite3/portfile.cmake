@@ -99,3 +99,7 @@ vcpkg_copy_pdbs()
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "SQLite is in the Public Domain.\nhttp://www.sqlite.org/copyright.html\n")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+if("unicode" IN_LIST FEATURES)
+    message(FATAL_ERROR STOP)
+endif()
