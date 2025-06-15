@@ -165,6 +165,11 @@ set(msys_require_packages gzip)
         )
     endforeach()
 
+# Considered for fixup in vcpkg-make:
+# https://savannah.gnu.org/support/?111257,
+# isolated in https://github.com/microsoft/vcpkg/pull/45913
+vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libtool" "lt_ar_flags=([^\"\n]+)" "lt_ar_flags=\"\\1\"" REGEX)
+
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.
     # - Avoid a subshell just to add comments, the build dir is temporary.
