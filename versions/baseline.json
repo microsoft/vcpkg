@@ -5666,7 +5666,7 @@
     },
     "libxslt": {
       "baseline": "1.1.43",
-      "port-version": 0
+      "port-version": 1
     },
     "libxt": {
       "baseline": "1.3.0",

@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 51d9e9586f78c5aa69ac67fac64b865625fefb16bf06f1f06dede0a57b3e382e78dea69145c7c0c59f06735b738bed209751e691dd9045c3cc33df096963f89d
     HEAD_REF master
     PATCHES
+        cxx-for-libxml2-icu.diff
         python3.patch
         msvc-no-suffix.patch
         libexslt-pkgconfig.patch
