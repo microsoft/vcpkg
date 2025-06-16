@@ -71,7 +71,7 @@ if(NOT VCPKG_BUILD_TYPE)
   file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG/cmake" "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/cmake")
 endif()
 
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME openMVG)
 
 file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/debug/include"
