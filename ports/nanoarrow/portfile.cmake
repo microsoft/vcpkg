@@ -2,7 +2,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow-nanoarrow
-    REF "apache-arrow-nanoarrow-${VERSION}"
+    REF "apache-arrow-nanoarrow-eb242312c2e679b24284dd49706ab8d6d0c995c4"
     SHA512 6d2bb68e4f35b42f543cf33aa5acf585690da5ffafe9d144da03473dc1e0a0834944abea719ba9b88296832bd3cc2e09a97f69552dec61a8d4a95fb78f0df405
     HEAD_REF main
 )
