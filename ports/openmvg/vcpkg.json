@@ -53,6 +53,7 @@
     },
     "software": {
       "description": "build openMVG tools",
+      "supports": "!staticcrt",
       "dependencies": [
         "qt5-base",
         "qt5-svg"
