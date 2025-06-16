@@ -500,6 +500,10 @@
       "baseline": "2025-03-31",
       "port-version": 0
     },
+    "azure-kinect-depth-engine": {
+      "baseline": "1.4.2",
+      "port-version": 0
+    },
     "azure-kinect-sensor-sdk": {
       "baseline": "1.4.2",
       "port-version": 0

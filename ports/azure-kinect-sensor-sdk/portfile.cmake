@@ -12,12 +12,6 @@ vcpkg_from_github(
         fix-header.patch
 )
 
-vcpkg_download_distfile(DEPTHENGINE_ARCHIVE
-    URLS "https://www.nuget.org/api/v2/package/Microsoft.Azure.Kinect.Sensor/${VERSION}"
-    FILENAME "microsoft.azure.kinect.sensor.${VERSION}.nupkg.zip"
-    SHA512 6e9e68f16bb00b3ddfdc963c6b62f9100d12b3407e0cd894052d5dc08ce2214e871f0c0977bff5b5e52af4ee325f775c818e2babacb6e8633b2887a9866c3ea3
-)
-
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -50,28 +44,6 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/k4arecord" PACKAGE_NAME "k4areco
 
 if ("tool" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES k4arecorder k4aviewer AzureKinectFirmwareTool AUTO_CLEAN)
-endif()
-
-vcpkg_extract_source_archive(
-    PACKAGE_PATH
-    ARCHIVE "${DEPTHENGINE_ARCHIVE}"
-    NO_REMOVE_ONE_LEVEL
-)
-
-# Deploy depthengine blob
-if (VCPKG_TARGET_IS_LINUX)
-    file(COPY "${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    if(NOT VCPKG_BUILD_TYPE)
-      file(COPY "${PACKAGE_PATH}/linux/lib/native/${VCPKG_TARGET_ARCHITECTURE}/release/libdepthengine.so.2.0" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    endif()
-else()
-    string(REPLACE "x64" "amd64" ARCHITECTURE "${VCPKG_TARGET_ARCHITECTURE}")
-    file(COPY "${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    if(NOT VCPKG_BUILD_TYPE)
-      file(COPY "${PACKAGE_PATH}/lib/native/${ARCHITECTURE}/release/depthengine_2_0.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
-      file(COPY "${CMAKE_CURRENT_LIST_DIR}/k4adeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
-    endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
