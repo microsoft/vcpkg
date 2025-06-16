@@ -87,6 +87,7 @@
     },
     "qdoc": {
       "description": "Build QDoc",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "llvm",

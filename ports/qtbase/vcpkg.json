@@ -324,6 +324,7 @@
           "default-features": false,
           "features": [
             "egl",
+            "freetype",
             "gles2",
             "opengl"
           ],
@@ -460,7 +461,6 @@
     "sql-oci": {
       "description": "Enable SQL Driver Oracle OCI",
       "dependencies": [
-        "ocilib",
         {
           "name": "qtbase",
           "default-features": false,
