@@ -37,15 +37,9 @@ if(z_vcpkg_icu_config_mode_args STREQUAL "")
                 list(REMOVE_ITEM ARGS data)
                 list(APPEND ARGS COMPONENTS data)
             endif()
-        endif()
-        # Fix problem: C++ linkage
-        if("data" IN_LIST ARGS AND NOT TARGET ICU::data)
-            add_library(ICU::data STATIC IMPORTED)
-            list(APPEND z_vcpkg_icu_fixup "data->c++")
-        endif()
-        if("dt" IN_LIST ARGS AND NOT TARGET ICU::dt)
-            add_library(ICU::dt STATIC IMPORTED)
-            list(APPEND z_vcpkg_icu_fixup "dt->c++")
+            # Fix problem: C++ linkage
+            add_library(ICU::uc STATIC IMPORTED)
+            list(APPEND z_vcpkg_icu_fixup "uc->c++")
         endif()
     endif()
     # Fix problem: Find debug variant without 'd' suffix
@@ -87,56 +81,30 @@ _find_package(${ARGS})
 if(ICU_FOUND AND NOT z_vcpkg_icu_fixup STREQUAL "")
     cmake_policy(PUSH)
     cmake_policy(SET CMP0057 NEW)
-    if("data->c++" IN_LIST z_vcpkg_icu_fixup)
-        list(REMOVE_ITEM z_vcpkg_icu_fixup "data->c++")
+    if("uc->c++" IN_LIST z_vcpkg_icu_fixup)
+        list(REMOVE_ITEM z_vcpkg_icu_fixup "uc->c++")
         if(ICU_INCLUDE_DIR)
-          set_target_properties(ICU::data PROPERTIES
+          set_target_properties(ICU::uc PROPERTIES
             INTERFACE_INCLUDE_DIRECTORIES "${ICU_INCLUDE_DIR}")
         endif()
-        if(EXISTS "${ICU_DATA_LIBRARY}")
-          set_target_properties(ICU::data PROPERTIES
+        if(EXISTS "${ICU_UC_LIBRARY}")
+          set_target_properties(ICU::uc PROPERTIES
             IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
-            IMPORTED_LOCATION "${ICU_DATA_LIBRARY}")
+            IMPORTED_LOCATION "${ICU_UC_LIBRARY}")
         endif()
-        if(EXISTS "${ICU_DATA_LIBRARY_RELEASE}")
-          set_property(TARGET ICU::data APPEND PROPERTY
+        if(EXISTS "${ICU_UC_LIBRARY_RELEASE}")
+          set_property(TARGET ICU::uc APPEND PROPERTY
             IMPORTED_CONFIGURATIONS RELEASE)
-          set_target_properties(ICU::data PROPERTIES
+          set_target_properties(ICU::uc PROPERTIES
             IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
-            IMPORTED_LOCATION_RELEASE "${ICU_DATA_LIBRARY_RELEASE}")
+            IMPORTED_LOCATION_RELEASE "${ICU_UC_LIBRARY_RELEASE}")
         endif()
-        if(EXISTS "${ICU_DATA_LIBRARY_DEBUG}")
-          set_property(TARGET ICU::data APPEND PROPERTY
+        if(EXISTS "${ICU_UC_LIBRARY_DEBUG}")
+          set_property(TARGET ICU::uc APPEND PROPERTY
             IMPORTED_CONFIGURATIONS DEBUG)
-          set_target_properties(ICU::data PROPERTIES
+          set_target_properties(ICU::uc PROPERTIES
             IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-            IMPORTED_LOCATION_DEBUG "${ICU_DATA_LIBRARY_DEBUG}")
-        endif()
-    endif()
-    if("dt->c++" IN_LIST z_vcpkg_icu_fixup)
-        list(REMOVE_ITEM z_vcpkg_icu_fixup "dt->c++")
-        if(ICU_INCLUDE_DIR)
-          set_target_properties(ICU::dt PROPERTIES
-            INTERFACE_INCLUDE_DIRECTORIES "${ICU_INCLUDE_DIR}")
-        endif()
-        if(EXISTS "${ICU_DT_LIBRARY}")
-          set_target_properties(ICU::dt PROPERTIES
-            IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
-            IMPORTED_LOCATION "${ICU_DT_LIBRARY}")
-        endif()
-        if(EXISTS "${ICU_DT_LIBRARY_RELEASE}")
-          set_property(TARGET ICU::dt APPEND PROPERTY
-            IMPORTED_CONFIGURATIONS RELEASE)
-          set_target_properties(ICU::dt PROPERTIES
-            IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
-            IMPORTED_LOCATION_RELEASE "${ICU_DT_LIBRARY_RELEASE}")
-        endif()
-        if(EXISTS "${ICU_DT_LIBRARY_DEBUG}")
-          set_property(TARGET ICU::dt APPEND PROPERTY
-            IMPORTED_CONFIGURATIONS DEBUG)
-          set_target_properties(ICU::dt PROPERTIES
-            IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-            IMPORTED_LOCATION_DEBUG "${ICU_DT_LIBRARY_DEBUG}")
+            IMPORTED_LOCATION_DEBUG "${ICU_UC_LIBRARY_DEBUG}")
         endif()
     endif()
     if("i18n->uc" IN_LIST z_vcpkg_icu_fixup)
