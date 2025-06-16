@@ -2221,5 +2221,5 @@ sciter = skip # The sciter port is deprecated by upstream and conflicts with ups
 shogun = skip # shogun is not compatible with c++17 because it uses dynamic exception specifications but the dependency abseil requires c++17
 winpcap = skip # Broken and marked for removal. See https://github.com/microsoft/vcpkg/pull/33215
 opencv4[dshow]:x64-uwp=feature-fails
-opencv4[core,opengl]=combination-fails # needs Win32UI, Qt or GTK to enable HAVE_OPENGL
-opencv4[core,halide]=combination-fails # error C2039: 'attachHalide': is not a member of 'cv::dnn::GeluFunctor'
+opencv4[opengl]=no-separate-feature-test # needs Win32UI, Qt or GTK to enable HAVE_OPENGL
+opencv4[halide]=no-separate-feature-test # error C2039: 'attachHalide': is not a member of 'cv::dnn::GeluFunctor'
