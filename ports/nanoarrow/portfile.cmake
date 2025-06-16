@@ -2,7 +2,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow-nanoarrow
-    REF "apache-arrow-nanoarrow-eb242312c2e679b24284dd49706ab8d6d0c995c4"
+    REF "eb242312c2e679b24284dd49706ab8d6d0c995c4"
     SHA512 23c2fb17a9aa605f4aa6c3eb88e4bb72d5d4113ed3b10c4c7b601716d8edce819639a7463eaa9169e78c5922b910658a0937c6a30e078ca602e41c01086a1f96
     HEAD_REF main
     PATCHES
