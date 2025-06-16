@@ -70,6 +70,17 @@ index 2049fe9..3dc8a06 100644
    set(CONNECT_CONFIG_SRC src/connect_config.cpp)
    set(CONNECT_CONFIG_LIBS ${JsonCpp_LIBRARY})
  else()
+@@ -37,9 +37,9 @@ else()
+ endif()
+ 
+ # Check for OPENTELEMETRY-CPP for distributed tracing
+-find_package(opentelemetry-cpp)
+ option(ENABLE_OPENTELEMETRYCPP "Use opentelemetry for distributed tracing" ${OPENTELEMETRY-CPP_FOUND})
+ if (ENABLE_OPENTELEMETRYCPP)
++  find_package(opentelemetry-cpp)
+   include_directories(${OPENTELEMETRY_CPP_INCLUDE_DIRS})
+   set(TRACING_SRC src/tracing_opentelemetry.cpp src/tracing_stub.cpp)
+   set(TRACING_LIBS opentelemetry-cpp::trace)
 diff --git a/cpp/ProtonCppConfig.cmake.in b/cpp/ProtonCppConfig.cmake.in
 index aaa1bf9..e1be025 100644
 --- a/cpp/ProtonCppConfig.cmake.in
