@@ -877,9 +877,9 @@ rbdl-orb:x64-windows=skip
 rbdl-orb:x86-windows=skip
 # rerun-sdk currently only supports the Dynamic Release build for Windows, and does not provide any other binary blobs.
 # Other blobs will be added in a future version of Rerun SDK.
-rerun-sdk:x64-windows = fail
-rerun-sdk:x64-windows-static = fail
-rerun-sdk:x64-windows-static-md = fail
+rerun-sdk:x64-windows=fail
+rerun-sdk:x64-windows-static=fail
+rerun-sdk:x64-windows-static-md=fail
 restbed:arm-neon-android=fail
 restbed:arm64-android=fail
 restbed:arm64-uwp=fail
