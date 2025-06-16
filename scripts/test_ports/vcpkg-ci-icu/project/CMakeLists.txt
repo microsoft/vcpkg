@@ -17,6 +17,10 @@ target_link_libraries(main-pkconfig PRIVATE PkgConfig::icu_pc)
 
 # Validate other components
 
-vcpkg_check_cmake_package_find(ICU MODULE REQUIRED COMPONENTS data dt in io uc OPTIONAL_COMPONENTS tu)
+set(required_components data dt in io tu uc)
+if(VCPKG_CROSSCOMPILING)
+    list(REMOVE_ITEM required_components tu) # comes with (host) tools
+endif()
+vcpkg_check_cmake_package_find(ICU MODULE REQUIRED COMPONENTS ${required_components})
 vcpkg_check_cmake_package_variables()
 vcpkg_check_cmake_package_targets()

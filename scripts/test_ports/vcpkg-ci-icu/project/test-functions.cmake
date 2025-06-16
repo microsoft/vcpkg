@@ -1,3 +1,5 @@
+set(VCPKG_CHECK_CMAKE_BUILD_TYPE "" CACHE STRING "Build type to be checked")
+
 set(Z_VCPKG_CHECK_CMAKE_PACKAGE_LAST_SEEN "" CACHE INTERNAL "Last loaded package name")
 
 # Call and trace find_package in distinct scope
@@ -137,7 +139,7 @@ function(vcpkg_check_cmake_package_targets)
                     if (NOT index EQUAL "0")
                         message(SEND_ERROR "Release lib is in wrong location.")
                     endif()
-                elseif(NOT CHECK_BUILD_TYPE OR CHECK_BUILD_TYPE STREQUAL "release")
+                elseif(NOT VCPKG_CHECK_CMAKE_BUILD_TYPE OR VCPKG_CHECK_CMAKE_BUILD_TYPE STREQUAL "release")
                     message(SEND_ERROR "Release configuration is missing.")
                 endif()
                 if("debug" IN_LIST configurations)
@@ -152,7 +154,7 @@ function(vcpkg_check_cmake_package_targets)
                     if (NOT index EQUAL "0")
                         message(SEND_ERROR "Debug lib is in wrong location.")
                     endif()
-                elseif(NOT CHECK_BUILD_TYPE OR CHECK_BUILD_TYPE STREQUAL "debug")
+                elseif(NOT VCPKG_CHECK_CMAKE_BUILD_TYPE OR VCPKG_CHECK_CMAKE_BUILD_TYPE STREQUAL "debug")
                     message(SEND_ERROR "Debug configuration is missing.")
                 endif()
             endif()
