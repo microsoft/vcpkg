@@ -142,7 +142,10 @@
         {
           "$package": "SQLite3",
           "name": "sqlite3",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "unicode"
+          ]
         },
         {
           "$package": "TIFF",
