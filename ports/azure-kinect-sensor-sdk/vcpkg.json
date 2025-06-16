@@ -4,7 +4,7 @@
   "description": "Azure Kinect SDK is a cross platform (Linux and Windows) user mode SDK to read data from your Azure Kinect device.",
   "homepage": "https://github.com/microsoft/Azure-Kinect-Sensor-SDK",
   "license": "MIT",
-  "supports": "linux | windows",
+  "supports": "(linux | windows) & !(static & staticcrt)",
   "dependencies": [
     "azure-c-shared-utility",
     "azure-kinect-depth-engine",
