@@ -23,8 +23,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tools"           LIBXSLT_WITH_PROGRAMS
 )
 if("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
-    list(APPEND FEATURE_OPTIONS "-DPYTHON_EXECUTABLE=${PYTHON3}")
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
+    list(APPEND FEATURE_OPTIONS "-DPython_EXECUTABLE=${PYTHON3}")
     list(APPEND FEATURE_OPTIONS_RELEASE "-DLIBXSLT_PYTHON_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/site-packages")
     list(APPEND FEATURE_OPTIONS_DEBUG "-DLIBXSLT_PYTHON_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib/site-packages")
 endif()
