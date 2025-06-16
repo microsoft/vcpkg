@@ -1,6 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,11 +5,7 @@ vcpkg_from_github(
     REF "apache-arrow-nanoarrow-${VERSION}"
     SHA512 6d2bb68e4f35b42f543cf33aa5acf585690da5ffafe9d144da03473dc1e0a0834944abea719ba9b88296832bd3cc2e09a97f69552dec61a8d4a95fb78f0df405
     HEAD_REF main
-    PATCHES
-        fix_install_dir.patch
-        no_werror.patch
 )
-
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
 

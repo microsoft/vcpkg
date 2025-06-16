@@ -1,6 +1,6 @@
 {
   "name": "nanoarrow",
-  "version": "0.6.0",
+  "version": "eb242312c2e679b24284dd49706ab8d6d0c995c4",
   "description": "Helpers for Arrow C Data & Arrow C Stream interfaces",
   "homepage": "https://arrow.apache.org/nanoarrow",
   "license": "Apache-2.0",
@@ -14,6 +14,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib"
+    "zlib",
+    "zstd"
   ]
 }
