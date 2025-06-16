@@ -66,7 +66,7 @@ index d8e0208..1fdb63c 100644
    set(OGRE_RELWDBG_PATH "")
    set(OGRE_MINSIZE_PATH "")
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2786e35..7a92a7b 100755
+index 2786e35..7a92a7b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -299,7 +299,6 @@ if (OGRE_BUILD_PLATFORM_APPLE_IOS)
@@ -109,28 +109,15 @@ index b698b84..75fef2c 100644
  foreach(HEADER_FILE ${HEADER_FILES})
  	string(REGEX REPLACE "((${CMAKE_CURRENT_SOURCE_DIR}|${OGRE_BINARY_DIR})/)?(include|src)/" "" RELATIVE_HEADER_FILE ${HEADER_FILE})
 diff --git a/OgreMain/include/OgrePlatform.h b/OgreMain/include/OgrePlatform.h
-index 6754c4e..6b1879d 100644
+index b5445ef..60fab21 100644
 --- a/OgreMain/include/OgrePlatform.h
 +++ b/OgreMain/include/OgrePlatform.h
-@@ -504,7 +504,7 @@ THE SOFTWARE.
+@@ -508,7 +508,7 @@ THE SOFTWARE.
  
-     // Define whether or not Ogre compiled with NEON support.
-     #if OGRE_DOUBLE_PRECISION == 0 && OGRE_CPU == OGRE_CPU_ARM && \
--        ( defined(__aarch64__) || defined(__ARM_NEON__) || defined(_WIN32_WINNT_WIN8) && _WIN32_WINNT >= _WIN32_WINNT_WIN8 )
-+        ( defined(__aarch64__) || defined(__ARM_NEON__) || defined(_M_ARM64) || defined(_WIN32_WINNT_WIN8) && _WIN32_WINNT >= _WIN32_WINNT_WIN8 )
-         #define __OGRE_HAVE_NEON  1
-     #endif
- #endif
-diff --git a/OgreMain/include/OgreString.h b/OgreMain/include/OgreString.h
-index 8693c57..b4179ea 100644
---- a/OgreMain/include/OgreString.h
-+++ b/OgreMain/include/OgreString.h
-@@ -222,7 +222,7 @@ namespace Ogre {
- #   endif
- #elif OGRE_COMPILER == OGRE_COMPILER_MSVC && OGRE_COMP_VER >= 1600 && OGRE_COMP_VER < 1910 && !defined(STLPORT) // VC++ 10.0
-     typedef ::std::tr1::hash< _StringBase > _StringHash;
--#elif !defined( _STLP_HASH_FUN_H )
-+#elif 0
-     typedef stdext::hash_compare< _StringBase, std::less< _StringBase > > _StringHash;
- #else
-     typedef std::hash< _StringBase > _StringHash;
+ // Define whether or not Ogre compiled with NEON support.
+ #    if OGRE_DOUBLE_PRECISION == 0 && OGRE_CPU == OGRE_CPU_ARM && \
+-        ( defined( __aarch64__ ) || defined( __ARM_NEON__ ) || \
++        ( defined( __aarch64__ ) || defined( __ARM_NEON__ ) || defined(_M_ARM64) || \
+           defined( _WIN32_WINNT_WIN8 ) && _WIN32_WINNT >= _WIN32_WINNT_WIN8 )
+ #        define __OGRE_HAVE_NEON 1
+ #    endif
