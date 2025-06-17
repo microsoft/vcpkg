@@ -1,6 +1,6 @@
 {
   "name": "cachelib",
-  "version-string": "2025.05.12.00",
+  "version-string": "2025.05.19.00",
   "description": "Pluggable caching engine to build and scale high performance cache services.",
   "homepage": "https://github.com/facebook/CacheLib",
   "license": "Apache-2.0",
