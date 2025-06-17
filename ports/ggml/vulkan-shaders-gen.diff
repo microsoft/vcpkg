@@ -1,0 +1,27 @@
+diff --git a/src/ggml-vulkan/CMakeLists.txt b/src/ggml-vulkan/CMakeLists.txt
+index 31816219..ae9c98d6 100644
+--- a/src/ggml-vulkan/CMakeLists.txt
++++ b/src/ggml-vulkan/CMakeLists.txt
+@@ -124,7 +124,10 @@ if (Vulkan_FOUND)
+         add_compile_definitions(GGML_VULKAN_RUN_TESTS)
+     endif()
+ 
+-    if (NOT CMAKE_CROSSCOMPILING)
++    if(DEFINED VULKAN_SHADERS_GEN_EXECUTABLE)
++        add_executable(vulkan-shaders-gen IMPORTED)
++        set_target_properties(vulkan-shaders-gen PROPERTIES IMPORTED_LOCATION "${VULKAN_SHADERS_GEN_EXECUTABLE}")
++    elseif(1) # not crosscompiling
+         add_subdirectory(vulkan-shaders)
+         if (MSVC)
+             foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES})
+@@ -175,7 +178,9 @@ if (Vulkan_FOUND)
+     file(GLOB _ggml_vk_shader_deps "${_ggml_vk_input_dir}/*.comp")
+     set (_ggml_vk_shader_deps ${_ggml_vk_shader_deps} vulkan-shaders-gen)
+ 
+-    if (CMAKE_CROSSCOMPILING)
++    if(TARGET vulkan-shaders-gen)
++        set(_ggml_vk_genshaders_cmd vulkan-shaders-gen)
++    elseif(0)
+         set(_ggml_vk_shader_deps ${_ggml_vk_shader_deps} vulkan-shaders-gen-build vulkan-shaders-gen-install)
+     endif()
+ 

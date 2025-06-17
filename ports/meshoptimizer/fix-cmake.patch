@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9e0beed..d28a04c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -137,13 +137,12 @@ if(MESHOPT_BUILD_GLTFPACK)
+         target_compile_definitions(gltfpack PRIVATE WITH_BASISU)
+         set_source_files_properties(gltf/basisenc.cpp gltf/basislib.cpp PROPERTIES INCLUDE_DIRECTORIES ${BASISU_PATH})
+ 
+-        if(NOT MSVC AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
++        if(NOT MSVC AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+             set_source_files_properties(gltf/basislib.cpp PROPERTIES COMPILE_OPTIONS -msse4.1)
+         endif()
+ 
+-        if(UNIX)
+-            target_link_libraries(gltfpack pthread)
+-        endif()
++        find_package(Threads REQUIRED)
++        target_link_libraries(gltfpack Threads::Threads)
+     endif()
+ endif()
+ 
