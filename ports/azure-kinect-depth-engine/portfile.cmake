@@ -1,4 +1,4 @@
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled) # runtime only
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # runtime only
 
 vcpkg_download_distfile(BLOB_ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Azure.Kinect.Sensor/${VERSION}"
