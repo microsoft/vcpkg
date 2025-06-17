@@ -1,10 +1,10 @@
 {
   "name": "syscalls-cpp",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A modern C++20 header-only library for advanced direct system call invocation.",
   "homepage": "https://github.com/sapdragon/syscalls-cpp",
   "license": "MIT",
-  "supports": "windows & x64",
+  "supports": "windows & (x64 | x86)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

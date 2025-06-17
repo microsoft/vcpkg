@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sapdragon/syscalls-cpp
     REF "v${VERSION}"             
-    SHA512 d030794c786cb4c83121cdeb27beb5beda4c89c3cf0b9eff56ba7e38af0f5249b67fc5225eed93c6adcec37cb25f9b15c76cc17338a63537d3340542188df9c9
+    SHA512 4dd8afa32367f4624f56308eb846b38b854df7fe619cb504c10173933969d7b849b6b0ae760650f11fdbdbc3fe3240477fb505efd64fae4c780428f3b68440ef
     HEAD_REF main                
 )
 
