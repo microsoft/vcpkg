@@ -538,8 +538,9 @@ libmpeg2:arm-neon-android=fail
 libmpeg2:arm64-android=fail
 libmpeg2:x64-android=fail
 libmysql:x86-windows=skip
-# C++20 conformant compiler required
-libnick:x64-linux=fail
+libnick:arm64-osx=fail # missing system-installed copy of sqlcipher
+libnick:x64-linux=fail # C++20 conformant compiler required
+libnick:x64-osx=fail # missing system-installed copy of sqlcipher
 libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
 libopensp:x64-android=fail
