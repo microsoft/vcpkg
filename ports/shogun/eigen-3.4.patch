@@ -1,18 +1,60 @@
+diff --git a/cmake/external/Eigen3.cmake b/cmake/external/Eigen3.cmake
+deleted file mode 100644
+index 4800270..0000000
+--- a/cmake/external/Eigen3.cmake
++++ /dev/null
+@@ -1,22 +0,0 @@
+-set(EIGEN3_INCLUDE_DIR ${THIRD_PARTY_INCLUDE_DIR}/eigen)
+-set(EIGEN3_VERSION_STRING 3.3.4)
+-include(ExternalProject)
+-ExternalProject_Add(
+-	Eigen3
+-	PREFIX ${CMAKE_BINARY_DIR}/Eigen3
+-	DOWNLOAD_DIR ${THIRD_PARTY_DIR}/Eigen3
+-	URL https://bitbucket.org/eigen/eigen/get/${EIGEN3_VERSION_STRING}.tar.bz2
+-	URL_MD5 a7aab9f758249b86c93221ad417fbe18
+-	CMAKE_ARGS -DINCLUDE_INSTALL_DIR:STRING=${EIGEN3_INCLUDE_DIR}
+-		-DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}${CMAKE_DEFINITIONS}
+-		-DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}${CMAKE_DEFINITIONS}
+-		-DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
+-		-DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+-		-DCMAKE_BUILD_TYPE:STRING=Release
+-		-DEIGEN_BUILD_PKGCONFIG=0
+-	)
+-
+-add_dependencies(libshogun Eigen3)
+-
+-UNSET(C_COMPILER)
+-UNSET(CXX_COMPILER)
 diff --git a/src/shogun/CMakeLists.txt b/src/shogun/CMakeLists.txt
-index 31a0d2c7b..e700bd7c7 100644
+index a984c62..24ad787 100644
 --- a/src/shogun/CMakeLists.txt
 +++ b/src/shogun/CMakeLists.txt
-@@ -307,7 +307,7 @@ IF(NOT EIGEN3_FOUND)
-   )
- ELSE()
-   # https://github.com/shogun-toolbox/shogun/issues/4870
+@@ -298,20 +298,8 @@ endif()
+ ############################ external dependencies
+ 
+ ####### LINALG
+-FIND_PACKAGE(Eigen3 ${EIGEN_VERSION_MINIMUM})
+-IF(NOT EIGEN3_FOUND)
+-  include(external/Eigen3)
+-  SHOGUN_INCLUDE_DIRS(SCOPE PUBLIC SYSTEM
+-    $<BUILD_INTERFACE:${EIGEN3_INCLUDE_DIR}>
+-    $<INSTALL_INTERFACE:include/shogun/third_party/eigen>
+-  )
+-ELSE()
+-  # https://github.com/shogun-toolbox/shogun/issues/4870
 -  IF(${EIGEN3_VERSION_STRING} VERSION_GREATER 3.3.9)
-+  IF(0)
-     MESSAGE(FATAL_ERROR "The system Eigen3 version ${EIGEN3_VERSION_STRING} isn't supported!")
-   ENDIF()
-   SHOGUN_INCLUDE_DIRS(SCOPE PUBLIC SYSTEM ${EIGEN3_INCLUDE_DIR})
+-    MESSAGE(FATAL_ERROR "The system Eigen3 version ${EIGEN3_VERSION_STRING} isn't supported!")
+-  ENDIF()
+-  SHOGUN_INCLUDE_DIRS(SCOPE PUBLIC SYSTEM ${EIGEN3_INCLUDE_DIR})
+-ENDIF()
++FIND_PACKAGE(Eigen3 CONFIG REQUIRED)
++link_libraries(Eigen3::Eigen)
+ 
+ # ViennaCL detection
+ SHOGUN_DEPENDENCIES(
 diff --git a/src/shogun/machine/gp/MultiLaplaceInferenceMethod.cpp b/src/shogun/machine/gp/MultiLaplaceInferenceMethod.cpp
-index a1677177e..0c9ca8f78 100644
+index a167717..0c9ca8f 100644
 --- a/src/shogun/machine/gp/MultiLaplaceInferenceMethod.cpp
 +++ b/src/shogun/machine/gp/MultiLaplaceInferenceMethod.cpp
 @@ -87,10 +87,10 @@ public:
