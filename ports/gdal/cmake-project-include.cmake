@@ -16,3 +16,7 @@ if(GDAL_USE_ARROW)
     find_package(Arrow REQUIRED)
     set(ARROW_USE_STATIC_LIBRARIES "${ARROW_BUILD_STATIC}" CACHE BOOL "")
 endif()
+
+if(GDAL_USE_SQLITE3)
+    find_package(SQLite3 REQUIRED)
+endif()
