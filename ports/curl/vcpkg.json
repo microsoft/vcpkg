@@ -1,6 +1,6 @@
 {
   "name": "curl",
-  "version": "8.12.1",
+  "version": "8.14.1",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -70,6 +70,9 @@
         },
         "nghttp2"
       ]
+    },
+    "httpsrr": {
+      "description": "enable support for HTTPS RR"
     },
     "idn": {
       "description": "Default IDN support",
@@ -208,6 +211,18 @@
         }
       ]
     },
+    "ssls-export": {
+      "description": "SSL session import/export",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    },
     "sspi": {
       "description": "SSPI support",
       "supports": "windows & !uwp"
@@ -231,19 +246,6 @@
           "default-features": false,
           "features": [
             "ldap"
-          ]
-        }
-      ]
-    },
-    "winssl": {
-      "description": "Legacy name for schannel",
-      "supports": "windows & !uwp",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "schannel"
           ]
         }
       ]

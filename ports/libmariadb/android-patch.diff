@@ -1,0 +1,43 @@
+diff --git a/libmariadb/ma_context.c b/libmariadb/ma_context.c
+index 224783b2..08a03cef 100644
+--- a/libmariadb/ma_context.c
++++ b/libmariadb/ma_context.c
+@@ -725,7 +725,11 @@ my_context_spawn(struct my_context *c, void (*f)(void *), void *d)
+        [stack] "+r" (stack)
+      : [save] "r" (save)
+      : "x3", "x4", "x5", "x6", "x7",
+-       "x9", "x10", "x11", "x14", "x15", "x18", "x30",
++       "x9", "x10", "x11", "x14", "x15",
++#if defined(__linux__) && !defined(__ANDROID__)
++       "x18",
++#endif
++       "x30",
+        "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7",
+        "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23",
+        "v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31",
+@@ -828,7 +832,11 @@ my_context_continue(struct my_context *c)
+      : [ret] "=r" (ret)
+      : [save] "r" (save)
+      : "x1", "x2", "x3", "x4", "x5", "x6", "x7",
+-       "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x18", "x30",
++       "x9", "x10", "x11", "x12", "x13", "x14", "x15",
++#if defined(__linux__) && !defined(__ANDROID__)
++       "x18",
++#endif
++       "x30",
+        "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7",
+        "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23",
+        "v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31",
+@@ -905,7 +913,11 @@ my_context_yield(struct my_context *c)
+      :
+      : [save] "r" (save)
+      : "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7",
+-       "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x18", "x30",
++       "x9", "x10", "x11", "x12", "x13", "x14", "x15",
++#if defined(__linux__) && !defined(__ANDROID__)
++       "x18",
++#endif
++       "x30",
+        "v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7",
+        "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23",
+        "v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31",

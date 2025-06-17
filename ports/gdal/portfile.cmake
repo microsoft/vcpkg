@@ -1,14 +1,21 @@
+vcpkg_download_distfile(
+    arm_neon_diff
+    URLS "https://github.com/OSGeo/gdal/pull/12343/commits/444dd0c302b7c12e87ea8497038eee76586ee920.diff?full_index=1"
+    FILENAME "OSGeo-gdal-v3.11.0-444dd0c.diff"
+    SHA512 c9f725c1ea7707eaeb2edb36fcf682aafbd38170718c89b949567b7271e17b98c24b2e1b4e0d47a760a9213ba18b9abc9c2046b7e4fa7fef4538f6fece7f22e1
+)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 c974977789092058540ace0e9192a17b0f593e770822a885181ec6eed4323e2f7a7a61963667ae8c9c8c8c0d2d8fb80d194ab4d918e6d4851f39abd1e1c948bc
+    SHA512 7a31cd0466a50b2e118b49eb2eca2b945377c2f9cb99196f98259904ff5f71278caef568582e510f500881621f58da095e7007116ee5a51e8693f0e15cb3ce19
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
         target-is-valid.patch
+        ${arm_neon_diff}
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
@@ -22,6 +29,7 @@ vcpkg_replace_string("${SOURCE_PATH}/ogr/ogrsf_frmts/flatgeobuf/flatbuffers/base
 # "core" is used for a dependency which must be enabled to avoid vendored lib.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        arrow            GDAL_USE_ARROW
         archive          GDAL_USE_ARCHIVE
         cfitsio          GDAL_USE_CFITSIO
         curl             GDAL_USE_CURL
@@ -44,6 +52,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         odbc             GDAL_USE_ODBC
         openjpeg         GDAL_USE_OPENJPEG
         openssl          GDAL_USE_OPENSSL
+        parquet          GDAL_USE_PARQUET
         pcre2            GDAL_USE_PCRE2
         png              GDAL_USE_PNG
         poppler          GDAL_USE_POPPLER
@@ -84,7 +93,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Arrow=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
@@ -119,6 +127,7 @@ list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 if (BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
+            gdal
             gdal_contour
             gdal_create
             gdal_footprint

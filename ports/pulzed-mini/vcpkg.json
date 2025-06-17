@@ -1,6 +1,6 @@
 {
   "name": "pulzed-mini",
-  "version": "0.9.17",
+  "version": "0.9.18",
   "description": "INI file reader and writer",
   "homepage": "https://github.com/pulzed/mINI",
   "license": "MIT"

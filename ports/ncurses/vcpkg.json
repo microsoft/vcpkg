@@ -1,9 +1,15 @@
 {
   "name": "ncurses",
   "version": "6.4",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Free software emulation of curses in System V Release 4.0, and more",
   "homepage": "https://invisible-island.net/ncurses/announce.html",
   "license": "MIT",
-  "supports": "!windows | mingw"
+  "supports": "!windows | mingw",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    }
+  ]
 }

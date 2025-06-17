@@ -1,0 +1,10 @@
+ripper37-libbase provides CMake targets:
+
+  find_package(libbase CONFIG REQUIRED [<opt_feature>...])
+  target_link_libraries(main PRIVATE libbase::libbase [<opt_feature_target>...])
+
+if enabled via features, it also provides optional CMake package components:
+
+  net - provides target `libbase::libbase_net` - networking module
+  win - provides target `libbase::libbase_win` - WinAPI integration module
+  wx  - provides target `libbase::libbase_wx`  - wxWidgets integration module

@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO herumi/xbyak
     REF "v${VERSION_STR}"
-    SHA512 d8bcf248b4506f09ee70431f6c38d0d2eb7c3dfa110cbe700e7ae689e0a640f77ec337aeafda93d0f4fd7e9139a8e46dbf1cb99dd4a576667d71b05992a618b8
+    SHA512 565d3396cb9e572b43d396cd6a5cfe7ba23fb27b6032129becbfce76e60f0c73c46bc7a9bdf088d4a4a9f3e2c70f7e33384ece13f0371f8059952bc38b98e9b5
     HEAD_REF master
 )
 

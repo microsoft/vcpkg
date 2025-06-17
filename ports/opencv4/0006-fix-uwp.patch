@@ -1,6 +1,6 @@
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
-@@ -1259,7 +1259,7 @@ function(ocv_add_perf_tests)
+@@ -1249,7 +1249,7 @@ function(ocv_add_perf_tests)
          set_target_properties(${the_target} PROPERTIES FOLDER "tests performance")
        endif()
  
