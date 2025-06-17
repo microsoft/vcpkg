@@ -3,7 +3,7 @@ set(VCPKG_BUILD_TYPE release) # header-only
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO localspook/zcrc
-    REF v${VERSION}
+    REF "v${VERSION}"
     SHA512 1ff2e5f007115062a9846af5017d2cde6e715d27bdcd0a3119f6785e171fa3b471b728a4adae6808d058f7a3ce4a98dd75cf06bac1d300ac39116500077dbde4
     HEAD_REF main
 )
