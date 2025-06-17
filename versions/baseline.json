@@ -5505,7 +5505,7 @@
       "port-version": 1
     },
     "libvault": {
-      "baseline": "0.61.0",
+      "baseline": "0.63.0",
       "port-version": 0
     },
     "libvhdi": {
