@@ -1,0 +1,108 @@
+From 37d17a94594648acf9cce85e8483c0405c510f0d Mon Sep 17 00:00:00 2001
+From: Rainer Kuemmerle <rainer.kuemmerle@gmail.com>
+Date: Tue, 18 Mar 2025 21:29:07 +0100
+Subject: [PATCH] Export csparse and cholmod wrapper
+
+Relates #875
+---
+ g2o/solvers/cholmod/cholmod_wrapper.h |  4 ++-
+ g2o/solvers/cholmod/g2o_cholmod_api.h | 49 +++++++++++++++++++++++++++
+ g2o/solvers/csparse/csparse_wrapper.h |  4 +--
+ 3 files changed, 54 insertions(+), 3 deletions(-)
+ create mode 100644 g2o/solvers/cholmod/g2o_cholmod_api.h
+
+diff --git a/g2o/solvers/cholmod/cholmod_wrapper.h b/g2o/solvers/cholmod/cholmod_wrapper.h
+index 5de59c2a0171ffa6ae9b284ab6bb5f450ef1a2c9..9d22ee056f32b1f5e38e0b1e12df742561293f77 100644
+--- a/g2o/solvers/cholmod/cholmod_wrapper.h
++++ b/g2o/solvers/cholmod/cholmod_wrapper.h
+@@ -30,10 +30,12 @@
+ #include <cstddef>
+ #include <memory>
+ 
++#include "g2o_cholmod_api.h"
++
+ namespace g2o {
+ namespace cholmod {
+ 
+-class Cholmod {
++class G2O_SOLVER_CHOLMOD_API Cholmod {
+  public:
+   Cholmod();
+   ~Cholmod();
+diff --git a/g2o/solvers/cholmod/g2o_cholmod_api.h b/g2o/solvers/cholmod/g2o_cholmod_api.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..b909b00e67f98a6250af8fd6407c39d9fc816a6b
+--- /dev/null
++++ b/g2o/solvers/cholmod/g2o_cholmod_api.h
+@@ -0,0 +1,49 @@
++// g2o - General Graph Optimization
++// Copyright (C) 2011 R. Kuemmerle, G. Grisetti, H. Strasdat, W. Burgard
++// All rights reserved.
++//
++// Redistribution and use in source and binary forms, with or without
++// modification, are permitted provided that the following conditions are
++// met:
++//
++// * Redistributions of source code must retain the above copyright notice,
++//   this list of conditions and the following disclaimer.
++// * Redistributions in binary form must reproduce the above copyright
++//   notice, this list of conditions and the following disclaimer in the
++//   documentation and/or other materials provided with the distribution.
++//
++// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
++// IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
++// TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
++// PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++// HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
++// TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
++// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
++// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
++// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++
++#ifndef G2O_SOLVER_CHOLMOD_API_H
++#define G2O_SOLVER_CHOLMOD_API_H
++
++#include "g2o/config.h"
++
++#ifdef _MSC_VER
++// We are using a Microsoft compiler:
++#ifdef G2O_SHARED_LIBS
++#ifdef solver_cholmod_EXPORTS
++#define G2O_SOLVER_CHOLMOD_API __declspec(dllexport)
++#else
++#define G2O_SOLVER_CHOLMOD_API __declspec(dllimport)
++#endif
++#else
++#define G2O_SOLVER_CHOLMOD_API
++#endif
++
++#else
++// Not Microsoft compiler so set empty definition:
++#define G2O_SOLVER_CHOLMOD_API
++#endif
++
++#endif  // G2O_CSPARSE_API_H
+diff --git a/g2o/solvers/csparse/csparse_wrapper.h b/g2o/solvers/csparse/csparse_wrapper.h
+index 1aae8e657cd318b7a56b19284d0079dce1aba101..10585f5afebbd4d69706b09973ed1f8cf0e2ef37 100644
+--- a/g2o/solvers/csparse/csparse_wrapper.h
++++ b/g2o/solvers/csparse/csparse_wrapper.h
+@@ -27,15 +27,15 @@
+ #ifndef G2O_CSPARSE_WRAPPER_H
+ #define G2O_CSPARSE_WRAPPER_H
+ 
+-#include <cstddef>
+ #include <memory>
+ 
+ #include "g2o/core/eigen_types.h"
++#include "g2o_csparse_api.h"
+ 
+ namespace g2o {
+ namespace csparse {
+ 
+-class CSparse {
++class G2O_SOLVER_CSPARSE_API CSparse {
+  public:
+   CSparse();
+   ~CSparse();
