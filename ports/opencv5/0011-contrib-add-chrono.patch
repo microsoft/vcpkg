@@ -1,0 +1,10 @@
+--- a/modules/gapi/src/streaming/gstreamer/gstreamersource.cpp
++++ b/modules/gapi/src/streaming/gstreamer/gstreamersource.cpp
+@@ -16,6 +16,7 @@
+ #include <logger.hpp>
+ 
+ #include <opencv2/imgproc.hpp>
++#include <chrono>
+ 
+ #ifdef HAVE_GSTREAMER
+ #include <gst/app/gstappsink.h>

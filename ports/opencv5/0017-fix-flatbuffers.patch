@@ -1,0 +1,16 @@
+--- a/cmake/OpenCVDetectFlatbuffers.cmake
++++ b/cmake/OpenCVDetectFlatbuffers.cmake
+@@ -1,9 +1,9 @@
+ if(WITH_FLATBUFFERS)
+   set(HAVE_FLATBUFFERS 1)
+-  set(flatbuffers_VERSION "23.5.9")
+-  ocv_install_3rdparty_licenses(flatbuffers "${OpenCV_SOURCE_DIR}/3rdparty/flatbuffers/LICENSE.txt")
+-  ocv_add_external_target(flatbuffers "${OpenCV_SOURCE_DIR}/3rdparty/flatbuffers/include" "" "HAVE_FLATBUFFERS=1")
+-  set(CUSTOM_STATUS_flatbuffers "    Flatbuffers:" "builtin/3rdparty (${flatbuffers_VERSION})")
++  set(flatbuffers_VERSION "23.5.26")
++  find_path(FLATBUFFERS_INCLUDE_DIR flatbuffers.h PATH_SUFFIXES flatbuffers)
++  get_filename_component(FLATBUFFERS_INCLUDE_DIR "${FLATBUFFERS_INCLUDE_DIR}" PATH)
++  ocv_add_external_target(flatbuffers "${FLATBUFFERS_INCLUDE_DIR}" "" "HAVE_FLATBUFFERS=1")
+ endif()
+ 
+ if(WITH_FLATBUFFERS OR HAVE_FLATBUFFERS)

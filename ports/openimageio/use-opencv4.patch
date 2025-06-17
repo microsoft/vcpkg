@@ -1,0 +1,18 @@
+--- a/src/cmake/externalpackages.cmake
++++ b/src/cmake/externalpackages.cmake
+@@ -143,8 +143,13 @@ if (NOT OPENCOLORIO_INCLUDES)
+ endif ()
+ include_directories(BEFORE ${OPENCOLORIO_INCLUDES})
+ 
+-checked_find_package (OpenCV 4.0
+-                      DEFINITIONS USE_OPENCV=1)
++set(OPENCV_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/opencv4")
++find_package (OpenCV 4 CONFIG PATHS "${OPENCV_DIR}")
++set(OPENCV_INCLUDES ${OpenCV_INCLUDES})
++set(OPENCV_LIBRARIES ${OpenCV_LIBRARIES})
++if(OpenCV_FOUND)
++  add_definitions(-DUSE_OPENCV=1)
++endif()
+ 
+ # Intel TBB
+ set (TBB_USE_DEBUG_BUILD OFF)
