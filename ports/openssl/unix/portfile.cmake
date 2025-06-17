@@ -139,8 +139,9 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc/ssl/misc")
 endif()
 
-file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/certs/.keep")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/private/.keep")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/etc/ssl/certs" "${CURRENT_PACKAGES_DIR}/etc/ssl/private")
+file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/certs/.keep" "${CURRENT_PACKAGES_DIR}/etc/ssl/private/.keep")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc/ssl/certs" "${CURRENT_PACKAGES_DIR}/etc/ssl/private/.keep")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/etc"
