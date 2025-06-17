@@ -117,7 +117,8 @@ vcpkg_configure_make(
         "${SOURCE_PATH}/Configure"
         ${OPENSSL_ARCH}
         ${CONFIGURE_OPTIONS}
-        "--openssldir=/etc/ssl"
+        "--prefix=${SOURCE_PATH}/vcpkg"
+        "--openssldir=${SOURCE_PATH}/vcpkg"
         "--libdir=lib"
     OPTIONS_DEBUG
         --debug
