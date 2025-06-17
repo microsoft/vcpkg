@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 91517a5936..715adb7c2e 100644
+index 34300d41ad..263b4bcbd3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -524,8 +524,8 @@ endif()
+@@ -518,8 +518,8 @@ endif()
  if (CAN_USE_FREETYPE AND USE_FREETYPE)
    message (STATUS "Info: FreeType is used by OCCT")
    add_definitions (-DHAVE_FREETYPE)
@@ -13,7 +13,7 @@ index 91517a5936..715adb7c2e 100644
  else()
    if (NOT CAN_USE_FREETYPE)
      OCCT_CHECK_AND_UNSET ("USE_FREETYPE")
-@@ -540,9 +540,10 @@ endif()
+@@ -534,9 +534,10 @@ endif()
  # VTK
  if (USE_VTK)
    add_definitions (-DHAVE_VTK)
@@ -26,7 +26,7 @@ index 91517a5936..715adb7c2e 100644
  else()
    OCCT_CHECK_AND_UNSET_GROUP ("3RDPARTY_VTK")
    OCCT_UNSET_VCPKG_FEATURE ("vtk")
-@@ -557,8 +558,8 @@ endif()
+@@ -551,8 +552,8 @@ endif()
  # FREEIMAGE
  if (CAN_USE_FREEIMAGE AND USE_FREEIMAGE)
    add_definitions (-DHAVE_FREEIMAGE)
@@ -37,7 +37,7 @@ index 91517a5936..715adb7c2e 100644
  elseif (NOT CAN_USE_FREEIMAGE)
    OCCT_CHECK_AND_UNSET ("USE_FREEIMAGE")
    OCCT_UNSET_VCPKG_FEATURE ("freeimage")
-@@ -653,8 +654,8 @@ endif()
+@@ -647,8 +648,8 @@ endif()
  # TBB
  if (CAN_USE_TBB AND USE_TBB)
    add_definitions (-DHAVE_TBB)
@@ -48,7 +48,7 @@ index 91517a5936..715adb7c2e 100644
  elseif (NOT CAN_USE_TBB)
    OCCT_CHECK_AND_UNSET ("USE_TBB")
    OCCT_UNSET_VCPKG_FEATURE ("tbb")
-@@ -670,8 +671,8 @@ endif()
+@@ -664,8 +665,8 @@ endif()
  OCCT_IS_PRODUCT_REQUIRED (CSF_RapidJSON CAN_USE_RAPIDJSON)
  if (CAN_USE_RAPIDJSON AND USE_RAPIDJSON)
    add_definitions (-DHAVE_RAPIDJSON)
@@ -59,29 +59,8 @@ index 91517a5936..715adb7c2e 100644
  elseif (NOT CAN_USE_RAPIDJSON)
    OCCT_CHECK_AND_UNSET ("USE_RAPIDJSON")
    OCCT_UNSET_VCPKG_FEATURE ("rapidjson")
-diff --git a/adm/cmake/occt_toolkit.cmake b/adm/cmake/occt_toolkit.cmake
-index 36accf907f..5ef87f9bf0 100644
---- a/adm/cmake/occt_toolkit.cmake
-+++ b/adm/cmake/occt_toolkit.cmake
-@@ -281,12 +281,11 @@ else()
-   endif()
- endif()
- 
--if (BUILD_SHARED_LIBS OR EXECUTABLE_PROJECT)
--  if(IS_VTK_9XX)
--    string (REGEX REPLACE "vtk" "VTK::" USED_TOOLKITS_BY_CURRENT_PROJECT "${USED_TOOLKITS_BY_CURRENT_PROJECT}")
--  endif()
-+if(IS_VTK_9XX)
-+  string (REGEX REPLACE "vtk" "VTK::" USED_TOOLKITS_BY_CURRENT_PROJECT "${USED_TOOLKITS_BY_CURRENT_PROJECT}")
- endif()
--target_link_libraries (${PROJECT_NAME} ${USED_TOOLKITS_BY_CURRENT_PROJECT} ${USED_EXTERNAL_LIBS_BY_CURRENT_PROJECT})
-+
-+target_link_libraries (${PROJECT_NAME} PRIVATE ${USED_TOOLKITS_BY_CURRENT_PROJECT} ${USED_EXTERNAL_LIBS_BY_CURRENT_PROJECT})
- 
- if (USE_QT)
-   foreach (PROJECT_LIBRARY_DEBUG ${PROJECT_LIBRARIES_DEBUG})
 diff --git a/adm/templates/OpenCASCADEConfig.cmake.in b/adm/templates/OpenCASCADEConfig.cmake.in
-index c926c499ac..a7ad99990c 100644
+index add6a678c7..312930343e 100644
 --- a/adm/templates/OpenCASCADEConfig.cmake.in
 +++ b/adm/templates/OpenCASCADEConfig.cmake.in
 @@ -71,6 +71,23 @@ set (OpenCASCADE_WITH_GLES2     @USE_GLES2@)
