@@ -31,17 +31,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 
-if(VCPKG_TARGET_IS_LINUX)
-    # Filament fails to compile with numerous errors using gcc
-    vcpkg_find_acquire_program(CLANG)
-    set(COMPILER -DCMAKE_CXX_COMPILER=${CLANG}++ -DCMAKE_C_COMPILER=${CLANG})
-endif()
-
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        ${COMPILER}
         -DFILAMENT_ALLOW_ANY_COMPILER=ON
         -DUSE_STATIC_CRT=${USE_STATIC_CRT}
         -DFILAMENT_SKIP_SAMPLES=ON

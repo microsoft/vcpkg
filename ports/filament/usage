@@ -1,7 +1,0 @@
-To use filament add the following to your CMake project:
-
-    find_package(filament CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE filament::filament)
-
-The filament package also provides the following targets:
-    filament::camutils filament::filabridge filament::filaflat filament::filagui filament::filameshio filament::uberarchive filament::gltfio_core filament::gltfio filament::ibl filament::ibl-lite filament::filament-iblprefilter filament::image filament::ktxreader filament::math filament::mathio filament::uberzlib filament::utils filament::viewer filament::backend filament::backend_headers filament::vkshaders filament::backend_test_linux filament::shaders filament::geometry filament::filamat filament::matdbg_resources filament::matdbg filament::bluevk filament::bluegl filament::imageio filament::cmgen filament::cso-lut filament::filamesh filament::glslminifier filament::matlang filament::matc filament::matinfo filament::matedit filament::mipgen filament::normal-blending filament::resgen filament::rgb-to-lmsr filament::roughness-prefilter filament::specular-color filament::uberz
