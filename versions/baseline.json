@@ -5893,7 +5893,7 @@
       "port-version": 1
     },
     "lunarg-vulkantools": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "lunasvg": {
@@ -8965,19 +8965,19 @@
       "port-version": 4
     },
     "spirv-cross": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "spout2": {
@@ -9941,7 +9941,7 @@
       "port-version": 0
     },
     "volk": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "voro": {
@@ -9989,19 +9989,19 @@
       "port-version": 0
     },
     "vulkan-extensionlayer": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "vulkan-headers": {
-      "baseline": "1.4.304.1",
-      "port-version": 1
+      "baseline": "1.4.309.0",
+      "port-version": 0
     },
     "vulkan-hpp": {
       "baseline": "deprecated",
       "port-version": 0
     },
     "vulkan-loader": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "vulkan-memory-allocator": {
@@ -10013,19 +10013,19 @@
       "port-version": 1
     },
     "vulkan-sdk-components": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "vulkan-tools": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "vulkan-utility-libraries": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "vulkan-validationlayers": {
-      "baseline": "1.4.304.1",
+      "baseline": "1.4.309.0",
       "port-version": 0
     },
     "vvenc": {
