@@ -6902,7 +6902,7 @@
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 24
+      "port-version": 25
     },
     "opencv3": {
       "baseline": "3.4.20",
@@ -8694,7 +8694,7 @@
     },
     "shogun": {
       "baseline": "2023-12-19",
-      "port-version": 1
+      "port-version": 2
     },
     "si": {
       "baseline": "2.5.1",
