@@ -1,5 +1,5 @@
 diff --git a/cmake/protobuf-generate.cmake b/cmake/protobuf-generate.cmake
-index 244407ee2..b7a1a9e7e 100644
+index 244407ee2..91bfff07a 100644
 --- a/cmake/protobuf-generate.cmake
 +++ b/cmake/protobuf-generate.cmake
 @@ -1,4 +1,5 @@
@@ -8,40 +8,38 @@ index 244407ee2..b7a1a9e7e 100644
    include(CMakeParseArguments)
  
    set(_options APPEND_PATH)
-@@ -100,6 +101,22 @@ function(protobuf_generate)
+@@ -100,6 +101,21 @@ function(protobuf_generate)
      set(_protobuf_include_path -I ${CMAKE_CURRENT_SOURCE_DIR})
    endif()
  
 +  # Use windows paths on protoc
-+  if(WIN32)
++  if(CMAKE_HOST_WIN32)
 +      foreach(_path ${_protobuf_include_path})
 +        if(NOT _path STREQUAL "-I")
 +          get_filename_component(_windows_path_include ${_path} ABSOLUTE)
 +          if(NOT _windows_path_include MATCHES "^[A-Za-z]:")
-+            set(_windows_path_include "C:${_windows_path_include}")
++            set(_windows_path_include "$ENV{SYSTEMDRIVE}${_windows_path_include}")
 +          endif()
-+          file(TO_NATIVE_PATH "${_windows_path_include}" _windows_path_include)
 +          list(APPEND _protobuf_proper_include_path -I ${_windows_path_include})
 +        endif()
 +      endforeach()
-+  else(WIN32)
++  else(CMAKE_HOST_WIN32)
 +      set(_protobuf_proper_include_path ${_protobuf_include_path})
-+  endif(WIN32)
++  endif(CMAKE_HOST_WIN32)
 +
    set(_generated_srcs_all)
    foreach(_proto ${protobuf_generate_PROTOS})
      get_filename_component(_abs_file ${_proto} ABSOLUTE)
-@@ -146,10 +163,18 @@ function(protobuf_generate)
+@@ -146,10 +162,17 @@ function(protobuf_generate)
        set(_comment "${_comment}, plugin-options: ${_plugin_options}")
      endif()
  
 +    # Use windows paths on protoc
-+    if(WIN32)
++    if(CMAKE_HOST_WIN32)
 +      if(NOT _abs_file MATCHES "^[A-Za-z]:")
-+        set(_abs_file "C:${_abs_file}")
++        set(_abs_file "$ENV{SYSTEMDRIVE}${_abs_file}")
 +      endif()
-+      file(TO_NATIVE_PATH "${_abs_file}" _abs_file)
-+    endif(WIN32)
++    endif(CMAKE_HOST_WIN32)
 +
      add_custom_command(
        OUTPUT ${_generated_srcs}
