@@ -117,7 +117,7 @@ vcpkg_configure_make(
         "${SOURCE_PATH}/Configure"
         ${OPENSSL_ARCH}
         ${CONFIGURE_OPTIONS}
-        "--openssldir=/etc/ssl"
+        "--openssldir=etc/ssl"
         "--libdir=lib"
     OPTIONS_DEBUG
         --debug
@@ -137,9 +137,6 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc/ssl/misc")
 endif()
-
-file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/certs/.keep")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/private/.keep")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/etc"
