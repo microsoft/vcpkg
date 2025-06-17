@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
     REF "v${VERSION}"
-    SHA512 9a52534cf19f908f776ed54b43791e621a9bd5da1fec93a4f035cf4535ddb0ce9cb9e6623ee57c631c76012b4f3ed5066ec731dc3ecac722f6b5d705ec7fd4c7
+    SHA512 b48f47c593172cf3a28ca926cf8e8dd2d080a7e0c4d4344fe9c1b60e036431d5e5ed93e2f67f56fb979eb6f03dad3f273594ca86dd0f6ddadd3b2e0bc3abde53
     HEAD_REF main
 )
 
@@ -16,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda      GINKGO_BUILD_CUDA
     mpi       GINKGO_BUILD_MPI
     half      GINKGO_ENABLE_HALF
+    bfloat16  GINKGO_ENABLE_BFLOAT16
 )
 
 vcpkg_cmake_configure(
