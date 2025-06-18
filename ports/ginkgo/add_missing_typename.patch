@@ -1,0 +1,19 @@
+Subject: [PATCH] add missing typename
+---
+Index: core/components/range_minimum_query.hpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/components/range_minimum_query.hpp b/core/components/range_minimum_query.hpp
+--- a/core/components/range_minimum_query.hpp	(revision 565eda706727da205a759f9e082f14593c9f4543)
++++ b/core/components/range_minimum_query.hpp	(date 1750236319681)
+@@ -195,7 +195,7 @@
+ template <int block_size>
+ class device_block_range_minimum_query_lookup_table {
+ public:
+-    using tree = detail::cartesian_tree<block_size>;
++    using tree = typename detail::cartesian_tree<block_size>;
+     // how many trees does the lookup table (LUT) contain?
+     constexpr static int num_trees = tree::num_trees;
+     // how many bits do we need theoretically for this block?

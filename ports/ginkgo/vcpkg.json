@@ -32,6 +32,7 @@
     },
     "mpi": {
       "description": "Build the distributed MPI backend of Ginkgo",
+      "supports": "!windows",
       "dependencies": [
         "mpi"
       ]

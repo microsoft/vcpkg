@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 b48f47c593172cf3a28ca926cf8e8dd2d080a7e0c4d4344fe9c1b60e036431d5e5ed93e2f67f56fb979eb6f03dad3f273594ca86dd0f6ddadd3b2e0bc3abde53
     HEAD_REF main
+    PATCHES add_missing_typename.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -26,7 +27,7 @@ vcpkg_cmake_configure(
         -DGINKGO_BUILD_TESTS=OFF
         -DGINKGO_BUILD_EXAMPLES=OFF
         -DGINKGO_BUILD_HIP=OFF
-        -DGINKGO_BUILD_DPCPP=OFF
+        -DGINKGO_BUILD_SYCL=OFF
         -DGINKGO_BUILD_HWLOC=OFF
         -DGINKGO_BUILD_BENCHMARKS=OFF
         -DGINKGO_DEVEL_TOOLS=OFF
