@@ -1,5 +1,5 @@
 diff --git a/cmake/protobuf-generate.cmake b/cmake/protobuf-generate.cmake
-index 244407ee2..91bfff07a 100644
+index 244407ee2..7c007fe07 100644
 --- a/cmake/protobuf-generate.cmake
 +++ b/cmake/protobuf-generate.cmake
 @@ -1,4 +1,5 @@
@@ -8,36 +8,44 @@ index 244407ee2..91bfff07a 100644
    include(CMakeParseArguments)
  
    set(_options APPEND_PATH)
-@@ -100,6 +101,21 @@ function(protobuf_generate)
+@@ -100,6 +101,25 @@ function(protobuf_generate)
      set(_protobuf_include_path -I ${CMAKE_CURRENT_SOURCE_DIR})
    endif()
  
 +  # Use windows paths on protoc
 +  if(CMAKE_HOST_WIN32)
-+      foreach(_path ${_protobuf_include_path})
-+        if(NOT _path STREQUAL "-I")
-+          get_filename_component(_windows_path_include ${_path} ABSOLUTE)
++    foreach(_path ${_protobuf_include_path})
++      if(NOT _path STREQUAL "-I")
++        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.19")
++          file(REAL_PATH "${_path}" _windows_path_include)
++        else()
++          get_filename_component(_windows_path_include "${_path}" ABSOLUTE)
 +          if(NOT _windows_path_include MATCHES "^[A-Za-z]:")
 +            set(_windows_path_include "$ENV{SYSTEMDRIVE}${_windows_path_include}")
 +          endif()
-+          list(APPEND _protobuf_proper_include_path -I ${_windows_path_include})
 +        endif()
-+      endforeach()
++        list(APPEND _protobuf_proper_include_path -I "${_windows_path_include}")
++      endif()
++    endforeach()
 +  else(CMAKE_HOST_WIN32)
-+      set(_protobuf_proper_include_path ${_protobuf_include_path})
++    set(_protobuf_proper_include_path "${_protobuf_include_path}")
 +  endif(CMAKE_HOST_WIN32)
 +
    set(_generated_srcs_all)
    foreach(_proto ${protobuf_generate_PROTOS})
      get_filename_component(_abs_file ${_proto} ABSOLUTE)
-@@ -146,10 +162,17 @@ function(protobuf_generate)
+@@ -146,10 +166,21 @@ function(protobuf_generate)
        set(_comment "${_comment}, plugin-options: ${_plugin_options}")
      endif()
  
 +    # Use windows paths on protoc
 +    if(CMAKE_HOST_WIN32)
 +      if(NOT _abs_file MATCHES "^[A-Za-z]:")
-+        set(_abs_file "$ENV{SYSTEMDRIVE}${_abs_file}")
++        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.19")
++          file(REAL_PATH "${_abs_file}" _abs_file)
++        else()
++          set(_abs_file "$ENV{SYSTEMDRIVE}${_abs_file}")
++        endif()
 +      endif()
 +    endif(CMAKE_HOST_WIN32)
 +
