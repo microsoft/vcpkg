@@ -15,29 +15,23 @@ macro(z_vcpkg_make_set_common_vars)
     endif()
 endmacro()
 
+### Autotool's crosscompiling by autotool's triplets in ARGN
+function(z_vcpkg_make_get_crosscompiling out_var)
+    set(host "")
+    set(build "")
+    if(ARGN MATCHES "--host=([^;]*)")
+        set(host "${CMAKE_MATCH_1}")
+    endif()
+    if(ARGN MATCHES "--build=([^;]*)")
+        set(build "${CMAKE_MATCH_1}")
+    endif()
+    string(COMPARE NOTEQUAL "${host}" "${build}" is_crosscompiling)
+    set("${out_var}" "${is_crosscompiling}" PARENT_SCOPE)
+endfunction()
+
 ###
 macro(z_vcpkg_make_get_cmake_vars)
-    cmake_parse_arguments(vmgcv_arg # Not just arg since macros don't define their own var scope. 
-        "" "" "LANGUAGES" ${ARGN}
-    )
-
-    z_vcpkg_get_global_property(has_cmake_vars_file "make_cmake_vars_file" SET)
-
-    if(NOT has_cmake_vars_file)
-        if(vmgcv_arg_LANGUAGES)
-            # Escape semicolons to prevent CMake from splitting LANGUAGES list when passing as -D option.
-            string(REPLACE ";" "\;" vmgcv_arg_langs "${vmgcv_arg_LANGUAGES}")
-            list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=${vmgcv_arg_langs}")
-            unset(langs)
-        endif()
-
-        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_LIBRARY_PATH_FLAG")
-        vcpkg_cmake_get_vars(cmake_vars_file)
-        z_vcpkg_set_global_property(make_cmake_vars_file "${cmake_vars_file}")
-    else()
-        z_vcpkg_get_global_property(cmake_vars_file "make_cmake_vars_file")
-    endif()
-
+    vcpkg_cmake_get_vars(cmake_vars_file ${Z_VCPKG_MAKE_GET_CMAKE_VARS_OPTS})
     include("${cmake_vars_file}")
 endmacro()
 
@@ -64,7 +58,9 @@ function(z_vcpkg_make_determine_host_arch out_var)
     elseif(DEFINED ENV{PROCESSOR_ARCHITECTURE})
         set(arch $ENV{PROCESSOR_ARCHITECTURE})
     else()
-        z_vcpkg_make_get_cmake_vars(#[[ LANGUAGES .... ]])
+        if(NOT DEFINED VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR)
+            z_vcpkg_make_get_cmake_vars()
+        endif()
         set(arch "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
     endif()
     z_vcpkg_make_normalize_arch("${out_var}" "${arch}")
@@ -94,6 +90,7 @@ function(z_vcpkg_make_prepare_compile_flags)
         set(arg_LANGUAGES "C" "CXX")
     endif()
 
+    z_vcpkg_make_set_common_vars()
     set(var_suffix "${arg_CONFIG}")
     set(CFLAGS "")
     set(CXXFLAGS "")
@@ -253,7 +250,8 @@ function(z_vcpkg_make_prepare_programs out_env)
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
-    z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
+    z_vcpkg_make_get_cmake_vars()
+    z_vcpkg_make_get_crosscompiling(is_crosscompiling ${arg_BUILD_TRIPLET})
 
     macro(z_vcpkg_append_to_configure_environment inoutlist var defaultval)
         # Allows to overwrite settings in custom triplets via the environment
@@ -283,12 +281,12 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
-            if(NOT arg_BUILD_TRIPLET MATCHES "--host") # TODO: Check if this generates problems with the new triplet approach
+            if(NOT is_crosscompiling)
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
             else()
-                # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated.
+                # Silly trick to make configure accept CC_FOR_BUILD but in reality CC_FOR_BUILD is deactivated.
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
@@ -308,7 +306,7 @@ function(z_vcpkg_make_prepare_programs out_env)
             z_vcpkg_append_to_configure_environment(configure_env CPP "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
             z_vcpkg_append_to_configure_environment(configure_env CC "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             z_vcpkg_append_to_configure_environment(configure_env CXX "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
-            if(NOT arg_BUILD_TRIPLET MATCHES "--host")
+            if(NOT is_crosscompiling)
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
@@ -399,7 +397,7 @@ function(z_vcpkg_make_prepare_programs out_env)
 
         z_vcpkg_make_set_env(CC C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
         z_vcpkg_make_set_env(CXX CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
-        if(NOT arg_BUILD_TRIPLET MATCHES "--host")
+        if(NOT is_crosscompiling)
             z_vcpkg_make_set_env(CC_FOR_BUILD C_COMPILER ${ABIFLAGS_${arg_CONFIG}})
             z_vcpkg_make_set_env(CPP_FOR_BUILD C_COMPILER "-E" ${ABIFLAGS_${arg_CONFIG}})
             z_vcpkg_make_set_env(CXX_FOR_BUILD CXX_COMPILER ${ABIFLAGS_${arg_CONFIG}})
@@ -469,7 +467,7 @@ function(z_vcpkg_make_prepare_flags)
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
-    z_vcpkg_make_get_cmake_vars(LANGUAGES ${arg_LANGUAGES})
+    z_vcpkg_make_get_cmake_vars()
 
     # ==== LIBS
     # TODO: Figure out what to do with other Languages like Fortran

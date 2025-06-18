@@ -1,14 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice/libplist
-    REF 2d8d7ef272db06783989f77ba1ed80aa0f4d2dfd # commits on 2023-06-15
-    SHA512 ec7c723ffb0492fe9901ee3854df16465e1b5b051cc8a716d89ff8fbf8f782134b7dda4d3a9656016fcf15c7cdf0eef7c80551b38a62317a11f056500e5c9ef4
+    REF ${VERSION}
+    SHA512 0477202686fb2f88684af30a97d53fd023ada470dfc7c5d8b32c0d80e09a4641e679522a53c5ad32eae61b21a2d0f1f0c660acd8482ba7951d728b42e4cf5eab
     HEAD_REF master
     PATCHES
         001_fix_static_build.patch
-        002_fix_api.patch
-        003_fix_msvc.patch
-        004_fix_tools_msvc.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -22,6 +19,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DPACKAGE_VERSION=${VERSION}
 )
 
 vcpkg_cmake_install()

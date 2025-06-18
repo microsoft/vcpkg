@@ -1,9 +1,10 @@
 {
   "name": "vulkan-extensionlayer",
-  "version": "1.4.304.1",
+  "version": "1.4.309.0",
   "description": "Layer providing Vulkan features when native support is unavailable",
   "homepage": "https://github.com/KhronosGroup/Vulkan-ExtensionLayer",
   "license": "Apache-2.0",
+  "supports": "!static",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

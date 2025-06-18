@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.8.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -31,7 +31,8 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
-        "cups"
+        "cups",
+        "thread"
       ],
       "platform": "osx"
     },
@@ -39,9 +40,10 @@
       "name": "qtbase",
       "default-features": false,
       "features": [
+        "concurrent",
         "thread"
       ],
-      "platform": "osx"
+      "platform": "android"
     },
     {
       "name": "qtbase",
@@ -70,7 +72,7 @@
     "concurrent",
     {
       "name": "dbus",
-      "platform": "!(static & windows)"
+      "platform": "!(static & windows) & !android"
     },
     "dnslookup",
     "doubleconversion",
@@ -208,19 +210,21 @@
     },
     "egl": {
       "description": "EGL",
-      "supports": "linux",
+      "supports": "android | linux",
       "dependencies": [
         "egl"
       ]
     },
     "fontconfig": {
       "description": "Use fontconfig",
+      "supports": "!osx & !windows",
       "dependencies": [
         "fontconfig",
         {
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "freetype",
             "gui"
           ]
         }
@@ -306,6 +310,16 @@
             "opengl"
           ],
           "platform": "osx"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "egl",
+            "gles2",
+            "opengl"
+          ],
+          "platform": "android"
         },
         {
           "name": "qtbase",

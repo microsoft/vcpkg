@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO upa-url/upa
   REF "v${VERSION}"
-  SHA512 26af05d36b1ae147594630a23d258ed55328940a23560afcbb31e132b2fa6360c16f4ff09568787d0d39b8a351cdb90dc4c5a0a237b782a743a343992ee7ca4f
+  SHA512 d998e8e61fe018035343e43d937bd673eb4eb5d609263c71eff916611651fa9192715ee1b6da1eeaeab46fa26b94cb57cb4384de9318e5b8e28be0dd90c89468
   HEAD_REF main
 )
 
@@ -13,6 +13,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "upa" CONFIG_PATH "lib/cmake/upa")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

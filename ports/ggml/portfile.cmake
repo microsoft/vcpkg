@@ -1,21 +1,54 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF 9a4acb374565f4146b8d6eb1cffdcd7d437d1ba2
-    SHA512 091a794baf669616ee20dc19d0232e64456c07cd50cbe6d81aa68b98f178801be1b62da9eea417e7a563a6b73bb3136777f860c756270569676fb760f2e751ed
+    REF 38648430fce1422694f2f349a5fe60d5969d6f49  # before ggml_backend_sched_new change
+    SHA512 6c51c4b4757aecea3f713b2ee8fb08992c2bdcc203f8e44e307ab8bcd5ed575f154d438c1d036251441aedef1eae812dc7114f6ca5da8314b8e415d92f02f33d
     HEAD_REF master
     PATCHES
-        0001-fix-cmakelists.patch
+        cmake-config.diff
+        relax-link-options.diff
+        vulkan-shaders-gen.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        blas     GGML_BLAS
         cuda     GGML_CUDA
-        vulkan   GGML_VULKAN
         metal    GGML_METAL
         opencl   GGML_OPENCL
         openmp   GGML_OPENMP
+        vulkan   GGML_VULKAN
 )
+
+if("blas" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_REQUIRE_FIND_PACKAGE_BLAS=ON" # workaround message(ERROR ...)
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    )
+endif()
+
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
+endif()
+
+if("opencl" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND FEATURE_OPTIONS
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+    )
+endif()
+
+if("vulkan" IN_LIST FEATURES AND VCPKG_CROSSCOMPILING)
+    list(APPEND FEATURE_OPTIONS
+        "-DVulkan_GLSLC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc/glslc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-DVULKAN_SHADERS_GEN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/vulkan-shaders-gen${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    )
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  GGML_STATIC)
 
@@ -30,55 +63,18 @@ vcpkg_cmake_configure(
         -DGGML_HIP=OFF
         -DGGML_SYCL=OFF
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME ggml CONFIG_PATH "lib/cmake/ggml")
 vcpkg_copy_pdbs()
 
-if (VCPKG_LIBRARY_LINKAGE MATCHES "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-        "set_and_check(GGML_BIN_DIR \"\${PACKAGE_PREFIX_DIR}/bin\")"
-        ""
-    )
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ggml.h" "#ifdef GGML_SHARED" "#if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ggml-backend.h" "#ifdef GGML_BACKEND_SHARED" "#if 1")
 endif()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "add_library(ggml::ggml UNKNOWN IMPORTED)"
-    "if (NOT TARGET ggml::ggml)
-    add_library(ggml::ggml UNKNOWN IMPORTED)
-endif()"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "add_library(ggml::ggml-base UNKNOWN IMPORTED)"
-    "if (NOT TARGET ggml::ggml-base)
-    add_library(ggml::ggml-base UNKNOWN IMPORTED)
-endif()"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "add_library(ggml::\${_ggml_backend} UNKNOWN IMPORTED)"
-    "if (NOT TARGET ggml::\${_ggml_backend})
-        add_library(ggml::\${_ggml_backend} UNKNOWN IMPORTED)
-    endif()"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "add_library(ggml::all INTERFACE IMPORTED)"
-    "if (NOT TARGET ggml::all)
-    add_library(ggml::all INTERFACE IMPORTED)
-endif()"
-)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/ggml/ggml-config.cmake"
-    "if (NOT GGML_SHARED_LIB)"
-    "if (NOT GGML_SHARED_LIB)
-    if (GGML_OPENCL)
-        find_package(OpenCL REQUIRED)
-        list(APPEND GGML_CPU_INTERFACE_LINK_LIBRARIES OpenCL::OpenCL)
-    endif()"
-)
 
 if (NOT VCPKG_BUILD_TYPE)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
@@ -88,10 +84,9 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/ggml.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ggml.pc")
 vcpkg_fixup_pkgconfig()
 
-if ("vulkan" IN_LIST FEATURES)
-  vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES vulkan-shaders-gen)
+if("vulkan" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
+    vcpkg_copy_tools(TOOL_NAMES vulkan-shaders-gen AUTO_CLEAN)
 endif()
-
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

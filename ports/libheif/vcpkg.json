@@ -1,15 +1,12 @@
 {
   "name": "libheif",
   "version": "1.19.8",
+  "port-version": 1,
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
   "license": "LGPL-3.0-only",
   "supports": "!xbox",
   "dependencies": [
-    {
-      "name": "gdk-pixbuf",
-      "platform": "!windows"
-    },
     "libde265",
     {
       "name": "vcpkg-cmake",
@@ -29,6 +26,13 @@
       "license": "BSD-2-Clause",
       "dependencies": [
         "aom"
+      ]
+    },
+    "gdk-pixbuf": {
+      "description": "Plugin for gdk-pixbuf",
+      "supports": "!windows",
+      "dependencies": [
+        "gdk-pixbuf"
       ]
     },
     "hevc": {

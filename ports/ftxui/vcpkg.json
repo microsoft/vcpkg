@@ -1,6 +1,6 @@
 {
   "name": "ftxui",
-  "version-semver": "6.1.8",
+  "version-semver": "6.1.9",
   "description": "C++ Functional Terminal User Interface",
   "homepage": "https://github.com/ArthurSonzogni/FTXUI",
   "license": "MIT",

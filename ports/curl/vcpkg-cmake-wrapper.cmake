@@ -1,16 +1,12 @@
-cmake_policy(PUSH)
-cmake_policy(SET CMP0012 NEW)
-cmake_policy(SET CMP0054 NEW)
-cmake_policy(SET CMP0057 NEW)
-
-if(NOT CMAKE_VERSION VERSION_LESS 3.14 AND COMPONENTS IN_LIST ARGS)
-    include("${CMAKE_CURRENT_LIST_DIR}/CURLConfigComponents.cmake")
-endif()
-
 list(REMOVE_ITEM ARGS "NO_MODULE" "CONFIG" "MODULE")
 _find_package(${ARGS} CONFIG)
 
 if(CURL_FOUND)
+    cmake_policy(PUSH)
+    cmake_policy(SET CMP0012 NEW)
+    cmake_policy(SET CMP0054 NEW)
+    cmake_policy(SET CMP0057 NEW)
+
     include("${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake")
 
     set(_curl_target CURL::libcurl_shared)
@@ -32,7 +28,7 @@ if(CURL_FOUND)
         message(WARNING "CURL_LIBRARIES list at least one target. This will not work for use cases where targets are not resolved.")
     endif()
 
-    if (CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(WIN32)
         get_target_property(_curl_location_debug ${_curl_target} IMPORTED_IMPLIB_DEBUG)
         get_target_property(_curl_location_release ${_curl_target} IMPORTED_IMPLIB_RELEASE)
     endif()
@@ -54,5 +50,5 @@ if(CURL_FOUND)
     unset(_curl_location_debug)
     unset(_curl_location_release)
     unset(_curl_target)
+    cmake_policy(POP)
 endif()
-cmake_policy(POP)

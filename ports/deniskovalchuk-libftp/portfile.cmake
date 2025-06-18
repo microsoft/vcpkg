@@ -2,7 +2,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO deniskovalchuk/libftp
         REF "v${VERSION}"
-        SHA512 c0fe6f174d0bcb200f7b3a933671f5b6ab63599ba9c7a4cadd2219866d246c0ab11bb9c9bfdfe6bf9adfebb9132c2378c7912cb7cb80489e29c05c9710e839c3
+        SHA512 34e3abdbe5fbc9e422f58e50f5a6f276ffbd3abf8d2c419c294e4e7ea36fb42dbdf15dff3c3a3d9e1c7ca7164e7f6fdc77f12f722c6002294a77e46fa61e3122
         HEAD_REF master
 )
 

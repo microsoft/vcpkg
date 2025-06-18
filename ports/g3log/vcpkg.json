@@ -1,6 +1,6 @@
 {
   "name": "g3log",
-  "version": "2.4",
+  "version": "2.6",
   "description": "Asynchronous logger with Dynamic Sinks",
   "homepage": "https://github.com/KjellKod/g3log",
   "license": "Unlicense",

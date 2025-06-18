@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LunarG/VulkanTools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 7548de6a8374d1be853308cd593583b970002ba673458ef84a62376f187d8453b2e433df7f08c78d0c675ce560c3d854db7efc764995b7cc3f54d57d8a80f565
+    SHA512 c4d44f94e93234a5b5a98f3a76072d43b1c08b44dcf68a0bbbdc711e487b9e3b1be0fc8ab084b8d19662ac7394f25ec3ad2430fb2c79497d6e3e715c93d4f306
     HEAD_REF main
+    PATCHES
+        disable-qtdeploy.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/via/CMakeLists.txt" "jsoncpp_static" "JsonCpp::JsonCpp")
@@ -18,6 +20,7 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DVULKAN_HEADERS_INSTALL_DIR=${CURRENT_INSTALLED_DIR}
+    -DCMAKE_DISABLE_FIND_PACKAGE_Qt6=ON
     -DBUILD_TESTS:BOOL=OFF
   OPTIONS_RELEASE
     -DVULKAN_LOADER_INSTALL_DIR=${CURRENT_INSTALLED_DIR}

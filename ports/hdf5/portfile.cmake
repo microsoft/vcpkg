@@ -5,12 +5,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${hdf5_ref}"
-    SHA512 77849b644f5312eae5a3f2fe45666d9df95cc21b092207dae01ca7d019e428255d75fe0c27538e4101eabf2030927a73ceaec8e1471c72b51fed5370810f9a35
+    SHA512 f3907abb530c4818cd9c0eb78b43073f3133260baa008ed52478e50e6bf9f1520365882acba21e0206e72c37c3e564d450def4edc3d2eef46275a41a2ad3f34b
     HEAD_REF develop
     PATCHES
         hdf5_config.patch
-        add-_Float16-type-on-aarch64.patch
-        pkgconfig-requires.patch
+        pkgconfig.patch
 )
 
 set(ALLOW_UNSUPPORTED OFF)
@@ -24,7 +23,7 @@ if ("threadsafe" IN_LIST FEATURES AND
      OR "fortran" IN_LIST FEATURES
      OR "cpp" IN_LIST FEATURES)
      )
-    message(WARNING "Feture 'threadsafe' and other features are mutually exclusive, enable feature ALLOW_UNSUPPORTED automatically to enable them both.")
+    message(WARNING "Feture 'threadsafe' and other features are mutually exclusive, enabling feature ALLOW_UNSUPPORTED automatically to enable them both.")
     set(ALLOW_UNSUPPORTED ON)
 endif()
 
@@ -51,13 +50,8 @@ if("tools" IN_LIST FEATURES AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND FEATURE_OPTIONS
-                    -DUSE_LIBAEC_STATIC=ON)
-else()
-    list(APPEND FEATURE_OPTIONS
-                    -DBUILD_STATIC_LIBS=OFF
-                    -DONLY_SHARED_LIBS=ON)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND FEATURE_OPTIONS -DONLY_SHARED_LIBS=ON)
 endif()
 
 vcpkg_cmake_configure(
@@ -66,6 +60,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DHDF5_ALLOW_EXTERNAL_SUPPORT=NO
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share/hdf5

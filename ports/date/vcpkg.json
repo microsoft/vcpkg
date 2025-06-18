@@ -1,6 +1,6 @@
 {
   "name": "date",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "A date and time library based on the C++17 <chrono> header",
   "homepage": "https://github.com/HowardHinnant/date",
   "license": "MIT",
@@ -17,7 +17,7 @@
   "features": {
     "remote-api": {
       "description": "support automatic download of tz data",
-      "supports": "!uwp",
+      "supports": "!uwp & !android",
       "dependencies": [
         "curl"
       ]

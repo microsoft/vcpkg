@@ -1,8 +1,11 @@
 {
   "name": "libpqxx",
-  "version": "7.10.0",
-  "description": "The official C++ client API for PostgreSQL",
-  "homepage": "https://www.postgresql.org/",
+  "version": "7.10.1",
+  "description": [
+    "The official* C++ client API for PostgreSQL.",
+    "*) NB https://pqxx.org/libpqxx/faq/"
+  ],
+  "homepage": "https://pqxx.org/libpqxx/",
   "license": "BSD-3-Clause",
   "dependencies": [
     {

@@ -1,65 +1,43 @@
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
-
-if(VCPKG_TARGET_IS_LINUX)
-    message(WARNING "${PORT} currently requires the following packages:\n    libtool\n    This can be installed on Ubuntu systems via\n    sudo apt-get install -y libtool\n")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO s-yata/marisa-trie
-    REF 006020c1df76d0d7dc6118dacc22da64da2e35c4
-    SHA512 05dd7cc81a6347d4528654c19617af16de8d7352ad9e38d5f1cd296d88527377ecbfed9dbe722362d64369cd792d1ae0410319854b546ce0b6081ac560a40c0f
+    REF v${VERSION}
+    SHA512 6d72b13daec877c9c42e2c93e591e3a5e9c738bb130c5d90d6adfde81d5b500684ca176439b7502d9243b6417f34c7b39750ff3fb3a5c52d8d06cb9bc5f14c22
     HEAD_REF master
     PATCHES
-        remove-windows-tests.patch
+        enable-debug.patch
+        fix-install.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_install_msbuild(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "vs2019/vs2019.sln"
-        LICENSE_SUBPATH COPYING.md
-        PLATFORM "${TRIPLET_SYSTEM_ARCH}"
-        ALLOW_ROOT_INCLUDES
-    )
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        tools    ENABLE_TOOLS
+)
 
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/marisa")
-    file(INSTALL "${SOURCE_PATH}/include/marisa.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-    file(GLOB MARISA_DIR_HEADERS "${SOURCE_PATH}/include/marisa/*.h")
-    file(INSTALL ${MARISA_DIR_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include/marisa")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${options}
+)
 
-    vcpkg_clean_msbuild()
-    set(prefix "${CURRENT_INSTALLED_DIR}")
-    set(exec_prefix "\${prefix}")
-    set(bindir "\${prefix}/bin")
-    set(libdir "\${prefix}/lib")
-    set(includedir "\${prefix}/include")
-    configure_file("${SOURCE_PATH}/marisa.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/marisa.pc" @ONLY)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/marisa.pc" "-lmarisa" "-llibmarisa")
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        set(prefix "${CURRENT_INSTALLED_DIR}/debug")
-        set(exec_prefix "\${prefix}")
-        set(bindir "\${prefix}/bin")
-        set(libdir "\${prefix}/lib")
-        set(includedir "\${prefix}/include")
-        configure_file("${SOURCE_PATH}/marisa.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/marisa.pc" @ONLY)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/marisa.pc" "-lmarisa" "-llibmarisa")
-    endif()
-else()
-    vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
-        COPY_SOURCE
-    )
-    vcpkg_install_make()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-    file(INSTALL "${SOURCE_PATH}/COPYING.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Marisa)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+if ("tools" IN_LIST FEATURES)
+    set(TOOL_NAMES marisa-benchmark marisa-build marisa-common-prefix-search marisa-dump marisa-lookup marisa-predictive-search marisa-reverse-lookup)
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.md")

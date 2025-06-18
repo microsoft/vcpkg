@@ -1,26 +1,36 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0a279c8..8e771ee 100644
+index a48dbbfe..9f51cf6e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -136,7 +136,7 @@ if (NOT MSVC)
+@@ -136,7 +136,12 @@ if (NOT MSVC)
      check_include_files(fcntl.h HAVE_FCNTL_H)
      check_function_exists(fpclass HAVE_FPCLASS)
      check_function_exists(ftime HAVE_FTIME)
 -    check_function_exists(getentropy HAVE_GETENTROPY)
-+    check_symbol_exists(getentropy "sys/random.h" HAVE_GETENTROPY)
++    if (APPLE)
++        # In old macOS SDKs (ex: 10.15), sys/random.h fails to include header files it needs, so add them here.
++        check_symbol_exists(getentropy "Availability.h;stddef.h;sys/random.h" HAVE_GETENTROPY)
++    else()
++        check_symbol_exists(getentropy sys/random.h HAVE_GETENTROPY)
++    endif()
      check_function_exists(gettimeofday HAVE_GETTIMEOFDAY)
      check_library_exists(history append_history "" HAVE_LIBHISTORY)
      check_library_exists(readline readline "" HAVE_LIBREADLINE)
-@@ -149,7 +149,6 @@ if (NOT MSVC)
+@@ -149,12 +154,6 @@ if (NOT MSVC)
      check_function_exists(stat HAVE_STAT)
      check_include_files(stdint.h HAVE_STDINT_H)
      check_include_files(sys/mman.h HAVE_SYS_MMAN_H)
--    check_include_files(sys/random.h HAVE_SYS_RANDOM_H)
+-    if (APPLE)
+-        # In old macOS SDKs (ex: 10.15), sys/random.h fails to include header files it needs, so add them here.
+-        check_include_files("Availability.h;stddef.h;sys/random.h" HAVE_SYS_RANDOM_H)
+-    else()
+-        check_include_files(sys/random.h HAVE_SYS_RANDOM_H)
+-    endif()
      check_include_files(sys/select.h HAVE_SYS_SELECT_H)
      check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
      check_include_files(sys/stat.h HAVE_SYS_STAT_H)
 diff --git a/config.h.cmake.in b/config.h.cmake.in
-index 2f4aeba..79f1cdb 100644
+index 2f4aeba3..36c068fd 100644
 --- a/config.h.cmake.in
 +++ b/config.h.cmake.in
 @@ -69,9 +69,6 @@
@@ -34,10 +44,10 @@ index 2f4aeba..79f1cdb 100644
  #cmakedefine HAVE_SYS_SELECT_H 1
  
 diff --git a/configure.ac b/configure.ac
-index 48cd2f0..0f09c61 100644
+index 478bb4eb..ad49a9ac 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -304,7 +304,6 @@ AC_CHECK_HEADERS([stdint.h])
+@@ -305,7 +305,6 @@ AC_CHECK_HEADERS([stdint.h])
  AC_CHECK_HEADERS([fcntl.h unistd.h sys/stat.h])
  AC_CHECK_HEADERS([sys/mman.h])
  AC_CHECK_HEADERS([sys/time.h sys/timeb.h])
@@ -45,7 +55,7 @@ index 48cd2f0..0f09c61 100644
  AC_CHECK_HEADERS([dl.h dlfcn.h])
  AC_CHECK_HEADERS([glob.h])
  AM_CONDITIONAL(WITH_GLOB, test "$ac_cv_header_glob_h" = "yes")
-@@ -317,9 +316,7 @@ AH_VERBATIM([HAVE_MUNMAP_AFTER],[/* mmap() is no good without munmap() */
+@@ -318,9 +317,7 @@ AH_VERBATIM([HAVE_MUNMAP_AFTER],[/* mmap() is no good without munmap() */
  #  undef /**/ HAVE_MMAP
  #endif])
  
@@ -57,31 +67,32 @@ index 48cd2f0..0f09c61 100644
  dnl
  dnl Checks for inet libraries
 diff --git a/dict.c b/dict.c
-index 49e1c6b..46bb4d4 100644
+index a238cd9d..ce501cb5 100644
 --- a/dict.c
 +++ b/dict.c
-@@ -928,13 +928,11 @@ xmlDictQLookup(xmlDictPtr dict, const xmlChar *prefix, const xmlChar *name) {
-   #define WIN32_LEAN_AND_MEAN
+@@ -929,13 +929,11 @@ xmlDictQLookup(xmlDictPtr dict, const xmlChar *prefix, const xmlChar *name) {
    #include <windows.h>
    #include <bcrypt.h>
--#elif defined(HAVE_GETENTROPY)
-+#elif HAVE_GETENTROPY
-   #ifdef HAVE_UNISTD_H
-     #include <unistd.h>
-   #endif
--  #ifdef HAVE_SYS_RANDOM_H
--    #include <sys/random.h>
--  #endif
-+  #include <sys/random.h>
  #else
+-  #if defined(HAVE_GETENTROPY)
++  #if HAVE_GETENTROPY
+     #ifdef HAVE_UNISTD_H
+       #include <unistd.h>
+     #endif
+-    #ifdef HAVE_SYS_RANDOM_H
+-      #include <sys/random.h>
+-    #endif
++    #include <sys/random.h>
+   #endif
    #include <time.h>
  #endif
-@@ -965,7 +963,7 @@ xmlInitRandom(void) {
-                     "error code %lu\n", GetLastError());
-             abort();
-         }
--#elif defined(HAVE_GETENTROPY)
-+#elif HAVE_GETENTROPY
+@@ -969,7 +967,7 @@ xmlInitRandom(void) {
+ #else
+         int var;
+ 
+-#if defined(HAVE_GETENTROPY)
++#if HAVE_GETENTROPY
          while (1) {
              if (getentropy(globalRngState, sizeof(globalRngState)) == 0)
-                 break;
+                 return;
+

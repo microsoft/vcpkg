@@ -12,4 +12,5 @@ ignition_modular_library(
       gz_remotery_vis.patch
       pthread.diff
       003-include-chrono.patch
+      gdal-3.11.diff
 )

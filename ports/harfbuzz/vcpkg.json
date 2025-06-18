@@ -7,10 +7,6 @@
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "gettext",
-      "platform": "osx"
-    },
-    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
@@ -79,9 +75,16 @@
     },
     "introspection": {
       "description": "build with introspection",
+      "supports": "!static",
       "dependencies": [
-        "glib",
-        "gobject-introspection"
+        "gobject-introspection",
+        {
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
+        }
       ]
     }
   }

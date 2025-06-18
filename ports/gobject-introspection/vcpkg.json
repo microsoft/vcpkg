@@ -1,42 +1,37 @@
 {
   "name": "gobject-introspection",
   "version": "1.82.0",
-  "description": "A middleware layer between C libraries (using GObject) and language bindings.",
+  "port-version": 1,
+  "description": [
+    "A middleware layer between C libraries (using GObject) and language bindings.",
+    "Building (with) gobject-introspection is based on dynamic library linkage. Static builds of the core feature set are supported only for CI purposes.",
+    "The g-ir-scanner program runs executables for the target system. This limits actual cross-build support to targets supported by the host CPU."
+  ],
   "homepage": "https://gi.readthedocs.io/en/latest/",
   "license": null,
-  "supports": "!static & (native | (windows & x86))",
+  "supports": "!(static & staticcrt)",
   "dependencies": [
-    {
-      "name": "cairo",
-      "default-features": false,
-      "features": [
-        "gobject"
-      ]
-    },
     "glib",
-    {
-      "name": "glib",
-      "host": true
-    },
-    {
-      "name": "gobject-introspection",
-      "host": true,
-      "platform": "!(windows & x86)"
-    },
     "libffi",
     "python3",
-    {
-      "name": "python3",
-      "host": true,
-      "platform": "!(windows & x86)"
-    },
-    {
-      "name": "vcpkg-get-python-packages",
-      "host": true
-    },
     {
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "cairo": {
+      "description": "Install introspection data for cairo.",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "gobject"
+          ]
+        }
+      ]
+    }
+  }
 }

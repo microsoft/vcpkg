@@ -10,9 +10,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS        "http://www.ijg.org/files/jpegsr9e.zip"
-    FILENAME    "jpegsr9e.zip"
-    SHA512      db7a2fb44e5cc20d61956c46334948af034c07cdcc0d6e41d9bd4f6611c0fbed8943d0a05029ba1bfb9d993f4acd0df5e95d0bc1cfb5a889b86a55b6b75fdf64
+    URLS        "http://www.ijg.org/files/jpegsr${VERSION}.zip"
+    FILENAME    "jpegsr${VERSION}.zip"
+    SHA512      f43e7cab21fb60d41c7a6842f5859ebeac34267f985870d999cc2e7e9e90ee552d667f054c0f162ef5e5ebaab87e285631432a7ca8441ba9837c4caa4fdf51ac
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH

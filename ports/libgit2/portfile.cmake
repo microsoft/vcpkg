@@ -2,15 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
     REF "v${VERSION}"
-    SHA512 38547ace676b933a3146c2a00405fc6815063a7af923b9f2c09c536ec717be77d19c513b383939054913ce617d7917c100a5cbd3378d101fcdb5eacd1d14f687
+    SHA512 3bec01704ad1acdb4f7e9454101c2a205b7e288a4dffaa5e1afc2b1f849fa3a42b961c532bed2669841925ab8f84fb35bb82a2df8039b1caf76c5779665032d9
     HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
         dependencies.diff
         mingw-winhttp.diff
-        fix-comment.diff
-        fix-include-path.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindPCRE.cmake"

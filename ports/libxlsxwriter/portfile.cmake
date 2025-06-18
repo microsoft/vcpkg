@@ -7,6 +7,13 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/minizip")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    "dtoa"        USE_DTOA_LIBRARY
+    "openssl-md5" USE_OPENSSL_MD5
+    "mem-file"    USE_MEM_FILE
+)
+
 set(USE_WINDOWSSTORE OFF)
 if (VCPKG_TARGET_IS_UWP)
     set(USE_WINDOWSSTORE ON)
@@ -17,6 +24,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DUSE_SYSTEM_MINIZIP=1
         -DWINDOWSSTORE=${USE_WINDOWSSTORE}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

@@ -25,14 +25,9 @@ else()
 endif()
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
     list(APPEND OPTIONS_RELEASE -Dintrospection=disabled)
-endif()
-
-set(GLIB_TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/glib")
-set(GIR_TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection")
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOLS_DIR "${CURRENT_INSTALLED_DIR}/tools/gobject-introspection")
 endif()
 
 vcpkg_configure_meson(
@@ -47,12 +42,12 @@ vcpkg_configure_meson(
     OPTIONS_DEBUG
         -Dintrospection=disabled
     ADDITIONAL_BINARIES
-        "glib-mkenums='${GLIB_TOOLS_DIR}/glib-mkenums'"
-        "glib-compile-resources='${GLIB_TOOLS_DIR}/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-compiler='${GIR_TOOLS_DIR}/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-scanner='${GIR_TOOLS_DIR}/g-ir-scanner'"
+        "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
+        "glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
-vcpkg_install_meson()
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 

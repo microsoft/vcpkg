@@ -1,21 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index df5693d..e5723d0 100644
+index 50362fb..5d7c22f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -295,9 +295,9 @@ else (SQLITECPP_INTERNAL_SQLITE)
+@@ -325,9 +325,9 @@ else (SQLITECPP_INTERNAL_SQLITE)
              target_link_libraries(SQLiteCpp PRIVATE ${sqlcipher_LIBRARY})
          endif()
      else()
 -        find_package (SQLite3 REQUIRED)
 +        find_package (unofficial-sqlite3 CONFIG)
-         message(STATUS "Link to sqlite3 system library")
+         message(STATUS "Link to sqlite3 system library ${SQLite3_VERSION}")
 -        target_link_libraries(SQLiteCpp PUBLIC SQLite::SQLite3)
 +        target_link_libraries(SQLiteCpp PRIVATE unofficial::sqlite3::sqlite3)
          if(SQLite3_VERSION VERSION_LESS "3.19")
              set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
          endif()
 diff --git a/cmake/SQLiteCppConfig.cmake.in b/cmake/SQLiteCppConfig.cmake.in
-index 2b48df4..d0feda9 100644
+index 7d0941c..d0feda9 100644
 --- a/cmake/SQLiteCppConfig.cmake.in
 +++ b/cmake/SQLiteCppConfig.cmake.in
 @@ -1,6 +1,6 @@

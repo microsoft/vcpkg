@@ -18,21 +18,14 @@ if(VCPKG_CROSSCOMPILING)
     file(TOUCH "${SOURCE_PATH}/libcap/cap_names.h")
 endif()
 
-block(SCOPE_FOR VARIABLES)
-    set(VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_VARS_TO_CHECK=CMAKE_OBJCOPY")
-    vcpkg_cmake_get_vars(cmake_vars_file)
-    include("${cmake_vars_file}")
-    set(ENV{OBJCOPY} "${VCPKG_DETECTED_CMAKE_OBJCOPY}")
-endblock()
+vcpkg_cmake_get_vars(cmake_vars_file)
+set(ENV{OBJCOPY} "${VCPKG_DETECTED_CMAKE_OBJCOPY}")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     COPY_SOURCE
-    DETERMINE_BUILD_TRIPLET
 )
-vcpkg_install_make(
-    MAKEFILE "Makefile.vcpkg"
-)
+vcpkg_make_install(MAKEFILE "Makefile.vcpkg")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

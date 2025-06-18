@@ -67,7 +67,7 @@ index 79c2126..6d06775 100644
  
  # 5. Unit tests
 diff --git a/cmake/igl/modules/imgui.cmake b/cmake/igl/modules/imgui.cmake
-index d7ffb9d..6152756 100644
+index d7ffb9d..f331854 100644
 --- a/cmake/igl/modules/imgui.cmake
 +++ b/cmake/igl/modules/imgui.cmake
 @@ -14,14 +14,12 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/opengl/glfw/imgui/*.cpp")
@@ -84,9 +84,8 @@ index d7ffb9d..6152756 100644
      igl::core
      igl::glfw
      imgui::imgui
--    imguizmo::imguizmo
+     imguizmo::imguizmo
 -    igl::imgui_fonts
-+    imguizmo::imguizmo
  )
 diff --git a/cmake/igl/modules/opengl.cmake b/cmake/igl/modules/opengl.cmake
 index 4580c03..dfadb38 100644
@@ -114,16 +113,3 @@ index 3763b77..31ab979 100644
  target_link_libraries(igl_xml ${IGL_SCOPE}
      igl::core
      tinyxml2::tinyxml2
-diff --git a/cmake/recipes/external/comiso.cmake b/cmake/recipes/external/comiso.cmake
-index d2879cb..5a0bd58 100644
---- a/cmake/recipes/external/comiso.cmake
-+++ b/cmake/recipes/external/comiso.cmake
-@@ -11,7 +11,7 @@ FetchContent_Declare(
-     GIT_TAG 536440e714f412e7ef6c0b96b90ba37b1531bb39
- )
- 
--include(eigen)
-+find_package(Eigen3 CONFIG REQUIRED)
- 
- FetchContent_MakeAvailable(comiso)
- 

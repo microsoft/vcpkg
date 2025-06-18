@@ -1,7 +1,7 @@
 {
   "name": "osgearth",
   "version": "3.7.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "osgEarth - 3D Maps for OpenSceneGraph / C++14",
   "homepage": "https://github.com/gwaldron/osgearth",
   "license": "LGPL-3.0-or-later",

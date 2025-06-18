@@ -1,13 +1,13 @@
 {
   "name": "faudio",
-  "version-string": "24.09",
+  "version-string": "25.04",
   "description": "FAudio - accuracy-focused XAudio reimplementation for open platforms",
   "homepage": "https://fna-xna.github.io/",
   "license": "Zlib",
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "sdl2",
+      "name": "sdl3",
       "default-features": false,
       "platform": "!windows"
     },

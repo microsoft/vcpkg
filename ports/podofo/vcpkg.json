@@ -1,11 +1,14 @@
 {
   "name": "podofo",
-  "version": "0.10.4",
+  "version": "1.0.0",
   "description": "PoDoFo is a library to work with the PDF file format",
   "homepage": "https://github.com/podofo/podofo",
   "license": "LGPL-2.0-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
+    "date",
+    "fast-float",
+    "fmt",
     "freetype",
     "libjpeg-turbo",
     "libpng",
@@ -18,6 +21,8 @@
       "name": "tiff",
       "default-features": false
     },
+    "utf8proc",
+    "utfcpp",
     {
       "name": "vcpkg-cmake",
       "host": true

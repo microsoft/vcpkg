@@ -1,7 +1,7 @@
 {
   "name": "qt5-base",
   "version": "5.15.16",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Qt Base provides the basic non-GUI functionality required by all Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -37,7 +37,6 @@
       "host": true,
       "default-features": false
     },
-    "sqlite3",
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
@@ -81,6 +80,12 @@
       "description": "Build the sql plugin for connecting to postgresql databases",
       "dependencies": [
         "libpq"
+      ]
+    },
+    "sqlite3plugin": {
+      "description": "Build the sql plugin for connecting to sqlite3 databases",
+      "dependencies": [
+        "sqlite3"
       ]
     },
     "vulkan": {
