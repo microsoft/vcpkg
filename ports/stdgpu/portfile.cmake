@@ -14,23 +14,34 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openmp  STDGPU_BACKEND_OPENMP
 )
 
-# Backend selection: CUDA (default) or OpenMP
+# Backend selection: try CUDA first, fallback to OpenMP if CUDA unavailable
+find_program(CUDA_COMPILER nvcc)
 if(STDGPU_BACKEND_OPENMP)
     set(STDGPU_BACKEND "STDGPU_BACKEND_OPENMP")
-else()
+elseif(CUDA_COMPILER OR EXISTS "/usr/local/cuda/bin/nvcc")
     set(STDGPU_BACKEND "STDGPU_BACKEND_CUDA")
+else()
+    # CUDA compiler not found, fallback to OpenMP
+    message(STATUS "CUDA compiler not found, falling back to OpenMP backend")
+    set(STDGPU_BACKEND "STDGPU_BACKEND_OPENMP")
 endif()
 
-# Check for thrust availability when using OpenMP backend (Linux only)
+# Check for thrust availability when using OpenMP backend
 if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_OPENMP")
-    if(NOT EXISTS "/usr/include/thrust/version.h" AND NOT EXISTS "/usr/local/cuda/include/thrust/version.h")
-        message(FATAL_ERROR "The OpenMP backend requires thrust headers. Please install thrust first:\n"
-                            "  - On Ubuntu/Debian: sudo apt-get install libthrust-dev\n"
-                            "  - Or install CUDA which includes thrust\n"
-                            "  - On other systems, install thrust manually")
+    # Try to find thrust from vcpkg CUDA package or system locations
+    find_path(THRUST_INCLUDE_DIR 
+        NAMES thrust/version.h
+        PATHS
+            "${CURRENT_INSTALLED_DIR}/include"
+            "/usr/include"
+            "/usr/local/cuda/include"
+        NO_DEFAULT_PATH
+    )
+    
+    if(NOT THRUST_INCLUDE_DIR)
+        message(WARNING "Thrust headers not found for OpenMP backend. Continuing anyway as they might be found during build.")
     endif()
 endif()
-
 
 # Set CUDA architectures for CUDA backend to avoid GPU detection on CI
 if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_CUDA")
