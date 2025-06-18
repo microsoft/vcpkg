@@ -1,0 +1,34 @@
+From 207ca5423c4d5b0cae2f77e8b755972be36e1095 Mon Sep 17 00:00:00 2001
+From: "sewon.jeon" <sewon.jeon@connecteve.com>
+Date: Wed, 18 Jun 2025 19:00:48 +0900
+Subject: [PATCH] Fix CUDA architecture detection for CI
+
+---
+ cmake/cuda/set_device_flags.cmake | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/cmake/cuda/set_device_flags.cmake b/cmake/cuda/set_device_flags.cmake
+index eba9845..dcae204 100644
+--- a/cmake/cuda/set_device_flags.cmake
++++ b/cmake/cuda/set_device_flags.cmake
+@@ -69,7 +69,16 @@ function(stdgpu_cuda_set_architecture_flags STDGPU_OUTPUT_DEVICE_COMPILE_AND_LIN
+     endforeach()
+ 
+     if(NOT STDGPU_CUDA_HAVE_SUITABLE_GPU)
+-        message(FATAL_ERROR "No CUDA-capable GPU detected")
++        if(DEFINED CMAKE_CUDA_ARCHITECTURES)
++            message(STATUS "No CUDA GPU detected, using user-provided architectures: ${CMAKE_CUDA_ARCHITECTURES}")
++            # Convert CMAKE_CUDA_ARCHITECTURES to stdgpu format
++            foreach(ARCH IN LISTS CMAKE_CUDA_ARCHITECTURES)
++                string(APPEND ${STDGPU_OUTPUT_DEVICE_COMPILE_AND_LINK_FLAGS} " --generate-code arch=compute_${ARCH},code=sm_${ARCH}")
++                message(STATUS "Enabled compilation for CC ${ARCH} (user-provided)")
++            endforeach()
++        else()
++            message(FATAL_ERROR "No CUDA-capable GPU detected and no CMAKE_CUDA_ARCHITECTURES provided")
++        endif()
+     endif()
+ 
+     # Make output variable visible
+-- 
+2.34.1
+

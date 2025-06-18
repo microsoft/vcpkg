@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 1.3.0
     SHA512 ea4999a28e3ee1eccb7ea3033b49ee783dfee9a577e3110ca210cf93f12242926182187e937cfa9b37465ea14e30880beca6a710446b13905d5d5872bdf31a19
     HEAD_REF master
+    PATCHES
+        fix-cuda-architectures.patch
 )
 
 # Copy our fixed Findthrust.cmake
@@ -54,7 +56,7 @@ endif()
 # Set CUDA architectures for CUDA backend to avoid GPU detection on CI
 if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_CUDA")
     # Use a minimal set of common architectures that work on CI
-    set(CUDA_ARCH_OPTIONS -DCMAKE_CUDA_ARCHITECTURES=52)
+    set(CUDA_ARCH_OPTIONS -DCMAKE_CUDA_ARCHITECTURES=native)
 else()
     set(CUDA_ARCH_OPTIONS "")
 endif()
