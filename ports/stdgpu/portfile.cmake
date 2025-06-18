@@ -37,7 +37,7 @@ elseif(BACKEND_COUNT GREATER 1)
     message(FATAL_ERROR "Multiple backends selected. Please enable only one backend feature: cuda, openmp, or hip")
 endif()
 
-# Check for thrust availability when using OpenMP backend
+# Check for thrust availability when using OpenMP backend (Linux only)
 if(STDGPU_BACKEND_OPENMP)
     if(NOT EXISTS "/usr/include/thrust/version.h" AND NOT EXISTS "/usr/local/cuda/include/thrust/version.h")
         message(FATAL_ERROR "The OpenMP backend requires thrust headers. Please install thrust first:\n"

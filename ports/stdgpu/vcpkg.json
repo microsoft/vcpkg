@@ -4,7 +4,7 @@
   "description": "Open-source library providing generic GPU data structures for fast and reliable data management",
   "homepage": "https://github.com/stotko/stdgpu",
   "license": "Apache-2.0",
-  "supports": "!osx",
+  "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -26,10 +26,12 @@
       ]
     },
     "hip": {
-      "description": "Build with experimental HIP backend (requires ROCm/HIP SDK installed)"
+      "description": "Build with experimental HIP backend (requires ROCm/HIP SDK installed)",
+      "supports": "linux"
     },
     "openmp": {
-      "description": "Build with OpenMP backend (requires thrust headers, e.g., from CUDA installation or libthrust-dev package)"
+      "description": "Build with OpenMP backend (requires thrust headers, e.g., from CUDA installation or libthrust-dev package)",
+      "supports": "linux"
     }
   }
 }
