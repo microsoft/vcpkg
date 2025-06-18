@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
   "dependencies": [
+    "cuda",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,10 +21,7 @@
   ],
   "features": {
     "cuda": {
-      "description": "Build with CUDA backend",
-      "dependencies": [
-        "cuda"
-      ]
+      "description": "Build with CUDA backend"
     },
     "hip": {
       "description": "Build with experimental HIP backend (requires ROCm/HIP SDK installed)",

@@ -32,7 +32,10 @@ if(STDGPU_BACKEND_HIP)
 endif()
 
 if(BACKEND_COUNT EQUAL 0)
-    message(FATAL_ERROR "No backend selected. Please enable at least one backend feature: cuda, openmp, or hip")
+    # No backend selected, use CUDA as default
+    message(STATUS "No backend feature specified, using CUDA as default backend")
+    set(STDGPU_BACKEND "STDGPU_BACKEND_CUDA")
+    set(BACKEND_COUNT 1)
 elseif(BACKEND_COUNT GREATER 1)
     message(FATAL_ERROR "Multiple backends selected. Please enable only one backend feature: cuda, openmp, or hip")
 endif()
