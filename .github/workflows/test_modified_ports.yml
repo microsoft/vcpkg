@@ -1,4 +1,6 @@
 name: Test Modified Ports
+permissions:
+  contents: read
 on:
   push:
     branches:
