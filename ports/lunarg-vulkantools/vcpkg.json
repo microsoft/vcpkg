@@ -1,13 +1,24 @@
 {
   "name": "lunarg-vulkantools",
   "version": "1.4.309.0",
+  "port-version": 1,
   "description": "Tools to aid in Vulkan development",
   "homepage": "https://github.com/LunarG/VulkanTools",
   "license": null,
   "supports": "!osx & !staticcrt",
   "dependencies": [
     "jsoncpp",
-    "qt5-base",
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui",
+        "network",
+        "thread",
+        "vulkan",
+        "widgets"
+      ]
+    },
     "valijson",
     {
       "name": "vcpkg-cmake",
