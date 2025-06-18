@@ -9072,6 +9072,10 @@
       "baseline": "2024-06-16",
       "port-version": 2
     },
+    "stdgpu": {
+      "baseline": "1.3.0",
+      "port-version": 0
+    },
     "stduuid": {
       "baseline": "1.2.3",
       "port-version": 0
