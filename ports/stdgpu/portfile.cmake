@@ -11,17 +11,13 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findthrust.cmake" DESTINATION "${SOURCE_PAT
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        cuda    STDGPU_BACKEND_CUDA
         openmp  STDGPU_BACKEND_OPENMP
         hip     STDGPU_BACKEND_HIP
 )
 
-# Ensure exactly one backend is selected
+# Backend selection via vcpkg features only
 set(BACKEND_COUNT 0)
-if(STDGPU_BACKEND_CUDA)
-    math(EXPR BACKEND_COUNT "${BACKEND_COUNT} + 1")
-    set(STDGPU_BACKEND "STDGPU_BACKEND_CUDA")
-endif()
+
 if(STDGPU_BACKEND_OPENMP)
     math(EXPR BACKEND_COUNT "${BACKEND_COUNT} + 1")
     set(STDGPU_BACKEND "STDGPU_BACKEND_OPENMP")
@@ -32,16 +28,13 @@ if(STDGPU_BACKEND_HIP)
 endif()
 
 if(BACKEND_COUNT EQUAL 0)
-    # No backend selected, use CUDA as default
-    message(STATUS "No backend feature specified, using CUDA as default backend")
     set(STDGPU_BACKEND "STDGPU_BACKEND_CUDA")
-    set(BACKEND_COUNT 1)
 elseif(BACKEND_COUNT GREATER 1)
-    message(FATAL_ERROR "Multiple backends selected. Please enable only one backend feature: cuda, openmp, or hip")
+    message(FATAL_ERROR "Multiple backends selected. Please enable only one backend feature: openmp or hip")
 endif()
 
 # Check for thrust availability when using OpenMP backend (Linux only)
-if(STDGPU_BACKEND_OPENMP)
+if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_OPENMP")
     if(NOT EXISTS "/usr/include/thrust/version.h" AND NOT EXISTS "/usr/local/cuda/include/thrust/version.h")
         message(FATAL_ERROR "The OpenMP backend requires thrust headers. Please install thrust first:\n"
                             "  - On Ubuntu/Debian: sudo apt-get install libthrust-dev\n"
@@ -51,7 +44,7 @@ if(STDGPU_BACKEND_OPENMP)
 endif()
 
 # Check for HIP availability when using HIP backend
-if(STDGPU_BACKEND_HIP)
+if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_HIP")
     message(STATUS "HIP backend selected - requires ROCm/HIP SDK to be installed system-wide")
 endif()
 

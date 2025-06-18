@@ -16,19 +16,13 @@
       "host": true
     }
   ],
-  "default-features": [
-    "cuda"
-  ],
   "features": {
-    "cuda": {
-      "description": "Build with CUDA backend"
-    },
     "hip": {
       "description": "Build with experimental HIP backend (requires ROCm/HIP SDK installed)",
       "supports": "linux"
     },
     "openmp": {
-      "description": "Build with OpenMP backend (requires thrust headers, e.g., from CUDA installation or libthrust-dev package)",
+      "description": "Build with OpenMP backend",
       "supports": "linux"
     }
   }
