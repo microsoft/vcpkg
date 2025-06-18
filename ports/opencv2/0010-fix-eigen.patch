@@ -19,7 +19,7 @@ index 077550f..8df4ca6 100644
 -  endif()
 +  find_package(Eigen3 CONFIG REQUIRED)
 +  # Use Eigen3 imported target
-+  list(APPEND OPENCV_LINKER_LIBS Eigen3::Eigen)
++  link_libraries(Eigen3::Eigen)
 +  set(HAVE_EIGEN 1)
 +  set(EIGEN_WORLD_VERSION ${Eigen3_VERSION_MAJOR})
 +  set(EIGEN_MAJOR_VERSION ${Eigen3_VERSION_MINOR})
