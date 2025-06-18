@@ -12,7 +12,7 @@ index d736de3..ef9d35c 100644
      target_compile_definitions(TracyServer PUBLIC TRACY_NO_STATISTICS)
  endif()
 diff --git a/cmake/vendor.cmake b/cmake/vendor.cmake
-index d310f97..768fbc0 100644
+index d310f97..e479bca 100644
 --- a/cmake/vendor.cmake
 +++ b/cmake/vendor.cmake
 @@ -104,15 +104,7 @@ endif()
@@ -45,12 +45,10 @@ index d310f97..768fbc0 100644
  list(TRANSFORM IMGUI_SOURCES PREPEND "${ImGui_SOURCE_DIR}/")
  
  add_library(TracyImGui STATIC EXCLUDE_FROM_ALL ${IMGUI_SOURCES})
-@@ -164,31 +160,7 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
- endif()
- 
+@@ -166,29 +162,8 @@ endif()
  # NFD
--
--if(NOT NO_FILESELECTOR AND NOT EMSCRIPTEN)
+ 
+ if(NOT NO_FILESELECTOR AND NOT EMSCRIPTEN)
 -    if(GTK_FILESELECTOR)
 -        set(NFD_PORTAL OFF)
 -    else()
@@ -65,8 +63,8 @@ index d310f97..768fbc0 100644
 -        OPTIONS
 -            "NFD_PORTAL ${NFD_PORTAL}"
 -    )
--endif()
-+find_package(nfd CONFIG REQUIRED)
++    find_package(nfd CONFIG REQUIRED)
+ endif()
  
  # PPQSort
 -
@@ -79,3 +77,19 @@ index d310f97..768fbc0 100644
 -    EXCLUDE_FROM_ALL TRUE
 -)
 +find_package(PPQSort CONFIG REQUIRED)
+diff --git a/profiler/CMakeLists.txt b/profiler/CMakeLists.txt
+index bd7ddc0..0ca4359 100644
+--- a/profiler/CMakeLists.txt
++++ b/profiler/CMakeLists.txt
+@@ -26,6 +26,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/../cmake/config.cmake)
+ include(${CMAKE_CURRENT_LIST_DIR}/../cmake/vendor.cmake)
+ include(${CMAKE_CURRENT_LIST_DIR}/../cmake/server.cmake)
+ 
++# FIXME: this is a workaround for cmake failing to find nfd which is enabled in vendor.cmake
++if(NOT NO_FILESELECTOR AND NOT EMSCRIPTEN)
++    find_package(nfd CONFIG REQUIRED)
++endif()
++
+ set(SERVER_FILES
+     TracyAchievementData.cpp
+     TracyAchievements.cpp

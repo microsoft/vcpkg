@@ -43,7 +43,6 @@
         },
         "freetype",
         "glfw3",
-        "nativefiledialog-extended",
         "ppqsort"
       ]
     },
