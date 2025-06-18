@@ -10456,6 +10456,10 @@
       "baseline": "2.15.0",
       "port-version": 0
     },
+    "zip": {
+      "baseline": "2025-06-13",
+      "port-version": 0
+    },
     "zix": {
       "baseline": "0.6.2",
       "port-version": 0
