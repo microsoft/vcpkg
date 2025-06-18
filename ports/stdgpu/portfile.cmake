@@ -11,19 +11,31 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findthrust.cmake" DESTINATION "${SOURCE_PAT
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        cuda    STDGPU_BACKEND_CUDA
         openmp  STDGPU_BACKEND_OPENMP
 )
 
-# Backend selection: try CUDA first, fallback to OpenMP if CUDA unavailable
-find_program(CUDA_COMPILER nvcc)
-if(STDGPU_BACKEND_OPENMP)
-    set(STDGPU_BACKEND "STDGPU_BACKEND_OPENMP")
-elseif(CUDA_COMPILER OR EXISTS "/usr/local/cuda/bin/nvcc")
+# Backend selection: ensure exactly one backend is selected
+set(BACKEND_COUNT 0)
+if(STDGPU_BACKEND_CUDA)
+    math(EXPR BACKEND_COUNT "${BACKEND_COUNT} + 1")
     set(STDGPU_BACKEND "STDGPU_BACKEND_CUDA")
-else()
-    # CUDA compiler not found, fallback to OpenMP
-    message(STATUS "CUDA compiler not found, falling back to OpenMP backend")
+endif()
+if(STDGPU_BACKEND_OPENMP)
+    math(EXPR BACKEND_COUNT "${BACKEND_COUNT} + 1")
     set(STDGPU_BACKEND "STDGPU_BACKEND_OPENMP")
+endif()
+
+if(BACKEND_COUNT EQUAL 0)
+    # Default to OpenMP on Linux, error on other platforms
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        set(STDGPU_BACKEND "STDGPU_BACKEND_OPENMP")
+        message(STATUS "No backend specified, defaulting to OpenMP backend")
+    else()
+        message(FATAL_ERROR "No backend selected. Please specify cuda or openmp feature.")
+    endif()
+elseif(BACKEND_COUNT GREATER 1)
+    message(FATAL_ERROR "Multiple backends selected. Please enable only one backend feature: cuda or openmp")
 endif()
 
 # Check for thrust availability when using OpenMP backend
