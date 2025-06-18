@@ -3853,7 +3853,7 @@
       "port-version": 5
     },
     "inipp": {
-      "baseline": "1.0.12",
+      "baseline": "1.0.13",
       "port-version": 0
     },
     "inja": {
