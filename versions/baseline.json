@@ -5093,8 +5093,8 @@
       "port-version": 1
     },
     "libogg": {
-      "baseline": "1.3.5",
-      "port-version": 2
+      "baseline": "1.3.6",
+      "port-version": 0
     },
     "libopenmpt": {
       "baseline": "0.7.13",
