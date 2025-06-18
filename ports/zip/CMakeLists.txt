@@ -10,39 +10,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 
-set(Header_Files "src/zip.h" "src/miniz.h")
-source_group("Header Files" FILES "${Header_Files}")
+add_subdirectory(src)
 
-set(Source_Files "src/zip.c")
-source_group("Source Files" FILES "${Source_Files}")
-
-add_library("${PROJECT_NAME}" "${Header_Files}" "${Source_Files}")
-
-include(GNUInstallDirs)
-target_include_directories(
-        "${PROJECT_NAME}"
-        PRIVATE
-        "$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>"
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-)
-
-# find_package(miniz CONFIG REQUIRED)
-# target_link_libraries("${PROJECT_NAME}" PRIVATE miniz::miniz)
-
-set_target_properties("${PROJECT_NAME}" PROPERTIES LINKER_LANGUAGE C)
-
-#######################################
-# Export / installation configuration #
-#######################################
-
-set_property(TARGET "${PROJECT_NAME}" PROPERTY VERSION "${${PROJECT_NAME}_VERSION}")
-set_property(TARGET "${PROJECT_NAME}" PROPERTY SOVERSION "${${PROJECT_NAME}_VERSION_MAJOR}")
-
-install(TARGETS ${LIBRARY_NAME}
-        EXPORT "${PROJECT_NAME}Targets"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
-
-install(FILES ${Header_Files}
-        TYPE "INCLUDE")
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}Config.cmake"
+        DESTINATION share/${PROJECT_NAME})

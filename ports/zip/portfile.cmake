@@ -9,13 +9,21 @@ vcpkg_from_github(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
      DESTINATION "${SOURCE_PATH}")
 
+file(COPY
+        "${CMAKE_CURRENT_LIST_DIR}/src/CMakeLists.txt"
+        "${CMAKE_CURRENT_LIST_DIR}/src/${PORT}Config.cmake"
+        DESTINATION "${SOURCE_PATH}/src")
+
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
 vcpkg_cmake_install()
 
-# file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/src/${PORT}Config.cmake"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
