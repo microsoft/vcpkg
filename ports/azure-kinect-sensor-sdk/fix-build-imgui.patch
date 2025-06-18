@@ -55,3 +55,18 @@ index 8fe5687..6d1e95a 100644
      }
      if (ImGui::TreeNode("External Sync"))
      {
+diff --git a/tools/k4aviewer/k4aviewerimage.cpp b/tools/k4aviewer/k4aviewerimage.cpp
+index 68899f1..ad23490 100644
+--- a/tools/k4aviewer/k4aviewerimage.cpp
++++ b/tools/k4aviewer/k4aviewerimage.cpp
+@@ -134,7 +134,9 @@ GLenum K4AViewerImage::Create(std::shared_ptr<K4AViewerImage> *out,
+ 
+ K4AViewerImage::operator ImTextureID() const
+ {
+-    return reinterpret_cast<ImTextureID>(static_cast<intptr_t>(m_texture.Id()));
++    // m_texture.Id() : GLUint, 32 bit unsigned
++    // ImTextureID :    ImU64, 64 bit unsigned
++    return m_texture.Id();
+ }
+ 
+ K4AViewerImage::operator GLuint() const
