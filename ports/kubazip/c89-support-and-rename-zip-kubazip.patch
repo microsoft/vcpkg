@@ -1,0 +1,567 @@
+From 784380be4ec04d593fedca966beceb2150cfbda7 Mon Sep 17 00:00:00 2001
+From: Samuel Marks <807580+SamuelMarks@users.noreply.github.com>
+Date: Wed, 18 Jun 2025 12:49:28 -0600
+Subject: [PATCH] C89 support; zip -> kubazip
+
+---
+ CMakeLists.txt      |  33 ++-----
+ src/CMakeLists.txt  |  33 +++++++
+ src/zip.c           | 221 +++++++++++++++++++++++---------------------
+ test/CMakeLists.txt |  16 ++--
+ 4 files changed, 162 insertions(+), 141 deletions(-)
+ create mode 100644 src/CMakeLists.txt
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1df1fc8..06d70c9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,8 +1,8 @@
+ cmake_minimum_required(VERSION 3.14)
+ 
+-project(zip
++project(kubazip
+   LANGUAGES C
+-  VERSION "0.3.0")
++  VERSION "2025.06.13")
+ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+ set(CMAKE_VERBOSE_MAKEFILE ON)
+ 
+@@ -27,29 +27,6 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+ 	add_definitions(-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64)
+ endif()
+ 
+-# zip
+-set(SRC src/miniz.h src/zip.h src/zip.c)
+-
+-add_library(${PROJECT_NAME} ${SRC})
+-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+-
+-if(ZIP_STATIC_PIC)
+-  set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE 1)
+-endif()
+-
+-set_property(TARGET ${PROJECT_NAME} PROPERTY C_VISIBILITY_PRESET hidden)
+-if(BUILD_SHARED_LIBS)
+-  target_compile_definitions(${PROJECT_NAME}
+-    PUBLIC ZIP_SHARED
+-    PRIVATE ZIP_BUILD_SHARED
+-  )
+-endif()
+-
+-target_include_directories(${PROJECT_NAME} PUBLIC
+-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+-  $<INSTALL_INTERFACE:include>
+-)
+-
+ # test
+ if (NOT CMAKE_DISABLE_TESTING)
+   enable_testing()
+@@ -70,7 +47,7 @@ if (MSVC)
+ elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR
+         "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" OR
+         "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -pedantic -Wno-implicit-function-declaration")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -pedantic -Wno-implicit-function-declaration -Wno-long-long")
+ endif (MSVC)
+ 
+ ####
+@@ -85,7 +62,7 @@ endif()
+ ###
+ 
+ set(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
+-set(INCLUDE_INSTALL_DIR "include")
++set(INCLUDE_INSTALL_DIR "include/${PROJECT_NAME}")
+ 
+ set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+ 
+@@ -112,6 +89,8 @@ configure_package_config_file(
+     INSTALL_DESTINATION "${CONFIG_INSTALL_DIR}"
+ )
+ 
++add_subdirectory(src)
++
+ install(
+     FILES "${PROJECT_CONFIG}" "${VERSION_CONFIG}"
+     DESTINATION "${CONFIG_INSTALL_DIR}"
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+new file mode 100644
+index 0000000..9065ad5
+--- /dev/null
++++ b/src/CMakeLists.txt
+@@ -0,0 +1,33 @@
++# zip
++set(Header_Files "miniz.h" "zip.h")
++source_group("Header Files" FILES "${Header_Files}")
++
++set(Source_Files "zip.c")
++source_group("Source Files" FILES "${Source_Files}")
++
++add_library(${PROJECT_NAME} "${Header_Files}" "${Source_Files}")
++add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
++
++if(ZIP_STATIC_PIC)
++    set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE 1)
++endif()
++
++set_property(TARGET ${PROJECT_NAME} PROPERTY C_VISIBILITY_PRESET hidden)
++if(BUILD_SHARED_LIBS)
++    target_compile_definitions(${PROJECT_NAME}
++            PUBLIC ZIP_SHARED
++            PRIVATE ZIP_BUILD_SHARED
++    )
++endif()
++
++include(GNUInstallDirs)
++target_include_directories(${PROJECT_NAME} PUBLIC
++        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
++        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
++        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>"
++)
++
++set_property(TARGET "${PROJECT_NAME}" PROPERTY VERSION "${${PROJECT_NAME}_VERSION}")
++set_property(TARGET "${PROJECT_NAME}" PROPERTY SOVERSION "${${PROJECT_NAME}_VERSION_MAJOR}")
++
++install(FILES ${Header_Files} DESTINATION "${INCLUDE_INSTALL_DIR}/${PROJECT_NAME}")
+diff --git a/src/zip.c b/src/zip.c
+index 39c946d..0a109b0 100644
+--- a/src/zip.c
++++ b/src/zip.c
+@@ -104,7 +104,7 @@ struct zip_t {
+ enum zip_modify_t {
+   MZ_KEEP = 0,
+   MZ_DELETE = 1,
+-  MZ_MOVE = 2,
++  MZ_MOVE = 2
+ };
+ 
+ struct zip_entry_mark_t {
+@@ -250,7 +250,7 @@ static char *zip_strrpl(const char *str, size_t n, char oldchar, char newchar) {
+   return begin;
+ }
+ 
+-static inline int zip_strchr_match(const char *const str, size_t len, char c) {
++static int zip_strchr_match(const char *const str, size_t len, char c) {
+   size_t i;
+   for (i = 0; i < len; ++i) {
+     if (str[i] != c) {
+@@ -440,7 +440,7 @@ out:
+   return err;
+ }
+ 
+-static inline void zip_archive_finalize(mz_zip_archive *pzip) {
++static void zip_archive_finalize(mz_zip_archive *pzip) {
+   mz_zip_writer_finalize_archive(pzip);
+   zip_archive_truncate(pzip);
+ }
+@@ -451,18 +451,18 @@ static ssize_t zip_entry_mark(struct zip_t *zip,
+                               const size_t len) {
+   size_t i = 0;
+   ssize_t err = 0;
++  mz_zip_archive_file_stat file_stat;
++  mz_uint64 d_pos = UINT64_MAX;
+   if (!zip || !entry_mark || !entries) {
+     return ZIP_ENOINIT;
+   }
+ 
+-  mz_zip_archive_file_stat file_stat;
+-  mz_uint64 d_pos = UINT64_MAX;
+   for (i = 0; i < n; ++i) {
++    mz_bool name_matches = MZ_FALSE;
+     if ((err = zip_entry_openbyindex(zip, i))) {
+       return (ssize_t)err;
+     }
+ 
+-    mz_bool name_matches = MZ_FALSE;
+     {
+       size_t j;
+       for (j = 0; j < len; ++j) {
+@@ -508,18 +508,18 @@ static ssize_t zip_entry_markbyindex(struct zip_t *zip,
+                                      const size_t len) {
+   size_t i = 0;
+   ssize_t err = 0;
++  mz_zip_archive_file_stat file_stat;
++  mz_uint64 d_pos = UINT64_MAX;
+   if (!zip || !entry_mark || !entries) {
+     return ZIP_ENOINIT;
+   }
+ 
+-  mz_zip_archive_file_stat file_stat;
+-  mz_uint64 d_pos = UINT64_MAX;
+   for (i = 0; i < n; ++i) {
++    mz_bool matches = MZ_FALSE;
+     if ((err = zip_entry_openbyindex(zip, i))) {
+       return (ssize_t)err;
+     }
+ 
+-    mz_bool matches = MZ_FALSE;
+     {
+       size_t j;
+       for (j = 0; j < len; ++j) {
+@@ -606,8 +606,8 @@ static int zip_entry_finalize(struct zip_t *zip,
+   }
+ 
+   for (i = 0; i < n; ++i) {
+-    local_header_ofs_array[i] = entry_mark[i].m_local_header_ofs;
+     ssize_t index = zip_sort(local_header_ofs_array, i);
++    local_header_ofs_array[i] = entry_mark[i].m_local_header_ofs;
+ 
+     if ((size_t)index != i) {
+       zip_index_update(entry_mark, i, index);
+@@ -615,23 +615,25 @@ static int zip_entry_finalize(struct zip_t *zip,
+     entry_mark[i].file_index = index;
+   }
+ 
+-  size_t *length = (size_t *)calloc(n, sizeof(size_t));
+-  if (!length) {
+-    CLEANUP(local_header_ofs_array);
+-    return ZIP_EOOMEM;
+-  }
+-  for (i = 0; i < n - 1; i++) {
+-    length[i] =
+-        (size_t)(local_header_ofs_array[i + 1] - local_header_ofs_array[i]);
+-  }
+-  length[n - 1] =
+-      (size_t)(zip->archive.m_archive_size - local_header_ofs_array[n - 1]);
++  {
++    size_t *length = (size_t *) calloc(n, sizeof(size_t));
++    if (!length) {
++      CLEANUP(local_header_ofs_array);
++      return ZIP_EOOMEM;
++    }
++    for (i = 0; i < n - 1; i++) {
++      length[i] =
++          (size_t) (local_header_ofs_array[i + 1] - local_header_ofs_array[i]);
++    }
++    length[n - 1] =
++        (size_t) (zip->archive.m_archive_size - local_header_ofs_array[n - 1]);
+ 
+-  for (i = 0; i < n; i++) {
+-    entry_mark[i].lf_length = length[entry_mark[i].file_index];
+-  }
++    for (i = 0; i < n; i++) {
++      entry_mark[i].lf_length = length[entry_mark[i].file_index];
++    }
+ 
+-  CLEANUP(length);
++    CLEANUP(length);
++  }
+   CLEANUP(local_header_ofs_array);
+   return 0;
+ }
+@@ -722,12 +724,12 @@ static ssize_t zip_files_move(struct zip_t *zip, mz_uint64 writen_num,
+   mz_zip_internal_state *pState = zip->archive.m_pState;
+ 
+   mz_uint8 *move_buf = (mz_uint8 *)calloc(1, page_size);
++  ssize_t moved_length = 0;
++  ssize_t move_count = 0;
+   if (!move_buf) {
+     return ZIP_EOOMEM;
+   }
+ 
+-  ssize_t moved_length = 0;
+-  ssize_t move_count = 0;
+   while ((mz_int64)length > 0) {
+     move_count = (length >= page_size) ? page_size : length;
+ 
+@@ -763,15 +765,16 @@ cleanup:
+ 
+ static int zip_central_dir_move(mz_zip_internal_state *pState, int begin,
+                                 int end, int entry_num) {
+-  if (begin == entry_num) {
+-    return 0;
+-  }
+-
+   size_t l_size = 0;
+   size_t r_size = 0;
+   mz_uint32 d_size = 0;
+   mz_uint8 *next = NULL;
+-  mz_uint8 *deleted = &MZ_ZIP_ARRAY_ELEMENT(
++  mz_uint8 *deleted;
++  if (begin == entry_num) {
++    return 0;
++  }
++
++  deleted = &MZ_ZIP_ARRAY_ELEMENT(
+       &pState->m_central_dir, mz_uint8,
+       MZ_ZIP_ARRAY_ELEMENT(&pState->m_central_dir_offsets, mz_uint32, begin));
+   l_size = (size_t)(deleted - (mz_uint8 *)(pState->m_central_dir.m_p));
+@@ -835,6 +838,7 @@ static int zip_central_dir_delete(mz_zip_internal_state *pState,
+ 
+   i = 0;
+   while (i < entry_num) {
++    int k = 0, j;
+     while ((i < entry_num) && (!deleted_entry_index_array[i])) {
+       i++;
+     }
+@@ -846,7 +850,6 @@ static int zip_central_dir_delete(mz_zip_internal_state *pState,
+       i++;
+     }
+     end = i;
+-    int k = 0, j;
+     for (j = end; j < entry_num; j++) {
+       MZ_ZIP_ARRAY_ELEMENT(&pState->m_central_dir_offsets, mz_uint32,
+                            begin + k) =
+@@ -879,60 +882,64 @@ static ssize_t zip_entries_delete_mark(struct zip_t *zip,
+     return ZIP_EOOMEM;
+   }
+ 
+-  mz_zip_internal_state *pState = zip->archive.m_pState;
+-  zip->archive.m_zip_mode = MZ_ZIP_MODE_WRITING;
++  {
++    mz_zip_internal_state *pState = zip->archive.m_pState;
++    zip->archive.m_zip_mode = MZ_ZIP_MODE_WRITING;
+ 
+-  if (pState->m_pFile) {
+-    if (MZ_FSEEK64(pState->m_pFile, 0, SEEK_SET)) {
+-      CLEANUP(deleted_entry_flag_array);
+-      return ZIP_ENOENT;
++    if (pState->m_pFile) {
++      if (MZ_FSEEK64(pState->m_pFile, 0, SEEK_SET)) {
++        CLEANUP(deleted_entry_flag_array);
++        return ZIP_ENOENT;
++      }
+     }
+-  }
+ 
+-  while (i < entry_num) {
+-    while ((i < entry_num) && (entry_mark[i].type == MZ_KEEP)) {
+-      writen_num += entry_mark[i].lf_length;
+-      read_num = writen_num;
+-      i++;
+-    }
++    while (i < entry_num) {
++      while ((i < entry_num) && (entry_mark[i].type == MZ_KEEP)) {
++        writen_num += entry_mark[i].lf_length;
++        read_num = writen_num;
++        i++;
++      }
+ 
+-    while ((i < entry_num) && (entry_mark[i].type == MZ_DELETE)) {
+-      deleted_entry_flag_array[i] = MZ_TRUE;
+-      read_num += entry_mark[i].lf_length;
+-      deleted_length += entry_mark[i].lf_length;
+-      i++;
+-      deleted_entry_num++;
+-    }
++      while ((i < entry_num) && (entry_mark[i].type == MZ_DELETE)) {
++        deleted_entry_flag_array[i] = MZ_TRUE;
++        read_num += entry_mark[i].lf_length;
++        deleted_length += entry_mark[i].lf_length;
++        i++;
++        deleted_entry_num++;
++      }
+ 
+-    while ((i < entry_num) && (entry_mark[i].type == MZ_MOVE)) {
+-      move_length += entry_mark[i].lf_length;
+-      mz_uint8 *p = &MZ_ZIP_ARRAY_ELEMENT(
+-          &pState->m_central_dir, mz_uint8,
+-          MZ_ZIP_ARRAY_ELEMENT(&pState->m_central_dir_offsets, mz_uint32, i));
+-      if (!p) {
+-        CLEANUP(deleted_entry_flag_array);
+-        return ZIP_ENOENT;
++      while ((i < entry_num) && (entry_mark[i].type == MZ_MOVE)) {
++        mz_uint8 *p = &MZ_ZIP_ARRAY_ELEMENT(
++            &pState->m_central_dir, mz_uint8,
++            MZ_ZIP_ARRAY_ELEMENT(&pState->m_central_dir_offsets, mz_uint32, i));
++        move_length += entry_mark[i].lf_length;
++        if (!p) {
++          CLEANUP(deleted_entry_flag_array);
++          return ZIP_ENOENT;
++        }
++        {
++          mz_uint32 offset = MZ_READ_LE32(p + MZ_ZIP_CDH_LOCAL_HEADER_OFS);
++          offset -= (mz_uint32) deleted_length;
++          MZ_WRITE_LE32(p + MZ_ZIP_CDH_LOCAL_HEADER_OFS, offset);
++        }
++        i++;
+       }
+-      mz_uint32 offset = MZ_READ_LE32(p + MZ_ZIP_CDH_LOCAL_HEADER_OFS);
+-      offset -= (mz_uint32)deleted_length;
+-      MZ_WRITE_LE32(p + MZ_ZIP_CDH_LOCAL_HEADER_OFS, offset);
+-      i++;
+-    }
+ 
+-    n = zip_files_move(zip, writen_num, read_num, move_length);
+-    if (n != (ssize_t)move_length) {
+-      CLEANUP(deleted_entry_flag_array);
+-      return n;
++      n = zip_files_move(zip, writen_num, read_num, move_length);
++      if (n != (ssize_t)move_length) {
++        CLEANUP(deleted_entry_flag_array);
++        return n;
++      }
++      writen_num += move_length;
++      read_num += move_length;
+     }
+-    writen_num += move_length;
+-    read_num += move_length;
+-  }
+ 
+-  zip->archive.m_archive_size -= (mz_uint64)deleted_length;
+-  zip->archive.m_total_files =
+-      (mz_uint32)entry_num - (mz_uint32)deleted_entry_num;
++    zip->archive.m_archive_size -= (mz_uint64)deleted_length;
++    zip->archive.m_total_files =
++        (mz_uint32)entry_num - (mz_uint32)deleted_entry_num;
+ 
+-  zip_central_dir_delete(pState, deleted_entry_flag_array, entry_num);
++    zip_central_dir_delete(pState, deleted_entry_flag_array, entry_num);
++  }
+   CLEANUP(deleted_entry_flag_array);
+ 
+   return (ssize_t)deleted_entry_num;
+@@ -1659,6 +1666,7 @@ ssize_t zip_entry_noallocread(struct zip_t *zip, void *buf, size_t bufsize) {
+ ssize_t zip_entry_noallocreadwithoffset(struct zip_t *zip, size_t offset,
+                                         size_t size, void *buf) {
+   mz_zip_archive *pzip = NULL;
++  mz_zip_reader_extract_iter_state *iter;
+ 
+   if (!zip) {
+     // zip_t handler is not initialized
+@@ -1680,49 +1688,50 @@ ssize_t zip_entry_noallocreadwithoffset(struct zip_t *zip, size_t offset,
+     return (ssize_t)ZIP_ENOENT;
+   }
+ 
+-  mz_zip_reader_extract_iter_state *iter =
+-      mz_zip_reader_extract_iter_new(pzip, (mz_uint)zip->entry.index, 0);
++  iter = mz_zip_reader_extract_iter_new(pzip, (mz_uint)zip->entry.index, 0);
+   if (!iter) {
+     return (ssize_t)ZIP_ENORITER;
+   }
+ 
+-  mz_uint8 *writebuf = (mz_uint8 *)buf;
+-  size_t file_offset = 0;
+-  size_t write_cursor = 0;
+-  size_t to_read = size;
++  {
++    mz_uint8 *writebuf = (mz_uint8 *) buf;
++    size_t file_offset = 0;
++    size_t write_cursor = 0;
++    size_t to_read = size;
+ 
+-  // iterate until the requested offset is in range
+-  while (file_offset < zip->entry.uncomp_size && to_read > 0) {
+-    size_t nread = mz_zip_reader_extract_iter_read(
+-        iter, (void *)&writebuf[write_cursor], to_read);
++    // iterate until the requested offset is in range
++    while (file_offset < zip->entry.uncomp_size && to_read > 0) {
++      size_t nread = mz_zip_reader_extract_iter_read(
++        iter, (void *) &writebuf[write_cursor], to_read);
+ 
+-    if (nread == 0)
+-      break;
++      if (nread == 0)
++        break;
++
++      if (offset < (file_offset + nread)) {
++        size_t read_cursor = offset - file_offset;
++        size_t read_size = nread - read_cursor;
++        MZ_ASSERT(read_cursor < size);
+ 
+-    if (offset < (file_offset + nread)) {
+-      size_t read_cursor = offset - file_offset;
+-      MZ_ASSERT(read_cursor < size);
+-      size_t read_size = nread - read_cursor;
++        if (to_read < read_size)
++          read_size = to_read;
++        MZ_ASSERT(read_size <= size);
+ 
+-      if (to_read < read_size)
+-        read_size = to_read;
+-      MZ_ASSERT(read_size <= size);
++        // If it's an unaligned read (i.e. the first one)
++        if (read_cursor != 0) {
++          memmove(&writebuf[write_cursor], &writebuf[read_cursor], read_size);
++        }
+ 
+-      // If it's an unaligned read (i.e. the first one)
+-      if (read_cursor != 0) {
+-        memmove(&writebuf[write_cursor], &writebuf[read_cursor], read_size);
++        write_cursor += read_size;
++        offset += read_size;
++        to_read -= read_size;
+       }
+ 
+-      write_cursor += read_size;
+-      offset += read_size;
+-      to_read -= read_size;
++      file_offset += nread;
+     }
+ 
+-    file_offset += nread;
++    mz_zip_reader_extract_iter_free(iter);
++    return (ssize_t) write_cursor;
+   }
+-
+-  mz_zip_reader_extract_iter_free(iter);
+-  return (ssize_t)write_cursor;
+ }
+ 
+ int zip_entry_fread(struct zip_t *zip, const char *filename) {
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 1bdfccd..ee509b4 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -10,37 +10,37 @@ add_sanitizers(${test_static_out})
+ 
+ set(test_write_out test_write.out)
+ add_executable(${test_write_out} test_write.c)
+-target_link_libraries(${test_write_out} zip)
++target_link_libraries(${test_write_out} ${PROJECT_NAME})
+ add_test(NAME ${test_write_out} COMMAND ${test_write_out})
+ add_sanitizers(${test_write_out})
+ 
+ set(test_append_out test_append.out)
+ add_executable(${test_append_out} test_append.c)
+-target_link_libraries(${test_append_out} zip)
++target_link_libraries(${test_append_out} ${PROJECT_NAME})
+ add_test(NAME ${test_append_out} COMMAND ${test_append_out})
+ add_sanitizers(${test_append_out})
+ 
+ set(test_read_out test_read.out)
+ add_executable(${test_read_out} test_read.c)
+-target_link_libraries(${test_read_out} zip)
++target_link_libraries(${test_read_out} ${PROJECT_NAME})
+ add_test(NAME ${test_read_out} COMMAND ${test_read_out})
+ add_sanitizers(${test_read_out})
+ 
+ set(test_extract_out test_extract.out)
+ add_executable(${test_extract_out} test_extract.c)
+-target_link_libraries(${test_extract_out} zip)
++target_link_libraries(${test_extract_out} ${PROJECT_NAME})
+ add_test(NAME ${test_extract_out} COMMAND ${test_extract_out})
+ add_sanitizers(${test_extract_out})
+ 
+ set(test_entry_out test_entry.out)
+ add_executable(${test_entry_out} test_entry.c)
+-target_link_libraries(${test_entry_out} zip)
++target_link_libraries(${test_entry_out} ${PROJECT_NAME})
+ add_test(NAME ${test_entry_out} COMMAND ${test_entry_out})
+ add_sanitizers(${test_entry_out})
+ 
+ set(test_permissions_out test_permissions.out)
+ add_executable(${test_permissions_out} test_permissions.c)
+-target_link_libraries(${test_permissions_out} zip)
++target_link_libraries(${test_permissions_out} ${PROJECT_NAME})
+ if(LINUX OR UNIX)
+     find_program(UNZIP_PROGRAM unzip)
+     if(UNZIP_PROGRAM)
+@@ -59,12 +59,12 @@ add_sanitizers(${test_permissions_out})
+ 
+ set(test_open_out test_open.out)
+ add_executable(${test_open_out} test_open.c)
+-target_link_libraries(${test_open_out} zip)
++target_link_libraries(${test_open_out} ${PROJECT_NAME})
+ add_test(NAME ${test_open_out} COMMAND ${test_open_out})
+ add_sanitizers(${test_open_out})
+ 
+ set(test_offset_out test_offset.out)
+ add_executable(${test_offset_out} test_offset.c)
+-target_link_libraries(${test_offset_out} zip)
++target_link_libraries(${test_offset_out} ${PROJECT_NAME})
+ add_test(NAME ${test_offset_out} COMMAND ${test_offset_out})
+ add_sanitizers(${test_offset_out})
+\ No newline at end of file
+-- 
+2.50.0
+
