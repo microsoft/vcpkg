@@ -17,7 +17,7 @@
     "zycore"
   ],
   "features": {
-    "tool": {
+    "tools": {
       "description": "Builds zydis executables"
     }
   }

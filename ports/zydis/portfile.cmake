@@ -12,7 +12,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYDIS_BUILD_SHARED_LIB
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tool        ZYDIS_BUILD_TOOLS
+        tools       ZYDIS_BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
@@ -30,7 +30,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zydis)
 
-if ("tool" IN_LIST FEATURES)
+if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ZydisDisasm ZydisInfo AUTO_CLEAN)
 endif()
 
