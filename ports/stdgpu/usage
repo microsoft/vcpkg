@@ -4,6 +4,10 @@ stdgpu provides CMake targets:
     target_link_libraries(main PRIVATE stdgpu::stdgpu)
 
 Installation:
-  - vcpkg install stdgpu          # OpenMP backend (default on Linux)
-  - vcpkg install stdgpu[cuda]    # CUDA backend
-  - vcpkg install stdgpu[openmp]  # OpenMP backend (explicit)
+  - vcpkg install stdgpu          # CUDA backend (default)
+  - vcpkg install stdgpu[cuda]    # CUDA backend (explicit)
+  - vcpkg install stdgpu[openmp]  # OpenMP backend (Linux only)
+
+Platform support:
+  - Windows x64 (not UWP/Xbox): CUDA backend only
+  - Linux x64/ARM64: Both CUDA and OpenMP backends

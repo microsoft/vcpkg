@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
   "dependencies": [
+    "cuda",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,21 +17,15 @@
     }
   ],
   "default-features": [
-    "openmp"
+    "cuda"
   ],
   "features": {
     "cuda": {
-      "description": "Build with CUDA backend",
-      "dependencies": [
-        "cuda"
-      ]
+      "description": "Build with CUDA backend"
     },
     "openmp": {
-      "description": "Build with OpenMP backend (default)",
-      "supports": "linux",
-      "dependencies": [
-        "cuda"
-      ]
+      "description": "Build with OpenMP backend (Linux only)",
+      "supports": "linux"
     }
   }
 }

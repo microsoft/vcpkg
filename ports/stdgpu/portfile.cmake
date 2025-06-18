@@ -27,13 +27,9 @@ if(STDGPU_BACKEND_OPENMP)
 endif()
 
 if(BACKEND_COUNT EQUAL 0)
-    # Default to OpenMP on Linux, error on other platforms
-    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-        set(STDGPU_BACKEND "STDGPU_BACKEND_OPENMP")
-        message(STATUS "No backend specified, defaulting to OpenMP backend")
-    else()
-        message(FATAL_ERROR "No backend selected. Please specify cuda or openmp feature.")
-    endif()
+    # Default to CUDA backend when no features specified
+    set(STDGPU_BACKEND "STDGPU_BACKEND_CUDA")
+    message(STATUS "No backend specified, defaulting to CUDA backend")
 elseif(BACKEND_COUNT GREATER 1)
     message(FATAL_ERROR "Multiple backends selected. Please enable only one backend feature: cuda or openmp")
 endif()
