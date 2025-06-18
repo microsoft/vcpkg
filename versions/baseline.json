@@ -6213,8 +6213,8 @@
       "port-version": 0
     },
     "miniz": {
-      "baseline": "3.0.2",
-      "port-version": 1
+      "baseline": "3.1.0",
+      "port-version": 0
     },
     "minizip": {
       "baseline": "1.3.1",
