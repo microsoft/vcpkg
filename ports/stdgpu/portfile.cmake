@@ -32,12 +32,18 @@ if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_OPENMP")
 endif()
 
 
+# Set CUDA architectures for CUDA backend to avoid GPU detection on CI
+if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_CUDA")
+    # Use a minimal set of common architectures that work on CI
+    set(CUDA_ARCH_OPTIONS -DCMAKE_CUDA_ARCHITECTURES=52)
+else()
+    set(CUDA_ARCH_OPTIONS "")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        # This is the crucial line to add.
-        # This will bypass the GPU auto-detection in stdgpu's build script.
-        -DCMAKE_CUDA_ARCHITECTURES=60;61;70;75;80;86
+        ${CUDA_ARCH_OPTIONS}
         -DSTDGPU_BACKEND=${STDGPU_BACKEND}
         -DSTDGPU_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DSTDGPU_BUILD_TESTS=OFF
