@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f10f489..28ce98a 100644
+index 1cf5b86e4..e79f8819c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -119,6 +119,12 @@ find_package(ZLIB REQUIRED)
+@@ -143,6 +143,12 @@ find_package(ZLIB REQUIRED)
  if(UNIX
     AND NOT (APPLE OR BEOS OR HAIKU)
     AND NOT EMSCRIPTEN)
@@ -15,18 +15,19 @@ index f10f489..28ce98a 100644
    find_library(M_LIBRARY m)
    if(M_LIBRARY)
      set(M_LIBRARY m)
-@@ -208,8 +214,8 @@ if(PNG_HARDWARE_OPTIMIZATIONS)
+@@ -236,9 +242,9 @@ if(PNG_HARDWARE_OPTIMIZATIONS)
  
    # Set definitions and sources for MIPS.
    if(PNG_TARGET_ARCHITECTURE MATCHES "^(mipsel|mips64el)")
 -    set(PNG_MIPS_MSA_POSSIBLE_VALUES on off)
--    set(PNG_MIPS_MSA "on"
 +    set(PNG_MIPS_MSA_POSSIBLE_VALUES on off check)
-+    set(PNG_MIPS_MSA "check"
+     set(PNG_MIPS_MSA
+-        "on"
++        "check"
          CACHE STRING "Enable MIPS_MSA optimizations: on|off; on is default")
      set_property(CACHE PNG_MIPS_MSA
-                 PROPERTY STRINGS ${PNG_MIPS_MSA_POSSIBLE_VALUES})
-@@ -241,6 +247,12 @@ if(PNG_HARDWARE_OPTIMIZATIONS)
+                  PROPERTY STRINGS ${PNG_MIPS_MSA_POSSIBLE_VALUES})
+@@ -271,6 +277,12 @@ if(PNG_HARDWARE_OPTIMIZATIONS)
            mips/filter_msa_intrinsics.c)
        add_definitions(-DPNG_MIPS_MSA_OPT=2)
        add_definitions(-DPNG_MIPS_MMI_OPT=0)
@@ -39,7 +40,7 @@ index f10f489..28ce98a 100644
      elseif(PNG_MIPS_MMI STREQUAL "on")
        set(libpng_mips_sources
            mips/mips_init.c
-@@ -594,7 +606,7 @@ else()
+@@ -665,7 +677,7 @@ else()
    # We also need to use a custom suffix, in order to distinguish between the
    # shared import library name and the static library name.
    set(PNG_SHARED_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}")
@@ -48,37 +49,38 @@ index f10f489..28ce98a 100644
  endif()
  
  if(PNG_SHARED)
-@@ -858,9 +870,9 @@ if(PNG_TESTS AND PNG_SHARED)
+@@ -943,10 +955,10 @@ if(PNG_TESTS AND PNG_SHARED)
                 FILES ${PNGSUITE_PNGS})
  endif()
  
 -if(PNG_SHARED AND PNG_TOOLS)
 +if(PNG_TOOLS)
    add_executable(pngfix ${pngfix_sources})
--  target_link_libraries(pngfix PRIVATE png_shared)
-+  target_link_libraries(pngfix PRIVATE $<TARGET_NAME_IF_EXISTS:png_shared> $<TARGET_NAME_IF_EXISTS:png_static>) # in vcpkg there's only one
+   target_link_libraries(pngfix
+-                        PRIVATE png_shared)
++                        PRIVATE $<TARGET_NAME_IF_EXISTS:png_shared> $<TARGET_NAME_IF_EXISTS:png_static>) # in vcpkg there's only one
    set(PNG_BIN_TARGETS pngfix)
  
    add_executable(png-fix-itxt ${png_fix_itxt_sources})
-@@ -944,12 +956,15 @@ endif()
+@@ -1030,12 +1042,15 @@ endif()
  # We use the same files like ./configure, so we have to set its vars.
  # Only do this on Windows for Cygwin - the files don't make much sense
  # outside of a UNIX look-alike.
 -if(NOT WIN32 OR CYGWIN OR MINGW)
 +if(1)
-   set(prefix      ${CMAKE_INSTALL_PREFIX})
+   set(prefix ${CMAKE_INSTALL_PREFIX})
    set(exec_prefix ${CMAKE_INSTALL_PREFIX})
-   set(libdir      ${CMAKE_INSTALL_FULL_LIBDIR})
-   set(includedir  ${CMAKE_INSTALL_FULL_INCLUDEDIR})
--  set(LIBS        "-lz -lm")
-+  set(LIBS        "")
+   set(libdir ${CMAKE_INSTALL_FULL_LIBDIR})
+   set(includedir ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+-  set(LIBS "-lz -lm")
++  set(LIBS "")
 +  if(M_LIBRARY)
 +    string(APPEND LIBS "-lm")
 +  endif()
    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpng.pc.in
                   ${CMAKE_CURRENT_BINARY_DIR}/libpng${PNGLIB_ABI_VERSION}.pc
                   @ONLY)
-@@ -1008,6 +1023,9 @@ if(NOT SKIP_INSTALL_PROGRAMS AND NOT SKIP_INSTALL_ALL)
+@@ -1094,6 +1109,9 @@ if(NOT SKIP_INSTALL_PROGRAMS AND NOT SKIP_INSTALL_ALL)
  endif()
  
  if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL)
