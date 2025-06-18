@@ -35,6 +35,9 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        # This is the crucial line to add.
+        # This will bypass the GPU auto-detection in stdgpu's build script.
+        -DCMAKE_CUDA_ARCHITECTURES=60;61;70;75;80;86
         -DSTDGPU_BACKEND=${STDGPU_BACKEND}
         -DSTDGPU_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DSTDGPU_BUILD_TESTS=OFF
