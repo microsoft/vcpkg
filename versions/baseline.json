@@ -6452,6 +6452,10 @@
       "baseline": "2.1.1",
       "port-version": 0
     },
+    "mzying2001-sw": {
+      "baseline": "0.0.2",
+      "port-version": 0
+    },
     "nameof": {
       "baseline": "0.10.4",
       "port-version": 0
@@ -9210,10 +9214,6 @@
     },
     "superlu": {
       "baseline": "7.0.0",
-      "port-version": 0
-    },
-    "sw-gui": {
-      "baseline": "0.0.1",
       "port-version": 0
     },
     "swenson-sort": {
