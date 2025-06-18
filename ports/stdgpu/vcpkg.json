@@ -15,6 +15,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "cuda"
+  ],
   "features": {
     "cuda": {
       "description": "Build with CUDA backend",
