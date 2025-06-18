@@ -17,10 +17,6 @@
     }
   ],
   "features": {
-    "hip": {
-      "description": "Build with experimental HIP backend (requires ROCm/HIP SDK installed)",
-      "supports": "linux"
-    },
     "openmp": {
       "description": "Build with OpenMP backend",
       "supports": "linux"

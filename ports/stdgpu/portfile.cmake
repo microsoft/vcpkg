@@ -12,25 +12,13 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/Findthrust.cmake" DESTINATION "${SOURCE_PAT
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         openmp  STDGPU_BACKEND_OPENMP
-        hip     STDGPU_BACKEND_HIP
 )
 
-# Backend selection via vcpkg features only
-set(BACKEND_COUNT 0)
-
+# Backend selection: CUDA (default) or OpenMP
 if(STDGPU_BACKEND_OPENMP)
-    math(EXPR BACKEND_COUNT "${BACKEND_COUNT} + 1")
     set(STDGPU_BACKEND "STDGPU_BACKEND_OPENMP")
-endif()
-if(STDGPU_BACKEND_HIP)
-    math(EXPR BACKEND_COUNT "${BACKEND_COUNT} + 1")
-    set(STDGPU_BACKEND "STDGPU_BACKEND_HIP")
-endif()
-
-if(BACKEND_COUNT EQUAL 0)
+else()
     set(STDGPU_BACKEND "STDGPU_BACKEND_CUDA")
-elseif(BACKEND_COUNT GREATER 1)
-    message(FATAL_ERROR "Multiple backends selected. Please enable only one backend feature: openmp or hip")
 endif()
 
 # Check for thrust availability when using OpenMP backend (Linux only)
@@ -43,10 +31,6 @@ if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_OPENMP")
     endif()
 endif()
 
-# Check for HIP availability when using HIP backend
-if(STDGPU_BACKEND STREQUAL "STDGPU_BACKEND_HIP")
-    message(STATUS "HIP backend selected - requires ROCm/HIP SDK to be installed system-wide")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

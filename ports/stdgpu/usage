@@ -3,16 +3,6 @@ stdgpu provides CMake targets:
     find_package(stdgpu REQUIRED)
     target_link_libraries(main PRIVATE stdgpu::stdgpu)
 
-Backend selection:
+Installation:
   - vcpkg install stdgpu          # CUDA backend (default)
   - vcpkg install stdgpu[openmp]  # OpenMP backend (Linux only)
-  - vcpkg install stdgpu[hip]     # HIP backend (Linux only, requires ROCm/HIP SDK)
-
-Platform support: 
-  - Windows x64 (not UWP/Xbox) - CUDA backend only
-  - Linux x64 and ARM64 - All backends
-
-Dependencies:
-  - CUDA backend: Automatically installs CUDA via vcpkg
-  - OpenMP backend: Requires system thrust headers (Linux only)
-  - HIP backend: Requires ROCm/HIP SDK installed system-wide (Linux only)
