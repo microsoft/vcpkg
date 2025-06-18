@@ -1545,7 +1545,7 @@
       "port-version": 0
     },
     "capnproto": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "capstone": {
