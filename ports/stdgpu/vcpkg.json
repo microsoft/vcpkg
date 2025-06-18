@@ -23,10 +23,7 @@
       ]
     },
     "hip": {
-      "description": "Build with experimental HIP backend",
-      "dependencies": [
-        "hip"
-      ]
+      "description": "Build with experimental HIP backend (requires ROCm/HIP SDK installed)"
     },
     "openmp": {
       "description": "Build with OpenMP backend (requires thrust headers, e.g., from CUDA installation or libthrust-dev package)"

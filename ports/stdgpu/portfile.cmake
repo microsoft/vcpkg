@@ -47,6 +47,11 @@ if(STDGPU_BACKEND_OPENMP)
     endif()
 endif()
 
+# Check for HIP availability when using HIP backend
+if(STDGPU_BACKEND_HIP)
+    message(STATUS "HIP backend selected - requires ROCm/HIP SDK to be installed system-wide")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
