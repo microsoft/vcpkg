@@ -85,7 +85,10 @@
     "sqlite3plugin": {
       "description": "Build the sql plugin for connecting to sqlite3 databases",
       "dependencies": [
-        "sqlite3"
+        {
+          "name": "sqlite3",
+          "default-features": false
+        }
       ]
     },
     "vulkan": {

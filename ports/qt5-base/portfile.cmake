@@ -14,11 +14,6 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-set(WITH_SQLITE3_PLUGIN OFF)
-if("sqlite3plugin" IN_LIST FEATURES)
-    set(WITH_SQLITE3_PLUGIN ON)
-endif()
-
 set(WITH_PGSQL_PLUGIN OFF)
 if("postgresqlplugin" IN_LIST FEATURES)
     set(WITH_PGSQL_PLUGIN ON)
@@ -132,11 +127,6 @@ else()
     list(APPEND CORE_OPTIONS -dbus-runtime)
 endif()
 
-if(WITH_SQLITE3_PLUGIN)
-    list(APPEND CORE_OPTIONS -system-sqlite)
-else()
-    list(APPEND CORE_OPTIONS -no-sql-sqlite)
-endif()
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
 else()
@@ -230,7 +220,6 @@ set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DE
 
 # If HarfBuzz is built with GLib enabled, it must be statically link
 x_vcpkg_pkgconfig_get_modules(PREFIX harfbuzz MODULES harfbuzz LIBRARIES)
-x_vcpkg_pkgconfig_get_modules(PREFIX sqlite3 MODULES sqlite3 LIBRARIES)
 
 set(RELEASE_OPTIONS
             "LIBJPEG_LIBS=${JPEG_RELEASE}"
@@ -238,7 +227,6 @@ set(RELEASE_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
             "FREETYPE_LIBS=${FREETYPE_RELEASE_ALL}"
-            "SQLITE_LIBS=${sqlite3_LIBRARIES_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
@@ -249,11 +237,19 @@ set(DEBUG_OPTIONS
             "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
             "FREETYPE_LIBS=${FREETYPE_DEBUG_ALL}"
-            "SQLITE_LIBS=${sqlite3_LIBRARIES_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
+
+if("sqlite3" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -system-sqlite)
+    x_vcpkg_pkgconfig_get_modules(PREFIX sqlite3 MODULES sqlite3 LIBRARIES)
+    list(APPEND RELEASE_OPTIONS "SQLITE_LIBS=${sqlite3_LIBRARIES_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "SQLITE_LIBS=${sqlite3_LIBRARIES_DEBUG}")
+else()
+    list(APPEND CORE_OPTIONS -no-sql-sqlite)
+endif()
 
 if("icu" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS -icu)
