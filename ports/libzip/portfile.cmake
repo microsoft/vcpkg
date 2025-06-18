@@ -2,12 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nih-at/libzip
     REF "v${VERSION}"
-    SHA512 cf7795ba52685bfc90cf4a3f993d29d6e27eabaca486098e04971fca31ab90a887194e6a77a5a9e19ade1a1d0855400c8108aa79724618f4204b1ba8d5e42c9d
+    SHA512 940a6e1145d6e0f2bd40577b4fa13f9c8e2115b267fb632dfb2443998a67d3e5de9a2026df5380c9b1b2fb181967d2f4dfd0929a9970d8bb196079a153a17bcc
     HEAD_REF master
     PATCHES
         fix-dependency.patch
         use-requires.patch
-        initialize-have_dos_time.patch # https://github.com/nih-at/libzip/commit/aa3a6b4da7577de63581f8db2f9d2757481b4cc8
 )
 
 vcpkg_check_features(
