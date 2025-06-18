@@ -12,13 +12,13 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        bzip2 ENABLE_BZIP2
-        liblzma ENABLE_LZMA
-        zstd ENABLE_ZSTD
-        openssl ENABLE_OPENSSL
-        wincrypto ENABLE_WINDOWS_CRYPTO
-        commoncrypto ENABLE_COMMONCRYPTO
-        mbedtls ENABLE_MBEDTLS
+        bzip2           ENABLE_BZIP2
+        commoncrypto    ENABLE_COMMONCRYPTO
+        liblzma         ENABLE_LZMA
+        mbedtls         ENABLE_MBEDTLS
+        openssl         ENABLE_OPENSSL
+        wincrypto       ENABLE_WINDOWS_CRYPTO
+        zstd            ENABLE_ZSTD
 )
 
 vcpkg_cmake_configure(
@@ -34,16 +34,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libzip)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libzip")
 vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Remove include directories from lib
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libzip" "${CURRENT_PACKAGES_DIR}/debug/lib/libzip")
-
-# Remove debug include
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-# Copy copright information
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
