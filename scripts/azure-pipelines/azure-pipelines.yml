@@ -20,11 +20,6 @@ jobs:
 #     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
 #     tripletPattern: ${{ parameters.tripletPattern }}
 - job: A
-  env:
-    A: ${{ variables['Build.SourceBranchName'] }}
-    B: ${{ startsWith(variables['Build.SourceBranchName'], 'copilot/') }}
-    C: ${{ variables['Build.QueuedBy'] }}
-    D: ${{ variables['Build.QueuedById'] }}
   steps:
   - script: |
       echo Build.SourceBranchName: $(A)
@@ -50,6 +45,11 @@ jobs:
       echo SYSTEM_STAGEID: $(SYSTEM_STAGEID)
       echo SYSTEM_STAGENAME: $(SYSTEM_STAGENAME)
       echo SYSTEM_DEBUG: $(SYSTEM_DEBUG)
+    env:
+      A: ${{ variables['Build.SourceBranchName'] }}
+      B: ${{ startsWith(variables['Build.SourceBranchName'], 'copilot/') }}
+      C: ${{ variables['Build.QueuedBy'] }}
+      D: ${{ variables['Build.QueuedById'] }}
   - ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
     - script: echo StartsWith
   - ${{ if not(startsWith(variables['Build.SourceBranchName'], 'copilot/')) }}:
