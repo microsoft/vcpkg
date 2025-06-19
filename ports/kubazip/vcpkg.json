@@ -1,6 +1,6 @@
 {
   "name": "kubazip",
-  "version-date": "2025-06-13",
+  "version-date": "2025-06-18",
   "description": "A portable, simple zip library written in C",
   "homepage": "https://github.com/kuba--/zip",
   "license": "MIT",
