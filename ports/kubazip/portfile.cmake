@@ -8,13 +8,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-include(GNUInstallDirs)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DISABLE_TESTING="ON"
-        -DNEW_PROJECT_NAME="kubazip"
-        -DNEW_INSTALL_PATH="${CMAKE_INSTALL_INCLUDEDIR}/${PORT}"
+        "-DCMAKE_DISABLE_TESTING=ON"
+        "-DNEW_PROJECT_NAME=kubazip"
+        "-DNEW_INSTALL_PATH=include/${PORT}"
 )
 
 vcpkg_cmake_install()
