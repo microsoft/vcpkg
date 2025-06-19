@@ -242,7 +242,7 @@ set(DEBUG_OPTIONS
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
 
-if("sqlite3" IN_LIST FEATURES)
+if("sqlite3plugin" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS -system-sqlite)
     x_vcpkg_pkgconfig_get_modules(PREFIX sqlite3 MODULES sqlite3 LIBRARIES)
     list(APPEND RELEASE_OPTIONS "SQLITE_LIBS=${sqlite3_LIBRARIES_RELEASE}")
