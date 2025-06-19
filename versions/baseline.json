@@ -7437,8 +7437,8 @@
       "port-version": 7
     },
     "portmidi": {
-      "baseline": "2.0.4",
-      "port-version": 3
+      "baseline": "2.0.6",
+      "port-version": 0
     },
     "portsmf": {
       "baseline": "239",
