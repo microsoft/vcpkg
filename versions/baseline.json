@@ -5162,7 +5162,7 @@
     },
     "libplist": {
       "baseline": "2.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libpmemobj-cpp": {
       "baseline": "1.13.0",
