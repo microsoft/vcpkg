@@ -89,7 +89,7 @@ index 6551dcb..718ac04 100644
  @PACKAGE_INIT@
 +include(CMakeFindDependencyMacro)
 +
-+if(NOT @BUILD_SHARED_LIBS@)
++if(NOT "@BUILD_SHARED_LIBS@")
 +    find_dependency(zip CONFIG)
 +    find_dependency(unofficial-minizip CONFIG)
 +    find_dependency(pugixml CONFIG)
@@ -352,7 +352,7 @@ index 8728188..3d82854 100644
    INCLUDE_DIRECTORIES(
        ${IRRXML_INCLUDE_DIR}
        ../contrib/openddlparser/include
-@@ -1483,18 +1477,22 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1483,21 +1477,25 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
    $<INSTALL_INTERFACE:${ASSIMP_INCLUDE_INSTALL_DIR}>
@@ -382,7 +382,11 @@ index 8728188..3d82854 100644
 -      stb::stb
    )
    if(TARGET zip::zip)
-     target_link_libraries(assimp PUBLIC zip::zip)
+-    target_link_libraries(assimp PUBLIC zip::zip)
++    target_link_libraries(assimp PRIVATE zip::zip)
+   endif()
+ 
+   if (ASSIMP_BUILD_DRACO)
 @@ -1520,9 +1518,9 @@ if(ASSIMP_ANDROID_JNIIOSYSTEM)
  endif()
  
