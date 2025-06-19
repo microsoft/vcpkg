@@ -21,7 +21,7 @@ jobs:
 #     tripletPattern: ${{ parameters.tripletPattern }}
 - job: A
   pool:
-    vmImage: 'ubuntu-latest'
+    name: PrAnd-WUS
   steps:
   - script: |
       echo Build.SourceBranchName: $(A)
