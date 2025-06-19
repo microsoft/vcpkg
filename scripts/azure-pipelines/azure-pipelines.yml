@@ -20,6 +20,8 @@ jobs:
 #     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
 #     tripletPattern: ${{ parameters.tripletPattern }}
 - job: A
+  pool:
+    vmImage: 'ubuntu-latest'
   steps:
   - script: |
       echo Build.SourceBranchName: $(A)
@@ -50,6 +52,10 @@ jobs:
       B: ${{ startsWith(variables['Build.SourceBranchName'], 'copilot/') }}
       C: ${{ variables['Build.QueuedBy'] }}
       D: ${{ variables['Build.QueuedById'] }}
+      E: ${{ variables['Build.RequestedFor'] }}
+      F: ${{ variables['System.PullRequest.SourceBranch'] }}
+      G: ${{ variables['Build.RequestedForId'] }}
+      H: ${{ variables['Build.RequestedForEmail'] }}
   - ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
     - script: echo StartsWith
   - ${{ if not(startsWith(variables['Build.SourceBranchName'], 'copilot/')) }}:
