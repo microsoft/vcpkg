@@ -1,6 +1,6 @@
 {
   "name": "libnick",
-  "version": "2025.5.3",
+  "version": "2025.6.3",
   "maintainers": "Nicholas Logozzo nlogozzo225@gmail.com",
   "description": "A cross-platform base for native Nickvision applications.",
   "homepage": "https://github.com/NickvisionApps/libnick",
@@ -20,10 +20,6 @@
       "platform": "linux"
     },
     "maddy",
-    {
-      "name": "openssl",
-      "platform": "linux | osx"
-    },
     {
       "name": "sqlcipher",
       "platform": "windows"
