@@ -20,13 +20,18 @@ jobs:
 #     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
 #     tripletPattern: ${{ parameters.tripletPattern }}
 - job: A
+  env:
+    A: ${{ variables['Build.SourceBranchName'] }}
+    B: ${{ startsWith(variables['Build.SourceBranchName'], 'copilot/') }}
+    C: ${{ variables['Build.QueuedBy'] }}
+    D: ${{ variables['Build.QueuedById'] }}
   steps:
   - script: |
-      echo Build.SourceBranchName: ${{ variables['Build.SourceBranchName'] }}
+      echo Build.SourceBranchName: $(A)
       echo Build.SourceBranchName: $(Build.SourceBranchName)
-      echo startsWith: ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}
-      echo Build.QueuedBy: ${{ variables['Build.QueuedBy'] }}
-      echo Build.QueuedById: ${{ variables['Build.QueuedById'] }}
+      echo startsWith: $(B)
+      echo Build.QueuedBy: $(C)
+      echo Build.QueuedById: $(D)
       echo System.PullRequest.SourceBranch: $(System.PullRequest.SourceBranch)
       echo System.PullRequest.PullRequestId: $(System.PullRequest.PullRequestId)
       echo Build.RequestedFor: $(Build.RequestedFor)
