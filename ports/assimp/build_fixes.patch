@@ -90,7 +90,7 @@ index 6551dcb..718ac04 100644
 +include(CMakeFindDependencyMacro)
 +
 +if(NOT @BUILD_SHARED_LIBS@)
-+    find_dependency(kubazip CONFIG)
++    find_dependency(zip CONFIG)
 +    find_dependency(unofficial-minizip CONFIG)
 +    find_dependency(pugixml CONFIG)
 +    find_dependency(poly2tri CONFIG)
@@ -265,18 +265,16 @@ index 8728188..3d82854 100644
    find_package(minizip CONFIG REQUIRED)
  ELSE()
    SET( unzip_SRCS
-@@ -1188,9 +1183,8 @@ ENDIF()
+@@ -1188,8 +1183,7 @@ ENDIF()
  # zip (https://github.com/kuba--/zip)
  separate_arguments(ASSIMP_EXPORTERS_LIST UNIX_COMMAND ${ASSIMP_EXPORTERS_ENABLED})
  IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
 -  IF(ASSIMP_HUNTER_ENABLED)
 -    hunter_add_package(zip)
--    find_package(zip CONFIG REQUIRED)
 +  IF(1)
-+    find_package(kubazip CONFIG REQUIRED)
+     find_package(zip CONFIG REQUIRED)
    ELSE()
      SET( ziplib_SRCS
-       ../contrib/zip/src/miniz.h
 @@ -1210,7 +1204,7 @@ IF(3MF IN_LIST ASSIMP_EXPORTERS_LIST)
  ENDIF()
  
@@ -354,7 +352,7 @@ index 8728188..3d82854 100644
    INCLUDE_DIRECTORIES(
        ${IRRXML_INCLUDE_DIR}
        ../contrib/openddlparser/include
-@@ -1483,21 +1477,25 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1483,18 +1477,22 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
    $<INSTALL_INTERFACE:${ASSIMP_INCLUDE_INSTALL_DIR}>
@@ -383,13 +381,8 @@ index 8728188..3d82854 100644
        pugixml
 -      stb::stb
    )
--  if(TARGET zip::zip)
--    target_link_libraries(assimp PUBLIC zip::zip)
-+  if(1)
-+    target_link_libraries(assimp PRIVATE kubazip::kubazip)
-   endif()
- 
-   if (ASSIMP_BUILD_DRACO)
+   if(TARGET zip::zip)
+     target_link_libraries(assimp PUBLIC zip::zip)
 @@ -1520,9 +1518,9 @@ if(ASSIMP_ANDROID_JNIIOSYSTEM)
  endif()
  
