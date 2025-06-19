@@ -14,122 +14,152 @@ parameters:
 jobs:
 # For Copilot builds, x64_linux runs first and all other jobs depend on it
 # For regular builds, all jobs run in parallel
-- template: linux/azure-pipelines.yml
-  parameters:
-    jobName: x64_linux
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
+# - template: linux/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_linux
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+- job: A
+  steps:
+  - script: |
+      echo Build.SourceBranchName: ${{ variables['Build.SourceBranchName'] }}
+      echo Build.SourceBranchName: $(Build.SourceBranchName)
+      echo startsWith: ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}
+      echo Build.QueuedBy: ${{ variables['Build.QueuedBy'] }}
+      echo Build.QueuedById: ${{ variables['Build.QueuedById'] }}
+      echo System.PullRequest.SourceBranch: $(System.PullRequest.SourceBranch)
+      echo System.PullRequest.PullRequestId: $(System.PullRequest.PullRequestId)
+      echo Build.RequestedFor: $(Build.RequestedFor)
+      echo Build.RequestedForId: $(Build.RequestedForId)
+      echo Build.RequestedForEmail: $(Build.RequestedForEmail)
+      echo Build.Reason: $(Build.Reason)
+      echo Agent.JobName: $(Agent.JobName)
+      echo SYSTEM_ACCESSTOKEN: $(SYSTEM_ACCESSTOKEN)
+      echo SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: $(SYSTEM_TEAMFOUNDATIONCOLLECTIONURI)
+      echo SYSTEM_TEAMPROJECT: $(SYSTEM_TEAMPROJECT)
+      echo SYSTEM_DEFINITIONNAME: $(SYSTEM_DEFINITIONNAME)
+      echo SYSTEM_JOBDISPLAYNAME: $(SYSTEM_JOBDISPLAYNAME)
+      echo SYSTEM_JOBID: $(SYSTEM_JOBID)
+      echo SYSTEM_JOBNAME: $(SYSTEM_JOBNAME)
+      echo SYSTEM_STAGEDISPLAYNAME: $(SYSTEM_STAGEDISPLAYNAME)
+      echo SYSTEM_STAGEID: $(SYSTEM_STAGEID)
+      echo SYSTEM_STAGENAME: $(SYSTEM_STAGENAME)
+      echo SYSTEM_DEBUG: $(SYSTEM_DEBUG)
+  - ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+    - script: echo StartsWith
+  - ${{ if not(startsWith(variables['Build.SourceBranchName'], 'copilot/')) }}:
+    - script: echo not StartsWith
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x86_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x86_windows
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_windows
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_release
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_windows_release
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_static
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_windows_static
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_windows_static_md
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_windows_static_md
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: x64_uwp
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_uwp
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_windows
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_windows
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_windows_static_md
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_windows_static_md
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_uwp
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: windows/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_uwp
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: osx/azure-pipelines.yml
-  parameters:
-    jobName: x64_osx
-    poolName: 'PrOsx-2025-01-24'
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: osx/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_osx
+#     poolName: 'PrOsx-2025-01-24'
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: osx/azure-pipelines.yml
-  parameters:
-    jobName: arm64_osx
-    poolName: 'PrOsx-2025-01-24-arm64'
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: osx/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_osx
+#     poolName: 'PrOsx-2025-01-24-arm64'
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: arm_neon_android
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: android/azure-pipelines.yml
+#   parameters:
+#     jobName: arm_neon_android
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: x64_android
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: android/azure-pipelines.yml
+#   parameters:
+#     jobName: x64_android
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
 
-- template: android/azure-pipelines.yml
-  parameters:
-    jobName: arm64_android
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-    ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
-      dependsOn: x64_linux
+# - template: android/azure-pipelines.yml
+#   parameters:
+#     jobName: arm64_android
+#     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+#     tripletPattern: ${{ parameters.tripletPattern }}
+#     ${{ if startsWith(variables['Build.SourceBranchName'], 'copilot/') }}:
+#       dependsOn: x64_linux
