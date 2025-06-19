@@ -6,6 +6,7 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         01-fix-findudev-module.patch
         02-fix-dependency-resolve.patch
+        03-fix-android-install-path.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)

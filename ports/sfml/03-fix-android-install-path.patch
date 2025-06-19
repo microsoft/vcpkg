@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8a11523..f03bf6e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -82,10 +82,10 @@ if(SFML_OS_ANDROID)
+     list(PREPEND CMAKE_FIND_ROOT_PATH "${PROJECT_SOURCE_DIR}")
+ 
+     # install everything in $NDK/sources/ because this path is appended by the NDK (convenient)
+-    set(CMAKE_INSTALL_PREFIX ${CMAKE_ANDROID_NDK}/sources/third_party/sfml)
++    #set(CMAKE_INSTALL_PREFIX ${CMAKE_ANDROID_NDK}/sources/third_party/sfml)
+ 
+     # we install libs in a subdirectory named after the ABI
+-    set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}/${CMAKE_ANDROID_ARCH_ABI}")
++    #set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}/${CMAKE_ANDROID_ARCH_ABI}")
+ endif()
+ 
+ # Install directories
+@@ -97,7 +97,7 @@ elseif(SFML_OS_LINUX OR SFML_OS_FREEBSD OR SFML_OS_OPENBSD OR SFML_OS_NETBSD)
+ elseif(SFML_OS_MACOS)
+     set(DEFAULT_INSTALL_MISC_DIR /usr/local/share/SFML)
+ elseif(SFML_OS_ANDROID)
+-    set(DEFAULT_INSTALL_MISC_DIR ${CMAKE_ANDROID_NDK}/sources/third_party/sfml)
++    #set(DEFAULT_INSTALL_MISC_DIR ${CMAKE_ANDROID_NDK}/sources/third_party/sfml)
+ endif()
+ 
+ # force building sfml-window, if sfml-graphics module is built
