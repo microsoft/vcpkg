@@ -1,8 +1,8 @@
 diff --git a/cmake/OpenCVFindLibsPerf.cmake b/cmake/OpenCVFindLibsPerf.cmake
-index 077550f..8df4ca6 100644
+index 077550f..8a73058 100644
 --- a/cmake/OpenCVFindLibsPerf.cmake
 +++ b/cmake/OpenCVFindLibsPerf.cmake
-@@ -26,17 +26,13 @@ endif(WITH_CUDA)
+@@ -26,17 +26,15 @@ endif(WITH_CUDA)
  
  # --- Eigen ---
  if(WITH_EIGEN)
@@ -19,7 +19,9 @@ index 077550f..8df4ca6 100644
 -  endif()
 +  find_package(Eigen3 CONFIG REQUIRED)
 +  # Use Eigen3 imported target
-+  link_libraries(Eigen3::Eigen)
++  list(APPEND OPENCV_LINKER_LIBS Eigen3::Eigen)
++  get_target_property(Eigen3_INCLUDE_DIRS Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
++  ocv_include_directories(${Eigen3_INCLUDE_DIRS})
 +  set(HAVE_EIGEN 1)
 +  set(EIGEN_WORLD_VERSION ${Eigen3_VERSION_MAJOR})
 +  set(EIGEN_MAJOR_VERSION ${Eigen3_VERSION_MINOR})
