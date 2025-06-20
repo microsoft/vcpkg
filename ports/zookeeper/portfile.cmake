@@ -2,12 +2,15 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 string(REGEX REPLACE "^([0-9]+[.][0-9]+[.][0-9]+)[.]([0-9]+)\$" "\\1-\\2" VERSION "${VERSION}")
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/zookeeper
-    REF "release-${VERSION}"
-    SHA512 98e42f35dd369e322439d87d0f7da13b78eaeb092f259c0eca9e5bd4971e297b9bbf5a3292b4f9e4e5a5f5f7f4e637774f175d0d68fcc07c9733471ba9d9ba1b
-    HEAD_REF master
+vcpkg_download_distfile(
+    zookeeper_src_archive
+    URLS "https://dlcdn.apache.org/zookeeper/stable/apache-zookeeper-${VERSION}.tar.gz"
+    FILENAME "apache-zookeeper-${VERSION}.tar.gz"
+    SHA512 78d909c92b3709cc2112d1b8df9ef006f78a81ee0aa1b6b6400b8fea771ebaafc03cde497c6080e3fd924b75facb28420c4970885914e5dc9cd47cd761e96dd4
+)
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${zookeeper_src_archive}"
     PATCHES
         cmake.patch
         win32.patch
@@ -16,18 +19,17 @@ file(COPY "${CURRENT_PORT_DIR}/unofficial-zookeeperConfig.cmake" DESTINATION "${
 
 # We must run the jute generator which is made from Java sources.
 # We fetch it as JAR from the latest matching binary release of zookeeper.
-string(REPLACE "3.9.4-0" "3.9.3" jute_release "${VERSION}")
 vcpkg_download_distfile(
     zookeeper_bin_archive
-    URLS "https://dlcdn.apache.org/zookeeper/zookeeper-${jute_release}/apache-zookeeper-${jute_release}-bin.tar.gz"
-    FILENAME "apache-zookeeper-${jute_release}-bin.tar.gz"
-    SHA512 d44d870c1691662efbf1a8baf1859c901b820dc5ff163b36e81beb27b6fbf3cd31b5f1f075697edaaf6d3e7a4cb0cc92f924dcff64b294ef13d535589bdaf143
+    URLS "https://dlcdn.apache.org/zookeeper/stable/apache-zookeeper-${VERSION}-bin.tar.gz"
+    FILENAME "apache-zookeeper-${VERSION}-bin.tar.gz"
+    SHA512 4d85d6f7644d5f36d9c4d65e78bd662ab35ebe1380d762c24c12b98af029027eee453437c9245dbdf2b9beb77cd6b690b69e26f91cf9d11b0a183a979c73fa43
 )
 vcpkg_extract_source_archive(
     zookeeper_jute_path
     ARCHIVE "${zookeeper_bin_archive}"
 )
-string(APPEND zookeeper_jute_path "/lib/zookeeper-jute-${jute_release}.jar")
+string(APPEND zookeeper_jute_path "/lib/zookeeper-jute-${VERSION}.jar")
 
 block(SCOPE_FOR VARIABLES)
     # Do not warn about FindJava.cmake accessing WIN32
