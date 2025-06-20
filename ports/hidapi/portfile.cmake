@@ -13,8 +13,14 @@ FEATURES
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DHIDAPI_BUILD_HIDTEST=OFF
-    ${FEATURE_OPTIONS}
+    OPTIONS
+        -DHIDAPI_BUILD_HIDTEST=OFF
+        -DHIDAPI_WITH_TESTS=OFF
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        # Windows only
+        HIDAPI_BUILD_PP_DATA_DUMP
+        HIDAPI_WITH_TESTS
 )
 vcpkg_cmake_install()
 
@@ -26,8 +32,7 @@ if ("pp-data-dump" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES pp_data_dump AUTO_CLEAN)
 endif()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hidapi/libhidapi.cmake" "\"/hidapi\"" "\"\${_IMPORT_PREFIX}/include\"" IGNORE_UNCHANGED)
-
-file(INSTALL "${SOURCE_PATH}/LICENSE-bsd.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-bsd.txt")

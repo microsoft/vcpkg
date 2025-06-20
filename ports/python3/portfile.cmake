@@ -1,4 +1,8 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     message(STATUS "Warning: Dynamic library with static CRT is not supported. Building static library.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
@@ -10,21 +14,6 @@ if("extensions" IN_LIST FEATURES)
     set(PYTHON_HAS_EXTENSIONS ON)
 else()
     set(PYTHON_HAS_EXTENSIONS OFF)
-endif()
-
-if(NOT VCPKG_HOST_IS_WINDOWS)
-    message(WARNING "${PORT} currently requires the following programs from the system package manager:
-    autoconf automake autoconf-archive
-On Debian and Ubuntu derivatives:
-    sudo apt-get install autoconf automake autoconf-archive
-On recent Red Hat and Fedora derivatives:
-    sudo dnf install autoconf automake autoconf-archive
-On Arch Linux and derivatives:
-    sudo pacman -S autoconf automake autoconf-archive
-On Alpine:
-    apk add autoconf automake autoconf-archive
-On macOS:
-    brew install autoconf automake autoconf-archive\n")
 endif()
 
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
@@ -269,6 +258,20 @@ else()
         list(APPEND OPTIONS "--without-readline")
     endif()
 
+    if(VCPKG_TARGET_IS_ANDROID)
+        list(APPEND OPTIONS "--without-static-libpython" )
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DANDROID_NO_UNDEFINED=OFF")
+        if(VCPKG_CROSSCOMPILING)
+            # Cannot not run target executables during configure
+            if(NOT PYTHON3_BUGGY_GETADDRINFO)
+                list(APPEND OPTIONS "ac_cv_buggy_getaddrinfo=no")
+            endif()
+            if(NOT PYTHON3_NO_PTMX)
+                list(APPEND OPTIONS "ac_cv_file__dev_ptmx=yes" "ac_cv_file__dev_ptc=no")
+            endif()
+        endif()
+    endif()
+
     # The version of the build Python must match the version of the cross compiled host Python.
     # https://docs.python.org/3/using/configure.html#cross-compiling-options
     if(VCPKG_CROSSCOMPILING)
@@ -276,9 +279,9 @@ else()
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             ${OPTIONS}
         OPTIONS_DEBUG
@@ -287,7 +290,7 @@ else()
         OPTIONS_RELEASE
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/lib"
     )
-    vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
+    vcpkg_make_install(TARGETS altinstall)
 
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
