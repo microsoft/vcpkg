@@ -567,6 +567,19 @@ z3:arm-uwp=fail
 z3:x64-uwp=fail
 zeroc-ice(uwp)=fail # ZeroC doesn't provide ARM tagets in project files.
 zint:x64-osx=fail
+# Needs Java runtime
+zookeeper:arm64-osx=fail
+zookeeper:arm64-uwp=fail
+zookeeper:arm64-windows-static-md=fail
+zookeeper:arm64-windows=fail
+zookeeper:x64-linux=fail
+zookeeper:x64-osx=fail
+zookeeper:x64-uwp=fail
+zookeeper:x64-windows-release=fail
+zookeeper:x64-windows-static-md=fail
+zookeeper:x64-windows-static=fail
+zookeeper:x64-windows=fail
+zookeeper:x86-windows=fail
 zyre:x64-windows-static-md=fail
 
 

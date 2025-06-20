@@ -1080,6 +1080,19 @@ yajl:x64-android=fail
 zeroc-ice:arm-neon-android=fail
 zeroc-ice:arm64-android=fail
 zeroc-ice:x64-android=fail
+# Needs Java runtime
+zookeeper:arm64-osx=fail
+zookeeper:arm64-uwp=fail
+zookeeper:arm64-windows-static-md=fail
+zookeeper:arm64-windows=fail
+zookeeper:x64-linux=fail
+zookeeper:x64-osx=fail
+zookeeper:x64-uwp=fail
+zookeeper:x64-windows-release=fail
+zookeeper:x64-windows-static-md=fail
+zookeeper:x64-windows-static=fail
+zookeeper:x64-windows=fail
+zookeeper:x86-windows=fail
 zyre:arm64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
 
@@ -1316,3 +1329,6 @@ vcpkg-ci-wxwidgets:x64-windows-static-md=pass
 vcpkg-ci-wxwidgets:x64-windows-static=pass
 vcpkg-ci-wxwidgets:x64-windows=pass
 vcpkg-ci-wxwidgets:x86-windows=pass
+zookeeper:arm-neon-android=pass
+zookeeper:arm64-android=pass
+zookeeper:x64-android=pass
