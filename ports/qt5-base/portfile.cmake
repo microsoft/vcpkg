@@ -14,11 +14,6 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-set(WITH_SQLITE3_PLUGIN OFF)
-if("sqlite3plugin" IN_LIST FEATURES)
-    set(WITH_SQLITE3_PLUGIN ON)
-endif()
-
 set(WITH_PGSQL_PLUGIN OFF)
 if("postgresqlplugin" IN_LIST FEATURES)
     set(WITH_PGSQL_PLUGIN ON)
@@ -132,11 +127,6 @@ else()
     list(APPEND CORE_OPTIONS -dbus-runtime)
 endif()
 
-if(WITH_SQLITE3_PLUGIN)
-    list(APPEND CORE_OPTIONS -system-sqlite)
-else()
-    list(APPEND CORE_OPTIONS -no-sql-sqlite)
-endif()
 if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
 else()
@@ -184,10 +174,6 @@ find_library(FREETYPE_RELEASE NAMES freetype PATHS "${CURRENT_INSTALLED_DIR}/lib
 find_library(FREETYPE_DEBUG NAMES freetype freetyped PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(DOUBLECONVERSION_RELEASE NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(DOUBLECONVERSION_DEBUG NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(HARFBUZZ_RELEASE NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(HARFBUZZ_DEBUG NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(SQLITE_DEBUG NAMES sqlite3 sqlite3d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 find_library(BROTLI_COMMON_RELEASE NAMES brotlicommon brotlicommon-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BROTLI_COMMON_DEBUG NAMES brotlicommon brotlicommon-static brotlicommond brotlicommon-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -256,6 +242,15 @@ set(DEBUG_OPTIONS
             "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
 
+if("sqlite3plugin" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -system-sqlite)
+    x_vcpkg_pkgconfig_get_modules(PREFIX sqlite3 MODULES sqlite3 LIBRARIES)
+    list(APPEND RELEASE_OPTIONS "SQLITE_LIBS=${sqlite3_LIBRARIES_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "SQLITE_LIBS=${sqlite3_LIBRARIES_DEBUG}")
+else()
+    list(APPEND CORE_OPTIONS -no-sql-sqlite)
+endif()
+
 if("icu" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS -icu)
 
@@ -287,12 +282,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     set(ADDITIONAL_WINDOWS_LIBS "-lws2_32 -lsecur32 -ladvapi32 -lshell32 -lcrypt32 -luser32 -lgdi32")
     list(APPEND RELEASE_OPTIONS
-            "SQLITE_LIBS=${SQLITE_RELEASE}"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
         )
 
     list(APPEND DEBUG_OPTIONS
-            "SQLITE_LIBS=${SQLITE_DEBUG}"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG}"
         )
 
@@ -310,12 +303,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
 elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
     list(APPEND RELEASE_OPTIONS
-            "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
             "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -luuid"
         )
     list(APPEND DEBUG_OPTIONS
-            "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG}"
             "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG} -luuid"
         )
@@ -393,12 +384,10 @@ elseif(VCPKG_TARGET_IS_OSX)
     file(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
     #list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
     list(APPEND RELEASE_OPTIONS
-            "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE} -framework ApplicationServices"
             "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -liconv"
         )
     list(APPEND DEBUG_OPTIONS
-            "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG} -framework ApplicationServices"
             "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG} -liconv"
         )
