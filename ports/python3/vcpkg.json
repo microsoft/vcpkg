@@ -1,7 +1,7 @@
 {
   "name": "python3",
   "version": "3.12.9",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -81,6 +81,11 @@
         {
           "name": "sqlite3",
           "default-features": false
+        },
+        {
+          "name": "vcpkg-pkgconfig-get-modules",
+          "host": true,
+          "platform": "windows & !mingw"
         }
       ]
     },
