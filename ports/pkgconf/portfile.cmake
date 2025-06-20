@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pkgconf/pkgconf
-    REF #[[ "pkgconf-${VERSION}" ]] efdeb71de5eb22c5477da1626e8dbffeca6471c2
-    SHA512 39ac07c54d1665817f4351291e39f3e6740c275591f6f1f5d88a7c16d5f18cd0cd6b1614b0bf21a24c5ecfb22aba876b725640ce4f03628cb0bac7fa6a60504e
+    REF "pkgconf-${VERSION}"
+    SHA512 c53cb8caf46c907cfcf0af5ebbead3e4f08d122607df8dd3649596a188b65486fa052820f1e6310d522b0b191879bf6ca2ae7f49fb69b39dad78eb76338b9fca
     HEAD_REF master
 )
 
@@ -66,7 +66,7 @@ if(EXISTS "${pkgconfig_file}")
 endif()
 
 vcpkg_install_meson()
-vcpkg_fixup_pkgconfig(#[[ SKIP_CHECK ]])
+vcpkg_fixup_pkgconfig(SKIP_CHECK)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
