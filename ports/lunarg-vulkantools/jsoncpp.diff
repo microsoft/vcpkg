@@ -1,0 +1,14 @@
+diff --git a/via/CMakeLists.txt b/via/CMakeLists.txt
+index 975fdb3..327acb1 100644
+--- a/via/CMakeLists.txt
++++ b/via/CMakeLists.txt
+@@ -72,6 +72,9 @@ endif()
+ find_package(jsoncpp CONFIG)
+ if (TARGET jsoncpp_static)
+     target_link_libraries(vkvia PRIVATE jsoncpp_static)
++
++elseif (TARGET JsonCpp::JsonCpp)
++    target_link_libraries(vkvia PRIVATE JsonCpp::JsonCpp)
+     
+ # Support using jsoncpp.pc but only for UNIX platforms.
+ # And only if UPDATE_DEPS is disabled.
