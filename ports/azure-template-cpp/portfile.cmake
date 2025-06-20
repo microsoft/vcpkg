@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 6a71677c9ec039286617136e6adcdf486683f44b
-    SHA512 bcf5bfd450f93ae5a21206107197d772808847e7695275204f6be22ca0053e8ead7b832e6d441d2451a8962a7936444038f8164bdb952673d351e60ff253015d
+    REF e741c1cdf20200322ad2262aa186a635fef492d4
+    SHA512 580d17974425f3acbee3f8817239eaf0e1ea47125d5816929277143a92ae5ef75acf13c4625be5ef7190fc1278f583b74a1e987c852d5fa6e527ffe4760f489f
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/core/azure-core-amqp")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/core/_")
+if(EXISTS "${SOURCE_PATH}/sdk/template/azure-template")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/template/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/core/azure-core-amqp" "${SOURCE_PATH}/sdk/core/_")
-  file(RENAME "${SOURCE_PATH}/sdk/core" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template/azure-template" "${SOURCE_PATH}/sdk/template/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
