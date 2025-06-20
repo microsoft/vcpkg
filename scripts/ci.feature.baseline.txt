@@ -1013,6 +1013,7 @@ jkqtplotter(uwp) = cascade
 jsonnet:arm64-uwp = cascade
 jsonnet:arm64-windows = cascade
 jsonnet:x64-uwp = cascade
+juce[alsa](windows) = cascade
 kd-soap:arm64-uwp = cascade
 kd-soap:x64-uwp = cascade
 kddockwidgets:arm64-uwp = cascade
