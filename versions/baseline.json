@@ -4469,7 +4469,7 @@
       "port-version": 0
     },
     "libassert": {
-      "baseline": "2.1.5",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "libassuan": {
