@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSYSTEM_SPDLOG=ON
+        -DMSVC_BUILD_L0_DYNAMIC_VCRUNTIME=ON
         ${BUILD_STATIC}
 )
 
