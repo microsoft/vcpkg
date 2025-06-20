@@ -14,6 +14,14 @@
     }
   ],
   "default-features": [
+    {
+      "name": "scripts-cl-cpp-wrapper",
+      "platform": "windows & !mingw"
+    },
+    {
+      "name": "vcpkg-make-cl-cpp-wrapper",
+      "platform": "windows & !mingw"
+    },
     "z-vcpkg-make-normalize-arch",
     "z-vcpkg-make-determine-host-arch",
     "z-vcpkg-make-determine-target-arch",
@@ -23,6 +31,12 @@
     "z-vcpkg-make-z-adapt-lib-link-names"
   ],
   "features": {
+    "scripts-cl-cpp-wrapper": {
+      "description": "Test the cl_cpp_wrapper in scripts"
+    },
+    "vcpkg-make-cl-cpp-wrapper": {
+      "description": "Test the cl_cpp_wrapper in vcpkg-make"
+    },
     "z-vcpkg-make-normalize-arch": {
       "description": "Test the z_vcpkg_make_normalize_arch function"
     },
