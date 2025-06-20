@@ -1,7 +1,6 @@
 {
   "name": "wpilib",
-  "version-date": "2023-08-24",
-  "port-version": 2,
+  "version": "2025.3.2",
   "description": "WPILib is the software library package for the FIRST Robotics Competition. The core install includes wpiutil, a common utilies library, and ntcore, the base NetworkTables library.",
   "homepage": "https://github.com/wpilibsuite/allwpilib",
   "license": null,
@@ -22,24 +21,30 @@
       "host": true
     }
   ],
+  "default-features": [
+    "cscore",
+    "protobuf",
+    {
+      "name": "simulation-modules",
+      "platform": "!static"
+    }
+  ],
   "features": {
-    "allwpilib": {
-      "description": "Enables the simulation HAL, and the high level wpilibc library.",
-      "dependencies": [
-        "opencv",
-        {
-          "name": "wpilib",
-          "features": [
-            "cameraserver"
-          ]
-        }
-      ]
-    },
-    "cameraserver": {
-      "description": "Enables the CameraServer and CSCore libraries for manipulating USB Cameras and HTTP Camera Streams",
+    "cscore": {
+      "description": "Enables cscore and cameraserver",
       "dependencies": [
         "opencv"
       ]
+    },
+    "protobuf": {
+      "description": "Enables protobuf support",
+      "dependencies": [
+        "protobuf"
+      ]
+    },
+    "simulation-modules": {
+      "description": "Enables simulation modules",
+      "supports": "!static"
     }
   }
 }

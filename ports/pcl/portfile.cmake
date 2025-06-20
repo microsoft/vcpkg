@@ -17,6 +17,7 @@ vcpkg_from_github(
         install-examples.patch
         fix-clang-cl.patch
         add-chrono-includes.patch
+        add-cassert.patch
         "${NO_GLU_PATCH}"
 )
 
@@ -70,6 +71,8 @@ vcpkg_cmake_configure(
         -DWITH_QHULL=ON
         -DWITH_RSSDK=OFF
         -DWITH_RSSDK2=OFF
+        -DWITH_SYSTEM_CJSON=ON
+        -DWITH_SYSTEM_ZLIB=ON
         # FEATURES
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
