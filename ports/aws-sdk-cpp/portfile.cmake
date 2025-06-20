@@ -10,6 +10,7 @@ vcpkg_from_github(
         lock-curl-http-and-tls-settings.patch
         fix_find_curl.patch
         find-dependency.patch
+        configure-binary-dir.patch # https://github.com/aws/aws-sdk-cpp/pull/3459
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -33,7 +34,6 @@ endif()
 string(REPLACE "awsmigrationhub" "AWSMigrationHub" targets "${FEATURES}")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${EXTRA_ARGS}
         "-DENABLE_UNITY_BUILD=ON"
