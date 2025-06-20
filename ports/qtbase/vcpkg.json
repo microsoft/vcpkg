@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.8.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -464,7 +464,6 @@
     },
     "sql-odbc": {
       "description": "Enable SQL Driver odbc",
-      "supports": "windows",
       "dependencies": [
         {
           "name": "qtbase",
@@ -472,6 +471,10 @@
           "features": [
             "sql"
           ]
+        },
+        {
+          "name": "unixodbc",
+          "platform": "!windows"
         }
       ]
     },
