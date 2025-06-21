@@ -9136,6 +9136,10 @@
       "baseline": "1.1",
       "port-version": 3
     },
+    "spz": {
+      "baseline": "2.0.0",
+      "port-version": 0
+    },
     "sqlcipher": {
       "baseline": "4.6.1",
       "port-version": 3
