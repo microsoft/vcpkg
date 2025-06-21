@@ -1,6 +1,6 @@
 {
   "name": "pdal-dimbuilder",
-  "version": "2.8.4",
+  "version": "2.9.0",
   "description": "A tool used by the PDAL build process",
   "homepage": "https://pdal.io/",
   "license": "BSD-3-Clause",
