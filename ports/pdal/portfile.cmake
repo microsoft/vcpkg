@@ -14,9 +14,10 @@ vcpkg_from_github(
         external-dimbuilder.diff
         find-library-suffix.diff
         no-rpath.patch
+        spz-zlib.diff  # https://github.com/PDAL/PDAL/issues/4745
 )
 file(REMOVE_RECURSE
-    "${SOURCE_PATH}/cmake/modules/FindCURL.cmake"
+    "${SOURCE_PATH}/cmake/modules/FindCurl.cmake"
     "${SOURCE_PATH}/cmake/modules/FindGeoTIFF.cmake"
     "${SOURCE_PATH}/cmake/modules/FindICONV.cmake"
     "${SOURCE_PATH}/cmake/modules/FindZSTD.cmake"
