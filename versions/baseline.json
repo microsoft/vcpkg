@@ -2073,7 +2073,7 @@
       "port-version": 1
     },
     "cppzmq": {
-      "baseline": "4.10.0",
+      "baseline": "4.11.0",
       "port-version": 0
     },
     "cpr": {
