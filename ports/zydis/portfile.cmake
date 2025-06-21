@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
         -DZYDIS_BUILD_DOXYGEN=OFF
         -DZYDIS_BUILD_EXAMPLES=OFF
         -DZYDIS_BUILD_TESTS=OFF
+    OPTIONS_RELEASE
         ${FEATURE_OPTIONS}
 )
 
