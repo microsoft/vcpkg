@@ -1,0 +1,60 @@
+{
+  "name": "cpp-rotor",
+  "version": "0.34",
+  "description": "Event loop friendly C++ actor micro-framework, supervisable",
+  "homepage": "https://github.com/basiliscos/cpp-rotor",
+  "license": "MIT",
+  "dependencies": [
+    "boost-date-time",
+    "boost-lockfree",
+    "boost-regex",
+    "boost-system",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "asio": {
+      "description": "Enable building with boost::asio support",
+      "dependencies": [
+        "boost-asio",
+        "boost-thread"
+      ]
+    },
+    "ev": {
+      "description": "Enable building with libev support",
+      "dependencies": [
+        "libev"
+      ]
+    },
+    "fltk": {
+      "description": "Enable building with FLTK support",
+      "dependencies": [
+        "fltk"
+      ]
+    },
+    "thread": {
+      "description": "Enable building with thread support (enabled by default)",
+      "dependencies": [
+        {
+          "name": "pthreads",
+          "platform": "!windows"
+        }
+      ]
+    },
+    "wx": {
+      "description": "Enable building with wxWidgets support",
+      "dependencies": [
+        "wxwidgets"
+      ]
+    }
+  },
+  "default-features": [
+    "thread"
+  ]
+}
