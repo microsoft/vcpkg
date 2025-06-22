@@ -525,7 +525,10 @@
             "gui"
           ]
         },
-        "vulkan"
+        {
+          "name": "vulkan",
+          "platform": "!osx"
+        }
       ]
     },
     "widgets": {
