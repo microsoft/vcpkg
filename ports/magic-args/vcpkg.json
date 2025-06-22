@@ -4,6 +4,7 @@
   "description": "Ease-of-use-first argument parsing for C++23",
   "homepage": "https://github.com/fredemmott/magic_args",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

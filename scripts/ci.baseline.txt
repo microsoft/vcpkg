@@ -625,6 +625,8 @@ llvm:x64-android=fail
 log4cplus:arm64-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:x64-linux=fail # dynamic exception specifications
+# magic-args requires C++23. linux-x64 always fails because it uses gcc11.
+magic-args:x64-linux=fail
 magma:x64-linux=fail
 marzbanpp:x64-linux=fail # triplet supported but vcpkg toolchain is too old (requires GCC 12+/Clang 19+)
 mchehab-zbar:arm-neon-android=fail
