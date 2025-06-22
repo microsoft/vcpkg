@@ -163,7 +163,16 @@
     },
     "cups": {
       "description": "Provides support for the Common Unix Printing System.",
-      "supports": "linux | osx"
+      "supports": "linux | osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
     },
     "dbus": {
       "description": "Qt D-Bus",
@@ -212,7 +221,14 @@
       "description": "EGL",
       "supports": "android | linux",
       "dependencies": [
-        "egl"
+        "egl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "fontconfig": {
@@ -532,7 +548,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "concurrent",
+            "thread",
             "xkbcommon-x11",
             "xlib"
           ]
@@ -576,6 +592,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
+            "fontconfig",
             "xcb"
           ]
         }
