@@ -1,0 +1,13 @@
+{
+  "name": "magic-args",
+  "version": "0.2",
+  "description": "Ease-of-use-first argument parsing for C++23",
+  "homepage": "https://github.com/fredemmott/magic_args",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
