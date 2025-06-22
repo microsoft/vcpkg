@@ -44,6 +44,11 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     )
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+    # Android ndk doesn't support AVX512
+    list(APPEND OPTIONS -DNO_AVX512=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
