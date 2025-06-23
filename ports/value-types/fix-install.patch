@@ -1,0 +1,20 @@
+---
+ CMakeLists.txt | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 552698a..a2786f0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,10 +126,6 @@ target_sources(polymorphic_cxx17
+ 
+ if (${XYZ_VALUE_TYPES_IS_NOT_SUBPROJECT})
+ 
+-    add_subdirectory(benchmarks)
+-    add_subdirectory(compile_checks)
+-    add_subdirectory(exploration)
+-
+     if (${BUILD_TESTING})
+         FetchContent_Declare(
+           googletest
+-- 
