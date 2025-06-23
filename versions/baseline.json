@@ -2116,6 +2116,10 @@
       "baseline": "1.1.2",
       "port-version": 2
     },
+    "crcpp": {
+      "baseline": "1.2.1.0",
+      "port-version": 0
+    },
     "crfsuite": {
       "baseline": "2020-08-27",
       "port-version": 1
