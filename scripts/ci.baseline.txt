@@ -1179,10 +1179,6 @@ vst3sdk:arm64-osx=fail
 vst3sdk:x64-osx=fail
 vulkan-tools:arm64-linux=fail
 vulkan-validationlayers:arm64-linux=fail
-vulkan-validationlayers:x64-windows-release=fail # VS2022 17.14.0 ICEs
-vulkan-validationlayers:x64-windows-static-md=fail
-vulkan-validationlayers:x64-windows-static=fail
-vulkan-validationlayers:x64-windows=fail
 wasmedge:arm-neon-android=fail
 # Collides with libpcap -> similar headers
 wcslib:arm64-linux=fail
