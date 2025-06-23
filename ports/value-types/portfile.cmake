@@ -19,12 +19,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-#file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/value_types")
-#file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/value-types")
-
-#set(VCPKG_POLICY_SKIP_LIB_CMAKE_MERGE_CHECK enabled)
-
 vcpkg_cmake_config_fixup(PACKAGE_NAME xyz_value_types CONFIG_PATH lib/cmake/xyz_value_types)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
