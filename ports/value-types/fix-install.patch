@@ -1,7 +1,3 @@
----
- CMakeLists.txt | 4 ----
- 1 file changed, 4 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 552698a..a2786f0 100644
 --- a/CMakeLists.txt
@@ -17,4 +13,25 @@ index 552698a..a2786f0 100644
      if (${BUILD_TESTING})
          FetchContent_Declare(
            googletest
+diff --git a/cmake/coverage.cmake b/cmake/coverage.cmake
+index 28022d6..d56da69 100644
+--- a/cmake/coverage.cmake
++++ b/cmake/coverage.cmake
+@@ -16,7 +16,6 @@ set(COVERAGE_SUPPORTED_FLAGS
+     "--coverage"
+ )
+ 
+-find_package(Python3 REQUIRED COMPONENTS Interpreter)
+ 
+ #[=======================================================================[.rst:
+ virtualenv_create
+@@ -84,6 +83,8 @@ function(virtualenv_create)
+         message(FATAL_ERROR "REQUIREMENTS must exist, invalid path: ${PYTHON_VENV_REQUIREMENTS}")
+     endif()
+ 
++    find_package(Python3 REQUIRED COMPONENTS Interpreter)
++
+     set(PYTHON_VENV_INTERPRETER ${PYTHON_VENV_DESTINATION}/bin/python)
+ 
+     add_custom_command(
 -- 
