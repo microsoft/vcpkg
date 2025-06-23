@@ -1,3 +1,16 @@
+diff --git a/cmake/ShogunFindLAPACK.cmake b/cmake/ShogunFindLAPACK.cmake
+index 2616f9b..2cb8579 100644
+--- a/cmake/ShogunFindLAPACK.cmake
++++ b/cmake/ShogunFindLAPACK.cmake
+@@ -126,7 +126,7 @@ IF (LAPACK_FOUND)
+     ENDIF()
+     # if LaPack is detected and Eigen is 3.3 or later
+     # use the lapack/blas backend in Eigen
+-    IF(${EIGEN3_VERSION_STRING} VERSION_GREATER 3.3.0 AND ENABLE_EIGEN_LAPACK AND HAVE_LAPACK)
++    IF(ENABLE_EIGEN_LAPACK AND HAVE_LAPACK)
+       SET(EIGEN_USE_BLAS 1)
+       MESSAGE(STATUS "Enabling detected BLAS library as backend for Eigen")
+ 
 diff --git a/cmake/external/Eigen3.cmake b/cmake/external/Eigen3.cmake
 deleted file mode 100644
 index 4800270..0000000
@@ -27,10 +40,10 @@ index 4800270..0000000
 -UNSET(C_COMPILER)
 -UNSET(CXX_COMPILER)
 diff --git a/src/shogun/CMakeLists.txt b/src/shogun/CMakeLists.txt
-index a984c62..24ad787 100644
+index a984c62..9f547b4 100644
 --- a/src/shogun/CMakeLists.txt
 +++ b/src/shogun/CMakeLists.txt
-@@ -298,20 +298,8 @@ endif()
+@@ -298,20 +298,10 @@ endif()
  ############################ external dependencies
  
  ####### LINALG
@@ -50,6 +63,8 @@ index a984c62..24ad787 100644
 -ENDIF()
 +FIND_PACKAGE(Eigen3 CONFIG REQUIRED)
 +link_libraries(Eigen3::Eigen)
++get_target_property(Eigen3_INCLUDE_DIRS Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
++SHOGUN_INCLUDE_DIRS(SCOPE PUBLIC SYSTEM ${Eigen3_INCLUDE_DIRS})
  
  # ViennaCL detection
  SHOGUN_DEPENDENCIES(
