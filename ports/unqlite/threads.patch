@@ -1,0 +1,56 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e4471bf..9208967 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,7 +11,10 @@ ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+ OPTION(ENABLE_THREADS "Enable threads" OFF)
+ 
+ IF(${ENABLE_THREADS})
++  set(UNQLITE_ENABLE_THREADS ON)
+   ADD_DEFINITIONS("-DUNQLITE_ENABLE_THREADS")
++
++  configure_file(./src/config.h.in ./src/config.h)
+ ENDIF(${ENABLE_THREADS})
+ 
+ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_LIST_DIR}/src)
+diff --git a/src/config.h b/src/config.h
+new file mode 100644
+index 0000000..90a2d4a
+--- /dev/null
++++ b/src/config.h
+@@ -0,0 +1,6 @@
++#ifndef _UNQLITE_CONFIG_H_
++#define _UNQLITE_CONFIG_H_
++
++/* #undef UNQLITE_ENABLE_THREADS */
++
++#endif
+diff --git a/src/config.h.in b/src/config.h.in
+new file mode 100644
+index 0000000..edf3d8e
+--- /dev/null
++++ b/src/config.h.in
+@@ -0,0 +1,6 @@
++#ifndef _UNQLITE_CONFIG_H_
++#define _UNQLITE_CONFIG_H_
++
++#cmakedefine UNQLITE_ENABLE_THREADS
++
++#endif
+diff --git a/src/unqlite.h b/src/unqlite.h
+index 4fffce9..4723394 100644
+--- a/src/unqlite.h
++++ b/src/unqlite.h
+@@ -1,6 +1,9 @@
+ /* This file was automatically generated.  Do not edit (Except for compile time directives)! */ 
+ #ifndef _UNQLITE_H_
+ #define _UNQLITE_H_
++
++#include "./config.h"
++
+ /*
+  * Symisc UnQLite: An Embeddable NoSQL (Post Modern) Database Engine.
+  * Copyright (C) 2012-2013, Symisc Systems http://unqlite.org/
+-- 
+2.48.1
+
