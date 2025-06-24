@@ -344,7 +344,6 @@ ftgl:x64-android=fail
 fuzzylite:arm-neon-android=fail
 fuzzylite:arm64-android=fail
 fuzzylite:x64-android=fail
-g2o:arm64-uwp=fail
 g3log:arm-neon-android=fail
 g3log:arm64-android=fail
 g3log:x64-android=fail

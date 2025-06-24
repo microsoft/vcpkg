@@ -850,7 +850,6 @@ freeopcua:x64-uwp = cascade
 freetds:x86-windows = cascade
 freetype-gl:arm64-uwp = cascade
 freetype-gl:x64-uwp = cascade
-g2o:x64-uwp = cascade
 gamedev-framework:x64-uwp = cascade
 games101-cgl:arm64-uwp = cascade
 games101-cgl:x64-uwp = cascade

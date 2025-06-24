@@ -4,6 +4,7 @@
   "port-version": 4,
   "description": "g2o: A General Framework for Graph Optimization",
   "homepage": "https://openslam.org/g2o.html",
+  "supports": "!uwp",
   "dependencies": [
     "ceres",
     "eigen3",
