@@ -8,7 +8,6 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-# Configuration, build, install, and fix-up
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 
