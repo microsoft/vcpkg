@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
 		-DBUILD_TESTING=OFF
 		-DENABLE_SANITIZERS=OFF
 		-DENABLE_CODE_COVERAGE=OFF
-		-DXYZ_VALUE_TYPES_IS_NOT_SUBPROJECT=OFF
 )
 
 vcpkg_cmake_install()
