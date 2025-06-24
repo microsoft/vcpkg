@@ -1,11 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO open-source-patterns/collection
-        REF "${VERSION}"
-        SHA512 f3781cbb4e9e190df38c3fe7fa80ba69bf6f9dbafb158e0426dd4604f2f1ba794450679005a38d0f9f1dad0696e2f22b8b086b2d7d08a0f99bb4fd3b0f7ed5d8
-        HEAD_REF main
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO open-source-patterns/collection
+    REF "${VERSION}"
+    SHA512 14c842ed15fe3faa4c0ecf32769c5e708a0c440b89aaaa6650792c5e7e87a02404dbc97bcdde42e15c3d72e1c95504e079ddbd75fc3c13ef5ea4b40be6964636
+    HEAD_REF main
 )
 
 # Configuration, build, install, and fix-up
