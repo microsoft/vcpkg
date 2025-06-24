@@ -1,0 +1,54 @@
+diff --git a/cmake/ggml-config.cmake.in b/cmake/ggml-config.cmake.in
+index 8c2dc31c..d6470b79 100644
+--- a/cmake/ggml-config.cmake.in
++++ b/cmake/ggml-config.cmake.in
+@@ -4,9 +4,11 @@
+ @PACKAGE_INIT@
+ 
+ set_and_check(GGML_INCLUDE_DIR "@PACKAGE_GGML_INCLUDE_INSTALL_DIR@")
+-set_and_check(GGML_LIB_DIR "@PACKAGE_GGML_LIB_INSTALL_DIR@")
++#set_and_check(GGML_LIB_DIR "@PACKAGE_GGML_LIB_INSTALL_DIR@")
+ #set_and_check(GGML_BIN_DIR "@PACKAGE_GGML_BIN_INSTALL_DIR@")
+ 
++if(NOT TARGET ggml::ggml)
++
+ find_package(Threads REQUIRED)
+ 
+ find_library(GGML_LIBRARY ggml
+@@ -53,6 +55,17 @@ if (NOT GGML_SHARED_LIB)
+ 
+     if (GGML_CUDA)
+         find_package(CUDAToolkit REQUIRED)
++        if (GGML_STATIC)
++            list(APPEND GGML_CUDA_INTERFACE_LINK_LIBRARIES $<LINK_ONLY:CUDA::cudart_static>)
++            if (WIN32)
++                list(APPEND GGML_CUDA_INTERFACE_LINK_LIBRARIES $<LINK_ONLY:CUDA::cublas> $<LINK_ONLY:CUDA::cublasLt>)
++            else()
++                list(APPEND GGML_CUDA_INTERFACE_LINK_LIBRARIES $<LINK_ONLY:CUDA::cublas_static> $<LINK_ONLY:CUDA::cublasLt_static>)
++            endif()
++        endif()
++        if (NOT GGML_CUDA_NO_VMM)
++            list(APPEND GGML_CUDA_INTERFACE_LINK_LIBRARIES $<LINK_ONLY:CUDA::cuda_driver>)
++        endif()
+     endif()
+ 
+     if (GGML_METAL)
+@@ -64,6 +77,11 @@ if (NOT GGML_SHARED_LIB)
+                     ${FOUNDATION_LIBRARY} ${METAL_FRAMEWORK} ${METALKIT_FRAMEWORK})
+     endif()
+ 
++    if (GGML_OPENCL)
++        find_package(OpenCL REQUIRED)
++        list(APPEND GGML_OPENCL_INTERFACE_LINK_LIBRARIES $<LINK_ONLY:OpenCL::OpenCL>)
++    endif()
++
+     if (GGML_VULKAN)
+         find_package(Vulkan REQUIRED)
+         list(APPEND GGML_VULKAN_INTERFACE_LINK_LIBRARIES Vulkan::Vulkan)
+@@ -149,4 +167,6 @@ set_target_properties(ggml::all
+     PROPERTIES
+         INTERFACE_LINK_LIBRARIES "${_ggml_all_targets}")
+ 
++endif() # TARGET ggml::ggml
++
+ check_required_components(ggml)

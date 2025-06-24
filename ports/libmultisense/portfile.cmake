@@ -1,23 +1,25 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO carnegierobotics/LibMultiSense
     REF ${VERSION}
-    SHA512 354c9eec33e9153496b0858b8dc6e5735218585abecf885f356f643d833ebf00a63fc4571634283c430de07045f2be544b0e6d445599fce4c1655af671b758bd
+    SHA512 4fb2343fc2288792c732e7e61cb447b953ed8e8354c3c1e401c5b2bc8151f4b3d8f692882e015e5e56d8dc2d08f121a798138a6974d3b02348b1689c9015fe00
     HEAD_REF master
+    PATCHES
+        fix-missing-algorithm.patch
+        fix-find-package-config-file.patch
 )
 
 vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        utilities MULTISENSE_BUILD_UTILITIES
+        OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+        FEATURES
+            json-serialization BUILD_JSON_SERIALIZATION
+            opencv BUILD_OPENCV
+            utilities MULTISENSE_BUILD_UTILITIES
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_LEGACY_API=OFF
         ${FEATURE_OPTIONS}
 )
 
@@ -34,19 +36,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 if ("utilities" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES
-            AprilTagTestUtility
-            ChangeFps
             ChangeIpUtility
-            ChangeResolution
-            ChangeTransmitDelay
-            ColorImageUtility
-            DeviceInfoUtility
-            ExternalCalUtility
-            FlashUtility
             ImageCalUtility
-            ImuConfigUtility
-            ImuTestUtility
-            LidarCalUtility
             PointCloudUtility
             RectifiedFocalLengthUtility
             SaveImageUtility

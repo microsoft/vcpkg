@@ -37,6 +37,12 @@ if(VCPKG_HOST_IS_OSX)
     message("${PORT} currently requires the following programs from the system package manager:\n    gsed\n\nIt can be installed with brew gnu-sed")
 endif()
 
+if("arpack" IN_LIST FEATURES)
+    set(ARPACK_OPTION "yes")
+else()
+    set(ARPACK_OPTION "no")
+endif()
+
 if("bz2" IN_LIST FEATURES)
     set(BZ2_OPTION "yes")
 else()
@@ -101,6 +107,13 @@ else()
     set(UMFPACK_OPTION "no")
 endif()
 
+if("spqr" IN_LIST FEATURES)
+    set(SPQR_OPTION "yes")
+    set(SUITESPARSECONFIG_OPTION "yes")
+else()
+    set(SPQR_OPTION "no")
+endif()
+
 if("hdf5" IN_LIST FEATURES)
     set(HDF5_OPTION "yes")
 else()
@@ -125,6 +138,12 @@ else()
     set(FREETYPE_OPTION "no")
 endif()
 
+if("portaudio" IN_LIST FEATURES)
+    set(PORTAUDIO_OPTION "yes")
+else()
+    set(PORTAUDIO_OPTION "no")
+endif()
+
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/fltk")
 
 vcpkg_configure_make(
@@ -137,7 +156,7 @@ vcpkg_configure_make(
     --enable-lib-visibility-flags
     --enable-relocate-all
     --with-amd=${AMD_OPTION}
-    --with-arpack=no
+    --with-arpack=${ARPACK_OPTION}
     --with-bz2=${BZ2_OPTION}
     --with-camd=${CAMD_OPTION}
     --with-ccolamd=${CCOLAMD_OPTION}
@@ -155,14 +174,14 @@ vcpkg_configure_make(
     --with-klu=${KLU_OPTION}
     --with-magick=no
     --with-opengl # yes
-    --with-portaudio=no
+    --with-portaudio=${PORTAUDIO_OPTION}
     --with-pcre2 # yes
     --with-qhull_r=no
     --with-qrupdate=no
     --with-qscintilla=no
     --with-qt=no
     --with-sndfile # yes
-    --with-spqr=no
+    --with-spqr=${SPQR_OPTION}
     --with-suitesparseconfig=${SUITESPARSECONFIG_OPTION}
     --with-sundials_ida=no
     --with-sundials_nvecserial=no

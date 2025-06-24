@@ -144,7 +144,7 @@ if ($testFeatures) {
     $ciFeatureBaselineArg = "--ci-feature-baseline=$ciFeatureBaselineFile"
     $knownFailingAbisFile = Join-Path $ArtifactStagingDirectory 'failing-abi-log.txt'
     $failingAbiLogArg = "--failing-abi-log=$knownFailingAbisFile"
-    & $vcpkgExe x-test-features --for-merge-with origin/master $tripletArg $failureLogsArg $ciBaselineArg $failingAbiLogArg @commonArgs @cachingArgs
+    & $vcpkgExe x-test-features --for-merge-with origin/master $tripletArg $failureLogsArg $ciBaselineArg $failingAbiLogArg $ciFeatureBaselineArg @commonArgs @cachingArgs
     $lastLastExitCode = $LASTEXITCODE
     if ($lastLastExitCode -ne 0)
     {

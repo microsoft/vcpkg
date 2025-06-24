@@ -1,6 +1,7 @@
 {
   "name": "metis",
   "version-date": "2022-07-27",
+  "port-version": 1,
   "description": "Serial Graph Partitioning and Fill-reducing Matrix Ordering",
   "homepage": "https://github.com/KarypisLab/METIS",
   "license": "Apache-2.0",

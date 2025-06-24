@@ -1,7 +1,7 @@
 {
   "name": "bitserializer",
-  "version": "0.75",
-  "description": "C++ 17 library for serialization to JSON, XML, YAML, CSV, MsgPack",
+  "version": "0.80",
+  "description": "Multi-format serialization library (JSON, XML, YAML, CSV, MsgPack)",
   "homepage": "https://github.com/PavelKisliak/BitSerializer",
   "license": "MIT",
   "dependencies": [
@@ -15,12 +15,6 @@
     }
   ],
   "features": {
-    "cpprestjson-archive": {
-      "description": "Module for support JSON (implementation based on the CppRestSDK library)",
-      "dependencies": [
-        "cpprestsdk"
-      ]
-    },
     "csv-archive": {
       "description": "Module for support CSV"
     },
