@@ -1,9 +1,18 @@
+vcpkg_download_distfile(
+    ADD_MISSING_DEFINE_PATCH
+    URLS https://github.com/pkgconf/pkgconf/commit/664b53d5c4920e66e4a57c7515ccfd1bd1477bac.patch?full_index=1
+    FILENAME pkgconf-add-missing-define-664b53d5c4920e66e4a57c7515ccfd1bd1477bac.patch
+    SHA512 1e5dc8b6ac9547157694c1674660c0f207876ed2916a053217c9299eb352c05d1f03a1ba8afddaf994b7c22474590407c627846cd68000bf53bd7229d9009895
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pkgconf/pkgconf
     REF "pkgconf-${VERSION}"
     SHA512 8c73b8f9c3dd3c72e6b0acf139a68054d631484af4618f46c30c3c13947294986d809bbac0648af9e974739fd42e1730a4e22323884d7cf72f0843a972991a99
     HEAD_REF master
+    PATCHES
+        "${ADD_MISSING_DEFINE_PATCH}"
 )
 
 vcpkg_configure_meson(

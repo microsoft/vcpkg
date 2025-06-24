@@ -13,6 +13,7 @@ vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --disable-i18n
+        --disable-introspection
         --with-glib
 )
 

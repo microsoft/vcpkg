@@ -1,0 +1,32 @@
+diff --git a/configure.ac b/configure.ac
+index 1a53887c..55b176f8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -482,6 +482,11 @@
+ AC_MSG_CHECKING([if GSSAPI should be used])
+ AC_MSG_RESULT($gssapi)
+ AM_CONDITIONAL(GSSAPI, test x$gssapi = xyes)
++
++AC_ARG_WITH(gsasl-tool, AS_HELP_STRING([--with-gsasl-tool], [Build gsasl tool]), gsasl_tool=$withval, gsasl_tool=no)
++AC_MSG_CHECKING([if gsasl tool should be built])
++AC_MSG_RESULT($gsasl_tool)
++AM_CONDITIONAL(BUILD_GSASL_TOOL, test x$gsasl_tool = xyes)
+ 
+ AC_ARG_ENABLE([gcc-warnings],
+   [AS_HELP_STRING([[--enable-gcc-warnings[=TYPE]]],
+diff --git a/Makefile.am b/Makefile.am
+index 016e0ed7..54121ff1 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -19,7 +19,10 @@ AM_DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --with-gssapi-impl=no
+ 
+ ACLOCAL_AMFLAGS = -I m4 -I lib/m4
+ 
+-SUBDIRS = lib po gl src examples tests doc
++if BUILD_GSASL_TOOL
++  MAYBE_GSASL_TOOL = src
++endif
++SUBDIRS = lib po gl $(MAYBE_GSASL_TOOL)
+ 
+ EXTRA_DIST = cfg.mk maint.mk CONTRIBUTING.md
+ EXTRA_DIST += m4/gnulib-cache.m4

@@ -1,6 +1,7 @@
 {
   "name": "qtopcua",
   "version": "6.8.3",
+  "port-version": 1,
   "description": "The Qt OPC UA module implements a Qt API to interact with OPC UA on top of a 3rd party OPC UA stack.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -41,7 +42,6 @@
           "name": "open62541",
           "default-features": false,
           "features": [
-            "amalgamation",
             "historizing",
             "openssl"
           ]

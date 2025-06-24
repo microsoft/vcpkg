@@ -1,7 +1,6 @@
 {
   "name": "minhook",
-  "version": "1.3.3",
-  "port-version": 5,
+  "version": "1.3.4",
   "description": "The Minimalistic x86/x64 API Hooking Library for Windows.",
   "homepage": "https://github.com/TsudaKageyu/minhook",
   "license": "BSD-2-Clause",

@@ -1,9 +1,8 @@
 {
   "name": "libmultisense",
-  "version": "6.1.0",
+  "version": "7.1.0",
   "description": "A C++ library for interfacing with the MultiSense S family of sensors from Carnegie Robotics.",
   "homepage": "https://github.com/carnegierobotics/LibMultiSense",
-  "supports": "linux | (windows & !static)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -15,6 +14,21 @@
     }
   ],
   "features": {
+    "json-serialization": {
+      "description": "Build JSON type serialization helpers.",
+      "dependencies": [
+        {
+          "name": "nlohmann-json",
+          "version>=": "3.10.2"
+        }
+      ]
+    },
+    "opencv": {
+      "description": "Build OpenCV helpers.",
+      "dependencies": [
+        "opencv"
+      ]
+    },
     "utilities": {
       "description": "Build MultiSense utility applications."
     }

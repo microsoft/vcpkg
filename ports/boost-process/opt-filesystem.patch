@@ -1,17 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c0c1bfef94..3c879b8958 100644
---- a/CMakeLists.txt	
+index 19826d3..bac311d 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -17,7 +17,7 @@ target_link_libraries(boost_process
-     Boost::asio
-     Boost::config
-     Boost::core
--    Boost::filesystem
-+    $<TARGET_NAME_IF_EXISTS:Boost::filesystem>
-     Boost::fusion
-     Boost::iterator
-     Boost::move
-@@ -50,6 +50,11 @@ target_compile_definitions(boost_process
+@@ -49,6 +49,11 @@ target_compile_definitions(boost_process
          PRIVATE BOOST_PROCESS_SOURCE=1
  )
  

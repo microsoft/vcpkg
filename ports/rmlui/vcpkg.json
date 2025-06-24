@@ -1,13 +1,13 @@
 {
   "name": "rmlui",
-  "version": "6.0",
-  "port-version": 1,
+  "version": "6.1",
   "maintainers": "Michael R. P. Ragazzon <mikke89@users.noreply.github.com>",
   "description": "RmlUi is the C++ user interface library based on the HTML and CSS standards, designed as a complete solution for any project's interface needs.",
   "homepage": "https://github.com/mikke89/RmlUi",
   "documentation": "https://mikke89.github.io/RmlUiDoc/",
   "license": "MIT",
   "dependencies": [
+    "itlib",
     "robin-hood-hashing",
     {
       "name": "vcpkg-cmake",
@@ -29,6 +29,12 @@
           "name": "freetype",
           "default-features": false
         }
+      ]
+    },
+    "lottie": {
+      "description": "Enable plugin for lottie animations",
+      "dependencies": [
+        "rlottie"
       ]
     },
     "lua": {

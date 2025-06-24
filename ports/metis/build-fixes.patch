@@ -14,7 +14,7 @@ index a15d19a..7210a61 100644
    set(METIS_INSTALL FALSE)
  else()
    set(METIS_INSTALL TRUE)
-@@ -34,19 +34,13 @@ include(./conf/gkbuild.cmake)
+@@ -34,19 +34,8 @@ include(./conf/gkbuild.cmake)
  #
  #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${METIS_COPTIONS}")
  
@@ -36,12 +36,7 @@ index a15d19a..7210a61 100644
  add_subdirectory("libmetis")
 -add_subdirectory("programs")
 +
-+install(EXPORT metisTargets FILE "metisTargets.cmake" DESTINATION "share/metis")
-+file(WRITE "${CMAKE_INSTALL_PREFIX}/share/metis/metisConfig.cmake" [=[
-+include(CMakeFindDependencyMacro)
-+find_dependency(GKlib CONFIG)
-+include("${CMAKE_CURRENT_LIST_DIR}/metisTargets.cmake")
-+]=])
++include(install_config.cmake)
 diff --git a/conf/gkbuild.cmake b/conf/gkbuild.cmake
 index 96435e5..ff43f05 100644
 --- a/conf/gkbuild.cmake

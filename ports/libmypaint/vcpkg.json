@@ -1,6 +1,7 @@
 {
   "name": "libmypaint",
   "version": "1.6.1",
+  "port-version": 1,
   "description": "Brush library used by MyPaint",
   "homepage": "mypaint.org",
   "license": "ISC",

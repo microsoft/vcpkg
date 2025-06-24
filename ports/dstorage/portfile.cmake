@@ -5,7 +5,7 @@ set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.DirectStorage/${VERSION}"
     FILENAME "directstorage.${VERSION}.zip"
-    SHA512 7d457f314d8ab61832d60dc8a6b1b7f7ab76a8ba89cdf5a2f80ccd34ec6a2b792058d1e1710284625c6803431d5a220b72fdfb87045cbd3d293884d87d6b2846
+    SHA512 0bae992933ff6d3a04e1af287ac96bc4516aaaf7f36d21249b1ab8147ccd5aa913f7151b36c628def5a733c24b7d35900574e845243a4cb4ee65f710e06ae9da
 )
 
 vcpkg_extract_source_archive(
@@ -14,12 +14,10 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64|arm64ec")
     set(DS_ARCH arm64)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(DS_ARCH x86)
 else()
-    set(DS_ARCH x64)
+    set(DS_ARCH ${VCPKG_TARGET_ARCHITECTURE})
 endif()
 
 file(INSTALL "${PACKAGE_PATH}/native/include/dstorage.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")

@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
       XAudio2Redist-ARM64.patch
+      GameInput-Connect.patch
 )
 
 vcpkg_check_features(

@@ -1,6 +1,6 @@
 {
   "name": "gtest",
-  "version-semver": "1.16.0",
+  "version-semver": "1.17.0",
   "port-version": 1,
   "description": "Google Testing and Mocking Framework",
   "homepage": "https://github.com/google/googletest",

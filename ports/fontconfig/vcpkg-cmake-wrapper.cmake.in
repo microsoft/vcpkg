@@ -1,5 +1,5 @@
 _find_package(${ARGS})
-if(Fontconfig_FOUND) # theoretically this could be skipped. If the wrapper is installed it should be found!
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     if(NOT TARGET Fontconfig::Fontconfig)
         # Simplify wrapper for case of vendored FindFontconfig.cmake
         add_library(Fontconfig::Fontconfig UNKNOWN IMPORTED)
@@ -32,6 +32,13 @@ if(Fontconfig_FOUND) # theoretically this could be skipped. If the wrapper is in
             set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:EXPAT::EXPAT>")
         else()
             # TODO link EXPAT_LIBRARIES transformed for $<CONFIG:...>.
+        endif()
+    endif()
+    if(NOT WIN32)
+        find_package(Iconv)
+        if(Iconv_FOUND)
+            list(APPEND Fontconfig_LIBRARIES "${Iconv_LIBRARIES}")
+            set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:Iconv::Iconv>")
         endif()
     endif()
 endif()

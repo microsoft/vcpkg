@@ -119,25 +119,33 @@ function(test_cmake_project)
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
         "-DCMAKE_INSTALL_PREFIX=${build_dir}/install"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
-        # Interface: vcpkg.cmake
+        # Interface: vcpkg.cmake and scripts/toolchains/*.cmake
+        "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
+        "-DVCPKG_CRT_LINKAGE=${VCPKG_CRT_LINKAGE}"
         "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         "-DVCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
         "-DVCPKG_MANIFEST_MODE=OFF"
         # Interface: project/CMakeLists.txt
+        "-DCHECK_BUILD_TYPE=${VCPKG_BUILD_TYPE}"
         "-DCHECK_CMAKE_VERSION=${cmake_version}"
+        # Interface: generic override
+        ${VCPKG_CMAKE_CONFIGURE_OPTIONS}
     )
 
-    if(DEFINED VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         # Interface: CMake
         list(APPEND base_options "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
-        if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-            list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
-        endif()
+    endif()
+    if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+        # Interface: scripts/toolchains/*.cmake
+        list(APPEND base_options "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
     endif()
 
     if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
-        list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
+        # Interface: scripts/toolchains/xbox.cmake
+        list(APPEND base_options "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -219,6 +227,10 @@ function(test_cmake_project)
         endif()
     endforeach()
 endfunction()
+
+if(NOT DEFINED VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
+    z_vcpkg_select_default_vcpkg_chainload_toolchain()
+endif()
 
 foreach(executable IN LISTS cmake_commands)
     test_cmake_project(NAME "release"

@@ -1,0 +1,16 @@
+{
+  "name": "libdicom",
+  "version": "1.2.0",
+  "description": "libdicom is a C library and a set of command-line tools for reading DICOM WSI files",
+  "homepage": "https://github.com/ImagingDataCommons/libdicom",
+  "documentation": "https://libdicom.readthedocs.io/en/latest/",
+  "license": "MIT",
+  "supports": "!android & !uwp & !(arm64 & windows)",
+  "dependencies": [
+    "uthash",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

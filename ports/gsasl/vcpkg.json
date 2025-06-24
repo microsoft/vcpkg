@@ -1,8 +1,21 @@
 {
   "name": "gsasl",
   "version": "2.2.2",
+  "port-version": 1,
   "description": "Simple Authentication and Security Layer framework and a few common SASL mechanisms",
   "homepage": "https://www.gnu.org/software/gsasl/",
-  "license": "GPL-3.0-or-later",
-  "supports": "!uwp"
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ],
+  "features": {
+    "tool": {
+      "description": "Build gsasl tool",
+      "license": "GPL-3.0-or-later"
+    }
+  }
 }
