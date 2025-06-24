@@ -12,8 +12,8 @@ set(VCPKG_BUILD_TYPE "release")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCRCPP_BUILD_TESTS=OFF
-        -DCRCPP_BUILD_DOCS=OFF
+        -DBUILD_TEST=OFF
+        -DBUILD_DOC=OFF
 )
 
 vcpkg_cmake_install()
