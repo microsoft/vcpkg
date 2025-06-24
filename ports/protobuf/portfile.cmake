@@ -2,13 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
     REF "v${VERSION}"
-    SHA512 32a9ae3de113b8c94e2aed21ad8f58e5ed4419a6d4078e51f614f0fabbf3bfe6c4affc62c2c1326e030a54df0fdcc47bb715b45022191a363f17680ec651b68e
+    SHA512 9138ac1b1c248246ed9840ab3879a6e18da60c709454ede2cb8e45e66e949998ab6e2c8aba557f0bb0b650ec430caeb546695b23387321ced5bc288866e04ad7
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
         fix-utf8-range.patch
         fix-install-dirs.patch
+        # Temporary fix for protobuf 6.31.1 https://github.com/protocolbuffers/protobuf/pull/22327
+        # This patch can be removed in the next version
+        fix-descriptor.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -56,7 +59,8 @@ vcpkg_cmake_configure(
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
         -Dprotobuf_ABSL_PROVIDER=package
-        -Dprotobuf_BUILD_LIBUPB=OFF
+        # Issues: libupb is hard bound in cmake builds https://github.com/protocolbuffers/protobuf/issues/18307
+        -Dprotobuf_BUILD_LIBUPB=ON
         ${FEATURE_OPTIONS}
 )
 
@@ -64,12 +68,12 @@ vcpkg_cmake_install()
 
 if(protobuf_BUILD_PROTOC_BINARIES)
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc-gen-upb protoc-gen-upbdefs protoc AUTO_CLEAN)
     else()
         string(REPLACE "." ";" VERSION_LIST ${VERSION})
         list(GET VERSION_LIST 1 VERSION_MINOR)
         list(GET VERSION_LIST 2 VERSION_PATCH)
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${VERSION_MINOR}.${VERSION_PATCH}.0 AUTO_CLEAN)
+        vcpkg_copy_tools(TOOL_NAMES protoc-gen-upb protoc-gen-upbdefs protoc protoc-${VERSION_MINOR}.${VERSION_PATCH}.0 AUTO_CLEAN)
     endif()
 else()
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
