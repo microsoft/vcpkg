@@ -1,9 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-# Use local source when developing overlay ports:
-# set(SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}/../..")
-
-# Use GitHub when submitting to vcpkg registry:
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO open-source-patterns/collection
