@@ -1,0 +1,13 @@
+{
+  "name": "libpisp",
+  "version": "1.2.1",
+  "description": "A helper library to generate run-time configuration for the Raspberry Pi ISP (PiSP), consisting of the Frontend and Backend hardware components.",
+  "license": "BSD-2-Clause",
+  "supports": "arm64 & linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
