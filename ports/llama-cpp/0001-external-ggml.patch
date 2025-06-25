@@ -1,15 +1,11 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -145,10 +145,8 @@ endif()
+@@ -145,6 +145,8 @@ endif()
  # 3rd-party
  #
  
--if (NOT TARGET ggml)
--    add_subdirectory(ggml)
--    # ... otherwise assume ggml is added by a parent CMakeLists.txt
--endif()
 +find_package(ggml CONFIG REQUIRED)
-+add_library(ggml ALIAS ggml::all)
- 
- #
- # build the library
++add_library(ggml ALIAS ggml::ggml)
+ if (NOT TARGET ggml)
+     add_subdirectory(ggml)
+     # ... otherwise assume ggml is added by a parent CMakeLists.txt
