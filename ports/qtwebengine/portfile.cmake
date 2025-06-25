@@ -74,7 +74,7 @@ foreach(_feat IN LISTS enabled_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=ON")
 endforeach()
 
-if(VCPKG_TARGET_IS_LINUX)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     # qt_configure_add_summary_entry(ARGS "webengine-system-lcms2")
     # qt_configure_add_summary_entry(ARGS "webengine-system-libpci")
     # + ALSA and PULSEAUDIO
@@ -88,14 +88,13 @@ if(VCPKG_TARGET_IS_LINUX)
     # vcpkg ports exist, but don't work with chromium
     list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libevent=OFF")
     list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libvpx=OFF")
+
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 endif()
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(PKGCONFIG)
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-endif()
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 
