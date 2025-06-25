@@ -1,7 +1,6 @@
 {
   "name": "argtable3",
-  "version-string": "3.3.0.116da6c",
-  "port-version": 1,
+  "version": "3.3.1",
   "description": "A single-file, ANSI C, command-line parsing library that parses GNU-style command-line options",
   "homepage": "https://www.argtable.org/",
   "license": "BSD-3-Clause AND TCL",
