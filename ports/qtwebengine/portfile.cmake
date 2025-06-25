@@ -6,6 +6,8 @@ set(${PORT}_PATCHES
       "fix-error2275-2672.patch"
       "blink-include-fixes.patch"
       "nested-name-fix.patch"
+      "pdf-system-libjpeg.diff"
+      "pdf-system-libpng.diff"
       "pkg-config.diff"
       "rpath.diff"
 )
@@ -84,9 +86,16 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     # qt_configure_add_summary_entry(ARGS "webengine-system-lcms2")
     # qt_configure_add_summary_entry(ARGS "webengine-system-libpci")
     # + ALSA and PULSEAUDIO
-    set(system_libs re2 icu libwebp opus snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype)
+    # gbm, libpci ?
+    set(system_libs freetype glib harfbuzz libjpeg libpng libtiff libwebp libxml minizip re2 snappy zlib)
+    if(NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_OSX)
+        list(APPEND system_libs icu)
+    endif()
+    if("pdfium" IN_LIST FEATURES)
+        list(APPEND system_libs lcms2 libopenjpeg2)
+    endif()
     if("webengine" IN_LIST FEATURES)
-        list(APPEND system_libs ffmpeg)
+        list(APPEND system_libs ffmpeg opus)
     endif()
     foreach(_sys_lib IN LISTS system_libs)
         list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_${_sys_lib}=ON")
@@ -176,6 +185,12 @@ qt_cmake_configure(
         "-DNodejs_EXECUTABLE=${NODEJS}"
         "-DPython3_EXECUTABLE=${PYTHON3}"
         -DQT_FEATURE_webengine_jumbo_build=0
+        -DVCPKG_LOCK_FIND_PACKAGE_BISON=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_FLEX=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_GPerf=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Ninja=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Nodejs=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_PkgConfig=ON
     OPTIONS_MAYBE_UNUSED
         FEATURE_webengine_webrtc
 )

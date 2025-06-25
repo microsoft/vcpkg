@@ -44,6 +44,14 @@
       "supports": "android | ios | linux | osx | (windows & x64 & !static)",
       "dependencies": [
         {
+          "name": "lcms",
+          "platform": "!windows"
+        },
+        {
+          "name": "openjpeg",
+          "platform": "!windows"
+        },
+        {
           "name": "qtwebengine",
           "default-features": false,
           "features": [
@@ -55,10 +63,6 @@
     "private-dependencies": {
       "description": "Bundles the common dependencies of the pdf and webengine features.",
       "dependencies": [
-        {
-          "name": "fontconfig",
-          "platform": "!windows"
-        },
         {
           "name": "freetype",
           "platform": "!windows"
@@ -77,15 +81,7 @@
         },
         {
           "name": "icu",
-          "platform": "!windows"
-        },
-        {
-          "name": "lcms",
-          "platform": "!windows"
-        },
-        {
-          "name": "libevent",
-          "platform": "!windows"
+          "platform": "!ios & !osx & !windows"
         },
         {
           "name": "libjpeg-turbo",
@@ -93,10 +89,6 @@
         },
         {
           "name": "libpng",
-          "platform": "!windows"
-        },
-        {
-          "name": "libvpx",
           "platform": "!windows"
         },
         {
@@ -112,14 +104,19 @@
           "platform": "!windows"
         },
         {
+          "name": "libxslt",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        {
           "name": "minizip",
           "platform": "!windows"
         },
-        "opengl",
         {
-          "name": "openjpeg",
-          "platform": "!windows"
+          "name": "nss",
+          "platform": "android | linux"
         },
+        "opengl",
         {
           "name": "opus",
           "platform": "!windows"
@@ -167,6 +164,11 @@
         },
         {
           "name": "snappy",
+          "platform": "!windows"
+        },
+        {
+          "name": "tiff",
+          "default-features": false,
           "platform": "!windows"
         },
         {
@@ -236,6 +238,10 @@
         },
         {
           "name": "ffmpeg",
+          "platform": "!windows"
+        },
+        {
+          "name": "opus",
           "platform": "!windows"
         },
         {
