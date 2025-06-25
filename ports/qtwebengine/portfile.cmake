@@ -99,6 +99,9 @@ if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 endif()
 
+set(ENV{QTWEBENGINE_GN_THREADS} "${VCPKG_CONCURRENCY}")
+set(ENV{NINJAFLAGS} "-j${VCPKG_CONCURRENCY} $ENV{NINJAFLAGS}")
+
 ##### qt_install_submodule, unrolled
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
