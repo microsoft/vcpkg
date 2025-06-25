@@ -8,7 +8,6 @@ set(${PORT}_PATCHES
       "nested-name-fix.patch"
 )
 
-set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -100,7 +99,7 @@ if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 endif()
 
-##### qt_install_submodule
+##### qt_install_submodule, unrolled
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
@@ -109,21 +108,23 @@ if(QT_UPDATE_VERSION)
     return()
 endif()
 
-qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
-                    OPTIONS ${FEATURE_OPTIONS}
-                        -DGPerf_EXECUTABLE=${GPERF}
-                        -DBISON_EXECUTABLE=${BISON}
-                        -DFLEX_EXECUTABLE=${FLEX}
-                        -DNodejs_EXECUTABLE=${NODEJS}
-                        -DPython3_EXECUTABLE=${PYTHON3}
-                        -DQT_FEATURE_webengine_jumbo_build=0
-                   OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
-                   OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
+qt_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE # due to in source changes.
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        "-DGPerf_EXECUTABLE=${GPERF}"
+        "-DBISON_EXECUTABLE=${BISON}"
+        "-DFLEX_EXECUTABLE=${FLEX}"
+        "-DNodejs_EXECUTABLE=${NODEJS}"
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+        -DQT_FEATURE_webengine_jumbo_build=0
+    OPTIONS_MAYBE_UNUSED
+        FEATURE_webengine_webrtc
+)
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
-
+qt_fixup_and_cleanup(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.exe")
