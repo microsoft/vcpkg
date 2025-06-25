@@ -8640,6 +8640,10 @@
       "baseline": "2.4.0",
       "port-version": 3
     },
+    "ser20": {
+      "baseline": "0.9.1",
+      "port-version": 0
+    },
     "serd": {
       "baseline": "0.32.4",
       "port-version": 0
