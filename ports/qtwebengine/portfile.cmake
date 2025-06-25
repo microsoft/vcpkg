@@ -102,8 +102,14 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 
-find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node" PATH_SUFFIXES "bin" NO_DEFAULT_PATHS)
-find_program(NODEJS NAMES node)
+find_program(NODEJS
+    NAMES node
+    PATHS
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
+        ENV PATH
+    NO_DEFAULT_PATHS
+)
 if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
 endif()
