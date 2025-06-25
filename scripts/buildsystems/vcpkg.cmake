@@ -699,9 +699,10 @@ function(x_vcpkg_install_local_dependencies)
             set(component_param COMPONENT "${arg_COMPONENT}")
         endif()
 
+        set(allowed_target_types MODULE_LIBRARY SHARED_LIBRARY EXECUTABLE)
         foreach(target IN LISTS arg_TARGETS)
             get_target_property(target_type "${target}" TYPE)
-            if(NOT target_type STREQUAL "INTERFACE_LIBRARY")
+            if(target_type IN_LIST allowed_target_types)
                 install(CODE "message(\"-- Installing app dependencies for ${target}...\")
                     execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
                         -targetBinary \"${arg_DESTINATION}/$<TARGET_FILE_NAME:${target}>\"
