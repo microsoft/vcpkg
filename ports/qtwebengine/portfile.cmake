@@ -6,8 +6,18 @@ set(${PORT}_PATCHES
       "fix-error2275-2672.patch"
       "blink-include-fixes.patch"
       "nested-name-fix.patch"
+      "rpath.diff"
 )
 
+set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")
+if(VCPKG_CROSSCOMPILING)
+    if(NOT qtwebengine_host STREQUAL qtwebengine_target)
+        # Port limitation: qtwebengine-chromium builds and runs host tools.
+        message(WARNING "Building for ${TARGET_TRIPLET} on ${HOST_TRIPLET} is unsupported.")
+    endif()
+else()
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" "set(qtwebengine_host \"${qtwebengine_target}\")\n")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -138,9 +148,13 @@ qt_cmake_configure(
 )
 
 vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release/*/args.gn")
 if(NOT VCPKG_BUILD_TYPE)
     block(SCOPE_FOR VARIABLES)
     set(VCPKG_BUILD_TYPE debug)
+    if(VCPKG_TARGET_IS_LINUX AND EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Debug/${target_args_gn}")
+        file(APPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Debug/${target_args_gn}" "\ngcc_target_rpath=\"\\\${ORIGIN}:${CURRENT_INSTALLED_DIR}/debug/lib\"\n")
+    endif()
     vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
     vcpkg_cmake_install(ADD_BIN_TO_PATH)
     endblock()
@@ -148,6 +162,9 @@ endif()
 vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 block(SCOPE_FOR VARIABLES)
 set(VCPKG_BUILD_TYPE release)
+if(VCPKG_TARGET_IS_LINUX AND EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/${target_args_gn}")
+    file(APPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/${target_args_gn}" "\ngcc_target_rpath=\"\\\${ORIGIN}:${CURRENT_INSTALLED_DIR}/lib\"\n")
+endif()
 vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 endblock()
