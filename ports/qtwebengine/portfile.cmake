@@ -95,6 +95,10 @@ endif()
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 
@@ -104,12 +108,10 @@ if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
 endif()
 
+# To actually use nodejs from the port, its location be must prepended to PATH
+# after prepending the location of tools which might reside in system dirs.
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
-get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES html5lib OUT_PYTHON_VAR PYTHON3)
 
