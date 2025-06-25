@@ -66,7 +66,7 @@ endif()
 
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}/source"
-    AUTORECONF
+    # AUTORECONF # Requires autoconf 2.72 which is not available in all distros supported by vcpkg
     OPTIONS
         ${CONFIGURE_OPTIONS}
         --disable-samples
