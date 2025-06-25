@@ -21,14 +21,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "cscore",
-    "protobuf",
-    {
-      "name": "simulation-modules",
-      "platform": "!static"
-    }
-  ],
   "features": {
     "cscore": {
       "description": "Enables cscore and cameraserver",
