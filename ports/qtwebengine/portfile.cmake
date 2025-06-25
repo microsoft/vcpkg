@@ -9,24 +9,50 @@ set(${PORT}_PATCHES
       "rpath.diff"
 )
 
+list(REMOVE_ITEM FEATURES "private-dependencies")
 set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")
 if(VCPKG_CROSSCOMPILING)
     if(NOT qtwebengine_host STREQUAL qtwebengine_target)
         # Port limitation: qtwebengine-chromium builds and runs host tools.
         message(WARNING "Building for ${TARGET_TRIPLET} on ${HOST_TRIPLET} is unsupported.")
     endif()
+    if(FEATURES STREQUAL "core")
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+        return()
+    endif()
 else()
     file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" "set(qtwebengine_host \"${qtwebengine_target}\")\n")
+    if(FEATURES STREQUAL "core")
+        # Install only the custom gn executable.
+        set(VCPKG_BUILD_TYPE "release")
+        set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+        qt_install_submodule(
+            CONFIGURE_OPTIONS
+                -DBUILD_ONLY_GN=ON
+            CONFIGURE_OPTIONS_MAYBE_UNUSED
+                INSTALL_MKSPECSDIR
+                QT_BUILD_BENCHMARKS
+                QT_BUILD_EXAMPLES
+                QT_BUILD_TESTS
+                QT_MKSPECS_DIR
+                QT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS
+        )
+        qt_fixup_and_cleanup(TOOL_NAMES gn)
+        qt_install_copyright("${SOURCE_PATH}")
+        return()
+    endif()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
+    "geolocation"           FEATURE_webengine_geolocation
+    "geolocation"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Positioning
+    "pdf"                   FEATURE_qtpdf_build
     "proprietary-codecs"    FEATURE_webengine_proprietary_codecs
     "spellchecker"          FEATURE_webengine_spellchecker
-    "geolocation"           FEATURE_webengine_geolocation
     "webchannel"            FEATURE_webengine_webchannel
-    "geolocation"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_REQUIRE_FIND_PACKAGE_Qt6WebChannel
+    "webengine"             FEATURE_qtwebengine_build
 INVERTED_FEATURES
     "geolocation"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_DISABLE_FIND_PACKAGE_Qt6WebChannel
@@ -57,7 +83,10 @@ if(VCPKG_TARGET_IS_LINUX)
     # qt_configure_add_summary_entry(ARGS "webengine-system-lcms2")
     # qt_configure_add_summary_entry(ARGS "webengine-system-libpci")
     # + ALSA and PULSEAUDIO
-    set(system_libs re2 icu libwebp opus ffmpeg snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype)
+    set(system_libs re2 icu libwebp opus snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype)
+    if("webengine" IN_LIST FEATURES)
+        list(APPEND system_libs ffmpeg)
+    endif()
     foreach(_sys_lib IN LISTS system_libs)
         list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_${_sys_lib}=ON")
     endforeach()
@@ -171,13 +200,14 @@ endblock()
 vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.exe")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.pdb")
+if("webengine" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.exe")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.pdb")
+    endif()
+    file(RENAME "${CURRENT_PACKAGES_DIR}/resources" "${CURRENT_PACKAGES_DIR}/share/Qt6/resources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
 endif()
-
-file(RENAME "${CURRENT_PACKAGES_DIR}/resources" "${CURRENT_PACKAGES_DIR}/share/Qt6/resources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
 
 qt_install_copyright("${SOURCE_PATH}")
 
