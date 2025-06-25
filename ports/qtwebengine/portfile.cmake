@@ -42,10 +42,13 @@ if(VCPKG_TARGET_IS_LINUX)
     # qt_configure_add_summary_entry(ARGS "webengine-system-lcms2")
     # qt_configure_add_summary_entry(ARGS "webengine-system-libpci")
     # + ALSA and PULSEAUDIO
-    set(system_libs re2 icu libwebp opus ffmpeg libvpx snappy glib zlib minizip libevent protobuf libxml libpng libjpeg harfbuzz freetype)
+    set(system_libs re2 icu libwebp opus ffmpeg snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype)
     foreach(_sys_lib IN LISTS system_libs)
         list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_${_sys_lib}=ON")
     endforeach()
+    # vcpkg ports exist, but don't work with chromium
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libevent=OFF")
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libvpx=OFF")
 endif()
 
 vcpkg_find_acquire_program(FLEX)
