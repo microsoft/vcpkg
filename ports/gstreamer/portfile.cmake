@@ -110,6 +110,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         wildmidi        gst-plugins-bad:wildmidi
         x11             gst-plugins-bad:x11
         x265            gst-plugins-bad:x265
+        amd-amf         gst-plugins-bad:amfcodec
 )
 
 string(REPLACE "OFF" "disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
