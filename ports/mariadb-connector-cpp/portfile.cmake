@@ -3,9 +3,8 @@ vcpkg_from_github(
     REPO mariadb-corporation/mariadb-connector-cpp
     REF ${VERSION}
     HEAD_REF master
-    SHA512 90ce780e19babda02608134c99e8c0e7601a41ee5531097735beb54ec94c2dd38ecf4f457e9cac04831d7e886fe7c7b7a6d9fe799bf71d52ba168158ec36dc67
+    SHA512 bb0bebdd7b533b3b3b67599a0bdb430842230b996a3bf1b5c850a80eed4aeeb76a013c743a4c17a947bc4b0a39e5921ae87fe07eb360e4bb6a25acb85a73ecab
     PATCHES
-        fix-carray.diff
         libmariadb.diff
         mingw.diff
         install.diff
