@@ -53,6 +53,10 @@ endif()
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+endif()
 
 #vcpkg_find_acquire_program(GN) # Qt builds its own internal version
 
@@ -128,7 +132,21 @@ qt_cmake_configure(
         FEATURE_webengine_webrtc
 )
 
+vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+if(NOT VCPKG_BUILD_TYPE)
+    block(SCOPE_FOR VARIABLES)
+    set(VCPKG_BUILD_TYPE debug)
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
+    vcpkg_cmake_install(ADD_BIN_TO_PATH)
+    endblock()
+endif()
+vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
+block(SCOPE_FOR VARIABLES)
+set(VCPKG_BUILD_TYPE release)
+vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
+endblock()
+vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
 qt_fixup_and_cleanup(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
