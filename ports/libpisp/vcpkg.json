@@ -5,6 +5,7 @@
   "license": "BSD-2-Clause",
   "supports": "arm64 & linux",
   "dependencies": [
+    "nlohmann-json",
     {
       "name": "vcpkg-tool-meson",
       "host": true
