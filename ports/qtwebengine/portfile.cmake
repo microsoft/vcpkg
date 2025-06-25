@@ -22,7 +22,7 @@ INVERTED_FEATURES
     "webchannel"            CMAKE_DISABLE_FIND_PACKAGE_Qt6WebChannel
 )
 
-if(VCPKG_TARGET_IS_OSX AND "spellchecker" IN_LIST FEATRUES)
+if(VCPKG_TARGET_IS_OSX AND "spellchecker" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_native_spellchecker=ON")
 endif()
 
