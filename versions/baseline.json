@@ -8732,6 +8732,10 @@
       "baseline": "1.6.2",
       "port-version": 0
     },
+    "signalsmith-stretch": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "sigslot": {
       "baseline": "1.0.0",
       "port-version": 5
