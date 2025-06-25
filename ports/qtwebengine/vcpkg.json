@@ -112,6 +112,11 @@
           "platform": "!windows"
         },
         {
+          "name": "libxslt",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        {
           "name": "minizip",
           "platform": "!windows"
         },
