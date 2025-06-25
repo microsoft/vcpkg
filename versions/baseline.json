@@ -6724,6 +6724,10 @@
       "baseline": "5.1.6",
       "port-version": 0
     },
+    "nvidia-ai-assisted-annotation-client": {
+      "baseline": "1.0.2",
+      "port-version": 0
+    },
     "nvidia-cutlass": {
       "baseline": "3.3.0",
       "port-version": 0
