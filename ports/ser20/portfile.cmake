@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO royjacobson/ser20
-    REF v0.9.1
+    REF "v${VERSION}"
     SHA512 3a9b796151d6fe48bf322758359ed6e39fa0025ada8fae0ca46177a986eb37c191fc014c5ad4776260aae4ed91c4d807a1b1175b7e13126a02fe7752314e3530
 )
 
