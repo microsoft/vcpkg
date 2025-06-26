@@ -1,0 +1,4 @@
+iperf3 provides CMake targets:
+
+    find_package(unofficial-iperf3 CONFIG REQUIRED)
+	target_link_libraries(main PRIVATE unofficial::iperf3::iperf3)
