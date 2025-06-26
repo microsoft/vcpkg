@@ -2132,6 +2132,10 @@
       "baseline": "2023-03-30",
       "port-version": 0
     },
+    "crossdb": {
+      "baseline": "0.14.0",
+      "port-version": 0
+    },
     "crossguid": {
       "baseline": "2021-10-22",
       "port-version": 3
