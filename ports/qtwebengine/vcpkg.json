@@ -77,7 +77,7 @@
         },
         {
           "name": "icu",
-          "platform": "!windows"
+          "platform": "!ios & !osx & !windows"
         },
         {
           "name": "lcms",

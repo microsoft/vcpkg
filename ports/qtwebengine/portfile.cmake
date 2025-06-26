@@ -83,7 +83,10 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     # qt_configure_add_summary_entry(ARGS "webengine-system-lcms2")
     # qt_configure_add_summary_entry(ARGS "webengine-system-libpci")
     # + ALSA and PULSEAUDIO
-    set(system_libs re2 icu libwebp opus snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype tiff)
+    set(system_libs re2 libwebp opus snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype libtiff)
+    if(NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_OSX)
+        list(APPEND system_libs icu)
+    endif()
     if("webengine" IN_LIST FEATURES)
         list(APPEND system_libs ffmpeg)
     endif()
@@ -96,6 +99,8 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_find_acquire_program(PKGCONFIG)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+    # Note <installed>/share/Qt6/QtBuildRepoHelpers.cmake
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_pkg_config=ON")
 
     list(APPEND FEATURE_OPTIONS --trace-expand)
 endif()
