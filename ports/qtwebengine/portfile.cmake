@@ -108,7 +108,7 @@ find_program(NODEJS
         "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
         "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
         ENV PATH
-    NO_DEFAULT_PATHS
+    NO_DEFAULT_PATH
 )
 if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
