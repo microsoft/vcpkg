@@ -175,6 +175,10 @@
           "platform": "!windows"
         },
         {
+          "name": "tiff",
+          "platform": "!windows"
+        },
+        {
           "name": "vcpkg-get-python-packages",
           "host": true
         },

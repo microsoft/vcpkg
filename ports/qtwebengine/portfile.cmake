@@ -78,7 +78,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     # qt_configure_add_summary_entry(ARGS "webengine-system-lcms2")
     # qt_configure_add_summary_entry(ARGS "webengine-system-libpci")
     # + ALSA and PULSEAUDIO
-    set(system_libs re2 icu libwebp opus snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype)
+    set(system_libs re2 icu libwebp opus snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype tiff)
     if("webengine" IN_LIST FEATURES)
         list(APPEND system_libs ffmpeg)
     endif()
