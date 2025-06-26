@@ -96,6 +96,8 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_find_acquire_program(PKGCONFIG)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
+    list(APPEND FEATURE_OPTIONS --trace-expand)
 endif()
 
 vcpkg_find_acquire_program(FLEX)
