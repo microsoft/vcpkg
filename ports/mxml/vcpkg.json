@@ -13,7 +13,7 @@
     },
     {
       "name": "vcpkg-make",
-      "host": "true",
+      "host": true,
       "platform": "!windows | mingw"
     }
   ]
