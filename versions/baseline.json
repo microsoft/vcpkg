@@ -4308,6 +4308,10 @@
       "baseline": "1.1.0",
       "port-version": 1
     },
+    "komihash": {
+      "baseline": "5.27",
+      "port-version": 0
+    },
     "krabsetw": {
       "baseline": "4.3.2",
       "port-version": 0
