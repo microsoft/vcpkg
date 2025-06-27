@@ -1,6 +1,7 @@
 {
   "name": "joltphysics",
   "version": "5.3.0",
+  "port-version": 1,
   "description": "A multi core friendly rigid body physics and collision detection library suitable for games and VR applications",
   "homepage": "https://github.com/jrouwe/JoltPhysics",
   "license": "MIT",
@@ -14,15 +15,36 @@
       "host": true
     }
   ],
+  "default-features": [
+    "object-stream"
+  ],
   "features": {
+    "asserts": {
+      "description": "Enable asserts"
+    },
     "debugrenderer": {
       "description": "Enable debug renderer in Debug and Release builds"
+    },
+    "disable-custom-allocator": {
+      "description": "Disable support for a custom memory allocator"
+    },
+    "double-precision": {
+      "description": "Use double precision math"
+    },
+    "exceptions": {
+      "description": "Enable C++ exceptions"
+    },
+    "object-stream": {
+      "description": "Enable support for serializing objects to a stream"
     },
     "profiler": {
       "description": "Enable the profiler in Debug and Release builds"
     },
     "rtti": {
       "description": "Enable C++ RTTI"
+    },
+    "std-vector": {
+      "description": "Use std::vector instead of Jolt's own Array class"
     }
   }
 }
