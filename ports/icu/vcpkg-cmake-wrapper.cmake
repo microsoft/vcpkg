@@ -128,3 +128,7 @@ if(ICU_FOUND AND NOT z_vcpkg_icu_fixup STREQUAL "")
     endif()
     cmake_policy(POP)
 endif()
+
+if(TARGET ICU::uc)
+    target_compile_features(ICU::uc INTERFACE cxx_std_17)
+endif()
