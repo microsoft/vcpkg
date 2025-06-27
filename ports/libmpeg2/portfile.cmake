@@ -1,15 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 # There is archived version of releases available at https://github.com/janisozaur/libmpeg2
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://libmpeg2.sourceforge.net/files/libmpeg2-0.5.1.tar.gz"
-    FILENAME "libmpeg2-0.5.1.tar.gz"
-    SHA512 3648a2b3d7e2056d5adb328acd2fb983a1fa9a05ccb6f9388cc686c819445421811f42e8439418a0491a13080977f074a0d8bf8fa6bc101ff245ddea65a46fbc
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_git(
+    OUT_SOURCE_PATH SOURCE_PATH
+    URL https://code.videolan.org/videolan/libmpeg2.git
+    REF 946bf4b518aacc224f845e73708f99e394744499  # Use a pinned commit hash
     PATCHES
         0001-Add-naive-MSVC-support-to-sources.patch
 )
