@@ -35,7 +35,7 @@
       "description": "Enable C++ exceptions"
     },
     "object-stream": {
-      "description": "Enable support for serializing objects to a stream"
+      "description": "Compile the ObjectStream class and RTTI attribute information"
     },
     "profiler": {
       "description": "Enable the profiler in Debug and Release builds"
