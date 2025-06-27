@@ -9072,6 +9072,10 @@
       "baseline": "2023-06-24",
       "port-version": 0
     },
+    "stardots-sdk-cpp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "starlink-ast": {
       "baseline": "9.2.12",
       "port-version": 0
