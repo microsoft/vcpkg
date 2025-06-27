@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 6d32311feda4b415f50236dbc1b982094fafe46f86bb3f2ad21365183bd7e9011d00e12c0c23827daf851022a20c99f7cc646e5957a10946300bdc836f91f924
     HEAD_REF master
     PATCHES
+        cxx-for-icu.diff
         disable-docs.patch
         fix_cmakelist.patch
         fix_ios_compilation.patch
@@ -53,6 +54,8 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_XPATH=ON
         -DLIBXML2_WITH_XPTR=ON
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    OPTIONS_DEBUG
+        -DLIBXML2_WITH_PROGRAMS=OFF
 )
 
 vcpkg_cmake_install()

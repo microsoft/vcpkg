@@ -1,8 +1,10 @@
 {
   "name": "livepp",
   "version-semver": "2.9.2",
+  "port-version": 1,
   "description": "Hot-reload for C & C++ transforms workflows and decreases iteration times.",
   "homepage": "https://liveplusplus.tech/",
+  "documentation": "https://liveplusplus.tech/docs/documentation.html",
   "license": null,
   "supports": "windows"
 }

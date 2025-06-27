@@ -1,4 +1,17 @@
 string(REPLACE "-" "" GIT_TAG "${VERSION}_git")
+
+vcpkg_download_distfile(FIX_UPSTREAM_37d17a9
+    URLS https://github.com/RainerKuemmerle/g2o/commit/37d17a94594648acf9cce85e8483c0405c510f0d.patch?full_index=1
+    SHA512 dc333fa43770fbdfc98592b4beb0ff03fdb033990b7054ae65953bad31899d11053fe08977526d70fa7fdf299ad0d2368ed79f29b9db847fdca3ff4e3d0415d9
+    FILENAME g2o-37d17a94594648acf9cce85e8483c0405c510f0d.patch
+)
+
+vcpkg_download_distfile(FIX_UPSTREAM_100af05
+    URLS https://github.com/RainerKuemmerle/g2o/commit/100af05931ae3497f39ab42cbeba240f50cc7b66.patch?full_index=1
+    SHA512 bc837081f14476e28e638de097fa7d8d44fa336d6f126391b4856dbfb6165d4fc89bf5a16d7e165a846288700596fd8d550c0a478bb7eb52d612d5d1ef62cbed
+    FILENAME g2o-100af05931ae3497f39ab42cbeba240f50cc7b66.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RainerKuemmerle/g2o
@@ -8,6 +21,8 @@ vcpkg_from_github(
     PATCHES
         fix-absolute.patch
         0003-dependency-spdlog.diff
+        "${FIX_UPSTREAM_37d17a9}"
+        "${FIX_UPSTREAM_100af05}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
