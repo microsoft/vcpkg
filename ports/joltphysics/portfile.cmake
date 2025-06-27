@@ -17,7 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         disable-custom-allocator    DISABLE_CUSTOM_ALLOCATOR
         double-precision            DOUBLE_PRECISION
         exceptions                  CPP_EXCEPTIONS_ENABLED
-        disable-object-stream       ENABLE_OBJECT_STREAM
+        object-stream               ENABLE_OBJECT_STREAM
         profiler                    PROFILER_IN_DEBUG_AND_RELEASE
         rtti                        CPP_RTTI_ENABLED
         std-vector                  USE_STD_VECTOR
