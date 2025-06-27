@@ -17,7 +17,6 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        DETERMINE_BUILD_TRIPLET
         COPY_SOURCE
     )
     vcpkg_make_install()
