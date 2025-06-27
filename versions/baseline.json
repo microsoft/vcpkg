@@ -3613,8 +3613,8 @@
       "port-version": 1
     },
     "harfbuzz": {
-      "baseline": "10.2.0",
-      "port-version": 4
+      "baseline": "11.2.0",
+      "port-version": 0
     },
     "hash-library": {
       "baseline": "8",
