@@ -4,7 +4,7 @@
   "description": "Ultra High-performance Lightweight Embedded and Server OLTP RDBMS",
   "homepage": "https://github.com/crossdb-org/crossdb",
   "license": "MPL-2.0",
-  "supports": "!windows | mingw",
+  "supports": "(!windows | mingw) & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
