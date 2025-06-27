@@ -8417,7 +8417,7 @@
       "port-version": 0
     },
     "ruckig": {
-      "baseline": "0.14.0",
+      "baseline": "0.15.3",
       "port-version": 0
     },
     "rxcpp": {
