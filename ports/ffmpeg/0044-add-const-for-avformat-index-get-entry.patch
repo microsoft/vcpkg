@@ -1,0 +1,51 @@
+diff --git a/libavformat/avformat.h b/libavformat/avformat.h
+index f12fa7d904..a5e33cf6b4 100644
+--- a/libavformat/avformat.h
++++ b/libavformat/avformat.h
+@@ -2647,7 +2647,7 @@ int avformat_index_get_entries_count(const AVStream *st);
+  *       until any function that takes the stream or the parent AVFormatContext
+  *       as input argument is called.
+  */
+-const AVIndexEntry *avformat_index_get_entry(AVStream *st, int idx);
++const AVIndexEntry *avformat_index_get_entry(const AVStream *st, int idx);
+ 
+ /**
+  * Get the AVIndexEntry corresponding to the given timestamp.
+@@ -2664,7 +2664,7 @@ const AVIndexEntry *avformat_index_get_entry(AVStream *st, int idx);
+  *       until any function that takes the stream or the parent AVFormatContext
+  *       as input argument is called.
+  */
+-const AVIndexEntry *avformat_index_get_entry_from_timestamp(AVStream *st,
++const AVIndexEntry *avformat_index_get_entry_from_timestamp(const AVStream *st,
+                                                             int64_t wanted_timestamp,
+                                                             int flags);
+ /**
+diff --git a/libavformat/seek.c b/libavformat/seek.c
+index 3b1c75f1b1..9ac6ff8fd1 100644
+--- a/libavformat/seek.c
++++ b/libavformat/seek.c
+@@ -247,20 +247,20 @@ int avformat_index_get_entries_count(const AVStream *st)
+     return cffstream(st)->nb_index_entries;
+ }
+ 
+-const AVIndexEntry *avformat_index_get_entry(AVStream *st, int idx)
++const AVIndexEntry *avformat_index_get_entry(const AVStream *st, int idx)
+ {
+-    const FFStream *const sti = ffstream(st);
++    const FFStream *const sti = cffstream(st);
+     if (idx < 0 || idx >= sti->nb_index_entries)
+         return NULL;
+ 
+     return &sti->index_entries[idx];
+ }
+ 
+-const AVIndexEntry *avformat_index_get_entry_from_timestamp(AVStream *st,
++const AVIndexEntry *avformat_index_get_entry_from_timestamp(const AVStream *st,
+                                                             int64_t wanted_timestamp,
+                                                             int flags)
+ {
+-    const FFStream *const sti = ffstream(st);
++    const FFStream *const sti = cffstream(st);
+     int idx = ff_index_search_timestamp(sti->index_entries,
+                                         sti->nb_index_entries,
+                                         wanted_timestamp, flags);
