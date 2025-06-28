@@ -147,7 +147,11 @@ function(checkout_in_path PATH URL REF)
         URL "${URL}"
         REF "${REF}"
     )
-    file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
+    if (WIN32)
+        file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${PATH}")
+    else()
+        file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
+    endif()
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
 endfunction()
 
