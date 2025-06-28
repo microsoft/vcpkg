@@ -1,6 +1,6 @@
 {
   "name": "libassert",
-  "version": "2.1.5",
+  "version": "2.2.0",
   "description": "The most over-engineered C++ assertion library",
   "homepage": "https://github.com/jeremy-rifkin/libassert",
   "license": "MIT",

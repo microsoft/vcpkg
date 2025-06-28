@@ -417,11 +417,6 @@ foreach(_config debug release)
         endif()
     endforeach()
 endforeach()
-if(VCPKG_CROSSCOMPILING AND NOT CMAKE_HOST_WIN32)
-    foreach(name IN ITEMS qmake qmake6 qtpaths qtpaths6)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${name}" "${CURRENT_HOST_INSTALLED_DIR}/" "\"\$script_dir_path\"/../../../../${HOST_TRIPLET}/")
-    endforeach()
-endif()
 
 # Fixup qt.toolchain.cmake
 set(qttoolchain "${CURRENT_PACKAGES_DIR}/share/Qt6/qt.toolchain.cmake")
@@ -481,6 +476,8 @@ set(CURRENT_HOST_INSTALLED_DIR "${BACKUP_CURRENT_HOST_INSTALLED_DIR}")
 set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}/")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONLY) # For vcpkg-qmake
 
+# target_qt_conf exists iff CMAKE_CROSSCOMPILING 
+# cf. qt_generate_qmake_and_qtpaths_wrapper_for_target in <src>/cmake/QtQmakeHelpers.cmake
 set(target_qt_conf "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/target_qt.conf")
 if(EXISTS "${target_qt_conf}")
     file(READ "${target_qt_conf}" qt_conf_contents)
@@ -488,6 +485,13 @@ if(EXISTS "${target_qt_conf}")
     string(REGEX REPLACE "HostData=[^\n]+" "HostData=./../${TARGET_TRIPLET}/share/Qt6" qt_conf_contents ${qt_conf_contents})
     string(REGEX REPLACE "HostPrefix=[^\n]+" "HostPrefix=./../../../../${_HOST_TRIPLET}" qt_conf_contents ${qt_conf_contents})
     file(WRITE "${target_qt_conf}" "${qt_conf_contents}")
+
+    if(script_suffix STREQUAL "")
+        foreach(name IN ITEMS qmake qmake6 qtpaths qtpaths6)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${name}" "${CURRENT_HOST_INSTALLED_DIR}/" "\"\$script_dir_path\"/../../../../${HOST_TRIPLET}/")
+        endforeach()
+    endif()
+
     if(NOT VCPKG_BUILD_TYPE)
       set(target_qt_conf_debug "${CURRENT_PACKAGES_DIR}/tools/Qt6/target_qt_debug.conf")
       configure_file("${target_qt_conf}" "${target_qt_conf_debug}" COPYONLY)
