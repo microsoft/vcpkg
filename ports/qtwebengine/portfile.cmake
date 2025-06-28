@@ -6,25 +6,65 @@ set(${PORT}_PATCHES
       "fix-error2275-2672.patch"
       "blink-include-fixes.patch"
       "nested-name-fix.patch"
+      "rpath.diff"
 )
 
-set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
+list(REMOVE_ITEM FEATURES "private-dependencies")
+set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")
+if(VCPKG_CROSSCOMPILING)
+    if(NOT qtwebengine_host STREQUAL qtwebengine_target)
+        # Port limitation: qtwebengine-chromium builds and runs host tools.
+        message(WARNING "Building for ${TARGET_TRIPLET} on ${HOST_TRIPLET} is unsupported.")
+    endif()
+    if(FEATURES STREQUAL "core")
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+        return()
+    endif()
+else()
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" "set(qtwebengine_host \"${qtwebengine_target}\")\n")
+    if(FEATURES STREQUAL "core")
+        # Install only the custom gn executable.
+        set(VCPKG_BUILD_TYPE "release")
+        set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+        qt_install_submodule(
+            CONFIGURE_OPTIONS
+                -DBUILD_ONLY_GN=ON
+            CONFIGURE_OPTIONS_MAYBE_UNUSED
+                INSTALL_MKSPECSDIR
+                QT_BUILD_BENCHMARKS
+                QT_BUILD_EXAMPLES
+                QT_BUILD_TESTS
+                QT_MKSPECS_DIR
+                QT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS
+        )
+        qt_fixup_and_cleanup(TOOL_NAMES gn)
+        qt_install_copyright("${SOURCE_PATH}")
+        return()
+    endif()
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
+    "geolocation"           FEATURE_webengine_geolocation
+    "geolocation"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Positioning
+    "pdf"                   FEATURE_qtpdf_build
     "proprietary-codecs"    FEATURE_webengine_proprietary_codecs
     "spellchecker"          FEATURE_webengine_spellchecker
-    "geolocation"           FEATURE_webengine_geolocation
     "webchannel"            FEATURE_webengine_webchannel
-    "geolocation"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_REQUIRE_FIND_PACKAGE_Qt6WebChannel
+    "webengine"             FEATURE_qtwebengine_build
 INVERTED_FEATURES
     "geolocation"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Positioning
     "webchannel"            CMAKE_DISABLE_FIND_PACKAGE_Qt6WebChannel
 )
 
-if(VCPKG_TARGET_IS_OSX AND "spellchecker" IN_LIST FEATRUES)
+if(VCPKG_TARGET_IS_OSX AND "spellchecker" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_native_spellchecker=ON")
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    string(COMPARE EQUAL "${VCPKG_RUNTIME_LINKAGE}" "static" static_runtime)
+    list(APPEND FEATURE_OPTIONS "-DQT_FEATURE_static_runtime=${static_runtime}")
 endif()
 
 # webengine-extensions
@@ -39,33 +79,57 @@ foreach(_feat IN LISTS enabled_features)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_${_feat}=ON")
 endforeach()
 
-if(VCPKG_TARGET_IS_LINUX)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     # qt_configure_add_summary_entry(ARGS "webengine-system-lcms2")
     # qt_configure_add_summary_entry(ARGS "webengine-system-libpci")
     # + ALSA and PULSEAUDIO
-    set(system_libs re2 icu libwebp opus ffmpeg libvpx snappy glib zlib minizip libevent protobuf libxml libpng libjpeg harfbuzz freetype)
+    set(system_libs re2 libwebp opus snappy glib zlib minizip libxml libpng libjpeg harfbuzz freetype libtiff)
+    if(NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_OSX)
+        list(APPEND system_libs icu)
+    endif()
+    if("webengine" IN_LIST FEATURES)
+        list(APPEND system_libs ffmpeg)
+    endif()
     foreach(_sys_lib IN LISTS system_libs)
         list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_${_sys_lib}=ON")
     endforeach()
+    # vcpkg ports exist, but don't work with chromium
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libevent=OFF")
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_system_libvpx=OFF")
+
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+    # Note <installed>/share/Qt6/QtBuildRepoHelpers.cmake
+    list(APPEND FEATURE_OPTIONS "-DFEATURE_pkg_config=ON")
+
+    list(APPEND FEATURE_OPTIONS --trace-expand)
 endif()
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
-
-#vcpkg_find_acquire_program(GN) # Qt builds its own internal version
-
-find_program(NODEJS NAMES node PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/node"  "bin" NO_DEFAULT_PATHS)
-find_program(NODEJS NAMES node)
-if(NOT NODEJS)
-    message(FATAL_ERROR "node not found! Please install it via your system package manager!")
-endif()
-
-get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+
+#vcpkg_find_acquire_program(GN) # Qt builds its own internal version
+
+find_program(NODEJS
+    NAMES node
+    PATHS
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
+        ENV PATH
+    NO_DEFAULT_PATH
+)
+if(NOT NODEJS)
+    message(FATAL_ERROR "node not found! Please install it via your system package manager!")
+endif()
+
+# To actually use nodejs from the port, its location be must prepended to PATH
+# after prepending the location of tools which might reside in system dirs.
+get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES html5lib OUT_PYTHON_VAR PYTHON3)
 
@@ -94,7 +158,10 @@ if(buildtree_length GREATER 22 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_
     file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 endif()
 
-##### qt_install_submodule
+set(ENV{QTWEBENGINE_GN_THREADS} "${VCPKG_CONCURRENCY}")
+set(ENV{NINJAFLAGS} "-j${VCPKG_CONCURRENCY} $ENV{NINJAFLAGS}")
+
+##### qt_install_submodule, unrolled
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
@@ -103,28 +170,53 @@ if(QT_UPDATE_VERSION)
     return()
 endif()
 
-qt_cmake_configure( DISABLE_PARALLEL_CONFIGURE # due to in source changes.
-                    OPTIONS ${FEATURE_OPTIONS}
-                        -DGPerf_EXECUTABLE=${GPERF}
-                        -DBISON_EXECUTABLE=${BISON}
-                        -DFLEX_EXECUTABLE=${FLEX}
-                        -DNodejs_EXECUTABLE=${NODEJS}
-                        -DPython3_EXECUTABLE=${PYTHON3}
-                        -DQT_FEATURE_webengine_jumbo_build=0
-                   OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
-                   OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
+qt_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE # due to in source changes.
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        "-DGPerf_EXECUTABLE=${GPERF}"
+        "-DBISON_EXECUTABLE=${BISON}"
+        "-DFLEX_EXECUTABLE=${FLEX}"
+        "-DNodejs_EXECUTABLE=${NODEJS}"
+        "-DPython3_EXECUTABLE=${PYTHON3}"
+        -DQT_FEATURE_webengine_jumbo_build=0
+    OPTIONS_MAYBE_UNUSED
+        FEATURE_webengine_webrtc
+)
 
+vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
+file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release/*/args.gn")
+if(NOT VCPKG_BUILD_TYPE)
+    block(SCOPE_FOR VARIABLES)
+    set(VCPKG_BUILD_TYPE debug)
+    if(VCPKG_TARGET_IS_LINUX AND EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Debug/${target_args_gn}")
+        file(APPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Debug/${target_args_gn}" "\ngcc_target_rpath=\"\\\${ORIGIN}:${CURRENT_INSTALLED_DIR}/debug/lib\"\n")
+    endif()
+    vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
+    vcpkg_cmake_install(ADD_BIN_TO_PATH)
+    endblock()
+endif()
+vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
+block(SCOPE_FOR VARIABLES)
+set(VCPKG_BUILD_TYPE release)
+if(VCPKG_TARGET_IS_LINUX AND EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/${target_args_gn}")
+    file(APPEND "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/${target_args_gn}" "\ngcc_target_rpath=\"\\\${ORIGIN}:${CURRENT_INSTALLED_DIR}/lib\"\n")
+endif()
+vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig" "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
+endblock()
+vcpkg_restore_env_variables(VARS PKG_CONFIG_PATH)
 
-qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
-
+qt_fixup_and_cleanup(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict webenginedriver)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.exe" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.exe")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/QtWebEngineProcessd.pdb" "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/debug/QtWebEngineProcessd.pdb")
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/resources" "${CURRENT_PACKAGES_DIR}/share/Qt6/resources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
+if("webengine" IN_LIST FEATURES)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/resources" "${CURRENT_PACKAGES_DIR}/share/Qt6/resources") # qt.conf wants it there and otherwise the QtWebEngineProcess cannot start
+endif()
 
 qt_install_copyright("${SOURCE_PATH}")
 
