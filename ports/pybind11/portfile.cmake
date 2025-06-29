@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 497c25b33b09a9c42f67131ab82e35d689e8ce089dd7639be997305ff9a6d502447b79c824508c455d559e61f0186335b54dd2771d903a7c1621833930622d1a
     HEAD_REF master
+    PATCHES
+        fix-bind-python-debug.patch
 )
 
 vcpkg_cmake_configure(

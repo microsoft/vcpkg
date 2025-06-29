@@ -1,0 +1,39 @@
+diff --git a/tools/pybind11NewTools.cmake b/tools/pybind11NewTools.cmake
+index a8b0800b..96c69386 100644
+--- a/tools/pybind11NewTools.cmake
++++ b/tools/pybind11NewTools.cmake
+@@ -129,14 +129,21 @@ if(NOT _PYBIND11_CROSSCOMPILING)
+     unset(PYTHON_MODULE_EXTENSION CACHE)
+   endif()
+ 
+-  set(PYBIND11_PYTHON_EXECUTABLE_LAST
+-      "${${_Python}_EXECUTABLE}"
+-      CACHE INTERNAL "Python executable during the last CMake run")
++  if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND DEFINED ${_Python}_EXECUTABLE_DEBUG AND IS_EXECUTABLE ${${_Python}_EXECUTABLE_DEBUG})
++    set(PYBIND11_PYTHON_EXECUTABLE_LAST
++        "${${_Python}_EXECUTABLE_DEBUG}"
++        CACHE INTERNAL "Python executable during the last CMake run")
++  else()
++    set(PYBIND11_PYTHON_EXECUTABLE_LAST
++        "${${_Python}_EXECUTABLE}"
++        CACHE INTERNAL "Python executable during the last CMake run")
++  endif()
++
+ 
+   if(NOT DEFINED PYTHON_IS_DEBUG)
+     # Debug check - see https://stackoverflow.com/questions/646518/python-how-to-detect-debug-Interpreter
+     execute_process(
+-      COMMAND "${${_Python}_EXECUTABLE}" "-c"
++      COMMAND "${PYBIND11_PYTHON_EXECUTABLE_LAST}" "-c"
+               "import sys; sys.exit(hasattr(sys, 'gettotalrefcount'))"
+       RESULT_VARIABLE _PYTHON_IS_DEBUG)
+     set(PYTHON_IS_DEBUG
+@@ -149,7 +156,7 @@ if(NOT _PYBIND11_CROSSCOMPILING)
+   if(NOT DEFINED PYTHON_MODULE_EXTENSION OR NOT DEFINED PYTHON_MODULE_DEBUG_POSTFIX)
+     execute_process(
+       COMMAND
+-        "${${_Python}_EXECUTABLE}" "-c"
++        "${PYBIND11_PYTHON_EXECUTABLE_LAST}" "-c"
+         "import sys, importlib; s = importlib.import_module('distutils.sysconfig' if sys.version_info < (3, 10) else 'sysconfig'); print(s.get_config_var('EXT_SUFFIX') or s.get_config_var('SO'))"
+       OUTPUT_VARIABLE _PYTHON_MODULE_EXT_SUFFIX
+       ERROR_VARIABLE _PYTHON_MODULE_EXT_SUFFIX_ERR
