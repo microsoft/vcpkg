@@ -3713,8 +3713,8 @@
       "port-version": 0
     },
     "hpx": {
-      "baseline": "1.10.0",
-      "port-version": 1
+      "baseline": "1.11.0",
+      "port-version": 0
     },
     "htscodecs": {
       "baseline": "1.6.1",
