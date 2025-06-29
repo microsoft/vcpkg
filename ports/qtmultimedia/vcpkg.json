@@ -48,6 +48,14 @@
         {
           "name": "qtdeclarative",
           "default-features": false
+        },
+        {
+          "name": "qtmultimedia",
+          "default-features": false,
+          "features": [
+            "qml"
+          ],
+          "platform": "linux"
         }
       ]
     },
