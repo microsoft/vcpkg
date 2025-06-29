@@ -22,7 +22,7 @@ do
     elif [ "$var" = "-buildTests" ]; then
         echo "Warning: -buildTests no longer has any effect; ignored."
     elif [ "$var" = "-skipDependencyChecks" ]; then
-        vcpkgSkipDependencyChecks="OFF"
+        vcpkgSkipDependencyChecks="ON"
     elif [ "$var" = "-musl" ]; then
         vcpkgUseMuslC="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
@@ -70,7 +70,8 @@ fi
 vcpkgCheckRepoTool()
 {
     __tool=$1
-    if [ "$vcpkgSkipDependencyChecks" = "ON" ]; then
+    # Only perform dependency checks when they are not explicitly skipped.
+    if [ "$vcpkgSkipDependencyChecks" = "OFF" ]; then
         if ! command -v "$__tool" >/dev/null 2>&1 ; then
             echo "Could not find $__tool. Please install it (and other dependencies) with:"
             echo "On Debian and Ubuntu derivatives:"
