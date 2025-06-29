@@ -1,5 +1,5 @@
 diff --git a/src/shogun/classifier/mkl/MKL.cpp b/src/shogun/classifier/mkl/MKL.cpp
-index 2622df919..1a36aa513 100644
+index 2622df9..1a36aa5 100644
 --- a/src/shogun/classifier/mkl/MKL.cpp
 +++ b/src/shogun/classifier/mkl/MKL.cpp
 @@ -369,7 +369,7 @@ bool MKL::train_machine(std::shared_ptr<Features> data)
@@ -12,7 +12,7 @@ index 2622df919..1a36aa513 100644
  	io::info("mkl_block_norm = {}", mkl_block_norm);
  
 diff --git a/src/shogun/classifier/mkl/MKLMulticlass.cpp b/src/shogun/classifier/mkl/MKLMulticlass.cpp
-index b50876f14..dc0f80e8a 100644
+index b50876f..dc0f80e 100644
 --- a/src/shogun/classifier/mkl/MKLMulticlass.cpp
 +++ b/src/shogun/classifier/mkl/MKLMulticlass.cpp
 @@ -104,7 +104,7 @@ void MKLMulticlass::initlpsolver()
@@ -25,7 +25,7 @@ index b50876f14..dc0f80e8a 100644
  
     int numker=std::dynamic_pointer_cast<CombinedKernel>(m_kernel)->get_num_subkernels();
 diff --git a/src/shogun/evaluation/ROCEvaluation.cpp b/src/shogun/evaluation/ROCEvaluation.cpp
-index 482f06528..58595c844 100644
+index 482f065..58595c8 100644
 --- a/src/shogun/evaluation/ROCEvaluation.cpp
 +++ b/src/shogun/evaluation/ROCEvaluation.cpp
 @@ -30,11 +30,11 @@ float64_t ROCEvaluation::evaluate(std::shared_ptr<Labels> predicted, std::shared
@@ -43,7 +43,7 @@ index 482f06528..58595c844 100644
  	return evaluate_roc(binary_labels(predicted),binary_labels(ground_truth));
  }
 diff --git a/src/shogun/io/SGIO.h b/src/shogun/io/SGIO.h
-index 336e35b03..0ba7b2c0b 100644
+index 336e35b..0ba7b2c 100644
 --- a/src/shogun/io/SGIO.h
 +++ b/src/shogun/io/SGIO.h
 @@ -307,7 +307,7 @@ namespace shogun
@@ -65,7 +65,7 @@ index 336e35b03..0ba7b2c0b 100644
  		env()->io()->message(io::MSG_ERROR, loc, msg.data());
  		throw ExceptionType(msg.data());
 diff --git a/src/shogun/io/serialization/JsonDeserializer.cpp b/src/shogun/io/serialization/JsonDeserializer.cpp
-index 24fd30edd..7667e34d3 100644
+index 24fd30e..7667e34 100644
 --- a/src/shogun/io/serialization/JsonDeserializer.cpp
 +++ b/src/shogun/io/serialization/JsonDeserializer.cpp
 @@ -49,7 +49,7 @@ public:
@@ -78,7 +78,7 @@ index 24fd30edd..7667e34d3 100644
  	void on(char* v) override
  	{
 diff --git a/src/shogun/io/serialization/JsonSerializer.cpp b/src/shogun/io/serialization/JsonSerializer.cpp
-index 22c99ec5c..530a14525 100644
+index 22c99ec..530a145 100644
 --- a/src/shogun/io/serialization/JsonSerializer.cpp
 +++ b/src/shogun/io/serialization/JsonSerializer.cpp
 @@ -62,7 +62,7 @@ public:
@@ -91,7 +91,7 @@ index 22c99ec5c..530a14525 100644
  		close_container();
  	}
 diff --git a/src/shogun/kernel/CustomKernel.cpp b/src/shogun/kernel/CustomKernel.cpp
-index 06a7e7abd..78be0ef6f 100644
+index 06a7e7a..78be0ef 100644
 --- a/src/shogun/kernel/CustomKernel.cpp
 +++ b/src/shogun/kernel/CustomKernel.cpp
 @@ -112,10 +112,10 @@ bool CustomKernel::init(std::shared_ptr<Features> l, std::shared_ptr<Features> r
@@ -107,8 +107,32 @@ index 06a7e7abd..78be0ef6f 100644
  
  	/* If l and r are the type of IndexFeatures,
  	 * the init function adds a subset to kernel matrix.
+diff --git a/src/shogun/labels/BinaryLabelEncoder.h b/src/shogun/labels/BinaryLabelEncoder.h
+index 5bcd57e..69ed63e 100644
+--- a/src/shogun/labels/BinaryLabelEncoder.h
++++ b/src/shogun/labels/BinaryLabelEncoder.h
+@@ -14,6 +14,7 @@
+ #include <shogun/labels/LabelEncoder.h>
+ #include <shogun/lib/SGVector.h>
+ #include <unordered_set>
++#include <fmt/ranges.h>
+ namespace shogun
+ {
+ 	/** @brief Implements a reversible mapping from
+diff --git a/src/shogun/labels/MulticlassLabelsEncoder.h b/src/shogun/labels/MulticlassLabelsEncoder.h
+index 41e9855..04151e4 100644
+--- a/src/shogun/labels/MulticlassLabelsEncoder.h
++++ b/src/shogun/labels/MulticlassLabelsEncoder.h
+@@ -13,6 +13,7 @@
+ #include <shogun/labels/LabelEncoder.h>
+ #include <shogun/labels/MulticlassLabels.h>
+ #include <shogun/lib/SGVector.h>
++#include <fmt/ranges.h>
+ 
+ namespace shogun
+ {
 diff --git a/src/shogun/preprocessor/DensePreprocessor.cpp b/src/shogun/preprocessor/DensePreprocessor.cpp
-index 56de8a9e6..05cd9a32e 100644
+index 56de8a9..05cd9a3 100644
 --- a/src/shogun/preprocessor/DensePreprocessor.cpp
 +++ b/src/shogun/preprocessor/DensePreprocessor.cpp
 @@ -90,7 +90,7 @@ std::shared_ptr<Features> DensePreprocessor<ST>::transform(std::shared_ptr<Featu
@@ -130,7 +154,7 @@ index 56de8a9e6..05cd9a32e 100644
  	auto matrix = features->as<DenseFeatures<ST>>()->get_feature_matrix();
  	if (!inplace)
 diff --git a/src/shogun/preprocessor/KernelPCA.cpp b/src/shogun/preprocessor/KernelPCA.cpp
-index 6709f67cd..0707f3db9 100644
+index 6709f67..0707f3d 100644
 --- a/src/shogun/preprocessor/KernelPCA.cpp
 +++ b/src/shogun/preprocessor/KernelPCA.cpp
 @@ -125,7 +125,7 @@ std::shared_ptr<Features> KernelPCA::transform(std::shared_ptr<Features> feature
@@ -143,7 +167,7 @@ index 6709f67cd..0707f3db9 100644
  }
  
 diff --git a/src/shogun/preprocessor/StringPreprocessor.cpp b/src/shogun/preprocessor/StringPreprocessor.cpp
-index c0c342b82..87629b5cb 100644
+index c0c342b..87629b5 100644
 --- a/src/shogun/preprocessor/StringPreprocessor.cpp
 +++ b/src/shogun/preprocessor/StringPreprocessor.cpp
 @@ -95,7 +95,7 @@ namespace shogun
@@ -156,7 +180,7 @@ index c0c342b82..87629b5cb 100644
  
  
 diff --git a/src/shogun/structure/BeliefPropagation.cpp b/src/shogun/structure/BeliefPropagation.cpp
-index e54228917..96b90c458 100644
+index e542289..96b90c4 100644
 --- a/src/shogun/structure/BeliefPropagation.cpp
 +++ b/src/shogun/structure/BeliefPropagation.cpp
 @@ -248,7 +248,7 @@ void TreeMaxProduct::bottom_up_pass()
@@ -178,7 +202,7 @@ index e54228917..96b90c458 100644
  		if (m_msg_order[mi]->mtype == FAC_TO_VAR) // factor <- var
  		{
 diff --git a/src/shogun/structure/CCSOSVM.cpp b/src/shogun/structure/CCSOSVM.cpp
-index 8dd920ad8..8267a402c 100644
+index 8dd920a..8267a40 100644
 --- a/src/shogun/structure/CCSOSVM.cpp
 +++ b/src/shogun/structure/CCSOSVM.cpp
 @@ -321,7 +321,7 @@ bool CCSOSVM::train_machine(std::shared_ptr<Features> data)
