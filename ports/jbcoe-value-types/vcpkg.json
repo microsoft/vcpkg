@@ -1,0 +1,17 @@
+{
+  "name": "jbcoe-value-types",
+  "version": "1.0.0",
+  "description": "Value-type for composite class design for C++26 (reference implementation of std::indirect and std::polymorphic from p3019r14)",
+  "homepage": "https://github.com/jbcoe/value_types",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
