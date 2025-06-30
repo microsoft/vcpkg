@@ -2533,7 +2533,7 @@
       "port-version": 3
     },
     "dxcam-cpp": {
-      "baseline": "0.2.1",
+      "baseline": "0.2.4",
       "port-version": 0
     },
     "dxsdk-d3dx": {
