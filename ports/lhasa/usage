@@ -1,0 +1,4 @@
+lhasa provides pkg-config modules:
+
+  # LHA (de)compression library
+  liblhasa
