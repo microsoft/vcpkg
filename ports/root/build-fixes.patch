@@ -1,0 +1,196 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6f7b06830..0aa4ff7b6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -553,11 +553,9 @@ if(runtime_cxxmodules)
+ endif()
+ 
+ #---hsimple.root---------(use the executable for clearer dependencies and proper return code)---
+-add_custom_target(hsimple ALL DEPENDS tutorials/hsimple.root)
+-add_dependencies(hsimple onepcm)
+ if(WIN32)
+   add_custom_command(OUTPUT tutorials/hsimple.root
+-                     COMMAND set PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY} &&
++                     COMMAND set "PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY};%PATH%" &&
+                              set ROOTIGNOREPREFIX=1 && set ROOT_HIST=0 &&
+                              $<TARGET_FILE:root.exe> -l -q -b -n -x hsimple.C -e return
+                      WORKING_DIRECTORY tutorials
+@@ -570,6 +568,9 @@ else()
+                      WORKING_DIRECTORY tutorials
+                      DEPENDS $<TARGET_FILE:root.exe> Cling Hist Tree Gpad Graf HistPainter move_artifacts)
+ endif()
++add_custom_target(hsimple ALL DEPENDS tutorials/hsimple.root)
++add_dependencies(hsimple onepcm)
++
+ install(FILES ${CMAKE_BINARY_DIR}/tutorials/hsimple.root DESTINATION ${CMAKE_INSTALL_TUTDIR} COMPONENT tests)
+ 
+ if(runtime_cxxmodules)
+diff --git a/cmake/modules/RootMacros.cmake b/cmake/modules/RootMacros.cmake
+index ad00f6939..ee032b1c8 100644
+--- a/cmake/modules/RootMacros.cmake
++++ b/cmake/modules/RootMacros.cmake
+@@ -1844,7 +1844,7 @@ function(ROOT_ADD_GTEST test_suite)
+   if(MSVC)
+     set(test_exports /EXPORT:_Init_thread_abort /EXPORT:_Init_thread_epoch
+         /EXPORT:_Init_thread_footer /EXPORT:_Init_thread_header /EXPORT:_tls_index)
+-    set_property(TARGET ${test_suite} APPEND_STRING PROPERTY LINK_FLAGS ${test_exports})
++    set_property(TARGET ${test_suite} APPEND PROPERTY LINK_OPTIONS ${test_exports})
+   endif()
+ 
+   if(ARG_WILLFAIL)
+diff --git a/cmake/modules/SearchInstalledSoftware.cmake b/cmake/modules/SearchInstalledSoftware.cmake
+index c6dc439ba..3ea0b6aca 100644
+--- a/cmake/modules/SearchInstalledSoftware.cmake
++++ b/cmake/modules/SearchInstalledSoftware.cmake
+@@ -1302,8 +1302,8 @@ if(imt AND NOT builtin_tbb)
+   if(fail-on-missing)
+     find_package(TBB 2018 REQUIRED)
+   else()
+-    find_package(TBB 2018)
+-    if(NOT TBB_FOUND)
++    find_package(TBB CONFIG REQUIRED)
++    if(0)
+       message(STATUS "TBB not found, enabling 'builtin_tbb' option")
+       set(builtin_tbb ON CACHE BOOL "Enabled because imt is enabled, but TBB was not found" FORCE)
+     endif()
+@@ -1312,7 +1312,7 @@ if(imt AND NOT builtin_tbb)
+   # Check that the found TBB does not use captured exceptions. If the header
+   # <tbb/tbb_config.h> does not exist, assume that we have oneTBB newer than
+   # version 2021, which does not have captured exceptions anyway.
+-  if(TBB_FOUND AND EXISTS "${TBB_INCLUDE_DIRS}/tbb/tbb_config.h")
++  if(0)
+     set(CMAKE_REQUIRED_INCLUDES "${TBB_INCLUDE_DIRS}")
+     check_cxx_source_compiles("
+ #include <tbb/tbb_config.h>
+@@ -1330,6 +1330,13 @@ int main() { return 0; }" tbb_exception_result)
+   endif()
+ 
+  set(TBB_CXXFLAGS "-DTBB_SUPPRESS_DEPRECATED_MESSAGES=1")
++  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
++    string(APPEND TBB_CXXFLAGS " -D_DEBUG=1")
++  endif()
++  set(TBB_TARGET TBB::tbb)
++  set(TBB_INCLUDE_DIRS "${VCPKG_INSTALLED_DIR}/include")
++  set(TBB_LIBRARIES "${TBB_TARGET}")
++  set(TBB_LIBRARIES "${TBB_TARGET}" CACHE STRING "")
+ endif()
+ 
+ if(builtin_tbb AND NO_CONNECTION)
+@@ -1342,7 +1346,7 @@ if(builtin_tbb AND NO_CONNECTION)
+   endif()
+ endif()
+ 
+-if(builtin_tbb)
++if(0)
+   set(tbb_builtin_version 2019_U9)
+   set(tbb_sha256 15652f5328cf00c576f065e5cd3eaf3317422fe82afb67a9bcec0dc065bd2abe)
+   if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
+diff --git a/cmake/modules/SetUpWindows.cmake b/cmake/modules/SetUpWindows.cmake
+index 118973c15..49ea54d94 100644
+--- a/cmake/modules/SetUpWindows.cmake
++++ b/cmake/modules/SetUpWindows.cmake
+@@ -55,10 +55,10 @@ elseif(MSVC)
+ 
+   #---Select compiler flags----------------------------------------------------------------
+   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -Z7")
+-  set(CMAKE_CXX_FLAGS_RELEASE        "-O2")
++  set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -Z7")
+   set(CMAKE_CXX_FLAGS_DEBUG          "-Od -Z7")
+   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -Z7")
+-  set(CMAKE_C_FLAGS_RELEASE          "-O2")
++  set(CMAKE_C_FLAGS_RELEASE          "-O2 -Z7")
+   set(CMAKE_C_FLAGS_DEBUG            "-Od -Z7")
+ 
+   #---Set Linker flags----------------------------------------------------------------------
+diff --git a/main/CMakeLists.txt b/main/CMakeLists.txt
+index d83759edd..44d7c7ed3 100644
+--- a/main/CMakeLists.txt
++++ b/main/CMakeLists.txt
+@@ -19,10 +19,10 @@ if(NOT WIN32)
+ endif()
+ ROOT_EXECUTABLE(root.exe rmain.cxx LIBRARIES Core Rint)
+ if(MSVC)
+-  set(root_exports "/EXPORT:_Init_thread_abort /EXPORT:_Init_thread_epoch
++  set(root_exports /EXPORT:_Init_thread_abort /EXPORT:_Init_thread_epoch
+       /EXPORT:_Init_thread_footer /EXPORT:_Init_thread_header /EXPORT:_tls_index
+-      /STACK:4000000 setargv.obj")
+-  set_property(TARGET root.exe APPEND_STRING PROPERTY LINK_FLAGS ${root_exports})
++      /STACK:4000000 setargv.obj)
++  set_property(TARGET root.exe APPEND PROPERTY LINK_OPTIONS ${root_exports})
+   add_custom_command(TARGET root.exe POST_BUILD
+                      COMMAND mt -manifest ${ROOT_MANIFEST} -outputresource:${CMAKE_BINARY_DIR}/bin/root.exe)
+ endif()
+diff --git a/math/mathcore/test/CMakeLists.txt b/math/mathcore/test/CMakeLists.txt
+index 2c27bbc38..574068946 100644
+--- a/math/mathcore/test/CMakeLists.txt
++++ b/math/mathcore/test/CMakeLists.txt
+@@ -68,7 +68,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(TrackMathCoreUnitDict
+                               LINKDEF stress/TrackMathCoreLinkDef.h
+                               DEPENDENCIES Core MathCore RIO GenVector Smatrix)
+ 
+-if(MSVC)
++if(CMAKE_GENERATOR MATCHES "Visual Studio")
+   add_custom_command(TARGET TrackMathCoreUnitDict POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/libTrackMathCoreUnitDict.dll
+                                      ${CMAKE_CURRENT_BINARY_DIR}/libTrackMathCoreUnitDict.dll)
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 5a6e92ea4..e8f9bc30c 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -49,7 +49,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(Event
+                               HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/Event.h
+                               SOURCES Event.cxx LINKDEF EventLinkDef.h
+                               DEPENDENCIES Hist MathCore)
+-if(MSVC)
++if(CMAKE_GENERATOR MATCHES "Visual Studio")
+   if(NOT runtime_cxxmodules)
+     add_custom_command(TARGET Event POST_BUILD
+       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/libEvent_rdict.pcm
+@@ -229,7 +229,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(TrackMathCoreDict
+                               HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/TrackMathCore.h
+                               LINKDEF TrackMathCoreLinkDef.h
+                               DEPENDENCIES Core MathCore RIO GenVector Smatrix)
+-if(MSVC)
++if(CMAKE_GENERATOR MATCHES "Visual Studio")
+   add_custom_command(TARGET TrackMathCoreDict POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/libTrackMathCoreDict.dll
+                                      ${CMAKE_CURRENT_BINARY_DIR}/libTrackMathCoreDict.dll)
+diff --git a/tree/ntuple/v7/test/CMakeLists.txt b/tree/ntuple/v7/test/CMakeLists.txt
+index 77eb51700..026d3adab 100644
+--- a/tree/ntuple/v7/test/CMakeLists.txt
++++ b/tree/ntuple/v7/test/CMakeLists.txt
+@@ -17,7 +17,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(CustomStruct
+                               LINKDEF CustomStructLinkDef.h
+                               DEPENDENCIES RIO)
+ configure_file(CustomStruct.hxx . COPYONLY)
+-if(MSVC)
++if(CMAKE_GENERATOR MATCHES "Visual Studio")
+   add_custom_command(TARGET CustomStruct POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/libCustomStruct.dll
+                                      ${CMAKE_CURRENT_BINARY_DIR}/libCustomStruct.dll)
+diff --git a/tree/ntupleutil/v7/test/CMakeLists.txt b/tree/ntupleutil/v7/test/CMakeLists.txt
+index 92039a39d..8ab7a84e5 100644
+--- a/tree/ntupleutil/v7/test/CMakeLists.txt
++++ b/tree/ntupleutil/v7/test/CMakeLists.txt
+@@ -13,7 +13,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(CustomStructUtil
+                               LINKDEF CustomStructUtilLinkDef.h
+                               DEPENDENCIES RIO)
+ configure_file(CustomStructUtil.hxx . COPYONLY)
+-if(MSVC)
++if(CMAKE_GENERATOR MATCHES "Visual Studio")
+   add_custom_command(TARGET CustomStructUtil POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/libCustomStructUtil.dll
+                                      ${CMAKE_CURRENT_BINARY_DIR}/libCustomStructUtil.dll)
+diff --git a/tree/tree/test/CMakeLists.txt b/tree/tree/test/CMakeLists.txt
+index 63b87bcd0..0dd6b82b4 100644
+--- a/tree/tree/test/CMakeLists.txt
++++ b/tree/tree/test/CMakeLists.txt
+@@ -9,7 +9,7 @@ ROOT_GENERATE_DICTIONARY(ElementStructDict ElementStruct.h LINKDEF ElementStruct
+ ROOT_ADD_GTEST(testTOffsetGeneration TOffsetGeneration.cxx ElementStruct.cxx ElementStructDict.cxx
+   LIBRARIES RIO Tree MathCore
+ )
+-if(MSVC)
++if(CMAKE_GENERATOR MATCHES "Visual Studio")
+   add_custom_command(TARGET testTOffsetGeneration POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/libElementStructDict_rdict.pcm
+                                      ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/libElementStructDict_rdict.pcm)
