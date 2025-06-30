@@ -1532,6 +1532,7 @@ opencv4[cuda]:arm64-uwp = cascade
 opencv4[cuda]:arm64-windows = cascade
 opencv4[cuda]:arm64-windows-static-md = cascade
 opencv4[cuda,cudnn](osx) = cascade
+opencv4[dnn,halide](osx) = combination-fails
 opencv4[cuda,cudnn,dc1394,dnn-cuda]:x86-windows = cascade
 opencv4[cuda,cudnn,dc1394,dnn-cuda,freetype,gdcm,gstreamer,halide,openexr,opengl,ovis,python,qt,sfm,tbb,vtk]:arm64-uwp = cascade
 opencv4[cuda,cudnn,dc1394,dnn-cuda,freetype,gdcm,gstreamer,halide,openexr,opengl,ovis,python,qt,sfm,tbb,vtk]:x64-uwp = cascade
