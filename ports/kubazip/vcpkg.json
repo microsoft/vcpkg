@@ -1,7 +1,6 @@
 {
   "name": "kubazip",
-  "version": "0.3.3",
-  "port-version": 1,
+  "version": "0.3.4",
   "description": "A portable, simple zip library written in C",
   "homepage": "https://github.com/kuba--/zip",
   "license": "MIT",
