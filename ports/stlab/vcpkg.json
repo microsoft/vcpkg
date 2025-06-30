@@ -17,17 +17,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "cpp17shims"
-  ],
-  "features": {
-    "cpp17shims": {
-      "description": "Support C++11/14 by polyfilling stlab's use of `optional` and `variant` with boost. On by default.",
-      "dependencies": [
-        "boost-optional",
-        "boost-variant"
-      ]
-    }
-  }
+  ]
 }

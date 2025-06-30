@@ -9,16 +9,10 @@ vcpkg_from_github(
         devendoring.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        cpp17shims   STLAB_USE_BOOST_CPP17_SHIMS
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        ${FEATURE_OPTIONS}
         -DCMAKE_DISABLE_FIND_PACKAGE_Qt6=ON
 )
 
@@ -27,11 +21,5 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/stlab)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/stlabConfig.cmake"
-    "find_dependency(Boost 1.74.0)"
-    "if(APPLE)\nfind_dependency(Boost)\nendif()"
-)
-
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
