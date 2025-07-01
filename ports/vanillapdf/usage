@@ -1,0 +1,29 @@
+The package vanillapdf provides the following CMake targets:
+
+    find_package(vanillapdf CONFIG REQUIRED)
+    target_link_libraries(myapp PRIVATE vanillapdf::vanillapdf)
+
+Headers are located under the include directory:
+
+    #include <vanillapdf/document.h>
+    #include <vanillapdf/syntax/file.h>
+    #include <vanillapdf/semantics/document.h>
+    #include <vanillapdf/contents/content_stream.h>
+
+Features:
+
+- PDF parsing and manipulation
+- Digital signature support (via OpenSSL)
+- JPEG/JPEG2000 decompression
+- zlib stream decoding
+
+Optional features (must be enabled manually):
+
+- Skia rendering: `--feature=skia-support`
+- Benchmarks: `--feature=benchmarks`
+- Tests: `--feature=tests`
+
+Supports both static and shared builds depending on the selected triplet.
+
+License: Apache-2.0
+Homepage: https://github.com/vanillapdf/vanillapdf
