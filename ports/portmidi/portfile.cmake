@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PortMidi/portmidi
     REF "v${VERSION}"
-    SHA512 d9f22d161e1dd9a4bde1971bb2b6e5352da51545f4fe5ecad11c55e7a535f0d88efce18d1c8fd91e93b70a7926150f86a0f53972ad92370e86556a8dd72dc194
+    SHA512 00d7cec97b58c074d484793b6097f4e60d061a9d680940bbcdb6670b287b78dbc099af378fb2e066c61f1c26e5060ded9c8f78c80fc03518b33e43f830e34a27 
     HEAD_REF master
-    PATCHES
-        "search-for-threads-in-config.patch"
-        "framework_link.patch"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)

@@ -12,9 +12,9 @@ index dc65543..5bccbce 100644
 -add_subdirectory(vendor/utfcpp)
  add_subdirectory(vendor/lepcc)
 -add_subdirectory(vendor/h3)
+ add_subdirectory(vendor/spz)
  add_subdirectory(tools)
  add_subdirectory(apps)
- 
 @@ -220,12 +217,13 @@ add_library(PDAL::PDAL ALIAS ${PDAL_LIB_NAME})
  
  
@@ -38,14 +38,15 @@ index dc65543..5bccbce 100644
 +find_package(nanoflann CONFIG REQUIRED)
 +target_link_libraries(${PDAL_LIB_NAME} PRIVATE nanoflann::nanoflann)
  
- #
- # Allow downstream cmake projects to find PDAL header files without
-@@ -274,7 +274,7 @@ target_include_directories(${PDAL_LIB_NAME}
+ if (ZSTD_FOUND)
+     target_link_libraries(${PDAL_LIB_NAME}
+@@ -307,9 +307,6 @@ target_include_directories(${PDAL_LIB_NAME}
+     INTERFACE
+         $<INSTALL_INTERFACE:include>)
  
- target_compile_definitions(${PDAL_LIB_NAME}
-     PRIVATE
+-target_compile_definitions(${PDAL_LIB_NAME}
+-    PRIVATE
 -    H3_PREFIX=PDALH3)
-+)
  
  if(WIN32)
      target_compile_definitions(${PDAL_LIB_NAME}
@@ -63,20 +64,6 @@ index 5f68579..a407c60 100644
  set_package_properties(GDAL PROPERTIES TYPE REQUIRED
      PURPOSE "Provides general purpose raster, vector, and reference system support")
  if (GDAL_FOUND)
-diff --git a/cmake/geotiff.cmake b/cmake/geotiff.cmake
-index 1d1e8af..f713c05 100644
---- a/cmake/geotiff.cmake
-+++ b/cmake/geotiff.cmake
-@@ -2,7 +2,8 @@
- # GeoTIFF support
- #
- 
--find_package(GeoTIFF REQUIRED 1.3.0)
-+find_package(GeoTIFF CONFIG REQUIRED)
-+set(GEOTIFF_LIBRARY ${GEOTIFF_LIBRARIES})
- set_package_properties(GeoTIFF PROPERTIES TYPE REQUIRED)
- if (GEOTIFF_FOUND)
-     include_directories("${GEOTIFF_INCLUDE_DIR}")
 diff --git a/cmake/h3.cmake b/cmake/h3.cmake
 index 398ad6d..fb3c9ad 100644
 --- a/cmake/h3.cmake
@@ -114,37 +101,6 @@ index 6543ff6..dc6fac8 100644
 +set(UTFCPP_INCLUDE_DIR "")
  set(UTFCPP_LIB_NAME utf8::cpp)
  
-diff --git a/cmake/zstd.cmake b/cmake/zstd.cmake
-index dfe3dc0..9f699e6 100644
---- a/cmake/zstd.cmake
-+++ b/cmake/zstd.cmake
-@@ -4,7 +4,10 @@
- option(WITH_ZSTD
-     "Build support for compression/decompression with Zstd." TRUE)
- if (WITH_ZSTD)
--    find_package(ZSTD QUIET)
-+    find_package(ZSTD NAMES zstd REQUIRED)
-+    set(ZSTD_INCLUDE_DIRS "")
-+    set(ZSTD_LIBRARIES zstd::libzstd)
-+    set(ZSTD_STATIC_LIB zstd::libzstd)
-     set_package_properties(ZSTD PROPERTIES TYPE
-         PURPOSE "General compression support")
-     if (ZSTD_FOUND)
-diff --git a/filters/H3Filter.cpp b/filters/H3Filter.cpp
-index 6eb10a2..153c3ee 100644
---- a/filters/H3Filter.cpp
-+++ b/filters/H3Filter.cpp
-@@ -45,7 +45,9 @@
- #include <string>
- #include <vector>
- 
--#include <h3api.h>
-+#include <h3/h3api.h>
-+#define PDALH3degsToRads    degsToRads
-+#define PDALH3latLngToCell  latLngToCell
- 
- namespace pdal
- {
 diff --git a/pdal/JsonFwd.hpp b/pdal/JsonFwd.hpp
 index f764961..f64dcc6 100644
 --- a/pdal/JsonFwd.hpp
@@ -205,5 +161,5 @@ index b15d595..a452d14 100644
  target_link_libraries(lasdump PRIVATE
 +    ${UTFCPP_LIB_NAME}
      ${PDAL_LAZPERF_LIB_NAME}
+     ${GDAL_LIBRARY}
  )
- target_include_directories(lasdump PRIVATE

@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         -DMZ_FETCH_LIBS=OFF
         -DMZ_LIB_SUFFIX=-ng
         -DMZ_ICONV=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_ZLIBNG=ON # minizip-ng 4.0.10 searches for zlib-ng first before zlib - we provide zlib
 )
 
 vcpkg_cmake_install()

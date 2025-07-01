@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
     PATCHES
         arrow-use-built-linkage.diff # https://github.com/rerun-io/rerun/pull/9550
         arrow-use-find-dependency.diff # https://github.com/rerun-io/rerun/pull/9548
+        arrow-20-fix.diff # https://github.com/rerun-io/rerun/commit/d620a649c18d333b02682b190d2b1b656b800746
 )
 
 vcpkg_cmake_configure(

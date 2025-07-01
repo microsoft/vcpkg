@@ -1,7 +1,6 @@
 {
   "name": "libdshowcapture",
-  "version": "0.6.0",
-  "port-version": 4,
+  "version-date": "2025-02-08",
   "description": "Free and Open Source C++11 Library for capturing DirectShow video/audio devices on windows.",
   "supports": "windows & !uwp",
   "dependencies": [

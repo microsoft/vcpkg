@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5fd2c6f..d8a1b2c 100644
+index 4e65f049..fead44d4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -714,7 +714,10 @@ include_directories(api/include)
+@@ -862,7 +862,10 @@ endif()
  add_subdirectory(api)
  
  if(WITH_OPENTRACING)
