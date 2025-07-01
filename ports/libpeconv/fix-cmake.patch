@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8cb4ee0..c25dce1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,8 +29,8 @@ set ( PECONV_LIB $<TARGET_FILE:libpeconv> CACHE PATH "PEConvLib library path" )
+ 
+ #demos:
+ 
+-add_subdirectory ( run_pe )
+-add_dependencies ( run_pe libpeconv )
++# add_subdirectory ( run_pe )
++# add_dependencies ( run_pe libpeconv )
+ 
+ # Setup testing
+ if(PECONV_BUILD_TESTING)
+diff --git a/libpeconv/CMakeLists.txt b/libpeconv/CMakeLists.txt
+index 66d9c23..b4e4fd9 100644
+--- a/libpeconv/CMakeLists.txt
++++ b/libpeconv/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ cmake_minimum_required ( VERSION 3.0 )
+ project ( libpeconv )
+ 
+-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
++# set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+ 
+ include_directories (
+   include
