@@ -1,7 +1,7 @@
 {
   "name": "nss",
   "version": "3.99",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Network Security Services from Mozilla",
   "homepage": "https://ftp.mozilla.org/pub/security/nss/releases/",
   "license": "MPL-2.0",
@@ -9,6 +9,10 @@
   "dependencies": [
     "nspr",
     "sqlite3",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
     {
       "name": "vcpkg-tool-gyp-next",
       "host": true

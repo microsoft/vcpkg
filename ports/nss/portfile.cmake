@@ -12,7 +12,6 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE}
     SOURCE_BASE "${VERSION}"
     PATCHES
-        "01-nspr-no-lib-prefix.patch"
         "02-gen-debug-info-for-release.patch"
         "03-use-debug-crt-for-debug.patch" # See https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.vcprojectengine.runtimelibraryoption
 )
@@ -81,6 +80,8 @@ get_filename_component(NINJA_ROOT "${NINJA}" DIRECTORY)
 list(APPEND CMAKE_PROGRAM_PATH "${NINJA_ROOT}")
 vcpkg_add_to_path(APPEND "${NINJA_ROOT}")
 
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_NSPR MODULES nspr LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
+
 # setup build.sh options -- see help.txt in nss root
 set(OPTIONS
     "-v"
@@ -138,7 +139,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-dbg")
     message(STATUS "Building debug ...")
     vcpkg_execute_required_process(
-        COMMAND ${MOZBUILD_ENV} ${GYPENV} bash ./build.sh ${OPTIONS}
+        COMMAND ${MOZBUILD_ENV} ${GYPENV} bash ./build.sh ${OPTIONS} "-Dnspr_libs=${PC_NSPR_LIBRARIES_DEBUG}"
         WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-dbg/nss
         LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
     )
@@ -150,7 +151,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-rel")
     message(STATUS "Building release ...")
     vcpkg_execute_required_process(
-        COMMAND ${MOZBUILD_ENV} ${GYPENV} bash ./build.sh ${OPTIONS} --opt
+        COMMAND ${MOZBUILD_ENV} ${GYPENV} bash ./build.sh ${OPTIONS} --opt "-Dnspr_libs=${PC_NSPR_LIBRARIES_RELEASE}"
         WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-rel/nss
         LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
     )

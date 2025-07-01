@@ -6690,7 +6690,7 @@
     },
     "nss": {
       "baseline": "3.99",
-      "port-version": 1
+      "port-version": 2
     },
     "nsync": {
       "baseline": "1.29.2",
