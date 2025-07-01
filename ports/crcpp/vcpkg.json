@@ -1,0 +1,13 @@
+{
+  "name": "crcpp",
+  "version": "1.2.1.0",
+  "description": "Easy to use and fast C++ CRC library.",
+  "homepage": "https://github.com/d-bahr/CRCpp",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

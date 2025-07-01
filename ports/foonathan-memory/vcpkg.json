@@ -1,7 +1,6 @@
 {
   "name": "foonathan-memory",
-  "version": "0.7.3",
-  "port-version": 2,
+  "version": "0.7.4",
   "description": "STL compatible C++ memory allocator library",
   "homepage": "https://foonathan.net/doc/memory/",
   "license": "Zlib",

@@ -1,8 +1,8 @@
 diff --git a/meson.build b/meson.build
-index abd42b9..dcb15be 100644
+index 5f44b78..7f91238 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -78,7 +78,7 @@ endif
+@@ -88,7 +88,7 @@ endif
  # Ensure that MSVC interprets all source code as UTF-8. Only do this when we're
  # not a subproject, because subprojects are not allowed to call
  # add_global_arguments().
@@ -11,7 +11,7 @@ index abd42b9..dcb15be 100644
    add_global_arguments(
        cc.get_supported_arguments(['/utf-8']), # set the input encoding to utf-8
        language: ['c', 'cpp'])
-@@ -453,7 +453,7 @@ if building_full
+@@ -480,7 +480,7 @@ if building_full
      if cc.has_link_argument(link_arg)
        gstfull_link_args += link_arg
        link_deps += symbol_map
@@ -21,10 +21,10 @@ index abd42b9..dcb15be 100644
      else
        warning('FIXME: Linker does not support the supplied version script (' + symbol_map + '), please disable the "gst-full-version-script" option')
 diff --git a/subprojects/gst-plugins-bad/ext/dts/meson.build b/subprojects/gst-plugins-bad/ext/dts/meson.build
-index c4868a4..6b34cb7 100644
+index dc884e0..82bfc53 100644
 --- a/subprojects/gst-plugins-bad/ext/dts/meson.build
 +++ b/subprojects/gst-plugins-bad/ext/dts/meson.build
-@@ -20,7 +20,7 @@ if not dca_dep.found()
+@@ -37,7 +37,7 @@ if not dca_dep.found()
  endif
  
  no_warn_c_args = []
@@ -34,36 +34,23 @@ index c4868a4..6b34cb7 100644
    # can point to a non-existing location (/usr/include/dca)
    no_warn_c_args = ['-Wno-missing-include-dirs']
 diff --git a/subprojects/gst-plugins-bad/meson.build b/subprojects/gst-plugins-bad/meson.build
-index 541b723..6703e0c 100644
+index c160778..9b1d692 100644
 --- a/subprojects/gst-plugins-bad/meson.build
 +++ b/subprojects/gst-plugins-bad/meson.build
 @@ -54,7 +54,7 @@ endif
+ 
  cdata = configuration_data()
- cdata.set('ENABLE_NLS', 1)
  
 -if cc.get_id() == 'msvc'
 +if cc.get_argument_syntax() == 'msvc'
    msvc_args = [
        # Ignore several spurious warnings for things gstreamer does very commonly
        # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
-diff --git a/subprojects/gst-plugins-bad/sys/asio/meson.build b/subprojects/gst-plugins-bad/sys/asio/meson.build
-index c61ad4e..b30793c 100644
---- a/subprojects/gst-plugins-bad/sys/asio/meson.build
-+++ b/subprojects/gst-plugins-bad/sys/asio/meson.build
-@@ -15,7 +15,7 @@ endif
- 
- # FIXME: non-msvc is not tested, and unlikely supported yet because of
- # tool-chain issue
--if cxx.get_id() != 'msvc'
-+if cxx.get_argument_syntax() != 'msvc'
-   if asio_option.enabled()
-     error('asio plugin can only be built with MSVC')
-   else
 diff --git a/subprojects/gst-plugins-bad/sys/d3d11/meson.build b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
-index ff557be..d5bf0db 100644
+index 2859ea3..666199d 100644
 --- a/subprojects/gst-plugins-bad/sys/d3d11/meson.build
 +++ b/subprojects/gst-plugins-bad/sys/d3d11/meson.build
-@@ -118,7 +118,7 @@ endif
+@@ -175,7 +175,7 @@ endif
  
  # MinGW 32bits compiler seems to be complaining about redundant-decls
  # when ComPtr is in use. Let's just disable the warning
@@ -71,25 +58,12 @@ index ff557be..d5bf0db 100644
 +if cc.get_argument_syntax() != 'msvc'
    extra_mingw_args = cc.get_supported_arguments([
      '-Wno-redundant-decls',
-   ])
-diff --git a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build b/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
-index 6b9a059..40713ce 100644
---- a/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
-+++ b/subprojects/gst-plugins-bad/sys/mediafoundation/meson.build
-@@ -54,7 +54,7 @@ if host_system != 'windows' or mf_option.disabled()
-   subdir_done()
- endif
- 
--if cc.get_id() != 'msvc'
-+if cc.get_argument_syntax() != 'msvc'
-   if mf_option.enabled()
-     error('mediafoundation plugin can only be built with MSVC')
-   endif
+     # include/directxmath/DirectXMathMatrix.inl:1161:16: error: variable 'aa' set but not used
 diff --git a/subprojects/gst-plugins-bad/sys/msdk/meson.build b/subprojects/gst-plugins-bad/sys/msdk/meson.build
-index b73370c..f3994e2 100644
+index 79e7200..4aad1d7 100644
 --- a/subprojects/gst-plugins-bad/sys/msdk/meson.build
 +++ b/subprojects/gst-plugins-bad/sys/msdk/meson.build
-@@ -175,12 +175,12 @@ if use_onevpl and have_mfx_ver205
+@@ -243,12 +243,12 @@ if use_onevpl and have_mfx_ver205
  endif
  
  if host_machine.system() == 'windows'
@@ -105,10 +79,10 @@ index b73370c..f3994e2 100644
    libdl_dep = cc.find_library('dl', required: get_option('msdk'))
    libgudev_dep = dependency('gudev-1.0', required: get_option('msdk'), allow_fallback: true)
 diff --git a/subprojects/gst-plugins-base/meson.build b/subprojects/gst-plugins-base/meson.build
-index c2e035f..33ce9bc 100644
+index 3f6730c..d94f936 100644
 --- a/subprojects/gst-plugins-base/meson.build
 +++ b/subprojects/gst-plugins-base/meson.build
-@@ -51,7 +51,7 @@ gst_libraries = []
+@@ -52,7 +52,7 @@ gst_libraries = []
  
  cc = meson.get_compiler('c')
  
@@ -118,19 +92,19 @@ index c2e035f..33ce9bc 100644
        # Ignore several spurious warnings for things gstreamer does very commonly
        # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
 diff --git a/subprojects/gst-plugins-good/meson.build b/subprojects/gst-plugins-good/meson.build
-index e79b337..c8190b1 100644
+index 95c89b2..52332c7 100644
 --- a/subprojects/gst-plugins-good/meson.build
 +++ b/subprojects/gst-plugins-good/meson.build
-@@ -40,7 +40,7 @@ static_build = get_option('default_library') == 'static'
+@@ -54,7 +54,7 @@ endif
+ 
  cc = meson.get_compiler('c')
- host_system = host_machine.system()
  
 -if cc.get_id() == 'msvc'
 +if cc.get_argument_syntax() == 'msvc'
    msvc_args = [
        # Ignore several spurious warnings for things gstreamer does very commonly
        # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
-@@ -222,7 +222,7 @@ cdata.set('HAVE_RTLD_NOLOAD', have_rtld_noload)
+@@ -239,7 +239,7 @@ cdata.set('HAVE_RTLD_NOLOAD', have_rtld_noload)
  # Here be fixmes.
  # FIXME: check if this is correct
  cdata.set('HAVE_CPU_X86_64', host_machine.cpu() == 'amd64')
@@ -140,10 +114,10 @@ index e79b337..c8190b1 100644
  cdata.set_quoted('PACKAGE_VERSION', gst_version)
  cdata.set_quoted('GST_LICENSE', 'LGPL')
 diff --git a/subprojects/gst-plugins-ugly/meson.build b/subprojects/gst-plugins-ugly/meson.build
-index 8fa3aa2..6602fb7 100644
+index 4d68e1d..28e8cb1 100644
 --- a/subprojects/gst-plugins-ugly/meson.build
 +++ b/subprojects/gst-plugins-ugly/meson.build
-@@ -38,7 +38,7 @@ if have_cxx
+@@ -39,7 +39,7 @@ if have_cxx
    cxx = meson.get_compiler('cpp')
  endif
  
@@ -166,7 +140,7 @@ index b79a07c..891f907 100644
  else
    flex_cdata.set('FLEX_ARGS', '')
 diff --git a/subprojects/gstreamer/meson.build b/subprojects/gstreamer/meson.build
-index dc9dbe2..b75b61b 100644
+index ba50005..47cc78a 100644
 --- a/subprojects/gstreamer/meson.build
 +++ b/subprojects/gstreamer/meson.build
 @@ -48,7 +48,7 @@ endif
@@ -178,7 +152,7 @@ index dc9dbe2..b75b61b 100644
    msvc_args = [
        # Ignore several spurious warnings for things gstreamer does very commonly
        # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
-@@ -354,9 +354,11 @@ static __uint128_t v2 = 10;
+@@ -358,9 +358,11 @@ static __uint128_t v2 = 10;
  static __uint128_t u;
  u = v1 / v2;
  }'''
