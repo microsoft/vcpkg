@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if test -n "${VSINSTALLDIR}"; then
+    export VSPATH=$(cygpath --unix "${VSINSTALLDIR}")
+    export GYP_MSVS_OVERRIDE_PATH=$(cygpath --unix "${VSPATH}")
+    export GYP_MSVS_VERSION=$(vswhere -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion)
+fi
+
+filtered_options=()
+for option
+do
+    accept=yes
+    case "${option}" in
+    --host=* | --build=*) accept=no ;;
+    esac
+    if test "${accept}" = "yes"; then filtered_options+=("${option}"); fi
+done
+
+echo Invoking nss/build.sh "${filtered_options[@]}"
+exec nss/build.sh "${filtered_options[@]}"

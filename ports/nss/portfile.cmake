@@ -1,10 +1,16 @@
+# - The static lib is named "ssl", conflicting with the "ssl" lib from openssl.
+# - The tools use the shared libs.
+# - The pkgconfig file refers to "ssl3"
+# - Linux distros don't install the static lib.
+# (Renaming the static lib to "ssl3" might be an alternative solution.)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 string(REPLACE "." "_" V_URL ${VERSION})
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.mozilla.org/pub/security/nss/releases/NSS_${V_URL}_RTM/src/nss-${VERSION}.tar.gz"
     FILENAME "nss-${VERSION}.tar.gz"
-    SHA512 8ae032f3cb8eadfe524505d20e430b90ed25af2b4732b2cf286c435b0fcd5701d2f5c48bd2cfb3f9aa0bfdf503c1f3d5394cf34f860f51a1141cc4a7586bba32
+    SHA512 5ffb1182e7d65f8895c09656d20bc7146d1616cd4f09046469b2f79f60b57083094c78da39a3f3faa5087742a19f706ce9e7928a662f9f0d3c410514cba2028f
 )
 
 vcpkg_extract_source_archive(
@@ -15,183 +21,117 @@ vcpkg_extract_source_archive(
         "02-gen-debug-info-for-release.patch"
         "03-use-debug-crt-for-debug.patch" # See https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.vcprojectengine.runtimelibraryoption
 )
+file(COPY "${CURRENT_PORT_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
-# setup mozbuild for windows
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(MOZBUILD_ROOT "${CURRENT_HOST_INSTALLED_DIR}/tools/mozbuild")
+set(gyp_version 0.20.2)
+vcpkg_download_distfile(GYP_NEXT_WHEEL
+    URLS "https://github.com/nodejs/gyp-next/releases/download/v${gyp_version}/gyp_next-${gyp_version}-py3-none-any.whl"
+    FILENAME "gyp_next-${gyp_version}-py3-none-any.whl"
+    SHA512 53feff516d0de8738910e04e4e5664af27947c0a2bca856c290f9082d18678b03e917403e2c842edb62b6dd5412c625f34edb52d6d9b295c07ef34b3c18981f8
+)
+x_vcpkg_get_python_packages(
+    OUT_PYTHON_VAR PYTHON3
+    PYTHON_VERSION 3
+    PACKAGES "${GYP_NEXT_WHEEL}"
+)
+cmake_path(GET PYTHON3 PARENT_PATH GYP_NEXT_ROOT)
 
-    set(MOZBUILD_BINDIR "${MOZBUILD_ROOT}/bin")
-    vcpkg_add_to_path(PREPEND "${MOZBUILD_BINDIR}")
-
-    set(MOZBUILD_MSYS_ROOT "${MOZBUILD_ROOT}/msys2")
-    vcpkg_add_to_path(PREPEND "${MOZBUILD_MSYS_ROOT}/usr/bin")
-
-    # setup mozbuild
-    find_program(MOZBUILD_ENV env PATHS "${MOZBUILD_MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
-    execute_process(
-        COMMAND ${MOZBUILD_ENV} mkdir -p /tmp
-     )
-
-    find_program(MOZBUILD_BASH bash PATHS "${MOZBUILD_MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
-    message(STATUS "Found bash: ${MOZBUILD_BASH}")
-
-    # setup mozbuild python
-    set(MOZBUILD_PYTHON_ROOT "${MOZBUILD_ROOT}/python3")
-    find_program(MOZBUILD_PYTHON python PATHS "${MOZBUILD_PYTHON_ROOT}" NO_DEFAULT_PATH REQUIRED)
-    message(STATUS "Found python: ${MOZBUILD_PYTHON}")
-    vcpkg_add_to_path(PREPEND "${MOZBUILD_PYTHON_ROOT}")
-
-    # setup paths
-    execute_process(
-        COMMAND ${MOZBUILD_BASH} -c pwd
-        WORKING_DIRECTORY ${CURRENT_INSTALLED_DIR}/include
-        OUTPUT_VARIABLE VCPKG_INCLUDEDIR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    message(STATUS "Using headers from: ${VCPKG_INCLUDEDIR} arch: ${VCPKG_TARGET_ARCHITECTURE}")
-
-    execute_process(
-        COMMAND ${MOZBUILD_BASH} -c pwd
-        WORKING_DIRECTORY ${CURRENT_INSTALLED_DIR}/lib
-        OUTPUT_VARIABLE VCPKG_LIBDIR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    message(STATUS "Using libraries from: ${VCPKG_LIBDIR} arch: ${VCPKG_TARGET_ARCHITECTURE}")
-
-else()
-    # TODO: setup non-windows build environment
-
-endif()
-
-# setup gyp-next
-set(GYP_NEXT_ROOT "${CURRENT_HOST_INSTALLED_DIR}/tools/gyp-next")
-if (VCPKG_HOST_IS_WINDOWS)
-    find_file(GYP_NEXT NAMES gyp.bat PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRED)
-else()
-    find_program(GYP_NEXT NAMES gyp PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRED)
-endif()
-
-vcpkg_add_to_path(PREPEND "${GYP_NEXT_ROOT}")
-message(STATUS "Found gyp-next: ${GYP_NEXT}")
-
-# setup ninja
+# Prepend to PATH in controlled order
 vcpkg_find_acquire_program(NINJA)
 get_filename_component(NINJA_ROOT "${NINJA}" DIRECTORY)
-list(APPEND CMAKE_PROGRAM_PATH "${NINJA_ROOT}")
-vcpkg_add_to_path(APPEND "${NINJA_ROOT}")
+vcpkg_add_to_path(PREPEND "${NINJA_ROOT}")
+
+find_file(GYP_NEXT NAMES gyp gyp.bat PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRED)
+message(STATUS "Using ${GYP_NEXT}")
+vcpkg_add_to_path(PREPEND "${GYP_NEXT_ROOT}")
 
 x_vcpkg_pkgconfig_get_modules(PREFIX PC_NSPR MODULES nspr LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
 
 # setup build.sh options -- see help.txt in nss root
-set(OPTIONS
-    "-v"
-    "-g"
-    "--disable-tests"
-    "--with-nspr=${VCPKG_INCLUDEDIR}/nspr:${VCPKG_LIBDIR}"
-    "--system-sqlite"
-    "-Dsign_libs=0"
-)
+set(OPTIONS "")
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND OPTIONS "-DOS=android")
+elseif(VCPKG_TARGET_IS_FREEBSD)
+    list(APPEND OPTIONS "-DOS=freebsd")
+elseif(VCPKG_TARGET_IS_IOS)
+    list(APPEND OPTIONS "-DOS=ios")
+elseif(VCPKG_TARGET_IS_LINUX)
+    list(APPEND OPTIONS "-DOS=linux")
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND OPTIONS "-DOS=mac")
+elseif(VCPKG_TARGET_IS_OPENBSD)
+    list(APPEND OPTIONS "-DOS=openbsd")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS "-DOS=win")
+elseif(VCPKG_CROSSCOMPILING)
+    message(WARNING "Cannot determine OS setting for ${TARGET_TRIPLET}")
+endif()
 
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    list(APPEND OPTIONS "--target=x64")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     list(APPEND OPTIONS "--target=ia32")
 else()
-    message(FATAL_ERROR "Unsupported arch: ${VCPKG_TARGET_ARCHITECTURE}")
+    list(APPEND OPTIONS "--target=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS
-        "--msvc"
-    )
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS "--msvc")
+    set(ENV{PYTHONUTF8} 1)
+endif() 
 
-    # prevent homemade vcvarsall.sh from running
-    set(VSCOMPONENT "Microsoft.VisualStudio.Component.VC.Tools.x86.x64")
-    execute_process(
-        COMMAND ${MOZBUILD_ENV} cygpath --unix $ENV{VSINSTALLDIR}
-        OUTPUT_VARIABLE GYP_MSVS_OVERRIDE_PATH
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-    execute_process(
-        COMMAND vswhere -latest -requires ${VSCOMPONENT} -property catalog_productLineVersion
-        OUTPUT_VARIABLE GYP_MSVS_VERSION
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
-    list(APPEND GYPENV
-        "PYTHONUTF8=1"
-        "VSPATH=${GYP_MSVS_OVERRIDE_PATH}"
-        "GYP_MSVS_OVERRIDE_PATH=${GYP_MSVS_OVERRIDE_PATH}"
-        "GYP_MSVS_VERSION=${GYP_MSVS_VERSION}"
-    )
-endif()
-
-#
-# get to work
-#
-
-set(VCPKG_BINARY_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
-
-# build debug
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    message(STATUS "Copying sources to debug build dir ...")
-    file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-dbg")
-    message(STATUS "Building debug ...")
-    vcpkg_execute_required_process(
-        COMMAND ${MOZBUILD_ENV} ${GYPENV} bash ./build.sh ${OPTIONS} "-Dnspr_libs=${PC_NSPR_LIBRARIES_DEBUG}"
-        WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-dbg/nss
-        LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
-    )
-endif()
-
-# build release
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    message(STATUS "Copying sources to release build dir ...")
-    file(COPY "${SOURCE_PATH}/nss" DESTINATION "${VCPKG_BINARY_DIR}-rel")
-    message(STATUS "Building release ...")
-    vcpkg_execute_required_process(
-        COMMAND ${MOZBUILD_ENV} ${GYPENV} bash ./build.sh ${OPTIONS} --opt "-Dnspr_libs=${PC_NSPR_LIBRARIES_RELEASE}"
-        WORKING_DIRECTORY ${VCPKG_BINARY_DIR}-rel/nss
-        LOGNAME build-${TARGET_TRIPLET}${short_buildtype}
-    )
-endif()
-
-#
-# VCPKG FHS adjustments
-#
-
-# Headers
-file(
-    COPY "${VCPKG_BINARY_DIR}-rel/dist/public/nss"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+# configuring and building in an autotools-like environment, but using gyp-next and ninja
+vcpkg_make_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    COPY_SOURCE
+    DISABLE_DEFAULT_OPTIONS
+    DISABLE_MSVC_WRAPPERS
+    OPTIONS
+        -g
+        -j "${VCPKG_CONCURRENCY}"
+        -v
+        --disable-tests
+        --system-sqlite
+        -Ddisable_werror=1
+        -Dsign_libs=0
+        -Duse_system_zlib=1
+        ${OPTIONS}
+    OPTIONS_DEBUG
+        "--with-nspr=${CURRENT_INSTALLED_DIR}/include/nspr:${CURRENT_INSTALLED_DIR}/debug/lib"
+        "-Dnspr_libs=${PC_NSPR_LIBRARIES_DEBUG}"
+        "-Dsqlite_libs=${PC_SQLITE3_LIBRARIES_DEBUG}"
+        "-Dzlib_libs=${PC_ZLIB_LIBRARIES_DEBUG}"
+    OPTIONS_RELEASE
+        --opt
+        "--with-nspr=${CURRENT_INSTALLED_DIR}/include/nspr:${CURRENT_INSTALLED_DIR}/lib"
+        "-Dnspr_libs=${PC_NSPR_LIBRARIES_RELEASE}"
+        "-Dsqlite_libs=${PC_SQLITE3_LIBRARIES_RELEASE}"
+        "-Dzlib_libs=${PC_ZLIB_LIBRARIES_RELEASE}"
 )
 
-file(
-    COPY "${VCPKG_BINARY_DIR}-rel/dist/private/nss/"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/nss/private"
-)
-
-# Release libraries
-file(GLOB LIB_RELEASE
-    "${VCPKG_BINARY_DIR}-rel/dist/Release/lib/*.dll"
-    "${VCPKG_BINARY_DIR}-rel/dist/Release/lib/*.pdb"
-)
-list(LENGTH LIB_RELEASE LIB_RELEASE_SIZE)
-
-if (LIB_RELEASE_SIZE GREATER 0)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-
-    foreach(path ${LIB_RELEASE})
-        get_filename_component(name "${path}" NAME)
-        file(RENAME "${path}" "${CURRENT_PACKAGES_DIR}/bin/${name}")
-    endforeach()
-
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-    file(COPY "${VCPKG_BINARY_DIR}-rel/dist/Release/lib" DESTINATION "${CURRENT_PACKAGES_DIR}")
+if(NOT VCPKG_BUILD_TYPE)
+    set(label "${TARGET_TRIPLET}-dbg")
+    set(binary_dir "${CURRENT_BUILDTREES_DIR}/${label}")
+    message(STATUS "Installing ${label} ...")
+    file(COPY "${binary_dir}/dist/Debug/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug" REGEX "[.](a|dylib|lib|so([.][0-9]+)*)\$")
+    file(GLOB runtime_debug "${binary_dir}/dist/Debug/lib/*.dll" "${binary_dir}/dist/Debug/lib/*.pdb")
+    if(NOT runtime_debug STREQUAL "")
+        file(COPY "${runtime_debug}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    endif()
 endif()
 
-# Tools from the release build
+set(label "${TARGET_TRIPLET}-rel")
+set(binary_dir "${CURRENT_BUILDTREES_DIR}/${label}")
+message(STATUS "Installing ${label} ...")
+file(COPY "${binary_dir}/dist/Release/lib" DESTINATION "${CURRENT_PACKAGES_DIR}" REGEX "[.](a|dylib|lib|so([.][0-9]+)*)\$")
+file(GLOB runtime_release "${binary_dir}/dist/Release/lib/*.dll" "${binary_dir}/dist/Release/lib/*.pdb")
+if(NOT runtime_release STREQUAL "")
+    file(COPY "${runtime_release}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+endif()
+
+file(COPY "${binary_dir}/dist/public/nss" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${binary_dir}/dist/private/nss/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/nss/private")
+
 vcpkg_copy_tools(
     TOOL_NAMES
         "certutil"
@@ -208,30 +148,8 @@ vcpkg_copy_tools(
         "ssltap"
         "symkeyutil"
         "validation"
-    SEARCH_DIR "${VCPKG_BINARY_DIR}-rel/dist/Release/bin/"
+    SEARCH_DIR "${binary_dir}/dist/Release/bin"
     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
 )
 
-# Debug libraries
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(GLOB LIB_DEBUG
-        "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib/*.dll"
-        "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib/*.pdb"
-    )
-    list(LENGTH LIB_DEBUG LIB_DEBUG_SIZE)
-
-    if (LIB_DEBUG_SIZE GREATER 0)
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-
-        foreach(path ${LIB_DEBUG})
-            get_filename_component(name "${path}" NAME)
-            file(RENAME "${path}" "${CURRENT_PACKAGES_DIR}/debug/bin/${name}")
-        endforeach()
-
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-        file(COPY "${VCPKG_BINARY_DIR}-dbg/dist/Debug/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug")
-    endif()
-endif()
-
-# License
-file(INSTALL "${SOURCE_PATH}/nss/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/nss" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/nss/COPYING")
