@@ -1,6 +1,6 @@
 {
   "name": "sfcgal",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "sfcgal is a C++ wrapper library around CGAL with the aim of supporting ISO 191007:2013 and OGC Simple Features for 3D operations.",
   "homepage": "https://gitlab.com/SFCGAL/SFCGAL",
   "license": "LGPL-2.0-or-later",
