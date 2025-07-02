@@ -11,7 +11,7 @@ index 54357b7..fd59e1a 100644
  TARGETS = $(PROGS)
  else
 -ifeq (,$(filter-out WINCE,$(OS_ARCH)))
-+ifeq (,$(filter-out WINNT WINCE,$(OS_ARCH)))
++ifeq (,$(filter-out WIN95 WINCE WINMO,$(OS_TARGET)))
  TARGETS = $(PROGS)
  else
  PROGS	+= $(OBJDIR)/nsinstall$(PROG_SUFFIX)

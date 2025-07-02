@@ -1,31 +1,28 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://releases.mozilla.org/pub/nspr/releases/v${VERSION}/src/nspr-${VERSION}.tar.gz"
     FILENAME "nspr-${VERSION}.tar.gz"
     SHA512 55d21e196508ad29a179639fc8006f44b04dc2c0b5a85895e727f0a4f0ea37aeeceb936e37ac6b271b882a18e9f06d96133a60f19cee6345f8424c1c66e270ee
 )
 
-set(disable_dllexport_patch "")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(disable_dllexport_patch disable-dllexport.diff)
-endif()
-
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "${VERSION}"
     PATCHES
         android.diff
-        dll-deps.diff
         library-linkage.diff
         nsinstall-windows.diff
         parallel.diff
-        winnt-arm64.diff # ported from "win95" config
-        ${disable_dllexport_patch}
 )
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS "--enable-win32-target=WINNT")
+    # https://firefox-source-docs.mozilla.org/nspr/nspr_build_instructions.html#enable-win32-target-win95
+    list(APPEND OPTIONS "--enable-win32-target=WIN95")
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
         list(APPEND OPTIONS "--enable-static-rtl")
     else()
@@ -35,6 +32,8 @@ endif()
 
 if(VCPKG_TARGET_ARCHITECTURE MATCHES "64")
     list(APPEND OPTIONS "--enable-64bit")
+else()
+    list(APPEND OPTIONS "--disable-64bit")
 endif()
 
 set(MAKE_OPTIONS "")
@@ -72,23 +71,8 @@ vcpkg_make_install(OPTIONS ${MAKE_OPTIONS})
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(prefix "")
-    if(NOT VCPKG_TARGET_IS_MINGW)
-        set(prefix "lib")
-    endif()
-    set(suffix "")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        set(suffix "_s")
-    endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/nspr.pc" "-lplds4 -lplc4 -lnspr4" " -l${prefix}plds4${suffix} -l${prefix}plc4${suffix} -l${prefix}nspr4${suffix}")
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/nspr.pc" "-lplds4 -lplc4 -lnspr4" " -l${prefix}plds4${suffix} -l${prefix}plc4${suffix} -l${prefix}nspr4${suffix}")
-    endif()
-endif()
-
 set(install_dir_pattern "${CURRENT_INSTALLED_DIR}")
-if (CMAKE_HOST_WIN32)
+if(CMAKE_HOST_WIN32)
     string(REGEX REPLACE [[^([a-zA-Z]):/]] [[/\1/]] install_dir_pattern "${install_dir_pattern}")
 endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/nspr-config" "${install_dir_pattern}" "`dirname $0`/../../..")
