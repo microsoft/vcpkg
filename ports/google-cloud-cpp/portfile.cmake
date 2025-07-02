@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 a482008c81d12ffd6ec97b58fc25677f93ac59338e7092c28d2d3bace2f5263d575827b9837bb3413b3078bf5bb4feda4410eeeb269b888aa05f056ced42175f
     HEAD_REF main
-    PATCHES fix-googleapis-download.patch
+    PATCHES
+        fix-googleapis-download.patch
+        fix-parallel-configure.patch
 )
 
 # On update, update REF according to $/cmake/GoogleapisConfig.cmake 's
