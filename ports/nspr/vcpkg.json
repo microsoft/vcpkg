@@ -4,7 +4,7 @@
   "description": "Netscape portable runtime",
   "homepage": "https://releases.mozilla.org/pub/nspr/",
   "license": "MPL-2.0",
-  "supports": "!uwp & !xbox",
+  "supports": "!uwp & !xbox & !(windows & static & staticcrt)",
   "dependencies": [
     {
       "name": "nspr",
