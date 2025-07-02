@@ -7,13 +7,12 @@ vcpkg_from_github(
     SHA512 24bd0e3e2a599e81432f59bd6ebc514729453cfe808541f6842dc57e2eff329e52a3e3575580bf84b2d4768209fa2624295e4e9cdcdc656dd48a8ab66bc6dbc6
     HEAD_REF master
     PATCHES
-        cmake.patch
-        eigen-3.4.patch
-        fix-ASSERT-not-found.patch
-        fmt.patch
-        syntax.patch
-        remove-bitsery.patch
-        fix-build-error-with-fmt11.patch
+        0001-fix-cmake.patch
+        0002-fix-assert-not-found.patch
+        0003-fix-syntax.patch
+        0004-remove-bitsery.patch
+        0005-fix-fmt.patch
+        0006-fix-eigen3.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -44,6 +43,7 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DUSE_SVMLIGHT=OFF
         -DENABLE_TESTING=OFF
+        -DENABLE_DOXYGEN=OFF
         -DLICENSE_GPL_SHOGUN=OFF
         -DLIBSHOGUN_BUILD_STATIC=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_ViennaCL=TRUE
@@ -56,7 +56,6 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_ColPack=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_ARPREC=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CCache=TRUE
-        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_bitsery=TRUE

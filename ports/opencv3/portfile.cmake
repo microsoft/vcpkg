@@ -136,6 +136,7 @@ if("contrib" IN_LIST FEATURES)
       0007-contrib-fix-hdf5.patch
       0013-contrib-fix-tesseract.patch
       0016-contrib-fix-freetype.patch
+      0020-contrib-add-cassert.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -216,15 +217,6 @@ if("ipp" IN_LIST FEATURES)
       )
     endif()
   endif()
-endif()
-
-if("halide" IN_LIST FEATURES)
-  list(APPEND ADDITIONAL_BUILD_FLAGS
-    # Halide 13 requires C++17
-    "-DCMAKE_CXX_STANDARD_REQUIRED=ON"
-    "-DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON"
-    "-DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
-  )
 endif()
 
 if("qt" IN_LIST FEATURES)
