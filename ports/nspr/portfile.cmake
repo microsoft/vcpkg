@@ -4,6 +4,11 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 55d21e196508ad29a179639fc8006f44b04dc2c0b5a85895e727f0a4f0ea37aeeceb936e37ac6b271b882a18e9f06d96133a60f19cee6345f8424c1c66e270ee
 )
 
+set(disable_dllexport_patch "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(disable_dllexport_patch disable-dllexport.diff)
+endif()
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE}
@@ -15,6 +20,7 @@ vcpkg_extract_source_archive(
         nsinstall-windows.diff
         parallel.diff
         winnt-arm64.diff # ported from "win95" config
+        ${disable_dllexport_patch}
 )
 
 set(OPTIONS "")
