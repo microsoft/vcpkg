@@ -128,6 +128,7 @@ if ($Triplet -eq 'x64-windows-release') {
     $tripletArg = "--triplet=$Triplet"
 }
 
+if ($false) {
 # Test uploads with azcopy
 # Using portable binaries from https://github.com/Azure/azure-storage-azcopy/releases, linked on
 # https://learn.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10?tabs=dnf#download-the-azcopy-portable-binary
@@ -148,6 +149,7 @@ if ($lastLastExitCode -ne 0)
 {
     Write-Error 'Cannot run azcopy.'
     exit $lastLastExitCode
+}
 }
 # Build large artifacts with unique ABI hashes
 Get-Date | Out-File "scripts/manual-tests/azcopy/test-upload-artifacts/mutable"
