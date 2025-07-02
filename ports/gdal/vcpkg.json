@@ -1,7 +1,6 @@
 {
   "name": "gdal",
-  "version-semver": "3.11.0",
-  "port-version": 1,
+  "version-semver": "3.11.1",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -184,7 +183,10 @@
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [
-        "libspatialite"
+        {
+          "name": "libspatialite",
+          "default-features": false
+        }
       ]
     },
     "libxml2": {

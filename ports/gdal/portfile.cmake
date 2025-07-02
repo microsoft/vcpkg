@@ -1,14 +1,8 @@
-vcpkg_download_distfile(
-    arm_neon_diff
-    URLS "https://github.com/OSGeo/gdal/pull/12343/commits/444dd0c302b7c12e87ea8497038eee76586ee920.diff?full_index=1"
-    FILENAME "OSGeo-gdal-v3.11.0-444dd0c.diff"
-    SHA512 c9f725c1ea7707eaeb2edb36fcf682aafbd38170718c89b949567b7271e17b98c24b2e1b4e0d47a760a9213ba18b9abc9c2046b7e4fa7fef4538f6fece7f22e1
-)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 7a31cd0466a50b2e118b49eb2eca2b945377c2f9cb99196f98259904ff5f71278caef568582e510f500881621f58da095e7007116ee5a51e8693f0e15cb3ce19
+    SHA512 7ad37c33a1a059aac5b5e4723b8d1b493b0b134da036bcae61256f3b6db02b45453dde75adc44a7e82f7314d260f3552510049d3e254bb31251bffb2de60aee0
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
@@ -16,7 +10,6 @@ vcpkg_from_github(
         libkml.patch
         sqlite3.diff
         target-is-valid.patch
-        ${arm_neon_diff}
 )
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
