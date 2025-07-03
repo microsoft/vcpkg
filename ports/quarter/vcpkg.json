@@ -8,6 +8,14 @@
   "dependencies": [
     "coin",
     {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -16,22 +24,18 @@
       "host": true
     }
   ],
-  "default-features": [
-    "qt6"
-  ],
   "features": {
     "qt5": {
       "description": "Build with Qt5",
       "dependencies": [
-        "qt5-base",
-        "qt5-tools"
-      ]
-    },
-    "qt6": {
-      "description": "Build with Qt6",
-      "dependencies": [
-        "qtbase",
-        "qttools"
+        {
+          "name": "qt5-base",
+          "default-features": false
+        },
+        {
+          "name": "qt5-tools",
+          "default-features": false
+        }
       ]
     }
   }

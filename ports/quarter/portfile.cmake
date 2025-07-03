@@ -15,11 +15,9 @@ endif()
 if ("qt5" IN_LIST FEATURES)
     set(QUARTER_USE_QT5 ON)
     set(QUARTER_USE_QT6 OFF)
-elseif ("qt6" IN_LIST FEATURES)
+else()
     set(QUARTER_USE_QT6 ON)
     set(QUARTER_USE_QT5 OFF)
-else()
-    message(FATAL_ERROR "Either qt5 or qt6 feature must be selected.")
 endif()
 
 vcpkg_cmake_configure(
