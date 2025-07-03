@@ -40,9 +40,6 @@
 
 # Add new items alphabetically
 
-ace:arm-neon-android=fail
-ace:arm64-android=fail
-ace:x64-android=fail
 # ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
 ada-url:x64-linux=fail
 angelscript:x64-osx=fail
