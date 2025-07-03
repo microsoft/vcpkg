@@ -57,6 +57,7 @@
     },
     "cuda": {
       "description": "Build with CUDA support",
+      "supports": "!linux & !(windows & arm)",
       "dependencies": [
         "cuda"
       ]
