@@ -94,7 +94,7 @@ elseif (VCPKG_TARGET_IS_ANDROID)
   set(SOLUTION_TYPE gnuace)
   set(config_h_contents "#include \"ace/config-android.h\"\n")
   file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "include $(ACE_ROOT)/include/makeinclude/platform_android.GNU")
-  set(ENV{ANDROID_ABI} "${VCPKG_DETECTED_CMAKE_ANDROID_ABI}")
+  set(ENV{ANDROID_ABI} "${VCPKG_DETECTED_CMAKE_ANDROID_ARCH_ABI}")
   set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
 endif()
 
