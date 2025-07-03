@@ -15,7 +15,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "${VERSION}"
     PATCHES
         "02-gen-debug-info-for-release.patch"
@@ -76,11 +76,6 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
 else()
     list(APPEND OPTIONS "--target=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
-
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    list(APPEND OPTIONS "--msvc")
-    set(ENV{PYTHONUTF8} 1)
-endif() 
 
 # configuring and building in an autotools-like environment, but using gyp-next and ninja
 vcpkg_make_configure(

@@ -1,12 +1,19 @@
 #!/bin/bash
 
-if test -n "${VSINSTALLDIR}"; then
+maybe_msvc=
+case "$CC" in
+*cl | *cl.exe)
+    maybe_msvc="--msvc"
+    export PYTHONUTF8=1
+    # cf. nss/coreconf/msvc.sh, but using VSINSTALLDIR instead of latest
     export VSPATH=$(cygpath --unix "${VSINSTALLDIR}")
-    export GYP_MSVS_OVERRIDE_PATH=$(cygpath --unix "${VSPATH}")
-    export GYP_MSVS_VERSION=$(vswhere -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion)
-fi
+    export GYP_MSVS_OVERRIDE_PATH="${VSPATH}"
+    export GYP_MSVS_VERSION=$(vswhere -path "${VSINSTALLDIR}" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion)
+    echo "Using MSVS ${GYP_MSVS_VERSION} from ${VSINSTALLDIR}"
+    ;;
+esac
 
-filtered_options=()
+filtered_options=( $maybe_msvc )
 for option
 do
     accept=yes
