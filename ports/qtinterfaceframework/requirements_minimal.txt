@@ -9,5 +9,5 @@ path.py==11.0.1
 PyYAML==6.0.1
 six==1.11.0
 watchdog==2.1.7
-pytest==5.3.5
-pytest-cov==2.8.1
+pytest==8.4.1
+pytest-cov==6.2.1
