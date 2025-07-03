@@ -90,6 +90,19 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     string(REGEX REPLACE "^.*\n *" "" vswhere "${vswhere}")
     message(STATUS "Using ${vswhere}")
     set(ENV{VCPKG_VSWHERE} "${vswhere}")
+
+    execute_process(
+        COMMAND "${vswhere}" -path "$ENV{VSINSTALL}" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion
+        OUTPUT_VARIABLE GYP_MSVS_VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    message(STATUS "a) ${GYP_MSVS_VERSION}")
+    execute_process(
+        COMMAND "${vswhere}" -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion
+        OUTPUT_VARIABLE GYP_MSVS_VERSION_LATEST
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    message(STATUS "b) ${GYP_MSVS_VERSION_LATEST}")
 endif()
 
 # configuring and building in an autotools-like environment, but using gyp-next and ninja
