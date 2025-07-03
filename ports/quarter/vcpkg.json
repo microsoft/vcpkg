@@ -23,20 +23,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "qt5": {
-      "description": "Build with Qt5",
-      "dependencies": [
-        {
-          "name": "qt5-base",
-          "default-features": false
-        },
-        {
-          "name": "qt5-tools",
-          "default-features": false
-        }
-      ]
-    }
-  }
+  ]
 }
