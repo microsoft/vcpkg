@@ -41,8 +41,6 @@ vcpkg_find_acquire_program(NINJA)
 get_filename_component(NINJA_ROOT "${NINJA}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NINJA_ROOT}")
 
-file(GLOB gyp "${GYP_NEXT_ROOT}/*")
-message(STATUS "${gyp}")
 find_program(GYP_NEXT NAMES gyp PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRED)
 message(STATUS "Using ${GYP_NEXT}")
 vcpkg_add_to_path(PREPEND "${GYP_NEXT_ROOT}")
@@ -75,6 +73,23 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     list(APPEND OPTIONS "--target=ia32")
 else()
     list(APPEND OPTIONS "--target=${VCPKG_TARGET_ARCHITECTURE}")
+endif()
+
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_execute_in_download_mode(
+        COMMAND "$ENV{VCPKG_COMMAND}" fetch vswhere --x-stderr-status
+        OUTPUT_VARIABLE vswhere
+        RESULT_VARIABLE error_code
+        ERROR_VARIABLE  error_pipe
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        WORKING_DIRECTORY "${DOWNLOADS}"
+    )
+    if(NOT error_code STREQUAL "0")
+        message("Failed to fetch vswhere.")
+    endif()
+    string(REGEX REPLACE "^.*\n *" "" vswhere "${vswhere}")
+    cmake_path(GET vswhere PARENT_PATH vswhere_dir)
+    vcpkg_host_path_list(APPEND ENV{PATH} "${vswhere_dir}")
 endif()
 
 # configuring and building in an autotools-like environment, but using gyp-next and ninja
