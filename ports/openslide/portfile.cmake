@@ -1,4 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(PATCHES fix-win-build.patch)
 endif()
@@ -7,16 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openslide/openslide
     REF "v${VERSION}" 
-    SHA512 5b0315215f9cada56c85e0068c9493a66c70bae1230cc01dd00ce364414f53bf285728dc860d7de0ac30a10bdc3c1a76f728446b96ca337a62d588f5cc2a971c
-    HEAD_REF master
-    PATCHES remove-w-flags.patch
-            ${PATCHES}
+    SHA512 98822994dd437f5a7d40e0a769fc9c63eda46823ede0547f530390b78b256631a50f66ac0d63d32a8875fc38283f96bc2f624f1023fe98772e9a89a8d6afb514
+    HEAD_REF main
+    PATCHES ${PATCHES}
 )
-
-set(opts "")
-if(VCPKG_TARGET_IS_WINDOWS)
-  list(APPEND opts "ac_cv_search_floor=none required")
-endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     #switching to clang-cl due to __attribute__((constructor)) in openslide.c
@@ -41,17 +34,23 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(cmake_vars_file "${cmake_vars_file}" CACHE INTERNAL "") # Don't run z_vcpkg_get_cmake_vars twice
 endif()
 
-vcpkg_configure_make(
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    OPTIONS ${opts}
+    OPTIONS "-Dtest=disabled"
 )
 
-vcpkg_install_make()
+vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tools(
+    TOOL_NAMES
+        openslide-quickhash1sum
+        openslide-show-properties
+        openslide-write-png
+        slidetool
+    AUTO_CLEAN
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LESSER")
