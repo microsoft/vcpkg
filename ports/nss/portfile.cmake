@@ -88,8 +88,8 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         message("Failed to fetch vswhere.")
     endif()
     string(REGEX REPLACE "^.*\n *" "" vswhere "${vswhere}")
-    cmake_path(GET vswhere PARENT_PATH vswhere_dir)
-    vcpkg_host_path_list(APPEND ENV{PATH} "${vswhere_dir}")
+    message(STATUS "Using ${vswhere}")
+    set(ENV{VCPKG_VSWHERE} "${vswhere}")
 endif()
 
 # configuring and building in an autotools-like environment, but using gyp-next and ninja

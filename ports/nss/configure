@@ -10,7 +10,7 @@ case "$VSINSTALLDIR,$CC" in
     # cf. nss/coreconf/msvc.sh, but using VSINSTALLDIR instead of latest
     export VSPATH=$(cygpath --unix "${VSINSTALLDIR}")
     export GYP_MSVS_OVERRIDE_PATH="${VSPATH}"
-    export GYP_MSVS_VERSION=$(vswhere -path "${VSINSTALLDIR}" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion)
+    export GYP_MSVS_VERSION=$(${VCPKG_VSWHERE:-vswhere} -path "${VSINSTALLDIR}" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion)
     echo "Using MSVS ${GYP_MSVS_VERSION} from ${VSINSTALLDIR}"
     ;;
 esac
