@@ -91,6 +91,7 @@ elseif (VCPKG_TARGET_IS_ANDROID)
   set(SOLUTION_TYPE gnuace)
   set(config_h_contents "#include \"ace/config-android.h\"\n")
   file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "include $(ACE_ROOT)/include/makeinclude/platform_android.GNU")
+  set(ENV{ANDROID_ABI} "${ANDROID_ABI}")
 endif()
 
 if("wchar" IN_LIST FEATURES)
