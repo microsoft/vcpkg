@@ -41,6 +41,11 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev \
   libxcb-cursor-dev libxkbcommon-x11-dev"
 
+## required by fltk
+ENV APT_PACKAGES="$APT_PACKAGES libasound2-dev libglu1-mesa-dev libwayland-dev \
+    wayland-protocols libdbus-1-dev libxkbcommon-dev libegl-dev libopengl-dev \
+    libpango1.0-dev libgtk-3-dev"
+
 ## PowerShell
 ENV APT_PACKAGES="$APT_PACKAGES powershell"
 
