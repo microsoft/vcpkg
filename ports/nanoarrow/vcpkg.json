@@ -13,14 +13,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "ipc": {
-      "description": "Support Arrow IPC files",
-      "dependencies": [
-        "flatcc",
-        "zstd"
-      ]
-    }
-  }
+  ]
 }
