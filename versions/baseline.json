@@ -4530,7 +4530,7 @@
     },
     "libcamera": {
       "baseline": "0.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libcanberra": {
       "baseline": "0.30",
@@ -5182,6 +5182,10 @@
     },
     "libphonenumber": {
       "baseline": "9.0.6",
+      "port-version": 0
+    },
+    "libpisp": {
+      "baseline": "1.2.1",
       "port-version": 0
     },
     "libplist": {
