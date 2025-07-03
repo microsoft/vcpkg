@@ -15,7 +15,7 @@ block(SCOPE_FOR VARIABLES)
     pkg_check_modules(PC_GDAL gdal REQUIRED IMPORTED_TARGET)
 
     add_executable(main-pkgconfig main.cpp)
-    if(WIN32 AND NOT MINGW)
+    if(APPLE OR (WIN32 AND NOT MINGW))
         target_link_libraries(main-pkgconfig PRIVATE PkgConfig::PC_GDAL)
     else()
         # Use raw flags, avoid find_library
