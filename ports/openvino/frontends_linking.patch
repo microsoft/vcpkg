@@ -1,0 +1,13 @@
+diff --git a/cmake/developer_package/frontends/frontends.cmake b/cmake/developer_package/frontends/frontends.cmake
+index 3c635777c3..ac2dc20f18 100644
+--- a/cmake/developer_package/frontends/frontends.cmake
++++ b/cmake/developer_package/frontends/frontends.cmake
+@@ -228,7 +228,7 @@ macro(ov_add_frontend)
+     ov_add_vs_version_file(NAME ${TARGET_NAME}
+                            FILEDESCRIPTION ${OV_FRONTEND_FILEDESCRIPTION})
+
+-    target_link_libraries(${TARGET_NAME} PRIVATE ${OV_FRONTEND_LINK_LIBRARIES} openvino::frontend::common_translators
++    target_link_libraries(${TARGET_NAME} PRIVATE ${OV_FRONTEND_LINK_LIBRARIES} $<TARGET_OBJECTS:openvino_frontend_common_obj> openvino::frontend::common_translators
+                           PUBLIC openvino::runtime)
+     ov_add_library_version(${TARGET_NAME})
+
