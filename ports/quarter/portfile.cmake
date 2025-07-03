@@ -34,7 +34,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Quarter-${VERSION})
-vcpkg_fixup_pkgconfig()
+# Qt6 pkg-config files not installed https://github.com/microsoft/vcpkg/issues/25988
+# vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
