@@ -2238,5 +2238,4 @@ qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](windows) = skip # no x11 in 
 qtwebengine = skip # Takes too long to feature test at ~3 hours per feature
 s2n = skip # builds too slow
 sciter = skip # The sciter port is deprecated by upstream and conflicts with upstream's replacement.
-shogun = skip # shogun is not compatible with c++17 because it uses dynamic exception specifications but the dependency abseil requires c++17
 winpcap = skip # Broken and merked for removal. See https://github.com/microsoft/vcpkg/pull/33215

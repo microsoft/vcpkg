@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 804df5e..d45ef96 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -46,8 +46,9 @@ endif()
+@@ -47,8 +47,9 @@ endif()
  
  target_include_directories(${PROJECT_NAME} PUBLIC
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
@@ -13,9 +13,9 @@ index 804df5e..d45ef96 100644
  
  # test
  if (NOT CMAKE_DISABLE_TESTING)
-@@ -74,7 +75,7 @@ endif (MSVC)
+@@ -85,7 +86,7 @@ endif()
+ ###
  
- ####
  set(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
 -set(INCLUDE_INSTALL_DIR "include")
 +set(INCLUDE_INSTALL_DIR "include/kubazip")
