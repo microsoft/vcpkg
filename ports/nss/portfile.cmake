@@ -41,7 +41,9 @@ vcpkg_find_acquire_program(NINJA)
 get_filename_component(NINJA_ROOT "${NINJA}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NINJA_ROOT}")
 
-find_file(GYP_NEXT NAMES gyp gyp.bat PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRED)
+file(GLOB gyp "${GYP_NEXT_ROOT}/*")
+message(STATUS "${gyp}")
+find_program(GYP_NEXT NAMES gyp PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRED)
 message(STATUS "Using ${GYP_NEXT}")
 vcpkg_add_to_path(PREPEND "${GYP_NEXT_ROOT}")
 

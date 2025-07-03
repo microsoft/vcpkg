@@ -4,6 +4,7 @@
   "description": "Network Security Services from Mozilla",
   "homepage": "https://ftp.mozilla.org/pub/security/nss/releases/",
   "license": "MPL-2.0",
+  "supports": "!arm32",
   "dependencies": [
     "nspr",
     {
