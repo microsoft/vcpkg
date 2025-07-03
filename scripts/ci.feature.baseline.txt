@@ -53,10 +53,10 @@ llvm = skip
 # Add new items alphabetically
 ace:x64-windows-static-md=fail
 ace[tao]:arm-neon-android=feature-fails # tao requires a host tree with tao_idl compiled for the host
-ace[wchar]:arm-neon-android=feature-fails # wchar seems to have a problem in ACE
 ace[tao]:arm64-android=feature-fails
-ace[wchar]:arm64-android=feature-fails
 ace[tao]:x64-android=feature-fails
+ace[wchar]:arm-neon-android=feature-fails # wchar seems to have a problem in ACE
+ace[wchar]:arm64-android=feature-fails
 ace[wchar]:x64-android=feature-fails
 ada-url:x64-linux=fail # ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
 allegro5:arm64-windows=fail # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
