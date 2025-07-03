@@ -63,6 +63,9 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -91,7 +94,6 @@ elseif (VCPKG_TARGET_IS_ANDROID)
   set(SOLUTION_TYPE gnuace)
   set(config_h_contents "#include \"ace/config-android.h\"\n")
   file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "include $(ACE_ROOT)/include/makeinclude/platform_android.GNU")
-  vcpkg_cmake_get_vars(cmake_vars_file)
   set(ENV{ANDROID_ABI} "${VCPKG_DETECTED_CMAKE_ANDROID_ABI}")
   set(ENV{ANDROID_NDK_ROOT} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
 endif()
