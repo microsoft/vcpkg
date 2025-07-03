@@ -1,13 +1,22 @@
 #!/bin/bash
 
 maybe_msvc=
-case "$CC" in
-*cl | *cl.exe)
+case "$VSINSTALLDIR,$CC" in
+,*)
+    ;;
+*,*cl | *,*cl.exe)
     maybe_msvc="--msvc"
     export PYTHONUTF8=1
     # cf. nss/coreconf/msvc.sh, but using VSINSTALLDIR instead of latest
     export VSPATH=$(cygpath --unix "${VSINSTALLDIR}")
     export GYP_MSVS_OVERRIDE_PATH="${VSPATH}"
+    if ! hash vswhere 2>/dev/null ; then
+        export PATH="$PATH;${VSPATH}/Installer"
+    fi
+    if ! hash vswhere 2>/dev/null; then
+        echo "Cannot find vswhere in ${PATH}" 1>&2
+        exit 1
+    fi
     export GYP_MSVS_VERSION=$(vswhere -path "${VSINSTALLDIR}" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion)
     echo "Using MSVS ${GYP_MSVS_VERSION} from ${VSINSTALLDIR}"
     ;;
