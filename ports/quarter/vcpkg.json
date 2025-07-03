@@ -1,0 +1,38 @@
+{
+  "name": "quarter",
+  "version": "1.2.3",
+  "description": "Coin3D GUI binding for Qt",
+  "homepage": "https://coin3d.github.io/quarter/",
+  "license": "BSD-3-Clause",
+  "supports": "!arm & !android & !uwp",
+  "dependencies": [
+    "coin",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "qt6"
+  ],
+  "features": {
+    "qt5": {
+      "description": "Build with Qt5",
+      "dependencies": [
+        "qt5-base",
+        "qt5-tools"
+      ]
+    },
+    "qt6": {
+      "description": "Build with Qt6",
+      "dependencies": [
+        "qtbase",
+        "qttools"
+      ]
+    }
+  }
+}
