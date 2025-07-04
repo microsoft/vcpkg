@@ -39,6 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         jpeg7 WITH_JPEG7
         jpeg8 WITH_JPEG8
+        tools ENABLE_EXECUTABLES
 )
 
 vcpkg_cmake_configure(
@@ -46,12 +47,12 @@ vcpkg_cmake_configure(
     OPTIONS
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
-        -DENABLE_EXECUTABLES=OFF
         -DINSTALL_DOCS=OFF
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
     OPTIONS_DEBUG
+        -DENABLE_EXECUTABLES=OFF
         -DINSTALL_HEADERS=OFF
     MAYBE_UNUSED_VARIABLES
         WITH_CRT_DLL
@@ -59,6 +60,16 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+if(ENABLE_EXECUTABLES)
+    vcpkg_copy_tools(
+        TOOL_NAMES cjpeg djpeg jpegtran rdjpgcom wrjpgcom
+        AUTO_CLEAN
+    )
+    vcpkg_clean_executables_in_bin(
+        FILE_NAMES tjbench
+    )
+endif()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libjpeg-turbo)
