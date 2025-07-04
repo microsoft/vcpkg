@@ -1,18 +1,14 @@
 #!/bin/bash
 
 maybe_msvc=
-case "$VSINSTALLDIR,$CC" in
-,*)
-    ;;
-*,*cl | *,*cl.exe)
-    maybe_msvc="--msvc"
-    export PYTHONUTF8=1
-    export VSPATH=$(cygpath --unix "${VSINSTALLDIR}")
+case "$@,$GYP_MSVS_VERSION" in
+*--msvc*,20*)
+    export VSPATH=$(cygpath --unix "${GYP_MSVS_OVERRIDE_PATH:-$VSINSTALLDIR}")
     export GYP_MSVS_OVERRIDE_PATH="${VSPATH}"
     ;;
 esac
 
-filtered_options=( $maybe_msvc )
+filtered_options=()
 for option
 do
     accept=yes

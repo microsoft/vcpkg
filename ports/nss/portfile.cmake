@@ -75,43 +75,55 @@ else()
     list(APPEND OPTIONS "--target=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND NOT DEFINED ENV{GYP_MSVS_VERSION} AND DEFINED ENV{VSINSTALLDIR})
-    cmake_path(SET vswhere "$ENV{ProgramFiles\(x86\)}/Microsoft Visual Studio/Installer/vswhere.exe")
-    if(NOT EXISTS "${vswhere}")
-        vcpkg_execute_in_download_mode(
-            COMMAND "$ENV{VCPKG_COMMAND}" fetch vswhere --x-stderr-status
-            OUTPUT_VARIABLE vswhere
-            RESULT_VARIABLE error_code
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-            WORKING_DIRECTORY "${DOWNLOADS}"
-        )
-        if(NOT error_code STREQUAL "0")
-            message(FATAL_ERROR "Failed to fetch vswhere.")
-        endif()
-        string(REGEX REPLACE "^.*\n *" "" vswhere "${vswhere}")
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
+    if(VCPKG_DETECTED_MSVC)
+        list(APPEND OPTIONS "--msvc")
+        set(ENV{PYTHONUTF8} 1)
     endif()
-    message(STATUS "Using ${vswhere}")
+    if(VCPKG_DETECTED_MSVC AND ENV{GYP_MSVS_VERSION} STREQUAL "")
+        # Determine GYP_MSVS_OVERRIDE_PATH and GYP_MSVS_VERSION for cl.exe
+        cmake_path(SET vswhere "$ENV{ProgramFiles\(x86\)}/Microsoft Visual Studio/Installer/vswhere.exe")
+        if(NOT EXISTS "${vswhere}")
+            vcpkg_execute_in_download_mode(
+                COMMAND "$ENV{VCPKG_COMMAND}" fetch vswhere --x-stderr-status
+                OUTPUT_VARIABLE vswhere
+                RESULT_VARIABLE error_code
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                WORKING_DIRECTORY "${DOWNLOADS}"
+            )
+            if(NOT error_code STREQUAL "0")
+                message(FATAL_ERROR "Failed to fetch vswhere.")
+            endif()
+            string(REGEX REPLACE "^.*\n *" "" vswhere "${vswhere}")
+        endif()
+        message(STATUS "Using ${vswhere}")
 
-    execute_process(
-        COMMAND "${vswhere}"
-        OUTPUT_VARIABLE trace
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    message(STATUS "${trace}")
-
-    string(REGEX REPLACE "[/\\]+$" "" vsinstalldir "$ENV{VSINSTALLDIR}")
-    execute_process(
-        COMMAND "${vswhere}"
-            -property catalog_productLineVersion
-            -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64
-            -path "${vsinstalldir}"
-        OUTPUT_VARIABLE GYP_MSVS_VERSION
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    if(GYP_MSVS_VERSION MATCHES "^20..e?\$")
-        set(ENV{GYP_MSVS_VERSION} "${GYP_MSVS_VERSION}")
-    else()
-        message(WARNING "Failed to determine MSVS version for ${vsinstalldir}")
+        execute_process(
+            COMMAND "${vswhere}"
+                -nologo
+                -property resolvedInstallationPath
+                -path "${VCPKG_DETECTED_CMAKE_C_COMPILER}"
+            OUTPUT_VARIABLE msvs_installdir
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        message(STATUS "MSVS resolvedInstallationPath: ${msvs_installdir}")
+        execute_process(
+            COMMAND "${vswhere}"
+                -nologo
+                -property catalog_productLineVersion
+                -path "${VCPKG_DETECTED_CMAKE_C_COMPILER}"
+            OUTPUT_VARIABLE msvs_version
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        message(STATUS "MSVS catalog_productLineVersion: ${msvs_version}")
+        if(msvs_version MATCHES "^20..e?\$" AND EXISTS "${msvs_installdir}")
+            set(ENV{GYP_MSVS_OVERRIDE_PATH} "${msvs_installdir}")
+            set(ENV{GYP_MSVS_VERSION} "${msvs_version}")
+        else()
+            message(FATAL_ERROR "Failed to determine valid MSVS properties for ${VCPKG_DETECTED_CMAKE_C_COMPILER}.")
+        endif()
     endif()
 endif()
 
