@@ -2736,6 +2736,10 @@
       "baseline": "21.10",
       "port-version": 0
     },
+    "f3d": {
+      "baseline": "3.2.0",
+      "port-version": 0
+    },
     "faad2": {
       "baseline": "2.11.1",
       "port-version": 0
