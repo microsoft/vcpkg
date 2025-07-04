@@ -46,8 +46,8 @@ message(STATUS "Using ${GYP_NEXT}")
 vcpkg_add_to_path(PREPEND "${GYP_NEXT_ROOT}")
 
 x_vcpkg_pkgconfig_get_modules(PREFIX PC_NSPR MODULES nspr LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBS USE_MSVC_SYNTAX_ON_WINDOWS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib LIBS USE_MSVC_SYNTAX_ON_WINDOWS)
 
 # setup build.sh options -- see help.txt in nss root
 set(OPTIONS "")
@@ -154,14 +154,14 @@ vcpkg_make_configure(
     OPTIONS_DEBUG
         "--with-nspr=${CURRENT_INSTALLED_DIR}/include/nspr:${CURRENT_INSTALLED_DIR}/debug/lib"
         "-Dnspr_libs=${PC_NSPR_LIBRARIES_DEBUG}"
-        "-Dsqlite_libs=${PC_SQLITE3_LIBRARIES_DEBUG}"
-        "-Dzlib_libs=${PC_ZLIB_LIBRARIES_DEBUG}"
+        "-Dsqlite_libs=${PC_SQLITE3_LIBS_DEBUG}"
+        "-Dzlib_libs=${PC_ZLIB_LIBS_DEBUG}"
     OPTIONS_RELEASE
         --opt
         "--with-nspr=${CURRENT_INSTALLED_DIR}/include/nspr:${CURRENT_INSTALLED_DIR}/lib"
         "-Dnspr_libs=${PC_NSPR_LIBRARIES_RELEASE}"
-        "-Dsqlite_libs=${PC_SQLITE3_LIBRARIES_RELEASE}"
-        "-Dzlib_libs=${PC_ZLIB_LIBRARIES_RELEASE}"
+        "-Dsqlite_libs=${PC_SQLITE3_LIBS_RELEASE}"
+        "-Dzlib_libs=${PC_ZLIB_LIBS_RELEASE}"
 )
 
 if(NOT VCPKG_BUILD_TYPE)
