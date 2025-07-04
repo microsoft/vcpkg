@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 9159f379119d1c0ac6bb7dbde916efd12a85275ef2f696ece2fc18e52593c78201090dcc1bf3b97d160f27d594a755c5987cb6c4cea811b9a5f2c999f72724e3
+    SHA512 74bc51caf30997e1d327ab8253e9d3556906cd14828794a72c4ba42f2c154b79c1d717e0833a6afc3f6ebff909b630326c11a052d7eb832008769157fad3760b
     HEAD_REF master
     PATCHES
         gdk-pixbuf.patch
@@ -42,11 +42,11 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
 else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
 endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "#ifdef LIBHEIF_EXPORTS" "#if 0")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "#ifdef LIBHEIF_EXPORTS" "#if 0")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
