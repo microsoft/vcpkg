@@ -1,14 +1,8 @@
-vcpkg_download_distfile(FIX_LIBRAW_BUILD_PATCH
-    URLS https://github.com/AcademySoftwareFoundation/OpenImageIO/commit/904df59ab74d0c89c1c9eea7d5ef0ecfe0620b2c.diff?full_index=1
-    FILENAME AcademySoftwareFoundation-OpenImageIO-libraw-build.patch
-    SHA512 0c3bb7bf76c8fd3e1e9408373cced3e8f1e189df268cef27c7ca7244ab6e15be8b96759505238aafd63061f683b0c552d7d710bf8ab49edb0de0d2aff8ceb8fc
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 8639b32ea3bd4d9188b346144721006cb93e09035ac6ec64636f1df97a26775b4dc53491b991aac943053824e2c2d52209a9a580a470d6450f2d55006554d87a
+    SHA512 80efcdba979e1afda609ede4f743b44bc5d277b2ae4bfb96943aee23570d8652f5d0975f5f0bc8c3c9764c4da3ad6bd430c5dab149822648d4b0ba051ba18c11
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -16,7 +10,6 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
-        ${FIX_LIBRAW_BUILD_PATCH}
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
