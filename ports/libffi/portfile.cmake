@@ -37,6 +37,8 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
     if(ccas_options)
         vcpkg_list(APPEND options "CCASFLAGS=\${CCASFLAGS}${ccas_options}")
     endif()
+else()
+    vcpkg_list(APPEND options "CCAS='${VCPKG_DETECTED_CMAKE_C_COMPILER}'")
 endif()
 
 vcpkg_make_configure(
