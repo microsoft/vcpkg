@@ -75,34 +75,34 @@ else()
     list(APPEND OPTIONS "--target=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND NOT DEFINED ENV{GYP_MSVS_VERSION} AND DEFINED ENV{VSINSTALLDIR})
     vcpkg_execute_in_download_mode(
         COMMAND "$ENV{VCPKG_COMMAND}" fetch vswhere --x-stderr-status
         OUTPUT_VARIABLE vswhere
         RESULT_VARIABLE error_code
-        ERROR_VARIABLE  error_pipe
         OUTPUT_STRIP_TRAILING_WHITESPACE
         WORKING_DIRECTORY "${DOWNLOADS}"
     )
     if(NOT error_code STREQUAL "0")
-        message("Failed to fetch vswhere.")
+        message(FATAL_ERROR "Failed to fetch vswhere.")
     endif()
     string(REGEX REPLACE "^.*\n *" "" vswhere "${vswhere}")
     message(STATUS "Using ${vswhere}")
-    set(ENV{VCPKG_VSWHERE} "${vswhere}")
 
+    string(REGEX REPLACE "[/\\]+$" "" vsinstalldir "$ENV{VSINSTALLDIR}")
     execute_process(
-        COMMAND "${vswhere}" -path "$ENV{VSINSTALL}" -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion
+        COMMAND "${vswhere}"
+            -property catalog_productLineVersion
+            -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64
+            -path "${vsinstalldir}"
         OUTPUT_VARIABLE GYP_MSVS_VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    message(STATUS "a) ${GYP_MSVS_VERSION}")
-    execute_process(
-        COMMAND "${vswhere}" -latest -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property catalog_productLineVersion
-        OUTPUT_VARIABLE GYP_MSVS_VERSION_LATEST
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    message(STATUS "b) ${GYP_MSVS_VERSION_LATEST}")
+    if(GYP_MSVS_VERSION MATCHES "^20..e?\$")
+        set(ENV{GYP_MSVS_VERSION} "${GYP_MSVS_VERSION}")
+    else()
+        message(WARNING "Failed to determine MSVS version for ${vsinstalldir}")
+    endif()
 endif()
 
 # configuring and building in an autotools-like environment, but using gyp-next and ninja
