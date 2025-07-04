@@ -76,18 +76,28 @@ else()
 endif()
 
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND NOT DEFINED ENV{GYP_MSVS_VERSION} AND DEFINED ENV{VSINSTALLDIR})
-    vcpkg_execute_in_download_mode(
-        COMMAND "$ENV{VCPKG_COMMAND}" fetch vswhere --x-stderr-status
-        OUTPUT_VARIABLE vswhere
-        RESULT_VARIABLE error_code
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY "${DOWNLOADS}"
-    )
-    if(NOT error_code STREQUAL "0")
-        message(FATAL_ERROR "Failed to fetch vswhere.")
+    cmake_path(SET vswhere "$ENV{ProgramFiles\(x86\)}/Microsoft Visual Studio/Installer/vswhere.exe")
+    if(NOT EXISTS "${vswhere}")
+        vcpkg_execute_in_download_mode(
+            COMMAND "$ENV{VCPKG_COMMAND}" fetch vswhere --x-stderr-status
+            OUTPUT_VARIABLE vswhere
+            RESULT_VARIABLE error_code
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            WORKING_DIRECTORY "${DOWNLOADS}"
+        )
+        if(NOT error_code STREQUAL "0")
+            message(FATAL_ERROR "Failed to fetch vswhere.")
+        endif()
+        string(REGEX REPLACE "^.*\n *" "" vswhere "${vswhere}")
     endif()
-    string(REGEX REPLACE "^.*\n *" "" vswhere "${vswhere}")
     message(STATUS "Using ${vswhere}")
+
+    execute_process(
+        COMMAND "${vswhere}"
+        OUTPUT_VARIABLE trace
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    message(STATUS "${trace}")
 
     string(REGEX REPLACE "[/\\]+$" "" vsinstalldir "$ENV{VSINSTALLDIR}")
     execute_process(
