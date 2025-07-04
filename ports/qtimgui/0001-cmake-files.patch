@@ -1,0 +1,82 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 481894f..7adbd2b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,11 @@ cmake_minimum_required (VERSION 3.8.1)
+ project(qtimgui_sln)
+ 
+ # goto subs
+-add_subdirectory(examples)
++option(QTIMGUI_BUILD_EXAMPLES "Build examples" ON)
++if(QTIMGUI_BUILD_EXAMPLES)
++    add_subdirectory(examples)
++endif()
+ add_subdirectory(modules)
+ add_subdirectory(src)
++
++install(FILES unofficial-qtimgui-config.cmake DESTINATION share/unofficial-qtimgui)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1f44de1..ac4bea9 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -4,7 +4,8 @@ project(qtimgui)
+ set(CMAKE_AUTOMOC ON)
+ set(CMAKE_AUTORCC ON)
+ set(CMAKE_AUTOUIC ON)
+-find_package(Qt5 COMPONENTS Core Quick Gui Widgets REQUIRED)
++find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
++find_package(imgui CONFIG REQUIRED)
+ 
+ set(
+     qt_imgui_sources
+@@ -16,11 +17,14 @@ set(
+ 
+ # qt_imgui_quick: library with a qt renderer for Qml / QtQuick applications
+ add_library(qt_imgui_quick STATIC ${qt_imgui_sources})
+-target_include_directories(qt_imgui_quick PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
++target_include_directories(qt_imgui_quick PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++    $<INSTALL_INTERFACE:include>
++)
+ target_link_libraries(
+     qt_imgui_quick
+     PUBLIC
+-    imgui
++    imgui::imgui
+     Qt5::Gui
+     )
+ if (ANDROID)
+@@ -29,14 +33,21 @@ endif()
+ 
+ # qt_imgui_widget: library with a qt renderer for classic Qt Widget applications
+ add_library(qt_imgui_widgets STATIC ${qt_imgui_sources})
+-target_include_directories(qt_imgui_widgets PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
++target_include_directories(qt_imgui_widgets PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++    $<INSTALL_INTERFACE:include>
++)
+ target_link_libraries(
+     qt_imgui_widgets
+     PUBLIC
+-    imgui
++    imgui::imgui
+     Qt5::Widgets
+     )
+ if (ANDROID)
+     target_link_libraries(qt_imgui_widgets PUBLIC log dl GLESv2 z)
+ endif()
+ target_compile_definitions(qt_imgui_widgets PUBLIC QT_WIDGETS_LIB)
++
++install(TARGETS qt_imgui_quick qt_imgui_widgets EXPORT unofficial-qtimgui-targets)
++install(EXPORT unofficial-qtimgui-targets NAMESPACE unofficial::qtimgui:: DESTINATION share/unofficial-qtimgui)
++install(FILES QtImGui.h DESTINATION include)
+diff --git a/unofficial-qtimgui-config.cmake b/unofficial-qtimgui-config.cmake
+new file mode 100644
+index 0000000..81ec378
+--- /dev/null
++++ b/unofficial-qtimgui-config.cmake
+@@ -0,0 +1,4 @@
++include(CMakeFindDependencyMacro)
++find_dependency(Qt5 COMPONENTS Core Gui Widgets)
++find_dependency(imgui)
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-qtimgui-targets.cmake")
