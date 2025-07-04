@@ -9109,7 +9109,7 @@
       "port-version": 0
     },
     "stlab": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "stlab-copy-on-write": {

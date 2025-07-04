@@ -1,39 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7d2882b..4dac785 100644
+index a012cb4..ced589b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -23,8 +23,8 @@ set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cpm-cache CACHE PATH "Directory to cac
+@@ -22,8 +22,8 @@ include(${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake)
+ set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cpm-cache CACHE PATH "Directory to cache CPM packages" FORCE)
  
  # Add stlab-copy-on-write as a dependency
- 
 -CPMAddPackage("gh:stlab/copy-on-write@1.0.3")
--target_link_libraries(stlab PUBLIC stlab::copy-on-write)
+-target_link_libraries(stlab INTERFACE stlab::copy-on-write)
 +find_package(stlab-copy-on-write CONFIG REQUIRED)
 +target_link_libraries(stlab PUBLIC stlab::stlab-copy-on-write)
  
  ########################################################
  # clangd
-diff --git a/cmake/stlabConfig.cmake.in b/cmake/stlabConfig.cmake.in
-index d66157c..ac2c32d 100644
---- a/cmake/stlabConfig.cmake.in
-+++ b/cmake/stlabConfig.cmake.in
-@@ -13,5 +13,5 @@ endif()
- if ( NOT @STLAB_THREAD_SYSTEM@ STREQUAL "none" )
-   find_dependency( Threads )
- endif()
--
-+find_dependency(stlab-copy-on-write)
- include( "${CMAKE_CURRENT_LIST_DIR}/stlabTargets.cmake" )
-diff --git a/include/stlab/CMakeLists.txt b/include/stlab/CMakeLists.txt
-index aad10bb..30d615a 100644
---- a/include/stlab/CMakeLists.txt
-+++ b/include/stlab/CMakeLists.txt
-@@ -27,7 +27,7 @@ target_sources( stlab INTERFACE
- 
-     test/model.hpp
- 
--    copy_on_write.hpp
-+#    copy_on_write.hpp
-     enum_ops.hpp
-     forest.hpp
-     forest_algorithms.hpp
