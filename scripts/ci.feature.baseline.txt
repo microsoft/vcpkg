@@ -2095,6 +2095,7 @@ dcmtk(uwp) = fail # Please set the C++ runtime location (required for running ap
 dmlc[openmp](osx) = feature-fails # No openmp on osx
 dv-processing[tools](osx) = feature-fails # Broke with compiler version. See https://github.com/microsoft/vcpkg/issues/39852
 embree3[core,avx,avx2,avx512,default-features,sse2,sse42](osx) = combination-fails # CMake Error at CMakeLists.txt:447 (MESSAGE):   Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.  Please either build a shared library or enable only one ISA.
+faker-cxx(linux) = fail # requires gcc13 or later
 ffmpeg[all,all-gpl](x64 & android) = feature-fails
 ffmpeg[nvcodec,ffplay,opengl](android) = feature-fails
 fftw3[openmp](osx) = feature-fails # waits for https://github.com/microsoft/vcpkg/pull/30833

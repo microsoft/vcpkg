@@ -297,6 +297,7 @@ ecal:x64-android=fail
 elfio:arm-neon-android=fail
 elfio:arm64-android=fail
 elfio:x64-android=fail
+faker-cxx:x64-linux=fail # requires gcc13 or later
 # clang rejects variable length arrays
 fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
