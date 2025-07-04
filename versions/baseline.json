@@ -7044,6 +7044,10 @@
       "baseline": "2025-06-11",
       "port-version": 0
     },
+    "openthreads": {
+      "baseline": "3.3.6",
+      "port-version": 0
+    },
     "opentracing": {
       "baseline": "1.6.0",
       "port-version": 4
