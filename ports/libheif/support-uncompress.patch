@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7dfbe6f..8581aec 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -459,7 +459,7 @@ endif()
+ if (LIBSHARPYUV_FOUND)
+     list(APPEND REQUIRES_PRIVATE "libsharpyuv")
+ endif()
+-if (WITH_HEADER_COMPRESSION OR WITH_UNCOMPRESSED_CODEC)
++if (0)
+     find_package(ZLIB)
+     if (ZLIB_FOUND)
+         message("zlib found")
