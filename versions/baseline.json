@@ -2493,7 +2493,7 @@
       "port-version": 0
     },
     "dstorage": {
-      "baseline": "1.2.4",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "dtl": {
