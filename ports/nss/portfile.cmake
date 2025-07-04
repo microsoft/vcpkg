@@ -82,7 +82,7 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         list(APPEND OPTIONS "--msvc")
         set(ENV{PYTHONUTF8} 1)
     endif()
-    if(VCPKG_DETECTED_MSVC AND ENV{GYP_MSVS_VERSION} STREQUAL "")
+    if(VCPKG_DETECTED_MSVC AND "$ENV{GYP_MSVS_VERSION}" STREQUAL "")
         # Determine GYP_MSVS_OVERRIDE_PATH and GYP_MSVS_VERSION for cl.exe
         cmake_path(SET vswhere "$ENV{ProgramFiles\(x86\)}/Microsoft Visual Studio/Installer/vswhere.exe")
         if(NOT EXISTS "${vswhere}")
@@ -109,6 +109,7 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
         message(STATUS "MSVS resolvedInstallationPath: ${msvs_installdir}")
+
         execute_process(
             COMMAND "${vswhere}"
                 -nologo
@@ -118,6 +119,7 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
         message(STATUS "MSVS catalog_productLineVersion: ${msvs_version}")
+
         if(msvs_version MATCHES "^20..e?\$" AND EXISTS "${msvs_installdir}")
             set(ENV{GYP_MSVS_OVERRIDE_PATH} "${msvs_installdir}")
             set(ENV{GYP_MSVS_VERSION} "${msvs_version}")
