@@ -13,8 +13,8 @@ set(VCPKG_BUILD_TYPE release) # header-only port
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    ${FEATURE_OPTIONS}
-    -Dstlab-copy-on-write_IS_TOP_LEVEL=OFF
+        ${FEATURE_OPTIONS}
+        -Dstlab-copy-on-write_IS_TOP_LEVEL=OFF
 )
 
 vcpkg_cmake_install()
