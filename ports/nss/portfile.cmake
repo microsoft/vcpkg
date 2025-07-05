@@ -23,16 +23,32 @@ vcpkg_extract_source_archive(
 )
 file(COPY "${CURRENT_PORT_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
-set(gyp_version 0.20.2)
-vcpkg_download_distfile(GYP_NEXT_WHEEL
-    URLS "https://github.com/nodejs/gyp-next/releases/download/v${gyp_version}/gyp_next-${gyp_version}-py3-none-any.whl"
-    FILENAME "gyp_next-${gyp_version}-py3-none-any.whl"
-    SHA512 53feff516d0de8738910e04e4e5664af27947c0a2bca856c290f9082d18678b03e917403e2c842edb62b6dd5412c625f34edb52d6d9b295c07ef34b3c18981f8
+function(download_distfile var url sha512)
+    string(REGEX REPLACE ".*/" "" filename "${url}")
+    vcpkg_download_distfile(archive
+        URLS "${url}"
+        FILENAME "${filename}"
+        SHA512 "${sha512}"
+    )
+    set("${var}" "${archive}" PARENT_SCOPE)
+endfunction()
+
+download_distfile(gyp_next
+    "https://files.pythonhosted.org/packages/37/3e/d920a254ad927c942a541388c84dd1af0db1af6f6c2b96e99d9ec3f3a148/gyp_next-0.20.2-py3-none-any.whl"
+    53feff516d0de8738910e04e4e5664af27947c0a2bca856c290f9082d18678b03e917403e2c842edb62b6dd5412c625f34edb52d6d9b295c07ef34b3c18981f8
+)
+download_distfile(packaging
+    "https://files.pythonhosted.org/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl"
+    a726fb46cce24f781fc8b55a3e6dea0a884ebc3b2b400ea74aa02333699f4955a5dc1e2ec5927ac72f35a624401f3f3b442882ba1cc4cadaf9c88558b5b8bdae
+)
+download_distfile(setuptools
+    "https://files.pythonhosted.org/packages/a3/dc/17031897dae0efacfea57dfd3a82fdd2a2aeb58e0ff71b77b87e44edc772/setuptools-80.9.0-py3-none-any.whl"
+    2a0420f7faaa33d2132b82895a8282688030e939db0225ad8abb95a47bdb87b45318f10985fc3cee271a9121441c1526caa363d7f2e4a4b18b1a674068766e87
 )
 x_vcpkg_get_python_packages(
     OUT_PYTHON_VAR PYTHON3
     PYTHON_VERSION 3
-    PACKAGES "${GYP_NEXT_WHEEL}"
+    PACKAGES "${gyp_next}" "${packaging}" "${setuptools}"
 )
 cmake_path(GET PYTHON3 PARENT_PATH GYP_NEXT_ROOT)
 
@@ -47,7 +63,7 @@ vcpkg_add_to_path(PREPEND "${GYP_NEXT_ROOT}")
 
 x_vcpkg_pkgconfig_get_modules(PREFIX PC_NSPR MODULES nspr LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
 x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBS USE_MSVC_SYNTAX_ON_WINDOWS)
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib LIBS USE_MSVC_SYNTAX_ON_WINDOWS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib LIBS)
 
 # setup build.sh options -- see help.txt in nss root
 set(OPTIONS "")
@@ -168,20 +184,26 @@ if(NOT VCPKG_BUILD_TYPE)
     set(label "${TARGET_TRIPLET}-dbg")
     set(binary_dir "${CURRENT_BUILDTREES_DIR}/${label}")
     message(STATUS "Installing ${label} ...")
-    file(COPY "${binary_dir}/dist/Debug/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug" REGEX "[.](a|dylib|lib|so([.][0-9]+)*)\$")
+    file(COPY "${binary_dir}/dist/Debug/lib"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/debug"
+        FILES_MATCHING REGEX "[.](a|dylib|lib|so([.][0-9]+)*)\$"
+    )
     file(GLOB runtime_debug "${binary_dir}/dist/Debug/lib/*.dll" "${binary_dir}/dist/Debug/lib/*.pdb")
     if(NOT runtime_debug STREQUAL "")
-        file(COPY "${runtime_debug}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(COPY ${runtime_debug} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 endif()
 
 set(label "${TARGET_TRIPLET}-rel")
 set(binary_dir "${CURRENT_BUILDTREES_DIR}/${label}")
 message(STATUS "Installing ${label} ...")
-file(COPY "${binary_dir}/dist/Release/lib" DESTINATION "${CURRENT_PACKAGES_DIR}" REGEX "[.](a|dylib|lib|so([.][0-9]+)*)\$")
+file(COPY "${binary_dir}/dist/Release/lib"
+    DESTINATION "${CURRENT_PACKAGES_DIR}"
+    FILES_MATCHING REGEX "[.](a|dylib|lib|so([.][0-9]+)*)\$"
+)
 file(GLOB runtime_release "${binary_dir}/dist/Release/lib/*.dll" "${binary_dir}/dist/Release/lib/*.pdb")
 if(NOT runtime_release STREQUAL "")
-    file(COPY "${runtime_release}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY ${runtime_release} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
 file(COPY "${binary_dir}/dist/public/nss" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
