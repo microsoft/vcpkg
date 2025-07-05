@@ -21,7 +21,6 @@
     "zlib"
   ],
   "default-features": [
-    "native-crypto",
     "openssl"
   ],
   "features": {
@@ -31,9 +30,6 @@
       "dependencies": [
         "libgnutls"
       ]
-    },
-    "native-crypto": {
-      "description": "Native crypto provider"
     },
     "openssl": {
       "description": "OpenSSL crypto provider",

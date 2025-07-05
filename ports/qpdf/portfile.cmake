@@ -11,7 +11,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         gnutls         REQUIRE_CRYPTO_GNUTLS
-        native-crypto  REQUIRE_CRYPTO_NATIVE
         openssl        REQUIRE_CRYPTO_OPENSSL
         zopfli         ZOPFLI
 )
@@ -21,6 +20,7 @@ vcpkg_cmake_configure(
     GENERATOR Ninja
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DREQUIRE_NATIVE_CRYPTO=ON
         -DUSE_IMPLICIT_CRYPTO=OFF
         -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
