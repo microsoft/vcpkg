@@ -20,7 +20,10 @@ vcpkg_extract_source_archive(
     PATCHES
         "02-gen-debug-info-for-release.patch"
         "03-use-debug-crt-for-debug.patch" # See https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.vcprojectengine.runtimelibraryoption
+        include-dirs.diff
 )
+file(GLOB devendor "${SOURCE_PATH}/nss/lib/sqlite/*.?" "${SOURCE_PATH}/nss/lib/zlib/*.?")
+file(REMOVE ${devendor})
 file(COPY "${CURRENT_PORT_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
 function(download_distfile var url sha512)
@@ -61,10 +64,6 @@ find_program(GYP_NEXT NAMES gyp PATHS "${GYP_NEXT_ROOT}" NO_DEFAULT_PATH REQUIRE
 message(STATUS "Using ${GYP_NEXT}")
 vcpkg_add_to_path(PREPEND "${GYP_NEXT_ROOT}")
 
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_NSPR MODULES nspr LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBS USE_MSVC_SYNTAX_ON_WINDOWS)
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib LIBS)
-
 # setup build.sh options -- see help.txt in nss root
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_ANDROID)
@@ -90,6 +89,11 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
 else()
     list(APPEND OPTIONS "--target=${VCPKG_TARGET_ARCHITECTURE}")
 endif()
+
+function(cygpath_u out_var input) # equivalent to cygpath -u
+    string(REGEX REPLACE "^([a-z][A-Z]):/" "/\\1/" input "${input}")
+    set("${out_var}" "${input}" PARENT_SCOPE)
+endfunction()
 
 if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_cmake_get_vars(cmake_vars_file)
@@ -131,7 +135,9 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             if(NOT EXISTS "${msvs_installdir}")
                 message(FATAL_ERROR "Failed to determine MSVS dir for ${VCPKG_DETECTED_CMAKE_C_COMPILER}.")
             endif()
-            set(ENV{GYP_MSVS_OVERRIDE_PATH} "${msvs_installdir}")
+            cygpath_u(vspath "${msvs_installdir}")
+            set(ENV{VSPATH} "${vspath}")
+            set(ENV{GYP_MSVS_OVERRIDE_PATH} "${vspath}")
 
             execute_process(
                 COMMAND "${vswhere}"
@@ -150,6 +156,47 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 endif()
 
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_NSPR MODULES nspr CFLAGS LIBS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE MODULES sqlite3 CFLAGS LIBS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib CFLAGS LIBS)
+# Produce absolute include dirs and library dirs filepaths.
+# Manually managing MSVC syntax because gyp converts foo.lib as if it were a relative path.
+foreach(key IN ITEMS NSPR_CFLAGS_RELEASE SQLITE_CFLAGS_RELEASE ZLIB_CFLAGS_RELEASE)
+    separate_arguments(cflags UNIX_COMMAND "${PC_${key}}")
+    string(REPLACE "CFLAGS_RELEASE" "INCLUDE_DIRS" out_var "${key}")
+    set(${out_var} "")
+    foreach(item IN LISTS cflags)
+        if(item MATCHES "^-I(.*)")
+            cmake_path(SET dir NORMALIZE "${CMAKE_MATCH_1}")
+            if(CMAKE_HOST_WIN32)
+                cygpath_u(dir "${dir}")
+            else()
+            endif()
+            list(APPEND ${out_var} "${dir}")
+        endif()
+    endforeach()
+    list(JOIN ${key}_INCLUDE_DIRS ":" ${key}_INCLUDE_DIRS)
+endforeach()
+foreach(out_var IN ITEMS NSPR_LIBS_RELEASE NSPR_LIBS_DEBUG SQLITE_LIBS_RELEASE SQLITE_LIBS_DEBUG ZLIB_LIBS_RELEASE ZLIB_LIBS_DEBUG)
+    separate_arguments(libs UNIX_COMMAND "${PC_${out_var}}")
+    set(${out_var} "")
+    foreach(item IN LISTS libs)
+        if(item MATCHES "^-L(.*)")
+            cmake_path(SET dir NORMALIZE "${CMAKE_MATCH_1}")
+            if(CMAKE_HOST_WIN32)
+                cygpath_u(dir "${dir}")
+            endif()
+            if(VCPKG_DETECTED_MSVC)
+                list(APPEND ${out_var} "-libpath:${dir}")
+            else()
+                list(APPEND ${out_var} "-L${dir}")
+            endif()
+        elseif(item MATCHES "^-l(.*)")
+            list(APPEND ${out_var} "${item}")
+        endif()
+    endforeach()
+endforeach()
+
 # configuring and building in an autotools-like environment, but using gyp-next and ninja
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -159,25 +206,26 @@ vcpkg_make_configure(
     DISABLE_MSVC_TRANSFORMATIONS
     OPTIONS
         -g
-        -j "${VCPKG_CONCURRENCY}"
         -v
-        --disable-tests
-        --system-sqlite
+        -j "${VCPKG_CONCURRENCY}"
+        ${OPTIONS}
+        -Ddisable_tests=1
         -Ddisable_werror=1
         -Dsign_libs=0
+        -Duse_system_sqlite=1
         -Duse_system_zlib=1
-        ${OPTIONS}
+        "--with-nspr=${NSPR_INCLUDE_DIRS}:"
+        "-Dsqlite_include_dirs=${SQLITE_INCLUDE_DIRS}"
+        "-Dzlib_include_dirs=${ZLIB_INCLUDE_DIRS}"
     OPTIONS_DEBUG
-        "--with-nspr=${CURRENT_INSTALLED_DIR}/include/nspr:${CURRENT_INSTALLED_DIR}/debug/lib"
-        "-Dnspr_libs=${PC_NSPR_LIBRARIES_DEBUG}"
-        "-Dsqlite_libs=${PC_SQLITE3_LIBS_DEBUG}"
-        "-Dzlib_libs=${PC_ZLIB_LIBS_DEBUG}"
+        "-Dnspr_libs=${NSPR_LIBS_DEBUG}"
+        "-Dsqlite_libs=${SQLITE_LIBS_DEBUG}"
+        "-Dzlib_libs=${ZLIB_LIBS_DEBUG}"
     OPTIONS_RELEASE
         --opt
-        "--with-nspr=${CURRENT_INSTALLED_DIR}/include/nspr:${CURRENT_INSTALLED_DIR}/lib"
-        "-Dnspr_libs=${PC_NSPR_LIBRARIES_RELEASE}"
-        "-Dsqlite_libs=${PC_SQLITE3_LIBS_RELEASE}"
-        "-Dzlib_libs=${PC_ZLIB_LIBS_RELEASE}"
+        "-Dnspr_libs=${NSPR_LIBS_RELEASE}"
+        "-Dsqlite_libs=${SQLITE_LIBS_RELEASE}"
+        "-Dzlib_libs=${ZLIB_LIBS_RELEASE}"
 )
 
 if(NOT VCPKG_BUILD_TYPE)

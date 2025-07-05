@@ -1,13 +1,5 @@
 #!/bin/bash
 
-maybe_msvc=
-case "$@,$GYP_MSVS_VERSION" in
-*--msvc*,20*)
-    export VSPATH=$(cygpath --unix "${GYP_MSVS_OVERRIDE_PATH:-$VSINSTALLDIR}")
-    export GYP_MSVS_OVERRIDE_PATH="${VSPATH}"
-    ;;
-esac
-
 filtered_options=()
 for option
 do
