@@ -1,7 +1,6 @@
 {
   "name": "highfive",
-  "version": "2.10.1",
-  "port-version": 1,
+  "version": "3.0.0",
   "description": "HighFive is a modern header-only C++/C++11 friendly interface for libhdf5",
   "homepage": "https://github.com/highfive-devs/highfive",
   "license": "BSL-1.0",
@@ -21,7 +20,7 @@
   ],
   "features": {
     "boost": {
-      "description": "Enables Boost support",
+      "description": "Enable testing Boost features",
       "dependencies": [
         "boost-multi-array",
         "boost-serialization",
@@ -30,19 +29,19 @@
       ]
     },
     "eigen3": {
-      "description": "Enable Eigen testing",
+      "description": "Enable testing Eigen",
       "dependencies": [
         "eigen3"
       ]
     },
-    "tests": {
-      "description": "Build unit tests",
+    "opencv": {
+      "description": "Enable testing OpenCV",
       "dependencies": [
-        "catch2"
+        "opencv"
       ]
     },
     "xtensor": {
-      "description": "Enable xtensor testing",
+      "description": "Enable testing xtensor",
       "dependencies": [
         "xtensor"
       ]
