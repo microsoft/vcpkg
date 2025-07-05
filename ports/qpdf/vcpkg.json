@@ -27,6 +27,7 @@
   "features": {
     "gnutls": {
       "description": "GnuTLS crypto provider",
+      "supports": "!windows | mingw",
       "dependencies": [
         "libgnutls"
       ]
