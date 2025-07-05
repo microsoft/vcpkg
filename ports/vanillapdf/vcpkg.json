@@ -28,12 +28,6 @@
         "benchmark"
       ]
     },
-    "skia-support": {
-      "description": "Enable Skia graphics engine integration for rendering",
-      "dependencies": [
-        "skia"
-      ]
-    },
     "tests": {
       "description": "Enable unit and integration tests",
       "dependencies": [
