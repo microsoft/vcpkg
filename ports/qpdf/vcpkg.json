@@ -8,10 +8,6 @@
   "dependencies": [
     "libjpeg-turbo",
     {
-      "name": "pkgconf",
-      "host": true
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
