@@ -4,6 +4,7 @@
   "description": "A content-preserving PDF document transformer",
   "homepage": "https://qpdf.sourceforge.io/",
   "license": "Apache-2.0 AND MIT",
+  "supports": "!uwp",
   "dependencies": [
     "libjpeg-turbo",
     {
