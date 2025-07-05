@@ -17,9 +17,6 @@
     },
     "zlib"
   ],
-  "default-features": [
-    "openssl"
-  ],
   "features": {
     "gnutls": {
       "description": "GnuTLS crypto provider",
