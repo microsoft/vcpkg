@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME stlab-copy-on-write CONFIG_PATH lib/cmake/stlab-copy-on-write)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/stlab-copy-on-write)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
