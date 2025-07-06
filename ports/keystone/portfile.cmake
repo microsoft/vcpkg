@@ -1,9 +1,3 @@
-vcpkg_download_distfile(FIX_GCC15
-    URLS https://github.com/keystone-engine/keystone/pull/593.diff?full_index=1
-    FILENAME fix-gcc15.patch
-    SHA512 2cfe7e48bd244f2540d31eb59922dd2a49093f0f97fa69e1e3b7582ea0a3ee9454ad071ef2e65fd04be66ca8febdd93f52cda1cc197598200b34702de0b602e6
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO keystone-engine/keystone
@@ -11,7 +5,8 @@ vcpkg_from_github(
     SHA512 ebcdb1cca6dfdf76e0ad2a42a667044806e5c083c07357908298c6ef23d15960f887efa05c1cb3dee90ebdcd5af819bcf8af0fa1aa068aa9a0c6703dee29514e
     HEAD_REF master
     PATCHES
-        "${FIX_GCC15}"
+        0001-fix-gcc15.patch
+        0002-fix-cmake4.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
