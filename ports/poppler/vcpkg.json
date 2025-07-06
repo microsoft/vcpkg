@@ -1,14 +1,12 @@
 {
   "name": "poppler",
-  "version": "24.3.0",
-  "port-version": 1,
+  "version": "25.7.0",
   "description": "A PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "license": "GPL-2.0-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
     "boost-container",
-    "boost-move",
     "freetype",
     "libiconv",
     "libjpeg-turbo",
@@ -25,7 +23,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "default-features": [
     "font-configuration",
@@ -100,18 +99,15 @@
       "dependencies": [
         {
           "name": "qtbase",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
         }
       ]
     },
-    "splash": {
-      "description": "The splash backend is always enabled. This option is kept for compatibility."
-    },
     "zlib": {
-      "description": "zlib for poppler",
-      "dependencies": [
-        "zlib"
-      ]
+      "description": "Use zlib to uncompress flate streams (not totally safe)."
     }
   }
 }
