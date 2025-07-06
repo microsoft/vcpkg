@@ -297,6 +297,7 @@ ecal:x64-android=fail
 elfio:arm-neon-android=fail
 elfio:arm64-android=fail
 elfio:x64-android=fail
+faker-cxx:x64-linux=fail # requires gcc13 or later
 # clang rejects variable length arrays
 fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
@@ -917,18 +918,6 @@ sfml:arm-neon-android=fail
 sfml:arm64-android=fail
 sfml:x64-android=fail
 shader-slang:x64-windows-static=fail
-shogun:arm64-android=skip
-shogun:arm64-osx=skip
-shogun:arm64-uwp=skip
-shogun:arm64-windows-static-md=skip
-shogun:arm64-windows=skip
-shogun:x64-osx=skip
-shogun:x64-uwp=skip
-shogun:x64-windows-release=skip
-shogun:x64-windows-static-md=skip
-shogun:x64-windows-static=skip
-shogun:x64-windows=skip
-shogun:x86-windows=skip
 # "Obsolete" and conflicts with microsoft-signalr
 signalrclient:arm-neon-android=skip
 signalrclient:arm64-android=skip
