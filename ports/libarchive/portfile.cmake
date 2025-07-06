@@ -5,9 +5,7 @@ vcpkg_from_github(
     SHA512 284da172cd5aef6a321f88a35ecd1f0400b885fea33d7c84139faa9ba67487b2673cbb244914f95c22b6c7e7cbfce773da4536c975844c8a156d6b4b3e58193f
     HEAD_REF master
     PATCHES
-        disable-warnings.patch
         fix-buildsystem.patch
-        fix-cpu-set.patch
         fix-deps.patch
 )
 
@@ -60,6 +58,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DENABLE_ZLIB=ON
+        -DZLIB_WINAPI=OFF
         -DENABLE_PCREPOSIX=OFF
         -DPOSIX_REGEX_LIB=NONE
         -DENABLE_MBEDTLS=OFF
@@ -84,6 +83,7 @@ vcpkg_cmake_configure(
         CMAKE_REQUIRE_FIND_PACKAGE_lz4
         ENABLE_LibGCC
         HAVE_XMLLITE_H
+        ZLIB_WINAPI
 )
 
 vcpkg_cmake_install()
