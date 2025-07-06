@@ -10,12 +10,9 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/include/cudnn_frontend/thirdparty")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE=OFF
         -DCUDNN_FRONTEND_BUILD_TESTS=OFF
         -DCUDNN_FRONTEND_BUILD_SAMPLES=OFF
         -DCUDNN_FRONTEND_SKIP_JSON_LIB=OFF
-    MAYBE_UNUSED_VARIABLES
-        CUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE
 )
 vcpkg_cmake_install()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cudnn_frontend_utils.h"
