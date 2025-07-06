@@ -6453,7 +6453,7 @@
       "port-version": 0
     },
     "mujs": {
-      "baseline": "1.3.6",
+      "baseline": "1.3.7",
       "port-version": 0
     },
     "munit": {
