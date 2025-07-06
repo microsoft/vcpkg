@@ -11,18 +11,29 @@ vcpkg_from_github(
         fix-deps.patch
 )
 
+if("xar" IN_LIST FEATURES)
+    # Cf. https://github.com/libarchive/libarchive/pull/2388:
+    # xmllite is available since Windows XP, but mingw-w64 added it with delay.
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        list(APPEND FEATURES "xar/xmllite")
+    else()
+        list(APPEND FEATURES "xar/libxml2")
+    endif()
+endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bzip2   ENABLE_BZip2
         bzip2   CMAKE_REQUIRE_FIND_PACKAGE_BZip2
-        libxml2 ENABLE_LIBXML2
-        libxml2 CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         lz4     ENABLE_LZ4
         lz4     CMAKE_REQUIRE_FIND_PACKAGE_lz4
         lzma    ENABLE_LZMA
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         lzo     ENABLE_LZO
         zstd    ENABLE_ZSTD
+        xar/libxml2  ENABLE_LIBXML2
+        xar/libxml2  CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
+        xar/xmllite  ENABLE_WIN32_XMLLITE
+        xar/xmllite  HAVE_XMLLITE_H
 )
 # Default crypto backend is OpenSSL, but it is ignored for DARWIN
 set(WRAPPER_ENABLE_OPENSSL OFF)
@@ -72,6 +83,7 @@ vcpkg_cmake_configure(
         CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         CMAKE_REQUIRE_FIND_PACKAGE_lz4
         ENABLE_LibGCC
+        HAVE_XMLLITE_H
 )
 
 vcpkg_cmake_install()
