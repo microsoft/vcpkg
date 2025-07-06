@@ -181,7 +181,7 @@ index 38664d2..d0882b2 100644
        IF(HAVE_XMLLITE_H)
          SET(XMLLITE_FOUND TRUE)
          LIST(APPEND ADDITIONAL_LIBS "xmllite" "uuid")
-+        STRING(APPEND LIBARCHIVE_LIBS_PRIVATE " xmllite uuid")
++        LIST(APPEND LIBARCHIVE_LIBS_PRIVATE xmllite uuid)
        ENDIF()
      ENDIF()
    ENDIF(EXPAT_FOUND)
