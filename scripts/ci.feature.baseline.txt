@@ -1465,7 +1465,6 @@ nngpp:arm64-uwp = cascade
 nngpp:x64-uwp = cascade
 nss:x64-uwp = cascade
 nss:x64-windows-static = cascade
-nss:x64-windows-static-md = cascade
 numcpp:arm64-uwp = cascade
 numcpp:x64-uwp = cascade
 numcpp[python]:arm64-windows = cascade
