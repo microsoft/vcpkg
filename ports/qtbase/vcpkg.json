@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.8.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -163,7 +163,16 @@
     },
     "cups": {
       "description": "Provides support for the Common Unix Printing System.",
-      "supports": "linux | osx"
+      "supports": "linux | osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
     },
     "dbus": {
       "description": "Qt D-Bus",
@@ -212,7 +221,14 @@
       "description": "EGL",
       "supports": "android | linux",
       "dependencies": [
-        "egl"
+        "egl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "fontconfig": {
@@ -510,6 +526,13 @@
     "vulkan": {
       "description": "Enable Vulkan support",
       "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
         "vulkan"
       ]
     },
@@ -532,7 +555,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "concurrent",
+            "thread",
             "xkbcommon-x11",
             "xlib"
           ]
@@ -567,7 +590,16 @@
       ]
     },
     "xlib": {
-      "description": "XLib"
+      "description": "XLib",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
     },
     "xrender": {
       "description": "XRender for native painting",
@@ -576,7 +608,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "xcb"
+            "fontconfig",
+            "xcb-xlib"
           ]
         }
       ]

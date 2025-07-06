@@ -1,0 +1,8 @@
+include(CMakeFindDependencyMacro)
+if("@WANT_SYNCAPI@" AND NOT WIN32)
+    find_dependency(Threads)
+endif()
+if("@WITH_OPENSSL@")
+    find_dependency(OpenSSL)
+endif()
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-zookeeperTargets.cmake")

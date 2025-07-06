@@ -1,6 +1,7 @@
 {
   "name": "mongoose",
   "version": "7.18",
+  "port-version": 1,
   "description": "Embedded web server / embedded networking library",
   "homepage": "https://cesanta.com/",
   "license": null,
@@ -16,6 +17,9 @@
     }
   ],
   "features": {
+    "pack": {
+      "description": "Build pack for embedding read-only filesystems"
+    },
     "ssl": {
       "description": "Build with openssl",
       "dependencies": [
