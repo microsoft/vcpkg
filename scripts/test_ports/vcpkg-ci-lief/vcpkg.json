@@ -1,25 +1,25 @@
 {
-    "name": "vcpkg-ci-lief",
-    "version-string": "ci",
-    "description": "Testing packages which provide lief",
-    "license": null,
-    "dependencies": [
+  "name": "vcpkg-ci-lief",
+  "version-string": "ci",
+  "description": "Testing packages which provide lief",
+  "license": null,
+  "dependencies": [
     {
       "name": "lief",
       "features": [
+        "art",
         "c-api",
+        "dex",
+        "elf",
         "enable-json",
         "extra-warnings",
         "logging",
         "logging-debug",
-        "use-ccache",
-        "elf",
-        "pe",
         "macho",
         "oat",
-        "dex",
-        "vdex",
-        "art"
+        "pe",
+        "use-ccache",
+        "vdex"
       ]
     },
     {
