@@ -8208,10 +8208,6 @@
       "baseline": "0",
       "port-version": 5
     },
-    "readline-osx": {
-      "baseline": "2020-01-04",
-      "port-version": 0
-    },
     "readline-unix": {
       "baseline": "8.2",
       "port-version": 1
