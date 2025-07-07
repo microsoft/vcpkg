@@ -10,12 +10,6 @@ vcpkg_from_github(
         cmake-config-export.patch
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    # In ARM64 it fails without /bigobj
-    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /bigobj")
-    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /bigobj")
-endif()
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -25,6 +19,7 @@ vcpkg_check_features(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DLUAU_BUILD_TESTS=OFF
         -DVERSION=${VERSION}
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
