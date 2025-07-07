@@ -46,4 +46,10 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+    COMMENT [[
+Keystone is distributed under dual Version 2 of the GNU General Public License (GPLv2) and commercial license.
+For commercial usage in production environments, contact the authors of Keystone to buy a royalty-free license keystone.engine@gmail.com
+]]
+    FILE_LIST "${SOURCE_PATH}/COPYING"
+)
