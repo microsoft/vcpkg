@@ -4,7 +4,7 @@
   "port-version": 4,
   "description": "A Lightweight multi-platform, multi-architecture assembler framework.",
   "homepage": "https://github.com/keystone-engine/keystone",
-  "license": "GPL-2.0-only",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {
