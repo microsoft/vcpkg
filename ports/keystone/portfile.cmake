@@ -45,7 +45,6 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-# Handle copyright
 vcpkg_install_copyright(
     COMMENT [[
 Keystone is distributed under dual Version 2 of the GNU General Public License (GPLv2) and commercial license.
