@@ -28,7 +28,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Blosc2")
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH "cmake/Blosc2")
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Blosc2")
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
