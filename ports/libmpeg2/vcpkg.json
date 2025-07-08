@@ -4,7 +4,7 @@
   "port-version": 4,
   "description": "a free MPEG-2 video stream decoder",
   "homepage": "http://libmpeg2.sourceforge.net/",
-  "supports": "!(linux | osx | uwp)",
+  "supports": "!(linux | osx | uwp | android)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
