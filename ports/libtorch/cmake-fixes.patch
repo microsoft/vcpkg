@@ -136,7 +136,8 @@ index c3abce5..63f665f 100644
  # ---[ cuDNN
  if(USE_CUDNN)
 +  find_package(CUDNN REQUIRED)
-   set(CUDNN_FRONTEND_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../third_party/cudnn_frontend/include)
+-  set(CUDNN_FRONTEND_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../third_party/cudnn_frontend/include)
++  find_path(CUDNN_FRONTEND_INCLUDE_DIR NAMES cudnn_frontend.h REQUIRED)
    target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})
 +  target_include_directories(torch::cudnn INTERFACE "${CUDNN_INCLUDE_DIR}")
  endif()
@@ -202,6 +203,27 @@ index c3abce5..63f665f 100644
  
  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
+@@ -1388,16 +1388,16 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+     endif()
+     set(TP_BUILD_LIBUV ON CACHE BOOL "" FORCE)
+     add_compile_options(-DTORCH_USE_LIBUV)
+-    include_directories(BEFORE SYSTEM ${CMAKE_CURRENT_LIST_DIR}/../third_party/tensorpipe/third_party/libuv/include)
++    find_package(libuv CONFIG REQUIRED)
+     set(TP_STATIC_OR_SHARED STATIC CACHE STRING "" FORCE)
+ 
+     # Tensorpipe uses cuda_add_library
+     torch_update_find_cuda_flags()
+-    add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/tensorpipe)
++    find_package(unofficial-tensorpipe CONFIG REQUIRED)
+ 
+-    list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)
++    list(APPEND Caffe2_DEPENDENCY_LIBS $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv> unofficial::tensorpipe::tensorpipe)
+     if(USE_CUDA)
+-      list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS tensorpipe_cuda)
++      list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS unofficial::tensorpipe::tensorpipe_cuda)
+     elseif(USE_ROCM)
+       message(WARNING "TensorPipe doesn't yet support ROCm")
+       # Not yet...
 diff --git a/cmake/Modules/FindLMDB.cmake b/cmake/Modules/FindLMDB.cmake
 index 2f0adb1..8a817fd 100644
 --- a/cmake/Modules/FindLMDB.cmake
