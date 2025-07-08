@@ -51,7 +51,6 @@ halide = skip
 llvm = skip
 
 # Add new items alphabetically
-ace:x64-windows-static-md=fail
 ace[tao]:arm-neon-android=feature-fails # tao requires a host tree with tao_idl compiled for the host
 ace[tao]:arm64-android=feature-fails
 ace[tao]:x64-android=feature-fails
