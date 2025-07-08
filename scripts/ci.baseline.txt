@@ -40,6 +40,7 @@
 
 # Add new items alphabetically
 
+ace:x64-windows-static-md=fail
 # ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
 ada-url:x64-linux=fail
 angelscript:x64-osx=fail
