@@ -9844,6 +9844,10 @@
       "baseline": "2.10",
       "port-version": 5
     },
+    "vanillapdf": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "variant-lite": {
       "baseline": "2.0.0",
       "port-version": 0
