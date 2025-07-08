@@ -114,7 +114,10 @@
         {
           "$package": "LibXml2",
           "name": "libxml2",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "icu"
+          ]
         },
         {
           "$package": "LibXslt",
@@ -139,7 +142,10 @@
         {
           "$package": "SQLite3",
           "name": "sqlite3",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "unicode"
+          ]
         },
         {
           "$package": "TIFF",

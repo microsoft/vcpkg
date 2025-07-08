@@ -1,8 +1,10 @@
 {
   "name": "capstone",
   "version": "5.0.3",
+  "port-version": 1,
   "description": "Multi-architecture disassembly framework",
   "homepage": "https://github.com/capstone-engine/capstone",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
