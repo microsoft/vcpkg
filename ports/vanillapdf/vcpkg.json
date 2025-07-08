@@ -20,19 +20,5 @@
       "host": true
     },
     "zlib"
-  ],
-  "features": {
-    "benchmarks": {
-      "description": "Enable performance benchmarking tools",
-      "dependencies": [
-        "benchmark"
-      ]
-    },
-    "tests": {
-      "description": "Enable unit and integration tests",
-      "dependencies": [
-        "gtest"
-      ]
-    }
-  }
+  ]
 }
