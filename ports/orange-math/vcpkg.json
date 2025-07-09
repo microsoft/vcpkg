@@ -4,6 +4,7 @@
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "MIT",
+  "supports": "windows | linux",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -15,6 +16,7 @@
     }
   ],
   "default-features": [
+    "avx2",
     "imgui"
   ],
   "features": {

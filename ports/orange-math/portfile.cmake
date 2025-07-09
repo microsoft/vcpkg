@@ -10,11 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# We just let it built further as compiler would emit error since it wont recognize -mavx2 -mfma
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" [[if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")]] [[if (0)]])
-endif()
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
