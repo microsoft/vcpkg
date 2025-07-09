@@ -274,3 +274,24 @@ index 4d48c0f..ebdd39a 100644
    endif()
  endmacro()
  
+diff --git a/cmake/VulkanDependencies.cmake b/cmake/VulkanDependencies.cmake
+index 52de6a4..02dcff1 100644
+--- a/cmake/VulkanDependencies.cmake
++++ b/cmake/VulkanDependencies.cmake
+@@ -31,13 +31,15 @@ if(ANDROID)
+ 
+ else()
+   find_package(Vulkan)
++  find_package(VulkanHeaders)
++  find_package(VulkanMemoryAllocator CONFIG REQUIRED)
+ 
+   if(NOT Vulkan_FOUND)
+     message(FATAL_ERROR "USE_VULKAN requires either Vulkan installed on system path or environment var VULKAN_SDK set.")
+   endif()
+ 
+   list(APPEND Vulkan_INCLUDES ${Vulkan_INCLUDE_DIRS})
+-  list(APPEND Vulkan_LIBS ${Vulkan_LIBRARIES})
++  list(APPEND Vulkan_LIBS ${Vulkan_LIBRARIES} Vulkan::Headers GPUOpen::VulkanMemoryAllocator)
+ 
+   set(GOOGLE_SHADERC_INCLUDE_SEARCH_PATH ${Vulkan_INCLUDE_DIR})
+   set(GOOGLE_SHADERC_LIBRARY_SEARCH_PATH ${Vulkan_LIBRARY})

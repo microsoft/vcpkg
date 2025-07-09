@@ -134,6 +134,7 @@
       "description": "Build with Vulkan GPU backend",
       "dependencies": [
         "vulkan",
+        "vulkan-headers",
         "vulkan-loader",
         "vulkan-memory-allocator"
       ]
