@@ -10,25 +10,49 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        hevc        WITH_X265
         aom         WITH_AOM_DECODER
         aom         WITH_AOM_ENCODER
-        openjpeg    WITH_OpenJPEG_DECODER
-        openjpeg    WITH_OpenJPEG_ENCODER
+        aom         VCPKG_LOCK_FIND_PACKAGE_AOM
+        gdk-pixbuf  WITH_GDK_PIXBUF
+        hevc        WITH_X265
+        hevc        VCPKG_LOCK_FIND_PACKAGE_X265
+        iso23001-17 WITH_UNCOMPRESSED_CODEC
+        iso23001-17 VCPKG_LOCK_FIND_PACKAGE_ZLIB
         jpeg        WITH_JPEG_DECODER
         jpeg        WITH_JPEG_ENCODER
-        iso23001-17 WITH_UNCOMPRESSED_CODEC
-        gdk-pixbuf  WITH_GDKPIXBUF2
+        jpeg        VCPKG_LOCK_FIND_PACKAGE_JPEG
+        openjpeg    WITH_OpenJPEG_DECODER
+        openjpeg    WITH_OpenJPEG_ENCODER
+        openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
 )
+
+if("gdk-pixbuf" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DWITH_EXAMPLES=OFF
-        -DWITH_DAV1D=OFF
         -DBUILD_TESTING=OFF
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
+        -DWITH_DAV1D=OFF
+        -DWITH_EXAMPLES=OFF
+        -DWITH_OpenH264_DECODER=OFF
+        -DWITH_LIBSHARPYUV=OFF
         -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Brotli=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_LIBDE265=ON   # feature candidate
+        -DVCPKG_LOCK_FIND_PACKAGE_PNG=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_TIFF=OFF
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_AOM
+        VCPKG_LOCK_FIND_PACKAGE_Brotli
+        VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
+        VCPKG_LOCK_FIND_PACKAGE_X265
+        VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

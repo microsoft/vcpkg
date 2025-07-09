@@ -29,7 +29,7 @@
     },
     "gdk-pixbuf": {
       "description": "Plugin for gdk-pixbuf",
-      "supports": "!windows",
+      "supports": "!windows | mingw",
       "dependencies": [
         "gdk-pixbuf"
       ]
@@ -42,10 +42,9 @@
       ]
     },
     "iso23001-17": {
-      "description": "Support for ISO23001-17 (uncompressed) codec",
+      "description": "Support for ISO23001-17 (uncompressed) codec (experimental)",
       "license": "LGPL-3.0-only",
       "dependencies": [
-        "brotli",
         "zlib"
       ]
     },
