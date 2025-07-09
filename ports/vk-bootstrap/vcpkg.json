@@ -1,7 +1,6 @@
 {
   "name": "vk-bootstrap",
-  "version": "1.3.279",
-  "port-version": 1,
+  "version": "1.4.312",
   "description": "Vulkan bootstraping library",
   "homepage": "https://github.com/charles-lunarg/vk-bootstrap",
   "license": "MIT",

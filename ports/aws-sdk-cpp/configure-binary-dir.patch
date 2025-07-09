@@ -1,0 +1,89 @@
+diff --git a/cmake/initialize_project_version.cmake b/cmake/initialize_project_version.cmake
+index c9b42f6..894c10f 100644
+--- a/cmake/initialize_project_version.cmake
++++ b/cmake/initialize_project_version.cmake
+@@ -6,9 +6,8 @@ if(GIT_FOUND)
+ endif()
+ 
+ if(NOT VERSION_STRING)
+-    # extract it from the existing generated header file
+-    file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h" __SDK_VERSION_LINE LIMIT_COUNT 1 REGEX "AWS_SDK_VERSION_STRING.*[0-9]+\\.[0-9]+\\.[0-9]+" )
+-    string( REGEX MATCH "([0-9]+\\.[0-9]+\\.[0-9]+)" VERSION_STRING "${__SDK_VERSION_LINE}" )
++    # read it from the version file
++    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION_STRING)
+ endif()
+ 
+ set(PROJECT_VERSION "${VERSION_STRING}")
+diff --git a/src/aws-cpp-sdk-core/CMakeLists.txt b/src/aws-cpp-sdk-core/CMakeLists.txt
+index 6a6ee83..fdd64b7 100644
+--- a/src/aws-cpp-sdk-core/CMakeLists.txt
++++ b/src/aws-cpp-sdk-core/CMakeLists.txt
+@@ -20,7 +20,7 @@ if(VERSION_STRING)
+     set(AWSSDK_VERSION_PATCH ${AWSSDK_VERSION_PATCH})
+     configure_file(
+         "${CMAKE_CURRENT_SOURCE_DIR}/include/aws/core/VersionConfig.h.in"
+-        "${CMAKE_CURRENT_SOURCE_DIR}/include/aws/core/VersionConfig.h"
++        "${CMAKE_CURRENT_BINARY_DIR}/include/aws/core/VersionConfig.h"
+         NEWLINE_STYLE UNIX)
+ else()
+     message("Not able to compute versioning string, not updating.")
+@@ -38,7 +38,7 @@ else()
+ endif()
+ 
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/aws/core/SDKConfig.h.in"
+-               "${CMAKE_CURRENT_SOURCE_DIR}/include/aws/core/SDKConfig.h"
++               "${CMAKE_CURRENT_BINARY_DIR}/include/aws/core/SDKConfig.h"
+                NEWLINE_STYLE UNIX)
+ 
+ file(GLOB AWS_HEADERS "include/aws/core/*.h")
+@@ -93,6 +93,8 @@ file(GLOB SMITHY_IDENTITY_SIGNER_BUILTIN_HEADERS "include/smithy/identity/signer
+ file(GLOB SMITHY_INTERCEPTOR_HEADERS "include/smithy/interceptor/*.h")
+ file(GLOB SMITHY_INTERCEPTOR_IMPL_HEADERS "include/smithy/interceptor/impl/*.h")
+ 
++file(GLOB AWS_GENERATED_HEADERS "${CMAKE_CURRENT_BINARY_DIR}/include/aws/core/*.h")
++
+ file(GLOB AWS_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
+ file(GLOB AWS_TINYXML2_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/source/external/tinyxml2/*.cpp")
+ file(GLOB CJSON_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/source/external/cjson/*.cpp")
+@@ -383,7 +385,7 @@ file(GLOB AWS_NATIVE_SDK_SRC
+ 
+ # Visual studio project directory structure
+ if(MSVC)
+-    source_group("Header Files\\aws\\core" FILES ${AWS_HEADERS})
++    source_group("Header Files\\aws\\core" FILES ${AWS_HEADERS} ${AWS_GENERATED_HEADERS})
+     source_group("Header Files\\aws\\core\\auth" FILES ${AWS_AUTH_HEADERS})
+     source_group("Header Files\\aws\\core\\auth\\signer" FILES ${AWS_AUTH_SIGNER_HEADERS})
+     source_group("Header Files\\aws\\core\\auth\\signer-provider" FILES ${AWS_AUTH_SIGNER_PROVIDER_HEADERS})
+@@ -591,6 +593,7 @@ endif()
+ 
+ target_include_directories(${PROJECT_NAME} PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+     $<INSTALL_INTERFACE:include>)
+ 
+ if (EXTERNAL_DEPS_INCLUDE_DIRS)
+@@ -663,7 +666,7 @@ if(SIMPLE_INSTALL)
+     endif()
+ endif()
+ 
+-install (FILES ${AWS_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core)
++install (FILES ${AWS_HEADERS} ${AWS_GENERATED_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core)
+ install (FILES ${AWS_AUTH_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/auth)
+ install (FILES ${AWS_AUTH_SIGNER_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/auth/signer)
+ install (FILES ${AWS_AUTH_SIGNER_PROVIDER_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/auth/signer-provider)
+diff --git a/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h b/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h
+deleted file mode 100644
+index 911d9ab..0000000
+--- a/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h
++++ /dev/null
+@@ -1,10 +0,0 @@
+-/**
+- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+- * SPDX-License-Identifier: Apache-2.0.
+- */
+-#pragma once
+-
+-#define AWS_SDK_VERSION_STRING "1.11.591"
+-#define AWS_SDK_VERSION_MAJOR 1
+-#define AWS_SDK_VERSION_MINOR 11
+-#define AWS_SDK_VERSION_PATCH 591

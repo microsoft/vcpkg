@@ -1,26 +1,16 @@
 diff --git a/cmake/StlabUtil.cmake b/cmake/StlabUtil.cmake
-index 3b6d21e..e8d81d7 100644
+index 3e36278..aeb284f 100644
 --- a/cmake/StlabUtil.cmake
 +++ b/cmake/StlabUtil.cmake
-@@ -2,7 +2,7 @@
+@@ -2,14 +2,14 @@
  # functionality useful for stlab builds.
  
  include( CheckCXXSymbolExists )
 -include( CheckCXXSourceRuns )
 +include( CheckCXXSourceCompiles )
  
- # Determine if the selected C++ compiler has functional versions of
- # 'std::variant' and 'std::optional'. Set the specified 'result_var' to 'TRUE'
-@@ -10,7 +10,7 @@ include( CheckCXXSourceRuns )
- # this check consists of a smoke test and does not check all the ways these
- # library components may be deficient.
- function( stlab_check_disfunctional_variant_optional result_var )
--  check_cxx_source_runs( "
-+  check_cxx_source_compiles( "
-     #include <variant>
-     #include <optional>
- 
-@@ -33,7 +33,7 @@ endfunction()
+ # Determine if the selected C++ compiler has functional coroutines. Set the
+ # specified 'result_var' to 'TRUE' if they are determined to be disfunctional
  # and 'FALSE' otherwise. Note that this check consists of a smoke test and does
  # not check all the ways this feature may be deficient.
  function( stlab_check_disfunctional_coroutines result_var )

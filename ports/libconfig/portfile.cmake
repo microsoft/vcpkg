@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hyperrealm/libconfig
     REF "v${VERSION}"
-    SHA512 3749bf9eb29bab0f6b14f4fc759f0c419ed27a843842aaabed1ec1fbe0faa8c93322ff875ca1291d69cb28a39ece86d512aec42c2140d566c38c56dc616734f4
+    SHA512 7899d3898e1741d90cf2381561b172ec6ba2bcc47d1b3e6058bcef74d73634d9be33eb8f99a58c7af15ac99e56800510edf3c412d9c1f136e6a3ab744455b992
     HEAD_REF master
     PATCHES
-        libconfig++-cmake-export.diff
         static-build.diff
+        include-stdint.patch
 )
 
 vcpkg_cmake_configure(
@@ -18,6 +18,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libconfig)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

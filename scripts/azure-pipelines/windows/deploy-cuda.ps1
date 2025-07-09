@@ -10,11 +10,11 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
 [string]$CudaUrl
 if ([string]::IsNullOrEmpty($SasToken)) {
   Write-Host 'Downloading from the Internet'
-  $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/12.8.0/local_installers/cuda_12.8.0_571.96_windows.exe'
+  $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda_12.8.1_572.61_windows.exe'
 } else {
   Write-Host 'Downloading from vcpkgimageminting using SAS token'
   $SasToken = $SasToken.Replace('"', '')
-  $CudaUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cuda_12.8.0_571.96_windows.exe?$SasToken"
+  $CudaUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cuda_12.8.1_572.61_windows.exe?$SasToken"
 }
 
 # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html

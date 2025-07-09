@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e5cead7..d49f8c2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -213,10 +213,6 @@ if(MINGW)
+   set(BUILD_XAUDIO_WIN10 OFF)
+ endif()
+ 
+-if(${DIRECTX_ARCH} MATCHES "^arm")
+-  set(BUILD_XAUDIO_REDIST OFF)
+-endif()
+-
+ if(WINDOWS_STORE
+    OR BUILD_XAUDIO_WIN10 OR BUILD_XAUDIO_WIN8
+    OR BUILD_XAUDIO_REDIST)
+-- 
+2.49.0.windows.1
+

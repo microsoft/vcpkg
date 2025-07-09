@@ -1,7 +1,7 @@
 {
   "name": "ffnvcodec",
   "version": "12.2.72.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "FFmpeg version of Nvidia Codec SDK headers.",
   "homepage": "https://github.com/FFmpeg/nv-codec-headers",
   "supports": "linux | (!osx & !uwp & !(arm64 & windows))"

@@ -1,7 +1,7 @@
 {
   "name": "ceres",
   "version": "2.2.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
   "license": "Apache-2.0",
@@ -29,7 +29,10 @@
       ]
     },
     "eigensparse": {
-      "description": "Use of Eigen as a sparse linear algebra library in Ceres"
+      "description": "Use of Eigen as a sparse linear algebra library in Ceres",
+      "dependencies": [
+        "metis"
+      ]
     },
     "lapack": {
       "description": "Use Lapack in Ceres",

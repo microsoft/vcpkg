@@ -1,18 +1,11 @@
-vcpkg_download_distfile(PKGCONFIG_EXPORT_PATCH
-    URLS https://github.com/c-ares/c-ares/commit/d41db1b7916fadea987e5bb05fd4aafaf0d1d6ea.patch?full_index=1
-    SHA512 a7f96fa0d10f44d0f5981cdeef741fb57228f61bb18a79d581c4f1a8df6ae54771b0fb9f7985a8429dc31c5c3506aa436e8240fdcd4c8503da98a4c7bdce4347
-    FILENAME c-ares-pkgconfig-export-d41db1b7916fadea987e5bb05fd4aafaf0d1d6ea.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO c-ares/c-ares
     REF "v${VERSION}"
-    SHA512 7bd4ca8f1a1b6d7b6662c724315bb5d4ca1d3c19e5ff4e06e3567ea25d5f8fd60f9c5f9ade055f08dc7fc3dec0e40e96f8284207b3e03c0975fd962d4a9fcb47
+    SHA512 5c6b4422e158cef2943f7066fb8c738d9ac6f470cdb3ca5cf2b9fa26494f4fb1d7fef25a73d59d9f12aa8eaadc1da358c889d84ac8703b7e430134310bda45ba
     HEAD_REF main
     PATCHES
         avoid-docs.patch
-        "${PKGCONFIG_EXPORT_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

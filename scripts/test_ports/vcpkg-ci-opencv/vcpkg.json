@@ -36,10 +36,18 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "opencl",
+        "jpegxl",
         "openexr"
       ],
       "platform": "!uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "opencl"
+      ],
+      "platform": "!uwp & !osx"
     },
     {
       "name": "opencv",
@@ -111,7 +119,6 @@
         "freetype",
         "gdcm",
         "ipp",
-        "opengl",
         "openjpeg",
         "qt",
         "sfm",

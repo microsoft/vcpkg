@@ -1,0 +1,4 @@
+mysvac-jsonlib provides CMake targets:
+
+  find_package(mysvac-jsonlib CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE mysvac::jsonlib)
