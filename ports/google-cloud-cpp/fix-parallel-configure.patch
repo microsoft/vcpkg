@@ -1,0 +1,19 @@
+diff --git a/google/cloud/google_cloud_cpp_common.cmake b/google/cloud/google_cloud_cpp_common.cmake
+index 773857e..d87d8b7 100644
+--- a/google/cloud/google_cloud_cpp_common.cmake
++++ b/google/cloud/google_cloud_cpp_common.cmake
+@@ -18,9 +18,14 @@ if (NOT WIN32)
+     find_package(OpenSSL REQUIRED)
+ endif ()
+ 
++# This file is already checked in source control.
++# If we skip writing it, we don't write anything to the source directory,
++# and can configure in parallel.
++if (FALSE)
+ # Generate the version information from the CMake values.
+ configure_file(internal/version_info.h.in
+                ${CMAKE_CURRENT_SOURCE_DIR}/internal/version_info.h)
++endif ()
+ 
+ # Create the file that captures build information. Having access to the compiler
+ # and build flags at runtime allows us to print better benchmark results.

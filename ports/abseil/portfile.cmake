@@ -31,7 +31,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DABSL_PROPAGATE_CXX_STD=ON
         ${ABSL_USE_CXX17_OPTION}
