@@ -42,7 +42,7 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb-cursor-dev libxkbcommon-x11-dev"
 
 ## PowerShell
-ENV APT_PACKAGES="$APT_PACKAGES powershell"
+ENV APT_PACKAGES="$APT_PACKAGES powershell azcopy"
 
 # The BUILD_DATE argument forces cache invalidation so we get updated apt dependencies
 ARG BUILD_DATE
