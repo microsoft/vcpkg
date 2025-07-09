@@ -4,7 +4,6 @@
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "MIT",
-  "supports": "windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -16,13 +15,11 @@
     }
   ],
   "default-features": [
-    "avx2",
     "imgui"
   ],
   "features": {
     "avx2": {
-      "description": "Omath will use AVX2 to boost performance",
-      "supports": "!arm"
+      "description": "Omath will use AVX2 to boost performance"
     },
     "imgui": {
       "description": "Omath will define method to convert omath types to imgui types",
