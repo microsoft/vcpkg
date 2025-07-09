@@ -5,6 +5,8 @@ vcpkg_from_github(
     SHA512 74bc51caf30997e1d327ab8253e9d3556906cd14828794a72c4ba42f2c154b79c1d717e0833a6afc3f6ebff909b630326c11a052d7eb832008769157fad3760b
     HEAD_REF master
     PATCHES
+        cxx-linkage-pkgconfig.diff
+        find-modules.diff
         gdk-pixbuf.patch
 )
 
@@ -26,10 +28,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
 )
 
-if("gdk-pixbuf" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PKGCONFIG)
-    set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-endif()
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -56,13 +56,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libheif/)
-# libheif's pc file assumes libstdc++, which isn't always true.
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libheif.pc" " -lstdc++" "" IGNORE_UNCHANGED)
-if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libheif.pc" " -lstdc++" "" IGNORE_UNCHANGED)
-endif()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -70,7 +64,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
 endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "#ifdef LIBHEIF_EXPORTS" "#if 0")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
