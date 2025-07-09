@@ -1553,8 +1553,8 @@
       "port-version": 0
     },
     "capstone": {
-      "baseline": "5.0.3",
-      "port-version": 1
+      "baseline": "5.0.6",
+      "port-version": 0
     },
     "cargs": {
       "baseline": "1.2.0",
