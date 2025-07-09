@@ -8,10 +8,13 @@ vcpkg_from_github(
         change-output-name.patch
 )
 
+vcpkg_find_acquire_program(PERL)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSUPERGLU_BUILD_SHARED_LIBS=OFF
+        "-DPERL_EXECUTABLE=${PERL}"
 )
 
 vcpkg_cmake_install()
