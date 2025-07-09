@@ -4,11 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RippeR37/libbase
     REF "v${VERSION}"
-    SHA512 7a1c77815634b8b07f324bcd6bb4a9b0804edb216bdd3f444265c97efdfc1dadd5fb2cf132987626872170ef6fcff5e16e3e1a79246c6107f91cb3192bf1b679
+    SHA512 5bbb6758db694ed899d1181c9dc1ad6f90a55f73c8fb6d05f179695c4cc5e3354989d85879651781a34e6bbd396afe8c8f5fb406a24280e579142618923fc9af
     HEAD_REF master
-    PATCHES
-        01_fix_output_lib_name_conflict.patch
-        02_remove_unneeded_find_dependency_calls.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        net LIBBASE_BUILD_MODULE_NET
+        win LIBBASE_BUILD_MODULE_WIN
+        wx  LIBBASE_BUILD_MODULE_WX
 )
 
 vcpkg_cmake_configure(
@@ -21,6 +25,9 @@ vcpkg_cmake_configure(
         -DLIBBASE_BUILD_EXAMPLES=OFF
         -DLIBBASE_BUILD_TESTS=OFF
         -DLIBBASE_BUILD_PERFORMANCE_TESTS=OFF
+        -DLIBBASE_BUILD_ASAN=OFF
+        -DLIBBASE_BUILD_TSAN=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

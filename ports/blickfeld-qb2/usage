@@ -1,0 +1,4 @@
+blickfeld-qb2 provides CMake targets:
+
+  find_package(blickfeld-qb2 REQUIRED)
+  target_link_libraries(main PRIVATE blickfeld-qb2)

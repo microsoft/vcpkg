@@ -1,6 +1,6 @@
 {
   "name": "qtconnectivity",
-  "version": "6.8.2",
+  "version": "6.8.3",
   "description": "The Qt Connectivity module provides access to Bluetooth and NFC hardware.",
   "homepage": "https://www.qt.io/",
   "license": null,

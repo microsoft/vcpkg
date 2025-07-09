@@ -12,14 +12,16 @@
       so in `scripts/azure-pipelines/windows`
 * [ ] Check for any updates possible to `vcpkg-tools.json`. Note that PowerShell currently uses the
     7.2.x series due to customer reported problems on older Windows with 7.3.x and later.
-* [ ] Update the first line of android/Dockerfile with the current 'focal' image according to
+* [ ] Update the first line of android/Dockerfile with the current 'noble' image according to
     https://hub.docker.com/_/ubuntu
-* [ ] Run android/create-docker-image.ps1
-* [ ] Update azure-pipelines.yml to point to the new linux docker image from Azure Container Registry
+* [ ] Update the first line of linux/Dockerfile with the current 'jammy' image according to
+    https://hub.docker.com/_/ubuntu
+* [ ] Run create-docker-images.ps1
+* [ ] Update android/azure-pipelines.yml and linux/azure-pipelines.yml to point to the new docker
+      images
 * [ ] Run windows/create-image.ps1
-* [ ] Update azure-pipelines.yml to point to the new Android image.
 * [ ] Submit PR with those changes and merge it.
 * [ ] In the Azure portal, mark the newly created image as the 'latest' one.
 * [ ] Mint a new macOS base box.  (See instructions in `scripts/azure-pipelines/osx/README.md`)
 * [ ] Deploy the new base box to all hosts.
-* [ ] Update the software on the CTI's machine #12 to match.
+* [ ] Update the software on the CTI's machine #1 to match.

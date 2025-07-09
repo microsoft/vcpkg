@@ -21,16 +21,10 @@ index 49d85c6..76209f5 100644
      "${JUCE_BINARY_DIR}/JUCEConfig.cmake"
      PATH_VARS UTILS_INSTALL_DIR JUCEAIDE_PATH JUCE_MODULE_PATH
 diff --git a/extras/Build/juceaide/CMakeLists.txt b/extras/Build/juceaide/CMakeLists.txt
-index 651aa53..9ff0fba 100644
+index 17e5520974..b8cab564ec 100644
 --- a/extras/Build/juceaide/CMakeLists.txt
 +++ b/extras/Build/juceaide/CMakeLists.txt
-@@ -55,12 +55,16 @@ if(JUCE_BUILD_HELPER_TOOLS)
-         juce::juce_recommended_lto_flags
-         juce::juce_recommended_warning_flags)
- 
--    set_target_properties(juceaide PROPERTIES
--        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
- 
+@@ -60,6 +60,11 @@ if(JUCE_BUILD_HELPER_TOOLS)
      export(TARGETS juceaide
             NAMESPACE juce_tools::
             FILE "${JUCE_BINARY_DIR}/JUCEToolsExport.cmake")
@@ -39,45 +33,60 @@ index 651aa53..9ff0fba 100644
 +    add_executable(juceaide IMPORTED GLOBAL)
 +    set_target_properties(juceaide PROPERTIES IMPORTED_LOCATION "${WITH_JUCEAIDE}")
 +    add_executable(juce::juceaide ALIAS juceaide)
-+
  else()
      message(STATUS "Configuring juceaide")
  
-@@ -111,13 +115,18 @@ else()
-         set(ENV{CMAKE_GENERATOR_PLATFORM} "${CMAKE_HOST_SYSTEM_PROCESSOR}")
+@@ -124,14 +129,25 @@ else()
+         list(APPEND PASSTHROUGH_ARGS "-DCMAKE_CXX_COMPILER_LAUNCHER=${CMAKE_CXX_COMPILER_LAUNCHER}")
      endif()
  
-+    set(options "")
 +    list(REMOVE_ITEM vcpkg_input_vars "JUCE_BUILD_EXTRAS")
 +    foreach(var IN LISTS vcpkg_input_vars)
-+        list(APPEND options "-D${var}=$CACHE{${var}}")
++        list(APPEND PASSTHROUGH_ARGS "-D${var}=$CACHE{${var}}")
 +    endforeach()
++
++    if (NOT DEFINED CMAKE_BUILD_TYPE)
++        set(JUCE_JUCEAIDE_BUILD_TYPE "Release")
++    else()
++        set(JUCE_JUCEAIDE_BUILD_TYPE "${CMAKE_BUILD_TYPE}")
++    endif()
++
      # Looks like we're bootstrapping, reinvoke CMake
      execute_process(COMMAND "${CMAKE_COMMAND}"
              "."
              "-B${JUCE_BINARY_DIR}/tools"
              "-G${CMAKE_GENERATOR}"
              "-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}"
--            "-DCMAKE_BUILD_TYPE=Debug"
-+            ${options}
+-            "-DCMAKE_CONFIGURATION_TYPES=Custom"
+-            "-DCMAKE_BUILD_TYPE=Custom"
++            "-DCMAKE_CONFIGURATION_TYPES=${JUCE_JUCEAIDE_BUILD_TYPE}"
++            "-DCMAKE_BUILD_TYPE=${JUCE_JUCEAIDE_BUILD_TYPE}"
              "-DJUCE_BUILD_HELPER_TOOLS=ON"
              "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
-         WORKING_DIRECTORY "${JUCE_SOURCE_DIR}"
-@@ -133,7 +142,7 @@ else()
+             ${PASSTHROUGH_ARGS}
+@@ -148,7 +164,8 @@ else()
  
      execute_process(COMMAND "${CMAKE_COMMAND}"
              --build "${JUCE_BINARY_DIR}/tools"
--            --config Debug
+-            --config Custom
++            --config ${JUCE_JUCEAIDE_BUILD_TYPE}
 +            --target juceaide
          OUTPUT_VARIABLE command_output
          ERROR_VARIABLE command_output
          RESULT_VARIABLE result_variable)
-@@ -148,7 +157,7 @@ else()
+@@ -163,7 +180,14 @@ else()
      include("${JUCE_BINARY_DIR}/tools/JUCEToolsExport.cmake")
  
      add_executable(juceaide IMPORTED GLOBAL)
--    get_target_property(imported_location juce_tools::juceaide IMPORTED_LOCATION_DEBUG)
-+    get_target_property(imported_location juce_tools::juceaide IMPORTED_LOCATION_RELEASE)
+-    get_target_property(imported_location juce_tools::juceaide IMPORTED_LOCATION_CUSTOM)
++
++    string(TOUPPER ${JUCE_JUCEAIDE_BUILD_TYPE} JUCE_JUCEAIDE_BUILD_TYPE_UPPER)
++
++    get_target_property(imported_location juce_tools::juceaide IMPORTED_LOCATION_${JUCE_JUCEAIDE_BUILD_TYPE_UPPER})
++    if(NOT imported_location)
++        message(FATAL_ERROR "Failed to find imported location for juceaide")
++    endif()
++    
      set_target_properties(juceaide PROPERTIES IMPORTED_LOCATION "${imported_location}")
  
      add_executable(juce::juceaide ALIAS juceaide)

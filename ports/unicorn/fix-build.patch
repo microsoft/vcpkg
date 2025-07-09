@@ -11,12 +11,3 @@ index 3fcde11..1acc0b5 100644
              message(FATAL_ERROR "please set the runtime library via either CMAKE_C_FLAGS or CMAKE_MSVC_RUNTIME_LIBRARY, not both")
          endif()
  
-@@ -1486,7 +1486,7 @@ if(UNICORN_BUILD_TESTS)
- endif()
- 
- 
--if(UNICORN_INSTALL AND NOT MSVC)
-+if(UNICORN_INSTALL)
-     include("GNUInstallDirs")
-     file(GLOB UNICORN_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/unicorn/*.h)
-     if (BUILD_SHARED_LIBS)

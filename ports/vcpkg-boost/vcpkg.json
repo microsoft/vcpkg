@@ -1,5 +1,15 @@
 {
   "name": "vcpkg-boost",
-  "version-date": "2024-05-15",
-  "license": "MIT"
+  "version-date": "2025-03-29",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }

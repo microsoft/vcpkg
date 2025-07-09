@@ -211,8 +211,8 @@ target system or to the host system. Use a prefixed variable instead.
     unset(z_post_portfile_include)
 
     if(DEFINED PORT)
-        # Always fixup RPATH on linux and osx unless explicitly disabled.
-        if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
+        # Always fixup RPATH on linux, osx and bsds unless explicitly disabled.
+        if(VCPKG_FIXUP_ELF_RPATH OR ((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD) AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
             z_vcpkg_fixup_rpath_in_dir()
         endif()
         if(VCPKG_FIXUP_MACHO_RPATH OR (VCPKG_TARGET_IS_OSX AND NOT DEFINED VCPKG_FIXUP_MACHO_RPATH))

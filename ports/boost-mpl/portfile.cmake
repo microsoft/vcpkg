@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mpl
     REF boost-${VERSION}
-    SHA512 1b9101b07bc2f3c93b5d994da7bf0848ab9169eab7cb6f3fc5c327fdac2e4bed6532302213b0337e69ad8ea1f6962e7f51d0260b015f21b0beaa655efc0bf05b
+    SHA512 0f62ac92b93eb6cfc63eee40df64a0c55c40171cf8b8e79dfaa7da2b34060e45030f2d20a537cbae7b5381874b4d2e9590704b09fe50362632282149402f034d
     HEAD_REF master
+    PATCHES
+        fix-msvc-build.diff
 )
 
 set(FEATURE_OPTIONS "")

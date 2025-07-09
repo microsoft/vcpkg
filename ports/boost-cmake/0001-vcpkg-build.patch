@@ -1,0 +1,95 @@
+diff --git a/include/BoostRoot.cmake b/include/BoostRoot.cmake
+index 98a19df..5054d6c 100644
+--- a/include/BoostRoot.cmake
++++ b/include/BoostRoot.cmake
+@@ -21,7 +21,7 @@ set(__boost_incompatible_libraries "")
+ 
+ # Define cache variables if root project
+ 
+-if(CMAKE_SOURCE_DIR STREQUAL Boost_SOURCE_DIR)
++if(1)
+ 
+   # --with-<library>
+   set(BOOST_INCLUDE_LIBRARIES "" CACHE STRING
+@@ -200,6 +200,8 @@ endfunction()
+ function(__boost_scan_dependencies lib var)
+ 
+   set(result "")
++  set(required_components "")
++  set(optional_components "")
+ 
+   if(EXISTS "${BOOST_SUPERPROJECT_SOURCE_DIR}/libs/${lib}/CMakeLists.txt")
+ 
+@@ -209,6 +211,13 @@ function(__boost_scan_dependencies lib var)
+ 
+       if(line MATCHES "^[ ]*Boost::([A-Za-z0-9_]+)[ ]*$")
+ 
++        list(APPEND required_components ${CMAKE_MATCH_1})
++        string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
++        list(APPEND result ${dep})
++
++      elseif(line MATCHES "^[ ]*\\$<TARGET_NAME_IF_EXISTS:Boost::([A-Za-z0-9_]+)>[ ]*$")
++
++        list(APPEND optional_components ${CMAKE_MATCH_1})
+         string(REGEX REPLACE "^numeric_" "numeric/" dep ${CMAKE_MATCH_1})
+         list(APPEND result ${dep})
+ 
+@@ -218,6 +227,12 @@ function(__boost_scan_dependencies lib var)
+ 
+   endif()
+ 
++  list(REMOVE_DUPLICATES required_components)
++  list(REMOVE_DUPLICATES optional_components)
++  list(REMOVE_ITEM required_components boost ${lib}) # due to property_tree and python
++  if(required_components OR optional_components)
++    find_package(Boost COMPONENTS ${required_components} OPTIONAL_COMPONENTS ${optional_components} REQUIRED CONFIG)
++  endif()
+   set(${var} ${result} PARENT_SCOPE)
+ 
+ endfunction()
+@@ -280,10 +295,10 @@ while(__boost_libs_to_scan)
+ 
+   list(REMOVE_DUPLICATES __boost_dependencies)
+ 
+-  set(__boost_libs_to_scan ${__boost_dependencies})
+ 
+   if(__boost_libs_to_scan)
+     list(REMOVE_ITEM __boost_libs_to_scan ${__boost_include_libraries})
++    list(REMOVE_ITEM __boost_libs_to_scan ${__boost_lib})
+   endif()
+ 
+   list(APPEND __boost_include_libraries ${__boost_libs_to_scan})
+@@ -429,33 +444,3 @@ if(CMAKE_SKIP_INSTALL_RULES)
+   return()
+ 
+ endif()
+-
+-set(CONFIG_INSTALL_DIR "${BOOST_INSTALL_CMAKEDIR}/Boost-${BOOST_SUPERPROJECT_VERSION}")
+-set(CONFIG_FILE_NAME "${CMAKE_CURRENT_LIST_DIR}/../config/BoostConfig.cmake")
+-
+-install(FILES "${CONFIG_FILE_NAME}" DESTINATION "${CONFIG_INSTALL_DIR}")
+-
+-set(CONFIG_VERSION_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/tmpinst/BoostConfigVersion.cmake")
+-
+-if(NOT CMAKE_VERSION VERSION_LESS 3.14)
+-
+-  write_basic_package_version_file("${CONFIG_VERSION_FILE_NAME}" COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT)
+-
+-else()
+-
+-  set(OLD_CMAKE_SIZEOF_VOID_P ${CMAKE_SIZEOF_VOID_P})
+-  set(CMAKE_SIZEOF_VOID_P "")
+-
+-  write_basic_package_version_file("${CONFIG_VERSION_FILE_NAME}" COMPATIBILITY SameMajorVersion)
+-
+-  set(CMAKE_SIZEOF_VOID_P ${OLD_CMAKE_SIZEOF_VOID_P})
+-
+-endif()
+-
+-install(FILES "${CONFIG_VERSION_FILE_NAME}" DESTINATION "${CONFIG_INSTALL_DIR}")
+-
+-set(CPACK_PACKAGE_VENDOR "Boost")
+-set(CPACK_GENERATOR "TGZ")
+-set(CPACK_RESOURCE_FILE_LICENSE "${Boost_SOURCE_DIR}/LICENSE_1_0.txt")
+-set(CPACK_RESOURCE_FILE_README "${Boost_SOURCE_DIR}/README.md")
+-include(CPack)

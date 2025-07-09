@@ -1,8 +1,8 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index a152fa9..e8a0efa 100644
+index 4be4a9e..b858c08 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
-@@ -15,7 +15,8 @@ set(LIBJSONNET_HEADERS
+@@ -16,7 +16,8 @@ set(LIBJSONNET_HEADERS
      static_error.h
      string_utils.h
      unicode.h
@@ -12,8 +12,8 @@ index a152fa9..e8a0efa 100644
  
  set(LIBJSONNET_SOURCE
      desugarer.cpp
-@@ -26,12 +27,13 @@ set(LIBJSONNET_SOURCE
-     pass.cpp
+@@ -28,12 +29,13 @@ set(LIBJSONNET_SOURCE
+     path_utils.cpp
      static_analysis.cpp
      string_utils.cpp
 -    vm.cpp)
@@ -29,7 +29,7 @@ index a152fa9..e8a0efa 100644
  
  file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/../include/libjsonnet.h JSONNET_VERSION_DEF
       REGEX "[#]define[ \t]+LIB_JSONNET_VERSION[ \t]+")
-@@ -56,8 +58,8 @@ endif()
+@@ -59,8 +61,8 @@ endif()
  if (BUILD_STATIC_LIBS)
      # Static library for jsonnet command-line tool.
      add_library(libjsonnet_static STATIC ${LIBJSONNET_SOURCE})

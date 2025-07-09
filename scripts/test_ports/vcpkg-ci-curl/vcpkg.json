@@ -50,9 +50,11 @@
           "features": [
             "c-ares",
             "http2",
+            "httpsrr",
             "idn",
             "rtmp",
-            "ssh"
+            "ssh",
+            "ssls-export"
           ]
         },
         {

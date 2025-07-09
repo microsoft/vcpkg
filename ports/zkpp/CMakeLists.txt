@@ -88,7 +88,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 # External Libraries                                                           #
 ################################################################################
 
-find_package(zookeeper REQUIRED)
+find_package(unofficial-zookeeper REQUIRED)
 
 
 build_module(NAME zkpp
@@ -97,7 +97,7 @@ build_module(NAME zkpp
             )
 
 target_include_directories(zkpp PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
-target_link_libraries(zkpp PRIVATE zookeeper::zookeeper)
+target_link_libraries(zkpp PRIVATE unofficial::zookeeper::zookeeper)
 
 install(TARGETS zkpp
     EXPORT zkpp

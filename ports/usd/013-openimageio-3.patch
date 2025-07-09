@@ -1,0 +1,13 @@
+diff --git a/pxr/imaging/plugin/hioOiio/oiioImage.cpp b/pxr/imaging/plugin/hioOiio/oiioImage.cpp
+index ad08cb5e1..0e27b9180 100644
+--- a/pxr/imaging/plugin/hioOiio/oiioImage.cpp
++++ b/pxr/imaging/plugin/hioOiio/oiioImage.cpp
+@@ -810,7 +810,7 @@ HioOIIO_Image::Write(StorageSpec const & storage,
+     }
+ 
+     // Read from storage
+-    ImageBuf src(_filename, spec, storage.data);
++    ImageBuf src(spec, storage.data);
+     ImageBuf *image = &src;
+ 
+     // Flip top-to-bottom

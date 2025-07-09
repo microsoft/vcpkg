@@ -4,55 +4,52 @@ set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 # Proper support for a true static usd build is left as a future port improvement.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
+# zero-pad version components to two digits
+string(REPLACE "." ";" version_components ${VERSION})
+foreach(component IN LISTS version_components)
+    string(LENGTH ${component} component_length)
+    if(component_length LESS 2)
+        list(APPEND USD_VERSION "0${component}")
+    else()
+        list(APPEND USD_VERSION "${component}")
+    endif()
+endforeach()
+string(JOIN "." USD_VERSION ${USD_VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 23f5a40c67ce0566cbb61a60a8d14ebb9fde5de0fb4921031f4d4eeb3a5a86d624955840f9f49ee36f32abc48e869d4910073189716e73ba997bb80f1e781d9b
+    SHA512 66bf75486f09dce7085c5c80cc3e005c02c1dfbbfbd02c8e2e8fd9498030ca49cd6bc0a9b9db930d0559c745cf77ebaf822018de4bf798cce84fdf0aa89f0d84
     HEAD_REF release
     PATCHES
-        001-fix_rename_find_package_to_find_dependency.patch # See PixarAnimationStudios/OpenUSD#3205
-        002-vcpkg_find_tbb.patch # See PixarAnimationStudios/OpenUSD#3207
         003-fix-dep.patch
         004-fix_cmake_package.patch
         007-fix_cmake_hgi_interop.patch
         008-fix_clang8_compiler_error.patch
         009-vcpkg_install_folder_conventions.patch
         010-cmake_export_plugin_as_modules.patch
-        011-TBB-2022.patch
-        012-fix-find-vulkan.patch
+        013-openimageio-3.patch
 )
 
-# Changes accompanying 006-vcpkg_find_spirv-reflect.patch
-vcpkg_replace_string("${SOURCE_PATH}/pxr/imaging/hgiVulkan/shaderCompiler.cpp"
-    [[#include "pxr/imaging/hgiVulkan/spirv_reflect.h"]]
-    [[#include <spirv_reflect.h>]]
-)
+# Changes accompanying 003-fix-dep.patch
 file(REMOVE
+    "${SOURCE_PATH}/cmake/modules/FindOpenColorIO.cmake"
     "${SOURCE_PATH}/pxr/imaging/hgiVulkan/spirv_reflect.cpp"
     "${SOURCE_PATH}/pxr/imaging/hgiVulkan/spirv_reflect.h"
+    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/vk_mem_alloc.cpp"
+    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/vk_mem_alloc.h"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        imaging        PXR_BUILD_IMAGING
+        imaging        PXR_BUILD_USD_IMAGING
+        imaging        PXR_ENABLE_GL_SUPPORT
         materialx      PXR_ENABLE_MATERIALX_SUPPORT
-        metal          PXR_ENABLE_METAL_SUPPORT
         openimageio    PXR_BUILD_OPENIMAGEIO_PLUGIN
         vulkan         PXR_ENABLE_VULKAN_SUPPORT
 )
-
-if (PXR_ENABLE_MATERIALX_SUPPORT)
-    list(APPEND FEATURE_OPTIONS "-DMaterialX_DIR=${CURRENT_INSTALLED_DIR}/share/materialx")
-endif()
-
-# hgiInterop Metal and Vulkan backend requires garch which is only enabled if PXR_ENABLE_GL_SUPPORT is ON
-if(PXR_ENABLE_VULKAN_SUPPORT OR PXR_ENABLE_METAL_SUPPORT)
-    list(APPEND FEATURE_OPTIONS "-DPXR_ENABLE_GL_SUPPORT:BOOL=ON")
-else()
-    list(APPEND FEATURE_OPTIONS "-DPXR_ENABLE_GL_SUPPORT:BOOL=OFF")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -68,15 +65,10 @@ vcpkg_cmake_configure(
         -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
         -DPXR_BUILD_PRMAN_PLUGIN:BOOL=OFF
 
-        -DPXR_BUILD_IMAGING:BOOL=ON 
-        -DPXR_BUILD_USD_IMAGING:BOOL=ON 
-
         -DPXR_ENABLE_OPENVDB_SUPPORT:BOOL=OFF
         -DPXR_ENABLE_PTEX_SUPPORT:BOOL=OFF
 
-        -DPXR_PREFER_SAFETY_OVER_SPEED:BOOL=ON 
-
-        -DPXR_ENABLE_PRECOMPILED_HEADERS:BOOL=OFF
+        -DPXR_PREFER_SAFETY_OVER_SPEED:BOOL=ON
 
         -DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF
         -DPXR_USE_DEBUG_PYTHON:BOOL=OFF

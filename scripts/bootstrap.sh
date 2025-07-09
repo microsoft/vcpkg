@@ -22,7 +22,7 @@ do
     elif [ "$var" = "-buildTests" ]; then
         echo "Warning: -buildTests no longer has any effect; ignored."
     elif [ "$var" = "-skipDependencyChecks" ]; then
-        vcpkgSkipDependencyChecks="OFF"
+        vcpkgSkipDependencyChecks="ON"
     elif [ "$var" = "-musl" ]; then
         vcpkgUseMuslC="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
@@ -70,7 +70,8 @@ fi
 vcpkgCheckRepoTool()
 {
     __tool=$1
-    if [ "$vcpkgSkipDependencyChecks" = "ON" ]; then
+    # Only perform dependency checks when they are not explicitly skipped.
+    if [ "$vcpkgSkipDependencyChecks" = "OFF" ]; then
         if ! command -v "$__tool" >/dev/null 2>&1 ; then
             echo "Could not find $__tool. Please install it (and other dependencies) with:"
             echo "On Debian and Ubuntu derivatives:"
@@ -101,9 +102,7 @@ ARCH="$(uname -m)"
 
 if [ -e /etc/alpine-release ]; then
     vcpkgUseSystem="ON"
-    if [ "$ARCH" = "x86_64" ]; then
-        vcpkgUseMuslC="ON"
-    fi
+    vcpkgUseMuslC="ON"
 fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
@@ -181,7 +180,7 @@ if [ "$UNAME" = "Darwin" ]; then
     echo "Downloading vcpkg-macos..."
     vcpkgToolReleaseSha=$VCPKG_MACOS_SHA
     vcpkgToolName="vcpkg-macos"
-elif [ "$vcpkgUseMuslC" = "ON" ]; then
+elif [ "$vcpkgUseMuslC" = "ON" ] && [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-muslc..."
     vcpkgToolReleaseSha=$VCPKG_MUSLC_SHA
     vcpkgToolName="vcpkg-muslc"
@@ -189,7 +188,7 @@ elif [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
     vcpkgToolName="vcpkg-glibc"
-elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+elif [ "$vcpkgUseMuslC" = "OFF" ] && { [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; }; then
     echo "Downloading vcpkg-arm64-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_ARM64_SHA
     vcpkgToolName="vcpkg-glibc-arm64"

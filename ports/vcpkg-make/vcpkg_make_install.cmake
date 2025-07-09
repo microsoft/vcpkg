@@ -61,6 +61,21 @@ function(vcpkg_make_install)
 
     set(prepare_env_opts "")
 
+    set(trace_opts "")
+    if(DEFINED VCPKG_MAKE_TRACE_OPTIONS)
+        set(trace_opts "${VCPKG_MAKE_TRACE_OPTIONS}")
+    else()
+        # --trace is a GNU make option
+        execute_process(
+            COMMAND "${Z_VCPKG_MAKE}" --help
+            OUTPUT_VARIABLE make_help_output
+            ERROR_VARIABLE make_help_output
+        )
+        if(make_help_output MATCHES "--trace")
+            set(trace_opts "--trace")
+        endif()
+    endif()
+
     foreach(buildtype IN LISTS buildtypes)
         string(TOUPPER "${buildtype}" cmake_buildtype)
         set(short_buildtype "${suffix_${cmake_buildtype}}")
@@ -75,15 +90,10 @@ function(vcpkg_make_install)
 
         set(destdir_opt "DESTDIR=${destdir}")
 
-        set(extra_opts "")
-        if(NOT VCPKG_TARGET_IS_OSX)
-            set(extra_opts --trace)
-        endif()
-
         foreach(target IN LISTS arg_TARGETS)
             string(REPLACE "/" "_" target_no_slash "${target}")
-            vcpkg_list(SET make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j ${VCPKG_CONCURRENCY} ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
-            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 ${extra_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
+            vcpkg_list(SET make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j ${VCPKG_CONCURRENCY} ${trace_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
+            vcpkg_list(SET no_parallel_make_cmd_line ${make_command} ${arg_OPTIONS} ${arg_OPTIONS_${cmake_buildtype}} V=1 -j 1 ${trace_opts} -f ${arg_MAKEFILE} ${target} ${destdir_opt})
             message(STATUS "Making target '${target}' for ${TARGET_TRIPLET}-${short_buildtype}")
             if (arg_DISABLE_PARALLEL)
                 vcpkg_run_shell_as_build(
