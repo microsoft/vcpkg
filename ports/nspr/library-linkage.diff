@@ -1,0 +1,69 @@
+diff --git a/nspr/config/rules.mk b/nspr/config/rules.mk
+index 8f3f926..1ddfffd 100644
+--- a/nspr/config/rules.mk
++++ b/nspr/config/rules.mk
+@@ -113,7 +113,8 @@ endif
+ 
+ ifndef TARGETS
+ ifeq (,$(filter-out WINNT WINCE,$(OS_ARCH)))
+-TARGETS		= $(LIBRARY) $(SHARED_LIBRARY) $(IMPORT_LIBRARY)
++ifdef BUILD_SHARED_LIBS
++TARGETS		= $(SHARED_LIBRARY) $(IMPORT_LIBRARY)
+ ifdef MOZ_DEBUG_SYMBOLS
+ ifdef MSC_VER
+ ifneq (,$(filter-out 1100 1200,$(MSC_VER)))
+@@ -122,7 +123,14 @@ endif
+ endif
+ endif
+ else
+-TARGETS		= $(LIBRARY) $(SHARED_LIBRARY)
++TARGETS		= $(LIBRARY)
++endif
++else
++ifdef BUILD_SHARED_LIBS
++TARGETS		= $(SHARED_LIBRARY)
++else
++TARGETS		= $(LIBRARY)
++endif
+ endif
+ endif
+ 
+diff --git a/nspr/lib/ds/Makefile.in b/nspr/lib/ds/Makefile.in
+index fa8c783..b102b04 100644
+--- a/nspr/lib/ds/Makefile.in
++++ b/nspr/lib/ds/Makefile.in
+@@ -131,7 +131,7 @@ endif
+ export:: $(TARGETS)
+ 	$(INSTALL) -m 444 $(HEADERS) $(dist_includedir)
+ 	$(INSTALL) -m 444 $(TARGETS) $(dist_libdir)
+-ifdef SHARED_LIBRARY
++ifdef BUILD_SHARED_LIBS
+ ifeq ($(OS_ARCH),HP-UX)
+ 	$(INSTALL) -m 755 $(SHARED_LIBRARY) $(dist_libdir)
+ 	$(INSTALL) -m 755 $(SHARED_LIBRARY) $(dist_bindir)
+diff --git a/nspr/lib/libc/src/Makefile.in b/nspr/lib/libc/src/Makefile.in
+index 9ef2007..4f5ddbe 100644
+--- a/nspr/lib/libc/src/Makefile.in
++++ b/nspr/lib/libc/src/Makefile.in
+@@ -132,7 +132,7 @@ endif
+ 
+ export:: $(TARGETS)
+ 	$(INSTALL) -m 444 $(TARGETS) $(dist_libdir)
+-ifdef SHARED_LIBRARY
++ifdef BUILD_SHARED_LIBS
+ ifeq ($(OS_ARCH),HP-UX)
+ 	$(INSTALL) -m 755 $(SHARED_LIBRARY) $(dist_libdir)
+ 	$(INSTALL) -m 755 $(SHARED_LIBRARY) $(dist_bindir)
+diff --git a/nspr/pr/src/Makefile.in b/nspr/pr/src/Makefile.in
+index a9e86f5..88e626e 100644
+--- a/nspr/pr/src/Makefile.in
++++ b/nspr/pr/src/Makefile.in
+@@ -325,7 +325,7 @@ export::
+ 
+ build:: $(TARGETS)
+ 	$(INSTALL) -m 444 $(TARGETS) $(dist_libdir)
+-ifdef SHARED_LIBRARY
++ifdef BUILD_SHARED_LIBS
+ ifeq ($(OS_ARCH),HP-UX)
+ 	$(INSTALL) -m 755 $(SHARED_LIBRARY) $(dist_libdir)
+ 	$(INSTALL) -m 755 $(SHARED_LIBRARY) $(dist_bindir)
