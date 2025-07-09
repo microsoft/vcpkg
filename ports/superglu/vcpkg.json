@@ -4,7 +4,7 @@
   "description": "SGI GLU with miscellaneous fixes",
   "homepage": "https://github.com/coin3d/superglu",
   "license": "SGI-B-1.1",
-  "supports": "!arm & !android & !uwp",
+  "supports": "windows",
   "dependencies": [
     "opengl-registry",
     {
