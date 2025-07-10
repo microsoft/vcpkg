@@ -14,7 +14,7 @@ $script = @"
 rm .ssh/known_hosts
 chmod +x /Users/vcpkg/register-guest.sh
 /Users/vcpkg/register-guest.sh $Pat
-rm /Users/vcpkg/register-guest.sh
 "@
 
 $script | ssh $sshCookie
+ssh $sshCookie rm /Users/vcpkg/register-guest.sh
