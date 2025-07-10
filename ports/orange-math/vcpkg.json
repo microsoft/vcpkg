@@ -16,7 +16,6 @@
     }
   ],
   "default-features": [
-    "avx2",
     "imgui"
   ],
   "features": {
