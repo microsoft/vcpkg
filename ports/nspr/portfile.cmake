@@ -17,6 +17,7 @@ vcpkg_extract_source_archive(
         library-linkage.diff
         nsinstall-windows.diff
         parallel.diff
+        unexport-ldflags.diff
 )
 
 set(OPTIONS "")
