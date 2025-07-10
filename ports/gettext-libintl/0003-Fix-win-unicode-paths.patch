@@ -59,4 +59,4 @@ index d5a5fe1..5c47f48 100644
 +}
  #endif
  
- /* For those losing systems which don't have `alloca' we have to add
+ /* For systems that distinguish between text and binary I/O.
