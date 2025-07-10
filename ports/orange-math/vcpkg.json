@@ -15,9 +15,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "imgui"
-  ],
   "features": {
     "avx2": {
       "description": "Omath will use AVX2 to boost performance"
