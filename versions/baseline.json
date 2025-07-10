@@ -9950,7 +9950,7 @@
     },
     "vcpkg-tool-nodejs": {
       "baseline": "16.18.0",
-      "port-version": 1
+      "port-version": 2
     },
     "vcpkg-tool-python2": {
       "baseline": "2.7.18",
