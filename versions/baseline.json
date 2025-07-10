@@ -585,8 +585,8 @@
       "port-version": 2
     },
     "babl": {
-      "baseline": "0.1.110",
-      "port-version": 2
+      "baseline": "0.1.114",
+      "port-version": 0
     },
     "backward-cpp": {
       "baseline": "2023-11-24",
@@ -3161,7 +3161,7 @@
       "port-version": 4
     },
     "gegl": {
-      "baseline": "0.4.54",
+      "baseline": "0.4.62",
       "port-version": 0
     },
     "gemmlowp": {
