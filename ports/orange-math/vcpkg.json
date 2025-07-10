@@ -3,7 +3,7 @@
   "version": "3.0.3",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
-  "license": "MIT",
+  "license": "Zlib",
   "supports": "windows | linux",
   "dependencies": [
     {
