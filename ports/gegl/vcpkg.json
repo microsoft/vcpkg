@@ -1,6 +1,6 @@
 {
   "name": "gegl",
-  "version": "0.4.54",
+  "version": "0.4.62",
   "description": "Generic Graphical Library.",
   "homepage": "https://gegl.org/",
   "license": "LGPL-3.0-or-later",

@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.8.3",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
