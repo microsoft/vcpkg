@@ -3,8 +3,8 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 find_program(NODEJS
     NAMES node
     PATHS
-        "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
-        "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
+        "${CURRENT_INSTALLED_DIR}/tools/node"
+        "${CURRENT_INSTALLED_DIR}/tools/node/bin"
     NO_DEFAULT_PATH
     REQUIRED
 )
