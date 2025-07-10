@@ -1,3 +1,9 @@
+vcpkg_download_distfile(FIX_LIBHEIF_BUILD_PATCH
+    URLS https://github.com/AcademySoftwareFoundation/OpenImageIO/commit/09250af27d11f6ea761872490403d074424b6e62.diff?full_index=1
+    FILENAME AcademySoftwareFoundation-OpenImageIO-libheif-build.patch
+    SHA512 3a0f9c735244ac40194b73b740c75ca4d0dc77623a12c017098502497bfdf98e4e76dfa48f4e632fbcaa50b3daa58234feb9279a4f1beba91d4c4bb38ff4889a
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
@@ -10,6 +16,7 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
+        ${FIX_LIBHEIF_BUILD_PATCH}
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
