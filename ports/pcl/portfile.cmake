@@ -73,6 +73,8 @@ vcpkg_cmake_configure(
         -DWITH_QHULL=ON
         -DWITH_RSSDK=OFF
         -DWITH_RSSDK2=OFF
+        # Misc
+        -DVCPKG_LOCK_FIND_PACKAGE_ClangFormat=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
