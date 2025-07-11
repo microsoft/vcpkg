@@ -7690,7 +7690,7 @@
     },
     "qt": {
       "baseline": "6.8.3",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "4.4.0",
