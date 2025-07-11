@@ -1,8 +1,8 @@
 diff --git a/libheif/CMakeLists.txt b/libheif/CMakeLists.txt
-index 55d6313..65cdfc1 100644
+index 55d6313..2229992 100644
 --- a/libheif/CMakeLists.txt
 +++ b/libheif/CMakeLists.txt
-@@ -232,10 +232,17 @@ if (BUILD_FRAMEWORK)
+@@ -232,10 +232,13 @@ if (BUILD_FRAMEWORK)
      MACOSX_RPATH TRUE)
  endif()
  
@@ -10,17 +10,33 @@ index 55d6313..65cdfc1 100644
 -        PUBLIC
 -        LIBHEIF_EXPORTS
 -        HAVE_VISIBILITY)
-+if(BUILD_SHARED_LIBS)
-+    target_compile_definitions(heif PRIVATE LIBHEIF_EXPORTS)
-+    if(NOT MSVC)
-+        option(LIBHEIF_HAVE_VISIBILITY "Use __attribute__((__visibility__(\"default\"))) for public API" ON)
-+        if(LIBHEIF_HAVE_VISIBILITY)
-+            target_compile_definitions(heif PRIVATE HAVE_VISIBILITY)
-+        endif()
-+    endif()
-+else()
++target_compile_definitions(heif PRIVATE LIBHEIF_EXPORTS)
++if(NOT BUILD_SHARED_LIBS)
 +    target_compile_definitions(heif PUBLIC LIBHEIF_STATIC_BUILD)
++endif()
++if(WITH_REDUCED_VISIBILITY AND NOT MSVC)
++    target_compile_definitions(heif PRIVATE HAVE_VISIBILITY)
 +endif()
  
  if (PLUGIN_LOADING_SUPPORTED_AND_ENABLED)
      target_compile_definitions(heif PRIVATE ENABLE_PLUGIN_LOADING=1)
+diff --git a/libheif/plugins/CMakeLists.txt b/libheif/plugins/CMakeLists.txt
+index f7379c0..43af4bf 100644
+--- a/libheif/plugins/CMakeLists.txt
++++ b/libheif/plugins/CMakeLists.txt
+@@ -13,10 +13,11 @@ macro(plugin_compilation name varName foundName optionName defineName)
+                         VERSION ${PROJECT_VERSION}
+                         SOVERSION ${PROJECT_VERSION_MAJOR})
+             endif ()
+-            target_compile_definitions(heif-${name}
+-                    PUBLIC
+-                    LIBHEIF_EXPORTS
+-                    HAVE_VISIBILITY)
++            target_compile_definitions(heif-${name} PRIVATE LIBHEIF_EXPORTS)
++            if(WITH_REDUCED_VISIBILITY AND NOT MSVC)
++                target_compile_definitions(heif-${name} PRIVATE HAVE_VISIBILITY)
++            endif()
++
+             target_compile_definitions(heif-${name} PRIVATE PLUGIN_${defineName}=1)
+             target_include_directories(heif-${name} PRIVATE ${PROJECT_SOURCE_DIR} ${libheif_BINARY_DIR} ${libheif_SOURCE_DIR}/libheif ${libheif_SOURCE_DIR}/libheif/api ${${varName}_INCLUDE_DIRS})
+             target_link_libraries(heif-${name} PRIVATE ${${varName}_LIBRARIES} heif)
