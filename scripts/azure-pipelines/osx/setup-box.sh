@@ -16,7 +16,7 @@ else
     (echo; echo 'eval "$(/usr/local/bin/brew shellenv)"') >> /Users/vcpkg/.zprofile
     eval "$(/usr/local/bin/brew shellenv)"
 fi
-brew install autoconf-archive autoconf automake azure-cli bison cmake gettext gfortran gnu-sed gperf gtk-doc libtool meson mono nasm ninja pkg-config powershell python-setuptools texinfo yasm
+brew install autoconf-archive autoconf automake azcopy azure-cli bison cmake gettext gfortran gnu-sed gperf gtk-doc libtool meson mono nasm ninja pkg-config powershell python-setuptools texinfo yasm
 mkdir ~/Data
 if [ `uname -m` = 'arm64' ]; then
 curl -s -o ~/Downloads/azure-agent.tar.gz https://vstsagentpackage.azureedge.net/agent/4.248.0/vsts-agent-osx-arm64-4.248.0.tar.gz

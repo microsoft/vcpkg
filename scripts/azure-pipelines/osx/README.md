@@ -181,13 +181,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 - [ ] [grab a PAT][] if you don't already have one
 - [ ] Copy the guest deploy script to the host, and run it with a first parameter of your PAT. From a developer machine:
     ```sh
-    scp ./register-guest.sh vcpkg@HOSTMACHINE:/Users/vcpkg
-    ssh vcpkg@HOSTMACHINE
-    rm .ssh/known_hosts
-    chmod +x register-guest.sh
-    ./register-guest.sh <PAT>
-    rm register-guest.sh
-    exit
+    ./fire-register-guest.ps1 -Target HOSTMACHINE -Pat YourPatGoesHere
     ```
 - [ ] In the VM, open a terminal on the host and run:
     ```
@@ -233,13 +227,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 - [ ] [grab a PAT][] if you don't already have one
 - [ ] Copy the guest deploy script to the host, and run it with a first parameter of your PAT. From a developer machine:
     ```sh
-    scp ./register-guest.sh vcpkg@HOSTMACHINE:/Users/vcpkg
-    ssh vcpkg@HOSTMACHINE
-    rm .ssh/known_hosts
-    chmod +x register-guest.sh
-    ./register-guest.sh <PAT>
-    rm register-guest.sh
-    exit
+    ./fire-register-guest.ps1 -Target HOSTMACHINE -Pat YourPatGoesHere
     ```
 - [ ] In the KVM's terminal, relaunch the VM in ephemeral mode with:
     ```sh
