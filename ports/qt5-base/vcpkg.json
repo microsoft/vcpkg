@@ -82,7 +82,14 @@
     "mysqlplugin": {
       "description": "Build the sql plugin for connecting to mysql databases",
       "dependencies": [
-        "libmysql"
+        "libmysql",
+        {
+          "name": "qt5-base",
+          "default-features": false,
+          "features": [
+            "zstd"
+          ]
+        }
       ]
     },
     "openssl": {
