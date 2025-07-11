@@ -8,6 +8,7 @@ vcpkg_from_github(
         cxx-linkage-pkgconfig.diff
         find-modules.diff
         gdk-pixbuf.patch
+        symbol-exports.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,0 +1,26 @@
+diff --git a/libheif/CMakeLists.txt b/libheif/CMakeLists.txt
+index 55d6313..65cdfc1 100644
+--- a/libheif/CMakeLists.txt
++++ b/libheif/CMakeLists.txt
+@@ -232,10 +232,17 @@ if (BUILD_FRAMEWORK)
+     MACOSX_RPATH TRUE)
+ endif()
+ 
+-target_compile_definitions(heif
+-        PUBLIC
+-        LIBHEIF_EXPORTS
+-        HAVE_VISIBILITY)
++if(BUILD_SHARED_LIBS)
++    target_compile_definitions(heif PRIVATE LIBHEIF_EXPORTS)
++    if(NOT MSVC)
++        option(LIBHEIF_HAVE_VISIBILITY "Use __attribute__((__visibility__(\"default\"))) for public API" ON)
++        if(LIBHEIF_HAVE_VISIBILITY)
++            target_compile_definitions(heif PRIVATE HAVE_VISIBILITY)
++        endif()
++    endif()
++else()
++    target_compile_definitions(heif PUBLIC LIBHEIF_STATIC_BUILD)
++endif()
+ 
+ if (PLUGIN_LOADING_SUPPORTED_AND_ENABLED)
+     target_compile_definitions(heif PRIVATE ENABLE_PLUGIN_LOADING=1)
