@@ -1,3 +1,19 @@
+diff --git a/heifio/CMakeLists.txt b/heifio/CMakeLists.txt
+index 920eeca..753bda1 100644
+--- a/heifio/CMakeLists.txt
++++ b/heifio/CMakeLists.txt
+@@ -20,10 +20,7 @@ set_target_properties(heifio
+         VERSION ${PROJECT_VERSION})
+ 
+ 
+-target_compile_definitions(heifio
+-        PUBLIC
+-        LIBHEIF_EXPORTS
+-        HAVE_VISIBILITY)
++# static lib, not changing visibility
+ 
+ find_package(TIFF)
+ if (TIFF_FOUND)
 diff --git a/libheif/CMakeLists.txt b/libheif/CMakeLists.txt
 index 55d6313..2229992 100644
 --- a/libheif/CMakeLists.txt
@@ -21,10 +37,10 @@ index 55d6313..2229992 100644
  if (PLUGIN_LOADING_SUPPORTED_AND_ENABLED)
      target_compile_definitions(heif PRIVATE ENABLE_PLUGIN_LOADING=1)
 diff --git a/libheif/plugins/CMakeLists.txt b/libheif/plugins/CMakeLists.txt
-index f7379c0..43af4bf 100644
+index f7379c0..c8a3245 100644
 --- a/libheif/plugins/CMakeLists.txt
 +++ b/libheif/plugins/CMakeLists.txt
-@@ -13,10 +13,11 @@ macro(plugin_compilation name varName foundName optionName defineName)
+@@ -13,10 +13,10 @@ macro(plugin_compilation name varName foundName optionName defineName)
                          VERSION ${PROJECT_VERSION}
                          SOVERSION ${PROJECT_VERSION_MAJOR})
              endif ()
@@ -36,7 +52,6 @@ index f7379c0..43af4bf 100644
 +            if(WITH_REDUCED_VISIBILITY AND NOT MSVC)
 +                target_compile_definitions(heif-${name} PRIVATE HAVE_VISIBILITY)
 +            endif()
-+
              target_compile_definitions(heif-${name} PRIVATE PLUGIN_${defineName}=1)
              target_include_directories(heif-${name} PRIVATE ${PROJECT_SOURCE_DIR} ${libheif_BINARY_DIR} ${libheif_SOURCE_DIR}/libheif ${libheif_SOURCE_DIR}/libheif/api ${${varName}_INCLUDE_DIRS})
              target_link_libraries(heif-${name} PRIVATE ${${varName}_LIBRARIES} heif)
