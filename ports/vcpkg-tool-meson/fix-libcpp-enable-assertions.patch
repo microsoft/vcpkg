@@ -1,0 +1,52 @@
+From a16ec8b0fb6d7035b669a13edd4d97ff0c307a0b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Martin=20D=C3=B8rum?= <martid0311@gmail.com>
+Date: Fri, 2 May 2025 10:56:28 +0200
+Subject: [PATCH] cpp: fix _LIBCPP_ENABLE_ASSERTIONS warning
+
+libc++ deprecated _LIBCPP_ENABLE_ASSERTIONS from version 18.
+However, the libc++ shipped with Apple Clang backported that
+deprecation in version 17 already,
+which is the version which Apple currently ships for macOS.
+This PR changes the _LIBCPP_ENABLE_ASSERTIONS deprecation check
+to use version ">=17" on Apple Clang.
+---
+ mesonbuild/compilers/cpp.py | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/mesonbuild/compilers/cpp.py b/mesonbuild/compilers/cpp.py
+index 01b9bb9fa34f..f7dc150e8608 100644
+--- a/mesonbuild/compilers/cpp.py
++++ b/mesonbuild/compilers/cpp.py
+@@ -311,6 +311,9 @@ def get_option_link_args(self, target: 'BuildTarget', env: 'Environment', subpro
+             return libs
+         return []
+ 
++    def is_libcpp_enable_assertions_deprecated(self) -> bool:
++        return version_compare(self.version, ">=18")
++
+     def get_assert_args(self, disable: bool, env: 'Environment') -> T.List[str]:
+         if disable:
+             return ['-DNDEBUG']
+@@ -323,7 +326,7 @@ def get_assert_args(self, disable: bool, env: 'Environment') -> T.List[str]:
+         if self.language_stdlib_provider(env) == 'stdc++':
+             return ['-D_GLIBCXX_ASSERTIONS=1']
+         else:
+-            if version_compare(self.version, '>=18'):
++            if self.is_libcpp_enable_assertions_deprecated():
+                 return ['-D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST']
+             elif version_compare(self.version, '>=15'):
+                 return ['-D_LIBCPP_ENABLE_ASSERTIONS=1']
+@@ -343,7 +346,12 @@ class ArmLtdClangCPPCompiler(ClangCPPCompiler):
+ 
+ 
+ class AppleClangCPPCompiler(AppleCompilerMixin, AppleCPPStdsMixin, ClangCPPCompiler):
+-    pass
++    def is_libcpp_enable_assertions_deprecated(self) -> bool:
++        # Upstream libc++ deprecated _LIBCPP_ENABLE_ASSERTIONS
++        # in favor of _LIBCPP_HARDENING_MODE from version 18 onwards,
++        # but Apple Clang 17's libc++ has back-ported that change.
++        # See: https://github.com/mesonbuild/meson/issues/14440
++        return version_compare(self.version, ">=17")
+ 
+ 
+ class EmscriptenCPPCompiler(EmscriptenMixin, ClangCPPCompiler):

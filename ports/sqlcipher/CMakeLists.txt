@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 project(sqlcipher C)
 
 find_package(OpenSSL REQUIRED)
-
-include_directories(. ${OPENSSL_INCLUDE_DIR})
 if(BUILD_SHARED_LIBS)
     if(UNIX)
         set(API "-DSQLITE_API=__attribute__((visibility(\"default\")))")
@@ -12,8 +10,6 @@ if(BUILD_SHARED_LIBS)
     else()
         message(FATAL_ERROR "Unsupported platform: ${CMAKE_SYSTEM_NAME}")
     endif()
-else()
-    set(API "-DSQLITE_API=extern")
 endif()
 add_library(sqlcipher sqlite3.c)
 
@@ -37,7 +33,6 @@ if(WITH_JSON1)
     add_compile_definitions(SQLITE_ENABLE_JSON1)
 endif()
 
-
 if(WITH_FTS5)
     add_compile_definitions(SQLITE_ENABLE_FTS5)
 endif()
@@ -51,7 +46,7 @@ if (UNIX AND NOT APPLE)
     target_link_libraries(sqlcipher PRIVATE m)
 endif()
 
-target_link_libraries(sqlcipher PRIVATE ${OPENSSL_CRYPTO_LIBRARY})
+target_link_libraries(sqlcipher PRIVATE OpenSSL::Crypto)
 
 if(CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     target_compile_definitions(sqlcipher PRIVATE -DSQLITE_OS_WINRT=1)

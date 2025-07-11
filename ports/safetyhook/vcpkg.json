@@ -1,6 +1,6 @@
 {
   "name": "safetyhook",
-  "version-semver": "0.6.6",
+  "version-semver": "0.6.7",
   "description": "C++23 procedure hooking library.",
   "homepage": "https://github.com/cursey/safetyhook",
   "license": "BSL-1.0",

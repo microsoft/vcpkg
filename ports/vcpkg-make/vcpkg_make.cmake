@@ -122,7 +122,7 @@ function(vcpkg_make_get_shell out_var)
     set("${out_var}" "${shell_cmd}" ${shell_options} PARENT_SCOPE)
 endfunction()
 
-function(z_vcpkg_make_get_configure_triplets out)
+function(z_vcpkg_make_determine_target_triplet out)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         ""
         "COMPILER_NAME"
@@ -136,35 +136,54 @@ function(z_vcpkg_make_get_configure_triplets out)
     # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
     z_vcpkg_make_determine_target_arch(TARGET_ARCH)
     z_vcpkg_make_determine_host_arch(BUILD_ARCH)
-
-    set(build_triplet_opt "")
-    if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS)
-        # This is required since we are running in a msys
-        # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-        set(build_triplet_opt "--build=${BUILD_ARCH}-pc-mingw32") 
+    set(output "")
+    if(VCPKG_MAKE_BUILD_TRIPLET MATCHES "--host=([^;]*)")
+        set(output "${CMAKE_MATCH_1}")
+    elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+        set(output "${TARGET_ARCH}-unknown-emscripten")
+    elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+        set(output "${TARGET_ARCH}-apple-darwin")
+    elseif(VCPKG_TARGET_IS_UWP)
+        # Needs to be different from --build to enable cross builds.
+        set(output "${TARGET_ARCH}-unknown-mingw32")
+    elseif(VCPKG_TARGET_IS_WINDOWS)
+        set(output "${TARGET_ARCH}-pc-mingw32")
+    elseif("${arg_COMPILER_NAME}" MATCHES "([^/]+)-(gcc|clang)(-[0-9]+)?$")
+        # --host activates crosscompilation and provides the prefix of the host tools for the target.
+        set(output "${CMAKE_MATCH_1}")
+    elseif(NOT VCPKG_CROSSCOMPILING AND VCPKG_MAKE_BUILD_TRIPLET MATCHES "--build=([^;]+)")
+        set(output "${CMAKE_MATCH_1}")
+    elseif(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
+        message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}
+            "Unable to determine autotools host triplet for cross-build. "
+            "You can set the VCPKG_MAKE_HOST_TRIPLET variable for ${TARGET_TRIPLET}."
+        )
     endif()
+    set("${out}" "${output}" PARENT_SCOPE)
+endfunction()
 
-    set(host_triplet_opt "")
-    if(VCPKG_CROSSCOMPILING)
-        if(VCPKG_TARGET_IS_UWP)
-            # Needs to be different from --build to enable cross builds.
-            set(host_triplet_opt "--host=${TARGET_ARCH}-unknown-mingw32")
-        elseif(VCPKG_TARGET_IS_WINDOWS)
-            set(host_triplet_opt "--host=${TARGET_ARCH}-pc-mingw32")
-        elseif(VCPKG_TARGET_IS_IOS)
-            set(host_triplet_opt "--host=${TARGET_ARCH}-apple-darwin")
-        elseif(VCPKG_TARGET_IS_OSX AND NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
-            set(host_triplet_opt "--host=${TARGET_ARCH}-apple-darwin")
-        elseif("${arg_COMPILER_NAME}" MATCHES "([^/]+)-(gcc|clang)(-[0-9]+)?$")
-            # --host activates crosscompilation and provides the prefix of the host tools for the target.
-            set(host_triplet_opt "--host=${CMAKE_MATCH_1}")
-        elseif(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
-            message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL} "Unable to determine --host for cross-build.")
+function(z_vcpkg_make_get_configure_triplets out)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        ""
+        "COMPILER_NAME"
+        ""
+    )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
+
+    set(output "${VCPKG_MAKE_BUILD_TRIPLET}")
+    if(NOT output MATCHES "--host")
+        z_vcpkg_make_determine_target_triplet(host_opt_triplet COMPILER_NAME "${arg_COMPILER_NAME}")
+        if(host_opt_triplet)
+            list(APPEND output "--host=${host_opt_triplet}")
+        endif()
+    endif()
+    if(output MATCHES "--host" AND NOT output MATCHES "--build")
+        file(STRINGS "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/build_opt_triplet.txt" build_opt_triplet LIMIT_COUNT 1)
+        if(build_opt_triplet)
+            list(APPEND output "--build=${build_opt_triplet}")
         endif()
     endif()
 
-    set(output "${build_triplet_opt}")
-    list(APPEND output ${host_triplet_opt})
     set("${out}" "${output}" PARENT_SCOPE)
 endfunction()
 

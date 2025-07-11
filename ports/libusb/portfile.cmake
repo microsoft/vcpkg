@@ -1,5 +1,5 @@
-if(VCPKG_TARGET_IS_LINUX)
-    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    autoreconf\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install autoconf libudev-dev")
+if("udev" IN_LIST FEATURES)
+    message("${PORT} currently requires the following tools and libraries from the system package manager:\n    libudev\n\nThese can be installed on Ubuntu systems via apt-get install libudev-dev")
 endif()
 
 vcpkg_from_github(
@@ -42,24 +42,21 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 else()
     vcpkg_list(SET MAKE_OPTIONS)
     vcpkg_list(SET LIBUSB_LINK_LIBRARIES)
-    if(VCPKG_TARGET_IS_EMSCRIPTEN)
-        vcpkg_list(APPEND MAKE_OPTIONS BUILD_TRIPLET --host=wasm32)
-    endif()
     if("udev" IN_LIST FEATURES)
         vcpkg_list(APPEND MAKE_OPTIONS "--enable-udev")
         vcpkg_list(APPEND LIBUSB_LINK_LIBRARIES udev)
     else()
         vcpkg_list(APPEND MAKE_OPTIONS "--disable-udev")
     endif()
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS 
             ${MAKE_OPTIONS}
             "--enable-examples-build=no"
             "--enable-tests-build=no"
     )
-    vcpkg_install_make()
+    vcpkg_make_install()
 endif()
 
 vcpkg_fixup_pkgconfig()
@@ -70,5 +67,4 @@ if(NOT VCPKG_BUILD_TYPE)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libusb-1.0.pc" " -Wl,-framework," " -framework " IGNORE_UNCHANGED)
 endif()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

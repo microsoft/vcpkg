@@ -1,6 +1,6 @@
 {
   "name": "sfl",
-  "version": "1.9.2",
+  "version": "1.10.0",
   "description": "header-only C++11 library that offers several new or less-known containers",
   "homepage": "https://github.com/slavenf/sfl-library",
   "license": "Zlib",
