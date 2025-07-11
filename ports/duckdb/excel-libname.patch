@@ -12,7 +12,7 @@ index 29d069e..eb8d178 100644
  
  # Dependencies from VCPKG
 -find_package(EXPAT REQUIRED)
-+find_package(expat REQUIRED)
++find_package(expat CONFIG REQUIRED)
  find_package(ZLIB REQUIRED)
  find_package(minizip-ng CONFIG REQUIRED)
  
