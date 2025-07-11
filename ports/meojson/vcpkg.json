@@ -1,7 +1,7 @@
 {
   "name": "meojson",
   "version": "4.5.0",
-  "description": "✨ Next-gen C++ JSON/JSON5 Serialization Engine | Zero Dependency | Header-Only | Unleash JSON Potential",
+  "description": "Next-gen C++ JSON/JSON5 Serialization Engine | Zero Dependency | Header-Only | Unleash JSON Potential",
   "homepage": "https://github.com/MistEO/meojson",
   "license": "MIT",
   "dependencies": [
