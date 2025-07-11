@@ -109,6 +109,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     vcpkg_find_acquire_program(PKGCONFIG)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+    list(APPEND FEATURE_OPTIONS "-DVCPKG_LOCK_FIND_PACKAGE_PkgConfig=ON")
     # Note <installed>/share/Qt6/QtBuildRepoHelpers.cmake
     list(APPEND FEATURE_OPTIONS "-DFEATURE_pkg_config=ON")
     # Note <installed>/share/Qt6BuildInternals/QtBuildInternalsExtra.cmake
@@ -221,7 +222,6 @@ qt_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_GPerf=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Ninja=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Nodejs=ON
-        -DVCPKG_LOCK_FIND_PACKAGE_PkgConfig=ON
     OPTIONS_MAYBE_UNUSED
         FEATURE_webengine_webrtc
 )
