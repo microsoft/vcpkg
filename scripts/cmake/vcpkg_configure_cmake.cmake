@@ -17,7 +17,7 @@ endfunction()
 
 function(z_vcpkg_get_visual_studio_generator)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "OUT_GENERATOR;OUT_ARCH" "")
-    
+
     if (NOT DEFINED arg_OUT_GENERATOR)
         message(FATAL_ERROR "OUT_GENERATOR must be defined.")
     endif()
@@ -81,6 +81,8 @@ function(z_vcpkg_select_default_vcpkg_chainload_toolchain)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
     elseif(VCPKG_TARGET_IS_OPENBSD)
         set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
+    elseif(VCPKG_TARGET_IS_SOLARIS)
+        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/solaris.cmake")
     endif()
     set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE ${VCPKG_CHAINLOAD_TOOLCHAIN_FILE} PARENT_SCOPE)
 endfunction()
