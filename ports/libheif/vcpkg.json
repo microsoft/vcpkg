@@ -1,7 +1,6 @@
 {
   "name": "libheif",
-  "version": "1.19.8",
-  "port-version": 1,
+  "version": "1.20.1",
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
   "license": "LGPL-3.0-only",
@@ -30,7 +29,7 @@
     },
     "gdk-pixbuf": {
       "description": "Plugin for gdk-pixbuf",
-      "supports": "!windows",
+      "supports": "!windows | mingw",
       "dependencies": [
         "gdk-pixbuf"
       ]
@@ -43,8 +42,11 @@
       ]
     },
     "iso23001-17": {
-      "description": "Support for ISO23001-17 (uncompressed) codec",
-      "license": "LGPL-3.0-only"
+      "description": "Support for ISO23001-17 (uncompressed) codec (experimental)",
+      "license": "LGPL-3.0-only",
+      "dependencies": [
+        "zlib"
+      ]
     },
     "jpeg": {
       "description": "JPEG decoding and encoding via libjpeg-turbo",

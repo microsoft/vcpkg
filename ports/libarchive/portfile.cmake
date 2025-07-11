@@ -2,28 +2,36 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 5ce1fb0b0108a1f5a1547fbecc261e0438b449eee7253eec0b66452462c052b09c8e6cccd0ed9e7fd0c55e5862b334519b17da4f72b1e0196e73bc90ad97c983
+    SHA512 284da172cd5aef6a321f88a35ecd1f0400b885fea33d7c84139faa9ba67487b2673cbb244914f95c22b6c7e7cbfce773da4536c975844c8a156d6b4b3e58193f
     HEAD_REF master
     PATCHES
-        disable-warnings.patch
         fix-buildsystem.patch
-        fix-cpu-set.patch
         fix-deps.patch
-        fix-cmake-version.patch
 )
 
+if("xar" IN_LIST FEATURES)
+    # Cf. https://github.com/libarchive/libarchive/pull/2388:
+    # xmllite is available since Windows XP, but mingw-w64 added it with delay.
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        list(APPEND FEATURES "xar/xmllite")
+    else()
+        list(APPEND FEATURES "xar/libxml2")
+    endif()
+endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bzip2   ENABLE_BZip2
         bzip2   CMAKE_REQUIRE_FIND_PACKAGE_BZip2
-        libxml2 ENABLE_LIBXML2
-        libxml2 CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         lz4     ENABLE_LZ4
         lz4     CMAKE_REQUIRE_FIND_PACKAGE_lz4
         lzma    ENABLE_LZMA
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         lzo     ENABLE_LZO
         zstd    ENABLE_ZSTD
+        xar/libxml2  ENABLE_LIBXML2
+        xar/libxml2  CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
+        xar/xmllite  ENABLE_WIN32_XMLLITE
+        xar/xmllite  HAVE_XMLLITE_H
 )
 # Default crypto backend is OpenSSL, but it is ignored for DARWIN
 set(WRAPPER_ENABLE_OPENSSL OFF)
@@ -50,6 +58,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DENABLE_ZLIB=ON
+        -DZLIB_WINAPI=OFF
         -DENABLE_PCREPOSIX=OFF
         -DPOSIX_REGEX_LIB=NONE
         -DENABLE_MBEDTLS=OFF
@@ -73,6 +82,8 @@ vcpkg_cmake_configure(
         CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         CMAKE_REQUIRE_FIND_PACKAGE_lz4
         ENABLE_LibGCC
+        HAVE_XMLLITE_H
+        ZLIB_WINAPI
 )
 
 vcpkg_cmake_install()
