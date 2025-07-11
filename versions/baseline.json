@@ -6148,6 +6148,10 @@
       "baseline": "2019-12-31",
       "port-version": 3
     },
+    "meojson": {
+      "baseline": "4.5.0",
+      "port-version": 0
+    },
     "mesa": {
       "baseline": "24.0.7",
       "port-version": 3
