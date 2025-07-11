@@ -110,10 +110,6 @@
           "platform": "!windows"
         },
         {
-          "name": "protobuf",
-          "platform": "!windows"
-        },
-        {
           "name": "qtbase",
           "default-features": false,
           "features": [
