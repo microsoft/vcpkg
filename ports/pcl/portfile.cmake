@@ -8,6 +8,12 @@ vcpkg_download_distfile(NO_TRY_RUN_PATCH
     FILENAME PointCloudLibrary-pcl-no-try-run.patch
     SHA512 922de43bf04b3d990c5f9123b2e7f2148b54b612b7a1fe80df42ff734c7e55a9dd33cf4a6bb26207a381eda929da79b3e594eb5369a02cbf73c3767f4cf2eca0
 )
+vcpkg_download_distfile(NO_TRY_RUN_PATCH_2
+    URLS https://github.com/PointCloudLibrary/pcl/commit/39669c02e9c0e68861baf0a25886c85e6011a259.patch?full_index=1
+    FILENAME PointCloudLibrary-pcl-no-try-run_2.patch
+    SHA512 1cbcebce8657190ecac7f82539218b345a7978f213c13764fe83dc9c32a416b4ae7bc3f896d31ef2c6480c4a98f756f9df3493b9ae1dc5d5b42a00d9d3928bfc
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
@@ -17,6 +23,7 @@ vcpkg_from_github(
     PATCHES
         add-gcc-version-check.patch
         "${NO_TRY_RUN_PATCH}"
+        "${NO_TRY_RUN_PATCH_2}"
         fix-check-sse.patch
         fix-numeric-literals-flag.patch
         install-layout.patch
