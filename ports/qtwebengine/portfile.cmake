@@ -26,6 +26,11 @@ if(VCPKG_TARGET_IS_OSX AND "spellchecker" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFEATURE_webengine_native_spellchecker=ON")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" static_runtime)
+    list(APPEND FEATURE_OPTIONS "-DQT_FEATURE_static_runtime=${static_runtime}")
+endif()
+
 # webengine-extensions
 # webengine-printing-and-pdf
 # webengine-pepper-plugins
