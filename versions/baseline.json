@@ -6549,7 +6549,7 @@
       "port-version": 1
     },
     "nanoprintf": {
-      "baseline": "0.5.3",
+      "baseline": "0.5.5",
       "port-version": 0
     },
     "nanorange": {
