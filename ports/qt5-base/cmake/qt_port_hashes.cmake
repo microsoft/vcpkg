@@ -4,11 +4,12 @@ set(QT_MAJOR_MINOR_VER 5.15)
 set(QT_PATCH_VER 17)
 set(QT_UPDATE_VERSION OFF) # Switch to update qt and not build qt. Creates a file cmake/qt_new_hashes.cmake in qt5-base with the new hashes.
 
-# qt5-mqtt is missing from 5.15.17 release
-# qt5-lottie is not in vcpkg yet
-set(QT_PORT_LIST base 3d activeqt charts connectivity datavis3d declarative gamepad graphicaleffects imageformats location macextras multimedia networkauth
+set(QT_PORT_LIST base 3d activeqt charts connectivity datavis3d declarative gamepad graphicaleffects imageformats location macextras mqtt multimedia networkauth
                  purchasing quickcontrols quickcontrols2 remoteobjects script scxml sensors serialport speech svg tools virtualkeyboard webchannel websockets
                  webview winextras xmlpatterns doc x11extras androidextras translations serialbus webengine webglplugin wayland)
+
+# qt5-mqtt archive is not included in 5.15.17 release, using git ref instead
+set(QT_HASH_qt5-mqtt 91efd3b1ebef3c95473c018bcacd0772e613b38c) # Same ref was used for all releases starting with 5.15.2
 
 set(QT_HASH_qt5-3d 94a88bf418f572a07b1ad25d6ca090525e7fe004c9f2d6ca7495e509fd150822bf5d49b66bed3660e492213bf54aff4e8772eeea0f42c24ef4f8c17f2655e2bc)
 set(QT_HASH_qt5-activeqt 9089830042c01c990d85b842eafad8cb0c13606b90d310cf5f9e1e030e237c7ad362393ead31d7b6c507fd4623f08f17cb54abb1a21e24a0e42685ffcb3eab45)
