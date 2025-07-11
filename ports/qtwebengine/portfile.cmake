@@ -139,7 +139,35 @@ vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
-x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES html5lib OUT_PYTHON_VAR PYTHON3)
+function(download_distfile var url sha512)
+    string(REGEX REPLACE ".*/" "" filename "${url}")
+    vcpkg_download_distfile(archive
+        URLS "${url}"
+        FILENAME "${filename}"
+        SHA512 "${sha512}"
+    )
+    set("${var}" "${archive}" PARENT_SCOPE)
+endfunction()
+
+download_distfile(html5lib
+    "https://files.pythonhosted.org/packages/6c/dd/a834df6482147d48e225a49515aabc28974ad5a4ca3215c18a882565b028/html5lib-1.1-py2.py3-none-any.whl"
+    53e828155e489176e8ea0cdc941ec6271764bbf7069b1a83c0ce8adb26694450d17d7c76b4a00a14dbb99ca203ae02b3d8c8e41953fd59499bbc8a8d4900975b
+)
+download_distfile(six
+    "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl"
+    2796b93aaac73193faeb5c93a85d23c2ae9fc4a7e57df88dc34b704a36fa62cd0b1fb5d1a74b961a23eff2467be94eb14f5f10874dfa733dc4ab59715280bbf3
+)
+download_distfile(webencodings
+    "https://files.pythonhosted.org/packages/f4/24/2a3e3df732393fed8b3ebf2ec078f05546de641fe1b667ee316ec1dcf3b7/webencodings-0.5.1-py2.py3-none-any.whl"
+    2a34dbebc33a44a3691216104982b4a978a2a60b38881fc3704d04cb1da38ea2878b5ffec5ac19ac43f50d00c8d4165e05fdf6fa4363a564d8c5090411fc392d
+)
+x_vcpkg_get_python_packages(
+    OUT_PYTHON_VAR PYTHON3
+    PYTHON_VERSION 3
+    PACKAGES --no-index "${html5lib}" "${six}" "${webencodings}"
+)
+get_filename_component(PYTHON_DIR "${PYTHON3}" DIRECTORY )
+vcpkg_add_to_path(APPEND "${PYTHON_DIR}")
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 set(GPERF "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}")
