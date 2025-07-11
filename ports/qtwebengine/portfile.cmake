@@ -8,6 +8,7 @@ set(${PORT}_PATCHES
       "fix-error2275-2672.patch"
       "blink-include-fixes.patch"
       "nested-name-fix.patch"
+      "osx-sdk-info.diff"
       "pdf-system-libjpeg.diff"
       "pdf-system-libpng.diff"
       "pkg-config.diff"
