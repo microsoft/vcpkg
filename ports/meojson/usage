@@ -1,0 +1,4 @@
+The package meojson provides CMake targets:
+
+    find_package(meojson CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE meojson::meojson)
