@@ -1,7 +1,12 @@
 vcpkg_download_distfile(NO_GLU_PATCH
     URLS https://github.com/PointCloudLibrary/pcl/pull/6253/commits/011905f3387e45b66828d81dacaafdde8893fdcb.patch?full_index=1
-    FILENAME fix-no-gluErrorString.patch
+    FILENAME PointCloudLibrary-fix-no-gluErrorString.patch
     SHA512 8bf795a0c0da667bae38a3293643bd92817f30ab0f8a56b065bbb7cfa0b8f125210a317ee9cd868911b87546b1a05c322280f159802f820fef886109b938635b
+)
+vcpkg_download_distfile(NO_TRY_RUN_PATCH
+    URLS https://github.com/PointCloudLibrary/pcl/commit/575168bb72232cd820362aac7791227753489683.patch?full_index=1
+    FILENAME PointCloudLibrary-pcl-no-try-run.patch
+    SHA512 922de43bf04b3d990c5f9123b2e7f2148b54b612b7a1fe80df42ff734c7e55a9dd33cf4a6bb26207a381eda929da79b3e594eb5369a02cbf73c3767f4cf2eca0
 )
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -11,6 +16,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         add-gcc-version-check.patch
+        "${NO_TRY_RUN_PATCH}"
         fix-check-sse.patch
         fix-numeric-literals-flag.patch
         install-layout.patch
@@ -42,7 +48,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         qt              WITH_QT
         simulation      BUILD_simulation
         surface-on-nurbs BUILD_surface_on_nurbs
-        surface-on-nurbs DVCPKG_LOCK_FIND_PACKAGE_ZLIB
+        surface-on-nurbs VCPKG_LOCK_FIND_PACKAGE_ZLIB
         tools           BUILD_tools
         visualization   WITH_VTK
         visualization   BUILD_visualization
