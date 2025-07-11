@@ -2,10 +2,11 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 116b934950b02639aa0924cdf6ceaf34518be7f94037e77e52f374aa0a03403487ef58384137569d930961c7d65291a7f0bbddcf1eaf4260086f49afbfae1f27
+    SHA512 cee56eef93728aef9b361f8b1080572532ce5247c80a9d1be53b30dab4d67e8588316890555d4c4ba423e87b09f954327d70615e1ba72d458d8238fa84e589f9
     PATCHES
-        01-fix-findudev-module.patch
-        02-fix-dependency-resolve.patch
+        01-fix-dependency-resolve.patch
+        02-fix-pkgconfig.patch
+        03-fix-android-install-path.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -41,7 +42,7 @@ vcpkg_copy_pdbs()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib")
     file(COPY "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib")
-    file(GLOB FILES "${CURRENT_PACKAGES_DIR}/share/sfml/SFML*Targets-*.cmake")
+    file(GLOB FILES "${CURRENT_PACKAGES_DIR}/share/sfml/SFMLMain*Targets-*.cmake")
     foreach(FILE ${FILES})
         vcpkg_replace_string("${FILE}" "/lib/sfml-main" "/lib/manual-link/sfml-main")
     endforeach()
@@ -52,32 +53,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
-set(SHOULD_REMOVE_SFML_ALL 0)
-if(NOT "audio" IN_LIST FEATURES)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-audio.pc")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-audio.pc")
-    set(SHOULD_REMOVE_SFML_ALL 1)
-endif()
-if(NOT "graphics" IN_LIST FEATURES)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-graphics.pc")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-graphics.pc")
-    set(SHOULD_REMOVE_SFML_ALL 1)
-endif()
-if(NOT "network" IN_LIST FEATURES)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-network.pc")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-network.pc")
-    set(SHOULD_REMOVE_SFML_ALL 1)
-endif()
-if(NOT "window" IN_LIST FEATURES)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-window.pc")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-window.pc")
-    set(SHOULD_REMOVE_SFML_ALL 1)
-endif()
-if(SHOULD_REMOVE_SFML_ALL)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-all.pc")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sfml-all.pc")
-endif()
 
 vcpkg_fixup_pkgconfig()
 
