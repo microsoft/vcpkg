@@ -61,6 +61,7 @@ qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                             patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/vulkan-windows.diff        #Forces QMake to use vulkan from vcpkg instead of VULKAN_SDK system variable
                             patches/egl.patch                  #Fix egl detection logic.
                             patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
