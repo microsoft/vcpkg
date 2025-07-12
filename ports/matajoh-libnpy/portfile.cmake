@@ -24,4 +24,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "cmake" PACKAGE_NAME "npy")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/CHANGELOG.md")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/README.md")
+file(RENAME "${CURRENT_PACKAGES_DIR}/CHANGELOG.md" "${CURRENT_PACKAGES_DIR}/share/npy/CHANGELOG.md")
+file(RENAME "${CURRENT_PACKAGES_DIR}/README.md" "${CURRENT_PACKAGES_DIR}/share/npy/README.md")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
