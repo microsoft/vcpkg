@@ -36,18 +36,22 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -DWITH_DAV1D=OFF
         -DWITH_EXAMPLES=OFF
         -DWITH_OpenH264_DECODER=OFF
         -DWITH_LIBSHARPYUV=OFF
-        -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_Brotli=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_LIBDE265=ON   # feature candidate
         -DVCPKG_LOCK_FIND_PACKAGE_PNG=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_TIFF=OFF
         ${FEATURE_OPTIONS}
+    OPTIONS_RELEASE
+        "-DPLUGIN_DIRECTORY=${CURRENT_PACKAGES_DIR}/plugins/libheif"
+    OPTIONS_DEBUG
+        "-DPLUGIN_DIRECTORY=${CURRENT_PACKAGES_DIR}/debug/plugins/libheif"
     MAYBE_UNUSED_VARIABLES
         VCPKG_LOCK_FIND_PACKAGE_AOM
         VCPKG_LOCK_FIND_PACKAGE_Brotli
@@ -68,10 +72,11 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libheif" "${CURRENT_PACKAGES_DIR}/debug/lib/libheif")
 
-file(GLOB maybe_plugins "${CURRENT_PACKAGES_DIR}/lib/libheif/*")
+file(GLOB maybe_plugins "${CURRENT_PACKAGES_DIR}/plugins/libheif/*")
 if(maybe_plugins STREQUAL "")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libheif" "${CURRENT_PACKAGES_DIR}/debug/lib/libheif")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/plugins" "${CURRENT_PACKAGES_DIR}/debug/plugins")
 endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_version.h" "#define LIBHEIF_PLUGIN_DIRECTORY \"${CURRENT_PACKAGES_DIR}/lib/libheif\"" "")
