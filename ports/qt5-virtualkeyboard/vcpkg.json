@@ -1,6 +1,6 @@
 {
   "name": "qt5-virtualkeyboard",
-  "version": "5.15.16",
+  "version": "5.15.17",
   "description": "The Qt Virtual Keyboard project provides an input framework and reference keyboard frontend for Qt 5 on Linux Desktop/X11, Windows Desktop, and Boot2Qt targets.",
   "license": null,
   "dependencies": [
