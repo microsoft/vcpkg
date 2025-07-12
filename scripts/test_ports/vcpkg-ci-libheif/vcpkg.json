@@ -13,5 +13,21 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "ci"
+  ],
+  "features": {
+    "ci": {
+      "description": "Feature depenencies. openjpeg is a plugin.",
+      "dependencies": [
+        {
+          "name": "libheif",
+          "features": [
+            "openjpeg"
+          ]
+        }
+      ]
+    }
+  }
 }
