@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-install.patch
         fix-miniz.patch
         fix-zip-wrapper.patch
+        fix-npy-config.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/miniz")
