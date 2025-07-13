@@ -55,7 +55,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/g2o")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB_RECURSE HEADERS "${CURRENT_PACKAGES_DIR}/include/*")
     foreach(HEADER IN LISTS HEADERS)
-        vcpkg_replace_string(REPLACE "${HEADER}" "#ifdef G2O_SHARED_LIBS" "#if 1")
+        vcpkg_replace_string("${HEADER}" "#ifdef G2O_SHARED_LIBS" "#if 1")
     endforeach()
 endif()
 
