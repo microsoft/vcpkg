@@ -174,7 +174,9 @@ function(configure_qt)
             )
 
         if(DEFINED _csc_HOST_TOOLS_ROOT) #use qmake
-            vcpkg_execute_required_process(
+            # what the fuck? why doesn't it work on the first try?
+            vcpkg_execute_required_process_repeat(
+                COUNT 2
                 COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" -- ${BUILD_OPTIONS} ${qmake_build_tools} ${qmake_comp_flags}
                 WORKING_DIRECTORY ${_build_dir}
                 LOGNAME config-${_build_triplet}
