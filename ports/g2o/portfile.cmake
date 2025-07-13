@@ -59,4 +59,15 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endforeach()
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/doc/license-bsd.txt")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(READ "${SOURCE_PATH}/README.md" readme)
+string(REGEX REPLACE "^.*## License" "" readme "${readme}")
+string(REGEX REPLACE "\n##.*" "" readme "${readme}")
+string(STRIP "${readme}" readme)
+vcpkg_install_copyright(
+    COMMENT "${readme}"
+    FILE_LIST
+        "${SOURCE_PATH}/doc/license-bsd.txt"
+        "${SOURCE_PATH}/doc/license-lgpl.txt"
+)
