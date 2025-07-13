@@ -1,14 +1,23 @@
 diff --git a/mesonbuild/modules/pkgconfig.py b/mesonbuild/modules/pkgconfig.py
-index 1bdf829..5f1bfd9 100644
+index cc0450a52..13501466d 100644
 --- a/mesonbuild/modules/pkgconfig.py
 +++ b/mesonbuild/modules/pkgconfig.py
-@@ -701,6 +701,9 @@ class PkgConfigModule(NewExtensionModule):
+@@ -701,16 +701,8 @@ class PkgConfigModule(NewExtensionModule):
          pcfile = filebase + '.pc'
          pkgroot = pkgroot_name = kwargs['install_dir'] or default_install_dir
          if pkgroot is None:
-+            pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(OptionKey('libdir'))), 'pkgconfig')
+-            m = state.environment.machines.host
+-            if m.is_freebsd():
+-                pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('prefix'))), 'libdata', 'pkgconfig')
+-                pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')
+-            elif m.is_haiku():
+-                pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('prefix'))), 'develop', 'lib', 'pkgconfig')
+-                pkgroot_name = os.path.join('{prefix}', 'develop', 'lib', 'pkgconfig')
+-            else:
+-                pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('libdir'))), 'pkgconfig')
+-                pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
++            pkgroot = os.path.join(_as_str(state.environment.coredata.optstore.get_value_for(OptionKey('libdir'))), 'pkgconfig')
 +            pkgroot_name = os.path.join('{libdir}', 'pkgconfig')
-+        elif False:
-             if mesonlib.is_freebsd():
-                 pkgroot = os.path.join(_as_str(state.environment.coredata.get_option(OptionKey('prefix'))), 'libdata', 'pkgconfig')
-                 pkgroot_name = os.path.join('{prefix}', 'libdata', 'pkgconfig')
+         relocatable = state.get_option('pkgconfig.relocatable')
+         self._generate_pkgconfig_file(state, deps, subdirs, name, description, url,
+                                       version, pcfile, conflicts, variables,

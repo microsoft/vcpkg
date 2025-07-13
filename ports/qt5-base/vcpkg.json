@@ -1,7 +1,7 @@
 {
   "name": "qt5-base",
   "version": "5.15.16",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Qt Base provides the basic non-GUI functionality required by all Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -85,7 +85,10 @@
     "sqlite3plugin": {
       "description": "Build the sql plugin for connecting to sqlite3 databases",
       "dependencies": [
-        "sqlite3"
+        {
+          "name": "sqlite3",
+          "default-features": false
+        }
       ]
     },
     "vulkan": {
