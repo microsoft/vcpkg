@@ -1,18 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SamuelMarks/zip
-    REF 24fadb2ed7780518ce11e3fde81e885ffd98575e # c89-vcpkg
-    SHA512 4b81494b83ccf23aa8f1df32f39ebafd5df84b5f857e7b40cefa9fdafb5448f9f71f51eafdda36251ad104180e6d3d066783a340ae6c395d9e96c494e95680e1
+    REF 30e8028fb454d70c392a91fc668dc47548d38417
+    SHA512 35a967dc4470f25e2502e4f248dd5cbea605f016aceb94feb4a3635983a00c0fbd4086262ae90dfde5000aa69520ff11aa16f4955c64097e84877da11f094f2c
     HEAD_REF c89-vcpkg
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DISABLE_TESTING=ON
+        "-DCMAKE_DISABLE_TESTING=ON"
+        "-DCMAKE_PROJECT_NAME=${PORT}"
 )
 
 vcpkg_cmake_install()
 #vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/zip" PACKAGE_NAME "zip-kuba--")
-
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
