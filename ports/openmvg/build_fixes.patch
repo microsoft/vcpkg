@@ -113,8 +113,18 @@ index cd800b0..9586d9b 100644
  }
  
  namespace openMVG {
+diff --git a/src/openMVG/exif/sensor_width_database/CMakeLists.txt b/src/openMVG/exif/sensor_width_database/CMakeLists.txt
+index 33d9f16..58b4761 100644
+--- a/src/openMVG/exif/sensor_width_database/CMakeLists.txt
++++ b/src/openMVG/exif/sensor_width_database/CMakeLists.txt
+@@ -2,4 +2,4 @@
+ UNIT_TEST(openMVG ParseDatabase "openMVG_testing;${STLPLUS_LIBRARY}")
+ 
+ # Installation rules
+-install(FILES sensor_width_camera_database.txt DESTINATION  ${CMAKE_INSTALL_LIBDIR}/openMVG)
++install(FILES sensor_width_camera_database.txt DESTINATION share/openmvg)
 diff --git a/src/openMVG/linearProgramming/CMakeLists.txt b/src/openMVG/linearProgramming/CMakeLists.txt
-index 4532161..e3ddedc 100644
+index 3a8a402..b705e47 100644
 --- a/src/openMVG/linearProgramming/CMakeLists.txt
 +++ b/src/openMVG/linearProgramming/CMakeLists.txt
 @@ -16,8 +16,8 @@ target_link_libraries(openMVG_linearProgramming
@@ -128,3 +138,14 @@ index 4532161..e3ddedc 100644
  )
  
  target_include_directories(openMVG_linearProgramming
+diff --git a/src/third_party/fast/CMakeLists.txt b/src/third_party/fast/CMakeLists.txt
+index dc0aba6..7361dc0 100644
+--- a/src/third_party/fast/CMakeLists.txt
++++ b/src/third_party/fast/CMakeLists.txt
+@@ -1,6 +1,5 @@
+ 
+ file(GLOB_RECURSE C_FILES ${CMAKE_CURRENT_SOURCE_DIR} *.c)
+-set_source_files_properties(${C_FILES} PROPERTIES LANGUAGE CXX)
+ add_library(openMVG_fast STATIC ${C_FILES})
+ set_property(TARGET openMVG_fast PROPERTY FOLDER OpenMVG/3rdParty)
+ 

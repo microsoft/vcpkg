@@ -23,6 +23,7 @@ file(REMOVE_RECURSE
     #${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
     #${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake
     "${SOURCE_PATH}/src/nonFree/sift/vl"
+    "${SOURCE_PATH}/src/third_party/CppUnitLite"
     "${SOURCE_PATH}/src/third_party/ceres-solver"
     "${SOURCE_PATH}/src/third_party/cxsparse"
     "${SOURCE_PATH}/src/third_party/eigen"
@@ -80,6 +81,7 @@ vcpkg_cmake_configure(
         VCPKG_LOCK_FIND_PACKAGE_OpenCV
 )
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/openMVG")
 
 file(REMOVE_RECURSE
@@ -91,22 +93,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test"
     "${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data"
 )
-
-if(OpenMVG_BUILD_SHARED)
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        # release
-        file(GLOB DLL_FILES  "${CURRENT_PACKAGES_DIR}/lib/*.dll")
-        file(COPY "${DLL_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE_RECURSE "${DLL_FILES}")
-    endif()
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        # debug
-        file(GLOB DLL_FILES  "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-        file(COPY "${DLL_FILES}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(REMOVE_RECURSE "${DLL_FILES}")
-    endif()
-endif()
-vcpkg_copy_pdbs()
 
 if("software" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_OSX)
@@ -178,4 +164,13 @@ if("software" IN_LIST FEATURES)
     file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/SfM_StructurePipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_StructurePipeline.py")
 endif()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(third_party_notices "")
+file(GLOB files "${SOURCE_PATH}/src/third_party/*/README.openMVG")
+foreach(file IN LISTS files)
+    cmake_path(GET file PARENT_PATH parent_path)
+    cmake_path(GET parent_path FILENAME component)
+    set(extra_file "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${component}")
+    file(COPY_FILE "${file}" "${extra_file}")
+    list(APPEND third_party_notices "${extra_file}")
+endforeach()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${third_party_notices})
