@@ -7,11 +7,12 @@ if(QT_UPDATE_VERSION)
     set(VCPKG_USE_HEAD_VERSION ON)
 endif()
 
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL git://code.qt.io/qt/qtmqtt.git
-    REF ${QT_HASH_${PORT}}
+    REPO qt/qtmqtt
+    REF 0b4955ce8b692409c3deded57892eb61e75be428
     HEAD_REF "v${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER}"
+    SHA512 4a16c277f338874c9606254f34c74c434a2f4df1767bd465822d1388f325de8c788d8ed184e1c340e092a358add6655e8d20d59a027f111d1882fcae6433320e
 )
 
 if(QT_UPDATE_VERSION)
