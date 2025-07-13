@@ -2701,7 +2701,7 @@
       "port-version": 3
     },
     "etl": {
-      "baseline": "20.41.7",
+      "baseline": "20.42.1",
       "port-version": 0
     },
     "eve": {
