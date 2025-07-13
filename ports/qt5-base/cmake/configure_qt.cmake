@@ -174,11 +174,8 @@ function(configure_qt)
             )
 
         if(DEFINED _csc_HOST_TOOLS_ROOT) #use qmake
-            if(WIN32)
-                set(INVOKE_OPTIONS "QMAKE_CXX.QMAKE_MSC_VER=1911" "QMAKE_MSC_VER=1911")
-            endif()
             vcpkg_execute_required_process(
-                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" "${INVOKE_OPTIONS}" -- ${BUILD_OPTIONS} ${qmake_build_tools} ${qmake_comp_flags}
+                COMMAND ${INVOKE} "${_csc_SOURCE_PATH}" -- ${BUILD_OPTIONS} ${qmake_build_tools} ${qmake_comp_flags}
                 WORKING_DIRECTORY ${_build_dir}
                 LOGNAME config-${_build_triplet}
             )
