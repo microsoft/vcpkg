@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 8d96c191cf7e61b0c1d725b102c7b2ad2c30bb168878d50971c1f471442f382ac4bc026b6dba8d83ac83ca009ddc0dd99ab8c32060d6f4dcd26492c39bf2337f
+    SHA512 57a80def1febba55d029971841677286ac3dc527f0a6ce4fa3b2278dc5ba6b4ac691cc2642f1c9a8bf244334b53717e9554e3917f8c8cca208b8d4ba3446342e
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
