@@ -1,0 +1,4 @@
+CsString provides CMake targets:
+
+    find_package(CsString CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE CsString::CsString)
