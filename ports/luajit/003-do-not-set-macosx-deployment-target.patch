@@ -1,8 +1,8 @@
 diff --git a/src/Makefile b/src/Makefile
-index 30d64be..b753ea1 100644
+index c83abfa0..12e79a5b 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -316,9 +316,6 @@ ifeq (,$(shell $(TARGET_CC) -o /dev/null -c -x c /dev/null -fno-stack-protector
+@@ -321,9 +321,6 @@ ifeq (,$(shell $(TARGET_CC) -o /dev/null -c -x c /dev/null -fno-stack-protector
    TARGET_XCFLAGS+= -fno-stack-protector
  endif
  ifeq (Darwin,$(TARGET_SYS))
@@ -11,4 +11,4 @@ index 30d64be..b753ea1 100644
 -  endif
    TARGET_STRIP+= -x
    TARGET_XCFLAGS+= -DLUAJIT_UNWIND_EXTERNAL
-   TARGET_XSHLDFLAGS= -dynamiclib -single_module -undefined dynamic_lookup -fPIC
+   TARGET_XSHLDFLAGS= -dynamiclib -undefined dynamic_lookup -fPIC
