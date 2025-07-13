@@ -57,5 +57,7 @@ function(find_qt_mkspec TARGET_PLATFORM_MKSPEC_OUT HOST_PLATFORM_MKSPEC_OUT EXT_
         set(${HOST_PLATFORM_MKSPEC_OUT} ${_tmp_host_out} PARENT_SCOPE)
     endif()
 
-    set(${EXT_HOST_TOOLS_OUT} "${CURRENT_HOST_INSTALLED_DIR}/tools/qt5" PARENT_SCOPE)
+    if(VCPKG_CROSSCOMPILING)
+        set(${EXT_HOST_TOOLS_OUT} "${CURRENT_HOST_INSTALLED_DIR}/tools/qt5" PARENT_SCOPE)
+    endif()
 endfunction()
