@@ -1,10 +1,8 @@
 vcpkg_buildpath_length_warning(37)
 
 #the port produces some empty dlls when building shared libraries, since some components do not export anything, breaking the internal build itself
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if("software" IN_LIST FEATURES AND VCPKG_CRT_LINKAGE STREQUAL static)
-    message(FATAL_ERROR "OpenMVG software currently cannot be built with static CRT linking. Please open an issue if you require this feature.")
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
@@ -17,73 +15,70 @@ vcpkg_from_github(
         0001-eigen_3.4.0.patch
         no-absolute-paths.patch
 )
-
-set(OpenMVG_USE_OPENMP OFF)
-if("openmp" IN_LIST FEATURES)
-    set(OpenMVG_USE_OPENMP ON)
-endif()
+file(REMOVE_RECURSE 
+    "${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake"
+    "${SOURCE_PATH}/src/cmakeFindModules/FindFlann.cmake"
+    "${SOURCE_PATH}/src/cmakeFindModules/FindLemon.cmake"
+    #${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
+    #${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
+    #${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake
+    "${SOURCE_PATH}/src/third_party/ceres-solver"
+    "${SOURCE_PATH}/src/third_party/cxsparse"
+    "${SOURCE_PATH}/src/third_party/eigen"
+    "${SOURCE_PATH}/src/third_party/flann"
+    "${SOURCE_PATH}/src/third_party/jpeg"
+    "${SOURCE_PATH}/src/third_party/lemon"
+    "${SOURCE_PATH}/src/third_party/png"
+    "${SOURCE_PATH}/src/third_party/tiff"
+    "${SOURCE_PATH}/src/third_party/zlib"
+)
+file(MAKE_DIRECTORY "${SOURCE_PATH}/dependencies/cereal/include/_placeholder")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        opencv OpenMVG_USE_OPENCV
-        opencv OpenMVG_USE_OCVSIFT
-        software OpenMVG_BUILD_SOFTWARES
-        software OpenMVG_BUILD_GUI_SOFTWARES
+        opencv      OpenMVG_USE_OPENCV
+        opencv      OpenMVG_USE_OCVSIFT
+        opencv      VCPKG_LOCK_FIND_PACKAGE_OpenCV
+        openmp      OpenMVG_USE_OPENMP
+        software    OpenMVG_BUILD_SOFTWARES
+        software    OpenMVG_BUILD_GUI_SOFTWARES
 )
 
-# remove some deps to prevent conflict
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/third_party/ceres-solver
-                    ${SOURCE_PATH}/src/third_party/cxsparse
-                    ${SOURCE_PATH}/src/third_party/eigen
-                    ${SOURCE_PATH}/src/third_party/flann
-                    ${SOURCE_PATH}/src/third_party/jpeg
-                    ${SOURCE_PATH}/src/third_party/lemon
-                    ${SOURCE_PATH}/src/third_party/png
-                    ${SOURCE_PATH}/src/third_party/tiff
-                    ${SOURCE_PATH}/src/third_party/zlib)
-
-# remove some cmake modules to force using our configs
-file(REMOVE_RECURSE ${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake
-                    ${SOURCE_PATH}/src/cmakeFindModules/FindLemon.cmake
-                    ${SOURCE_PATH}/src/cmakeFindModules/FindFlann.cmake
-                    #${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
-                    #${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
-                    #${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake
-                    )
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OpenMVG_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
     OPTIONS ${FEATURE_OPTIONS}
-        -DOpenMVG_USE_OPENMP=${OpenMVG_USE_OPENMP}
-        -DOpenMVG_BUILD_SHARED=OFF
-        -DOpenMVG_BUILD_TESTS=OFF
+        -DOpenMVG_BUILD_SHARED=${OpenMVG_BUILD_SHARED}
+        -DOpenMVG_BUILD_COVERAGE=OFF
         -DOpenMVG_BUILD_DOC=OFF
         -DOpenMVG_BUILD_EXAMPLES=OFF
         -DOpenMVG_BUILD_OPENGL_EXAMPLES=OFF
-        -DOpenMVG_BUILD_COVERAGE=OFF
-        -DOpenMVG_USE_INTERNAL_CLP=OFF
-        -DOpenMVG_USE_INTERNAL_COINUTILS=OFF
-        -DOpenMVG_USE_INTERNAL_OSI=OFF
-        -DOpenMVG_USE_INTERNAL_EIGEN=OFF
+        -DOpenMVG_BUILD_TESTS=OFF
         -DOpenMVG_USE_INTERNAL_CEREAL=OFF
         -DOpenMVG_USE_INTERNAL_CERES=OFF
+        -DOpenMVG_USE_INTERNAL_CLP=OFF
+        -DOpenMVG_USE_INTERNAL_COINUTILS=OFF
+        -DOpenMVG_USE_INTERNAL_EIGEN=OFF
         -DOpenMVG_USE_INTERNAL_FLANN=OFF
         -DOpenMVG_USE_INTERNAL_LEMON=OFF
+        -DOpenMVG_USE_INTERNAL_OSI=OFF
+        -DOpenMVG_USE_LIGT=OFF
         "-DCOINUTILS_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
         "-DCLP_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
+        "-DFLANN_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include"
+        "-DLEMON_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include"
         "-DOSI_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
+        -DVCPKG_LOCK_FIND_PACKAGE_cereal=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Ceres=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Eigen3=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Flann=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_JPEG=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_PNG=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_TIFF=ON
 )
-
 vcpkg_cmake_install()
-
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/openMVG/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/openMVG/cmake" "${CURRENT_PACKAGES_DIR}/share/openMVG/cmake")
-if(NOT VCPKG_BUILD_TYPE)
-  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/openMVG/cmake" "${CURRENT_PACKAGES_DIR}/debug/share/openMVG/cmake")
-endif()
-
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/openMVG/openMVG")
 
 file(REMOVE_RECURSE
      "${CURRENT_PACKAGES_DIR}/debug/include"
@@ -181,5 +176,4 @@ if("software" IN_LIST FEATURES)
     configure_file("${SOURCE_PATH}/src/software/SfM/SfM_SequentialPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_SequentialPipeline.py" @ONLY)
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
