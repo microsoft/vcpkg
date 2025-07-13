@@ -22,6 +22,7 @@ file(REMOVE_RECURSE
     #${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
     #${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
     #${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake
+    "${SOURCE_PATH}/src/nonFree/sift/vl"
     "${SOURCE_PATH}/src/third_party/ceres-solver"
     "${SOURCE_PATH}/src/third_party/cxsparse"
     "${SOURCE_PATH}/src/third_party/eigen"
@@ -32,7 +33,7 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/src/third_party/tiff"
     "${SOURCE_PATH}/src/third_party/zlib"
 )
-file(MAKE_DIRECTORY "${SOURCE_PATH}/dependencies/cereal/include/_placeholder")
+file(MAKE_DIRECTORY "${SOURCE_PATH}/src/dependencies/cereal/include/_placeholder")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -48,21 +49,14 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OpenMVG_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DOpenMVG_BUILD_SHARED=${OpenMVG_BUILD_SHARED}
         -DOpenMVG_BUILD_COVERAGE=OFF
         -DOpenMVG_BUILD_DOC=OFF
         -DOpenMVG_BUILD_EXAMPLES=OFF
         -DOpenMVG_BUILD_OPENGL_EXAMPLES=OFF
         -DOpenMVG_BUILD_TESTS=OFF
-        -DOpenMVG_USE_INTERNAL_CEREAL=OFF
-        -DOpenMVG_USE_INTERNAL_CERES=OFF
-        -DOpenMVG_USE_INTERNAL_CLP=OFF
-        -DOpenMVG_USE_INTERNAL_COINUTILS=OFF
-        -DOpenMVG_USE_INTERNAL_EIGEN=OFF
-        -DOpenMVG_USE_INTERNAL_FLANN=OFF
-        -DOpenMVG_USE_INTERNAL_LEMON=OFF
-        -DOpenMVG_USE_INTERNAL_OSI=OFF
         -DOpenMVG_USE_LIGT=OFF
         "-DCOINUTILS_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
         "-DCLP_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
@@ -76,18 +70,27 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_JPEG=ON
         -DVCPKG_LOCK_FIND_PACKAGE_PNG=ON
         -DVCPKG_LOCK_FIND_PACKAGE_TIFF=ON
+    OPTIONS_DEBUG
+        -DOpenMVG_USE_OPENCV=OFF
+        -DOpenMVG_BUILD_SOFTWARES=OFF
+        -DOpenMVG_BUILD_GUI_SOFTWARES=OFF
+    MAYBE_UNUSED_VARIABLES
+        FLANN_INCLUDE_DIR_HINTS # Must be "defined"
+        LEMON_INCLUDE_DIR_HINTS # Must be "defined"
+        VCPKG_LOCK_FIND_PACKAGE_OpenCV
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/openMVG/openMVG")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/openMVG")
 
 file(REMOVE_RECURSE
-     "${CURRENT_PACKAGES_DIR}/debug/include"
-     "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/cereal" 
-     "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/glfw"
-     "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/osi_clp"
-     "${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test"
-     "${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data"
-     "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/nonFree/sift/vl")
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/cereal" 
+    "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/glfw"
+    "${CURRENT_PACKAGES_DIR}/include/openMVG_dependencies/osi_clp"
+    "${CURRENT_PACKAGES_DIR}/include/openMVG/image/image_test"
+    "${CURRENT_PACKAGES_DIR}/include/openMVG/exif/image_data"
+)
 
 if(OpenMVG_BUILD_SHARED)
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -168,12 +171,11 @@ if("software" IN_LIST FEATURES)
             openMVG_main_ComputeFeatures_OpenCV)
     endif()
 
-    file(COPY "${SOURCE_PATH}/src/openMVG/exif/sensor_width_database/sensor_width_camera_database.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    set(OPENMVG_SOFTWARE_SFM_BUILD_DIR "${CURRENT_INSTALLED_DIR}/tools/${PORT}")
-    set(OPENMVG_CAMERA_SENSOR_WIDTH_DIRECTORY "${CURRENT_INSTALLED_DIR}/tools/${PORT}")
-    configure_file("${SOURCE_PATH}/src/software/SfM/tutorial_demo.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/tutorial_demo.py" @ONLY)
-    configure_file("${SOURCE_PATH}/src/software/SfM/SfM_GlobalPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_GlobalPipeline.py" @ONLY)
-    configure_file("${SOURCE_PATH}/src/software/SfM/SfM_SequentialPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_SequentialPipeline.py" @ONLY)
+    file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}/sensor_width_camera_database.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/tutorial_demo.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/tutorial_demo.py")
+    file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/SfM_GlobalPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_GlobalPipeline.py")
+    file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/SfM_SequentialPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_SequentialPipeline.py")
+    file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/SfM_StructurePipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_StructurePipeline.py")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
