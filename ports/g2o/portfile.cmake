@@ -55,7 +55,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/g2o")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB_RECURSE HEADERS "${CURRENT_PACKAGES_DIR}/include/*")
     foreach(HEADER IN LISTS HEADERS)
-        vcpkg_replace_string("${HEADER}" "#ifdef G2O_SHARED_LIBS" "#if 1")
+        vcpkg_replace_string("${HEADER}" "#ifdef G2O_SHARED_LIBS" "#if 1" IGNORE_UNCHANGED)
     endforeach()
 endif()
 
@@ -65,9 +65,13 @@ file(READ "${SOURCE_PATH}/README.md" readme)
 string(REGEX REPLACE "^.*## License" "" readme "${readme}")
 string(REGEX REPLACE "\n##.*" "" readme "${readme}")
 string(STRIP "${readme}" readme)
+set(ceres_license "${CURRENT_PACKAGES_DIR}/include/g2o/autodiff/Ceres Solver in autodiff")
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/g2o/autodiff/LICENSE" "${ceres_license}")
 vcpkg_install_copyright(
     COMMENT "${readme}"
     FILE_LIST
         "${SOURCE_PATH}/doc/license-bsd.txt"
+        "${ceres_license}"
         "${SOURCE_PATH}/doc/license-lgpl.txt"
 )
+file(REMOVE "${ceres_license}")
