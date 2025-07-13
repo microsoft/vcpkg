@@ -10,7 +10,6 @@
     "ecm",
     "liblzma",
     "openssl",
-    "pkgconf",
     "qtbase",
     {
       "name": "qttools",
