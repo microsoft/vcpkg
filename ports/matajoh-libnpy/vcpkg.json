@@ -5,6 +5,7 @@
   "homepage": "https://github.com/matajoh/libnpy",
   "license": "MIT",
   "dependencies": [
+    "miniz",
     {
       "name": "vcpkg-cmake",
       "host": true

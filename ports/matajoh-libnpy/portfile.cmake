@@ -8,7 +8,11 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-install.patch
+        fix-miniz.patch
+        fix-zip-wrapper.patch
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/miniz")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
