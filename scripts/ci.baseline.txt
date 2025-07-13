@@ -776,6 +776,7 @@ optional-bare:x64-windows-static-md=skip
 optional-bare:x64-windows-static=skip
 optional-bare:x64-windows=skip
 optional-bare:x86-windows=skip
+orange-math:x64-linux=fail
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
