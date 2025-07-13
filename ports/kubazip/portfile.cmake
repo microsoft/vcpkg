@@ -11,9 +11,11 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DCMAKE_DISABLE_TESTING=ON"
         "-DCMAKE_PROJECT_NAME=${PORT}"
+        "-DCMAKE_PROJECT_NAME=${PORT}"
+        #"-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/${PORT}"
+        "-DCMAKE_INSTALL_INCLUDEDIR=${CURRENT_PACKAGES_DIR}/${PORT}"
 )
 
 vcpkg_cmake_install()
-#vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/zip" PACKAGE_NAME "zip-kuba--")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
