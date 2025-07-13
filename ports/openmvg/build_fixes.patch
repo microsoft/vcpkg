@@ -123,6 +123,20 @@ index 33d9f16..58b4761 100644
  # Installation rules
 -install(FILES sensor_width_camera_database.txt DESTINATION  ${CMAKE_INSTALL_LIBDIR}/openMVG)
 +install(FILES sensor_width_camera_database.txt DESTINATION share/openmvg)
+diff --git a/src/openMVG/features/fast/fast_detector.cpp b/src/openMVG/features/fast/fast_detector.cpp
+index 7223149..0daa5db 100644
+--- a/src/openMVG/features/fast/fast_detector.cpp
++++ b/src/openMVG/features/fast/fast_detector.cpp
+@@ -9,7 +9,9 @@
+ #include "openMVG/features/fast/fast_detector.hpp"
+ 
+ #include "openMVG/image/image_container.hpp"
++extern "C" {
+ #include "third_party/fast/fast.h"
++}
+ 
+ #include <iostream>
+ //
 diff --git a/src/openMVG/linearProgramming/CMakeLists.txt b/src/openMVG/linearProgramming/CMakeLists.txt
 index 3a8a402..b705e47 100644
 --- a/src/openMVG/linearProgramming/CMakeLists.txt
