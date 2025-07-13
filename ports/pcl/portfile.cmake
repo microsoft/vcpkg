@@ -31,6 +31,7 @@ vcpkg_from_github(
         fix-clang-cl.patch
         add-chrono-includes.patch
         add-cassert.patch
+        rollback-1092d70.diff
         "${NO_GLU_PATCH}"
 )
 
