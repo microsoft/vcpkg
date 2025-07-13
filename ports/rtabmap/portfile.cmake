@@ -31,12 +31,20 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openmp      WITH_OPENMP
         gui         WITH_QT
+        gui         VCPKG_LOCK_FIND_PACKAGE_Qt6
+        gui         VCPKG_LOCK_FIND_PACKAGE_VTK
         k4w2        WITH_K4W2
+        k4w2        VCPKG_LOCK_FIND_PACKAGE_KinectSDK2
         octomap     WITH_OCTOMAP
+        octomap     VCPKG_LOCK_FIND_PACKAGE_octomap
+        openmp      WITH_OPENMP
+        openmp      VCPKG_LOCK_FIND_PACKAGE_OpenMP
         openni2     WITH_OPENNI2
+        openni2     VCPKG_LOCK_FIND_PACKAGE_OpenNI2
         realsense2  WITH_REALSENSE2
+        realsense2  VCPKG_LOCK_FIND_PACKAGE_realsense2
+        realsense2  VCPKG_LOCK_FIND_PACKAGE_RealSense2  # WIN32
         tools       BUILD_APP
         tools       BUILD_TOOLS
 )
@@ -95,6 +103,17 @@ vcpkg_cmake_configure(
         -DWITH_VISO2=OFF
         -DWITH_ZED=OFF
         -DWITH_ZEDOC=OFF
+        # other
+        -DVCPKG_LOCK_FIND_PACKAGE_SQLite3=ON
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_Qt6
+        VCPKG_LOCK_FIND_PACKAGE_VTK
+        VCPKG_LOCK_FIND_PACKAGE_KinectSDK2
+        VCPKG_LOCK_FIND_PACKAGE_octomap
+        VCPKG_LOCK_FIND_PACKAGE_OpenMP
+        VCPKG_LOCK_FIND_PACKAGE_OpenNI2
+        VCPKG_LOCK_FIND_PACKAGE_realsense2
+        VCPKG_LOCK_FIND_PACKAGE_RealSense2
 )
 
 vcpkg_cmake_install()
