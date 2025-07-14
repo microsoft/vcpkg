@@ -1706,7 +1706,7 @@
     },
     "cinatra": {
       "baseline": "0.9.5",
-      "port-version": 0
+      "port-version": 1
     },
     "cista": {
       "baseline": "0.15",
@@ -3806,6 +3806,10 @@
     },
     "igraph": {
       "baseline": "0.10.16",
+      "port-version": 0
+    },
+    "iguana": {
+      "baseline": "1.0.9",
       "port-version": 0
     },
     "iir1": {
