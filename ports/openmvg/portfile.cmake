@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         build_fixes.patch
         0001-eigen_3.4.0.patch
+        fast-c-language.diff
         no-absolute-paths.patch
 )
 file(REMOVE_RECURSE 
@@ -161,7 +162,7 @@ if("software" IN_LIST FEATURES)
     file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/tutorial_demo.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/tutorial_demo.py")
     file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/SfM_GlobalPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_GlobalPipeline.py")
     file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/SfM_SequentialPipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_SequentialPipeline.py")
-    file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/SfM_StructurePipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_StructurePipeline.py")
+    file(COPY_FILE "${SOURCE_PATH}/src/software/SfM/import/SfM_StructurePipeline.py.in" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/SfM_StructurePipeline.py")
 endif()
 
 set(third_party_notices "")
