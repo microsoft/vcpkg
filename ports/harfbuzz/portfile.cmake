@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 697205a571bb3d52d83598e8511e2e21e7cd15630aac32d8deb4354e462efda6a5ce46510cf4a1c18365dffe935cf2e4f1fda65d1779f17c9bb60c503315bf5c
+    SHA512 1dd91dea966e7da2d4077bb711f5936e30829a80b88ea77b987da57f15ae9566aa2eaf8bd1dcf099e73c2eb52b66654c6cb1f69c907c58f3d046e284e81d973c
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
-        fix-build-ffmpeg-failed.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -136,7 +135,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure hb-info)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()

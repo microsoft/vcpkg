@@ -61,3 +61,8 @@ vcpkg_execute_in_download_mode(
 )
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/tools/${ARCHIVE}" "${CURRENT_PACKAGES_DIR}/tools/node")
+
+# Do not break code signatures
+if(VCPKG_TARGET_IS_OSX)
+    set(VCPKG_FIXUP_MACHO_RPATH OFF)
+endif()

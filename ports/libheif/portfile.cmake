@@ -2,51 +2,68 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 9159f379119d1c0ac6bb7dbde916efd12a85275ef2f696ece2fc18e52593c78201090dcc1bf3b97d160f27d594a755c5987cb6c4cea811b9a5f2c999f72724e3
+    SHA512 74bc51caf30997e1d327ab8253e9d3556906cd14828794a72c4ba42f2c154b79c1d717e0833a6afc3f6ebff909b630326c11a052d7eb832008769157fad3760b
     HEAD_REF master
     PATCHES
+        cxx-linkage-pkgconfig.diff
+        find-modules.diff
         gdk-pixbuf.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        hevc        WITH_X265
         aom         WITH_AOM_DECODER
         aom         WITH_AOM_ENCODER
-        openjpeg    WITH_OpenJPEG_DECODER
-        openjpeg    WITH_OpenJPEG_ENCODER
+        aom         VCPKG_LOCK_FIND_PACKAGE_AOM
+        gdk-pixbuf  WITH_GDK_PIXBUF
+        hevc        WITH_X265
+        hevc        VCPKG_LOCK_FIND_PACKAGE_X265
+        iso23001-17 WITH_UNCOMPRESSED_CODEC
+        iso23001-17 VCPKG_LOCK_FIND_PACKAGE_ZLIB
         jpeg        WITH_JPEG_DECODER
         jpeg        WITH_JPEG_ENCODER
-        iso23001-17 WITH_UNCOMPRESSED_CODEC
-        gdk-pixbuf  WITH_GDKPIXBUF2
+        jpeg        VCPKG_LOCK_FIND_PACKAGE_JPEG
+        openjpeg    WITH_OpenJPEG_DECODER
+        openjpeg    WITH_OpenJPEG_ENCODER
+        openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DWITH_EXAMPLES=OFF
-        -DWITH_DAV1D=OFF
         -DBUILD_TESTING=OFF
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
+        -DWITH_DAV1D=OFF
+        -DWITH_EXAMPLES=OFF
+        -DWITH_OpenH264_DECODER=OFF
+        -DWITH_LIBSHARPYUV=OFF
         -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Brotli=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_LIBDE265=ON   # feature candidate
+        -DVCPKG_LOCK_FIND_PACKAGE_PNG=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_TIFF=OFF
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_AOM
+        VCPKG_LOCK_FIND_PACKAGE_Brotli
+        VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
+        VCPKG_LOCK_FIND_PACKAGE_X265
+        VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libheif/)
-# libheif's pc file assumes libstdc++, which isn't always true.
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libheif.pc" " -lstdc++" "" IGNORE_UNCHANGED)
-if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libheif.pc" " -lstdc++" "" IGNORE_UNCHANGED)
-endif()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
 else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
 endif()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "#ifdef LIBHEIF_EXPORTS" "#if 0")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
