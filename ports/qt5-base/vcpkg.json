@@ -31,10 +31,7 @@
       "name": "harfbuzz",
       "default-features": false,
       "features": [
-        {
-          "name": "freetype",
-          "platform": "!uwp"
-        }
+        "freetype"
       ]
     },
     "libjpeg-turbo",
