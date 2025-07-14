@@ -35,11 +35,10 @@ elseif(VCPKG_CRT_LINKAGE STREQUAL static)
     set(COIN_BUILD_MSVC_STATIC_RUNTIME ON)
 endif()
 
-if("superglu" IN_LIST FEATURES)
-    set(USE_SUPERGLU ON)
-else()
-    set(USE_SUPERGLU OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
+  superglu USE_SUPERGLU
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -49,7 +48,7 @@ vcpkg_cmake_configure(
         -DCOIN_BUILD_MSVC_STATIC_RUNTIME=${COIN_BUILD_MSVC_STATIC_RUNTIME}
         -DCOIN_BUILD_SHARED_LIBS=${COIN_BUILD_SHARED_LIBS}
         -DCOIN_BUILD_TESTS=OFF
-        -DUSE_SUPERGLU=${USE_SUPERGLU}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
