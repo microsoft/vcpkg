@@ -1,11 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b7d36de7..d2c998bc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -229,12 +229,12 @@ ENDIF()
+@@ -234,12 +234,12 @@ option(BUILD_WITH_RPATH_NOT_RUNPATH "Explicitly disable usage of RUNPATH for the
  set(RTABMAP_QT_VERSION AUTO CACHE STRING "Force a specific Qt version.")
  set_property(CACHE RTABMAP_QT_VERSION PROPERTY STRINGS AUTO 4 5 6)
  
--FIND_PACKAGE(OpenCV REQUIRED QUIET COMPONENTS core calib3d imgproc highgui stitching photo video videoio OPTIONAL_COMPONENTS aruco xfeatures2d nonfree gpu cudafeatures2d)
-+FIND_PACKAGE(OpenCV REQUIRED COMPONENTS core calib3d imgproc highgui stitching photo video videoio OPTIONAL_COMPONENTS aruco xfeatures2d nonfree gpu cudafeatures2d)
+-FIND_PACKAGE(OpenCV REQUIRED QUIET COMPONENTS core calib3d imgproc highgui stitching photo video videoio OPTIONAL_COMPONENTS aruco objdetect xfeatures2d nonfree gpu cudafeatures2d cudaoptflow cudaimgproc)
++FIND_PACKAGE(OpenCV REQUIRED COMPONENTS core calib3d imgproc highgui stitching photo video videoio OPTIONAL_COMPONENTS aruco objdetect xfeatures2d nonfree gpu cudafeatures2d cudaoptflow cudaimgproc)
  
  IF(WITH_QT)
 -FIND_PACKAGE(PCL 1.7 REQUIRED QUIET COMPONENTS common io kdtree search surface filters registration sample_consensus segmentation visualization)
@@ -16,7 +18,7 @@
  ENDIF()
  if(PCL_COMPILE_OPTIONS)
    if("${PCL_COMPILE_OPTIONS}" MATCHES "-march=native")
-@@ -250,9 +250,9 @@ else()
+@@ -255,9 +255,9 @@ else()
    endif()
  endif()
  
@@ -28,7 +30,7 @@
  IF(SQLite3_FOUND)
     MESSAGE(STATUS "Found SQLite3: ${SQLite3_INCLUDE_DIRS} ${SQLite3_LIBRARIES}")
  ENDIF(SQLite3_FOUND)
-@@ -264,8 +264,8 @@ endif()
+@@ -269,8 +269,8 @@ endif()
  
  # OpenMP ("-fopenmp" should be added for flann included in PCL)
  # the gcc-4.2.1 coming with MacOS X is not compatible with the OpenMP pragmas we use, so disabling OpenMP for it
@@ -39,7 +41,7 @@
  endif()
  if(OPENMP_FOUND)
    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-@@ -292,7 +292,7 @@ ENDIF(ZLIB_FOUND)
+@@ -297,7 +297,7 @@ ENDIF(ZLIB_FOUND)
  
  SET(ADD_VTK_GUI_SUPPORT_QT_TO_CONF FALSE)
  IF(WITH_QT)
@@ -48,7 +50,7 @@
      IF(NOT VTK_FOUND)
        MESSAGE(FATAL_ERROR "VTK is required when using Qt. Set -DWITH_QT=OFF if you don't want gui tools.")
      ENDIF(NOT VTK_FOUND)
-@@ -310,29 +310,29 @@ IF(WITH_QT)
+@@ -315,29 +315,29 @@ IF(WITH_QT)
  
        MESSAGE(STATUS "VTK>=9 detected, will use VTK_QT_VERSION=${VTK_QT_VERSION} for Qt version.")
        IF(${VTK_QT_VERSION} EQUAL 6)
@@ -85,7 +87,7 @@
          # we will enable them for jsut specific targets
          set(CMAKE_AUTOMOC OFF)
          set(CMAKE_AUTORCC OFF)
-@@ -391,14 +391,14 @@ IF(NOT VTK_FOUND)
+@@ -396,14 +396,14 @@ IF(NOT VTK_FOUND)
  ENDIF(NOT VTK_FOUND)
  
  IF(WITH_TORCH)
@@ -102,7 +104,7 @@
      IF(Python3_FOUND)
          MESSAGE(STATUS "Found Python3")
          FIND_PACKAGE(pybind11 REQUIRED)
-@@ -406,28 +406,28 @@ IF(WITH_PYTHON)
+@@ -411,7 +411,7 @@ IF(WITH_PYTHON)
  ENDIF(WITH_PYTHON)
  
  IF(WITH_PDAL)
@@ -111,7 +113,8 @@
      IF(PDAL_FOUND)
         MESSAGE(STATUS "Found PDAL ${PDAL_VERSION}: ${PDAL_INCLUDE_DIRS}")
      ENDIF(PDAL_FOUND)
- ENDIF(WITH_PDAL)
+@@ -432,21 +432,21 @@ IF(WITH_CUDASIFT)
+ ENDIF(WITH_CUDASIFT)
  
  IF(WITH_FREENECT)
 -    FIND_PACKAGE(Freenect QUIET)
@@ -135,7 +138,7 @@
         IF(OpenCL_FOUND)
            SET(freenect2_LIBRARIES
              ${OpenCL_LIBRARIES}
-@@ -438,7 +438,7 @@ IF(WITH_FREENECT2)
+@@ -457,7 +457,7 @@ IF(WITH_FREENECT2)
  ENDIF(WITH_FREENECT2)
  
  IF(WITH_K4W2 AND WIN32)
@@ -144,7 +147,7 @@
      IF(KinectSDK2_FOUND)
         MESSAGE(STATUS "Found Kinect for Windows 2: ${KinectSDK2_INCLUDE_DIRS}")
      ENDIF(KinectSDK2_FOUND)
-@@ -446,10 +446,10 @@ ENDIF(WITH_K4W2 AND WIN32)
+@@ -465,10 +465,10 @@ ENDIF(WITH_K4W2 AND WIN32)
  
  IF(WITH_K4A)
      IF(WIN32)
@@ -158,7 +161,7 @@
          IF(NOT (k4a_FOUND AND k4arecord_FOUND))
              SET(k4a_FOUND FALSE)
          ENDIF(NOT (k4a_FOUND AND k4arecord_FOUND))
-@@ -461,27 +461,27 @@ ENDIF(WITH_K4A)
+@@ -480,21 +480,21 @@ ENDIF(WITH_K4A)
  
  # IF PCL depends on OpenNI2 (already found), ignore WITH_OPENNI2
  IF(WITH_OPENNI2 OR OpenNI2_FOUND)
@@ -183,23 +186,16 @@
      IF(g2o_FOUND)
         MESSAGE(STATUS "Found g2o (targets)")
           SET(G2O_FOUND ${g2o_FOUND})
-          get_target_property(G2O_INCLUDES g2o::core INTERFACE_INCLUDE_DIRECTORIES)
-          MESSAGE(STATUS "g2o include dir: ${G2O_INCLUDES}")
--         FIND_FILE(G2O_FACTORY_FILE g2o/core/factory.h 
-+         FIND_FILE(G2O_FACTORY_FILE g2o/core/factory.h
-          PATHS ${G2O_INCLUDES}
-          NO_DEFAULT_PATH)
-        FILE(READ ${G2O_FACTORY_FILE} TMPTXT)
-@@ -494,7 +494,7 @@ IF(WITH_G2O)
-            SET(G2O_CPP11 1)
-        ENDIF()
+@@ -513,7 +513,7 @@ IF(WITH_G2O)
+             SET(G2O_CPP11 1)
+          ENDIF()
      ELSE()
 -        FIND_PACKAGE(G2O QUIET)
 +        FIND_PACKAGE(G2O REQUIRED)
          IF(G2O_FOUND)
              MESSAGE(STATUS "Found g2o: ${G2O_INCLUDE_DIRS}")
-         ENDIF(G2O_FOUND)
-@@ -503,11 +503,11 @@ ENDIF(WITH_G2O)
+             FIND_FILE(G2O_FACTORY_FILE g2o/core/factory.h 
+@@ -531,11 +531,11 @@ ENDIF(WITH_G2O)
  
  IF(WITH_GTSAM)
      # Force config mode to ignore PCL's findGTSAM.cmake file
@@ -213,7 +209,7 @@
      IF(MRPT_FOUND)
          message(STATUS "MRPT_VERSION: ${MRPT_VERSION}")
          message(STATUS "MRPT_LIBRARIES: ${MRPT_LIBRARIES}")
-@@ -515,21 +515,21 @@ IF(WITH_MRPT)
+@@ -543,21 +543,21 @@ IF(WITH_MRPT)
  ENDIF(WITH_MRPT)
  
  IF(WITH_FLYCAPTURE2)
@@ -238,7 +234,7 @@
      IF(libpointmatcher_FOUND)
          MESSAGE(STATUS "Found libpointmatcher: ${libpointmatcher_INCLUDE_DIRS}")
          string(FIND "${libpointmatcher_LIBRARIES}" "libnabo" value)
-@@ -554,19 +554,19 @@ IF(libpointmatcher_FOUND OR GTSAM_FOUND)
+@@ -587,19 +587,19 @@ IF(libpointmatcher_FOUND OR GTSAM_FOUND)
  ENDIF(libpointmatcher_FOUND OR GTSAM_FOUND)
  
  IF(WITH_CCCORELIB)
@@ -261,7 +257,7 @@
         IF(Open3D_FOUND)
            MESSAGE(STATUS "Found Open3D: ${Open3DINCLUDE_DIRS}")
         ENDIF(Open3D_FOUND)
-@@ -574,28 +574,28 @@ IF(WITH_OPEN3D)
+@@ -607,28 +607,28 @@ IF(WITH_OPEN3D)
  ENDIF(WITH_OPEN3D)
  
  IF(WITH_LOAM)
@@ -296,7 +292,7 @@
         IF(CUDA_FOUND)
          MESSAGE(STATUS "Found CUDA: ${CUDA_INCLUDE_DIRS}")
         ELSE()
-@@ -605,11 +605,11 @@ IF(WITH_ZED)
+@@ -638,11 +638,11 @@ IF(WITH_ZED)
  ENDIF(WITH_ZED)
  
  IF(WITH_ZEDOC)
@@ -310,7 +306,7 @@
         IF(HIDAPI_FOUND)
            MESSAGE(STATUS "Found HIDAPI: ${HIDAPI_INCLUDE_DIRS}")
         ELSE()
-@@ -620,9 +620,9 @@ ENDIF(WITH_ZEDOC)
+@@ -653,9 +653,9 @@ ENDIF(WITH_ZEDOC)
  
  IF(WITH_REALSENSE)
      IF(WITH_REALSENSE_SLAM)
@@ -322,7 +318,7 @@
      ENDIF()
      IF(RealSense_FOUND)
         MESSAGE(STATUS "Found RealSense: ${RealSense_INCLUDE_DIRS}")
-@@ -634,9 +634,9 @@ ENDIF(WITH_REALSENSE)
+@@ -667,9 +667,9 @@ ENDIF(WITH_REALSENSE)
  
  IF(WITH_REALSENSE2)
      IF(WIN32)
@@ -334,7 +330,7 @@
      ENDIF()
      IF(realsense2_FOUND)
         MESSAGE(STATUS "Found RealSense2: ${realsense2_INCLUDE_DIRS}")
-@@ -644,21 +644,21 @@ IF(WITH_REALSENSE2)
+@@ -677,14 +677,14 @@ IF(WITH_REALSENSE2)
  ENDIF(WITH_REALSENSE2)
  
  IF(WITH_MYNTEYE)
@@ -346,12 +342,13 @@
  ENDIF(WITH_MYNTEYE)
  
  IF(WITH_DEPTHAI)
--    FIND_PACKAGE(depthai 2 QUIET)
+-    FIND_PACKAGE(depthai 2.24 QUIET)
 +    FIND_PACKAGE(depthai 2 REQUIRED)
      IF(depthai_FOUND)
         MESSAGE(STATUS "Found depthai-core (targets)")
      ENDIF(depthai_FOUND)
- ENDIF(WITH_DEPTHAI)
+@@ -698,7 +698,7 @@ IF(WITH_XVSDK)
+ ENDIF(WITH_XVSDK)
  
  IF(WITH_OCTOMAP)
 -    FIND_PACKAGE(octomap QUIET)
@@ -359,7 +356,7 @@
      IF(octomap_FOUND)
         MESSAGE(STATUS "Found octomap ${octomap_VERSION}: ${OCTOMAP_INCLUDE_DIRS}")
         IF(octomap_VERSION VERSION_LESS 1.8)
-@@ -668,35 +668,35 @@ IF(WITH_OCTOMAP)
+@@ -708,35 +708,35 @@ IF(WITH_OCTOMAP)
  ENDIF(WITH_OCTOMAP)
  
  IF(WITH_GRIDMAP)
@@ -401,7 +398,7 @@
          add_definitions("-DRTABMAP_ALICE_VISION_MAJOR=${AliceVision_VERSION_MAJOR}")
          add_definitions("-DRTABMAP_ALICE_VISION_MINOR=${AliceVision_VERSION_MINOR}")
          add_definitions("-DRTABMAP_ALICE_VISION_PATCH=${AliceVision_VERSION_PATCH}")
-@@ -704,28 +704,28 @@ IF(WITH_ALICE_VISION)
+@@ -744,28 +744,28 @@ IF(WITH_ALICE_VISION)
  ENDIF(WITH_ALICE_VISION)
  
  IF(WITH_FOVIS)
@@ -434,7 +431,7 @@
      IF(okvis_FOUND)
         MESSAGE(STATUS "Found okvis: ${OKVIS_INCLUDE_DIRS}")
         find_package(brisk 2 REQUIRED)
-@@ -740,7 +740,7 @@ ENDIF(WITH_OKVIS)
+@@ -780,7 +780,7 @@ ENDIF(WITH_OKVIS)
  # If built with okvis, we found already ceres above
  IF(WITH_CERES)
    IF(NOT okvis_FOUND AND NOT floam_FOUND)
@@ -443,7 +440,7 @@
      MESSAGE(STATUS "Found ceres ${Ceres_VERSION}: ${CERES_INCLUDE_DIRS}")
    ENDIF(NOT okvis_FOUND AND NOT floam_FOUND)
  ELSEIF(Ceres_FOUND)
-@@ -748,14 +748,14 @@ ELSEIF(Ceres_FOUND)
+@@ -788,14 +788,14 @@ ELSEIF(Ceres_FOUND)
  ENDIF()
  
  IF(WITH_MSCKF_VIO)
@@ -460,15 +457,16 @@
      IF(vins_FOUND)
         MESSAGE(STATUS "Found vins: ${vins_INCLUDE_DIRS}")
         IF(okvis_FOUND)
-@@ -765,28 +765,28 @@ IF(WITH_VINS)
+@@ -805,7 +805,7 @@ IF(WITH_VINS)
  ENDIF(WITH_VINS)
  
  IF(WITH_OPENVINS)
 -    FIND_PACKAGE(ov_msckf QUIET)
 +    FIND_PACKAGE(ov_msckf REQUIRED)
-     IF(ov_msckf_FOUND)
-        MESSAGE(STATUS "Found ov_msckf: ${ov_msckf_INCLUDE_DIRS}")
-     ENDIF(ov_msckf_FOUND)
+     # On ROS2, the indirect includes and libraries
+     # are not forwarded by ov_msckf target, append them manually
+     FIND_PACKAGE(ov_core QUIET)
+@@ -824,21 +824,21 @@ IF(WITH_OPENVINS)
  ENDIF(WITH_OPENVINS)
  
  IF(WITH_FASTCV)
@@ -493,6 +491,8 @@
      IF(ORB_SLAM_FOUND)
         MESSAGE(STATUS "Found ORB_SLAM${ORB_SLAM_VERSION}: ${ORB_SLAM_INCLUDE_DIRS}")
      ENDIF(ORB_SLAM_FOUND)
+diff --git a/app/android/CMakeLists.txt b/app/android/CMakeLists.txt
+index a756b3f3..7e8a7215 100644
 --- a/app/android/CMakeLists.txt
 +++ b/app/android/CMakeLists.txt
 @@ -5,25 +5,25 @@ option(WITH_ARENGINE      "Include AREngine support"             ON)
@@ -526,8 +526,23 @@
      IF(AREngine_FOUND)
         MESSAGE(STATUS "Found AREngine: ${AREngine_INCLUDE_DIRS}")
      ENDIF(AREngine_FOUND)
+diff --git a/cmake_modules/FindEigen3.cmake b/cmake_modules/FindEigen3.cmake
+index 0b36805e..af059a7d 100644
 --- a/cmake_modules/FindEigen3.cmake
 +++ b/cmake_modules/FindEigen3.cmake
+@@ -27,10 +27,10 @@
+ 
+ if(NOT Eigen3_FIND_VERSION)
+   if(NOT Eigen3_FIND_VERSION_MAJOR)
+-    set(Eigen3_FIND_VERSION_MAJOR 2)
++    set(Eigen3_FIND_VERSION_MAJOR 3)
+   endif()
+   if(NOT Eigen3_FIND_VERSION_MINOR)
+-    set(Eigen3_FIND_VERSION_MINOR 91)
++    set(Eigen3_FIND_VERSION_MINOR 0)
+   endif()
+   if(NOT Eigen3_FIND_VERSION_PATCH)
+     set(Eigen3_FIND_VERSION_PATCH 0)
 @@ -71,16 +71,16 @@ if (EIGEN3_INCLUDE_DIR)
    set(Eigen3_FOUND ${EIGEN3_VERSION_OK})
  
@@ -548,6 +563,8 @@
          ENV EIGEN3_ROOT_DIR
          PATHS
          ${CMAKE_INSTALL_PREFIX}/include
+diff --git a/cmake_modules/FindHIDAPI.cmake b/cmake_modules/FindHIDAPI.cmake
+index 02633e90..20d81464 100644
 --- a/cmake_modules/FindHIDAPI.cmake
 +++ b/cmake_modules/FindHIDAPI.cmake
 @@ -75,7 +75,7 @@ if(NOT "${HIDAPI_FIND_COMPONENTS}")
@@ -568,6 +585,8 @@
  
  ###
  # Compute the "I don't care which backend" library
+diff --git a/cmake_modules/FindORB_SLAM.cmake b/cmake_modules/FindORB_SLAM.cmake
+index f9ccdc0d..53ba6a4c 100644
 --- a/cmake_modules/FindORB_SLAM.cmake
 +++ b/cmake_modules/FindORB_SLAM.cmake
 @@ -33,7 +33,7 @@ IF (ORB_SLAM_INCLUDE_DIR AND ORB_SLAM_LIBRARY AND DBoW2_LIBRARY AND g2o_INCLUDE_
@@ -584,9 +603,11 @@
     ENDIF (ORB_SLAM_FIND_REQUIRED)
  ENDIF (ORB_SLAM_FOUND)
 -
+diff --git a/corelib/src/CMakeLists.txt b/corelib/src/CMakeLists.txt
+index b758ad0f..88c56c36 100644
 --- a/corelib/src/CMakeLists.txt
 +++ b/corelib/src/CMakeLists.txt
-@@ -167,13 +167,11 @@ SET(LIBRARIES
+@@ -182,13 +182,11 @@ SET(LIBRARIES
  # Issue that qhull dependency uses optimized and debug keywords,
  # which are converted to \$<\$<NOT:\$<CONFIG:DEBUG>> and \$<\$<CONFIG:DEBUG>
  # in RTABMap_coreTargets.cmake (not sure why?!).
@@ -600,7 +621,7 @@
      SET(INCLUDE_DIRS
  		${INCLUDE_DIRS}
  		${SQLite3_INCLUDE_DIRS}
-@@ -182,16 +180,7 @@ IF(SQLite3_FOUND)
+@@ -197,16 +195,7 @@ IF(SQLite3_FOUND)
  		${LIBRARIES}
  		${SQLite3_LIBRARIES}
  	)
@@ -618,7 +639,7 @@
  
  IF(TORCH_FOUND)
  	SET(LIBRARIES
-@@ -748,8 +734,8 @@ IF(GTSAM_FOUND)
+@@ -795,8 +784,8 @@ IF(GTSAM_FOUND)
  	)
  	IF(WIN32)
  		#explicitly add metis target on windows (after gtsam target)
@@ -629,6 +650,8 @@
  			metis
  		)
  	ENDIF(WIN32)
+diff --git a/utilite/resource_generator/CMakeLists.txt b/utilite/resource_generator/CMakeLists.txt
+index 82f12535..63141fd4 100644
 --- a/utilite/resource_generator/CMakeLists.txt
 +++ b/utilite/resource_generator/CMakeLists.txt
 @@ -1,5 +1,5 @@
