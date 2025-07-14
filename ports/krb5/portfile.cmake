@@ -86,8 +86,6 @@ else()
             --disable-nls
             --with-tls-impl=no
             "CFLAGS=-fcommon \$CFLAGS"
-        OPTIONS_RELEASE
-			"NODEBUG=1"
     )
     vcpkg_install_make()
 
