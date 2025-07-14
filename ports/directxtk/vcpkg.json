@@ -1,7 +1,6 @@
 {
   "name": "directxtk",
-  "version-date": "2025-03-20",
-  "port-version": 2,
+  "version-date": "2025-07-10",
   "description": "A collection of helper classes for writing DirectX 11.x code in C++.",
   "homepage": "https://github.com/Microsoft/DirectXTK",
   "documentation": "https://github.com/microsoft/DirectXTK/wiki",
@@ -40,7 +39,7 @@
       "description": "Build with XAudio 2.9 support for Windows 10/11"
     },
     "xaudio2redist": {
-      "description": "Build with XAudio2Redist support for Windows 7 SP1 or later",
+      "description": "Build with XAudio2Redist support for Windows 8.1 or later",
       "dependencies": [
         "xaudio2redist"
       ]

@@ -40,9 +40,6 @@
 
 # Add new items alphabetically
 
-ace:arm-neon-android=fail
-ace:arm64-android=fail
-ace:x64-android=fail
 # ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
 ada-url:x64-linux=fail
 angelscript:x64-osx=fail
@@ -447,6 +444,9 @@ ijg-libjpeg:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static=skip
 ijg-libjpeg:x64-windows=skip
 ijg-libjpeg:x86-windows=skip
+imgui-sfml:arm-neon-android=fail
+imgui-sfml:arm64-android=fail
+imgui-sfml:x64-android=fail
 intelrdfpmathlib:arm-neon-android=fail
 intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
@@ -753,6 +753,12 @@ openmpi:x64-android=fail
 openmvg:arm64-windows-static-md=fail
 openmvg:x64-linux=fail
 openmvs:arm64-windows-static-md=fail
+# MSVC is not supported
+openslide:x64-windows-release=fail
+openslide:x64-windows-static-md=fail
+openslide:x64-windows-static=fail
+openslide:x64-windows=fail
+openslide:x86-windows=fail
 opensubdiv:x64-android=fail
 openturns:arm64-windows-static-md=fail
 openturns:arm64-windows=fail
@@ -776,6 +782,7 @@ optional-bare:x64-windows-static-md=skip
 optional-bare:x64-windows-static=skip
 optional-bare:x64-windows=skip
 optional-bare:x86-windows=skip
+orange-math:x64-linux=fail
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
@@ -914,9 +921,9 @@ sciter:x64-windows-static=skip
 sciter:x64-windows=skip
 sciter:x86-windows=skip
 septag-sx:x64-android=fail
-sfml:arm-neon-android=fail
-sfml:arm64-android=fail
-sfml:x64-android=fail
+sfgui:arm-neon-android=fail
+sfgui:arm64-android=fail
+sfgui:x64-android=fail
 shader-slang:x64-windows-static=fail
 # "Obsolete" and conflicts with microsoft-signalr
 signalrclient:arm-neon-android=skip
@@ -1012,6 +1019,9 @@ tensorflow-cc:x64-osx=skip
 tensorflow:x64-linux=skip
 tensorflow-cc:x64-linux=skip
 
+tgui:arm-neon-android=fail
+tgui:arm64-android=fail
+tgui:x64-android=fail
 tinycthread:arm-neon-android=fail
 tinycthread:arm64-android=fail
 tinycthread:x64-android=fail
