@@ -6,6 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(CROSSCOMP_OPTIONS "")
+if(VCPKG_CROSSCOMPILING)
+    set(CROSSCOMP_OPTIONS -DHAVE_SYMBOLIZE_EXITCODE=0)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -17,6 +22,7 @@ vcpkg_cmake_configure(
         -DWITH_PKGCONFIG=ON
         -DWITH_SYMBOLIZE=ON
         -DWITH_TLS=ON
+        ${CROSSCOMP_OPTIONS}
 )
 
 vcpkg_cmake_install()
