@@ -753,6 +753,12 @@ openmpi:x64-android=fail
 openmvg:arm64-windows-static-md=fail
 openmvg:x64-linux=fail
 openmvs:arm64-windows-static-md=fail
+# MSVC is not supported
+openslide:x64-windows-release=fail
+openslide:x64-windows-static-md=fail
+openslide:x64-windows-static=fail
+openslide:x64-windows=fail
+openslide:x86-windows=fail
 opensubdiv:x64-android=fail
 openturns:arm64-windows-static-md=fail
 openturns:arm64-windows=fail
