@@ -1,9 +1,10 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_BUILD_TYPE release)  # only data
 
 string(REPLACE "." "_" poppler_data_version "POPPLER_DATA_${VERSION}")
 
 vcpkg_from_gitlab(
-    GITLAB_URL gitlab.freedesktop.org/
+    GITLAB_URL gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO poppler/poppler-data
     REF "${poppler_data_version}"
@@ -13,13 +14,14 @@ vcpkg_from_gitlab(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
 )
-
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/")
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/COPYING.adobe"
+        "${SOURCE_PATH}/COPYING.gpl2"
+        "${SOURCE_PATH}/COPYING.gpl3"
+)
