@@ -30,7 +30,7 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
-    "${SOURCE_PATH}/cmake_modules/RealSense2.cmake"
+    "${SOURCE_PATH}/cmake_modules/FindRealSense2.cmake"
     "${SOURCE_PATH}/src/sqlite3"
 )
 
@@ -122,6 +122,10 @@ vcpkg_cmake_configure(
         VCPKG_LOCK_FIND_PACKAGE_OpenNI2
         VCPKG_LOCK_FIND_PACKAGE_realsense2
         VCPKG_LOCK_FIND_PACKAGE_RealSense2
+        # Android
+        WITH_ARCore
+        WITH_ARENGINE
+        WITH_TANGO
 )
 
 vcpkg_cmake_install()
