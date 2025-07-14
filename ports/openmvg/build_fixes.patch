@@ -147,8 +147,8 @@ index 3a8a402..b705e47 100644
      ${CLP_LIBRARIES}     # clp + solver wrapper
 -    ${COINUTILS_LIBRARY} # container tools
 -    ${OSI_LIBRARY}       # generic LP
-+    ${COINUTILS_LIBRARIES} # container tools
-+    ${OSI_LIBRARIES}       # generic LP
++    ${OSI_LIBRARIES}     # generic LP
++    ${COINUTILS_LIBRARIES} # container tools, dependency of osi
  )
  
  target_include_directories(openMVG_linearProgramming
