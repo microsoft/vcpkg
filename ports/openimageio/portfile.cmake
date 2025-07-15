@@ -51,6 +51,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         viewer      ENABLE_IV
 )
 
+if("pybind11" IN_LIST FEATURES)
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
+    list(APPEND FEATURE_OPTIONS "-DPython_EXECUTABLE=${PYTHON3}")
+endif()
+
 # TODO Remove --trace-expand again
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
