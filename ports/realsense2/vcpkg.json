@@ -12,6 +12,14 @@
     },
     "nlohmann-json",
     {
+      "name": "realsense2",
+      "default-features": false,
+      "features": [
+        "rs-usb-backend"
+      ],
+      "platform": "android"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -23,12 +31,17 @@
   "features": {
     "openni2": {
       "description": "Build Intel® RealSense™ OpenNI2 driver",
+      "supports": "!static",
       "dependencies": [
         "openni2"
       ]
     },
+    "rs-usb-backend": {
+      "description": "Use RS USB backend"
+    },
     "tools": {
-      "description": "Build Intel® RealSense™ tools"
+      "description": "Build Intel® RealSense™ tools",
+      "supports": "!android"
     }
   }
 }
