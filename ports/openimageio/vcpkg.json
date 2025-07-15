@@ -109,6 +109,7 @@
     },
     "viewer": {
       "description": "Build openimageio viewer",
+      "supports": "!android",
       "dependencies": [
         "opengl",
         {
