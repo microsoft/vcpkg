@@ -51,12 +51,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         viewer      ENABLE_IV
 )
 
-if("pybind11" IN_LIST FEATURES)
-    vcpkg_get_vcpkg_installed_python(PYTHON3)
-    list(APPEND FEATURE_OPTIONS "-DPython_EXECUTABLE=${PYTHON3}")
-endif()
-
-# TODO Remove --trace-expand again
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -80,7 +74,6 @@ vcpkg_cmake_configure(
         -DENABLE_INSTALL_testtex=OFF
         "-DFMT_INCLUDES=${CURRENT_INSTALLED_DIR}/include"
         "-DREQUIRED_DEPS=fmt;JPEG;PNG;Robinmap"
-        --trace-expand
     MAYBE_UNUSED_VARIABLES
         ENABLE_INSTALL_testtex
         ENABLE_IV
