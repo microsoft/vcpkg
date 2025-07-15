@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1faa317b..ae6efc80 100644
+index 1faa317b..2157fffb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -264,7 +264,7 @@ endif()
@@ -25,6 +25,23 @@ index 1faa317b..ae6efc80 100644
      ENDIF()
      IF(realsense2_FOUND)
         MESSAGE(STATUS "Found RealSense2: ${realsense2_INCLUDE_DIRS}")
+@@ -977,14 +979,14 @@ IF(NOT realsense2_FOUND)
+    SET(CONF_WITH_REALSENSE2 0)
+ ELSE()
+    SET(CONF_WITH_REALSENSE2 1)
+-   IF(WIN32)
++   IF(0)
+       install(
+          FILES
+          "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/FindRealSense2.cmake"
+          DESTINATION ${INSTALL_CMAKE_DIR}/Modules/.
+          COMPONENT devel
+       )
+-   ENDIF(WIN32)
++   ENDIF(0)
+ ENDIF()
+ IF(NOT mynteye_FOUND)
+    SET(MYNTEYE "//")
 diff --git a/utilite/resource_generator/CMakeLists.txt b/utilite/resource_generator/CMakeLists.txt
 index 82f12535..f1a1c8aa 100644
 --- a/utilite/resource_generator/CMakeLists.txt
