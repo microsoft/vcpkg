@@ -99,7 +99,6 @@
     },
     "pybind11": {
       "description": "Enable Python bindings support for openimageio",
-      "supports": "!android",
       "dependencies": [
         "pybind11",
         "python3"
