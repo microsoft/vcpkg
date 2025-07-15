@@ -2397,7 +2397,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2025-03-24",
+      "baseline": "2025-07-10",
       "port-version": 0
     },
     "directxsdk": {
@@ -2405,7 +2405,7 @@
       "port-version": 8
     },
     "directxtex": {
-      "baseline": "2025-03-24",
+      "baseline": "2025-07-10",
       "port-version": 0
     },
     "directxtk": {
@@ -9841,7 +9841,7 @@
       "port-version": 1
     },
     "uvatlas": {
-      "baseline": "2025-03-26",
+      "baseline": "2025-07-10",
       "port-version": 0
     },
     "uvw": {
