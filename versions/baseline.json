@@ -268,6 +268,10 @@
       "baseline": "2.1.1",
       "port-version": 0
     },
+    "arun11299-cpp-subprocess": {
+      "baseline": "2.1",
+      "port-version": 0
+    },
     "ashes": {
       "baseline": "2023-03-12",
       "port-version": 0
