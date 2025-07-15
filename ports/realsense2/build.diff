@@ -1,0 +1,114 @@
+diff --git a/common/rendering.h b/common/rendering.h
+index ed0b525..a36b5ff 100644
+--- a/common/rendering.h
++++ b/common/rendering.h
+@@ -233,7 +233,7 @@ namespace rs2
+     // Simple font loading code //
+     //////////////////////////////
+ 
+-#include "../third-party/stb_easy_font.h"
++#include <stb_easy_font.h>
+ 
+     inline void draw_text(int x, int y, const char * text)
+     {
+diff --git a/src/librealsense-exception.h b/src/librealsense-exception.h
+index c9ce838..f02f42f 100644
+--- a/src/librealsense-exception.h
++++ b/src/librealsense-exception.h
+@@ -7,6 +7,7 @@
+ #include <rsutils/easylogging/easyloggingpp.h>
+ #include "basics.h"  // LRS_EXTENSION_API
+ 
++#include <cstring>
+ #include <exception>
+ #include <string>
+ 
+diff --git a/src/linux/backend-hid.h b/src/linux/backend-hid.h
+index bc70bfd..2a989f0 100644
+--- a/src/linux/backend-hid.h
++++ b/src/linux/backend-hid.h
+@@ -6,6 +6,7 @@
+ #include "types.h"
+ 
+ #include <limits.h>
++#include <fstream>
+ #include <list>
+ 
+ namespace librealsense
+diff --git a/src/platform/platform-utils.cpp b/src/platform/platform-utils.cpp
+index 0cfa3a7..12e5868 100644
+--- a/src/platform/platform-utils.cpp
++++ b/src/platform/platform-utils.cpp
+@@ -7,6 +7,8 @@
+ #include "hid-device-info.h"
+ #include <src/librealsense-exception.h>
+ 
++#include <algorithm>
++using std::find;
+ 
+ namespace librealsense {
+ namespace platform {
+diff --git a/src/proc/color-formats-converter.cpp b/src/proc/color-formats-converter.cpp
+index f0a54ba..13411fe 100644
+--- a/src/proc/color-formats-converter.cpp
++++ b/src/proc/color-formats-converter.cpp
+@@ -9,7 +9,7 @@
+ 
+ #define STB_IMAGE_STATIC
+ #define STB_IMAGE_IMPLEMENTATION
+-#include "../third-party/stb_image.h"
++#include <stb_image.h>
+ 
+ #ifdef RS2_USE_CUDA
+ #include "cuda/cuda-conversion.cuh"
+diff --git a/third-party/rsutils/src/network-adapter-watcher.cpp b/third-party/rsutils/src/network-adapter-watcher.cpp
+index 942fa1f..48414b4 100644
+--- a/third-party/rsutils/src/network-adapter-watcher.cpp
++++ b/third-party/rsutils/src/network-adapter-watcher.cpp
+@@ -26,6 +26,8 @@
+ #endif
+ #endif  // ! __APPLE__ && ! __ANDROID__
+ 
++#include <cstring>
++#include <thread>
+ 
+ namespace rsutils {
+ namespace os {
+diff --git a/third-party/rsutils/src/special-folder.cpp b/third-party/rsutils/src/special-folder.cpp
+index 79bc45d..c06afa6 100644
+--- a/third-party/rsutils/src/special-folder.cpp
++++ b/third-party/rsutils/src/special-folder.cpp
+@@ -18,6 +18,7 @@
+ 
+ #endif
+ 
++#include <stdexcept>
+ 
+ namespace rsutils {
+ namespace os {
+diff --git a/tools/convert/converters/converter-png.hpp b/tools/convert/converters/converter-png.hpp
+index fcfd6ce..adbb1e6 100644
+--- a/tools/convert/converters/converter-png.hpp
++++ b/tools/convert/converters/converter-png.hpp
+@@ -7,7 +7,7 @@
+ 
+ // 3rd party header for writing png files
+ #define STB_IMAGE_WRITE_IMPLEMENTATION
+-#include <third-party/stb_image_write.h>
++#include <stb_image_write.h>
+ 
+ #include "../converter.hpp"
+ 
+diff --git a/tools/embed/CMakeLists.txt b/tools/embed/CMakeLists.txt
+index 4fd9aa1..951bfa6 100644
+--- a/tools/embed/CMakeLists.txt
++++ b/tools/embed/CMakeLists.txt
+@@ -19,6 +19,8 @@ target_link_libraries(rs-embed PRIVATE lz4::lz4)
+ target_link_libraries( rs-embed PRIVATE tclap )
+ set_target_properties (rs-embed PROPERTIES FOLDER Tools)
+ 
++find_package(Stb REQUIRED)
++target_include_directories(rs-embed PRIVATE "${Stb_INCLUDE_DIR}")
+ 
+ install(
+     TARGETS

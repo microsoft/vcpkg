@@ -1,3 +1,9 @@
+vcpkg_download_distfile(lz4_patch
+    URLS https://github.com/IntelRealSense/librealsense/commit/20748445a8e24bee148d8b6f67f3a6c3f259cced.diff?full_index=1
+    SHA512 90d754e7da6931b607429035c2fa14aa1137e28fa88d04f5e90220f57fc808fd256b516840922d0938d6b0f3f30b937ddc3568865c9a21fa1a2d8a51788e6f9a
+    FILENAME IntelRealSense-librealsense-lz4.diff
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
@@ -6,9 +12,19 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         android-config.diff
+        build.diff
         fix_openni2.patch
         fix-nlohmann_json.patch
         add-include-chrono.patch #https://github.com/IntelRealSense/librealsense/pull/13537
+        "${lz4_patch}"
+        lz4-embed.diff # https://github.com/IntelRealSense/librealsense/pull/13803#issuecomment-3072432118
+)
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/third-party/easyloggingpp"
+    "${SOURCE_PATH}/third-party/realsense-file/lz4"
+    "${SOURCE_PATH}/third-party/stb_easy_font.h"
+    "${SOURCE_PATH}/third-party/stb_image.h"
+    "${SOURCE_PATH}/third-party/stb_image_write.h"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -24,6 +40,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DBUILD_EASYLOGGINGPP=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_GRAPHICAL_EXAMPLES=OFF
         -DBUILD_UNIT_TESTS=OFF
@@ -32,6 +49,7 @@ vcpkg_cmake_configure(
         -DENABLE_CCACHE=OFF
         -DENFORCE_METADATA=ON
         "-DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2"
+        -DUSE_EXTERNAL_LZ4=ON
     OPTIONS_DEBUG
         -DBUILD_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES
