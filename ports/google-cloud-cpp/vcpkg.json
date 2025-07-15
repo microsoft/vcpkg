@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.37.0",
+  "version": "2.38.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -518,6 +518,18 @@
         }
       ]
     },
+    "dataform": {
+      "description": "Dataform API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "datafusion": {
       "description": "Cloud Data Fusion API C++ Client Library",
       "dependencies": [
@@ -930,6 +942,18 @@
         }
       ]
     },
+    "lustre": {
+      "description": "Google Cloud Managed Lustre API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "managedidentities": {
       "description": "Managed Service for Microsoft Active Directory API C++ Client Library",
       "dependencies": [
@@ -956,6 +980,18 @@
     },
     "memcache": {
       "description": "Cloud Memorystore for Memcached API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "memorystore": {
+      "description": "Memorystore API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1103,6 +1139,18 @@
     },
     "optimization": {
       "description": "Cloud Optimization API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "oracledatabase": {
+      "description": "Oracle Database@Google Cloud API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
