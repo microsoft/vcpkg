@@ -11,13 +11,15 @@ vcpkg_from_github(
     SHA512 5b5998560ab6a7d81a23b1d84194f4cf3e123af1d46711127d838dc37c3eb1414f232bf0e1a444c68212fabcd79c3e4e1c47ff87b878266558e0027bd522447f
     HEAD_REF master
     PATCHES
+        add-include-chrono.patch # https://github.com/IntelRealSense/librealsense/pull/13537
         android-config.diff
         build.diff
-        fix_openni2.patch
-        fix-nlohmann_json.patch
-        add-include-chrono.patch #https://github.com/IntelRealSense/librealsense/pull/13537
         "${lz4_patch}"
-        lz4-embed.diff # https://github.com/IntelRealSense/librealsense/pull/13803#issuecomment-3072432118
+        devendor-lz4.diff # https://github.com/IntelRealSense/librealsense/pull/13803#issuecomment-3072432118
+        devendor-nlohmann-json.diff
+        devendor-stb.diff
+        fix_openni2.patch
+        using-firmware.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/third-party/easyloggingpp"
@@ -25,6 +27,15 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/third-party/stb_easy_font.h"
     "${SOURCE_PATH}/third-party/stb_image.h"
     "${SOURCE_PATH}/third-party/stb_image_write.h"
+)
+
+file(READ "${SOURCE_PATH}/common/fw/firmware-version.h" firmware_version_h)
+string(REGEX MATCH "D4XX_RECOMMENDED_FIRMWARE_VERSION \"([0-9]+.[0-9]+.[0-9]+.[0-9]+)\"" unused "${firmware_version_h}")
+set(firmware_filename "D4XX_FW_Image-${CMAKE_MATCH_1}.bin")
+vcpkg_download_distfile(firmware_distfile
+    URLS "https://librealsense.intel.com/Releases/RS4xx/FW/${firmware_filename}"
+    SHA512 c465cedba2a8df713fb7900bb60a448b15e53ac013175cf7c152909bc9f2324cf46efd1323954633d7c011e33a27f9426eb1347ad48d92839a68c7e4fa680f94
+    FILENAME "IntelRealSense-${firmware_filename}"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
@@ -48,6 +59,7 @@ vcpkg_cmake_configure(
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
         -DENABLE_CCACHE=OFF
         -DENFORCE_METADATA=ON
+        "-DFIRMWARE_DISTFILE=${firmware_distfile}"
         "-DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2"
         -DUSE_EXTERNAL_LZ4=ON
     OPTIONS_DEBUG

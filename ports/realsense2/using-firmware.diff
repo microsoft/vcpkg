@@ -1,0 +1,27 @@
+diff --git a/common/fw/CMakeLists.txt b/common/fw/CMakeLists.txt
+index f270844..84538cf 100644
+--- a/common/fw/CMakeLists.txt
++++ b/common/fw/CMakeLists.txt
+@@ -31,7 +31,11 @@ if (MSVC)
+   # even then, the linker won't grab a .res out of a .lib object, so it needs to be explicitly listed
+   # and to find the name of the .res file (across cmake generators) we need to create our own rule. :(
+   add_custom_command(TARGET ${PROJECT_NAME} BYPRODUCTS ${PROJECT_NAME}.res COMMAND ${CMAKE_RC_COMPILER} ${CMAKE_RC_FLAGS} /I . /fo "${PROJECT_NAME}.res" "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.rc")
+-  target_link_libraries(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.res")
++  target_link_libraries(${PROJECT_NAME} PUBLIC
++    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.res>"
++    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/lib/realsense2/${PROJECT_NAME}.res>"
++  )
++  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.res" DESTINATION "lib/realsense2")
+ endif()
+ 
+ target_include_directories(${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+@@ -39,8 +43,7 @@ set_target_properties (${PROJECT_NAME} PROPERTIES FOLDER Resources)
+ 
+ function(target_binary url version sha1 symbol ext)
+   set(binary "${CMAKE_CURRENT_BINARY_DIR}/${symbol}-${version}${ext}")
+-  message(STATUS "... ${url}/${symbol}-${version}${ext}")
+-  file(DOWNLOAD "${url}/${symbol}-${version}${ext}" "${binary}"
++  file(DOWNLOAD "file://${FIRMWARE_DISTFILE}" "${binary}"
+        EXPECTED_HASH SHA1=${sha1}
+        STATUS status)
+   list(GET status 0 error_code)

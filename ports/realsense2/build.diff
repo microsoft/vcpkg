@@ -1,16 +1,16 @@
-diff --git a/common/rendering.h b/common/rendering.h
-index ed0b525..a36b5ff 100644
---- a/common/rendering.h
-+++ b/common/rendering.h
-@@ -233,7 +233,7 @@ namespace rs2
-     // Simple font loading code //
-     //////////////////////////////
+diff --git a/src/algo.cpp b/src/algo.cpp
+index e6b3210..524f2a8 100644
+--- a/src/algo.cpp
++++ b/src/algo.cpp
+@@ -5,6 +5,8 @@
+ #include "option.h"
+ #include "core/video-frame.h"
  
--#include "../third-party/stb_easy_font.h"
-+#include <stb_easy_font.h>
++#include <algorithm>
++
+ using namespace librealsense;
  
-     inline void draw_text(int x, int y, const char * text)
-     {
+ bool auto_exposure_state::get_enable_auto_exposure() const
 diff --git a/src/librealsense-exception.h b/src/librealsense-exception.h
 index c9ce838..f02f42f 100644
 --- a/src/librealsense-exception.h
@@ -48,19 +48,6 @@ index 0cfa3a7..12e5868 100644
  
  namespace librealsense {
  namespace platform {
-diff --git a/src/proc/color-formats-converter.cpp b/src/proc/color-formats-converter.cpp
-index f0a54ba..13411fe 100644
---- a/src/proc/color-formats-converter.cpp
-+++ b/src/proc/color-formats-converter.cpp
-@@ -9,7 +9,7 @@
- 
- #define STB_IMAGE_STATIC
- #define STB_IMAGE_IMPLEMENTATION
--#include "../third-party/stb_image.h"
-+#include <stb_image.h>
- 
- #ifdef RS2_USE_CUDA
- #include "cuda/cuda-conversion.cuh"
 diff --git a/third-party/rsutils/src/network-adapter-watcher.cpp b/third-party/rsutils/src/network-adapter-watcher.cpp
 index 942fa1f..48414b4 100644
 --- a/third-party/rsutils/src/network-adapter-watcher.cpp
@@ -86,29 +73,3 @@ index 79bc45d..c06afa6 100644
  
  namespace rsutils {
  namespace os {
-diff --git a/tools/convert/converters/converter-png.hpp b/tools/convert/converters/converter-png.hpp
-index fcfd6ce..adbb1e6 100644
---- a/tools/convert/converters/converter-png.hpp
-+++ b/tools/convert/converters/converter-png.hpp
-@@ -7,7 +7,7 @@
- 
- // 3rd party header for writing png files
- #define STB_IMAGE_WRITE_IMPLEMENTATION
--#include <third-party/stb_image_write.h>
-+#include <stb_image_write.h>
- 
- #include "../converter.hpp"
- 
-diff --git a/tools/embed/CMakeLists.txt b/tools/embed/CMakeLists.txt
-index 4fd9aa1..951bfa6 100644
---- a/tools/embed/CMakeLists.txt
-+++ b/tools/embed/CMakeLists.txt
-@@ -19,6 +19,8 @@ target_link_libraries(rs-embed PRIVATE lz4::lz4)
- target_link_libraries( rs-embed PRIVATE tclap )
- set_target_properties (rs-embed PROPERTIES FOLDER Tools)
- 
-+find_package(Stb REQUIRED)
-+target_include_directories(rs-embed PRIVATE "${Stb_INCLUDE_DIR}")
- 
- install(
-     TARGETS
