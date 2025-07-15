@@ -19,9 +19,12 @@ vcpkg_from_github(
         devendor-nlohmann-json.diff
         devendor-stb.diff
         fix_openni2.patch
+        libusb.diff
         using-firmware.diff
 )
+file(GLOB extern "${SOURCE_PATH}/CMake/extern_*.cmake")
 file(REMOVE_RECURSE
+    ${extern}
     "${SOURCE_PATH}/third-party/easyloggingpp"
     "${SOURCE_PATH}/third-party/realsense-file/lz4"
     "${SOURCE_PATH}/third-party/stb_easy_font.h"
@@ -47,6 +50,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools           BUILD_TOOLS
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -61,6 +66,7 @@ vcpkg_cmake_configure(
         -DENFORCE_METADATA=ON
         "-DFIRMWARE_DISTFILE=${firmware_distfile}"
         "-DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DUSE_EXTERNAL_LZ4=ON
     OPTIONS_DEBUG
         -DBUILD_TOOLS=OFF
@@ -88,4 +94,5 @@ if(BUILD_OPENNI2_BINDINGS)
     endif()
 endif()
 
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

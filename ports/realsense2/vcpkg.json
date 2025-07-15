@@ -18,7 +18,7 @@
       "features": [
         "rs-usb-backend"
       ],
-      "platform": "android"
+      "platform": "android | osx"
     },
     "stb",
     {
@@ -39,7 +39,10 @@
       ]
     },
     "rs-usb-backend": {
-      "description": "Use RS USB backend"
+      "description": "Use RS USB backend",
+      "dependencies": [
+        "openni2"
+      ]
     },
     "tools": {
       "description": "Build Intel® RealSense™ tools",
