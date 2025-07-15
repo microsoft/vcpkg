@@ -5062,7 +5062,7 @@
     },
     "libmpeg2": {
       "baseline": "0.5.1",
-      "port-version": 3
+      "port-version": 4
     },
     "libmspack": {
       "baseline": "0.11",
