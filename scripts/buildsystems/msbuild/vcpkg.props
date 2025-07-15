@@ -44,7 +44,7 @@
     <VcpkgManifestInstall Condition="'$(VcpkgManifestInstall)' == ''">true</VcpkgManifestInstall>
     <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' == ''">$([MSbuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), vcpkg.json))</VcpkgManifestRoot>
 
-    <!-- AutoBootstrap: Controls whether - on manifest builds - VCPkg is automatically bootstrapped. -->
+    <!-- AutoBootstrap: Controls whether - on manifest builds - Vcpkg is automatically bootstrapped. -->
     <VcpkgAutoBootstrap Condition="'$(VcpkgAutoBootstrap)' == ''">true</VcpkgAutoBootstrap>
   </PropertyGroup>
 </Project>

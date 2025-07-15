@@ -5,7 +5,7 @@
   out-of-date with respect to $(_ZVcpkgRoot)\scripts\vcpkg-tool-metadata.txt - it invokes the
   VcpkgBootstrapImplementation target.
 
-  MSBuild will ensure that MSBuild tasks with a given target and set of global properties will run only once.
+  MSBuild will ensure that MSBuild tasks with a given project path and set of global properties will run only once.
   -->
   <Target Name="VcpkgBootstrap"
           BeforeTargets="VcpkgInstallManifestDependencies"

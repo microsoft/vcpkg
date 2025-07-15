@@ -173,8 +173,9 @@
     2. If VcpkgAutoBootstrap is true - VcpkgAutoBootstrap allows consumers to opt-out.
     3. If MSBuild is 16.5 or higher - IBuildEngine6 is needed, which first shipped in MSBuild 16.5.
     4. The OS is Windows.
+    5. The 'bootstrap'-script is present in the Vcpkg root directory - When 'vcpkg' is redistributed through mechanisms that don't need bootstrapping, the script isn't present so we shouldn't attempt to run it.
   -->
-  <Import Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgAutoBootstrap)' == 'true' and $([System.Version]::new($(MSBuildVersion))) >= $([System.Version]::new(16, 5)) and $([MSBuild]::IsOSPlatform('Windows'))"
+  <Import Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgAutoBootstrap)' == 'true' and $([System.Version]::new($(MSBuildVersion))) >= $([System.Version]::new(16, 5)) and $([MSBuild]::IsOSPlatform('Windows')) and Exists('$(_ZVcpkgRoot)bootstrap-vcpkg.bat')"
           Project="$(MSBuildThisFileDirectory)\support\Bootstrap.targets" />
 
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
