@@ -1,6 +1,6 @@
 {
   "name": "etl",
-  "version": "20.41.7",
+  "version": "20.42.1",
   "description": "A C++ template library for embedded applications",
   "homepage": "https://www.etlcpp.com",
   "license": "MIT",
