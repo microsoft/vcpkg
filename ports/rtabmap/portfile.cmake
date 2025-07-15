@@ -1,32 +1,14 @@
-vcpkg_download_distfile(CERES_21_PATCH_1
-    URLS https://patch-diff.githubusercontent.com/raw/introlab/rtabmap/pull/1405.patch
-    SHA512 c586885683807b3a3853fd09f46942f1599c8d3c3869388338cab97f0c09f51bf55726aad62ee883fbe3ce1734ab3c4c2e23a8ea7f2e5c01e0a7df8f9dc1e94b
-    FILENAME rtabmap-1405.patch
-)
-
-vcpkg_download_distfile(CERES_21_PATCH_2
-    URLS https://patch-diff.githubusercontent.com/raw/introlab/rtabmap/pull/1437.patch
-    SHA512 d5400fdfd35594912af0d463e360a2b79739d18d4eb487f81486af67bc80e4c2d26c3bf3b94dbb51dfa159bb02a70196c6d42c9aca4b789b0026c009b1645296
-    FILENAME rtabmap-1437.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
     REF ${VERSION}
-    SHA512 2b424f5b6458cf0f976e711985708f104b56d11921c9c43c6a837f9d3dc9e9e802308f1aa2b6d0e7e6ddf13623ff1ad2922b5f54254d16ee5811e786d27b9f98
+    SHA512 1e38d55ca762737bb9bea8c0348b97426f4d12f2ee2f6aa677415b02f5ee811fcd0a581e8a5b8c469039f8d769c049be5f1886f5471998cc007d9c666ff61f24
     HEAD_REF master
     PATCHES
-        ${CERES_21_PATCH_1}
-        ${CERES_21_PATCH_2}
         0001-cmakelists-fixes.patch
         0002-fix-link.patch
         0003-multi-definition.patch
-        0004-fix-manfold-typo.patch
-        0005-fix-opencv3-aruco.patch
-        0006-remove-apple-sys-path.patch
-        0007-fix-g2o.patch
-        0008-fix-pcl-include.patch
+        0004-remove-apple-sys-path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -102,7 +84,7 @@ vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.21)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.22)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
