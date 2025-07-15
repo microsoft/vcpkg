@@ -10,6 +10,7 @@
       "name": "libusb",
       "platform": "!windows"
     },
+    "lz4",
     "nlohmann-json",
     {
       "name": "realsense2",
