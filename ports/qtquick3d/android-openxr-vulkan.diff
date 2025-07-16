@@ -1,0 +1,14 @@
+diff --git a/src/xr/quick3dxr/openxr/CMakeLists.txt b/src/xr/quick3dxr/openxr/CMakeLists.txt
+index ad6ee98..efd3be7 100644
+--- a/src/xr/quick3dxr/openxr/CMakeLists.txt
++++ b/src/xr/quick3dxr/openxr/CMakeLists.txt
+@@ -52,6 +52,9 @@ qt_internal_extend_target(Quick3DXr CONDITION ANDROID AND QT_FEATURE_opengles2
+ qt_internal_extend_target(Quick3DXr CONDITION QT_FEATURE_vulkan
+     SOURCES
+         qopenxrgraphics_vulkan.cpp qopenxrgraphics_vulkan_p.h
++)
++
++qt_internal_extend_target(Quick3DXr CONDITION QT_FEATURE_vulkan OR ANDROID
+     DEFINES
+         XR_USE_GRAPHICS_API_VULKAN
+ )
