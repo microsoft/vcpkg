@@ -1,9 +1,10 @@
 {
   "name": "poppler-data",
   "version": "0.4.12",
+  "port-version": 1,
   "description": "This package consists of encoding files for use with poppler.",
   "homepage": "https://poppler.freedesktop.org",
-  "license": "GPL-2.0-or-later",
+  "license": null,
   "dependencies": [
     {
       "name": "vcpkg-cmake",
