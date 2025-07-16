@@ -13,6 +13,12 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DISABLE_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DISABLE_STATIC)
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        "icu" DISABLE_ICU_LOCALE
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -23,6 +29,7 @@ vcpkg_cmake_configure(
         -DDISABLE_STATIC=${DISABLE_STATIC}
         -DDISABLE_GCRYPT=ON
         -DDISABLE_ICONV=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
