@@ -40,8 +40,9 @@
     },
     "rs-usb-backend": {
       "description": "Use RS USB backend",
+      "supports": "!windows",
       "dependencies": [
-        "openni2"
+        "libusb"
       ]
     },
     "tools": {

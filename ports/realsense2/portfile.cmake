@@ -50,7 +50,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools           BUILD_TOOLS
 )
 
-vcpkg_find_acquire_program(PKGCONFIG)
+if("rs-usb-backend" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -59,6 +62,7 @@ vcpkg_cmake_configure(
         -DBUILD_EASYLOGGINGPP=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_GRAPHICAL_EXAMPLES=OFF
+        -DBUILD_RS2_ALL=NO
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_WITH_STATIC_CRT}
@@ -66,7 +70,6 @@ vcpkg_cmake_configure(
         -DENFORCE_METADATA=ON
         "-DFIRMWARE_DISTFILE=${firmware_distfile}"
         "-DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2"
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DUSE_EXTERNAL_LZ4=ON
     OPTIONS_DEBUG
         -DBUILD_TOOLS=OFF
