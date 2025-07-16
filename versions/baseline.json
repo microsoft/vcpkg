@@ -3269,7 +3269,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.5.2",
+      "baseline": "5.5.3",
       "port-version": 0
     },
     "glbinding": {
