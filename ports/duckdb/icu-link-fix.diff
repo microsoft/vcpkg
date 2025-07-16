@@ -2,7 +2,7 @@ diff --git a/src/common/types.cpp b/src/common/types.cpp
 index 25d75e377bc..d241e514b93 100644
 --- a/src/common/types.cpp
 +++ b/src/common/types.cpp
-@@ -166,54 +166,6 @@ string LogicalTypeIdToString(LogicalTypeId type) {
+@@ -166,53 +166,6 @@ string LogicalTypeIdToString(LogicalTypeId type) {
  	return EnumUtil::ToString(type);
  }
  
@@ -31,7 +31,6 @@ index 25d75e377bc..d241e514b93 100644
 -constexpr const LogicalTypeId LogicalType::TIMESTAMP_S;
 -
 -constexpr const LogicalTypeId LogicalType::TIME;
--constexpr const LogicalTypeId LogicalType::TIME_NS;
 -
 -constexpr const LogicalTypeId LogicalType::TIME_TZ;
 -constexpr const LogicalTypeId LogicalType::TIMESTAMP_TZ;
