@@ -19,6 +19,11 @@ vcpkg_from_github(
         python3_8_compatibility.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        vulkan  VCPKG_LOCK_FIND_PACKAGE_Vulkan
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DYNAMIC_LOADER)
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -26,12 +31,12 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DBUILD_API_LAYERS=OFF
         -DBUILD_CONFORMANCE_TESTS=OFF
         -DBUILD_TESTS=OFF
         -DCMAKE_INSTALL_INCLUDEDIR=include
         -DDYNAMIC_LOADER=${DYNAMIC_LOADER}
-        "-DPYTHON_EXECUTABLE=${PYTHON3}"
         "-DPython3_EXECUTABLE=${PYTHON3}"
 )
 
