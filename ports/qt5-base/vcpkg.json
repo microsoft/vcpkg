@@ -1,7 +1,6 @@
 {
   "name": "qt5-base",
-  "version": "5.15.16",
-  "port-version": 5,
+  "version": "5.15.17",
   "description": "Qt Base provides the basic non-GUI functionality required by all Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -20,8 +19,21 @@
       "name": "fontconfig",
       "platform": "!windows"
     },
-    "freetype",
-    "harfbuzz",
+    {
+      "name": "freetype",
+      "default-features": false,
+      "features": [
+        "png",
+        "zlib"
+      ]
+    },
+    {
+      "name": "harfbuzz",
+      "default-features": false,
+      "features": [
+        "freetype"
+      ]
+    },
     "libjpeg-turbo",
     "libpng",
     {
@@ -45,13 +57,16 @@
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
-    "zlib",
-    "zstd"
+    "zlib"
   ],
   "default-features": [
     "openssl"
   ],
   "features": {
+    "cups": {
+      "description": "Provides support for the Common Unix Printing System",
+      "supports": "linux | osx"
+    },
     "icu": {
       "description": "Enable ICU support",
       "dependencies": [
@@ -67,7 +82,14 @@
     "mysqlplugin": {
       "description": "Build the sql plugin for connecting to mysql databases",
       "dependencies": [
-        "libmysql"
+        "libmysql",
+        {
+          "name": "qt5-base",
+          "default-features": false,
+          "features": [
+            "zstd"
+          ]
+        }
       ]
     },
     "openssl": {
@@ -95,6 +117,12 @@
       "description": "Enable Vulkan support in QtGui",
       "dependencies": [
         "vulkan"
+      ]
+    },
+    "zstd": {
+      "description": "Zstandard support",
+      "dependencies": [
+        "zstd"
       ]
     }
   }
