@@ -28,15 +28,27 @@ vcpkg_from_github(
         0007-fix-g2o.patch
         0008-fix-pcl-include.patch
 )
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
+    "${SOURCE_PATH}/cmake_modules/FindRealSense2.cmake"
+    "${SOURCE_PATH}/src/sqlite3"
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openmp      WITH_OPENMP
         gui         WITH_QT
+        gui         VCPKG_LOCK_FIND_PACKAGE_Qt6
+        gui         VCPKG_LOCK_FIND_PACKAGE_VTK
         k4w2        WITH_K4W2
+        k4w2        VCPKG_LOCK_FIND_PACKAGE_KinectSDK2
         octomap     WITH_OCTOMAP
+        octomap     VCPKG_LOCK_FIND_PACKAGE_octomap
+        openmp      WITH_OPENMP
+        openmp      VCPKG_LOCK_FIND_PACKAGE_OpenMP
         openni2     WITH_OPENNI2
+        openni2     VCPKG_LOCK_FIND_PACKAGE_OpenNI2
         realsense2  WITH_REALSENSE2
+        realsense2  VCPKG_LOCK_FIND_PACKAGE_realsense2
         tools       BUILD_APP
         tools       BUILD_TOOLS
 )
@@ -53,12 +65,15 @@ vcpkg_cmake_configure(
         -DRTABMAP_QT_VERSION=6
         -DBUILD_AS_BUNDLE=OFF
         -DBUILD_EXAMPLES=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_SQLite3=ON
         ## always on feats
-        -DWITH_G2O=ON
+        -DWITH_G2O=ON  -DVCPKG_LOCK_FIND_PACKAGE_g2o=ON
         -DWITH_CERES=ON
         -DWITH_ORB_OCTREE=ON   # GPLv3
         ## always off feats
         -DWITH_ALICE_VISION=OFF
+        -DWITH_ARCore=OFF
+        -DWITH_ARENGINE=OFF
         -DWITH_CCCORELIB=OFF
         -DWITH_CPUTSDF=OFF
         -DWITH_CVSBA=OFF
@@ -66,6 +81,7 @@ vcpkg_cmake_configure(
         -DWITH_DEPTHAI=OFF
         -DWITH_DVO=OFF
         -DWITH_FASTCV=OFF
+        -DWITH_FLOAM=OFF
         -DWITH_FLYCAPTURE2=OFF
         -DWITH_FOVIS=OFF
         -DWITH_FREENECT=OFF
@@ -79,6 +95,7 @@ vcpkg_cmake_configure(
         -DWITH_MSCKF_VIO=OFF
         -DWITH_MYNTEYE=OFF
         -DWITH_OKVIS=OFF
+        -DWITH_OPEN3D=OFF
         -DWITH_OPENCHISEL=OFF
         -DWITH_OPENGV=OFF
         -DWITH_OPENVINS=OFF
@@ -89,12 +106,26 @@ vcpkg_cmake_configure(
         -DWITH_PYTHON_THREADING=OFF
         -DWITH_REALSENSE=OFF
         -DWITH_REALSENSE_SLAM=OFF
+        -DWITH_TANGO=OFF
         -DWITH_TORCH=OFF
         -DWITH_VERTIGO=OFF
         -DWITH_VINS=OFF
         -DWITH_VISO2=OFF
         -DWITH_ZED=OFF
         -DWITH_ZEDOC=OFF
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_Qt6
+        VCPKG_LOCK_FIND_PACKAGE_VTK
+        VCPKG_LOCK_FIND_PACKAGE_KinectSDK2
+        VCPKG_LOCK_FIND_PACKAGE_octomap
+        VCPKG_LOCK_FIND_PACKAGE_OpenMP
+        VCPKG_LOCK_FIND_PACKAGE_OpenNI2
+        VCPKG_LOCK_FIND_PACKAGE_realsense2
+        VCPKG_LOCK_FIND_PACKAGE_RealSense2
+        # Android
+        WITH_ARCore
+        WITH_ARENGINE
+        WITH_TANGO
 )
 
 vcpkg_cmake_install()
@@ -134,7 +165,6 @@ if("tools" IN_LIST FEATURES)
             rtabmap-calibration
             rtabmap-databaseViewer
             rtabmap-dataRecorder
-            rtabmap-lidar_viewer
             rtabmap-odometryViewer
             rtabmap-rgbd_camera
         AUTO_CLEAN
