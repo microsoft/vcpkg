@@ -480,7 +480,7 @@ juce:x64-android=fail
 # needs newer ECM version
 kf6archive:arm-neon-android=skip
 kf6archive:arm64-android=skip
-kf6archive:x86-android=skip
+kf6archive:x64-android=skip
 lcm:arm-neon-android=fail
 lcm:arm64-android=fail
 lcm:arm64-windows-static-md=fail
