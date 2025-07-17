@@ -13,7 +13,18 @@ index 6879c4c..e7644ee 100644
  endif()
  if (NOT FLANN_FOUND OR OpenMVG_USE_INTERNAL_FLANN)
    set(FLANN_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/flann/src/cpp)
-@@ -402,7 +403,7 @@ if (NOT DEFINED LEMON_INCLUDE_DIR_HINTS)
+@@ -344,7 +345,9 @@ if (NOT DEFINED COINUTILS_INCLUDE_DIR_HINTS)
+   set(COINUTILS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/CoinUtils/src/)
+   set(COINUTILS_LIBRARY lib_CoinUtils)
+ else()
+-  find_package(CoinUtils QUIET)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(COINUTILS coinutils REQUIRED)
++  set(COINUTILS_LIBRARY "${COINUTILS_LINK_LIBRARIES}")
+ endif()
+ 
+ ## ==============================================================================
+@@ -402,7 +405,7 @@ if (NOT DEFINED LEMON_INCLUDE_DIR_HINTS)
    set(LEMON_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lemon)
    set(OpenMVG_USE_INTERNAL_LEMON ON)
  endif()
@@ -64,17 +75,13 @@ index 5a788b5..a5329fe 100644
  if (NOT EXISTS ${CURRENT_ROOT_INSTALL_DIR})
    OPENMVG_REPORT_NOT_FOUND(
      "OpenMVG install root: ${CURRENT_ROOT_INSTALL_DIR}, "
-@@ -88,11 +88,18 @@ set(OpenMVG_USE_OPENMP "@OpenMVG_USE_OPENMP@")
+@@ -88,11 +88,14 @@ set(OpenMVG_USE_OPENMP "@OpenMVG_USE_OPENMP@")
  
  # Find transitive dependencies if required
  include(CMakeFindDependencyMacro)
 +find_dependency(flann CONFIG)
 +find_dependency(Ceres CONFIG)
 +find_dependency(vlfeat CONFIG)
-+if(NOT WIN32)
-+    find_dependency(PkgConfig)
-+    pkg_check_modules(CoinUtils coinutils IMPORTED_TARGET)
-+endif()
  if (OpenMVG_USE_OPENMP)
 -  find_dependency(OpenMP REQUIRED)
 +  find_dependency(OpenMP)
