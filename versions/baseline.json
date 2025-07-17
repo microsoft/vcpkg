@@ -8649,7 +8649,7 @@
       "port-version": 11
     },
     "sdl3": {
-      "baseline": "3.2.16",
+      "baseline": "3.2.18",
       "port-version": 0
     },
     "sdl3-image": {
