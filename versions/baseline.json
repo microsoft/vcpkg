@@ -2222,7 +2222,7 @@
     },
     "curl": {
       "baseline": "8.15.0",
-      "port-version": 0
+      "port-version": 1
     },
     "curlcpp": {
       "baseline": "3.1",
@@ -6674,7 +6674,7 @@
     },
     "ngtcp2": {
       "baseline": "1.13.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nifly": {
       "baseline": "1.0.0",

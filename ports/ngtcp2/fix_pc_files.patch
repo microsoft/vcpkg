@@ -1,0 +1,45 @@
+diff --git a/crypto/boringssl/libngtcp2_crypto_boringssl.pc.in b/crypto/boringssl/libngtcp2_crypto_boringssl.pc.in
+index 737970a8c..7421f15d2 100644
+--- a/crypto/boringssl/libngtcp2_crypto_boringssl.pc.in
++++ b/crypto/boringssl/libngtcp2_crypto_boringssl.pc.in
+@@ -31,3 +31,4 @@ URL: https://github.com/ngtcp2/ngtcp2
+ Version: @VERSION@
+ Libs: -L${libdir} -lngtcp2_crypto_boringssl
+ Cflags: -I${includedir}
++Requires: openssl
+diff --git a/crypto/gnutls/libngtcp2_crypto_gnutls.pc.in b/crypto/gnutls/libngtcp2_crypto_gnutls.pc.in
+index 890e89d45..cad79829a 100644
+--- a/crypto/gnutls/libngtcp2_crypto_gnutls.pc.in
++++ b/crypto/gnutls/libngtcp2_crypto_gnutls.pc.in
+@@ -31,3 +31,4 @@ URL: https://github.com/ngtcp2/ngtcp2
+ Version: @VERSION@
+ Libs: -L${libdir} -lngtcp2_crypto_gnutls
+ Cflags: -I${includedir}
++Requires: gnutls
+diff --git a/crypto/ossl/libngtcp2_crypto_ossl.pc.in b/crypto/ossl/libngtcp2_crypto_ossl.pc.in
+index 1397b4bfb..8027121aa 100644
+--- a/crypto/ossl/libngtcp2_crypto_ossl.pc.in
++++ b/crypto/ossl/libngtcp2_crypto_ossl.pc.in
+@@ -31,3 +31,4 @@ URL: https://github.com/ngtcp2/ngtcp2
+ Version: @VERSION@
+ Libs: -L${libdir} -lngtcp2_crypto_ossl
+ Cflags: -I${includedir}
++Requires: openssl
+diff --git a/crypto/quictls/libngtcp2_crypto_quictls.pc.in b/crypto/quictls/libngtcp2_crypto_quictls.pc.in
+index 991d2a7e7..569752e89 100644
+--- a/crypto/quictls/libngtcp2_crypto_quictls.pc.in
++++ b/crypto/quictls/libngtcp2_crypto_quictls.pc.in
+@@ -31,3 +31,4 @@ URL: https://github.com/ngtcp2/ngtcp2
+ Version: @VERSION@
+ Libs: -L${libdir} -lngtcp2_crypto_quictls
+ Cflags: -I${includedir}
++Requires: openssl
+diff --git a/crypto/wolfssl/libngtcp2_crypto_wolfssl.pc.in b/crypto/wolfssl/libngtcp2_crypto_wolfssl.pc.in
+index 720c7849c..7f717f31e 100644
+--- a/crypto/wolfssl/libngtcp2_crypto_wolfssl.pc.in
++++ b/crypto/wolfssl/libngtcp2_crypto_wolfssl.pc.in
+@@ -31,3 +31,4 @@ URL: https://github.com/ngtcp2/ngtcp2
+ Version: @VERSION@
+ Libs: -L${libdir} -lngtcp2_crypto_wolfssl
+ Cflags: -I${includedir}
++Requires: wolfssl
