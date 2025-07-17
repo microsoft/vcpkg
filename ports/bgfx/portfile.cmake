@@ -12,6 +12,8 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(
   SOURCE_PATH
   ARCHIVE "${ARCHIVE_FILE}"
+  PATCHES
+    fix-dependencies.patch
 )
 
 vcpkg_check_features(
