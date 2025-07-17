@@ -2221,7 +2221,7 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.14.1",
+      "baseline": "8.15.0",
       "port-version": 0
     },
     "curlcpp": {
@@ -10278,7 +10278,7 @@
     },
     "wolfssl": {
       "baseline": "5.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "wolftpm": {
       "baseline": "3.9.1",
