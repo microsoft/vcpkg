@@ -70,6 +70,7 @@ vcpkg_cmake_configure(
         -DgRPC_DOWNLOAD_ARCHIVES=OFF
     MAYBE_UNUSED_VARIABLES
         gRPC_MSVC_STATIC_RUNTIME
+        gRPC_USE_SYSTEMD
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
