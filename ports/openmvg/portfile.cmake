@@ -20,9 +20,9 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake"
     "${SOURCE_PATH}/src/cmakeFindModules/FindFlann.cmake"
     "${SOURCE_PATH}/src/cmakeFindModules/FindLemon.cmake"
-    #${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake
-    #${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake
-    #${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake
+    "${SOURCE_PATH}/src/cmakeFindModules/FindClp.cmake"
+    "${SOURCE_PATH}/src/cmakeFindModules/FindCoinUtils.cmake"
+    "${SOURCE_PATH}/src/cmakeFindModules/FindOsi.cmake"
     "${SOURCE_PATH}/src/nonFree/sift/vl"
     "${SOURCE_PATH}/src/third_party/CppUnitLite"
     "${SOURCE_PATH}/src/third_party/ceres-solver"
@@ -63,11 +63,8 @@ vcpkg_cmake_configure(
         -DOpenMVG_BUILD_OPENGL_EXAMPLES=OFF
         -DOpenMVG_BUILD_TESTS=OFF
         -DOpenMVG_USE_LIGT=OFF
-        "-DCOINUTILS_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
-        "-DCLP_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
         "-DFLANN_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include"
         "-DLEMON_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include"
-        "-DOSI_INCLUDE_DIR_HINTS=${CURRENT_INSTALLED_DIR}/include/coin-or"
         -DVCPKG_LOCK_FIND_PACKAGE_cereal=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Ceres=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Eigen3=ON

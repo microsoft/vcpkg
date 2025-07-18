@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 6879c4c..e7644ee 100644
+index 6879c4c..aa4167a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -324,8 +324,9 @@ else()
+@@ -324,13 +324,18 @@ else()
    if (TARGET flann::flann)
      set(FLANN_LIBRARIES "flann::flann;flann::flann_cpp")
    else()
@@ -13,18 +13,24 @@ index 6879c4c..e7644ee 100644
  endif()
  if (NOT FLANN_FOUND OR OpenMVG_USE_INTERNAL_FLANN)
    set(FLANN_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/flann/src/cpp)
-@@ -344,7 +345,9 @@ if (NOT DEFINED COINUTILS_INCLUDE_DIR_HINTS)
-   set(COINUTILS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/osi_clp/CoinUtils/src/)
-   set(COINUTILS_LIBRARY lib_CoinUtils)
- else()
--  find_package(CoinUtils QUIET)
-+  find_package(PkgConfig REQUIRED)
-+  pkg_check_modules(COINUTILS coinutils REQUIRED)
-+  set(COINUTILS_LIBRARY "${COINUTILS_LINK_LIBRARIES}")
  endif()
  
- ## ==============================================================================
-@@ -402,7 +405,7 @@ if (NOT DEFINED LEMON_INCLUDE_DIR_HINTS)
++# Used together in openMVG/LinearProgramming
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(OSI_CLP_COIN  osi-clp clp osi coinutils  REQUIRED)
++if(0)
+ # ==============================================================================
+ # CoinUtils
+ # ==============================================================================
+@@ -391,6 +396,7 @@ if (OpenMVG_USE_INTERNAL_OSI AND OpenMVG_USE_INTERNAL_CLP AND OpenMVG_USE_INTERN
+   set_property(TARGET lib_Osi PROPERTY FOLDER OpenMVG/3rdParty/lib_Osi)
+   set_property(TARGET lib_OsiClpSolver PROPERTY FOLDER OpenMVG/3rdParty/lib_OsiClpSolver)
+ endif()
++endif()
+ 
+ # ==============================================================================
+ # Lemon
+@@ -402,7 +408,7 @@ if (NOT DEFINED LEMON_INCLUDE_DIR_HINTS)
    set(LEMON_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lemon)
    set(OpenMVG_USE_INTERNAL_LEMON ON)
  endif()
@@ -33,37 +39,8 @@ index 6879c4c..e7644ee 100644
  if (NOT LEMON_FOUND OR OpenMVG_USE_INTERNAL_LEMON)
    set(LEMON_INCLUDE_DIRS
      ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lemon
-diff --git a/src/cmakeFindModules/FindClp.cmake b/src/cmakeFindModules/FindClp.cmake
-index 8a69c23..a694a09 100644
---- a/src/cmakeFindModules/FindClp.cmake
-+++ b/src/cmakeFindModules/FindClp.cmake
-@@ -51,7 +51,7 @@ IF(EXISTS "${CLP_DIR}" AND NOT "${CLP_DIR}" STREQUAL "")
-         SET(CLP_INCLUDE_DIR ${CLP_DIR})
- 
-         FIND_LIBRARY(CLP_LIBRARY NAMES Clp)
--        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver)
-+        FIND_LIBRARY(CLPSOLVER_LIBRARY NAMES ClpSolver Clp NAMES_PER_DIR)
-         FIND_LIBRARY(OSICLP_LIBRARY NAMES OsiClp)
- 
-         # locate Clp libraries
-diff --git a/src/cmakeFindModules/FindCoinUtils.cmake b/src/cmakeFindModules/FindCoinUtils.cmake
-index 5b64ce1..3dc0894 100644
---- a/src/cmakeFindModules/FindCoinUtils.cmake
-+++ b/src/cmakeFindModules/FindCoinUtils.cmake
-@@ -56,6 +56,11 @@ IF(EXISTS "${COINUTILS_DIR}" AND NOT "${COINUTILS_DIR}" STREQUAL "")
-         IF(DEFINED COINUTILS_LIBRARY)
-           SET(COINUTILS_LIBRARIES ${COINUTILS_LIBRARY})
-         ENDIF()
-+        if(NOT WIN32)
-+            find_package(PkgConfig)
-+            pkg_check_modules(CoinUtils coinutils IMPORTED_TARGET)
-+            list(APPEND COINUTILS_LIBRARIES PkgConfig::CoinUtils)
-+        endif()
- 
-         MESSAGE(STATUS "CoinUtils ${COINUTILS_VERSION} found (include: ${COINUTILS_INCLUDE_DIRS})")
- ELSE()
 diff --git a/src/cmakeFindModules/OpenMVGConfig.cmake.in b/src/cmakeFindModules/OpenMVGConfig.cmake.in
-index 5a788b5..a5329fe 100644
+index 5a788b5..7a0afdb 100644
 --- a/src/cmakeFindModules/OpenMVGConfig.cmake.in
 +++ b/src/cmakeFindModules/OpenMVGConfig.cmake.in
 @@ -61,7 +61,7 @@ set(CMAKE_MODULE_PATH ${CURRENT_CONFIG_INSTALL_DIR})
@@ -131,17 +108,25 @@ index 33d9f16..58b4761 100644
 -install(FILES sensor_width_camera_database.txt DESTINATION  ${CMAKE_INSTALL_LIBDIR}/openMVG)
 +install(FILES sensor_width_camera_database.txt DESTINATION share/openmvg)
 diff --git a/src/openMVG/linearProgramming/CMakeLists.txt b/src/openMVG/linearProgramming/CMakeLists.txt
-index 3a8a402..b705e47 100644
+index 3a8a402..24151e9 100644
 --- a/src/openMVG/linearProgramming/CMakeLists.txt
 +++ b/src/openMVG/linearProgramming/CMakeLists.txt
-@@ -16,8 +16,8 @@ target_link_libraries(openMVG_linearProgramming
+@@ -15,16 +15,12 @@ target_link_libraries(openMVG_linearProgramming
+   PUBLIC
      openMVG_numeric
    PRIVATE
-     ${CLP_LIBRARIES}     # clp + solver wrapper
+-    ${CLP_LIBRARIES}     # clp + solver wrapper
 -    ${COINUTILS_LIBRARY} # container tools
 -    ${OSI_LIBRARY}       # generic LP
-+    ${OSI_LIBRARIES}     # generic LP
-+    ${COINUTILS_LIBRARIES} # container tools, dependency of osi
++    ${OSI_CLP_COIN_LINK_LIBRARIES}
  )
  
  target_include_directories(openMVG_linearProgramming
+   PRIVATE
+-    ${CLP_INCLUDE_DIRS}
+-    ${COINUTILS_INCLUDE_DIRS}
+-    ${OSI_INCLUDE_DIRS}
++    ${OSI_CLP_COIN_INCLUDE_DIRS}
+   PUBLIC
+     $<INSTALL_INTERFACE:include>
+ )
