@@ -8,6 +8,14 @@
     {
       "name": "reflectcpp",
       "version>=": "0.18.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ],
   "default-features": [
