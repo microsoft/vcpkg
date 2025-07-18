@@ -10,7 +10,7 @@
       "version>=": "0.18.0"
     }
   ],
-  "default-features": {
+  "features": {
     "postgres": {
       "description": "Enable PostgreSQL support",
       "dependencies": [
@@ -31,9 +31,7 @@
           "version>=": "3.49.1"
         }
       ]
-    }
-  },
-  "features": {
+    },
     "tests": {
       "description": "Build the tests",
       "dependencies": [
