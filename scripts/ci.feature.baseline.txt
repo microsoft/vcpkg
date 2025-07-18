@@ -1561,7 +1561,7 @@ opencv4[dnn-cuda](!((windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & ar
 opencv4[dnn-cuda](osx) = cascade
 opencv4[freetype](uwp) = cascade
 opencv4[gdcm](uwp) = cascade
-opencv4[gstreamer](uwp | xbox) = cascade
+opencv4[gstreamer](uwp | xbox) = cascade
 opencv4[opencl](uwp) = cascade
 opencv4[openexr](uwp) = cascade
 opencv4[opengl](uwp | xbox) = cascade
