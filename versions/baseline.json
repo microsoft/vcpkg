@@ -753,7 +753,7 @@
       "port-version": 0
     },
     "blosc2": {
-      "baseline": "2.19.0",
+      "baseline": "2.19.1",
       "port-version": 0
     },
     "blpapi": {
