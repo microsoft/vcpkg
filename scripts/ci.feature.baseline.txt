@@ -2089,7 +2089,6 @@ geogram[graphics] = feature-fails # imgui not found. See https://github.com/micr
 ggml[blas](windows & static) = feature-fails
 ginkgo[openmp](osx) = feature-fails # No openmp on osx
 ginkgo[openmp](windows) = feature-fails # needs openmp 3.0 support but msvc only supports openmp 2.0
-glib[selinux]:x64-linux = feature-fails # CI machines don't have libselinux1-dev installed
 glib-networking[openssl, gnutls] = options # You have to select exactly one ssl backend
 google-cloud-cpp[storagetransfer](osx) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32149
 graphviz(osx) = fail # CMake configure error. See https://github.com/microsoft/vcpkg/issues/44414
