@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake-config.diff
+        pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
 )
@@ -41,6 +42,16 @@ if("opencl" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS
         "-DPython3_EXECUTABLE=${PYTHON3}"
     )
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    message(STATUS "The CPU backend is not supported for arm64 with MSVC.")
+    list(APPEND FEATURE_OPTIONS
+        "-DGGML_CPU=OFF"
+    )
+    if(FEATURES STREQUAL "core")
+        message(WARNING "No backend enabled!")
+    endif()
 endif()
 
 if("vulkan" IN_LIST FEATURES AND VCPKG_CROSSCOMPILING)
