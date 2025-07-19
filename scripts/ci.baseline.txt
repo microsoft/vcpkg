@@ -128,10 +128,6 @@ lapack-reference:x64-uwp=skip
 #openblas:x64-windows-static=skip
 # </BLAS+LAPACK>
 ################################################################
-# Bug in VS2022 17.13 where <wchar.h> breaks with -Zc:arm64-aliased-neon-types-
-blend2d:arm64-uwp=fail
-blend2d:arm64-windows-static-md=fail
-blend2d:arm64-windows=fail
 blitz:x64-android=fail
 boinc:arm-neon-android=fail
 boinc:arm64-android=fail
@@ -1227,9 +1223,9 @@ vcpkg-ci-mathgl:x86-windows=pass
 vcpkg-ci-opencv:arm-neon-android=pass
 vcpkg-ci-opencv:arm64-android=pass
 vcpkg-ci-opencv:arm64-osx=pass
-# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
-#vcpkg-ci-opencv:arm64-uwp=pass
-opencv4:arm64-uwp=fail
+vcpkg-ci-opencv:arm64-uwp=pass
+# OpenCV appears to be trying to use __fp16 on a platform that does not support that
+# buildtrees\opencv4\src\4.11.0-46ecfbc8ae.clean\modules\dnn\src\layers\cpu_kernels\conv_winograd_f63.simd.hpp(1371): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
 #vcpkg-ci-opencv:arm64-windows-static-md=pass
 opencv4:arm64-windows-static-md=fail
 #vcpkg-ci-opencv:arm64-windows=pass
