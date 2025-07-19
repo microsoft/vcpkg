@@ -52,16 +52,16 @@ endif()
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
                             # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
-                            patches/0001-CVE-2023-51714-qtbase-5.15.diff
-                            patches/0002-CVE-2023-51714-qtbase-5.15.diff
-                            patches/CVE-2024-25580-qtbase-5.15.diff
                             patches/CVE-2024-39936-qtbase-5.15.patch
+                            patches/CVE-2025-4211-qtbase-5.15.diff
+                            patches/CVE-2025-5455-qtbase-5.15.patch
+                            patches/CVE-2025-30348-qtbase-5.15.diff
 
                             patches/winmain_pro.patch          #Moves qtmain to manual-link
                             patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
                             patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
-                            patches/gui_configure.patch        #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
                             patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/vulkan-windows.diff        #Forces QMake to use vulkan from vcpkg instead of VULKAN_SDK system variable
                             patches/egl.patch                  #Fix egl detection logic.
                             patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
                             patches/mysql_plugin_include.patch #Fix include path of mysql plugin
@@ -109,10 +109,8 @@ list(APPEND CORE_OPTIONS
     -system-zlib
     -system-libjpeg
     -system-libpng
-    -system-freetype
     -system-pcre
     -system-doubleconversion
-    -system-harfbuzz
     -no-angle # Qt does not need to build angle. VCPKG will build angle!
     -no-glib
     -no-feature-gssapi
@@ -144,6 +142,13 @@ else()
     list(APPEND CORE_OPTIONS -no-openssl)
 endif()
 
+if("cups" IN_LIST FEATURES)
+    message(WARNING "${PORT} feature 'cups' requires libcups2-dev from system package manger.")
+    list(APPEND CORE_OPTIONS -cups)
+else()
+    list(APPEND CORE_OPTIONS -no-cups)
+endif()
+
 if ("vulkan" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS --vulkan=yes)
 else()
@@ -170,23 +175,9 @@ find_library(MYSQL_DEBUG NAMES libmysql libmysqld mysqlclient mysqlclientd PATHS
 
 find_library(PCRE2_RELEASE NAMES pcre2-16 pcre2-16-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(PCRE2_DEBUG NAMES pcre2-16 pcre2-16-static pcre2-16d pcre2-16-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(FREETYPE_RELEASE NAMES freetype PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #zlib, bzip2, libpng
-find_library(FREETYPE_DEBUG NAMES freetype freetyped PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(DOUBLECONVERSION_RELEASE NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(DOUBLECONVERSION_DEBUG NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-
-find_library(BROTLI_COMMON_RELEASE NAMES brotlicommon brotlicommon-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(BROTLI_COMMON_DEBUG NAMES brotlicommon brotlicommon-static brotlicommond brotlicommon-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(BROTLI_DEC_RELEASE NAMES brotlidec brotlidec-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(BROTLI_DEC_DEBUG NAMES brotlidec brotlidec-static brotlidecd brotlidec-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 find_library(ICUUC_RELEASE NAMES icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUUC_DEBUG NAMES icuucd libicuucd icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-
-# Was installed in WSL but not on CI machine
-#    find_library(ICULX_RELEASE NAMES iculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-#    find_library(ICULX_DEBUG NAMES iculxd libiculxd iculx libiculx PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-
 find_library(ICUIO_RELEASE NAMES icuio libicuio PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUIO_DEBUG NAMES icuiod libicuiod icuio libicuio PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(ICUIN_RELEASE NAMES icui18n libicui18n icuin PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -200,47 +191,47 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(ICU_DEBUG "${ICU_DEBUG} -ladvapi32" )
 endif()
 
-find_library(FONTCONFIG_RELEASE NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(FONTCONFIG_DEBUG NAMES fontconfig PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(EXPAT_RELEASE NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(EXPAT_DEBUG NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-
 #Dependent libraries
-find_library(ZSTD_RELEASE NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(ZSTD_DEBUG NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(BZ2_RELEASE bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(BZ2_DEBUG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(SSL_RELEASE ssl ssleay32 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(SSL_DEBUG ssl ssleay32 ssld ssleay32d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(EAY_RELEASE libeay32 crypto libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(EAY_DEBUG libeay32 crypto libcrypto libeay32d cryptod libcryptod PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-
-set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE} ${BROTLI_DEC_RELEASE} ${BROTLI_COMMON_RELEASE}")
-set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_DEBUG}")
-
-# If HarfBuzz is built with GLib enabled, it must be statically link
-x_vcpkg_pkgconfig_get_modules(PREFIX harfbuzz MODULES harfbuzz LIBRARIES)
 
 set(RELEASE_OPTIONS
             "LIBJPEG_LIBS=${JPEG_RELEASE}"
             "ZLIB_LIBS=${ZLIB_RELEASE}"
             "LIBPNG_LIBS=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
             "PCRE2_LIBS=${PCRE2_RELEASE}"
-            "FREETYPE_LIBS=${FREETYPE_RELEASE_ALL}"
-            "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE} ${ZLIB_RELEASE}"
-            "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
             )
 set(DEBUG_OPTIONS
             "LIBJPEG_LIBS=${JPEG_DEBUG}"
             "ZLIB_LIBS=${ZLIB_DEBUG}"
             "LIBPNG_LIBS=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
             "PCRE2_LIBS=${PCRE2_DEBUG}"
-            "FREETYPE_LIBS=${FREETYPE_DEBUG_ALL}"
-            "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG} ${ZLIB_DEBUG}"
-            "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
+
+x_vcpkg_pkgconfig_get_modules(PREFIX freetype MODULES freetype2 LIBRARIES)
+list(APPEND CORE_OPTIONS -system-freetype)
+list(APPEND RELEASE_OPTIONS "FREETYPE_LIBS=${freetype_LIBRARIES_RELEASE}")
+list(APPEND DEBUG_OPTIONS "FREETYPE_LIBS=${freetype_LIBRARIES_DEBUG}")
+
+x_vcpkg_pkgconfig_get_modules(PREFIX harfbuzz MODULES harfbuzz LIBRARIES)
+if(VCPKG_TARGET_IS_OSX)
+    string(APPEND harfbuzz_LIBRARIES_RELEASE " -framework ApplicationServices")
+    string(APPEND harfbuzz_LIBRARIES_DEBUG " -framework ApplicationServices")
+endif()
+list(APPEND CORE_OPTIONS -system-harfbuzz)
+list(APPEND RELEASE_OPTIONS "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}")
+list(APPEND DEBUG_OPTIONS "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG}")
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND CORE_OPTIONS -fontconfig)
+    x_vcpkg_pkgconfig_get_modules(PREFIX fontconfig MODULES fontconfig LIBRARIES)
+    list(APPEND RELEASE_OPTIONS "FONTCONFIG_LIBS=${fontconfig_LIBRARIES_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "FONTCONFIG_LIBS=${fontconfig_LIBRARIES_DEBUG}")
+endif()
 
 if("sqlite3plugin" IN_LIST FEATURES)
     list(APPEND CORE_OPTIONS -system-sqlite)
@@ -249,6 +240,15 @@ if("sqlite3plugin" IN_LIST FEATURES)
     list(APPEND DEBUG_OPTIONS "SQLITE_LIBS=${sqlite3_LIBRARIES_DEBUG}")
 else()
     list(APPEND CORE_OPTIONS -no-sql-sqlite)
+endif()
+
+if("zstd" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -zstd)
+    x_vcpkg_pkgconfig_get_modules(PREFIX libzstd MODULES libzstd LIBRARIES)
+    list(APPEND RELEASE_OPTIONS "QMAKE_LIBS_PRIVATE+=${libzstd_LIBRARIES_RELEASE}")
+    list(APPEND DEBUG_OPTIONS "QMAKE_LIBS_PRIVATE+=${libzstd_LIBRARIES_DEBUG}")
+else()
+    list(APPEND CORE_OPTIONS -no-zstd)
 endif()
 
 if("icu" IN_LIST FEATURES)
@@ -281,13 +281,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND CORE_OPTIONS -opengl dynamic) # other possible option without moving angle dlls: "-opengl desktop". "-opengel es2" only works with commented patch
     endif()
     set(ADDITIONAL_WINDOWS_LIBS "-lws2_32 -lsecur32 -ladvapi32 -lshell32 -lcrypt32 -luser32 -lgdi32")
-    list(APPEND RELEASE_OPTIONS
-            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
-        )
-
-    list(APPEND DEBUG_OPTIONS
-            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG}"
-        )
 
     if(WITH_OPENSSL)
         list(APPEND RELEASE_OPTIONS "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} ${ADDITIONAL_WINDOWS_LIBS}")
@@ -301,15 +294,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ${ADDITIONAL_WINDOWS_LIBS} -lwldap32")
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
-    list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
-    list(APPEND RELEASE_OPTIONS
-            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
-            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -luuid"
-        )
-    list(APPEND DEBUG_OPTIONS
-            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG}"
-            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG} -luuid"
-        )
+    list(APPEND CORE_OPTIONS -xcb-xlib -xcb -linuxfb)
 
     if(WITH_OPENSSL)
         list(APPEND RELEASE_OPTIONS "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread")
@@ -329,7 +314,6 @@ elseif(VCPKG_TARGET_IS_OSX)
         list(APPEND RELEASE_OPTIONS -R ${CURRENT_INSTALLED_DIR}/lib)
     endif()
 
-    list(APPEND CORE_OPTIONS -fontconfig)
     if("${VCPKG_TARGET_ARCHITECTURE}" MATCHES "arm64")
         FILE(READ "${SOURCE_PATH}/mkspecs/common/macx.conf" _tmp_contents)
         string(REPLACE "QMAKE_APPLE_DEVICE_ARCHS = x86_64" "QMAKE_APPLE_DEVICE_ARCHS = arm64" _tmp_contents ${_tmp_contents})
@@ -383,14 +367,6 @@ elseif(VCPKG_TARGET_IS_OSX)
     string(REPLACE "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.13" "QMAKE_MACOSX_DEPLOYMENT_TARGET = ${VCPKG_OSX_DEPLOYMENT_TARGET}" _tmp_contents ${_tmp_contents})
     file(WRITE "${SOURCE_PATH}/mkspecs/common/macx.conf" ${_tmp_contents})
     #list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
-    list(APPEND RELEASE_OPTIONS
-            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE} -framework ApplicationServices"
-            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -liconv"
-        )
-    list(APPEND DEBUG_OPTIONS
-            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG} -framework ApplicationServices"
-            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG} -liconv"
-        )
 
     if(WITH_OPENSSL)
         list(APPEND RELEASE_OPTIONS "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread")

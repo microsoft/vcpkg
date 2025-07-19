@@ -1,6 +1,6 @@
 {
   "name": "coin",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "A high-level 3D visualization library with Open Inventor 2.1 API",
   "homepage": "https://github.com/coin3d/coin",
   "license": "BSD-3-Clause",
@@ -61,6 +61,13 @@
       "description": "Use simage for loading images (textures), audio, and animations",
       "dependencies": [
         "simage"
+      ]
+    },
+    "superglu": {
+      "description": "Use SuperGLU (SGI GLU fork with fixes) instead of system GLU",
+      "supports": "windows",
+      "dependencies": [
+        "superglu"
       ]
     },
     "zlib": {
