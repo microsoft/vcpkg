@@ -8,17 +8,23 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
+if(VCPKG_USE_HEAD_VERSION)
+    set(_OPTION_PREFIX MAGNUM_)
+else()
+    set(_OPTION_PREFIX )
+endif()
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        ui WITH_UI
+        ui ${_OPTION_PREFIX}WITH_UI
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DBUILD_STATIC=${BUILD_STATIC}
+        -D${_OPTION_PREFIX}BUILD_STATIC=${BUILD_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )

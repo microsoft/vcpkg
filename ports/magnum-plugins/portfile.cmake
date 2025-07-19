@@ -53,7 +53,7 @@ endif()
 # Head only features
 set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
 if(NOT VCPKG_USE_HEAD_VERSION)
-    set(head_only cgltfimporter glslangshaderconverter ktximageconverter ktximporter openexrimageconverter openexrimporter spirvtoolsshaderconverter stbdxtimageconverter)
+    set(head_only astcimporter bcdecimageconverter cgltfimporter etcdecimageconverter glslangshaderconverter gltfimporter gltfsceneconverter ktximageconverter ktximporter lunasvgimporter openexrimageconverter openexrimporter plutosvgimporter spirvtoolsshaderconverter stbdxtimageconverter stbresizeimageconverter ufbximporter webpimporter webpimageconverter)
     foreach(_feature ${head_only})
         if("${_feature}" IN_LIST FEATURES)
             list(JOIN head_only ", " features_list)
@@ -61,6 +61,12 @@ if(NOT VCPKG_USE_HEAD_VERSION)
         endif()
     endforeach()
     list(REMOVE_ITEM ALL_SUPPORTED_FEATURES ${head_only})
+endif()
+
+if(VCPKG_USE_HEAD_VERSION)
+    set(_OPTION_PREFIX MAGNUM_)
+else()
+    set(_OPTION_PREFIX )
 endif()
 
 set(_COMPONENTS "")
@@ -72,7 +78,7 @@ foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
 
     # Final feature is empty, ignore it
     if(_feature)
-        list(APPEND _COMPONENTS ${_feature} WITH_${_FEATURE})
+        list(APPEND _COMPONENTS ${_feature} ${_OPTION_PREFIX}WITH_${_FEATURE})
     endif()
 endforeach()
 
@@ -87,8 +93,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CORRADE_RC_EXECUTABLE}
-        -DBUILD_STATIC=${BUILD_PLUGINS_STATIC}
-        -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
+        -D${_OPTION_PREFIX}BUILD_STATIC=${BUILD_PLUGINS_STATIC}
+        -D${_OPTION_PREFIX}BUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )

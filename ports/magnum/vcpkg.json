@@ -183,6 +183,10 @@
         }
       ]
     },
+    "emscriptenapplication": {
+      "description": "EmscriptenApplication library",
+      "supports": "emscripten"
+    },
     "fontconverter": {
       "description": "magnum-fontconverter utility",
       "supports": "!ios & !android",
@@ -284,6 +288,18 @@
         }
       ]
     },
+    "materialtools": {
+      "description": "MaterialTools library",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
     "meshtools": {
       "description": "MeshTools library",
       "dependencies": [
@@ -361,6 +377,18 @@
     },
     "scenegraph": {
       "description": "SceneGraph library"
+    },
+    "scenetools": {
+      "description": "SceneTools library",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
     },
     "sdl2application": {
       "description": "Sdl2Application library",
