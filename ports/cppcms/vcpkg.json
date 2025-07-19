@@ -1,13 +1,12 @@
 {
   "name": "cppcms",
   "version": "1.2.1",
-  "port-version": 7,
+  "port-version": 8,
   "description": "CppCMS is a Free High Performance Web Development Framework (not a CMS) aimed at Rapid Web Application Development",
   "homepage": "https://github.com/artyom-beilis/cppcms",
   "license": null,
   "supports": "!uwp",
   "dependencies": [
-    "icu",
     "openssl",
     "pcre",
     {
@@ -15,5 +14,16 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "icu": {
+      "description": "Enable icu locale backend",
+      "dependencies": [
+        {
+          "name": "icu",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }
