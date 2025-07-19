@@ -1,7 +1,7 @@
 {
   "name": "magnum-plugins",
   "version-string": "2020.06",
-  "port-version": 13,
+  "port-version": 14,
   "description": "Plugins for magnum, C++11/C++14 graphics middleware for games and data visualization",
   "homepage": "https://magnum.graphics/",
   "license": null,
@@ -24,10 +24,12 @@
     "icoimporter",
     "miniexrimageconverter",
     "opengeximporter",
+    "primitiveimporter",
     "stanfordimporter",
     "stanfordsceneconverter",
     "stbimageconverter",
     "stbimageimporter",
+    "stbtruetypefont",
     "stlimporter"
   ],
   "features": {
@@ -42,6 +44,18 @@
             "anyimageimporter"
           ]
         },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "astcimporter": {
+      "description": "AstcImporter plugin",
+      "dependencies": [
         {
           "name": "magnum",
           "default-features": false,
@@ -75,6 +89,18 @@
           ]
         },
         "zstd"
+      ]
+    },
+    "bcdecimageconverter": {
+      "description": "BcDecImageConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
       ]
     },
     "cgltfimporter": {
@@ -157,6 +183,18 @@
         }
       ]
     },
+    "etcdecimageconverter": {
+      "description": "EtcDecImageConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
     "freetypefont": {
       "description": "FreeTypeFont plugin",
       "dependencies": [
@@ -179,6 +217,37 @@
           "default-features": false,
           "features": [
             "shadertools"
+          ]
+        }
+      ]
+    },
+    "gltfimporter": {
+      "description": "GltfImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "anyimageimporter"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "gltfsceneconverter": {
+      "description": "GltfSceneConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
           ]
         }
       ]
@@ -249,6 +318,19 @@
     "ktximporter": {
       "description": "KtxImporter plugin",
       "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "lunasvgimporter": {
+      "description": "LunaSvgImporter plugin",
+      "dependencies": [
+        "lunasvg",
         {
           "name": "magnum",
           "default-features": false,
@@ -338,6 +420,19 @@
         }
       ]
     },
+    "plutosvgimporter": {
+      "description": "PlutoSvgImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        },
+        "plutosvg"
+      ]
+    },
     "pngimageconverter": {
       "description": "PngImageConverter plugin",
       "dependencies": [
@@ -355,6 +450,25 @@
       "description": "PngImporter plugin",
       "dependencies": [
         "libpng",
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "primitiveimporter": {
+      "description": "PrimitiveImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "primitives"
+          ]
+        },
         {
           "name": "magnum",
           "default-features": false,
@@ -437,6 +551,18 @@
         }
       ]
     },
+    "stbresizeimageconverter": {
+      "description": "StbResizeImageConverter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
     "stbtruetypefont": {
       "description": "StbTrueTypeFont plugin",
       "dependencies": [
@@ -483,6 +609,58 @@
             "anyimageimporter"
           ]
         },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "ufbximporter": {
+      "description": "UfbxImporter plugin",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "anyimageimporter"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "meshtools"
+          ]
+        },
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "webpimageconverter": {
+      "description": "WebPImageConverter plugin",
+      "dependencies": [
+        "libwebp",
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
+    },
+    "webpimporter": {
+      "description": "WebPImporter plugin",
+      "dependencies": [
+        "libwebp",
         {
           "name": "magnum",
           "default-features": false,

@@ -13,6 +13,12 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
+if(VCPKG_USE_HEAD_VERSION)
+    set(_OPTION_PREFIX CORRADE_)
+else()
+    set(_OPTION_PREFIX )
+endif()
+
 # Handle features
 set(_COMPONENTS "")
 foreach(_feature IN LISTS ALL_FEATURES)
@@ -22,7 +28,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
 
     # Final feature is empty, ignore it
     if(_feature AND NOT "${_feature}" STREQUAL "dynamic-pluginmanager")
-        list(APPEND _COMPONENTS ${_feature} WITH_${_FEATURE})
+        list(APPEND _COMPONENTS ${_feature} ${_OPTION_PREFIX}WITH_${_FEATURE})
     endif()
 endforeach()
 
@@ -35,16 +41,21 @@ if(VCPKG_CROSSCOMPILING)
     )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(USE_ANSI_COLORS_ON_WINDOWS -D${_OPTION_PREFIX}UTILITY_USE_ANSI_COLORS=ON)
+else()
+    set(USE_ANSI_COLORS_ON_WINDOWS )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         "${corrade_rc_param}"
-        -DUTILITY_USE_ANSI_COLORS=ON
-        -DBUILD_STATIC=${BUILD_STATIC}
+        ${USE_ANSI_COLORS_ON_WINDOWS}
+        -D${_OPTION_PREFIX}BUILD_STATIC=${BUILD_STATIC}
     MAYBE_UNUSED_VARIABLES
         CORRADE_RC_EXECUTABLE
-        UTILITY_USE_ANSI_COLORS
 )
 
 vcpkg_cmake_install()
