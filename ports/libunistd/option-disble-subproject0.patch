@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b8be0bd..00dd987 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,11 +40,27 @@ if(NOT WIN32 AND NOT APPLE)
+ 	message("Linking rt pthread dl")
+ endif(NOT WIN32 AND NOT APPLE)
+ 
+-add_subdirectory(portable)
+-add_subdirectory(sqlite)
+-add_subdirectory(uuid)
+-add_subdirectory(regex)
+-add_subdirectory(xxhash)
++option(BUILD_PORTABLE "Build portable" ON)
++option(BUILD_SQLITE "Build sqlite" ON)
++option(BUILD_UUID "Build uuid" ON)
++option(BUILD_REGEX "Build regex" ON)
++option(BUILD_XXHASH "Build xxhash" ON)
++
++if (BUILD_PORTABLE)
++    add_subdirectory(portable)
++endif (BUILD_PORTABLE)
++if (BUILD_SQLITE)
++    add_subdirectory(sqlite)
++endif (BUILD_SQLITE)
++if (BUILD_UUID)
++    add_subdirectory(uuid)
++endif (BUILD_UUID)
++if (BUILD_REGEX)
++	add_subdirectory(regex)
++endif (BUILD_REGEX)
++if (BUILD_XXHASH)
++    add_subdirectory(xxhash)
++endif (BUILD_XXHASH)
+ if(WITH_TESTS)
+ add_subdirectory(test)
+ endif()
