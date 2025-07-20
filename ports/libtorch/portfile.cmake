@@ -1,45 +1,11 @@
-vcpkg_download_distfile(
-    CUDNN_9_FIX
-    URLS https://github.com/pytorch/pytorch/commit/e14026bc2a6cd80bedffead77a5d7b75a37f8e67.patch?full_index=1
-    SHA512 9569547b44b61f9559f0e7ab91f2be51657ece4f5462b6860cb5eae8d23d01187d6af046b369a77a228fe4d7153f5c683b686e84c1296a662f83e5f1f281bc7e
-    FILENAME libtorch-cudnn-9-fix-e14026bc2a6cd80bedffead77a5d7b75a37f8e67.patch
-)
-
-vcpkg_download_distfile(
-    CUDA_THRUST_MISSING_HEADER_FIX
-    URLS https://github.com/pytorch/pytorch/commit/2a440348958b3f0a2b09458bd76fe5959b371c0c.patch?full_index=1
-    SHA512 eff10d81b1c635108ad1b95a430865a76ab3f2079be74e61e06876942ac1fd43a274fc1c73e43c2c01b9ce5aca648213ef75c13c28b8ffa40497e4e26d5e3b16
-    FILENAME libtorch-cuda-thrust-missing-header-2a440348958b3f0a2b09458bd76fe5959b371c0c.patch
-)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
     REF "v${VERSION}"
-    SHA512 a8961d78ad785b13c959a0612563a60e0de17a7c8bb9822ddea9a24072796354d07e81c47b6cc8761b21a6448845b088cf80e1661d9e889b0ed5474d3dc76756
-    HEAD_REF master
-    PATCHES
-        "${CUDNN_9_FIX}"
-        "${CUDA_THRUST_MISSING_HEADER_FIX}"
-        cmake-fixes.patch
-        more-fixes.patch
-        fix-build.patch
-        clang-cl.patch
-        cuda-adjustments.patch
-        fix-api-export.patch
-        fxdiv.patch
-        protoc.patch
-        fix-sleef.patch
-        fix-glog.patch
-        fix-msvc-ICE.patch
-        fix-calculate-minloglevel.patch
-        force-cuda-include.patch
-        fix-aten-cutlass.patch
-        fix-build-error-with-fmt11.patch
-        no-abs-path.patch
-        add-include-chrono.patch
+    SHA512 a9fc2252af9031c2cd46dde558c491aea8bc322fb80157a7760f300a44b759d4bfe866f030fbb974b80493057cfff4dd512498f99a100ed6d05bf620258ed37e
+    HEAD_REF main
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -47,19 +13,17 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generat
 vcpkg_from_github(
     OUT_SOURCE_PATH src_kineto
     REPO pytorch/kineto
-    REF 49e854d805d916b2031e337763928d2f8d2e1fbf
-    SHA512 ae63d48dc5b8ac30c38c2ace60f16834c7e9275fa342dc9f109d4fbc87b7bd674664f6413c36d0c1ab5a7da786030a4108d83daa4502b2f30239283ea3acdb16
+    REF 54ffcd4fb0bd77a5ecea46d11b4ed12d393c7fe3 # 2025-07-17
+    SHA512 5346f9d97e12ac200b5d9d5e96fa6c6b9e4b84736d0beea51050725949f6fca31af020aff287468426c2b04588428fc67fbb1c8eb1f50fbef2f5e6ad002c58de
     HEAD_REF main
-    PATCHES
-      kineto.patch
 )
 file(COPY "${src_kineto}/" DESTINATION "${SOURCE_PATH}/third_party/kineto")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH src_cudnn
     REPO NVIDIA/cudnn-frontend # new port ?
-    REF 12f35fa2be5994c1106367cac2fba21457b064f4
-    SHA512 a7e4bf58f82ca0b767df35da1b3588e2639ea2ef22ed0c47e989fb4cde5a28b0605b228b42fcaefbdf721bfbb91f2a9e7d41352ff522bd80b63db6d27e44ec20
+    REF v1.12.0
+    SHA512 331ebbbd3439ab1b680d543d0550d63407148e9731c62e4d805eddb49bad5bc9ca7a38d9dd6ac4b976c70955155254fdee037a98f386f5e34c744eb3c2de095f
     HEAD_REF main
 )
 file(COPY "${src_cudnn}/" DESTINATION "${SOURCE_PATH}/third_party/cudnn_frontend")
@@ -187,6 +151,7 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_LIBS=ON
         -DUSE_SYSTEM_FXDIV=ON
         -DUSE_SYSTEM_SLEEF=ON
+        -DUSE_SYSTEM_XNNPACK=ON
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
         ${BLAS_OPTIONS}
