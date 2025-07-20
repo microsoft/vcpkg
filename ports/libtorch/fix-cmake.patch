@@ -1,0 +1,132 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f3fee2f..07a6347 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1239,13 +1239,10 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/aten/src/)
+ include_directories(BEFORE ${CMAKE_BINARY_DIR}/aten/src/)
+ 
+ if(USE_MIMALLOC)
+-  set(MI_OVERRIDE OFF)
+-  set(MI_BUILD_SHARED OFF)
+-  set(MI_BUILD_OBJECT OFF)
+-  set(MI_BUILD_TESTS OFF)
+-  add_definitions(-DUSE_MIMALLOC)
+-  add_subdirectory(third_party/mimalloc)
+-  include_directories(third_party/mimalloc/include)
++  find_package(mimalloc CONFIG REQUIRED)
++  add_compile_definitions(USE_MIMALLOC)
++  find_path(MIMALLOC_INCLUDE_DIR mimalloc.h REQUIRED)
++  include_directories(${MIMALLOC_INCLUDE_DIR})
+ endif()
+ 
+ if(USE_MIMALLOC AND USE_MIMALLOC_ON_MKL)
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 5227204..0190b36 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -380,13 +380,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
+ 
+   if(NOT TARGET pthreadpool)
+     if(USE_SYSTEM_PTHREADPOOL)
+-      add_library(pthreadpool SHARED IMPORTED)
+-      find_library(PTHREADPOOL_LIBRARY pthreadpool)
+-      set_property(TARGET pthreadpool PROPERTY IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")
+-      if(NOT PTHREADPOOL_LIBRARY)
+-        message(FATAL_ERROR "Cannot find pthreadpool")
+-      endif()
+-      message("-- Found pthreadpool: ${PTHREADPOOL_LIBRARY}")
++      find_package(unofficial-pthreadpool CONFIG REQUIRED) # unofficial::pthreadpool unofficial::pthreadpool_interface
++      add_library(pthreadpool ALIAS unofficial::pthreadpool)
+     else()
+       if(NOT DEFINED PTHREADPOOL_SOURCE_DIR)
+         set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
+@@ -413,13 +408,8 @@ if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x|ppc64le)$")
+   # ---[ Caffe2 uses cpuinfo library in the thread pool
+   # ---[ But it doesn't support s390x/powerpc and thus not used on s390x/powerpc
+   if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
+-    add_library(cpuinfo SHARED IMPORTED)
+-    find_library(CPUINFO_LIBRARY cpuinfo)
+-    if(NOT CPUINFO_LIBRARY)
+-      message(FATAL_ERROR "Cannot find cpuinfo")
+-    endif()
+-    message("Found cpuinfo: ${CPUINFO_LIBRARY}")
+-    set_target_properties(cpuinfo PROPERTIES IMPORTED_LOCATION "${CPUINFO_LIBRARY}")
++    find_package(cpuinfo CONFIG REQUIRED)
++    add_library(cpuinfo ALIAS cpuinfo::cpuinfo)
+   elseif(NOT TARGET cpuinfo)
+     if(NOT DEFINED CPUINFO_SOURCE_DIR)
+       set(CPUINFO_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../third_party/cpuinfo" CACHE STRING "cpuinfo source directory")
+@@ -557,17 +547,8 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
+   include_directories(SYSTEM ${XNNPACK_INCLUDE_DIR})
+   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
+ elseif(NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)
+-  add_library(XNNPACK SHARED IMPORTED)
+-  add_library(microkernels-prod SHARED IMPORTED)
+-  find_library(XNNPACK_LIBRARY XNNPACK)
+-  find_library(microkernels-prod_LIBRARY microkernels-prod)
+-  set_property(TARGET XNNPACK PROPERTY IMPORTED_LOCATION "${XNNPACK_LIBRARY}")
+-  set_property(TARGET microkernels-prod PROPERTY IMPORTED_LOCATION "${microkernels-prod_LIBRARY}")
+-  if(NOT XNNPACK_LIBRARY or NOT microkernels-prod_LIBRARY)
+-    message(FATAL_ERROR "Cannot find XNNPACK")
+-  endif()
+-  message("-- Found XNNPACK: ${XNNPACK_LIBRARY}")
+-  list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
++  find_library(XNNPACK_LIBRARY XNNPACK REQUIRED)
++  list(APPEND Caffe2_DEPENDENCY_LIBS "${XNNPACK_LIBRARY}")
+ endif()
+ 
+ # ---[ Vulkan deps
+@@ -829,8 +810,9 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
+       "${CONFU_DEPENDENCIES_BINARY_DIR}/FP16")
+   endif()
+ elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
+-  add_library(fp16 STATIC "/usr/include/fp16.h")
+-  set_target_properties(fp16 PROPERTIES LINKER_LANGUAGE C)
++  find_path(FP16_INCLUDE_DIRS "fp16.h" REQUIRED)
++  add_library(fp16 INTERFACE IMPORTED)
++  set_target_properties(fp16 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${FP16_INCLUDE_DIRS}")
+ endif()
+ list(APPEND Caffe2_DEPENDENCY_LIBS fp16)
+ 
+@@ -1330,19 +1312,9 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+     endif()
+     list(APPEND Caffe2_DEPENDENCY_WHOLE_LINK_LIBS onnx_library)
+   else()
+-    add_library(onnx SHARED IMPORTED)
+-    find_library(ONNX_LIBRARY onnx)
+-    if(NOT ONNX_LIBRARY)
+-      message(FATAL_ERROR "Cannot find onnx")
+-    endif()
+-    set_property(TARGET onnx PROPERTY IMPORTED_LOCATION ${ONNX_LIBRARY})
+-    add_library(onnx_proto SHARED IMPORTED)
+-    find_library(ONNX_PROTO_LIBRARY onnx_proto)
+-    if(NOT ONNX_PROTO_LIBRARY)
+-      message(FATAL_ERROR "Cannot find onnx")
+-    endif()
+-    set_property(TARGET onnx_proto PROPERTY IMPORTED_LOCATION ${ONNX_PROTO_LIBRARY})
+-    message("-- Found onnx: ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY}")
++    find_package(ONNX CONFIG REQUIRED)
++    add_library(onnx ALIAS ONNX::onnx)
++    add_library(onnx_proto ALIAS ONNX::onnx_proto)
+     list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)
+   endif()
+   # Recover the build shared libs option.
+@@ -1586,17 +1558,7 @@ endif()
+ #
+ set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+-add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+-
+-# Disable compiler feature checks for `fmt`.
+-#
+-# CMake compiles a little program to check compiler features. Some of our build
+-# configurations (notably the mobile build analyzer) will populate
+-# CMAKE_CXX_FLAGS in ways that break feature checks. Since we already know
+-# `fmt` is compatible with a superset of the compilers that PyTorch is, it
+-# shouldn't be too bad to just disable the checks.
+-set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
+-
++find_package(fmt CONFIG REQUIRED)
+ list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
+ set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
+ 
