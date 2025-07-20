@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aedc983..0551b35 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -157,6 +157,9 @@ IF(CPUINFO_SUPPORTED_PLATFORM AND CPUINFO_BUILD_BENCHMARKS)
+   ENDIF()
+ ENDIF()
+ 
++# ---[ clog library for qnnpack port in vcpkg
++add_subdirectory(deps/clog)
++
+ # ---[ cpuinfo library
+ SET(CPUINFO_SRCS src/api.c src/cache.c src/init.c src/log.c)
+ 
