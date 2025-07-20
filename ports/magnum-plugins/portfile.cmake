@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         002-fix-stb-conflict.patch
-        003-fix-drmp3-windows-arm64.patch
 )
 
 if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)
