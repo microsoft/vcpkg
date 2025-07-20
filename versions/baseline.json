@@ -5209,7 +5209,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "9.0.8",
+      "baseline": "9.0.9",
       "port-version": 0
     },
     "libplist": {
