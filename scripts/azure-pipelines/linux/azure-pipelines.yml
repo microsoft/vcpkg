@@ -19,7 +19,7 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: PrAnd-WUS  # The "android" pool name is something of a misnomer; the pool is named that way due to Android being our first dockerized platform
+    name: PrAzureLinux3Docker
   timeoutInMinutes: 1440 # 1 day
   variables:
   - name: WORKING_ROOT
@@ -27,7 +27,7 @@ jobs:
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
   - name: LINUX_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-06-11'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-07-10'
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |

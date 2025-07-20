@@ -199,7 +199,7 @@
       "arch": "amd64",
       "executable": "coscli-v1.0.3-linux-amd64",
       "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-linux-amd64",
-      "sha512": "c91b2665682969e389b3c70c663eb694024b2f7ed68e059d2b9f44000259f6c6466cc33667b8557a2999b2d2ed912b405f997420c56df6dea50576368b1b8536"
+      "sha512": "6c55a2b6e00afcc3cd3d724c50f8b07ab8b54b7d04f0e2a55f2b82a8735504422132431c4a70b152b94d7f02f9c03cea25f98013f884f099ba2bfd414ed9521a"
     },
     {
       "name": "coscli",
@@ -208,7 +208,7 @@
       "arch": "arm64",
       "executable": "coscli-v1.0.3-darwin-arm64",
       "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-darwin-arm64",
-      "sha512": "9556335bfc8bc14bace6dfced45fa77fb07c80f08aa975e047a54efda1d19852aae0ea68a5bc7f04fbd88e3edce5a73512a61216b1c5ff4cade224de4a9ab8db"
+      "sha512": "c91b2665682969e389b3c70c663eb694024b2f7ed68e059d2b9f44000259f6c6466cc33667b8557a2999b2d2ed912b405f997420c56df6dea50576368b1b8536"
     },
     {
       "name": "coscli",
@@ -218,15 +218,6 @@
       "executable": "coscli-v1.0.3-darwin-amd64",
       "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-darwin-amd64",
       "sha512": "aaa7fe9e71ef46246d08a59777898ea59a4ca6261ca9139e02ed2ebdc026295fa8d24d48cda2973c05fefe82379ad007196e08973dde6ce36c816df1dcfead2e"
-    },
-    {
-      "name": "installerbase",
-      "os": "windows",
-      "version": "4.4.0",
-      "executable": "QtInstallerFramework-win-x86/bin/installerbase.exe",
-      "url": "https://download.qt.io/official_releases/qt-installer-framework/4.4.0/installer-framework-opensource-src-4.4.0.zip",
-      "sha512": "fc713f54bfe2781cb232cd0ae8eddb96833ec178d53a55ec0b01886aa048b13441eb49a1f33282e8eab7259cfe512c890d50b8e632d3dbf501a0bf1fd83de947",
-      "archive": "installer-framework-opensource-src-4.4.0.zip"
     },
     {
       "name": "7zip_msi",
@@ -315,29 +306,29 @@
     {
       "name": "node",
       "os": "windows",
-      "version": "16.15.1",
-      "executable": "node-v16.15.1-win-x64/node.exe",
-      "url": "https://nodejs.org/dist/v16.15.1/node-v16.15.1-win-x64.7z",
-      "sha512": "7ec4bfe2ea6034e1461e306b6372d62c0c5d1060c453ba76a73a5cec38ac26b5952a744caa9071455329caa58eb0a96d26c68854c8915c17610ff27b0cf2c1cf",
-      "archive": "node-v16.15.1-win-x64.7z"
+      "version": "24.3.0",
+      "executable": "node-v24.3.0-win-x64/node.exe",
+      "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-win-x64.7z",
+      "sha512": "01d967a0a24f7ffe76a963caca3faae19f788ebdd598d99033adc6cd9916db8912f7b80ca6966eca5e5b215b6d36d4fae22422f9fb269d2e25c1bbf64235e583",
+      "archive": "node-v24.3.0-win-x64.7z"
     },
     {
       "name": "node",
       "os": "linux",
-      "version": "16.15.1",
-      "executable": "node-v16.15.1-linux-x64/bin/node",
-      "url": "https://nodejs.org/dist/v16.15.1/node-v16.15.1-linux-x64.tar.gz",
-      "sha512": "5ad3b4b9caeaa8d31503efa99f5a593118a267dec9d4181d019732126ba248ce9a901207115b3f6b899eb5b3f0373c7f77ea95cc92ac625cddf437ee9b8b8919",
-      "archive": "node-v16.15.1-linux-x64.tar.gz"
+      "version": "24.3.0",
+      "executable": "node-v24.3.0-linux-x64/bin/node",
+      "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-linux-x64.tar.gz",
+      "sha512": "5b64913ad0138d4db19b85048c0a72d81d1b696edcadf2d2d80e18d6c6cf1bf5529bcba692ebeedc0468173db4b9d472d25c88eaa6178b71ae398a91d105c1dc",
+      "archive": "node-v24.3.0-linux-x64.tar.gz"
     },
     {
       "name": "node",
       "os": "osx",
-      "version": "16.15.1",
-      "executable": "node-v16.15.1-darwin-x64/bin/node",
-      "url": "https://nodejs.org/dist/v16.15.1/node-v16.15.1-darwin-x64.tar.gz",
-      "sha512": "90d0612bbe5467b6cf385c91a68b8daad0057e3e0ccacea44567f5b95b14f7481cb79784185ab1463b4bd990e092ff0f9109576d1a1934b84e1c816582929611",
-      "archive": "node-v16.15.1-darwin-x64.tar.gz"
+      "version": "24.3.0",
+      "executable": "node-v24.3.0-darwin-x64/bin/node",
+      "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-darwin-x64.tar.gz",
+      "sha512": "366c58a27c04db072116619f7f085f38c9e9fb3d3022ce18484f61bb29ab1d0bb79412b8d6f9ea8b97ec9fa6c41584f18ba83a01e89d744f29983d2bc8532358",
+      "archive": "node-v24.3.0-darwin-x64.tar.gz"
     },
     {
       "name": "azcopy",
