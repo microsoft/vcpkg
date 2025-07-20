@@ -8513,7 +8513,7 @@
       "port-version": 0
     },
     "safetyhook": {
-      "baseline": "0.6.7",
+      "baseline": "0.6.9",
       "port-version": 0
     },
     "sail": {
