@@ -1,0 +1,18 @@
+diff --git a/src/MagnumPlugins/DrMp3AudioImporter/DrMp3Importer.cpp b/src/MagnumPlugins/DrMp3AudioImporter/DrMp3Importer.cpp
+index 0141beb25..3354ed3f5 100644
+--- a/src/MagnumPlugins/DrMp3AudioImporter/DrMp3Importer.cpp
++++ b/src/MagnumPlugins/DrMp3AudioImporter/DrMp3Importer.cpp
+@@ -34,6 +34,13 @@
+ #include <Magnum/Math/Packing.h>
+ 
+ #define DR_MP3_IMPLEMENTATION
++/* ARM64 detection is broken on MSVC until
++   https://github.com/mackron/dr_libs/commit/35139bf8dcbedf1fd7f5ae5551c6c6431509b81f
++   that adds _M_ARM64 to line 537, and even then NEON vector initializers
++   aren't ready for MSVC's lack of features. Disable it there altogether. */
++#if defined(CORRADE_TARGET_MSVC) && defined(CORRADE_TARGET_ARM)
++#define DR_MP3_NO_SIMD
++#endif
+ #include "dr_mp3.h"
+ 
+ namespace Magnum { namespace Audio {
