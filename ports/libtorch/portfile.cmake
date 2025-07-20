@@ -6,6 +6,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 a9fc2252af9031c2cd46dde558c491aea8bc322fb80157a7760f300a44b759d4bfe866f030fbb974b80493057cfff4dd512498f99a100ed6d05bf620258ed37e
     HEAD_REF main
+    PATCHES
+        fix-cmake.patch
+        fix-glog.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
