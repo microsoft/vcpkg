@@ -5105,7 +5105,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2025.7.2",
+      "baseline": "2025.6.5",
       "port-version": 0
     },
     "libnoise": {
