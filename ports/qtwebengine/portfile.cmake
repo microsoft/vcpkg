@@ -222,9 +222,11 @@ qt_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_GPerf=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Ninja=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Nodejs=ON
+        --trace-expand
     OPTIONS_MAYBE_UNUSED
         FEATURE_webengine_webrtc
 )
+message(FATAL_ERROR Stop.)
 
 vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
 file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release/*/args.gn")
