@@ -221,13 +221,14 @@
     },
     "glfwapplication": {
       "description": "GlfwApplication library",
+      "supports": "!ios & !android & !emscripten",
       "dependencies": [
         "glfw3"
       ]
     },
     "glxcontext": {
       "description": "GlxContext library",
-      "supports": "!windows & !osx",
+      "supports": "!windows & !osx & !ios & !android & !emscripten",
       "dependencies": [
         {
           "name": "magnum",
@@ -560,7 +561,7 @@
     },
     "windowlessglxapplication": {
       "description": "WindowlessGlxApplication library",
-      "supports": "!windows & !osx & !ios",
+      "supports": "!windows & !osx & !ios & !android & !emscripten",
       "dependencies": [
         {
           "name": "magnum",
