@@ -30,13 +30,6 @@
           ]
         },
         {
-          "name": "corrade",
-          "host": true,
-          "features": [
-            "utility"
-          ]
-        },
-        {
           "name": "magnum",
           "features": [
             "text"
