@@ -45,8 +45,7 @@
       "description": "Build the tests",
       "dependencies": [
         {
-          "name": "gtest",
-          "version>=": "1.14.0"
+          "name": "gtest"
         }
       ]
     }
