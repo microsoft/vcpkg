@@ -17,10 +17,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "postgres",
-    "sqlite3"
-  ],
   "features": {
     "postgres": {
       "description": "Enable PostgreSQL support",
