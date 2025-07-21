@@ -8,6 +8,7 @@ vcpkg_from_github(
             0002-lottieparser-fix-rapidjson-include.patch
             0003-vector-cmakelists-remove-pixman.patch
             0004-vector-vdrawhelper-remove-pixman.patch
+            0005-lottieparser-windows-path-parsing.patch
 )
 
 vcpkg_cmake_configure(

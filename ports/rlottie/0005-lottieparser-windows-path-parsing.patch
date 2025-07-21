@@ -1,0 +1,64 @@
+diff --git a/src/lottie/lottieparser.cpp b/src/lottie/lottieparser.cpp
+index 8d79af4..c013f7d 100644
+--- a/src/lottie/lottieparser.cpp
++++ b/src/lottie/lottieparser.cpp
+@@ -58,6 +58,14 @@
+ #include "lottiemodel.h"
+ #include <rapidjson/document.h>
+ #include "zip/zip.h"
++#include <stdlib.h>
++#include <set>
++
++#ifdef _WIN32
++#ifndef PATH_MAX
++#define PATH_MAX _MAX_PATH
++#endif
++#endif
+ 
+ RAPIDJSON_DIAG_PUSH
+ #ifdef __GNUC__
+@@ -803,7 +811,11 @@ static bool isResourcePathSafe(const std::string& baseDir, const std::string& us
+     char resolvedTarget[PATH_MAX] = {};
+ 
+     // Resolve base directory
++#ifdef _WIN32
++    if (!_fullpath(resolvedBase, baseDir.c_str(), PATH_MAX)) {
++#else
+     if (!realpath(baseDir.c_str(), resolvedBase)) {
++#endif
+ #ifdef DEBUG_PARSER
+         vWarning << "Error: Cannot resolve base path: " << baseDir.c_str();
+ #endif
+@@ -811,11 +823,22 @@ static bool isResourcePathSafe(const std::string& baseDir, const std::string& us
+     }
+ 
+     // Resolve target path
++
++#ifdef _WIN32
++    static const std::set<char> possiblePathSeparators = { '\\', '/' };
++#else
++    static const std::set<char> possiblePathSeparators = { '/' };
++#endif
++
+     std::string fullPath = baseDir;
+-    if (!baseDir.empty() && baseDir.back() != '/') fullPath += "/";
++    if (!baseDir.empty() && possiblePathSeparators.find(baseDir.back()) == possiblePathSeparators.end()) fullPath += "/";
+     fullPath += userPath;
+ 
++#ifdef _WIN32
++    if (!_fullpath(resolvedTarget, fullPath.c_str(), PATH_MAX)) {
++#else
+     if (!realpath(fullPath.c_str(), resolvedTarget)) {
++#endif
+ #ifdef DEBUG_PARSER
+         vWarning << "Error: Cannot resolve target path: " << fullPath.c_str();
+ #endif
+@@ -827,7 +850,7 @@ static bool isResourcePathSafe(const std::string& baseDir, const std::string& us
+ 
+     // Ensure target starts with base
+     bool result = target.compare(0, base.length(), base) == 0 &&
+-         (target.length() == base.length() || target[base.length()] == '/');
++         (target.length() == base.length() || possiblePathSeparators.find(target[base.length()]) == possiblePathSeparators.end());
+ 
+     if (!result) {
+ #ifdef DEBUG_PARSER
