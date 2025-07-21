@@ -33,9 +33,6 @@ foreach(config RELEASE DEBUG)
   if ("secret-callback" IN_LIST FEATURES)
       string(APPEND VCPKG_COMBINED_C_FLAGS_${config} " -DHAVE_SECRET_CALLBACK")
   endif()
-  if ("curve25519-blinding" IN_LIST FEATURES)
-      string(APPEND VCPKG_COMBINED_C_FLAGS_${config} " -DWOLFSSL_CURVE25519_BLINDING")
-  endif()
 endforeach()
 
 vcpkg_cmake_configure(
