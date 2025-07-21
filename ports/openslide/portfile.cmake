@@ -19,7 +19,7 @@ endif()
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    message(WARNING "MSVC is not supported; use clang-cl")
+    message(FATAL_ERROR "MSVC is not supported; use clang-cl")
 endif()
 
 vcpkg_configure_meson(
