@@ -37,8 +37,7 @@
           "name": "sqlite3",
           "features": [
             "math"
-          ],
-          "version>=": "3.49.1"
+          ]
         }
       ]
     },
