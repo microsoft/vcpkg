@@ -16,10 +16,7 @@
       "name": "gperf",
       "host": true
     },
-    {
-      "name": "libiconv",
-      "platform": "!windows"
-    },
+    "libiconv",
     {
       "name": "libuuid",
       "platform": "!osx & !windows"
