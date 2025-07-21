@@ -780,6 +780,7 @@ dcmtk[icu](uwp) = cascade
 dcmtk[icu](uwp) = cascade
 devil[openexr]:arm64-uwp = cascade
 devil[openexr]:x64-uwp = cascade
+directxtex[core,dx11,dx12,openexr,spectre,tools]:arm64-windows-static-md = combination-fails # error LNK2047: module contains C++ EH or complex EH metadata but was not compiled with /guard:ehcont
 directxtex[openexr]:arm64-uwp = cascade
 directxtex[openexr]:x64-uwp = cascade
 directxtk[xaudio2redist](uwp) = cascade
