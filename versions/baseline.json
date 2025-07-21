@@ -7046,7 +7046,7 @@
     },
     "openmvg": {
       "baseline": "2.1",
-      "port-version": 1
+      "port-version": 2
     },
     "openmvs": {
       "baseline": "2.1.0",
@@ -10042,7 +10042,7 @@
     },
     "vlfeat": {
       "baseline": "2020-07-10",
-      "port-version": 4
+      "port-version": 5
     },
     "vlpp": {
       "baseline": "1.2.10.2",
