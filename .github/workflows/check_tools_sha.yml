@@ -5,6 +5,9 @@ on:
     paths:
       - "scripts/vcpkg-tools.json"
 
+permissions:
+  contents: read
+
 jobs:
   check-tools-sha:
     runs-on: ubuntu-latest
