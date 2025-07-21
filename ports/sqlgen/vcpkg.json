@@ -5,8 +5,12 @@
   "homepage": "https://github.com/getml/sqlgen/",
   "license": "MIT",
   "dependencies": [
+    "reflectcpp",
     {
-      "name": "reflectcpp"
+      "name": "sqlite3",
+      "features": [
+        "math"
+      ]
     },
     {
       "name": "vcpkg-cmake",
@@ -21,28 +25,13 @@
     "postgres": {
       "description": "Enable PostgreSQL support",
       "dependencies": [
-        {
-          "name": "libpq"
-        }
-      ]
-    },
-    "sqlite3": {
-      "description": "Enable SQLite3 support",
-      "dependencies": [
-        {
-          "name": "sqlite3",
-          "features": [
-            "math"
-          ]
-        }
+        "libpq"
       ]
     },
     "tests": {
       "description": "Build the tests",
       "dependencies": [
-        {
-          "name": "gtest"
-        }
+        "gtest"
       ]
     }
   }

@@ -14,7 +14,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SQLGEN_BUILD_SHARED)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         postgres            SQLGEN_POSTGRES
-        sqlite3             SQLGEN_SQLITE3
 )
 
 vcpkg_cmake_configure(
@@ -22,6 +21,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DSQLGEN_BUILD_TESTS=OFF
+        -DSQLGEN_SQLITE3=ON
         -DSQLGEN_BUILD_SHARED=${SQLGEN_BUILD_SHARED}
 )
 
