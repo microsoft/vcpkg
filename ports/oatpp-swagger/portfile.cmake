@@ -5,7 +5,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-swagger
-    REF "1.3.1"
+    REF "${VERSION}"
     SHA512 ba4668e3cc90163219a29d61ef5fba2f3565d9f35c2d050723b00706f2ac5bb721d020f1a49a7c9025694ff7c93c3ff7e4318ef4be5bd1438c02a54df72ba1e3
     HEAD_REF master
 )
