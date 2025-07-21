@@ -1,0 +1,13 @@
+diff --git a/src/lottie/lottieparser.cpp b/src/lottie/lottieparser.cpp
+index 919ec5b..8d79af4 100644
+--- a/src/lottie/lottieparser.cpp
++++ b/src/lottie/lottieparser.cpp
+@@ -56,7 +56,7 @@
+ #include <array>
+ 
+ #include "lottiemodel.h"
+-#include "rapidjson/document.h"
++#include <rapidjson/document.h>
+ #include "zip/zip.h"
+ 
+ RAPIDJSON_DIAG_PUSH
