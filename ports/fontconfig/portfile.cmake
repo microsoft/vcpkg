@@ -44,11 +44,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(replacement "**invalid-fontconfig-dir-do-not-use**")
 endif()
 set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.h")
-vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}" "${replacement}")
+vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}" "${replacement}" IGNORE_UNCHANGED)
 vcpkg_replace_string("${configfile}" "#define FC_TEMPLATEDIR \"/share/fontconfig/conf.avail\"" "#define FC_TEMPLATEDIR \"/usr/share/fontconfig/conf.avail\"" IGNORE_UNCHANGED)
 if(NOT VCPKG_BUILD_TYPE)
     set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.h")
-    vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}/debug" "${replacement}")
+    vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}/debug" "${replacement}" IGNORE_UNCHANGED)
     vcpkg_replace_string("${configfile}" "#define FC_TEMPLATEDIR \"/share/fontconfig/conf.avail\"" "#define FC_TEMPLATEDIR \"/usr/share/fontconfig/conf.avail\"" IGNORE_UNCHANGED)
 endif()
 
@@ -94,7 +94,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER}"
             "#define FcPublic"
             "${DEFINE_FC_PUBLIC}"
-        )
+        IGNORE_UNCHANGED)
     endforeach()
 endif()
 
