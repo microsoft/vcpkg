@@ -2477,8 +2477,8 @@
       "port-version": 0
     },
     "double-conversion": {
-      "baseline": "3.3.0",
-      "port-version": 1
+      "baseline": "3.3.1",
+      "port-version": 0
     },
     "dp-thread-pool": {
       "baseline": "0.7.0",
