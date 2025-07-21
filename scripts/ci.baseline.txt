@@ -491,6 +491,8 @@ libcpplocate:x64-android=fail
 libdc1394:arm-neon-android=fail
 libdc1394:arm64-android=fail
 libdc1394:x64-android=fail
+libdicom:arm64-windows-static-md=fail
+libdicom:arm64-windows=fail
 libfreenect2:arm64-windows-static-md=fail
 libfreenect2:arm64-windows=fail
 # error: call to undeclared function 'mktime_z'
