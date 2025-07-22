@@ -1,15 +1,11 @@
 {
   "name": "wasmedge",
-  "version": "0.13.5",
-  "port-version": 2,
+  "version": "0.14.1",
   "description": "WasmEdge is a high-performance WebAssembly runtime for edge computing.",
   "homepage": "https://WasmEdge.org",
   "license": "Apache-2.0",
   "supports": "!windows",
   "dependencies": [
-    "boost-algorithm",
-    "boost-align",
-    "boost-predef",
     "spdlog",
     {
       "name": "vcpkg-cmake",
@@ -20,12 +16,9 @@
       "host": true
     }
   ],
-  "default-features": [
-    "tools"
-  ],
   "features": {
-    "aot": {
-      "description": "Build with the Ahead-of-Time compiler supporting",
+    "llvm": {
+      "description": "Use LLVM",
       "dependencies": [
         "llvm"
       ]
