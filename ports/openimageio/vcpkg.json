@@ -1,7 +1,6 @@
 {
   "name": "openimageio",
-  "version": "3.0.1.0",
-  "port-version": 2,
+  "version": "3.0.8.0",
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "license": "BSD-3-Clause",
@@ -100,6 +99,7 @@
     },
     "pybind11": {
       "description": "Enable Python bindings support for openimageio",
+      "supports": "!android",
       "dependencies": [
         "pybind11",
         "python3"
@@ -110,6 +110,7 @@
     },
     "viewer": {
       "description": "Build openimageio viewer",
+      "supports": "!android",
       "dependencies": [
         "opengl",
         {
