@@ -1,0 +1,21 @@
+The package tgfx provides CMake targets:
+
+    find_package(tgfx CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE tgfx::tgfx)
+
+Available features:
+- svg: Enable building the SVG module
+- layers: Enable building the layers module  
+- drawers: Enable building the tgfx-drawers library for testing
+- qt: Enable building with the Qt framework
+- swiftshader: Enable building with the SwiftShader library
+- angle: Enable building with the ANGLE library
+- async-promise: Enable async promises for loading images on the web
+- exclude-opengl: Disable OpenGL as the GPU backend (OpenGL is enabled by default)
+- exclude-faster-blur: Disable the faster blur algorithm and use standard Gaussian blur (faster blur is enabled by default)
+
+Example usage with features:
+vcpkg install "tgfx[svg,layers,drawers]"
+
+To disable default features:
+vcpkg install "tgfx[exclude-opengl,exclude-faster-blur]"

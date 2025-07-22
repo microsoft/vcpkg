@@ -1,0 +1,46 @@
+{
+  "name": "tgfx",
+  "version-string": "dev",
+  "description": "A lightweight 2D graphics library for rendering texts, geometries, and images with high-performance APIs that work across various platforms.",
+  "homepage": "https://github.com/Tencent/tgfx",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "angle": {
+      "description": "Enable building with the ANGLE library"
+    },
+    "async-promise": {
+      "description": "Enable async promises for loading images on the web"
+    },
+    "drawers": {
+      "description": "Enable building the tgfx-drawers library for testing"
+    },
+    "exclude-faster-blur": {
+      "description": "Disable the faster blur algorithm and use standard Gaussian blur (faster blur is enabled by default)"
+    },
+    "exclude-opengl": {
+      "description": "Disable OpenGL as the GPU backend (OpenGL is enabled by default)"
+    },
+    "layers": {
+      "description": "Enable building the layers module"
+    },
+    "qt": {
+      "description": "Enable building with the Qt framework"
+    },
+    "svg": {
+      "description": "Enable building the SVG module"
+    },
+    "swiftshader": {
+      "description": "Enable building with the SwiftShader library"
+    }
+  }
+}
