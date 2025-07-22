@@ -10,6 +10,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
+        threads  BZIP3_ENABLE_PTHREAD
         tools    BZIP3_BUILD_APPS
 )
 

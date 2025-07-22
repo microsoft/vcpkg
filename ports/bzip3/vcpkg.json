@@ -15,6 +15,10 @@
     }
   ],
   "features": {
+    "threads": {
+      "description": "Enable use of pthread library",
+      "supports": "!windows"
+    },
     "tools": {
       "description": "Build bzip3 applications"
     }
