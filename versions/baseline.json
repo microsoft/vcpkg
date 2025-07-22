@@ -4654,7 +4654,7 @@
     },
     "libdicom": {
       "baseline": "1.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -7066,7 +7066,7 @@
     },
     "openslide": {
       "baseline": "4.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl": {
       "baseline": "3.5.1",
