@@ -49,6 +49,7 @@ vcpkg_configure_meson(
     OPTIONS
         ${OPTIONS}
         -Ddocumentation=false
+        -Ddtrace=disabled
         -Dinstalled_tests=false
         -Dintrospection=disabled
         -Dlibelf=disabled
