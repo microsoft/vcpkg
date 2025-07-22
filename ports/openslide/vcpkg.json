@@ -7,15 +7,31 @@
   "license": "LGPL-2.1-only",
   "supports": "!xbox",
   "dependencies": [
-    "cairo",
-    "gdk-pixbuf",
+    {
+      "name": "cairo",
+      "default-features": false
+    },
+    {
+      "name": "gdk-pixbuf",
+      "default-features": false
+    },
     "glib",
     "libdicom",
     "libjpeg-turbo",
     "libpng",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "openjpeg",
-    "sqlite3",
+    {
+      "name": "openslide",
+      "host": true
+    },
+    {
+      "name": "sqlite3",
+      "default-features": false
+    },
     {
       "name": "tiff",
       "default-features": false,
