@@ -12,12 +12,12 @@
       "name": "freetype",
       "default-features": false
     },
+    "gettext-libintl",
     {
       "name": "gperf",
       "host": true
     },
     "libiconv",
-    "gettext-libintl",
     {
       "name": "libuuid",
       "platform": "!osx & !windows"
