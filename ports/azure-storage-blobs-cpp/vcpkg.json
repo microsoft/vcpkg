@@ -4,8 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-storage-blobs-cpp",
-  "version-semver": "12.13.0",
-  "port-version": 1,
+  "version-semver": "12.14.0",
   "description": [
     "Microsoft Azure Storage Blobs SDK for C++",
     "This library provides Azure Storage Blobs SDK."
