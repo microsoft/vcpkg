@@ -9901,7 +9901,7 @@
       "port-version": 0
     },
     "vcglib": {
-      "baseline": "2023.12",
+      "baseline": "2025.07",
       "port-version": 0
     },
     "vcpkg-boost": {
