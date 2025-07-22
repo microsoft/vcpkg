@@ -1,8 +1,29 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f3fee2f..07a6347 100644
+index f3fee2f..b016632 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1239,13 +1239,10 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/aten/src/)
+@@ -796,7 +796,10 @@ if(NOT CMAKE_BUILD_TYPE)
+ endif()
+ 
+ # The below means we are cross compiling for arm64 or x86_64 on MacOSX
+-if(NOT IOS
++if(TRUE)
++  message(STATUS "Using custom protoc executable: ${PROTOBUF_PROTOC_EXECUTABLE}")
++  message(STATUS "Using custom caffe2 protoc executable: ${CAFFE2_CUSTOM_PROTOC_EXECUTABLE}")
++elseif(NOT IOS
+    AND CMAKE_SYSTEM_NAME STREQUAL "Darwin"
+    AND CMAKE_OSX_ARCHITECTURES MATCHES "^(x86_64|arm64)$")
+   set(CROSS_COMPILING_MACOSX TRUE)
+@@ -1101,7 +1104,7 @@ if(NOT MSVC)
+ else()
+   # Define export functions for AOTI.
+   add_compile_definitions(EXPORT_AOTI_FUNCTIONS)
+-
++  add_compile_definitions(_USE_MATH_DEFINES) # math.h macros like M_PI, M_SQRT2, M_2_SQRTPI, etc.
+   # skip unwanted includes from windows.h
+   add_compile_definitions(WIN32_LEAN_AND_MEAN)
+   # Windows SDK broke compatibility since version 25131, but introduced this
+@@ -1239,13 +1242,10 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/aten/src/)
  include_directories(BEFORE ${CMAKE_BINARY_DIR}/aten/src/)
  
  if(USE_MIMALLOC)
@@ -13,34 +34,150 @@ index f3fee2f..07a6347 100644
 -  add_definitions(-DUSE_MIMALLOC)
 -  add_subdirectory(third_party/mimalloc)
 -  include_directories(third_party/mimalloc/include)
-+  find_package(mimalloc CONFIG REQUIRED)
++  find_package(mimalloc CONFIG REQUIRED) # for mimalloc-static target dependency
 +  add_compile_definitions(USE_MIMALLOC)
 +  find_path(MIMALLOC_INCLUDE_DIR mimalloc.h REQUIRED)
 +  include_directories(${MIMALLOC_INCLUDE_DIR})
  endif()
  
  if(USE_MIMALLOC AND USE_MIMALLOC_ON_MKL)
+@@ -1309,14 +1309,6 @@ if(BUILD_SHARED_LIBS)
+           ${PROJECT_SOURCE_DIR}/cmake/public/LoadHIP.cmake
+     DESTINATION share/cmake/Caffe2/public
+     COMPONENT dev)
+-  install(
+-    DIRECTORY ${PROJECT_SOURCE_DIR}/cmake/Modules_CUDA_fix
+-    DESTINATION share/cmake/Caffe2/
+-    COMPONENT dev)
+-  install(
+-    FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUDAToolkit.cmake
+-    DESTINATION share/cmake/Caffe2/
+-    COMPONENT dev)
+   install(
+     FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
+     DESTINATION share/cmake/Caffe2/
+diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
+index 085af37..a935a4c 100644
+--- a/aten/src/ATen/CMakeLists.txt
++++ b/aten/src/ATen/CMakeLists.txt
+@@ -515,15 +515,9 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
+     list(APPEND ATen_THIRD_PARTY_INCLUDE ${CMAKE_BINARY_DIR}/include)
+     link_directories(${CMAKE_BINARY_DIR}/sleef/lib)
+   else()
+-    add_library(sleef SHARED IMPORTED)
+-    find_library(SLEEF_LIBRARY sleef)
+-    if(NOT SLEEF_LIBRARY)
+-      message(FATAL_ERROR "Cannot find sleef")
+-    endif()
+-    message("Found sleef: ${SLEEF_LIBRARY}")
+-    set_target_properties(sleef PROPERTIES IMPORTED_LOCATION "${SLEEF_LIBRARY}")
++    find_library(SLEEF_LIBRARY sleef REQUIRED)
+   endif()
+-  list(APPEND ATen_CPU_DEPENDENCY_LIBS sleef)
++  list(APPEND ATen_CPU_DEPENDENCY_LIBS "${SLEEF_LIBRARY}")
+ 
+   if(NOT MSVC)
+     set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})
+diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
+index 34577ca..9ace500 100644
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -95,7 +95,7 @@ if(NOT BUILD_LIBTORCHLESS)
+     target_link_libraries(c10 PUBLIC glog::glog)
+   endif()
+   target_link_libraries(c10 PRIVATE fmt::fmt-header-only)
+-  target_link_libraries(c10 PRIVATE nlohmann)
++  target_link_libraries(c10 PRIVATE nlohmann_json::nlohmann_json)
+ 
+   if(C10_USE_NUMA)
+     message(STATUS "NUMA paths:")
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index d2d23b7..2aec3c9 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -89,11 +89,7 @@ endif()
+ 
+ if(NOT MSVC AND USE_XNNPACK)
+   if(NOT TARGET fxdiv)
+-    set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+-    set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+-    add_subdirectory(
+-      "${FXDIV_SOURCE_DIR}"
+-      "${CMAKE_BINARY_DIR}/FXdiv")
++    find_path(FXDIV_INCLUDE_DIRS "fxdiv.h" REQUIRED)
+   endif()
+ endif()
+ 
+@@ -1134,10 +1130,6 @@ if(USE_XPU)
+   endif()
+ endif()
+ 
+-if(NOT MSVC AND USE_XNNPACK)
+-  TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
+-endif()
+-
+ # ==========================================================
+ # formerly-libtorch flags
+ # ==========================================================
+@@ -1251,11 +1243,10 @@ if(USE_KINETO)
+     ${TORCH_ROOT}/third_party/kineto/libkineto/src)
+ endif()
+ 
+-target_include_directories(torch_cpu PRIVATE
+-  ${TORCH_ROOT}/third_party/cpp-httplib)
+-
+-target_include_directories(torch_cpu PRIVATE
+-  ${TORCH_ROOT}/third_party/nlohmann/include)
++target_link_libraries(torch_cpu PRIVATE httplib::httplib nlohmann_json::nlohmann_json)
++if(APPLE)
++  target_link_libraries(torch_cpu PUBLIC "-framework CoreFoundation" "-framework CFNetwork")
++endif()
+ 
+ install(DIRECTORY "${TORCH_SRC_DIR}/csrc"
+   DESTINATION ${TORCH_INSTALL_INCLUDE_DIR}/torch
+diff --git a/cmake/Codegen.cmake b/cmake/Codegen.cmake
+index 724d993..34bb683 100644
+--- a/cmake/Codegen.cmake
++++ b/cmake/Codegen.cmake
+@@ -36,11 +36,13 @@ endfunction()
+ ################################################################################
+ 
+ # -- [ Deterine commit hash
+-execute_process(
+-    COMMAND "${Python_EXECUTABLE}" -c "from tools.generate_torch_version import get_sha;print(get_sha('.'), end='')"
+-    OUTPUT_VARIABLE COMMIT_SHA
+-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
+-)
++if(NOT DEFINED COMMIT_SHA)
++  execute_process(
++      COMMAND "${Python_EXECUTABLE}" -c "from tools.generate_torch_version import get_sha;print(get_sha('.'), end='')"
++      OUTPUT_VARIABLE COMMIT_SHA
++      WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
++  )
++endif()
+ 
+ # ---[ Write the macros file
+ configure_file(
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 5227204..0190b36 100644
+index 5227204..fe0ebdf 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -380,13 +380,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
- 
+@@ -381,12 +381,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
    if(NOT TARGET pthreadpool)
      if(USE_SYSTEM_PTHREADPOOL)
--      add_library(pthreadpool SHARED IMPORTED)
+       add_library(pthreadpool SHARED IMPORTED)
 -      find_library(PTHREADPOOL_LIBRARY pthreadpool)
 -      set_property(TARGET pthreadpool PROPERTY IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")
 -      if(NOT PTHREADPOOL_LIBRARY)
 -        message(FATAL_ERROR "Cannot find pthreadpool")
 -      endif()
 -      message("-- Found pthreadpool: ${PTHREADPOOL_LIBRARY}")
-+      find_package(unofficial-pthreadpool CONFIG REQUIRED) # unofficial::pthreadpool unofficial::pthreadpool_interface
-+      add_library(pthreadpool ALIAS unofficial::pthreadpool)
++      find_library(PTHREADPOOL_LIBRARY pthreadpool REQUIRED)
++      set_target_properties(pthreadpool PROPERTIES IMPORTED_IMPLIB "${PTHREADPOOL_LIBRARY}" IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")
      else()
        if(NOT DEFINED PTHREADPOOL_SOURCE_DIR)
          set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
-@@ -413,13 +408,8 @@ if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x|ppc64le)$")
+@@ -413,13 +409,8 @@ if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x|ppc64le)$")
    # ---[ Caffe2 uses cpuinfo library in the thread pool
    # ---[ But it doesn't support s390x/powerpc and thus not used on s390x/powerpc
    if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
@@ -56,7 +193,7 @@ index 5227204..0190b36 100644
    elseif(NOT TARGET cpuinfo)
      if(NOT DEFINED CPUINFO_SOURCE_DIR)
        set(CPUINFO_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}/../third_party/cpuinfo" CACHE STRING "cpuinfo source directory")
-@@ -557,17 +547,8 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
+@@ -557,17 +548,9 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
    include_directories(SYSTEM ${XNNPACK_INCLUDE_DIR})
    list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
  elseif(NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)
@@ -72,11 +209,12 @@ index 5227204..0190b36 100644
 -  message("-- Found XNNPACK: ${XNNPACK_LIBRARY}")
 -  list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
 +  find_library(XNNPACK_LIBRARY XNNPACK REQUIRED)
-+  list(APPEND Caffe2_DEPENDENCY_LIBS "${XNNPACK_LIBRARY}")
++  find_library(microkernels-prod_LIBRARY NAMES microkernels-prod xnnpack-microkernels-prod REQUIRED)
++  list(APPEND Caffe2_DEPENDENCY_LIBS "${XNNPACK_LIBRARY}" "${microkernels-prod_LIBRARY}")
  endif()
  
  # ---[ Vulkan deps
-@@ -829,8 +810,9 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
+@@ -829,8 +812,9 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
        "${CONFU_DEPENDENCIES_BINARY_DIR}/FP16")
    endif()
  elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
@@ -88,7 +226,39 @@ index 5227204..0190b36 100644
  endif()
  list(APPEND Caffe2_DEPENDENCY_LIBS fp16)
  
-@@ -1330,19 +1312,9 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1013,7 +997,7 @@ if(USE_CUDNN)
+   if(CUDNN_VERSION VERSION_LESS 8.5)
+     message(FATAL_ERROR "PyTorch needs CuDNN-8.5 or above, but found ${CUDNN_VERSION}. Builds are still possible with `USE_CUDNN=0`")
+   endif()
+-  set(CUDNN_FRONTEND_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../third_party/cudnn_frontend/include)
++  find_path(CUDNN_FRONTEND_INCLUDE_DIR "cudnn_backend.h" REQUIRED)
+   target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})
+ endif()
+ 
+@@ -1170,18 +1154,11 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+       message(WARNING "Archived TensorPipe forces CMake compatibility mode")
+       set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+     endif()
+-    add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/tensorpipe)
+-    # Suppress warning to unblock libnop comiplation by clang-17
+-    # See https://github.com/pytorch/pytorch/issues/151316
+-    target_compile_options_if_supported(tensorpipe -Wno-missing-template-arg-list-after-template-kw)
+-    if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0.0")
+-      unset(CMAKE_POLICY_VERSION_MINIMUM)
+-    endif()
+-
+-    list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)
+-    list(APPEND Caffe2_DEPENDENCY_LIBS nlohmann)
++    find_package(unofficial-tensorpipe CONFIG REQUIRED)
++    list(APPEND Caffe2_DEPENDENCY_LIBS unofficial::tensorpipe::tensorpipe)
++    list(APPEND Caffe2_DEPENDENCY_LIBS nlohmann_json::nlohmann_json)
+     if(USE_CUDA)
+-      list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS tensorpipe_cuda)
++      list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS unofficial::tensorpipe::tensorpipe_cuda)
+     elseif(USE_ROCM)
+       message(WARNING "TensorPipe doesn't yet support ROCm")
+       # Not yet...
+@@ -1330,19 +1307,9 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
      endif()
      list(APPEND Caffe2_DEPENDENCY_WHOLE_LINK_LIBS onnx_library)
    else()
@@ -111,7 +281,40 @@ index 5227204..0190b36 100644
      list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)
    endif()
    # Recover the build shared libs option.
-@@ -1586,17 +1558,7 @@ endif()
+@@ -1515,30 +1482,8 @@ if(NOT INTERN_BUILD_MOBILE)
+   endif()
+ 
+   if(USE_KLEIDIAI)
+-    if(CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_VERSION VERSION_LESS "11" )
+-        message(WARNING "KleidiAI: Using non-supported Clang version. Expected 11 or newer, received ${CMAKE_C_COMPILER_VERSION}.")
+-    endif()
+-    if(CMAKE_C_COMPILER_ID STREQUAL "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_LESS "11" )
+-        message(WARNING "KleidiAI: Using non-supported GCC version. Expected 11 or newer, received ${CMAKE_C_COMPILER_VERSION}.")
+-    endif()
+-    set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+-    set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+-    set(AT_KLEIDIAI_ENABLED 1)
+-    set(KLEIDIAI_BUILD_TESTS OFF) # Disable building KLEIDIAI tests
+-    set(KLEIDIAI_SRC "${PROJECT_SOURCE_DIR}/third_party/kleidiai")
+-    add_subdirectory(${KLEIDIAI_SRC})
+-    set(KLEIDIAI_INCLUDE_DIRS
+-    ${KLEIDIAI_SRC}/
+-    ${KLEIDIAI_SRC}/kai/
+-    ${KLEIDIAI_SRC}/kai/ukernels/
+-    ${KLEIDIAI_SRC}/kai/ukernels/matmul/
+-    ${KLEIDIAI_SRC}/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4cxp/
+-    ${KLEIDIAI_SRC}/kai/ukernels/matmul/matmul_clamp_f32_qsi8d32p_qsi4c32p/
+-    ${KLEIDIAI_SRC}/kai/ukernels/matmul/matmul_clamp_f32_qai8dxp_qsi4c32p/
+-    ${KLEIDIAI_SRC}/kai/ukernels/matmul/pack/
+-    )
+-    include_directories(SYSTEM INTERFACE ${KLEIDIAI_INCLUDE_DIRS})
+-    list(APPEND Caffe2_DEPENDENCY_LIBS kleidiai)
++    find_package(KleidiAI CONFIG REQUIRED)
++    list(APPEND Caffe2_DEPENDENCY_LIBS KleidiAI::kleidiai)
+     # Recover build options.
+     set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
+   endif()
+@@ -1586,17 +1531,7 @@ endif()
  #
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
@@ -130,3 +333,36 @@ index 5227204..0190b36 100644
  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
  
+@@ -1749,9 +1684,7 @@ endif()
+ include(${CMAKE_CURRENT_LIST_DIR}/FlatBuffers.cmake)
+ 
+ # Include cpp-httplib
+-add_library(httplib INTERFACE IMPORTED)
+-target_include_directories(httplib SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/third_party/cpp-httplib)
++find_package(httplib CONFIG REQUIRED) # httplib::httplib
+ 
+ # Include nlohmann-json
+-add_library(nlohmann INTERFACE IMPORTED)
+-include_directories(nlohmann SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/third_party/nlohmann/include)
++find_package(nlohmann_json CONFIG REQUIRED) # nlohmann_json::nlohmann_json
+diff --git a/cmake/External/nnpack.cmake b/cmake/External/nnpack.cmake
+index 8a4a310..ca90142 100644
+--- a/cmake/External/nnpack.cmake
++++ b/cmake/External/nnpack.cmake
+@@ -39,6 +39,16 @@ endif()
+ ##############################################################################
+ # (3) Android, iOS, Linux, macOS - supported
+ ##############################################################################
++if(DEFINED _VCPKG_INSTALLED_DIR)
++  add_library(nnpack INTERFACE IMPORTED GLOBAL)
++  find_path(NNPACK_INCLUDE_DIR NAMES nnpack.h REQUIRED)
++  find_library(NNPACK_LIBRARY NAMES nnpack REQUIRED)
++  set_target_properties(nnpack PROPERTIES
++    INTERFACE_INCLUDE_DIRECTORIES "${NNPACK_INCLUDE_DIR}"
++    INTERFACE_LINK_LIBRARIES "${NNPACK_LIBRARY}"
++  )
++  return()
++endif()
+ 
+ if(ANDROID OR IOS OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+   message(STATUS "Brace yourself, we are building NNPACK")

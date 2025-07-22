@@ -6,9 +6,9 @@
   "license": null,
   "dependencies": [
     "blas",
+    "cpp-httplib",
     "cpuinfo",
     "eigen3",
-    "fftw3",
     "flatbuffers",
     {
       "name": "flatbuffers",
@@ -16,11 +16,14 @@
     },
     "fmt",
     "foxi",
-    "foxi",
     "fp16",
     "gemmlowp",
     "gflags",
     "glog",
+    {
+      "name": "kleidiai",
+      "platform": "arm"
+    },
     "lapack",
     "lmdb",
     "mimalloc",
@@ -48,11 +51,14 @@
       "name": "vcpkg-get-python-packages",
       "host": true
     },
-    "xnnpack"
-  ],
-  "default-features": [
-    "opencv",
-    "zstd"
+    "xnnpack",
+    {
+      "name": "xnnpack",
+      "features": [
+        "kleidiai"
+      ],
+      "platform": "arm64"
+    }
   ],
   "features": {
     "cuda": {
@@ -60,23 +66,31 @@
       "dependencies": [
         "cuda",
         "cudnn",
+        "cudnn-frontend",
+        {
+          "name": "gloo",
+          "features": [
+            "cuda"
+          ],
+          "platform": "linux"
+        },
         "magma",
-        "nvidia-cutlass"
+        "nvidia-cutlass",
+        {
+          "name": "tensorpipe",
+          "features": [
+            "cuda"
+          ],
+          "platform": "linux"
+        }
       ]
     },
     "dist": {
       "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
+      "supports": "linux | windows | osx",
       "dependencies": [
         {
           "name": "gloo",
-          "platform": "linux"
-        },
-        {
-          "name": "libtorch",
-          "default-features": false,
-          "features": [
-            "mpi"
-          ],
           "platform": "linux"
         },
         {
@@ -89,13 +103,6 @@
         }
       ]
     },
-    "leveldb": {
-      "description": "Build with LevelDB",
-      "dependencies": [
-        "leveldb",
-        "snappy"
-      ]
-    },
     "llvm": {
       "description": "Build with LLVM",
       "dependencies": [
@@ -103,8 +110,16 @@
       ]
     },
     "mpi": {
-      "description": "Build with MPI",
+      "description": "Use MPI for Caffe2. Only available if USE_DISTRIBUTED is on",
       "dependencies": [
+        {
+          "name": "libtorch",
+          "default-features": false,
+          "features": [
+            "dist"
+          ],
+          "platform": "linux"
+        },
         "mpi"
       ]
     },
@@ -112,27 +127,26 @@
       "description": "Build with NNPack",
       "supports": "linux | osx",
       "dependencies": [
+        {
+          "name": "kleidiai",
+          "platform": "arm64"
+        },
         "nnpack"
       ]
     },
-    "opencv": {
-      "description": "Build with OpenCV",
-      "dependencies": [
-        "opencv"
-      ]
+    "openmp": {
+      "description": "Use OpenMP for parallel code"
     },
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
       "dependencies": [
+        {
+          "name": "shaderc",
+          "host": true
+        },
         "vulkan",
         "vulkan-loader",
         "vulkan-memory-allocator"
-      ]
-    },
-    "zstd": {
-      "description": "Build with ZSTD",
-      "dependencies": [
-        "zstd"
       ]
     }
   }
