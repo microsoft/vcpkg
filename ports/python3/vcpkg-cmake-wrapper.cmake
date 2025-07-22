@@ -71,7 +71,14 @@ if(_PythonFinder_WantLibs)
 
     _find_package(${ARGS})
 
-    if(@VCPKG_LIBRARY_LINKAGE@ STREQUAL static)
+    # The android toolchain links with --no-undefined, and the modules need python lib symbols.
+    get_directory_property(_@PythonFinder_PREFIX@_IMPORTED_TARGETS IMPORTED_TARGETS)
+    if(ANDROID AND @PythonFinder_PREFIX@::Module IN_LIST _@PythonFinder_PREFIX@_IMPORTED_TARGETS AND @PythonFinder_PREFIX@::Python IN_LIST _@PythonFinder_PREFIX@_IMPORTED_TARGETS)
+        set_property(TARGET @PythonFinder_PREFIX@::Module APPEND PROPERTY INTERFACE_LINK_LIBRARIES $<LINK_ONLY:@PythonFinder_PREFIX@::Python>)
+    endif()
+    unset(_@PythonFinder_PREFIX@_IMPORTED_TARGETS)
+
+    if(@VCPKG_LIBRARY_LINKAGE@ STREQUAL "static")
         # Python for Windows embeds the zlib module into the core, so we have to link against it.
         # This is a separate extension module on Unix-like platforms.
         if(WIN32)
