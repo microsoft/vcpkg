@@ -3,7 +3,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/Tencent/tgfx.git
-    REF feature/skyrimHuang_vcpkg
+    REF 0334e47271024633da29f357dc7e400b0d4761ff
     PATCHES
         add-vcpkg-install.patch
 )
