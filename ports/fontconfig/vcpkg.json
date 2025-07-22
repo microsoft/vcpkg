@@ -17,6 +17,7 @@
       "host": true
     },
     "libiconv",
+    "gettext-libintl",
     {
       "name": "libuuid",
       "platform": "!osx & !windows"
@@ -41,8 +42,7 @@
           "features": [
             "tools"
           ]
-        },
-        "gettext-libintl"
+        }
       ]
     },
     "tools": {
