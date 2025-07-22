@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
+        add-parameter-name.patch
 )
 
 if("icu" IN_LIST FEATURES)
