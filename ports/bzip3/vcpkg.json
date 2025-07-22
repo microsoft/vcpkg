@@ -20,7 +20,8 @@
       "supports": "!windows"
     },
     "tools": {
-      "description": "Build bzip3 applications"
+      "description": "Build bzip3 applications",
+      "supports": "!windows"
     }
   }
 }
