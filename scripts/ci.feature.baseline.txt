@@ -380,7 +380,6 @@ opencv4[openvino]:arm64-osx=feature-fails
 opencv4[ovis](android)=feature-fails
 opencv4[rgbd]:arm64-uwp=feature-fails
 opencv4[vulkan]:arm64-osx=feature-fails
-opencv4(arm & windows)=fail
 opendnp3:arm-uwp=fail
 opendnp3:x64-uwp=fail
 openmama:x64-windows-static-md=fail
