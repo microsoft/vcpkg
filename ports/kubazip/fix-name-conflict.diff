@@ -1,24 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 804df5e..d45ef96 100644
+index e2eac43..dc2628c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -47,8 +47,9 @@ endif()
- 
- target_include_directories(${PROJECT_NAME} PUBLIC
-   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
--  $<INSTALL_INTERFACE:include>
-+  $<INSTALL_INTERFACE:include/kubazip>
+@@ -46,6 +46,7 @@ target_compile_options(
+         "$<${msvc}:$<BUILD_INTERFACE:-W3;-WX;-Zi;-permissive->>"
  )
+ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 +set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME kubazip)
  
- # test
- if (NOT CMAKE_DISABLE_TESTING)
-@@ -85,7 +86,7 @@ endif()
- ###
- 
- set(CONFIG_INSTALL_DIR "lib/cmake/${PROJECT_NAME}")
--set(INCLUDE_INSTALL_DIR "include")
-+set(INCLUDE_INSTALL_DIR "include/kubazip")
- 
- set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
- 
+ if(ZIP_STATIC_PIC)
+     set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE 1)
