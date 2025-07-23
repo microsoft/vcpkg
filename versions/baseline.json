@@ -361,7 +361,7 @@
       "port-version": 3
     },
     "atomic-queue": {
-      "baseline": "1.6.9",
+      "baseline": "1.7.1",
       "port-version": 0
     },
     "attr": {
@@ -1838,7 +1838,7 @@
     },
     "coin": {
       "baseline": "4.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "coin-or-buildtools": {
       "baseline": "2023-02-02",
@@ -1913,8 +1913,8 @@
       "port-version": 0
     },
     "conjure-enum": {
-      "baseline": "1.1.0",
-      "port-version": 1
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "console-bridge": {
       "baseline": "1.0.2",
@@ -2405,7 +2405,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2025-03-24",
+      "baseline": "2025-07-10",
       "port-version": 0
     },
     "directxsdk": {
@@ -2413,7 +2413,7 @@
       "port-version": 8
     },
     "directxtex": {
-      "baseline": "2025-03-24",
+      "baseline": "2025-07-10",
       "port-version": 0
     },
     "directxtk": {
@@ -2477,8 +2477,8 @@
       "port-version": 0
     },
     "double-conversion": {
-      "baseline": "3.3.0",
-      "port-version": 1
+      "baseline": "3.3.1",
+      "port-version": 0
     },
     "dp-thread-pool": {
       "baseline": "0.7.0",
@@ -2713,7 +2713,7 @@
       "port-version": 3
     },
     "etl": {
-      "baseline": "20.42.1",
+      "baseline": "20.42.2",
       "port-version": 0
     },
     "eve": {
@@ -3294,7 +3294,7 @@
     },
     "glib": {
       "baseline": "2.84.2",
-      "port-version": 1
+      "port-version": 2
     },
     "glib-networking": {
       "baseline": "2.78.0",
@@ -3693,7 +3693,7 @@
       "port-version": 0
     },
     "hfsm2": {
-      "baseline": "2.7.1",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "hidapi": {
@@ -3957,7 +3957,7 @@
       "port-version": 1
     },
     "itay-grudev-singleapplication": {
-      "baseline": "3.5.2",
+      "baseline": "3.5.3",
       "port-version": 0
     },
     "itk": {
@@ -4654,7 +4654,7 @@
     },
     "libdicom": {
       "baseline": "1.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libdisasm": {
       "baseline": "0.23",
@@ -4693,7 +4693,7 @@
       "port-version": 0
     },
     "libdwarf": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "libe57": {
@@ -5286,7 +5286,7 @@
     },
     "libremidi": {
       "baseline": "4.5.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libressl": {
       "baseline": "4.1.0",
@@ -5945,7 +5945,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.682",
+      "baseline": "0.683",
       "port-version": 0
     },
     "luminoengine": {
@@ -6081,7 +6081,7 @@
       "port-version": 0
     },
     "marisa-trie": {
-      "baseline": "0.3.0",
+      "baseline": "0.3.1",
       "port-version": 0
     },
     "marl": {
@@ -6175,6 +6175,10 @@
     "memorymodule": {
       "baseline": "2019-12-31",
       "port-version": 3
+    },
+    "meojson": {
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "mesa": {
       "baseline": "24.0.7",
@@ -6405,7 +6409,7 @@
       "port-version": 0
     },
     "mqtt-cpp": {
-      "baseline": "13.2.1",
+      "baseline": "13.2.2",
       "port-version": 0
     },
     "ms-angle": {
@@ -6833,8 +6837,8 @@
       "port-version": 1
     },
     "oatpp-swagger": {
-      "baseline": "1.3.0",
-      "port-version": 1
+      "baseline": "1.3.1",
+      "port-version": 0
     },
     "oatpp-websocket": {
       "baseline": "1.3.0",
@@ -6986,7 +6990,7 @@
     },
     "opencv4": {
       "baseline": "4.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -7062,7 +7066,7 @@
     },
     "openslide": {
       "baseline": "4.0.0",
-      "port-version": 0
+      "port-version": 3
     },
     "openssl": {
       "baseline": "3.5.1",
@@ -7073,7 +7077,7 @@
       "port-version": 3
     },
     "opentelemetry-cpp": {
-      "baseline": "1.21.0",
+      "baseline": "1.22.0",
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
@@ -7649,7 +7653,7 @@
       "port-version": 0
     },
     "pybind11": {
-      "baseline": "2.13.6",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "pystring": {
@@ -9084,6 +9088,10 @@
       "baseline": "4.6.1",
       "port-version": 2
     },
+    "sqlgen": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "sqlite-modern-cpp": {
       "baseline": "2023-12-03",
       "port-version": 0
@@ -9309,7 +9317,7 @@
       "port-version": 0
     },
     "sundials": {
-      "baseline": "7.1.1",
+      "baseline": "7.4.0",
       "port-version": 0
     },
     "superglu": {
@@ -9857,7 +9865,7 @@
       "port-version": 1
     },
     "uvatlas": {
-      "baseline": "2025-03-26",
+      "baseline": "2025-07-10",
       "port-version": 0
     },
     "uvw": {
@@ -10325,7 +10333,7 @@
       "port-version": 0
     },
     "wxwidgets": {
-      "baseline": "3.2.7",
+      "baseline": "3.2.8.1",
       "port-version": 0
     },
     "wyhash": {
@@ -10361,7 +10369,7 @@
       "port-version": 0
     },
     "xbyak": {
-      "baseline": "7.27",
+      "baseline": "7.28",
       "port-version": 0
     },
     "xcb": {
