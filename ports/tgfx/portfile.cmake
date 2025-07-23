@@ -9,26 +9,17 @@ vcpkg_from_github(
         add-vcpkg-install.patch
 )
 
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
-    # For macOS platform: run sync_deps.sh script
-    vcpkg_execute_required_process(
-        COMMAND "${SOURCE_PATH}/sync_deps.sh"
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME sync-deps
-    )
-else()
-    vcpkg_execute_required_process(
-        COMMAND npm install -g depsync
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME install-depsync
-    )
+vcpkg_execute_required_process(
+    COMMAND npm install depsync
+    WORKING_DIRECTORY "${SOURCE_PATH}"
+    LOGNAME install-depsync
+)
     
-    vcpkg_execute_required_process(
-        COMMAND depsync
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME run-depsync
-    )
-endif()
+vcpkg_execute_required_process(
+    COMMAND depsync
+    WORKING_DIRECTORY "${SOURCE_PATH}"
+    LOGNAME run-depsync
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -57,7 +48,6 @@ string(REPLACE
     CMAKELIST_CONTENT "${CMAKELIST_CONTENT}")
 
 file(WRITE "${SOURCE_PATH}/CMakeLists.txt" "${CMAKELIST_CONTENT}")
-
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
