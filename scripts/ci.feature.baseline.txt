@@ -366,7 +366,6 @@ opencv4[core,cuda,world](windows)=options
 opencv4[dnn]:arm64-osx=feature-fails
 opencv4[dnn](arm & windows) = feature-fails
 opencv4[dshow](!windows | uwp)=feature-fails
-opencv4[dshow, gapi](!uwp)=feature-fails
 opencv4[halide](!android & !(windows & staticcrt) & !uwp & !(arm & windows))=feature-fails  # error C2039: 'attachHalide': is not a member of 'cv::dnn::GeluFunctor'
 opencv4[halide](android | (windows & staticcrt) | uwp | (arm & windows))=cascade
 opencv4[opengl]:x64-linux=feature-fails
