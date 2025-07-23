@@ -16,7 +16,8 @@ endif()
 # of the system Python, which may have certain packages the user expects. But - if the user is
 # embedding Python or using both the development and interpreter components, then we need the
 # interpreter matching vcpkg's Python libraries. Note that the "Development" component implies
-# both "Development.Module" and "Development.Embed"
+# both "Development.Module" and "Development.Embed".
+# The android toolchain links with --no-undefined. So modules must be linked with Python libs.
 if("Development" IN_LIST ARGS OR "Development.Embed" IN_LIST ARGS)
     set(_PythonFinder_WantInterp TRUE)
     set(_PythonFinder_WantLibs TRUE)
@@ -25,6 +26,9 @@ elseif("Development.Module" IN_LIST ARGS OR "Development.SABIModule" IN_LIST ARG
         set(_PythonFinder_WantInterp TRUE)
     endif()
     set(_PythonFinder_WantLibs TRUE)
+    if(ANDROID)
+        list(APPEND ARGS COMPONENTS Development.Embed)
+    endif()
 endif()
 
 if(_PythonFinder_WantLibs)
@@ -71,9 +75,8 @@ if(_PythonFinder_WantLibs)
 
     _find_package(${ARGS})
 
-    # The android toolchain links with --no-undefined, and the modules need python lib symbols.
     get_directory_property(_@PythonFinder_PREFIX@_IMPORTED_TARGETS IMPORTED_TARGETS)
-    if(ANDROID AND @PythonFinder_PREFIX@::Module IN_LIST _@PythonFinder_PREFIX@_IMPORTED_TARGETS AND @PythonFinder_PREFIX@::Python IN_LIST _@PythonFinder_PREFIX@_IMPORTED_TARGETS)
+    if(ANDROID AND @PythonFinder_PREFIX@::Module IN_LIST _@PythonFinder_PREFIX@_IMPORTED_TARGETS)
         set_property(TARGET @PythonFinder_PREFIX@::Module APPEND PROPERTY INTERFACE_LINK_LIBRARIES $<LINK_ONLY:@PythonFinder_PREFIX@::Python>)
     endif()
     unset(_@PythonFinder_PREFIX@_IMPORTED_TARGETS)
