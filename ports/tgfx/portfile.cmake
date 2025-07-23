@@ -22,7 +22,7 @@ if(NOT NODEJS)
 endif()
 
 find_program(NPM
-    NAMES npm
+    NAMES npm.cmd npm
     PATHS
         "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
         "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
@@ -35,18 +35,25 @@ get_filename_component(NPM_DIR "${NPM}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 vcpkg_add_to_path(PREPEND "${NPM_DIR}")
 
+set(DEPSYNC_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/tools")
+file(MAKE_DIRECTORY "${DEPSYNC_INSTALL_DIR}")
+
 vcpkg_execute_required_process(
-    COMMAND "${NPM}" install depsync
+    COMMAND "${NPM}" install depsync --prefix "${DEPSYNC_INSTALL_DIR}"
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME install-depsync
-    SAVE_LOG_FILES tgfxbuild/config.log
 )
-    
+
+vcpkg_add_to_path("${DEPSYNC_INSTALL_DIR}/node_modules/depsync/bin")
+find_program(DEPSYNC depsync
+    PATHS "${DEPSYNC_INSTALL_DIR}/node_modules/depsync/bin"
+    NO_DEFAULT_PATH REQUIRED
+)
+
 vcpkg_execute_required_process(
-    COMMAND depsync
+    COMMAND "${NODEJS}" "${DEPSYNC}"
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME run-depsync
-    SAVE_LOG_FILES tgfxbuild/config.log
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
