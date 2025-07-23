@@ -9317,7 +9317,7 @@
       "port-version": 0
     },
     "sundials": {
-      "baseline": "7.1.1",
+      "baseline": "7.4.0",
       "port-version": 0
     },
     "superglu": {
