@@ -36,15 +36,17 @@ vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 vcpkg_add_to_path(PREPEND "${NPM_DIR}")
 
 vcpkg_execute_required_process(
-    COMMAND npm install depsync
+    COMMAND "${NPM}" install depsync
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME install-depsync
+    SAVE_LOG_FILES tgfxbuild/config.log
 )
     
 vcpkg_execute_required_process(
     COMMAND depsync
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME run-depsync
+    SAVE_LOG_FILES tgfxbuild/config.log
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
