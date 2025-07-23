@@ -9,9 +9,31 @@ vcpkg_from_github(
         add-vcpkg-install.patch
 )
 
-set(NODEJS "${CURRENT_HOST_INSTALLED_DIR}/tools/node/node${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+find_program(NODEJS
+    NAMES node
+    PATHS
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
+        ENV PATH
+    NO_DEFAULT_PATH
+)
+if(NOT NODEJS)
+    message(FATAL_ERROR "node not found! Please install it via your system package manager!")
+endif()
+
+find_program(NPM
+    NAMES npm
+    PATHS
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
+        ENV PATH
+    NO_DEFAULT_PATH
+)
+
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
+get_filename_component(NPM_DIR "${NPM}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
+vcpkg_add_to_path(PREPEND "${NPM_DIR}")
 
 vcpkg_execute_required_process(
     COMMAND npm install depsync
