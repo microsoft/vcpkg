@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF 38648430fce1422694f2f349a5fe60d5969d6f49  # before ggml_backend_sched_new change
-    SHA512 6c51c4b4757aecea3f713b2ee8fb08992c2bdcc203f8e44e307ab8bcd5ed575f154d438c1d036251441aedef1eae812dc7114f6ca5da8314b8e415d92f02f33d
+    REF 56938c4a3b2d923f42040f9ad32d229c76c466cd
+    SHA512 341c89a200346ae4f87c2e2afcb230d75d24584a69c1653e67a2eda78d7fcb2d66c654fa210a582f79b860d0c395c36639df0444fe9c46674c1f0b6e885a5c9e
     HEAD_REF master
     PATCHES
         cmake-config.diff

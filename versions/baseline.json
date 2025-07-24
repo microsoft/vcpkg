@@ -3237,7 +3237,7 @@
       "port-version": 9
     },
     "ggml": {
-      "baseline": "2025-05-13",
+      "baseline": "2025-07-23",
       "port-version": 0
     },
     "ghc-filesystem": {
