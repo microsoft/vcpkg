@@ -1,3 +1,5 @@
+include("${CMAKE_CURRENT_LIST_DIR}/tgfx-functions.cmake")
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -8,6 +10,10 @@ vcpkg_from_github(
     PATCHES
         add-vcpkg-install.patch
 )
+
+parse_and_declare_deps_externals("${SOURCE_PATH}")
+
+get_tgfx_externals("${SOURCE_PATH}")
 
 find_program(NODEJS
     NAMES node
@@ -21,40 +27,8 @@ if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
 endif()
 
-find_program(NPM
-    NAMES npm.cmd npm
-    PATHS
-        "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
-        "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
-        ENV PATH
-    NO_DEFAULT_PATH
-)
-
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
-get_filename_component(NPM_DIR "${NPM}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
-vcpkg_add_to_path(PREPEND "${NPM_DIR}")
-
-set(DEPSYNC_INSTALL_DIR "${CURRENT_PACKAGES_DIR}/tools")
-file(MAKE_DIRECTORY "${DEPSYNC_INSTALL_DIR}")
-
-vcpkg_execute_required_process(
-    COMMAND "${NPM}" install depsync --prefix "${DEPSYNC_INSTALL_DIR}"
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME install-depsync
-)
-
-vcpkg_add_to_path("${DEPSYNC_INSTALL_DIR}/node_modules/depsync/bin")
-find_program(DEPSYNC depsync
-    PATHS "${DEPSYNC_INSTALL_DIR}/node_modules/depsync/bin"
-    NO_DEFAULT_PATH REQUIRED
-)
-
-vcpkg_execute_required_process(
-    COMMAND "${NODEJS}" "${DEPSYNC}"
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME run-depsync
-)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
