@@ -7026,7 +7026,7 @@
     },
     "openimageio": {
       "baseline": "3.0.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openjpeg": {
       "baseline": "2.5.3",
@@ -7654,7 +7654,7 @@
     },
     "pybind11": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pystring": {
       "baseline": "1.1.4",
@@ -7666,7 +7666,7 @@
     },
     "python3": {
       "baseline": "3.12.9",
-      "port-version": 2
+      "port-version": 3
     },
     "qca": {
       "baseline": "2.3.7",
