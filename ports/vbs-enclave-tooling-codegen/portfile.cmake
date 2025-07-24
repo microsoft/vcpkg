@@ -1,7 +1,3 @@
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-     message(FATAL_ERROR "ERROR: Vbs enclave tooling is not supported on x86 architecture.")
-endif()
-
 if (NOT EXISTS "$ENV{WindowsSDKDir}/Lib/$ENV{WindowsSDKVersion}.")
     message(FATAL_ERROR "ERROR: Cannot locate the Windows SDK. Please define %WindowsSDKDir% and %WindowsSDKVersion%.
 (Expected file to exist: $ENV{WindowsSDKDir}/Lib/$ENV{WindowsSDKVersion})")
