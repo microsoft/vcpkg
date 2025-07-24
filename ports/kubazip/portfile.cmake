@@ -11,7 +11,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DCMAKE_DISABLE_TESTING=ON"
+        -DCMAKE_DISABLE_TESTING=ON
         "-DCMAKE_INSTALL_INCLUDEDIR=${CURRENT_PACKAGES_DIR}/include/${PORT}"
 )
 vcpkg_cmake_install()
