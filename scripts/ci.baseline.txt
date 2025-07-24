@@ -534,8 +534,6 @@ libmysql:x86-windows=skip
 libnick:arm64-osx=fail # missing system-installed copy of sqlcipher
 libnick:x64-linux=fail # C++20 conformant compiler required
 libnick:x64-osx=fail # missing system-installed copy of sqlcipher
-libnick:x64-windows-static-md=fail # Missing transitive dependency on sqlcipher, remove if issue is fixed
-libnick:x64-windows-static=fail # Missing transitive dependency on sqlcipher, remove if issue is fixed
 libopensp:arm-neon-android=fail
 libopensp:arm64-android=fail
 libopensp:x64-android=fail
@@ -743,7 +741,6 @@ openmpi:arm-neon-android=fail
 openmpi:arm64-android=fail
 openmpi:x64-android=fail
 openmvg:arm64-windows-static-md=fail
-openmvg:x64-linux=fail
 openmvs:arm64-windows-static-md=fail
 # MSVC is not supported
 openslide:x64-windows-release=fail

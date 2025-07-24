@@ -9086,7 +9086,7 @@
     },
     "sqlcipher": {
       "baseline": "4.6.1",
-      "port-version": 2
+      "port-version": 3
     },
     "sqlgen": {
       "baseline": "0.1.0",
