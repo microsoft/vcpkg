@@ -74,11 +74,20 @@ function(get_tgfx_externals SOURCE_PATH)
         
         message(STATUS "Fetching external dependency: ${EXTERNAL} from ${URL}")
         
-        vcpkg_from_git(
-            OUT_SOURCE_PATH DEP_SOURCE_PATH
-            URL "${URL}"
-            REF "${REF}"
-        )
+        if(EXTERNAL STREQUAL "vendor_tools")
+            vcpkg_from_git(
+                OUT_SOURCE_PATH DEP_SOURCE_PATH
+                URL "${URL}"
+                REF "${REF}"
+                PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-ios-toolchain.patch"
+            )
+        else()
+            vcpkg_from_git(
+                OUT_SOURCE_PATH DEP_SOURCE_PATH
+                URL "${URL}"
+                REF "${REF}"
+            )
+        endif()
         
         get_filename_component(TARGET_DIR "${SOURCE_PATH}/${DIR}" DIRECTORY)
         file(MAKE_DIRECTORY "${TARGET_DIR}")

@@ -30,6 +30,20 @@ endif()
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 
+find_program(NINJA
+    NAMES ninja
+    PATHS
+        "${CURRENT_HOST_INSTALLED_DIR}/tools/ninja"
+        ENV PATH
+    NO_DEFAULT_PATH
+)
+if(NOT NINJA)
+    message(FATAL_ERROR "ninja not found! Please install it via your system package manager!")
+endif()
+
+get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         svg             TGFX_BUILD_SVG
