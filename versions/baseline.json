@@ -2845,7 +2845,7 @@
       "port-version": 1
     },
     "fbthrift": {
-      "baseline": "2025.05.19.00",
+      "baseline": "2025.07.21.00",
       "port-version": 0
     },
     "fcl": {
@@ -2897,7 +2897,7 @@
       "port-version": 0
     },
     "fizz": {
-      "baseline": "2025.05.19.00",
+      "baseline": "2025.07.21.00",
       "port-version": 0
     },
     "flagpp": {
@@ -6505,7 +6505,7 @@
       "port-version": 7
     },
     "mvfst": {
-      "baseline": "2025.05.19.00",
+      "baseline": "2025.07.21.00",
       "port-version": 0
     },
     "mxml": {
@@ -10165,7 +10165,7 @@
       "port-version": 0
     },
     "wangle": {
-      "baseline": "2025.05.19.00",
+      "baseline": "2025.07.21.00",
       "port-version": 0
     },
     "wasmedge": {

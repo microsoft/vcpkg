@@ -1,0 +1,61 @@
+diff --git a/thrift/lib/cpp2/security/SSLUtil.cpp b/thrift/lib/cpp2/security/SSLUtil.cpp
+index 1234567..abcdefg 100644
+--- a/thrift/lib/cpp2/security/SSLUtil.cpp
++++ b/thrift/lib/cpp2/security/SSLUtil.cpp
+@@ -1,6 +1,6 @@
+ #include <thrift/lib/cpp2/security/SSLUtil.h>
+ 
+-#include <folly/experimental/io/AsyncIoUringSocketFactory.h>
++// #include <folly/experimental/io/AsyncIoUringSocketFactory.h>
+ #include <folly/io/async/AsyncSocket.h>
+ #include <folly/io/async/AsyncSSLSocket.h>
+ #include <folly/io/async/EventBase.h>
+@@ -135,20 +135,20 @@ folly::AsyncSocketTransport::UniquePtr moveToPlaintext(FizzSocket* fizzSock) {
+   auto newSocket = fizzSock->getUnderlyingTransport<folly::AsyncSocket>();
+   if (newSocket) {
+     return newSocket;
+-  } else if (
+-      fizzSock->template getUnderlyingTransport<folly::AsyncIoUringSocket>()) {
+-    folly::AsyncIoUringSocket::UniquePtr io =
+-        fizzSock->template getUnderlyingTransport<folly::AsyncIoUringSocket>();
+-    if (io) {
+-      return folly::AsyncSocketTransport::UniquePtr(
+-          folly::AsyncIoUringSocket>(newSocket);
+-    }
++  // } else if (
++  //     fizzSock->template getUnderlyingTransport<folly::AsyncIoUringSocket>()) {
++  //   folly::AsyncIoUringSocket::UniquePtr io =
++  //       fizzSock->template getUnderlyingTransport<folly::AsyncIoUringSocket>();
++  //   if (io) {
++  //     return folly::AsyncSocketTransport::UniquePtr(
++  //         folly::AsyncIoUringSocket>(newSocket);
++  //   }
+   }
+   return nullptr;
+ }
+diff --git a/thrift/lib/cpp2/server/Cpp2Worker.cpp b/thrift/lib/cpp2/server/Cpp2Worker.cpp
+index 1234567..abcdefg 100644
+--- a/thrift/lib/cpp2/server/Cpp2Worker.cpp
++++ b/thrift/lib/cpp2/server/Cpp2Worker.cpp
+@@ -1,6 +1,6 @@
+ #include <thrift/lib/cpp2/server/Cpp2Worker.h>
+ 
+-#include <folly/experimental/io/AsyncIoUringSocketFactory.h>
++// #include <folly/experimental/io/AsyncIoUringSocketFactory.h>
+ #include <folly/io/async/AsyncServerSocket.h>
+ #include <folly/io/async/AsyncSocket.h>
+ #include <folly/io/async/AsyncSSLSocket.h>
+@@ -50,10 +50,10 @@ void Cpp2Worker::useExistingSocket(folly::AsyncSocket::UniquePtr sock) {
+   if (sock) {
+     // If the socket supports io_uring, upgrade it
+-    if (folly::AsyncIoUringSocketFactory::supports(sock->getEventBase())) {
+-      sock = folly::AsyncIoUringSocketFactory::create<
+-          folly::AsyncSocket>(std::move(sock));
+-    }
++    // if (folly::AsyncIoUringSocketFactory::supports(sock->getEventBase())) {
++    //   sock = folly::AsyncIoUringSocketFactory::create<
++    //       folly::AsyncSocket>(std::move(sock));
++    // }
+   }
+   socket_ = std::move(sock);
+ } 

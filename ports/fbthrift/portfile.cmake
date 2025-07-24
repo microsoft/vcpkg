@@ -2,12 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
     REF "v${VERSION}"
-    SHA512 957b58b32b7cd7cbf58ebe1e65f8c9befbe5d48d8fa33ea36ff40a04f6c34f362d88c03d0060fa6681cd7fc8b5aa7063fbd9c16ded23df0fb091031bcb0668c1
+    SHA512 a61838d588bc9de042afac70b2607940573fafd803a778255eb717c7d8be452e74e21955f7bf264557bdae96989e92e863f9b34e5c637dbc705dd55623713b59
     HEAD_REF main
-    PATCHES
-        fix-deps.patch
-        fix-test.patch
-        folly-has-liburing.diff
 )
 
 file(REMOVE "${SOURCE_PATH}/thrift/cmake/FindGMock.cmake")
@@ -19,6 +15,19 @@ file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindGMock.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindLibEvent.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindSodium.cmake")
 file(REMOVE "${SOURCE_PATH}/build/fbcode_builder/CMake/FindZstd.cmake")
+
+# Fix dependency issues for new version - only apply if the strings exist
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" 
+    "find_package(Zstd REQUIRED)"
+    "find_package(zstd CONFIG REQUIRED)"
+    IGNORE_UNCHANGED
+)
+
+# Fix io_uring issues - disable AsyncIoUringSocket usage by commenting out the entire block
+vcpkg_replace_string("${SOURCE_PATH}/thrift/lib/cpp2/security/SSLUtil.cpp"
+    "#if defined(__linux__) && __has_include(<liburing.h>)"
+    "#if 0 // defined(__linux__) && __has_include(<liburing.h>)"
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

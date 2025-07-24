@@ -7,7 +7,7 @@ index 3c422db..c4a05fa 100644
  #include <signal.h>
  
 -#if !FOLLY_MOBILE && __has_include(<liburing.h>)
-+#if !FOLLY_MOBILE && FOLLY_HAS_LIBURING
++#if !FOLLY_MOBILE && FOLLY_HAS_LIBURING && !defined(__APPLE__)
  
  DEFINE_int32(pwt_io_uring_capacity, -1, "io_uring backend capacity");
  DEFINE_int32(pwt_io_uring_max_submit, 128, "io_uring backend max submit");
