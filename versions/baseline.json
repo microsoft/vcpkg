@@ -9904,6 +9904,10 @@
       "baseline": "2.0.0",
       "port-version": 0
     },
+    "vbs-enclave-tooling-codegen": {
+      "baseline": "0.0.2-prerelease",
+      "port-version": 0
+    },
     "vc": {
       "baseline": "1.4.4",
       "port-version": 0
