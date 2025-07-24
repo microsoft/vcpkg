@@ -14,6 +14,10 @@
       "host": true
     },
     {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
       "name": "vcpkg-tool-ninja",
       "host": true
     },

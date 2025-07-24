@@ -44,6 +44,25 @@ endif()
 get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
+execute_process(
+    COMMAND "${NODEJS}" --version
+    OUTPUT_VARIABLE NODEJS_VERSION_OUTPUT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+if(NODEJS_VERSION_OUTPUT MATCHES "v([0-9]+)\\.([0-9]+)")
+    if(CMAKE_MATCH_1 LESS 14 OR (CMAKE_MATCH_1 EQUAL 14 AND CMAKE_MATCH_2 LESS 14))
+        message(FATAL_ERROR "NodeJS version ${NODEJS_VERSION_OUTPUT} is too old. TGFX requires NodeJS 14.14.0+")
+    endif()
+endif()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+if(CMAKE_VERSION VERSION_LESS "3.13.0")
+    message(FATAL_ERROR "CMake ${CMAKE_VERSION} is too old. TGFX requires CMake 3.13.0+")
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         svg             TGFX_BUILD_SVG
@@ -57,6 +76,70 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         exclude-opengl          TGFX_USE_OPENGL
         exclude-faster-blur     TGFX_USE_FASTER_BLUR
 )
+
+if("qt" IN_LIST FEATURES)
+    find_package(QT NAMES Qt6 Qt5 QUIET)
+    if(QT_FOUND AND QT_VERSION VERSION_LESS "5.13.0")
+        message(FATAL_ERROR "Qt version ${QT_VERSION} is too old. TGFX requires Qt 5.13.0+")
+    endif()
+endif()
+
+set(PLATFORM_OPTIONS)
+
+if(VCPKG_TARGET_IS_ANDROID)
+    if(NOT VCPKG_DETECTED_CMAKE_ANDROID_NDK)
+        message(FATAL_ERROR "Android NDK not detected. Please set ANDROID_NDK_HOME")
+    endif()
+    
+    list(APPEND PLATFORM_OPTIONS
+        -DCMAKE_ANDROID_NDK=${VCPKG_DETECTED_CMAKE_ANDROID_NDK}
+        -DCMAKE_ANDROID_API=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}
+        -DCMAKE_ANDROID_ARCH_ABI=${VCPKG_TARGET_ARCHITECTURE}
+    )
+    
+elseif(VCPKG_TARGET_IS_IOS)
+    list(APPEND PLATFORM_OPTIONS
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
+    )
+    
+elseif(VCPKG_TARGET_IS_OSX)
+    set(osx_deployment_target "10.15")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(osx_deployment_target "11.0")
+    endif()
+    
+    list(APPEND PLATFORM_OPTIONS
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=${osx_deployment_target}
+    )
+    
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    # Windows configuration
+    if(VCPKG_PLATFORM_TOOLSET VERSION_LESS "v142")
+        message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")
+    endif()
+    
+    list(APPEND PLATFORM_OPTIONS
+        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL
+    )
+    
+    if(VCPKG_TARGET_IS_UWP)
+        list(APPEND PLATFORM_OPTIONS 
+            -DTGFX_UWP_BUILD=ON
+        )
+    endif()
+    
+elseif(VCPKG_TARGET_IS_LINUX)
+    list(APPEND PLATFORM_OPTIONS
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+    )
+endif()
+
+if(VCPKG_DETECTED_CMAKE_C_COMPILER)
+    list(APPEND PLATFORM_OPTIONS -DCMAKE_C_COMPILER=${VCPKG_DETECTED_CMAKE_C_COMPILER})
+endif()
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
+    list(APPEND PLATFORM_OPTIONS -DCMAKE_CXX_COMPILER=${VCPKG_DETECTED_CMAKE_CXX_COMPILER})
+endif()
 
 file(READ "${SOURCE_PATH}/CMakeLists.txt" CMAKELIST_CONTENT)
 
@@ -76,8 +159,14 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${PLATFORM_OPTIONS}
         -DTGFX_BUILD_TESTS=OFF
+        -DCMAKE_CXX_STANDARD=17
+        -DCMAKE_CXX_STANDARD_REQUIRED=ON
+        -DFETCHCONTENT_FULLY_DISCONNECTED=ON
     OPTIONS_DEBUG
+        -DTGFX_BUILD_TESTS=OFF
+    OPTIONS_RELEASE
         -DTGFX_BUILD_TESTS=OFF
 )
 
