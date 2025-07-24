@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF b${VERSION}
     SHA512 39c9a5358d561a4c6675e24c67d810573d7589f9936d7a32e19ea99a7393fa435223c60824c6dad9ac3f1507d327fff704a6000988ddf60faeb219dace876a51
     HEAD_REF master
+    PATCHES
+        cmake-config.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/ggml/include" "${SOURCE_PATH}/ggml/src")
 
@@ -31,14 +33,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/llama")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/llama-config.cmake"
-    "add_library(llama UNKNOWN IMPORTED)"
-    "if (NOT TARGET llama)
-    add_library(llama UNKNOWN IMPORTED)
-endif()
-"
-)
 
 file(INSTALL "${SOURCE_PATH}/gguf-py/gguf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gguf-py")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/convert_hf_to_gguf.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/convert-hf-to-gguf.py")
