@@ -47,7 +47,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(ENABLE_UTILITIES)
+if(DVP_ENABLE_UTILITIES)
     vcpkg_copy_tools(TOOL_NAMES dv-filestat dv-imu-bias-estimation dv-list-devices dv-tcpstat AUTO_CLEAN)
 endif()
 
