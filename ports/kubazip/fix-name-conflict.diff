@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e2eac43..dc2628c 100644
+index a548657..717c30f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -46,6 +46,7 @@ target_compile_options(
-         "$<${msvc}:$<BUILD_INTERFACE:-W3;-WX;-Zi;-permissive->>"
+@@ -52,6 +52,7 @@ set_target_properties(
+         VISIBILITY_INLINES_HIDDEN ON
+         C_STANDARD 90
  )
- add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 +set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME kubazip)
+ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
  
  if(ZIP_STATIC_PIC)
-     set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE 1)
