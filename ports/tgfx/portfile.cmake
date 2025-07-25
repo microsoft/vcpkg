@@ -8,7 +8,7 @@ vcpkg_from_github(
     REF 0334e47271024633da29f357dc7e400b0d4761ff
     SHA512 4f3c8ac8dda4a973bc147f4e09e0242ee0d633ee167703153132d02abf529b6a76a4834cf11b50642ea37f0e97d2e47cc41d38b5bcabaeca14521f025d3b71df
     PATCHES
-        add-vcpkg-install.patch
+        disable-depsync.patch
 )
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")

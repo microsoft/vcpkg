@@ -79,7 +79,6 @@ function(get_tgfx_externals SOURCE_PATH)
                 OUT_SOURCE_PATH DEP_SOURCE_PATH
                 URL "${URL}"
                 REF "${REF}"
-                PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-ios-toolchain.patch"
             )
         else()
             vcpkg_from_git(
