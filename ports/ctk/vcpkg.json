@@ -1,0 +1,25 @@
+{
+  "name": "ctk",
+  "version": "2023-07-13",
+  "description": "A set of common support code for medical imaging, surgical navigation, and related purposes.",
+  "homepage": "https://commontk.org/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "dcmtk",
+    "itk",
+    "qt5-base",
+    "qt5-multimedia",
+    "qt5-script",
+    "qt5-tools",
+    "qt5-xmlpatterns",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vtk"
+  ]
+}
