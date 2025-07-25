@@ -1,4 +1,5 @@
 set(USE_QT_VERSION "6")
+set(BASE_OPENCV_VERSION 4)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -361,14 +362,14 @@ vcpkg_cmake_configure(
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
-        -DOPENCV_INCLUDE_INSTALL_PATH=include/opencv4
+        -DOPENCV_INCLUDE_INSTALL_PATH=include/opencv${BASE_OPENCV_VERSION}
         -DOPENCV_LIB_INSTALL_PATH=lib
-        -DOPENCV_3P_LIB_INSTALL_PATH=lib/manual-link/opencv4_thirdparty
-        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv4
+        -DOPENCV_3P_LIB_INSTALL_PATH=lib/manual-link/opencv${BASE_OPENCV_VERSION}_thirdparty
+        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv${BASE_OPENCV_VERSION}
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         -DOPENCV_FFMPEG_SKIP_BUILD_CHECK=TRUE
         -DCMAKE_DEBUG_POSTFIX=d
-        -DOPENCV_DLLVERSION=4
+        -DOPENCV_DLLVERSION=${BASE_OPENCV_VERSION}
         -DOPENCV_DEBUG_POSTFIX=d
         -DOPENCV_GENERATE_SETUPVARS=OFF
         -DOPENCV_GENERATE_PKGCONFIG=ON
@@ -411,7 +412,7 @@ vcpkg_cmake_configure(
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
-        -DOPENCV_OTHER_INSTALL_PATH=share/opencv4
+        -DOPENCV_OTHER_INSTALL_PATH=share/opencv${BASE_OPENCV_VERSION}
         ###### customized properties
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
@@ -445,14 +446,14 @@ vcpkg_copy_pdbs()
 
 if (NOT VCPKG_BUILD_TYPE)
   # Update debug paths for libs in Android builds (e.g. sdk/native/staticlibs/armeabi-v7a)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules-debug.cmake"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/opencv${BASE_OPENCV_VERSION}/OpenCVModules-debug.cmake"
       "\${_IMPORT_PREFIX}/sdk"
       "\${_IMPORT_PREFIX}/debug/sdk"
       IGNORE_UNCHANGED
   )
 endif()
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
+file(READ "${CURRENT_PACKAGES_DIR}/share/opencv${BASE_OPENCV_VERSION}/OpenCVModules.cmake" OPENCV_MODULES)
 set(DEPS_STRING "include(CMakeFindDependencyMacro)
 if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
@@ -553,7 +554,7 @@ if("ovis" IN_LIST FEATURES)
                  "OgreGLSupport" OPENCV_MODULES "${OPENCV_MODULES}")
 endif()
 
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" "${OPENCV_MODULES}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv${BASE_OPENCV_VERSION}/OpenCVModules.cmake" "${OPENCV_MODULES}")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -593,76 +594,76 @@ foreach(PYTHON3_SITE_FILE_DEBUG ${PYTHON3_SITE_FILES_DEBUG})
   )
 endforeach()
 
-if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lQt6::Core5Compat"
     "-lQt6Core5Compat"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lhdf5::hdf5-static"
     "-lhdf5"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lglog::glog"
     "-lglog"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lgflags::gflags_static"
     "-lgflags"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lTesseract::libtesseract"
     "-ltesseract"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lharfbuzz::harfbuzz"
     "-lharfbuzz"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/"
     "\${prefix}"
     IGNORE_UNCHANGED
   )
 endif()
 
-if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lQt6::Core5Compat"
     "-lQt6Core5Compat"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lhdf5::hdf5-static"
     "-lhdf5"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lglog::glog"
     "-lglog"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lgflags::gflags_static"
     "-lgflags"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lTesseract::libtesseract"
     "-ltesseract"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "-lharfbuzz::harfbuzz"
     "-lharfbuzz"
     IGNORE_UNCHANGED
   )
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv${BASE_OPENCV_VERSION}.pc"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/"
     "\${prefix}"
     IGNORE_UNCHANGED
@@ -676,9 +677,9 @@ configure_file("${CURRENT_PORT_DIR}/usage.in" "${CURRENT_PACKAGES_DIR}/share/${P
 file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
 file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
 file(GLOB_RECURSE extra1_license_files "${CURRENT_PACKAGES_DIR}/share/licenses/*")
-file(GLOB_RECURSE extra2_license_files "${CURRENT_PACKAGES_DIR}/share/opencv4/licenses/*")
+file(GLOB_RECURSE extra2_license_files "${CURRENT_PACKAGES_DIR}/share/opencv${BASE_OPENCV_VERSION}/licenses/*")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" ${extra1_license_files} ${extra2_license_files})
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv4/licenses")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv${BASE_OPENCV_VERSION}/licenses")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/licenses")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/opencv")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
