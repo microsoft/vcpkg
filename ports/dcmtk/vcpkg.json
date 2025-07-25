@@ -30,6 +30,12 @@
         "libiconv"
       ]
     },
+    "openjpeg": {
+      "description": "Enable OpenJPEG support",
+      "dependencies": [
+        "openjpeg"
+      ]
+    },
     "openssl": {
       "description": "Enable OpenSSL",
       "dependencies": [
@@ -64,12 +70,6 @@
       "description": "Enable zlib support",
       "dependencies": [
         "zlib"
-      ]
-    },
-    "openjpeg": {
-      "description": "Enable OpenJPEG support",
-      "dependencies": [
-        "openjpeg"
       ]
     }
   }
