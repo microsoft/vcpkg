@@ -10,7 +10,18 @@ vcpkg_from_github(
         ggml-test.diff
 )
 
+set(options "")
+if("pkgconfig" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PKGCONFIG)
+    list(APPEND options
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/examples/simple"
+    OPTIONS
+        ${options}
 )
 vcpkg_cmake_build()
