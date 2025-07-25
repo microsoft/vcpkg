@@ -177,13 +177,17 @@
     },
     {
       "name": "qtwebengine",
+      "default-features": false
+    },
+    {
+      "name": "qtwebengine",
       "default-features": false,
       "features": [
         "geolocation",
         "spellchecker",
         "webchannel"
       ],
-      "platform": "!static & !(windows & arm)"
+      "platform": "(linux | osx | (windows & x64)) & !static"
     },
     {
       "name": "qtwebsockets",

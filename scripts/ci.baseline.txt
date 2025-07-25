@@ -40,9 +40,6 @@
 
 # Add new items alphabetically
 
-ace:arm-neon-android=fail
-ace:arm64-android=fail
-ace:x64-android=fail
 # ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
 ada-url:x64-linux=fail
 angelscript:x64-osx=fail
@@ -131,10 +128,6 @@ lapack-reference:x64-uwp=skip
 #openblas:x64-windows-static=skip
 # </BLAS+LAPACK>
 ################################################################
-# Bug in VS2022 17.13 where <wchar.h> breaks with -Zc:arm64-aliased-neon-types-
-blend2d:arm64-uwp=fail
-blend2d:arm64-windows-static-md=fail
-blend2d:arm64-windows=fail
 blitz:x64-android=fail
 boinc:arm-neon-android=fail
 boinc:arm64-android=fail
@@ -447,6 +440,9 @@ ijg-libjpeg:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static=skip
 ijg-libjpeg:x64-windows=skip
 ijg-libjpeg:x86-windows=skip
+imgui-sfml:arm-neon-android=fail
+imgui-sfml:arm64-android=fail
+imgui-sfml:x64-android=fail
 intelrdfpmathlib:arm-neon-android=fail
 intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
@@ -534,9 +530,6 @@ libmikmod:arm-neon-android=fail
 libmikmod:arm64-android=fail
 libmikmod:x64-android=fail
 libmodman:x64-windows-static=fail
-libmpeg2:arm-neon-android=fail
-libmpeg2:arm64-android=fail
-libmpeg2:x64-android=fail
 libmysql:x86-windows=skip
 libnick:arm64-osx=fail # missing system-installed copy of sqlcipher
 libnick:x64-linux=fail # C++20 conformant compiler required
@@ -737,10 +730,7 @@ omniorb:x64-android=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
-openimageio:arm-neon-android=fail
-openimageio:arm64-android=fail
 openimageio:arm64-windows-static-md=fail
-openimageio:x64-android=fail
 openmama:arm64-windows-static-md=fail
 openmama:x64-windows-static-md=fail
 openmesh:arm64-uwp=fail
@@ -751,8 +741,13 @@ openmpi:arm-neon-android=fail
 openmpi:arm64-android=fail
 openmpi:x64-android=fail
 openmvg:arm64-windows-static-md=fail
-openmvg:x64-linux=fail
 openmvs:arm64-windows-static-md=fail
+# MSVC is not supported
+openslide:x64-windows-release=fail
+openslide:x64-windows-static-md=fail
+openslide:x64-windows-static=fail
+openslide:x64-windows=fail
+openslide:x86-windows=fail
 opensubdiv:x64-android=fail
 openturns:arm64-windows-static-md=fail
 openturns:arm64-windows=fail
@@ -776,6 +771,7 @@ optional-bare:x64-windows-static-md=skip
 optional-bare:x64-windows-static=skip
 optional-bare:x64-windows=skip
 optional-bare:x86-windows=skip
+orange-math:x64-linux=fail
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
@@ -784,7 +780,6 @@ outcome:arm64-android=fail
 outcome:x64-android=fail
 paho-mqtt:arm64-uwp=fail
 paho-mqtt:x64-uwp=fail
-pcl:x64-android=fail
 platform-folders:arm64-uwp=fail
 platform-folders:x64-uwp=fail
 plib:arm-neon-android=fail
@@ -827,12 +822,8 @@ qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:arm64-osx=skip
 qt5-x11extras:x64-osx=skip
-qtmultimedia:arm-neon-android=fail
 qtmultimedia:arm64-android=fail
 qtmultimedia:x64-android=fail
-qtquick3d:arm-neon-android=fail
-qtquick3d:arm64-android=fail
-qtquick3d:x64-android=fail
 qtwayland:arm-neon-android=fail
 qtwayland:arm64-android=fail
 qtwayland:x64-android=fail
@@ -914,9 +905,9 @@ sciter:x64-windows-static=skip
 sciter:x64-windows=skip
 sciter:x86-windows=skip
 septag-sx:x64-android=fail
-sfml:arm-neon-android=fail
-sfml:arm64-android=fail
-sfml:x64-android=fail
+sfgui:arm-neon-android=fail
+sfgui:arm64-android=fail
+sfgui:x64-android=fail
 shader-slang:x64-windows-static=fail
 # "Obsolete" and conflicts with microsoft-signalr
 signalrclient:arm-neon-android=skip
@@ -1012,6 +1003,9 @@ tensorflow-cc:x64-osx=skip
 tensorflow:x64-linux=skip
 tensorflow-cc:x64-linux=skip
 
+tgui:arm-neon-android=fail
+tgui:arm64-android=fail
+tgui:x64-android=fail
 tinycthread:arm-neon-android=fail
 tinycthread:arm64-android=fail
 tinycthread:x64-android=fail
@@ -1036,9 +1030,6 @@ v8:x64-windows-static-md=fail
 v8:x64-windows-static=fail
 v8:x64-windows=fail
 v8:x86-windows=fail
-vowpal-wabbit:arm-neon-android=fail
-vowpal-wabbit:arm64-android=fail
-vowpal-wabbit:x64-android=fail
 # vst3sdk CMake files work only with the GUI version of Xcode
 vst3sdk:arm64-osx=fail
 vst3sdk:x64-osx=fail
@@ -1231,9 +1222,9 @@ vcpkg-ci-mathgl:x86-windows=pass
 vcpkg-ci-opencv:arm-neon-android=pass
 vcpkg-ci-opencv:arm64-android=pass
 vcpkg-ci-opencv:arm64-osx=pass
-# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
-#vcpkg-ci-opencv:arm64-uwp=pass
-opencv4:arm64-uwp=fail
+vcpkg-ci-opencv:arm64-uwp=pass
+# OpenCV appears to be trying to use __fp16 on a platform that does not support that
+# buildtrees\opencv4\src\4.11.0-46ecfbc8ae.clean\modules\dnn\src\layers\cpu_kernels\conv_winograd_f63.simd.hpp(1371): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
 #vcpkg-ci-opencv:arm64-windows-static-md=pass
 opencv4:arm64-windows-static-md=fail
 #vcpkg-ci-opencv:arm64-windows=pass

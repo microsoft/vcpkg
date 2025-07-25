@@ -1,6 +1,6 @@
 {
   "name": "libnick",
-  "version": "2025.6.5",
+  "version": "2025.7.3",
   "maintainers": "Nicholas Logozzo nlogozzo225@gmail.com",
   "description": "A cross-platform base for native Nickvision applications.",
   "homepage": "https://github.com/NickvisionApps/libnick",
@@ -9,7 +9,7 @@
   "supports": "windows | linux | osx",
   "dependencies": [
     "boost-json",
-    "curl",
+    "cpr",
     "gettext-libintl",
     {
       "name": "glib",

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yhirose/cpp-httplib
     REF "v${VERSION}"
-    SHA512 c355ab3814efce40759a3328b4e1079dc372d3cce8a841c42d22adb4eb228351f0602b5e82135c0bf69321fd5138a0052882ab801908ad4c32fa963d655a11d9
+    SHA512 f8037a0d55019931beb4dfd12418c140e6b170ed7d0eb851f2eebefb8a5f48bb83fc3c9030b78a3524190d2d1647a16e14ac64209ce663bbaa717f03b167cb59
     HEAD_REF master
     PATCHES
         fix-find-brotli.patch

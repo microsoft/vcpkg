@@ -22,8 +22,8 @@ vcpkg_from_github(
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
-      0020-fix-qt-gen-def.patch
-      0021-unicode-fix.patch
+      0020-fix-narrow-filesystem.diff
+      0021-fix-qt-gen-def.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
