@@ -50,7 +50,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
+set(VCPKG_CMAKE_CONFIG_FIXUP_NO_CONFIG_DIR ON)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/libCZI)
 # vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT})
 
 # vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
