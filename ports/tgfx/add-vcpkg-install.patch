@@ -1,9 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -618,0 +619,35 @@ endif ()
+@@ -618,0 +619,34 @@ endif ()
 +
-+# Install targets for vcpkg
 +set(TGFX_INSTALL_TARGETS tgfx)
 +if(TARGET tgfx-drawers)
 +    list(APPEND TGFX_INSTALL_TARGETS tgfx-drawers)

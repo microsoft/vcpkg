@@ -72,17 +72,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         swiftshader     TGFX_USE_SWIFTSHADER
         angle           TGFX_USE_ANGLE
         async-promise   TGFX_USE_ASYNC_PROMISE
-    INVERTED_FEATURES
-        exclude-opengl          TGFX_USE_OPENGL
-        exclude-faster-blur     TGFX_USE_FASTER_BLUR
 )
-
-if("qt" IN_LIST FEATURES)
-    find_package(QT NAMES Qt6 Qt5 QUIET)
-    if(QT_FOUND AND QT_VERSION VERSION_LESS "5.13.0")
-        message(FATAL_ERROR "Qt version ${QT_VERSION} is too old. TGFX requires Qt 5.13.0+")
-    endif()
-endif()
 
 set(PLATFORM_OPTIONS)
 
@@ -141,38 +131,135 @@ if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
     list(APPEND PLATFORM_OPTIONS -DCMAKE_CXX_COMPILER=${VCPKG_DETECTED_CMAKE_CXX_COMPILER})
 endif()
 
-file(READ "${SOURCE_PATH}/CMakeLists.txt" CMAKELIST_CONTENT)
+set(TGFX_PLATFORM "")
+set(TGFX_ARCH "")
 
-string(REPLACE 
-    "target_include_directories(tgfx PUBLIC include PRIVATE src)"
-    "target_include_directories(tgfx PUBLIC \$<BUILD_INTERFACE:\${CMAKE_CURRENT_SOURCE_DIR}/include> \$<INSTALL_INTERFACE:include> PRIVATE src)"
-    CMAKELIST_CONTENT "${CMAKELIST_CONTENT}")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(TGFX_PLATFORM "win")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(TGFX_ARCH "x86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(TGFX_ARCH "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(TGFX_ARCH "arm64")
+    endif()
+elseif(VCPKG_TARGET_IS_OSX)
+    set(TGFX_PLATFORM "mac")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(TGFX_ARCH "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(TGFX_ARCH "arm64")
+    endif()
+elseif(VCPKG_TARGET_IS_IOS)
+    set(TGFX_PLATFORM "ios")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(TGFX_ARCH "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(TGFX_ARCH "arm64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(TGFX_ARCH "arm")
+    endif()
+elseif(VCPKG_TARGET_IS_LINUX)
+    set(TGFX_PLATFORM "linux")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(TGFX_ARCH "x86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(TGFX_ARCH "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(TGFX_ARCH "arm64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(TGFX_ARCH "arm")
+    endif()
+elseif(VCPKG_TARGET_IS_ANDROID)
+    set(TGFX_PLATFORM "android")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(TGFX_ARCH "x86")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(TGFX_ARCH "x64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(TGFX_ARCH "arm64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(TGFX_ARCH "arm")
+    endif()
+endif()
 
-string(REPLACE 
-    "target_include_directories(tgfx-drawers PUBLIC drawers/include PRIVATE include drawers/src)"
-    "target_include_directories(tgfx-drawers PUBLIC \$<BUILD_INTERFACE:\${CMAKE_CURRENT_SOURCE_DIR}/drawers/include> \$<INSTALL_INTERFACE:include> PRIVATE include drawers/src)"
-    CMAKELIST_CONTENT "${CMAKELIST_CONTENT}")
+if(NOT TGFX_PLATFORM)
+    message(FATAL_ERROR "Unsupported platform: ${VCPKG_TARGET_TRIPLET}")
+endif()
 
-file(WRITE "${SOURCE_PATH}/CMakeLists.txt" "${CMAKELIST_CONTENT}")
+set(BASE_BUILD_ARGS "build_tgfx")
+list(APPEND BASE_BUILD_ARGS "-p" "${TGFX_PLATFORM}")
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        ${FEATURE_OPTIONS}
-        ${PLATFORM_OPTIONS}
-        -DTGFX_BUILD_TESTS=OFF
-        -DCMAKE_CXX_STANDARD=17
-        -DCMAKE_CXX_STANDARD_REQUIRED=ON
-        -DFETCHCONTENT_FULLY_DISCONNECTED=ON
-    OPTIONS_DEBUG
-        -DTGFX_BUILD_TESTS=OFF
-    OPTIONS_RELEASE
-        -DTGFX_BUILD_TESTS=OFF
-)
+if(TGFX_ARCH)
+    list(APPEND BASE_BUILD_ARGS "-a" "${TGFX_ARCH}")
+endif()
 
-vcpkg_cmake_install()
+foreach(option IN LISTS FEATURE_OPTIONS)
+    if(option MATCHES "^-D(.+)=(.+)$")
+        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=${CMAKE_MATCH_2}")
+    elseif(option MATCHES "^-D(.+)$")
+        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=ON")
+    endif()
+endforeach()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME tgfx CONFIG_PATH share/tgfx)
+foreach(option IN LISTS PLATFORM_OPTIONS)
+    if(option MATCHES "^-D(.+)=(.+)$")
+        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=${CMAKE_MATCH_2}")
+    elseif(option MATCHES "^-D(.+)$")
+        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=ON")
+    endif()
+endforeach()
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    set(RELEASE_BUILD_ARGS ${BASE_BUILD_ARGS})
+    
+    vcpkg_execute_required_process(
+        COMMAND "${NODEJS}" ${RELEASE_BUILD_ARGS}
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME tgfx_build_release
+    )
+endif()
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(DEBUG_BUILD_ARGS ${BASE_BUILD_ARGS})
+    list(APPEND DEBUG_BUILD_ARGS "-d")
+    
+    vcpkg_execute_required_process(
+        COMMAND "${NODEJS}" ${DEBUG_BUILD_ARGS}
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME tgfx_build_debug
+    )
+endif()
+
+set(RELEASE_OUT_DIR "${SOURCE_PATH}/out/release/${TGFX_PLATFORM}")
+set(DEBUG_OUT_DIR "${SOURCE_PATH}/out/debug/${TGFX_PLATFORM}")
+
+if(TGFX_ARCH)
+    set(RELEASE_OUT_DIR "${RELEASE_OUT_DIR}/${TGFX_ARCH}")
+    set(DEBUG_OUT_DIR "${DEBUG_OUT_DIR}/${TGFX_ARCH}")
+endif()
+
+file(INSTALL "${SOURCE_PATH}/include/"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+     FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+
+if(EXISTS "${RELEASE_OUT_DIR}")
+    file(GLOB RELEASE_LIBS "${RELEASE_OUT_DIR}/*.a" "${RELEASE_OUT_DIR}/*.lib")
+    if(RELEASE_LIBS)
+        file(INSTALL ${RELEASE_LIBS}
+             DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    endif()
+endif()
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(EXISTS "${DEBUG_OUT_DIR}")
+        file(GLOB DEBUG_LIBS "${DEBUG_OUT_DIR}/*.a" "${DEBUG_OUT_DIR}/*.lib")
+        if(DEBUG_LIBS)
+            file(INSTALL ${DEBUG_LIBS}
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        endif()
+    endif()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

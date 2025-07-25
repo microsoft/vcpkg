@@ -36,12 +36,6 @@
     "drawers": {
       "description": "Enable building the tgfx-drawers library for testing"
     },
-    "exclude-faster-blur": {
-      "description": "Disable the faster blur algorithm and use standard Gaussian blur (faster blur is enabled by default)"
-    },
-    "exclude-opengl": {
-      "description": "Disable OpenGL as the GPU backend (OpenGL is enabled by default)"
-    },
     "layers": {
       "description": "Enable building the layers module"
     },
@@ -55,6 +49,10 @@
             "opengl",
             "widgets"
           ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
         }
       ]
     },
