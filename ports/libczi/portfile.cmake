@@ -50,6 +50,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+# Note: libCZI installs CMake config files into 'share/libCZI' (with capital CZI),
+# so we must match that exactly here
 set(VCPKG_CMAKE_CONFIG_FIXUP_NO_CONFIG_DIR ON)
 vcpkg_cmake_config_fixup(CONFIG_PATH share/libCZI)
 # vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT})
