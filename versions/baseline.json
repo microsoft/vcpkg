@@ -6033,7 +6033,7 @@
       "port-version": 0
     },
     "malware-detector": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.104",
       "port-version": 0
     },
     "manif": {
