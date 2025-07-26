@@ -1,10 +1,10 @@
 {
   "name": "ggml",
-  "version-date": "2025-05-13",
+  "version-date": "2025-07-23",
   "description": "Tensor library for machine learning",
   "homepage": "https://github.com/ggml-org/ggml",
   "license": "MIT",
-  "supports": "!(windows & arm) & !uwp",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
