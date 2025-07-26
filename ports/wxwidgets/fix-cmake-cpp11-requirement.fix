@@ -1,0 +1,13 @@
+diff --git a/build/cmake/wxWidgetsConfig.cmake.in b/build/cmake/wxWidgetsConfig.cmake.in
+index 93d7443659..9ccc6e031b 100644
+--- a/build/cmake/wxWidgetsConfig.cmake.in
++++ b/build/cmake/wxWidgetsConfig.cmake.in
+@@ -129,6 +129,8 @@ foreach(libname @wxLIB_TARGETS@)
+             add_library(wx::${name} ALIAS wx::${libname})
+         endif()
+ 
++        target_compile_features(wx::${name} INTERFACE cxx_std_11)
++
+         # add to FindwxWidgets variable
+         if(NOT @PROJECT_NAME@_FIND_COMPONENTS OR ${name} IN_LIST @PROJECT_NAME@_FIND_COMPONENTS)
+             list(APPEND wxWidgets_LIBRARIES wx::${name})
