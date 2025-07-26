@@ -7,6 +7,7 @@ option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
 
 set(PKGCONFIG_LIBS_PRIVATE "")
 set(PKGCONFIG_REQUIRES_PRIVATE "")
+set(PKGCONFIG_CFLAGS "")
 
 add_library(sqlite3 sqlite3.c sqlite3.rc)
 
@@ -33,6 +34,7 @@ if (NOT WIN32)
     find_package(Threads REQUIRED)
     target_link_libraries(sqlite3 PRIVATE Threads::Threads ${CMAKE_DL_LIBS})
     string(APPEND PKGCONFIG_LIBS_PRIVATE " -pthread")
+    string(APPEND PKGCONFIG_CFLAGS " -pthread")
     foreach(LIB IN LISTS CMAKE_DL_LIBS)
         string(APPEND PKGCONFIG_LIBS_PRIVATE " -l${LIB}")
     endforeach()
