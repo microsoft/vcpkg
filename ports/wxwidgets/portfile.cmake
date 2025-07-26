@@ -76,8 +76,11 @@ endif()
 vcpkg_find_acquire_program(PKGCONFIG)
 
 # This may be set to ON by users in a custom triplet.
-# The use of 'wxUSE_STL' and 'WXWIDGETS_USE_STD_CONTAINERS' (ON or OFF) are not API compatible
-# which is why they must be set in a custom triplet rather than a port feature.
+# The use of 'WXWIDGETS_USE_STD_CONTAINERS' (ON or OFF) is not API compatible
+# which is why it must be set in a custom triplet rather than a port feature.
+# For backwards compatibility, we also replace 'wxUSE_STL' (which no longer
+# exists) with 'wxUSE_STD_STRING_CONV_IN_WXSTRING' which still exists and was
+# set by `wxUSE_STL` previously.
 if(NOT DEFINED WXWIDGETS_USE_STL)
     set(WXWIDGETS_USE_STL OFF)
 endif()
@@ -101,7 +104,7 @@ vcpkg_cmake_configure(
         -DwxUSE_GLCANVAS=ON
         -DwxUSE_LIBGNOMEVFS=OFF
         -DwxUSE_LIBNOTIFY=OFF
-        -DwxUSE_STL=${WXWIDGETS_USE_STL}
+        -DwxUSE_STD_STRING_CONV_IN_WXSTRING=${WXWIDGETS_USE_STL}
         -DwxUSE_STD_CONTAINERS=${WXWIDGETS_USE_STD_CONTAINERS}
         -DwxUSE_UIACTIONSIMULATOR=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_GSPELL=ON
@@ -146,6 +149,10 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/msvc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/mswu")
+if(VCPKG_BUILD_TYPE STREQUAL "release")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/mswud")
+endif()
+
 file(GLOB_RECURSE INCLUDES "${CURRENT_PACKAGES_DIR}/include/*.h")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h")
     list(APPEND INCLUDES "${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h")
@@ -205,7 +212,7 @@ if(NOT "debug-support" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
     else()
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx-3.2/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/wx-3.3/wx/debug.h" "#define wxDEBUG_LEVEL 1" "#define wxDEBUG_LEVEL 0")
     endif()
 endif()
 
