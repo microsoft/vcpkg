@@ -83,8 +83,8 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/libczi)
 
 
 # Rename CMake config files to lowercase for CMake compatibility
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/libczi/libCZIConfig.cmake"          "${CURRENT_PACKAGES_DIR}/share/libczi/libcziConfig.cmake")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/libczi/libCZIConfigVersion.cmake"   "${CURRENT_PACKAGES_DIR}/share/libczi/libcziConfigVersion.cmake")
+#file(RENAME "${CURRENT_PACKAGES_DIR}/share/libczi/libCZIConfig.cmake"          "${CURRENT_PACKAGES_DIR}/share/libczi/libcziConfig.cmake")
+#file(RENAME "${CURRENT_PACKAGES_DIR}/share/libczi/libCZIConfigVersion.cmake"   "${CURRENT_PACKAGES_DIR}/share/libczi/libcziConfigVersion.cmake")
 
 
 # vcpkg_cmake_config_fixup(CONFIG_PATH share/${PORT})
