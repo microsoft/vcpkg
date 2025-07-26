@@ -1,13 +1,12 @@
-diff --git a/build/cmake/wxWidgetsConfig.cmake.in b/build/cmake/wxWidgetsConfig.cmake.in
-index 93d7443659..9ccc6e031b 100644
---- a/build/cmake/wxWidgetsConfig.cmake.in
-+++ b/build/cmake/wxWidgetsConfig.cmake.in
-@@ -129,6 +129,8 @@ foreach(libname @wxLIB_TARGETS@)
-             add_library(wx::${name} ALIAS wx::${libname})
-         endif()
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index a35328f354..0b97f0bc7f 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -681,6 +681,7 @@ function(wx_add_builtin_library name)
+     add_library(wx::${name_short} ALIAS ${name})
+     wx_set_builtin_target_properties(${name})
+     set_target_properties(${name} PROPERTIES PROJECT_LABEL ${name_short})
++    target_compile_features(${name} INTERFACE cxx_std_11)
+ endfunction()
  
-+        target_compile_features(wx::${name} INTERFACE cxx_std_11)
-+
-         # add to FindwxWidgets variable
-         if(NOT @PROJECT_NAME@_FIND_COMPONENTS OR ${name} IN_LIST @PROJECT_NAME@_FIND_COMPONENTS)
-             list(APPEND wxWidgets_LIBRARIES wx::${name})
+ # List of third party libraries added via wx_add_thirdparty_library()
