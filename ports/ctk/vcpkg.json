@@ -5,9 +5,6 @@
   "homepage": "https://commontk.org/",
   "license": "Apache-2.0",
   "dependencies": [
-    "dcmtk",
-    "itk",
-    "qt5-base",
     "qt5-multimedia",
     "qt5-script",
     "qt5-tools",
@@ -19,7 +16,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "vtk"
+    }
   ]
 }
