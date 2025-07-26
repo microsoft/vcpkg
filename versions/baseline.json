@@ -4356,6 +4356,10 @@
       "baseline": "1.21.3",
       "port-version": 3
     },
+    "kspalaiologos-bzip3": {
+      "baseline": "1.5.2",
+      "port-version": 0
+    },
     "ktx": {
       "baseline": "4.3.2",
       "port-version": 2
