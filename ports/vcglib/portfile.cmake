@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cnr-isti-vclab/vcglib
     REF "${VERSION}"
-    SHA512 867a4e4e038f2c67000486a207c04a69ae7fa8dff5be73b4bae8a67ae1530faeb8d20915086c334da545b6e3511b4fe6b1135d732f41b632cf3256687882218e
+    SHA512 6533dfdc48a8ee0f904c49edcd25a3c06a945cec7baa047ddbba78ae48fbf7b490718fe15eb7c729f9c097114b798ec5204302b37011906a0bed4de819616717
     PATCHES
         consume-vcpkg-eigen3.patch
-        fix-build.patch
     )
 
 file(COPY ${SOURCE_PATH}/vcg/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/vcg)
