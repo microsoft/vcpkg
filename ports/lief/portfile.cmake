@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
     REF ${VERSION}
-    SHA512 776d26bc5d8ec7bca823d1c0fc821b0efc2411976901e1fca0ffecbc64591798e9e21a483c1637e9877bdd921dc463ffaef4eeb6a76d9dd8463c97c5f50834d4
+    SHA512 0e50fb5aba2d6cdf2eb653dd52d5f237a065d9f75c1b40e533bd14e300b7bb802f78308f4810b97efb87a40fc85626d7a2a2bd9ec557546c2ae98f5107fdeab0
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
         fix-liefconfig-cmake-in.patch
         fix-vcpkg-includes.patch
+        include-json.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third-party")
@@ -31,6 +32,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "vdex"           LIEF_VDEX              # Build LIEF with VDEX module
         "art"            LIEF_ART               # Build LIEF with ART module
 )
+
+# While paging.cpp refers to ELF, PE, MachO implementations, we have to enable these features on Windows dynamic builds
+# see https://github.com/lief-project/LIEF/blob/0.16.6/src/paging.cpp
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND FEATURE_OPTIONS "-DLIEF_ELF=ON" "-DLIEF_PE=ON" "-DLIEF_MACHO=ON")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
