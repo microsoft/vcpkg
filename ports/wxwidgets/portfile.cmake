@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
+        fix-cmake-msvc-naming.patch # v3.3.0-only, can be replaced with conditional `-DwxBUILD_WIN32_MSVC_NAMING=ON` in v3.3.1
 )
 
 # Submodule dependencies
