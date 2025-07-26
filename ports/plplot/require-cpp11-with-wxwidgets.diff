@@ -1,0 +1,34 @@
+diff --git a/bindings/wxwidgets/CMakeLists.txt b/bindings/wxwidgets/CMakeLists.txt
+index 4243d4977..e64abae26 100644
+--- a/bindings/wxwidgets/CMakeLists.txt
++++ b/bindings/wxwidgets/CMakeLists.txt
+@@ -61,6 +61,7 @@ if(ENABLE_wxwidgets)
+   list(APPEND LIB_INSTALL_RPATH ${wxwidgets_RPATH})
+ 
+   configure_library_build(plplotwxwidgets "" "${plplotwxwidgets_LIB_SRCS}" "PLPLOT::plplot;PLPLOT::plplotcxx;${wxwidgets_LINK_FLAGS}" "${LIB_INSTALL_RPATH}")
++  target_compile_features(${WRITEABLE_TARGET}plplotwxwidgets PUBLIC cxx_std_11)
+   target_include_directories(${WRITEABLE_TARGET}plplotwxwidgets
+     PUBLIC
+     # Applications (e.g., wxPLplotDemo and wxPLViewer) which are linked to
+diff --git a/drivers/CMakeLists.txt b/drivers/CMakeLists.txt
+index 6cae58965..925a6dfdf 100644
+--- a/drivers/CMakeLists.txt
++++ b/drivers/CMakeLists.txt
+@@ -249,4 +249,5 @@ if(ENABLE_wxwidgets AND NOT OLD_WXWIDGETS)
+     PROPERTIES
+     WIN32_EXECUTABLE "ON"
+     )
++  target_compile_features(${WRITEABLE_TARGET}wxPLViewer PUBLIC cxx_std_11)
+ endif(ENABLE_wxwidgets AND NOT OLD_WXWIDGETS)
+diff --git a/examples/c++/CMakeLists.txt b/examples/c++/CMakeLists.txt
+index f245aa83c..ed00a7b6b 100644
+--- a/examples/c++/CMakeLists.txt
++++ b/examples/c++/CMakeLists.txt
+@@ -122,6 +122,7 @@ if(ENABLE_wxwidgets)
+ 	)
+     endif(BUILD_SHARED_LIBS)
+     target_link_libraries(wxPLplotDemo PLPLOT::plplotwxwidgets PLPLOT::plplotcxx ${wxwidgets_LINK_FLAGS} ${MATH_LIB})
++    target_compile_features(wxPLplotDemo PUBLIC cxx_std_11)
+ 
+   endif(BUILD_TEST)
+   # Transform wxwidgets_LINK_FLAGS from list of libraries to the standard pkg-config form

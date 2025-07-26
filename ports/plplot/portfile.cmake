@@ -12,6 +12,7 @@ vcpkg_from_sourceforge(
         pkgconfig-template.diff
         subdirs.patch
         use-math-h-nan.patch
+        require-cpp11-with-wxwidgets.diff
 )
 
 vcpkg_check_features(
