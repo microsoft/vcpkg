@@ -1,6 +1,7 @@
 {
   "name": "curl",
   "version": "8.15.0",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -69,6 +70,27 @@
           ]
         },
         "nghttp2"
+      ]
+    },
+    "http3": {
+      "description": "Enable http3 with openssl backend",
+      "supports": "(uwp | !windows) & !mingw",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        },
+        "nghttp3",
+        {
+          "name": "ngtcp2",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        }
       ]
     },
     "httpsrr": {
