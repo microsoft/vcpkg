@@ -10,3 +10,18 @@ index a35328f354..0b97f0bc7f 100644
  endfunction()
  
  # List of third party libraries added via wx_add_thirdparty_library()
+diff --git a/build/cmake/wxWidgetsConfig.cmake.in b/build/cmake/wxWidgetsConfig.cmake.in
+index 93d7443659..d0e2f46f61 100644
+--- a/build/cmake/wxWidgetsConfig.cmake.in
++++ b/build/cmake/wxWidgetsConfig.cmake.in
+@@ -125,8 +125,10 @@ foreach(libname @wxLIB_TARGETS@)
+             wx_inherit_property(wx::${libname} wx::${name} IMPORTED_LOCATION)
+             wx_inherit_property(wx::${libname} wx::${name} IMPORTED_IMPLIB)
+             wx_inherit_property(wx::${libname} wx::${name} IMPORTED_LINK_DEPENDENT_LIBRARIES)
++            target_compile_features(wx::${name} PUBLIC cxx_std_11)
+         else()
+             add_library(wx::${name} ALIAS wx::${libname})
++            target_compile_features(wx::${libname} PUBLIC cxx_std_11)
+         endif()
+ 
+         # add to FindwxWidgets variable
