@@ -158,6 +158,10 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
+
 # no absolute paths
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h"
     "#define (DCMTK_PREFIX|DCM_DICT_DEFAULT_PATH|DEFAULT_CONFIGURATION_DIR|DEFAULT_SUPPORT_DATA_DIR) \"[^\"]*\""
