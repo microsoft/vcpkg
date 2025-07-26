@@ -1,8 +1,8 @@
 {
     "name": "libczi",
     "version": "0.66.1",
-    "description": "libCZI is an Open Source Cross-Platform C++ library to read and write CZI.",
-    "homepage": "https://github.com/HakanAcundas/libczi",
+    "description": "library to read and write CZI files.",
+    "homepage": "https://github.com/ZEISS/libczi",
 
     "dependencies": [
     {
