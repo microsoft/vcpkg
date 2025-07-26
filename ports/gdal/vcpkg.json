@@ -1,6 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.11.3",
+  "port-version": 1,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -83,6 +84,12 @@
           "name": "arrow",
           "default-features": false
         }
+      ]
+    },
+    "arrow-adbc": {
+      "description": "Arrow adbc support",
+      "dependencies": [
+        "arrow-adbc"
       ]
     },
     "aws-ec2-windows": {

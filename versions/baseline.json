@@ -3162,7 +3162,7 @@
     },
     "gdal": {
       "baseline": "3.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "gdbm": {
       "baseline": "1.24",
