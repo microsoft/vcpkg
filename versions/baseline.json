@@ -2602,7 +2602,7 @@
     },
     "ebml": {
       "baseline": "1.4.5",
-      "port-version": 0
+      "port-version": 1
     },
     "ecal": {
       "baseline": "5.13.3",
@@ -6130,7 +6130,7 @@
     },
     "matroska": {
       "baseline": "1.7.1",
-      "port-version": 2
+      "port-version": 3
     },
     "mbedtls": {
       "baseline": "3.6.4",
