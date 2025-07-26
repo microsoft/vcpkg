@@ -3,13 +3,13 @@
 # -------------------------------
 
 set(LIBCZI_REPO_NAME ptahmose/libczi-zeiss)
-set(LIBCZI_REPO_REF a043cb8cd83e09072c303dd6c3ad3be629ff1ae4)
+set(LIBCZI_REPO_REF d2e760f6e94435038f930ef8be8210deb7fde584)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ${LIBCZI_REPO_NAME}
     REF ${LIBCZI_REPO_REF}
-    SHA512 9df9e91e79438b81715a9405b227def389ece9c484eb44941ba762c9c49b1fd482e286cc41b9f8a4c11e9c8d4d09c76ad25c672c70aae0da4dc5358f06276cb9
+    SHA512 ffd9b73697e9768ded7ee72ed4a812c667d2e944f6d827c5867d31d340bd8774d47450fcbd558c774c9eb3af3881bc790234df78ecf027a162842b8ecbb2c334
 )
 
 # --- Allow installation of headers in debug/include (not typical, but harmless here)
@@ -31,6 +31,12 @@ set(LIBCZI_REPO_URL "https://github.com/${LIBCZI_REPO_NAME}.git")
 # Configure CMake
 # -------------------------------
 
+# c.f. https://learn.microsoft.com/en-us/vcpkg/contributing/maintainer-guide#only-static-or-shared
+# We use the BUILD_SHARED_LIBCZI option to determine whether to build a shared or static library.
+# libCZI will always build a static library, but we can choose to build a shared library if LIBCZI_BUILD_DYNLIB is set to ON.
+# libCZI will install the static library if LIBCZI_BUILD_DYNLIB is OFF, and the dynamic library if it is ON.
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBCZI)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -38,10 +44,10 @@ vcpkg_cmake_configure(
     -DLIBCZI_DO_NOT_SET_MSVC_RUNTIME_LIBRARY=ON # Do not set the MSVC runtime library, use it as it is set by vcpkg.
     -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_EIGEN3=ON
     -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_ZSTD=ON
-    -DLIBCZI_BUILD_UNITTESTS=OFF    # Do not build unit tests.
+    -DLIBCZI_BUILD_UNITTESTS=OFF                # Do not build unit tests.
     -DLIBCZI_ENABLE_INSTALL=ON
-    -DLIBCZI_BUILD_DYNLIB=OFF       # Only build static lib by default, dynamic lib is chosen by vcpkg with the BUILD_SHARED_LIBS option.
-    -DLIBCZI_BUILD_CZICMD=OFF       # Do not build the command line tool
+    -DLIBCZI_BUILD_DYNLIB=${BUILD_SHARED_LIBCZI}
+    -DLIBCZI_BUILD_CZICMD=OFF                   # Do not build the command line tool
     -DLIBCZI_REPOSITORY_HASH=${LIBCZI_REPO_HASH}   
     -DLIBCZI_REPOSITORY_BRANCH=${LIBCZI_REPO_BRANCH}
     -DLIBCZI_REPOSITORY_REMOTE=${LIBCZI_REPO_URL}

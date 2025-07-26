@@ -1,6 +1,6 @@
 {
     "name": "libczi",
-    "version": "0.66.1",
+    "version": "0.66.2",
     "description": "library to read and write CZI files.",
     "homepage": "https://github.com/ZEISS/libczi",
     "license": "LGPL-3.0-only",
