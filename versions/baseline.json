@@ -4933,8 +4933,8 @@
       "port-version": 2
     },
     "libjpeg-turbo": {
-      "baseline": "3.1.0",
-      "port-version": 2
+      "baseline": "3.1.1",
+      "port-version": 0
     },
     "libjuice": {
       "baseline": "1.6.1",
