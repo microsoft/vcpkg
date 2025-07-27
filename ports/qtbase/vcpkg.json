@@ -479,7 +479,6 @@
     },
     "sql-odbc": {
       "description": "Enable SQL Driver odbc",
-      "supports": "windows",
       "dependencies": [
         {
           "name": "qtbase",
@@ -487,6 +486,10 @@
           "features": [
             "sql"
           ]
+        },
+        {
+          "name": "unixodbc",
+          "platform": "!windows"
         }
       ]
     },

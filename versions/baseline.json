@@ -2081,7 +2081,7 @@
       "port-version": 4
     },
     "cpptrace": {
-      "baseline": "1.0.2",
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "cppunit": {
@@ -6681,7 +6681,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.13.0",
+      "baseline": "1.14.0",
       "port-version": 0
     },
     "nifly": {
@@ -7934,7 +7934,7 @@
     },
     "qtbase": {
       "baseline": "6.8.3",
-      "port-version": 4
+      "port-version": 5
     },
     "qtcharts": {
       "baseline": "6.8.3",
@@ -10098,7 +10098,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
-      "port-version": 8
+      "port-version": 9
     },
     "vtk-dicom": {
       "baseline": "0.8.16",
@@ -10297,8 +10297,8 @@
       "port-version": 0
     },
     "wolfssl": {
-      "baseline": "5.8.0",
-      "port-version": 1
+      "baseline": "5.8.2",
+      "port-version": 0
     },
     "wolftpm": {
       "baseline": "3.9.1",
