@@ -96,6 +96,7 @@
           "name": "qt3d",
           "default-features": false,
           "features": [
+            "render",
             "rhi"
           ]
         },
