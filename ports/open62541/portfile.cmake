@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 637f662a38b4d09288bbf9fc5cce3c3c8711a90a4afe570ef85bd30437353208a2cabc0e5a8edaac453e1b7b50ff97ce4757b1376ec1be248066cceda6362257
     HEAD_REF master
     PATCHES
+      android.patch
 )
 
 # disable docs
