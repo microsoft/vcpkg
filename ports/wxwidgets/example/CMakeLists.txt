@@ -14,6 +14,7 @@ add_executable(main2 WIN32 popup.cpp)
 
 find_package(wxWidgets CONFIG REQUIRED)
 target_link_libraries(main2 PRIVATE wx::core wx::base)
+target_compile_features(main2 PRIVATE cxx_std_11)
 
 option(USE_WXRC "Use the wxrc resource compiler" ON)
 if(USE_WXRC)
