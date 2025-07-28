@@ -4,6 +4,7 @@
   "description": "library to read and write CZI files.",
   "homepage": "https://github.com/ZEISS/libczi",
   "license": "LGPL-3.0-only",
+  "supports": "!uwp & !android",
   "dependencies": [
     "eigen3",
     {
@@ -15,6 +16,5 @@
       "host": true
     },
     "zstd"
-  ],
-  "supports": "!uwp & !android"
+  ]
 }
