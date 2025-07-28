@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 8,
+  "port-version": 9,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
@@ -125,6 +125,9 @@
       "dependencies": [
         "cuda"
       ]
+    },
+    "debugleaks": {
+      "description": "Enables vtk debug leaks detection"
     },
     "gdal": {
       "description": "Support GDAL compilation",

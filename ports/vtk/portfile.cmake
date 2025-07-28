@@ -255,6 +255,12 @@ if("openmp" IN_LIST FEATURES)
 	)
 endif()
 
+if("debugleaks" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_DEBUG_LEAKS=ON
+    )
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "cuda"         VTK_USE_CUDA
