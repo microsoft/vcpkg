@@ -15,5 +15,6 @@
       "host": true
     },
     "zstd"
-  ]
+  ],
+  "supports": "!uwp & !android"
 }

@@ -41,8 +41,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
     ${FEATURE_OPTIONS}
-    -DCRASH_ON_UNALIGNED_ACCESS=OFF # for cross-compilation scenarios, we want to prevent execution of 
-    -DIS_BIG_ENDIAN=FALSE           # test-programs inside the libCZI-build-scripts
+    -DCRASH_ON_UNALIGNED_ACCESS=FALSE # for cross-compilation scenarios, we want to prevent execution of 
+    -DIS_BIG_ENDIAN=FALSE             # test-programs inside the libCZI-build-scripts
     -DLIBCZI_DO_NOT_SET_MSVC_RUNTIME_LIBRARY=ON # Do not set the MSVC runtime library, use it as it is set by vcpkg.
     -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_EIGEN3=ON
     -DLIBCZI_BUILD_PREFER_EXTERNALPACKAGE_ZSTD=ON
