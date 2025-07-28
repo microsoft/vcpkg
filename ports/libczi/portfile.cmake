@@ -2,14 +2,14 @@
 # Package metadata and source
 # -------------------------------
 
-set(LIBCZI_REPO_NAME ptahmose/libczi-zeiss)
-set(LIBCZI_REPO_REF 885b30d4837c022e24a25c403f4e79d763e46500)
+set(LIBCZI_REPO_NAME ZEISS/libczi)
+set(LIBCZI_REPO_REF cc041191e64f59b4d3abba90ced4203c783c53e2)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ${LIBCZI_REPO_NAME}
     REF ${LIBCZI_REPO_REF}
-    SHA512 8e9db31a14101bf2dce1adb81d4e862b8fe5a09c06a8e7fac29fa287accafec21457093750e1196304215d915885b5da1c491b8721de894af560694bedbd9cd0
+    SHA512 9df2767149c088160fec4b33e413bf3d69cac44b15d52d2f902be1fc908e75a8fd81886b7fa67bbef039b936b6743490aac731cdd9b812d7bdeaff3aa4fe99b6
 )
 
 # --- Allow installation of headers in debug/include (not typical, but harmless here)
