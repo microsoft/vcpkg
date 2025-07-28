@@ -1,11 +1,11 @@
 {
-    "name": "libczi",
-    "version": "0.66.2",
-    "description": "library to read and write CZI files.",
-    "homepage": "https://github.com/ZEISS/libczi",
-    "license": "LGPL-3.0-only",
-
-    "dependencies": [
+  "name": "libczi",
+  "version": "0.66.2",
+  "description": "library to read and write CZI files.",
+  "homepage": "https://github.com/ZEISS/libczi",
+  "license": "LGPL-3.0-only",
+  "dependencies": [
+    "eigen3",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,7 +14,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "eigen3",
     "zstd"
-    ]
+  ]
 }
