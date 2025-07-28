@@ -6997,7 +6997,7 @@
       "port-version": 1
     },
     "openexr": {
-      "baseline": "3.3.4",
+      "baseline": "3.3.5",
       "port-version": 0
     },
     "openfbx": {
