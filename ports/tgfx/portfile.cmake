@@ -15,6 +15,9 @@ parse_and_declare_deps_externals("${SOURCE_PATH}")
 
 get_tgfx_externals("${SOURCE_PATH}")
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
 find_program(NODEJS
     NAMES node
     PATHS
@@ -56,8 +59,6 @@ if(NODEJS_VERSION_OUTPUT MATCHES "v([0-9]+)\\.([0-9]+)")
     endif()
 endif()
 
-#vcpkg_cmake_get_vars(cmake_vars_file)
-#include("${cmake_vars_file}")
 
 if(CMAKE_VERSION VERSION_LESS "3.13.0")
     message(FATAL_ERROR "CMake ${CMAKE_VERSION} is too old. TGFX requires CMake 3.13.0+")
@@ -73,6 +74,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         angle           TGFX_USE_ANGLE
         async-promise   TGFX_USE_ASYNC_PROMISE
 )
+
+if(TGFX_USE_QT IN_LIST FEATURE_OPTIONS)
+    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_SWIFTSHADER=ON" "TGFX_USE_SWIFTSHADER=OFF")
+    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_ANGLE=ON" "TGFX_USE_ANGLE=OFF")
+    message(STATUS "Qt feature enabled: disabling SwiftShader and ANGLE features")
+elseif(TGFX_USE_SWIFTSHADER IN_LIST FEATURE_OPTIONS)
+    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_ANGLE=ON" "TGFX_USE_ANGLE=OFF")
+    message(STATUS "SwiftShader feature enabled: disabling ANGLE feature")
+endif()
 
 set(PLATFORM_OPTIONS)
 
@@ -207,7 +217,16 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
             endif ()
         endif ()
     endif()
-    if(NOT SDK_VERSION OR NOT CMAKE_OSX_SYSROOT_INT)
+    if(CMAKE_OSX_SYSROOT_INT AND NOT SDK_VERSION)
+        if(VCPKG_TARGET_IS_OSX)
+            string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
+            set(SDK_VERSION "${CMAKE_MATCH_1}")
+        elseif(VCPKG_TARGET_IS_IOS)
+            string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
+            set(SDK_VERSION "${CMAKE_MATCH_2}")
+        endif ()
+    endif()
+    if(NOT SDK_VERSION AND NOT CMAKE_OSX_SYSROOT_INT)
         message(FATAL_ERROR "Unable to extract SDK path and SDK version.")
     endif()
     list(APPEND BASE_BUILD_ARGS "-DCMAKE_OSX_SYSROOT_INT=${CMAKE_OSX_SYSROOT_INT}")
@@ -283,3 +302,7 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
+endif()
