@@ -1646,7 +1646,6 @@ pdal-c:x64-uwp = cascade
 pdal(uwp) = cascade
 pixel:arm64-uwp = cascade
 pixel:x64-uwp = cascade
-plplot:x64-uwp = cascade
 plplot[x11]:arm64-windows = cascade
 plplot[x11]:x64-windows = cascade
 plplot[x11]:x64-windows-static = cascade
