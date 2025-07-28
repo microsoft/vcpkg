@@ -1,8 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1676ee7..34e8b95 100644
+index 1676ee7..5231934 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -173,7 +173,7 @@ if(NOT_SUBPROJECT)
+@@ -167,13 +167,13 @@ if(NOT_SUBPROJECT)
+         "extras/gdbinit"
+         "extras/lldbinit"
+       DESTINATION
+-        ${CMAKE_INSTALL_DATAROOTDIR}/Catch2
++        ${CMAKE_INSTALL_DATAROOTDIR}/catch2
+     )
+   endif()
  
    ## Provide some pkg-config integration
    set(PKGCONFIG_INSTALL_DIR

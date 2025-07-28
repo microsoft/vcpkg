@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "thread-safe-assertions": {
+      "description": "Enables thread safe assertions"
+    }
+  }
 }

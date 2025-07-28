@@ -12,9 +12,15 @@ vcpkg_from_github(
         fix-install-path.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
+    FEATURES
+        thread-safe-assertions CATCH_CONFIG_EXPERIMENTAL_THREAD_SAFE_ASSERTIONS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${OPTIONS}
         -DCATCH_INSTALL_DOCS=OFF
         -DCMAKE_CXX_STANDARD=17
 )
