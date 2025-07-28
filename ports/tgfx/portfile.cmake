@@ -56,8 +56,8 @@ if(NODEJS_VERSION_OUTPUT MATCHES "v([0-9]+)\\.([0-9]+)")
     endif()
 endif()
 
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
+#vcpkg_cmake_get_vars(cmake_vars_file)
+#include("${cmake_vars_file}")
 
 if(CMAKE_VERSION VERSION_LESS "3.13.0")
     message(FATAL_ERROR "CMake ${CMAKE_VERSION} is too old. TGFX requires CMake 3.13.0+")
@@ -80,48 +80,16 @@ if(VCPKG_TARGET_IS_ANDROID)
     if(NOT VCPKG_DETECTED_CMAKE_ANDROID_NDK)
         message(FATAL_ERROR "Android NDK not detected. Please set ANDROID_NDK_HOME")
     endif()
-    
+
     list(APPEND PLATFORM_OPTIONS
         -DCMAKE_ANDROID_NDK=${VCPKG_DETECTED_CMAKE_ANDROID_NDK}
         -DCMAKE_ANDROID_API=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}
         -DCMAKE_ANDROID_ARCH_ABI=${VCPKG_TARGET_ARCHITECTURE}
     )
-    
-elseif(VCPKG_TARGET_IS_IOS)
-    list(APPEND PLATFORM_OPTIONS
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0
-    )
-    
-elseif(VCPKG_TARGET_IS_OSX)
-    set(osx_deployment_target "10.15")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(osx_deployment_target "11.0")
-    endif()
-    
-    list(APPEND PLATFORM_OPTIONS
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=${osx_deployment_target}
-    )
-    
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    # Windows configuration
     if(VCPKG_PLATFORM_TOOLSET VERSION_LESS "v142")
         message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")
     endif()
-    
-    list(APPEND PLATFORM_OPTIONS
-        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL
-    )
-    
-    if(VCPKG_TARGET_IS_UWP)
-        list(APPEND PLATFORM_OPTIONS 
-            -DTGFX_UWP_BUILD=ON
-        )
-    endif()
-    
-elseif(VCPKG_TARGET_IS_LINUX)
-    list(APPEND PLATFORM_OPTIONS
-        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-    )
 endif()
 
 if(VCPKG_DETECTED_CMAKE_C_COMPILER)
@@ -210,6 +178,42 @@ foreach(option IN LISTS PLATFORM_OPTIONS)
     endif()
 endforeach()
 
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_OSX_SYSROOT}")
+    set(SDK_VERSION "")
+    find_program(XCODEBUILD_EXECUTABLE xcodebuild)
+    if(XCODEBUILD_EXECUTABLE)
+        execute_process(
+                COMMAND ${XCODEBUILD_EXECUTABLE} -sdk ${CMAKE_OSX_SYSROOT_INT} -version
+                OUTPUT_VARIABLE xcodebuild_output
+                ERROR_QUIET
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        if(xcodebuild_output)
+            if(VCPKG_TARGET_IS_OSX)
+                string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
+                set(SDK_VERSION "${CMAKE_MATCH_1}")
+                if(NOT CMAKE_OSX_SYSROOT_INT)
+                    string(REGEX MATCH "Path: ([^\n]*MacOSX[0-9.]+\.sdk)" _ "${xcodebuild_output}")
+                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
+                endif ()
+            elseif(VCPKG_TARGET_IS_IOS)
+                string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
+                set(SDK_VERSION "${CMAKE_MATCH_2}")
+                if(NOT CMAKE_OSX_SYSROOT_INT)
+                    string(REGEX MATCH "Path: ([^\n]*iPhone(OS|Simulator)[0-9.]+\.sdk)" _ "${xcodebuild_output}")
+                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
+                endif ()
+            endif ()
+        endif ()
+    endif()
+    if(NOT SDK_VERSION OR NOT CMAKE_OSX_SYSROOT_INT)
+        message(FATAL_ERROR "Unable to extract SDK path and SDK version.")
+    endif()
+    list(APPEND BASE_BUILD_ARGS "-DCMAKE_OSX_SYSROOT_INT=${CMAKE_OSX_SYSROOT_INT}")
+    list(APPEND BASE_BUILD_ARGS "-DSDK_VERSION=${SDK_VERSION}")
+endif()
+
 list(APPEND BASE_BUILD_ARGS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
 list(APPEND BASE_BUILD_ARGS "-DCMAKE_COMMAND=${CMAKE_COMMAND}")
 
@@ -224,7 +228,7 @@ message(STATUS "===============")
 
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(RELEASE_BUILD_ARGS ${BASE_BUILD_ARGS})
-    
+
     vcpkg_execute_required_process(
         COMMAND "${NODEJS}" ${RELEASE_BUILD_ARGS}
         WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -235,7 +239,7 @@ endif()
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(DEBUG_BUILD_ARGS ${BASE_BUILD_ARGS})
     list(APPEND DEBUG_BUILD_ARGS "-d")
-    
+
     vcpkg_execute_required_process(
         COMMAND "${NODEJS}" ${DEBUG_BUILD_ARGS}
         WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -275,7 +279,7 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
