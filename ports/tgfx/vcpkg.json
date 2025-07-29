@@ -4,6 +4,7 @@
   "description": "A lightweight 2D graphics library for rendering texts, geometries, and images with high-performance APIs that work across various platforms.",
   "homepage": "https://github.com/Tencent/tgfx",
   "license": "BSD-3-Clause",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
