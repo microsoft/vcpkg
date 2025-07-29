@@ -1,61 +1,38 @@
-From e729a306230ff8289ae832ea3deab91eae516f0d Mon Sep 17 00:00:00 2001
-From: Ankur <ankurv@verma>
-Date: Thu, 21 Nov 2024 17:38:29 -0800
-Subject: [PATCH] fix-cmakelist
-
----
- CMakeLists.txt | 103 ++++++++++++++++++-------------------------------
- 1 file changed, 38 insertions(+), 65 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0243f68..f5d0190 100644
+index 0243f68..dc473c2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -94,13 +94,7 @@ project(fbgemm VERSION 0.1 LANGUAGES CXX C)
+@@ -94,13 +94,12 @@ project(fbgemm VERSION 0.1 LANGUAGES CXX C)
  include(GNUInstallDirs)
  
  # Load Python
 -find_package(PythonInterp)
- 
+-
 -set(FBGEMM_LIBRARY_TYPE "default"
 -  CACHE STRING
 -  "Type of library (shared, static, or default) to build")
--
++if(BUILD_SHARED_LIBS)
++set(FBGEMM_LIBRARY_TYPE "shared")
++else()
++set(FBGEMM_LIBRARY_TYPE "static")
++endif()
+ 
 -set_property(CACHE FBGEMM_LIBRARY_TYPE PROPERTY STRINGS default static shared)
  option(FBGEMM_BUILD_TESTS "Build fbgemm unit tests" ON)
  option(FBGEMM_BUILD_BENCHMARKS "Build fbgemm benchmarks" ON)
  option(FBGEMM_BUILD_DOCS "Build fbgemm documentation" OFF)
-@@ -178,18 +172,11 @@ add_dependencies(fbgemm_autovec defs.bzl)
+@@ -178,8 +177,8 @@ add_dependencies(fbgemm_autovec defs.bzl)
  # 2)  MSVC uses /MD in default cxx compiling flags,
  # Need to change it to /MT in static case
  if(MSVC)
 -  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309")
 -  if(FBGEMM_LIBRARY_TYPE STREQUAL "static")
 +  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309 /wd4703 /bigobj")
-+  if(NOT BUILD_SHARED_LIBS)
++if(FBGEMM_LIBRARY_TYPE STREQUAL "static")
      target_compile_definitions(fbgemm_generic PRIVATE ASMJIT_STATIC)
      target_compile_definitions(fbgemm_avx2 PRIVATE ASMJIT_STATIC)
      target_compile_definitions(fbgemm_avx512 PRIVATE ASMJIT_STATIC)
--    foreach(flag_var
--      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
--      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
--      if(${flag_var} MATCHES "/MD")
--        string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
--      endif(${flag_var} MATCHES "/MD")
--    endforeach(flag_var)
-   endif()
-   target_compile_options(fbgemm_avx2 PRIVATE "/arch:AVX2")
-   target_compile_options(fbgemm_avx512 PRIVATE "/arch:AVX512")
-@@ -199,7 +186,7 @@ if(MSVC)
- else(MSVC)
-   string(APPEND CMAKE_CXX_FLAGS " -Wall")
-   string(APPEND CMAKE_CXX_FLAGS " -Wextra")
--  string(APPEND CMAKE_CXX_FLAGS " -Werror")
-+  #string(APPEND CMAKE_CXX_FLAGS " -Werror")
-   string(APPEND CMAKE_CXX_FLAGS " -Wno-deprecated-declarations")
-   string(APPEND CMAKE_CXX_FLAGS " -Wunknown-pragmas")
-   string(APPEND CMAKE_CXX_FLAGS " -Wimplicit-fallthrough")
-@@ -247,7 +234,8 @@ message(WARNING "CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
+@@ -247,7 +246,8 @@ message(WARNING "CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
  message(WARNING "CMAKE_CXX_FLAGS_RELEASE is ${CMAKE_CXX_FLAGS_RELEASE}")
  message(WARNING "==========")
  
@@ -65,7 +42,7 @@ index 0243f68..f5d0190 100644
    # Download asmjit from github if ASMJIT_SRC_DIR is not specified.
    if(NOT DEFINED ASMJIT_SRC_DIR)
      set(ASMJIT_SRC_DIR "${FBGEMM_SOURCE_DIR}/external/asmjit"
-@@ -280,7 +268,8 @@ if(NOT TARGET asmjit)
+@@ -280,7 +280,8 @@ if(NOT TARGET asmjit)
    endif()
  endif()
  
@@ -75,7 +52,7 @@ index 0243f68..f5d0190 100644
    #Download cpuinfo from github if CPUINFO_SOURCE_DIR is not specified.
    if(NOT DEFINED CPUINFO_SOURCE_DIR)
      set(CPUINFO_SOURCE_DIR "${FBGEMM_SOURCE_DIR}/external/cpuinfo"
-@@ -301,58 +290,47 @@ endif()
+@@ -301,26 +302,26 @@ endif()
  target_include_directories(fbgemm_generic BEFORE
        PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
        PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>
@@ -105,64 +82,20 @@ index 0243f68..f5d0190 100644
        PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>
 -      PRIVATE "${ASMJIT_SRC_DIR}/src"
 -      PRIVATE "${CPUINFO_SOURCE_DIR}/include")
--
--if(FBGEMM_LIBRARY_TYPE STREQUAL "default")
--  add_library(fbgemm
--    $<TARGET_OBJECTS:fbgemm_generic>
--    $<TARGET_OBJECTS:fbgemm_avx2>
--    $<TARGET_OBJECTS:fbgemm_avx512>
--    $<TARGET_OBJECTS:fbgemm_autovec>)
--elseif(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
--  add_library(fbgemm SHARED
--    $<TARGET_OBJECTS:fbgemm_generic>
--    $<TARGET_OBJECTS:fbgemm_avx2>
--    $<TARGET_OBJECTS:fbgemm_avx512>
--    $<TARGET_OBJECTS:fbgemm_autovec>)
--  set_property(TARGET fbgemm_generic PROPERTY POSITION_INDEPENDENT_CODE ON)
--  set_property(TARGET fbgemm_avx2 PROPERTY POSITION_INDEPENDENT_CODE ON)
--  set_property(TARGET fbgemm_avx512 PROPERTY POSITION_INDEPENDENT_CODE ON)
--  set_property(TARGET fbgemm_autovec PROPERTY POSITION_INDEPENDENT_CODE ON)
--elseif(FBGEMM_LIBRARY_TYPE STREQUAL "static")
--  add_library(fbgemm STATIC
--    $<TARGET_OBJECTS:fbgemm_generic>
--    $<TARGET_OBJECTS:fbgemm_avx2>
--    $<TARGET_OBJECTS:fbgemm_avx512>
--    $<TARGET_OBJECTS:fbgemm_autovec>)
--  #MSVC need to define FBGEMM_STATIC for fbgemm_generic also to
--  #avoid generating _dllimport functions.
--  target_compile_definitions(fbgemm_generic PRIVATE FBGEMM_STATIC)
--  target_compile_definitions(fbgemm_avx2 PRIVATE FBGEMM_STATIC)
--  target_compile_definitions(fbgemm_avx512 PRIVATE FBGEMM_STATIC)
--  target_compile_definitions(fbgemm_autovec PRIVATE FBGEMM_STATIC)
--  target_compile_definitions(fbgemm PRIVATE FBGEMM_STATIC)
 +)
 +target_link_libraries(fbgemm_autovec PUBLIC asmjit::asmjit cpuinfo::cpuinfo)
-+
-+add_library(fbgemm
-+  $<TARGET_OBJECTS:fbgemm_generic>
-+  $<TARGET_OBJECTS:fbgemm_avx2>
-+  $<TARGET_OBJECTS:fbgemm_avx512>
-+  $<TARGET_OBJECTS:fbgemm_autovec>)
-+if(BUILD_SHARED_LIBS)
-+   set_property(TARGET fbgemm_generic PROPERTY POSITION_INDEPENDENT_CODE ON)
-+   set_property(TARGET fbgemm_avx2 PROPERTY POSITION_INDEPENDENT_CODE ON)
-+   set_property(TARGET fbgemm_avx512 PROPERTY POSITION_INDEPENDENT_CODE ON)
-+   set_property(TARGET fbgemm_autovec PROPERTY POSITION_INDEPENDENT_CODE ON)
-+   set_target_properties(fbgemm PROPERTIES
-+     CXX_VISIBILITY_PRESET hidden)
- else()
--  message(FATAL_ERROR "Unsupported library type ${FBGEMM_LIBRARY_TYPE}")
-+   #MSVC need to define FBGEMM_STATIC for fbgemm_generic also to
-+   #avoid generating _dllimport functions.
-+   target_compile_definitions(fbgemm_generic PRIVATE FBGEMM_STATIC)
-+   target_compile_definitions(fbgemm_avx2 PRIVATE FBGEMM_STATIC)
-+   target_compile_definitions(fbgemm_avx512 PRIVATE FBGEMM_STATIC)
-+   target_compile_definitions(fbgemm_autovec PRIVATE FBGEMM_STATIC)
-+   target_compile_definitions(fbgemm PRIVATE FBGEMM_STATIC)
- endif()
  
- if(USE_SANITIZER)
-@@ -364,15 +342,10 @@ target_include_directories(fbgemm BEFORE
+ if(FBGEMM_LIBRARY_TYPE STREQUAL "default")
+   add_library(fbgemm
+@@ -338,6 +339,7 @@ elseif(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
+   set_property(TARGET fbgemm_avx2 PROPERTY POSITION_INDEPENDENT_CODE ON)
+   set_property(TARGET fbgemm_avx512 PROPERTY POSITION_INDEPENDENT_CODE ON)
+   set_property(TARGET fbgemm_autovec PROPERTY POSITION_INDEPENDENT_CODE ON)
++  set_target_properties(fbgemm PROPERTIES CXX_VISIBILITY_PRESET hidden)
+ elseif(FBGEMM_LIBRARY_TYPE STREQUAL "static")
+   add_library(fbgemm STATIC
+     $<TARGET_OBJECTS:fbgemm_generic>
+@@ -364,15 +366,10 @@ target_include_directories(fbgemm BEFORE
      PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
      PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>)
  
@@ -180,7 +113,7 @@ index 0243f68..f5d0190 100644
  endif()
  
  install(
-@@ -391,7 +364,7 @@ install(
+@@ -391,7 +388,7 @@ install(
    DESTINATION share/cmake/fbgemm
    FILE fbgemmLibraryConfig.cmake)
  
@@ -189,6 +122,3 @@ index 0243f68..f5d0190 100644
    if(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
      install(
        FILES $<TARGET_PDB_FILE:fbgemm> $<TARGET_PDB_FILE:asmjit>
--- 
-2.47.0
-
