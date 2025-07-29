@@ -11,14 +11,6 @@
     }
   ],
   "features": {
-    "wayland": {
-      "description": "Build with Wayland support",
-      "supports": "linux"
-    },
-    "x11": {
-      "description": "Build with X11 support",
-      "supports": "linux"
-    },
     "glx": {
       "description": "Build with GLX support",
       "supports": "linux",
@@ -30,6 +22,14 @@
           ]
         }
       ]
+    },
+    "wayland": {
+      "description": "Build with Wayland support",
+      "supports": "linux"
+    },
+    "x11": {
+      "description": "Build with X11 support",
+      "supports": "linux"
     }
   }
 }
