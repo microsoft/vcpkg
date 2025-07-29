@@ -3,11 +3,11 @@ include("${CMAKE_CURRENT_LIST_DIR}/tgfx-functions.cmake")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO Tencent/tgfx
-    REF de33316656ad7b5ab905731e6d03c4fc1315b466
-    SHA512 c743716f2cb873cdb78e995302bc14cc36a43d006a046e0e09c558b0ede58cec40b7648b189499c072557006fa2002acb7b6d03aa041ed3405b677f2b7d5d912
-    PATCHES
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Tencent/tgfx
+        REF de33316656ad7b5ab905731e6d03c4fc1315b466
+        SHA512 c743716f2cb873cdb78e995302bc14cc36a43d006a046e0e09c558b0ede58cec40b7648b189499c072557006fa2002acb7b6d03aa041ed3405b677f2b7d5d912
+        PATCHES
         disable-depsync.patch
 )
 
@@ -19,12 +19,12 @@ vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
 find_program(NODEJS
-    NAMES node
-    PATHS
+        NAMES node
+        PATHS
         "${CURRENT_HOST_INSTALLED_DIR}/tools/node"
         "${CURRENT_HOST_INSTALLED_DIR}/tools/node/bin"
         ENV PATH
-    NO_DEFAULT_PATH
+        NO_DEFAULT_PATH
 )
 if(NOT NODEJS)
     message(FATAL_ERROR "node not found! Please install it via your system package manager!")
@@ -34,11 +34,11 @@ get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
 
 find_program(NINJA
-    NAMES ninja
-    PATHS
+        NAMES ninja
+        PATHS
         "${CURRENT_HOST_INSTALLED_DIR}/tools/ninja"
         ENV PATH
-    NO_DEFAULT_PATH
+        NO_DEFAULT_PATH
 )
 if(NOT NINJA)
     message(FATAL_ERROR "ninja not found! Please install it via your system package manager!")
@@ -48,10 +48,10 @@ get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
 execute_process(
-    COMMAND "${NODEJS}" --version
-    OUTPUT_VARIABLE NODEJS_VERSION_OUTPUT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    ERROR_QUIET
+        COMMAND "${NODEJS}" --version
+        OUTPUT_VARIABLE NODEJS_VERSION_OUTPUT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
 )
 if(NODEJS_VERSION_OUTPUT MATCHES "v([0-9]+)\\.([0-9]+)")
     if(CMAKE_MATCH_1 LESS 14 OR (CMAKE_MATCH_1 EQUAL 14 AND CMAKE_MATCH_2 LESS 14))
@@ -64,7 +64,7 @@ if(CMAKE_VERSION VERSION_LESS "3.13.0")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
+        FEATURES
         svg             TGFX_BUILD_SVG
         layers          TGFX_BUILD_LAYERS
         drawers         TGFX_BUILD_DRAWERS
@@ -88,10 +88,6 @@ if(TGFX_USE_QT IN_LIST FEATURE_OPTIONS)
     list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_SWIFTSHADER=ON$" "-DTGFX_USE_SWIFTSHADER=OFF")
     list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_ANGLE=ON$" "-DTGFX_USE_ANGLE=OFF")
     message(STATUS "Qt feature enabled: disabling SwiftShader and ANGLE features")
-
-    list(APPEND FEATURE_OPTIONS
-            "-DCMAKE_PREFIX_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/Qt6"
-    )
 elseif(TGFX_USE_SWIFTSHADER IN_LIST FEATURE_OPTIONS)
     list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_ANGLE=ON$" "-DTGFX_USE_ANGLE=OFF")
     message(STATUS "SwiftShader feature enabled: disabling ANGLE feature")
@@ -99,20 +95,29 @@ endif()
 
 set(PLATFORM_OPTIONS)
 
+list(APPEND PLATFORM_OPTIONS -DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR})
+
 if(VCPKG_TARGET_IS_ANDROID)
     if(NOT VCPKG_DETECTED_CMAKE_ANDROID_NDK)
         message(FATAL_ERROR "Android NDK not detected. Please set ANDROID_NDK_HOME")
     endif()
 
     list(APPEND PLATFORM_OPTIONS
-        -DCMAKE_ANDROID_NDK=${VCPKG_DETECTED_CMAKE_ANDROID_NDK}
-        -DCMAKE_ANDROID_API=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}
-        -DCMAKE_ANDROID_ARCH_ABI=${VCPKG_TARGET_ARCHITECTURE}
+            -DCMAKE_ANDROID_NDK=${VCPKG_DETECTED_CMAKE_ANDROID_NDK}
+            -DCMAKE_ANDROID_API=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}
+            -DCMAKE_ANDROID_ARCH_ABI=${VCPKG_TARGET_ARCHITECTURE}
     )
 elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_PLATFORM_TOOLSET VERSION_LESS "v142")
         message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")
     endif()
+endif()
+
+if(VCPKG_DETECTED_CMAKE_C_COMPILER)
+    list(APPEND PLATFORM_OPTIONS "-DCMAKE_C_COMPILER=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\"")
+endif()
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
+    list(APPEND PLATFORM_OPTIONS "-DCMAKE_CXX_COMPILER=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
 endif()
 
 set(TGFX_PLATFORM "")
@@ -194,60 +199,63 @@ foreach(option IN LISTS PLATFORM_OPTIONS)
     endif()
 endforeach()
 
-#if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-#
-#    message(STATUS "CMAKE_OSX_SYSROOT: ${CMAKE_OSX_SYSROOT}")
-#
-#    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_OSX_SYSROOT}")
-#    set(SDK_VERSION "")
-#    find_program(XCODEBUILD_EXECUTABLE xcodebuild)
-#    if(XCODEBUILD_EXECUTABLE)
-#        execute_process(
-#                COMMAND ${XCODEBUILD_EXECUTABLE} -sdk ${CMAKE_OSX_SYSROOT_INT} -version
-#                OUTPUT_VARIABLE xcodebuild_output
-#                ERROR_QUIET
-#                OUTPUT_STRIP_TRAILING_WHITESPACE
-#        )
-#
-#        message(STATUS "xcodebuild_output: ${xcodebuild_output}")
-#
-#        if(xcodebuild_output)
-#            if(VCPKG_TARGET_IS_OSX)
-#                string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
-#                set(SDK_VERSION "${CMAKE_MATCH_1}")
-#                if(NOT CMAKE_OSX_SYSROOT_INT)
-#                    string(REGEX MATCH "Path: ([^\n]*MacOSX[0-9.]+\.sdk)" _ "${xcodebuild_output}")
-#                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
-#                endif ()
-#            elseif(VCPKG_TARGET_IS_IOS)
-#                string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
-#                set(SDK_VERSION "${CMAKE_MATCH_2}")
-#                if(NOT CMAKE_OSX_SYSROOT_INT)
-#                    string(REGEX MATCH "Path: ([^\n]*iPhone(OS|Simulator)[0-9.]+\.sdk)" _ "${xcodebuild_output}")
-#                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
-#                endif ()
-#            endif ()
-#        endif ()
-#    endif()
-#
-#    message(STATUS "CMAKE_OSX_SYSROOT_INT: ${CMAKE_OSX_SYSROOT_INT}")
-#    message(STATUS "SDK_VERSION: ${SDK_VERSION}")
-#
-#    if(CMAKE_OSX_SYSROOT_INT AND NOT SDK_VERSION)
-#        if(VCPKG_TARGET_IS_OSX)
-#            string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
-#            set(SDK_VERSION "${CMAKE_MATCH_1}")
-#        elseif(VCPKG_TARGET_IS_IOS)
-#            string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
-#            set(SDK_VERSION "${CMAKE_MATCH_2}")
-#        endif ()
-#    endif()
-#    if(NOT SDK_VERSION AND NOT CMAKE_OSX_SYSROOT_INT)
-#        message(WARNING "Unable to extract SDK path and SDK version.")
-#    endif()
-#    list(APPEND BASE_BUILD_ARGS "-DCMAKE_OSX_SYSROOT_INT=${CMAKE_OSX_SYSROOT_INT}")
-#    list(APPEND BASE_BUILD_ARGS "-DSDK_VERSION=${SDK_VERSION}")
-#endif()
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+
+    message(STATUS "CMAKE_OSX_SYSROOT: ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
+
+    set(CMAKE_OSX_SYSROOT_INT "${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
+    set(SDK_VERSION "")
+
+    find_program(XCODEBUILD_EXECUTABLE xcodebuild)
+    if(XCODEBUILD_EXECUTABLE AND NOT CMAKE_OSX_SYSROOT_INT)
+        vcpkg_execute_required_process(
+                COMMAND ${XCODEBUILD_EXECUTABLE} -sdk ${CMAKE_OSX_SYSROOT_INT} -version
+                WORKING_DIRECTORY ${SOURCE_PATH}
+                LOGNAME "xcodebuild-sdk-version"
+                OUTPUT_VARIABLE xcodebuild_output
+        )
+
+        message(STATUS "xcodebuild_output: ${xcodebuild_output}")
+
+        if(xcodebuild_output)
+            if(VCPKG_TARGET_IS_OSX)
+                string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
+                set(SDK_VERSION "${CMAKE_MATCH_1}")
+                if(NOT CMAKE_OSX_SYSROOT_INT)
+                    string(REGEX MATCH "Path: ([^\n]*MacOSX[0-9.]+\.sdk)" _ "${xcodebuild_output}")
+                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
+                endif ()
+            elseif(VCPKG_TARGET_IS_IOS)
+                string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
+                set(SDK_VERSION "${CMAKE_MATCH_2}")
+                if(NOT CMAKE_OSX_SYSROOT_INT)
+                    string(REGEX MATCH "Path: ([^\n]*iPhone(OS|Simulator)[0-9.]+\.sdk)" _ "${xcodebuild_output}")
+                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
+                endif ()
+            endif ()
+        endif ()
+    endif()
+
+    if(CMAKE_OSX_SYSROOT_INT AND NOT SDK_VERSION)
+        if(VCPKG_TARGET_IS_OSX)
+            string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
+            set(SDK_VERSION "${CMAKE_MATCH_1}")
+        elseif(VCPKG_TARGET_IS_IOS)
+            string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
+            set(SDK_VERSION "${CMAKE_MATCH_2}")
+        endif ()
+    endif()
+    if(NOT SDK_VERSION AND NOT CMAKE_OSX_SYSROOT_INT)
+        message(FATAL_ERROR "Unable to extract SDK path and SDK version.")
+    endif()
+
+    message(STATUS "CMAKE_OSX_SYSROOT_INT: ${CMAKE_OSX_SYSROOT_INT}")
+    message(STATUS "SDK_VERSION: ${SDK_VERSION}")
+
+    list(APPEND BASE_BUILD_ARGS "-DCMAKE_OSX_SYSROOT=${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
+    list(APPEND BASE_BUILD_ARGS "-DCMAKE_OSX_SYSROOT_INT=${CMAKE_OSX_SYSROOT_INT}")
+    list(APPEND BASE_BUILD_ARGS "-DSDK_VERSION=${SDK_VERSION}")
+endif()
 
 list(APPEND BASE_BUILD_ARGS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
 list(APPEND BASE_BUILD_ARGS "-DCMAKE_COMMAND=${CMAKE_COMMAND}")
@@ -265,9 +273,9 @@ if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(RELEASE_BUILD_ARGS ${BASE_BUILD_ARGS})
 
     vcpkg_execute_required_process(
-        COMMAND "${NODEJS}" ${RELEASE_BUILD_ARGS}
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME tgfx_build_release
+            COMMAND "${NODEJS}" ${RELEASE_BUILD_ARGS}
+            WORKING_DIRECTORY "${SOURCE_PATH}"
+            LOGNAME tgfx_build_release
     )
 endif()
 
@@ -276,9 +284,9 @@ if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     list(APPEND DEBUG_BUILD_ARGS "-d")
 
     vcpkg_execute_required_process(
-        COMMAND "${NODEJS}" ${DEBUG_BUILD_ARGS}
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME tgfx_build_debug
+            COMMAND "${NODEJS}" ${DEBUG_BUILD_ARGS}
+            WORKING_DIRECTORY "${SOURCE_PATH}"
+            LOGNAME tgfx_build_debug
     )
 endif()
 
@@ -291,14 +299,14 @@ if(TGFX_ARCH)
 endif()
 
 file(INSTALL "${SOURCE_PATH}/include/"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-     FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+        DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+        FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
 
 if(EXISTS "${RELEASE_OUT_DIR}")
     file(GLOB RELEASE_LIBS "${RELEASE_OUT_DIR}/*.a" "${RELEASE_OUT_DIR}/*.lib")
     if(RELEASE_LIBS)
         file(INSTALL ${RELEASE_LIBS}
-             DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+                DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
     endif()
 endif()
 
@@ -307,7 +315,7 @@ if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(GLOB DEBUG_LIBS "${DEBUG_OUT_DIR}/*.a" "${DEBUG_OUT_DIR}/*.lib")
         if(DEBUG_LIBS)
             file(INSTALL ${DEBUG_LIBS}
-                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+                    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
     endif()
 endif()
@@ -315,7 +323,7 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
