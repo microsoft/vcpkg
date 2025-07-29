@@ -85,7 +85,6 @@ chromium-base:x64-osx=skip # broken on OSX for unknown reasons; it appears to be
 chromium-base(windows) =skip # chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI broken on Windows because it does not yet support VS2022
 clamav:arm64-windows=fail
 clockutils:x64-linux=fail
-coin(uwp) = fail
 coroutine(uwp)=fail
 cpp-netlib(uwp)=fail
 cppcoro(uwp | linux | osx)=fail
