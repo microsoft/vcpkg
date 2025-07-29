@@ -31,6 +31,7 @@ if(VCPKG_CROSSCOMPILING)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 endif()
 
+string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" gRPC_BUILD_GRPC_PLUGIN_BINARIES)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" gRPC_MSVC_STATIC_RUNTIME)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" gRPC_STATIC_LINKING)
 
@@ -84,17 +85,21 @@ else()
 endif()
 
 if (gRPC_BUILD_CODEGEN)
-    vcpkg_copy_tools(
-        AUTO_CLEAN
-        TOOL_NAMES
-            grpc_php_plugin
-            grpc_python_plugin
-            grpc_node_plugin
-            grpc_objective_c_plugin
-            grpc_csharp_plugin
-            grpc_cpp_plugin
-            grpc_ruby_plugin
-    )
+    if(gRPC_BUILD_GRPC_PLUGIN_BINARIES)
+        vcpkg_copy_tools(
+            AUTO_CLEAN
+            TOOL_NAMES
+                grpc_php_plugin
+                grpc_python_plugin
+                grpc_node_plugin
+                grpc_objective_c_plugin
+                grpc_csharp_plugin
+                grpc_cpp_plugin
+                grpc_ruby_plugin
+        )
+    else()
+        file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+    endif()
 else()
     configure_file("${CMAKE_CURRENT_LIST_DIR}/gRPCTargets-vcpkg-tools.cmake" "${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-vcpkg-tools.cmake" @ONLY)
 endif()
