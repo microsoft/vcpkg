@@ -74,27 +74,26 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         async-promise   TGFX_USE_ASYNC_PROMISE
 )
 
-if(NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_LINUX)
-    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_SWIFTSHADER=ON" "TGFX_USE_SWIFTSHADER=OFF")
+if(NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_LINUX)
+    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_SWIFTSHADER=ON$" "-DTGFX_USE_SWIFTSHADER=OFF")
     message(STATUS "SwiftShader feature disabled: not supported on this platform")
 endif ()
 
 if (TGFX_BUILD_DRAWERS IN_LIST FEATURE_OPTIONS)
-    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_BUILD_LAYERS=ON" "TGFX_BUILD_LAYERS=OFF")
+    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_BUILD_LAYERS=ON$" "-DTGFX_BUILD_LAYERS=OFF")
     message(STATUS "Drawers feature enabled: disabling Layers feature")
 endif ()
 
 if(TGFX_USE_QT IN_LIST FEATURE_OPTIONS)
-    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_SWIFTSHADER=ON" "TGFX_USE_SWIFTSHADER=OFF")
-    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_ANGLE=ON" "TGFX_USE_ANGLE=OFF")
+    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_SWIFTSHADER=ON$" "-DTGFX_USE_SWIFTSHADER=OFF")
+    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_ANGLE=ON$" "-DTGFX_USE_ANGLE=OFF")
     message(STATUS "Qt feature enabled: disabling SwiftShader and ANGLE features")
 
     list(APPEND FEATURE_OPTIONS
-        "-DCMAKE_PREFIX_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/Qt6"
+            "-DCMAKE_PREFIX_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/Qt6"
     )
-
 elseif(TGFX_USE_SWIFTSHADER IN_LIST FEATURE_OPTIONS)
-    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_ANGLE=ON" "TGFX_USE_ANGLE=OFF")
+    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_ANGLE=ON$" "-DTGFX_USE_ANGLE=OFF")
     message(STATUS "SwiftShader feature enabled: disabling ANGLE feature")
 endif()
 
@@ -195,60 +194,60 @@ foreach(option IN LISTS PLATFORM_OPTIONS)
     endif()
 endforeach()
 
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-
-    message(STATUS "CMAKE_OSX_SYSROOT: ${CMAKE_OSX_SYSROOT}")
-
-    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_OSX_SYSROOT}")
-    set(SDK_VERSION "")
-    find_program(XCODEBUILD_EXECUTABLE xcodebuild)
-    if(XCODEBUILD_EXECUTABLE)
-        execute_process(
-                COMMAND ${XCODEBUILD_EXECUTABLE} -sdk ${CMAKE_OSX_SYSROOT_INT} -version
-                OUTPUT_VARIABLE xcodebuild_output
-                ERROR_QUIET
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-
-        message(STATUS "xcodebuild_output: ${xcodebuild_output}")
-
-        if(xcodebuild_output)
-            if(VCPKG_TARGET_IS_OSX)
-                string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
-                set(SDK_VERSION "${CMAKE_MATCH_1}")
-                if(NOT CMAKE_OSX_SYSROOT_INT)
-                    string(REGEX MATCH "Path: ([^\n]*MacOSX[0-9.]+\.sdk)" _ "${xcodebuild_output}")
-                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
-                endif ()
-            elseif(VCPKG_TARGET_IS_IOS)
-                string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
-                set(SDK_VERSION "${CMAKE_MATCH_2}")
-                if(NOT CMAKE_OSX_SYSROOT_INT)
-                    string(REGEX MATCH "Path: ([^\n]*iPhone(OS|Simulator)[0-9.]+\.sdk)" _ "${xcodebuild_output}")
-                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
-                endif ()
-            endif ()
-        endif ()
-    endif()
-
-    message(STATUS "CMAKE_OSX_SYSROOT_INT: ${CMAKE_OSX_SYSROOT_INT}")
-    message(STATUS "SDK_VERSION: ${SDK_VERSION}")
-
-    if(CMAKE_OSX_SYSROOT_INT AND NOT SDK_VERSION)
-        if(VCPKG_TARGET_IS_OSX)
-            string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
-            set(SDK_VERSION "${CMAKE_MATCH_1}")
-        elseif(VCPKG_TARGET_IS_IOS)
-            string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
-            set(SDK_VERSION "${CMAKE_MATCH_2}")
-        endif ()
-    endif()
-    if(NOT SDK_VERSION AND NOT CMAKE_OSX_SYSROOT_INT)
-        message(FATAL_ERROR "Unable to extract SDK path and SDK version.")
-    endif()
-    list(APPEND BASE_BUILD_ARGS "-DCMAKE_OSX_SYSROOT_INT=${CMAKE_OSX_SYSROOT_INT}")
-    list(APPEND BASE_BUILD_ARGS "-DSDK_VERSION=${SDK_VERSION}")
-endif()
+#if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+#
+#    message(STATUS "CMAKE_OSX_SYSROOT: ${CMAKE_OSX_SYSROOT}")
+#
+#    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_OSX_SYSROOT}")
+#    set(SDK_VERSION "")
+#    find_program(XCODEBUILD_EXECUTABLE xcodebuild)
+#    if(XCODEBUILD_EXECUTABLE)
+#        execute_process(
+#                COMMAND ${XCODEBUILD_EXECUTABLE} -sdk ${CMAKE_OSX_SYSROOT_INT} -version
+#                OUTPUT_VARIABLE xcodebuild_output
+#                ERROR_QUIET
+#                OUTPUT_STRIP_TRAILING_WHITESPACE
+#        )
+#
+#        message(STATUS "xcodebuild_output: ${xcodebuild_output}")
+#
+#        if(xcodebuild_output)
+#            if(VCPKG_TARGET_IS_OSX)
+#                string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
+#                set(SDK_VERSION "${CMAKE_MATCH_1}")
+#                if(NOT CMAKE_OSX_SYSROOT_INT)
+#                    string(REGEX MATCH "Path: ([^\n]*MacOSX[0-9.]+\.sdk)" _ "${xcodebuild_output}")
+#                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
+#                endif ()
+#            elseif(VCPKG_TARGET_IS_IOS)
+#                string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
+#                set(SDK_VERSION "${CMAKE_MATCH_2}")
+#                if(NOT CMAKE_OSX_SYSROOT_INT)
+#                    string(REGEX MATCH "Path: ([^\n]*iPhone(OS|Simulator)[0-9.]+\.sdk)" _ "${xcodebuild_output}")
+#                    set(CMAKE_OSX_SYSROOT_INT "${CMAKE_MATCH_1}")
+#                endif ()
+#            endif ()
+#        endif ()
+#    endif()
+#
+#    message(STATUS "CMAKE_OSX_SYSROOT_INT: ${CMAKE_OSX_SYSROOT_INT}")
+#    message(STATUS "SDK_VERSION: ${SDK_VERSION}")
+#
+#    if(CMAKE_OSX_SYSROOT_INT AND NOT SDK_VERSION)
+#        if(VCPKG_TARGET_IS_OSX)
+#            string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
+#            set(SDK_VERSION "${CMAKE_MATCH_1}")
+#        elseif(VCPKG_TARGET_IS_IOS)
+#            string(REGEX MATCH "iPhone(OS|Simulator)([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
+#            set(SDK_VERSION "${CMAKE_MATCH_2}")
+#        endif ()
+#    endif()
+#    if(NOT SDK_VERSION AND NOT CMAKE_OSX_SYSROOT_INT)
+#        message(WARNING "Unable to extract SDK path and SDK version.")
+#    endif()
+#    list(APPEND BASE_BUILD_ARGS "-DCMAKE_OSX_SYSROOT_INT=${CMAKE_OSX_SYSROOT_INT}")
+#    list(APPEND BASE_BUILD_ARGS "-DSDK_VERSION=${SDK_VERSION}")
+#endif()
 
 list(APPEND BASE_BUILD_ARGS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
 list(APPEND BASE_BUILD_ARGS "-DCMAKE_COMMAND=${CMAKE_COMMAND}")
