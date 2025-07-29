@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 be93d44f87ef25f7c0bb37ca8020de7714ec89b4f92677d7b631a2dcad9db38789e59adb7a6af0d1f5f550c570d875ea9ed69833f7d7af76ef8cb9159f0a7c23
     HEAD_REF master
     PATCHES
+        android-vulkan.diff
         cmake-config.diff
         fix-32bit.diff
         relax-link-options.diff
