@@ -1,5 +1,5 @@
 diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
-index e0eea6c..b54ace4 100644
+index 9ae8e48..937266e 100644
 --- a/libshaderc/CMakeLists.txt
 +++ b/libshaderc/CMakeLists.txt
 @@ -28,7 +28,9 @@ if (NOT BUILD_SHARED_LIBS)
@@ -57,7 +57,7 @@ index e0eea6c..b54ace4 100644
    TEST_PREFIX shaderc
    LINK_LIBS shaderc
 diff --git a/libshaderc_util/CMakeLists.txt b/libshaderc_util/CMakeLists.txt
-index 99ce3c4..3d5a222 100644
+index 69ba519..b52caab 100644
 --- a/libshaderc_util/CMakeLists.txt
 +++ b/libshaderc_util/CMakeLists.txt
 @@ -39,7 +39,7 @@ add_library(shaderc_util STATIC

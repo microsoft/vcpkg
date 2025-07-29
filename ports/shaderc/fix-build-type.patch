@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2e92ef..cf0832b 100644
+index ae3d1e9..f62e592 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -152,6 +152,8 @@ function(define_pkg_config_file NAME LIBS)
+@@ -161,6 +161,8 @@ function(define_pkg_config_file NAME LIBS)
    endif()
  endfunction()
  
@@ -13,7 +13,7 @@ index b2e92ef..cf0832b 100644
 -define_pkg_config_file(shaderc_combined -lshaderc_combined)
 +endif()
 diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
-index 2cced9e..e0eea6c 100644
+index df9a88d..9ae8e48 100644
 --- a/libshaderc/CMakeLists.txt
 +++ b/libshaderc/CMakeLists.txt
 @@ -24,13 +24,16 @@ set(SHADERC_SOURCES
@@ -71,7 +71,7 @@ index 2cced9e..e0eea6c 100644
  shaderc_combine_static_lib(shaderc_combined shaderc)
  
  if(SHADERC_ENABLE_INSTALL)
-@@ -122,6 +131,7 @@ shaderc_add_tests(
+@@ -109,6 +118,7 @@ shaderc_add_tests(
    TEST_NAMES
      shaderc
      shaderc_cpp)
