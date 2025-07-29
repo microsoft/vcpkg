@@ -38,6 +38,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         simage      VCPKG_LOCK_FIND_PACKAGE_simage
         superglu    USE_SUPERGLU
         superglu    VCPKG_LOCK_FIND_PACKAGE_superglu
+        zlib        VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_configure(
@@ -58,7 +59,6 @@ vcpkg_cmake_configure(
         -DSPIDERMONKEY_RUNTIME_LINKING=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_SpiderMonkey=OFF
         -DZLIB_RUNTIME_LINKING=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=ON
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         COIN_BUILD_MSVC_STATIC_RUNTIME
