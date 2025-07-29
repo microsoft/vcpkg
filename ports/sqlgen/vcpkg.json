@@ -22,7 +22,7 @@
     }
   ],
   "features": {
-    "mysql": {
+    "mariadb": {
       "description": "Enable MySQL/MariaDB support",
       "dependencies": [
         "libmariadb"

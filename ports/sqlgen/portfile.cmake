@@ -13,7 +13,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SQLGEN_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        mysql               SQLGEN_MYSQL
+        mariadb             SQLGEN_MYSQL
         postgres            SQLGEN_POSTGRES
 )
 
