@@ -10437,7 +10437,7 @@
       "port-version": 1
     },
     "xnnpack": {
-      "baseline": "2022-12-22",
+      "baseline": "2024-08-20",
       "port-version": 0
     },
     "xorg-macros": {
