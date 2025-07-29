@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0243f68..dc473c2 100644
+index 0243f68..8e0006d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -94,13 +94,12 @@ project(fbgemm VERSION 0.1 LANGUAGES CXX C)
@@ -21,17 +21,15 @@ index 0243f68..dc473c2 100644
  option(FBGEMM_BUILD_TESTS "Build fbgemm unit tests" ON)
  option(FBGEMM_BUILD_BENCHMARKS "Build fbgemm benchmarks" ON)
  option(FBGEMM_BUILD_DOCS "Build fbgemm documentation" OFF)
-@@ -178,8 +177,8 @@ add_dependencies(fbgemm_autovec defs.bzl)
+@@ -178,7 +177,7 @@ add_dependencies(fbgemm_autovec defs.bzl)
  # 2)  MSVC uses /MD in default cxx compiling flags,
  # Need to change it to /MT in static case
  if(MSVC)
 -  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309")
--  if(FBGEMM_LIBRARY_TYPE STREQUAL "static")
 +  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309 /wd4703 /bigobj")
-+if(FBGEMM_LIBRARY_TYPE STREQUAL "static")
+   if(FBGEMM_LIBRARY_TYPE STREQUAL "static")
      target_compile_definitions(fbgemm_generic PRIVATE ASMJIT_STATIC)
      target_compile_definitions(fbgemm_avx2 PRIVATE ASMJIT_STATIC)
-     target_compile_definitions(fbgemm_avx512 PRIVATE ASMJIT_STATIC)
 @@ -247,7 +246,8 @@ message(WARNING "CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
  message(WARNING "CMAKE_CXX_FLAGS_RELEASE is ${CMAKE_CXX_FLAGS_RELEASE}")
  message(WARNING "==========")
