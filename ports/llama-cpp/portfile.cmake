@@ -26,7 +26,6 @@ vcpkg_cmake_configure(
         -DLLAMA_BUILD_SERVER=OFF
         -DLLAMA_USE_SYSTEM_GGML=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Git=OFF
-        -DVCPKG_TRACE_FIND_PACKAGE=ON
 )
 
 vcpkg_cmake_install()
