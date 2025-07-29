@@ -21,6 +21,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         expat.diff
+        openal.diff
         remove-default-config.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/xml/expat")
