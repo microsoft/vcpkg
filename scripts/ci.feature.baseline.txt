@@ -1678,7 +1678,6 @@ qscintilla:x64-uwp = cascade
 qt-advanced-docking-system:arm64-uwp = cascade
 qt-advanced-docking-system:x64-uwp = cascade
 qt(uwp) = cascade
-qt3d[vulkan] = cascade # no vulkan sdk installed
 qt3d(uwp) = cascade
 qt5:arm64-uwp = cascade
 qt5:arm64-windows = cascade
