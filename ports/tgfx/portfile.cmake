@@ -59,7 +59,6 @@ if(NODEJS_VERSION_OUTPUT MATCHES "v([0-9]+)\\.([0-9]+)")
     endif()
 endif()
 
-
 if(CMAKE_VERSION VERSION_LESS "3.13.0")
     message(FATAL_ERROR "CMake ${CMAKE_VERSION} is too old. TGFX requires CMake 3.13.0+")
 endif()
@@ -75,10 +74,25 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         async-promise   TGFX_USE_ASYNC_PROMISE
 )
 
+if(NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_LINUX)
+    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_SWIFTSHADER=ON" "TGFX_USE_SWIFTSHADER=OFF")
+    message(STATUS "SwiftShader feature disabled: not supported on this platform")
+endif ()
+
+if (TGFX_BUILD_DRAWERS IN_LIST FEATURE_OPTIONS)
+    list(FILTER FEATURE_OPTIONS REPLACE "TGFX_BUILD_LAYERS=ON" "TGFX_BUILD_LAYERS=OFF")
+    message(STATUS "Drawers feature enabled: disabling Layers feature")
+endif ()
+
 if(TGFX_USE_QT IN_LIST FEATURE_OPTIONS)
     list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_SWIFTSHADER=ON" "TGFX_USE_SWIFTSHADER=OFF")
     list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_ANGLE=ON" "TGFX_USE_ANGLE=OFF")
     message(STATUS "Qt feature enabled: disabling SwiftShader and ANGLE features")
+
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_PREFIX_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/Qt6"
+    )
+
 elseif(TGFX_USE_SWIFTSHADER IN_LIST FEATURE_OPTIONS)
     list(FILTER FEATURE_OPTIONS REPLACE "TGFX_USE_ANGLE=ON" "TGFX_USE_ANGLE=OFF")
     message(STATUS "SwiftShader feature enabled: disabling ANGLE feature")
@@ -100,13 +114,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_PLATFORM_TOOLSET VERSION_LESS "v142")
         message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")
     endif()
-endif()
-
-if(VCPKG_DETECTED_CMAKE_C_COMPILER)
-    list(APPEND PLATFORM_OPTIONS -DCMAKE_C_COMPILER=${VCPKG_DETECTED_CMAKE_C_COMPILER})
-endif()
-if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
-    list(APPEND PLATFORM_OPTIONS -DCMAKE_CXX_COMPILER=${VCPKG_DETECTED_CMAKE_CXX_COMPILER})
 endif()
 
 set(TGFX_PLATFORM "")
@@ -189,6 +196,9 @@ foreach(option IN LISTS PLATFORM_OPTIONS)
 endforeach()
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+
+    message(STATUS "CMAKE_OSX_SYSROOT: ${CMAKE_OSX_SYSROOT}")
+
     set(CMAKE_OSX_SYSROOT_INT "${CMAKE_OSX_SYSROOT}")
     set(SDK_VERSION "")
     find_program(XCODEBUILD_EXECUTABLE xcodebuild)
@@ -199,6 +209,9 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
                 ERROR_QUIET
                 OUTPUT_STRIP_TRAILING_WHITESPACE
         )
+
+        message(STATUS "xcodebuild_output: ${xcodebuild_output}")
+
         if(xcodebuild_output)
             if(VCPKG_TARGET_IS_OSX)
                 string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
@@ -217,6 +230,10 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
             endif ()
         endif ()
     endif()
+
+    message(STATUS "CMAKE_OSX_SYSROOT_INT: ${CMAKE_OSX_SYSROOT_INT}")
+    message(STATUS "SDK_VERSION: ${SDK_VERSION}")
+
     if(CMAKE_OSX_SYSROOT_INT AND NOT SDK_VERSION)
         if(VCPKG_TARGET_IS_OSX)
             string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
