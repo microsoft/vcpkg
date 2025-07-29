@@ -4,6 +4,7 @@
   "description": "Libva is an implementation for VA-API (Video Acceleration API)",
   "homepage": "https://github.com/intel/libva",
   "license": "MIT",
+  "supports": "linux",
   "dependencies": [
     {
       "name": "vcpkg-tool-meson",
