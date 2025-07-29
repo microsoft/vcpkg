@@ -34,7 +34,10 @@
       "name": "metal",
       "platform": "osx"
     },
-    "opencl",
+    {
+      "name": "opencl",
+      "platform": "!arm32"
+    },
     {
       "name": "openmp",
       "platform": "!osx"
