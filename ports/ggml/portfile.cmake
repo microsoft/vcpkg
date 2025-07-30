@@ -8,6 +8,7 @@ vcpkg_from_github(
         cmake-config.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
+        fix-dequant_funcs-comp.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

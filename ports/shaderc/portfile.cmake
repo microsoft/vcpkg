@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/shaderc
     REF "v${VERSION}"
-    SHA512 6761372591075944fddd926e9f7c2ea9447496566d2d549f523c6c529c3bd753d459b66d499f76d955bdcfb335016daddbeba49b087f4ecabf37d76a46ac14cd
+    SHA512 4d4f0d7c37d3224e6fb38b320f1ab52e4feb2e5a1c630973c1f00171d90d8d66bef3e44faf996ec67e1568fafc7f767e147fa130d5919b05aad55a78fca7f101
     HEAD_REF master
     PATCHES 
         disable-update-version.patch
