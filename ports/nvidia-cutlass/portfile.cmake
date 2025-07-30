@@ -26,14 +26,13 @@ vcpkg_cmake_configure(
         -DCUTLASS_ENABLE_CUBLAS=ON
         -DCUTLASS_ENABLE_CUDNN=ON
         "-DPython3_EXECUTABLE:FILEPATH=${PYTHON3}"
+    MAYBE_UNUSED_VARIABLES
+        CUTLASS_NATIVE_CUDA
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/NvidiaCutlass" PACKAGE_NAME "NvidiaCutlass")
 
-# note CUTLASS_ENABLE_LIBRARY=OFF
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/NvidiaCutlass/NvidiaCutlassConfig.cmake"
-    "add_library" "# add_library" # comment out the command
-)
+
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"
