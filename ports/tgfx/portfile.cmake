@@ -8,7 +8,7 @@ vcpkg_from_github(
         REF de33316656ad7b5ab905731e6d03c4fc1315b466
         SHA512 c743716f2cb873cdb78e995302bc14cc36a43d006a046e0e09c558b0ede58cec40b7648b189499c072557006fa2002acb7b6d03aa041ed3405b677f2b7d5d912
         PATCHES
-        disable-depsync.patch
+            disable-depsync.patch
 )
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
@@ -47,22 +47,6 @@ endif()
 get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
-execute_process(
-        COMMAND "${NODEJS}" --version
-        OUTPUT_VARIABLE NODEJS_VERSION_OUTPUT
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        ERROR_QUIET
-)
-if(NODEJS_VERSION_OUTPUT MATCHES "v([0-9]+)\\.([0-9]+)")
-    if(CMAKE_MATCH_1 LESS 14 OR (CMAKE_MATCH_1 EQUAL 14 AND CMAKE_MATCH_2 LESS 14))
-        message(FATAL_ERROR "NodeJS version ${NODEJS_VERSION_OUTPUT} is too old. TGFX requires NodeJS 14.14.0+")
-    endif()
-endif()
-
-if(CMAKE_VERSION VERSION_LESS "3.13.0")
-    message(FATAL_ERROR "CMake ${CMAKE_VERSION} is too old. TGFX requires CMake 3.13.0+")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
         svg             TGFX_BUILD_SVG
@@ -74,33 +58,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         async-promise   TGFX_USE_ASYNC_PROMISE
 )
 
-#if(NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_LINUX)
-#    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_SWIFTSHADER=ON$" "-DTGFX_USE_SWIFTSHADER=OFF")
-#    message(STATUS "SwiftShader feature disabled: not supported on this platform")
-#endif ()
-#
-#if(NOT VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_IS_WINDOWS)
-#    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_QT=ON$" "-DTGFX_USE_QT=OFF")
-#    message(STATUS "Qt feature disabled: not supported on this platform")
-#endif ()
-
-#if (TGFX_BUILD_DRAWERS IN_LIST FEATURE_OPTIONS)
-#    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_BUILD_LAYERS=ON$" "-DTGFX_BUILD_LAYERS=OFF")
-#    message(STATUS "Drawers feature enabled: disabling Layers feature")
-#endif ()
-#
-#if(TGFX_USE_QT IN_LIST FEATURE_OPTIONS)
-#    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_SWIFTSHADER=ON$" "-DTGFX_USE_SWIFTSHADER=OFF")
-#    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_ANGLE=ON$" "-DTGFX_USE_ANGLE=OFF")
-#    message(STATUS "Qt feature enabled: disabling SwiftShader and ANGLE features")
-#elseif(TGFX_USE_SWIFTSHADER IN_LIST FEATURE_OPTIONS)
-#    list(TRANSFORM FEATURE_OPTIONS REPLACE "^-DTGFX_USE_ANGLE=ON$" "-DTGFX_USE_ANGLE=OFF")
-#    message(STATUS "SwiftShader feature enabled: disabling ANGLE feature")
-#endif()
-
 set(PLATFORM_OPTIONS)
-
-set(ENV{CMAKE_PREFIX_PATH} "${CURRENT_INSTALLED_DIR}")
 
 if(VCPKG_TARGET_IS_ANDROID)
     if(NOT VCPKG_DETECTED_CMAKE_ANDROID_NDK)
@@ -150,8 +108,6 @@ elseif(VCPKG_TARGET_IS_IOS)
         set(TGFX_ARCH "x64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(TGFX_ARCH "arm64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(TGFX_ARCH "arm")
     endif()
 elseif(VCPKG_TARGET_IS_LINUX)
     set(TGFX_PLATFORM "linux")
@@ -161,8 +117,6 @@ elseif(VCPKG_TARGET_IS_LINUX)
         set(TGFX_ARCH "x64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(TGFX_ARCH "arm64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(TGFX_ARCH "arm")
     endif()
 elseif(VCPKG_TARGET_IS_ANDROID)
     set(TGFX_PLATFORM "android")
@@ -172,9 +126,11 @@ elseif(VCPKG_TARGET_IS_ANDROID)
         set(TGFX_ARCH "x64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(TGFX_ARCH "arm64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(TGFX_ARCH "arm")
     endif()
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(TGFX_PLATFORM "web")
+    set(TGFX_ARCH "wasm-mt")
+    # set(TGFX_ARCH "wasm")
 endif()
 
 if(NOT TGFX_PLATFORM)
@@ -205,12 +161,8 @@ foreach(option IN LISTS PLATFORM_OPTIONS)
 endforeach()
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-
-    message(STATUS "CMAKE_OSX_SYSROOT: ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
-
     set(CMAKE_OSX_SYSROOT_INT "${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
     set(SDK_VERSION "")
-
     find_program(XCODEBUILD_EXECUTABLE xcodebuild)
     if(XCODEBUILD_EXECUTABLE AND NOT CMAKE_OSX_SYSROOT_INT)
         vcpkg_execute_required_process(
@@ -219,9 +171,6 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
                 LOGNAME "xcodebuild-sdk-version"
                 OUTPUT_VARIABLE xcodebuild_output
         )
-
-        message(STATUS "xcodebuild_output: ${xcodebuild_output}")
-
         if(xcodebuild_output)
             if(VCPKG_TARGET_IS_OSX)
                 string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${xcodebuild_output}")
@@ -240,7 +189,6 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
             endif ()
         endif ()
     endif()
-
     if(CMAKE_OSX_SYSROOT_INT AND NOT SDK_VERSION)
         if(VCPKG_TARGET_IS_OSX)
             string(REGEX MATCH "MacOSX([0-9]+\\.[0-9]+)" _ "${CMAKE_OSX_SYSROOT_INT}")
@@ -250,7 +198,6 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
             set(SDK_VERSION "${CMAKE_MATCH_2}")
         endif ()
     endif()
-
     if(NOT SDK_VERSION AND NOT CMAKE_OSX_SYSROOT_INT)
         message(FATAL_ERROR "Unable to extract SDK path and SDK version.")
     endif()
@@ -259,16 +206,10 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
 endif()
 
 set(ENV{CMAKE_COMMAND} "${CMAKE_COMMAND}")
-
-message(STATUS "=== 调试信息 ===")
-message(STATUS "CMAKE_COMMAND: ${CMAKE_COMMAND}")
-message(STATUS "NINJA: ${NINJA}")
-message(STATUS "NODEJS: ${NODEJS}")
-message(STATUS "===============")
+set(ENV{CMAKE_PREFIX_PATH} "${CURRENT_INSTALLED_DIR}")
 
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(RELEASE_BUILD_ARGS ${BASE_BUILD_ARGS})
-
     vcpkg_execute_required_process(
             COMMAND "${NODEJS}" ${RELEASE_BUILD_ARGS}
             WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -279,7 +220,6 @@ endif()
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(DEBUG_BUILD_ARGS ${BASE_BUILD_ARGS})
     list(APPEND DEBUG_BUILD_ARGS "-d")
-
     vcpkg_execute_required_process(
             COMMAND "${NODEJS}" ${DEBUG_BUILD_ARGS}
             WORKING_DIRECTORY "${SOURCE_PATH}"
@@ -297,10 +237,10 @@ endif()
 
 file(INSTALL "${SOURCE_PATH}/include/"
         DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-        FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp")
+        FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx")
 
 if(EXISTS "${RELEASE_OUT_DIR}")
-    file(GLOB RELEASE_LIBS "${RELEASE_OUT_DIR}/*.a" "${RELEASE_OUT_DIR}/*.lib")
+    file(GLOB RELEASE_LIBS "${RELEASE_OUT_DIR}/*.a" "${RELEASE_OUT_DIR}/*.lib" "${RELEASE_OUT_DIR}/*.so")
     if(RELEASE_LIBS)
         file(INSTALL ${RELEASE_LIBS}
                 DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
@@ -309,7 +249,7 @@ endif()
 
 if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     if(EXISTS "${DEBUG_OUT_DIR}")
-        file(GLOB DEBUG_LIBS "${DEBUG_OUT_DIR}/*.a" "${DEBUG_OUT_DIR}/*.lib")
+        file(GLOB DEBUG_LIBS "${DEBUG_OUT_DIR}/*.a" "${DEBUG_OUT_DIR}/*.lib" "${DEBUG_OUT_DIR}/*.so")
         if(DEBUG_LIBS)
             file(INSTALL ${DEBUG_LIBS}
                     DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
@@ -323,6 +263,11 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+
+generate_tgfx_config_cmake()
+
+file(INSTALL "${CURRENT_PACKAGES_DIR}/share/tgfx/tgfxConfig.cmake"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/tgfx")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)

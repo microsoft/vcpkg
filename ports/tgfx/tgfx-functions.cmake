@@ -74,19 +74,11 @@ function(get_tgfx_externals SOURCE_PATH)
 
         message(STATUS "Fetching external dependency: ${EXTERNAL} from ${URL}")
 
-        if(EXTERNAL STREQUAL "vendor_tools")
-            vcpkg_from_git(
-                OUT_SOURCE_PATH DEP_SOURCE_PATH
-                URL "${URL}"
-                REF "${REF}"
-            )
-        else()
-            vcpkg_from_git(
-                OUT_SOURCE_PATH DEP_SOURCE_PATH
-                URL "${URL}"
-                REF "${REF}"
-            )
-        endif()
+        vcpkg_from_git(
+            OUT_SOURCE_PATH DEP_SOURCE_PATH
+            URL "${URL}"
+            REF "${REF}"
+        )
 
         get_filename_component(TARGET_DIR "${SOURCE_PATH}/${DIR}" DIRECTORY)
         file(MAKE_DIRECTORY "${TARGET_DIR}")
@@ -96,4 +88,21 @@ function(get_tgfx_externals SOURCE_PATH)
     endforeach()
 
     message(STATUS "Successfully fetched all external dependencies")
+endfunction()
+
+function(generate_tgfx_config_cmake)
+    set(CONFIG_CONTENT
+            "include(CMakeFindDependencyMacro)\n"
+            "add_library(tgfx::tgfx STATIC IMPORTED)\n"
+            "set_target_properties(tgfx::tgfx PROPERTIES\n"
+            "    INTERFACE_INCLUDE_DIRECTORIES \"\${CMAKE_CURRENT_LIST_DIR}/../../include\"\n"
+            "    IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/tgfx.a\"\n"
+            ")\n\n"
+            "if(EXISTS \"\${CMAKE_CURRENT_LIST_DIR}/../../debug/lib/tgfx.a\")\n"
+            "    set_target_properties(tgfx::tgfx PROPERTIES\n"
+            "        IMPORTED_LOCATION_DEBUG \"\${CMAKE_CURRENT_LIST_DIR}/../../debug/lib/tgfx.a\"\n"
+            "    )\n"
+            "endif()\n"
+    )
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/tgfx/tgfxConfig.cmake" ${CONFIG_CONTENT})
 endfunction()
