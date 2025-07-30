@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alibaba/yalantinglibs
     REF d4337e3297fa9bb8ef67473d7f40e766da39f4e3 # Use commit id to avoid target to multiple commits(the author will fix it in the next release), see https://github.com/alibaba/yalantinglibs/issues/1027
-    SHA512 06a61247102e0f90b76987b7a5e244dd5e727ee2c67aedac472bf8984b4e9a91c8634ec3c210ad3f70266207870df0f83b2bc6a1e23ad5febb16d095f322173b
+    SHA512 a4572dd0e9ca4052091be0f40cc93616bb982432ada4640f9f92df4ec2173731d53a7758af6ee7835ae8841f3ad81dd4e615dfea8af5b88298823c6724774b00
     HEAD_REF main
 )
 
