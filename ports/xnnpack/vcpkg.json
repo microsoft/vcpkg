@@ -14,6 +14,10 @@
     },
     "fp16",
     "fxdiv",
+    {
+      "name": "kleidai",
+      "platform": "arm64"
+    },
     "pthreadpool",
     {
       "name": "vcpkg-cmake",
