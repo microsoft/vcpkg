@@ -12,9 +12,8 @@ vcpkg_from_github(
         consume-vcpkg-eigen3.patch
 )
 
+file(COPY "${SOURCE_PATH}/img" DESTINATION "${CURRENT_PACKAGES_DIR}/include/img")
 file(COPY "${SOURCE_PATH}/vcg/"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/vcg")
-# This header is part of the core library
-# https://github.com/cnr-isti-vclab/vcglib/blob/c94ef4e12e9ea3ae986d9af91005be8328d13719/CMakeLists.txt#L285
-file(COPY "${SOURCE_PATH}/wrap/callback.h"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/wrap")
+file(COPY "${SOURCE_PATH}/wrap/"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/wrap" FILES_MATCHING PATTERN "*.h")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
