@@ -14,9 +14,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "font-face-cache"
-  ],
   "features": {
     "font-face-cache": {
       "description": "Enable loading font face cache from files and directories"
