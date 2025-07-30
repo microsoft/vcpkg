@@ -9,11 +9,14 @@ vcpkg_from_github(
     REF 33ed0be77d7767d0e2010e2c3cf972ef36c7c307
     SHA512 41775802b5a33f1bb0cb2c5dd126180e25d281a57c934d94247130c31ec7bf1dbf269ed9e8e946be1bdeeb09f0c17fee42048f71b4beb44c65df18cfb0cddc3b
     HEAD_REF master
+    PATCHES
+        add-clog-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools CPUINFO_BUILD_TOOLS
+        clog CPUINFO_BUILD_CLOG
 )
 
 set(LINK_OPTIONS "")
