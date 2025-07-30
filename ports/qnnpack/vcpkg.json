@@ -7,7 +7,12 @@
   "license": "BSD-3-Clause",
   "supports": "!windows",
   "dependencies": [
-    {"name":"cpuinfo","features":["clog"]},
+    {
+      "name": "cpuinfo",
+      "features": [
+        "clog"
+      ]
+    },
     "fp16",
     "fxdiv",
     "psimd",

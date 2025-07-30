@@ -16,13 +16,12 @@
     }
   ],
   "features": {
-    "tools": {
-      "description": "Build cpuinfo command-line tools",
-      "supports": "!uwp"
-    }
-    ,
     "clog": {
       "description": "Build clog support",
+      "supports": "!uwp"
+    },
+    "tools": {
+      "description": "Build cpuinfo command-line tools",
       "supports": "!uwp"
     }
   }
