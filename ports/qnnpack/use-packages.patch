@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 932f9e7..a2e126f 100644
+index 932f9e7..f7a3bb4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -13,8 +13,6 @@ PROJECT(QNNPACK C CXX ASM)
@@ -91,8 +91,21 @@ index 932f9e7..a2e126f 100644
  SET_TARGET_PROPERTIES(qnnpack PROPERTIES
    C_STANDARD 99
    C_EXTENSIONS YES)
-@@ -287,7 +277,7 @@ ENDIF()
- TARGET_LINK_LIBRARIES(qnnpack PRIVATE clog)
+@@ -275,7 +265,7 @@ TARGET_INCLUDE_DIRECTORIES(qnnpack PRIVATE src)
+ SET_TARGET_PROPERTIES(qnnpack PROPERTIES PUBLIC_HEADER include/qnnpack.h)
+ 
+ # ---[ Configure clog
+-IF(NOT TARGET clog)
++IF(FALSE)
+   SET(CLOG_BUILD_TESTS OFF CACHE BOOL "")
+   SET(CLOG_RUNTIME_TYPE "${CPUINFO_RUNTIME_TYPE}" CACHE STRING "")
+   ADD_SUBDIRECTORY(
+@@ -284,10 +274,10 @@ IF(NOT TARGET clog)
+   # We build static version of clog but a dynamic library may indirectly depend on it
+   SET_PROPERTY(TARGET clog PROPERTY POSITION_INDEPENDENT_CODE ON)
+ ENDIF()
+-TARGET_LINK_LIBRARIES(qnnpack PRIVATE clog)
++
  
  # ---[ Configure cpuinfo
 -IF(NOT TARGET cpuinfo)
@@ -107,7 +120,7 @@ index 932f9e7..a2e126f 100644
 -TARGET_LINK_LIBRARIES(qnnpack PRIVATE cpuinfo)
 +
 +find_package(cpuinfo CONFIG REQUIRED)
-+target_link_libraries(qnnpack PUBLIC cpuinfo::cpuinfo)
++target_link_libraries(qnnpack PUBLIC cpuinfo::cpuinfo cpuinfo::clog)
  
  # ---[ Configure pthreadpool
 -IF(NOT TARGET pthreadpool)
