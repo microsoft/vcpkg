@@ -15,7 +15,7 @@
     "fp16",
     "fxdiv",
     {
-      "name": "kleidai",
+      "name": "kleidiai",
       "platform": "arm64"
     },
     "pthreadpool",
