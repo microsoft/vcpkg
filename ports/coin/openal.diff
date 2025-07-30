@@ -1,19 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b9891b1..be310f0 100644
+index b9891b1..0cf864f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -324,9 +324,14 @@ if(HAVE_SOUND)
+@@ -324,9 +324,11 @@ if(HAVE_SOUND)
      if(OpenAL_FOUND)
        set(HAVE_OPENAL 1)
        # Checks specific OpenAL configurations
 -      set(CMAKE_REQUIRED_INCLUDES ${OPENGL_INCLUDE_DIR})
 +      set(CMAKE_REQUIRED_INCLUDES "")
 +      set(CMAKE_REQUIRED_LIBRARIES OpenAL::OpenAL)
-+      block(SCOPE_FOR POLICIES)
-+      cmake_policy(SET CMP0075 NEW)
        check_include_file(AL/al.h HAVE_AL_AL_H)
        check_include_file(OpenAL/al.h HAVE_OPENAL_AL_H)
-+      endblock()
 +      set(CMAKE_REQUIRED_LIBRARIES)
        set(CMAKE_REQUIRED_INCLUDES)
        if(NOT TARGET OpenAL::OpenAL)
