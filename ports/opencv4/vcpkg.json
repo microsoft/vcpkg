@@ -281,9 +281,6 @@
     "nonfree": {
       "description": "allow nonfree and unredistributable libraries"
     },
-    "notrace": {
-      "description": "Disables OpenCv Tracing, CV_TRACE can cause memory leaks https://github.com/opencv/opencv/issues/19727) "
-    },
     "opencl": {
       "description": "Enable opencl support",
       "supports": "!osx",

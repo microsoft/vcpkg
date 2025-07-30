@@ -114,7 +114,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"      BUILD_opencv_world
  INVERTED_FEATURES
  "fs"         OPENCV_DISABLE_FILESYSTEM_SUPPORT
- "notrace"    CV_TRACE
 )
 
 if("dnn" IN_LIST FEATURES)
@@ -432,6 +431,7 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_ZLIB_NG=OFF
+        -DCV_TRACE=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
