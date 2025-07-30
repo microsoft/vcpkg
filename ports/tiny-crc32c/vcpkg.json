@@ -1,0 +1,8 @@
+{
+  "name": "tiny-crc32c",
+  "version-string": "1.0.1",
+  "description": "Tiny C++23 header-only CRC32C library (Castagnoli polynomial)",
+  "license": "MIT",
+  "homepage": "https://github.com/AndyTechnologies/tiny-crc32c",
+  "dependencies": []
+}
