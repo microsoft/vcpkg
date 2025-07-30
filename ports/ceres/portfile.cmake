@@ -35,7 +35,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "lapack"            LAPACK
         "eigensparse"       EIGENSPARSE
         "tools"             GFLAGS
-        "cuda"              CUDA
+        "cuda"              USE_CUDA
 )
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
@@ -45,9 +45,12 @@ foreach (FEATURE ${FEATURE_OPTIONS})
     message(STATUS "${FEATURE}")
 endforeach()
 
-set(USE_CUDA OFF)
 if("cuda" IN_LIST FEATURES)
-    set(USE_CUDA ON)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
 endif()
 
 set(TARGET_OPTIONS )
@@ -66,11 +69,9 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARKS=OFF
-        -DUSE_CUDA=${USE_CUDA}
         -DPROVIDE_UNINSTALL_TARGET=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
     MAYBE_UNUSED_VARIABLES
-        CUDA
         MSVC_USE_STATIC_CRT
 )
 
