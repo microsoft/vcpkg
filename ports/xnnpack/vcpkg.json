@@ -6,7 +6,12 @@
   "license": "BSD-3-Clause",
   "supports": "!(arm & windows) & !uwp & !arm32",
   "dependencies": [
-    "cpuinfo",
+    {
+      "name": "cpuinfo",
+      "features": [
+        "clog"
+      ]
+    },
     "fp16",
     "fxdiv",
     "pthreadpool",
