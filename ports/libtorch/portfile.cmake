@@ -3,22 +3,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
     REF "v${VERSION}"
-    SHA512 a913a466324a65fa3d79c5e9ad4d605fc7976f0134fda2f81aaa3cea29d56926604999b8a238759646d211e63b47bbb446cdffa86ca8defd8159f11e30301289
+    SHA512 a9fc2252af9031c2cd46dde558c491aea8bc322fb80157a7760f300a44b759d4bfe866f030fbb974b80493057cfff4dd512498f99a100ed6d05bf620258ed37e
     HEAD_REF master
     PATCHES
-        cmake-fixes.patch
-        more-fixes.patch
-        fix-build.patch
-        clang-cl.patch
-        cuda-adjustments.patch
-        fix-api-export.patch
-        fxdiv.patch
-        protoc.patch
-        fix-sleef.patch
-        fix-glog.patch
+        cmake-dependencies.patch
         fix-calculate-minloglevel.patch
-        force-cuda-include.patch
-        fix-aten-cutlass.patch
+
+        # cmake-fixes.patch
+        # more-fixes.patch
+        # fix-build.patch
+        # clang-cl.patch
+        # cuda-adjustments.patch
+        # fix-api-export.patch
+        # fxdiv.patch
+        # protoc.patch
+        # fix-sleef.patch
+        # fix-glog.patch
+        # fix-calculate-minloglevel.patch
+        # force-cuda-include.patch
+        # fix-aten-cutlass.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -164,18 +167,7 @@ vcpkg_cmake_configure(
         -DUSE_KINETO=OFF
         -DUSE_ROCM=OFF
         -DUSE_NUMA=OFF
-        -DUSE_SYSTEM_ONNX=ON
-        -DUSE_SYSTEM_FP16=ON
-        -DUSE_SYSTEM_EIGEN_INSTALL=ON
-        -DUSE_SYSTEM_CPUINFO=ON
-        -DUSE_SYSTEM_PTHREADPOOL=ON
-        -DUSE_SYSTEM_PYBIND11=ON
-        -DUSE_SYSTEM_ZSTD=ON
-        -DUSE_SYSTEM_GLOO=ON
-        -DUSE_SYSTEM_NCCL=ON
         -DUSE_SYSTEM_LIBS=ON
-        -DUSE_SYSTEM_FXDIV=ON
-        -DUSE_SYSTEM_SLEEF=ON
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
         ${BLAS_OPTIONS}

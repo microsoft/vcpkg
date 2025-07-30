@@ -1,6 +1,6 @@
 {
   "name": "libtorch",
-  "version": "2.5.1",
+  "version": "2.7.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -16,7 +16,6 @@
       "host": true
     },
     "fmt",
-    "foxi",
     "foxi",
     "fp16",
     "gemmlowp",

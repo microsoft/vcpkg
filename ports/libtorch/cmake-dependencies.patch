@@ -1,0 +1,227 @@
+diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+index 7ea66d9..6284829 100644
+--- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
++++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
+@@ -323,7 +323,7 @@ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/pytorch_q
+ set_target_properties(pytorch_qnnpack PROPERTIES PUBLIC_HEADER include/qnnpack_func.h)
+ 
+ # ---[ Configure clog
+-if(NOT TARGET clog)
++if(false)
+   set(CLOG_BUILD_TESTS OFF CACHE BOOL "")
+   set(CLOG_RUNTIME_TYPE "${CPUINFO_RUNTIME_TYPE}" CACHE STRING "")
+   add_subdirectory(
+@@ -332,10 +332,10 @@ if(NOT TARGET clog)
+   # We build static version of clog but a dynamic library may indirectly depend on it
+   set_property(TARGET clog PROPERTY POSITION_INDEPENDENT_CODE ON)
+ endif()
+-target_link_libraries(pytorch_qnnpack PUBLIC clog)
++target_link_libraries(pytorch_qnnpack PUBLIC cpuinfo::clog)
+ 
+ # ---[ Configure cpuinfo
+-if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
++if(false)
+   add_library(cpuinfo SHARED IMPORTED)
+   find_library(CPUINFO_LIBRARY cpuinfo)
+   if(NOT CPUINFO_LIBRARY)
+@@ -343,7 +343,7 @@ if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
+   endif()
+   message("Found cpuinfo: ${CPUINFO_LIBRARY}")
+   set_target_properties(cpuinfo PROPERTIES IMPORTED_LOCATION "${CPUINFO_LIBRARY}")
+-elseif(NOT TARGET cpuinfo)
++elseif(false)
+   set(CPUINFO_BUILD_TOOLS OFF CACHE BOOL "")
+   set(CPUINFO_BUILD_UNIT_TESTS OFF CACHE BOOL "")
+   set(CPUINFO_BUILD_MOCK_TESTS OFF CACHE BOOL "")
+@@ -355,13 +355,13 @@ endif()
+ target_link_libraries(pytorch_qnnpack PRIVATE cpuinfo)
+ 
+ # ---[ Configure pthreadpool
+-if(NOT TARGET pthreadpool AND NOT USE_SYSTEM_PTHREADPOOL)
++if(false)
+   set(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
+   set(PTHREADPOOL_BUILD_BENCHMARKS OFF CACHE BOOL "")
+   add_subdirectory(
+     "${PTHREADPOOL_SOURCE_DIR}"
+     "${CONFU_DEPENDENCIES_BINARY_DIR}/pthreadpool")
+-elseif(NOT TARGET pthreadpool AND USE_SYSTEM_PTHREADPOOL)
++elseif(false)
+   add_library(pthreadpool SHARED IMPORTED)
+   find_library(PTHREADPOOL_LIBRARY pthreadpool)
+   if(NOT PTHREADPOOL_LIBRARY)
+@@ -375,13 +375,13 @@ endif()
+ target_link_libraries(pytorch_qnnpack PUBLIC pthreadpool)
+ 
+ # ---[ Configure FXdiv
+-if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
++if(false)
+   set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+   set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+   add_subdirectory(
+     "${FXDIV_SOURCE_DIR}"
+     "${CONFU_DEPENDENCIES_BINARY_DIR}/fxdiv")
+-elseif(NOT TARGET fxdiv AND USE_SYSTEM_FXDIV)
++elseif(false)
+   find_file(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
+   if(NOT FXDIV_HDR)
+     message(FATAL_ERROR "Cannot find fxdiv")
+@@ -398,11 +398,11 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0.0" AND NOT (USE_SYSTEM_PSIMD OR USE_
+ endif()
+ 
+ # ---[ Configure psimd
+-if(NOT TARGET psimd AND NOT USE_SYSTEM_PSIMD)
++if(false)
+   add_subdirectory(
+     "${PSIMD_SOURCE_DIR}"
+     "${CONFU_DEPENDENCIES_BINARY_DIR}/psimd")
+-elseif(NOT TARGET psimd AND USE_SYSTEM_PSIMD)
++elseif(false)
+   find_file(PSIMD_HDR psimd.h PATH_SUFFIXES include)
+   if(NOT PSIMD_HDR)
+     message(FATAL_ERROR "Cannot find psimd")
+@@ -413,13 +413,13 @@ endif()
+ target_link_libraries(pytorch_qnnpack PRIVATE psimd)
+ 
+ # ---[ Configure FP16
+-if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
++if(false)
+   set(FP16_BUILD_TESTS OFF CACHE BOOL "")
+   set(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
+   add_subdirectory(
+     "${FP16_SOURCE_DIR}"
+     "${CONFU_DEPENDENCIES_BINARY_DIR}/fp16")
+-elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
++elseif(false)
+   find_file(FP16_HDR fp16.h PATH_SUFFIXES include)
+   if(NOT FP16_HDR)
+     message(FATAL_ERROR "Cannot find fp16")
+@@ -427,6 +427,7 @@ elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
+   add_library(fp16 STATIC "${FP16_HDR}")
+   set_target_properties(fp16 PROPERTIES LINKER_LANGUAGE C)
+ endif()
++find_package(fp16 REQUIRED)
+ target_link_libraries(pytorch_qnnpack PRIVATE fp16)
+ 
+ # -- [ Undo cmake-4 compat mode
+diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
+index 34577ca..42dff2a 100644
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -121,8 +121,7 @@ if(NOT BUILD_LIBTORCHLESS)
+   endif()
+ 
+   if(USE_MIMALLOC)
+-    target_link_libraries(c10 PRIVATE "mimalloc-static")
+-    add_dependencies(c10 mimalloc-static)
++    target_link_libraries(c10 PRIVATE "mimalloc")
+   endif()
+ 
+   if(LINUX)
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index d2d23b7..bba6ac5 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -87,7 +87,7 @@ endif()
+ # Note: the folders that are being commented out have not been properly
+ # addressed yet.
+ 
+-if(NOT MSVC AND USE_XNNPACK)
++if(false)
+   if(NOT TARGET fxdiv)
+     set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+     set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 5227204..13edfc8 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -492,7 +492,7 @@ if(USE_NNPACK)
+ endif()
+ 
+ # ---[ XNNPACK
+-if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
++if(FALSE)
+   if(NOT DEFINED XNNPACK_SOURCE_DIR)
+     set(XNNPACK_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/XNNPACK" CACHE STRING "XNNPACK source directory")
+   endif()
+@@ -556,7 +556,7 @@ if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
+ 
+   include_directories(SYSTEM ${XNNPACK_INCLUDE_DIR})
+   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
+-elseif(NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)
++elseif(FALSE)
+   add_library(XNNPACK SHARED IMPORTED)
+   add_library(microkernels-prod SHARED IMPORTED)
+   find_library(XNNPACK_LIBRARY XNNPACK)
+@@ -569,6 +569,7 @@ elseif(NOT TARGET XNNPACK AND USE_SYSTEM_XNNPACK)
+   message("-- Found XNNPACK: ${XNNPACK_LIBRARY}")
+   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
+ endif()
++list(APPEND Caffe2_DEPENDENCY_LIBS xnnpack microkernels-prod)
+ 
+ # ---[ Vulkan deps
+ if(USE_VULKAN)
+@@ -702,7 +703,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
+ endif()
+ 
+ # ---[ FBGEMM
+-if(USE_FBGEMM)
++if(FALSE)
+   set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
+   if(NOT DEFINED FBGEMM_SOURCE_DIR)
+     set(FBGEMM_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/fbgemm" CACHE STRING "FBGEMM source directory")
+@@ -755,6 +756,8 @@ endif()
+ 
+ if(USE_FBGEMM)
+   caffe2_update_option(USE_FBGEMM ON)
++  list(APPEND Caffe2_DEPENDENCY_LIBS fbgemm)
++
+ else()
+   caffe2_update_option(USE_FBGEMM OFF)
+   message(WARNING
+@@ -804,7 +807,7 @@ if(USE_ITT)
+ endif()
+ 
+ # ---[ Caffe2 depends on FP16 library for half-precision conversions
+-if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
++if(false)
+   set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
+   # PSIMD is required by FP16
+   if(NOT DEFINED PSIMD_SOURCE_DIR)
+@@ -829,10 +832,17 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
+       "${CONFU_DEPENDENCIES_BINARY_DIR}/FP16")
+   endif()
+ elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
+-  add_library(fp16 STATIC "/usr/include/fp16.h")
++  find_file(FP16_HDR fp16.h PATH_SUFFIXES include)
++  if(NOT FP16_HDR)
++    message(FATAL_ERROR "Cannot find fp16")
++  endif()
++
++  add_library(fp16 INTERFACE)
++  target_include_directories(fp16 INTERFACE "${FP16_INCLUDE_DIR}")
+   set_target_properties(fp16 PROPERTIES LINKER_LANGUAGE C)
++  list(APPEND Caffe2_DEPENDENCY_LIBS fp16)
+ endif()
+-list(APPEND Caffe2_DEPENDENCY_LIBS fp16)
++
+ 
+ # ---[ EIGEN
+ # Due to license considerations, we will only use the MPL2 parts of Eigen.
+@@ -1586,6 +1596,7 @@ endif()
+ #
+ set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+ set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
++if(0)
+ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+ 
+ # Disable compiler feature checks for `fmt`.
+@@ -1596,7 +1607,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+ # `fmt` is compatible with a superset of the compilers that PyTorch is, it
+ # shouldn't be too bad to just disable the checks.
+ set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
+-
++endif()
++find_package(fmt REQUIRED)
+ list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
+ set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
+ 
