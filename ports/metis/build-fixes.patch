@@ -1,11 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a15d19a..7210a61 100644
+index ef34603..540841c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,9 +1,9 @@
--cmake_minimum_required(VERSION 2.8)
-+cmake_minimum_required(VERSION 3.22)
- project(METIS C)
+@@ -3,7 +3,7 @@ project(METIS C)
  
  set(SHARED FALSE CACHE BOOL "build a shared library")
  
@@ -38,7 +35,7 @@ index a15d19a..7210a61 100644
 +
 +include(install_config.cmake)
 diff --git a/conf/gkbuild.cmake b/conf/gkbuild.cmake
-index 96435e5..ff43f05 100644
+index 591ece4..a09d086 100644
 --- a/conf/gkbuild.cmake
 +++ b/conf/gkbuild.cmake
 @@ -16,7 +16,6 @@ option(GKRAND "enable GKRAND support" OFF)
@@ -49,7 +46,7 @@ index 96435e5..ff43f05 100644
    set(GK_COPTIONS "-DWIN32 -DMSC -D_CRT_SECURE_NO_DEPRECATE -DUSE_GKREGEX")
  elseif(MINGW)
    set(GK_COPTS "-DUSE_GKREGEX")
-@@ -38,7 +37,7 @@ endif(VALGRIND)
+@@ -43,7 +42,7 @@ endif(VALGRIND)
        set(GK_COPTIONS "${GK_COPTIONS} -fPIC")
    endif(NOT MINGW)
  # GCC warnings.
@@ -58,7 +55,7 @@ index 96435e5..ff43f05 100644
  elseif(${CMAKE_C_COMPILER_ID} MATCHES "Sun")
  # Sun insists on -xc99.
    set(GK_COPTIONS "${GK_COPTIONS} -xc99")
-@@ -69,7 +68,7 @@ endif(OPENMP)
+@@ -74,7 +73,7 @@ endif(OPENMP)
  if(GDB)
    set(GK_COPTS "${GK_COPTS} -g")
    set(GK_COPTIONS "${GK_COPTIONS} -Werror")
@@ -68,7 +65,7 @@ index 96435e5..ff43f05 100644
  endif(GDB)
  
 diff --git a/include/metis.h b/include/metis.h
-index 7fef0e7..f8e5dcf 100644
+index ab475fe..8033858 100644
 --- a/include/metis.h
 +++ b/include/metis.h
 @@ -30,7 +30,7 @@
@@ -81,8 +78,8 @@ index 7fef0e7..f8e5dcf 100644
  
  /*--------------------------------------------------------------------------
 @@ -40,7 +40,7 @@
-    32 : single precission floating point (float)
-    64 : double precission floating point (double)
+    32 : single precision floating point (float)
+    64 : double precision floating point (double)
  --------------------------------------------------------------------------*/
 -//#define REALTYPEWIDTH 32
 +#define REALTYPEWIDTH 32
