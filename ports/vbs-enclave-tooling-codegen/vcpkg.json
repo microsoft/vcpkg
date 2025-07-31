@@ -1,6 +1,7 @@
 {
   "name": "vbs-enclave-tooling-codegen",
   "version": "0.0.2-prerelease",
+  "port-version": 1,
   "description": "Supports code generation for VBS enclaves.",
   "homepage": "https://github.com/microsoft/vbsEnclaveTooling",
   "license": "MIT",
