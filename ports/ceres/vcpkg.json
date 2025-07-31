@@ -59,12 +59,6 @@
         },
         "suitesparse-spqr"
       ]
-    },
-    "tools": {
-      "description": "Ceres tools",
-      "dependencies": [
-        "gflags"
-      ]
     }
   }
 }

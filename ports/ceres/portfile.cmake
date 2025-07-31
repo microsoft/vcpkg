@@ -26,7 +26,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "lapack"            LAPACK
         "schur"             SCHUR_SPECIALIZATIONS
         "suitesparse"       SUITESPARSE
-        "tools"             GFLAGS
 )
 
 if(VCPKG_TARGET_IS_UWP)
@@ -54,9 +53,9 @@ vcpkg_cmake_configure(
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        -DBUILD_BENCHMARKS=OFF
         -DPROVIDE_UNINSTALL_TARGET=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
+        -DVCPKG_LOCK_FIND_PACKAGE_gflags=OFF  # No direct use except examples+tests
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_CRT
 )

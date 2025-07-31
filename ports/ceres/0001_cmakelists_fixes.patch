@@ -32,15 +32,6 @@ index 8e49c19e..f8c61d92 100644
  endif (MINIGLOG)
  
  if (NOT SCHUR_SPECIALIZATIONS)
-@@ -466,7 +445,7 @@ endif (NOT CUSTOM_BLAS)
- 
- if (BUILD_BENCHMARKS)
-   # Version 1.3 was first to provide import targets
--  find_package(benchmark 1.3 QUIET)
-+  find_package(benchmark CONFIG REQUIRED)
-   if (benchmark_FOUND)
-      message("-- Found Google benchmark library. Building Ceres benchmarks.")
-   else()
 @@ -722,12 +705,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
  install(FILES "${Ceres_BINARY_DIR}/CeresConfigVersion.cmake"

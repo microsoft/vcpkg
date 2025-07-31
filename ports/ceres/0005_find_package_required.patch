@@ -45,12 +45,3 @@
    if (AccelerateSparse_FOUND)
      message("-- Found Apple's Accelerate framework with sparse solvers, "
        "building with Accelerate sparse support.")
-@@ -395,7 +395,7 @@
- # GFlags.
- if (GFLAGS)
-   # Don't search with REQUIRED as we can continue without gflags.
--  find_package(gflags 2.2.0)
-+  find_package(gflags 2.2.0 REQUIRED)
-   if (gflags_FOUND)
-     if (TARGET gflags)
-       message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
