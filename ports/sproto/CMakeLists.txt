@@ -3,8 +3,13 @@ project(sproto C)
 
 set(CMAKE_C_STANDARD 99)
 
-# Add the main library
-add_library(sproto STATIC sproto.c)
+# Add the main library - let vcpkg control static/shared
+add_library(sproto sproto.c)
+
+# For Windows DLL, export all symbols
+if(WIN32 AND BUILD_SHARED_LIBS)
+    set_target_properties(sproto PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 target_include_directories(sproto PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
