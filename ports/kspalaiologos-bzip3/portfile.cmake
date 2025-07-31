@@ -1,3 +1,8 @@
+# Static builds are recommended to avoid the pthread dynamic linking issue.
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kspalaiologos/bzip3
@@ -25,5 +30,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME bzip3 CONFIG_PATH lib/cmake/bzip3)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
