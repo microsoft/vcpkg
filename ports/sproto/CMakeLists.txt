@@ -19,7 +19,7 @@ if(WIN32 AND MSVC)
             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
         )
     else()
-        # For static library, match vcpkg's CRT setting strictly
+        # For static library, match vcpkg's CRT setting
         if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
             set_target_properties(sproto PROPERTIES 
                 MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
@@ -27,32 +27,6 @@ if(WIN32 AND MSVC)
         else()
             set_target_properties(sproto PROPERTIES 
                 MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
-            )
-        endif()
-        
-        # Force consumers to use same CRT as the library
-        # This ensures no mixing of static/dynamic CRT
-        if(VCPKG_CRT_LINKAGE STREQUAL "static")
-            # Force static CRT for consumers and exclude dynamic CRT libraries
-            target_compile_options(sproto INTERFACE 
-                $<$<CONFIG:Release>:/MT>
-                $<$<CONFIG:Debug>:/MTd>
-            )
-            target_link_options(sproto INTERFACE 
-                $<$<CONFIG:Release>:/NODEFAULTLIB:msvcrt.lib>
-                $<$<CONFIG:Release>:/NODEFAULTLIB:libucrt.lib>
-                $<$<CONFIG:Debug>:/NODEFAULTLIB:msvcrtd.lib>
-                $<$<CONFIG:Debug>:/NODEFAULTLIB:libucrtd.lib>
-            )
-        else()
-            # Force dynamic CRT for consumers and exclude static CRT libraries
-            target_compile_options(sproto INTERFACE 
-                $<$<CONFIG:Release>:/MD>
-                $<$<CONFIG:Debug>:/MDd>
-            )
-            target_link_options(sproto INTERFACE 
-                $<$<CONFIG:Release>:/NODEFAULTLIB:libcmt.lib>
-                $<$<CONFIG:Debug>:/NODEFAULTLIB:libcmtd.lib>
             )
         endif()
     endif()
