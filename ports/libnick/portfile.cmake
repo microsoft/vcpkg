@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NickvisionApps/libnick
     REF "${VERSION}"
-    SHA512 d42925986dc92e4842dad24b55e1deabd88d9f9afffb0e5b1c2ac48370d45e11a9b90ef4cd6346fffafe0f4d4ecd4df50e6fc523057a99bac81a0ddde6f5fcf1
+    SHA512 42452de0040b2d365328a8b721561de87fe4c60fb98d5374d62c0a4270073e66aac45ee2b5cea9466c056ad010a1eb0df2c50a1d7d3e65db09419b984c553153
     HEAD_REF main
 )
 
