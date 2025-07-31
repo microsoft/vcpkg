@@ -1,3 +1,8 @@
+# Set policies for this port
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cloudwu/sproto
@@ -70,6 +75,9 @@ vcpkg_cmake_install()
 
 # Remove debug includes
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+# Remove empty lib directories as suggested by the warning
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/lib")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
