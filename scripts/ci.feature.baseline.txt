@@ -641,7 +641,6 @@ arrow[cuda]:x64-windows-release = feature-fails
 arrow[cuda]:x64-windows-static = feature-fails
 arrow[cuda]:x64-windows-static-md = feature-fails
 arrow[cuda](!(windows & x64 & !uwp & !xbox) & !(linux & x64) & !(linux & arm64)) = cascade
-arrow[mimalloc]:x64-windows-static-md = feature-fails
 arrow[orc]:arm64-android = cascade
 arrow[orc]:x64-android = cascade
 arrow[orc]:x64-windows = feature-fails
