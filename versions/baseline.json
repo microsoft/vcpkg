@@ -7177,7 +7177,7 @@
       "port-version": 1
     },
     "outcome": {
-      "baseline": "2.2.9",
+      "baseline": "2.2.12",
       "port-version": 0
     },
     "p-ranav-csv": {
@@ -9165,8 +9165,8 @@
       "port-version": 0
     },
     "status-code": {
-      "baseline": "2023-11-06",
-      "port-version": 1
+      "baseline": "2025-05-21",
+      "port-version": 0
     },
     "status-value-lite": {
       "baseline": "1.1.0",
