@@ -647,6 +647,17 @@
         "libtheora"
       ]
     },
+    "vaapi": {
+      "description": "VAAPI video decoding/encoding acceleration",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "libva",
+          "default-features": false,
+          "platform": "linux"
+        }
+      ]
+    },
     "version3": {
       "description": "Upgrade (L)GPL to version 3"
     },
@@ -711,17 +722,6 @@
       "description": "zlib support",
       "dependencies": [
         "zlib"
-      ]
-    },
-    "vaapi": {
-      "description": "VAAPI video decoding/encoding acceleration",
-      "supports": "linux",
-      "dependencies": [
-        {
-          "name": "libva",
-          "default-features": false,
-          "platform": "linux"
-        }
       ]
     }
   }
