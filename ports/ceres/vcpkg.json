@@ -51,13 +51,14 @@
             "lapack"
           ]
         },
-        "suitesparse-config",
         {
           "name": "suitesparse-cholmod",
+          "default-features": false,
           "features": [
             "matrixops"
           ]
         },
+        "suitesparse-config",
         "suitesparse-spqr"
       ]
     }

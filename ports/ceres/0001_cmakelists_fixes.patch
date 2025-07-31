@@ -1,14 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8e49c19..221b202 100644
+index 8e49c19..4ea82bc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -292,10 +292,11 @@ if (SUITESPARSE)
+@@ -292,10 +292,23 @@ if (SUITESPARSE)
    # built with SuiteSparse support.
  
    # Check for SuiteSparse and dependencies.
 -  find_package(SuiteSparse 4.5.6 COMPONENTS CHOLMOD SPQR
 -    OPTIONAL_COMPONENTS Partition)
 +  find_package(CHOLMOD REQUIRED)
++  include(CheckCSourceCompiles)
++  block(SCOPE_FOR VARIABLES)
++  set(CMAKE_REQUIRED_INCLUDES "")
++  set(CMAKE_REQUIRED_LIBRARIES SuiteSparse::CHOLMOD)
++  set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
++  check_c_source_compiles([[
++    #include <cholmod.h>
++    #ifndef CHOLMOD_HAS_PARTITION
++    #error "partition not enabled"
++    #endif
++  ]] SuiteSparse_Partition_FOUND)
++  endblock()
 +  find_package(SPQR CONFIG REQUIRED)
 +  find_package(SuiteSparse NAMES SuiteSparse_config REQUIRED)
    if (SuiteSparse_FOUND)
@@ -17,7 +29,7 @@ index 8e49c19..221b202 100644
      # By default, if all of SuiteSparse's dependencies are found, Ceres is
      # built with SuiteSparse support.
      message("-- Found SuiteSparse ${SuiteSparse_VERSION}, "
-@@ -323,13 +324,14 @@ if (NOT SuiteSparse_Partition_FOUND)
+@@ -323,13 +336,14 @@ if (NOT SuiteSparse_Partition_FOUND)
  endif (NOT SuiteSparse_Partition_FOUND)
  
  if (EIGENMETIS)
@@ -34,7 +46,7 @@ index 8e49c19..221b202 100644
      # METIS find module must be installed unless a package config is being used.
      if (NOT METIS_DIR)
        install(FILES ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
-@@ -433,7 +435,9 @@ else (MINIGLOG)
+@@ -433,7 +447,9 @@ else (MINIGLOG)
    unset(MINIGLOG_MAX_LOG_LEVEL CACHE)
    # Don't search with REQUIRED so that configuration continues if not found and
    # we can output an error messages explaining MINIGLOG option.
@@ -67,3 +79,38 @@ index ceb7e26..a5eb833 100644
      set(GLOG_FOUND ${glog_FOUND})
    else()
      # Version of glog against which Ceres was built was not built with CMake,
+diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
+index f9fc241..9f6f25b 100644
+--- a/internal/ceres/CMakeLists.txt
++++ b/internal/ceres/CMakeLists.txt
+@@ -104,15 +104,14 @@ if (SUITESPARSE AND SuiteSparse_FOUND)
+     SuiteSparse::SPQR)
+ 
+   if (SuiteSparse_Partition_FOUND)
+-    list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES SuiteSparse::Partition)
+   endif (SuiteSparse_Partition_FOUND)
+ endif (SUITESPARSE AND SuiteSparse_FOUND)
+ 
+-if (SuiteSparse_Partition_FOUND OR EIGENMETIS)
++if (EIGENMETIS)
+   # Define version information for use in Solver::FullReport.
+   add_definitions(-DCERES_METIS_VERSION="${METIS_VERSION}")
+   list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES METIS::METIS)
+-endif (SuiteSparse_Partition_FOUND OR EIGENMETIS)
++endif (EIGENMETIS)
+ 
+ if (ACCELERATESPARSE AND AccelerateSparse_FOUND)
+   list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES ${AccelerateSparse_LIBRARIES})
+diff --git a/internal/ceres/solver_utils.cc b/internal/ceres/solver_utils.cc
+index 3356f3b..35a6109 100644
+--- a/internal/ceres/solver_utils.cc
++++ b/internal/ceres/solver_utils.cc
+@@ -62,7 +62,7 @@ constexpr char kVersion[] =
+   "-suitesparse-(" CERES_SUITESPARSE_VERSION ")"
+ #endif
+ 
+-#if !defined(CERES_NO_EIGEN_METIS) || !defined(CERES_NO_CHOLMOD_PARTITION)
++#if !defined(CERES_NO_EIGEN_METIS)
+   "-metis-(" CERES_METIS_VERSION ")"
+ #endif
+ 
