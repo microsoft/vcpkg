@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
     REF "client_release/${MAJOR_MINOR}/${VERSION}"
-    SHA512 0e0c4f7647325f8f1e8a87da0d7ff43d1a3e5d3ef0dc3daf1fb974a47c0e4fb7318b3fdde77d0ae6ec4f3d30be113a5ceff33658facc8f3c2c325c8c61942698
+    SHA512 1cb7a4d5a411fe703137f5c8127e03ce70e01a9d1c9d23e19b9d4231c833fabad779cf52dc7b85500ff54121c4b5e900ea1634c312ee1d72cfdf4c2051703c38
     HEAD_REF master
+    PATCHES
+        fix-android-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.8)
-project (xmlsec1 C)
+project (xmlsec1 C CXX)
 
 option(INSTALL_HEADERS_TOOLS "Install public header files and tools" ON)
 

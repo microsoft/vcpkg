@@ -1,8 +1,20 @@
+From ac48075c5813f8ff2036aafddc0c391955ea36ae Mon Sep 17 00:00:00 2001
+From: Jackey Lea <1768478912@qq.com>
+Date: Wed, 23 Jul 2025 14:23:04 +0800
+Subject: [PATCH] =?UTF-8?q?vcpkg=E7=BC=96=E8=AF=91?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ CMakeLists.txt | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e86706..f2bdc36 100644
+index 0ada641..2aa5744 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -57,7 +57,9 @@ ELSEIF(WITH_MINIZIP_NG)
+@@ -57,7 +57,10 @@ ELSEIF(WITH_MINIZIP_NG)
    SET(ANYZIP_LIBRARIES minizip${MINIZIP_NG_SUFFIX})
    SET(ANYZIP_DEF USE_MINIZIP;USE_MINIZIP_NG)
  ELSE()
@@ -10,10 +22,11 @@ index 7e86706..f2bdc36 100644
 +  FIND_PACKAGE(Minizip NAMES unofficial-minizip REQUIRED)
 +  SET(MINIZIP_INCLUDE_DIRS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
 +  SET(MINIZIP_LIBRARIES unofficial::minizip::minizip)
++  SET(ANYZIP_DEF USE_MINIZIP)
    SET(ANYZIP_INCLUDE_DIRS ${MINIZIP_INCLUDE_DIRS})
    SET(ANYZIP_LIBRARIES ${MINIZIP_LIBRARIES})
    SET(ANYZIP_DEF USE_MINIZIP)
-@@ -68,7 +70,8 @@ IF(EXPAT_DIR)
+@@ -68,7 +71,8 @@ IF(EXPAT_DIR)
    FIND_PATH(EXPAT_INCLUDE_DIR NAMES expat.h NO_DEFAULT_PATH PATHS ${EXPAT_DIR}/include ${EXPAT_DIR})
    FIND_LIBRARY(EXPAT_LIBRARIES NAMES expat libexpat NO_DEFAULT_PATH PATHS ${EXPAT_DIR}/lib ${EXPAT_DIR})
  ELSE()
@@ -21,9 +34,9 @@ index 7e86706..f2bdc36 100644
 +  FIND_PACKAGE(EXPAT NAMES expat REQUIRED)
 +  SET(EXPAT_LIBRARIES expat::expat)
  ENDIF()
- #   dependancy: expatw (if wide library was requested)
+ #   dependency: expatw (if wide library was requested)
  IF(WITH_WIDE)
-@@ -225,13 +228,13 @@ FILE(WRITE "${CMAKE_CURRENT_BINARY_DIR}/xlsxio-config.cmake.in"
+@@ -225,13 +229,13 @@ FILE(WRITE "${CMAKE_CURRENT_BINARY_DIR}/xlsxio-config.cmake.in"
  IF (@WITH_LIBZIP@)
    FIND_DEPENDENCY(LibZip)
  ELSE()
@@ -39,3 +52,6 @@ index 7e86706..f2bdc36 100644
  ENDIF()
  
  IF(@WITH_WIDE@)
+-- 
+2.50.1.windows.1
+

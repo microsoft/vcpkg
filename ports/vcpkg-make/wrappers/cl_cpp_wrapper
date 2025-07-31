@@ -1,11 +1,15 @@
 #!/usr/bin/bash
+
 # cl_cpp_wrapper
-# Wrapper around MS's cl.exe to make it act more like Unix cpp
+# Wrapper around MS's cl.exe to make it act more like Unix cpp,
+# in particular process stdin
 
 PATH="$PATH:/usr/bin"
 
-case $MACHTYPE in
-    *-msys)
+msys2_dll="$(test -f /usr/bin/msys-2.0.dll && echo yes)"
+
+case $msys2_dll,$MACHTYPE in
+    *-msys | yes,*-cygwin)
         slash="-"
         ;;
     *)

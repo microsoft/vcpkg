@@ -1,0 +1,9 @@
+{
+  "name": "vcpkg-ci-vcpkg-tool-nodejs",
+  "version-string": "ci",
+  "description": "Test port to validate vcpkg-tool-nodejs",
+  "supports": "native",
+  "dependencies": [
+    "vcpkg-tool-nodejs"
+  ]
+}

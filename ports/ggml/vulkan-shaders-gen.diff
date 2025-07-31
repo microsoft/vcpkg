@@ -1,0 +1,26 @@
+diff --git a/src/ggml-vulkan/CMakeLists.txt b/src/ggml-vulkan/CMakeLists.txt
+index b97e7bf9..0ba5fcdd 100644
+--- a/src/ggml-vulkan/CMakeLists.txt
++++ b/src/ggml-vulkan/CMakeLists.txt
+@@ -110,6 +110,12 @@ if (Vulkan_FOUND)
+         add_compile_definitions(GGML_VULKAN_RUN_TESTS)
+     endif()
+ 
++    if(DEFINED VULKAN_SHADERS_GEN_EXECUTABLE)
++        add_executable(vulkan-shaders-gen IMPORTED)
++        set_target_properties(vulkan-shaders-gen PROPERTIES IMPORTED_LOCATION "${VULKAN_SHADERS_GEN_EXECUTABLE}")
++    elseif(1)
++        add_subdirectory(vulkan-shaders)
++    elseif(0)
+     # Set up toolchain for host compilation whether cross-compiling or not
+     if (CMAKE_CROSSCOMPILING)
+         if (GGML_VULKAN_SHADERS_GEN_TOOLCHAIN)
+@@ -159,6 +165,8 @@ if (Vulkan_FOUND)
+     set (_ggml_vk_host_suffix $<IF:$<STREQUAL:${CMAKE_HOST_SYSTEM_NAME},Windows>,.exe,>)
+     set (_ggml_vk_genshaders_dir "${CMAKE_BINARY_DIR}/$<CONFIG>")
+     set (_ggml_vk_genshaders_cmd "${_ggml_vk_genshaders_dir}/vulkan-shaders-gen${_ggml_vk_host_suffix}")
++    endif()
++    set (_ggml_vk_genshaders_cmd "vulkan-shaders-gen")
+     set (_ggml_vk_header     "${CMAKE_CURRENT_BINARY_DIR}/ggml-vulkan-shaders.hpp")
+     set (_ggml_vk_source     "${CMAKE_CURRENT_BINARY_DIR}/ggml-vulkan-shaders.cpp")
+     set (_ggml_vk_input_dir  "${CMAKE_CURRENT_SOURCE_DIR}/vulkan-shaders")

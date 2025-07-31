@@ -1,0 +1,17 @@
+{
+  "name": "st-tree",
+  "version": "1.2.2",
+  "description": "A fast and flexible c++ template class for tree data structures",
+  "homepage": "https://github.com/erikerlandson/st_tree",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

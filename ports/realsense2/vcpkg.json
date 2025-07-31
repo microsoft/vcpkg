@@ -1,7 +1,6 @@
 {
   "name": "realsense2",
-  "version": "2.56.2",
-  "port-version": 2,
+  "version": "2.56.3",
   "description": "Intel® RealSense™ SDK 2.0 is a cross-platform library for Intel® RealSense™ depth cameras (D400 series and the SR300).",
   "homepage": "https://github.com/IntelRealSense/librealsense",
   "license": "Apache-2.0",
@@ -11,7 +10,17 @@
       "name": "libusb",
       "platform": "!windows"
     },
+    "lz4",
     "nlohmann-json",
+    {
+      "name": "realsense2",
+      "default-features": false,
+      "features": [
+        "rs-usb-backend"
+      ],
+      "platform": "android | osx"
+    },
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -24,12 +33,21 @@
   "features": {
     "openni2": {
       "description": "Build Intel® RealSense™ OpenNI2 driver",
+      "supports": "!static",
       "dependencies": [
         "openni2"
       ]
     },
+    "rs-usb-backend": {
+      "description": "Use RS USB backend",
+      "supports": "!windows",
+      "dependencies": [
+        "libusb"
+      ]
+    },
     "tools": {
-      "description": "Build Intel® RealSense™ tools"
+      "description": "Build Intel® RealSense™ tools",
+      "supports": "!android"
     }
   }
 }

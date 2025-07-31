@@ -1,7 +1,6 @@
 {
   "name": "babl",
-  "version": "0.1.110",
-  "port-version": 2,
+  "version": "0.1.114",
   "description": "A pixel encoding and color space conversion engine.",
   "homepage": "https://gegl.org/babl/",
   "license": "LGPL-3.0-or-later",
@@ -17,6 +16,12 @@
       "description": "Support CMYK ICC profiles.",
       "dependencies": [
         "lcms"
+      ]
+    },
+    "introspection": {
+      "description": "Enable introspection",
+      "dependencies": [
+        "gobject-introspection"
       ]
     }
   }

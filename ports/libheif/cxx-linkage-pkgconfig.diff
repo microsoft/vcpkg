@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7dfbe6f..67d31f5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -479,13 +479,17 @@ endif()
+ 
+ list(JOIN REQUIRES_PRIVATE " " REQUIRES_PRIVATE)
+ 
+-include(CheckCXXSymbolExists)
+-check_cxx_symbol_exists(_LIBCPP_VERSION cstdlib HAVE_LIBCPP)
+-if(HAVE_LIBCPP)
+-  set(LIBS_PRIVATE "-lc++")
+-else()
+-  set(LIBS_PRIVATE "-lstdc++")
+-endif()
++set(FAKE_CXX_LINKAGE "")
++foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++        continue()
++    elseif(EXISTS "${lib}")
++        string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++    else()
++        string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++    endif()
++endforeach()
++set(LIBS_PRIVATE "${FAKE_CXX_LINKAGE}")
+ 
+ configure_file(libheif.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libheif.pc @ONLY)
+ 

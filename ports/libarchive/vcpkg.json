@@ -1,7 +1,6 @@
 {
   "name": "libarchive",
-  "version": "3.7.8",
-  "port-version": 1,
+  "version": "3.8.1",
   "description": "Library for reading and writing streaming archives",
   "homepage": "https://www.libarchive.org",
   "license": null,
@@ -16,9 +15,9 @@
   "default-features": [
     "bzip2",
     "crypto",
-    "libxml2",
     "lz4",
     "lzma",
+    "xar",
     "zstd"
   ],
   "features": {
@@ -41,12 +40,6 @@
         }
       ]
     },
-    "libxml2": {
-      "description": "Libxml2 support",
-      "dependencies": [
-        "libxml2"
-      ]
-    },
     "lz4": {
       "description": "Lz4 support",
       "dependencies": [
@@ -63,6 +56,16 @@
       "description": "Lzo support",
       "dependencies": [
         "lzo"
+      ]
+    },
+    "xar": {
+      "description": "Xar support",
+      "dependencies": [
+        {
+          "name": "libxml2",
+          "default-features": false,
+          "platform": "!windows | mingw"
+        }
       ]
     },
     "zstd": {

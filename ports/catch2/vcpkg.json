@@ -1,6 +1,6 @@
 {
   "name": "catch2",
-  "version-semver": "3.8.1",
+  "version-semver": "3.9.0",
   "description": "A modern, C++-native, test framework for unit-tests, TDD and BDD.",
   "homepage": "https://github.com/catchorg/Catch2",
   "license": "BSL-1.0",
@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "thread-safe-assertions": {
+      "description": "Enables thread safe assertions"
+    }
+  }
 }

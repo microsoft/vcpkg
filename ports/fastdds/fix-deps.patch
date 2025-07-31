@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2ea15f4c..8996d18f1 100644
+index 7974e8b..8afdb5a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -255,8 +255,8 @@ if(NOT BUILD_SHARED_LIBS)
  endif()
  
  eprosima_find_package(fastcdr 2 REQUIRED)
--eprosima_find_thirdparty(Asio asio VERSION 1.10.8)
+-eprosima_find_thirdparty(Asio asio VERSION 1.13.0)
 -eprosima_find_thirdparty(TinyXML2 tinyxml2)
 +find_package(asio CONFIG REQUIRED)
 +find_package(tinyxml2 CONFIG REQUIRED)
@@ -23,10 +23,10 @@ index b2ea15f4c..8996d18f1 100644
  
  ###############################################################################
 diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
-index 44a74948c..09330717b 100644
+index 3f4a3aa..3394cc3 100644
 --- a/src/cpp/CMakeLists.txt
 +++ b/src/cpp/CMakeLists.txt
-@@ -505,8 +505,9 @@ target_link_libraries(${PROJECT_NAME}
+@@ -508,8 +508,9 @@ target_link_libraries(${PROJECT_NAME}
      ${PRIVACY}
      fastcdr
      foonathan_memory

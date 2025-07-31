@@ -1,7 +1,6 @@
 {
   "name": "pkgconf",
-  "version": "2.4.3",
-  "port-version": 1,
+  "version": "2.5.1",
   "description": "pkgconf is a program which helps to configure compiler and linker flags for development libraries. It is similar to pkg-config from freedesktop.org.",
   "homepage": "https://github.com/pkgconf/pkgconf",
   "license": null,

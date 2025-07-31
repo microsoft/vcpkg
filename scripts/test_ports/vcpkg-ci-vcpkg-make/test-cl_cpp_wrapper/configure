@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "${CPP:-cpp} ${CPPFLAGS} ${CFLAGS} ${TEST_FLAGS} >> stdout.c < source.c"
+${CPP:-cpp} ${CPPFLAGS} ${CFLAGS} ${TEST_FLAGS} >> stdout.c < source.c

@@ -1,0 +1,19 @@
+diff --git a/filters/src/convolution.cpp b/filters/src/convolution.cpp
+index 41ffd02..34eb3b5 100644
+--- a/filters/src/convolution.cpp
++++ b/filters/src/convolution.cpp
+@@ -189,5 +189,14 @@ Convolution<pcl::RGB, pcl::RGB>::convolveOneColDense(int i, int j)
+   result.b = static_cast<std::uint8_t>(b);
+   return (result);
+ }
++
++#ifndef PCL_NO_PRECOMPILE
++#include <pcl/impl/instantiate.hpp>
++#include <pcl/point_types.h>
++
++PCL_INSTANTIATE_PRODUCT(
++    Convolution, ((pcl::PointXYZRGB))((pcl::PointXYZRGB)))
++#endif // PCL_NO_PRECOMPILE
++
+ } // namespace filters
+ } // namespace pcl

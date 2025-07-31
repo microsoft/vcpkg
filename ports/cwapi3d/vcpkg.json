@@ -1,6 +1,6 @@
 {
   "name": "cwapi3d",
-  "version": "30.475.1",
+  "version": "32.219.1",
   "description": "CwAPI3D is the Cadwork 3D plugin architecture in C++.",
   "homepage": "https://github.com/cwapi3d/cwapi3dcpp",
   "license": "MIT",

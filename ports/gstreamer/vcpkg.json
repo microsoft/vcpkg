@@ -1,6 +1,7 @@
 {
   "name": "gstreamer",
   "version": "1.26.1",
+  "port-version": 1,
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -46,6 +47,20 @@
           "default-features": false,
           "features": [
             "plugins-base"
+          ]
+        }
+      ]
+    },
+    "amd-amf": {
+      "description": "Enable support for the AMD AMF plugins",
+      "supports": "windows",
+      "dependencies": [
+        "amd-amf",
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
           ]
         }
       ]

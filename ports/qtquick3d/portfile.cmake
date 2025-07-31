@@ -1,5 +1,8 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
-set(${PORT}_PATCHES 0001-devendor-meshoptimizer.patch)
+set(${PORT}_PATCHES
+    0001-devendor-meshoptimizer.patch
+    android-openxr-vulkan.diff
+)
 
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 

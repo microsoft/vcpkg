@@ -168,6 +168,13 @@ if ($lastLastExitCode -ne 0)
     exit $lastLastExitCode
 }
 
+if ($IsMacOS)
+{
+    Write-Host "macOS disk space report:"
+    & df -h | Where-Object { $_ -match "Avail|/System/Volumes/Data$" }
+    & du -sh $WorkingRoot
+}
+
 $parentHashesArgs = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {

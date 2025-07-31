@@ -2,7 +2,20 @@ diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
 index 1b69cad..9494278 100644
 --- a/cmake/defaults/Packages.cmake
 +++ b/cmake/defaults/Packages.cmake
-@@ -190,7 +190,8 @@ if (PXR_BUILD_IMAGING)
+@@ -178,7 +178,12 @@ if (PXR_BUILD_IMAGING)
+         if (POLICY CMP0072)
+             cmake_policy(SET CMP0072 OLD)
+         endif()
++        set(previous_CMAKE_FIND_FRAMEWORK ${CMAKE_FIND_FRAMEWORK})
++        if(APPLE) # Must find Apple OpenGL, not XQuartz OpenGL
++            set(CMAKE_FIND_FRAMEWORK FIRST)
++        endif()
+         find_package(OpenGL REQUIRED)
++        set(CMAKE_FIND_FRAMEWORK ${previous_CMAKE_FIND_FRAMEWORK})
+         add_definitions(-DPXR_GL_SUPPORT_ENABLED)
+     endif()
+     # --Metal
+@@ -155,7 +160,8 @@ if (PXR_BUILD_IMAGING)
      # --OpenImageIO
      if (PXR_BUILD_OPENIMAGEIO_PLUGIN)
          set(REQUIRES_Imath TRUE)
@@ -12,50 +25,40 @@ index 1b69cad..9494278 100644
          add_definitions(-DPXR_OIIO_PLUGIN_ENABLED)
          if (OIIO_idiff_BINARY)
              set(IMAGE_DIFF_TOOL ${OIIO_idiff_BINARY} CACHE STRING "Uses idiff for image diffing")
-@@ -227,6 +228,7 @@ if (PXR_BUILD_IMAGING)
-             find_package(Vulkan REQUIRED)
-             list(APPEND VULKAN_LIBS Vulkan::Vulkan)
+@@ -189,4 +195,4 @@ if (PXR_BUILD_IMAGING)
+-        if (EXISTS $ENV{VULKAN_SDK})
++        if (0)
+             # Prioritize the VULKAN_SDK includes and packages before any system
+             # installed headers. This is to prevent linking against older SDKs
+             # that may be installed by the OS.
+@@ -215,8 +221,14 @@ if (PXR_BUILD_IMAGING)
+             endif()
  
-+            if(0)
-             # Find the extra vulkan libraries we need
-             set(EXTRA_VULKAN_LIBS shaderc_combined)
-             if (WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-@@ -236,6 +238,7 @@ if (PXR_BUILD_IMAGING)
-                 find_library("${EXTRA_LIBRARY}_PATH" NAMES "${EXTRA_LIBRARY}" PATHS $ENV{VULKAN_SDK}/lib)
-                 list(APPEND VULKAN_LIBS "${${EXTRA_LIBRARY}_PATH}")
-             endforeach()
-+            endif()
- 
-             # Find the OS specific libs we need
-             if (UNIX AND NOT APPLE)
-@@ -249,10 +252,20 @@ if (PXR_BUILD_IMAGING)
-         else()
-             message(FATAL_ERROR "VULKAN_SDK not valid")
+             add_definitions(-DPXR_VULKAN_SUPPORT_ENABLED)
+-        else()
+-            message(FATAL_ERROR "VULKAN_SDK not valid")
          endif()
++        find_package(Vulkan REQUIRED)
 +        find_package(unofficial-shaderc CONFIG REQUIRED)
 +        find_package(unofficial-spirv-reflect CONFIG REQUIRED)
 +        find_package(VulkanMemoryAllocator CONFIG REQUIRED)
++        list(APPEND VULKAN_LIBS Vulkan::Vulkan)
 +        list(APPEND VULKAN_LIBS unofficial::shaderc::shaderc)
 +        list(APPEND VULKAN_LIBS unofficial::spirv-reflect)
 +        list(APPEND VULKAN_LIBS GPUOpen::VulkanMemoryAllocator)
      endif()
      # --Opensubdiv
--    set(OPENSUBDIV_USE_GPU ${PXR_BUILD_GPU_SUPPORT})
--    find_package(OpenSubdiv 3 REQUIRED)
-+    find_package(OpenSubdiv 3 CONFIG REQUIRED)
-+    set(OPENSUBDIV_LIBRARIES OpenSubdiv::osdCPU_static)
-+    set(OPENSUBDIV_OSDCPU_LIBRARY OpenSubdiv::osdCPU_static) # For compatibility
-+    if(PXR_ENABLE_GL_SUPPORT)
-+        list(APPEND OPENSUBDIV_LIBRARIES OpenSubdiv::osdGPU_static)
-+    endif()
-     # --Ptex
-     if (PXR_ENABLE_PTEX_SUPPORT)
-         find_package(PTex REQUIRED)
 diff --git a/pxr/imaging/hgiVulkan/CMakeLists.txt b/pxr/imaging/hgiVulkan/CMakeLists.txt
-index 97e4228..3eb83be 100644
+index 00ad75448..dff475436 100644
 --- a/pxr/imaging/hgiVulkan/CMakeLists.txt
 +++ b/pxr/imaging/hgiVulkan/CMakeLists.txt
-@@ -46,8 +46,6 @@ pxr_library(hgiVulkan
+@@ -40,14 +40,11 @@ pxr_library(hgiVulkan
+         shaderProgram
+         shaderSection
+         texture
+-        vk_mem_alloc
+ 
+     PUBLIC_HEADERS
          api.h
          vulkan.h
  
@@ -64,6 +67,46 @@ index 97e4228..3eb83be 100644
  
      RESOURCE_FILES
          plugInfo.json
+diff --git a/pxr/imaging/hgiVulkan/shaderCompiler.cpp b/pxr/imaging/hgiVulkan/shaderCompiler.cpp
+index cb527e4d7..ee8e3be25 100644
+--- a/pxr/imaging/hgiVulkan/shaderCompiler.cpp
++++ b/pxr/imaging/hgiVulkan/shaderCompiler.cpp
+@@ -10,7 +10,7 @@
+ #include "pxr/imaging/hgiVulkan/device.h"
+ #include "pxr/imaging/hgiVulkan/diagnostic.h"
+ #include "pxr/imaging/hgiVulkan/shaderCompiler.h"
+-#include "pxr/imaging/hgiVulkan/spirv_reflect.h"
++#include <spirv_reflect.h>
+ 
+ #include <shaderc/shaderc.hpp>
+ 
+diff --git a/pxr/imaging/hgiVulkan/device.cpp b/pxr/imaging/hgiVulkan/device.cpp
+index 08bf8e0a7..bfc368169 100644
+--- a/pxr/imaging/hgiVulkan/device.cpp
++++ b/pxr/imaging/hgiVulkan/device.cpp
+@@ -11,7 +11,8 @@
+ #include "pxr/imaging/hgiVulkan/hgi.h"
+ #include "pxr/imaging/hgiVulkan/instance.h"
+ #include "pxr/imaging/hgiVulkan/pipelineCache.h"
+-#include "pxr/imaging/hgiVulkan/vk_mem_alloc.h"
++#define VMA_IMPLEMENTATION
++#include <vk_mem_alloc.h>
+ 
+ #include "pxr/base/tf/diagnostic.h"
+ 
+diff --git a/pxr/imaging/hgiVulkan/vulkan.h b/pxr/imaging/hgiVulkan/vulkan.h
+index 1f527b9cb..b5ffd314f 100644
+--- a/pxr/imaging/hgiVulkan/vulkan.h
++++ b/pxr/imaging/hgiVulkan/vulkan.h
+@@ -24,7 +24,7 @@
+ 
+ #include <vulkan/vulkan.h>
+ 
+-#include "pxr/imaging/hgiVulkan/vk_mem_alloc.h"
++#include <vk_mem_alloc.h>
+ 
+ // Use the default allocator (nullptr)
+ inline VkAllocationCallbacks*
 diff --git a/pxr/imaging/plugin/hioOiio/CMakeLists.txt b/pxr/imaging/plugin/hioOiio/CMakeLists.txt
 index 0a055b7..de4b73a 100644
 --- a/pxr/imaging/plugin/hioOiio/CMakeLists.txt
@@ -85,15 +128,14 @@ index 0a055b7..de4b73a 100644
  pxr_plugin(hioOiio
      LIBRARIES
 diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
-index 041cd8c..2f89d69 100644
+index a7e566bac..559f50b9c 100644
 --- a/pxr/pxrConfig.cmake.in
 +++ b/pxr/pxrConfig.cmake.in
-@@ -20,6 +20,27 @@ include(CMakeFindDependencyMacro)
+@@ -18,6 +18,26 @@ set(PXR_VERSION "@PXR_VERSION@")
  
- find_dependency(TBB CONFIG)
+ include(CMakeFindDependencyMacro)
  
 +if(@PXR_BUILD_IMAGING@)
-+    find_dependency(OpenSubdiv 3 CONFIG)
 +    if(@PXR_BUILD_OPENIMAGEIO_PLUGIN@)
 +        find_dependency(OpenImageIO CONFIG)
 +    endif()
@@ -116,7 +158,7 @@ index 041cd8c..2f89d69 100644
  # If Python support was enabled for this USD build, find the import
  # targets by invoking the appropriate FindPython module. Use the same
  # LIBRARY and INCLUDE_DIR settings from the original build if they
-@@ -75,17 +96,17 @@ if(@Imath_FOUND@)
+@@ -75,17 +95,17 @@ if(@Imath_FOUND@)
              set(Imath_DIR [[@Imath_DIR@]])
          endif()
      endif()

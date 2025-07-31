@@ -1,0 +1,15 @@
+diff --git a/vkconfig_gui/CMakeLists.txt b/vkconfig_gui/CMakeLists.txt
+index 2dbaabead..b9d836139 100644
+--- a/vkconfig_gui/CMakeLists.txt
++++ b/vkconfig_gui/CMakeLists.txt
+@@ -59,8 +59,8 @@ endif()
+         get_filename_component(QT_BIN_DIR "${QMAKE_EXE}" DIRECTORY)
+         find_program(WINDEPLOYQT_EXE windeployqt HINTS "${QT_BIN_DIR}")
+ 
+-        message(STATUS "Will run ${WINDEPLOYQT_EXE} at ${CMAKE_INSTALL_FULL_BINDIR}/vkconfig-gui.exe")
+-        install(CODE "execute_process(COMMAND ${WINDEPLOYQT_EXE} ${CMAKE_INSTALL_FULL_BINDIR}/vkconfig-gui.exe)")
++        # message(STATUS "Will run ${WINDEPLOYQT_EXE} at ${CMAKE_INSTALL_FULL_BINDIR}/vkconfig-gui.exe")
++        # install(CODE "execute_process(COMMAND ${WINDEPLOYQT_EXE} ${CMAKE_INSTALL_FULL_BINDIR}/vkconfig-gui.exe)")
+     endif()
+ else()
+     include(macOS/vkconfig.cmake)

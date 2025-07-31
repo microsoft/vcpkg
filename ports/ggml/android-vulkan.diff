@@ -1,0 +1,14 @@
+diff --git a/src/ggml-vulkan/CMakeLists.txt b/src/ggml-vulkan/CMakeLists.txt
+index b97e7bf9..6de2b2fc 100644
+--- a/src/ggml-vulkan/CMakeLists.txt
++++ b/src/ggml-vulkan/CMakeLists.txt
+@@ -48,6 +48,9 @@ if (Vulkan_FOUND)
+                              ggml-vulkan.cpp
+                              ../../include/ggml-vulkan.h
+                             )
++    if(ANDROID)
++        target_compile_definitions(ggml-vulkan PUBLIC VULKAN_HPP_DISPATCH_LOADER_DYNAMIC=1)
++    endif()
+ 
+     set(VULKAN_SHADER_GEN_CMAKE_ARGS "")
+ 

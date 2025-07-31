@@ -6,7 +6,7 @@ index d81ac1d..9f97998 100644
    set(googletest_STATIC_LIBRARIES GTest::gtest)
  endif()
  
-+find_package(protobuf CONFIG REQUIRED)
++find_package(Protobuf CONFIG REQUIRED)
  if((ONNX_USE_LITE_PROTO AND TARGET protobuf::libprotobuf-lite) OR ((NOT ONNX_USE_LITE_PROTO) AND TARGET protobuf::libprotobuf))
    # Sometimes we need to use protoc compiled for host architecture while linking
    # libprotobuf against target architecture. See https://github.com/caffe2/caffe
@@ -22,7 +22,7 @@ index d588f8a..dbd4398 100644
 -set(Protobuf_INCLUDE_DIR "@PROTOBUF_INCLUDE_DIR@")
 -find_package(Protobuf REQUIRED)
 +include(CMakeFindDependencyMacro)
-+find_dependency(protobuf CONFIG)
++find_dependency(Protobuf CONFIG)
  
  # import targets
  include ("${CMAKE_CURRENT_LIST_DIR}/ONNXTargets.cmake")

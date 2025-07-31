@@ -3,7 +3,7 @@ string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS https://download.gimp.org/pub/gegl/${VERSION_MAJOR_MINOR}/gegl-${VERSION}.tar.xz
     FILENAME "gegl-${VERSION}.tar.xz"
-    SHA512 95a6ef4866b90c9ce950af2e8e1e465044bc8f0e0065884b103c7d86d7a56f5b9142a90abc4676675add46e69b811f5b8225eb7676454d5c49d7cd19e4edab7e
+    SHA512 bf4801588abe8b568ae3d1daafa97af28516bbbdd44d2a0798c87412b49301f621db3cf1c7a3ec33f19d96ab4dbd37d80824f04460116a896dd7415aa0d5229d
 )
 
 vcpkg_extract_source_archive(

@@ -39,7 +39,8 @@ vcpkg_from_github(
         opencascade-7.8.0.patch
         no-libharu-for-ioexport.patch
         no-libproj-for-netcdf.patch
-		fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
+        octree.patch
+        fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
 )
 
 # =============================================================================
@@ -252,6 +253,12 @@ if("openmp" IN_LIST FEATURES)
 	list(APPEND ADDITIONAL_OPTIONS
 	    -DVTK_SMP_IMPLEMENTATION_TYPE=OpenMP
 	)
+endif()
+
+if("debugleaks" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_DEBUG_LEAKS=ON
+    )
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

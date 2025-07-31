@@ -1,8 +1,8 @@
 {
   "name": "ereignis",
-  "version": "2.3",
+  "version": "4.3",
   "description": "A thread-safe C++17 Event Library",
-  "homepage": "https://github.com/Soundux/ereignis",
+  "homepage": "https://github.com/Curve/ereignis",
   "license": "MIT",
   "dependencies": [
     {

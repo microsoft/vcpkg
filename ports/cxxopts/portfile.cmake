@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jarro2783/cxxopts
@@ -6,20 +8,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(VCPKG_BUILD_TYPE release) # header-only port
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCXXOPTS_BUILD_EXAMPLES=OFF
         -DCXXOPTS_BUILD_TESTS=OFF
         -DCXXOPTS_ENABLE_WARNINGS=OFF
+        -DCXXOPTS_CMAKE_DIR=share/cxxopts
 )
-
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/cxxopts)
-
+vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")

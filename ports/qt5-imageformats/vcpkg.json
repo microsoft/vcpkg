@@ -1,6 +1,6 @@
 {
   "name": "qt5-imageformats",
-  "version": "5.15.16",
+  "version": "5.15.17",
   "description": "The Qt Image Formats add-on module provides optional support for other image file formats.",
   "license": null,
   "dependencies": [

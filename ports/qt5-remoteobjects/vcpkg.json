@@ -1,6 +1,6 @@
 {
   "name": "qt5-remoteobjects",
-  "version": "5.15.16",
+  "version": "5.15.17",
   "description": "Qt Remote Objects (QtRO) is an Inter-Process Communication (IPC) module developed for Qt. This module extends Qt's existing functionalities to enable information exchange between processes or computers, easily.",
   "license": null,
   "dependencies": [
