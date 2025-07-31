@@ -3,14 +3,14 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF 9a4acb374565f4146b8d6eb1cffdcd7d437d1ba2
-    SHA512 091a794baf669616ee20dc19d0232e64456c07cd50cbe6d81aa68b98f178801be1b62da9eea417e7a563a6b73bb3136777f860c756270569676fb760f2e751ed
+    REF 44ea6eda2ad8a94663597cbe85e37de98bd99269
+    SHA512 be93d44f87ef25f7c0bb37ca8020de7714ec89b4f92677d7b631a2dcad9db38789e59adb7a6af0d1f5f550c570d875ea9ed69833f7d7af76ef8cb9159f0a7c23
     HEAD_REF master
     PATCHES
-        ggml-test.diff
+        android-vulkan.diff
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}/examples/simple"
+    SOURCE_PATH "${SOURCE_PATH}/examples/test-cmake"
 )
 vcpkg_cmake_build()

@@ -8,6 +8,20 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # Force Z7 debug information format for MSVC builds
+    vcpkg_replace_string("${SOURCE_PATH}/vcnet/mxml4.vcxproj"
+      "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+      "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string("${SOURCE_PATH}/vcnet/mxml4.vcxproj"
+      "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
+      "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    )
+    vcpkg_replace_string("${SOURCE_PATH}/vcnet/mxml4.vcxproj"
+        "<MinimalRebuild>true</MinimalRebuild>"
+        "<MinimalRebuild>false</MinimalRebuild>"
+    )
+
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "vcnet/mxml4.vcxproj"
