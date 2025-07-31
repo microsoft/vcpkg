@@ -4,7 +4,6 @@
   "description": "Yet another protocol library like google protocol buffers, but simple and fast",
   "homepage": "https://github.com/cloudwu/sproto",
   "license": "MIT",
-  "supports": "!ios & !android & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
