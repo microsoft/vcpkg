@@ -12,8 +12,16 @@ vcpkg_from_github(
         consume-vcpkg-eigen3.patch
 )
 
-file(COPY "${SOURCE_PATH}/img" DESTINATION "${CURRENT_PACKAGES_DIR}/include/img")
-file(COPY "${SOURCE_PATH}/vcg/"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/vcg")
-file(COPY "${SOURCE_PATH}/wrap/"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/wrap" FILES_MATCHING PATTERN "*.h")
+# Remove non-header folders)
+file(REMOVE_RECURSE 
+    "${SOURCE_PATH}/wrap/gcache/docs" 
+    "${SOURCE_PATH}/wrap/gl/splatting_apss/shaders" 
+    "${SOURCE_PATH}/wrap/igl/sample" 
+    "${SOURCE_PATH}/wrap/nanoply"
+)
+
+file(COPY "${SOURCE_PATH}/img"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/img")
+file(COPY "${SOURCE_PATH}/vcg"  DESTINATION "${CURRENT_PACKAGES_DIR}/include/vcg")
+file(COPY "${SOURCE_PATH}/wrap" DESTINATION "${CURRENT_PACKAGES_DIR}/include/wrap" FILES_MATCHING PATTERN "*.h")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
