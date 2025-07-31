@@ -9084,6 +9084,10 @@
       "baseline": "2.007.010",
       "port-version": 0
     },
+    "sproto": {
+      "baseline": "2024-07-08",
+      "port-version": 0
+    },
     "sprout": {
       "baseline": "2019-06-20",
       "port-version": 2
