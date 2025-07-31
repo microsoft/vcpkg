@@ -51,6 +51,7 @@
             "lapack"
           ]
         },
+        "suitesparse-config",
         {
           "name": "suitesparse-cholmod",
           "features": [

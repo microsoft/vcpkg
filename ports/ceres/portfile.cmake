@@ -6,12 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001_cmakelists_fixes.patch
-        0002_use_glog_target.patch
-        0003_fix_exported_ceres_config.patch
         0004_remove_broken_fake_ba_jac.patch
-        0005_find_package_required.patch
-        0006_use_official_suitesparse_config.patch
-        0007_use_metis_config.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
@@ -28,7 +23,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "suitesparse"       SUITESPARSE
 )
 
-if(VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP)
     list(APPEND FEATURE_OPTIONS -DMINIGLOG=ON)
 endif()
 
@@ -55,9 +50,13 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DPROVIDE_UNINSTALL_TARGET=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
+        -DVCPKG_LOCK_FIND_PACKAGE_CUDAToolkit=ON
         -DVCPKG_LOCK_FIND_PACKAGE_gflags=OFF  # No direct use except examples+tests
+        -DVCPKG_LOCK_FIND_PACKAGE_LAPACK=ON
     MAYBE_UNUSED_VARIABLES
         MSVC_USE_STATIC_CRT
+        VCPKG_LOCK_FIND_PACKAGE_CUDAToolkit
+        VCPKG_LOCK_FIND_PACKAGE_LAPACK
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
