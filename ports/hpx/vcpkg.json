@@ -7,7 +7,7 @@
   ],
   "homepage": "https://github.com/STEllAR-GROUP/hpx",
   "license": "BSL-1.0",
-  "supports": "!(windows & x86)",
+  "supports": "!(windows & arm64) & !(windows & staticcrt)",
   "dependencies": [
     "asio",
     "boost-accumulators",
