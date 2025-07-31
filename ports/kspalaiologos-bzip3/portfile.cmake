@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/bzip3)
+vcpkg_cmake_config_fixup(PACKAGE_NAME bzip3 CONFIG_PATH lib/cmake/bzip3)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
