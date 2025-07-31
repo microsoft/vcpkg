@@ -1,6 +1,4 @@
 # Set policies for this port
-set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
 
 vcpkg_from_github(
@@ -26,8 +24,7 @@ vcpkg_cmake_install()
 # Remove debug includes
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Remove empty lib directories as suggested by the warning
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/lib")
+# Note: sproto creates static libraries, so lib directories should be kept
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

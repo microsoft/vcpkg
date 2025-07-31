@@ -4,7 +4,7 @@ project(sproto C)
 set(CMAKE_C_STANDARD 99)
 
 # Add the main library
-add_library(sproto sproto.c)
+add_library(sproto STATIC sproto.c)
 target_include_directories(sproto PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>

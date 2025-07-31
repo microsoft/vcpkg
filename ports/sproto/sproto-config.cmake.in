@@ -2,4 +2,14 @@
 
 include("${CMAKE_CURRENT_LIST_DIR}/sproto-targets.cmake")
 
+# Provide the sproto target
+set_target_properties(unofficial-sproto::sproto PROPERTIES
+    IMPORTED_GLOBAL TRUE
+)
+
+# Create alias for backward compatibility
+if(NOT TARGET sproto::sproto)
+    add_library(sproto::sproto ALIAS unofficial-sproto::sproto)
+endif()
+
 check_required_components(sproto)
