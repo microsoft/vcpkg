@@ -14,10 +14,10 @@ index b912a55..401c6ca 100644
  
  
 -#include "status-code/include/status-code/posix_code.hpp"
-+#include "status-code/posix_code.hpp"
++#include <status-code/posix_code.hpp>
  #ifdef _WIN32
 -#include "status-code/include/status-code/win32_code.hpp"
-+#include "status-code/win32_code.hpp"
++#include <status-code/win32_code.hpp>
  #endif
  
  #include <algorithm>
