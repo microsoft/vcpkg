@@ -8,20 +8,7 @@ vcpkg_from_github(
     PATCHES
         cmake-dependencies.patch
         fix-calculate-minloglevel.patch
-
-        # cmake-fixes.patch
-        # more-fixes.patch
-        # fix-build.patch
-        # clang-cl.patch
-        # cuda-adjustments.patch
-        # fix-api-export.patch
-        # fxdiv.patch
-        # protoc.patch
-        # fix-sleef.patch
-        # fix-glog.patch
-        # fix-calculate-minloglevel.patch
-        # force-cuda-include.patch
-        # fix-aten-cutlass.patch
+        third-party.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
@@ -155,6 +142,7 @@ vcpkg_cmake_configure(
         -DATEN_NO_TEST=ON
         -DUSE_SYSTEM_LIBS=ON
         -DUSE_METAL=OFF
+        -DUSE_FLASH_ATTENTION=OFF
         -DUSE_PYTORCH_METAL=OFF
         -DUSE_PYTORCH_METAL_EXPORT=OFF
         -DUSE_FBGEMM=ON

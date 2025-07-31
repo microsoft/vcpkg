@@ -28,6 +28,7 @@
     "onnx",
     "onnx-optimizer",
     "opencl",
+    "cpp-httplib",
     "pocketfft",
     "protobuf",
     {
