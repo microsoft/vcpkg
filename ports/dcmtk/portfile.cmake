@@ -60,7 +60,10 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DDCMTK_USE_CXX11_STL=ON
+        -DDCMTK_CXX11_FLAGS="-std=c++14"
         -DCMAKE_CXX_STANDARD=17
+        -DCMAKE_CXX_FLAGS="-std=c++14 /Zc:__cplusplus"
         -DCMAKE_INSTALL_DOCDIR=share/${PORT}/doc
         -DDCMTK_DEFAULT_DICT=${DCMTK_DEFAULT_DICT}
         -DCMAKE_DISABLE_FIND_PACKAGE_BISON=ON

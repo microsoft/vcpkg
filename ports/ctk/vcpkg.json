@@ -5,6 +5,7 @@
   "homepage": "https://commontk.org/",
   "license": "Apache-2.0",
   "dependencies": [
+    "dcmtk",
     "qt5-multimedia",
     "qt5-script",
     "qt5-tools",
