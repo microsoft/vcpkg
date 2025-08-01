@@ -1,31 +1,38 @@
 diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
-index e76dff6..eb4edc0 100644
+index f044d22d4d..a78b9aa1e9 100644
 --- a/build/cmake/init.cmake
 +++ b/build/cmake/init.cmake
-@@ -156,7 +156,7 @@ if(WIN32)
-     endif()
- endif()
+@@ -200,12 +200,12 @@ endif()
  
--if(WIN32_MSVC_NAMING)
-+if(0)
+ if(WIN32_MSVC_NAMING)
      if(wxBUILD_SHARED)
-         set(lib_suffix "_dll")
+-        set(lib_suffix "_dll")
++        # set(lib_suffix "_dll")
      else()
+-        set(lib_suffix "_lib")
++        # set(lib_suffix "_lib")
+     endif()
+ 
+-    set(wxPLATFORM_LIB_DIR "${wxCOMPILER_PREFIX}${wxARCH_SUFFIX}${lib_suffix}")
++    # set(wxPLATFORM_LIB_DIR "${wxCOMPILER_PREFIX}${wxARCH_SUFFIX}${lib_suffix}")
+ 
+     # Generator expression to not create different Debug and Release directories
+     set(GEN_EXPR_DIR "$<1:/>")
 diff --git a/build/cmake/install.cmake b/build/cmake/install.cmake
-index 384c683..a662a48 100644
+index a373983043..2e1ace7bf9 100644
 --- a/build/cmake/install.cmake
 +++ b/build/cmake/install.cmake
-@@ -41,7 +41,7 @@ else()
+@@ -63,7 +63,7 @@ else()
  
      install(DIRECTORY DESTINATION "bin")
      install(CODE "execute_process( \
 -        COMMAND ${CMAKE_COMMAND} -E create_symlink \
 +        COMMAND ${CMAKE_COMMAND} -E copy \
-         \"${CMAKE_INSTALL_PREFIX}/lib/wx/config/${wxBUILD_FILE_ID}\" \
+         \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/wx/config/${wxBUILD_FILE_ID}\" \
          \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/wx-config\" \
          )"
 diff --git a/build/cmake/utils/CMakeLists.txt b/build/cmake/utils/CMakeLists.txt
-index dbed8cc..f1da8e3 100644
+index 15f4339ef9..f93849e025 100644
 --- a/build/cmake/utils/CMakeLists.txt
 +++ b/build/cmake/utils/CMakeLists.txt
 @@ -39,7 +39,7 @@ if(wxUSE_XRC)
@@ -34,6 +41,6 @@ index dbed8cc..f1da8e3 100644
          install(CODE "execute_process( \
 -            COMMAND ${CMAKE_COMMAND} -E create_symlink \
 +            COMMAND ${CMAKE_COMMAND} -E copy \
-             \"${CMAKE_INSTALL_PREFIX}/bin/${wxrc_output_name}${EXE_SUFFIX}\" \
+             \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/${wxrc_output_name}${EXE_SUFFIX}\" \
              \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/wxrc${EXE_SUFFIX}\" \
              )"
