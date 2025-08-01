@@ -22,7 +22,6 @@
     },
     "cuda": {
       "description": "Build the CUDA backend of Ginkgo",
-      "supports": "!windows",
       "dependencies": [
         "cuda"
       ]
