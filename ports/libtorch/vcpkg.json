@@ -9,14 +9,12 @@
     "cpp-httplib",
     "cpuinfo",
     "eigen3",
-    "fftw3",
     "flatbuffers",
     {
       "name": "flatbuffers",
       "host": true
     },
     "fmt",
-    "foxi",
     "foxi",
     "fp16",
     "gemmlowp",
@@ -68,6 +66,7 @@
       "dependencies": [
         "cuda",
         "cudnn",
+        "cudnn-frontend",
         {
           "name": "gloo",
           "features": [
