@@ -11,7 +11,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        run-mk-ops.diff
+        #run-mk-ops.diff
         dep_pc_names.patch
 )
 
