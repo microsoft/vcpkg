@@ -1,6 +1,7 @@
 {
   "name": "octave",
   "version": "10.2.0",
+  "port-version": 1,
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
   "documentation": "https://docs.octave.org/latest/",
@@ -113,6 +114,31 @@
       "dependencies": [
         {
           "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "gui": {
+      "description": "build with gui support",
+      "dependencies": [
+        {
+          "name": "freeglut",
+          "platform": "linux"
+        },
+        {
+          "name": "octave",
+          "default-features": false,
+          "features": [
+            "fontconfig",
+            "freetype"
+          ]
+        },
+        {
+          "name": "qt5-base",
+          "default-features": false
+        },
+        {
+          "name": "qt5-tools",
           "default-features": false
         }
       ]
