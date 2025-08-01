@@ -1581,6 +1581,7 @@ openturns:arm64-windows = cascade
 openturns:x64-uwp = cascade
 openvdb:x64-uwp = cascade
 openvdb[ax] = cascade 
+openvdb[ax](osx) = feature-fails
 openvdb[nanovdb]:arm64-uwp = cascade
 openvdb[nanovdb](osx) = cascade
 openvino:arm64-uwp = cascade
