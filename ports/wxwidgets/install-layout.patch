@@ -1,16 +1,23 @@
 diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
-index f044d22d4d..48fc5ad072 100644
+index f044d22d4d..a78b9aa1e9 100644
 --- a/build/cmake/init.cmake
 +++ b/build/cmake/init.cmake
-@@ -198,7 +198,7 @@ if(WIN32)
-     endif()
- endif()
+@@ -200,12 +200,12 @@ endif()
  
--if(WIN32_MSVC_NAMING)
-+if(0)
+ if(WIN32_MSVC_NAMING)
      if(wxBUILD_SHARED)
-         set(lib_suffix "_dll")
+-        set(lib_suffix "_dll")
++        # set(lib_suffix "_dll")
      else()
+-        set(lib_suffix "_lib")
++        # set(lib_suffix "_lib")
+     endif()
+ 
+-    set(wxPLATFORM_LIB_DIR "${wxCOMPILER_PREFIX}${wxARCH_SUFFIX}${lib_suffix}")
++    # set(wxPLATFORM_LIB_DIR "${wxCOMPILER_PREFIX}${wxARCH_SUFFIX}${lib_suffix}")
+ 
+     # Generator expression to not create different Debug and Release directories
+     set(GEN_EXPR_DIR "$<1:/>")
 diff --git a/build/cmake/install.cmake b/build/cmake/install.cmake
 index a373983043..2e1ace7bf9 100644
 --- a/build/cmake/install.cmake
