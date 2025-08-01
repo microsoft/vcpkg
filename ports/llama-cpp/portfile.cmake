@@ -2,58 +2,65 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/llama.cpp
     REF b${VERSION}
-    SHA512 e093f4c7d4b2de425932bb4960683527a8a3bba242132c2f5e5bfed8480f0e336a06f97baf2d20ee591c6deee7535e159d40884a5e3f7caf0ae0967b8a046850
+    SHA512 39c9a5358d561a4c6675e24c67d810573d7589f9936d7a32e19ea99a7393fa435223c60824c6dad9ac3f1507d327fff704a6000988ddf60faeb219dace876a51
     HEAD_REF master
     PATCHES
-        0001-external-ggml.patch
+        cmake-config.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/ggml/include" "${SOURCE_PATH}/ggml/src")
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/ggml")
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        download    LLAMA_CURL
+        tools       LLAMA_BUILD_TOOLS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-      -DGGML_CCACHE=OFF
-      -DLLAMA_BUILD_TESTS=OFF
-      -DLLAMA_BUILD_EXAMPLES=OFF
-      -DLLAMA_ALL_WARNINGS=OFF
-      ${FEATURE_OPTIONS}
+        ${options}
+        -DGGML_CCACHE=OFF
+        -DLLAMA_ALL_WARNINGS=OFF
+        -DLLAMA_BUILD_TESTS=OFF
+        -DLLAMA_BUILD_EXAMPLES=OFF
+        -DLLAMA_BUILD_SERVER=OFF
+        -DLLAMA_USE_SYSTEM_GGML=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Git=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME llama CONFIG_PATH "lib/cmake/llama")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/llama")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if (VCPKG_LIBRARY_LINKAGE MATCHES "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/llama/llama-config.cmake"
-        "set_and_check(LLAMA_BIN_DIR     \"${PACKAGE_PREFIX_DIR}/bin\")"
-        ""
-        IGNORE_UNCHANGED
-    )
-endif()
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/llama/llama-config.cmake"
-    "add_library(llama UNKNOWN IMPORTED)"
-    "if (NOT TARGET llama)
-    add_library(llama UNKNOWN IMPORTED)
-endif()
-"
-)
-
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(INSTALL "${SOURCE_PATH}/gguf-py/gguf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/gguf-py")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/convert_hf_to_gguf.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/convert-hf-to-gguf.py")
-file(INSTALL "${SOURCE_PATH}/gguf-py" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-if (NOT VCPKG_BUILD_TYPE)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/convert_hf_to_gguf.py")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/convert_hf_to_gguf.py")
+
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            llama-batched-bench
+            llama-bench
+            llama-cli
+            llama-cvector-generator
+            llama-export-lora
+            llama-gguf-split
+            llama-imatrix
+            llama-mtmd-cli
+            llama-perplexity
+            llama-quantize
+            llama-run
+            llama-tokenize
+            llama-tts
+        AUTO_CLEAN
+    )
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
-if (VCPKG_LIBRARY_LINKAGE MATCHES "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+set(gguf-py-license "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gguf-py LICENSE")
+file(COPY_FILE "${SOURCE_PATH}/gguf-py/LICENSE" "${gguf-py-license}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${gguf-py-license}")
