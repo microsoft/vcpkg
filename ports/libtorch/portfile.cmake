@@ -9,6 +9,7 @@ vcpkg_from_github(
         cmake-dependencies.patch
         fix-calculate-minloglevel.patch
         third-party.patch
+        more-thirdparty.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files

@@ -1,0 +1,118 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f3fee2f..1a78ed4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1313,10 +1313,7 @@ if(BUILD_SHARED_LIBS)
+     DIRECTORY ${PROJECT_SOURCE_DIR}/cmake/Modules_CUDA_fix
+     DESTINATION share/cmake/Caffe2/
+     COMPONENT dev)
+-  install(
+-    FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUDAToolkit.cmake
+-    DESTINATION share/cmake/Caffe2/
+-    COMPONENT dev)
++ 
+   install(
+     FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
+     DESTINATION share/cmake/Caffe2/
+diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
+index 809f073..7068534 100644
+--- a/aten/src/ATen/CMakeLists.txt
++++ b/aten/src/ATen/CMakeLists.txt
+@@ -515,7 +515,7 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
+     list(APPEND ATen_THIRD_PARTY_INCLUDE ${CMAKE_BINARY_DIR}/include)
+     link_directories(${CMAKE_BINARY_DIR}/sleef/lib)
+   else()
+-    add_library(sleef SHARED IMPORTED)
++    add_library(sleef UNKNOWN IMPORTED)
+     find_library(SLEEF_LIBRARY sleef)
+     if(NOT SLEEF_LIBRARY)
+       message(FATAL_ERROR "Cannot find sleef")
+@@ -523,7 +523,7 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
+     message("Found sleef: ${SLEEF_LIBRARY}")
+     set_target_properties(sleef PROPERTIES IMPORTED_LOCATION "${SLEEF_LIBRARY}")
+   endif()
+-  list(APPEND ATen_CPU_DEPENDENCY_LIBS sleef)
++  list(APPEND ATen_CPU_DEPENDENCY_LIBS ${SLEEF_LIBRARY})
+ 
+   if(NOT MSVC)
+     set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})
+diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
+index 42dff2a..966a7d2 100644
+--- a/c10/CMakeLists.txt
++++ b/c10/CMakeLists.txt
+@@ -95,7 +95,7 @@ if(NOT BUILD_LIBTORCHLESS)
+     target_link_libraries(c10 PUBLIC glog::glog)
+   endif()
+   target_link_libraries(c10 PRIVATE fmt::fmt-header-only)
+-  target_link_libraries(c10 PRIVATE nlohmann)
++  target_link_libraries(c10 PRIVATE nlohmann_json)
+ 
+   if(C10_USE_NUMA)
+     message(STATUS "NUMA paths:")
+diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
+index bba6ac5..1e9b327 100644
+--- a/caffe2/CMakeLists.txt
++++ b/caffe2/CMakeLists.txt
+@@ -1134,9 +1134,7 @@ if(USE_XPU)
+   endif()
+ endif()
+ 
+-if(NOT MSVC AND USE_XNNPACK)
+-  TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
+-endif()
++
+ 
+ # ==========================================================
+ # formerly-libtorch flags
+@@ -1652,7 +1650,7 @@ if(APPLE AND USE_PYTORCH_METAL)
+ endif()
+ 
+ 
+-target_link_libraries(torch_cpu PRIVATE flatbuffers)
++target_link_libraries(torch_cpu PRIVATE flatbuffers::flatbuffers)
+ 
+ # Note [Global dependencies]
+ # Some libraries (e.g. OpenMPI) like to dlopen plugins after they're initialized,
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 60581e0..b2bc5d0 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -556,20 +556,19 @@ if(FALSE)
+ 
+   include_directories(SYSTEM ${XNNPACK_INCLUDE_DIR})
+   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
+-elseif(FALSE)
+-  add_library(XNNPACK SHARED IMPORTED)
+-  add_library(microkernels-prod SHARED IMPORTED)
+-  find_library(XNNPACK_LIBRARY XNNPACK)
+-  find_library(microkernels-prod_LIBRARY microkernels-prod)
++else()
++  add_library(XNNPACK UNKNOWN IMPORTED)
++  add_library(microkernels-prod UNKNOWN IMPORTED)
++  find_library(XNNPACK_LIBRARY XNNPACK REQUIRED)
++  find_library(microkernels-prod_LIBRARY microkernels-prod REQUIRED)
+   set_property(TARGET XNNPACK PROPERTY IMPORTED_LOCATION "${XNNPACK_LIBRARY}")
+   set_property(TARGET microkernels-prod PROPERTY IMPORTED_LOCATION "${microkernels-prod_LIBRARY}")
+-  if(NOT XNNPACK_LIBRARY or NOT microkernels-prod_LIBRARY)
+-    message(FATAL_ERROR "Cannot find XNNPACK")
+-  endif()
++
+   message("-- Found XNNPACK: ${XNNPACK_LIBRARY}")
++  message("-- Found microkernels-prod: ${microkernels-prod_LIBRARY}")
+   list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
+ endif()
+-list(APPEND Caffe2_DEPENDENCY_LIBS xnnpack microkernels-prod)
++
+ 
+ # ---[ Vulkan deps
+ if(USE_VULKAN)
+@@ -756,6 +755,9 @@ endif()
+ 
+ if(USE_FBGEMM)
+   caffe2_update_option(USE_FBGEMM ON)
++  find_package(cpuinfo REQUIRED)
++  find_package(asmjit REQUIRED)
++  find_package(fbgemmLibrary REQUIRED)
+   list(APPEND Caffe2_DEPENDENCY_LIBS fbgemm)
+ 
+ else()
