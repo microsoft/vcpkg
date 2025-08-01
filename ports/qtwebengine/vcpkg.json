@@ -2,123 +2,24 @@
   "$comment": "x86-windows is not within the upstream support matrix of Qt6",
   "name": "qtwebengine",
   "version": "6.8.3",
-  "port-version": 1,
-  "description": "Qt WebEngine provides functionality for rendering regions of dynamic web content.",
+  "port-version": 2,
+  "description": "Qt modules for rendering web and PDF content.",
   "homepage": "https://www.qt.io/",
   "license": null,
-  "supports": "!static & ((!x86 & !arm & native) | !windows)",
   "dependencies": [
     {
-      "name": "ffmpeg",
-      "platform": "!windows"
-    },
-    {
-      "name": "fontconfig",
-      "platform": "!windows"
-    },
-    {
-      "name": "freetype",
-      "platform": "!windows"
-    },
-    {
-      "name": "glib",
-      "platform": "!windows"
-    },
-    {
-      "name": "gperf",
-      "host": true
-    },
-    {
-      "name": "harfbuzz",
-      "platform": "!windows"
-    },
-    {
-      "name": "icu",
-      "platform": "!windows"
-    },
-    {
-      "name": "libevent",
-      "platform": "!windows"
-    },
-    {
-      "name": "libjpeg-turbo",
-      "platform": "!windows"
-    },
-    {
-      "name": "libpng",
-      "platform": "!windows"
-    },
-    {
-      "name": "libvpx",
-      "platform": "!windows"
-    },
-    {
-      "name": "libwebp",
-      "platform": "!windows"
-    },
-    {
-      "name": "libxml2",
-      "default-features": false,
-      "features": [
-        "icu"
-      ],
-      "platform": "!windows"
-    },
-    {
-      "name": "minizip",
-      "platform": "!windows"
-    },
-    "opengl",
-    {
-      "name": "opus",
-      "platform": "!windows"
-    },
-    {
-      "name": "protobuf",
-      "platform": "!windows"
-    },
-    {
       "name": "qtbase",
-      "default-features": false,
-      "features": [
-        "gui",
-        "network",
-        "widgets"
-      ]
-    },
-    {
-      "name": "qtdeclarative",
       "default-features": false
+    }
+  ],
+  "default-features": [
+    {
+      "name": "pdf",
+      "platform": "android | ios | (linux & !x86) | osx | (windows & x64 & !static)"
     },
     {
-      "name": "qttools",
-      "default-features": false
-    },
-    {
-      "$comment": "Requires GN host tool build by the port itself! (special version check)",
-      "name": "qtwebengine",
-      "host": true,
-      "default-features": false
-    },
-    {
-      "name": "re2",
-      "platform": "!windows"
-    },
-    {
-      "name": "snappy",
-      "platform": "!windows"
-    },
-    {
-      "name": "vcpkg-get-python-packages",
-      "host": true
-    },
-    {
-      "name": "vcpkg-tool-nodejs",
-      "host": true
-    },
-    {
-      "name": "zlib",
-      "platform": "!windows"
+      "name": "webengine",
+      "platform": "!static & ((linux & !x86) | osx | (windows & x64))"
     }
   ],
   "features": {
@@ -128,14 +29,169 @@
         {
           "name": "qtlocation",
           "default-features": false
+        },
+        {
+          "name": "qtwebengine",
+          "default-features": false,
+          "features": [
+            "webengine"
+          ]
+        }
+      ]
+    },
+    "pdf": {
+      "description": "The Qt PDF module contains classes and functions for rendering PDF documents.",
+      "supports": "android | ios | linux | osx | (windows & x64 & !static)",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "platform": "!windows"
+        },
+        {
+          "name": "glib",
+          "platform": "!windows"
+        },
+        {
+          "name": "gperf",
+          "host": true
+        },
+        {
+          "name": "harfbuzz",
+          "platform": "!windows"
+        },
+        {
+          "name": "icu",
+          "platform": "!ios & !osx & !windows"
+        },
+        {
+          "name": "lcms",
+          "platform": "!windows"
+        },
+        {
+          "name": "libjpeg-turbo",
+          "platform": "!windows"
+        },
+        {
+          "name": "libpng",
+          "platform": "!windows"
+        },
+        {
+          "name": "libwebp",
+          "platform": "!windows"
+        },
+        {
+          "name": "libxml2",
+          "default-features": false,
+          "features": [
+            "icu"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "libxslt",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        {
+          "name": "minizip",
+          "platform": "!windows"
+        },
+        {
+          "name": "nss",
+          "platform": "android | linux"
+        },
+        "opengl",
+        {
+          "name": "openjpeg",
+          "platform": "!windows"
+        },
+        {
+          "name": "opus",
+          "platform": "!windows"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui",
+            "network",
+            "widgets"
+          ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "harfbuzz",
+            "jpeg",
+            "png"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        },
+        {
+          "name": "qttools",
+          "default-features": false
+        },
+        {
+          "$comment": "Provides the port's custom GN host tool",
+          "name": "qtwebengine",
+          "host": true,
+          "default-features": false
+        },
+        {
+          "name": "re2",
+          "platform": "!windows"
+        },
+        {
+          "name": "snappy",
+          "platform": "!windows"
+        },
+        {
+          "name": "tiff",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        {
+          "name": "vcpkg-get-python-packages",
+          "host": true
+        },
+        {
+          "name": "vcpkg-tool-nodejs",
+          "host": true
+        },
+        {
+          "name": "zlib",
+          "platform": "!windows"
         }
       ]
     },
     "proprietary-codecs": {
-      "description": "Enables the use of proprietary codecs such as h.264/h.265 and MP3."
+      "description": "Enables the use of proprietary codecs such as h.264/h.265 and MP3.",
+      "dependencies": [
+        {
+          "name": "qtwebengine",
+          "default-features": false,
+          "features": [
+            "webengine"
+          ]
+        }
+      ]
     },
     "spellchecker": {
-      "description": "Provides a spellchecker"
+      "description": "Provides a spellchecker",
+      "dependencies": [
+        {
+          "name": "qtwebengine",
+          "default-features": false,
+          "features": [
+            "webengine"
+          ]
+        }
+      ]
     },
     "webchannel": {
       "description": "Provides QtWebChannel integration",
@@ -145,6 +201,38 @@
           "default-features": false,
           "features": [
             "qml"
+          ]
+        },
+        {
+          "name": "qtwebengine",
+          "default-features": false,
+          "features": [
+            "webengine"
+          ]
+        }
+      ]
+    },
+    "webengine": {
+      "description": "Qt WebEngine provides functionality for rendering regions of dynamic web content.",
+      "supports": "(linux | osx | (windows & x64)) & !static",
+      "dependencies": [
+        {
+          "name": "dbus",
+          "default-features": false
+        },
+        {
+          "name": "ffmpeg",
+          "platform": "!windows"
+        },
+        {
+          "name": "opus",
+          "platform": "!windows"
+        },
+        {
+          "name": "qtwebengine",
+          "default-features": false,
+          "features": [
+            "pdf"
           ]
         }
       ]

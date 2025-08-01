@@ -1,7 +1,6 @@
 {
   "name": "pthreadpool",
-  "version-date": "2020-04-10",
-  "port-version": 3,
+  "version-date": "2024-11-04",
   "description": "Portable (POSIX/Windows/Emscripten) thread pool for C/C++",
   "homepage": "https://github.com/Maratyszcza/pthreadpool",
   "dependencies": [

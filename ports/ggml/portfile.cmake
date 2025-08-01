@@ -1,13 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF 38648430fce1422694f2f349a5fe60d5969d6f49  # before ggml_backend_sched_new change
-    SHA512 6c51c4b4757aecea3f713b2ee8fb08992c2bdcc203f8e44e307ab8bcd5ed575f154d438c1d036251441aedef1eae812dc7114f6ca5da8314b8e415d92f02f33d
+    REF 44ea6eda2ad8a94663597cbe85e37de98bd99269
+    SHA512 be93d44f87ef25f7c0bb37ca8020de7714ec89b4f92677d7b631a2dcad9db38789e59adb7a6af0d1f5f550c570d875ea9ed69833f7d7af76ef8cb9159f0a7c23
     HEAD_REF master
     PATCHES
+        android-vulkan.diff
         cmake-config.diff
+        fix-32bit.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
+        blas.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -41,6 +44,16 @@ if("opencl" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS
         "-DPython3_EXECUTABLE=${PYTHON3}"
     )
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    message(STATUS "The CPU backend is not supported for arm64 with MSVC.")
+    list(APPEND FEATURE_OPTIONS
+        "-DGGML_CPU=OFF"
+    )
+    if(FEATURES STREQUAL "core")
+        message(WARNING "No backend enabled!")
+    endif()
 endif()
 
 if("vulkan" IN_LIST FEATURES AND VCPKG_CROSSCOMPILING)
