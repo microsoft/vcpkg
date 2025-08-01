@@ -128,10 +128,10 @@ if ($Triplet -eq 'x64-windows-release') {
     $tripletArg = "--triplet=$Triplet"
 }
 
-$override_ndk = 'r28b'
+$override_ndk = 'r28c'
 if ($IsLinux -and $Triplet -match 'android' -and $override_ndk -ne '')
 {
-    $override_ndk_url = 'https://dl.google.com/android/repository/android-ndk-r28b-linux.zip'
+    $override_ndk_url = 'https://dl.google.com/android/repository/android-ndk-r28c-linux.zip'
     $override_ndk_sha512 = '25f4517febcc6a37a762ec158daf42ff4bd6fd6ea643959395eef109f4f29a8f5256ee997f7c40fee66282686f19cd254c17d2f7ccfa80a4f601bff262997f57'
     Write-Host "Downloading Android NDK $override_ndk"
     & "./vcpkg" x-download android-ndk-$override_ndk-linux.zip "--sha512=$override_ndk_sha512" "--url=$override_ndk_url" @cachingArgs
