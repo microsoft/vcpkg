@@ -28,7 +28,7 @@ jobs:
   - name: ANDROID_NDK_HOME
     value: /android-ndk-r27c
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-07-10'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-08-01'
   - name: LINUX_DOCKER_IMAGE
     value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-07-10'
   steps:
