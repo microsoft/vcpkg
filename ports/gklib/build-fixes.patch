@@ -69,3 +69,16 @@ index 7e200dc..1c51958 100644
  
  #if _MSC_VER > 1000
  #pragma once
+diff --git a/src/win32/adapt.c b/src/win32/adapt.c
+index 546857c..d56f767 100644
+--- a/src/win32/adapt.c
++++ b/src/win32/adapt.c
+@@ -3,7 +3,7 @@
+ \brief Implementation of Win32 adaptation of libc functions
+ */
+ 
+-#include "adapt.h"
++#include "win32/adapt.h"
+ 
+ pid_t getpid(void)
+ {
