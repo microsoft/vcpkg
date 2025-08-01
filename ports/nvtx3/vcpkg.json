@@ -3,6 +3,7 @@
   "version": "3.2.1",
   "description": "NVTX (NVIDIA Tools Extension Library)",
   "homepage": "https://github.com/NVIDIA/NVTX",
+  "license": "Apache-2.0 WITH LLVM-exception",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
