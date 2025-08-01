@@ -27,6 +27,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     bfloat16  GINKGO_ENABLE_BFLOAT16
 )
 
+set(CUDA_ARCHITECTURES_OPTION "")
+if("cuda" IN_LIST FEATURES)
+    set(CUDA_ARCHITECTURES_OPTION "-DCMAKE_CUDA_ARCHITECTURES=native")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -41,6 +46,7 @@ vcpkg_cmake_configure(
         -DGINKGO_SKIP_DEPENDENCY_UPDATE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         ${FEATURE_OPTIONS}
+        ${CUDA_ARCHITECTURES_OPTION}
 )
 
 vcpkg_cmake_install()
