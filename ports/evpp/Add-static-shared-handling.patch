@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 17b0a1c..2158214 100644
+index 17b0a1c..7a054b3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -3,6 +3,30 @@ set(CMAKE_CXX_STANDARD 14)
@@ -15,7 +15,7 @@ index 17b0a1c..2158214 100644
 +        set_target_properties(${static_targets} PROPERTIES EXCLUDE_FROM_ALL 1)
 +        install (
 +            TARGETS ${shared_targets}
-+            EXPORT ${PACKAGE_NAME}
++            EXPORT evpp-targets
 +            RUNTIME DESTINATION bin
 +            LIBRARY DESTINATION lib
 +            ARCHIVE DESTINATION lib)
@@ -23,7 +23,7 @@ index 17b0a1c..2158214 100644
 +        set_target_properties(${shared_targets} PROPERTIES EXCLUDE_FROM_ALL 1)
 +        install (
 +            TARGETS ${static_targets}
-+            EXPORT ${PACKAGE_NAME}
++            EXPORT evpp-targets
 +            RUNTIME DESTINATION bin
 +            LIBRARY DESTINATION lib
 +            ARCHIVE DESTINATION lib)
