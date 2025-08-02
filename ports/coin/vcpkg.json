@@ -1,7 +1,7 @@
 {
   "name": "coin",
   "version": "4.0.4",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A high-level 3D visualization library with Open Inventor 2.1 API",
   "homepage": "https://github.com/coin3d/coin",
   "license": "BSD-3-Clause",
@@ -13,6 +13,7 @@
     "boost-math",
     "boost-smart-ptr",
     "boost-static-assert",
+    "expat",
     "opengl-registry",
     {
       "name": "vcpkg-cmake",
