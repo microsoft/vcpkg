@@ -7,6 +7,10 @@
   "license": "Apache-2.0",
   "dependencies": [
     {
+      "name": "suitesparse-graphblas",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
