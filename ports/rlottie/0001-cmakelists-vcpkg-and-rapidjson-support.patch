@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 38a9862..eca77d5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,6 +16,10 @@ endif()
+ add_library( rlottie )
+ set_target_properties( rlottie PROPERTIES DEFINE_SYMBOL RLOTTIE_BUILD )
+ 
++#use vcpkg ports
++find_package(RapidJSON CONFIG REQUIRED)
++target_link_libraries(rlottie PRIVATE rapidjson)
++
+ #declare version of the target
+ set(player_version_major 0)
+ set(player_version_minor 2)
+@@ -75,8 +79,6 @@ endif()
+ 
+ if (WIN32 AND NOT BUILD_SHARED_LIBS)
+     target_compile_definitions(rlottie PUBLIC -DRLOTTIE_BUILD=0)
+-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+ endif()
+ 
+ #declare dependancy
+@@ -88,13 +90,6 @@ target_link_libraries(rlottie
+                         "${CMAKE_THREAD_LIBS_INIT}"
+                      )
+ 
+-if (NOT APPLE AND NOT WIN32)
+-    target_link_libraries(rlottie
+-                        PRIVATE
+-                            "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/rlottie.expmap"
+-                          )
+-endif()
+-
+ if (LOTTIE_MODULE)
+     # for dlopen, dlsym and dlclose dependancy
+     target_link_libraries(rlottie PRIVATE ${CMAKE_DL_LIBS})
+@@ -165,6 +160,7 @@ install( TARGETS rlottie EXPORT rlottie-targets
+          LIBRARY     DESTINATION    ${LIB_INSTALL_DIR}
+          ARCHIVE     DESTINATION    ${LIB_INSTALL_DIR}
+          INCLUDES    DESTINATION    include
++         RUNTIME     DESTINATION    bin
+        )
+ 
+ #install config file.
