@@ -7722,7 +7722,7 @@
     },
     "qnnpack": {
       "baseline": "2021-02-26",
-      "port-version": 3
+      "port-version": 4
     },
     "qoi": {
       "baseline": "2023-08-10",
