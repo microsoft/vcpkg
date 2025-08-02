@@ -4,6 +4,7 @@
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
+  "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     "blas",
     "cpp-httplib",
