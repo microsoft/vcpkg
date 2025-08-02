@@ -1,6 +1,7 @@
 {
   "name": "concurrentqueue",
   "version": "1.0.4",
+  "port-version": 1,
   "description": "A fast multi-producer, multi-consumer lock-free concurrent queue for C++11",
   "homepage": "https://github.com/cameron314/concurrentqueue",
   "license": "BSD-2-Clause OR BSL-1.0",
