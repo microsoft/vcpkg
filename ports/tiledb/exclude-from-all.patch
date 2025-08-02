@@ -1,0 +1,13 @@
+diff --git a/cmake/object_library.cmake b/cmake/object_library.cmake
+index 4e881db..31f340c 100644
+--- a/cmake/object_library.cmake
++++ b/cmake/object_library.cmake
+@@ -115,7 +115,7 @@ macro(TileDB_Environment_object_library_begin Result Library_Name)
+     # code generation
+     # ----------------------------------
+     # Target-based commands must work within the environment.
+-    add_library(${Library_Name} OBJECT)
++    add_library(${Library_Name} OBJECT EXCLUDE_FROM_ALL)
+     # ----------------------------------
+ 
+     message(${TileDB_Environment_object_library_begin_Log_Level} "<<< object-library commence end <<<")
