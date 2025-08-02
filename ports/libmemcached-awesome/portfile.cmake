@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 0a10a2431142ec6e4547f82fdd35b55c018264e5f8c39910a65252c3f53d862fb5945e7a671951915aac076767cc995740b3e499eb584017a38eb2d1e82171fb
     HEAD_REF v1.x
+    PATCHES
+        in_port_t.diff
 )
 
 vcpkg_find_acquire_program(BISON)
