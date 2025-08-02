@@ -23,6 +23,7 @@ vcpkg_extract_source_archive(
       clang-cuda.patch
       fix-min-max.patch
 )
+vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
 
 
 
