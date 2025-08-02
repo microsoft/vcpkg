@@ -9285,7 +9285,7 @@
       "port-version": 0
     },
     "suitesparse-graphblas": {
-      "baseline": "9.3.1",
+      "baseline": "10.1.1",
       "port-version": 0
     },
     "suitesparse-klu": {

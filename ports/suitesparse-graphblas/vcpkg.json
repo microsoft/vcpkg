@@ -4,7 +4,7 @@
   "version-semver": "10.1.1",
   "description": "SuiteSparse:GraphBLAS: graph algorithms in the language of linear algebra",
   "homepage": "https://people.engr.tamu.edu/davis/GraphBLAS.html",
-  "license": "Apache-2.0",
+  "license": null,
   "dependencies": [
     {
       "name": "suitesparse-graphblas",

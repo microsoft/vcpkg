@@ -39,11 +39,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME GraphBLAS
-    CONFIG_PATH lib/cmake/GraphBLAS
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/GraphBLAS" PACKAGE_NAME "graphblas")
 vcpkg_fixup_pkgconfig()
 
 if(NOT VCPKG_CROSSCOMPILING)
