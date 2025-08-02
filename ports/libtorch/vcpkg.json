@@ -63,6 +63,7 @@
   "features": {
     "cuda": {
       "description": "Build with CUDA GPU backend",
+      "supports": "!(windows & staticcrt)",
       "dependencies": [
         "cuda",
         "cudnn",
