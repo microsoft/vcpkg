@@ -57,10 +57,10 @@ index f3fee2f..b016632 100644
      FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
      DESTINATION share/cmake/Caffe2/
 diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
-index 085af37..ef15bcd 100644
+index a246e4d..9fe191f 100644
 --- a/aten/src/ATen/CMakeLists.txt
 +++ b/aten/src/ATen/CMakeLists.txt
-@@ -496,7 +496,9 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
+@@ -495,7 +495,9 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
      set(SLEEF_ARCH_AARCH64 ON)
    endif()
  
@@ -71,7 +71,7 @@ index 085af37..ef15bcd 100644
      set(SLEEF_BUILD_SHARED_LIBS OFF CACHE BOOL "Build sleef static" FORCE)
      set(SLEEF_BUILD_DFT OFF CACHE BOOL "Don't build sleef DFT lib" FORCE)
      set(SLEEF_BUILD_GNUABI_LIBS OFF CACHE BOOL "Don't build sleef gnuabi libs" FORCE)
-@@ -523,7 +525,7 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
+@@ -522,7 +524,7 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
      message("Found sleef: ${SLEEF_LIBRARY}")
      set_target_properties(sleef PROPERTIES IMPORTED_LOCATION "${SLEEF_LIBRARY}")
    endif()
@@ -80,7 +80,7 @@ index 085af37..ef15bcd 100644
  
    if(NOT MSVC)
      set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})
-@@ -534,8 +536,8 @@ if(USE_CUDA AND NOT USE_ROCM)
+@@ -533,8 +535,8 @@ if(USE_CUDA AND NOT USE_ROCM)
    add_definitions(-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
    add_definitions(-DCUTLASS_ENABLE_SM90_EXTENDED_MMA_SHAPES=1)
    add_definitions(-DCUTE_SM90_EXTENDED_MMA_SHAPES_ENABLED)
@@ -141,7 +141,7 @@ index 3327dab..0b784b1 100644
 +  install(FILES $<TARGET_PDB_FILE:c10_cuda> DESTINATION bin OPTIONAL)
  endif()
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index d2d23b7..657a614 100644
+index d2d23b7..0107327 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
 @@ -87,7 +87,7 @@ endif()
@@ -153,6 +153,15 @@ index d2d23b7..657a614 100644
    if(NOT TARGET fxdiv)
      set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
      set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
+@@ -557,7 +557,7 @@ if(USE_CUDA)
+   endif()
+ 
+   target_link_libraries(caffe2_nvrtc PRIVATE caffe2::nvrtc ${DELAY_LOAD_FLAGS})
+-  install(TARGETS caffe2_nvrtc DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS caffe2_nvrtc RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+   if(USE_NCCL)
+     list(APPEND Caffe2_GPU_SRCS
+       ${TORCH_SRC_DIR}/csrc/cuda/nccl.cpp)
 @@ -1134,7 +1134,7 @@ if(USE_XPU)
    endif()
  endif()
@@ -189,7 +198,7 @@ index d2d23b7..657a614 100644
  
  install(DIRECTORY "${TORCH_SRC_DIR}/csrc"
    DESTINATION ${TORCH_INSTALL_INCLUDE_DIR}/torch
-@@ -1536,7 +1535,7 @@ endif()
+@@ -1536,17 +1535,17 @@ endif()
  
  caffe2_interface_library(torch torch_library)
  
@@ -197,8 +206,11 @@ index d2d23b7..657a614 100644
 +install(TARGETS torch_cpu torch_cpu_library EXPORT Caffe2Targets RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
  
  if(USE_CUDA)
-   install(TARGETS torch_cuda torch_cuda_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
-@@ -1546,7 +1545,7 @@ elseif(USE_XPU)
+-  install(TARGETS torch_cuda torch_cuda_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS torch_cuda torch_cuda_library EXPORT Caffe2Targets RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ elseif(USE_ROCM)
+   install(TARGETS torch_hip torch_hip_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ elseif(USE_XPU)
    install(TARGETS torch_xpu torch_xpu_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
  endif()
  
@@ -240,7 +252,7 @@ index 724d993..3164480 100644
  # ---[ Write the macros file
  configure_file(
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 5227204..5d19778 100644
+index a1babd6..82fe0a6 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -46,7 +46,8 @@ if(USE_CUDA)
@@ -357,7 +369,7 @@ index 5227204..5d19778 100644
      if(CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_VERSION VERSION_LESS "11" )
          message(WARNING "KleidiAI: Using non-supported Clang version. Expected 11 or newer, received ${CMAKE_C_COMPILER_VERSION}.")
      endif()
-@@ -1584,6 +1600,9 @@ endif()
+@@ -1582,6 +1598,9 @@ endif()
  #
  # End ATen checks
  #
@@ -367,7 +379,7 @@ index 5227204..5d19778 100644
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
  add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
-@@ -1599,6 +1618,7 @@ set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
+@@ -1597,6 +1616,7 @@ set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
  
  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
@@ -375,7 +387,7 @@ index 5227204..5d19778 100644
  
  # ---[ Kineto
  # edge profiler depends on KinetoProfiler but it only does cpu
-@@ -1749,9 +1769,7 @@ endif()
+@@ -1747,9 +1767,7 @@ endif()
  include(${CMAKE_CURRENT_LIST_DIR}/FlatBuffers.cmake)
  
  # Include cpp-httplib
@@ -405,3 +417,32 @@ index 8a4a310..9b8ed5e 100644
  
  if(ANDROID OR IOS OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
    message(STATUS "Brace yourself, we are building NNPACK")
+diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
+index c66d32b..77ef44b 100644
+--- a/cmake/public/cuda.cmake
++++ b/cmake/public/cuda.cmake
+@@ -169,7 +169,8 @@ else()
+         CUDA::cudart)
+ endif()
+ 
+-# nvToolsExt
++# CUDA::nvToolsExt or CUDA::nvtx3
++cmake_minimum_required(VERSION 3.25)
+ if(USE_SYSTEM_NVTX)
+   find_path(nvtx3_dir NAMES nvtx3 PATHS ${CUDA_INCLUDE_DIRS})
+ else()
+@@ -183,7 +184,13 @@ if(nvtx3_FOUND)
+ else()
+   message(WARNING "Cannot find NVTX3, find old NVTX instead")
+   add_library(torch::nvtoolsext INTERFACE IMPORTED)
+-  set_property(TARGET torch::nvtoolsext PROPERTY INTERFACE_LINK_LIBRARIES CUDA::nvToolsExt)
++  # https://cmake.org/cmake/help/latest/module/FindCUDAToolkit.html#nvtx3
++  if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 12.9)
++    message(STATUS "Using CUDA::nvtx3 instead of CUDA::nvToolsExt")
++    set_target_properties(torch::nvtoolsext PROPERTIES INTERFACE_LINK_LIBRARIES CUDA::nvtx3)
++  else()
++    set_target_properties(torch::nvtoolsext PROPERTIES INTERFACE_LINK_LIBRARIES CUDA::nvToolsExt)
++  endif()
+ endif()
+ 
+ 

@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 a9fc2252af9031c2cd46dde558c491aea8bc322fb80157a7760f300a44b759d4bfe866f030fbb974b80493057cfff4dd512498f99a100ed6d05bf620258ed37e
     HEAD_REF main
     PATCHES
+        fix-pytorch-pr-156630.patch # https://github.com/pytorch/pytorch/pull/156630
         fix-cmake.patch
         fix-glog.patch
         fix-kineto.patch
@@ -89,6 +90,15 @@ if("dist" IN_LIST FEATURES)
         list(APPEND FEATURE_OPTIONS -DUSE_LIBUV=ON)
     endif()
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
+endif()
+
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
+    message(STATUS "Using nvcc: ${NVCC}")
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}" 
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}" 
+    ) 
 endif()
 
 if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
