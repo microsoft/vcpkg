@@ -1,18 +1,17 @@
 {
   "name": "octave",
-  "version": "9.4.0",
-  "port-version": 1,
+  "version": "10.2.0",
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
   "documentation": "https://docs.octave.org/latest/",
   "license": "GPL-3.0-or-later",
   "supports": "!windows | mingw",
   "dependencies": [
-    "blas",
     "fftw3",
     "glpk",
     "lapack",
     "libsndfile",
+    "openblas",
     "opengl",
     "pcre2",
     "readline",
@@ -114,6 +113,31 @@
       "dependencies": [
         {
           "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "gui": {
+      "description": "build with gui support",
+      "dependencies": [
+        {
+          "name": "freeglut",
+          "platform": "linux"
+        },
+        {
+          "name": "octave",
+          "default-features": false,
+          "features": [
+            "fontconfig",
+            "freetype"
+          ]
+        },
+        {
+          "name": "qt5-base",
+          "default-features": false
+        },
+        {
+          "name": "qt5-tools",
           "default-features": false
         }
       ]
