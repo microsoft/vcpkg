@@ -517,6 +517,7 @@ stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
 stxxl:x64-uwp=fail
+suitesparse-graphblas:x86-windows=fail  # no InterlockedExchange64 with MSVC
 systemc:arm-uwp=fail
 systemc:arm64-windows=fail
 systemc:x64-uwp=fail
