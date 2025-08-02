@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcltk/tcl
-    REF 0cb9c0b3f8c6426be5bf4b609aef819e379d123e
-    SHA512 5a4e293d8d741148674e67de3a10f94f8b812d2dd4a36ef9a3e2a64eb8b4e21c0a31649cf95bdb76290243f14c8b61982a1f28a71d5def771312543f595bba6f
+    REF e1b559b602eefccffdab183c9deef96241268116
+    SHA512 14efb9c0b0fea8f699eba4d814a588f4954cf8c41904f5782d711ed53a0d6f34647dd9c8dd05459fd72ec381f4fd8d665c42ad095181792b8736a855f81a5727
     PATCHES
         force-shell-install.patch
         remove-git-rev-parse.patch
@@ -76,26 +76,26 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE ${TOOL_EXES})
 
         file(GLOB_RECURSE TOOLS
-                "${CURRENT_PACKAGES_DIR}/lib/dde1.4/*"
+                "${CURRENT_PACKAGES_DIR}/lib/dde1.5/*"
                 "${CURRENT_PACKAGES_DIR}/lib/nmake/*"
                 "${CURRENT_PACKAGES_DIR}/lib/reg1.3/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tcl8/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*"
-                "${CURRENT_PACKAGES_DIR}/lib/registry1.3/*"
+                "${CURRENT_PACKAGES_DIR}/lib/registry1.4/*"
         )
         
         foreach(TOOL ${TOOLS})
             get_filename_component(DST_DIR ${TOOL} PATH)
             file(COPY "${TOOL}" DESTINATION ${DST_DIR})
         endforeach()
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/dde1.4"
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/dde1.5"
                             "${CURRENT_PACKAGES_DIR}/lib/nmake"
                             "${CURRENT_PACKAGES_DIR}/lib/reg1.3"
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8"
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0"
-                            "${CURRENT_PACKAGES_DIR}/lib/registry1.3"
+                            "${CURRENT_PACKAGES_DIR}/lib/registry1.4"
         )
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
@@ -111,13 +111,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
         )
         file(REMOVE ${EXES})
     
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/dde1.4"
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/dde1.5"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/nmake"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/reg1.3"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0"
-                            "${CURRENT_PACKAGES_DIR}/debug/lib/registry1.3"
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/registry1.4"
         )
     endif()
     
