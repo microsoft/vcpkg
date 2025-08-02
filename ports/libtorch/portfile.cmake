@@ -92,6 +92,12 @@ if("dist" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
 endif()
 
+if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
+    find_program(GLSLC NAMES glslc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc" REQUIRED)
+    message(STATUS "Using glslc: ${GLSLC}")
+    list(APPEND FEATURE_OPTIONS "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}")
+endif()
+
 set(IS_MOBILE_BUILD OFF)
 if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
     set(IS_MOBILE_BUILD ON)

@@ -140,6 +140,10 @@
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
       "dependencies": [
+        {
+          "name": "shaderc",
+          "host": true
+        },
         "vulkan",
         "vulkan-loader",
         "vulkan-memory-allocator"
