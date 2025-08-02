@@ -1,6 +1,6 @@
 {
   "name": "sqlgen",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "sqlgen is an ORM and SQL query generator for C++-20, similar to Python's SQLAlchemy/SQLModel or Rust's Diesel.",
   "homepage": "https://github.com/getml/sqlgen/",
   "license": "MIT",
@@ -22,6 +22,12 @@
     }
   ],
   "features": {
+    "mariadb": {
+      "description": "Enable MySQL/MariaDB support",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
     "postgres": {
       "description": "Enable PostgreSQL support",
       "dependencies": [
