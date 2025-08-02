@@ -1,0 +1,21 @@
+The package sproto provides CMake targets:
+
+    find_package(sproto CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial-sproto::sproto)
+
+sproto is a serialization library for C. Example usage:
+
+    #include <sproto.h>
+    
+    // Create sproto object from schema
+    struct sproto * sp = sproto_create(proto, sz);
+    
+    // Get type object  
+    struct sproto_type * st = sproto_type(sp, "typename");
+    
+    // Encode/decode using callbacks
+    sproto_encode(st, buffer, size, callback, userdata);
+    sproto_decode(st, data, size, callback, userdata);
+    
+    // Clean up
+    sproto_release(sp);
