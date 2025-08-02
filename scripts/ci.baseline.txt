@@ -129,9 +129,6 @@ lapack-reference:x64-uwp=skip
 # </BLAS+LAPACK>
 ################################################################
 blitz:x64-android=fail
-boinc:arm-neon-android=fail
-boinc:arm64-android=fail
-boinc:x64-android=fail
 bond:arm-neon-android=fail
 bond:arm64-android=fail
 bond:arm64-osx=fail
