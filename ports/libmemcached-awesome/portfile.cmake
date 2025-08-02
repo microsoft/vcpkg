@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         in_port_t.diff
         no-static-exports.diff
+        p9y-targets.diff
 )
 
 vcpkg_find_acquire_program(BISON)
