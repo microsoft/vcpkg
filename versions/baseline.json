@@ -8833,7 +8833,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "6.2.151",
+      "baseline": "6.2.152",
       "port-version": 0
     },
     "simde": {
