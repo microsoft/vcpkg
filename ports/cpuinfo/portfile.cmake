@@ -6,9 +6,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/cpuinfo
-    REF 5e63739504f0f8e18e941bd63b2d6d42536c7d90
-    SHA512 6a61f4574661a55771c2ec31bb0919a51d0bd8c770477b254a5c14dc5323716af275c7fe3abc5aa96720d7cc929559ca66f614265d3940e076b8db2fa15c8e36
-    HEAD_REF master
+    REF e4cadd02a8b386c38b84f0a19eddacec3f433baa
+    SHA512 aaf239e4a322f04514c8d85d4792abb6b4f5058be9f2013e42e51ecff66e3c967339fa3e030373aed8aebefaf8b0a287cf941de854ae7ade99fe6af4213f78e9
+    HEAD_REF main
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -60,4 +60,4 @@ if("tools" IN_LIST FEATURES)
     )
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

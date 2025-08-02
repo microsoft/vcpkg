@@ -12,10 +12,17 @@ vcpkg_check_features(
   FEATURES
   mpi USE_MPI
   redis USE_REDIS
+  cuda USE_CUDA
+  cuda USE_NCCL
   )
 
 if ("cuda" IN_LIST FEATURES)
-  list(APPEND GLOO_FEATURE_OPTIONS "-DUSE_CUDA=1" "-DUSE_NCCL=1")
+  vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
+  message(STATUS "Using nvcc: ${NVCC}")
+  list(APPEND GLOO_FEATURE_OPTIONS
+    "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}"
+    "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+  ) 
 endif()
 
 vcpkg_cmake_configure(

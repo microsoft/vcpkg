@@ -1,3 +1,4 @@
+# note: because cpuinfo doesn't support clog anymore, the port will install clog library together
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/QNNPACK
@@ -17,7 +18,9 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+# install clog library LICENSE together
+file(INSTALL "${SOURCE_PATH}/deps/clog/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright-clog)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/debug/bin"
 )
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
