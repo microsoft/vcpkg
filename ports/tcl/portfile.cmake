@@ -1,14 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tcltk/tcl
-    REF 0fa6a4e5aad821a5c34fdfa070c37c3f1ffc8c8e
-    SHA512 9d7f35309fe8b1a7c116639aaea50cc01699787c7afb432389bee2b9ad56a67034c45d90c9585ef1ccf15bdabf0951cbef86257c0c6aedbd2591bbfae3e93b76
-    PATCHES force-shell-install.patch
+    REF 0cb9c0b3f8c6426be5bf4b609aef819e379d123e
+    SHA512 5a4e293d8d741148674e67de3a10f94f8b812d2dd4a36ef9a3e2a64eb8b4e21c0a31649cf95bdb76290243f14c8b61982a1f28a71d5def771312543f595bba6f
+    PATCHES
+        force-shell-install.patch
+        remove-git-rev-parse.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         set(TCL_BUILD_MACHINE_STR MACHINE=AMD64)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        set(TCL_BUILD_MACHINE_STR MACHINE=ARM64)
     else()
         set(TCL_BUILD_MACHINE_STR MACHINE=IX86)
     endif()
@@ -78,6 +82,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                 "${CURRENT_PACKAGES_DIR}/lib/tcl8/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tcl8.6/*"
                 "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0/*"
+                "${CURRENT_PACKAGES_DIR}/lib/registry1.3/*"
         )
         
         foreach(TOOL ${TOOLS})
@@ -90,13 +95,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8"
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0"
-        )
-        file(CHMOD_RECURSE
-                "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/tzdata"
-            PERMISSIONS
-                OWNER_READ OWNER_WRITE
-                GROUP_READ GROUP_WRITE
-                WORLD_READ WORLD_WRITE
+                            "${CURRENT_PACKAGES_DIR}/lib/registry1.3"
         )
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
@@ -118,14 +117,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0"
-        )
-
-        file(CHMOD_RECURSE
-                "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/tzdata"
-            PERMISSIONS
-                OWNER_READ OWNER_WRITE
-                GROUP_READ GROUP_WRITE
-                WORLD_READ WORLD_WRITE
+                            "${CURRENT_PACKAGES_DIR}/debug/lib/registry1.3"
         )
     endif()
     

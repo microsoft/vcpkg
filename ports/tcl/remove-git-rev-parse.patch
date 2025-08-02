@@ -1,0 +1,39 @@
+diff --git a/unix/Makefile.in b/unix/Makefile.in
+index 2c0ddaa..ac24b32 100644
+--- a/unix/Makefile.in
++++ b/unix/Makefile.in
+@@ -2327,7 +2327,7 @@ tclUuid.h: $(TOP_DIR)/manifest.uuid
+ 
+ $(TOP_DIR)/manifest.uuid:
+ 	printf "git-" >$(TOP_DIR)/manifest.uuid
+-	(cd $(TOP_DIR); git rev-parse HEAD >>$(TOP_DIR)/manifest.uuid || \
++	(cd $(TOP_DIR); echo 0cb9c0b3f8c6426be5bf4b609aef819e379d123e >>$(TOP_DIR)/manifest.uuid || \
+ 	    (printf "svn-r" >$(TOP_DIR)/manifest.uuid ; \
+ 	    svn info --show-item last-changed-revision >>$(TOP_DIR)/manifest.uuid) || \
+ 	    printf "unknown" >$(TOP_DIR)/manifest.uuid)
+diff --git a/win/Makefile.in b/win/Makefile.in
+index 7a56163..d1dc64a 100644
+--- a/win/Makefile.in
++++ b/win/Makefile.in
+@@ -725,7 +725,7 @@ tclTest.${OBJEXT}: tclTest.c tclUuid.h
+ 
+ $(TOP_DIR)/manifest.uuid:
+ 	printf "git-" >$(TOP_DIR)/manifest.uuid
+-	(cd $(TOP_DIR); git rev-parse HEAD >>$(TOP_DIR)/manifest.uuid || \
++	(cd $(TOP_DIR); echo 0cb9c0b3f8c6426be5bf4b609aef819e379d123e >>$(TOP_DIR)/manifest.uuid || \
+ 	    (printf "svn-r" >$(TOP_DIR)/manifest.uuid ; \
+ 	    svn info --show-item last-changed-revision >>$(TOP_DIR)/manifest.uuid) || \
+ 	    printf "unknown" >$(TOP_DIR)/manifest.uuid)
+diff --git a/win/makefile.vc b/win/makefile.vc
+index 175c4b2..20996ca 100644
+--- a/win/makefile.vc
++++ b/win/makefile.vc
+@@ -879,7 +879,7 @@ $(TMP_DIR)\tclMainW.obj: $(GENERICDIR)\tclMain.c
+ 
+ $(ROOT)\manifest.uuid:
+ 	copy $(WIN_DIR)\gitmanifest.in $(ROOT)\manifest.uuid
+-	git rev-parse HEAD >>$(ROOT)\manifest.uuid
++	echo 0cb9c0b3f8c6426be5bf4b609aef819e379d123e >>$(ROOT)\manifest.uuid
+ 
+ $(TMP_DIR)\tclUuid.h:	$(ROOT)\manifest.uuid
+ 	copy $(WIN_DIR)\tclUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tclUuid.h
