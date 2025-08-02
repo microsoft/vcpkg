@@ -3741,8 +3741,8 @@
       "port-version": 0
     },
     "hpx": {
-      "baseline": "1.10.0",
-      "port-version": 1
+      "baseline": "1.11.0",
+      "port-version": 0
     },
     "htscodecs": {
       "baseline": "1.6.1",
@@ -6478,7 +6478,7 @@
     },
     "msmpi": {
       "baseline": "10.1.12498",
-      "port-version": 4
+      "port-version": 5
     },
     "msquic": {
       "baseline": "2.4.8",
