@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1396a42a..212b727c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,6 +22,10 @@ include(CMakeConfig.txt)
+ include(GNUInstallDirs)
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+ 
++if(NOT BUILD_SHARED_LIBS)
++    add_compile_definitions(LIBMEMCACHED_STATIC)
++endif()
++
+ if(BUILD_DOCS OR BUILD_DOCSONLY)
+     add_subdirectory(docs)
+ endif()
+diff --git a/include/libhashkit-1.0/visibility.h b/include/libhashkit-1.0/visibility.h
+index dce8c097..80b8bc00 100644
+--- a/include/libhashkit-1.0/visibility.h
++++ b/include/libhashkit-1.0/visibility.h
+@@ -46,3 +46,10 @@
+ #    define HASHKIT_LOCAL
+ #  endif /* defined(_MSC_VER) */
+ #endif   /* defined(BUILDING_HASHKIT) */
++
++#ifdef LIBMEMCACHED_STATIC
++#  undef HASHKIT_API
++#  define HASHKIT_API
++#  undef HASHKIT_LOCAL
++#  define HASHKIT_LOCAL
++#endif
+diff --git a/include/libmemcached-1.0/visibility.h b/include/libmemcached-1.0/visibility.h
+index 62c4ea22..6d4238ee 100644
+--- a/include/libmemcached-1.0/visibility.h
++++ b/include/libmemcached-1.0/visibility.h
+@@ -62,3 +62,10 @@
+ #    endif /* defined(_MSC_VER) */
+ #  endif   /* defined(BUILDING_LIBMEMCACHED) */
+ #endif     /* defined(BUILDING_LIBMEMCACHEDINTERNAL) */
++
++#ifdef LIBMEMCACHED_STATIC
++#  undef LIBMEMCACHED_API
++#  define LIBMEMCACHED_API
++#  undef LIBMEMCACHED_LOCAL
++#  define LIBMEMCACHED_LOCAL
++#endif

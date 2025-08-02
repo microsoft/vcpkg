@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF v1.x
     PATCHES
         in_port_t.diff
+        no-static-exports.diff
 )
 
 vcpkg_find_acquire_program(BISON)
@@ -44,6 +45,11 @@ vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES memcapable memcat memcp memdump memerror memexist memflush memparse memping memrm memslap memstat memtouch)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libmemcached-1.0/visibility.h" "#ifdef LIBMEMCACHED_STATIC" "#if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libhashkit-1.0/visibility.h" "#ifdef LIBMEMCACHED_STATIC" "#if 1")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
