@@ -3261,7 +3261,7 @@
       "port-version": 0
     },
     "gklib": {
-      "baseline": "2023-03-27",
+      "baseline": "2025-07-06",
       "port-version": 0
     },
     "gl2ps": {
@@ -6205,8 +6205,8 @@
       "port-version": 0
     },
     "metis": {
-      "baseline": "2022-07-27",
-      "port-version": 1
+      "baseline": "2025-07-04",
+      "port-version": 0
     },
     "metrohash": {
       "baseline": "1.1.3",
@@ -7237,7 +7237,7 @@
       "port-version": 4
     },
     "parmetis": {
-      "baseline": "2022-07-27",
+      "baseline": "2023-03-26",
       "port-version": 0
     },
     "parquet": {
