@@ -40,6 +40,11 @@ if(VCPKG_TARGET_IS_IOS)
     list(APPEND FEATURE_OPTIONS "-DIOS_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
 endif()
 
+# Add big object support for MinGW
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_CXX_FLAGS=-Wa,-mbig-obj")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

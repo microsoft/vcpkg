@@ -29,6 +29,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
     set(ABSL_STATIC_RUNTIME_OPTION "-DABSL_MSVC_STATIC_RUNTIME=ON")
 endif()
 
+set(ABSL_MINGW_OPTIONS "")
+if(VCPKG_TARGET_IS_MINGW)
+    # LIBRT-NOTFOUND is needed since the system librt may be found by cmake in
+    # a cross-compile setup.
+    # See https://github.com/pywinrt/pywinrt/pull/83 for the FIReference
+    # definition issue.
+    set(ABSL_MINGW_OPTIONS "-DLIBRT=LIBRT-NOTFOUND"
+        "-DCMAKE_CXX_FLAGS=-D____FIReference_1_boolean_INTERFACE_DEFINED__")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -37,6 +47,7 @@ vcpkg_cmake_configure(
         ${ABSL_USE_CXX17_OPTION}
         ${ABSL_TEST_HELPERS_OPTIONS}
         ${ABSL_STATIC_RUNTIME_OPTION}
+        ${ABSL_MINGW_OPTIONS}
 )
 
 vcpkg_cmake_install()
