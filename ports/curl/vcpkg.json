@@ -71,6 +71,20 @@
         "nghttp2"
       ]
     },
+    "http3": {
+      "description": "HTTP3 support using ngtcp2, nghttp3 and OpenSSL",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        },
+        "ngtcp2",
+        "nghttp3"
+      ]
+    },
     "httpsrr": {
       "description": "enable support for HTTPS RR"
     },

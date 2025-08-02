@@ -14,6 +14,8 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         http2       USE_NGHTTP2
+        http3       USE_NGHTTP3
+        http3       USE_NGTCP2
         wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
         mbedtls     CURL_USE_MBEDTLS
@@ -61,7 +63,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         ${FEATURE_OPTIONS}
