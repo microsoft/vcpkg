@@ -1,6 +1,7 @@
 {
   "name": "kdstatemachineeditor",
   "version": "2.0.0",
+  "port-version": 1,
   "description": "KDStateMachineEditor is a library for visualizing and editing state charts.",
   "homepage": "https://github.com/KDAB/KDStateMachineEditor",
   "license": "LGPL-2.1-only",
