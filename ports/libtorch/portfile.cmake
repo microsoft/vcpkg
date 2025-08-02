@@ -13,10 +13,15 @@ vcpkg_from_github(
         fix-glog.patch
         fix-kineto.patch
         fix-vulkan.patch
+        fix-miniz.patch
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/caffe2/core/macros.h" # We must use generated header files
+    "${SOURCE_PATH}/third_party/miniz-3.0.2" # use vcpkg port 'miniz'
+)
 
+# even though we are using `USE_KINETO=OFF`, some files are using the headers
 vcpkg_from_github(
     OUT_SOURCE_PATH src_kineto
     REPO pytorch/kineto
@@ -51,7 +56,6 @@ x_vcpkg_get_python_packages(
     PACKAGES typing-extensions pyyaml numpy
     OUT_PYTHON_VAR PYTHON3
 )
-#set(PYTHON3 "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 message(STATUS "Using Python3: ${PYTHON3}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -59,16 +63,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     dist    USE_DISTRIBUTED # MPI, Gloo, TensorPipe
     fbgemm  USE_FBGEMM
     openmp  USE_OPENMP
-    openmp  AT_PARALLEL_OPENMP # AT_PARALLEL_ are alternatives
     opencl  USE_OPENCL
     mkldnn  USE_MKLDNN
-    mkldnn  AT_MKLDNN_ENABLED
     cuda    USE_CUDA
     cuda    USE_CUDNN
     cuda    USE_NCCL
     cuda    USE_NVRTC
-    cuda    AT_CUDA_ENABLED
-    cuda    AT_CUDNN_ENABLED
     cuda    USE_MAGMA
     vulkan  USE_VULKAN
     vulkan  USE_VULKAN_RELAXED_PRECISION
@@ -76,7 +76,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     llvm    USE_LLVM
     mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
-    nnpack  AT_NNPACK_ENABLED
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
     python  BUILD_PYTHON
     python  USE_NUMPY
@@ -98,9 +97,9 @@ if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
     list(APPEND FEATURE_OPTIONS "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}")
 endif()
 
-set(IS_MOBILE_BUILD OFF)
+set(TARGET_IS_MOBILE OFF)
 if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
-    set(IS_MOBILE_BUILD ON)
+    set(TARGET_IS_MOBILE ON)
 endif()
 
 set(TARGET_IS_APPLE OFF)
@@ -120,7 +119,7 @@ vcpkg_cmake_configure(
         "-DPython_EXECUTABLE:FILEPATH=${PYTHON3}" # cmake/Codegen.cmake
         -DBUILD_CUSTOM_PROTOBUF=OFF # cmake/ProtoBuf.cmake
         -DCOMMIT_SHA=${GIT_COMMIT} # cmake/Codegen.cmake
-        -DINTERN_BUILD_MOBILE=${IS_MOBILE_BUILD}
+        -DINTERN_BUILD_MOBILE=${TARGET_IS_MOBILE}
         -DATEN_NO_TEST=ON
         -DCAFFE2_STATIC_LINK_CUDA=ON
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
@@ -151,8 +150,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME caffe2 CONFIG_PATH "share/cmake/Caffe2" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(PACKAGE_NAME torch CONFIG_PATH "share/cmake/Torch")
+vcpkg_cmake_config_fixup(PACKAGE_NAME Caffe2 CONFIG_PATH "share/cmake/Caffe2" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME Torch CONFIG_PATH "share/cmake/Torch")
 
 # Traverse the folder and remove "some" empty folders
 function(cleanup_once folder)
