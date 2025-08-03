@@ -22,8 +22,6 @@ vcpkg_cmake_install()
 # Remove debug includes
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Note: sproto creates static libraries, so lib directories should be kept
-
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 

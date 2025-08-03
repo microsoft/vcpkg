@@ -3,10 +3,21 @@ project(sproto C)
 
 set(CMAKE_C_STANDARD 99)
 
+# Find Lua dependency
+find_package(Lua REQUIRED)
+
 # Add the main library - let vcpkg control static/shared
-add_library(sproto sproto.c)
+add_library(sproto sproto.c lsproto.c)
 
 # Windows DLL exports should be handled with explicit declarations
+
+# Link with Lua based on platform (Windows requires explicit linking)
+if(WIN32)
+    target_link_libraries(sproto PUBLIC ${LUA_LIBRARIES})
+endif()
+
+# Always include Lua headers for all platforms
+target_include_directories(sproto PRIVATE ${LUA_INCLUDE_DIR})
 
 target_include_directories(sproto PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

@@ -5,6 +5,7 @@
   "homepage": "https://github.com/cloudwu/sproto",
   "license": "MIT",
   "dependencies": [
+    "lua",
     {
       "name": "vcpkg-cmake",
       "host": true
