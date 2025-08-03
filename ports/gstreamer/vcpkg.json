@@ -813,7 +813,9 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
-            "plugins-bad"
+            "dtls",
+            "plugins-bad",
+            "srtp"
           ]
         },
         "libnice"
