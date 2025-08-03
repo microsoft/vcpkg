@@ -129,9 +129,6 @@ lapack-reference:x64-uwp=skip
 # </BLAS+LAPACK>
 ################################################################
 blitz:x64-android=fail
-boinc:arm-neon-android=fail
-boinc:arm64-android=fail
-boinc:x64-android=fail
 bond:arm-neon-android=fail
 bond:arm64-android=fail
 bond:arm64-osx=fail
@@ -291,8 +288,6 @@ elfio:arm-neon-android=fail
 elfio:arm64-android=fail
 elfio:x64-android=fail
 faker-cxx:x64-linux=fail # requires gcc13 or later
-# clang rejects variable length arrays
-fbgemm:x64-android=fail
 # variable length arrays in C++ are a Clang extension
 fbbgemmerror:arm-neon-android=fail
 fbbgemmerror:arm64-android=fail
@@ -478,6 +473,10 @@ jinja2cpplight:x64-android=fail
 juce:arm-neon-android=fail
 juce:arm64-android=fail
 juce:x64-android=fail
+# needs newer ECM version
+kf6archive:arm-neon-android=skip
+kf6archive:arm64-android=skip
+kf6archive:x64-android=skip
 lcm:arm-neon-android=fail
 lcm:arm64-android=fail
 lcm:arm64-windows-static-md=fail
@@ -780,9 +779,6 @@ orange-math:x64-linux=fail
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
-outcome:arm-neon-android=fail
-outcome:arm64-android=fail
-outcome:x64-android=fail
 paho-mqtt:arm64-uwp=fail
 paho-mqtt:x64-uwp=fail
 platform-folders:arm64-uwp=fail
