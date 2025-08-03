@@ -32,4 +32,10 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-evpp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
+    COMMENT [[
+The evpp source code is offered under the BSD-3-Clause license.
+However, evpp includes 3rd-party source code with other licenses
+and additional attribution requirements.
+]])
