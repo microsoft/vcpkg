@@ -1,5 +1,3 @@
-# Set policies for this port
-set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
