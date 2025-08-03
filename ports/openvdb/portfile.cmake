@@ -30,7 +30,12 @@ if (OPENVDB_BUILD_NANOVDB)
     -DNANOVDB_USE_CUDA=ON
     -DNANOVDB_CUDA_KEEP_PTX=ON
     -DNANOVDB_USE_OPENVDB=ON
-)
+    )
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
 endif()
 
 vcpkg_cmake_configure(
