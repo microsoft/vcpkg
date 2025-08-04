@@ -8749,7 +8749,7 @@
       "port-version": 4
     },
     "sfcgal": {
-      "baseline": "2.1.0",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "sfgui": {
