@@ -1,7 +1,6 @@
 {
   "name": "gstreamer",
-  "version": "1.26.1",
-  "port-version": 1,
+  "version": "1.26.4",
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.0-only",
@@ -814,7 +813,9 @@
           "name": "gstreamer",
           "default-features": false,
           "features": [
-            "plugins-bad"
+            "dtls",
+            "plugins-bad",
+            "srtp"
           ]
         },
         "libnice"
