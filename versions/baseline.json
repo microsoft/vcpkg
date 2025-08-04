@@ -41,7 +41,7 @@
       "port-version": 0
     },
     "ada-url": {
-      "baseline": "3.2.6",
+      "baseline": "3.2.7",
       "port-version": 0
     },
     "ade": {
@@ -769,7 +769,7 @@
       "port-version": 0
     },
     "boinc": {
-      "baseline": "8.0.4",
+      "baseline": "8.2.5",
       "port-version": 0
     },
     "bond": {
@@ -2637,7 +2637,7 @@
       "port-version": 0
     },
     "efsw": {
-      "baseline": "1.4.1",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "egl": {
@@ -3141,7 +3141,7 @@
       "port-version": 6
     },
     "gapp": {
-      "baseline": "0.2.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "gasol": {
@@ -3237,7 +3237,7 @@
       "port-version": 9
     },
     "ggml": {
-      "baseline": "2025-05-13",
+      "baseline": "2025-07-23",
       "port-version": 0
     },
     "ghc-filesystem": {
@@ -3641,7 +3641,7 @@
       "port-version": 1
     },
     "harfbuzz": {
-      "baseline": "11.2.0",
+      "baseline": "11.3.3",
       "port-version": 0
     },
     "hash-library": {
@@ -3893,7 +3893,7 @@
       "port-version": 0
     },
     "inih": {
-      "baseline": "59",
+      "baseline": "61",
       "port-version": 0
     },
     "iniparser": {
@@ -5109,7 +5109,7 @@
       "port-version": 0
     },
     "libnick": {
-      "baseline": "2025.7.3",
+      "baseline": "2025.7.6",
       "port-version": 0
     },
     "libnoise": {
@@ -5821,8 +5821,8 @@
       "port-version": 0
     },
     "llama-cpp": {
-      "baseline": "4743",
-      "port-version": 1
+      "baseline": "5975",
+      "port-version": 0
     },
     "llfio": {
       "baseline": "2025-01-13",
@@ -10225,8 +10225,8 @@
       "port-version": 2
     },
     "whisper-cpp": {
-      "baseline": "1.7.5",
-      "port-version": 1
+      "baseline": "1.7.6",
+      "port-version": 0
     },
     "wiiuse": {
       "baseline": "0.15.6",

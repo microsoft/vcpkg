@@ -10,6 +10,13 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON_PATH "${PYTHON3}" PATH)
 vcpkg_add_to_path(PREPEND "${PYTHON_PATH}")
 
+vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+list(APPEND FEATURE_OPTIONS
+    "-DCMAKE_CUDA_COMPILER=${NVCC}"
+    "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+)
+
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -26,6 +33,7 @@ vcpkg_cmake_configure(
         -DCUTLASS_ENABLE_CUBLAS=ON
         -DCUTLASS_ENABLE_CUDNN=ON
         "-DPython3_EXECUTABLE:FILEPATH=${PYTHON3}"
+        ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         CUTLASS_NATIVE_CUDA
 )
