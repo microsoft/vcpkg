@@ -3,20 +3,22 @@ project(sproto C)
 
 set(CMAKE_C_STANDARD 99)
 
-# Find Lua dependency
-find_package(Lua REQUIRED)
+find_package(unofficial-lua CONFIG REQUIRED)
 
-# Add the main library - let vcpkg control static/shared
 add_library(sproto sproto.c lsproto.c)
 
-# Windows DLL exports should be handled with explicit declarations
-
-# Link with Lua based on platform (Windows requires explicit linking)
-if(WIN32)
-    target_link_libraries(sproto PUBLIC ${LUA_LIBRARIES})
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(sproto PRIVATE SPROTO_BUILD_DLL)
+    # Set symbol visibility for GCC/Clang
+    if(NOT WIN32)
+        target_compile_options(sproto PRIVATE -fvisibility=hidden)
+    endif()
+else()
+    target_compile_definitions(sproto PUBLIC SPROTO_STATIC)
 endif()
 
-# Always include Lua headers for all platforms
+target_link_libraries(sproto PRIVATE lua)
+
 target_include_directories(sproto PRIVATE ${LUA_INCLUDE_DIR})
 
 target_include_directories(sproto PUBLIC
@@ -24,7 +26,6 @@ target_include_directories(sproto PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
-# Install library and headers
 install(TARGETS sproto 
     EXPORT sproto-targets
     LIBRARY DESTINATION lib
@@ -36,22 +37,20 @@ install(FILES sproto.h
     DESTINATION include
 )
 
-# Install CMake config files
 install(EXPORT sproto-targets
     FILE sproto-targets.cmake
-    NAMESPACE unofficial-sproto::
-    DESTINATION share/sproto
+    NAMESPACE unofficial::sproto::
+    DESTINATION share/unofficial-sproto
 )
 
-# Create and install config file
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
     "${CMAKE_CURRENT_LIST_DIR}/sproto-config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/sproto-config.cmake"
-    INSTALL_DESTINATION share/sproto
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-sproto-config.cmake"
+    INSTALL_DESTINATION share/unofficial-sproto
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/sproto-config.cmake"
-    DESTINATION share/sproto
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-sproto-config.cmake"
+    DESTINATION share/unofficial-sproto
 )
