@@ -55,8 +55,7 @@ vcpkg_cmake_configure(
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
-        -Dprotobuf_ABSL_PROVIDER=package
-        -Dprotobuf_BUILD_LIBUPB=OFF
+        -Dprotobuf_BUILD_LIBUPB=ON
         ${FEATURE_OPTIONS}
 )
 
