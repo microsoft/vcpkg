@@ -1,6 +1,6 @@
 {
   "name": "thorvg",
-  "version": "0.15.13",
+  "version": "0.15.14",
   "description": "ThorVG is a platform-independent portable library for drawing vector-based scenes and animations",
   "homepage": "https://www.thorvg.org",
   "license": "MIT",

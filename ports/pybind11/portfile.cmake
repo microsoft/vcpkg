@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 a68a5eb3253db771308ed0922852207e6dc9a3089ad055ba3ccd36690f68b93cad98cc1a3ab822eb653153af2eeef10e6f6272b93314b2da1119e17f6c63337b
     HEAD_REF master
+    PATCHES
+        android.diff
 )
 
 vcpkg_cmake_configure(
