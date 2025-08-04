@@ -27,9 +27,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     bfloat16  GINKGO_ENABLE_BFLOAT16
 )
 
-set(CUDA_ARCHITECTURES_OPTION "")
 if("cuda" IN_LIST FEATURES)
-    set(CUDA_ARCHITECTURES_OPTION "-DCMAKE_CUDA_ARCHITECTURES=native")
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+        "-DCMAKE_CUDA_ARCHITECTURES=native"
+     )
 endif()
 
 vcpkg_cmake_configure(
