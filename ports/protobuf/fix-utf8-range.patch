@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 15065d874..540c12253 100644
+index ea004a6b6..681e8acf4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -302,6 +302,7 @@ endif (protobuf_BUILD_TESTS)
+@@ -273,6 +273,7 @@ endif (protobuf_BUILD_TESTS)
  include(${protobuf_SOURCE_DIR}/cmake/abseil-cpp.cmake)
  
  if (protobuf_BUILD_PROTOBUF_BINARIES)
