@@ -34,9 +34,6 @@
     "async-promise": {
       "description": "Enable async promises for loading images on the web"
     },
-    "drawers": {
-      "description": "Enable building the tgfx-drawers library for testing"
-    },
     "layers": {
       "description": "Enable building the layers module"
     },

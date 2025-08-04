@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Tencent/tgfx
-        REF de33316656ad7b5ab905731e6d03c4fc1315b466
-        SHA512 c743716f2cb873cdb78e995302bc14cc36a43d006a046e0e09c558b0ede58cec40b7648b189499c072557006fa2002acb7b6d03aa041ed3405b677f2b7d5d912
+        REF 396d4d6fa8afac25e0b7dbdd63b927f2b2290b36
+        SHA512 6dcf5fb71d048f62b9baf1427c2ad82043d149d6d7387b5d6938b5ac27b9e7a7d8f77809839eae9813322d46400feb74e6e307e55cdcd11b07ebcba005c3c552
         PATCHES
             disable-depsync.patch
 )
@@ -51,7 +51,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
         svg             TGFX_BUILD_SVG
         layers          TGFX_BUILD_LAYERS
-        drawers         TGFX_BUILD_DRAWERS
         qt              TGFX_USE_QT
         swiftshader     TGFX_USE_SWIFTSHADER
         angle           TGFX_USE_ANGLE
@@ -137,12 +136,7 @@ if(NOT TGFX_PLATFORM)
     message(FATAL_ERROR "Unsupported platform: ${VCPKG_TARGET_TRIPLET}")
 endif()
 
-set(BASE_BUILD_ARGS "build_tgfx")
-list(APPEND BASE_BUILD_ARGS "-p" "${TGFX_PLATFORM}")
-
-if(TGFX_ARCH)
-    list(APPEND BASE_BUILD_ARGS "-a" "${TGFX_ARCH}")
-endif()
+set(BASE_BUILD_ARGS "")
 
 foreach(option IN LISTS FEATURE_OPTIONS)
     if(option MATCHES "^-D(.+)=(.+)$")
@@ -208,54 +202,18 @@ endif()
 set(ENV{CMAKE_COMMAND} "${CMAKE_COMMAND}")
 set(ENV{CMAKE_PREFIX_PATH} "${CURRENT_INSTALLED_DIR}")
 
-if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    set(RELEASE_BUILD_ARGS ${BASE_BUILD_ARGS})
-    vcpkg_execute_required_process(
-            COMMAND "${NODEJS}" ${RELEASE_BUILD_ARGS}
-            WORKING_DIRECTORY "${SOURCE_PATH}"
-            LOGNAME tgfx_build_release
-    )
-endif()
+vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            ${BASE_BUILD_ARGS}
+            -DTGFX_BUILD_VCPKG=ON    # 强制启用vcpkg支持
+)
 
-if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    set(DEBUG_BUILD_ARGS ${BASE_BUILD_ARGS})
-    list(APPEND DEBUG_BUILD_ARGS "-d")
-    vcpkg_execute_required_process(
-            COMMAND "${NODEJS}" ${DEBUG_BUILD_ARGS}
-            WORKING_DIRECTORY "${SOURCE_PATH}"
-            LOGNAME tgfx_build_debug
-    )
-endif()
+vcpkg_cmake_install()
 
-set(RELEASE_OUT_DIR "${SOURCE_PATH}/out/release/${TGFX_PLATFORM}")
-set(DEBUG_OUT_DIR "${SOURCE_PATH}/out/debug/${TGFX_PLATFORM}")
+vcpkg_cmake_config_fixup(CONFIG_PATH share/tgfx)
 
-if(TGFX_ARCH)
-    set(RELEASE_OUT_DIR "${RELEASE_OUT_DIR}/${TGFX_ARCH}")
-    set(DEBUG_OUT_DIR "${DEBUG_OUT_DIR}/${TGFX_ARCH}")
-endif()
-
-file(INSTALL "${SOURCE_PATH}/include/"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/include"
-        FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN "*.hxx")
-
-if(EXISTS "${RELEASE_OUT_DIR}")
-    file(GLOB RELEASE_LIBS "${RELEASE_OUT_DIR}/*.a" "${RELEASE_OUT_DIR}/*.lib" "${RELEASE_OUT_DIR}/*.so")
-    if(RELEASE_LIBS)
-        file(INSTALL ${RELEASE_LIBS}
-                DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    endif()
-endif()
-
-if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    if(EXISTS "${DEBUG_OUT_DIR}")
-        file(GLOB DEBUG_LIBS "${DEBUG_OUT_DIR}/*.a" "${DEBUG_OUT_DIR}/*.lib" "${DEBUG_OUT_DIR}/*.so")
-        if(DEBUG_LIBS)
-            file(INSTALL ${DEBUG_LIBS}
-                    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-        endif()
-    endif()
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -263,11 +221,6 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
-
-generate_tgfx_config_cmake()
-
-file(INSTALL "${CURRENT_PACKAGES_DIR}/share/tgfx/tgfxConfig.cmake"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/share/tgfx")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
