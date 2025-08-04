@@ -4,6 +4,11 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 9138ac1b1c248246ed9840ab3879a6e18da60c709454ede2cb8e45e66e949998ab6e2c8aba557f0bb0b650ec430caeb546695b23387321ced5bc288866e04ad7
     HEAD_REF master
+    PATCHES
+        fix-static-build.patch
+        fix-default-proto-file-path.patch
+        fix-utf8-range.patch
+        fix-install-dirs.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
