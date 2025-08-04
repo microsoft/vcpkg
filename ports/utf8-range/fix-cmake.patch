@@ -1,8 +1,24 @@
 diff --git a/third_party/utf8_range/CMakeLists.txt b/third_party/utf8_range/CMakeLists.txt
-index 82d1965b5..a39e90a21 100644
+index 82d1965b5..d3f211d3e 100644
 --- a/third_party/utf8_range/CMakeLists.txt
 +++ b/third_party/utf8_range/CMakeLists.txt
-@@ -70,6 +70,7 @@ if (utf8_range_ENABLE_INSTALL)
+@@ -19,15 +19,6 @@ add_library (utf8_range
+ # A heavier-weight C++ wrapper that supports Abseil.
+ add_library (utf8_validity utf8_range.c)
+ 
+-set_target_properties(utf8_range PROPERTIES
+-  VERSION ${protobuf_VERSION}
+-  OUTPUT_NAME ${LIB_PREFIX}utf8_range
+-)
+-set_target_properties(utf8_validity PROPERTIES
+-  VERSION ${protobuf_VERSION}
+-  OUTPUT_NAME ${LIB_PREFIX}utf8_validity
+-)
+-
+ # Load Abseil dependency.
+ if (NOT TARGET absl::strings)
+   if (NOT ABSL_ROOT_DIR)
+@@ -70,6 +61,7 @@ if (utf8_range_ENABLE_INSTALL)
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
          LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
          ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
