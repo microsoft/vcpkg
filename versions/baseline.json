@@ -5706,7 +5706,7 @@
     },
     "libxmlpp": {
       "baseline": "5.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libxmp": {
       "baseline": "4.6.0",
