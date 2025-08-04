@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f9cdd1c20..24d891d26 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -80,12 +80,6 @@ if(SFML_OS_ANDROID)
+ 
+     # avoid missing libraries when building SFML for Android with NDK r19c and later
+     list(PREPEND CMAKE_FIND_ROOT_PATH "${PROJECT_SOURCE_DIR}")
+-
+-    # install everything in $NDK/sources/ because this path is appended by the NDK (convenient)
+-    set(CMAKE_INSTALL_PREFIX ${CMAKE_ANDROID_NDK}/sources/third_party/sfml)
+-
+-    # we install libs in a subdirectory named after the ABI
+-    set(CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_LIBDIR}/${CMAKE_ANDROID_ARCH_ABI}")
+ endif()
+ 
+ # Install directories

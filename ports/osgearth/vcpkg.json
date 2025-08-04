@@ -1,11 +1,11 @@
 {
   "name": "osgearth",
   "version": "3.7.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "osgEarth - 3D Maps for OpenSceneGraph / C++14",
   "homepage": "https://github.com/gwaldron/osgearth",
   "license": "LGPL-3.0-or-later",
-  "supports": "!(arm32 | x86 | wasm32 | xbox)",
+  "supports": "!(arm32 | x86 | wasm32 | xbox) & !(windows & arm64)",
   "dependencies": [
     "blend2d",
     "draco",

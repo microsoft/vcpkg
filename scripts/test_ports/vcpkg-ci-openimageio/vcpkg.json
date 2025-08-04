@@ -28,6 +28,7 @@
             "ffmpeg",
             "freetype",
             "gif",
+            "libheif",
             "libraw",
             "opencolorio",
             "opencv",
@@ -37,6 +38,7 @@
               "platform": "!(windows & static) & !uwp & !mingw"
             },
             "tools",
+            "viewer",
             "webp"
           ]
         }

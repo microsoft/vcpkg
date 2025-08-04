@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO eclipse/mosquitto
     HEAD_REF master
     REF "v${VERSION}"
-    SHA512 92994ec34cebc56dd9aba1a5c3e082117157b42dc5a4c418a9e57a741ad0f2d909226e432082d21b4c9836d2f13fc37d39a1a77f0122a349d1ba6d50974e5190
+    SHA512 ca8bdcb10fea751e655e2de393479b2f863287b396b13e441de46c32918229c1f80a386fdd6d0daf3b0161f640702b6d8a87f2278c9baf2150e2c533cb59e57a
     PATCHES
         0003-add-find_package-libwebsockets.patch
         0004-support-static-build.patch
