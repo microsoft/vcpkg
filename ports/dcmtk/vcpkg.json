@@ -1,7 +1,7 @@
 {
   "name": "dcmtk",
   "version": "3.6.9",
-  "port-version": 1,
+  "port-version": 2,
   "description": "This DICOM ToolKit (DCMTK) package consists of source code, documentation and installation instructions for a set of software libraries and applications implementing part of the DICOM/MEDICOM Standard.",
   "homepage": "https://github.com/DCMTK/dcmtk",
   "license": null,
@@ -28,6 +28,12 @@
       "description": "Enable Iconv support",
       "dependencies": [
         "libiconv"
+      ]
+    },
+    "openjpeg": {
+      "description": "Enable OpenJPEG support",
+      "dependencies": [
+        "openjpeg"
       ]
     },
     "openssl": {
