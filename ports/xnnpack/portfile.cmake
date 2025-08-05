@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-build.patch
+        patch-cmake-config.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
