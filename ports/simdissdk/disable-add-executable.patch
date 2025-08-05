@@ -1,0 +1,16 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 9873bdbc..46eb668f 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -89,8 +89,11 @@ include(CheckOSGEarthMethodExists)
+ include(TestBigEndian)
+ test_big_endian(SDK_BIG_ENDIAN)
+ 
++if(USING_VCPKG)
++else()
+ # Defines an add_executable that respects CMAKE_<CONFIGURATION>_POSTFIX for non-imported executables
+ include(AddExecutablePostfix)
++endif()
+ 
+ # Set architecture identifiers
+ string(TOUPPER ${BUILD_SYSTEM_ARCH} ARCH)
