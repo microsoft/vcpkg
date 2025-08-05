@@ -85,8 +85,7 @@ $buildtreesRoot = Join-Path $WorkingRoot 'b'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'p'
 
-# Publish azcopy logs for debugging
-$env:AZCOPY_LOG_LOCATION = Join-Path $WorkingRoot 'faiure-logs/azcopy-logs'
+$env:AZCOPY_LOG_LOCATION = Join-Path $ArtifactStagingDirectory 'failure-logs/azcopy-logs'
 $env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $WorkingRoot 'azcopy-plans'
 
 $commonArgs = @(
