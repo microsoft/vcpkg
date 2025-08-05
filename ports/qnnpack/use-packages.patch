@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 932f9e7..b74eb93 100644
+index 932f9e7..06edfea 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -13,8 +13,6 @@ PROJECT(QNNPACK C CXX ASM)
@@ -106,7 +106,7 @@ index 932f9e7..b74eb93 100644
  TARGET_LINK_LIBRARIES(qnnpack PRIVATE cpuinfo)
  
  # ---[ Configure pthreadpool
-+find_package(pthreadpool CONFIG REQUIRED)
++find_package(unofficial-pthreadpool CONFIG REQUIRED)
 +add_library(pthreadpool ALIAS unofficial::pthreadpool)
  IF(NOT TARGET pthreadpool)
    SET(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
