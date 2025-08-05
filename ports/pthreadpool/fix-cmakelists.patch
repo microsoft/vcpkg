@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7fa4285..30b4b7b 100644
+index 1361e94..bf098c4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,8 +4,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.5 FATAL_ERROR)
@@ -29,7 +29,7 @@ index 7fa4285..30b4b7b 100644
    MESSAGE(STATUS "Downloading FXdiv to ${CMAKE_BINARY_DIR}/FXdiv-source (define FXDIV_SOURCE_DIR to avoid it)")
    CONFIGURE_FILE(cmake/DownloadFXdiv.cmake "${CMAKE_BINARY_DIR}/FXdiv-download/CMakeLists.txt")
    EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-@@ -91,21 +89,13 @@ ELSE()
+@@ -92,21 +90,13 @@ ELSE()
  ENDIF()
  
  ADD_LIBRARY(pthreadpool_interface INTERFACE)
@@ -53,7 +53,7 @@ index 7fa4285..30b4b7b 100644
  
  IF(PTHREADPOOL_SYNC_PRIMITIVE STREQUAL "condvar")
    TARGET_COMPILE_DEFINITIONS(pthreadpool PRIVATE PTHREADPOOL_USE_FUTEX=0)
-@@ -135,7 +125,7 @@ ENDIF()
+@@ -136,7 +126,7 @@ ENDIF()
  SET_TARGET_PROPERTIES(pthreadpool PROPERTIES
    C_STANDARD 11
    C_EXTENSIONS NO)
@@ -62,7 +62,7 @@ index 7fa4285..30b4b7b 100644
  TARGET_INCLUDE_DIRECTORIES(pthreadpool PRIVATE src)
  IF(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
    SET(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-@@ -154,6 +144,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+@@ -155,6 +145,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
  ENDIF()
  
  # ---[ Configure FXdiv
@@ -72,19 +72,39 @@ index 7fa4285..30b4b7b 100644
  IF(NOT TARGET fxdiv)
    SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -163,9 +156,14 @@ IF(NOT TARGET fxdiv)
+@@ -164,10 +157,22 @@ IF(NOT TARGET fxdiv)
  ENDIF()
  TARGET_LINK_LIBRARIES(pthreadpool PRIVATE fxdiv)
  
 -INSTALL(TARGETS pthreadpool
 +
 +INSTALL(TARGETS pthreadpool pthreadpool_interface
-+  EXPORT unofficial-pthreadpool-config
++  EXPORT unofficial-pthreadpool-config-targets
 +  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+install(EXPORT unofficial-pthreadpool-config NAMESPACE unofficial::
-+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME}) # share/unofficial-pthreadpool
  
++install(EXPORT unofficial-pthreadpool-config-targets NAMESPACE unofficial::
++  FILE unofficial-pthreadpool-config-targets.cmake
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME}) # share/unofficial-pthreadpool
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/unofficial-pthreadpool-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME})
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-pthreadpool-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME})
++
++
  IF(PTHREADPOOL_BUILD_TESTS)
    # ---[ Build google test
+   IF(NOT TARGET gtest)
+diff --git a/Config.cmake.in b/Config.cmake.in
+new file mode 100644
+index 0000000..3ed0212
+--- /dev/null
++++ b/Config.cmake.in
+@@ -0,0 +1,6 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++find_dependency(fxdiv)
++
++include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-pthreadpool-config-targets.cmake" )
