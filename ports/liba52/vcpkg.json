@@ -1,0 +1,13 @@
+{
+  "name": "liba52",
+  "version": "0.7.4",
+  "description": "a free ATSC A/52 stream decoder",
+  "homepage": "https://liba52.sourceforge.io/",
+  "supports": "!(android | osx | uwp)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
