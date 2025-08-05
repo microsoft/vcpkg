@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 932f9e7..06edfea 100644
+index 932f9e7..187be72 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -13,8 +13,6 @@ PROJECT(QNNPACK C CXX ASM)
@@ -120,32 +120,26 @@ index 932f9e7..06edfea 100644
  IF(NOT TARGET fxdiv)
    SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -325,24 +323,27 @@ ENDIF()
+@@ -325,6 +323,8 @@ ENDIF()
  TARGET_LINK_LIBRARIES(qnnpack PRIVATE fxdiv)
  
  # ---[ Configure psimd
--IF(NOT TARGET psimd)
-+IF(FALSE)
++find_package(psimd CONFIG REQUIRED)
++add_library(psimd ALIAS psimd::psimd)
+ IF(NOT TARGET psimd)
    ADD_SUBDIRECTORY(
      "${PSIMD_SOURCE_DIR}"
-     "${CONFU_DEPENDENCIES_BINARY_DIR}/psimd")
- ENDIF()
--TARGET_LINK_LIBRARIES(qnnpack PRIVATE psimd)
-+find_path(PSIMD_INCLUDE_DIRS "psimd.h")
-+target_include_directories(qnnpack PRIVATE ${PSIMD_INCLUDE_DIRS})
+@@ -333,6 +333,8 @@ ENDIF()
+ TARGET_LINK_LIBRARIES(qnnpack PRIVATE psimd)
  
  # ---[ Configure FP16
--IF(NOT TARGET fp16)
-+IF(FALSE)
++find_package(fp16 CONFIG REQUIRED)
++add_library(fp16 ALIAS fp16::fp16)
+ IF(NOT TARGET fp16)
    SET(FP16_BUILD_TESTS OFF CACHE BOOL "")
    SET(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
-   ADD_SUBDIRECTORY(
-     "${FP16_SOURCE_DIR}"
-     "${CONFU_DEPENDENCIES_BINARY_DIR}/fp16")
- ENDIF()
--TARGET_LINK_LIBRARIES(qnnpack PRIVATE fp16)
-+find_path(FP16_INCLUDE_DIRS "fp16.h")
-+target_include_directories(qnnpack PRIVATE ${FP16_INCLUDE_DIRS})
+@@ -343,6 +345,7 @@ ENDIF()
+ TARGET_LINK_LIBRARIES(qnnpack PRIVATE fp16)
  
  INSTALL(TARGETS qnnpack
 +    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
