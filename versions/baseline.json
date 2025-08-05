@@ -6730,7 +6730,7 @@
     },
     "nnpack": {
       "baseline": "2021-02-21",
-      "port-version": 3
+      "port-version": 4
     },
     "node-addon-api": {
       "baseline": "8.3.1",
