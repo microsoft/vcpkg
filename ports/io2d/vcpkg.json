@@ -1,7 +1,7 @@
 {
   "name": "io2d",
   "version-date": "2020-09-14",
-  "port-version": 5,
+  "port-version": 6,
   "description": "a lightweight, cross platform drawing library",
   "dependencies": [
     {
@@ -18,6 +18,12 @@
     {
       "name": "graphicsmagick",
       "platform": "!osx"
+    },
+    "libiconv",
+    {
+      "name": "sdl2",
+      "default-features": false,
+      "platform": "android"
     },
     {
       "name": "vcpkg-cmake",

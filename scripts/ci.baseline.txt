@@ -445,9 +445,6 @@ imgui-sfml:x64-android=fail
 intelrdfpmathlib:arm-neon-android=fail
 intelrdfpmathlib:arm64-android=fail
 intelrdfpmathlib:x64-android=fail
-io2d:arm-neon-android=fail
-io2d:arm64-android=fail
-io2d:x64-android=fail
 irrlicht:x64-android=fail
 isal:x64-android=fail
 # Failing on try_run() in cross builds
