@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Tencent/tgfx
-        REF 396d4d6fa8afac25e0b7dbdd63b927f2b2290b36
-        SHA512 6dcf5fb71d048f62b9baf1427c2ad82043d149d6d7387b5d6938b5ac27b9e7a7d8f77809839eae9813322d46400feb74e6e307e55cdcd11b07ebcba005c3c552
+        REF 0d875c4da20882c172c707b5237759dc3a543178
+        SHA512 7672f53239896910a1a3939cd364aa8e84d8c3865aed12296fcb79fbf91e60ad05d5238062e0ac9cde3e16325cfe3a2e645efc31d21531763af495a38c959343
         PATCHES
             disable-depsync.patch
 )
@@ -158,7 +158,7 @@ vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${BASE_BUILD_ARGS}
-            -DTGFX_BUILD_VCPKG=ON    # 强制启用vcpkg支持
+            -DTGFX_BUILD_VCPKG=ON
 )
 
 vcpkg_cmake_install()
