@@ -7618,7 +7618,7 @@
     },
     "psimd": {
       "baseline": "2021-02-21",
-      "port-version": 2
+      "port-version": 3
     },
     "ptc-print": {
       "baseline": "1.4.1",
