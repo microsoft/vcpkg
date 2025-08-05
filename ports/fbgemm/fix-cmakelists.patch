@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0243f68..8e0006d 100644
+index 0243f68..ccf7331 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -94,13 +94,12 @@ project(fbgemm VERSION 0.1 LANGUAGES CXX C)
@@ -30,7 +30,15 @@ index 0243f68..8e0006d 100644
    if(FBGEMM_LIBRARY_TYPE STREQUAL "static")
      target_compile_definitions(fbgemm_generic PRIVATE ASMJIT_STATIC)
      target_compile_definitions(fbgemm_avx2 PRIVATE ASMJIT_STATIC)
-@@ -247,7 +246,8 @@ message(WARNING "CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
+@@ -199,7 +198,6 @@ if(MSVC)
+ else(MSVC)
+   string(APPEND CMAKE_CXX_FLAGS " -Wall")
+   string(APPEND CMAKE_CXX_FLAGS " -Wextra")
+-  string(APPEND CMAKE_CXX_FLAGS " -Werror")
+   string(APPEND CMAKE_CXX_FLAGS " -Wno-deprecated-declarations")
+   string(APPEND CMAKE_CXX_FLAGS " -Wunknown-pragmas")
+   string(APPEND CMAKE_CXX_FLAGS " -Wimplicit-fallthrough")
+@@ -247,7 +245,8 @@ message(WARNING "CMAKE_CXX_FLAGS_DEBUG is ${CMAKE_CXX_FLAGS_DEBUG}")
  message(WARNING "CMAKE_CXX_FLAGS_RELEASE is ${CMAKE_CXX_FLAGS_RELEASE}")
  message(WARNING "==========")
  
@@ -40,7 +48,7 @@ index 0243f68..8e0006d 100644
    # Download asmjit from github if ASMJIT_SRC_DIR is not specified.
    if(NOT DEFINED ASMJIT_SRC_DIR)
      set(ASMJIT_SRC_DIR "${FBGEMM_SOURCE_DIR}/external/asmjit"
-@@ -280,7 +280,8 @@ if(NOT TARGET asmjit)
+@@ -280,7 +279,8 @@ if(NOT TARGET asmjit)
    endif()
  endif()
  
@@ -50,7 +58,7 @@ index 0243f68..8e0006d 100644
    #Download cpuinfo from github if CPUINFO_SOURCE_DIR is not specified.
    if(NOT DEFINED CPUINFO_SOURCE_DIR)
      set(CPUINFO_SOURCE_DIR "${FBGEMM_SOURCE_DIR}/external/cpuinfo"
-@@ -301,26 +302,26 @@ endif()
+@@ -301,26 +301,26 @@ endif()
  target_include_directories(fbgemm_generic BEFORE
        PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
        PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>
@@ -85,7 +93,7 @@ index 0243f68..8e0006d 100644
  
  if(FBGEMM_LIBRARY_TYPE STREQUAL "default")
    add_library(fbgemm
-@@ -338,6 +339,7 @@ elseif(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
+@@ -338,6 +338,7 @@ elseif(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
    set_property(TARGET fbgemm_avx2 PROPERTY POSITION_INDEPENDENT_CODE ON)
    set_property(TARGET fbgemm_avx512 PROPERTY POSITION_INDEPENDENT_CODE ON)
    set_property(TARGET fbgemm_autovec PROPERTY POSITION_INDEPENDENT_CODE ON)
@@ -93,7 +101,7 @@ index 0243f68..8e0006d 100644
  elseif(FBGEMM_LIBRARY_TYPE STREQUAL "static")
    add_library(fbgemm STATIC
      $<TARGET_OBJECTS:fbgemm_generic>
-@@ -364,15 +366,10 @@ target_include_directories(fbgemm BEFORE
+@@ -364,15 +365,10 @@ target_include_directories(fbgemm BEFORE
      PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
      PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}/include>)
  
@@ -111,7 +119,7 @@ index 0243f68..8e0006d 100644
  endif()
  
  install(
-@@ -391,7 +388,7 @@ install(
+@@ -391,7 +387,7 @@ install(
    DESTINATION share/cmake/fbgemm
    FILE fbgemmLibraryConfig.cmake)
  
