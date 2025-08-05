@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 932f9e7..f7a3bb4 100644
+index 932f9e7..b74eb93 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -13,8 +13,6 @@ PROJECT(QNNPACK C CXX ASM)
@@ -91,66 +91,37 @@ index 932f9e7..f7a3bb4 100644
  SET_TARGET_PROPERTIES(qnnpack PROPERTIES
    C_STANDARD 99
    C_EXTENSIONS YES)
-@@ -275,7 +265,7 @@ TARGET_INCLUDE_DIRECTORIES(qnnpack PRIVATE src)
+@@ -274,6 +264,10 @@ TARGET_INCLUDE_DIRECTORIES(qnnpack PUBLIC include)
+ TARGET_INCLUDE_DIRECTORIES(qnnpack PRIVATE src)
  SET_TARGET_PROPERTIES(qnnpack PROPERTIES PUBLIC_HEADER include/qnnpack.h)
  
- # ---[ Configure clog
--IF(NOT TARGET clog)
-+IF(FALSE)
-   SET(CLOG_BUILD_TESTS OFF CACHE BOOL "")
-   SET(CLOG_RUNTIME_TYPE "${CPUINFO_RUNTIME_TYPE}" CACHE STRING "")
-   ADD_SUBDIRECTORY(
-@@ -284,10 +274,10 @@ IF(NOT TARGET clog)
-   # We build static version of clog but a dynamic library may indirectly depend on it
-   SET_PROPERTY(TARGET clog PROPERTY POSITION_INDEPENDENT_CODE ON)
- ENDIF()
--TARGET_LINK_LIBRARIES(qnnpack PRIVATE clog)
-+
- 
- # ---[ Configure cpuinfo
--IF(NOT TARGET cpuinfo)
-+IF(FALSE)
-   SET(CPUINFO_BUILD_TOOLS OFF CACHE BOOL "")
-   SET(CPUINFO_BUILD_UNIT_TESTS OFF CACHE BOOL "")
-   SET(CPUINFO_BUILD_MOCK_TESTS OFF CACHE BOOL "")
-@@ -296,17 +286,19 @@ IF(NOT TARGET cpuinfo)
-     "${CPUINFO_SOURCE_DIR}"
-     "${CONFU_DEPENDENCIES_BINARY_DIR}/cpuinfo")
- ENDIF()
--TARGET_LINK_LIBRARIES(qnnpack PRIVATE cpuinfo)
-+
 +find_package(cpuinfo CONFIG REQUIRED)
-+target_link_libraries(qnnpack PUBLIC cpuinfo::cpuinfo cpuinfo::clog)
++add_library(cpuinfo ALIAS cpuinfo::cpuinfo)
++add_library(clog ALIAS cpuinfo::clog)
++
+ # ---[ Configure clog
+ IF(NOT TARGET clog)
+   SET(CLOG_BUILD_TESTS OFF CACHE BOOL "")
+@@ -299,6 +293,8 @@ ENDIF()
+ TARGET_LINK_LIBRARIES(qnnpack PRIVATE cpuinfo)
  
  # ---[ Configure pthreadpool
--IF(NOT TARGET pthreadpool)
-+IF(FALSE)
++find_package(pthreadpool CONFIG REQUIRED)
++add_library(pthreadpool ALIAS unofficial::pthreadpool)
+ IF(NOT TARGET pthreadpool)
    SET(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
    SET(PTHREADPOOL_BUILD_BENCHMARKS OFF CACHE BOOL "")
-   ADD_SUBDIRECTORY(
-     "${PTHREADPOOL_SOURCE_DIR}"
-     "${CONFU_DEPENDENCIES_BINARY_DIR}/pthreadpool")
- ENDIF()
--IF(QNNPACK_CUSTOM_THREADPOOL)
-+IF(FALSE)
-   # Depend on pthreadpool interface, but not on implementation.
-   # This is used when QNNPACK user (e.g. Caffe2) provides its own threadpool implementation.
-   TARGET_LINK_LIBRARIES(qnnpack PUBLIC pthreadpool_interface)
-@@ -315,34 +307,38 @@ ELSE()
+@@ -315,6 +311,8 @@ ELSE()
  ENDIF()
  
  # ---[ Configure FXdiv
--IF(NOT TARGET fxdiv)
-+IF(FALSE)
++find_package(fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS fxdiv::fxdiv)
+ IF(NOT TARGET fxdiv)
    SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-   ADD_SUBDIRECTORY(
-     "${FXDIV_SOURCE_DIR}"
-     "${CONFU_DEPENDENCIES_BINARY_DIR}/fxdiv")
- ENDIF()
--TARGET_LINK_LIBRARIES(qnnpack PRIVATE fxdiv)
-+find_path(FXDIV_INCLUDE_DIRS "fxdiv.h")
-+target_include_directories(qnnpack PRIVATE ${FXDIV_INCLUDE_DIRS})
+@@ -325,24 +323,27 @@ ENDIF()
+ TARGET_LINK_LIBRARIES(qnnpack PRIVATE fxdiv)
  
  # ---[ Configure psimd
 -IF(NOT TARGET psimd)
