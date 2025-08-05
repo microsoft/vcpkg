@@ -12,11 +12,15 @@ vcpkg_from_github(
 )
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
-
 get_tgfx_externals("${SOURCE_PATH}")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
+endif()
+set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
 find_program(NODEJS
         NAMES node
@@ -76,10 +80,12 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_DETECTED_CMAKE_C_COMPILER)
-    list(APPEND PLATFORM_OPTIONS "-DCMAKE_C_COMPILER=\"${VCPKG_DETECTED_CMAKE_C_COMPILER}\"")
+    string(REPLACE " " "\\ " ESCAPED_C_COMPILER "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    list(APPEND PLATFORM_OPTIONS "-DCMAKE_C_COMPILER=\"${ESCAPED_C_COMPILER}\"")
 endif()
 if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
-    list(APPEND PLATFORM_OPTIONS "-DCMAKE_CXX_COMPILER=\"${VCPKG_DETECTED_CMAKE_CXX_COMPILER}\"")
+    string(REPLACE " " "\\ " ESCAPED_CXX_COMPILER "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+    list(APPEND PLATFORM_OPTIONS "-DCMAKE_CXX_COMPILER=\"${ESCAPED_CXX_COMPILER}\"")
 endif()
 
 set(TGFX_PLATFORM "")
@@ -221,7 +227,3 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
-endif()

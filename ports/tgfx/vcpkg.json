@@ -32,7 +32,8 @@
       "description": "Enable building with the ANGLE library"
     },
     "async-promise": {
-      "description": "Enable async promises for loading images on the web"
+      "description": "Enable async promises for loading images on the web",
+      "supports": "emscripten"
     },
     "layers": {
       "description": "Enable building the layers module"
