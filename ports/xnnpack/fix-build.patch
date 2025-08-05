@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 856a47d..ed464f6 100644
+index 856a47d..6da13ad 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1040,14 +1040,14 @@ IF(XNNPACK_BUILD_ALL_MICROKERNELS)
@@ -19,17 +19,16 @@ index 856a47d..ed464f6 100644
    TARGET_INCLUDE_DIRECTORIES(XNNPACK PRIVATE src)
    TARGET_INCLUDE_DIRECTORIES(allocator PRIVATE include src)
    TARGET_INCLUDE_DIRECTORIES(cache PRIVATE include src)
-@@ -1085,6 +1085,9 @@ IF(XNNPACK_BUILD_WITH_LIBM)
+@@ -1085,6 +1085,8 @@ IF(XNNPACK_BUILD_WITH_LIBM)
  ENDIF()
  
  # ---[ Configure cpuinfo
 +find_package(cpuinfo CONFIG REQUIRED)
 +add_library(cpuinfo ALIAS cpuinfo::cpuinfo)
-+
  IF(NOT TARGET cpuinfo)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(CPUINFO_BUILD_TOOLS OFF CACHE BOOL "")
-@@ -1111,6 +1114,8 @@ IF(XNNPACK_BUILD_LIBRARY)
+@@ -1111,6 +1113,8 @@ IF(XNNPACK_BUILD_LIBRARY)
  ENDIF()
  
  # ---[ Configure pthreadpool
@@ -38,23 +37,16 @@ index 856a47d..ed464f6 100644
  IF(NOT TARGET pthreadpool)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
-@@ -1143,12 +1148,12 @@ IF(NOT TARGET fxdiv)
-       "${FXDIV_SOURCE_DIR}"
-       "${CMAKE_BINARY_DIR}/FXdiv")
-   ELSE()
--    FIND_FILE(FXDIV_HDR fxdiv.h PATH_SUFFIXES include PATHS "${FXDIV_SOURCE_DIR}")
-+    FIND_PATH(FXDIV_HDR fxdiv.h PATH_SUFFIXES include)
-     IF(NOT FXDIV_HDR)
-       MESSAGE(FATAL_ERROR "Cannot find fxdiv")
-     ENDIF()
--    ADD_LIBRARY(fxdiv STATIC "${FXDIV_HDR}")
--    TARGET_INCLUDE_DIRECTORIES(fxdiv INTERFACE "${FXDIV_SOURCE_DIR}/include")
-+    ADD_LIBRARY(fxdiv INTERFACE IMPORTED)
-+    target_include_directories(fxdiv INTERFACE "${FXDIV_HDR}")
-     SET_PROPERTY(TARGET fxdiv PROPERTY LINKER_LANGUAGE C)
-   ENDIF()
- ENDIF()
-@@ -1162,10 +1167,14 @@ IF(XNNPACK_BUILD_LIBRARY)
+@@ -1135,6 +1139,8 @@ ENDIF()
+ TARGET_LINK_LIBRARIES(xnnpack-base INTERFACE pthreadpool)
+ 
+ # ---[ Configure FXdiv
++find_package(fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS fxdiv::fxdiv)
+ IF(NOT TARGET fxdiv)
+   IF(NOT XNNPACK_USE_SYSTEM_LIBS)
+     SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+@@ -1162,10 +1168,14 @@ IF(XNNPACK_BUILD_LIBRARY)
  ENDIF()
  
  IF(XNNPACK_BUILD_LIBRARY)
