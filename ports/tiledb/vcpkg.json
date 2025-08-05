@@ -4,6 +4,7 @@
   "description": "Cloud-native embeddable array storage engine",
   "homepage": "https://github.com/TileDB-Inc/TileDB",
   "license": "MIT",
+  "supports": "!(x86 | arm32)",
   "dependencies": [
     "bzip2",
     "libmagic",
