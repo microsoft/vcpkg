@@ -27,7 +27,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.xz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.xz"
     FILENAME "gettext-${VERSION}.tar.xz"
-    SHA512 8fb6934c7603304ce1b8f23740e68a6d23252e71f3cb22849506230ad289c03dd1a4d9bf01387b9a7bc6413e37bda14ab9bf166eecd678373d896c08c016c9dd
+    SHA512 544e41c9390695df1c21542842e9ca027a03cb7d4045d8cd759dec1a3dfb624aae900751b458bdb31d6454b37c40c474a952059b884555a03c7c95d6d0e687b1
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
