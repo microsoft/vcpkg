@@ -1,7 +1,7 @@
 {
   "name": "ceres",
   "version": "2.2.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
   "license": "Apache-2.0",
@@ -9,7 +9,7 @@
     "eigen3",
     {
       "name": "glog",
-      "platform": "!(arm & uwp)"
+      "platform": "!ios & !uwp"
     },
     {
       "name": "vcpkg-cmake",
@@ -23,7 +23,6 @@
   "features": {
     "cuda": {
       "description": "Support for CUDA based dense solvers",
-      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
       "dependencies": [
         "cuda"
       ]
@@ -54,17 +53,13 @@
         },
         {
           "name": "suitesparse-cholmod",
+          "default-features": false,
           "features": [
             "matrixops"
           ]
         },
+        "suitesparse-config",
         "suitesparse-spqr"
-      ]
-    },
-    "tools": {
-      "description": "Ceres tools",
-      "dependencies": [
-        "gflags"
       ]
     }
   }
