@@ -7638,7 +7638,7 @@
     },
     "pthreadpool": {
       "baseline": "2024-11-04",
-      "port-version": 0
+      "port-version": 1
     },
     "pthreads": {
       "baseline": "3.0.0",
