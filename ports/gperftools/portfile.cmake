@@ -2,14 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gperftools/gperftools
     REF gperftools-${VERSION}
-    SHA512 a6eddee06cd6a9344c724522a5bb977082d6ee30eded1c6793d6bb508d4c8542a238dc0f62818c715f09312c858cc90cded0ee95ba2a3ea15fad8a0b78bcdaea
+    SHA512 0373053d1a67684a8a8c47818f3e4a5ad8f88993107868a1d90305a401c54e6ca94bde4dc5187bfce8cfc99e98e04ac72f3e2894806160a4dca006b6c86ba215
     HEAD_REF master
     PATCHES
         libunwind.diff
         install.diff
         win32-override.diff
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/vendor")
 
 if("override" IN_LIST FEATURES)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
