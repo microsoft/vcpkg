@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 856a47d..61c8bec 100644
+index 856a47d..ed464f6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1040,7 +1040,7 @@ IF(XNNPACK_BUILD_ALL_MICROKERNELS)
+@@ -1040,14 +1040,14 @@ IF(XNNPACK_BUILD_ALL_MICROKERNELS)
  ENDIF()
  TARGET_INCLUDE_DIRECTORIES(datatype PRIVATE include src)
  TARGET_INCLUDE_DIRECTORIES(microkernels-prod PRIVATE include src)
@@ -11,45 +11,34 @@ index 856a47d..61c8bec 100644
  TARGET_INCLUDE_DIRECTORIES(indirection PRIVATE include src)
  TARGET_INCLUDE_DIRECTORIES(microparams-init PRIVATE include src)
  TARGET_INCLUDE_DIRECTORIES(normalization PRIVATE include src)
-@@ -1095,14 +1095,9 @@ IF(NOT TARGET cpuinfo)
-       "${CPUINFO_SOURCE_DIR}"
-       "${CMAKE_BINARY_DIR}/cpuinfo")
-   ELSE()
--    ADD_LIBRARY(cpuinfo SHARED IMPORTED)
--    FIND_LIBRARY(CPUINFO_LIBRARY cpuinfo PATHS "${CPUINFO_SOURCE_DIR}/lib")
--    IF(NOT CPUINFO_LIBRARY)
--      MESSAGE(FATAL_ERROR "Cannot find cpuinfo")
--    ENDIF()
--    TARGET_INCLUDE_DIRECTORIES(cpuinfo INTERFACE "${CPUINFO_SOURCE_DIR}/include")
--    SET_PROPERTY(TARGET cpuinfo PROPERTY IMPORTED_LOCATION "${CPUINFO_LIBRARY}")
--    SET_PROPERTY(TARGET cpuinfo PROPERTY IMPORTED_IMPLIB "${CPUINFO_LIBRARY}")
-+    ADD_LIBRARY(cpuinfo INTERFACE)
-+    FIND_PACKAGE(cpuinfo CONFIG REQUIRED)
-+    TARGET_LINK_LIBRARIES(cpuinfo INTERFACE cpuinfo::cpuinfo)
-   ENDIF()
- ENDIF()
+ TARGET_INCLUDE_DIRECTORIES(packing PRIVATE include src)
+ TARGET_INCLUDE_DIRECTORIES(logging PRIVATE include src)
  IF(XNNPACK_BUILD_LIBRARY)
-@@ -1120,16 +1115,12 @@ IF(NOT TARGET pthreadpool)
-       "${PTHREADPOOL_SOURCE_DIR}"
-       "${CMAKE_BINARY_DIR}/pthreadpool")
-   ELSE()
-+    find_package(unofficial-pthreadpool CONFIG REQUIRED)
-     ADD_LIBRARY(pthreadpool SHARED IMPORTED)
--    FIND_LIBRARY(PTHREADPOOL_LIBRARY pthreadpool PATHS "${PTHREADPOOL_SOURCE_DIR}/lib")
--    IF(NOT PTHREADPOOL_LIBRARY)
--      MESSAGE(FATAL_ERROR "Cannot find pthreadpool")
--    ENDIF()
-+    FIND_LIBRARY(PTHREADPOOL_LIBRARY NAMES pthreadpool REQUIRED)
-     FIND_PACKAGE(Threads REQUIRED)
--    TARGET_INCLUDE_DIRECTORIES(pthreadpool INTERFACE "${PTHREADPOOL_SOURCE_DIR}/include")
--    TARGET_LINK_LIBRARIES(pthreadpool INTERFACE Threads::Threads)
-+    TARGET_LINK_LIBRARIES(pthreadpool INTERFACE Threads::Threads unofficial::pthreadpool unofficial::pthreadpool_interface)
-     SET_PROPERTY(TARGET pthreadpool PROPERTY IMPORTED_LOCATION "${PTHREADPOOL_LIBRARY}")
--    SET_PROPERTY(TARGET pthreadpool PROPERTY IMPORTED_IMPLIB "${PTHREADPOOL_LIBRARY}")
-   ENDIF()
+-  TARGET_INCLUDE_DIRECTORIES(XNNPACK PUBLIC include)
++  TARGET_INCLUDE_DIRECTORIES(XNNPACK PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>) 
+   TARGET_INCLUDE_DIRECTORIES(XNNPACK PRIVATE src)
+   TARGET_INCLUDE_DIRECTORIES(allocator PRIVATE include src)
+   TARGET_INCLUDE_DIRECTORIES(cache PRIVATE include src)
+@@ -1085,6 +1085,9 @@ IF(XNNPACK_BUILD_WITH_LIBM)
  ENDIF()
- TARGET_LINK_LIBRARIES(xnnpack-base INTERFACE pthreadpool)
-@@ -1143,12 +1134,12 @@ IF(NOT TARGET fxdiv)
+ 
+ # ---[ Configure cpuinfo
++find_package(cpuinfo CONFIG REQUIRED)
++add_library(cpuinfo ALIAS cpuinfo::cpuinfo)
++
+ IF(NOT TARGET cpuinfo)
+   IF(NOT XNNPACK_USE_SYSTEM_LIBS)
+     SET(CPUINFO_BUILD_TOOLS OFF CACHE BOOL "")
+@@ -1111,6 +1114,8 @@ IF(XNNPACK_BUILD_LIBRARY)
+ ENDIF()
+ 
+ # ---[ Configure pthreadpool
++find_package(unofficial-pthreadpool CONFIG REQUIRED)
++add_library(pthreadpool ALIAS unofficial::pthreadpool)
+ IF(NOT TARGET pthreadpool)
+   IF(NOT XNNPACK_USE_SYSTEM_LIBS)
+     SET(PTHREADPOOL_BUILD_TESTS OFF CACHE BOOL "")
+@@ -1143,12 +1148,12 @@ IF(NOT TARGET fxdiv)
        "${FXDIV_SOURCE_DIR}"
        "${CMAKE_BINARY_DIR}/FXdiv")
    ELSE()
@@ -65,3 +54,19 @@ index 856a47d..61c8bec 100644
      SET_PROPERTY(TARGET fxdiv PROPERTY LINKER_LANGUAGE C)
    ENDIF()
  ENDIF()
+@@ -1162,10 +1167,14 @@ IF(XNNPACK_BUILD_LIBRARY)
+ ENDIF()
+ 
+ IF(XNNPACK_BUILD_LIBRARY)
+-  INSTALL(TARGETS XNNPACK microkernels-prod
++  INSTALL(TARGETS XNNPACK microkernels-prod xnnpack-base allocator cache hardware-config indirection memory microkernel-utils microparams-init mutex normalization  operators operator-run operator-utils packing subgraph datatype reference-ukernels logging      
++  EXPORT xnnpack-config
++      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++  INSTALL(EXPORT xnnpack-config NAMESPACE xnnpack::
++    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}) # share/xnnpack
+ ENDIF()
+ 
+ # ---[ Configure KleidiAI
