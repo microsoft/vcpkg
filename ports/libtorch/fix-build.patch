@@ -217,7 +217,7 @@ index 5227204..b97a084 100644
      message("-- Found onnx: ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY}")
      list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)
    endif()
-+  find_package(onnx CONFIG REQUIRED)
++  find_package(ONNX CONFIG REQUIRED)
    # Recover the build shared libs option.
    set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
  endif()
