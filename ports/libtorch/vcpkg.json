@@ -1,23 +1,21 @@
 {
   "name": "libtorch",
-  "version": "2.1.2",
-  "port-version": 12,
+  "version": "2.7.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
-  "supports": "(windows & !static) | osx | linux",
+  "supports": "windows | osx | linux",
   "dependencies": [
     "blas",
     "cpuinfo",
     "eigen3",
-    "fftw3",
+    "fbgemm",
     "flatbuffers",
     {
       "name": "flatbuffers",
       "host": true
     },
     "fmt",
-    "foxi",
     "foxi",
     "fp16",
     "gemmlowp",
@@ -26,11 +24,14 @@
     "lapack",
     "lmdb",
     "mimalloc",
+    "nlohmann-json",
     "onnx",
     "onnx-optimizer",
     "opencl",
+    "cpp-httplib",
     "pocketfft",
     "protobuf",
+    "pybind11",
     {
       "name": "protobuf",
       "host": true
@@ -52,6 +53,10 @@
     "xnnpack"
   ],
   "default-features": [
+    {
+      "name": "cuda",
+      "platform": "windows & !x86 & !static"
+    },
     "opencv",
     "zstd"
   ],
@@ -117,7 +122,7 @@
       ]
     },
     "opencv": {
-      "description": "Build with OpenCV",
+      "description": "Build with OpenCV 3.x",
       "dependencies": [
         "opencv"
       ]
