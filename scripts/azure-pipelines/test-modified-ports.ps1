@@ -85,6 +85,9 @@ $buildtreesRoot = Join-Path $WorkingRoot 'b'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'p'
 
+$env:AZCOPY_LOG_LOCATION = Join-Path $WorkingRoot 'azcopy-logs'
+$env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $WorkingRoot 'azcopy-plans'
+
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
@@ -210,6 +213,13 @@ if ($lastLastExitCode -ne 0)
 {
     Write-Error "vcpkg x-ci-clean failed. This is usually an infrastructure problem; trying again may help."
     exit $lastLastExitCode
+}
+
+if ($IsMacOS)
+{
+    Write-Host "macOS disk space report:"
+    & df -h | Where-Object { $_ -match "Avail|/System/Volumes/Data$" }
+    & du -sh $WorkingRoot
 }
 
 $parentHashesArgs = @()

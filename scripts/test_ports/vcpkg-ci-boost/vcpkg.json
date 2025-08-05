@@ -1,6 +1,7 @@
 {
   "name": "vcpkg-ci-boost",
   "version": "1",
+  "port-version": 5,
   "description": "Boost features testing within CI.",
   "dependencies": [
     "boost",

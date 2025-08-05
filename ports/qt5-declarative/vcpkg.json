@@ -1,6 +1,6 @@
 {
   "name": "qt5-declarative",
-  "version": "5.15.16",
+  "version": "5.15.17",
   "description": "Qt Declarative (Quick 2)",
   "license": null,
   "dependencies": [
