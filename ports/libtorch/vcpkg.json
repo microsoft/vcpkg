@@ -95,13 +95,6 @@
         }
       ]
     },
-    "leveldb": {
-      "description": "Build with LevelDB",
-      "dependencies": [
-        "leveldb",
-        "snappy"
-      ]
-    },
     "llvm": {
       "description": "Build with LLVM",
       "dependencies": [

@@ -73,7 +73,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     # tbb     AT_PARALLEL_NATIVE_TBB # AT_PARALLEL_ are alternatives
     # openmp  USE_OPENMP
     # openmp  AT_PARALLEL_OPENMP # AT_PARALLEL_ are alternatives
-    leveldb USE_LEVELDB
     opencl  USE_OPENCL
     cuda    USE_CUDA
     cuda    USE_CUDNN
