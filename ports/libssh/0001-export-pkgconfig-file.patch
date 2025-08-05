@@ -32,20 +32,22 @@ index 9877cd7..ce74d73 100644
  
  if (WITH_GSSAPI)
      find_package(GSSAPI)
-@@ -96,7 +103,6 @@ add_subdirectory(include)
+@@ -96,7 +103,7 @@ add_subdirectory(include)
  add_subdirectory(src)
  
  # pkg-config file
 -if (UNIX OR MINGW)
++if (1)
  configure_file(libssh.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc @ONLY)
  install(
    FILES
-@@ -106,7 +112,6 @@ install(
+@@ -106,7 +113,7 @@ install(
    COMPONENT
      pkgconfig
  )
 -endif (UNIX OR MINGW)
- 
++endif (1)
+
  # CMake config files
  include(CMakePackageConfigHelpers)
 @@ -255,3 +260,13 @@ message(STATUS "Global bind config: ${GLOBAL_BIND_CONFIG}")
@@ -103,3 +105,4 @@ index e0243bb..1dd9951 100644
  endif (WIN32)
  
  if (BUILD_STATIC_LIB)
+

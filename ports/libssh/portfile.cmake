@@ -3,7 +3,6 @@ vcpkg_download_distfile(distfile
     FILENAME libssh-${VERSION}.tar.xz
     SHA512 15d56c3f82ee81c3ab4af2b17eba054626bb53c3337ef45f829479f8b64c552f6e7cbf307e41c9792bcb3438f282d2690acbe994150bd03a8b6c21ba8b1cfe50
 )
-
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${distfile}"
     PATCHES
@@ -42,11 +41,16 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
-# This picks up lib/cmake/libssh and moves the config files to share/libssh
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libssh)
 
-# Remove debug include files (clean install)
+file(READ "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" cmake_config)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" "
+include(CMakeFindDependencyMacro)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_dependency(Threads)
+${cmake_config}"
+)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
