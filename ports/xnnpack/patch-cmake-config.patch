@@ -1,0 +1,42 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6da13ad..60af0a1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1169,13 +1169,20 @@ ENDIF()
+ 
+ IF(XNNPACK_BUILD_LIBRARY)
+   INSTALL(TARGETS XNNPACK microkernels-prod xnnpack-base allocator cache hardware-config indirection memory microkernel-utils microparams-init mutex normalization  operators operator-run operator-utils packing subgraph datatype reference-ukernels logging      
+-  EXPORT xnnpack-config
++  EXPORT xnnpack-config-targets
+       RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+       LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+       PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+-  INSTALL(EXPORT xnnpack-config NAMESPACE xnnpack::
++  INSTALL(EXPORT xnnpack-config-targets NAMESPACE xnnpack::
++    FILE xnnpack-config-targets.cmake
+     DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}) # share/xnnpack
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/xnnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/xnnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
++
++
+ ENDIF()
+ 
+ # ---[ Configure KleidiAI
+diff --git a/Config.cmake.in b/Config.cmake.in
+new file mode 100644
+index 0000000..db54a96
+--- /dev/null
++++ b/Config.cmake.in
+@@ -0,0 +1,9 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++find_dependency(fxdiv)
++find_dependency(cpuinfo)
++find_dependency(unofficial-pthreadpool)
++
++
++include ( "${CMAKE_CURRENT_LIST_DIR}/xnnpack-config-targets.cmake" )
