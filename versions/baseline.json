@@ -609,7 +609,7 @@
       "port-version": 0
     },
     "bark": {
-      "baseline": "0.3.0",
+      "baseline": "0.3.1",
       "port-version": 0
     },
     "barkeep": {
