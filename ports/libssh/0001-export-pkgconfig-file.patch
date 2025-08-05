@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9877cd7..e97c900 100644
+index 9877cd7..ce74d73 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -42,8 +42,11 @@ macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source buil
@@ -48,6 +48,20 @@ index 9877cd7..e97c900 100644
  
  # CMake config files
  include(CMakePackageConfigHelpers)
+@@ -255,3 +260,13 @@ message(STATUS "Global bind config: ${GLOBAL_BIND_CONFIG}")
+ endif()
+ message(STATUS "********************************************")
+ 
++configure_file(
++  ${CMAKE_CURRENT_SOURCE_DIR}/libssh.pc.in
++  ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc
++  @ONLY
++)
++
++install(FILES
++  ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc
++  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
++)
 diff --git a/libssh.pc.cmake b/libssh.pc.cmake
 index f288b94..759525c 100644
 --- a/libssh.pc.cmake
@@ -59,6 +73,23 @@ index f288b94..759525c 100644
 +Libs.private: @PC_LIBS_PRIVATE@
 +Requires.private: @PC_REQUIRES_PRIVATE@
  Cflags: -I${includedir}
+diff --git a/libssh.pc.in b/libssh.pc.in
+new file mode 100644
+index 0000000..8958fd7
+--- /dev/null
++++ b/libssh.pc.in
+@@ -0,0 +1,10 @@
++prefix=@CMAKE_INSTALL_PREFIX@
++exec_prefix=${prefix}
++libdir=@CMAKE_INSTALL_FULL_LIBDIR@
++includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
++
++Name: libssh
++Description: The SSH library
++Version: @PROJECT_VERSION@
++Libs: -L${libdir} -lssh
++Cflags: -I${includedir}
+\ No newline at end of file
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index e0243bb..1dd9951 100644
 --- a/src/CMakeLists.txt
