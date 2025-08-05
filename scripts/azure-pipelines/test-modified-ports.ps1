@@ -131,18 +131,6 @@ if ($Triplet -eq 'x64-windows-release') {
     $tripletArg = "--triplet=$Triplet"
 }
 
-if ($false) {
-$env:AZCOPY_LOG_LOCATION = Join-Path $ArtifactStagingDirectory 'azcopy-logs'
-$env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $ArtifactStagingDirectory 'azcopy-plans'
-}
-& azcopy --version
-$lastLastExitCode = $LASTEXITCODE
-if ($lastLastExitCode -ne 0)
-{
-    Write-Error 'Cannot run azcopy.'
-    exit $lastLastExitCode
-}
-
 # Build large artifacts with unique ABI hashes
 Get-Date | Out-File "scripts/manual-tests/azcopy/test-upload-artifacts/mutable"
 # 3 GB < single max write (5 GB) < 6 GB, in files of 1.5 GB random data
