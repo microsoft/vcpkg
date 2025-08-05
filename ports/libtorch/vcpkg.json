@@ -7,6 +7,7 @@
   "supports": "windows | osx | linux",
   "dependencies": [
     "blas",
+    "cpp-httplib",
     "cpuinfo",
     "eigen3",
     "fbgemm",
@@ -28,15 +29,14 @@
     "onnx",
     "onnx-optimizer",
     "opencl",
-    "cpp-httplib",
     "pocketfft",
     "protobuf",
-    "pybind11",
     {
       "name": "protobuf",
       "host": true
     },
     "pthreadpool",
+    "pybind11",
     "sleef",
     {
       "name": "vcpkg-cmake",
