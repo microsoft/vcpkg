@@ -2,6 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO TileDB-Inc/TileDB
     REF "${VERSION}"
+    HEAD_REF main
     SHA512 ab71bb62f1eeb3cd023eb77decf7442ac86ffb2b56fc294aa27c49e7c9571f7e7ae7f5226d02366843e6e664741440e9c8353c42c6964e7a7f47bd849b559b50
     PATCHES
         azure-fix.patch
