@@ -4,6 +4,8 @@ vcpkg_from_github(
     REPO Maratyszcza/fxdiv
     REF 63058eff77e11aa15bf531df5dd34395ec3017c8
     SHA512 da33eab4d006645f383a1f24fc3e747db3aeb0613219297ec0ae69aa2617f07ba050ebd6a64a8cbde6d25481f176d0ec3b9753a95d1fbcead2136595f3e50e97
+    PATCHES
+    add-cmake-config.patch
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
