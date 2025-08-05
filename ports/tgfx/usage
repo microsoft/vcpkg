@@ -12,7 +12,4 @@ Available features:
 - async-promise: Enable async promises for loading images on the web
 
 Example usage with features:
-vcpkg install "tgfx[svg,layers,drawers]"
-
-To disable default features:
-vcpkg install "tgfx[exclude-opengl,exclude-faster-blur]"
+vcpkg install "tgfx[svg,layers]"
