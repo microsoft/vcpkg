@@ -17,6 +17,7 @@ vcpkg_from_github(
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
         ${FIX_LIBHEIF_BUILD_PATCH}
+        libheif-1_20_2.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
