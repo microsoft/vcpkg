@@ -5,7 +5,12 @@
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "abseil",
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    },
     {
       "name": "protobuf",
       "host": true
