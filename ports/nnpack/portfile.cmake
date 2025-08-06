@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 f0b261e8698b412d12dd739e5d0cf71c284965ae28da735ae22814a004358ba3ecaea6cd26fa17b594c0245966b7dd2561c1e05c6cbf0592fd7b85ea0f21eb37
     PATCHES
         fix-cmakelists.patch
-        make-unofficial-bindings.patch
 )
 
 vcpkg_cmake_configure(

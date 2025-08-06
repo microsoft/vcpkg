@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ecd2df..df4e39e 100644
+index 5ecd2df..d26aa34 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -12,8 +12,6 @@ SET_PROPERTY(CACHE NNPACK_BACKEND PROPERTY STRINGS auto psimd scalar)
@@ -80,8 +80,8 @@ index 5ecd2df..df4e39e 100644
  TARGET_LINK_LIBRARIES(nnpack_reference_layers PUBLIC pthreadpool)
  
  # ---[ Configure FXdiv
-+find_package(fxdiv CONFIG REQUIRED)
-+add_library(fxdiv ALIAS fxdiv::fxdiv)
++find_package(unofficial-fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS unofficial::fxdiv::fxdiv)
  IF(NOT TARGET fxdiv)
    SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
@@ -89,8 +89,8 @@ index 5ecd2df..df4e39e 100644
  TARGET_LINK_LIBRARIES(nnpack PRIVATE fxdiv)
  
  # ---[ Configure psimd
-+find_package(psimd CONFIG REQUIRED)
-+add_library(psimd ALIAS psimd::psimd)
++find_package(unofficial-psimd CONFIG REQUIRED)
++add_library(psimd ALIAS unofficial::psimd::psimd)
  IF(NOT TARGET psimd)
    ADD_SUBDIRECTORY(
      "${PSIMD_SOURCE_DIR}"
@@ -98,8 +98,8 @@ index 5ecd2df..df4e39e 100644
  TARGET_LINK_LIBRARIES(nnpack PRIVATE psimd)
  
  # ---[ Configure FP16
-+find_package(fp16 CONFIG REQUIRED)
-+add_library(fp16 ALIAS fp16::fp16)
++find_package(unofficial-fp16 CONFIG REQUIRED)
++add_library(fp16 ALIAS unofficial::fp16::fp16)
  IF(NOT TARGET fp16)
    SET(FP16_BUILD_TESTS OFF CACHE BOOL "")
    SET(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
@@ -107,19 +107,19 @@ index 5ecd2df..df4e39e 100644
  TARGET_LINK_LIBRARIES(nnpack_reference_layers PUBLIC fp16)
  
  INSTALL(TARGETS nnpack
-+    EXPORT nnpack-config-targets
++    EXPORT unofficial-nnpack-config-targets
 +    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  
-+install(EXPORT nnpack-config-targets NAMESPACE nnpack::
-+  FILE nnpack-config-targets.cmake
-+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/nnpack) # share/nnpack
++install(EXPORT unofficial-nnpack-config-targets NAMESPACE unofficial::nnpack::
++  FILE unofficial-nnpack-config-targets.cmake
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-nnpack) # share/nnpack
 +
 +include(CMakePackageConfigHelpers)
-+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/nnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/nnpack)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/nnpack)
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/unofficial-nnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-nnpack)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-nnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-nnpack)
 +
 +
 +
@@ -130,17 +130,17 @@ index 5ecd2df..df4e39e 100644
    IF(NOT TARGET gtest)
 diff --git a/Config.cmake.in b/Config.cmake.in
 new file mode 100644
-index 0000000..11f9da0
+index 0000000..1724d5a
 --- /dev/null
 +++ b/Config.cmake.in
 @@ -0,0 +1,10 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
-+find_dependency(fp16)
-+find_dependency(fxdiv)
++find_dependency(unofficial-fp16)
++find_dependency(unofficial-fxdiv)
 +find_dependency(cpuinfo)
 +find_dependency(unofficial-pthreadpool)
 +
 +
-+include ( "${CMAKE_CURRENT_LIST_DIR}/nnpack-config-targets.cmake" )
++include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-nnpack-config-targets.cmake" )
