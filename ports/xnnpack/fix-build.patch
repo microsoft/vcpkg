@@ -41,8 +41,8 @@ index 856a47d..6da13ad 100644
  TARGET_LINK_LIBRARIES(xnnpack-base INTERFACE pthreadpool)
  
  # ---[ Configure FXdiv
-+find_package(fxdiv CONFIG REQUIRED)
-+add_library(fxdiv ALIAS fxdiv::fxdiv)
++find_package(unofficial-fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS unofficial::fxdiv::fxdiv)
  IF(NOT TARGET fxdiv)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
