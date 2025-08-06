@@ -1,7 +1,6 @@
 {
   "name": "octave",
-  "version": "9.4.0",
-  "port-version": 1,
+  "version": "10.2.0",
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
   "documentation": "https://docs.octave.org/latest/",
