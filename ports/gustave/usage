@@ -1,0 +1,4 @@
+gustave library provides CMake targets:
+
+find_package(Gustave CONFIG REQUIRED Distrib-Std)
+target_link_libraries(main PRIVATE Gustave::Distrib-Std)
