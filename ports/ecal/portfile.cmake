@@ -9,7 +9,6 @@ vcpkg_from_github(
     SHA512 75081d9a79e7d97d8f2bf354d3e9414f1cc7781be782ba492fdc26dc2f9a85e6e84e9e8f55d2e42b7dee6b183a8584d52bd931bce22131668639e6f147256245 
     HEAD_REF master
     PATCHES
-        0001-disable-app-plugins.patch
         0002-fix-build.patch
         0003-fix-dependencies.patch
         0004-install-cmake-files-to-share.patch
@@ -28,12 +27,12 @@ vcpkg_cmake_configure(
         -DHAS_CAPNPROTO=OFF
         -DHAS_FTXUI=OFF
         -DBUILD_DOCS=OFF
-        -DBUILD_APPS=OFF
         -DBUILD_SAMPLES=OFF
         -DBUILD_TIME=OFF
         -DBUILD_PY_BINDING=OFF
         -DBUILD_CSHARP_BINDING=OFF
         -DBUILD_ECAL_TESTS=OFF
+        -DECAL_BUILD_APPS=OFF
         -DECAL_INCLUDE_PY_SAMPLES=OFF
         -DECAL_INSTALL_SAMPLE_SOURCES=OFF
         -DECAL_NPCAP_SUPPORT=OFF
