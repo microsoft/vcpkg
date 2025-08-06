@@ -10,8 +10,10 @@ function(is_dependency_managed_by_vcpkg DEP_NAME RESULT_VAR)
         "harfbuzz"
         "flatbuffers"
         "concurrentqueue"
-        "highway"
-        "lz4"
+        "expat"
+        "json"
+        "stb"
+        "googletest"
     )
     
     if("${DEP_NAME}" IN_LIST VCPKG_MANAGED_LIBS)

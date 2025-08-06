@@ -7,14 +7,16 @@
   "supports": "!uwp",
   "dependencies": [
     "concurrentqueue",
+    "expat",
     "flatbuffers",
     "freetype",
+    "gtest",
     "harfbuzz",
-    "highway",
     "libjpeg-turbo",
     "libpng",
     "libwebp",
-    "lz4",
+    "nlohmann-json",
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
