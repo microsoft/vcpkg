@@ -1,0 +1,17 @@
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index bcc66a6..f9c7bf9 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -482,8 +482,10 @@ endif()
+ 
+ # ---[ NNPACK
+ if(USE_NNPACK)
+-  include(${CMAKE_CURRENT_LIST_DIR}/External/nnpack.cmake)
+-  if(NNPACK_FOUND)
++  #include(${CMAKE_CURRENT_LIST_DIR}/External/nnpack.cmake)
++  find_package(nnpack CONFIG REQUIRED)
++  add_library(nnpack ALIAS nnpack::nnpack)
++  if(nnpack_FOUND)
+     if(TARGET nnpack)
+       # ---[ NNPACK is being built together with Caffe2: explicitly specify dependency
+       list(APPEND Caffe2_DEPENDENCY_LIBS nnpack)
