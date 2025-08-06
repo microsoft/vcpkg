@@ -3528,6 +3528,10 @@
       "baseline": "0.12.3",
       "port-version": 0
     },
+    "gustave": {
+      "baseline": "0.1.1",
+      "port-version": 0
+    },
     "gz-cmake": {
       "baseline": "4.1.1",
       "port-version": 1
