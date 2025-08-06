@@ -11,7 +11,6 @@ vcpkg_from_github(
     PATCHES
         protobuf-cmake.patch
         werror.patch
-        protobuf.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
