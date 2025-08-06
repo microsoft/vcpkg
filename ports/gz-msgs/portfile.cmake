@@ -23,7 +23,6 @@ ignition_modular_library(
       -DCMAKE_CXX_STANDARD=17
    PATCHES
       remove_ruby.patch
-      move_bin_to_tools.patch
       pthread.diff
 )
 
