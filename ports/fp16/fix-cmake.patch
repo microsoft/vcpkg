@@ -65,7 +65,7 @@ index 0000000..4523150
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
-+find_dependency(psimd)
++find_dependency(unofficial-psimd)
 +
 +
 +include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-fp16-config-targets.cmake" )
