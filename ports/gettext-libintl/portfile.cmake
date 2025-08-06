@@ -24,10 +24,10 @@ endif()
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
-         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
-    FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
+    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.xz"
+    FILENAME "gettext-${VERSION}.tar.xz"
+    SHA512 544e41c9390695df1c21542842e9ca027a03cb7d4045d8cd759dec1a3dfb624aae900751b458bdb31d6454b37c40c474a952059b884555a03c7c95d6d0e687b1
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
