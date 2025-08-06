@@ -1,3 +1,25 @@
+function(is_dependency_managed_by_vcpkg DEP_NAME RESULT_VAR)
+    set(${RESULT_VAR} FALSE PARENT_SCOPE)
+    
+    set(VCPKG_MANAGED_LIBS 
+        "zlib"
+        "libpng"
+        "libwebp"
+        "libjpeg-turbo"
+        "freetype"
+        "harfbuzz"
+        "flatbuffers"
+        "concurrentqueue"
+        "highway"
+        "lz4"
+    )
+    
+    if("${DEP_NAME}" IN_LIST VCPKG_MANAGED_LIBS)
+        set(${RESULT_VAR} TRUE PARENT_SCOPE)
+        return()
+    endif()
+endfunction()
+
 function(parse_and_declare_deps_externals SOURCE_PATH)
     if(NOT EXISTS "${SOURCE_PATH}/DEPS")
         message(FATAL_ERROR "DEPS file not found at ${SOURCE_PATH}/DEPS")
@@ -31,13 +53,19 @@ function(parse_and_declare_deps_externals SOURCE_PATH)
 
         get_filename_component(DEP_NAME "${REPO_DIR}" NAME)
 
-        message(STATUS "Declaring external dependency: ${DEP_NAME}")
+        is_dependency_managed_by_vcpkg("${DEP_NAME}" IS_VCPKG_MANAGED)
 
-        declare_tgfx_external_from_git(${DEP_NAME}
-            URL "${REPO_URL}"
-            REF "${REPO_COMMIT}"
-            DIR "${REPO_DIR}"
-        )
+        if(IS_VCPKG_MANAGED)
+            message(STATUS "Skipping ${DEP_NAME} - already managed by vcpkg")
+        else()
+            message(STATUS "Declaring external dependency: ${DEP_NAME}")
+            declare_tgfx_external_from_git(
+                ${DEP_NAME}
+                URL "${REPO_URL}"
+                REF "${REPO_COMMIT}"
+                DIR "${REPO_DIR}"
+            )
+        endif()
     endforeach()
 endfunction()
 
@@ -57,7 +85,7 @@ function(declare_tgfx_external_from_git NAME)
     set_property(GLOBAL PROPERTY TGFX_EXTERNALS "${EXTERNALS}")
 endfunction()
 
-function(get_tgfx_externals SOURCE_PATH)
+function(get_tgfx_external_from_git SOURCE_PATH)
     get_property(EXTERNALS GLOBAL PROPERTY TGFX_EXTERNALS)
 
     if(NOT EXTERNALS)
@@ -88,21 +116,4 @@ function(get_tgfx_externals SOURCE_PATH)
     endforeach()
 
     message(STATUS "Successfully fetched all external dependencies")
-endfunction()
-
-function(generate_tgfx_config_cmake)
-    set(CONFIG_CONTENT
-            "include(CMakeFindDependencyMacro)\n"
-            "add_library(tgfx::tgfx STATIC IMPORTED)\n"
-            "set_target_properties(tgfx::tgfx PROPERTIES\n"
-            "    INTERFACE_INCLUDE_DIRECTORIES \"\${CMAKE_CURRENT_LIST_DIR}/../../include\"\n"
-            "    IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/tgfx.a\"\n"
-            ")\n\n"
-            "if(EXISTS \"\${CMAKE_CURRENT_LIST_DIR}/../../debug/lib/tgfx.a\")\n"
-            "    set_target_properties(tgfx::tgfx PROPERTIES\n"
-            "        IMPORTED_LOCATION_DEBUG \"\${CMAKE_CURRENT_LIST_DIR}/../../debug/lib/tgfx.a\"\n"
-            "    )\n"
-            "endif()\n"
-    )
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/tgfx/tgfxConfig.cmake" ${CONFIG_CONTENT})
 endfunction()

@@ -5,14 +5,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Tencent/tgfx
-        REF 0d875c4da20882c172c707b5237759dc3a543178
-        SHA512 7672f53239896910a1a3939cd364aa8e84d8c3865aed12296fcb79fbf91e60ad05d5238062e0ac9cde3e16325cfe3a2e645efc31d21531763af495a38c959343
-        PATCHES
-            disable-depsync.patch
+        REF 062b9dee35fc957de7c0664d8380c87706f2f54f
+        SHA512 9eb35c562984cd4eb45a2d113b0f0d83b7510b8d36f9dc500bccd044394d2862278fc4ddddcf41c9f7ac6877ccd04267e3b3ea5d396787b5481bd2814390b389
 )
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
-get_tgfx_externals("${SOURCE_PATH}")
+get_tgfx_external_from_git("${SOURCE_PATH}")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
@@ -78,15 +76,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")
     endif()
 endif()
-
-#if(VCPKG_DETECTED_CMAKE_C_COMPILER)
-#    string(REPLACE " " "\\ " ESCAPED_C_COMPILER "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
-#    list(APPEND PLATFORM_OPTIONS "-DCMAKE_C_COMPILER=\"${ESCAPED_C_COMPILER}\"")
-#endif()
-#if(VCPKG_DETECTED_CMAKE_CXX_COMPILER)
-#    string(REPLACE " " "\\ " ESCAPED_CXX_COMPILER "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
-#    list(APPEND PLATFORM_OPTIONS "-DCMAKE_CXX_COMPILER=\"${ESCAPED_CXX_COMPILER}\"")
-#endif()
 
 set(BASE_BUILD_ARGS "")
 

@@ -6,6 +6,15 @@
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
+    "concurrentqueue",
+    "flatbuffers",
+    "freetype",
+    "harfbuzz",
+    "highway",
+    "libjpeg-turbo",
+    "libpng",
+    "libwebp",
+    "lz4",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -25,7 +34,8 @@
     {
       "name": "vcpkg-tool-nodejs",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "features": {
     "angle": {
