@@ -20,6 +20,7 @@ ignition_modular_library(
       ${options}
       "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
       "-DPython3_EXECUTABLE=${PYTHON3}"
+      -DCMAKE_CXX_STANDARD=17
    PATCHES
       remove_ruby.patch
       move_bin_to_tools.patch
