@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6c1aafc..97854a6 100644
+index b72e725..be6fa33 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -58,11 +58,10 @@ else ()
@@ -112,6 +112,19 @@ index 952607f..f947540 100644
  if (WIN32)
  	target_compile_definitions(
  		${PROJECT_NAME} PRIVATE
+diff --git a/src/message/rpc_message_srpc.cc b/src/message/rpc_message_srpc.cc
+index 032bb6a..2f97384 100644
+--- a/src/message/rpc_message_srpc.cc
++++ b/src/message/rpc_message_srpc.cc
+@@ -105,7 +105,7 @@ private:
+ 
+ static inline std::string GetTypeUrl(const ProtobufIDLMessage *pb_msg)
+ {
+-	return std::string(kTypePrefix) + "/" + pb_msg->GetDescriptor()->full_name();
++	return std::string(kTypePrefix) + "/" + std::string(pb_msg->GetDescriptor()->full_name());
+ }
+ 
+ SRPCMessage::SRPCMessage()
 diff --git a/src/module/CMakeLists.txt b/src/module/CMakeLists.txt
 index f0041a4..a9d9a65 100644
 --- a/src/module/CMakeLists.txt
