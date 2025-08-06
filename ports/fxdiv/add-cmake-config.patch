@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bcae6b5..b056d09 100644
+index bcae6b5..a20ea87 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -43,7 +43,7 @@ ENDIF()
@@ -16,13 +16,13 @@ index bcae6b5..b056d09 100644
  
  INSTALL(FILES include/fxdiv.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +INSTALL(TARGETS fxdiv 
-+      EXPORT fxdiv-config
++      EXPORT unofficial-fxdiv-config
 +      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 +      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+INSTALL(EXPORT fxdiv-config NAMESPACE fxdiv::
-+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}) # share/fxdiv
++INSTALL(EXPORT unofficial-fxdiv-config NAMESPACE unofficial::fxdiv::
++    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-fxdiv) # share/fxdiv
  
  IF(FXDIV_BUILD_TESTS)
    # ---[ Build google test
