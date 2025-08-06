@@ -193,6 +193,9 @@ set(makefiles "")
         file(WRITE "${file}" "${rules}")
     endforeach()
 
+    # ... but libtool needs msys2 conversions
+    set(ENV{MSYS2_ARG_CONV_EXCL} "")
+
     vcpkg_make_install()
     vcpkg_copy_pdbs()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
