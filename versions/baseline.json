@@ -3022,7 +3022,7 @@
     },
     "fp16": {
       "baseline": "2021-02-21",
-      "port-version": 3
+      "port-version": 4
     },
     "freealut": {
       "baseline": "1.1.0",
@@ -7622,7 +7622,7 @@
     },
     "psimd": {
       "baseline": "2021-02-21",
-      "port-version": 3
+      "port-version": 4
     },
     "ptc-print": {
       "baseline": "1.4.1",
