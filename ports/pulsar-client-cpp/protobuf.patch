@@ -1,0 +1,15 @@
+diff --git a/lib/ProtobufNativeSchema.cc b/lib/ProtobufNativeSchema.cc
+index 5cddf74..e73f2f2 100644
+--- a/lib/ProtobufNativeSchema.cc
++++ b/lib/ProtobufNativeSchema.cc
+@@ -39,8 +39,8 @@ SchemaInfo createProtobufNativeSchema(const google::protobuf::Descriptor* descri
+     }
+ 
+     const auto fileDescriptor = descriptor->file();
+-    const std::string rootMessageTypeName = descriptor->full_name();
+-    const std::string rootFileDescriptorName = fileDescriptor->name();
++    const auto rootMessageTypeName = std::string(descriptor->full_name());
++    const auto rootFileDescriptorName = std::string(fileDescriptor->name());
+ 
+     FileDescriptorSet fileDescriptorSet;
+     internalCollectFileDescriptors(fileDescriptor, fileDescriptorSet);
