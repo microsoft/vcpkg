@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-osx.patch
         fix-vulkan.patch
         fix-glog.patch
+        fix-pytorch-pr-156630.patch # https://github.com/pytorch/pytorch/pull/156630
         )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
