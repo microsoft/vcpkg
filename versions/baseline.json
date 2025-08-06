@@ -3549,8 +3549,8 @@
       "port-version": 1
     },
     "gz-msgs": {
-      "baseline": "11.0.2",
-      "port-version": 2
+      "baseline": "11.1.0",
+      "port-version": 0
     },
     "gz-msgs9": {
       "baseline": "9.5.0",
@@ -3601,8 +3601,8 @@
       "port-version": 2
     },
     "gz-transport": {
-      "baseline": "14.0.0",
-      "port-version": 1
+      "baseline": "14.1.0",
+      "port-version": 0
     },
     "gz-transport12": {
       "baseline": "12.2.1",
@@ -4773,8 +4773,8 @@
       "port-version": 0
     },
     "libfido2": {
-      "baseline": "1.15.0",
-      "port-version": 1
+      "baseline": "1.16.0",
+      "port-version": 0
     },
     "libflac": {
       "baseline": "1.5.0",
@@ -4877,8 +4877,8 @@
       "port-version": 6
     },
     "libheif": {
-      "baseline": "1.20.1",
-      "port-version": 1
+      "baseline": "1.20.2",
+      "port-version": 0
     },
     "libhsplasma": {
       "baseline": "2024-03-07",
@@ -5249,8 +5249,8 @@
       "port-version": 0
     },
     "libprotobuf-mutator": {
-      "baseline": "1.3",
-      "port-version": 1
+      "baseline": "1.5",
+      "port-version": 0
     },
     "libproxy": {
       "baseline": "0.4.18",
@@ -5613,8 +5613,8 @@
       "port-version": 0
     },
     "libwebp": {
-      "baseline": "1.5.0",
-      "port-version": 1
+      "baseline": "1.6.0",
+      "port-version": 0
     },
     "libwebsockets": {
       "baseline": "4.3.5",
@@ -6985,8 +6985,8 @@
       "port-version": 0
     },
     "opencolorio": {
-      "baseline": "2.2.1",
-      "port-version": 4
+      "baseline": "2.4.2",
+      "port-version": 0
     },
     "opencsg": {
       "baseline": "1.8.1",
@@ -7046,7 +7046,7 @@
     },
     "openimageio": {
       "baseline": "3.0.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openjpeg": {
       "baseline": "2.5.3",
@@ -7086,7 +7086,7 @@
     },
     "openslide": {
       "baseline": "4.0.0",
-      "port-version": 3
+      "port-version": 4
     },
     "openssl": {
       "baseline": "3.5.1",
@@ -8253,8 +8253,8 @@
       "port-version": 2
     },
     "re2": {
-      "baseline": "2025-06-26",
-      "port-version": 1
+      "baseline": "2025-08-05",
+      "port-version": 0
     },
     "reactiveplusplus": {
       "baseline": "2.1.1",
@@ -8317,7 +8317,7 @@
       "port-version": 0
     },
     "reflectcpp": {
-      "baseline": "0.19.0",
+      "baseline": "0.20.0",
       "port-version": 0
     },
     "refprop-headers": {
