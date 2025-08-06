@@ -32,6 +32,7 @@ jobs:
     value: /Users/vcpkg/Data/downloads
   steps:
   - bash: |
+      sudo mdutil -ad || 0
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo chmod 777 ${{ variables.VCPKG_DOWNLOADS }} || 0
       exit 0
