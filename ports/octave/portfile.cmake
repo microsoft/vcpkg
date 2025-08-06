@@ -4,15 +4,14 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftpmirror.gnu.org/octave/octave-${VERSION}.tar.xz"
          "https://ftp.gnu.org/gnu/octave/octave-${VERSION}.tar.xz"
     FILENAME "octave-${VERSION}.tar.xz"
-    SHA512 f0a5ec7d3a14ee18c9a48bab240004ed67ce475b7d5f67037a102d20585b2a78475f260efac33396697dac12c3c49cbabdb2c1370e608ca9ae8ef7954a4e2d92
+    SHA512 4ba4d65e326ab85ffcf8864b073910b8ec5ecaba96d18cffa2b13e8f38e5382e7a200bd9bc8838c47b947edcf8388ad3dd749e2d4f529f1f110946d99adf188f
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        run-mk-ops.diff
-        dep_pc_names.patch
+        add_other_linkage_flags.patch
 )
 
 include(vcpkg_find_fortran)
@@ -196,5 +195,7 @@ foreach(subdir IN ITEMS libexec lib/octave/site lib/octave/${VERSION}/site share
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${subdir}")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/${subdir}")
 endforeach()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/octave/octave/site/")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
