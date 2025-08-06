@@ -23,7 +23,6 @@ vcpkg_cmake_configure(
         # for cross-compilation scenarios, prevent execution of test-programs inside the libCZI-build-scripts
         -DCRASH_ON_UNALIGNED_ACCESS=FALSE
         -DIS_BIG_ENDIAN=FALSE
-        -DNEON_INTRINSICS_CAN_BE_USED=TRUE
         # VCS metadata injection
         -DLIBCZI_REPOSITORY_HASH=${LIBCZI_REPO_REF}   
         -DLIBCZI_REPOSITORY_BRANCH=unknown
