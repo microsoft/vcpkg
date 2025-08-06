@@ -8,9 +8,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 2fb374ff32c52aaf15ebff26e8fe11fc3ca1ef411da74bb6212ed5acaf20ae48e388b2b26d5c6786b85058ea7cd65e5ad5c55ea18916c1a701add34c6e62ebfe
     HEAD_REF master
-    PATCHES
-        protobuf-cmake.patch
-        werror.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
