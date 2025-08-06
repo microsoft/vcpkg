@@ -17,6 +17,10 @@
     },
     "pystring",
     {
+      "name": "sse2neon",
+      "platform": "arm"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

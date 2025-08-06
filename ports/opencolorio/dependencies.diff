@@ -76,7 +76,7 @@ index aa2550a..3c968f7 100644
                                   RECOMMENDED_VERSION 3.1.5
                                   RECOMMENDED_VERSION_REASON "Latest version tested with OCIO"
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
-index 4e2367b..63333b5 100644
+index 4e2367b..fc0e483 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
 @@ -23,19 +23,19 @@ if (NOT @BUILD_SHARED_LIBS@) # NOT @BUILD_SHARED_LIBS@
@@ -103,12 +103,12 @@ index 4e2367b..63333b5 100644
          if (TARGET yaml-cpp AND NOT TARGET yaml-cpp::yaml-cpp)
              add_library(yaml-cpp::yaml-cpp ALIAS yaml-cpp)
          endif()
-@@ -53,7 +53,7 @@ if (NOT @BUILD_SHARED_LIBS@) # NOT @BUILD_SHARED_LIBS@
-         endif()
+@@ -54,7 +54,7 @@ if (NOT @BUILD_SHARED_LIBS@) # NOT @BUILD_SHARED_LIBS@
      endif()
  
--    if (NOT TARGET MINIZIP::minizip-ng)
-+    if (NOT TARGET MINIZIP::minizip-ng CONFIG)
-         find_dependency(minizip-ng @minizip-ng_VERSION@)
+     if (NOT TARGET MINIZIP::minizip-ng)
+-        find_dependency(minizip-ng @minizip-ng_VERSION@)
++        find_dependency(minizip-ng @minizip-ng_VERSION@ CONFIG)
      endif()
  
+     # Remove OCIO custom find module path.
