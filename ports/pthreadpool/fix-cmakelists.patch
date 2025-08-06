@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1361e94..bf098c4 100644
+index 1361e94..5798f2e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,8 +4,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.5 FATAL_ERROR)
@@ -53,31 +53,25 @@ index 1361e94..bf098c4 100644
  
  IF(PTHREADPOOL_SYNC_PRIMITIVE STREQUAL "condvar")
    TARGET_COMPILE_DEFINITIONS(pthreadpool PRIVATE PTHREADPOOL_USE_FUTEX=0)
-@@ -136,7 +126,7 @@ ENDIF()
- SET_TARGET_PROPERTIES(pthreadpool PROPERTIES
-   C_STANDARD 11
-   C_EXTENSIONS NO)
--TARGET_LINK_LIBRARIES(pthreadpool PUBLIC pthreadpool_interface)
-+TARGET_LINK_LIBRARIES(pthreadpool PUBLIC pthreadpool_interface fxdiv::fxdiv)
- TARGET_INCLUDE_DIRECTORIES(pthreadpool PRIVATE src)
- IF(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
-   SET(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 @@ -155,6 +145,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
  ENDIF()
  
  # ---[ Configure FXdiv
 +
-+find_package(fxdiv CONFIG REQUIRED)
-+add_library(fxdiv ALIAS fxdiv::fxdiv)
++find_package(unofficial-fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS unofficial::fxdiv::fxdiv)
  IF(NOT TARGET fxdiv)
    SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -164,10 +157,22 @@ IF(NOT TARGET fxdiv)
+@@ -162,12 +155,24 @@ IF(NOT TARGET fxdiv)
+     "${FXDIV_SOURCE_DIR}"
+     "${CMAKE_BINARY_DIR}/FXdiv")
  ENDIF()
- TARGET_LINK_LIBRARIES(pthreadpool PRIVATE fxdiv)
+-TARGET_LINK_LIBRARIES(pthreadpool PRIVATE fxdiv)
++TARGET_LINK_LIBRARIES(pthreadpool PUBLIC fxdiv)
++
  
 -INSTALL(TARGETS pthreadpool
-+
 +INSTALL(TARGETS pthreadpool pthreadpool_interface
 +  EXPORT unofficial-pthreadpool-config-targets
 +  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -98,13 +92,13 @@ index 1361e94..bf098c4 100644
    IF(NOT TARGET gtest)
 diff --git a/Config.cmake.in b/Config.cmake.in
 new file mode 100644
-index 0000000..3ed0212
+index 0000000..575b8b1
 --- /dev/null
 +++ b/Config.cmake.in
 @@ -0,0 +1,6 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
-+find_dependency(fxdiv)
++find_dependency(unofficial-fxdiv)
 +
 +include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-pthreadpool-config-targets.cmake" )
