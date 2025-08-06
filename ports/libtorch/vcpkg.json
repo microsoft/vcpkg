@@ -20,8 +20,6 @@
     "foxi",
     "fp16",
     "gemmlowp",
-    "gflags",
-    "glog",
     "lapack",
     "lmdb",
     "mimalloc",
@@ -58,7 +56,9 @@
       "platform": "windows & !x86 & !static"
     },
     "opencv",
-    "zstd"
+    "zstd",
+    "gflags",
+    "glog"
   ],
   "features": {
     "cuda": {
@@ -68,6 +68,18 @@
         "cudnn",
         "magma",
         "nvidia-cutlass"
+      ]
+    },
+    "gflags": {
+      "description": "Build with gflags",
+      "dependencies": [
+        "gflags"
+      ]
+    },
+    "glog": {
+      "description": "Build with glog",
+      "dependencies": [
+        "glog"
       ]
     },
     "dist": {

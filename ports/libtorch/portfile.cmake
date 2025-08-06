@@ -94,6 +94,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
     python  BUILD_PYTHON
     python  USE_NUMPY
+    glog    USE_GLOG
+    gflags  USE_GFLAGS
 )
 
 if("dist" IN_LIST FEATURES)
@@ -154,8 +156,6 @@ vcpkg_cmake_configure(
         -DUSE_PYTORCH_METAL_EXPORT=OFF
         -DUSE_FBGEMM=ON
         -DUSE_PYTORCH_QNNPACK:BOOL=OFF
-        -DUSE_GFLAGS=ON
-        -DUSE_GLOG=ON
         -DUSE_ITT=OFF
         -DUSE_ROCKSDB=ON
         -DUSE_OBSERVERS=OFF
