@@ -46,9 +46,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libssh)
 file(READ "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" cmake_config)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" "
 include(CMakeFindDependencyMacro)
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_dependency(Threads)
+if(MINGW32)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_dependency(Threads)
+endif()
 find_dependency(OpenSSL)
+if(\"${WITH_ZLIB}\")
+    find_dependency(ZLIB)
+endif()
 ${cmake_config}"
 )
 
