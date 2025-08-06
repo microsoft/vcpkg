@@ -3550,7 +3550,7 @@
     },
     "gz-msgs": {
       "baseline": "11.0.2",
-      "port-version": 2
+      "port-version": 3
     },
     "gz-msgs9": {
       "baseline": "9.5.0",
@@ -5250,7 +5250,7 @@
     },
     "libprotobuf-mutator": {
       "baseline": "1.3",
-      "port-version": 1
+      "port-version": 2
     },
     "libproxy": {
       "baseline": "0.4.18",
@@ -7658,7 +7658,7 @@
     },
     "pulsar-client-cpp": {
       "baseline": "3.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pulseaudio": {
       "baseline": "17.0",
@@ -9154,7 +9154,7 @@
     },
     "srpc": {
       "baseline": "0.10.3",
-      "port-version": 1
+      "port-version": 2
     },
     "sse2neon": {
       "baseline": "1.8.0",
