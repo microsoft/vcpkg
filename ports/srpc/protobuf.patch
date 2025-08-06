@@ -113,7 +113,7 @@ index 952607f..f947540 100644
  	target_compile_definitions(
  		${PROJECT_NAME} PRIVATE
 diff --git a/src/message/rpc_message_srpc.cc b/src/message/rpc_message_srpc.cc
-index 032bb6a..2f97384 100644
+index 032bb6a..f450611 100644
 --- a/src/message/rpc_message_srpc.cc
 +++ b/src/message/rpc_message_srpc.cc
 @@ -105,7 +105,7 @@ private:
@@ -125,6 +125,15 @@ index 032bb6a..2f97384 100644
  }
  
  SRPCMessage::SRPCMessage()
+@@ -461,7 +461,7 @@ int SRPCMessage::serialize(const ProtobufIDLMessage *pb_msg)
+ 					ResolverInstance::get_resolver() :
+ 					util::NewTypeResolverForDescriptorPool(kTypePrefix, pool));
+ 
+-		util::JsonOptions options;
++		util::JsonPrintOptions options;
+ 		options.add_whitespace = this->get_json_add_whitespace();
+ 		options.always_print_enums_as_ints = this->get_json_enums_as_ints();
+ 		options.preserve_proto_field_names = this->get_json_preserve_names();
 diff --git a/src/module/CMakeLists.txt b/src/module/CMakeLists.txt
 index f0041a4..a9d9a65 100644
 --- a/src/module/CMakeLists.txt
