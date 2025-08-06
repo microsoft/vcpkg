@@ -56,33 +56,33 @@ index 085af37..7068534 100644
      list(APPEND ATen_CUDA_DEPENDENCY_LIBS
        ${CUDA_LIBRARIES}
 diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-index 7ea66d9..4e9b283 100644
+index 7ea66d9..015e069 100644
 --- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
 +++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
 @@ -375,6 +375,8 @@ endif()
  target_link_libraries(pytorch_qnnpack PUBLIC pthreadpool)
  
  # ---[ Configure FXdiv
-+find_package(fxdiv CONFIG REQUIRED)
-+add_library(fxdiv ALIAS fxdiv::fxdiv)
++find_package(unofficial-fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS unofficial::fxdiv::fxdiv)
  if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
    set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -402,7 +404,7 @@ if(NOT TARGET psimd AND NOT USE_SYSTEM_PSIMD)
+@@ -398,6 +400,8 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0.0" AND NOT (USE_SYSTEM_PSIMD OR USE_
+ endif()
+ 
+ # ---[ Configure psimd
++find_package(unofficial-psimd CONFIG REQUIRED)
++add_library(psimd ALIAS unofficial::psimd::psimd)
+ if(NOT TARGET psimd AND NOT USE_SYSTEM_PSIMD)
    add_subdirectory(
      "${PSIMD_SOURCE_DIR}"
-     "${CONFU_DEPENDENCIES_BINARY_DIR}/psimd")
--elseif(NOT TARGET psimd AND USE_SYSTEM_PSIMD)
-+elseif(false)
-   find_file(PSIMD_HDR psimd.h PATH_SUFFIXES include)
-   if(NOT PSIMD_HDR)
-     message(FATAL_ERROR "Cannot find psimd")
-@@ -413,6 +415,8 @@ endif()
+@@ -413,6 +417,8 @@ endif()
  target_link_libraries(pytorch_qnnpack PRIVATE psimd)
  
  # ---[ Configure FP16
-+find_package(fp16 CONFIG REQUIRED)
-+add_library(fp16 ALIAS fp16::fp16)
++find_package(unofficial-fp16 CONFIG REQUIRED)
++add_library(fp16 ALIAS unofficial::fp16::fp16)
  if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
    set(FP16_BUILD_TESTS OFF CACHE BOOL "")
    set(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
@@ -101,38 +101,28 @@ index 34577ca..42dff2a 100644
  
    if(LINUX)
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index d2d23b7..50b8064 100644
+index d2d23b7..ec6e6e3 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -87,15 +87,17 @@ endif()
+@@ -86,7 +86,7 @@ endif()
+ # ---[ Caffe2 build
  # Note: the folders that are being commented out have not been properly
  # addressed yet.
- 
--if(NOT MSVC AND USE_XNNPACK)
--  if(NOT TARGET fxdiv)
--    set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
--    set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
--    add_subdirectory(
--      "${FXDIV_SOURCE_DIR}"
--      "${CMAKE_BINARY_DIR}/FXdiv")
--  endif()
--endif()
-+# find_package(XNNPACK CONFIG REQUIRED)
-+# if(NOT MSVC AND USE_XNNPACK)
-+#   if(NOT TARGET fxdiv)
-+#     MESSAGE(ERROR "Should not get here, fxdiv should be found by find_package")
-+#     set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
-+#     set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-+#     add_subdirectory(
-+#       "${FXDIV_SOURCE_DIR}"
-+#       "${CMAKE_BINARY_DIR}/FXdiv")
-+#   endif()
-+# endif()
+-
++if(FALSE)
+ if(NOT MSVC AND USE_XNNPACK)
+   if(NOT TARGET fxdiv)
+     set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
+@@ -96,6 +96,7 @@ if(NOT MSVC AND USE_XNNPACK)
+       "${CMAKE_BINARY_DIR}/FXdiv")
+   endif()
+ endif()
++endif()
  
  add_subdirectory(core)
  add_subdirectory(serialize)
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 5227204..bcc66a6 100644
+index 5227204..bfbb88f 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -378,6 +378,9 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
@@ -155,20 +145,33 @@ index 5227204..bcc66a6 100644
    if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
      add_library(cpuinfo SHARED IMPORTED)
      find_library(CPUINFO_LIBRARY cpuinfo)
-@@ -492,6 +498,12 @@ if(USE_NNPACK)
+@@ -476,8 +482,10 @@ endif()
+ 
+ # ---[ NNPACK
+ if(USE_NNPACK)
+-  include(${CMAKE_CURRENT_LIST_DIR}/External/nnpack.cmake)
+-  if(NNPACK_FOUND)
++  #include(${CMAKE_CURRENT_LIST_DIR}/External/nnpack.cmake)
++  find_package(unofficial-nnpack CONFIG REQUIRED)
++  add_library(nnpack ALIAS unofficial::nnpack::nnpack)
++  if(nnpack_FOUND)
+     if(TARGET nnpack)
+       # ---[ NNPACK is being built together with Caffe2: explicitly specify dependency
+       list(APPEND Caffe2_DEPENDENCY_LIBS nnpack)
+@@ -492,6 +500,12 @@ if(USE_NNPACK)
  endif()
  
  # ---[ XNNPACK
 +if(USE_XNNPACK)
-+  find_package(xnnpack CONFIG REQUIRED)
-+  add_library(XNNPACK ALIAS xnnpack::XNNPACK)
-+  add_library(microkernels-prod ALIAS xnnpack::microkernels-prod)
++  find_package(unofficial-xnnpack CONFIG REQUIRED)
++  add_library(XNNPACK ALIAS unofficial::xnnpack::XNNPACK)
++  add_library(microkernels-prod ALIAS unofficial::xnnpack::microkernels-prod)
 +  list(APPEND Caffe2_DEPENDENCY_LIBS XNNPACK microkernels-prod)
 +endif()
  if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
    if(NOT DEFINED XNNPACK_SOURCE_DIR)
      set(XNNPACK_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/XNNPACK" CACHE STRING "XNNPACK source directory")
-@@ -702,7 +714,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
+@@ -702,7 +716,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
  endif()
  
  # ---[ FBGEMM
@@ -177,7 +180,7 @@ index 5227204..bcc66a6 100644
    set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
    if(NOT DEFINED FBGEMM_SOURCE_DIR)
      set(FBGEMM_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/fbgemm" CACHE STRING "FBGEMM source directory")
-@@ -755,6 +767,10 @@ endif()
+@@ -755,6 +769,10 @@ endif()
  
  if(USE_FBGEMM)
    caffe2_update_option(USE_FBGEMM ON)
@@ -188,16 +191,34 @@ index 5227204..bcc66a6 100644
  else()
    caffe2_update_option(USE_FBGEMM OFF)
    message(WARNING
-@@ -804,6 +820,8 @@ if(USE_ITT)
+@@ -804,6 +822,8 @@ if(USE_ITT)
  endif()
  
  # ---[ Caffe2 depends on FP16 library for half-precision conversions
-+find_package(fp16 CONFIG REQUIRED)
-+add_library(fp16 ALIAS fp16::fp16)
++find_package(unofficial-fp16 CONFIG REQUIRED)
++add_library(fp16 ALIAS unofficial::fp16::fp16)
  if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
    set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
    # PSIMD is required by FP16
-@@ -1329,7 +1347,7 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1155,6 +1175,7 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+   if(MSVC)
+     message(WARNING "Tensorpipe cannot be used on Windows.")
+   else()
++    if(FALSE)
+     if(USE_CUDA)
+       set(TP_USE_CUDA ON CACHE BOOL "" FORCE)
+       set(TP_ENABLE_CUDA_IPC ON CACHE BOOL "" FORCE)
+@@ -1177,6 +1198,9 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+     if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0.0")
+       unset(CMAKE_POLICY_VERSION_MINIMUM)
+     endif()
++    endif()
++    find_package(unofficial-tensorpipe CONFIG REQUIRED)
++    add_library(tensorpipe ALIAS unofficial::tensorpipe::tensorpipe)
+ 
+     list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)
+     list(APPEND Caffe2_DEPENDENCY_LIBS nlohmann)
+@@ -1329,7 +1353,7 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
        caffe2_interface_library(onnx onnx_library)
      endif()
      list(APPEND Caffe2_DEPENDENCY_WHOLE_LINK_LIBS onnx_library)
@@ -206,7 +227,7 @@ index 5227204..bcc66a6 100644
      add_library(onnx SHARED IMPORTED)
      find_library(ONNX_LIBRARY onnx)
      if(NOT ONNX_LIBRARY)
-@@ -1345,6 +1363,7 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1345,6 +1369,7 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
      message("-- Found onnx: ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY}")
      list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)
    endif()
@@ -214,7 +235,7 @@ index 5227204..bcc66a6 100644
    # Recover the build shared libs option.
    set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
  endif()
-@@ -1586,6 +1605,7 @@ endif()
+@@ -1586,6 +1611,7 @@ endif()
  #
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
@@ -222,7 +243,7 @@ index 5227204..bcc66a6 100644
  add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  
  # Disable compiler feature checks for `fmt`.
-@@ -1596,7 +1616,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+@@ -1596,7 +1622,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
  # shouldn't be too bad to just disable the checks.
  set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
@@ -232,7 +253,7 @@ index 5227204..bcc66a6 100644
  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
  
-@@ -1745,13 +1766,10 @@ if(USE_KINETO)
+@@ -1745,13 +1772,10 @@ if(USE_KINETO)
    endif()
  endif()
  

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 856a47d..6da13ad 100644
+index 856a47d..a815bd1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1040,14 +1040,14 @@ IF(XNNPACK_BUILD_ALL_MICROKERNELS)
@@ -46,19 +46,41 @@ index 856a47d..6da13ad 100644
  IF(NOT TARGET fxdiv)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
-@@ -1162,10 +1168,14 @@ IF(XNNPACK_BUILD_LIBRARY)
+@@ -1162,10 +1168,21 @@ IF(XNNPACK_BUILD_LIBRARY)
  ENDIF()
  
  IF(XNNPACK_BUILD_LIBRARY)
 -  INSTALL(TARGETS XNNPACK microkernels-prod
 +  INSTALL(TARGETS XNNPACK microkernels-prod xnnpack-base allocator cache hardware-config indirection memory microkernel-utils microparams-init mutex normalization  operators operator-run operator-utils packing subgraph datatype reference-ukernels logging      
-+  EXPORT xnnpack-config
++  EXPORT unofficial-xnnpack-config-targets
 +      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+  INSTALL(EXPORT xnnpack-config NAMESPACE xnnpack::
-+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}) # share/xnnpack
++  INSTALL(EXPORT unofficial-xnnpack-config-targets NAMESPACE unofficial::xnnpack::
++    FILE unofficial-xnnpack-config-targets.cmake
++    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME}) # share/xnnpack
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/unofficial-xnnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME})
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-xnnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME})
++
++
  ENDIF()
  
  # ---[ Configure KleidiAI
+diff --git a/Config.cmake.in b/Config.cmake.in
+new file mode 100644
+index 0000000..4070f47
+--- /dev/null
++++ b/Config.cmake.in
+@@ -0,0 +1,9 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++find_dependency(unofficial-fxdiv)
++find_dependency(cpuinfo)
++find_dependency(unofficial-pthreadpool)
++
++
++include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-xnnpack-config-targets.cmake" )
