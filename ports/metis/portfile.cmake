@@ -1,13 +1,11 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO KarypisLab/METIS
-    REF 94c03a6e2d1860128c2d0675cbbb86ad4f261256
-    SHA512 9f24329fa0f0856d0b5d10a489574d857bc4538d9639055fc895363cf70aa37342eaf7bc08819500ff6d5b98a4aa99f4241880622b540d4c484ca19e693d3480
+    REF a6e6a2cfa92f93a3ee2971ebc9ddfc3b0b581ab2
+    SHA512 c41168788c287ed9baea3c43c1ea8ef7d0bbdaa340a03cbbb5d0ba2d928d8a6dd83e2b77e7d3fabc58ac6d2b59a4be0492940e31460fe5e1807849cb98e80d2e
     PATCHES
         build-fixes.patch
-    )
-
+)
+file(COPY "${SOURCE_PATH}/include/" DESTINATION "${SOURCE_PATH}/build/xinclude")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/install_config.cmake" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
@@ -15,10 +13,11 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/metis.h" "#ifdef _WINDLL" "#if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/metis.h" "__declspec(dllexport)" "__declspec(dllimport)")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" [=[
-metis provides CMake targets:
-    find_package(metis CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE metis)
-]=])
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

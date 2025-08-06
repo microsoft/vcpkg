@@ -1,11 +1,15 @@
 {
   "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
   "name": "suitesparse-graphblas",
-  "version-semver": "9.3.1",
+  "version-semver": "10.1.1",
   "description": "SuiteSparse:GraphBLAS: graph algorithms in the language of linear algebra",
   "homepage": "https://people.engr.tamu.edu/davis/GraphBLAS.html",
-  "license": "Apache-2.0",
+  "license": null,
   "dependencies": [
+    {
+      "name": "suitesparse-graphblas",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

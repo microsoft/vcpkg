@@ -1,9 +1,9 @@
 {
   "name": "graphicsmagick",
-  "version": "1.3.41",
-  "port-version": 1,
+  "version": "1.3.43",
   "description": "Image processing library",
-  "homepage": "https://sourceforge.net/projects/graphicsmagick/",
+  "homepage": "http://www.graphicsmagick.org/",
+  "license": "MIT",
   "dependencies": [
     "bzip2",
     "freetype",

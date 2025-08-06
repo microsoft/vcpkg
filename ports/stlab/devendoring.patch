@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a012cb4..ced589b 100644
+index 671f79d..8eabae4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,8 +22,8 @@ include(${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake)
- set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cpm-cache CACHE PATH "Directory to cache CPM packages" FORCE)
+@@ -15,8 +15,8 @@ include(cmake/CPM.cmake)
+ 
  
  # Add stlab-copy-on-write as a dependency
 -CPMAddPackage("gh:stlab/copy-on-write@1.0.3")

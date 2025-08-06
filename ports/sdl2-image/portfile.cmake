@@ -41,8 +41,14 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
+set(debug_libname "SDL2_imaged")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/SDL2_image.pc" "-lSDL2_image" "-lSDL2_image-static")
+    set(debug_libname "SDL2_image-staticd")
+endif()
+
 if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_image.pc" "-lSDL2_image" "-lSDL2_imaged")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/SDL2_image.pc" "-lSDL2_image" "-l${debug_libname}")
 endif()
 
 file(REMOVE_RECURSE 
