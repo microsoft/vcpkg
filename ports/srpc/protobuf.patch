@@ -134,6 +134,28 @@ index 032bb6a..f450611 100644
  		options.add_whitespace = this->get_json_add_whitespace();
  		options.always_print_enums_as_ints = this->get_json_enums_as_ints();
  		options.preserve_proto_field_names = this->get_json_preserve_names();
+diff --git a/src/message/rpc_message_trpc.cc b/src/message/rpc_message_trpc.cc
+index 6d710ee..4462bdd 100644
+--- a/src/message/rpc_message_trpc.cc
++++ b/src/message/rpc_message_trpc.cc
+@@ -343,7 +343,7 @@ private:
+ 
+ static inline std::string GetTypeUrl(const ProtobufIDLMessage *pb_msg)
+ {
+-	return std::string(kTypePrefix) + "/" + pb_msg->GetDescriptor()->full_name();
++	return std::string(kTypePrefix) + "/" + std::string(pb_msg->GetDescriptor()->full_name());
+ }
+ 
+ TRPCMessage::TRPCMessage()
+@@ -908,7 +908,7 @@ int TRPCMessage::serialize(const ProtobufIDLMessage *pb_msg)
+ 					ResolverInstance::get_resolver() :
+ 					util::NewTypeResolverForDescriptorPool(kTypePrefix, pool));
+ 
+-		util::JsonOptions options;
++		util::JsonPrintOptions options;
+ 		options.add_whitespace = this->get_json_add_whitespace();
+ 		options.always_print_enums_as_ints = this->get_json_enums_as_ints();
+ 		options.preserve_proto_field_names = this->get_json_preserve_names();
 diff --git a/src/module/CMakeLists.txt b/src/module/CMakeLists.txt
 index f0041a4..a9d9a65 100644
 --- a/src/module/CMakeLists.txt
