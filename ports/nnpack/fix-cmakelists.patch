@@ -1,16 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ecd2df..f4fcae5 100644
+index 5ecd2df..df4e39e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -4,7 +4,7 @@ INCLUDE(GNUInstallDirs)
- INCLUDE(CheckCSourceCompiles)
- 
- # ---[ Project and semantic versioning.
--PROJECT(NNPACK C CXX ASM)
-+PROJECT(nnpack C CXX ASM)
- 
- # ---[ Options.
- SET(NNPACK_BACKEND "auto" CACHE STRING "Backend for micro-kernels implementation")
 @@ -12,8 +12,6 @@ SET_PROPERTY(CACHE NNPACK_BACKEND PROPERTY STRINGS auto psimd scalar)
  OPTION(NNPACK_CONVOLUTION_ONLY "Build only NNPACK functions for convolutional layer" OFF)
  OPTION(NNPACK_INFERENCE_ONLY "Build only NNPACK functions for inference" OFF)
@@ -124,11 +115,11 @@ index 5ecd2df..f4fcae5 100644
  
 +install(EXPORT nnpack-config-targets NAMESPACE nnpack::
 +  FILE nnpack-config-targets.cmake
-+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}) # share/nnpack
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/nnpack) # share/nnpack
 +
 +include(CMakePackageConfigHelpers)
-+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/nnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME})
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/nnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/nnpack)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/nnpack)
 +
 +
 +
