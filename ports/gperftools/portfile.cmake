@@ -55,8 +55,6 @@ if("tools" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         vcpkg_copy_tools(TOOL_NAMES addr2line-pdb nm-pdb AUTO_CLEAN)
     endif()
-    # Perl script
-    file(INSTALL "${SOURCE_PATH}/src/pprof" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
