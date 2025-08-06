@@ -1,0 +1,22 @@
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index f9c7bf9..e9c9d72 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1175,6 +1175,7 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+   if(MSVC)
+     message(WARNING "Tensorpipe cannot be used on Windows.")
+   else()
++    if(FALSE)
+     if(USE_CUDA)
+       set(TP_USE_CUDA ON CACHE BOOL "" FORCE)
+       set(TP_ENABLE_CUDA_IPC ON CACHE BOOL "" FORCE)
+@@ -1197,6 +1198,9 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+     if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0.0")
+       unset(CMAKE_POLICY_VERSION_MINIMUM)
+     endif()
++    endif()
++    find_package(unofficial-tensorpipe CONFIG REQUIRED)
++    add_library(tensorpipe ALIAS unofficial::tensorpipe::tensorpipe)
+ 
+     list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)
+     list(APPEND Caffe2_DEPENDENCY_LIBS nlohmann)
