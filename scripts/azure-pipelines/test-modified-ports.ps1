@@ -84,9 +84,12 @@ if ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot))) {
 $buildtreesRoot = Join-Path $WorkingRoot 'b'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'p'
+$failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
-$env:AZCOPY_LOG_LOCATION = Join-Path $ArtifactStagingDirectory 'failure-logs/azcopy-logs'
+$env:AZCOPY_LOG_LOCATION = Join-Path $failureLogs 'azcopy-logs'
 $env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $WorkingRoot 'azcopy-plans'
+
+New-Item -Type Directory -Path $env:AZCOPY_LOG_LOCATION -Force | Out-Null
 
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
@@ -163,7 +166,6 @@ if ($lastLastExitCode -eq 0)
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$true"
 exit $lastLastExitCode
 
-$failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $failureLogsArg = "--failure-logs=$failureLogs"
 $knownFailuresFromArgs = @()
 if ($testFeatures) {
