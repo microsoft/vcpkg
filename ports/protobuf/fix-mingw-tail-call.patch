@@ -1,0 +1,18 @@
+diff --git a/src/google/protobuf/port_def.inc b/src/google/protobuf/port_def.inc
+index 56f995e45e..bc7a01e534 100644
+--- a/src/google/protobuf/port_def.inc
++++ b/src/google/protobuf/port_def.inc
+@@ -228,11 +228,12 @@ static_assert(PROTOBUF_ABSL_MIN(20230125, 3),
+ #endif
+ #if ABSL_HAVE_CPP_ATTRIBUTE(clang::musttail) && !defined(__arm__) &&  \
+     !defined(_ARCH_PPC) && !defined(__wasm__) &&                      \
+-    !(defined(_MSC_VER) && defined(_M_IX86)) && !defined(__i386__)
++    !(defined(_MSC_VER) && defined(_M_IX86)) && !defined(__i386__) && !defined(__MINGW32__)
+ // Compilation fails on ARM32: b/195943306
+ // Compilation fails on powerpc64le: b/187985113
+ // Compilation fails on X86 Windows:
+ // https://github.com/llvm/llvm-project/issues/53271
++// Compilation fails on MINGW: https://github.com/protocolbuffers/protobuf/issues/21625
+ #define PROTOBUF_MUSTTAIL [[clang::musttail]]
+ #define PROTOBUF_TAILCALL true
+ #else
