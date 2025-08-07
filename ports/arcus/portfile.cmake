@@ -21,3 +21,5 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME Arcus CONFIG_PATH lib/cmake/Arcus)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+set(ignoreMe "${FETCHCONTENT_FULLY_DISCONNECTED}${VCPKG_PLATFORM_TOOLSET}${VCPKG_SET_CHARSET_FLAG}${_VCPKG_ROOT_DIR}")
