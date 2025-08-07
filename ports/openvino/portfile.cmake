@@ -24,17 +24,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tensorflow-lite ENABLE_OV_TF_LITE_FRONTEND
 )
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux"
-        AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"
-        AND (ENABLE_OV_TF_FRONTEND OR ENABLE_OV_TF_LITE_FRONTEND)
-        AND NOT ENABLE_OV_PYTORCH_FRONTEND)
-    # For 2025.2.0: openvino[core,tensorflow] or openvino[core,tensorflow-lite]
-    # would fail to build on x64-linux because of a linking error, adding pytorch
-    # makes a workaround
-    list(APPEND FEATURE_OPTIONS "-DENABLE_OV_PYTORCH_FRONTEND=ON")
-    message(WARNING "Setting ENABLE_OV_PYTORCH_FRONTEND=ON as a workaround for build issue.")
-endif()
-
 if(ENABLE_INTEL_GPU)
     # python is required for conversion of OpenCL source files into .cpp.
     vcpkg_find_acquire_program(PYTHON3)
