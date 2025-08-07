@@ -11,12 +11,17 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tool        CARES_BUILD_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DCARES_STATIC=${BUILD_STATIC}
         -DCARES_SHARED=${BUILD_SHARED}
-        -DCARES_BUILD_TOOLS=OFF
         -DCARES_BUILD_TESTS=OFF
         -DCARES_BUILD_CONTAINER_TESTS=OFF
 )
@@ -37,3 +42,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+
+if ("tool" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES adig ahost AUTO_CLEAN)
+endif()
