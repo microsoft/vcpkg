@@ -1,0 +1,29 @@
+diff --git a/aten/src/ATen/native/vulkan/api/Allocator.h b/aten/src/ATen/native/vulkan/api/Allocator.h
+index a89c333..d3fa38f 100644
+--- a/aten/src/ATen/native/vulkan/api/Allocator.h
++++ b/aten/src/ATen/native/vulkan/api/Allocator.h
+@@ -50,7 +50,11 @@
+ #pragma clang diagnostic ignored "-Winconsistent-missing-destructor-override"
+ #endif /* __clang__ */
+ 
+-#include <include/vk_mem_alloc.h>
++#if __has_include(<vma/vk_mem_alloc.h>)
++#include <vma/vk_mem_alloc.h>
++#else
++#include <vk_mem_alloc.h>
++#endif
+ 
+ #ifdef __clang__
+ #pragma clang diagnostic pop
+diff --git a/aten/src/ATen/native/vulkan/api/QueryPool.cpp b/aten/src/ATen/native/vulkan/api/QueryPool.cpp
+index 9c0c7fb..ae4a81f 100644
+--- a/aten/src/ATen/native/vulkan/api/QueryPool.cpp
++++ b/aten/src/ATen/native/vulkan/api/QueryPool.cpp
+@@ -9,6 +9,7 @@
+ #include <iomanip>
+ #include <iostream>
+ #include <utility>
++#include <algorithm>
+ 
+ namespace at {
+ namespace native {

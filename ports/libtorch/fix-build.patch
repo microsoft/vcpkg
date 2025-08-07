@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f3fee2f..463788e 100644
+index 07edb30..1ca26e3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1244,8 +1244,7 @@ if(USE_MIMALLOC)
+@@ -1247,8 +1247,7 @@ if(USE_MIMALLOC)
    set(MI_BUILD_OBJECT OFF)
    set(MI_BUILD_TESTS OFF)
    add_definitions(-DUSE_MIMALLOC)
@@ -12,7 +12,7 @@ index f3fee2f..463788e 100644
  endif()
  
  if(USE_MIMALLOC AND USE_MIMALLOC_ON_MKL)
-@@ -1313,10 +1312,7 @@ if(BUILD_SHARED_LIBS)
+@@ -1316,10 +1315,7 @@ if(BUILD_SHARED_LIBS)
      DIRECTORY ${PROJECT_SOURCE_DIR}/cmake/Modules_CUDA_fix
      DESTINATION share/cmake/Caffe2/
      COMPONENT dev)
@@ -88,7 +88,7 @@ index 34577ca..5462cfe 100644
 +  install(FILES $<TARGET_PDB_FILE:c10> DESTINATION bin OPTIONAL)
  endif()
 diff --git a/c10/cuda/CMakeLists.txt b/c10/cuda/CMakeLists.txt
-index 3327dab..52f5d3c 100644
+index 3327dab..4a0476f 100644
 --- a/c10/cuda/CMakeLists.txt
 +++ b/c10/cuda/CMakeLists.txt
 @@ -82,7 +82,7 @@ if(NOT BUILD_LIBTORCHLESS)
@@ -100,13 +100,6 @@ index 3327dab..52f5d3c 100644
  
  endif()
  
-@@ -96,5 +96,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/cuda/impl/cuda_cmake_macros.h
-   DESTINATION include/c10/cuda/impl)
- 
- if(MSVC AND C10_CUDA_BUILD_SHARED_LIBS)
--  install(FILES $<TARGET_PDB_FILE:c10_cuda> DESTINATION lib OPTIONAL)
-+  install(FILES $<TARGET_PDB_FILE:c10_cuda> DESTINATION "${TORCH_INSTALL_BIN_DIR}" OPTIONAL)
- endif()
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
 index d2d23b7..51930dd 100644
 --- a/caffe2/CMakeLists.txt

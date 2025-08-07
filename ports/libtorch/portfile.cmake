@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-calculate-minloglevel.patch
         fix-osx.patch
+        fix-vulkan.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/caffe2/core/macros.h") # We must use generated header files
