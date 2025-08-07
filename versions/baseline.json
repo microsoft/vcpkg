@@ -2846,7 +2846,7 @@
     },
     "fbgemm": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fbthrift": {
       "baseline": "2025.05.19.00",
