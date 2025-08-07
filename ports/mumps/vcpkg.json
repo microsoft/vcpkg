@@ -4,6 +4,7 @@
   "port-version": 1,
   "description": "COIN-OR autotools harness to build MUMPS (MUltifrontal Massively Parallel sparse direct Solver)",
   "homepage": "https://github.com/coin-or-tools/ThirdParty-Mumps",
+  "supports": "x64 & (linux | windows)",
   "license": "EPL-2.0",
   "dependencies": [
     {
