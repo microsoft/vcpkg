@@ -375,6 +375,10 @@ openmesh:arm-uwp=fail
 openmesh:arm64-windows=fail
 openmesh:x64-uwp=fail
 openslide(windows & native)=fail # g_auto* using __attribute__((cleanup))
+# Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
+openvino:arm64-windows-static-md=fail
+openvino:arm64-windows=fail
+openvino[npu]:x64-linux=cascade # dependency level-zero not supported
 openvpn3:x64-osx=fail
 openvr:arm-uwp=fail
 openvr:arm64-windows=fail
