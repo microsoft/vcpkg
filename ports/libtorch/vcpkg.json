@@ -55,10 +55,10 @@
       "name": "cuda",
       "platform": "windows & !x86 & !static"
     },
-    "opencv",
-    "zstd",
     "gflags",
-    "glog"
+    "glog",
+    "opencv",
+    "zstd"
   ],
   "features": {
     "cuda": {
@@ -68,19 +68,6 @@
         "cudnn",
         "magma",
         "nvidia-cutlass"
-        
-      ]
-    },
-    "gflags": {
-      "description": "Build with gflags",
-      "dependencies": [
-        "gflags"
-      ]
-    },
-    "glog": {
-      "description": "Build with glog",
-      "dependencies": [
-        "glog"
       ]
     },
     "dist": {
@@ -106,6 +93,18 @@
           "name": "tensorpipe",
           "platform": "linux | osx"
         }
+      ]
+    },
+    "gflags": {
+      "description": "Build with gflags",
+      "dependencies": [
+        "gflags"
+      ]
+    },
+    "glog": {
+      "description": "Build with glog",
+      "dependencies": [
+        "glog"
       ]
     },
     "llvm": {
