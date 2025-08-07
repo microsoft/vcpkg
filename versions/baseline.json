@@ -1518,7 +1518,7 @@
     },
     "c-ares": {
       "baseline": "1.34.5",
-      "port-version": 0
+      "port-version": 1
     },
     "c-dbg-macro": {
       "baseline": "2020-02-29",
