@@ -39,86 +39,74 @@ file(RENAME "${MUMPS_SOURCE_PATH}" "${SOURCE_PATH}/MUMPS")
 file(RENAME "${SOURCE_PATH}/MUMPS/libseq/mpi.h" "${SOURCE_PATH}/MUMPS/libseq/mumps_mpi.h")
 #####
 
-message(STATUS "cmake current list dir: ${CMAKE_CURRENT_LIST_DIR}")
-
 set(CONFIGURE_ARGS
     "--prefix=${CURRENT_INSTALLED_DIR}"
     "--with-metis"
     "--with-lapack"
 )
-
 #list(APPEND CONFIGURE_ARGS "--with-metis-cflags=-I${CURRENT_INSTALLED_DIR}/include/")
 
 # link against openblas, assumed static lib
 set(OPENBLAS_LIB "${CMAKE_STATIC_LIBRARY_PREFIX}openblas${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if(VCPKG_HOST_IS_LINUX)
-  list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=-L${CURRENT_INSTALLED_DIR}/lib/ -lopenblas -lm")
-  #list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=${CURRENT_INSTALLED_DIR}/lib/${OPENBLAS_LIB}")
+    list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=-L${CURRENT_INSTALLED_DIR}/lib/ -lopenblas -lm")
+    #list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=${CURRENT_INSTALLED_DIR}/lib/${OPENBLAS_LIB}")
+    vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        #AUTOCONFIG
+        OPTIONS
+        ${CONFIGURE_ARGS}
+    )
+    vcpkg_install_make()
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
-  list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=${CURRENT_INSTALLED_DIR}/lib/${OPENBLAS_LIB}")
-  #list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=-L${CURRENT_INSTALLED_DIR}/lib/ -lopenblas -lm")
+    list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=${CURRENT_INSTALLED_DIR}/lib/${OPENBLAS_LIB}")
+    #list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=-L${CURRENT_INSTALLED_DIR}/lib/ -lopenblas -lm")
 
-  list(APPEND CONFIGURE_ARGS "--enable-msvc")
+    list(APPEND CONFIGURE_ARGS "--enable-msvc")
 
-  # Fortran Compiler
-  list(APPEND CONFIGURE_ARGS "FC=ifx")
-  list(APPEND CONFIGURE_ARGS "CC=cl.exe")
-  list(APPEND CONFIGURE_ARGS "LD=link.exe")
-  list(APPEND CONFIGURE_ARGS "AR=lib.exe")
-  list(APPEND CONFIGURE_ARGS "ADD_FCFLAGS=-name:lowercase -assume:underscore")
-  list(APPEND CONFIGURE_ARGS "LDFLAGS=-L/c/Program Files (x86)/Intel/oneAPI/compiler/latest/lib")
-  #list(APPEND CONFIGURE_ARGS "LDFLAGS=-L/c/programfilesx86/Intel/oneAPI/compiler/latest/lib")
+    # Fortran Compiler
+    list(APPEND CONFIGURE_ARGS "FC=ifx")
+    list(APPEND CONFIGURE_ARGS "CC=cl.exe")
+    list(APPEND CONFIGURE_ARGS "LD=link.exe")
+    list(APPEND CONFIGURE_ARGS "AR=lib.exe")
+    list(APPEND CONFIGURE_ARGS "ADD_FCFLAGS=-name:lowercase -assume:underscore")
 
-  message(STATUS "fortran compiler: ${FORTRAN_COMPILER}")
-  set(ENV{PATH}  "$ENV{PATH};C:/Program Files (x86)/Intel/oneAPI/compiler/latest/bin/")
+    # find fortran libaries while configure compile tests
+    set(IFX_ROOT "C:/PROGRA~2/Intel/oneAPI/compiler/latest")
+    list(APPEND CONFIGURE_ARGS "LDFLAGS=-L${IFX_ROOT}/lib")
 
-  message(STATUS "Configure and build (Make)")
-  vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash make findutils)
-  vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-  unset(ENV{MSYSTEM_PREFIX})
+    set(ENV{PATH} "$ENV{PATH};${IFX_ROOT}/bin/")
+
+    # acquire tools needed by configure
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash make findutils)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+    unset(ENV{MSYSTEM_PREFIX})
+
+    ################# use custom_build_commands
+    ## configure
+    vcpkg_execute_build_process(
+        COMMAND bash ./configure ${CONFIGURE_ARGS}
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME "execute-configure-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}"
+    )
+    ## make
+    vcpkg_execute_build_process(
+        COMMAND make all
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME "execute-build-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}"
+    )
+    ## install
+    vcpkg_execute_build_process(
+        COMMAND make install
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME "execute-install-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}"
+    )
+    ##############
 endif()
 
-message(STATUS "Reading env path...")
-if (NOT "$ENV{PATH}" STREQUAL "")
-    set(ENV_PATH "$ENV{PATH}" CACHE INTERNAL "Copied from environment variable")
-    message(STATUS "env: ${ENV_PATH}")
-endif()
-
-################# use custom_build_commands
-### configure
-#vcpkg_execute_build_process(
-#    COMMAND bash ./configure ${CONFIGURE_ARGS}
-#    WORKING_DIRECTORY ${SOURCE_PATH}
-#    LOGNAME "execute-configure-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}"
-#)
-
-### make
-#vcpkg_execute_build_process(
-#    COMMAND make all
-#    WORKING_DIRECTORY ${SOURCE_PATH}
-#    LOGNAME "execute-build-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}"
-#)
-### install
-#vcpkg_execute_build_process(
-#set(MAKE_INSTALLDIR "${CURRENT_INSTALLED_DIR}")
-## "DESTDIR=${MAKE_INSTALLDIR}"
-#vcpkg_execute_build_process(
-#    COMMAND make install
-#    WORKING_DIRECTORY ${SOURCE_PATH}
-#    LOGNAME "execute-install-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}"
-#)
-##############
-
-vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    #AUTOCONFIG
-    OPTIONS
-      ${CONFIGURE_ARGS}
-)
-vcpkg_install_make()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
