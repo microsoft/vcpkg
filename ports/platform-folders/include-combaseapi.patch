@@ -1,13 +1,15 @@
 diff --git a/sago/platform_folders.cpp b/sago/platform_folders.cpp
-index 321ed58..53c0649 100644
+index 321ed58..1496dde 100644
 --- a/sago/platform_folders.cpp
 +++ b/sago/platform_folders.cpp
-@@ -99,6 +99,8 @@ std::string getHome() {
+@@ -99,6 +99,10 @@ std::string getHome() {
  #include <stringapiset.h>
  // For SHGetFolderPathW and various CSIDL "magic numbers"
  #include <shlobj.h>
 +// For CoTaskMemFree
 +#include <combaseapi.h>
++// For REFKNOWNFOLDERID
++#include <Knownfolders.h>
  
  namespace sago {
  namespace internal {
