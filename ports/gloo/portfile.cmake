@@ -18,7 +18,6 @@ vcpkg_check_features(
 
 if ("cuda" IN_LIST FEATURES)
   vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
-  message(STATUS "Using nvcc: ${NVCC}")
   list(APPEND GLOO_FEATURE_OPTIONS
     "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}"
     "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
@@ -39,4 +38,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Gloo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
