@@ -14,6 +14,8 @@ vcpkg_cmake_configure(
         -DBUILD_PYTHON=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_STATIC=${ENABLE_STATIC}
+    PATCHES
+        0001-standardprojectsettings.patch
 )
 
 vcpkg_cmake_install()
