@@ -1,8 +1,8 @@
-diff --git a/CMake/StandardProjectSettings.cmake b/CMake/StandardProjectSettings.cmake
+diff --git a/CMake/standardprojectsettings-config.cmake b/CMake/standardprojectsettings-config.cmake
 new file mode 100644
 index 0000000..59fcdfd
 --- /dev/null
-+++ b/CMake/StandardProjectSettings.cmake
++++ b/CMake/standardprojectsettings-config.cmake
 @@ -0,0 +1,220 @@
 +include(GNUInstallDirs) # Standard install dirs
 +
