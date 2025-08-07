@@ -25,7 +25,7 @@ index f3fee2f..463788e 100644
      FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
      DESTINATION share/cmake/Caffe2/
 diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
-index 085af37..7068534 100644
+index 085af37..1c61f27 100644
 --- a/aten/src/ATen/CMakeLists.txt
 +++ b/aten/src/ATen/CMakeLists.txt
 @@ -515,7 +515,7 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
@@ -46,17 +46,19 @@ index 085af37..7068534 100644
  
    if(NOT MSVC)
      set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})
-@@ -534,8 +534,6 @@ if(USE_CUDA AND NOT USE_ROCM)
+@@ -534,8 +534,8 @@ if(USE_CUDA AND NOT USE_ROCM)
    add_definitions(-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
    add_definitions(-DCUTLASS_ENABLE_SM90_EXTENDED_MMA_SHAPES=1)
    add_definitions(-DCUTE_SM90_EXTENDED_MMA_SHAPES_ENABLED)
 -  list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party/cutlass/include)
 -  list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party/cutlass/tools/util/include)
++  find_package(NvidiaCutlass CONFIG REQUIRED)
++  list(APPEND ATen_CUDA_DEPENDENCY_LIBS nvidia::cutlass::cutlass)
    if($ENV{ATEN_STATIC_CUDA})
      list(APPEND ATen_CUDA_DEPENDENCY_LIBS
        ${CUDA_LIBRARIES}
 diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
-index 34577ca..42dff2a 100644
+index 34577ca..5462cfe 100644
 --- a/c10/CMakeLists.txt
 +++ b/c10/CMakeLists.txt
 @@ -121,8 +121,7 @@ if(NOT BUILD_LIBTORCHLESS)
@@ -69,8 +71,44 @@ index 34577ca..42dff2a 100644
    endif()
  
    if(LINUX)
+@@ -163,7 +162,7 @@ if(NOT BUILD_LIBTORCHLESS)
+   # Note: for now, we will put all export path into one single Caffe2Targets group
+   # to deal with the cmake deployment need. Inside the Caffe2Targets set, the
+   # individual libraries like libc10.so and libcaffe2.so are still self-contained.
+-  install(TARGETS c10 EXPORT Caffe2Targets DESTINATION lib)
++  install(TARGETS c10 EXPORT Caffe2Targets RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+ endif()
+ 
+ install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+@@ -173,5 +172,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/macros/cmake_macros.h
+         DESTINATION include/c10/macros)
+ 
+ if(MSVC AND C10_BUILD_SHARED_LIBS)
+-  install(FILES $<TARGET_PDB_FILE:c10> DESTINATION lib OPTIONAL)
++  install(FILES $<TARGET_PDB_FILE:c10> DESTINATION bin OPTIONAL)
+ endif()
+diff --git a/c10/cuda/CMakeLists.txt b/c10/cuda/CMakeLists.txt
+index 3327dab..52f5d3c 100644
+--- a/c10/cuda/CMakeLists.txt
++++ b/c10/cuda/CMakeLists.txt
+@@ -82,7 +82,7 @@ if(NOT BUILD_LIBTORCHLESS)
+ # Note: for now, we will put all export path into one single Caffe2Targets group
+ # to deal with the cmake deployment need. Inside the Caffe2Targets set, the
+ # individual libraries like libc10.so and libcaffe2.so are still self-contained.
+-install(TARGETS c10_cuda EXPORT Caffe2Targets DESTINATION lib)
++install(TARGETS c10_cuda EXPORT Caffe2Targets  RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ 
+ endif()
+ 
+@@ -96,5 +96,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/cuda/impl/cuda_cmake_macros.h
+   DESTINATION include/c10/cuda/impl)
+ 
+ if(MSVC AND C10_CUDA_BUILD_SHARED_LIBS)
+-  install(FILES $<TARGET_PDB_FILE:c10_cuda> DESTINATION lib OPTIONAL)
++  install(FILES $<TARGET_PDB_FILE:c10_cuda> DESTINATION "${TORCH_INSTALL_BIN_DIR}" OPTIONAL)
+ endif()
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index d2d23b7..ec6e6e3 100644
+index d2d23b7..51930dd 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
 @@ -86,7 +86,7 @@ endif()
@@ -90,11 +128,110 @@ index d2d23b7..ec6e6e3 100644
  
  add_subdirectory(core)
  add_subdirectory(serialize)
+@@ -557,7 +558,7 @@ if(USE_CUDA)
+   endif()
+ 
+   target_link_libraries(caffe2_nvrtc PRIVATE caffe2::nvrtc ${DELAY_LOAD_FLAGS})
+-  install(TARGETS caffe2_nvrtc DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS caffe2_nvrtc RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+   if(USE_NCCL)
+     list(APPEND Caffe2_GPU_SRCS
+       ${TORCH_SRC_DIR}/csrc/cuda/nccl.cpp)
+@@ -1134,7 +1135,7 @@ if(USE_XPU)
+   endif()
+ endif()
+ 
+-if(NOT MSVC AND USE_XNNPACK)
++if(FALSE)
+   TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
+ endif()
+ 
+@@ -1251,11 +1252,11 @@ if(USE_KINETO)
+     ${TORCH_ROOT}/third_party/kineto/libkineto/src)
+ endif()
+ 
+-target_include_directories(torch_cpu PRIVATE
+-  ${TORCH_ROOT}/third_party/cpp-httplib)
++target_link_libraries(torch_cpu PRIVATE httplib::httplib nlohmann_json::nlohmann_json)
++if(APPLE)
++  target_link_libraries(torch_cpu PUBLIC "-framework CoreFoundation" "-framework CFNetwork")
+ 
+-target_include_directories(torch_cpu PRIVATE
+-  ${TORCH_ROOT}/third_party/nlohmann/include)
++endif()
+ 
+ install(DIRECTORY "${TORCH_SRC_DIR}/csrc"
+   DESTINATION ${TORCH_INSTALL_INCLUDE_DIR}/torch
+@@ -1536,17 +1537,17 @@ endif()
+ 
+ caffe2_interface_library(torch torch_library)
+ 
+-install(TARGETS torch_cpu torch_cpu_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++install(TARGETS torch_cpu torch_cpu_library EXPORT Caffe2Targets RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ 
+ if(USE_CUDA)
+-  install(TARGETS torch_cuda torch_cuda_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS torch_cuda torch_cuda_library EXPORT Caffe2Targets RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ elseif(USE_ROCM)
+-  install(TARGETS torch_hip torch_hip_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS torch_hip torch_hip_library EXPORT Caffe2Targets RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ elseif(USE_XPU)
+-  install(TARGETS torch_xpu torch_xpu_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS torch_xpu torch_xpu_library EXPORT Caffe2Targets RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ endif()
+ 
+-install(TARGETS torch torch_library EXPORT Caffe2Targets DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++install(TARGETS torch torch_library EXPORT Caffe2Targets RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ 
+ target_link_libraries(torch PUBLIC torch_cpu_library)
+ 
+@@ -1685,7 +1686,7 @@ if(BUILD_SHARED_LIBS)
+       target_link_libraries(torch_global_deps torch::nvtoolsext)
+     endif()
+   endif()
+-  install(TARGETS torch_global_deps DESTINATION "${TORCH_INSTALL_LIB_DIR}")
++  install(TARGETS torch_global_deps RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+ endif()
+ 
+ # ---[ Caffe2 HIP sources.
+diff --git a/cmake/Codegen.cmake b/cmake/Codegen.cmake
+index 724d993..f743939 100644
+--- a/cmake/Codegen.cmake
++++ b/cmake/Codegen.cmake
+@@ -36,11 +36,13 @@ endfunction()
+ ################################################################################
+ 
+ # -- [ Deterine commit hash
+-execute_process(
+-    COMMAND "${Python_EXECUTABLE}" -c "from tools.generate_torch_version import get_sha;print(get_sha('.'), end='')"
+-    OUTPUT_VARIABLE COMMIT_SHA
+-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
+-)
++if(NOT DEFINED COMMIT_SHA) 
++  execute_process(
++      COMMAND "${Python_EXECUTABLE}" -c "from tools.generate_torch_version import get_sha;print(get_sha('.'), end='')"
++      OUTPUT_VARIABLE COMMIT_SHA
++      WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
++  )
++endif()
+ 
+ # ---[ Write the macros file
+ configure_file(
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 5227204..b9b8095 100644
+index 5227204..91c67f1 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -378,6 +378,9 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
+@@ -46,7 +46,8 @@ if(USE_CUDA)
+     # A helper variable recording the list of Caffe2 dependent libraries
+     # torch::cudart is dealt with separately, due to CUDA_ADD_LIBRARY
+     # design reason (it adds CUDA_LIBRARIES itself).
+-    set(Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS )
++    find_package(NvidiaCutlass CONFIG REQUIRED)
++    set(Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS nvidia::cutlass::cutlass)
+     if(NOT CAFFE2_USE_NVRTC)
+       caffe2_update_option(USE_NVRTC OFF)
+     endif()
+@@ -378,6 +379,9 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
    set(USE_PTHREADPOOL ON CACHE BOOL "" FORCE)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_PTHREADPOOL")
  
@@ -104,7 +241,7 @@ index 5227204..b9b8095 100644
    if(NOT TARGET pthreadpool)
      if(USE_SYSTEM_PTHREADPOOL)
        add_library(pthreadpool SHARED IMPORTED)
-@@ -412,6 +415,9 @@ endif()
+@@ -412,6 +416,9 @@ endif()
  if(NOT CMAKE_SYSTEM_PROCESSOR MATCHES "^(s390x|ppc64le)$")
    # ---[ Caffe2 uses cpuinfo library in the thread pool
    # ---[ But it doesn't support s390x/powerpc and thus not used on s390x/powerpc
@@ -114,20 +251,20 @@ index 5227204..b9b8095 100644
    if(NOT TARGET cpuinfo AND USE_SYSTEM_CPUINFO)
      add_library(cpuinfo SHARED IMPORTED)
      find_library(CPUINFO_LIBRARY cpuinfo)
-@@ -476,8 +482,10 @@ endif()
+@@ -476,8 +483,10 @@ endif()
  
  # ---[ NNPACK
  if(USE_NNPACK)
 -  include(${CMAKE_CURRENT_LIST_DIR}/External/nnpack.cmake)
 -  if(NNPACK_FOUND)
-+  #include(${CMAKE_CURRENT_LIST_DIR}/External/nnpack.cmake)
++
 +  find_package(unofficial-nnpack CONFIG REQUIRED)
 +  add_library(nnpack ALIAS unofficial::nnpack::nnpack)
 +  if(nnpack_FOUND)
      if(TARGET nnpack)
        # ---[ NNPACK is being built together with Caffe2: explicitly specify dependency
        list(APPEND Caffe2_DEPENDENCY_LIBS nnpack)
-@@ -492,6 +500,12 @@ if(USE_NNPACK)
+@@ -492,6 +501,12 @@ if(USE_NNPACK)
  endif()
  
  # ---[ XNNPACK
@@ -140,7 +277,7 @@ index 5227204..b9b8095 100644
  if(USE_XNNPACK AND NOT USE_SYSTEM_XNNPACK)
    if(NOT DEFINED XNNPACK_SOURCE_DIR)
      set(XNNPACK_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/XNNPACK" CACHE STRING "XNNPACK source directory")
-@@ -702,7 +716,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
+@@ -702,7 +717,7 @@ if(BUILD_TEST OR BUILD_MOBILE_BENCHMARK OR BUILD_MOBILE_TEST)
  endif()
  
  # ---[ FBGEMM
@@ -149,11 +286,10 @@ index 5227204..b9b8095 100644
    set(CAFFE2_THIRD_PARTY_ROOT "${PROJECT_SOURCE_DIR}/third_party")
    if(NOT DEFINED FBGEMM_SOURCE_DIR)
      set(FBGEMM_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/fbgemm" CACHE STRING "FBGEMM source directory")
-@@ -755,6 +769,10 @@ endif()
+@@ -755,6 +770,9 @@ endif()
  
  if(USE_FBGEMM)
    caffe2_update_option(USE_FBGEMM ON)
-+  find_package(asmjit REQUIRED)
 +  find_package(fbgemmLibrary REQUIRED)
 +  list(APPEND Caffe2_DEPENDENCY_LIBS fbgemm)
 +
@@ -205,7 +341,17 @@ index 5227204..b9b8095 100644
    # Recover the build shared libs option.
    set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
  endif()
-@@ -1586,6 +1612,7 @@ endif()
+@@ -1515,6 +1541,9 @@ if(NOT INTERN_BUILD_MOBILE)
+   endif()
+ 
+   if(USE_KLEIDIAI)
++    find_package(KleidiAI CONFIG REQUIRED)
++    list(APPEND Caffe2_DEPENDENCY_LIBS KleidiAI::kleidiai)
++  elseif(FALSE)
+     if(CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_VERSION VERSION_LESS "11" )
+         message(WARNING "KleidiAI: Using non-supported Clang version. Expected 11 or newer, received ${CMAKE_C_COMPILER_VERSION}.")
+     endif()
+@@ -1586,6 +1615,7 @@ endif()
  #
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
@@ -213,7 +359,7 @@ index 5227204..b9b8095 100644
  add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  
  # Disable compiler feature checks for `fmt`.
-@@ -1596,7 +1623,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+@@ -1596,7 +1626,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
  # shouldn't be too bad to just disable the checks.
  set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
@@ -223,7 +369,7 @@ index 5227204..b9b8095 100644
  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
  
-@@ -1745,13 +1773,10 @@ if(USE_KINETO)
+@@ -1745,13 +1776,10 @@ if(USE_KINETO)
    endif()
  endif()
  

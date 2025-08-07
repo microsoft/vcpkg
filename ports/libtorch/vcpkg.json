@@ -4,7 +4,7 @@
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
-  "supports": "windows | osx | linux",
+  "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     "blas",
     "cpp-httplib",
@@ -127,7 +127,7 @@
       ]
     },
     "opencv": {
-      "description": "Build with OpenCV 3.x",
+      "description": "Build with OpenCV",
       "dependencies": [
         "opencv"
       ]
@@ -135,6 +135,10 @@
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
       "dependencies": [
+        {
+          "name": "shaderc",
+          "host": true
+        },
         "vulkan",
         "vulkan-loader",
         "vulkan-memory-allocator"

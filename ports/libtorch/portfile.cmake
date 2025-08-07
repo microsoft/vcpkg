@@ -1,3 +1,4 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -60,7 +61,7 @@ x_vcpkg_get_python_packages(
     # numpy
     OUT_PYTHON_VAR PYTHON3
 )
-#set(PYTHON3 "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+
 message(STATUS "Using Python3: ${PYTHON3}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -69,12 +70,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     zstd    USE_ZSTD
     fbgemm  USE_FBGEMM
     opencv  USE_OPENCV
-    # These are alternatives !
-    # tbb     USE_TBB
-    # tbb     AT_PARALLEL_NATIVE_TBB # AT_PARALLEL_ are alternatives
-    # openmp  USE_OPENMP
-    # openmp  AT_PARALLEL_OPENMP # AT_PARALLEL_ are alternatives
     opencl  USE_OPENCL
+    mkldnn  USE_MKLDNN
     cuda    USE_CUDA
     cuda    USE_CUDNN
     cuda    USE_NCCL
@@ -84,13 +81,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda    AT_CUDNN_ENABLED
     cuda    USE_MAGMA
     vulkan  USE_VULKAN
-    #vulkan  USE_VULKAN_SHADERC_RUNTIME
     vulkan  USE_VULKAN_RELAXED_PRECISION
     rocm    USE_ROCM  # This is an alternative to cuda not a feature! (Not in vcpkg.json!) -> disabled
     llvm    USE_LLVM
     mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
-    nnpack  AT_NNPACK_ENABLED
 #   No feature in vcpkg yet so disabled. -> Requires numpy build by vcpkg itself
     python  BUILD_PYTHON
     python  USE_NUMPY
@@ -102,25 +97,12 @@ if("dist" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
         list(APPEND FEATURE_OPTIONS -DUSE_TENSORPIPE=ON)
     endif()
-    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX)
         list(APPEND FEATURE_OPTIONS -DUSE_LIBUV=ON)
     endif()
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
-    list(APPEND FEATURE_OPTIONS -DINTERN_BUILD_MOBILE=ON)
-else()
-    list(APPEND FEATURE_OPTIONS -DINTERN_BUILD_MOBILE=OFF)
-endif()
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # torch_cpu is too large to link statically (exceeds 4GB limit)
-    # INTERN_USE_EIGEN_BLAS=OFF is to make sure it uses system eigen blas
-    list(APPEND FEATURE_OPTIONS -DINTERN_BUILD_MOBILE=ON -DINTERN_USE_EIGEN_BLAS=OFF -DUSE_BLAS=OFF)
-    list(APPEND FEATURE_OPTIONS -DMSVC_Z7_OVERRIDE=OFF) # Reduce the size
-
-endif()
 if("cuda" IN_LIST FEATURES)
   vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
     list(APPEND FEATURE_OPTIONS
@@ -129,6 +111,21 @@ if("cuda" IN_LIST FEATURES)
     )
 endif()
 
+if("vulkan" IN_LIST FEATURES) # Vulkan::glslc in FindVulkan.cmake
+    find_program(GLSLC NAMES glslc PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc" REQUIRED)
+    message(STATUS "Using glslc: ${GLSLC}")
+    list(APPEND FEATURE_OPTIONS "-DVulkan_GLSLC_EXECUTABLE:FILEPATH=${GLSLC}")
+endif()
+
+set(TARGET_IS_MOBILE OFF)
+if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
+    set(TARGET_IS_MOBILE ON)
+endif()
+
+set(TARGET_IS_APPLE OFF)
+if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+    set(TARGET_IS_APPLE ON)
+endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
 vcpkg_cmake_configure(
@@ -233,22 +230,6 @@ file(REMOVE_RECURSE
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-# Cannot build python bindings yet
-#if("python" IN_LIST FEATURES)
-#  set(ENV{USE_SYSTEM_LIBS} 1)
-#  vcpkg_replace_string("${SOURCE_PATH}/setup.py" "@TARGET_TRIPLET@" "${TARGET_TRIPLET}-rel")
-#  vcpkg_replace_string("${SOURCE_PATH}/tools/setup_helpers/env.py" "@TARGET_TRIPLET@" "${TARGET_TRIPLET}-rel")
-#  vcpkg_replace_string("${SOURCE_PATH}/torch/utils/cpp_extension.py" "@TARGET_TRIPLET@" "${TARGET_TRIPLET}-rel")
-#  vcpkg_python_build_and_install_wheel(SOURCE_PATH "${SOURCE_PATH}" OPTIONS -x)
-#endif()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled) # torch_global_deps.dll is empty.c and just for linking deps
 
-# set(config "${CURRENT_PACKAGES_DIR}/share/torch/TorchConfig.cmake")
-# file(READ "${config}" contents)
-# string(REGEX REPLACE "set\\\(NVTOOLEXT_HOME[^)]+" "set(NVTOOLEXT_HOME \"\$ENV{CUDA_PATH}\"" contents "${contents}")
-# #string(REGEX REPLACE "set\\\(NVTOOLEXT_HOME[^)]+" "set(NVTOOLEXT_HOME \"\${CMAKE_CURRENT_LIST_DIR}/../../tools/cuda/\"" contents "${contents}")
-# string(REGEX REPLACE "\\\${NVTOOLEXT_HOME}/lib/x64/nvToolsExt64_1.lib" "" contents "${contents}")
-# file(WRITE "${config}" "${contents}")
-
-# vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/torch/csrc/autograd/custom_function.h" "struct TORCH_API Function" "struct Function")
