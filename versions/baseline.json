@@ -18,7 +18,7 @@
     },
     "abseil": {
       "baseline": "20250127.1",
-      "port-version": 2
+      "port-version": 3
     },
     "absent": {
       "baseline": "0.3.1",
@@ -846,7 +846,7 @@
     },
     "boost-charconv": {
       "baseline": "1.88.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-chrono": {
       "baseline": "1.88.0",
@@ -1086,7 +1086,7 @@
     },
     "boost-locale": {
       "baseline": "1.88.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-lockfree": {
       "baseline": "1.88.0",
@@ -1642,7 +1642,7 @@
     },
     "ceres": {
       "baseline": "2.2.0",
-      "port-version": 3
+      "port-version": 4
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -7594,7 +7594,7 @@
     },
     "protobuf": {
       "baseline": "5.29.5",
-      "port-version": 0
+      "port-version": 1
     },
     "protobuf-c": {
       "baseline": "1.5.2",
