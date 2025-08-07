@@ -1,19 +1,17 @@
 The package mumps provides CMake targets:
 
-		pkg_check_modules(COINMUMPS REQUIRED mumps)
-		target_include_directories(main PRIVATE ${COINMUMPS_INCLUDE_DIRS})
-		target_link_directories(main PRIVATE ${COINMUMPS_LIBRARY_DIRS})
-		target_link_libraries(main PRIVATE ${COINMUMPS_LIBRARIES})
+  pkg_check_modules(coinmumps REQUIRED IMPORTED_TARGET coinmumps)
+  target_link_libraries(main PRIVATE PkgConfig::coinmumps)
 
-COINMUMPS is a COIN-OR autotools harness to build MUMPS (MUltifrontal 
-Massively Parallel sparse direct Solver) for solving systems of linear 
+COINMUMPS is a Coin-Or autotools harness to build MUMPS (MUltifrontal
+Massively Parallel sparse direct Solver) for solving systems of linear
 equations of the form Ax = b where A is a square sparse matrix.
 
-The mumps target provides access to the COIN-OR build of MUMPS
-with all required dependencies (BLAS, LAPACK (both provided by OpenBLAS), METIS, and optionally MPI) 
+The coinmumps target provides access to the Coin-Or build of mumps-solver
+with all required dependencies (BLAS, LAPACK (both provided by OpenBLAS), METIS, and optionally MPI)
 automatically linked.
 
-This version uses the COIN-OR ThirdParty-Mumps build system which provides
+This version uses the Coin-Or ThirdParty-Mumps build system which provides
 better integration with other COIN-OR solvers and includes additional
 compatibility patches.
 

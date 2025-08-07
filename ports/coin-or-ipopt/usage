@@ -1,12 +1,13 @@
 The package coin-or-ipopt provides pkg-config config:
 
-		pkg_check_modules(IPOPT REQUIRED ipopt)
-		target_include_directories(main PRIVATE ${IPOPT_INCLUDE_DIRS})
-		target_link_directories(main PRIVATE ${IPOPT_LIBRARY_DIRS})
-		target_link_libraries(main PRIVATE ${IPOPT_LIBRARIES})
+  pkg_check_modules(ipopt REQUIRED IMPORTED_TARGET ipopt)
+  target_link_libraries(main PRIVATE PkgConfig::ipopt)
 
 Ipopt (Interior Point OPTimizer, pronounced eye-pea-Opt) is a software package for large-scale nonlinear optimization
 
-The ipopt target provides access to the COIN-OR build of IPOPT
-with with basic set of required dependencies, BLAS, LAPACK (both provided by OpenBLAS), and MUMPS (provided by COINMUMPS)
+The ipopt target provides access to the Coin-Or  IpOpt
+with with basic set of required dependencies, BLAS, LAPACK (both provided by OpenBLAS), and mumps-solver (provided by coinmumps)
 automatically linked.
+
+For more information, see:
+https://github.com/coin-or/Ipopt
