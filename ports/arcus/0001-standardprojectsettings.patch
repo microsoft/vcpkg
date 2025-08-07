@@ -1,8 +1,22 @@
-diff --git a/CMake/standardprojectsettings-config.cmake b/CMake/standardprojectsettings-config.cmake
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 32d537d..805159a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,7 +1,7 @@
++cmake_minimum_required(VERSION 3.23)
+ cmake_policy(SET CMP0091 NEW)
+ project(libarcus)
+-cmake_minimum_required(VERSION 3.23)
+-find_package(standardprojectsettings REQUIRED)
++include(${libarcus_SOURCE_DIR}/cmake/standardprojectsettings.cmake)
+ find_package(protobuf REQUIRED)
+ 
+ set(arcus_SRCS
+diff --git a/cmake/standardprojectsettings.cmake b/cmake/standardprojectsettings.cmake
 new file mode 100644
 index 0000000..59fcdfd
 --- /dev/null
-+++ b/CMake/standardprojectsettings-config.cmake
++++ b/cmake/standardprojectsettings.cmake
 @@ -0,0 +1,220 @@
 +include(GNUInstallDirs) # Standard install dirs
 +
