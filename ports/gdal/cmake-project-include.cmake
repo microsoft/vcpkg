@@ -11,3 +11,17 @@ if(GDAL_USE_WEBP)
     set(GDAL_CHECK_PACKAGE_WebP_NAMES WebP CACHE INTERNAL "vcpkg")
     set(GDAL_CHECK_PACKAGE_WebP_TARGETS WebP::webp CACHE INTERNAL "vcpkg")
 endif()
+
+if(GDAL_USE_ARROW)
+    find_package(Arrow REQUIRED)
+    set(ARROW_USE_STATIC_LIBRARIES "${ARROW_BUILD_STATIC}" CACHE BOOL "")
+endif()
+
+if(GDAL_USE_SQLITE3)
+    # CMake find module with vcpkg cmake wrapper
+    find_package(SQLite3 REQUIRED)
+    # .. and inject into GDAL's FindSQLite3.cmake
+    set(SQLite3_LIBRARY "${SQLite3_LIBRARIES}")
+    set(SQLite3_FOUND FALSE)
+    set(SQLITE3_FOUND FALSE)
+endif()

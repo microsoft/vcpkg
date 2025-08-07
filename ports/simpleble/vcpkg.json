@@ -1,11 +1,16 @@
 {
   "name": "simpleble",
   "version-date": "2023-07-29",
+  "port-version": 1,
   "description": "The ultimate fully-fledged cross-platform library and bindings for Bluetooth Low Energy (BLE).",
   "homepage": "https://github.com/OpenBluetoothToolbox/SimpleBLE",
   "license": "MIT",
   "supports": "!android & !uwp",
   "dependencies": [
+    {
+      "name": "dbus",
+      "platform": "linux"
+    },
     "fmt",
     {
       "name": "vcpkg-cmake",

@@ -3,12 +3,11 @@ vcpkg_from_github(
     REPO eclipse/mosquitto
     HEAD_REF master
     REF "v${VERSION}"
-    SHA512 667216f3e60f9916d5de200d3a205fb5a5c798564c96e44939af6c8e3af85fffa36a63eba47db009b432d14f43883dbca5b92547a458215dd269e91f6bcfb7fa
+    SHA512 ca8bdcb10fea751e655e2de393479b2f863287b396b13e441de46c32918229c1f80a386fdd6d0daf3b0161f640702b6d8a87f2278c9baf2150e2c533cb59e57a
     PATCHES
         0003-add-find_package-libwebsockets.patch
         0004-support-static-build.patch
         0005-websocket-shared-lib-name.patch
-        0006-pthreads-for-windows.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC_LINKAGE)
@@ -73,4 +72,4 @@ endif()
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

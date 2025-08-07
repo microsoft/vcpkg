@@ -14,15 +14,20 @@ vcpkg_replace_string ("${SOURCE_PATH}/meson.build"
 
 set(opts "")
 if(VCPKG_TARGET_IS_LINUX)
-  set(opts
+  list(APPEND opts
     -Dalsa=enabled
     -Doss-output=enabled
   )
 else()
-  set(opts
+  list(APPEND opts
     -Dalsa=disabled
     -Doss-output=disabled
   )
+endif()
+if("gstreamer" IN_LIST FEATURES)
+  list(APPEND opts -Dgstreamer=enabled)
+else()
+  list(APPEND opts -Dgstreamer=disabled)
 endif()
 
 vcpkg_configure_meson(
@@ -38,30 +43,27 @@ vcpkg_configure_meson(
       -Dbashcompletiondir=no
       -Dzshcompletiondir=no
       
-      -Dasyncns=disabled # rerquires port?
+      -Dasyncns=disabled # requires port?
       -Davahi=disabled
       -Dbluez5=disabled
-      -Dbluez5-native-headset=false
-      -Dbluez5-ofono-headset=false
       -Dconsolekit=disabled
       -Ddbus=enabled
       -Delogind=disabled
       -Dfftw=enabled
       -Dglib=enabled
       -Dgsettings=disabled
-      -Dgstreamer=enabled
       -Dgtk=disabled
       -Dhal-compat=false
       -Dipv6=true
-      -Dopenssl=enabled
       -Djack=enabled # jack2?
       -Dlirc=enabled # does this need a port?
-      -Dorc=enabled # does this need a port? "orc" ?
+      -Dopenssl=enabled
+      -Dorc=disabled # not port orc
 
       -Dsoxr=enabled
       -Dspeex=enabled
       -Dsystemd=disabled
-      -Dtcpwrap=enabled # dito
+      -Dtcpwrap=disabled
       -Dudev=disabled # port ?
       -Dvalgrind=disabled
       -Dx11=disabled
@@ -80,16 +82,15 @@ endif()
 
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
-vcpkg_cmake_config_fixup(PACKAGE_NAME PulseAudio CONFIG_PATH "lib/cmake/PulseAudio")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/PulseAudio")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/padsp" "${CURRENT_PACKAGES_DIR}" "$(dirname "$0")/../..")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/padsp" "${CURRENT_PACKAGES_DIR}" [[$(dirname "$0")/../..]])
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/etc/pulse/client.conf" "${CURRENT_PACKAGES_DIR}" "<path-to-pulseaudio>")
 if(NOT VCPKG_BUILD_TYPE)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/etc/pulse/client.conf" "${CURRENT_PACKAGES_DIR}" "<path-to-pulseaudio>")
 endif()
 vcpkg_copy_tools(TOOL_NAMES pacat pactl padsp pa-info pamon AUTO_CLEAN)
 
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

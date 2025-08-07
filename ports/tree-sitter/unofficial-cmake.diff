@@ -1,0 +1,17 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 4b44cc1..1b99f08 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -92,4 +92,12 @@ install(FILES include/tree_sitter/api.h
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/tree-sitter.pc"
+         DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+ install(TARGETS tree-sitter
++        EXPORT unofficial-tree-sitter-config
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
++
++target_include_directories(tree-sitter PUBLIC "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
++install(
++    EXPORT unofficial-tree-sitter-config
++    NAMESPACE unofficial::tree-sitter::
++    DESTINATION share/unofficial-tree-sitter
++)

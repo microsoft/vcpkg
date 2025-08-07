@@ -2,10 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/pulsar-client-cpp
     REF "v${VERSION}"
-    SHA512 b1f56ca8d5edb7faaba68eb4e04fcb4e458ccf2c7a5b0fb6d66868c6507081344fb3f0ebb29afe9aef567295a249b09cdeb3fb00285746767bbccef65a0f6e70
+    SHA512 28c828529cc59ace8b9da97a724191a3314c5cfc36a9cf9a91b25b99b70ca2875bc9f8780f26770dc426a2641ad465bb2a47ba501921442fd712fa76edcbc5aa
     HEAD_REF main
     PATCHES
-      0001-use-find-package.patch
+        disable-warnings.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIB)
@@ -14,6 +14,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC_LIB)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DINTEGRATE_VCPKG=ON
         -DBUILD_TESTS=OFF
         -DBUILD_PERF_TOOLS=OFF
         -DBUILD_DYNAMIC_LIB=${BUILD_DYNAMIC_LIB}

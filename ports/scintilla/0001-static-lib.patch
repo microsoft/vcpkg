@@ -1,14 +1,13 @@
-diff --git a/win32/SciLexer.vcxproj b/win32/SciLexer.vcxproj
-index b2e993c..c8774f1 100644
---- a/win32/SciLexer.vcxproj
-+++ b/win32/SciLexer.vcxproj
-@@ -33,7 +33,7 @@
+diff --git a/win32/Scintilla.vcxproj b/win32/Scintilla.vcxproj
+index 82aa9b7..5eac42f 100644
+--- a/win32/Scintilla.vcxproj
++++ b/win32/Scintilla.vcxproj
+@@ -34,7 +34,7 @@
    </PropertyGroup>
    <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
    <PropertyGroup>
 -    <ConfigurationType>DynamicLibrary</ConfigurationType>
 +    <ConfigurationType>StaticLibrary</ConfigurationType>
      <CharacterSet>Unicode</CharacterSet>
-     <PlatformToolset>v141</PlatformToolset>
+     <PlatformToolset>v143</PlatformToolset>
    </PropertyGroup>
--- 

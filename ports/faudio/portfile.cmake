@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FNA-XNA/faudio
-    REF cfdc4db21a9c7d21a9132da5b213248a823fbe05 # This is 24.03 with 3 patches to fix minor build failures by @rkitover and @dg0yt
-    SHA512 9f7ee882e9aa7cf80d976e2c016aa085222d21da2b0fac0e59f5a713e3a3dd41deb2dfc1a4698a3eff0b46bb122eca874fbd5b2747c243c53118bae3c5af9ef9
+    REF "${VERSION}"
+    SHA512 1811e59736a053a2b8c4cce75345d3c0fe9f3a7127fe5bc13a562838e9d2ace0b54403f5e4da3d20970e031d69d62e81aa388d8bde72e805dc57ea026a7f1bea
     HEAD_REF master
-    PATCHES
 )
 
 set(options "")
@@ -22,9 +21,12 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FAudio)
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(
     COMMENT "FAudio is licensed under the Zlib license."

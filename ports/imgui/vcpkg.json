@@ -1,6 +1,6 @@
 {
   "name": "imgui",
-  "version": "1.90.2",
+  "version": "1.91.9",
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -50,8 +50,8 @@
         "freetype"
       ]
     },
-    "freetype-lunasvg": {
-      "description": "Add support to render OpenType SVG fonts using LunaSVG",
+    "freetype-svg": {
+      "description": "Add support to render OpenType SVG fonts",
       "dependencies": [
         {
           "name": "imgui",
@@ -59,7 +59,12 @@
             "freetype"
           ]
         },
-        "lunasvg"
+        {
+          "name": "plutosvg",
+          "features": [
+            "freetype"
+          ]
+        }
       ]
     },
     "glfw-binding": {
@@ -95,16 +100,36 @@
       "description": "Make available OSX binding",
       "supports": "osx"
     },
-    "sdl2-binding": {
-      "description": "Make available SDL2 binding",
+    "sdl3-binding": {
+      "description": "Make available SDL3 binding",
       "dependencies": [
-        "sdl2"
+        "sdl3"
       ]
     },
-    "sdl2-renderer-binding": {
-      "description": "Make available SDL2 Renderer binding",
+    "sdl3-renderer-binding": {
+      "description": "Make available SDL3 Renderer binding",
       "dependencies": [
-        "sdl2"
+        "sdl3"
+      ]
+    },
+    "sdlgpu3-binding": {
+      "description": "Make available SDLGPU3 binding",
+      "dependencies": [
+        {
+          "name": "imgui",
+          "features": [
+            "sdl3-binding"
+          ]
+        },
+        "sdl3"
+      ]
+    },
+    "test-engine": {
+      "description": "Build test engine",
+      "supports": "!uwp",
+      "license": null,
+      "dependencies": [
+        "stb"
       ]
     },
     "vulkan-binding": {

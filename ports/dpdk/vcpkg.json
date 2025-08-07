@@ -1,7 +1,6 @@
 {
   "name": "dpdk",
-  "version-string": "22.07",
-  "port-version": 1,
+  "version-string": "24.07",
   "description": "A set of libraries and drivers for fast packet processing",
   "homepage": "https://www.dpdk.org/",
   "documentation": "https://doc.dpdk.org/guides/index.html",

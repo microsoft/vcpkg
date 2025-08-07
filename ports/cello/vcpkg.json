@@ -1,9 +1,10 @@
 {
   "name": "cello",
   "version-date": "2019-07-23",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Higher level programming in C",
   "homepage": "https://libcello.org/",
+  "license": "BSD-2-Clause-Views",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -1,8 +1,8 @@
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index e8e450d36c..8ba1778b4f 100644
+index 5964429..d528597 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
-@@ -60,6 +60,7 @@ find_package(CUDAToolkit REQUIRED)
+@@ -57,6 +57,7 @@ find_package(CUDAToolkit REQUIRED)
  
  cmake_policy(POP)
  

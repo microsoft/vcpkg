@@ -1,7 +1,7 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 23,
+  "port-version": 27,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
   "homepage": "https://www.openscenegraph.com/",
   "license": null,
@@ -28,8 +28,19 @@
     "zlib"
   ],
   "default-features": [
-    "default-features",
+    {
+      "name": "fontconfig",
+      "platform": "!android & !ios & !uwp"
+    },
     "freetype",
+    {
+      "name": "nvtt",
+      "platform": "x64 & (linux | osx | windows) & !uwp"
+    },
+    {
+      "name": "openexr",
+      "platform": "!uwp"
+    },
     "plugins"
   ],
   "features": {
@@ -39,40 +50,12 @@
         "collada-dom"
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "openexr"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ],
-          "platform": "!android & !ios & !uwp"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "nvtt"
-          ],
-          "platform": "!x86 & !(windows & arm64) & !uwp"
-        }
-      ]
-    },
     "docs": {
       "description": "Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads"
     },
     "examples": {
       "description": "Enable to build OSG Examples",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "libiconv",
@@ -170,6 +153,7 @@
     },
     "tools": {
       "description": "Enable to build OSG Applications (e.g. osgviewer)",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "curl",

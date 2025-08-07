@@ -1,5 +1,5 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 233c89f..8164b41 100644
+index 00bff60..2935ddf 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
 @@ -25,7 +25,6 @@ set(libinc_cpp
@@ -10,8 +10,8 @@ index 233c89f..8164b41 100644
      libconfigcpp.cc)
  
  if(MSVC)
-@@ -55,8 +54,10 @@ set_target_properties(${libname}++
- #check_symbol_exists(freelocale "locale.h" HAVE_FREELOCALE)
+@@ -59,8 +58,10 @@ set_target_properties(${libname}++
+         PUBLIC_HEADER "${libinc_cpp}")
  
  if(BUILD_SHARED_LIBS)
 +    target_sources(${libname}++ PRIVATE ${libsrc})
@@ -19,9 +19,9 @@ index 233c89f..8164b41 100644
  else()
 +    target_link_libraries(${libname}++ PRIVATE ${libname})
      target_compile_definitions(${libname} PUBLIC LIBCONFIG_STATIC)
-     target_compile_definitions(${libname}++ PUBLIC LIBCONFIGXX_STATIC)
+     target_compile_definitions(${libname}++ PUBLIC LIBCONFIG_STATIC LIBCONFIGXX_STATIC)
  endif()
-@@ -91,8 +92,8 @@ if(MSVC)
+@@ -111,8 +112,8 @@ if(MSVC)
  endif()
  
  if(WIN32)

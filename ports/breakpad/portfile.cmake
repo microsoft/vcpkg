@@ -1,21 +1,21 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+string(REPLACE "-" "." BREAKPAD-VERSION "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/breakpad
-    REF v2023.01.27
-    SHA512 c6802c55653289780232b20e2abc0458c49f3cdff108c3ddfd6e40a2f378da34adbc158548e9c88cbfdbba9526477da9b68c2c45e205231e2802fe533b6bd6a4
+    REF "v${BREAKPAD-VERSION}"
+    SHA512 88c691983c6c92fd5321d729c8eec059914293de0e91fe1d429a6247f3b7299f32ec4938eccbbe2c95a9ca507db14d73a1c9798d5fce79a8b474c3c216f0951a
     HEAD_REF master
     PATCHES
-        fix-const-char.patch
-        fix-unique_ptr.patch
+        add-algorithm-1.patch
 )
 
 if(VCPKG_HOST_IS_LINUX OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     vcpkg_from_git(
         OUT_SOURCE_PATH LSS_SOURCE_PATH
         URL https://chromium.googlesource.com/linux-syscall-support
-        REF 7bde79cc274d06451bf65ae82c012a5d3e476b5a
+        REF 9719c1e1e676814c456b55f5f070eabad6709d31
     )
 
     file(RENAME "${LSS_SOURCE_PATH}" "${SOURCE_PATH}/src/third_party/lss")

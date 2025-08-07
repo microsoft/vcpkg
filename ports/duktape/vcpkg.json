@@ -1,7 +1,7 @@
 {
   "name": "duktape",
   "version": "2.7.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Embeddable Javascript engine with a focus on portability and compact footprint.",
   "homepage": "https://github.com/svaarala/duktape",
   "license": "MIT",

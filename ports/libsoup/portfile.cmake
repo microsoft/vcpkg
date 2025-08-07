@@ -3,17 +3,24 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libsoup
     REF "${VERSION}"
-    SHA512 "780d360167af1c7b5497d79c6752f3fb917b552928f7e1af6476e2713285426de7803fc28d1b76c541d5246a404772abd0f412acc953d6a1441e632416f72f94"
+    SHA512 8edab1f6ccf9d17befd80b238b9d435cca3743316341336b2b92e4caf5d0d5f35a05269f5ddfcbbb1839f26cd011bf13ed66ee3f620b9b0c566894cdc1600f19
     HEAD_REF main
 )
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -Dgssapi=disabled
+        -Dbrotli=disabled
         -Dtls_check=false
+        -Dintrospection=disabled
+        -Dvapi=disabled
         -Ddocs=disabled
-        -Dtests=false
         -Ddoc_tests=false
+        -Dtests=false
+        -Dautobahn=disabled
+        -Dsysprof=disabled
+        -Dpkcs11_tests=disabled
     ADDITIONAL_BINARIES
         "gio-querymodules = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gio-querymodules${CMAKE_EXECUTABLE_SUFFIX}'"
         "glib-compile-schemas = '${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${CMAKE_EXECUTABLE_SUFFIX}'"

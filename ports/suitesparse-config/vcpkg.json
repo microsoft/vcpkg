@@ -1,0 +1,24 @@
+{
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
+  "name": "suitesparse-config",
+  "version-semver": "7.8.3",
+  "description": "Configuration for SuiteSparse libraries",
+  "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "blas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP support (in SuiteSparse_config only)"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 {
   "name": "rtaudio",
   "version": "6.0.1",
+  "port-version": 1,
   "description": "A set of C++ classes that provide a common API for realtime audio input/output across Linux (native ALSA, JACK, PulseAudio and OSS), Macintosh OS X (CoreAudio and JACK), and Windows (DirectSound, ASIO and WASAPI) operating systems.",
   "homepage": "https://github.com/thestk/rtaudio",
   "license": null,
@@ -29,7 +30,10 @@
     },
     "pulse": {
       "description": "Build with PulseAudio backend",
-      "supports": "linux"
+      "supports": "linux",
+      "dependencies": [
+        "pulseaudio"
+      ]
     }
   }
 }

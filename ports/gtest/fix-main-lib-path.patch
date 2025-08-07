@@ -1,36 +1,40 @@
 diff --git a/googlemock/CMakeLists.txt b/googlemock/CMakeLists.txt
-index e7df8ec..1ecd596 100644
+index 99b2411f..74610b12 100644
 --- a/googlemock/CMakeLists.txt
 +++ b/googlemock/CMakeLists.txt
-@@ -112,7 +112,8 @@ endif()
+@@ -112,8 +112,9 @@ target_include_directories(gmock_main SYSTEM INTERFACE
+ 
  ########################################################################
  #
- # Install rules
+-# Install rules.
 -install_project(gmock gmock_main)
++# Install rules
 +install_project(gmock)
 +install_project(gmock_main)
  
  ########################################################################
  #
 diff --git a/googletest/CMakeLists.txt b/googletest/CMakeLists.txt
-index abdd98b..7d1c01d 100644
+index dce6a7c9..d8faf644 100644
 --- a/googletest/CMakeLists.txt
 +++ b/googletest/CMakeLists.txt
-@@ -155,7 +155,8 @@ target_link_libraries(gtest_main PUBLIC gtest)
+@@ -154,8 +154,9 @@ target_link_libraries(gtest_main PUBLIC gtest)
+ 
  ########################################################################
  #
- # Install rules
+-# Install rules.
 -install_project(gtest gtest_main)
++# Install rules
 +install_project(gtest)
 +install_project(gtest_main)
  
  ########################################################################
  #
 diff --git a/googletest/cmake/internal_utils.cmake b/googletest/cmake/internal_utils.cmake
-index 8d8d60a..b08ce28 100644
+index 580ac1cb..78a5b659 100644
 --- a/googletest/cmake/internal_utils.cmake
 +++ b/googletest/cmake/internal_utils.cmake
-@@ -300,12 +300,16 @@ function(install_project)
+@@ -302,12 +302,16 @@ function(install_project)
        COMPONENT "${PROJECT_NAME}"
        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
      # Install the project targets.
@@ -47,9 +51,9 @@ index 8d8d60a..b08ce28 100644
 +      ARCHIVE DESTINATION "${LIB_INSTALL_DST}"
 +      LIBRARY DESTINATION "${LIB_INSTALL_DST}")
      if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-       # Install PDBs
+       # Install PDBs.
        foreach(t ${ARGN})
-@@ -315,7 +319,7 @@ function(install_project)
+@@ -317,7 +321,7 @@ function(install_project)
          install(FILES
            "${t_pdb_output_directory}/\${CMAKE_INSTALL_CONFIG_NAME}/$<$<CONFIG:Debug>:${t_pdb_name_debug}>$<$<NOT:$<CONFIG:Debug>>:${t_pdb_name}>.pdb"
            COMPONENT "${PROJECT_NAME}"

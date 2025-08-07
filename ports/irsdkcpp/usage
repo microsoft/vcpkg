@@ -1,0 +1,7 @@
+irsdkcpp provides CMake targets:
+
+  find_package(irsdkcpp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:irsdkcpp::irsdkcpp_shared>,irsdkcpp::irsdkcpp_shared,irsdkcpp::irsdkcpp_static>)
+
+irsdkcpp provides pkg-config modules:
+  irsdkcpp

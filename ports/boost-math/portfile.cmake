@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
     REF boost-${VERSION}
-    SHA512 5f5aec5c7c2de137fc8b69e33a3f0aa6c18b63292a66508cb68c86d3c1c27455f73432218e90cbd47e919e0be84a6d25af39aa1c4b9a223c013a948c029b7251
+    SHA512 a246df993c0201dd61cad821d75486957dc3be804e511f583943d13cdf08a664a3c6b038f354200d398b90eb03c66a9640371bfd115ba4fbd4b6c2502083df67
     HEAD_REF master
     PATCHES
         build-old-libs.patch
@@ -12,6 +12,7 @@ vcpkg_from_github(
 )
 
 set(FEATURE_OPTIONS "")
+include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}

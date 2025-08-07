@@ -1,12 +1,10 @@
-set(UVATLAS_TAG feb2024)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+set(UVATLAS_TAG jul2025)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
     REF ${UVATLAS_TAG}
-    SHA512 893626920207e0d6707bdb579cb70f74e1abc8e31f00bfedb8fccb4f4034862068ba6174cc0824e4fb1d463c6c5bbcc9edbbdbfde654bc1fff7e075df2a2838d
+    SHA512 cdc1f5116e63ed807c808e51ec78b00a3b04634d63b00980e75ca3886d59b5f7dd02bd8ba6caad89890dd9cc769603ba3587f6009479f186297ad4f4d259b221
     HEAD_REF main
 )
 
@@ -41,7 +39,7 @@ if("tools" IN_LIST FEATURES)
       UVATLASTOOL_EXE
       URLS "https://github.com/Microsoft/UVAtlas/releases/download/${UVATLAS_TAG}/uvatlastool.exe"
       FILENAME "uvatlastool-${UVATLAS_TAG}.exe"
-      SHA512 14b606c57d0a1eeee573b5e484505d950534e6ab2d15693f5672fd52198de3b4986bddc48ee0957ee1936c7493c912212262c9c9ecdb91426ec74cd4f06d4d47
+      SHA512 fa9453467c958328186a82552b5d0dd946b27cac16c86cd6f81d2ef35a750f37510d8519cc7cdeabb126e2a30886635157029f85c0cda731243bdeb51d3775d9
     )
 
     file(INSTALL

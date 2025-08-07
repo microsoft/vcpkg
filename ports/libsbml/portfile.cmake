@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sbmlteam/libsbml
     REF "v${VERSION}"
-    SHA512 2770c1d3295e22ed8fb8dfa2480efa160fc61fbeeca3a9e214e210acb3fd6531a5cfb22eeb72c5334158bf8ba21c27015d0910487a7ef060f594a708f197676c
+    SHA512 d4960b2ef12d00ae93ea883f945acf435a99763a0e2e751d94a15c7ff22fd41ff31cb16c1f37aa23257b3eb0de894201420962b008a6fe43ef0511fa2612846a
     HEAD_REF development
     PATCHES
         dependencies.diff
@@ -10,13 +10,17 @@ vcpkg_from_github(
         no-docs.diff
         test-shared.diff
 )
+file(REMOVE
+    "${SOURCE_PATH}/CMakeModules/FindBZ2.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindEXPAT.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindLIBXML.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindZLIB.cmake"
+)
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC_LIBRARY)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DYNAMIC_LIBRARY)
 
 if("expat" IN_LIST FEATURES AND "libxml2" IN_LIST FEATURES)
-    message("Feature expat conflicts with feature libxml2. Selecting libxml2.")
+    message(WARNING "Feature expat conflicts with feature libxml2. Selecting libxml2.")
     list(REMOVE_ITEM FEATURES "expat")
 endif()
 
@@ -43,8 +47,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DENABLE_L3V2EXTENDEDMATH:BOOL=ON
         -DWITH_STATIC_RUNTIME=${STATIC_RUNTIME}
-        -DLIBSBML_SKIP_SHARED_LIBRARY=${STATIC_LIBRARY}
-        -DLIBSBML_SKIP_STATIC_LIBRARY=${DYNAMIC_LIBRARY}
+        -DWITH_SWIG=OFF
     MAYBE_UNUSED_VARIABLES
         WITH_STATIC_RUNTIME
 )
@@ -66,6 +69,12 @@ endforeach()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sbml/common/extern.h" "defined LIBSBML_STATIC" "1")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sbml/xml/XMLExtern.h" "defined(LIBLAX_STATIC)" "1")
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libsbml.pc" " -lsbml" " -lsbml-static")
+        if(NOT VCPKG_BUILD_TYPE)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libsbml.pc" " -lsbml" " -lsbml-static")
+        endif()
+    endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

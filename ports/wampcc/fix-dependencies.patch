@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ca5a738..5e65bcf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -95,9 +95,7 @@ set(HAVE_JANSSON ON)
+ ## Find Threads on Linux systems, for compiling EXAMPLES or UTILS
+ ##
+ 
+-if(CMAKE_HOST_UNIX)
+-  find_package(Threads REQUIRED)
+-endif()
++find_package(Threads REQUIRED)
+ 
+ message(STATUS "OpenSSL_INCLUDE_DIR:      " ${OPENSSL_INCLUDE_DIR})
+ message(STATUS "OpenSSL_LIBRARIES:        " ${OPENSSL_LIBRARIES})
+diff --git a/cmake/wampccConfig.cmake.in b/cmake/wampccConfig.cmake.in
+index 8c4bed5..7ef2483 100644
+--- a/cmake/wampccConfig.cmake.in
++++ b/cmake/wampccConfig.cmake.in
+@@ -13,9 +13,7 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_LIST_DIR}/find_modules")
+ find_dependency(OpenSSL REQUIRED)
+ find_dependency(LibUV REQUIRED)
+ find_dependency(Jansson REQUIRED)
+-if(CMAKE_HOST_UNIX)
+-  find_dependency(Threads REQUIRED)
+-endif()
++find_dependency(Threads REQUIRED)
+ 
+ # Restore old path
+ set(CMAKE_MODULE_PATH "${wampcc_original_module_path}")
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index ee2bb06..0284808 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -14,10 +14,6 @@ endif()
+ macro(Compile_Example example source_path)
+   add_executable(${example} "${PROJECT_SOURCE_DIR}/examples/${source_path}/${example}.cc")
+   target_link_libraries (${example}	PRIVATE ${EXTRA_LIBS})
+-
+-  if (WIN32)
+-    set_target_properties(${example} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcmtd.lib")
+-  endif()
+ endmacro()
+ 
+ 

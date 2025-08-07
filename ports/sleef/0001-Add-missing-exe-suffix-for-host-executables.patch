@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6f4f3e8..039e6fc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -320,7 +320,11 @@ function(add_host_executable TARGETNAME)
+     endif()
+   else()
+     add_executable(${TARGETNAME} IMPORTED GLOBAL)
+-    set_property(TARGET ${TARGETNAME} PROPERTY IMPORTED_LOCATION ${NATIVE_BUILD_DIR}/bin/${TARGETNAME})
++    if(CMAKE_HOST_WIN32)
++      set_property(TARGET ${TARGETNAME} PROPERTY IMPORTED_LOCATION ${NATIVE_BUILD_DIR}/bin/${TARGETNAME}.exe)
++    else()
++      set_property(TARGET ${TARGETNAME} PROPERTY IMPORTED_LOCATION ${NATIVE_BUILD_DIR}/bin/${TARGETNAME})
++    endif()
+   endif()
+ endfunction()
+ 
+-- 
+2.34.1
+

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bitdefender/bddisasm
     REF "v${VERSION}"
-    SHA512 307a341eeaddf6ba6858ee0f5c4c51d20e82ad5c5e977a9a40bed94266a5d1d05164a0dca0ee9bf3f6a0b4613e6c82a78a1118c09fc623c9b09fe8d0872da6d2
+    SHA512 5c1b8b8b9a29db76ce6197674e662fdc526e89372a84f7fac8e74cf4cc53bfab8d55c096cdb3f344fcfaa6a4d54a5bef79e8f1cf9131e497636072523b2cf3ec
     HEAD_REF master
 )
 
@@ -16,11 +16,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(INSTALL
-    ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/bddisasm)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

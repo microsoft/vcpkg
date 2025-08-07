@@ -1,0 +1,28 @@
+{
+  "name": "vcpkg-ci-juce",
+  "version-string": "ci",
+  "description": "Validates juce",
+  "dependencies": [
+    "juce",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "extras"
+  ],
+  "features": {
+    "extras": {
+      "description": "Install juce[extras]",
+      "dependencies": [
+        {
+          "name": "juce",
+          "features": [
+            "extras"
+          ]
+        }
+      ]
+    }
+  }
+}

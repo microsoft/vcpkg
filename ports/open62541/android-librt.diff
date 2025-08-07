@@ -1,0 +1,13 @@
+diff --git a/arch/posix/CMakeLists.txt b/arch/posix/CMakeLists.txt
+index a53c9f2..badf1e8 100644
+--- a/arch/posix/CMakeLists.txt
++++ b/arch/posix/CMakeLists.txt
+@@ -23,7 +23,7 @@ if (${_index} GREATER -1 OR "${UA_ARCHITECTURE}" STREQUAL "posix")
+           if(UA_MULTITHREADING OR UA_BUILD_UNIT_TESTS)
+             ua_architecture_append_to_library(pthread)
+           endif()
+-          if(NOT APPLE AND (NOT ${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD"))
++          if(NOT APPLE AND (NOT ${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD") AND NOT ANDROID)
+             ua_architecture_append_to_library(rt)
+           endif()
+         endif()

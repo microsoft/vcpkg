@@ -4,8 +4,8 @@ include(CMakePackageConfigHelpers)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cubicdaiya/dtl
-    REF v1.20
-    SHA512 44cdaf190d8a103effbca8df244c652b642590795f7307f5f7fdf64fc34bdbe2fa5ab2e1a08185abf099e35b0d9158306a80a8dc24bba9eccab4c77c7b1eed5e
+    REF "v${VERSION}"
+    SHA512 53a448ce499d96c5030ff787db68dd4cb52ee9686453da81aeb5c143e21d4a10fcc4c9b88ebf86d71824cb919d6e4ebf39df52b74bd9333f411935e5f23bfa86
     HEAD_REF master
 )
 

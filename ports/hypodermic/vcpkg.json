@@ -1,6 +1,6 @@
 {
   "name": "hypodermic",
-  "version": "2.5.3",
+  "version-date": "2023-03-03",
   "description": "Hypodermic is a non-intrusive header only IoC container for C++",
   "homepage": "https://github.com/ybainier/Hypodermic",
   "license": "MIT",

@@ -1,106 +1,67 @@
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 
-# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1
+param([string]$SasToken)
 
-# REPLACE WITH UTILITY-PREFIX.ps1
+if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
+  . "$PSScriptRoot/utility-prefix.ps1"
+}
 
-# If you are running this script outside of our Azure VMs, you will need to download cudnn from NVIDIA and place
-# it next to this script.
-$CudnnUrl = 'https://vcpkgimageminting.blob.core.windows.net/assets/cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip'
-
-$CudnnLocalZipPath = "$PSScriptRoot\cudnn-windows-x86_64-8.8.1.3_cuda12-archive.zip"
-
-$CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/12.1.0/network_installers/cuda_12.1.0_windows_network.exe'
+[string]$CudaUrl
+if ([string]::IsNullOrEmpty($SasToken)) {
+  Write-Host 'Downloading from the Internet'
+  $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/12.9.1/local_installers/cuda_12.9.1_576.57_windows.exe'
+} else {
+  Write-Host 'Downloading from vcpkgimageminting using SAS token'
+  $SasToken = $SasToken.Replace('"', '')
+  $CudaUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/cuda_12.9.1_576.57_windows.exe?$SasToken"
+}
 
 # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
 # Intentionally omitted:
-#  demo_suite_12.1
-#  documentation_12.1
-#  nvvm_samples_12.1
+#  demo_suite_12.9
+#  documentation_12.9
+#  nsight_compute_12.9
+#  nsight_systems_12.9
+#  nsight_vse_12.9
+#  nvvm_samples_12.9
+#  visual_studio_integration_12.9
+#  visual_profiler_12.9
 #  Display.Driver
-
-$CudaInstallerArgs = @(
+DownloadAndInstall -Name 'CUDA' -Url $CudaUrl -Args @(
   '-s',
-  'cublas_12.1',
-  'cublas_dev_12.1',
-  'cuda_profiler_api_12.1',
-  'cudart_12.1',
-  'cufft_12.1',
-  'cufft_dev_12.1',
-  'cuobjdump_12.1',
-  'cupti_12.1',
-  'curand_12.1',
-  'curand_dev_12.1',
-  'cusolver_12.1',
-  'cusolver_dev_12.1',
-  'cusparse_12.1',
-  'cusparse_dev_12.1',
-  'cuxxfilt_12.1',
-  'npp_12.1',
-  'npp_dev_12.1',
-  'nsight_compute_12.1',
-  'nsight_systems_12.1',
-  'nsight_vse_12.1',
-  'nvcc_12.1',
-  'nvdisasm_12.1',
-  'nvjitlink_12.1',
-  'nvjpeg_12.1',
-  'nvjpeg_dev_12.1',
-  'nvml_dev_12.1',
-  'nvprof_12.1',
-  'nvprune_12.1',
-  'nvrtc_12.1',
-  'nvrtc_dev_12.1',
-  'nvtx_12.1',
-  'occupancy_calculator_12.1',
-  'opencl_12.1',
-  'sanitizer_12.1',
-  'thrust_12.1',
-  'visual_profiler_12.1',
-  'visual_studio_integration_12.1'
+  'cublas_12.9',
+  'cublas_dev_12.9',
+  'cuda_profiler_api_12.9',
+  'cudart_12.9',
+  'cufft_12.9',
+  'cufft_dev_12.9',
+  'cuobjdump_12.9',
+  'cupti_12.9',
+  'curand_12.9',
+  'curand_dev_12.9',
+  'cusolver_12.9',
+  'cusolver_dev_12.9',
+  'cusparse_12.9',
+  'cusparse_dev_12.9',
+  'cuxxfilt_12.9',
+  'npp_12.9',
+  'npp_dev_12.9',
+  'nvcc_12.9',
+  'nvdisasm_12.9',
+  'nvfatbin_12.9',
+  'nvjitlink_12.9',
+  'nvjpeg_12.9',
+  'nvjpeg_dev_12.9',
+  'nvml_dev_12.9',
+  'nvprof_12.9',
+  'nvprune_12.9',
+  'nvrtc_12.9',
+  'nvrtc_dev_12.9',
+  'nvtx_12.9',
+  'occupancy_calculator_12.9',
+  'opencl_12.9',
+  'sanitizer_12.9',
+  'thrust_12.9',
+  '-n'
 )
-
-$destination = "$env:ProgramFiles\NVIDIA GPU Computing Toolkit\CUDA\v12.1"
-
-try {
-  Write-Host 'Downloading CUDA...'
-  [string]$installerPath = Get-TempFilePath -Extension 'exe'
-  curl.exe -L -o $installerPath -s -S $CudaUrl
-  Write-Host 'Installing CUDA...'
-  $proc = Start-Process -FilePath $installerPath -ArgumentList $CudaInstallerArgs -Wait -PassThru
-  $exitCode = $proc.ExitCode
-  if ($exitCode -eq 0) {
-    Write-Host 'Installation successful!'
-  }
-  else {
-    Write-Error "Installation failed! Exited with $exitCode."
-    throw
-  }
-}
-catch {
-  Write-Error "Failed to install CUDA! $($_.Exception.Message)"
-  throw
-}
-
-try {
-  if (Test-Path $CudnnLocalZipPath) {
-    $cudnnZipPath = $CudnnLocalZipPath
-  } else {
-    Write-Host 'Attempting to download cudnn. If this fails, you need to agree to NVidia''s EULA, download cudnn, and place it next to this script.'
-    $cudnnZipPath = Get-TempFilePath -Extension 'zip'
-    $env:AZCOPY_AUTO_LOGIN_TYPE = 'MSI'
-    & "$env:PROGRAMFILES\azcopy_windows_amd64_10.23.0\azcopy.exe" copy $CudnnUrl $cudnnZipPath
-    if ($LASTEXITCODE -ne 0) {
-      throw 'Failed to download cudnn!'
-    }
-  }
-
-  Write-Host "Installing CUDNN to $destination..."
-  tar.exe -xvf "$cudnnZipPath" --strip 1 --directory "$destination"
-  Write-Host 'Installation successful!'
-}
-catch {
-  Write-Error "Failed to install CUDNN! $($_.Exception.Message)"
-  throw
-}

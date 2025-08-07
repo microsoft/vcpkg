@@ -6,9 +6,11 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 99191c9551ff345f96af9177d124c6e10f3da8e87021576058b63df82ee64461cb8fc134919fe390617200aebf222e70501e3cee43fc0a294596947669ed4f03
     HEAD_REF master
+    PATCHES
+        android-strerror_r.diff
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "\${SOCKPP}-static" "\${SOCKPP}")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "\${SOCKPP}-static" "\${SOCKPP}" IGNORE_UNCHANGED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

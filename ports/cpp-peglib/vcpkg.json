@@ -1,6 +1,6 @@
 {
   "name": "cpp-peglib",
-  "version": "1.8.6",
+  "version": "1.9.1",
   "description": "C++11 header-only PEG (Parsing Expression Grammars) library.",
   "license": "MIT"
 }

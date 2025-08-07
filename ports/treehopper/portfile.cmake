@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,8 +10,18 @@ vcpkg_from_github(
         fix-dependences.patch
 )
 
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
+    vcpkg_find_acquire_program(PKGCONFIG)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/C++/API/"
+    OPTIONS
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        -DTHREADS_PREFER_PTHREAD_FLAG=ON
+    MAYBE_UNUSED_VARIABLES
+        PKG_CONFIG_EXECUTABLE
+        THREADS_PREFER_PTHREAD_FLAG
 )
 
 vcpkg_cmake_install()

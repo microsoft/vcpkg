@@ -8,6 +8,7 @@
     {
       "name": "gdal",
       "features": [
+        "archive",
         "freexl"
       ]
     },
@@ -40,6 +41,15 @@
         "aws-ec2-windows"
       ],
       "platform": "windows & !mingw"
+    },
+    {
+      "name": "tiff",
+      "features": [
+        "lerc",
+        "libdeflate",
+        "webp",
+        "zstd"
+      ]
     }
   ]
 }

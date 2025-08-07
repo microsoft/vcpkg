@@ -1,0 +1,44 @@
+diff --git a/cmake/FindDependencies.cmake b/cmake/FindDependencies.cmake
+index 9e33c7e..f640c77 100644
+--- a/cmake/FindDependencies.cmake
++++ b/cmake/FindDependencies.cmake
+@@ -17,7 +17,12 @@ find_package(Eigen3 ${COLMAP_FIND_TYPE})
+ 
+ find_package(FreeImage ${COLMAP_FIND_TYPE})
+ 
+-find_package(FLANN ${COLMAP_FIND_TYPE})
++find_package(flann CONFIG ${COLMAP_FIND_TYPE})
++if(BUILD_SHARED_LIBS )
++    set(FLANN_LIB flann::flann)
++else()
++	set(FLANN_LIB flann::flann_s)
++endif()
+ find_package(LZ4 ${COLMAP_FIND_TYPE})
+ 
+ find_package(Metis ${COLMAP_FIND_TYPE})
+diff --git a/src/colmap/feature/CMakeLists.txt b/src/colmap/feature/CMakeLists.txt
+index c5da882..478ee6d 100644
+--- a/src/colmap/feature/CMakeLists.txt
++++ b/src/colmap/feature/CMakeLists.txt
+@@ -66,7 +66,7 @@ COLMAP_ADD_LIBRARY(
+         colmap_sensor
+         colmap_vlfeat
+         Eigen3::Eigen
+-        flann
++        ${FLANN_LIB}
+         lz4
+ )
+ if(GPU_ENABLED)
+diff --git a/src/colmap/retrieval/CMakeLists.txt b/src/colmap/retrieval/CMakeLists.txt
+index 903a935..93363b3 100644
+--- a/src/colmap/retrieval/CMakeLists.txt
++++ b/src/colmap/retrieval/CMakeLists.txt
+@@ -43,7 +43,7 @@ COLMAP_ADD_LIBRARY(
+     PUBLIC_LINK_LIBS
+         Boost::boost
+         Eigen3::Eigen
+-        flann
++        ${FLANN_LIB}
+         lz4
+     PRIVATE_LINK_LIBS
+         colmap_math

@@ -1,11 +1,12 @@
 {
   "name": "unit-test-cmake",
-  "version-string": "0",
+  "version-string": "ci",
   "description": "Ensures that the CMake scripts are unit tested.",
   "license": "MIT",
   "supports": "x64",
   "default-features": [
     "backup-restore-env-vars",
+    "execute-required-process",
     "fixup-pkgconfig",
     {
       "name": "fixup-rpath",
@@ -21,6 +22,9 @@
   "features": {
     "backup-restore-env-vars": {
       "description": "Test the vcpkg_backup/restore_env_vars functions"
+    },
+    "execute-required-process": {
+      "description": "Test the vcpkg_execute_required_process function"
     },
     "fixup-pkgconfig": {
       "description": "Test the vcpkg_fixup_pkgconfig function"

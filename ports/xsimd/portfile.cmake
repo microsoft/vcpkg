@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xsimd
     REF "${VERSION}"
-    SHA512 8e45a8e9b28358d5f20f713ea19a8c366edc62790c27984149f283dfe808d78a549c8ec465e8b3677d7e30b2cb80093908de364bbb9dc80683f5fdfb843131e1
+    SHA512 3825626547b0dd9b58f306bc89e9b3bc6dd778ad3811b7828e50fc16ae102574255b53f2b0714995de2bd6f9eb7b2c5d266a1a24fbfdf5420dc5e94d7dcbb522
     HEAD_REF master
 )
 
@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 

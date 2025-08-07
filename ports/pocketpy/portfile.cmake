@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocketpy/pocketpy
     REF "v${VERSION}"
-    SHA512 8c0b773fa6b113a7ef5bdf20837e46e61e17ed257c052e31c8bf08e88a911482b5617091c85f62d77f6145d8713c7ae08d70ce9f438f253ce21fb850520f0bcf
+    SHA512 6c9872c4a402bc702e577067c05d593034f45f150ebbf033ef204b4c7deff6cd2da0f9db44e0bb37aefdeb7a4d99e5a9c4a93ece57316f561c5bf4cd33cd12e3
     HEAD_REF master
+    PATCHES
+        fix-conflict.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

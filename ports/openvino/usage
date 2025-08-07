@@ -1,10 +1,4 @@
-The package OpenVINO can be used in cmake scripts as:
+openvino provides CMake targets:
 
-    find_package(OpenVINO REQUIRED)
-    target_link_libraries(main PRIVATE openvino::runtime)
-
-Note: static build of Intel GPU plugin disables usage of oneDNN for GPU, which is important
-for decent performance on discrete GPU devices. If you want to levarage performance of dGPU,
-please, consider either option:
-- Building with 'VCPKG_LIBRARY_LINKAGE=dynamic'
-- Disable Intel CPU plugin, because it uses different oneDNN flavor
+  find_package(OpenVINO REQUIRED)
+  target_link_libraries(main PRIVATE openvino::runtime)

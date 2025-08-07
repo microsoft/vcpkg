@@ -9,6 +9,8 @@ endif()
 
 project(xqilla C CXX)
 
+set(CMAKE_CXX_STANDARD 11) # 17 does not allow 'register'
+
 add_library(xqilla  
 ./src/exceptions/XQException.cpp
 ./src/exceptions/XQillaException.cpp
@@ -431,7 +433,9 @@ target_include_directories(xqilla PRIVATE "${XercesC_INCLUDE_DIRS}")
 target_include_directories(xqilla PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 if (BUILD_SHARED_LIBS)
-  target_link_libraries(xqilla PUBLIC debug "${XercesC_LIBRARY_DEBUG}")
+  if(XercesC_LIBRARY_DEBUG)
+    target_link_libraries(xqilla PUBLIC debug "${XercesC_LIBRARY_DEBUG}")
+  endif()
   target_link_libraries(xqilla PUBLIC optimized "${XercesC_LIBRARY_RELEASE}")
 endif()
 

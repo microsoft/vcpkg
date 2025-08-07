@@ -23,39 +23,25 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-if(NOT WIN32)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}/include")
-endif()
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
-if(NOT VCPKG_BUILD_TYPE)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-endif()
-file(RENAME "${CURRENT_PACKAGES_DIR}/include/" "${CURRENT_PACKAGES_DIR}/share/${PORT}/include/") 
 # the include folder is moved since it contains source files. It is not meant as a traditional include folder but as a shared files folder for different x libraries. 
+file(RENAME "${CURRENT_PACKAGES_DIR}/include" "${CURRENT_PACKAGES_DIR}/share/${PORT}/include")
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/aclocal/" "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal")
-
 if(NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/" "${CURRENT_PACKAGES_DIR}/share/xorg/debug")
 endif()
-
 vcpkg_fixup_pkgconfig() # must be called after files have been moved 
-
-set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xtrans.pc" )
-file(READ "${_file}" _contents)
-string(REPLACE "includedir=\${prefix}/include" "includedir=\${prefix}/share/xtrans/include" _contents "${_contents}")
-file(WRITE "${_file}" "${_contents}")
-
-
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xtrans.pc" )
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xtrans.pc" "includedir=\${prefix}/include" "includedir=\${prefix}/share/${PORT}/include")
 if(NOT VCPKG_BUILD_TYPE)
-    file(READ "${_file}" _contents)
-    string(REPLACE "includedir=\${prefix}/../include" "includedir=\${prefix}/../share/xtrans/include" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xtrans.pc" "includedir=\${prefix}/../include" "includedir=\${prefix}/../share/${PORT}/include")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

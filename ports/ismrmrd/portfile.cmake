@@ -6,11 +6,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ismrmrd/ismrmrd
     REF "v${VERSION}"
-    SHA512 cbd34cfbcc16e898f44c00888bc605d01e6a915b6c02454630a61c92b6179d727affb1ffeebc7d14da5aac189f929f5d36a6fd7ab68a73cb963ee4a233fba056
+    SHA512 4bf3fbab89436636c64e4917d09117134f4d1c6446bae7ef570e0af5850998f066d881f45c414f40e1d1be942f34fda6836a1b3e4cb5ec904f9ecf2a432964c1
     HEAD_REF master
     PATCHES
         ${WIN32_INCLUDE_STDDEF_PATCH}
         fix-depends-hdf5.patch
+        fix-nodiscard-warning.patch
 )
 
 vcpkg_cmake_configure(
@@ -47,4 +48,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

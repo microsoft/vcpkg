@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUTPP_INCLUDE_TESTS_IN_BUILD=OFF
+        -DUTPP_AMPLIFY_WARNINGS=OFF
 )
 
 vcpkg_cmake_install()

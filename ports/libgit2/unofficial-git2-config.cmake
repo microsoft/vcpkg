@@ -1,6 +1,0 @@
-file(READ "${CMAKE_CURRENT_LIST_DIR}/../unofficial-libgit2/usage" usage)
-message(WARNING "find_package(unofficial-git2) is deprecated.\n${usage}")
-include(CMakeFindDependencyMacro)
-find_dependency(unofficial-libgit2 CONFIG)
-add_library(unofficial::git2::libgit2package INTERFACE IMPORTED)
-set_target_properties(unofficial::git2::libgit2package PROPERTIES INTERFACE_LINK_LIBRARIES unofficial::libgit2::libgit2package)

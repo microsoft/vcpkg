@@ -1,26 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 93733dd0..769025cf 100644
+index 5e8e016..b3c3f18 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -460,8 +460,7 @@ if(LIBUV_BUILD_SHARED)
+@@ -465,7 +465,7 @@ if(LIBUV_BUILD_SHARED)
    endif()
    target_link_libraries(uv ${uv_libraries})
    set_target_properties(uv PROPERTIES OUTPUT_NAME "uv")
 -endif()
--
 +else()
+ 
  add_library(uv_a STATIC ${uv_sources})
  target_compile_definitions(uv_a PRIVATE ${uv_defines})
- target_compile_options(uv_a PRIVATE ${uv_cflags})
-@@ -480,6 +479,7 @@ set_target_properties(uv_a PROPERTIES OUTPUT_NAME "uv")
- if(MSVC)
+@@ -485,6 +485,7 @@ set_target_properties(uv_a PROPERTIES OUTPUT_NAME "uv")
+ if(WIN32)
    set_target_properties(uv_a PROPERTIES PREFIX "lib")
  endif()
 +endif()
  
  if(LIBUV_BUILD_TESTS)
    # Small hack: use ${uv_test_sources} now to get the runner skeleton,
-@@ -737,10 +737,6 @@ configure_file(libuv-static.pc.in libuv-static.pc @ONLY)
+@@ -755,10 +756,6 @@ configure_file(libuv-static.pc.in libuv-static.pc @ONLY)
  install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DOCDIR})
  install(FILES LICENSE-extra DESTINATION ${CMAKE_INSTALL_DOCDIR})
@@ -31,7 +30,7 @@ index 93733dd0..769025cf 100644
  install(EXPORT libuvConfig
  	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libuv
  	NAMESPACE libuv::)
-@@ -757,6 +753,11 @@ if(LIBUV_BUILD_SHARED)
+@@ -775,6 +772,11 @@ if(LIBUV_BUILD_SHARED)
            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
@@ -43,4 +42,3 @@ index 93733dd0..769025cf 100644
  endif()
  
  if(MSVC)
-

@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b444c292e..0200a56df 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -297,6 +297,7 @@ option(ENABLE_STATIC "Compile static libraries (.a on Linux)" OFF)
+ option(ENABLE_SHARED "Compile shared libraries (.so on Linux)" ON)
+ option(SWIG_EXPORT "Export SWIG" OFF)
+ option(SWIG_IMPORT "Import SWIG" OFF)
++option(RELOCATABLE "Avoid any usage of absolute paths" ON)
+ 
+ # enabling OpenMP support if requested
+ option(WITH_OPENMP "Compile with parallelization support using OpenMP" OFF)
+diff --git a/casadi/CMakeLists.txt b/casadi/CMakeLists.txt
+index 3c803afc0..bd408fdd6 100644
+--- a/casadi/CMakeLists.txt
++++ b/casadi/CMakeLists.txt
+@@ -141,10 +141,16 @@ if(NOT SKIP_CONFIG_H_GENERATION)
+ 
+   # See issue #3831, RELOCATABILITY
+   set(CASADI_CMAKE_CXX_COMPILER ${CMAKE_CXX_COMPILER})
+-  if(CASADI_CMAKE_CXX_COMPILER MATCHES "shims")
++  if(CASADI_CMAKE_CXX_COMPILER MATCHES "shims" OR RELOCATABLE)
+     get_filename_component(CASADI_CMAKE_CXX_COMPILER ${CMAKE_CXX_COMPILER} NAME)
+   endif()
+ 
++  if(RELOCATABLE)
++    set(CASADI_INSTALL_PREFIX "")
++  else()
++    set(CASADI_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
++  endif()
++
+   configure_file(config.h.cmake "${CMAKE_CURRENT_BINARY_DIR}/config.h" ESCAPE_QUOTES)
+ endif()
+ install(FILES casadi.hpp mem.h casadi_c.h "${CMAKE_CURRENT_BINARY_DIR}/config.h"
+diff --git a/casadi/config.h.cmake b/casadi/config.h.cmake
+index 2b805aede..3a4795eb2 100644
+--- a/casadi/config.h.cmake
++++ b/casadi/config.h.cmake
+@@ -38,7 +38,7 @@
+ #define CASADI_COMPILER_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_${UPPER_CMAKE_BUILD_TYPE}} ${EXTRA_CXX_FLAGS_FROM_DEFS}"  // NOLINT(whitespace/line_length)
+ #define CASADI_MODULES "${CASADI_MODULES}"  // NOLINT(whitespace/line_length)
+ #define CASADI_PLUGINS "${CASADI_PLUGINS}"  // NOLINT(whitespace/line_length)
+-#define CASADI_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"  // NOLINT(whitespace/line_length)
++#define CASADI_INSTALL_PREFIX "${CASADI_INSTALL_PREFIX}"  // NOLINT(whitespace/line_length)
+ #define CASADI_SHARED_LIBRARY_PREFIX "${CMAKE_SHARED_LIBRARY_PREFIX}"  // NOLINT(whitespace/line_length)
+ #define CASADI_SHARED_LIBRARY_SUFFIX "${CMAKE_SHARED_LIBRARY_SUFFIX}"  // NOLINT(whitespace/line_length)
+ #define CASADI_OBJECT_FILE_SUFFIX "${CMAKE_C_OUTPUT_EXTENSION}"  // NOLINT(whitespace/line_length)

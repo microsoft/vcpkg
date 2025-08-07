@@ -1,7 +1,6 @@
 {
   "name": "zint",
-  "version": "2.12.0",
-  "port-version": 1,
+  "version": "2.15.0",
   "description": "A barcode encoding library supporting over 50 symbologies",
   "homepage": "https://github.com/zint/zint",
   "license": null,

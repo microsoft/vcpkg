@@ -1,6 +1,6 @@
 {
   "name": "libgnutls",
-  "version": "3.8.5",
+  "version": "3.8.7.1",
   "description": "A secure communications library implementing the SSL, TLS and DTLS protocols.",
   "homepage": "https://www.gnutls.org/",
   "license": null,
@@ -11,11 +11,6 @@
     "libtasn1",
     "libunistring",
     "nettle",
-    {
-      "name": "vcpkg-cmake-get-vars",
-      "host": true,
-      "platform": "!native"
-    },
     "zlib"
   ],
   "features": {

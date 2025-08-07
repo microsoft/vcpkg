@@ -8,14 +8,14 @@ if("tao" IN_LIST FEATURES)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
         FILENAME "ACE-TAO-${VERSION}.tar.gz"
-        SHA512 cf28ca68e460b163d1af2858dddf597306dac7a048ea1d8c69d74e65d671594ce16ecd5f3b1b571e2be6e0e860a7bbedf7372a2c6aea9427d1c8f83f73b99e12
+        SHA512 11707f5c4c3a67b437ed2112612640d19a5d11c3909597dae2ce60a34979578e3376871a698d43f9c4236a26d37b301f2148314535f66242444a0849c42fedbe
     )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
         FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 7eefc6ec2cb3ad862deffe341dab81e75a75a73acf429c8b64229e63de6ec2baa01e6bbef1643519cfd7312cc70564aa2836d57824667ea4f456659f01ba3fd5
+        SHA512 208b6101c1415ee64f7a9a99c1fe53a3b51078408809716ea9bf744667f853c86e7656e02c49c55e6866218033336de4ed8bfbd39254bf94f8a332861ea6e97f
     )
 endif()
 
@@ -63,6 +63,9 @@ vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_PATH}")
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
 # Add ace/config.h file
 # see https://htmlpreview.github.io/?https://github.com/DOCGroup/ACE_TAO/blob/master/ACE/ACE-INSTALL.html
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -87,6 +90,13 @@ elseif(VCPKG_TARGET_IS_OSX)
   set(SOLUTION_TYPE gnuace)
   set(config_h_contents "#include \"ace/config-macosx.h\"\n")
   file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
+elseif (VCPKG_TARGET_IS_ANDROID)
+  set(SOLUTION_TYPE gnuace)
+  set(config_h_contents "#include \"ace/config-android.h\"\n")
+  file(WRITE "${ACE_ROOT}/include/makeinclude/platform_macros.GNU" "include $(ACE_ROOT)/include/makeinclude/platform_android.GNU")
+  set(ENV{ANDROID_ABI} "${VCPKG_DETECTED_CMAKE_ANDROID_ARCH_ABI}")
+  set(ENV{android_ndk} "${VCPKG_DETECTED_CMAKE_ANDROID_NDK}")
+  set(ENV{android_api} "${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}")
 endif()
 
 if("wchar" IN_LIST FEATURES)
@@ -274,7 +284,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb")
     endif()
   endif()
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)
     MESSAGE(FATAL_ERROR "MAKE not found")
@@ -346,7 +356,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     )
   endif()
 endif()
-  
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   message(STATUS "Building ${TARGET_TRIPLET}-rel")
   vcpkg_execute_build_process(
@@ -381,7 +391,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   endif()
   message(STATUS "Packaging ${TARGET_TRIPLET}-rel done")
 endif()
-  
+
   # Restore `PWD` environment variable
   set($ENV{PWD} _prev_env)
 

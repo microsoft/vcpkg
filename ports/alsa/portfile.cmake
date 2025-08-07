@@ -11,21 +11,15 @@ On Alpine:
     apk add autoconf automake libtool"
 )
 
-vcpkg_download_distfile(ALSA_VERSION_SCRIPT_PATCH
-    URLS https://github.com/alsa-project/alsa-lib/commit/2a736a0d2543f206fd2653aaae8a08a4c42eb917.diff?full_index=1
-    FILENAME alsa-version-script-2a736a.patch
-    SHA512 d3f2c73b8e8fbae36de43c1db6b59489a0a28c1bc7992f13f40e83f64dfcaaee2d6688b7133668f54685e2d92a2cc06ad03b2efdb40c3c1da7f020f9f0a04de7
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alsa-project/alsa-lib
     REF "v${VERSION}"
-    SHA512 da9277007dd3b197fcafb748ced4ace89fdb1ab5eafae7596e91935ee9fb410be54fa76aabe86cdd83227e48cd073a7df319e90bdf06fa2da7c97470c085645d
+    SHA512 c28e9fbd2cdf8f6482ed8fb1d48235441e6de9939406b7e1d2b595a9c6587c39e408dd892bca55af0e8e892b30622d89e796fbff2c0bde67f730a34be2017aa1
     HEAD_REF master
     PATCHES
         fix-plugin-dir.patch
-        ${ALSA_VERSION_SCRIPT_PATCH}
+        libdl.diff
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
