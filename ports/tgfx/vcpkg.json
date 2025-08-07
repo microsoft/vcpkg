@@ -6,16 +6,34 @@
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
-    "concurrentqueue",
+    {
+      "name": "concurrentqueue",
+      "version>=": "1.0.4"
+    },
     "expat",
     "flatbuffers",
     "freetype",
-    "gtest",
+    {
+      "name": "gtest",
+      "version>=": "1.16.0#1"
+    },
     "harfbuzz",
-    "libjpeg-turbo",
-    "libpng",
-    "libwebp",
-    "nlohmann-json",
+    {
+      "name": "libjpeg-turbo",
+      "version>=": "2.1.1"
+    },
+    {
+      "name": "libpng",
+      "version>=": "1.6.47"
+    },
+    {
+      "name": "libwebp",
+      "version>=": "1.3.2"
+    },
+    {
+      "name": "nlohmann-json",
+      "version>=": "3.10.4"
+    },
     "stb",
     {
       "name": "vcpkg-cmake",
@@ -37,7 +55,10 @@
       "name": "vcpkg-tool-nodejs",
       "host": true
     },
-    "zlib"
+    {
+      "name": "zlib",
+      "version>=": "1.3.1"
+    }
   ],
   "features": {
     "angle": {
@@ -75,5 +96,23 @@
       "description": "Enable building with the SwiftShader library",
       "supports": "osx | linux"
     }
-  }
+  },
+  "overrides": [
+    {
+      "name": "freetype",
+      "version": "2.13.3"
+    },
+    {
+      "name": "harfbuzz",
+      "version": "5.3.1"
+    },
+    {
+      "name": "flatbuffers",
+      "version": "25.2.10"
+    },
+    {
+      "name": "expat",
+      "version": "2.6.3"
+    }
+  ]
 }
