@@ -3322,7 +3322,7 @@
     },
     "gloo": {
       "baseline": "20240626",
-      "port-version": 0
+      "port-version": 1
     },
     "glpk": {
       "baseline": "5.0",
