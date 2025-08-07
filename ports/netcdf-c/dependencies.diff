@@ -148,7 +148,7 @@ index 987b2ad..a910949 100644
  
 +if(NOT "@BUILD_SHARED_LIBS@")
 +  include(CMakeFindDependencyMacro)
-+  find_dependency(Bzip2)
++  find_dependency(BZip2)
 +  find_dependency(tinyxml2 CONFIG)
 +  find_dependency(ZLIB)
 +  if("@FOUND_CURL@")

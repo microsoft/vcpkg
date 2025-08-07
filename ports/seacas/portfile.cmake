@@ -74,6 +74,7 @@ vcpkg_cmake_configure(
         "-DSeacas_HOSTNAME:STRING=localhost"
         "-DSeacas_GENERATE_REPO_VERSION_FILE:BOOL=OFF"
         "-DNetcdf_ALLOW_MODERN:BOOL=ON"
+        "-DNetcdf_FORCE_MODERN:BOOL=ON"
         "-DSeacas_ENABLE_Fortran:BOOL=OFF"
         #"-DCGNS_ALLOW_PREDEFIND:BOOL=NO"
         #"-DSeacas_ENABLE_ALL_PACKAGES:BOOL=ON"
