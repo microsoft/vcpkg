@@ -59,11 +59,11 @@ index 856a47d..a815bd1 100644
        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 +  INSTALL(EXPORT unofficial-xnnpack-config-targets NAMESPACE unofficial::xnnpack::
 +    FILE unofficial-xnnpack-config-targets.cmake
-+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME}) # share/xnnpack
++    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-xnnpack) # share/xnnpack
 +
 +include(CMakePackageConfigHelpers)
-+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/unofficial-xnnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME})
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-xnnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME})
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/unofficial-xnnpack-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-xnnpack)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-xnnpack-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-xnnpack)
 +
 +
  ENDIF()
