@@ -8,14 +8,8 @@ vcpkg_from_github(
         0001-standardprojectsettings.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_PYTHON=OFF
-        -DBUILD_EXAMPLES=OFF
-        -DBUILD_STATIC=${ENABLE_STATIC}
 )
 
 vcpkg_cmake_install()
