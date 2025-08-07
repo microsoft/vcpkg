@@ -9424,6 +9424,10 @@
       "baseline": "20250301",
       "port-version": 0
     },
+    "teem": {
+      "baseline": "1.11.0",
+      "port-version": 0
+    },
     "telnetpp": {
       "baseline": "4.0.0",
       "port-version": 0
