@@ -205,8 +205,8 @@
       "port-version": 0
     },
     "arcus": {
-      "baseline": "4.10.0",
-      "port-version": 4
+      "baseline": "5.3.0",
+      "port-version": 0
     },
     "arg-router": {
       "baseline": "1.4.0",
