@@ -1,0 +1,3 @@
+set(OpenCV_DIR "${CMAKE_CURRENT_LIST_DIR}/../opencv@USE_OPENCV_VERSION@/" CACHE PATH "Path to OpenCVConfig.cmake" FORCE)
+set(OpenCV_ROOT "${CMAKE_CURRENT_LIST_DIR}/../opencv@USE_OPENCV_VERSION@/")
+_find_package(${ARGS})

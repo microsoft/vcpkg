@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/CacheLib
     REF "v${VERSION}"
-    SHA512 fac41a2cb477f252034b932b1499b32b100d164eec4638d387af0487eeb1f84d430cd5908652914e615b188264d2806d6374343938165ebd47dd2494d1e7450d
-    HEAD_REF master
+    SHA512 0290b51ac3461ae7622f5e916a44f005cf55dded1c7f36ca84e98dbb806f876bde97f187a31f5b0015fe1cc6fc6baa57eb5ecba6ebfa71b86e6a828d299c9763
+    HEAD_REF main
     PATCHES
         fix-build.patch
-        fmt-10.patch
+        fix-glog.patch
 )
 
 FIND_PATH(NUMA_INCLUDE_DIR NAME numa.h
@@ -18,11 +18,13 @@ IF (NOT NUMA_INCLUDE_DIR)
     MESSAGE(FATAL_ERROR "Numa library not found.\nTry: 'sudo yum install numactl numactl-devel' (or sudo apt-get install libnuma1 libnuma-dev)")
 ENDIF ()
 
+file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cachelib"
     OPTIONS
         -DBUILD_TESTS=OFF
         -DCMAKE_INSTALL_DIR=share/cachelib
+        -DVCPKG_LOCK_FIND_PACKAGE_uring=OFF
 )
 
 vcpkg_cmake_install()

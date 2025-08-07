@@ -1,23 +1,11 @@
 {
   "name": "usd",
-  "version": "23.5",
-  "port-version": 3,
+  "version": "25.5.1",
   "description": "Universal Scene Description (USD) is an efficient, scalable system for authoring, reading, and streaming time-sampled scene description for interchange between graphics applications.",
-  "homepage": "https://github.com/PixarAnimationStudios/USD",
+  "homepage": "https://github.com/PixarAnimationStudios/OpenUSD",
   "license": null,
-  "supports": "!x86 & !arm & !android",
+  "supports": "!x86 & !(arm & windows) & !android",
   "dependencies": [
-    "boost-assign",
-    "boost-crc",
-    "boost-date-time",
-    "boost-filesystem",
-    "boost-format",
-    "boost-multi-index",
-    "boost-program-options",
-    "boost-regex",
-    "boost-system",
-    "boost-variant",
-    "boost-vmd",
     "tbb",
     {
       "name": "vcpkg-cmake",
@@ -28,5 +16,60 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "imaging": {
+      "description": "Enable the imaging components",
+      "dependencies": [
+        "opengl",
+        {
+          "name": "opensubdiv",
+          "default-features": false,
+          "features": [
+            {
+              "name": "opengl",
+              "platform": "!osx & !ios"
+            }
+          ]
+        }
+      ]
+    },
+    "materialx": {
+      "description": "Enable MaterialX support",
+      "dependencies": [
+        {
+          "name": "materialx",
+          "features": [
+            "glsl-generator",
+            "render"
+          ]
+        }
+      ]
+    },
+    "openimageio": {
+      "description": "Build OpenImageIO plugin",
+      "dependencies": [
+        "openimageio"
+      ]
+    },
+    "vulkan": {
+      "description": "Enable Vulkan based components",
+      "supports": "!ios",
+      "dependencies": [
+        "opengl",
+        {
+          "name": "opensubdiv",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        },
+        "shaderc",
+        "spirv-reflect",
+        "vulkan",
+        "vulkan-memory-allocator",
+        "vulkan-utility-libraries"
+      ]
+    }
+  }
 }

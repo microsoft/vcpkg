@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nuspell/nuspell
-    REF v5.1.2
-    SHA512 138212ae5340836f0bc85d9d5327dc43ffdb1481ca72678b4619938b86c4c8e7c156eec1446f459636460a9015cd476031ad53d0979325e637ed97c19e2f87c8
+    REF "v${VERSION}"
+    SHA512 ab6d9394a55d9a2a347ccae47aeef6a96af70f421ad6ea8f7ac7fde2052790f37fb1c7ec3112daac7600d193430a560cb1915ab6557c9353717f65cb32f13ab8
     HEAD_REF master
 )
 
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DBUILD_DOCS=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

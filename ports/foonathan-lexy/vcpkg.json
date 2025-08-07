@@ -1,10 +1,9 @@
 {
   "name": "foonathan-lexy",
-  "version": "2022.12.1",
+  "version": "2025.5.0",
   "description": "C++ parsing DSL",
   "homepage": "https://github.com/foonathan/lexy",
   "license": "BSL-1.0",
-  "supports": "x64 | arm64",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

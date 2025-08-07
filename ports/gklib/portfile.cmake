@@ -1,26 +1,29 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KarypisLab/GKlib
-    REF b1cb3bd7f6bf4da641af901c8d455c0f858c816f
-    SHA512 e906c7af8b40ce1c4c4ea43cbfca3e3970e5595686333ac9ac80c6cbc558feb0e833f530f034161927030edac5272234c6ac9cad5287cb6edab0c0671ba3644c
+    REF 6e7951358fd896e2abed7887196b6871aac9f2f8
+    SHA512 54ba87f2c47e025ada0fe6fe608d9d144df5cd13e97e71892dbba4d50cd96409add309937a540cdf8bd2632cbfbc0e22e080a32d114ba6037008c8676aa8d88d
     PATCHES
         build-fixes.patch
-        fix-mingw.patch
 )
 
-# Delete files that are workarounds for very old copies of msvc.
-file(REMOVE "${SOURCE_PATH}/ms_inttypes.h" "${SOURCE_PATH}/ms_stdint.h")
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_INSTALL_INCLUDEDIR=include/GKlib
+        -DGKLIB_BUILD_APPS=OFF
+        -DSHARED=${SHARED}
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/GKlib")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" [=[
-gklib provides CMake targets:
-    find_package(GKlib CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE GKlib)
-]=])

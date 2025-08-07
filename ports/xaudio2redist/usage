@@ -1,0 +1,4 @@
+The XAudio2 redistributable package provides CMake targets
+
+    find_package(xaudio2redist CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Microsoft::XAudio2Redist)

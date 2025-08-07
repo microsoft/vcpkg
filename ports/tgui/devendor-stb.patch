@@ -1,27 +1,41 @@
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index ebabb8a..4a166dc 100755
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -173,6 +173,9 @@ else()
-     set_target_properties(tgui PROPERTIES RELWITHDEBINFO_POSTFIX -s)
- endif()
- 
-+find_path(STB_INCLUDE_DIR stb_image.h REQUIRED)
-+target_include_directories(tgui PRIVATE "${STB_INCLUDE_DIR}")
-+
- # Add the backend files to the library.
- # Without the ability to call target_link_libraries in a subdirectory (which was only added in CMake 3.13 in policy CMP0079),
- # the code would be more complicated when using add_subdirectory. So we just avoid creating a new scope by using include.
-diff --git a/src/Loading/ImageLoader.cpp b/src/Loading/ImageLoader.cpp
-index e3ec9c5..d2f691d 100644
---- a/src/Loading/ImageLoader.cpp
-+++ b/src/Loading/ImageLoader.cpp
-@@ -45,7 +45,7 @@
- #define STB_IMAGE_STATIC
- #define STBI_WINDOWS_UTF8
- #define STB_IMAGE_IMPLEMENTATION
--#include <TGUI/extlibs/stb/stb_image.h>
-+#include <stb_image.h>
+diff --git a/include/TGUI/extlibs/IncludeStbImage.hpp b/include/TGUI/extlibs/IncludeStbImage.hpp
+index e19cccb..79d0f0c 100644
+--- a/include/TGUI/extlibs/IncludeStbImage.hpp
++++ b/include/TGUI/extlibs/IncludeStbImage.hpp
+@@ -64,7 +64,7 @@
+ #else
+ #   define STB_IMAGE_STATIC
+ #   define STB_IMAGE_IMPLEMENTATION
+-#   include <TGUI/extlibs/stb/stb_image.h>
++#   include <stb_image.h>
+ #endif
  
  #if defined(__GNUC__)
-     #pragma GCC diagnostic pop
+diff --git a/include/TGUI/extlibs/IncludeStbImageWrite.hpp b/include/TGUI/extlibs/IncludeStbImageWrite.hpp
+index 2e23a5b..97ce878 100644
+--- a/include/TGUI/extlibs/IncludeStbImageWrite.hpp
++++ b/include/TGUI/extlibs/IncludeStbImageWrite.hpp
+@@ -52,7 +52,7 @@
+ #else
+ #   define STB_IMAGE_WRITE_STATIC
+ #   define STB_IMAGE_WRITE_IMPLEMENTATION
+-#   include <TGUI/extlibs/stb/stb_image_write.h>
++#   include <stb_image_write.h>
+ #endif
+ 
+ #if defined(__GNUC__)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 6a08458..c575036 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -225,6 +225,10 @@ else()
+     set_target_properties(tgui PROPERTIES MINSIZEREL_POSTFIX -s)
+     set_target_properties(tgui PROPERTIES RELWITHDEBINFO_POSTFIX -s)
+ endif()
++find_path(STB_INCLUDE_DIR stb_image.h REQUIRED)
++target_include_directories(tgui PRIVATE "${STB_INCLUDE_DIR}")
++find_path(TGUI_SYSTEM_STB_IMAGE_WRITE_INCLUDE_DIR stb_image_write.h REQUIRED)
++target_include_directories(tgui SYSTEM PRIVATE "${TGUI_SYSTEM_STB_IMAGE_WRITE_INCLUDE_DIR}")
+ 
+ if (TGUI_BUILD_AS_CXX_MODULE)
+     target_sources(tgui

@@ -1,0 +1,140 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e17ec1d0..465e42f0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -818,8 +818,12 @@ INCLUDE(fileutils)
+ INCLUDE(zlib)
+ INCLUDE(zstd)
+ INCLUDE(lz4)
+-INCLUDE(icu)
+-INCLUDE(libevent)
++macro(MYSQL_CHECK_ICU)
++endmacro()
++macro(MYSQL_CHECK_LIBEVENT)
++endmacro()
++macro(WARN_MISSING_SYSTEM_LIBEVENT)
++endmacro()
+ INCLUDE(ssl)
+ INCLUDE(sasl)
+ INCLUDE(ldap)
+@@ -837,7 +841,8 @@ INCLUDE(curl)
+ INCLUDE(rapidjson)
+ INCLUDE(fprofile)
+ INCLUDE(gloves)
+-INCLUDE(fido2)
++macro(MYSQL_CHECK_FIDO)
++endmacro()
+ INCLUDE(win_jemalloc)
+ 
+ IF(UNIX)
+@@ -1942,7 +1947,7 @@ MYSQL_CHECK_RAPIDJSON()
+ MYSQL_CHECK_FIDO()
+ MYSQL_CHECK_FIDO_DLLS()
+ 
+-IF(APPLE)
++IF(0)
+   GET_FILENAME_COMPONENT(HOMEBREW_BASE ${HOMEBREW_HOME} DIRECTORY)
+   IF(EXISTS ${HOMEBREW_BASE}/include/boost)
+     FOREACH(SYSTEM_LIB ICU LIBEVENT LZ4 PROTOBUF ZSTD FIDO)
+diff --git a/cmake/boost.cmake b/cmake/boost.cmake
+index c979055c..53e55fcf 100644
+--- a/cmake/boost.cmake
++++ b/cmake/boost.cmake
+@@ -301,7 +301,7 @@ IF(NOT BOOST_MAJOR_VERSION EQUAL 10)
+   COULD_NOT_FIND_BOOST()
+ ENDIF()
+ 
+-IF(NOT BOOST_MINOR_VERSION EQUAL 77)
++IF(NOT BOOST_MINOR_VERSION EQUAL 77 AND NOT IGNORE_BOOST_VERSION)
+   MESSAGE(WARNING "Boost minor version found is ${BOOST_MINOR_VERSION} "
+     "we need 77"
+     )
+diff --git a/cmake/libutils.cmake b/cmake/libutils.cmake
+index 7107f4bd..bb7f3733 100644
+--- a/cmake/libutils.cmake
++++ b/cmake/libutils.cmake
+@@ -534,7 +534,7 @@ MACRO(MERGE_CONVENIENCE_LIBRARIES TARGET_ARG)
+ 
+   # On Windows, ssleay32.lib/libeay32.lib or libssl.lib/libcrypto.lib
+   # must be merged into mysqlclient.lib
+-  IF(WIN32 AND ${TARGET} STREQUAL "mysqlclient")
++  IF(0)
+     SET(LINKER_EXTRA_FLAGS "")
+     FOREACH(LIB ${SSL_LIBRARIES})
+       STRING_APPEND(LINKER_EXTRA_FLAGS " ${LIB}")
+diff --git a/cmake/lz4.cmake b/cmake/lz4.cmake
+index 10e7e8c8..48772329 100644
+--- a/cmake/lz4.cmake
++++ b/cmake/lz4.cmake
+@@ -46,7 +46,7 @@ FUNCTION(FIND_SYSTEM_LZ4)
+   FIND_PATH(LZ4_INCLUDE_DIR
+     NAMES lz4frame.h)
+   FIND_LIBRARY(LZ4_SYSTEM_LIBRARY
+-    NAMES lz4)
++    NAMES lz4d lz4 NAMES_PER_DIR)
+   IF (LZ4_INCLUDE_DIR AND LZ4_SYSTEM_LIBRARY)
+     SET(SYSTEM_LZ4_FOUND 1 CACHE INTERNAL "")
+     ADD_LIBRARY(lz4_interface INTERFACE)
+diff --git a/cmake/ssl.cmake b/cmake/ssl.cmake
+index 04e3af87..8ae52c82 100644
+--- a/cmake/ssl.cmake
++++ b/cmake/ssl.cmake
+@@ -273,7 +273,18 @@ MACRO (MYSQL_CHECK_SSL)
+     FIND_ALTERNATIVE_SYSTEM_SSL()
+   ENDIF()
+ 
+-  IF(WITH_SSL STREQUAL "system" OR WITH_SSL_PATH OR ALTERNATIVE_SYSTEM_SSL)
++  IF(WITH_SSL STREQUAL "system")
++    find_package(OpenSSL REQUIRED)
++    set(OPENSSL_LIBRARY OpenSSL::SSL CACHE STRING "")
++    set(CRYPTO_LIBRARY OpenSSL::Crypto CACHE STRING "")
++    find_program(OPENSSL_EXECUTABLE openssl
++          DOC "path to the openssl executable")
++    set(SSL_DEFINES "-DHAVE_OPENSSL")
++    add_library(ext::openssl ALIAS OpenSSL::SSL)
++    set(SSL_LIBRARIES ext::openssl)
++    set(OPENSSL_APPLINK_C "${OPENSSL_APPLINK_SOURCE}")
++    include_directories(SYSTEM ${OPENSSL_INCLUDE_DIR})
++  ELSEIF(WITH_SSL STREQUAL "system" OR WITH_SSL_PATH OR ALTERNATIVE_SYSTEM_SSL)
+     IF((APPLE OR WIN32) AND WITH_SSL STREQUAL "system")
+       # FindOpenSSL.cmake knows about
+       # http://www.slproweb.com/products/Win32OpenSSL.html
+diff --git a/cmake/zlib.cmake b/cmake/zlib.cmake
+index 3781fe09..ac312ad0 100644
+--- a/cmake/zlib.cmake
++++ b/cmake/zlib.cmake
+@@ -124,7 +124,7 @@ MACRO (MYSQL_CHECK_ZLIB)
+     MESSAGE(FATAL_ERROR "WITH_ZLIB must be bundled or system")
+   ENDIF()
+ 
+-  ADD_LIBRARY(ext::zlib ALIAS zlib_interface)
++  ADD_LIBRARY(ext::zlib ALIAS ZLIB::ZLIB)
+ 
+   IF(ZLIB_VERSION VERSION_LESS MIN_ZLIB_VERSION_REQUIRED)
+     MESSAGE(FATAL_ERROR
+diff --git a/cmake/zstd.cmake b/cmake/zstd.cmake
+index 425426d1..0ae1a907 100644
+--- a/cmake/zstd.cmake
++++ b/cmake/zstd.cmake
+@@ -90,15 +90,16 @@ MACRO (MYSQL_CHECK_ZSTD)
+   IF(WITH_ZSTD STREQUAL "bundled")
+     MYSQL_USE_BUNDLED_ZSTD()
+   ELSEIF(WITH_ZSTD STREQUAL "system")
+-    FIND_SYSTEM_ZSTD()
+-    IF (NOT SYSTEM_ZSTD_FOUND)
+-      MESSAGE(FATAL_ERROR "Cannot find system zstd libraries.")
+-    ENDIF()
++    find_package(ZSTD NAMES zstd REQUIRED)
+   ELSE()
+     MESSAGE(FATAL_ERROR "WITH_ZSTD must be bundled or system")
+   ENDIF()
+ 
+-  ADD_LIBRARY(ext::zstd ALIAS zstd_interface)
++  if(TARGET zstd::libzstd_shared)
++    add_library(ext::zstd ALIAS zstd::libzstd_shared)
++  else()
++    add_library(ext::zstd ALIAS zstd::libzstd_static)
++  endif()
+ 
+   IF(ZSTD_VERSION VERSION_LESS MIN_ZSTD_VERSION_REQUIRED)
+     MESSAGE(FATAL_ERROR

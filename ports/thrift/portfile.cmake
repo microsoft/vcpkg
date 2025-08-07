@@ -12,12 +12,12 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/thrift
-    REF "${VERSION}"
-    SHA512 f9bfaf149dde4da1f5353e540b862c2088465115564d981bf02cd89e8c1f84ca53143ca0091b63d24f8f515425d9163af52ec6122245b59810a2b98292a71650
+    REF "v${VERSION}"
+    SHA512 6dedcf48a8900e3a1dabfa73a4577a4d2482527b45ad8b77fec3fa7fdd8ea21b9249b3602c1e3e54bcee98143a9bb325b59e345423dc6dd8c9365889095615e2
     HEAD_REF master
     PATCHES
-      "correct-paths.patch"
       "pc-suffix.patch"
+      "fix_missing_quotes_in_config_and_bin_path.patch"
 )
 
 if (VCPKG_TARGET_IS_OSX)

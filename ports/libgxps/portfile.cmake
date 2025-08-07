@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 set(LIBGXPS_VERSION 0.3.2)
 string(SUBSTRING ${LIBGXPS_VERSION} 0 3 MAJOR_MINOR) # e.g. 0.3
 

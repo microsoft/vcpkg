@@ -4,15 +4,14 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fltk/fltk
-    REF release-1.3.8
-    SHA512 197848d3b80a65cca936daf4f0b74609f0fe8332a4cd11af53385fb2aa45ad698b1e239a48732b118cd3cb189bc531711b72fb2eeeb85be887dc6c5a558fa4b3
+    REF "release-${VERSION}"
+    SHA512 b18ff6322349af4416a37d28c4f42ebe355260786ed42bdd54dcc20dc92db1a38a8db74e6d637fdff8f320bdd51e2515c0fa939d30679c5f22ea99fb32c97204
     PATCHES
         dependencies.patch
         config-path.patch
         include.patch
         fix-system-link.patch
         math-h-polyfill.patch
-        fix-narrow.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/jpeg"
@@ -31,6 +30,11 @@ if(VCPKG_CROSSCOMPILING)
     set(fluid_path_param "-DFLUID_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/fltk/fluid${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
+set(runtime_dll "ON")
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(runtime_dll "OFF")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -45,6 +49,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
         "-DCocoa:STRING=-framework Cocoa" # avoid absolute path
         ${fluid_path_param}
+        -DFLTK_MSVC_RUNTIME_DLL=${runtime_dll}
     MAYBE_UNUSED_VARIABLES
         Cocoa
 )
@@ -59,10 +64,12 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/fltk-config")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/fltk-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/fltk-config")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fltk-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fltk-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
     if(NOT VCPKG_BUILD_TYPE)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/fltk-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/fltk-config")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/fltk-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../../..")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/fltk-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../.." IGNORE_UNCHANGED)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/fltk-config" "{prefix}/include" "{prefix}/../include")
     endif()
 endif()

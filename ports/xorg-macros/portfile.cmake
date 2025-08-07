@@ -26,7 +26,7 @@ vcpkg_configure_make(
 vcpkg_install_make()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/")
-if(NOT WIN32)
+if(NOT CMAKE_HOST_WIN32)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/aclocal/")
 endif()
 
@@ -48,7 +48,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}/pkgconfig/xorg-macros.pc"
     string(REPLACE "datarootdir=\${prefix}/share}" "datarootdir=\${prefix}/share/xorg/debug}" _contents "${_contents}")
     string(REPLACE "includedir=${CURRENT_INSTALLED_DIR}/debug/include" "includedir=\${prefix}/../include" _contents "${_contents}")
     file(WRITE "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/xorg-macros.pc" "${_contents}")
-    if(NOT WIN32)
+    if(NOT CMAKE_HOST_WIN32)
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg/debug/")
     endif()
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")

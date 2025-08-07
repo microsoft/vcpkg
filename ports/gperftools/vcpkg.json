@@ -1,25 +1,29 @@
 {
   "name": "gperftools",
-  "version": "2.10",
-  "port-version": 1,
-  "description": "A set of tools for performance profiling and memory checking",
+  "version": "2.16",
+  "description": "A high-performance multi-threaded malloc() implementation, plus some performance analysis tools.",
   "homepage": "https://github.com/gperftools/gperftools",
-  "supports": "!(arm & windows) & !uwp & !android",
+  "license": "BSD-3-Clause",
+  "supports": "((x86 | x64) & windows & !uwp) | !windows | mingw",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
-      "host": true,
-      "platform": "windows"
+      "host": true
     }
   ],
   "features": {
+    "libunwind": {
+      "description": "Support libunwind for stack traces",
+      "dependencies": [
+        "libunwind"
+      ]
+    },
     "override": {
-      "description": "Override allocators",
+      "description": "Override Windows allocators",
       "supports": "windows & staticcrt"
     },
     "tools": {
-      "description": "Build gperftools CLI tools",
-      "supports": "windows"
+      "description": "Install tools"
     }
   }
 }

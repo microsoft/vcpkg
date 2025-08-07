@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jll63/yomm2
     REF "v${VERSION}"
-    SHA512  35d869f79b278ae219d61e0ae3b01902c5df5457d2ced7bfd109cf0e75f3f7835ce3d4751c34838d134531f6483dc89b7d67d5ecab6e8af42b4b735284573db4
+    SHA512  9ca6415bb40888332c15d559c6832c0dcf30e9400d2fe36f7f1382acc3e79797edd98a74b89bcae6cdf3add928a001298e78561d5846839920ec7aaf9ffe7744
     HEAD_REF master
-    PATCHES "fix_install.patch"
 )
 
 set(YOMM2_SHARED OFF)
@@ -12,10 +11,15 @@ if(VCPKG_LIBRARY_LINKAGE MATCHES "dynamic")
     set(YOMM2_SHARED ON)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE MATCHES "static")
+    set(VCPKG_BUILD_TYPE release) # header-only
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DYOMM2_ENABLE_EXAMPLES=OFF
+        -DYOMM2_ENABLE_TESTS=OFF
         -DYOMM2_SHARED=${YOMM2_SHARED}
 )
 vcpkg_cmake_install()

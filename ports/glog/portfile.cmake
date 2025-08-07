@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/glog
-    REF v0.6.0
-    SHA512 fd2c42583d0dd72c790a8cf888f328a64447c5fb9d99b2e2a3833d70c102cb0eb9ae874632c2732424cc86216c8a076a3e24b23a793eaddb5da8a1dc52ba9226
+    REF "v${VERSION}"
+    SHA512 2dabac87d44e4fe58beceb31b22be732b47df84c22f1af8c0e7d0f262de939889de1f16025c1256539f2833ef3393bc92034e983aa2886752bb8705801a68630
     HEAD_REF master
     PATCHES
       fix_glog_CMAKE_MODULE_PATH.patch
@@ -16,6 +16,8 @@ vcpkg_check_features(
     FEATURES
         unwind          WITH_UNWIND
         customprefix    WITH_CUSTOM_PREFIX
+    INVERTED_FEATURES
+        unwind          CMAKE_DISABLE_FIND_PACKAGE_Unwind
 )
 file(REMOVE "${SOURCE_PATH}/glog-modules.cmake.in")
 
@@ -35,4 +37,14 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${PORT}/export.h" "#ifdef GLOG_STATIC_DEFINE" "#if 1")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${PORT}/export.h" "#ifdef GLOG_STATIC_DEFINE" "#if 0")
+endif()
+
+if("unwind" IN_LIST FEATURES)
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

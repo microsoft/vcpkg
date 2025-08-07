@@ -16,7 +16,7 @@ index 1a3fb7bbf2..79081ce040 100644
    if (${HDF5_PACKAGE_NAME}_ENABLE_SZIP_SUPPORT AND ${HDF5_PACKAGE_NAME}_PACKAGE_EXTLIBS)
      include (@PACKAGE_SHARE_INSTALL_DIR@/@LIBAEC_PACKAGE_NAME@@HDF_PACKAGE_EXT@-targets.cmake)
 +  elseif (${HDF5_PACKAGE_NAME}_ENABLE_SZIP_SUPPORT)
-+    find_dependency(szip)
++    find_dependency(libaec)
    endif ()
    include (@PACKAGE_SHARE_INSTALL_DIR@/@HDF5_PACKAGE@@HDF_PACKAGE_EXT@-targets.cmake)
  endif ()

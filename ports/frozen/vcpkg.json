@@ -1,6 +1,6 @@
 {
   "name": "frozen",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Header-only library that provides 0 cost initialization for immutable containers and various algorithms. Frozen provides:immutable (a.k.a. frozen), constexpr-compatible versions of std::set, std::unordered_set, std::map and std::unordered_map and 0-cost initialization version of std::search for frozen needles using Boyer-Moore or Knuth-Morris-Pratt algorithms.",
   "homepage": "https://github.com/serge-sans-paille/frozen",
   "license": "Apache-2.0",

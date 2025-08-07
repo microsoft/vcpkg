@@ -1,0 +1,18 @@
+{
+  "name": "vladimirshaleev-ipaddress",
+  "version": "1.2.0",
+  "description": "A library for working and manipulating IPv4/IPv6 addresses and networks in modern C++.",
+  "homepage": "https://github.com/VladimirShaleev/ipaddress",
+  "documentation": "https://vladimirshaleev.github.io/ipaddress/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

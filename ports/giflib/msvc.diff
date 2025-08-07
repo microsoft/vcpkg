@@ -1,0 +1,89 @@
+diff --git a/dgif_lib.c b/dgif_lib.c
+index cbcf23f..15dee84 100644
+--- a/dgif_lib.c
++++ b/dgif_lib.c
+@@ -57,7 +57,7 @@ GifFileType *DGifOpenFileName(const char *FileName, int *Error) {
+ 	int FileHandle;
+ 	GifFileType *GifFile;
+ 
+-	if ((FileHandle = open(FileName, O_RDONLY)) == -1) {
++	if ((FileHandle = _open(FileName, O_RDONLY)) == -1) {
+ 		if (Error != NULL) {
+ 			*Error = D_GIF_ERR_OPEN_FAILED;
+ 		}
+@@ -84,7 +84,7 @@ GifFileType *DGifOpenFileHandle(int FileHandle, int *Error) {
+ 		if (Error != NULL) {
+ 			*Error = D_GIF_ERR_NOT_ENOUGH_MEM;
+ 		}
+-		(void)close(FileHandle);
++		(void)_close(FileHandle);
+ 		return NULL;
+ 	}
+ 
+@@ -99,7 +99,7 @@ GifFileType *DGifOpenFileHandle(int FileHandle, int *Error) {
+ 		if (Error != NULL) {
+ 			*Error = D_GIF_ERR_NOT_ENOUGH_MEM;
+ 		}
+-		(void)close(FileHandle);
++		(void)_close(FileHandle);
+ 		free((char *)GifFile);
+ 		return NULL;
+ 	}
+@@ -110,7 +110,7 @@ GifFileType *DGifOpenFileHandle(int FileHandle, int *Error) {
+ 	_setmode(FileHandle, O_BINARY); /* Make sure it is in binary mode. */
+ #endif                                  /* _WIN32 */
+ 
+-	f = fdopen(FileHandle, "rb"); /* Make it into a stream: */
++	f = _fdopen(FileHandle, "rb"); /* Make it into a stream: */
+ 
+ 	/*@-mustfreeonly@*/
+ 	GifFile->Private = (void *)Private;
+diff --git a/egif_lib.c b/egif_lib.c
+index 1526868..6644eed 100644
+--- a/egif_lib.c
++++ b/egif_lib.c
+@@ -64,10 +64,10 @@ GifFileType *EGifOpenFileName(const char *FileName, const bool TestExistence,
+ 	GifFileType *GifFile;
+ 
+ 	if (TestExistence) {
+-		FileHandle = open(FileName, O_WRONLY | O_CREAT | O_EXCL,
++		FileHandle = _open(FileName, O_WRONLY | O_CREAT | O_EXCL,
+ 		                  S_IREAD | S_IWRITE);
+ 	} else {
+-		FileHandle = open(FileName, O_WRONLY | O_CREAT | O_TRUNC,
++		FileHandle = _open(FileName, O_WRONLY | O_CREAT | O_TRUNC,
+ 		                  S_IREAD | S_IWRITE);
+ 	}
+ 
+@@ -79,7 +79,7 @@ GifFileType *EGifOpenFileName(const char *FileName, const bool TestExistence,
+ 	}
+ 	GifFile = EGifOpenFileHandle(FileHandle, Error);
+ 	if (GifFile == (GifFileType *)NULL) {
+-		(void)close(FileHandle);
++		(void)_close(FileHandle);
+ 	}
+ 	return GifFile;
+ }
+@@ -125,7 +125,7 @@ GifFileType *EGifOpenFileHandle(const int FileHandle, int *Error) {
+ 	_setmode(FileHandle, O_BINARY); /* Make sure it is in binary mode. */
+ #endif                                  /* _WIN32 */
+ 
+-	f = fdopen(FileHandle, "wb"); /* Make it into a stream: */
++	f = _fdopen(FileHandle, "wb"); /* Make it into a stream: */
+ 
+ 	GifFile->Private = (void *)Private;
+ 	Private->FileHandle = FileHandle;
+diff --git a/gif_font.c b/gif_font.c
+index 75f9731..c215795 100644
+--- a/gif_font.c
++++ b/gif_font.c
+@@ -200,6 +200,9 @@ void GifDrawRectangle(SavedImage *Image, const int x, const int y, const int w,
+ 	}
+ }
+ 
++#ifdef _MSC_VER
++#  define strtok_r strtok_s
++#endif
+ void GifDrawBoxedText8x8(SavedImage *Image, const int x, const int y,
+                          const char *legend, const int border, const int bg,
+                          const int fg) {

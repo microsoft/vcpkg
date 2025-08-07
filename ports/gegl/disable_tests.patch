@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+--- a/meson.build
++++ b/meson.build
+@@ -600,9 +600,8 @@
+ subdir('bin')
+ subdir('tools')
+ subdir('operations')
+ subdir('examples')
+-subdir('tests')
+ subdir('perf')
+ subdir('po')
+ subdir('docs')
+ 

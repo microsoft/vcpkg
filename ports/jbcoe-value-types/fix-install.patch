@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 552698a..5e595a5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -126,9 +126,6 @@ target_sources(polymorphic_cxx17
+ 
+ if (${XYZ_VALUE_TYPES_IS_NOT_SUBPROJECT})
+ 
+-    add_subdirectory(benchmarks)
+-    add_subdirectory(compile_checks)
+-    add_subdirectory(exploration)
+ 
+     if (${BUILD_TESTING})
+         FetchContent_Declare(
+diff --git a/cmake/coverage.cmake b/cmake/coverage.cmake
+index 28022d6..1527f92 100644
+--- a/cmake/coverage.cmake
++++ b/cmake/coverage.cmake
+@@ -16,7 +16,6 @@ set(COVERAGE_SUPPORTED_FLAGS
+     "--coverage"
+ )
+ 
+-find_package(Python3 REQUIRED COMPONENTS Interpreter)
+ 
+ #[=======================================================================[.rst:
+ virtualenv_create
+@@ -84,6 +83,7 @@ function(virtualenv_create)
+         message(FATAL_ERROR "REQUIREMENTS must exist, invalid path: ${PYTHON_VENV_REQUIREMENTS}")
+     endif()
+ 
++    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+     set(PYTHON_VENV_INTERPRETER ${PYTHON_VENV_DESTINATION}/bin/python)
+ 
+     add_custom_command(

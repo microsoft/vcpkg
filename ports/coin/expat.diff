@@ -1,0 +1,13 @@
+diff --git a/src/xml/document.cpp b/src/xml/document.cpp
+index f31e2ed..576ceb5 100644
+--- a/src/xml/document.cpp
++++ b/src/xml/document.cpp
+@@ -52,7 +52,7 @@
+ #include <Inventor/lists/SbList.h>
+ #include <Inventor/SbString.h>
+ 
+-#include "expat/expat.h"
++#include <expat.h>
+ #include "utils.h"
+ #include "elementp.h"
+ 

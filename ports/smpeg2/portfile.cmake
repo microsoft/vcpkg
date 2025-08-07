@@ -18,6 +18,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS_DEBUG
         -DSMPEG_SKIP_HEADERS=ON
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_ALSA
+        CMAKE_REQUIRE_FIND_PACKAGE_ALSA
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

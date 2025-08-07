@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-openvpn3",
+  "version-string": "ci",
+  "description": "Validates openvpn3",
+  "dependencies": [
+    "openvpn3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

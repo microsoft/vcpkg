@@ -1,5 +1,0 @@
-libusb provides CMake targets:
-
-    find_package(libusb CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${LIBUSB_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${LIBUSB_LIBRARIES})

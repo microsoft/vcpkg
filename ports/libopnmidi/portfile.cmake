@@ -10,6 +10,7 @@ vcpkg_from_github(
         disable-wopn2hpp.patch
         fix-build-without-sequencer.patch
         fix-pmdwin-emulator-include.patch
+        fix-c++-standard.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

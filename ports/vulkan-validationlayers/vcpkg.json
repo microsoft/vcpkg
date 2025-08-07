@@ -1,0 +1,25 @@
+{
+  "name": "vulkan-validationlayers",
+  "version": "1.4.309.0",
+  "description": "Vulkan Validation Layers (VVL)",
+  "homepage": "https://github.com/KhronosGroup/Vulkan-ValidationLayers",
+  "license": null,
+  "dependencies": [
+    "mimalloc",
+    "robin-hood-hashing",
+    "spirv-cross",
+    "spirv-headers",
+    "spirv-reflect",
+    "spirv-tools",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vulkan-headers",
+    "vulkan-utility-libraries"
+  ]
+}

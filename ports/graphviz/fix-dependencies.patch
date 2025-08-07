@@ -2,23 +2,23 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 12fd424..11371df 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -126,9 +126,13 @@ endif()
- find_package(PANGOCAIRO)
- find_package(PkgConfig)
+@@ -185,12 +185,14 @@ find_package(PkgConfig)
  if(PkgConfig_FOUND)
+   pkg_check_modules(GDK gdk-2.0)
+   pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0)
+-  pkg_check_modules(LASI lasi)
 -  pkg_check_modules(POPPLER poppler-glib)
--  pkg_check_modules(RSVG librsvg-2.0)
--  pkg_check_modules(WEBP libwebp)
-+  #pkg_check_modules(POPPLER poppler-glib IMPORTED_TARGET REQUIRED)
-+  set(POPPLER_LIBRARIES PkgConfig::POPPLER)
++  set(LASI_FOUND 0)
 +  set(POPPLER_FOUND 0)
-+  pkg_check_modules(RSVG librsvg-2.0 IMPORTED_TARGET REQUIRED)
-+  set(RSVG_LIBRARIES PkgConfig::RSVG)
-+  pkg_check_modules(WEBP libwebp IMPORTED_TARGET REQUIRED)
-+  set(WEBP_LIBRARIES PkgConfig::WEBP)
+   pkg_check_modules(RSVG librsvg-2.0)
+   pkg_check_modules(WEBP libwebp)
++  if(UNIX)
+   pkg_check_modules(X11 x11)
+   pkg_check_modules(XRENDER xrender)
++  endif()
  else()
-   set(POPPLER_FOUND 0)
-   set(RSVG_FOUND 0)
+   set(GDK_FOUND 0)
+   set(GDK_PIXBUF_FOUND 0)
 diff --git a/cmake/FindCAIRO.cmake b/cmake/FindCAIRO.cmake
 index 65bb42f..47949f6 100644
 --- a/cmake/FindCAIRO.cmake
@@ -118,37 +118,34 @@ diff --git a/cmd/dot/CMakeLists.txt b/cmd/dot/CMakeLists.txt
 index d2ea435..3b068b0 100644
 --- a/cmd/dot/CMakeLists.txt
 +++ b/cmd/dot/CMakeLists.txt
-@@ -73,22 +73,20 @@ endif()
+@@ -146,7 +146,6 @@ endif()
  
  find_package(PkgConfig)
  if(PkgConfig_FOUND)
 -  pkg_check_modules(GTS gts)
    if(GTS_FOUND)
-     target_include_directories(dot_builtins SYSTEM PRIVATE ${GTS_INCLUDE_DIRS})
-     target_link_libraries(dot_builtins PRIVATE ${GTS_LINK_LIBRARIES})
-   endif()
- 
-   pkg_check_modules(LASI lasi)
--  if(LASI_FOUND)
-+  if(TARGET gvplugin_lasi)
-     target_link_libraries(dot_builtins PRIVATE gvplugin_lasi)
-   endif()
- endif()
- 
- if(PANGOCAIRO_FOUND)
-   target_link_libraries(dot_builtins PRIVATE gvplugin_pango)
--  if(PkgConfig_FOUND)
--    pkg_check_modules(WEBP libwebp)
-+  if(TARGET gvplugin_webp)
-     if(WEBP_FOUND)
-       target_link_libraries(dot_builtins PRIVATE gvplugin_webp)
-     endif()
-@@ -96,7 +94,7 @@ if(PANGOCAIRO_FOUND)
+     target_include_directories(dot SYSTEM PRIVATE ${GTS_INCLUDE_DIRS})
+     target_link_libraries(dot PRIVATE ${GTS_LINK_LIBRARIES})
+@@ -223,7 +222,7 @@ if(WEBP_FOUND)
  endif()
  
  find_library(SOCKET socket)
 -if(SOCKET)
 +if(0)
-   target_link_libraries(dot_builtins PRIVATE ${SOCKET})
+   target_link_libraries(dot PRIVATE ${SOCKET})
  endif()
  
+diff --git a/lib/cdt/CMakeLists.txt b/lib/cdt/CMakeLists.txt
+index 4057b57..bf1a913 100644
+--- a/lib/cdt/CMakeLists.txt
++++ b/lib/cdt/CMakeLists.txt
+@@ -68,3 +68,9 @@ set_target_properties(cdt PROPERTIES
+   VERSION 5.0.0
+   SOVERSION 5
+ )
++
++set(THREADS_PREFER_PTHREAD_FLAG ON)
++find_package(Threads)
++if(TARGET Threads::Threads)
++  target_link_libraries(cdt Threads::Threads)
++endif()

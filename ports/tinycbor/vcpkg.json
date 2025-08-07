@@ -1,7 +1,6 @@
 {
   "name": "tinycbor",
-  "version-semver": "0.6.0",
-  "port-version": 1,
+  "version-semver": "0.6.1",
   "description": "Concise Binary Object Representation (CBOR) Library",
   "homepage": "https://github.com/intel/tinycbor",
   "license": "MIT",

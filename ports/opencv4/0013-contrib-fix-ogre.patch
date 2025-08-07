@@ -1,0 +1,8 @@
+--- a/modules/ovis/CMakeLists.txt
++++ b/modules/ovis/CMakeLists.txt
+@@ -27,4 +27,5 @@ ocv_create_module()
+ ocv_add_samples(opencv_objdetect opencv_aruco)
+ 
+ ocv_warnings_disable(CMAKE_CXX_FLAGS -Wunused-parameter)
++string(REPLACE "OgreGLSupportStatic" "OgreGLSupport" OGRE_LIBRARIES "${OGRE_LIBRARIES}")
+ ocv_target_link_libraries(${the_module} ${OGRE_LIBRARIES})

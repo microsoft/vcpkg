@@ -1,0 +1,23 @@
+{
+  "name": "tinytiff",
+  "version": "4.0.1.0",
+  "description": "Lightweight TIFF reader/writer library",
+  "homepage": "https://jkriege2.github.io/TinyTIFF/",
+  "license": "LGPL-3.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "winapi": {
+      "description": "Use WIN-API for File-IO",
+      "supports": "windows"
+    }
+  }
+}

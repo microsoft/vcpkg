@@ -1,0 +1,13 @@
+diff --git a/core/vul/vul_temp_filename.cxx b/core/vul/vul_temp_filename.cxx
+index 4921a04..731fee0 100644
+--- a/core/vul/vul_temp_filename.cxx
++++ b/core/vul/vul_temp_filename.cxx
+@@ -11,7 +11,7 @@
+ 
+ #if defined(_MSC_VER) || defined(__MINGW32__)
+ 
+-#  include <Windows.h>
++#  include <windows.h>
+ #else
+ #  if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
+ // Helper functions for Unix

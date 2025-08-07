@@ -1,17 +1,13 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.osgeo.org/geos/geos-${VERSION}.tar.bz2"
     FILENAME "geos-${VERSION}.tar.bz2"
-    SHA512 b5df5b773bef595335e1be6c6d3325f932f1577e2a4b8bdfa8cf26f09c7d41ed5e0695ca15826d1f95bc4a45b777839c2be8a96a8af5415c8bcf58cc804eb1ec
+    SHA512 38a6d8bb05b374160c6e5eb82e5f601915ee44e75bdba0414bb7b1096a62f3cdfbb877389998bd3ff4c77c98927ce95a8d8298dd599a0fcb8ea0e83f174f1744
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
-        disable-warning-4996.patch
         fix-exported-config.patch
-        fix-dll-builds.patch
-        gcc-13-fix-backport.patch
 )
 
 vcpkg_cmake_configure(
@@ -54,4 +50,4 @@ endif()
 vcpkg_copy_pdbs()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

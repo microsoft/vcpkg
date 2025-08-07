@@ -6,22 +6,22 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO charles-lunarg/vk-bootstrap
     REF "v${VERSION}"
-    SHA512 357ce69b080c6abcef7764652f5ab5e5fc744a9d0308bf457787f27c3c14a911480a7f9caf304ee92c33519bfbc977fb320fa3ef4a329716d0bd1b03135dd98e
+    SHA512 d55752fbaa84ecf8c674eb9c8639553db2631024797e62b807078c95601dd711263381443d52ddd2ef6635d61ffcacd39650aa638363cf1d124ff0a37010c2d9
     HEAD_REF master
+    PATCHES
+        fix-targets.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        # This option will disable build tests and example, and next release this option need to change as -DVK_BOOTSTRAP_TEST=OFF. The related upstream commit: https://github.com/charles-lunarg/vk-bootstrap/commit/4ae9513ff9182b9c519504a73435ed575a821300.
-        -DCMAKE_PROJECT_NAME=
+        -DVK_BOOTSTRAP_TEST=OFF
+        -DVK_BOOTSTRAP_INSTALL=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/vk-bootstrap-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

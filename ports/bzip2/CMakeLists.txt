@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5...3.29)
 project(bzip2 C)
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)

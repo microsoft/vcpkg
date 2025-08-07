@@ -24,12 +24,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/outcome
-    REF 90032f99503b4620f21d8160dc3af06fa343541f
-    SHA512 7eda0694098a118633c8ad0ef812f8b03db536548f51d1ca71ca98b9f9e445bcb24019cd4d1046da9215227ad85205c5b3631d0c66de6edc1fcc904b2d9e0e0f
+    REF v${VERSION}
+    SHA512 faa92dbee1f5c74389bc181721e12cd87ad616bdcd2e5845b19233f63cd366270eb806b88ac057ea9a3147e3df49210b7219e9b98a0a0299f00c98eaf2ab8903
     HEAD_REF develop
     PATCHES
-        fix-find-library.patch # incorporated into upstream after 2.2.4
-        fix-status-code-include.patch # incorporated into upstream after 2.2.4
+        fix-status-code-path.patch
 )
 
 # Because outcome's deployed files are header-only, the debug build is not necessary
@@ -39,10 +38,9 @@ set(VCPKG_BUILD_TYPE release)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DPROJECT_IS_DEPENDENCY=On
-        -Dquickcpplib_DIR=${CURRENT_INSTALLED_DIR}/share/quickcpplib
+        -Doutcome_IS_DEPENDENCY=ON
+        "-DCMAKE_PREFIX_PATH=${CURRENT_INSTALLED_DIR}"
         -DOUTCOME_BUNDLE_EMBEDDED_STATUS_CODE=OFF
-        -Dstatus-code_DIR=${CURRENT_INSTALLED_DIR}/share/status-code
         -DOUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCXX_CONCEPTS_FLAGS=

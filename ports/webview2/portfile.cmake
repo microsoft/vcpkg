@@ -2,12 +2,10 @@ if(VCPKG_TARGET_IS_UWP)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-set(VERSION 1.0.1210.39)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/${VERSION}"
     FILENAME "microsoft.web.webview2.${VERSION}.zip"
-    SHA512 c87812247a466f4aaeac8be8b32be49166b4ddb5bbf65581d5df81d69eda340e9911144a8dd8401baa6e51f95337001cd18ff90cd36ca0af86cc65227e8e2ccf
+    SHA512 dd447d7526e82a0e4522447d0e861f347ad72f2a73dfa82cca2537f633afe54b2764c2d437f717cf22aeb339641f79c04f9cbce0b68a100eef716bd58c1a8989
 )
 
 vcpkg_extract_source_archive(

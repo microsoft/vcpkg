@@ -1,0 +1,7 @@
+{
+  "name": "bluescarni-tanuki",
+  "version-date": "2024-08-17",
+  "description": "A type-erasure toolkit for C++20.",
+  "homepage": "https://github.com/bluescarni/tanuki",
+  "license": "MPL-2.0"
+}

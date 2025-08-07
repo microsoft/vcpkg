@@ -1,6 +1,5 @@
 
-get_filename_component(_xaudio2_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(_xaudio2_root "${_xaudio2_root}" PATH)
+get_filename_component(_xaudio2_root "${CMAKE_CURRENT_LIST_DIR}" PATH)
 get_filename_component(_xaudio2_root "${_xaudio2_root}" PATH)
 
 set(_xaudio2_root_lib "${_xaudio2_root}/lib/xaudio2_9redist.lib")

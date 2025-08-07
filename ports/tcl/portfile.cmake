@@ -91,6 +91,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             "${CURRENT_PACKAGES_DIR}/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/lib/tdbcsqlite31.1.0"
         )
+        file(CHMOD_RECURSE
+                "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/tzdata"
+            PERMISSIONS
+                OWNER_READ OWNER_WRITE
+                GROUP_READ GROUP_WRITE
+                WORLD_READ WORLD_WRITE
+        )
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
         file(GLOB_RECURSE TOOL_BIN
@@ -112,6 +119,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tcl8.6"
                             "${CURRENT_PACKAGES_DIR}/debug/lib/tdbcsqlite31.1.0"
         )
+
+        file(CHMOD_RECURSE
+                "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/tzdata"
+            PERMISSIONS
+                OWNER_READ OWNER_WRITE
+                GROUP_READ GROUP_WRITE
+                WORLD_READ WORLD_WRITE
+        )
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -119,15 +134,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-    
-    file(CHMOD_RECURSE
-            "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/debug/lib/tcl9.0/tzdata"
-            "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/msgs" "${CURRENT_PACKAGES_DIR}/tools/tcl/lib/tcl9.0/tzdata"
-        PERMISSIONS
-            OWNER_READ OWNER_WRITE
-            GROUP_READ GROUP_WRITE
-            WORLD_READ WORLD_WRITE
-    )
 else()
     file(REMOVE "${SOURCE_PATH}/unix/configure")
     vcpkg_configure_make(
@@ -146,4 +152,4 @@ endif()
     
 file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/tclConfig.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/tclConfig.sh")
 
-file(INSTALL "${SOURCE_PATH}/license.terms" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.terms")

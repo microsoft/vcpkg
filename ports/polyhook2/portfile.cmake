@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevemk14ebr/PolyHook_2_0
-    REF 71553ebf0d197e73c49365cc3ab2a6aa326b3c37
-    SHA512 f8daaa0307f07990b10a6487e1b0f2719e7442fcaeff5878eae9c22a741f27b1dfa7a292b91dcf7e2039029dd7dce71083ab2288e9d84de1bc20be7567a858c8
+    REF 4c8872e207e76ea43fd23f802e3bf5acb43fee8a
+    SHA512 f3baec4fc99e90221ce1b663c4fa10516a16c777135cca457e4b1de5e121c87b6a8eb5ac6392b75ee1c41e9e5a15a73171136fd3adfb3ff51ffaf0f909c58dd3
     HEAD_REF master
-    PATCHES fix-dep.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -22,7 +22,7 @@ index cb1b9a0f2..edca5d579 100644
      DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
      COMPONENT headers)
 +
-+  if(ZLIB_FOUND)
++  if(ZLIB_FOUND AND BUILD_SHARED_LIBS)
 +    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/freetype-config.cmake"
 +[[include(CMakeFindDependencyMacro)
 +find_dependency(ZLIB)

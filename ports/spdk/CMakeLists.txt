@@ -17,7 +17,7 @@ IF (SOURCE_PATH)
     SET(CMAKE_SOURCE_DIR ${SOURCE_PATH})
 ENDIF ()
 
-SET(SPDK_CONFIG --disable-tests --with-rdma --without-isal --with-dpdk=${CMAKE_SOURCE_DIR}/../../../spdk-dpdk/src/spdk-18.11-411c51fb97/build)
+SET(SPDK_CONFIG --disable-tests --with-rdma --with-dpdk=${CMAKE_SOURCE_DIR}/../../../spdk-dpdk/src/spdk-18.11-411c51fb97/build)
 # No option to define path for isa-l (--with-isal=${CMAKE_SOURCE_DIR}/../../../spdk-isal/src/spdk-d34ebb51cd)
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     LIST(APPEND ${SPDK_CONFIG} --enable-debug)

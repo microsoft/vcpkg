@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nlohmann/json
-    REF v3.11.2
-    SHA512 70097c9bcd7a91254acbd41b8b68a6aaa371fc2dd7011f472917f69f1e2d2986155a0339dad791699d542e4a3be44dc49ae72ff73d0ee0ea4b34183296ce19a0 
+    REF "v${VERSION}"
+    SHA512 6cc1e86261f8fac21cc17a33da3b6b3c3cd5c116755651642af3c9e99bb3538fd42c1bd50397a77c8fb6821bc62d90e6b91bcdde77a78f58f2416c62fc53b97d
     HEAD_REF master
 )
 
@@ -31,6 +31,7 @@ vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/nlohmann_json/nlohmann_jsonTargets.cmake"
     "{_IMPORT_PREFIX}/nlohmann_json.natvis"
     "{_IMPORT_PREFIX}/share/nlohmann_json/nlohmann_json.natvis"
+    IGNORE_UNCHANGED
 )
 if(EXISTS "${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis")
     file(RENAME

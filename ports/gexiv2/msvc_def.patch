@@ -1,0 +1,203 @@
+From 53770886561d434db53c229cd3d6391939a8185c Mon Sep 17 00:00:00 2001
+From: Jens Georg <mail@jensge.org>
+Date: Mon, 10 Feb 2025 22:15:56 +0100
+Subject: [PATCH] build: Add .def file and a script to update it
+
+---
+ build-aux/update-def-file.sh |   3 +
+ gexiv2/gexiv2.def            | 152 +++++++++++++++++++++++++++++++++++
+ gexiv2/meson.build           |   8 ++
+ 3 files changed, 163 insertions(+)
+ create mode 100755 build-aux/update-def-file.sh
+ create mode 100644 gexiv2/gexiv2.def
+
+diff --git a/build-aux/update-def-file.sh b/build-aux/update-def-file.sh
+new file mode 100755
+index 0000000..950d422
+--- /dev/null
++++ b/build-aux/update-def-file.sh
+@@ -0,0 +1,3 @@
++#!/bin/bash
++
++nm -gD "$1" | grep " T " | cut -f3 -d " " | sort | uniq > "$2"
+diff --git a/gexiv2/gexiv2.def b/gexiv2/gexiv2.def
+new file mode 100644
+index 0000000..de934fd
+--- /dev/null
++++ b/gexiv2/gexiv2.def
+@@ -0,0 +1,151 @@
++EXPORTS
++gexiv2_get_version
++gexiv2_gexiv2_byte_order_get_type
++gexiv2_gexiv2_log_level_get_type
++gexiv2_gexiv2_orientation_get_type
++gexiv2_gexiv2_structure_type_get_type
++gexiv2_gexiv2_xmp_format_flags_get_type
++gexiv2_initialize
++gexiv2_log_get_default_handler
++gexiv2_log_get_handler
++gexiv2_log_get_level
++gexiv2_log_set_handler
++gexiv2_log_set_level
++gexiv2_log_use_glib_logging
++gexiv2_metadata_clear
++gexiv2_metadata_clear_comment
++gexiv2_metadata_clear_exif
++gexiv2_metadata_clear_iptc
++gexiv2_metadata_clear_tag
++gexiv2_metadata_clear_xmp
++gexiv2_metadata_delete_gps_info
++gexiv2_metadata_erase_exif_thumbnail
++gexiv2_metadata_free
++gexiv2_metadata_from_app1_segment
++gexiv2_metadata_from_stream
++gexiv2_metadata_generate_xmp_packet
++gexiv2_metadata_get_comment
++gexiv2_metadata_get_exif_data
++gexiv2_metadata_get_exif_tag_rational
++gexiv2_metadata_get_exif_tags
++gexiv2_metadata_get_exif_thumbnail
++gexiv2_metadata_get_exposure_time
++gexiv2_metadata_get_fnumber
++gexiv2_metadata_get_focal_length
++gexiv2_metadata_get_gps_altitude
++gexiv2_metadata_get_gps_info
++gexiv2_metadata_get_gps_latitude
++gexiv2_metadata_get_gps_longitude
++gexiv2_metadata_get_iptc_tags
++gexiv2_metadata_get_iso_speed
++gexiv2_metadata_get_metadata_pixel_height
++gexiv2_metadata_get_metadata_pixel_width
++gexiv2_metadata_get_mime_type
++gexiv2_metadata_get_orientation
++gexiv2_metadata_get_pixel_height
++gexiv2_metadata_get_pixel_width
++gexiv2_metadata_get_preview_image
++gexiv2_metadata_get_preview_properties
++gexiv2_metadata_get_supports_exif
++gexiv2_metadata_get_supports_iptc
++gexiv2_metadata_get_supports_xmp
++gexiv2_metadata_get_tag_description
++gexiv2_metadata_get_tag_interpreted_string
++gexiv2_metadata_get_tag_label
++gexiv2_metadata_get_tag_long
++gexiv2_metadata_get_tag_multiple
++gexiv2_metadata_get_tag_raw
++gexiv2_metadata_get_tag_string
++gexiv2_metadata_get_tag_type
++gexiv2_metadata_get_type
++gexiv2_metadata_get_xmp_namespace_for_tag
++gexiv2_metadata_get_xmp_packet
++gexiv2_metadata_get_xmp_tags
++gexiv2_metadata_has_exif
++gexiv2_metadata_has_iptc
++gexiv2_metadata_has_tag
++gexiv2_metadata_has_xmp
++gexiv2_metadata_is_exif_tag
++gexiv2_metadata_is_iptc_tag
++gexiv2_metadata_is_xmp_tag
++gexiv2_metadata_new
++gexiv2_metadata_open_buf
++gexiv2_metadata_open_path
++gexiv2_metadata_register_xmp_namespace
++gexiv2_metadata_save_external
++gexiv2_metadata_save_file
++gexiv2_metadata_set_comment
++gexiv2_metadata_set_exif_tag_rational
++gexiv2_metadata_set_exif_thumbnail_from_buffer
++gexiv2_metadata_set_exif_thumbnail_from_file
++gexiv2_metadata_set_gps_info
++gexiv2_metadata_set_metadata_pixel_height
++gexiv2_metadata_set_metadata_pixel_width
++gexiv2_metadata_set_orientation
++gexiv2_metadata_set_tag_long
++gexiv2_metadata_set_tag_multiple
++gexiv2_metadata_set_tag_string
++gexiv2_metadata_set_xmp_tag_struct
++gexiv2_metadata_try_clear_tag
++gexiv2_metadata_try_delete_gps_info
++gexiv2_metadata_try_erase_exif_thumbnail
++gexiv2_metadata_try_generate_xmp_packet
++gexiv2_metadata_try_get_comment
++gexiv2_metadata_try_get_exif_tag_rational
++gexiv2_metadata_try_get_exposure_time
++gexiv2_metadata_try_get_fnumber
++gexiv2_metadata_try_get_focal_length
++gexiv2_metadata_try_get_gps_altitude
++gexiv2_metadata_try_get_gps_info
++gexiv2_metadata_try_get_gps_latitude
++gexiv2_metadata_try_get_gps_longitude
++gexiv2_metadata_try_get_iso_speed
++gexiv2_metadata_try_get_metadata_pixel_height
++gexiv2_metadata_try_get_metadata_pixel_width
++gexiv2_metadata_try_get_orientation
++gexiv2_metadata_try_get_preview_image
++gexiv2_metadata_try_get_tag_description
++gexiv2_metadata_try_get_tag_interpreted_string
++gexiv2_metadata_try_get_tag_label
++gexiv2_metadata_try_get_tag_long
++gexiv2_metadata_try_get_tag_multiple
++gexiv2_metadata_try_get_tag_raw
++gexiv2_metadata_try_get_tag_string
++gexiv2_metadata_try_get_tag_type
++gexiv2_metadata_try_get_xmp_namespace_for_tag
++gexiv2_metadata_try_get_xmp_packet
++gexiv2_metadata_try_has_tag
++gexiv2_metadata_try_register_xmp_namespace
++gexiv2_metadata_try_set_comment
++gexiv2_metadata_try_set_exif_tag_rational
++gexiv2_metadata_try_set_exif_thumbnail_from_buffer
++gexiv2_metadata_try_set_gps_info
++gexiv2_metadata_try_set_metadata_pixel_height
++gexiv2_metadata_try_set_metadata_pixel_width
++gexiv2_metadata_try_set_orientation
++gexiv2_metadata_try_set_tag_long
++gexiv2_metadata_try_set_tag_multiple
++gexiv2_metadata_try_set_tag_string
++gexiv2_metadata_try_set_xmp_tag_struct
++gexiv2_metadata_try_tag_supports_multiple_values
++gexiv2_metadata_try_unregister_all_xmp_namespaces
++gexiv2_metadata_try_unregister_xmp_namespace
++gexiv2_metadata_try_update_gps_info
++gexiv2_metadata_unregister_all_xmp_namespaces
++gexiv2_metadata_unregister_xmp_namespace
++gexiv2_metadata_update_gps_info
++gexiv2_preview_image_free
++gexiv2_preview_image_get_data
++gexiv2_preview_image_get_extension
++gexiv2_preview_image_get_height
++gexiv2_preview_image_get_mime_type
++gexiv2_preview_image_get_type
++gexiv2_preview_image_get_width
++gexiv2_preview_image_try_write_file
++gexiv2_preview_image_write_file
++gexiv2_preview_properties_get_extension
++gexiv2_preview_properties_get_height
++gexiv2_preview_properties_get_mime_type
++gexiv2_preview_properties_get_size
++gexiv2_preview_properties_get_type
++gexiv2_preview_properties_get_width
+diff --git a/gexiv2/meson.build b/gexiv2/meson.build
+index d56409c..fe7de09 100644
+--- a/gexiv2/meson.build
++++ b/gexiv2/meson.build
+@@ -66,8 +66,16 @@ gexiv2 = library('gexiv2',
+                  version: libversion,
+                  darwin_versions: darwin_versions,
+                  dependencies : [gobject, exiv2, gio],
++                 vs_module_defs : 'gexiv2.def',
+                  install : true)
+ 
++update_def_script = find_program('update-def-file.sh', dirs: [meson.project_source_root() / 'build-aux'])
++custom_target('update-def-file',
++  output: 'gexiv2.def',
++  input: gexiv2,
++  command: [update_def_script, '@INPUT@', '@OUTPUT@'],
++  install: false)
++
+ libgexiv2 = declare_dependency(
+     link_with : gexiv2,
+     include_directories : include_directories('..'),
+-- 
+GitLab
+

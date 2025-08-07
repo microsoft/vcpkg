@@ -1,0 +1,15 @@
+{
+  "name": "nanobind",
+  "version-semver": "2.5.0",
+  "description": "Tiny and efficient C++/Python bindings",
+  "homepage": "https://nanobind.readthedocs.io/en/latest/",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "python3",
+    "robin-map",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

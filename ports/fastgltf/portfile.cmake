@@ -2,14 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO spnda/fastgltf
     REF "v${VERSION}"
-    SHA512 85b946f9ea849bcbbb77ff5d4dc8196d3348757cf6a940be1a50923158a31aa7b43aebed2799256cb3d303a81fa28e5eaeb000b6ecca3ab15f6a7a20908d8e8f
+    SHA512 b18162eb8a1631d9a28ed97961ac8f08d6aa2797f2bf035a470660cfd052f25c2bd47b77ce2c3f5367d5006c706cf6e00a710c14a25ad5e02b619430ea076882
     HEAD_REF main
-    PATCHES find_package.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DFASTGLTF_DOWNLOAD_SIMDJSON=OFF
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})

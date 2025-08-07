@@ -1,6 +1,7 @@
 {
   "name": "glm",
-  "version-date": "2023-06-08",
+  "version": "1.0.1",
+  "port-version": 3,
   "description": "OpenGL Mathematics (GLM)",
   "homepage": "https://glm.g-truc.net",
   "license": "MIT",

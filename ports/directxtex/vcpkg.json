@@ -1,11 +1,11 @@
 {
   "name": "directxtex",
-  "version-date": "2023-09-01",
+  "version-date": "2025-07-10",
   "description": "DirectXTex texture processing library",
   "homepage": "https://github.com/Microsoft/DirectXTex",
   "documentation": "https://github.com/microsoft/DirectXTex/wiki",
   "license": "MIT",
-  "supports": "windows | linux",
+  "supports": "(windows & !arm32) | linux",
   "dependencies": [
     {
       "name": "directx-headers",
@@ -26,11 +26,15 @@
     }
   ],
   "default-features": [
-    "dx11"
+    {
+      "name": "dx11",
+      "platform": "windows & !xbox"
+    }
   ],
   "features": {
     "dx11": {
-      "description": "Build with DirectX11 support"
+      "description": "Build with DirectX11 support",
+      "supports": "windows & !xbox"
     },
     "dx12": {
       "description": "Build with DirectX12 support for Windows 10/Windows 11",
@@ -41,10 +45,24 @@
         }
       ]
     },
+    "jpeg": {
+      "description": "Add the JPEG auxiliary functions",
+      "supports": "linux",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
     "openexr": {
       "description": "Enable OpenEXR support",
       "dependencies": [
         "openexr"
+      ]
+    },
+    "png": {
+      "description": "Add the PNG auxiliary functions",
+      "supports": "linux",
+      "dependencies": [
+        "libpng"
       ]
     },
     "spectre": {
@@ -53,6 +71,13 @@
     "tools": {
       "description": "texture command-line tools",
       "supports": "windows & !uwp & !xbox"
+    },
+    "xbox": {
+      "description": "Adds Xbox specific extensions to the library",
+      "supports": "windows & x64 & !uwp & !xbox",
+      "dependencies": [
+        "ms-gdkx"
+      ]
     }
   }
 }

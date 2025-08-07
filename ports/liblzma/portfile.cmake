@@ -2,12 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tukaani-project/xz
     REF "v${VERSION}"
-    SHA512 c28461123562564e030f3f733f078bc4c840e87598d9f4b718d4bca639120d8133f969c45d7bdc62f33f081d789ec0f14a1791fb7da18515682bfe3c0c7362e0
+    SHA512 2f51fb316adb2962e0f2ef6ccc8b544cdc45087b9ad26dcd33f2025784be56578ab937c618e5826b2220b49b79b8581dcb8c6d43cd50ded7ad9de9fe61610f46
     HEAD_REF master
     PATCHES
-        fix_config_include.patch
-        win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
-        add_support_ios.patch # add install bundle info for support ios 
         build-tools.patch
 )
 
@@ -29,10 +26,13 @@ vcpkg_cmake_configure(
         -DCREATE_XZ_SYMLINKS=OFF
         -DCREATE_LZMA_SYMLINKS=OFF
         -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=   # using flags from (vcpkg) toolchain
+        -DENABLE_NLS=OFF # nls is not supported by this port, yet
+        -DXZ_NLS=OFF
     MAYBE_UNUSED_VARIABLES
         CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
         CREATE_XZ_SYMLINKS
         CREATE_LZMA_SYMLINKS
+        ENABLE_NLS
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -41,13 +41,13 @@ set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/include")
 set(PACKAGE_URL https://tukaani.org/xz/)
-set(PACKAGE_VERSION 5.4.3)
+set(PACKAGE_VERSION "${VERSION}")
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(PTHREAD_CFLAGS -pthread)
 endif()
 set(prefix "${CURRENT_INSTALLED_DIR}")
 configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/liblzma.pc" @ONLY)
-if (NOT VCPKG_BUILD_TYPE)
+if(NOT VCPKG_BUILD_TYPE)
   set(prefix "${CURRENT_INSTALLED_DIR}/debug")
   configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" @ONLY)
 endif()
@@ -67,7 +67,7 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
-set(TOOLS xz xzdec)
+set(TOOLS xz xzdec lzmadec lzmainfo)
 foreach(_tool IN LISTS TOOLS)
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
         list(REMOVE_ITEM TOOLS ${_tool})

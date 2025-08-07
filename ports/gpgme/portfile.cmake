@@ -4,7 +4,7 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/gpgme/gpgme-${VERSION}.tar.bz2"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/gpgme/gpgme-${VERSION}.tar.bz2"
     FILENAME "gpgme-${VERSION}.tar.bz2"
-    SHA512 17053053fa885f01416433e43072ac716b5d5db0c3edf45b2d6e90e6384d127626e6ae3ce421abba8f449f5ca7e8963f3d62f3565d295847170bc998d1ec1a70
+    SHA512 3b5fc22a2f83576058ac14e744333f46df362b39f742d6c9e54a5a66828194a1312f5f365bdc15683e148821f5d591fa92a2daad83fc116f65dccf14e817ca48
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH

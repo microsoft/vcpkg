@@ -4,6 +4,8 @@ project(
   VERSION 1.0.3
   LANGUAGES C)
 
+find_package(7zip CONFIG REQUIRED)
+
 set(PUBLIC_HEADERS lib/openctm.h lib/openctmpp.h)
 
 add_library(
@@ -12,19 +14,14 @@ add_library(
   lib/compressMG2.c
   lib/compressRAW.c
   lib/openctm.c
-  lib/stream.c
-  lib/liblzma/Alloc.c
-  lib/liblzma/LzFind.c
-  lib/liblzma/LzmaDec.c
-  lib/liblzma/LzmaEnc.c
-  lib/liblzma/LzmaLib.c)
+  lib/stream.c)
 
 target_include_directories(
   openctm
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib>
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/lib/liblzma>
          $<INSTALL_INTERFACE:include>)
-target_compile_definitions(openctm PRIVATE OPENCTM_BUILD LZMA_PREFIX_CTM)
+target_link_libraries(openctm PRIVATE 7zip::7zip)
+target_compile_definitions(openctm PRIVATE OPENCTM_BUILD)
 if(NOT BUILD_SHARED_LIBS)
   target_compile_definitions(openctm PUBLIC OPENCTM_STATIC)
 endif()

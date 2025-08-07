@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/json_dto
-    REF 9a08aaab6caee28300043c96e1ad3e6700f0f8fc # v.0.3.1
-    SHA512 09ca1072a3de2cc5c5ab6eeaa1b82014dcc6139992da84558e77fe4bfa42210ff9f7fa6ee7d7e6b2d4ac15fd7ae6286a6a56d8a72cce75fc73b91755bb831864
+    REF "v.${VERSION}"
+    SHA512 176556702dfa4092b3e1b0face065b66041346d3f9e0a96bd96fada4b8ba2a423e83d11501fc724341f831d6b3e8ce93c0fd2f4f1018b1bfb0423f70e68e8adb
 )
 
 vcpkg_cmake_configure(
