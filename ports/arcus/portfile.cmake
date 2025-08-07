@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 8106bbcd595921d56e39bf694fbee43c6146a9c661edf9fb1fe271bbcf199a202e399cfbda5b83711c9daad1c55d8242ba23ce4fb52c416ddd862fb6de2bcab3
     HEAD_REF main
+    PATCHES
+        0001-standardprojectsettings.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
@@ -14,8 +16,6 @@ vcpkg_cmake_configure(
         -DBUILD_PYTHON=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_STATIC=${ENABLE_STATIC}
-    PATCHES
-        0001-standardprojectsettings.patch
 )
 
 vcpkg_cmake_install()
