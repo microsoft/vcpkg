@@ -55,37 +55,6 @@ index 085af37..7068534 100644
    if($ENV{ATEN_STATIC_CUDA})
      list(APPEND ATen_CUDA_DEPENDENCY_LIBS
        ${CUDA_LIBRARIES}
-diff --git a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-index 7ea66d9..015e069 100644
---- a/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-+++ b/aten/src/ATen/native/quantized/cpu/qnnpack/CMakeLists.txt
-@@ -375,6 +375,8 @@ endif()
- target_link_libraries(pytorch_qnnpack PUBLIC pthreadpool)
- 
- # ---[ Configure FXdiv
-+find_package(unofficial-fxdiv CONFIG REQUIRED)
-+add_library(fxdiv ALIAS unofficial::fxdiv::fxdiv)
- if(NOT TARGET fxdiv AND NOT USE_SYSTEM_FXDIV)
-   set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
-   set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -398,6 +400,8 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0.0" AND NOT (USE_SYSTEM_PSIMD OR USE_
- endif()
- 
- # ---[ Configure psimd
-+find_package(unofficial-psimd CONFIG REQUIRED)
-+add_library(psimd ALIAS unofficial::psimd::psimd)
- if(NOT TARGET psimd AND NOT USE_SYSTEM_PSIMD)
-   add_subdirectory(
-     "${PSIMD_SOURCE_DIR}"
-@@ -413,6 +417,8 @@ endif()
- target_link_libraries(pytorch_qnnpack PRIVATE psimd)
- 
- # ---[ Configure FP16
-+find_package(unofficial-fp16 CONFIG REQUIRED)
-+add_library(fp16 ALIAS unofficial::fp16::fp16)
- if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
-   set(FP16_BUILD_TESTS OFF CACHE BOOL "")
-   set(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
 diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
 index 34577ca..42dff2a 100644
 --- a/c10/CMakeLists.txt
@@ -122,7 +91,7 @@ index d2d23b7..ec6e6e3 100644
  add_subdirectory(core)
  add_subdirectory(serialize)
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 5227204..bfbb88f 100644
+index 5227204..b9b8095 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -378,6 +378,9 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
@@ -227,15 +196,16 @@ index 5227204..bfbb88f 100644
      add_library(onnx SHARED IMPORTED)
      find_library(ONNX_LIBRARY onnx)
      if(NOT ONNX_LIBRARY)
-@@ -1345,6 +1369,7 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1345,6 +1369,8 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
      message("-- Found onnx: ${ONNX_LIBRARY} ${ONNX_PROTO_LIBRARY}")
      list(APPEND Caffe2_DEPENDENCY_LIBS onnx_proto onnx)
    endif()
 +  find_package(ONNX CONFIG REQUIRED)
++  list(APPEND Caffe2_DEPENDENCY_LIBS ONNX::onnx ONNX::onnx_proto)
    # Recover the build shared libs option.
    set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
  endif()
-@@ -1586,6 +1611,7 @@ endif()
+@@ -1586,6 +1612,7 @@ endif()
  #
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
@@ -243,7 +213,7 @@ index 5227204..bfbb88f 100644
  add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  
  # Disable compiler feature checks for `fmt`.
-@@ -1596,7 +1622,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
+@@ -1596,7 +1623,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
  # `fmt` is compatible with a superset of the compilers that PyTorch is, it
  # shouldn't be too bad to just disable the checks.
  set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
@@ -253,7 +223,7 @@ index 5227204..bfbb88f 100644
  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
  
-@@ -1745,13 +1772,10 @@ if(USE_KINETO)
+@@ -1745,13 +1773,10 @@ if(USE_KINETO)
    endif()
  endif()
  
