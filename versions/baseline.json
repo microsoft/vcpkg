@@ -3997,7 +3997,7 @@
       "port-version": 1
     },
     "jasper": {
-      "baseline": "4.2.7",
+      "baseline": "4.2.8",
       "port-version": 0
     },
     "jbcoe-value-types": {
