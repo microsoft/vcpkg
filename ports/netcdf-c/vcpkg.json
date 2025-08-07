@@ -1,10 +1,15 @@
 {
   "name": "netcdf-c",
-  "version": "4.8.1",
-  "port-version": 6,
+  "version": "4.9.3",
   "description": "A set of self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.",
   "homepage": "https://github.com/Unidata/netcdf-c",
+  "license": null,
   "dependencies": [
+    {
+      "name": "bzip2",
+      "default-features": false
+    },
+    "tinyxml2",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,16 +17,19 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "default-features": [
     "dap",
     {
-      "name": "hdf5",
-      "platform": "!uwp & !(arm64 & windows)"
+      "name": "nczarr",
+      "platform": "!uwp"
     },
-    "nczarr",
-    "netcdf-4"
+    {
+      "name": "netcdf-4",
+      "platform": "!uwp"
+    }
   ],
   "features": {
     "dap": {
@@ -30,29 +38,6 @@
         {
           "name": "curl",
           "default-features": false
-        }
-      ]
-    },
-    "hdf5": {
-      "description": "Build with HDF5 support",
-      "dependencies": [
-        {
-          "name": "hdf5",
-          "default-features": false,
-          "features": [
-            "zlib"
-          ]
-        },
-        {
-          "name": "netcdf-c",
-          "default-features": false,
-          "features": [
-            "netcdf-4"
-          ]
-        },
-        {
-          "name": "vcpkg-pkgconfig-get-modules",
-          "host": true
         }
       ]
     },
@@ -89,7 +74,22 @@
       ]
     },
     "netcdf-4": {
-      "description": "Build with netCDF-4 support"
+      "description": "Build with netCDF-4 support",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false,
+          "features": [
+            "zlib"
+          ]
+        }
+      ]
+    },
+    "szip": {
+      "description": "Support Szip compression",
+      "dependencies": [
+        "libaec"
+      ]
     },
     "tools": {
       "description": "Build utilities"

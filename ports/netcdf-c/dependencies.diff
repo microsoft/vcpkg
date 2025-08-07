@@ -1,0 +1,150 @@
+diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
+index d06a276..fcecec3 100644
+--- a/cmake/dependencies.cmake
++++ b/cmake/dependencies.cmake
+@@ -134,7 +134,13 @@ if(USE_HDF5)
+   #####
+   # First, find the C and HL libraries.
+   #####
+-  find_package(HDF5 COMPONENTS C HL REQUIRED)
++  find_package(HDF5 NAMES hdf5 C HL REQUIRED)
++  if(TARGET hdf5::hdf5-static)
++    add_library(HDF5::HDF5 ALIAS hdf5::hdf5-static)
++    add_library(hdf5::hdf5_hl ALIAS hdf5::hdf5_hl-static)
++  else()
++    add_library(HDF5::HDF5 ALIAS hdf5::hdf5)
++  endif()
+ 
+   message(STATUS "Found HDF5 version: ${HDF5_VERSION}")
+   if(${HDF5_VERSION} VERSION_LESS ${HDF5_VERSION_REQUIRED})
+@@ -164,7 +170,7 @@ if(USE_HDF5)
+     if(NOT ZLIB_LIBRARY)
+       find_package(ZLIB)
+       if(ZLIB_FOUND)
+-        set(ZLIB_LIBRARY ${ZLIB_LIBRARIES} )
++        set(ZLIB_LIBRARY ZLIB::ZLIB)
+       else()
+         message(FATAL_ERROR "HDF5 Requires ZLIB, but cannot find libz.")
+       endif()
+@@ -345,6 +351,10 @@ if(NOT WIN32)
+         set(HAVE_LIBM "")
+     endif()
+   else(NOT HAVE_LIBM)
++    find_library(HAVE_LIBM_M NAMES m)
++    if(HAVE_LIBM STREQUAL HAVE_LIBM_M)
++      set(HAVE_LIBM m)
++    endif()
+     message(STATUS "Found Math library: ${HAVE_LIBM}")
+   endif()
+ endif()
+@@ -354,6 +364,7 @@ endif()
+ ################################
+ # See if we have zlib
+ find_package(ZLIB)
++set(ZLIB_LIBRARY ZLIB::ZLIB)
+ 
+ # Define a test flag for have zlib library
+ if(ZLIB_FOUND)
+@@ -370,13 +381,15 @@ endif()
+ # Zips
+ ################################
+ MESSAGE(STATUS "Checking for filter libraries")
+-IF (NETCDF_ENABLE_FILTER_SZIP)
+-  find_package(Szip)
+-elseif(NETCDF_ENABLE_NCZARR)
+-  find_package(Szip)
++IF (NETCDF_ENABLE_FILTER_SZIP OR NETCDF_ENABLE_NCZARR)
++  find_package(libaec CONFIG REQUIRED)
++  set(Szip_FOUND 1)
++  set(Szip_LIBRARIES libaec::sz)
+ endif()
+ IF (NETCDF_ENABLE_FILTER_BZ2)
+-  find_package(Bz2)
++  find_package(BZip2 REQUIRED)
++  set(Bz2_FOUND 1)
++  set(Bz2_LIBRARIES BZip2::BZip2)
+ endif()
+ IF (NETCDF_ENABLE_FILTER_BLOSC)
+   find_package(Blosc)
+@@ -412,7 +425,8 @@ endif()
+ 
+ set(STD_FILTERS "${STD_FILTERS}${FOUND_STD_FILTERS}")
+ IF (NETCDF_ENABLE_NCZARR_ZIP)
+-  find_package(Zip)
++  find_package(Zip NAMES libzip REQUIRED)
++  set(Zip_LIBRARIES libzip::zip)
+   if(Zip_FOUND)
+     target_include_directories(netcdf
+       PRIVATE
+diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
+index cc482d5..f7c5349 100644
+--- a/liblib/CMakeLists.txt
++++ b/liblib/CMakeLists.txt
+@@ -58,8 +58,8 @@ if(NETCDF_ENABLE_DAP4)
+   target_sources(netcdf
+     PRIVATE
+       $<TARGET_OBJECTS:dap4>
+-      $<TARGET_OBJECTS:ncxml>
+   )
++  target_link_libraries(netcdf PRIVATE $<BUILD_LOCAL_INTERFACE:ncxml> $<INSTALL_INTERFACE:tinyxml2::tinyxml2>)
+ endif()
+ 
+ if(NETCDF_ENABLE_NCZARR)
+@@ -70,10 +70,7 @@ if(NETCDF_ENABLE_NCZARR)
+ endif()
+ 
+ if(NETCDF_ENABLE_S3_INTERNAL)
+-  target_sources(netcdf
+-    PRIVATE
+-      $<TARGET_OBJECTS:ncxml>
+-  )
++  target_link_libraries(netcdf PRIVATE $<BUILD_LOCAL_INTERFACE:ncxml> $<INSTALL_INTERFACE:tinyxml2::tinyxml2>)
+ endif()
+ 
+ if(NETCDF_ENABLE_PLUGINS)
+diff --git a/libncxml/CMakeLists.txt b/libncxml/CMakeLists.txt
+index b8fa4b2..5f8a6cb 100644
+--- a/libncxml/CMakeLists.txt
++++ b/libncxml/CMakeLists.txt
+@@ -1,7 +1,8 @@
+ if(HAVE_LIBXML2)
+   set(libncxml_SOURCES ncxml_xml2.c)
+ else()
+-  set(libncxml_SOURCES ncxml_tinyxml2.cpp tinyxml2.cpp tinyxml2.h)
++  find_package(tinyxml2 CONFIG REQUIRED GLOBAL)
++  set(libncxml_SOURCES ncxml_tinyxml2.cpp)
+ endif()
+ 
+ add_library(ncxml OBJECT ${libncxml_SOURCES})
+@@ -13,6 +14,7 @@ if(HAVE_LIBXML2)
+       ${LIBXML2_INCLUDE_DIRS}
+ )
+ else()
++  target_link_libraries(ncxml PRIVATE tinyxml2::tinyxml2)
+   target_include_directories(ncxml
+   PUBLIC
+     ./include
+diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
+index 987b2ad..a910949 100644
+--- a/netCDFConfig.cmake.in
++++ b/netCDFConfig.cmake.in
+@@ -4,6 +4,19 @@
+ #
+ @PACKAGE_INIT@
+ 
++if(NOT "@BUILD_SHARED_LIBS@")
++  include(CMakeFindDependencyMacro)
++  find_dependency(Bzip2)
++  find_dependency(tinyxml2 CONFIG)
++  find_dependency(ZLIB)
++  if("@FOUND_CURL@")
++    find_dependency(CURL)
++  endif()
++  if("@NETCDF_ENABLE_NCZARR_ZIP@")
++      find_dependency(libzip CONFIG)
++  endif()
++endif()
++
+ set(NetCDFVersion "@PACKAGE_VERSION@")
+ set_and_check(netCDF_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@")
+ set_and_check(netCDF_INCLUDE_DIR "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@")
