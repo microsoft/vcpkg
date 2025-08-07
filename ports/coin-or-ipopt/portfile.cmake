@@ -26,23 +26,23 @@ set(CONFIGURE_ARGS
 )
 
 if("mumps" IN_LIST FEATURES)
-  list(APPEND CONFIGURE_ARGS "--with-mumps")
+    list(APPEND CONFIGURE_ARGS "--with-mumps")
 endif()
 
 # link against openblas, assumed static lib
 set(OPENBLAS_LIB "${CMAKE_STATIC_LIBRARY_PREFIX}openblas${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 if(VCPKG_HOST_IS_WINDOWS)
-	list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=${CURRENT_INSTALLED_DIR}/lib/${OPENBLAS_LIB}")
+    list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=${CURRENT_INSTALLED_DIR}/lib/${OPENBLAS_LIB}")
 elseif(VCPKG_HOST_IS_LINUX)
-  list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=-L${CURRENT_INSTALLED_DIR}/lib -lopenblas -lm")
+    list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=-L${CURRENT_INSTALLED_DIR}/lib -lopenblas -lm")
 endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     OPTIONS
-      ${CONFIGURE_ARGS}
+        ${CONFIGURE_ARGS}
 )
 vcpkg_install_make()
 vcpkg_copy_pdbs()
