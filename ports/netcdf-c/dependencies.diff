@@ -76,6 +76,20 @@ index d06a276..fcecec3 100644
    if(Zip_FOUND)
      target_include_directories(netcdf
        PRIVATE
+diff --git a/libdispatch/CMakeLists.txt b/libdispatch/CMakeLists.txt
+index 0f5d66d..fb83551 100644
+--- a/libdispatch/CMakeLists.txt
++++ b/libdispatch/CMakeLists.txt
+@@ -13,6 +13,9 @@ target_sources(dispatch
+     dcrc32.c dcrc32.h dcrc64.c ncexhash.c ncxcache.c ncjson.c ds3util.c dparallel.c dmissing.c
+     ncproplist.c 
+ )
++if(FOUND_CURL)
++  target_link_libraries(dispatch PRIVATE CURL::libcurl)
++endif()
+ 
+ if (NETCDF_ENABLE_DLL)
+   target_compile_definitions(dispatch PRIVATE DLL_NETCDF DLL_EXPORT)
 diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
 index cc482d5..f7c5349 100644
 --- a/liblib/CMakeLists.txt
