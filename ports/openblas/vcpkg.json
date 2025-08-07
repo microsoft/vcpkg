@@ -12,8 +12,7 @@
     },
     {
       "name": "vcpkg-cmake",
-      "host": true,
-      "platform": "!linux"
+      "host": true
     },
     {
       "name": "vcpkg-cmake-config",
