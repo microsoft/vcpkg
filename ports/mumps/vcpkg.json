@@ -1,0 +1,44 @@
+{
+  "name": "mumps",
+  "version": "5.8.0",
+  "port-version": 1,
+  "description": "COIN-OR autotools harness to build MUMPS (MUltifrontal Massively Parallel sparse direct Solver)",
+  "homepage": "https://github.com/coin-or-tools/ThirdParty-Mumps",
+  "license": "EPL-2.0",
+  "dependencies": [
+    {
+      "name": "pkgconf",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name":"openblas",
+      "features":["blas","lapack"]
+    },
+    "metis",
+    "gklib"
+  ],
+  "default-features": ["mpi"],
+  "features": {
+    "mpi": {
+      "description": "Enable MPI support",
+      "dependencies": [
+        "mpi"
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support"
+    }
+  }
+}

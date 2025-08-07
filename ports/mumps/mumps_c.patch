@@ -1,0 +1,38 @@
+--- a/src/mumps_c.c
++++ b/src/mumps_c.c
+@@ -43,7 +43,7 @@
+  *   CMUMPS_XXX in the code to get rid of any symbol convention annoyance.
+  */
+ #if MUMPS_ARITH == MUMPS_ARITH_s
+-# if defined(UPPER) || defined(MUMPS_WIN32)
++# if defined(UPPER)
+ #  define F_SYM_ARITH(lower_case,upper_case) SMUMPS_##upper_case
+ # elif defined(Add_)
+ #  define F_SYM_ARITH(lower_case,upper_case) smumps_##lower_case##_
+@@ -53,7 +53,7 @@
+ #  define F_SYM_ARITH(lower_case,upper_case) smumps_##lower_case
+ # endif
+ #elif MUMPS_ARITH == MUMPS_ARITH_d
+-# if defined(UPPER) || defined(MUMPS_WIN32)
++# if defined(UPPER)
+ #  define F_SYM_ARITH(lower_case,upper_case) DMUMPS_##upper_case
+ # elif defined(Add_)
+ #  define F_SYM_ARITH(lower_case,upper_case) dmumps_##lower_case##_
+@@ -63,7 +63,7 @@
+ #  define F_SYM_ARITH(lower_case,upper_case) dmumps_##lower_case
+ # endif
+ #elif MUMPS_ARITH == MUMPS_ARITH_c
+-# if defined(UPPER) || defined(MUMPS_WIN32)
++# if defined(UPPER)
+ #  define F_SYM_ARITH(lower_case,upper_case) CMUMPS_##upper_case
+ # elif defined(Add_)
+ #  define F_SYM_ARITH(lower_case,upper_case) cmumps_##lower_case##_
+@@ -73,7 +73,7 @@
+ #  define F_SYM_ARITH(lower_case,upper_case) cmumps_##lower_case
+ # endif
+ #elif MUMPS_ARITH == MUMPS_ARITH_z
+-# if defined(UPPER) || defined(MUMPS_WIN32)
++# if defined(UPPER)
+ #  define F_SYM_ARITH(lower_case,upper_case) ZMUMPS_##upper_case
+ # elif defined(Add_)
+ #  define F_SYM_ARITH(lower_case,upper_case) zmumps_##lower_case##_

@@ -13,10 +13,38 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
+        blas           BUILD_BLAS
+        lapack         BUILD_LAPACK
         threads        USE_THREAD
         simplethread   USE_SIMPLE_THREADED_LEVEL3
         dynamic-arch   DYNAMIC_ARCH
 )
+
+# Configure OpenBLAS flags based on features
+set(OPENBLAS_FLAGS)
+set(BUILD_OPTIONS)
+
+
+#if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+#    set(OPTIONS -DTARGET=ARMV8 -DDYNAMIC_ARCH=OFF -DUSE_THREAD=OFF)
+#else()
+#    set(OPTIONS -DTARGET=CORE2 -DDYNAMIC_ARCH=OFF -DUSE_THREAD=ON -DNUM_THREADS=16)
+#endif()
+if("lapack" IN_LIST FEATURES)
+    set(OPTIONS
+        -DBUILD_SINGLE=ON
+        -DBUILD_DOUBLE=ON
+        -DBUILD_COMPLEX=ON
+        -DBUILD_COMPLEX16=ON
+        -DUSE_OPENMP=OFF
+        #-DBUILD_SHARED_LIBS=ON
+    )
+else()
+    set(OPTIONS
+      -DBUILD_WITHOUT_LAPACK=ON
+      -DNOFORTRAN=ON
+    )
+endif()
 
 # If not explicitly configured for a cross build, OpenBLAS wants to run 
 # getarch executables in order to optimize for the target.
@@ -50,8 +78,6 @@ vcpkg_cmake_configure(
         ${OPTIONS}
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -DBUILD_TESTING=OFF
-        -DBUILD_WITHOUT_LAPACK=ON
-        -DNOFORTRAN=ON
     MAYBE_UNUSED_VARIABLES
         GETARCH_BINARY_DIR
 )

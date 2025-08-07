@@ -1,24 +1,31 @@
 {
   "name": "openblas",
   "version": "0.3.29",
+  "port-version": 2,
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/OpenMathLib/OpenBLAS",
   "license": "BSD-3-Clause",
   "dependencies": [
     {
-      "name": "openblas",
-      "host": true
-    },
-    {
       "name": "vcpkg-cmake",
-      "host": true
+      "host": true,
+      "platform": "!linux"
     },
     {
       "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
+  "default-features": [
+    "blas"
+  ],
   "features": {
+    "blas": {
+      "description": "Build with BLAS support only"
+    },
+    "lapack": {
+      "description": "Build with LAPACK support"
+    },
     "dynamic-arch": {
       "description": "Support for multiple targets in a single library",
       "supports": "!windows | mingw"
