@@ -115,8 +115,8 @@ index 932f9e7..187be72 100644
  ENDIF()
  
  # ---[ Configure FXdiv
-+find_package(fxdiv CONFIG REQUIRED)
-+add_library(fxdiv ALIAS fxdiv::fxdiv)
++find_package(unofficial-fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS unofficial::fxdiv::fxdiv)
  IF(NOT TARGET fxdiv)
    SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
@@ -124,8 +124,8 @@ index 932f9e7..187be72 100644
  TARGET_LINK_LIBRARIES(qnnpack PRIVATE fxdiv)
  
  # ---[ Configure psimd
-+find_package(psimd CONFIG REQUIRED)
-+add_library(psimd ALIAS psimd::psimd)
++find_package(unofficial-psimd CONFIG REQUIRED)
++add_library(psimd ALIAS unofficial::psimd::psimd)
  IF(NOT TARGET psimd)
    ADD_SUBDIRECTORY(
      "${PSIMD_SOURCE_DIR}"
@@ -133,8 +133,8 @@ index 932f9e7..187be72 100644
  TARGET_LINK_LIBRARIES(qnnpack PRIVATE psimd)
  
  # ---[ Configure FP16
-+find_package(fp16 CONFIG REQUIRED)
-+add_library(fp16 ALIAS fp16::fp16)
++find_package(unofficial-fp16 CONFIG REQUIRED)
++add_library(fp16 ALIAS unofficial::fp16::fp16)
  IF(NOT TARGET fp16)
    SET(FP16_BUILD_TESTS OFF CACHE BOOL "")
    SET(FP16_BUILD_BENCHMARKS OFF CACHE BOOL "")
