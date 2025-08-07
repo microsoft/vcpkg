@@ -3932,10 +3932,6 @@
       "baseline": "0.13.0",
       "port-version": 0
     },
-    "io2d": {
-      "baseline": "2020-09-14",
-      "port-version": 5
-    },
     "iowa-hills-dsp": {
       "baseline": "0.1.0",
       "port-version": 0
