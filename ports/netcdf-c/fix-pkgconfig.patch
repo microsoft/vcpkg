@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index bbb647c..a04ae6b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1628,6 +1628,21 @@ list(REMOVE_DUPLICATES LINKFLAGS)
+@@ -1628,6 +1628,22 @@ list(REMOVE_DUPLICATES LINKFLAGS)
  set(LIBS ${NC_LIBS})
  set(NC_LIBS "-lnetcdf")
  
@@ -14,6 +14,7 @@ index bbb647c..a04ae6b 100644
 +    string(APPEND NC_REQUIRES_PRIVATE " ${MODULE}")
 +  endif()
 +endmacro()
++string(REPLACE           "-laec::sz"       "-lsz -laec" NC_LIBS_PRIVATE "${NC_LIBS_PRIVATE}")
 +replace_pkgconfig_module("-lBZip2[^ ]*"    "bzip2")
 +replace_pkgconfig_module("-lCURL[^ ]*"     "libcurl")
 +replace_pkgconfig_module("-lHDF5::HDF5"    "hdf5")

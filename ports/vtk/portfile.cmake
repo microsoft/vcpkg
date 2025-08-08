@@ -3,8 +3,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
-set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
-
 # =============================================================================
 # Clone & patch
 vcpkg_from_github(
@@ -134,28 +132,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
+        "debugleaks"  VTK_DEBUG_LEAKS
 )
 
-# Require port features to prevent accidental finding of transitive dependencies
+# Lock port features to prevent accidental finding of transitive dependencies
 vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
-  FEATURES
-    "libtheora" CMAKE_REQUIRE_FIND_PACKAGE_THEORA
-    "libharu" CMAKE_REQUIRE_FIND_PACKAGE_LibHaru
-    "cgns" CMAKE_REQUIRE_FIND_PACKAGE_CGNS
-    "seacas" CMAKE_REQUIRE_FIND_PACKAGE_SEACASIoss
-    "seacas" CMAKE_REQUIRE_FIND_PACKAGE_SEACASExodus
-    "sql" CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
-    "proj" CMAKE_REQUIRE_FIND_PACKAGE_PROJ
-    "netcdf" CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
-  INVERTED_FEATURES
-    "libtheora" CMAKE_DISABLE_FIND_PACKAGE_THEORA
-    "libharu" CMAKE_DISABLE_FIND_PACKAGE_LibHaru
-    "cgns" CMAKE_DISABLE_FIND_PACKAGE_CGNS
-    "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
-    "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
-    "sql" CMAKE_DISABLE_FIND_PACKAGE_SQLite3
-    "proj" CMAKE_DISABLE_FIND_PACKAGE_PROJ
-    "netcdf" CMAKE_DISABLE_FIND_PACKAGE_NetCDF
+    FEATURES
+        "cgns"        VCPKG_LOCK_FIND_PACKAGE_CGNS
+        "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
+        "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
+        "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
+        "proj"        VCPKG_LOCK_FIND_PACKAGE_PROJ
+        "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
+        "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
+        "sql"         VCPKG_LOCK_FIND_PACKAGE_SQLite3
 )
 
 # Replace common value to vtk value
@@ -255,12 +245,6 @@ if("openmp" IN_LIST FEATURES)
 	)
 endif()
 
-if("debugleaks" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_DEBUG_LEAKS=ON
-    )
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     "cuda"         VTK_USE_CUDA
@@ -310,23 +294,14 @@ vcpkg_cmake_configure(
         VTK_QT_VERSION # Only with Qt
         CMAKE_INSTALL_QMLDIR
         # When working properly these should be unused
-        CMAKE_DISABLE_FIND_PACKAGE_CGNS
-        CMAKE_DISABLE_FIND_PACKAGE_LibHaru
-        CMAKE_DISABLE_FIND_PACKAGE_NetCDF
-        CMAKE_DISABLE_FIND_PACKAGE_PROJ
-        CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
-        CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
-        CMAKE_DISABLE_FIND_PACKAGE_SQLite3
-        CMAKE_DISABLE_FIND_PACKAGE_THEORA
-        CMAKE_REQUIRE_FIND_PACKAGE_CGNS
-        CMAKE_REQUIRE_FIND_PACKAGE_LibHaru
-        CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
-        CMAKE_REQUIRE_FIND_PACKAGE_PROJ
-        CMAKE_REQUIRE_FIND_PACKAGE_SEACASExodus
-        CMAKE_REQUIRE_FIND_PACKAGE_SEACASIoss
-        CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
-        CMAKE_REQUIRE_FIND_PACKAGE_THEORA
-
+        VCPKG_LOCK_FIND_PACKAGE_CGNS
+        VCPKG_LOCK_FIND_PACKAGE_LibHaru
+        VCPKG_LOCK_FIND_PACKAGE_NetCDF
+        VCPKG_LOCK_FIND_PACKAGE_PROJ
+        VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
+        VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
+        VCPKG_LOCK_FIND_PACKAGE_SQLite3
+        VCPKG_LOCK_FIND_PACKAGE_THEORA
 )
 
 vcpkg_cmake_install()
