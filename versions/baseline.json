@@ -9848,6 +9848,10 @@
       "baseline": "2.17.11",
       "port-version": 0
     },
+    "userver": {
+      "baseline": "2.6",
+      "port-version": 0
+    },
     "usockets": {
       "baseline": "0.8.8",
       "port-version": 3
