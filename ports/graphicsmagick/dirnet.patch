@@ -1,0 +1,13 @@
+diff --git a/magick/nt_base.h b/magick/nt_base.h
+index 964695960..dca2ee89b 100644
+--- a/magick/nt_base.h
++++ b/magick/nt_base.h
+@@ -375,7 +375,7 @@ extern MagickExport const GhostscriptVectors
+ /*
+   Directory access functions
+ */
+-#if !defined(HAVE_DIRENT_H) || defined(__MINGW32__) || defined(__MINGW64__)
++#if !defined(HAVE_DIRENT_H) || defined(__MINGW32__) || defined(__MINGW64__) || defined(WIN32)
+ struct dirent
+ {
+   char
