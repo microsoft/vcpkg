@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 856a47d..a815bd1 100644
+index 856a47d..a8f8477 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1040,14 +1040,14 @@ IF(XNNPACK_BUILD_ALL_MICROKERNELS)
@@ -71,16 +71,18 @@ index 856a47d..a815bd1 100644
  # ---[ Configure KleidiAI
 diff --git a/Config.cmake.in b/Config.cmake.in
 new file mode 100644
-index 0000000..4070f47
+index 0000000..8dc60b4
 --- /dev/null
 +++ b/Config.cmake.in
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,11 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
 +find_dependency(unofficial-fxdiv)
 +find_dependency(cpuinfo)
 +find_dependency(unofficial-pthreadpool)
-+
++if(@XNNPACK_ENABLE_KLEIDIAI@)
++    find_dependency(KleidiAI)
++endif()
 +
 +include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-xnnpack-config-targets.cmake" )
