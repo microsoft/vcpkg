@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2515,14 +2515,14 @@
+ # Link Libraries
+ ####################################################
+ 
+ target_link_libraries(wolfssl PUBLIC ${WOLFSSL_LINK_LIBS})
+-
++message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+ if(CMAKE_C_COMPILER_ID STREQUAL "OpenWatcom")
+     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+         target_link_libraries(wolfssl PUBLIC ws2_32 crypt32)
+     endif()
+-elseif (WIN32 OR ${CMAKE_SYSTEM_NAME} MATCHES "^MSYS" OR ${CMAKE_SYSTEM_NAME} MATCHES "^MINGW")
++elseif (WIN32 OR ${CMAKE_SYSTEM_NAME} MATCHES "^MSYS" OR ${CMAKE_SYSTEM_NAME} MATCHES "^MINGW" OR ${CMAKE_SYSTEM_NAME} MATCHES "^Windows")
+     # For Windows link required libraries
+     message("Building on Windows/MSYS/MINGW")
+     target_link_libraries(wolfssl PUBLIC
+         ws2_32 crypt32 advapi32)

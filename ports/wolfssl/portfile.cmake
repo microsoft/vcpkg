@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 29f52644966f21908e0d3f795c62b0f5af9cd2d766db20c6ed5c588611f19f048119827fe6e787ccc3ce676d8c97cf7ab409d996df0e3acb812d6cd01364de61
     HEAD_REF master
     PATCHES
+        fix_uwp.patch
     )
 
 if ("asio" IN_LIST FEATURES)
