@@ -2672,6 +2672,10 @@
       "baseline": "0.193",
       "port-version": 0
     },
+    "eljonny-testcpp": {
+      "baseline": "0.3.0-beta.4",
+      "port-version": 0
+    },
     "embree3": {
       "baseline": "3.13.5",
       "port-version": 4
@@ -9454,10 +9458,6 @@
     },
     "tevclient": {
       "baseline": "2023-12-04",
-      "port-version": 0
-    },
-    "testcpp": {
-      "baseline": "0.1.0-beta.1",
       "port-version": 0
     },
     "tfhe": {
