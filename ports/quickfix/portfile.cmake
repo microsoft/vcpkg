@@ -1,39 +1,27 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO quickfix/quickfix
-    REF v1.15.1
-    SHA512 6c3dc53f25932c9b7516ab9228f634511ae0f399719f87f0ec2b38c380c0a7d1c808f0f9a14a70a063e1956118550d1121222283a9139f23cd4f8f038f595f70
+    REF 4e89249a90f5c8a140ffdd6eeb5e5cbf7a8e224b # change to "v${VERSION}" when officially released on github
+    SHA512 5128f2626428b5161f5be6e7aba86de56d14b2a0955f0c07d6fa6adbc0c76bfd919faff513a0c94eedf9bb110bf9b57eac5880e93dfc22138529234b62855b62
     HEAD_REF master
-    PATCHES 
+    PATCHES
         00001-fix-build.patch
-        fix_wsl_symlink_error.patch
+        00002-quickfix-663.patch # remove when https://github.com/quickfix/quickfix/pull/663 gets merged
 )
 
-file(GLOB_RECURSE SRC_FILES RELATIVE "${SOURCE_PATH}"
-	"${SOURCE_PATH}/src/*.cpp" 
-	"${SOURCE_PATH}/src/*.h"
-)
-
-list(REMOVE_ITEM SRC_FILES "src/C++/Utility.h")
-list(REMOVE_ITEM SRC_FILES "src/C++/pugixml.cpp")
-
-foreach(SRC_FILE IN LISTS SRC_FILES)
-    file(READ "${SOURCE_PATH}/${SRC_FILE}" _contents)
-	string(REPLACE "throw("  "QUICKFIX_THROW(" _contents "${_contents}")
-	string(REPLACE "throw (" "QUICKFIX_THROW(" _contents "${_contents}")
-    file(WRITE "${SOURCE_PATH}/${SRC_FILE}" "${_contents}")
-endforeach()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" QUICKFIX_SHARED_LIBS)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DHAVE_EMX=OFF
+        -DQUICKFIX_SHARED_LIBS=${QUICKFIX_SHARED_LIBS}
+        -DQUICKFIX_EXAMPLES=OFF
+        -DQUICKFIX_TESTS=OFF
         -DHAVE_MYSQL=OFF
+        -DHAVE_ODBC=OFF
         -DHAVE_POSTGRESQL=OFF
         -DHAVE_PYTHON=OFF
-        -DHAVE_PYTHON2=OFF
         -DHAVE_PYTHON3=OFF
         -DHAVE_SSL=ON
 )
