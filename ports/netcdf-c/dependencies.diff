@@ -1,13 +1,14 @@
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index d06a276..fcecec3 100644
+index d06a276..7cb6fc9 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
-@@ -134,7 +134,13 @@ if(USE_HDF5)
+@@ -134,7 +134,14 @@ if(USE_HDF5)
    #####
    # First, find the C and HL libraries.
    #####
 -  find_package(HDF5 COMPONENTS C HL REQUIRED)
 +  find_package(HDF5 NAMES hdf5 C HL REQUIRED)
++  set(HDF5_IS_PARALLEL "${HDF5_ENABLE_PARALLEL}")
 +  if(TARGET hdf5::hdf5-static)
 +    add_library(HDF5::HDF5 ALIAS hdf5::hdf5-static)
 +    add_library(hdf5::hdf5_hl ALIAS hdf5::hdf5_hl-static)
@@ -17,7 +18,7 @@ index d06a276..fcecec3 100644
  
    message(STATUS "Found HDF5 version: ${HDF5_VERSION}")
    if(${HDF5_VERSION} VERSION_LESS ${HDF5_VERSION_REQUIRED})
-@@ -164,7 +170,7 @@ if(USE_HDF5)
+@@ -164,7 +171,7 @@ if(USE_HDF5)
      if(NOT ZLIB_LIBRARY)
        find_package(ZLIB)
        if(ZLIB_FOUND)
@@ -26,7 +27,7 @@ index d06a276..fcecec3 100644
        else()
          message(FATAL_ERROR "HDF5 Requires ZLIB, but cannot find libz.")
        endif()
-@@ -345,6 +351,10 @@ if(NOT WIN32)
+@@ -345,6 +352,10 @@ if(NOT WIN32)
          set(HAVE_LIBM "")
      endif()
    else(NOT HAVE_LIBM)
@@ -37,7 +38,7 @@ index d06a276..fcecec3 100644
      message(STATUS "Found Math library: ${HAVE_LIBM}")
    endif()
  endif()
-@@ -354,6 +364,7 @@ endif()
+@@ -354,6 +365,7 @@ endif()
  ################################
  # See if we have zlib
  find_package(ZLIB)
@@ -45,7 +46,7 @@ index d06a276..fcecec3 100644
  
  # Define a test flag for have zlib library
  if(ZLIB_FOUND)
-@@ -370,13 +381,15 @@ endif()
+@@ -370,13 +382,15 @@ endif()
  # Zips
  ################################
  MESSAGE(STATUS "Checking for filter libraries")
@@ -66,7 +67,7 @@ index d06a276..fcecec3 100644
  endif()
  IF (NETCDF_ENABLE_FILTER_BLOSC)
    find_package(Blosc)
-@@ -412,7 +425,8 @@ endif()
+@@ -412,7 +426,8 @@ endif()
  
  set(STD_FILTERS "${STD_FILTERS}${FOUND_STD_FILTERS}")
  IF (NETCDF_ENABLE_NCZARR_ZIP)
@@ -139,7 +140,7 @@ index b8fa4b2..5f8a6cb 100644
    PUBLIC
      ./include
 diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
-index 987b2ad..a910949 100644
+index 987b2ad..593d955 100644
 --- a/netCDFConfig.cmake.in
 +++ b/netCDFConfig.cmake.in
 @@ -4,6 +4,19 @@

@@ -14,14 +14,6 @@ file(GLOB_RECURSE modules "${SOURCE_PATH}/cmake/modules/Find*.cmake")
 file(GLOB vendored "${SOURCE_PATH}/libncxml/tinyxml2.*")
 file(REMOVE ${modules} ${vendored})
 
-if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
-    set(CRT_OPTION "")
-elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(CRT_OPTION -DNC_USE_STATIC_CRT=ON)
-else()
-    set(CRT_OPTION -DNC_USE_STATIC_CRT=OFF)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dap         NETCDF_ENABLE_DAP
@@ -39,6 +31,7 @@ else()
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
+    list(APPEND FEATURE_OPTIONS "-DNETCDF_ENABLE_PLUGINS=OFF")
     string(APPEND VCPKG_C_FLAGS " /wd4996 /wd4703")
     string(APPEND VCPKG_CXX_FLAGS " /wd4996 /wd4703")
 endif()
@@ -59,10 +52,7 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_MakeDist=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_PkgConfig=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=ON
-        ${CRT_OPTION}
         ${FEATURE_OPTIONS}
-        -DVCPKG_TRACE_FIND_PACKAGE=1
-        #--trace-expand
     MAYBE_UNUSED_VARIABLES
         VCPKG_LOCK_FIND_PACKAGE_CURL
 )
@@ -75,12 +65,14 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/netcdf.h" "defined(DLL_NETCDF)" "1")
 endif()
 
-vcpkg_clean_executables_in_bin(FILE_NAMES nc-config)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/nc-config" "${CURRENT_PACKAGES_DIR}/bin/nc-config") # invalid
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES  nccopy ncdump ncgen ncgen3
         AUTO_CLEAN
     )
+else()
+    vcpkg_clean_executables_in_bin(FILE_NAMES none)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
