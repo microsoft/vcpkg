@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:noble-20250619
+FROM ubuntu:noble-20250714
 
 ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14+7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
@@ -8,7 +8,7 @@ ADD https://dl.google.com/android/repository/commandlinetools-linux-10406996_lat
 ADD https://dl.google.com/android/repository/build-tools_r34-linux.zip /build-tools_r34-linux.zip
 ADD https://dl.google.com/android/repository/platform-34-ext7_r03.zip /platform-34-ext7_r03.zip
 ADD https://dl.google.com/android/repository/platform-tools_r35.0.1-linux.zip /platform-tools_r35.0.1-linux.zip
-ADD https://dl.google.com/android/repository/android-ndk-r27c-linux.zip /android-ndk-r27c-linux.zip
+ADD https://dl.google.com/android/repository/android-ndk-r28c-linux.zip /android-ndk-r28c-linux.zip
 
 # Add apt packages
 
@@ -94,8 +94,8 @@ export JAVA_HOME=/jdk-17.0.14+7
 yes | /android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/android-sdk --licenses
 
 # Android NDK
-unzip -q /android-ndk-r27c-linux.zip
-rm -f android-ndk-r27c-linux.zip
+unzip -q /android-ndk-r28c-linux.zip
+rm -f android-ndk-r28c-linux.zip
 
 END_OF_SCRIPT
 
@@ -103,6 +103,6 @@ ENV JAVA_HOME /jdk-17.0.14+7
 
 ENV ANDROID_HOME /android-sdk
 
-ENV ANDROID_NDK_HOME /android-ndk-r27c
+ENV ANDROID_NDK_HOME /android-ndk-r28c
 
 WORKDIR /vcpkg
