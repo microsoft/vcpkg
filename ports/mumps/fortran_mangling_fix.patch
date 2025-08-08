@@ -36,3 +36,25 @@
  #  define F_SYM_ARITH(lower_case,upper_case) ZMUMPS_##upper_case
  # elif defined(Add_)
  #  define F_SYM_ARITH(lower_case,upper_case) zmumps_##lower_case##_
+--- a/src/mumps_common.h
++++ b/src/mumps_common.h
+@@ -28,7 +28,7 @@
+  *     knowledge, there is no way to perform the conversion with CPP
+  *     directives only.
+  */
+-#if defined(UPPER) || defined(MUMPS_WIN32)
++#if defined(UPPER)
+ # define F_SYMBOL(lower_case,upper_case) MUMPS_##upper_case
+ #elif defined(Add_)
+ # define F_SYMBOL(lower_case,upper_case) mumps_##lower_case##_
+--- a/libseq/elapse.h
++++ b/libseq/elapse.h
+@@ -25,7 +25,7 @@
+ #endif
+ #endif
+ 
+-#if (defined(_WIN32) && ! defined(__MINGW32__)) || defined(UPPER)
++#if defined(UPPER)
+ #define mumps_elapse MUMPS_ELAPSE
+ #elif defined(Add__)
+ #define mumps_elapse mumps_elapse__

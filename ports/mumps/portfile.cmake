@@ -29,9 +29,7 @@ vcpkg_extract_source_archive(
     WORKING_DIRECTORY ${SOURCE_PATH}
     PATCHES
         mumps_mpi.patch
-        mumps_c.patch
-        mumps_common_h.patch
-        elapse_h.patch
+        fortran_mangling_fix.patch
 )
 
 ## move files
