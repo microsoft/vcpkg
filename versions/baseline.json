@@ -9965,7 +9965,7 @@
       "port-version": 3
     },
     "vcpkg-gn": {
-      "baseline": "2024-02-22",
+      "baseline": "2025-08-05",
       "port-version": 0
     },
     "vcpkg-make": {
@@ -9993,7 +9993,7 @@
       "port-version": 0
     },
     "vcpkg-tool-gn": {
-      "baseline": "2025-01-27",
+      "baseline": "2025-08-05",
       "port-version": 0
     },
     "vcpkg-tool-gyp-next": {
