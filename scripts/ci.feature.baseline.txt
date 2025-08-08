@@ -1264,7 +1264,6 @@ qtwebview:arm64-linux=cascade
 qtwebview[webengine]:x86-windows=cascade
 quarter:arm64-linux=cascade
 quazip:arm64-linux=cascade
-quickfix:arm64-linux=fail
 quickjs-ng:arm64-linux=fail
 qwt:arm64-linux=cascade
 qwtw:x64-windows=cascade

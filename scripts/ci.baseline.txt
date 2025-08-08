@@ -1049,7 +1049,6 @@ qtopcua:x64-android=fail
 qtwayland:arm64-osx=skip # Missing system libraries
 quickfix:arm-neon-android=fail
 quickfix:arm64-android=fail
-quickfix:arm64-linux=fail
 quickjs-ng:arm64-linux=fail
 realm-core:arm-neon-android=fail # https://github.com/realm/realm-core/issues/8093
 realm-core:arm64-android=fail
@@ -1479,4 +1478,3 @@ vcpkg-ci-wxwidgets:x86-windows=pass
 zookeeper:arm-neon-android=pass
 zookeeper:arm64-android=pass
 zookeeper:x64-android=pass
-
