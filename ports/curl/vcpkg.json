@@ -34,7 +34,7 @@
       ]
     },
     "gnutls": {
-      "description": "SSL support (gnutls)",
+      "description": "TLS support (gnutls)",
       "dependencies": [
         {
           "name": "libgnutls",
@@ -73,7 +73,7 @@
       ]
     },
     "http3": {
-      "description": "Enable http3 with openssl backend",
+      "description": "HTTP3 support with ngtcp2 on openssl",
       "dependencies": [
         {
           "name": "curl",
@@ -140,16 +140,16 @@
       ]
     },
     "mbedtls": {
-      "description": "SSL support (mbedTLS)",
+      "description": "TLS support (mbedTLS)",
       "dependencies": [
         "mbedtls"
       ]
     },
     "non-http": {
-      "description": "Enables protocols beyond HTTP/HTTPS/HTTP2"
+      "description": "Enables protocols beyond HTTP/HTTPS/HTTP2/HTTP3"
     },
     "openssl": {
-      "description": "SSL support (OpenSSL)",
+      "description": "TLS support (OpenSSL)",
       "dependencies": [
         "openssl"
       ]
@@ -187,9 +187,10 @@
       ]
     },
     "ssl": {
-      "description": "Default SSL backend",
+      "description": "Default SSL / TLS implementation.",
       "dependencies": [
         {
+          "$comment": "Defaults to schannel on Windows, unless http3 is also enabled",
           "name": "curl",
           "default-features": false,
           "features": [
@@ -198,6 +199,7 @@
           "platform": "(windows & !uwp) | mingw"
         },
         {
+          "$comment": "Otherwise, defaults to OpenSSL.",
           "name": "curl",
           "default-features": false,
           "features": [

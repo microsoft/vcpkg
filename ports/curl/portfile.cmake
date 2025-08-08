@@ -42,19 +42,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if("ssl" IN_LIST FEATURES AND
     NOT "http3" IN_LIST FEATURES AND
-    #(windows & !uwp) | mingw
-    ((VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP) OR VCPKG_TARGET_IS_MINGW)
-)
+    # (windows & !uwp) | mingw to match curl[ssl]'s "platform"
+    ((VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP) OR VCPKG_TARGET_IS_MINGW))
     list(APPEND FEATURE_OPTIONS -DCURL_USE_SCHANNEL=ON)
 endif()
 
 if("http3" IN_LIST FEATURES AND
     ("wolfssl" IN_LIST FEATURES OR
      "mbedtls" IN_LIST FEATURES OR
-     "gnutls" IN_LIST FEATURES
-    )
-)
-    message(FATAL_ERROR "http3 feature is not supported with wolfssl, mbedtls or gnutls")
+     "gnutls" IN_LIST FEATURES))
+    message(FATAL_ERROR "http3 is incompatible with curl multi-ssl, preventing combination with wolfssl, mbedtls or \
+gnutls in vcpkg's curated registry. To use curl http3 on ngtcp2 on one of the other TLS backends, author an \
+overlay-port which exchanges curl[ssl]'s and curl[http3]'s openssl dependencies with the backend you want.")
 endif()
 
 set(OPTIONS "")
