@@ -19,7 +19,6 @@ vcpkg_check_features(
     FEATURES
         libunwind   gperftools_enable_libunwind
         override    GPERFTOOLS_WIN32_OVERRIDE
-        tools       GPERFTOOLS_BUILD_TOOLS
 )
 
 if(gperftools_enable_libunwind)
@@ -49,12 +48,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     foreach(gperf_header IN LISTS gperf_public_headers)
         vcpkg_replace_string("${gperf_header}" "__declspec(dllimport)" "")
     endforeach()
-endif()
-
-if("tools" IN_LIST FEATURES)
-    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-        vcpkg_copy_tools(TOOL_NAMES addr2line-pdb nm-pdb AUTO_CLEAN)
-    endif()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -21,9 +21,6 @@
     "override": {
       "description": "Override Windows allocators",
       "supports": "windows & staticcrt"
-    },
-    "tools": {
-      "description": "Install tools"
     }
   }
 }
