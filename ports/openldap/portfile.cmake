@@ -1,24 +1,18 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-2.5.13.tgz"
-    FILENAME "openldap-2.5.13.tgz"
-    SHA512 30fdc884b513c53169910eec377c2ad05013b9f06bab3123d50d028108b24548791f7f47f18bcb3a2b4868edeab02c10d81ffa320c02d7b562f2e8f2fa25d6c9
+    URLS "https://www.openldap.org/software/download/OpenLDAP/openldap-release/openldap-${VERSION}.tgz"
+         "https://mirror.eu.oneandone.net/software/openldap/openldap-release/openldap-${VERSION}.tgz"
+    FILENAME "openldap-${VERSION}.tgz"
+    SHA512 18129ad9a385457941e3203de5f130fe2571701abf24592c5beffb01361aae3182c196b2cd48ffeecb792b9b0e5f82c8d92445a7ec63819084757bdedba63b20
 )
-
-vcpkg_list(SET EXTRA_PATCHES)
-
-# Check autoconf version < 2.70
-execute_process(COMMAND autoconf --version OUTPUT_VARIABLE AUTOCONF_VERSION_STR)
-if(NOT "${AUTOCONF_VERSION_STR}" STREQUAL "" AND "${AUTOCONF_VERSION_STR}" MATCHES ".*2\\.[0-6].*")
-    vcpkg_list(APPEND EXTRA_PATCHES m4.patch)
-endif()
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        android.diff
+        cyrus-sasl.diff
         openssl.patch
         subdirs.patch
-        ${EXTRA_PATCHES}
 )
 
 vcpkg_list(SET FEATURE_OPTIONS)
@@ -32,13 +26,16 @@ else()
     vcpkg_list(APPEND FEATURE_OPTIONS --without-cyrus-sasl)
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_list(APPEND FEATURE_OPTIONS -with-yielding_select=yes)
+endif()
+
 # Disable build environment details in binaries
 set(ENV{SOURCE_DATE_EPOCH} "1659614616")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_VERBOSE_FLAGS
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${FEATURE_OPTIONS}
         --disable-cleartext
@@ -55,12 +52,10 @@ vcpkg_configure_make(
         ac_cv_lib_odbc32_SQLDriverConnect=no
 )
 
-vcpkg_build_make(BUILD_TARGET depend LOGFILE_ROOT depend)
-vcpkg_install_make()
+vcpkg_make_install(TARGETS depend install)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

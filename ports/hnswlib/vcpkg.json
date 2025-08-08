@@ -1,7 +1,6 @@
 {
   "name": "hnswlib",
-  "version": "0.7.0",
-  "port-version": 1,
+  "version": "0.8.0",
   "description": "Header-only library for fast approximate nearest neighbors",
   "homepage": "https://github.com/nmslib/hnswlib",
   "license": "Apache-2.0",

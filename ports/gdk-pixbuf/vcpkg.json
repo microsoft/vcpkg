@@ -1,40 +1,65 @@
 {
   "name": "gdk-pixbuf",
-  "version": "2.42.10",
-  "port-version": 1,
+  "version": "2.42.12",
+  "port-version": 4,
   "description": "Image loading library.",
   "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
   "license": "LGPL-2.1-or-later",
   "supports": "!xbox",
   "dependencies": [
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "gettext-libintl",
     "glib",
     {
       "name": "glib",
       "host": true
     },
-    "libpng",
-    {
-      "name": "tiff",
-      "default-features": false
-    },
     {
       "name": "vcpkg-tool-meson",
       "host": true
-    },
-    "zlib"
+    }
+  ],
+  "default-features": [
+    "jpeg",
+    "png",
+    "tiff"
   ],
   "features": {
     "introspection": {
-      "description": "build with introspection",
+      "description": "Build with introspection",
+      "supports": "!static",
+      "dependencies": [
+        "gobject-introspection"
+      ]
+    },
+    "jpeg": {
+      "description": "Enable JPEG loader (requires libjpeg)",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "others": {
+      "description": "Enable other loaders, which are weakly maintained (ani, bmp, icns, ico, pnm, qtif, tga, xbm, xpm)"
+    },
+    "png": {
+      "description": "Enable PNG loader (requires libpng)",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "tiff": {
+      "description": "Enable TIFF loader (requires libtiff)",
       "dependencies": [
         {
-          "name": "gobject-introspection",
-          "host": true
-        },
-        {
-          "name": "gobject-introspection",
-          "platform": "windows & x86"
+          "name": "tiff",
+          "default-features": false
         }
       ]
     }

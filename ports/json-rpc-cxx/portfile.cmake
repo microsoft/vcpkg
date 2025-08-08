@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jsonrpcx/json-rpc-cxx
     REF "v${VERSION}"
-    SHA512 0b8f2b1c8ff95bee14585f6b363f6aa4bf046e3905f7a65cf2e562e5c9181a3ba882baded36fab4d3ff9ac5b2f3245eeb54260f2163491af7fba264ff547f6d8
+    SHA512 fa4ee807dd29027edd86949a8632adede77c3706406e6b78a8b6e38003f80103082ef70e0b89293a608db238d6f5662669b69cf0cb3d607bcc959c8801c5f3e0
     HEAD_REF master
     PATCHES
        fix-config.patch

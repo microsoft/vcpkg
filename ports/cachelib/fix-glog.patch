@@ -1,0 +1,13 @@
+diff --git a/cachelib/CMakeLists.txt b/cachelib/CMakeLists.txt
+index 6be8199..2ebff62 100644
+--- a/cachelib/CMakeLists.txt
++++ b/cachelib/CMakeLists.txt
+@@ -96,7 +96,7 @@ find_package(Threads REQUIRED)
+ find_package(Boost REQUIRED COMPONENTS
+              system filesystem regex context program_options thread)
+ find_package(Gflags REQUIRED)
+-find_package(Glog REQUIRED)
++find_package(glog CONFIG REQUIRED)
+ find_package(GTest CONFIG REQUIRED)
+ find_package(folly CONFIG REQUIRED)
+ find_package(fizz CONFIG REQUIRED)

@@ -1,14 +1,12 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/BehaviorTree/BehaviorTree.CPP/archive/${VERSION}.tar.gz"
-    FILENAME "BehaviorTree.CPP.${VERSION}.tar.gz"
-    SHA512 4505c4c8798ccbbc02f58320810eb86e791fb6ef57d8c85882e62bd2b509b41e0549dc311ed61926a873b5b956eda979efda488f01d00746e1e8db559f60253c
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO BehaviorTree/BehaviorTree.CPP
+    REF ${VERSION}
+    SHA512 b2460f24915ab3aa803b95ca8a07a3d6d96c9e6d17f6b20297c45572162fe83f50e0cb51dd62da783ce6b962838bc0e74e7e137b8ef29a92f1805058beccc404
+    HEAD_REF master
     PATCHES
         fix-x86_build.patch
+        remove-source-charset.diff
 )
 
 vcpkg_cmake_configure(
@@ -17,7 +15,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_ament_cmake=1
         -DCMAKE_DISABLE_FIND_PACKAGE_Curses=1
         -DBTCPP_EXAMPLES=OFF
-        -DBTCPP_UNIT_TESTS=OFF
+        -DBUILD_TESTING=OFF
         -DBTCPP_BUILD_TOOLS=OFF
         -DBTCPP_GROOT_INTERFACE=OFF
         -DBTCPP_SQLITE_LOGGING=OFF

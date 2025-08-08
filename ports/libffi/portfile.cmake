@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libffi/libffi/releases/download/v${VERSION}/libffi-${VERSION}.tar.gz"
     FILENAME "libffi-${VERSION}.tar.gz"
-    SHA512 88680aeb0fa0dc0319e5cd2ba45b4b5a340bc9b4bcf20b1e0613b39cd898f177a3863aa94034d8e23a7f6f44d858a53dcd36d1bb8dee13b751ef814224061889
+    SHA512 76974a84e3aee6bbd646a6da2e641825ae0b791ca6efdc479b2d4cbcd3ad607df59cffcf5031ad5bd30822961a8c6de164ac8ae379d1804acd388b1975cdbf4d
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -12,18 +12,19 @@ vcpkg_extract_source_archive(
 
 vcpkg_list(SET options)
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(extra_cflags "-DFFI_BUILDING")
+    set(linkage_flag "-DFFI_STATIC_BUILD")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(APPEND extra_cflags " -DFFI_BUILDING_DLL")
+        set(linkage_flag "-DFFI_BUILDING_DLL")
     endif()
-    vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${extra_cflags}")
+    vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${linkage_flag}")
 endif()
 
-set(ccas_options "")
-vcpkg_cmake_get_vars(cmake_vars_file)
+vcpkg_cmake_get_vars(cmake_vars_file ADDITIONAL_LANGUAGES ASM)
 include("${cmake_vars_file}")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    set(ccas "${SOURCE_PATH}/msvcc.sh")
+    vcpkg_add_to_path("${SOURCE_PATH}")
+    vcpkg_list(APPEND options "CCAS=msvcc.sh")
+    set(ccas_options "")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         string(APPEND ccas_options " -m32")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -33,18 +34,14 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         string(APPEND ccas_options " -marm64")
     endif()
-else()
-    set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+    if(ccas_options)
+        vcpkg_list(APPEND options "CCASFLAGS=\${CCASFLAGS}${ccas_options}")
+    endif()
 endif()
-cmake_path(GET ccas PARENT_PATH ccas_dir)
-vcpkg_add_to_path("${ccas_dir}")
-cmake_path(GET ccas FILENAME ccas_command)
-vcpkg_list(APPEND options "CCAS=${ccas_command}${ccas_options}")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DETERMINE_BUILD_TRIPLET
-    USE_WRAPPERS
+    LANGUAGES C CXX ASM
     OPTIONS
         --enable-portable-binary
         --disable-docs
@@ -52,12 +49,12 @@ vcpkg_configure_make(
         ${options}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h" "!defined FFI_BUILDING" "0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h" "defined(FFI_STATIC_BUILD)" "1")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

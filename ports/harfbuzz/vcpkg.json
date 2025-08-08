@@ -1,28 +1,55 @@
 {
   "name": "harfbuzz",
-  "version": "8.2.0",
+  "version": "11.3.3",
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "license": "MIT-Modern-Variant",
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "freetype",
-      "default-features": false
-    },
-    {
-      "name": "gettext",
-      "platform": "osx"
-    },
-    {
       "name": "vcpkg-tool-meson",
       "host": true
     }
   ],
+  "default-features": [
+    "freetype"
+  ],
   "features": {
+    "cairo": {
+      "description": "Enable Cairo graphics library support",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
+    },
     "coretext": {
       "description": "Enable CoreText shaper backend on macOS",
       "supports": "osx"
+    },
+    "directwrite": {
+      "description": "Enable DirectWrite support on Windows",
+      "supports": "windows"
+    },
+    "experimental-api": {
+      "description": "Enable experimental api"
+    },
+    "freetype": {
+      "description": "Enable FreeType support",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "gdi": {
+      "description": "Enable GDI/Uniscribe support on Windows",
+      "supports": "windows"
     },
     "glib": {
       "description": "Glib Unicode callbacks support",
@@ -48,15 +75,15 @@
     },
     "introspection": {
       "description": "build with introspection",
+      "supports": "!static",
       "dependencies": [
-        "glib",
+        "gobject-introspection",
         {
-          "name": "gobject-introspection",
-          "host": true
-        },
-        {
-          "name": "gobject-introspection",
-          "platform": "windows & x86"
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "glib"
+          ]
         }
       ]
     }

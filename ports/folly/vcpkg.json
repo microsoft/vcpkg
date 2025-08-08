@@ -1,10 +1,10 @@
 {
   "name": "folly",
-  "version-string": "2023.07.03.00",
+  "version-string": "2025.05.19.00",
   "description": "An open-source C++ library developed and used at Facebook. The library is UNSTABLE on Windows",
   "homepage": "https://github.com/facebook/folly",
   "license": "Apache-2.0",
-  "supports": "(windows & x64 & !uwp) | (!windows & (x64 | arm64))",
+  "supports": "(windows & x64 & !uwp & !mingw) | (!windows & !android & (x64 | arm64))",
   "dependencies": [
     "boost-chrono",
     "boost-context",
@@ -20,10 +20,16 @@
     "boost-thread",
     "boost-variant",
     "double-conversion",
+    "fast-float",
     "fmt",
     "gflags",
     "glog",
     "libevent",
+    "liblzma",
+    {
+      "name": "libunwind",
+      "platform": "linux"
+    },
     "openssl",
     {
       "name": "vcpkg-cmake",
@@ -32,9 +38,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
-  ],
-  "default-features": [
+    },
     "zlib"
   ],
   "features": {
@@ -42,6 +46,13 @@
       "description": "Support bzip2 for compression",
       "dependencies": [
         "bzip2"
+      ]
+    },
+    "libaio": {
+      "description": "Support compile with libaio",
+      "supports": "linux",
+      "dependencies": [
+        "libaio"
       ]
     },
     "libsodium": {
@@ -52,6 +63,7 @@
     },
     "liburing": {
       "description": "Support compile with liburing",
+      "supports": "linux",
       "dependencies": [
         "liburing"
       ]
@@ -71,13 +83,12 @@
     "snappy": {
       "description": "Support Snappy for compression",
       "dependencies": [
-        "snappy"
-      ]
-    },
-    "zlib": {
-      "description": "Support zlib for compression",
-      "dependencies": [
-        "zlib"
+        {
+          "name": "snappy",
+          "features": [
+            "rtti"
+          ]
+        }
       ]
     },
     "zstd": {

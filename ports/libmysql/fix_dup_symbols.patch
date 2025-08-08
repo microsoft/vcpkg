@@ -1,8 +1,8 @@
 diff --git a/client/CMakeLists.txt b/client/CMakeLists.txt
-index 058967b..bcd8841 100644
+index d54f4a6f..cd2132c9 100644
 --- a/client/CMakeLists.txt
 +++ b/client/CMakeLists.txt
-@@ -43,7 +43,6 @@ MYSQL_ADD_EXECUTABLE(mysql
+@@ -44,7 +44,6 @@ MYSQL_ADD_EXECUTABLE(mysql
    pattern_matcher.cc
    readline.cc
    client_query_attributes.cc
@@ -10,11 +10,11 @@ index 058967b..bcd8841 100644
    ${CMAKE_CURRENT_SOURCE_DIR}/common/user_registration.cc
    LINK_LIBRARIES mysqlclient client_base ${EDITLINE_LIBRARY}
    )
-@@ -226,7 +226,6 @@ SET(MYSQLBINLOG_SOURCES
+@@ -232,7 +231,6 @@ SET(MYSQLBINLOG_SOURCES
    ${CMAKE_SOURCE_DIR}/sql/binlog_reader.cc
    ${CMAKE_SOURCE_DIR}/sql/stream_cipher.cc
    ${CMAKE_SOURCE_DIR}/sql/rpl_log_encryption.cc
 -  ${CMAKE_SOURCE_DIR}/libbinlogevents/src/trx_boundary_parser.cpp
    )
  
- SET(MYSQLBINLOG_LIBRARIES
+ # The client version of log_event.cc has false positives.

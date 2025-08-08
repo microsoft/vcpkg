@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libebml
-    REF release-1.4.4
-    SHA512 4a7926f56de211b8431105e37045a13d5e0576151326c87bc3168821c10342acee2aa6447438296f1d56893b3ebbc60851cb0c310f5561127612f0cd2477743f
+    REF "release-${VERSION}"
+    SHA512 284da9b7a1415585bbcfffc87101c63f1dd242bb09d88a731597127732a2f8064fd35e0a718fdcde464714b71e3f7dcc8285f291889629aba6997c38e0575dfb
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DDISABLE_PKGCONFIG=1
 )
 
 vcpkg_cmake_install()
@@ -21,3 +20,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL "${SOURCE_PATH}/LICENSE.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()

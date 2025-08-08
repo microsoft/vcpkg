@@ -15,19 +15,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alsa-project/alsa-lib
     REF "v${VERSION}"
-    SHA512 34ebeb64fd43432df779bfd6de08fb26cfd59d75586100cab7308d1ecf60d722cf137f1209426a288bdbaa27c31e963ce09690272b8d85653989a935a6fc50af
+    SHA512 c28e9fbd2cdf8f6482ed8fb1d48235441e6de9939406b7e1d2b595a9c6587c39e408dd892bca55af0e8e892b30622d89e796fbff2c0bde67f730a34be2017aa1
     HEAD_REF master
     PATCHES
-        "fix-plugin-dir.patch"
+        fix-plugin-dir.patch
+        libdl.diff
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(BUILD_OPTS --enable-shared=yes --enable-static=no)
-else()
-    set(BUILD_OPTS --enable-shared=no --enable-static=yes)
-endif()
-
-
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(ALSA_PLUGIN_DIR "/usr/lib/x86_64-linux-gnu/alsa-lib")

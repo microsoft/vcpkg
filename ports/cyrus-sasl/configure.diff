@@ -1,0 +1,81 @@
+diff --git a/libsasl2.pc.in b/libsasl2.pc.in
+index ddad76d..5192f74 100644
+--- a/libsasl2.pc.in
++++ b/libsasl2.pc.in
+@@ -9,4 +9,5 @@ URL: http://www.cyrussasl.org/
+ Version: @VERSION@
+ Cflags: -I${includedir}
+ Libs: -L${libdir} -lsasl2
+-Libs.private: @LIB_DOOR@ @SASL_DL_LIB@ @LIBS@
++Libs.private: @LIB_DOOR@ @SASL_DB_LIB@ @SASL_DL_LIB@ @LIBS@
++Requires.private: mit-krb5-gssapi
+diff --git a/m4/openssl.m4 b/m4/openssl.m4
+index 42b31af..301dca5 100644
+--- a/m4/openssl.m4
++++ b/m4/openssl.m4
+@@ -20,6 +20,12 @@ case "$with_openssl" in
+ 	no)
+ 	  with_openssl="no";;
+ 	*) 
++	  with_openssl="yes"
++	  PKG_CHECK_MODULES([LIBCRYPTO],[libcrypto],[],[AC_MSG_FAILURE([Cannot find OpenSSL])])
++	  CFLAGS="$CFLAGS $LIBCRYPTO_CFLAGS"
++	  LIBS="$LIBS $LIBCRYPTO_LIBS"
++	  ;;
++	orig)
+ 	  with_openssl="yes"
+ 	  dnl if openssl has been compiled with the rsaref2 libraries,
+ 	  dnl we need to include the rsaref libraries in the crypto check
+diff --git a/m4/sasl2.m4 b/m4/sasl2.m4
+index 80371ef..77133af 100644
+--- a/m4/sasl2.m4
++++ b/m4/sasl2.m4
+@@ -117,8 +117,7 @@ if test "$gssapi" != no; then
+ 
+   if test "$gss_impl" = "auto" -o "$gss_impl" = "mit"; then
+     gss_failed=0
+-    AC_CHECK_LIB(gssapi_krb5,gss_unwrap,gss_impl="mit",gss_failed=1,
+-                 ${GSSAPIBASE_LIBS} -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err ${LIB_SOCKET})
++    PKG_CHECK_MODULES([MIT_KRB5_GSSAPI],[mit-krb5-gssapi],[gss_impl="mit"],[AC_MSG_FAILURE([Cannot find MIT Kerberos])])
+     if test "$gss_impl" != "auto" -a "$gss_failed" = "1"; then
+       gss_impl="failed"
+     fi
+@@ -170,8 +169,9 @@ if test "$gssapi" != no; then
+   fi
+ 
+   if test "$gss_impl" = "mit"; then
+-    GSSAPIBASE_LIBS="$GSSAPIBASE_LIBS -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err"
+-    GSSAPIBASE_STATIC_LIBS="$GSSAPIBASE_LIBS $gssapi_dir/libgssapi_krb5.a $gssapi_dir/libkrb5.a $gssapi_dir/libk5crypto.a $gssapi_dir/libcom_err.a"
++    GSSAPIBASE_LIBS="$GSSAPIBASE_LIBS $MIT_KRB5_GSSAPI_LIBS"
++    GSSAPIBASE_STATIC_LIBS="$GSSAPIBASE_LIBS $MIT_KRB5_GSSAPI_LIBS"
++    CFLAGS="$CFLAGS $MIT_KRB5_GSSAPI_CFLAGS"
+   elif test "$gss_impl" = "heimdal"; then
+     CPPFLAGS="$CPPFLAGS"
+     GSSAPIBASE_LIBS="$GSSAPIBASE_LIBS -lgssapi -lkrb5 -lasn1 -lroken ${LIB_CRYPT} ${LIB_DES} -lcom_err"
+diff --git a/m4/sasldb.m4 b/m4/sasldb.m4
+index 5febf14..5848576 100644
+--- a/m4/sasldb.m4
++++ b/m4/sasldb.m4
+@@ -46,8 +46,9 @@ dnl named.  arg.
+        esac
+ 	;;
+   lmdb)
++    AX_PTHREAD()
+     AC_CHECK_HEADER(lmdb.h, [
+-		AC_CHECK_LIB(lmdb, mdb_env_create, SASL_DB_LIB="-llmdb"; enable_keep_db_open=yes, dblib="no")],
++		AC_CHECK_LIB(lmdb, mdb_env_create, SASL_DB_LIB="-llmdb $PTHREAD_CFLAGS $PTHREAD_LIBS"; enable_keep_db_open=yes, [AC_MSG_FAILURE([Cannot find lmdb])], [$PTHREAD_CFLAGS $PTHREAD_LIBS])],
+ 		dblib="no")
+ 	;;
+   ndbm)
+diff --git a/utils/Makefile.am b/utils/Makefile.am
+index 99c49e1..c34913f 100644
+--- a/utils/Makefile.am
++++ b/utils/Makefile.am
+@@ -43,6 +43,7 @@
+ ################################################################
+ 
+ all_sasl_libs = ../lib/libsasl2.la $(SASL_DB_LIB) $(LIB_SOCKET)
++all_sasl_libs += $(GSSAPIBASE_LIBS)
+ all_sasl_static_libs = ../lib/.libs/libsasl2.a $(SASL_DB_LIB) $(LIB_SOCKET) $(GSSAPIBASE_LIBS) $(GSSAPI_LIBS) $(SASL_KRB_LIB) $(LIB_DES) $(PLAIN_LIBS) $(SRP_LIBS) $(LIB_MYSQL) $(LIB_PGSQL) $(LIB_SQLITE)
+ 
+ sbin_PROGRAMS = @SASL_DB_UTILS@ @SMTPTEST_PROGRAM@ pluginviewer

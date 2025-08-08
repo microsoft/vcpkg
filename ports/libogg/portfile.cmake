@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.xiph.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/ogg
-    REF v1.3.5
-    SHA512 72bfad534a459bfca534eae9b209fa630ac20364a82e82f2707b210a40deaf9a7dc9031532a8b27120a9dd66f804655ddce79875758ef14b109bf869e57fb747
+    REF v${VERSION}
+    SHA512 c41b71a0fcedd97251d01e1a61fd94f6185b2ab0fba96c38e878d354b488b0e9a9a9782674bc06f08c281681c3ddd775be704685d3f6a65131096caa46f261ba
     HEAD_REF master
 )
 
@@ -14,9 +14,12 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 #https://gitlab.xiph.org/xiph/ogg/-/issues/2304
         -DINSTALL_DOCS=OFF
         -DINSTALL_PKG_CONFIG_MODULE=ON
         -DBUILD_TESTING=OFF
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_POLICY_VERSION_MINIMUM
 )
 
 vcpkg_cmake_install()

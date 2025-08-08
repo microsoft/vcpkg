@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redboltz/async_mqtt
     REF "${VERSION}"
-    SHA512 0bcb0bc3a08329a11ebe3efee4f919efc7bb8192373efd924f29f63c3bc7ca3ddd2c6e669f5800baf2fb3c5d67ae423e89cc802275d088848da83b2f343f7318
+    SHA512 1f7296d5e4641d7d8c54481c926dd48d4d6ab867bc64f5abcc24254b4b2997db559a8e8d581e864bf8b4dac6d75e56dd5c1b8bd83919bec2f915b05429fca020
     HEAD_REF main
 )
 
@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
         -DASYNC_MQTT_BUILD_EXAMPLES=OFF
         -DASYNC_MQTT_BUILD_UNIT_TESTS=OFF
         -DASYNC_MQTT_BUILD_SYSTEM_TESTS=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()

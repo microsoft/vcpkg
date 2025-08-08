@@ -1,22 +1,20 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(tesseract_patch fix-depend-libarchive.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 1744106d76eafd0786b99b517707afdd22b7b5cb3dfd7f0af02954539715c981ff0f12d142ee103113ba38dac8476052d6880b81d4c8050de650bf1cee6ba06c
+    SHA512 37c9cc2ac1bcd26b783f76a0cd8ef266d2dd54746c73d983202d150bf885b50fd32d9f1745d1df65f4cddccd9fc24b1b871e8dea8dcba3454a27363297423cdd
     PATCHES
-        ${tesseract_patch}
         fix_static_link_icu.patch
-        fix-aarch64-mfpu-not-available.patch
+        fix-link-include-path.patch
+        target-curl.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         training-tools  BUILD_TRAINING_TOOLS
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -29,6 +27,8 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenCL=ON
         -DLeptonica_DIR=YES
         -DSW_BUILD=OFF
+        -DLEPT_TIFF_RESULT=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenCL
 )
@@ -54,7 +54,7 @@ if("training-tools" IN_LIST FEATURES)
     list(APPEND TRAINING_TOOLS
         ambiguous_words classifier_tester combine_tessdata
         cntraining dawg2wordlist mftraining shapeclustering
-        wordlist2dawg combine_lang_model lstmeval lstmtraining
+        wordlist2dawg combine_lang_model lstmeval lstmtraining text2image
         set_unicharset_properties unicharset_extractor merge_unicharsets
         )
     vcpkg_copy_tools(TOOL_NAMES ${TRAINING_TOOLS} AUTO_CLEAN)
@@ -102,4 +102,4 @@ file(GLOB WORDREC_HEADER_FILES LIST_DIRECTORIES false "${SOURCE_PATH}/src/wordre
 file(INSTALL ${WORDREC_HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tesseract/wordrec")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

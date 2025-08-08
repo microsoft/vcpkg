@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yhirose/cpp-httplib
     REF "v${VERSION}"
-    SHA512 fac8fd1730e7f828053c61924d3ff9b660ad3cb385aa7a506c50c1ed1ca9820fb07691e28e03effcc60e391ecb78727108f1fdbe8b428917ab494738bed86d78
+    SHA512 9e6c50392fab0069ecde703117a88a694aea80b5ea8da6938d4918ec8084ebb7bfa72b6b9fd97da65f13d57f47b7774ecf42b78fbcfdfc015d9cffc208630572
     HEAD_REF master
     PATCHES
         fix-find-brotli.patch
@@ -13,6 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         brotli  HTTPLIB_REQUIRE_BROTLI
         openssl HTTPLIB_REQUIRE_OPENSSL
         zlib    HTTPLIB_REQUIRE_ZLIB
+        zstd    HTTPLIB_REQUIRE_ZSTD
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
@@ -24,6 +25,7 @@ vcpkg_cmake_configure(
     -DHTTPLIB_USE_OPENSSL_IF_AVAILABLE=OFF
     -DHTTPLIB_USE_ZLIB_IF_AVAILABLE=OFF
     -DHTTPLIB_USE_BROTLI_IF_AVAILABLE=OFF
+    -DHTTPLIB_USE_ZSTD_IF_AVAILABLE=OFF
 )
 
 vcpkg_cmake_install()

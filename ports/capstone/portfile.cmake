@@ -1,14 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "capstone-engine/capstone"
-    REF 000561b4f74dc15bda9af9544fe714efda7a6e13 # 5.0.0-rc2
-    SHA512 66b09a7d2fda297836bbedaeece71dcfe39bdbd633d9b6ecb68ee2e5aa094b697226136ab172cdc4550e8b2ef1448d001c8ee4e0d456c6d277afe0b3d1aab5a1
+    REF "${VERSION}"
+    SHA512 d4ed08a2ab4ed8ede51a163e98542129d6441889cf6936ac9e3f8027fb2dfcbb04a7aacba14c2a007e788790bb3939c173b47db3d95f5dd9eafce2f30ff493e1
     HEAD_REF next
     PATCHES
         001-silence-windows-crt-secure-warnings.patch
+        002-force-exportname-capstone.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CAPSTONE_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -24,16 +26,28 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tms320c64x"  CAPSTONE_TMS320C64X_SUPPORT
         "x86"         CAPSTONE_X86_SUPPORT
         "xcore"       CAPSTONE_XCORE_SUPPORT
+        "mos65xx"     CAPSTONE_MOS65XX_SUPPORT
+        "tricore"     CAPSTONE_TRICORE_SUPPORT
+        "wasm"        CAPSTONE_WASM_SUPPORT
+        "bpf"         CAPSTONE_BPF_SUPPORT
+        "riscv"       CAPSTONE_RISCV_SUPPORT
         "diet"        CAPSTONE_BUILD_DIET
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DCAPSTONE_ARCHITECTURE_DEFAULT=OFF
         -DCAPSTONE_BUILD_TESTS=OFF
         -DCAPSTONE_BUILD_CSTOOL=OFF
         -DCAPSTONE_BUILD_STATIC_RUNTIME=${STATIC_CRT}
+        -DBUILD_STATIC_RUNTIME=${STATIC_CRT}
+        -DBUILD_STATIC_LIBS=${CAPSTONE_STATIC}
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CAPSTONE_BUILD_STATIC_RUNTIME
+        BUILD_STATIC_RUNTIME
+        BUILD_STATIC_LIBS
 )
 
 vcpkg_cmake_install()
@@ -43,4 +57,6 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE.TXT"
+)

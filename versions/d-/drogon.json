@@ -1,6 +1,76 @@
 {
   "versions": [
     {
+      "git-tree": "5cabd4bbc4cebe3718ded84b1db6ffb0f9aa02ba",
+      "version-semver": "1.9.11",
+      "port-version": 0
+    },
+    {
+      "git-tree": "51b49c1237db808cd360cd44a0213029f7ef05ef",
+      "version-semver": "1.9.10",
+      "port-version": 0
+    },
+    {
+      "git-tree": "9bbcd1c695ccc0436b6956e73e0507ed4f704a0e",
+      "version-semver": "1.9.9",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4c701ae2548b41370eeebae23e5e14a806268c06",
+      "version-semver": "1.9.8",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2e3d5294ff97e6915a9ac0ada868c260728fe781",
+      "version-semver": "1.9.7",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ca6574efb8d720eb429eb5d3829936ec2a2342ee",
+      "version-semver": "1.9.6",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e8f978a09d763c54a1149e6b8cb75301f274c3e7",
+      "version-semver": "1.9.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "74578b0091a10840e127b7b5da3e9d44a97c010f",
+      "version-semver": "1.9.4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "963d27de10dfedc9f4980726aa5c8e4731c1bdb8",
+      "version-semver": "1.9.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "881a2d3fe8ed95836190c20c36471e47168954c5",
+      "version-semver": "1.9.2",
+      "port-version": 0 
+    },
+    {
+      "git-tree": "2258c21d158a9c39a058f30d88d6a8a9e8172e5b",
+      "version-semver": "1.9.1",
+      "port-version": 1
+    },
+    {
+      "git-tree": "72953f06e1c7a3195daa8549c9d2b46d42125822",
+      "version-semver": "1.9.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3dc8fd6d40ad624513353e295fbd39a0dd237c91",
+      "version": "1.8.7",
+      "port-version": 1
+    },
+    {
+      "git-tree": "01b8dcf586886018269bc888cc651751d074d4c6",
+      "version": "1.8.7",
+      "port-version": 0
+    },
+    {
       "git-tree": "7f8d8eadd014bf7d28bfff57e3e11e211fa8c4ae",
       "version": "1.8.4",
       "port-version": 4

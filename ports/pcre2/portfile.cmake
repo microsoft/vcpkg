@@ -2,12 +2,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PCRE2Project/pcre2
     REF "pcre2-${VERSION}"
-    SHA512 3d0ee66e23809d3da2fe2bf4ed6e20b0fb96c293a91668935f6319e8d02e480eeef33da01e08a7436a18a1a85a116d83186b953520f394c866aad3cea73c7f5c
+    SHA512 2c4fd0bcd6c4f606627c17336d583e14d7bd3f5cd5ab0219ded46e7d784a792a8bbd33332fd06772f451041c046e15d1feaa6b48d8f9aa00dcddbc6cdb89be92
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
+        fix-cmake.patch
 )
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SLJIT_SOURCE_PATH
+    REPO zherczeg/sljit
+    REF 8481dde366d0346ac5475aa03ae48ee44fa74ca4
+    SHA512 99a6ab54ee6b9b3b2e241d2f29eb24217c8385bb3b756411116eaed0d91f008401822406710431ccf17ddf687828b8ab6933230e44144bea03f550c0f5ac9210
+    HEAD_REF main
+)
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps/sljit")
+file(MAKE_DIRECTORY "${SOURCE_PATH}/deps")
+file(RENAME "${SLJIT_SOURCE_PATH}" "${SOURCE_PATH}/deps/sljit")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" INSTALL_PDB)
@@ -31,11 +44,11 @@ vcpkg_cmake_configure(
         -DPCRE2_SUPPORT_UNICODE=ON
         -DPCRE2_BUILD_TESTS=OFF
         -DPCRE2_BUILD_PCRE2GREP=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_BZip2=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Readline=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Editline=ON
         -DINSTALL_MSVC_PDB=${INSTALL_PDB}
-        -DCMAKE_REQUIRE_FIND_PACKAGE_BZip2=ON
-        -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
     )
 
 vcpkg_cmake_install()
@@ -50,24 +63,27 @@ endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/pcre2.h" "${PCRE2_H}")
 
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
-# The cmake file provided by pcre2 has some problems, so don't use it for now.
-#vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/cmake")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/man"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/man"
+    "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/man")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/man")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(BUILD_STATIC)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
-    endif()
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/pcre2")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}/tools/pcre2/pcre2-config")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/pcre2/pcre2-config" "${CURRENT_PACKAGES_DIR}" [[$(cd "$(dirname "$0")/../.."; pwd -P)]])
+if(NOT VCPKG_BUILD_TYPE)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/pcre2/debug")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-config" "${CURRENT_PACKAGES_DIR}/tools/pcre2/debug/pcre2-config")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/pcre2/debug/pcre2-config" "${CURRENT_PACKAGES_DIR}/debug" [[$(cd "$(dirname "$0")/../../../debug"; pwd -P)]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/pcre2/debug/pcre2-config" [[${prefix}/include]] [[${prefix}/../include]])
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,0 +1,72 @@
+diff --git a/include/IList.h b/include/IList.h
+index e66cd00..c94cfed 100644
+--- a/include/IList.h
++++ b/include/IList.h
+@@ -26,7 +26,9 @@ public:
+   void swap(IList<T> &list) { IListBase::swap(list); }
+   T *head() const { return (T *)IListBase::head(); }
+   T *get() { return (T *)IListBase::get(); }
++  using
+   IListBase::clear;
++  using
+   IListBase::empty;
+ friend class IListIter<T>;
+ private:
+diff --git a/include/IListIter.h b/include/IListIter.h
+index 74e1bd6..d322bf8 100644
+--- a/include/IListIter.h
++++ b/include/IListIter.h
+@@ -17,7 +17,9 @@ public:
+   IListIter(const IList<T> &list) : IListIterBase(list) { }
+   T *cur() const { return (T *)IListIterBase::cur(); }
+   
++  using
+   IListIterBase::next;
++  using
+   IListIterBase::done;
+ };
+ 
+diff --git a/include/Ptr.h b/include/Ptr.h
+index c6b2767..5dda0ca 100644
+--- a/include/Ptr.h
++++ b/include/Ptr.h
+@@ -69,7 +69,9 @@ public:
+   const T *operator->() const { return Ptr<T>::pointer(); }
+   const T &operator*() const { return *Ptr<T>::pointer(); }
+   void swap(ConstPtr<T> &p) { Ptr<T>::swap(p); }
++  using
+   Ptr<T>::isNull;
++  using
+   Ptr<T>::clear;
+   Boolean operator==(const Ptr<T> &p) const { return Ptr<T>::operator==(p); }
+   Boolean operator!=(const Ptr<T> &p) const { return Ptr<T>::operator!=(p); }
+diff --git a/lib/Parser.h b/lib/Parser.h
+index e721000..c6c41b2 100644
+--- a/lib/Parser.h
++++ b/lib/Parser.h
+@@ -62,15 +62,25 @@ public:
+   Parser(const SgmlParser::Params &);
+   Event *nextEvent();
+   void parseAll(EventHandler &, const volatile sig_atomic_t *cancelPtr);
++  using
+   ParserState::sdPointer;
++  using
+   ParserState::instanceSyntaxPointer;
++  using
+   ParserState::prologSyntaxPointer;
++  using
+   ParserState::activateLinkType;
++  using
+   ParserState::allLinkTypesActivated;
++  using
+   ParserState::entityManager;
++  using
+   ParserState::entityCatalog;
++  using
+   ParserState::baseDtd;
++  using
+   ParserState::options;
++  using 
+   ParserState::instantiateDtd;
+   friend class PiAttspecParser;
+ private:

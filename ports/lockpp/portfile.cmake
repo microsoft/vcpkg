@@ -1,15 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO Soundux/lockpp
-    REF v1.0.2
-    SHA512 6d92d3bbcbad3e2afd844ab95526e1eb49a7722d0d9d972ff85df561bbb9dc0b7a8aa5c83847f6832a806e52dde427ec0bcd11570b095d9cce7e35b3717e1f51
+    REPO Curve/lockpp
+    REF "v${VERSION}"
+    SHA512 ce2572ff53096a53cda722e47bbd23e4c3a8b3856de9dfe775b7468cd5f7fcbc86412457af091b8977dd0b41d161c103b679c7a98016f6e9d3ab70aaa360648f
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
-
 vcpkg_cmake_install()
 
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

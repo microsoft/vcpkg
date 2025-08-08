@@ -1,0 +1,63 @@
+diff --git a/cmake/Modules_CUDA_fix/upstream/FindCUDA.cmake b/cmake/Modules_CUDA_fix/upstream/FindCUDA.cmake
+index 420ee63..8bc24a0 100644
+--- a/cmake/Modules_CUDA_fix/upstream/FindCUDA.cmake
++++ b/cmake/Modules_CUDA_fix/upstream/FindCUDA.cmake
+@@ -1691,14 +1691,6 @@ function(CUDA_LINK_SEPARABLE_COMPILATION_OBJECTS output_file cuda_target options
+     # If -ccbin, --compiler-bindir has been specified, don't do anything.  Otherwise add it here.
+     list( FIND nvcc_flags "-ccbin" ccbin_found0 )
+     list( FIND nvcc_flags "--compiler-bindir" ccbin_found1 )
+-    if( ccbin_found0 LESS 0 AND ccbin_found1 LESS 0 AND CUDA_HOST_COMPILER )
+-      # Match VERBATIM check below.
+-      if(CUDA_HOST_COMPILER MATCHES "\\$\\(VCInstallDir\\)")
+-        list(APPEND nvcc_flags -ccbin "\"${CUDA_HOST_COMPILER}\"")
+-      else()
+-        list(APPEND nvcc_flags -ccbin "${CUDA_HOST_COMPILER}")
+-      endif()
+-    endif()
+ 
+     # Create a list of flags specified by CUDA_NVCC_FLAGS_${CONFIG} and CMAKE_${CUDA_C_OR_CXX}_FLAGS*
+     set(config_specific_flags)
+diff --git a/cmake/Modules_CUDA_fix/upstream/FindCUDA/run_nvcc.cmake b/cmake/Modules_CUDA_fix/upstream/FindCUDA/run_nvcc.cmake
+index 9293df3..8c12015 100644
+--- a/cmake/Modules_CUDA_fix/upstream/FindCUDA/run_nvcc.cmake
++++ b/cmake/Modules_CUDA_fix/upstream/FindCUDA/run_nvcc.cmake
+@@ -126,13 +126,6 @@ list(APPEND CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS_${build_configuration}})
+ # Any -ccbin existing in CUDA_NVCC_FLAGS gets highest priority
+ list( FIND CUDA_NVCC_FLAGS "-ccbin" ccbin_found0 )
+ list( FIND CUDA_NVCC_FLAGS "--compiler-bindir" ccbin_found1 )
+-if( ccbin_found0 LESS 0 AND ccbin_found1 LESS 0 AND CUDA_HOST_COMPILER )
+-  if (CUDA_HOST_COMPILER STREQUAL "@_CUDA_MSVC_HOST_COMPILER@" AND DEFINED CCBIN)
+-    set(CCBIN -ccbin "${CCBIN}")
+-  else()
+-    set(CCBIN -ccbin "${CUDA_HOST_COMPILER}")
+-  endif()
+-endif()
+ 
+ # cuda_execute_process - Executes a command with optional command echo and status message.
+ #
+diff --git a/cmake/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake b/cmake/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake
+index d917738..6d0d4fa 100644
+--- a/cmake/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake
++++ b/cmake/Modules_CUDA_fix/upstream/FindCUDA/select_compute_arch.cmake
+@@ -30,7 +30,6 @@ endif()
+ set(CUDA_KNOWN_GPU_ARCHITECTURES  "Kepler" "Maxwell")
+ 
+ # This list will be used for CUDA_ARCH_NAME = Common option (enabled by default)
+-set(CUDA_COMMON_GPU_ARCHITECTURES "3.5" "5.0")
+ 
+ # This list is used to filter CUDA archs when autodetecting
+ set(CUDA_ALL_GPU_ARCHITECTURES "3.5" "5.0")
+diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
+index 4112937..5964429 100644
+--- a/cmake/public/cuda.cmake
++++ b/cmake/public/cuda.cmake
+@@ -41,9 +41,6 @@ set(CUDAToolkit_ROOT "${CUDA_TOOLKIT_ROOT_DIR}")
+ # Pass clang as host compiler, which according to the docs
+ # Must be done before CUDA language is enabled, see
+ # https://cmake.org/cmake/help/v3.15/variable/CMAKE_CUDA_HOST_COMPILER.html
+-if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+-  set(CMAKE_CUDA_HOST_COMPILER "${CMAKE_C_COMPILER}")
+-endif()
+ enable_language(CUDA)
+ if("X${CMAKE_CUDA_STANDARD}" STREQUAL "X" )
+   set(CMAKE_CUDA_STANDARD ${CMAKE_CXX_STANDARD})

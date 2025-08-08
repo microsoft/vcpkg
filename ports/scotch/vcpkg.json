@@ -1,6 +1,7 @@
 {
   "name": "scotch",
-  "version": "7.0.3",
+  "version": "7.0.5",
+  "port-version": 1,
   "description": "Scotch: a software package for graph and mesh/hypergraph partitioning, graph clustering, and sparse matrix ordering",
   "homepage": "https://gitlab.inria.fr/scotch/scotch",
   "license": null,
@@ -18,5 +19,13 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "ptscotch": {
+      "description": "Build PT-Scotch",
+      "dependencies": [
+        "mpi"
+      ]
+    }
+  }
 }

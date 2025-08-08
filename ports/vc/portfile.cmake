@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  VcDevel/Vc
-    REF 1.4.3
-    SHA512 7c0c4ccf8c7c4585334482135f2daf1a5bc088114b880093893583bdcea1fbfcec02485da6059304c510c8b1bb1b768ef04fd7ac8ccb21b9ebbad5d0d5babaef
+    REF 1.4.4
+    SHA512 b8aa0a45637dd1e0cc23f074d023b677aab570dd4a78cff94e4c2d832afb841c1b421077ae9c848a40aa4beb50ed2e31fdf075738496856ff8fe3ea1d0acba07
     HEAD_REF 1.4
     PATCHES 
        correct_cmake_config_path.patch
-       Fix-internal-func-export.patch #remove it in next version
 )
 
 vcpkg_cmake_configure(

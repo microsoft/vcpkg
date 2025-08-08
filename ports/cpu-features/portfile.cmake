@@ -4,15 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/cpu_features
     REF "v${VERSION}"
-    SHA512 43085d11f58f314d696276c8543561d411a4156aa546d1e14ed3d8adffded5818f1ad4259b3ad38bb5d4167bd9084f78c725eb53509999a2349a749b9eb47007
+    SHA512 40c314c584fcf109d9a641c055cb75f335fd5425dd336fe831828b956226eaf0ac2fd8ffceeaf10e02afa9cec01cb0ddc6af8ff78f20dd925783e6958d0b9304
     HEAD_REF master
-    PATCHES
-        make_list_cpu_features_optional.patch
-        fix-windows.patch
 )
 
-# If feature "tools" is not specified, disable building/exporting executable targets.
-# This is necessary so that downstream find_package(CpuFeatures) does not fail.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools BUILD_EXECUTABLE

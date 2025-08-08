@@ -1,17 +1,16 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(BDE_TOOLS_VERSION "${VERSION}")
-
 # Acquire Python and add it to PATH
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 
 # Acquire BDE Tools and add them to PATH
+set (BDE_TOOLS_VER 4.13.0.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
-    REF "${BDE_TOOLS_VERSION}"
-    SHA512 3c39da8d1ea40459e36e11ada93cc2821ae1b16a831f93cccab463996394a400cc08bb1654642eae1aa5187f139d7fb80c4729e464051eee182133eb8a74158d
+    REF "${BDE_TOOLS_VER}"
+    SHA512 6a0eec25889a33fb0302af735ed2fcce38afa5ad2be9202d2589d76509f9fd85f9ddc0a73147df1b6471543f51df3b5b40e8c08d378ab1335d2703d89b5921e6
     HEAD_REF main
 )
 
@@ -24,7 +23,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "bloomberg/bde"
     REF "${VERSION}"
-    SHA512 810b4a06a08739dcd990751dd543aa7dc58355f9d64a7c96ef0cf45c81501946434db42ad5bcf5d16110d5a463586b587ce09a446136e824298f39a8a871b490
+    SHA512 d6d7e453cf22f6e28f3513b818ab3f4b597db3e1d109587e0e0a8957338483c475494f55d953dfe86de507a6c292d1492d9cbb3c8be359044ef368fe80595448
     HEAD_REF main
 )
 
@@ -49,12 +48,13 @@ vcpkg_cmake_build()
 # Install release
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/)
+list(APPEND SUBPACKAGES "ryu" "inteldfp" "pcre2" "s_baltst" "bsl" "bdl" "bal")
+include(GNUInstallDirs) # needed for CMAKE_INSTALL_LIBDIR
+foreach(subpackage IN LISTS SUBPACKAGES)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME ${subpackage} CONFIG_PATH /${CMAKE_INSTALL_LIBDIR}/cmake/${subpackage} DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endforeach()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${CMAKE_INSTALL_LIBDIR}/cmake" "${CURRENT_PACKAGES_DIR}/debug/${CMAKE_INSTALL_LIBDIR}/cmake")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/bde
-     RENAME copyright
-)
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_fixup_pkgconfig()

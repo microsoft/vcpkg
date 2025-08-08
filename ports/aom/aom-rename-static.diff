@@ -1,12 +1,33 @@
-diff -pruN aom-3.0.0.o/CMakeLists.txt aom-3.0.0/CMakeLists.txt
---- aom-3.0.0.o/CMakeLists.txt	2021-04-15 20:05:52.695181200 +0300
-+++ aom-3.0.0/CMakeLists.txt	2021-04-15 22:34:16.147522600 +0300
-@@ -249,7 +249,7 @@ endif()
- add_library(aom ${AOM_SOURCES} $<TARGET_OBJECTS:aom_rtcd>)
- if(BUILD_SHARED_LIBS)
-   add_library(aom_static STATIC ${AOM_SOURCES} $<TARGET_OBJECTS:aom_rtcd>)
--  set_target_properties(aom_static PROPERTIES OUTPUT_NAME aom)
-+  set_target_properties(aom_static PROPERTIES OUTPUT_NAME aom_static)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2e5b623..bed61da 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -314,6 +314,15 @@ if(BUILD_SHARED_LIBS)
+     set_target_properties(aom PROPERTIES SOVERSION ${SO_VERSION})
+     set_target_properties(aom PROPERTIES VERSION ${SO_FILE_VERSION})
+   endif()
++
++  # override conditional changes
++  set_target_properties(aom PROPERTIES
++      ARCHIVE_OUTPUT_NAME aom
++  )
++  set_target_properties(aom_static PROPERTIES
++      ARCHIVE_OUTPUT_NAME aom_static
++      EXCLUDE_FROM_ALL 1
++  )
+ endif()
  
-   if(NOT MSVC)
-     # Extract version string and set VERSION/SOVERSION for the aom target.
+ if(NOT WIN32 AND NOT APPLE)
+diff --git a/build/cmake/aom_install.cmake b/build/cmake/aom_install.cmake
+index b02c7b9..c219841 100644
+--- a/build/cmake/aom_install.cmake
++++ b/build/cmake/aom_install.cmake
+@@ -79,7 +79,7 @@ macro(setup_aom_install_targets)
+     endif()
+ 
+     if(BUILD_SHARED_LIBS)
+-      set(AOM_INSTALL_LIBS aom aom_static)
++      set(AOM_INSTALL_LIBS aom)
+     else()
+       set(AOM_INSTALL_LIBS aom)
+     endif()

@@ -1,7 +1,6 @@
 {
   "name": "apr-util",
-  "version": "1.6.1",
-  "port-version": 10,
+  "version": "1.6.3",
   "description": "Apache Portable Runtime (APR) project  mission is to create and maintain software libraries that provide a predictable and consistent interface to underlying platform-specific implementation",
   "homepage": "https://apr.apache.org/",
   "license": "Apache-2.0",

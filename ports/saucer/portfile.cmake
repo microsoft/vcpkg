@@ -3,29 +3,22 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO saucer/saucer
-    REF 6ae482092cca4d4a408e6bdf24714153d9203797
-    SHA512 1865f6178b2885483f0b43c1641e602f957d4e64e77b802e64a64038b709dbf63fa2dd6037720e7180434e91341f2e1a0eb86424c1ee1556db5971cba3434bb0
+    REF "v${VERSION}"
+    SHA512 083b92079bf324fb9e50b3d6291ee3654b8e4e2926c292c9dc092b1c4ce336ce4d4bbea7e14d52291340c692887b8ab92d1f9f3d50aed6092b5465242572bfdc
     HEAD_REF dev
     PATCHES
-        unofficial-webview2.patch
-        fix-source-generation.patch
+        0001-use-local-packages.patch
 )
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(BACKEND_OPTION "-Dsaucer_backend=WebView2")
-else()
-    set(BACKEND_OPTION "-Dsaucer_backend=Qt6")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH} 
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        ${BACKEND_OPTION}
+        -Dsaucer_no_polyfill=ON
         -Dsaucer_prefer_remote=OFF
-        -Dsaucer_remote_webview2=OFF
+        -DCPM_USE_LOCAL_PACKAGES=ON
 )
-
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

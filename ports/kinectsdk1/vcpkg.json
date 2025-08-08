@@ -1,7 +1,7 @@
 {
   "name": "kinectsdk1",
   "version": "1.8",
-  "port-version": 7,
+  "port-version": 8,
   "description": "Kinect for Windows SDK for Kinect v1 sensor.",
   "license": null,
   "supports": "!arm & windows & !uwp & !xbox",
@@ -9,7 +9,7 @@
     {
       "name": "vcpkg-tool-lessmsi",
       "host": true,
-      "version>=": "1.10#1"
+      "version>=": "1.10.0#1"
     }
   ]
 }

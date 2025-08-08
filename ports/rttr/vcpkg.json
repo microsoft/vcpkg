@@ -1,6 +1,7 @@
 {
   "name": "rttr",
   "version": "0.9.6+20210811",
+  "port-version": 1,
   "description": "an easy and intuitive way to use reflection in C++",
   "homepage": "https://github.com/rttrorg/rttr",
   "license": "MIT",

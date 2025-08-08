@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(libodb-pgsql VERSION 2.4.0 LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 11) # 17 removes 'auto_ptr'
 find_package(odb 2.4.0 REQUIRED COMPONENTS libodb)
 find_package(PostgreSQL REQUIRED)
 configure_file(config.unix.h.in

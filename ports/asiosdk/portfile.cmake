@@ -1,29 +1,32 @@
-set(VERSION 2.3.3)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.steinberg.net/sdk_downloads/asiosdk_2.3.3_2019-06-14.zip"
-    FILENAME "asiosdk_2.3.3_2019-06-14-eac6c1a57829.zip"
-	SHA512 eac6c1a57829b7f722a681c54b2f6469d54695523f08f727d0dd6744dcd7fce4f3249c57689bb15ed7a8bcb912833b226439d800913e122e0ef9ab73672f6542
+    FILENAME "asiosdk_2.3.3_2019-06-14-d74c0bc09162.zip"
+    SHA512 d74c0bc09162640a377aaab2f2ce716f9ee7a6ef8d1aa1aa6bc223a4748c60fa900cc77b1cf6db66f8a4064a074b31a71d75cccc7de3634347865238d9c039af
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    SOURCE_BASE ${VERSION}
+    ARCHIVE "${ARCHIVE}"
+    SOURCE_BASE "${VERSION}"
 )
 
-file(INSTALL ${SOURCE_PATH}/asio/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/asiosdk/asio)
-file(INSTALL ${SOURCE_PATH}/common/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/asiosdk/common)
-file(INSTALL ${SOURCE_PATH}/driver/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/asiosdk/driver)
-file(INSTALL ${SOURCE_PATH}/host/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/asiosdk/host)
-file(INSTALL ${SOURCE_PATH}/readme.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/readme.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/changes.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL "${SOURCE_PATH}/Steinberg ASIO Logo Artwork.zip" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL "${SOURCE_PATH}/Steinberg ASIO 2.3.3 Licensing Agreement 2.0.1 - 2019.pdf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL "${SOURCE_PATH}/ASIO SDK 2.3.pdf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${SOURCE_PATH}/asio/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/asio")
+file(INSTALL "${SOURCE_PATH}/common/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/common")
+file(INSTALL "${SOURCE_PATH}/driver/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/driver")
+file(INSTALL "${SOURCE_PATH}/host/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/host")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/Findasiosdk.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/readme.txt")
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(
+    INSTALL
+        "${SOURCE_PATH}/changes.txt"
+        "${SOURCE_PATH}/Steinberg ASIO Logo Artwork.zip"
+        "${SOURCE_PATH}/Steinberg ASIO 2.3.3 Licensing Agreement V2.0.3 - 2023.pdf"
+        "${SOURCE_PATH}/ASIO SDK 2.3.pdf"
+        "${CMAKE_CURRENT_LIST_DIR}/Findasiosdk.cmake"
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    DESTINATION
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

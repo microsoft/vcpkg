@@ -41,10 +41,6 @@ else()
   message(STATUS "Building without bzip2 support")
 endif()
 
-if(ANDROID)
-  target_compile_definitions(minizip PRIVATE IOAPI_NO_64)
-endif()
-
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
   target_compile_definitions(minizip PRIVATE -DIOWIN32_USING_WINRT_API)
 endif()

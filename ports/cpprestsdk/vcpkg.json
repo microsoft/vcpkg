@@ -1,6 +1,6 @@
 {
   "name": "cpprestsdk",
-  "version": "2.10.18",
+  "version": "2.10.19",
   "port-version": 3,
   "description": [
     "C++11 JSON, REST, and OAuth library",
@@ -79,38 +79,6 @@
       "description": "HTTP Compression support",
       "dependencies": [
         "zlib"
-      ]
-    },
-    "websockets": {
-      "description": "Websockets support",
-      "dependencies": [
-        {
-          "name": "boost-date-time",
-          "platform": "!uwp"
-        },
-        {
-          "name": "boost-regex",
-          "platform": "!uwp"
-        },
-        {
-          "name": "boost-system",
-          "platform": "!uwp"
-        },
-        {
-          "name": "cpprestsdk",
-          "default-features": false,
-          "features": [
-            "compression"
-          ]
-        },
-        {
-          "name": "openssl",
-          "platform": "!uwp"
-        },
-        {
-          "name": "websocketpp",
-          "platform": "!uwp"
-        }
       ]
     }
   }

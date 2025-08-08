@@ -1,15 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v1.6.4
-    SHA512 fd73df91710f19b0d6c3765c37c7f529233196da91cf4d58028a8d3840244f11df44abafabd74a8ed1cbe4826d1afd6ff9f01316d183ace0924c65e7cf0eb8d5
-    HEAD_REF maint/v1.6
+    REF "v${VERSION}"
+    SHA512 3bec01704ad1acdb4f7e9454101c2a205b7e288a4dffaa5e1afc2b1f849fa3a42b961c532bed2669841925ab8f84fb35bb82a2df8039b1caf76c5779665032d9
+    HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
         dependencies.diff
         mingw-winhttp.diff
-        unofficial-config-export.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindPCRE.cmake"
@@ -25,6 +24,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 set(REGEX_BACKEND OFF)
 set(USE_HTTPS OFF)
+set(USE_SSH OFF)
 
 function(set_regex_backend VALUE)
     if(REGEX_BACKEND)
@@ -53,6 +53,11 @@ foreach(GIT2_FEATURE ${FEATURES})
         set_tls_backend("SecureTransport")
     elseif(GIT2_FEATURE STREQUAL "mbedtls")
         set_tls_backend("mbedTLS")
+    elseif(GIT2_FEATURE STREQUAL "ssh")
+        set(USE_SSH ON)
+        message(STATUS "This version of `libgit2` uses the default (`libssh2`) backend. To use the newer backend which utilizes the `ssh` CLI from a local install of OpenSSH instead, create an overlay port of this with USE_SSH set to 'exec' and the `libssh2` dependency removed.")
+        message(STATUS "This recipe is at ${CMAKE_CURRENT_LIST_DIR}")
+        message(STATUS "See the overlay ports documentation at https://learn.microsoft.com/vcpkg/concepts/overlay-ports")
     endif()
 endforeach()
 
@@ -64,8 +69,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
-    FEATURES    
-        ssh     USE_SSH
+    FEATURES
         tools   BUILD_CLI
 )
 
@@ -76,6 +80,7 @@ vcpkg_cmake_configure(
         -DUSE_HTTP_PARSER=system
         -DUSE_HTTPS=${USE_HTTPS}
         -DREGEX_BACKEND=${REGEX_BACKEND}
+        -DUSE_SSH=${USE_SSH}
         -DSTATIC_CRT=${STATIC_CRT}
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON
@@ -88,18 +93,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-git2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-git2")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libgit2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libgit2")
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libgit2 CONFIG_PATH share/unofficial-libgit2)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES git2 AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 set(file_list "${SOURCE_PATH}/COPYING")
 if(NOT VCPKG_TARGET_IS_WINDOWS)

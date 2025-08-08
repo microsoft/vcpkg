@@ -1,0 +1,17 @@
+diff --git a/src/core/core_chromium.pri b/src/core/core_chromium.pri
+index a846f2fbc..102ec9ace 100644
+--- a/src/core/core_chromium.pri
++++ b/src/core/core_chromium.pri
+@@ -32,6 +32,12 @@ isUniversal() {
+ # whenever we are cross compiling.
+ qtConfig(webengine-embedded-build): DEFINES += QTWEBENGINE_EMBEDDED_SWITCHES
+
++# Prepend Chromium's protobuf and abseil-cpp include directories to the include paths
++# to ensure we use chromiums own copies instead of vcpkg provided libraries.
++# See https://github.com/microsoft/vcpkg/issues/12150
++CHROMIUM_SRC_DIR = $$QTWEBENGINE_ROOT/$$getChromiumSrcDir()
++INCLUDEPATH = $$CHROMIUM_SRC_DIR/third_party/protobuf/src $$CHROMIUM_SRC_DIR/third_party/abseil-cpp $$INCLUDEPATH
++
+ INCLUDEPATH += $$PWD $$PWD/api
+
+ clang_cl {

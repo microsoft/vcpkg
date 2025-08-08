@@ -1,0 +1,201 @@
+ bolt/cmake/modules/AddBOLT.cmake                 | 2 +-
+ clang-tools-extra/clang-tidy/tool/CMakeLists.txt | 2 +-
+ clang-tools-extra/modularize/CMakeLists.txt      | 2 +-
+ clang/cmake/modules/AddClang.cmake               | 2 +-
+ clang/tools/c-index-test/CMakeLists.txt          | 2 +-
+ clang/tools/clang-format/CMakeLists.txt          | 2 +-
+ clang/tools/scan-build-py/CMakeLists.txt         | 4 ++--
+ clang/tools/scan-build/CMakeLists.txt            | 2 +-
+ clang/tools/scan-view/CMakeLists.txt             | 2 +-
+ flang/cmake/modules/AddFlang.cmake               | 2 +-
+ flang/tools/f18/CMakeLists.txt                   | 2 +-
+ flang/tools/flang-driver/CMakeLists.txt          | 2 +-
+ lld/cmake/modules/AddLLD.cmake                   | 2 +-
+ lldb/cmake/modules/AddLLDB.cmake                 | 2 +-
+ 14 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/bolt/cmake/modules/AddBOLT.cmake b/bolt/cmake/modules/AddBOLT.cmake
+index 1f69b9046320..b0de5186dde4 100644
+--- a/bolt/cmake/modules/AddBOLT.cmake
++++ b/bolt/cmake/modules/AddBOLT.cmake
+@@ -17,7 +17,7 @@ macro(add_bolt_tool name)
+     get_target_export_arg(${name} BOLT export_to_bolttargets)
+     install(TARGETS ${name}
+       ${export_to_bolttargets}
+-      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++      RUNTIME DESTINATION "${BOLT_TOOLS_INSTALL_DIR}"
+       COMPONENT bolt)
+ 
+     if(NOT LLVM_ENABLE_IDE)
+diff --git a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
+index b220cbea80f1..b94501ec82ab 100644
+--- a/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
++++ b/clang-tools-extra/clang-tidy/tool/CMakeLists.txt
+@@ -65,6 +65,6 @@ install(PROGRAMS clang-tidy-diff.py
+   DESTINATION "${CMAKE_INSTALL_DATADIR}/clang"
+   COMPONENT clang-tidy)
+ install(PROGRAMS run-clang-tidy.py
+-  DESTINATION "${CMAKE_INSTALL_BINDIR}"
++  DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+   COMPONENT clang-tidy
+   RENAME run-clang-tidy)
+diff --git a/clang-tools-extra/modularize/CMakeLists.txt b/clang-tools-extra/modularize/CMakeLists.txt
+index eb5383c3ad44..39a34dfe8c71 100644
+--- a/clang-tools-extra/modularize/CMakeLists.txt
++++ b/clang-tools-extra/modularize/CMakeLists.txt
+@@ -27,5 +27,5 @@ clang_target_link_libraries(modularize
+   )
+ 
+ install(TARGETS modularize
+-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        RUNTIME DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+         COMPONENT clang-extras)
+diff --git a/clang/cmake/modules/AddClang.cmake b/clang/cmake/modules/AddClang.cmake
+index 75b0080f6715..46e32ddbe0cd 100644
+--- a/clang/cmake/modules/AddClang.cmake
++++ b/clang/cmake/modules/AddClang.cmake
+@@ -169,7 +169,7 @@ macro(add_clang_tool name)
+       get_target_export_arg(${name} Clang export_to_clangtargets)
+       install(TARGETS ${name}
+         ${export_to_clangtargets}
+-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        RUNTIME DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+         COMPONENT ${name})
+ 
+       if(NOT LLVM_ENABLE_IDE)
+diff --git a/clang/tools/c-index-test/CMakeLists.txt b/clang/tools/c-index-test/CMakeLists.txt
+index 0ae1b4e55244..7774cd27afcd 100644
+--- a/clang/tools/c-index-test/CMakeLists.txt
++++ b/clang/tools/c-index-test/CMakeLists.txt
+@@ -49,7 +49,7 @@ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
+     set_property(TARGET c-index-test APPEND PROPERTY INSTALL_RPATH
+        "@executable_path/../../lib")
+   else()
+-    set(INSTALL_DESTINATION "${CMAKE_INSTALL_BINDIR}")
++    set(INSTALL_DESTINATION "${CLANG_TOOLS_INSTALL_DIR}")
+   endif()
+ 
+   install(TARGETS c-index-test
+diff --git a/clang/tools/clang-format/CMakeLists.txt b/clang/tools/clang-format/CMakeLists.txt
+index 1c61a3c8fb80..4220d90274bd 100644
+--- a/clang/tools/clang-format/CMakeLists.txt
++++ b/clang/tools/clang-format/CMakeLists.txt
+@@ -36,7 +36,7 @@ install(FILES clang-format.py
+   DESTINATION "${CMAKE_INSTALL_DATADIR}/clang"
+   COMPONENT clang-format)
+ install(PROGRAMS git-clang-format
+-  DESTINATION "${CMAKE_INSTALL_BINDIR}"
++  DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+   COMPONENT clang-format)
+ 
+ if (WIN32 AND NOT CYGWIN)
+diff --git a/clang/tools/scan-build-py/CMakeLists.txt b/clang/tools/scan-build-py/CMakeLists.txt
+index 3aca22c0b0a8..a8283219c99f 100644
+--- a/clang/tools/scan-build-py/CMakeLists.txt
++++ b/clang/tools/scan-build-py/CMakeLists.txt
+@@ -43,7 +43,7 @@ foreach(BinFile ${BinFiles})
+                          ${CMAKE_BINARY_DIR}/bin/scan-build-py
+                        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/scan-build)
+     install (PROGRAMS "bin/scan-build"
+-             DESTINATION "${CMAKE_INSTALL_BINDIR}"
++             DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+              RENAME scan-build-py
+              COMPONENT scan-build-py)
+     list(APPEND Depends ${CMAKE_BINARY_DIR}/bin/scan-build-py)
+@@ -56,7 +56,7 @@ foreach(BinFile ${BinFiles})
+                          ${CMAKE_BINARY_DIR}/bin/
+                        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/${BinFile})
+     install(PROGRAMS bin/${BinFile}
+-            DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+             COMPONENT scan-build-py)
+     list(APPEND Depends ${CMAKE_BINARY_DIR}/bin/${BinFile})
+   endif()
+diff --git a/clang/tools/scan-build/CMakeLists.txt b/clang/tools/scan-build/CMakeLists.txt
+index ef687b0e90a1..47f31efc9174 100644
+--- a/clang/tools/scan-build/CMakeLists.txt
++++ b/clang/tools/scan-build/CMakeLists.txt
+@@ -47,7 +47,7 @@ if(CLANG_INSTALL_SCANBUILD)
+                        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/${BinFile})
+     list(APPEND Depends ${CMAKE_BINARY_DIR}/bin/${BinFile})
+     install(PROGRAMS bin/${BinFile}
+-            DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+             COMPONENT scan-build)
+   endforeach()
+ 
+diff --git a/clang/tools/scan-view/CMakeLists.txt b/clang/tools/scan-view/CMakeLists.txt
+index 07aec76ee66f..55a945bb278d 100644
+--- a/clang/tools/scan-view/CMakeLists.txt
++++ b/clang/tools/scan-view/CMakeLists.txt
+@@ -20,7 +20,7 @@ if(CLANG_INSTALL_SCANVIEW)
+                        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/bin/${BinFile})
+     list(APPEND Depends ${CMAKE_BINARY_DIR}/bin/${BinFile})
+     install(PROGRAMS bin/${BinFile}
+-            DESTINATION "${CMAKE_INSTALL_BINDIR}"
++            DESTINATION "${CLANG_TOOLS_INSTALL_DIR}"
+             COMPONENT scan-view)
+   endforeach()
+ 
+diff --git a/flang/cmake/modules/AddFlang.cmake b/flang/cmake/modules/AddFlang.cmake
+index 41ce8738e7bf..d9659c4cf53a 100644
+--- a/flang/cmake/modules/AddFlang.cmake
++++ b/flang/cmake/modules/AddFlang.cmake
+@@ -115,7 +115,7 @@ macro(add_flang_tool name)
+     get_target_export_arg(${name} Flang export_to_flangtargets)
+     install(TARGETS ${name}
+       ${export_to_flangtargets}
+-      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++      RUNTIME DESTINATION "${FLANG_TOOLS_INSTALL_DIR}"
+       COMPONENT ${name})
+ 
+     if(NOT LLVM_ENABLE_IDE)
+diff --git a/flang/tools/f18/CMakeLists.txt b/flang/tools/f18/CMakeLists.txt
+index ba6c6642c0b6..ab2802aeeaaa 100644
+--- a/flang/tools/f18/CMakeLists.txt
++++ b/flang/tools/f18/CMakeLists.txt
+@@ -83,7 +83,7 @@ if (NOT WIN32)
+     @ONLY
+   )
+   add_custom_target(flang-to-external-fc ALL DEPENDS ${CMAKE_BINARY_DIR}/bin/flang-to-external-fc)
+-  install(PROGRAMS ${CMAKE_BINARY_DIR}/bin/flang-to-external-fc DESTINATION "${CMAKE_INSTALL_BINDIR}")
++  install(PROGRAMS ${CMAKE_BINARY_DIR}/bin/flang-to-external-fc DESTINATION "${FLANG_TOOLS_INSTALL_DIR}")
+ endif()
+ 
+ # TODO Move this to a more suitable location
+diff --git a/flang/tools/flang-driver/CMakeLists.txt b/flang/tools/flang-driver/CMakeLists.txt
+index 3ce8b407450d..6b2e2b0dc33a 100644
+--- a/flang/tools/flang-driver/CMakeLists.txt
++++ b/flang/tools/flang-driver/CMakeLists.txt
+@@ -43,4 +43,4 @@ if(FLANG_PLUGIN_SUPPORT)
+   export_executable_symbols_for_plugins(flang-new)
+ endif()
+ 
+-install(TARGETS flang-new DESTINATION "${CMAKE_INSTALL_BINDIR}")
++install(TARGETS flang-new DESTINATION "${FLANG_TOOLS_INSTALL_DIR}")
+diff --git a/lld/cmake/modules/AddLLD.cmake b/lld/cmake/modules/AddLLD.cmake
+index 2ee066b41535..c6a4740ab9eb 100644
+--- a/lld/cmake/modules/AddLLD.cmake
++++ b/lld/cmake/modules/AddLLD.cmake
+@@ -56,7 +56,7 @@ macro(add_lld_tool name)
+       get_target_export_arg(${name} LLD export_to_lldtargets)
+       install(TARGETS ${name}
+         ${export_to_lldtargets}
+-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        RUNTIME DESTINATION "${LLD_TOOLS_INSTALL_DIR}"
+         COMPONENT ${name})
+ 
+       if(NOT CMAKE_CONFIGURATION_TYPES)
+diff --git a/lldb/cmake/modules/AddLLDB.cmake b/lldb/cmake/modules/AddLLDB.cmake
+index 328e883ddbe5..86eebba45e01 100644
+--- a/lldb/cmake/modules/AddLLDB.cmake
++++ b/lldb/cmake/modules/AddLLDB.cmake
+@@ -221,7 +221,7 @@ function(add_lldb_executable name)
+   endif()
+ 
+   if(ARG_GENERATE_INSTALL)
+-    set(install_dest bin)
++    set(install_dest "${LLVM_TOOLS_INSTALL_DIR}")
+     if(ARG_INSTALL_PREFIX)
+       set(install_dest ${ARG_INSTALL_PREFIX})
+     endif()

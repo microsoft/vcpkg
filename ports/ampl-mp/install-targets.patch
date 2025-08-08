@@ -16,8 +16,8 @@ index d4c6762..c7b15b6 100644
  
  install(DIRECTORY include/mp DESTINATION include)
 -install(TARGETS mp DESTINATION lib RUNTIME DESTINATION bin)
-+install(TARGETS mp EXPORT unofficial-mp-config DESTINATION lib RUNTIME DESTINATION bin)
++install(TARGETS mp EXPORT unofficial-mp-targets DESTINATION lib RUNTIME DESTINATION bin)
  install(FILES LICENSE.rst DESTINATION share/mp)
-+install(EXPORT unofficial-mp-config DESTINATION share/unofficial-mp)
++include(0007-unofficial-export.cmake)
  install(TARGETS gen-expr-info RUNTIME DESTINATION bin)
 \ No newline at end of file

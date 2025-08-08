@@ -1,6 +1,5 @@
 # Download the apng patch
 set(LIBPNG_APNG_PATCH_PATH "")
-set(LIBPNG_APNG_OPTION "")
 if ("apng" IN_LIST FEATURES)
     if(VCPKG_HOST_IS_WINDOWS)
         # Get (g)awk and gzip installed
@@ -8,12 +7,12 @@ if ("apng" IN_LIST FEATURES)
         set(AWK_EXE_PATH "${MSYS_ROOT}/usr/bin")
         vcpkg_add_to_path("${AWK_EXE_PATH}")
     endif()
-    
+
     set(LIBPNG_APNG_PATCH_NAME "libpng-${VERSION}-apng.patch")
     vcpkg_download_distfile(LIBPNG_APNG_PATCH_ARCHIVE
         URLS "https://downloads.sourceforge.net/project/libpng-apng/libpng16/${VERSION}/${LIBPNG_APNG_PATCH_NAME}.gz"
         FILENAME "${LIBPNG_APNG_PATCH_NAME}.gz"
-        SHA512 97a182da0b3b54aecf735e3655d8e8f1a569ae957b23fc3d7a9c8cc65dcdd26f34f173ce9f60af99b01d5347267b2afefaf787c500ce1005e86bf2810b3d0738
+        SHA512 f9b3b5ef42a7d3e61b435af69e04174c9ea6319d8fc8b5fd3443a3a9f0a0e9803bc2b0fe6658a91d0a76b06dfd846d29b63edffebeedd1cb26f4d2cf0c87f8b1
     )
     set(LIBPNG_APNG_PATCH_PATH "${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APNG_PATCH_NAME}")
     if (NOT EXISTS "${LIBPNG_APNG_PATCH_PATH}")
@@ -25,25 +24,29 @@ if ("apng" IN_LIST FEATURES)
             LOGNAME extract-patch.log
         )
     endif()
-    set(LIBPNG_APNG_OPTION "-DPNG_PREFIX=a")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO glennrp/libpng
+    REPO pnggroup/libpng
     REF v${VERSION}
-    SHA512 d61408cee5850582baa57166547ccab6cc171bc809076e53494ace26157fd7787c3209e3b757fd68c541bfb95afe309745d887fb5cd2005b2024af7355c809a0
+    SHA512 34c806e0dda960b480ce2f5ea13e2e55a9540f07c51948be25d312b901c431bc814f730f9322a2e3b6f88d4104a0c49bde9e616762b342d07db44e2c7fd5f2dc
     HEAD_REF master
     PATCHES
         "${LIBPNG_APNG_PATCH_PATH}"
         cmake.patch
-        fix-export-targets.patch
-        pkgconfig.patch
-        fix-msa-support-for-mips.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PNG_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PNG_STATIC)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools PNG_TOOLS
+    INVERTED_FEATURES
+        tools SKIP_INSTALL_PROGRAMS
+)
 
 vcpkg_list(SET LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION)
 if(VCPKG_TARGET_IS_IOS)
@@ -65,26 +68,34 @@ if(VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_TARGET_IS_LINUX)
+  vcpkg_list(APPEND LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION "-DPNG_ARM_NEON=on")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${LIBPNG_APNG_OPTION}
         ${LIBPNG_HARDWARE_OPTIMIZATIONS_OPTION}
         ${LD_VERSION_SCRIPT_OPTION}
         -DPNG_STATIC=${PNG_STATIC}
         -DPNG_SHARED=${PNG_SHARED}
+        -DPNG_FRAMEWORK=OFF
         -DPNG_TESTS=OFF
-        -DSKIP_INSTALL_PROGRAMS=ON
         -DSKIP_INSTALL_EXECUTABLES=ON
         -DSKIP_INSTALL_FILES=OFF
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
     MAYBE_UNUSED_VARIABLES
         PNG_ARM_NEON
 )
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME png CONFIG_PATH lib/cmake/PNG)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/libpng)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/png")
+
+# unofficial legacy usage
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/libpng-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_fixup_pkgconfig()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -100,6 +111,11 @@ endif()
 file(INSTALL "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpng16.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" RENAME "libpng.pc")
 
 vcpkg_copy_pdbs()
+
+if(PNG_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES "pngfix" "png-fix-itxt" AUTO_CLEAN)
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

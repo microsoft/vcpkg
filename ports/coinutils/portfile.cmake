@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CoinUtils
-    REF aae9b0b807a920c41d7782d7bf2775afb17a12c6 # I don't trust the release tags. They seem to point to a different fork with an outdates file structure?
-    SHA512 a515e62846698bcc3df15aabcce89d9052e30dffe2112ab5eb54c0c5def199140bd25435ef17e453c873239ab63fd03dd4cee5e4c4bfae5521f549917e025efe
+    REF 014be1f1724c074401d9d9c27bcce35baa9dca45 # I don't trust the release tags. They seem to point to a different fork with an outdates file structure?
+    SHA512 c5b706ca070b9f0997f9cdf532eb97c4d6ef6c6219d5d247c486048daf94a31151711ad96a32a0f0e701024d7759f07abc867591249d6c19b2b1c153257b794a
     PATCHES coinutils.patch coinutils2.patch
 )
 

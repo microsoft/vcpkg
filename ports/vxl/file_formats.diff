@@ -1,0 +1,41 @@
+diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index 88daf27..a47c183 100644
+--- a/core/CMakeLists.txt
++++ b/core/CMakeLists.txt
+@@ -60,6 +60,10 @@ if(VXL_BUILD_CORE_IMAGING)
+   if(VXL_BUILD_CORE_NUMERICS)
+     add_subdirectory (vil/algo)
+   endif()
++else()
++  file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/vil)
++  file(WRITE ${PROJECT_BINARY_DIR}/vil/vil_config.h "/* core imaging disabled */")
++  install(FILES ${PROJECT_BINARY_DIR}/vil/vil_config.h DESTINATION include/vxl/core/vil)
+ endif()
+ 
+ 
+diff --git a/core/vpgl/algo/CMakeLists.txt b/core/vpgl/algo/CMakeLists.txt
+index 9ec767a..fda53dc 100644
+--- a/core/vpgl/algo/CMakeLists.txt
++++ b/core/vpgl/algo/CMakeLists.txt
+@@ -32,7 +32,7 @@ set( vpgl_algo_sources
+   vpgl_equi_rectification.h        vpgl_equi_rectification.cxx
+ )
+ include(${VXL_CMAKE_DIR}/FindTIFF.cmake)
+-if(TIFF_FOUND)
++if(VXL_BUILD_CORE_IMAGING)
+   include_directories(${TIFF_INCLUDE_DIR})
+   include( ${VXL_CMAKE_DIR}/FindGEOTIFF.cmake)
+   if(GEOTIFF_FOUND)
+diff --git a/core/vpgl/file_formats/CMakeLists.txt b/core/vpgl/file_formats/CMakeLists.txt
+index d23a2f2..6c933f0 100644
+--- a/core/vpgl/file_formats/CMakeLists.txt
++++ b/core/vpgl/file_formats/CMakeLists.txt
+@@ -9,7 +9,7 @@ set( vpgl_file_formats_sources
+ )
+ 
+ include(${VXL_CMAKE_DIR}/FindTIFF.cmake)
+-if(TIFF_FOUND)
++if(VXL_BUILD_CORE_IMAGING)
+   include_directories(${TIFF_INCLUDE_DIR})
+   include( ${VXL_CMAKE_DIR}/FindGEOTIFF.cmake)
+   if(GEOTIFF_FOUND)

@@ -8,4 +8,4 @@ index 6a4da5a..4961174 100644
  add_definitions(-DUILIB_EXPORTS)
 -target_link_libraries(duilib comctl32)
 +target_link_libraries(duilib comctl32 gdi32 user32)
- set_target_properties(duilib PROPERTIES OUTPUT_NAME "duilib")
+ target_include_directories(duilib PUBLIC $<INSTALL_INTERFACE:include>)

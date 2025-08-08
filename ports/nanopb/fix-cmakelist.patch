@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 301501d..c7e8e42 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,12 +16,6 @@ option(nanopb_MSVC_STATIC_RUNTIME "Link static runtime libraries" ON)
+ 
+ set(nanopb_PYTHON_INSTDIR_OVERRIDE "" CACHE PATH "Override the default python installation directory with the given path")
+ 
+-find_program(nanopb_PROTOC_PATH protoc PATHS generator-bin generator NO_DEFAULT_PATH)
+-find_program(nanopb_PROTOC_PATH protoc)
+-if(NOT EXISTS ${nanopb_PROTOC_PATH})
+-    message(FATAL_ERROR "protoc compiler not found")
+-endif()
+-
+ if(NOT DEFINED CMAKE_DEBUG_POSTFIX)
+     set(CMAKE_DEBUG_POSTFIX "d")
+ endif()
+@@ -44,7 +38,6 @@ endif()
+ 
+ # Determine Python module installation path
+ if (NOT nanopb_PYTHON_INSTDIR_OVERRIDE)
+-    find_package(Python REQUIRED COMPONENTS Interpreter)
+     file(TO_CMAKE_PATH "${Python_SITELIB}" PYTHON_INSTDIR)
+ else()
+     set(PYTHON_INSTDIR ${nanopb_PYTHON_INSTDIR_OVERRIDE})
+@@ -54,6 +47,10 @@ message(STATUS "Python install dir: ${PYTHON_INSTDIR}")
+ # Package nanopb generator as Python module 'nanopb'
+ if(nanopb_BUILD_GENERATOR)
+     # Copy Python code files related to the generator
++    if(NOT EXISTS ${nanopb_PROTOC_PATH})
++        message(FATAL_ERROR "protoc compiler not found")
++    endif()
++    
+     add_custom_target(nanopb_generator ALL
+         COMMAND ${CMAKE_COMMAND} -E make_directory
+             ${PROJECT_BINARY_DIR}/nanopb/generator/proto
+@@ -83,24 +80,14 @@ if(nanopb_BUILD_GENERATOR)
+ 
+     # Install Python module files
+     install(
+-        DIRECTORY ${PROJECT_BINARY_DIR}/nanopb
+-        DESTINATION ${PYTHON_INSTDIR}
++        DIRECTORY ${PROJECT_BINARY_DIR}/nanopb/generator
++        DESTINATION ${CMAKE_INSTALL_BINDIR}
+         FILES_MATCHING
+         PATTERN *.py
+         PATTERN *.proto
+         PATTERN __pycache__ EXCLUDE
+     )
+ 
+-    # Generate a wrapper script that calls nanopb.generator Python module when invoked
+-    configure_file(
+-        extra/script_wrappers/nanopb_generator.py.in
+-        ${PROJECT_BINARY_DIR}/nanopb_generator.py
+-    )
+-    install(
+-        PROGRAMS ${PROJECT_BINARY_DIR}/nanopb_generator.py
+-        DESTINATION ${CMAKE_INSTALL_BINDIR}
+-    )
+-
+     # Install shell/bat script wrappers for invoking nanopb_generator.py.
+     # protoc-gen-nanopb is automatically used by protoc when --nanopb_out= option is used.
+     if(WIN32)

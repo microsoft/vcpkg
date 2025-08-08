@@ -3,19 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/atomic
-    REF boost-1.83.0
-    SHA512 d6ee15758d9de6c64e9bb307e3b9a5a9aea6d4555be2df78c8ed8089d9da75926f6ec376c2917fbb8c2f985f23b0b926b39fb2d02921c443a83edb77e0455996
+    REF boost-${VERSION}
+    SHA512 f589d5f5097fa591f8265ad6c3a081d5eb00c71fcf5588940a42879643fe479d5f74fd8a24a068c7ebb8eca3a0efb277bec0537713b5e15ef7f5468f61ae36b3
     HEAD_REF master
+    PATCHES
+        fix-include.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
-    "project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ]"
-    "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]"
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-#Make sure to keep this line when updating boost.
-file(INSTALL "${SOURCE_PATH}/config/has_synchronization_lib.cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-atomic")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

@@ -2,22 +2,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO madler/zlib
-    REF v${VERSION}
-    SHA512 78eecf335b14af1f7188c039a4d5297b74464d61156e4f12a485c74beec7d62c4159584ad482a07ec57ae2616d58873e45b09cb8ea822bb5b17e43d163df84e9
+    REF "v${VERSION}"
+    SHA512 8c9642495bafd6fad4ab9fb67f09b268c69ff9af0f4f20cf15dfc18852ff1f312bd8ca41de761b3f8d8e90e77d79f2ccacd3d4c5b19e475ecf09d021fdfe9088
     HEAD_REF master
     PATCHES
         0001-remove-ifndef-NOUNCRYPT.patch
         0002-add-declaration-for-mkdir.patch
         pkgconfig.patch
+        android-fileapi.patch
 )
-
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
 
 # Maintainer switch: Temporarily set this to 1 to re-generate the lists
 # of exported symbols. This is needed when the version is bumped.
 set(GENERATE_SYMBOLS 0)
 if(GENERATE_SYMBOLS)
+    vcpkg_cmake_get_vars(cmake_vars_file)
+    include("${cmake_vars_file}")
     if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
         vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
     else()
@@ -60,7 +60,7 @@ endif()
 if ("bzip2" IN_LIST FEATURES)
     file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/minizip/*.h")
     foreach(HEADER ${HEADERS})
-        vcpkg_replace_string("${HEADER}" "#ifdef HAVE_BZIP2" "#if 1")
+        vcpkg_replace_string("${HEADER}" "#ifdef HAVE_BZIP2" "#if 1" IGNORE_UNCHANGED)
     endforeach()
 endif()
 

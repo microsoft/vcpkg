@@ -1,0 +1,48 @@
+{
+  "name": "libaribcaption",
+  "version": "1.1.1",
+  "description": "Portable ARIB STD-B24 caption decoder/renderer",
+  "homepage": "https://github.com/xqq/libaribcaption",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "renderer"
+  ],
+  "features": {
+    "gdi": {
+      "description": "Enable Win32 GDI font provider",
+      "supports": "windows",
+      "dependencies": [
+        {
+          "name": "libaribcaption",
+          "default-features": false,
+          "features": [
+            "renderer"
+          ]
+        }
+      ]
+    },
+    "renderer": {
+      "description": "Build with renderer enabled",
+      "dependencies": [
+        {
+          "name": "fontconfig",
+          "platform": "linux"
+        },
+        {
+          "name": "freetype",
+          "platform": "android | linux"
+        }
+      ]
+    }
+  }
+}

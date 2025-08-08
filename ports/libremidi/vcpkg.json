@@ -1,0 +1,22 @@
+{
+  "name": "libremidi",
+  "version": "4.5.0",
+  "port-version": 2,
+  "description": "A modern C++ MIDI real-time & file I/O library",
+  "homepage": "https://github.com/jcelerier/libremidi",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "alsa",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

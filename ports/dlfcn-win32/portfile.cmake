@@ -1,10 +1,9 @@
-set(SOURCE_VERSION 1.3.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dlfcn-win32/dlfcn-win32
-    REF v${SOURCE_VERSION}
-    SHA512 0aa01c49ee8628c42cdc8b9782b4741a36502764d4442227ea4e9a8062356ff17e8eaa3cdd4113009ad7ad2044b6cfd24128319d71825e13062259dd1906e27e
+    REF "v${VERSION}"
+    SHA512 13b52c078c20f97b4293257904d64c4a018115a68af606a04699acbe3f7ff07887eecd2512363c062eb43a34cedd27c5989bded4b7d0530d697dbd65dbdbffac
     HEAD_REF master
 )
 
@@ -17,8 +16,6 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 

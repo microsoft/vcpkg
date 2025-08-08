@@ -1,6 +1,6 @@
 {
   "name": "zydis",
-  "version-semver": "4.0.0",
+  "version-semver": "4.1.1",
   "port-version": 1,
   "description": "Fast and lightweight x86/x86-64 disassembler library.",
   "homepage": "https://zydis.re",
@@ -15,5 +15,10 @@
       "host": true
     },
     "zycore"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Builds zydis executables"
+    }
+  }
 }

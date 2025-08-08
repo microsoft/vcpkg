@@ -1,0 +1,326 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1888c14..41fcfda 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -150,6 +150,7 @@ include(CheckFunctionExists)
+ include(CheckSymbolExists)
+ include(CheckIncludeFile)
+ include(CheckTypeSize)
++INCLUDE(CMakePackageConfigHelpers)
+ include(GNUInstallDirs) # for CMAKE_INSTALL_LIBDIR
+ 
+ check_include_file(assert.h HAVE_ASSERT_H)
+@@ -792,7 +793,7 @@ if(PCRE2_BUILD_PCRE2_8)
+         SOVERSION ${LIBPCRE2_8_SOVERSION}
+     )
+     target_compile_definitions(pcre2-8-static PUBLIC PCRE2_STATIC)
+-    target_include_directories(pcre2-8-static PUBLIC ${PROJECT_BINARY_DIR})
++    target_include_directories(pcre2-8-static PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+     if(REQUIRE_PTHREAD)
+       target_link_libraries(pcre2-8-static Threads::Threads)
+     endif()
+@@ -808,7 +809,7 @@ if(PCRE2_BUILD_PCRE2_8)
+         SOVERSION ${LIBPCRE2_POSIX_SOVERSION}
+     )
+     target_link_libraries(pcre2-posix-static pcre2-8-static)
+-    target_include_directories(pcre2-posix-static PUBLIC ${PROJECT_SOURCE_DIR}/src)
++    target_include_directories(pcre2-posix-static PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+     set(TARGETS ${TARGETS} pcre2-posix-static)
+ 
+     if(MSVC)
+@@ -825,7 +826,7 @@ if(PCRE2_BUILD_PCRE2_8)
+ 
+   if(BUILD_SHARED_LIBS)
+     add_library(pcre2-8-shared SHARED ${PCRE2_HEADERS} ${PCRE2_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
+-    target_include_directories(pcre2-8-shared PUBLIC ${PROJECT_BINARY_DIR})
++    target_include_directories(pcre2-8-shared PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+     set_target_properties(
+       pcre2-8-shared
+       PROPERTIES
+@@ -844,7 +845,7 @@ if(PCRE2_BUILD_PCRE2_8)
+     set(DLL_PDB_DEBUG_FILES $<TARGET_PDB_FILE_DIR:pcre2-8-shared>/pcre2-8d.pdb ${DLL_PDB_DEBUG_FILES})
+ 
+     add_library(pcre2-posix-shared SHARED ${PCRE2POSIX_HEADERS} ${PCRE2POSIX_SOURCES})
+-    target_include_directories(pcre2-posix-shared PUBLIC ${PROJECT_SOURCE_DIR}/src)
++    target_include_directories(pcre2-posix-shared PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+     set_target_properties(
+       pcre2-posix-shared
+       PROPERTIES
+@@ -886,7 +887,7 @@ endif()
+ if(PCRE2_BUILD_PCRE2_16)
+   if(BUILD_STATIC_LIBS)
+     add_library(pcre2-16-static STATIC ${PCRE2_HEADERS} ${PCRE2_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
+-    target_include_directories(pcre2-16-static PUBLIC ${PROJECT_BINARY_DIR})
++    target_include_directories(pcre2-16-static PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+     set_target_properties(
+       pcre2-16-static
+       PROPERTIES
+@@ -915,7 +916,7 @@ if(PCRE2_BUILD_PCRE2_16)
+ 
+   if(BUILD_SHARED_LIBS)
+     add_library(pcre2-16-shared SHARED ${PCRE2_HEADERS} ${PCRE2_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
+-    target_include_directories(pcre2-16-shared PUBLIC ${PROJECT_BINARY_DIR})
++    target_include_directories(pcre2-16-shared PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+     set_target_properties(
+       pcre2-16-shared
+       PROPERTIES
+@@ -956,7 +957,7 @@ endif()
+ if(PCRE2_BUILD_PCRE2_32)
+   if(BUILD_STATIC_LIBS)
+     add_library(pcre2-32-static STATIC ${PCRE2_HEADERS} ${PCRE2_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
+-    target_include_directories(pcre2-32-static PUBLIC ${PROJECT_BINARY_DIR})
++    target_include_directories(pcre2-32-static PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+     set_target_properties(
+       pcre2-32-static
+       PROPERTIES
+@@ -985,7 +986,7 @@ if(PCRE2_BUILD_PCRE2_32)
+ 
+   if(BUILD_SHARED_LIBS)
+     add_library(pcre2-32-shared SHARED ${PCRE2_HEADERS} ${PCRE2_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
+-    target_include_directories(pcre2-32-shared PUBLIC ${PROJECT_BINARY_DIR})
++    target_include_directories(pcre2-32-shared PUBLIC $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+     set_target_properties(
+       pcre2-32-shared
+       PROPERTIES
+@@ -1244,10 +1245,14 @@ set(CMAKE_INSTALL_ALWAYS 1)
+ 
+ install(
+   TARGETS ${TARGETS}
+-  RUNTIME DESTINATION bin
++  EXPORT pcre2-targets
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
++INSTALL(EXPORT pcre2-targets
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pcre2
++        NAMESPACE pcre2::)
+ install(FILES ${pkg_config_files} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ install(
+   FILES "${CMAKE_CURRENT_BINARY_DIR}/pcre2-config"
+@@ -1261,11 +1266,12 @@ install(FILES ${PCRE2_HEADERS} ${PCRE2POSIX_HEADERS} DESTINATION include)
+ # CMake config files.
+ set(PCRE2_CONFIG_IN ${CMAKE_CURRENT_SOURCE_DIR}/cmake/pcre2-config.cmake.in)
+ set(PCRE2_CONFIG_OUT ${CMAKE_CURRENT_BINARY_DIR}/cmake/pcre2-config.cmake)
+-configure_file(${PCRE2_CONFIG_IN} ${PCRE2_CONFIG_OUT} @ONLY)
+-set(PCRE2_CONFIG_VERSION_IN ${CMAKE_CURRENT_SOURCE_DIR}/cmake/pcre2-config-version.cmake.in)
++configure_package_config_file(${PCRE2_CONFIG_IN} ${PCRE2_CONFIG_OUT} INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pcre2)
+ set(PCRE2_CONFIG_VERSION_OUT ${CMAKE_CURRENT_BINARY_DIR}/cmake/pcre2-config-version.cmake)
+-configure_file(${PCRE2_CONFIG_VERSION_IN} ${PCRE2_CONFIG_VERSION_OUT} @ONLY)
+-install(FILES ${PCRE2_CONFIG_OUT} ${PCRE2_CONFIG_VERSION_OUT} DESTINATION "${PCRE2_INSTALL_CMAKEDIR}")
++write_basic_package_version_file(${PCRE2_CONFIG_VERSION_OUT}
++                                 VERSION ${PCRE2_MAJOR}.${PCRE2_MINOR}.0
++                                 COMPATIBILITY SameMajorVersion)
++install(FILES ${PCRE2_CONFIG_OUT} ${PCRE2_CONFIG_VERSION_OUT} DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/pcre2)
+ 
+ file(GLOB html ${PROJECT_SOURCE_DIR}/doc/html/*.html ${PROJECT_SOURCE_DIR}/doc/html/*.txt)
+ file(
+diff --git a/cmake/pcre2-config-version.cmake.in b/cmake/pcre2-config-version.cmake.in
+index db00606..e69de29 100644
+--- a/cmake/pcre2-config-version.cmake.in
++++ b/cmake/pcre2-config-version.cmake.in
+@@ -1,14 +0,0 @@
+-set(PACKAGE_VERSION_MAJOR @PCRE2_MAJOR@)
+-set(PACKAGE_VERSION_MINOR @PCRE2_MINOR@)
+-set(PACKAGE_VERSION_PATCH 0)
+-set(PACKAGE_VERSION @PCRE2_MAJOR@.@PCRE2_MINOR@.0)
+-
+-# Check whether the requested PACKAGE_FIND_VERSION is compatible
+-if(PACKAGE_VERSION VERSION_LESS PACKAGE_FIND_VERSION OR PACKAGE_VERSION_MAJOR GREATER PACKAGE_FIND_VERSION_MAJOR)
+-  set(PACKAGE_VERSION_COMPATIBLE FALSE)
+-else()
+-  set(PACKAGE_VERSION_COMPATIBLE TRUE)
+-  if(PACKAGE_VERSION VERSION_EQUAL PACKAGE_FIND_VERSION)
+-    set(PACKAGE_VERSION_EXACT TRUE)
+-  endif()
+-endif()
+diff --git a/cmake/pcre2-config.cmake.in b/cmake/pcre2-config.cmake.in
+index 082dc19..545f4de 100644
+--- a/cmake/pcre2-config.cmake.in
++++ b/cmake/pcre2-config.cmake.in
+@@ -5,11 +5,17 @@
+ #
+ # Static vs. shared
+ # -----------------
+-# To make use of the static library instead of the shared one, one needs
++# To force using the static library instead of the shared one, one needs
+ # to set the variable PCRE2_USE_STATIC_LIBS to ON before calling find_package.
++# If the variable is not set, the static library will be used if only that has
++# been built, otherwise the shared library will be used.
++#
++# The following components are supported: 8BIT, 16BIT, 32BIT and POSIX.
++# They used to be required but not anymore; all available targets will
++# be defined regardless of the requested components.
+ # Example:
+ #   set(PCRE2_USE_STATIC_LIBS ON)
+-#   find_package(PCRE2 CONFIG COMPONENTS 8BIT)
++#   find_package(PCRE2 CONFIG)
+ #
+ # This will define the following variables:
+ #
+@@ -23,88 +29,42 @@
+ #   PCRE2::32BIT - The 32 bit PCRE2 library.
+ #   PCRE2::POSIX - The POSIX PCRE2 library.
+ 
+-set(PCRE2_NON_STANDARD_LIB_PREFIX @NON_STANDARD_LIB_PREFIX@)
+-set(PCRE2_NON_STANDARD_LIB_SUFFIX @NON_STANDARD_LIB_SUFFIX@)
+-set(PCRE2_8BIT_NAME pcre2-8)
+-set(PCRE2_16BIT_NAME pcre2-16)
+-set(PCRE2_32BIT_NAME pcre2-32)
+-set(PCRE2_POSIX_NAME pcre2-posix)
+-find_path(PCRE2_INCLUDE_DIR NAMES pcre2.h DOC "PCRE2 include directory")
+-if(PCRE2_USE_STATIC_LIBS)
+-  if(MSVC)
+-    set(PCRE2_8BIT_NAME pcre2-8-static)
+-    set(PCRE2_16BIT_NAME pcre2-16-static)
+-    set(PCRE2_32BIT_NAME pcre2-32-static)
+-    set(PCRE2_POSIX_NAME pcre2-posix-static)
+-  endif()
+-
+-  set(PCRE2_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
+-  set(PCRE2_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
+-else()
+-  set(PCRE2_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
+-  if(MINGW AND PCRE2_NON_STANDARD_LIB_PREFIX)
+-    set(PCRE2_PREFIX "")
+-  endif()
++@PACKAGE_INIT@
+ 
+-  set(PCRE2_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+-  if(MINGW AND PCRE2_NON_STANDARD_LIB_SUFFIX)
+-    set(PCRE2_SUFFIX "-0.dll")
+-  elseif(MSVC)
+-    set(PCRE2_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
+-  endif()
++include(CMakeFindDependencyMacro)
++if("@REQUIRE_PTHREAD@") # REQUIRE_PTHREAD
++  find_dependency(Threads)
+ endif()
+-find_library(
+-  PCRE2_8BIT_LIBRARY
+-  NAMES ${PCRE2_PREFIX}${PCRE2_8BIT_NAME}${PCRE2_SUFFIX} ${PCRE2_PREFIX}${PCRE2_8BIT_NAME}d${PCRE2_SUFFIX}
+-  DOC "8 bit PCRE2 library"
+-)
+-find_library(
+-  PCRE2_16BIT_LIBRARY
+-  NAMES ${PCRE2_PREFIX}${PCRE2_16BIT_NAME}${PCRE2_SUFFIX} ${PCRE2_PREFIX}${PCRE2_16BIT_NAME}d${PCRE2_SUFFIX}
+-  DOC "16 bit PCRE2 library"
+-)
+-find_library(
+-  PCRE2_32BIT_LIBRARY
+-  NAMES ${PCRE2_PREFIX}${PCRE2_32BIT_NAME}${PCRE2_SUFFIX} ${PCRE2_PREFIX}${PCRE2_32BIT_NAME}d${PCRE2_SUFFIX}
+-  DOC "32 bit PCRE2 library"
+-)
+-find_library(
+-  PCRE2_POSIX_LIBRARY
+-  NAMES ${PCRE2_PREFIX}${PCRE2_POSIX_NAME}${PCRE2_SUFFIX} ${PCRE2_PREFIX}${PCRE2_POSIX_NAME}d${PCRE2_SUFFIX}
+-  DOC "8 bit POSIX PCRE2 library"
+-)
+-unset(PCRE2_NON_STANDARD_LIB_PREFIX)
+-unset(PCRE2_NON_STANDARD_LIB_SUFFIX)
+-unset(PCRE2_8BIT_NAME)
+-unset(PCRE2_16BIT_NAME)
+-unset(PCRE2_32BIT_NAME)
+-unset(PCRE2_POSIX_NAME)
+ 
+-# Set version
+-if(PCRE2_INCLUDE_DIR)
+-  set(PCRE2_VERSION "@PCRE2_MAJOR@.@PCRE2_MINOR@.0")
+-endif()
++include("${CMAKE_CURRENT_LIST_DIR}/pcre2-targets.cmake")
+ 
+-# Which components have been found.
+-if(PCRE2_8BIT_LIBRARY)
+-  set(PCRE2_8BIT_FOUND TRUE)
+-endif()
+-if(PCRE2_16BIT_LIBRARY)
+-  set(PCRE2_16BIT_FOUND TRUE)
+-endif()
+-if(PCRE2_32BIT_LIBRARY)
+-  set(PCRE2_32BIT_FOUND TRUE)
+-endif()
+-if(PCRE2_POSIX_LIBRARY)
+-  set(PCRE2_POSIX_FOUND TRUE)
+-endif()
++# Set version
++set(PCRE2_VERSION "@PCRE2_MAJOR@.@PCRE2_MINOR@.0")
+ 
+-# Check if at least one component has been specified.
+-list(LENGTH PCRE2_FIND_COMPONENTS PCRE2_NCOMPONENTS)
+-if(PCRE2_NCOMPONENTS LESS 1)
+-  message(FATAL_ERROR "No components have been specified. This is not allowed. Please, specify at least one component.")
+-endif()
+-unset(PCRE2_NCOMPONENTS)
++# Chooses the linkage of the library to expose in the
++# unsuffixed edition of the target.
++macro(_pcre2_add_component_target component target)
++  # If the static library exists and either PCRE2_USE_STATIC_LIBS
++  # is defined, or the dynamic library does not exist, use the static library.
++  if(NOT TARGET PCRE2::${component})
++    if(TARGET pcre2::pcre2-${target}-static AND (PCRE2_USE_STATIC_LIBS OR NOT TARGET pcre2::pcre2-${target}-shared))
++      add_library(PCRE2::${component} ALIAS pcre2::pcre2-${target}-static)
++      set(PCRE2_${component}_FOUND TRUE)
++    # Otherwise use the dynamic library if it exists.
++    elseif(TARGET pcre2::pcre2-${target}-shared AND NOT PCRE2_USE_STATIC_LIBS)
++      add_library(PCRE2::${component} ALIAS pcre2::pcre2-${target}-shared)
++      set(PCRE2_${component}_FOUND TRUE)
++    endif()
++    if(PCRE2_${component}_FOUND)
++      get_target_property(PCRE2_${component}_LIBRARY PCRE2::${component} IMPORTED_LOCATION)
++      set(PCRE2_LIBRARIES ${PCRE2_LIBRARIES} ${PCRE2_${component}_LIBRARY})
++    endif()
++  endif()
++endmacro()
++_pcre2_add_component_target(8BIT 8)
++_pcre2_add_component_target(16BIT 16)
++_pcre2_add_component_target(32BIT 32)
++_pcre2_add_component_target(POSIX posix)
+ 
+ # When POSIX component has been specified make sure that also 8BIT component is specified.
+ set(PCRE2_8BIT_COMPONENT FALSE)
+@@ -126,43 +86,5 @@ endif()
+ unset(PCRE2_8BIT_COMPONENT)
+ unset(PCRE2_POSIX_COMPONENT)
+ 
+-include(FindPackageHandleStandardArgs)
+-set(${CMAKE_FIND_PACKAGE_NAME}_CONFIG "${CMAKE_CURRENT_LIST_FILE}")
+-find_package_handle_standard_args(
+-  PCRE2
+-  FOUND_VAR PCRE2_FOUND
+-  REQUIRED_VARS PCRE2_INCLUDE_DIR
+-  HANDLE_COMPONENTS
+-  VERSION_VAR PCRE2_VERSION
+-  CONFIG_MODE
+-)
+-
+-set(PCRE2_LIBRARIES)
+-if(PCRE2_FOUND)
+-  foreach(component ${PCRE2_FIND_COMPONENTS})
+-    if(PCRE2_USE_STATIC_LIBS)
+-      add_library(PCRE2::${component} STATIC IMPORTED)
+-      target_compile_definitions(PCRE2::${component} INTERFACE PCRE2_STATIC)
+-    else()
+-      add_library(PCRE2::${component} SHARED IMPORTED)
+-    endif()
+-    set_target_properties(
+-      PCRE2::${component}
+-      PROPERTIES
+-        IMPORTED_LOCATION "${PCRE2_${component}_LIBRARY}"
+-        IMPORTED_IMPLIB "${PCRE2_${component}_LIBRARY}"
+-        INTERFACE_INCLUDE_DIRECTORIES "${PCRE2_INCLUDE_DIR}"
+-    )
+-    if(component STREQUAL "POSIX")
+-      set_target_properties(
+-        PCRE2::${component}
+-        PROPERTIES INTERFACE_LINK_LIBRARIES "PCRE2::8BIT" LINK_LIBRARIES "PCRE2::8BIT"
+-      )
+-    endif()
+-
+-    set(PCRE2_LIBRARIES ${PCRE2_LIBRARIES} ${PCRE2_${component}_LIBRARY})
+-    mark_as_advanced(PCRE2_${component}_LIBRARY)
+-  endforeach()
+-endif()
+-
+-mark_as_advanced(PCRE2_INCLUDE_DIR)
++# Check for required components.
++check_required_components("PCRE2")

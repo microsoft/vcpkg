@@ -1,8 +1,8 @@
 {
   "name": "qt5-tools",
-  "version": "5.15.10",
+  "version": "5.15.17",
   "port-version": 1,
-  "description": "Qt5 Tools Module; Includes deployment tools and helpers, Qt Designer, Assistant, and other applications",
+  "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
   "license": null,
   "dependencies": [
     {
@@ -11,8 +11,25 @@
     },
     {
       "name": "qt5-base",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "sqlite3plugin"
+      ]
     },
     "qt5-declarative"
-  ]
+  ],
+  "features": {
+    "qdoc": {
+      "description": "Build the qdoc tool.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang"
+          ]
+        }
+      ]
+    }
+  }
 }

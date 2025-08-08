@@ -1,0 +1,30 @@
+juce provides the following common CMake targets:
+
+    find_package(JUCE CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE
+        juce::juce_core
+        juce::juce_audio_basics
+        juce::juce_events
+        juce::juce_audio_devices
+        juce::juce_recommended_config_flags
+        juce::juce_recommended_lto_flags
+        juce::juce_recommended_warning_flags)
+
+See the Juce CMake API documentation and the License for details on how to create targets. Here are other available targets:
+
+        juce::juce_graphics
+        juce::juce_gui_basics
+        juce::juce_gui_extra
+        juce::juce_opengl
+        juce::juce_analytics
+        juce::juce_audio_formats
+        juce::juce_audio_plugin_client
+        juce::juce_audio_processors
+        juce::juce_audio_utils
+        juce::juce_box2d
+        juce::juce_cryptography
+        juce::juce_data_structures
+        juce::juce_dsp
+        juce::juce_osc
+        juce::juce_product_unlocking
+        juce::juce_video

@@ -1,7 +1,6 @@
 {
   "name": "apsi",
-  "version-semver": "0.9.0",
-  "port-version": 2,
+  "version-semver": "0.11.0",
   "description": "APSI is a research library for asymmetric private set intersection.",
   "homepage": "https://github.com/microsoft/APSI",
   "license": "MIT",
@@ -11,8 +10,11 @@
     "kuku",
     {
       "name": "seal",
+      "default-features": false,
       "features": [
-        "no-throw-tran"
+        "ms-gsl",
+        "no-throw-tran",
+        "zstd"
       ]
     },
     {
@@ -35,8 +37,7 @@
         {
           "name": "seal",
           "features": [
-            "hexl",
-            "no-throw-tran"
+            "hexl"
           ],
           "platform": "x64"
         }
@@ -51,7 +52,8 @@
     "zeromq": {
       "description": "Use ZeroMQ for networking.",
       "dependencies": [
-        "cppzmq"
+        "cppzmq",
+        "zeromq"
       ]
     }
   }

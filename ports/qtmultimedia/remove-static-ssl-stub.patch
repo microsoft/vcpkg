@@ -1,0 +1,26 @@
+diff --git a/src/plugins/multimedia/ffmpeg/cmake/QtAddFFmpegStubs.cmake b/src/plugins/multimedia/ffmpeg/cmake/QtAddFFmpegStubs.cmake
+index 5778ae4d23..8c0df4b44d 100644
+--- a/src/plugins/multimedia/ffmpeg/cmake/QtAddFFmpegStubs.cmake
++++ b/src/plugins/multimedia/ffmpeg/cmake/QtAddFFmpegStubs.cmake
+@@ -70,7 +70,10 @@ macro(qt_internal_multimedia_find_openssl_soversion)
+         if (NOT OPENSSL_SSL_LIBRARY)
+             message(FATAL_ERROR "OPENSSL_SSL_LIBRARY is not found")
+         endif()
+-
++        set(openssl_is_shared ON)
++        if(OPENSSL_SSL_LIBRARY MATCHES "${CMAKE_STATIC_LIBRARY_SUFFIX}$")
++          set(openssl_is_shared OFF)
++        endif()
+         get_filename_component(ssl_lib_realpath "${OPENSSL_SSL_LIBRARY}" REALPATH)
+ 
+         string(REGEX MATCH "[0-9]+(\\.[0-9]+)*[a-z]?$" ssl_soversion "${ssl_lib_realpath}")
+@@ -187,6 +190,9 @@ function(qt_internal_multimedia_add_ffmpeg_stubs)
+ 
+     if (ffmpeg_has_openssl)
+         qt_internal_multimedia_find_openssl_soversion()
++        if(NOT openssl_is_shared)
++          list(REMOVE_ITEM FFMPEG_STUBS ssl crypto)
++        endif()
+     endif()
+ 
+     foreach (stub ${FFMPEG_STUBS})

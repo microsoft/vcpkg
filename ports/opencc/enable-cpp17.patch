@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1d8c8e6..8979a5e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,7 +72,7 @@ include(CPack)
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+     set(CMAKE_MACOSX_RPATH 1)
+-    set(CMAKE_CXX_STANDARD 14)
++    set(CMAKE_CXX_STANDARD 17)
+     set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ endif()
+ 
+@@ -154,7 +154,7 @@ add_definitions(
+ 
+ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+   add_definitions(
+-    -std=c++14
++    -std=c++17
+     -Wall
+   )
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+@@ -163,7 +163,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+   endif ()
+ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+   add_definitions(
+-    -std=c++14
++    -std=c++17
+     -Wall
+   )
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+@@ -174,6 +174,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+   add_definitions(
+     /W4
+     /D "_CRT_SECURE_NO_WARNINGS"
++    /std:c++17
+   )
+ endif()
+ 

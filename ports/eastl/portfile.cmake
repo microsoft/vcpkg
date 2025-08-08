@@ -3,13 +3,12 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EASTL
-    REF e8bdd5531ed79c30ccef2fd71e070f5ab9f1222a #v3.18.00
-    SHA512 3e5d97a77b8610a2efdb9156b47c91e8a8dd5629ff95ea6d2c65016b067ab645df5beddc8c7f93d89c3d1a6f404ff71282efc6db9885a6e6240fa444fe2be79c
+    REF "${VERSION}"
+    SHA512 b061660b58aea8944b7b1488bbf344d004a93a06c89fa43881a02cdaf9d0fce5db3db3c5efd9c09e3e000b502c5dc197ab57b298d1bc935fc7603d285f8563db
     HEAD_REF master
-    PATCHES 
-        fix_cmake_install.patch
-        Fix-error-C2338.patch
-        fix-error-C2039.diff
+    PATCHES
+        0001-fix-cmake-install.patch
+        0002-fix-error-C2338.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/EASTLConfig.cmake.in" DESTINATION "${SOURCE_PATH}")

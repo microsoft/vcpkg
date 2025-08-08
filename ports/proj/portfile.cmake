@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 ee8170780c70e09efa4bc3fcf6ee9a2c15554a05a8562617fc5e9698fb33c6c0af380dd0de836db91955eb35623ded1fec67c6afe5fd3b692fcf4f4b3e4f0658
+    SHA512 8d3dc8c65b9b0d5239c408d8c3634bcdcbdab2d365956d46633ca0ccdcea8d80a434cc71b65bf702e6cf697c33509cf51b441eb6f11220d3e5beec9d39e0ea2a
     HEAD_REF master
     PATCHES
-        fix-win-output-name.patch
         fix-proj4-targets-cmake.patch
         remove_toolset_restriction.patch
-        fix-uwp.patch
+        sqlite.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,7 +32,10 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DNLOHMANN_JSON=external
         -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
         "-DEXE_SQLITE3=${EXE_SQLITE3}"
+        -DPROJ_DATA_ENV_VAR_TRIED_LAST=ON
+        -DEMBED_PROJ_DATA_PATH=OFF
     OPTIONS_DEBUG
         -DBUILD_APPS=OFF
 )
@@ -70,4 +72,4 @@ if(NOT DEFINED VCPKG_BUILD_TYPE AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

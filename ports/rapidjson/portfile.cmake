@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/rapidjson
-    REF 949c771b03de448bdedea80c44a4a5f65284bfeb # accessed on 2023-04-27
-    SHA512 dc0a16230188ccd3ef8f1abffb3213948dd34b17df68330a28bb82a4e3f636e13add3ff33f03774322697140456c704223102e6517d5122fa099260704b7c363
+    REF 24b5e7a8b27f42fa16b96fc70aade9106cf7102f # accessed on 2025-02-26
+    SHA512 50f8723414a6e63eadd45f97be5c44e9fff2d06216c8cc4df802f5bfc2a9416a039f2c69e9bb1882f7e756cd38a7097eea05cab76c739f45805dc41617140799
     FILE_DISAMBIGUATOR 2
     HEAD_REF master
 )
@@ -34,10 +34,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/RapidJSONConfig.cmake" _contents)
+string(REPLACE "VERSION 3.0" "VERSION 3.5...3.30" _contents "${_contents}")
 string(REPLACE "\${RapidJSON_SOURCE_DIR}" "\${RapidJSON_CMAKE_DIR}/../.." _contents "${_contents}")
 string(REPLACE "set( RapidJSON_SOURCE_DIR \"${SOURCE_PATH}\")" "" _contents "${_contents}")
 string(REPLACE "set( RapidJSON_DIR \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel\")" "" _contents "${_contents}")
 string(REPLACE "\${RapidJSON_CMAKE_DIR}/../../../include" "\${RapidJSON_CMAKE_DIR}/../../include" _contents "${_contents}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/RapidJSONConfig.cmake" "${_contents}\nset(RAPIDJSON_INCLUDE_DIRS \"\${RapidJSON_INCLUDE_DIRS}\")\n")
 
-file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

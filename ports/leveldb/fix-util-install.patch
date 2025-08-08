@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 39536fc..648de6d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -477,6 +477,11 @@ if(LEVELDB_INSTALL)
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/leveldb"
+   )
+ 
++  file(GLOB HEADER_UTIL "${PROJECT_SOURCE_DIR}/util/*.h" )
++  file(GLOB HEADER_TABLE "${PROJECT_SOURCE_DIR}/table/*.h" )
++  install(FILES ${HEADER_UTIL} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/util)
++  install(FILES ${HEADER_TABLE} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/leveldb/table)
++
+   include(CMakePackageConfigHelpers)
+   configure_package_config_file(
+     "cmake/${PROJECT_NAME}Config.cmake.in"

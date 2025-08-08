@@ -1,0 +1,18 @@
+{
+  "name": "open62541pp",
+  "version": "0.19.0",
+  "description": "C++ wrapper of the open62541 OPC UA library",
+  "homepage": "https://open62541pp.github.io",
+  "license": "MPL-2.0",
+  "dependencies": [
+    "open62541",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
-    REF ${VERSION}
-    SHA512 70ab7bc79463fb0cf60b5ff07598f58b422cfff8d46fec2e9bb1d8598f5e2785e9f5dad2c6dbc24f7ff0ccf8cdcd8c52a09e647b6e1a9000444a1866f710175d
+    REF "${VERSION}"
+    SHA512 89754567b823105de694ee1c2f6e8cecd0b6c1231531f2b791ff95f29039567273329ac9ecc612a96e44232cf80371e947a7a424903c2be8e8c14d0d7260e4d5
     HEAD_REF master
     PATCHES
-        0002-link-glew.patch
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
 )
@@ -50,7 +49,6 @@ vcpkg_cmake_configure(
         -DINSTALL_CONFIG_FILE_PATH="${DOWNLOADS}/wt"
         -DSHARED_LIBS=${SHARED_LIBS}
         -DBOOST_DYNAMIC=${SHARED_LIBS}
-        -DDISABLE_BOOST_AUTOLINK=ON
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
 
@@ -71,12 +69,15 @@ vcpkg_cmake_configure(
         ${WT_PLATFORM_SPECIFIC_OPTIONS}
 
         -DUSE_SYSTEM_SQLITE3=ON
-        -DUSE_SYSTEM_GLEW=ON
 
         -DCMAKE_INSTALL_DIR=share
         # see https://redmine.webtoolkit.eu/issues/9646
         -DWTHTTP_CONFIGURATION=
         -DCONFIGURATION=
+        
+        "-DUSERLIB_PREFIX=${CURRENT_INSTALLED_DIR}"
+    MAYBE_UNUSED_VARIABLES
+        USE_SYSTEM_SQLITE3
 
 )
 
@@ -93,5 +94,5 @@ file(READ "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" W_CONFIG_H)
 string(REGEX REPLACE "([\r\n])#define RUNDIR[^\r\n]+" "\\1// RUNDIR intentionally unset by vcpkg" W_CONFIG_H "${W_CONFIG_H}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/Wt/WConfig.h" "${W_CONFIG_H}")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_copy_pdbs()

@@ -12,10 +12,12 @@ vcpkg_from_github(
         fix-sdl.patch
         fix-nvtt-squish.patch
         plugin-pdb-install.patch
-        use-boost-asio.patch
         osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
         openexr3.patch
         unofficial-export.patch
+        fix-min-max-macro.patch
+        fix-error-c3861.patch
+        android.diff
 )
 
 file(REMOVE
@@ -65,16 +67,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         nvtt        CMAKE_REQUIRE_FIND_PACKAGE_NVTT
         openexr     BUILD_OSG_PLUGIN_EXR
         openexr     CMAKE_REQUIRE_FIND_PACKAGE_OpenEXR
-        rest-http-device BUILD_OSG_PLUGIN_RESTHTTPDEVICE
         sdl1        BUILD_OSG_PLUGIN_SDL
-    INVERTED_FEATURES
-        sdl1        CMAKE_DISABLE_FIND_PACKAGE_SDL # for apps and examples
+        sdl1        VCPKG_LOCK_FIND_PACKAGE_SDL
 )
 
 # The package osg can be configured to use different OpenGL profiles via a custom triplet file:
 # Possible values are GLCORE, GL2, GL3, GLES1, GLES2, GLES3, and GLES2+GLES3
 if(NOT DEFINED osg_OPENGL_PROFILE)
     set(osg_OPENGL_PROFILE "GL2")
+    if(VCPKG_TARGET_IS_ANDROID)
+        set(osg_OPENGL_PROFILE "GLES2")
+    endif()
 endif()
 
 # Plugin control variables are used only if prerequisites are satisfied.
@@ -92,31 +95,34 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
-        -DDYNAMIC_OPENTHREADS=${OSG_DYNAMIC}
-        -DOSG_MSVC_VERSIONED_DLL=OFF
-        -DOSG_DETERMINE_WIN_VERSION=OFF
-        -DUSE_3RDPARTY_BIN=OFF
-        -DBUILD_OSG_PLUGIN_DICOM=OFF
-        -DBUILD_OSG_PLUGIN_OPENCASCADE=OFF
-        -DBUILD_OSG_PLUGIN_INVENTOR=OFF
-        -DBUILD_OSG_PLUGIN_FBX=OFF
-        -DBUILD_OSG_PLUGIN_DIRECTSHOW=OFF
-        -DBUILD_OSG_PLUGIN_LAS=OFF
-        -DBUILD_OSG_PLUGIN_QTKIT=OFF
-        -DBUILD_OSG_PLUGIN_SVG=OFF
-        -DBUILD_OSG_PLUGIN_VNC=OFF
-        -DBUILD_OSG_PLUGIN_LUA=OFF
-        -DOPENGL_PROFILE=${osg_OPENGL_PROFILE}
-        -DBUILD_OSG_PLUGIN_ZEROCONFDEVICE=OFF
         -DBUILD_DASHBOARD_REPORTS=OFF
         -DCMAKE_CXX_STANDARD=11
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
+        -DDYNAMIC_OPENSCENEGRAPH=${OSG_DYNAMIC}
+        -DDYNAMIC_OPENTHREADS=${OSG_DYNAMIC}
+        -DOPENGL_PROFILE=${osg_OPENGL_PROFILE}
+        -DOSG_MSVC_VERSIONED_DLL=OFF
+        -DOSG_DETERMINE_WIN_VERSION=OFF
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
+        -DUSE_3RDPARTY_BIN=OFF
+        # Plugins
+        -DBUILD_OSG_PLUGIN_DICOM=OFF
+        -DBUILD_OSG_PLUGIN_DIRECTSHOW=OFF
+        -DBUILD_OSG_PLUGIN_FBX=OFF
+        -DBUILD_OSG_PLUGIN_INVENTOR=OFF
+        -DBUILD_OSG_PLUGIN_LAS=OFF
+        -DBUILD_OSG_PLUGIN_LUA=OFF
+        -DBUILD_OSG_PLUGIN_OPENCASCADE=OFF
+        -DBUILD_OSG_PLUGIN_QTKIT=OFF
+        -DBUILD_OSG_PLUGIN_RESTHTTPDEVICE=OFF
+        -DBUILD_OSG_PLUGIN_SVG=OFF
+        -DBUILD_OSG_PLUGIN_VNC=OFF
+        -DBUILD_OSG_PLUGIN_ZEROCONFDEVICE=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_FFmpeg=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_DCMTK=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GStreamer=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLIB=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Inventor=ON
-        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=ON
         ${OPTIONS}
     OPTIONS_DEBUG
         -DBUILD_OSG_APPLICATIONS=OFF
@@ -133,6 +139,15 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-osg-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-osg/unofficial-osg-config.cmake" @ONLY)
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-osg)
+
+# Add debug folder prefix for plugin targets. vcpkg_cmake_config_fixup only handles this for targets in bin/ and lib/.
+set(osg_plugins_debug_targets "${CURRENT_PACKAGES_DIR}/share/unofficial-osg/osg-plugins-debug.cmake")
+if(EXISTS "${osg_plugins_debug_targets}")
+    file(READ "${osg_plugins_debug_targets}" contents)
+    string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" contents "${contents}")
+    string(REPLACE "\${_IMPORT_PREFIX}/plugins" "\${_IMPORT_PREFIX}/debug/plugins" contents "${contents}")
+    file(WRITE "${osg_plugins_debug_targets}" "${contents}")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/osg/Config" "#ifndef OSG_LIBRARY_STATIC\n#define OSG_LIBRARY_STATIC 1\n#endif\n")
@@ -170,4 +185,4 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

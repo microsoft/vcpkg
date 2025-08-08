@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6420a813c1..749bd8d680 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.5)
+ project(DMTX VERSION 0.7.5 LANGUAGES C)
+ 
+ # DMTX library
+@@ -26,3 +26,10 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+       add_subdirectory("test")
+     endif()
+ endif()
++
++# Add install rules
++install(TARGETS dmtx
++        RUNTIME DESTINATION bin
++        ARCHIVE DESTINATION lib
++        LIBRARY DESTINATION lib)
++install(FILES "dmtx.h" DESTINATION include)

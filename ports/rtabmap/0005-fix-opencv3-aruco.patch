@@ -1,0 +1,14 @@
+--- a/corelib/src/MarkerDetector.cpp
++++ b/corelib/src/MarkerDetector.cpp
+@@ -380,11 +380,7 @@ std::map<int, MarkerInfo> MarkerDetector::detect(const cv::Mat & image,
+                 std::map<int, MarkerInfo>::iterator iter = detections.find(ids[i]);
+                 if(iter!=detections.end())
+                 {
+-#if CV_MAJOR_VERSION > 4 || (CV_MAJOR_VERSION == 4 && (CV_MINOR_VERSION >1 || (CV_MINOR_VERSION==1 && CV_PATCH_VERSION>=1)))
+                     cv::drawFrameAxes(*imageWithDetections, model.K(), model.D(), rvecs[i], tvecs[i], iter->second.length() * 0.5f);
+-#else
+-                    cv::aruco::drawAxis(*imageWithDetections, model.K(), model.D(), rvecs[i], tvecs[i], iter->second.length() * 0.5f);
+-#endif
+                 }
+ 			}
+ 		}

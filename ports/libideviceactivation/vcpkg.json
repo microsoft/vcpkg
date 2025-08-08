@@ -1,6 +1,7 @@
 {
   "name": "libideviceactivation",
   "version-date": "2023-05-01",
+  "port-version": 1,
   "description": "A library to handle the activation process of iOS devices",
   "homepage": "https://libimobiledevice.org/",
   "license": "LGPL-2.1-or-later",
@@ -18,5 +19,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "build command line tool",
+      "supports": "!android & !ios & !xbox"
+    }
+  }
 }

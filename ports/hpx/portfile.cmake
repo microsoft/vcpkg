@@ -7,12 +7,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
     REF "v${VERSION}"
-    SHA512 a7972beada950cf6ef3b61f20496a08b220e4f48c28c11d57c20683906ca5124a9f36ac2552318883a5ab1db6efdbf63d1141b6e0c484c560a8c1311ae2d7090
-    HEAD_REF stable
-    PATCHES
-        fix-dependency-hwloc.patch
-        fix-debug.patch
-        fix_output_name_clash.patch
+    SHA512 bf22add7a97087f68bd49fe0ae5b2bfbd7ba01d4018872c3934ebd81a632e2559e6144c5aa06779db971c642d5a41b16c8c48108af2c4069be6d9f9b72985182
+    HEAD_REF master
 )
 
 vcpkg_check_features(
@@ -93,7 +89,7 @@ file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/hpxcxx" "${CURRENT_PACKAGES_DIR}/debug/
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/hpxrun.py")
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/hpxrun.py" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/hpxrun.py")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/hpxrun.py" "'${CURRENT_INSTALLED_DIR}/tools/openmpi/bin/mpiexec'" "'mpiexec'")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/hpxrun.py" "'${CURRENT_INSTALLED_DIR}/tools/openmpi/bin/mpiexec'" "'mpiexec'" IGNORE_UNCHANGED)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

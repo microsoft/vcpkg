@@ -1,0 +1,51 @@
+diff --git a/src/gpgrt-config.in b/src/gpgrt-config.in
+index bada0f2..8c03a05 100644
+--- a/src/gpgrt-config.in
++++ b/src/gpgrt-config.in
+@@ -78,7 +78,7 @@ substitute_vars () {
+ 	esac
+     done
+ 
+-    echo "$__result"
++    echo "$__result" | sed -e 's,",,g'
+ }
+ 
+ #
+@@ -132,7 +132,6 @@ EOF2
+ 		*:|*:\ ) ;;
+ 		*)
+ 		    echo "Error reading $_filename: $_line" 1>&2
+-		    exit 1
+ 		    ;;
+ 	    esac
+ 	fi
+@@ -166,6 +165,7 @@ read_config_file () {
+ 	fi
+ 	exit 1
+     fi
++    VAR_pcfiledir="${RESULT%/*}" \
+     read_config_from_stdin $RESULT < $RESULT
+ }
+ 
+@@ -540,6 +540,11 @@ while test $# -gt 0; do
+ 	    ;;
+     esac
+ done
++vcpkg_prefix=$(echo "$0" | sed -e 's,^\([a-zA-Z]\):/,/\1/,')
++case "$vcpkg_prefix" in
++*/tools/libgpg-error/debug/bin/gpgrt-config)  libdir="${vcpkg_prefix%/*/*/*/*/*}/debug/lib" ;;
++*/tools/libgpg-error/bin/gpgrt-config)        libdir="${vcpkg_prefix%/*/*/*/*}/lib" ;;
++esac
+ 
+ if env | grep '^PKG_CONFIG_LIBDIR=$' >/dev/null 2>&1; then
+   # The variable set as empty, we use PKG_CONFIG_PATH in this case,
+@@ -598,7 +603,8 @@ output=""
+ 
+ mt="no"
+ 
+-VAR_list=VAR_pc_sysrootdir
++VAR_list="VAR_pcfiledir VAR_pc_sysrootdir"
++VAR_pcfiledir=""
+ if [ -z "$PKG_CONFIG_SYSROOT_DIR" ]; then
+     VAR_pc_sysrootdir="/"
+ else

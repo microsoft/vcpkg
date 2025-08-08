@@ -6,7 +6,7 @@ openssl requires Linux kernel headers from the system package manager.
 ]])
 endif()
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_HOST_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
     set(MAKE "${MSYS_ROOT}/usr/bin/make.exe")
     set(PERL "${MSYS_ROOT}/usr/bin/perl.exe")
@@ -87,14 +87,21 @@ elseif(VCPKG_TARGET_IS_MINGW)
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(OPENSSL_ARCH linux-x32)
     vcpkg_list(APPEND CONFIGURE_OPTIONS
-        threads
         no-engine
         no-asm
         no-sse2
         no-srtp
         --cross-compile-prefix=
     )
+    # Cf. https://emscripten.org/docs/porting/pthreads.html:
+    # For Pthreads support, not just openssl but everything
+    # must be compiled and linked with `-pthread`.
+    # This makes it a triplet/toolchain-wide setting.
+    if(NOT " ${VCPKG_DETECTED_CMAKE_C_FLAGS} " MATCHES " -pthread ")
+        vcpkg_list(APPEND CONFIGURE_OPTIONS no-threads)
+    endif()
 else()
     message(FATAL_ERROR "Unknown platform")
 endif()

@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version-date": "2023-06-11",
-  "port-version": 6,
+  "version": "2025.2.0",
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -15,23 +14,13 @@
   "homepage": "https://github.com/openvinotoolkit/openvino",
   "documentation": "https://docs.openvino.ai/latest/index.html",
   "license": "Apache-2.0",
+  "supports": "!uwp & !x86 & !(android & arm32)",
   "dependencies": [
-    "ade",
-    {
-      "name": "pkgconf",
-      "host": true
-    },
+    "nlohmann-json",
     "pugixml",
     {
       "name": "tbb",
-      "default-features": false,
-      "features": [
-        {
-          "name": "hwloc",
-          "platform": "!static & !osx"
-        }
-      ],
-      "version>=": "2021.9.0#2"
+      "version>=": "2021.10.0#2"
     },
     {
       "name": "vcpkg-cmake",
@@ -48,7 +37,7 @@
     {
       "name": "xbyak",
       "platform": "!(arm | uwp)",
-      "version>=": "6.69"
+      "version>=": "6.73"
     }
   ],
   "default-features": [
@@ -60,10 +49,14 @@
     },
     {
       "name": "gpu",
-      "platform": "x64 & !(osx | uwp) & !static"
+      "platform": "x64 & !(osx | uwp)"
     },
     "hetero",
     "ir",
+    {
+      "name": "npu",
+      "platform": "x64 & !(osx | uwp)"
+    },
     "onnx",
     "paddle",
     "pytorch",
@@ -83,9 +76,10 @@
     },
     "gpu": {
       "description": "Enables GPU plugin for inference",
-      "supports": "x64 & !(osx | uwp) & !static",
+      "supports": "x64 & !(osx | uwp)",
       "dependencies": [
-        "opencl"
+        "opencl",
+        "rapidjson"
       ]
     },
     "hetero": {
@@ -94,21 +88,28 @@
     "ir": {
       "description": "Enables IR frontend for reading models in OpenVINO IR format"
     },
+    "npu": {
+      "description": "Enables NPU plugin for inference",
+      "supports": "x64 & !(osx | uwp)",
+      "dependencies": [
+        "level-zero"
+      ]
+    },
     "onnx": {
       "description": "Enables ONNX frontend for reading models in ONNX format",
       "dependencies": [
         {
           "name": "onnx",
-          "version>=": "1.13.1"
+          "version>=": "1.16.2"
         },
         {
           "name": "protobuf",
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         },
         {
           "name": "protobuf",
           "host": true,
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         }
       ]
     },
@@ -117,12 +118,12 @@
       "dependencies": [
         {
           "name": "protobuf",
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         },
         {
           "name": "protobuf",
           "host": true,
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         }
       ]
     },
@@ -133,13 +134,22 @@
       "description": "Enables TensorFlow frontend for reading models in TensorFlow format",
       "dependencies": [
         {
+          "$comment": "to workaround a linking issue for 2025.2.0 openvino[core,tensorflow]",
+          "name": "openvino",
+          "default-features": false,
+          "features": [
+            "pytorch"
+          ],
+          "platform": "linux & static"
+        },
+        {
           "name": "protobuf",
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         },
         {
           "name": "protobuf",
           "host": true,
-          "version>=": "3.20.3"
+          "version>=": "3.21.2"
         },
         "snappy"
       ]
@@ -155,6 +165,15 @@
           "name": "flatbuffers",
           "host": true,
           "version>=": "2.0.6"
+        },
+        {
+          "$comment": "to workaround a linking issue for 2025.2.0 openvino[core,tensorflow]",
+          "name": "openvino",
+          "default-features": false,
+          "features": [
+            "pytorch"
+          ],
+          "platform": "linux & static"
         }
       ]
     }

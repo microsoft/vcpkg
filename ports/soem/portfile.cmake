@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         winpcap.patch
-        disable-werror.patch
+        disable-werror-and-wx.patch
 )
 
 vcpkg_cmake_configure(
@@ -19,6 +19,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/soem/cmake")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/bin"

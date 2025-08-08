@@ -1,0 +1,49 @@
+diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
+index eaa5c6f..8a9ec44 100644
+--- a/source/CMakeLists.txt
++++ b/source/CMakeLists.txt
+@@ -811,6 +811,9 @@ else()
+ endif()
+ if(NOT MSVC)
+     set_target_properties(x265-static PROPERTIES OUTPUT_NAME x265)
++    set(X265_LIB x265)
++else()
++    set(X265_LIB x265-static)
+ endif()
+ if(EXTRA_LIB)
+     target_link_libraries(x265-static ${EXTRA_LIB})
+@@ -906,8 +909,10 @@ if(ENABLE_SHARED)
+     endif(SVTHEVC_FOUND)
+     if(MSVC)
+         set_target_properties(x265-shared PROPERTIES OUTPUT_NAME libx265)
++        set(X265_LIB libx265)
+     else()
+         set_target_properties(x265-shared PROPERTIES OUTPUT_NAME x265)
++        set(X265_LIB x265)
+     endif()
+     if(UNIX)
+         set_target_properties(x265-shared PROPERTIES VERSION ${X265_BUILD})
+@@ -944,7 +949,11 @@ endif()
+ 
+ if(X265_LATEST_TAG OR NOT GIT_FOUND)
+     # convert lists of link libraries into -lstdc++ -lm etc..
++    cmake_policy(SET CMP0057 NEW)
+     foreach(LIB ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES} ${PLATFORM_LIBS})
++        if(LIB IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++            continue()
++        endif()
+         if(IS_ABSOLUTE ${LIB} AND EXISTS ${LIB})
+             list(APPEND PLIBLIST "${LIB}")
+         else()
+diff --git a/source/x265.pc.in b/source/x265.pc.in
+index 0bf99e9..fe76d20 100644
+--- a/source/x265.pc.in
++++ b/source/x265.pc.in
+@@ -6,6 +6,6 @@ includedir=${prefix}/include
+ Name: @CMAKE_PROJECT_NAME@
+ Description: H.265/HEVC video encoder
+ Version: @X265_LATEST_TAG@
+-Libs: -L${libdir} -lx265
++Libs: -L${libdir} -l@X265_LIB@
+ Libs.private: @PRIVATE_LIBS@
+ Cflags: -I${includedir}

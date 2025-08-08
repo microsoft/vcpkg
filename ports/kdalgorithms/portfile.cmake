@@ -2,12 +2,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDAB/KDAlgorithms
-    REF 93023b7b6640a227cfa6b2e7f1b8e72d10a0b981
-    SHA512 151488c5ba30fceee204278e620bbc509464cb993d4207891ba627cb4384dc585927336f263ea80bfeb46f5100fdb31edcef13482d4b7f70b79480d1b153f087
-    HEAD_REF master
+    REF ${VERSION}
+    SHA512 5d877b8aa16aae870276a542554aa1b39ae2daa863e77ebaa248ca1427a92179611dd7c7cd98e88fc6a406905f404f052f9c891b8a49d64582dfc2ba857118f6
 )
 
-file(INSTALL "${SOURCE_PATH}/src/kdalgorithms.h" "${SOURCE_PATH}/src/bits"
+file(INSTALL "${SOURCE_PATH}/src/kdalgorithms.h" "${SOURCE_PATH}/src/kdalgorithms_bits"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

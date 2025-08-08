@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/double-conversion
-    REF af09fd65fcf24eee95dc62813ba9123414635428 #v3.2.1
-    SHA512 721d736a2d065b8ff6058345afe6990ab568174e202361abc7ce36c16931c05128df4fd5034f98f114a7b01972eda3b98bfc209ef45394d0b5d4bbce8140b28a
+    REF "v${VERSION}"
+    SHA512 60cab2fe623204cfa8737150e6ffcae091266180461dba377231e4fe8dccf712e74c643cd317b62266240ab82f1c0f820cf825038d627934d2dd0af1426f0cca
     HEAD_REF master
 )
 
@@ -11,15 +11,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-# Rename exported target files into something vcpkg_cmake_config_fixup expects
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
-endif()
-
-vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

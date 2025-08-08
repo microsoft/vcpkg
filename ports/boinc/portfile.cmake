@@ -1,11 +1,13 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" MAJOR_MINOR "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/7.24/7.24.1
-    SHA512 7dad36900c13b69a89b5a173fc283130bc4cf15c781ed31ed72ce0b6ba0db4895a12314d0f302c7a91c2762333b7c162f20f32e67ed5e2e7a4099e1f2238c255
+    REF "client_release/${MAJOR_MINOR}/${VERSION}"
+    SHA512 1cb7a4d5a411fe703137f5c8127e03ce70e01a9d1c9d23e19b9d4231c833fabad779cf52dc7b85500ff54121c4b5e900ea1634c312ee1d72cfdf4c2051703c38
     HEAD_REF master
+    PATCHES
+        fix-android-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})

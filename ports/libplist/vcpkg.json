@@ -1,6 +1,6 @@
 {
   "name": "libplist",
-  "version-date": "2023-06-15",
+  "version": "2.7.0",
   "description": "A library to handle Apple Property List format in binary or XML",
   "homepage": "https://libimobiledevice.org/",
   "license": "LGPL-2.1-or-later",
@@ -13,5 +13,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "build command line tool",
+      "supports": "!android & !ios & !xbox"
+    }
+  }
 }

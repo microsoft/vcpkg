@@ -1,9 +1,9 @@
 {
   "name": "curl",
-  "version": "8.2.1",
+  "version": "8.15.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
-  "license": null,
+  "license": "curl AND ISC AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -32,6 +32,32 @@
         "c-ares"
       ]
     },
+    "gnutls": {
+      "description": "SSL support (gnutls)",
+      "dependencies": [
+        {
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
+        },
+        {
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !mingw"
+        }
+      ]
+    },
+    "gsasl": {
+      "description": "GSASL support (libgsasl)",
+      "dependencies": [
+        "gsasl"
+      ]
+    },
+    "gssapi": {
+      "description": "krb5 support",
+      "supports": "!windows",
+      "dependencies": [
+        "krb5"
+      ]
+    },
     "http2": {
       "description": "HTTP2 support",
       "dependencies": [
@@ -44,6 +70,9 @@
         },
         "nghttp2"
       ]
+    },
+    "httpsrr": {
+      "description": "enable support for HTTPS RR"
     },
     "idn": {
       "description": "Default IDN support",
@@ -72,6 +101,23 @@
         "libidn2"
       ]
     },
+    "ldap": {
+      "description": "LDAP support",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "non-http"
+          ]
+        },
+        {
+          "name": "openldap",
+          "platform": "!windows"
+        }
+      ]
+    },
     "mbedtls": {
       "description": "SSL support (mbedTLS)",
       "dependencies": [
@@ -87,6 +133,18 @@
         "openssl"
       ]
     },
+    "psl": {
+      "description": "Use psl support (libpsl)",
+      "dependencies": [
+        "libpsl"
+      ]
+    },
+    "rtmp": {
+      "description": "RTMP support",
+      "dependencies": [
+        "librtmp"
+      ]
+    },
     "schannel": {
       "description": "SSL support (Secure Channel)",
       "supports": "windows & !uwp",
@@ -99,10 +157,6 @@
           ]
         }
       ]
-    },
-    "sectransp": {
-      "description": "SSL support (sectransp)",
-      "supports": "osx | ios"
     },
     "ssh": {
       "description": "SSH support via libssh2",
@@ -131,14 +185,6 @@
           "name": "curl",
           "default-features": false,
           "features": [
-            "sectransp"
-          ],
-          "platform": "osx | ios"
-        },
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
             "schannel"
           ],
           "platform": "(windows & !uwp) | mingw"
@@ -149,7 +195,19 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
+          "platform": "(uwp | !windows) & !mingw"
+        }
+      ]
+    },
+    "ssls-export": {
+      "description": "SSL session import/export",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
         }
       ]
     },
@@ -162,34 +220,20 @@
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support (experimental)"
+      "description": "WebSocket support"
     },
     "winidn": {
       "description": "WinIDN support",
       "supports": "windows"
     },
     "winldap": {
-      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
-      "supports": "windows & !uwp",
+      "description": "Obsolete. Use feature 'ldap' instead.",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "non-http"
-          ]
-        }
-      ]
-    },
-    "winssl": {
-      "description": "Legacy name for schannel",
-      "supports": "windows & !uwp",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "schannel"
+            "ldap"
           ]
         }
       ]

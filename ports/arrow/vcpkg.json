@@ -1,6 +1,6 @@
 {
   "name": "arrow",
-  "version": "13.0.0",
+  "version": "21.0.0",
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -40,6 +40,9 @@
     "acero": {
       "description": "Acero support"
     },
+    "compute": {
+      "description": "Build all computational kernel functions"
+    },
     "csv": {
       "description": "CSV support"
     },
@@ -67,6 +70,18 @@
         "protobuf"
       ]
     },
+    "flightsql": {
+      "description": "FlightSQL support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "flight"
+          ]
+        }
+      ]
+    },
     "gcs": {
       "description": "GCS support",
       "dependencies": [
@@ -91,7 +106,7 @@
     },
     "mimalloc": {
       "description": "mimalloc allocator",
-      "supports": "windows"
+      "supports": "!staticcrt"
     },
     "orc": {
       "description": "ORC support",
@@ -102,6 +117,13 @@
     "parquet": {
       "description": "Parquet support",
       "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "json"
+          ]
+        },
         "rapidjson"
       ]
     },

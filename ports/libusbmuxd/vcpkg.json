@@ -1,6 +1,7 @@
 {
   "name": "libusbmuxd",
   "version-date": "2023-06-21",
+  "port-version": 1,
   "description": "A client library to multiplex connections from and to iOS devices",
   "homepage": "https://libimobiledevice.org/",
   "license": "LGPL-2.1-or-later",
@@ -16,5 +17,14 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "build command line tool",
+      "supports": "!android & !ios & !xbox",
+      "dependencies": [
+        "getopt"
+      ]
+    }
+  }
 }

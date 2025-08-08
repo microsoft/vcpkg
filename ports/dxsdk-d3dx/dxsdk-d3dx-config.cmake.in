@@ -1,6 +1,5 @@
 
-get_filename_component(_d3dx_root "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(_d3dx_root "${_d3dx_root}" PATH)
+get_filename_component(_d3dx_root "${CMAKE_CURRENT_LIST_DIR}" PATH)
 get_filename_component(_d3dx_root "${_d3dx_root}" PATH)
 
 set(_d3dx_root_lib "${_d3dx_root}/lib/d3dx9.lib")

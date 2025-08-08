@@ -1,0 +1,3 @@
+# This package is a single  header. Add this to your CMakeLists.txt after declaring the project.
+find_path(TRY_CATCHER_INCLUDE_DIRS "TryCatcher.h")
+target_include_directories(${PROJECT_NAME} PRIVATE ${TRY_CATCHER_INCLUDE_DIRS})

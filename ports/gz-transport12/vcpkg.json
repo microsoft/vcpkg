@@ -1,0 +1,10 @@
+{
+  "name": "gz-transport12",
+  "version": "12.2.1",
+  "port-version": 1,
+  "description": "Transport middleware for robotics",
+  "license": null,
+  "dependencies": [
+    "gz-transport"
+  ]
+}

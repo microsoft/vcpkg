@@ -9,7 +9,6 @@ if(MSVC)
     add_compile_definitions(_CRT_NONSTDC_NO_DEPRECATE)
 endif()
 
-add_compile_definitions(HAVE_LOCAL_LIBCAES)
 add_compile_definitions(HAVE_LOCAL_LIBCERROR)
 add_compile_definitions(HAVE_LOCAL_LIBCTHREADS)
 add_compile_definitions(HAVE_LOCAL_LIBCDATA)

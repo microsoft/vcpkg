@@ -1,0 +1,100 @@
+diff --git a/cmake/dependencies/Boost.cmake b/cmake/dependencies/Boost.cmake
+index 366d32b..7ff041b 100644
+--- a/cmake/dependencies/Boost.cmake
++++ b/cmake/dependencies/Boost.cmake
+@@ -10,4 +10,6 @@ endif()
+ set(Boost_RELEASE_VERSION
+   "${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}")
+ 
++set(BOOST_FOUND "${Boost_FOUND}")
++set(BOOST_LIBRARIES "${Boost_LIBRARIES}")
+ boost_external_report(Boost RELEASE_VERSION INCLUDE_DIR LIBRARIES)
+diff --git a/cmake/dependencies/MySQL.cmake b/cmake/dependencies/MySQL.cmake
+index 5599b08..0a4ce0f 100644
+--- a/cmake/dependencies/MySQL.cmake
++++ b/cmake/dependencies/MySQL.cmake
+@@ -1,5 +1,9 @@
+ set(MySQL_FIND_QUIETLY TRUE)
+ 
+-find_package(MySQL)
++find_package(MYSQL NAMES unofficial-libmysql REQUIRED)
++set(MYSQL_LIBRARIES "$<TARGET_NAME:libmysql>")
++if(TARGET mysqlclient AND NOT TARGET libmysql)
++    set(MYSQL_LIBRARIES "$<TARGET_NAME:mysqlclient>")
++endif()
+ 
+ boost_external_report(MySQL INCLUDE_DIR LIBRARIES)
+diff --git a/cmake/dependencies/PostgreSQL.cmake b/cmake/dependencies/PostgreSQL.cmake
+index c6f2154..ef6bfcd 100644
+--- a/cmake/dependencies/PostgreSQL.cmake
++++ b/cmake/dependencies/PostgreSQL.cmake
+@@ -1,5 +1,8 @@
+ set(PostgreSQL_FIND_QUIETLY TRUE)
+ 
+-find_package(PostgreSQL)
++find_package(PostgreSQL REQUIRED)
++set(POSTGRESQL_FOUND TRUE)
++set(POSTGRESQL_INCLUDE_DIRS "${PostgreSQL_INCLUDE_DIRS}")
++set(POSTGRESQL_LIBRARIES "${PostgreSQL_LIBRARIES}")
+ 
+ boost_external_report(PostgreSQL INCLUDE_DIRS LIBRARIES VERSION)
+diff --git a/cmake/dependencies/SQLite3.cmake b/cmake/dependencies/SQLite3.cmake
+index 0daa9a5..17775da 100644
+--- a/cmake/dependencies/SQLite3.cmake
++++ b/cmake/dependencies/SQLite3.cmake
+@@ -1,5 +1,6 @@
+ set(SQLITE3_FIND_QUIETLY TRUE)
+ 
+-find_package(SQLite3)
++find_package(SQLITE3 NAMES unofficial-sqlite3 CONFIG REQUIRED)
++set(SQLITE3_LIBRARIES unofficial::sqlite3::sqlite3)
+ 
+ boost_external_report(SQLite3 INCLUDE_DIR LIBRARIES)
+diff --git a/cmake/resources/SOCIConfig.cmake.in b/cmake/resources/SOCIConfig.cmake.in
+index 8096a3c..354c18b 100644
+--- a/cmake/resources/SOCIConfig.cmake.in
++++ b/cmake/resources/SOCIConfig.cmake.in
+@@ -1,3 +1,11 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++if("@WITH_MYSQL@")
++    find_dependency(unofficial-libmysql)
++endif()
++if("@WITH_SQLITE3@")
++    find_dependency(unofficial-sqlite3)
++endif()
++
+ include(${CMAKE_CURRENT_LIST_DIR}/SOCITargets.cmake)
+diff --git a/include/soci/mysql/soci-mysql.h b/include/soci/mysql/soci-mysql.h
+index 376bb7e..fbe48fa 100644
+--- a/include/soci/mysql/soci-mysql.h
++++ b/include/soci/mysql/soci-mysql.h
+@@ -21,8 +21,8 @@
+ #ifdef _WIN32
+ #include <winsock.h> // SOCKET
+ #endif // _WIN32
+-#include <mysql.h> // MySQL Client
+-#include <errmsg.h> // MySQL Error codes
++#include <mysql/mysql.h> // MySQL Client
++#include <mysql/errmsg.h> // MySQL Error codes
+ #include <vector>
+ 
+ 
+diff --git a/src/backends/CMakeLists.txt b/src/backends/CMakeLists.txt
+index 871e151..3cffc80 100644
+--- a/src/backends/CMakeLists.txt
++++ b/src/backends/CMakeLists.txt
+@@ -14,9 +14,9 @@ colormsg(_HIBLUE_ "Configuring SOCI backend libraries:")
+ foreach(dep ${SOCI_BACKENDS_DB_DEPENDENCIES})
+ 	string(TOUPPER ${dep} depUP)
+ 	if (WITH_${depUP})
+-		find_package(${dep})
+-	endif()
+-	if(${dep}_FOUND OR ${depUP}_FOUND)
++		if(NOT (${dep}_FOUND OR ${depUP}_FOUND))
++			message(FATAL_ERROR "${depUP} not found, check SociDependencies.cmake")
++		endif()
+ 		set(${depUP}_FOUND ON)
+ 	else()
+ 		set(${depUP}_FOUND OFF)

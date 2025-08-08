@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1417f6a79..a25a1238d 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -6,13 +6,13 @@ cmake_minimum_required(VERSION 3.5...3.20)
+ 
+ project(boost_system VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
+ 
+-add_library(boost_system INTERFACE)
++add_library(boost_system "src/error_code.cpp")
+ add_library(Boost::system ALIAS boost_system)
+ 
+-target_include_directories(boost_system INTERFACE include)
++target_include_directories(boost_system PUBLIC include)
+ 
+ target_link_libraries(boost_system
+-  INTERFACE
++  PUBLIC
+     Boost::assert
+     Boost::config
+     Boost::throw_exception

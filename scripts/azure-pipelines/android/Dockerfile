@@ -1,55 +1,108 @@
-FROM ubuntu:20.04
-ENV DEBIAN_FRONTEND noninteractive
+# syntax=docker/dockerfile:1.4
+# DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
+FROM ubuntu:noble-20250619
 
-RUN \
-  apt-get update && \
-  apt-get -y upgrade && \
-  apt-get -y --no-install-recommends install git g++ wget curl zip vim \
-  pkg-config tar cmake unzip ca-certificates
+ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
+ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14+7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
+ADD https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip /sdk-commandlinetools-linux-10406996_latest.zip
+ADD https://dl.google.com/android/repository/build-tools_r34-linux.zip /build-tools_r34-linux.zip
+ADD https://dl.google.com/android/repository/platform-34-ext7_r03.zip /platform-34-ext7_r03.zip
+ADD https://dl.google.com/android/repository/platform-tools_r35.0.1-linux.zip /platform-tools_r35.0.1-linux.zip
+ADD https://dl.google.com/android/repository/android-ndk-r27c-linux.zip /android-ndk-r27c-linux.zip
 
-# Download Android NDK
-RUN \
-  wget https://dl.google.com/android/repository/android-ndk-r25c-linux.zip && \
-  unzip android-ndk-r25c-linux.zip && \
-  rm -rf android-ndk-r25c-linux.zip
+# Add apt packages
 
-ENV ANDROID_NDK_HOME /android-ndk-r25c
+## vcpkg prerequisites
+ENV APT_PACKAGES="git curl zip unzip tar"
 
-# Download Powershell
-RUN \
-  wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb && \
-  dpkg -i packages-microsoft-prod.deb && \
-  rm -f packages-microsoft-prod.deb && \
-  apt-get -y install software-properties-common && \
-  apt-get update && \
-  add-apt-repository universe && \
-  apt-get -y install powershell
+## Common build prereqs
+ENV APT_PACKAGES="$APT_PACKAGES g++ vim pkg-config cmake ca-certificates"
 
-RUN \
-  apt-get -y --no-install-recommends install autoconf nasm bison python2 \
-  flex build-essential libtool libtool-bin gettext automake autoconf-archive
+ENV APT_PACKAGES="$APT_PACKAGES autoconf nasm bison flex build-essential libtool libtool-bin libltdl-dev gettext automake autoconf-archive"
 
-# python related
-RUN \
-  apt-get -y --no-install-recommends install python3-setuptools python3-pip python3-venv
+## Python related
+ENV APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-pip python3-venv python3-mako python3-jinja2"
 
-# freeglut
-RUN \
-  apt-get -y --no-install-recommends install libxi-dev libgl1-mesa-dev \
-  libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev
+## at-spi2-atk
+ENV APT_PACKAGES="$APT_PACKAGES libxtst-dev"
+
+## freeglut
+ENV APT_PACKAGES="$APT_PACKAGES libxi-dev libgl1-mesa-dev libglu1-mesa-dev mesa-common-dev libxrandr-dev libxxf86vm-dev"
 
 # glfw3
-RUN \
-  apt-get -y --no-install-recommends install libxinerama-dev libxcursor-dev
+ENV APT_PACKAGES="$APT_PACKAGES libxinerama-dev libxcursor-dev"
 
-# required by qt5-base
-RUN \
-  apt-get -y --no-install-recommends install libxext-dev libxfixes-dev libxrender-dev \
+# qt5-base
+ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libxcb-util0-dev \
   libxkbcommon-dev libxcb-keysyms1-dev \
   libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev \
   libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev \
-  libxcb-cursor-dev libxkbcommon-x11-dev
+  libxcb-cursor-dev libxkbcommon-x11-dev"
+
+## PowerShell
+ENV APT_PACKAGES="$APT_PACKAGES powershell azcopy"
+
+# The BUILD_DATE argument forces cache invalidation so we get updated apt dependencies
+ARG BUILD_DATE
+RUN echo "Build date: ${BUILD_DATE}"
+
+RUN <<END_OF_SCRIPT bash
+set -e
+
+export DEBIAN_FRONTEND=noninteractive
+
+# Apt prereqs itself
+apt-get -y update
+apt-get -y --no-install-recommends install ca-certificates
+
+# Add apt repos
+
+## PowerShell
+dpkg -i packages-microsoft-prod.deb
+rm -f packages-microsoft-prod.deb
+
+# Run apt things
+apt-get -y update
+apt-get -y dist-upgrade
+
+apt-get -y --no-install-recommends install $APT_PACKAGES
+
+# OpenJDK
+tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
+rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
+
+# Android SDK
+unzip -q sdk-commandlinetools-linux-10406996_latest.zip -d android-sdk
+rm sdk-commandlinetools-linux-10406996_latest.zip
+
+unzip -q build-tools_r34-linux.zip -d android-sdk/build-tools
+mv android-sdk/build-tools/android-14 android-sdk/build-tools/34.0.0
+rm build-tools_r34-linux.zip
+
+unzip -q platform-34-ext7_r03.zip -d android-sdk/platforms
+rm platform-34-ext7_r03.zip
+find android-sdk/platforms -type d -exec chmod o+rx '{}' ';'
+find android-sdk/platforms -type f -exec chmod o+r '{}' ';'
+
+unzip -q platform-tools_r35.0.1-linux.zip -d android-sdk
+rm platform-tools_r35.0.1-linux.zip
+
+# JRE for sdk setup
+export JAVA_HOME=/jdk-17.0.14+7
+yes | /android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/android-sdk --licenses
+
+# Android NDK
+unzip -q /android-ndk-r27c-linux.zip
+rm -f android-ndk-r27c-linux.zip
+
+END_OF_SCRIPT
+
+ENV JAVA_HOME /jdk-17.0.14+7
+
+ENV ANDROID_HOME /android-sdk
+
+ENV ANDROID_NDK_HOME /android-ndk-r27c
 
 WORKDIR /vcpkg

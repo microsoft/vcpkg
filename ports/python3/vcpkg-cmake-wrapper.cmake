@@ -16,20 +16,24 @@ endif()
 # of the system Python, which may have certain packages the user expects. But - if the user is
 # embedding Python or using both the development and interpreter components, then we need the
 # interpreter matching vcpkg's Python libraries. Note that the "Development" component implies
-# both "Development.Module" and "Development.Embed"
+# both "Development.Module" and "Development.Embed".
+# The android toolchain links with --no-undefined. So modules must be linked with Python libs.
 if("Development" IN_LIST ARGS OR "Development.Embed" IN_LIST ARGS)
     set(_PythonFinder_WantInterp TRUE)
     set(_PythonFinder_WantLibs TRUE)
-elseif("Development.Module" IN_LIST ARGS)
+elseif("Development.Module" IN_LIST ARGS OR "Development.SABIModule" IN_LIST ARGS)
     if("Interpreter" IN_LIST ARGS)
         set(_PythonFinder_WantInterp TRUE)
     endif()
     set(_PythonFinder_WantLibs TRUE)
+    if(ANDROID)
+        list(APPEND ARGS COMPONENTS Development.Embed)
+    endif()
 endif()
 
 if(_PythonFinder_WantLibs)
     find_path(
-        @PythonFinder_PREFIX@_INCLUDE_DIR
+        _@PythonFinder_PREFIX@_INCLUDE_DIR
         NAMES "Python.h"
         PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
         PATH_SUFFIXES "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
@@ -64,15 +68,24 @@ if(_PythonFinder_WantLibs)
         )
     endif()
 
+    # These are duplicated as normal variables to nullify FindPython's checksum verifications.
+    set(_@PythonFinder_PREFIX@_INCLUDE_DIR "${_@PythonFinder_PREFIX@_INCLUDE_DIR}")
+    set(_@PythonFinder_PREFIX@_LIBRARY_RELEASE "${_@PythonFinder_PREFIX@_LIBRARY_RELEASE}")
+    set(_@PythonFinder_PREFIX@_LIBRARY_DEBUG "${_@PythonFinder_PREFIX@_LIBRARY_DEBUG}")
+
     _find_package(${ARGS})
 
-    if(@VCPKG_LIBRARY_LINKAGE@ STREQUAL static)
-        include(CMakeFindDependencyMacro)
+    get_directory_property(_@PythonFinder_PREFIX@_IMPORTED_TARGETS IMPORTED_TARGETS)
+    if(ANDROID AND @PythonFinder_PREFIX@::Module IN_LIST _@PythonFinder_PREFIX@_IMPORTED_TARGETS)
+        set_property(TARGET @PythonFinder_PREFIX@::Module APPEND PROPERTY INTERFACE_LINK_LIBRARIES $<LINK_ONLY:@PythonFinder_PREFIX@::Python>)
+    endif()
+    unset(_@PythonFinder_PREFIX@_IMPORTED_TARGETS)
 
+    if(@VCPKG_LIBRARY_LINKAGE@ STREQUAL "static")
         # Python for Windows embeds the zlib module into the core, so we have to link against it.
         # This is a separate extension module on Unix-like platforms.
         if(WIN32)
-            find_dependency(ZLIB)
+            find_package(ZLIB)
             if(TARGET @PythonFinder_PREFIX@::Python)
                 set_property(TARGET @PythonFinder_PREFIX@::Python APPEND PROPERTY INTERFACE_LINK_LIBRARIES ZLIB::ZLIB)
             endif()
@@ -85,8 +98,8 @@ if(_PythonFinder_WantLibs)
         endif()
 
         if(APPLE)
-            find_dependency(Iconv)
-            find_dependency(Intl)
+            find_package(Iconv)
+            find_package(Intl)
             if(TARGET @PythonFinder_PREFIX@::Python)
                 get_target_property(_PYTHON_INTERFACE_LIBS @PythonFinder_PREFIX@::Python INTERFACE_LINK_LIBRARIES)
                 if(NOT _PYTHON_INTERFACE_LIBS)
@@ -120,6 +133,16 @@ if(_PythonFinder_WantLibs)
     endif()
 else()
     _find_package(${ARGS})
+endif()
+
+if(TARGET @PythonFinder_PREFIX@::Python)
+    target_compile_definitions(@PythonFinder_PREFIX@::Python INTERFACE "Py_NO_LINK_LIB")
+endif()
+if(TARGET @PythonFinder_PREFIX@::Module)
+    target_compile_definitions(@PythonFinder_PREFIX@::Module INTERFACE "Py_NO_LINK_LIB")
+endif()
+if(TARGET @PythonFinder_PREFIX@::SABIModule)
+    target_compile_definitions(@PythonFinder_PREFIX@::SABIModule INTERFACE "Py_NO_LINK_LIB")
 endif()
 
 unset(_PythonFinder_WantInterp)

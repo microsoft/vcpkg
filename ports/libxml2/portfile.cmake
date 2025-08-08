@@ -1,13 +1,14 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
     REF "v${VERSION}"
-    SHA512 527e66f6260a399318cfacc06db3ede4b16178ef17492ed0d515884aa00fce685f9e6932cd117df0d83e2440b5a5392c3d5fbe187b601cf19769b495e0865c87
+    SHA512 6d32311feda4b415f50236dbc1b982094fafe46f86bb3f2ad21365183bd7e9011d00e12c0c23827daf851022a20c99f7cc646e5957a10946300bdc836f91f924
     HEAD_REF master
     PATCHES
+        cxx-for-icu.diff
         disable-docs.patch
         fix_cmakelist.patch
+        fix_ios_compilation.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -19,7 +20,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "lzma" LIBXML2_WITH_LZMA
         "zlib" LIBXML2_WITH_ZLIB
         "tools" LIBXML2_WITH_PROGRAMS
+        "icu"  LIBXML2_WITH_ICU
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -30,8 +35,6 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_CATALOG=ON
         -DLIBXML2_WITH_DEBUG=ON
         -DLIBXML2_WITH_ISO8859X=ON
-        -DLIBXML2_WITH_ICU=OFF # Culprit of linkage issues? Solving this is probably another PR
-        -DLIBXML2_WITH_MEM_DEBUG=OFF
         -DLIBXML2_WITH_MODULES=ON
         -DLIBXML2_WITH_OUTPUT=ON
         -DLIBXML2_WITH_PATTERN=ON
@@ -50,11 +53,14 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_XINCLUDE=ON
         -DLIBXML2_WITH_XPATH=ON
         -DLIBXML2_WITH_XPTR=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    OPTIONS_DEBUG
+        -DLIBXML2_WITH_PROGRAMS=OFF
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2-${VERSION}")
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
@@ -86,4 +92,4 @@ file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/usage"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
-file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright")

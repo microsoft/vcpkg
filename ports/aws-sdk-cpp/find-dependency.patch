@@ -1,0 +1,14 @@
+diff --git a/toolchains/core-config.cmake b/toolchains/core-config.cmake
+index d90bfaf747..ab14402577 100644
+--- a/toolchains/core-config.cmake
++++ b/toolchains/core-config.cmake
+@@ -15,5 +15,9 @@ if (AWSSDK_CRYPTO_IN_SOURCE_BUILD)
+     find_dependency(crypto)
+     find_dependency(ssl)
+ endif()
++find_dependency(ZLIB)
++if("@ENABLE_CURL_CLIENT@")
++    find_dependency(CURL)
++endif()
+ set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_PREV})
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")

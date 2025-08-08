@@ -4,7 +4,7 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
     FILENAME "armadillo-${VERSION}.tar.xz"
-    SHA512 163e81e09d3cd13aa80833ce06d9c4f1889110efa99532adfb66ffac6abb067eedb81775f9a988377d3197f75bfd3cefda56c003cbfe4f2b8256bed680a028de
+    SHA512 E5983B109242F522561A16A4C5F095F25A8F5262E9E6A5C8AC9D7FA48B1F1B1C3A2E48D5671EB02C478B378BC1759BACE9AC061434C42E7338C0C2D21779F607
     PATCHES
         cmake-config.patch
         dependencies.patch
@@ -23,12 +23,16 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DALLOW_FLEXIBLAS_LINUX=OFF
-        -DDETECT_HDF5=OFF
         "-DREQUIRES_PRIVATE=${REQUIRES_PRIVATE}"
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/Armadillo/CMake)
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME Armadillo CONFIG_PATH share/Armadillo/CMake)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Armadillo/ArmadilloConfig.cmake"
+                    [[include("${CMAKE_CURRENT_LIST_DIR}/ArmadilloLibraryDepends.cmake")]]
+                    "include(CMakeFindDependencyMacro)\nfind_dependency(LAPACK)\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/ArmadilloLibraryDepends.cmake\")"
+                    )
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 

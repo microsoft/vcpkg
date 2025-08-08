@@ -2,12 +2,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tlk00/BitMagic
-    REF v7.12.3
-    SHA512 03b9261d102b3c610a4b284f74092feb451b7a5fe80d60002dd2a42e2eeae4b763d212d2647eeb1fc9a61c93500f006ab2bcc46598207903682b70b1e4336b6a
+    REF "v${VERSION}"
+    SHA512 49e1fe4b1628d54ca6b45d8b2a5a1f31aaec67a949630b3ca60c2e70af536d7954fbf8577cf26981436339818ddf243c5c2579585755f42c9dc6a87e0e6d9548
     HEAD_REF master
-
+        fix-clang.patch #https://github.com/tlk00/BitMagic/commit/fab01f43eca266bf56efb1aca659773c911a83fb
 )
 
 file(GLOB HEADER_LIST "${SOURCE_PATH}/src/*.h")
 file(INSTALL ${HEADER_LIST} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,19 +1,22 @@
-if("pulseaudio" IN_LIST FEATURES)
-    message(
-    "${PORT} with pulseaudio feature currently requires the following from the system package manager:
-        libpulse-dev pulseaudio
-    These can be installed on Ubuntu systems via sudo apt install libpulse-dev pulseaudio"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 "702b80ff9c8e2ba9fadd46a0377a295be78900c831ec4b6b75c2f5fee7e453b2e1f5511b076ccc044be7e6eb87086230c50c317dad3597a16d610e16032410fc"
+    SHA512 2d5424d80234742be45f1c7cdf696182c96b684232bb92b079edf270d726c5d1292c5fc42c8b580ae1a89642ad7b536245977928bbeecedd94443f6e1f47d5fd
     HEAD_REF master
     PATCHES
         gentables.patch
+        pkgconfig-opensles.diff
+)
+# Do not use or install FindSndFileLegacy.cmake and its deps
+file(REMOVE
+    "${SOURCE_PATH}/cmake_admin/FindFLAC.cmake"
+    "${SOURCE_PATH}/cmake_admin/Findmp3lame.cmake"
+    "${SOURCE_PATH}/cmake_admin/Findmpg123.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindOgg.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindOpus.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindSndFileLegacy.cmake"
+    "${SOURCE_PATH}/cmake_admin/FindVorbis.cmake"
 )
 
 vcpkg_check_features(
@@ -30,9 +33,9 @@ set(WINDOWS_OPTIONS enable-dsound enable-wasapi enable-waveout enable-winmidi HA
 set(MACOS_OPTIONS enable-coreaudio enable-coremidi COREAUDIO_FOUND COREMIDI_FOUND)
 set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
-set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack enable-lash
+set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack
     enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
-    enable-profiling enable-readline enable-sdl2 enable-systemd enable-trap-on-fpe enable-ubsan)
+    enable-profiling enable-readline enable-sdl2 enable-sdl3 enable-systemd enable-trap-on-fpe enable-ubsan)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS_TO_ENABLE ${WINDOWS_OPTIONS})
@@ -49,7 +52,7 @@ elseif(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 foreach(_option IN LISTS OPTIONS_TO_ENABLE)
-    list(APPEND ENABLED_OPTIONS "-D{_option}:BOOL=ON")
+    list(APPEND ENABLED_OPTIONS "-D${_option}:BOOL=ON")
 endforeach()
     
 foreach(_option IN LISTS OPTIONS_TO_DISABLE IGNORED_OPTIONS)
@@ -74,9 +77,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fluidsynth)
-
 vcpkg_fixup_pkgconfig()
 
 set(tools fluidsynth)
@@ -85,13 +87,12 @@ if("buildtools" IN_LIST FEATURES)
 endif()
 vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
-vcpkg_copy_pdbs()
-
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/share/man")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
