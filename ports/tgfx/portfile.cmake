@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Tencent/tgfx
-        REF c8ef8ec64d2b9a2d5b805932d6361d0f3fa56ab9
-        SHA512 1f11b8d81324c97aa9500ae4d9049dc7d63a33a4681d3d48aa6599f6b72547f4200effff1c6ff272c42fefe77bac45886db7c1abb5702cc5cc23e0f78b20d3dd
+        REF 92d667a8c4e833b6281c3d2e0ea258640d1b8986
+        SHA512 25d44b837cc2e20cfd4e17b6e01943076af4e5e0570447cf871292e8fcb2616774c92ff86ca824ec25529924a277e2bd2c3db8dfc54ed972951bf4d8ca99267f
 )
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
