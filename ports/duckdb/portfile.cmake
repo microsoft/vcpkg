@@ -2,7 +2,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 db92ed9781fe6b88db7e283b188e95ae24a5b567a8e9fd3539574b9fc6c9b3f50330886b8ff9b340f733795115194f624d17eb4cecddc43249dd235ce9201027
+        SHA512 8e725d94cfd81989d4f6d206728188e5b290ce3a7f71d89adc6beed91957f965180d34d69d9099d04e35fc402b389de56184875397b29286789bd9c5655595c5
         HEAD_REF main
     PATCHES
         extensions.patch
@@ -20,11 +20,9 @@ if("excel" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_EXCCEL_SOURCE_PATH
         REPO duckdb/duckdb-excel
-        REF 7e97933214d0c7de2315668ec68589ae85651afb
-        SHA512 594ffe9456e1c11e3bed2939199e735afcd071f9a1b241a3ab0f6fd85c1cdf89d00d10c380260f86f8b9ab0beb1fb904faf9b4c20869b016c41ce86caac4c185
+        REF 6c7a0270608d18053d23359834b775d40804a052
+        SHA512 442b4dc9405f34a9b624e5c4e874ebf2cffd1f5c477257b090613f987d83fcc02bc2293b8d163fffe018aa250e90bcadc9ac345e84dc4c96f4092c19c769f924
         HEAD_REF main
-        PATCHES
-            excel-libname.patch
     )
     file(RENAME "${DUCKDB_EXCCEL_SOURCE_PATH}" "${SOURCE_PATH}/extension/excel")
 endif()
@@ -33,8 +31,8 @@ if("httpfs" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
         REPO duckdb/duckdb_httpfs
-        REF 85a4c0ed07cbda688f71589ed3a92a093bc55c87
-        SHA512 f0040a38dae4bcea360f1da53032aea956dcdd31d80fe0b8b6243c041e53f1b7840ed775a7e29ca0bb70010bf954f4cdb1f2274506cbd4bfcfcc5899b9d3f226
+        REF a4a014d4fc232c3087ee44a804959b5d67a0f8c5
+        SHA512 7e774a0714b863ecd49ad6ff07b8ecf780614f8e81d097dc01def37b48efb140efba003a5caa2deec9c83c636906fbcb44f5d74813da31f162d9d8b06016afe8
         HEAD_REF main
     )
     file(RENAME "${DUCKDB_HTTPFS_SOURCE_PATH}" "${SOURCE_PATH}/extension/httpfs")
