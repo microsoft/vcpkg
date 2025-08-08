@@ -1319,7 +1319,6 @@ librsvg:x64-uwp = cascade
 libsm:arm64-uwp = cascade
 libsm:x64-uwp = cascade
 libtorch:x86-windows = cascade
-libtorch[vulkan] = cascade # no vulkan sdk installed
 libtorch(uwp | (arm & windows) | (arm64 & osx)) = cascade
 libwebp[all,vwebp](uwp) = cascade
 libwebp[vwebp](android) = cascade
