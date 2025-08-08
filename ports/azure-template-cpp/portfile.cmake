@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 236acb5edd48c875184a17e16b64a8420c8b77ea
-    SHA512 29436bdd47f9a10eda9e20e1984b23d01d123d40b873fb4587bfe152dd4bffb309730352ad5e02d49cbbe6f97443debb4235bf1c61edb7f7b3e371d186f0697b
+    REF f1185effdd455d3116ffcadf52e1529348e3c782
+    SHA512 989968b122254797d7cf6feffb3dbb24bc236ab3d5c9e80810200cccd153b0ee56955ec9041976a3c240bc76be44135c63569508d80ed4b2c8c4782332fb2d45
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/attestation/azure-security-attestation")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/attestation/_")
+if(EXISTS "${SOURCE_PATH}/sdk/template/azure-template")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/template/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/attestation/azure-security-attestation" "${SOURCE_PATH}/sdk/attestation/_")
-  file(RENAME "${SOURCE_PATH}/sdk/attestation" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template/azure-template" "${SOURCE_PATH}/sdk/template/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
