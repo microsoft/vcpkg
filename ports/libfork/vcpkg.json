@@ -1,11 +1,10 @@
 {
   "name": "libfork",
-  "version": "3.7.1",
+  "version": "3.8.0",
   "description": "A bleeding-edge, lock-free, wait-free, continuation-stealing fork-join library built on C++20's coroutines.",
   "homepage": "https://github.com/conorwilliams/libfork",
   "license": "MPL-2.0",
   "dependencies": [
-    "boost-atomic",
     "hwloc",
     {
       "name": "vcpkg-cmake",

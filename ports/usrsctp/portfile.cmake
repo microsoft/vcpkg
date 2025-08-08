@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix_export.patch
+        mingw.diff
 )
 
 vcpkg_cmake_configure(

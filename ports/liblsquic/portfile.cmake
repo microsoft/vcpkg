@@ -1,4 +1,4 @@
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
   # The lib uses CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS, at least until
   # https://github.com/litespeedtech/lsquic/pull/371 or similar is merged
   vcpkg_check_linkage(ONLY_STATIC_LIBRARY)

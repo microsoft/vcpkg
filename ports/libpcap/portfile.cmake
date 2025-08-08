@@ -2,80 +2,65 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/winpcap")
     message(FATAL_ERROR "FATAL ERROR: winpcap and libpcap are incompatible.")
 endif()
 
-if(VCPKG_TARGET_IS_LINUX)
-    message(
-"libpcap currently requires the following libraries from the system package manager:
-    flex
-    libbison-dev
-These can be installed on Ubuntu systems via sudo apt install flex libbison-dev"
-    )
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO the-tcpdump-group/libpcap
     REF "libpcap-${VERSION}"
-    SHA512 7352ff4d5bded916c0802e4a846fcb6b26e3ea8025dbbf58543abd9d9f6e8f7f5d60e03bcadb222d20434b7e052f663a560d7487af4b81fba74cf5aea040d733
+    SHA512 bb8ba3a589425d71531312285a3c7ded4abdff5ea157b88195e06a2b4f8c93b4db0bca122e9ac853cff14cd16e9519dca30b6bdf0311e7749038fdce57325726
     HEAD_REF master
-    PATCHES 
-        install-pc-on-msvc.patch
-        add-disable-packet-option.patch
+    PATCHES
+        install.diff
+        mingw-dynamic-libname.diff
 )
 
 vcpkg_find_acquire_program(BISON)
-get_filename_component(BISON_PATH ${BISON} DIRECTORY)
-vcpkg_add_to_path(${BISON_PATH})
 vcpkg_find_acquire_program(FLEX)
-get_filename_component(FLEX_PATH ${FLEX} DIRECTORY)
-vcpkg_add_to_path(${FLEX_PATH})
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RT)
+
+SET(options "")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CMAKE_CONFIGURE_OPTIONS MATCHES "Packet_ROOT")
+        list(APPEND options "-DPCAP_TYPE=null")
+        message(STATUS [[Attention:
+
+This build does not include packet capture capabilities.
+In order to enable such capabilities, install the Npcap SDK or the WinPcap SDK,
+and pass '-DPacket_ROOT=<path of SDK>' via VCPKG_CMAKE_CONFIGURE_OPTIONS
+in a custom triplet file.
+]])
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DDISABLE_NETMAP=ON
+        ${options}
+        -DBUILD_WITH_LIBNL=OFF
+        -DDISABLE_AIRPCAP=ON
         -DDISABLE_BLUETOOTH=ON
-        -DDISABLE_DBUS=ON
-        -DDISABLE_RDMA=ON
         -DDISABLE_DAG=ON
+        -DDISABLE_DBUS=ON
+        -DDISABLE_DPDK=ON
+        -DDISABLE_NETMAP=ON
+        -DDISABLE_RDMA=ON
         -DDISABLE_SEPTEL=ON
         -DDISABLE_SNF=ON
         -DDISABLE_TC=ON
-        -DDISABLE_PACKET=ON
         -DENABLE_REMOTE=OFF
+        "-DLEX_EXECUTABLE=${FLEX}"
+        "-DYACC_EXECUTABLE=${BISON}"
         -DUSE_STATIC_RT=${USE_STATIC_RT}
+    MAYBE_UNUSED_VARIABLES
+        BUILD_WITH_LIBNL  # linux only
+        CMAKE_DISABLE_FIND_PACKAGE_Packet # windows only
 )
 
 vcpkg_cmake_install()
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
-# On Windows 64-bit, libpcap 1.10.1 installs the libraries in a x64 subdirectory of the usual directories
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(libsubdir "x64")
-    file(GLOB_RECURSE FILES_TO_MOVE "${CURRENT_PACKAGES_DIR}/lib/${libsubdir}/*")
-    file(COPY ${FILES_TO_MOVE} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    file(GLOB_RECURSE FILES_TO_MOVE "${CURRENT_PACKAGES_DIR}/debug/lib/${libsubdir}/*")
-    file(COPY ${FILES_TO_MOVE} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    file(GLOB_RECURSE FILES_TO_MOVE "${CURRENT_PACKAGES_DIR}/bin/${libsubdir}/*")
-    file(COPY ${FILES_TO_MOVE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(GLOB_RECURSE FILES_TO_MOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${libsubdir}/*")
-    file(COPY ${FILES_TO_MOVE} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/${libsubdir}"
-                        "${CURRENT_PACKAGES_DIR}/debug/lib/${libsubdir}"
-                        "${CURRENT_PACKAGES_DIR}/bin/${libsubdir}"
-                        "${CURRENT_PACKAGES_DIR}/debug/bin/${libsubdir}")
-endif()
-
-# Even if compiled with BUILD_SHARED_LIBS=ON, pcap also install a pcap_static library
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pcap_static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/pcap_static.lib")
-endif()
-
 vcpkg_fixup_pkgconfig()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/man")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

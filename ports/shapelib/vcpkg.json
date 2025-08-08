@@ -1,6 +1,6 @@
 {
   "name": "shapelib",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Shapefile C Library is simple C API for reading and writing ESRI Shapefiles",
   "homepage": "https://download.osgeo.org/shapelib",
   "license": "MIT OR LGPL-2.0-or-later",
@@ -16,8 +16,11 @@
   ],
   "features": {
     "contrib": {
-      "description": "Build utilities (from contrib)",
+      "description": "Build utilities from contrib",
       "license": null
+    },
+    "tools": {
+      "description": "Build tools"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "libuuid",
   "version": "1.0.3",
-  "port-version": 14,
+  "port-version": 15,
   "description": "Universally unique id library",
   "homepage": "https://sourceforge.net/projects/libuuid",
   "license": "BSD-3-Clause",

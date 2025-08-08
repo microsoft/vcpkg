@@ -1,6 +1,6 @@
 {
   "name": "qwt",
-  "version-date": "2023-05-12",
+  "version": "6.3.0",
   "description": "Widgets library for technical applications",
   "homepage": "https://sourceforge.net/projects/qwt",
   "license": null,

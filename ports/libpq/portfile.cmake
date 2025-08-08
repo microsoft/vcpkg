@@ -1,7 +1,8 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
+         "https://www.mirrorservice.org/sites/ftp.postgresql.org/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
     FILENAME "postgresql-${VERSION}.tar.bz2"
-    SHA512 3194941cc3f1ec86b6cf4f08c6422d268d99890441f8fc9ab87b6a7fd16c990fa230b544308644cbef54e6960c4984e3703752e40930bdc0537b7bfda3ab7ccf
+    SHA512 23a3d983c5be49c3daabbbde35db2920bd2e2ba8d9baba805e7908da1f43153ff438c76c253ea8ee8ac6f8a9313fbf0348a1e9b45ef530c5e156fee0daceb814
 )
 
 vcpkg_extract_source_archive(
@@ -18,6 +19,7 @@ vcpkg_extract_source_archive(
         windows/win_bison_flex.patch
         windows/msbuild.patch
         windows/spin_delay.patch
+        windows/tcl-9.0-alpha.patch
         android/unversioned_so.patch
 )
 
@@ -31,25 +33,20 @@ else()
     set(HAS_TOOLS FALSE)
 endif()
 
-set(required_programs PERL)
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND required_programs BISON FLEX)
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+set(required_programs BISON FLEX)
+if(VCPKG_DETECTED_MSVC OR NOT VCPKG_HOST_IS_WINDOWS)
+    list(APPEND required_programs PERL)
 endif()
 foreach(program_name IN LISTS required_programs)
-    # Need to rename win_bison and win_flex to just bison and flex
     vcpkg_find_acquire_program(${program_name})
     get_filename_component(program_dir ${${program_name}} DIRECTORY)
     vcpkg_add_to_path(PREPEND "${program_dir}")
 endforeach()
 
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-
 if(VCPKG_DETECTED_MSVC)
-    if("nls" IN_LIST FEATURES)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES gettext)
-        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-    endif()
     if("xml" IN_LIST FEATURES)
         x_vcpkg_pkgconfig_get_modules(
             PREFIX PC_LIBXML2
@@ -97,16 +94,13 @@ else()
     endforeach()
     if("nls" IN_LIST FEATURES)
         set(ENV{MSGFMT} "${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin/msgfmt${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-        if(VCPKG_TARGET_IS_ANDROID)
-            list(APPEND BUILD_OPTS [[LIBS=$LIBS -liconv]])
-        endif()
     endif()
     if("python" IN_LIST FEATURES)
         list(APPEND BUILD_OPTS --with-python=3.${PYTHON_VERSION_MINOR})
         vcpkg_find_acquire_program(PYTHON3)
         list(APPEND BUILD_OPTS "PYTHON=${PYTHON3}")
     endif()
-    if(VCPKG_TARGET_IS_ANDROID) # AND CMAKE_SYSTEM_VERSION LESS 26)
+    if(VCPKG_TARGET_IS_ANDROID AND (NOT VCPKG_CMAKE_SYSTEM_VERSION OR VCPKG_CMAKE_SYSTEM_VERSION LESS "26"))
         list(APPEND BUILD_OPTS ac_cv_header_langinfo_h=no)
     endif()
     if(VCPKG_DETECTED_CMAKE_OSX_SYSROOT)

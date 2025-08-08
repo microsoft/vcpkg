@@ -1,0 +1,18 @@
+diff --git a/base/atomicops_internals_portable.h b/base/atomicops_internals_portable.h
+index 2486fb7..88e2d2d 100644
+--- a/base/atomicops_internals_portable.h
++++ b/base/atomicops_internals_portable.h
+@@ -51,13 +51,7 @@ static_assert(sizeof(*(AtomicLocation32) nullptr) == sizeof(Atomic32),
+               "incompatible 32-bit atomic layout");
+
+ inline void MemoryBarrier() {
+-#if defined(__GLIBCXX__)
+-  // Work around libstdc++ bug 51038 where atomic_thread_fence was declared but
+-  // not defined, leading to the linker complaining about undefined references.
+-  __atomic_thread_fence(std::memory_order_seq_cst);
+-#else
+   std::atomic_thread_fence(std::memory_order_seq_cst);
+-#endif
+ }
+
+ inline Atomic32 NoBarrier_CompareAndSwap(volatile Atomic32* ptr,

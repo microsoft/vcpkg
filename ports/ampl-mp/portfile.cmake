@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-arm-build.patch # https://github.com/ampl/mp/issues/115
         install-targets.patch
 )
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/0007-unofficial-export.cmake" DESTINATION "${SOURCE_PATH}/")
 
 if (NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     set(ARITHCHK_EXEC ${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}/gen-expr-info${VCPKG_HOST_EXECUTABLE_SUFFIX})

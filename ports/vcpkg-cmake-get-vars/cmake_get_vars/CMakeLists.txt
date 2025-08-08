@@ -32,6 +32,7 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR
                                         CMAKE_SIZEOF_VOID_P
+                                        CMAKE_LIBRARY_PATH_FLAG
                                         MSVC
                                         MSVC_VERSION)
 if(ANDROID)
@@ -62,7 +63,7 @@ if(APPLE)
                                             CMAKE_OSX_SYSROOT)
 endif()
 # Programs to check
-set(PROGLIST AR RANLIB STRIP NM OBJDUMP DLLTOOL MT LINKER)
+set(PROGLIST AR DLLTOOL LINKER MT NM OBJCOPY OBJDUMP RANLIB STRIP)
 foreach(prog IN LISTS PROGLIST)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${prog})
 endforeach()
@@ -81,11 +82,10 @@ foreach(_lang IN LISTS VCPKG_LANGUAGES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILE_FEATURES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_EXTENSION)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILER_TARGET)
-    # Probably never required since implicit.
-    #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
-    #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_INCLUDE_DIRECTORIES)
-    #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_DIRECTORIES)
-    #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_LIBRARIES)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_INCLUDE_DIRECTORIES)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_DIRECTORIES)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_LIBRARIES)
 endforeach()
 list(REMOVE_DUPLICATES VCPKG_DEFAULT_VARS_TO_CHECK)
 
@@ -159,12 +159,37 @@ if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
         string(APPEND EXTRA_FLAGS " ${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} \"${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}\"")
     endif()
 endif()
-if(CMAKE_SYSROOT AND CMAKE_CXX_COMPILE_OPTIONS_SYSROOT)
-    string(APPEND EXTRA_FLAGS " \"${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}\"")
+
+set(extra_flags_compile "")
+set(extra_flags_link "")
+if(CMAKE_CXX_COMPILE_OPTIONS_SYSROOT)
+    if(CMAKE_SYSROOT_COMPILE)
+        string(APPEND extra_flags_compile " \"${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT_COMPILE}\"")
+    elseif(CMAKE_SYSROOT)
+        string(APPEND extra_flags_compile " \"${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}\"")
+    endif()
+
+    if(CMAKE_SYSROOT_LINK)
+        string(APPEND extra_flags_link " \"${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT_LINK}\"")
+    elseif(CMAKE_SYSROOT)
+        string(APPEND extra_flags_link " \"${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}\"")
+    endif()
 endif()
 
-foreach(flags ${VCPKG_LANGUAGES} SHARED_LINKER EXE_LINKER STATIC_LINKER MODULE_LINKER)
+set(flags_to_add_target_compile "${VCPKG_LANGUAGES}")
+set(flags_to_add_target_link SHARED_LINKER EXE_LINKER STATIC_LINKER MODULE_LINKER)
+
+foreach(flags IN LISTS flags_to_add_target_compile flags_to_add_target_link)
     set(${flags}_FLAGS "${target_param} ${CMAKE_${flags}_FLAGS} ${CMAKE_${flags}_FLAGS_${VCPKG_CONFIGS}} ${EXTRA_FLAGS}")
+endforeach()
+
+foreach(flags IN LISTS flags_to_add_target_compile)
+    string(APPEND ${flags}_FLAGS " ${extra_flags_compile}")
+    string(STRIP ${flags}_FLAGS "${${flags}_FLAGS}")
+endforeach()
+
+foreach(flags IN LISTS flags_to_add_target_link)
+    string(APPEND ${flags}_FLAGS " ${extra_flags_link}")
     string(STRIP ${flags}_FLAGS "${${flags}_FLAGS}")
 endforeach()
 

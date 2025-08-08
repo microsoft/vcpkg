@@ -1,7 +1,6 @@
 {
   "name": "vcpkg-cmake-config",
-  "version-date": "2022-02-06",
-  "port-version": 1,
-  "documentation": "https://vcpkg.io/en/docs/README.html",
+  "version-date": "2024-05-23",
+  "documentation": "https://learn.microsoft.com/vcpkg/maintainers/functions/vcpkg_cmake_config_fixup",
   "license": "MIT"
 }

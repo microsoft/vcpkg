@@ -1,0 +1,13 @@
+diff --git a/CPP/Windows/TimeUtils.cpp b/CPP/Windows/TimeUtils.cpp
+index bbd79ba..8df3ea3 100644
+--- a/CPP/Windows/TimeUtils.cpp
++++ b/CPP/Windows/TimeUtils.cpp
+@@ -259,7 +259,7 @@ bool GetSecondsSince1601(unsigned year, unsigned month, unsigned day,
+       Minix 3.1.8, AIX 7.1, HP-UX 11.31, IRIX 6.5, Solaris 11.3,
+       Cygwin 2.9, mingw, MSVC 14, Android 9.0.
+ */
+-#if defined(TIME_UTC)
++#if defined(TIME_UTC) && (!defined(__ANDROID__) || __ANDROID_API__ >= 29)
+ #define ZIP7_USE_timespec_get
+ // #pragma message("ZIP7_USE_timespec_get")
+ #elif defined(CLOCK_REALTIME)

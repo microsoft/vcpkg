@@ -1,0 +1,8 @@
+{
+  "name": "audit",
+  "version": "4.0.5",
+  "description": "Library for working with audit subsystem",
+  "homepage": "https://github.com/linux-audit/audit-userspace",
+  "license": "GPL-2.0-or-later OR LGPL-2.1-or-later",
+  "supports": "linux"
+}

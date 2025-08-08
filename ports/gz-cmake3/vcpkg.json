@@ -1,14 +1,11 @@
 {
   "name": "gz-cmake3",
   "version": "3.4.1",
-  "port-version": 5,
+  "port-version": 6,
   "description": "CMake helper functions for building robotic applications",
   "homepage": "https://ignitionrobotics.org/libs/cmake",
   "license": null,
   "dependencies": [
-    {
-      "name": "ignition-modularscripts",
-      "host": true
-    }
+    "gz-cmake"
   ]
 }

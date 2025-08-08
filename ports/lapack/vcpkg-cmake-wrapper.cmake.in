@@ -4,7 +4,12 @@
 
 _find_package(BLAS) # Find BLAS before setting BLA_VENDOR (Will set/unset BLA_VENDOR itself)
 set(BLA_VENDOR @BLA_VENDOR@)
-set(BLA_STATIC @BLA_STATIC@)
+if(APPLE AND "@BLA_STATIC@" AND CMAKE_VERSION VERSION_LESS "3.17.0")
+    # avoid `-Wl,--(start|end)-group` and wrong lib suffix
+    set(BLA_STATIC 0) 
+else()
+    set(BLA_STATIC @BLA_STATIC@)
+endif()
 _find_package(${ARGS})
 unset(BLA_VENDOR)
 unset(BLA_STATIC)

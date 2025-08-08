@@ -1,24 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c0c1bfef94..3c879b8958 100644
---- a/CMakeLists.txt	
+index 19826d3..bac311d 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -17,7 +17,7 @@ target_link_libraries(boost_process
-     Boost::asio
-     Boost::config
-     Boost::core
--    Boost::filesystem
-+    $<TARGET_NAME_IF_EXISTS:Boost::filesystem>
-     Boost::fusion
-     Boost::iterator
-     Boost::move
-@@ -28,6 +28,10 @@ target_link_libraries(boost_process
-     Boost::winapi
+@@ -49,6 +49,11 @@ target_compile_definitions(boost_process
+         PRIVATE BOOST_PROCESS_SOURCE=1
  )
  
 +if(NOT TARGET Boost::filesystem)
-+  target_compile_definitions(boost_process INTERFACE $<$<NOT:$<TARGET_EXISTS:Boost::filesystem>>:BOOST_PROCESS_USE_STD_FS>)
++  set(BOOST_PROCESS_USE_STD_FS ON)
++  target_compile_features(boost_process PUBLIC cxx_std_17)
 +endif()
 +
- if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
- 
-   add_subdirectory(test)
+ if (BOOST_PROCESS_USE_STD_FS)
+   target_compile_definitions(boost_process PUBLIC BOOST_PROCESS_USE_STD_FS=1 )
+ else()

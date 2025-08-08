@@ -4,22 +4,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO saucer/saucer
     REF "v${VERSION}"
-    SHA512 29abb465a888aa4284795e293624598c09e0ba690bb430adb7a2122d82985daa1cfcfd594120f5657fc70349f8480e63554d72bff1b23f9dca86bcdbb930d953
+    SHA512 083b92079bf324fb9e50b3d6291ee3654b8e4e2926c292c9dc092b1c4ce336ce4d4bbea7e14d52291340c692887b8ab92d1f9f3d50aed6092b5465242572bfdc
     HEAD_REF dev
     PATCHES
-        fix_findpkg.patch
+        0001-use-local-packages.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH} 
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        ${BACKEND_OPTION}
+        -Dsaucer_no_polyfill=ON
         -Dsaucer_prefer_remote=OFF
-        -Dsaucer_remote_webview2=OFF
-    MAYBE_UNUSED_VARIABLES
-        saucer_remote_webview2
+        -DCPM_USE_LOCAL_PACKAGES=ON
 )
-
 vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

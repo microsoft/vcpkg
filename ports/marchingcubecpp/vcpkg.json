@@ -1,0 +1,7 @@
+{
+  "name": "marchingcubecpp",
+  "version-date": "2023-09-11",
+  "description": "Marching cube implementation.",
+  "homepage": "https://github.com/aparis69/MarchingCubeCpp",
+  "license": "MIT"
+}

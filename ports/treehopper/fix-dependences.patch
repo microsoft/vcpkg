@@ -9,8 +9,8 @@ index 8537305..db3d29b 100644
 -    target_link_libraries(treehopper usb-1.0 pthread)
 +    find_package(PkgConfig REQUIRED)
 +    pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
-+
-+    target_link_libraries(treehopper PRIVATE PkgConfig::libusb pthread)
++    find_package(Threads REQUIRED)
++    target_link_libraries(treehopper PRIVATE PkgConfig::libusb ${CMAKE_THREAD_LIBS_INIT})
  elseif(WIN32)
      target_link_libraries(treehopper winusb setupapi)
  endif(APPLE)

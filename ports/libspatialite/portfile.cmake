@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         gaiaconfig-msvc.patch
         fix-mingw.patch
         fix-utf8-source.patch
+        android-builtin-iconv.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
@@ -159,6 +160,8 @@ else()
     if(VCPKG_TARGET_IS_MINGW)
         # Avoid system libs (as detected by cmake) in exported pc files
         set(SYSTEM_LIBS "")
+    elseif(VCPKG_TARGET_IS_ANDROID)
+        set(SYSTEM_LIBS "\$LIBS -llog")
     else()
         set(SYSTEM_LIBS "\$LIBS")
     endif()
@@ -197,7 +200,7 @@ else()
         "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Makefile"
     )
     foreach(makefile IN LISTS makefiles)
-        vcpkg_replace_string("${makefile}" " -I$(top_builddir)/./src/headers/spatialite" " -I$(top_builddir)/./src/headers")
+        vcpkg_replace_string("${makefile}" " -I$(top_builddir)/./src/headers/spatialite" " -I$(top_builddir)/./src/headers" IGNORE_UNCHANGED)
     endforeach()
 
     vcpkg_install_make()

@@ -1,7 +1,9 @@
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://github.com/Ipotrick/Daxa
-    REF 61b699ac12de475cf4a79bc99106b865acddaf18
+    REPO Ipotrick/Daxa
+    REF ${VERSION}
+    SHA512 5843d95ced3ec154d46e31ad5bf822a8470c785415819d235d5b499c3de629c30f5e4afe12b68ef3505ef7287afc68a70f06e255379136fae2e63976310ca3e0
+    HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -9,10 +11,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     utils-imgui WITH_UTILS_IMGUI
     utils-mem WITH_UTILS_MEM
     utils-pipeline-manager-glslang WITH_UTILS_PIPELINE_MANAGER_GLSLANG
+    utils-pipeline-manager-slang WITH_UTILS_PIPELINE_MANAGER_SLANG
     utils-pipeline-manager-spirv-validation WITH_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION
     utils-task-graph WITH_UTILS_TASK_GRAPH
 )
-set(DAXA_DEFINES)
+set(DAXA_DEFINES "-DDAXA_INSTALL=true")
 
 if(WITH_UTILS_IMGUI)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_IMGUI=true")
@@ -22,6 +25,9 @@ if(WITH_UTILS_MEM)
 endif()
 if(WITH_UTILS_PIPELINE_MANAGER_GLSLANG)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_PIPELINE_MANAGER_GLSLANG=true")
+endif()
+if(WITH_UTILS_PIPELINE_MANAGER_SLANG)
+    list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_PIPELINE_MANAGER_SLANG=true")
 endif()
 if(WITH_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION)
     list(APPEND DAXA_DEFINES "-DDAXA_ENABLE_UTILS_PIPELINE_MANAGER_SPIRV_VALIDATION=true")
@@ -44,7 +50,4 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

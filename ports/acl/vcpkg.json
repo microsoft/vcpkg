@@ -1,7 +1,6 @@
 {
   "name": "acl",
-  "version-semver": "2.3.1",
-  "port-version": 2,
+  "version-semver": "2.3.2",
   "description": "Commands for Manipulating POSIX Access Control Lists",
   "homepage": "https://savannah.nongnu.org/projects/acl",
   "license": "LGPL-2.1-or-later",

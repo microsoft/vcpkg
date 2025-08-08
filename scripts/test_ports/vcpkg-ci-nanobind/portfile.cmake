@@ -15,11 +15,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# This is needed to correctly build/link against a debug build of Python on
-# Windows
-string(APPEND VCPKG_CXX_FLAGS_DEBUG " -DPy_DEBUG")
-string(APPEND VCPKG_C_FLAGS_DEBUG " -DPy_DEBUG")
-
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
 vcpkg_cmake_build()

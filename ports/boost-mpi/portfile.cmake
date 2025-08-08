@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mpi
     REF boost-${VERSION}
-    SHA512 b2308a8ad35ad803b53d53025286e41dd24f309c422e284f37e7d40b0706697335c05fcd9b3630cb242f1333ba2280aff3134ce1983e652b7b5a8960c5b59d46
+    SHA512 fcea94d2bbc46389917211944bc72eebd11d1c7fed9221c2fd00d6d716882680ee03e509e55e6ccaede8164d79c9abc9f084c8743c3026d2e2fbcd5381aa725d
     HEAD_REF master
+    PATCHES
+        revert_mpi_cxx_bool.diff
 )
 
 set(FEATURE_OPTIONS "")

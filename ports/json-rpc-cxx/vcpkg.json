@@ -1,6 +1,6 @@
 {
   "name": "json-rpc-cxx",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A JSON-RPC 2.0 framework implemented in C++17 using the nlohmann's json for modern C++.",
   "homepage": "https://github.com/jsonrpcx/json-rpc-cxx",
   "license": "MIT",

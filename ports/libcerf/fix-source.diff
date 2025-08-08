@@ -1,0 +1,26 @@
+diff --git a/lib/width.c b/lib/width.c
+index 37c3afa..b4b6bda 100644
+--- a/lib/width.c
++++ b/lib/width.c
+@@ -47,7 +47,7 @@ using std::isnan;
+  * Olivero & Longbothum [1977]
+  * Journal of Quantitative Spectroscopy and Radiative Transfer. 17:233
+  */
+-double hwhm0(double sigma, double gamma)
++static double hwhm0(double sigma, double gamma)
+ {
+     return .5*(1.06868*gamma+sqrt(0.86743*gamma*gamma+4*2*log(2)*sigma*sigma));
+ }
+diff --git a/test/widthtest.c b/test/widthtest.c
+index b395d34..a44b83f 100644
+--- a/test/widthtest.c
++++ b/test/widthtest.c
+@@ -28,7 +28,7 @@
+ #include "testtool.h"
+ 
+ // excellent approximation [Olivero & Longbothum, 1977], used as starting value in voigt_hwhm
+-double hwhm0(double sigma, double gamma)
++static double hwhm0(double sigma, double gamma)
+ {
+     return .5*(1.06868*gamma+sqrt(0.86743*gamma*gamma+4*2*log(2)*sigma*sigma));
+ }

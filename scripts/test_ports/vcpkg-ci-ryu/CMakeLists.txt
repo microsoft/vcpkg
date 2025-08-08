@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.30)
+project(vcpkg-ci-ryu LANGUAGES C)
+find_package(ryu CONFIG REQUIRED)
+add_executable(test test.c)
+target_link_libraries(test PUBLIC RYU::ryu RYU::ryu_printf)
+install(TARGETS test RUNTIME DESTINATION bin/vcpkg-ci-ryu)

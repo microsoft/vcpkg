@@ -1,0 +1,34 @@
+{
+  "name": "vcpkg-ci-plplot",
+  "version-string": "ci",
+  "description": "Port to force features of plplot within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "plplot",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test all features",
+      "dependencies": [
+        {
+          "name": "plplot",
+          "features": [
+            "wxwidgets"
+          ],
+          "platform": "!android"
+        }
+      ]
+    }
+  }
+}

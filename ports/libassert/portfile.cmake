@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jeremy-rifkin/libassert
     REF "v${VERSION}"
-    SHA512 04b70ba705cfa6b7ab7957815ba6462ceb2ee07247058d05768e4ddb0e7d05077d9bb9f5266516bbae1d2347027b9ebe0f1fd20f2dcda007c8f4522145aa0f65
+    SHA512 877f7ddac1b3ffa77d6c30b9aa4c6bf2a32bd3089b5348b75b4f52ef474cf6ee1f754bab5f0396e3ee3df83f9a438a5154c0fefce683c479b2f3a8adaef3c0a7
     HEAD_REF main
 )
 

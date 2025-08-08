@@ -1,7 +1,6 @@
 {
   "name": "paho-mqtt",
-  "version": "1.3.13",
-  "port-version": 1,
+  "version": "1.3.14",
   "description": "Paho project provides open-source client implementations of MQTT and MQTT-SN messaging protocols aimed at new, existing, and emerging applications for the Internet of Things",
   "homepage": "https://github.com/eclipse/paho.mqtt.c",
   "license": "EPL-2.0",

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HappySeaFox/sail
     REF "v${VERSION}"
-    SHA512 75d797d3fb36e1712cfdd2f0cc13f9bb20b2fc1fe0546e2046ad4356b608adb0efb9c3d17dd1b3c131e445fd5399705c0598d04ba55b1140d271ba86c6e42744
+    SHA512 1d390272d12e1b39939e9b7e0ccf046cc5401dad238945b6f9b1d94d6bb7ecebb9bb6bbe0cdd2f59d8df677ee1d413b3ef648c7ec64336179fcf0068f6e73fb2
     HEAD_REF master
     PATCHES
         fix-include-directory.patch
@@ -57,8 +57,8 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake"
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
 
-# Unused because SAIL_COMBINE_CODECS is ON
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#define SAIL_CODECS_PATH \"${CURRENT_PACKAGES_DIR}/lib/sail/codecs\"" "")
+# Unused because SAIL_COMBINE_CODECS is ON, removes an absolute path from the output
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sail-common/config.h" "#define SAIL_CODECS_PATH [^\r\n]+[\r\n]*" "" REGEX)
 
 # Handle usage
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

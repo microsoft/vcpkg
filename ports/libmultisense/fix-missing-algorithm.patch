@@ -1,0 +1,12 @@
+diff --git a/source/LibMultiSense/details/legacy/message.cc b/source/LibMultiSense/details/legacy/message.cc
+index 14c2a6e..5c3aa23 100644
+--- a/source/LibMultiSense/details/legacy/message.cc
++++ b/source/LibMultiSense/details/legacy/message.cc
+@@ -34,6 +34,7 @@
+  *   2025-01-08, malvarado@carnegierobotics.com, IRAD, Created file.
+  **/
+ 
++#include <algorithm>
+ #include <inttypes.h>
+ #include <limits>
+ 

@@ -1,0 +1,22 @@
+{
+  "name": "netcpp",
+  "version": "0.5.0",
+  "description": "A simple asynchronous network library",
+  "homepage": "https://github.com/index1207/netcpp",
+  "license": "MIT",
+  "supports": "windows | linux",
+  "dependencies": [
+    {
+      "name": "liburing",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,8 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fbaffc9..451b689 100644
+index fbaffc9..672ebb9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -39,10 +39,11 @@ set(SOURCES
+@@ -5,7 +5,6 @@ project(libuvc
+ )
+ 
+ # Additional search scripts path for libusb-1.0, libjpeg, OpenCV
+-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+ 
+ # Xcode and Visual Studio do not using CMAKE_BUILD_TYPE cache variable
+ # so we use Release build type only with single configuration generators.
+@@ -39,10 +38,11 @@ set(SOURCES
    src/misc.c
  )
  
@@ -16,15 +24,32 @@ index fbaffc9..451b689 100644
  if(JPEG_FOUND)
    message(STATUS "Building libuvc with JPEG support.")
    set(LIBUVC_HAS_JPEG TRUE)
-@@ -116,7 +117,7 @@ foreach(target_name IN LISTS UVC_TARGETS)
+@@ -116,8 +116,11 @@ foreach(target_name IN LISTS UVC_TARGETS)
    )
    target_link_libraries(${target_name}
      # libusb-1.0 used internally so we link to it privately.
 -    PRIVATE LibUSB::LibUSB ${threads}
 +    PRIVATE PkgConfig::libusb ${threads}
    )
++  if(APPLE)
++    target_link_libraries(${target_name} PRIVATE "-framework IOKit" "-framework CoreFoundation" "-framework Security")
++  endif()
    if(JPEG_FOUND)
      target_link_libraries(${target_name}
+       PRIVATE JPEG::JPEG
+@@ -191,12 +194,6 @@ install(EXPORT libuvcTargets
+   DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
+ )
+ 
+-install(FILES 
+-    cmake/FindLibUSB.cmake
+-    cmake/FindJpegPkg.cmake
+-  DESTINATION ${CMAKE_INSTALL_CMAKEDIR}
+-)
+-
+ include(CMakePackageConfigHelpers)
+ write_basic_package_version_file(libuvcConfigVersion.cmake
+   COMPATIBILITY AnyNewerVersion
 diff --git a/libuvcConfig.cmake b/libuvcConfig.cmake
 index b9887ea..c704ab5 100644
 --- a/libuvcConfig.cmake

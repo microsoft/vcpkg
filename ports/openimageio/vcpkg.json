@@ -1,30 +1,20 @@
 {
   "name": "openimageio",
-  "version": "2.5.8.0",
-  "port-version": 2,
+  "version": "3.0.9.0",
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "boost-algorithm",
-    "boost-asio",
-    "boost-config",
-    "boost-filesystem",
-    "boost-foreach",
-    "boost-random",
-    "boost-regex",
-    "boost-smart-ptr",
-    "boost-stacktrace",
-    "boost-static-assert",
-    "boost-system",
-    "boost-thread",
-    "boost-type-traits",
     "fmt",
     "libjpeg-turbo",
     "libpng",
+    "opencolorio",
     "openexr",
     "robin-map",
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -60,6 +50,12 @@
         "giflib"
       ]
     },
+    "jpegxl": {
+      "description": "Enable JPEG XL codec",
+      "dependencies": [
+        "libjxl"
+      ]
+    },
     "libheif": {
       "description": "Enable heif support for openimageio",
       "dependencies": [
@@ -86,7 +82,12 @@
       "dependencies": [
         {
           "name": "opencv",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "fs",
+            "intrinsics",
+            "thread"
+          ]
         }
       ]
     },
@@ -108,6 +109,7 @@
     },
     "viewer": {
       "description": "Build openimageio viewer",
+      "supports": "!android",
       "dependencies": [
         "opengl",
         {

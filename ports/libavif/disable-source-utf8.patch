@@ -1,15 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6d9431c..29d7d60 100644
+index baf5964..a28e6c3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -161,8 +161,8 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "MSVC")
-         # A C4556 warning will be generated on violation.
-         # Commonly used /utf-8 flag assumes UTF-8 for both source and console, which is usually not the case.
-         # Warnings can be suppressed but there will still be random characters printed to the console.
--        /source-charset:utf-8
--        /execution-charset:us-ascii
-+        #/source-charset:utf-8
-+        #/execution-charset:us-ascii
-     )
- else()
-     message(FATAL_ERROR "libavif: Unknown compiler, bailing out")
+@@ -296,8 +296,8 @@ if(MSVC)
+                    # A C4556 warning will be generated on violation.
+                    # Commonly used /utf-8 flag assumes UTF-8 for both source and console, which is usually not the case.
+                    # Warnings can be suppressed but there will still be random characters printed to the console.
+-                   /source-charset:utf-8
+-                   /execution-charset:us-ascii
++                   #/source-charset:utf-8
++                   #/execution-charset:us-ascii
+                    >
+         )
+     endif()

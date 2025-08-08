@@ -1,13 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gul-cpp/gul14
-    REF v2.11.0
-    SHA512 d36bac6573f7eaee068df6b94481efb05270d55d2cf5b22bf57ccaaed650cefece61585fc518769da1308194cfde976854bf5ad89647c5a5808b7f8784c9c7f5
+    REF "v${VERSION}"
+    SHA512 50e20163ac0d29b80eb5b7fef3d57ccb8c649096414f432d613a900d8c420aa6847b1f2e47fb34571efc614d965ef265796b29ebf45bc99809ae8c505315c3bc
     HEAD_REF main
 )
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS -Dtests=false
 )
 
 vcpkg_install_meson()

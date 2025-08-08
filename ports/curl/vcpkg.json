@@ -1,7 +1,6 @@
 {
   "name": "curl",
-  "version": "8.7.1",
-  "port-version": 2,
+  "version": "8.15.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -33,6 +32,32 @@
         "c-ares"
       ]
     },
+    "gnutls": {
+      "description": "SSL support (gnutls)",
+      "dependencies": [
+        {
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
+        },
+        {
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !mingw"
+        }
+      ]
+    },
+    "gsasl": {
+      "description": "GSASL support (libgsasl)",
+      "dependencies": [
+        "gsasl"
+      ]
+    },
+    "gssapi": {
+      "description": "krb5 support",
+      "supports": "!windows",
+      "dependencies": [
+        "krb5"
+      ]
+    },
     "http2": {
       "description": "HTTP2 support",
       "dependencies": [
@@ -45,6 +70,9 @@
         },
         "nghttp2"
       ]
+    },
+    "httpsrr": {
+      "description": "enable support for HTTPS RR"
     },
     "idn": {
       "description": "Default IDN support",
@@ -111,6 +139,12 @@
         "libpsl"
       ]
     },
+    "rtmp": {
+      "description": "RTMP support",
+      "dependencies": [
+        "librtmp"
+      ]
+    },
     "schannel": {
       "description": "SSL support (Secure Channel)",
       "supports": "windows & !uwp",
@@ -123,10 +157,6 @@
           ]
         }
       ]
-    },
-    "sectransp": {
-      "description": "SSL support (sectransp)",
-      "supports": "osx | ios"
     },
     "ssh": {
       "description": "SSH support via libssh2",
@@ -155,14 +185,6 @@
           "name": "curl",
           "default-features": false,
           "features": [
-            "sectransp"
-          ],
-          "platform": "osx | ios"
-        },
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
             "schannel"
           ],
           "platform": "(windows & !uwp) | mingw"
@@ -173,7 +195,19 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !(osx | ios) & !mingw"
+          "platform": "(uwp | !windows) & !mingw"
+        }
+      ]
+    },
+    "ssls-export": {
+      "description": "SSL session import/export",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
         }
       ]
     },
@@ -186,7 +220,7 @@
       "supports": "!uwp"
     },
     "websockets": {
-      "description": "WebSocket support (experimental)"
+      "description": "WebSocket support"
     },
     "winidn": {
       "description": "WinIDN support",
@@ -200,19 +234,6 @@
           "default-features": false,
           "features": [
             "ldap"
-          ]
-        }
-      ]
-    },
-    "winssl": {
-      "description": "Legacy name for schannel",
-      "supports": "windows & !uwp",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "schannel"
           ]
         }
       ]

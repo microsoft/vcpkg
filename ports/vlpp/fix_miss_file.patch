@@ -1,0 +1,24 @@
+diff --git a/Import/VlppReflection.h b/Import/VlppReflection.h
+index 4589f99..85c9c01 100644
+--- a/Import/VlppReflection.h
++++ b/Import/VlppReflection.h
+@@ -5,6 +5,7 @@ DEVELOPER: Zihan Chen(vczh)
+ #include "VlppOS.h"
+ #include "Vlpp.h"
+ #include "VlppRegex.h"
++#include <float.h>
+ 
+ /***********************************************************************
+ .\DESCRIPTABLEOBJECT.H
+diff --git a/Tools/GacGen/CMakeLists.txt b/Tools/GacGen/CMakeLists.txt
+index f809893..5354e75 100644
+--- a/Tools/GacGen/CMakeLists.txt
++++ b/Tools/GacGen/CMakeLists.txt
+@@ -25,7 +25,6 @@ set(SRCS
+     ../../Release/GacUIReflection.cpp
+     GacGen/GacGen.cpp
+     GacGen/Main.cpp
+-    GacGen/NativeController.cpp
+ )
+ 
+ if (WIN32)

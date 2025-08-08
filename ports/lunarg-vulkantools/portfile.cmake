@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LunarG/VulkanTools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 4b22a32720ae541ec28c9cafa7edd0656639840863b7dd1054a7d73648d23e11f19b7a4804a6727601ff4c6e53606016584f104b83c1afd227a6844ad0acd2d1
+    SHA512 c4d44f94e93234a5b5a98f3a76072d43b1c08b44dcf68a0bbbdc711e487b9e3b1be0fc8ab084b8d19662ac7394f25ec3ad2430fb2c79497d6e3e715c93d4f306
     HEAD_REF main
+    PATCHES
+        disable-qtdeploy.patch
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/via/CMakeLists.txt" "jsoncpp_static" "JsonCpp::JsonCpp")
@@ -18,6 +20,7 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DVULKAN_HEADERS_INSTALL_DIR=${CURRENT_INSTALLED_DIR}
+    -DCMAKE_DISABLE_FIND_PACKAGE_Qt6=ON
     -DBUILD_TESTS:BOOL=OFF
   OPTIONS_RELEASE
     -DVULKAN_LOADER_INSTALL_DIR=${CURRENT_INSTALLED_DIR}
@@ -31,7 +34,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
-vcpkg_copy_tools(TOOL_NAMES vkvia vkconfig AUTO_CLEAN )
+vcpkg_copy_tools(TOOL_NAMES vkvia vkconfig vkconfig-gui AUTO_CLEAN )
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

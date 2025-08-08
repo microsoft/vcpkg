@@ -31,5 +31,6 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DFEATURE_qt3d_fbxsdk=OFF # OpenFBX? Probably not!
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_RELEASE
+                        -DCMAKE_TRY_COMPILE_CONFIGURATION=Release
                      CONFIGURE_OPTIONS_DEBUG
                     )

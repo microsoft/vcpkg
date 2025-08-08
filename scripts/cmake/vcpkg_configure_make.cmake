@@ -164,7 +164,7 @@ function(z_vcpkg_configure_make_process_flags var_suffix)
         vcpkg_list(REMOVE_ITEM ${list} "Z_VCM_WRAP")
     endforeach()
 
-    # libtool tries to filter CFLAGS passed to the link stage via a whitelist.
+    # libtool tries to filter CFLAGS passed to the link stage via an allow-list.
     # This approach is flawed since it fails to pass flags unknown to libtool
     # but required for linking to the link stage (e.g. -fsanitize=<x>).
     # libtool has an -R option so we need to guard against -RTC by using -Xcompiler.
@@ -375,7 +375,7 @@ function(vcpkg_configure_make)
     endif()
 
    # macOS - cross-compiling support
-    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_VISIONOS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
@@ -552,6 +552,9 @@ function(vcpkg_configure_make)
         # OSX dosn't like CMAKE_C(XX)_COMPILER (cc) in CC/CXX and rather wants to have gcc/g++
         vcpkg_list(SET z_vcm_all_tools)
         function(z_vcpkg_make_set_env envvar cmakevar)
+            if(NOT VCPKG_DETECTED_CMAKE_${cmakevar})
+              return()
+            endif()
             set(prog "${VCPKG_DETECTED_CMAKE_${cmakevar}}")
             if(NOT DEFINED ENV{${envvar}} AND NOT prog STREQUAL "")
                 vcpkg_list(APPEND z_vcm_all_tools "${prog}")

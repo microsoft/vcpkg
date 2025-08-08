@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
     REF "v${VERSION}"
-    SHA512 6b0e410160c9f60923283be5d948e60b3b8c7819a7e75c9e39608d72202c1c715c048bd615e33d14544394c63efa6ad01cd3eda4c997ebe5a8c6e15ae18d4715
+    SHA512 dc9637b183a1ab4c87d3548b1cacf4278fc5d30ffa4ca35436f94723c20b916932791e8e2c2f0d2a63786078457e61a42fb7aac8462551172f7f5bd2582ad9a9
     HEAD_REF master
     PATCHES
         build_fixes.patch
@@ -32,6 +32,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DASSIMP_BUILD_ZLIB=OFF
         -DASSIMP_BUILD_ASSIMP_TOOLS=OFF
+        -DASSIMP_BUILD_VRML_IMPORTER=OFF # requires meshlab
         -DASSIMP_BUILD_TESTS=OFF
         -DASSIMP_WARNINGS_AS_ERRORS=OFF
         -DASSIMP_IGNORE_GIT_HASH=ON
@@ -61,7 +62,7 @@ find_library(ASSIMP_DBG NAMES assimp assimpd ${DBG_NAMES} PATHS "${CURRENT_PACKA
 if(ASSIMP_REL)
     get_filename_component(ASSIMP_NAME_REL "${ASSIMP_REL}" NAME_WLE)
     string(REGEX REPLACE "^lib(.*)" "\\1" ASSIMP_NAME_REL "${ASSIMP_NAME_REL}")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "-lassimp" "-l${ASSIMP_NAME_REL}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "-lassimp" "-l${ASSIMP_NAME_REL}" IGNORE_UNCHANGED)
 endif()
 if(ASSIMP_DBG)
     get_filename_component(ASSIMP_NAME_DBG "${ASSIMP_DBG}" NAME_WLE)

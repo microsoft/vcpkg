@@ -1,0 +1,26 @@
+diff --git a/src/heif.imageio/heifinput.cpp b/src/heif.imageio/heifinput.cpp
+index b87cb16..13b964d 100644
+--- a/src/heif.imageio/heifinput.cpp
++++ b/src/heif.imageio/heifinput.cpp
+@@ -390,7 +390,7 @@ HeifInput::read_native_scanline(int subimage, int miplevel, int y, int /*z*/,
+ #else
+     int ystride = 0;
+ #endif
+-    const uint8_t* hdata = m_himage.get_plane(heif_channel_interleaved,
++    const uint8_t* hdata = m_himage.get_plane2(heif_channel_interleaved,
+                                               &ystride);
+     if (!hdata) {
+         errorfmt("Unknown read error");
+diff --git a/src/heif.imageio/heifoutput.cpp b/src/heif.imageio/heifoutput.cpp
+index 32e46ea..b7be1da 100644
+--- a/src/heif.imageio/heifoutput.cpp
++++ b/src/heif.imageio/heifoutput.cpp
+@@ -155,7 +155,7 @@ HeifOutput::write_scanline(int y, int /*z*/, TypeDesc format, const void* data,
+ #else
+     int hystride = 0;
+ #endif
+-    uint8_t* hdata = m_himage.get_plane(heif_channel_interleaved, &hystride);
++    uint8_t* hdata = m_himage.get_plane2(heif_channel_interleaved, &hystride);
+     hdata += hystride * (y - m_spec.y);
+     memcpy(hdata, data, hystride);
+     return true;

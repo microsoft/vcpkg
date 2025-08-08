@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a8af3a4..3926b68 100644
+index b2e97c6..5f5418d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -421,8 +421,9 @@ set(LIBSBML_XML_LIBRARY_LIBS)
+@@ -435,8 +435,9 @@ set(LIBSBML_XML_LIBRARY_LIBS)
  if(WITH_EXPAT)
    
      if(NOT TARGET EXPAT::EXPAT)
@@ -13,7 +13,7 @@ index a8af3a4..3926b68 100644
  
      add_definitions( -DUSE_EXPAT )
      list(APPEND SWIG_EXTRA_ARGS -DUSE_EXPAT)
-@@ -443,7 +444,8 @@ endif(WITH_EXPAT)
+@@ -457,7 +458,8 @@ endif(WITH_EXPAT)
  set(USE_LIBXML OFF)
  if(WITH_LIBXML)
  
@@ -23,7 +23,7 @@ index a8af3a4..3926b68 100644
    
    add_definitions( -DUSE_LIBXML )
    list(APPEND SWIG_EXTRA_ARGS -DUSE_LIBXML)
-@@ -495,7 +497,7 @@ endif()
+@@ -509,7 +511,7 @@ endif()
  option(WITH_BZIP2    "Enable the use of bzip2 compression."  ${BZIP_INITIAL_VALUE})
  set(USE_BZ2 OFF)
  if(WITH_BZIP2)
@@ -32,7 +32,7 @@ index a8af3a4..3926b68 100644
    set(USE_BZ2 ON)
    add_definitions( -DUSE_BZ2 )
    list(APPEND SWIG_EXTRA_ARGS -DUSE_BZ2)
-@@ -521,6 +525,9 @@ Separate multiple directories using semicolons." )
+@@ -535,6 +537,9 @@ Separate multiple directories using semicolons." )
  # Locate zlib
  #
  
@@ -42,7 +42,7 @@ index a8af3a4..3926b68 100644
  set(ZLIB_INITIAL_VALUE)
  if (NOT LIBZ_LIBRARY)
  find_library(LIBZ_LIBRARY
-@@ -614,7 +621,6 @@ valid. It should contain the file zlib.h, but it does not.")
+@@ -628,7 +633,6 @@ valid. It should contain the file zlib.h, but it does not.")
  endif(WITH_ZLIB)
  
  # install find scripts only for used dependencies
@@ -50,7 +50,7 @@ index a8af3a4..3926b68 100644
  
  ###############################################################################
  #
-@@ -671,7 +677,12 @@ if(WITH_CHECK)
+@@ -685,7 +689,12 @@ if(WITH_CHECK)
  
    enable_testing()
  
@@ -64,10 +64,22 @@ index a8af3a4..3926b68 100644
  
    if (UNIX)
        # setup valgrind
-@@ -1005,17 +1016,18 @@ install(FILES ${DOCUMENTATION_FILES} DESTINATION ${MISC_PREFIX})
+@@ -1018,18 +1027,29 @@ install(FILES ${DOCUMENTATION_FILES} DESTINATION ${MISC_PREFIX})
+ # Write libsbml.pc
  #
  
- set (PRIVATE_LIBS "-lstdc++ -lm")
+-set (PRIVATE_LIBS "-lstdc++ -lm")
++set(FAKE_CXX_LINKAGE "")
++foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++        continue()
++    elseif(EXISTS "${lib}")
++        string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++    else()
++        string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++    endif()
++endforeach()
++set (PRIVATE_LIBS "${FAKE_CXX_LINKAGE}")
 +set (PRIVATE_REQUIRES "")
  if (WITH_ZLIB)
 -set (PRIVATE_LIBS "${LIBZ_LIBRARY} ${PRIVATE_LIBS}")
@@ -87,7 +99,7 @@ index a8af3a4..3926b68 100644
  endif()
  if (WITH_XERCES)
  set (PRIVATE_LIBS "${XERCES_LIBRARY} ${PRIVATE_LIBS}")
-@@ -1037,9 +1049,7 @@ if (WITH_XERCES)
+@@ -1051,9 +1071,7 @@ if (WITH_XERCES)
  file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/libsbml.pc" "Conflicts: xerces-c = 2.6.0\n")
  endif()
  

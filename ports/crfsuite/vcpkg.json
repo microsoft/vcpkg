@@ -1,6 +1,7 @@
 {
   "name": "crfsuite",
   "version-date": "2020-08-27",
+  "port-version": 1,
   "description": "CRFSuite is an implementation of Conditional Random Fields (CRFs) for labeling sequential data.",
   "homepage": "https://www.chokkan.org/software/crfsuite/",
   "license": null,
