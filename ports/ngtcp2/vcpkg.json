@@ -1,6 +1,6 @@
 {
   "name": "ngtcp2",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "description": "ngtcp2 project is an effort to implement RFC9000 QUIC protocol.",
   "homepage": "https://github.com/ngtcp2/ngtcp2",
   "license": "MIT",
