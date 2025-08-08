@@ -31,6 +31,14 @@ vcpkg_list(SET CONFIGURE_OPTIONS
     no-docs
 )
 
+# https://github.com/openssl/openssl/blob/master/INSTALL.md#enable-ec_nistp_64_gcc_128
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$"
+   AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(x64|arm64|riscv64|ppc64le)$")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ec_nistp_64_gcc_128)
+endif()
+
 set(INSTALL_FIPS "")
 if("fips" IN_LIST FEATURES)
     vcpkg_list(APPEND INSTALL_FIPS install_fips)
