@@ -8648,6 +8648,10 @@
       "baseline": "2.32.8",
       "port-version": 0
     },
+    "sdl2-compat": {
+      "baseline": "2.32.50",
+      "port-version": 0
+    },
     "sdl2-gfx": {
       "baseline": "1.0.4",
       "port-version": 11
