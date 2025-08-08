@@ -38,7 +38,7 @@ file(RENAME "${SOURCE_PATH}/MUMPS/libseq/mpi.h" "${SOURCE_PATH}/MUMPS/libseq/mum
 #####
 
 set(CONFIGURE_ARGS
-    "--prefix=${CURRENT_INSTALLED_DIR}"
+    #"--prefix=${CURRENT_INSTALLED_DIR}"
     "--with-metis"
     "--with-lapack"
 )
@@ -62,6 +62,7 @@ endif()
 if(VCPKG_HOST_IS_WINDOWS)
     list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=${CURRENT_INSTALLED_DIR}/lib/${OPENBLAS_LIB}")
     #list(APPEND CONFIGURE_ARGS "--with-lapack-lflags=-L${CURRENT_INSTALLED_DIR}/lib/ -lopenblas -lm")
+    list(APPEND CONFIGURE_ARGS "--prefix=/install_dir")
 
     list(APPEND CONFIGURE_ARGS "--enable-msvc")
 
@@ -98,10 +99,19 @@ if(VCPKG_HOST_IS_WINDOWS)
     )
     ## install
     vcpkg_execute_build_process(
-        COMMAND make install
+        COMMAND make DESTDIR=${SOURCE_PATH} install
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME "execute-install-${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE}"
     )
+
+    # install in staging
+    file(INSTALL "${SOURCE_PATH}/install_dir/lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+    file(INSTALL "${SOURCE_PATH}/install_dir/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(INSTALL "${SOURCE_PATH}/install_dir/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+    # install
+    file(INSTALL "${SOURCE_PATH}/install_dir/lib" DESTINATION "${CURRENT_INSTALLED_DIR}/lib")
+    file(INSTALL "${SOURCE_PATH}/install_dir/bin" DESTINATION "${CURRENT_INSTALLED_DIR}/bin")
+    file(INSTALL "${SOURCE_PATH}/install_dir/include" DESTINATION "${CURRENT_INSTALLED_DIR}/include")
     ##############
 endif()
 
