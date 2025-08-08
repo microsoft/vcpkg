@@ -10,7 +10,10 @@
     "cpp-httplib",
     "cpuinfo",
     "eigen3",
-    "fbgemm",
+    {
+      "name": "fbgemm",
+      "platform": "x64"
+    },
     "flatbuffers",
     {
       "name": "flatbuffers",
