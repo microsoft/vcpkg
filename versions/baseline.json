@@ -1518,7 +1518,7 @@
     },
     "c-ares": {
       "baseline": "1.34.5",
-      "port-version": 0
+      "port-version": 1
     },
     "c-dbg-macro": {
       "baseline": "2020-02-29",
@@ -6878,7 +6878,7 @@
     },
     "octave": {
       "baseline": "10.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "octomap": {
       "baseline": "1.10.0",
