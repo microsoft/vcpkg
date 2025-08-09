@@ -7381,8 +7381,8 @@
       "port-version": 0
     },
     "platform-folders": {
-      "baseline": "4.2.0",
-      "port-version": 1
+      "baseline": "4.3.0",
+      "port-version": 0
     },
     "plf-colony": {
       "baseline": "7.5.25",
