@@ -32,17 +32,6 @@ vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-# copy config
-file(COPY "${SOURCE_PATH}/config/colors.mgk" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/config")
-file(COPY "${SOURCE_PATH}/config/log.mgk" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/config")
-file(COPY "${SOURCE_PATH}/config/modules.mgk" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/config")
-
-file(READ "${SOURCE_PATH}/config/type-windows.mgk.in" TYPE_MGK)
-string(REPLACE "@windows_font_dir@" "$ENV{SYSTEMROOT}/Fonts/" TYPE_MGK "${TYPE_MGK}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/graphicsmagick/config/type.mgk" "${TYPE_MGK}")
-
-configure_file("${SOURCE_PATH}/config/delegates.mgk.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/config/delegates.mgk" @ONLY)
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 set(config_scripts
