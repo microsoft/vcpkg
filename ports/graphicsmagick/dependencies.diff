@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index bc9acc9..6a21b9d 100644
+index bc9acc9..94449f3 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1876,12 +1876,12 @@ then
@@ -129,16 +129,24 @@ index bc9acc9..6a21b9d 100644
              #LIBS="$LIB_TTF $LIBS"
              AC_DEFINE([HasTTF],[1],[Define if you have FreeType (TrueType font) library])
              if test "$ac_cv_header_ft2build_h" = 'yes'
-@@ -2742,7 +2751,7 @@ then
+@@ -2718,7 +2727,6 @@ then
+         printf "WEBPMUX_LIBS=${WEBPMUX_LIBS}\n"
+         printf "WEBPMUX_CFLAGS=${WEBPMUX_CFLAGS}\n"
+       fi
+-      pkg_config_to_flags 'libwebpmux' "${WEBPMUX_LIBS}" "${WEBPMUX_CFLAGS}"
+     else
+       if test -n "${WEBPMUX_PKG_ERRORS}"
+       then
+@@ -2742,7 +2750,7 @@ then
  
      # pkg-config libwebp --static --libs
      #-L/work/lib -lwebp -lm -lsharpyuv -lm
 -    PKG_CHECK_MODULES([WEBP], [libwebp], [passed=`expr $passed + 1`], [failed=`expr $failed + 1`])
-+    PKG_CHECK_MODULES([WEBP], [libwebp libwebpdemux libwebpmux], [passed=`expr $passed + 1`], [failed=`expr $failed + 1`])
++    PKG_CHECK_MODULES([WEBP], [libwebp libwebpmux], [passed=`expr $passed + 1`], [failed=`expr $failed + 1`])
      if test $failed -eq 0 ; then
        if test -n "$VERBOSE"
        then
-@@ -2760,9 +2769,9 @@ then
+@@ -2760,9 +2768,9 @@ then
  
      AC_CHECK_HEADER([webp/decode.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`],[])
      AC_CHECK_HEADER([webp/encode.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`],[])
@@ -151,7 +159,7 @@ index bc9acc9..6a21b9d 100644
      AC_MSG_CHECKING([if WEBP package is complete])
      if test $passed -gt 0
      then
-@@ -2774,7 +2783,7 @@ then
+@@ -2774,7 +2782,7 @@ then
              LDFLAGS=$OLD_LDFLAGS
              LIBS=$OLD_LIBS
          else
@@ -160,7 +168,7 @@ index bc9acc9..6a21b9d 100644
              # LIBS="$LIB_WEBP $LIBS"
              AC_DEFINE([HasWEBP],[1],[Define if you have WEBP library])
              AC_MSG_RESULT([yes])
-@@ -2918,11 +2927,11 @@ then
+@@ -2918,11 +2926,11 @@ then
      #set +x
      AC_CHECK_HEADER([tiff.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`])
      AC_CHECK_HEADER([tiffio.h],[passed=`expr $passed + 1`],[failed=`expr $failed + 1`])
@@ -177,7 +185,7 @@ index bc9acc9..6a21b9d 100644
      AC_MSG_CHECKING([if TIFF package is complete])
      if test $passed -gt 0
      then
-@@ -2934,8 +2943,7 @@ then
+@@ -2934,8 +2942,7 @@ then
              CPPFLAGS=$OLD_CPPFLAGS
              LIBS=$OLD_LIBS
          else
@@ -187,7 +195,7 @@ index bc9acc9..6a21b9d 100644
              #LIBS="$LIB_TIFF $LIBS"
              AC_DEFINE([HasTIFF],[1],[Define if you have TIFF library])
              AC_MSG_RESULT([yes])
-@@ -4266,7 +4274,7 @@ MAGICK_EXTRA_DEP_LIBS=`echo $MAGICK_EXTRA_DEP_LIBS | sed -e 's/  */ /g'`
+@@ -4266,7 +4273,7 @@ MAGICK_EXTRA_DEP_LIBS=`echo $MAGICK_EXTRA_DEP_LIBS | sed -e 's/  */ /g'`
  
  MAGICK_API_CFLAGS=$CFLAGS
  MAGICK_API_CPPFLAGS=`echo $MAGICK_API_CPPFLAGS | sed -e 's/  */ /g'`
