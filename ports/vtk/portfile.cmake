@@ -288,7 +288,6 @@ vcpkg_cmake_configure(
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
-        -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
         -DVTK_MODULE_USE_EXTERNAL_VTK_token:BOOL=OFF # Not yet in VCPKG
         #-DVTK_MODULE_ENABLE_VTK_jsoncpp=YES
         ${ADDITIONAL_OPTIONS}
@@ -302,8 +301,9 @@ vcpkg_cmake_configure(
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
         VTK_MODULE_ENABLE_VTK_vtkm
-        VTK_QT_VERSION # Only with Qt
+        # Only with Qt
         CMAKE_INSTALL_QMLDIR
+        VTK_QT_VERSION # Only with Qt
         # When working properly these should be unused
         VCPKG_LOCK_FIND_PACKAGE_CGNS
         VCPKG_LOCK_FIND_PACKAGE_LibHaru
