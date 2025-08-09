@@ -281,7 +281,3 @@ endif()
 qt_install_copyright("${SOURCE_PATH}")
 
 ##### qt_install_submodule
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-  message(FATAL_ERROR "Get logs")
-endif()

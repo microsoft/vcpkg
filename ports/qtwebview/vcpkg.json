@@ -24,7 +24,10 @@
       "dependencies": [
         {
           "name": "qtwebengine",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "webengine"
+          ]
         }
       ]
     }
