@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 856a47d..3d87c8a 100644
+index 856a47d..9f32bad 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1095,19 +1095,12 @@ IF(NOT TARGET cpuinfo)
@@ -52,20 +52,3 @@ index 856a47d..3d87c8a 100644
    ENDIF()
  ENDIF()
  IF(XNNPACK_BUILD_ALL_MICROKERNELS)
-@@ -1177,14 +1167,8 @@ IF(XNNPACK_ENABLE_KLEIDIAI)
-         "${KLEIDIAI_SOURCE_DIR}"
-         "${CMAKE_BINARY_DIR}/kleidiai")
-     ELSE()
--      ADD_LIBRARY(kleidiai SHARED IMPORTED)
--      FIND_LIBRARY(KLEIDIAI_LIBRARY kleidiai PATHS "${KLEIDIAI_SOURCE_DIR}/lib")
--      IF(NOT KLEIDIAI_LIBRARY)
--        MESSAGE(FATAL_ERROR "Cannot find KleidiAI")
--      ENDIF()
--      TARGET_INCLUDE_DIRECTORIES(kleidiai INTERFACE "${KLEIDIAI_SOURCE_DIR}")
--      SET_PROPERTY(TARGET kleidiai PROPERTY IMPORTED_LOCATION "${KLEIDIAI_LIBRARY}")
--      SET_PROPERTY(TARGET kleidiai PROPERTY IMPORTED_IMPLIB "${KLEIDIAI_LIBRARY}")
-+      find_package(KleidiAI CONFIG REQUIRED)
-+      add_library(kleidiai ALIAS KleidiAI::kleidiai)
-     ENDIF()
-   ENDIF()
-   TARGET_LINK_LIBRARIES(xnnpack-base INTERFACE kleidiai)
