@@ -54,10 +54,6 @@
     "xnnpack"
   ],
   "default-features": [
-    {
-      "name": "cuda",
-      "platform": "windows & !x86 & !static"
-    },
     "gflags",
     "glog",
     "opencv",
