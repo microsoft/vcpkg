@@ -1,0 +1,17 @@
+diff --git a/magick/magick_types.h.in b/magick/magick_types.h.in
+index 106ac97..19e001d 100644
+--- a/magick/magick_types.h.in
++++ b/magick/magick_types.h.in
+@@ -66,6 +66,12 @@ extern "C" {
+   ssize_t zd?
+ 
+ */
++#if defined(_WIN32) && !defined(WIN32)
++  #define WIN32
++#endif
++#if defined(_WIN64) && !defined(WIN64)
++  #define WIN64
++#endif
+ 
+ #if (defined(WIN32) || defined(WIN64)) && \
+   !defined(__MINGW32__) && !defined(__MINGW64__)

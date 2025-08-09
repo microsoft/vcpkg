@@ -7,7 +7,8 @@ vcpkg_from_gitlab(
     REF ${graphicsmagick_version}
     SHA512 e64842dbbe2026e7d75b4004f615f32b4e2d57ce8dbd9bc90f87ee6e180d7e2feb61da6c25d404c43ac8d7661f94f7be3bd2882928dbd0e276b5c9040690f6f4
     PATCHES
-        fix-png.patch
+        dependencies.diff
+        magick-types.diff
 )
 
 set(options "")
@@ -20,7 +21,10 @@ vcpkg_make_configure(
     AUTORECONF
     OPTIONS
         ${options}
+        # Before enabling another lib, make sure that the build does not
+        # hard-code the library name and dependencies (cf. dependencies.diff).
         --with-heif=no
+        --with-fpx=no  ###
         --with-gs=no
         --with-jbig=no
         --with-jp2=no
