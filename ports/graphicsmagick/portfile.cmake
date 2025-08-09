@@ -46,6 +46,9 @@ vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/gm${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 set(config_scripts
