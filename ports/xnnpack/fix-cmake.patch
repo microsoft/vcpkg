@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 856a47d..a8f8477 100644
+index 856a47d..06f5ea9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1040,14 +1040,14 @@ IF(XNNPACK_BUILD_ALL_MICROKERNELS)
@@ -46,7 +46,7 @@ index 856a47d..a8f8477 100644
  IF(NOT TARGET fxdiv)
    IF(NOT XNNPACK_USE_SYSTEM_LIBS)
      SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
-@@ -1162,10 +1168,21 @@ IF(XNNPACK_BUILD_LIBRARY)
+@@ -1162,14 +1168,27 @@ IF(XNNPACK_BUILD_LIBRARY)
  ENDIF()
  
  IF(XNNPACK_BUILD_LIBRARY)
@@ -69,6 +69,12 @@ index 856a47d..a8f8477 100644
  ENDIF()
  
  # ---[ Configure KleidiAI
+ IF(XNNPACK_ENABLE_KLEIDIAI)
++  find_package(KleidiAI CONFIG REQUIRED)
++  add_library(kleidiai ALIAS KleidiAI::kleidiai)
+   IF(NOT TARGET kleidiai)
+     IF(NOT XNNPACK_USE_SYSTEM_LIBS)
+       SET(KLEIDIAI_BUILD_TESTS OFF CACHE BOOL "")
 diff --git a/Config.cmake.in b/Config.cmake.in
 new file mode 100644
 index 0000000..8dc60b4

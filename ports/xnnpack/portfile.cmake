@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 ecb859935996416ce51b2b9ffd5a8c3cc5e933dfab96b7b68c8a52e05227ce3416ffa81e8a3fcef8349aa85147aa1c6a07138c7fc8e87a02ad577e1da9126827
     HEAD_REF master
     PATCHES
-        fix-build.patch
+        fix-cmake.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
