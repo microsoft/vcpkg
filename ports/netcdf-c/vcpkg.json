@@ -5,10 +5,6 @@
   "homepage": "https://github.com/Unidata/netcdf-c",
   "license": null,
   "dependencies": [
-    {
-      "name": "bzip2",
-      "default-features": false
-    },
     "tinyxml2",
     {
       "name": "vcpkg-cmake",
@@ -32,8 +28,17 @@
     }
   ],
   "features": {
+    "bzip2": {
+      "description": "Support bzip2 compression",
+      "dependencies": [
+        {
+          "name": "bzip2",
+          "default-features": false
+        }
+      ]
+    },
     "dap": {
-      "description": "Build with DAP remote access client support",
+      "description": "DAP remote access client support",
       "dependencies": [
         {
           "name": "curl",
@@ -42,7 +47,7 @@
       ]
     },
     "nczarr": {
-      "description": "Build with NCZarr cloud storage access support",
+      "description": "NCZarr cloud storage access support",
       "dependencies": [
         {
           "name": "curl",
@@ -52,13 +57,14 @@
           "name": "netcdf-c",
           "default-features": false,
           "features": [
-            "netcdf-4"
+            "netcdf-4",
+            "szip"
           ]
         }
       ]
     },
     "nczarr-zip": {
-      "description": "Build with NCZarr ZIP support",
+      "description": "NCZarr ZIP support",
       "dependencies": [
         {
           "name": "libzip",
@@ -74,7 +80,7 @@
       ]
     },
     "netcdf-4": {
-      "description": "Build with netCDF-4 support",
+      "description": "netCDF-4 support",
       "dependencies": [
         {
           "name": "hdf5",
@@ -93,6 +99,12 @@
     },
     "tools": {
       "description": "Build utilities"
+    },
+    "zstd": {
+      "description": "Support Zstandard compression",
+      "dependencies": [
+        "zstd"
+      ]
     }
   }
 }

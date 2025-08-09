@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index bbb647c..a04ae6b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1628,6 +1628,22 @@ list(REMOVE_DUPLICATES LINKFLAGS)
+@@ -1628,6 +1628,23 @@ list(REMOVE_DUPLICATES LINKFLAGS)
  set(LIBS ${NC_LIBS})
  set(NC_LIBS "-lnetcdf")
  
@@ -21,6 +21,7 @@ index bbb647c..a04ae6b 100644
 +replace_pkgconfig_module("-lhdf5::hdf5_hl" "hdf5_hl")
 +replace_pkgconfig_module("-lzip::zip"      "libzip")
 +replace_pkgconfig_module("-lZLIB::ZLIB"    "zlib")
++replace_pkgconfig_module("-lzstd::libzstd" "libzstd")
 +
  configure_file(
    ${netCDF_SOURCE_DIR}/netcdf.pc.in

@@ -291,6 +291,7 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
+        VTK_MODULE_ENABLE_VTK_vtkm
         VTK_QT_VERSION # Only with Qt
         CMAKE_INSTALL_QMLDIR
         # When working properly these should be unused

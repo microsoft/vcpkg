@@ -1,5 +1,5 @@
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index d06a276..11e7ddf 100644
+index d06a276..b493b65 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
 @@ -134,7 +134,20 @@ if(USE_HDF5)
@@ -61,7 +61,7 @@ index d06a276..11e7ddf 100644
  
  # Define a test flag for have zlib library
  if(ZLIB_FOUND)
-@@ -370,13 +388,17 @@ endif()
+@@ -370,19 +388,24 @@ endif()
  # Zips
  ################################
  MESSAGE(STATUS "Checking for filter libraries")
@@ -84,7 +84,15 @@ index d06a276..11e7ddf 100644
  endif()
  IF (NETCDF_ENABLE_FILTER_BLOSC)
    find_package(Blosc)
-@@ -412,7 +434,8 @@ endif()
+ endif()
+ IF (NETCDF_ENABLE_FILTER_ZSTD)
+-  find_package(Zstd)
++  find_package(Zstd NAMES zstd REQUIRED)
++  set(Zstd_LIBRARIES zstd::libzstd)
+ endif()
+ 
+ # Accumulate standard filters
+@@ -412,7 +435,8 @@ endif()
  
  set(STD_FILTERS "${STD_FILTERS}${FOUND_STD_FILTERS}")
  IF (NETCDF_ENABLE_NCZARR_ZIP)
@@ -157,30 +165,38 @@ index b8fa4b2..5f8a6cb 100644
    PUBLIC
      ./include
 diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
-index 987b2ad..2e2cea6 100644
+index 987b2ad..373f543 100644
 --- a/netCDFConfig.cmake.in
 +++ b/netCDFConfig.cmake.in
-@@ -4,6 +4,19 @@
+@@ -4,6 +4,27 @@
  #
  @PACKAGE_INIT@
  
 +if(NOT "@BUILD_SHARED_LIBS@")
 +  include(CMakeFindDependencyMacro)
-+  find_dependency(BZip2)
 +  find_dependency(tinyxml2 CONFIG)
 +  find_dependency(ZLIB)
++  if("@NETCDF_ENABLE_FILTER_BZ2@")
++    find_dependency(BZip2)
++  endif()
 +  if("@FOUND_CURL@")
 +    find_dependency(CURL)
 +  endif()
++  if("@NETCDF_ENABLE_FILTER_SZIP@" OR "@NETCDF_ENABLE_NCZARR@")
++    find_dependency(libaec CONFIG)
++  endif()
 +  if("@NETCDF_ENABLE_NCZARR_ZIP@")
-+      find_dependency(libzip CONFIG)
++    find_dependency(libzip CONFIG)
++  endif()
++  if("@NETCDF_ENABLE_FILTER_ZSTD@")
++    find_dependency(zstd CONFIG)
 +  endif()
 +endif()
 +
  set(NetCDFVersion "@PACKAGE_VERSION@")
  set_and_check(netCDF_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@")
  set_and_check(netCDF_INCLUDE_DIR "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@")
-@@ -42,7 +55,7 @@ set(netCDF_HAS_DISKLESS @HAS_DISKLESS@)
+@@ -42,7 +63,7 @@ set(netCDF_HAS_DISKLESS @HAS_DISKLESS@)
  set(netCDF_HAS_MMAP @HAS_MMAP@)
  if (netCDF_HAS_HDF4 OR netCDF_HAS_HDF5)
    include(CMakeFindDependencyMacro)

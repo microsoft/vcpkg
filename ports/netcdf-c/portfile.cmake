@@ -16,12 +16,14 @@ file(REMOVE ${modules} ${vendored})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        bzip2       NETCDF_ENABLE_FILTER_BZ2
         dap         NETCDF_ENABLE_DAP
         nczarr      NETCDF_ENABLE_NCZARR
         nczarr-zip  NETCDF_ENABLE_NCZARR_ZIP
         netcdf-4    NETCDF_ENABLE_HDF5
         szip        NETCDF_ENABLE_FILTER_SZIP
         tools       NETCDF_BUILD_UTILITIES
+        zstd        NETCDF_ENABLE_FILTER_ZSTD
     )
 
 if(NOT NETCDF_ENABLE_DAP AND NOT NETCDF_ENABLE_NCZARR)
