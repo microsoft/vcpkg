@@ -56,6 +56,11 @@
       "host": true
     },
     "verdict",
+    {
+      "name": "vtk-compile-tools",
+      "host": true,
+      "platform": "!native"
+    },
     "zlib"
   ],
   "default-features": [
