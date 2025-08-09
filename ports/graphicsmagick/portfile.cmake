@@ -26,6 +26,20 @@ vcpkg_make_configure(
     AUTORECONF
     OPTIONS
         VERBOSE=yes
+        --with-heif=no
+        --with-gs=no
+        --with-jbig=no
+        --with-jp2=no
+        --with-jxl=no
+        --with-lcms2=no
+        --with-libzip=no
+        --with-lzma=no
+        --with-mpeg2=no
+        --with-trio=no
+        --with-x=no
+        --with-xml=no
+        --with-wmf=no
+        --with-zstd=no
 )
 
 vcpkg_make_install()
