@@ -1,96 +1,8 @@
-diff --git a/src/openslide-decode-tifflike.c b/src/openslide-decode-tifflike.c
-index 63e0ad5..8de1abb 100644
---- a/src/openslide-decode-tifflike.c
-+++ b/src/openslide-decode-tifflike.c
-@@ -348,7 +348,7 @@ static bool populate_item(struct _openslide_tifflike *tl,
-   uint64_t count = item->count;
-   int32_t value_size = get_value_size(item->type, &count);
-   g_assert(value_size);
--  ssize_t len = value_size * count;
-+  size_t len = value_size * count;
- 
-   buf = g_try_malloc(len);
-   if (buf == NULL) {
-@@ -485,7 +485,7 @@ static struct tiff_directory *read_directory(FILE *f, int64_t *diroff,
-     }
- 
-     // check for overflow
--    if (count > SSIZE_MAX / value_size) {
-+    if (count > PTRDIFF_MAX / value_size) {
-       g_set_error(err, OPENSLIDE_ERROR, OPENSLIDE_ERROR_FAILED,
-                   "Value count too large");
-       goto FAIL;
-diff --git a/src/openslide-features.h b/src/openslide-features.h
-index a5328fb..db7593d 100644
---- a/src/openslide-features.h
-+++ b/src/openslide-features.h
-@@ -22,26 +22,7 @@
- #ifndef OPENSLIDE_OPENSLIDE_FEATURES_H_
- #define OPENSLIDE_OPENSLIDE_FEATURES_H_
- 
--
--#ifndef __cplusplus
--#  ifdef _MSC_VER
--#    ifndef bool
--#      define bool unsigned char
--#    endif
--#    ifndef true
--#      define true 1
--#    endif
--#    ifndef false
--#      define false 0
--#    endif
--#    ifndef __bool_true_false_are_defined
--#      define __bool_true_false_are_defined 1
--#    endif
--#  else
--#    include <stdbool.h>
--#  endif
--#endif
--
-+#include <stdbool.h>
- 
- // for exporting from shared libraries or DLLs
- #if defined _WIN32
-diff --git a/src/openslide-private.h b/src/openslide-private.h
-index a70bcba..e39f288 100644
---- a/src/openslide-private.h
-+++ b/src/openslide-private.h
-@@ -34,6 +34,11 @@
- 
- #include <cairo.h>
- 
-+#ifdef _MSC_VER
-+#define fseeko fseek
-+#define ftello ftell
-+#endif
-+
- /* the associated image structure */
- struct _openslide_associated_image {
-   const struct _openslide_associated_image_ops *ops;
-@@ -357,8 +362,8 @@ void openslide_cancel_prefetch_hint(openslide_t *osr, int prefetch_id);
-    Every @p replacement must be unique to avoid conflicting-type errors. */
- #define _OPENSLIDE_POISON(replacement) error__use_ ## replacement ## _instead
- #define fopen _OPENSLIDE_POISON(_openslide_fopen)
--#define fseek _OPENSLIDE_POISON(fseeko)
--#define ftell _OPENSLIDE_POISON(ftello)
-+//#define fseek _OPENSLIDE_POISON(fseeko)
-+//#define ftell _OPENSLIDE_POISON(ftello)
- #define strtod _OPENSLIDE_POISON(_openslide_parse_double)
- #define g_ascii_strtod _OPENSLIDE_POISON(_openslide_parse_double_)
- #define sqlite3_open _OPENSLIDE_POISON(_openslide_sqlite_open)
-diff --git a/test/test-common.c b/test/test-common.c
-index 8003128..b7c4bd4 100644
---- a/test/test-common.c
-+++ b/test/test-common.c
-@@ -22,11 +22,13 @@
- #ifdef WIN32
- #define _WIN32_WINNT 0x0600
- #include <windows.h>
-+#include <io.h>
-+#else
-+#include <unistd.h>
- #endif
+diff --git a/common/openslide-common-fd.c b/common/openslide-common-fd.c
+index 3d3ce955f3c1..20127ce4bdd9 100644
+--- a/common/openslide-common-fd.c
++++ b/common/openslide-common-fd.c
+@@ -27,10 +27,13 @@
  
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -98,29 +10,239 @@ index 8003128..b7c4bd4 100644
  #include <fcntl.h>
  #include <glib.h>
  
-diff --git a/test/test.c b/test/test.c
-index 50f0651..7fb192a 100644
---- a/test/test.c
-+++ b/test/test.c
-@@ -32,7 +32,7 @@
- #include <stdlib.h>
- #include <stdbool.h>
- #include <inttypes.h>
--#include <sys/time.h>
-+//#include <sys/time.h>
++#ifndef _WIN32
++#include <unistd.h>
++#endif
++
+ #ifdef __APPLE__
+ #include <sys/param.h>  // MAXPATHLEN
+ #include <libproc.h>
+diff --git a/meson.build b/meson.build
+index 0b4d7d47b695..ac106fb1001f 100644
+--- a/meson.build
++++ b/meson.build
+@@ -59,6 +59,17 @@ add_project_arguments(
+   '-DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_MIN_REQUIRED',
+   language : 'c'
+ )
++if host_machine.system() == 'windows'
++  # Windows likes to warn about C and POSIX functions
++  foreach native : [false, true]
++    add_project_arguments(
++      '-D_CRT_NONSTDC_NO_DEPRECATE',
++      '-D_CRT_SECURE_NO_WARNINGS',
++      language : 'c',
++      native : native,
++    )
++  endforeach
++endif
+ add_project_link_arguments(
+   cc.get_supported_link_arguments(
+     '-Wl,--no-undefined',
+@@ -66,6 +77,13 @@ add_project_link_arguments(
+   language : 'c'
+ )
  
- #include <glib.h>
- #include <cairo.h>
-diff --git a/test/try_open.c b/test/try_open.c
-index dd3a6a2..ad9233e 100644
---- a/test/try_open.c
-+++ b/test/try_open.c
-@@ -24,7 +24,7 @@
++# Functions
++foreach f : ['fseeko', 'ftello']
++  if cc.has_function(f)
++    conf.set('HAVE_' + f.to_upper(), 1)
++  endif
++endforeach
++
+ # fopen cloexec flag
+ if host_machine.system() in ['dragonfly', 'freebsd', 'linux', 'netbsd', 'openbsd']
+   message('Using "e" flag for close-on-exec')
+diff --git a/src/meson.build b/src/meson.build
+index e886eea4b5c4..4be22f64aef7 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -24,6 +24,8 @@ openslide_dll_rc = configure_file(
+ if host_machine.system() == 'windows'
+   openslide_dll_o = import('windows').compile_resources(
+     openslide_dll_rc,
++    # https://github.com/llvm/llvm-project/issues/63426
++    args : [cc.get_argument_syntax() == 'msvc' ? '/c' : '-c', '65001'],
+     depend_files : [openslide_dll_manifest],
+   )
+ else
+diff --git a/src/openslide-decode-dicom.c b/src/openslide-decode-dicom.c
+index 24dcfbfe4568..d5fa053e94ef 100644
+--- a/src/openslide-decode-dicom.c
++++ b/src/openslide-decode-dicom.c
+@@ -88,7 +88,7 @@ static int64_t vfs_seek(DcmError **dcm_error, DcmIO *io,
+ 
+   // libdicom uses lseek(2) semantics, so it must always return the new file
+   // pointer
+-  off_t new_position = _openslide_ftell(dio->file, &err);
++  int64_t new_position = _openslide_ftell(dio->file, &err);
+   if (new_position < 0) {
+     propagate_gerror(dcm_error, err);
+   }
+diff --git a/src/openslide-decode-tifflike.c b/src/openslide-decode-tifflike.c
+index 626cd4039110..3ca3e374f208 100644
+--- a/src/openslide-decode-tifflike.c
++++ b/src/openslide-decode-tifflike.c
+@@ -470,8 +470,9 @@ static struct tiff_directory *read_directory(struct _openslide_file *f,
+       return NULL;
+     }
+ 
+-    // check for overflow
+-    if (count > SSIZE_MAX / value_size) {
++    // compute total size
++    size_t value_len;
++    if (!g_size_checked_mul(&value_len, value_size, count)) {
+       g_set_error(err, OPENSLIDE_ERROR, OPENSLIDE_ERROR_FAILED,
+                   "Value count too large");
+       return NULL;
+@@ -486,7 +487,7 @@ static struct tiff_directory *read_directory(struct _openslide_file *f,
+     }
+ 
+     // does value/offset contain the value?
+-    if (value_size * count <= sizeof(value)) {
++    if (value_len <= sizeof(value)) {
+       // yes
+       fix_byte_order(value, value_size, count, big_endian);
+       if (!set_item_values(item, value, err)) {
+diff --git a/src/openslide-dll.rc.in b/src/openslide-dll.rc.in
+index 0670ee539e02..47e4d729e2bd 100644
+--- a/src/openslide-dll.rc.in
++++ b/src/openslide-dll.rc.in
+@@ -10,16 +10,16 @@ FILETYPE VFT_DLL
+ BEGIN
+     BLOCK "StringFileInfo"
+     BEGIN
+-        BLOCK "040904e4"
++        BLOCK "040904b0"
+         BEGIN
+             VALUE "FileDescription",  "OpenSlide library"
+             VALUE "FileVersion", "@SUFFIXED_VERSION@"
+             VALUE "InternalName", "OpenSlide"
+-            VALUE "LegalCopyright", "Copyright \251 2007-2023 Carnegie Mellon University and others.  OpenSlide is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License, version 2.1."
++            VALUE "LegalCopyright", "Copyright © 2007-2023 Carnegie Mellon University and others.  OpenSlide is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License, version 2.1."
+         END
+     END
+     BLOCK "VarFileInfo"
+     BEGIN
+-        VALUE "Translation", 0x0409, 0x04e4
++        VALUE "Translation", 0x0409, 0x04b0
+     END
+ END
+diff --git a/src/openslide-file.c b/src/openslide-file.c
+index 2763f38071dc..11b568913cfe 100644
+--- a/src/openslide-file.c
++++ b/src/openslide-file.c
+@@ -36,6 +36,13 @@
+ #include <fcntl.h>
+ #endif
+ 
++#if !defined(HAVE_FSEEKO) && defined(_WIN32)
++#define fseeko _fseeki64
++#endif
++#if !defined(HAVE_FTELLO) && defined(_WIN32)
++#define ftello _ftelli64
++#endif
++
+ struct _openslide_file {
+   FILE *fp;
+ };
+@@ -141,7 +148,7 @@ size_t _openslide_fread(struct _openslide_file *file, void *buf, size_t size) {
+   return total;
+ }
+ 
+-bool _openslide_fseek(struct _openslide_file *file, off_t offset, int whence,
++bool _openslide_fseek(struct _openslide_file *file, int64_t offset, int whence,
+                       GError **err) {
+   if (fseeko(file->fp, offset, whence)) {
+     g_set_error(err, G_FILE_ERROR, g_file_error_from_errno(errno),
+@@ -151,8 +158,8 @@ bool _openslide_fseek(struct _openslide_file *file, off_t offset, int whence,
+   return true;
+ }
+ 
+-off_t _openslide_ftell(struct _openslide_file *file, GError **err) {
+-  off_t ret = ftello(file->fp);
++int64_t _openslide_ftell(struct _openslide_file *file, GError **err) {
++  int64_t ret = ftello(file->fp);
+   if (ret == -1) {
+     g_set_error(err, G_FILE_ERROR, g_file_error_from_errno(errno),
+                 "%s", g_strerror(errno));
+@@ -160,15 +167,15 @@ off_t _openslide_ftell(struct _openslide_file *file, GError **err) {
+   return ret;
+ }
+ 
+-off_t _openslide_fsize(struct _openslide_file *file, GError **err) {
+-  off_t orig = _openslide_ftell(file, err);
++int64_t _openslide_fsize(struct _openslide_file *file, GError **err) {
++  int64_t orig = _openslide_ftell(file, err);
+   if (orig == -1) {
+     return -1;
+   }
+   if (!_openslide_fseek(file, 0, SEEK_END, err)) {
+     return -1;
+   }
+-  off_t ret = _openslide_ftell(file, err);
++  int64_t ret = _openslide_ftell(file, err);
+   if (ret == -1) {
+     return -1;
+   }
+diff --git a/src/openslide-private.h b/src/openslide-private.h
+index 5ae36939b048..eb670427f6e4 100644
+--- a/src/openslide-private.h
++++ b/src/openslide-private.h
+@@ -186,10 +186,10 @@ struct _openslide_file;
+ 
+ struct _openslide_file *_openslide_fopen(const char *path, GError **err);
+ size_t _openslide_fread(struct _openslide_file *file, void *buf, size_t size);
+-bool _openslide_fseek(struct _openslide_file *file, off_t offset, int whence,
++bool _openslide_fseek(struct _openslide_file *file, int64_t offset, int whence,
+                       GError **err);
+-off_t _openslide_ftell(struct _openslide_file *file, GError **err);
+-off_t _openslide_fsize(struct _openslide_file *file, GError **err);
++int64_t _openslide_ftell(struct _openslide_file *file, GError **err);
++int64_t _openslide_fsize(struct _openslide_file *file, GError **err);
+ void _openslide_fclose(struct _openslide_file *file);
+ bool _openslide_fexists(const char *path, GError **err);
+ 
+diff --git a/src/openslide-vendor-synthetic.c b/src/openslide-vendor-synthetic.c
+index e3a44056900a..2966803ae6e8 100644
+--- a/src/openslide-vendor-synthetic.c
++++ b/src/openslide-vendor-synthetic.c
+@@ -156,13 +156,13 @@ static bool decode_png(const void *data, uint32_t len,
+ 
+ struct mem_tiff {
+   const uint8_t *data;
+-  ssize_t offset;
+-  ssize_t size;
++  int64_t offset;
++  int64_t size;
+ };
+ 
+ static tsize_t mem_tiff_read(thandle_t th, tdata_t buf, tsize_t size) {
+   struct mem_tiff *mem = th;
+-  ssize_t count = MIN(mem->size - mem->offset, size);
++  int64_t count = MIN(mem->size - mem->offset, size);
+   memcpy(buf, mem->data + mem->offset, count);
+   mem->offset += count;
+   return count;
+diff --git a/tools/slidetool-util.c b/tools/slidetool-util.c
+index 28901eda611c..7a0de731245f 100644
+--- a/tools/slidetool-util.c
++++ b/tools/slidetool-util.c
+@@ -20,11 +20,16 @@
+  */
+ 
  #include <stdio.h>
- #include <stdarg.h>
- #include <string.h>
 -#include <unistd.h>
-+//#include <unistd.h>
- #include <glib.h>
- #include "openslide.h"
- #include "test-common.h"
+ #include <errno.h>
+ #include "openslide-common.h"
+ #include "slidetool.h"
+ 
++#ifdef _WIN32
++#include <io.h>
++#else
++#include <unistd.h>
++#endif
++
+ struct output open_output(const char *filename) {
+   struct output out;
+   if (filename) {

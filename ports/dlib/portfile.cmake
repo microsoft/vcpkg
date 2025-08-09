@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
     REF "v${VERSION}"
-    SHA512 8aef0e1e54093618e5246aa2418902681aeb4ffcaac734e523ee51cc2a4cbc3eefa78302a32b82550219a6d2cba997ea2ff10506310c1a4de8551a709579b5af
+    SHA512 a4bcb2d013bd2b0000530d684c9c4b9f047f9fa6216174b3cb26d96f66c4a302d0bd1733d0ba35626d57133d9159f90114ab51a3af8fb9c493ff3e74dcc73911
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -44,9 +44,12 @@ vcpkg_cmake_configure(
         -DDLIB_WEBP_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
         -DDLIB_USE_FFMPEG=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_X11=ON
     OPTIONS_DEBUG
         ${dbg_opts}
         #-DDLIB_ENABLE_STACK_TRACE=ON
+    MAYBE_UNUSED_OPTIONS
+        CMAKE_DISABLE_FIND_PACKAGE_X11 # Not checked on Windows
 )
 
 vcpkg_cmake_install()

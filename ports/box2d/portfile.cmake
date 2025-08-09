@@ -1,18 +1,11 @@
-vcpkg_download_distfile(
-    werror_patch
-    URLS https://github.com/erincatto/Box2D/commit/0f2b0246f39594e93fcc8dde0fe0bb1b20b403f9.patch?full_index=1
-    SHA512 debe1bae799909ad51a1a69d79843e1d4bfcd86257057de1c09c79479bd5e4714b9ae78e593f854868af568b459a24de29a369d04e6f280fcb233398e486bac3
-    FILENAME erincatto-Box2D-0f2b024.diff
-)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO erincatto/Box2D
     REF v${VERSION}
-    SHA512 85d67a0de92aecc61692d7a6f1a8c7e878cdd2a6457470f1a9be075dfc27fdcefb951ac689d95bb78a7b791d6586f794720af8417f55d7f66782b4c3c179210a
+    SHA512 7367640e7f2ff395b8ca48766c71f57c96e08c298627c996eba76899a149ee28b0e3ecacfa4a224fdb5d160c7e25c6069bb8414fd1575787727d796097aa347b
     HEAD_REF main
     PATCHES
-        ${werror_patch}
-        crt-linkage.diff
         libm.diff
 )
 

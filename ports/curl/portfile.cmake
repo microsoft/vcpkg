@@ -4,13 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 083591171202ea26fcb22ffa9c52286c76c7ff8dcea0a5e8a616737eee8672ab8bfffaa230e84b05450c0acb1f3e5f402d4f6aca46bd52fd6e812b68eadfca27
+    SHA512 d4a560e225d0110133f44ed57cf5394c1710530c5fec395d02baafaac9ea2186dd543047ae27fd7542894b8744070760516ae611602105b1b40605abbf84e684
     HEAD_REF master
     PATCHES
-        export-components.patch
         dependencies.patch
         pkgconfig-curl-config.patch
-        cmake-config.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -25,7 +23,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         sspi        CURL_WINDOWS_SSPI
         brotli      CURL_BROTLI
         schannel    CURL_USE_SCHANNEL
-        sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
         zstd        CURL_ZSTD
@@ -49,11 +46,9 @@ if("sectransp" IN_LIST FEATURES)
     list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
 endif()
 
-# UWP targets
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS
         -DCURL_DISABLE_TELNET=ON
-        -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
 endif()
@@ -139,7 +134,7 @@ string(REGEX REPLACE "#i.*" "" krb5_c "${krb5_c}")
 set(krb5_copyright "${CURRENT_BUILDTREES_DIR}/krb5.c Notice")
 file(WRITE "${krb5_copyright}" "${krb5_c}")
 
-file(READ "${SOURCE_PATH}/lib/inet_ntop.c" inet_ntop_c)
+file(READ "${SOURCE_PATH}/lib/curlx/inet_ntop.c" inet_ntop_c)
 string(REGEX REPLACE "#i.*" "" inet_ntop_c "${inet_ntop_c}")
 set(inet_ntop_copyright "${CURRENT_BUILDTREES_DIR}/inet_ntop.c and inet_pton.c Notice")
 file(WRITE "${inet_ntop_copyright}" "${inet_ntop_c}")

@@ -1,7 +1,6 @@
 {
   "name": "libmem",
-  "version": "5.0.4",
-  "port-version": 1,
+  "version": "5.0.5",
   "description": "Advanced Game Hacking Library for C, Modern C++, Rust and Python (Windows/Linux/FreeBSD) (Process/Memory Hacking) (Hooking/Detouring) (Cross Platform) (x86/x64/ARM/ARM64) (DLL/SO Injection) (Internal/External) (Assembler/Disassembler)",
   "homepage": "https://github.com/rdbo/libmem",
   "license": "AGPL-3.0-only",

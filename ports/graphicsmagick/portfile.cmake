@@ -1,11 +1,11 @@
-set(GM_VERSION 1.3.41)
+string(REPLACE "." "_" graphicsmagick_version "GraphicsMagick-${VERSION}")
 
-vcpkg_from_sourceforge(
+vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
+    GITLAB_URL https://foss.heptapod.net/
     REPO graphicsmagick/graphicsmagick
-    REF ${GM_VERSION}
-    FILENAME "GraphicsMagick-${GM_VERSION}-windows.7z"
-    SHA512 4790081136af67bf406b94e3de88feff295cc98fd3b125776e014436b12dbb31331af4ee4f8497ccc39d4afda08145b5e4bfeb45b3210a50e17b14e4dc2a220d
+    REF ${graphicsmagick_version}
+    SHA512 e64842dbbe2026e7d75b4004f615f32b4e2d57ce8dbd9bc90f87ee6e180d7e2feb61da6c25d404c43ac8d7661f94f7be3bd2882928dbd0e276b5c9040690f6f4
     PATCHES
         # GM always requires a dynamic BZIP2. This patch makes this dependent if _DLL is defined
         dynamic_bzip2.patch
@@ -15,23 +15,22 @@ vcpkg_from_sourceforge(
         # load either PNG or JPEG files (due to missing GM Modules, with names
         # matching "IM_*.DLL").
         disable_graphicsmagick_modules.patch
+        fix-png.patch
+        dirnet.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/magick_types.h" DESTINATION "${SOURCE_PATH}/magick")
+configure_file ("${CMAKE_CURRENT_LIST_DIR}/magick_types.h" "${SOURCE_PATH}/magick/magick_types.h.in" COPYONLY)
 
-vcpkg_cmake_configure(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
+    AUTORECONF
+    OPTIONS
+        VERBOSE=yes
 )
 
-vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-graphicsmagick)
-
-# copy license
-file(INSTALL "${SOURCE_PATH}/Copyright.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_make_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 # copy config
 file(COPY "${SOURCE_PATH}/config/colors.mgk" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/config")
@@ -43,4 +42,24 @@ string(REPLACE "@windows_font_dir@" "$ENV{SYSTEMROOT}/Fonts/" TYPE_MGK "${TYPE_M
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/graphicsmagick/config/type.mgk" "${TYPE_MGK}")
 
 configure_file("${SOURCE_PATH}/config/delegates.mgk.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/config/delegates.mgk" @ONLY)
-vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+set(FILE_LIST
+        "GraphicsMagick++-config"
+        "GraphicsMagick-config"
+        "GraphicsMagickWand-config"
+)
+foreach(filename ${FILE_LIST})
+    
+    set(file "${CURRENT_PACKAGES_DIR}/tools/graphicsmagick/bin/${filename}")
+    vcpkg_replace_string("${file}" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../.." IGNORE_UNCHANGED)
+    if(NOT VCPKG_BUILD_TYPE)
+        set(debug_file "${CURRENT_PACKAGES_DIR}/tools/graphicsmagick/debug/bin/${filename}")
+        vcpkg_replace_string("${debug_file}" "${CURRENT_INSTALLED_DIR}/debug" "`dirname $0`/../../../../debug" IGNORE_UNCHANGED)
+        vcpkg_replace_string("${debug_file}" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../debug" IGNORE_UNCHANGED)
+    endif()
+endforeach()
+
+# copy license
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")

@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gdraheim/zziplib
     REF "v${VERSION}"
-    SHA512 bed63fa7d430bd197bb70084f28ae6edc4c4120655b882bc8367f968b32c03340bb6d9bf1b14a5fcc5a1160d91ccf00e7b1131a4123da5d52233a84840ba8b7e
+    SHA512 1560b9b6851247ef07e64c689551e191eb26e2756f7ba32bdd1a7ed345a76b444050474b2fdd5f6308ca2ff1e9a55a55c8961eefaf8db0c6674c6a2f1c368a68
     PATCHES
         no-release-postfix.patch
-        revert-pkgconfig-path.patch
 )
 
 string(COMPARE EQUAL VCPKG_CRT_LINKAGE "static" MSVC_STATIC_RUNTIME)

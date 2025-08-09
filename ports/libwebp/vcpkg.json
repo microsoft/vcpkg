@@ -1,7 +1,6 @@
 {
   "name": "libwebp",
-  "version": "1.5.0",
-  "port-version": 1,
+  "version": "1.6.0",
   "description": "WebP codec: library to encode and decode images in WebP format",
   "homepage": "https://github.com/webmproject/libwebp",
   "license": "BSD-3-Clause",

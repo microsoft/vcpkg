@@ -1,26 +1,12 @@
-diff --git a/src/cpp/fastdds/topic/DDSSQLFilter/DDSFilterCompoundCondition.hpp b/src/cpp/fastdds/topic/DDSSQLFilter/DDSFilterCompoundCondition.hpp
-index d4759de..66c2f7a 100644
---- a/src/cpp/fastdds/topic/DDSSQLFilter/DDSFilterCompoundCondition.hpp
-+++ b/src/cpp/fastdds/topic/DDSSQLFilter/DDSFilterCompoundCondition.hpp
-@@ -20,7 +20,7 @@
- #define _FASTDDS_TOPIC_DDSSQLFILTER_DDSFILTERCOMPOUNDCONDITION_HPP_
+diff --git a/src/cpp/rtps/security/common/SharedSecretHandle.h b/src/cpp/rtps/security/common/SharedSecretHandle.h
+index c53b153..b2b6507 100644
+--- a/src/cpp/rtps/security/common/SharedSecretHandle.h
++++ b/src/cpp/rtps/security/common/SharedSecretHandle.h
+@@ -21,6 +21,7 @@
+ #include <rtps/security/common/Handle.h>
  
- #include <memory>
--
+ #include <vector>
 +#include <cstdint>
- #include "DDSFilterCondition.hpp"
  
- namespace eprosima {
-diff --git a/src/cpp/fastdds/topic/DDSSQLFilter/DDSFilterValue.hpp b/src/cpp/fastdds/topic/DDSSQLFilter/DDSFilterValue.hpp
-index 4ae70cb..f66790e 100644
---- a/src/cpp/fastdds/topic/DDSSQLFilter/DDSFilterValue.hpp
-+++ b/src/cpp/fastdds/topic/DDSSQLFilter/DDSFilterValue.hpp
-@@ -23,7 +23,7 @@
- 
- #include <memory>
- #include <regex>
--
-+#include <cstdint>
  namespace eprosima {
  namespace fastdds {
- namespace dds {
