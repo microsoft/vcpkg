@@ -6,7 +6,10 @@
   "license": "MIT",
   "dependencies": [
     "bzip2",
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
     "libjpeg-turbo",
     "libpng",
     "libwebp",
