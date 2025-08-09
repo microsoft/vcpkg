@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index df72448..e2eeff6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,7 +11,12 @@ set(CMAKE_C_STANDARD 99)
+ 
+ option(BUILD_SHARED_LIBS "Build libbz3 as a shared library" ON)
+ option(BZIP3_BUILD_APPS "Build bzip3 applications" ON)
+-option(BZIP3_ENABLE_PTHREAD "Enable use of pthread library" ON)
++if(WIN32)
++  set(BZIP3_ENABLE_PTHREAD_DEFAULT OFF)
++else()
++  set(BZIP3_ENABLE_PTHREAD_DEFAULT ON)
++endif()
++option(BZIP3_ENABLE_PTHREAD "Enable use of pthread library" "${BZIP3_ENABLE_PTHREAD_DEFAULT}")
+ option(BZIP3_ENABLE_ARCH_NATIVE "Enable CPU-specific optimizations" OFF)
+ option(BZIP3_ENABLE_STATIC_EXE "Enable static builds of the executable" OFF)
+ 
