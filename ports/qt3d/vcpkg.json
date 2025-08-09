@@ -1,6 +1,6 @@
 {
   "name": "qt3d",
-  "version": "6.8.3",
+  "version": "6.9.0",
   "description": "Qt wrapper for existing OPC UA stacks",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -96,7 +96,15 @@
           "name": "qt3d",
           "default-features": false,
           "features": [
+            "render",
             "rhi"
+          ]
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "vulkan"
           ]
         },
         "vulkan"
