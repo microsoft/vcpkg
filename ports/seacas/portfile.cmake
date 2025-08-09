@@ -11,6 +11,7 @@ vcpkg_from_github(
             fix-headers.patch
             fix-fmt-10.patch
             fix-build-error-with-fmt11.patch
+            netcdf-c.diff
 )
 file(REMOVE "${SOURCE_PATH}/cmake/tribits/common_tpls/find_modules/FindHDF5.cmake")
 
@@ -73,6 +74,7 @@ vcpkg_cmake_configure(
         "-DSeacas_HOSTNAME:STRING=localhost"
         "-DSeacas_GENERATE_REPO_VERSION_FILE:BOOL=OFF"
         "-DNetcdf_ALLOW_MODERN:BOOL=ON"
+        "-DNetcdf_FORCE_MODERN:BOOL=ON"
         "-DSeacas_ENABLE_Fortran:BOOL=OFF"
         #"-DCGNS_ALLOW_PREDEFIND:BOOL=NO"
         #"-DSeacas_ENABLE_ALL_PACKAGES:BOOL=ON"
