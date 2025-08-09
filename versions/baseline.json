@@ -2486,7 +2486,7 @@
     },
     "dp-thread-pool": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "dpdk": {
       "baseline": "24.07",
