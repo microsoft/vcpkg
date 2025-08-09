@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5b6ad2c..82e210d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,15 +76,20 @@ if(BUILD_SHARED_LIBS)
+ endif()
+ install(
+   TARGETS bz3
+-  EXPORT ${CMAKE_PROJECT_NAME}-config
++  EXPORT ${CMAKE_PROJECT_NAME}-targets
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ install(
+-  EXPORT ${CMAKE_PROJECT_NAME}-config
+-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}
++  EXPORT ${CMAKE_PROJECT_NAME}-targets
++  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}"
+   NAMESPACE ${CMAKE_PROJECT_NAME}::)
+-
++configure_file(
++  "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_PROJECT_NAME}-config.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}-config.cmake"
++  @ONLY)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}-config.cmake"
++  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}")
+ if(BZIP3_BUILD_APPS)
+   add_executable(bzip3)
+   target_sources(bzip3 PRIVATE src/main.c)
+diff --git a/bzip3-config.cmake.in b/bzip3-config.cmake.in
+new file mode 100644
+index 0000000..e45f5a6
+--- /dev/null
++++ b/bzip3-config.cmake.in
+@@ -0,0 +1,5 @@
++if(@BZIP3_ENABLE_PTHREAD@)
++  include(CMakeFindDependencyMacro)
++  find_dependency(Threads)
++endif()
++include("${CMAKE_CURRENT_LIST_DIR}/bzip3-targets.cmake")

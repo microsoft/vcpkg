@@ -6,13 +6,6 @@
   "license": "LGPL-3.0-or-later",
   "dependencies": [
     {
-      "name": "bzip3",
-      "features": [
-        "threads"
-      ],
-      "platform": "!windows"
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -22,10 +15,6 @@
     }
   ],
   "features": {
-    "threads": {
-      "description": "Enable use of pthread library",
-      "supports": "!windows"
-    },
     "tools": {
       "description": "Build bzip3 applications",
       "supports": "!windows"
