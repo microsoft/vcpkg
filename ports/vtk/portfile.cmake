@@ -132,7 +132,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
-        "debugleaks"  VTK_DEBUG_LEAKS
 )
 
 # Lock port features to prevent accidental finding of transitive dependencies
@@ -212,8 +211,12 @@ if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
     )
 endif()
 
-if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
-    vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND ADDITIONAL_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
 endif()
 
 if("utf8" IN_LIST FEATURES)
@@ -247,11 +250,12 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    "cuda"         VTK_USE_CUDA
-    "mpi"          VTK_USE_MPI
-    "all"          VTK_BUILD_ALL_MODULES
-	"tbb"          VTK_SMP_ENABLE_TBB
-	"openmp"       VTK_SMP_ENABLE_OPENMP      
+        "all"           VTK_BUILD_ALL_MODULES
+        "cuda"          VTK_USE_CUDA
+        "debugleaks"    VTK_DEBUG_LEAKS
+        "mpi"           VTK_USE_MPI
+        "openmp"        VTK_SMP_ENABLE_OPENMP
+        "tbb"           VTK_SMP_ENABLE_TBB
 )
 
 # =============================================================================
