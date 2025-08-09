@@ -980,13 +980,6 @@ stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
 # _Interlocked* intrinsic functions are not available on x86
 suitesparse-graphblas:x86-windows=fail
-# "ninja: error: failed recompaction: Permission denied"
-# See https://gist.github.com/valgur/a27f15e16efe93b1ed589703c3cb22cd for the build logs
-suitesparse-graphblas:arm64-windows-static-md=fail
-suitesparse-graphblas:arm64-windows=fail
-# uwp: "unresolved external symbol __imp_RoInitialize referenced in function __scrt_initialize_winrt"
-suitesparse-graphblas:arm64-uwp=fail
-suitesparse-graphblas:x64-uwp=fail
 systemc:arm64-uwp=fail
 systemc:x64-uwp=fail
 teemo:x64-android=fail
