@@ -45,19 +45,19 @@ configure_file("${SOURCE_PATH}/config/delegates.mgk.in" "${CURRENT_PACKAGES_DIR}
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-set(FILE_LIST
-        "GraphicsMagick++-config"
-        "GraphicsMagick-config"
-        "GraphicsMagickWand-config"
+set(config_scripts
+    "GraphicsMagick++-config"
+    "GraphicsMagick-config"
+    "GraphicsMagickWand-config"
 )
-foreach(filename ${FILE_LIST})
-    
+foreach(filename IN LISTS config_scripts)
     set(file "${CURRENT_PACKAGES_DIR}/tools/graphicsmagick/bin/${filename}")
-    vcpkg_replace_string("${file}" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../.." IGNORE_UNCHANGED)
+    vcpkg_replace_string("${file}" "${CURRENT_INSTALLED_DIR}" "'\"\${prefix}\"'")
+    vcpkg_replace_string("${file}" "while test" "prefix=$(CDPATH= cd -- \"$(dirname -- \"$0\")/../../..\" && pwd -P)\n\nwhile test")
     if(NOT VCPKG_BUILD_TYPE)
         set(debug_file "${CURRENT_PACKAGES_DIR}/tools/graphicsmagick/debug/bin/${filename}")
-        vcpkg_replace_string("${debug_file}" "${CURRENT_INSTALLED_DIR}/debug" "`dirname $0`/../../../../debug" IGNORE_UNCHANGED)
-        vcpkg_replace_string("${debug_file}" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../../../debug" IGNORE_UNCHANGED)
+        vcpkg_replace_string("${debug_file}" "${CURRENT_INSTALLED_DIR}" "'\"\${prefix}\"'")
+        vcpkg_replace_string("${debug_file}" "while test" "prefix=$(CDPATH= cd -- \"$(dirname -- \"$0\")/../../../..\" && pwd -P)\n\nwhile test")
     endif()
 endforeach()
 
