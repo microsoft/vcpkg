@@ -250,6 +250,12 @@ if("openmp" IN_LIST FEATURES)
 	)
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND ADDITIONAL_OPTIONS
+        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
+    )
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "all"           VTK_BUILD_ALL_MODULES
