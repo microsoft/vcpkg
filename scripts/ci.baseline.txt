@@ -448,7 +448,6 @@ intelrdfpmathlib:x64-android=fail
 io2d:arm-neon-android=fail
 io2d:arm64-android=fail
 io2d:x64-android=fail
-irrlicht:x64-android=fail
 isal:x64-android=fail
 # Failing on try_run() in cross builds
 itk:arm-neon-android=fail
