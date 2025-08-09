@@ -396,6 +396,7 @@ pfring:arm64-osx=fail
 pfring:x64-osx=fail
 pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
+platform-folders:arm64-uwp=fail
 platform-folders:x64-uwp=fail
 plibsys:arm-uwp=fail
 plibsys:x64-uwp=fail
