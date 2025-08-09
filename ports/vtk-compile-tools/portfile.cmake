@@ -1,4 +1,7 @@
 set(VCPKG_BUILD_TYPE release)  # tools
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+
 set(SHORT_VERSION 9.3)
 
 vcpkg_from_github(
@@ -21,7 +24,7 @@ vcpkg_copy_pdbs()
 # Not adjusting the directory name: The package location is meant to be passed explicitly.
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtkcompiletools-${SHORT_VERSION})
 
-vcpkg_copy_tools(AUTOCLEAN TOOL_NAMES vtkParseJava-${SHORT_VERSION} vtkWrapHierarchy-${SHORT_VERSION} vtkWrapJava-${SHORT_VERSION} vtkWrapPython-${SHORT_VERSION} vtkWrapPythonInit-${SHORT_VERSION})
+vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES vtkParseJava-${SHORT_VERSION} vtkWrapHierarchy-${SHORT_VERSION} vtkWrapJava-${SHORT_VERSION} vtkWrapPython-${SHORT_VERSION} vtkWrapPythonInit-${SHORT_VERSION})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")  # owned by port vtk
 

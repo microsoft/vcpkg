@@ -19,6 +19,7 @@
         "zlib"
       ]
     },
+    "gl2ps",
     "glew",
     {
       "name": "hdf5",
@@ -218,10 +219,7 @@
       ]
     },
     "opengl": {
-      "description": "All opengl related modules",
-      "dependencies": [
-        "gl2ps"
-      ]
+      "description": "All opengl related modules"
     },
     "openmp": {
       "description": "Use openmp multithreading parallel implementation"
