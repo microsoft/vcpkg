@@ -1,12 +1,16 @@
 {
   "name": "graphicsmagick",
   "version": "1.3.45",
+  "port-version": 1,
   "description": "Image processing library",
   "homepage": "http://www.graphicsmagick.org/",
   "license": "MIT",
   "dependencies": [
     "bzip2",
-    "freetype",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
     "libjpeg-turbo",
     "libpng",
     "libwebp",
