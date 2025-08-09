@@ -449,11 +449,11 @@
       "port-version": 0
     },
     "aws-c-http": {
-      "baseline": "0.10.2",
+      "baseline": "0.10.4",
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.20.1",
+      "baseline": "0.21.2",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -689,7 +689,7 @@
       "port-version": 0
     },
     "bfgroup-lyra": {
-      "baseline": "1.6.1",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "bgfx": {
@@ -2462,7 +2462,7 @@
     },
     "dlib": {
       "baseline": "20.0",
-      "port-version": 0
+      "port-version": 1
     },
     "dlpack": {
       "baseline": "1.1",
@@ -2837,7 +2837,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "25.06",
+      "baseline": "25.08",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -3409,7 +3409,7 @@
       "port-version": 5
     },
     "graphicsmagick": {
-      "baseline": "1.3.43",
+      "baseline": "1.3.45",
       "port-version": 0
     },
     "graphite2": {
@@ -7082,7 +7082,7 @@
     },
     "openssl": {
       "baseline": "3.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "opensubdiv": {
       "baseline": "3.5.0",
@@ -8713,7 +8713,7 @@
       "port-version": 2
     },
     "sentry-native": {
-      "baseline": "0.9.1",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9961,7 +9961,7 @@
       "port-version": 3
     },
     "vcpkg-gn": {
-      "baseline": "2024-02-22",
+      "baseline": "2025-08-05",
       "port-version": 0
     },
     "vcpkg-make": {
@@ -9989,7 +9989,7 @@
       "port-version": 0
     },
     "vcpkg-tool-gn": {
-      "baseline": "2025-01-27",
+      "baseline": "2025-08-05",
       "port-version": 0
     },
     "vcpkg-tool-gyp-next": {
@@ -10605,7 +10605,7 @@
       "port-version": 0
     },
     "zlib-ng": {
-      "baseline": "2.2.4",
+      "baseline": "2.2.5",
       "port-version": 0
     },
     "zlmediakit": {
