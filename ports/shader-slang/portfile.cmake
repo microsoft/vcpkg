@@ -123,9 +123,9 @@ block(SCOPE_FOR VARIABLES)
 		[[HINTS ENV PATH "${PACKAGE_PREFIX_DIR}/bin"]]
 		[[PATHS "${PACKAGE_PREFIX_DIR}/tools/shader-slang" NO_DEFAULT_PATH REQUIRED]]
 	)
-	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfig.cmake"
-		[[if(NOT CMAKE_SIZEOF_VOID_P STREQUAL "8")]]
-		[[if(0) # cross-tool]]
+	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfigVersion.cmake"
+		[[if("${CMAKE_SIZEOF_VOID_P}" STREQUAL ""]]
+		[[if(#[=[ host tool ]=] "TRUE"]] 
 	)
 endblock()
 
