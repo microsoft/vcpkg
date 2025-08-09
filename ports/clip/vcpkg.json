@@ -1,0 +1,22 @@
+{
+  "name": "clip",
+  "version": "1.10.0",
+  "description": "Cross-platform C++ library to copy/paste clipboard content.",
+  "homepage": "https://github.com/dacap/clip",
+  "license": "MIT",
+  "supports": "!android & !uwp",
+  "dependencies": [
+    {
+      "name": "libpng",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 79f7074..32e284a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,8 @@ cmake_minimum_required(VERSION 3.15)
+ 
+ project(clip LANGUAGES CXX)
+ 
++include(GNUInstallDirs)
++
+ set(CMAKE_CXX_STANDARD 11)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+@@ -25,7 +27,8 @@ if(UNIX AND NOT APPLE)
+   option(CLIP_X11_WITH_PNG "Compile with libpng to support copy/paste image in png format" on)
+ endif()
+ 
+-add_library(clip clip.cpp)
++add_library(clip STATIC clip.cpp)
++target_include_directories(clip PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ 
+ if(CLIP_ENABLE_IMAGE)
+   target_sources(clip PRIVATE image.cpp)
+@@ -107,8 +110,6 @@ if(CLIP_TESTS)
+ endif()
+ 
+ if(CLIP_INSTALL)
+-  include(GNUInstallDirs)
+-
+   install(
+     FILES clip.h
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

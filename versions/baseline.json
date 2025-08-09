@@ -1780,6 +1780,10 @@
       "baseline": "2.5.1",
       "port-version": 0
     },
+    "clip": {
+      "baseline": "1.10.0",
+      "port-version": 0
+    },
     "clipboardxx": {
       "baseline": "2022-02-04",
       "port-version": 0
