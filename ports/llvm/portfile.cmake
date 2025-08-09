@@ -4,19 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
     REF "llvmorg-${VERSION}"
-    SHA512 9e9ec501336127339347c01ffd47768d501a84ef415c6a72fe56d31e867f982baeb3c4659be8e9b8475848a460357f33a6b2aa0ee9f81150e363963b98387bc0
+    SHA512 3db4660b629bd1b45fb5c3a10bb1bf4d78133dda60e44a9a34d3bc797b833985b94153195e3fcec31b6413ed0ed61439322a8da51d58629d0bf47e52e4c8ad94
     HEAD_REF main
     PATCHES
-        0001-fix-install-package-dir.patch
-        0002-fix-tools-install-dir.patch
-        0003-fix-llvm-config.patch
-        0004-disable-libomp-aliases.patch
-        0005-remove-numpy.patch
-        0006-create-destination-mlir-directory.patch
-        75711.patch # [clang] Add intrin0.h header to mimic intrin0.h used by MSVC STL for clang-cl #75711
-        79694.patch # [SEH] Ignore EH pad check for internal intrinsics #79694
-        82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
-        add-include-chrono.patch # https://github.com/llvm/llvm-project/pull/118059
+        #0001-fix-install-package-dir.patch
+        #0002-fix-tools-install-dir.patch
+        #0003-fix-llvm-config.patch
+        #0004-disable-libomp-aliases.patch
+        #0005-remove-numpy.patch
+        #0006-create-destination-mlir-directory.patch
 )
 
 vcpkg_check_features(
@@ -30,8 +26,6 @@ vcpkg_check_features(
         enable-assertions LLVM_ENABLE_ASSERTIONS
         enable-rtti LLVM_ENABLE_RTTI
         enable-ffi LLVM_ENABLE_FFI
-        enable-terminfo LLVM_ENABLE_TERMINFO
-        enable-ios COMPILER_RT_ENABLE_IOS
         enable-eh LLVM_ENABLE_EH
         enable-bindings LLVM_ENABLE_BINDINGS
         export-symbols LLVM_EXPORT_SYMBOLS_FOR_PLUGINS
@@ -87,6 +81,7 @@ else()
     )
 endif()
 
+# All projects: bolt;clang;clang-tools-extra;cross-project-tests;libclc;lld;lldb;mlir;polly")
 set(LLVM_ENABLE_PROJECTS)
 if("bolt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "bolt")
@@ -94,26 +89,26 @@ if("bolt" IN_LIST FEATURES)
         -DBOLT_TOOLS_INSTALL_DIR:PATH=tools/llvm
     )
 endif()
-if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
+if("clang" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang")
-    list(APPEND FEATURE_OPTIONS
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS CLANG_FEATURE_OPTIONS
+        FEATURES
+            clang-enable-cir CLANG_ENABLE_CIR
+            clang-enable-arcmt CLANG_ENABLE_ARCMT
+            clang-enable-static-analyzer CLANG_ENABLE_STATIC_ANALYZER
+    )
+    string(REGEX MATCH "^[0-9]+" CLANG_VERSION_MAJOR ${VERSION})
+    list(APPEND CLANG_FEATURE_OPTIONS
         -DCLANG_INSTALL_PACKAGE_DIR:PATH=share/clang
         -DCLANG_TOOLS_INSTALL_DIR:PATH=tools/llvm
-        # Disable ARCMT
-        -DCLANG_ENABLE_ARCMT=OFF
-        # Disable static analyzer
-        -DCLANG_ENABLE_STATIC_ANALYZER=OFF
+        # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (CLANG_TOOLS_INSTALL_DIR=tools/llvm)
+        # 2) Clang resource files should be relocated from lib/clang/<major_version> to ../tools/llvm/lib/clang/<major_version>
+        -DCLANG_RESOURCE_DIR=lib/clang/${CLANG_VERSION_MAJOR}
     )
-    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (CLANG_TOOLS_INSTALL_DIR=tools/llvm)
-    # 2) Clang resource files should be relocated from lib/clang/<major_version> to ../tools/llvm/lib/clang/<major_version>
-    string(REGEX MATCH "^[0-9]+" CLANG_VERSION_MAJOR ${VERSION})
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${CLANG_VERSION_MAJOR})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
-endif()
-if("compiler-rt" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
 endif()
 if("flang" IN_LIST FEATURES)
     if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -159,17 +154,6 @@ if("mlir" IN_LIST FEATURES)
         )
     endif()
 endif()
-if("openmp" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "openmp")
-    # Perl is required for the OpenMP run-time
-    vcpkg_find_acquire_program(PERL)
-    list(APPEND FEATURE_OPTIONS
-        -DLIBOMP_INSTALL_ALIASES=OFF
-        -DOPENMP_ENABLE_LIBOMPTARGET=OFF # Currently libomptarget cannot be compiled on Windows or MacOS X.
-        -DOPENMP_ENABLE_OMPT_TOOLS=OFF # Currently tools are not tested well on Windows or MacOS X.
-        -DPERL_EXECUTABLE=${PERL}
-    )
-endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
     list(APPEND FEATURE_OPTIONS
@@ -177,6 +161,7 @@ if("polly" IN_LIST FEATURES)
     )
 endif()
 
+# Supported runtimes: libc;libcxx;libcxxabi;libunwind;compiler-rt;openmp;llvm-libgcc;offload
 set(LLVM_ENABLE_RUNTIMES)
 if("libc" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libc")
@@ -195,19 +180,22 @@ if("libcxxabi" IN_LIST FEATURES)
 endif()
 if("libunwind" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libunwind")
-    list(APPEND FEATURE_OPTIONS
-        -DLIBCXXABI_USE_LLVM_UNWINDER=ON
-    )
-else()
-    list(APPEND FEATURE_OPTIONS
-        -DLIBCXXABI_USE_LLVM_UNWINDER=OFF
+endif()
+if("compiler-rt" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "compiler-rt")
+    vcpkg_check_features(
+        OUT_FEATURE_OPTIONS COMPILER_RT_FEATURE_OPTIONS
+        FEATURES
+            enable-ios COMPILER_RT_ENABLE_IOS
     )
 endif()
-if("pstl" IN_LIST FEATURES)
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        message(FATAL_ERROR "Building pstl with MSVC is not supported.")
-    endif()
-    list(APPEND LLVM_ENABLE_RUNTIMES "pstl")
+if("openmp" IN_LIST FEATURES)
+    list(APPEND LLVM_ENABLE_RUNTIMES "openmp")
+    # Perl is required for the OpenMP run-time
+    vcpkg_find_acquire_program(PERL)
+    list(APPEND FEATURE_OPTIONS
+        -DPERL_EXECUTABLE=${PERL}
+    )
 endif()
 
 # this is for normal targets
@@ -226,6 +214,7 @@ set(known_llvm_targets
     PowerPC
     RISCV
     Sparc
+    SPIRV
     SystemZ
     VE
     WebAssembly
@@ -247,7 +236,6 @@ set(known_llvm_experimental_targets
     CSKY
     DirectX
     M68k
-    SPIRV
     Xtensa
 )
 
@@ -299,8 +287,8 @@ vcpkg_cmake_configure(
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}"
         ${FEATURE_OPTIONS}
-    MAYBE_UNUSED_VARIABLES 
-        COMPILER_RT_ENABLE_IOS
+        ${CLANG_FEATURE_OPTIONS}
+        ${COMPILER_RT_FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -332,7 +320,6 @@ llvm_cmake_package_config_fixup("flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
 llvm_cmake_package_config_fixup("polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-llvm_cmake_package_config_fixup("ParallelSTL" FEATURE_NAME "pstl" DO_NOT_DELETE_PARENT_CONFIG_PATH CONFIG_PATH "lib/cmake/ParallelSTL")
 llvm_cmake_package_config_fixup("llvm")
 
 if("mlir" IN_LIST FEATURES)
@@ -353,15 +340,13 @@ endif()
 
 # Remove empty directories to avoid vcpkg warning
 set(empty_dirs)
+if("clang" IN_LIST FEATURES)
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang/Basic/Target/MSP430")
+    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang/CIRFrontendAction")
+endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/clang-tidy/misc/ConfusableTable")
-endif()
-if("pstl" IN_LIST FEATURES)
-    list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/lib/cmake")
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-    endif()
 endif()
 if("flang" IN_LIST FEATURES)
     list(APPEND empty_dirs "${CURRENT_PACKAGES_DIR}/include/flang/CMakeFiles")
