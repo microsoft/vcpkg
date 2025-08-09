@@ -6,8 +6,6 @@
   "homepage": "https://mosquitto.org/",
   "license": "EPL-2.0",
   "dependencies": [
-    "c-ares",
-    "libwebsockets",
     "openssl",
     "pthreads",
     "uthash",

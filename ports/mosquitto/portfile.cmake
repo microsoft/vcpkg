@@ -5,10 +5,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 ca8bdcb10fea751e655e2de393479b2f863287b396b13e441de46c32918229c1f80a386fdd6d0daf3b0161f640702b6d8a87f2278c9baf2150e2c533cb59e57a
     PATCHES
-        0003-add-find_package-libwebsockets.patch
         0004-support-static-build.patch
-        0005-websocket-shared-lib-name.patch
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC_LINKAGE)
 
@@ -17,8 +16,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DWITH_STATIC_LIBRARIES=${STATIC_LINKAGE}
         -DWITH_SRV=OFF
-        -DWITH_WEBSOCKETS=ON
-        -DSTATIC_WEBSOCKETS=${STATIC_LINKAGE}
         -DWITH_TLS=ON
         -DWITH_TLS_PSK=ON
         -DWITH_THREADING=ON
@@ -29,14 +26,9 @@ vcpkg_cmake_configure(
         -DWITH_APPS=OFF
         -DWITH_BROKER=OFF
         -DWITH_BUNDLED_DEPS=OFF
-    MAYBE_UNUSED_VARIABLES
-        WITH_WEBSOCKETS
-        STATIC_WEBSOCKETS
 )
-
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
