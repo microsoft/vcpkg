@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d39958a..cdee3ce 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -117,7 +117,7 @@ if(BUILD_SHARED_LIBS AND WIN32 AND HTTPLIB_COMPILE)
+ 	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+ endif()
+ 
+-if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND ${CMAKE_SYSTEM_VERSION} VERSION_LESS "10.0.0")
++if(CMAKE_SYSTEM_NAME MATCHES "Windows" AND DEFINED CMAKE_SYSTEM_VERSION AND CMAKE_SYSTEM_VERSION VERSION_LESS "10.0.0")
+ 	message(SEND_ERROR "Windows ${CMAKE_SYSTEM_VERSION} or lower is not supported. Please use Windows 10 or later.")
+ endif()
+ if(CMAKE_SIZEOF_VOID_P LESS 8)
