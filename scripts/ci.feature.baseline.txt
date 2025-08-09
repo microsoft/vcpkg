@@ -2220,7 +2220,6 @@ vtk[all](!windows & !android & !osx) = feature-fails # Wait for fix: https://git
 vtk[all](x64 & windows & !uwp & !staticcrt) = feature-fails
 vtk[atlmfc]:arm64-windows = feature-fails
 vtk[cgns]:arm64-windows = feature-fails
-vtk[cuda]:x64-linux = feature-fails
 vtk[gdal](windows & (arm64 | static) & !uwp) = feature-fails
 vtk[ioocct](windows & arm64 & !uwp) = feature-fails
 vtk[libharu]:arm64-windows = feature-fails
