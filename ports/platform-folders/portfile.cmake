@@ -7,8 +7,6 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 0c5221581f6cb8ce44ee0200c6a9b9ddb85f1065f0f7dc48b33b8d380483094efba8c089f3d1fc8b6cef51c4f6b70497861e77ac2309a37d1ded9317085a06ae
     HEAD_REF master
-    PATCHES
-        include-combaseapi.patch
 )
 
 vcpkg_cmake_configure(
