@@ -218,7 +218,7 @@ index 987b2ad..0dfda8e 100644
  
  if (@HAS_PARALLEL@)
 diff --git a/plugins/CMakeLists.txt b/plugins/CMakeLists.txt
-index fbaeb21..5b32310 100644
+index fbaeb21..8cdb5d4 100644
 --- a/plugins/CMakeLists.txt
 +++ b/plugins/CMakeLists.txt
 @@ -4,7 +4,7 @@
@@ -230,7 +230,7 @@ index fbaeb21..5b32310 100644
  
  if(WIN32)
    set(PLUGINEXT "dll")
-@@ -86,7 +86,7 @@ buildplugin(h5unknown "h5unknown")
+@@ -86,10 +86,13 @@ buildplugin(h5unknown "h5unknown")
  
  buildplugin(h5shuffle "h5shuffle")
  buildplugin(h5fletcher32 "h5fletcher32")
@@ -239,3 +239,9 @@ index fbaeb21..5b32310 100644
  
  buildplugin(nczmisc "zmisc")
  buildplugin(nczhdf5filters "zhdf5filters" netcdf)
++if(HAVE_SZ)
++  target_link_libraries(nczhdf5filters PRIVATE ${Szip_LIBRARIES})
++endif()
+ 
+ if(NETCDF_ENABLE_BLOSC)
+   set(h5blosc_SOURCES H5Zblosc.c)
