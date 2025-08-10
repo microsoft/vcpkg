@@ -1,0 +1,22 @@
+diff --git a/toolchain/apple/linker_driver.py b/toolchain/apple/linker_driver.py
+index e502500ce..76264a008 100755
+--- a/toolchain/apple/linker_driver.py
++++ b/toolchain/apple/linker_driver.py
+@@ -486,7 +486,7 @@ class LinkerDriver(object):
+         """
+         toc = b''
+         dylib = self._get_linker_output()
+-        out = subprocess.check_output(self._otool_cmd + ['-l', dylib])
++        out = subprocess.check_output(['xcrun', 'otool'] + ['-l', dylib])
+         lines = out.split(b'\n')
+         found_id = False
+         for i, line in enumerate(lines):
+@@ -507,7 +507,7 @@ class LinkerDriver(object):
+         # -U ignores undefined symbols
+         # -g display only global (external) symbols
+         # -p unsorted https://crrev.com/c/2173969
+-        out = subprocess.check_output(self._nm_cmd + ['-Ugp', dylib])
++        out = subprocess.check_output(['xcrun', 'nm'] + ['-Ugp', dylib])
+         lines = out.split(b'\n')
+         for line in lines:
+             fields = line.split(b' ', 2)

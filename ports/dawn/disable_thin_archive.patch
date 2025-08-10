@@ -1,0 +1,58 @@
+diff --git a/config/BUILDCONFIG.gn b/config/BUILDCONFIG.gn
+index 2ff4a83b6..ad63861f5 100644
+--- a/config/BUILDCONFIG.gn
++++ b/config/BUILDCONFIG.gn
+@@ -379,7 +379,6 @@ default_compiler_configs = [
+   "//build/config/compiler:no_rtti",
+   "//build/config/compiler:no_unresolved_symbols",
+   "//build/config/compiler:runtime_library",
+-  "//build/config/compiler:thin_archive",
+   "//build/config/compiler:thinlto_optimize_default",
+   "//build/config/compiler:tot_warnings",
+   "//build/config/coverage:default_coverage",
+diff --git a/config/compiler/BUILD.gn b/config/compiler/BUILD.gn
+index ce390e55f..587cc6ab2 100644
+--- a/config/compiler/BUILD.gn
++++ b/config/compiler/BUILD.gn
+@@ -2437,41 +2437,6 @@ config("export_dynamic") {
+   }
+ }
+ 
+-# thin_archive -----------------------------------------------------------------
+-#
+-# Enables thin archives on posix, and on windows when the lld linker is used.
+-# Regular archives directly include the object files used to generate it.
+-# Thin archives merely reference the object files.
+-# This makes building them faster since it requires less disk IO, but is
+-# inappropriate if you wish to redistribute your static library.
+-# This config is added to the global config, so thin archives should already be
+-# enabled.  If you want to make a distributable static library, you need to do 2
+-# things:
+-# 1. Set complete_static_lib so that all dependencies of the library make it
+-#    into the library. See `gn help complete_static_lib` for details.
+-# 2. Remove the thin_archive config, so that the .a file actually contains all
+-#    .o files, instead of just references to .o files in the build directoy
+-config("thin_archive") {
+-  if ((is_apple && use_lld) || (is_linux && !is_clang) || current_os == "aix") {
+-    # The macOS and iOS linker ld64.ldd doesn't support thin archive without
+-    # symbol table, gcc on linux also throws the error `archive has no index`.
+-    # AIX does support -s option, not -S option.
+-    arflags = [
+-      "-T",
+-      "-s",
+-    ]
+-  } else if ((is_posix && (!is_apple || use_lld)) || is_fuchsia) {
+-    # The macOS and iOS default linker ld64 does not support reading thin
+-    # archives.
+-    arflags = [
+-      "-T",
+-      "-S",
+-    ]
+-  } else if (is_win && use_lld) {
+-    arflags = [ "/llvmlibthin" ]
+-  }
+-}
+-
+ # exceptions -------------------------------------------------------------------
+ #
+ # Allows turning Exceptions on or off.

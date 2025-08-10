@@ -1,0 +1,28 @@
+diff --git a/config/BUILDCONFIG.gn b/config/BUILDCONFIG.gn
+index 2ff4a83b6..3cf2aab69 100644
+--- a/config/BUILDCONFIG.gn
++++ b/config/BUILDCONFIG.gn
+@@ -181,6 +181,10 @@ declare_args() {
+       is_debug && current_os != "ios" && current_os != "watchos"
+ }
+ 
++declare_args() {
++  force_dynamic_crt = false
++}
++
+ assert(!(is_debug && is_official_build), "Can't do official debug builds")
+ assert(!(current_os == "ios" && is_component_build),
+        "Can't use component build on iOS")
+diff --git a/config/win/BUILD.gn b/config/win/BUILD.gn
+index aaeadc313..2ad89fa40 100644
+--- a/config/win/BUILD.gn
++++ b/config/win/BUILD.gn
+@@ -504,7 +504,7 @@ if (build_with_chromium && current_cpu == target_cpu && host_os == "win") {
+ # See https://msdn.microsoft.com/en-us/library/2kzt1wy3.aspx for a reference of
+ # what each value does.
+ config("default_crt") {
+-  if (is_component_build) {
++  if (is_component_build || force_dynamic_crt) {
+     # Component mode: dynamic CRT. Since the library is shared, it requires
+     # exceptions or will give errors about things not matching, so keep
+     # exceptions on.

@@ -2328,6 +2328,10 @@
       "baseline": "2.2.5",
       "port-version": 1
     },
+    "dawn": {
+      "baseline": "chromium_7349",
+      "port-version": 0
+    },
     "daxa": {
       "baseline": "3.0.3",
       "port-version": 0
