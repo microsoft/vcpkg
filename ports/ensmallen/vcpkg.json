@@ -15,5 +15,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    {
+      "name": "openmp",
+      "platform": "!osx"
+    }
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP support"
+    }
+  }
 }
