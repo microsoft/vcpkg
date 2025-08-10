@@ -9,10 +9,13 @@ vcpkg_from_github(
         dependencies.diff
         fix-pkgconfig.patch
         mremap.diff
+        plugin-install-dir.diff
 )
 file(GLOB_RECURSE modules "${SOURCE_PATH}/cmake/modules/Find*.cmake")
-file(GLOB vendored "${SOURCE_PATH}/libncxml/tinyxml2.*")
-file(REMOVE ${modules} ${vendored})
+set(vendored_bzip2 blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c bzlib.h bzlib_private.h)
+list(TRANSFORM vendored_bzip2 PREPEND "${SOURCE_PATH}/plugins")
+file(GLOB vendored_tinyxml2 "${SOURCE_PATH}/libncxml/tinyxml2.*")
+file(REMOVE ${modules} ${vendored_bzip2} ${vendored_tinyxml2})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -21,6 +24,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         nczarr      NETCDF_ENABLE_NCZARR
         nczarr-zip  NETCDF_ENABLE_NCZARR_ZIP
         netcdf-4    NETCDF_ENABLE_HDF5
+        plugins     NETCDF_ENABLE_PLUGINS
         szip        NETCDF_ENABLE_FILTER_SZIP
         tools       NETCDF_BUILD_UTILITIES
         zstd        NETCDF_ENABLE_FILTER_ZSTD
@@ -33,7 +37,6 @@ else()
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
-    list(APPEND FEATURE_OPTIONS "-DNETCDF_ENABLE_PLUGINS=OFF")
     string(APPEND VCPKG_C_FLAGS " /wd4996 /wd4703")
     string(APPEND VCPKG_CXX_FLAGS " /wd4996 /wd4703")
 endif()
@@ -46,11 +49,11 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DENABLE_PLUGIN_INSTALL=ON
         -DNETCDF_ENABLE_DAP_REMOTE_TESTS=OFF
         -DNETCDF_ENABLE_EXAMPLES=OFF
         -DNETCDF_ENABLE_FILTER_BLOSC=OFF
         -DNETCDF_ENABLE_FILTER_TESTING=OFF
-        -DNETCDF_ENABLE_FILTER_ZSTD=OFF
         -DNETCDF_ENABLE_LIBXML2=OFF
         -DNETCDF_ENABLE_S3=OFF
         -DNETCDF_ENABLE_TESTS=OFF
@@ -59,6 +62,7 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_ZLIB=ON
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
+        ENABLE_PLUGIN_INSTALL
         VCPKG_LOCK_FIND_PACKAGE_CURL
 )
 
@@ -80,8 +84,12 @@ else()
     vcpkg_clean_executables_in_bin(FILE_NAMES none)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    #"${CURRENT_PACKAGES_DIR}/debug/lib/libnetcdf.settings"
+    #"${CURRENT_PACKAGES_DIR}/lib/libnetcdf.settings"
+)
 
 set(ncpoco_copyright "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libncpoco COPYRIGHT")
 file(COPY_FILE "${SOURCE_PATH}/libncpoco/COPYRIGHT" "${ncpoco_copyright}")

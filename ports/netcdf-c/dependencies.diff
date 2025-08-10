@@ -1,20 +1,22 @@
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index d06a276..b493b65 100644
+index d06a276..65e0ef7 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
-@@ -134,7 +134,20 @@ if(USE_HDF5)
+@@ -134,7 +134,22 @@ if(USE_HDF5)
    #####
    # First, find the C and HL libraries.
    #####
 -  find_package(HDF5 COMPONENTS C HL REQUIRED)
 +  find_package(HDF5 NAMES hdf5 CONFIG COMPONENTS C HL REQUIRED)
 +  if(TARGET HDF5::HDF5)
++    # pass
 +  elseif(TARGET hdf5::hdf5-shared)
 +    add_library(HDF5::HDF5 ALIAS hdf5::hdf5-shared)
 +  elseif(TARGET hdf5::hdf5-static)
 +    add_library(HDF5::HDF5 ALIAS hdf5::hdf5-static)
 +  endif()
 +  if(TARGET hdf5::hdf5_hl)
++    # pass
 +  elseif(TARGET hdf5::hdf5_hl-shared)
 +    add_library(hdf5::hdf5_hl ALIAS hdf5::hdf5_hl-shared)
 +  elseif(TARGET hdf5::hdf5_hl-static)
@@ -24,25 +26,28 @@ index d06a276..b493b65 100644
  
    message(STATUS "Found HDF5 version: ${HDF5_VERSION}")
    if(${HDF5_VERSION} VERSION_LESS ${HDF5_VERSION_REQUIRED})
-@@ -164,7 +177,7 @@ if(USE_HDF5)
-     if(NOT ZLIB_LIBRARY)
-       find_package(ZLIB)
-       if(ZLIB_FOUND)
--        set(ZLIB_LIBRARY ${ZLIB_LIBRARIES} )
-+        set(ZLIB_LIBRARY ZLIB::ZLIB)
-       else()
-         message(FATAL_ERROR "HDF5 Requires ZLIB, but cannot find libz.")
-       endif()
-@@ -191,7 +204,7 @@ if(USE_HDF5)
-   message(STATUS "-- HDF5_UTF8_PATHS (HDF5 version 1.10.6+): ${HDF5_UTF8_PATHS}")
+@@ -144,7 +159,6 @@ if(USE_HDF5)
+   message(STATUS "Using HDF5 include dir: ${HDF5_INCLUDE_DIRS}")
+   target_link_libraries(netcdf
+     PRIVATE
+-    HDF5::HDF5
+   )
  
-   # Find out if HDF5 was built with parallel support.
--  set(HDF5_PARALLEL ${HDF5_IS_PARALLEL})
-+  set(HDF5_PARALLEL "${HDF5_IS_PARALLEL}")
- 
-   set(CMAKE_REQUIRED_LIBRARIES HDF5::HDF5)
-   include(CheckSymbolExists)
-@@ -345,6 +358,10 @@ if(NOT WIN32)
+   find_package(Threads)
+@@ -244,10 +258,11 @@ if( NETCDF_ENABLE_DAP2 OR NETCDF_ENABLE_DAP4 OR NETCDF_ENABLE_BYTERANGE_SUPPORT
+   #    ${CURL_INCLUDE_DIRS}
+   #)
+   if(CURL_FOUND)
++    set(CURL_INCLUDE_DIRS "")
++    set(CURL_LIBRARIES "")
+     set(FOUND_CURL TRUE)
+     target_link_libraries(netcdf
+     PRIVATE
+-    CURL::libcurl
+   )
+   else()
+     set(FOUND_CURL FALSE)
+@@ -345,6 +360,10 @@ if(NOT WIN32)
          set(HAVE_LIBM "")
      endif()
    else(NOT HAVE_LIBM)
@@ -53,7 +58,7 @@ index d06a276..b493b65 100644
      message(STATUS "Found Math library: ${HAVE_LIBM}")
    endif()
  endif()
-@@ -354,6 +371,7 @@ endif()
+@@ -354,6 +373,7 @@ endif()
  ################################
  # See if we have zlib
  find_package(ZLIB)
@@ -61,7 +66,7 @@ index d06a276..b493b65 100644
  
  # Define a test flag for have zlib library
  if(ZLIB_FOUND)
-@@ -370,19 +388,24 @@ endif()
+@@ -370,19 +390,24 @@ endif()
  # Zips
  ################################
  MESSAGE(STATUS "Checking for filter libraries")
@@ -92,7 +97,7 @@ index d06a276..b493b65 100644
  endif()
  
  # Accumulate standard filters
-@@ -412,7 +435,8 @@ endif()
+@@ -412,7 +437,8 @@ endif()
  
  set(STD_FILTERS "${STD_FILTERS}${FOUND_STD_FILTERS}")
  IF (NETCDF_ENABLE_NCZARR_ZIP)
@@ -102,101 +107,94 @@ index d06a276..b493b65 100644
    if(Zip_FOUND)
      target_include_directories(netcdf
        PRIVATE
-diff --git a/libdispatch/CMakeLists.txt b/libdispatch/CMakeLists.txt
-index 0f5d66d..fb83551 100644
---- a/libdispatch/CMakeLists.txt
-+++ b/libdispatch/CMakeLists.txt
-@@ -13,6 +13,9 @@ target_sources(dispatch
-     dcrc32.c dcrc32.h dcrc64.c ncexhash.c ncxcache.c ncjson.c ds3util.c dparallel.c dmissing.c
-     ncproplist.c 
- )
-+if(FOUND_CURL)
-+  target_link_libraries(dispatch PRIVATE CURL::libcurl)
-+endif()
- 
- if (NETCDF_ENABLE_DLL)
-   target_compile_definitions(dispatch PRIVATE DLL_NETCDF DLL_EXPORT)
 diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
-index cc482d5..f7c5349 100644
+index cc482d5..5f263c5 100644
 --- a/liblib/CMakeLists.txt
 +++ b/liblib/CMakeLists.txt
-@@ -58,8 +58,8 @@ if(NETCDF_ENABLE_DAP4)
-   target_sources(netcdf
-     PRIVATE
+@@ -43,7 +43,6 @@ if(USE_HDF4)
+ endif()
+ 
+ if(FOUND_CURL)
+-  target_link_libraries(netcdf PRIVATE CURL::libcurl)
+ endif()
+ 
+ if(NETCDF_ENABLE_DAP2)
+@@ -60,6 +59,7 @@ if(NETCDF_ENABLE_DAP4)
        $<TARGET_OBJECTS:dap4>
--      $<TARGET_OBJECTS:ncxml>
+       $<TARGET_OBJECTS:ncxml>
    )
-+  target_link_libraries(netcdf PRIVATE $<BUILD_LOCAL_INTERFACE:ncxml> $<INSTALL_INTERFACE:tinyxml2::tinyxml2>)
++  list(APPEND EXTRA_DEPS tinyxml2::tinyxml2)
  endif()
  
  if(NETCDF_ENABLE_NCZARR)
-@@ -70,10 +70,7 @@ if(NETCDF_ENABLE_NCZARR)
- endif()
- 
- if(NETCDF_ENABLE_S3_INTERNAL)
--  target_sources(netcdf
--    PRIVATE
--      $<TARGET_OBJECTS:ncxml>
--  )
-+  target_link_libraries(netcdf PRIVATE $<BUILD_LOCAL_INTERFACE:ncxml> $<INSTALL_INTERFACE:tinyxml2::tinyxml2>)
+@@ -74,6 +74,7 @@ if(NETCDF_ENABLE_S3_INTERNAL)
+     PRIVATE
+       $<TARGET_OBJECTS:ncxml>
+   )
++  list(APPEND EXTRA_DEPS tinyxml2::tinyxml2)
  endif()
  
  if(NETCDF_ENABLE_PLUGINS)
+@@ -185,6 +186,14 @@ endif()
+ 
+ if(TLL_LIBS)
+   list(REMOVE_DUPLICATES TLL_LIBS)
++  # Plugins only
++  list(REMOVE_ITEM TLL_LIBS
++    ${Blosc_LIBRARIES}
++    ${Bz2_LIBRARIES}
++    ${Szip_LIBRARIES}
++    ${ZLIB_LIBRARY}
++    ${Zstd_LIBRARIES}
++  )
+ endif()
+ 
+ target_link_libraries(netcdf PRIVATE ${TLL_LIBS})
 diff --git a/libncxml/CMakeLists.txt b/libncxml/CMakeLists.txt
-index b8fa4b2..5f8a6cb 100644
+index b8fa4b2..65f1c18 100644
 --- a/libncxml/CMakeLists.txt
 +++ b/libncxml/CMakeLists.txt
-@@ -1,7 +1,8 @@
+@@ -1,7 +1,7 @@
  if(HAVE_LIBXML2)
    set(libncxml_SOURCES ncxml_xml2.c)
  else()
 -  set(libncxml_SOURCES ncxml_tinyxml2.cpp tinyxml2.cpp tinyxml2.h)
-+  find_package(tinyxml2 CONFIG REQUIRED GLOBAL)
 +  set(libncxml_SOURCES ncxml_tinyxml2.cpp)
  endif()
  
  add_library(ncxml OBJECT ${libncxml_SOURCES})
-@@ -13,6 +14,7 @@ if(HAVE_LIBXML2)
+@@ -13,6 +13,8 @@ if(HAVE_LIBXML2)
        ${LIBXML2_INCLUDE_DIRS}
  )
  else()
-+  target_link_libraries(ncxml PRIVATE tinyxml2::tinyxml2)
++  find_package(tinyxml2 CONFIG REQUIRED GLOBAL)
++  target_link_libraries(ncxml PRIVATE $<COMPILE_ONLY:tinyxml2::tinyxml2>)
    target_include_directories(ncxml
    PUBLIC
      ./include
 diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
-index 987b2ad..373f543 100644
+index 987b2ad..0dfda8e 100644
 --- a/netCDFConfig.cmake.in
 +++ b/netCDFConfig.cmake.in
-@@ -4,6 +4,27 @@
+@@ -4,6 +4,17 @@
  #
  @PACKAGE_INIT@
  
 +if(NOT "@BUILD_SHARED_LIBS@")
 +  include(CMakeFindDependencyMacro)
 +  find_dependency(tinyxml2 CONFIG)
-+  find_dependency(ZLIB)
-+  if("@NETCDF_ENABLE_FILTER_BZ2@")
-+    find_dependency(BZip2)
-+  endif()
 +  if("@FOUND_CURL@")
 +    find_dependency(CURL)
 +  endif()
-+  if("@NETCDF_ENABLE_FILTER_SZIP@" OR "@NETCDF_ENABLE_NCZARR@")
-+    find_dependency(libaec CONFIG)
-+  endif()
 +  if("@NETCDF_ENABLE_NCZARR_ZIP@")
 +    find_dependency(libzip CONFIG)
-+  endif()
-+  if("@NETCDF_ENABLE_FILTER_ZSTD@")
-+    find_dependency(zstd CONFIG)
 +  endif()
 +endif()
 +
  set(NetCDFVersion "@PACKAGE_VERSION@")
  set_and_check(netCDF_INSTALL_PREFIX "@CMAKE_INSTALL_PREFIX@")
  set_and_check(netCDF_INCLUDE_DIR "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@")
-@@ -42,7 +63,7 @@ set(netCDF_HAS_DISKLESS @HAS_DISKLESS@)
+@@ -42,7 +53,7 @@ set(netCDF_HAS_DISKLESS @HAS_DISKLESS@)
  set(netCDF_HAS_MMAP @HAS_MMAP@)
  if (netCDF_HAS_HDF4 OR netCDF_HAS_HDF5)
    include(CMakeFindDependencyMacro)
@@ -205,3 +203,25 @@ index 987b2ad..373f543 100644
  endif ()
  
  if (@HAS_PARALLEL@)
+diff --git a/plugins/CMakeLists.txt b/plugins/CMakeLists.txt
+index fbaeb21..5b32310 100644
+--- a/plugins/CMakeLists.txt
++++ b/plugins/CMakeLists.txt
+@@ -4,7 +4,7 @@
+ # University Corporation for Atmospheric Research/Unidata.
+ 
+ # See netcdf-c/COPYRIGHT file for more info.
+-set(CMAKE_BUILD_TYPE "")
++set(ALL_TLL_LIBS ${HAVE_LIBM})
+ 
+ if(WIN32)
+   set(PLUGINEXT "dll")
+@@ -86,7 +86,7 @@ buildplugin(h5unknown "h5unknown")
+ 
+ buildplugin(h5shuffle "h5shuffle")
+ buildplugin(h5fletcher32 "h5fletcher32")
+-buildplugin(h5deflate "h5deflate")
++buildplugin(h5deflate "h5deflate" ZLIB::ZLIB)
+ 
+ buildplugin(nczmisc "zmisc")
+ buildplugin(nczhdf5filters "zhdf5filters" netcdf)

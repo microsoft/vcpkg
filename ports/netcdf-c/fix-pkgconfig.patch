@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index bbb647c..a04ae6b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1628,6 +1628,23 @@ list(REMOVE_DUPLICATES LINKFLAGS)
+@@ -1628,6 +1628,20 @@ list(REMOVE_DUPLICATES LINKFLAGS)
  set(LIBS ${NC_LIBS})
  set(NC_LIBS "-lnetcdf")
  
@@ -14,14 +14,11 @@ index bbb647c..a04ae6b 100644
 +    string(APPEND NC_REQUIRES_PRIVATE " ${MODULE}")
 +  endif()
 +endmacro()
-+string(REPLACE           "-laec::sz"       "-lsz -laec" NC_LIBS_PRIVATE "${NC_LIBS_PRIVATE}")
-+replace_pkgconfig_module("-lBZip2[^ ]*"    "bzip2")
-+replace_pkgconfig_module("-lCURL[^ ]*"     "libcurl")
-+replace_pkgconfig_module("-lHDF5::HDF5"    "hdf5")
-+replace_pkgconfig_module("-lhdf5::hdf5_hl" "hdf5_hl")
-+replace_pkgconfig_module("-lzip::zip"      "libzip")
-+replace_pkgconfig_module("-lZLIB::ZLIB"    "zlib")
-+replace_pkgconfig_module("-lzstd::libzstd" "libzstd")
++replace_pkgconfig_module("-lCURL[^ ]*"          "libcurl")
++replace_pkgconfig_module("-lHDF5::HDF5"         "hdf5")
++replace_pkgconfig_module("-lhdf5::hdf5_hl"      "hdf5_hl")
++replace_pkgconfig_module("-ltinyxml2::tinyxml2" "tinyxml2")
++replace_pkgconfig_module("-lzip::zip"           "libzip")
 +
  configure_file(
    ${netCDF_SOURCE_DIR}/netcdf.pc.in

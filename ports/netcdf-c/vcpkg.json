@@ -29,11 +29,18 @@
   ],
   "features": {
     "bzip2": {
-      "description": "Support bzip2 compression",
+      "description": "Bzip2 compression plugin",
       "dependencies": [
         {
           "name": "bzip2",
           "default-features": false
+        },
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "plugins"
+          ]
         }
       ]
     },
@@ -57,8 +64,7 @@
           "name": "netcdf-c",
           "default-features": false,
           "features": [
-            "netcdf-4",
-            "szip"
+            "netcdf-4"
           ]
         }
       ]
@@ -91,18 +97,39 @@
         }
       ]
     },
-    "szip": {
-      "description": "Support Szip compression",
+    "plugins": {
+      "description": "Enable plugin support",
+      "supports": "!static & !uwp",
       "dependencies": [
-        "libaec"
+        "zlib"
+      ]
+    },
+    "szip": {
+      "description": "Szip compression plugin",
+      "dependencies": [
+        "libaec",
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "plugins"
+          ]
+        }
       ]
     },
     "tools": {
       "description": "Build utilities"
     },
     "zstd": {
-      "description": "Support Zstandard compression",
+      "description": "Zstandard compression plugin",
       "dependencies": [
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "plugins"
+          ]
+        },
         "zstd"
       ]
     }
