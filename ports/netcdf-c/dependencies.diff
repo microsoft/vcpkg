@@ -1,5 +1,5 @@
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index d06a276..65e0ef7 100644
+index d06a276..fcec70f 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
 @@ -134,7 +134,22 @@ if(USE_HDF5)
@@ -34,11 +34,10 @@ index d06a276..65e0ef7 100644
    )
  
    find_package(Threads)
-@@ -244,10 +258,11 @@ if( NETCDF_ENABLE_DAP2 OR NETCDF_ENABLE_DAP4 OR NETCDF_ENABLE_BYTERANGE_SUPPORT
+@@ -244,10 +258,10 @@ if( NETCDF_ENABLE_DAP2 OR NETCDF_ENABLE_DAP4 OR NETCDF_ENABLE_BYTERANGE_SUPPORT
    #    ${CURL_INCLUDE_DIRS}
    #)
    if(CURL_FOUND)
-+    set(CURL_INCLUDE_DIRS "")
 +    set(CURL_LIBRARIES "")
      set(FOUND_CURL TRUE)
      target_link_libraries(netcdf
@@ -47,7 +46,7 @@ index d06a276..65e0ef7 100644
    )
    else()
      set(FOUND_CURL FALSE)
-@@ -345,6 +360,10 @@ if(NOT WIN32)
+@@ -345,6 +359,10 @@ if(NOT WIN32)
          set(HAVE_LIBM "")
      endif()
    else(NOT HAVE_LIBM)
@@ -58,7 +57,7 @@ index d06a276..65e0ef7 100644
      message(STATUS "Found Math library: ${HAVE_LIBM}")
    endif()
  endif()
-@@ -354,6 +373,7 @@ endif()
+@@ -354,6 +372,7 @@ endif()
  ################################
  # See if we have zlib
  find_package(ZLIB)
@@ -66,7 +65,7 @@ index d06a276..65e0ef7 100644
  
  # Define a test flag for have zlib library
  if(ZLIB_FOUND)
-@@ -370,19 +390,24 @@ endif()
+@@ -370,19 +389,24 @@ endif()
  # Zips
  ################################
  MESSAGE(STATUS "Checking for filter libraries")
@@ -97,7 +96,7 @@ index d06a276..65e0ef7 100644
  endif()
  
  # Accumulate standard filters
-@@ -412,7 +437,8 @@ endif()
+@@ -412,7 +436,8 @@ endif()
  
  set(STD_FILTERS "${STD_FILTERS}${FOUND_STD_FILTERS}")
  IF (NETCDF_ENABLE_NCZARR_ZIP)
