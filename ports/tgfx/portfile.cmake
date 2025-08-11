@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Tencent/tgfx
-        REF 92d667a8c4e833b6281c3d2e0ea258640d1b8986
-        SHA512 25d44b837cc2e20cfd4e17b6e01943076af4e5e0570447cf871292e8fcb2616774c92ff86ca824ec25529924a277e2bd2c3db8dfc54ed972951bf4d8ca99267f
+        REF bb753b09d58557617206a6bdfc612907bd2100d8
+        SHA512 732489af152f69c94590e349a2090910440aa5d2d63cec8dd0879c03764e147856d2bee10c5b62dcf8adb2c52ae8d02ad710efd8d4f8f2f092790c48ebd1c088
 )
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
@@ -70,11 +70,55 @@ if(VCPKG_TARGET_IS_ANDROID)
             -DCMAKE_ANDROID_NDK=${VCPKG_DETECTED_CMAKE_ANDROID_NDK}
             -DCMAKE_ANDROID_API=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}
             -DCMAKE_ANDROID_ARCH_ABI=${VCPKG_TARGET_ARCHITECTURE}
+            -DANDROID=TRUE
+    )
+elseif(VCPKG_CMAKE_SYSTEM_NAME MATCHES "OHOS")
+    if(NOT DEFINED ENV{OHOS_NDK_HOME})
+        message(FATAL_ERROR "HarmonyOS NDK not detected. Please set OHOS_NDK_HOME environment variable")
+    endif()
+
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(OHOS_ARCH_VALUE "x86_64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(OHOS_ARCH_VALUE "arm64-v8a")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(OHOS_ARCH_VALUE "arm")
+    else()
+        message(FATAL_ERROR "Invalid architecture")
+    endif()
+
+    list(APPEND PLATFORM_OPTIONS
+            -DOHOS_NDK_HOME=$ENV{OHOS_NDK_HOME}
+            -DCMAKE_SYSTEM_VERSION=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}
+            -DOHOS_PLATFORM=OHOS
+            -DOHOS_ARCH=${OHOS_ARCH_VALUE}
+            -DOHOS=TRUE
     )
 elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_PLATFORM_TOOLSET VERSION_LESS "v142")
         message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")
     endif()
+
+    list(APPEND PLATFORM_OPTIONS
+            -DWIN32=TRUE
+    )
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND PLATFORM_OPTIONS
+            -DAPPLE=TRUE
+            -DMACOS=TRUE
+    )
+elseif(VCPKG_TARGET_IS_IOS)
+    list(APPEND PLATFORM_OPTIONS
+            -DAPPLE=TRUE
+            -DIOS=TRUE
+    )
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    # EMSCRIPTEN_PTHREADS 默认开启
+    list(APPEND PLATFORM_OPTIONS
+            -DWEB=TRUE
+            -DEMSCRIPTEN_PTHREADS=TRUE
+            -DEMSCRIPTEN=TRUE
+    )
 endif()
 
 set(BASE_BUILD_ARGS "")
@@ -101,7 +145,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     find_program(XCODEBUILD_EXECUTABLE xcodebuild)
     if(XCODEBUILD_EXECUTABLE AND NOT CMAKE_OSX_SYSROOT_INT)
         vcpkg_execute_required_process(
-                COMMAND ${XCODEBUILD_EXECUTABLE} -sdk ${CMAKE_OSX_SYSROOT_INT} -version
+                COMMAND ${XCODEBUILD_EXECUTABLE} -sdk -version
                 WORKING_DIRECTORY ${SOURCE_PATH}
                 LOGNAME "xcodebuild-sdk-version"
                 OUTPUT_VARIABLE xcodebuild_output
@@ -147,7 +191,7 @@ vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             ${BASE_BUILD_ARGS}
-            -DTGFX_BUILD_VCPKG=ON
+            -DTGFX_USE_VCPKG=ON
 )
 
 vcpkg_cmake_install()

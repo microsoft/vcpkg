@@ -1,0 +1,96 @@
+
+# 设置 HarmonyOS 平台标识
+set(CMAKE_SYSTEM_NAME OHOS CACHE STRING "")
+set(OHOS_PLATFORM OHOS CACHE STRING "")
+
+# 1. 优先使用 CMAKE_OHOS_NDK 环境变量（与 JS 工具保持一致）
+if(DEFINED ENV{CMAKE_OHOS_NDK})
+    set(OHOS_NDK_HOME $ENV{CMAKE_OHOS_NDK} PARENT_SCOPE)
+    return()
+endif()
+    
+# 2. 使用 OHOS_NDK_HOME 环境变量
+if(DEFINED ENV{OHOS_NDK_HOME})
+    set(OHOS_NDK_HOME $ENV{OHOS_NDK_HOME} PARENT_SCOPE)
+    return()
+endif()
+
+    # 4. 使用 OHOS_SDK 环境变量
+if(DEFINED ENV{OHOS_SDK})
+    set(NDK_PATH "$ENV{OHOS_SDK}/native")
+    if(EXISTS "${NDK_PATH}/build/cmake/ohos.toolchain.cmake")
+        set(OHOS_NDK_HOME ${NDK_PATH} PARENT_SCOPE)
+        return()
+    endif()
+endif()
+    
+message(FATAL_ERROR "Could not find OHOS NDK. Please set CMAKE_OHOS_NDK, OHOS_NDK_HOME, or OHOS_SDK environment variable")
+
+# 验证 NDK 路径
+if(NOT EXISTS "${OHOS_NDK_HOME}/build/cmake/ohos.toolchain.cmake")
+    message(FATAL_ERROR "Could not find OHOS toolchain at ${OHOS_NDK_HOME}")
+endif()
+
+# 根据 vcpkg triplet 设置 OHOS_ARCH（与 JS 工具保持一致的架构命名）
+if (VCPKG_TARGET_TRIPLET MATCHES "x64-ohos")
+    set(OHOS_ARCH x86_64 CACHE STRING "")
+elseif (VCPKG_TARGET_TRIPLET MATCHES "arm64-ohos")
+    set(OHOS_ARCH arm64-v8a CACHE STRING "")
+elseif(VCPKG_TARGET_TRIPLET MATCHES "arm.*-ohos")
+    set(OHOS_ARCH armeabi-v7a CACHE STRING "")
+    if(VCPKG_TARGET_TRIPLET MATCHES "arm-neon-ohos")
+        set(OHOS_ARM_NEON ON CACHE BOOL "")
+    else()
+        set(OHOS_ARM_NEON OFF CACHE BOOL "")
+    endif()
+else()
+    message(FATAL_ERROR "Unknown ABI for target triplet ${VCPKG_TARGET_TRIPLET}")
+endif()
+
+# 设置环境变量供 OHOS 工具链使用
+set(ENV{CMAKE_OHOS_NDK} ${OHOS_NDK_HOME})
+set(OHOS_SDK_NATIVE ${OHOS_NDK_HOME} CACHE PATH "")
+
+# 包含 HarmonyOS NDK 的官方工具链（使用正确的路径）
+include("${OHOS_NDK_HOME}/build/cmake/ohos.toolchain.cmake")
+
+if(NOT _VCPKG_OHOS_TOOLCHAIN)
+    set(_VCPKG_OHOS_TOOLCHAIN 1)
+
+    if(POLICY CMP0056)
+        cmake_policy(SET CMP0056 NEW)
+    endif()
+    if(POLICY CMP0066)
+        cmake_policy(SET CMP0066 NEW)
+    endif()
+    if(POLICY CMP0067)
+        cmake_policy(SET CMP0067 NEW)
+    endif()
+    if(POLICY CMP0137)
+        cmake_policy(SET CMP0137 NEW)
+    endif()
+    list(APPEND CMAKE_TRY_COMPILE_PLATFORM_VARIABLES
+        VCPKG_CRT_LINKAGE VCPKG_TARGET_ARCHITECTURE
+        VCPKG_C_FLAGS VCPKG_CXX_FLAGS
+        VCPKG_C_FLAGS_DEBUG VCPKG_CXX_FLAGS_DEBUG
+        VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
+        VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
+    )
+
+    string(APPEND CMAKE_C_FLAGS " -fPIC ${VCPKG_C_FLAGS} ")
+    string(APPEND CMAKE_CXX_FLAGS " -fPIC ${VCPKG_CXX_FLAGS} ")
+    string(APPEND CMAKE_C_FLAGS_DEBUG " ${VCPKG_C_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_CXX_FLAGS_DEBUG " ${VCPKG_CXX_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_C_FLAGS_RELEASE " ${VCPKG_C_FLAGS_RELEASE} ")
+    string(APPEND CMAKE_CXX_FLAGS_RELEASE " ${VCPKG_CXX_FLAGS_RELEASE} ")
+
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS " ${VCPKG_LINKER_FLAGS} ")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS " ${VCPKG_LINKER_FLAGS} ")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS " ${VCPKG_LINKER_FLAGS} ")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS_DEBUG " ${VCPKG_LINKER_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS_DEBUG " ${VCPKG_LINKER_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " ${VCPKG_LINKER_FLAGS_DEBUG} ")
+    string(APPEND CMAKE_MODULE_LINKER_FLAGS_RELEASE " ${VCPKG_LINKER_FLAGS_RELEASE} ")
+    string(APPEND CMAKE_SHARED_LINKER_FLAGS_RELEASE " ${VCPKG_LINKER_FLAGS_RELEASE} ")
+    string(APPEND CMAKE_EXE_LINKER_FLAGS_RELEASE " ${VCPKG_LINKER_FLAGS_RELEASE} ")
+endif()

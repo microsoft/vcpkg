@@ -15,12 +15,12 @@
     "freetype",
     {
       "name": "gtest",
-      "version>=": "1.16.0#1"
+      "version>=": "1.16.0"
     },
     "harfbuzz",
     {
       "name": "libjpeg-turbo",
-      "version>=": "2.1.1"
+      "version>=": "2.1.2"
     },
     {
       "name": "libpng",

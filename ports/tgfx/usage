@@ -13,3 +13,20 @@ Available features:
 
 Example usage with features:
 vcpkg install "tgfx[svg,layers]"
+
+For HarmonyOS platform support:
+1. Set OHOS_NDK_HOME environment variable to your HarmonyOS NDK path
+2. Use overlay-triplets to include the custom HarmonyOS triplets
+3. Available triplets:
+   - x64-ohos: for x86_64 architecture
+   - arm64-ohos: for ARM64 architecture
+   - arm-ohos: for ARM v7a architecture without NEON
+   - arm-neon-ohos: for ARM v7a architecture with NEON support
+
+Example usage for HarmonyOS:
+    vcpkg install tgfx:x64-ohos --overlay-triplets=triplets
+    vcpkg install tgfx:arm64-ohos --overlay-triplets=triplets
+    vcpkg install tgfx:arm-ohos --overlay-triplets=triplets
+    vcpkg install tgfx:arm-neon-ohos --overlay-triplets=triplets
+
+Note: The triplets directory should contain the custom HarmonyOS triplet files.
