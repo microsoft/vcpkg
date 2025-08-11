@@ -13,18 +13,18 @@ vcpkg_from_github(
 )
 file(GLOB_RECURSE modules "${SOURCE_PATH}/cmake/modules/Find*.cmake")
 set(vendored_bzip2 blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c bzlib.h bzlib_private.h)
-list(TRANSFORM vendored_bzip2 PREPEND "${SOURCE_PATH}/plugins")
+list(TRANSFORM vendored_bzip2 PREPEND "${SOURCE_PATH}/plugins/")
 file(GLOB vendored_tinyxml2 "${SOURCE_PATH}/libncxml/tinyxml2.*")
 file(REMOVE ${modules} ${vendored_bzip2} ${vendored_tinyxml2})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        bzip2       NETCDF_ENABLE_FILTER_BZ2
         dap         NETCDF_ENABLE_DAP
         nczarr      NETCDF_ENABLE_NCZARR
         nczarr-zip  NETCDF_ENABLE_NCZARR_ZIP
         netcdf-4    NETCDF_ENABLE_HDF5
         plugins     NETCDF_ENABLE_PLUGINS
+        plugins     NETCDF_ENABLE_FILTER_BZ2
         szip        NETCDF_ENABLE_FILTER_SZIP
         tools       NETCDF_BUILD_UTILITIES
         zstd        NETCDF_ENABLE_FILTER_ZSTD
@@ -87,8 +87,8 @@ endif()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
-    #"${CURRENT_PACKAGES_DIR}/debug/lib/libnetcdf.settings"
-    #"${CURRENT_PACKAGES_DIR}/lib/libnetcdf.settings"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libnetcdf.settings"
+    "${CURRENT_PACKAGES_DIR}/lib/libnetcdf.settings"
 )
 
 set(ncpoco_copyright "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libncpoco COPYRIGHT")

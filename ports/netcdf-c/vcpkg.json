@@ -28,22 +28,6 @@
     }
   ],
   "features": {
-    "bzip2": {
-      "description": "Bzip2 compression plugin",
-      "dependencies": [
-        {
-          "name": "bzip2",
-          "default-features": false
-        },
-        {
-          "name": "netcdf-c",
-          "default-features": false,
-          "features": [
-            "plugins"
-          ]
-        }
-      ]
-    },
     "dap": {
       "description": "DAP remote access client support",
       "dependencies": [
@@ -101,6 +85,10 @@
       "description": "Enable plugin support",
       "supports": "!static & !uwp",
       "dependencies": [
+        {
+          "name": "bzip2",
+          "default-features": false
+        },
         "zlib"
       ]
     },
