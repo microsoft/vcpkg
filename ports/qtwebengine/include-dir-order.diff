@@ -1,0 +1,19 @@
+diff --git a/cmake/Functions.cmake b/cmake/Functions.cmake
+index 239eaa1dd..7ded50aa9 100644
+--- a/cmake/Functions.cmake
++++ b/cmake/Functions.cmake
+@@ -274,8 +274,14 @@ function(resolve_target_includes resultVar target)
+     foreach(includeDir  ${includeDirs})
+         if(includeDir MATCHES "\\$<BUILD_INTERFACE:([^,>]+)>")
+             list(APPEND includeDirList ${CMAKE_MATCH_1})
++            set(maybe_protobuf_dir "${CMAKE_MATCH_1}")
++            if(maybe_protobuf_dir MATCHES "src/3rdparty/chromium/third_party/protobuf/src\$")
++                list(REMOVE_ITEM includeDirList "${maybe_protobuf_dir}")
++                list(PREPEND includeDirList "${maybe_protobuf_dir}")
++            endif()
+         endif()
+     endforeach()
++    message(STATUS "${target} : ${includeDirList}")
+     set(${resultVar} ${includeDirList} PARENT_SCOPE)
+ endfunction()
+ 
