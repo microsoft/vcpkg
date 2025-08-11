@@ -1,14 +1,18 @@
 {
   "name": "faudio",
   "version-string": "25.08",
+  "port-version": 1,
   "description": "FAudio - accuracy-focused XAudio reimplementation for open platforms",
   "homepage": "https://fna-xna.github.io/",
   "license": "Zlib",
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "sdl3",
+      "name": "faudio",
       "default-features": false,
+      "features": [
+        "sdl3"
+      ],
       "platform": "!windows"
     },
     {
@@ -19,5 +23,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "sdl3": {
+      "description": "use the SDL3 audio backend",
+      "dependencies": [
+        "sdl3"
+      ]
+    }
+  }
 }
