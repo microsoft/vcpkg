@@ -5198,7 +5198,7 @@
     },
     "libosmscout": {
       "baseline": "1.1.1",
-      "port-version": 6
+      "port-version": 7
     },
     "libp7-baical": {
       "baseline": "replaced",
@@ -5302,7 +5302,7 @@
     },
     "librsvg": {
       "baseline": "2.40.21",
-      "port-version": 0
+      "port-version": 1
     },
     "librsync": {
       "baseline": "2.3.4",
