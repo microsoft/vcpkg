@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 fdf411b7035367020b8f3056979c6f25800cdbfa545d844485ddb2ab41148c5b471b75a40bfa1f8ba52bafa8fe8459b221391ff3ddfdf891b4169444141cf75c
+    SHA512 cee6ddfbd825022a45a46b041c894a18718a474a32da8715fe08f918c7387505e81f3220c0ad79d3ec160b9c224bdeafbbb8a2b67a47cd845dca492582607c22
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -10,7 +10,6 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
-        libheif-1_20_2.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
