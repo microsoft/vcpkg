@@ -59,7 +59,7 @@ index 00588459e..48b4a0102 100644
 --- a/src/3rdparty/chromium/build/config/mac/mac_sdk.gni
 +++ b/src/3rdparty/chromium/build/config/mac/mac_sdk.gni
 @@ -15,6 +15,8 @@ assert(
-     (current_os == "ios" && current_toolchain == "${default_toolchain}_blink"))
+ assert(current_os == "mac" || current_os == "android" || current_toolchain == default_toolchain)
  
  declare_args() {
 +  apple_sdk_version = ""
