@@ -20,13 +20,11 @@ For HarmonyOS platform support:
 3. Available triplets:
    - x64-ohos: for x86_64 architecture
    - arm64-ohos: for ARM64 architecture
-   - arm-ohos: for ARM v7a architecture without NEON
-   - arm-neon-ohos: for ARM v7a architecture with NEON support
+   - arm-ohos: for ARM v7a architecture
 
 Example usage for HarmonyOS:
     vcpkg install tgfx:x64-ohos --overlay-triplets=triplets
     vcpkg install tgfx:arm64-ohos --overlay-triplets=triplets
     vcpkg install tgfx:arm-ohos --overlay-triplets=triplets
-    vcpkg install tgfx:arm-neon-ohos --overlay-triplets=triplets
 
 Note: The triplets directory should contain the custom HarmonyOS triplet files.

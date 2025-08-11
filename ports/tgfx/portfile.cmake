@@ -73,27 +73,73 @@ if(VCPKG_TARGET_IS_ANDROID)
             -DANDROID=TRUE
     )
 elseif(VCPKG_CMAKE_SYSTEM_NAME MATCHES "OHOS")
-    if(NOT DEFINED ENV{OHOS_NDK_HOME})
-        message(FATAL_ERROR "HarmonyOS NDK not detected. Please set OHOS_NDK_HOME environment variable")
+    # 查找鸿蒙SDK路径，支持多种环境变量命名
+    set(OHOS_SDK_ROOT "")
+    
+    if(DEFINED ENV{OHOS_SDK_HOME})
+        set(OHOS_SDK_ROOT $ENV{OHOS_SDK_HOME})
+    elseif(DEFINED ENV{OHOS_NDK_HOME})
+        set(OHOS_SDK_ROOT $ENV{OHOS_NDK_HOME})
+    elseif(DEFINED ENV{CMAKE_OHOS_NDK})
+        set(OHOS_SDK_ROOT $ENV{CMAKE_OHOS_NDK})
+    elseif(DEFINED ENV{OHOS_SDK})
+        set(OHOS_SDK_ROOT $ENV{OHOS_SDK})
+    elseif(DEFINED ENV{HARMONY_SDK_HOME})
+        set(OHOS_SDK_ROOT $ENV{HARMONY_SDK_HOME})
+    else()
+        message(FATAL_ERROR "HarmonyOS SDK not detected. Please set one of the following environment variables:\n"
+                            "  OHOS_SDK_HOME (recommended)\n"
+                            "  OHOS_NDK_HOME\n"
+                            "  CMAKE_OHOS_NDK\n"
+                            "  OHOS_SDK\n"
+                            "  HARMONY_SDK_HOME")
+    endif()
+
+    if(NOT EXISTS "${OHOS_SDK_ROOT}")
+        message(FATAL_ERROR "OHOS SDK path does not exist: ${OHOS_SDK_ROOT}")
+    endif()
+
+    if(NOT EXISTS "${OHOS_SDK_ROOT}/native")
+        message(FATAL_ERROR "Invalid OHOS SDK structure. Missing 'native' directory in: ${OHOS_SDK_ROOT}")
+    endif()
+
+    set(OHOS_NDK_PATH "${OHOS_SDK_ROOT}/native")
+
+    if(NOT EXISTS "${OHOS_NDK_PATH}/sysroot")
+        message(FATAL_ERROR "Could not find OHOS sysroot at ${OHOS_NDK_PATH}/sysroot")
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(OHOS_ARCH_DIR "x86_64-linux-ohos")
         set(OHOS_ARCH_VALUE "x86_64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(OHOS_ARCH_DIR "aarch64-linux-ohos")
         set(OHOS_ARCH_VALUE "arm64-v8a")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(OHOS_ARCH_DIR "arm-linux-ohos")
         set(OHOS_ARCH_VALUE "arm")
     else()
-        message(FATAL_ERROR "Invalid architecture")
+        message(FATAL_ERROR "Invalid architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 
+    message(STATUS "Using OHOS SDK: ${OHOS_SDK_ROOT}")
+    message(STATUS "Using OHOS NDK: ${OHOS_NDK_PATH}")
+    message(STATUS "Using OHOS Architecture: ${OHOS_ARCH_VALUE} (${OHOS_ARCH_DIR})")
+
     list(APPEND PLATFORM_OPTIONS
-            -DOHOS_NDK_HOME=$ENV{OHOS_NDK_HOME}
-            -DCMAKE_SYSTEM_VERSION=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}
-            -DOHOS_PLATFORM=OHOS
-            -DOHOS_ARCH=${OHOS_ARCH_VALUE}
-            -DOHOS=TRUE
+        "-DOHOS=TRUE"
+        "-DOHOS_ARCH=${OHOS_ARCH_VALUE}"
+        "-DOHOS_PLATFORM=OHOS"
+        "-DOHOS_SDK_HOME=${OHOS_SDK_ROOT}"
+        "-DOHOS_NDK_HOME=${OHOS_NDK_PATH}"
+        "-DCMAKE_SYSTEM_VERSION=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}"
+        "-DCMAKE_FIND_ROOT_PATH=${OHOS_NDK_PATH}/sysroot"
+        "-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY"
+        "-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY"
+        "-DCMAKE_LIBRARY_PATH=${OHOS_NDK_PATH}/sysroot/usr/lib/${OHOS_ARCH_DIR}"
+        "-DCMAKE_INCLUDE_PATH=${OHOS_NDK_PATH}/sysroot/usr/include"
     )
+
 elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_PLATFORM_TOOLSET VERSION_LESS "v142")
         message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")

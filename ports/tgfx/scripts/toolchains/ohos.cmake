@@ -3,33 +3,59 @@
 set(CMAKE_SYSTEM_NAME OHOS CACHE STRING "")
 set(OHOS_PLATFORM OHOS CACHE STRING "")
 
-# 1. 优先使用 CMAKE_OHOS_NDK 环境变量（与 JS 工具保持一致）
-if(DEFINED ENV{CMAKE_OHOS_NDK})
-    set(OHOS_NDK_HOME $ENV{CMAKE_OHOS_NDK} PARENT_SCOPE)
-    return()
-endif()
-    
+# 查找鸿蒙NDK路径，支持多种环境变量命名
+set(OHOS_SDK_ROOT "")
+
+# 1. 优先使用 OHOS_SDK_HOME 环境变量（推荐）
+if(DEFINED ENV{OHOS_SDK_HOME})
+    set(OHOS_SDK_ROOT $ENV{OHOS_SDK_HOME})
 # 2. 使用 OHOS_NDK_HOME 环境变量
-if(DEFINED ENV{OHOS_NDK_HOME})
-    set(OHOS_NDK_HOME $ENV{OHOS_NDK_HOME} PARENT_SCOPE)
-    return()
+elseif(DEFINED ENV{OHOS_NDK_HOME})
+    set(OHOS_SDK_ROOT $ENV{OHOS_NDK_HOME})
+# 3. 使用 CMAKE_OHOS_NDK 环境变量（与 JS 工具保持一致）
+elseif(DEFINED ENV{CMAKE_OHOS_NDK})
+    set(OHOS_SDK_ROOT $ENV{CMAKE_OHOS_NDK})
+# 4. 使用 OHOS_SDK 环境变量
+elseif(DEFINED ENV{OHOS_SDK})
+    set(OHOS_SDK_ROOT $ENV{OHOS_SDK})
+# 5. 使用 HARMONY_SDK_HOME 环境变量
+elseif(DEFINED ENV{HARMONY_SDK_HOME})
+    set(OHOS_SDK_ROOT $ENV{HARMONY_SDK_HOME})
+else()
+    message(FATAL_ERROR "Could not find OHOS SDK. Please set one of the following environment variables:\n"
+                        "  OHOS_SDK_HOME (recommended)\n"
+                        "  OHOS_NDK_HOME\n"
+                        "  CMAKE_OHOS_NDK\n"
+                        "  OHOS_SDK\n"
+                        "  HARMONY_SDK_HOME")
 endif()
 
-    # 4. 使用 OHOS_SDK 环境变量
-if(DEFINED ENV{OHOS_SDK})
-    set(NDK_PATH "$ENV{OHOS_SDK}/native")
-    if(EXISTS "${NDK_PATH}/build/cmake/ohos.toolchain.cmake")
-        set(OHOS_NDK_HOME ${NDK_PATH} PARENT_SCOPE)
-        return()
-    endif()
+# 验证SDK根目录结构
+if(NOT EXISTS "${OHOS_SDK_ROOT}")
+    message(FATAL_ERROR "OHOS SDK path does not exist: ${OHOS_SDK_ROOT}")
 endif()
-    
-message(FATAL_ERROR "Could not find OHOS NDK. Please set CMAKE_OHOS_NDK, OHOS_NDK_HOME, or OHOS_SDK environment variable")
 
-# 验证 NDK 路径
+# 检查是否包含native子目录
+if(NOT EXISTS "${OHOS_SDK_ROOT}/native")
+    message(FATAL_ERROR "Invalid OHOS SDK structure. Missing 'native' directory in: ${OHOS_SDK_ROOT}")
+endif()
+
+# 设置NDK路径（指向native子目录）
+set(OHOS_NDK_HOME "${OHOS_SDK_ROOT}/native")
+
+# 验证 NDK 工具链文件
 if(NOT EXISTS "${OHOS_NDK_HOME}/build/cmake/ohos.toolchain.cmake")
-    message(FATAL_ERROR "Could not find OHOS toolchain at ${OHOS_NDK_HOME}")
+    message(FATAL_ERROR "Could not find OHOS toolchain at ${OHOS_NDK_HOME}/build/cmake/ohos.toolchain.cmake")
 endif()
+
+# 验证 sysroot 目录
+if(NOT EXISTS "${OHOS_NDK_HOME}/sysroot")
+    message(FATAL_ERROR "Could not find OHOS sysroot at ${OHOS_NDK_HOME}/sysroot")
+endif()
+
+message(STATUS "Using OHOS SDK: ${OHOS_SDK_ROOT}")
+message(STATUS "Using OHOS NDK: ${OHOS_NDK_HOME}")
+
 
 # 根据 vcpkg triplet 设置 OHOS_ARCH（与 JS 工具保持一致的架构命名）
 if (VCPKG_TARGET_TRIPLET MATCHES "x64-ohos")
@@ -50,6 +76,7 @@ endif()
 # 设置环境变量供 OHOS 工具链使用
 set(ENV{CMAKE_OHOS_NDK} ${OHOS_NDK_HOME})
 set(OHOS_SDK_NATIVE ${OHOS_NDK_HOME} CACHE PATH "")
+set(OHOS_SDK_HOME ${OHOS_SDK_ROOT} CACHE PATH "")
 
 # 包含 HarmonyOS NDK 的官方工具链（使用正确的路径）
 include("${OHOS_NDK_HOME}/build/cmake/ohos.toolchain.cmake")
