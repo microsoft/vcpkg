@@ -1,5 +1,5 @@
 diff --git a/cmake/dependencies.cmake b/cmake/dependencies.cmake
-index d06a276..fcec70f 100644
+index d06a276..5d97fd3 100644
 --- a/cmake/dependencies.cmake
 +++ b/cmake/dependencies.cmake
 @@ -134,7 +134,22 @@ if(USE_HDF5)
@@ -65,19 +65,18 @@ index d06a276..fcec70f 100644
  
  # Define a test flag for have zlib library
  if(ZLIB_FOUND)
-@@ -370,19 +389,24 @@ endif()
- # Zips
+@@ -371,18 +390,25 @@ endif()
  ################################
  MESSAGE(STATUS "Checking for filter libraries")
--IF (NETCDF_ENABLE_FILTER_SZIP)
+ IF (NETCDF_ENABLE_FILTER_SZIP)
 -  find_package(Szip)
--elseif(NETCDF_ENABLE_NCZARR)
--  find_package(Szip)
-+IF (NETCDF_ENABLE_FILTER_SZIP OR NETCDF_ENABLE_NCZARR)
 +  find_package(libaec CONFIG REQUIRED)
 +  set(Szip_FOUND 1)
 +  set(Szip_LIBRARY libaec::sz)
 +  set(Szip_LIBRARIES "${Szip_LIBRARY}")
+ elseif(NETCDF_ENABLE_NCZARR)
+-  find_package(Szip)
++  # purely transitive
  endif()
  IF (NETCDF_ENABLE_FILTER_BZ2)
 -  find_package(Bz2)
@@ -96,7 +95,7 @@ index d06a276..fcec70f 100644
  endif()
  
  # Accumulate standard filters
-@@ -412,7 +436,8 @@ endif()
+@@ -412,7 +438,8 @@ endif()
  
  set(STD_FILTERS "${STD_FILTERS}${FOUND_STD_FILTERS}")
  IF (NETCDF_ENABLE_NCZARR_ZIP)
