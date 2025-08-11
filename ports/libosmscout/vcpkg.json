@@ -1,11 +1,11 @@
 {
   "name": "libosmscout",
   "version": "1.1.1",
-  "port-version": 6,
+  "port-version": 7,
   "description": "libosmscout offers applications simple, high-level interfaces for offline location and POI lokup, rendering and routing functionalities based on OpenStreetMap (OSM) data.",
   "homepage": "https://libosmscout.sourceforge.net/",
   "documentation": "https://libosmscout.sourceforge.net/documentation/",
-  "supports": "!uwp & !arm & !arm64 & !static & !wasm32 & !emscripten",
+  "supports": "!uwp & !(windows & arm) & !android & !(windows & static) & !wasm32 & !emscripten",
   "dependencies": [
     "libiconv",
     "liblzma",

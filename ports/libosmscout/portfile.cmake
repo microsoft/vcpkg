@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF c81e1d9a0f69cc5b93588dbe330b2af587162c5f
     SHA512 d6ddbc49dd40b1f938ae2cd1ea9342cab0a52db46bf7ed6716111a91d0a38acba12ff2e273d457db51fc240d578a5b849af77b53e600482cf52c3b22306f8c45
     HEAD_REF master
-    PATCHES protobuf-linkage.patch
+    PATCHES
+        protobuf-linkage.patch
+        fix-libxml2.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
