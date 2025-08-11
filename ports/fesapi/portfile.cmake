@@ -17,6 +17,7 @@ vcpkg_cmake_configure(
         -DWITH_JAVA_WRAPPING:BOOL=OFF
         -DWITH_PYTHON_WRAPPING:BOOL=OFF
         -DWITH_RESQML2_2:BOOL=ON
+        "-DHDF5_PREFER_PARALLEL=${HDF5_WITH_PARALLEL}"
 )
 
 vcpkg_cmake_install()
