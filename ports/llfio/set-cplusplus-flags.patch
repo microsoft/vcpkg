@@ -1,13 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a77d982..fa58df3 100644
+index a77d982..d65e65e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -188,6 +188,8 @@ set(check_cxx_source_linkage_flags)
+@@ -184,6 +184,10 @@ include(QuickCppLibApplyDefaultDefinitions)
+ 
+ # Set the C++ features this library requires
+ all_compile_features(PUBLIC cxx_std_17)
++# for checking __cplusplus
++if(MSVC)
++  all_compile_options(PRIVATE /Zc:__cplusplus)
++endif()
+ set(check_cxx_source_linkage_flags)
  if(NOT CMAKE_CXX_STANDARD)
    if(MSVC)
-     set(check_cxx_source_linkage_flags /std:c++17)
-+    # for checking __cplusplus
-+    set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} /Zc:__cplusplus")
-   else()
-     set(check_cxx_source_linkage_flags -std=c++17)
-   endif()
