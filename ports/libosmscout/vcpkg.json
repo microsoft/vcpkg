@@ -5,6 +5,7 @@
   "description": "libosmscout offers applications simple, high-level interfaces for offline location and POI lokup, rendering and routing functionalities based on OpenStreetMap (OSM) data.",
   "homepage": "https://libosmscout.sourceforge.net/",
   "documentation": "https://libosmscout.sourceforge.net/documentation/",
+  "supports": "!uwp",
   "dependencies": [
     "libiconv",
     "liblzma",

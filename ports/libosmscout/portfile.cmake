@@ -7,6 +7,8 @@ vcpkg_from_github(
     PATCHES
         protobuf-linkage.patch
         fix-libxml2.patch
+        msvc-arm.diff
+        msvc-static.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
