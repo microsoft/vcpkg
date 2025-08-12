@@ -1,0 +1,17 @@
+diff --git a/extern/license-generator/src/license_generator/project.cpp b/extern/license-generator/src/license_generator/project.cpp
+index 1234567..abcdefg 100644
+--- a/extern/license-generator/src/license_generator/project.cpp
++++ b/extern/license-generator/src/license_generator/project.cpp
+@@ -52,7 +52,11 @@ static const string guess_templates_folder(const string &source_folder) {
+ 									 "] does not exist. tried also [" + template_fname.string() + "]");
+ 		}
+ 	}
+-	fs::path normalized = templates_path.normalize();
++#if BOOST_VERSION >= 107200
++	fs::path normalized = fs::weakly_canonical(templates_path);
++#else
++	fs::path normalized = templates_path.normalize();
++#endif
+ 	return normalized.string();
+ }
+ static const fs::path publicKeyFolder(const fs::path &product_folder, const string &product_name) {
