@@ -1,0 +1,21 @@
+diff --git a/orocos_kdl/CMakeLists.txt b/orocos_kdl/CMakeLists.txt
+index a15bd15..0bf5bab 100644
+--- a/orocos_kdl/CMakeLists.txt
++++ b/orocos_kdl/CMakeLists.txt
+@@ -53,12 +53,11 @@ ENDIF ( NOT CMAKE_BUILD_TYPE )
+ 
+ SET( KDL_CFLAGS "")
+ 
+-find_package(Eigen3 QUIET)
+-if(NOT EIGEN3_FOUND)
+-  include(${PROJ_SOURCE_DIR}/cmake/FindEigen3.cmake)
+-endif()
++find_package(Eigen3 CONFIG REQUIRED)
++get_target_property(EIGEN3_INCLUDE_DIR Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
++message(STATUS "EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}")
+ include_directories(${EIGEN3_INCLUDE_DIR})
+-SET(KDL_CFLAGS "${KDL_CFLAGS} -I${EIGEN3_INCLUDE_DIR}")
++SET(KDL_CFLAGS "${KDL_CFLAGS} -I\"${EIGEN3_INCLUDE_DIR}\"")
+ 
+ # Check the platform STL containers capabilities
+ include(cmake/CheckSTLContainers.cmake)
