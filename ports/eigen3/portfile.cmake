@@ -34,6 +34,8 @@ vcpkg_cmake_config_fixup()
 
 vcpkg_fixup_pkgconfig()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/COPYING.README"
