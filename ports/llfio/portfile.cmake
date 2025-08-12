@@ -12,6 +12,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 7eab64a43422286ae405baf60e53470a847354bebc90635897c7e27468e28e486f371bbf57af1e0719cde76cb859b41aa3494cadd4e8f476eb1aadc8595107e3
     HEAD_REF develop
+    PATCHES
+        set-cplusplus-flags.patch
 )
 
 vcpkg_from_github(
