@@ -1,6 +1,6 @@
 {
   "name": "qtserialport",
-  "version": "6.9.0",
+  "version": "6.9.1",
   "description": "Qt Serial Port provides basic functionality for configuration, I/O operations, and getting and setting the control signals of the RS-232 pinouts.",
   "homepage": "https://www.qt.io/",
   "license": null,
