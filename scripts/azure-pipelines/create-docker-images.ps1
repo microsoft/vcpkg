@@ -56,7 +56,7 @@ Connect-AzContainerRegistry -Name $registry.Name
 if ($BuildAndroid) {
     Build-Image -AcrRegistry $registry `
         -Location "$PSScriptRoot/android" `
-        -ImageName "vcpkg-android-r28c" `
+        -ImageName "vcpkg-android" `
         -Date $Date
 }
 
