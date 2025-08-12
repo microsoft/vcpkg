@@ -6374,7 +6374,7 @@
     },
     "mosquitto": {
       "baseline": "2.0.22",
-      "port-version": 0
+      "port-version": 1
     },
     "mozjpeg": {
       "baseline": "4.1.5",
