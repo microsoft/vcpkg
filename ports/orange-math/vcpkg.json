@@ -1,6 +1,6 @@
 {
   "name": "orange-math",
-  "version": "3.0.3",
+  "version": "3.2.3",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "Zlib",
@@ -17,7 +17,8 @@
   ],
   "features": {
     "avx2": {
-      "description": "Omath will use AVX2 to boost performance"
+      "description": "Omath will use AVX2 to boost performance",
+      "supports": "!arm"
     },
     "imgui": {
       "description": "Omath will define method to convert omath types to imgui types",
