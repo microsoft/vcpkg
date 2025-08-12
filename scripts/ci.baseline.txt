@@ -911,7 +911,6 @@ septag-sx:x64-android=fail
 sfgui:arm-neon-android=fail
 sfgui:arm64-android=fail
 sfgui:x64-android=fail
-shader-slang:x64-windows-static=fail
 # "Obsolete" and conflicts with microsoft-signalr
 signalrclient:arm-neon-android=skip
 signalrclient:arm64-android=skip
