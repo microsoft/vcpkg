@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d25936d..d778095 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -71,12 +71,13 @@ OPTION (RBDL_VCPKG_BUILD "Building RBDL in vcpkg environment" OFF)
+ 
+ 
+ # Find and use the system's Eigen3 library
+-FIND_PACKAGE (Eigen3 3.0.0)
++FIND_PACKAGE (Eigen3 CONFIG REQUIRED)
+ 
+ IF (NOT EIGEN3_FOUND)
+     MESSAGE (WARNING "Could not find Eigen3 on your system. Please install it!")
+ ENDIF (NOT EIGEN3_FOUND)
+ 
++get_target_property(EIGEN3_INCLUDE_DIR Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
+ INCLUDE_DIRECTORIES (${EIGEN3_INCLUDE_DIR})
+ 
+ # Addons
