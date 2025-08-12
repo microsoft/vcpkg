@@ -3,8 +3,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
 endif()
 
-set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
-
 # =============================================================================
 # Clone & patch
 vcpkg_from_github(
