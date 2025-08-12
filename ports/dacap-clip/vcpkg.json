@@ -6,10 +6,7 @@
   "license": "MIT",
   "supports": "!android & !uwp",
   "dependencies": [
-    {
-      "name": "libpng",
-      "host": true
-    },
+    "libpng",
     {
       "name": "vcpkg-cmake",
       "host": true
