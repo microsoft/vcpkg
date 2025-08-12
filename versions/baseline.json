@@ -2288,6 +2288,10 @@
       "baseline": "may2021",
       "port-version": 1
     },
+    "dacap-clip": {
+      "baseline": "1.10.0",
+      "port-version": 0
+    },
     "darknet": {
       "baseline": "2024-10-10",
       "port-version": 0
