@@ -21,6 +21,7 @@ vcpkg_from_github(
     PATCHES
         dependencies.diff
         fix-absolute.patch
+        remove-FindEigen3.patch
         "${FIX_UPSTREAM_37d17a9}"
         "${FIX_UPSTREAM_100af05}"
 )
