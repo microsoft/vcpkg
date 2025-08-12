@@ -13,7 +13,10 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/concurrentqueue")
-# transitional
+
+# transitional polyfill
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/concurrentqueue/unofficial/concurrentqueue")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/concurrentqueue/unofficial/concurrentqueue/concurrentqueue.h" [[#include "../../moodycamel/concurrentqueue.h"]])
 file(COPY "${CURRENT_PORT_DIR}/unofficial-concurrentqueue-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-concurrentqueue")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
