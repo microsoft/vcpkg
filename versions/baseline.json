@@ -4809,7 +4809,7 @@
       "port-version": 5
     },
     "libfuse": {
-      "baseline": "3.16.2",
+      "baseline": "3.17.3",
       "port-version": 0
     },
     "libgcrypt": {
