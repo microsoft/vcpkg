@@ -107,6 +107,7 @@ discord-rpc:x64-uwp=fail
 dmlc(uwp) = fail
 eastl:arm-uwp=fail
 ebml:arm-uwp=fail
+ensmallen[openmp](osx) = feature-fails # No openmp on default osx toolchain
 epsilon(uwp)=fail
 faiss:arm64-windows=fail
 fastrtps:arm-uwp=fail
