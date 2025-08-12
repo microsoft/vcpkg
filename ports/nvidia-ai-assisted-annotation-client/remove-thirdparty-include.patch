@@ -1,0 +1,21 @@
+--- original/cpp-client/CMakeLists.txt	2025-06-10 21:40:59.278578565 +0000
++++ simple/cpp-client/CMakeLists.txt	2025-06-10 21:46:40.476647358 +0000
+@@ -54,7 +54,6 @@
+     
+ ####################################################################
+ # 3rdParty Dependencies
+-include_directories(${THIRDPARTY_BINARY_DIR}/include)
+ 
+ # Poco
+ find_package(Poco REQUIRED Foundation Util Net)
+@@ -67,6 +68,10 @@
+ find_package(ITK)
+ include(${ITK_USE_FILE})
+ target_link_libraries(NvidiaAIAAClient ${ITK_LIBRARIES})
++
++# nlohmann_json
++find_package(nlohmann_json CONFIG REQUIRED)
++target_link_libraries(NvidiaAIAAClient nlohmann_json::nlohmann_json)
+ ####################################################################
+ 
+ include(CMakePackageConfigHelpers)
