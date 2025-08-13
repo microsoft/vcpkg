@@ -303,8 +303,9 @@ vcpkg_cmake_configure(
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
         VTK_MODULE_ENABLE_VTK_vtkm
-        VTK_QT_VERSION # Only with Qt
+        # Only with Qt
         CMAKE_INSTALL_QMLDIR
+        VTK_QT_VERSION # Only with Qt
         # When working properly these should be unused
         VCPKG_LOCK_FIND_PACKAGE_CGNS
         VCPKG_LOCK_FIND_PACKAGE_LibHaru
