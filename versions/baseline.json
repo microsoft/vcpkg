@@ -7066,7 +7066,7 @@
     },
     "openmvg": {
       "baseline": "2.1",
-      "port-version": 3
+      "port-version": 2
     },
     "openmvs": {
       "baseline": "2.1.0",
@@ -7158,7 +7158,7 @@
     },
     "orocos-kdl": {
       "baseline": "1.5.1",
-      "port-version": 1
+      "port-version": 0
     },
     "oscpack": {
       "baseline": "1.1.0",
@@ -8246,7 +8246,7 @@
     },
     "rbdl": {
       "baseline": "3.3.0",
-      "port-version": 8
+      "port-version": 7
     },
     "rbdl-orb": {
       "baseline": "3.2.0",

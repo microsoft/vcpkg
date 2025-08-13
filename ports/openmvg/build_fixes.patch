@@ -1,23 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 6879c4c6..073190b3 100644
+index 6879c4c..aa4167a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -281,12 +281,13 @@ endif()
- # - external if EIGEN_INCLUDE_DIR_HINTS is defined
- # - internal if Eigen not found
- # ==============================================================================
--find_package(Eigen3 QUIET)
-+find_package(Eigen3 CONFIG REQUIRED)
- if (NOT Eigen3_FOUND)
-   set(EIGEN_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/eigen)
-   set(OpenMVG_USE_INTERNAL_EIGEN ON)
-   find_package(Eigen QUIET)
- else()
-+  get_target_property(EIGEN3_INCLUDE_DIR Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
-   set(EIGEN_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
- endif()
- add_definitions(-DEIGEN_MPL2_ONLY)
-@@ -324,13 +325,18 @@ else()
+@@ -324,13 +324,18 @@ else()
    if (TARGET flann::flann)
      set(FLANN_LIBRARIES "flann::flann;flann::flann_cpp")
    else()
@@ -37,7 +22,7 @@ index 6879c4c6..073190b3 100644
  # ==============================================================================
  # CoinUtils
  # ==============================================================================
-@@ -391,6 +397,7 @@ if (OpenMVG_USE_INTERNAL_OSI AND OpenMVG_USE_INTERNAL_CLP AND OpenMVG_USE_INTERN
+@@ -391,6 +396,7 @@ if (OpenMVG_USE_INTERNAL_OSI AND OpenMVG_USE_INTERNAL_CLP AND OpenMVG_USE_INTERN
    set_property(TARGET lib_Osi PROPERTY FOLDER OpenMVG/3rdParty/lib_Osi)
    set_property(TARGET lib_OsiClpSolver PROPERTY FOLDER OpenMVG/3rdParty/lib_OsiClpSolver)
  endif()
@@ -45,7 +30,7 @@ index 6879c4c6..073190b3 100644
  
  # ==============================================================================
  # Lemon
-@@ -402,7 +409,7 @@ if (NOT DEFINED LEMON_INCLUDE_DIR_HINTS)
+@@ -402,7 +408,7 @@ if (NOT DEFINED LEMON_INCLUDE_DIR_HINTS)
    set(LEMON_INCLUDE_DIR_HINTS ${CMAKE_CURRENT_SOURCE_DIR}/third_party/lemon)
    set(OpenMVG_USE_INTERNAL_LEMON ON)
  endif()

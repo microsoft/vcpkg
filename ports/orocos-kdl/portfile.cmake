@@ -4,9 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 9774b76b755ea81168390643813789783f60d0b1cdb46cd250e3e0d27f75a6cf2fd3bfd2081c04e30a14ff4fc70d0080c9b43b82ee181c2dda82f23f052b338d
     HEAD_REF master
-    PATCHES 
-      export-include-dir.patch
-      find-eigen3.patch
+    PATCHES export-include-dir.patch
 )
 
 vcpkg_cmake_configure(
