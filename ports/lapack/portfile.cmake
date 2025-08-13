@@ -24,7 +24,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     unset(installed_module)
 elseif(VCPKG_TARGET_IS_UWP
         OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-        OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_MINGW))
+        OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_MINGW))
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/wrapper/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" COPYONLY)
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/FindLAPACK.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/FindLAPACK.cmake" COPYONLY)
     set(libs "-llapack -llibf2c")
