@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/third_party/utf8_range"
     OPTIONS
         "-Dutf8_range_ENABLE_TESTS=off"
+        "-Dprotobuf_VERSION=${VERSION}"
 )
 
 vcpkg_cmake_install()
