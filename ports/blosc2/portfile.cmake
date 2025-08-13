@@ -11,9 +11,16 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BLOSC2_SHARED)
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/internal-complibs")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        zlib DEACTIVATE_ZLIB
+        zstd DEACTIVATE_ZSTD
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DPREFER_EXTERNAL_LZ4=ON
         -DPREFER_EXTERNAL_ZLIB=ON
         -DPREFER_EXTERNAL_ZSTD=ON
@@ -26,6 +33,9 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_STATIC=${BLOSC2_STATIC}
         -DBUILD_SHARED=${BLOSC2_SHARED}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
+        CMAKE_REQUIRE_FIND_PACKAGE_ZSTD
 )
 
 vcpkg_cmake_install()

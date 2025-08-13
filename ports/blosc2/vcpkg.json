@@ -13,8 +13,24 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
+    }
+  ],
+  "default-features": [
     "zlib",
     "zstd"
-  ]
+  ],
+  "features": {
+    "zlib": {
+      "description": "Support zlib compression",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Support zstd compression",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
 }
