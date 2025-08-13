@@ -1,0 +1,123 @@
+diff --git a/libmpdec++/Makefile.vc b/libmpdec++/Makefile.vc
+index c684e3e..c3b6fff 100644
+--- a/libmpdec++/Makefile.vc
++++ b/libmpdec++/Makefile.vc
+@@ -14,10 +14,10 @@
+ 
+ !if "$(DEBUG)" == "1"
+-OPT = /MTd /Od /Zi /EHsc
+-OPT_SHARED = /MDd /Od /Zi /EHsc
++OPT = /Od /EHsc
++OPT_SHARED = /Od /EHsc
+ !else
+-OPT = /MT /O2 /GS /EHsc /DNDEBUG
+-OPT_SHARED = /MD /O2 /GS /EHsc /DNDEBUG
++OPT = /O2 /GS /EHsc /DNDEBUG
++OPT_SHARED = /O2 /GS /EHsc /DNDEBUG
+ !endif
+ 
+ !if "$(CC)" == "clang-cl"
+@@ -27,7 +27,7 @@
+ !endif
+ 
+ MPD_CXXFLAGS = $(WARN) /nologo $(OPT)
+-MPD_CXXFLAGS_SHARED = /DBUILD_LIBMPDECXX $(WARN) /nologo $(OPT_SHARED) $(PGOFLAGS)
++MPD_CXXFLAGS_SHARED = /DBUILD_LIBMPDECXX /DMPDECIMAL_DLL $(WARN) /nologo $(OPT_SHARED) $(PGOFLAGS)
+ MPD_BIN_CXXFLAGS_SHARED = $(WARN) /nologo $(OPT_SHARED) $(PGOFLAGS)
+ 
+ MPD_LDXXFLAGS= /DLL /MANIFEST $(LDXXFLAGS)
+@@ -42,22 +42,22 @@
+ SHARED_OBJS = .objs\decimal.obj
+ 
+ 
+-$(LIBSTATIC_CXX): Makefile $(OBJS)
++$(LIBSTATIC_CXX): Makefile.vc $(OBJS)
+ 	-@if exist $@ del $(LIBSTATIC_CXX)
+ 	lib /out:$(LIBSTATIC_CXX) $(OBJS)
+ 
+-$(LIBSHARED_CXX): Makefile $(SHARED_OBJS)
++$(LIBSHARED_CXX): Makefile.vc $(SHARED_OBJS)
+ 	-@if exist $@ del $(LIBSHARED_CXX)
+ 	link $(MPD_LDXXFLAGS) /out:$(LIBSHARED_CXX) /implib:$(LIBIMPORT_CXX) /LIBPATH:$(SRCDIR) $(SHARED_OBJS) $(LIBIMPORT)
+ 	mt -manifest $(LIBSHARED_CXX).manifest -outputresource:$(LIBSHARED_CXX);2
+ 
+ 
+ decimal.obj:\
+-Makefile decimal.cc ..\libmpdec\mpdecimal.h decimal.hh
++Makefile.vc decimal.cc ..\libmpdec\mpdecimal.h decimal.hh
+ 	$(CXX) "-I." "-I$(SRCDIR)" $(MPD_CXXFLAGS) -c decimal.cc
+ 
+ .objs\decimal.obj:\
+-Makefile decimal.cc ..\libmpdec\mpdecimal.h decimal.hh
++Makefile.vc decimal.cc ..\libmpdec\mpdecimal.h decimal.hh
+ 	$(CXX) "-I." "-I$(SRCDIR)" $(MPD_CXXFLAGS_SHARED) -c decimal.cc /Fo.objs\decimal.obj
+ 
+ 
+diff --git a/libmpdec/Makefile.vc b/libmpdec/Makefile.vc
+index b672037..f9a6a15 100644
+--- a/libmpdec/Makefile.vc
++++ b/libmpdec/Makefile.vc
+@@ -31,11 +31,11 @@ CONFIG = /DCONFIG_32 /DANSI
+ !endif
+ 
+ !if "$(DEBUG)" == "1"
+-OPT = /MTd /Od /Zi /EHsc
+-OPT_SHARED = /MDd /Od /Zi /EHsc
++OPT = /Od /EHsc
++OPT_SHARED = /Od /EHsc
+ !else
+-OPT = /MT /O2 /GS /EHsc /DNDEBUG
+-OPT_SHARED = /MD /O2 /GS /EHsc /DNDEBUG
++OPT = /O2 /GS /EHsc /DNDEBUG
++OPT_SHARED = /O2 /GS /EHsc /DNDEBUG
+ !endif
+ 
+ !if "$(CC)" == "clang-cl"
+@@ -45,7 +45,7 @@
+ !endif
+ 
+ MPD_CFLAGS = $(WARN) /nologo $(CONFIG) $(OPT)
+-MPD_CFLAGS_SHARED = /DBUILD_LIBMPDEC $(WARN) /nologo $(CONFIG) $(OPT_SHARED) $(PGOFLAGS)
++MPD_CFLAGS_SHARED = /DBUILD_LIBMPDEC /DMPDECIMAL_DLL $(WARN) /nologo $(CONFIG) $(OPT_SHARED) $(PGOFLAGS)
+ 
+ MPD_BIN_CFLAGS = $(WARN) /nologo $(OPT)
+ MPD_BIN_CFLAGS_SHARED = $(WARN) /nologo $(OPT_SHARED) $(PGOFLAGS)
+diff --git a/libmpdec++/decimal.hh b/libmpdec++/decimal.hh
+index 9040290..5e057cb 100644
+--- a/libmpdec++/decimal.hh
++++ b/libmpdec++/decimal.hh
+@@ -58,7 +58,7 @@
+ #ifdef _MSC_VER
+   #if defined (BUILD_LIBMPDECXX)
+     #define IMPORTEXPORT __declspec(dllexport)
+-  #elif defined(_DLL)
++  #elif defined(MPDECIMAL_DLL)
+     #define IMPORTEXPORT __declspec(dllimport)
+   #else
+     #define IMPORTEXPORT
+diff --git a/libmpdec/mpdecimal32vc.h b/libmpdec/mpdecimal32vc.h
+index 6a35951..43e5631 100644
+--- a/libmpdec/mpdecimal32vc.h
++++ b/libmpdec/mpdecimal32vc.h
+@@ -59,7 +59,7 @@ extern "C" {
+ #if defined (BUILD_LIBMPDEC)
+   #undef IMPORTEXPORT
+   #define IMPORTEXPORT __declspec(dllexport)
+-#elif defined(_DLL)
++#elif defined(MPDECIMAL_DLL)
+   #undef IMPORTEXPORT
+   #define IMPORTEXPORT __declspec(dllimport)
+ #endif
+diff --git a/libmpdec/mpdecimal64vc.h b/libmpdec/mpdecimal64vc.h
+index 9320176..a9944fc 100644
+--- a/libmpdec/mpdecimal64vc.h
++++ b/libmpdec/mpdecimal64vc.h
+@@ -59,7 +59,7 @@ extern "C" {
+ #if defined (BUILD_LIBMPDEC)
+   #undef IMPORTEXPORT
+   #define IMPORTEXPORT __declspec(dllexport)
+-#elif defined(_DLL)
++#elif defined(MPDECIMAL_DLL)
+   #undef IMPORTEXPORT
+   #define IMPORTEXPORT __declspec(dllimport)
+ #endif
