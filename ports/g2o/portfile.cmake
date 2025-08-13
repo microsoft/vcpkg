@@ -21,13 +21,13 @@ vcpkg_from_github(
     PATCHES
         dependencies.diff
         fix-absolute.patch
-        remove-FindEigen3.patch
         "${FIX_UPSTREAM_37d17a9}"
         "${FIX_UPSTREAM_100af05}"
 )
 file(REMOVE
     "${SOURCE_PATH}/cmake_modules/FindBLAS.cmake"
     "${SOURCE_PATH}/cmake_modules/FindCSparse.cmake"
+    "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
