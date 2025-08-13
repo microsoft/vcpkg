@@ -56,6 +56,7 @@
     },
     "otlp-file": {
       "description": "Whether to include the OpenTelemetry Protocol to File exporter in the SDK",
+      "supports": "!uwp",
       "dependencies": [
         "protobuf"
       ]
