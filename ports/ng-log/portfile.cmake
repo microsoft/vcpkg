@@ -14,6 +14,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_COMPAT=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
         -DPRINT_UNSYMBOLIZED_STACK_TRACES=OFF
