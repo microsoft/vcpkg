@@ -1,16 +1,17 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4e65f049..fead44d4 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -862,7 +862,10 @@ endif()
- add_subdirectory(api)
+diff --git a/cmake/opentracing-cpp.cmake b/cmake/opentracing-cpp.cmake
+index f014ecd..fd8898a 100644
+--- a/cmake/opentracing-cpp.cmake
++++ b/cmake/opentracing-cpp.cmake
+@@ -1,7 +1,11 @@
+ # Copyright The OpenTelemetry Authors
+ # SPDX-License-Identifier: Apache-2.0
  
- if(WITH_OPENTRACING)
--  find_package(OpenTracing CONFIG QUIET)
-+  find_package(OpenTracing CONFIG REQUIRED)
-+  if(NOT TARGET OpenTracing::opentracing AND TARGET OpenTracing::opentracing-static)
-+    add_library(OpenTracing::opentracing ALIAS OpenTracing::opentracing-static)
-+  endif()
-   if(NOT OpenTracing_FOUND)
-     set(OPENTRACING_DIR "third_party/opentracing-cpp")
-     message(STATUS "Trying to use local ${OPENTRACING_DIR} from submodule")
+-find_package(OpenTracing CONFIG QUIET)
++find_package(OpenTracing CONFIG REQUIRED)
++if(NOT TARGET OpenTracing::opentracing AND TARGET OpenTracing::opentracing-static)
++  add_library(OpenTracing::opentracing ALIAS OpenTracing::opentracing-static)
++endif()
++
+ set(OpenTracing_PROVIDER "find_package")
+ 
+ if(NOT OpenTracing_FOUND)
