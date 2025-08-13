@@ -236,7 +236,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ```sh
     ./fire-register-guest.ps1 -Target HOSTMACHINE -Pat YourPatGoesHere
     ```
-- [ ] In the KVM's terminal, relaunch the VM in ephemeral mode with:
+- [ ] That will cleanly shut down the VM. In the KVM's terminal, relaunch the VM in ephemeral mode with:
     ```sh
     ~/macosvm --ephemeral ./vm.json
     ```
