@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index d75ce1055..a21acbd83 100644
+index d75ce1055..11505afe2 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -96,7 +96,7 @@ endif()
@@ -32,16 +32,18 @@ index d75ce1055..a21acbd83 100644
     
     # Set substitution variables for configuration file
     if(SIMD_SSE)
-@@ -250,7 +251,7 @@ endif()
+@@ -250,8 +251,9 @@ endif()
  #-----------------------------------------------------------------------------
  
  message(STATUS "Searching for Eigen3...")
 -find_package(Eigen3 3.3.0)
 +find_package(Eigen3 3.3.0 REQUIRED)
  if(EIGEN3_FOUND)
++  get_target_property(EIGEN3_INCLUDE_DIR Eigen3::Eigen INTERFACE_INCLUDE_DIRECTORIES)
    message(STATUS "  Eigen3 version: ${EIGEN3_VERSION}")
    message(STATUS "  Eigen3 include directory: ${EIGEN3_INCLUDE_DIR}")
-@@ -293,7 +294,9 @@ endif()
+ else()
+@@ -293,7 +295,9 @@ endif()
  #-----------------------------------------------------------------------------
  
  message(STATUS "Searching for MPI...")
@@ -52,7 +54,7 @@ index d75ce1055..a21acbd83 100644
  if(MPI_FOUND)
    message(STATUS "  MPI compiler:      ${MPI_CXX_COMPILER}")
    message(STATUS "  MPI compile flags: ${MPI_CXX_COMPILE_FLAGS}")
-@@ -312,9 +315,9 @@ endif()
+@@ -312,9 +316,9 @@ endif()
  #-----------------------------------------------------------------------------
  
  message(STATUS "Searching for CUDA...")
@@ -65,7 +67,7 @@ index d75ce1055..a21acbd83 100644
  if(CUDA_FOUND)
    set(CUDA_BINARY_DIR "${CUDA_TOOLKIT_ROOT_DIR}/bin")
  
-@@ -373,7 +376,7 @@ endif()
+@@ -373,7 +377,7 @@ endif()
  #-----------------------------------------------------------------------------
  
  message(STATUS "Searching for Thrust...")
@@ -74,7 +76,7 @@ index d75ce1055..a21acbd83 100644
  if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
    find_path(THRUST_INCLUDE_DIR NAMES thrust/version.h PATHS "/usr/local" "/usr/local/include")
    if (THRUST_INCLUDE_DIR)
-@@ -383,9 +386,9 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+@@ -383,9 +387,9 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
      set(${THRUST_FOUND} FALSE)
    endif()
  else()
@@ -86,7 +88,7 @@ index d75ce1055..a21acbd83 100644
  if(THRUST_FOUND)
    message(STATUS "  Thrust version:     ${THRUST_VERSION}")
    message(STATUS "  Thrust include dir: ${THRUST_INCLUDE_DIR}")
-@@ -500,14 +503,14 @@ if(ENABLE_HDF5)
+@@ -500,14 +504,14 @@ if(ENABLE_HDF5)
      #    HDF5_INCLUDE_DIRS
      #    HDF5_C_LIBRARIES
      #    HDF5_CXX_LIBRARIES
