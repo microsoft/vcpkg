@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO open-license-manager/licensecc
     REF v2.0.0
     SHA512 4f1e80b536f2bb9685ac71fd185b841d0dfc0ef6747dac956d7514f7a3f207dfd366b87a7a6a505b8becf68660254eafbc26e8552ad34cd75c0530fae469bbaa
+    PATCHES
+        fix-include-path.patch
 )
 
 vcpkg_from_github(
@@ -15,12 +17,16 @@ vcpkg_from_github(
 file(REMOVE_RECURSE "${SOURCE_PATH}/extern/license-generator")
 file(RENAME "${LCC_GENERATOR_PATH}" "${SOURCE_PATH}/extern/license-generator")
 
-# Apply patches after setting up license-generator
-vcpkg_apply_patches(
-    SOURCE_PATH ${SOURCE_PATH}
-    PATCHES
-        fix-boost-filesystem-normalize.patch
-        fix-include-path.patch
+# Apply Boost filesystem patch to license-generator after it's been set up
+vcpkg_replace_string(
+    "${SOURCE_PATH}/extern/license-generator/src/license_generator/project.cpp"
+    "fs::path normalized = templates_path.normalize();"
+    "
+#if BOOST_VERSION >= 107200
+    fs::path normalized = fs::weakly_canonical(templates_path);
+#else
+    fs::path normalized = templates_path.normalize();
+#endif"
 )
 
 # Manually fix the CMakeLists.txt to remove project_initialize dependency
@@ -50,15 +56,15 @@ file(WRITE "${LCC_INCLUDE_DIR}/public_key.h"
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DBUILD_SHARED_LIBS=OFF
         -DBUILD_TESTING=OFF
         -DLCC_LOCATION=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
 )
 
 vcpkg_cmake_install()
 
-# Move library files to the correct location
+# Move library files to correct locations
 file(GLOB RELEASE_LIBS "${CURRENT_PACKAGES_DIR}/licensecc/DEFAULT/*.lib")
 file(GLOB DEBUG_LIBS "${CURRENT_PACKAGES_DIR}/debug/licensecc/DEFAULT/*.lib")
 
@@ -87,28 +93,27 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/licensecc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/licensecc")
 
-# Remove and replace the original CMake files with a simplified one
+# Remove auto-generated CMake files and install our own
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/cmake")
 
-# Install CMake config files using vcpkg's helper
+# Install our custom CMake config files
 include(CMakePackageConfigHelpers)
 
-# Configure the package config file
 configure_package_config_file(
     "${CMAKE_CURRENT_LIST_DIR}/licensecc-config.cmake"
     "${CURRENT_PACKAGES_DIR}/share/licensecc/licensecc-config.cmake"
     INSTALL_DESTINATION "share/licensecc"
 )
 
-# Copy the version file
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/licensecc-config-version.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/licensecc")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/licensecc-config-version.cmake" 
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/licensecc")
 
-# Remove debug binaries and includes (they are the same as release)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+# Remove debug includes (they are the same as release)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Remove unwanted tools from bin directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/licensecc RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

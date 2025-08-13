@@ -1,11 +1,16 @@
 {
   "name": "licensecc",
   "version": "2.0.0",
+  "port-version": 3,
   "description": "LicenseCC is a cross-platform C++ license management library with hardware fingerprinting and trial support.",
   "homepage": "https://github.com/open-license-manager/licensecc",
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
+    "boost-date-time",
+    "boost-filesystem",
+    "boost-program-options",
+    "boost-system",
     "openssl",
     {
       "name": "vcpkg-cmake",
