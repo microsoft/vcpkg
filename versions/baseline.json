@@ -730,7 +730,7 @@
     },
     "blas": {
       "baseline": "2023-04-14",
-      "port-version": 3
+      "port-version": 4
     },
     "blaze": {
       "baseline": "3.8.2",
@@ -4398,7 +4398,7 @@
     },
     "lapack": {
       "baseline": "2023-06-10",
-      "port-version": 2
+      "port-version": 3
     },
     "lapack-reference": {
       "baseline": "3.12.1",
