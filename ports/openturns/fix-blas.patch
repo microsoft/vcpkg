@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,11 +123,12 @@
+    )
+ set (TEMPDIR ${OPENTURNS_TEMPDIR})
+ 
+ if (NOT DEFINED LAPACK_LIBRARIES)
+-  find_package (LAPACK REQUIRED)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(LAPACK REQUIRED lapack)
+ endif ()
+-list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${LAPACK_LIBRARIES})
++list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${LAPACK_LINK_LIBRARIES})
+ 
+ if (USE_SPECTRA)
+   find_package (Spectra 1.0 CONFIG)
+ endif ()

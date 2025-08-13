@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openturns/openturns
-    REF b62fb487266949ffdad036712cec604cf70d6e34
-    SHA512 de14a872bb2c3cd871d7f98e6a0d62f9f3c23386200f0c63d11fec0877d69639e45f004f3f18217bad68fc52d02d285ac3f5d70dcc89a8c23edaea9fe365b527
+    REF v${VERSION}
+    SHA512 d73c294ce8fafb99da0769791cee09a6da76d3839489dd32227a7569c1fbbfc06c2a918d3951ea5b9d7a7efb1f30d11e04a52bb8d906e37411bc372235a9832b
     HEAD_REF master
     PATCHES
-      link-gmp.patch
       fix-dep.patch
+      fix-blas.patch
 )
 
 vcpkg_find_acquire_program(FLEX)
@@ -16,10 +16,13 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       ${FEATURE_OPTIONS}
+      "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
       -DBUILD_PYTHON:BOOL=OFF # Requires additional python modules
       -DUSE_BOOST:BOOL=ON # Required to make the distributions cross platform
       -DUSE_DOXYGEN:BOOL=OFF
