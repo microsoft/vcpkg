@@ -44,9 +44,12 @@ vcpkg_cmake_configure(
         -DDLIB_WEBP_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
         -DDLIB_USE_FFMPEG=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_X11=ON
     OPTIONS_DEBUG
         ${dbg_opts}
         #-DDLIB_ENABLE_STACK_TRACE=ON
+    MAYBE_UNUSED_OPTIONS
+        CMAKE_DISABLE_FIND_PACKAGE_X11 # Not checked on Windows
 )
 
 vcpkg_cmake_install()

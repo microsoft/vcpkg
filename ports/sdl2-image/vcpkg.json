@@ -1,7 +1,7 @@
 {
   "name": "sdl2-image",
   "version": "2.8.8",
-  "port-version": 1,
+  "port-version": 2,
   "description": "SDL_image is an image file loading library. It loads images as SDL surfaces and textures, and supports the following formats: BMP, GIF, JPEG, LBM, PCX, PNG, PNM, TGA, TIFF, WEBP, XCF, XPM, XV",
   "homepage": "https://github.com/libsdl-org/SDL_image",
   "license": "Zlib",

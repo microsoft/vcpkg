@@ -1,7 +1,7 @@
 {
   "name": "dataframe",
-  "version": "3.5.0",
-  "description": "C++ DataFrame for statistical, Financial, and ML analysis -- in modern C++ using native types and contiguous memory storage",
+  "version": "3.6.0",
+  "description": "C++ DataFrame for statistical, Financial, and ML analysis in modern C++",
   "homepage": "https://github.com/hosseinmoein/DataFrame",
   "license": "BSD-3-Clause",
   "supports": "!uwp",

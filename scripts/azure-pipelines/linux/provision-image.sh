@@ -150,7 +150,7 @@ APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-8 cuda-libraries-dev-12-8 cuda-driv
   libnccl2 libnccl-dev"
 
 ## PowerShell + Azure
-APT_PACKAGES="$APT_PACKAGES powershell azure-cli"
+APT_PACKAGES="$APT_PACKAGES powershell azcopy azure-cli"
 
 ## Additionally required/installed by Azure DevOps Scale Set Agents, skip on WSL
 if [[ $(grep microsoft /proc/version) ]]; then
