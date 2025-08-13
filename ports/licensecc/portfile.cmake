@@ -14,20 +14,9 @@ vcpkg_from_github(
     SHA512 fc7b49075ca4f72fac0bf3ea3303c51afc03c976c5058ecb97cbe8bbf3319ab642489be8817048850ef88d89062efb6e01c7133a02f7f187f7fbdfbd860eb55a
 )
 
+# Remove license-generator completely to avoid Boost dependencies for x86 builds
 file(REMOVE_RECURSE "${SOURCE_PATH}/extern/license-generator")
-file(RENAME "${LCC_GENERATOR_PATH}" "${SOURCE_PATH}/extern/license-generator")
-
-# Apply Boost filesystem patch to license-generator after it's been set up
-vcpkg_replace_string(
-    "${SOURCE_PATH}/extern/license-generator/src/license_generator/project.cpp"
-    "fs::path normalized = templates_path.normalize();"
-    "
-#if BOOST_VERSION >= 107200
-    fs::path normalized = fs::weakly_canonical(templates_path);
-#else
-    fs::path normalized = templates_path.normalize();
-#endif"
-)
+file(WRITE "${SOURCE_PATH}/extern/license-generator/CMakeLists.txt" "# Disabled for vcpkg")
 
 # Manually fix the CMakeLists.txt to remove project_initialize dependency
 vcpkg_replace_string(
@@ -60,6 +49,7 @@ vcpkg_cmake_configure(
         -DLCC_LOCATION=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_POLICY_DEFAULT_CMP0167=NEW
+        -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
 )
 
 vcpkg_cmake_install()
