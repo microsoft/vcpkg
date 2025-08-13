@@ -218,13 +218,7 @@
       ]
     },
     "opengl": {
-      "description": "All opengl related modules",
-      "dependencies": [
-        {
-          "name": "vtk",
-          "default-features": false
-        }
-      ]
+      "description": "All opengl related modules"
     },
     "openmp": {
       "description": "Use openmp multithreading parallel implementation"
@@ -335,13 +329,7 @@
       ]
     },
     "utf8": {
-      "description": "Enables vtk reader/writer with utf-8 path support",
-      "dependencies": [
-        {
-          "name": "vtk",
-          "default-features": false
-        }
-      ]
+      "description": "Enables vtk reader/writer with utf-8 path support"
     },
     "vtkm": {
       "description": "Build with vtk-m accelerator and module.",
