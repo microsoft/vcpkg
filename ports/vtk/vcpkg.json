@@ -19,6 +19,7 @@
         "zlib"
       ]
     },
+    "gl2ps",
     "glew",
     {
       "name": "hdf5",
