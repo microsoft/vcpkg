@@ -46,7 +46,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Set the desktop wallpaper to a fixed color from Settings -> Wallpaper . (This makes the KVM a lot easier to use :) )
 - [ ] Disable automatic updates in the VM: Settings -> General -> Automatic Updates -> Disable them all
 - [ ] Enable remote login in System Settings -> General -> Sharing -> Remote Login
-- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/4.259.0/vsts-agent-osx-x64-4.259.0.tar.gz
+- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://download.agent.dev.azure.com/agent/4.259.0/vsts-agent-osx-x64-4.259.0.tar.gz
 - [ ] In the guest, set the vcpkg user to be able to use sudo without a password:
     ```sh
     printf 'vcpkg\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vcpkg'
@@ -109,11 +109,13 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     ```
 - [ ] Follow prompts as you would on real hardware.
     * Set up as new.
-    * Apple ID: 'Set Up Later' / Skip
     * Account name: vcpkg
     * A very similar password
+    * Do not allow computer account password to be reset with your Apple Account.
+    * Apple ID: 'Set Up Later' / Skip
     * No location services
     * Yes send crash reports
+    * Set up screen time later
     * Only download updates automatically
 - [ ] Set the desktop wallpaper to a fixed color from Settings -> Wallpaper . (This makes the KVM a lot easier to use :) )
 - [ ] Disable automatic updates in the VM: Settings -> General -> Automatic Updates -> Disable them all
@@ -127,7 +129,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     sudo chmod 0440 '/etc/sudoers.d/vcpkg'
     exit
     ```
-- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://vstsagentpackage.azureedge.net/agent/4.259.0/vsts-agent-osx-arm64-4.259.0.tar.gz
+- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://download.agent.dev.azure.com/agent/4.259.0/vsts-agent-osx-arm64-4.259.0.tar.gz
 - [ ] Copy setup-box.sh and the xcode installer renamed to 'clt.dmg' to the host. For example from a dev workstation:
     ```sh
     scp ./setup-guest.sh vcpkg@HOSTMACHINE:/Users/vcpkg
