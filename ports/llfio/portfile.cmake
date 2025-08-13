@@ -14,6 +14,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         set-cplusplus-flags.patch
+        disable-backtrace-on-android.patch
 )
 
 vcpkg_from_github(

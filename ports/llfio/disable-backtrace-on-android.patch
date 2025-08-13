@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d65e65e..f2184f9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -188,6 +188,10 @@ all_compile_features(PUBLIC cxx_std_17)
+ if(MSVC)
+   all_compile_options(PRIVATE /Zc:__cplusplus)
+ endif()
++# for lack of backtrace on android
++if(ANDROID)
++  all_compile_definitions(PRIVATE QUICKCPPLIB_DISABLE_EXECINFO=1)
++endif()
+ set(check_cxx_source_linkage_flags)
+ if(NOT CMAKE_CXX_STANDARD)
+   if(MSVC)
