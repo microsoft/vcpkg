@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         configure-binary-dir.patch # https://github.com/Blosc/c-blosc2/pull/679
+        cmake-deps.patch # https://github.com/Blosc/c-blosc2/pull/682
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLOSC2_STATIC)
@@ -26,6 +27,7 @@ vcpkg_cmake_configure(
         -DPREFER_EXTERNAL_LZ4=ON
         -DPREFER_EXTERNAL_ZLIB=ON
         -DPREFER_EXTERNAL_ZSTD=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_ZLIB_NG=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_LZ4=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZLIB=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_ZSTD=ON
