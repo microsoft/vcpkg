@@ -47,10 +47,16 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] Disable automatic updates in the VM: Settings -> General -> Automatic Updates -> Disable them all
 - [ ] Enable remote login in System Settings -> General -> Sharing -> Remote Login
 - [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://download.agent.dev.azure.com/agent/4.259.0/vsts-agent-osx-x64-4.259.0.tar.gz
-- [ ] In the guest, set the vcpkg user to be able to use sudo without a password:
+- [ ] In the guest, set the vcpkg user to be able to use sudo without a password. From a dev machine:
     ```sh
+    ssh vcpkg@HOSTMACHINE
+    export GUEST_IP=`prlctl list --full | sed -nr 's/^.*running *([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}).*/\1/p'`
+    export SSH_COOKIE=vcpkg@$GUEST_IP
+    ssh $SSH_COOKIE  # and then enter the password here
     printf 'vcpkg\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vcpkg'
     sudo chmod 0440 '/etc/sudoers.d/vcpkg'
+    exit
+    exit
     ```
 - [ ] Copy setup-guest, setup-box.sh, and the xcode installer renamed to 'clt.dmg' to the host, and run setup-guest.sh.  From a developer machine:
     ```sh
