@@ -190,7 +190,10 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     * On VM Shutdown: Close Window (this one should already be set)
     * On Mac Shutdown: Shut Down
     * On Window Close: Keep Running in the Background
-- [ ] Close and restart Parallels Desktop. The VM should start automatically.
+- [ ] Under 'More Options':
+    * Time: Do not sync
+    * Uncheck 'Update Parallels Tools automatically'
+- [ ] Close and restart Parallels Desktop. The VM should start automatically. If it does not, start it.
 - [ ] [grab a PAT][] if you don't already have one
 - [ ] Copy the guest deploy script to the host, and run it with a first parameter of your PAT. From a developer machine:
     ```sh
