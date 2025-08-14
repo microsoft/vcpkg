@@ -1,0 +1,13 @@
+diff --git a/cmake/QtPublicAppleHelpers.cmake b/cmake/QtPublicAppleHelpers.cmake
+index 8192b35..9cf5070 100644
+--- a/cmake/QtPublicAppleHelpers.cmake
++++ b/cmake/QtPublicAppleHelpers.cmake
+@@ -909,7 +909,7 @@ function(_qt_internal_get_xcode_version_raw out_var)
+         string(STRIP "${xcode_version}" xcode_version)
+ 
+         if(NOT xcode_version)
+-            message(FATAL_ERROR
++            message(WARNING
+                     "Can't determine Xcode version. Is Xcode installed?"
+                     " Error details:\n${xcrun_error}")
+         endif()
