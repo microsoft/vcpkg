@@ -1,6 +1,6 @@
 {
   "name": "bzip3",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "A better and stronger spiritual successor to BZip2.",
   "homepage": "https://github.com/kspalaiologos/bzip3/",
   "license": "LGPL-3.0-or-later",
