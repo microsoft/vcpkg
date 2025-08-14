@@ -13,14 +13,17 @@
         "ccolamd",
         "cholmod",
         "colamd",
+        "curl",
         "cxsparse",
         "fltk",
         "fontconfig",
         "freetype",
+        "graphicsmagick",
         "gui",
         "hdf5",
         "klu",
         "portaudio",
+        "qhull",
         "spqr",
         "umfpack"
       ]
