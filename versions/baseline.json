@@ -10529,7 +10529,7 @@
       "port-version": 4
     },
     "yalantinglibs": {
-      "baseline": "0.5.3",
+      "baseline": "0.5.4",
       "port-version": 0
     },
     "yaml-cpp": {
