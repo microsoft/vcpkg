@@ -1,0 +1,16 @@
+{
+    "name": "sbgecom",
+    "version": "5.3.2276",
+    "homepage": "https://github.com/SBG-Systems/sbgECom",
+    "description": "C library used to communicate with SBG Systems IMU, AHRS and INS",
+    "license": "MIT",
+    "dependencies": [
+    {
+        "name" : "vcpkg-cmake",
+        "host" : true
+    },
+    {
+        "name" : "vcpkg-cmake-config",
+        "host" : true
+    }]
+}
