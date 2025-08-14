@@ -1856,10 +1856,6 @@
       "baseline": "2.5.0",
       "port-version": 11
     },
-    "collection": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "colmap": {
       "baseline": "3.11.1",
       "port-version": 3
@@ -7102,6 +7098,10 @@
     },
     "osmanip": {
       "baseline": "4.6.1",
+      "port-version": 0
+    },
+    "osp-collection": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "otl": {
