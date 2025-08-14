@@ -193,7 +193,7 @@ index 68d8b5c..844d0e2 100644
  
  if(PREFER_EXTERNAL_LZ4)
 -    find_dependency(LZ4)
-+    find_dependency(LZ4 CONFIG)
++    find_dependency(lz4 CONFIG)
  endif()
  set(Blosc2_LZ4_FOUND TRUE)
  
@@ -211,7 +211,7 @@ index 68d8b5c..844d0e2 100644
      set(Blosc2_ZSTD_FOUND FALSE)
  elseif(NOT PREFER_EXTERNAL_ZSTD AND PREFER_EXTERNAL_ZSTD)
 -    find_dependency(ZSTD)
-+    find_dependency(ZSTD CONFIG)
++    find_dependency(zstd CONFIG)
      set(Blosc2_ZSTD_FOUND TRUE)
  endif()
  
@@ -224,7 +224,7 @@ index fd0ae5a..39ec771 100644
  
  if(PREFER_EXTERNAL_LZ4)
 -    find_package(LZ4)
-+    find_package(LZ4 CONFIG)
++    find_package(LZ4 CONFIG NAMES lz4)
  else()
      message(STATUS "Using LZ4 internal sources.")
  endif()
@@ -241,7 +241,7 @@ index fd0ae5a..39ec771 100644
  if(NOT DEACTIVATE_ZSTD)
      if(PREFER_EXTERNAL_ZSTD)
 -        find_package(ZSTD)
-+        find_package(ZSTD CONFIG)
++        find_package(ZSTD CONFIG NAMES zstd)
          if(NOT ZSTD_FOUND)
            message(STATUS "No ZSTD library found.  Using internal sources.")
          endif()
