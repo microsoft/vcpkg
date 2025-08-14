@@ -3464,6 +3464,10 @@
       "baseline": "1.26.4",
       "port-version": 0
     },
+    "gstlearn": {
+      "baseline": "1.7.2",
+      "port-version": 0
+    },
     "gstreamer": {
       "baseline": "1.26.4",
       "port-version": 0
