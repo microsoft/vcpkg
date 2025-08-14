@@ -7,12 +7,31 @@
   "license": null,
   "dependencies": [
     {
-      "name": "openblas",
-      "platform": "!osx & !ios"
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "default-blas"
+  ],
+  "features": {
+    "default-blas": {
+      "description": "Use the default blas implementation.",
+      "dependencies": [
+        "openblas"
+      ]
+    },
+    "force-reference-blas": {
+      "description": "Force the use of blas from lapack.",
+      "supports": "windows & static & !mingw",
+      "dependencies": [
+        {
+          "name": "lapack-reference",
+          "features": [
+            "cblas"
+          ]
+        }
+      ]
+    }
+  }
 }

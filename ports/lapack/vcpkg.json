@@ -8,16 +8,32 @@
   "supports": "!android",
   "dependencies": [
     {
-      "name": "clapack",
-      "platform": "!osx & !ios & (uwp | (arm & windows) | (static & windows & !mingw))"
-    },
-    {
-      "name": "lapack-reference",
-      "platform": "!osx & !ios & (!uwp & !(arm & windows) & !(static & windows & !mingw))"
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "default-lapack"
+  ],
+  "features": {
+    "default-lapack": {
+      "description": "Use the default lapack implementation.",
+      "dependencies": [
+        {
+          "name": "clapack",
+          "platform": "!osx & !ios & (uwp | (arm & windows) | (static & windows & !mingw))"
+        },
+        {
+          "name": "lapack-reference",
+          "platform": "!osx & !ios & (!uwp & !(arm & windows) & !(static & windows & !mingw))"
+        }
+      ]
+    },
+    "force-reference-lapack": {
+      "description": "Force the use of lapack-reference.",
+      "dependencies": [
+        "lapack-reference"
+      ]
+    }
+  }
 }
