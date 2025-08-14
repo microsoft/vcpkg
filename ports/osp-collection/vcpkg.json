@@ -1,8 +1,8 @@
 {
-  "name": "collection",
+  "name": "osp-collection",
   "version": "1.0.0",
   "maintainers": "Saad Shams",
-  "description": "A C library providing linked-list based data structures for efficient collection management.",
+  "description": "A C library providing data structures for efficient collection management.",
   "homepage": "https://github.com/open-source-patterns/collection",
   "license": "BSD-3-Clause",
   "dependencies": [
