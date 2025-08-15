@@ -1,7 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.8.3",
-  "port-version": 5,
+  "version": "6.9.0",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -256,6 +255,13 @@
         {
           "name": "freetype",
           "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
         }
       ]
     },
@@ -316,13 +322,6 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "freetype"
-          ]
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
             "opengl"
           ],
           "platform": "osx"
@@ -332,6 +331,7 @@
           "default-features": false,
           "features": [
             "egl",
+            "freetype",
             "gles2",
             "opengl"
           ],
@@ -468,7 +468,6 @@
     "sql-oci": {
       "description": "Enable SQL Driver Oracle OCI",
       "dependencies": [
-        "ocilib",
         {
           "name": "qtbase",
           "default-features": false,
