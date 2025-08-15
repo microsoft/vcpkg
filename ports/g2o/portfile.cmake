@@ -27,6 +27,7 @@ vcpkg_from_github(
 file(REMOVE
     "${SOURCE_PATH}/cmake_modules/FindBLAS.cmake"
     "${SOURCE_PATH}/cmake_modules/FindCSparse.cmake"
+    "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
