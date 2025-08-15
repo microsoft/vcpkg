@@ -16,7 +16,7 @@ get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE
 add_library(ntuples INTERFACE)
 add_library(ntuples::ntuples ALIAS ntuples)
 target_include_directories(ntuples INTERFACE "${_IMPORT_PREFIX}/include")
-target_compile_features(ntuples INTERFACE cxx_std_20)
+target_compile_features(ntuples INTERFACE cxx_std_17)
 ]])
 
 vcpkg_install_copyright(FILE_LIST
