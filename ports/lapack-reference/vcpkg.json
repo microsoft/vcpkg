@@ -1,6 +1,7 @@
 {
   "name": "lapack-reference",
   "version": "3.12.1",
+  "port-version": 1,
   "description": "LAPACK - Linear Algebra PACKage",
   "homepage": "https://netlib.org/lapack/",
   "license": "BSD-3-Clause-Open-MPI",
@@ -19,7 +20,14 @@
     }
   ],
   "default-features": [
-    "blas-select"
+    {
+      "name": "blas-select",
+      "platform": "!windows | !static | mingw"
+    },
+    {
+      "name": "cblas",
+      "platform": "windows & static & !mingw"
+    }
   ],
   "features": {
     "blas-select": {

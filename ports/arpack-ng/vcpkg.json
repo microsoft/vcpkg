@@ -1,14 +1,36 @@
 {
   "name": "arpack-ng",
   "version": "3.9.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "ARPACK-NG is a collection of Fortran77 subroutines designed to solve large scale eigenvalue problems.",
   "homepage": "https://github.com/opencollab/arpack-ng",
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
-    "blas",
-    "lapack",
+    {
+      "name": "blas",
+      "default-features": false,
+      "features": [
+        "force-reference-blas"
+      ],
+      "platform": "windows & static & !mingw"
+    },
+    {
+      "name": "blas",
+      "platform": "!(windows & static & !mingw)"
+    },
+    {
+      "name": "lapack",
+      "default-features": false,
+      "features": [
+        "force-reference-lapack"
+      ],
+      "platform": "windows & static & !mingw"
+    },
+    {
+      "name": "lapack",
+      "platform": "!(windows & static & !mingw)"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

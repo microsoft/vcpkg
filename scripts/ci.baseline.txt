@@ -97,8 +97,8 @@ vcpkg-ci-blas:x64-linux=pass # openblas
 vcpkg-ci-blas:x64-osx=pass # accelerate framework
 vcpkg-ci-blas:x64-uwp=pass # openblas
 vcpkg-ci-blas:x64-windows-release=pass # openblas
-vcpkg-ci-blas:x64-windows-static-md=pass # lapack-reference[blas]
-vcpkg-ci-blas:x64-windows-static=pass # lapack-reference[blas]
+vcpkg-ci-blas:x64-windows-static-md=pass # openblas
+vcpkg-ci-blas:x64-windows-static=pass # openblas
 vcpkg-ci-blas:x64-windows=pass # openblas
 vcpkg-ci-blas:x86-windows=pass # openblas
 
@@ -109,8 +109,8 @@ clapack:x64-android=fail
 clapack:x64-linux=skip
 clapack:x64-osx=skip
 clapack:x64-windows-release=skip
-clapack:x64-windows-static-md=skip
-clapack:x64-windows-static=skip
+clapack:x64-windows-static-md=pass
+clapack:x64-windows-static=pass
 clapack:x64-windows=skip
 clapack:x86-windows=skip
 cpprestsdk:arm-neon-android=fail # std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
@@ -127,8 +127,8 @@ lapack-reference:x64-osx=skip
 lapack-reference:x64-uwp=skip
 #openblas:arm64-osx=skip
 #openblas:x64-osx=skip
-#openblas:x64-windows-static-md=skip
-#openblas:x64-windows-static=skip
+openblas:x64-windows-static-md=pass
+openblas:x64-windows-static=pass
 # </BLAS+LAPACK>
 ################################################################
 blitz:x64-android=fail

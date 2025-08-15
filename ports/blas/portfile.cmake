@@ -41,22 +41,24 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 # and for lapack-reference[blas], the DeMorgan'd inverse of that:
 # !uwp && !(windows && arm) && windows && static
 
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-    # Use Apple's accelerate framework where available
-    set(BLA_VENDOR Apple)
-    set(requires "")
-    set(libs "-framework Accelerate")
-    set(cflags "-framework Accelerate")
-elseif(VCPKG_TARGET_IS_UWP
-        OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-        OR VCPKG_TARGET_IS_MINGW
-        OR NOT VCPKG_TARGET_IS_WINDOWS
-        OR NOT (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
-    set(BLA_VENDOR OpenBLAS)
-    set(requires openblas)
-else()
+if("default-blas" IN_LIST FEATURES AND "force-reference-blas" IN_LIST FEATURES)
+    MESSAGE(ERROR "Cannot have both `default-blas` and `force-reference-blas` enabled. Disable default features if you want to use reference blas.")
+elseif("default-blas" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+        # Use Apple's accelerate framework where available
+        set(BLA_VENDOR Apple)
+        set(requires "")
+        set(libs "-framework Accelerate")
+        set(cflags "-framework Accelerate")
+    else()
+        set(BLA_VENDOR OpenBLAS)
+        set(requires openblas)
+    endif()
+elseif("force-reference-blas" IN_LIST FEATURES)
     set(BLA_VENDOR Generic)
     set(requires "blas-reference")
+else()
+    MESSAGE(ERROR "Enable either `default-blas` or `force-reference blas`.")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" @ONLY)
