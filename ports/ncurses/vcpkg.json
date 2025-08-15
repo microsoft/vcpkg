@@ -1,7 +1,6 @@
 {
   "name": "ncurses",
-  "version": "6.4",
-  "port-version": 3,
+  "version": "6.5",
   "description": "Free software emulation of curses in System V Release 4.0, and more",
   "homepage": "https://invisible-island.net/ncurses/announce.html",
   "license": "MIT",
@@ -11,5 +10,10 @@
       "name": "vcpkg-cmake-get-vars",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "check-size": {
+      "description": "compile-in code to detect screensize of serial terminals"
+    }
+  }
 }
