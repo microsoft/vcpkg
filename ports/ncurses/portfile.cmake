@@ -5,7 +5,7 @@ vcpkg_download_distfile(
         "ftp://ftp.invisible-island.net/ncurses/ncurses-${VERSION}.tar.gz"
         "https://ftp.gnu.org/gnu/ncurses/ncurses-${VERSION}.tar.gz"
     FILENAME "ncurses-${VERSION}.tgz"
-    SHA512 1c2efff87a82a57e57b0c60023c87bae93f6718114c8f9dc010d4c21119a2f7576d0225dab5f0a227c2cfc6fb6bdbd62728e407f35fce5bf351bb50cf9e0fd34
+    SHA512 fc5a13409d2a530a1325776dcce3a99127ddc2c03999cfeb0065d0eee2d68456274fb1c7b3cc99c1937bc657d0e7fca97016e147f93c7821b5a4a6837db821e8
 )
 
 vcpkg_extract_source_archive(
