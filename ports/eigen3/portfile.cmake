@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         restore-include-dir.patch   # Restore EIGEN3_INCLUDE_DIR variable to match the 3.4.0 behavior
+        fix-arm-neon-cxx03.patch   # Fix compilation with c++03 and clang on arm
 )
 
 vcpkg_cmake_configure(
