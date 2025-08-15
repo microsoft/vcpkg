@@ -4925,8 +4925,8 @@
       "port-version": 1
     },
     "libidn2": {
-      "baseline": "2.3.7",
-      "port-version": 2
+      "baseline": "2.3.8",
+      "port-version": 0
     },
     "libigl": {
       "baseline": "2.6.0",
