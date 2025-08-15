@@ -1,0 +1,11 @@
+--- a/include/licensecc/datatypes.h
++++ b/include/licensecc/datatypes.h
+@@ -25,7 +25,7 @@
+ #define DllExport __declspec(dllexport)
+ #endif
+ 
+-#include <licensecc_properties.h>
++#include "licensecc_properties.h"
+ 
+ typedef enum {
+ 	LICENSE_OK = 0,  // OK
