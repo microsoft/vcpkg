@@ -24,6 +24,12 @@
         { "name": "azure-storage-blobs-cpp"  },
         { "name": "azure-identity-cpp"  }
       ]
+    },
+    "curl": {
+      "description": "cURL support",
+      "dependencies": [
+        { "name": "curl", "default-features": false, "features": ["ssl"] }
+      ]
     }
   }
 }
