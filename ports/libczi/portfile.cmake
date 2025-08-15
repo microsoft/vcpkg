@@ -8,11 +8,19 @@ vcpkg_from_github(
     SHA512 69e3594b1d250b54788718938add39dba3ba00c5bb262ca5fc5ab8f522482f8c6037ce69234ea5cb809913f5aabc7de89e2da4650d0ea611af0af0f8cf5a08b4
 )
 
+# Translate enabled vcpkg features into CMake -D flags:
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTS
+    FEATURES
+        azureblobstore  LIBCZI_BUILD_AZURESDK_BASED_STREAM
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBCZI)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTS}
         -DLIBCZI_DO_NOT_SET_MSVC_RUNTIME_LIBRARY=ON  # set by vcpkg
         -DLIBCZI_BUILD_CZICMD=OFF  # could be feature
         -DLIBCZI_BUILD_DYNLIB=${BUILD_SHARED_LIBCZI}
