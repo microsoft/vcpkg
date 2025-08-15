@@ -17,18 +17,24 @@
     },
     "zstd"
   ],
-   "features": {
+  "features": {
     "azureblobstore": {
       "description": "Azure Blob Storage support",
       "dependencies": [
-        { "name": "azure-storage-blobs-cpp" },
-        { "name": "azure-identity-cpp" }
+        "azure-identity-cpp",
+        "azure-storage-blobs-cpp"
       ]
     },
     "curl": {
       "description": "cURL support",
       "dependencies": [
-        { "name": "curl", "default-features": false, "features": ["ssl"] }
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
       ]
     }
   }
