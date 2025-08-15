@@ -21,8 +21,8 @@
     "azureblobstore": {
       "description": "Azure Blob Storage support",
       "dependencies": [
-        { "name": "azure-storage-blobs-cpp"  },
-        { "name": "azure-identity-cpp"  }
+        { "name": "azure-storage-blobs-cpp" },
+        { "name": "azure-identity-cpp" }
       ]
     },
     "curl": {
