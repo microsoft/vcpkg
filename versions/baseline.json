@@ -2470,7 +2470,7 @@
     },
     "dlib": {
       "baseline": "20.0",
-      "port-version": 1
+      "port-version": 2
     },
     "dlpack": {
       "baseline": "1.1",
