@@ -409,7 +409,6 @@ pmdk:x64-osx=fail
 pmdk:x64-uwp=fail
 pmdk:x64-windows-static=fail
 pmdk:x86-windows=fail
-popsift:x64-windows-static-md=fail
 portable-snippets:arm-uwp=fail
 qbittorrent:x64-linux=fail # Not yet ready for these platforms.
 qbittorrent:x64-osx=fail # Not yet ready for these platforms.
