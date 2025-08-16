@@ -121,7 +121,7 @@ index fc6cec6..a56f6ca 100644
 +target_include_directories(metis INTERFACE $<INSTALL_INTERFACE:include>)
 +
 +find_package(GKlib CONFIG REQUIRED)
-+target_link_libraries(metis PRIVATE GKlib::GKlib)
++target_link_libraries(metis PRIVATE GKlib)
  
  if(METIS_INSTALL)
    install(TARGETS metis
