@@ -1,0 +1,49 @@
+{
+  "name": "dawn",
+  "version-string": "chromium_7349",
+  "description": [
+    "Dawn is an open-source and cross-platform implementation of the WebGPU standard.",
+    "More precisely it implements webgpu.h that is a one-to-one mapping with the WebGPU IDL."
+  ],
+  "homepage": "https://github.com/google/dawn",
+  "license": null,
+  "supports": "!android & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-gn",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-gn",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "metal",
+      "platform": "osx"
+    },
+    {
+      "name": "vulkan",
+      "platform": "windows | linux"
+    }
+  ],
+  "features": {
+    "metal": {
+      "description": "Metal backend support",
+      "supports": "osx"
+    },
+    "vulkan": {
+      "description": "Vulkan backend support",
+      "supports": "windows | linux"
+    },
+    "wayland": {
+      "description": "Wayland support",
+      "supports": "linux"
+    },
+    "x11": {
+      "description": "X11 support",
+      "supports": "linux"
+    }
+  }
+}
