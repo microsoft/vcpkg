@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libffi/libffi/releases/download/v${VERSION}/libffi-${VERSION}.tar.gz"
     FILENAME "libffi-${VERSION}.tar.gz"
-    SHA512 05344c6c1a1a5b44704f6cf99277098d1ea3ac1dc11c2a691c501786a214f76184ec0637135588630db609ce79e49df3dbd00282dd61e7f21137afba70e24ffe
+    SHA512 76974a84e3aee6bbd646a6da2e641825ae0b791ca6efdc479b2d4cbcd3ad607df59cffcf5031ad5bd30822961a8c6de164ac8ae379d1804acd388b1975cdbf4d
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -19,13 +19,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND options "CFLAGS=\${CFLAGS} ${linkage_flag}")
 endif()
 
-set(ccas_options "")
-vcpkg_cmake_get_vars(cmake_vars_file)
+vcpkg_cmake_get_vars(cmake_vars_file ADDITIONAL_LANGUAGES ASM)
 include("${cmake_vars_file}")
-set(ccas "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
 if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
     vcpkg_add_to_path("${SOURCE_PATH}")
-    set(ccas "msvcc.sh")
+    vcpkg_list(APPEND options "CCAS=msvcc.sh")
+    set(ccas_options "")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
         string(APPEND ccas_options " -m32")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -35,21 +34,14 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID STREQUAL "MSVC")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         string(APPEND ccas_options " -marm64")
     endif()
-endif()
-vcpkg_list(APPEND options "CCAS=${ccas}")
-if(ccas_options)
-    vcpkg_list(APPEND options "CCASFLAGS=\${CCASFLAGS}${ccas_options}")
-endif()
-
-set(configure_triplets DETERMINE_BUILD_TRIPLET)
-if(VCPKG_TARGET_IS_EMSCRIPTEN)
-    set(configure_triplets BUILD_TRIPLET "--host=wasm32-unknown-emscripten --build=\$(\$SHELL \"${SOURCE_PATH}/config.guess\")")
+    if(ccas_options)
+        vcpkg_list(APPEND options "CCASFLAGS=\${CCASFLAGS}${ccas_options}")
+    endif()
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    ${configure_triplets}
-    USE_WRAPPERS
+    LANGUAGES C CXX ASM
     OPTIONS
         --enable-portable-binary
         --disable-docs
@@ -57,7 +49,7 @@ vcpkg_configure_make(
         ${options}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

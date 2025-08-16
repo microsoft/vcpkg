@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/libphonenumber
     REF "v${VERSION}"
-    SHA512 965d4385027a07ed55cf01168530453e793ad5c8954ad5b94959396a4b7902e22f72d9f73c88a2e45f7502922783a0bae568040822e7bf4899bd26e6b0f86b2d
+    SHA512 de00750caea6a4ce7f78f0b681c7ef687218af7f43e851615618cf36c3ebb47f25461a1a3a5bde4834a97064c3846d388fa07f9fbac7bbe762621c2325e57c8f
     HEAD_REF master
     PATCHES 
         # fix compilation error due to deprecated warnings in protobuf generated files
@@ -13,6 +13,8 @@ vcpkg_from_github(
         fix-icui18n-lib-name.patch
         fix-find-protobuf.patch
         re2-2023-07-01-compat.patch
+        # enable C++17 for re2
+        enable-cpp17.patch
 )
 
 vcpkg_cmake_configure(

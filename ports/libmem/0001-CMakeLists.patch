@@ -113,7 +113,7 @@ index 534057a..6241a58 100644
 +	"${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake"
 +	INSTALL_DESTINATION "share/libmem"
 +)
-+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake" VERSION 5.0.4 COMPATIBILITY SameMajorVersion)
++write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake" VERSION "${VERSION}" COMPATIBILITY SameMajorVersion)
 +install(FILES
 +		"${CMAKE_CURRENT_BINARY_DIR}/libmem-config.cmake"
 +		"${CMAKE_CURRENT_BINARY_DIR}/libmem-config-version.cmake"

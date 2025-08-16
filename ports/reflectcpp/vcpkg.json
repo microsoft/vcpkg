@@ -1,6 +1,6 @@
 {
   "name": "reflectcpp",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "A C++ library for serialization and deserialization using reflection. Supports JSON, Avro, BSON, Cap'n Proto, CBOR, flexbuffers, msgpack, TOML, UBJSON, XML, YAML.",
   "homepage": "https://github.com/getml/reflect-cpp/",
   "license": "MIT",
@@ -91,7 +91,7 @@
       "dependencies": [
         {
           "name": "pugixml",
-          "version>=": "1.14"
+          "version>=": "1.15"
         }
       ]
     },

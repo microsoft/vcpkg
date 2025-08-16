@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.imcce.fr/content/medias/recherche/equipes/asd/calceph/calceph-${VERSION}.tar.gz"
     FILENAME "calceph-${VERSION}.tar.gz"
-    SHA512 81cddae9fa0d06758dbbb5fae486bd64eb087dc2ebf2d7b17fa89b6689b86e0e84d1412e6852e980ebed00a4c84a3b1b4ac00b89021f6d0bb2f370a98a6dad25
+    SHA512 d3f17a302dafee243a3c7698dd5b7e67550ba070cd3217c399e2cee5f90486d2be394ddcfe6dcc1b72f980e212d19bda50c4057fca05b032f6558794f191935a
 )
 
 vcpkg_extract_source_archive(

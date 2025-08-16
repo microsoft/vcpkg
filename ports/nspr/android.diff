@@ -1,0 +1,14 @@
+diff --git a/nspr/configure.in b/nspr/configure.in
+index 1a3e489..59e6347 100644
+--- a/nspr/configure.in
++++ b/nspr/configure.in
+@@ -153,6 +153,9 @@ mipsel-*android*)
+ esac
+ 
+ case "$target" in
++*-android*)
++    AC_DEFINE(ANDROID)
++    ;;
+ *-android*|*-linuxandroid*)
+     if test -z "$android_ndk" ; then
+        AC_MSG_ERROR([You must specify --with-android-ndk=/path/to/ndk when targeting Android.])

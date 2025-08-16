@@ -85,6 +85,15 @@ else
     OPTIONS_x86_64="${OPTIONS_x86}"
 fi
 
+case "@VCPKG_CMAKE_SYSTEM_NAME@" in
+    FreeBSD|OpenBSD)
+        MAKE_BINARY="gmake"
+        ;;
+    *)
+        MAKE_BINARY="make"
+        ;;
+esac
+
 build_ffmpeg() {
     # extract build architecture
     BUILD_ARCH=$1
@@ -102,11 +111,11 @@ build_ffmpeg() {
 
     echo "=== BUILDING ==="
 
-    make -j${JOBS} V=1
+    $MAKE_BINARY -j${JOBS} V=1
 
     echo "=== INSTALLING ==="
 
-    make install
+    $MAKE_BINARY install
 }
 
 cd "$PATH_TO_BUILD_DIR"
@@ -115,7 +124,7 @@ if [ $OSX_ARCH_COUNT -gt 0 ]; then
     for ARCH in $OSX_ARCHS; do
         echo "=== CLEANING FOR $ARCH ==="
 
-        make clean && make distclean
+        $MAKE_BINARY clean && $MAKE_BINARY distclean
 
         build_ffmpeg $ARCH --extra-cflags=-arch --extra-cflags=$ARCH --extra-ldflags=-arch --extra-ldflags=$ARCH
 
