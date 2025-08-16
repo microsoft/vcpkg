@@ -5516,10 +5516,6 @@
       "baseline": "1.4.0",
       "port-version": 0
     },
-    "tusclient": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "libu2f-server": {
       "baseline": "1.1.0",
       "port-version": 5
@@ -9762,6 +9758,10 @@
     },
     "turbobase64": {
       "baseline": "2023.8",
+      "port-version": 0
+    },
+    "tusclient": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "tvision": {
