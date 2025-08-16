@@ -5849,7 +5849,7 @@
       "port-version": 0
     },
     "llfio": {
-      "baseline": "2025-01-13",
+      "baseline": "2025-05-27",
       "port-version": 0
     },
     "llgi": {
@@ -6653,8 +6653,8 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "2023-11-22",
-      "port-version": 1
+      "baseline": "2025-05-21",
+      "port-version": 0
     },
     "neon2sse": {
       "baseline": "2024-11-24",
