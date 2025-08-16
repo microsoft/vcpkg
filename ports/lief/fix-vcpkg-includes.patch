@@ -24,19 +24,6 @@ index 8cbe7b2..994e9bf 100644
  
  
  #include "LIEF/PE/Builder.hpp"
-diff --git a/src/logging.cpp b/src/logging.cpp
-index 39936fe..f5e1345 100644
---- a/src/logging.cpp
-+++ b/src/logging.cpp
-@@ -20,7 +20,7 @@
- #include "logging.hpp"
- 
- #include "spdlog/spdlog.h"
--#include "spdlog/fmt/bundled/args.h"
-+#include <fmt/args.h>
- #include "spdlog/sinks/stdout_color_sinks.h"
- #include "spdlog/sinks/basic_file_sink.h"
- #include "spdlog/sinks/android_sink.h"
 diff --git a/src/utils.cpp b/src/utils.cpp
 index 0acbba1..b624a1d 100644
 --- a/src/utils.cpp
