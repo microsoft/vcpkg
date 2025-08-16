@@ -16,6 +16,27 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        # Subsystems
+        atomic   SDL_ATOMIC
+        audio    SDL_AUDIO
+        cpuinfo  SDL_CPUINFO
+        events   SDL_EVENTS
+        file     SDL_FILE
+        filesystem SDL_FILESYSTEM
+        haptic   SDL_HAPTIC
+        hidapi   SDL_HIDAPI
+        joystick SDL_JOYSTICK
+        loadso   SDL_LOADSO
+        locale   SDL_LOCALE
+        misc     SDL_MISC
+        power    SDL_POWER
+        render   SDL_RENDER
+        sensor   SDL_SENSOR
+        threads  SDL_THREADS
+        timers   SDL_TIMERS
+        video    SDL_VIDEO
+
+        # Dependencies
         alsa     SDL_ALSA
         dbus     SDL_DBUS
         ibus     SDL_IBUS

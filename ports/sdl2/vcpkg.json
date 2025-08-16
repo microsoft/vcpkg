@@ -16,6 +16,60 @@
   ],
   "default-features": [
     {
+      "name": "atomic"
+    },
+    {
+      "name": "audio"
+    },
+    {
+      "name": "cpuinfo"
+    },
+    {
+      "name": "events"
+    },
+    {
+      "name": "file"
+    },
+    {
+      "name": "filesystem"
+    },
+    {
+      "name": "haptic"
+    },
+    {
+      "name": "hidapi"
+    },
+    {
+      "name": "joystick"
+    },
+    {
+      "name": "loadso"
+    },
+    {
+      "name": "locale"
+    },
+    {
+      "name": "misc"
+    },
+    {
+      "name": "power"
+    },
+    {
+      "name": "render"
+    },
+    {
+      "name": "sensor"
+    },
+    {
+      "name": "threads"
+    },
+    {
+      "name": "timers"
+    },
+    {
+      "name": "video"
+    },
+    {
       "name": "dbus",
       "platform": "linux"
     },
@@ -33,6 +87,60 @@
     }
   ],
   "features": {
+    "atomic": {
+      "description": "Build with the Atomic subsystem enabled"
+    },
+    "audio": {
+      "description": "Build with the Audio subsystem enabled"
+    },
+    "cpuinfo": {
+      "description": "Build with the CPUinfo subsystem enabled"
+    },
+    "events": {
+      "description": "Build with the Events subsystem enabled"
+    },
+    "file": {
+      "description": "Build with the File subsystem enabled"
+    },
+    "filesystem": {
+      "description": "Build with the Filesystem subsystem enabled"
+    },
+    "haptic": {
+      "description": "Build with the Haptic subsystem enabled"
+    },
+    "hidapi": {
+      "description": "Build with the Hidapi subsystem enabled"
+    },
+    "joystick": {
+      "description": "Build with the Joystick subsystem enabled"
+    },
+    "loadso": {
+      "description": "Build with the Loadso subsystem enabled"
+    },
+    "locale": {
+      "description": "Build with the Locale subsystem enabled"
+    },
+    "misc": {
+      "description": "Build with the Misc subsystem enabled"
+    },
+    "power": {
+      "description": "Build with the Power subsystem enabled"
+    },
+    "render": {
+      "description": "Build with the Render subsystem enabled"
+    },
+    "sensor": {
+      "description": "Build with the Sensor subsystem enabled"
+    },
+    "threads": {
+      "description": "Build with the Threads subsystem enabled"
+    },
+    "timers": {
+      "description": "Build with the Timers subsystem enabled"
+    },
+    "video": {
+      "description": "Build with the Video subsystem enabled"
+    },
     "alsa": {
       "description": "Support for alsa audio",
       "dependencies": [
