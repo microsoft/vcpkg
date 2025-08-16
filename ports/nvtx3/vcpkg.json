@@ -1,0 +1,17 @@
+{
+  "name": "nvtx3",
+  "version": "3.2.2",
+  "description": "The NVIDIA Tools Extension SDK (NVTX) is a C-based Application Programming Interface (API) for annotating events, code ranges, and resources in your applications.",
+  "homepage": "https://nvidia.github.io/NVTX/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
