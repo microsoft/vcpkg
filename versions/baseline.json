@@ -5516,7 +5516,7 @@
       "baseline": "1.4.0",
       "port-version": 0
     },
-    "libtusclient": {
+    "tusclient": {
       "baseline": "1.0.0",
       "port-version": 0
     },
