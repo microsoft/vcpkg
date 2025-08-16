@@ -26,6 +26,7 @@ set(${PORT}_PATCHES
         fix-missing-include.patch
         moltenvk.patch
         xcodebuild-not-installed.patch
+        fix-libresolv-test.patch
 )
  
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
