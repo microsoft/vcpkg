@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-source-patterns/collection
     REF "${VERSION}"
-    SHA512 baa516ab4334934beff42b62ba34d4ddf3ebfd1a06f798ad24fe6bdc9e70adeb769de7583629ae1ad4ecf177d8a4d245ed103d43ab459de67a0c5c4128d54512
+    SHA512 1b9504b670fd98358b7253d421244c5e2adc9391d759e653b344688a19c9973ee88da5c2e233baf759a91683364ddde85702f8211003f2cf95ccc18ef6732a52
     HEAD_REF main
 )
 
