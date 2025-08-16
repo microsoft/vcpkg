@@ -1,6 +1,6 @@
 {
   "name": "qtquick3d",
-  "version": "6.9.0",
+  "version": "6.9.1",
   "description": "Qt Quick 3D provides a high-level API for creating 3D content and 3D user interfaces based on Qt Quick.",
   "homepage": "https://www.qt.io/",
   "license": null,

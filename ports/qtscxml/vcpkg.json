@@ -1,6 +1,6 @@
 {
   "name": "qtscxml",
-  "version": "6.9.0",
+  "version": "6.9.1",
   "description": "The Qt SCXML module provides functionality to create state machines from SCXML files.",
   "homepage": "https://www.qt.io/",
   "license": null,
