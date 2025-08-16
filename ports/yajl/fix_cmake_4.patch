@@ -1,0 +1,45 @@
+diff --git a/reformatter/CMakeLists.txt b/reformatter/CMakeLists.txt
+index 52a9bee8a6..0e826a14cf 100644
+--- a/reformatter/CMakeLists.txt
++++ b/reformatter/CMakeLists.txt
+@@ -35,9 +35,4 @@ IF (NOT WIN32)
+ ENDIF (NOT WIN32)
+ 
+ # copy the binary into the output directory
+-GET_TARGET_PROPERTY(binPath json_reformat LOCATION)
+-
+-ADD_CUSTOM_COMMAND(TARGET json_reformat POST_BUILD
+-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${binPath} ${binDir})
+-
+ INSTALL(TARGETS json_reformat RUNTIME DESTINATION bin)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 05596be9e0..5bd41da522 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -67,10 +67,7 @@ CONFIGURE_FILE(yajl.pc.cmake ${shareDir}/yajl.pc)
+ FOREACH (header ${PUB_HDRS})
+   SET (header ${CMAKE_CURRENT_SOURCE_DIR}/${header})
+ 
+-  EXEC_PROGRAM(${CMAKE_COMMAND} ARGS -E copy_if_different ${header} ${incDir})
+-
+-  ADD_CUSTOM_COMMAND(TARGET yajl_s POST_BUILD
+-      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${header} ${incDir})
++  file(COPY "${header}" DESTINATION "${incDir}")
+ ENDFOREACH (header ${PUB_HDRS})
+ 
+ INCLUDE_DIRECTORIES(${incDir}/..)
+diff --git a/verify/CMakeLists.txt b/verify/CMakeLists.txt
+index 967fca1607..85fd080207 100644
+--- a/verify/CMakeLists.txt
++++ b/verify/CMakeLists.txt
+@@ -28,10 +28,4 @@ ADD_EXECUTABLE(json_verify ${SRCS})
+ 
+ TARGET_LINK_LIBRARIES(json_verify yajl_s)
+ 
+-# copy in the binary
+-GET_TARGET_PROPERTY(binPath json_verify LOCATION)
+-
+-ADD_CUSTOM_COMMAND(TARGET json_verify POST_BUILD
+-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${binPath} ${binDir})
+-
+ INSTALL(TARGETS json_verify RUNTIME DESTINATION bin)

@@ -1,0 +1,12 @@
+diff --git a/modules/ECMSetupVersion.cmake b/modules/ECMSetupVersion.cmake
+index 7164c9a0bd..408ef33638 100644
+--- a/modules/ECMSetupVersion.cmake
++++ b/modules/ECMSetupVersion.cmake
+@@ -112,7 +112,6 @@ function(ecm_setup_version _version)
+     set(use_project_version FALSE)
+     cmake_policy(GET CMP0048 project_version_policy)
+     if(project_version_policy STREQUAL "NEW")
+-        set(project_manages_version TRUE)
+         if(_version STREQUAL "PROJECT")
+             set(use_project_version TRUE)
+         endif()

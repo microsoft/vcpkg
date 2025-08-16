@@ -12,6 +12,7 @@ vcpkg_from_bitbucket(
         pthread.diff
         compiler-target.diff
         neon.diff
+        fix-cmake-4.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
