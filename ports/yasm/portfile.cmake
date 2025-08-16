@@ -9,6 +9,7 @@ vcpkg_from_github(
         cmake-4.diff
         fix-cross-build.patch
         fix-overlay-pdb.patch
+        cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

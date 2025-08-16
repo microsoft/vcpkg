@@ -46,6 +46,11 @@ index 153a4a1..9b37ef4 100644
  
  if (BUILD_STATIC_LIBS)
      # Static library for jsonnet command-line tool.
+     add_library(libjsonnet++_static STATIC ${LIBJSONNETPP_SOURCE})
+-    add_dependencies(libjsonnet++_static jsonnet)
+     target_link_libraries(libjsonnet++_static libjsonnet_static)
+     set_target_properties(libjsonnet++_static PROPERTIES OUTPUT_NAME jsonnet++)
+     install(TARGETS libjsonnet++_static DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 @@ -43,6 +44,7 @@ else()
      add_library(libjsonnet++_for_binaries ALIAS libjsonnet++_static)
  endif()

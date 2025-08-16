@@ -29,6 +29,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         fix-status-code-path.patch
+        files-do-not-exist.patch
 )
 
 # Because outcome's deployed files are header-only, the debug build is not necessary

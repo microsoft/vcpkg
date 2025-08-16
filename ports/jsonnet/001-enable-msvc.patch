@@ -78,4 +78,6 @@ index a481d9f..d4829f8 100644
  # Standard library build target that libjsonnet can depend on.
  add_custom_target(stdlib ALL
  	DEPENDS ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h)
++else()
++add_custom_target(stdlib)
 +endif()
