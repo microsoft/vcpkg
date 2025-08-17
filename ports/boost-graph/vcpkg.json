@@ -67,10 +67,6 @@
       "version>=": "1.89.0"
     },
     {
-      "name": "boost-geometry",
-      "version>=": "1.89.0"
-    },
-    {
       "name": "boost-headers",
       "version>=": "1.89.0"
     },

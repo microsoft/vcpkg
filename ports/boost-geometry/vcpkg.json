@@ -55,6 +55,10 @@
       "version>=": "1.89.0"
     },
     {
+      "name": "boost-graph",
+      "version>=": "1.89.0"
+    },
+    {
       "name": "boost-headers",
       "version>=": "1.89.0"
     },
