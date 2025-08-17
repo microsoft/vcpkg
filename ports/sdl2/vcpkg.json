@@ -15,68 +15,32 @@
     }
   ],
   "default-features": [
-    {
-      "name": "atomic"
-    },
-    {
-      "name": "audio"
-    },
-    {
-      "name": "cpuinfo"
-    },
-    {
-      "name": "events"
-    },
-    {
-      "name": "file"
-    },
-    {
-      "name": "filesystem"
-    },
-    {
-      "name": "haptic"
-    },
-    {
-      "name": "hidapi"
-    },
-    {
-      "name": "joystick"
-    },
-    {
-      "name": "loadso"
-    },
-    {
-      "name": "locale"
-    },
-    {
-      "name": "misc"
-    },
-    {
-      "name": "power"
-    },
-    {
-      "name": "render"
-    },
-    {
-      "name": "sensor"
-    },
-    {
-      "name": "threads"
-    },
-    {
-      "name": "timers"
-    },
-    {
-      "name": "video"
-    },
+    "atomic",
+    "audio",
+    "cpuinfo",
     {
       "name": "dbus",
       "platform": "linux"
     },
+    "events",
+    "file",
+    "filesystem",
+    "haptic",
+    "hidapi",
     {
       "name": "ibus",
       "platform": "linux"
     },
+    "joystick",
+    "loadso",
+    "locale",
+    "misc",
+    "power",
+    "render",
+    "sensor",
+    "threads",
+    "timers",
+    "video",
     {
       "name": "wayland",
       "platform": "linux"
@@ -87,6 +51,12 @@
     }
   ],
   "features": {
+    "alsa": {
+      "description": "Support for alsa audio",
+      "dependencies": [
+        "alsa"
+      ]
+    },
     "atomic": {
       "description": "Build with the Atomic subsystem enabled"
     },
@@ -95,6 +65,16 @@
     },
     "cpuinfo": {
       "description": "Build with the CPUinfo subsystem enabled"
+    },
+    "dbus": {
+      "description": "Build with D-Bus support",
+      "dependencies": [
+        {
+          "name": "dbus",
+          "default-features": false,
+          "platform": "linux"
+        }
+      ]
     },
     "events": {
       "description": "Build with the Events subsystem enabled"
@@ -110,6 +90,10 @@
     },
     "hidapi": {
       "description": "Build with the Hidapi subsystem enabled"
+    },
+    "ibus": {
+      "description": "Build with ibus IME support",
+      "supports": "linux"
     },
     "joystick": {
       "description": "Build with the Joystick subsystem enabled"
@@ -129,6 +113,12 @@
     "render": {
       "description": "Build with the Render subsystem enabled"
     },
+    "samplerate": {
+      "description": "Use libsamplerate for audio rate conversion",
+      "dependencies": [
+        "libsamplerate"
+      ]
+    },
     "sensor": {
       "description": "Build with the Sensor subsystem enabled"
     },
@@ -140,32 +130,6 @@
     },
     "video": {
       "description": "Build with the Video subsystem enabled"
-    },
-    "alsa": {
-      "description": "Support for alsa audio",
-      "dependencies": [
-        "alsa"
-      ]
-    },
-    "dbus": {
-      "description": "Build with D-Bus support",
-      "dependencies": [
-        {
-          "name": "dbus",
-          "default-features": false,
-          "platform": "linux"
-        }
-      ]
-    },
-    "ibus": {
-      "description": "Build with ibus IME support",
-      "supports": "linux"
-    },
-    "samplerate": {
-      "description": "Use libsamplerate for audio rate conversion",
-      "dependencies": [
-        "libsamplerate"
-      ]
     },
     "vulkan": {
       "description": "Vulkan functionality for SDL"
