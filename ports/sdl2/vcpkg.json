@@ -16,9 +16,15 @@
     }
   ],
   "default-features": [
-    "atomic",
+    {
+      "name": "atomic",
+      "platform": "!emscripten"
+    },
     "audio",
-    "cpuinfo",
+    {
+      "name": "cpuinfo",
+      "platform": "!emscripten"
+    },
     {
       "name": "dbus",
       "platform": "linux"
@@ -33,7 +39,10 @@
       "platform": "linux"
     },
     "joystick",
-    "loadso",
+    {
+      "name": "loadso",
+      "platform": "!emscripten"
+    },
     "locale",
     "misc",
     "power",
@@ -57,13 +66,15 @@
       ]
     },
     "atomic": {
-      "description": "Build with the Atomic subsystem enabled"
+      "description": "Build with the Atomic subsystem enabled",
+      "supports": "!emscripten"
     },
     "audio": {
       "description": "Build with the Audio subsystem enabled"
     },
     "cpuinfo": {
-      "description": "Build with the CPUinfo subsystem enabled"
+      "description": "Build with the CPUinfo subsystem enabled",
+      "supports": "!emscripten"
     },
     "dbus": {
       "description": "Build with D-Bus support",
@@ -85,7 +96,16 @@
       "description": "Build with the Filesystem subsystem enabled"
     },
     "haptic": {
-      "description": "Build with the Haptic subsystem enabled"
+      "description": "Build with the Haptic subsystem enabled",
+      "dependencies": [
+        {
+          "name": "sdl2",
+          "default-features": false,
+          "features": [
+            "joystick"
+          ]
+        }
+      ]
     },
     "hidapi": {
       "description": "Build with the Hidapi subsystem enabled"
@@ -98,7 +118,8 @@
       "description": "Build with the Joystick subsystem enabled"
     },
     "loadso": {
-      "description": "Build with the Loadso subsystem enabled"
+      "description": "Build with the Loadso subsystem enabled",
+      "supports": "!emscripten"
     },
     "locale": {
       "description": "Build with the Locale subsystem enabled"
@@ -122,7 +143,17 @@
       "description": "Build with the Sensor subsystem enabled"
     },
     "video": {
-      "description": "Build with the Video subsystem enabled"
+      "description": "Build with the Video subsystem enabled",
+      "dependencies": [
+        {
+          "name": "sdl2",
+          "default-features": false,
+          "features": [
+            "loadso"
+          ],
+          "platform": "windows"
+        }
+      ]
     },
     "vulkan": {
       "description": "Vulkan functionality for SDL"
