@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc2
     REF "v${VERSION}"
-    SHA512 7c40a3b64d956a2141d482bfac65601a999e068262091c51525bde9e05a3667109c5f275688213af0caebbb439cb3004a76f45cb216a468e0793f20e04cc1ba3
+    SHA512 ab9f1846edd7fde710508597e3dfe43f80bb35a20ce913984dfc3c4212c71c009cfc711a330beb6c19858170911c658df463b2b50bd6a1422e656e2bf6e53813
     HEAD_REF main
-    PATCHES
-        configure-binary-dir.patch # https://github.com/Blosc/c-blosc2/pull/679
-        cmake-deps.patch # https://github.com/Blosc/c-blosc2/pull/682
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLOSC2_STATIC)
