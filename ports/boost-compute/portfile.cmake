@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/compute
     REF boost-${VERSION}
-    SHA512 e11d4618f69c7dc55a2b99288602eadf5223c252adf217247c21008cd784f34a91ff383cb9a7ecd8d6b46707facb65a0778944519b1476bf74b16fab55e3fbaf
+    SHA512 50aa3b79920b0056552b0988046a1d11016684085cd514bc8d8904e7ed842c248cbf9df1aeb0b9c2c38d8dfd8845ed20c5eca8e232cb719c302a0bee772bf312
     HEAD_REF master
     PATCHES
         opt-filesystem.diff

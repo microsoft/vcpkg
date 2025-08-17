@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.88.0",
+    $version = "1.89.0",
 # This script treats support statements as platform expressions. This is incorrect
 # in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
 # boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
@@ -29,8 +29,6 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
-    'boost-charconv' = 1;
-    'boost-locale' = 1;
 }
 
 function Get-PortVersion {
