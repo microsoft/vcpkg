@@ -21,6 +21,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/uvw)
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/uvw/config.h" "#ifndef UVW_AS_LIB" "#define UVW_AS_LIB\n#ifndef UVW_AS_LIB")
+
 file(READ "${CURRENT_PACKAGES_DIR}/share/uvw/uvwConfig.cmake" cmake_config)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/uvw/uvwConfig.cmake"
 "include(CMakeFindDependencyMacro)

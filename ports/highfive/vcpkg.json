@@ -1,7 +1,7 @@
 {
   "name": "highfive",
-  "version": "3.0.0",
-  "description": "HighFive is a modern header-only C++/C++11 friendly interface for libhdf5",
+  "version": "3.1.1",
+  "description": "HighFive is a modern, user-friendly, header-only, C++14 interface for libhdf5.",
   "homepage": "https://github.com/highfive-devs/highfive",
   "license": "BSL-1.0",
   "dependencies": [

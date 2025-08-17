@@ -2135,7 +2135,6 @@ gstreamer[x11](android | osx) = feature-fails # no system X11 in CI
 hdf5[fortran](android | windows) = feature-fails # No fortran compiler
 hdf5[fortran,parallel](linux | osx) = options # Fortran disabled in port openmpi
 hdf5[threadsafe](android) = feature-fails # pthread_setcancelstate
-highway[contrib](osx) = feature-fails # clang: fatal error: error in backend: Calling convention SVE_VectorCall is unsupported on Darwin.
 hunspell[tools](windows) = feature-fails # error C2065: 'mode_t': undeclared identifier. See https://github.com/microsoft/vcpkg/issues/30633
 igraph[openmp](osx) = feature-fails # openmp setup needed
 imgui[core,sdl2-binding](uwp) = options # sdl2-binding fails to build when build together with docking-experimental => exclude from all
