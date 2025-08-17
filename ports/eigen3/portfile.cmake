@@ -4,12 +4,11 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libeigen/eigen
-    REF 4a2c4901ce1627c9511d2f23d3a33d903c42069f # 3.4.1, from 3.4 branch on Jul 07, 2025
-    SHA512 3711944483d5dedd685f9b280322803ce5f873156ee0e9aa8e6c8686fbc7e4afb780d2ca39a694db8be651f3e776f2e5a09e69b315520ed2eddd5b638813d0c6
+    REF eb57d4bdf1052f27bc575a8850dbc63eec6e9870 # from 3.4 branch on Aug 17, 2025 (3.4.1-250817)
+    SHA512 6c7d7b12492d24d3c25e39a04322d9182b1f6f78ed617a1bc4086cca14b1673cf5b9f8e67dd4bb7db5e0544cf24928e2afbe27af094761a65cc61bc6fd20fdab
     HEAD_REF master
     PATCHES
         restore-include-dir.patch   # Restore EIGEN3_INCLUDE_DIR variable to match the 3.4.0 behavior
-        fix-arm-neon-cxx03.patch   # Fix compilation with c++03 and clang on arm
 )
 
 vcpkg_cmake_configure(
