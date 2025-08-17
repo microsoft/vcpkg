@@ -11,6 +11,28 @@ index 6a8f0f9e1..c44f92eb4 100644
    else()
      find_package(Threads REQUIRED)
    endif()
+diff --git a/cmake/FindEigen3.cmake b/cmake/FindEigen3.cmake
+index 0d2b3cedd..02c2b50d2 100644
+--- a/cmake/FindEigen3.cmake
++++ b/cmake/FindEigen3.cmake
+@@ -1,7 +1,7 @@
+ # - Try to find Eigen3 lib
+ #
+ # This module supports requiring a minimum version, e.g. you can do
+-#   find_package(Eigen3 3.1.2)
++#   find_package(Eigen3 3.1.2 REQUIRED)
+ # to require version 3.1.2 or newer of Eigen3.
+ #
+ # Once done this will define
+@@ -70,7 +70,7 @@ else (EIGEN3_INCLUDE_DIR)
+   # search first if an Eigen3Config.cmake is available in the system,
+   # if successful this would set EIGEN3_INCLUDE_DIR and the rest of
+   # the script will work as usual
+-  find_package(Eigen3 ${Eigen3_FIND_VERSION} NO_MODULE QUIET)
++  find_package(Eigen3 ${Eigen3_FIND_VERSION} NO_MODULE REQUIRED)
+ 
+   if(NOT EIGEN3_INCLUDE_DIR)
+     find_path(EIGEN3_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library
 diff --git a/cmake/FindMKL.cmake b/cmake/FindMKL.cmake
 index 6f8a2740f..acf43af4d 100644
 --- a/cmake/FindMKL.cmake

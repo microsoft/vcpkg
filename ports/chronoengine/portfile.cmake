@@ -8,10 +8,7 @@ vcpkg_from_github(
         find_package_required.patch
 )
 
-file(REMOVE 
-    "${SOURCE_PATH}/cmake/FindTBB.cmake"
-    "${SOURCE_PATH}/cmake/FindEigen3.cmake"
-)
+file(REMOVE "${SOURCE_PATH}/cmake/FindTBB.cmake")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS
