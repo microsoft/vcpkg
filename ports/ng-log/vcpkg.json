@@ -7,6 +7,10 @@
   "dependencies": [
     "gflags",
     {
+      "name": "libunwind",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
