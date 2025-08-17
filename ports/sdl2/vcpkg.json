@@ -39,8 +39,6 @@
     "power",
     "render",
     "sensor",
-    "threads",
-    "timers",
     "video",
     {
       "name": "wayland",
@@ -122,12 +120,6 @@
     },
     "sensor": {
       "description": "Build with the Sensor subsystem enabled"
-    },
-    "threads": {
-      "description": "Build with the Threads subsystem enabled"
-    },
-    "timers": {
-      "description": "Build with the Timers subsystem enabled"
     },
     "video": {
       "description": "Build with the Video subsystem enabled"

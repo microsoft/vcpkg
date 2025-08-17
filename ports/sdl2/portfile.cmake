@@ -32,8 +32,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         power    SDL_POWER
         render   SDL_RENDER
         sensor   SDL_SENSOR
-        threads  SDL_THREADS
-        timers   SDL_TIMERS
         video    SDL_VIDEO
 
         # Dependencies
