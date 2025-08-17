@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.88.0",
+    $version = "1.89.0",
 # This script treats support statements as platform expressions. This is incorrect
 # in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
 # boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
@@ -29,9 +29,6 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
-    'boost-charconv' = 1;
-    'boost-locale' = 1;
-    'boost-container' = 1;
 }
 
 function Get-PortVersion {
@@ -57,11 +54,20 @@ $portData = @{
         }
     };
     "boost-asio" = @{
+        "default-features" = @("deadline-timer"; @{ "name" = "spawn"; "platform" = "!uwp & !emscripten" };);
         "features" = @{
             "ssl" = @{
                 "description"  = "Build with SSL support";
                 "dependencies" = @(@{ "name" = "openssl"; "platform" = "!emscripten" });
+            };
+            "deadline-timer" = @{
+                "description"  = "Build with deadline_timer support";
+                "dependencies" = @("boost-date-time");
             }
+            "spawn" = @{
+                "description"  = "Build with spawn (stackful coroutines) support";
+                "dependencies" = @(@{ "name" = "boost-context"; "platform" = "!uwp & !emscripten" });
+            };
         }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
@@ -666,6 +672,13 @@ foreach ($library in $libraries) {
                 # Boost.Beast only used for MQTT connections over WebSocket
                 # See CMakeLists.txt
                 -not ($library -eq 'mqtt5' -and $_ -eq 'beast')
+            }
+        )
+
+        # Remove cyclic dependencies
+        $deps = @($deps `
+            | Where-Object {
+                -not ($library -eq 'graph' -and $_ -eq 'geometry')
             }
         )
 
