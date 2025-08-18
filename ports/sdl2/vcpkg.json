@@ -7,6 +7,23 @@
   "license": "Zlib",
   "dependencies": [
     {
+      "name": "sdl2",
+      "default-features": false,
+      "features": [
+        "video"
+      ],
+      "platform": "uwp"
+    },
+    {
+      "name": "sdl2",
+      "default-features": false,
+      "features": [
+        "haptic",
+        "joystick"
+      ],
+      "platform": "android"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
