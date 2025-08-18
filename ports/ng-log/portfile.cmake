@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ng-log/ng-log
     REF "v${VERSION}"
-    SHA512 bc97ab17f7421003d8dd7cd42cfb6880006c7d9b84d3201df5e14536f62cc39cafa6e7e1f6f1a34d48d085cdf557b90faf347f672b5fb29c92cc1b2859fde32d
+    SHA512 0685e92f5d147d162be71e666cfaae52aaf23b7f3e3d5bc1384345ac05dfd16e7163ff7c1c7d83a70fb00fb56a5c9be6a246c0690d9fb01ba2b5c1576ee8787b
     HEAD_REF master
 )
 
