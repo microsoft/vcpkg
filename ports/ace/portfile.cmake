@@ -22,6 +22,8 @@ endif()
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        p2453.patch
 )
 
 set(ACE_ROOT "${SOURCE_PATH}")
