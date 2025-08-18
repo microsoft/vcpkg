@@ -1,11 +1,12 @@
 diff --git a/src/core/src/runtime/compute_hash.cpp b/src/core/src/runtime/compute_hash.cpp
-index b1b50df..c346bf3 100644
+index b1b50df..87804fd 100644
 --- a/src/core/src/runtime/compute_hash.cpp
 +++ b/src/core/src/runtime/compute_hash.cpp
-@@ -98,14 +98,14 @@ static const uint64_t K_PULL[] = {
+@@ -97,15 +97,14 @@ static const uint64_t K_PULL[] = {
+     0x05cf79dea9ac37d6,  // x^(64*16)
      0x001067e571d7d5c2   // x^(64*17)
  };
- 
+-
 -constexpr uint64_t K_2_3_OFF = 0lu * 2lu * sizeof(uint64_t);
 -constexpr uint64_t K_4_5_OFF = 1lu * 2lu * sizeof(uint64_t);
 -constexpr uint64_t K_6_7_OFF = 2lu * 2lu * sizeof(uint64_t);
@@ -14,18 +15,18 @@ index b1b50df..c346bf3 100644
 -constexpr uint64_t K_12_13_OFF = 5lu * 2lu * sizeof(uint64_t);
 -constexpr uint64_t K_14_15_OFF = 6lu * 2lu * sizeof(uint64_t);
 -constexpr uint64_t K_16_17_OFF = 7lu * 2lu * sizeof(uint64_t);
-+constexpr uint64_t K_2_3_OFF = static_cast<Xbyak::RegExp>(0lu * 2lu * sizeof(uint64_t));
-+constexpr uint64_t K_4_5_OFF = static_cast<Xbyak::RegExp>(1lu * 2lu * sizeof(uint64_t));
-+constexpr uint64_t K_6_7_OFF = static_cast<Xbyak::RegExp>(2lu * 2lu * sizeof(uint64_t));
-+constexpr uint64_t K_8_9_OFF = static_cast<Xbyak::RegExp>(3lu * 2lu * sizeof(uint64_t));
-+constexpr uint64_t K_10_11_OFF = static_cast<Xbyak::RegExp>(4lu * 2lu * sizeof(uint64_t));
-+constexpr uint64_t K_12_13_OFF = static_cast<Xbyak::RegExp>(5lu * 2lu * sizeof(uint64_t));
-+constexpr uint64_t K_14_15_OFF = static_cast<Xbyak::RegExp>(6lu * 2lu * sizeof(uint64_t));
-+constexpr uint64_t K_16_17_OFF = static_cast<Xbyak::RegExp>(7lu * 2lu * sizeof(uint64_t));
++constexpr size_t K_2_3_OFF = 0u * 2u * sizeof(uint64_t);
++constexpr size_t K_4_5_OFF = 1u * 2u * sizeof(uint64_t);
++constexpr size_t K_6_7_OFF = 2u * 2u * sizeof(uint64_t);
++constexpr size_t K_8_9_OFF = 3u * 2u * sizeof(uint64_t);
++constexpr size_t K_10_11_OFF = 4u * 2u * sizeof(uint64_t);
++constexpr size_t K_12_13_OFF = 5u * 2u * sizeof(uint64_t);
++constexpr size_t K_14_15_OFF = 6u * 2u * sizeof(uint64_t);
++constexpr size_t K_16_17_OFF = 7u * 2u * sizeof(uint64_t);
  
  class HashBase : public Generator {
  protected:
-@@ -430,13 +430,13 @@ void ComputeHash<avx512_core>::bulk_fold(const Vmm& v_dst) {
+@@ -430,13 +429,13 @@ void ComputeHash<avx512_core>::bulk_fold(const Vmm& v_dst) {
  
      if (m_jcp.type == FIRST_THREAD || m_jcp.type == N_THREAD) {
          add(r64_src_ptr, r64_bulk_step);
@@ -43,7 +44,7 @@ index b1b50df..c346bf3 100644
  
      sub(r64_work_amount, static_cast<uint32_t>(get_vlen() * 2lu - xmm_len));
  
-@@ -447,13 +447,13 @@ void ComputeHash<avx512_core>::bulk_fold(const Vmm& v_dst) {
+@@ -447,13 +446,13 @@ void ComputeHash<avx512_core>::bulk_fold(const Vmm& v_dst) {
  
          if (m_jcp.type == FIRST_THREAD || m_jcp.type == N_THREAD) {
              add(r64_src_ptr, r64_bulk_step);
@@ -61,7 +62,7 @@ index b1b50df..c346bf3 100644
  
          if (is_vpclmulqdq) {
              vpclmulqdq(v_aux_0, v_dst_0, v_k_loop, 0b00000000);
-@@ -519,10 +519,10 @@ void ComputeHash<avx512_core>::bulk_fold(const Vmm& v_dst) {
+@@ -519,10 +518,10 @@ void ComputeHash<avx512_core>::bulk_fold(const Vmm& v_dst) {
          if (is_vpclmulqdq) {
              uni_vmovdqu64(ptr[r64_dst_ptr], v_dst_0);
          } else {
@@ -76,7 +77,7 @@ index b1b50df..c346bf3 100644
          }
      }
  
-@@ -647,14 +647,14 @@ void ComputeHash<avx512_core>::join(const Vmm& v_dst) {
+@@ -647,14 +646,14 @@ void ComputeHash<avx512_core>::join(const Vmm& v_dst) {
      }
  
      mov(r64_aux, ptr[r64_params + GET_OFF(intermediate_ptr)]);
@@ -93,7 +94,7 @@ index b1b50df..c346bf3 100644
  
      uni_vmovdqu64(xmm_src_0, ptr[r64_aux]);
      vpclmulqdq(xmm_aux_0, xmm_src_0, ptr[r64_k_ptr + K_14_15_OFF], 0b00000000);
-@@ -662,37 +662,37 @@ void ComputeHash<avx512_core>::join(const Vmm& v_dst) {
+@@ -662,37 +661,37 @@ void ComputeHash<avx512_core>::join(const Vmm& v_dst) {
      uni_vpxorq(xmm_src_last, xmm_src_last, xmm_aux_0);
      uni_vpxorq(xmm_src_last, xmm_src_last, xmm_src_0);
  
