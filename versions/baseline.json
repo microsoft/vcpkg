@@ -8777,7 +8777,7 @@
       "port-version": 0
     },
     "sfl": {
-      "baseline": "1.10.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "sfml": {
