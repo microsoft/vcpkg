@@ -76,3 +76,5 @@ file(INSTALL "${PACKAGE_PATH}/native/bin/GameConfigEditorDependencies" DESTINATI
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
+
+message(STATUS "BY USING THE SOFTWARE, YOU ACCEPT THESE TERMS: https://www.nuget.org/packages/Microsoft.GDK.PC/${VERSION}/License")
