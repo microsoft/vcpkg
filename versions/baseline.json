@@ -6689,7 +6689,7 @@
       "port-version": 4
     },
     "ng-log": {
-      "baseline": "0.8.1",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "nghttp2": {
