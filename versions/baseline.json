@@ -7192,6 +7192,10 @@
       "baseline": "4.6.1",
       "port-version": 0
     },
+    "osp-collection": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "otl": {
       "baseline": "4.0.487",
       "port-version": 0
