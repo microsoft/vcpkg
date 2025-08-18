@@ -169,6 +169,14 @@
             "loadso"
           ],
           "platform": "windows"
+        },
+        {
+          "name": "sdl2",
+          "default-features": false,
+          "features": [
+            "render"
+          ],
+          "platform": "uwp"
         }
       ]
     },
