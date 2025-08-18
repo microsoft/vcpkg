@@ -2,7 +2,7 @@
   "name": "vcpkg-ci-boost",
   "version": "1",
   "$comment": "trigger CI build",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Boost features testing within CI.",
   "dependencies": [
     "boost",
