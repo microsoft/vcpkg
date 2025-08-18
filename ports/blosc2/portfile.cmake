@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 ab9f1846edd7fde710508597e3dfe43f80bb35a20ce913984dfc3c4212c71c009cfc711a330beb6c19858170911c658df463b2b50bd6a1422e656e2bf6e53813
     HEAD_REF main
+    PATCHES
+        config-typo.patch # https://github.com/Blosc/c-blosc2/pull/690
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLOSC2_STATIC)
