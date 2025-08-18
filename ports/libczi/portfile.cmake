@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ${LIBCZI_REPO_NAME}
     REF ${LIBCZI_REPO_REF}
-    SHA512 55d20413d48fe6d9346c5d0ea1f27d9e43f3fdc82d7ba04a3bf8789d4e954b4be5807b1ec97baad486002db474a12d6a975437ae0c7c2908455fbda89842c8a9
+    SHA512 e0c08c8e8f1abbfd029d7d47439960bc25f19f718a6fa732ba360a5e5cebdb6d0619f335e083686ef6e51e9a77316ecc447ec52cdbc3c57b64d6c2964c9d3c01
 )
 
 # Translate enabled vcpkg features into CMake -D flags:
