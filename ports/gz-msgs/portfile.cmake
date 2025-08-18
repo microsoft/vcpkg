@@ -15,7 +15,7 @@ ignition_modular_library(
    NAME ${PACKAGE_NAME}
    REF ${PORT}${VERSION_MAJOR}_${VERSION}
    VERSION ${VERSION}
-   SHA512 b96ec15d2ef46eebab6bebb6ffbd8f11b7bd9ed27156e753343603546d49db41afb3cf926b72de7eb9f702c40ad7e029dd3ddfe3e00d6d503cc45c1a0b8761d9
+   SHA512 43c75eb30f00708c54f3de54737a4f1bda4a77a1d1ca3ba1354270beb01db078e73b909fdebb33b938a45a9808d4d2f2c164efe01c98aaec7a88003c85fab6f9
    OPTIONS
       ${options}
       "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"

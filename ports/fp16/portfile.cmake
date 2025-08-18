@@ -13,6 +13,6 @@ vcpkg_cmake_configure(
         -DFP16_BUILD_BENCHMARKS=OFF
 )
 vcpkg_cmake_install()
-
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT})
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

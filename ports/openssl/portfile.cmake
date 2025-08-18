@@ -11,7 +11,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 0ffa32b60779709214ca3987838d0cd02f906d6f14772a32ef49e3f4854f8d2a287503ec742004ce7623afa9cf9ef2c8813d94a3c5b6c230ba150b0b4b4914d3
+    SHA512 c6c4ac5fe58be8657bb37b1345a2b0953f36be78619d1ad92daa785a3ca4273e6042c6315859d91a61417590299e0ef0ac7a7d609b382f6ee19e484e0c756c2c
     PATCHES
         cmake-config.patch
         command-line-length.patch
@@ -30,6 +30,14 @@ vcpkg_list(SET CONFIGURE_OPTIONS
     no-tests
     no-docs
 )
+
+# https://github.com/openssl/openssl/blob/master/INSTALL.md#enable-ec_nistp_64_gcc_128
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$"
+   AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(x64|arm64|riscv64|ppc64le)$")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ec_nistp_64_gcc_128)
+endif()
 
 set(INSTALL_FIPS "")
 if("fips" IN_LIST FEATURES)

@@ -1,0 +1,13 @@
+diff --git a/Blosc2Config.cmake.in b/Blosc2Config.cmake.in
+index 4206a95..0ae50ed 100644
+--- a/Blosc2Config.cmake.in
++++ b/Blosc2Config.cmake.in
+@@ -60,7 +60,7 @@ endif()
+ 
+ if(DEACTIVATE_ZSTD)
+     set(Blosc2_ZSTD_FOUND FALSE)
+-elseif(NOT PREFER_EXTERNAL_ZSTD AND PREFER_EXTERNAL_ZSTD)
++elseif(NOT DEACTIVATE_ZSTD AND PREFER_EXTERNAL_ZSTD)
+     find_dependency(zstd CONFIG)
+     set(Blosc2_ZSTD_FOUND TRUE)
+ endif()

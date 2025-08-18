@@ -24,14 +24,21 @@ vcpkg_extract_source_archive(
       fix-min-max.patch
 )
 
+
+
+vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${src_path}"
   OPTIONS
     -DMAGMA_ENABLE_CUDA=ON
     -DMAGMA_ENABLE_HIP=OFF # HIP is backend and seems additive?!
     -DUSE_FORTRAN=OFF
+    "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}"
+    "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     ${opts}
 )
+
 
 vcpkg_cmake_install()
 

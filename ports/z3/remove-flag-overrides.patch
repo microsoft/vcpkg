@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 477410ba8..fcca03917 100644
+index 2575104..655ef60 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,7 +1,6 @@
  # Enforce some CMake policies
  cmake_minimum_required(VERSION 3.16)
-
+ 
 -set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_compiler_flags_overrides.cmake")
- project(Z3 VERSION 4.15.2.0 LANGUAGES CXX)
-
+ project(Z3 VERSION 4.15.3.0 LANGUAGES CXX)
+ 
  ################################################################################

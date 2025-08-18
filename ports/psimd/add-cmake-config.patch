@@ -13,11 +13,10 @@ index bd69c62..f3c5f15 100644
 +
 +
 +INSTALL(TARGETS psimd 
-+      EXPORT psimd-config
++      EXPORT unofficial-psimd-config
 +      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 +      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +      PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+INSTALL(EXPORT psimd-config NAMESPACE psimd::
-+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}) # share/psimd
-\ No newline at end of file
++INSTALL(EXPORT unofficial-psimd-config NAMESPACE unofficial::psimd::
++    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME}) # share/psimd

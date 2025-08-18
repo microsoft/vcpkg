@@ -1,6 +1,7 @@
 {
   "name": "curl",
   "version": "8.15.0",
+  "port-version": 1,
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
   "license": "curl AND ISC AND BSD-3-Clause",
@@ -33,7 +34,7 @@
       ]
     },
     "gnutls": {
-      "description": "SSL support (gnutls)",
+      "description": "TLS support (gnutls)",
       "dependencies": [
         {
           "name": "libgnutls",
@@ -69,6 +70,26 @@
           ]
         },
         "nghttp2"
+      ]
+    },
+    "http3": {
+      "description": "HTTP3 support with ngtcp2 on openssl",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        },
+        "nghttp3",
+        {
+          "name": "ngtcp2",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        }
       ]
     },
     "httpsrr": {
@@ -119,16 +140,16 @@
       ]
     },
     "mbedtls": {
-      "description": "SSL support (mbedTLS)",
+      "description": "TLS support (mbedTLS)",
       "dependencies": [
         "mbedtls"
       ]
     },
     "non-http": {
-      "description": "Enables protocols beyond HTTP/HTTPS/HTTP2"
+      "description": "Enables protocols beyond HTTP/HTTPS/HTTP2/HTTP3"
     },
     "openssl": {
-      "description": "SSL support (OpenSSL)",
+      "description": "TLS support (OpenSSL)",
       "dependencies": [
         "openssl"
       ]
@@ -143,19 +164,6 @@
       "description": "RTMP support",
       "dependencies": [
         "librtmp"
-      ]
-    },
-    "schannel": {
-      "description": "SSL support (Secure Channel)",
-      "supports": "windows & !uwp",
-      "dependencies": [
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "sspi"
-          ]
-        }
       ]
     },
     "ssh": {
@@ -179,17 +187,19 @@
       ]
     },
     "ssl": {
-      "description": "Default SSL backend",
+      "description": "Default SSL / TLS implementation.",
       "dependencies": [
         {
+          "$comment": "Defaults to schannel on Windows, unless http3 is also enabled",
           "name": "curl",
           "default-features": false,
           "features": [
-            "schannel"
+            "sspi"
           ],
           "platform": "(windows & !uwp) | mingw"
         },
         {
+          "$comment": "Otherwise, defaults to OpenSSL.",
           "name": "curl",
           "default-features": false,
           "features": [
@@ -213,7 +223,7 @@
     },
     "sspi": {
       "description": "SSPI support",
-      "supports": "windows & !uwp"
+      "supports": "(windows & !uwp) | mingw"
     },
     "tool": {
       "description": "Builds curl executable",

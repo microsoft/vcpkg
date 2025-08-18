@@ -1,14 +1,8 @@
-vcpkg_download_distfile(FIX_LIBHEIF_BUILD_PATCH
-    URLS https://github.com/AcademySoftwareFoundation/OpenImageIO/commit/09250af27d11f6ea761872490403d074424b6e62.diff?full_index=1
-    FILENAME AcademySoftwareFoundation-OpenImageIO-libheif-build.patch
-    SHA512 3a0f9c735244ac40194b73b740c75ca4d0dc77623a12c017098502497bfdf98e4e76dfa48f4e632fbcaa50b3daa58234feb9279a4f1beba91d4c4bb38ff4889a
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 80efcdba979e1afda609ede4f743b44bc5d277b2ae4bfb96943aee23570d8652f5d0975f5f0bc8c3c9764c4da3ad6bd430c5dab149822648d4b0ba051ba18c11
+    SHA512 cee6ddfbd825022a45a46b041c894a18718a474a32da8715fe08f918c7387505e81f3220c0ad79d3ec160b9c224bdeafbbb8a2b67a47cd845dca492582607c22
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -16,7 +10,6 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
-        ${FIX_LIBHEIF_BUILD_PATCH}
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -89,6 +82,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 

@@ -1,10 +1,10 @@
 {
   "name": "libfuse",
-  "version": "3.16.2",
+  "version": "3.17.3",
   "description": "The reference implementation of the Linux FUSE (Filesystem in Userspace) interface",
   "homepage": "https://github.com/libfuse/libfuse",
-  "license": "LGPL-2.1 AND GPL-2.0",
-  "supports": "linux",
+  "license": "LGPL-2.1-only AND GPL-2.0-only",
+  "supports": "linux | freebsd",
   "dependencies": [
     {
       "name": "vcpkg-tool-meson",
