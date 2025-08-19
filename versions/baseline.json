@@ -2908,6 +2908,10 @@
       "baseline": "2024-09-19",
       "port-version": 0
     },
+    "fixed-math": {
+      "baseline": "2.2.0",
+      "port-version": 0
+    },
     "fixed-string": {
       "baseline": "0.1.1",
       "port-version": 0
