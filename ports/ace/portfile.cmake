@@ -10,6 +10,12 @@ if("tao" IN_LIST FEATURES)
         FILENAME "ACE-TAO-src-${VERSION}.tar.gz"
         SHA512 7ca16de48c669d113a25975be132eb358527de0b51b45dea665c609e3a37d39ac3aac07e816d3ded9cdcd6895d84417bf1d3db36c4e977fc36af53ec333f5d32
     )
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
+        ARCHIVE "${ARCHIVE}"
+        PATCHES
+            p2453.patch
+    )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
@@ -17,16 +23,12 @@ else()
         FILENAME "ACE-src-${VERSION}.tar.gz"
         SHA512 0126b90b77c0b92f3a995bb4c9eb61ddc1c551c4ed078567f421dc3703f2427aff5445fcaa70d6cd690d61065fa4855dc865eda4297b64ce06b5c5cbb26968f8
     )
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
+        ARCHIVE "${ARCHIVE}"
+    )
 endif()
 
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-if("tao" IN_LIST FEATURES)
-    PATCHES
-        p2453.patch
-endif()
-)
 
 set(ACE_ROOT "${SOURCE_PATH}")
 set(ENV{ACE_ROOT} "${ACE_ROOT}")
