@@ -16,10 +16,6 @@ vcpkg_check_features(
             utilities MULTISENSE_BUILD_UTILITIES
 )
 
-#
-#
-#
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
