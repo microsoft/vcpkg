@@ -15,6 +15,8 @@ vcpkg_configure_meson(
       -Dstemming=false
       -Dsvg-support=false
       -Dgir=false
+    ADDITIONAL_BINARIES
+      "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${HOST_EXECUTABLE_SUFFIX}']"
 )
 
 vcpkg_install_meson()
@@ -22,4 +24,3 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
