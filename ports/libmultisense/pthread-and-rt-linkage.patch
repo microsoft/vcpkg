@@ -1,0 +1,99 @@
+diff --git a/source/Legacy/CMakeLists.txt b/source/Legacy/CMakeLists.txt
+index 2a7367c..094f75c 100644
+--- a/source/Legacy/CMakeLists.txt
++++ b/source/Legacy/CMakeLists.txt
+@@ -90,7 +90,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+     target_link_libraries(MultiSense ws2_32)
+ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+     target_link_libraries(MultiSense pthread)
+-else()
++elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+     target_link_libraries(MultiSense pthread rt)
+ endif()
+ 
+diff --git a/source/LibMultiSense/CMakeLists.txt b/source/LibMultiSense/CMakeLists.txt
+index 7a4cb8e..bf3593d 100644
+--- a/source/LibMultiSense/CMakeLists.txt
++++ b/source/LibMultiSense/CMakeLists.txt
+@@ -70,7 +70,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+     target_link_libraries(MultiSense ws2_32)
+ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+     target_link_libraries(MultiSense pthread)
+-else()
++elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+     target_link_libraries(MultiSense pthread rt)
+ endif()
+ 
+diff --git a/source/Utilities/Legacy/CMakeLists.txt b/source/Utilities/Legacy/CMakeLists.txt
+index 21c747d..aa117f8 100644
+--- a/source/Utilities/Legacy/CMakeLists.txt
++++ b/source/Utilities/Legacy/CMakeLists.txt
+@@ -8,11 +8,15 @@ include_directories(shared)
+ # Common libraries that each utility needs to link with.
+ #
+ 
++set (MULTISENSE_UTILITY_LIBS
++    ${MULTISENSE_UTILITY_LIBS}
++    MultiSense
++)
++
+ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+ 
+ set (MULTISENSE_UTILITY_LIBS
+      ${MULTISENSE_UTILITY_LIBS}
+-     MultiSense
+      ws2_32
+ )
+ 
+@@ -20,15 +24,13 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ 
+ set (MULTISENSE_UTILITY_LIBS
+      ${MULTISENSE_UTILITY_LIBS}
+-     MultiSense
+      pthread
+ )
+ 
+-else ()
++elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+ 
+ set (MULTISENSE_UTILITY_LIBS
+      ${MULTISENSE_UTILITY_LIBS}
+-     MultiSense
+      pthread
+      rt
+ )
+diff --git a/source/Utilities/LibMultiSense/CMakeLists.txt b/source/Utilities/LibMultiSense/CMakeLists.txt
+index 3d21f9b..b240995 100644
+--- a/source/Utilities/LibMultiSense/CMakeLists.txt
++++ b/source/Utilities/LibMultiSense/CMakeLists.txt
+@@ -1,9 +1,12 @@
++set (MULTISENSE_UTILITY_LIBS
++    ${MULTISENSE_UTILITY_LIBS}
++    MultiSense
++)
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+ 
+ set (MULTISENSE_UTILITY_LIBS
+     ${MULTISENSE_UTILITY_LIBS}
+-    MultiSense
+     ws2_32
+ )
+ 
+@@ -11,15 +14,13 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+ 
+ set (MULTISENSE_UTILITY_LIBS
+     ${MULTISENSE_UTILITY_LIBS}
+-    MultiSense
+     pthread
+ )
+ 
+-else ()
++elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+ 
+ set (MULTISENSE_UTILITY_LIBS
+     ${MULTISENSE_UTILITY_LIBS}
+-    MultiSense
+     pthread
+     rt
+ )

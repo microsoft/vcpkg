@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         json-serialization-dependencies.patch
+        pthread-and-rt-linkage.patch
+        utilities-cc-unreachable-code.patch
 )
 
 vcpkg_check_features(
