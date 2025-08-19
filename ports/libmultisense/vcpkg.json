@@ -30,7 +30,8 @@
       ]
     },
     "utilities": {
-      "description": "Build MultiSense utility applications."
+      "description": "Build MultiSense utility applications.",
+      "supports": "!uwp & !android"
     }
   }
 }

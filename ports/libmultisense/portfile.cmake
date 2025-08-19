@@ -57,6 +57,13 @@ if ("utilities" IN_LIST FEATURES)
     )
 endif ()
 
+# Ensure that non-tool executables are not included
+file(
+    REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+        "${CURRENT_PACKAGES_DIR}/bin"
+)
+
 vcpkg_install_copyright(
     FILE_LIST "${SOURCE_PATH}/LICENSE.TXT"
 )
