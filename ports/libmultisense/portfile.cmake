@@ -39,15 +39,20 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if ("utilities" IN_LIST FEATURES)
+    set(_tool_names
+        ChangeIpUtility
+        ImageCalUtility
+        PointCloudUtility
+        RectifiedFocalLengthUtility
+        SaveImageUtility
+        VersionInfoUtility
+    )
+    if ("json-serialization" IN_LIST FEATURES)
+        list(APPEND _tool_names DeviceInfoUtility)
+    endif ()
+
     vcpkg_copy_tools(
-        TOOL_NAMES
-            ChangeIpUtility
-            DeviceInfoUtility
-            ImageCalUtility
-            PointCloudUtility
-            RectifiedFocalLengthUtility
-            SaveImageUtility
-            VersionInfoUtility
+        TOOL_NAMES ${_tool_names}
         AUTO_CLEAN
     )
 endif ()
