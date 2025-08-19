@@ -7,6 +7,10 @@
   "dependencies": [
     "curl",
     "glib",
+    {
+      "name": "gettext",
+      "host": "true"
+    },
     "libxml2",
     "libxmlb",
     "libyaml",
