@@ -22,8 +22,10 @@ endif()
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+if("tao" IN_LIST FEATURES)
     PATCHES
         p2453.patch
+endif()
 )
 
 set(ACE_ROOT "${SOURCE_PATH}")
