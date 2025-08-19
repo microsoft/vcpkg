@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO carnegierobotics/LibMultiSense
     REF ${VERSION}
-    SHA512 4fb2343fc2288792c732e7e61cb447b953ed8e8354c3c1e401c5b2bc8151f4b3d8f692882e015e5e56d8dc2d08f121a798138a6974d3b02348b1689c9015fe00
+    SHA512 69472f288de46c0ecdbbbcb8c280610c1c80778d660098e3b639ab653b108096c3fb4cd92a21afd4745b959a0c80812c5bf2d42053760bbceeafd90e67c20388
     HEAD_REF master
     PATCHES
-        fix-missing-algorithm.patch
-        fix-find-package-config-file.patch
+        json-serialization-dependencies.patch
 )
 
 vcpkg_check_features(
@@ -16,6 +15,11 @@ vcpkg_check_features(
             opencv BUILD_OPENCV
             utilities MULTISENSE_BUILD_UTILITIES
 )
+
+#
+#
+#
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -23,11 +27,16 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
 )
 
-set(PACKAGE_NAME MultiSense)
 vcpkg_cmake_install()
+
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME "${PACKAGE_NAME}"
-    CONFIG_PATH "lib/cmake/${PACKAGE_NAME}"
+    PACKAGE_NAME "MultiSenseWire"
+    CONFIG_PATH "lib/cmake/MultiSenseWire"
+    DO_NOT_DELETE_PARENT_CONFIG_PATH
+)
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME "MultiSense"
+    CONFIG_PATH "lib/cmake/MultiSense"
 )
 vcpkg_fixup_pkgconfig()
 
@@ -37,6 +46,7 @@ if ("utilities" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES
             ChangeIpUtility
+            DeviceInfoUtility
             ImageCalUtility
             PointCloudUtility
             RectifiedFocalLengthUtility
@@ -46,10 +56,8 @@ if ("utilities" IN_LIST FEATURES)
     )
 endif ()
 
-file(
-    INSTALL "${SOURCE_PATH}/LICENSE.TXT"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"     
-    RENAME copyright
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE.TXT"
 )
 file(
     INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"

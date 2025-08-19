@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 333d8ca..fdd655e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -113,12 +113,7 @@ if (BUILD_OPENCV)
+ endif()
+ 
+ if (BUILD_JSON_SERIALIZATION)
+-    find_package(nlohmann_json 3.9)
+-    if(nlohmann_json_FOUND)
+-        message(STATUS "Building JSON serialization helper functions")
+-    else()
+-        message(STATUS "Could not find nlohmann json. Skipping JSON serialization helpers")
+-    endif()
++    find_package(nlohmann_json 3.9 REQUIRED)
+ endif()
+ 
+ #
+diff --git a/python/CMakeLists.txt b/python/CMakeLists.txt
+index 9d102d8..82ad0f0 100644
+--- a/python/CMakeLists.txt
++++ b/python/CMakeLists.txt
+@@ -11,10 +11,8 @@ target_link_libraries(
+     MultiSense)
+ 
+ if (BUILD_JSON_SERIALIZATION)
+-    if(nlohmann_json_FOUND)
+-        message("Building python bindings with json print support")
+-        target_compile_definitions(_libmultisense PRIVATE BUILD_JSON="True")
+-    endif()
++    message("Building python bindings with json print support")
++    target_compile_definitions(_libmultisense PRIVATE BUILD_JSON="True")
+ endif()
+ 
+ install(TARGETS _libmultisense DESTINATION libmultisense)
+diff --git a/source/LibMultiSense/CMakeLists.txt b/source/LibMultiSense/CMakeLists.txt
+index 7a4cb8e..5dc35fc 100644
+--- a/source/LibMultiSense/CMakeLists.txt
++++ b/source/LibMultiSense/CMakeLists.txt
+@@ -3,9 +3,7 @@ set(MULTISENSE_HEADERS ${CMAKE_CURRENT_LIST_DIR}/include/MultiSense/MultiSenseCh
+                        ${CMAKE_CURRENT_LIST_DIR}/include/MultiSense/MultiSenseUtilities.hh)
+ 
+ if (BUILD_JSON_SERIALIZATION)
+-    if(nlohmann_json_FOUND)
+-        list("APPEND" MULTISENSE_HEADERS ${CMAKE_CURRENT_LIST_DIR}/include/MultiSense/MultiSenseSerialization.hh)
+-    endif()
++    list("APPEND" MULTISENSE_HEADERS ${CMAKE_CURRENT_LIST_DIR}/include/MultiSense/MultiSenseSerialization.hh)
+ endif()
+ 
+ set(DETAILS_SRC details/factory.cc
+@@ -47,9 +45,7 @@ if (BUILD_OPENCV)
+ endif()
+ 
+ if (BUILD_JSON_SERIALIZATION)
+-    if(nlohmann_json_FOUND)
+-        target_link_libraries(MultiSense nlohmann_json::nlohmann_json)
+-    endif()
++    target_link_libraries(MultiSense nlohmann_json::nlohmann_json)
+ endif()
+ 
+ set_target_properties(MultiSense PROPERTIES VERSION "${version}")
+diff --git a/source/LibMultiSense/MultiSenseConfig.cmake.in b/source/LibMultiSense/MultiSenseConfig.cmake.in
+index cf98076..dbc311d 100644
+--- a/source/LibMultiSense/MultiSenseConfig.cmake.in
++++ b/source/LibMultiSense/MultiSenseConfig.cmake.in
+@@ -2,6 +2,9 @@
+ 
+ include(CMakeFindDependencyMacro)
+ find_dependency(MultiSenseWire)
++if (@BUILD_JSON_SERIALIZATION@)
++    find_dependency(nlohmann_json 3.9 REQUIRED)
++endif ()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/MultiSenseTargets.cmake")
+ 
