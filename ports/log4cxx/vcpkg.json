@@ -1,6 +1,7 @@
 {
   "name": "log4cxx",
   "version": "1.4.0",
+  "port-version": 1,
   "description": "Apache log4cxx is a logging framework for C++ patterned after Apache log4j, which uses Apache Portable Runtime for most platform-specific code and should be usable on any platform supported by APR",
   "homepage": "https://logging.apache.org/log4cxx",
   "license": "Apache-2.0",
@@ -24,6 +25,9 @@
       "dependencies": [
         "fmt"
       ]
+    },
+    "mprfa": {
+      "description": "Synchronizes rollover when multiple process log to the same file"
     },
     "qt": {
       "description": "Allow QString values in the LOG4CXX_WARN, LOG4CXX_INFO, LOG4CXX_DEBUG etc. macros",

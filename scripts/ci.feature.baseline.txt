@@ -1391,7 +1391,6 @@ libxxf86vm:x64-uwp = cascade
 libzim:arm64-uwp = cascade
 libzim:x64-uwp = cascade
 llgl[vulkan](osx) = cascade # no vulkan sdk installed
-log4cxx:arm64-windows = cascade
 luajit:arm-neon-android = cascade
 luasec:x64-linux = cascade
 luv:arm64-windows = cascade

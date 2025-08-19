@@ -12,6 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         qt        LOG4CXX_QT_SUPPORT
         fmt       ENABLE_FMT_LAYOUT
+        mprfa     LOG4CXX_MULTIPROCESS_ROLLING_FILE_APPENDER
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
