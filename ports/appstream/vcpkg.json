@@ -12,6 +12,10 @@
     },
     "glib",
     {
+      "name": "glib",
+      "host": true
+    },
+    {
       "name": "gperf",
       "host": true
     },
