@@ -6,11 +6,11 @@
   "license": "LGPL-2.1-or-later",
   "dependencies": [
     "curl",
-    "glib",
     {
       "name": "gettext",
-      "host": "true"
+      "host": true
     },
+    "glib",
     "libxml2",
     "libxmlb",
     "libyaml",
