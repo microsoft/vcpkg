@@ -4,11 +4,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libeigen/eigen
-    REF eb57d4bdf1052f27bc575a8850dbc63eec6e9870 # from 3.4 branch on Aug 17, 2025 (3.4.1-250817)
-    SHA512 6c7d7b12492d24d3c25e39a04322d9182b1f6f78ed617a1bc4086cca14b1673cf5b9f8e67dd4bb7db5e0544cf24928e2afbe27af094761a65cc61bc6fd20fdab
+    REF cd7263e7f626e75c9210b74d2d6043a8c0519f1c # from 3.4 branch on Aug 18, 2025 (3.4.1-250818)
+    SHA512 dd3992bdc79bd9a04c71d2e6c767cfaf3f20a27b4a72abf0e9157b9712b83101bc4ffe188f4f48d045a33617ad2c7a882d1ea1579b4ce997e5f377be38b8906e
     HEAD_REF master
-    PATCHES
-        restore-include-dir.patch   # Restore EIGEN3_INCLUDE_DIR variable to match the 3.4.0 behavior
 )
 
 vcpkg_cmake_configure(
