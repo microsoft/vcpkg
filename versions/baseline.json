@@ -4649,8 +4649,8 @@
       "port-version": 0
     },
     "libczi": {
-      "baseline": "0.66.5",
-      "port-version": 0
+      "baseline": "0.66.6",
+      "port-version": 1
     },
     "libdatachannel": {
       "baseline": "0.23.1",
