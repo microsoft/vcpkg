@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 80f3b7b9279152ce271bab61e97a41268d5dc5d977dc9488fc187df90077ac1a81169201d3d1a7a5578d36e962321035bfe34106486c2ac3d684621b40338de6
     HEAD_REF main
     PATCHES
-      remove-tests-and-data.patch
+      remove-uneeded-directories.patch
 )
 
 set(GLIB_TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/glib")
