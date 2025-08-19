@@ -7,23 +7,25 @@ vcpkg_from_github(
     PATCHES
         protobuf-linkage.patch
         fix-libxml2.patch
+        msvc-arm.diff
+        msvc-static.diff
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES
-    cairo   OSMSCOUT_BUILD_MAP_CAIRO
-    directx OSMSCOUT_BUILD_MAP_DIRECTX
-    gdi     OSMSCOUT_BUILD_MAP_GDI
-    svg     OSMSCOUT_BUILD_MAP_SVG
-    qt5      OSMSCOUT_BUILD_MAP_QT
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cairo   OSMSCOUT_BUILD_MAP_CAIRO
+        directx OSMSCOUT_BUILD_MAP_DIRECTX
+        gdi     OSMSCOUT_BUILD_MAP_GDI
+        qt5     OSMSCOUT_BUILD_MAP_QT
+        svg     OSMSCOUT_BUILD_MAP_SVG
+        tools   OSMSCOUT_BUILD_TOOL_IMPORT
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    WINDOWS_USE_MSBUILD
     OPTIONS
         -DOSMSCOUT_BUILD_DEMOS=OFF
         -DOSMSCOUT_BUILD_TOOL_DUMPDATA=OFF
-        -DOSMSCOUT_BUILD_TOOL_IMPORT=ON
         -DOSMSCOUT_BUILD_TOOL_OSMSCOUT2=OFF
         -DOSMSCOUT_BUILD_TOOL_OSMSCOUTOPENGL=OFF
         -DOSMSCOUT_BUILD_TOOL_PUBLICTRANSPORTMAP=OFF
@@ -31,15 +33,18 @@ vcpkg_cmake_configure(
         -DOSMSCOUT_BUILD_EXTERN_MATLAB=OFF
         -DOSMSCOUT_BUILD_TESTS=OFF
         ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DOSMSCOUT_BUILD_TOOL_IMPORT=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_tools(TOOL_NAMES Import AUTO_CLEAN)
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/libosmscout)
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES BasemapImport Import AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/BasemapImport.exe")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/BasemapImport.exe")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

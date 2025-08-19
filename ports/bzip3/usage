@@ -1,0 +1,9 @@
+bzip3 provides CMake targets:
+
+  find_package(bzip3 CONFIG REQUIRED)
+  target_link_libraries(main PUBLIC bzip3::bz3)
+
+bzip3 provides pkg-config modules:
+
+  # A better and stronger spiritual successor to BZip2
+  bzip3
