@@ -11,6 +11,10 @@
       "host": true
     },
     "glib",
+    {
+      "name": "gperf",
+      "host": true
+    },
     "libxml2",
     "libxmlb",
     "libyaml",
