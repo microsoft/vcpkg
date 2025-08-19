@@ -1,7 +1,7 @@
-diff --git a/ACE_wrappers/TAO/TAO_IDL/be/be_codegen.cpp b/ACE_wrappers/TAO/TAO_IDL/be/be_codegen.cpp
+diff --git a/TAO/TAO_IDL/be/be_codegen.cpp b/TAO/TAO_IDL/be/be_codegen.cpp
 index a7ee5daa65e..a7a46d5fc10 100644
---- a/ACE_wrappers/TAO/TAO_IDL/be/be_codegen.cpp
-+++ b/ACE_wrappers/TAO/TAO_IDL/be/be_codegen.cpp
+--- a/TAO/TAO_IDL/be/be_codegen.cpp
++++ b/TAO/TAO_IDL/be/be_codegen.cpp
 @@ -3726,45 +3726,22 @@ TAO_CodeGen::make_rand_extension (char * const t)
    // static_cast<> to an integral type.
    unsigned int seed = static_cast<unsigned int> (msec);
