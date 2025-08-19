@@ -8,6 +8,7 @@ vcpkg_from_github(
         json-serialization-dependencies.patch
         pthread-and-rt-linkage.patch
         utilities-cc-unreachable-code.patch
+        disable-error-on-warning.patch
 )
 
 vcpkg_check_features(
