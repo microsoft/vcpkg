@@ -10,6 +10,13 @@ vcpkg_from_github(
         use-external-lexy.patch
 )
 
+# Set BTCPP_SHARED_LIBS based on VCPKG_LIBRARY_LINKAGE
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(BTCPP_SHARED_LIBS ON)
+else()
+    set(BTCPP_SHARED_LIBS OFF)
+endif()
+
 # Remove vendored lexy directory to prevent conflicts with foonathan-lexy port
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/lexy")
 
@@ -23,6 +30,7 @@ vcpkg_cmake_configure(
         -DBTCPP_BUILD_TOOLS=OFF
         -DBTCPP_GROOT_INTERFACE=OFF
         -DBTCPP_SQLITE_LOGGING=OFF
+        -DBTCPP_SHARED_LIBS=${BTCPP_SHARED_LIBS}
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Curses
 )
@@ -34,7 +42,3 @@ vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
