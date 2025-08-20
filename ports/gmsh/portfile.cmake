@@ -28,6 +28,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE # writes to sources on osx
     OPTIONS
         ${FEATURE_OPTIONS}
         -DENABLE_BUILD_LIB=${BUILD_LIB}
