@@ -172,6 +172,10 @@
       "baseline": "10.13.0",
       "port-version": 0
     },
+    "appstream": {
+      "baseline": "1.0.6",
+      "port-version": 0
+    },
     "appstream-glib": {
       "baseline": "0.8.3",
       "port-version": 0
