@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-x86_build.patch
         remove-source-charset.diff
         use-external-lexy.patch
+        fix-dependencies.patch
 )
 
 # Set BTCPP_SHARED_LIBS based on VCPKG_LIBRARY_LINKAGE
