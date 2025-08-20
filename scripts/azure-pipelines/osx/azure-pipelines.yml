@@ -16,10 +16,15 @@ parameters:
     displayName: 'Enable the triplets which contain this substring'
     type: string
     default: ''
+  - name: dependsOn
+    type: string
+    default: ''
 
 jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
+  ${{ if ne(parameters.dependsOn, '') }}:
+    dependsOn: ${{ parameters.dependsOn }}
   pool:
     name: ${{ parameters.poolName }}
   workspace:
