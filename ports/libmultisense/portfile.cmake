@@ -78,6 +78,20 @@ if ("utilities" IN_LIST FEATURES)
                 "${CURRENT_PACKAGES_DIR}/bin/${_python_tool_name}"
         )
     endforeach ()
+
+    # Remove the bin directory if its empty (anticipated on non-Windows platforms).
+    foreach (_directory IN ITEMS
+                 "${CURRENT_PACKAGES_DIR}/debug/bin/${_python_tool_name}"
+                 "${CURRENT_PACKAGES_DIR}/bin/${_python_tool_name}")
+        if (NOT IS_DIRECTORY "${_directory}")
+            continue()
+        endif ()
+
+        file(GLOB _files_in_directory "${_directory}/*")
+        if("${_files_in_directory}" STREQUAL "")
+            file(REMOVE_RECURSE "${_directory}")
+        endif()
+    endforeach()
 endif ()
 
 vcpkg_install_copyright(
