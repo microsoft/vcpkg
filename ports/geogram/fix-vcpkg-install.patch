@@ -15,7 +15,7 @@ index 6934fca..c2f855d 100644
  add_subdirectory(src/lib/third_party)
  
  if(GEOGRAM_WITH_GRAPHICS)
-+find_package(GLFW3 REQUIRED)
++find_package(glfw3 REQUIRED CONFIG)
  add_subdirectory(src/lib/geogram_gfx)
  endif()
  
