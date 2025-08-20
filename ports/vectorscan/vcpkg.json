@@ -35,10 +35,6 @@
   "features": {
     "dump": {
       "description": "Dump code support"
-    },
-    "fat-runtime": {
-      "description": "Build a library that supports multiple microarchitectures",
-      "supports": "x64 | x86"
     }
   }
 }

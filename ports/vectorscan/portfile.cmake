@@ -10,14 +10,8 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        fat-runtime     FAT_RUNTIME
         dump            DUMP_SUPPORT
 )
-
-if("fat-runtime" IN_LIST FEATURES AND (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug"))
-    message(WARNING "Fat runtime is only built on Release builds. Force Release build.")
-    set(VCPKG_BUILD_TYPE release)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
