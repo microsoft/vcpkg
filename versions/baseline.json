@@ -10589,7 +10589,7 @@
       "port-version": 0
     },
     "yyjson": {
-      "baseline": "0.11.1",
+      "baseline": "0.12.0",
       "port-version": 0
     },
     "z3": {
