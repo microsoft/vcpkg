@@ -29,6 +29,8 @@ vcpkg_cmake_config_fixup()
 
 if(NOT "interop" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

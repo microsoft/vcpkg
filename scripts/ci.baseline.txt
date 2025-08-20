@@ -370,6 +370,8 @@ gherkin-c:x86-windows=skip
 gl3w:arm-neon-android=fail
 gl3w:arm64-android=fail
 gl3w:x64-android=fail
+# glaze requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
+glaze:x64-linux=fail
 glfw3:arm-neon-android=fail
 glfw3:arm64-android=fail
 glfw3:arm64-uwp=fail
