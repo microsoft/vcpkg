@@ -3213,7 +3213,7 @@
       "port-version": 0
     },
     "geographiclib": {
-      "baseline": "2.5",
+      "baseline": "2.5.1",
       "port-version": 0
     },
     "geos": {
