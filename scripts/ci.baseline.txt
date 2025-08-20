@@ -1026,9 +1026,14 @@ v8:x64-windows-static-md=fail
 v8:x64-windows-static=fail
 v8:x64-windows=fail
 v8:x86-windows=fail
-# vectorscan doesn't support MSVC(yet)
+# vectorscan doesn't support MSVC(yet) and cross-compilation to Android(due to ragel)
+vectorscan:arm-neon-android=fail
+vectorscan:arm64-android=fail
+vectorscan:arm64-uwp=fail
 vectorscan:arm64-windows-static-md=fail
 vectorscan:arm64-windows=fail
+vectorscan:x64-android=fail
+vectorscan:x64-uwp=fail
 vectorscan:x64-windows-release=fail
 vectorscan:x64-windows-static-md=fail
 vectorscan:x64-windows-static=fail
