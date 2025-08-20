@@ -7,7 +7,11 @@ vcpkg_from_github(
     PATCHES
         fix-x86_build.patch
         remove-source-charset.diff
+        use-external-lexy.patch
 )
+
+# Remove vendored lexy directory to prevent conflicts with foonathan-lexy port
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/lexy")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
