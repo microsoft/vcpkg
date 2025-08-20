@@ -5,16 +5,17 @@ vcpkg_from_github(
     SHA512 69472f288de46c0ecdbbbcb8c280610c1c80778d660098e3b639ab653b108096c3fb4cd92a21afd4745b959a0c80812c5bf2d42053760bbceeafd90e67c20388
     HEAD_REF master
     PATCHES
-        json-serialization-dependencies.patch
-        pthread-and-rt-linkage.patch
-        utilities-cc-unreachable-code.patch
-        disable-error-on-warning.patch
+        0000-platform-specific-links.patch
+        0001-find-public-api-dependencies.patch
+        0002-disable-error-on-warning.patch
+        0003-utilities-cc-unreachable-code.patch
 )
 
 vcpkg_check_features(
         OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
             json-serialization BUILD_JSON_SERIALIZATION
+            json-serialization CMAKE_REQUIRE_FIND_PACKAGE_nlohmann_json
             opencv BUILD_OPENCV
             utilities MULTISENSE_BUILD_UTILITIES
 )
@@ -53,19 +54,31 @@ if ("utilities" IN_LIST FEATURES)
     if ("json-serialization" IN_LIST FEATURES)
         list(APPEND _tool_names DeviceInfoUtility)
     endif ()
-
     vcpkg_copy_tools(
         TOOL_NAMES ${_tool_names}
         AUTO_CLEAN
     )
-endif ()
 
-# Ensure that non-tool executables are not included
-file(
-    REMOVE_RECURSE
-        "${CURRENT_PACKAGES_DIR}/debug/bin"
-        "${CURRENT_PACKAGES_DIR}/bin"
-)
+    # Python equivalents of the above tools are also installed into bin.  These tools are duplicates and require that
+    # the Python bindings be built, which we are not doing.  Since they provide no additional functionality, remove
+    # them.
+    set(_python_tool_names
+        change_ip_utility.py
+        device_info_utility.py
+        image_cal_utility.py
+        point_cloud_utility.py
+        rectified_focal_length_utility.py
+        save_image_utility.py
+        version_info_utility.py
+    )
+    foreach (_python_tool_name IN LISTS _python_tool_names)
+        file(
+            REMOVE
+                "${CURRENT_PACKAGES_DIR}/debug/bin/${_python_tool_name}"
+                "${CURRENT_PACKAGES_DIR}/bin/${_python_tool_name}"
+        )
+    endforeach ()
+endif ()
 
 vcpkg_install_copyright(
     FILE_LIST "${SOURCE_PATH}/LICENSE.TXT"
