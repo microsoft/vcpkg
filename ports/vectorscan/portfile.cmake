@@ -20,6 +20,8 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_BENCHMARKS=OFF
         -DBUILD_DOC=OFF
+        # FAT_RUNTIME is not supported on debug build
+        -DFAT_RUNTIME=OFF
         ${FEATURE_OPTIONS}
 )
 
