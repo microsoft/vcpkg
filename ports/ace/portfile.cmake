@@ -8,21 +8,27 @@ if("tao" IN_LIST FEATURES)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE%2BTAO-src-${VERSION}.tar.gz"
         FILENAME "ACE-TAO-src-${VERSION}.tar.gz"
-        SHA512 e7d0d8e1e1a8aa839278337dbba43ff70744bef8f4eece06b37c370e3b0e80f4bd7360d6f0fe3e31ea0c2355aae8e8de53114d9db10865a5aac789a026e2065c
+        SHA512 7ca16de48c669d113a25975be132eb358527de0b51b45dea665c609e3a37d39ac3aac07e816d3ded9cdcd6895d84417bf1d3db36c4e977fc36af53ec333f5d32
+    )
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
+        ARCHIVE "${ARCHIVE}"
+        PATCHES
+            p2453.patch
     )
 else()
     # Don't change to vcpkg_from_github! This points to a release and not an archive
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${VERSION_DIRECTORY}/ACE-src-${VERSION}.tar.gz"
         FILENAME "ACE-src-${VERSION}.tar.gz"
-        SHA512 3adf34a72ee8b060c4edd41cb33053971473d077abe0aaa8448dc2b4c868ee1e9cc8c4934bcd41ae55e5decd7c540df114f415b383c37266b3bd044f290dc1f9
+        SHA512 0126b90b77c0b92f3a995bb4c9eb61ddc1c551c4ed078567f421dc3703f2427aff5445fcaa70d6cd690d61065fa4855dc865eda4297b64ce06b5c5cbb26968f8
+    )
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
+        ARCHIVE "${ARCHIVE}"
     )
 endif()
 
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
-)
 
 set(ACE_ROOT "${SOURCE_PATH}")
 set(ENV{ACE_ROOT} "${ACE_ROOT}")
