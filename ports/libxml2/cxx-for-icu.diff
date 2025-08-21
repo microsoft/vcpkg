@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2af1e6f..a2c134c 100644
+index b952d7bf..6d43569b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -10,7 +10,7 @@ foreach(line ${CONFIGURE_AC_LINES})
- endforeach()
- set(VERSION "${LIBXML_MAJOR_VERSION}.${LIBXML_MINOR_VERSION}.${LIBXML_MICRO_VERSION}")
+@@ -8,7 +8,7 @@ if(${VERSION} MATCHES [[([0-9]+)\.([0-9]+)\.([0-9]+)]])
+     set(LIBXML_MICRO_VERSION ${CMAKE_MATCH_3})
+ endif()
  
 -project(libxml2 VERSION ${VERSION} LANGUAGES C)
 +project(libxml2 VERSION ${VERSION} LANGUAGES C CXX)
  
- include(CheckCSourceCompiles)
- include(CheckFunctionExists)
+ set(CMAKE_C_STANDARD 11)
+ 

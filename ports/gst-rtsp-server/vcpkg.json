@@ -1,6 +1,6 @@
 {
   "name": "gst-rtsp-server",
-  "version": "1.26.1",
+  "version": "1.26.4",
   "description": "gst-rtsp-server is a library on top of GStreamer for building an RTSP server",
   "homepage": "https://gstreamer.freedesktop.org/",
   "license": "LGPL-2.1-only",

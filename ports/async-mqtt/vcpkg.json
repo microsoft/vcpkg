@@ -1,6 +1,6 @@
 {
   "name": "async-mqtt",
-  "version": "10.2.0",
+  "version": "10.2.1",
   "description": "Header-only Asynchronous MQTT communication library for C++17 based on Boost.Asio.",
   "homepage": "https://github.com/redboltz/async_mqtt",
   "license": "BSL-1.0",
