@@ -1,0 +1,43 @@
+diff --git a/Makefile.am b/Makefile.am
+index 0bc424f..19e3774 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -15,7 +15,7 @@ libudfread_la_SOURCES = \
+ 	src/udfread.c \
+ 	src/udfread-version.c
+ 
+-libudfread_la_LDFLAGS = -version-info $(UDFREAD_LTVERSION) -export-symbols-regex "(^udfread_.*)"
++libudfread_la_LDFLAGS = -no-undefined -version-info $(UDFREAD_LTVERSION) -export-symbols-regex "(^udfread_.*)"
+ 
+ pkgincludedir = $(includedir)/udfread
+ pkginclude_HEADERS = \
+diff --git a/src/default_blockinput.c b/src/default_blockinput.c
+index 3926e65..1be4505 100644
+--- a/src/default_blockinput.c
++++ b/src/default_blockinput.c
+@@ -37,6 +37,9 @@
+ 
+ #ifdef _WIN32
+ #include <windows.h>
++#if !defined(ssize_t)
++#define ssize_t SSIZE_T
++#endif
+ #ifndef HAVE_UNISTD_H
+ #include <stdio.h>
+ #endif
+diff --git a/src/udfread.h b/src/udfread.h
+index dcce516..8813502 100644
+--- a/src/udfread.h
++++ b/src/udfread.h
+@@ -29,6 +29,11 @@ extern "C" {
+ #include <stdint.h>    /* *int_t */
+ #include <sys/types.h> /* *size_t */
+ 
++#if defined(_WIN32) && !defined(ssize_t)
++#include <windows.h>
++#define ssize_t SSIZE_T
++#endif
++
+ /**
+  * @file udfread/udfread.h
+  * external API header
