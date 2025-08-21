@@ -1,13 +1,13 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+string(REPLACE "-" "." BREAKPAD-VERSION "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/breakpad
-    REF v2023.06.01
-    SHA512 7a231bbaf88f94c79b1ace1c3e66bd520595905bfc8a7ffa1aa453ea6f056136b82aea3a321d97db4ccfd1212a41e8790badcc43222564d861e9e5c35e40a402
+    REF "v${BREAKPAD-VERSION}"
+    SHA512 88c691983c6c92fd5321d729c8eec059914293de0e91fe1d429a6247f3b7299f32ec4938eccbbe2c95a9ca507db14d73a1c9798d5fce79a8b474c3c216f0951a
     HEAD_REF master
     PATCHES
-        add-algorithm.patch # https://github.com/google/breakpad/commit/898a997855168c0e6a689072fefba89246271a5d
         add-algorithm-1.patch
 )
 

@@ -1,0 +1,27 @@
+diff --git a/third-party/CMakeLists.txt b/third-party/CMakeLists.txt
+index c28e66c..18df754 100644
+--- a/third-party/CMakeLists.txt
++++ b/third-party/CMakeLists.txt
+@@ -5,7 +5,6 @@ add_subdirectory( "${CMAKE_CURRENT_LIST_DIR}/rsutils" )
+ 
+ pop_security_flags() # remove security flags for third party, as we cannot guarantee their security enforcment
+ 
+-include(CMake/external_json.cmake)
+ # Add additional include directories to allow file to include rosbag headers
+ include(${_rel_path}/realsense-file/config.cmake)
+ 
+diff --git a/third-party/rsutils/CMakeLists.txt b/third-party/rsutils/CMakeLists.txt
+index b0fc310..50aa0e4 100644
+--- a/third-party/rsutils/CMakeLists.txt
++++ b/third-party/rsutils/CMakeLists.txt
+@@ -12,8 +12,9 @@ set_target_properties( ${PROJECT_NAME} PROPERTIES FOLDER Library )
+ target_include_directories( ${PROJECT_NAME}
+     PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+-        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/third-party/json/include>
+ )
++find_package(nlohmann_json CONFIG REQUIRED)
++target_link_libraries(${PROJECT_NAME} PUBLIC $<BUILD_LOCAL_INTERFACE:nlohmann_json::nlohmann_json>)
+ 
+ # Headers -----------------------------------------------------------------------------------
+ #

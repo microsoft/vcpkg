@@ -1,0 +1,88 @@
+diff --git a/include/boost/mpl/and.hpp b/include/boost/mpl/and.hpp
+index a6f4892..f901adf 100644
+--- a/include/boost/mpl/and.hpp
++++ b/include/boost/mpl/and.hpp
+@@ -28,7 +28,7 @@
+ // 'or' and 'and' macros, see http://tinyurl.com/3et69; 'defined(and)'
+ // has to be checked in a separate condition, otherwise GCC complains 
+ // about 'and' being an alternative token
+-#if defined(_MSC_VER) && !defined(__cplusplus)
++#if defined(_MSC_VER) && !defined(__cplusplus) || defined(_MSC_EXTENSIONS)
+ #ifndef __GCCXML__
+ #if defined(and) 
+ #   pragma push_macro("and")
+@@ -41,7 +41,7 @@
+ #   define BOOST_MPL_PREPROCESSED_HEADER and.hpp
+ #   include <boost/mpl/aux_/include_preprocessed.hpp>
+ 
+-#if defined(_MSC_VER) && !defined(__clang__) && !defined(__cplusplus)
++#if defined(_MSC_VER) && !defined(__clang__) && !defined(__cplusplus) || defined(_MSC_EXTENSIONS)
+ #ifndef __GCCXML__
+ #if defined(and) 
+ #   pragma pop_macro("and")
+diff --git a/include/boost/mpl/bitand.hpp b/include/boost/mpl/bitand.hpp
+index 82261d0..f9204a5 100644
+--- a/include/boost/mpl/bitand.hpp
++++ b/include/boost/mpl/bitand.hpp
+@@ -19,7 +19,7 @@
+ // macros, see http://tinyurl.com/ycwdxco; 'defined(bitand)'
+ // has to be checked in a separate condition, otherwise GCC complains 
+ // about 'bitand' being an alternative token
+-#if defined(_MSC_VER) && !defined(__cplusplus)
++#if defined(_MSC_VER) && !defined(__cplusplus) || defined(_MSC_EXTENSIONS)
+ #ifndef __GCCXML__
+ #if defined(bitand)
+ #   pragma push_macro("bitand")
+@@ -34,7 +34,7 @@
+ #define AUX778076_OP_TOKEN  &
+ #include <boost/mpl/aux_/arithmetic_op.hpp>
+ 
+-#if defined(_MSC_VER) && !defined(__clang__) && !defined(__cplusplus)
++#if defined(_MSC_VER) && !defined(__clang__) && !defined(__cplusplus) || defined(_MSC_EXTENSIONS)
+ #ifndef __GCCXML__
+ #if defined(bitand)
+ #   pragma pop_macro("bitand")
+diff --git a/include/boost/mpl/bitor.hpp b/include/boost/mpl/bitor.hpp
+index 9bd4da2..fe6b179 100644
+--- a/include/boost/mpl/bitor.hpp
++++ b/include/boost/mpl/bitor.hpp
+@@ -19,7 +19,7 @@
+ // macros, see http://tinyurl.com/ycwdxco; 'defined(bitor)'
+ // has to be checked in a separate condition, otherwise GCC complains 
+ // about 'bitor' being an alternative token
+-#if defined(_MSC_VER) && !defined(__cplusplus)
++#if defined(_MSC_VER) && !defined(__cplusplus) || defined(_MSC_EXTENSIONS)
+ #ifndef __GCCXML__
+ #if defined(bitor)
+ #   pragma push_macro("bitor")
+@@ -34,7 +34,7 @@
+ #define AUX778076_OP_TOKEN  |
+ #include <boost/mpl/aux_/arithmetic_op.hpp>
+ 
+-#if defined(_MSC_VER) && !defined(__clang__) && !defined(__cplusplus)
++#if defined(_MSC_VER) && !defined(__clang__) && !defined(__cplusplus) || defined(_MSC_EXTENSIONS)
+ #ifndef __GCCXML__
+ #if defined(bitor)
+ #   pragma pop_macro("bitor")
+diff --git a/include/boost/mpl/or.hpp b/include/boost/mpl/or.hpp
+index 337e53a..b2529db 100644
+--- a/include/boost/mpl/or.hpp
++++ b/include/boost/mpl/or.hpp
+@@ -29,7 +29,7 @@
+ // 'or' and 'and' macros, see http://tinyurl.com/3et69; 'defined(or)'
+ // has to be checked in a separate condition, otherwise GCC complains 
+ // about 'or' being an alternative token
+-#if defined(_MSC_VER)&& !defined(__cplusplus)
++#if defined(_MSC_VER)&& !defined(__cplusplus) || defined(_MSC_EXTENSIONS)
+ #ifndef __GCCXML__
+ #if defined(or)
+ #   pragma push_macro("or")
+@@ -42,7 +42,7 @@
+ #   define BOOST_MPL_PREPROCESSED_HEADER or.hpp
+ #   include <boost/mpl/aux_/include_preprocessed.hpp>
+ 
+-#if defined(_MSC_VER) && !defined(__clang__) && !defined(__cplusplus)
++#if defined(_MSC_VER) && !defined(__clang__) && !defined(__cplusplus) || defined(_MSC_EXTENSIONS)
+ #ifndef __GCCXML__
+ #if defined(or)
+ #   pragma pop_macro("or")

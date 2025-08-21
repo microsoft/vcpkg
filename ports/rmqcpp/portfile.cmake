@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
       "disable-tests-and-examples.patch"
+      new-boost.patch # From https://github.com/bloomberg/rmqcpp/pull/59
 )
 
 vcpkg_cmake_configure(

@@ -1,206 +1,58 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 26ccf18..a885024 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -6,6 +6,8 @@ set(CMAKE_C_VISIBILITY_PRESET hidden)
- set(CMAKE_POSITION_INDEPENDENT_CODE ON)
- include(CTest)
- 
-+include(CMakePackageConfigHelpers)
-+
- include(TestBigEndian)
- test_big_endian(WORDS_BIGENDIAN)
- 
-@@ -67,12 +69,12 @@ endif()
- set(libaec_CONFIG_IN  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libaec-config.cmake.in)
- set(libaec_CONFIG_OUT ${CMAKE_CURRENT_BINARY_DIR}/cmake/libaec-config.cmake)
- configure_file(${libaec_CONFIG_IN} ${libaec_CONFIG_OUT} @ONLY)
--set(libaec_CONFIG_VERSION_IN  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libaec-config-version.cmake.in)
--set(libaec_CONFIG_VERSION_OUT ${CMAKE_CURRENT_BINARY_DIR}/cmake/libaec-config-version.cmake)
--configure_file(${libaec_CONFIG_VERSION_IN} ${libaec_CONFIG_VERSION_OUT} @ONLY)
- install(FILES ${libaec_CONFIG_OUT}
-         DESTINATION cmake)
--install(FILES ${libaec_CONFIG_VERSION_OUT}
-+write_basic_package_version_file(
-+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-+  COMPATIBILITY SameMajorVersion)
-+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-         DESTINATION cmake)
- 
- # Cpack configuration mainly for Windows installer
-diff --git a/cmake/libaec-config-version.cmake.in b/cmake/libaec-config-version.cmake.in
-deleted file mode 100644
-index d32ef96..0000000
---- a/cmake/libaec-config-version.cmake.in
-+++ /dev/null
-@@ -1,15 +0,0 @@
--set(PACKAGE_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
--set(PACKAGE_VERSION_MINOR @PROJECT_VERSION_MINOR@)
--set(PACKAGE_VERSION_PATCH @PROJECT_VERSION_PATCH@)
--set(PACKAGE_VERSION @PROJECT_VERSION@)
--
--# Check whether the requested PACKAGE_FIND_VERSION is compatible
--if(PACKAGE_VERSION VERSION_LESS PACKAGE_FIND_VERSION OR
--   PACKAGE_VERSION_MAJOR GREATER PACKAGE_FIND_VERSION_MAJOR)
--  set(PACKAGE_VERSION_COMPATIBLE FALSE)
--else()
--  set(PACKAGE_VERSION_COMPATIBLE TRUE)
--  if(PACKAGE_VERSION VERSION_EQUAL PACKAGE_FIND_VERSION)
--    set(PACKAGE_VERSION_EXACT TRUE)
--  endif()
--endif()
 diff --git a/cmake/libaec-config.cmake.in b/cmake/libaec-config.cmake.in
-index ce5d4cc..2fffad9 100644
+index 11ac99e..03b96aa 100644
 --- a/cmake/libaec-config.cmake.in
 +++ b/cmake/libaec-config.cmake.in
-@@ -38,64 +38,3 @@ else ()
+@@ -36,7 +36,7 @@ if (libaec_USE_STATIC_LIBS OR (NOT DEFINED libaec_USE_STATIC_LIBS AND NOT "@BUIL
+   endif ()
+ else ()
    find_library(libaec_LIBRARY NAMES aec DOC "AEC library")
-   find_library(SZIP_LIBRARY NAMES sz szip DOC "SZIP compatible version of the AEC library")
+-  find_library(SZIP_LIBRARY NAMES sz szip DOC "SZIP compatible version of the AEC library")
++  find_library(SZIP_LIBRARY NAMES sz szip NAMES_PER_DIR DOC "SZIP compatible version of the AEC library")
  endif ()
--
--# Check version here
--if (libaec_INCLUDE_DIR AND libaec_LIBRARY)
--  set(libaec_VERSION "@PROJECT_VERSION@")
--  set(SZIP_VERSION "2.0.1")
--endif ()
--
--include(FindPackageHandleStandardArgs)
--set(${CMAKE_FIND_PACKAGE_NAME}_CONFIG "${CMAKE_CURRENT_LIST_FILE}")
--find_package_handle_standard_args(libaec
--  FOUND_VAR libaec_FOUND
--  REQUIRED_VARS libaec_LIBRARY libaec_INCLUDE_DIR SZIP_LIBRARY SZIP_INCLUDE_DIR
--  VERSION_VAR libaec_VERSION
--  CONFIG_MODE
--)
--
--if (libaec_FOUND)
--  if (libaec_USE_STATIC_LIBS)
--    add_library(libaec::aec STATIC IMPORTED)
--  else ()
--    add_library(libaec::aec SHARED IMPORTED)
--    target_compile_definitions(libaec::aec INTERFACE LIBAEC_SHARED)
--    if (MSVC)
--      set_target_properties(libaec::aec PROPERTIES
--        IMPORTED_IMPLIB "${libaec_LIBRARY}"
--      )
--    endif ()
--  endif ()
--  set_target_properties(libaec::aec PROPERTIES
--    IMPORTED_LOCATION "${libaec_LIBRARY}"
--    INTERFACE_INCLUDE_DIRECTORIES "${libaec_INCLUDE_DIR}"
--  )
--
--  # SZIP
--  if (libaec_USE_STATIC_LIBS)
--    add_library(libaec::sz STATIC IMPORTED)
--  else ()
--    add_library(libaec::sz SHARED IMPORTED)
--    target_compile_definitions(libaec::sz INTERFACE LIBAEC_SHARED)
--    if (MSVC)
--      set_target_properties(libaec::sz PROPERTIES
--        IMPORTED_IMPLIB "${SZIP_LIBRARY}"
--      )
--    endif ()
--  endif ()
--  set_target_properties(libaec::sz PROPERTIES
--    IMPORTED_LOCATION "${SZIP_LIBRARY}"
--    INTERFACE_INCLUDE_DIRECTORIES "${SZIP_INCLUDE_DIR}"
--  )
--
--  # Set SZIP variables.
--  set(SZIP_FOUND TRUE)
--  set(SZIP_LIBRARIES "${SZIP_LIBRARY}")
--endif ()
--
--mark_as_advanced(
--  libaec_LIBRARY
--  libaec_INCLUDE_DIR
--  SZIP_LIBRARY
--  SZIP_INCLUDE_DIR
--)
+ 
+ # Check version here
+@@ -55,6 +55,7 @@ find_package_handle_standard_args(libaec
+ )
+ 
+ if (libaec_FOUND)
++ if(0)
+   if (libaec_USE_STATIC_LIBS)
+     add_library(libaec::aec STATIC IMPORTED)
+   else ()
+@@ -87,6 +88,8 @@ if (libaec_FOUND)
+     IMPORTED_LOCATION "${SZIP_LIBRARY}"
+     INTERFACE_INCLUDE_DIRECTORIES "${SZIP_INCLUDE_DIR}"
+   )
++ endif()
++ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
+ 
+   # Set SZIP variables.
+   set(SZIP_FOUND TRUE)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index f9c3031..dea7574 100644
+index b2aeb6c..1fb3b6d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -11,12 +11,17 @@ target_include_directories(aec
-   "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>"
-   "$<INSTALL_INTERFACE:include>")
+@@ -77,9 +77,22 @@ set_target_properties(aec sz
  
-+# Handle visibility of symbols. Compatible with gnulib's gl_VISIBILITY
-+include(CheckCCompilerFlag)
-+check_c_compiler_flag(-fvisibility=hidden COMPILER_HAS_HIDDEN_VISIBILITY)
-+
- # Create both static and shared aec library.
- add_library(aec_static STATIC "$<TARGET_OBJECTS:aec>")
- target_link_libraries(aec_static PUBLIC aec)
- set_target_properties(aec_static
-   PROPERTIES
-   OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,aec-static,aec>)
-+target_compile_definitions(aec_static PRIVATE LIBAEC_BUILD)
- 
- add_library(aec_shared SHARED "$<TARGET_OBJECTS:aec>")
- target_link_libraries(aec_shared PUBLIC aec)
-@@ -26,19 +31,19 @@ set_target_properties(aec_shared
-   SOVERSION 0
-   OUTPUT_NAME aec
-   PUBLIC_HEADER ${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h)
-+target_compile_definitions(aec_shared PRIVATE LIBAEC_BUILD LIBAEC_SHARED)
- 
- # Wrapper for compatibility with szip
- add_library(sz OBJECT sz_compat.c)
- target_link_libraries(sz PUBLIC aec)
- 
--set(libaec_COMPILE_DEFINITIONS "LIBAEC_BUILD;LIBAEC_SHARED")
--
- # Create both static and shared szip library.
- add_library(sz_static STATIC "$<TARGET_OBJECTS:sz>" "$<TARGET_OBJECTS:aec>")
- set_target_properties(sz_static
-   PROPERTIES
-   OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,szip-static,sz>)
- target_link_libraries(sz_static PUBLIC sz)
-+target_compile_definitions(sz_static PRIVATE LIBAEC_BUILD)
- 
- add_library(sz_shared SHARED "$<TARGET_OBJECTS:sz>" "$<TARGET_OBJECTS:aec>")
- target_link_libraries(sz_shared PUBLIC sz)
-@@ -48,17 +53,19 @@ set_target_properties(sz_shared
-   SOVERSION 2
-   OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,szip,sz>
-   PUBLIC_HEADER ../include/szlib.h)
-+target_compile_definitions(sz_shared PRIVATE LIBAEC_BUILD LIBAEC_SHARED)
-+
-+if(COMPILER_HAS_HIDDEN_VISIBILITY)
-+  target_compile_definitions(aec_static PUBLIC HAVE_VISIBILITY)
-+  target_compile_definitions(aec_shared PUBLIC HAVE_VISIBILITY)
-+  target_compile_definitions(sz_static PUBLIC HAVE_VISIBILITY)
-+  target_compile_definitions(sz_shared PUBLIC HAVE_VISIBILITY)
-+endif()
- 
- # Simple executable for testing and benchmarking.
- add_executable(graec graec.c)
- target_link_libraries(graec aec)
- 
--# Handle visibility of symbols. Compatible with gnulib's gl_VISIBILITY
--include(CheckCCompilerFlag)
--check_c_compiler_flag(-fvisibility=hidden COMPILER_HAS_HIDDEN_VISIBILITY)
--set(libaec_COMPILE_DEFINITIONS
--  "${libaec_COMPILE_DEFINITIONS};HAVE_VISIBILITY=$<BOOL:${COMPILER_HAS_HIDDEN_VISIBILITY}>")
--
- include(GNUInstallDirs)
- if(UNIX)
-   # The shell scripts for benchmarking are supported on unix only
-@@ -71,8 +78,11 @@ if(UNIX)
-     DEPENDS graec utime)
+ if(BUILD_SHARED_LIBS)
+   set(install_targets aec_shared sz_shared)
++  set_target_properties(aec_shared PROPERTIES EXPORT_NAME aec INTERFACE_COMPILE_DEFINITIONS LIBAEC_SHARED)
++  set_target_properties(sz_shared PROPERTIES EXPORT_NAME sz INTERFACE_COMPILE_DEFINITIONS LIBAEC_SHARED)
+   set_target_properties(aec_static graec sz_static PROPERTIES EXCLUDE_FROM_ALL 1)
+ else()
+   set(install_targets aec_static sz_static)
++  set_target_properties(aec_static PROPERTIES EXPORT_NAME aec PUBLIC_HEADER "${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h")
++  set_target_properties(sz_static PROPERTIES EXPORT_NAME sz PUBLIC_HEADER ../include/szlib.h)
+   set_target_properties(aec_shared graec sz_shared PROPERTIES EXCLUDE_FROM_ALL 1)
  endif()
- 
--set_target_properties(aec sz
--  PROPERTIES
--  COMPILE_DEFINITIONS "${libaec_COMPILE_DEFINITIONS}")
-+install(TARGETS aec aec_static aec_shared sz sz_static sz_shared
-+        EXPORT ${PROJECT_NAME}Targets)
- 
--install(TARGETS aec_static aec_shared sz_static sz_shared)
+-install(TARGETS ${install_targets})
++set_target_properties(aec PROPERTIES EXPORT_NAME aec_obj)
++set_target_properties(sz PROPERTIES EXPORT_NAME sz_obj)
++install(TARGETS ${install_targets} aec sz
++  EXPORT ${PROJECT_NAME}-targets
++)
 +install(
-+  EXPORT ${PROJECT_NAME}Targets
-+  FILE ${PROJECT_NAME}-targets.cmake
++  EXPORT ${PROJECT_NAME}-targets
 +  NAMESPACE ${PROJECT_NAME}::
-+  DESTINATION cmake)
++  DESTINATION cmake
++)

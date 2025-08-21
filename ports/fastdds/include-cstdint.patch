@@ -1,0 +1,12 @@
+diff --git a/src/cpp/rtps/security/common/SharedSecretHandle.h b/src/cpp/rtps/security/common/SharedSecretHandle.h
+index c53b153..b2b6507 100644
+--- a/src/cpp/rtps/security/common/SharedSecretHandle.h
++++ b/src/cpp/rtps/security/common/SharedSecretHandle.h
+@@ -21,6 +21,7 @@
+ #include <rtps/security/common/Handle.h>
+ 
+ #include <vector>
++#include <cstdint>
+ 
+ namespace eprosima {
+ namespace fastdds {

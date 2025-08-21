@@ -1,6 +1,7 @@
 {
   "name": "ebml",
   "version": "1.4.5",
+  "port-version": 1,
   "description": "A C++ library to parse EBML files",
   "homepage": "https://github.com/Matroska-Org/libebml",
   "dependencies": [

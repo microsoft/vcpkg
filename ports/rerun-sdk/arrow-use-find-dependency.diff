@@ -1,0 +1,15 @@
+diff --git a/Config.cmake.in b/Config.cmake.in
+index c093c4432b..d74bbdfce9 100644
+--- a/Config.cmake.in
++++ b/Config.cmake.in
+@@ -47,7 +47,9 @@ else()
+         )
+     endif()
+ 
+-    find_package(Arrow REQUIRED)
++    include(CMakeFindDependencyMacro)
++
++    find_dependency(Arrow)
+ 
+     message(STATUS "Rerun is using a system installed libArrow.")
+ 

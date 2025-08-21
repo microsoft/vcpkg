@@ -19,9 +19,11 @@ vcpkg_cmake_configure(
         ${options}
         -DLIBREMIDI_NO_BOOST=ON
         -DLIBREMIDI_NO_JACK=ON
+        -DLIBREMIDI_NO_PIPEWIRE=ON
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

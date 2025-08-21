@@ -1,0 +1,12 @@
+diff --git a/src/common/transport/serialization_transport.cpp b/src/common/transport/serialization_transport.cpp
+index f916961..5ab0f3a 100644
+--- a/src/common/transport/serialization_transport.cpp
++++ b/src/common/transport/serialization_transport.cpp
+@@ -43,6 +43,7 @@
+ 
+ #include "ble_common.h"
+ 
++#include <chrono>
+ #include <iterator>
+ #include <memory>
+ #include <sstream>

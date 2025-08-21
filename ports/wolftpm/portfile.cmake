@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolftpm
-    REF v3.4.0
-    SHA512 03cff1e1ae13525c3c9325b56e0b8d900a4546d94378d1be61125e4873de5114644e3031bdd65178d6c8afb9a4a1c3dff7997bdfbf796266d2420f802d4cd77b
+    REF v${VERSION}
+    SHA512 e6b73ec95f6c0cd37a71063c13db2a95175c54d2c63f69959ed68b4992277f1304136e1ecc5419ce4ff070d9162dbb30a9c6f78c7238383d72c686f1cdc1ab7c
     HEAD_REF master
+    PATCHES
+      "wolftpm_pr430.diff"
     )
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}

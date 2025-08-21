@@ -1,4 +1,8 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     message(STATUS "Warning: Dynamic library with static CRT is not supported. Building static library.")
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
@@ -10,21 +14,6 @@ if("extensions" IN_LIST FEATURES)
     set(PYTHON_HAS_EXTENSIONS ON)
 else()
     set(PYTHON_HAS_EXTENSIONS OFF)
-endif()
-
-if(NOT VCPKG_HOST_IS_WINDOWS)
-    message(WARNING "${PORT} currently requires the following programs from the system package manager:
-    autoconf automake autoconf-archive
-On Debian and Ubuntu derivatives:
-    sudo apt-get install autoconf automake autoconf-archive
-On recent Red Hat and Fedora derivatives:
-    sudo dnf install autoconf automake autoconf-archive
-On Arch Linux and derivatives:
-    sudo pacman -S autoconf automake autoconf-archive
-On Alpine:
-    apk add autoconf automake autoconf-archive
-On macOS:
-    brew install autoconf automake autoconf-archive\n")
 endif()
 
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
@@ -40,29 +29,15 @@ set(PATCHES
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
     0012-force-disable-modules.patch
-    0014-fix-get-python-inc-output.patch
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
     0019-fix-ssl-linkage.patch
+    0020-Py_NO_LINK_LIB.patch # Remove in 3.14 https://github.com/python/cpython/pull/19740
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND PATCHES 0002-static-library.patch)
-endif()
-
-# Fix build failures with GCC for built-in modules (https://github.com/microsoft/vcpkg/issues/26573)
-if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND PATCHES 0011-gcc-ldflags-fix.patch)
-endif()
-
-# Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
-# required to build this port on Windows 7 itself due to Python using itself in its own build system.
-if("deprecated-win7-support" IN_LIST FEATURES)
-    list(APPEND PATCHES 0006-restore-support-for-windows-7.patch)
-    message(WARNING "Windows 7 support is deprecated and may be removed at any time.")
-elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
-    message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -87,7 +62,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${VERSION}
-    SHA512 411f43495943b8aeec287d4339bac6beb6a7224b0844cc4d48188b208fbbbc6404ad031b6e7a3bed0900baf972c4536a54f4da1ab39202f4f405a188ca04ae07
+    SHA512 0ca83685fe00d374857ce544eb10037f284a702b14f4cd5c22402b9fbeb557d6d4d23722eae3adbcff1208bf780a50c71146d8d5e3e8a65b84f50bcc5b6968c3
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -127,12 +102,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
         find_library(FFI_DEBUG NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(LZMA_DEBUG NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(SQLITE_DEBUG NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
+        separate_arguments(SQLITE3_LIBRARIES_DEBUG UNIX_COMMAND "${PC_SQLITE3_LIBRARIES_DEBUG}")
+        separate_arguments(SQLITE3_LIBRARIES_RELEASE UNIX_COMMAND "${PC_SQLITE3_LIBRARIES_RELEASE}")
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SSL_DEBUG NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE}")
-        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG}")
+        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE3_LIBRARIES_RELEASE}")
+        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE3_LIBRARIES_DEBUG}")
     else()
         message(STATUS "WARNING: Extensions have been disabled. No C extension modules will be available.")
     endif()
@@ -283,6 +259,20 @@ else()
         list(APPEND OPTIONS "--without-readline")
     endif()
 
+    if(VCPKG_TARGET_IS_ANDROID)
+        list(APPEND OPTIONS "--without-static-libpython" )
+        list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DANDROID_NO_UNDEFINED=OFF")
+        if(VCPKG_CROSSCOMPILING)
+            # Cannot not run target executables during configure
+            if(NOT PYTHON3_BUGGY_GETADDRINFO)
+                list(APPEND OPTIONS "ac_cv_buggy_getaddrinfo=no")
+            endif()
+            if(NOT PYTHON3_NO_PTMX)
+                list(APPEND OPTIONS "ac_cv_file__dev_ptmx=yes" "ac_cv_file__dev_ptc=no")
+            endif()
+        endif()
+    endif()
+
     # The version of the build Python must match the version of the cross compiled host Python.
     # https://docs.python.org/3/using/configure.html#cross-compiling-options
     if(VCPKG_CROSSCOMPILING)
@@ -290,9 +280,9 @@ else()
         list(APPEND OPTIONS "--with-build-python=${_python_for_build}")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             ${OPTIONS}
         OPTIONS_DEBUG
@@ -301,7 +291,7 @@ else()
         OPTIONS_RELEASE
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/lib"
     )
-    vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
+    vcpkg_make_install(TARGETS altinstall)
 
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
@@ -396,10 +386,7 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/python3/Lib/distutils/command/build_ext.py" "'libs'" "'../../lib'")
-else()
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/python3.${PYTHON_VERSION_MINOR}/distutils/command/build_ext.py" "'libs'" "'../../lib'")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
   file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
 endif()
 

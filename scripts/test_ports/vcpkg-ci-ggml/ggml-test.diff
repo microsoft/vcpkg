@@ -1,0 +1,44 @@
+diff --git a/examples/simple/CMakeLists.txt b/examples/simple/CMakeLists.txt
+index 7d3aae02..fe030a49 100644
+--- a/examples/simple/CMakeLists.txt
++++ b/examples/simple/CMakeLists.txt
+@@ -1,16 +1,25 @@
++cmake_minimum_required(VERSION 3.14)
++project(ggml-test)
++
++set(CMAKE_CXX_STANDARD 17)
++
++if(NOT TARGET ggml::ggml)
++    find_package(ggml CONFIG REQUIRED)
++endif()
++
+ #
+ # simple-ctx
+ 
+ set(TEST_TARGET simple-ctx)
+ add_executable(${TEST_TARGET} simple-ctx.cpp)
+-target_link_libraries(${TEST_TARGET} PRIVATE ggml)
++target_link_libraries(${TEST_TARGET} PRIVATE ggml::ggml)
+ 
+ #
+ # simple-backend
+ 
+ set(TEST_TARGET simple-backend)
+ add_executable(${TEST_TARGET} simple-backend.cpp)
+-target_link_libraries(${TEST_TARGET} PRIVATE ggml)
++target_link_libraries(${TEST_TARGET} PRIVATE ggml::ggml)
+ 
+ if (GGML_CUDA)
+     add_compile_definitions(GGML_USE_CUDA)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 889d0f88..3b4162ff 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -211,6 +211,7 @@ endif()
+ 
+ add_library(ggml
+             ggml-backend-reg.cpp)
++add_library(ggml::ggml ALIAS ggml)
+ 
+ target_link_libraries(ggml PUBLIC ggml-base)
+ 

@@ -1,8 +1,8 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index 3b7afda..a152fa9 100644
+index 9e8ffe2..4be4a9e 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
-@@ -28,6 +28,7 @@ set(LIBJSONNET_SOURCE
+@@ -30,6 +30,7 @@ set(LIBJSONNET_SOURCE
      string_utils.cpp
      vm.cpp)
  
@@ -10,7 +10,7 @@ index 3b7afda..a152fa9 100644
  add_library(libjsonnet ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
  add_dependencies(libjsonnet md5 stdlib)
  target_link_libraries(libjsonnet md5 nlohmann_json::nlohmann_json ryml)
-@@ -50,6 +51,7 @@ install(TARGETS libjsonnet
+@@ -53,6 +54,7 @@ install(TARGETS libjsonnet
  	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
  target_include_directories(libjsonnet INTERFACE
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
@@ -18,29 +18,27 @@ index 3b7afda..a152fa9 100644
  
  if (BUILD_STATIC_LIBS)
      # Static library for jsonnet command-line tool.
-@@ -106,3 +108,5 @@ if (BUILD_TESTS)
+@@ -112,3 +114,5 @@ if (BUILD_TESTS)
      add_test(jsonnet_test_snippet
          ${GLOBAL_OUTPUT_PATH}/jsonnet -e ${TEST_SNIPPET})
  endif()
 +
 +install(FILES ${LIB_HEADER} DESTINATION include)
 diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
-index eb7686c..326125c 100644
+index 153a4a1..9b37ef4 100644
 --- a/cpp/CMakeLists.txt
 +++ b/cpp/CMakeLists.txt
-@@ -8,9 +8,9 @@ set(LIBJSONNETPP_SOURCE
+@@ -8,8 +8,8 @@ set(LIBJSONNETPP_SOURCE
      libjsonnet++.cpp
  )
  
 +if (BUILD_SHARED_BINARIES)
  add_library(libjsonnet++ SHARED ${LIBJSONNETPP_HEADERS} ${LIBJSONNETPP_SOURCE})
 -add_dependencies(libjsonnet++ jsonnet)
--# target_link_libraries(libjsonnet libjsonnet)
-+target_link_libraries(libjsonnet libjsonnet)
+ target_link_libraries(libjsonnet++ libjsonnet)
  
  # CMake prepends CMAKE_SHARED_LIBRARY_PREFIX to shared libraries, so without
- # this step the output would be |liblibjsonnet|.
-@@ -24,6 +24,7 @@ install(TARGETS libjsonnet++
+@@ -25,6 +25,7 @@ install(TARGETS libjsonnet++
  	PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
  target_include_directories(libjsonnet++ INTERFACE
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
@@ -48,7 +46,7 @@ index eb7686c..326125c 100644
  
  if (BUILD_STATIC_LIBS)
      # Static library for jsonnet command-line tool.
-@@ -42,6 +43,7 @@ else()
+@@ -43,6 +44,7 @@ else()
      add_library(libjsonnet++_for_binaries ALIAS libjsonnet++_static)
  endif()
  

@@ -1,0 +1,12 @@
+diff --git a/lib/util.h b/lib/util.h
+index f33e70b..7b1e679 100644
+--- a/lib/util.h
++++ b/lib/util.h
+@@ -22,6 +22,7 @@
+ 
+ #include <string.h>
+ #include <sys/types.h>
++#include <stdint.h>
+ 
+ extern void libconfig_set_fatal_error_func(void (*func)(const char *));
+ 

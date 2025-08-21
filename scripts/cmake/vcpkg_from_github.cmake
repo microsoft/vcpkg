@@ -1,6 +1,6 @@
 function(vcpkg_from_github)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        ""
+        "USE_TARBALL_API"
         "OUT_SOURCE_PATH;REPO;REF;SHA512;HEAD_REF;GITHUB_HOST;AUTHORIZATION_TOKEN;FILE_DISAMBIGUATOR"
         "PATCHES")
 
@@ -102,9 +102,23 @@ Error was: ${head_version_err}
     else()
         set(downloaded_file_name "${org_name}-${repo_name}-${sanitized_ref}.tar.gz")
     endif()
+
+    if(arg_USE_TARBALL_API)
+        # This alternative endpoint has a better support for GitHub's personal
+        # access tokens (for instance when there is SSO enabled within the
+        # organization).
+        set(download_url
+            "${github_api_url}/repos/${org_name}/${repo_name}/tarball/${ref_to_use}"
+        )
+    else()
+        set(download_url
+            "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
+        )
+    endif()
+
     # Try to download the file information from github
     vcpkg_download_distfile(archive
-        URLS "${github_host}/${org_name}/${repo_name}/archive/${ref_to_use}.tar.gz"
+        URLS "${download_url}"
         FILENAME "${downloaded_file_name}"
         ${headers_param}
         ${sha512_param}

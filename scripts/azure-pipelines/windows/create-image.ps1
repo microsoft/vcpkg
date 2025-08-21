@@ -20,11 +20,11 @@ $Prefix = "Win-$DatePrefixComponent"
 $GalleryImageVersion = $DatePrefixComponent.Replace('-','.')
 $VMSize = 'Standard_D8ads_v5'
 $ProtoVMName = 'PROTOTYPE'
-$WindowsServerSku = '2022-datacenter-azure-edition'
+$WindowsServerSku = '2025-datacenter-azure-edition'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Windows Image'
-$TotalProgress = 17
+$TotalProgress = 18
 $CurrentProgress = 1
 
 # Assigning this to another variable helps when running the commands in this script manually for
@@ -95,7 +95,8 @@ function Wait-Shutdown {
 $AdminPW = New-Password
 $Credential = New-Object System.Management.Automation.PSCredential ("AdminUser", $AdminPW)
 
-$VirtualNetwork = Get-AzVirtualNetwork -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkg-image-mintingNetwork'
+$VirtualNetwork = Get-AzVirtualNetwork -ResourceGroupName 'vcpkg-image-minting' -Name 'vcpkg-image-minting-wus3'
+$Subnet = $VirtualNetwork.Subnets | Where-Object -Property 'Name' -EQ -Value 'image-minting' | Select-Object -First 1
 
 ####################################################################################################
 Write-Progress `
@@ -108,7 +109,7 @@ $Nic = New-AzNetworkInterface `
   -Name $NicName `
   -ResourceGroupName 'vcpkg-image-minting' `
   -Location $Location `
-  -Subnet $VirtualNetwork.Subnets[0] `
+  -Subnet $Subnet `
   -EnableAcceleratedNetworking
 
 $VM = New-AzVMConfig -Name $ProtoVMName -VMSize $VMSize -SecurityType TrustedLaunch -IdentityType SystemAssigned
@@ -218,6 +219,9 @@ Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-azure-cli.ps1'
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-azcopy.ps1'
 
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-settings.txt' -SkipSas

@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a1eda0c..af4079e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,8 +51,6 @@ else()
+   endif()
+ endif(BUILD_TESTING)
+ 
+-add_subdirectory(singleheader)
+-
+ add_library(ada-idna::ada-idna ALIAS ada-idna)
+ 
+ set_target_properties(
+@@ -83,3 +81,8 @@ install(
+   ARCHIVE COMPONENT ada-idna_development
+   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+ )
++
++install(EXPORT ada-idna_targets
++    FILE unofficial-ada-idna-config.cmake
++    NAMESPACE unofficial::ada-idna::
++    DESTINATION share/unofficial-ada-idna)

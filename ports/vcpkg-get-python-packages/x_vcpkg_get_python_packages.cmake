@@ -31,7 +31,10 @@ function(x_vcpkg_get_python_packages)
 
     get_filename_component(python_dir "${arg_PYTHON_EXECUTABLE}" DIRECTORY)
     set(ENV{PYTHONNOUSERSITE} "1")
-    if("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})" AND CMAKE_HOST_WIN32) # inside vcpkg and windows host.
+    if(CMAKE_HOST_WIN32 AND
+        ("${python_dir}" MATCHES "(${DOWNLOADS}|${CURRENT_HOST_INSTALLED_DIR})"
+        OR (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND ("${python_dir}" MATCHES "(${CURRENT_INSTALLED_DIR})"))
+        )) # inside vcpkg and windows host or compatible target.
         if(NOT EXISTS "${python_dir}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
             if(NOT EXISTS "${python_dir}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
                 if(arg_PYTHON_VERSION STREQUAL 3)

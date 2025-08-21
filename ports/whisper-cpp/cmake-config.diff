@@ -1,0 +1,30 @@
+diff --git a/cmake/whisper-config.cmake.in b/cmake/whisper-config.cmake.in
+index 6a3fa227..f1e06f6c 100644
+--- a/cmake/whisper-config.cmake.in
++++ b/cmake/whisper-config.cmake.in
+@@ -12,8 +12,8 @@ set(GGML_ACCELERATE @GGML_ACCELERATE@)
+ @PACKAGE_INIT@
+ 
+ set_and_check(WHISPER_INCLUDE_DIR "@PACKAGE_WHISPER_INCLUDE_INSTALL_DIR@")
+-set_and_check(WHISPER_LIB_DIR     "@PACKAGE_WHISPER_LIB_INSTALL_DIR@")
+-set_and_check(WHISPER_BIN_DIR     "@PACKAGE_WHISPER_BIN_INSTALL_DIR@")
++#set_and_check(WHISPER_LIB_DIR     "@PACKAGE_WHISPER_LIB_INSTALL_DIR@")
++#set_and_check(WHISPER_BIN_DIR     "@PACKAGE_WHISPER_BIN_INSTALL_DIR@")
+ 
+ # Ensure transient dependencies satisfied
+ 
+@@ -50,6 +50,7 @@ find_library(whisper_LIBRARY whisper
+ set(_whisper_link_deps "Threads::Threads" "@WHISPER_EXTRA_LIBS@")
+ set(_whisper_transient_defines "@WHISPER_TRANSIENT_DEFINES@")
+ 
++if(NOT TARGET whisper)
+ add_library(whisper UNKNOWN IMPORTED)
+ 
+ set_target_properties(whisper
+@@ -61,5 +62,6 @@ set_target_properties(whisper
+         IMPORTED_LOCATION "${whisper_LIBRARY}"
+         INTERFACE_COMPILE_FEATURES cxx_std_11
+         POSITION_INDEPENDENT_CODE ON )
++endif()
+ 
+ check_required_components(whisper)

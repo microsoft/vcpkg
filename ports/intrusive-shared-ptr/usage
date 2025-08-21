@@ -1,0 +1,4 @@
+intrusive-shared-ptr provides CMake targets:
+
+  find_package(isptr CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE isptr::isptr)

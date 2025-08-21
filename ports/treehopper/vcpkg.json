@@ -1,14 +1,14 @@
 {
   "name": "treehopper",
   "version": "1.11.3",
-  "port-version": 9,
+  "port-version": 10,
   "description": "Treehopper connects the physical world to your computer, tablet, or smartphone.",
   "homepage": "https://treehopper.io",
-  "supports": "!staticcrt & !uwp",
+  "supports": "!uwp & !(static & staticcrt)",
   "dependencies": [
     {
       "name": "libusb",
-      "platform": "linux"
+      "platform": "android | linux"
     },
     {
       "name": "vcpkg-cmake",

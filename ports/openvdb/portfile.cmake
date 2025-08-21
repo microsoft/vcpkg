@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
     REF "v${VERSION}"
-    SHA512 7ea2997afa99ed1ed23422eb8b8420c7127c913432f94043ccf559b6720bba2f6e19376e955d8d9055ab765a821749936966f6e5925b9d36febaa724d866b90a
+    SHA512 67b859bf77c53e68116faa7915bb6a5a50a8cff10435762890e13348625e8aebdb6661b722017632471648afe31e2f9d4cd2e18456c728192bfd0accd70a40ef
     PATCHES
         fix_cmake.patch
 )
@@ -21,16 +21,21 @@ vcpkg_check_features(
         "tools" OPENVDB_BUILD_TOOLS
         "ax"    OPENVDB_BUILD_AX
         "nanovdb" OPENVDB_BUILD_NANOVDB
+        "nanovdb-tools" NANOVDB_BUILD_TOOLS
 )
 
 if (OPENVDB_BUILD_NANOVDB)
     set(NANOVDB_OPTIONS
-    -DNANOVDB_BUILD_TOOLS=OFF
     -DNANOVDB_USE_INTRINSICS=ON
     -DNANOVDB_USE_CUDA=ON
     -DNANOVDB_CUDA_KEEP_PTX=ON
     -DNANOVDB_USE_OPENVDB=ON
-)
+    )
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
 endif()
 
 vcpkg_cmake_configure(
@@ -54,6 +59,7 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         OPENVDB_3_ABI_COMPATIBLE
         OPENVDB_BUILD_TOOLS
+        NANOVDB_BUILD_TOOLS
 )
 
 vcpkg_cmake_install()
@@ -68,6 +74,10 @@ if (OPENVDB_BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES vdb_print vdb_render vdb_view vdb_lod AUTO_CLEAN)
 endif()
 
+if (NANOVDB_BUILD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES nanovdb_convert nanovdb_print nanovdb_validate AUTO_CLEAN)
+endif()
+
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/openvdb/openvdb/COPYRIGHT")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

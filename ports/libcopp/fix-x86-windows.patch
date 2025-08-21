@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 95ebe36..658c5e1 100644
+index 085cc82..7da39f2 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -25,6 +25,11 @@ project(
+@@ -33,6 +33,11 @@ project(
    HOMEPAGE_URL "https://libcopp.atframe.work"
    LANGUAGES C CXX ASM)
  

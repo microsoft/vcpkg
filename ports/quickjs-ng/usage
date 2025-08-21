@@ -1,0 +1,4 @@
+quickjs-ng provides CMake targets:
+
+  find_package(qjs CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE qjs)

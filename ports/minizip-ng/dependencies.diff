@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9ded851..8f3c767 100644
+index c684e3e..c3b6fff 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -254,7 +254,7 @@ if(MZ_BZIP2)
@@ -67,12 +67,3 @@ index 9ded851..8f3c767 100644
      else()
          message(STATUS "OpenSSL library not found")
  
-@@ -735,7 +732,7 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
-     if(MINIZIP_DEP_PKG)
-         string(APPEND MINIZIP_CONFIG_CONTENT "include(CMakeFindDependencyMacro)\n")
-         foreach(pkg_name ${MINIZIP_DEP_PKG})
--            string(APPEND MINIZIP_CONFIG_CONTENT "find_dependency(${pkg_name} REQUIRED)\n")
-+            string(APPEND MINIZIP_CONFIG_CONTENT "find_dependency(${pkg_name})\n")
-         endforeach()
-     endif()
-     string(APPEND MINIZIP_CONFIG_CONTENT "include(\"\${CMAKE_CURRENT_LIST_DIR}/${MINIZIP_TARGET}.cmake\")")

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/asio
     REF boost-${VERSION}
-    SHA512 379905acf0cc0352c8df32f4106c3e17ad0f02fd0367288c2dca319a7573bd34ebf435a0e9d876ee0d44a24189d896167c49c7727e1dc77c0fca887e9f7a6eca
+    SHA512 5b6adb3d4500ed0173911e9be2b774d186838e3cb13273078e1f00b8f5fb79fd7f52fbbe9fe326c96d3062e4a1c047ad795118d8834d431dcec8734b7dac2711
     HEAD_REF master
     PATCHES
         opt-dep.diff

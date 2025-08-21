@@ -1,6 +1,6 @@
 {
   "name": "cpp-timsort",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A C++ implementation of timsort",
   "homepage": "https://github.com/timsort/cpp-TimSort",
   "license": "MIT",

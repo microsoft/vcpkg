@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/entt
     REF "v${VERSION}"
-    SHA512 153cd353aa211a93c8f2f8650d55a0fd2ea9abb836386ef827285b6ab96ad680e92cac65c4b23db50c7882078d599200ac6a9eb3326a2a33160e62fc624202c7
+    SHA512 ab9ea213fdfedb7b51554b4adfdb07ec363482728f4e758ec002ea3cdbb2ff45bbfbd06f46db17a50d8ce14c6537ff7683efdb3102212f0c4ab674d18a5517a3
     HEAD_REF master
 )
 
@@ -12,6 +12,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENTT_BUILD_TESTING=OFF
+        -DENTT_BUILD_DOCS=OFF
+        -DENTT_INSTALL=ON
 )
 
 vcpkg_cmake_install()

@@ -1,0 +1,133 @@
+diff --git a/source/Legacy/CMakeLists.txt b/source/Legacy/CMakeLists.txt
+index 2a7367c..a0bfbd3 100644
+--- a/source/Legacy/CMakeLists.txt
++++ b/source/Legacy/CMakeLists.txt
+@@ -86,12 +86,12 @@ set_target_properties(MultiSense PROPERTIES PUBLIC_HEADER "${MULTISENSE_HEADERS}
+ # We want to link against our child libraries.
+ #
+ 
+-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
++find_package(Threads REQUIRED)
++target_link_libraries(MultiSense Threads::Threads)
++if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+     target_link_libraries(MultiSense ws2_32)
+-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-    target_link_libraries(MultiSense pthread)
+-else()
+-    target_link_libraries(MultiSense pthread rt)
++elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++    target_link_libraries(MultiSense rt)
+ endif()
+ 
+ include(CMakePackageConfigHelpers)
+diff --git a/source/LibMultiSense/CMakeLists.txt b/source/LibMultiSense/CMakeLists.txt
+index 7a4cb8e..72e2e54 100644
+--- a/source/LibMultiSense/CMakeLists.txt
++++ b/source/LibMultiSense/CMakeLists.txt
+@@ -66,12 +66,12 @@ set_target_properties(MultiSense PROPERTIES PUBLIC_HEADER "${MULTISENSE_HEADERS}
+ # We want to link against our child libraries.
+ #
+ 
+-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
++find_package(Threads REQUIRED)
++target_link_libraries(MultiSense Threads::Threads)
++if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+     target_link_libraries(MultiSense ws2_32)
+-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-    target_link_libraries(MultiSense pthread)
+-else()
+-    target_link_libraries(MultiSense pthread rt)
++elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++    target_link_libraries(MultiSense rt)
+ endif()
+ 
+ if (BUILD_TESTS)
+diff --git a/source/Utilities/Legacy/CMakeLists.txt b/source/Utilities/Legacy/CMakeLists.txt
+index 21c747d..da05f78 100644
+--- a/source/Utilities/Legacy/CMakeLists.txt
++++ b/source/Utilities/Legacy/CMakeLists.txt
+@@ -8,32 +8,16 @@ include_directories(shared)
+ # Common libraries that each utility needs to link with.
+ #
+ 
+-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+-
+-set (MULTISENSE_UTILITY_LIBS
+-     ${MULTISENSE_UTILITY_LIBS}
+-     MultiSense
+-     ws2_32
+-)
+-
+-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-
+-set (MULTISENSE_UTILITY_LIBS
+-     ${MULTISENSE_UTILITY_LIBS}
++find_package(Threads REQUIRED)
++list(APPEND MULTISENSE_UTILITY_LIBS
+      MultiSense
+-     pthread
++     Threads::Threads
+ )
+-
+-else ()
+-
+-set (MULTISENSE_UTILITY_LIBS
+-     ${MULTISENSE_UTILITY_LIBS}
+-     MultiSense
+-     pthread
+-     rt
+-)
+-
+-endif ()
++if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
++     list(APPEND MULTISENSE_UTILITY_LIBS ws2_32)
++elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++     list(APPEND MULTISENSE_UTILITY_LIBS rt)
++endif()
+ 
+ #
+ # Recurse into each of these directories.
+diff --git a/source/Utilities/LibMultiSense/CMakeLists.txt b/source/Utilities/LibMultiSense/CMakeLists.txt
+index 3d21f9b..0d9a992 100644
+--- a/source/Utilities/LibMultiSense/CMakeLists.txt
++++ b/source/Utilities/LibMultiSense/CMakeLists.txt
+@@ -1,30 +1,13 @@
+-
+-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+-
+-set (MULTISENSE_UTILITY_LIBS
+-    ${MULTISENSE_UTILITY_LIBS}
+-    MultiSense
+-    ws2_32
+-)
+-
+-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+-
+-set (MULTISENSE_UTILITY_LIBS
+-    ${MULTISENSE_UTILITY_LIBS}
+-    MultiSense
+-    pthread
++find_package(Threads REQUIRED)
++list(APPEND MULTISENSE_UTILITY_LIBS
++     MultiSense
++     Threads::Threads
+ )
+-
+-else ()
+-
+-set (MULTISENSE_UTILITY_LIBS
+-    ${MULTISENSE_UTILITY_LIBS}
+-    MultiSense
+-    pthread
+-    rt
+-)
+-
+-endif ()
++if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
++     list(APPEND MULTISENSE_UTILITY_LIBS ws2_32)
++elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++     list(APPEND MULTISENSE_UTILITY_LIBS rt)
++endif()
+ 
+ add_subdirectory(ChangeIpUtility)
+ add_subdirectory(DeviceInfoUtility)

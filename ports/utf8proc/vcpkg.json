@@ -1,6 +1,6 @@
 {
   "name": "utf8proc",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "description": "Clean C library for processing UTF-8 Unicode data.",
   "homepage": "https://github.com/JuliaLang/utf8proc",
   "license": "MIT",

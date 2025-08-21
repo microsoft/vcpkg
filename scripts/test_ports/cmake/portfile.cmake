@@ -3,29 +3,23 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.kitware.com/
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cmake/cmake
-    REF
-        8428e39ed9cddb3b7f1a6f7a58cb8617503183d2
-    SHA512
-        12df5d68aad6bf1bfa34c3a83b428e1ecdc0b2b746e92bf71157eec4b4c114c86f21e91509f26f5da6e8916941563750e63cc3218970eaba33d6de231599de34
+    REF v${VERSION}
+    SHA512 ac67fe802179f6cd9ed290f905976923ffa3843e63e0e680a971a1019a88b813e281bd912e71a02af5df101eb1dd1692f140e34466ba4fa1b822a03097d2467b
     HEAD_REF master
     PATCHES
-        curl.diff
         fix-dependency-libuv.patch
 )
-set(OPTIONS)
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
-    list(APPEND OPTIONS "-DBUILD_CursesDialog=ON")
-else()
+set(OPTIONS "")
+if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS "-DBUILD_CursesDialog=OFF")
+else()
+    list(APPEND OPTIONS "-DBUILD_CursesDialog=ON")
 endif()
 
 if(VCPKG_CROSSCOMPILING)
     list(APPEND OPTIONS "-DQt6CoreTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6CoreTools")
     list(APPEND OPTIONS "-DQt6WidgetsTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6WidgetsTools")
     list(APPEND OPTIONS "-DQt6GuiTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6GuiTools")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 AND VCPKG_TARGET_IS_WINDOWS) # Remove if PR #16111 is merged
-        list(APPEND OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows)
-    endif()
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -38,17 +32,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${OPTIONS}
         -DBUILD_TESTING=OFF
-        #-DCMAKE_USE_SYSTEM_LIBRARIES=ON
-        -DCMAKE_USE_SYSTEM_LIBARCHIVE=ON
-        -DCMAKE_USE_SYSTEM_CURL=ON
-        -DCMAKE_USE_SYSTEM_EXPAT=ON
-        -DCMAKE_USE_SYSTEM_ZLIB=ON
-        -DCMAKE_USE_SYSTEM_BZIP2=ON
-        -DCMAKE_USE_SYSTEM_ZSTD=ON
-        -DCMAKE_USE_SYSTEM_FORM=ON
-        -DCMAKE_USE_SYSTEM_JSONCPP=ON
-        -DCMAKE_USE_SYSTEM_LIBRHASH=OFF # not yet in VCPKG
-        -DCMAKE_USE_SYSTEM_LIBUV=ON
+        -DCMAKE_USE_SYSTEM_LIBRARIES=ON
         -DBUILD_QtDialog=ON # Just to test Qt with CMake
         -DCMake_QT_MAJOR_VERSION:STRING=6
 )
@@ -56,16 +40,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
-if(NOT VCPKG_TARGET_IS_OSX)
-    set(_tools cmake cmake-gui ctest cpack)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND _tools cmcldeps)
-    endif()
-    if(BUILD_CURSES_DIALOG)
-        list(APPEND _tools ccmake)
-    endif()
-    vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
-else()
+if(VCPKG_TARGET_IS_OSX)
     # On OSX everything is within a CMake.app folder
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
     file(RENAME "${CURRENT_PACKAGES_DIR}/CMake.app" "${CURRENT_PACKAGES_DIR}/tools/CMake.app")
@@ -73,10 +48,16 @@ else()
         file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/debug")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/CMake.app" "${CURRENT_PACKAGES_DIR}/tools/debug/CMake.app")
     endif()
+else()
+    set(tool_names cmake cmake-gui ctest cpack)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(APPEND tool_names cmcldeps)
+    else()
+        list(APPEND tool_names ccmake)
+    endif()
+    vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-# Handle copyright
-configure_file("${SOURCE_PATH}/Copyright.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.rst")

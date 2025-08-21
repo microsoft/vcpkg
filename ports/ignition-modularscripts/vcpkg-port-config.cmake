@@ -139,7 +139,7 @@ function(ignition_modular_library)
     endif()
 
     # If the CMAKE_PACKAGE_NAME option is omitted, use the canonical one
-    set(DEFAULT_CMAKE_PACKAGE_NAME "ignition-${IML_NAME}${IML_MAJOR_VERSION}")
+    set(DEFAULT_CMAKE_PACKAGE_NAME "gz-${IML_NAME}${IML_MAJOR_VERSION}")
     if(NOT DEFINED IML_CMAKE_PACKAGE_NAME)
         set(IML_CMAKE_PACKAGE_NAME "${DEFAULT_CMAKE_PACKAGE_NAME}")
     endif()

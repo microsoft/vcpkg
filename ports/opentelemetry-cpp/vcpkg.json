@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-cpp",
-  "version-semver": "1.17.0",
+  "version-semver": "1.22.0",
   "port-version": 1,
   "description": [
     "OpenTelemetry is a collection of tools, APIs, and SDKs.",
@@ -48,6 +48,19 @@
         "opentelemetry-cpp-contrib-version"
       ]
     },
+    "opentracing": {
+      "description": "Whether to include the Opentracing shim",
+      "dependencies": [
+        "opentracing"
+      ]
+    },
+    "otlp-file": {
+      "description": "Whether to include the OpenTelemetry Protocol to File exporter in the SDK",
+      "supports": "!uwp",
+      "dependencies": [
+        "protobuf"
+      ]
+    },
     "otlp-grpc": {
       "description": "Whether to include the OTLP gRPC exporter in the SDK",
       "dependencies": [
@@ -87,7 +100,10 @@
       ]
     },
     "zipkin": {
-      "description": "Whether to include the Zipkin exporter in the SDK"
+      "description": "Whether to include the Zipkin exporter in the SDK",
+      "dependencies": [
+        "curl"
+      ]
     }
   }
 }

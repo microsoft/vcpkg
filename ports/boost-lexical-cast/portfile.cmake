@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/lexical_cast
     REF boost-${VERSION}
-    SHA512 f4ce81d6f1acc31b131bb60d2918147f3cdbb9ab38a1abf8d463fc437d5eea6cd8dcc676b09b28c3174c2ffeb7cabb2439cbc546bbea86f8ea01c2dee596f39d
+    SHA512 71eb6eaaea512d48dbbd69857330c29644c1ca7b4d13ded2379f80ec8bb893c8bc906fb62116b53234f8d4216ead99d516ee5a83156b6ef74e5b125f6184d694
     HEAD_REF master
 )
 

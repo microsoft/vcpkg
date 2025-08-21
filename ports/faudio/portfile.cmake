@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FNA-XNA/faudio
     REF "${VERSION}"
-    SHA512 f74282a7df749f50026bb07309ca20fb12b098cc24b003f8b93f4f6868a3d6f4343d4bd06b947b17d9ec6c1d08f88e477da259397d745f9cc41321f7c5722448
+    SHA512 f5acd68969e918a70ca59e2f9ef9f1c0c528a07d10537525c440247ccda0d11af7e079a815a17352f35e28c11abb33b6a926db44e87eeaa1f6910c8f0dee9ad4
     HEAD_REF master
 )
 
@@ -21,9 +21,12 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FAudio)
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
 vcpkg_install_copyright(
     COMMENT "FAudio is licensed under the Zlib license."

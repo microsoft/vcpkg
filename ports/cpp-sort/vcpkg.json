@@ -1,6 +1,6 @@
 {
   "name": "cpp-sort",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "Sorting algorithms & related tools for C++14",
   "homepage": "https://github.com/Morwenn/cpp-sort/",
   "license": "MIT",

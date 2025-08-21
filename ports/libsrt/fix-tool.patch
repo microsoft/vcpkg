@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e8062a..2277e33 100644
+index 7ed11ef..794028a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1300,11 +1300,13 @@ if (ENABLE_APPS)
+@@ -1384,11 +1384,13 @@ if (ENABLE_APPS)
  
  	# Applications
  
@@ -18,13 +18,13 @@ index 7e8062a..2277e33 100644
  
  	if (MINGW)
  		# FIXME: with MINGW, it fails to build apps that require C++11
-@@ -1313,7 +1315,8 @@ if (ENABLE_APPS)
+@@ -1397,7 +1399,8 @@ if (ENABLE_APPS)
  	else()
  		# srt-multiplex temporarily blocked
  		#srt_add_application(srt-multiplex ${VIRTUAL_srtsupport})
 -		srt_add_application(srt-tunnel ${VIRTUAL_srtsupport})
 +		srt_add_application(srt-tunnel ${VIRTUAL_srtsupport} ${VIRTUAL_srt})
 +		target_link_libraries(srt-tunnel ${SSL_LIBRARIES})
- 		target_compile_definitions(srt-tunnel PUBLIC -DSRT_ENABLE_VERBOSE_LOCK)
  	endif()
  
+ 	if (ENABLE_TESTING)

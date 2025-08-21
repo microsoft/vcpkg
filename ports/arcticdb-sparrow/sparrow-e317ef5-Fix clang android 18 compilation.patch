@@ -1,0 +1,192 @@
+From e317ef5dfc5696845ee3ff42be705328eb0e1769 Mon Sep 17 00:00:00 2001
+From: Alexis Placet <alexis.placet@quantstack.net>
+Date: Thu, 17 Jul 2025 11:32:12 +0200
+Subject: [PATCH] Fix clang android 18 compilation (#514)
+
+---
+ include/sparrow/config/config.hpp            |  9 ++++----
+ include/sparrow/dictionary_encoded_array.hpp | 13 +++++------
+ include/sparrow/union_array.hpp              | 23 ++++++++++----------
+ 3 files changed, 22 insertions(+), 23 deletions(-)
+
+diff --git a/include/sparrow/config/config.hpp b/include/sparrow/config/config.hpp
+index ebd84239..77136639 100644
+--- a/include/sparrow/config/config.hpp
++++ b/include/sparrow/config/config.hpp
+@@ -56,9 +56,10 @@
+ #    endif
+ #endif
+ 
+-// If using clang or apple-clang version < 18, we define the constexpr keyword to be empty.
+-#if defined(__clang__) && __clang_major__ < 18
+-#    define SPARROW_CONSTEXPR_CLANG_17 inline
++// If using clang or apple-clang version < 18 or clang 18 on Android, we define the constexpr keyword to be
++// "inline".
++#if defined(__clang__) && ((__clang_major__ < 18) || (__clang_major__ == 18 && defined(__ANDROID__)))
++#    define SPARROW_CONSTEXPR_CLANG inline
+ #else
+-#    define SPARROW_CONSTEXPR_CLANG_17 constexpr
++#    define SPARROW_CONSTEXPR_CLANG constexpr
+ #endif
+diff --git a/include/sparrow/dictionary_encoded_array.hpp b/include/sparrow/dictionary_encoded_array.hpp
+index 606ea1e9..5eb5d587 100644
+--- a/include/sparrow/dictionary_encoded_array.hpp
++++ b/include/sparrow/dictionary_encoded_array.hpp
+@@ -241,7 +241,7 @@ namespace sparrow
+          * @param i The index of the element to access.
+          * @return Constant reference to the element at the specified index.
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 const_reference operator[](size_type i) const;
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG const_reference operator[](size_type i) const;
+ 
+         /**
+          * Gets an iterator to the beginning of the array.
+@@ -332,14 +332,14 @@ namespace sparrow
+          *
+          * @return Constant reference to the first element.
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 const_reference front() const;
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG const_reference front() const;
+ 
+         /**
+          * Gets a reference to the last element.
+          *
+          * @return Constant reference to the last element.
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 const_reference back() const;
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG const_reference back() const;
+ 
+         /**
+          * Constructs a dictionary encoded array with the given arguments.
+@@ -776,8 +776,7 @@ namespace sparrow
+     }
+ 
+     template <std::integral IT>
+-    SPARROW_CONSTEXPR_CLANG_17 auto dictionary_encoded_array<IT>::operator[](size_type i) const
+-        -> const_reference
++    SPARROW_CONSTEXPR_CLANG auto dictionary_encoded_array<IT>::operator[](size_type i) const -> const_reference
+     {
+         SPARROW_ASSERT_TRUE(i < size());
+         const auto index = m_keys_layout[i];
+@@ -866,14 +865,14 @@ namespace sparrow
+     }
+ 
+     template <std::integral IT>
+-    SPARROW_CONSTEXPR_CLANG_17 auto dictionary_encoded_array<IT>::front() const -> const_reference
++    SPARROW_CONSTEXPR_CLANG auto dictionary_encoded_array<IT>::front() const -> const_reference
+     {
+         SPARROW_ASSERT_FALSE(empty());
+         return operator[](0);
+     }
+ 
+     template <std::integral IT>
+-    SPARROW_CONSTEXPR_CLANG_17 auto dictionary_encoded_array<IT>::back() const -> const_reference
++    SPARROW_CONSTEXPR_CLANG auto dictionary_encoded_array<IT>::back() const -> const_reference
+     {
+         SPARROW_ASSERT_FALSE(empty());
+         return operator[](size() - 1);
+diff --git a/include/sparrow/union_array.hpp b/include/sparrow/union_array.hpp
+index 1f98ce9c..2459c35f 100644
+--- a/include/sparrow/union_array.hpp
++++ b/include/sparrow/union_array.hpp
+@@ -157,7 +157,7 @@ namespace sparrow
+          * @post Returns nullopt if no metadata is set
+          * @post Returned view remains valid while array exists
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 std::optional<key_value_view> metadata() const;
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG std::optional<key_value_view> metadata() const;
+ 
+         /**
+          * @brief Gets element at specified position with bounds checking.
+@@ -171,7 +171,7 @@ namespace sparrow
+          *
+          * @throws std::out_of_range if i >= size()
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 value_type at(size_type i) const;
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG value_type at(size_type i) const;
+ 
+         /**
+          * @brief Gets element at specified position without bounds checking.
+@@ -183,7 +183,7 @@ namespace sparrow
+          * @post Returns value from child array indicated by type ID
+          * @post Value type depends on the type ID at position i
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 value_type operator[](size_type i) const;
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG value_type operator[](size_type i) const;
+ 
+         /**
+          * @brief Gets mutable element at specified position.
+@@ -195,7 +195,7 @@ namespace sparrow
+          * @post Returns value from child array indicated by type ID
+          * @post Value type depends on the type ID at position i
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 value_type operator[](size_type i);
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG value_type operator[](size_type i);
+ 
+         /**
+          * @brief Gets reference to the first element.
+@@ -206,7 +206,7 @@ namespace sparrow
+          * @post Returns valid value from child array
+          * @post Equivalent to (*this)[0]
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 value_type front() const;
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG value_type front() const;
+ 
+         /**
+          * @brief Gets reference to the last element.
+@@ -217,7 +217,7 @@ namespace sparrow
+          * @post Returns valid value from child array
+          * @post Equivalent to (*this)[size() - 1]
+          */
+-        [[nodiscard]] SPARROW_CONSTEXPR_CLANG_17 value_type back() const;
++        [[nodiscard]] SPARROW_CONSTEXPR_CLANG value_type back() const;
+ 
+         /**
+          * @brief Checks if the union array is empty.
+@@ -1010,7 +1010,7 @@ namespace sparrow
+     }
+ 
+     template <class DERIVED>
+-    SPARROW_CONSTEXPR_CLANG_17 std::optional<key_value_view> union_array_crtp_base<DERIVED>::metadata() const
++    SPARROW_CONSTEXPR_CLANG std::optional<key_value_view> union_array_crtp_base<DERIVED>::metadata() const
+     {
+         return m_proxy.metadata();
+     }
+@@ -1056,8 +1056,7 @@ namespace sparrow
+     }
+ 
+     template <class DERIVED>
+-    SPARROW_CONSTEXPR_CLANG_17 auto union_array_crtp_base<DERIVED>::operator[](std::size_t i) const
+-        -> value_type
++    SPARROW_CONSTEXPR_CLANG auto union_array_crtp_base<DERIVED>::operator[](std::size_t i) const -> value_type
+     {
+         const auto type_id = static_cast<std::size_t>(p_type_ids[i]);
+         const auto child_index = m_type_id_map[type_id];
+@@ -1066,7 +1065,7 @@ namespace sparrow
+     }
+ 
+     template <class DERIVED>
+-    SPARROW_CONSTEXPR_CLANG_17 auto union_array_crtp_base<DERIVED>::operator[](std::size_t i) -> value_type
++    SPARROW_CONSTEXPR_CLANG auto union_array_crtp_base<DERIVED>::operator[](std::size_t i) -> value_type
+     {
+         return static_cast<const derived_type&>(*this)[i];
+     }
+@@ -1144,13 +1143,13 @@ namespace sparrow
+     }
+ 
+     template <class DERIVED>
+-    SPARROW_CONSTEXPR_CLANG_17 auto union_array_crtp_base<DERIVED>::front() const -> value_type
++    SPARROW_CONSTEXPR_CLANG auto union_array_crtp_base<DERIVED>::front() const -> value_type
+     {
+         return (*this)[0];
+     }
+ 
+     template <class DERIVED>
+-    SPARROW_CONSTEXPR_CLANG_17 auto union_array_crtp_base<DERIVED>::back() const -> value_type
++    SPARROW_CONSTEXPR_CLANG auto union_array_crtp_base<DERIVED>::back() const -> value_type
+     {
+         return (*this)[this->size() - 1];
+     }
+-- 
+2.47.1.windows.2
+

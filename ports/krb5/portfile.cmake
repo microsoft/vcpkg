@@ -19,6 +19,8 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         SOURCE_PATH "${SOURCE_PATH}/src"
         PROJECT_NAME Makefile.in
         TARGET prep-windows
+        OPTIONS_RELEASE
+            "NODEBUG=1"
     )
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
@@ -30,6 +32,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             "NO_LEASH=1"
         OPTIONS_RELEASE
             "KRB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}"
+            "NODEBUG=1"
         OPTIONS_DEBUG
             "KRB_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug"
     )
@@ -51,7 +54,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
     vcpkg_copy_tools(
         TOOL_NAMES ${tools}
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"        
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin"
         AUTO_CLEAN
     )
     foreach(tool_name ${tools})
@@ -110,6 +113,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "${CURRENT_PACKAGES_DIR}/debug/lib/krb5/"
         "${CURRENT_PACKAGES_DIR}/lib/krb5/"
     )
+endif()
+
+if(VCPKG_BUILD_TYPE)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/NOTICE")

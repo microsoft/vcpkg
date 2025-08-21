@@ -37,8 +37,18 @@ if(VCPKG_TARGET_IS_MINGW)
     )
 endif()
 
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+# There are compilation errors on gcc 15. adding `-std=c17` to CFLAGS for workaround.
+# ref: https://gitlab.archlinux.org/archlinux/packaging/packages/ncurses/-/issues/3
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND VCPKG_DETECTED_CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 15)
+    set(ENV{CFLAGS} "$ENV{CFLAGS} -std=c17")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
+    CONFIGURE_ENVIRONMENT_VARIABLES CFLAGS
     DETERMINE_BUILD_TRIPLET
     NO_ADDITIONAL_PATHS
     OPTIONS

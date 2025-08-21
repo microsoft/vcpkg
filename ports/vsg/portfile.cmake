@@ -2,11 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vsg-dev/VulkanSceneGraph
     REF "v${VERSION}"
-    SHA512 a9a1d2f82badc393b7be8db9616ef6bd5fa74cd65f83dd65d7d7344b61eb9d52d24f34de71f98f2de1a5bd4c41c7aae5e538a4f58346ff1a9ec5108cbef759cf
+    SHA512 997ba97c4860c2b9e79589358b1471df5ec14e64329bc8c5e23b1db2e855e63433cc5141f5fe34f785f88c9b3bcfc27f6aa8e9f5fc5d11cfdd1dab43f0e448cc
     HEAD_REF master
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+# added -DGLSLANG_MIN_VERSION=15 to sync with vcpkg version of glslang
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DGLSLANG_MIN_VERSION=
+)
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "vsg" CONFIG_PATH "lib/cmake/vsg")
 vcpkg_copy_pdbs()

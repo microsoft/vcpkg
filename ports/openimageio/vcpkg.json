@@ -1,6 +1,6 @@
 {
   "name": "openimageio",
-  "version": "3.0.0.3",
+  "version": "3.0.9.1",
   "port-version": 1,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
@@ -51,6 +51,12 @@
         "giflib"
       ]
     },
+    "jpegxl": {
+      "description": "Enable JPEG XL codec",
+      "dependencies": [
+        "libjxl"
+      ]
+    },
     "libheif": {
       "description": "Enable heif support for openimageio",
       "dependencies": [
@@ -77,7 +83,12 @@
       "dependencies": [
         {
           "name": "opencv",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "fs",
+            "intrinsics",
+            "thread"
+          ]
         }
       ]
     },
@@ -99,6 +110,7 @@
     },
     "viewer": {
       "description": "Build openimageio viewer",
+      "supports": "!android",
       "dependencies": [
         "opengl",
         {

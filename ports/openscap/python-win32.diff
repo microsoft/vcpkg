@@ -1,0 +1,23 @@
+diff --git a/swig/python3/CMakeLists.txt b/swig/python3/CMakeLists.txt
+index cbad9f9..1aba788 100644
+--- a/swig/python3/CMakeLists.txt
++++ b/swig/python3/CMakeLists.txt
+@@ -6,6 +6,9 @@ include_directories(${PYTHON_INCLUDE_PATH})
+ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+ 
+ set(CMAKE_SWIG_FLAGS "-module" "openscap_py")
++if (WIN32)
++	list(APPEND CMAKE_SWIG_FLAGS "-D_WIN32")
++endif()
+ if (${CMAKE_VERSION} VERSION_LESS "3.8.0")
+ 	swig_add_module(openscap_py python ../openscap.i)
+ else()
+@@ -17,7 +20,7 @@ if (${CMAKE_C_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_C_COMPILER_ID} STREQUAL "Cl
+ endif()
+ 
+ add_custom_command(OUTPUT ${PYTHON_COMPILED_FILES}
+-	COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../openscap_api.py ${CMAKE_CURRENT_BINARY_DIR}
++	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/../openscap_api.py ${CMAKE_CURRENT_BINARY_DIR}
+ 	COMMAND ${PYTHON_EXECUTABLE} -m compileall ${CMAKE_CURRENT_BINARY_DIR}
+ 	COMMAND ${PYTHON_EXECUTABLE} -O -m compileall ${CMAKE_CURRENT_BINARY_DIR}
+ 	DEPENDS ${SWIG_MODULE_openscap_py_REAL_NAME}

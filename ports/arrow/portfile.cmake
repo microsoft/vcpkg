@@ -2,16 +2,17 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 4df30ab5561da695eaa864422626b9898555d86ca56835c3b8a8ca93a1dbaf081582bb36e2440d1daf7e1dd48c76941f1152a4f25ce0dbcc1c2abe244a00c05e
+    SHA512 89da6de7eb2513c797d6671e1addf40b8b156215b481cf2511fa69faa16547c52d8220727626eeda499e4384d276e03880cd920aaab41c3d15106743d51a90a6
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
-        android.patch
-        msvc-static-name.patch
-        utf8proc.patch
-        thrift.patch
+        0001-msvc-static-name.patch
+        0002-utf8proc.patch
+        0003-android-musl.patch
+        0004-android-datetime.patch
+        0005-cmake-msvcruntime.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -90,6 +91,14 @@ if("acero" IN_LIST FEATURES)
     )
 endif()
 
+if("compute" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrowcompute
+        CONFIG_PATH lib/cmake/ArrowCompute
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("flight" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
         PACKAGE_NAME ArrowFlight
@@ -127,6 +136,11 @@ endif()
 if("acero" IN_LIST FEATURES)
     file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-acero" usage-acero)
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-acero}")
+endif()
+
+if("compute" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-compute" usage-compute)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-compute}")
 endif()
 
 if("flight" IN_LIST FEATURES)

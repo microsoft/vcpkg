@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1ff6c9a..95c335c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -73,6 +73,7 @@ if(PKG_CONFIG_FOUND)
+     pkg_check_modules(LIBUSB libusb-1.0 IMPORTED_TARGET)
+     if(LIBUSB_LINK_LIBRARIES)
+         set(LIBUSB_LIBRARIES "${LIBUSB_LINK_LIBRARIES}")
++        set(LIBUSB_LIBRARY_DIRS "")
+     endif()
+ else()
+     set(LIBUSB_LIBRARIES "" CACHE STRING "manual libusb path")
+@@ -80,7 +81,8 @@ else()
+ endif()
+ 
+ if(MSVC)
+-    set(THREADS_PTHREADS_LIBRARY "" CACHE STRING "manual pthread-win32 path")
++    find_package(PThreads4W REQUIRED)
++    set(THREADS_PTHREADS_LIBRARY "PThreads4W::PThreads4W" CACHE INTERNAL "")
+     set(THREADS_PTHREADS_INCLUDE_DIR "" CACHE STRING "manual pthread-win32 includepath")
+ else()
+     set(THREADS_PTHREADS_LIBRARY "" CACHE INTERNAL "manual pthread-win32 path")
+diff --git a/cmake/rtlsdrConfig.cmake b/cmake/rtlsdrConfig.cmake
+index eeff2f3..23702ca 100644
+--- a/cmake/rtlsdrConfig.cmake
++++ b/cmake/rtlsdrConfig.cmake
+@@ -1,5 +1,7 @@
+-include(FindPkgConfig)
+-pkg_check_modules(LIBUSB libusb-1.0 IMPORTED_TARGET)
++if(MSVC)
++  include(CMakeFindDependencyMacro)
++  find_dependency(PThreads4W)
++endif()
+ 
+ get_filename_component(RTLSDR_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ 
+diff --git a/librtlsdr.pc.in b/librtlsdr.pc.in
+index e46519a..92bbddf 100644
+--- a/librtlsdr.pc.in
++++ b/librtlsdr.pc.in
+@@ -8,4 +8,5 @@ Description: C Utility Library
+ Version: @VERSION@
+ Cflags: -I${includedir}/
+ Libs: -L${libdir} -lrtlsdr
+-Libs.private:  -lusb-1.0 @RTLSDR_PC_LIBS@
++Libs.private:            @RTLSDR_PC_LIBS@
++Requires.private: libusb-1.0
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index a2bcb3d..ecc3c90 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -38,7 +38,7 @@ generate_export_header(rtlsdr)
+ ########################################################################
+ add_library(rtlsdr_static STATIC librtlsdr.c
+   tuner_e4k.c tuner_fc0012.c tuner_fc0013.c tuner_fc2580.c tuner_r82xx.c)
+-target_link_libraries(rtlsdr ${LIBUSB_LIBRARIES} ${THREADS_PTHREADS_LIBRARY})
++target_link_libraries(rtlsdr_static ${LIBUSB_LIBRARIES} ${THREADS_PTHREADS_LIBRARY})
+ target_include_directories(rtlsdr_static PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>  # <prefix>/include

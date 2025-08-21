@@ -1,0 +1,12 @@
+diff --git a/src/urcu-bp.c b/src/urcu-bp.c
+index 8e9afd8..b1edc5c 100644
+--- a/src/urcu-bp.c
++++ b/src/urcu-bp.c
+@@ -21,6 +21,7 @@
+ #include <unistd.h>
+ #include <stdbool.h>
+ #include <sys/mman.h>
++#include <assert.h>
+ 
+ #include <urcu/annotate.h>
+ #include <urcu/assert.h>

@@ -1,8 +1,8 @@
 {
   "name": "libsoup",
-  "version": "3.6.0",
+  "version": "3.6.5",
   "description": "HTTP Library for GLib",
-  "homepage": "https://libsoup.org",
+  "homepage": "https://libsoup.gnome.org/",
   "license": "LGPL-2.0-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
@@ -14,7 +14,10 @@
     "glib-networking",
     "libpsl",
     "nghttp2",
-    "sqlite3",
+    {
+      "name": "sqlite3",
+      "default-features": false
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

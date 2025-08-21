@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 98d07c9..5b79f06 100644
+index 99957a1..9a5fb2b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -436,12 +436,12 @@ IF(WIN32)
+@@ -533,12 +533,12 @@ IF(WIN32)
      LIST(APPEND LIBS winmm gdi32)
      IF(FREEGLUT_BUILD_SHARED_LIBS)
          TARGET_COMPILE_DEFINITIONS(freeglut PRIVATE FREEGLUT_EXPORTS)
@@ -15,10 +15,10 @@ index 98d07c9..5b79f06 100644
 -            SET_TARGET_PROPERTIES(freeglut_static PROPERTIES OUTPUT_NAME ${LIBNAME})
 +            SET_TARGET_PROPERTIES(freeglut_static PROPERTIES OUTPUT_NAME freeglut)
          ENDIF()
-     ENDIF()
- ELSE()
+         # need to set machine:x64 for linker, at least for VC10, and
+         # doesn't hurt for older compilers:
 diff --git a/include/GL/freeglut_std.h b/include/GL/freeglut_std.h
-index a5efb3b..6bdcdfb 100644
+index e5da4ce..4eea6eb 100644
 --- a/include/GL/freeglut_std.h
 +++ b/include/GL/freeglut_std.h
 @@ -71,9 +71,9 @@

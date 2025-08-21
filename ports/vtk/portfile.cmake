@@ -39,6 +39,8 @@ vcpkg_from_github(
         opencascade-7.8.0.patch
         no-libharu-for-ioexport.patch
         no-libproj-for-netcdf.patch
+        octree.patch
+        fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
 )
 
 # =============================================================================
@@ -134,26 +136,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
 )
 
-# Require port features to prevent accidental finding of transitive dependencies
+# Lock port features to prevent accidental finding of transitive dependencies
 vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
-  FEATURES
-    "libtheora" CMAKE_REQUIRE_FIND_PACKAGE_THEORA
-    "libharu" CMAKE_REQUIRE_FIND_PACKAGE_LibHaru
-    "cgns" CMAKE_REQUIRE_FIND_PACKAGE_CGNS
-    "seacas" CMAKE_REQUIRE_FIND_PACKAGE_SEACASIoss
-    "seacas" CMAKE_REQUIRE_FIND_PACKAGE_SEACASExodus
-    "sql" CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
-    "proj" CMAKE_REQUIRE_FIND_PACKAGE_PROJ
-    "netcdf" CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
-  INVERTED_FEATURES
-    "libtheora" CMAKE_DISABLE_FIND_PACKAGE_THEORA
-    "libharu" CMAKE_DISABLE_FIND_PACKAGE_LibHaru
-    "cgns" CMAKE_DISABLE_FIND_PACKAGE_CGNS
-    "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
-    "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
-    "sql" CMAKE_DISABLE_FIND_PACKAGE_SQLite3
-    "proj" CMAKE_DISABLE_FIND_PACKAGE_PROJ
-    "netcdf" CMAKE_DISABLE_FIND_PACKAGE_NetCDF
+    FEATURES
+        "cgns"        VCPKG_LOCK_FIND_PACKAGE_CGNS
+        "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
+        "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
+        "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
+        "proj"        VCPKG_LOCK_FIND_PACKAGE_PROJ
+        "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
+        "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
+        "sql"         VCPKG_LOCK_FIND_PACKAGE_SQLite3
 )
 
 # Replace common value to vtk value
@@ -172,21 +165,19 @@ if("qt" IN_LIST FEATURES)
 endif()
 
 if("python" IN_LIST FEATURES)
+    # This sections relies on target package python3.
     set(python_ver "")
     if(NOT VCPKG_TARGET_IS_WINDOWS)
-        file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
-        string(REGEX MATCH "python3\\.([0-9]+)" _python_version_tmp ${_py3_include_path})
-        set(PYTHON_VERSION_MINOR "${CMAKE_MATCH_1}")
-        set(python_ver "3.${PYTHON_VERSION_MINOR}")
+        set(python_ver "3")
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         -DVTK_MODULE_ENABLE_VTK_Python=YES
         -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
         -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
-        -DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}
+        "-DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}" # from vcpkg-port-config.cmake
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
 endif()
@@ -222,8 +213,12 @@ if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
     )
 endif()
 
-if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
-    vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND ADDITIONAL_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+    )
 endif()
 
 if("utf8" IN_LIST FEATURES)
@@ -243,11 +238,26 @@ else()
     )
 endif()
 
+if("tbb" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+	    -DVTK_SMP_IMPLEMENTATION_TYPE=TBB
+	)
+endif()
+
+if("openmp" IN_LIST FEATURES)
+	list(APPEND ADDITIONAL_OPTIONS
+	    -DVTK_SMP_IMPLEMENTATION_TYPE=OpenMP
+	)
+endif()
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    "cuda"         VTK_USE_CUDA
-    "mpi"          VTK_USE_MPI
-    "all"          VTK_BUILD_ALL_MODULES
+        "all"           VTK_BUILD_ALL_MODULES
+        "cuda"          VTK_USE_CUDA
+        "debugleaks"    VTK_DEBUG_LEAKS
+        "mpi"           VTK_USE_MPI
+        "openmp"        VTK_SMP_ENABLE_OPENMP
+        "tbb"           VTK_SMP_ENABLE_TBB
 )
 
 # =============================================================================
@@ -287,26 +297,18 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
+        VTK_MODULE_ENABLE_VTK_vtkm
         VTK_QT_VERSION # Only with Qt
         CMAKE_INSTALL_QMLDIR
         # When working properly these should be unused
-        CMAKE_DISABLE_FIND_PACKAGE_CGNS
-        CMAKE_DISABLE_FIND_PACKAGE_LibHaru
-        CMAKE_DISABLE_FIND_PACKAGE_NetCDF
-        CMAKE_DISABLE_FIND_PACKAGE_PROJ
-        CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
-        CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
-        CMAKE_DISABLE_FIND_PACKAGE_SQLite3
-        CMAKE_DISABLE_FIND_PACKAGE_THEORA
-        CMAKE_REQUIRE_FIND_PACKAGE_CGNS
-        CMAKE_REQUIRE_FIND_PACKAGE_LibHaru
-        CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
-        CMAKE_REQUIRE_FIND_PACKAGE_PROJ
-        CMAKE_REQUIRE_FIND_PACKAGE_SEACASExodus
-        CMAKE_REQUIRE_FIND_PACKAGE_SEACASIoss
-        CMAKE_REQUIRE_FIND_PACKAGE_SQLite3
-        CMAKE_REQUIRE_FIND_PACKAGE_THEORA
-
+        VCPKG_LOCK_FIND_PACKAGE_CGNS
+        VCPKG_LOCK_FIND_PACKAGE_LibHaru
+        VCPKG_LOCK_FIND_PACKAGE_NetCDF
+        VCPKG_LOCK_FIND_PACKAGE_PROJ
+        VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
+        VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
+        VCPKG_LOCK_FIND_PACKAGE_SQLite3
+        VCPKG_LOCK_FIND_PACKAGE_THEORA
 )
 
 vcpkg_cmake_install()
@@ -418,15 +420,16 @@ endforeach()
 # Use vcpkg provided find method
 file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/FindEXPAT.cmake")
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
-
 if(EXISTS "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}/vtkChemistryConfigure.h")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}/vtkChemistryConfigure.h" "${SOURCE_PATH}" "not/existing" IGNORE_UNCHANGED)
 endif()
-# =============================================================================
-# Usage
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
-# Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt")
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtk/VTK-vtk-module-properties.cmake" "_vtk_module_import_prefix}/lib/vtk-9.3/hierarchy" "_vtk_module_import_prefix}$<$<CONFIG:Debug>:/debug>/lib/vtk-9.3/hierarchy")
+
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/licenses" "${CURRENT_PACKAGES_DIR}/share/${PORT}/licenses")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/Copyright.txt" COMMENT [[
+This file presents the top-level Copyright.txt.
+Additional licenses and notes are located in the licenses directory.
+]])

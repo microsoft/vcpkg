@@ -1,0 +1,4 @@
+f3d provides CMake targets:
+
+    find_package(f3d CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE f3d::libf3d)

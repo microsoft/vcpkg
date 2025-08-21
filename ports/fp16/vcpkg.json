@@ -1,13 +1,17 @@
 {
   "name": "fp16",
   "version-date": "2021-02-21",
-  "port-version": 2,
+  "port-version": 4,
   "description": "Header-only library for conversion to/from half-precision floating point formats",
   "homepage": "https://github.com/Maratyszcza/FP16",
   "dependencies": [
     "psimd",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

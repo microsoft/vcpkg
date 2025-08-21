@@ -1,0 +1,20 @@
+diff --git a/configure.ac b/configure.ac
+index 920612f..06d5dfa 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -147,6 +147,7 @@ AC_CHECK_DECLS([TIOCSRS485], [], [], [[#include <sys/ioctl.h>]])
+ # Check for RTS flags
+ AC_CHECK_DECLS([TIOCM_RTS], [], [], [[#include <sys/ioctl.h>]])
+ 
++test -n "$WARNING_CFLAGS" || \
+ WARNING_CFLAGS="-Wall \
+ -Wmissing-declarations -Wmissing-prototypes \
+ -Wnested-externs -Wpointer-arith \
+@@ -178,6 +179,7 @@ AC_ARG_ENABLE([debug],
+   [enable_debug=$enableval],
+   [enable_debug=no])
+ 
++test -n "$CFLAGS" || \
+ AS_IF([test "x$enable_debug" = "xyes"], [
+   CFLAGS="-g -O0"
+   CXXFLAGS="-g -O0"

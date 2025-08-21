@@ -11,7 +11,7 @@ find_dependency(ZLIB)
 
 if(NOT TARGET crashpad::crashpad)
   add_library(crashpad::crashpad INTERFACE IMPORTED)
-  target_include_directories(crashpad::crashpad INTERFACE "${_IMPORT_PREFIX}/include/crashpad")
+  target_include_directories(crashpad::crashpad INTERFACE "${_IMPORT_PREFIX}/include/crashpad" "${_IMPORT_PREFIX}/include")
 
   set(_libs vcpkg_crashpad_client vcpkg_crashpad_client_common vcpkg_crashpad_util vcpkg_crashpad_base)
   if(APPLE)

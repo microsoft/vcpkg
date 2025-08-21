@@ -3,7 +3,7 @@ vcpkg_from_sourceforge(
     REPO geographiclib
     REF distrib-C++
     FILENAME "GeographicLib-${VERSION}.tar.gz"
-    SHA512 31b6019784d3379572f973e6bd99957cd977baeaec55a7702340e50285321158646b3a87ea96111b3f14ee08ea50bc3a1b2eb2c51641995e8f289518cc23f618
+    SHA512 afa44e65f1d58c14b527ac2df6f0ccd647bce76736f012970b3913dfe611ea796a9ea1c1d3c5c9887f7737160034319b74042b1edb31a1d77717cde6d20f7418
     )
 
 vcpkg_check_features(

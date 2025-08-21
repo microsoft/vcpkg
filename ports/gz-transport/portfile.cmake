@@ -1,0 +1,16 @@
+string(REGEX MATCH "^[0-9]+" VERSION_MAJOR "${VERSION}")
+string(REGEX REPLACE "^gz-" "" PACKAGE_NAME "${PORT}")
+
+vcpkg_find_acquire_program(PYTHON3)
+
+ignition_modular_library(
+   NAME ${PACKAGE_NAME}
+   REF ${PORT}${VERSION_MAJOR}_${VERSION}
+   VERSION ${VERSION}
+   SHA512 e8e6efd5b9423aabe7d737cb999837468939aabaa11748de8e157499e455b2c0296660a2db3499dedd2f7e0b2081015aa4d2c090110c7519997e63124346a36c
+   OPTIONS 
+      "-DPython3_EXECUTABLE=${PYTHON3}"
+      -DSKIP_PYBIND11=ON
+   PATCHES
+      uuid-osx.patch
+)

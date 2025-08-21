@@ -47,12 +47,17 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Importing certstore done")
 
-set(PLUGINS gnupg logger softstore wincrypto)
+set(PLUGINS gnupg logger wincrypto)
 if("botan" IN_LIST FEATURES)
     list(APPEND PLUGINS botan)
 endif()
 if ("ossl" IN_LIST FEATURES)
     list(APPEND PLUGINS ossl)
+endif()
+if (VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message(STATUS "Building with an osx-dynamic triplet: 'softstore' disabled.")
+else()
+    list(APPEND PLUGINS softstore)
 endif()
 
 # Configure and build

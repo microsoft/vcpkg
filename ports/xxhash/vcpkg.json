@@ -1,8 +1,9 @@
 {
   "name": "xxhash",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Extremely fast hash algorithm",
   "homepage": "https://github.com/Cyan4973/xxHash",
+  "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

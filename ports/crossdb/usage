@@ -1,0 +1,6 @@
+The package crossdb can be used via CMake:
+
+    find_path(CROSSDB_INCLUDE_DIR crossdb.h)
+    find_library(CROSSDB_LIBRARY NAMES crossdb)
+    target_include_directories(main PRIVATE "${CROSSDB_INCLUDE_DIR}")
+    target_link_libraries(main PRIVATE "${CROSSDB_LIBRARY}")

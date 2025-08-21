@@ -1,38 +1,24 @@
 diff --git a/src/bin/CMakeLists.txt b/src/bin/CMakeLists.txt
-index 2376823..d0592a3 100644
+index 18048e3..4fcd161 100644
 --- a/src/bin/CMakeLists.txt
 +++ b/src/bin/CMakeLists.txt
-@@ -253,14 +253,14 @@ endif()
+@@ -11,6 +11,7 @@ endif()
+ 
  if(BUILD_SHARED_LIBS)
-     target_include_directories(msquic PUBLIC
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../inc>
--        $<INSTALL_INTERFACE:${include_dest}>)
-+        $<INSTALL_INTERFACE:include>)
- else()
-     target_include_directories(msquic_static INTERFACE
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../inc>
--        $<INSTALL_INTERFACE:${include_dest}>)
-+        $<INSTALL_INTERFACE:include>)
-     target_include_directories(msquic INTERFACE
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../inc>
--        $<INSTALL_INTERFACE:${include_dest}>)
-+        $<INSTALL_INTERFACE:include>)
+     add_library(msquic SHARED ${SOURCES})
++    target_include_directories(msquic PUBLIC $<INSTALL_INTERFACE:include>)
+     target_link_libraries(msquic PRIVATE core msquic_platform inc warnings logging base_link main_binary_link_args)
+     set_target_properties(msquic PROPERTIES OUTPUT_NAME ${QUIC_LIBRARY_NAME})
+     if (NOT WIN32)
+@@ -261,7 +262,10 @@ if(WIN32)
  endif()
  
- set(PUBLIC_HEADERS
-@@ -269,11 +269,10 @@ set(PUBLIC_HEADERS
-     ../inc/msquic_posix.h
-     ../inc/quic_sal_stub.h)
- 
--if(BUILD_SHARED_LIBS)
--  install(TARGETS msquic EXPORT msquic DESTINATION lib)
--else()
--  install(FILES ${QUIC_STATIC_LIBRARY} DESTINATION lib)
--endif()
-+install(TARGETS msquic EXPORT msquic
+ if(BUILD_SHARED_LIBS)
+-  install(TARGETS msquic msquic_platform inc logging_inc warnings main_binary_link_args ${OTHER_TARGETS} EXPORT msquic DESTINATION lib)
++  install(TARGETS msquic EXPORT msquic
 +    RUNTIME DESTINATION bin
 +    ARCHIVE DESTINATION lib
 +    LIBRARY DESTINATION lib)
- install(FILES ${PUBLIC_HEADERS} DESTINATION include)
- 
- configure_file(msquic-config.cmake.in ${CMAKE_BINARY_DIR}/msquic-config.cmake)
+ else()
+   install(FILES ${QUIC_STATIC_LIBRARY} DESTINATION lib)
+ endif()

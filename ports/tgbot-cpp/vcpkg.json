@@ -1,6 +1,7 @@
 {
   "name": "tgbot-cpp",
   "version": "1.7.3",
+  "port-version": 1,
   "description": "C++ library for Telegram bot API.",
   "homepage": "https://github.com/reo7sp/tgbot-cpp",
   "license": "MIT",

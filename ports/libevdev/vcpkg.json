@@ -1,0 +1,14 @@
+{
+  "name": "libevdev",
+  "version": "1.13.4",
+  "description": "Wrapper library for evdev devices",
+  "homepage": "https://www.freedesktop.org/wiki/Software/libevdev",
+  "license": "MIT",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

@@ -12,6 +12,7 @@
 . "$PSScriptRoot\deploy-inteloneapi.ps1"
 . "$PSScriptRoot\deploy-pwsh.ps1"
 . "$PSScriptRoot\deploy-azure-cli.ps1"
+. "$PSScriptRoot\deploy-azcopy.ps1"
 try {
     Copy-Item "$PSScriptRoot\deploy-settings.txt" "$PSScriptRoot\deploy-settings.ps1"
     . "$PSScriptRoot\deploy-settings.ps1"

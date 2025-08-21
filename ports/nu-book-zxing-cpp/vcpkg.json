@@ -1,6 +1,6 @@
 {
   "name": "nu-book-zxing-cpp",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Barcode detection and decoding library.",
   "homepage": "https://github.com/zxing-cpp/zxing-cpp",
   "license": "Apache-2.0",

@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -674,7 +674,7 @@ endif()
+@@ -638,7 +638,7 @@ set(OPENCV_EXTRA_MODULES_PATH "" CACHE PATH "Where to look for additional OpenCV
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
  # --- Python Support ---
@@ -9,9 +9,17 @@
    include(cmake/OpenCVDetectPython.cmake)
  endif()
  
+@@ -730,6 +730,7 @@ endif()
+ # ----------------------------------------------------------------------------
+ #       CHECK FOR SYSTEM LIBRARIES, OPTIONS, ETC..
+ # ----------------------------------------------------------------------------
++find_package(PkgConfig REQUIRED)
+ if(UNIX OR MINGW)
+   if(NOT APPLE_FRAMEWORK OR OPENCV_ENABLE_PKG_CONFIG)
+     if(CMAKE_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG_LIBDIR} AND NOT DEFINED ENV{PKG_CONFIG_SYSROOT_DIR}
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -300,7 +300,6 @@ if(MSVC)
+@@ -306,7 +306,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)

@@ -1,0 +1,23 @@
+{
+  "name": "marzbanpp",
+  "version": "1.0.1",
+  "description": "marzbanpp is the C++ library for interaction with Marzban through its REST API.",
+  "homepage": "https://github.com/andrascii/marzbanpp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "curl",
+      "default-features": false
+    },
+    "fmt",
+    "glaze",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

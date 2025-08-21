@@ -23,8 +23,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
 vcpkg_fixup_pkgconfig()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gsl.pc" "\${GSL_CBLAS_LIB}" "-lgsl \${GSL_CBLAS_LIB}")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gsl.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gsl.pc" "-lgslcblas" "-lgslcblasd")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gsl.pc" "\${GSL_CBLAS_LIB}" "-lgsld \${GSL_CBLAS_LIB}")
+endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -4,15 +4,18 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-${VERSION}.tar.bz2"
     FILENAME "libgpg-error-${VERSION}.tar.bz2"
-    SHA512 bbb4b15dae75856ee5b1253568674b56ad155524ae29a075cb5b0a7e74c4af685131775c3ea2226fff2f84ef80855e77aa661645d002b490a795c7ae57b66a30
+    SHA512 d3f6ca9d9abefe81f5cbbc195fbe259d3362119018c535ad2621ee407cad3487011325a9f4c4a15442a9ac5a0fe7ce86dafd7b3d891a446516362ba6b7b9047b
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${tarball}"
     PATCHES
+        android.diff
         cross-tools.patch
         gpgrt-config.patch
+        mingw.diff
         pkgconfig-libintl.patch
+        win32-nls.diff
 )
 
 vcpkg_list(SET options)
@@ -27,16 +30,20 @@ if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-vcpkg_configure_make(
-    AUTOCONFIG
+if(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND options "--disable-threads")
+endif()
+
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
     OPTIONS
         ${options}
-        --disable-tests
         --disable-doc
+        --disable-tests
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 
@@ -55,4 +62,4 @@ if(NOT "nls" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/locale")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING.LIB" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LIB")

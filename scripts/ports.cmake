@@ -3,6 +3,9 @@ if(POLICY CMP0174)
     # Use CMake 3.31 behavior for cmake_parse_arguments(PARSE_ARGV)
     cmake_policy(SET CMP0174 NEW)
 endif()
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0")
+    set(ENV{CMAKE_POLICY_VERSION_MINIMUM} 3.5)
+endif()
 
 # Remove CMAKE_ variables from the script call
 foreach(i RANGE 0 "${CMAKE_ARGC}")
@@ -124,8 +127,15 @@ file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
 
 set(CURRENT_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}" CACHE PATH "Location to install final packages")
 
-if(PORT)
+if(DEFINED CURRENT_BUILDTREES_DIR)
+    file(TO_CMAKE_PATH "${CURRENT_BUILDTREES_DIR}" CURRENT_BUILDTREES_DIR)
+elseif(PORT)
     set(CURRENT_BUILDTREES_DIR "${BUILDTREES_DIR}/${PORT}")
+endif()
+
+if(DEFINED CURRENT_PACKAGES_DIR)
+    file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" CURRENT_PACKAGES_DIR)
+elseif(PORT)
     set(CURRENT_PACKAGES_DIR "${PACKAGES_DIR}/${PORT}_${TARGET_TRIPLET}")
 endif()
 
@@ -201,8 +211,8 @@ target system or to the host system. Use a prefixed variable instead.
     unset(z_post_portfile_include)
 
     if(DEFINED PORT)
-        # Always fixup RPATH on linux and osx unless explicitly disabled.
-        if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
+        # Always fixup RPATH on linux, osx and bsds unless explicitly disabled.
+        if(VCPKG_FIXUP_ELF_RPATH OR ((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD) AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
             z_vcpkg_fixup_rpath_in_dir()
         endif()
         if(VCPKG_FIXUP_MACHO_RPATH OR (VCPKG_TARGET_IS_OSX AND NOT DEFINED VCPKG_FIXUP_MACHO_RPATH))

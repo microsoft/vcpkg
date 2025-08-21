@@ -15,6 +15,7 @@ vcpkg_from_gitlab(
         select-plugins.patch
         static-linkage.patch
         webp-install.patch
+        workaround-insufficiently-ugly-wchar-h.patch # Avoids conflict between #define S and VS2022 17.13's <wchar.h>
 )
 
 vcpkg_list(SET OPTIONS)

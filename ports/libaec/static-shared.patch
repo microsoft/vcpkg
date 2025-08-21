@@ -1,109 +1,30 @@
+diff --git a/cmake/libaec-config.cmake.in b/cmake/libaec-config.cmake.in
+index 6f6c9e9..11ac99e 100644
+--- a/cmake/libaec-config.cmake.in
++++ b/cmake/libaec-config.cmake.in
+@@ -26,7 +26,7 @@
+ 
+ find_path(libaec_INCLUDE_DIR NAMES libaec.h DOC "AEC include directory")
+ find_path(SZIP_INCLUDE_DIR NAMES szlib.h DOC "SZIP include directory")
+-if (libaec_USE_STATIC_LIBS)
++if (libaec_USE_STATIC_LIBS OR (NOT DEFINED libaec_USE_STATIC_LIBS AND NOT "@BUILD_SHARED_LIBS@"))
+   if (MSVC)
+     find_library(libaec_LIBRARY NAMES aec-static.lib DOC "AEC library")
+     find_library(SZIP_LIBRARY NAMES szip-static.lib DOC "SZIP compatible version of the AEC library")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index dea7574..2df037e 100644
+index f9c3031..b2aeb6c 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -1,3 +1,6 @@
-+option(AEC_BUILD_SHARED "Enable build of shared library" ON)
-+option(AEC_BUILD_STATIC "Enable build of static library" ON)
-+
- # Main library aec
- add_library(aec OBJECT
-   encode.c
-@@ -15,14 +18,20 @@ target_include_directories(aec
- include(CheckCCompilerFlag)
- check_c_compiler_flag(-fvisibility=hidden COMPILER_HAS_HIDDEN_VISIBILITY)
- 
-+target_compile_definitions(aec PRIVATE LIBAEC_BUILD LIBAEC_SHARED)
-+if(COMPILER_HAS_HIDDEN_VISIBILITY)
-+  target_compile_definitions(aec PUBLIC HAVE_VISIBILITY)
-+endif()
--# Create both static and shared aec library.
-+if (AEC_BUILD_STATIC)
- add_library(aec_static STATIC "$<TARGET_OBJECTS:aec>")
- target_link_libraries(aec_static PUBLIC aec)
- set_target_properties(aec_static
+@@ -75,4 +75,11 @@ set_target_properties(aec sz
    PROPERTIES
-   OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,aec-static,aec>)
- target_compile_definitions(aec_static PRIVATE LIBAEC_BUILD)
-+endif()
+   COMPILE_DEFINITIONS "${libaec_COMPILE_DEFINITIONS}")
  
-+if (AEC_BUILD_SHARED)
- add_library(aec_shared SHARED "$<TARGET_OBJECTS:aec>")
- target_link_libraries(aec_shared PUBLIC aec)
- set_target_properties(aec_shared
-@@ -29,22 +37,31 @@ set_target_properties(aec_shared
-   PROPERTIES
-   VERSION 0.1.3
-   SOVERSION 0
--  OUTPUT_NAME aec
--  PUBLIC_HEADER ${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h)
--target_compile_definitions(aec_shared PRIVATE LIBAEC_BUILD LIBAEC_SHARED)
-+  OUTPUT_NAME aec)
-+target_compile_definitions(aec_shared PRIVATE LIBAEC_BUILD PUBLIC LIBAEC_SHARED)
+-install(TARGETS aec_static aec_shared sz_static sz_shared)
++if(BUILD_SHARED_LIBS)
++  set(install_targets aec_shared sz_shared)
++  set_target_properties(aec_static graec sz_static PROPERTIES EXCLUDE_FROM_ALL 1)
++else()
++  set(install_targets aec_static sz_static)
++  set_target_properties(aec_shared graec sz_shared PROPERTIES EXCLUDE_FROM_ALL 1)
 +endif()
-+
-+set_target_properties(aec PROPERTIES PUBLIC_HEADER "${CMAKE_CURRENT_BINARY_DIR}/../include/libaec.h")
- 
- # Wrapper for compatibility with szip
- add_library(sz OBJECT sz_compat.c)
- target_link_libraries(sz PUBLIC aec)
-+target_compile_definitions(sz PRIVATE LIBAEC_BUILD LIBAEC_SHARED)
-+if(COMPILER_HAS_HIDDEN_VISIBILITY)
-+  target_compile_definitions(sz PUBLIC HAVE_VISIBILITY)
-+endif()
- 
- # Create both static and shared szip library.
-+if (AEC_BUILD_STATIC)
- add_library(sz_static STATIC "$<TARGET_OBJECTS:sz>" "$<TARGET_OBJECTS:aec>")
- set_target_properties(sz_static
-   PROPERTIES
-   OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,szip-static,sz>)
- target_link_libraries(sz_static PUBLIC sz)
- target_compile_definitions(sz_static PRIVATE LIBAEC_BUILD)
-+endif()
- 
-+if (AEC_BUILD_SHARED)
- add_library(sz_shared SHARED "$<TARGET_OBJECTS:sz>" "$<TARGET_OBJECTS:aec>")
- target_link_libraries(sz_shared PUBLIC sz)
- set_target_properties(sz_shared
-@@ -51,16 +69,11 @@ set_target_properties(sz_shared
-   PROPERTIES
-   VERSION 2.0.1
-   SOVERSION 2
--  OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,szip,sz>
--  PUBLIC_HEADER ../include/szlib.h)
--target_compile_definitions(sz_shared PRIVATE LIBAEC_BUILD LIBAEC_SHARED)
-+  OUTPUT_NAME $<IF:$<BOOL:${MSVC}>,szip,sz>)
-+target_compile_definitions(sz_shared PUBLIC LIBAEC_SHARED)
--
--if(COMPILER_HAS_HIDDEN_VISIBILITY)
--  target_compile_definitions(aec_static PUBLIC HAVE_VISIBILITY)
--  target_compile_definitions(aec_shared PUBLIC HAVE_VISIBILITY)
--  target_compile_definitions(sz_static PUBLIC HAVE_VISIBILITY)
--  target_compile_definitions(sz_shared PUBLIC HAVE_VISIBILITY)
--endif()
-+endif()
-+
-+set_target_properties(sz PROPERTIES PUBLIC_HEADER "../include/szlib.h")
- 
- # Simple executable for testing and benchmarking.
- add_executable(graec graec.c)
-@@ -78,7 +93,16 @@ if(UNIX)
-     DEPENDS graec utime)
- endif()
- 
--install(TARGETS aec aec_static aec_shared sz sz_static sz_shared
-+set(TARGETS_EXPORT)
-+if (AEC_BUILD_STATIC)
-+  set(TARGETS_EXPORT aec_static sz_static)
-+endif()
-+if (AEC_BUILD_SHARED)
-+  set(TARGETS_EXPORT ${TARGETS_EXPORT} aec_shared sz_shared)
-+endif()
-+
-+install(TARGETS aec sz ${TARGETS_EXPORT}
--        EXPORT ${PROJECT_NAME}Targets)
-+        EXPORT ${PROJECT_NAME}Targets
-+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
- 
- install(
++install(TARGETS ${install_targets})

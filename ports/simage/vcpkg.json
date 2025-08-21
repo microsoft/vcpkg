@@ -1,6 +1,6 @@
 {
   "name": "simage",
-  "version-semver": "1.8.3",
+  "version-semver": "1.8.4",
   "description": "Image file format library abstraction layer",
   "homepage": "https://github.com/coin3d/simage",
   "license": "ISC",

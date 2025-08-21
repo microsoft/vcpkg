@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
-    SHA512 16d357fc6f75d39b1c9265edb45fe78dd2ea67a094885174a0a2bdd39ad19f8f69c16a7aaacac82a106a295e08e311d0315daafcb5641c24f644a52e66aaf667
+    SHA512 cee6ddfbd825022a45a46b041c894a18718a474a32da8715fe08f918c7387505e81f3220c0ad79d3ec160b9c224bdeafbbb8a2b67a47cd845dca492582607c22
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
@@ -24,6 +24,7 @@ file(REMOVE
     "${SOURCE_PATH}/src/cmake/modules/FindWebP.cmake"
     "${SOURCE_PATH}/src/cmake/modules/Findfmt.cmake"
     "${SOURCE_PATH}/src/cmake/modules/FindTBB.cmake"
+    "${SOURCE_PATH}/src/cmake/modules/FindJXL.cmake"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -33,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ffmpeg      USE_FFMPEG
         freetype    USE_FREETYPE
         gif         USE_GIF
+        jpegxl      USE_JXL
         opencv      USE_OPENCV
         openjpeg    USE_OPENJPEG
         webp        USE_WEBP
@@ -41,6 +43,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools       OIIO_BUILD_TOOLS
         viewer      ENABLE_IV
 )
+
+if("pybind11" IN_LIST FEATURES)
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
+    list(APPEND FEATURE_OPTIONS "-DPython3_EXECUTABLE=${PYTHON3}")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -55,7 +62,7 @@ vcpkg_cmake_configure(
         -DUSE_TBB=OFF
         -DLINKSTATIC=OFF # LINKSTATIC breaks library lookup
         -DBUILD_MISSING_FMT=OFF
-        -DINTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
+        -DOIIO_INTERNALIZE_FMT=OFF  # carry fmt's msvc utf8 usage requirements
         -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
         -DSTOP_ON_WARNING=OFF
@@ -71,11 +78,12 @@ vcpkg_cmake_configure(
         BUILD_MISSING_DEPS
         BUILD_MISSING_FMT
         BUILD_MISSING_ROBINMAP
-        INTERNALIZE_FMT
         REQUIRED_DEPS
 )
 
 vcpkg_cmake_install()
+
+vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/OpenImageIO)
 

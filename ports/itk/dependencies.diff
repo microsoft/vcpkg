@@ -52,6 +52,19 @@ index 8dbbb86..428d335 100644
  install(FILES ${ITKEigen3_BINARY_DIR}/src/itk_eigen.h
    DESTINATION ${ITKEigen3_INSTALL_INCLUDE_DIR}
    COMPONENT Development
+diff --git a/Modules/ThirdParty/MINC/CMakeLists.txt b/Modules/ThirdParty/MINC/CMakeLists.txt
+index 5644257..9744d7c 100644
+--- a/Modules/ThirdParty/MINC/CMakeLists.txt
++++ b/Modules/ThirdParty/MINC/CMakeLists.txt
+@@ -5,7 +5,7 @@ set(ITKMINC_THIRD_PARTY 1)
+ set(ITKMINC_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/src)
+ if(ITK_USE_SYSTEM_MINC)
+ 
+-  find_package(LIBMINC REQUIRED)
++  find_package(LIBMINC REQUIRED GLOBAL)
+ 
+   set(ITKMINC_SYSTEM_INCLUDE_DIRS  ${LIBMINC_INCLUDE_DIRS} )
+   set(ITKMINC_SYSTEM_LIBRARY_DIRS  ${LIBMINC_LIBRARY_DIRS} )
 diff --git a/Modules/ThirdParty/OpenJPEG/CMakeLists.txt b/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
 index 103eaa9..b59eb81 100644
 --- a/Modules/ThirdParty/OpenJPEG/CMakeLists.txt
@@ -77,7 +90,7 @@ index 103eaa9..b59eb81 100644
  itk_module_impl()
  
 diff --git a/Modules/ThirdParty/VNL/CMakeLists.txt b/Modules/ThirdParty/VNL/CMakeLists.txt
-index c379a24..6a15432 100644
+index c379a24..25fdb8d 100644
 --- a/Modules/ThirdParty/VNL/CMakeLists.txt
 +++ b/Modules/ThirdParty/VNL/CMakeLists.txt
 @@ -5,7 +5,7 @@ option(ITK_USE_SYSTEM_VXL "Use an outside build of VXL." OFF)

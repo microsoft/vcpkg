@@ -1,0 +1,41 @@
+{
+  "name": "vcpkg-ci-fluidsynth",
+  "version-string": "ci",
+  "description": "Port to validate fluidsynth in CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "fluidsynth",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "all"
+  ],
+  "features": {
+    "all": {
+      "description": "Test all features",
+      "dependencies": [
+        {
+          "name": "fluidsynth",
+          "features": [
+            "pulseaudio"
+          ],
+          "platform": "linux"
+        },
+        {
+          "name": "fluidsynth",
+          "features": [
+            "sndfile"
+          ],
+          "platform": "!xbox"
+        }
+      ]
+    }
+  }
+}

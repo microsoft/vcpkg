@@ -23,6 +23,11 @@
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
         {
+          "$package": "ALSA",
+          "name": "alsa",
+          "platform": "linux"
+        },
+        {
           "$package": "Boost",
           "name": "boost",
           "platform": "!uwp"
@@ -48,7 +53,7 @@
         {
           "$package": "GLUT",
           "name": "freeglut",
-          "platform": "!uwp & !osx"
+          "platform": "!android & !osx & !uwp"
         },
         {
           "$package": "Freetype",
@@ -77,7 +82,7 @@
         {
           "$package": "LAPACK",
           "name": "lapack",
-          "platform": "!(uwp & arm)"
+          "platform": "!android & !(uwp & arm)"
         },
         {
           "$package": "GnuTLS",
@@ -109,7 +114,10 @@
         {
           "$package": "LibXml2",
           "name": "libxml2",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "icu"
+          ]
         },
         {
           "$package": "LibXslt",
@@ -129,12 +137,15 @@
         {
           "$package": "GnuTLS",
           "name": "shiftmedia-libgnutls",
-          "platform": "windows & !arm & !mingw & !xbox"
+          "platform": "windows & !arm & !mingw & !uwp & !xbox"
         },
         {
           "$package": "SQLite3",
           "name": "sqlite3",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "unicode"
+          ]
         },
         {
           "$package": "TIFF",
@@ -150,7 +161,7 @@
           "$package": "wxWidgets",
           "name": "wxwidgets",
           "default-features": false,
-          "platform": "!uwp"
+          "platform": "!android & !uwp"
         },
         {
           "$package": "ZLIB",

@@ -1,8 +1,8 @@
 {
   "name": "fcl",
   "version": "0.7.0",
-  "port-version": 3,
-  "description": "a library for performing three types of proximity queries on a pair of geometric models composed of triangles",
+  "port-version": 4,
+  "description": "A library for performing three types of proximity queries on a pair of geometric models composed of triangles",
   "homepage": "https://github.com/flexible-collision-library/fcl",
   "dependencies": [
     "ccd",

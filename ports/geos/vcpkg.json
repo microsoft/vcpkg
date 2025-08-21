@@ -1,7 +1,6 @@
 {
   "name": "geos",
-  "version": "3.13.0",
-  "port-version": 1,
+  "version": "3.13.1",
   "description": "Geometry Engine Open Source",
   "homepage": "https://libgeos.org/",
   "license": "LGPL-2.1-only",

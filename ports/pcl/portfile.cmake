@@ -1,24 +1,45 @@
+vcpkg_download_distfile(NO_GLU_PATCH
+    URLS https://github.com/PointCloudLibrary/pcl/pull/6253/commits/011905f3387e45b66828d81dacaafdde8893fdcb.patch?full_index=1
+    FILENAME PointCloudLibrary-fix-no-gluErrorString.patch
+    SHA512 8bf795a0c0da667bae38a3293643bd92817f30ab0f8a56b065bbb7cfa0b8f125210a317ee9cd868911b87546b1a05c322280f159802f820fef886109b938635b
+)
+vcpkg_download_distfile(NO_TRY_RUN_PATCH
+    URLS https://github.com/PointCloudLibrary/pcl/commit/575168bb72232cd820362aac7791227753489683.patch?full_index=1
+    FILENAME PointCloudLibrary-pcl-no-try-run.patch
+    SHA512 922de43bf04b3d990c5f9123b2e7f2148b54b612b7a1fe80df42ff734c7e55a9dd33cf4a6bb26207a381eda929da79b3e594eb5369a02cbf73c3767f4cf2eca0
+)
+vcpkg_download_distfile(NO_TRY_RUN_PATCH_2
+    URLS https://github.com/PointCloudLibrary/pcl/commit/39669c02e9c0e68861baf0a25886c85e6011a259.patch?full_index=1
+    FILENAME PointCloudLibrary-pcl-no-try-run_2.patch
+    SHA512 1cbcebce8657190ecac7f82539218b345a7978f213c13764fe83dc9c32a416b4ae7bc3f896d31ef2c6480c4a98f756f9df3493b9ae1dc5d5b42a00d9d3928bfc
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
     REF "pcl-${VERSION}"
-    SHA512 8e2d2839fe73a955d49b9a72861de2becf2da9a0dc906bd10ab8a3518e270a2f1900d801922d02871d704f2ed380273d35c2d0e04d8da7e24a21eb351c43c00b
+    SHA512 a1ab4858b8e5bde5b21bb3e04dcdcd9ca69204aa37a90dee336d4da452cb4be0a5b6a2b2b477668d4e82891955398825e97009fb5805df931af3c7d253e9100e
     HEAD_REF master
     PATCHES
         add-gcc-version-check.patch
+        "${NO_TRY_RUN_PATCH}"
+        "${NO_TRY_RUN_PATCH_2}"
         fix-check-sse.patch
         fix-numeric-literals-flag.patch
         install-layout.patch
         install-examples.patch
         fix-clang-cl.patch
-        gh-5985-inline.patch
-        io_ply.patch
-        6053.diff # https://github.com/PointCloudLibrary/pcl/pull/6053
-        6990a3b0d7dd3c1ca04a1a473cc172a937418060.diff # https://github.com/PointCloudLibrary/pcl/pull/6105
-        0012-msvc-optimizer-workaround.patch # backport pcl #6143 and #6154
+        add-chrono-includes.patch
+        add-cassert.patch
+        rollback-1092d70.diff
+        "${NO_GLU_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+	set(PCL_DONT_TRY_SSE "-DPCL_ENABLE_SSE=OFF")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -27,6 +48,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cuda            BUILD_CUDA
         cuda            BUILD_GPU
         examples        BUILD_examples
+        examples        VCPKG_LOCK_FIND_PACKAGE_cJSON
         libusb          WITH_LIBUSB
         opengl          WITH_OPENGL
         openni2         WITH_OPENNI2
@@ -34,6 +56,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         qt              WITH_QT
         simulation      BUILD_simulation
         surface-on-nurbs BUILD_surface_on_nurbs
+        surface-on-nurbs VCPKG_LOCK_FIND_PACKAGE_ZLIB
         tools           BUILD_tools
         visualization   WITH_VTK
         visualization   BUILD_visualization
@@ -52,6 +75,8 @@ vcpkg_cmake_configure(
         -DPCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32=${PCL_SHARED_LIBS}
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         -DPCL_ENABLE_MARCHNATIVE=OFF
+        ${PCL_DONT_TRY_SSE}
+        -DUSE_HOMEBREW_FALLBACK=OFF
         # WITH
         -DWITH_DAVIDSDK=OFF
         -DWITH_DOCS=OFF
@@ -62,6 +87,8 @@ vcpkg_cmake_configure(
         -DWITH_QHULL=ON
         -DWITH_RSSDK=OFF
         -DWITH_RSSDK2=OFF
+        # Misc
+        -DVCPKG_LOCK_FIND_PACKAGE_ClangFormat=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG

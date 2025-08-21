@@ -1,0 +1,13 @@
+diff --git a/include/jemalloc/jemalloc_macros.h.in b/include/jemalloc/jemalloc_macros.h.in
+index ebb3137..05d996b 100644
+--- a/include/jemalloc/jemalloc_macros.h.in
++++ b/include/jemalloc/jemalloc_macros.h.in
+@@ -142,7 +142,7 @@
+ #  define JEMALLOC_COLD
+ #endif
+ 
+-#if (defined(__APPLE__) || defined(__FreeBSD__)) && !defined(JEMALLOC_NO_RENAME)
++#if (defined(__APPLE__) || defined(__FreeBSD__) || defined(__OpenBSD__) || (defined(__linux__) && !defined(__GLIBC__))) && !defined(JEMALLOC_NO_RENAME)
+ #  define JEMALLOC_SYS_NOTHROW
+ #else
+ #  define JEMALLOC_SYS_NOTHROW JEMALLOC_NOTHROW
