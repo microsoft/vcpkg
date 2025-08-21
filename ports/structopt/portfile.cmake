@@ -17,6 +17,7 @@ vcpkg_cmake_install()
 
 # Header-only library
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/structopt")
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
