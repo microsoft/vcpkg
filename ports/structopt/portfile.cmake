@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Header-only library
+# Header-only library.
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/structopt")
 vcpkg_fixup_pkgconfig()
 
@@ -28,7 +28,7 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/LICENSE.visit_struct"
 )
 
-# Remove redundant license files that are installed by the library
+# Remove redundant license files that are installed by the library.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/licenses)
 
 configure_file(
