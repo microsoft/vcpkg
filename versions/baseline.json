@@ -6365,8 +6365,8 @@
       "port-version": 0
     },
     "mongoose": {
-      "baseline": "7.18",
-      "port-version": 1
+      "baseline": "7.19",
+      "port-version": 0
     },
     "monkeys-audio": {
       "baseline": "10.08",
