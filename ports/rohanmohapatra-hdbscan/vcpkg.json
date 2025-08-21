@@ -1,0 +1,17 @@
+{
+  "name": "rohanmohapatra-hdbscan",
+  "version": "1.0.0",
+  "description": "Fast and Efficient Implementation of HDBSCAN in C++ using STL.",
+  "homepage": "https://github.com/rohanmohapatra/hdbscan-cpp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
