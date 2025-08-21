@@ -1,0 +1,13 @@
+The package mumps provides CMake targets:
+
+	find_package(MUMPS CONFIG REQUIRED)
+
+mumps-solver uses a scivision cmake harness to build MUMPS (MUltifrontal
+Massively Parallel sparse direct Solver) for solving systems of linear
+equations of the form Ax = b where A is a square sparse matrix.
+
+The MUMPS target provides access to the Coin-Or build of mumps-solver
+with all required dependencies (BLAS, LAPACK, METIS).
+
+For more information, see:
+https://github.com/coin-or-tools/ThirdParty-Mumps

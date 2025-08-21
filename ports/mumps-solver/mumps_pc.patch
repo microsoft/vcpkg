@@ -1,0 +1,26 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -189,6 +189,23 @@
+ # --- MUMPS itself
+ include(cmake/mumps.cmake)
+ 
++# --- MUMPS pkg-config
++# Configure the .pc file from the template
++configure_file(
++  mumps.pc.in
++  ${CMAKE_CURRENT_BINARY_DIR}/mumps.pc
++  @ONLY
++)
++
++# Install the generated .pc
++install(
++  FILES ${CMAKE_CURRENT_BINARY_DIR}/mumps.pc
++  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
++)
++
++
++
++
+ if(MUMPS_matlab)
+   include(cmake/matlab.cmake)
+ endif()
