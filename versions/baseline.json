@@ -5532,6 +5532,10 @@
       "baseline": "1.1.0",
       "port-version": 5
     },
+    "libudfread": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "libudis86": {
       "baseline": "2018-01-28",
       "port-version": 4
