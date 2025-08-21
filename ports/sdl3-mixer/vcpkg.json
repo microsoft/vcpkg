@@ -1,6 +1,6 @@
 {
   "name": "sdl3-mixer",
-  "version": "3.0.0-e32ba24",
+  "version": "3.0.0-f9566f4",
   "description": "Multi-channel audio mixer library for SDL.",
   "homepage": "https://github.com/libsdl-org/SDL_mixer",
   "license": "Zlib",
