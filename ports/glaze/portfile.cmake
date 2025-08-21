@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 8bacfaee61f98147dfea7cbb3c7a3feb074ea953a32e33f985ee21d83840e1937fbd2f92cd6306c8349b511839a400e111844e446d732d724307ed2b5b02348a
     HEAD_REF main
+    PATCHES
+        support-win64.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
