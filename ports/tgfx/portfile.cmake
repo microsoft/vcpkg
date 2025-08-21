@@ -1,13 +1,18 @@
 include("${CMAKE_CURRENT_LIST_DIR}/tgfx-functions.cmake")
-
+include("${CMAKE_CURRENT_LIST_DIR}/ohos-ndk-finder.cmake")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO Tencent/tgfx
-        REF bb753b09d58557617206a6bdfc612907bd2100d8
-        SHA512 732489af152f69c94590e349a2090910440aa5d2d63cec8dd0879c03764e147856d2bee10c5b62dcf8adb2c52ae8d02ad710efd8d4f8f2f092790c48ebd1c088
-)
+set(LOCAL_BUILD "OFF")
+if(LOCAL_BUILD)
+    set(SOURCE_PATH "/Users/huangbeiao/Documents/UGit/tgfx-vcpkg")
+else ()
+    vcpkg_from_github(
+            OUT_SOURCE_PATH SOURCE_PATH
+            REPO Tencent/tgfx
+            REF b0e2e8113908f324c0073a32b114343bb8ad7c5d
+            SHA512 8d9ce4e7db0fefed4424b123efd24829e0dee9ba8a02637800292f152c528daa81bebe0c801ea2aed98bd1e61750a30e9bde3fd9f1b28219ccc662ba5147d97c
+    )
+endif ()
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
 get_tgfx_external_from_git("${SOURCE_PATH}")
@@ -49,15 +54,14 @@ endif()
 get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-        FEATURES
-        svg             TGFX_BUILD_SVG
-        layers          TGFX_BUILD_LAYERS
-        qt              TGFX_USE_QT
-        swiftshader     TGFX_USE_SWIFTSHADER
-        angle           TGFX_USE_ANGLE
-        async-promise   TGFX_USE_ASYNC_PROMISE
-)
+#vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+#        FEATURES
+#        svg             TGFX_BUILD_SVG
+#        layers          TGFX_BUILD_LAYERS
+#        qt              TGFX_USE_QT
+#        swiftshader     TGFX_USE_SWIFTSHADER
+#        angle           TGFX_USE_ANGLE
+#)
 
 set(PLATFORM_OPTIONS)
 
@@ -68,46 +72,15 @@ if(VCPKG_TARGET_IS_ANDROID)
 
     list(APPEND PLATFORM_OPTIONS
             -DCMAKE_ANDROID_NDK=${VCPKG_DETECTED_CMAKE_ANDROID_NDK}
-            -DCMAKE_ANDROID_API=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}
-            -DCMAKE_ANDROID_ARCH_ABI=${VCPKG_TARGET_ARCHITECTURE}
-            -DANDROID=TRUE
     )
 elseif(VCPKG_CMAKE_SYSTEM_NAME MATCHES "OHOS")
-    # 查找鸿蒙SDK路径，支持多种环境变量命名
-    set(OHOS_SDK_ROOT "")
-    
-    if(DEFINED ENV{OHOS_SDK_HOME})
-        set(OHOS_SDK_ROOT $ENV{OHOS_SDK_HOME})
-    elseif(DEFINED ENV{OHOS_NDK_HOME})
-        set(OHOS_SDK_ROOT $ENV{OHOS_NDK_HOME})
-    elseif(DEFINED ENV{CMAKE_OHOS_NDK})
-        set(OHOS_SDK_ROOT $ENV{CMAKE_OHOS_NDK})
-    elseif(DEFINED ENV{OHOS_SDK})
-        set(OHOS_SDK_ROOT $ENV{OHOS_SDK})
-    elseif(DEFINED ENV{HARMONY_SDK_HOME})
-        set(OHOS_SDK_ROOT $ENV{HARMONY_SDK_HOME})
-    else()
-        message(FATAL_ERROR "HarmonyOS SDK not detected. Please set one of the following environment variables:\n"
-                            "  OHOS_SDK_HOME (recommended)\n"
-                            "  OHOS_NDK_HOME\n"
-                            "  CMAKE_OHOS_NDK\n"
-                            "  OHOS_SDK\n"
-                            "  HARMONY_SDK_HOME")
-    endif()
 
-    if(NOT EXISTS "${OHOS_SDK_ROOT}")
-        message(FATAL_ERROR "OHOS SDK path does not exist: ${OHOS_SDK_ROOT}")
-    endif()
+    # NDK_PATH = /Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native
+    set(NDK_PATH "")
+    set(NDK_VERSION "")
+    find_ohos_ndk(NDK_PATH NDK_VERSION)
 
-    if(NOT EXISTS "${OHOS_SDK_ROOT}/native")
-        message(FATAL_ERROR "Invalid OHOS SDK structure. Missing 'native' directory in: ${OHOS_SDK_ROOT}")
-    endif()
-
-    set(OHOS_NDK_PATH "${OHOS_SDK_ROOT}/native")
-
-    if(NOT EXISTS "${OHOS_NDK_PATH}/sysroot")
-        message(FATAL_ERROR "Could not find OHOS sysroot at ${OHOS_NDK_PATH}/sysroot")
-    endif()
+    set(ENV{CMAKE_OHOS_NDK} "${NDK_PATH}")
 
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(OHOS_ARCH_DIR "x86_64-linux-ohos")
@@ -122,60 +95,27 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME MATCHES "OHOS")
         message(FATAL_ERROR "Invalid architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
 
-    message(STATUS "Using OHOS SDK: ${OHOS_SDK_ROOT}")
-    message(STATUS "Using OHOS NDK: ${OHOS_NDK_PATH}")
-    message(STATUS "Using OHOS Architecture: ${OHOS_ARCH_VALUE} (${OHOS_ARCH_DIR})")
+    message(STATUS "Using OHOS NDK: ${NDK_PATH}")
 
     list(APPEND PLATFORM_OPTIONS
-        "-DOHOS=TRUE"
-        "-DOHOS_ARCH=${OHOS_ARCH_VALUE}"
-        "-DOHOS_PLATFORM=OHOS"
-        "-DOHOS_SDK_HOME=${OHOS_SDK_ROOT}"
-        "-DOHOS_NDK_HOME=${OHOS_NDK_PATH}"
-        "-DCMAKE_SYSTEM_VERSION=${VCPKG_DETECTED_CMAKE_SYSTEM_VERSION}"
-        "-DCMAKE_FIND_ROOT_PATH=${OHOS_NDK_PATH}/sysroot"
-        "-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY"
-        "-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY"
-        "-DCMAKE_LIBRARY_PATH=${OHOS_NDK_PATH}/sysroot/usr/lib/${OHOS_ARCH_DIR}"
-        "-DCMAKE_INCLUDE_PATH=${OHOS_NDK_PATH}/sysroot/usr/include"
+        "-DCMAKE_OHOS_NDK=${NDK_PATH}"
     )
 
 elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_PLATFORM_TOOLSET VERSION_LESS "v142")
         message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")
     endif()
-
-    list(APPEND PLATFORM_OPTIONS
-            -DWIN32=TRUE
-    )
-elseif(VCPKG_TARGET_IS_OSX)
-    list(APPEND PLATFORM_OPTIONS
-            -DAPPLE=TRUE
-            -DMACOS=TRUE
-    )
-elseif(VCPKG_TARGET_IS_IOS)
-    list(APPEND PLATFORM_OPTIONS
-            -DAPPLE=TRUE
-            -DIOS=TRUE
-    )
-elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
-    # EMSCRIPTEN_PTHREADS 默认开启
-    list(APPEND PLATFORM_OPTIONS
-            -DWEB=TRUE
-            -DEMSCRIPTEN_PTHREADS=TRUE
-            -DEMSCRIPTEN=TRUE
-    )
 endif()
 
 set(BASE_BUILD_ARGS "")
 
-foreach(option IN LISTS FEATURE_OPTIONS)
-    if(option MATCHES "^-D(.+)=(.+)$")
-        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=${CMAKE_MATCH_2}")
-    elseif(option MATCHES "^-D(.+)$")
-        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=ON")
-    endif()
-endforeach()
+#foreach(option IN LISTS FEATURE_OPTIONS)
+#    if(option MATCHES "^-D(.+)=(.+)$")
+#        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=${CMAKE_MATCH_2}")
+#    elseif(option MATCHES "^-D(.+)$")
+#        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=ON")
+#    endif()
+#endforeach()
 
 foreach(option IN LISTS PLATFORM_OPTIONS)
     if(option MATCHES "^-D(.+)=(.+)$")

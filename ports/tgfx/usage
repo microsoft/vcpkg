@@ -2,29 +2,3 @@ The package tgfx provides CMake targets:
 
     find_package(tgfx CONFIG REQUIRED)
     target_link_libraries(main PRIVATE tgfx::tgfx)
-
-Available features:
-- svg: Enable building the SVG module
-- layers: Enable building the layers module
-- qt: Enable building with the Qt framework
-- swiftshader: Enable building with the SwiftShader library
-- angle: Enable building with the ANGLE library
-- async-promise: Enable async promises for loading images on the web
-
-Example usage with features:
-vcpkg install "tgfx[svg,layers]"
-
-For HarmonyOS platform support:
-1. Set OHOS_NDK_HOME environment variable to your HarmonyOS NDK path
-2. Use overlay-triplets to include the custom HarmonyOS triplets
-3. Available triplets:
-   - x64-ohos: for x86_64 architecture
-   - arm64-ohos: for ARM64 architecture
-   - arm-ohos: for ARM v7a architecture
-
-Example usage for HarmonyOS:
-    vcpkg install tgfx:x64-ohos --overlay-triplets=triplets
-    vcpkg install tgfx:arm64-ohos --overlay-triplets=triplets
-    vcpkg install tgfx:arm-ohos --overlay-triplets=triplets
-
-Note: The triplets directory should contain the custom HarmonyOS triplet files.

@@ -60,43 +60,6 @@
       "version>=": "1.3.1"
     }
   ],
-  "features": {
-    "angle": {
-      "description": "Enable building with the ANGLE library"
-    },
-    "async-promise": {
-      "description": "Enable async promises for loading images on the web",
-      "supports": "emscripten"
-    },
-    "layers": {
-      "description": "Enable building the layers module"
-    },
-    "qt": {
-      "description": "Enable building with the Qt framework",
-      "supports": "osx | windows",
-      "dependencies": [
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "opengl",
-            "widgets"
-          ]
-        },
-        {
-          "name": "qtdeclarative",
-          "default-features": false
-        }
-      ]
-    },
-    "svg": {
-      "description": "Enable building the SVG module"
-    },
-    "swiftshader": {
-      "description": "Enable building with the SwiftShader library",
-      "supports": "osx | linux"
-    }
-  },
   "overrides": [
     {
       "name": "freetype",
