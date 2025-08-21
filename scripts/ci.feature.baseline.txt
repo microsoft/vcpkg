@@ -563,8 +563,10 @@ v8:x64-osx=fail
 v8(windows)=fail # the version of v8 we have in the repo doesn't support VS2022
 vectorclass:arm-uwp=fail
 vectorclass:arm64-windows=fail
-vectorscan(windows)=fail # vectorscan doesn't support MSVC(yet)
-vectorscan(android)=fail # vectorscan doesn't support cross compiling (due to ragel)
+# vectorscan doesn't support cross-compilation to Android(due to ragel)
+vectorscan:arm-neon-android=fail
+vectorscan:arm64-android=fail
+vectorscan:x64-android=fail
 winreg:x64-linux=fail
 winreg:x64-osx=fail
 workflow:arm-uwp=fail
