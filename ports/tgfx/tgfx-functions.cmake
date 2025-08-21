@@ -1,27 +1,3 @@
-function(is_dependency_managed_by_vcpkg DEP_NAME RESULT_VAR)
-    set(${RESULT_VAR} FALSE PARENT_SCOPE)
-    
-    set(VCPKG_MANAGED_LIBS 
-        "zlib"
-        "libpng"
-        "libwebp"
-        "libjpeg-turbo"
-        "freetype"
-        "harfbuzz"
-        "flatbuffers"
-        "concurrentqueue"
-        "expat"
-        "json"
-        "stb"
-        "googletest"
-    )
-    
-    if("${DEP_NAME}" IN_LIST VCPKG_MANAGED_LIBS)
-        set(${RESULT_VAR} TRUE PARENT_SCOPE)
-        return()
-    endif()
-endfunction()
-
 function(parse_and_declare_deps_externals SOURCE_PATH)
     if(NOT EXISTS "${SOURCE_PATH}/DEPS")
         message(FATAL_ERROR "DEPS file not found at ${SOURCE_PATH}/DEPS")
@@ -50,15 +26,18 @@ function(parse_and_declare_deps_externals SOURCE_PATH)
         string(JSON REPO_URL GET "${REPO_INFO}" "url")
         string(JSON REPO_COMMIT GET "${REPO_INFO}" "commit")
         string(JSON REPO_DIR GET "${REPO_INFO}" "dir")
+        string(JSON VCPKG_MANAGED ERROR_VARIABLE VCPKG_ERROR GET "${REPO_INFO}" "vcpkg")
+        
+        if(VCPKG_ERROR)
+            set(VCPKG_MANAGED FALSE)
+        endif()
 
         string(REPLACE "\${PAG_GROUP}" "${PAG_GROUP}" REPO_URL "${REPO_URL}")
 
         get_filename_component(DEP_NAME "${REPO_DIR}" NAME)
 
-        is_dependency_managed_by_vcpkg("${DEP_NAME}" IS_VCPKG_MANAGED)
-
-        if(IS_VCPKG_MANAGED)
-            message(STATUS "Skipping ${DEP_NAME} - already managed by vcpkg")
+        if(VCPKG_MANAGED)
+            message(STATUS "Skipping ${DEP_NAME} - managed by vcpkg")
         else()
             message(STATUS "Declaring external dependency: ${DEP_NAME}")
             declare_tgfx_external_from_git(

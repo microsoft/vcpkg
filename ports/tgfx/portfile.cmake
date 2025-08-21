@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Tencent/tgfx
-        REF 86808436861db13687af2f8c70f5e48bd6e83ec2
-        SHA512 daf0669a7c4a8739829cd6a2cadf5c2c10113b8197b8401df8e74130a6a1bfa7ec0de212f424ef6eb8c545cb91dd49cc564fbc9e68627a97200ece1da79a0467
+        REF 8143b55df975ea5f0c00cdb1477754719b9735c8
+        SHA512 838e3db317b54f31a929f56f1fb5ad0ee0b5b77c1dcf0e64c7bc3dfc7410901031999d0795f0981f4d686fb71b6e6cc2d4e222c2d74315a9cf6f03f182f36a42
 )
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
@@ -48,15 +48,6 @@ endif()
 
 get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
-
-#vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#        FEATURES
-#        svg             TGFX_BUILD_SVG
-#        layers          TGFX_BUILD_LAYERS
-#        qt              TGFX_USE_QT
-#        swiftshader     TGFX_USE_SWIFTSHADER
-#        angle           TGFX_USE_ANGLE
-#)
 
 set(PLATFORM_OPTIONS)
 
@@ -101,24 +92,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         message(WARNING "TGFX requires Visual Studio 2019+ for optimal C++17 support")
     endif()
 endif()
-
-set(BASE_BUILD_ARGS "")
-
-#foreach(option IN LISTS FEATURE_OPTIONS)
-#    if(option MATCHES "^-D(.+)=(.+)$")
-#        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=${CMAKE_MATCH_2}")
-#    elseif(option MATCHES "^-D(.+)$")
-#        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=ON")
-#    endif()
-#endforeach()
-
-foreach(option IN LISTS PLATFORM_OPTIONS)
-    if(option MATCHES "^-D(.+)=(.+)$")
-        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=${CMAKE_MATCH_2}")
-    elseif(option MATCHES "^-D(.+)$")
-        list(APPEND BASE_BUILD_ARGS "-D${CMAKE_MATCH_1}=ON")
-    endif()
-endforeach()
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(CMAKE_OSX_SYSROOT_INT "${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
@@ -171,7 +144,7 @@ set(ENV{CMAKE_PREFIX_PATH} "${CURRENT_INSTALLED_DIR}")
 vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
-            ${BASE_BUILD_ARGS}
+            ${PLATFORM_OPTIONS}
             -DTGFX_USE_VCPKG=ON
 )
 
