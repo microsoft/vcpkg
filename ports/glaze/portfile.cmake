@@ -29,10 +29,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
-if(NOT "interop" IN_LIST FEATURES)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-else()
+if("interop" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    # interop produces shared library with static client library.
+    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
