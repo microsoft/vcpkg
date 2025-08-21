@@ -17,6 +17,7 @@ vcpkg_from_github(
         79694.patch # [SEH] Ignore EH pad check for internal intrinsics #79694
         82407.patch # [Clang][Sema] Fix incorrect rejection default construction of union with nontrivial member #82407
         add-include-chrono.patch # https://github.com/llvm/llvm-project/pull/118059
+        cmake4.patch
 )
 
 vcpkg_check_features(

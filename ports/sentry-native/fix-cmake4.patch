@@ -1,0 +1,24 @@
+diff --git a/external/crashpad/util/CMakeLists.txt b/external/crashpad/util/CMakeLists.txt
+index ef066fb9b1..4a96a8386b 100644
+--- a/external/crashpad/util/CMakeLists.txt
++++ b/external/crashpad/util/CMakeLists.txt
+@@ -407,7 +407,7 @@ if(APPLE)
+     foreach(x ${def_relative_files})
+         # CMAKE_OSX_SYSROOT may be empty (e.g. for Makefile generators),
+         # in this case files will be taken from root.
+-        set(full_path "${CMAKE_OSX_SYSROOT}/usr/include/mach/${x}")
++        set(full_path "${_CMAKE_OSX_SYSROOT_PATH}/usr/include/mach/${x}")
+         if(NOT EXISTS "${full_path}")
+             message(FATAL_ERROR "File not found: ${full_path}")
+         endif()
+@@ -438,8 +438,8 @@ if(APPLE)
+     endif()
+     list(TRANSFORM includes PREPEND "--include=")
+ 
+-    if(CMAKE_OSX_SYSROOT)
+-        set(sdk --sdk ${CMAKE_OSX_SYSROOT})
++    if(_CMAKE_OSX_SYSROOT_PATH)
++        set(sdk --sdk ${_CMAKE_OSX_SYSROOT_PATH})
+     endif()
+ 
+     # When building for Xcode, the `CMAKE_OSX_SYSROOT` is not set to a proper
