@@ -2,17 +2,12 @@ include("${CMAKE_CURRENT_LIST_DIR}/tgfx-functions.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/ohos-ndk-finder.cmake")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(LOCAL_BUILD "OFF")
-if(LOCAL_BUILD)
-    set(SOURCE_PATH "/Users/huangbeiao/Documents/UGit/tgfx-vcpkg")
-else ()
-    vcpkg_from_github(
-            OUT_SOURCE_PATH SOURCE_PATH
-            REPO Tencent/tgfx
-            REF b0e2e8113908f324c0073a32b114343bb8ad7c5d
-            SHA512 8d9ce4e7db0fefed4424b123efd24829e0dee9ba8a02637800292f152c528daa81bebe0c801ea2aed98bd1e61750a30e9bde3fd9f1b28219ccc662ba5147d97c
-    )
-endif ()
+vcpkg_from_github(
+        OUT_SOURCE_PATH SOURCE_PATH
+        REPO Tencent/tgfx
+        REF a41cae6dd135a48c1148fdb5b80789e32762e8d8
+        SHA512 f5d094eaf6a6d998aabf588486ebfe3c7b91c7b327d0b7e4fc6d4c1c684e4bd6eb8616c66eab855463da61ff2d9291f75fafae8bd8a11fe2b1d486a1e9b90bf9
+)
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
 get_tgfx_external_from_git("${SOURCE_PATH}")
