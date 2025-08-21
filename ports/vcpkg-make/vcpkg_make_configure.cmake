@@ -133,5 +133,9 @@ function(vcpkg_make_configure)
         EMMAKEN_JUST_CONFIGURE
     )
 
-    find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
+    if(VCPKG_HOST_IS_FREEBSD OR VCPKG_HOST_IS_OPENBSD)
+        find_program(Z_VCPKG_MAKE gmake REQUIRED)
+    else()
+        find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
+    endif()
 endfunction()

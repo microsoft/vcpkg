@@ -41,7 +41,11 @@ function(vcpkg_make_install)
     vcpkg_make_get_shell(shell_var)
     set(shell_cmd "${shell_var}")
 
-    find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
+    if(VCPKG_HOST_IS_FREEBSD OR VCPKG_HOST_IS_OPENBSD)
+        find_program(Z_VCPKG_MAKE gmake REQUIRED)
+    else()
+        find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
+    endif()
     set(make_command "${Z_VCPKG_MAKE}")
 
     set(destdir "${CURRENT_PACKAGES_DIR}")
