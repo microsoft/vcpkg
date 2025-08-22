@@ -457,7 +457,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.21.3",
+      "baseline": "0.21.4",
       "port-version": 0
     },
     "aws-c-mqtt": {
