@@ -294,13 +294,13 @@ function(vcpkg_configure_make)
     endif()
 
     # Backup environment variables
-    # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
+    # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y
     set(cm_FLAGS AR AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
     list(TRANSFORM cm_FLAGS APPEND "FLAGS")
     vcpkg_backup_env_variables(VARS ${cm_FLAGS})
 
 
-    # FC fotran compiler | FF Fortran 77 compiler 
+    # FC fotran compiler | FF Fortran 77 compiler
     # LDFLAGS -> pass -L flags
     # LIBS -> pass -l flags
 
@@ -343,7 +343,7 @@ function(vcpkg_configure_make)
 
         message(DEBUG "path_list:${path_list}") # Just to have --trace-expand output
 
-        vcpkg_list(SET find_system_dirs 
+        vcpkg_list(SET find_system_dirs
             "${system_root}/System32"
             "${system_root}/System32/"
             "${local_app_data}/Microsoft/WindowsApps"
@@ -375,7 +375,7 @@ function(vcpkg_configure_make)
     endif()
 
    # macOS - cross-compiling support
-    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_VISIONOS)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_WATCHOS OR VCPKG_TARGET_IS_TVOS OR VCPKG_TARGET_IS_VISIONOS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
@@ -394,10 +394,10 @@ function(vcpkg_configure_make)
     # Linux - cross-compiling support
     if(VCPKG_TARGET_IS_LINUX)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
-            # The regex below takes the prefix from the resulting CMAKE_C_COMPILER variable eg. arm-linux-gnueabihf-gcc 
+            # The regex below takes the prefix from the resulting CMAKE_C_COMPILER variable eg. arm-linux-gnueabihf-gcc
             # set in the common toolchains/linux.cmake
-            # This is used via --host as a prefix for all other bin tools as well. 
-            # Setting the compiler directly via CC=arm-linux-gnueabihf-gcc does not work acording to: 
+            # This is used via --host as a prefix for all other bin tools as well.
+            # Setting the compiler directly via CC=arm-linux-gnueabihf-gcc does not work acording to:
             # https://www.gnu.org/software/autoconf/manual/autoconf-2.65/html_node/Specifying-Target-Triplets.html
             if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "([^\/]*)-gcc$" AND CMAKE_MATCH_1)
                 set(arg_BUILD_TRIPLET "--host=${CMAKE_MATCH_1}") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
@@ -462,7 +462,7 @@ function(vcpkg_configure_make)
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "compile ${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
             else()
-                # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated. 
+                # Silly trick to make configure accept CC_FOR_BUILD but in reallity CC_FOR_BUILD is deactivated.
                 z_vcpkg_append_to_configure_environment(configure_env CC_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CPP_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
                 z_vcpkg_append_to_configure_environment(configure_env CXX_FOR_BUILD "touch a.out | touch conftest${VCPKG_HOST_EXECUTABLE_SUFFIX} | true")
@@ -506,20 +506,20 @@ function(vcpkg_configure_make)
             z_vcpkg_append_to_configure_environment(configure_env OBJDUMP "${VCPKG_DETECTED_CMAKE_OBJDUMP}") # Trick to ignore the RANLIB call
         endif()
         if(VCPKG_DETECTED_CMAKE_STRIP) # If required set the ENV variable STRIP in the portfile correctly
-            z_vcpkg_append_to_configure_environment(configure_env STRIP "${VCPKG_DETECTED_CMAKE_STRIP}") 
+            z_vcpkg_append_to_configure_environment(configure_env STRIP "${VCPKG_DETECTED_CMAKE_STRIP}")
         else()
             z_vcpkg_append_to_configure_environment(configure_env STRIP ":")
             list(APPEND arg_OPTIONS ac_cv_prog_ac_ct_STRIP=:)
         endif()
         if(VCPKG_DETECTED_CMAKE_NM) # If required set the ENV variable NM in the portfile correctly
-            z_vcpkg_append_to_configure_environment(configure_env NM "${VCPKG_DETECTED_CMAKE_NM}") 
+            z_vcpkg_append_to_configure_environment(configure_env NM "${VCPKG_DETECTED_CMAKE_NM}")
         else()
-            # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
+            # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm
             # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
             z_vcpkg_append_to_configure_environment(configure_env NM "dumpbin.exe -symbols -headers")
         endif()
         if(VCPKG_DETECTED_CMAKE_DLLTOOL) # If required set the ENV variable DLLTOOL in the portfile correctly
-            z_vcpkg_append_to_configure_environment(configure_env DLLTOOL "${VCPKG_DETECTED_CMAKE_DLLTOOL}") 
+            z_vcpkg_append_to_configure_environment(configure_env DLLTOOL "${VCPKG_DETECTED_CMAKE_DLLTOOL}")
         else()
             z_vcpkg_append_to_configure_environment(configure_env DLLTOOL "link.exe -verbose -dll")
         endif()
@@ -531,15 +531,15 @@ function(vcpkg_configure_make)
         endforeach()
         debug_message("configure_env: '${configure_env}'")
         # Other maybe interesting variables to control
-        # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line. 
+        # COMPILE This is the command used to actually compile a C source file. The file name is appended to form the complete command line.
         # LINK This is the command used to actually link a C program.
-        # CXXCOMPILE The command used to actually compile a C++ source file. The file name is appended to form the complete command line. 
-        # CXXLINK  The command used to actually link a C++ program. 
+        # CXXCOMPILE The command used to actually compile a C++ source file. The file name is appended to form the complete command line.
+        # CXXLINK  The command used to actually link a C++ program.
 
         # Variables not correctly detected by configure. In release builds.
         list(APPEND arg_OPTIONS gl_cv_double_slash_root=yes
                                  ac_cv_func_memmove=yes)
-        #list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all) # Just ignore libtool checks 
+        #list(APPEND arg_OPTIONS lt_cv_deplibs_check_method=pass_all) # Just ignore libtool checks
         if(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]64$")
             list(APPEND arg_OPTIONS gl_cv_host_cpu_c_abi=no)
             # Currently needed for arm64 because objdump yields: "unrecognised machine type (0xaa64) in Import Library Format archive"
@@ -648,7 +648,7 @@ function(vcpkg_configure_make)
 
     file(RELATIVE_PATH relative_build_path "${CURRENT_BUILDTREES_DIR}" "${arg_SOURCE_PATH}/${arg_PROJECT_SUBPATH}")
 
-    # Used by CL 
+    # Used by CL
     vcpkg_host_path_list(PREPEND ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include")
     # Used by GCC
     vcpkg_host_path_list(PREPEND ENV{C_INCLUDE_PATH} "${CURRENT_INSTALLED_DIR}/include")
@@ -659,10 +659,10 @@ function(vcpkg_configure_make)
         vcpkg_backup_env_variables(VARS _CL_ _LINK_)
         # TODO: Should be CPP flags instead -> rewrite when vcpkg_determined_cmake_compiler_flags defined
         if(VCPKG_TARGET_IS_UWP)
-            # Be aware that configure thinks it is crosscompiling due to: 
-            # error while loading shared libraries: VCRUNTIME140D_APP.dll: 
+            # Be aware that configure thinks it is crosscompiling due to:
+            # error while loading shared libraries: VCRUNTIME140D_APP.dll:
             # cannot open shared object file: No such file or directory
-            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper 
+            # IMPORTANT: The only way to pass linker flags through libtool AND the compile wrapper
             # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" VCToolsInstallDir)
@@ -688,9 +688,9 @@ function(vcpkg_configure_make)
     if(VCPKG_TARGET_IS_UWP)
         set(x_vcpkg_transform_libs OFF)
         # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
-        # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested. 
-        # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
-        # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
+        # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested.
+        # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows.
+        # It even does unix/dos-short/unix transformation with the path to get rid of spaces.
     endif()
     if(x_vcpkg_transform_libs)
         list(TRANSFORM all_libs_list REPLACE "[.](dll[.]lib|lib|a|so)$" "")
@@ -855,7 +855,7 @@ function(vcpkg_configure_make)
         unset(lib_env_vars)
 
         set(command "${base_cmd}" -c "${configure_env} ./${relative_build_path}/configure ${arg_BUILD_TRIPLET} ${arg_OPTIONS} ${arg_OPTIONS_${current_buildtype}}")
-        
+
         if(arg_ADD_BIN_TO_PATH)
             set(path_backup $ENV{PATH})
             vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}${path_suffix_${current_buildtype}}/bin")
@@ -879,11 +879,11 @@ function(vcpkg_configure_make)
             endif()
         endif()
         z_vcpkg_restore_pkgconfig_path()
-        
+
         if(DEFINED link_config_backup)
             set(ENV{_LINK_} "${link_config_backup}")
         endif()
-        
+
         if(arg_ADD_BIN_TO_PATH)
             set(ENV{PATH} "${path_backup}")
         endif()
