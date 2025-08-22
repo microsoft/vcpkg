@@ -36,7 +36,7 @@ function(parse_and_declare_deps_externals SOURCE_PATH)
 
         get_filename_component(DEP_NAME "${REPO_DIR}" NAME)
 
-        if(VCPKG_MANAGED)
+        if(VCPKG_MANAGED AND NOT VCPKG_CMAKE_SYSTEM_NAME MATCHES "OHOS")
             message(STATUS "Skipping ${DEP_NAME} - managed by vcpkg")
         else()
             message(STATUS "Declaring external dependency: ${DEP_NAME}")

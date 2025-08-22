@@ -5,9 +5,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Tencent/tgfx
-        REF 8143b55df975ea5f0c00cdb1477754719b9735c8
-        SHA512 838e3db317b54f31a929f56f1fb5ad0ee0b5b77c1dcf0e64c7bc3dfc7410901031999d0795f0981f4d686fb71b6e6cc2d4e222c2d74315a9cf6f03f182f36a42
+        REF b53f462a34c766cb2c2947391d218f5e3be32038
+        SHA512 3b23422a0e454155e0e164156a20eeb65f526498344de45dd48467aa45529443a506375632acdedde2ea0399b3bb3a5b63e76903af6723db8b3dff873a8d41bc
 )
+#set(SOURCE_PATH "/Users/huangbeiao/Documents/UGit/tgfx-vcpkg")
 
 parse_and_declare_deps_externals("${SOURCE_PATH}")
 get_tgfx_external_from_git("${SOURCE_PATH}")
@@ -67,20 +68,6 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME MATCHES "OHOS")
     find_ohos_ndk(NDK_PATH NDK_VERSION)
 
     set(ENV{CMAKE_OHOS_NDK} "${NDK_PATH}")
-
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(OHOS_ARCH_DIR "x86_64-linux-ohos")
-        set(OHOS_ARCH_VALUE "x86_64")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(OHOS_ARCH_DIR "aarch64-linux-ohos")
-        set(OHOS_ARCH_VALUE "arm64-v8a")
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(OHOS_ARCH_DIR "arm-linux-ohos")
-        set(OHOS_ARCH_VALUE "arm")
-    else()
-        message(FATAL_ERROR "Invalid architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-    endif()
-
     message(STATUS "Using OHOS NDK: ${NDK_PATH}")
 
     list(APPEND PLATFORM_OPTIONS

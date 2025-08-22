@@ -7,6 +7,40 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "concurrentqueue",
+      "version>=": "1.0.4"
+    },
+    "expat",
+    "flatbuffers",
+    {
+      "name": "freetype",
+      "features": [
+        "png",
+        "zlib"
+      ]
+    },
+    {
+      "name": "gtest",
+      "version>=": "1.16.0"
+    },
+    "harfbuzz",
+    {
+      "name": "libjpeg-turbo",
+      "version>=": "2.1.2"
+    },
+    {
+      "name": "libpng",
+      "version>=": "1.6.47"
+    },
+    {
+      "name": "libwebp",
+      "version>=": "1.3.2"
+    },
+    {
+      "name": "nlohmann-json",
+      "version>=": "3.10.4"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -25,6 +59,28 @@
     {
       "name": "vcpkg-tool-nodejs",
       "host": true
+    },
+    {
+      "name": "zlib",
+      "version>=": "1.3.1"
+    }
+  ],
+  "overrides": [
+    {
+      "name": "freetype",
+      "version": "2.13.3"
+    },
+    {
+      "name": "harfbuzz",
+      "version": "5.3.1"
+    },
+    {
+      "name": "flatbuffers",
+      "version": "25.2.10"
+    },
+    {
+      "name": "expat",
+      "version": "2.6.3"
     }
   ]
 }
