@@ -18,6 +18,6 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME cadons-ctus
-        CONFIG_PATH lib/cmake/tusclient)
+        CONFIG_PATH lib/cmake/cadons-ctus)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
