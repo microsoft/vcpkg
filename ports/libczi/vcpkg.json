@@ -1,10 +1,10 @@
 {
   "name": "libczi",
-  "version": "0.66.5",
+  "version": "0.66.6",
+  "port-version": 1,
   "description": "library to read and write CZI files.",
   "homepage": "https://github.com/ZEISS/libczi",
   "license": null,
-  "supports": "!android",
   "dependencies": [
     "eigen3",
     {
@@ -16,5 +16,26 @@
       "host": true
     },
     "zstd"
-  ]
+  ],
+  "features": {
+    "azureblobstore": {
+      "description": "Azure Blob Storage support",
+      "dependencies": [
+        "azure-identity-cpp",
+        "azure-storage-blobs-cpp"
+      ]
+    },
+    "curl": {
+      "description": "cURL support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    }
+  }
 }

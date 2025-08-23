@@ -2,11 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc2
     REF "v${VERSION}"
-    SHA512 7c40a3b64d956a2141d482bfac65601a999e068262091c51525bde9e05a3667109c5f275688213af0caebbb439cb3004a76f45cb216a468e0793f20e04cc1ba3
+    SHA512 6dfcbb16bfd0da8b1eb5287b3ab06ee83c5d19955195c9dad855ae0de98af7b20202b83103d80fda2578bc7fdd32205f26cdc63e4660ddb9559c83b3c5b603ff
     HEAD_REF main
-    PATCHES
-        configure-binary-dir.patch # https://github.com/Blosc/c-blosc2/pull/679
-        cmake-deps.patch # https://github.com/Blosc/c-blosc2/pull/682
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLOSC2_STATIC)
@@ -38,6 +35,7 @@ vcpkg_cmake_configure(
         -DBUILD_STATIC=${BLOSC2_STATIC}
         -DBUILD_SHARED=${BLOSC2_SHARED}
     MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_ZLIB_NG
         CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
         CMAKE_REQUIRE_FIND_PACKAGE_ZSTD
 )

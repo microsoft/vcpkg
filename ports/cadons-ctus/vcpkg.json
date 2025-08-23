@@ -20,10 +20,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "shared": {
-      "description": "Build shared libraries"
-    }
-  }
+  ]
 }
