@@ -15,7 +15,7 @@ vcpkg_from_github(
 )
 
 set(options "")
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND "native" IN_LIST FEATURES)
     list(APPEND options -DPLATFORM_WIN32=TRUE)
 endif()
 
