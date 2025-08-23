@@ -1,4 +1,4 @@
-The package jsonata provides CMake targets:
+jsonata provides CMake targets:
 
-    find_package(jsonata CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE jsonata::jsonata)
+  find_package(jsonata CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE jsonata::jsonata)
