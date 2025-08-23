@@ -140,7 +140,7 @@ list(APPEND LIBRSVG_SOURCES
 )
 
 if(WIN32)
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.win32" "${CMAKE_CURRENT_BINARY_DIR}/config.h" COPYONLY)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.win32.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h" COPYONLY)
     file(READ "${CMAKE_CURRENT_SOURCE_DIR}/rsvg.symbols" rsvg_symbols)
     string(REGEX REPLACE "/[*][^*]*[*]/" "" rsvg_symbols "${rsvg_symbols}")
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/rsvg.def" "EXPORTS\n${rsvg_symbols}")
