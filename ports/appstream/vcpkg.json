@@ -1,14 +1,21 @@
 {
   "name": "appstream",
   "version": "1.0.6",
+  "port-version": 1,
   "description": "Tools and libraries to work with AppStream metadata",
   "homepage": "https://www.freedesktop.org/software/appstream/docs",
   "license": "LGPL-2.1-or-later",
   "dependencies": [
-    "curl",
+    {
+      "name": "curl",
+      "default-features": false
+    },
     {
       "name": "gettext",
-      "host": true
+      "host": true,
+      "features": [
+        "tools"
+      ]
     },
     "glib",
     {
@@ -19,7 +26,10 @@
       "name": "gperf",
       "host": true
     },
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "libxmlb",
     "libyaml",
     {
