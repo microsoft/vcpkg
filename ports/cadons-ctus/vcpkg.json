@@ -1,5 +1,5 @@
 {
-  "name": "tusclient",
+  "name": "cadons-ctus",
   "version": "1.0.0",
   "description": "Library implementing the tus protocol for resumable uploads",
   "homepage": "https://github.com/Cadons/libtusclient",
@@ -8,15 +8,12 @@
     "boost-lexical-cast",
     "boost-uuid",
     "curl",
+    "fmt",
     "glog",
-    "gtest",
     "libzippp",
     "nlohmann-json",
-    "pkgconf",
-    "vcpkg-cmake",
-    "vcpkg-cmake",
     {
-      "name": "vcpkg-cmake-config",
+      "name": "vcpkg-cmake",
       "host": true
     },
     {
