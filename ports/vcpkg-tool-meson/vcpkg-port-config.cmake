@@ -14,7 +14,7 @@ set(ref "${program_version}")
 set(path_to_search "${DOWNLOADS}/tools/meson-${program_version}-${meson_short_hash}")
 set(download_urls "https://github.com/mesonbuild/meson/archive/${ref}.tar.gz")
 set(download_filename "meson-${ref}.tar.gz")
-set(download_sha512 bd2e65f0863d9cb974e659ff502d773e937b8a60aaddfd7d81e34cd2c296c8e82bf214d790ac089ba441543059dfc2677ba95ed51f676df9da420859f404a907)
+set(download_sha512 3f1c04f6438f7016cd9f5e72c5e98b3bfa7e43fd9e1c6cbf721506d285a3d07116d2beacd2b773096a20aacc3f6332c3f84592ae46feed7e6aed4cb1681ade64)
 
 find_program(SCRIPT_MESON NAMES ${search_names} PATHS "${path_to_search}" NO_DEFAULT_PATH) # NO_DEFAULT_PATH due top patching
 
