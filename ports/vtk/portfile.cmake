@@ -65,6 +65,15 @@ endif()
 # Options:
 # Collect CMake options for optional components
 
+# Strict wiring of features/dependencies to VTK modules
+vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
+    FEATURES
+        "sql"         VTK_MODULE_ENABLE_VTK_sqlite
+        "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
+)
+list(TRANSFORM VTK_YES_NO_OPTIONS REPLACE "=ON" "=YES")
+list(TRANSFORM VTK_YES_NO_OPTIONS REPLACE "=OFF" "=NO")
+
 if("atlmfc" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_GUISupportMFC=YES
@@ -129,7 +138,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "cgns"        VTK_MODULE_ENABLE_VTK_IOCGNSReader
         "seacas"      VTK_MODULE_ENABLE_VTK_IOIOSS
         "seacas"      VTK_MODULE_ENABLE_VTK_IOExodus
-        "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
         "proj"        VTK_MODULE_ENABLE_VTK_IOCesium3DTiles
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
@@ -268,6 +276,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
+        ${VTK_YES_NO_OPTIONS}
         ${PACKAGE_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
