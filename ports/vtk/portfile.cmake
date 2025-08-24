@@ -70,6 +70,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "proj"        VTK_MODULE_ENABLE_VTK_libproj
         "proj"        VTK_MODULE_ENABLE_VTK_IOCesium3DTiles
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
+        "python"      VTK_WRAP_PYTHON
+        "python"      VTK_MODULE_ENABLE_VTK_Python
+        "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
         "sql"         VTK_MODULE_ENABLE_VTK_sqlite
         "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
         "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
@@ -157,18 +160,10 @@ if("qt" IN_LIST FEATURES)
 endif()
 
 if("python" IN_LIST FEATURES)
-    # This sections relies on target package python3.
-    set(python_ver "")
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        set(python_ver "3")
-    endif()
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_WRAP_PYTHON=ON
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-        -DVTK_MODULE_ENABLE_VTK_Python=YES
-        -DVTK_MODULE_ENABLE_VTK_PythonContext2D=YES # TODO: recheck
-        -DVTK_MODULE_ENABLE_VTK_PythonInterpreter=YES
+        "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
         "-DVTK_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}" # from vcpkg-port-config.cmake
     )
     #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
@@ -296,6 +291,7 @@ vcpkg_cmake_configure(
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
         VTK_MODULE_ENABLE_VTK_vtkm
+        VTK_MODULE_USE_EXTERNAL_VTK_mpi4py
         # Only with Qt
         CMAKE_INSTALL_QMLDIR
         VTK_QT_VERSION # Only with Qt
