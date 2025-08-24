@@ -9,5 +9,5 @@ index 08d9532..37cc195 100644
 -if host_machine.system() != 'windows'
 +if host_machine.system() != 'windows' and host_machine.system() != 'emscripten'
    thread_dep = dependency('threads')
-   conf.set('HAVE_PTHREAD', 1)
-   deps += [thread_dep]
+   if thread_dep.found() and cc.has_header('pthread.h')
+     conf.set('HAVE_PTHREAD', 1)
