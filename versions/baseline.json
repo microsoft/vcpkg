@@ -4608,6 +4608,14 @@
       "baseline": "3.1.0",
       "port-version": 0
     },
+    "libcerror": {
+      "baseline": "20240413",
+      "port-version": 0
+    },
+    "libcnotify": {
+      "baseline": "20240414",
+      "port-version": 0
+    },
     "libconfig": {
       "baseline": "1.8",
       "port-version": 0
@@ -10002,6 +10010,10 @@
     },
     "vcpkg-make": {
       "baseline": "2025-07-09",
+      "port-version": 0
+    },
+    "vcpkg-libyal-vstools": {
+      "baseline": "2023-12-18",
       "port-version": 0
     },
     "vcpkg-msbuild": {
