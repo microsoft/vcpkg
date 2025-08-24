@@ -150,6 +150,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
         "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
         "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
         "sql"         VCPKG_LOCK_FIND_PACKAGE_SQLite3
+    INVERTED_FEATURES
+        "all"         VTK_FORBID_DOWNLOADS
 )
 
 
@@ -224,17 +226,6 @@ endif()
 if("utf8" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DKWSYS_ENCODING_DEFAULT_CODEPAGE=CP_UTF8
-    )
-endif()
-
-if("all" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
-        -DVTK_FORBID_DOWNLOADS=OFF
-    )
-else()
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_FORBID_DOWNLOADS=ON
     )
 endif()
 
