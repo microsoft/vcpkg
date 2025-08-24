@@ -21,6 +21,9 @@
     },
     "realtime": {
       "description": "enable this option while building for real-time encoding"
+    },
+    "disable-multithread": {
+      "description": "disable multithread support for vpx"
     }
   }
 }
