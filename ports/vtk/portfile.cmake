@@ -72,18 +72,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
         "sql"         VTK_MODULE_ENABLE_VTK_sqlite
         "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
+        "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
+        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
 )
 list(TRANSFORM VTK_YES_NO_OPTIONS REPLACE "=ON" "=YES")
 list(TRANSFORM VTK_YES_NO_OPTIONS REPLACE "=OFF" "=NO")
-
-if("vtkm" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=YES
-        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel=YES
-        -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters=YES
-        -DVTK_MODULE_ENABLE_VTK_vtkm=YES
-    )
-endif()
 
 # TODO:
 # - add loguru as a dependency requires #8682
@@ -94,10 +89,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
         "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
         "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
-        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
-        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
-        "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
-        "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
         "python"      VTK_MODULE_ENABLE_VTK_Python
         "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
         "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
