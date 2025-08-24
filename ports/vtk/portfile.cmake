@@ -260,6 +260,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${VTK_FEATURE_OPTIONS}
         ${VTK_YES_NO_OPTIONS}
+        ${ADDITIONAL_OPTIONS}
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
         -DVTK_BUILD_EXAMPLES=OFF
@@ -274,7 +275,6 @@ vcpkg_cmake_configure(
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_token:BOOL=OFF # Not yet in VCPKG
         #-DVTK_MODULE_ENABLE_VTK_jsoncpp=YES
-        ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
         -DVTK_QT_VERSION=6
