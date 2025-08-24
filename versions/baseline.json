@@ -8876,6 +8876,10 @@
       "baseline": "0.8.2",
       "port-version": 0
     },
+    "simdissdk": {
+      "baseline": "2025-4-30",
+      "port-version": 0
+    },
     "simdjson": {
       "baseline": "3.13.0",
       "port-version": 0
