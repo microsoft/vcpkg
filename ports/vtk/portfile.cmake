@@ -135,6 +135,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
 )
+# Replace common value to vtk value
+list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
+list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
 
 # Lock port features to prevent accidental finding of transitive dependencies
 vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
@@ -149,9 +152,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
         "sql"         VCPKG_LOCK_FIND_PACKAGE_SQLite3
 )
 
-# Replace common value to vtk value
-list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
-list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
 
 if("qt" IN_LIST FEATURES AND NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmlplugindump${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     list(APPEND VTK_FEATURE_OPTIONS -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=NO)
