@@ -63,6 +63,7 @@ vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "OGG::OGG" "Ogg::og
 # Strict wiring of features/dependencies to VTK modules
 vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
     FEATURES
+        "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
         "netcdf"      VTK_MODULE_ENABLE_VTK_netcdf
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
@@ -75,11 +76,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
 list(TRANSFORM VTK_YES_NO_OPTIONS REPLACE "=ON" "=YES")
 list(TRANSFORM VTK_YES_NO_OPTIONS REPLACE "=OFF" "=NO")
 
-if("atlmfc" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_GUISupportMFC=YES
-    )
-endif()
 if("vtkm" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore=YES
@@ -98,7 +94,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
         "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
         "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
-        "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
