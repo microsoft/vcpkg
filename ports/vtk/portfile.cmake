@@ -66,6 +66,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "netcdf"      VTK_MODULE_ENABLE_VTK_netcdf
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
+        "proj"        VTK_MODULE_ENABLE_VTK_libproj
+        "proj"        VTK_MODULE_ENABLE_VTK_IOCesium3DTiles
+        "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
         "sql"         VTK_MODULE_ENABLE_VTK_sqlite
         "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
 )
@@ -136,8 +139,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "cgns"        VTK_MODULE_ENABLE_VTK_IOCGNSReader
         "seacas"      VTK_MODULE_ENABLE_VTK_IOIOSS
         "seacas"      VTK_MODULE_ENABLE_VTK_IOExodus
-        "proj"        VTK_MODULE_ENABLE_VTK_IOCesium3DTiles
-        "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
 )
 # Replace common value to vtk value
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
