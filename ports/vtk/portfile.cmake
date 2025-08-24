@@ -61,24 +61,39 @@ vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "OGG::OGG" "Ogg::og
 # Collect CMake options for optional components
 
 # Strict wiring of features/dependencies to VTK modules
+# VTK_MODULE_ENABLE... and VTK_GROUP_ENABLE... do not use ON/OFF but
+# VTK's special NO/DONT_WANT/WANT/YES/DEFAULT (cf. vtkModule.cmake).
+# This section produces either YES or NO (after postprocessing).
+# YES/NO are also okay for regular CMake options instead of ON/OFF,
+# so we can consolidate VTK and CMake settings here.
 vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
     FEATURES
         "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
+        "cgns"        VCPKG_LOCK_FIND_PACKAGE_CGNS
+        "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
+        "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
+        "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
         "netcdf"      VTK_MODULE_ENABLE_VTK_netcdf
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
+        "proj"        VCPKG_LOCK_FIND_PACKAGE_PROJ
         "proj"        VTK_MODULE_ENABLE_VTK_libproj
         "proj"        VTK_MODULE_ENABLE_VTK_IOCesium3DTiles
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
         "python"      VTK_WRAP_PYTHON
         "python"      VTK_MODULE_ENABLE_VTK_Python
         "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
+        "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
+        "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
+        "sql"         VCPKG_LOCK_FIND_PACKAGE_SQLite3
         "sql"         VTK_MODULE_ENABLE_VTK_sqlite
         "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
         "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmFilters
+    INVERTED_FEATURES
+        "all"         VTK_FORBID_DOWNLOADS
 )
 list(TRANSFORM VTK_YES_NO_OPTIONS REPLACE "=ON" "=YES")
 list(TRANSFORM VTK_YES_NO_OPTIONS REPLACE "=OFF" "=NO")
@@ -132,21 +147,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
 # Replace common value to vtk value
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
-
-# Lock port features to prevent accidental finding of transitive dependencies
-vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
-    FEATURES
-        "cgns"        VCPKG_LOCK_FIND_PACKAGE_CGNS
-        "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
-        "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
-        "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
-        "proj"        VCPKG_LOCK_FIND_PACKAGE_PROJ
-        "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
-        "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
-        "sql"         VCPKG_LOCK_FIND_PACKAGE_SQLite3
-    INVERTED_FEATURES
-        "all"         VTK_FORBID_DOWNLOADS
-)
 
 if("qt" IN_LIST FEATURES AND NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmlplugindump${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     list(APPEND VTK_FEATURE_OPTIONS -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=NO)
@@ -265,7 +265,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
         ${VTK_YES_NO_OPTIONS}
-        ${PACKAGE_FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DVTK_BUILD_TESTING=OFF
         -DVTK_BUILD_EXAMPLES=OFF
