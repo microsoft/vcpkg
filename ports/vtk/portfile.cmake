@@ -56,11 +56,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "OGG::OGG" "Ogg::og
 
 # =============================================================================
 
-if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
-    message(WARNING "${HDF5_WITH_PARALLEL} Enabling MPI in vtk.")
-    list(APPEND FEATURES "mpi")
-endif()
-
 # =============================================================================
 # Options:
 # Collect CMake options for optional components
@@ -162,7 +157,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
         "all"         VTK_FORBID_DOWNLOADS
 )
 
-
 if("qt" IN_LIST FEATURES AND NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/qmlplugindump${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     list(APPEND VTK_FEATURE_OPTIONS -DVTK_MODULE_ENABLE_VTK_GUISupportQtQuick=NO)
 endif()
@@ -210,17 +204,29 @@ if ("paraview" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
     )
 endif()
 
-if("paraview" IN_LIST FEATURES AND "mpi" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_ENABLE_VTK_FiltersParallelFlowPaths=YES
-        -DVTK_MODULE_ENABLE_VTK_RenderingParallelLIC=YES
-    )
+set(use_mpi OFF)
+if("mpi" IN_LIST FEATURES)
+    set(use_mpi ON)
+elseif(HDF5_WITH_PARALLEL)
+    message(WARNING "${HDF5_WITH_PARALLEL} Enabling VTK MPI.")
+    set(use_mpi ON)
 endif()
+list(APPEND ADDITIONAL_OPTIONS -DVTK_USE_MPI=${use_mpi})
+if(use_mpi)
+    list(APPEND ADDITIONAL_OPTIONS -DVTK_MODULE_ENABLE_VTK_ParallelMPI=YES)
 
-if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
-    list(APPEND ADDITIONAL_OPTIONS
-        -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
-    )
+    if("paraview" IN_LIST FEATURES)
+        list(APPEND ADDITIONAL_OPTIONS
+            -DVTK_MODULE_ENABLE_VTK_FiltersParallelFlowPaths=YES
+            -DVTK_MODULE_ENABLE_VTK_RenderingParallelLIC=YES
+        )
+    endif()
+
+    if("python" IN_LIST FEATURES)
+        list(APPEND ADDITIONAL_OPTIONS
+            -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
+        )
+    endif()
 endif()
 
 if("cuda" IN_LIST FEATURES)
@@ -260,7 +266,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "all"           VTK_BUILD_ALL_MODULES
         "cuda"          VTK_USE_CUDA
         "debugleaks"    VTK_DEBUG_LEAKS
-        "mpi"           VTK_USE_MPI
         "openmp"        VTK_SMP_ENABLE_OPENMP
         "tbb"           VTK_SMP_ENABLE_TBB
 )
