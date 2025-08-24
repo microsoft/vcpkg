@@ -63,6 +63,9 @@ vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "OGG::OGG" "Ogg::og
 # Strict wiring of features/dependencies to VTK modules
 vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
     FEATURES
+        "netcdf"      VTK_MODULE_ENABLE_VTK_netcdf
+        "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
+        "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
         "sql"         VTK_MODULE_ENABLE_VTK_sqlite
         "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
 )
@@ -135,8 +138,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "seacas"      VTK_MODULE_ENABLE_VTK_IOExodus
         "proj"        VTK_MODULE_ENABLE_VTK_IOCesium3DTiles
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
-        "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
-        "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
 )
 # Replace common value to vtk value
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
