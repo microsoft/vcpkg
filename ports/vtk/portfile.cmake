@@ -68,14 +68,18 @@ vcpkg_replace_string("${SOURCE_PATH}/CMake/FindTHEORA.cmake" "OGG::OGG" "Ogg::og
 # so we can consolidate VTK and CMake settings here.
 vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
     FEATURES
+        "all"         VTK_BUILD_ALL_MODULES
         "atlmfc"      VTK_MODULE_ENABLE_VTK_GUISupportMFC
         "cgns"        VCPKG_LOCK_FIND_PACKAGE_CGNS
+        "cuda"        VTK_USE_CUDA
+        "debugleaks"  VTK_DEBUG_LEAKS
         "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
         "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
         "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
         "netcdf"      VTK_MODULE_ENABLE_VTK_netcdf
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
+        "openmp"      VTK_SMP_ENABLE_OPENMP
         "proj"        VCPKG_LOCK_FIND_PACKAGE_PROJ
         "proj"        VTK_MODULE_ENABLE_VTK_libproj
         "proj"        VTK_MODULE_ENABLE_VTK_IOCesium3DTiles
@@ -88,6 +92,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "sql"         VCPKG_LOCK_FIND_PACKAGE_SQLite3
         "sql"         VTK_MODULE_ENABLE_VTK_sqlite
         "sql"         VTK_MODULE_ENABLE_VTK_IOSQL
+        "tbb"         VTK_SMP_ENABLE_TBB
         "vtkm"        VTK_MODULE_ENABLE_VTK_vtkm
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmCore
         "vtkm"        VTK_MODULE_ENABLE_VTK_AcceleratorsVTKmDataModel
@@ -244,15 +249,6 @@ if(VCPKG_CROSSCOMPILING)
     )
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        "all"           VTK_BUILD_ALL_MODULES
-        "cuda"          VTK_USE_CUDA
-        "debugleaks"    VTK_DEBUG_LEAKS
-        "openmp"        VTK_SMP_ENABLE_OPENMP
-        "tbb"           VTK_SMP_ENABLE_TBB
-)
-
 # =============================================================================
 # Configure & Install
 
@@ -262,7 +258,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         ${VTK_FEATURE_OPTIONS}
         ${VTK_YES_NO_OPTIONS}
         -DBUILD_TESTING=OFF
