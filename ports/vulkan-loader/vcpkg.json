@@ -5,6 +5,20 @@
   "homepage": "https://github.com/KhronosGroup/Vulkan-Loader",
   "license": null,
   "supports": "!android",
+  "features": {
+    "xcb": {
+      "description": "Build XCB WSI support"
+    },
+    "xlib": {
+      "description": "Build Xlib WSI support"
+    },
+    "wayland": {
+      "description": "Build Wayland WSI support"
+    },
+    "directfb": {
+      "description": "Build DirectFB WSI support"
+    }
+  },
   "dependencies": [
     {
       "name": "vcpkg-cmake",
