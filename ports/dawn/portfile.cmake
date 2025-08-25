@@ -2,7 +2,11 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     # emscripten has built-in dawn library
     set(VCPKG_BUILD_TYPE release)
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/dawn")
+    set(DAWN_PKGCONFIG_CFLAGS "--use-port=emdawnwebgpu")
+    set(DAWN_PKGCONFIG_DEPS "--use-port=emdawnwebgpu")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-webgpu-dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial-webgpu-dawn.pc" @ONLY)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     return()
 endif()
 
@@ -183,6 +187,25 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Dawn)
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(DAWN_PKGCONFIG_CFLAGS "")
+    set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn -ldxguid -lonecore")
+elseif (VCPKG_TARGET_IS_OSX)
+    set(DAWN_PKGCONFIG_CFLAGS "")
+    set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn -framework IOSurface -framework Metal -framework QuartzCore")
+else ()
+    set(DAWN_PKGCONFIG_CFLAGS "")
+    set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn")
+endif ()
+
+if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-webgpu-dawn.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/unofficial-webgpu-dawn.pc" @ONLY)
+endif()
+if (EXISTS "${CURRENT_PACKAGES_DIR}/lib")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-webgpu-dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial-webgpu-dawn.pc" @ONLY)
+endif()
+vcpkg_fixup_pkgconfig()
 
 # Restore the original library linkage
 set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})

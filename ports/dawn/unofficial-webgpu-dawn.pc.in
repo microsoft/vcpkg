@@ -1,0 +1,11 @@
+prefix=${pcfiledir}/../..
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: unofficial-webgpu-dawn
+Description: Dawn WebGPU library
+Version: @VERSION@
+URL: https://dawn.googlesource.com/dawn
+
+Libs: -L${libdir} @DAWN_PKGCONFIG_DEPS@
+Cflags: -I${includedir} @DAWN_PKGCONFIG_CFLAGS@
