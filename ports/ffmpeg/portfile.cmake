@@ -528,10 +528,8 @@ endif()
 
 if("vulkan" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-vulkan")
-    set(WITH_VULKAN ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-vulkan")
-    set(WITH_VULKAN OFF)
 endif()
 
 if("webp" IN_LIST FEATURES)
