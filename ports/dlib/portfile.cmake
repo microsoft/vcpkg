@@ -10,8 +10,10 @@ vcpkg_from_github(
         fix-dependencies.patch
         find_blas.patch
 )
-
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -85,3 +87,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/cmake_utils/test_for_l
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/dlib/external/libpng/arm")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/dlib/LICENSE.txt")
+mesage(FATAL_ERROR STOP)

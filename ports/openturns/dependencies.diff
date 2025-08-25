@@ -1,0 +1,113 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e2f0f5b..61cc8b9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -128,6 +128,12 @@ if (NOT DEFINED LAPACK_LIBRARIES)
+ endif ()
+ list (APPEND OPENTURNS_PRIVATE_LIBRARIES ${LAPACK_LIBRARIES})
+ 
++find_package(kissfft CONFIG REQUIRED)
++list(APPEND OPENTURNS_PRIVATE_LIBRARIES kissfft::kissfft-double)
++
++find_path(RAPIDCSV_INCLUDE_DIRS "rapidcsv.h" REQUIRED)
++list(APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${RAPIDCSV_INCLUDE_DIRS})
++
+ if (USE_SPECTRA)
+   find_package (Spectra 1.0 CONFIG)
+ endif ()
+@@ -183,7 +189,8 @@ if (TBB_FOUND)
+ endif ()
+ 
+ if (USE_MUPARSER)
+-  find_package (muParser 2.2.3 QUIET)
++  find_package (MUPARSER NAMES muparser REQUIRED)
++  set(MUPARSER_LIBRARIES muparser::muparser)
+ endif ()
+ if (MUPARSER_FOUND)
+   set (OPENTURNS_HAVE_MUPARSER TRUE)
+@@ -194,6 +201,8 @@ if (MUPARSER_FOUND)
+   set (SYMBOLICPARSER_DEFAULT_BACKEND MuParser)
+ endif ()
+ if (USE_EXPRTK)
++  find_path(EXPRTK_INCLUDE_DIRS "exprtk.hpp" REQUIRED)
++  list(APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${EXPRTK_INCLUDE_DIRS})
+   set (OPENTURNS_HAVE_EXPRTK TRUE)
+   set (OPENTURNS_HAVE_ANALYTICAL_PARSER TRUE)
+   set (SYMBOLICPARSER_DEFAULT_BACKEND ExprTk)
+@@ -262,7 +271,9 @@ if (USE_BOOST)
+       endif ()
+     endif ()
+     if (USE_MPFR)
+-      find_package (MPFR)
++      find_package(PkgConfig REQUIRED)
++      pkg_check_modules(MPFR mpfr REQUIRED)
++      set(MPFR_LIBRARIES "${MPFR_LINK_LIBRARIES}")
+       if (MPFR_FOUND)
+         set (OPENTURNS_HAVE_MPFR TRUE)
+         list (APPEND OPENTURNS_PRIVATE_INCLUDE_DIRS ${MPFR_INCLUDE_DIRS})
+@@ -435,9 +446,8 @@ check_include_file (dlfcn.h       OPENTURNS_HAVE_DLFCN_H      )
+ 
+ include (CheckFunctionExists)
+ if (OPENTURNS_HAVE_DLFCN_H AND UNIX)
+-  find_library (LIBDL_LIBRARIES NAMES dl)
+-  mark_as_advanced (LIBDL_LIBRARIES)
+-  if (LIBDL_LIBRARIES)
++  set(LIBDL_LIBRARIES "${CMAKE_DL_LIBS}")
++  if(1)
+     set (CMAKE_REQUIRED_LIBRARIES ${LIBDL_LIBRARIES})
+     check_function_exists (dladdr OPENTURNS_HAVE_DLADDR)
+     set (CMAKE_REQUIRED_LIBRARIES)
+diff --git a/LICENSE b/LICENSE
+index 2bd2cde..3148f78 100644
+--- a/LICENSE
++++ b/LICENSE
+@@ -4,11 +4,8 @@ This library bundles several third-party codes with various licenses compatible
+ - COBYLA optimization solver (lib/src/Base/Optim/algocobyla.*) under Expat license, see COPYING.cobyla
+ - Mersenne twister RNG (lib/src/Base/Stat/dsfmt.*) under BSD license, see COPYING.dsfmt
+ - Ev3 symbolic library (lib/src/Base/Diff/Ev3/*) under LGPL license, see COPYING.ev3
+-- ExprTk symbolic parser (lib/src/Base/Func/openturns/exprtk.hpp) under Expat license, see COPYING.exprtk
+ - Faddeeva function (lib/src/Base/Func/SpecFunc/Faddeeva.*) under Expat license, see COPYING.faddeeva
+ - Kendall Tau (lib/src/Base/Stat/kendall.c) under BSL license, see COPYING.kendall
+-- KissFFT (lib/src/Base/Algo/kissfft.hh), under BSD license, see COPYING.kissfft
+ - KS distribution from Cephes library (lib/src/Uncertainty/Distribution/cephes/*) under BSD license, see COPYING.cephes
+ - TNC optimization solver (lib/src/Base/Optim/algotnc.*) under Expat license, see COPYING.tnc
+ - Gauss Legendre quadrature from FastGL library (lib/src/Base/Algo/fastgl*) under BSD license, see COPYING.fastGL
+-- Rapidcsv parser library (lib/src/Base/Stat/rapidcsv.h) under BSD license, see COPYING.rapidcsv
+diff --git a/lib/OpenTURNSConfig.cmake.in b/lib/OpenTURNSConfig.cmake.in
+index 096490b..307faaa 100644
+--- a/lib/OpenTURNSConfig.cmake.in
++++ b/lib/OpenTURNSConfig.cmake.in
+@@ -47,7 +47,7 @@ set_and_check ( OPENTURNS_INCLUDE_DIR        "@PACKAGE_OPENTURNS_INCLUDE_DIR@" )
+ set ( OPENTURNS_INCLUDE_DIRS "@PACKAGE_OPENTURNS_INCLUDE_DIRS@" )
+ set ( OPENTURNS_LIBRARY      "@OPENTURNS_LIBRARY@" )
+ set ( OPENTURNS_LIBRARIES    "@OPENTURNS_LIBRARIES@" )
+-set ( OPENTURNS_LIBRARY_DIRS "@PACKAGE_OPENTURNS_LIBRARY_DIRS@" )
++set ( OPENTURNS_LIBRARY_DIRS "" )
+ set_and_check ( OPENTURNS_ROOT_DIR   "@PACKAGE_OPENTURNS_ROOT_DIR@" )
+ 
+ set ( OPENTURNS_VERSION_STRING "@OPENTURNS_VERSION_STRING@" )
+@@ -62,6 +62,11 @@ set (OPENTURNS_PYTHON_MODULE_PATH "@PACKAGE_PYTHON_MODULE_PATH@")
+ # static libraries dependencies are transitive so imported targets must be defined
+ if (NOT @BUILD_SHARED_LIBS@)
+   include(CMakeFindDependencyMacro)
++  find_dependency(kissfft CONFIG)
++  find_dependency(nanoflann CONFIG)
++  if("@MUPARSER_FOUND@")
++    find_dependency(muparser CONFIG)
++  endif()
+ 
+   if ("1" STREQUAL "@Ceres_FOUND@")
+     find_dependency(Ceres CONFIG)
+diff --git a/lib/src/Base/Func/SymbolicParserExprTk.cxx b/lib/src/Base/Func/SymbolicParserExprTk.cxx
+index 38e818b..8f926da 100644
+--- a/lib/src/Base/Func/SymbolicParserExprTk.cxx
++++ b/lib/src/Base/Func/SymbolicParserExprTk.cxx
+@@ -27,7 +27,7 @@
+ 
+ #include "openturns/OTwindows.h" // exprtk includes windows.h
+ #define exprtk_disable_caseinsensitivity
+-#include "openturns/exprtk.hpp"
++#include <exprtk.hpp>
+ 
+ BEGIN_NAMESPACE_OPENTURNS
+ 
