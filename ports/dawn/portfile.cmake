@@ -60,6 +60,12 @@ checkout_in_path(
 )
 
 checkout_in_path(
+    "${SOURCE_PATH}/third_party/markupsafe"
+    "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
+    "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
+)
+
+checkout_in_path(
     "${SOURCE_PATH}/third_party/khronos/EGL-Registry"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/EGL-Registry"
     "7dea2ed79187cd13f76183c4b9100159b9e3e071"
@@ -69,12 +75,6 @@ checkout_in_path(
     "${SOURCE_PATH}/third_party/khronos/OpenGL-Registry"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/OpenGL-Registry"
     "5bae8738b23d06968e7c3a41308568120943ae77"
-)
-
-checkout_in_path(
-    "${SOURCE_PATH}/third_party/markupsafe"
-    "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
-    "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
 )
 
 checkout_in_path(
@@ -125,27 +125,36 @@ endif()
 set(VCPKG_LIBRARY_LINKAGE_BACKUP ${VCPKG_LIBRARY_LINKAGE})
 set(VCPKG_LIBRARY_LINKAGE static)
 
+set(DAWN_ENABLE_NULL ON)
+set(DAWN_ENABLE_D3D11 OFF)
 if("d3d11" IN_LIST FEATURES)
     set(DAWN_ENABLE_D3D11 ON)
 endif()
+set(DAWN_ENABLE_D3D12 OFF)
 if("d3d12" IN_LIST FEATURES)
     set(DAWN_ENABLE_D3D12 ON)
 endif()
+set(DAWN_ENABLE_DESKTOP_GL OFF)
 if("gl" IN_LIST FEATURES)
     set(DAWN_ENABLE_DESKTOP_GL ON)
 endif()
+set(DAWN_ENABLE_OPENGLES OFF)
 if("gles" IN_LIST FEATURES)
     set(DAWN_ENABLE_OPENGLES ON)
 endif()
+set(DAWN_ENABLE_METAL OFF)
 if("metal" IN_LIST FEATURES)
     set(DAWN_ENABLE_METAL ON)
 endif()
+set(DAWN_ENABLE_VULKAN OFF)
 if("vulkan" IN_LIST FEATURES)
     set(DAWN_ENABLE_VULKAN ON)
 endif()
+set(DAWN_USE_WAYLAND OFF)
 if("wayland" IN_LIST FEATURES)
     set(DAWN_USE_WAYLAND ON)
 endif()
+set(DAWN_USE_X11 OFF)
 if("x11" IN_LIST FEATURES)
     set(DAWN_USE_X11 ON)
 endif()
@@ -163,7 +172,7 @@ vcpkg_cmake_configure(
         -DTINT_BUILD_TESTS=OFF
         -DTINT_ENABLE_INSTALL=OFF
         -DTINT_BUILD_CMD_TOOLS=OFF
-        -DDAWN_ENABLE_NULL=ON
+        -DDAWN_ENABLE_NULL=${DAWN_ENABLE_NULL}
         -DDAWN_ENABLE_D3D11=${DAWN_ENABLE_D3D11}
         -DDAWN_ENABLE_D3D12=${DAWN_ENABLE_D3D12}
         -DDAWN_ENABLE_DESKTOP_GL=${DAWN_ENABLE_DESKTOP_GL}
@@ -177,21 +186,24 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Dawn)
 
-set(DAWN_ABSL_REQUIRES "absl_flat_hash_set absl_flat_hash_map absl_inlined_vector absl_no_destructor absl_overload absl_str_format_internal absl_strings absl_span absl_string_view")
+set(DAWN_PKGCONFIG_CFLAGS "")
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    set(DAWN_PKGCONFIG_CFLAGS "")
-    set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn -ldxguid -lonecore")
-    set(DAWN_PKGCONFIG_REQUIRES "${DAWN_ABSL_REQUIRES}")
-elseif (VCPKG_TARGET_IS_OSX)
-    set(DAWN_PKGCONFIG_CFLAGS "")
-    set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn -framework IOSurface -framework Metal -framework QuartzCore")
-    set(DAWN_PKGCONFIG_REQUIRES "${DAWN_ABSL_REQUIRES}")
-else ()
-    set(DAWN_PKGCONFIG_CFLAGS "")
-    set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn")
-    set(DAWN_PKGCONFIG_REQUIRES "${DAWN_ABSL_REQUIRES}")
-endif ()
+set(DAWN_ABSL_REQUIRES "absl_flat_hash_set absl_flat_hash_map absl_inlined_vector absl_no_destructor absl_overload absl_str_format_internal absl_strings absl_span absl_string_view")
+set(DAWN_PKGCONFIG_REQUIRES "${DAWN_ABSL_REQUIRES}")
+
+set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn")
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND NOT VCPKG_TARGET_IS_UWP)
+    set(DAWN_PKGCONFIG_DEPS "${DAWN_PKGCONFIG_DEPS} -lonecore -luser32 -ldelayimp")
+endif()
+if (DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
+    set(DAWN_PKGCONFIG_DEPS "${DAWN_PKGCONFIG_DEPS} -ldxguid")
+endif()
+if (DAWN_ENABLE_METAL)
+    set(DAWN_PKGCONFIG_DEPS "${DAWN_PKGCONFIG_DEPS} -framework IOSurface -framework Metal -framework QuartzCore")
+    if (VCPKG_TARGET_IS_OSX)
+        set(DAWN_PKGCONFIG_DEPS "${DAWN_PKGCONFIG_DEPS} -framework Cocoa -framework IOKit")
+    endif()
+endif()
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-webgpu-dawn.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/unofficial-webgpu-dawn.pc" @ONLY)
