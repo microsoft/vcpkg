@@ -4,8 +4,8 @@ set(VCPKG_BUILD_TYPE release)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tonitaga/defer
-    REF 39ac0bd816a9f8974c79ba43df1dcfc4d811d6bd
-    SHA512 004540a6627f9087fa84358232f963bd503fbb56ad4afc73b6956d6cb3f2cb17deaa2bb0e1dc4bd2af3bec16180aa36004082d99557de6ff07d56c3f54941730
+    REF df60d7dd6ee197d4747c5c9defd521b15d881897
+    SHA512 586fa794e8f78af739f530105afdc497011d2261c0cf1483a59956cbbdb71562559c352d2a27b5b2200bbd67f2f552db0ae04997abaf4d388317645a7eeb1e3d
     HEAD_REF main
 )
 
@@ -13,11 +13,9 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_cmake_install(ADD_BIN_TO_PATH)
-
+vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "defer" CONFIG_PATH "lib/cmake/defer")
 vcpkg_fixup_pkgconfig()
-
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
