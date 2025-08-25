@@ -53,18 +53,6 @@ function(checkout_in_path PATH URL REF)
 endfunction()
 
 checkout_in_path(
-    "${SOURCE_PATH}/third_party/dxc"
-    "https://chromium.googlesource.com/external/github.com/microsoft/DirectXShaderCompiler"
-    "39f1dc165ca38e7548d74eaad88d5ee47f1de5a6"
-)
-
-checkout_in_path(
-    "${SOURCE_PATH}/third_party/dxheaders"
-    "https://chromium.googlesource.com/external/github.com/microsoft/DirectX-Headers"
-    "980971e835876dc0cde415e8f9bc646e64667bf7"
-)
-
-checkout_in_path(
     "${SOURCE_PATH}/third_party/jinja2"
     "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
     "e2d024354e11cc6b041b0cff032d73f0c7e43a07"
