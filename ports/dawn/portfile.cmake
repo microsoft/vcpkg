@@ -19,6 +19,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
+        002-fix-uwp.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
