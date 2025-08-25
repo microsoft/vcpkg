@@ -17,7 +17,7 @@
 #define ASSERT(expr, fmt, ...)                                                         \
     do {                                                                               \
         if (!(expr)) {                                                                 \
-            LOGE("Assertion failed: {}:{}, func: \"{}\", expr: \"{}\", message: " /**/ \
+            LOGE("Assertion failed: %s:%d, func: \"%s\", expr: \"%s\", message: " /**/ \
                  fmt,                                                             /**/ \
                  __FILE__, __LINE__, MY_PRETTY_FUNCTION, #expr,                   /**/ \
                  ##__VA_ARGS__);                                                       \

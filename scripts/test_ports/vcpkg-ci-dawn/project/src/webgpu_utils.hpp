@@ -9,11 +9,7 @@
 #include "assert.hpp"
 #include "log.hpp"
 #include "webgpu/webgpu_cpp.h"
-#include "webgpu_formatter.hpp"
-
-void inspect_adapter(const wgpu::Adapter &adapter);
-
-void inspect_device(const wgpu::Device &device);
+#include <string>
 
 wgpu::Instance create_instance();
 

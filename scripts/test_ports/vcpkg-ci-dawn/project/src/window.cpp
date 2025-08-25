@@ -7,7 +7,7 @@
 #include "assert.hpp"
 #include "webgpu_glfw.hpp"
 
-static void glfw_error_callback(int error, const char *description) { LOGE("GLFW error, {}, {}", error, description); }
+static void glfw_error_callback(int error, const char *description) { LOGE("GLFW error, %d, %s", error, description); }
 
 static Window *window_singleton_ = nullptr;
 

@@ -4,11 +4,7 @@ project(vcpkg_ci_dawn)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(glfw3 CONFIG REQUIRED)
-find_package(fmt CONFIG REQUIRED)
-find_package(spdlog CONFIG REQUIRED)
-
 find_package(Dawn CONFIG REQUIRED)
-
 find_package(PkgConfig)
 pkg_check_modules(webgpu_dawn REQUIRED IMPORTED_TARGET unofficial-webgpu-dawn)
 
@@ -21,8 +17,6 @@ endif ()
 add_executable(vcpkg_ci_dawn ${SOURCES})
 target_link_libraries(vcpkg_ci_dawn PUBLIC
         glfw
-        fmt::fmt
-        spdlog::spdlog
         dawn::webgpu_dawn
 )
 if (EMSCRIPTEN)
@@ -34,8 +28,6 @@ endif ()
 add_executable(vcpkg_ci_dawn_pc ${SOURCES})
 target_link_libraries(vcpkg_ci_dawn_pc PUBLIC
         glfw
-        fmt::fmt
-        spdlog::spdlog
         PkgConfig::webgpu_dawn
 )
 if (EMSCRIPTEN)

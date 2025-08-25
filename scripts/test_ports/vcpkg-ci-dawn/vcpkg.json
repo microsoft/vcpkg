@@ -6,9 +6,7 @@
   "supports": "!uwp & !android & !ios",
   "dependencies": [
     "dawn",
-    "fmt",
     "glfw3",
-    "spdlog",
     {
       "name": "vcpkg-cmake",
       "host": true
