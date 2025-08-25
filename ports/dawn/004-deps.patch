@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 46ae8fdf42..d49396cc9b 100644
+index 26b84f4794..02729557a5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -455,6 +455,7 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
+@@ -461,6 +461,7 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
  ################################################################################
  # Run on all subdirectories
  ################################################################################

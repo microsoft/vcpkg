@@ -21,7 +21,8 @@ vcpkg_from_github(
     PATCHES
         001-fix-windows-build.patch
         002-fix-uwp.patch
-        003-deps.patch
+        003-fix-d3d11.patch
+        004-deps.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
