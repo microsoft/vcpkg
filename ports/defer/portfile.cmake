@@ -13,9 +13,11 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME defer CONFIG_PATH share/defer/cmake)
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME "defer" CONFIG_PATH "lib/cmake/defer")
 vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
