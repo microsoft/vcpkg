@@ -1,0 +1,28 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO sourcemeta/blaze
+    REF 51a6158e5094c7881a68c0e9411023f1b1822a9f
+    SHA512 69d85f0eac77fdc73a0689df209c3241ea311a9599ee89bff62abbfc24c2a23848f8ea761e0b4efadd976024601f3b2a7c0ebb6ed696a16bfd976aabf6da2daf
+    HEAD_REF master
+)
+
+#vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+#    FEATURES
+#        lapack   USE_LAPACK
+#        openmp   BLAZE_SHARED_MEMORY_PARALLELIZATION
+#)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+
+#vcpkg_cmake_config_fixup(CONFIG_PATH share/blaze/cmake)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+# Handle copyright
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
