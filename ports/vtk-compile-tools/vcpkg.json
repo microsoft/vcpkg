@@ -1,7 +1,7 @@
 {
   "name": "vtk-compile-tools",
   "version-semver": "9.3.0-pv5.12.1",
-  "description": "Software system for 3D computer graphics, image processing, and visualization",
+  "description": "Tools needed for crosscompiling VTK",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
   "supports": "native",
