@@ -1,7 +1,7 @@
 {
   "name": "abseil",
   "version": "20250127.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": [
     "Abseil is an open-source collection of C++ library code designed to augment the C++ standard library. The Abseil library code is collected from Google's own C++ code base, has been extensively tested and used in production, and is the same code we depend on in our daily coding lives.",
     "In some cases, Abseil provides pieces missing from the C++ standard; in others, Abseil provides alternatives to the standard for special needs we've found through usage in the Google code base. We denote those cases clearly within the library code we provide you.",
