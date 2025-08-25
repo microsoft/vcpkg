@@ -4,6 +4,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/dawn")
     set(DAWN_PKGCONFIG_CFLAGS "--use-port=emdawnwebgpu")
     set(DAWN_PKGCONFIG_DEPS "--use-port=emdawnwebgpu")
+    set(DAWN_PKGCONFIG_REQUIRES "")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-webgpu-dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial-webgpu-dawn.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
@@ -20,6 +21,7 @@ vcpkg_from_github(
     PATCHES
         001-fix-windows-build.patch
         002-fix-uwp.patch
+        003-deps.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
@@ -51,12 +53,6 @@ function(checkout_in_path PATH URL REF)
 endfunction()
 
 checkout_in_path(
-    "${SOURCE_PATH}/third_party/abseil-cpp"
-    "https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp"
-    "cae4b6a3990e1431caa09c7b2ed1c76d0dfeab17"
-)
-
-checkout_in_path(
     "${SOURCE_PATH}/third_party/dxc"
     "https://chromium.googlesource.com/external/github.com/microsoft/DirectXShaderCompiler"
     "39f1dc165ca38e7548d74eaad88d5ee47f1de5a6"
@@ -66,12 +62,6 @@ checkout_in_path(
     "${SOURCE_PATH}/third_party/dxheaders"
     "https://chromium.googlesource.com/external/github.com/microsoft/DirectX-Headers"
     "980971e835876dc0cde415e8f9bc646e64667bf7"
-)
-
-checkout_in_path(
-    "${SOURCE_PATH}/third_party/glfw"
-    "https://chromium.googlesource.com/external/github.com/glfw/glfw"
-    "b35641f4a3c62aa86a0b3c983d163bc0fe36026d"
 )
 
 checkout_in_path(
@@ -92,18 +82,6 @@ checkout_in_path(
     "5bae8738b23d06968e7c3a41308568120943ae77"
 )
 
-# checkout_in_path(
-#     "${SOURCE_PATH}/third_party/libprotobuf-mutator/src"
-#     "https://chromium.googlesource.com/external/github.com/google/libprotobuf-mutator.git"
-#     "7bf98f78a30b067e22420ff699348f084f802e12"
-# )
-
-# checkout_in_path(
-#     "${SOURCE_PATH}/third_party/protobuf"
-#     "https://chromium.googlesource.com/chromium/src/third_party/protobuf"
-#     "1a4051088b71355d44591172c474304331aaddad"
-# )
-
 checkout_in_path(
     "${SOURCE_PATH}/third_party/markupsafe"
     "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
@@ -115,18 +93,6 @@ checkout_in_path(
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/glslang"
     "fcf4e9296fa400e2b03c34e23b261e0c8a0ac34d"
 )
-
-# checkout_in_path(
-#     "${SOURCE_PATH}/third_party/google_benchmark/src"
-#     "https://chromium.googlesource.com/external/github.com/google/benchmark.git"
-#     "761305ec3b33abf30e08d50eb829e19a802581cc"
-# )
-
-# checkout_in_path(
-#     "${SOURCE_PATH}/third_party/googletest"
-#     "https://chromium.googlesource.com/external/github.com/google/googletest"
-#     "309dab8d4bbfcef0ef428762c6fec7172749de0f"
-# )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-headers/src"
@@ -166,8 +132,6 @@ else()
     set(DAWN_BUILD_MONOLITHIC_LIBRARY "SHARED")
 endif()
 
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
-
 # DAWN_BUILD_MONOLITHIC_LIBRARY SHARED/STATIC requires BUILD_SHARED_LIBS=OFF
 set(VCPKG_LIBRARY_LINKAGE_BACKUP ${VCPKG_LIBRARY_LINKAGE})
 set(VCPKG_LIBRARY_LINKAGE static)
@@ -185,21 +149,25 @@ vcpkg_cmake_configure(
         -DTINT_BUILD_TESTS=OFF
         -DTINT_ENABLE_INSTALL=OFF
         -DTINT_BUILD_CMD_TOOLS=OFF
-        -DABSL_MSVC_STATIC_RUNTIME=${STATIC_CRT}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Dawn)
 
+set(DAWN_ABSL_REQUIRES "absl_flat_hash_set absl_flat_hash_map absl_inlined_vector absl_no_destructor absl_overload absl_str_format_internal absl_strings absl_span absl_string_view")
+
 if (VCPKG_TARGET_IS_WINDOWS)
     set(DAWN_PKGCONFIG_CFLAGS "")
     set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn -ldxguid -lonecore")
+    set(DAWN_PKGCONFIG_REQUIRES "${DAWN_ABSL_REQUIRES}")
 elseif (VCPKG_TARGET_IS_OSX)
     set(DAWN_PKGCONFIG_CFLAGS "")
     set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn -framework IOSurface -framework Metal -framework QuartzCore")
+    set(DAWN_PKGCONFIG_REQUIRES "${DAWN_ABSL_REQUIRES}")
 else ()
     set(DAWN_PKGCONFIG_CFLAGS "")
     set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn")
+    set(DAWN_PKGCONFIG_REQUIRES "${DAWN_ABSL_REQUIRES}")
 endif ()
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")

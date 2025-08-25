@@ -6,6 +6,12 @@
   "license": "BSD-3-Clause",
   "dependencies": [
     {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },

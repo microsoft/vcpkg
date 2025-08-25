@@ -8,4 +8,5 @@ Version: @VERSION@
 URL: https://dawn.googlesource.com/dawn
 
 Libs: -L${libdir} @DAWN_PKGCONFIG_DEPS@
+Requires.private: @DAWN_PKGCONFIG_REQUIRES@
 Cflags: -I${includedir} @DAWN_PKGCONFIG_CFLAGS@

@@ -1,0 +1,72 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 46ae8fdf42..d49396cc9b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -455,6 +455,7 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
+ ################################################################################
+ # Run on all subdirectories
+ ################################################################################
++find_package(absl CONFIG REQUIRED)
+ add_subdirectory(third_party)
+ 
+ # TODO(crbug.com/tint/455): Tint does not currently build with CMake when
+diff --git a/src/cmake/BundleLibraries.cmake b/src/cmake/BundleLibraries.cmake
+index 682a73924c..33d4f4f95e 100644
+--- a/src/cmake/BundleLibraries.cmake
++++ b/src/cmake/BundleLibraries.cmake
+@@ -92,7 +92,13 @@ function(bundle_libraries output_target library_type)
+ 
+   # Collect $<TARGET_OBJECTS:...> from STATIC and OBJECT library dependencies
+   set(all_objects "")
++  set(all_libraries "")
++  message(STATUS "all_dependencies: ${all_dependencies}")
+   foreach(dependency IN LISTS all_dependencies)
++    if("${dependency}" MATCHES "^absl::")
++      list(APPEND all_libraries ${dependency})
++      continue()
++    endif()
+     get_target_property(type ${dependency} TYPE)
+ 
+     # We only want object files from static or object libraries.
+@@ -112,6 +118,7 @@ function(bundle_libraries output_target library_type)
+   # Create the output library using the validated type and collected objects
+   # If all_objects is empty, add_library will still create an empty library of the specified type.
+   add_library(${output_target} ${library_type} ${all_objects})
++  target_link_libraries(${output_target} PRIVATE ${all_libraries})
+ 
+   # Add dependencies to ensure input targets are built before the bundled library.
+   # This handles the build order correctly.
+diff --git a/src/cmake/DawnConfig.cmake.in b/src/cmake/DawnConfig.cmake.in
+index 8bfeda55bc..6d0283df25 100644
+--- a/src/cmake/DawnConfig.cmake.in
++++ b/src/cmake/DawnConfig.cmake.in
+@@ -31,4 +31,7 @@
+ # 2. https://cmake.org/cmake/help/latest/guide/tutorial/Adding%20Export%20Configuration.html
+ 
+ @PACKAGE_INIT@
++
++find_dependency(absl CONFIG)
++
+ include ("${CMAKE_CURRENT_LIST_DIR}/DawnTargets.cmake")
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index b263399c1c..309b37b027 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -41,6 +41,8 @@ if (DAWN_FETCH_DEPENDENCIES)
+     )
+ endif ()
+ 
++if(0)
++
+ set(ABSL_ROOT_DIR ${DAWN_ABSEIL_DIR})
+ if (NOT TARGET absl::strings)
+     # Recommended setting for compatibility with future abseil releases.
+@@ -63,6 +65,8 @@ if (NOT TARGET absl::strings)
+     add_subdirectory(${DAWN_ABSEIL_DIR} "${CMAKE_CURRENT_BINARY_DIR}/abseil")
+ endif()
+ 
++endif()
++
+ if (DAWN_BUILD_PROTOBUF AND EXISTS "${DAWN_PROTOBUF_DIR}/cmake")
+     if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") AND WIN32)
+         set(protobuf_HAVE_BUILTIN_ATOMICS 1)
