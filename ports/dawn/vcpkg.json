@@ -9,7 +9,8 @@
       "name": "abseil",
       "features": [
         "cxx17"
-      ]
+      ],
+      "platform": "!emscripten"
     },
     {
       "name": "vcpkg-cmake",
