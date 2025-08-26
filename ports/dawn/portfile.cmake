@@ -78,12 +78,6 @@ checkout_in_path(
 )
 
 checkout_in_path(
-    "${SOURCE_PATH}/third_party/glslang/src"
-    "https://chromium.googlesource.com/external/github.com/KhronosGroup/glslang"
-    "fcf4e9296fa400e2b03c34e23b261e0c8a0ac34d"
-)
-
-checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-headers/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers"
     "a8637796c28386c3cf3b4e8107020fbb52c46f3f"
