@@ -96,12 +96,6 @@ checkout_in_path(
 )
 
 checkout_in_path(
-    "${SOURCE_PATH}/third_party/vulkan-loader/src"
-    "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Loader"
-    "484f3cd7dfb13f63a8b8930cb0397e9b849ab076"
-)
-
-checkout_in_path(
     "${SOURCE_PATH}/third_party/vulkan-utility-libraries/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Utility-Libraries"
     "4f4c0b6c61223b703f1c753a404578d7d63932ad"
