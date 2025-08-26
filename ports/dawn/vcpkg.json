@@ -65,11 +65,19 @@
     },
     "gl": {
       "description": "Desktop OpenGL backend support",
-      "supports": "linux | freebsd | openbsd"
+      "supports": "linux | freebsd | openbsd",
+      "dependencies": [
+        "egl-registry",
+        "opengl-registry"
+      ]
     },
     "gles": {
       "description": "OpenGL ES backend support",
-      "supports": "android | linux | freebsd | openbsd"
+      "supports": "android | linux | freebsd | openbsd",
+      "dependencies": [
+        "egl-registry",
+        "opengl-registry"
+      ]
     },
     "metal": {
       "description": "Metal backend support",

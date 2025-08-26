@@ -66,18 +66,6 @@ checkout_in_path(
 )
 
 checkout_in_path(
-    "${SOURCE_PATH}/third_party/khronos/EGL-Registry"
-    "https://chromium.googlesource.com/external/github.com/KhronosGroup/EGL-Registry"
-    "7dea2ed79187cd13f76183c4b9100159b9e3e071"
-)
-
-checkout_in_path(
-    "${SOURCE_PATH}/third_party/khronos/OpenGL-Registry"
-    "https://chromium.googlesource.com/external/github.com/KhronosGroup/OpenGL-Registry"
-    "5bae8738b23d06968e7c3a41308568120943ae77"
-)
-
-checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-headers/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers"
     "a8637796c28386c3cf3b4e8107020fbb52c46f3f"
