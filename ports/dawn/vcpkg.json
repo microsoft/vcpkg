@@ -77,7 +77,11 @@
     },
     "vulkan": {
       "description": "Vulkan backend support",
-      "supports": "(windows & !uwp) | android | linux | freebsd | openbsd"
+      "supports": "(windows & !uwp) | android | linux | freebsd | openbsd",
+      "dependencies": [
+        "vulkan-headers",
+        "vulkan-utility-libraries"
+      ]
     },
     "wayland": {
       "description": "Wayland support",

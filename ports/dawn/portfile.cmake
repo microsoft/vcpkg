@@ -89,18 +89,6 @@ checkout_in_path(
     "f386417185be0601894b20d9ad000aceb73d898b"
 )
 
-checkout_in_path(
-    "${SOURCE_PATH}/third_party/vulkan-headers/src"
-    "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Headers"
-    "2efaa559ff41655ece68b2e904e2bb7e7d55d265"
-)
-
-checkout_in_path(
-    "${SOURCE_PATH}/third_party/vulkan-utility-libraries/src"
-    "https://chromium.googlesource.com/external/github.com/KhronosGroup/Vulkan-Utility-Libraries"
-    "4f4c0b6c61223b703f1c753a404578d7d63932ad"
-)
-
 vcpkg_find_acquire_program(PYTHON3)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")

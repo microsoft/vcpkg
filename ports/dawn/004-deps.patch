@@ -1,20 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 26b84f4794..02729557a5 100644
+index 26b84f4794..27a595e2fb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -461,6 +461,7 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
+@@ -461,6 +461,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
  ################################################################################
  # Run on all subdirectories
  ################################################################################
 +find_package(absl CONFIG REQUIRED)
++if (DAWN_ENABLE_VULKAN)
++    find_package(VulkanHeaders CONFIG REQUIRED)
++    find_package(VulkanUtilityLibraries CONFIG REQUIRED)
++endif()
  add_subdirectory(third_party)
  
  # TODO(crbug.com/tint/455): Tint does not currently build with CMake when
 diff --git a/src/cmake/BundleLibraries.cmake b/src/cmake/BundleLibraries.cmake
-index 682a73924c..33d4f4f95e 100644
+index 682a73924c..1ec358c54c 100644
 --- a/src/cmake/BundleLibraries.cmake
 +++ b/src/cmake/BundleLibraries.cmake
-@@ -92,7 +92,13 @@ function(bundle_libraries output_target library_type)
+@@ -92,7 +92,18 @@ function(bundle_libraries output_target library_type)
  
    # Collect $<TARGET_OBJECTS:...> from STATIC and OBJECT library dependencies
    set(all_objects "")
@@ -25,10 +29,15 @@ index 682a73924c..33d4f4f95e 100644
 +      list(APPEND all_libraries ${dependency})
 +      continue()
 +    endif()
++    if("${dependency}" MATCHES "^Vulkan-Headers" OR "${dependency}" MATCHES "^VulkanUtility")
++      list(APPEND all_libraries ${dependency})
++      continue()
++    endif()
++
      get_target_property(type ${dependency} TYPE)
  
      # We only want object files from static or object libraries.
-@@ -112,6 +118,7 @@ function(bundle_libraries output_target library_type)
+@@ -112,6 +123,7 @@ function(bundle_libraries output_target library_type)
    # Create the output library using the validated type and collected objects
    # If all_objects is empty, add_library will still create an empty library of the specified type.
    add_library(${output_target} ${library_type} ${all_objects})
@@ -49,7 +58,7 @@ index 8bfeda55bc..6d0283df25 100644
 +
  include ("${CMAKE_CURRENT_LIST_DIR}/DawnTargets.cmake")
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index b263399c1c..97d7141228 100644
+index b263399c1c..65ad8a55a0 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
 @@ -41,6 +41,7 @@ if (DAWN_FETCH_DEPENDENCIES)
@@ -68,3 +77,19 @@ index b263399c1c..97d7141228 100644
  
  if (DAWN_BUILD_PROTOBUF AND EXISTS "${DAWN_PROTOBUF_DIR}/cmake")
      if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") AND WIN32)
+@@ -179,6 +181,7 @@ if (DAWN_ENABLE_DESKTOP_GL OR DAWN_ENABLE_OPENGLES)
+     target_include_directories(dawn_khronos_platform INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/khronos/EGL-Registry/api")
+ endif()
+ 
++if (0)
+ if (NOT TARGET Vulkan::Headers AND DAWN_ENABLE_VULKAN)
+     message(STATUS "Dawn: using Vulkan::Headers at ${DAWN_VULKAN_HEADERS_DIR}")
+ 
+@@ -190,6 +193,7 @@ if (NOT TARGET Vulkan::UtilityHeaders AND DAWN_ENABLE_VULKAN)
+     message(STATUS "Dawn: using VulkanUtilityLibraries at ${DAWN_VULKAN_UTILITY_LIBRARIES_DIR}")
+     add_subdirectory(${DAWN_VULKAN_UTILITY_LIBRARIES_DIR} "${CMAKE_CURRENT_BINARY_DIR}/vulkan-utility-libraries/src")
+ endif()
++endif()
+ 
+ if (DAWN_ENABLE_SWIFTSHADER AND NOT TARGET vk_swiftshader)
+     set(SWIFTSHADER_BUILD_TESTS OFF CACHE BOOL "" FORCE)
