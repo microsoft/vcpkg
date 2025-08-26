@@ -10,10 +10,8 @@ vcpkg_from_github(
         fix-dependencies.patch
         find_blas.patch
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
 
-vcpkg_find_acquire_program(PKGCONFIG)
-set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
