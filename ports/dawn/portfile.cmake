@@ -3,9 +3,9 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     set(VCPKG_BUILD_TYPE release)
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/dawn")
     set(DAWN_PKGCONFIG_CFLAGS "--use-port=emdawnwebgpu")
-    set(DAWN_PKGCONFIG_DEPS "--use-port=emdawnwebgpu")
+    set(DAWN_PKGCONFIG_LIBS "--use-port=emdawnwebgpu")
     set(DAWN_PKGCONFIG_REQUIRES "")
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-webgpu-dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial-webgpu-dawn.pc" @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
@@ -162,30 +162,41 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Dawn)
 
+list(APPEND DAWN_ABSL_REQUIRES
+    absl_flat_hash_set
+    absl_flat_hash_map
+    absl_inlined_vector
+    absl_no_destructor
+    absl_overload
+    absl_str_format_internal
+    absl_strings
+    absl_span
+    absl_string_view
+)
+list(JOIN DAWN_ABSL_REQUIRES ", " DAWN_ABSL_REQUIRES)
+
 set(DAWN_PKGCONFIG_CFLAGS "")
-
-set(DAWN_ABSL_REQUIRES "absl_flat_hash_set absl_flat_hash_map absl_inlined_vector absl_no_destructor absl_overload absl_str_format_internal absl_strings absl_span absl_string_view")
 set(DAWN_PKGCONFIG_REQUIRES "${DAWN_ABSL_REQUIRES}")
+set(DAWN_PKGCONFIG_LIBS "-lwebgpu_dawn")
 
-set(DAWN_PKGCONFIG_DEPS "-lwebgpu_dawn")
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND NOT VCPKG_TARGET_IS_UWP)
-    set(DAWN_PKGCONFIG_DEPS "${DAWN_PKGCONFIG_DEPS} -lonecore -luser32 -ldelayimp")
+    set(DAWN_PKGCONFIG_LIBS "${DAWN_PKGCONFIG_LIBS} -lonecore -luser32 -ldelayimp")
 endif()
 if (DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
-    set(DAWN_PKGCONFIG_DEPS "${DAWN_PKGCONFIG_DEPS} -ldxguid")
+    set(DAWN_PKGCONFIG_LIBS "${DAWN_PKGCONFIG_LIBS} -ldxguid")
 endif()
 if (DAWN_ENABLE_METAL)
-    set(DAWN_PKGCONFIG_DEPS "${DAWN_PKGCONFIG_DEPS} -framework IOSurface -framework Metal -framework QuartzCore")
+    set(DAWN_PKGCONFIG_LIBS "${DAWN_PKGCONFIG_LIBS} -framework IOSurface -framework Metal -framework QuartzCore")
     if (VCPKG_TARGET_IS_OSX)
-        set(DAWN_PKGCONFIG_DEPS "${DAWN_PKGCONFIG_DEPS} -framework Cocoa -framework IOKit")
+        set(DAWN_PKGCONFIG_LIBS "${DAWN_PKGCONFIG_LIBS} -framework Cocoa -framework IOKit")
     endif()
 endif()
 
 if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-webgpu-dawn.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/unofficial-webgpu-dawn.pc" @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
 endif()
 if (EXISTS "${CURRENT_PACKAGES_DIR}/lib")
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-webgpu-dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial-webgpu-dawn.pc" @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
 endif()
 vcpkg_fixup_pkgconfig()
 

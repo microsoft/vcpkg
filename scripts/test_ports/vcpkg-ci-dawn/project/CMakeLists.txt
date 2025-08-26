@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(Dawn CONFIG REQUIRED)
 find_package(PkgConfig)
-pkg_check_modules(webgpu_dawn REQUIRED IMPORTED_TARGET unofficial-webgpu-dawn)
+pkg_check_modules(webgpu_dawn REQUIRED IMPORTED_TARGET unofficial_webgpu_dawn)
 
 if (APPLE)
     file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.hpp src/*.cpp src/*.mm)

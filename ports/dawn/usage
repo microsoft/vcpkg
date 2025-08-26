@@ -5,4 +5,4 @@ dawn provides CMake targets:
 
 dawn provides pkg-config modules:
 
-  unofficial-webgpu-dawn
+  unofficial_webgpu_dawn
