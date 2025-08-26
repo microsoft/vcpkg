@@ -2341,7 +2341,7 @@
       "port-version": 1
     },
     "dawn": {
-      "baseline": "chromium_7371",
+      "baseline": "20250825.204709",
       "port-version": 0
     },
     "daxa": {
