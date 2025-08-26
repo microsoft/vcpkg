@@ -9,7 +9,7 @@ vcpkg_from_github(
     #[[
         Attention: pdal must be updated together with pdal-dimbuilder
     #]]
-    SHA512 85aaab726d172ef46b8cf05bd72772da72cf5615db549cd262acc4d468f631f1093577b9866ca598b7bef72507f7774e599e66a6cbbf589bd1b5b85bb8107642
+    SHA512 4a7f4356530a3d2c1ecde8c3aa7cfee052eb7d57a33e5e8bf7699e05bf0994bfc5552562b22af744879866336deea228cee75b543b89399fbeb952c400c33ea2
     HEAD_REF master
     PATCHES
         namespace-nl.diff
