@@ -196,7 +196,7 @@
           "features": [
             "vulkan"
           ],
-          "platform": "(linux | windows) & !arm"
+          "platform": "(linux | windows) & !arm & !uwp"
         }
       ]
     }
