@@ -58,10 +58,10 @@ index 8bfeda55bc..6d0283df25 100644
 +
  include ("${CMAKE_CURRENT_LIST_DIR}/DawnTargets.cmake")
 diff --git a/src/dawn/native/CMakeLists.txt b/src/dawn/native/CMakeLists.txt
-index 35deada81d..233e1006d1 100644
+index 62eb7f443d..07a4a871b8 100644
 --- a/src/dawn/native/CMakeLists.txt
 +++ b/src/dawn/native/CMakeLists.txt
-@@ -615,11 +615,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
+@@ -617,11 +617,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
  endif()
  
  if (DAWN_ENABLE_OPENGL)

@@ -15,8 +15,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
-    REF e8356f257403e1c979d73f9d6d136ea8e30f52d2 # chromium_7371
-    SHA512 4fbb77e1bb6cf5c67a98f79c632c4b001bf272273851b929c241ed45a700d2f2dd73fdb5516d459eecf630ccdf7ee1c62308768dccd4989abbec0936a29600dc
+    REF "v${VERSION}"
+    SHA512 8726185122f23084db5358c4141d95e8f32f40e4121671422af9c9d2c984ebc9a806edf4f32db65398d414b94b93e48041fd75bbe5afd2582dc2155f6ddea7ad
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
@@ -74,7 +74,7 @@ checkout_in_path(
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-tools/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools"
-    "f386417185be0601894b20d9ad000aceb73d898b"
+    "8a8bb6c89174ed753eb18a438092ee59356efc3c"
 )
 
 vcpkg_find_acquire_program(PYTHON3)
