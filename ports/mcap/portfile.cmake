@@ -36,11 +36,6 @@ list(JOIN MCAP_LINK_LIBRARIES " " MCAP_LINK_LIBRARIES)
 set(_LIB_NAME mcap)
 set(_PACKAGE_CONFIG_DIR "${CURRENT_PACKAGES_DIR}/share/${_LIB_NAME}")
 configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/${_LIB_NAME}Targets.cmake.in
-    ${_PACKAGE_CONFIG_DIR}/${_LIB_NAME}Targets.cmake
-    @ONLY
-)
-configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/${_LIB_NAME}Config.cmake.in
     ${_PACKAGE_CONFIG_DIR}/${_LIB_NAME}Config.cmake
     @ONLY
