@@ -15,13 +15,13 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    src_path
-    ARCHIVE "${dist_file}" 
-    PATCHES
-      disable-openmp-msvc.patch
-      no-tests.patch
-      clang-cuda.patch
-      fix-cmake4.patch
+  src_path
+  ARCHIVE "${dist_file}"
+  PATCHES
+    disable-openmp-msvc.patch
+    no-tests.patch
+    clang-cuda.patch
+    fix-cmake4.patch
 )
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
@@ -36,10 +36,7 @@ vcpkg_cmake_configure(
     "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     ${opts}
 )
-
-
 vcpkg_cmake_install()
-
 vcpkg_fixup_pkgconfig()
 
 file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/magma.pc" contents)
