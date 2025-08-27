@@ -84,6 +84,7 @@ chromium-base:x64-linux=skip # broken on Linux because
 chromium-base:x64-osx=skip # broken on OSX for unknown reasons; it appears to be messing with some form of system-wide cache because the first attempt to build it fails, but subsequent attempts succeed
 chromium-base(windows) =skip # chromium-base has several problems and is upgraded to "skip" because it hits a lot of servers that can slow CI broken on Windows because it does not yet support VS2022
 clamav:arm64-windows=fail
+clapack(android)=fail # needs target configuration data
 clockutils:x64-linux=fail
 coroutine(uwp)=fail
 cpp-netlib(uwp)=fail
