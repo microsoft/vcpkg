@@ -31,6 +31,7 @@ $defaultPortVersion = 0
 $portVersions = @{
     'boost-charconv' = 1;
     'boost-locale' = 1;
+    'boost-container' = 1;
 }
 
 function Get-PortVersion {
