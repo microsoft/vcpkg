@@ -1,4 +1,0 @@
-mcap provides CMake targets:
-
-    find_package(mcap CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE mcap::mcap)

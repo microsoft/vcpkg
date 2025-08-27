@@ -33,7 +33,8 @@ list(JOIN MCAP_COMPILE_DEFINITIONS " " MCAP_COMPILE_DEFINITIONS)
 list(JOIN MCAP_FIND_DEPENDENCIES " " MCAP_FIND_DEPENDENCIES)
 list(JOIN MCAP_LINK_LIBRARIES " " MCAP_LINK_LIBRARIES)
 
-set(_LIB_NAME mcap)
+set(_LIB_NAME unofficial-mcap)
+set(_LIB_TARGET unofficial::mcap::mcap)
 set(_PACKAGE_CONFIG_DIR "${CURRENT_PACKAGES_DIR}/share/${_LIB_NAME}")
 configure_file(
     ${CMAKE_CURRENT_LIST_DIR}/${_LIB_NAME}Config.cmake.in
@@ -48,7 +49,6 @@ vcpkg_install_copyright(
 )
 
 configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/usage"
+    "${CMAKE_CURRENT_LIST_DIR}/usage.in"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage"
-    COPYONLY
 )
