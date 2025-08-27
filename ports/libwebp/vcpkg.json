@@ -1,6 +1,7 @@
 {
   "name": "libwebp",
   "version": "1.6.0",
+  "port-version": 1,
   "description": "WebP codec: library to encode and decode images in WebP format",
   "homepage": "https://github.com/webmproject/libwebp",
   "license": "BSD-3-Clause",
@@ -33,7 +34,10 @@
   "default-features": [
     "libwebpmux",
     "nearlossless",
-    "simd"
+    {
+      "name": "simd",
+      "platform": "!emscripten"
+    }
   ],
   "features": {
     "all": {
