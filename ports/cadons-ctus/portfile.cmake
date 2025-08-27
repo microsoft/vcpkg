@@ -1,8 +1,8 @@
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
-        REPO Cadons/libtusclient
+        REPO Cadons/ctus
         REF 1.0.0
-        SHA512 bdca3c3c8baba50f55fdc9422d349e7d20b18ca79eefc5d0681de6a9145f2901a070a0b2313e1c80052ec85170174a11338fb5e89fba71b422521c9f2c5155be
+        SHA512 efc633effdbcf0616519ef72a83bd511cc3e9a6e208454292aefef0eea75a9953cebd78c9567b830d12b1faa3b78a767bfe9fc57e293748b9333ac2055f7d07d
         HEAD_REF main
 )
 
@@ -10,14 +10,13 @@ vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
         -DBUILD_TESTING=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
-vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME cadons-ctus
-        CONFIG_PATH lib/cmake/tusclient)
+        CONFIG_PATH lib/cmake/ctus)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
