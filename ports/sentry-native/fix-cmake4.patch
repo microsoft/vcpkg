@@ -1,23 +1,21 @@
 diff --git a/external/crashpad/util/CMakeLists.txt b/external/crashpad/util/CMakeLists.txt
-index ef066fb9b1..4a96a8386b 100644
+index f60da7d..b512fc8 100644
 --- a/external/crashpad/util/CMakeLists.txt
 +++ b/external/crashpad/util/CMakeLists.txt
-@@ -407,7 +407,7 @@ if(APPLE)
+@@ -428,7 +428,7 @@ if(APPLE)
+         )
+     endif()
      foreach(x ${def_relative_files})
-         # CMAKE_OSX_SYSROOT may be empty (e.g. for Makefile generators),
-         # in this case files will be taken from root.
 -        set(full_path "${CMAKE_OSX_SYSROOT}/usr/include/mach/${x}")
 +        set(full_path "${_CMAKE_OSX_SYSROOT_PATH}/usr/include/mach/${x}")
          if(NOT EXISTS "${full_path}")
              message(FATAL_ERROR "File not found: ${full_path}")
          endif()
-@@ -438,8 +438,8 @@ if(APPLE)
-     endif()
+@@ -460,7 +460,7 @@ if(APPLE)
      list(TRANSFORM includes PREPEND "--include=")
  
--    if(CMAKE_OSX_SYSROOT)
+     if(CMAKE_OSX_SYSROOT)
 -        set(sdk --sdk ${CMAKE_OSX_SYSROOT})
-+    if(_CMAKE_OSX_SYSROOT_PATH)
 +        set(sdk --sdk ${_CMAKE_OSX_SYSROOT_PATH})
      endif()
  
