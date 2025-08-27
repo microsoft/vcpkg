@@ -1,0 +1,13 @@
+diff --git a/lib/pkgconfig/magma.pc.in b/lib/pkgconfig/magma.pc.in
+index 85277d3..ac700a6 100644
+--- a/lib/pkgconfig/magma.pc.in
++++ b/lib/pkgconfig/magma.pc.in
+@@ -6,7 +6,7 @@ includedir=${prefix}/include
+ Name: magma
+ Description: Matrix Algebra on GPU and Multicore Architectures
+ Version: 2.9.0
+-Cflags: -I${includedir} @CXXFLAGS@ @MAGMA_INCLUDE@
++Cflags: -I${includedir} @CXXFLAGS@
+ Libs: -L${libdir} -lmagma_sparse -lmagma @LIBS@
+ Libs.private:
+ Requires: @MAGMA_REQUIRED@
