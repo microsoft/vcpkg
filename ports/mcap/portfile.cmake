@@ -48,7 +48,3 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/cpp/mcap/LICENSE"
 )
 
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/usage.in"
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage"
-)
