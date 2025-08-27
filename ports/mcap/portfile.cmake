@@ -1,10 +1,11 @@
-# Header-only library
+set(VCPKG_BUILD_TYPE release)  # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foxglove/mcap
-    REF 07540999a18b63cd4a4433f3fb1bdb5384b93af9
-    SHA512 a4d0232d428e03e59a74a10b17830566b4ce0b0a5e4f9a81137d3480accbd8ac4a4f7e2ad59a6f1660ffa4fccaaa75b5c1b9b8520743fdde33270eb1a8675e59
-    HEAD_REF master
+    REF "releases/cpp/v${VERSION}"
+    SHA512 99bfc99cd02fd946ac437a6bd2c71faec2083ccc1d81131e2978c72285d57b53f8c92a5d2b7cabef0c79056882aebfb1e2951479c47f5c7b99c44227c4b826e5
+    HEAD_REF main
 )
 
 file(INSTALL
