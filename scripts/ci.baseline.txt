@@ -1029,7 +1029,7 @@ v8:x86-windows=fail
 # vst3sdk CMake files work only with the GUI version of Xcode
 vst3sdk:arm64-osx=fail
 vst3sdk:x64-osx=fail
-vulkan-loader:x64-linux=fail # vulkan-loader[directfb] requires DirectFB on CI build machine
+vulkan-loader[directfb]:x64-linux=feature-fails # requires DirectFB on CI build machine
 wasmedge:arm-neon-android=fail
 # Collides with libpcap -> similar headers
 winpcap:x64-windows-release=skip
