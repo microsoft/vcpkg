@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 04785a0c77a63480b1f7b1b794393a5e08faa6c56e434e30cdf3802e2e0ab659062a30010db920dc32aa672663133cb45840e4484a51ce5272aa9953ea77d364
+    SHA512 2870d76fffd68bb5c702766a5dd3aa95f864c56a1d19444a3ad0a0e38fa1c66b25d61d5eb31046a3c53b875499ce7b784277cc9bf0bcbf698f35df0fb6a7b3f1
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
