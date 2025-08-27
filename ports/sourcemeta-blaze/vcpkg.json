@@ -5,6 +5,8 @@
   "homepage": "https://blaze.sourcemeta.com",
   "license": "BSD-3-Clause",
   "dependencies": [
+    "boost-regex",
+    "uriparser",
     {
       "name": "vcpkg-cmake",
       "host": true
