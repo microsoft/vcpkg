@@ -719,7 +719,6 @@ cgal[qt]:arm64-windows = cascade
 cgal[qt]:x64-windows = cascade
 cgal[qt]:x86-windows = cascade
 cgns[hdf5,mpi](uwp) = cascade
-chronoengine[irrlicht]:arm64-osx = cascade
 clblas:x64-uwp = cascade
 clblast:arm64-uwp = cascade
 clblast:x64-uwp = cascade
