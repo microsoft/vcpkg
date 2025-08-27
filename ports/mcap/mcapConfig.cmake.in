@@ -1,0 +1,8 @@
+# Template for mcapConfig.cmake -- a simple config wrapper for the mcap library
+
+include(CMakeFindDependencyMacro)
+foreach(_DEPENDENCY IN ITEMS @MCAP_FIND_DEPENDENCIES@)
+    find_dependency(${_DEPENDENCY})
+endforeach()
+
+include("${CMAKE_CURRENT_LIST_DIR}/mcapTargets.cmake")
