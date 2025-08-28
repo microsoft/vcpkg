@@ -8,6 +8,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
+        # from upstream commit https://github.com/onnx/optimizer/commit/31194ccb971bbbcc8218e103c7b0a8049ddddc3e
+        dimension-explicit.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
