@@ -410,7 +410,7 @@
     },
     "avcpp": {
       "baseline": "2.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "avir": {
       "baseline": "3.1",
