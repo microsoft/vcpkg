@@ -46,13 +46,15 @@ index 682a73924c..1ec358c54c 100644
    # Add dependencies to ensure input targets are built before the bundled library.
    # This handles the build order correctly.
 diff --git a/src/cmake/DawnConfig.cmake.in b/src/cmake/DawnConfig.cmake.in
-index 8bfeda55bc..6d0283df25 100644
+index 8bfeda55bc..a0f9858530 100644
 --- a/src/cmake/DawnConfig.cmake.in
 +++ b/src/cmake/DawnConfig.cmake.in
-@@ -31,4 +31,7 @@
+@@ -31,4 +31,9 @@
  # 2. https://cmake.org/cmake/help/latest/guide/tutorial/Adding%20Export%20Configuration.html
  
  @PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
 +
 +find_dependency(absl CONFIG)
 +
