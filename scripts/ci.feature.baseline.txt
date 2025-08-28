@@ -2164,7 +2164,6 @@ libsbml[expat, libxml2] = options # have to select excatly one xml lib(they are 
 libssh[core,openssl,mbedtls] = options # we have to select feature openssl or mbedtls
 libwebp[anim,cwebp,dwebp,extras,gif2webp,img2webp,info,mux,libwebpmux,nearlossless,swap16bitcsp,unicode,vwebp]:x64-android = no-separate-feature-test # Compiler crash without simd
 libwebp[anim,cwebp,dwebp,extras,img2webp](uwp) = feature-fails # linker error. See https://github.com/microsoft/vcpkg/issues/33603
-llama-cpp[tools]:arm-neon-android = feature-fails # int64_t vs. size_t
 llama-cpp[tools](arm & windows & !uwp) = feature-fails # unresolved symbols
 llama-cpp(uwp) = cascade
 llvm[core,flang] = options # exclude flang from all since it is not compatible with enable enable-eh
