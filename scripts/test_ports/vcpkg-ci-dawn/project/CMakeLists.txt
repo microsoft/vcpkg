@@ -9,7 +9,7 @@ find_package(glfw3 CONFIG REQUIRED)
 #                              Use cmake config                                #
 ################################################################################
 find_package(Dawn CONFIG REQUIRED)
-add_executable(vcpkg_ci_dawn main.cpp)
+add_executable(vcpkg_ci_dawn main.cpp webgpu_glfw3.cpp)
 target_link_libraries(vcpkg_ci_dawn PRIVATE glfw dawn::webgpu_dawn)
 if (EMSCRIPTEN)
     target_link_options(vcpkg_ci_dawn PRIVATE -sASYNCIFY)
@@ -22,7 +22,7 @@ endif ()
 ################################################################################
 find_package(PkgConfig)
 pkg_check_modules(webgpu_dawn REQUIRED IMPORTED_TARGET unofficial_webgpu_dawn)
-add_executable(vcpkg_ci_dawn_pc main.cpp)
+add_executable(vcpkg_ci_dawn_pc main.cpp webgpu_glfw3.cpp)
 target_link_libraries(vcpkg_ci_dawn_pc PRIVATE glfw PkgConfig::webgpu_dawn)
 if (EMSCRIPTEN)
     target_link_options(vcpkg_ci_dawn_pc PRIVATE -sASYNCIFY)
