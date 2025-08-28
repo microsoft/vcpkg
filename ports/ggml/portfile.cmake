@@ -1,16 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF 44ea6eda2ad8a94663597cbe85e37de98bd99269
-    SHA512 be93d44f87ef25f7c0bb37ca8020de7714ec89b4f92677d7b631a2dcad9db38789e59adb7a6af0d1f5f550c570d875ea9ed69833f7d7af76ef8cb9159f0a7c23
+    REF baf5574bc768f614bdc4c0fce3c7bd20306bb26e
+    SHA512 1bc5e04d3b306051ec06cb8b15ba04b1558e135a19a055d67f65e082cffd3f94a13076cd0e4dddb90abc5b24da4adedfff35283758a7808f53d685d7de499fc2
     HEAD_REF master
     PATCHES
         android-vulkan.diff
         cmake-config.diff
-        fix-32bit.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
-        blas.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
