@@ -3261,7 +3261,7 @@
       "port-version": 9
     },
     "ggml": {
-      "baseline": "2025-07-23",
+      "baseline": "2025-08-18",
       "port-version": 0
     },
     "ghc-filesystem": {
@@ -5853,7 +5853,7 @@
       "port-version": 0
     },
     "llama-cpp": {
-      "baseline": "5975",
+      "baseline": "6301",
       "port-version": 0
     },
     "llfio": {
