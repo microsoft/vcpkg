@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stephenberry/glaze
     REF "v${VERSION}"
-    SHA512 8bacfaee61f98147dfea7cbb3c7a3feb074ea953a32e33f985ee21d83840e1937fbd2f92cd6306c8349b511839a400e111844e446d732d724307ed2b5b02348a
+    SHA512 f19e001fd6025594eb546ed7993bab73b303b064bf9563148f172a9c6dbbba9e6de41997be5284ca148908a307fe282e67974489df68fca699b9fb25ce4e7af0
     HEAD_REF main
     PATCHES
         support-win64.patch
