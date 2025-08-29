@@ -1,17 +1,13 @@
 {
   "name": "libremidi",
   "version": "4.5.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A modern C++ MIDI real-time & file I/O library",
   "homepage": "https://github.com/jcelerier/libremidi",
   "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "alsa",
-      "platform": "linux"
-    },
-    {
-      "name": "readerwriterqueue",
       "platform": "linux"
     },
     {

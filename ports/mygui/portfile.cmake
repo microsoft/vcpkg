@@ -1,3 +1,10 @@
+vcpkg_download_distfile(
+    basic_string_patch
+    URLS "https://github.com/MyGUI/mygui/commit/0731785d83431bd17a0854f19bea9a7d687de5a7.diff?full_index=1"
+    FILENAME "MyGUI-mygui-basic-string-0731785.diff"
+    SHA512 4ca252b8d37d9b98b9a1295c181325a33c30534757f8adbbcceceafacd97ff6987fb7a5d1f087b960519c923007e6adff2e8b1d873d75e7faff05b9a20b9cd79
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MyGUI/mygui
@@ -11,6 +18,7 @@ vcpkg_from_github(
         sdl2-static.patch
         fix-tools-lnk2005.patch
         platform-lib-static.patch
+        ${basic_string_patch}
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
