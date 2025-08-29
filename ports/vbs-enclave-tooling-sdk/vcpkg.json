@@ -1,0 +1,16 @@
+{
+  "name": "vbs-enclave-tooling-sdk",
+  "version": "0.1.2.1-prerelease",
+  "description": "The VBS enclave sdk.",
+  "homepage": "https://github.com/microsoft/vbsEnclaveTooling",
+  "license": "MIT",
+  "supports": "(windows & arm64) | (windows & x64)",
+  "dependencies": [
+    "ms-gsl",
+    {
+      "name": "vcpkg-msbuild",
+      "host": true
+    },
+    "wil"
+  ]
+}
