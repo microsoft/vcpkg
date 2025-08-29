@@ -683,14 +683,6 @@ if (VCPKG_TARGET_IS_IOS)
     set(OPTIONS "${OPTIONS} --extra-ldflags=-isysroot\"${vcpkg_osx_sysroot}\"")
 endif ()
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(OPTIONS "${OPTIONS} --extra-cflags=-isysroot\"${CMAKE_SYSROOT}\"")
-    set(OPTIONS_RELEASE "${OPTIONS} --extra-cflags=-isysroot\"${CMAKE_SYSROOT}\"")
-    
-    set(OPTIONS "${OPTIONS} --extra-ldflags=-isysroot\"${CMAKE_SYSROOT}\"")
-    set(OPTIONS_RELEASE "${OPTIONS} --extra-ldflags=-isysroot\"${CMAKE_SYSROOT}\"")
-endif()
-
 set(OPTIONS_DEBUG "--disable-optimizations")
 set(OPTIONS_RELEASE "--enable-optimizations")
 
