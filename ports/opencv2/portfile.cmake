@@ -15,6 +15,7 @@ vcpkg_from_github(
       0008-missing-include.patch
       0009-pkgconfig-suffix.patch
       0010-fix-cmake4.patch
+      0011-msvc-compile-fix.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
