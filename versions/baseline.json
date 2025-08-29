@@ -8441,7 +8441,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.3.6",
+      "baseline": "4.3.9",
       "port-version": 0
     },
     "robin-hood-hashing": {
