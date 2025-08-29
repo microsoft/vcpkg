@@ -1,6 +1,6 @@
 {
   "name": "bfgroup-lyra",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "A simple to use, composable, command line parser for C++ 11 and beyond",
   "homepage": "https://bfgroup.github.io/Lyra/",
   "license": "BSL-1.0",

@@ -306,6 +306,7 @@
     {
       "name": "node",
       "os": "windows",
+      "arch":"x64",
       "version": "24.3.0",
       "executable": "node-v24.3.0-win-x64/node.exe",
       "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-win-x64.7z",
@@ -314,7 +315,18 @@
     },
     {
       "name": "node",
+      "os": "windows",
+      "arch":"arm64",
+      "version": "24.3.0",
+      "executable": "node-v24.3.0-win-arm64/node.exe",
+      "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-win-arm64.7z",
+      "sha512": "8ba71abd1bac1f790f2d71c5e879381e221c00265dc418dd98c01798a5ee60578488b7f838d29a76d70fa2aca7e8c9feb4a6f41d00a55affd9eb991a1e28eef8",
+      "archive": "node-v24.3.0-win-arm64.7z"
+    },
+    {
+      "name": "node",
       "os": "linux",
+      "arch":"x64",
       "version": "24.3.0",
       "executable": "node-v24.3.0-linux-x64/bin/node",
       "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-linux-x64.tar.gz",
@@ -323,12 +335,33 @@
     },
     {
       "name": "node",
+      "os": "linux",
+      "arch": "arm64",
+      "version": "24.3.0",
+      "executable": "node-v24.3.0-linux-arm64/bin/node",
+      "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-linux-arm64.tar.gz",
+      "sha512": "cebafb7d5889f89dcdf4139c568b84f7daff09088a1b227d02e92bdb56c11f1ba739f29cd645150098c14d70d384c2e31a3ad71e3b582709e7adcaaedc5240cd",
+      "archive": "node-v24.3.0-linux-arm64.tar.gz"
+    },
+    {
+      "name": "node",
       "os": "osx",
+      "arch":"x64",
       "version": "24.3.0",
       "executable": "node-v24.3.0-darwin-x64/bin/node",
       "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-darwin-x64.tar.gz",
       "sha512": "366c58a27c04db072116619f7f085f38c9e9fb3d3022ce18484f61bb29ab1d0bb79412b8d6f9ea8b97ec9fa6c41584f18ba83a01e89d744f29983d2bc8532358",
       "archive": "node-v24.3.0-darwin-x64.tar.gz"
+    },
+    {
+      "name": "node",
+      "os": "osx",
+      "arch": "arm64",
+      "version": "24.3.0",
+      "executable": "node-v24.3.0-darwin-arm64/bin/node",
+      "url": "https://nodejs.org/dist/v24.3.0/node-v24.3.0-darwin-arm64.tar.gz",
+      "sha512": "b8356c0798cff75bba1ec652410400ebe0d9de9025f39854b664a327fa28265f8584ccfcb965bf25530cc379163c3b796e11c487e065c836a54b113f318f79c7",
+      "archive": "node-v24.3.0-darwin-arm64.tar.gz"
     },
     {
       "name": "azcopy",

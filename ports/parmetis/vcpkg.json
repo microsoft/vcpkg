@@ -1,8 +1,8 @@
 {
   "name": "parmetis",
-  "version-date": "2022-07-27",
+  "version-date": "2023-03-26",
   "description": "Parallel Graph Partitioning and Fill-reducing Matrix Ordering",
-  "homepage": "https://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview",
+  "homepage": "https://github.com/KarypisLab/ParMETIS",
   "license": null,
   "dependencies": [
     "metis",
