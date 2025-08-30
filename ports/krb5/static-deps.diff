@@ -1,8 +1,8 @@
 diff --git a/src/aclocal.m4 b/src/aclocal.m4
-index 3d66a87..cf3e3e6 100644
+index 7397bdc..8a702a1 100644
 --- a/src/aclocal.m4
 +++ b/src/aclocal.m4
-@@ -226,6 +226,7 @@ old_CFLAGS="$CFLAGS"
+@@ -229,6 +229,7 @@ old_CFLAGS="$CFLAGS"
  # On Solaris, -pthreads is added to CFLAGS, no extra explicit libraries.
  CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
  AC_SUBST(PTHREAD_CFLAGS)
@@ -21,15 +21,15 @@ index fdc5577..745d5ec 100644
 -Libs.private: -lkrb5support
 +Libs.private: -lkrb5support @GEN_LIB@ @MACOS_FRAMEWORK@ @LIBS@ @DL_LIB@ @PTHREAD_CFLAGS@ @PTHREAD_LIBS@
 diff --git a/src/config/pre.in b/src/config/pre.in
-index a0c60c7..a8432a8 100644
+index 1197c1f..8bba26a 100644
 --- a/src/config/pre.in
 +++ b/src/config/pre.in
-@@ -379,7 +379,7 @@ SUPPORT_LIB			= -l$(SUPPORT_LIBNAME)
+@@ -377,7 +377,7 @@ SUPPORT_LIB			= -l$(SUPPORT_LIBNAME)
  # HESIOD_LIBS is -lhesiod...
  HESIOD_LIBS	= @HESIOD_LIBS@
  
--KRB5_BASE_LIBS	= $(KRB5_LIB) $(K5CRYPTO_LIB) $(COM_ERR_LIB) $(SUPPORT_LIB) $(GEN_LIB) $(LIBS) $(DL_LIB)
-+KRB5_BASE_LIBS	= $(KRB5_LIB) $(K5CRYPTO_LIB) $(COM_ERR_LIB) $(SUPPORT_LIB) $(GEN_LIB) @MACOS_FRAMEWORK@ $(LIBS) $(DL_LIB)
+-KRB5_BASE_LIBS	= $(KRB5_LIB) $(K5CRYPTO_LIB) $(COM_ERR_LIB) $(SUPPORT_LIB) $(LIBS) $(DL_LIB)
++KRB5_BASE_LIBS	= $(KRB5_LIB) $(K5CRYPTO_LIB) $(COM_ERR_LIB) $(SUPPORT_LIB) @MACOS_FRAMEWORK@ $(LIBS) $(DL_LIB)
  KDB5_LIBS	= $(KDB5_LIB) $(GSSRPC_LIBS)
  GSS_LIBS	= $(GSS_KRB5_LIB)
  # needs fixing if ever used on macOS!
