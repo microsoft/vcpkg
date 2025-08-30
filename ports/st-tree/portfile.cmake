@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO erikerlandson/st_tree
     REF "version_${VERSION}"
-    SHA512 b2bd47509783c3efb366343aeb1713874225ba63348afcd1ddc770a4b0ae4d839455cee5e05d4cdc04a5aa798db21c8c9b414492c32d2b1458b2dfcbe87f2388
+    SHA512 354181bf397d92a863fcb46a6c07aec44599720456f61d639b3f0df4b95a6f908d0d44d3b2a430b3ef5a30c5df24ad29f638c4f8f80e51682d3eee800cfeea57
     HEAD_REF develop
 )
 
