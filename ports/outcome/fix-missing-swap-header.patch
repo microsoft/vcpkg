@@ -1,0 +1,12 @@
+diff --git a/include/outcome/detail/value_storage.hpp b/include/outcome/detail/value_storage.hpp
+index 3046a32..6b08ad7 100644
+--- a/include/outcome/detail/value_storage.hpp
++++ b/include/outcome/detail/value_storage.hpp
+@@ -26,6 +26,7 @@ Distributed under the Boost Software License, Version 1.0.
+ #define OUTCOME_VALUE_STORAGE_HPP
+ 
+ #include "../config.hpp"
++#include <utility>
+ 
+ OUTCOME_V2_NAMESPACE_EXPORT_BEGIN
+ 
