@@ -1,16 +1,3 @@
-diff --git a/cmake/attrib.cmake b/cmake/attrib.cmake
-index 5600ce6..f716507 100644
---- a/cmake/attrib.cmake
-+++ b/cmake/attrib.cmake
-@@ -1,8 +1,5 @@
- # tests for compiler properties
- 
--# set -Werror so we can't ignore unused attribute warnings
--set (CMAKE_REQUIRED_FLAGS "-Werror")
--
- CHECK_C_SOURCE_COMPILES("
-     int foo(int) __attribute__ ((ifunc(\"foo_i\")));
-     int f1(int i) { return i; }
 diff --git a/cmake/cflags-generic.cmake b/cmake/cflags-generic.cmake
 index 28a0549..c670c36 100644
 --- a/cmake/cflags-generic.cmake
