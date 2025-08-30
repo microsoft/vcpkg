@@ -410,7 +410,7 @@
     },
     "avcpp": {
       "baseline": "2.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "avir": {
       "baseline": "3.1",
@@ -2885,8 +2885,8 @@
       "port-version": 0
     },
     "ffmpeg": {
-      "baseline": "7.1.1",
-      "port-version": 4
+      "baseline": "8.0",
+      "port-version": 0
     },
     "ffnvcodec": {
       "baseline": "12.2.72.0",

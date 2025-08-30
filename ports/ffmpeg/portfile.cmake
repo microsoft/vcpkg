@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 6b9a5ee501be41d6abc7579a106263b31f787321cbc45dedee97abf992bf8236cdb2394571dd256a74154f4a20018d429ae7e7f0409611ddc4d6f529d924d175
+    SHA512 33d8102c0e2cca0fce2b737be3af114d3d39a30d0ed9d521ce02493fc10ec1f22af07747346a56371d748e5914b6f8069fdf4e2e6c87c7f472953e92a43d0010
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -15,8 +15,6 @@ vcpkg_from_github(
         0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
-        0041-add-const-for-opengl-definition.patch
-        0043-fix-miss-head.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -237,15 +235,6 @@ if("avfilter" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-avfilter")
     set(ENABLE_AVFILTER OFF)
-endif()
-
-if("postproc" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-postproc")
-    set(ENABLE_POSTPROC ON)
-    list(APPEND FFMPEG_PKGCONFIG_MODULES libpostproc)
-else()
-    set(OPTIONS "${OPTIONS} --disable-postproc")
-    set(ENABLE_POSTPROC OFF)
 endif()
 
 if("swresample" IN_LIST FEATURES)
