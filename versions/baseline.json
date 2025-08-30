@@ -570,7 +570,7 @@
     },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
-      "port-version": 7
+      "port-version": 8
     },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.12.0",
@@ -5714,7 +5714,7 @@
     },
     "libxml2": {
       "baseline": "2.14.5",
-      "port-version": 0
+      "port-version": 1
     },
     "libxmlb": {
       "baseline": "0.3.22",
