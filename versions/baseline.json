@@ -7010,7 +7010,7 @@
     },
     "openctm": {
       "baseline": "1.0.3",
-      "port-version": 2
+      "port-version": 3
     },
     "opencv": {
       "baseline": "4.11.0",
