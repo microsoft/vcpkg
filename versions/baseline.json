@@ -4086,7 +4086,7 @@
     },
     "json11": {
       "baseline": "2017-06-20",
-      "port-version": 6
+      "port-version": 7
     },
     "json5-parser": {
       "baseline": "1.0.0",
