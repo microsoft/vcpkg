@@ -1,38 +1,22 @@
-vcpkg_download_distfile(NO_GLU_PATCH
-    URLS https://github.com/PointCloudLibrary/pcl/pull/6253/commits/011905f3387e45b66828d81dacaafdde8893fdcb.patch?full_index=1
-    FILENAME PointCloudLibrary-fix-no-gluErrorString.patch
-    SHA512 8bf795a0c0da667bae38a3293643bd92817f30ab0f8a56b065bbb7cfa0b8f125210a317ee9cd868911b87546b1a05c322280f159802f820fef886109b938635b
-)
-vcpkg_download_distfile(NO_TRY_RUN_PATCH
-    URLS https://github.com/PointCloudLibrary/pcl/commit/575168bb72232cd820362aac7791227753489683.patch?full_index=1
-    FILENAME PointCloudLibrary-pcl-no-try-run.patch
-    SHA512 922de43bf04b3d990c5f9123b2e7f2148b54b612b7a1fe80df42ff734c7e55a9dd33cf4a6bb26207a381eda929da79b3e594eb5369a02cbf73c3767f4cf2eca0
-)
-vcpkg_download_distfile(NO_TRY_RUN_PATCH_2
-    URLS https://github.com/PointCloudLibrary/pcl/commit/39669c02e9c0e68861baf0a25886c85e6011a259.patch?full_index=1
-    FILENAME PointCloudLibrary-pcl-no-try-run_2.patch
-    SHA512 1cbcebce8657190ecac7f82539218b345a7978f213c13764fe83dc9c32a416b4ae7bc3f896d31ef2c6480c4a98f756f9df3493b9ae1dc5d5b42a00d9d3928bfc
+vcpkg_download_distfile(BOOST_1_89_0_COMPAT_PATCH
+    URLS https://github.com/PointCloudLibrary/pcl/commit/99333442ac63971297b4cdd05fab9d2bd2ff57a4.patch?full_index=1
+    FILENAME PointCloudLibrary-pcl-boost-1-89-0-compat.patch
+    SHA512 2fefaeaeda9fe423b481cddf4de85eff58418286f24f065be8610216e87d8faeb869406b72b3a7158abd22d17e25742b54f6b9eb3c81f82a1718f938bb8e0d26
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
     REF "pcl-${VERSION}"
-    SHA512 a1ab4858b8e5bde5b21bb3e04dcdcd9ca69204aa37a90dee336d4da452cb4be0a5b6a2b2b477668d4e82891955398825e97009fb5805df931af3c7d253e9100e
+    SHA512 ca9e742bc24b38f31c42c9ea08e19054e18d045f487269b64a7b831dada89936445d90a5b46870d8c24c2d25b33a59df2d904fe7e51bc0b231317cdb319951e9
     HEAD_REF master
     PATCHES
-        add-gcc-version-check.patch
-        "${NO_TRY_RUN_PATCH}"
-        "${NO_TRY_RUN_PATCH_2}"
         fix-check-sse.patch
         fix-numeric-literals-flag.patch
         install-layout.patch
         install-examples.patch
         fix-clang-cl.patch
-        add-chrono-includes.patch
-        add-cassert.patch
-        rollback-1092d70.diff
-        "${NO_GLU_PATCH}"
+        "${BOOST_1_89_0_COMPAT_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
