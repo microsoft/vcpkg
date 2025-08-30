@@ -397,7 +397,7 @@
       "port-version": 2
     },
     "aurora-au": {
-      "baseline": "0.4.1",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "autobahn": {
