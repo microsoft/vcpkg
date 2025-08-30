@@ -47,16 +47,9 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(requires "")
     set(libs "-framework Accelerate")
     set(cflags "-framework Accelerate")
-elseif(VCPKG_TARGET_IS_UWP
-        OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-        OR VCPKG_TARGET_IS_MINGW
-        OR NOT VCPKG_TARGET_IS_WINDOWS
-        OR NOT (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+else()
     set(BLA_VENDOR OpenBLAS)
     set(requires openblas)
-else()
-    set(BLA_VENDOR Generic)
-    set(requires "blas-reference")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" @ONLY)
