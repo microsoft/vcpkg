@@ -1298,6 +1298,7 @@ libimobiledevice:arm64-uwp = cascade
 libimobiledevice:x64-uwp = cascade
 libirecovery:x64-uwp = cascade
 liblas:x64-uwp = cascade
+liblas[tools]:x64-osx=feature-fails
 liblas[tools](android)=feature-fails
 liblsquic:arm64-uwp = cascade
 liblsquic:arm64-windows = cascade
