@@ -427,9 +427,6 @@ if(WIN32)
     target_sources(7zip PRIVATE
         CPP/7zip/Archive/Archive2.def
         CPP/7zip/Bundles/Format7zF/resource.rc
-        # vcpkg only: expose LZMA-SDK interface in DLLs,
-        # static libs can't hide it, cf. #44085
-        C/Util/LzmaLib/LzmaLib.def
     )
 else()
     target_sources(7zip PRIVATE
@@ -444,6 +441,15 @@ if(NOT MSVC)
             -D_LARGEFILE_SOURCE
     )
 endif()
+
+
+# LZMA SDK API, cf. #44085.
+# Implementation is already in the 7zip lib.
+
+target_sources(7zip PRIVATE
+    C/LzmaLib.c
+    C/Util/LzmaLib/LzmaLib.def
+)
 
 
 # install
