@@ -6,11 +6,10 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/gtk
     REF ${VERSION}
-    SHA512 2e2d3135ebf8cb176a4e5e6f1faa26ae9ea5c3e2441e2c820372a76b78e641f207257600d6a207aa05883e04f29fac1452673bffa0395789b8e482cc6b204673
+    SHA512 73397bbc1f6bb9fd0fa2a8eedd6247cf3e4b70fb93ee62512a4bb6b205f4702d2e2680b655d7e06908f9d911442f07e29b7af2567d1806b63f0a13ca0f9f5572
     HEAD_REF master # branch name
     PATCHES
         0001-build.patch
-        fix_vulkan_enabled.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
