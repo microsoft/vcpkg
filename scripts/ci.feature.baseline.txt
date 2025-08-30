@@ -324,6 +324,7 @@ moos-essential:x86-windows=fail
 msquic:arm-neon-android=fail
 msquic:arm64-android=fail
 msquic:x64-android=fail
+msquic[0-rtt](android)=cascade
 munit:arm-uwp=fail
 munit:arm64-windows=fail
 munit:x64-uwp=fail
