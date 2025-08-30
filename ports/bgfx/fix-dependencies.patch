@@ -1,0 +1,562 @@
+Submodule bgfx contains modified content
+diff --git a/bgfx/examples/common/bgfx_utils.cpp b/bgfx/examples/common/bgfx_utils.cpp
+index baaeba382..f6bc8547f 100644
+--- a/bgfx/examples/common/bgfx_utils.cpp
++++ b/bgfx/examples/common/bgfx_utils.cpp
+@@ -17,7 +17,7 @@ namespace stl = tinystl;
+ #include <bx/readerwriter.h>
+ #include <bx/string.h>
+ #include "entry/entry.h"
+-#include <meshoptimizer/src/meshoptimizer.h>
++#include <meshoptimizer.h>
+ 
+ #include "bgfx_utils.h"
+ 
+diff --git a/bgfx/examples/common/font/font_manager.cpp b/bgfx/examples/common/font/font_manager.cpp
+index 92e497a41..85d149561 100644
+--- a/bgfx/examples/common/font/font_manager.cpp
++++ b/bgfx/examples/common/font/font_manager.cpp
+@@ -4,7 +4,7 @@
+  */
+ 
+ #include <bx/bx.h>
+-#include <stb/stb_truetype.h>
++#include <stb_truetype.h>
+ #include "../common.h"
+ #include <bgfx/bgfx.h>
+ 
+diff --git a/bgfx/examples/common/imgui/imgui.cpp b/bgfx/examples/common/imgui/imgui.cpp
+index 2fe825849..1006741f7 100644
+--- a/bgfx/examples/common/imgui/imgui.cpp
++++ b/bgfx/examples/common/imgui/imgui.cpp
+@@ -8,10 +8,10 @@
+ #include <bx/allocator.h>
+ #include <bx/math.h>
+ #include <bx/timer.h>
+-#include <dear-imgui/imgui.h>
+-#include <dear-imgui/imgui_internal.h>
++#include <imgui.h>
++#include <imgui_internal.h>
+ 
+-#include "imgui.h"
++#include "imgui/imgui.h"
+ #include "../bgfx_utils.h"
+ 
+ #ifndef USE_ENTRY
+@@ -591,7 +591,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wtype-limits"); // warning: comparison
+ #	define STBTT_free(_ptr, _userData)         memFree(_ptr, _userData)
+ 
+ #	define STB_RECT_PACK_IMPLEMENTATION
+-#	include <stb/stb_rect_pack.h>
++#	include <stb_rect_pack.h>
+ #	define STB_TRUETYPE_IMPLEMENTATION
+-#	include <stb/stb_truetype.h>
++#	include <stb_truetype.h>
+ #endif // USE_LOCAL_STB
+diff --git a/bgfx/examples/common/imgui/imgui.h b/bgfx/examples/common/imgui/imgui.h
+index 865879eb1..c6a3d8433 100644
+--- a/bgfx/examples/common/imgui/imgui.h
++++ b/bgfx/examples/common/imgui/imgui.h
+@@ -7,7 +7,7 @@
+ #define IMGUI_H_HEADER_GUARD
+ 
+ #include <bgfx/bgfx.h>
+-#include <dear-imgui/imgui.h>
++#include <imgui.h>
+ #include <iconfontheaders/icons_kenney.h>
+ #include <iconfontheaders/icons_font_awesome.h>
+ 
+diff --git a/bgfx/examples/common/nanovg/fontstash.h b/bgfx/examples/common/nanovg/fontstash.h
+index 39a48fb90..ca0056d58 100644
+--- a/bgfx/examples/common/nanovg/fontstash.h
++++ b/bgfx/examples/common/nanovg/fontstash.h
+@@ -266,7 +266,7 @@ static void fons__tmpfree(void* ptr, void* up);
+ #endif // 0
+ 
+ #define STBTT_DEF extern
+-#include <stb/stb_truetype.h>
++#include <stb_truetype.h>
+ 
+ struct FONSttFontImpl {
+ 	stbtt_fontinfo font;
+diff --git a/bgfx/tools/geometryc/geometryc.cpp b/bgfx/tools/geometryc/geometryc.cpp
+index d79a80e96..77402727a 100644
+--- a/bgfx/tools/geometryc/geometryc.cpp
++++ b/bgfx/tools/geometryc/geometryc.cpp
+@@ -14,11 +14,11 @@
+ #include <tinystl/vector.h>
+ namespace stl = tinystl;
+ 
+-#include <meshoptimizer/src/meshoptimizer.h>
++#include <meshoptimizer.h>
+ 
+ #define CGLTF_VALIDATE_ENABLE_ASSERTS BX_CONFIG_DEBUG
+ #define CGLTF_IMPLEMENTATION
+-#include <cgltf/cgltf.h>
++#include <cgltf.h>
+ 
+ #define BGFX_GEOMETRYC_VERSION_MAJOR 1
+ #define BGFX_GEOMETRYC_VERSION_MINOR 0
+diff --git a/bgfx/tools/shaderc/shaderc_metal.cpp b/bgfx/tools/shaderc/shaderc_metal.cpp
+index 9f073b908..e8fd20820 100644
+--- a/bgfx/tools/shaderc/shaderc_metal.cpp
++++ b/bgfx/tools/shaderc/shaderc_metal.cpp
+@@ -20,11 +20,11 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
+ #include <spirv_reflect.hpp>
+ 
+ #define ENABLE_OPT 1
+-#include <ShaderLang.h>
+-#include <ResourceLimits.h>
+-#include <SPIRV/GlslangToSpv.h>
+-#include <SPIRV/SPVRemapper.h>
+-#include <SPIRV/SpvTools.h>
++#include <glslang/Public/ShaderLang.h>
++#include <glslang/Include/ResourceLimits.h>
++#include <glslang/SPIRV/GlslangToSpv.h>
++#include <glslang/SPIRV/SPVRemapper.h>
++#include <glslang/SPIRV/SpvTools.h>
+ #include <spirv-tools/optimizer.hpp>
+ BX_PRAGMA_DIAGNOSTIC_POP()
+ 
+diff --git a/bgfx/tools/shaderc/shaderc_spirv.cpp b/bgfx/tools/shaderc/shaderc_spirv.cpp
+index f7910deee..a844cc054 100644
+--- a/bgfx/tools/shaderc/shaderc_spirv.cpp
++++ b/bgfx/tools/shaderc/shaderc_spirv.cpp
+@@ -20,11 +20,11 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
+ #include <spirv_reflect.hpp>
+ 
+ #define ENABLE_OPT 1
+-#include <ShaderLang.h>
+-#include <ResourceLimits.h>
+-#include <SPIRV/SPVRemapper.h>
+-#include <SPIRV/GlslangToSpv.h>
+-#include <SPIRV/SpvTools.h>
++#include <glslang/Public/ShaderLang.h>
++#include <glslang/Include/ResourceLimits.h>
++#include <glslang/SPIRV/SPVRemapper.h>
++#include <glslang/SPIRV/GlslangToSpv.h>
++#include <glslang/SPIRV/SpvTools.h>
+ #include <spirv-tools/optimizer.hpp>
+ BX_PRAGMA_DIAGNOSTIC_POP()
+ 
+Submodule bimg contains modified content
+diff --git a/bimg/src/image_decode.cpp b/bimg/src/image_decode.cpp
+index 798eaba..a4cd3ef 100644
+--- a/bimg/src/image_decode.cpp
++++ b/bimg/src/image_decode.cpp
+@@ -16,22 +16,14 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4018) // warning C4018:  '<': signed/unsigned
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4100) // error C4100: '' : unreferenced formal parameter
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4389) // warning C4389 : '==' : signed / unsigned mismatch
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4505) // warning C4505: 'tinyexr::miniz::def_realloc_func': unreferenced local function has been removed
+-#define MINIZ_NO_ARCHIVE_APIS
+-#define MINIZ_NO_STDIO
+-#define TINYEXR_IMPLEMENTATION
+-#include <tinyexr/tinyexr.h>
++#include <tinyexr.h>
+ BX_PRAGMA_DIAGNOSTIC_POP()
+ 
+ BX_PRAGMA_DIAGNOSTIC_PUSH();
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4127) // warning C4127: conditional expression is constant
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4267) // warning C4267: '=' : conversion from 'size_t' to 'unsigned short', possible loss of data
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4334) // warning C4334: '<<' : result of 32 - bit shift implicitly converted to 64 bits(was 64 - bit shift intended ? )
+-#define LODEPNG_NO_COMPILE_ENCODER
+-#define LODEPNG_NO_COMPILE_DISK
+-#define LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS
+-#define LODEPNG_NO_COMPILE_ALLOCATORS
+-#define LODEPNG_NO_COMPILE_CPP
+-#include <lodepng/lodepng.cpp>
++#include <lodepng.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+ 
+ #if BIMG_DECODE_HEIF
+@@ -72,7 +64,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_GCC("-Wimplicit-fallthrough");
+ #define STBI_FREE(_ptr)           lodepng_free(_ptr)
+ #define STB_IMAGE_IMPLEMENTATION
+ #define STB_IMAGE_STATIC
+-#include <stb/stb_image.h>
++#include <stb_image.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+ 
+ namespace bimg
+@@ -453,7 +445,7 @@ namespace bimg
+ 		case TINYEXR_ERROR_INVALID_HEADER:       BX_ERROR_SET(_err, BIMG_ERROR, "EXR: Failed to parse image. Invalid header.");       break;
+ 		case TINYEXR_ERROR_UNSUPPORTED_FEATURE:  BX_ERROR_SET(_err, BIMG_ERROR, "EXR: Failed to parse image. Unsupported feature.");  break;
+ 		case TINYEXR_ERROR_CANT_WRITE_FILE:      BX_ERROR_SET(_err, BIMG_ERROR, "EXR: Failed to parse image. Can't write file.");     break;
+-		case TINYEXR_ERROR_SERIALZATION_FAILED:  BX_ERROR_SET(_err, BIMG_ERROR, "EXR: Failed to parse image. Serialization failed."); break;
++		case TINYEXR_ERROR_SERIALIZATION_FAILED: BX_ERROR_SET(_err, BIMG_ERROR, "EXR: Failed to parse image. Serialization failed."); break;
+ 		default:                                 BX_ERROR_SET(_err, BIMG_ERROR, "EXR: Failed to parse image.");                       break;
+ 		}
+ 	}
+diff --git a/bimg/src/image_encode.cpp b/bimg/src/image_encode.cpp
+index 7c0cd76..9138f88 100644
+--- a/bimg/src/image_encode.cpp
++++ b/bimg/src/image_encode.cpp
+@@ -6,7 +6,7 @@
+ #include <bimg/encode.h>
+ #include "bimg_p.h"
+ 
+-#include <libsquish/squish.h>
++#include <squish.h>
+ #include <etc1/etc1.h>
+ #include <etc2/ProcessRGB.hpp>
+ #include <nvtt/nvtt.h>
+@@ -19,7 +19,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4100) // warning C4100: 'alloc_context': unref
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_MSVC(4702) // warning C4702: unreachable code
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wunused-parameter") // warning: unused parameter ‘alloc_context’ [-Wunused-parameter]
+ #define STB_IMAGE_RESIZE_IMPLEMENTATION
+-#include <stb/stb_image_resize.h>
++#include <stb_image_resize2.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+ 
+ extern "C" {
+@@ -564,18 +564,16 @@ namespace bimg
+ 				const uint32_t srcDataStep = uint32_t(bx::floor(zz * _src->m_depth / float(_dst->m_depth) ) );
+ 				const uint8_t* srcData = &srcMip.m_data[srcDataStep*srcSlice];
+ 
+-				int result = stbir_resize_float_generic(
+-					  (const float*)srcData, _src->m_width, _src->m_height, srcPitch
+-					, (      float*)dstData, _dst->m_width, _dst->m_height, dstPitch
+-					, 4, 3
+-					, STBIR_FLAG_ALPHA_PREMULTIPLIED
++				void* result = stbir_resize(
++					  (const void *)srcData, _src->m_width,  _src->m_height, srcPitch
++					, (      void *)dstData, _dst->m_width,  _dst->m_height, dstPitch
++					, STBIR_RGBA_PM
++					, STBIR_TYPE_FLOAT
+ 					, STBIR_EDGE_CLAMP
+ 					, STBIR_FILTER_BOX
+-					, STBIR_COLORSPACE_LINEAR
+-					, NULL
+-					);
++				);
+ 
+-				if (1 != result)
++				if (result == 0)
+ 				{
+ 					return false;
+ 				}
+Submodule bx contains modified content
+diff --git a/bx/src/settings.cpp b/bx/src/settings.cpp
+index 907c74c..ffcc442 100644
+--- a/bx/src/settings.cpp
++++ b/bx/src/settings.cpp
+@@ -19,7 +19,7 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wunused-function");
+ 
+ BX_PRAGMA_DIAGNOSTIC_PUSH();
+ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wsign-compare");
+-#include <ini/ini.h>
++#include <mgnlibs/ini.h>
+ BX_PRAGMA_DIAGNOSTIC_POP();
+ }
+ 
+@@ -58,7 +58,7 @@ void Settings::load(const void* _data, uint32_t _len)
+ 	}
+ 	else
+ 	{
+-		m_ini = ini_load( (const char*)_data, _len, m_allocator);
++		m_ini = ini_load( (const char*)_data, m_allocator);
+ 	}
+ }
+ 
+diff --git a/cmake/bgfx/CMakeLists.txt b/cmake/bgfx/CMakeLists.txt
+index 0125da3..025d2b6 100644
+--- a/cmake/bgfx/CMakeLists.txt
++++ b/cmake/bgfx/CMakeLists.txt
+@@ -9,20 +9,21 @@
+ # this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+ 
+ include(bgfx.cmake)
+-include(3rdparty/meshoptimizer.cmake)
+-include(3rdparty/dear-imgui.cmake)
+ 
+-if(BGFX_BUILD_TOOLS_TEXTURE)
+-	include(texturev.cmake)
+-endif()
+ if(BGFX_BUILD_TOOLS_GEOMETRY)
++        find_package(meshoptimizer CONFIG REQUIRED)
+ 	include(geometryc.cmake)
+-	include(geometryv.cmake)
+ endif()
+ if(BGFX_BUILD_TOOLS_SHADER)
+-	include(3rdparty/spirv-opt.cmake)
+-	include(3rdparty/spirv-cross.cmake)
+-	include(3rdparty/glslang.cmake)
++	find_package(Threads REQUIRED)
++	find_package(glslang CONFIG REQUIRED)
++
++	find_package(spirv_cross_core CONFIG QUIET)
++	find_package(spirv_cross_reflect CONFIG QUIET)
++	find_package(spirv_cross_glsl CONFIG QUIET)
++	find_package(spirv_cross_hlsl CONFIG QUIET)
++	find_package(spirv_cross_msl CONFIG QUIET)
++
+ 	include(3rdparty/glsl-optimizer.cmake)
+ 	include(3rdparty/fcpp.cmake)
+ 	include(3rdparty/webgpu.cmake)
+@@ -30,4 +31,3 @@ if(BGFX_BUILD_TOOLS_SHADER)
+ endif()
+ 
+ include(shared.cmake)
+-include(examples.cmake)
+diff --git a/cmake/bgfx/examples.cmake b/cmake/bgfx/examples.cmake
+index c8759f0..0a35008 100755
+--- a/cmake/bgfx/examples.cmake
++++ b/cmake/bgfx/examples.cmake
+@@ -127,14 +127,13 @@ function(add_example ARG_NAME)
+ 	# Add target
+ 	if(ARG_COMMON)
+ 		add_library(
+-			example-${ARG_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES} ${DEAR_IMGUI_SOURCES} ${MESHOPTIMIZER_SOURCES}
++			example-${ARG_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES}
+ 		)
+ 		target_include_directories(
+-			example-${ARG_NAME} PUBLIC ${BGFX_DIR}/examples/common ${DEAR_IMGUI_INCLUDE_DIR}
+-									   ${MESHOPTIMIZER_INCLUDE_DIR}
++			example-${ARG_NAME} PUBLIC ${BGFX_DIR}/examples/common ${BGFX_DIR}/3rdparty
+ 		)
+ 		target_link_libraries(
+-			example-${ARG_NAME} PUBLIC bgfx bx bimg bimg_decode ${DEAR_IMGUI_LIBRARIES} ${MESHOPTIMIZER_LIBRARIES}
++			example-${ARG_NAME} PUBLIC bgfx bx bimg bimg_decode imgui::imgui meshoptimizer::meshoptimizer
+ 		)
+ 
+ 		if(BGFX_WITH_WAYLAND)
+@@ -269,6 +268,9 @@ endif()
+ 
+ # Add common library for examples
+ if(BGFX_BUILD_EXAMPLE_COMMON)
++	find_package(meshoptimizer CONFIG REQUIRED)
++	find_package(imgui CONFIG REQUIRED)
++
+ 	add_example(
+ 		common
+ 		COMMON
+diff --git a/cmake/bgfx/geometryc.cmake b/cmake/bgfx/geometryc.cmake
+index e6efcd5..ae0a961 100644
+--- a/cmake/bgfx/geometryc.cmake
++++ b/cmake/bgfx/geometryc.cmake
+@@ -14,13 +14,10 @@ file(
+ 	GEOMETRYC_SOURCES #
+ 	${BGFX_DIR}/tools/geometryc/*.cpp #
+ 	${BGFX_DIR}/tools/geometryc/*.h #
+-	#
+-	${MESHOPTIMIZER_SOURCES}
+ )
+ add_executable(geometryc ${GEOMETRYC_SOURCES})
+ 
+-target_include_directories(geometryc PRIVATE ${MESHOPTIMIZER_INCLUDE_DIR})
+-target_link_libraries(geometryc PRIVATE bx bgfx-vertexlayout ${MESHOPTIMIZER_LIBRARIES})
++target_link_libraries(geometryc PRIVATE bx bgfx-vertexlayout meshoptimizer::meshoptimizer)
+ target_compile_definitions(geometryc PRIVATE "-D_CRT_SECURE_NO_WARNINGS")
+ set_target_properties(
+ 	geometryc PROPERTIES FOLDER "bgfx/tools" #
+diff --git a/cmake/bgfx/shaderc.cmake b/cmake/bgfx/shaderc.cmake
+index 0f50eab..a8d765d 100644
+--- a/cmake/bgfx/shaderc.cmake
++++ b/cmake/bgfx/shaderc.cmake
+@@ -24,22 +24,11 @@ target_link_libraries(
+ 	PRIVATE bx
+ 			bgfx-vertexlayout
+ 			fcpp
+-			glslang
+-			glsl-optimizer
+-			spirv-opt
+-			spirv-cross
+-)
+-target_link_libraries(
+-	shaderc
+-	PRIVATE bx
+ 			bimg
+-			bgfx-vertexlayout
+-			fcpp
+-			glslang
+-			glsl-optimizer
+-			spirv-opt
+-			spirv-cross
+ 			webgpu
++			glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV glslang::SPVRemapper
++			spirv-cross-core spirv-cross-reflect spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl
++			glsl-optimizer
+ )
+ if(BGFX_AMALGAMATED)
+ 	target_link_libraries(shaderc PRIVATE bgfx-shader)
+diff --git a/cmake/bimg/CMakeLists.txt b/cmake/bimg/CMakeLists.txt
+index 200b29b..529005f 100644
+--- a/cmake/bimg/CMakeLists.txt
++++ b/cmake/bimg/CMakeLists.txt
+@@ -8,17 +8,19 @@
+ # You should have received a copy of the CC0 Public Domain Dedication along with
+ # this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+ 
+-include(3rdparty/loadpng.cmake)
+-include(3rdparty/libsquish.cmake)
++find_package(unofficial-libsquish CONFIG REQUIRED)
++find_package(tinyexr CONFIG REQUIRED)
++find_package(miniz CONFIG REQUIRED)
++find_package(lodepng CONFIG REQUIRED)
++find_package(Stb REQUIRED)
++
+ include(3rdparty/astc_encoder.cmake)
+ include(3rdparty/edtaa3.cmake)
+ include(3rdparty/etc1.cmake)
+ include(3rdparty/etc2.cmake)
+ include(3rdparty/nvtt.cmake)
+ include(3rdparty/pvrtc.cmake)
+-include(3rdparty/tinyexr.cmake)
+ include(3rdparty/iqa.cmake)
+-include(3rdparty/miniz.cmake)
+ include(bimg.cmake)
+ include(bimg_decode.cmake)
+ include(bimg_encode.cmake)
+diff --git a/cmake/bimg/bimg.cmake b/cmake/bimg/bimg.cmake
+index 6f52fe1..debb4c6 100644
+--- a/cmake/bimg/bimg.cmake
++++ b/cmake/bimg/bimg.cmake
+@@ -22,7 +22,6 @@ file(
+ 	${BIMG_DIR}/src/image_gnf.cpp #
+ 	#
+ 	${ASTC_ENCODER_SOURCES}
+-	${MINIZ_SOURCES}
+ )
+ 
+ add_library(bimg STATIC ${BIMG_SOURCES})
+@@ -33,14 +32,16 @@ set_target_properties(bimg PROPERTIES FOLDER "bgfx")
+ target_include_directories(
+ 	bimg PUBLIC $<BUILD_INTERFACE:${BIMG_DIR}/include>$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ 	PRIVATE ${ASTC_ENCODER_INCLUDE_DIR} #
+-			${MINIZ_INCLUDE_DIR} #
+ )
+ 
+ target_link_libraries(
+ 	bimg
+ 	PUBLIC bx #
+ 		   ${ASTC_ENCODER_LIBRARIES} #
+-		   ${MINIZ_LIBRARIES} #
++)
++
++target_link_libraries(bimg PRIVATE
++        miniz::miniz
+ )
+ 
+ if(BGFX_INSTALL)
+diff --git a/cmake/bimg/bimg_decode.cmake b/cmake/bimg/bimg_decode.cmake
+index a511e8f..4adf5c9 100644
+--- a/cmake/bimg/bimg_decode.cmake
++++ b/cmake/bimg/bimg_decode.cmake
+@@ -19,9 +19,6 @@ file(
+ 	BIMG_DECODE_SOURCES #
+ 	${BIMG_DIR}/include/* #
+ 	${BIMG_DIR}/src/image_decode.* #
+-	#
+-	${LOADPNG_SOURCES} #
+-	${MINIZ_SOURCES} #
+ )
+ 
+ add_library(bimg_decode STATIC ${BIMG_DECODE_SOURCES})
+@@ -31,17 +28,18 @@ set_target_properties(bimg_decode PROPERTIES FOLDER "bgfx")
+ target_include_directories(
+ 	bimg_decode
+ 	PUBLIC $<BUILD_INTERFACE:${BIMG_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+-	PRIVATE ${LOADPNG_INCLUDE_DIR} #
+-			${MINIZ_INCLUDE_DIR} #
+-			${TINYEXR_INCLUDE_DIR} #
++        PRIVATE ${Stb_INCLUDE_DIR}
+ )
+ 
+ target_link_libraries(
+ 	bimg_decode
+ 	PUBLIC bx #
+-		   ${LOADPNG_LIBRARIES} #
+-		   ${MINIZ_LIBRARIES} #
+-		   ${TINYEXR_LIBRARIES} #
++)
++
++target_link_libraries(bimg_decode PRIVATE
++        unofficial::tinyexr::tinyexr
++        miniz::miniz
++        lodepng
+ )
+ 
+ if(BGFX_INSTALL AND NOT BGFX_LIBRARY_TYPE MATCHES "SHARED")
+diff --git a/cmake/bimg/bimg_encode.cmake b/cmake/bimg/bimg_encode.cmake
+index 82d9fe0..a583a9b 100644
+--- a/cmake/bimg/bimg_encode.cmake
++++ b/cmake/bimg/bimg_encode.cmake
+@@ -22,16 +22,14 @@ set_target_properties(bimg_encode PROPERTIES FOLDER "bgfx")
+ target_include_directories(
+ 	bimg_encode
+ 	PUBLIC $<BUILD_INTERFACE:${BIMG_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+-	PRIVATE ${LIBSQUISH_INCLUDE_DIR} #
+-			${ASTC_ENCODER_INCLUDE_DIR} #
++	PRIVATE ${ASTC_ENCODER_INCLUDE_DIR} #
+ 			${EDTAA3_INCLUDE_DIR} #
+ 			${ETC1_INCLUDE_DIR} #
+ 			${ETC2_INCLUDE_DIR} #
+ 			${NVTT_INCLUDE_DIR} #
+ 			${PVRTC_INCLUDE_DIR} #
+-			${TINYEXR_INCLUDE_DIR} #
+ 			${IQA_INCLUDE_DIR} #
+-			${MINIZ_INCLUDE_DIR} #
++			${Stb_INCLUDE_DIR} #
+ )
+ 
+ file(
+@@ -40,13 +38,11 @@ file(
+ 	${BIMG_DIR}/include/* #
+ 	${BIMG_DIR}/src/image_encode.* #
+ 	${BIMG_DIR}/src/image_cubemap_filter.* #
+-	${LIBSQUISH_SOURCES} #
+ 	${EDTAA3_SOURCES} #
+ 	${ETC1_SOURCES} #
+ 	${ETC2_SOURCES} #
+ 	${NVTT_SOURCES} #
+ 	${PVRTC_SOURCES} #
+-	${TINYEXR_SOURCES}
+ 	${IQA_SOURCES} #
+ )
+ 
+@@ -55,17 +51,21 @@ target_sources(bimg_encode PRIVATE ${BIMG_ENCODE_SOURCES})
+ target_link_libraries(
+ 	bimg_encode
+ 	PUBLIC bx #
+-		   ${LIBSQUISH_LIBRARIES} #
+ 		   ${ASTC_ENCODER_LIBRARIES} #
+ 		   ${EDTAA3_LIBRARIES} #
+ 		   ${ETC1_LIBRARIES} #
+ 		   ${ETC2_LIBRARIES} #
+ 		   ${NVTT_LIBRARIES} #
+ 		   ${PVRTC_LIBRARIES} #
+-		   ${TINYEXR_LIBRARIES} #
+ 		   ${IQA_LIBRARIES} #
+ )
+ 
++target_link_libraries(bimg_encode PRIVATE
++       unofficial::libsquish::squish
++       unofficial::tinyexr::tinyexr
++       miniz::miniz
++)
++
+ include(CheckCXXCompilerFlag)
+ foreach(flag "-Wno-implicit-fallthrough" "-Wno-shadow" "-Wno-shift-negative-value" "-Wno-undef")
+ 	check_cxx_compiler_flag(${flag} flag_supported)
+diff --git a/cmake/bx/bx.cmake b/cmake/bx/bx.cmake
+index d1a73c6..4689bc8 100644
+--- a/cmake/bx/bx.cmake
++++ b/cmake/bx/bx.cmake
+@@ -78,7 +78,6 @@ endif()
+ target_include_directories(
+ 	bx
+ 	PUBLIC $<BUILD_INTERFACE:${BX_DIR}/include> #
+-		   $<BUILD_INTERFACE:${BX_DIR}/3rdparty> #
+ 		   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> #
+ 		   $<BUILD_INTERFACE:${BX_DIR}/include/compat/${BX_COMPAT_PLATFORM}> #
+ 		   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/bx/compat/${BX_COMPAT_PLATFORM}> #
+@@ -118,6 +117,9 @@ elseif(UNIX)
+ 	target_link_libraries(bx rt)
+ endif()
+ 
++find_path(MGNLIBS_INCLUDE_DIRS "mgnlibs/ini.h")
++target_include_directories(bx PRIVATE ${MGNLIBS_INCLUDE_DIRS})
++
+ # Put in a "bgfx" folder in Visual Studio
+ set_target_properties(bx PROPERTIES FOLDER "bgfx")
+ 
