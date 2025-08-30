@@ -1,12 +1,14 @@
 --- a/modules/freetype/CMakeLists.txt
 +++ b/modules/freetype/CMakeLists.txt
-@@ -3,8 +3,10 @@ if(APPLE_FRAMEWORK)
+@@ -3,8 +3,12 @@ if(APPLE_FRAMEWORK)
    ocv_module_disable(freetype)
  endif()
  
 -ocv_check_modules(FREETYPE freetype2)
 -ocv_check_modules(HARFBUZZ harfbuzz)
 +if(WITH_FREETYPE)
++set(Freetype_FOUND TRUE)
++set(HARFBUZZ_FOUND TRUE)
 +find_package(freetype CONFIG REQUIRED)
 +find_package(harfbuzz CONFIG REQUIRED)
 +endif()
