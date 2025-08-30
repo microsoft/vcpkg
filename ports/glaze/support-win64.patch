@@ -1,0 +1,31 @@
+diff --git a/include/glaze/interop/interop.hpp b/include/glaze/interop/interop.hpp
+index b6ef0c2..3354f81 100644
+--- a/include/glaze/interop/interop.hpp
++++ b/include/glaze/interop/interop.hpp
+@@ -127,7 +127,7 @@ static_assert(sizeof(glz_string_desc) == 8, "glz_string_desc must be 8 bytes");
+ static_assert(sizeof(glz_complex_desc) == 8, "glz_complex_desc must be 8 bytes");
+ 
+ // Pointer sizes vary between 32-bit and 64-bit systems
+-#ifdef __LP64__
++#if defined(__LP64__) || defined(_WIN64)
+ // 64-bit system
+ static_assert(sizeof(glz_vector_desc) == 8, "glz_vector_desc must be 8 bytes on 64-bit");
+ static_assert(sizeof(glz_map_desc) == 16, "glz_map_desc must be 16 bytes on 64-bit");
+@@ -167,7 +167,7 @@ struct glz_type_descriptor
+ };
+ 
+ // Verify the overall type descriptor size
+-#ifdef __LP64__
++#if defined(__LP64__) || defined(_WIN64)
+ static_assert(sizeof(glz_type_descriptor) == 40, "glz_type_descriptor must be 40 bytes on 64-bit");
+ #else
+ static_assert(sizeof(glz_type_descriptor) == 28, "glz_type_descriptor must be 28 bytes on 32-bit");
+@@ -1311,7 +1311,7 @@ struct glz_unordered_map
+ };
+ 
+ // Static assertions for the C structs
+-#ifdef __LP64__
++#if defined(__LP64__) || defined(_WIN64)
+ // 64-bit system
+ static_assert(sizeof(glz_member_info) == 48, "glz_member_info must be 48 bytes on 64-bit");
+ static_assert(sizeof(glz_type_info) == 32, "glz_type_info must be 32 bytes on 64-bit");
