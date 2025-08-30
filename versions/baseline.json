@@ -5,8 +5,8 @@
       "port-version": 5
     },
     "7zip": {
-      "baseline": "24.09",
-      "port-version": 1
+      "baseline": "25.1",
+      "port-version": 0
     },
     "ableton": {
       "baseline": "3.0.6",
@@ -7010,7 +7010,7 @@
     },
     "openctm": {
       "baseline": "1.0.3",
-      "port-version": 2
+      "port-version": 3
     },
     "opencv": {
       "baseline": "4.11.0",
