@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         debug.patch
         fix-arm64-osx-config.patch
+        fix-cmake4.patch # Note: The portfile currently deletes all cmake files
 )
 
 vcpkg_cmake_configure(
