@@ -4,7 +4,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
-    SHA512 eab5702bc0baed45492f8dde43a4d2ea3560ad80645e5f9e0cfa8d3b57bccd7fd782d04638e000ba07924a5d9f85e760095b55189188c4017b94705bef9b4a66
+    SHA512 4d8427c0f115268132f7544e80a808c883ab1406338f6c529b1a586b016d57aedb0857f66166eb8d9f37d70efc9dccf907b673b43b17bcf258c8797db1e829ce
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
