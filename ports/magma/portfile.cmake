@@ -8,23 +8,21 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 vcpkg_download_distfile(
-    dist_file
-    URLS https://icl.utk.edu/projectsfiles/magma/downloads/magma-${VERSION}.tar.gz
-    FILENAME magma-${VERSION}.tar.gz
-    SHA512 4c2d7c472a69f3b0d491410900db1622478476673e4896dcec26060b839918cdf3cfdfb2680ecbb2042335e8bcc11c44244a82d11e15ba93c489ae5c66d7385a
+  dist_file
+  URLS https://icl.utk.edu/projectsfiles/magma/downloads/magma-${VERSION}.tar.gz
+  FILENAME magma-${VERSION}.tar.gz
+  SHA512 233beb3d2809c12a27a9b7a6a0eb0bec0ade91fa6bf1a63e1ca4d491491ed5a8729996ac8fbf68ab8d678acab6ed56b7728689358a7b76b20b101227a9851c16
 )
 
 vcpkg_extract_source_archive(
-    src_path
-    ARCHIVE "${dist_file}"
-    PATCHES
-      disable-openmp-msvc.patch
-      no-tests.patch
-      clang-cuda.patch
-      fix-min-max.patch
+  src_path
+  ARCHIVE "${dist_file}"
+  PATCHES
+    disable-openmp-msvc.patch
+    no-tests.patch
+    clang-cuda.patch
+    fix-cmake4.patch
 )
-
-
 
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
 
@@ -38,10 +36,7 @@ vcpkg_cmake_configure(
     "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     ${opts}
 )
-
-
 vcpkg_cmake_install()
-
 vcpkg_fixup_pkgconfig()
 
 file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/magma.pc" contents)
