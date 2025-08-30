@@ -289,6 +289,16 @@ if(@WITH_OPENCL@)
   endif()
 endif()
 
+if(@WITH_VAAPI@)
+  find_package(PkgConfig )
+  pkg_check_modules(libva IMPORTED_TARGET libva)
+  pkg_check_modules(libva-drm IMPORTED_TARGET libva-drm)
+  list(APPEND FFMPEG_LIBRARIES PkgConfig::libva PkgConfig::libva-drm)
+  if(vcpkg_no_avcodec_target AND TARGET FFmpeg::avcodec)
+    target_link_libraries(FFmpeg::avcodec INTERFACE PkgConfig::libva PkgConfig::libva-drm)
+  endif()
+endif()
+
 endif(NOT z_vcpkg_using_vcpkg_find_ffmpeg)
 unset(z_vcpkg_using_vcpkg_find_ffmpeg)
 
