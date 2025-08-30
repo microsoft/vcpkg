@@ -8561,7 +8561,7 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.5.21",
+      "baseline": "1.5.25",
       "port-version": 0
     },
     "safeint": {
