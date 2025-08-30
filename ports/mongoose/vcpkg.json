@@ -1,7 +1,6 @@
 {
   "name": "mongoose",
-  "version": "7.18",
-  "port-version": 1,
+  "version": "7.19",
   "description": "Embedded web server / embedded networking library",
   "homepage": "https://cesanta.com/",
   "license": null,
