@@ -138,7 +138,7 @@ getopt:arm-uwp=fail
 getopt:x64-uwp=fail
 gflags(uwp)=fail
 # glaze requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
-glaze[interop]:x64-linux=fail
+glaze[interop]:x64-linux=feature-fails
 glfw3(uwp)=fail
 glibmm:x64-windows-static-md=fail
 glibmm:x64-windows-static=fail
