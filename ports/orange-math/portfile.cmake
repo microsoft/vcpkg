@@ -2,18 +2,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_download_distfile(
-    FIX_VECTOR_INCLUDE
-    URLS https://github.com/orange-cpp/omath/commit/463532ba81030b3ed9ccfd6a277af0028c190bb3.patch?full_index=1
-    FILENAME fix-vector-include-463532ba81030b3ed9ccfd6a277af0028c190bb3.patch
-    SHA512 6ec747d3cd89fce54e26997ea3508cb9c6cbf9ee2d473a825ea0bf8d4ecfad6712217a348f4d43acc757e4ab2d865778163982b8c9e5c490946bb3e92679b8c6
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orange-cpp/omath
     REF "v${VERSION}"
-    SHA512 42ecf51363be50e7382b9aebd03039f4e6ef855beaa227fbd354da6aad39e6cb328baf8ef8acf8eea551403fdd43a94980990c57cb70b408d065fa992bc68c72
+    SHA512 55ecfbc45f83d398cb40dcdcc1042b2d6d6c956448521830279c49ea689efc23787df1e43b1a28519ce97b38e765bbcd43dbda1bba36d05f8fade45555728656
     HEAD_REF master
 )
 
