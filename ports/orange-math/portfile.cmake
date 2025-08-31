@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orange-cpp/omath
     REF "v${VERSION}"
-    SHA512 f6ee4356df67bfd624444fbdbee27840d6124d03797e9d4e5ebc6524c4d54fffc8999ddbf1381132891ca7d1a45d61cd84fac515ef1a3c8005f15d70d1b93c5b
+    SHA512 42ecf51363be50e7382b9aebd03039f4e6ef855beaa227fbd354da6aad39e6cb328baf8ef8acf8eea551403fdd43a94980990c57cb70b408d065fa992bc68c72
     HEAD_REF master
 )
 
