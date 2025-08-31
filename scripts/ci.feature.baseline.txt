@@ -2102,6 +2102,7 @@ ctbench(osx) = fail # requires C++ 20
 date[remote-api](uwp) = feature-fails # error C2065: 'FOLDERID_ProgramFiles': undeclared identifier. See https://github.com/microsoft/vcpkg/issues/33610
 dcmtk[core,iconv,icu,openssl,png,tiff,tools,xml2,zlib](osx) = combination-fails # missing symbols from libtiff. See https://github.com/microsoft/vcpkg/issues/33512
 dcmtk[iconv](arm64 & windows & !uwp) =  feature-fails # try_run
+dcmtk[tools](arm64 & windows & !uwp) =  feature-fails # try_run
 dcmtk(android) = fail  # try_run
 dcmtk(uwp) = fail # Please set the C++ runtime location (required for running applications targeting Windows). See https://github.com/microsoft/vcpkg/issues/35112
 dmlc[openmp](osx) = feature-fails # No openmp on osx
