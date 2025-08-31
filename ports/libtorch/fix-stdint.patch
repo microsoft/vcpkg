@@ -1,0 +1,24 @@
+diff --git a/c10/util/ThreadLocalDebugInfo.h b/c10/util/ThreadLocalDebugInfo.h
+index 8820d35ac47..4c86c6e5c86 100644
+--- a/c10/util/ThreadLocalDebugInfo.h
++++ b/c10/util/ThreadLocalDebugInfo.h
+@@ -4,6 +4,7 @@
+ 
+ #include <memory>
+ #include <string>
++#include <cstdint>
+ 
+ namespace c10 {
+ 
+diff --git a/caffe2/utils/string_utils.cc b/caffe2/utils/string_utils.cc
+index 640cac70edb..ba763738f7b 100644
+--- a/caffe2/utils/string_utils.cc
++++ b/caffe2/utils/string_utils.cc
+@@ -3,6 +3,7 @@
+ #include <algorithm>
+ #include <sstream>
+ #include <vector>
++#include <cstdint>
+ 
+ namespace caffe2 {
+ 
