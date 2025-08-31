@@ -3262,7 +3262,7 @@
     },
     "ggml": {
       "baseline": "2025-08-18",
-      "port-version": 0
+      "port-version": 1
     },
     "ghc-filesystem": {
       "baseline": "1.5.14",
