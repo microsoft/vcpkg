@@ -17,9 +17,10 @@ vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(NASM)
 
-# gstreamer/meson tends to pick host modules (e.g. libdrm),
-# so clean the search root unless explicitly set externally.
-if(VCPKG_CROSSCOMPILING AND "$ENV{PKG_CONFIG}$ENV{PKG_CONFIG_LIBDIR}" STREQUAL "")
+# gstreamer/meson tends to pick host modules (e.g. libdrm)
+# or X11 etc. from brew, so control installation order by
+# explicitly cleaning the search root unless set externally.
+if((VCPKG_CROSSCOMPILING OR VCPKG_TARGET_IS_OSX) AND "$ENV{PKG_CONFIG}$ENV{PKG_CONFIG_LIBDIR}" STREQUAL "")
     set(ENV{PKG_CONFIG_LIBDIR} "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
 endif()
 
