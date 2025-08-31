@@ -432,4 +432,3 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-message(FATAL_ERROR STOP)
