@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 9b47667b33a685308aa65f848b7ee620e9e8783ca4851fd57e873f34310b486fb351813f573f2a7a71b6bdc5c8b2c5ef4eb4f66c890ddfbfada7bb9d74626c0b
     HEAD_REF master
     PATCHES
+        android-neon.diff
         export-link-libs.diff
 )
 
@@ -22,6 +23,7 @@ vcpkg_cmake_configure(
         -DSLEEF_BUILD_GNUABI_LIBS=${VCPKG_TARGET_IS_LINUX}
         -DSLEEF_BUILD_TESTS=OFF
         -DSLEEF_DISABLE_SSL=ON
+        -DSLEEF_DISABLE_SVE=ON  # arm64 build issues, officially unmaintained
         -DSLEEF_ENABLE_TLFLOAT=OFF
         -DSLEEF_ENABLE_TESTER4=OFF
         ${CROSSCOMP_OPTIONS}
