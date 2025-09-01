@@ -90,6 +90,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         fdkaac          gst-plugins-bad:fdkaac
         fluidsynth      gst-plugins-bad:fluidsynth
         gl              gst-plugins-bad:gl
+        hls             gst-plugins-bad:hls
         libde265        gst-plugins-bad:libde265
         microdns        gst-plugins-bad:microdns
         modplug         gst-plugins-bad:modplug
@@ -246,6 +247,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:gme=disabled
         -Dgst-plugins-bad:gs=disabled # Error during plugin configuration (abseil pkg-config file missing)
         -Dgst-plugins-bad:gsm=disabled
+        -Dgst-plugins-bad:hls-crypto=openssl
         -Dgst-plugins-bad:ipcpipeline=auto
         -Dgst-plugins-bad:iqa=disabled
         -Dgst-plugins-bad:kms=disabled

@@ -335,6 +335,19 @@
         }
       ]
     },
+    "hls": {
+      "description": "Enable HTTP Live Streaming plugin",
+      "dependencies": [
+        {
+          "name": "gstreamer",
+          "default-features": false,
+          "features": [
+            "plugins-bad"
+          ]
+        },
+        "openssl"
+      ]
+    },
     "jpeg": {
       "description": "Enable support for the JPEG file format",
       "dependencies": [
