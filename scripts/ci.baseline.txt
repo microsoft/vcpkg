@@ -735,8 +735,6 @@ omniorb:x64-android=fail
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
 openimageio:arm64-windows-static-md=fail
-openimageio:x64-windows-static-md=fail
-openimageio:x64-windows-static=fail
 openmama:arm64-windows-static-md=fail
 openmama:x64-windows-static-md=fail
 openmesh:arm64-uwp=fail
@@ -748,8 +746,6 @@ openmpi:arm64-android=fail
 openmpi:x64-android=fail
 openmvg:arm64-windows-static-md=fail
 openmvs:arm64-windows-static-md=fail
-openmvs:x64-windows-static-md=fail
-openmvs:x64-windows-static=fail
 # MSVC is not supported
 openslide:x64-windows-release=fail
 openslide:x64-windows-static-md=fail
@@ -788,8 +784,6 @@ paho-mqtt:x64-uwp=fail
 paho-mqttpp3:arm-neon-android=fail
 paho-mqttpp3:arm64-android=fail
 paho-mqttpp3:x64-android=fail
-paraview:x64-windows-static-md=fail
-paraview:x64-windows-static=fail
 platform-folders:arm64-uwp=fail
 platform-folders:x64-uwp=fail
 plib:arm-neon-android=fail
