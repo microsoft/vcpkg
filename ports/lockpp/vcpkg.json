@@ -1,8 +1,7 @@
 {
   "name": "lockpp",
-  "version": "3.0",
-  "port-version": 1,
-  "description": "A C++17 Library that provides mutex protected objects",
+  "version": "3.2.0",
+  "description": "A C++23 Library that provides mutex protected objects",
   "homepage": "https://github.com/Curve/lockpp",
   "license": "MIT",
   "dependencies": [
