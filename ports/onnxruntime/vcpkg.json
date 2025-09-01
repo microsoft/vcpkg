@@ -1,0 +1,14 @@
+{
+  "name": "onnxruntime",
+  "version": "1.22.0",
+  "description": "onnxruntime",
+  "homepage": "https://github.com/microsoft/onnxruntime",
+  "license": "MIT",
+  "supports": "(windows & (x64 | x86 | arm64)) | (osx & (arm64 | universal2 | x86)) | (linux & (x64 | aarch64))",
+  "features": {
+    "gpu": {
+      "description": "Enable GPU variant of onnxruntime",
+      "supports": "(windows & x64) | (linux & x64)"
+    }
+  }
+}
