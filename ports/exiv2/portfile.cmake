@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Exiv2/exiv2
     REF "v${VERSION}"
-    SHA512 2c57255a77eee291acc045b022e8637c38646726410379d80fb3db7f90dcbb511be804142f8569842694adb88cfd3e064554e6f7a66b5e0ca0c00ef1245bffea
+    SHA512 b53f4989abcd5d346f2a9c726a06707c47e1990ecb2e5e193c963e01d452fefe4dddd14e25eb08ef35e2f8288b8ec4bdee60725aa7dcd6b1c0348ed56c803fc0
     HEAD_REF master
     PATCHES
         dependencies.diff
