@@ -7,9 +7,15 @@ vcpkg_from_github(
     PATCHES
         azure-fix.patch
         exclude-from-all.patch # Significantly reduces the amount of files compiled.
+        rm-vendored-nlohmann-json.patch # https://github.com/TileDB-Inc/TileDB/pull/5609
+        rm-vendored-bufferstream.patch # https://github.com/TileDB-Inc/TileDB/pull/5619
+        blosc2.patch # https://github.com/TileDB-Inc/TileDB/pull/5620
+        rm-cpp17-pmr.patch
 )
 
-file(REMOVE
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/external/"
+    "${SOURCE_PATH}/tiledb/common/polymorphic_allocator/"
     "${SOURCE_PATH}/tiledb/sm/serialization/tiledb-rest.capnp.c++"
     "${SOURCE_PATH}/tiledb/sm/serialization/tiledb-rest.capnp.h"
 )

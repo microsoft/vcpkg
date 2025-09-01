@@ -6,9 +6,14 @@
   "license": "MIT",
   "supports": "!(x86 | arm32)",
   "dependencies": [
+    {
+      "name": "blosc2",
+      "default-features": false
+    },
     "bzip2",
     "libmagic",
     "lz4",
+    "nlohmann-json",
     {
       "name": "openssl",
       "platform": "!windows"
