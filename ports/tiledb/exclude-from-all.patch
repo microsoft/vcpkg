@@ -11,3 +11,119 @@ index 4e881db..31f340c 100644
      # ----------------------------------
  
      message(${TileDB_Environment_object_library_begin_Log_Level} "<<< object-library commence end <<<")
+diff --git a/tiledb/api/c_api/group/CMakeLists.txt b/tiledb/api/c_api/group/CMakeLists.txt
+index b19ce95..23b78eb 100644
+--- a/tiledb/api/c_api/group/CMakeLists.txt
++++ b/tiledb/api/c_api/group/CMakeLists.txt
+@@ -37,6 +37,6 @@ gather_sources(${SOURCES})
+ # Maturity Note: We can't make a proper group unit library until we've
+ # removed its dependence on StorageManager.
+ #
+-add_library(capi_group OBJECT ${SOURCES})
++add_library(capi_group OBJECT EXCLUDE_FROM_ALL ${SOURCES})
+ target_link_libraries(capi_group PUBLIC export)
+ target_link_libraries(capi_group PUBLIC baseline $<TARGET_OBJECTS:baseline>)
+diff --git a/tiledb/api/c_api/object/CMakeLists.txt b/tiledb/api/c_api/object/CMakeLists.txt
+index b3fb5fe..f4b230a 100644
+--- a/tiledb/api/c_api/object/CMakeLists.txt
++++ b/tiledb/api/c_api/object/CMakeLists.txt
+@@ -42,7 +42,7 @@ gather_sources(${SOURCES})
+ # absent. This is the reason that it hasn't been converted to use the
+ # `object_library` environment for CMake.
+ #
+-add_library(capi_object OBJECT ${SOURCES})
++add_library(capi_object OBJECT EXCLUDE_FROM_ALL ${SOURCES})
+ target_link_libraries(capi_object PUBLIC export)
+ target_link_libraries(capi_object PUBLIC baseline $<TARGET_OBJECTS:baseline>)
+ target_link_libraries(capi_object PUBLIC constants $<TARGET_OBJECTS:constants>)
+diff --git a/tiledb/api/c_api/query_aggregate/CMakeLists.txt b/tiledb/api/c_api/query_aggregate/CMakeLists.txt
+index 71bf3da..a1b605f 100644
+--- a/tiledb/api/c_api/query_aggregate/CMakeLists.txt
++++ b/tiledb/api/c_api/query_aggregate/CMakeLists.txt
+@@ -38,7 +38,7 @@ gather_sources(${SOURCES})
+ #   `query_aggregate` object library to link to, since at present nothing
+ #   involving query is able to link standalone.
+ #
+-add_library(capi_query_aggregate OBJECT ${SOURCES})
++add_library(capi_query_aggregate OBJECT EXCLUDE_FROM_ALL ${SOURCES})
+ target_link_libraries(capi_query_aggregate PUBLIC export)
+ target_link_libraries(capi_query_aggregate PUBLIC baseline $<TARGET_OBJECTS:baseline>)
+ 
+diff --git a/tiledb/api/c_api/query_field/CMakeLists.txt b/tiledb/api/c_api/query_field/CMakeLists.txt
+index b8fd508..4773223 100644
+--- a/tiledb/api/c_api/query_field/CMakeLists.txt
++++ b/tiledb/api/c_api/query_field/CMakeLists.txt
+@@ -46,7 +46,7 @@ gather_sources(${SOURCES})
+ # Maturity Note: object library `capi_query_field` cannot be linked stand-alone
+ #   at present.
+ #
+-add_library(capi_query_field OBJECT ${SOURCES})
++add_library(capi_query_field OBJECT EXCLUDE_FROM_ALL ${SOURCES})
+ target_link_libraries(capi_query_field PUBLIC export)
+ target_link_libraries(capi_query_field PUBLIC baseline $<TARGET_OBJECTS:baseline>)
+ 
+diff --git a/tiledb/api/c_api/query_plan/CMakeLists.txt b/tiledb/api/c_api/query_plan/CMakeLists.txt
+index 544e29b..1707c98 100644
+--- a/tiledb/api/c_api/query_plan/CMakeLists.txt
++++ b/tiledb/api/c_api/query_plan/CMakeLists.txt
+@@ -37,7 +37,7 @@ gather_sources(${SOURCES})
+ #   This object library cannot link standalone because `query_plan` cannot link
+ #   standalone.
+ #
+-add_library(capi_query_plan OBJECT ${SOURCES})
++add_library(capi_query_plan OBJECT EXCLUDE_FROM_ALL ${SOURCES})
+ target_link_libraries(capi_query_plan PUBLIC export)
+ target_link_libraries(capi_query_plan PUBLIC baseline $<TARGET_OBJECTS:baseline>)
+ target_link_libraries(capi_query_plan PUBLIC query_plan $<TARGET_OBJECTS:query_plan>)
+diff --git a/tiledb/api/c_api_support/handle/CMakeLists.txt b/tiledb/api/c_api_support/handle/CMakeLists.txt
+index 4643467..2905402 100644
+--- a/tiledb/api/c_api_support/handle/CMakeLists.txt
++++ b/tiledb/api/c_api_support/handle/CMakeLists.txt
+@@ -30,7 +30,7 @@ list(APPEND SOURCES
+ )
+ gather_sources(${SOURCES})
+ 
+-add_library(handle OBJECT handle.cc)
++add_library(handle OBJECT EXCLUDE_FROM_ALL handle.cc)
+ target_link_libraries(handle PUBLIC baseline $<TARGET_OBJECTS:baseline>)
+ 
+ add_test_subdirectory()
+diff --git a/tiledb/sm/filter/CMakeLists.txt b/tiledb/sm/filter/CMakeLists.txt
+index ae68f6e..54b4ebe 100644
+--- a/tiledb/sm/filter/CMakeLists.txt
++++ b/tiledb/sm/filter/CMakeLists.txt
+@@ -123,7 +123,7 @@ conclude(object_library)
+ #
+ # `webp_filter` object library.
+ #
+-#add_library(webp_filter OBJECT webp_filter.cc)
++#add_library(webp_filter OBJECT EXCLUDE_FROM_ALL webp_filter.cc)
+ #target_link_libraries(webp_filter PUBLIC filter $<TARGET_OBJECTS:filter>)
+ #target_link_libraries(webp_filter PUBLIC misc_types $<TARGET_OBJECTS:misc_types>)
+ #target_link_libraries(webp_filter PUBLIC tile $<TARGET_OBJECTS:tile>)
+diff --git a/tiledb/sm/group/CMakeLists.txt b/tiledb/sm/group/CMakeLists.txt
+index 6a19ce0..68e6e08 100644
+--- a/tiledb/sm/group/CMakeLists.txt
++++ b/tiledb/sm/group/CMakeLists.txt
+@@ -34,7 +34,7 @@ include(common NO_POLICY_SCOPE)
+ # linked standalone. As a result, this library is not defined with
+ # `commence(object_library)`, since that mandates a link-completeness test.
+ #
+-add_library(group OBJECT group_directory.cc group.cc group_details.cc group_details_v1.cc group_details_v2.cc group_member.cc group_member_v1.cc group_member_v2.cc)
++add_library(group OBJECT EXCLUDE_FROM_ALL group_directory.cc group.cc group_details.cc group_details_v1.cc group_details_v2.cc group_member.cc group_member_v1.cc group_member_v2.cc)
+ target_link_libraries(group PUBLIC baseline $<TARGET_OBJECTS:baseline>)
+ target_link_libraries(group PUBLIC buffer $<TARGET_OBJECTS:buffer>)
+ target_link_libraries(group PUBLIC object $<TARGET_OBJECTS:object>)
+diff --git a/tiledb/sm/query_plan/CMakeLists.txt b/tiledb/sm/query_plan/CMakeLists.txt
+index b7be22e..7d282cc 100644
+--- a/tiledb/sm/query_plan/CMakeLists.txt
++++ b/tiledb/sm/query_plan/CMakeLists.txt
+@@ -33,7 +33,7 @@ include(common NO_POLICY_SCOPE)
+ #   This class is at present unable to be part of a standalone object library.
+ #   Note that the unit test for this module links in the whole library.
+ #
+-add_library(query_plan OBJECT query_plan.cc)
++add_library(query_plan OBJECT EXCLUDE_FROM_ALL query_plan.cc)
+ target_link_libraries(query_plan PUBLIC baseline $<TARGET_OBJECTS:baseline>)
+ target_link_libraries(query_plan PUBLIC buffer $<TARGET_OBJECTS:buffer>)
+ 
