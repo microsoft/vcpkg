@@ -20,5 +20,7 @@ file(RENAME "${PACKAGE_PROJECT_SOURCE_PATH}" "${SOURCE_PATH}/cmake/PackageProjec
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH})
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/lockpp-${VERSION})
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
