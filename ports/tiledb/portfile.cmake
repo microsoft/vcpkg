@@ -6,7 +6,7 @@ vcpkg_from_github(
     SHA512 ab71bb62f1eeb3cd023eb77decf7442ac86ffb2b56fc294aa27c49e7c9571f7e7ae7f5226d02366843e6e664741440e9c8353c42c6964e7a7f47bd849b559b50
     PATCHES
         azure-fix.patch
-        exclude-from-all.patch # Significantly reduces the amount of files compiled.
+        exclude-from-all.patch # https://github.com/TileDB-Inc/TileDB/pull/5606
         rm-vendored-nlohmann-json.patch # https://github.com/TileDB-Inc/TileDB/pull/5609
         rm-vendored-bufferstream.patch # https://github.com/TileDB-Inc/TileDB/pull/5619
         blosc2.patch # https://github.com/TileDB-Inc/TileDB/pull/5620
