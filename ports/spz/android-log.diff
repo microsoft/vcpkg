@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ca49824..01f53ca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,6 +27,9 @@ add_library(spz ${spz_sources})
+ add_library(spz::spz ALIAS spz)
+ 
+ target_link_libraries(spz PRIVATE ZLIB::ZLIB)
++if(ANDROID)
++  target_link_libraries(spz PRIVATE log)
++endif()
+ 
+ target_include_directories(spz
+   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/cc>
