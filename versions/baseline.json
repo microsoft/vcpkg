@@ -8250,7 +8250,7 @@
     },
     "rapidxml": {
       "baseline": "1.13",
-      "port-version": 7
+      "port-version": 8
     },
     "rapidxml-ns": {
       "baseline": "1.13.2",
