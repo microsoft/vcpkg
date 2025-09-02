@@ -2002,7 +2002,6 @@ vtk[openvr]:arm64-osx = cascade
 vtk[openvr]:x64-windows-static = cascade
 vtk[openvr](arm64 & windows) = cascade # openvr[core] only supports !(arm | uwp | osx | android)
 vtk[paraview](android) = cascade
-vtk[paraview](arm64 & windows) = cascade # the following dependencies are unavailable: openturns[core]
 vtk[python](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only supports !uwp & !xbox, python3[core] only supports !uwp & !mingw
 vtk[qt](uwp) = cascade # dbus[core] only supports !uwp & !staticcrt & !android & !ios, harfbuzz[core] only supports !uwp, hdf5[core] only supports !uwp, libpq[core] only supports !uwp, opengl[core] only supports !uwp & !xbox, qtbase[core] only supports !uwp
 vtk[seacas](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only supports !uwp & !xbox
