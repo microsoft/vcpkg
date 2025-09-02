@@ -1,5 +1,6 @@
+
 diff --git a/include/glaze/interop/interop.hpp b/include/glaze/interop/interop.hpp
-index b6ef0c2..52d556a 100644
+index b6ef0c2..ebee37c 100644
 --- a/include/glaze/interop/interop.hpp
 +++ b/include/glaze/interop/interop.hpp
 @@ -127,7 +127,7 @@ static_assert(sizeof(glz_string_desc) == 8, "glz_string_desc must be 8 bytes");
@@ -11,32 +12,29 @@ index b6ef0c2..52d556a 100644
  // 64-bit system
  static_assert(sizeof(glz_vector_desc) == 8, "glz_vector_desc must be 8 bytes on 64-bit");
  static_assert(sizeof(glz_map_desc) == 16, "glz_map_desc must be 16 bytes on 64-bit");
-@@ -144,8 +144,12 @@ static_assert(sizeof(glz_struct_desc) == 12, "glz_struct_desc must be 12 bytes o
+@@ -144,7 +144,7 @@ static_assert(sizeof(glz_struct_desc) == 12, "glz_struct_desc must be 12 bytes o
  static_assert(sizeof(glz_optional_desc) == 4, "glz_optional_desc must be 4 bytes on 32-bit");
  static_assert(sizeof(glz_function_desc) == 20, "glz_function_desc must be 20 bytes on 32-bit");
  static_assert(sizeof(glz_shared_future_desc) == 4, "glz_shared_future_desc must be 4 bytes on 32-bit");
-+#ifdef _WIN32
+-static_assert(sizeof(glz_variant_desc) == 20, "glz_variant_desc must be 20 bytes on 32-bit");
 +static_assert(sizeof(glz_variant_desc) == 24, "glz_variant_desc must be 24 bytes on 32-bit");
-+#else
- static_assert(sizeof(glz_variant_desc) == 20, "glz_variant_desc must be 20 bytes on 32-bit");
  #endif
-+#endif
  
  // The variant-like type descriptor - properly aligned
- struct glz_type_descriptor
-@@ -167,8 +171,10 @@ struct glz_type_descriptor
+@@ -167,10 +167,10 @@ struct glz_type_descriptor
  };
  
  // Verify the overall type descriptor size
 -#ifdef __LP64__
 +#if defined(__LP64__) || defined(_WIN64)
  static_assert(sizeof(glz_type_descriptor) == 40, "glz_type_descriptor must be 40 bytes on 64-bit");
-+#elif defined(_WIN32)
-+static_assert(sizeof(glz_type_descriptor) == 32, "glz_type_descriptor must be 32 bytes on 32-bit");
  #else
- static_assert(sizeof(glz_type_descriptor) == 28, "glz_type_descriptor must be 28 bytes on 32-bit");
+-static_assert(sizeof(glz_type_descriptor) == 28, "glz_type_descriptor must be 28 bytes on 32-bit");
++static_assert(sizeof(glz_type_descriptor) == 32, "glz_type_descriptor must be 32 bytes on 32-bit");
  #endif
-@@ -1311,7 +1317,7 @@ struct glz_unordered_map
+ 
+ namespace glz
+@@ -1311,7 +1311,7 @@ struct glz_unordered_map
  };
  
  // Static assertions for the C structs
