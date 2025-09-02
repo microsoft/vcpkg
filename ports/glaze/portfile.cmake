@@ -9,7 +9,7 @@ vcpkg_from_github(
     SHA512 f19e001fd6025594eb546ed7993bab73b303b064bf9563148f172a9c6dbbba9e6de41997be5284ca148908a307fe282e67974489df68fca699b9fb25ce4e7af0
     HEAD_REF main
     PATCHES
-        support-win64.patch
+        support-win.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
