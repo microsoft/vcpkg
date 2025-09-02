@@ -20,7 +20,7 @@ target_compile_features(ntuples INTERFACE cxx_std_20)
 ]])
 
 vcpkg_install_copyright(FILE_LIST
-    "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/LICENSE.txt"
+    "${SOURCE_PATH}/LICENSE" 
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

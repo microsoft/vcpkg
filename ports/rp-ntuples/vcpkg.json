@@ -1,5 +1,5 @@
 {
-  "name": "ntuples",
+  "name": "rp-ntuples",
   "version": "0.1.2",
   "description": "A C++ ntuple library for structured data storage and processing",
   "homepage": "https://github.com/RPeschke/ntuples",
