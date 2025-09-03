@@ -2061,7 +2061,7 @@
       "port-version": 2
     },
     "cppitertools": {
-      "baseline": "2.2",
+      "baseline": "2.3",
       "port-version": 0
     },
     "cppkafka": {
