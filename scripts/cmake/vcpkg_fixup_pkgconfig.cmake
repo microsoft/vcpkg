@@ -121,6 +121,26 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
     # First make sure everything is ok with the package and its deps
     cmake_path(GET arg_file STEM LAST_ONLY package_name)
     debug_message("Checking package (${arg_config}): ${package_name}")
+
+    # debugging message
+    get_filename_component(pkgconfig_dir_ "${PKGCONFIG}" DIRECTORY)
+    file(GLOB pkgconfig_dir_files_ LIST_DIRECTORIES TRUE "${pkgconfig_dir_}/*")
+    list(JOIN pkgconfig_dir_files_ ", " pkgconfig_dir_files_str_)
+    message(STATUS "TESTING PKGCONFIG directory files: ${pkgconfig_dir_files_str_}")
+
+    if (VCPKG_HOST_IS_WINDOWS)
+        execute_process(
+            COMMAND dumpbin /DEPENDENTS "${PKGCONFIG}"
+            WORKING_DIRECTORY "${pkgconfig_dir_}"
+            RESULT_VARIABLE result_
+            OUTPUT_VARIABLE output_
+            ERROR_VARIABLE  error_var_
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            ERROR_STRIP_TRAILING_WHITESPACE
+        )
+        message(STATUS "dumpbin result: ${result_}" - "output: ${output_}" - "error: ${error_var_}")
+    endif()
+
     execute_process(
         COMMAND "${PKGCONFIG}" --print-errors --exists "${package_name}"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
@@ -136,6 +156,7 @@ function(z_vcpkg_fixup_pkgconfig_check_files arg_file arg_config)
     output: ${output}"
         )
     else()
+        message(STATUS "${PKGCONFIG} --exists ${package_name} succeeded")
         debug_message("pkg-config --exists ${package_name} output: ${output}")
     endif()
 
