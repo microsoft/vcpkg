@@ -1,51 +1,42 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a64b770..716bb34 100644
+index 9877cd7..5177904 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -43,8 +43,12 @@ macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source buil
+@@ -42,8 +42,11 @@ macro_ensure_out_of_source_build("${PROJECT_NAME} requires an out of source buil
  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
  
  # search for libraries
 +set(PC_LIBS_PRIVATE "")
 +set(PC_REQUIRES_PRIVATE "")
-+
  if (WITH_ZLIB)
      find_package(ZLIB REQUIRED)
 +    string(APPEND PC_REQUIRES_PRIVATE "zlib")
  endif (WITH_ZLIB)
  
  if (WITH_GCRYPT)
-@@ -60,6 +64,7 @@ elseif(WITH_MBEDTLS)
- else (WITH_GCRYPT)
-   find_package(OpenSSL 1.0.1)
-   if (OPENSSL_FOUND)
-+    string(APPEND PC_REQUIRES_PRIVATE " libcrypto")
-     # On CMake < 3.16, OPENSSL_CRYPTO_LIBRARIES is usually a synonym for OPENSSL_CRYPTO_LIBRARY, but is not defined
-     # when building on Windows outside of Cygwin. We provide the synonym here, if FindOpenSSL didn't define it already.
-     if (NOT DEFINED OPENSSL_CRYPTO_LIBRARIES)
-@@ -84,6 +89,9 @@ endif ()
- set(CMAKE_THREAD_PREFER_PTHREADS ON)
- set(THREADS_PREFER_PTHREAD_FLAG ON)
- find_package(Threads)
-+if(Threads_FOUND)
-+  string(APPEND PC_LIBS_PRIVATE " ${CMAKE_THREAD_LIBS_INIT}")
-+endif()
+@@ -53,6 +56,7 @@ elseif(WITH_MBEDTLS)
+     find_package(MbedTLS REQUIRED)
+ else()
+   find_package(OpenSSL 1.1.1 REQUIRED)
++  string(APPEND PC_REQUIRES_PRIVATE " libcrypto")
+ endif()
  
- if (WITH_GSSAPI)
-     find_package(GSSAPI)
-@@ -122,7 +130,6 @@ add_subdirectory(include)
+ if (UNIT_TESTING)
+@@ -96,7 +100,7 @@ add_subdirectory(include)
  add_subdirectory(src)
  
  # pkg-config file
 -if (UNIX OR MINGW)
++if (1)
  configure_file(libssh.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc @ONLY)
  install(
    FILES
-@@ -132,7 +139,6 @@ install(
+@@ -106,7 +110,7 @@ install(
    COMPONENT
      pkgconfig
  )
 -endif (UNIX OR MINGW)
++endif (1)
  
  # CMake config files
  include(CMakePackageConfigHelpers)
@@ -61,10 +52,19 @@ index f288b94..759525c 100644
 +Requires.private: @PC_REQUIRES_PRIVATE@
  Cflags: -I${includedir}
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 807313b..72ef059 100644
+index e0243bb..b17d9e2 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -94,6 +94,8 @@ if (WIN32)
+@@ -54,6 +54,8 @@ if (MINGW AND Threads_FOUND)
+     ${LIBSSH_LINK_LIBRARIES}
+     Threads::Threads
+   )
++  string(APPEND PC_LIBS_PRIVATE " ${CMAKE_THREAD_LIBS_INIT}")
++  set(PC_LIBS_PRIVATE "${PC_LIBS_PRIVATE}" PARENT_SCOPE)
+ endif()
+ 
+ # The ws2_32 needs to be last for mingw to build
+@@ -64,6 +66,8 @@ if (WIN32)
      iphlpapi
      ws2_32
    )

@@ -1,8 +1,8 @@
 {
   "name": "openturns",
-  "version": "1.24",
+  "version": "1.25",
   "description": "OpenTURNS is a scientific C++ and Python library featuring an internal data model and algorithms dedicated to the treatment of uncertainties.",
-  "homepage": "http://www.openturns.org",
+  "homepage": "https://openturns.github.io/",
   "license": null,
   "dependencies": [
     "blas",
@@ -21,22 +21,19 @@
         "cpp"
       ]
     },
+    "kissfft",
     "lapack",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "mpc",
     "mpfr",
-    "muparser",
     "nanoflann",
     "nlopt",
     "pagmo2",
-    "pthread",
-    "python3",
-    {
-      "name": "python3",
-      "host": true
-    },
+    "rapidcsv",
     "spectra",
-    "tbb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -45,5 +42,19 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "muparser": {
+      "description": "Legacy analytical parser",
+      "dependencies": [
+        "muparser"
+      ]
+    },
+    "tbb": {
+      "description": "Use TBB multithreading",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
 }

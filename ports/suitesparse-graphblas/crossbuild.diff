@@ -1,0 +1,24 @@
+diff --git a/JITpackage/CMakeLists.txt b/JITpackage/CMakeLists.txt
+index 64492a1..bd15dd0 100644
+--- a/JITpackage/CMakeLists.txt
++++ b/JITpackage/CMakeLists.txt
+@@ -13,7 +13,10 @@ project ( jitpackage LANGUAGES C )
+ set ( GRAPHBLAS_CROSS_TOOLCHAIN_FLAGS_NATIVE "" CACHE STRING
+     "list of configuration flags used for building native generator binaries when cross-compiling" )
+ 
+-if ( CMAKE_CROSSCOMPILING )
++if (GRB_JITPACKAGE_EXECUTABLE)
++    add_executable(grb_jitpackage IMPORTED)
++    set_target_properties(grb_jitpackage PROPERTIES IMPORTED_LOCATION "${GRB_JITPACKAGE_EXECUTABLE}")
++elseif (0)
+ 
+     cmake_path ( GET PROJECT_BINARY_DIR FILENAME _subdir )
+     if ( ${_subdir} STREQUAL "native" )
+@@ -60,6 +63,7 @@ else ( )
+     if ( NOT WIN32 )
+         target_link_libraries ( grb_jitpackage PRIVATE m )
+     endif ( )
++    install(TARGETS grb_jitpackage)
+ 
+     # Generate an import target to be able to run the native executable when
+     # cross-compiling.

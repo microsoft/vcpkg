@@ -1,8 +1,8 @@
 {
   "name": "sundials",
-  "version-semver": "7.1.1",
+  "version-semver": "7.4.0",
   "description": "SUNDIALS (SUite of Nonlinear and DIfferential/ALgebraic equation Solvers)",
-  "homepage": "https://computation.llnl.gov/projects/sundials",
+  "homepage": "https://computing.llnl.gov/projects/sundials",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
