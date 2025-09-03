@@ -496,10 +496,6 @@ libdc1394:arm64-android=fail
 libdc1394:x64-android=fail
 libfreenect2:arm64-windows-static-md=fail
 libfreenect2:arm64-windows=fail
-# error: call to undeclared function 'mktime_z'
-libgnutls:arm-neon-android=fail
-libgnutls:arm64-android=fail
-libgnutls:x64-android=fail
 # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-android=fail
 libgo:x64-osx=fail
@@ -1064,9 +1060,6 @@ xbitmaps:arm64-android=fail
 xbitmaps:arm64-osx=skip
 xbitmaps:x64-android=fail
 xbitmaps:x64-osx=skip
-yajl:arm-neon-android=fail
-yajl:arm64-android=fail
-yajl:x64-android=fail
 zeroc-ice:arm-neon-android=fail
 zeroc-ice:arm64-android=fail
 zeroc-ice:x64-android=fail
