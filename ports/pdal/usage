@@ -1,8 +1,8 @@
 pdal provides CMake targets:
 
   find_package(PDAL CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE $<TARGET_NAME:pdalcpp>)
-        
+  target_link_libraries(main PRIVATE pdalcpp)
+
 If necessary, override the default plugin search path by setting the
 environment variable PDAL_DRIVER_PATH to a list of directories that
 PDAL should search for plugins.
