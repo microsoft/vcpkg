@@ -2125,8 +2125,8 @@
       "port-version": 0
     },
     "cpuid": {
-      "baseline": "0.7.0",
-      "port-version": 1
+      "baseline": "0.8.1",
+      "port-version": 0
     },
     "cpuinfo": {
       "baseline": "2022-07-19",
