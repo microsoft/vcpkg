@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001-fix-destination.patch
+        002-disable-werror.patch
 )
 
 vcpkg_cmake_configure(
