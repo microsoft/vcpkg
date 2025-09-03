@@ -8,13 +8,15 @@ vcpkg_from_gitlab(
         android-llvm.diff
 )
 
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+if (VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64)")
     vcpkg_find_acquire_program(NASM)
-    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-    vcpkg_add_to_path(${NASM_EXE_PATH})
-    set(DISABLE_SIMD OFF)
+    set(SIMD_OPTIONS -DCOMPILE_C_ONLY=OFF "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
 else()
-    set(DISABLE_SIMD ON)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "^(arm64|arm64ec)$" AND NOT VCPKG_TARGET_IS_WINDOWS)
+        set(SIMD_OPTIONS -DCOMPILE_C_ONLY=OFF)
+    else()
+        set(SIMD_OPTIONS -DCOMPILE_C_ONLY=ON)
+    endif()
 endif()
 
 
@@ -23,22 +25,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         tool   BUILD_APPS
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
-        -DBUILD_SHARED_LIBS=${ENABLE_SHARED}
-        -DCOMPILE_C_ONLY=${DISABLE_SIMD}
+        ${SIMD_OPTIONS}
         -DREPRODUCIBLE_BUILDS=ON
         -DEXCLUDE_HASH=OFF
         -DBUILD_TESTING=OFF
         -DSVT_AV1_LTO=OFF
     OPTIONS_RELEASE
-        -DCMAKE_OUTPUT_DIRECTORY="${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Bin/Release"
+        "-DCMAKE_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Bin/Release"
     OPTIONS_DEBUG
-        -DCMAKE_OUTPUT_DIRECTORY="${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Bin/Debug"
+        "-DCMAKE_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Bin/Debug"
 )
 
 vcpkg_cmake_install()
@@ -51,5 +50,4 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
