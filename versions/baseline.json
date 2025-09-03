@@ -10358,7 +10358,7 @@
     },
     "wolftpm": {
       "baseline": "3.9.2",
-      "port-version": 0
+      "port-version": 1
     },
     "wordnet": {
       "baseline": "3.0",
