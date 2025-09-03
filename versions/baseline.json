@@ -9269,7 +9269,7 @@
       "port-version": 2
     },
     "string-theory": {
-      "baseline": "3.8",
+      "baseline": "3.9",
       "port-version": 0
     },
     "string-view-lite": {
