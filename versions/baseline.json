@@ -6998,7 +6998,7 @@
     },
     "opencl": {
       "baseline": "2024.10.24",
-      "port-version": 0
+      "port-version": 1
     },
     "opencolorio": {
       "baseline": "2.4.2",
