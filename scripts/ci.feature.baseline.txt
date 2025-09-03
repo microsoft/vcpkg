@@ -387,6 +387,9 @@ openmama:x64-windows-static-md=fail
 openmesh:arm-uwp=fail
 openmesh:arm64-windows=fail
 openmesh:x64-uwp=fail
+openmpi:arm-neon-android=fail
+openmpi:arm64-android=fail
+openmpi:x64-android=fail
 openslide(windows & native)=fail # g_auto* using __attribute__((cleanup))
 # Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
 openvino:arm64-windows-static-md=fail
