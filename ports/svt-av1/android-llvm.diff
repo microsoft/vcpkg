@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57100575..a96c08a5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -205,13 +205,13 @@ if(CMAKE_C_COMPILER_ID MATCHES "Clang" AND UNIX AND NOT APPLE)
+     find_program(LLVM_AR_EXE llvm-ar)
+     find_program(LLVM_RANLIB_EXE llvm-ranlib)
+     if(LLVM_LD_EXE)
+-        SET (CMAKE_LINKER  "llvm-ld")
++        SET (CMAKE_LINKER  ${LLVM_LD_EXE})
+     endif()
+     if(LLVM_AR_EXE)
+-        SET (CMAKE_AR      "llvm-ar")
++        SET (CMAKE_AR      ${LLVM_AR_EXE})
+     endif()
+     if(LLVM_RANLIB_EXE)
+-        SET (CMAKE_RANLIB  "llvm-ranlib")
++        SET (CMAKE_RANLIB  ${LLVM_RANLIB_EXE})
+     endif()
+ endif()
+ 
