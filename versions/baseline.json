@@ -7309,7 +7309,7 @@
       "port-version": 0
     },
     "pdal": {
-      "baseline": "2.9.1",
+      "baseline": "2.9.2",
       "port-version": 0
     },
     "pdal-c": {
@@ -7317,7 +7317,7 @@
       "port-version": 0
     },
     "pdal-dimbuilder": {
-      "baseline": "2.9.1",
+      "baseline": "2.9.2",
       "port-version": 0
     },
     "pdcurses": {
@@ -8250,7 +8250,7 @@
     },
     "rapidxml": {
       "baseline": "1.13",
-      "port-version": 7
+      "port-version": 8
     },
     "rapidxml-ns": {
       "baseline": "1.13.2",
