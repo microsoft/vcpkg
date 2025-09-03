@@ -6792,10 +6792,6 @@
       "baseline": "2.5.4",
       "port-version": 0
     },
-    "ntuples": {
-      "baseline": "0.1.2",
-      "port-version": 0
-    },
     "nu-book-zxing-cpp": {
       "baseline": "2.3.0",
       "port-version": 0
@@ -8458,6 +8454,10 @@
     },
     "rocksdb": {
       "baseline": "10.4.2",
+      "port-version": 0
+    },
+    "rp-ntuples": {
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "rpclib": {
