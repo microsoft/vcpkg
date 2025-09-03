@@ -12,6 +12,7 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LWS_WITH_SHARED)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 ## All LWS options could be possible features:
 # #
@@ -141,7 +142,7 @@ vcpkg_cmake_configure(
         ${EXTRA_ARGS}
         -DLWS_WITH_STATIC=${LWS_WITH_STATIC}
         -DLWS_WITH_SHARED=${LWS_WITH_SHARED}
-	-DLWS_MSVC_STATIC_RUNTIME=${LWS_WITH_STATIC}
+	-DLWS_MSVC_STATIC_RUNTIME=${STATIC_CRT}
         -DLWS_WITH_GENCRYPTO=ON
         -DLWS_WITH_TLS=ON
         -DLWS_WITH_BUNDLED_ZLIB=OFF
