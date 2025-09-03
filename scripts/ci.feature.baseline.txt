@@ -604,7 +604,7 @@ google-cloud-cpp[accessapproval,accesscontextmanager,advisorynotifications,alloy
 halide[target-aarch64,target-all,target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-nvptx,target-opencl,target-opengl-compute,target-powerpc,target-riscv,target-webassembly,target-x86] = no-separate-feature-test
 llvm[target-aarch64,target-all,target-amdgpu,target-arc,target-arm,target-avr,target-bpf,target-csky,target-directx,target-hexagon,target-lanai,target-loongarch,target-m68k,target-mips,target-msp430,target-nvptx,target-powerpc,target-riscv,target-sparc,target-spirv,target-systemz,target-ve,target-webassembly,target-x86,target-xcore,target-xtensa] = no-separate-feature-test
 qtbase[doubleconversion,gui,sql,thread] = no-separate-feature-test # covered in many combinations
-
+vtk[debugleaks,utf8] = no-separate-feature-test
 
 # cascade
 3fd:x64-uwp = cascade
@@ -2002,7 +2002,6 @@ vtk[openvr]:arm64-osx = cascade
 vtk[openvr]:x64-windows-static = cascade
 vtk[openvr](arm64 & windows) = cascade # openvr[core] only supports !(arm | uwp | osx | android)
 vtk[paraview](android) = cascade
-vtk[paraview](arm64 & windows) = cascade # the following dependencies are unavailable: openturns[core]
 vtk[python](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only supports !uwp & !xbox, python3[core] only supports !uwp & !mingw
 vtk[qt](uwp) = cascade # dbus[core] only supports !uwp & !staticcrt & !android & !ios, harfbuzz[core] only supports !uwp, hdf5[core] only supports !uwp, libpq[core] only supports !uwp, opengl[core] only supports !uwp & !xbox, qtbase[core] only supports !uwp
 vtk[seacas](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only supports !uwp & !xbox
@@ -2221,23 +2220,9 @@ vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX
 vtk[all]:arm64-osx = feature-fails
 vtk[all](!windows & !android & !osx) = feature-fails # Wait for fix: https://github.com/microsoft/vcpkg/pull/29260
 vtk[all](x64 & windows & !uwp & !staticcrt) = feature-fails
-vtk[atlmfc]:arm64-windows = feature-fails
-vtk[cgns]:arm64-windows = feature-fails
-vtk[gdal](windows & arm64 & !uwp) = feature-fails
-vtk[ioocct](windows & arm64 & !uwp) = feature-fails
-vtk[libharu]:arm64-windows = feature-fails
-vtk[libtheora]:arm64-windows = feature-fails
-vtk[netcdf](windows & arm64 & !uwp) = feature-fails
 vtk[openmp](osx) = feature-fails
 vtk[paraview](!windows & !android) = feature-fails
-vtk[proj]:arm64-windows = feature-fails
-vtk[python](windows & arm64 & !uwp) = feature-fails
-vtk[qt](windows & arm64 & !uwp) = feature-fails
-vtk[seacas](windows & arm64 & !uwp) = feature-fails
-vtk[sql]:arm64-windows = feature-fails
-vtk[tbb]:arm64-windows = feature-fails
 vtk-m[omp](osx) = feature-fails # fixed by https://github.com/microsoft/vcpkg/pull/30923
-vtk(arm64 & windows & !uwp) = fail
 wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See https://github.com/microsoft/vcpkg/issues/32146
 wayland[force-build](native) = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
