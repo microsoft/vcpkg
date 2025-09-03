@@ -10,4 +10,4 @@ index b251109..60cf762 100644
 +
  cmake_policy(PUSH)
  # Set policies to prevent warnings
- if(POLICY CMP0072)
+ if(POLICY CMP0057)

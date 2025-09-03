@@ -6,8 +6,15 @@
   "license": "MIT",
   "dependencies": [
     {
+      "$comment": "Lacks default (CPU) backend on arm64 windows",
       "name": "ggml",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        {
+          "name": "vulkan",
+          "platform": "windows & arm64"
+        }
+      ]
     },
     {
       "name": "vcpkg-cmake",
@@ -27,7 +34,10 @@
       "name": "metal",
       "platform": "osx"
     },
-    "opencl",
+    {
+      "name": "opencl",
+      "platform": "!arm32"
+    },
     {
       "name": "openmp",
       "platform": "!osx"

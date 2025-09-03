@@ -1,7 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.8.3",
-  "port-version": 2,
+  "version": "6.9.1",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -163,7 +162,16 @@
     },
     "cups": {
       "description": "Provides support for the Common Unix Printing System.",
-      "supports": "linux | osx"
+      "supports": "linux | osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
     },
     "dbus": {
       "description": "Qt D-Bus",
@@ -212,7 +220,14 @@
       "description": "EGL",
       "supports": "android | linux",
       "dependencies": [
-        "egl"
+        "egl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "opengl"
+          ]
+        }
       ]
     },
     "fontconfig": {
@@ -240,6 +255,13 @@
         {
           "name": "freetype",
           "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
         }
       ]
     },
@@ -300,13 +322,6 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "freetype"
-          ]
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
             "opengl"
           ],
           "platform": "osx"
@@ -316,6 +331,7 @@
           "default-features": false,
           "features": [
             "egl",
+            "freetype",
             "gles2",
             "opengl"
           ],
@@ -452,7 +468,6 @@
     "sql-oci": {
       "description": "Enable SQL Driver Oracle OCI",
       "dependencies": [
-        "ocilib",
         {
           "name": "qtbase",
           "default-features": false,
@@ -464,7 +479,6 @@
     },
     "sql-odbc": {
       "description": "Enable SQL Driver odbc",
-      "supports": "windows",
       "dependencies": [
         {
           "name": "qtbase",
@@ -472,6 +486,10 @@
           "features": [
             "sql"
           ]
+        },
+        {
+          "name": "unixodbc",
+          "platform": "!windows"
         }
       ]
     },
@@ -510,6 +528,13 @@
     "vulkan": {
       "description": "Enable Vulkan support",
       "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
         "vulkan"
       ]
     },
@@ -532,7 +557,7 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "concurrent",
+            "thread",
             "xkbcommon-x11",
             "xlib"
           ]
@@ -567,7 +592,16 @@
       ]
     },
     "xlib": {
-      "description": "XLib"
+      "description": "XLib",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
     },
     "xrender": {
       "description": "XRender for native painting",
@@ -576,7 +610,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "xcb"
+            "fontconfig",
+            "xcb-xlib"
           ]
         }
       ]
