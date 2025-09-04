@@ -8530,7 +8530,7 @@
     },
     "rubberband": {
       "baseline": "4.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ruckig": {
       "baseline": "0.15.3",
