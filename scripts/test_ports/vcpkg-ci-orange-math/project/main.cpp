@@ -1,4 +1,4 @@
-#include <omath/Vector2.hpp>
+#include <omath/linear_algebra/vector2.hpp>
 
 int main()
 {
