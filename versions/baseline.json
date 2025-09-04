@@ -4009,8 +4009,8 @@
       "port-version": 2
     },
     "jansson": {
-      "baseline": "2.14",
-      "port-version": 1
+      "baseline": "2.14.1",
+      "port-version": 0
     },
     "jasper": {
       "baseline": "4.2.8",
