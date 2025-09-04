@@ -8,13 +8,10 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f19e001fd6025594eb546ed7993bab73b303b064bf9563148f172a9c6dbbba9e6de41997be5284ca148908a307fe282e67974489df68fca699b9fb25ce4e7af0
     HEAD_REF main
-    PATCHES
-        support-win.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        interop glaze_BUILD_INTEROP
         ssl     glaze_ENABLE_SSL
 )
 
@@ -29,12 +26,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
-if("interop" IN_LIST FEATURES)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-    # interop produces shared library with static client library.
-    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-else()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

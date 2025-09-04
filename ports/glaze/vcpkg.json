@@ -16,9 +16,6 @@
     }
   ],
   "features": {
-    "interop": {
-      "description": "Build language interoperability library"
-    },
     "ssl": {
       "description": "Enable SSL/TLS support for HTTPS servers",
       "dependencies": [
