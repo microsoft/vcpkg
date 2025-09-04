@@ -2116,7 +2116,6 @@ gapp(android) = fail # requires c++20
 gapp(osx) = fail # requires c++20
 gegl(osx) = fail # meson bug on osx. See https://github.com/microsoft/vcpkg/issues/44411
 geogram[graphics] = feature-fails # imgui not found. See https://github.com/microsoft/vcpkg/issues/32421
-ggml[blas](x64 & windows & static) = feature-fails # 'cblas.h': No such file or directory
 ginkgo[openmp](osx) = feature-fails # No openmp on osx
 ginkgo[openmp](windows) = feature-fails # needs openmp 3.0 support but msvc only supports openmp 2.0
 glib-networking[openssl, gnutls] = options # You have to select exactly one ssl backend
