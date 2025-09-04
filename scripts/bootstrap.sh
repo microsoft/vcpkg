@@ -87,6 +87,8 @@ vcpkgCheckRepoTool()
             echo "On Alpine:"
             echo "  apk add build-base cmake ninja zip unzip curl git"
             echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
+            echo "On Solaris and illumos distributions:"
+            echo "  pkg install web/curl compress/zip compress/unzip"
             exit 1
         fi
     fi
