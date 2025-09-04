@@ -9873,7 +9873,7 @@
       "port-version": 0
     },
     "uriparser": {
-      "baseline": "0.9.8",
+      "baseline": "0.9.9",
       "port-version": 0
     },
     "usbmuxd": {
