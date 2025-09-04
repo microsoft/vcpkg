@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "krb5",
-  "version": "1.21.3",
-  "port-version": 3,
+  "version": "1.22.1",
   "description": [
     "Kerberos is a network authentication protocol.",
     "It is designed to provide strong authentication for client/server applications by using secret-key cryptography.",

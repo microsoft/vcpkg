@@ -1,8 +1,9 @@
 {
   "name": "libwebsockets",
-  "version-semver": "4.3.5",
+  "version-semver": "4.4.1",
   "description": "Libwebsockets is a lightweight pure C library built to use minimal CPU and memory resources, and provide fast throughput in both directions as client or server.",
-  "homepage": "https://github.com/warmcat/libwebsockets",
+  "homepage": "https://libwebsockets.org/",
+  "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
     {
