@@ -10,10 +10,5 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ],
-  "features": {
-    "tool": {
-      "description": "Build standalone encoder app"
-    }
-  }
+  ]
 }

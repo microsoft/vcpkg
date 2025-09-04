@@ -6,7 +6,11 @@ vcpkg_from_gitlab(
     SHA512 4301e923965e3bff30a0fd2f74ae023d19260f91c2361d48ea7bc1718f501dcca73fa17cb8795b23392ca1bfbe1f4d55edcbb5ce06a2fa9e41da36c5166f527d
     PATCHES
         android-llvm.diff
+        no-safestringlib.diff
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/googletest/")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/safestringlib/")
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "^(x86|x64)")
     vcpkg_find_acquire_program(NASM)
@@ -19,17 +23,11 @@ else()
     endif()
 endif()
 
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
-    FEATURES
-        tool   BUILD_APPS
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${OPTIONS}
         ${SIMD_OPTIONS}
+        -DBUILD_APPS=OFF
         -DREPRODUCIBLE_BUILDS=ON
         -DEXCLUDE_HASH=OFF
         -DBUILD_TESTING=OFF
