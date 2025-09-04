@@ -5,10 +5,6 @@
   "homepage": "https://mcap.dev/",
   "documentation": "https://mcap.dev/",
   "license": "MIT",
-  "default-features": [
-    "lz4",
-    "zstd"
-  ],
   "features": {
     "lz4": {
       "description": "Enable LZ4 compression support.",
