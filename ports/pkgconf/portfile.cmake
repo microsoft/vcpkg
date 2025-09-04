@@ -21,8 +21,12 @@ set(PKG_DEFAULT_PATH "")
 set(SYSTEM_INCLUDEDIR "")
 set(PERSONALITY_PATH "personality.d")
 
-
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+if(VCPKG_TARGET_IS_FREEBSD)
+    # These are taken from the FreeBSD port of pkgconf
+    set(SYSTEM_INCLUDEDIR "/usr/include")
+    set(SYSTEM_LIBDIR "/usr/lib")
+    set(PKG_DEFAULT_PATH "/usr/libdata/pkgconfig:/usr/local/libdata/pkgconfig:/usr/local/share/pkgconfig")
+elseif(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
     # These defaults are obtained from pkgconf/pkg-config on Ubuntu and OpenSuse
     # vcpkg cannot do system introspection to obtain/set these values since it would break binary caching.
     set(SYSTEM_INCLUDEDIR "/usr/include")
