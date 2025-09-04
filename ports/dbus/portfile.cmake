@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
         getpeereid.patch # missing check from configure.ac
         libsystemd.patch
         remove-path.patch
+        remove-var-lib-dbus-creation.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
