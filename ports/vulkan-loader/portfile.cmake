@@ -9,6 +9,9 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
+# Needed to make port install vulkan.pc
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

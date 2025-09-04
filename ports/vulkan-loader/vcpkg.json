@@ -1,7 +1,7 @@
 {
   "name": "vulkan-loader",
   "version": "1.4.309.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Vulkan Development Tools",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Loader",
   "license": null,
