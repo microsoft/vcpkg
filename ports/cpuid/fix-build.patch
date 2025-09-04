@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a8f9f25..21e2c37 100644
+index 4f5ff50..3d62dba 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -66,7 +66,6 @@ endif(UNIX)
+@@ -61,7 +61,6 @@ endif(UNIX)
  
  # Include subdirectories
  add_subdirectory(libcpuid)

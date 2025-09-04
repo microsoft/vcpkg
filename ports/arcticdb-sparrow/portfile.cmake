@@ -6,10 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO man-group/sparrow
     REF "${VERSION}"
-    SHA512 421829a8f4db24f78abe7f4503ab36037f3aebd16863eea38f1a5a602e508f95452274aa59f7bb46e414010ae47bbab86e3d2f7d535c95f6d3da6e6efed0814c
+    SHA512 a92f3ce59005f996303ce94e4527de6a4c667ecdb3d797750af48ab797a5bc08417fc4e37c4bd5ef1b514cfdca7c98f4a2a6cef46d89494275dac88f16f32572
     HEAD_REF main
-    PATCHES
-        "sparrow-e317ef5-Fix clang android 18 compilation.patch"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

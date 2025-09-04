@@ -7,13 +7,14 @@ vcpkg_from_github(
     #[[
         Attention: pdal-dimbuilder must be updated together with pdal
     #]]
-    SHA512 4a7f4356530a3d2c1ecde8c3aa7cfee052eb7d57a33e5e8bf7699e05bf0994bfc5552562b22af744879866336deea228cee75b543b89399fbeb952c400c33ea2
+    SHA512 4816c1ef8946937440541b5b8214dd5cbe706ccfbb82e5d67652e983eb6b386a02c1e0ba8ae7e22a0298a65b93953953bc4738d15a33f0f67a39dd6e48dfc076
     HEAD_REF master
     PATCHES
         dependencies.diff
         external-dimbuilder.diff
         find-library-suffix.diff
         no-rpath.patch
+        rapidxml.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/modules/FindCurl.cmake"
@@ -36,6 +37,8 @@ file(APPEND "${SOURCE_PATH}/vendor/nlohmann/nlohmann/json_fwd.hpp" "\nnamespace 
 file(WRITE "${SOURCE_PATH}/pdal/JsonFwd.hpp" "/* vcpkg redacted */\n#include <nlohmann/json_fwd.hpp>\nnamespace NL = nlohmann;\n")
 file(MAKE_DIRECTORY "${SOURCE_PATH}/vendor/nlohmann/schema-validator")
 file(WRITE "${SOURCE_PATH}/vendor/nlohmann/schema-validator/json-schema.hpp" "/* vcpkg redacted */\n#include <nlohmann/json-schema.hpp>\n")
+# PDAL vendors arbiter vendors rapidxml
+file(COPY "${CURRENT_INSTALLED_DIR}/include/rapidxml/rapidxml.hpp" DESTINATION "${SOURCE_PATH}/vendor/arbiter/")
 
 unset(ENV{OSGEO4W_HOME})
 
