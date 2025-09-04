@@ -10190,7 +10190,7 @@
     },
     "vulkan-loader": {
       "baseline": "1.4.309.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vulkan-memory-allocator": {
       "baseline": "3.3.0",
