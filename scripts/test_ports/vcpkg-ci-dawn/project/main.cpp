@@ -35,11 +35,6 @@
     } while (0)
 
 wgpu::Instance create_instance() {
-#if defined(__EMSCRIPTEN__)
-    wgpu::InstanceDescriptor instance_desc;
-    instance_desc.capabilities.timedWaitAnyEnable = true;
-    return wgpu::CreateInstance(&instance_desc);
-#else
     wgpu::InstanceDescriptor instance_desc;
     std::vector<wgpu::InstanceFeatureName> required_features = {
         wgpu::InstanceFeatureName::TimedWaitAny,
@@ -47,7 +42,6 @@ wgpu::Instance create_instance() {
     instance_desc.requiredFeatureCount = required_features.size();
     instance_desc.requiredFeatures = required_features.data();
     return wgpu::CreateInstance(&instance_desc);
-#endif
 }
 
 wgpu::Surface create_surface(const wgpu::Instance &instance, GLFWwindow *window);

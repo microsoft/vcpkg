@@ -1,13 +1,27 @@
 if (VCPKG_TARGET_IS_EMSCRIPTEN)
-    # emscripten has built-in dawn library
+    vcpkg_download_distfile(ARCHIVE
+        URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
+        FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
+        SHA512 a33cd20bde55eb7b4dd62843ebdc7125074fe046b8a2a9b37e9ef9bffe5bd03856749c6de4dcf3c3b7fef98e47f0c69addd6a6a1016c00725f8457a42e107b8c
+    )
+    vcpkg_extract_source_archive(
+        SOURCE_PATH
+        ARCHIVE ${ARCHIVE}
+        PATCHES
+            000-fix-emdawnwebgpu.patch
+    )
     set(VCPKG_BUILD_TYPE release)
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/dawn")
-    set(DAWN_PKGCONFIG_CFLAGS "--use-port=emdawnwebgpu")
-    set(DAWN_PKGCONFIG_LIBS "--use-port=emdawnwebgpu")
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    file(INSTALL "${SOURCE_PATH}/webgpu/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+    file(INSTALL "${SOURCE_PATH}/webgpu_cpp/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+    file(INSTALL "${SOURCE_PATH}/webgpu/src" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" PATTERN "LICENSE" EXCLUDE)
+    file(INSTALL "${SOURCE_PATH}/emdawnwebgpu.port.py" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    set(DAWN_PKGCONFIG_CFLAGS "--use-port=\${prefix}/share/${PORT}/emdawnwebgpu.port.py")
+    set(DAWN_PKGCONFIG_LIBS "--use-port=\${prefix}/share/${PORT}/emdawnwebgpu.port.py")
     set(DAWN_PKGCONFIG_REQUIRES "")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/webgpu/src/LICENSE" "${SOURCE_PATH}/webgpu_cpp/LICENSE")
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     return()
 endif()
