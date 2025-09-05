@@ -12,11 +12,18 @@ else()
     set(URIPARSER_BUILD_TOOLS OFF)
 endif()
 
+set(OPTIONS)
+# On Android, we need to set C standard to C99 (headers on ndk uses `inline`)
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND OPTIONS -DCMAKE_C_STANDARD=99)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DURIPARSER_BUILD_DOCS=OFF
         -DURIPARSER_BUILD_TESTS=OFF
+        ${OPTIONS}
     OPTIONS_DEBUG
         -DURIPARSER_BUILD_TOOLS=OFF
     OPTIONS_RELEASE
