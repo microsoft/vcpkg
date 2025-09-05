@@ -1,7 +1,7 @@
 {
   "name": "vtk-dicom",
   "version": "0.8.16",
-  "port-version": 2,
+  "port-version": 3,
   "description": "DICOM for VTK",
   "homepage": "https://github.com/dgobbi/vtk-dicom",
   "license": "BSD-3-Clause",
@@ -22,6 +22,11 @@
     {
       "name": "vtk",
       "default-features": false
+    },
+    {
+      "name": "vtk-compile-tools",
+      "host": true,
+      "platform": "!native"
     },
     "zlib"
   ],
