@@ -1,12 +1,16 @@
 {
   "name": "protobuf",
-  "version": "5.29.5",
-  "port-version": 1,
+  "version": "5.30.0",
   "description": "Google's language-neutral, platform-neutral, extensible mechanism for serializing structured data.",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "BSD-3-Clause",
   "dependencies": [
-    "abseil",
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    },
     {
       "name": "protobuf",
       "host": true
