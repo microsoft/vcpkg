@@ -6912,10 +6912,6 @@
       "baseline": "2019-07-10",
       "port-version": 3
     },
-    "ogdf": {
-      "baseline": "2022-06-30",
-      "port-version": 1
-    },
     "ogre": {
       "baseline": "14.3.2",
       "port-version": 0
