@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 0cd390e79640f0b03b5ac7b58ab52996a0a69f13cd52b404acf06601c2cf5788fe6ef8c082c35ed734fa4094a0b9543a6c07a1f6deaffd8a69475abbae7268dc
 )
 
-file(INSTALL "${SOURCE_PATH}/core/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/core/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/ntuples")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/ntuples/ntuples-config.cmake"
