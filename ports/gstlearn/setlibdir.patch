@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 092db80ca..a46158edb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -11,7 +11,7 @@ project(gstlearn
+ #set (PROJECT_VERSION_SUFFIX a3)  # Alpha (new feature not yet stable)
+ #set (PROJECT_VERSION_SUFFIX b1)  # Beta (new feature finished to be tested)
+ #set (PROJECT_VERSION_SUFFIX rc1) # Release Candidate (only small bugs to be fixed before the release)
+-
++set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+ # Build the full version
+ set (PROJECT_FULL_VERSION "${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}")
+ 

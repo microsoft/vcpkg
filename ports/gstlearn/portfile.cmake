@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "stable_${VERSION}"
     SHA512 51a3c0ffcff311931c03d224a08675ab91747c270f61851080a3331b1b4468f2de8cb2d262b91bd3781ed1b92153901cdfcaba47a011cb4ec3156f7662d109a7
     HEAD_REF dev
+    PATCHES
+        setlibdir.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
