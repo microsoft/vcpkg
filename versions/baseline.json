@@ -2065,7 +2065,7 @@
       "port-version": 0
     },
     "cppkafka": {
-      "baseline": "0.4.0",
+      "baseline": "0.4.1",
       "port-version": 0
     },
     "cppmicroservices": {
@@ -2362,7 +2362,7 @@
     },
     "dbus": {
       "baseline": "1.16.2",
-      "port-version": 1
+      "port-version": 2
     },
     "dcmtk": {
       "baseline": "3.6.9",
@@ -2666,7 +2666,7 @@
     },
     "eigen3": {
       "baseline": "3.4.1-250818",
-      "port-version": 0
+      "port-version": 1
     },
     "eipscanner": {
       "baseline": "1.3.0",
@@ -3297,7 +3297,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.5.5",
+      "baseline": "5.6.1",
       "port-version": 0
     },
     "glbinding": {
@@ -3921,8 +3921,8 @@
       "port-version": 0
     },
     "iniparser": {
-      "baseline": "2020-04-06",
-      "port-version": 5
+      "baseline": "4.2.6",
+      "port-version": 0
     },
     "inipp": {
       "baseline": "1.0.13",
@@ -4609,7 +4609,7 @@
       "port-version": 0
     },
     "libconfig": {
-      "baseline": "1.8",
+      "baseline": "1.8.1",
       "port-version": 0
     },
     "libconfuse": {
@@ -7169,7 +7169,7 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "3.2.3",
+      "baseline": "3.5.1",
       "port-version": 0
     },
     "orc": {
@@ -8441,7 +8441,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.3.9",
+      "baseline": "4.3.10",
       "port-version": 0
     },
     "robin-hood-hashing": {
