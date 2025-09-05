@@ -747,8 +747,6 @@ openslide:x64-windows-static=fail
 openslide:x64-windows=fail
 openslide:x86-windows=fail
 opensubdiv:x64-android=fail
-openturns:arm64-windows-static-md=fail
-openturns:arm64-windows=fail
 # Incorrect use of arm64 intrinsics in <wchar.h> in VS 2022 17.13 broke these with -Zc:arm64-aliased-neon-types-
 openvino:arm64-windows-static-md=fail
 openvino:arm64-windows=fail
@@ -778,6 +776,8 @@ paho-mqtt:x64-uwp=fail
 paho-mqttpp3:arm-neon-android=fail
 paho-mqttpp3:arm64-android=fail
 paho-mqttpp3:x64-android=fail
+paraview:arm64-windows-static-md=fail
+paraview:arm64-windows=fail
 platform-folders:arm64-uwp=fail
 platform-folders:x64-uwp=fail
 plib:arm-neon-android=fail
@@ -1030,6 +1030,8 @@ v8:x86-windows=fail
 # vst3sdk CMake files work only with the GUI version of Xcode
 vst3sdk:arm64-osx=fail
 vst3sdk:x64-osx=fail
+vtk-dicom:arm64-windows-static-md=fail
+vtk-dicom:arm64-windows=fail
 wasmedge:arm-neon-android=fail
 # Collides with libpcap -> similar headers
 winpcap:x64-windows-release=skip
