@@ -1625,7 +1625,7 @@
       "port-version": 0
     },
     "cctz": {
-      "baseline": "2.4",
+      "baseline": "2.5",
       "port-version": 0
     },
     "cddlib": {
