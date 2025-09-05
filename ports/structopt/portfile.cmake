@@ -21,6 +21,10 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/structopt")
 vcpkg_fixup_pkgconfig()
 
+# Delete all third-party header files vendored by the structopt library.  The library has been patched to instead use
+# the external versions of these libraries.
+file(REMOVE RECURSE "${CURRENT_PACKAGES_DIR}/include/structopt/third_party")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(
