@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO quickfix/quickfix
-    REF 4e89249a90f5c8a140ffdd6eeb5e5cbf7a8e224b # change to "v${VERSION}" when officially released on github
+    REF 4e89249a90f5c8a140ffdd6eeb5e5cbf7a8e224b # change to "v${VERSION}" when 1.16.0 is officially released on github
     SHA512 5128f2626428b5161f5be6e7aba86de56d14b2a0955f0c07d6fa6adbc0c76bfd919faff513a0c94eedf9bb110bf9b57eac5880e93dfc22138529234b62855b62
     HEAD_REF master
     PATCHES
