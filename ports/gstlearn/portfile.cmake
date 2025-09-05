@@ -21,12 +21,14 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+if(NOT VCPKG_BUILD_TYPE STREQUAL "release")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/gstlearnd.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/gstlearnd.dll")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
 file(RENAME "${CURRENT_PACKAGES_DIR}/lib/gstlearn.dll" "${CURRENT_PACKAGES_DIR}/bin/gstlearn.dll")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
