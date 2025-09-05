@@ -27,7 +27,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/ntuples/usage"
-[[ntuples provides CMake targets:
+[[rp-ntuples provides CMake targets:
 
     find_package(ntuples CONFIG REQUIRED)
     target_link_libraries(main PRIVATE ntuples::ntuples)
