@@ -21,7 +21,16 @@
   ],
   "features": {
     "dft": {
-      "description": "Build the DFT library. Needs OpenMP."
+      "description": "Build the DFT library. Needs OpenMP.",
+      "dependencies": [
+        {
+          "name": "sleef",
+          "host": true,
+          "features": [
+            "dft"
+          ]
+        }
+      ]
     }
   }
 }

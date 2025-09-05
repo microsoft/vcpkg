@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         android-neon.diff
+        exclude-testerutil.diff
         export-link-libs.diff
 )
 
@@ -16,7 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
 )
 
 if(VCPKG_CROSSCOMPILING)
-    set(options "-DNATIVE_BUILD_DIR=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
+    list(APPEND options "-DNATIVE_BUILD_DIR=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
 vcpkg_cmake_configure(
