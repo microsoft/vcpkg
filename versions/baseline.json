@@ -6450,7 +6450,7 @@
     },
     "ms-gdk": {
       "baseline": "2504.2.4061",
-      "port-version": 0
+      "port-version": 1
     },
     "ms-gdkx": {
       "baseline": "1.0.0",
