@@ -8,6 +8,7 @@ vcpkg_from_github(
         android-neon.diff
         exclude-testerutil.diff
         export-link-libs.diff
+        sleefdft.pc.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options

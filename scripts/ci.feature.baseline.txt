@@ -2206,7 +2206,6 @@ qtmultimedia[core,ffmpeg,gstreamer,qml,widgets](osx) = combination-fails # Error
 qtmultimedia[gstreamer]:x64-linux=no-separate-feature-test
 realsense2:arm64-windows = fail # fw-update-device.h(1): warning C4828: The file contains a character starting at offset 0x4c3 that is illegal in the current source character set (codepage 65001). See https://github.com/microsoft/vcpkg/issues/35628
 rtabmap[openmp](osx) = feature-fails # No openmp on default osx toolchain
-rubberband[cli](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32360
 saucer(linux) = fail # requires gcc14 or later
 saucer(osx) = fail # std::move_only_function is not supported
 sleef[dft](osx) = feature-fails # openmp setup needed
