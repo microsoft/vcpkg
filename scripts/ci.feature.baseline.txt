@@ -713,7 +713,6 @@ cairomm:arm64-uwp = cascade
 cairomm:x64-uwp = cascade
 cartographer:arm64-uwp = cascade
 cartographer:x64-uwp = cascade
-cctz:arm64-uwp = cascade
 cgal:arm64-uwp = cascade
 cgal:x64-uwp = cascade
 cgal[qt]:arm64-windows = cascade
