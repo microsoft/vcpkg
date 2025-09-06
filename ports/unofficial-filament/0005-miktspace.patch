@@ -1,0 +1,20 @@
+diff --git a/libs/geometry/src/MikktspaceImpl.cpp b/libs/geometry/src/MikktspaceImpl.cpp
+index 5c5a1b582..6223bcf79 100644
+--- a/libs/geometry/src/MikktspaceImpl.cpp
++++ b/libs/geometry/src/MikktspaceImpl.cpp
+@@ -21,7 +21,12 @@
+ #include <utils/Panic.h>
+ 
+ #include <meshoptimizer.h>
++
++#if __has_include(<mikktspace/mikktspace.h>)
+ #include <mikktspace/mikktspace.h>
++#else
++#include <mikktspace.h>
++#endif
+ 
+ #include <vector>
+ 
+-- 
+2.45.2
+
