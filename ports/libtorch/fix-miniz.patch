@@ -1,0 +1,76 @@
+diff --git a/caffe2/serialize/inline_container.h b/caffe2/serialize/inline_container.h
+index e098bed..1fdc109 100644
+--- a/caffe2/serialize/inline_container.h
++++ b/caffe2/serialize/inline_container.h
+@@ -16,10 +16,12 @@
+ #include "caffe2/serialize/read_adapter_interface.h"
+ #include "caffe2/serialize/versions.h"
+ 
+-extern "C" {
+-typedef struct mz_zip_archive mz_zip_archive;
+-}
++#if __has_include(<miniz/miniz.h>)
++#include <miniz/miniz.h>
++#else
++#include <miniz.h>
++#endif
+ 
+ // PyTorch containers are a special zip archive with the following layout
+ // archive_name.zip contains:
+ //    archive_name/
+diff --git a/caffe2/serialize/inline_container.cc b/caffe2/serialize/inline_container.cc
+index 4972c65..1ab7108 100644
+--- a/caffe2/serialize/inline_container.cc
++++ b/caffe2/serialize/inline_container.cc
+@@ -768,7 +768,7 @@ void PyTorchStreamWriter::writeRecord(
+   uint32_t flags = compress ? MZ_BEST_COMPRESSION : 0;
+   if (!compute_crc32_) {
+ #if (!defined(FBCODE_CAFFE2))
+-    flags |= MZ_ZIP_FLAG_DO_NOT_COMPUTE_CRC32;
++    // flags |= MZ_ZIP_FLAG_DO_NOT_COMPUTE_CRC32; // this flag doesn't exist in miniz_zip.h
+ #endif
+   }
+   mz_zip_writer_add_mem_ex_v2(
+diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
+index 06f9377..7839edf 100644
+--- a/aten/src/ATen/CMakeLists.txt
++++ b/aten/src/ATen/CMakeLists.txt
+@@ -457,7 +457,6 @@ if(UNIX)
+   endif(HAVE_MALLOC_USABLE_SIZE)
+ endif(UNIX)
+ 
+-ADD_DEFINITIONS(-DUSE_EXTERNAL_MZCRC)
+ 
+ if(NOT MSVC)
+   list(APPEND ATen_CPU_DEPENDENCY_LIBS m)
+diff --git a/caffe2/serialize/CMakeLists.txt b/caffe2/serialize/CMakeLists.txt
+index ebbff0f..5a42e4e 100644
+--- a/caffe2/serialize/CMakeLists.txt
++++ b/caffe2/serialize/CMakeLists.txt
+@@ -2,13 +2,11 @@ file(GLOB tmp *_test.cc)
+ 
+ set(Caffe2_CPU_TEST_SRCS ${Caffe2_CPU_TEST_SRCS} ${tmp})
+ list(APPEND Caffe2_CPU_SRCS
+-  ${PROJECT_SOURCE_DIR}/third_party/miniz-3.0.2/miniz.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/inline_container.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/istream_adapter.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/file_adapter.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/crc.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/read_adapter_interface.cc)
+-list(APPEND Caffe2_CPU_INCLUDE ${PROJECT_SOURCE_DIR}/third_party/miniz-3.0.2)
+ 
+ set(Caffe2_CPU_TEST_SRCS ${Caffe2_CPU_TEST_SRCS} PARENT_SCOPE)
+ set(Caffe2_CPU_SRCS ${Caffe2_CPU_SRCS} PARENT_SCOPE)
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 5d19778..9f36487 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1591,8 +1591,6 @@ if(NOT INTERN_BUILD_MOBILE)
+     endif(HAVE_MALLOC_USABLE_SIZE)
+   endif(UNIX)
+ 
+-  add_definitions(-DUSE_EXTERNAL_MZCRC)
+-  add_definitions(-DMINIZ_DISABLE_ZIP_READER_CRC32_CHECKS)
+ 
+   find_package(ZVECTOR) # s390x simd support
+ endif()
