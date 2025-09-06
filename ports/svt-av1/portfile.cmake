@@ -9,6 +9,8 @@ vcpkg_from_gitlab(
         no-safestringlib.diff
 )
 
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/aom/inc/")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/aom_dsp/")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/googletest/")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/safestringlib/")
 
