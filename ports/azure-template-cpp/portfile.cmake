@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF bc178b1f98f84ece20295514d5f56d4149695274
-    SHA512 c95ed129e0317bac647f8ccc965cfb4ae55c4f0390d6922ee63e2ad7324dde7b11d09c14da1de2f79752f8c30fafa4b5ac361b1476e7396d15cd75626b06cd98
+    REF 2d969df700c1402375f83837c671b79070bf28e4
+    SHA512 435e0a2caae3077bcb90623f7fae81193b6ec8a61da3133765e08c8fe1c2cf6b3ca8ff26aff058478d61f97d698efd92f99c83bf9a5961019ecd8c8c70be263e
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-files-shares")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/storage/_")
+if(EXISTS "${SOURCE_PATH}/sdk/template/azure-template")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/template/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/storage/azure-storage-files-shares" "${SOURCE_PATH}/sdk/storage/_")
-  file(RENAME "${SOURCE_PATH}/sdk/storage" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template/azure-template" "${SOURCE_PATH}/sdk/template/_")
+  file(RENAME "${SOURCE_PATH}/sdk/template" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/_/_/_"
     OPTIONS
         -DWARNINGS_AS_ERRORS=OFF
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

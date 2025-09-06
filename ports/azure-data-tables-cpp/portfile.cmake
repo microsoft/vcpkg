@@ -4,8 +4,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF "azure-data-tables_${VERSION}"
-    SHA512 368ad9a26e824de2f547263ce923e6ccdcadaadf43bdbbffe7d88948b2f9012f5f545a073caa4311d3ff5c5486ceb0b849a5e130cff295926fbed17153d959a5
+    REF bc178b1f98f84ece20295514d5f56d4149695274
+    SHA512 c95ed129e0317bac647f8ccc965cfb4ae55c4f0390d6922ee63e2ad7324dde7b11d09c14da1de2f79752f8c30fafa4b5ac361b1476e7396d15cd75626b06cd98
     HEAD_REF main
 )
 
