@@ -797,6 +797,7 @@ egl:x64-uwp = cascade
 elements:arm64-uwp = cascade
 elements:x64-uwp = cascade
 embree3:x64-uwp = fail
+embree3[tasking-tbb]:x64-uwp = cascade
 etcd-cpp-apiv3:arm64-uwp = cascade
 etcd-cpp-apiv3:x64-uwp = cascade
 evpp:arm64-uwp = cascade
