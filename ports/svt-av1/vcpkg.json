@@ -6,6 +6,7 @@
   "license": "BSD-3-Clause",
   "supports": "!x86 & !arm32 & !uwp",
   "dependencies": [
+    "fastfeat",
     {
       "name": "vcpkg-cmake",
       "host": true

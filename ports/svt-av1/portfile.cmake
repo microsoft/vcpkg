@@ -7,10 +7,12 @@ vcpkg_from_gitlab(
     PATCHES
         no-force-llvm.diff
         no-safestringlib.diff
+        unvendor-fastfeat.diff
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/aom/inc/")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/aom_dsp/")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/fastfeat/")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/googletest/")
 file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/safestringlib/")
 
@@ -34,9 +36,12 @@ vcpkg_cmake_configure(
         -DEXCLUDE_HASH=OFF
         -DBUILD_TESTING=OFF
         -DSVT_AV1_LTO=OFF
-    OPTIONS_RELEASE
+        "-DFASTFEAT_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/"
+        OPTIONS_RELEASE
+        "-DFASTFEAT_LIB_DIR=${CURRENT_INSTALLED_DIR}/lib/"
         "-DCMAKE_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Bin/Release"
     OPTIONS_DEBUG
+        "-DFASTFEAT_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib/"
         "-DCMAKE_OUTPUT_DIRECTORY=${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Bin/Debug"
 )
 
