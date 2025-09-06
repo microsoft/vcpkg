@@ -1,0 +1,54 @@
+diff --git a/src/libmtp.c b/src/libmtp.c
+index 8280e75..cc0db37 100644
+--- a/src/libmtp.c
++++ b/src/libmtp.c
+@@ -5722,18 +5722,19 @@ static char *generate_unique_filename(PTPParams* params, char const * const file
+   {
+     extension_position = strrchr(filename,'.');
+ 
+-    char basename[extension_position - filename + 1];
++    char *basename = calloc(1, extension_position - filename + 1);
+     strncpy(basename, filename, extension_position - filename);
+     basename[extension_position - filename] = '\0';
+ 
+     suffix = 1;
+-    char newname[ strlen(basename) + 6 + strlen(extension_position)];
++    char *newname = calloc(1, strlen(basename) + 6 + strlen(extension_position));
+     sprintf(newname, "%s_%d%s", basename, suffix, extension_position);
+     while ((check_filename_exists(params, newname)) && (suffix < 1000000)) {
+       suffix++;
+       sprintf(newname, "%s_%d%s", basename, suffix, extension_position);
+     }
+-  return strdup(newname);
++    free(basename);
++    return newname;
+   }
+   else
+   {
+diff --git a/src/playlist-spl.c b/src/playlist-spl.c
+index f68fc33..5eaa9c7 100644
+--- a/src/playlist-spl.c
++++ b/src/playlist-spl.c
+@@ -329,11 +329,11 @@ int update_spl_playlist(LIBMTP_mtpdevice_t *device,
+ static text_t* read_into_spl_text_t(LIBMTP_mtpdevice_t *device, const int fd)
+ {
+   // set MAXREAD to match STRING_BUFFER_LENGTH in unicode.h conversion function
+-  const size_t MAXREAD = 1024*2;
++  #define MAXREAD (1024*2)
+   char t[MAXREAD];
+   // upto 3 bytes per utf8 character, 2 bytes per ucs2 character,
+   // +1 for '\0' at end of string
+-  const size_t WSIZE = MAXREAD/2*3+1;
++  #define WSIZE (MAXREAD/2*3+1)
+   char w[WSIZE];
+   char* it = t; // iterator on t
+   char* iw = w;
+@@ -666,7 +666,7 @@ static void discover_filepath_from_id(char** p,
+                                       LIBMTP_file_t* files)
+ {
+   // fill in a string from the right side since we don't know the root till the end
+-  const int M = 1024;
++  #define M (1024)
+   char w[M];
+   char* iw = w + M; // iterator on w
+ 

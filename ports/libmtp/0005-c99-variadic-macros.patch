@@ -1,0 +1,68 @@
+diff --git a/src/libusb-glue.h b/src/libusb-glue.h
+index be1fedf..a1cfc30 100644
+--- a/src/libusb-glue.h
++++ b/src/libusb-glue.h
+@@ -51,10 +51,10 @@ extern "C" {
+ /**
+  * Debug macro
+  */
+-#define LIBMTP_USB_DEBUG(format, args...) \
++#define LIBMTP_USB_DEBUG(format, ...) \
+   do { \
+     if ((LIBMTP_debug & LIBMTP_DEBUG_USB) != 0) \
+-      fprintf(stdout, "LIBMTP %s[%d]: " format, __FUNCTION__, __LINE__, ##args); \
++      fprintf(stdout, "LIBMTP %s[%d]: " format, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+   } while (0)
+ 
+ #define LIBMTP_USB_DATA(buffer, length, base) \
+diff --git a/src/playlist-spl.c b/src/playlist-spl.c
+index 5eaa9c7..84a9937 100644
+--- a/src/playlist-spl.c
++++ b/src/playlist-spl.c
+@@ -48,10 +48,10 @@
+ /**
+  * Debug macro
+  */
+-#define LIBMTP_PLST_DEBUG(format, args...) \
++#define LIBMTP_PLST_DEBUG(format, ...) \
+   do { \
+     if ((LIBMTP_debug & LIBMTP_DEBUG_PLST) != 0) \
+-      fprintf(stdout, "LIBMTP %s[%d]: " format, __FUNCTION__, __LINE__, ##args); \
++      fprintf(stdout, "LIBMTP %s[%d]: " format, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+   } while (0)
+ 
+ 
+diff --git a/src/util.h b/src/util.h
+index 0a2d941..3b010b0 100644
+--- a/src/util.h
++++ b/src/util.h
+@@ -34,23 +34,23 @@ void device_unknown(const int dev_number, const int id_vendor, const int id_prod
+ /**
+  * Info macro
+  */
+-#define LIBMTP_INFO(format, args...) \
++#define LIBMTP_INFO(format, ...) \
+   do { \
+     if (LIBMTP_debug != 0) \
+-      fprintf(stdout, "LIBMTP %s[%d]: " format, __FUNCTION__, __LINE__, ##args); \
++      fprintf(stdout, "LIBMTP %s[%d]: " format, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+ 	else \
+-      fprintf(stdout, format, ##args); \
++      fprintf(stdout, format, ##__VA_ARGS__); \
+   } while (0)
+ 
+ /**
+  * Error macro
+  */
+-#define LIBMTP_ERROR(format, args...) \
++#define LIBMTP_ERROR(format, ...) \
+   do { \
+     if (LIBMTP_debug != 0) \
+-      fprintf(stderr, "LIBMTP %s[%d]: " format, __FUNCTION__, __LINE__, ##args); \
++      fprintf(stderr, "LIBMTP %s[%d]: " format, __FUNCTION__, __LINE__, ##__VA_ARGS__); \
+ 	else \
+-      fprintf(stderr, format, ##args); \
++      fprintf(stderr, format, ##__VA_ARGS__); \
+   } while (0)
+ 
+ 
