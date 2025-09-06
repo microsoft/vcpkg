@@ -1,6 +1,6 @@
 {
   "name": "aws-crt-cpp",
-  "version": "0.34.0",
+  "version": "0.34.1",
   "description": "C++ wrapper around the aws-c-* libraries. Provides Cross-Platform Transport Protocols and SSL/TLS implementations for C++.",
   "homepage": "https://github.com/awslabs/aws-crt-cpp",
   "license": "Apache-2.0",
