@@ -42,6 +42,7 @@ vcpkg_from_github(
         octree.patch
         fix-tbbsmptool.patch  # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
         backport-bda8324.diff # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/12418
+        use-compile-tools.diff
 )
 
 # =============================================================================
@@ -245,12 +246,6 @@ if("openmp" IN_LIST FEATURES)
 	)
 endif()
 
-if(VCPKG_CROSSCOMPILING)
-    list(APPEND ADDITIONAL_OPTIONS
-        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
-    )
-endif()
-
 # =============================================================================
 # Configure & Install
 
@@ -275,6 +270,8 @@ vcpkg_cmake_configure(
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
+        -DVTK_MODULE_ENABLE_VTK_WrappingTools=YES
+        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
         -DVTK_MODULE_USE_EXTERNAL_VTK_token:BOOL=OFF # Not yet in VCPKG
         #-DVTK_MODULE_ENABLE_VTK_jsoncpp=YES
         -DVTK_DEBUG_MODULE_ALL=ON
