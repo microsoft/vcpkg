@@ -1,0 +1,7 @@
+ReactPhysics3D provides CMake targets:
+
+find_package(ReactPhysics3D REQUIRED)
+
+add_executable(helloworld main.cpp)
+
+target_link_libraries(helloworld ReactPhysics3D::ReactPhysics3D)
