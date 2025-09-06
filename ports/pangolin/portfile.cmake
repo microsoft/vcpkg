@@ -16,7 +16,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         devendor-palsigslot.patch
-        ${INITIALISE_PAD_PATCH}
+        "${INITIALISE_PAD_PATCH}"
+        avoid-vlas.diff # Adapted from https://github.com/stevenlovegrove/Pangolin/commit/b91d462442ab3b392ac62e76ac5eef243971a530.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,0 +1,35 @@
+diff --git a/components/pango_display/src/view.cpp b/components/pango_display/src/view.cpp
+index d378bad..7b0b60e 100644
+--- a/components/pango_display/src/view.cpp
++++ b/components/pango_display/src/view.cpp
+@@ -302,26 +302,17 @@ void View::ActivateIdentity() const
+ GLfloat View::GetClosestDepth([[maybe_unused]] int x, [[maybe_unused]] int y, int radius) const
+ {
+     // TODO: Get to work on android
+-
+-#ifdef _MSC_VER
+-    // MSVC Requires fixed sized arrays on stack
+-    radius = 5;
+-    const int zl = (5*2+1);
+-#else
+     const int zl = (radius*2+1);
+-#endif
+-
+-    const int zsize = zl*zl;
+-    GLfloat zs[zsize];
++    std::vector<GLfloat> zs(zl*zl);
+ 
+ #ifndef HAVE_GLES
+     glReadBuffer(GL_FRONT);
+-    glReadPixels(x-radius,y-radius,zl,zl,GL_DEPTH_COMPONENT,GL_FLOAT,zs);
++    glReadPixels(x-radius,y-radius,zl,zl,GL_DEPTH_COMPONENT,GL_FLOAT,zs.data());
+ #else
+-    std::fill(zs,zs+zsize, 0.8);
++    std::fill(zs.begin(), zs.end(), 0.8);
+ #endif
+ 
+-    const GLfloat mindepth = *(std::min_element(zs,zs+zsize));
++    const GLfloat mindepth = *(std::min_element(zs.begin(),zs.end()));
+     return mindepth;
+ }
+ 

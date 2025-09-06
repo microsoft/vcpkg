@@ -1,0 +1,38 @@
+From 48e385af319543800398656645327243a29babfb Mon Sep 17 00:00:00 2001
+From: Kenneth Moreland <morelandkd@ornl.gov>
+Date: Tue, 15 Oct 2024 12:01:34 -0400
+Subject: [PATCH] Fix compile error for contour tree print
+
+A print for one of the contour tree objects was referencing members of
+itself that don't seem to exist. This causes the Intel compiler to fail
+to compile it. I'm at a loss about how any other compiler does not error
+out, but at any rate this should be correct.
+---
+ .../worklet/contourtree_distributed/HierarchicalContourTree.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/vtkm/filter/scalar_topology/worklet/contourtree_distributed/HierarchicalContourTree.h b/vtkm/filter/scalar_topology/worklet/contourtree_distributed/HierarchicalContourTree.h
+index a996d42928..e40d5f4f15 100644
+--- a/vtkm/filter/scalar_topology/worklet/contourtree_distributed/HierarchicalContourTree.h
++++ b/vtkm/filter/scalar_topology/worklet/contourtree_distributed/HierarchicalContourTree.h
+@@ -663,7 +663,7 @@ std::string HierarchicalContourTree<FieldType>::PrintDotSuperStructure(const cha
+   auto hyperarcsPortal = this->Hyperarcs.ReadPortal();
+   auto regularNodeGlobalIdsPortal = this->RegularNodeGlobalIds.ReadPortal();
+   auto whichIterationPortal = this->WhichIteration.ReadPortal();
+-  auto whichRoundPortal = this->whichRound.ReadPortal();
++  auto whichRoundPortal = this->WhichRound.ReadPortal();
+   auto superarcsPortal = this->Superarcs.ReadPortal();
+   auto superparentsPortal = this->Superparents.ReadPortal();
+   for (vtkm::Id supernode = 0; supernode < this->Supernodes.GetNumberOfValues(); supernode++)
+@@ -708,7 +708,7 @@ std::string HierarchicalContourTree<FieldType>::PrintDotSuperStructure(const cha
+     if (contourtree_augmented::NoSuchElement(superarcTo))
+     { // no superarc
+       // if it occurred on the final round, it's the global root and is shown as the NULL node
+-      if (whichRoundPortal.Get(superarcFrom) == this->NRounds)
++      if (whichRoundPortal.Get(superarcFrom) == this->NumRounds)
+       { // root node
+         outstream << "\tSN" << std::setw(1) << superarcFrom << " -> SA" << std::setw(1) << superarc
+                   << " [label=\"S" << std::setw(1) << superarc << "\",style=dotted]\n";
+-- 
+GitLab
+
