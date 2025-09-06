@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vpetrigo/smf
     REF "v${VERSION}"
-    SHA512 afe1b8e670c06f9ba50a8338957d2a23fc0ccda9a22a8091bc58b4ed3b6714907a85b8f6a823cde6eff1dfcbb5a834f31c5d14559ebbf92a73576f932c4e311d
+    SHA512 bed114b54142e6fbcbb5eec9dc202c61f73e7592559eaaeb0ed3c62231ed1e4bd5eedf4ac5b5bfa2b4cf64095f432d09a8644c37b47cdba8c367b14ad080bba0
     HEAD_REF main
 )
 
