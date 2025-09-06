@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1f1d4d6..069347b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1747,7 +1747,7 @@ endforeach()
+ # static library target
+ if(ENABLE_BUILD_LIB)
+   add_library(lib STATIC ${GMSH_SRC})
+-  set_target_properties(lib PROPERTIES OUTPUT_NAME gmsh)
++  set_target_properties(lib PROPERTIES OUTPUT_NAME gmsh_static)
+   if(MSVC)
+     set_target_properties(lib PROPERTIES DEBUG_POSTFIX d)
+     if(ENABLE_MSVC_STATIC_RUNTIME)
+@@ -1759,7 +1759,7 @@ endif()
+ # shared library target
+ if(ENABLE_BUILD_SHARED OR ENABLE_BUILD_DYNAMIC)
+   add_library(shared SHARED ${GMSH_SRC})
+-  set_target_properties(shared PROPERTIES OUTPUT_NAME gmsh
++  set_target_properties(shared PROPERTIES OUTPUT_NAME gmsh_shared
+      VERSION ${GMSH_MAJOR_VERSION}.${GMSH_MINOR_VERSION}.${GMSH_PATCH_VERSION}
+      SOVERSION ${GMSH_MAJOR_VERSION}.${GMSH_MINOR_VERSION})
+   if(WIN32)
+@@ -1856,10 +1856,10 @@ if(ENABLE_BUILD_ANDROID)
+   add_definitions(-DBUILD_ANDROID)
+   add_definitions(-DPICOJSON_USE_LOCALE=0)
+   add_library(androidGmsh SHARED ${GMSH_SRC})
+-  set_target_properties(androidGmsh PROPERTIES OUTPUT_NAME gmsh)
++  set_target_properties(androidGmsh PROPERTIES OUTPUT_NAME gmsh_android)
+   target_link_libraries(androidGmsh ${EXTERNAL_LIBRARIES} ${LAPACK_LIBRARIES})
+   add_custom_command(TARGET androidGmsh POST_BUILD COMMAND
+-                     ${CMAKE_STRIP} ${LIBRARY_OUTPUT_PATH}/libgmsh.so)
++                     ${CMAKE_STRIP} $<TARGET_FILE:androidGmsh>)
+ endif()
+ 
+ # parser target
