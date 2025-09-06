@@ -123,6 +123,12 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   string(APPEND VCPKG_LINKER_FLAGS_DEBUG " /PDBPAGESIZE:8192")
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND ADDITIONAL_OPTIONS
+        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
      OPTIONS

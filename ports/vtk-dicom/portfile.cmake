@@ -24,6 +24,12 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(python_ver "3")
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND ADDITIONAL_OPTIONS
+        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

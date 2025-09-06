@@ -40,7 +40,8 @@ vcpkg_from_github(
         no-libharu-for-ioexport.patch
         no-libproj-for-netcdf.patch
         octree.patch
-        fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
+        fix-tbbsmptool.patch  # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
+        backport-bda8324.diff # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/12418
 )
 
 # =============================================================================

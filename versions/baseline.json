@@ -7266,7 +7266,7 @@
     },
     "paraview": {
       "baseline": "5.12.1",
-      "port-version": 4
+      "port-version": 5
     },
     "parmetis": {
       "baseline": "2023-03-26",
@@ -10166,7 +10166,7 @@
     },
     "vtk": {
       "baseline": "9.3.0-pv5.12.1",
-      "port-version": 11
+      "port-version": 12
     },
     "vtk-compile-tools": {
       "baseline": "9.3.0-pv5.12.1",
@@ -10174,7 +10174,7 @@
     },
     "vtk-dicom": {
       "baseline": "0.8.16",
-      "port-version": 2
+      "port-version": 3
     },
     "vtk-m": {
       "baseline": "2.1.0",
