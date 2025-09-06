@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO "libunwind/libunwind"
     REF "v${VERSION}"
     HEAD_REF master
-    SHA512 50bb802a821939d38e38ce9f906934eea6a4e815f9401c18d5de6205ae0b5c7594e94d37bbf8f9da4012c0adebac208077548771d21bb89a4dedeb27645ceb25
+    SHA512 0619716b2385375d618d84b1e9a75c42a7fa86d452c7c3168b4aa78c6bda629c8bb5e3a984a642277e9949c1b7dc39d5e21ae9d2670437182c7b797a14544cfa
     PATCHES
         liblzma.diff
 )
