@@ -12,7 +12,7 @@ index 86add74..be7b193 100644
    list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${CARES_PC_REQUIRES})
    include_directories(SYSTEM ${CARES_INCLUDE_DIRS})
 @@ -789,7 +789,7 @@ if(CURL_USE_MBEDTLS)
-   find_package(MbedTLS REQUIRED)
+   endif()
    set(_ssl_enabled ON)
    set(USE_MBEDTLS ON)
 -  list(APPEND CURL_LIBS ${MBEDTLS_LIBRARIES})

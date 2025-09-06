@@ -3,8 +3,8 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF ${curl_version}
-    SHA512 d4a560e225d0110133f44ed57cf5394c1710530c5fec395d02baafaac9ea2186dd543047ae27fd7542894b8744070760516ae611602105b1b40605abbf84e684
+    REF rc-8_16_0-3 # ${curl_version}
+    SHA512 e75e301dcde85328c39840b03ced1a48d8d4bc6082d34b52cc1f47c4da4a1f397eb5d2987d919e85ca3c7cb76d446edd8a95690ac0ee776a8942e9bb2866fa63
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         http3       USE_NGTCP2
         wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
+        openssl     CURL_CA_FALLBACK
         mbedtls     CURL_USE_MBEDTLS
         ssh         CURL_USE_LIBSSH2
         tool        BUILD_CURL_EXE
@@ -82,7 +83,6 @@ vcpkg_cmake_configure(
         -DENABLE_CURL_MANUAL=OFF
         -DIMPORT_LIB_SUFFIX=   # empty
         -DSHARE_LIB_OBJECT=OFF
-        -DCURL_CA_FALLBACK=ON
         -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     MAYBE_UNUSED_VARIABLES
