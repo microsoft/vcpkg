@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         dependencies.diff
         uwp-warnings.patch
+        disable-pdb.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
