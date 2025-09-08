@@ -1,0 +1,16 @@
+diff --git a/tools/pybind11NewTools.cmake b/tools/pybind11NewTools.cmake
+index e881ca7..c012e2d 100644
+--- a/tools/pybind11NewTools.cmake
++++ b/tools/pybind11NewTools.cmake
+@@ -248,10 +248,7 @@ if(TARGET ${_Python}::Module)
+   # files.
+   get_target_property(module_target_type ${_Python}::Module TYPE)
+   if(ANDROID AND module_target_type STREQUAL INTERFACE_LIBRARY)
+-    set_property(
+-      TARGET ${_Python}::Module
+-      APPEND
+-      PROPERTY INTERFACE_LINK_LIBRARIES "${${_Python}_LIBRARIES}")
++    target_link_libraries(${_Python}::Module INTERFACE ${${_Python}_LIBRARIES})
+   endif()
+ 
+   set_property(

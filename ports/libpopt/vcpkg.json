@@ -1,7 +1,7 @@
 {
   "name": "libpopt",
   "version": "1.16",
-  "port-version": 17,
+  "port-version": 18,
   "description": "Library for parsing command line parameters",
   "dependencies": [
     {

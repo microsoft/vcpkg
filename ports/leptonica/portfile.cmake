@@ -1,18 +1,11 @@
-vcpkg_download_distfile(REDUCE_REQUIRED_C_SANDARD
-    URLS https://github.com/DanBloomberg/leptonica/commit/23aef077a8dd631de80cb457384e0aa5338e85a4.patch?full_index=1
-    FILENAME leptonica-reduce-c-standard-23aef077a8dd631de80cb457384e0aa5338e85a4.patch
-    SHA512 e309730b959c58b2c063bfd40434da22c79061ece48f2d8a388364a49e2a12a85b74b755e8b837d8fdeee9c187379460a85a9e5cf84f09f0c4649f280a0c9536
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DanBloomberg/leptonica
     REF "${VERSION}"
-    SHA512 968a88d2074717e6f379d2f9b8f7f0d5193fe9b8856051e09e2b31c939689b196a4a9b2cde595ce76ff8ae2784680ef5e68c40709c051d3d23738e862968016f
+    SHA512 49e387eae37fda02242ff093c6effa92f59e0761640c71a5c79f0c02923486dc96472ff99a17763cbecc6396966cbc5c0d7f5c8fd3a61f9a65a34339f930735a
     HEAD_REF master
     PATCHES
         fix-pc-and-config.patch
-        "${REDUCE_REQUIRED_C_SANDARD}"
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)

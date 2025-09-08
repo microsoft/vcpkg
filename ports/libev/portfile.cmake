@@ -8,6 +8,7 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES "0000-event-fix-undefined-struct-timeval.patch"
+            "0001-use-select-with-msvc.patch"
 )
 
 set(LIBEV_LINK_FLAGS "")

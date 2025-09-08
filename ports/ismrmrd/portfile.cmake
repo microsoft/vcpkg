@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         ${WIN32_INCLUDE_STDDEF_PATCH}
         fix-depends-hdf5.patch
+        fix-nodiscard-warning.patch
 )
 
 vcpkg_cmake_configure(
@@ -47,4 +48,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

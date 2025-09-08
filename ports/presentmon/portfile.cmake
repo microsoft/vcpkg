@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GameTechDev/PresentMon
     REF "v${VERSION}"
-    SHA512 30945e61ba09e23ebc05e3f8a0e96a298349dad6a83043a37df9e1af0c892bee1704214e8f6ddc8cdaa9f527deb16f27b3653c855eab6bbc2f9ce509da4ded00
+    SHA512 1c606dd53a05b88a500a2deeb7099ce3cf0e9edfdf6ce8f9a1a91efecf9049bf700368066cbafc1e196f4bf8a6e43da86a2f10ad0843b582ab851e366a33eda4
     HEAD_REF main
 )
 

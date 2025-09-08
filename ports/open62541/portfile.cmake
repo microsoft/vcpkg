@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF 43afb0471a81c71dfb1d1e33589308762d5a6d18
-    SHA512 4c602160baa7ffa464a48f53edcaaaa95bac6933ed40d5113915a04941c0006d0f65267f5ec2462decb0307db5995b8facd3c1d7c4e0e3c3cb9b6f8adb18eb6f
+    REF v${VERSION}
+    SHA512 637f662a38b4d09288bbf9fc5cce3c3c8711a90a4afe570ef85bd30437353208a2cabc0e5a8edaac453e1b7b50ff97ce4757b1376ec1be248066cceda6362257
     HEAD_REF master
+    PATCHES
+      android.patch
 )
 
 # disable docs
@@ -13,12 +15,9 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "
 # do not enable LTO by default
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)" "")
 
-vcpkg_replace_string("${SOURCE_PATH}/tools/cmake/open62541Config.cmake.in" "find_dependency(PythonInterp REQUIRED)" "")
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        amalgamation UA_ENABLE_AMALGAMATION
         diagnostics UA_ENABLE_DIAGNOSTICS
         discovery UA_ENABLE_DISCOVERY
         historizing UA_ENABLE_HISTORIZING
@@ -38,16 +37,26 @@ elseif("mbedtls" IN_LIST FEATURES)
     set(OPEN62541_ENCRYPTION_OPTIONS -DUA_ENABLE_ENCRYPTION=MBEDTLS)
 endif()
 
+if("multithreading" IN_LIST FEATURES)
+    set(OPEN62541_MULTITHREADING_OPTIONS -DUA_MULTITHREADING=100)
+endif()
+
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
+
+if(VCPKG_TARGET_IS_ANDROID)
+  list(APPEND FEATURE_OPTIONS "-DUA_ARCHITECTURE=posix")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${OPEN62541_ENCRYPTION_OPTIONS}
+        ${OPEN62541_MULTITHREADING_OPTIONS}
         "-DOPEN62541_VERSION=v${VERSION}"
+        -DUA_ENABLE_DEBUG_SANITIZER=OFF
         -DUA_MSVC_FORCE_STATIC_CRT=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )

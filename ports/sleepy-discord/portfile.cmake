@@ -1,6 +1,5 @@
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "websocketpp"    USE_WEBSOCKETPP
         "cpr"            USE_CPR
         "voice"          ENABLE_VOICE
         "compression"    USE_ZLIB
@@ -9,20 +8,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yourWaifu/sleepy-discord
-    REF 70b9ec13427ea68de6f4213e9dfec6129fbab21b
-    SHA512 c91fbb9a672257c63ee83b40b62961b89568ca33081048b440876c390a2a2e11c602aaf43a6c9485fd85a91248f34a70d7b9ea769d0cfcd4b35b80d58a6ad737
-    HEAD_REF develop
+    REF ae26f3f573f625bc32561776126b4b06707d985c
+    SHA512 68ba8d9a1e48a9cd0374b0a3ec1ae05da54bf3238b1551726c6d5b99e368a995b86a13c7067cd017cdda7eb85085300d19d84f0e7d8a31df5df5f129d6fff904
+    HEAD_REF master
     PATCHES
         fix-messing-header.patch
 )
 
 # Handle version data here to prevent issues from doing this twice in parallel
-set(SLEEPY_DISCORD_VERSION_HASH 70b9ec13427ea68de6f4213e9dfec6129fbab21b)
-set(SLEEPY_DISCORD_VERSION_BUILD 949)
-set(SLEEPY_DISCORD_VERSION_BRANCH "develop")
-set(SLEEPY_DISCORD_VERSION_IS_MASTER 0)
+set(SLEEPY_DISCORD_VERSION_HASH ae26f3f573f625bc32561776126b4b06707d985c)
+set(SLEEPY_DISCORD_VERSION_BUILD 1017)
+set(SLEEPY_DISCORD_VERSION_BRANCH "master")
+set(SLEEPY_DISCORD_VERSION_IS_MASTER 1)
 set(SLEEPY_DISCORD_VERSION_DESCRIPTION_CONCAT " ")
-set(SLEEPY_DISCORD_VERSION_DESCRIPTION "70b9ec13")
+set(SLEEPY_DISCORD_VERSION_DESCRIPTION "ae26f3f")
 configure_file(
     "${SOURCE_PATH}/include/sleepy_discord/version.h.in"
     "${SOURCE_PATH}/include/sleepy_discord/version.h"
@@ -32,7 +31,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS 
         -DSLEEPY_VCPKG=ON 
-        -DAUTO_DOWNLOAD_LIBRARY=OFF 
+        -DAUTO_DOWNLOAD_LIBRARY=OFF
+        -DUSE_ASIO=OFF # ASIO standalone off
         -DUSE_BOOST_ASIO=ON
         -DCMAKE_CXX_STANDARD=17
         ${FEATURE_OPTIONS}

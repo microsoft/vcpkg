@@ -27,7 +27,7 @@ Param(
     [string]$Label
 )
     if ($Letter.Length -ne 1) {
-        throw "Bad drive letter $Letter, expected only one letter. (Did you accidentially add a : ?)"
+        throw "Bad drive letter $Letter, expected only one letter. (Did you accidentally add a : ?)"
     }
 
     try {

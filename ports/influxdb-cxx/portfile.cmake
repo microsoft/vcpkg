@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO offa/influxdb-cxx
     REF "v${VERSION}"
-    SHA512 ac16178a17ac9b43a23d64f56d0012aeda896d3065246166abdef1441cf466453a6972c5820411936dcfa10a21505b654dfe981449c1d4cc169807f1db5d099f
+    SHA512 c2ff1b989e08d571d1ca29b78136c24d2759b787996bff05101527cf405835a15330812a26301714c960450f1ffaf984e4a6d76f608fba888b6a44142e79905d
     HEAD_REF master
     PATCHES
         fix-dllexports.patch
-        268.patch # https://github.com/offa/influxdb-cxx/pull/268
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

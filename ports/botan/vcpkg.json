@@ -1,6 +1,6 @@
 {
   "name": "botan",
-  "version": "3.6.1",
+  "version": "3.7.1",
   "description": "A cryptography library written in C++11",
   "homepage": "https://botan.randombit.net",
   "license": "BSD-2-Clause",

@@ -9,7 +9,7 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 # sometimes are unable.
 #
 # If we are on Windows and arm or uwp, that we use gfortran as our fortran compiler creates an issue
-# because there is no available libgfortran. This means ew can't use lapack-reference at all.
+# because there is no available libgfortran. This means we can't use lapack-reference at all.
 #
 # If we are on Windows and static, there is a linking problem caused by static gfortran in the same
 # link as openblas, so we have to use the blas implementation from lapack-reference.
@@ -47,15 +47,9 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(requires "")
     set(libs "-framework Accelerate")
     set(cflags "-framework Accelerate")
-elseif(VCPKG_TARGET_IS_UWP
-        OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-        OR NOT VCPKG_TARGET_IS_WINDOWS
-        OR NOT (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+else()
     set(BLA_VENDOR OpenBLAS)
     set(requires openblas)
-else()
-    set(BLA_VENDOR Generic)
-    set(requires "blas-reference")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/blas.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/blas.pc" @ONLY)

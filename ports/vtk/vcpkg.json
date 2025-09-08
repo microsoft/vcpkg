@@ -1,10 +1,10 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 5,
+  "port-version": 11,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
-  "license": "BSD-3-Clause",
+  "license": null,
   "dependencies": [
     "double-conversion",
     "eigen3",
@@ -19,6 +19,7 @@
         "zlib"
       ]
     },
+    "gl2ps",
     "glew",
     {
       "name": "hdf5",
@@ -56,6 +57,11 @@
       "host": true
     },
     "verdict",
+    {
+      "name": "vtk-compile-tools",
+      "host": true,
+      "platform": "!native"
+    },
     "zlib"
   ],
   "default-features": [
@@ -125,6 +131,9 @@
       "dependencies": [
         "cuda"
       ]
+    },
+    "debugleaks": {
+      "description": "Enables vtk debug leaks detection"
     },
     "gdal": {
       "description": "Support GDAL compilation",
@@ -204,19 +213,16 @@
           "name": "netcdf-c",
           "default-features": false,
           "features": [
-            "hdf5"
+            "netcdf-4"
           ]
         }
       ]
     },
     "opengl": {
-      "description": "All opengl related modules",
-      "dependencies": [
-        {
-          "name": "vtk",
-          "default-features": false
-        }
-      ]
+      "description": "All opengl related modules"
+    },
+    "openmp": {
+      "description": "Use openmp multithreading parallel implementation"
     },
     "openvr": {
       "description": "OpenVR functionality for VTK",
@@ -255,13 +261,6 @@
         {
           "name": "proj",
           "default-features": false
-        },
-        {
-          "name": "vtk",
-          "default-features": false,
-          "features": [
-            "sql"
-          ]
         }
       ]
     },
@@ -317,14 +316,14 @@
         "sqlite3"
       ]
     },
-    "utf8": {
-      "description": "Enables vtk reader/writer with utf-8 path support",
+    "tbb": {
+      "description": "Use TBB multithreading parallel implementation",
       "dependencies": [
-        {
-          "name": "vtk",
-          "default-features": false
-        }
+        "tbb"
       ]
+    },
+    "utf8": {
+      "description": "Enables vtk reader/writer with utf-8 path support"
     },
     "vtkm": {
       "description": "Build with vtk-m accelerator and module.",

@@ -1,17 +1,14 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO deniskovalchuk/libftp
         REF "v${VERSION}"
-        SHA512 7765c35884e1e4560e39018b15f441abac687afcb06942b0350ef21df8bf27d40283011397ce4a9e9125772bb9752180c225429b274fd6374e1a521ac2744b2e
+        SHA512 34e3abdbe5fbc9e422f58e50f5a6f276ffbd3abf8d2c419c294e4e7ea36fb42dbdf15dff3c3a3d9e1c7ca7164e7f6fdc77f12f722c6002294a77e46fa61e3122
         HEAD_REF master
 )
 
 vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        DISABLE_PARALLEL_CONFIGURE # generating export header in source dir
         OPTIONS
             -DLIBFTP_BUILD_TEST=OFF
             -DLIBFTP_BUILD_EXAMPLE=OFF

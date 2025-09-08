@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ermig1979/Simd
     REF "v${VERSION}"
-    SHA512 b490d1ea42cf5fa3d5a6ccf5f62c2f2f661c8e413d6a11d5caf384c9b4b6d0cda2c76499f03711a492c83cd56fbf685f58fb6626579d18053158d084a8ce74df
+    SHA512 91b0e4e4876330026154b1a5ad86fca164eed25ec478192999d7c0e55660fe18d7ecaecba6535fda55db53276734c0f81cd8398facfcd3e6a3f39d92330480cb
     HEAD_REF master
     PATCHES
         fix-platform-detection.patch

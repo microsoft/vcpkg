@@ -1,6 +1,7 @@
 {
   "name": "llgi",
   "version-date": "2023-12-19",
+  "port-version": 1,
   "homepage": "https://github.com/altseed/LLGI",
   "license": null,
   "supports": "!(uwp | android)",

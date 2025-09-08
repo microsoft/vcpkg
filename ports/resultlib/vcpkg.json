@@ -1,0 +1,9 @@
+{
+  "name": "resultlib",
+  "version-semver": "1.0.0",
+  "maintainers": "Guillermo Calvo <guillermo@guillermo.dev>",
+  "description": "Elegant error handling in C",
+  "homepage": "https://github.com/guillermocalvo/resultlib/",
+  "documentation": "https://result.guillermo.dev/",
+  "license": "Apache-2.0"
+}

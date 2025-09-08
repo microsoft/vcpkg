@@ -87,16 +87,22 @@ if(IMGUI_BUILD_OSX_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_osx.mm)
 endif()
 
-if(IMGUI_BUILD_SDL2_BINDING)
-    find_package(SDL2 CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp)
+if(IMGUI_BUILD_SDL3_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp)
 endif()
 
-if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
-    find_package(SDL2 CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::SDL2)
-    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.cpp)
+if(IMGUI_BUILD_SDLGPU3_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3.cpp)
+endif()
+
+if(IMGUI_BUILD_SDL3_RENDERER_BINDING)
+    find_package(SDL3 CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
 endif()
 
 if(IMGUI_BUILD_VULKAN_BINDING)
@@ -116,10 +122,10 @@ if(IMGUI_FREETYPE)
     target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE)
 endif()
 
-if(IMGUI_FREETYPE_LUNASVG)
-    find_package(unofficial-lunasvg CONFIG REQUIRED)
-    target_link_libraries(${PROJECT_NAME} PUBLIC unofficial::lunasvg::lunasvg)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE_LUNASVG)
+if(IMGUI_FREETYPE_SVG)
+    find_package(plutosvg CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC plutosvg::plutosvg)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE_PLUTOSVG)
 endif()
 
 if(IMGUI_USE_WCHAR32)
@@ -229,12 +235,22 @@ if(NOT IMGUI_SKIP_HEADERS)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_osx.h DESTINATION include)
     endif()
 
-    if(IMGUI_BUILD_SDL2_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl2.h DESTINATION include)
+    if(IMGUI_BUILD_SDL3_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdl3.h DESTINATION include)
     endif()
 
-    if(IMGUI_BUILD_SDL2_RENDERER_BINDING)
-        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.h DESTINATION include)
+    if(IMGUI_BUILD_SDLGPU3_BINDING)
+        install(
+            FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3.h
+                ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlgpu3_shaders.h
+            DESTINATION
+                include
+        )
+    endif()
+
+    if(IMGUI_BUILD_SDL3_RENDERER_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_VULKAN_BINDING)

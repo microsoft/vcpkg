@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-mpg123",
+  "version-string": "ci",
+  "description": "Validates mpg123",
+  "dependencies": [
+    "mpg123",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

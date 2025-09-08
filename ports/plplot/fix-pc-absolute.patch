@@ -1,0 +1,26 @@
+diff --git a/cmake/modules/wingcc.cmake b/cmake/modules/wingcc.cmake
+index 25a7494..bb0f476 100644
+--- a/cmake/modules/wingcc.cmake
++++ b/cmake/modules/wingcc.cmake
+@@ -40,7 +40,7 @@ if(PLD_wingcc)
+   endif(GDI32_LIBRARY)
+   if(GDI32_LIBRARY AND COMDLG32_LIBRARY)
+     message(STATUS "Looking for gdi32 header and library - found")
+-    set(wingcc_LINK_FLAGS "${GDI32_LIBRARY};${COMDLG32_LIBRARY}")
++    set(wingcc_LINK_FLAGS "-lgdi32;-lcomdlg32")
+     if(WITH_FREETYPE)
+       set(
+       wingcc_COMPILE_FLAGS
+diff --git a/cmake/modules/wingdi.cmake b/cmake/modules/wingdi.cmake
+index bbe7aed..24c29f9 100644
+--- a/cmake/modules/wingdi.cmake
++++ b/cmake/modules/wingdi.cmake
+@@ -41,7 +41,7 @@ if(PLD_wingdi)
+   endif(GDI32_LIBRARY)
+   if(GDI32_LIBRARY AND COMDLG32_LIBRARY AND COMCTL32_LIBRARY)
+     message(STATUS "Looking for gdi32 header and library - found")
+-    set(wingdi_LINK_FLAGS "${GDI32_LIBRARY};${COMDLG32_LIBRARY};${COMCTL32_LIBRARY}")
++    set(wingdi_LINK_FLAGS "-lgdi32;-lcomdlg32;-lcomctl32")
+     set(DRIVERS_LINK_FLAGS ${DRIVERS_LINK_FLAGS} ${wingdi_LINK_FLAGS})
+   else(GDI32_LIBRARY AND COMDLG32_LIBRARY AND COMCTL32_LIBRARY)
+     message(STATUS "Looking for gdi32 header and library - not found")

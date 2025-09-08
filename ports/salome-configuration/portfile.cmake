@@ -1,7 +1,11 @@
-vcpkg_from_git(
+string(REPLACE "." "_" UNDERSCORE_VERSION "${VERSION}")
+
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH_CONFIG
-    URL "https://git.salome-platform.org/gitpub/tools/configuration.git"
-    REF "25f724f7a6c0000330a40c3851dcd8bc2493e1fa"
+    REPO SalomePlatform/configuration
+    REF "V${UNDERSCORE_VERSION}"
+    SHA512 e905a0f1e1105f5a630153036b80942032ccc07fad411d390e4da19d56561e224ac2ac681873b97d811d33ce4b0c9518ce3488b54414a42e011c39628d8e1673
+    HEAD_REF master
 )
 
 file(COPY "${SOURCE_PATH_CONFIG}/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

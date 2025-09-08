@@ -1,7 +1,7 @@
 {
   "name": "libenvpp",
-  "version": "1.4.1",
-  "description": "A modern C++ library for type-safe environment variable parsing ",
+  "version": "1.5.1",
+  "description": "A modern C++ library for type-safe environment variable parsing",
   "homepage": "https://github.com/ph3at/libenvpp",
   "license": "Apache-2.0",
   "supports": "!uwp",

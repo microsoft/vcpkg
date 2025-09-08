@@ -12,6 +12,6 @@ index c99d71a..7333110 100644
 +    set(CMAKE_IMPORT_LIBRARY_PREFIX "")
 +endif()
 +
- # Add the CMake directory for custom CMake modules
- set(CMAKE_MODULE_PATH "${LAPACK_SOURCE_DIR}/CMAKE" ${CMAKE_MODULE_PATH})
- 
+ # Allow setting a prefix for the library names
+ set(CMAKE_STATIC_LIBRARY_PREFIX "lib${LIBRARY_PREFIX}")
+ set(CMAKE_SHARED_LIBRARY_PREFIX "lib${LIBRARY_PREFIX}")

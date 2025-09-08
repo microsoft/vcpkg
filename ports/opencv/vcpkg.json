@@ -1,6 +1,6 @@
 {
   "name": "opencv",
-  "version": "4.10.0",
+  "version": "4.11.0",
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -9,9 +9,6 @@
       "name": "opencv4",
       "default-features": false
     }
-  ],
-  "default-features": [
-    "default-features"
   ],
   "features": {
     "ade": {
@@ -22,6 +19,18 @@
           "default-features": false,
           "features": [
             "ade"
+          ]
+        }
+      ]
+    },
+    "aravis": {
+      "description": "aravis",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "aravis"
           ]
         }
       ]
@@ -86,14 +95,14 @@
         }
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
+    "directml": {
+      "description": "Build with DirectML support",
       "dependencies": [
         {
           "name": "opencv4",
           "default-features": false,
           "features": [
-            "default-features"
+            "directml"
           ]
         }
       ]
@@ -278,18 +287,6 @@
         }
       ]
     },
-    "jasper": {
-      "description": "JPEG 2000 support for opencv (deprecated)",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "jasper"
-          ]
-        }
-      ]
-    },
     "jpeg": {
       "description": "JPEG support for opencv",
       "dependencies": [
@@ -302,14 +299,14 @@
         }
       ]
     },
-    "lapack": {
-      "description": "LAPACK support for opencv",
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
       "dependencies": [
         {
           "name": "opencv4",
           "default-features": false,
           "features": [
-            "lapack"
+            "jpegxl"
           ]
         }
       ]

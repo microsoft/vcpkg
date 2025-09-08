@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5a51d5285c..8374f911a6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,7 +14,7 @@ project(boost_cobalt VERSION "${BOOST_COBALT_VERSION}" LANGUAGES CXX)
+ 
+ include(cmake/CheckRequirements.cmake)
+ if (NOT BOOST_COBALT_REQUIREMENTS_MATCHED)
+-    return()
++    message(FATAL_ERROR "The current compiler is not supported.")
+ endif()
+ 
+ set(BOOST_COBALT_IS_ROOT OFF)

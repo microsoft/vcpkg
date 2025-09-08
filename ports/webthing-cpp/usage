@@ -3,3 +3,11 @@ webthing-cpp is header-only and can be used from CMake via:
 
   find_path(WEBTHING_CPP_INCLUDE_DIRS "bw/webthing/webthing.hpp")
   target_include_directories(main PRIVATE ${WEBTHING_CPP_INCLUDE_DIRS})
+
+However it requires
+
+  find_package(nlohmann_json_schema_validator CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE nlohmann_json_schema_validator::validator)
+
+  find_package(unofficial-uwebsockets CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::uwebsockets::uwebsockets)

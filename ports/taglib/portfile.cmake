@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
     REF "v${VERSION}"
-    SHA512 099d02b2eab033f5702a8cb03e70752d7523c6f8c2f3eebdd0bcd939eafbdca3f2a6c82452983904b5822cfa45f2707ed866c3419508df9d43bf5c0b3a476f6c
+    SHA512 79f333dbe8ed44076010e33803e3418410516df4b70203962bbefea81ce0a6989a54a9791022488e64f1876573580cbe93920da4b2a7277d6a3f48c946e518fc
     HEAD_REF master
-    PATCHES
-        disable-wchar-t-check-emscripten.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")

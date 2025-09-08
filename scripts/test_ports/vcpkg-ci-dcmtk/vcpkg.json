@@ -9,12 +9,12 @@
       "name": "dcmtk",
       "features": [
         "iconv",
-        "icu",
         "openssl",
         "tiff",
         "tools",
         "xml2",
-        "zlib"
+        "zlib",
+        "openjpeg"
       ]
     },
     {

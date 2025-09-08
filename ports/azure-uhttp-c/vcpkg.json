@@ -1,6 +1,6 @@
 {
   "name": "azure-uhttp-c",
-  "version-date": "2024-06-24",
+  "version-date": "2025-03-31",
   "description": "Azure HTTP Library written in C",
   "homepage": "https://github.com/Azure/azure-uhttp-c",
   "license": "MIT",

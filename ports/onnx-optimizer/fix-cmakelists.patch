@@ -42,36 +42,6 @@ index 0063385..f1522bc 100644
  target_include_directories(onnx_optimizer PUBLIC
      $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
      $<INSTALL_INTERFACE:include>
-@@ -70,7 +77,7 @@ if(BUILD_ONNX_PYTHON)
-       set(PY_EXT_SUFFIX ".so")
-     endif()
-   endif()
--  find_package(Python COMPONENTS Interpreter REQUIRED)
-+  find_package(Python3 COMPONENTS Development REQUIRED)
- 
-   onnxopt_add_library(onnx_opt_cpp2py_export MODULE "onnxoptimizer/cpp2py_export.cc")
-   set_target_properties(onnx_opt_cpp2py_export PROPERTIES PREFIX "")
-@@ -84,7 +91,7 @@ if(BUILD_ONNX_PYTHON)
-                              $<INSTALL_INTERFACE:include>
-                              ${Python_INCLUDE_DIR})
-   # pybind11 is a header only lib
--  find_package(pybind11 2.2)
-+  find_package(pybind11 2.2 CONFIG REQUIRED)
-   if(pybind11_FOUND)
-     target_include_directories(onnx_opt_cpp2py_export PUBLIC
-       ${pybind11_INCLUDE_DIRS})
-@@ -121,9 +128,9 @@ if(BUILD_ONNX_PYTHON)
- 
-   target_link_libraries(onnx_opt_cpp2py_export PRIVATE onnx_optimizer)
- 
-+  target_link_directories(onnx_opt_cpp2py_export PRIVATE ${Python3_LIBRARY_DIRS})
-+  target_link_libraries(onnx_opt_cpp2py_export PRIVATE ${Python3_LIBRARIES})
-   if(MSVC)
--    find_package(Python COMPONENTS Interpreter Development REQUIRED)
--    target_link_libraries(onnx_opt_cpp2py_export PRIVATE ${Python_LIBRARIES})
-     target_compile_options(onnx_opt_cpp2py_export
-                            PRIVATE /MP
-                                    /WX
 diff --git a/cmake/utils.cmake b/cmake/utils.cmake
 index 6cca9f3..9d79f1a 100644
 --- a/cmake/utils.cmake
@@ -91,8 +61,8 @@ index 72dcc88..c5639c8 100644
  # as well as ONNX Optimizer targets for other cmake libraries to use.
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(onnx CONFIG)
-+
++find_dependency(protobuf CONFIG)
++find_dependency(ONNX CONFIG)
  # library version information
  set(ONNX_OPTIMIZER_VERSION "@ONNX_OPTIMIZER_VERSION@")
  

@@ -1,0 +1,13 @@
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 27e4680..ab4c404 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -418,7 +418,7 @@ if (USE_ICU_REGEXP)
+ endif ()
+ 
+ if (NOT WIN32)
+-  add_definitions ("-Wall -Werror")
++  add_definitions ("-Wall")
+ endif ()
+ 
+ include_directories ("src")

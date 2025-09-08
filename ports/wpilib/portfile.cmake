@@ -9,6 +9,7 @@ vcpkg_from_github(
         missing-find_dependency.patch
         fix-usage.patch
         fix-build-error-with-fmt11.patch
+        fix-fmt.patch #https://github.com/wpilibsuite/allwpilib/pull/6796
 )
 
 if("allwpilib" IN_LIST FEATURES)

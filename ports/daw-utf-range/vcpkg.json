@@ -1,8 +1,9 @@
 {
   "name": "daw-utf-range",
   "version": "2.2.5",
+  "port-version": 1,
   "description": "Header-only utf8 string range used by daw-json-link. Includes a constexpr/noexcept modified version of utfcpp.",
-  "homepage": "https://github.com/beached/header_libraries",
+  "homepage": "https://github.com/beached/utf_range",
   "license": "BSL-1.0",
   "dependencies": [
     "daw-header-libraries",

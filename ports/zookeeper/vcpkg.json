@@ -1,7 +1,6 @@
 {
   "name": "zookeeper",
-  "version": "3.5.6",
-  "port-version": 1,
+  "version": "3.8.4",
   "description": "ZooKeeper C bindings",
   "homepage": "https://github.com/apache/zookeeper",
   "license": "BSD-3-Clause",
@@ -15,10 +14,13 @@
       "host": true
     }
   ],
-  "default-features": [
-    "sync"
-  ],
   "features": {
+    "openssl": {
+      "description": "Enable OpenSSL support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
     "sync": {
       "description": "ZooKeeper with the sync API"
     }
