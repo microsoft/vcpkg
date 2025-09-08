@@ -1,7 +1,6 @@
 {
   "name": "intel-mkl",
-  "version": "2023.0.0",
-  "port-version": 5,
+  "version": "2023.2.0",
   "description": "Intel® Math Kernel Library (Intel® MKL) accelerates math processing routines, increases application performance, and reduces development time on Intel® processors.",
   "homepage": "https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html",
   "license": null,
