@@ -1,6 +1,6 @@
 {
   "name": "gperftools",
-  "version": "2.16",
+  "version": "2.17.2",
   "description": "A high-performance multi-threaded malloc() implementation, plus some performance analysis tools.",
   "homepage": "https://github.com/gperftools/gperftools",
   "license": "BSD-3-Clause",
@@ -21,9 +21,6 @@
     "override": {
       "description": "Override Windows allocators",
       "supports": "windows & staticcrt"
-    },
-    "tools": {
-      "description": "Install tools"
     }
   }
 }
