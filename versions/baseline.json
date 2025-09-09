@@ -2057,8 +2057,8 @@
       "port-version": 4
     },
     "cppgraphqlgen": {
-      "baseline": "4.5.7",
-      "port-version": 2
+      "baseline": "4.5.9",
+      "port-version": 0
     },
     "cppitertools": {
       "baseline": "2.3",
