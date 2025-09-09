@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_download_distfile(FIX_UPSTREAM_421
     URLS https://github.com/DanielChappuis/reactphysics3d/pull/421.patch?full_index=1
     SHA512 71ab7d5024fff100546d1cc934976f15e3ee3fe8df29ff62e1c743d3f0c5f6dad73def0b9d0a560fa423e610cb1388c88c3226d8e2b9f2b1afdf4535204541ff
