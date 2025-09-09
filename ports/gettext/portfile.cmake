@@ -12,34 +12,44 @@
 set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
+# gettext hates msys2. Turn off msys2 heurisics for command line arguments.
+set(ENV{MSYS2_ARG_CONV_EXCL} "*")
+include("${CURRENT_PORT_DIR}/vcpkg_make.cmake")
+include("${CURRENT_PORT_DIR}/vcpkg_make_common.cmake")
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
-         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
-    FILENAME "gettext-${VERSION}.tar.gz"
-    SHA512 d8b22d7fba10052a2045f477f0a5b684d932513bdb3b295c22fbd9dfc2a9d8fccd9aefd90692136c62897149aa2f7d1145ce6618aa1f0be787cb88eba5bc09be
+    URLS "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.xz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.xz"
+    FILENAME "gettext-${VERSION}.tar.xz"
+    SHA512 544e41c9390695df1c21542842e9ca027a03cb7d4045d8cd759dec1a3dfb624aae900751b458bdb31d6454b37c40c474a952059b884555a03c7c95d6d0e687b1
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        assume-modern-darwin.patch
-        uwp.patch
+        # assume-modern-darwin.patch
+        # uwp.patch
         rel_path.patch
         subdirs.patch
-        parallel-gettext-tools.patch
+        # parallel-gettext-tools.patch
         config-step-order.patch
-        0001-xgettext-Fix-some-test-failures-on-MSVC.patch
+        # 0001-xgettext-Fix-some-test-failures-on-MSVC.patch
 )
+
+macro(execute_process)
+    _execute_process(TIMEOUT 1800 ${ARGN})
+endmacro()
 
 set(subdirs "")
 if("runtime-tools" IN_LIST FEATURES)
-    string(APPEND subdirs " gettext-runtime")
+    list(APPEND subdirs "gettext-runtime")
 endif()
 if("tools" IN_LIST FEATURES)
-    string(APPEND subdirs " libtextstyle gettext-tools")
+    list(APPEND subdirs "libtextstyle" "gettext-tools")
 endif()
 if(subdirs)
-    set(ENV{VCPKG_GETTEXT_SUBDIRS} "${subdirs}")
+    list(JOIN subdirs " " subdirs_string)
+    set(ENV{VCPKG_GETTEXT_SUBDIRS} "${subdirs_string}")
 
     vcpkg_find_acquire_program(BISON)
     cmake_path(GET BISON FILENAME BISON_NAME)
@@ -47,6 +57,7 @@ if(subdirs)
     vcpkg_add_to_path("${BISON_PATH}")
 
     if(VCPKG_HOST_IS_WINDOWS)
+elseif(0)
         message(STATUS "Modifying build system for less forks")
         set(ENV{CONFIG_SHELL} "/usr/bin/bash")
         vcpkg_execute_required_process(
@@ -64,7 +75,9 @@ if(subdirs)
         --disable-acl
         --disable-csharp
         --disable-curses
+        --disable-d
         --disable-java
+        --disable-modula2
         --disable-openmp
         --disable-dependency-tracking
         # Avoiding system dependencies and unnecessary tests
@@ -77,6 +90,7 @@ if(subdirs)
         --without-git
         --without-libcurses-prefix
         --without-libncurses-prefix
+        --without-selinux
         --without-libtermcap-prefix
         --without-libxcurses-prefix
         "INTLBISON=${BISON_NAME}"
@@ -84,9 +98,9 @@ if(subdirs)
     )
 
     if("nls" IN_LIST FEATURES)
-        vcpkg_list(APPEND options "--enable-nls")
+        vcpkg_list(APPEND OPTIONS "--enable-nls")
     else()
-        vcpkg_list(APPEND options "--disable-nls")
+        vcpkg_list(APPEND OPTIONS "--disable-nls")
     endif()
 
     if(VCPKG_TARGET_IS_LINUX)
@@ -139,22 +153,37 @@ if(subdirs)
         endif()
     endif()
 
+set(msys_require_packages gzip)
     file(REMOVE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log")
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
-        DETERMINE_BUILD_TRIPLET
-        USE_WRAPPERS
-        ADDITIONAL_MSYS_PACKAGES gzip
+    vcpkg_make_configure(SOURCE_PATH "${SOURCE_PATH}"
+        #[[ADDITIONAL_MSYS_PACKAGES gzip]]
         OPTIONS
             ${OPTIONS}
         OPTIONS_RELEASE
             "--cache-file=${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}-rel.log"
     )
 
+    foreach(subdir IN LISTS subdirs)
+        file(COPY_FILE
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${subdir}/config.log"
+            "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-${subdir}-config.log"
+        )
+    endforeach()
+
+# Considered for fixup in vcpkg-make:
+# https://savannah.gnu.org/support/?111257,
+# isolated in https://github.com/microsoft/vcpkg/pull/45913
+file(GLOB_RECURSE libtool_scripts "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*libtool")
+foreach(script IN LISTS libtool_scripts)
+    vcpkg_replace_string("${script}" "lt_ar_flags=([^\"\n]+)" "lt_ar_flags=\"\\1\"" REGEX IGNORE_UNCHANGED)
+endforeach()
+
     # This helps with Windows build times, but should work everywhere in vcpkg.
     # - Avoid an extra command to move a temporary file, we are building out of source.
     # - Avoid a subshell just to add comments, the build dir is temporary.
     # - Avoid cygpath -w when other tools handle this for us.
     file(GLOB_RECURSE makefiles "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}*/*Makefile")
+set(makefiles "")
     foreach(file IN LISTS makefiles)
         file(READ "${file}" rules)
         string(REGEX REPLACE "(\n\ttest -d [^ ]* [|][|] [\$][(]MKDIR_P[)][^\n;]*)(\n\t)" "\\1 || exit 1 ; \\\\\\2" rules "${rules}")
@@ -164,7 +193,10 @@ if(subdirs)
         file(WRITE "${file}" "${rules}")
     endforeach()
 
-    vcpkg_install_make()
+    # ... but libtool needs msys2 conversions
+    set(ENV{MSYS2_ARG_CONV_EXCL} "")
+
+    vcpkg_make_install()
     vcpkg_copy_pdbs()
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(GLOB unix_runtime LIST_DIRECTORIES false
@@ -179,7 +211,8 @@ if(subdirs)
 endif()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/libexec/gettext/user-email" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../.." IGNORE_UNCHANGED)
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/libexec/gettext")
 else()
     # A fast installation of the autopoint tool and data, needed for autoconfig
     include("${CMAKE_CURRENT_LIST_DIR}/install-autopoint.cmake")
@@ -192,12 +225,13 @@ endif()
 file(INSTALL
     "${SOURCE_PATH}/gettext-runtime/m4/build-to-host.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/gettext.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/iconv.m4"
-    "${SOURCE_PATH}/gettext-runtime/m4/intlmacosx.m4"
+    "${SOURCE_PATH}/gettext-runtime/m4/glibc2.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/nls.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/po.m4"
     "${SOURCE_PATH}/gettext-runtime/m4/progtest.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/host-cpu-c-abi.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/iconv.m4"
+    "${SOURCE_PATH}/gettext-runtime/gnulib-m4/intlmacosx.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-ld.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-link.m4"
     "${SOURCE_PATH}/gettext-runtime/gnulib-m4/lib-prefix.m4"
