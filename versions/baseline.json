@@ -3186,7 +3186,7 @@
     },
     "gdbm": {
       "baseline": "1.24",
-      "port-version": 0
+      "port-version": 1
     },
     "gdcm": {
       "baseline": "3.0.24",
