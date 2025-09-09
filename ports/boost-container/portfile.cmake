@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         posix-threads.diff
+        fix_msvc_c4146_warnings.diff
 )
 
 set(FEATURE_OPTIONS "")

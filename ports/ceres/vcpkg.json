@@ -1,7 +1,7 @@
 {
   "name": "ceres",
   "version": "2.2.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
   "license": "Apache-2.0",

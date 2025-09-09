@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter",
-  "version-semver": "0.25.8",
+  "version-semver": "0.25.9",
   "description": "An incremental parsing system for programming tools.",
   "homepage": "https://github.com/tree-sitter/tree-sitter",
   "license": "MIT",

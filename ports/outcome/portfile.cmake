@@ -15,6 +15,12 @@
 # the exact copy of those third party libraries known to
 # have passed Outcome's CI process.
 
+vcpkg_download_distfile(MISSING_HEADER_FIX
+    URLS https://github.com/ned14/outcome/commit/d4d38266a0c889be00069600bdbc339456f8f5bd.patch?full_index=1
+    FILENAME outcome-missing-swap-d4d38266a0c889be00069600bdbc339456f8f5bd.patch
+    SHA512 bcc6c050001776b998ff8146b7937ab86811288a0e611b911fad5031b654b0839c41a57196f70ec314c322124e1cb6473a7c5e91472e18b5bb6d35780eaf65f8
+)
+
 if ("polyfill-cxx20" IN_LIST FEATURES)
     message(WARNING [=[
     Outcome depends on QuickCppLib which uses the vcpkg versions of gsl-lite and byte-lite, rather than the versions tested by QuickCppLib's and Outcome's CI. It is not guaranteed to work with other versions, with failures experienced in the past up-to-and-including runtime crashes. See the warning message from QuickCppLib for how you can pin the versions of those dependencies in your manifest file to those with which QuickCppLib was tested. Do not report issues to upstream without first pinning the versions as QuickCppLib was tested against.
@@ -29,6 +35,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         fix-status-code-path.patch
+        "${MISSING_HEADER_FIX}"
 )
 
 # Because outcome's deployed files are header-only, the debug build is not necessary

@@ -2,13 +2,10 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 d9b4cdc798212ddeb518d9c1d8a6640423ac05f9e8ce99855f96c63778a6757079da37fed17ad8ec131b3f28a9f89c3580d2bbacad03d7607d9d9150347f4903
+        SHA512 8e725d94cfd81989d4f6d206728188e5b290ce3a7f71d89adc6beed91957f965180d34d69d9099d04e35fc402b389de56184875397b29286789bd9c5655595c5
         HEAD_REF main
     PATCHES
-        bigobj.patch
-        unvendor_icu_and_find_dependency.patch # https://github.com/duckdb/duckdb/pull/16176 + https://github.com/duckdb/duckdb/pull/16197
         extensions.patch
-        t-external-icu.patch # from https://github.com/duckdb/duckdb/pull/16676
 )
 
 # Remove vendored dependencies which are not properly namespaced
@@ -23,11 +20,9 @@ if("excel" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_EXCCEL_SOURCE_PATH
         REPO duckdb/duckdb-excel
-        REF f14e7c3beaf379c54b47b996aa896a1d814e1be8
-        SHA512 d2e97cfd59fc08d86f6e4a6fe35dc7dd6435ef1750b334d4b422555987d55eef67a9eb1b1859cacc46addd7a6f848de4e5e092d694fc4ccd7cf24fcf8298012e
+        REF 6c7a0270608d18053d23359834b775d40804a052
+        SHA512 442b4dc9405f34a9b624e5c4e874ebf2cffd1f5c477257b090613f987d83fcc02bc2293b8d163fffe018aa250e90bcadc9ac345e84dc4c96f4092c19c769f924
         HEAD_REF main
-        PATCHES
-            excel-libname.patch
     )
     file(RENAME "${DUCKDB_EXCCEL_SOURCE_PATH}" "${SOURCE_PATH}/extension/excel")
 endif()
@@ -36,8 +31,8 @@ if("httpfs" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
         REPO duckdb/duckdb_httpfs
-        REF 85ac4667bcb0d868199e156f8dd918b0278db7b9
-        SHA512 5790ed795d394dd1b512aac0d1f1dc5976588d93b34381cab1d78c256428f3047682c7b662b1c855d3b19a9dbf99a6c64f32152dba347c18f2a36e19bcc3c5df
+        REF a4a014d4fc232c3087ee44a804959b5d67a0f8c5
+        SHA512 7e774a0714b863ecd49ad6ff07b8ecf780614f8e81d097dc01def37b48efb140efba003a5caa2deec9c83c636906fbcb44f5d74813da31f162d9d8b06016afe8
         HEAD_REF main
     )
     file(RENAME "${DUCKDB_HTTPFS_SOURCE_PATH}" "${SOURCE_PATH}/extension/httpfs")
