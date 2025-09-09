@@ -7613,7 +7613,7 @@
       "port-version": 0
     },
     "promise-cpp": {
-      "baseline": "2.1.2",
+      "baseline": "2.1.5",
       "port-version": 0
     },
     "protobuf": {
