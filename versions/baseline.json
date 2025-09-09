@@ -4918,7 +4918,7 @@
     },
     "libiconv": {
       "baseline": "1.18",
-      "port-version": 1
+      "port-version": 2
     },
     "libics": {
       "baseline": "1.6.8",
@@ -10009,7 +10009,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-08-21",
+      "baseline": "2025-09-09",
       "port-version": 0
     },
     "vcpkg-msbuild": {
