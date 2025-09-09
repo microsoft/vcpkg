@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-crashpad-wer.patch
         fix-usage-runtime.patch
+        fix-cmake4.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/external/crashpad/third_party/zlib/zlib")
 

@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 11,
+  "port-version": 10,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
@@ -19,7 +19,6 @@
         "zlib"
       ]
     },
-    "gl2ps",
     "glew",
     {
       "name": "hdf5",
@@ -57,11 +56,6 @@
       "host": true
     },
     "verdict",
-    {
-      "name": "vtk-compile-tools",
-      "host": true,
-      "platform": "!native"
-    },
     "zlib"
   ],
   "default-features": [
@@ -219,7 +213,13 @@
       ]
     },
     "opengl": {
-      "description": "All opengl related modules"
+      "description": "All opengl related modules",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false
+        }
+      ]
     },
     "openmp": {
       "description": "Use openmp multithreading parallel implementation"
@@ -261,6 +261,13 @@
         {
           "name": "proj",
           "default-features": false
+        },
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
         }
       ]
     },
@@ -323,7 +330,13 @@
       ]
     },
     "utf8": {
-      "description": "Enables vtk reader/writer with utf-8 path support"
+      "description": "Enables vtk reader/writer with utf-8 path support",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false
+        }
+      ]
     },
     "vtkm": {
       "description": "Build with vtk-m accelerator and module.",
