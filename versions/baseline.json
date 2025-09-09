@@ -1662,7 +1662,7 @@
     },
     "cgicc": {
       "baseline": "3.2.20",
-      "port-version": 1
+      "port-version": 2
     },
     "cglm": {
       "baseline": "0.9.4",
