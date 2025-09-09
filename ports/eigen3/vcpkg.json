@@ -1,6 +1,7 @@
 {
   "name": "eigen3",
   "version": "3.4.1-250818",
+  "port-version": 1,
   "description": "C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.",
   "homepage": "http://eigen.tuxfamily.org",
   "license": "MPL-2.0",

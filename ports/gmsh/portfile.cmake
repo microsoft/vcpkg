@@ -7,7 +7,9 @@ vcpkg_from_gitlab(
     REF "${PORT}_${UNDERSCORES_VERSION}"
     SHA512 af2574ec3aadfddeedf981faced20a6736be06fe30c7670b682837612ca5a42248444f7a782ca5e75556cb957b5cf4467d5e972ba3f60559cc719690e73f3dca
     HEAD_REF master
-    PATCHES fix-install.patch
+    PATCHES
+        fix-install.patch
+        linking-and-naming.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_LIB)

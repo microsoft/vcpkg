@@ -189,6 +189,14 @@
             "nvcodec"
           ],
           "platform": "!android & !osx & !uwp & !(arm64 & windows)"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ],
+          "platform": "(linux | windows) & !arm & !uwp"
         }
       ]
     }
