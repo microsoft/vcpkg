@@ -88,6 +88,8 @@ $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
 $env:AZCOPY_LOG_LOCATION = Join-Path $failureLogs 'azcopy-logs'
 $env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $WorkingRoot 'azcopy-plans'
+$env:AZCOPY_BUFFER_GB = 2
+$env:AZCOPY_CONCURRENCY_VALUE = 16
 
 New-Item -Type Directory -Path $env:AZCOPY_LOG_LOCATION -Force | Out-Null
 
