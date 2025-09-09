@@ -11,6 +11,12 @@ vcpkg_from_github(
 file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/core/vendor/boost-regex")
 file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/core/vendor/uriparser")
 file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/core/vendor/yaml")
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/vendorpull")
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/jsonschema-test-suite")
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/core/vendor/googletest")
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/core/vendor/googlebenchmark")
+
+
 
 
 vcpkg_cmake_configure(
