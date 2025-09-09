@@ -125,7 +125,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_replace_string(
       "${CURRENT_PACKAGES_DIR}/share/arrayfire/ArrayFireConfig.cmake"
-      "{PACKAGE_PREFIX_DIR}/cmake/"
+      "{PACKAGE_PREFIX_DIR}/cmake"
       "{PACKAGE_PREFIX_DIR}/share/arrayfire"
     )
 endif()
