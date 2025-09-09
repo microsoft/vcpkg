@@ -17,10 +17,17 @@ vcpkg_from_github(
             ${PATCHES}
 )
 
+if (VCPKG_TARGET_IS_ANDROID)
+    list(APPEND OPTIONS ac_cv_func_malloc_0_nonnull=yes)
+    list(APPEND OPTIONS ac_cv_func_realloc_0_nonnull=yes)
+endif()
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     COPY_SOURCE
+    OPTIONS
+        ${OPTIONS}
 )
 vcpkg_install_make()
 
