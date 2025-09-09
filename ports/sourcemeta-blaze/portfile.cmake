@@ -8,6 +8,11 @@ vcpkg_from_github(
         use_vcpkg_libs.patch
 )
 
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/core/vendor/boost-regex")
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/core/vendor/uriparser")
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/core/vendor/yaml")
+
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )

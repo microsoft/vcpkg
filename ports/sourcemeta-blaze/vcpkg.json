@@ -7,6 +7,7 @@
   "supports": "!arm",
   "dependencies": [
     "boost-regex",
+    "libyaml",
     "uriparser",
     {
       "name": "vcpkg-cmake",
