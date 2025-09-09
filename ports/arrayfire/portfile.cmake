@@ -116,6 +116,20 @@ if(FEATURES STREQUAL "core")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string(
+      "${CURRENT_PACKAGES_DIR}/share/arrayfire/ArrayFireConfig.cmake"
+      "{PACKAGE_PREFIX_DIR}/share/ArrayFire/cmake"
+      "{PACKAGE_PREFIX_DIR}/share/arrayfire"
+    )
+else()
+    vcpkg_replace_string(
+      "${CURRENT_PACKAGES_DIR}/share/arrayfire/ArrayFireConfig.cmake"
+      "{PACKAGE_PREFIX_DIR}/cmake/"
+      "{PACKAGE_PREFIX_DIR}/share/arrayfire"
+    )
+endif()
+
 # Copyright and license
 file(INSTALL "${SOURCE_PATH}/COPYRIGHT.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
