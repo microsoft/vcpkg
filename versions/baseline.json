@@ -4997,8 +4997,8 @@
       "port-version": 9
     },
     "liblinear": {
-      "baseline": "243",
-      "port-version": 1
+      "baseline": "249",
+      "port-version": 0
     },
     "liblo": {
       "baseline": "0.32",
