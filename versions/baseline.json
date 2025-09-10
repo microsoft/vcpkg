@@ -6733,8 +6733,8 @@
       "port-version": 0
     },
     "nlohmann-fifo-map": {
-      "baseline": "2018.05.07",
-      "port-version": 3
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "nlohmann-json": {
       "baseline": "3.12.0",
