@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 fd537c5d45d4c53de54c31b9286ff1100f74d62458fa2bbfd0d10d9cfedeb638e20c8d89a683b934310244de1de1093dbf79a06ac56a4918032ee31f0b49cbd7
     HEAD_REF master
+    PATCHES
+        remove-werror.patch
 )
 
 set(STRING_ENCODING_TYPE "NONE")
