@@ -8800,10 +8800,6 @@
       "baseline": "0.2.0",
       "port-version": 0
     },
-    "signalrclient": {
-      "baseline": "1.0.0-beta1-9",
-      "port-version": 6
-    },
     "signalsmith-dsp": {
       "baseline": "1.6.2",
       "port-version": 0

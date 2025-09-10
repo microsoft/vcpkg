@@ -486,7 +486,6 @@ shiva-sfml:x64-linux=fail
 shiva-sfml:x64-osx=fail
 shiva-sfml:x64-windows=fail
 shiva-sfml:x86-windows=fail
-signalrclient:arm-uwp=fail
 simbody:arm64-windows=fail
 simd(android)=fail
 sleef:x86-windows=fail
