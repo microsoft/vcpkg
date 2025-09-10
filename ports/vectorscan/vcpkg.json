@@ -4,7 +4,7 @@
   "description": "A portable fork of the high-performance regular expression matching library",
   "homepage": "https://vectorcamp.gr/project/vectorscan/",
   "license": "BSD-3-Clause",
-  "supports": "!windows & !(x64 | x86)",
+  "supports": "!windows & !(x64 | x86) & !android",
   "dependencies": [
     "boost-array",
     "boost-chrono",
