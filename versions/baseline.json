@@ -3506,7 +3506,7 @@
     },
     "guile": {
       "baseline": "3.0.10",
-      "port-version": 0
+      "port-version": 1
     },
     "guilite": {
       "baseline": "2022-05-05",
