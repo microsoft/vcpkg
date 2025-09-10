@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc2
     REF "v${VERSION}"
-    SHA512 ab9f1846edd7fde710508597e3dfe43f80bb35a20ce913984dfc3c4212c71c009cfc711a330beb6c19858170911c658df463b2b50bd6a1422e656e2bf6e53813
+    SHA512 6dfcbb16bfd0da8b1eb5287b3ab06ee83c5d19955195c9dad855ae0de98af7b20202b83103d80fda2578bc7fdd32205f26cdc63e4660ddb9559c83b3c5b603ff
     HEAD_REF main
-    PATCHES
-        config-typo.patch # https://github.com/Blosc/c-blosc2/pull/690
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLOSC2_STATIC)

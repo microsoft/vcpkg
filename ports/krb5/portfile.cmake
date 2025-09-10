@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO krb5/krb5
     REF krb5-${VERSION}-final
-    SHA512 82ea07acbc91a0352579aeec4f20d1c6d2c3f024640eaaa046f3ec5852d5d9c84143a1e0d04a5cf146f90c3406830823845eb608907f4060d7f765dfe0fb10a8
+    SHA512 4abfc37679483727fdad827afcf53729e6316febdf985a70133ee1dabaf8516e7fa771c1cfbc8fd557fed868c50f16b26bb59939ec091c2dd7019d0b2234ef1f
     HEAD_REF master
     PATCHES
         static-deps.diff
