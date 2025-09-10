@@ -780,10 +780,6 @@
       "baseline": "8.2.5",
       "port-version": 0
     },
-    "bond": {
-      "baseline": "13.0.1",
-      "port-version": 0
-    },
     "boolinq": {
       "baseline": "3.0.4",
       "port-version": 0
