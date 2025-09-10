@@ -27,6 +27,7 @@ vcpkg_copy_pdbs()
 # Not adjusting the directory name: The package is meant to be
 # selected either explicitly, or transitively via package vtk.
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/vtkcompiletools-${SHORT_VERSION})
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${port}/vtkcompiletools-config-version.cmake" "set(PACKAGE_VERSION_UNSUITABLE TRUE)" "# allow host tools on any arch")
 
 vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES vtkParseJava-${SHORT_VERSION} vtkWrapHierarchy-${SHORT_VERSION} vtkWrapJava-${SHORT_VERSION} vtkWrapPython-${SHORT_VERSION} vtkWrapPythonInit-${SHORT_VERSION})
 
