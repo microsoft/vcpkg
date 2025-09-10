@@ -1,6 +1,6 @@
 {
   "name": "pdal",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
   "homepage": "https://pdal.io/",
   "license": null,
@@ -30,6 +30,7 @@
       "name": "pdal-dimbuilder",
       "host": true
     },
+    "rapidxml",
     "utfcpp",
     {
       "name": "vcpkg-cmake",
