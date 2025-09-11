@@ -1,0 +1,21 @@
+{
+  "name": "sourcemeta-blaze",
+  "version": "1.0.0",
+  "description": "The ultra high-performance C++ JSON Schema validator, providing validation in the nano-second range along with perfect compliance scores. Supports Draft 4, Draft 6, Draft 7, 2019-09 and 2020-12. For both servers and embedded devices",
+  "homepage": "https://blaze.sourcemeta.com",
+  "license": "BSD-3-Clause",
+  "supports": "!arm",
+  "dependencies": [
+    "boost-regex",
+    "libyaml",
+    "uriparser",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

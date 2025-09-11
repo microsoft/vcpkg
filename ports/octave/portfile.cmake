@@ -12,6 +12,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         add_other_linkage_flags.patch
+        qhull.patch
 )
 
 include(vcpkg_find_fortran)
@@ -143,7 +144,33 @@ else()
     set(PORTAUDIO_OPTION "no")
 endif()
 
+if("gui" IN_LIST FEATURES)
+    set(GUI_OPTION "yes")
+else()
+    set(GUI_OPTION "no")
+endif()
+
+if("qhull" IN_LIST FEATURES)
+    set(QHULL_OPTION "yes")
+    set(QHULL_PKG_OPTION "qhullstatic_r")
+else()
+    set(QHULL_OPTION "no")
+endif()
+
+if("curl" IN_LIST FEATURES)
+    set(CURL_OPTION "yes")
+else()
+    set(CURL_OPTION "no")
+endif()
+
+if("graphicsmagick" IN_LIST FEATURES)
+    set(GRAPHICSMAGICK_OPTION "GraphicsMagick++")
+else()
+    set(GRAPHICSMAGICK_OPTION "no")
+endif()
+
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/fltk")
+vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/qt5/bin")
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -162,7 +189,7 @@ vcpkg_configure_make(
     --with-cholmod=${CHOLMOD_OPTION}
     --with-colamd=${COLAMD_OPTION}
     --with-cxsparse=${CXSPARSE_OPTION}
-    --with-curl=no
+    --with-curl=${CURL_OPTION}
     --with-fftw3 # yes
     --with-fftw3f # yes
     --with-fltk=${FLTK_OPTION}
@@ -171,14 +198,15 @@ vcpkg_configure_make(
     --with-glpk # yes
     --with-hdf5=${HDF5_OPTION}
     --with-klu=${KLU_OPTION}
-    --with-magick=no
+    --with-magick=${GRAPHICSMAGICK_OPTION}
     --with-opengl # yes
     --with-portaudio=${PORTAUDIO_OPTION}
     --with-pcre2 # yes
-    --with-qhull_r=no
+    --with-qhull_r=${QHULL_OPTION}
+    --with-qhull_r-pkg-config=${QHULL_PKG_OPTION}
     --with-qrupdate=no
     --with-qscintilla=no
-    --with-qt=no
+    --with-qt=${GUI_OPTION}
     --with-sndfile # yes
     --with-spqr=${SPQR_OPTION}
     --with-suitesparseconfig=${SUITESPARSECONFIG_OPTION}
