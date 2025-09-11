@@ -36,6 +36,9 @@ if(CMAKE_HOST_WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${BISON_DIR}/BISON${VCPKG_HOST_EXECUTABLE_SUFFIX}")
         file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     endif()
+    if(NOT EXISTS "${PYTHON3_DIR}/python3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        file(CREATE_LINK "${PYTHON3}" "${PYTHON3_DIR}/python3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    endif()
 endif()
 
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
