@@ -52,6 +52,7 @@ APT_PACKAGES="$APT_PACKAGES \
   build-essential \
   cmake \
   gcc g++ gfortran \
+  clang flang lld \
   libnuma1 libnuma-dev \
   libtool libtool-bin libltdl-dev \
   libudev-dev \
