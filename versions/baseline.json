@@ -3404,6 +3404,10 @@
       "baseline": "2.0.0",
       "port-version": 0
     },
+    "gpgmepp": {
+      "baseline": "2.0.0",
+      "port-version": 0
+    },
     "gpgmm": {
       "baseline": "0.1.2",
       "port-version": 1
