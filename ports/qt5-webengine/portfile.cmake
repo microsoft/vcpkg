@@ -67,7 +67,7 @@ set(PATCHES
     fix-spellcheck-buildflags.patch
 )
 
-set(OPTIONS "-webengine-python-version" "python3")
+set(OPTIONS "-webengine-python-version" "python")
 if("proprietary-codecs" IN_LIST FEATURES)
     list(APPEND OPTIONS "-webengine-proprietary-codecs")
 endif()
