@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 15edbe3917..206d532ddb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,11 +46,6 @@ endif()
+ if (APPLE AND NOT ANDROID AND NOT EMSCRIPTEN AND NOT ANDROID_PLATFORM)
+   SET(CMAKE_SIZEOF_VOID_P 4)
+ 
+-  if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+-    enable_language(OBJC)
+-    enable_language(OBJCXX)
+-  endif()
+-
+   if(POLICY CMP0068)
+     cmake_policy(SET CMP0068 NEW)  # CMake 3.9+: `RPATH` settings on macOS do not affect `install_name`.
+   endif()
+@@ -65,6 +60,13 @@ endif ()
+ 
+ project(OGRE VERSION 14.3.2)
+ 
++if (APPLE AND NOT ANDROID AND NOT EMSCRIPTEN AND NOT ANDROID_PLATFORM)
++  if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
++    enable_language(OBJC)
++    enable_language(OBJCXX)
++  endif()
++endif()
++
+ # extra version info
+ set(OGRE_VERSION_SUFFIX "")
+ set(OGRE_VERSION_NAME "Tsathoggua")
