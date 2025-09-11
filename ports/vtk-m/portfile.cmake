@@ -71,6 +71,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/vtkm-2.3" PACKAGE_NAME vtkm-2.3)
 vcpkg_fixup_pkgconfig()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtkm-2.3/VTKmConfig.cmake" "${CURRENT_BUILDTREES_DIR}" ":not/existing/buildtree:")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/vtkm-2.3/VTKmConfig.cmake" [[/lib/cmake/vtkm-2.3"]] [[/share/vtkm-2.3"]])
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
