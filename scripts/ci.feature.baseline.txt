@@ -2030,6 +2030,8 @@ vtk[seacas](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only su
 vtk[vtkm](arm64 & windows) = cascade # vtk-m[core] only supports !x86 & !uwp & !(arm & windows)
 vtk-dicom:arm64-uwp = cascade
 vtk-dicom:x64-uwp = cascade
+# cuda[core] only supports (windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)
+vtk-m[cuda](arm64 & windows) = cascade
 vtk-m[cuda](osx) = cascade
 vtk(uwp) = cascade # hdf5[core] only supports !uwp
 vulkan[tools](osx) = cascade
