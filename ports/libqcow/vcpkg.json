@@ -1,6 +1,6 @@
 {
   "name": "libqcow",
-  "version": "20221124",
+  "version": "20221124-DONOTMERGE",
   "port-version": 1,
   "description": "Library and tools to access the QEMU Copy-On-Write (QCOW) image format.",
   "homepage": "https://github.com/libyal/libqcow",
