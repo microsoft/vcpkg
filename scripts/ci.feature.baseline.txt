@@ -875,7 +875,6 @@ gazebo(arm | uwp | osx) = cascade
 gdal[arrow,parquet](!(arm64 | x64)) = cascade
 gdal[arrow,parquet](arm64 & windows) = cascade
 gdal[aws-ec2-windows](!windows) = cascade
-gdal[netcdf](android) = cascade
 gdcm2:arm64-uwp = cascade
 gdcm2:arm64-windows = cascade
 gdcm2:x64-uwp = cascade
