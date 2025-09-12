@@ -1,0 +1,46 @@
+cmake_minimum_required (VERSION 3.31)
+
+
+set(MIDI_SDK_VERSION "1.0.13-preview.13.192")
+set(MIDI_SDK_NUGET_URL "https://github.com/microsoft/MIDI/releases/download/preview-13/Microsoft.Windows.Devices.Midi2.${MIDI_SDK_VERSION}.nupkg")
+set(MIDI_SDK_SHA512 e950cf87ec74df7b8fb8d06c1c09646f5a9f390fa1d19b9906cc79874f52310bd90a80371f9bb089f953794b05d013d602780a5905ba77aa8d8a1a6205d341d8)
+
+set(MIDI2_WINMD "@MIDI_SDK_EXTRACTED_FILES@/ref/native/Microsoft.Windows.Devices.Midi2.winmd")
+
+message("-MIDI: MIDI SDK Version:   ${MIDI_SDK_VERSION}")
+message("-MIDI: MIDI SDK NuGet URL: ${MIDI_SDK_NUGET_URL}")
+
+# Get the MIDI SDK ---------------------------------------------------------------------------
+# Grab the NuGet package from the official release location
+vcpkg_download_distfile(
+    MIDISDK_ARCHIVE
+    URLS ${MIDI_SDK_NUGET_URL}
+    FILENAME "Microsoft.Windows.Devices.Midi2.${MIDI_SDK_VERSION}.zip"
+    SHA512 ${MIDI_SDK_SHA512}
+)
+
+# NuGet files are just zip files, so we extract it here
+vcpkg_extract_source_archive(
+    MIDI_SDK_EXTRACTED_FILES
+    ARCHIVE "${MIDISDK_ARCHIVE}"
+    NO_REMOVE_ONE_LEVEL
+)
+
+set(WINRT_GENERATED_HEADERS_FOLDER "${CURRENT_BUILDTREES_DIR}/GeneratedFiles")
+message("-MIDI: winrt generated headers will be here: ${WINRT_GENERATED_HEADERS_FOLDER}")
+
+# TODO: This should find and use the latest SDK, but needs to be
+# a minimum version. Currently this is not checking for that version
+vcpkg_get_windows_sdk(WINDOWS_SDK_VERSION)
+message("-MIDI: found Windows SDK: ${WINDOWS_SDK_VERSION}")
+
+
+# this will update the config file with a few variables needed at build time
+configure_file("${CMAKE_CURRENT_LIST_DIR}/microsoft-windows-devices-midi2-config.cmake"
+  "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
+  @ONLY)
+
+#vcpkg_cmake_config_fixup(PACKAGE_NAME "${PORT}")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+

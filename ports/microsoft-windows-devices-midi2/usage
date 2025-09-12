@@ -1,0 +1,6 @@
+
+microsoft-windows-devices-midi2 provides CMake target:
+
+    find_package(microsoft-windows-devices-midi2 CONFIG REQUIRED)
+
+It also sets the variable MIDI2_WINMD to the full path to the Microsoft.Windows.Devices.Midi2.winmd file
