@@ -10050,7 +10050,7 @@
     },
     "vcpkg-tool-gn": {
       "baseline": "2025-08-05",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-tool-gyp-next": {
       "baseline": "2022-10-15",
