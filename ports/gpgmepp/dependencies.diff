@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 33a55c7..dd66c85 100644
+index 33a55c7..ed169aa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -62,10 +62,9 @@ include(ECMUninstallTarget)
+@@ -62,10 +62,8 @@ include(ECMUninstallTarget)
  include(FeatureSummary)
  include(GNUInstallDirs)
  
@@ -11,30 +11,39 @@ index 33a55c7..dd66c85 100644
 -find_package(Gpgme ${GPGME_REQUIRED_VERSION})
 -set_package_properties(Gpgme PROPERTIES TYPE REQUIRED)
 +find_package(PkgConfig REQUIRED)
-+pkg_check_modules(LibGpgError "gpg-error>=${GPG_ERROR_REQUIRED_VERSION}" REQUIRED)
-+pkg_check_modules(Gpgme "gpgme>=${GPGME_REQUIRED_VERSION}" REQUIRED)
++pkg_check_modules(Gpgme "gpgme>=${GPGME_REQUIRED_VERSION}" "gpg-error>=${GPG_ERROR_REQUIRED_VERSION}" REQUIRED)
  
  g10_get_full_version()
  
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index d28ed8f..c121025 100644
+index d28ed8f..989a011 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -130,7 +130,7 @@ if(ENABLE_SHARED)
+@@ -126,11 +126,11 @@ if(ENABLE_SHARED)
+     target_sources(Gpgmepp PRIVATE ${Gpgmepp_SOURCES})
+ 
+     target_include_directories(Gpgmepp
+-        PRIVATE ${LibGpgError_INCLUDE_DIRS}
++        PRIVATE ${Gpgme_INCLUDE_DIRS}
          INTERFACE $<INSTALL_INTERFACE:include>
      )
  
 -    target_link_libraries(Gpgmepp Gpgme::Gpgme)
-+    target_link_libraries(Gpgmepp PRIVATE Gpgme_LINK_LIBRARIES)
++    target_link_libraries(Gpgmepp PRIVATE ${Gpgme_LINK_LIBRARIES})
  
      set_target_properties(Gpgmepp PROPERTIES
          OUTPUT_NAME gpgmepp
-@@ -146,7 +146,7 @@ if(ENABLE_STATIC)
+@@ -142,11 +142,11 @@ if(ENABLE_STATIC)
+     target_sources(GpgmeppStatic PRIVATE ${Gpgmepp_SOURCES})
+ 
+     target_include_directories(GpgmeppStatic
+-        PRIVATE ${LibGpgError_INCLUDE_DIRS}
++        PRIVATE ${Gpgme_INCLUDE_DIRS}
          INTERFACE $<INSTALL_INTERFACE:include>
      )
  
 -    target_link_libraries(GpgmeppStatic Gpgme::Gpgme)
-+    target_link_libraries(GpgmeppStatic PRIVATE Gpgme_LINK_LIBRARIES)
++    target_link_libraries(GpgmeppStatic PRIVATE ${Gpgme_LINK_LIBRARIES})
  
      set_target_properties(GpgmeppStatic PROPERTIES
          OUTPUT_NAME gpgmepp
