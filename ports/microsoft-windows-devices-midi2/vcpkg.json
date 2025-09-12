@@ -5,6 +5,7 @@
   "description": "Application SDK for using Windows MIDI Services (MIDI 1.0 and MIDI 2.0) from C++ apps. Microsoft.Windows.Devices.Midi2",
   "homepage": "https://aka.ms/midi",
   "license": "MIT",
+  "supports": "(windows & x64) | (windows & arm64) | (windows & arm64ec)",
   "dependencies": [
     {
       "name": "cppwinrt",
