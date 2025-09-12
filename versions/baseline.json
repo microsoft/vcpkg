@@ -8288,6 +8288,10 @@
       "baseline": "2.1.1",
       "port-version": 0
     },
+    "reactphysics3d": {
+      "baseline": "0.10.2",
+      "port-version": 0
+    },
     "readerwriterqueue": {
       "baseline": "1.0.7",
       "port-version": 0
