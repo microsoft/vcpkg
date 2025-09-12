@@ -4418,7 +4418,7 @@
     },
     "lastools": {
       "baseline": "2.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "laszip": {
       "baseline": "3.4.4",
