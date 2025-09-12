@@ -62,11 +62,30 @@
   "features": {
     "cuda": {
       "description": "Build with CUDA GPU backend",
+      "supports": "(windows & x64 & !staticcrt) | (linux & x64)",
       "dependencies": [
         "cuda",
         "cudnn",
+        {
+          "name": "gloo",
+          "features": [
+            "cuda"
+          ],
+          "platform": "linux"
+        },
         "magma",
-        "nvidia-cutlass"
+        {
+          "name": "nccl",
+          "platform": "linux"
+        },
+        "nvidia-cutlass",
+        {
+          "name": "tensorpipe",
+          "features": [
+            "cuda"
+          ],
+          "platform": "linux"
+        }
       ]
     },
     "dist": {
@@ -90,9 +109,6 @@
         },
         {
           "name": "tensorpipe",
-          "features": [
-            "cuda"
-          ],
           "platform": "linux"
         }
       ]
