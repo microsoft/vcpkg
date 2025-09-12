@@ -9552,6 +9552,10 @@
       "baseline": "4.7.0",
       "port-version": 0
     },
+    "tiledb": {
+      "baseline": "2.28.1",
+      "port-version": 0
+    },
     "tinkerforge": {
       "baseline": "2.1.25",
       "port-version": 3
