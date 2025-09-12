@@ -90,10 +90,10 @@
         },
         {
           "name": "tensorpipe",
-          "platform": "linux",
           "features": [
             "cuda"
-          ]
+          ],
+          "platform": "linux"
         }
       ]
     },
