@@ -1,5 +1,8 @@
 cmake_minimum_required (VERSION 3.30)
 
+#set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+
 set(MIDI_SDK_VERSION "1.0.13-preview.13.192")
 set(MIDI_SDK_NUGET_URL "https://github.com/microsoft/MIDI/releases/download/preview-13/Microsoft.Windows.Devices.Midi2.${MIDI_SDK_VERSION}.nupkg")
 set(MIDI_SDK_SHA512 e950cf87ec74df7b8fb8d06c1c09646f5a9f390fa1d19b9906cc79874f52310bd90a80371f9bb089f953794b05d013d602780a5905ba77aa8d8a1a6205d341d8)
@@ -25,7 +28,7 @@ vcpkg_extract_source_archive(
     NO_REMOVE_ONE_LEVEL
 )
 
-set(WINRT_GENERATED_HEADERS_FOLDER "${CURRENT_BUILDTREES_DIR}/GeneratedFiles")
+set(WINRT_GENERATED_HEADERS_FOLDER "${CURRENT_PACKAGES_DIR}/include")
 message("-MIDI: winrt generated headers will be here: ${WINRT_GENERATED_HEADERS_FOLDER}")
 
 # TODO: This should find and use the latest SDK, but needs to be
@@ -41,5 +44,20 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/microsoft-windows-devices-midi2-config
 
 #vcpkg_cmake_config_fixup(PACKAGE_NAME "${PORT}")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+# usage
+file(INSTALL 
+  "${CMAKE_CURRENT_LIST_DIR}/usage" 
+  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+  )
 
+  
+# license
+
+file(DOWNLOAD
+  https://github.com/microsoft/MIDI/blob/main/LICENSE
+  ${MIDI_SDK_EXTRACTED_FILES}/LICENSE
+  )
+
+vcpkg_install_copyright(
+  FILE_LIST ${MIDI_SDK_EXTRACTED_FILES}/LICENSE
+  )
