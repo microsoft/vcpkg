@@ -1,5 +1,4 @@
-cmake_minimum_required (VERSION 3.31)
-
+cmake_minimum_required (VERSION 3.30)
 
 set(MIDI_SDK_VERSION "1.0.13-preview.13.192")
 set(MIDI_SDK_NUGET_URL "https://github.com/microsoft/MIDI/releases/download/preview-13/Microsoft.Windows.Devices.Midi2.${MIDI_SDK_VERSION}.nupkg")

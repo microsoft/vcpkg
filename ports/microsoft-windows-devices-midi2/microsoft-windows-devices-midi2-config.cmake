@@ -1,5 +1,4 @@
-#find_package(cppwinrt CONFIG REQUIRED)
-#message("cppwinrt location: ${CPPWINRT_TOOL}")
+cmake_minimum_required (VERSION 3.30)
 
 set(MIDI2_WINMD "@MIDI_SDK_EXTRACTED_FILES@/ref/native/Microsoft.Windows.Devices.Midi2.winmd")
 
