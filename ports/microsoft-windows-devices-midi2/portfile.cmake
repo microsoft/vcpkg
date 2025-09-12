@@ -71,7 +71,7 @@ vcpkg_download_distfile(
     LICENSE_FILE
     URLS https://github.com/microsoft/MIDI/blob/main/LICENSE
     FILENAME LICENSE
-    SHA512 bf25c9cd2c50e8736d26cc85f4c638a78fab11aa9ed7ce5ec6a30320b022f90cf01190fbdcc91c75e50a83230adfade907f22fc3177730c7ddf5166b8ff7c7a8
+    SHA512 160730f5f364c4dbc387afacfb301c08912d0111726f27b1833d7c45d9fdede5fd1f4b30f53e162c69a7abfaea6b05e0e9e0254907e34f90e3d3fcf4deae1178
   ) 
 
 vcpkg_install_copyright(
