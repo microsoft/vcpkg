@@ -270,7 +270,7 @@ vcpkg_cmake_configure(
         # Disable deps not in VCPKG or not in the manifest
         -DVTK_ENABLE_OSPRAY=OFF
         -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
-        -DVTK_MODULE_ENABLE_VTK_IOPDAL=YES
+        -DVTK_MODULE_ENABLE_VTK_IOPDAL=NO
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
