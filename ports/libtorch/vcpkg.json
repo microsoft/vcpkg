@@ -90,6 +90,7 @@
     },
     "dist": {
       "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
+      "supports": "linux | windows",
       "dependencies": [
         {
           "name": "gloo",
