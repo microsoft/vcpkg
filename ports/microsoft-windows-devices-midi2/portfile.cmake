@@ -67,7 +67,6 @@ file(INSTALL
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
   )
 
-# license
 vcpkg_download_distfile(
     LICENSE_FILE
     # preview-13
