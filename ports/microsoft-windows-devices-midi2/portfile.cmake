@@ -18,7 +18,7 @@ message("MIDI2: MIDI SDK NuGet URL: ${MIDI_SDK_NUGET_URL}")
 # Grab the NuGet package from the official release location
 vcpkg_download_distfile(
     MIDISDK_ARCHIVE
-    URLS ${MIDI_SDK_NUGET_URL}
+    URLS "${MIDI_SDK_NUGET_URL}"
     FILENAME "Microsoft.Windows.Devices.Midi2.${MIDI_SDK_VERSION}.zip"
     SHA512 ${MIDI_SDK_SHA512}
   )
