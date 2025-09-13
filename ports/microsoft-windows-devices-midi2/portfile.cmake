@@ -55,7 +55,6 @@ else()
 endif()
 
 
-# this will update the config file with a few variables needed at build time
 configure_file("${CMAKE_CURRENT_LIST_DIR}/microsoft-windows-devices-midi2-config.cmake"
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake"
     @ONLY
