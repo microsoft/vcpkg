@@ -103,7 +103,7 @@ vcpkg_execute_required_process(
         -verbose
       WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
       LOGNAME "Microsoft.Windows.Devices.Midi2.cppwinrt"
-)
+  )
 
 # the cppwinrt tool always generates Windows.* headers even when you ask to exclude them. So we need
 # to copy only the Midi2 headers to ${CURRENT_PACKAGES_DIR}/include
