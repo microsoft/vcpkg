@@ -44,7 +44,7 @@ index 0a18f5a..5346a9d 100644
  
  # utf8proc configuration
 -find_package(Utf8Proc REQUIRED)
-+find_package(unofficial-utf8proc CONFIG REQUIRED)
++find_package(utf8proc CONFIG REQUIRED)
  set(UTF8PROC_INCLUDE_DIRS, "")
  if (USE_BUNDLED_UTF8PROC)
     set (
@@ -86,7 +86,7 @@ index 31e6cbc..cdbb756 100644
 -  find_dependency(PkgConfig)
 -  pkg_check_modules(PC_UTF8PROC ${_required} ${_quiet} libutf8proc IMPORTED_TARGET GLOBAL)
  endif()
-+find_dependency(unofficial-utf8proc CONFIG)
++find_dependency(utf8proc CONFIG)
  
  # Find dependencies for SASL
  set(_sasl_backend [[@SASL_BACKEND@]])

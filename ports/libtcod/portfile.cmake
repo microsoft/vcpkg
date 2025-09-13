@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 7aa0a355937c70a49975f1f131e8cb8dd62ac5c880f4a2ad2a4c51cfdd87a60341160dfaf4c42d5a8c7d77316e4084d62d0baa2ff5abecee47b5413fd161ebad
     HEAD_REF main
+    PATCHES
+        remove-unofficial-utf8proc.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -12,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "sdl" CMAKE_DISABLE_FIND_PACKAGE_SDL3
         "threads" CMAKE_DISABLE_FIND_PACKAGE_Threads
         "unicode" CMAKE_DISABLE_FIND_PACKAGE_utf8proc
-        "unicode" CMAKE_DISABLE_FIND_PACKAGE_unofficial-utf8proc
+        "unicode" CMAKE_DISABLE_FIND_PACKAGE_utf8proc
         "zlib" CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 

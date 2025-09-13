@@ -9,7 +9,7 @@ index d8df9dc..fe2b000 100644
 -	find_package(PCRE2 REQUIRED)
  	find_package(ZLIB REQUIRED)
 -	find_package(Utf8Proc REQUIRED)
-+	find_package(unofficial-utf8proc CONFIG REQUIRED)
++	find_package(utf8proc CONFIG REQUIRED)
 +	include(SelectLibraryConfigurations)
 +	find_library(PCRE2_LIBRARY_DEBUG NAMES pcre2-8d pcre2-8-staticd HINTS ${INSTALLED_LIB_PATH})
 +	find_library(PCRE2_LIBRARY_RELEASE NAMES pcre2-8 pcre2-8-static HINTS ${INSTALLED_LIB_PATH})
