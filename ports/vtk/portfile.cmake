@@ -75,6 +75,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "cgns"        VCPKG_LOCK_FIND_PACKAGE_CGNS
         "cuda"        VTK_USE_CUDA
         "debugleaks"  VTK_DEBUG_LEAKS
+        "fontconfig"  VTK_MODULE_ENABLE_VTK_RenderingFreeTypeFontConfig
         "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
         "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
         "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
@@ -266,9 +267,10 @@ vcpkg_cmake_configure(
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
         -DVTK_GROUP_ENABLE_Views=YES
-        # Disable deps not in VCPKG
+        # Disable deps not in VCPKG or not in the manifest
         -DVTK_ENABLE_OSPRAY=OFF
         -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
+        -DVTK_MODULE_ENABLE_VTK_IOPDAL=YES
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON

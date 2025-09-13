@@ -65,6 +65,10 @@
   ],
   "default-features": [
     "cgns",
+    {
+      "name": "fontconfig",
+      "platform": "android | linux"
+    },
     "libharu",
     "libtheora",
     "netcdf",
@@ -83,6 +87,7 @@
           "default-features": false,
           "features": [
             "cgns",
+            "fontconfig",
             "gdal",
             "geojson",
             "libharu",
@@ -133,6 +138,12 @@
     },
     "debugleaks": {
       "description": "Enables vtk debug leaks detection"
+    },
+    "fontconfig": {
+      "description": "Enables fontconfig for rendering",
+      "dependencies": [
+        "fontconfig"
+      ]
     },
     "gdal": {
       "description": "Support GDAL compilation",
