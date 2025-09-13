@@ -1,0 +1,90 @@
+cmake_minimum_required(VERSION 3.12)
+project(python3-test)
+
+set(Python_ARTIFACTS_PREFIX "_MEOW")
+
+# We need to opt-out of CMP0148 to be able to test the pre-CMake 3.12 Python
+# find modules. The old policy is deprecated, so, at some point, this aspect
+# of the test will have to go away.
+if(POLICY CMP0148)
+    cmake_policy(SET CMP0148 OLD)
+endif()
+
+# The purpose of this test is to ensure that we get the expected values
+# from the finders, not crosscompiling. So, let's not even go there.
+if(NOT CMAKE_CROSSCOMPILING)
+    find_package(PythonInterp REQUIRED)
+
+    # The old find modules do not return the path to the Python standard
+    # library, so we will need to fetch that ourselves.
+    execute_process(
+        COMMAND ${PYTHON_EXECUTABLE}
+        -c "import sysconfig; print(sysconfig.get_path('stdlib'))"
+        OUTPUT_VARIABLE PYTHON_STDLIB
+    )
+    string(STRIP "${PYTHON_STDLIB}" PYTHON_STDLIB)
+endif()
+find_package(PythonLibs REQUIRED)
+
+# The old find modules should NOT be prefixed.
+if(DEFINED PYTHON_MEOW_LIBRARIES OR DEFINED PYTHON_MEOW_EXECUTABLE)
+    message(FATAL_ERROR "Old find module prefixed the result variables")
+endif()
+
+function(test_result NAME TYPE EXPECTED UNEXPECTED)
+    if(NOT ${TYPE} ${EXPECTED}${NAME})
+        message(FATAL_ERROR "${EXPECTED}${NAME} should be ${TYPE}")
+    endif()
+    if(${TYPE} ${UNEXPECTED}${NAME})
+        message(FATAL_ERROR "${UNEXPECTED}${NAME} should not be ${TYPE}")
+    endif()
+endfunction()
+
+function(test_new_finder EXPECTED UNEXPECTED)
+    test_result(::Python TARGET ${EXPECTED} ${UNEXPECTED})
+    test_result(_LIBRARIES DEFINED ${EXPECTED} ${UNEXPECTED})
+
+    if(NOT CMAKE_CROSSCOMPILING)
+        test_result(_EXECUTABLE DEFINED ${EXPECTED} ${UNEXPECTED})
+        test_result(_STDLIB DEFINED ${EXPECTED} ${UNEXPECTED})
+        test_result(::Interpreter TARGET ${EXPECTED} ${UNEXPECTED})
+    endif()
+endfunction()
+
+if(NOT CMAKE_CROSSCOMPILING)
+    set(_INTERPRETER "Interpreter")
+endif()
+
+# The new find modules should be prefixed if CMake is 4.0+
+find_package(Python REQUIRED COMPONENTS ${_INTERPRETER} Development)
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0)
+    set(EXPECTED_PYTHON Python_MEOW)
+    set(UNEXPECTED_PYTHON Python)
+else()
+    set(EXPECTED_PYTHON Python)
+    set(UNEXPECTED_PYTHON Python_MEOW)
+endif()
+test_new_finder(${EXPECTED_PYTHON} ${UNEXPECTED_PYTHON})
+
+# Also test non-prefixed. Use Python3:: to avoid conflicts with Python_MEOW::
+# The test against Python3_MEOW should never happen because the prefix variable
+# should be Python3_ARTIFACT_PREFIX, but we set Python_ARTIFACT_PREFIX.
+find_package(Python3 REQUIRED COMPONENTS ${_INTERPRETER} Development)
+test_new_finder(Python3 Python3_MEOW)
+
+# Test embedding the libraries found.
+function(add_test_executable TARGET LIBRARIES INCLUDES STDLIB)
+    add_executable(${TARGET} main.c)
+    target_link_libraries(${TARGET} PRIVATE ${LIBRARIES})
+    if(INCLUDES)
+        target_include_directories(${TARGET} PRIVATE ${INCLUDES})
+    endif()
+    if(NOT CMAKE_CROSSCOMPILING)
+        file(TO_CMAKE_PATH "${STDLIB}" _STDLIB)
+        target_compile_definitions(${TARGET} PRIVATE "-DBATTERIES=L\"${_STDLIB}\"")
+    endif()
+endfunction()
+
+add_test_executable(old "${PYTHON_LIBRARIES}" "${PYTHON_INCLUDE_DIRS}" "${PYTHON_STDLIB}")
+add_test_executable(new_with_prefix "${EXPECTED_PYTHON}::Python" "" "${${EXPECTED_PYTHON}_STDLIB}")
+add_test_executable(new_without_prefix "${Python3_LIBRARIES}" "${Python3_INCLUDE_DIRS}" "${Python3_STDLIB}")
