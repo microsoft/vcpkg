@@ -12,10 +12,10 @@ index dc65543..5bccbce 100644
 -add_subdirectory(vendor/utfcpp)
  add_subdirectory(vendor/lepcc)
 -add_subdirectory(vendor/h3)
- add_subdirectory(vendor/spz)
  add_subdirectory(tools)
  add_subdirectory(apps)
-@@ -220,12 +217,13 @@ add_library(PDAL::PDAL ALIAS ${PDAL_LIB_NAME})
+ 
+@@ -230,12 +227,13 @@ add_library(PDAL::PDAL ALIAS ${PDAL_LIB_NAME})
  
  
  

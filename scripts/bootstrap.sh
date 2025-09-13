@@ -180,15 +180,15 @@ if [ "$UNAME" = "Darwin" ]; then
     echo "Downloading vcpkg-macos..."
     vcpkgToolReleaseSha=$VCPKG_MACOS_SHA
     vcpkgToolName="vcpkg-macos"
-elif [ "$vcpkgUseMuslC" = "ON" ] && [ "$ARCH" = "x86_64" ]; then
+elif [ "$UNAME" = "Linux" ] && [ "$vcpkgUseMuslC" = "ON" ] && [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-muslc..."
     vcpkgToolReleaseSha=$VCPKG_MUSLC_SHA
     vcpkgToolName="vcpkg-muslc"
-elif [ "$ARCH" = "x86_64" ]; then
+elif [ "$UNAME" = "Linux" ] && [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
     vcpkgToolName="vcpkg-glibc"
-elif [ "$vcpkgUseMuslC" = "OFF" ] && { [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; }; then
+elif [ "$UNAME" = "Linux" ] && [ "$vcpkgUseMuslC" = "OFF" ] && { [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; }; then
     echo "Downloading vcpkg-arm64-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_ARM64_SHA
     vcpkgToolName="vcpkg-glibc-arm64"

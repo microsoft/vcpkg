@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-cmakelists.patch
         fix-glad-dependence.patch
         fix-release-build.patch
+        cmake4.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

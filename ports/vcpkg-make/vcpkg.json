@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-make",
-  "version-date": "2025-07-09",
+  "version-date": "2025-08-21",
   "documentation": "https://learn.microsoft.com/vcpkg/maintainers/functions/vcpkg_make_configure",
   "license": null,
   "supports": "native",
