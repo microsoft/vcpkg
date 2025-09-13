@@ -1,24 +1,8 @@
 microsoft-windows-devices-midi2 provides CMake integration:
 
-<<<<<<< HEAD
-microsoft-windows-devices-midi2 provides CMake integration:
-
   find_package(microsoft-windows-devices-midi2 CONFIG REQUIRED)
   target_link_libraries(main PRIVATE Microsoft::Windows::Devices::Midi2)
 
 It also sets the following:
   MIDI2_WINDOWS_SDK_VERSION to the version of the Windows SDK used to generate the projections
   MIDI2_SDK_VERSION to the projected version of the Windows MIDI Services SDK
-=======
-  find_package(microsoft-windows-devices-midi2 CONFIG REQUIRED)
-  target_include_directories(main PRIVATE ...)
-  target_link_libraries(main PRIVATE ...)
-
-It also sets the following:
-  MIDI2_WINRT_WINMD to the full path to the Microsoft.Windows.Devices.Midi2.winmd file
-  MIDI2_WINDOWS_SDK_VERSION to the version of the Windows SDK used to generate the projections
-  MIDI2_HEADERS_ROOT_FOLDER to the root location of the necessary include files
-  MIDI2_HEADERS_INIT_FOLDER for the initialization headers under the root header folder
-  MIDI2_HEADERS_WINRT_FOLDER for the winrt projection headers under the root header folder
-
->>>>>>> 334e98797228e0ef0231e644d787746cf24912c1
