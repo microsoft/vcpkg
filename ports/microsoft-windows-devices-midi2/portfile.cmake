@@ -70,7 +70,8 @@ file(INSTALL
 # license
 vcpkg_download_distfile(
     LICENSE_FILE
-    URLS "https://raw.githubusercontent.com/microsoft/MIDI/refs/heads/main/LICENSE"
+    # preview-13
+    URLS "https://github.com/microsoft/MIDI/raw/30f42326e4ec0072cb6fd846a9b1230149fd4888/LICENSE"
     FILENAME LICENSE
     SHA512 1d0688424f69c0e7322aeb720e4e28d9af3b5a7a2dc18b8b198156e377a61a6e05bc824528fca0f8e61ac39b137a028029ff82e5229ad400a3cc22e2bdb687ad
   ) 
