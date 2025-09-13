@@ -2,18 +2,14 @@ diff --git a/caffe2/serialize/inline_container.h b/caffe2/serialize/inline_conta
 index e098bed..1fdc109 100644
 --- a/caffe2/serialize/inline_container.h
 +++ b/caffe2/serialize/inline_container.h
-@@ -16,10 +16,12 @@
+@@ -16,10 +16,8 @@
  #include "caffe2/serialize/read_adapter_interface.h"
  #include "caffe2/serialize/versions.h"
  
 -extern "C" {
 -typedef struct mz_zip_archive mz_zip_archive;
 -}
-+#if __has_include(<miniz/miniz.h>)
 +#include <miniz/miniz.h>
-+#else
-+#include <miniz.h>
-+#endif
  
  // PyTorch containers are a special zip archive with the following layout
  // archive_name.zip contains:

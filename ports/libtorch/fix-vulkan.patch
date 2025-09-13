@@ -2,16 +2,12 @@ diff --git a/aten/src/ATen/native/vulkan/api/Allocator.h b/aten/src/ATen/native/
 index a89c333..d3fa38f 100644
 --- a/aten/src/ATen/native/vulkan/api/Allocator.h
 +++ b/aten/src/ATen/native/vulkan/api/Allocator.h
-@@ -50,7 +50,11 @@
+@@ -50,7 +50,7 @@
  #pragma clang diagnostic ignored "-Winconsistent-missing-destructor-override"
  #endif /* __clang__ */
  
 -#include <include/vk_mem_alloc.h>
-+#if __has_include(<vma/vk_mem_alloc.h>)
-+#include <vma/vk_mem_alloc.h>
-+#else
 +#include <vk_mem_alloc.h>
-+#endif
  
  #ifdef __clang__
  #pragma clang diagnostic pop
@@ -27,3 +23,17 @@ index 9c0c7fb..ae4a81f 100644
  
  namespace at {
  namespace native {
+diff --git a/cmake/VulkanDependencies.cmake b/cmake/VulkanDependencies.cmake
+index 52de6a4..1add62c 100644
+--- a/cmake/VulkanDependencies.cmake
++++ b/cmake/VulkanDependencies.cmake
+@@ -37,7 +37,8 @@ else()
+   endif()
+ 
+   list(APPEND Vulkan_INCLUDES ${Vulkan_INCLUDE_DIRS})
+-  list(APPEND Vulkan_LIBS ${Vulkan_LIBRARIES})
++  find_package(VulkanMemoryAllocator CONFIG REQUIRED)
++  list(APPEND Vulkan_LIBS ${Vulkan_LIBRARIES} GPUOpen::VulkanMemoryAllocator)
+ 
+   set(GOOGLE_SHADERC_INCLUDE_SEARCH_PATH ${Vulkan_INCLUDE_DIR})
+   set(GOOGLE_SHADERC_LIBRARY_SEARCH_PATH ${Vulkan_LIBRARY})

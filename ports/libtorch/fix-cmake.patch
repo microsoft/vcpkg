@@ -446,3 +446,21 @@ index c66d32b..77ef44b 100644
  endif()
  
  
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 82fe0a6..fde1298 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -1203,6 +1203,13 @@ if(USE_GLOO)
+   if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+     message(WARNING "Gloo can only be used on 64-bit systems.")
+     caffe2_update_option(USE_GLOO OFF)
++  elseif(TRUE)
++    find_package(Gloo CONFIG REQUIRED)
++    list(APPEND Caffe2_DEPENDENCY_LIBS gloo)
++    if(USE_CUDA AND TARGET gloo_cuda)
++      list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS gloo_cuda)
++    endif()
++    add_compile_options(-DCAFFE2_USE_GLOO)
+   else()
+     # Don't install gloo
+     set(GLOO_INSTALL OFF CACHE BOOL "" FORCE)
