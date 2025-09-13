@@ -136,11 +136,6 @@ openblas:x64-windows-static=pass
 # </BLAS+LAPACK>
 ################################################################
 blitz:x64-android=fail
-bond:arm-neon-android=fail
-bond:arm64-android=fail
-bond:arm64-osx=fail
-bond:x64-android=fail
-bond:x64-osx=fail
 # Conflicts with openssl
 boringssl:arm-neon-android=skip
 boringssl:arm64-android=skip
