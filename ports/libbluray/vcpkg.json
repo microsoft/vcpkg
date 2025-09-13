@@ -1,0 +1,45 @@
+{
+  "name": "libbluray",
+  "version-semver": "1.4.0",
+  "description": "Library to access Blu-Ray disks",
+  "homepage": "https://www.videolan.org/developers/libbluray.html",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "libudfread",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "fontconfig",
+      "platform": "!uwp & !windows"
+    },
+    "freetype",
+    "libxml2"
+  ],
+  "features": {
+    "fontconfig": {
+      "description": "Fontconfig support for system fonts",
+      "supports": "!uwp & !windows",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "freetype": {
+      "description": "FreeType support for fonts",
+      "supports": "!uwp",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "libxml2": {
+      "description": "libxml2 support for metadata parser",
+      "dependencies": [
+        "libxml2"
+      ]
+    }
+  }
+}
