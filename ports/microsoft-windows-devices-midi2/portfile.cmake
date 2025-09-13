@@ -4,7 +4,8 @@ set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
 
 set(MINIMUM_WINDOWS_SDK_VERSION "10.0.26100.0")
 
-set(MIDI_SDK_VERSION "1.0.13-preview.13.192")
+set(MIDI_SDK_VERSION "${VERSION}")
+
 set(MIDI_SDK_NUGET_URL "https://github.com/microsoft/MIDI/releases/download/preview-13/Microsoft.Windows.Devices.Midi2.${MIDI_SDK_VERSION}.nupkg")
 set(MIDI_SDK_SHA512 e950cf87ec74df7b8fb8d06c1c09646f5a9f390fa1d19b9906cc79874f52310bd90a80371f9bb089f953794b05d013d602780a5905ba77aa8d8a1a6205d341d8)
 
