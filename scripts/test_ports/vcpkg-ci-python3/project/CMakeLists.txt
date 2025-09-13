@@ -14,15 +14,6 @@ endif()
 # from the finders, not crosscompiling. So, let's not even go there.
 if(NOT CMAKE_CROSSCOMPILING)
     find_package(PythonInterp REQUIRED)
-
-    # The old find modules do not return the path to the Python standard
-    # library, so we will need to fetch that ourselves.
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE}
-        -c "import sysconfig; print(sysconfig.get_path('stdlib'))"
-        OUTPUT_VARIABLE PYTHON_STDLIB
-    )
-    string(STRIP "${PYTHON_STDLIB}" PYTHON_STDLIB)
 endif()
 find_package(PythonLibs REQUIRED)
 
@@ -73,18 +64,14 @@ find_package(Python3 REQUIRED COMPONENTS ${_INTERPRETER} Development)
 test_new_finder(Python3 Python3_MEOW)
 
 # Test embedding the libraries found.
-function(add_test_executable TARGET LIBRARIES INCLUDES STDLIB)
+function(add_test_executable TARGET LIBRARIES INCLUDES)
     add_executable(${TARGET} main.c)
     target_link_libraries(${TARGET} PRIVATE ${LIBRARIES})
     if(INCLUDES)
         target_include_directories(${TARGET} PRIVATE ${INCLUDES})
     endif()
-    if(NOT CMAKE_CROSSCOMPILING)
-        file(TO_CMAKE_PATH "${STDLIB}" _STDLIB)
-        target_compile_definitions(${TARGET} PRIVATE "-DBATTERIES=L\"${_STDLIB}\"")
-    endif()
 endfunction()
 
-add_test_executable(old "${PYTHON_LIBRARIES}" "${PYTHON_INCLUDE_DIRS}" "${PYTHON_STDLIB}")
-add_test_executable(new_with_prefix "${EXPECTED_PYTHON}::Python" "" "${${EXPECTED_PYTHON}_STDLIB}")
-add_test_executable(new_without_prefix "${Python3_LIBRARIES}" "${Python3_INCLUDE_DIRS}" "${Python3_STDLIB}")
+add_test_executable(old "${PYTHON_LIBRARIES}" "${PYTHON_INCLUDE_DIRS}")
+add_test_executable(new_with_prefix "${EXPECTED_PYTHON}::Python" "")
+add_test_executable(new_without_prefix "${Python3_LIBRARIES}" "${Python3_INCLUDE_DIRS}")
