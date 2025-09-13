@@ -1,0 +1,110 @@
+diff --git a/src/libmtp.c b/src/libmtp.c
+index d8fe1b8..8280e75 100644
+--- a/src/libmtp.c
++++ b/src/libmtp.c
+@@ -49,7 +49,9 @@ int use_mtpz;
+ #include <stdarg.h>
+ #include <stdlib.h>
+ #include <limits.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <string.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -59,6 +61,7 @@ int use_mtpz;
+ #ifdef _MSC_VER // For MSVC++
+ #define USE_WINDOWS_IO_H
+ #include <io.h>
++#define strcasecmp _stricmp
+ #endif
+ 
+ 
+diff --git a/src/libusb1-glue.c b/src/libusb1-glue.c
+index 334385f..27cc04a 100644
+--- a/src/libusb1-glue.c
++++ b/src/libusb1-glue.c
+@@ -40,7 +40,22 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifndef _MSC_VER
+ #include <unistd.h>
++#else
++
++static void usleep(__int64 usec)
++{
++    HANDLE timer;
++    LARGE_INTEGER ft;
++    ft.QuadPart = -(10*usec);
++    timer = CreateWaitableTimer(NULL, TRUE, NULL);
++    SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
++    WaitForSingleObject(timer, INFINITE);
++    CloseHandle(timer);
++}
++
++#endif
+ 
+ #include "ptp-pack.c"
+ 
+diff --git a/src/playlist-spl.c b/src/playlist-spl.c
+index a3eb80e..f68fc33 100644
+--- a/src/playlist-spl.c
++++ b/src/playlist-spl.c
+@@ -25,7 +25,9 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h> // mkstmp()
++#ifndef _MSC_VER
+ #include <unistd.h>
++#endif
+ #include <errno.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+diff --git a/src/ptp.c b/src/ptp.c
+index 62898ef..dafb574 100644
+--- a/src/ptp.c
++++ b/src/ptp.c
+@@ -38,6 +38,22 @@
+ # include <unistd.h>
+ #endif
+ 
++#ifdef _MSC_VER
++#include <windows.h>
++typedef SSIZE_T ssize_t;
++
++static void usleep(__int64 usec)
++{
++    HANDLE timer;
++    LARGE_INTEGER ft;
++    ft.QuadPart = -(10*usec);
++    timer = CreateWaitableTimer(NULL, TRUE, NULL);
++    SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
++    WaitForSingleObject(timer, INFINITE);
++    CloseHandle(timer);
++}
++#endif
++
+ #ifdef ENABLE_NLS
+ #  include <libintl.h>
+ #  undef _
+diff --git a/src/ptp.h b/src/ptp.h
+index 992537c..30794bf 100644
+--- a/src/ptp.h
++++ b/src/ptp.h
+@@ -25,10 +25,15 @@
+ 
+ #include <stdarg.h>
+ #include <time.h>
++#ifndef _MSC_VER
+ #include <sys/time.h>
++#endif
+ #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
+ #include <iconv.h>
+ #endif
++#ifdef _WIN32
++#include <winsock.h>
++#endif
+ #include "gphoto2-endian.h"
+ #include "device-flags.h"
+ 
