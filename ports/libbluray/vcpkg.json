@@ -1,12 +1,16 @@
 {
   "name": "libbluray",
-  "version-semver": "1.3.4",
+  "version-semver": "1.4.0",
   "description": "Library to access Blu-Ray disks",
   "homepage": "https://www.videolan.org/developers/libbluray.html",
   "license": "LGPL-2.1-or-later",
   "supports": "!uwp & !xbox",
   "dependencies": [
-    "libudfread"
+    "libudfread",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
   ],
   "default-features": [
     {

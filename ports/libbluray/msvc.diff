@@ -1,16 +1,3 @@
-diff --git a/configure.ac b/configure.ac
-index c7016344..fd8965b9 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -156,7 +156,7 @@ dnl required system services
- AC_SYS_LARGEFILE
- 
- dnl required functions
--AC_CHECK_FUNC([snprintf],, [AC_MSG_ERROR($function_not_found)])
-+dnl AC_CHECK_FUNC([snprintf],, [AC_MSG_ERROR($function_not_found)])
- 
- dnl required libraries
- dnl pthreads (not on win32)
 diff --git a/src/libbluray/bdnav/meta_parse.c b/src/libbluray/bdnav/meta_parse.c
 index d45be33c..20e1ec47 100644
 --- a/src/libbluray/bdnav/meta_parse.c

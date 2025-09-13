@@ -4573,7 +4573,7 @@
       "port-version": 4
     },
     "libbluray": {
-      "baseline": "1.3.4",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "libbson": {
