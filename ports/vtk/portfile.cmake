@@ -268,6 +268,7 @@ vcpkg_cmake_configure(
         -DVTK_GROUP_ENABLE_Views=YES
         # Disable deps not in VCPKG
         -DVTK_ENABLE_OSPRAY=OFF
+        -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
