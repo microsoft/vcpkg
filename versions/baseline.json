@@ -8400,6 +8400,10 @@
       "baseline": "0.2.2",
       "port-version": 0
     },
+    "rgfw": {
+      "baseline": "1.70",
+      "port-version": 0
+    },
     "rhash": {
       "baseline": "1.4.5",
       "port-version": 0
