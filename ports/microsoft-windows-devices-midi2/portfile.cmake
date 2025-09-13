@@ -61,7 +61,6 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/microsoft-windows-devices-midi2-config
     @ONLY
   )
 
-# usage
 file(INSTALL 
     "${CMAKE_CURRENT_LIST_DIR}/usage" 
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
