@@ -3,24 +3,19 @@ vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org/
     REPO videolan/libudfread
     REF ${VERSION}
-    SHA512 3069feb5db40288beb5b112b285186162a704f0fdd3cf67a17fd4eeea015f2cfcfbb455b7aa7c3d79d00fd095a3fd11cffc7b121dce94d99c3b06a509a8977d2
+    SHA512 63cdd8ce9b7525d17f8f685b87d1232334ebfe9ffcd48b3bb189231f4d3c88c11a19d3435be9252058d374b1cbd86eb38a045c969699730cb9729a541582f645
     PATCHES
         msvc.diff
-
 )
 
-vcpkg_configure_make(
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    OPTIONS
+        -Denable_examples=false
 )
 
-vcpkg_install_make()
+vcpkg_install_meson()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
-)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
