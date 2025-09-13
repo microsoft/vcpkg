@@ -1,6 +1,6 @@
 {
   "name": "miniaudio",
-  "version": "0.11.22",
+  "version": "0.11.23",
   "description": "Audio playback and capture library written in C, in a single source file",
   "homepage": "https://github.com/mackron/miniaudio",
   "license": "Unlicense OR MIT-0"
