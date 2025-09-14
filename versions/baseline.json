@@ -8776,6 +8776,10 @@
       "baseline": "2019-05-07",
       "port-version": 5
     },
+    "seq": {
+      "baseline": "2.0",
+      "port-version": 0
+    },
     "seqan": {
       "baseline": "2.4.0",
       "port-version": 3
