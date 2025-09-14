@@ -7,10 +7,6 @@
   "dependencies": [
     "python3",
     {
-      "name": "python3",
-      "host": true
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     }
