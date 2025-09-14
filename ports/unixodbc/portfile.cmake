@@ -6,40 +6,25 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
-
-if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
-    list(APPEND OPTIONS --with-included-ltdl)
-endif()
-
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    COPY_SOURCE
-    OPTIONS ${OPTIONS}
+    AUTORECONF
 )
-
-vcpkg_install_make()
-
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif ()
-
 file(REMOVE_RECURSE
-     "${CURRENT_PACKAGES_DIR}/debug/include"
-     "${CURRENT_PACKAGES_DIR}/debug/share"
-     "${CURRENT_PACKAGES_DIR}/debug/etc"
-     "${CURRENT_PACKAGES_DIR}/etc"
-     "${CURRENT_PACKAGES_DIR}/share/man"
-     "${CURRENT_PACKAGES_DIR}/share/${PORT}/man1"
-     "${CURRENT_PACKAGES_DIR}/share/${PORT}/man5"
-     "${CURRENT_PACKAGES_DIR}/share/${PORT}/man7"
+    "${CURRENT_PACKAGES_DIR}/debug/etc"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/etc"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/man1"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/man5"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/man7"
 )
 
-foreach(FILE config.h unixodbc_conf.h)
+foreach(FILE IN ITEMS config.h unixodbc_conf.h)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/${FILE}" "#define BIN_PREFIX \"${CURRENT_INSTALLED_DIR}/tools/unixodbc/bin\"" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/${FILE}" "#define DEFLIB_PATH \"${CURRENT_INSTALLED_DIR}/lib\"" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/${FILE}" "#define EXEC_PREFIX \"${CURRENT_INSTALLED_DIR}\"" "")
@@ -51,6 +36,11 @@ foreach(FILE config.h unixodbc_conf.h)
 endforeach()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unixodbcConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(
+    COMMENT
+        "All libraries are LGPL Version 2.1. All programs are GPL Version 2.0."
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+)
