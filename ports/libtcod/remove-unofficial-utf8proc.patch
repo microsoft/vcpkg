@@ -1,35 +1,13 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index a3d309e..57b7761 100644
+index d702ecf..3b2b973 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -31,7 +31,7 @@ endif()
- if (CMAKE_DISABLE_FIND_PACKAGE_lodepng-c)
-     set(LIBTCOD_LODEPNG "disable")
- endif()
--if (CMAKE_DISABLE_FIND_PACKAGE_unofficial-utf8proc OR CMAKE_DISABLE_FIND_PACKAGE_utf8proc)
-+if (CMAKE_DISABLE_FIND_PACKAGE_utf8proc OR CMAKE_DISABLE_FIND_PACKAGE_utf8proc)
-     set(LIBTCOD_UTF8PROC "disable")
- endif()
- 
-@@ -83,7 +83,7 @@ elseif (LIBTCOD_UTF8PROC STREQUAL "find_package")
+@@ -85,7 +85,7 @@ elseif(LIBTCOD_UTF8PROC STREQUAL "find_package")
      find_package(utf8proc REQUIRED)
      target_link_libraries(${PROJECT_NAME} PRIVATE utf8proc)
- elseif (LIBTCOD_UTF8PROC STREQUAL "vcpkg")
+ elseif(LIBTCOD_UTF8PROC STREQUAL "vcpkg")
 -    find_package(unofficial-utf8proc CONFIG REQUIRED)
 +    find_package(utf8proc CONFIG REQUIRED)
      target_link_libraries(${PROJECT_NAME} PRIVATE utf8proc)
  elseif(LIBTCOD_UTF8PROC STREQUAL "disable")
      target_compile_definitions(${PROJECT_NAME} PUBLIC TCOD_NO_UNICODE)
-diff --git a/src/libtcodConfig.cmake.in b/src/libtcodConfig.cmake.in
-index 3da3865..d753187 100644
---- a/src/libtcodConfig.cmake.in
-+++ b/src/libtcodConfig.cmake.in
-@@ -4,7 +4,7 @@ find_package(SDL3 QUIET)
- find_package(ZLIB QUIET)
- find_package(lodepng-c QUIET)
- find_package(utf8proc QUIET)
--find_package(unofficial-utf8proc QUIET)
-+find_package(utf8proc QUIET)
- 
- set_and_check(LIBTCOD_INCLUDE_DIR "@PACKAGE_INSTALL_FULL_INCLUDEDIR@")
- 
