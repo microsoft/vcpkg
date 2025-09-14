@@ -1,10 +1,12 @@
 {
   "name": "hueplusplus",
   "version": "1.2.0",
-  "homepage": "https://github.com/enwi/hueplusplus",
   "description": "A simple and easy to use library for Philips Hue Lights",
+  "homepage": "https://github.com/enwi/hueplusplus",
   "license": "LGPL-3.0+",
   "dependencies": [
+    "mbedtls",
+    "nlohmann-json",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,8 +14,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "nlohmann-json",
-    "mbedtls"
+    }
   ]
 }
