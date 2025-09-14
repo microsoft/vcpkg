@@ -9,6 +9,8 @@ vcpkg_from_github(
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
+    OPTIONS
+        --with-included-ltdl=no
 )
 vcpkg_make_install()
 vcpkg_copy_pdbs()
