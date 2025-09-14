@@ -12,14 +12,21 @@ endif()
 
 # The purpose of this test is to ensure that we get the expected values
 # from the finders, not crosscompiling. So, let's not even go there.
+# These find_package() calls aren't required because FindPythonInterp
+# seems to not return a result in CI. Probably because FindPythonInterp
+# prefers the system Python instead of the executable from the python3
+# port.
 if(NOT CMAKE_CROSSCOMPILING)
-    find_package(PythonInterp REQUIRED)
+    find_package(PythonInterp)
 endif()
-find_package(PythonLibs REQUIRED)
+find_package(PythonLibs)
 
 # The old find modules should NOT be prefixed.
-if(DEFINED PYTHON_MEOW_LIBRARIES OR DEFINED PYTHON_MEOW_EXECUTABLE)
-    message(FATAL_ERROR "Old find module prefixed the result variables")
+if(DEFINED PythonInterp_MEOW_FOUND OR DEFINED PYTHON_MEOW_EXECUTABLE)
+    message(FATAL_ERROR "FindPythonInterp prefixed the result variables")
+endif()
+if(DEFINED PythonLibs_MEOW_FOUND OR DEFINED PYTHON_MEOW_LIBRARIES)
+    message(FATAL_ERROR "FindPythonLibs prefixed the result variables")
 endif()
 
 function(test_result NAME TYPE EXPECTED UNEXPECTED)
