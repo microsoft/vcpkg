@@ -1,31 +1,34 @@
-function(set_library_target NAMESPACE LIB_NAME DEBUG_DIR RELEASE_DIR INCLUDE_DIR)
-    add_library(${NAMESPACE}::${LIB_NAME} STATIC IMPORTED)
-    
-    find_library (RELEASE_LIB_FILE_NAME NAMES "lib${LIB_NAME}.a" PATHS ${RELEASE_DIR} NO_DEFAULT_PATH)
-    if (RELEASE_LIB_FILE_NAME)
-        set(LIBODBC_USE_STATIC_LIB true)
+if(NOT TARGET UNIX::odbc)
+    if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+        include(CMakeFindDependencyMacro)
+        find_dependency(Iconv)
     endif()
-    find_library (RELEASE_LIB_FILE_NAME NAMES ${LIB_NAME} PATHS ${RELEASE_DIR} NO_DEFAULT_PATH)
-    find_library (DEBUG_LIB_FILE_NAME NAMES "lib${LIB_NAME}.a" PATHS ${DEBUG_DIR} NO_DEFAULT_PATH)
-    if (DEBUG_LIB_FILE_NAME)
-        set(LIBODBC_USE_STATIC_LIB true)
-    endif()
-    find_library (DEBUG_LIB_FILE_NAME NAMES ${LIB_NAME} PATHS ${DEBUG_DIR} NO_DEFAULT_PATH)
-    set_target_properties(${NAMESPACE}::${LIB_NAME} PROPERTIES
-                          IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
-                          IMPORTED_LOCATION_RELEASE "${RELEASE_LIB_FILE_NAME}"
-                          IMPORTED_LOCATION_DEBUG "${DEBUG_LIB_FILE_NAME}"
-                          INTERFACE_INCLUDE_DIRECTORIES "${INCLUDE_DIR}"
-                          )
-    if(LIBODBC_USE_STATIC_LIB)
-        find_package(Iconv MODULE)
-        set_property(TARGET ${NAMESPACE}::${LIB_NAME} PROPERTY INTERFACE_LINK_LIBRARIES ${CMAKE_DL_LIBS} Iconv::Iconv)
-    endif()
-    set(${NAMESPACE}_${LIB_NAME}_FOUND 1)
-endfunction()
 
-get_filename_component(ROOT "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(ROOT "${ROOT}" PATH)
-get_filename_component(ROOT "${ROOT}" PATH)
+    get_filename_component(z_unixodbc_root "${CMAKE_CURRENT_LIST_DIR}" PATH)
+    get_filename_component(z_unixodbc_root "${z_unixodbc_root}" PATH)
 
-set_library_target("UNIX" "odbc" "${ROOT}/debug/lib/" "${ROOT}/lib/" "${ROOT}/include/")
+    find_library(UNIXODBC_LIBRARY_RELEASE NAMES "odbc" PATHS "${z_unixodbc_root}/lib" NO_DEFAULT_PATH REQUIRED)
+    add_library(UNIX::odbc UNKNOWN IMPORTED)
+    set_target_properties(UNIX::odbc PROPERTIES
+        IMPORTED_CONFIGURATIONS RELEASE
+        IMPORTED_LOCATION_RELEASE "${UNIXODBC_LIBRARY_RELEASE}"
+        INTERFACE_INCLUDE_DIRECTORIES "${z_unixodbc_root}/include"
+    )
+    find_library(UNIXODBC_LIBRARY_DEBUG NAMES "odbc" PATHS "${z_unixodbc_root}/debug/lib" NO_DEFAULT_PATH)
+    if(UNIXODBC_LIBRARY_DEBUG)
+        set_property(TARGET UNIX::odbc APPEND PROPERTY
+            IMPORTED_CONFIGURATIONS DEBUG
+        )
+        set_target_properties(UNIX::odbc PROPERTIES
+            IMPORTED_LOCATION_DEBUG "${UNIXODBC_LIBRARY_DEBUG}"
+        )
+    endif()
+
+    if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+        set_target_properties(UNIX::odbc PROPERTIES
+            INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:Iconv::Iconv>;$<LINK_ONLY:ltdl>;${CMAKE_DL_LIBS}"
+        )
+    endif()
+    unset(z_unixodbc_root)
+endif()
+
