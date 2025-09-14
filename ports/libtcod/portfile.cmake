@@ -14,7 +14,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "sdl" CMAKE_DISABLE_FIND_PACKAGE_SDL3
         "threads" CMAKE_DISABLE_FIND_PACKAGE_Threads
         "unicode" CMAKE_DISABLE_FIND_PACKAGE_utf8proc
-        "unicode" CMAKE_DISABLE_FIND_PACKAGE_utf8proc
         "zlib" CMAKE_DISABLE_FIND_PACKAGE_ZLIB
 )
 
