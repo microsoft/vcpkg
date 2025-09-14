@@ -225,7 +225,6 @@ if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
     list(APPEND ADDITIONAL_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
-        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     )
 endif()
 
@@ -267,10 +266,11 @@ vcpkg_cmake_configure(
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
         -DVTK_GROUP_ENABLE_Views=YES
-        # Disable deps not in VCPKG or not in the manifest
+        # Disable dependencies which are not in vcpkg or not in the manifest
         -DVTK_ENABLE_OSPRAY=OFF
-        -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
+        -DVTK_MODULE_ENABLE_VTK_IOOpenVDB=NO
         -DVTK_MODULE_ENABLE_VTK_IOPDAL=NO
+        -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
@@ -285,6 +285,7 @@ vcpkg_cmake_configure(
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Due to Qt6::Platform not being found on Linux platform
     MAYBE_UNUSED_VARIABLES
+        VTK_ENABLE_OSPRAY
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
         VTK_MODULE_ENABLE_VTK_vtkm
