@@ -1,13 +1,18 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index d702ecf..3b2b973 100644
+index d702ecf..17577fb 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -85,7 +85,7 @@ elseif(LIBTCOD_UTF8PROC STREQUAL "find_package")
+@@ -83,10 +83,10 @@ if(LIBTCOD_UTF8PROC STREQUAL "vendored")
+     target_sources(${PROJECT_NAME} PRIVATE "vendor/utf8proc/utf8proc.c")
+ elseif(LIBTCOD_UTF8PROC STREQUAL "find_package")
      find_package(utf8proc REQUIRED)
-     target_link_libraries(${PROJECT_NAME} PRIVATE utf8proc)
+-    target_link_libraries(${PROJECT_NAME} PRIVATE utf8proc)
++    target_link_libraries(${PROJECT_NAME} PRIVATE utf8proc::utf8proc)
  elseif(LIBTCOD_UTF8PROC STREQUAL "vcpkg")
 -    find_package(unofficial-utf8proc CONFIG REQUIRED)
+-    target_link_libraries(${PROJECT_NAME} PRIVATE utf8proc)
 +    find_package(utf8proc CONFIG REQUIRED)
-     target_link_libraries(${PROJECT_NAME} PRIVATE utf8proc)
++    target_link_libraries(${PROJECT_NAME} PRIVATE utf8proc::utf8proc)
  elseif(LIBTCOD_UTF8PROC STREQUAL "disable")
      target_compile_definitions(${PROJECT_NAME} PUBLIC TCOD_NO_UNICODE)
+ else()
