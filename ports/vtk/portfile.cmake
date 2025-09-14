@@ -82,6 +82,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "netcdf"      VTK_MODULE_ENABLE_VTK_netcdf
         "netcdf"      VTK_MODULE_ENABLE_VTK_IOMINC
         "netcdf"      VTK_MODULE_ENABLE_VTK_IONetCDF
+        "odbc"        VTK_MODULE_ENABLE_VTK_IOODBC
         "openmp"      VTK_SMP_ENABLE_OPENMP
         "proj"        VCPKG_LOCK_FIND_PACKAGE_PROJ
         "proj"        VTK_MODULE_ENABLE_VTK_libproj
@@ -268,6 +269,7 @@ vcpkg_cmake_configure(
         -DVTK_GROUP_ENABLE_Views=YES
         # Disable dependencies which are not in vcpkg or not in the manifest
         -DVTK_ENABLE_OSPRAY=OFF
+        -DVTK_MODULE_ENABLE_VTK_IOLAS=NO
         -DVTK_MODULE_ENABLE_VTK_IOOpenVDB=NO
         -DVTK_MODULE_ENABLE_VTK_IOPDAL=NO
         -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO

@@ -94,6 +94,7 @@
             "libtheora",
             "mpi",
             "netcdf",
+            "odbc",
             "proj",
             "python",
             "qt",
@@ -225,6 +226,15 @@
           "features": [
             "netcdf-4"
           ]
+        }
+      ]
+    },
+    "odbc": {
+      "description": "ODBC functionality for VTK",
+      "dependencies": [
+        {
+          "name": "unixodbc",
+          "platform": "osx | linux"
         }
       ]
     },
