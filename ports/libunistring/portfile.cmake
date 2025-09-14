@@ -8,6 +8,13 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 5fbb5a0a864db73a6d18cdea7b31237da907fff0ef288f3a8db6ebdba8ef61ad8855e5fc780c2bbf632218d8fa59dd119734e5937ca64dc77f53f30f13b80b17
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS
+        # Avoid unnecessary tests.
+        am_cv_func_iconv_works=yes
+    )
+endif()
+
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "v${VERSION}"
@@ -21,6 +28,8 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     USE_WRAPPERS
+    OPTIONS
+        ${OPTIONS}
     OPTIONS
         "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
 )
