@@ -276,6 +276,7 @@ vcpkg_cmake_configure(
         # Disable dependencies which are not in vcpkg or not in the manifest
         -DVTK_ENABLE_OSPRAY=OFF
         -DVTK_MODULE_ENABLE_VTK_fides=NO
+        -DVTK_MODULE_ENABLE_VTK_IOAlembic=NO
         -DVTK_MODULE_ENABLE_VTK_IOLAS=NO
         -DVTK_MODULE_ENABLE_VTK_IOOpenVDB=NO
         -DVTK_MODULE_ENABLE_VTK_IOPDAL=NO
