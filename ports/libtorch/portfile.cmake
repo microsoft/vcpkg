@@ -12,9 +12,8 @@ vcpkg_from_github(
         fix-pytorch-pr-156630.patch # https://github.com/pytorch/pytorch/pull/156630
         fix-cmake.patch
         fix-glog.patch
-        fix-kineto.patch
-        fix-vulkan.patch
-        fix-miniz.patch
+        fix-vulkan.patch # use vulkan-memory-allocator from vcpkg
+        fix-miniz.patch # https://github.com/pytorch/pytorch/commit/a02e88d19c01a7226fa69fa0bf3a6a0b9a21c7e2
 )
 
 file(REMOVE_RECURSE
@@ -23,11 +22,12 @@ file(REMOVE_RECURSE
 )
 
 # even though we are using `USE_KINETO=OFF`, some files are using the headers
+# https://github.com/pytorch/kineto/pull/1099 removed MTIA_WORKLOADD enum. use a commit before the change
 vcpkg_from_github(
     OUT_SOURCE_PATH src_kineto
     REPO pytorch/kineto
-    REF 54ffcd4fb0bd77a5ecea46d11b4ed12d393c7fe3 # 2025-07-17
-    SHA512 5346f9d97e12ac200b5d9d5e96fa6c6b9e4b84736d0beea51050725949f6fca31af020aff287468426c2b04588428fc67fbb1c8eb1f50fbef2f5e6ad002c58de
+    REF 3f4beb08ad7e49be28eafa1216233df73e5be06f # 2025-06-03
+    SHA512 742e5119e130d3a01bf92480af9285c93663126b22de2c597fa566fb571969a724bb225ddb122e1cb32bce13d6507f6d3e8500205d0d6811f9c67838f44828ef
     HEAD_REF main
 )
 file(COPY "${src_kineto}/" DESTINATION "${SOURCE_PATH}/third_party/kineto")
