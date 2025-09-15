@@ -42,9 +42,6 @@
     "dex": {
       "description": "Build LIEF with DEX module"
     },
-    "elf": {
-      "description": "Build LIEF with ELF module"
-    },
     "enable-json": {
       "description": "Enable JSON-related APIs",
       "dependencies": [
@@ -60,14 +57,8 @@
     "logging-debug": {
       "description": "Enable debug logging"
     },
-    "macho": {
-      "description": "Build LIEF with MachO module"
-    },
     "oat": {
       "description": "Build LIEF with OAT module"
-    },
-    "pe": {
-      "description": "Build LIEF with PE module"
     },
     "use-ccache": {
       "description": "Use ccache to speed up compilation"

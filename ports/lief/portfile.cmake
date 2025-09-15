@@ -22,10 +22,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
         "use-ccache"     LIEF_USE_CCACHE        # Use ccache to speed up compilation
 
-        "elf"            LIEF_ELF               # Build LIEF with ELF module
-        "pe"             LIEF_PE                # Build LIEF with PE  module
-        "macho"          LIEF_MACHO             # Build LIEF with MachO module
-
         "oat"            LIEF_OAT               # Build LIEF with OAT module
         "dex"            LIEF_DEX               # Build LIEF with DEX module
         "vdex"           LIEF_VDEX              # Build LIEF with VDEX module
@@ -48,6 +44,11 @@ vcpkg_cmake_configure(
         -DLIEF_OPT_EXTERNAL_EXPECTED=ON
         -DLIEF_DISABLE_FROZEN=OFF
         -DLIEF_DISABLE_EXCEPTIONS=OFF
+
+        # https://github.com/lief-project/LIEF/blob/0.16.6/src/paging.cpp requires ELF/PE/MACHO in any case
+        -DLIEF_ELF=ON
+        -DLIEF_PE=ON
+        -DLIEF_MACHO=ON
 
         "-DLIEF_EXTERNAL_SPAN_DIR=${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tcb"
 )
