@@ -16,6 +16,7 @@ vcpkg_from_github(
     PATCHES
         FindLZMA.patch
         FindLZ4.patch
+        find-mysql.diff
         libproj.patch
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
