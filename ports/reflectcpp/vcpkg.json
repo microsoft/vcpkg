@@ -55,8 +55,10 @@
       "dependencies": [
         {
           "name": "arrow",
-          "version>=": "21.0.0",
-          "features": ["csv"]
+          "features": [
+            "csv"
+          ],
+          "version>=": "21.0.0"
         }
       ]
     },
@@ -83,8 +85,10 @@
       "dependencies": [
         {
           "name": "arrow",
-          "version>=": "21.0.0",
-          "features": ["parquet"]
+          "features": [
+            "parquet"
+          ],
+          "version>=": "21.0.0"
         }
       ]
     },
