@@ -79,6 +79,9 @@ function(add_test_executable TARGET LIBRARIES INCLUDES)
     endif()
 endfunction()
 
-add_test_executable(old "${PYTHON_LIBRARIES}" "${PYTHON_INCLUDE_DIRS}")
+# We're purposefully not testing the result of the old finders.
+# The python3 port never added a vcpkg-cmake-wrapper for FindPythonLibs,
+# and it seems like a poor use of time to do so at this point - the
+# old finders are soft removed as of CMake 3.27.
 add_test_executable(new_with_prefix "${EXPECTED_PYTHON}::Python" "")
 add_test_executable(new_without_prefix "${Python3_LIBRARIES}" "${Python3_INCLUDE_DIRS}")
