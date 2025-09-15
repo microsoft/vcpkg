@@ -37,18 +37,6 @@ index 0441083c..ff19fe8e 100644
  if(PODOFO_BUILD_TEST)
      enable_testing()
      add_subdirectory(test)
-diff --git a/src/podofo/podofo-config.cmake.in b/src/podofo/podofo-config.cmake.in
-index 700619bb..3ab4afce 100644
---- a/src/podofo/podofo-config.cmake.in
-+++ b/src/podofo/podofo-config.cmake.in
-@@ -2,6 +2,7 @@
- 
- if("@PODOFO_BUILD_STATIC@")
-     include(CMakeFindDependencyMacro)
-+    find_dependency(utf8proc CONFIG)
-     if("@Fontconfig_FOUND@")
-         find_dependency(Fontconfig)
-     endif()
 diff --git a/src/podofo/private/SASLprep.cpp b/src/podofo/private/SASLprep.cpp
 index a9c8a672..6899b9f0 100644
 --- a/src/podofo/private/SASLprep.cpp
