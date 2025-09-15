@@ -1,68 +1,45 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO microsoft/VbsEnclaveTooling
-    REF "codegen-v${VERSION}"
-    SHA512 "630bf6c3c70b1bb34f41d1cc3ff32518dbcba59518d82bfcb12673fea874a3878cd51bde5818ad069c4d4b8f6b0ab7d4fec194f249b5a583698a7772c5f88107"
-    HEAD_REF main
+set(ARCHIVE_FILENAME vbs-enclave-tooling-codegen-${VERSION}.tar.gz)
+vcpkg_download_distfile(ARCHIVE
+    # Use the VbsEnclaveTooling public nuget feed so internal Microsoft users as well as the public can access it in their pipelines.
+    URLS "https://pkgs.dev.azure.com/shine-oss/VbsEnclaveTooling/_apis/packaging/feeds/VbsEnclaveToolingDependencies/nuget/packages/Microsoft.Windows.VbsEnclave.CodeGenerator/versions/${VERSION}/content?api-version=7.1-preview.1"
+    FILENAME "${ARCHIVE_FILENAME}"
+    SHA512 afba1a0d66299c412f15e8677479d72443a85913a335e3540eae517fc9e29c04c615470b9350b71fe9f73964e7ae5001a862383a76c548c4edfd5c8ae8832f7d
 )
 
-# All the projects in the repo require some nuget packages to be installed so we need
-# to run nuget restore prior to running the msbuild function.
-vcpkg_find_acquire_program(NUGET)
-vcpkg_execute_required_process(
-    COMMAND ${NUGET} restore "${SOURCE_PATH}/VbsEnclaveTooling.sln"
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME nuget-restore
-)
-
-vcpkg_msbuild_install(
-  SOURCE_PATH "${SOURCE_PATH}"
-  PROJECT_SUBPATH VbsEnclaveTooling.sln
-  NO_INSTALL # Make sure libs, exes and dlls from consumed nuget packages don't get added
-  NO_TOOLCHAIN_PROPS 
-  OPTIONS 
-    "/p:VbsEnclaveCodegenVersion=${VERSION}"
+vcpkg_extract_source_archive(
+    PACKAGE_PATH
+    ARCHIVE ${ARCHIVE}
+    SOURCE_BASE ${LIB_VERSION}
+    NO_REMOVE_ONE_LEVEL
 )
 
 file(INSTALL
-    "${SOURCE_PATH}/src/ToolingSharedLibrary/Includes/VbsEnclaveABI"
+    "${PACKAGE_PATH}/src/VbsEnclaveABI"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     FILES_MATCHING PATTERN "*.h"
 )
 
 file(INSTALL
-    "${SOURCE_PATH}/Common/veil_enclave_wil_inc/wil"
+    "${PACKAGE_PATH}/src/wil"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     FILES_MATCHING PATTERN "*.h"
 )
-
-set(RELEASE_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_build/${VCPKG_TARGET_ARCHITECTURE}/Release")
-set(DEBUG_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/_build/${VCPKG_TARGET_ARCHITECTURE}/Debug")
 
 # veil_enclave_cpp_support lib contains CRT stubs and should not be autolinked globally to avoid symbol conflicts.
 set(ENCLAVE_CPP_SUPPORT_DIR "${CURRENT_PACKAGES_DIR}/lib/manual-link")
 set(ENCLAVE_CPP_SUPPORT_DEBUG_DIR "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
 
-# Note: the vcxproj project that creates edlcodegen.exe is always built using x64, regardless of what 
-# is passed to vcpkg_msbuild_install. This is by design.
-if (EXISTS "${RELEASE_BUILD_DIR}")
-    vcpkg_copy_tools(TOOL_NAMES edlcodegen SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_build/x64/Release"  AUTO_CLEAN)
-    file(GLOB CPP_SUPPORT_LIB_FILE "${RELEASE_BUILD_DIR}/veil_enclave_cpp_support_${VCPKG_TARGET_ARCHITECTURE}_Release_lib.lib")
-    file(MAKE_DIRECTORY "${ENCLAVE_CPP_SUPPORT_DIR}")
-    file(INSTALL DESTINATION "${ENCLAVE_CPP_SUPPORT_DIR}" TYPE FILE FILES "${CPP_SUPPORT_LIB_FILE}")
-endif()
+file(INSTALL 
+    "${PACKAGE_PATH}/lib/native/${VCPKG_TARGET_ARCHITECTURE}/"
+    DESTINATION "${ENCLAVE_CPP_SUPPORT_DIR}"
+    FILES_MATCHING PATTERN "veil_enclave_cpp_support_${VCPKG_TARGET_ARCHITECTURE}_Release_lib.*"
+)
 
-if(EXISTS "${DEBUG_BUILD_DIR}")
-    vcpkg_copy_tools(
-        TOOL_NAMES edlcodegen 
-        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/_build/x64/Debug" 
-        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug"
-        AUTO_CLEAN
-    )
+file(INSTALL 
+    "${PACKAGE_PATH}/lib/native/${VCPKG_TARGET_ARCHITECTURE}/"
+    DESTINATION "${ENCLAVE_CPP_SUPPORT_DEBUG_DIR}"
+    FILES_MATCHING PATTERN "veil_enclave_cpp_support_${VCPKG_TARGET_ARCHITECTURE}_Debug_lib.*"
+)
 
-    file(GLOB CPP_SUPPORT_LIB_FILE "${DEBUG_BUILD_DIR}/veil_enclave_cpp_support_${VCPKG_TARGET_ARCHITECTURE}_Debug_lib.lib")
-    file(MAKE_DIRECTORY "${ENCLAVE_CPP_SUPPORT_DEBUG_DIR}")
-    file(INSTALL DESTINATION "${ENCLAVE_CPP_SUPPORT_DEBUG_DIR}" TYPE FILE FILES "${CPP_SUPPORT_LIB_FILE}")
-endif()
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_copy_tools(TOOL_NAMES edlcodegen SEARCH_DIR "${PACKAGE_PATH}/bin" AUTO_CLEAN)
+vcpkg_install_copyright(FILE_LIST "${PACKAGE_PATH}/LICENSE")
