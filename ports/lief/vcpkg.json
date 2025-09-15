@@ -24,12 +24,9 @@
   "default-features": [
     "art",
     "dex",
-    "elf",
     "enable-json",
     "logging",
-    "macho",
     "oat",
-    "pe",
     "vdex"
   ],
   "features": {
