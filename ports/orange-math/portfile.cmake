@@ -10,6 +10,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_replace_string("${SOURCE_PATH}/include/omath/omath.hpp" [[#include "linear_algebra/matrix.hpp"]] "")
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
