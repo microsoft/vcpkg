@@ -4982,7 +4982,7 @@
     },
     "libkml": {
       "baseline": "1.3.0",
-      "port-version": 13
+      "port-version": 14
     },
     "liblas": {
       "baseline": "1.8.1",
