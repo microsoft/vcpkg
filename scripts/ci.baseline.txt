@@ -136,7 +136,7 @@ openblas:x64-windows-static=pass
 # </BLAS+LAPACK>
 ################################################################
 blend2d:arm64-uwp=fail
-blend2d:arm64-window=fail
+blend2d:arm64-windows=fail
 blend2d:arm64-windows-static-md=fail
 blitz:x64-android=fail
 bond:arm-neon-android=fail
