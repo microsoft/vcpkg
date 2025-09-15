@@ -9044,10 +9044,6 @@
       "baseline": "2.3.3",
       "port-version": 0
     },
-    "sourcemeta-blaze": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "soxr": {
       "baseline": "0.1.3",
       "port-version": 8
