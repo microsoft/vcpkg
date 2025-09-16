@@ -1,6 +1,6 @@
 {
   "name": "bgfx",
-  "version": "1.129.8866-491",
+  "version": "1.129.8930-495",
   "maintainers": "Sandy Carter <bwrsandman@users.noreply.github.com>",
   "description": "Cross-platform, graphics API agnostic, Bring Your Own Engine/Framework style rendering library.",
   "homepage": "https://bkaradzic.github.io/bgfx/overview.html",
@@ -8,7 +8,10 @@
   "license": "BSD-2-Clause AND CC0-1.0",
   "dependencies": [
     "libsquish",
+    "lodepng",
+    "mgnlibs",
     "miniz",
+    "stb",
     "tinyexr",
     {
       "name": "vcpkg-cmake",
@@ -33,7 +36,18 @@
     "tools": {
       "$comment": "Use '\"host\": true' in dependencies of vcpkg.json in manifest mode.",
       "description": "Shader, Texture and Geometry compilers for bgfx.",
-      "supports": "native"
+      "dependencies": [
+        "cgltf",
+        {
+          "name": "glslang",
+          "features": [
+            "opt"
+          ]
+        },
+        "meshoptimizer",
+        "spirv-cross",
+        "spirv-tools"
+      ]
     }
   }
 }
