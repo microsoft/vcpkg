@@ -10,7 +10,14 @@ vcpkg_download_distfile(ARCHIVE
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS
-        # Avoid unnecessary tests.
+        # On windows during configure tests iconv is properly linked,
+        # but iconv-2.dll missing from the directory where check program is built
+        # causes one of the tests to fail and in result builds libunistring
+        # without iconv support, this flag allows to bypass the test.
+        #
+        # The failing test is "checking for working iconv", while in previous
+        # test "checking for iconv", configure only checks linking, in
+        # "checking for working iconv" it also runs resulting test application.
         am_cv_func_iconv_works=yes
     )
 endif()
