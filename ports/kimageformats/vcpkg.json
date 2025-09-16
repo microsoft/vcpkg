@@ -1,0 +1,15 @@
+{
+	"name": "kimageformats",
+	"version": "6.18.0",
+	"description": "Plugins to allow QImage to support extra file formats.",
+	"dependencies": [
+		{
+			"name": "vcpkg-cmake",
+			"host": true
+		},
+		"qtbase",
+		"kf6archive",
+		"openexr",
+		"ecm"
+	]
+}
