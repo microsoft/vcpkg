@@ -13,6 +13,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         namespace-nl.diff
+        add-cplusplus-flag.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/vendor")
 

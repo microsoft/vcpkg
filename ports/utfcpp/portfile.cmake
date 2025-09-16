@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 9692c4a581944c6cc41ae050243d81604ada1c9f7fe7df7f24ea3b98879c5ed73ddc3a4ff89258247fd19f91403cbddb2a1f9c153511b6065d856bbcba89bde8
     HEAD_REF master
+    PATCHES
+        add-cplusplus-flag.patch
 )
 
 vcpkg_cmake_configure(
