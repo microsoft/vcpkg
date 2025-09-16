@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 6c8071b1bef4e4991e7b3023a1c1c712168a818e # v2.3.11
     SHA512 5c5b189e3b62935fdee5e25f5cf9b41fb2bc68fc9bd1652cab1b109032ab586978ba14d19e83328838b55e773f099046344bb4c84ec99edac309650ed863543e
     HEAD_REF master
+    PATCHES
+        pkgconfig-libiconv.diff
 )
 
 vcpkg_libltdl_get_vars(LIBLTDL)
