@@ -2,7 +2,7 @@
   "name": "cadons-ctus",
   "version": "1.0.0",
   "description": "Library implementing the tus protocol for resumable uploads",
-  "homepage": "https://github.com/Cadons/libtusclient",
+  "homepage": "https://github.com/Cadons/ctus",
   "license": "MIT",
   "dependencies": [
     "boost-lexical-cast",
