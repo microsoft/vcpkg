@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO JuliaLang/utf8proc
     REF v${VERSION}
     SHA512 bf9bfb20036e8b709449ee4a11592becf99e61f4c82d03519ab9de1a93ca47d6f8ed4b0bb471f7ca3ae06293275a391a9102ae810a9e07e914789d05ddbd25ab
+    PATCHES
+        msvc-static-name.patch
 )
 
 vcpkg_cmake_configure(
@@ -29,5 +31,9 @@ endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/utf8proc.h" "${UTF8PROC_H}")
 
 vcpkg_fixup_pkgconfig()
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/utf8proc_static.lib")
+    message(FATAL_ERROR "Installed lib file should be named 'utf8proc.lib' via patching the upstream build.")
+endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
