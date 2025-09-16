@@ -275,6 +275,10 @@ vcpkg_cmake_configure(
         -DVTK_GROUP_ENABLE_Views=YES
         # Disable dependencies which are not in vcpkg or not in the manifest
         -DVTK_ENABLE_OSPRAY=OFF
+        -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
+        # Select modules / groups to install
+        -DVTK_USE_EXTERNAL:BOOL=ON
+        -DVTK_MODULE_ENABLE_VTK_DomainsMicroscopy=NO
         -DVTK_MODULE_ENABLE_VTK_fides=NO
         -DVTK_MODULE_ENABLE_VTK_IOADIOS2=NO
         -DVTK_MODULE_ENABLE_VTK_IOAlembic=NO
@@ -282,9 +286,6 @@ vcpkg_cmake_configure(
         -DVTK_MODULE_ENABLE_VTK_IOOpenVDB=NO
         -DVTK_MODULE_ENABLE_VTK_IOPDAL=NO
         -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
-        -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
-        # Select modules / groups to install
-        -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_ENABLE_VTK_WrappingTools=YES
         "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
         -DVTK_MODULE_USE_EXTERNAL_VTK_token:BOOL=OFF # Not yet in VCPKG
