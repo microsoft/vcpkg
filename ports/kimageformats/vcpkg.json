@@ -1,15 +1,67 @@
 {
-	"name": "kimageformats",
-	"version": "6.18.0",
-	"description": "Plugins to allow QImage to support extra file formats.",
-	"dependencies": [
-		{
-			"name": "vcpkg-cmake",
-			"host": true
-		},
-		"qtbase",
-		"kf6archive",
-		"openexr",
-		"ecm"
-	]
+  "name": "kimageformats",
+  "version": "6.18.0",
+  "description": "Plugins to allow QImage to support extra file formats.",
+  "dependencies": [
+    "ecm",
+    "openexr",
+    "qtbase",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "avif": {
+      "description": "Required for the QImage plguin for AVIF images",
+      "dependencies": [
+        "libavif"
+      ]
+    },
+    "dds": {
+      "description": "Enable plugin for DDS format"
+    },
+    "heif": {
+      "description": "Enable plugin for HEIF format",
+      "dependencies": [
+        "libheif"
+      ]
+    },
+    "jp2": {
+      "description": "Enable plugin for JPEG 2000 images",
+      "dependencies": [
+        "openjpeg"
+      ]
+    },
+    "jxl": {
+      "description": "Enable plugin for JPEG XL images",
+      "dependencies": [
+        "libjxl"
+      ]
+    },
+    "jxr": {
+      "description": "Enable plugin for JPEG XR images. WARNING: There are security issues with this plugin",
+      "dependencies": [
+        "jxrlib"
+      ]
+    },
+    "kritaraster": {
+      "description": "QImage plugin for Krita and OpenRaster images",
+      "dependencies": [
+        "kf6archive"
+      ]
+    },
+    "openexr": {
+      "description": "Required for the QImage plugin for OpenEXR images",
+      "dependencies": [
+        "openexr"
+      ]
+    },
+    "raw": {
+      "description": "Enable plugin for RAW images",
+      "dependencies": [
+        "libraw"
+      ]
+    }
+  }
 }

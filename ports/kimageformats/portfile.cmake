@@ -5,17 +5,19 @@ vcpkg_from_git(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dds KIMAGEFORMATS_DDS
+	heif KIMAGEFORMATS_HEIF
+	jxl KIMAGEFORMATS_JXL
+	jp2 KIMAGEFORMATS_JP2
+	jxr KIMAGEFORMATS_JXR
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DKIMAGEFORMATS_DDS=OFF
-	-DKIMAGEFORMATS_HEIF=OFF
-	-DKIMAGEFORMATS_JXL=OFF
-	-DKIMAGEFORMATS_JP2=OFF
-	-DKIMAGEFORMATS_JXR=OFF # says that there are security issues with this plugin in their CMakeLists.txt
-	# not sure how comfortable I feel including it as a feature if there are active security issues,
-	# but I guess it could be considered "not our problem". Maybe just having a warning is good?
-	# Whoever reviews this, please comment <3
+        ${FEATURE_OPTIONS}
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()

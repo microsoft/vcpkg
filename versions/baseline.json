@@ -4340,6 +4340,10 @@
       "baseline": "6.3.0",
       "port-version": 0
     },
+    "kimageformats": {
+      "baseline": "6.18.0",
+      "port-version": 0
+    },
     "kinectsdk1": {
       "baseline": "1.8",
       "port-version": 8
