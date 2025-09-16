@@ -1,11 +1,9 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
-set(LIBUNISTRING_FILENAME libunistring-${VERSION}.tar.xz)
+set(LIBUNISTRING_FILENAME "libunistring-${VERSION}.tar.xz")
 
 vcpkg_download_distfile(ARCHIVE
     URLS
-        "https://ftp.gnu.org/gnu/libunistring/${LIBUNISTRING_FILENAME}"
         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libunistring/${LIBUNISTRING_FILENAME}"
+        "https://ftp.gnu.org/gnu/libunistring/${LIBUNISTRING_FILENAME}"
     FILENAME "${LIBUNISTRING_FILENAME}"
     SHA512 5fbb5a0a864db73a6d18cdea7b31237da907fff0ef288f3a8db6ebdba8ef61ad8855e5fc780c2bbf632218d8fa59dd119734e5937ca64dc77f53f30f13b80b17
 )
