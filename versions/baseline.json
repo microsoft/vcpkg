@@ -8776,10 +8776,6 @@
       "baseline": "2019-05-07",
       "port-version": 5
     },
-    "seq": {
-      "baseline": "2.0",
-      "port-version": 0
-    },
     "seqan": {
       "baseline": "2.4.0",
       "port-version": 3
@@ -9539,6 +9535,10 @@
     "tgui": {
       "baseline": "1.8.0",
       "port-version": 2
+    },
+    "thermadiag-seq": {
+      "baseline": "2.0",
+      "port-version": 0
     },
     "think-cell-range": {
       "baseline": "2023.1",

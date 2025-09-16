@@ -1,5 +1,5 @@
 {
-  "name": "seq",
+  "name": "thermadiag-seq",
   "version": "2.0",
   "description": "a collection of original C++17 STL-like containers and related tools",
   "homepage": "https://github.com/Thermadiag/seq",
