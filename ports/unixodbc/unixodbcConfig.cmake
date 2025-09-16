@@ -23,11 +23,21 @@ if(NOT TARGET UNIX::odbc)
             IMPORTED_LOCATION_DEBUG "${UNIXODBC_LIBRARY_DEBUG}"
         )
     endif()
+    mark_as_advanced(UNIXODBC_LIBRARY_RELEASE UNIXODBC_LIBRARY_DEBUG)
 
     if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+        find_library(UNIXODBC_LTDL_LIBRARY_RELEASE NAMES "ltdl" PATHS "${z_unixodbc_root}/lib" NO_DEFAULT_PATH REQUIRED)
+        find_library(UNIXODBC_LTDL_LIBRARY_DEBUG NAMES "ltdl" PATHS "${z_unixodbc_root}/debug/lib" NO_DEFAULT_PATH REQUIRED)
+        mark_as_advanced(UNIXODBC_LTDL_LIBRARY_RELEASE UNIXODBC_LTDL_LIBRARY_DEBUG)
+        if(UNIXODBC_LTDL_LIBRARY_DEBUG)
+            set(z_unixodbc_ltdl "$<$<CONFIG:DEBUG>:${UNIXODBC_LTDL_LIBRARY_DEBUG}>;$<$<NOT:$<CONFIG:DEBUG>>:${UNIXODBC_LTDL_LIBRARY_RELEASE}>")
+        else()
+            set(z_unixodbc_ltdl "${UNIXODBC_LTDL_LIBRARY_RELEASE}")
+        endif()
         set_target_properties(UNIX::odbc PROPERTIES
-            INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:Iconv::Iconv>;$<LINK_ONLY:ltdl>;${CMAKE_DL_LIBS}"
+            INTERFACE_LINK_LIBRARIES "$<LINK_ONLY:Iconv::Iconv>;${z_unixodbc_ltdl};${CMAKE_DL_LIBS}"
         )
+        unset(z_unixodbc_ltdl)
     endif()
     unset(z_unixodbc_root)
 endif()
