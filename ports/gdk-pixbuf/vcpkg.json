@@ -1,7 +1,7 @@
 {
   "name": "gdk-pixbuf",
   "version": "2.42.12",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Image loading library.",
   "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
   "license": "LGPL-2.1-or-later",
@@ -10,6 +10,7 @@
     {
       "name": "gettext",
       "host": true,
+      "default-features": false,
       "features": [
         "tools"
       ]
@@ -32,7 +33,8 @@
   ],
   "features": {
     "introspection": {
-      "description": "build with introspection",
+      "description": "Build with introspection",
+      "supports": "!static",
       "dependencies": [
         "gobject-introspection"
       ]

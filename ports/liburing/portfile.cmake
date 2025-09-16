@@ -1,31 +1,20 @@
-vcpkg_download_distfile(SYNC_ZCRX_CHANGES_1
-    URLS https://github.com/axboe/liburing/commit/48d8d54e524a9c37e0cc52921bb41070156a597f.patch?full_index=1
-    SHA512 d16a6622538256c163785c0eaa89dd2ac53c5e7f1a93fc471198325628305d3d494ca3716233e666d0589d3d0a9e67708f6e8c2b46cda3bc4588fde11e091749
-    FILENAME liburing-sync-zcrx-changes-1.patch
-)
-
-vcpkg_download_distfile(SYNC_ZCRX_CHANGES_2
-    URLS https://github.com/axboe/liburing/commit/ce3a65747d43a405cc19a630d5f8a0f613293f5c.patch?full_index=1
-    SHA512 571d0e8cdc5334208947de750b6458277653d64235dfeae99ae130e8de61e9ababc5827232eae9db3f44743fd93dd22f1cd248ec2ea22a035dd7efd10f18b2bd
-    FILENAME liburing-sync-zcrx-changes-2.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO axboe/liburing
     REF "liburing-${VERSION}"
-    SHA512 f27233e6128444175b18cd1d45647acdd27b906a8cd561029508710e443b44416b916cad1b2c1217e23d9a5ffb5ba68b119e9c812eae406650fbd10bf26c2fa5
+    SHA512 ccd40be43d4ea046c63d949cfddd9adb0fda531e3ae4ee17d4639b82a11eda966d8a2afd280b4e6b45f907ea1d53bbd432bfd8ae7a015609e86555a766fc850f
     HEAD_REF master
     PATCHES
         fix-configure.patch     # ignore unsupported options, handle ENABLE_SHARED
         disable-tests-and-examples.patch
-        ${SYNC_ZCRX_CHANGES_1}
-        ${SYNC_ZCRX_CHANGES_2}
-        add-basic-support.patch # https://github.com/axboe/liburing/commit/d7ec4ce3421fbbdaba07426d589b72e204ac92e9
 )
 
 # https://github.com/axboe/liburing/blob/liburing-2.8/src/Makefile#L13
 set(ENV{CFLAGS} "$ENV{CFLAGS} -O3 -Wall -Wextra -fno-stack-protector")
+
+# without this calls to `realpath ${prefix}` inside the build system fail for the debug build if this is the first
+# library to be installed
+file(MAKE_DIRECTORY "${CURRENT_INSTALLED_DIR}/debug")
 
 # note: check ${SOURCE_PATH}/liburing.spec before updating configure options
 vcpkg_configure_make(

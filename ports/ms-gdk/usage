@@ -14,15 +14,3 @@ The Microsoft GDK package provides CMake targets:
 
   find_package(xbox.game.chat.2.cpp.api CONFIG REQUIRED)
   target_link_libraries(main PRIVATE Xbox::GameChat2)
-
-  find_package(playfab.services.c CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE Xbox::PlayFabServices)
-
-  find_package(playfab.multiplayer.cpp CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE Xbox::PlayFabMultiplayer)
-
-  find_package(playfab.party.cpp CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE Xbox::PlayFabParty)
-
-  find_package(playfab.partyxboxlive.cpp CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE Xbox::PlayFabPartyLIVE)

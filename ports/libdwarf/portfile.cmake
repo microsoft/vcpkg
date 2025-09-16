@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davea42/libdwarf-code
     REF "v${VERSION}"
-    SHA512 f6e72c7dc1430d9f5bbd324632a9825cafcab9c9aad1302ac1b413cae674b6180ece957672b16e52bd2976fd3e7203e732db7d8a395aa0606dce159188988c2e
+    SHA512 b7ad4117bf24511a75080f6c3ab27335a055f8702f365b74fe7772b2eca35eaeda31bfa455603083232a80a634b00483a071541ff32810434f31ac83774475b0
     HEAD_REF main
     PATCHES
         include-dir.diff # avoid dwarf.h conflict with elfutils

@@ -2,11 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 697205a571bb3d52d83598e8511e2e21e7cd15630aac32d8deb4354e462efda6a5ce46510cf4a1c18365dffe935cf2e4f1fda65d1779f17c9bb60c503315bf5c
+    SHA512 1d0f19e6aebc6aa273e749fb7968eff851dcfb15a0b5ef6cf268c74e77a81175d845c20c9285be7e9a7cb79871cb08bdac5c9d802a50fc5bd11a7225d510f48f
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
-        fix-build-ffmpeg-failed.patch
+        add-parameter-name.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -59,14 +59,9 @@ endif()
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_DEBUG -Dgobject=enabled -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dgobject=enabled -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
     list(APPEND OPTIONS -Dintrospection=disabled)
-endif()
-
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
-else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
 endif()
 
 set(cxx_link_libraries "")
@@ -96,8 +91,8 @@ vcpkg_configure_meson(
     ADDITIONAL_BINARIES
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
+        g-ir-compiler='${GIR_COMPILER}'
+        g-ir-scanner='${GIR_SCANNER}'
 )
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
@@ -141,7 +136,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure hb-info)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()

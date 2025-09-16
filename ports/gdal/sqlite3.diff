@@ -1,0 +1,49 @@
+diff --git a/cmake/modules/packages/FindSQLite3.cmake b/cmake/modules/packages/FindSQLite3.cmake
+index 903465b3c9..5d3a067e50 100644
+--- a/cmake/modules/packages/FindSQLite3.cmake
++++ b/cmake/modules/packages/FindSQLite3.cmake
+@@ -77,7 +77,7 @@ if(SQLite3_INCLUDE_DIR AND SQLite3_LIBRARY)
+     cmake_push_check_state(RESET)
+     # check column metadata
+     set(CMAKE_REQUIRED_INCLUDES ${SQLite3_INCLUDE_DIR})
+-    if( ${SQLite3_LIBRARY} MATCHES "libsqlite3.a")
++    if(0)
+       if(PC_SQLITE3_STATIC_LDFLAGS)
+         set(CMAKE_REQUIRED_LIBRARIES ${PC_SQLITE3_STATIC_LDFLAGS})
+       else()
+@@ -111,15 +111,10 @@ if(SQLite3_INCLUDE_DIR AND SQLite3_LIBRARY)
+       endif()
+     else()
+         set(CMAKE_REQUIRED_LIBRARIES ${SQLite3_LIBRARY})
++        list(APPEND CMAKE_REQUIRED_LIBRARIES ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
++        list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} "")
+     endif()
+ 
+-    # Trick to force CMake to re-run if SQLite3_LIBRARY changes
+-    # Useful in development situations when switching/refreshing the library
+-    set_property(
+-        DIRECTORY
+-        APPEND
+-        PROPERTY CMAKE_CONFIGURE_DEPENDS "${SQLite3_LIBRARY}"
+-    )
+     # Invalidate cached variables if SQLite3_LIBRARY changes
+     file(TIMESTAMP "${SQLite3_LIBRARY}" SQLite3_LIBRARY_TIMESTAMP)
+     if( SQLite3_LIBRARY_TIMESTAMP_OLD_VAL AND
+@@ -179,6 +174,7 @@ if(SQLite3_FOUND)
+                           INTERFACE_INCLUDE_DIRECTORIES "${SQLite3_INCLUDE_DIRS}"
+                           IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+                           IMPORTED_LOCATION "${SQLite3_LIBRARY}")
++  endif()
+     if(SQLite3_HAS_COLUMN_METADATA)
+         set_property(TARGET SQLite::SQLite3 APPEND PROPERTY
+                      INTERFACE_COMPILE_DEFINITIONS "SQLite3_HAS_COLUMN_METADATA")
+@@ -187,5 +183,9 @@ if(SQLite3_FOUND)
+         set_property(TARGET SQLite::SQLite3 APPEND PROPERTY
+                      INTERFACE_COMPILE_DEFINITIONS "SQLite3_HAS_RTREE")
+     endif()
++  get_target_property(definitions SQLite::SQLite3 INTERFACE_COMPILE_DEFINITIONS)
++  if(definitions)
++    list(REMOVE_DUPLICATES definitions)
++    set_target_properties(SQLite::SQLite3 PROPERTIES INTERFACE_COMPILE_DEFINITIONS "${definitions}")
+   endif()
+ endif()

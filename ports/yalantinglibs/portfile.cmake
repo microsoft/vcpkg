@@ -3,11 +3,15 @@ set(VCPKG_BUILD_TYPE release)  # header-only
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alibaba/yalantinglibs
-    REF 75b2c25eb591e0ee6dd94e3c764f99af761fb6f1 # Use commit id to avoid target to multiple commits
-    SHA512 8a5e01414389084a856c1ce07ae07991ecfe24b61fef9629aff531d303fd9dbb0da4fca4cd259a757788815cd8f3039fd115d5a2548845438665f6baed89163c
+    REF "${VERSION}"
+    SHA512 16d4a9dfffeca3010dd473e6c26df652b57ba6ed2c35624600fb984db8071a0c7181f2b08da2600b8fddd9ffba631f1a641e9c4a6dc9f2aa3e48e6cacca537aa
     HEAD_REF main
+    PATCHES
+        use-external-iguana.patch
 )
 
+# Remove the vendored iguana sources
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/ylt/standalone/iguana")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

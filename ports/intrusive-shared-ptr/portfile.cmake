@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gershnik/intrusive_shared_ptr
     REF "v${VERSION}"
-    SHA512 0c76f04f9fec491cc8a1fc790248c3787b893459ca14cd1953fe1abe3cd5afd275627acac141bac3bc5f039a9e47448aafe246a5e7adb2aec5038057e5102fe8
+    SHA512 4977aeb12ee2ad79f7dbd240c7383d11e0dbd2821682705c351c8a1b55b17afa6eb99aa0618df494a3dd717b5b6e55b6d8dc555e3011c563369500382091ec93
     HEAD_REF master
 )
 
