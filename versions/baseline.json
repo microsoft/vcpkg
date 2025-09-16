@@ -2625,7 +2625,7 @@
       "port-version": 0
     },
     "ecm": {
-      "baseline": "6.14.0-rc1",
+      "baseline": "6.18.0",
       "port-version": 0
     },
     "ecos": {
