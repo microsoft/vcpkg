@@ -65,7 +65,6 @@ blend2d:arm64-uwp=fail
 blend2d:arm64-windows-static-md=fail
 blend2d:arm64-windows=fail
 blitz:arm64-windows=fail
-blitz:x64-uwp=fail
 caf:arm-uwp=fail
 caf:x64-uwp=fail
 caffe2:arm64-windows=fail
