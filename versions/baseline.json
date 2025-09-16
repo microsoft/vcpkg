@@ -4576,6 +4576,10 @@
       "baseline": "1.0.0",
       "port-version": 4
     },
+    "libbluray": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "libbson": {
       "baseline": "1.30.3",
       "port-version": 0
@@ -5535,6 +5539,10 @@
     "libu2f-server": {
       "baseline": "1.1.0",
       "port-version": 5
+    },
+    "libudfread": {
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "libudis86": {
       "baseline": "2018-01-28",
