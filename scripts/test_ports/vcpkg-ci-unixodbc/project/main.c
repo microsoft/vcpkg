@@ -13,8 +13,8 @@ int main()
 	if ((result != SQL_SUCCESS) && (result != SQL_SUCCESS_WITH_INFO))
 		return 1;
 
-    char l_dsn[100], l_desc[100];
-    short int l_len1, l_len2, l_next;
+    SQLCHAR l_dsn[100], l_desc[100];
+    SQLUSMALLINT l_len1, l_len2, l_next;
     for (short int l_next = SQL_FETCH_FIRST;
          SQLDataSources(odbc_handle, l_next, l_dsn, sizeof(l_dsn), &l_len1, l_desc, sizeof(l_desc), &l_len2) == SQL_SUCCESS;
          l_next = SQL_FETCH_NEXT)
