@@ -6,11 +6,18 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_libltdl_get_vars(LIBLTDL)
+set(ENV{LIBTOOLIZE} "${LIBLTDL_LIBTOOLIZE}")
+
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
     OPTIONS
         --with-included-ltdl=no
+    OPTIONS_RELEASE
+        ${LIBLTDL_OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        ${LIBLTDL_OPTIONS_RELEASE}
 )
 vcpkg_make_install()
 vcpkg_copy_pdbs()
