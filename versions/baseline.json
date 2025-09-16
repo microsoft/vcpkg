@@ -449,7 +449,7 @@
       "port-version": 0
     },
     "aws-c-event-stream": {
-      "baseline": "0.5.6",
+      "baseline": "0.5.7",
       "port-version": 0
     },
     "aws-c-http": {
@@ -765,7 +765,7 @@
       "port-version": 0
     },
     "blosc2": {
-      "baseline": "2.21.1",
+      "baseline": "2.21.2",
       "port-version": 0
     },
     "blpapi": {
@@ -778,7 +778,7 @@
     },
     "boinc": {
       "baseline": "8.2.5",
-      "port-version": 0
+      "port-version": 1
     },
     "bond": {
       "baseline": "13.0.1",
@@ -2733,7 +2733,7 @@
       "port-version": 3
     },
     "etl": {
-      "baseline": "20.43.1",
+      "baseline": "20.43.4",
       "port-version": 0
     },
     "eve": {
@@ -3293,7 +3293,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.7.0",
+      "baseline": "5.7.1",
       "port-version": 0
     },
     "glbinding": {
@@ -3917,7 +3917,7 @@
       "port-version": 0
     },
     "inih": {
-      "baseline": "61",
+      "baseline": "62",
       "port-version": 0
     },
     "iniparser": {
@@ -5813,7 +5813,7 @@
       "port-version": 0
     },
     "lief": {
-      "baseline": "0.16.1",
+      "baseline": "0.17.0",
       "port-version": 0
     },
     "lightgbm": {
@@ -6289,7 +6289,7 @@
       "port-version": 0
     },
     "miniaudio": {
-      "baseline": "0.11.22",
+      "baseline": "0.11.23",
       "port-version": 0
     },
     "minifb": {
@@ -6457,8 +6457,8 @@
       "port-version": 1
     },
     "ms-gdk": {
-      "baseline": "2504.2.4061",
-      "port-version": 1
+      "baseline": "2504.3.4084",
+      "port-version": 0
     },
     "ms-gdkx": {
       "baseline": "1.0.0",
@@ -7173,7 +7173,7 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "3.5.1",
+      "baseline": "3.6.1",
       "port-version": 0
     },
     "orc": {
@@ -7601,7 +7601,7 @@
       "port-version": 0
     },
     "proj": {
-      "baseline": "9.6.2",
+      "baseline": "9.7.0",
       "port-version": 0
     },
     "projectm": {
@@ -7734,7 +7734,7 @@
     },
     "qhull": {
       "baseline": "8.0.2",
-      "port-version": 5
+      "port-version": 6
     },
     "qlementine": {
       "baseline": "1.2.2",
@@ -8349,7 +8349,7 @@
       "port-version": 0
     },
     "reflectcpp": {
-      "baseline": "0.20.0",
+      "baseline": "0.21.0",
       "port-version": 0
     },
     "refprop-headers": {
@@ -8893,7 +8893,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "3.13.0",
+      "baseline": "4.0.1",
       "port-version": 0
     },
     "simdutf": {
@@ -9042,10 +9042,6 @@
     },
     "soundtouch": {
       "baseline": "2.3.3",
-      "port-version": 0
-    },
-    "sourcemeta-blaze": {
-      "baseline": "1.0.0",
       "port-version": 0
     },
     "soxr": {
@@ -10101,7 +10097,7 @@
       "port-version": 1
     },
     "verdict": {
-      "baseline": "1.4.0",
+      "baseline": "1.4.2",
       "port-version": 0
     },
     "via-httplib": {
@@ -10513,7 +10509,7 @@
       "port-version": 0
     },
     "xlsxio": {
-      "baseline": "0.2.35",
+      "baseline": "0.2.36",
       "port-version": 0
     },
     "xmlsec": {
