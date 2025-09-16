@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         missing-cstdint.diff # https://github.com/realm/realm-cpp/pull/247
         disable-werror.diff
+        remove-overzealous-template.diff # https://github.com/realm/realm-cpp/pull/248
 )
 
 if(NOT VCPKG_BUILD_TYPE)
