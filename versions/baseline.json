@@ -4572,10 +4572,6 @@
       "baseline": "2024-11-30",
       "port-version": 0
     },
-    "libbf": {
-      "baseline": "1.0.0",
-      "port-version": 4
-    },
     "libbson": {
       "baseline": "1.30.3",
       "port-version": 0
