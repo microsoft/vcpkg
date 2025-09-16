@@ -5020,6 +5020,10 @@
       "baseline": "3.3.2",
       "port-version": 1
     },
+    "libltdl": {
+      "baseline": "2.5.4",
+      "port-version": 0
+    },
     "liblttng-ust": {
       "baseline": "2.14.0-rc1",
       "port-version": 0
