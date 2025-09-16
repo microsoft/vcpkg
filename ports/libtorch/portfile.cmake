@@ -111,6 +111,13 @@ if(VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
     set(TARGET_IS_MOBILE ON)
 endif()
 
+# By default MKL is used. We will use Eigen 
+set(BLAS "Eigen")
+if(TARGET_IS_MOBILE)
+    # In mobile, Eigen(embedded source) is used. We will use OpenBLAS instead.
+    set(BLAS "OpenBLAS") # see how port 'blas' works
+endif()
+
 set(TARGET_IS_APPLE OFF)
 if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
     set(TARGET_IS_APPLE ON)
@@ -129,11 +136,12 @@ vcpkg_cmake_configure(
         -DBUILD_CUSTOM_PROTOBUF=OFF # cmake/ProtoBuf.cmake
         -DCOMMIT_SHA=${GIT_COMMIT} # cmake/Codegen.cmake
         -DINTERN_BUILD_MOBILE=${TARGET_IS_MOBILE}
+        -DBLAS=${BLAS}
         -DATEN_NO_TEST=ON
         -DCAFFE2_STATIC_LINK_CUDA=ON
         -DCAFFE2_USE_MSVC_STATIC_RUNTIME=${USE_STATIC_RUNTIME}
         -DCAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO=OFF
-        -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
+        -DBUILD_JNI=OFF # -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_FLASH_ATTENTION=OFF
         -DUSE_GFLAGS=ON
         -DUSE_GLOG=ON

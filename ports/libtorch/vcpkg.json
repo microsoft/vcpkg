@@ -18,10 +18,16 @@
     "fmt",
     "foxi",
     "fp16",
-    "gemmlowp",
+    {
+      "name": "gemmlowp",
+      "platform": "!android"
+    },
     "gflags",
     "glog",
-    "lapack",
+    {
+      "name": "lapack",
+      "platform": "!android"
+    },
     "lmdb",
     "mimalloc",
     "miniz",
@@ -154,7 +160,10 @@
           "host": true
         },
         "vulkan",
-        "vulkan-loader",
+        {
+          "name": "vulkan-loader",
+          "platform": "!android"
+        },
         "vulkan-memory-allocator"
       ]
     }

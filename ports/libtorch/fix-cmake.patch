@@ -464,3 +464,19 @@ index 82fe0a6..fde1298 100644
    else()
      # Don't install gloo
      set(GLOO_INSTALL OFF CACHE BOOL "" FORCE)
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index fde1298..40445bf 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -250,7 +250,10 @@ else()
+   message(FATAL_ERROR "Unrecognized BLAS option: " ${BLAS})
+ endif()
+ 
+-if(NOT INTERN_BUILD_MOBILE)
++if(BLAS_FOUND)
++  # We expect the BLAS settings are done above. Just set the variable.
++  set(USE_BLAS 1)
++elseif(NOT INTERN_BUILD_MOBILE)
+   set(AT_MKL_SEQUENTIAL 0)
+   set(USE_BLAS 1)
+   if(NOT (ATLAS_FOUND OR BLIS_FOUND OR GENERIC_BLAS_FOUND OR MKL_FOUND OR OpenBLAS_FOUND OR VECLIB_FOUND OR FlexiBLAS_FOUND OR NVPL_BLAS_FOUND OR APL_FOUND))
