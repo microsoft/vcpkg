@@ -950,7 +950,6 @@ gz-rendering7(arm|android) = cascade
 gz-sensors7:x64-uwp = cascade
 gz-sensors7(arm | android) = cascade
 gz-transport12:x64-uwp = cascade
-gz-transport12(osx) = cascade
 h5py-lzf:arm64-uwp = cascade
 h5py-lzf:arm64-windows = cascade
 h5py-lzf:x64-uwp = cascade
