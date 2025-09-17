@@ -14,8 +14,6 @@ set(ENV{LIBTOOLIZE} "${LIBLTDL_LIBTOOLIZE}")
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
-    OPTIONS
-        --with-included-ltdl=no
     OPTIONS_RELEASE
         ${LIBLTDL_OPTIONS_RELEASE}
     OPTIONS_DEBUG

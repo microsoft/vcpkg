@@ -4,7 +4,8 @@
 #   A libtoolize (wrapper) which disables the check for  libltdl.la.
 #   la files are removed from packages in vcpkg (and in most distros).
 #   They add little value in modern environments, and they use absolute paths.
-# - <out_var_basename>_OPTIONS_RELEASE, <out_var_basename>_OPTIONS_DEBUG:
+# - <out_var_basename>_OPTIONS_RELEASE,
+#   <out_var_basename>_OPTIONS_DEBUG:
 #   Options to pass to vcpkg_make_configure.
 #
 # Usage:
@@ -14,8 +15,6 @@
 #   vcpkg_make_configure(
 #       SOURCE_PATH "${SOURCE_PATH}"
 #       AUTORECONF
-#       OPTIONS
-#           --with-included-ltdl=no
 #       OPTIONS_RELEASE
 #           ${LIBLTDL_OPTIONS_RELEASE}
 #       OPTIONS_DEBUG
@@ -35,10 +34,12 @@ function(vcpkg_libltdl_get_vars out_var_basename)
     endif()
 
     vcpkg_list(SET options_release
+        "--with-included-ltdl=no"
         "--with-ltdl-include=${CURRENT_INSTALLED_DIR}/include"
         "--with-ltdl-lib=${CURRENT_INSTALLED_DIR}/lib"
     )
     vcpkg_list(SET options_debug
+        "--with-included-ltdl=no"
         "--with-ltdl-include=${CURRENT_INSTALLED_DIR}/include"
         "--with-ltdl-lib=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
