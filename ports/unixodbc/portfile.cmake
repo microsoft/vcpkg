@@ -44,7 +44,8 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define SYSTEM_FILE_PATH \"${CURRENT_INSTALLED_DIR}/etc\"" "/* redacted */")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/unixODBC/unixodbc_conf.h" "#define SYSTEM_LIB_PATH \"${CURRENT_INSTALLED_DIR}/lib\"" "/* redacted */")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/unixodbcConfig.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/unixodbcConfig.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial-unixodbc-config.cmake" "${CURRENT_PACKAGES_DIR}/share/unofficial-unixodbc/unofficial-unixodbc-config.cmake" @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unixodbcConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}") # legacy
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(
