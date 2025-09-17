@@ -1,0 +1,14 @@
+{
+  "name": "vcpkg-ci-python3",
+  "version-string": "ci",
+  "description": "Port to test python3 in CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    "python3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

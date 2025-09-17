@@ -29,6 +29,9 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LASlib PACKAGE_NAME laslib)
 
 if(BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES las2las64 las2txt64 lascopcindex64 lasdiff64 lasindex64 lasinfo64 lasmerge64 lasprecision64 laszip64 txt2las64  AUTO_CLEAN)
+
+    # Copy CSV files that are used as lookup tables by las2las.
+    file(COPY ${SOURCE_PATH}/bin/serf/geo DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/serf)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
