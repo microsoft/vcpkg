@@ -5806,7 +5806,7 @@
     },
     "licensepp": {
       "baseline": "2020-11-24",
-      "port-version": 0
+      "port-version": 1
     },
     "lief": {
       "baseline": "0.16.1",
