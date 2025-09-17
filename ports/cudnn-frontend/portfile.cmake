@@ -9,10 +9,13 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/include/cudnn_frontend/thirdparty")
 
 set(VCPKG_BUILD_TYPE release) # header only, INTERFACE library
 
+vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
+        "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}" 
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}" 
         -DCUDNN_FRONTEND_BUILD_PYTHON_BINDINGS=OFF
         -DCUDNN_FRONTEND_BUILD_TESTS=OFF
         -DCUDNN_FRONTEND_BUILD_SAMPLES=OFF
