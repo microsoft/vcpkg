@@ -1,0 +1,13 @@
+diff --git a/CMake/Findutf8cpp.cmake b/CMake/Findutf8cpp.cmake
+index e7b53af..bfb3340 100644
+--- a/CMake/Findutf8cpp.cmake
++++ b/CMake/Findutf8cpp.cmake
+@@ -15,5 +15,8 @@ if (utf8cpp_FOUND)
+     add_library(utf8cpp::utf8cpp INTERFACE IMPORTED)
+     set_target_properties(utf8cpp::utf8cpp PROPERTIES
+       INTERFACE_INCLUDE_DIRECTORIES "${utf8cpp_INCLUDE_DIR}")
++    target_compile_options(utf8cpp::utf8cpp INTERFACE
++      $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>
++    )
+   endif ()
+ endif ()

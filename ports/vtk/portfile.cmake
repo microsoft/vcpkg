@@ -41,6 +41,8 @@ vcpkg_from_github(
         no-libproj-for-netcdf.patch
         octree.patch
         fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
+        add-cplusplus-flag.patch # workaround utfcpp compilation error
+        disable-pdb.patch # workaround LNK1140 link error on MSVC
 )
 
 # =============================================================================
