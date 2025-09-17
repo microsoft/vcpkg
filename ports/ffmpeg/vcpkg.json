@@ -57,6 +57,7 @@
             "snappy",
             "soxr",
             "speex",
+            "svt-av1",
             "swresample",
             "swscale",
             "theora",
@@ -155,6 +156,14 @@
             "opencl"
           ],
           "platform": "!uwp & !osx"
+        },
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "svt-av1"
+          ],
+          "platform": "linux | (!osx & !uwp)"
         },
         {
           "name": "ffmpeg",
@@ -620,6 +629,13 @@
       "description": "SFTP protocol via libssh",
       "dependencies": [
         "libssh"
+      ]
+    },
+    "svt-av1": {
+      "description": "Scalable Video Technology AV1 encoding acceleration",
+      "supports": "linux | (!osx & !uwp)",
+      "dependencies": [
+        "svt-av1"
       ]
     },
     "swresample": {
