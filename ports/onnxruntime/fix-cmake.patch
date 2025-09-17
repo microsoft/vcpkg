@@ -24,18 +24,3 @@ index cd93a8d..0e48bcd 100644
  )
  
  onnxruntime_fetchcontent_makeavailable(abseil_cpp)
-diff --git a/cmake/external/onnxruntime_external_deps.cmake b/cmake/external/onnxruntime_external_deps.cmake
-index ebf20ab..fbef28d 100644
---- a/cmake/external/onnxruntime_external_deps.cmake
-+++ b/cmake/external/onnxruntime_external_deps.cmake
-@@ -544,7 +544,9 @@ if(TARGET ONNX::onnx_proto AND NOT TARGET onnx_proto)
-   add_library(onnx_proto ALIAS ONNX::onnx_proto)
- endif()
- if(onnxruntime_USE_VCPKG)
--  find_package(Eigen3 CONFIG REQUIRED)
-+  # find_package(Eigen3 CONFIG REQUIRED) # can't use 3.4.0 of the vcpkg
-+  add_library(Eigen3::Eigen INTERFACE IMPORTED GLOBAL)
-+  target_include_directories(Eigen3::Eigen BEFORE INTERFACE ${EIGEN3_INCLUDE_DIRS})
- else()
-   include(external/eigen.cmake)
- endif()

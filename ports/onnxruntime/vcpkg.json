@@ -1,6 +1,6 @@
 {
   "name": "onnxruntime",
-  "version-semver": "1.21.0",
+  "version-semver": "1.22.1",
   "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
   "homepage": "https://github.com/microsoft/onnxruntime",
   "license": "MIT",
@@ -19,6 +19,7 @@
     "cxxopts",
     "date",
     "dlpack",
+    "eigen3",
     {
       "name": "flatbuffers",
       "host": true,
@@ -66,6 +67,7 @@
       "supports": "(x64 & windows) | (x64 & linux)",
       "dependencies": [
         "cuda",
+        "cudnn",
         "cudnn-frontend",
         "nvidia-cutlass"
       ]
