@@ -66,6 +66,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openmp  USE_OPENMP
     opencl  USE_OPENCL
     mkldnn  USE_MKLDNN
+    mkldnn  USE_MKLDNN_CBLAS
     cuda    USE_CUDA
     cuda    USE_CUDNN
     cuda    USE_NCCL
@@ -73,7 +74,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda    USE_MAGMA
     vulkan  USE_VULKAN
     vulkan  USE_VULKAN_RELAXED_PRECISION
-    rocm    USE_ROCM  # This is an alternative to cuda not a feature! (Not in vcpkg.json!) -> disabled
     llvm    USE_LLVM
     mpi     USE_MPI
     nnpack  USE_NNPACK  # todo: check use of `DISABLE_NNPACK_AND_FAMILY`
@@ -94,7 +94,6 @@ endif()
 
 if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
-    message(STATUS "Using nvcc: ${NVCC}")
     list(APPEND FEATURE_OPTIONS
         "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}" 
         "-DCUDAToolkit_ROOT=${cuda_toolkit_root}" 
@@ -139,12 +138,9 @@ vcpkg_cmake_configure(
         -DUSE_GFLAGS=ON
         -DUSE_GLOG=ON
         -DUSE_ITT=OFF
-        -DUSE_OBSERVERS=OFF
-        -DUSE_ROCM=OFF
+        -DUSE_ROCM=OFF # This is an alternative to cuda
         -DUSE_NUMA=${VCPKG_TARGET_IS_LINUX}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
-        -DUSE_MKLDNN=OFF
-        -DUSE_MKLDNN_CBLAS=OFF
         -DUSE_KINETO=OFF
         -DUSE_COREML_DELEGATE=${VCPKG_TARGET_IS_IOS}
         -DUSE_PYTORCH_METAL=${TARGET_IS_APPLE}

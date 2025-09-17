@@ -97,6 +97,14 @@
           "platform": "linux"
         },
         {
+          "name": "libtorch",
+          "default-features": false,
+          "features": [
+            "mpi"
+          ],
+          "platform": "linux"
+        },
+        {
           "name": "libuv",
           "platform": "windows | osx"
         },
@@ -115,14 +123,6 @@
     "mpi": {
       "description": "Use MPI for Caffe2. Only available if USE_DISTRIBUTED is on",
       "dependencies": [
-        {
-          "name": "libtorch",
-          "default-features": false,
-          "features": [
-            "dist"
-          ],
-          "platform": "linux"
-        },
         "mpi"
       ]
     },
@@ -135,6 +135,12 @@
           "platform": "arm64"
         },
         "nnpack"
+      ]
+    },
+    "opencl": {
+      "description": "Build with OpenCL",
+      "dependencies": [
+        "opencl"
       ]
     },
     "openmp": {
