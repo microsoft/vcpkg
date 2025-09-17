@@ -5866,7 +5866,7 @@
     },
     "llgl": {
       "baseline": "2023-03-05",
-      "port-version": 0
+      "port-version": 1
     },
     "llhttp": {
       "baseline": "9.2.1",
