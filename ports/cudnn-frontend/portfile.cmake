@@ -2,14 +2,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/cudnn-frontend
     REF "v${VERSION}"
-    SHA512 331ebbbd3439ab1b680d543d0550d63407148e9731c62e4d805eddb49bad5bc9ca7a38d9dd6ac4b976c70955155254fdee037a98f386f5e34c744eb3c2de095f
+    SHA512 95dbf57594eda08905f176f6f18be297cfbac571460829c55959f15e87f92e9019812ff367bf857dc26d6961d9c6393e667b09e855732e3ab7645e93f325efa1
     HEAD_REF main
+    PATCHES
+        fix-thirdparty.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/cudnn_frontend/thirdparty")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        python  CUDNN_FRONTEND_BUILD_PYTHON_BINDINGS
+)
+
+# header only, INTERFACE library
+set(VCPKG_BUILD_TYPE release)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DCUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE=OFF
         -DCUDNN_FRONTEND_BUILD_TESTS=OFF
         -DCUDNN_FRONTEND_BUILD_SAMPLES=OFF
@@ -18,10 +29,7 @@ vcpkg_cmake_configure(
         CUDNN_FRONTEND_FETCH_PYBINDS_IN_CMAKE
 )
 vcpkg_cmake_install()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/cudnn_frontend_utils.h"
-    "\"cudnn_frontend/thirdparty/nlohmann/json.hpp\""
-    "<nlohmann/json.hpp>"
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cudnn_frontend PACKAGE_NAME cudnn_frontend)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug"

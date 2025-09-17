@@ -1,0 +1,13 @@
+diff --git a/include/cudnn_frontend_utils.h b/include/cudnn_frontend_utils.h
+index 8b5577a..485a3bd 100644
+--- a/include/cudnn_frontend_utils.h
++++ b/include/cudnn_frontend_utils.h
+@@ -36,7 +36,7 @@
+ #ifndef CUDNN_FRONTEND_SKIP_JSON_LIB
+ 
+ #ifndef CUDNN_FRONTEND_SKIP_JSON_LIB
+-#include "cudnn_frontend/thirdparty/nlohmann/json.hpp"
++#include <nlohmann/json.hpp>
+ #endif
+ 
+ using json = nlohmann::json;
