@@ -52,5 +52,6 @@ vcpkg_install_copyright(
     COMMENT
         "All libraries are LGPL Version 2.1. All programs are GPL Version 2.0."
     FILE_LIST
-        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/COPYING"
+        "${SOURCE_PATH}/exe/COPYING"
 )
