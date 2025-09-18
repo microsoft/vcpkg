@@ -8830,7 +8830,7 @@
     },
     "shaderwriter": {
       "baseline": "2.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "shapelib": {
       "baseline": "1.6.1",
