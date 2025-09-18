@@ -2,10 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RPeschke/ntuples
     REF "v${VERSION}"
-    SHA512 0cd390e79640f0b03b5ac7b58ab52996a0a69f13cd52b404acf06601c2cf5788fe6ef8c082c35ed734fa4094a0b9543a6c07a1f6deaffd8a69475abbae7268dc
+    SHA512 591fa37eb77fb793490a34cb7759d8f0d7aaa1f904f9b92d9d03064430cd3adfa7f45eef31b9043b84bf2ff1a480e2c1407a242e604173c795ef97722e061668
 )
 
-file(INSTALL "${SOURCE_PATH}/core/include" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(INSTALL "${SOURCE_PATH}/core/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/ntuples")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/ntuples/ntuples-config.cmake"
