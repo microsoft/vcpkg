@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f3d94401e47294eb41cd3ab234cbb40a17dafe3b9a0a09f85e167d0f4f1caa1f3388b14fa5ae6f15283ba64006009791793b4857904d0f06ff56a60435dac7c9
     HEAD_REF master
+    PATCHES
+        no-fmodf.diff # https://github.com/orange-cpp/omath/pull/74
 )
 
 vcpkg_replace_string("${SOURCE_PATH}/include/omath/omath.hpp" [[#include "linear_algebra/matrix.hpp"]] "")
