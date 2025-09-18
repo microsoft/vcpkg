@@ -351,6 +351,7 @@ gegl:x64-osx=fail
 gemmlowp:arm-neon-android=fail
 gemmlowp:arm64-android=fail
 gemmlowp:x64-android=fail
+ggml:arm64-osx=fail # error: always_inline function 'vmmlaq_s32' requires target feature 'i8mm', but would be inlined into function 'ggml_vec_dot_q4_1_q8_1' that is compiled without support for 'i8mm'
 gherkin-c:arm-neon-android=fail
 gherkin-c:arm64-android=fail
 gherkin-c:x64-android=fail
