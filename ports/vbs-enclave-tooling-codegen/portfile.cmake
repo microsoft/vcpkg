@@ -8,8 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive(
     PACKAGE_PATH
-    ARCHIVE ${ARCHIVE}
-    SOURCE_BASE ${LIB_VERSION}
+    ARCHIVE "${ARCHIVE}"
     NO_REMOVE_ONE_LEVEL
 )
 
