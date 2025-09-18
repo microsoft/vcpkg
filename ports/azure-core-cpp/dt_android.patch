@@ -1,0 +1,30 @@
+diff --git a/sdk/core/azure-core/src/datetime.cpp b/sdk/core/azure-core/src/datetime.cpp
+index 288705b3d..750446dc4 100644
+--- a/sdk/core/azure-core/src/datetime.cpp
++++ b/sdk/core/azure-core/src/datetime.cpp
+@@ -50,11 +50,21 @@ DateTime GetMaxDateTime()
+ #pragma warning(disable : 6326)
+ #endif
+   static_assert(
+-      std::is_same<DateTime::clock::duration::rep, std::chrono::system_clock::duration::rep>::value,
+-      "DateTime::clock::duration::rep must be the same as "
+-      "std::chrono::system_clock::duration::rep");
++      std::is_signed<std::chrono::system_clock::duration::rep>::value
++          && std::is_integral<std::chrono::system_clock::duration::rep>::value
++          && sizeof(std::chrono::system_clock::duration::rep) <= sizeof(std::int64_t),
++      "Currently, GetMaxDateTime() is written with an expectation that "
++      "std::chrono::system_clock::duration::rep is signed integral type that can fit into 64 "
++      "bits.");
+ 
+-  using Rep = DateTime::clock::duration::rep;
++  static_assert(
++      std::is_signed<DateTime::clock::duration::rep>::value
++          && std::is_integral<DateTime::clock::duration::rep>::value
++          && sizeof(DateTime::clock::duration::rep) <= sizeof(std::int64_t),
++      "GetMaxDateTime() expects DateTime::clock::duration::rep to be signed integral type that can "
++      "fit into 64 bits.");
++
++  using Rep = std::int64_t;
+ 
+   using CommonDuration = std::chrono::duration<
+       Rep,

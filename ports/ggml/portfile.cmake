@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         android-vulkan.diff
         cmake-config.diff
+        pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
 )
@@ -79,21 +80,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME ggml CONFIG_PATH "lib/cmake/ggml")
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME ggml CONFIG_PATH "lib/cmake/ggml")
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ggml.h" "#ifdef GGML_SHARED" "#if 1")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ggml-backend.h" "#ifdef GGML_BACKEND_SHARED" "#if 1")
 endif()
-
-if (NOT VCPKG_BUILD_TYPE)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/ggml.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ggml.pc")
-endif()
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/ggml.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ggml.pc")
-vcpkg_fixup_pkgconfig()
 
 if("vulkan" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
     vcpkg_copy_tools(TOOL_NAMES vulkan-shaders-gen AUTO_CLEAN)
@@ -101,6 +95,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

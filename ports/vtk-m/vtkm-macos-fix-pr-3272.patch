@@ -1,0 +1,35 @@
+From c805a6039ea500cb96158cfc11271987c9f67aa4 Mon Sep 17 00:00:00 2001
+From: Kenneth Moreland <morelandkd@ornl.gov>
+Date: Tue, 15 Oct 2024 13:06:36 -0400
+Subject: [PATCH] Remove unused method from MIR tables
+
+The implementation of this method was incorrect as it referenced a class
+member that does not exist. Many compilers allowed it in a templated
+class when the method was never used, but other compilers attempt to
+compile the inlined method regardless.
+
+Since the method clearly is not needed, the easy solution is to remove
+it.
+---
+ vtkm/filter/contour/worklet/mir/MIRTables.h | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/vtkm/filter/contour/worklet/mir/MIRTables.h b/vtkm/filter/contour/worklet/mir/MIRTables.h
+index 3dff3329eb..a6f4d4f1fd 100644
+--- a/vtkm/filter/contour/worklet/mir/MIRTables.h
++++ b/vtkm/filter/contour/worklet/mir/MIRTables.h
+@@ -11400,11 +11400,6 @@ public:
+       return FacesLookup[shape];
+     }
+ 
+-    VTKM_EXEC vtkm::UInt8 GetPoint(vtkm::Id pointIndex) const
+-    {
+-      return this->CellFacePortal.Get(pointIndex);
+-    }
+-
+   private:
+     typename vtkm::cont::ArrayHandle<vtkm::UInt8>::ReadPortalType MIRTablesDataPortal;
+     typename vtkm::cont::ArrayHandle<vtkm::UInt16>::ReadPortalType MIRTablesIndicesPortal;
+-- 
+GitLab
+
