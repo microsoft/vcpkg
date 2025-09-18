@@ -1,16 +1,15 @@
 {
   "name": "libtorch",
-  "version": "2.1.2",
-  "port-version": 12,
+  "version": "2.7.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     "blas",
+    "cpp-httplib",
     "cpuinfo",
     "eigen3",
-    "fftw3",
     "flatbuffers",
     {
       "name": "flatbuffers",
@@ -18,17 +17,24 @@
     },
     "fmt",
     "foxi",
-    "foxi",
     "fp16",
-    "gemmlowp",
+    {
+      "name": "gemmlowp",
+      "platform": "!android"
+    },
     "gflags",
     "glog",
-    "lapack",
+    {
+      "name": "lapack",
+      "platform": "!android"
+    },
     "lmdb",
     "mimalloc",
+    "miniz",
     "onnx",
     "onnx-optimizer",
     "opencl",
+    "opentelemetry-cpp",
     "pocketfft",
     "protobuf",
     {
@@ -49,24 +55,48 @@
       "name": "vcpkg-get-python-packages",
       "host": true
     },
-    "xnnpack"
-  ],
-  "default-features": [
-    "opencv",
-    "zstd"
+    "xnnpack",
+    {
+      "name": "xnnpack",
+      "features": [
+        "kleidiai"
+      ],
+      "platform": "arm64"
+    }
   ],
   "features": {
     "cuda": {
       "description": "Build with CUDA GPU backend",
+      "supports": "(windows & x64 & !staticcrt) | (linux & x64)",
       "dependencies": [
         "cuda",
         "cudnn",
+        "cudnn-frontend",
+        {
+          "name": "gloo",
+          "features": [
+            "cuda"
+          ],
+          "platform": "linux"
+        },
         "magma",
-        "nvidia-cutlass"
+        {
+          "name": "nccl",
+          "platform": "linux"
+        },
+        "nvidia-cutlass",
+        {
+          "name": "tensorpipe",
+          "features": [
+            "cuda"
+          ],
+          "platform": "linux"
+        }
       ]
     },
     "dist": {
       "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
+      "supports": "linux | windows | osx",
       "dependencies": [
         {
           "name": "gloo",
@@ -90,13 +120,6 @@
         }
       ]
     },
-    "leveldb": {
-      "description": "Build with LevelDB",
-      "dependencies": [
-        "leveldb",
-        "snappy"
-      ]
-    },
     "llvm": {
       "description": "Build with LLVM",
       "dependencies": [
@@ -104,7 +127,7 @@
       ]
     },
     "mpi": {
-      "description": "Build with MPI",
+      "description": "Use MPI for Caffe2. Only available if USE_DISTRIBUTED is on",
       "dependencies": [
         "mpi"
       ]
@@ -113,27 +136,35 @@
       "description": "Build with NNPack",
       "supports": "linux | osx",
       "dependencies": [
+        {
+          "name": "kleidiai",
+          "platform": "arm64"
+        },
         "nnpack"
       ]
     },
-    "opencv": {
-      "description": "Build with OpenCV",
+    "opencl": {
+      "description": "Build with OpenCL",
       "dependencies": [
-        "opencv"
+        "opencl"
       ]
+    },
+    "openmp": {
+      "description": "Use OpenMP for parallel code"
     },
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
       "dependencies": [
+        {
+          "name": "shaderc",
+          "host": true
+        },
         "vulkan",
-        "vulkan-loader",
+        {
+          "name": "vulkan-loader",
+          "platform": "!android"
+        },
         "vulkan-memory-allocator"
-      ]
-    },
-    "zstd": {
-      "description": "Build with ZSTD",
-      "dependencies": [
-        "zstd"
       ]
     }
   }
