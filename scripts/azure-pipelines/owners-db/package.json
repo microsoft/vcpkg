@@ -1,0 +1,18 @@
+{
+  "name": "owners-db",
+  "version": "1.0.0",
+  "description": "Utility to generate VCPKG file lists (TypeScript)",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.9",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.7"
+  }
+}

@@ -229,7 +229,19 @@ if ($AllowUnexpectedPassing) {
 Add-ToolchainToTestCMake
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 $xunitArg = "--x-xunit=$xunitFile"
-& $vcpkgExe ci $tripletArg $failureLogsArg $xunitArg $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs @knownFailuresFromArgs @allowUnexpectedPassingArgs
+$prHashes = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
+& $vcpkgExe ci `
+    $tripletArg `
+    $failureLogsArg `
+    "--output-hashes=$prHashes" `
+    $xunitArg `
+    $ciBaselineArg `
+    @commonArgs `
+    @cachingArgs `
+    @parentHashesArgs `
+    @skipFailuresArgs `
+    @knownFailuresFromArgs `
+    @allowUnexpectedPassingArgs
 $lastLastExitCode = $LASTEXITCODE
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
