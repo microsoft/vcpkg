@@ -386,6 +386,7 @@ openvino:arm64-android=skip # conflicts with kleidiai
 openvino:arm64-osx=skip # conflicts with kleidiai
 openvino:arm64-windows-static-md=fail
 openvino:arm64-windows=fail
+openvino:x64-osx=fail # OpenVINO_VERSION_MAJOR parsed from CI_BUILD_NUMBER () and from openvino/core/version.hpp (2025) are different
 openvino[npu]:x64-linux=cascade # dependency level-zero not supported
 openvpn3:x64-osx=fail
 openvr:arm-uwp=fail
