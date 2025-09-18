@@ -615,7 +615,7 @@ google-cloud-cpp[accessapproval,accesscontextmanager,advisorynotifications,alloy
 halide[target-aarch64,target-all,target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-nvptx,target-opencl,target-opengl-compute,target-powerpc,target-riscv,target-webassembly,target-x86] = no-separate-feature-test
 llvm[target-aarch64,target-all,target-amdgpu,target-arc,target-arm,target-avr,target-bpf,target-csky,target-directx,target-hexagon,target-lanai,target-loongarch,target-m68k,target-mips,target-msp430,target-nvptx,target-powerpc,target-riscv,target-sparc,target-spirv,target-systemz,target-ve,target-webassembly,target-x86,target-xcore,target-xtensa] = no-separate-feature-test
 qtbase[doubleconversion,gui,sql,thread] = no-separate-feature-test # covered in many combinations
-vtk[atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,ioocct,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,paraview,proj,python,qt,seacas,sql,tbb,utf8,vtkm] = no-separate-feature-test
+vtk[all,atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,ioocct,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,paraview,proj,python,qt,seacas,sql,tbb,utf8,vtkm] = no-separate-feature-test
 
 # cascade
 3fd:x64-uwp = cascade

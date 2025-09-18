@@ -274,6 +274,7 @@ vcpkg_cmake_configure(
         -DVTK_GROUP_ENABLE_Rendering=YES
         -DVTK_GROUP_ENABLE_Views=YES
         # Disable dependencies which are not in vcpkg or not in the manifest
+        -DVCPKG_LOCK_FIND_PACKAGE_Boost=OFF
         -DVTK_ENABLE_OSPRAY=OFF
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
