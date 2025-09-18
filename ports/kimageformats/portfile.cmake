@@ -4,8 +4,7 @@ vcpkg_from_git(
     REF 7858c4eeec712c59b3214386d7e5639cab636bba
     HEAD_REF master
     PATCHES
-        fixconfigdir.patch
-	installheaders.patch
+        fixinstall.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -18,32 +17,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	eps BUILD_EPS_PLUGIN
     INVERTED_FEATURES
         kritaraster 	CMAKE_DISABLE_FIND_PACKAGE_KF6Archive
-	eps		CMAKE_DISABLE_FIND_PACKAGE_Qt6PrintSupport
 	openexr		CMAKE_DISABLE_FIND_PACKAGE_OpenEXR
 	avif		CMAKE_DISABLE_FIND_PACKAGE_libavif
-	heif		CMAKE_DISABLE_FIND_PACKAGE_libheif
-	jp2		CMAKE_DISABLE_FIND_PACKAGE_OpenJPEG
 	raw		CMAKE_DISABLE_FIND_PACKAGE_LibRaw
-	jxr		CMAKE_DISABLE_FIND_PACKAGE_LibJXR
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DBUILD_TESTING=OFF
-	OPTIONS_DEBUG
-	-DCMAKECONFIG_INSTALL_DIR="${CURRENT_PACKAGES_DIR}/debug/share/${PORT}"
-	OPTIONS_RELEASE
-	-DCMAKECONFIG_INSTALL_DIR="${CURRENT_PACKAGES_DIR}/share/${PORT}"
+	-DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
-
-file(GLOB HEADERS "${SOURCE_PATH}/src/*.h" "${CURRENT_PACKAGES_DIR}/include")
-file(COPY ${HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-
-#vcpkg_cmake_config_fixup()
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 

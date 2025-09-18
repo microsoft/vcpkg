@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d9ddb40..d79a96f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -109,7 +109,13 @@ if (BUILD_TESTING)
+     add_subdirectory(tests)
+ endif()
+ 
+-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF6ImageFormats")
++file(GLOB_RECURSE header_files "${CMAKE_CURRENT_SOURCE_DIR}/src/imageformats/*.h")
++install(FILES
++  ${header_files}
++  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++)
++
++set(CMAKECONFIG_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/share/kimageformats")
+ include(CMakePackageConfigHelpers)
+ 
+ write_basic_package_version_file(
+@@ -134,4 +140,4 @@ install(FILES
+ include(ECMFeatureSummary)
+ ecm_feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+ 
+-kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
++#kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
