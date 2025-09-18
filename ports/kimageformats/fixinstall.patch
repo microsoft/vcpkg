@@ -23,3 +23,16 @@ index d9ddb40..d79a96f 100644
  
 -kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
 +#kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
+diff --git a/src/imageformats/CMakeLists.txt b/src/imageformats/CMakeLists.txt
+index e02347f..314e366 100644
+--- a/src/imageformats/CMakeLists.txt
++++ b/src/imageformats/CMakeLists.txt
+@@ -13,7 +13,7 @@ function(kimageformats_add_plugin plugin)
+ 
+     qt_add_plugin(${plugin} PLUGIN_TYPE imageformats)
+     target_sources(${plugin} PRIVATE ${KIF_ADD_PLUGIN_SOURCES})
+-    set_target_properties(${plugin} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imageformats)
++    set_target_properties(${plugin} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imageformats RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imageformats ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+     target_link_libraries(${plugin} PRIVATE Qt6::Gui)
+ 
+     if(ANDROID)
