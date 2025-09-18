@@ -3,6 +3,9 @@ vcpkg_from_git(
     URL https://invent.kde.org/frameworks/kimageformats.git
     REF 7858c4eeec712c59b3214386d7e5639cab636bba
     HEAD_REF master
+    PATCHES
+        fixconfigdir.patch
+	installheaders.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
