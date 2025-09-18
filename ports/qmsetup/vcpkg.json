@@ -1,0 +1,19 @@
+{
+  "name": "qmsetup",
+  "version": "0.1.1.1",
+  "homepage": "https://github.com/stdware/qmsetup",
+  "description": "CMake Modules and Basic Libraries for C/C++ projects. Includes powerful CMake macros for Qt and more.",
+  "license": "MIT",
+  "supports": "!android & !uwp",
+  "dependencies": [
+    "syscmdline",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

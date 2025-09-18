@@ -1,0 +1,27 @@
+{
+  "name": "qwindowkit",
+  "version": "1.4.0",
+  "homepage": "https://github.com/stdware/qwindowkit",
+  "description": "Cross-platform frameless window framework for Qt. Support Windows, macOS, Linux.",
+  "license": "Apache-2.0",
+  "supports": "!android & !uwp",
+  "dependencies": [
+    "qmsetup",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
