@@ -90,6 +90,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
         "python"      VTK_WRAP_PYTHON
         "python"      VTK_MODULE_ENABLE_VTK_Python
+        "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
         "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
         "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
         "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
@@ -116,9 +117,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
         "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
         "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
-        "python"      VTK_MODULE_ENABLE_VTK_Python
-        "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
-        "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelStatistics
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
@@ -308,6 +306,7 @@ vcpkg_cmake_configure(
         CMAKE_INSTALL_QMLDIR
         VTK_QT_VERSION # Only with Qt
         # When working properly these should be unused
+        VCPKG_LOCK_FIND_PACKAGE_Boost
         VCPKG_LOCK_FIND_PACKAGE_CGNS
         VCPKG_LOCK_FIND_PACKAGE_LibHaru
         VCPKG_LOCK_FIND_PACKAGE_NetCDF
