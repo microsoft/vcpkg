@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-library-conflict.diff
+        fix-apple-silicon-arm64-detection.diff # https://github.com/powturbo/Turbo-Base64/pull/29
 )
 
 vcpkg_cmake_configure(
