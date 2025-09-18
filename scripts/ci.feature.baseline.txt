@@ -134,7 +134,6 @@ freeopcua:arm64-windows=fail # Needs /bigobj
 ftgl:arm-uwp=fail
 ftgl:x64-uwp=fail
 functions-framework-cpp:x64-uwp=fail # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
-g
 g3log:arm-neon-android=fail
 g3log:arm64-android=fail
 g3log:x64-android=fail
