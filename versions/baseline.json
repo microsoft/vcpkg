@@ -8310,7 +8310,7 @@
     },
     "realsense2": {
       "baseline": "2.56.3",
-      "port-version": 0
+      "port-version": 1
     },
     "rebind": {
       "baseline": "5.2.2",
