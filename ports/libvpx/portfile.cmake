@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
+        0005-dont-expect-gnu-diff.patch
 )
 
 if(CMAKE_HOST_WIN32)
