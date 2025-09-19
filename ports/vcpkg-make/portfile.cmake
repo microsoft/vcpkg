@@ -2,9 +2,10 @@ set(VCPKG_POLICY_CMAKE_HELPER_PORT enabled)
 
 set(automake_version 1.17)
 vcpkg_download_distfile(ARCHIVE
-    URLS https://ftp.gnu.org/gnu/automake/automake-${automake_version}.tar.gz
-         https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/automake/automake-${automake_version}.tar.gz
-    FILENAME automake-${automake_version}.tar.gz
+    URLS "https://ftpmirror.gnu.org/gnu/automake/automake-${automake_version}.tar.gz"
+         "https://ftp.gnu.org/gnu/automake/automake-${automake_version}.tar.gz"
+         "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/automake/automake-${automake_version}.tar.gz"
+    FILENAME "automake-${automake_version}.tar.gz"
     SHA512 11357dfab8cbf4b5d94d9d06e475732ca01df82bef1284888a34bd558afc37b1a239bed1b5eb18a9dbcc326344fb7b1b301f77bb8385131eb8e1e118b677883a
 )
 
