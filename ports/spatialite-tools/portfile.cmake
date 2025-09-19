@@ -15,13 +15,10 @@ vcpkg_extract_source_archive(SOURCE_PATH
 )
 file(REMOVE "${SOURCE_PATH}/config.h")
 
-set(PKGCONFIG_MODULES expat libxml-2.0 sqlite3)
-
 if (VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PKGCONFIG_MODULES readosm spatialite)
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
-        MODULES --msvc-syntax ${PKGCONFIG_MODULES}
+        MODULES --msvc-syntax expat libxml-2.0 readosm spatialite sqlite3
         LIBS
     )
 
@@ -77,28 +74,17 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 else()
-    x_vcpkg_pkgconfig_get_modules(
-        PREFIX PKGCONFIG
-        MODULES ${PKGCONFIG_MODULES}
-        LIBS
-    )
-
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             --disable-minizip
             --disable-readline
             --enable-readosm
-        OPTIONS_DEBUG
-            "LIBS=${PKGCONFIG_LIBS_DEBUG} \$LIBS"
-        OPTIONS_RELEASE
-            "LIBS=${PKGCONFIG_LIBS_RELEASE} \$LIBS"
     )
+    vcpkg_make_install()
 
-    vcpkg_install_make()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

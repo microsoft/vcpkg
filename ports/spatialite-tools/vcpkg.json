@@ -21,10 +21,19 @@
       "default-features": false
     },
     "readosm",
-    "sqlite3",
+    {
+      "name": "sqlite3",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows | mingw"
+    },
     {
       "name": "vcpkg-pkgconfig-get-modules",
-      "host": true
+      "host": true,
+      "platform": "windows & !mingw"
     }
   ]
 }

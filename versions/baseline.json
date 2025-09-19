@@ -9070,7 +9070,7 @@
     },
     "spatialite-tools": {
       "baseline": "5.1.0-a",
-      "port-version": 0
+      "port-version": 1
     },
     "spdk": {
       "baseline": "24.01",

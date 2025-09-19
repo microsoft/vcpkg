@@ -2352,4 +2352,3 @@ sdformat:x64-osx=skip # due to dependency on gz-*
 
 # WIP: depending on http in libxml2
 pdal=skip
-spatialite-tools=skip
