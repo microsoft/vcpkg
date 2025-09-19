@@ -1,48 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1300ab8..db2a32c 100644
+index 1300ab8..038c03b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1277,9 +1277,23 @@ endif()
+@@ -1277,7 +1277,10 @@ endif()
  # Load extensions passed through cmake config var
  foreach(EXT IN LISTS BUILD_EXTENSIONS)
    if(NOT "${EXT}" STREQUAL "")
 -    if (EXISTS "${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")
-+    if ("${EXT}" STREQUAL "httpfs")
-+      duckdb_extension_load(${EXT}
-+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}
-+        INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/extension/${EXT}/include
-+      )
-+    elseif ("${EXT}" STREQUAL "excel")
-+      # out-of-tree extension: load cmake file
-+      duckdb_extension_load(${EXT}
-+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}
-+        INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/src/${EXT}/include
-+      )
-+    elseif ("${EXT}" STREQUAL "iceberg")
++    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/extension_config.cmake")  
++      # out-of-tree extension  
++      include("${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/extension_config.cmake")  
++    elseif (EXISTS "${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")  
        # out-of-tree extension: load cmake file
--      include("${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")
-+      duckdb_extension_load(${EXT}
-+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}
-+        INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/src/${EXT}/include
-+      )
+       include("${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")
      else()
-       # in-tree or non-existent extension: load it
-       duckdb_extension_load(${EXT})
-diff --git a/DuckDBConfig.cmake.in b/DuckDBConfig.cmake.in
-index 7c5ce31..4095e02 100644
---- a/DuckDBConfig.cmake.in
-+++ b/DuckDBConfig.cmake.in
-@@ -9,6 +9,13 @@ find_dependency(Threads)
- if(NOT @WITH_INTERNAL_ICU@)
-     find_dependency(ICU COMPONENTS i18n uc data)
- endif()
-+set(EXTENSION_LIST "@BUILD_EXTENSIONS@")
-+list(FIND EXTENSION_LIST "excel" EXCEL_INDEX)
-+
-+if(EXCEL_INDEX GREATER_EQUAL 0)
-+  find_dependency(expat CONFIG)
-+  find_dependency(minizip-ng CONFIG)
-+endif()
- 
- # Compute paths
- get_filename_component(DuckDB_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)

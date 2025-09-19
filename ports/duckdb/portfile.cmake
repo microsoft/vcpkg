@@ -66,7 +66,7 @@ endif()
 vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            -DOVERRIDE_GIT_DESCRIBE=v${VERSION}
+            -DOVERRIDE_GIT_DESCRIBE=v${VERSION}-0-g0123456789
             -DDUCKDB_EXPLICIT_VERSION=v${VERSION}
             -DBUILD_UNITTESTS=OFF
             -DBUILD_SHELL=FALSE
