@@ -25,10 +25,10 @@ vcpkg_extract_source_archive(
 
 set(MIDI2_WINRT_WINMD_SOURCE "${MIDI_SDK_EXTRACTED_FILES}/ref/native/Microsoft.Windows.Devices.Midi2.winmd")
 
-file(INSTALL 
-    "${MIDI2_WINRT_WINMD_SOURCE}" 
+file(INSTALL
+    "${MIDI2_WINRT_WINMD_SOURCE}"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  )  
+  )
 
 set(MIDI2_WINRT_WINMD "${CURRENT_PACKAGES_DIR}/share/${PORT}/Microsoft.Windows.Devices.Midi2.winmd")
 
@@ -42,10 +42,10 @@ set(_MIDI2_HEADERS_INIT_FOLDER "${_MIDI2_HEADERS_ROOT_FOLDER}/winmidi/init/")
 set(_MIDI2_HEADERS_WINRT_FOLDER "${_MIDI2_HEADERS_ROOT_FOLDER}/winrt/")
 
 
-file(INSTALL 
+file(INSTALL
     FILES
-      "${MIDI_SDK_EXTRACTED_FILES}/build/native/include/winmidi/init/Microsoft.Windows.Devices.Midi2.Initialization.hpp" 
-      "${MIDI_SDK_EXTRACTED_FILES}/build/native/include/winmidi/init/WindowsMidiServicesVersion.h" 
+      "${MIDI_SDK_EXTRACTED_FILES}/build/native/include/winmidi/init/Microsoft.Windows.Devices.Midi2.Initialization.hpp"
+      "${MIDI_SDK_EXTRACTED_FILES}/build/native/include/winmidi/init/WindowsMidiServicesVersion.h"
     DESTINATION "${_MIDI2_HEADERS_INIT_FOLDER}"
   )
 
@@ -63,21 +63,21 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/microsoft-windows-devices-midi2-config
     @ONLY
   )
 
-file(INSTALL 
-    "${CMAKE_CURRENT_LIST_DIR}/usage" 
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/usage"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  )
+)
 
 vcpkg_download_distfile(
     LICENSE_FILE
     URLS "https://github.com/microsoft/MIDI/raw/30f42326e4ec0072cb6fd846a9b1230149fd4888/LICENSE"
-    FILENAME LICENSE
+    FILENAME microsoft-windows-devices-midi2-LICENSE.txt
     SHA512 1d0688424f69c0e7322aeb720e4e28d9af3b5a7a2dc18b8b198156e377a61a6e05bc824528fca0f8e61ac39b137a028029ff82e5229ad400a3cc22e2bdb687ad
-  ) 
+)
 
 vcpkg_install_copyright(
-    FILE_LIST ${LICENSE_FILE}
-  )
+    FILE_LIST "${LICENSE_FILE}"
+)
 
 # run the cppwinrt tool against the winmd in our extracted archive
 # this requires that it was installed and configured before MIDI was configured
@@ -101,9 +101,9 @@ vcpkg_execute_required_process(
         -overwrite
         -optimize
         -verbose
-      WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
-      LOGNAME "Microsoft.Windows.Devices.Midi2.cppwinrt"
-  )
+    WORKING_DIRECTORY "${CURRENT_PACKAGES_DIR}"
+    LOGNAME "Microsoft.Windows.Devices.Midi2.cppwinrt"
+)
 
 # the cppwinrt tool always generates Windows.* headers even when you ask to exclude them. So we need
 # to copy only the Midi2 headers to ${CURRENT_PACKAGES_DIR}/include
@@ -115,6 +115,6 @@ file(INSTALL
     "${MIDI2_TEMP_HEADER_FOLDER}/winrt"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     FILES_MATCHING PATTERN "Microsoft.Windows.Devices.Midi2*.h"
-  )
+)
 
 file(REMOVE_RECURSE "${MIDI2_TEMP_HEADER_FOLDER}")
