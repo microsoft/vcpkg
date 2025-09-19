@@ -1,6 +1,6 @@
 {
   "name": "qtlanguageserver",
-  "version": "6.9.1",
+  "version": "6.9.2",
   "description": "An implementation of the Language Server Protocol.",
   "homepage": "https://www.qt.io/",
   "license": null,
