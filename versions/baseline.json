@@ -2616,6 +2616,10 @@
       "baseline": "9.97.1",
       "port-version": 1
     },
+    "easyprofiler": {
+      "baseline": "2.1.0",
+      "port-version": 0
+    },
     "eathread": {
       "baseline": "1.32.09",
       "port-version": 5
