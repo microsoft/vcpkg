@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
     REF "${REF}"
-    SHA512 ea5452c511e18e0eb927eab46a47c7ced1b1be3b46232a38caef39aa86fd552a72f066db66ca824ade3ff2376b70ca72ca91bdf1d003770c91a38a47e8781b8f
+    SHA512 18d978a52f5ab9f5b0f8f0059a71c96d35708e437d763d356cde1babc6d4d08297f2b443d420b3906a51a7559fe4a84bc49bd51d4b9a6e1ee24c5d12b8c42707
     HEAD_REF master
 )
 
