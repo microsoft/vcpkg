@@ -91,6 +91,6 @@ PR cache mode (pipeline example using `BCACHE_SAS_TOKEN` set as a secret variabl
 
 ```sh
 # pipeline constructs the URL from the secret token and passes it to the script
-blob="https://vcpkgbinarycachewus.blob.core.windows.net/cache?$BCACHE_SAS_TOKEN"
+blob="https://vcpkgbinarycachewus.blob.core.windows.net/cache?${BCACHE_SAS_TOKEN}"
 npx --yes ts-node ./file_script_from_cache.ts --pr-hashes /path/to/pr-hashes.json --blob-base-url "$blob" --target-branch origin/master --out-dir ./scripts/list_files
 ```

@@ -108,6 +108,8 @@ jobs:
           npx --yes ts-node ./file_script.ts --info-dir D:\installed\vcpkg\info\ --out-dir ../../list_files
         }
       pwsh: true
+    env:
+      BCACHE_SAS_TOKEN: $(BCACHE_SAS_TOKEN)
   - task: PublishPipelineArtifact@1
     displayName: "Publish Artifact: file lists for ${{ replace(parameters.jobName, '_', '-') }}"
     condition: always()
