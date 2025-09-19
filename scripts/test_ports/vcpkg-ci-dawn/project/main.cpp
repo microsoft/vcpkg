@@ -320,19 +320,16 @@ fn fs_main(input: FragmentInput) -> FragmentOutput {
 
     wgpu::RenderPipeline pipeline = state.device.CreateRenderPipeline(&pipeline_desc);
 
-    auto create_bind_group = [&]() {
-        std::vector<wgpu::BindGroupEntry> bind_group_entries(1);
-        bind_group_entries[0].binding = 0;
-        bind_group_entries[0].buffer = uniform_buffer;
-        bind_group_entries[0].size = uniform_buffer.GetSize();
+    std::vector<wgpu::BindGroupEntry> bind_group_entries(1);
+    bind_group_entries[0].binding = 0;
+    bind_group_entries[0].buffer = uniform_buffer;
+    bind_group_entries[0].size = uniform_buffer.GetSize();
 
-        wgpu::BindGroupDescriptor bind_group_desc;
-        bind_group_desc.layout = pipeline.GetBindGroupLayout(0);
-        bind_group_desc.entryCount = bind_group_entries.size();
-        bind_group_desc.entries = bind_group_entries.data();
-        return state.device.CreateBindGroup(&bind_group_desc);
-    };
-    wgpu::BindGroup bind_group = create_bind_group();
+    wgpu::BindGroupDescriptor bind_group_desc;
+    bind_group_desc.layout = pipeline.GetBindGroupLayout(0);
+    bind_group_desc.entryCount = bind_group_entries.size();
+    bind_group_desc.entries = bind_group_entries.data();
+    wgpu::BindGroup bind_group = state.device.CreateBindGroup(&bind_group_desc);
 
     const double start_time = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {
