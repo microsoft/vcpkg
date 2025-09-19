@@ -1,0 +1,40 @@
+{
+  "name": "pjproject",
+  "version": "2.15.1",
+  "description": "PJSIP (pjproject) with video (FFmpeg/libvpx/SDL2) + Opus/OpenSSL",
+  "homepage": "https://github.com/pjsip/pjproject",
+  "license": "GPL-2.0-or-later",
+  "supports": "(windows & !uwp) | mingw | linux",
+  "dependencies": [
+    {
+      "name": "ffmpeg",
+      "default-features": false,
+      "features": [
+        "avcodec",
+        "avformat",
+        "swscale"
+      ]
+    },
+    "libvpx",
+    "openssl",
+    "opus",
+    {
+      "name": "pkgconf",
+      "host": true
+    },
+    "sdl2",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    }
+  ]
+}
