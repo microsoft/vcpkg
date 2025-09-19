@@ -51,15 +51,18 @@ list(APPEND OPTIONS
 list(APPEND OPTIONS -DBUILD_TESTING=OFF)
 
 vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com" 
-                  OUT_SOURCE_PATH SOURCE_PATH 
-                  REPO vtk/vtk-m 
-                  REF a057f62e756efc43095e72c5813aaaf2dea36ebb # v2.1.0 Upgrading will most likely break the VTK build
-
-                  SHA512 fa08bd597e1918d10e7fed9f6b9667fd53f4a14589580e68691aad3cfb240f7de80fa0c5001712f100911c2262b5af3105b8f21da21b945a88e1204ea82b92a6
-                  PATCHES
-                    omp.patch
-                    fix-build.patch
+    OUT_SOURCE_PATH SOURCE_PATH 
+    REPO vtk/vtk-m 
+    REF a057f62e756efc43095e72c5813aaaf2dea36ebb # v2.1.0 Upgrading will most likely break the VTK build
+    SHA512 fa08bd597e1918d10e7fed9f6b9667fd53f4a14589580e68691aad3cfb240f7de80fa0c5001712f100911c2262b5af3105b8f21da21b945a88e1204ea82b92a6
+    PATCHES
+        omp.patch
+        fix-build.patch
+        fix-macos-15-6.patch
+        vtkm-macos-fix-pr-3272.patch
+        vtkm-macos-fix-commit-48e385af319543800398656645327243a29babfb.patch
 )
+
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS ${OPTIONS}

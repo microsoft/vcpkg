@@ -2,25 +2,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
     REF "v${VERSION}"
-    SHA512 30bc2f10cd7c29ae4e8580afcf6626fb14e5ef5046bad1242c2e6b433a374d6eaaa6093cd3682b84392c9dd75ba90d7090b6899b732a5b98e8790173bddd3020
+    SHA512 22ba2541815e4a3e78be67576312f7dc33cea8aee03fa24dbb0baaa9e64bca915627fac22b09476cb626ad36f324ef539c7430206c78987695851277574f26a3
     HEAD_REF master
     PATCHES
         cxx-for-icu.diff
         disable-docs.patch
+        disable-xml2-config.diff
         fix_cmakelist.patch
         fix_ios_compilation.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "ftp" LIBXML2_WITH_FTP
-        "http" LIBXML2_WITH_HTTP
-        "iconv" LIBXML2_WITH_ICONV
-        "legacy" LIBXML2_WITH_LEGACY
-        "lzma" LIBXML2_WITH_LZMA
-        "zlib" LIBXML2_WITH_ZLIB
-        "tools" LIBXML2_WITH_PROGRAMS
-        "icu"  LIBXML2_WITH_ICU
+        "http"      LIBXML2_WITH_HTTP
+        "iconv"     LIBXML2_WITH_ICONV
+        "icu"       LIBXML2_WITH_ICU
+        "legacy"    LIBXML2_WITH_LEGACY
+        "lzma"      LIBXML2_WITH_LZMA
+        "tools"     LIBXML2_WITH_PROGRAMS
+        "zlib"      LIBXML2_WITH_ZLIB
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -47,7 +47,6 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_SCHEMATRON=ON
         -DLIBXML2_WITH_THREADS=ON
         -DLIBXML2_WITH_THREAD_ALLOC=OFF
-        -DLIBXML2_WITH_TREE=ON
         -DLIBXML2_WITH_VALID=ON
         -DLIBXML2_WITH_WRITER=ON
         -DLIBXML2_WITH_XINCLUDE=ON
@@ -59,33 +58,20 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2-${VERSION}")
 vcpkg_fixup_pkgconfig()
-
-vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h" "#ifdef LIBXML_STATIC" "#if 1 /* LIBXML_STATIC */")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(_file "${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h")
-    file(READ "${_file}" _contents)
-    string(REPLACE "#ifdef LIBXML_STATIC" "#undef LIBXML_STATIC\n#define LIBXML_STATIC\n#ifdef LIBXML_STATIC" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
-endif()
-
-file(COPY "${CURRENT_PACKAGES_DIR}/include/libxml2/" DESTINATION "${CURRENT_PACKAGES_DIR}/include") # TODO: Fix usage in all dependent ports hardcoding the wrong include path.
-
-# Cleanup
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/xml2Conf.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/xml2Conf.sh")
 
 file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"

@@ -6,9 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orange-cpp/omath
     REF "v${VERSION}"
-    SHA512 f6ee4356df67bfd624444fbdbee27840d6124d03797e9d4e5ebc6524c4d54fffc8999ddbf1381132891ca7d1a45d61cd84fac515ef1a3c8005f15d70d1b93c5b
+    SHA512 f3d94401e47294eb41cd3ab234cbb40a17dafe3b9a0a09f85e167d0f4f1caa1f3388b14fa5ae6f15283ba64006009791793b4857904d0f06ff56a60435dac7c9
     HEAD_REF master
 )
+
+vcpkg_replace_string("${SOURCE_PATH}/include/omath/omath.hpp" [[#include "linear_algebra/matrix.hpp"]] "")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
 

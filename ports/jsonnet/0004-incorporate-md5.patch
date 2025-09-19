@@ -1,5 +1,5 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index 4be4a9e..b858c08 100644
+index 2eb28d2..8116ac3 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
 @@ -16,7 +16,8 @@ set(LIBJSONNET_HEADERS

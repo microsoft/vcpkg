@@ -1,67 +1,78 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openturns/openturns
-    REF b62fb487266949ffdad036712cec604cf70d6e34
-    SHA512 de14a872bb2c3cd871d7f98e6a0d62f9f3c23386200f0c63d11fec0877d69639e45f004f3f18217bad68fc52d02d285ac3f5d70dcc89a8c23edaea9fe365b527
+    REF v${VERSION}
+    SHA512 960cdcceef3f6589edc6e278751045842c5903c28e51db65afc9b90be073821ac65d8445521008c045aa31fd8aae28a7b1f7b268a3ba057ecc1d7abdb18fe40f
     HEAD_REF master
     PATCHES
-      link-gmp.patch
-      fix-dep.patch
+        dependencies.diff
 )
+file(REMOVE "${SOURCE_PATH}/lib/src/Base/Algo/kissfft.hh")
+file(REMOVE "${SOURCE_PATH}/lib/src/Base/Func/openturns/exprtk.hpp")
+file(REMOVE "${SOURCE_PATH}/lib/src/Base/Stat/rapidcsv.h")
 
-vcpkg_find_acquire_program(FLEX)
-get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
-vcpkg_find_acquire_program(BISON)
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY)
-vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+      "muparser"    USE_MUPARSER
+      "tbb"         USE_TBB
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       ${FEATURE_OPTIONS}
       -DBUILD_PYTHON:BOOL=OFF # Requires additional python modules
-      -DUSE_BOOST:BOOL=ON # Required to make the distributions cross platform
-      -DUSE_DOXYGEN:BOOL=OFF
-      -DUSE_OPENMP:BOOL=OFF
+      -DUSE_BONMIN=OFF
       -DUSE_CUBA:BOOL=OFF
+      -DUSE_DOXYGEN:BOOL=OFF
+      -DUSE_HMAT=OFF
+      -DUSE_IPOPT=OFF
+      -DUSE_OPENMP:BOOL=OFF
+      -DUSE_PRIMESIEVE=OFF
       -DCMAKE_REQUIRE_FIND_PACKAGE_Spectra:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_Eigen3:BOOL=ON
-      -DCMAKE_DISABLE_FIND_PACKAGE_primesieve:BOOL=ON
-      -DCMAKE_REQUIRE_FIND_PACKAGE_BISON:BOOL=ON
-      -DCMAKE_REQUIRE_FIND_PACKAGE_FLEX:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_TBB:BOOL=ON
-      -DCMAKE_REQUIRE_FIND_PACKAGE_muParser:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_LibXml2:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_HDF5:BOOL=ON
-      -DCMAKE_REQUIRE_FIND_PACKAGE_MPFR:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_MPC:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_NLopt:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_dlib:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_Ceres:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_CMinpack:BOOL=ON
-      -DCMAKE_DISABLE_FIND_PACKAGE_Bonmin:BOOL=ON
-      -DCMAKE_DISABLE_FIND_PACKAGE_Ipopt:BOOL=ON
       -DCMAKE_REQUIRE_FIND_PACKAGE_Pagmo:BOOL=ON
+      -DCMAKE_REQUIRE_FIND_PACKAGE_nanoflann:BOOL=ON
+    OPTIONS_RELEASE
+      "-DOPENTURNS_CONFIG_CMAKE_PATH=${CURRENT_PACKAGES_DIR}/share/${PORT}"
+    OPTIONS_DEBUG
+      "-DOPENTURNS_CONFIG_CMAKE_PATH=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}"
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenTURNSConfig.cmake" "/lib/cmake/" "/share/" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/OpenTURNSConfig.cmake" "/lib" "$<$<CONFIG:DEBUG>:/debug>/lib" IGNORE_UNCHANGED)
+vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openturns/OTdebug.h" "#ifndef OT_STATIC" "#if 0")
-else()
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openturns/OTdebug.h" "#ifndef OT_STATIC" "#if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openturns/OTdebug.h" "#ifndef OT_STATIC" "#if 0")
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/include/pthread.h"
-            "${CURRENT_PACKAGES_DIR}/include/semaphore.h"
-            "${CURRENT_PACKAGES_DIR}/include/unistd.h")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/LICENSE"
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/COPYING.LESSER"
+    "${SOURCE_PATH}/COPYING.cobyla"
+    "${SOURCE_PATH}/COPYING.dsfmt"
+    "${SOURCE_PATH}/COPYING.ev3"
+    "${SOURCE_PATH}/COPYING.faddeeva"
+    "${SOURCE_PATH}/COPYING.fastgl"
+    "${SOURCE_PATH}/COPYING.kendall"
+    "${SOURCE_PATH}/COPYING.cephes"
+    "${SOURCE_PATH}/COPYING.tnc"
+)

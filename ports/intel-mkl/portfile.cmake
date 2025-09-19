@@ -5,28 +5,35 @@
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/19150/w_onemkl_p_2023.0.0.25930_offline.exe # windows
-# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/19116/m_onemkl_p_2023.0.0.25376_offline.dmg # macos
-# https://registrationcenter-download.intel.com/akdlm/irc_nas/19138/l_onemkl_p_2023.0.0.25398_offline.sh # linux
+# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/2b9cdf66-5291-418e-a7e8-f90515cc9098/w_onemkl_p_2023.2.0.49500_offline.exe # windows
+# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/dd6ae4b7-5d07-4307-8163-e1ccf7a770a0/m_onemkl_p_2023.2.2.9_offline.dmg # macos
+# https://registrationcenter-download.intel.com/akdlm/IRC_NAS/adb8a02c-4ee7-4882-97d6-a524150da358/l_onemkl_p_2023.2.0.49497_offline.sh # linux
 set(sha "")
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
   # nop
 elseif(VCPKG_TARGET_IS_WINDOWS)
-  set(filename w_onemkl_p_2023.0.0.25930_offline.exe)
-  set(magic_number 19150)
-  set(sha a3eb6b75241a2eccb73ed73035ff111172c55d3fa51f545c7542277a155df84ff72fc826621711153e683f84058e64cb549c030968f9f964531db76ca8a3ed46)
+  set(mkl_version 2023.2.0) 
+  set(version_magic_number 49496)
+  set(filename w_onemkl_p_2023.2.0.49500_offline.exe)
+  set(magic_number 2b9cdf66-5291-418e-a7e8-f90515cc9098)
+  set(sha 00ef5e9e059290474fb0ed5eeec5b76fd2793d45e5707e90125adecfc526af8ca716bd0f33dbe9f077b56bf30c2cbdd27401978a087687600c6c7e5847767857)
   set(package_infix "win")
 elseif(VCPKG_TARGET_IS_OSX)
-  set(filename m_onemkl_p_2023.0.0.25376_offline.dmg)
-  set(magic_number 19116)
-  set(sha 7b9b8c004054603e6830fb9b9c049d5a4cfc0990c224cb182ac5262ab9f1863775a67491413040e3349c590e2cca58edcfc704db9f3b9f9faa8b5b09022cd2af)
+  set(mkl_version 2023.2.2)
+  set(mkl_version_openmp 2023.2.0)
+  set(filename m_onemkl_p_2023.2.2.9_offline.dmg)
+  set(magic_number dd6ae4b7-5d07-4307-8163-e1ccf7a770a0)
+  set(sha 9de501e0c6553265a5226ff0b00bb36f5a1c89c39114c1a64a5ae816a58b50981faf341e98e00aec11103c565059567b96e61413aa09b22462c1c5ec975c5cb9)
   set(package_infix "mac")
   set(package_libdir "lib")
   set(compiler_libdir "mac/compiler/lib")
 elseif(VCPKG_TARGET_IS_LINUX)
-  set(filename l_onemkl_p_2023.0.0.25398_offline.sh)
-  set(magic_number 19138)
-  set(sha b5f2f464675f0fd969dde2faf2e622b834eb1cc406c4a867148116f6c24ba5c709d98b678840f4a89a1778e12cde0ff70ce2ef59faeef3d3f3aa1d0329c71af1)
+  set(mkl_version 2023.2.0)
+  set(mkl_version_openmp 2023.2.0)
+  set(version_magic_number 49497)
+  set(filename l_onemkl_p_2023.2.0.49497_offline.sh)
+  set(magic_number adb8a02c-4ee7-4882-97d6-a524150da358)
+  set(sha 421d4c33014b9a77799273f78db9877c72401d7b2a9b697abb9e148def008c58259b11c0238ab658c8f8499b13ac7bb880b91d57338345e77d0475d5d65c39f3)
   set(package_infix "lin")
   set(package_libdir "lib/intel64")
   set(compiler_libdir "linux/compiler/lib/intel64_lin")
@@ -80,11 +87,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
     set(packages 
-        "intel.oneapi.win.mkl.devel,v=2023.0.0-25930/oneapi-mkl-devel-for-installer_p_2023.0.0.25930.msi" # has the required libs. 
-        "intel.oneapi.win.mkl.runtime,v=2023.0.0-25930/oneapi-mkl-for-installer_p_2023.0.0.25930.msi" # has the required DLLs
-        #"intel.oneapi.win.compilers-common-runtime,v=2023.0.0-25922" # SVML
-        "intel.oneapi.win.openmp,v=2023.0.0-25922/oneapi-comp-openmp-for-installer_p_2023.0.0.25922.msi" # OpenMP
-        #"intel.oneapi.win.tbb.runtime,v=2021.8.0-25874" #TBB
+        "intel.oneapi.win.mkl.devel,v=${mkl_version}-${version_magic_number}/oneapi-mkl-devel-for-installer_p_${mkl_version}.${version_magic_number}.msi" # has the required libs. 
+        "intel.oneapi.win.mkl.runtime,v=${mkl_version}-${version_magic_number}/oneapi-mkl-for-installer_p_${mkl_version}.${version_magic_number}.msi" # has the required DLLs
+        #"intel.oneapi.win.compilers-common-runtime,v=${mkl_version}-25922" # SVML
+        "intel.oneapi.win.openmp,v=${mkl_version}-${version_magic_number}/oneapi-comp-openmp-for-installer_p_${mkl_version}.${version_magic_number}.msi" # OpenMP
+        #"intel.oneapi.win.tbb.runtime,v=${mkl_version}-25874" #TBB
         )
 
     foreach(pack IN LISTS packages)
@@ -100,7 +107,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(REMOVE_RECURSE "${extract_1_dir}/${packstem}")
     endforeach()
 
-    set(mkl_dir "${extract_1_dir}/Intel/Compiler/12.0/mkl/2023.0.0")
+    set(mkl_dir "${extract_1_dir}/Intel/Compiler/12.0/mkl/${mkl_version}")
     file(COPY "${mkl_dir}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     # see https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-link-line-advisor.html for linking
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -120,7 +127,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
     file(COPY_FILE "${mkl_dir}/lib/pkgconfig/${main_pc_file}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}")
 
-    set(compiler_dir "${extract_1_dir}/Intel/Compiler/12.0/compiler/2023.0.0")
+    set(compiler_dir "${extract_1_dir}/Intel/Compiler/12.0/compiler/${mkl_version}")
     if(threading STREQUAL "intel_thread")
       file(COPY "${compiler_dir}/windows/redist/intel64_win/compiler/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
       file(COPY "${compiler_dir}/windows/compiler/lib/intel64_win/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
@@ -147,7 +154,7 @@ else()
           WORKING_DIRECTORY "${extract_0_dir}"
           LOGNAME "extract-${TARGET_TRIPLET}-0"
       )
-      file(RENAME "${extract_0_dir}/l_onemkl_p_2023.0.0.25398_offline/packages" "${extract_0_dir}/packages")
+      file(RENAME "${extract_0_dir}/l_onemkl_p_${mkl_version}.${version_magic_number}_offline/packages" "${extract_0_dir}/packages")
     elseif(VCPKG_TARGET_IS_OSX)
       find_program(HDIUTIL NAMES hdiutil REQUIRED)
       file(MAKE_DIRECTORY "${extract_0_dir}/packages")
@@ -163,38 +170,38 @@ else()
       message(STATUS "... Done.")
     endif()
 
-    file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.runtime,v=2023.0.0-*")
+    file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.runtime,v=${mkl_version}-*")
     cmake_path(GET package_path STEM LAST_ONLY packstem)
     message(STATUS "Extracting ${packstem}")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${package_path}/cupPayload.cup"
-            "_installdir/mkl/2023.0.0/lib"
-            "_installdir/mkl/2023.0.0/licensing"
+            "_installdir/mkl/${mkl_version}/lib"
+            "_installdir/mkl/${mkl_version}/licensing"
         WORKING_DIRECTORY "${extract_1_dir}"
         LOGNAME "extract-${TARGET_TRIPLET}-${packstem}"
     )
-    file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.devel,v=2023.0.0-*")
+    file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.devel,v=${mkl_version}-*")
     cmake_path(GET package_path STEM LAST_ONLY packstem)
     message(STATUS "Extracting ${packstem}")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${package_path}/cupPayload.cup"
-            "_installdir/mkl/2023.0.0/bin"
-            "_installdir/mkl/2023.0.0/include"
-            "_installdir/mkl/2023.0.0/lib"
+            "_installdir/mkl/${mkl_version}/bin"
+            "_installdir/mkl/${mkl_version}/include"
+            "_installdir/mkl/${mkl_version}/lib"
         WORKING_DIRECTORY "${extract_1_dir}"
         LOGNAME "extract-${TARGET_TRIPLET}-${packstem}"
     )
-    file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.openmp,v=2023.0.0-*")
+    file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.openmp,v=${mkl_version_openmp}-*")
     cmake_path(GET package_path STEM LAST_ONLY packstem)
     message(STATUS "Extracting ${packstem}")
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" "-E" "tar" "-xf" "${package_path}/cupPayload.cup"
-            "_installdir/compiler/2023.0.0"
+            "_installdir/compiler/${mkl_version_openmp}"
         WORKING_DIRECTORY "${extract_1_dir}"
         LOGNAME "extract-${TARGET_TRIPLET}-${packstem}"
     )
 
-    set(mkl_dir "${extract_1_dir}/_installdir/mkl/2023.0.0")
+    set(mkl_dir "${extract_1_dir}/_installdir/mkl/${mkl_version}")
     file(COPY "${mkl_dir}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     file(COPY "${mkl_dir}/${package_libdir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -212,7 +219,7 @@ else()
     file(COPY_FILE "${mkl_dir}/lib/pkgconfig/${main_pc_file}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}" "\${exec_prefix}/${package_libdir}" "\${exec_prefix}/lib/intel64" IGNORE_UNCHANGED)
   
-    set(compiler_dir "${extract_1_dir}/_installdir/compiler/2023.0.0")
+    set(compiler_dir "${extract_1_dir}/_installdir/compiler/${mkl_version_openmp}")
     if(threading STREQUAL "intel_thread")
       file(COPY "${compiler_dir}/${compiler_libdir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/intel64")
       file(COPY_FILE "${compiler_dir}/lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc")
@@ -247,7 +254,7 @@ endif()
 #TODO: Give lapack/blas information about the correct BLA_VENDOR depending on settings. 
 
 file(INSTALL "${mkl_dir}/licensing" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.product,v=2023.0.0-*")
+file(GLOB package_path "${extract_0_dir}/packages/intel.oneapi.${package_infix}.mkl.product,v=${mkl_version}-*")
 vcpkg_install_copyright(FILE_LIST "${package_path}/licenses/license.htm")
 
 file(REMOVE_RECURSE
