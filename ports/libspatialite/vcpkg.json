@@ -21,6 +21,11 @@
       ]
     },
     {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows | mingw"
+    },
+    {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
