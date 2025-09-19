@@ -1,6 +1,6 @@
 {
   "name": "qtsvg",
-  "version": "6.9.1",
+  "version": "6.9.2",
   "description": "Qt SVG provides classes for rendering and displaying SVG drawings in widgets and on other paint devices.",
   "homepage": "https://www.qt.io/",
   "license": null,
