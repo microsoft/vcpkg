@@ -1,10 +1,10 @@
 {
   "name": "perfetto",
-  "version": "51.2",
+  "version": "52.0",
   "description": "System profiling, app tracing and trace analysis",
   "homepage": "https://perfetto.dev",
   "license": "Apache-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !x86",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
