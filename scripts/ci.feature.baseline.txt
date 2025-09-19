@@ -559,7 +559,6 @@ torch-th:arm64-windows=fail
 torch-th:x64-android=fail
 torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
-treehopper:x64-linux=fail
 treehopper:x64-windows-static=fail
 unicorn-lib:arm-uwp=fail
 unicorn-lib:x64-uwp=fail
