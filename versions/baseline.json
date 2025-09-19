@@ -5597,7 +5597,7 @@
       "port-version": 1
     },
     "libva": {
-      "baseline": "2.22.0",
+      "baseline": "2.20.0",
       "port-version": 0
     },
     "libvault": {
