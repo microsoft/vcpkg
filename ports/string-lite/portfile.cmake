@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/string-lite
     REF "v${VERSION}"
-    SHA512 36c359388b50775d1602dd7b4f6adb8acd0ce168
+    SHA512 b61667660d32a96232737e0d38e02a0e6d934830e7dafdb9844eb87d855dbea43392797c291d9f39a0f352c43bcd6e5af9510b656887532be99f02982ff38dfa
     HEAD_REF master
 )
 
