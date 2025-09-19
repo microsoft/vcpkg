@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Utility to generate VCPKG file lists (TypeScript)",
   "private": true,
+  "type": "module",
   "license": "MIT",
   "engines": {
     "node": ">=14"
