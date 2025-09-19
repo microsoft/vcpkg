@@ -375,7 +375,7 @@ function(vcpkg_configure_make)
     endif()
 
    # macOS - cross-compiling support
-    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_VISIONOS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             z_vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
             z_vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
@@ -902,6 +902,8 @@ function(vcpkg_configure_make)
         find_program(Z_VCPKG_MAKE make PATHS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH REQUIRED)
     elseif(VCPKG_HOST_IS_FREEBSD OR VCPKG_HOST_IS_OPENBSD)
         find_program(Z_VCPKG_MAKE gmake REQUIRED)
+    elseif(VCPKG_HOST_IS_SOLARIS)
+        find_program(Z_VCPKG_MAKE NAMES gmake make REQUIRED)
     else()
         find_program(Z_VCPKG_MAKE make REQUIRED)
     endif()

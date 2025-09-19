@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/proxy
     REF ${VERSION}
-    SHA512 9e9a0d46291d1bd92b205a5a27cfa0b08974f4e644b9ef66f2ba2ea1fed2df3e0adfc40b247a8f53a479a2dbbd2bad162f157e8cf73b72973a19f97193d4102b 
+    SHA512 b6484a9ebc71d0a76bf80b80dc6688c5c4f08ab02496e105f0b8392d8752d79216da315513755176aa98da95247dc785a20379e2e2b192eb463213c6f8c9cf6f
     HEAD_REF main
 )
 
@@ -13,7 +13,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "msft_proxy4")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

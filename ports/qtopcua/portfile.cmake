@@ -16,8 +16,7 @@ INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     )
 if("open62541" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_open62541=system
-                                -DHAVE_open62541=true)
+    list(APPEND FEATURE_OPTIONS -DINPUT_open62541=system)
     vcpkg_find_acquire_program(PYTHON3)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_open62541=no)

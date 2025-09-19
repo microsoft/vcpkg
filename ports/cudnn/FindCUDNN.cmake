@@ -25,14 +25,14 @@
 include(FindPackageHandleStandardArgs)
 file(GLOB CUDNN_VERSION_DIRS
   LIST_DIRECTORIES true
-  "$ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v[1-9]*.[1-9]*"
+  "$ENV{CUDA_PATH}/../../../NVIDIA/CUDNN/v[1-9]*.[0-9]*"
 )
 find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
   HINTS ${CUDA_TOOLKIT_ROOT} $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} ${CUDNN_VERSION_DIRS} /usr/include /usr/include/x86_64-linux-gnu/ /usr/include/aarch64-linux-gnu/
-  PATH_SUFFIXES cuda/include include include/11.8 include/12.0 include/12.1 include/12.2 include/12.3 include/12.4 include/12.5 include/12.6)
+  PATH_SUFFIXES cuda/include include include/11.8 include/12.0 include/12.1 include/12.2 include/12.3 include/12.4 include/12.5 include/12.6 include/12.7 include/12.8 include/12.9)
 find_library(CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
   HINTS ${CUDA_TOOLKIT_ROOT} $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} ${CUDNN_VERSION_DIRS} /usr/lib/x86_64-linux-gnu/ /usr/lib/aarch64-linux-gnu/ /usr/
-  PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64 cuda/lib/x64 lib/11.8/x64 lib/12.0/x64 lib/12.1/x64 lib/12.2/x64 lib/12.3/x64 lib/12.4/x64 lib/12.5/x64 lib/12.6/x64)
+  PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64 cuda/lib/x64 lib/11.8/x64 lib/12.0/x64 lib/12.1/x64 lib/12.2/x64 lib/12.3/x64 lib/12.4/x64 lib/12.5/x64 lib/12.6/x64 lib/12.7/x64 lib/12.8/x64 lib/12.9/x64)
 
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn.h CUDNN_HEADER_CONTENTS)
@@ -83,25 +83,23 @@ find_package_handle_standard_args(CUDNN
       VERSION_VAR    CUDNN_VERSION
 )
 
-if(WIN32)
-  set(CUDNN_DLL_DIR ${CUDNN_INCLUDE_DIR})
-  list(TRANSFORM CUDNN_DLL_DIR APPEND "/../bin")
-  find_file(CUDNN_LIBRARY_DLL NAMES cudnn64_${CUDNN_VERSION_MAJOR}.dll PATHS ${CUDNN_DLL_DIR})
-endif()
+set(CUDNN_DLL_DIR ${CUDNN_INCLUDE_DIR})
+list(TRANSFORM CUDNN_DLL_DIR APPEND "/../bin")
+find_file(CUDNN_LIBRARY_DLL NAMES cudnn64_${CUDNN_VERSION_MAJOR}.dll PATHS ${CUDNN_DLL_DIR})
 
-if( CUDNN_FOUND AND NOT TARGET CuDNN::CuDNN )
-  if( EXISTS "${CUDNN_LIBRARY_DLL}" )
-    add_library( CuDNN::CuDNN      SHARED IMPORTED )
-    set_target_properties( CuDNN::CuDNN PROPERTIES
+if(CUDNN_FOUND AND NOT TARGET CuDNN::CuDNN AND NOT CMAKE_SCRIPT_MODE_FILE)
+  if(EXISTS "${CUDNN_LIBRARY_DLL}")
+    add_library(CuDNN::CuDNN      SHARED IMPORTED)
+    set_target_properties(CuDNN::CuDNN PROPERTIES
       IMPORTED_LOCATION                 "${CUDNN_LIBRARY_DLL}"
       IMPORTED_IMPLIB                   "${CUDNN_LIBRARY}"
       INTERFACE_INCLUDE_DIRECTORIES     "${CUDNN_INCLUDE_DIR}"
-      IMPORTED_LINK_INTERFACE_LANGUAGES "C" )
+      IMPORTED_LINK_INTERFACE_LANGUAGES "C")
   else()
-    add_library( CuDNN::CuDNN      UNKNOWN IMPORTED )
-    set_target_properties( CuDNN::CuDNN PROPERTIES
+    add_library(CuDNN::CuDNN      UNKNOWN IMPORTED)
+    set_target_properties(CuDNN::CuDNN PROPERTIES
       IMPORTED_LOCATION                 "${CUDNN_LIBRARY}"
       INTERFACE_INCLUDE_DIRECTORIES     "${CUDNN_INCLUDE_DIR}"
-      IMPORTED_LINK_INTERFACE_LANGUAGES "C" )
+      IMPORTED_LINK_INTERFACE_LANGUAGES "C")
   endif()
 endif()

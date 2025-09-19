@@ -8,6 +8,7 @@ vcpkg_from_github(
     PATCHES
         no-runtime-install.patch
         001-downgrade-find-package-tbb-2020.patch
+        avoid-library-conflicts.diff
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)

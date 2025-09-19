@@ -24,9 +24,9 @@ foreach ($binary in @('macos', 'muslc', 'glibc', 'glibc-arm64')) {
 }
 
 # Source
-$sourceName = "$Date.tar.gz"
+$sourceName = "$Date.zip"
 & $vcpkg x-download "$PSScriptRoot\$sourceName" `
-    "--url=https://github.com/microsoft/vcpkg-tool/archive/refs/tags/$Date.tar.gz" --skip-sha512
+    "--url=https://github.com/microsoft/vcpkg-tool/archive/refs/tags/$Date.zip" --skip-sha512
 $sha512 = & $vcpkg hash "$PSScriptRoot\$sourceName"
 $metadata += "VCPKG_TOOL_SOURCE_SHA=$sha512`n"
 
