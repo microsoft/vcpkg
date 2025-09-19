@@ -8,6 +8,9 @@ vcpkg_from_github(
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DPISP_LOGGING_ENABLE=0
+	-DLOGGING=0
 )
 
 vcpkg_install_meson()
