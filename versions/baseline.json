@@ -3845,7 +3845,7 @@
       "port-version": 0
     },
     "igraph": {
-      "baseline": "0.10.16",
+      "baseline": "0.10.17",
       "port-version": 0
     },
     "iguana": {
