@@ -2133,8 +2133,8 @@
       "port-version": 0
     },
     "cpuinfo": {
-      "baseline": "2022-07-19",
-      "port-version": 3
+      "baseline": "2025-07-25",
+      "port-version": 0
     },
     "cr": {
       "baseline": "2020-04-26",
@@ -2866,7 +2866,7 @@
     },
     "fbgemm": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fbthrift": {
       "baseline": "2025.05.19.00",
@@ -5509,8 +5509,8 @@
       "port-version": 2
     },
     "libtorch": {
-      "baseline": "2.1.2",
-      "port-version": 12
+      "baseline": "2.7.1",
+      "port-version": 0
     },
     "libtorrent": {
       "baseline": "2.0.11",
@@ -7754,7 +7754,7 @@
     },
     "qnnpack": {
       "baseline": "2021-02-26",
-      "port-version": 3
+      "port-version": 5
     },
     "qoi": {
       "baseline": "2023-08-10",
@@ -10521,7 +10521,7 @@
       "port-version": 1
     },
     "xnnpack": {
-      "baseline": "2022-12-22",
+      "baseline": "2024-08-20",
       "port-version": 0
     },
     "xorg-macros": {

@@ -1,8 +1,21 @@
 diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
-index ff8e1d6cc..306dac51f 100644
---- a/c10/util/Logging.cpp	
+index c463658..a523040 100644
+--- a/c10/util/Logging.cpp
 +++ b/c10/util/Logging.cpp
-@@ -218,24 +218,11 @@ C10_DEFINE_int(
+@@ -362,7 +362,7 @@ void UpdateLoggingLevelsFromFlags() {
+ 
+ void ShowLogInfoToStderr() {
+   FLAGS_logtostderr = 1;
+-  FLAGS_minloglevel = std::min(FLAGS_minloglevel, google::GLOG_INFO);
++  FLAGS_minloglevel = std::min<int>(FLAGS_minloglevel, google::GLOG_INFO);
+ }
+ } // namespace c10
+ 
+diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
+index a523040..04375b6 100644
+--- a/c10/util/Logging.cpp
++++ b/c10/util/Logging.cpp
+@@ -295,23 +295,13 @@ C10_DEFINE_int(
      google::GLOG_WARNING,
      "The minimum log level that caffe2 will output.");
  
@@ -20,11 +33,10 @@ index ff8e1d6cc..306dac51f 100644
  namespace {
  
  void initGoogleLogging(char const* name) {
--#if !defined(_MSC_VER)
--  // This trick can only be used on UNIX platforms
+ #if !defined(_MSC_VER)
+   // This trick can only be used on UNIX platforms
 -  if (!::google::glog_internal_namespace_::IsGoogleLoggingInitialized())
--#endif
 +  if (!::google::IsGoogleLoggingInitialized())
+ #endif
    {
      ::google::InitGoogleLogging(name);
- #if !defined(_MSC_VER)
