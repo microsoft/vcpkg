@@ -1,0 +1,76 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eb5c2bd..a107533 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,23 +19,23 @@ option(SEQ_NO_WARNINGS "Treat warnings as errors" OFF)
+ 
+ set(SEQ_INSTALL_LIBDIR       "${CMAKE_INSTALL_LIBDIR}")
+ set(SEQ_INSTALL_DATAROOTDIR  "${CMAKE_INSTALL_DATAROOTDIR}")
+-set(SEQ_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/seq")
++set(SEQ_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/thermadiag-seq")
+ 
+ # create source file list
+ file(GLOB SeqSources
+      "seq/*.hpp"
+ )
+ 
+-add_library(seq INTERFACE ${SeqSources})
++add_library(thermadiag-seq INTERFACE ${SeqSources})
+ 
+-target_include_directories(seq INTERFACE
++target_include_directories(thermadiag-seq INTERFACE
+ 					   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/seq>"
+ 					   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/seq/internal>"
+ 					   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+-					   
+-install(TARGETS seq EXPORT seq )
+-install(EXPORT seq DESTINATION ${SEQ_CMAKEDIR})
+-	
++
++install(TARGETS thermadiag-seq EXPORT thermadiag-seq)
++install(EXPORT thermadiag-seq DESTINATION ${SEQ_CMAKEDIR})
++
+ 
+ # add tests
+ enable_testing()
+@@ -69,19 +69,18 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/seq_config.hpp
+ # Configure and install seqConfig.cmake and seqConfigVersion.cmake
+ include(CMakePackageConfigHelpers)
+ 
+-configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/seqConfig.cmake.in"
+-  "${CMAKE_CURRENT_BINARY_DIR}/seqConfig.cmake"
+-  INSTALL_DESTINATION ${SEQ_INSTALL_LIBDIR}/cmake/seq
++configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/seqConfig.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/thermadiag-seqConfig.cmake"
++  INSTALL_DESTINATION ${SEQ_INSTALL_LIBDIR}/cmake/thermadiag-seq
+   PATH_VARS )
+ 
+-  
++
+ # Generate seqConfigVersion.cmake
+ write_basic_package_version_file(
+-  ${CMAKE_CURRENT_BINARY_DIR}/seqConfigVersion.cmake
++  ${CMAKE_CURRENT_BINARY_DIR}/thermadiag-seqConfigVersion.cmake
+   VERSION ${PROJECT_VERSION}
+   COMPATIBILITY SameMajorVersion )
+-  
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/seqConfig.cmake
+-              ${CMAKE_CURRENT_BINARY_DIR}/seqConfigVersion.cmake
+-        DESTINATION ${SEQ_INSTALL_LIBDIR}/cmake/seq )
+-		
++
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/thermadiag-seqConfig.cmake
++              ${CMAKE_CURRENT_BINARY_DIR}/thermadiag-seqConfigVersion.cmake
++        DESTINATION ${SEQ_INSTALL_LIBDIR}/cmake/thermadiag-seq )
+diff --git a/cmake/seqConfig.cmake.in b/cmake/seqConfig.cmake.in
+index ad6afa8..a3f53a8 100644
+--- a/cmake/seqConfig.cmake.in
++++ b/cmake/seqConfig.cmake.in
+@@ -1,6 +1,6 @@
+ 
+ @PACKAGE_INIT@
+-include(${CMAKE_CURRENT_LIST_DIR}/seq.cmake)
++include(${CMAKE_CURRENT_LIST_DIR}/thermadiag-seq.cmake)
+ 
+ set(SEQ_FOUND TRUE)
+ set(SEQ_VERSION_MAJOR @PROJECT_VERSION_MAJOR@)
