@@ -1,11 +1,16 @@
 {
   "name": "utf8-range",
-  "version": "5.29.5",
+  "version": "5.30.0",
   "description": "Fast UTF-8 validation with Range algorithm (NEON+SSE4+AVX2)",
   "homepage": "https://github.com/protocolbuffers/protobuf",
   "license": "MIT",
   "dependencies": [
-    "abseil",
+    {
+      "name": "abseil",
+      "features": [
+        "cxx17"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
