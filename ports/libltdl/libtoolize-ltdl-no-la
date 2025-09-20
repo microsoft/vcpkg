@@ -1,9 +1,9 @@
 #!/bin/sh
-me=libtoolize-ltdl
+me=libtoolize-ltdl-no-la
 echo "$me: running: $*" 1>&2
 "${VCPKG_LIBLTDL_LIBTOOLIZE:-libtoolize}" "$@" &&
+echo "$me: disabling libltdl.la check in m4/ltdl.m4" # most distros removes the la file
 if test -f m4/ltdl.m4 ; then
-    echo "$me: disabling libltdl.la check in m4/ltdl.m4" # most distros removes the la file
     sed -e 's,test -f "\$with_ltdl_lib/libltdl.la",test -d "\$with_ltdl_lib",' m4/ltdl.m4 > m4/_ltdl.m4.tmp &&
     cp m4/_ltdl.m4.tmp m4/ltdl.m4 &&
     rm m4/_ltdl.m4.tmp

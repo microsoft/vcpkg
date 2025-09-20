@@ -1,11 +1,11 @@
 # Provide variables to use lib ltldl with autoconf.
 #
-# - <out_var_basename>_LIBTOOLIZE
+# - <PREFIX>_LIBTOOLIZE
 #   A libtoolize (wrapper) which disables the check for  libltdl.la.
 #   la files are removed from packages in vcpkg (and in most distros).
 #   They add little value in modern environments, and they use absolute paths.
-# - <out_var_basename>_OPTIONS_RELEASE,
-#   <out_var_basename>_OPTIONS_DEBUG:
+# - <PREFIX>_OPTIONS_RELEASE,
+#   <PREFIX>_OPTIONS_DEBUG:
 #   Options to pass to vcpkg_make_configure.
 #
 # Usage:
@@ -21,7 +21,7 @@
 #           ${LIBLTDL_OPTIONS_RELEASE}
 #   )
 
-function(vcpkg_libltdl_get_vars out_var_basename)
+function(vcpkg_libltdl_get_vars prefix)
     # Select host libtoolize: triplet, environment, PATH, plain name.
     if(NOT VCPKG_LIBLTDL_LIBTOOLIZE)
         set(VCPKG_LIBLTDL_LIBTOOLIZE "$ENV{LIBTOOLIZE}")
@@ -43,7 +43,7 @@ function(vcpkg_libltdl_get_vars out_var_basename)
         "--with-ltdl-include=${CURRENT_INSTALLED_DIR}/include"
         "--with-ltdl-lib=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
-    set("${out_var}_OPTIONS_RELEASE" "${options_release}" PARENT_SCOPE)
-    set("${out_var}_OPTIONS_DEBUG" "${options_debug}" PARENT_SCOPE)
-    set("${out_var}_LIBTOOLIZE" "${CURRENT_INSTALLED_DIR}/manual-tools/libltdl/libtoolize-ltdl-no-la" PARENT_SCOPE)
+    set("${prefix}_OPTIONS_RELEASE" "${options_release}" PARENT_SCOPE)
+    set("${prefix}_OPTIONS_DEBUG" "${options_debug}" PARENT_SCOPE)
+    set("${prefix}_LIBTOOLIZE" "${CURRENT_INSTALLED_DIR}/manual-tools/libltdl/libtoolize-ltdl-no-la" PARENT_SCOPE)
 endfunction()

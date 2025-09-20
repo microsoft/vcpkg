@@ -17,7 +17,7 @@ vcpkg_make_configure(
     OPTIONS_RELEASE
         ${LIBLTDL_OPTIONS_RELEASE}
     OPTIONS_DEBUG
-        ${LIBLTDL_OPTIONS_RELEASE}
+        ${LIBLTDL_OPTIONS_DEBUG}
 )
 vcpkg_make_install()
 vcpkg_copy_pdbs()
