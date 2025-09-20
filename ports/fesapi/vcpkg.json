@@ -1,0 +1,25 @@
+{
+  "name": "fesapi",
+  "version": "2.13.0.0",
+  "description": "A library allowing ENERGISTICS™ data standards support (mainly RESQML™), multi-languages (C++, Java, C#, Python).",
+  "homepage": "https://github.com/F2I-Consulting/fesapi",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "boost-uuid",
+    {
+      "name": "hdf5",
+      "features": [
+        "zlib"
+      ]
+    },
+    "minizip",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
