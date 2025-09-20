@@ -8,7 +8,7 @@ index 3a4f288..d9ba65f 100644
    AC_DEFINE(ENABLE_LIBXML2)
 +  LIBS_SAVE="$LIBS"
 +  LIBS="$LIBXML2_LIBS"
-+  AC_SEARCH_LIBS(NANOHTTP, [], [has_nanohttp="yes"], [has_nanohttp="no"], [${LIBXML2_LIBS}])
++  AC_SEARCH_LIBS(xmlNanoHTTPCleanup, [], [has_nanohttp="yes"], [has_nanohttp="no"], [${LIBXML2_LIBS}])
 +  if test "x$has_nanohttp" != "xno"; then
 +    CPPFLAGS="$CFLAGS -DLIBXML2_HAS_NANOHTTP"
 +  else

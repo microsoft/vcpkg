@@ -11,6 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        configure.diff
         fix-makefiles.patch
 )
 file(REMOVE "${SOURCE_PATH}/config.h")
