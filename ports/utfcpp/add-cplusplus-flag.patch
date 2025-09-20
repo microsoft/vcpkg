@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eef212e..1ea9b9e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,9 @@ target_include_directories(utf8cpp INTERFACE
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source>"
+     $<INSTALL_INTERFACE:include/utf8cpp>
+ )
++target_compile_options(utf8cpp INTERFACE
++    $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>
++)
+ 
+ include(CMakePackageConfigHelpers)
+ write_basic_package_version_file(
