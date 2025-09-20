@@ -2349,6 +2349,3 @@ osg:x64-osx=skip
 osg-qt:x64-osx=skip # due to dependency on osg
 osgearth:x64-osx=skip # due to dependency on osg
 sdformat:x64-osx=skip # due to dependency on gz-*
-
-# WIP: depending on http in libxml2
-pdal=skip
