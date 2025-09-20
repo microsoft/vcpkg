@@ -2380,6 +2380,10 @@
       "baseline": "1.18",
       "port-version": 1
     },
+    "defer": {
+      "baseline": "1.0",
+      "port-version": 0
+    },
     "delaunator-cpp": {
       "baseline": "1.0.0",
       "port-version": 0
