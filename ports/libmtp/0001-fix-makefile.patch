@@ -1,0 +1,24 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 088050e..209bdb3 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -69,17 +69,13 @@ W32_LDFLAGS=-export-dynamic
+ if MS_LIB_EXE
+ noinst_DATA=libmtp.lib
+ libmtp.def: $(srcdir)/libmtp.sym
+-	echo "LIBRARY \"@PACKAGE@\"" > libmtp.def
+-	echo "DESCRIPTION \"Media Transfer Protocol (MTP) library\"" >> libmtp.def
+-	echo "VERSION @VERSION@" >> libmtp.def
+-	echo >> libmtp.def
+ 	echo "EXPORTS" >> libmtp.def
+ 	cat $< >> libmtp.def
+ libmtp.lib: libmtp.la libmtp.def
+ 	lib -name:libmtp-$(LT_CURRENT_MINUS_AGE).dll -def:libmtp.def -out:$@
+ install-data-local: libmtp.lib libmtp.def
+-	$(INSTALL) libmtp.def $(DESTDIR)$(libdir)
+-	$(INSTALL) libmtp.lib $(DESTDIR)$(libdir)
++#	$(INSTALL) libmtp.def $(DESTDIR)$(libdir)
++#	$(INSTALL) libmtp.lib $(DESTDIR)$(libdir)
+ endif
+ endif
+ 
