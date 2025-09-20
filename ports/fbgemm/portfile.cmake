@@ -20,7 +20,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME fbgemmLibrary CONFIG_PATH share/cmake/${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME fbgemmLibrary)
 
 # this internal header is required by pytorch
 file(INSTALL     "${SOURCE_PATH}/src/RefImplementations.h"

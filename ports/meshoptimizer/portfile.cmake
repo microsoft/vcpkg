@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/meshoptimizer
     REF v${VERSION}
-    SHA512 d8342aadd48c0f51aa014ba56ff4c97f4780194eabf78d8a867876fb49f5d103597748ec4aa3613e236e2c42c5ca58d46a9ad3b7c458de5e1f01546d9951bfb4
+    SHA512 c00f2357c9c8d17804047c3c678f253bf13aa467b1dadc099a7958787e1725c501bd92a7837494d4831dd7c3428bbeb92353b70fd45ec71e88d753036318ab2f
     HEAD_REF master
-    PATCHES
-      fix-cmake.patch
 )
 
 # If we want basisu support in gltfpack we need a particular fork of basisu
@@ -16,8 +14,8 @@ if ("gltfpack" IN_LIST FEATURES)
   vcpkg_from_github(
       OUT_SOURCE_PATH BASISU_PATH
       REPO zeux/basis_universal
-      REF 88e813c46b3ff42e56ef947b3fa11eeee7a504b0
-      SHA512 cc9e4dbaed556fac30f4426ead9c8fb018ca8540bd1188849a90396192e410a5fdc6f38edbad07d2615583fbdfe01a79989d426caed7614d38b93731bbe3d4ae
+      REF 6588a8a443f8ca1f0abb56ee4f46be10be1b2a2c
+      SHA512 a59e44d4406dde88b42718335be11a9bb0e07acaec955200b7f439151be01fa9e5321fa2ae1fe27173bbf76a3bd70ceca2f8bd4d0377b602aed6a75704cdcc73
       HEAD_REF gltfpack
   )
 endif()
