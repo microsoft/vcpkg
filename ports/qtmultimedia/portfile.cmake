@@ -3,7 +3,6 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
     static_find_modules.patch
-    fix_avfoundation_target.patch
     remove-static-ssl-stub.patch
     ffmpeg-compile-def.patch
     ffmpeg.patch
