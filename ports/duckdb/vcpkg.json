@@ -29,6 +29,7 @@
     "httpfs": {
       "description": "Statically link the httpfs extension into DuckDB",
       "dependencies": [
+        "curl",
         "openssl"
       ]
     },
