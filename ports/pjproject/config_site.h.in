@@ -1,0 +1,30 @@
+#ifndef PJ_CONFIG_SITE_H
+#define PJ_CONFIG_SITE_H
+
+/* SSL/TLS Support */
+#define PJ_HAS_SSL_SOCK                    @PJ_HAS_SSL_SOCK@
+
+/* Video Support */
+#define PJSUA_HAS_VIDEO                    @PJSUA_HAS_VIDEO@
+#define PJMEDIA_HAS_VIDEO                  @PJMEDIA_HAS_VIDEO@
+#define PJMEDIA_HAS_FFMPEG                 @PJMEDIA_HAS_FFMPEG@
+#define PJMEDIA_HAS_VPX_CODEC              @PJMEDIA_HAS_VPX_CODEC@
+#define PJMEDIA_HAS_VPX_CODEC_VP9          @PJMEDIA_HAS_VPX_CODEC_VP9@
+#define PJMEDIA_HAS_LIBYUV                 @PJMEDIA_HAS_LIBYUV@
+#define PJMEDIA_VIDEO_DEV_HAS_SDL          @PJMEDIA_VIDEO_DEV_HAS_SDL@
+
+/* Opus Codec Support */
+#define PJMEDIA_HAS_OPUS_CODEC             @PJMEDIA_HAS_OPUS_CODEC@
+
+/* Platform-specific video support */
+#ifdef _MSC_VER
+    #define PJMEDIA_VIDEO_DEV_HAS_DSHOW    @PJMEDIA_VIDEO_DEV_HAS_DSHOW@
+#endif
+
+/* Windows platform detection */
+#ifdef _WIN32
+    #define PJ_HAS_WINDOWS_H               1
+    #define PJ_WIN32_WINCE                 0
+#endif
+
+#endif /* PJ_CONFIG_SITE_H */

@@ -1,28 +1,15 @@
 {
   "name": "pjproject",
   "version": "2.15.1",
-  "description": "PJSIP (pjproject) with video (FFmpeg/libvpx/SDL2) + Opus/OpenSSL",
+  "description": "PJSIP (pjproject) is a free and open source multimedia communication library implementing standard based protocols such as SIP, SDP, RTP, STUN, TURN, and ICE. It combines signaling protocol (SIP) with rich multimedia framework and NAT traversal functionality into high level API that is portable",
   "homepage": "https://github.com/pjsip/pjproject",
   "license": "GPL-2.0-or-later",
   "supports": "(windows & !uwp) | mingw | linux",
   "dependencies": [
     {
-      "name": "ffmpeg",
-      "default-features": false,
-      "features": [
-        "avcodec",
-        "avformat",
-        "swscale"
-      ]
-    },
-    "libvpx",
-    "openssl",
-    "opus",
-    {
       "name": "pkgconf",
       "host": true
     },
-    "sdl2",
     {
       "name": "vcpkg-make",
       "host": true
@@ -36,5 +23,35 @@
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "opus": {
+      "description": "Enable Opus codec support",
+      "dependencies": [
+        "opus"
+      ]
+    },
+    "ssl": {
+      "description": "Enable SSL/TLS support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "video": {
+      "description": "Enable video support with FFmpeg, libvpx, and SDL2",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swscale"
+          ]
+        },
+        "libvpx",
+        "sdl2"
+      ]
+    }
+  }
 }
