@@ -1,0 +1,13 @@
+diff --git a/Parallel/Core/vtkThreadedCallbackQueue.txx b/Parallel/Core/vtkThreadedCallbackQueue.txx
+index 8f5a4414..fd55136d 100644
+--- a/Parallel/Core/vtkThreadedCallbackQueue.txx
++++ b/Parallel/Core/vtkThreadedCallbackQueue.txx
+@@ -275,7 +275,7 @@ template <class T>
+ struct vtkThreadedCallbackQueue::InvokerImpl::DereferenceImpl<T,
+   std::true_type /* CanBeDereferencedT */>
+ {
+-  using Type = decltype(*std::declval<T>());
++  using Type = typename std::remove_pointer<decltype(*std::declval<T>())>::type;
+   static Type& Get(T& instance) { return *instance; }
+ };
+ 
