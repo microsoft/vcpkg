@@ -10,6 +10,7 @@ vcpkg_from_github(
         pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
+        ggml-i8mm-macos-24a6734daf6932ff29ba8c1ff0245c51d76f783e.diff # as suggested in https://github.com/ggml-org/ggml/issues/1343
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
