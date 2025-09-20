@@ -9,6 +9,8 @@ vcpkg_from_github(
     PATCHES
         0001-use-old-pem-pack.patch
         0002-fix-compilation-macos.patch
+        add-stdint.diff
+        remove-werror.diff
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindCryptoPP.cmake" DESTINATION "${SOURCE_PATH}/cmake")

@@ -1,8 +1,9 @@
 {
   "name": "licensepp",
   "version-date": "2020-11-24",
+  "port-version": 1,
   "description": "Cross platform software licensing library",
-  "homepage": "https://github.com/zuhd-org/licensepp",
+  "homepage": "https://github.com/amrayn/licensepp",
   "supports": "!uwp",
   "dependencies": [
     {
