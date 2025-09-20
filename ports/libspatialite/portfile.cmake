@@ -14,6 +14,9 @@ vcpkg_extract_source_archive(
         fix-mingw.patch
         fix-utf8-source.patch
         android-builtin-iconv.diff
+        # https://groups.google.com/g/spatialite-users/c/FLBqJNIDkNQ
+        # https://groups.google.com/g/spatialite-users/c/nyT4iAJbttY
+        libxml2-no-http.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS unused
@@ -175,10 +178,9 @@ else()
     else()
         set(TARGET_ALIAS "")
     endif()
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
-        DETERMINE_BUILD_TRIPLET
+        AUTORECONF
         OPTIONS
             ${TARGET_ALIAS}
             ${FREEXL_OPTION}
@@ -203,7 +205,7 @@ else()
         vcpkg_replace_string("${makefile}" " -I$(top_builddir)/./src/headers/spatialite" " -I$(top_builddir)/./src/headers" IGNORE_UNCHANGED)
     endforeach()
 
-    vcpkg_install_make()
+    vcpkg_make_install()
 
     if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
