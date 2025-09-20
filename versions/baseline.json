@@ -465,7 +465,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.8.7",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "aws-c-sdkutils": {
