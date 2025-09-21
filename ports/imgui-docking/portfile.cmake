@@ -19,10 +19,13 @@ file(INSTALL
 )
 
 # Install docking backends
+file(GLOB BACKENDS
+    "${SOURCE_PATH}/backends/*.h"
+    "${SOURCE_PATH}/backends/*.cpp"
+)
 file(INSTALL
-    ${SOURCE_PATH}/backends/
+    ${BACKENDS}
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/backends
-    FILES_MATCHING PATTERN "*.h" PATTERN "*.cpp"
 )
 
 # Install LICENSE file to satisfy vcpkg audit
