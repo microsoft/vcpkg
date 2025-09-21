@@ -1,3 +1,4 @@
+# Download the docking branch source from GitHub at a fixed commit
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
@@ -5,6 +6,7 @@ vcpkg_from_github(
     SHA512 5bb29c5b0102c01d3408e0f1bf171049274faa6ab8e9e1413788abf306f7014e57ab6cd5644bfa7c8d028ba174b8e82662e26f9db7854a1c01c22ff95216c968
 )
 
+# Install core ImGui header and source files
 file(INSTALL
     ${SOURCE_PATH}/imgui.h
     ${SOURCE_PATH}/imconfig.h
@@ -16,8 +18,16 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
+# Install docking backends
 file(INSTALL
     ${SOURCE_PATH}/backends/
     DESTINATION ${CURRENT_PACKAGES_DIR}/include/backends
     FILES_MATCHING PATTERN "*.h" PATTERN "*.cpp"
+)
+
+# Install LICENSE file to satisfy vcpkg audit
+file(INSTALL
+    ${SOURCE_PATH}/LICENSE.txt
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/imgui-docking
+    RENAME copyright
 )
