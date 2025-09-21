@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         "001-mingw-dll.patch" # Upstreamed (not yet in a release): https://github.com/abseil/abseil-cpp/commit/f2dee57baf19ceeb6d12cf9af7cbb3c049396ba5
+        "string-view.patch"
 )
 
 # With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
