@@ -1,6 +1,7 @@
 {
   "name": "libtorch",
   "version": "2.7.1",
+  "port-version": 1,
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
@@ -26,10 +27,12 @@
     "lapack",
     "lmdb",
     "mimalloc",
+    "miniz",
     "nlohmann-json",
     "onnx",
     "onnx-optimizer",
     "opencl",
+    "opentelemetry-cpp",
     "pocketfft",
     "protobuf",
     {
@@ -37,7 +40,6 @@
       "host": true
     },
     "pthreadpool",
-    "pybind11",
     "sleef",
     {
       "name": "vcpkg-cmake",
@@ -55,9 +57,7 @@
   ],
   "default-features": [
     "gflags",
-    "glog",
-    "opencv",
-    "zstd"
+    "glog"
   ],
   "features": {
     "cuda": {
@@ -90,7 +90,7 @@
     },
     "dist": {
       "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
-      "supports": "linux | windows",
+      "supports": "linux | windows | osx",
       "dependencies": [
         {
           "name": "gloo",
@@ -110,7 +110,7 @@
         },
         {
           "name": "tensorpipe",
-          "platform": "linux"
+          "platform": "linux | osx"
         }
       ]
     },
@@ -133,7 +133,7 @@
       ]
     },
     "mpi": {
-      "description": "Build with MPI",
+      "description": "Use MPI for Caffe2. Only available if USE_DISTRIBUTED is on",
       "dependencies": [
         "mpi"
       ]
@@ -142,14 +142,21 @@
       "description": "Build with NNPack",
       "supports": "linux | osx",
       "dependencies": [
+        {
+          "name": "kleidiai",
+          "platform": "arm64"
+        },
         "nnpack"
       ]
     },
-    "opencv": {
-      "description": "Build with OpenCV",
+    "opencl": {
+      "description": "Build with OpenCL",
       "dependencies": [
-        "opencv"
+        "opencl"
       ]
+    },
+    "openmp": {
+      "description": "Use OpenMP for parallel code"
     },
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
@@ -159,14 +166,11 @@
           "host": true
         },
         "vulkan",
-        "vulkan-loader",
+        {
+          "name": "vulkan-loader",
+          "platform": "!android"
+        },
         "vulkan-memory-allocator"
-      ]
-    },
-    "zstd": {
-      "description": "Build with ZSTD",
-      "dependencies": [
-        "zstd"
       ]
     }
   }
