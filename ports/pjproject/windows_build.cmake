@@ -92,22 +92,19 @@ function(generate_windows_pkgconfig)
 endfunction()
 
 function(build_windows_ldflags_private OUTPUT_VAR)
-    set(LIBS "version setupapi mfuuid bcrypt cfgmgr32 imm32 ws2_32 ole32 oleaut32 uuid odbc32 odbccp32 winmm")
+    set(LIBS "-lversion -lsetupapi -lmfuuid -lbcrypt -lcfgmgr32 -limm32 -lws2_32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwinmm")
 
     if("video" IN_LIST FEATURES)
-        list(APPEND LIBS "swresample swscale avformat avcodec avutil avdevice avfilter vpx SDL2 dsound strmiids dxguid quartz")
-    endif()
-    
-    if("ssl" IN_LIST FEATURES)
-        list(APPEND LIBS "crypto ssl")
-    endif()
-    
-    if("opus" IN_LIST FEATURES)
-        list(APPEND LIBS "opus")
+        string(APPEND LIBS " -lswresample -lswscale -lavformat -lavcodec -lavutil -lavdevice -lavfilter -lvpx -lSDL2 -ldsound -lstrmiids -ldxguid -lquartz")
     endif()
 
-    list(TRANSFORM LIBS PREPEND "-l")
-    string(JOIN " " LDFLAGS_STRING ${LIBS})
-    
-    set(${OUTPUT_VAR} "${LDFLAGS_STRING}" PARENT_SCOPE)
+    if("ssl" IN_LIST FEATURES)
+        string(APPEND LIBS " -lcrypto -lssl")
+    endif()
+
+    if("opus" IN_LIST FEATURES)
+        string(APPEND LIBS " -lopus")
+    endif()
+
+    set(${OUTPUT_VAR} "${LIBS}" PARENT_SCOPE)
 endfunction()
