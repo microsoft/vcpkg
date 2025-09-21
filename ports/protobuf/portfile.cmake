@@ -1,3 +1,9 @@
+vcpkg_download_distfile(ABSL_PATCH_2
+    URLS https://github.com/protocolbuffers/protobuf/commit/d801cbd86818b587e0ebba2de13614a3ee83d369.diff
+    FILENAME protobuf-fix-abseil-d801cbd86818b587e0ebba2de13614a3ee83d369.patch
+    SHA512 37d653d057a78baace78c4b61afae174b5027d23063ac63e91df02f23aacc79615a5db6d3e57f96242f1f1235eb3a20db4a195dc08979728981c2daac099262e
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
@@ -10,6 +16,8 @@ vcpkg_from_github(
         fix-utf8-range.patch
         fix-install-dirs.patch
         fix-mingw-tail-call.patch
+        fix-abseil.patch
+        "${ABSL_PATCH_2}"
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
