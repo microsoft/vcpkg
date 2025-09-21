@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 d3ba654ed7dd7b432494918b2de5d8e2b0ad1c42752c5d726f20d6fe2841828fb4e8beb853e3570a11efecef725029ce5ffa3ebc434efff007e7f60735eb9856
     HEAD_REF master
+    PATCHES 
+        "001-mingw-dll.patch" # Upstreamed (not yet in a release): https://github.com/abseil/abseil-cpp/commit/f2dee57baf19ceeb6d12cf9af7cbb3c049396ba5
 )
 
 # With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
@@ -37,6 +39,10 @@ if(VCPKG_TARGET_IS_MINGW)
     # definition issue.
     set(ABSL_MINGW_OPTIONS "-DLIBRT=LIBRT-NOTFOUND"
         "-DCMAKE_CXX_FLAGS=-D____FIReference_1_boolean_INTERFACE_DEFINED__")
+    # Specify ABSL_BUILD_MONOLITHIC_SHARED_LIBS=ON when VCPKG_LIBRARY_LINKAGE is dynamic to match Abseil's Windows (MSVC) defaults
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        vcpkg_list(APPEND ABSL_MINGW_OPTIONS "-DABSL_BUILD_MONOLITHIC_SHARED_LIBS=ON")
+    endif()
 endif()
 
 vcpkg_cmake_configure(
