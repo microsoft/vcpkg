@@ -1,5 +1,4 @@
-# Allow empty include directory
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # only executables
 
 string(REPLACE "-" "" SPATIALITE_TOOLS_VERSION_STR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
@@ -11,6 +10,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        android-builtin-iconv.diff
         configure.diff
         fix-makefiles.patch
 )
@@ -24,21 +24,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
 
     # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
-    if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
-        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
-    endif()
-    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
+    if(NOT VCPKG_TARGET_IS_UWP AND PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
         string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
-    endif()
-
-    set(ICONV_LIBS "iconv.lib")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        string(APPEND ICONV_LIBS " charset.lib")
-    endif()
-
-    set(UWP_LIBS "")
-    if(VCPKG_TARGET_IS_UWP)
-        set(UWP_LIBS "windowsapp.lib /APPCONTAINER")
+        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
     endif()
 
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
@@ -49,10 +37,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
         CL_LANGUAGE C
         OPTIONS_RELEASE
             "INSTDIR=${INST_DIR}"
-            "LIBS_ALL=/link ${PKGCONFIG_LIBS_RELEASE} ${ICONV_LIBS} ${UWP_LIBS}"
+            "LIBS_ALL=${PKGCONFIG_LIBS_RELEASE} iconv.lib charset.lib"
         OPTIONS_DEBUG
             "INSTDIR=${INST_DIR}\\debug"
-            "LIBS_ALL=/link ${PKGCONFIG_LIBS_DEBUG} ${ICONV_LIBS} ${UWP_LIBS}"
+            "LIBS_ALL=${PKGCONFIG_LIBS_DEBUG} iconv.lib charset.lib"
         )
 
     set(TOOL_EXES

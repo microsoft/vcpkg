@@ -57,29 +57,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(CL_FLAGS_DEBUG "${CL_FLAGS} ${PKGCONFIG_CFLAGS_DEBUG}")
 
     # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
-    if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
+    if(NOT VCPKG_TARGET_IS_UWP AND PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
+        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
         string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
     endif()
-    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
-        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
-    endif()
 
-    string(JOIN " " LIBS_ALL_DEBUG
-        "/LIBPATH:${CURRENT_INSTALLED_DIR}/debug/lib"
-        "${PKGCONFIG_LIBS_DEBUG}"
-        iconv.lib charset.lib
-    )
-    string(JOIN " " LIBS_ALL_RELEASE
-        "/LIBPATH:${CURRENT_INSTALLED_DIR}/lib"
-        "${PKGCONFIG_LIBS_RELEASE}"
-        iconv.lib charset.lib
-    )
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
 
-    string(REPLACE "/" "\\\\" INST_DIR "${CURRENT_PACKAGES_DIR}")
-
-    if(ENABLE_RTTOPO)
-        list(APPEND pkg_config_modules rttopo)
-    endif()
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         PREFER_JOM
@@ -87,14 +71,13 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         OPTIONS_RELEASE
             "CL_FLAGS=${CL_FLAGS_RELEASE}"
             "INST_DIR=${INST_DIR}"
-            "LIBS_ALL=${LIBS_ALL_RELEASE}"
+            "LIBS_ALL=${PKGCONFIG_LIBS_RELEASE} iconv.lib charset.lib"
         OPTIONS_DEBUG
             "CL_FLAGS=${CL_FLAGS_DEBUG}"
             "INST_DIR=${INST_DIR}\\debug"
-            "LIBS_ALL=${LIBS_ALL_DEBUG}"
+            "LIBS_ALL=${PKGCONFIG_LIBS_DEBUG} iconv.lib charset.lib"
             "LINK_FLAGS=/debug"
     )
-
     vcpkg_copy_pdbs()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
