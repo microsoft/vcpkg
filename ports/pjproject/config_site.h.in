@@ -16,9 +16,10 @@
 /* Opus Codec Support */
 #define PJMEDIA_HAS_OPUS_CODEC             @PJMEDIA_HAS_OPUS_CODEC@
 
-/* Platform-specific video support */
+/* Platform-specific configuration */
 #ifdef _MSC_VER
     #define PJMEDIA_VIDEO_DEV_HAS_DSHOW    @PJMEDIA_VIDEO_DEV_HAS_DSHOW@
+    #define PJPROJECT_DISABLE_SDL_AUTOLINK 1
 #endif
 
 /* Windows platform detection */

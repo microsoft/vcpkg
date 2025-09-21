@@ -8,7 +8,9 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 2f83ed32f16c27808d3b9cc8f3b364c68fe88caae9765012b385a0fea70ba8ef4dcfebe3b130156047546720351a527e17d6a1e967877d6a44a6ff3a1f695599
     PATCHES
-        add-required-windows-libs.patch
+        0001-add-required-windows-libs.patch
+        0002-opus-fix.patch
+        0003-sdl2-disable-autolink.patch
 )
 
 file(MAKE_DIRECTORY "${SOURCE_PATH}/pjlib/include/pj")

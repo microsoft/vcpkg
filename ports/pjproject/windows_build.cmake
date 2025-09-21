@@ -1,5 +1,8 @@
 function(build_windows_msvc)
-    apply_windows_patches()
+    if("video" IN_LIST FEATURES)
+        file(COPY "${CURRENT_INSTALLED_DIR}/include/SDL2/"
+             DESTINATION "${CURRENT_INSTALLED_DIR}/include/")
+    endif()
 
     set(CONFIGURATION_RELEASE "Release-Static")
     set(CONFIGURATION_DEBUG "Debug-Static")
@@ -25,27 +28,6 @@ function(build_windows_msvc)
     vcpkg_copy_pdbs()
 endfunction()
 
-function(apply_windows_patches)
-    if("opus" IN_LIST FEATURES)
-        vcpkg_replace_string(
-            "${SOURCE_PATH}/pjmedia/src/pjmedia-codec/opus.c"
-            "#    pragma comment(lib, \"libopus.a\")"
-            "#    pragma comment(lib, \"opus.lib\")"
-        )
-    endif()
-    
-    if("video" IN_LIST FEATURES)
-        vcpkg_replace_string(
-            "${SOURCE_PATH}/pjmedia/src/pjmedia-videodev/sdl_dev.c"
-            "#       pragma comment( lib, \"sdl2.lib\")"
-            "// #       pragma comment( lib, \"sdl2.lib\") // Disabled for vcpkg - SDL2 is linked via pkg-config"
-        )
-
-        file(COPY "${CURRENT_INSTALLED_DIR}/include/SDL2/" 
-             DESTINATION "${CURRENT_INSTALLED_DIR}/include/")
-    endif()
-endfunction()
-
 function(install_headers)
     set(HEADER_DIRS 
         "pjlib/include"
@@ -66,11 +48,13 @@ function(generate_windows_pkgconfig)
     set(PJ_VERSION "${VERSION}")
     set(PJ_INSTALL_CFLAGS "-I\${includedir}")
 
+    get_dependency_requires_private(PJ_REQUIRES_PRIVATE)
+
     set(CONFIGS "RELEASE")
     if(NOT VCPKG_BUILD_TYPE)
         list(APPEND CONFIGS "DEBUG")
     endif()
-    
+
     foreach(CONFIG ${CONFIGS})
         if(CONFIG STREQUAL "DEBUG")
             set(LIBDIR "\${prefix}/debug/lib")
@@ -81,30 +65,53 @@ function(generate_windows_pkgconfig)
             set(CONFIG_SUFFIX "Release")
             set(PKG_PATH "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpjproject.pc")
         endif()
-        
+
         set(INCLUDEDIR "\${prefix}/include")
         set(PJ_INSTALL_LDFLAGS "-lpjproject-x86_64-x64-vc14-${CONFIG_SUFFIX}-Static")
 
-        build_windows_ldflags_private(PJ_INSTALL_LDFLAGS_PRIVATE)
+        build_libs_private(PJ_INSTALL_LDFLAGS_PRIVATE)
 
-        configure_file("${SOURCE_PATH}/libpjproject.pc.in" "${PKG_PATH}" @ONLY)
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/libpjproject.pc.in" "${PKG_PATH}" @ONLY)
     endforeach()
 endfunction()
 
-function(build_windows_ldflags_private OUTPUT_VAR)
-    set(LIBS "-lversion -lsetupapi -lmfuuid -lbcrypt -lcfgmgr32 -limm32 -lws2_32 -lole32 -loleaut32 -luuid -lodbc32 -lodbccp32 -lwinmm")
-
+function(build_libs_private OUTPUT_VAR)
+    # Add SDL2 manually with correct library name
     if("video" IN_LIST FEATURES)
-        string(APPEND LIBS " -lswresample -lswscale -lavformat -lavcodec -lavutil -lavdevice -lavfilter -lvpx -lSDL2 -ldsound -lstrmiids -ldxguid -lquartz")
-    endif()
-
-    if("ssl" IN_LIST FEATURES)
-        string(APPEND LIBS " -lcrypto -lssl")
-    endif()
-
-    if("opus" IN_LIST FEATURES)
-        string(APPEND LIBS " -lopus")
+        set(LIBS "-lsdl2")
     endif()
 
     set(${OUTPUT_VAR} "${LIBS}" PARENT_SCOPE)
+endfunction()
+
+function(get_dependency_requires_private OUTPUT_VAR)
+    set(DEPENDENCY_MODULES "")
+
+    if("ssl" IN_LIST FEATURES)
+        list(APPEND DEPENDENCY_MODULES "openssl")
+    endif()
+
+    if("opus" IN_LIST FEATURES)
+        list(APPEND DEPENDENCY_MODULES "opus")
+    endif()
+
+    if("video" IN_LIST FEATURES)
+        # Don't include SDL2 in pkgconfig requires due to library name mismatch
+        # SDL2's pkgconfig references SDL2-static but vcpkg builds sdl2.lib
+        list(APPEND DEPENDENCY_MODULES "libavcodec" "libavformat" "libswscale" "vpx")
+    endif()
+
+    if(DEPENDENCY_MODULES)
+        x_vcpkg_pkgconfig_get_modules(
+            PREFIX pjproject_deps
+            MODULES ${DEPENDENCY_MODULES}
+            LIBS_VAR DEPS_LIBS
+            CFLAGS_VAR DEPS_CFLAGS
+        )
+
+        string(REPLACE ";" " " REQUIRES_PRIVATE_STR "${DEPENDENCY_MODULES}")
+        set(${OUTPUT_VAR} "${REQUIRES_PRIVATE_STR}" PARENT_SCOPE)
+    else()
+        set(${OUTPUT_VAR} "" PARENT_SCOPE)
+    endif()
 endfunction()
