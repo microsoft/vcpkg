@@ -23,12 +23,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
         LIBS
     )
 
-    # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
-    if(NOT VCPKG_TARGET_IS_UWP AND PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
-        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
-        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
-    endif()
-
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
 
     vcpkg_install_nmake(
@@ -37,10 +31,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
         CL_LANGUAGE C
         OPTIONS_RELEASE
             "INSTDIR=${INST_DIR}"
-            "LIBS_ALL=${PKGCONFIG_LIBS_RELEASE} iconv.lib charset.lib"
+            "LIBS_ALL=/link ${PKGCONFIG_LIBS_RELEASE} iconv.lib charset.lib user32.lib"
         OPTIONS_DEBUG
             "INSTDIR=${INST_DIR}\\debug"
-            "LIBS_ALL=${PKGCONFIG_LIBS_DEBUG} iconv.lib charset.lib"
+            "LIBS_ALL=/link ${PKGCONFIG_LIBS_DEBUG} iconv.lib charset.lib user32.lib"
         )
 
     set(TOOL_EXES
