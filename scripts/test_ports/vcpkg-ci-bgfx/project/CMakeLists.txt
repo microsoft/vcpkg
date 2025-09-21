@@ -16,3 +16,7 @@ target_link_libraries(main PRIVATE
     bgfx::bimg_decode
     bgfx::bimg_encode
 )
+if(ANDROID)
+    find_package(OpenGL COMPONENTS EGL GLES2 REQUIRED)
+    target_link_libraries(main PRIVATE nativewindow OpenGL::EGL OpenGL::GLES2)
+endif()
