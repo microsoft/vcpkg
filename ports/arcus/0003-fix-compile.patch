@@ -1,0 +1,48 @@
+diff --git a/src/MessageTypeStore.cpp b/src/MessageTypeStore.cpp
+index 5f09122..cfff256 100644
+--- a/src/MessageTypeStore.cpp
++++ b/src/MessageTypeStore.cpp
+@@ -21,6 +21,7 @@
+ #include <unordered_map>
+ #include <sstream>
+ #include <iostream>
++#include <string_view>
+ 
+ #include <google/protobuf/dynamic_message.h>
+ #include <google/protobuf/compiler/importer.h>
+@@ -34,9 +35,9 @@ using namespace Arcus;
+  * of std::hash differs between compilers, we need to make sure we use the same
+  * implementation everywhere.
+  */
+-uint32_t hash(const std::string& input)
++uint32_t hash(std::string_view input)
+ {
+-    const char* data = input.c_str();
++    const char* data = input.data();
+     uint32_t length = input.size();
+     uint32_t result = static_cast<uint32_t>(2166136261UL);
+     for(; length; --length)
+diff --git a/src/PlatformSocket_p.h b/src/PlatformSocket_p.h
+index f2dbd1c..b0f8ca7 100644
+--- a/src/PlatformSocket_p.h
++++ b/src/PlatformSocket_p.h
+@@ -21,6 +21,7 @@
+ 
+ #include <memory>
+ #include <string>
++#include <cstdint>
+ 
+ namespace Arcus
+ {
+diff --git a/src/Types.h b/src/Types.h
+index ac55c0e..50320dc 100644
+--- a/src/Types.h
++++ b/src/Types.h
+@@ -21,6 +21,7 @@
+ 
+ #include <string>
+ #include <memory>
++#include <cstdint>
+ 
+ namespace google
+ {

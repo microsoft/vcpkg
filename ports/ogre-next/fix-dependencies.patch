@@ -1,5 +1,5 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
-index cdb097a..967d33b 100644
+index b0ca7c1..7e52ca6 100644
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
 @@ -21,9 +21,7 @@ endif()
@@ -12,13 +12,12 @@ index cdb097a..967d33b 100644
    Packages/FindOGRE.cmake
    Utils/FindPkgMacros.cmake
    Utils/MacroLogFeature.cmake
-@@ -45,12 +43,8 @@ endif ()
+@@ -44,11 +42,7 @@ if (OGRE_CONFIG_THREAD_PROVIDER STREQUAL "tbb")
+ endif ()
  
  set(STATIC_INST_FILES
-   Packages/FindDirectX.cmake
 -  Packages/FindFreeImage.cmake
 -  Packages/FindFreetype.cmake
-   Packages/FindOpenGLES.cmake
    Packages/FindOpenGLES2.cmake
 -  Packages/FindZLIB.cmake
 -  Packages/FindZZip.cmake
@@ -26,7 +25,7 @@ index cdb097a..967d33b 100644
  )
  if (WIN32)
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
-index 74cb0f4..2cad26a 100644
+index 7dd36f2..7097250 100644
 --- a/CMake/Dependencies.cmake
 +++ b/CMake/Dependencies.cmake
 @@ -74,21 +74,24 @@ set(CMAKE_FRAMEWORK_PATH ${OGRE_DEP_SEARCH_PATH} ${CMAKE_FRAMEWORK_PATH})
