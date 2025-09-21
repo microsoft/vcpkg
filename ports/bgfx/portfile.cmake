@@ -15,6 +15,19 @@ vcpkg_extract_source_archive(
   PATCHES
     fix-dependencies.patch
 )
+file(REMOVE_RECURSE
+  "${SOURCE_PATH}/bgfx/3rdparty/dear-imgui"
+  "${SOURCE_PATH}/bgfx/3rdparty/glslang"
+  "${SOURCE_PATH}/bgfx/3rdparty/meshoptimizer"
+  "${SOURCE_PATH}/bgfx/3rdparty/spirv-cross"
+  "${SOURCE_PATH}/bgfx/3rdparty/spirv-headers"
+  "${SOURCE_PATH}/bgfx/3rdparty/spirv-opt"
+  "${SOURCE_PATH}/bgfx/3rdparty/stb"
+  "${SOURCE_PATH}/bimg/3rdparty/libsquish"
+  "${SOURCE_PATH}/bimg/3rdparty/lodepng"
+  "${SOURCE_PATH}/bimg/3rdparty/stb"
+  "${SOURCE_PATH}/bimg/3rdparty/tinyexr"
+)
 
 vcpkg_check_features(
   OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -37,7 +50,6 @@ vcpkg_cmake_configure(
     -DBGFX_AMALGAMATED=ON
     -DBGFX_BUILD_EXAMPLES=OFF
     -DBGFX_OPENGLES_VERSION=30
-    "-DBGFX_CMAKE_USER_SCRIPT=${CURRENT_PORT_DIR}/vcpkg-inject-packages.cmake"
     "-DBGFX_ADDITIONAL_TOOL_PATHS=${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/bgfx"
     ${FEATURE_OPTIONS}
   OPTIONS_DEBUG
