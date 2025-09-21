@@ -7,10 +7,6 @@
   "supports": "(windows & !uwp) | mingw | linux",
   "dependencies": [
     {
-      "name": "pkgconf",
-      "host": true
-    },
-    {
       "name": "vcpkg-make",
       "host": true
     },
