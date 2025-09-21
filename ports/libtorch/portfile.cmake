@@ -6,14 +6,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/pytorch
     REF "v${VERSION}"
-    SHA512 a9fc2252af9031c2cd46dde558c491aea8bc322fb80157a7760f300a44b759d4bfe866f030fbb974b80493057cfff4dd512498f99a100ed6d05bf620258ed37e
+    SHA512 448e9dad4aa10f1793d35e6ffe9f0f69b7719d41e6eccceb687a8d0c148e22d03e4f76170a05308ef9323a7aea41aa74605077ae1d68c6d949f13b3340ebf310
     HEAD_REF main
     PATCHES
         fix-cmake.patch
         fix-osx.patch
         fix-vulkan.patch # use vulkan-memory-allocator from vcpkg
         fix-glog.patch
-        fix-pytorch-pr-156630.patch # https://github.com/pytorch/pytorch/pull/156630
         fix-miniz.patch # https://github.com/pytorch/pytorch/commit/a02e88d19c01a7226fa69fa0bf3a6a0b9a21c7e2
 )
 
