@@ -1,14 +1,45 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index eef212e..1ea9b9e 100644
+index eef212e..f21ba1f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -12,6 +12,9 @@ target_include_directories(utf8cpp INTERFACE
-     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source>"
+@@ -13,6 +13,40 @@ target_include_directories(utf8cpp INTERFACE
      $<INSTALL_INTERFACE:include/utf8cpp>
  )
-+target_compile_options(utf8cpp INTERFACE
-+    $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>
-+)
  
++# Check C++20 support
++set(CHECK_CXX20_CODE "#if __cplusplus < 202002L
++#error \"C++20 or higher is required\"
++#endif
++int main() {}")
++file(WRITE ${CMAKE_BINARY_DIR}/check_cxx20.cpp "${CHECK_CXX20_CODE}")
++try_compile(SUPPORT_CXX20 ${CMAKE_BINARY_DIR}/check_cxx20_build ${CMAKE_BINARY_DIR}/check_cxx20.cpp)
++
++# Check C++17 support
++set(CHECK_CXX17_CODE "#if __cplusplus < 201703L
++#error \"C++17 or higher is required\"
++#endif
++int main() {}")
++file(WRITE ${CMAKE_BINARY_DIR}/check_cxx17.cpp "${CHECK_CXX17_CODE}")
++try_compile(SUPPORT_CXX17 ${CMAKE_BINARY_DIR}/check_cxx17_build ${CMAKE_BINARY_DIR}/check_cxx17.cpp)
++
++# Check C++11 support
++set(CHECK_CXX11_CODE "#if __cplusplus < 201103L
++#error \"C++11 or higher is required\"
++#endif
++int main() {}")
++file(WRITE ${CMAKE_BINARY_DIR}/check_cxx11.cpp "${CHECK_CXX11_CODE}")
++try_compile(SUPPORT_CXX11 ${CMAKE_BINARY_DIR}/check_cxx11_build ${CMAKE_BINARY_DIR}/check_cxx11.cpp)
++
++if(SUPPORT_CXX20)
++    target_compile_definitions(utf8cpp INTERFACE UTF_CPP_CPLUSPLUS=202002L)
++elseif(SUPPORT_CXX17)
++    target_compile_definitions(utf8cpp INTERFACE UTF_CPP_CPLUSPLUS=201703L)
++elseif(SUPPORT_CXX11)
++    target_compile_definitions(utf8cpp INTERFACE UTF_CPP_CPLUSPLUS=201103L)
++else()
++    target_compile_definitions(utf8cpp INTERFACE UTF_CPP_CPLUSPLUS=199711L)
++endif()
++
  include(CMakePackageConfigHelpers)
  write_basic_package_version_file(
+     "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"

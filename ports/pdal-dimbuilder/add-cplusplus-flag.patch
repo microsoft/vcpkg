@@ -1,11 +1,11 @@
 diff --git a/dimbuilder/CMakeLists.txt b/dimbuilder/CMakeLists.txt
-index 99109b7..df570e6 100644
+index 99109b7..0b490a4 100644
 --- a/dimbuilder/CMakeLists.txt
 +++ b/dimbuilder/CMakeLists.txt
 @@ -37,5 +37,6 @@ target_link_libraries(dimbuilder
  
  
  if (MSVC)
-+    target_compile_options(dimbuilder PRIVATE /Zc:__cplusplus)
++    target_compile_definitions(dimbuilder PRIVATE UTF_CPP_CPLUSPLUS=201103L)
      target_link_options(dimbuilder PRIVATE /SUBSYSTEM:CONSOLE /ENTRY:mainCRTStartup)
  endif(MSVC)
