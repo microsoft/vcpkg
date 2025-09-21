@@ -5,6 +5,7 @@
   "description": "SpatiaLite is an open source library intended to extend the SQLite core to support fully fledged Spatial SQL capabilities.",
   "homepage": "https://www.gaia-gis.it/fossil/libspatialite/index",
   "license": null,
+  "supports": "!uwp",
   "dependencies": [
     "geos",
     "libiconv",
