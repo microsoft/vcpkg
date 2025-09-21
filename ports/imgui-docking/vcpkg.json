@@ -1,0 +1,6 @@
+{
+  "name": "imgui-docking",
+  "version-string": "1.92.3-docking",
+  "description": "Dear ImGui (docking branch): Immediate Mode GUI with docking support",
+  "homepage": "https://github.com/ocornut/imgui/tree/docking"
+}
