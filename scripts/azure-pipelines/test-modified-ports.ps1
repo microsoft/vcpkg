@@ -87,6 +87,10 @@ $packagesRoot = Join-Path $WorkingRoot 'p'
 
 $env:AZCOPY_LOG_LOCATION = Join-Path $ArtifactStagingDirectory 'azcopy-logs'
 $env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $WorkingRoot 'azcopy-plans'
+if ($Triplet -eq 'x64-osx') {
+    $env:AZCOPY_BUFFER_GB = 2
+    $env:AZCOPY_CONCURRENCY_VALUE = 8
+}
 
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
