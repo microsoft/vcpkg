@@ -47,13 +47,9 @@ vcpkg_cmake_configure(
     OPTIONS
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
-        -DINSTALL_DOCS=OFF
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
-    OPTIONS_DEBUG
-        -DENABLE_EXECUTABLES=OFF
-        -DINSTALL_HEADERS=OFF
     MAYBE_UNUSED_VARIABLES
         WITH_CRT_DLL
 )
@@ -61,7 +57,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if(ENABLE_EXECUTABLES)
+if(WITH_TOOLS)
     vcpkg_copy_tools(
         TOOL_NAMES cjpeg djpeg jpegtran rdjpgcom wrjpgcom
         AUTO_CLEAN
