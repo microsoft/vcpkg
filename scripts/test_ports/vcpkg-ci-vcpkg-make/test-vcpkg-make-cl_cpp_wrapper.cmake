@@ -21,5 +21,13 @@ unit_test_ensure_success([[
     vcpkg_make_configure(SOURCE_PATH "${SOURCE_PATH}" COPY_SOURCE)
 ]])
 
+# In verbose mode (V=1), the command line is echoed.
+# This is is diagnostic output and must not go to stdout.
+unit_test_ensure_success([[
+    set(ENV{TEST_FLAGS} "-DEXPECT_SUCCESS -DOOPS_ECHOED_INVOCATION")
+    set(ENV{V} 1)
+    vcpkg_make_configure(SOURCE_PATH "${SOURCE_PATH}" COPY_SOURCE)
+]])
+
 vcpkg_restore_env_variables(VARS CPP TEST_FLAGS)
 endblock()

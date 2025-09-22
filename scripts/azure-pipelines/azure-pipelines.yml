@@ -7,9 +7,9 @@ parameters:
     type: string
     default:  'use default'
   - name: tripletPattern
-    displayName: 'Enable triplets which contain this substring'
+    displayName: 'Enable triplets which contain this substring (^ matches begin, $ matches end)'
     type: string
-    default: '-'
+    default: '^'
 
 jobs:
 - template: windows/azure-pipelines.yml
