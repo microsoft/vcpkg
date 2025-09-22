@@ -57,7 +57,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(CL_FLAGS_DEBUG "${CL_FLAGS} ${PKGCONFIG_CFLAGS_DEBUG}")
 
     # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
-    if(NOT VCPKG_TARGET_IS_UWP AND PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
+    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
         string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
         string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
     endif()
