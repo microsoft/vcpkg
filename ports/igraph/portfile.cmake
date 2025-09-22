@@ -4,9 +4,9 @@
 #  - The release tarball contains pre-generated parser sources, which eliminates the dependency on bison/flex.
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/igraph/igraph/releases/download/0.10.16/igraph-0.10.16.tar.gz"
-    FILENAME "igraph-0.10.16.tar.gz"
-    SHA512 f17b2777b8817618958f2b5505a8d066a45a25ac05ee646e3ae7e2e6d19c86d90aca3ad05866a03fb2545d21caa374d736f4f9b8c090c04da3bd88c632792fd8
+    URLS "https://github.com/igraph/igraph/releases/download/${VERSION}/igraph-${VERSION}.tar.gz"
+    FILENAME "igraph-${VERSION}.tar.gz"
+    SHA512 821a8ef3fa4d4049d0ca09fa54e0824b3b31ce2c3329cca902899a8fd2441ad4e106ea9c65e7ad8ef643c906e7b5f4d276b670f0fdbf80c8e6c473cf6536bc96
 )
 
 vcpkg_extract_source_archive(
