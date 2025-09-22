@@ -23,6 +23,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DEASY_PROFILER_NO_SAMPLES=ON
 	-DWIN32=${HAS_WIN32}
+	-DEASY_OPTION_EVENT_TRACING=${HAS_WIN32}
 )
 
 vcpkg_cmake_install()
