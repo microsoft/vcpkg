@@ -1,7 +1,8 @@
-vcpkg_from_git(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://invent.kde.org/frameworks/kimageformats.git
+    REPO KDE/kimageformats
     REF 7858c4eeec712c59b3214386d7e5639cab636bba
+    SHA512 222a4a3aa5304aa6d36d694bf1fd3773456e134a162d835cba3ba8b36a8f6724bfb14900f09cd955a6e85184033e8e6b30cb70587c161b5d1a1d900940451512
     HEAD_REF master
     PATCHES
         fixinstall.patch
