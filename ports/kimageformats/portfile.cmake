@@ -10,24 +10,24 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        dds KIMAGEFORMATS_DDS
-	heif KIMAGEFORMATS_HEIF
-	jxl KIMAGEFORMATS_JXL
-	jp2 KIMAGEFORMATS_JP2
-	jxr KIMAGEFORMATS_JXR
-	eps BUILD_EPS_PLUGIN
+        dds     KIMAGEFORMATS_DDS
+        heif    KIMAGEFORMATS_HEIF
+        jxl     KIMAGEFORMATS_JXL
+        jp2     KIMAGEFORMATS_JP2
+        jxr     KIMAGEFORMATS_JXR
+        eps     BUILD_EPS_PLUGIN
     INVERTED_FEATURES
-        kritaraster 	CMAKE_DISABLE_FIND_PACKAGE_KF6Archive
-	openexr		CMAKE_DISABLE_FIND_PACKAGE_OpenEXR
-	avif		CMAKE_DISABLE_FIND_PACKAGE_libavif
-	raw		CMAKE_DISABLE_FIND_PACKAGE_LibRaw
+        kritaraster CMAKE_DISABLE_FIND_PACKAGE_KF6Archive
+        openexr CMAKE_DISABLE_FIND_PACKAGE_OpenEXR
+        avif    CMAKE_DISABLE_FIND_PACKAGE_libavif
+        raw     CMAKE_DISABLE_FIND_PACKAGE_LibRaw
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-	-DBUILD_TESTING=OFF
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
