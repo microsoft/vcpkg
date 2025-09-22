@@ -7502,7 +7502,7 @@
     },
     "podofo": {
       "baseline": "1.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "poissonrecon": {
       "baseline": "2021-09-26",
@@ -9925,7 +9925,7 @@
       "port-version": 1
     },
     "utf8proc": {
-      "baseline": "2.10.0",
+      "baseline": "2.11.0",
       "port-version": 0
     },
     "utfcpp": {
