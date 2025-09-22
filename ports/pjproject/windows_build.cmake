@@ -67,21 +67,21 @@ function(generate_windows_pkgconfig)
         endif()
 
         set(INCLUDEDIR "\${prefix}/include")
-        set(PJ_INSTALL_LDFLAGS "-lpjproject-x86_64-x64-vc14-${CONFIG_SUFFIX}-Static")
 
-        build_libs_private(PJ_INSTALL_LDFLAGS_PRIVATE)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(ARCH_PART "x86_64-x64")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(ARCH_PART "i386-Win32")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(ARCH_PART "ARM64-arm64")
+        else()
+            message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
+        endif()
+
+        set(PJ_INSTALL_LDFLAGS "-lpjproject-${ARCH_PART}-vc14-${CONFIG_SUFFIX}-Static")
 
         configure_file("${CMAKE_CURRENT_LIST_DIR}/libpjproject.pc.in" "${PKG_PATH}" @ONLY)
     endforeach()
-endfunction()
-
-function(build_libs_private OUTPUT_VAR)
-    # Add SDL2 manually with correct library name
-    if("video" IN_LIST FEATURES)
-        set(LIBS "-lsdl2")
-    endif()
-
-    set(${OUTPUT_VAR} "${LIBS}" PARENT_SCOPE)
 endfunction()
 
 function(get_dependency_requires_private OUTPUT_VAR)
@@ -96,9 +96,7 @@ function(get_dependency_requires_private OUTPUT_VAR)
     endif()
 
     if("video" IN_LIST FEATURES)
-        # Don't include SDL2 in pkgconfig requires due to library name mismatch
-        # SDL2's pkgconfig references SDL2-static but vcpkg builds sdl2.lib
-        list(APPEND DEPENDENCY_MODULES "libavcodec" "libavformat" "libswscale" "vpx")
+        list(APPEND DEPENDENCY_MODULES "libavcodec" "libavformat" "libswscale" "vpx" "sdl2")
     endif()
 
     if(DEPENDENCY_MODULES)
