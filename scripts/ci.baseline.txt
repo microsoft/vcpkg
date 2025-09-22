@@ -582,9 +582,9 @@ libvmdk:x64-windows-static=skip
 libvmdk:x64-windows=skip
 libvmdk:x86-windows=skip
 libxaw:x64-windows-static=skip
-# Inline asm used doesn't appear to support arm64-windows:
-libxt:arm64-windows-static-md=fail
-libxt:arm64-windows=fail
+libxt:arm64-windows-static-md=fail # Inline asm used doesn't appear to support arm64-windows
+libxt:arm64-windows=fail # Inline asm used doesn't appear to support arm64-windows
+libxt:x64-windows=fail # Appears to have broken races
 linenoise-ng:arm64-uwp=fail
 linenoise-ng:x64-uwp=fail
 linenoise-ng:x64-windows-static-md=fail
