@@ -1,0 +1,13 @@
+diff --git a/src/multimedia/windows/qwmf_support_p.h b/src/multimedia/windows/qwmf_support_p.h
+index a3f69462b..3124a5b9c 100644
+--- a/src/multimedia/windows/qwmf_support_p.h
++++ b/src/multimedia/windows/qwmf_support_p.h
+@@ -60,7 +60,7 @@ auto withLockedBuffer(IMFMediaBuffer *buffer, Functor &&f)
+         f(QSpan{ data, currentLength }, QSpan{ data, maxLength });
+         return {};
+     } else
+-        return f(QSpan{ data, currentLength }, QSpan{ data, maxLength });
++        return f(QSpan{ data, qsizetype(currentLength) }, QSpan{ data, qsizetype(maxLength) });
+ }
+ 
+ template <typename Functor>

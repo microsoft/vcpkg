@@ -6,6 +6,7 @@ set(${PORT}_PATCHES
     remove-static-ssl-stub.patch
     ffmpeg-compile-def.patch
     ffmpeg.patch
+    fix_qwmf_support_p_type_issue.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
