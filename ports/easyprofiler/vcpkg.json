@@ -11,5 +11,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "gui": {
+      "description": "Build the GUI components of easyprofiler"
+    }
+  }
 }

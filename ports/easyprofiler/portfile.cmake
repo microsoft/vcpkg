@@ -6,8 +6,23 @@ vcpkg_from_github(
     HEAD_REF develop
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        gui EASY_PROFILER_NO_GUI
+)
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
+    set(HAS_WIN32 ON)
+else()
+    set(HAS_WIN32 OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DEASY_PROFILER_NO_SAMPLES=ON
+	-DWIN32=${HAS_WIN32}
 )
 
 vcpkg_cmake_install()
