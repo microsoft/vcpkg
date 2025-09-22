@@ -19,18 +19,10 @@
     }
   ],
   "features": {
-    "cxx17": {
-      "description": "Enable compiler C++17."
-    },
     "test-helpers": {
       "description": "Build Abseil's test helpers",
       "dependencies": [
-        {
-          "name": "abseil",
-          "features": [
-            "cxx17"
-          ]
-        },
+        "abseil",
         {
           "name": "gtest",
           "features": [
