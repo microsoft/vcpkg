@@ -2313,4 +2313,5 @@ s2n = skip # builds too slow
 sciter = skip # The sciter port is deprecated by upstream and conflicts with upstream's replacement.
 vtk[atlmfc,cgns,cuda,geojson,ioocct,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,paraview,proj,python,qt,seacas,sql,tbb,utf8,vtkm]:x64-windows-static-md = skip
 vtk[atlmfc,cgns,geojson,ioocct,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,proj,python,qt,seacas,sql,tbb,utf8,vtkm]:x64-linux = skip
+vtk-m[cuda]:x64-linux = skip # CUDA clash with default gcc in Ubuntu 22.04, and not a quick failure.
 winpcap = skip # Broken and merked for removal. See https://github.com/microsoft/vcpkg/pull/33215
