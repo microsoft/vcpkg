@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF baf5574bc768f614bdc4c0fce3c7bd20306bb26e
-    SHA512 1bc5e04d3b306051ec06cb8b15ba04b1558e135a19a055d67f65e082cffd3f94a13076cd0e4dddb90abc5b24da4adedfff35283758a7808f53d685d7de499fc2
+    REF v${VERSION}
+    SHA512 c31aeaaba328cd217f34191f1ce87720bb34dc39dc036f2ba8c92710636706f5be2cfcf86dc8c38ec737b020908da0e136447de10e7d9e6db698c812e7d21ae3
     HEAD_REF master
     PATCHES
-        android-vulkan.diff
         cmake-config.diff
         pkgconfig.diff
         relax-link-options.diff
