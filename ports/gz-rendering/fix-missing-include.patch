@@ -1,0 +1,12 @@
+diff --git a/include/gz/rendering/NativeWindow.hh b/include/gz/rendering/NativeWindow.hh
+index 1e8982f..563e4b2 100644
+--- a/include/gz/rendering/NativeWindow.hh
++++ b/include/gz/rendering/NativeWindow.hh
+@@ -19,6 +19,7 @@
+ 
+ #include <map>
+ #include <string>
++#include <cstdint>
+ #include "gz/rendering/config.hh"
+ #include "gz/rendering/Export.hh"
+ #include "gz/rendering/RenderTypes.hh"

@@ -1,15 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF "v${VERSION}"
-    SHA512 46d60de626480f5bac256a09c57300fe5ec990664876edbe04c9385769b500ec88409da976acc28fcb2b2e987afc1bbbf5669f4fed4033c5464ab8bbd38723bc
+    REF "v32.0" # protobuf repo does not have v6.32.0 tag for C++ runtime
+    SHA512 89806b219fa2132e46bf01b7a5831c2977ad7ebe06750956d0e17bcdc028498e883704445fca56bb813f4b78e935709f67f8fa1b46b597840c58a843483cdafb
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
         fix-utf8-range.patch
         fix-install-dirs.patch
-        fix-mingw-tail-call.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -56,25 +55,51 @@ vcpkg_cmake_configure(
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
         -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
         -Dprotobuf_BUILD_LIBPROTOC=${protobuf_BUILD_LIBPROTOC}
-        -Dprotobuf_ABSL_PROVIDER=package
-        -Dprotobuf_BUILD_LIBUPB=OFF
+        -Dprotobuf_LOCAL_DEPENDENCIES_ONLY=ON
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 
 if(protobuf_BUILD_PROTOC_BINARIES)
-    if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_copy_tools(TOOL_NAMES protoc AUTO_CLEAN)
-    else()
+    set(TOOL_NAMES protoc protoc-gen-upb protoc-gen-upbdefs protoc-gen-upb_minitable)
+    set(VERSIONED_TOOL_NAMES)
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        # on unix systems, the tools are symlinks to versioned tools
         string(REPLACE "." ";" VERSION_LIST ${VERSION})
         list(GET VERSION_LIST 1 VERSION_MINOR)
         list(GET VERSION_LIST 2 VERSION_PATCH)
-        vcpkg_copy_tools(TOOL_NAMES protoc protoc-${VERSION_MINOR}.${VERSION_PATCH}.0 AUTO_CLEAN)
+        foreach(TOOL IN LISTS TOOL_NAMES)
+            list(APPEND VERSIONED_TOOL_NAMES ${TOOL}-${VERSION_MINOR}.${VERSION_PATCH}.0)
+        endforeach()
     endif()
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} ${VERSIONED_TOOL_NAMES} AUTO_CLEAN)
 else()
     file(COPY "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
 endif()
+
+# Some other libraries, such as grpc, use their own upb. We need to move the
+# upb headers shipped with protobuf into a separate directory to avoid
+# polluting the global include directory so that those libraries won't
+# accidentally use the protobuf::upb headers.
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/protobuf-upb")
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/upb"
+    "${CURRENT_PACKAGES_DIR}/include/protobuf-upb/upb")
+# change include dir of libupb. A more robust solution is to apply a patch, but
+# vcpkg_apply_patches has been deprecated so here is our tricky regex...
+# note that cmake regex matches longest substrings
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/protobuf/protobuf-targets.cmake"
+    "(set_target_properties\\(protobuf::libupb PROPERTIES[^e]*e)\""
+    "\\1/protobuf-upb\""
+    REGEX
+)
+vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/upb.pc"
+    "(includedir=[^/]*/include)"
+    "\\1/protobuf-upb"
+    REGEX
+)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake"
     "if(protobuf_MODULE_COMPATIBLE)"
