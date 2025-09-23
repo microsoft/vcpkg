@@ -60,6 +60,8 @@ vcpkg_configure_make(
     OPTIONS
         ${OPTIONS}
         --disable-db-install
+        --disable-pkg-ldflags
+        --disable-rpath-hack
         --enable-pc-files
         --without-ada
         --without-debug # "lib model"
@@ -70,8 +72,16 @@ vcpkg_configure_make(
         --with-pkg-config-libdir=libdir
 )
 vcpkg_install_make()
-
 vcpkg_fixup_pkgconfig()
+
+file(GLOB pcfiles_release "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+foreach(file IN LISTS pcfiles_release)
+    vcpkg_replace_string("${file}" [[ "-I${prefix}/include"]] "")
+endforeach()
+file(GLOB pcfiles_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+foreach(file IN LISTS pcfiles_debug)
+    vcpkg_replace_string("${file}" [[ "-I${prefix}/../include"]] "")
+endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")

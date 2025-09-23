@@ -1,7 +1,10 @@
 {
   "name": "ncurses",
   "version": "6.5",
-  "description": "Free software emulation of curses in System V Release 4.0, and more",
+  "description": [
+    "Free software emulation of curses in System V Release 4.0, and more.",
+    "This port installs a wide character configuration (ncursesw)."
+  ],
   "homepage": "https://invisible-island.net/ncurses/announce.html",
   "license": "MIT",
   "supports": "!windows | mingw",
@@ -13,7 +16,7 @@
   ],
   "features": {
     "check-size": {
-      "description": "compile-in code to detect screensize of serial terminals"
+      "description": "Detect screensize of serial terminals"
     }
   }
 }
