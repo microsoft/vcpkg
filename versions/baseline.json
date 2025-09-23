@@ -10441,7 +10441,7 @@
       "port-version": 1
     },
     "x86-simd-sort": {
-      "baseline": "5.0",
+      "baseline": "7.0",
       "port-version": 0
     },
     "xapian": {
