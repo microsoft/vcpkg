@@ -13,6 +13,9 @@ vcpkg_from_github(
         0003-sdl2-disable-autolink.patch
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 file(MAKE_DIRECTORY "${SOURCE_PATH}/pjlib/include/pj")
 
 include("${CMAKE_CURRENT_LIST_DIR}/feature_config.cmake")

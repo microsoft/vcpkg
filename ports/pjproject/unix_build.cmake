@@ -18,8 +18,6 @@ function(build_unix)
 endfunction()
 
 function(setup_unix_environment)
-    set(ENV{PKG_CONFIG} "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf/pkgconf")
-
     if("video" IN_LIST FEATURES)
         create_sdl2_config_shim()
     endif()
