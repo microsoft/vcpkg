@@ -2025,7 +2025,7 @@
       "port-version": 5
     },
     "cpp-sort": {
-      "baseline": "1.17.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "cpp-taskflow": {
