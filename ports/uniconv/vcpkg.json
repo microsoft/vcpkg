@@ -1,0 +1,10 @@
+{
+  "name": "uniconv",
+  "version-string": "2.1.1",
+  "description": "A C++ library for variable encoding conversion (UniConv)",
+  "homepage": "https://github.com/hesphoros/UniConv",
+  "license": "MIT",
+  "dependencies": ["vcpkg-cmake-config"],
+  "default-features": [],
+  "features": {}
+}
