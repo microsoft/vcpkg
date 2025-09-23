@@ -7,6 +7,7 @@
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     "blas",
+    "concurrentqueue",
     "cpp-httplib",
     "cpuinfo",
     "eigen3",

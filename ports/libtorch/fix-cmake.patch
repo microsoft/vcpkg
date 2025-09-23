@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f3fee2f..d854d9f 100644
+index a5d25e6..c832c9a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1101,7 +1101,7 @@ if(NOT MSVC)
+@@ -1091,7 +1091,7 @@ if(NOT MSVC)
  else()
    # Define export functions for AOTI.
    add_compile_definitions(EXPORT_AOTI_FUNCTIONS)
@@ -11,7 +11,7 @@ index f3fee2f..d854d9f 100644
    # skip unwanted includes from windows.h
    add_compile_definitions(WIN32_LEAN_AND_MEAN)
    # Windows SDK broke compatibility since version 25131, but introduced this
-@@ -1239,13 +1239,10 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/aten/src/)
+@@ -1229,13 +1229,10 @@ include_directories(BEFORE ${PROJECT_SOURCE_DIR}/aten/src/)
  include_directories(BEFORE ${CMAKE_BINARY_DIR}/aten/src/)
  
  if(USE_MIMALLOC)
@@ -29,7 +29,7 @@ index f3fee2f..d854d9f 100644
  endif()
  
  if(USE_MIMALLOC AND USE_MIMALLOC_ON_MKL)
-@@ -1309,14 +1306,6 @@ if(BUILD_SHARED_LIBS)
+@@ -1299,14 +1296,6 @@ if(BUILD_SHARED_LIBS)
            ${PROJECT_SOURCE_DIR}/cmake/public/LoadHIP.cmake
      DESTINATION share/cmake/Caffe2/public
      COMPONENT dev)
@@ -45,10 +45,19 @@ index f3fee2f..d854d9f 100644
      FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
      DESTINATION share/cmake/Caffe2/
 diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
-index 085af37..ef15bcd 100644
+index c9cfd74..45b8d18 100644
 --- a/aten/src/ATen/CMakeLists.txt
 +++ b/aten/src/ATen/CMakeLists.txt
-@@ -496,7 +496,9 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
+@@ -495,8 +495,6 @@ if(UNIX)
+   endif(HAVE_MALLOC_USABLE_SIZE)
+ endif(UNIX)
+ 
+-ADD_DEFINITIONS(-DUSE_EXTERNAL_MZCRC)
+-
+ if(NOT MSVC)
+   list(APPEND ATen_CPU_DEPENDENCY_LIBS m)
+ endif()
+@@ -534,7 +532,9 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
      set(SLEEF_ARCH_AARCH64 ON)
    endif()
  
@@ -59,7 +68,7 @@ index 085af37..ef15bcd 100644
      set(SLEEF_BUILD_SHARED_LIBS OFF CACHE BOOL "Build sleef static" FORCE)
      set(SLEEF_BUILD_DFT OFF CACHE BOOL "Don't build sleef DFT lib" FORCE)
      set(SLEEF_BUILD_GNUABI_LIBS OFF CACHE BOOL "Don't build sleef gnuabi libs" FORCE)
-@@ -523,7 +525,7 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
+@@ -561,7 +561,7 @@ if(NOT EMSCRIPTEN AND NOT INTERN_BUILD_MOBILE)
      message("Found sleef: ${SLEEF_LIBRARY}")
      set_target_properties(sleef PROPERTIES IMPORTED_LOCATION "${SLEEF_LIBRARY}")
    endif()
@@ -68,19 +77,19 @@ index 085af37..ef15bcd 100644
  
    if(NOT MSVC)
      set(CMAKE_C_FLAGS_DEBUG ${OLD_CMAKE_C_FLAGS_DEBUG})
-@@ -534,8 +536,8 @@ if(USE_CUDA AND NOT USE_ROCM)
+@@ -572,8 +572,8 @@ if(USE_CUDA AND NOT USE_ROCM)
    add_definitions(-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
    add_definitions(-DCUTLASS_ENABLE_SM90_EXTENDED_MMA_SHAPES=1)
    add_definitions(-DCUTE_SM90_EXTENDED_MMA_SHAPES_ENABLED)
 -  list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party/cutlass/include)
 -  list(APPEND ATen_CUDA_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../third_party/cutlass/tools/util/include)
 +  find_package(NvidiaCutlass CONFIG REQUIRED)
-+  list(APPEND ATen_CUDA_DEPENDENCY_LIBS nvidia::cutlass::cutlass)
++  list(APPEND ATen_CUDA_DEPENDENCY_LIBS nvidia::cutlass::cutlass nvidia::cutlass::tools::util)
    if($ENV{ATEN_STATIC_CUDA})
      list(APPEND ATen_CUDA_DEPENDENCY_LIBS
        ${CUDA_LIBRARIES}
 diff --git a/c10/CMakeLists.txt b/c10/CMakeLists.txt
-index 34577ca..60df2cb 100644
+index 8e9d267..ac482a4 100644
 --- a/c10/CMakeLists.txt
 +++ b/c10/CMakeLists.txt
 @@ -95,7 +95,7 @@ if(NOT BUILD_LIBTORCHLESS)
@@ -89,10 +98,10 @@ index 34577ca..60df2cb 100644
    target_link_libraries(c10 PRIVATE fmt::fmt-header-only)
 -  target_link_libraries(c10 PRIVATE nlohmann)
 +  target_link_libraries(c10 PRIVATE nlohmann_json::nlohmann_json)
+   target_link_libraries(c10 PRIVATE moodycamel)
  
    if(C10_USE_NUMA)
-     message(STATUS "NUMA paths:")
-@@ -163,7 +163,7 @@ if(NOT BUILD_LIBTORCHLESS)
+@@ -164,7 +164,7 @@ if(NOT BUILD_LIBTORCHLESS)
    # Note: for now, we will put all export path into one single Caffe2Targets group
    # to deal with the cmake deployment need. Inside the Caffe2Targets set, the
    # individual libraries like libc10.so and libcaffe2.so are still self-contained.
@@ -101,7 +110,7 @@ index 34577ca..60df2cb 100644
  endif()
  
  install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-@@ -173,5 +173,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/macros/cmake_macros.h
+@@ -174,5 +174,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/macros/cmake_macros.h
          DESTINATION include/c10/macros)
  
  if(MSVC AND C10_BUILD_SHARED_LIBS)
@@ -109,10 +118,10 @@ index 34577ca..60df2cb 100644
 +  install(FILES $<TARGET_PDB_FILE:c10> DESTINATION bin OPTIONAL)
  endif()
 diff --git a/c10/cuda/CMakeLists.txt b/c10/cuda/CMakeLists.txt
-index 3327dab..0b784b1 100644
+index 2604f67..0fb63da 100644
 --- a/c10/cuda/CMakeLists.txt
 +++ b/c10/cuda/CMakeLists.txt
-@@ -82,7 +82,7 @@ if(NOT BUILD_LIBTORCHLESS)
+@@ -83,7 +83,7 @@ if(NOT BUILD_LIBTORCHLESS)
  # Note: for now, we will put all export path into one single Caffe2Targets group
  # to deal with the cmake deployment need. Inside the Caffe2Targets set, the
  # individual libraries like libc10.so and libcaffe2.so are still self-contained.
@@ -121,7 +130,7 @@ index 3327dab..0b784b1 100644
  
  endif()
  
-@@ -96,5 +96,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/cuda/impl/cuda_cmake_macros.h
+@@ -97,5 +97,5 @@ install(FILES ${CMAKE_BINARY_DIR}/c10/cuda/impl/cuda_cmake_macros.h
    DESTINATION include/c10/cuda/impl)
  
  if(MSVC AND C10_CUDA_BUILD_SHARED_LIBS)
@@ -129,7 +138,7 @@ index 3327dab..0b784b1 100644
 +  install(FILES $<TARGET_PDB_FILE:c10_cuda> DESTINATION bin OPTIONAL)
  endif()
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index d2d23b7..0107327 100644
+index d1ce24e..c9e5dc5 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
 @@ -87,7 +87,7 @@ endif()
@@ -141,7 +150,7 @@ index d2d23b7..0107327 100644
    if(NOT TARGET fxdiv)
      set(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
      set(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-@@ -557,7 +557,7 @@ if(USE_CUDA)
+@@ -562,7 +562,7 @@ if(USE_CUDA)
    endif()
  
    target_link_libraries(caffe2_nvrtc PRIVATE caffe2::nvrtc ${DELAY_LOAD_FLAGS})
@@ -150,7 +159,7 @@ index d2d23b7..0107327 100644
    if(USE_NCCL)
      list(APPEND Caffe2_GPU_SRCS
        ${TORCH_SRC_DIR}/csrc/cuda/nccl.cpp)
-@@ -1134,7 +1134,7 @@ if(USE_XPU)
+@@ -1194,7 +1194,7 @@ if(USE_XPU)
    endif()
  endif()
  
@@ -159,9 +168,9 @@ index d2d23b7..0107327 100644
    TARGET_LINK_LIBRARIES(torch_cpu PRIVATE fxdiv)
  endif()
  
-@@ -1240,8 +1240,8 @@ target_include_directories(torch_cpu PRIVATE ${ATen_CPU_INCLUDE})
- target_include_directories(torch_cpu PRIVATE
-   ${TORCH_SRC_DIR}/csrc)
+@@ -1301,8 +1301,8 @@ target_include_directories(torch_cpu PRIVATE
+   ${TORCH_SRC_DIR}/csrc
+   ${TORCH_SRC_DIR}/headeronly)
  
 -target_include_directories(torch_cpu PRIVATE
 -  ${TORCH_ROOT}/third_party/miniz-3.0.2)
@@ -170,23 +179,24 @@ index d2d23b7..0107327 100644
  
  target_include_directories(torch_cpu PRIVATE
    ${TORCH_ROOT}/third_party/kineto/libkineto/include)
-@@ -1251,11 +1251,10 @@ if(USE_KINETO)
+@@ -1312,11 +1312,12 @@ if(USE_KINETO)
      ${TORCH_ROOT}/third_party/kineto/libkineto/src)
  endif()
  
 -target_include_directories(torch_cpu PRIVATE
 -  ${TORCH_ROOT}/third_party/cpp-httplib)
--
--target_include_directories(torch_cpu PRIVATE
--  ${TORCH_ROOT}/third_party/nlohmann/include)
-+target_link_libraries(torch_cpu PRIVATE httplib::httplib nlohmann_json::nlohmann_json)
++target_link_libraries(torch_cpu PRIVATE httplib::httplib)
 +if(APPLE)
 +  target_link_libraries(torch_cpu PUBLIC "-framework CoreFoundation" "-framework CFNetwork")
 +endif()
  
- install(DIRECTORY "${TORCH_SRC_DIR}/csrc"
-   DESTINATION ${TORCH_INSTALL_INCLUDE_DIR}/torch
-@@ -1536,17 +1535,17 @@ endif()
+-target_include_directories(torch_cpu PRIVATE
+-  ${TORCH_ROOT}/third_party/nlohmann/include)
++target_link_libraries(torch_cpu PRIVATE httplib::httplib nlohmann_json::nlohmann_json)
+ 
+ install(DIRECTORY
+   "${TORCH_SRC_DIR}/csrc"
+@@ -1584,17 +1585,17 @@ endif()
  
  caffe2_interface_library(torch torch_library)
  
@@ -207,35 +217,52 @@ index d2d23b7..0107327 100644
  
  target_link_libraries(torch PUBLIC torch_cpu_library)
  
-@@ -1685,7 +1684,7 @@ if(BUILD_SHARED_LIBS)
-       target_link_libraries(torch_global_deps torch::nvtoolsext)
-     endif()
+@@ -1726,7 +1727,7 @@ if(BUILD_SHARED_LIBS)
+     target_link_libraries(torch_global_deps ${Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS})
+     target_link_libraries(torch_global_deps torch::cudart)
    endif()
 -  install(TARGETS torch_global_deps DESTINATION "${TORCH_INSTALL_LIB_DIR}")
 +  install(TARGETS torch_global_deps RUNTIME DESTINATION "${TORCH_INSTALL_BIN_DIR}" LIBRARY DESTINATION "${TORCH_INSTALL_LIB_DIR}" ARCHIVE DESTINATION "${TORCH_INSTALL_LIB_DIR}")
  endif()
  
  # ---[ Caffe2 HIP sources.
+diff --git a/caffe2/serialize/CMakeLists.txt b/caffe2/serialize/CMakeLists.txt
+index ebbff0f..5a42e4e 100644
+--- a/caffe2/serialize/CMakeLists.txt
++++ b/caffe2/serialize/CMakeLists.txt
+@@ -2,13 +2,11 @@ file(GLOB tmp *_test.cc)
+ 
+ set(Caffe2_CPU_TEST_SRCS ${Caffe2_CPU_TEST_SRCS} ${tmp})
+ list(APPEND Caffe2_CPU_SRCS
+-  ${PROJECT_SOURCE_DIR}/third_party/miniz-3.0.2/miniz.c
+   ${CMAKE_CURRENT_SOURCE_DIR}/inline_container.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/istream_adapter.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/file_adapter.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/crc.cc
+   ${CMAKE_CURRENT_SOURCE_DIR}/read_adapter_interface.cc)
+-list(APPEND Caffe2_CPU_INCLUDE ${PROJECT_SOURCE_DIR}/third_party/miniz-3.0.2)
+ 
+ set(Caffe2_CPU_TEST_SRCS ${Caffe2_CPU_TEST_SRCS} PARENT_SCOPE)
+ set(Caffe2_CPU_SRCS ${Caffe2_CPU_SRCS} PARENT_SCOPE)
 diff --git a/cmake/Codegen.cmake b/cmake/Codegen.cmake
-index 724d993..87cca47 100644
+index 9a562da..c698d70 100644
 --- a/cmake/Codegen.cmake
 +++ b/cmake/Codegen.cmake
-@@ -36,11 +36,13 @@ endfunction()
+@@ -36,11 +36,7 @@ endfunction()
  ################################################################################
  
- # -- [ Deterine commit hash
-+if(NOT DEFINED COMMIT_SHA) # we will provide this in portfile.cmake
- execute_process(
-     COMMAND "${Python_EXECUTABLE}" -c "from tools.generate_torch_version import get_sha;print(get_sha('.'), end='')"
-     OUTPUT_VARIABLE COMMIT_SHA
-     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
- )
-+endif()
+ # -- [ Determine commit hash
+-execute_process(
+-    COMMAND "${Python_EXECUTABLE}" -c "from tools.generate_torch_version import get_sha;print(get_sha('.'), end='')"
+-    OUTPUT_VARIABLE COMMIT_SHA
+-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
+-)
++message(STATUS "COMMIT_SHA=${COMMIT_SHA}") # we will provide in portfile.cmake
  
  # ---[ Write the macros file
  configure_file(
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 5227204..01dafa8 100644
+index a93386c..cd817b6 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -46,7 +46,8 @@ if(USE_CUDA)
@@ -244,7 +271,7 @@ index 5227204..01dafa8 100644
      # design reason (it adds CUDA_LIBRARIES itself).
 -    set(Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS )
 +    find_package(NvidiaCutlass CONFIG REQUIRED)
-+    set(Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS nvidia::cutlass::cutlass)
++    set(Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS nvidia::cutlass::cutlass nvidia::cutlass::tools::util)
      if(NOT CAFFE2_USE_NVRTC)
        caffe2_update_option(USE_NVRTC OFF)
      endif()
@@ -253,13 +280,22 @@ index 5227204..01dafa8 100644
  endif()
  
 -if(NOT INTERN_BUILD_MOBILE)
++# We expect the BLAS settings are done above. Just set the variable.
 +if(BLAS_FOUND)
-+  # We expect the BLAS settings are done above. Just set the variable.
 +  set(USE_BLAS 1)
 +elseif(NOT INTERN_BUILD_MOBILE)
    set(AT_MKL_SEQUENTIAL 0)
    set(USE_BLAS 1)
    if(NOT (ATLAS_FOUND OR BLIS_FOUND OR GENERIC_BLAS_FOUND OR MKL_FOUND OR OpenBLAS_FOUND OR VECLIB_FOUND OR FlexiBLAS_FOUND OR NVPL_BLAS_FOUND OR APL_FOUND))
+@@ -276,7 +280,7 @@ endif()
+ # --- [ PocketFFT
+ set(AT_POCKETFFT_ENABLED 0)
+ if(NOT AT_MKL_ENABLED)
+-  set(POCKETFFT_INCLUDE_DIR "${Torch_SOURCE_DIR}/third_party/pocketfft/")
++  find_path(POCKETFFT_INCLUDE_DIR "pocketfft_hdronly.h" REQUIRED)
+   if(NOT EXISTS "${POCKETFFT_INCLUDE_DIR}")
+     message(FATAL_ERROR "pocketfft directory not found, expected ${POCKETFFT_INCLUDE_DIR}")
+   elseif(NOT EXISTS "${POCKETFFT_INCLUDE_DIR}/pocketfft_hdronly.h")
 @@ -381,8 +385,8 @@ if(INTERN_BUILD_MOBILE OR NOT DISABLE_NNPACK_AND_FAMILY)
    if(NOT TARGET pthreadpool)
      if(USE_SYSTEM_PTHREADPOOL)
@@ -296,7 +332,7 @@ index 5227204..01dafa8 100644
    if(NOT DEFINED XNNPACK_SOURCE_DIR)
      set(XNNPACK_SOURCE_DIR "${CAFFE2_THIRD_PARTY_ROOT}/XNNPACK" CACHE STRING "XNNPACK source directory")
    endif()
-@@ -829,8 +840,9 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
+@@ -773,8 +784,9 @@ if(NOT TARGET fp16 AND NOT USE_SYSTEM_FP16)
        "${CONFU_DEPENDENCIES_BINARY_DIR}/FP16")
    endif()
  elseif(NOT TARGET fp16 AND USE_SYSTEM_FP16)
@@ -308,7 +344,7 @@ index 5227204..01dafa8 100644
  endif()
  list(APPEND Caffe2_DEPENDENCY_LIBS fp16)
  
-@@ -1013,7 +1025,7 @@ if(USE_CUDNN)
+@@ -961,7 +973,7 @@ if(USE_CUDNN)
    if(CUDNN_VERSION VERSION_LESS 8.5)
      message(FATAL_ERROR "PyTorch needs CuDNN-8.5 or above, but found ${CUDNN_VERSION}. Builds are still possible with `USE_CUDNN=0`")
    endif()
@@ -317,13 +353,13 @@ index 5227204..01dafa8 100644
    target_include_directories(torch::cudnn INTERFACE ${CUDNN_FRONTEND_INCLUDE_DIR})
  endif()
  
-@@ -1170,18 +1182,18 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+@@ -1156,19 +1168,18 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
        message(WARNING "Archived TensorPipe forces CMake compatibility mode")
        set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
      endif()
 -    add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/tensorpipe)
 +    find_package(unofficial-tensorpipe CONFIG REQUIRED)
-     # Suppress warning to unblock libnop comiplation by clang-17
+     # Suppress warning to unblock libnop compilation by clang-17
      # See https://github.com/pytorch/pytorch/issues/151316
 -    target_compile_options_if_supported(tensorpipe -Wno-missing-template-arg-list-after-template-kw)
 +    # target_compile_options_if_supported(tensorpipe -Wno-missing-template-arg-list-after-template-kw)
@@ -333,6 +369,7 @@ index 5227204..01dafa8 100644
  
 -    list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)
 -    list(APPEND Caffe2_DEPENDENCY_LIBS nlohmann)
+-    list(APPEND Caffe2_DEPENDENCY_LIBS moodycamel)
 -    if(USE_CUDA)
 -      list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS tensorpipe_cuda)
 +    list(APPEND Caffe2_DEPENDENCY_LIBS unofficial::tensorpipe::tensorpipe)
@@ -342,21 +379,23 @@ index 5227204..01dafa8 100644
      elseif(USE_ROCM)
        message(WARNING "TensorPipe doesn't yet support ROCm")
        # Not yet...
-@@ -1194,6 +1206,13 @@ if(USE_GLOO)
-   if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
-     message(WARNING "Gloo can only be used on 64-bit systems.")
-     caffe2_update_option(USE_GLOO OFF)
-+  elseif(TRUE)
+@@ -1178,7 +1189,14 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+ endif()
+ 
+ if(USE_GLOO)
+-  if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
++  if(TRUE)
 +    find_package(Gloo CONFIG REQUIRED)
 +    list(APPEND Caffe2_DEPENDENCY_LIBS gloo)
 +    if(USE_CUDA AND TARGET gloo_cuda)
 +      list(APPEND Caffe2_CUDA_DEPENDENCY_LIBS gloo_cuda)
 +    endif()
-+    add_compile_options(-DCAFFE2_USE_GLOO)
++    add_compile_definitions(CAFFE2_USE_GLOO)
++  elseif(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+     message(WARNING "Gloo can only be used on 64-bit systems.")
+     caffe2_update_option(USE_GLOO OFF)
    else()
-     # Don't install gloo
-     set(GLOO_INSTALL OFF CACHE BOOL "" FORCE)
-@@ -1319,7 +1338,11 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
+@@ -1308,7 +1326,11 @@ if(CAFFE2_CMAKE_BUILDING_WITH_MAIN_REPO AND NOT INTERN_DISABLE_ONNX)
    endif()
  
    add_definitions(-DONNX_NAMESPACE=${ONNX_NAMESPACE})
@@ -366,38 +405,47 @@ index 5227204..01dafa8 100644
 +    # later version of ONNX use the namespace
 +    list(APPEND Caffe2_DEPENDENCY_LIBS ONNX::onnx ONNX::onnx_proto)
 +  elseif(NOT USE_SYSTEM_ONNX)
-     include_directories(${ONNX_INCLUDE_DIRS})
      # In mobile build we care about code size, and so we need drop
      # everything (e.g. checker) in onnx but the pb definition.
-@@ -1515,6 +1538,9 @@ if(NOT INTERN_BUILD_MOBILE)
+     if(ANDROID OR IOS)
+@@ -1503,6 +1525,9 @@ if(NOT INTERN_BUILD_MOBILE)
    endif()
  
    if(USE_KLEIDIAI)
 +    find_package(KleidiAI CONFIG REQUIRED)
 +    list(APPEND Caffe2_DEPENDENCY_LIBS KleidiAI::kleidiai)
 +  elseif(FALSE)
-     if(CMAKE_C_COMPILER_ID STREQUAL "Clang" AND CMAKE_C_COMPILER_VERSION VERSION_LESS "11" )
-         message(WARNING "KleidiAI: Using non-supported Clang version. Expected 11 or newer, received ${CMAKE_C_COMPILER_VERSION}.")
-     endif()
-@@ -1584,6 +1610,9 @@ endif()
+     set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+     set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
+     set(AT_KLEIDIAI_ENABLED 1)
+@@ -1546,15 +1571,14 @@ if(NOT INTERN_BUILD_MOBILE)
+     endif(HAVE_MALLOC_USABLE_SIZE)
+   endif(UNIX)
+ 
+-  add_definitions(-DUSE_EXTERNAL_MZCRC)
+-  add_definitions(-DMINIZ_DISABLE_ZIP_READER_CRC32_CHECKS)
+-
+   find_package(ZVECTOR) # s390x simd support
+ endif()
+ 
  #
  # End ATen checks
  #
 +find_package(fmt CONFIG REQUIRED) # use vcpkg installed fmtlib
-+list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
 +if(FALSE)
  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
  set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libs" FORCE)
  add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/fmt)
-@@ -1599,6 +1628,7 @@ set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
+@@ -1570,6 +1594,8 @@ set_target_properties(fmt-header-only PROPERTIES INTERFACE_COMPILE_FEATURES "")
  
  list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS} CACHE BOOL "Build shared libs" FORCE)
 +endif()
++list(APPEND Caffe2_DEPENDENCY_LIBS fmt::fmt-header-only)
  
  # ---[ Kineto
  # edge profiler depends on KinetoProfiler but it only does cpu
-@@ -1748,10 +1778,5 @@ endif()
+@@ -1722,14 +1748,9 @@ endif()
  # Include google/FlatBuffers
  include(${CMAKE_CURRENT_LIST_DIR}/FlatBuffers.cmake)
  
@@ -410,6 +458,13 @@ index 5227204..01dafa8 100644
 -include_directories(nlohmann SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/third_party/nlohmann/include)
 +find_package(httplib CONFIG REQUIRED) # httplib::httplib
 +find_package(nlohmann_json CONFIG REQUIRED) # nlohmann_json::nlohmann_json
+ 
+-# Include moodycamel
+-add_library(moodycamel INTERFACE IMPORTED)
+-include_directories(moodycamel SYSTEM INTERFACE ${PROJECT_SOURCE_DIR}/third_party/concurrentqueue)
++# not KjellKod/Moody-Camel-s-concurrentqueue, but https://github.com/cameron314/concurrentqueue
++find_package(concurrentqueue CONFIG REQUIRED)
++add_library(moodycamel ALIAS concurrentqueue::concurrentqueue)
 diff --git a/cmake/External/nnpack.cmake b/cmake/External/nnpack.cmake
 index 8a4a310..9b8ed5e 100644
 --- a/cmake/External/nnpack.cmake
@@ -428,32 +483,3 @@ index 8a4a310..9b8ed5e 100644
  
  if(ANDROID OR IOS OR ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" OR ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
    message(STATUS "Brace yourself, we are building NNPACK")
-diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index c66d32b..77ef44b 100644
---- a/cmake/public/cuda.cmake
-+++ b/cmake/public/cuda.cmake
-@@ -169,7 +169,8 @@ else()
-         CUDA::cudart)
- endif()
- 
--# nvToolsExt
-+# CUDA::nvToolsExt or CUDA::nvtx3
-+cmake_minimum_required(VERSION 3.25)
- if(USE_SYSTEM_NVTX)
-   find_path(nvtx3_dir NAMES nvtx3 PATHS ${CUDA_INCLUDE_DIRS})
- else()
-@@ -183,7 +184,13 @@ if(nvtx3_FOUND)
- else()
-   message(WARNING "Cannot find NVTX3, find old NVTX instead")
-   add_library(torch::nvtoolsext INTERFACE IMPORTED)
--  set_property(TARGET torch::nvtoolsext PROPERTY INTERFACE_LINK_LIBRARIES CUDA::nvToolsExt)
-+  # https://cmake.org/cmake/help/latest/module/FindCUDAToolkit.html#nvtx3
-+  if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 12.9)
-+    message(STATUS "Using CUDA::nvtx3 instead of CUDA::nvToolsExt")
-+    set_target_properties(torch::nvtoolsext PROPERTIES INTERFACE_LINK_LIBRARIES CUDA::nvtx3)
-+  else()
-+    set_target_properties(torch::nvtoolsext PROPERTIES INTERFACE_LINK_LIBRARIES CUDA::nvToolsExt)
-+  endif()
- endif()
- 
- 
