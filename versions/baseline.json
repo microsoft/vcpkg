@@ -5430,7 +5430,7 @@
     },
     "libspatialite": {
       "baseline": "5.1.0",
-      "port-version": 4
+      "port-version": 5
     },
     "libspnav": {
       "baseline": "0.2.3",
@@ -5717,7 +5717,7 @@
       "port-version": 0
     },
     "libxml2": {
-      "baseline": "2.14.6",
+      "baseline": "2.15.0",
       "port-version": 0
     },
     "libxmlb": {
@@ -7318,7 +7318,7 @@
     },
     "pdal": {
       "baseline": "2.9.2",
-      "port-version": 0
+      "port-version": 1
     },
     "pdal-c": {
       "baseline": "2.2.0",
@@ -9074,7 +9074,7 @@
     },
     "spatialite-tools": {
       "baseline": "5.1.0-a",
-      "port-version": 0
+      "port-version": 1
     },
     "spdk": {
       "baseline": "24.01",
