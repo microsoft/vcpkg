@@ -6,7 +6,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/igraph/igraph/releases/download/${VERSION}/igraph-${VERSION}.tar.gz"
     FILENAME "igraph-${VERSION}.tar.gz"
-    SHA512 821a8ef3fa4d4049d0ca09fa54e0824b3b31ce2c3329cca902899a8fd2441ad4e106ea9c65e7ad8ef643c906e7b5f4d276b670f0fdbf80c8e6c473cf6536bc96
+    SHA512 2a2b7930adf9cf9de550e1a1348260e0c58e4d8b387cb7b6805aad2d501272cd846d1948bde9f6cc0432d904e6b1fb1f17e5e8c81f5bd146aef2560b7a7042c8
 )
 
 vcpkg_extract_source_archive(
