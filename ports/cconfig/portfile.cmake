@@ -17,7 +17,3 @@ vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
 endif()
-
-# Skip copyright and post-build checks for header-only
-set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled)
-set(VCPKG_POLICY_SKIP_POST_BUILD_CHECKS enabled)
