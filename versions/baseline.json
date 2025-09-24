@@ -9292,6 +9292,10 @@
       "baseline": "0.5",
       "port-version": 2
     },
+    "string-lite": {
+      "baseline": "0.0.0",
+      "port-version": 0
+    },
     "string-theory": {
       "baseline": "3.9",
       "port-version": 0
