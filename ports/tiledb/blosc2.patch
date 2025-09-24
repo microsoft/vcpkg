@@ -136,8 +136,7 @@ index 81ef162..e06410d 100644
  find_package(BZip2 REQUIRED)
  find_package(LZ4 MODULE REQUIRED)
  find_package(nlohmann_json CONFIG REQUIRED)
-@@ -578,6 +550,7 @@ find_package(zstd CONFIG REQUIRED)
- find_package(LibMagic MODULE REQUIRED)
+@@ -578,5 +550,6 @@ find_package(zstd CONFIG REQUIRED)
  target_link_libraries(TILEDB_CORE_OBJECTS_ILIB
    INTERFACE
 +    Blosc2::blosc2
