@@ -1,7 +1,7 @@
 {
   "name": "treehopper",
   "version": "1.11.3",
-  "port-version": 10,
+  "port-version": 11,
   "description": "Treehopper connects the physical world to your computer, tablet, or smartphone.",
   "homepage": "https://treehopper.io",
   "supports": "!uwp & !(static & staticcrt)",
