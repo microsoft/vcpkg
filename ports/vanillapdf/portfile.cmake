@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO vanillapdf/vanillapdf
     REF "v${VERSION}"
     SHA512 f15d9a290de0eebac9073503ac555cbf389484aa3ff6385697ba879c336ed9cd4277af180f9d842b5bd8cca69bf6ef4dcfbedba07a6a76014e3974fe09fc6190
+    PATCHES
+        disable-autosubscribe.diff
 )
 
 vcpkg_cmake_configure(

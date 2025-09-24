@@ -430,7 +430,7 @@
     },
     "awlib": {
       "baseline": "2024-04-06",
-      "port-version": 1
+      "port-version": 2
     },
     "aws-c-auth": {
       "baseline": "0.9.1",
@@ -1766,7 +1766,7 @@
     },
     "clblas": {
       "baseline": "2.12",
-      "port-version": 7
+      "port-version": 8
     },
     "clblast": {
       "baseline": "1.6.3",
@@ -1806,7 +1806,7 @@
     },
     "clockutils": {
       "baseline": "1.1.1",
-      "port-version": 3
+      "port-version": 4
     },
     "clrng": {
       "baseline": "2020-12-01",
@@ -1890,7 +1890,7 @@
     },
     "colmap": {
       "baseline": "3.11.1",
-      "port-version": 3
+      "port-version": 4
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -1966,7 +1966,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 8
+      "port-version": 9
     },
     "correlation-vector-cpp": {
       "baseline": "1.0",
@@ -2082,7 +2082,7 @@
     },
     "cpprealm": {
       "baseline": "2.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cpprestsdk": {
       "baseline": "2.10.19",
@@ -2366,7 +2366,7 @@
     },
     "dbow3": {
       "baseline": "1.0.0",
-      "port-version": 3
+      "port-version": 4
     },
     "dbus": {
       "baseline": "1.16.2",
@@ -2698,7 +2698,7 @@
     },
     "embree3": {
       "baseline": "3.13.5",
-      "port-version": 5
+      "port-version": 6
     },
     "enchantum": {
       "baseline": "0.3.0",
@@ -3670,7 +3670,7 @@
     },
     "hareflow": {
       "baseline": "0.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "harfbuzz": {
       "baseline": "11.3.3",
@@ -3966,7 +3966,7 @@
     },
     "irrlicht": {
       "baseline": "1.8.5",
-      "port-version": 1
+      "port-version": 2
     },
     "irrxml": {
       "baseline": "0",
@@ -4866,7 +4866,7 @@
     },
     "libgo": {
       "baseline": "3.1",
-      "port-version": 5
+      "port-version": 6
     },
     "libgossip": {
       "baseline": "1.0.0.2",
@@ -5826,7 +5826,7 @@
     },
     "licensepp": {
       "baseline": "2020-11-24",
-      "port-version": 0
+      "port-version": 1
     },
     "lief": {
       "baseline": "0.17.0",
@@ -5886,7 +5886,7 @@
     },
     "llgl": {
       "baseline": "2023-03-05",
-      "port-version": 0
+      "port-version": 1
     },
     "llhttp": {
       "baseline": "9.2.1",
@@ -6062,7 +6062,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 19
+      "port-version": 20
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -6090,7 +6090,7 @@
     },
     "manifold": {
       "baseline": "3.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mapbox-geojson-cpp": {
       "baseline": "0.5.1",
@@ -6494,7 +6494,7 @@
     },
     "ms-ifc-sdk": {
       "baseline": "0.43.1",
-      "port-version": 0
+      "port-version": 1
     },
     "msdfgen": {
       "baseline": "1.12.1",
@@ -6770,7 +6770,7 @@
     },
     "nmslib": {
       "baseline": "2.1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "nng": {
       "baseline": "1.11",
@@ -7194,7 +7194,7 @@
     },
     "orange-math": {
       "baseline": "3.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "orc": {
       "baseline": "2.1.0",
@@ -7414,7 +7414,7 @@
     },
     "pistache": {
       "baseline": "2021-03-31",
-      "port-version": 3
+      "port-version": 4
     },
     "pixel": {
       "baseline": "2022-03-15",
@@ -7862,7 +7862,7 @@
     },
     "qt5-location": {
       "baseline": "5.15.17",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-macextras": {
       "baseline": "5.15.17",
@@ -8338,7 +8338,7 @@
     },
     "realsense2": {
       "baseline": "2.56.3",
-      "port-version": 0
+      "port-version": 1
     },
     "rebind": {
       "baseline": "5.2.2",
@@ -8442,7 +8442,7 @@
     },
     "rioki-glow": {
       "baseline": "0.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ripper37-libbase": {
       "baseline": "1.1.2",
@@ -8550,7 +8550,7 @@
     },
     "rtmfp-cpp": {
       "baseline": "1.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "rtmidi": {
       "baseline": "6.0.0",
@@ -8850,7 +8850,7 @@
     },
     "shaderwriter": {
       "baseline": "2.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "shapelib": {
       "baseline": "1.6.1",
@@ -9782,7 +9782,7 @@
     },
     "treehopper": {
       "baseline": "1.11.3",
-      "port-version": 10
+      "port-version": 11
     },
     "triangle": {
       "baseline": "1.6",
@@ -9822,7 +9822,7 @@
     },
     "turbobase64": {
       "baseline": "2023.8",
-      "port-version": 1
+      "port-version": 2
     },
     "tvision": {
       "baseline": "2024-05-22",
@@ -9998,7 +9998,7 @@
     },
     "vanillapdf": {
       "baseline": "2.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "variant-lite": {
       "baseline": "2.0.0",
@@ -10522,7 +10522,7 @@
     },
     "xeus": {
       "baseline": "0.24.3",
-      "port-version": 3
+      "port-version": 4
     },
     "xframe": {
       "baseline": "0.3.0",

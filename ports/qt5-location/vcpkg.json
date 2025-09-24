@@ -1,7 +1,7 @@
 {
   "name": "qt5-location",
   "version": "5.15.17",
-  "port-version": 1,
+  "port-version": 2,
   "description": "The Qt Location API helps you create viable mapping solutions using the data available from some of the popular location services.",
   "license": null,
   "dependencies": [
