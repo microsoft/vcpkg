@@ -1,8 +1,20 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5e8e016..b3c3f18 100644
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 73d5aff8..e149b46e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -465,7 +465,7 @@ if(LIBUV_BUILD_SHARED)
+@@ -437,6 +437,11 @@ if(APPLE OR CMAKE_SYSTEM_NAME MATCHES "DragonFly|FreeBSD|Linux|NetBSD|OpenBSD")
+   list(APPEND uv_libraries m)
+ endif()
+ 
++## -lpthread -lrt is not found on android, and it is not necessary.
++if(ANDROID)
++  list(REMOVE_ITEM uv_libraries pthread rt)
++endif()
++
+ if(CYGWIN OR MSYS)
+   list(APPEND uv_defines _GNU_SOURCE)
+   list(APPEND uv_sources
+@@ -472,7 +477,7 @@ if(LIBUV_BUILD_SHARED)
    endif()
    target_link_libraries(uv ${uv_libraries})
    set_target_properties(uv PROPERTIES OUTPUT_NAME "uv")
@@ -11,7 +23,7 @@ index 5e8e016..b3c3f18 100644
  
  add_library(uv_a STATIC ${uv_sources})
  target_compile_definitions(uv_a PRIVATE ${uv_defines})
-@@ -485,6 +485,7 @@ set_target_properties(uv_a PROPERTIES OUTPUT_NAME "uv")
+@@ -492,6 +497,7 @@ set_target_properties(uv_a PROPERTIES OUTPUT_NAME "uv")
  if(WIN32)
    set_target_properties(uv_a PROPERTIES PREFIX "lib")
  endif()
@@ -19,7 +31,7 @@ index 5e8e016..b3c3f18 100644
  
  if(LIBUV_BUILD_TESTS)
    # Small hack: use ${uv_test_sources} now to get the runner skeleton,
-@@ -755,10 +756,6 @@ configure_file(libuv-static.pc.in libuv-static.pc @ONLY)
+@@ -767,10 +773,6 @@ configure_file(libuv-static.pc.in libuv-static.pc @ONLY)
  install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
  install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DOCDIR})
  install(FILES LICENSE-extra DESTINATION ${CMAKE_INSTALL_DOCDIR})
@@ -30,7 +42,7 @@ index 5e8e016..b3c3f18 100644
  install(EXPORT libuvConfig
  	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/libuv
  	NAMESPACE libuv::)
-@@ -775,6 +772,11 @@ if(LIBUV_BUILD_SHARED)
+@@ -787,6 +789,11 @@ if(LIBUV_BUILD_SHARED)
            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
