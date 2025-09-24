@@ -5,14 +5,14 @@ vcpkg_from_github(
     SHA512 8CE0C0FCA4E55AF9CFD56BA7779F4775703752D328518FE72F242336A7D4DB08B53284CA6148FC65BDBFE7D5BE4F025F49DFC7B13A45E2B69F350E15966C1929
 )
 
-# Copy the main header
+# Copy headers
 file(COPY "${SOURCE_PATH}/cconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/cconfig")
 
-# Convenience header in root include folder
+# Convenience root include
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/cconfig.h" "#include \"cconfig/cconfig.h\"\n")
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-# Remove auto-generated usage file if present
-file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
+# Remove auto-generated usage if present
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
