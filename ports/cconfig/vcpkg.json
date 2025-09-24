@@ -1,0 +1,9 @@
+{
+  "name": "cconfig",
+  "version-string": "1.0.0",
+  "description": "A small, dependency-free, single-header C library for parsing TOML and INI files.",
+  "homepage": "https://github.com/Nouridin/cconfig",
+  "license": "MIT",
+  "supports": "!(uwp)",
+  "maintainers": ["Nouridin"]
+}
