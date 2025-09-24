@@ -1,8 +1,7 @@
 {
   "name": "cconfig",
-  "version": "1.0.0",
-  "description": "A header-only C library for configuration parsing.",
+  "version-string": "1.0.0",
+  "description": "Header-only config parsing library",
   "homepage": "https://github.com/Nouridin/cconfig",
-  "license": "MIT",
-  "supports": "(windows & (x86 | x64 | arm64)) | (linux & x64) | (osx & x64) | (android & (x86 | x64 | arm64))"
+  "dependencies": []
 }
