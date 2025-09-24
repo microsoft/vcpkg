@@ -2,7 +2,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
         FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
-        SHA512 a33cd20bde55eb7b4dd62843ebdc7125074fe046b8a2a9b37e9ef9bffe5bd03856749c6de4dcf3c3b7fef98e47f0c69addd6a6a1016c00725f8457a42e107b8c
+        SHA512 a0544b3bf2d81abee91fb43901d384b021005d4158b43fec996977607f08852b211940a3ca71d37ac8bda52821c361bbaa93d0e4e63f72ff186863ef48a6a3d0
     )
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -30,7 +30,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
     REF "v${VERSION}"
-    SHA512 8726185122f23084db5358c4141d95e8f32f40e4121671422af9c9d2c984ebc9a806edf4f32db65398d414b94b93e48041fd75bbe5afd2582dc2155f6ddea7ad
+    SHA512 6962d1526ac88d4e00d236b4ae86bd885d67f493d6b7342117e3b658fa6f37bf6d6b8617af4d74ef0bf9e3e95cf91aed567fb0f90bf836ad132dff4a304525f8
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
@@ -88,7 +88,7 @@ checkout_in_path(
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-tools/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools"
-    "8a8bb6c89174ed753eb18a438092ee59356efc3c"
+    "f386417185be0601894b20d9ad000aceb73d898b"
 )
 
 vcpkg_find_acquire_program(PYTHON3)
