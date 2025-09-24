@@ -1,6 +1,6 @@
 {
   "name": "duckdb",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
   "license": "MIT",
@@ -29,7 +29,14 @@
     "httpfs": {
       "description": "Statically link the httpfs extension into DuckDB",
       "dependencies": [
+        "curl",
         "openssl"
+      ]
+    },
+    "iceberg": {
+      "description": "Statically link the iceberg extension into DuckDB",
+      "dependencies": [
+        "roaring"
       ]
     },
     "icu": {

@@ -2,7 +2,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 8e725d94cfd81989d4f6d206728188e5b290ce3a7f71d89adc6beed91957f965180d34d69d9099d04e35fc402b389de56184875397b29286789bd9c5655595c5
+        SHA512 c6514268d136b7c1c768c4d5470b230345b68d5db0c78acd48329d8fa0b6faff146d1840ff5d207dacdc9930a60aed09495f3867bd0e11bc9c63bdbef7781478
         HEAD_REF main
     PATCHES
         extensions.patch
@@ -20,8 +20,8 @@ if("excel" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_EXCCEL_SOURCE_PATH
         REPO duckdb/duckdb-excel
-        REF 6c7a0270608d18053d23359834b775d40804a052
-        SHA512 442b4dc9405f34a9b624e5c4e874ebf2cffd1f5c477257b090613f987d83fcc02bc2293b8d163fffe018aa250e90bcadc9ac345e84dc4c96f4092c19c769f924
+        REF 8504be9ec8183e4082141f9359b53a64d3a440b7
+        SHA512 295bfe67c2902c09b584bee623dee7db69aad272a00e6bd4038ec65e2d8a977d1ace7261af8f67863c2fae709acc414e290e40f0bad43bae679c0a8639a0d6b5
         HEAD_REF main
     )
     file(RENAME "${DUCKDB_EXCCEL_SOURCE_PATH}" "${SOURCE_PATH}/extension/excel")
@@ -31,11 +31,22 @@ if("httpfs" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
         REPO duckdb/duckdb_httpfs
-        REF a4a014d4fc232c3087ee44a804959b5d67a0f8c5
-        SHA512 7e774a0714b863ecd49ad6ff07b8ecf780614f8e81d097dc01def37b48efb140efba003a5caa2deec9c83c636906fbcb44f5d74813da31f162d9d8b06016afe8
+        REF 0989823e43554e8a00b31959a853e29ab9bd07f9
+        SHA512 71461d522aa5338df81931f937ed538b453b274d22e91ad7e0f1a92e4437a29cc869a0f5be3bd5a9abf0045dfd4681a787923ee32374be471483909c0a60a21f
         HEAD_REF main
     )
     file(RENAME "${DUCKDB_HTTPFS_SOURCE_PATH}" "${SOURCE_PATH}/extension/httpfs")
+endif()
+
+if("iceberg" IN_LIST FEATURES)
+    vcpkg_from_github(
+        OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
+        REPO duckdb/duckdb-iceberg
+        REF 6b636bff44aeeccf6f6d5b54de6edf280274beea
+        SHA512 f8ce593117dd5423fd5445b6fa6c1f3b11ee7c8a2fdb988c3c0208a59d5ed980b941116866f7cb1d0597662e98c03687da071cbc5617c71086eb112621e31748
+        HEAD_REF main
+    )
+    file(RENAME "${DUCKDB_HTTPFS_SOURCE_PATH}" "${SOURCE_PATH}/extension/iceberg")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DUCKDB_BUILD_STATIC)
@@ -55,7 +66,7 @@ endif()
 vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            -DOVERRIDE_GIT_DESCRIBE=v${VERSION}
+            -DOVERRIDE_GIT_DESCRIBE=v${VERSION}-0-g0123456789
             -DDUCKDB_EXPLICIT_VERSION=v${VERSION}
             -DBUILD_UNITTESTS=OFF
             -DBUILD_SHELL=FALSE
