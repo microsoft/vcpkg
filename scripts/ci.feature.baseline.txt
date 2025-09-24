@@ -2030,12 +2030,9 @@ vtk[seacas](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only su
 vtk[vtkm](arm64 & windows) = cascade # vtk-m[core] only supports !x86 & !uwp & !(arm & windows)
 vtk-dicom:arm64-uwp = cascade
 vtk-dicom:x64-uwp = cascade
-vtk-m[cuda]:x64-linux=feature-fails
+# cuda[core] only supports (windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)
+vtk-m[cuda](arm64 & windows) = cascade
 vtk-m[cuda](osx) = cascade
-vtk-m[omp,cuda]:x64-windows-release=feature-fails
-vtk-m[omp,cuda]:x64-windows-static-md=feature-fails
-vtk-m[omp,cuda]:x64-windows-static=feature-fails
-vtk-m[omp,cuda]:x64-windows=feature-fails
 vtk(uwp) = cascade # hdf5[core] only supports !uwp
 vulkan[tools](osx) = cascade
 vulkan-sdk-components[tools]( osx | staticcrt) = cascade
@@ -2269,7 +2266,9 @@ vtk[qt](windows & arm64 & !uwp) = feature-fails
 vtk[seacas](windows & arm64 & !uwp) = feature-fails
 vtk[sql]:arm64-windows = feature-fails
 vtk[tbb]:arm64-windows = feature-fails
-vtk-m[omp](osx) = feature-fails # fixed by https://github.com/microsoft/vcpkg/pull/30923
+vtk-m[cuda](windows & !arm64) = feature-fails
+vtk-m[omp](osx) = feature-fails # no openmp on default osx toolchain
+vtk-m[omp](windows) = feature-fails # needs openmp 4.0, msvc has openmp 2.0
 vtk(arm64 & windows & !uwp) = fail
 wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See https://github.com/microsoft/vcpkg/issues/32146
 wayland[force-build](native) = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
@@ -2314,6 +2313,7 @@ s2n = skip # builds too slow
 sciter = skip # The sciter port is deprecated by upstream and conflicts with upstream's replacement.
 vtk[atlmfc,cgns,cuda,geojson,ioocct,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,paraview,proj,python,qt,seacas,sql,tbb,utf8,vtkm]:x64-windows-static-md = skip
 vtk[atlmfc,cgns,geojson,ioocct,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,proj,python,qt,seacas,sql,tbb,utf8,vtkm]:x64-linux = skip
+vtk-m[cuda]:x64-linux = skip # CUDA clash with default gcc in Ubuntu 22.04, and not a quick failure.
 winpcap = skip # Broken and merked for removal. See https://github.com/microsoft/vcpkg/pull/33215
 
 # Skipped due to time and x64-osx going away soon:
