@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 101d84a903315456ac24d060da6269e02ac0030e966b801910543c39980042e92082b2430daaa9ab48ced90fb5fc0adf43dfab647615742d32950a1667c3630f
     HEAD_REF develop
+    PATCHES
+        fixifwin32.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
