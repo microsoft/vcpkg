@@ -10545,8 +10545,8 @@
       "port-version": 0
     },
     "xproperty": {
-      "baseline": "0.8.1",
-      "port-version": 3
+      "baseline": "0.12.1",
+      "port-version": 0
     },
     "xproto": {
       "baseline": "2021.5",
