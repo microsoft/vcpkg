@@ -1,3 +1,4 @@
+# Fetch source from GitHub
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Nouridin/cconfig
@@ -12,10 +13,11 @@ file(COPY "${SOURCE_PATH}/cconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/includ
 # Install license correctly for vcpkg
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-# Optional: skip usage cleanup if it exists
+# Optional: remove auto-generated usage folder if exists
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
 endif()
 
-# Optional: skip copyright check for header-only
+# Skip copyright and post-build checks for header-only
 set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled)
+set(VCPKG_POLICY_SKIP_POST_BUILD_CHECKS enabled)
