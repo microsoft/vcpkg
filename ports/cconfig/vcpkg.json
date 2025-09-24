@@ -1,6 +1,6 @@
 {
   "name": "cconfig",
-  "version-string": "1.0.0",
+  "version": "1.0.0",
   "description": "Header-only config parsing library",
   "homepage": "https://github.com/Nouridin/cconfig"
 }
