@@ -5028,6 +5028,10 @@
       "baseline": "3.3.2",
       "port-version": 1
     },
+    "libltdl": {
+      "baseline": "2.5.4",
+      "port-version": 0
+    },
     "liblttng-ust": {
       "baseline": "2.14.0-rc1",
       "port-version": 0
@@ -9881,8 +9885,8 @@
       "port-version": 6
     },
     "unixodbc": {
-      "baseline": "2.3.11",
-      "port-version": 2
+      "baseline": "2.3.12",
+      "port-version": 0
     },
     "unleash-client-cpp": {
       "baseline": "1.3.0",
