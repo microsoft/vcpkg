@@ -1,5 +1,8 @@
 {
-  "1.0.0": {
-    "port-version": 0
-  }
+  "versions": [
+    {
+      "version": "1.0.0",
+      "port-version": 0
+    }
+  ]
 }
