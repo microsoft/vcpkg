@@ -9,10 +9,13 @@ vcpkg_from_github(
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/cconfig")
 file(COPY "${SOURCE_PATH}/cconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/cconfig")
 
-# Install license
-file(COPY "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+# Install license correctly for vcpkg
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-# Remove unnecessary auto-generated usage folder
+# Optional: skip usage cleanup if it exists
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
 endif()
+
+# Optional: skip copyright check for header-only
+set(VCPKG_POLICY_SKIP_COPYRIGHT_CHECK enabled)
