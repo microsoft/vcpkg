@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO TileDB-Inc/TileDB
     REF "${VERSION}"
     HEAD_REF main
-    SHA512 ab71bb62f1eeb3cd023eb77decf7442ac86ffb2b56fc294aa27c49e7c9571f7e7ae7f5226d02366843e6e664741440e9c8353c42c6964e7a7f47bd849b559b50
+    SHA512 91fc9c601da2a422f785cc60f803c111beadb1c72825b611e6c16e6ce688a5f2df6dedee518d6b541c265917a946338d015ded60c929f722623ef74e30c645da
     PATCHES
         azure-fix.patch
         exclude-from-all.patch # https://github.com/TileDB-Inc/TileDB/pull/5606

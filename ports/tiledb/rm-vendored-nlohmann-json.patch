@@ -78,8 +78,22 @@ index 112ddc2..2779371 100644
 -#include "external/include/nlohmann/json.hpp"
 +#include <nlohmann/json.hpp>
  
+ #include "tiledb/common/assert.h"
  #include "tiledb/common/exception/exception.h"
- #include "tiledb/common/logger.h"
+diff --git a/tiledb/common/memory_tracker.h b/tiledb/common/memory_tracker.h
+index e6f6723..bc10972 100644
+--- a/tiledb/common/memory_tracker.h
++++ b/tiledb/common/memory_tracker.h
+@@ -100,7 +100,8 @@
+ #include <functional>
+ #include <thread>
+ 
+-#include "external/include/nlohmann/json.hpp"
++#include <nlohmann/json_fwd.hpp>
++
+ #include "tiledb/common/pmr.h"
+ #include "tiledb/common/status.h"
+ #include "tiledb/sm/config/config.h"
 diff --git a/tiledb/sm/filesystem/win.cc b/tiledb/sm/filesystem/win.cc
 index 26f0521..e10fc72 100644
 --- a/tiledb/sm/filesystem/win.cc
