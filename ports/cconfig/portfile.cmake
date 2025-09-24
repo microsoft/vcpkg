@@ -10,12 +10,10 @@ vcpkg_from_github(
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/cconfig")
 file(COPY "${SOURCE_PATH}/cconfig.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/cconfig")
 
-# Install license correctly for vcpkg
+# Install license using the vcpkg helper (required)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-# Optional: remove auto-generated usage folder if exists
+# Remove auto-generated usage folder if present
 if(EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
 endif()
-
-# Skip copyright and post-build checks for header-only
