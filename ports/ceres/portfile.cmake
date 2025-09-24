@@ -7,6 +7,9 @@ vcpkg_from_github(
     PATCHES
         0001_cmakelists_fixes.patch
         0004_remove_broken_fake_ba_jac.patch
+        0005_link_cuda_static.patch
+        0006_fix_cuda_architectures.patch
+        0007_support_cuda_13.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
