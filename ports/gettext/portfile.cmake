@@ -13,7 +13,7 @@ set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
+    URLS "https://ftpmirror.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://ftp.gnu.org/pub/gnu/gettext/gettext-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gettext/gettext-${VERSION}.tar.gz"
     FILENAME "gettext-${VERSION}.tar.gz"
