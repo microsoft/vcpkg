@@ -7,9 +7,6 @@
   "dependencies": [
     {
       "name": "abseil",
-      "features": [
-        "cxx17"
-      ],
       "platform": "!emscripten"
     },
     {
