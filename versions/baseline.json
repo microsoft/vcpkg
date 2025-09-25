@@ -10057,7 +10057,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-09-14",
+      "baseline": "2025-09-24",
       "port-version": 0
     },
     "vcpkg-msbuild": {
