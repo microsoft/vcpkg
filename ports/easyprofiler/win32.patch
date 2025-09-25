@@ -1,0 +1,13 @@
+diff --git a/easy_profiler_core/CMakeLists.txt b/easy_profiler_core/CMakeLists.txt
+index 9125d54..8d759ca 100644
+--- a/easy_profiler_core/CMakeLists.txt
++++ b/easy_profiler_core/CMakeLists.txt
+@@ -222,6 +222,8 @@ easy_define_target_option(easy_profiler EASY_OPTION_TRUNCATE_RUNTIME_NAMES EASY_
+ easy_define_target_option(easy_profiler EASY_OPTION_CHECK_MAX_VALUE_SIZE EASY_OPTION_CHECK_MAX_VALUE_DATA_SIZE)
+ easy_define_target_option(easy_profiler EASY_OPTION_IMPLICIT_THREAD_REGISTRATION EASY_OPTION_IMPLICIT_THREAD_REGISTRATION)
+ if (WIN32)
++    message(STATUS "Defined has win32")
++    target_compile_options(easy_profiler PRIVATE -DACTUALLY_HAS_WIN32)
+     easy_define_target_option(easy_profiler EASY_OPTION_EVENT_TRACING EASY_OPTION_EVENT_TRACING_ENABLED)
+     easy_define_target_option(easy_profiler EASY_OPTION_LOW_PRIORITY_EVENT_TRACING EASY_OPTION_LOW_PRIORITY_EVENT_TRACING)
+ else ()

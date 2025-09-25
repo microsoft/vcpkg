@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 101d84a903315456ac24d060da6269e02ac0030e966b801910543c39980042e92082b2430daaa9ab48ced90fb5fc0adf43dfab647615742d32950a1667c3630f
     HEAD_REF develop
+    PATCHES
+        win32.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,6 +18,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
 else()
     set(HAS_WIN32 OFF)
 endif()
+
+file(GLOB_RECURSE source_files
+	"${SOURCE_PATH}/*.cpp"
+	"${SOURCE_PATH}/*.h"
+	)
+	foreach(file_path IN LISTS source_files)
+		    file(READ "${file_path}" file_content)
+		        string(REPLACE "#if _WIN32" "#ifdef ACTUALLY_HAS_WIN32" file_content "${file_content}")
+			    file(WRITE "${file_path}" "${file_content}")
+		    endforeach()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
