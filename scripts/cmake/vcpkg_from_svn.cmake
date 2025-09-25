@@ -45,13 +45,19 @@ function(vcpkg_from_svn)
         message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified")
     endif()
 
-    string(SHA256 url_hash "${arg_URL}")
+    set(hash_working_dir "${arg_URL}")
+    if(DEFINED ${arg_REF})
+        string(APPEND hash_working_dir "-${arg_REF}")
+    else()
+        string(APPEND hash_working_dir "-${arg_HEAD_REF}")
+    endif()
+    string(SHA256 hash_working_dir "${hash_working_dir}")
 
     vcpkg_list(SET extract_working_directory_param)
     vcpkg_list(SET skip_patch_check_param)
     vcpkg_list(SET svn_ignore_externals_param)
+    set(svn_working_directory "${DOWNLOADS}/svn-${hash_working_dir}")
     vcpkg_list(SET svn_depth_param --depth infinity)
-    set(svn_working_directory "${DOWNLOADS}/svn-${url_hash}")
     set(do_download OFF)
     if(DEFINED IGNORE_EXTERNALS)
         vcpkg_list(SET "svn_ignore_externals_param" --ignore-externals)
@@ -102,7 +108,6 @@ function(vcpkg_from_svn)
             set(expected_rev_parse "${arg_REF}")
         endif()
 
-        file(REMOVE_RECURSE "${svn_working_directory}")
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
             COMMAND "${SVN}" checkout "--force"  -r "${ref_to_fetch}" ${svn_depth_param}
