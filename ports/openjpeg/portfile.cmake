@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         third-party.diff
+        pkgconfig.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
@@ -41,13 +42,6 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
-
-if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
-    if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libopenjp2.pc" "-lm" "-lm -pthread")
-    endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libopenjp2.pc" "-lm" "-lm -pthread")
-endif()
 
 set(TOOL_NAMES "")
 if("tools" IN_LIST FEATURES)
