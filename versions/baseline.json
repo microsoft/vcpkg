@@ -6741,8 +6741,8 @@
       "port-version": 2
     },
     "nghttp3": {
-      "baseline": "1.11.0",
-      "port-version": 1
+      "baseline": "1.12.0",
+      "port-version": 0
     },
     "ngspice": {
       "baseline": "41",
