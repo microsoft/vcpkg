@@ -4,7 +4,6 @@
   "description": "A lightweight, header-only, high-performance reactive programming framework for C++20",
   "homepage": "https://github.com/lumia431/reaction",
   "license": "MIT",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -14,11 +13,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "cxx20": {
-      "description": "Enable C++20 features",
-      "supports": "native"
-    }
-  }
+  ]
 }
