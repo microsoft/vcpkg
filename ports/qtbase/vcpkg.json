@@ -1,6 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.9.1",
+  "version": "6.9.2",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,

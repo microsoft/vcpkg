@@ -17,7 +17,7 @@ INVERTED_FEATURES
     )
 
 if("assimp" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=system -DTEST_quick3d_assimp=ON -DHAVE_Assimp=ON)
+    list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=system -DTEST_quick3d_assimp=ON)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=no)
 endif()
