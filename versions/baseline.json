@@ -3246,11 +3246,11 @@
     },
     "gettext": {
       "baseline": "0.22.5",
-      "port-version": 2
+      "port-version": 3
     },
     "gettext-libintl": {
       "baseline": "0.22.5",
-      "port-version": 3
+      "port-version": 4
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
