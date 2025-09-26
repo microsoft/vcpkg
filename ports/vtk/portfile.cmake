@@ -280,6 +280,8 @@ vcpkg_cmake_configure(
         -DVTK_MODULE_ENABLE_VTK_CommonArchive=NO
         -DVTK_MODULE_ENABLE_VTK_DomainsMicroscopy=NO
         -DVTK_MODULE_ENABLE_VTK_fides=NO
+        -DVTK_MODULE_ENABLE_VTK_InfovisBoost=NO
+        -DVTK_MODULE_ENABLE_VTK_InfovisBoostGraphAlgorithms=NO
         -DVTK_MODULE_ENABLE_VTK_IOADIOS2=NO
         -DVTK_MODULE_ENABLE_VTK_IOAlembic=NO
         -DVTK_MODULE_ENABLE_VTK_IOLAS=NO
