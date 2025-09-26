@@ -1,7 +1,7 @@
 {
   "name": "python3",
   "version": "3.12.9",
-  "port-version": 4,
+  "port-version": 5,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -75,6 +75,10 @@
           "default-features": false
         },
         {
+          "name": "ncurses",
+          "platform": "!windows | mingw"
+        },
+        {
           "name": "openssl",
           "default-features": false
         },
@@ -90,8 +94,11 @@
       ]
     },
     "readline": {
-      "description": "Build with readline. Requires system readline to be installed",
-      "supports": "!windows"
+      "description": "Build with readline.",
+      "supports": "!windows",
+      "dependencies": [
+        "readline"
+      ]
     }
   }
 }
