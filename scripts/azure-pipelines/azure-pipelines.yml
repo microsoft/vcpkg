@@ -68,13 +68,6 @@ jobs:
 
 - template: osx/azure-pipelines.yml
   parameters:
-    jobName: x64_osx
-    poolName: 'PrOsx-2025-09-11'
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-
-- template: osx/azure-pipelines.yml
-  parameters:
     jobName: arm64_osx
     poolName: 'PrOsx-2025-09-11-arm64'
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
