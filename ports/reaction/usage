@@ -1,0 +1,20 @@
+reaction is a header-only library that provides CMake targets:
+
+  find_package(reaction CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE reaction::reaction)
+
+Example usage:
+
+  #include <reaction.h>
+
+  // Create reactive variables
+  auto a = reaction::var(1);
+  auto b = reaction::var(2);
+
+  // Create computed values
+  auto sum = reaction::calc([]() { return a() + b(); });
+
+  // Values automatically update when dependencies change
+  a.value(10); // sum will automatically update to 12
+
+
