@@ -1,0 +1,7 @@
+{
+  "name": "sugar-proto",
+  "version": "1.0.0",
+  "description": "C++ sugar wrapper for protobuf",
+  "homepage": "https://github.com/illegal-instruction-co/sugar-proto",
+  "license": "Apache-2.0"
+}
