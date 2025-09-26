@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 702a10e20caaf8209684ded7c9fcf32f5ba6a972cf2d9fcf2611cdc6a446d2c3bb60324205758e6b6f92278c8cf4ef0fbae511e6ffb45ed6e8df514db0c6ab25
     HEAD_REF master
     PATCHES
-        third-party.diff
         pkgconfig.diff
+        third-party.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)

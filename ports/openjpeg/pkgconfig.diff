@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 29a8993..7403e18 100644
+index 29a89939..5c5f4e5c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -332,10 +332,14 @@ set_variable_from_rel_or_absolute_path("includedir" "\\\${prefix}" "${CMAKE_INST
@@ -14,7 +14,7 @@ index 29a8993..7403e18 100644
 +    list(REMOVE_ITEM link_libs "${OPENJPEG_LIBRARY_NAME}")
 +    set(deps "")
 +    foreach(item IN LISTS link_libs)
-+      if(item STREQUAL "-pthread")
++      if(item STREQUAL "-pthread" OR item STREQUAL "-lpthread")
 +        string(APPEND deps " ${item}")
 +      else()
 +        string(APPEND deps " -l${item}")
