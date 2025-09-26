@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 1231716b59b40083732781fe54fd2fa55d308dde
-    SHA512 8d672e1b424b8a71d1050e3e12547b27d40c2abc079764e3582de6a67b9ba2809b0c91e5719bc2cdcdd6a74ce5ab603034eb83bb77a11d7d49ea370c0c8976a1
+    REF 1f7b40dee51a308f20ad6c3c5a8dece33a03e086
+    SHA512 be1780d435d7fd89ab75688c9e50ebc16bbd02e20b95207248c1a547cb9653cf6ef86d8d778ba73847d4103caf0f60bb97be2e9f98c91b1b8543d733a1ebe9a0
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/core/azure-core-tracing-opentelemetry")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/core/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/core/azure-core-tracing-opentelemetry" "${SOURCE_PATH}/sdk/core/_")
-  file(RENAME "${SOURCE_PATH}/sdk/core" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
