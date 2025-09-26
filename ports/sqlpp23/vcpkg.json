@@ -1,0 +1,48 @@
+{
+  "name": "sqlpp23",
+  "version": "0.67",
+  "description": "A type safe SQL library for C++",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "mariadb": {
+      "description": "Build with MariaDB connection",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
+    "mysql": {
+      "description": "Build with MySQL connection",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
+    "postgres": {
+      "description": "Build postgres connection",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "sqlcipher": {
+      "description": "Build with sqlcipher connection",
+      "dependencies": [
+        "sqlcipher"
+      ]
+    },
+    "sqlite3": {
+      "description": "Build with sqlite3 connection",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}
