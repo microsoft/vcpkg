@@ -3,11 +3,10 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF 44ea6eda2ad8a94663597cbe85e37de98bd99269
-    SHA512 be93d44f87ef25f7c0bb37ca8020de7714ec89b4f92677d7b631a2dcad9db38789e59adb7a6af0d1f5f550c570d875ea9ed69833f7d7af76ef8cb9159f0a7c23
+    REF v0.9.1
+    SHA512 c31aeaaba328cd217f34191f1ce87720bb34dc39dc036f2ba8c92710636706f5be2cfcf86dc8c38ec737b020908da0e136447de10e7d9e6db698c812e7d21ae3
     HEAD_REF master
     PATCHES
-        android-vulkan.diff
 )
 
 vcpkg_cmake_configure(

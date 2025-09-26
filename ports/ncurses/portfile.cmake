@@ -5,7 +5,7 @@ vcpkg_download_distfile(
         "ftp://ftp.invisible-island.net/ncurses/ncurses-${VERSION}.tar.gz"
         "https://ftp.gnu.org/gnu/ncurses/ncurses-${VERSION}.tar.gz"
     FILENAME "ncurses-${VERSION}.tgz"
-    SHA512 1c2efff87a82a57e57b0c60023c87bae93f6718114c8f9dc010d4c21119a2f7576d0225dab5f0a227c2cfc6fb6bdbd62728e407f35fce5bf351bb50cf9e0fd34
+    SHA512 fc5a13409d2a530a1325776dcce3a99127ddc2c03999cfeb0065d0eee2d68456274fb1c7b3cc99c1937bc657d0e7fca97016e147f93c7821b5a4a6837db821e8
 )
 
 vcpkg_extract_source_archive(
@@ -37,6 +37,12 @@ if(VCPKG_TARGET_IS_MINGW)
     )
 endif()
 
+if("check-size" IN_LIST FEATURES)
+    list(APPEND OPTIONS
+        --enable-check-size
+    )
+endif()
+
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
@@ -54,6 +60,8 @@ vcpkg_configure_make(
     OPTIONS
         ${OPTIONS}
         --disable-db-install
+        --disable-pkg-ldflags
+        --disable-rpath-hack
         --enable-pc-files
         --without-ada
         --without-debug # "lib model"
@@ -64,8 +72,16 @@ vcpkg_configure_make(
         --with-pkg-config-libdir=libdir
 )
 vcpkg_install_make()
-
 vcpkg_fixup_pkgconfig()
+
+file(GLOB pcfiles_release "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
+foreach(file IN LISTS pcfiles_release)
+    vcpkg_replace_string("${file}" [[ "-I${prefix}/include"]] "")
+endforeach()
+file(GLOB pcfiles_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
+foreach(file IN LISTS pcfiles_debug)
+    vcpkg_replace_string("${file}" [[ "-I${prefix}/../include"]] "")
+endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")

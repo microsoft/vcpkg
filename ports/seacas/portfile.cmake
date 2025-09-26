@@ -12,6 +12,7 @@ vcpkg_from_github(
             fix-fmt-10.patch
             fix-build-error-with-fmt11.patch
             netcdf-c.diff
+            use-std-localtime.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/tribits/common_tpls/find_modules/FindHDF5.cmake")
 
