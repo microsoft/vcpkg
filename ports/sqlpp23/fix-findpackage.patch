@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4cf2640d..98bf50de 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,11 +47,11 @@ set(SQLPP23_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Sqlpp23 CACHE STRING
+ 
+ ### Dependencies
+ if(DEPENDENCY_CHECK AND BUILD_MYSQL_CONNECTOR)
+-    find_package(MySQL REQUIRED)
++    find_package(unofficial-libmysql REQUIRED)
+ endif()
+ 
+ if(DEPENDENCY_CHECK AND BUILD_MARIADB_CONNECTOR)
+-    find_package(MariaDB REQUIRED)
++    find_package(unofficial-libmariadb CONFIG REQUIRED)
+ endif()
+ 
+ if(DEPENDENCY_CHECK AND BUILD_POSTGRESQL_CONNECTOR)
+@@ -59,11 +59,11 @@ if(DEPENDENCY_CHECK AND BUILD_POSTGRESQL_CONNECTOR)
+ endif()
+ 
+ if(DEPENDENCY_CHECK AND BUILD_SQLITE3_CONNECTOR)
+-    find_package(SQLite3 REQUIRED)
++    find_package(unofficial-sqlite3 CONFIG REQUIRED)
+ endif()
+ 
+ if(DEPENDENCY_CHECK AND BUILD_SQLCIPHER_CONNECTOR)
+-    find_package(SQLCipher REQUIRED)
++    find_package(SQLCipher CONFIG REQUIRED)
+ endif()
+ 
+ ### Core targets
