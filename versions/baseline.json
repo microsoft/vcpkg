@@ -780,10 +780,6 @@
       "baseline": "8.2.5",
       "port-version": 1
     },
-    "bond": {
-      "baseline": "13.0.1",
-      "port-version": 0
-    },
     "boolinq": {
       "baseline": "3.0.4",
       "port-version": 0
@@ -4934,7 +4930,7 @@
     },
     "libiconv": {
       "baseline": "1.18",
-      "port-version": 1
+      "port-version": 2
     },
     "libics": {
       "baseline": "1.6.8",
@@ -10061,7 +10057,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-09-14",
+      "baseline": "2025-09-19",
       "port-version": 0
     },
     "vcpkg-msbuild": {
