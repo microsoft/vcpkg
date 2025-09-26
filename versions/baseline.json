@@ -485,7 +485,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.591",
+      "baseline": "1.11.646",
       "port-version": 0
     },
     "azmq": {
@@ -765,7 +765,7 @@
       "port-version": 0
     },
     "blosc2": {
-      "baseline": "2.21.2",
+      "baseline": "2.21.3",
       "port-version": 0
     },
     "blpapi": {
@@ -779,10 +779,6 @@
     "boinc": {
       "baseline": "8.2.5",
       "port-version": 1
-    },
-    "bond": {
-      "baseline": "13.0.1",
-      "port-version": 0
     },
     "boolinq": {
       "baseline": "3.0.4",
@@ -1624,6 +1620,10 @@
       "baseline": "2.5",
       "port-version": 13
     },
+    "cconfig": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "cctag": {
       "baseline": "1.0.4",
       "port-version": 0
@@ -2181,7 +2181,7 @@
       "port-version": 1
     },
     "cserialport": {
-      "baseline": "4.3.1",
+      "baseline": "4.3.3",
       "port-version": 0
     },
     "cspice": {
@@ -2348,6 +2348,10 @@
       "baseline": "2.2.5",
       "port-version": 1
     },
+    "dawn": {
+      "baseline": "20250922.223923",
+      "port-version": 0
+    },
     "daxa": {
       "baseline": "3.0.3",
       "port-version": 0
@@ -2417,11 +2421,11 @@
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.616.0",
+      "baseline": "1.618.1",
       "port-version": 0
     },
     "directx12-agility": {
-      "baseline": "1.616.1",
+      "baseline": "1.618.1",
       "port-version": 0
     },
     "directxmath": {
@@ -2673,8 +2677,8 @@
       "port-version": 0
     },
     "eigen3": {
-      "baseline": "3.4.1-250818",
-      "port-version": 1
+      "baseline": "3.4.1",
+      "port-version": 0
     },
     "eipscanner": {
       "baseline": "1.3.0",
@@ -2761,7 +2765,7 @@
       "port-version": 0
     },
     "expat": {
-      "baseline": "2.7.2",
+      "baseline": "2.7.3",
       "port-version": 0
     },
     "expected-lite": {
@@ -2965,7 +2969,7 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "25.2.10",
+      "baseline": "25.9.23",
       "port-version": 0
     },
     "flatbush": {
@@ -3246,11 +3250,11 @@
     },
     "gettext": {
       "baseline": "0.22.5",
-      "port-version": 2
+      "port-version": 3
     },
     "gettext-libintl": {
       "baseline": "0.22.5",
-      "port-version": 3
+      "port-version": 4
     },
     "gettimeofday": {
       "baseline": "2017-10-14",
@@ -3301,7 +3305,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.7.1",
+      "baseline": "5.7.2",
       "port-version": 0
     },
     "glbinding": {
@@ -4930,7 +4934,7 @@
     },
     "libiconv": {
       "baseline": "1.18",
-      "port-version": 1
+      "port-version": 2
     },
     "libics": {
       "baseline": "1.6.8",
@@ -5257,7 +5261,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "9.0.13",
+      "baseline": "9.0.15",
       "port-version": 0
     },
     "libplist": {
@@ -5325,7 +5329,7 @@
       "port-version": 0
     },
     "librdkafka": {
-      "baseline": "2.10.1",
+      "baseline": "2.11.1",
       "port-version": 0
     },
     "libredwg": {
@@ -6593,7 +6597,7 @@
       "port-version": 0
     },
     "mzying2001-sw": {
-      "baseline": "0.0.5",
+      "baseline": "0.0.6",
       "port-version": 0
     },
     "nameof": {
@@ -6741,15 +6745,15 @@
       "port-version": 2
     },
     "nghttp3": {
-      "baseline": "1.11.0",
-      "port-version": 1
+      "baseline": "1.12.0",
+      "port-version": 0
     },
     "ngspice": {
       "baseline": "41",
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.15.1",
+      "baseline": "1.16.0",
       "port-version": 0
     },
     "nifly": {
@@ -7093,7 +7097,7 @@
       "port-version": 1
     },
     "openjpeg": {
-      "baseline": "2.5.3",
+      "baseline": "2.5.4",
       "port-version": 0
     },
     "openldap": {
@@ -7145,7 +7149,7 @@
       "port-version": 1
     },
     "opentelemetry-cpp-contrib-version": {
-      "baseline": "2025-06-11",
+      "baseline": "2025-09-25",
       "port-version": 0
     },
     "opentracing": {
@@ -8166,7 +8170,7 @@
     },
     "qtwebengine": {
       "baseline": "6.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "qtwebsockets": {
       "baseline": "6.9.1",
@@ -8601,7 +8605,7 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.5.25",
+      "baseline": "1.5.27",
       "port-version": 0
     },
     "safeint": {
@@ -8953,8 +8957,8 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "134",
-      "port-version": 2
+      "baseline": "140",
+      "port-version": 0
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -9560,6 +9564,10 @@
       "baseline": "1.8.0",
       "port-version": 2
     },
+    "thermadiag-seq": {
+      "baseline": "2.0",
+      "port-version": 0
+    },
     "think-cell-range": {
       "baseline": "2023.1",
       "port-version": 1
@@ -9585,7 +9593,7 @@
       "port-version": 2
     },
     "tiff": {
-      "baseline": "4.7.0",
+      "baseline": "4.7.1",
       "port-version": 0
     },
     "tinkerforge": {
@@ -9877,7 +9885,7 @@
       "port-version": 0
     },
     "units": {
-      "baseline": "2.3.4",
+      "baseline": "3.1.1",
       "port-version": 0
     },
     "unittest-cpp": {
@@ -10053,7 +10061,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-09-14",
+      "baseline": "2025-09-19",
       "port-version": 0
     },
     "vcpkg-msbuild": {
@@ -10565,8 +10573,8 @@
       "port-version": 0
     },
     "xproperty": {
-      "baseline": "0.8.1",
-      "port-version": 3
+      "baseline": "0.12.1",
+      "port-version": 0
     },
     "xproto": {
       "baseline": "2021.5",
