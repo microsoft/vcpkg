@@ -7093,7 +7093,7 @@
       "port-version": 1
     },
     "openjpeg": {
-      "baseline": "2.5.3",
+      "baseline": "2.5.4",
       "port-version": 0
     },
     "openldap": {
