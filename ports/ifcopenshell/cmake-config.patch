@@ -1,0 +1,63 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 4c3d681..7431a34 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -1228,10 +1229,16 @@
+ )
+ 
+ install(TARGETS IfcParse
++	EXPORT IfcParseTargets
+ 	ARCHIVE DESTINATION ${LIBDIR}
+ 	LIBRARY DESTINATION ${LIBDIR}
+ 	RUNTIME DESTINATION ${BINDIR}
+ )
++install(
++	EXPORT IfcParseTargets
++	NAMESPACE IfcOpenShell::
++	DESTINATION share/IfcOpenShell
++)
+ 
+ if(BUILD_IFCGEOM)
+     # install(FILES ${IFCGEOM_H_FILES}
+@@ -1248,11 +1255,17 @@
+         )
+     endforeach()
+ 
+-    install(TARGETS ${IFCGEOM_SCHEMA_LIBRARIES} ${kernel_libraries} IfcGeom
++    install(TARGETS IfcGeom
++        EXPORT IfcGeomTargets
+         ARCHIVE DESTINATION ${LIBDIR}
+         LIBRARY DESTINATION ${LIBDIR}
+         RUNTIME DESTINATION ${BINDIR}
+     )
++    install(
++        EXPORT IfcGeomTargets
++        NAMESPACE IfcOpenShell::
++        DESTINATION share/IfcOpenShell
++    )
+ endif(BUILD_IFCGEOM)
+ 
+ if(BUILD_CONVERT)
+@@ -1289,6 +1302,22 @@
+     add_custom_target(uninstall
+         COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+ endif()
++include(CMakePackageConfigHelpers)
++file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/IfcOpenShellConfig.cmake.in [[
++@PACKAGE_INIT@
++include(CMakeFindDependencyMacro)
++find_dependency(Boost COMPONENTS date_time program_options regex system thread)
++include("${CMAKE_CURRENT_LIST_DIR}/IfcParseTargets.cmake")
++if(@BUILD_IFCGEOM@)
++    if(@WITH_OPENCASCADE@)
++        find_dependency(OpenCASCADE CONFIG)
++    endif()
++    find_dependency(Eigen3)
++    include("${CMAKE_CURRENT_LIST_DIR}/IfcGeomTargets.cmake")
++endif()
++]])
++configure_package_config_file("${CMAKE_CURRENT_BINARY_DIR}/IfcOpenShellConfig.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/IfcOpenShellConfig.cmake" INSTALL_DESTINATION share/IfcOpenShell)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/IfcOpenShellConfig.cmake" DESTINATION share/IfcOpenShell)
+ 
+ # Packaging
+ list(APPEND CPACK_SOURCE_IGNORE_FILES

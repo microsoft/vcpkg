@@ -1,0 +1,38 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index ebca949..b95d6be 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -359,6 +359,12 @@ if(BUILD_IFCGEOM)
+ 
+     # Open CASCADE
+     if(WITH_OPENCASCADE)
++        find_package(OpenCASCADE CONFIG REQUIRED)
++        set(OCC_VERSION_STRING ${OpenCASCADE_VERSION})
++        set(OCC_INCLUDE_DIR "${OpenCASCADE_INCLUDE_DIR}")
++        set(OPENCASCADE_LIBRARIES TKBO TKDE TKBin TKBool TKMesh TKOffset TKCAF)
++    endif()
++    if(0)
+     if("${OCC_INCLUDE_DIR}" STREQUAL "")
+ 	clear_wasm_sysroot()
+         find_path(OCC_INCLUDE_DIR Standard_Version.hxx
+diff --git a/src/ifcgeom/IfcGeomRepresentation.cpp b/src/ifcgeom/IfcGeomRepresentation.cpp
+index 4c3d681..7431a34 100644
+--- a/src/ifcgeom/IfcGeomRepresentation.cpp
++++ b/src/ifcgeom/IfcGeomRepresentation.cpp
+@@ -170,12 +170,15 @@
+ 	}
+ 
+ 	if (brep.begin() != brep.end()) {
++#ifdef IFOPSH_WITH_OPENCASCADE
+ 		if (std::dynamic_pointer_cast<ifcopenshell::geometry::OpenCascadeShape>(brep.begin()->Shape())) {
+ 			ConversionResultShape* shape = brep.as_compound();
+ 			ifcopenshell::geometry::taxonomy::matrix4 identity;
+ 			shape->Serialize(identity, brep_data_);
+ 			delete shape;
+-		} else {
++		} else
++#endif
++		{
+ 			for (auto it = brep.begin(); it != brep.end(); ++it) {
+ 				std::string part;
+ 				it->Shape()->Serialize(*it->Placement(), part);
