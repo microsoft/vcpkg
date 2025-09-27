@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # this mirrors ImGui's portfile behavior
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sfml/imgui-sfml
