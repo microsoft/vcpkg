@@ -1,6 +1,6 @@
 {
   "name": "luau",
-  "version": "0.692",
+  "version": "0.693",
   "description": "A fast, small, safe, gradually typed embeddable scripting language derived from Lua",
   "homepage": "https://github.com/luau-lang/luau",
   "license": "MIT",
