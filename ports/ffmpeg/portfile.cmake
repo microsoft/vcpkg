@@ -18,6 +18,7 @@ vcpkg_from_github(
         0041-add-const-for-opengl-definition.patch
         0043-fix-miss-head.patch
         0044-fix-vulkan-debug-callback-abi.patch
+        0045-fix-svt-av1-integration_ffmpeg_n7_fix.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -593,6 +594,12 @@ if ("vaapi" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-vaapi")
     set(WITH_VAAPI OFF)
+endif()
+
+if("svt-av1" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libsvtav1")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libsvtav1")
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")
