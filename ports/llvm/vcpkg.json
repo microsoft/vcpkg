@@ -1,7 +1,6 @@
 {
   "name": "llvm",
-  "version": "18.1.6",
-  "port-version": 5,
+  "version": "21.1.1",
   "description": "The LLVM Compiler Infrastructure.",
   "homepage": "https://llvm.org",
   "license": "Apache-2.0 WITH LLVM-exception",
@@ -28,7 +27,6 @@
     "clang",
     "default-targets",
     "enable-bindings",
-    "enable-terminfo",
     "enable-zlib",
     "enable-zstd",
     "lld",
@@ -55,6 +53,31 @@
           "default-features": false,
           "features": [
             "tools"
+          ]
+        }
+      ]
+    },
+    "clang-enable-cir": {
+      "description": "Include ClangIR.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "mlir"
+          ]
+        }
+      ]
+    },
+    "clang-enable-static-analyzer": {
+      "description": "Include static analyzer in Clang binary.",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang"
           ]
         }
       ]
@@ -175,9 +198,6 @@
     "enable-rtti": {
       "description": "Build LLVM with run-time type information."
     },
-    "enable-terminfo": {
-      "description": "Use terminfo database if available."
-    },
     "enable-zlib": {
       "description": "Build with ZLib.",
       "dependencies": [
@@ -284,7 +304,6 @@
           "default-features": false,
           "features": [
             "clang",
-            "enable-terminfo",
             "tools"
           ]
         }
@@ -325,18 +344,6 @@
           "features": [
             "tools",
             "utils"
-          ]
-        }
-      ]
-    },
-    "pstl": {
-      "description": "Include pstl (Parallel STL) library.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
           ]
         }
       ]
@@ -432,7 +439,7 @@
       "description": "Build with Sparc backend."
     },
     "target-spirv": {
-      "description": "Build with SPIRV backend (experimental)."
+      "description": "Build with SPIRV backend."
     },
     "target-systemz": {
       "description": "Build with SystemZ backend."
