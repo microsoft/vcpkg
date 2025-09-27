@@ -1,0 +1,5 @@
+Header-only library. After installing, include the header:
+
+    #include <mexce.h>
+
+The library targets x86/x86_64 architectures only.
