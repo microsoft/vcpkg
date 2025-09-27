@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libvpx
@@ -133,7 +131,12 @@ else()
 
     set(OPTIONS "--disable-examples --disable-tools --disable-docs --disable-unit-tests --enable-pic")
 
-    set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
+    # Only enable debug static libs in static builds; shared builds must NOT enable debug-libs.
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        set(OPTIONS_DEBUG "--enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
+    else()
+        set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
+    endif()
     set(OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
     set(AS_NASM "--as=nasm")
 
@@ -308,8 +311,13 @@ else()
             LOGNAME install-${TARGET_TRIPLET}-dbg
         )
 
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+            # This file only exists for static builds; guard the removal.
+            if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+                file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libvpx_g.a")
+            endif()
+        endif()
     endif()
 endif()
 
