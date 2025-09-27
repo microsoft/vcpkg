@@ -5,8 +5,10 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libeigen/eigen
     REF ${VERSION}
-    SHA512 8b82e6785eda1982fd8f2a8321b0fff144062eb78cac6b9d0c87cba374cfaa3f2bde33a34069b2871ae548ce681f5a7e1247918c5215d92ed4836614548a1936
+    SHA512 7709e303b278ab7e7fb74ff6e05ab40a7a851fd3b3bda2cae6418f5fe1d95b34f3a6b2e3ff4f1bfef731143d7155292f100d656bc7d32111c53bc22a7a010876
     HEAD_REF master
+    PATCHES
+        0001-add-cxx_std_14.patch
 )
 
 vcpkg_cmake_configure(
@@ -31,12 +33,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
-
 vcpkg_fixup_pkgconfig()
-
-# Copy the eigen header files to conventional location for user-wide MSBuild integration
-file(GLOB INCLUDES ${CURRENT_PACKAGES_DIR}/include/eigen3/*)
-file(COPY ${INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
