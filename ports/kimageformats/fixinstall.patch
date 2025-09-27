@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d9ddb40..d79a96f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -109,7 +109,13 @@ if (BUILD_TESTING)
+     add_subdirectory(tests)
+ endif()
+ 
+-set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF6ImageFormats")
++file(GLOB_RECURSE header_files "${CMAKE_CURRENT_SOURCE_DIR}/src/imageformats/*.h")
++install(FILES
++  ${header_files}
++  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++)
++
++set(CMAKECONFIG_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/share/kimageformats")
+ include(CMakePackageConfigHelpers)
+ 
+ write_basic_package_version_file(
+@@ -134,4 +140,4 @@ install(FILES
+ include(ECMFeatureSummary)
+ ecm_feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+ 
+-kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
++#kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)
+diff --git a/src/imageformats/CMakeLists.txt b/src/imageformats/CMakeLists.txt
+index e02347f..314e366 100644
+--- a/src/imageformats/CMakeLists.txt
++++ b/src/imageformats/CMakeLists.txt
+@@ -13,7 +13,7 @@ function(kimageformats_add_plugin plugin)
+ 
+     qt_add_plugin(${plugin} PLUGIN_TYPE imageformats)
+     target_sources(${plugin} PRIVATE ${KIF_ADD_PLUGIN_SOURCES})
+-    set_target_properties(${plugin} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imageformats)
++    set_target_properties(${plugin} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imageformats RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imageformats ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
+     target_link_libraries(${plugin} PRIVATE Qt6::Gui)
+ 
+     if(ANDROID)
