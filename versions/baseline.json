@@ -3409,7 +3409,7 @@
       "port-version": 0
     },
     "gperftools": {
-      "baseline": "2.16",
+      "baseline": "2.17.2",
       "port-version": 0
     },
     "gpgme": {
