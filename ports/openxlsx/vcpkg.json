@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "openxlsx",
+  "version-date": "2025-07-14",
+  "description": "OpenXLSX is a C++ library for reading, writing, creating and modifying Microsoft Excel® files, with the .xlsx format.",
+  "homepage": "https://github.com/troldal/OpenXLSX",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "nowide",
+      "platform": "windows"
+    },
+    "pugixml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
