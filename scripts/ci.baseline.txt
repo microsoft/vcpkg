@@ -996,7 +996,11 @@ torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
 tvision:arm-neon-android=fail
 tvision:arm64-android=fail
+tvision:arm64-osx=fail
 tvision:x64-android=fail
+tvision:x64-osx=fail
+unixodbc:arm64-osx=fail
+unixodbc:x64-osx=fail
 urho3d:x64-osx=fail
 # Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
 usd:x64-windows-static=skip
