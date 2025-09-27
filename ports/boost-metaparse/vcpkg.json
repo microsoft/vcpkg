@@ -17,6 +17,26 @@
     {
       "name": "boost-headers",
       "version>=": "1.89.0"
+    },
+    {
+      "name": "boost-mpl",
+      "version>=": "1.89.0"
+    },
+    {
+      "name": "boost-predef",
+      "version>=": "1.89.0"
+    },
+    {
+      "name": "boost-preprocessor",
+      "version>=": "1.89.0"
+    },
+    {
+      "name": "boost-static-assert",
+      "version>=": "1.89.0"
+    },
+    {
+      "name": "boost-type-traits",
+      "version>=": "1.89.0"
     }
   ]
 }
