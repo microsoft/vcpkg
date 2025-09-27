@@ -15,6 +15,9 @@ vcpkg_from_github(
         skparagraph-dllexport.patch
         dawn.patch
         use-pkgconfig-to-find-gl.patch
+        dont-use-response-file.patch
+        fix-openbsd.patch
+        allow-disabling-lib-dl.patch
 )
 
 # De-vendor
@@ -124,12 +127,20 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         string(APPEND OPTIONS " skia_enable_bentleyottmann=false")
     endif()
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
+    string(APPEND OPTIONS " target_os=\"linux\"")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     string(APPEND OPTIONS " is_component_build=true")
 else()
     string(APPEND OPTIONS " is_component_build=false")
+endif()
+
+if (VCPKG_TARGET_IS_OPENBSD)
+    string(APPEND OPTIONS " skia_vcpkg_has_lib_dl=false")
+else()
+    string(APPEND OPTIONS " skia_vcpkg_has_lib_dl=true")
 endif()
 
 set(required_externals
