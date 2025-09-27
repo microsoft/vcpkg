@@ -22,7 +22,7 @@ index a28e6c3..aaeb5d2 100644
 +            set(avif_find_dependencies "find_dependency(libyuv CONFIG)\n")
 +            if(AVIF_CODEC_AOM_ENABLED)
 +                find_package(AOM CONFIG REQUIRED)
-+                list(APPEND avif_static_link_libs unofficial::aom)
++                list(APPEND avif_static_link_libs AOM::aom)
 +                string(APPEND avif_find_dependencies "find_dependency(AOM CONFIG)\n")
 +            endif()
 +            if(AVIF_CODEC_DAV1D_ENABLED)
