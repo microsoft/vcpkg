@@ -1,12 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 55869f4..e8b20cb 100644
+index 8bed591..ccbf050 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -524,6 +524,7 @@ else()
-   set_target_properties(onnx_proto PROPERTIES VISIBILITY_INLINES_HIDDEN 1)
- endif()
- target_compile_definitions(onnx_proto PRIVATE ${ONNX_API_DEFINE})
+@@ -434,7 +434,7 @@ list(APPEND ONNX_SRCS ${__tmp_srcs})
+ # Hide all symbols we don't need
+ set_target_properties(onnx_proto PROPERTIES CXX_VISIBILITY_PRESET hidden)
+ set_target_properties(onnx_proto PROPERTIES VISIBILITY_INLINES_HIDDEN 1)
+-
 +target_compile_features(onnx_proto PUBLIC cxx_std_${CMAKE_CXX_STANDARD})
- 
+ set(LINKED_PROTOBUF_TARGET protobuf::libprotobuf)
  if(ONNX_USE_LITE_PROTO)
    if(TARGET protobuf::libprotobuf-lite)
