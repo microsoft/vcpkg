@@ -47,6 +47,10 @@
       "platform": "uwp"
     },
     {
+      "name": "dng",
+      "platform": "!(freebsd | openbsd)"
+    },
+    {
       "name": "fontconfig",
       "platform": "linux"
     },
@@ -96,6 +100,10 @@
     "direct3d": {
       "description": "Direct3D support for skia",
       "supports": "windows"
+    },
+    "dng": {
+      "description": "Support for DNG files",
+      "supports": "!(freebsd | openbsd)"
     },
     "fontconfig": {
       "description": "Fontconfig support",

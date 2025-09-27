@@ -131,7 +131,6 @@ else()
 endif()
 
 set(required_externals
-    dng_sdk
     expat
     libjpeg
     libpng
@@ -140,6 +139,13 @@ set(required_externals
     zlib
     wuffs
 )
+
+if("dng" IN_LIST FEATURES)
+    list(APPEND required_externals dng_sdk)
+    string(APPEND OPTIONS " skia_use_dng_sdk=true")
+else()
+    string(APPEND OPTIONS " skia_use_dng_sdk=false")
+endif()
 
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND required_externals fontconfig)
