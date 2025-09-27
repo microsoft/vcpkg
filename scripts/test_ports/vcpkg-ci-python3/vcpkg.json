@@ -10,5 +10,28 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "ci"
+  ],
+  "features": {
+    "ci": {
+      "description": "Test features in CI",
+      "dependencies": [
+        {
+          "name": "python3",
+          "features": [
+            {
+              "name": "extensions",
+              "platform": "!(windows & staticcrt)"
+            },
+            {
+              "name": "readline",
+              "platform": "!windows"
+            }
+          ]
+        }
+      ]
+    }
+  }
 }

@@ -1,0 +1,15 @@
+{
+  "name": "vcpkg-ci-dawn",
+  "version-date": "2025-08-23",
+  "description": "Validates dawn",
+  "license": null,
+  "supports": "!uwp & !android & !ios",
+  "dependencies": [
+    "dawn",
+    "glfw3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
