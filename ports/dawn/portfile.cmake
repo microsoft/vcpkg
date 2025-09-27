@@ -37,6 +37,8 @@ vcpkg_from_github(
         002-fix-uwp.patch
         003-fix-d3d11.patch
         004-deps.patch
+        005-bsd-support.patch
+        006-fix-x11-include-dirs.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
