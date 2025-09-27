@@ -76,9 +76,9 @@ if(_PythonFinder_WantLibs)
     endif()
 
     # These are duplicated as normal variables to nullify FindPython's checksum verifications.
-    set(_${_PythonFinder_PREFIX}_INCLUDE_DIR "${_@PythonFinder_PREFIX@_INCLUDE_DIR}")
-    set(_${_PythonFinder_PREFIX}_LIBRARY_RELEASE "${_@PythonFinder_PREFIX@_LIBRARY_RELEASE}")
-    set(_${_PythonFinder_PREFIX}_LIBRARY_DEBUG "${_@PythonFinder_PREFIX@_LIBRARY_DEBUG}")
+    set(_${_PythonFinder_PREFIX}_INCLUDE_DIR "${_${_PythonFinder_PREFIX}_INCLUDE_DIR}")
+    set(_${_PythonFinder_PREFIX}_LIBRARY_RELEASE "${_${_PythonFinder_PREFIX}_LIBRARY_RELEASE}")
+    set(_${_PythonFinder_PREFIX}_LIBRARY_DEBUG "${_${_PythonFinder_PREFIX}_LIBRARY_DEBUG}")
 
     _find_package(${ARGS})
 
