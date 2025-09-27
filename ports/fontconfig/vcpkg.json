@@ -1,7 +1,6 @@
 {
   "name": "fontconfig",
-  "version": "2.15.0",
-  "port-version": 4,
+  "version": "2.17.1",
   "description": "Library for configuring and customizing font access.",
   "homepage": "https://www.freedesktop.org/wiki/Software/fontconfig",
   "license": "MIT",
@@ -13,14 +12,12 @@
       "name": "freetype",
       "default-features": false
     },
+    "gettext-libintl",
     {
       "name": "gperf",
       "host": true
     },
-    {
-      "name": "libiconv",
-      "platform": "!windows"
-    },
+    "libiconv",
     {
       "name": "libuuid",
       "platform": "!osx & !windows"
@@ -45,8 +42,7 @@
           "features": [
             "tools"
           ]
-        },
-        "gettext-libintl"
+        }
       ]
     },
     "tools": {
