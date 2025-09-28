@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 e5b2a3a0bafb5e11b1bad27e2c70ae8c8bd9abe96550764821a83a3886deff63ba1d9717f449550d61b1b6670f2e5f7c9621849f42e02042116dc78c44b9050a
     HEAD_REF master
+    PATCHES
+        enable-avx2-on-gcc.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
