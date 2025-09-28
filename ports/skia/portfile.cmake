@@ -14,6 +14,7 @@ vcpkg_from_github(
         pdfsubsetfont-uwp.diff
         skparagraph-dllexport.patch
         dawn.patch
+        use-pkgconfig-to-find-gl.patch
 )
 
 # De-vendor
@@ -80,6 +81,7 @@ declare_external_from_git(wuffs
 declare_external_from_pkgconfig(expat)
 declare_external_from_pkgconfig(fontconfig PATH "third_party")
 declare_external_from_pkgconfig(freetype2)
+declare_external_from_pkgconfig(gl)
 declare_external_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
 declare_external_from_pkgconfig(icu MODULES icu-uc)
 declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
@@ -179,6 +181,9 @@ else()
 endif()
 
 if("gl" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
+        list(APPEND required_externals gl)
+    endif()
     string(APPEND OPTIONS " skia_use_gl=true")
 else()
     string(APPEND OPTIONS " skia_use_gl=false")
