@@ -7946,7 +7946,7 @@
     },
     "qt5-tools": {
       "baseline": "5.15.17",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-translations": {
       "baseline": "5.15.17",
