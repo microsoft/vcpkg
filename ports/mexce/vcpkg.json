@@ -4,5 +4,5 @@
   "description": "Header-only JIT compiler for scalar mathematical expressions.",
   "homepage": "https://github.com/imakris/mexce",
   "license": "BSD-2-Clause",
-  "supports": "(windows | linux) & !(arm | arm64)"
+  "supports": "(windows | linux) & (x86 | x64)"
 }
