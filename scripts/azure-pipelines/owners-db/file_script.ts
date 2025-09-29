@@ -2,7 +2,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
-const keyword = "/include/";
+const include_subpath = "/include/";
 
 function getFiles(dirPath: string): string[] {
   const files = fs.readdirSync(dirPath);
@@ -25,11 +25,12 @@ function genAllFileStrings(
       const line = raw.trim();
       if (line.length === 0) continue;
       if (line.endsWith("/")) continue;
+      // Remove the leading triplet directory
       const idx = line.indexOf("/");
       const filepath = idx >= 0 ? line.substring(idx) : line;
       outputStream.write(pkg + ":" + filepath + "\n");
-      if (filepath.startsWith(keyword)) {
-        headersStream.write(pkg + ":" + filepath.substring(keyword.length) + "\n");
+      if (filepath.startsWith(include_subpath)) {
+        headersStream.write(pkg + ":" + filepath.substring(include_subpath.length) + "\n");
       }
     }
   }
@@ -40,8 +41,6 @@ function usage() {
 }
 
 function parseArgs(argv: string[]) {
-  // supports: --info-dir <path> --out-dir <path>
-  // legacy: single positional arg = info-dir
   let infoDir: string | undefined;
   let outDir = "scripts/list_files";
   for (let i = 0; i < argv.length; i++) {
@@ -56,9 +55,6 @@ function parseArgs(argv: string[]) {
       console.error(`Unknown argument: ${a}`);
       usage();
       process.exit(2);
-    } else if (!infoDir) {
-      // positional fallback
-      infoDir = a;
     } else {
       console.error(`Unexpected positional argument: ${a}`);
       usage();
@@ -77,7 +73,7 @@ function main() {
   const { infoDir: dir, outDir } = parseArgs(process.argv.slice(2));
   try {
     fs.mkdirSync(outDir, { recursive: true });
-  } catch (err) {
+  } catch {
     // ignore
   }
 
