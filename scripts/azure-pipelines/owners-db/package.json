@@ -6,7 +6,7 @@
   "type": "module",
   "license": "MIT",
   "engines": {
-    "node": ">=14"
+    "node": ">=22"
   },
   "dependencies": {
     "adm-zip": "^0.5.9",

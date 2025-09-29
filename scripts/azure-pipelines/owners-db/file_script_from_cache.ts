@@ -109,8 +109,21 @@ async function main() {
   // Determine list of ports to process from git-diff (only folders under ports/ that changed)
   let changedPorts: string[] = [];
   try {
-    const gitRange = `${targetBranch}...HEAD`;
-    const diffOut = execSync(`cd ../../.. && git diff --name-only ${gitRange} -- ports/`, { encoding: "utf8" });
+    const mergebase = execSync(`git merge-base ${targetBranch} HEAD`, { encoding: "utf8" }).trim();
+    // Find repository root by locating .vcpkg-root in or above cwd
+    function findRepoRoot(): string {
+      let dir = process.cwd();
+      while (true) {
+        if (fs.existsSync(path.join(dir, ".vcpkg-root"))) return dir;
+        const parent = path.dirname(dir);
+        if (parent === dir) break;
+        dir = parent;
+      }
+      throw new Error("Could not find .vcpkg-root in or above current working directory");
+    }
+
+    const repoRoot = findRepoRoot();
+    const diffOut = execSync(`git diff --name-only ${mergebase}...HEAD -- ports/`, { encoding: "utf8", cwd: repoRoot });
     const files = diffOut.split(/\r?\n/).filter((l) => l.length > 0);
     const set = new Set<string>();
     for (const f of files) {
@@ -119,7 +132,7 @@ async function main() {
     }
     changedPorts = Array.from(set);
     if (changedPorts.length === 0) {
-      console.log(`git diff found no changed ports under ports/ for range ${gitRange}; exiting.`);
+      console.log(`git diff found no changed ports under ports/ for range ${mergebase}...HEAD; exiting.`);
       writeOutputLines(outDir, dbLines, headerLines);
       return;
     }

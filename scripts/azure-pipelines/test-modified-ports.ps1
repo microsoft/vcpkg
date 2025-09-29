@@ -229,11 +229,11 @@ if ($AllowUnexpectedPassing) {
 Add-ToolchainToTestCMake
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 $xunitArg = "--x-xunit=$xunitFile"
-$prHashes = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
+$prHashesFile = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
 & $vcpkgExe ci `
     $tripletArg `
     $failureLogsArg `
-    "--output-hashes=$prHashes" `
+    "--output-hashes=$prHashesFile" `
     $xunitArg `
     $ciBaselineArg `
     @commonArgs `
