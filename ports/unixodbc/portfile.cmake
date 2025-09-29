@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         pkgconfig-libiconv.diff
+        subdirs.diff
 )
 
 vcpkg_libltdl_get_vars(LIBLTDL)
