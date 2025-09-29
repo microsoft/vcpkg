@@ -9,6 +9,3 @@ vcpkg_from_github(
 file(INSTALL "${SOURCE_PATH}/mexce.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
-
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
