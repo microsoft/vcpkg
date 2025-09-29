@@ -1,6 +1,7 @@
 {
   "name": "libgme",
   "version": "0.6.3",
+  "port-version": 1,
   "description": "Video game music file emulation/playback library",
   "homepage": "https://bitbucket.org/mpyne/game-music-emu/wiki/Home",
   "license": "LGPL-2.1-or-later OR GPL-2.0-or-later",
