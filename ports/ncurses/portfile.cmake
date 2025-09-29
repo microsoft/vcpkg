@@ -74,13 +74,10 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(GLOB pcfiles_release "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
-foreach(file IN LISTS pcfiles_release)
-    vcpkg_replace_string("${file}" [[ "-I${prefix}/include"]] "")
-endforeach()
-file(GLOB pcfiles_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
-foreach(file IN LISTS pcfiles_debug)
-    vcpkg_replace_string("${file}" [[ "-I${prefix}/../include"]] "")
+# Prefer local files over search path
+file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/ncursesw/*.h")
+foreach(file IN LISTS headers)
+    vcpkg_replace_string("${file}" [[#include <ncursesw/([^>]*)>]] [[#include "\1"]] REGEX IGNORE_UNCHANGED)
 endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
