@@ -1,5 +1,5 @@
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index d24f807..d652bee 100644
+index d24f807..e3ad262 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
 @@ -88,6 +88,7 @@ endif()
@@ -10,7 +10,7 @@ index d24f807..d652bee 100644
      # ncursesw
      find_library(NCURSESW ncursesw)
      if (NOT NCURSESW AND APPLE)
-@@ -125,6 +126,13 @@ if (NOT WIN32)
+@@ -125,6 +126,14 @@ if (NOT WIN32)
          tv_message(STATUS "Found 'tinfow': ${TINFOW}")
          target_link_libraries(${PROJECT_NAME} PUBLIC ${TINFOW})
      endif()
@@ -19,7 +19,8 @@ index d24f807..d652bee 100644
 +    set(CURSES_NEED_WIDE 1)
 +    find_package(Curses REQUIRED)
 +    target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_NCURSES)
-+    target_include_directories(${PROJECT_NAME} PRIVATE ${CURSES_INCLUDE_DIRS})
++    find_path(NCURSESW_INCLUDE NAMES "ncurses.h" PATHS ${CURSES_INCLUDE_DIRS} PATH_SUFFIXES "ncursesw")
++    target_include_directories(${PROJECT_NAME} PRIVATE ${NCURSESW_INCLUDE})
 +    target_link_libraries(${PROJECT_NAME} PUBLIC ${CURSES_LIBRARIES})
  
      # gpm
