@@ -4969,7 +4969,7 @@
       "port-version": 0
     },
     "libinterpolate": {
-      "baseline": "2.7.1",
+      "baseline": "2.7.2",
       "port-version": 0
     },
     "libirecovery": {
