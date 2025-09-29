@@ -284,7 +284,6 @@ marble:x64-osx=fail
 marble:x64-windows-static-md=fail
 marble:x64-windows-static=fail
 marble:x86-windows=fail
-marzbanpp:x64-linux=fail # triplet supported but vcpkg toolchain is too old (requires GCC 12+/Clang 19+)
 mathgl:arm-uwp=fail
 mathgl:x64-uwp=fail
 mesa:x64-linux=fail # Missing dependent libraries.
