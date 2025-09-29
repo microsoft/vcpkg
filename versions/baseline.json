@@ -6686,7 +6686,7 @@
     },
     "ncurses": {
       "baseline": "6.5",
-      "port-version": 0
+      "port-version": 1
     },
     "ndis-driver-library": {
       "baseline": "1.2.0",
@@ -9838,7 +9838,7 @@
     },
     "tvision": {
       "baseline": "2024-05-22",
-      "port-version": 0
+      "port-version": 1
     },
     "tweeny": {
       "baseline": "3.2.0",
