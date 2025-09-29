@@ -9,6 +9,7 @@ vcpkg_from_sourceforge(
         cmake-config.patch
         dependencies.patch
         pkgconfig.patch
+        disable_tests.patch
 )
 
 set(REQUIRES_PRIVATE "")

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49a91bb..cd71771 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -215,7 +215,7 @@ option(ALLOW_BLAS_LAPACK_MACOS "Allow detection of BLAS and LAPACK on macOS" OFF
+ ## cmake -D ALLOW_BLAS_LAPACK_MACOS=true .
+ 
+ option(BUILD_SMOKE_TEST "Build the smoke test" ON)
+-# set(BUILD_SMOKE_TEST false)
++set(BUILD_SMOKE_TEST false)
+ ## uncomment the above line to disable building the smoke test;
+ ## you can also disable building the smoke test directly on the command line:
+ ## cmake -D BUILD_SMOKE_TEST=false .
