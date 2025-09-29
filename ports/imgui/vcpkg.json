@@ -1,6 +1,7 @@
 {
   "name": "imgui",
   "version": "1.91.9",
+  "port-version": 1,
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -99,6 +100,18 @@
     "osx-binding": {
       "description": "Make available OSX binding",
       "supports": "osx"
+    },
+    "sdl2-binding": {
+      "description": "Make available SDL2 binding",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "sdl2-renderer-binding": {
+      "description": "Make available SDL2 Renderer binding",
+      "dependencies": [
+        "sdl2"
+      ]
     },
     "sdl3-binding": {
       "description": "Make available SDL3 binding",
