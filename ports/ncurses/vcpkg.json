@@ -1,6 +1,7 @@
 {
   "name": "ncurses",
   "version": "6.5",
+  "port-version": 1,
   "description": [
     "Free software emulation of curses in System V Release 4.0, and more.",
     "This port installs a wide character configuration (ncursesw)."
