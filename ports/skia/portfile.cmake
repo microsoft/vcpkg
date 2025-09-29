@@ -14,6 +14,10 @@ vcpkg_from_github(
         pdfsubsetfont-uwp.diff
         skparagraph-dllexport.patch
         dawn.patch
+        use-pkgconfig-to-find-gl.patch
+        dont-use-response-file.patch
+        fix-openbsd.patch
+        allow-disabling-lib-dl.patch
 )
 
 # De-vendor
@@ -80,6 +84,7 @@ declare_external_from_git(wuffs
 declare_external_from_pkgconfig(expat)
 declare_external_from_pkgconfig(fontconfig PATH "third_party")
 declare_external_from_pkgconfig(freetype2)
+declare_external_from_pkgconfig(gl)
 declare_external_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
 declare_external_from_pkgconfig(icu MODULES icu-uc)
 declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
@@ -122,6 +127,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         string(APPEND OPTIONS " skia_enable_bentleyottmann=false")
     endif()
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
+    string(APPEND OPTIONS " target_os=\"linux\"")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -130,8 +137,13 @@ else()
     string(APPEND OPTIONS " is_component_build=false")
 endif()
 
+if (VCPKG_TARGET_IS_OPENBSD)
+    string(APPEND OPTIONS " skia_vcpkg_has_lib_dl=false")
+else()
+    string(APPEND OPTIONS " skia_vcpkg_has_lib_dl=true")
+endif()
+
 set(required_externals
-    dng_sdk
     expat
     libjpeg
     libpng
@@ -140,6 +152,13 @@ set(required_externals
     zlib
     wuffs
 )
+
+if("dng" IN_LIST FEATURES)
+    list(APPEND required_externals dng_sdk)
+    string(APPEND OPTIONS " skia_use_dng_sdk=true")
+else()
+    string(APPEND OPTIONS " skia_use_dng_sdk=false")
+endif()
 
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND required_externals fontconfig)
@@ -173,6 +192,9 @@ else()
 endif()
 
 if("gl" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
+        list(APPEND required_externals gl)
+    endif()
     string(APPEND OPTIONS " skia_use_gl=true")
 else()
     string(APPEND OPTIONS " skia_use_gl=false")

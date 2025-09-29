@@ -1,13 +1,14 @@
 {
   "name": "skia",
   "version": "140",
+  "port-version": 1,
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
     "Skia is sponsored and managed by Google, but is available for use by anyone under the BSD Free Software License. While engineering of the core components is done by the Skia development team, we consider contributions from any source."
   ],
   "homepage": "https://skia.org",
-  "license": null,
+  "license": "BSD-3-Clause",
   "supports": "!(windows & arm32) & !mingw",
   "dependencies": [
     "expat",
@@ -47,8 +48,12 @@
       "platform": "uwp"
     },
     {
+      "name": "dng",
+      "platform": "!(freebsd | openbsd)"
+    },
+    {
       "name": "fontconfig",
-      "platform": "linux"
+      "platform": "linux | freebsd | openbsd"
     },
     {
       "name": "freetype",
@@ -74,15 +79,15 @@
       "dependencies": [
         {
           "name": "dawn",
+          "platform": "osx | windows"
+        },
+        {
+          "name": "dawn",
           "default-features": false,
           "features": [
             "x11"
           ],
-          "platform": "linux"
-        },
-        {
-          "name": "dawn",
-          "platform": "osx | windows"
+          "platform": "linux | freebsd | openbsd"
         },
         {
           "name": "skia",
@@ -96,6 +101,10 @@
     "direct3d": {
       "description": "Direct3D support for skia",
       "supports": "windows"
+    },
+    "dng": {
+      "description": "Support for DNG files",
+      "supports": "!(freebsd | openbsd)"
     },
     "fontconfig": {
       "description": "Fontconfig support",
