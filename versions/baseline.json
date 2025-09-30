@@ -5980,10 +5980,6 @@
       "baseline": "4.0.2",
       "port-version": 0
     },
-    "ltla-knncolle": {
-      "baseline": "2023-05-09",
-      "port-version": 0
-    },
     "ltla-powerit": {
       "baseline": "2023-03-19",
       "port-version": 0
