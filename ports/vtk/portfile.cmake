@@ -280,6 +280,7 @@ vcpkg_cmake_configure(
         -DVTK_MODULE_ENABLE_VTK_CommonArchive=NO
         -DVTK_MODULE_ENABLE_VTK_DomainsMicroscopy=NO
         -DVTK_MODULE_ENABLE_VTK_fides=NO
+        -DVTK_MODULE_ENABLE_VTK_FiltersReebGraph=NO
         -DVTK_MODULE_ENABLE_VTK_InfovisBoost=NO
         -DVTK_MODULE_ENABLE_VTK_InfovisBoostGraphAlgorithms=NO
         -DVTK_MODULE_ENABLE_VTK_IOADIOS2=NO
@@ -299,6 +300,7 @@ vcpkg_cmake_configure(
         "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
         -DCMAKE_POLICY_DEFAULT_CMP0174=NEW     # cmake_parse_arguments
+        -DCMAKE_POLICY_DEFAULT_CMP0177=NEW     # install() DESTINATION paths are normalized
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Due to Qt6::Platform not being found on Linux platform
     MAYBE_UNUSED_VARIABLES
         VTK_ENABLE_OSPRAY
@@ -307,6 +309,9 @@ vcpkg_cmake_configure(
         VTK_MODULE_ENABLE_VTK_vtkm
         VTK_MODULE_ENABLE_VTK_xdmf3
         VTK_MODULE_USE_EXTERNAL_VTK_mpi4py
+        # Some subprojects
+        CMAKE_POLICY_DEFAULT_CMP0174
+        CMAKE_POLICY_DEFAULT_CMP0177
         # Only with Qt
         CMAKE_INSTALL_QMLDIR
         VTK_QT_VERSION # Only with Qt
