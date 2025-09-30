@@ -13,13 +13,10 @@ set(VCPKG_BUILD_TYPE release) # header-only port
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    -DFK_YAML_INSTALL=ON
+        -DFK_YAML_INSTALL=ON
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME fkYAML CONFIG_PATH share/cmake/fkYAML)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/fkYAML)
 vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
