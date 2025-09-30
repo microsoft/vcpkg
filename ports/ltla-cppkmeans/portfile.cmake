@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LTLA/CppKmeans
     REF "v${VERSION}"
-    SHA512 17ea2822ccf35adc18a5162ac5bb469bbd46fba32072e524fda4e3baa12bc04f9666c69ccb8fe71b02e471197acc392958bf5d6036ba9e7829d7a8d4522471d5
+    SHA512 f1798873ee0bd15fcb8ba9c02d9dc6ecbc3cce0b8cd6f38d23aff27b37fdd68069d64aa16fbdfa63515906c51ce811093f3f0a4dc92081072f21c41d08e98d31
     HEAD_REF master
-    PATCHES
-        0001-fix-dependencies.patch # https://github.com/LTLA/CppKmeans/pull/15
 )
 
 set(VCPKG_BUILD_TYPE "release") # header-only port
