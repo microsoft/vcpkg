@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libscran/umappp
     REF "v${VERSION}"
-    SHA512 0
+    SHA512 cb934d4989c63485d457423419dc749b5d775f800d8a0bee65566b5f5def00ce1720eb583cb1e5bd277bc04b9cd0f31a4b1b2cd65f50ac2564a1970b00e42d16
     HEAD_REF master
 )
 
