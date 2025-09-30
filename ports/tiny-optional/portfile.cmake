@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Sedeniono/tiny-optional
     REF "v${VERSION}"
-    SHA512 0143df1f9412f9273fcad012925a0e60a74fffa5f843831ee05fe287871c1122c82f6023b61c3e25a62c904014e4fa7cda2b60d1a8a146d7e57f9a3790c42cf3
+    SHA512 d92394c20a12451c59b30a7bec446dce1be08a6aab2ed8527a6e23f04789be759b6f4eb83666d1985b2716df2031baeb84d5ec83d39ceaf43d7162921cb92d4a
 )
 
 vcpkg_cmake_configure(
