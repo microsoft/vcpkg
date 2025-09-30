@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libvpx
@@ -10,6 +8,7 @@ vcpkg_from_github(
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
         0005-dont-expect-gnu-diff.patch
+        0006-Guard-installation-of-static-only-library.patch # https://chromium-review.googlesource.com/c/webm/libvpx/+/6973790
 )
 
 if(CMAKE_HOST_WIN32)
