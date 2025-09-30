@@ -4925,7 +4925,7 @@
       "port-version": 0
     },
     "libical": {
-      "baseline": "3.0.19",
+      "baseline": "3.0.20",
       "port-version": 0
     },
     "libice": {
