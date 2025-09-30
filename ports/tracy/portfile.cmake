@@ -17,9 +17,29 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        on-demand TRACY_ON_DEMAND
-        fibers	  TRACY_FIBERS
-        verbose   TRACY_VERBOSE
+        on-demand                        TRACY_ON_DEMAND
+        fibers                           TRACY_FIBERS
+        verbose                          TRACY_VERBOSE
+        delayed-init                     TRACY_DELAYED_INIT
+        manual-lifetime                  TRACY_MANUAL_LIFETIME
+        manual-lifetime                  TRACY_DELAYED_INIT # TRACY_DELAYED_INIT augments TRACY_MANUAL_LIFETIME
+        no-callstack                     TRACY_NO_CALLSTACK
+        no-callstack-inlines             TRACY_NO_CALLSTACK_INLINES
+        only-localhost                   TRACY_ONLY_LOCALHOST
+        no-broadcast                     TRACY_NO_BROADCAST
+        only-ipv4                        TRACY_ONLY_IPV4
+        no-code-transfer                 TRACY_NO_CODE_TRANSFER
+        no-context-switch                TRACY_NO_CONTEXT_SWITCH
+        no-exit                          TRACY_NO_EXIT
+        no-sampling                      TRACY_NO_SAMPLING
+        no-verify                        TRACY_NO_VERIFY
+        no-vsync-capture                 TRACY_NO_VSYNC_CAPTURE
+        no-frame-image                   TRACY_NO_FRAME_IMAGE
+        no-system-tracing                TRACY_NO_SYSTEM_TRACING
+        patchable-nopsleds               TRACY_PATCHABLE_NOPSLEDS
+        timer-fallback                   TRACY_TIMER_FALLBACK
+        symbol-offline-resolve           TRACY_SYMBOL_OFFLINE_RESOLVE
+
     INVERTED_FEATURES
         crash-handler TRACY_NO_CRASH_HANDLER
 )
