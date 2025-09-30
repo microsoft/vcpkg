@@ -6,8 +6,8 @@
   "license": "MIT",
   "dependencies": [
     "ltla-aarand",
-    "ltla-subpar",
     "ltla-sanisizer",
+    "ltla-subpar",
     {
       "name": "vcpkg-cmake",
       "host": true
