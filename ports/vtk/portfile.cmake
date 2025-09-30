@@ -289,20 +289,23 @@ vcpkg_cmake_configure(
         -DVTK_MODULE_ENABLE_VTK_IOPDAL=NO
         -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
         -DVTK_MODULE_ENABLE_VTK_WrappingTools=YES
-        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
+        -DVTK_MODULE_ENABLE_VTK_xdmf3=NO
         -DVTK_MODULE_USE_EXTERNAL_VTK_token:BOOL=OFF # Not yet in VCPKG
-        #-DVTK_MODULE_ENABLE_VTK_jsoncpp=YES
+        # misc
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
         -DVTK_QT_VERSION=6
         -DCMAKE_INSTALL_QMLDIR:PATH=qml
+        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
+        -DCMAKE_POLICY_DEFAULT_CMP0174=NEW     # cmake_parse_arguments
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Due to Qt6::Platform not being found on Linux platform
     MAYBE_UNUSED_VARIABLES
         VTK_ENABLE_OSPRAY
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
         VTK_MODULE_ENABLE_VTK_vtkm
+        VTK_MODULE_ENABLE_VTK_xdmf3
         VTK_MODULE_USE_EXTERNAL_VTK_mpi4py
         # Only with Qt
         CMAKE_INSTALL_QMLDIR
