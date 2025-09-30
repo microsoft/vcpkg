@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF baf5574bc768f614bdc4c0fce3c7bd20306bb26e
-    SHA512 1bc5e04d3b306051ec06cb8b15ba04b1558e135a19a055d67f65e082cffd3f94a13076cd0e4dddb90abc5b24da4adedfff35283758a7808f53d685d7de499fc2
+    REF v${VERSION}
+    SHA512 d2820f9d1a5f80a4ec154cd89fc944b9c8b172f547fdeeb630f43fa06186bf37cad2e02aafad781b4bda9d964a8daa02b90685c7e29a4beebf296d2e1e8a7b8f
     HEAD_REF master
     PATCHES
-        android-vulkan.diff
         cmake-config.diff
         pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
+        vulkan-loader-storage.diff # backport of https://github.com/ggml-org/llama.cpp/pull/16224
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
