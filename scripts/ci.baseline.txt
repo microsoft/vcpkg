@@ -130,9 +130,6 @@ openblas:x64-windows-static-md=pass
 openblas:x64-windows-static=pass
 # </BLAS+LAPACK>
 ################################################################
-blend2d:arm64-uwp=fail
-blend2d:arm64-windows-static-md=fail
-blend2d:arm64-windows=fail
 blitz:x64-android=fail
 # Conflicts with openssl
 boringssl:arm-neon-android=skip
@@ -866,14 +863,8 @@ rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
 salome-medcoupling:x64-linux=fail
 saucer:arm64-osx=fail # std::move_only_function is not supported
-saucer:arm64-windows-static-md=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
-saucer:arm64-windows=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
 saucer:x64-linux=fail # requires gcc14 or later
 saucer:x64-osx=fail # std::move_only_function is not supported
-saucer:x64-windows-static-md=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
-saucer:x64-windows-static=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
-saucer:x64-windows=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
-saucer:x86-windows=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
 sciter:arm-neon-android=fail
 sciter:arm64-android=fail
 sciter:arm64-osx=skip
@@ -1215,7 +1206,6 @@ opencv4:arm64-windows-static-md=fail
 #vcpkg-ci-opencv:arm64-windows=pass
 opencv4:arm64-windows=fail
 #vcpkg-ci-opencv:arm64-uwp=pass
-opencv4:arm64-uwp=fail # also -Zc:arm64-aliased-neon-types-
 vcpkg-ci-opencv:x64-android=pass
 vcpkg-ci-opencv:x64-linux=pass
 vcpkg-ci-opencv:x64-osx=pass
