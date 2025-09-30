@@ -161,7 +161,7 @@
       "port-version": 2
     },
     "aom": {
-      "baseline": "3.11.0",
+      "baseline": "3.13.1",
       "port-version": 0
     },
     "apache-datasketches": {
@@ -477,7 +477,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.34.4",
+      "baseline": "0.34.5",
       "port-version": 0
     },
     "aws-lambda-cpp": {
@@ -2089,7 +2089,7 @@
       "port-version": 3
     },
     "cppslippi": {
-      "baseline": "1.4.3.16",
+      "baseline": "1.4.3.18",
       "port-version": 0
     },
     "cpptoml": {
@@ -2350,7 +2350,7 @@
     },
     "dawn": {
       "baseline": "20250922.223923",
-      "port-version": 0
+      "port-version": 1
     },
     "daxa": {
       "baseline": "3.0.3",
@@ -3269,7 +3269,7 @@
       "port-version": 9
     },
     "ggml": {
-      "baseline": "0.9.1",
+      "baseline": "0.9.3",
       "port-version": 0
     },
     "ghc-filesystem": {
@@ -3374,7 +3374,7 @@
     },
     "gmp": {
       "baseline": "6.3.0",
-      "port-version": 2
+      "port-version": 3
     },
     "gmsh": {
       "baseline": "4.14.0",
@@ -4061,7 +4061,7 @@
       "port-version": 1
     },
     "joltphysics": {
-      "baseline": "5.3.0",
+      "baseline": "5.4.0",
       "port-version": 0
     },
     "josuttis-jthread": {
@@ -4105,7 +4105,7 @@
       "port-version": 7
     },
     "jsoncons": {
-      "baseline": "1.4.1",
+      "baseline": "1.4.2",
       "port-version": 0
     },
     "jsoncpp": {
@@ -4570,7 +4570,7 @@
     },
     "libavif": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libb2": {
       "baseline": "0.98.1",
@@ -4969,7 +4969,7 @@
       "port-version": 0
     },
     "libinterpolate": {
-      "baseline": "2.7.1",
+      "baseline": "2.7.2",
       "port-version": 0
     },
     "libirecovery": {
@@ -6005,7 +6005,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.692",
+      "baseline": "0.693",
       "port-version": 0
     },
     "luminoengine": {
@@ -6054,6 +6054,10 @@
     },
     "maddy": {
       "baseline": "1.6.0",
+      "port-version": 0
+    },
+    "magic-args": {
+      "baseline": "0.2.1",
       "port-version": 0
     },
     "magic-enum": {
@@ -6149,7 +6153,7 @@
       "port-version": 0
     },
     "marzbanpp": {
-      "baseline": "1.0.1",
+      "baseline": "1.0.5",
       "port-version": 0
     },
     "matajoh-libnpy": {
@@ -6263,6 +6267,10 @@
     "metrohash": {
       "baseline": "1.1.3",
       "port-version": 5
+    },
+    "mexce": {
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "mfl": {
       "baseline": "0.0.1",
@@ -6686,7 +6694,7 @@
     },
     "ncurses": {
       "baseline": "6.5",
-      "port-version": 0
+      "port-version": 1
     },
     "ndis-driver-library": {
       "baseline": "1.2.0",
@@ -6841,7 +6849,7 @@
       "port-version": 0
     },
     "nuklear": {
-      "baseline": "2022-05-12",
+      "baseline": "4.12.7",
       "port-version": 0
     },
     "numactl": {
@@ -7145,11 +7153,11 @@
       "port-version": 3
     },
     "opentelemetry-cpp": {
-      "baseline": "1.22.0",
-      "port-version": 1
+      "baseline": "1.23.0",
+      "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
-      "baseline": "2025-09-25",
+      "baseline": "2025-09-26",
       "port-version": 0
     },
     "opentracing": {
@@ -7174,7 +7182,7 @@
     },
     "openvr": {
       "baseline": "2.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openxr-loader": {
       "baseline": "1.1.45",
@@ -7201,8 +7209,8 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "3.6.1",
-      "port-version": 1
+      "baseline": "3.8.1",
+      "port-version": 0
     },
     "orc": {
       "baseline": "2.1.0",
@@ -7738,7 +7746,7 @@
     },
     "python3": {
       "baseline": "3.12.9",
-      "port-version": 5
+      "port-version": 6
     },
     "qca": {
       "baseline": "2.3.7",
@@ -8300,6 +8308,10 @@
       "baseline": "5.5",
       "port-version": 0
     },
+    "raylib-cpp": {
+      "baseline": "5.5.0",
+      "port-version": 0
+    },
     "rbdl": {
       "baseline": "3.3.0",
       "port-version": 7
@@ -8310,6 +8322,10 @@
     },
     "re2": {
       "baseline": "2025-08-12",
+      "port-version": 0
+    },
+    "reaction": {
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "reactiveplusplus": {
@@ -8789,8 +8805,8 @@
       "port-version": 8
     },
     "sentencepiece": {
-      "baseline": "0.2.0",
-      "port-version": 2
+      "baseline": "0.2.1",
+      "port-version": 0
     },
     "sentry-native": {
       "baseline": "0.11.1",
@@ -8841,7 +8857,7 @@
       "port-version": 0
     },
     "sfml": {
-      "baseline": "3.0.1",
+      "baseline": "3.0.2",
       "port-version": 0
     },
     "sfsexp": {
@@ -8958,7 +8974,7 @@
     },
     "skia": {
       "baseline": "140",
-      "port-version": 0
+      "port-version": 1
     },
     "skyr-url": {
       "baseline": "1.13.0",
@@ -9838,7 +9854,7 @@
     },
     "tvision": {
       "baseline": "2024-05-22",
-      "port-version": 0
+      "port-version": 1
     },
     "tweeny": {
       "baseline": "3.2.0",
@@ -9894,7 +9910,7 @@
     },
     "unixodbc": {
       "baseline": "2.3.12",
-      "port-version": 0
+      "port-version": 1
     },
     "unleash-client-cpp": {
       "baseline": "1.3.0",
@@ -9937,7 +9953,7 @@
       "port-version": 0
     },
     "usearch": {
-      "baseline": "2.19.9",
+      "baseline": "2.21.0",
       "port-version": 0
     },
     "usockets": {
