@@ -8306,7 +8306,7 @@
     },
     "raylib": {
       "baseline": "5.5",
-      "port-version": 0
+      "port-version": 1
     },
     "raylib-cpp": {
       "baseline": "5.5.0",
