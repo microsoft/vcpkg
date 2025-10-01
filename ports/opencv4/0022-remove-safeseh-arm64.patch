@@ -1,0 +1,13 @@
+diff --git a/cmake/OpenCVCompilerDefenses.cmake b/cmake/OpenCVCompilerDefenses.cmake
+index 9fffdb4d72..ff612ea72d 100644
+--- a/cmake/OpenCVCompilerDefenses.cmake
++++ b/cmake/OpenCVCompilerDefenses.cmake
+@@ -41,7 +41,7 @@ if(MSVC)
+   ocv_add_defense_compiler_flag("/guard:cf")
+   ocv_add_defense_compiler_flag("/w34018 /w34146 /w34244 /w34267 /w34302 /w34308 /w34509 /w34532 /w34533 /w34700 /w34789 /w34995 /w34996")
+   set(OPENCV_LINKER_DEFENSES_FLAGS_COMMON "${OPENCV_LINKER_DEFENSES_FLAGS_COMMON} /guard:cf /dynamicbase" )
+-  if(NOT X86_64)
++  if(NOT X86_64 AND NOT AARCH64)
+     set(OPENCV_LINKER_DEFENSES_FLAGS_COMMON "${OPENCV_LINKER_DEFENSES_FLAGS_COMMON} /safeseh")
+   endif()
+ elseif(CV_CLANG)
