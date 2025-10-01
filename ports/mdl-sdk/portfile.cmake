@@ -73,6 +73,9 @@ endif()
 # Required for plugins.
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
+# The libraries are supposed to be loaded at runtime, not linked.
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/MDL-SDK
