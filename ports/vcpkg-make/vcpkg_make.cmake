@@ -75,20 +75,45 @@ function(vcpkg_run_shell_as_build)
 endfunction()
 
 function(vcpkg_run_autoreconf shell_cmd work_dir)
+    find_program(AUTOCONF NAMES autoconf)
+    find_program(AUTOMAKE NAMES automake)
     find_program(AUTORECONF NAMES autoreconf)
-    if(NOT AUTORECONF)
+    find_program(LIBTOOLIZE NAMES libtoolize glibtoolize)
+    if(NOT AUTOCONF OR NOT AUTOMAKE OR NOT AUTORECONF OR NOT LIBTOOLIZE)
         message(FATAL_ERROR "${PORT} currently requires the following programs from the system package manager:
-        autoconf automake autoconf-archive
+        autoconf autoconf-archive automake libtoolize
     On Debian and Ubuntu derivatives:
-        sudo apt-get install autoconf automake autoconf-archive
+        sudo apt-get install autoconf autoconf-archive automake libtool
     On recent Red Hat and Fedora derivatives:
-        sudo dnf install autoconf automake autoconf-archive
+        sudo dnf install autoconf autoconf-archive automake libtool
     On Arch Linux and derivatives:
-        sudo pacman -S autoconf automake autoconf-archive
+        sudo pacman -S autoconf autoconf-archive automake libtool
     On Alpine:
-        apk add autoconf automake autoconf-archive
+        apk add autoconf autoconf-archive automake libtool
     On macOS:
-        brew install autoconf automake autoconf-archive\n")
+        brew install autoconf autoconf-archive automake libtool\n")
+    endif()
+    if(EXISTS "${work_dir}/configure.ac")
+        # Modeled after autoreconf's tracing behavior.
+        file(READ "${work_dir}/configure.ac" configure_ac)
+        find_program(AUTOPOINT NAMES autopoint)
+        if(configure_ac MATCHES "AM_GNU_GETTEXT" AND NOT AUTOPOINT AND "$ENV{AUTOPOINT}" STREQUAL "")
+            message(STATUS "${PORT} depends on gettext infrastructure.")
+            message(STATUS "'set(ENV{AUTOPOINT} true)' might disable this dependency.")
+        endif()
+        find_program(GTKDOCIZE NAMES gtkdocize)
+        if(configure_ac MATCHES "GTK_DOC_CHECK" AND NOT GTKDOCIZE AND "$ENV{GTKDOCIZE}" STREQUAL "")
+            message(STATUS "${PORT} depends on gtk-doc infrastructure.")
+            message(STATUS "'set(ENV{GTKDOCIZE} true)' might disable this dependency.")
+        endif()
+        if(configure_ac MATCHES "LT_CONFIG_LTDL_DIR")
+            message(STATUS "${PORT} depends on ltdl development files.")
+            message([[
+        On Debian and Ubuntu derivatives:
+            sudo apt-get install libltdl-dev
+        On recent Red Hat and Fedora derivatives:
+            sudo dnf install libtool-ltdl-devel]])
+        endif()
     endif()
     message(STATUS "Generating configure for ${TARGET_TRIPLET}")
     vcpkg_run_shell(

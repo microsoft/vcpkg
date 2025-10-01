@@ -17,6 +17,7 @@ vcpkg_from_github(
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0041-add-const-for-opengl-definition.patch
         0043-fix-miss-head.patch
+        0044-fix-vulkan-debug-callback-abi.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -524,6 +525,12 @@ if("vpx" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-libvpx")
     set(WITH_VPX OFF)
+endif()
+
+if("vulkan" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-vulkan")
+else()
+    set(OPTIONS "${OPTIONS} --disable-vulkan")
 endif()
 
 if("webp" IN_LIST FEATURES)

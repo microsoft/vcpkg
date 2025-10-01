@@ -226,7 +226,7 @@ qt_cmake_configure(
 )
 
 vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release/*/args.gn")
+file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/*/args.gn")
 if(NOT VCPKG_BUILD_TYPE)
     block(SCOPE_FOR VARIABLES)
     set(VCPKG_BUILD_TYPE debug)

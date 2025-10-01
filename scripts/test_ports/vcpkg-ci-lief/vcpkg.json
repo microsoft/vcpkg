@@ -10,14 +10,11 @@
         "art",
         "c-api",
         "dex",
-        "elf",
         "enable-json",
         "extra-warnings",
         "logging",
         "logging-debug",
-        "macho",
         "oat",
-        "pe",
         "use-ccache",
         "vdex"
       ]
