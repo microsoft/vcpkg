@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/logging/log4cxx/${VERSION}/apache-log4cxx-${VERSION}.tar.gz"
     FILENAME "apache-log4cxx-${VERSION}.tar.gz"
-    SHA512 625495e8399a49ac84707a7213980f6d0776cdeab142d3c3e0805258a533e3bbc50b8d429c623642b481367705a086855135faa398f9ed63a24dea751607dc6f
+    SHA512 60cedb41511cca6646682d0041a4dfac1d9e50f29fac7c7d31ef2f6c5c200dba84c010c79aed8a5f453795408a8905669d1a6b2002af6728d5734808369af075
 )
 
 vcpkg_extract_source_archive(
@@ -12,6 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         qt        LOG4CXX_QT_SUPPORT
         fmt       ENABLE_FMT_LAYOUT
+        mprfa     LOG4CXX_MULTIPROCESS_ROLLING_FILE_APPENDER
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

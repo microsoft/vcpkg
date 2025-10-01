@@ -1,12 +1,11 @@
 diff --git a/src/software/SfM/SfM_GlobalPipeline.py.in b/src/software/SfM/SfM_GlobalPipeline.py.in
-index 7fda0cd..c6f0bdb 100644
+index 42b41cc..b1dc361 100644
 --- a/src/software/SfM/SfM_GlobalPipeline.py.in
 +++ b/src/software/SfM/SfM_GlobalPipeline.py.in
-@@ -16,14 +16,13 @@
- #
+@@ -17,13 +17,13 @@
  # if output_dir is not present script will create it
  #
--
+ 
 +import os
  # Indicate the openMVG binary directory
 -OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
@@ -14,21 +13,20 @@ index 7fda0cd..c6f0bdb 100644
  
  # Indicate the openMVG camera sensor width directory
 -CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = os.path.dirname(__file__)
++CAMERA_SENSOR_WIDTH_DIRECTORY = OPENMVG_SFM_BIN
  
 -import os
  import subprocess
  import sys
  
 diff --git a/src/software/SfM/SfM_SequentialPipeline.py.in b/src/software/SfM/SfM_SequentialPipeline.py.in
-index 0ff2e77..98d3eb2 100644
+index 423c85c..5335680 100644
 --- a/src/software/SfM/SfM_SequentialPipeline.py.in
 +++ b/src/software/SfM/SfM_SequentialPipeline.py.in
-@@ -16,14 +16,13 @@
- #
+@@ -17,13 +17,13 @@
  # if output_dir is not present script will create it
  #
--
+ 
 +import os
  # Indicate the openMVG binary directory
 -OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
@@ -36,29 +34,49 @@ index 0ff2e77..98d3eb2 100644
  
  # Indicate the openMVG camera sensor width directory
 -CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = os.path.dirname(__file__)
++CAMERA_SENSOR_WIDTH_DIRECTORY = OPENMVG_SFM_BIN
+ 
+-import os
+ import subprocess
+ import sys
+ 
+diff --git a/src/software/SfM/import/SfM_StructurePipeline.py.in b/src/software/SfM/import/SfM_StructurePipeline.py.in
+index 3489eca..6d8b3d2 100644
+--- a/src/software/SfM/import/SfM_StructurePipeline.py.in
++++ b/src/software/SfM/import/SfM_StructurePipeline.py.in
+@@ -18,13 +18,13 @@
+ # if output_dir is not present script will create it
+ #
+ 
++import os
+ # Indicate the openMVG binary directory
+-OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
++OPENMVG_SFM_BIN = os.path.dirname(__file__)
+ 
+ # Indicate the openMVG camera sensor width directory
+-CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
++CAMERA_SENSOR_WIDTH_DIRECTORY = OPENMVG_SFM_BIN
  
 -import os
  import subprocess
  import sys
  
 diff --git a/src/software/SfM/tutorial_demo.py.in b/src/software/SfM/tutorial_demo.py.in
-index 1c56aab..3fb31c4 100644
+index c7361f3..82f3378 100644
 --- a/src/software/SfM/tutorial_demo.py.in
 +++ b/src/software/SfM/tutorial_demo.py.in
-@@ -8,13 +8,14 @@
+@@ -8,13 +8,13 @@
  # usage : python tutorial_demo.py
  #
  
 +import os
-+
  # Indicate the openMVG binary directory
 -OPENMVG_SFM_BIN = "@OPENMVG_SOFTWARE_SFM_BUILD_DIR@"
 +OPENMVG_SFM_BIN = os.path.dirname(__file__)
  
  # Indicate the openMVG camera sensor width directory
 -CAMERA_SENSOR_WIDTH_DIRECTORY = "@OPENMVG_SOFTWARE_SFM_SRC_DIR@" + "/../../openMVG/exif/sensor_width_database"
-+CAMERA_SENSOR_WIDTH_DIRECTORY = os.path.dirname(__file__)
++CAMERA_SENSOR_WIDTH_DIRECTORY = OPENMVG_SFM_BIN
  
 -import os
  import subprocess

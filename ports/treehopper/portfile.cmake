@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependences.patch
+        add-cstdint.diff
 )
 
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
