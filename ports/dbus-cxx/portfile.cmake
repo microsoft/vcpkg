@@ -31,7 +31,6 @@ vcpkg_cmake_configure(
         -DENABLE_TOOLS=OFF
         -DBUILD_SITE=OFF
         -DUV_STATIC=${UV_STATIC}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Qt5=ON
 )
 
 vcpkg_cmake_install()
