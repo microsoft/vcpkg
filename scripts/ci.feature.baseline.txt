@@ -2238,7 +2238,6 @@ vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issu
 vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 vtk[all]:arm64-osx = feature-fails
 vtk[all](!windows & !android & !osx) = feature-fails # Wait for fix: https://github.com/microsoft/vcpkg/pull/29260
-vtk[all](x64 & windows & !uwp & !staticcrt) = feature-fails
 vtk[core,python,paraview]:x64-linux = options # paraview's transitive gfortran linkage breaks python
 vtk[openmp](osx) = feature-fails
 vtk[python](windows & x64 & !uwp) = feature-fails # vtk[*] dbg: defaultlib 'MSVCRT' conflicts with use of other libs

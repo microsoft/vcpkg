@@ -14,6 +14,7 @@ vcpkg_from_github(
     SHA512 396ee901fafacae8aef860b9c9c17cb92ae8b4969527fd271ad8dd9f6a9e0dc8e3dc807c8d43cc585608ad101a64edcd7aff49e1580c7a61a817c2ea8e2655f5
     HEAD_REF master
     PATCHES
+        ffmpeg.diff
         FindLZMA.patch
         FindLZ4.patch
         libproj.patch
