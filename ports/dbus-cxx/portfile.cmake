@@ -10,9 +10,9 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "glib"          ENABLE_GLIB_SUPPORT            # Build dbus-cxx with GLib module
-        "qt5"           ENABLE_QT_SUPPORT              # Build dbus-cxx with QT5 module
-        "libuv"         ENABLE_UV_SUPPORT              # Build dbus-cxx with libuv module
+        "glib"          ENABLE_GLIB_SUPPORT
+        "libuv"         ENABLE_UV_SUPPORT
+        "qt5"           ENABLE_QT_SUPPORT
 )
 
 if (EXISTS "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/lib/pkgconfig/libuv-static.pc")
