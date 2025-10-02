@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 ad6551d03d0c7d499e9f0c6d77584e39d361a1464017be3c40c237d4c43306ad0ffb49b52c06b89cd62ec7346ebcb29f3d166a31b245fd978159e337a08ebafb
     HEAD_REF master
+    PATCHES
+        0001-fix-libuv.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -20,8 +22,6 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/libuv-static.pc")
 else ()
     set(UV_STATIC OFF)
 endif ()
-
-vcpkg_replace_string("${SOURCE_PATH}/dbus-cxx-uv/CMakeLists.txt", "PkgConfig::libuv", "PkgConfig::${LIBUV_PKG_NAME}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

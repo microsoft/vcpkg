@@ -1,0 +1,13 @@
+diff --git a/dbus-cxx-uv/CMakeLists.txt b/dbus-cxx-uv/CMakeLists.txt
+index 23d51c5..e0aab90 100644
+--- a/dbus-cxx-uv/CMakeLists.txt
++++ b/dbus-cxx-uv/CMakeLists.txt
+@@ -33,7 +33,7 @@ target_include_directories( dbus-cxx-uv INTERFACE
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+     $<INSTALL_INTERFACE:include/dbus-cxx-uv-${DBUS_CXX_INCLUDE_VERSION}>
+ )
+-target_link_libraries( dbus-cxx-uv PUBLIC PkgConfig::libuv )
++target_link_libraries( dbus-cxx-uv PUBLIC PkgConfig::${LIBUV_PKG_NAME} )
+ 
+ set_property( TARGET dbus-cxx-uv PROPERTY CXX_STANDARD 17 )
+ 
