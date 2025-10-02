@@ -1,22 +1,16 @@
-vcpkg_download_distfile(FIX_PACKAGE_VERSION_PATCH
-    URLS https://github.com/GNOME/libxslt/commit/7504032097712714aafe309d54f2ad57e3364bac.diff?full_index=1
-    FILENAME Fix-package-version.patch
-    SHA512 972921decf374fe8a4cad4e09890ce0d5961ee05e3c52d117c09fe8bde1a4540ebe212e767f8a95d281945240f29a90fd15e37104f45d47440032737d41dc8d0
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
     REF "v${VERSION}"
-    SHA512 0974419e0eae3cd4070ca52341b3df2d1b873b30d0ede2143274fcd0ef8653d5ac55b5f0faad56d8cf60443fefb01c5f5ddecff4b7638ba28e450e88f1c3d3c4
+    SHA512 51d9e9586f78c5aa69ac67fac64b865625fefb16bf06f1f06dede0a57b3e382e78dea69145c7c0c59f06735b738bed209751e691dd9045c3cc33df096963f89d
     HEAD_REF master
     PATCHES
+        cxx-for-libxml2-icu.diff
         python3.patch
         msvc-no-suffix.patch
         libexslt-pkgconfig.patch
         fix-gcrypt-deps.patch
         skip-install-docs.patch
-        ${FIX_PACKAGE_VERSION_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -29,8 +23,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "tools"           LIBXSLT_WITH_PROGRAMS
 )
 if("python" IN_LIST FEATURES)
-    vcpkg_find_acquire_program(PYTHON3)
-    list(APPEND FEATURE_OPTIONS "-DPYTHON_EXECUTABLE=${PYTHON3}")
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
+    list(APPEND FEATURE_OPTIONS "-DPython_EXECUTABLE=${PYTHON3}")
     list(APPEND FEATURE_OPTIONS_RELEASE "-DLIBXSLT_PYTHON_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/site-packages")
     list(APPEND FEATURE_OPTIONS_DEBUG "-DLIBXSLT_PYTHON_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib/site-packages")
 endif()

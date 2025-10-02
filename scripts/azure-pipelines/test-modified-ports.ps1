@@ -168,6 +168,13 @@ if ($lastLastExitCode -ne 0)
     exit $lastLastExitCode
 }
 
+if ($IsMacOS)
+{
+    Write-Host "macOS disk space report:"
+    & df -h | Where-Object { $_ -match "Avail|/System/Volumes/Data$" }
+    & du -sh $WorkingRoot
+}
+
 $parentHashesArgs = @()
 if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 {
@@ -222,7 +229,19 @@ if ($AllowUnexpectedPassing) {
 Add-ToolchainToTestCMake
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 $xunitArg = "--x-xunit=$xunitFile"
-& $vcpkgExe ci $tripletArg $failureLogsArg $xunitArg $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs @knownFailuresFromArgs @allowUnexpectedPassingArgs
+$prHashesFile = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
+& $vcpkgExe ci `
+    $tripletArg `
+    $failureLogsArg `
+    "--output-hashes=$prHashesFile" `
+    $xunitArg `
+    $ciBaselineArg `
+    @commonArgs `
+    @cachingArgs `
+    @parentHashesArgs `
+    @skipFailuresArgs `
+    @knownFailuresFromArgs `
+    @allowUnexpectedPassingArgs
 $lastLastExitCode = $LASTEXITCODE
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"

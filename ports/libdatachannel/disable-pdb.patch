@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 015c973..e589518 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -520,7 +520,7 @@ install(TARGETS datachannel EXPORT LibDataChannelTargets
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
+ 
+-if(MSVC)
++if(MSVC AND BUILD_SHARED_LIBS)
+ 	install(FILES $<TARGET_PDB_FILE:datachannel>
+     DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
+ endif()

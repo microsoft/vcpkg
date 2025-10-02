@@ -3,7 +3,6 @@
   "version-string": "ci",
   "description": "Port to force features of certain ports within CI",
   "license": "BSD-3-Clause",
-  "supports": "!(windows & static)",
   "dependencies": [
     {
       "name": "mdl-sdk",

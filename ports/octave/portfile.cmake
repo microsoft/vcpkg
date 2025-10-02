@@ -4,15 +4,15 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftpmirror.gnu.org/octave/octave-${VERSION}.tar.xz"
          "https://ftp.gnu.org/gnu/octave/octave-${VERSION}.tar.xz"
     FILENAME "octave-${VERSION}.tar.xz"
-    SHA512 f0a5ec7d3a14ee18c9a48bab240004ed67ce475b7d5f67037a102d20585b2a78475f260efac33396697dac12c3c49cbabdb2c1370e608ca9ae8ef7954a4e2d92
+    SHA512 4ba4d65e326ab85ffcf8864b073910b8ec5ecaba96d18cffa2b13e8f38e5382e7a200bd9bc8838c47b947edcf8388ad3dd749e2d4f529f1f110946d99adf188f
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        run-mk-ops.diff
-        dep_pc_names.patch
+        add_other_linkage_flags.patch
+        qhull.patch
 )
 
 include(vcpkg_find_fortran)
@@ -35,6 +35,12 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 if(VCPKG_HOST_IS_OSX)
     message("${PORT} currently requires the following programs from the system package manager:\n    gsed\n\nIt can be installed with brew gnu-sed")
+endif()
+
+if("arpack" IN_LIST FEATURES)
+    set(ARPACK_OPTION "yes")
+else()
+    set(ARPACK_OPTION "no")
 endif()
 
 if("bz2" IN_LIST FEATURES)
@@ -101,6 +107,13 @@ else()
     set(UMFPACK_OPTION "no")
 endif()
 
+if("spqr" IN_LIST FEATURES)
+    set(SPQR_OPTION "yes")
+    set(SUITESPARSECONFIG_OPTION "yes")
+else()
+    set(SPQR_OPTION "no")
+endif()
+
 if("hdf5" IN_LIST FEATURES)
     set(HDF5_OPTION "yes")
 else()
@@ -125,7 +138,39 @@ else()
     set(FREETYPE_OPTION "no")
 endif()
 
+if("portaudio" IN_LIST FEATURES)
+    set(PORTAUDIO_OPTION "yes")
+else()
+    set(PORTAUDIO_OPTION "no")
+endif()
+
+if("gui" IN_LIST FEATURES)
+    set(GUI_OPTION "yes")
+else()
+    set(GUI_OPTION "no")
+endif()
+
+if("qhull" IN_LIST FEATURES)
+    set(QHULL_OPTION "yes")
+    set(QHULL_PKG_OPTION "qhullstatic_r")
+else()
+    set(QHULL_OPTION "no")
+endif()
+
+if("curl" IN_LIST FEATURES)
+    set(CURL_OPTION "yes")
+else()
+    set(CURL_OPTION "no")
+endif()
+
+if("graphicsmagick" IN_LIST FEATURES)
+    set(GRAPHICSMAGICK_OPTION "GraphicsMagick++")
+else()
+    set(GRAPHICSMAGICK_OPTION "no")
+endif()
+
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/fltk")
+vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/qt5/bin")
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -137,14 +182,14 @@ vcpkg_configure_make(
     --enable-lib-visibility-flags
     --enable-relocate-all
     --with-amd=${AMD_OPTION}
-    --with-arpack=no
+    --with-arpack=${ARPACK_OPTION}
     --with-bz2=${BZ2_OPTION}
     --with-camd=${CAMD_OPTION}
     --with-ccolamd=${CCOLAMD_OPTION}
     --with-cholmod=${CHOLMOD_OPTION}
     --with-colamd=${COLAMD_OPTION}
     --with-cxsparse=${CXSPARSE_OPTION}
-    --with-curl=no
+    --with-curl=${CURL_OPTION}
     --with-fftw3 # yes
     --with-fftw3f # yes
     --with-fltk=${FLTK_OPTION}
@@ -153,16 +198,17 @@ vcpkg_configure_make(
     --with-glpk # yes
     --with-hdf5=${HDF5_OPTION}
     --with-klu=${KLU_OPTION}
-    --with-magick=no
+    --with-magick=${GRAPHICSMAGICK_OPTION}
     --with-opengl # yes
-    --with-portaudio=no
+    --with-portaudio=${PORTAUDIO_OPTION}
     --with-pcre2 # yes
-    --with-qhull_r=no
+    --with-qhull_r=${QHULL_OPTION}
+    --with-qhull_r-pkg-config=${QHULL_PKG_OPTION}
     --with-qrupdate=no
     --with-qscintilla=no
-    --with-qt=no
+    --with-qt=${GUI_OPTION}
     --with-sndfile # yes
-    --with-spqr=no
+    --with-spqr=${SPQR_OPTION}
     --with-suitesparseconfig=${SUITESPARSECONFIG_OPTION}
     --with-sundials_ida=no
     --with-sundials_nvecserial=no
@@ -177,5 +223,7 @@ foreach(subdir IN ITEMS libexec lib/octave/site lib/octave/${VERSION}/site share
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/${subdir}")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/${subdir}")
 endforeach()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/octave/octave/site/")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

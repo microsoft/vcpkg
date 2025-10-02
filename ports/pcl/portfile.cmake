@@ -1,23 +1,22 @@
-vcpkg_download_distfile(NO_GLU_PATCH
-    URLS https://github.com/PointCloudLibrary/pcl/pull/6253/commits/011905f3387e45b66828d81dacaafdde8893fdcb.patch?full_index=1
-    FILENAME fix-no-gluErrorString.patch
-    SHA512 8bf795a0c0da667bae38a3293643bd92817f30ab0f8a56b065bbb7cfa0b8f125210a317ee9cd868911b87546b1a05c322280f159802f820fef886109b938635b
+vcpkg_download_distfile(BOOST_1_89_0_COMPAT_PATCH
+    URLS https://github.com/PointCloudLibrary/pcl/commit/99333442ac63971297b4cdd05fab9d2bd2ff57a4.patch?full_index=1
+    FILENAME PointCloudLibrary-pcl-boost-1-89-0-compat.patch
+    SHA512 2fefaeaeda9fe423b481cddf4de85eff58418286f24f065be8610216e87d8faeb869406b72b3a7158abd22d17e25742b54f6b9eb3c81f82a1718f938bb8e0d26
 )
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
     REF "pcl-${VERSION}"
-    SHA512 a1ab4858b8e5bde5b21bb3e04dcdcd9ca69204aa37a90dee336d4da452cb4be0a5b6a2b2b477668d4e82891955398825e97009fb5805df931af3c7d253e9100e
+    SHA512 ca9e742bc24b38f31c42c9ea08e19054e18d045f487269b64a7b831dada89936445d90a5b46870d8c24c2d25b33a59df2d904fe7e51bc0b231317cdb319951e9
     HEAD_REF master
     PATCHES
-        add-gcc-version-check.patch
         fix-check-sse.patch
         fix-numeric-literals-flag.patch
         install-layout.patch
         install-examples.patch
         fix-clang-cl.patch
-        add-chrono-includes.patch
-        "${NO_GLU_PATCH}"
+        "${BOOST_1_89_0_COMPAT_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
@@ -33,6 +32,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cuda            BUILD_CUDA
         cuda            BUILD_GPU
         examples        BUILD_examples
+        examples        VCPKG_LOCK_FIND_PACKAGE_cJSON
         libusb          WITH_LIBUSB
         opengl          WITH_OPENGL
         openni2         WITH_OPENNI2
@@ -40,6 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         qt              WITH_QT
         simulation      BUILD_simulation
         surface-on-nurbs BUILD_surface_on_nurbs
+        surface-on-nurbs VCPKG_LOCK_FIND_PACKAGE_ZLIB
         tools           BUILD_tools
         visualization   WITH_VTK
         visualization   BUILD_visualization
@@ -70,6 +71,8 @@ vcpkg_cmake_configure(
         -DWITH_QHULL=ON
         -DWITH_RSSDK=OFF
         -DWITH_RSSDK2=OFF
+        # Misc
+        -DVCPKG_LOCK_FIND_PACKAGE_ClangFormat=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG

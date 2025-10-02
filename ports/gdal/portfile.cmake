@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 02dfa7d57c37b0f0c5994cae6632286a8671039b5aa9853360c08df8210d93227e42b0f22e74e167dc888761e8118b1b2dd2fe365bdc6c75daf7283c4be89b4c
+    SHA512 84a9bd58e9992d2d447788727228410184ef31e881026aee1f48766ed8b25039ab1b09afe95c97b66d3a0751bab524dc9bb57ab2c78af53632b52ec8dcd6f4ad
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        sqlite3.diff
         target-is-valid.patch
 )
 # `vcpkg clean` stumbles over one subdir
@@ -120,6 +121,7 @@ list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 if (BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
+            gdal
             gdal_contour
             gdal_create
             gdal_footprint

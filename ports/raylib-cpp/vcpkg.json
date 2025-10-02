@@ -1,0 +1,19 @@
+{
+  "name": "raylib-cpp",
+  "version": "5.5.0",
+  "description": "C++ Object Oriented Wrapper for raylib",
+  "homepage": "https://github.com/RobLoach/raylib-cpp",
+  "license": "Zlib",
+  "supports": "!arm32 & !uwp",
+  "dependencies": [
+    "raylib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

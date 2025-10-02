@@ -22,6 +22,8 @@ vcpkg_from_github(
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
+      0020-fix-narrow-filesystem.diff
+      0021-fix-qt-gen-def.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -430,6 +432,7 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_ZLIB_NG=OFF
+        -DCV_TRACE=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
@@ -619,6 +622,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+    "-lharfbuzz::harfbuzz"
+    "-lharfbuzz"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/"
     "\${prefix}"
     IGNORE_UNCHANGED
@@ -649,6 +657,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
     "-lTesseract::libtesseract"
     "-ltesseract"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+    "-lharfbuzz::harfbuzz"
+    "-lharfbuzz"
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"

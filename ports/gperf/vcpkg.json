@@ -1,16 +1,13 @@
 {
   "name": "gperf",
-  "version": "3.1",
-  "port-version": 7,
+  "version": "3.3",
   "description": "GNU perfect hash function generator",
   "homepage": "https://www.gnu.org/software/gperf/",
+  "license": "GPL-3.0-or-later",
+  "supports": "!uwp",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
+      "name": "vcpkg-make",
       "host": true
     }
   ]
