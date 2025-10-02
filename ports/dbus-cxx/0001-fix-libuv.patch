@@ -1,13 +1,22 @@
 diff --git a/dbus-cxx-uv/CMakeLists.txt b/dbus-cxx-uv/CMakeLists.txt
-index 23d51c5..e0aab90 100644
+index 23d51c5..c487337 100644
 --- a/dbus-cxx-uv/CMakeLists.txt
 +++ b/dbus-cxx-uv/CMakeLists.txt
+@@ -18,7 +18,7 @@ else()
+   set( LIBUV_PKG_NAME libuv )
+ endif()
+ 
+-pkg_check_modules( libuv REQUIRED IMPORTED_TARGET ${LIBUV_PKG_NAME} )
++find_package(libuv CONFIG REQUIRED)
+ 
+ set( dbus-cxx-uv-headers dbus-cxx-uv.h uvdispatcher.h )
+ set( dbus-cxx-uv-sources dbus-cxx-uv.cpp uvdispatcher.cpp )
 @@ -33,7 +33,7 @@ target_include_directories( dbus-cxx-uv INTERFACE
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
      $<INSTALL_INTERFACE:include/dbus-cxx-uv-${DBUS_CXX_INCLUDE_VERSION}>
  )
 -target_link_libraries( dbus-cxx-uv PUBLIC PkgConfig::libuv )
-+target_link_libraries( dbus-cxx-uv PUBLIC PkgConfig::${LIBUV_PKG_NAME} )
++target_link_libraries( dbus-cxx-uv PUBLIC $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv> )
  
  set_property( TARGET dbus-cxx-uv PROPERTY CXX_STANDARD 17 )
  
