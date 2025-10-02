@@ -15,7 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "qt5"           ENABLE_QT_SUPPORT
 )
 
-if (EXISTS "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/lib/pkgconfig/libuv-static.pc")
+if (EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/libuv-static.pc")
     set(UV_STATIC ON)
 else ()
     set(UV_STATIC OFF)
