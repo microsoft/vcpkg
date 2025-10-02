@@ -37,7 +37,7 @@
     "qt5": {
       "description": "Build dbus-cxx with QT5 module",
       "dependencies": [
-        "qt5"
+        "qt5compat"
       ]
     }
   }
