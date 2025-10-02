@@ -21,6 +21,8 @@ else ()
     set(UV_STATIC OFF)
 endif ()
 
+vcpkg_replace_string("${SOURCE_PATH}/dbus-cxx-uv/CMakeLists.txt", "PkgConfig::libuv", "PkgConfig::${LIBUV_PKG_NAME}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
