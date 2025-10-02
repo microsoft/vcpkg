@@ -7,7 +7,7 @@ index b1a8b81..59c9464 100644
      install(
        FILES ${FK_YAML_NATVIS_FILE}
 -      DESTINATION .
-+      DESTINATION ./share/${PROJECT_NAME}
++      DESTINATION share/fkyaml
      )
    endif()
  
