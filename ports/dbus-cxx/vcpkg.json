@@ -18,8 +18,8 @@
   ],
   "default-features": [
     "glib",
-    "qt5",
-    "libuv"
+    "libuv",
+    "qt5"
   ],
   "features": {
     "glib": {
@@ -28,16 +28,16 @@
         "glib"
       ]
     },
-    "qt5": {
-      "description": "Build dbus-cxx with QT5 module",
-      "dependencies": [
-        "qt5"
-      ]
-    },
     "libuv": {
       "description": "Build dbus-cxx with libuv module",
       "dependencies": [
         "libuv"
+      ]
+    },
+    "qt5": {
+      "description": "Build dbus-cxx with QT5 module",
+      "dependencies": [
+        "qt5"
       ]
     }
   }
