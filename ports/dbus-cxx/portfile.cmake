@@ -23,7 +23,7 @@ endif ()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_CODE_COVERAGE_REPORT=OFF
@@ -31,6 +31,7 @@ vcpkg_cmake_configure(
         -DENABLE_TOOLS=OFF
         -DBUILD_SITE=OFF
         -DUV_STATIC=${UV_STATIC}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Qt5=ON
 )
 
 vcpkg_cmake_install()
