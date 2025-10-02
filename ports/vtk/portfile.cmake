@@ -16,8 +16,8 @@ vcpkg_from_github(
     PATCHES
         FindLZMA.patch
         FindLZ4.patch
-        find-mysql.diff
         libproj.patch
+        mysql.diff
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.

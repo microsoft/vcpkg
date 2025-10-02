@@ -20,15 +20,16 @@ index cc0679b..330326c 100644
 +  target_link_libraries(MySQL::MySQL INTERFACE unofficial::libmysql::libmysql)
 +endif()
 diff --git a/IO/MySQL/vtkMySQLDatabasePrivate.h b/IO/MySQL/vtkMySQLDatabasePrivate.h
-index 82bc5c5..6a82538 100644
+index 82bc5c5..76256bc 100644
 --- a/IO/MySQL/vtkMySQLDatabasePrivate.h
 +++ b/IO/MySQL/vtkMySQLDatabasePrivate.h
-@@ -8,7 +8,7 @@
+@@ -8,7 +8,8 @@
  #endif
  
  #include "vtkIOMySQLModule.h" // For export macro
 -#include <mysql.h>            // needed for MYSQL typedefs
 +#include <mysql/mysql.h>      // needed for MYSQL typedefs
++using my_bool = bool;         // removed in libmysql 8.0
  
  VTK_ABI_NAMESPACE_BEGIN
  class VTKIOMYSQL_EXPORT vtkMySQLDatabasePrivate
