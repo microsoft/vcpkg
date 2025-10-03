@@ -26,6 +26,12 @@ vcpkg_from_github(
     0003-fix-shared-symbol-visibility.patch
 )
 
+set(BORINGSSL_OPTIONS)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  # MSVC armasm64 expects MASM syntax; BoringSSL uses GNU asm on arm64, so force the C fallback.
+  list(APPEND BORINGSSL_OPTIONS "-DOPENSSL_NO_ASM=ON")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
   # the FindOpenSSL.cmake script differentiates debug and release binaries using this suffix.
   set(CMAKE_CONFIGURE_OPTIONS_DEBUG "-DCMAKE_DEBUG_POSTFIX=d")
@@ -33,6 +39,8 @@ endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    ${BORINGSSL_OPTIONS}
   OPTIONS_DEBUG
     ${CMAKE_CONFIGURE_OPTIONS_DEBUG}
 )
