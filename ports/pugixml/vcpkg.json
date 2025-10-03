@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "compact": {
+      "description": "Enable compact memory mode (reduces memory consumption at the cost of performance)"
+    }
+  }
 }
