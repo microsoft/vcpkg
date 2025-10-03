@@ -53,79 +53,35 @@ index 0030f17..0e19089 100644
  
  #
 diff --git a/dbus-cxx-glib/CMakeLists.txt b/dbus-cxx-glib/CMakeLists.txt
-index 6b98f27..cdcefe1 100644
+index 6b98f27..87c245c 100644
 --- a/dbus-cxx-glib/CMakeLists.txt
 +++ b/dbus-cxx-glib/CMakeLists.txt
-@@ -65,8 +65,30 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glib-2.0.pc"
- # Library install information
- #
+@@ -67,6 +67,6 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glib-2.0.pc"
  install( TARGETS dbus-cxx-glib
--    EXPORT dbus-cxxTargets
-+    EXPORT dbus-cxx-glibTargets
+     EXPORT dbus-cxxTargets
      COMPONENT glib
-     PUBLIC_HEADER DESTINATION include/dbus-cxx-glib-${DBUS_CXX_INCLUDE_VERSION}
-     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
-+
-+install(EXPORT dbus-cxx-glibTargets
-+  FILE        dbus-cxx-glibTargets.cmake
-+  NAMESPACE   dbus-cxx::
-+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-glib
-+)
-+include(CMakePackageConfigHelpers)
-+write_basic_package_version_file(
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glibConfigVersion.cmake"
-+  VERSION       ${PROJECT_VERSION}
-+  COMPATIBILITY SameMajorVersion
-+)
-+configure_package_config_file(
-+  "${PROJECT_SOURCE_DIR}/cmake/dbus-cxx-glibConfig.cmake.in"
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glibConfig.cmake"
-+  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-glib"
-+)
-+install(FILES
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glibConfig.cmake"
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glibConfigVersion.cmake"
-+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-glib"
-+)
+-    PUBLIC_HEADER DESTINATION include/dbus-cxx-glib-${DBUS_CXX_INCLUDE_VERSION}
+-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
++    PUBLIC_HEADER DESTINATION include/dbus-cxx-glib-${DBUS_CXX_INCLUDE_VERSION} COMPONENT glib
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT glib
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT glib)
 diff --git a/dbus-cxx-qt/CMakeLists.txt b/dbus-cxx-qt/CMakeLists.txt
-index 9c637ed..50c9890 100644
+index 9c637ed..cfff41c 100644
 --- a/dbus-cxx-qt/CMakeLists.txt
 +++ b/dbus-cxx-qt/CMakeLists.txt
-@@ -71,8 +71,30 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qt-2.0.pc"
- # Library install information
- #
+@@ -73,6 +73,6 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qt-2.0.pc"
  install( TARGETS dbus-cxx-qt
--    EXPORT dbus-cxxTargets
-+    EXPORT dbus-cxx-qtTargets
+     EXPORT dbus-cxxTargets
      COMPONENT qt
-     PUBLIC_HEADER DESTINATION include/dbus-cxx-qt-${DBUS_CXX_INCLUDE_VERSION}
-     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
-+
-+install(EXPORT dbus-cxx-qtTargets
-+  FILE        dbus-cxx-qtTargets.cmake
-+  NAMESPACE   dbus-cxx::
-+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-qt
-+)
-+include(CMakePackageConfigHelpers)
-+write_basic_package_version_file(
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qtConfigVersion.cmake"
-+  VERSION       ${PROJECT_VERSION}
-+  COMPATIBILITY SameMajorVersion
-+)
-+configure_package_config_file(
-+  "${PROJECT_SOURCE_DIR}/cmake/dbus-cxx-qtConfig.cmake.in"
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qtConfig.cmake"
-+  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-qt"
-+)
-+install(FILES
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qtConfig.cmake"
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qtConfigVersion.cmake"
-+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-qt"
-+)
+-    PUBLIC_HEADER DESTINATION include/dbus-cxx-qt-${DBUS_CXX_INCLUDE_VERSION}
+-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
++    PUBLIC_HEADER DESTINATION include/dbus-cxx-qt-${DBUS_CXX_INCLUDE_VERSION} COMPONENT qt
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT qt
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT qt)
 diff --git a/dbus-cxx-uv/CMakeLists.txt b/dbus-cxx-uv/CMakeLists.txt
-index 23d51c5..1e471d0 100644
+index 23d51c5..a1e3abb 100644
 --- a/dbus-cxx-uv/CMakeLists.txt
 +++ b/dbus-cxx-uv/CMakeLists.txt
 @@ -18,7 +18,7 @@ else()
@@ -146,35 +102,13 @@ index 23d51c5..1e471d0 100644
  
  set_property( TARGET dbus-cxx-uv PROPERTY CXX_STANDARD 17 )
  
-@@ -72,8 +72,30 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-uv-2.0.pc"
- # Library install information
- #
+@@ -74,6 +74,6 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-uv-2.0.pc"
  install( TARGETS dbus-cxx-uv
--    EXPORT dbus-cxxTargets
-+    EXPORT dbus-cxx-uvTargets
+     EXPORT dbus-cxxTargets
      COMPONENT uv
-     PUBLIC_HEADER DESTINATION include/dbus-cxx-uv-${DBUS_CXX_INCLUDE_VERSION}
-     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
-+
-+install(EXPORT dbus-cxx-uvTargets
-+  FILE        dbus-cxx-uvTargets.cmake
-+  NAMESPACE   dbus-cxx::
-+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-uv
-+)
-+include(CMakePackageConfigHelpers)
-+write_basic_package_version_file(
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-uvConfigVersion.cmake"
-+  VERSION       ${PROJECT_VERSION}
-+  COMPATIBILITY SameMajorVersion
-+)
-+configure_package_config_file(
-+  "${PROJECT_SOURCE_DIR}/cmake/dbus-cxx-uvConfig.cmake.in"
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-uvConfig.cmake"
-+  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-uv"
-+)
-+install(FILES
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-uvConfig.cmake"
-+  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-uvConfigVersion.cmake"
-+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-uv"
-+)
+-    PUBLIC_HEADER DESTINATION include/dbus-cxx-uv-${DBUS_CXX_INCLUDE_VERSION}
+-    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
++    PUBLIC_HEADER DESTINATION include/dbus-cxx-uv-${DBUS_CXX_INCLUDE_VERSION} COMPONENT uv
++    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT uv
++    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT uv)
