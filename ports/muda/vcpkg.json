@@ -16,9 +16,6 @@
   "features": {
     "compute-graph": {
       "description": "Enable compute graph feature"
-    },
-    "nvtx3": {
-      "description": "Enable nvtx3 feature"
     }
   }
 }

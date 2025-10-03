@@ -12,11 +12,7 @@ else()
     set(MUDA_WITH_COMPUTE_GRAPH OFF)
 endif()
 
-if("nvtx3" IN_LIST FEATURES)
-    set(MUDA_WITH_NVTX3 ON)
-else()
-    set(MUDA_WITH_NVTX3 OFF)
-endif()
+set(MUDA_WITH_NVTX3 OFF)
 
 message(STATUS "[muda] Build with vcpkg port")
 message(STATUS "[muda] Configuring with options:")
