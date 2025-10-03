@@ -2677,7 +2677,7 @@
       "port-version": 0
     },
     "eigen3": {
-      "baseline": "3.4.1",
+      "baseline": "5.0.0",
       "port-version": 0
     },
     "eipscanner": {
