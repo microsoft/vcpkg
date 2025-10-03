@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0030f17..bd6074d 100644
+index 0030f17..e6c8fb7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -36,7 +36,7 @@ set( DBUS_CXX_INCLUDE_VERSION 2.0 )
@@ -53,7 +53,7 @@ index 0030f17..bd6074d 100644
  
  #
 diff --git a/dbus-cxx-glib/CMakeLists.txt b/dbus-cxx-glib/CMakeLists.txt
-index 6b98f27..387fda5 100644
+index 6b98f27..4d679b7 100644
 --- a/dbus-cxx-glib/CMakeLists.txt
 +++ b/dbus-cxx-glib/CMakeLists.txt
 @@ -22,7 +22,7 @@ set_target_properties( dbus-cxx-glib PROPERTIES
@@ -65,7 +65,13 @@ index 6b98f27..387fda5 100644
  target_include_directories( dbus-cxx-glib INTERFACE
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
      $<INSTALL_INTERFACE:include/dbus-cxx-glib-${DBUS_CXX_INCLUDE_VERSION}>
-@@ -70,3 +70,25 @@ install( TARGETS dbus-cxx-glib
+@@ -65,8 +65,30 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glib-2.0.pc"
+ # Library install information
+ #
+ install( TARGETS dbus-cxx-glib
+-    EXPORT dbus-cxxTargets
++    EXPORT dbus-cxx-glibTargets
+     COMPONENT glib
      PUBLIC_HEADER DESTINATION include/dbus-cxx-glib-${DBUS_CXX_INCLUDE_VERSION}
      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
@@ -92,7 +98,7 @@ index 6b98f27..387fda5 100644
 +  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-glib"
 +)
 diff --git a/dbus-cxx-qt/CMakeLists.txt b/dbus-cxx-qt/CMakeLists.txt
-index 9c637ed..9adf9b2 100644
+index 9c637ed..12f5ab4 100644
 --- a/dbus-cxx-qt/CMakeLists.txt
 +++ b/dbus-cxx-qt/CMakeLists.txt
 @@ -28,7 +28,7 @@ set_target_properties( dbus-cxx-qt PROPERTIES
@@ -104,7 +110,13 @@ index 9c637ed..9adf9b2 100644
  target_include_directories( dbus-cxx-qt INTERFACE
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
      $<INSTALL_INTERFACE:include/dbus-cxx-qt-${DBUS_CXX_INCLUDE_VERSION}>
-@@ -76,3 +76,25 @@ install( TARGETS dbus-cxx-qt
+@@ -71,8 +71,30 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qt-2.0.pc"
+ # Library install information
+ #
+ install( TARGETS dbus-cxx-qt
+-    EXPORT dbus-cxxTargets
++    EXPORT dbus-cxx-qtTargets
+     COMPONENT qt
      PUBLIC_HEADER DESTINATION include/dbus-cxx-qt-${DBUS_CXX_INCLUDE_VERSION}
      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
@@ -131,7 +143,7 @@ index 9c637ed..9adf9b2 100644
 +  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-qt"
 +)
 diff --git a/dbus-cxx-uv/CMakeLists.txt b/dbus-cxx-uv/CMakeLists.txt
-index 23d51c5..dc84216 100644
+index 23d51c5..1a4e795 100644
 --- a/dbus-cxx-uv/CMakeLists.txt
 +++ b/dbus-cxx-uv/CMakeLists.txt
 @@ -18,7 +18,7 @@ else()
@@ -158,7 +170,13 @@ index 23d51c5..dc84216 100644
  
  set_property( TARGET dbus-cxx-uv PROPERTY CXX_STANDARD 17 )
  
-@@ -77,3 +77,25 @@ install( TARGETS dbus-cxx-uv
+@@ -72,8 +72,30 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-uv-2.0.pc"
+ # Library install information
+ #
+ install( TARGETS dbus-cxx-uv
+-    EXPORT dbus-cxxTargets
++    EXPORT dbus-cxx-uvTargets
+     COMPONENT uv
      PUBLIC_HEADER DESTINATION include/dbus-cxx-uv-${DBUS_CXX_INCLUDE_VERSION}
      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" )
