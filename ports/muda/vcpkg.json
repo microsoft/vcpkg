@@ -2,7 +2,7 @@
   "name": "muda",
   "version": "2025.10.3",
   "description": "μ-Cuda, COVER THE LAST MILE OF CUDA. With features: intellisense-friendly, structured launch, automatic cuda graph generation and updating.",
-  "supports": "windows | linux",
+  "supports": "(windows & x64) | (linux & x64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
