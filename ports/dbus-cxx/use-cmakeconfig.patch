@@ -41,7 +41,7 @@ index 0030f17..bd6074d 100644
 -install(FILES   "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxxConfigVersion.cmake"
 -  DESTINATION   ${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx
 +configure_package_config_file(
-+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/dbus-cxxConfig.cmake.in"
++  "${PROJECT_SOURCE_DIR}/cmake/dbus-cxxConfig.cmake.in"
 +  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxxConfig.cmake"
 +  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx"
 +)
@@ -82,7 +82,7 @@ index 6b98f27..387fda5 100644
 +  COMPATIBILITY SameMajorVersion
 +)
 +configure_package_config_file(
-+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/dbus-cxx-glibConfig.cmake.in"
++  "${PROJECT_SOURCE_DIR}/cmake/dbus-cxx-glibConfig.cmake.in"
 +  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glibConfig.cmake"
 +  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-glib"
 +)
@@ -121,7 +121,7 @@ index 9c637ed..9adf9b2 100644
 +  COMPATIBILITY SameMajorVersion
 +)
 +configure_package_config_file(
-+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/dbus-cxx-qtConfig.cmake.in"
++  "${PROJECT_SOURCE_DIR}/cmake/dbus-cxx-qtConfig.cmake.in"
 +  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qtConfig.cmake"
 +  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-qt"
 +)
@@ -175,7 +175,7 @@ index 23d51c5..dc84216 100644
 +  COMPATIBILITY SameMajorVersion
 +)
 +configure_package_config_file(
-+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/dbus-cxx-uvConfig.cmake.in"
++  "${PROJECT_SOURCE_DIR}/cmake/dbus-cxx-uvConfig.cmake.in"
 +  "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-uvConfig.cmake"
 +  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-uv"
 +)
