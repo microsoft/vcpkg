@@ -8,6 +8,7 @@ vcpkg_from_github(
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        python.diff
         sqlite3.diff
         target-is-valid.patch
 )
@@ -75,14 +76,15 @@ if(VCPKG_TARGET_IS_ANDROID AND ANDROID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGE
 endif()
 
 if("python" IN_LIST FEATURES)
-    vcpkg_get_vcpkg_installed_python(PYTHON3)
-    x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES numpy setuptools)
+    set(host_python "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(host_python "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python.exe")
+    endif()
+    x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${host_python}" PACKAGES numpy setuptools OUT_PYTHON_VAR "PYTHON3")
     vcpkg_find_acquire_program(SWIG)
     list(APPEND FEATURE_OPTIONS
         "-DPython_EXECUTABLE=${PYTHON3}"
-        "-DPython_LOOKUP_VERSION=${PYTHON3_VERSION}"
         "-DSWIG_EXECUTABLE:PATH=${SWIG}"
-        "-DVCPKG_LOCK_FIND_PACKAGE_Python=ON"
     )
 endif()
 

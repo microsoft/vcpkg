@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d8ea752ca5..582d43108d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -206,7 +206,10 @@ if (Python_LOOKUP_VERSION)
+     find_package(Python ${Python_LOOKUP_VERSION} EXACT COMPONENTS Interpreter Development NumPy)
+ else ()
+     set(Python_FIND_STRATEGY LOCATION)
+-    find_package(Python 3.8 COMPONENTS Interpreter Development NumPy)
++    find_package(Python 3.8 COMPONENTS Interpreter Development  REQUIRED  OPTIONAL_COMPONENTS NumPy)
++    message(STATUS "Python_INCLUDE_DIRS: ${Python_INCLUDE_DIRS}")
++    message(STATUS "Python_LIBRARY_DIRS: ${Python_LIBRARY_DIRS}")
++    set(Python_LIBRARY_DIRS "") # unused; wrong for Debug
+ endif ()
+ set_package_properties(Python PROPERTIES PURPOSE "SWIG_PYTHON: Python binding")
+ 
