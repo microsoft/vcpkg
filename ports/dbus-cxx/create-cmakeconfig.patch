@@ -9,7 +9,7 @@ index 0000000..1ba2959
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(sigc++-3)
-+find_dependency(PkgConfig REQUIRED)
++find_dependency(PkgConfig)
 +pkg_check_modules(glib REQUIRED IMPORTED_TARGET glib-2.0)
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxx-glibTargets.cmake")
@@ -55,3 +55,4 @@ index 0000000..2dbd443
 +find_dependency(sigc++-3)
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxxTargets.cmake")
+
