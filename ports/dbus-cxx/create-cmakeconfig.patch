@@ -1,9 +1,9 @@
 diff --git a/cmake/dbus-cxxConfig.cmake.in b/cmake/dbus-cxxConfig.cmake.in
 new file mode 100644
-index 0000000..9ce3cc1
+index 0000000..78320bb
 --- /dev/null
 +++ b/cmake/dbus-cxxConfig.cmake.in
-@@ -0,0 +1,57 @@
+@@ -0,0 +1,78 @@
 +@PACKAGE_INIT@
 +
 +set(dbus-cxx_KNOWN_COMPONENTS Runtime Development glib qt uv)
@@ -19,12 +19,19 @@ index 0000000..9ce3cc1
 +endif()
 +
 +if("glib" IN_LIST dbus-cxx_FIND_COMPONENTS)
-+    if(TARGET dbus-cxx::dbus-cxx-glib)
-+        set(dbus-cxx_glib_FOUND TRUE)
++    if(@ENABLE_GLIB_SUPPORT@)
++        if(TARGET dbus-cxx::dbus-cxx-glib)
++            set(dbus-cxx_glib_FOUND TRUE)
++        else()
++            set(dbus-cxx_glib_FOUND FALSE)
++            if(dbus-cxx_FIND_REQUIRED_glib)
++                message(FATAL_ERROR "Requested 'glib' component but target 'dbus-cxx::dbus-cxx-glib' is not available.")
++            endif()
++        endif()
 +    else()
 +        set(dbus-cxx_glib_FOUND FALSE)
 +        if(dbus-cxx_FIND_REQUIRED_glib)
-+            message(FATAL_ERROR "Requested 'glib' component but target 'dbus-cxx::dbus-cxx-glib' is not available.")
++            message(FATAL_ERROR "Requested 'glib' component but dbus-cxx was built without glib support.")
 +        endif()
 +    endif()
 +endif()
@@ -34,12 +41,19 @@ index 0000000..9ce3cc1
 +endif()
 +
 +if("uv" IN_LIST dbus-cxx_FIND_COMPONENTS)
-+    if(TARGET dbus-cxx::dbus-cxx-uv)
-+        set(dbus-cxx_uv_FOUND TRUE)
++    if(@ENABLE_UV_SUPPORT@)
++        if(TARGET dbus-cxx::dbus-cxx-uv)
++            set(dbus-cxx_uv_FOUND TRUE)
++        else()
++            set(dbus-cxx_uv_FOUND FALSE)
++            if(dbus-cxx_FIND_REQUIRED_uv)
++                message(FATAL_ERROR "Requested 'uv' component but target 'dbus-cxx::dbus-cxx-uv' is not available.")
++            endif()
++        endif()
 +    else()
 +        set(dbus-cxx_uv_FOUND FALSE)
 +        if(dbus-cxx_FIND_REQUIRED_uv)
-+            message(FATAL_ERROR "Requested 'uv' component but target 'dbus-cxx::dbus-cxx-uv' is not available.")
++            message(FATAL_ERROR "Requested 'uv' component but dbus-cxx was built without uv support.")
 +        endif()
 +    endif()
 +endif()
@@ -49,12 +63,19 @@ index 0000000..9ce3cc1
 +endif()
 +
 +if("qt" IN_LIST dbus-cxx_FIND_COMPONENTS)
-+    if(TARGET dbus-cxx::dbus-cxx-qt)
-+        set(dbus-cxx_qt_FOUND TRUE)
++    if(@ENABLE_QT_SUPPORT@)
++        if(TARGET dbus-cxx::dbus-cxx-qt)
++            set(dbus-cxx_qt_FOUND TRUE)
++        else()
++            set(dbus-cxx_qt_FOUND FALSE)
++            if(dbus-cxx_FIND_REQUIRED_qt)
++                message(FATAL_ERROR "Requested 'qt' component but target 'dbus-cxx::dbus-cxx-qt' is not available.")
++            endif()
++        endif()
 +    else()
 +        set(dbus-cxx_qt_FOUND FALSE)
 +        if(dbus-cxx_FIND_REQUIRED_qt)
-+            message(FATAL_ERROR "Requested 'qt' component but target 'dbus-cxx::dbus-cxx-qt' is not available.")
++            message(FATAL_ERROR "Requested 'qt' component but dbus-cxx was built without qt support.")
 +        endif()
 +    endif()
 +endif()
