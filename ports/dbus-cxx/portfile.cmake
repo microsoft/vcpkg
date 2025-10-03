@@ -38,16 +38,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(ENABLE_GLIB_SUPPORT)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "dbus-cxx-glib" CONFIG_PATH "lib/cmake/dbus-cxx-glib" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-endif()
-if(ENABLE_UV_SUPPORT)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "dbus-cxx-uv" CONFIG_PATH "lib/cmake/dbus-cxx-uv" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-endif()
-if(ENABLE_QT_SUPPORT)
-    vcpkg_cmake_config_fixup(PACKAGE_NAME "dbus-cxx-qt" CONFIG_PATH "lib/cmake/dbus-cxx-qt" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-endif()
-
 vcpkg_cmake_config_fixup(PACKAGE_NAME "dbus-cxx" CONFIG_PATH "lib/cmake/dbus-cxx")
 
 vcpkg_fixup_pkgconfig()
