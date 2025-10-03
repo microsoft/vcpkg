@@ -285,7 +285,10 @@
       "description": "Build python bindings",
       "supports": "!static",
       "dependencies": [
-        "python3",
+        {
+          "name": "python3",
+          "default-features": false
+        },
         {
           "name": "vcpkg-get-python-packages",
           "host": true

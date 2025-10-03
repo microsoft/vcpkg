@@ -136,7 +136,7 @@ if(BUILD_PYTHON_BINDINGS)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     foreach(script IN LISTS command_scripts python_scripts shell_scripts)
         file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/debugg/bin/${script}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
     endforeach()
 endif()
 
