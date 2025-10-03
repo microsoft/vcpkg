@@ -1,13 +1,14 @@
 diff --git a/cmake/dbus-cxx-glibConfig.cmake.in b/cmake/dbus-cxx-glibConfig.cmake.in
 new file mode 100644
-index 0000000..1ba2959
+index 0000000..e55076e
 --- /dev/null
 +++ b/cmake/dbus-cxx-glibConfig.cmake.in
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,10 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
 +
++find_dependency(dbus-cxx)
 +find_dependency(sigc++-3)
 +find_dependency(PkgConfig)
 +pkg_check_modules(glib REQUIRED IMPORTED_TARGET glib-2.0)
@@ -15,28 +16,30 @@ index 0000000..1ba2959
 +include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxx-glibTargets.cmake")
 diff --git a/cmake/dbus-cxx-qtConfig.cmake.in b/cmake/dbus-cxx-qtConfig.cmake.in
 new file mode 100644
-index 0000000..76241c1
+index 0000000..68b7a4e
 --- /dev/null
 +++ b/cmake/dbus-cxx-qtConfig.cmake.in
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,9 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
 +
++find_dependency(dbus-cxx)
 +find_dependency(sigc++-3)
 +find_dependency(Qt5 COMPONENTS Core)
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxx-qtTargets.cmake")
 diff --git a/cmake/dbus-cxx-uvConfig.cmake.in b/cmake/dbus-cxx-uvConfig.cmake.in
 new file mode 100644
-index 0000000..b52832e
+index 0000000..ef45e33
 --- /dev/null
 +++ b/cmake/dbus-cxx-uvConfig.cmake.in
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,9 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
 +
++find_dependency(dbus-cxx)
 +find_dependency(sigc++-3)
 +find_dependency(libuv)
 +
