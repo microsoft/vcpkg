@@ -80,7 +80,16 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
-        "ffmpeg",
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        },
         "libmysql",
         {
           "name": "vtk",

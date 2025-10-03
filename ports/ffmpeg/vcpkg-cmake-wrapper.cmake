@@ -27,7 +27,7 @@ endif()
 _find_package(${ARGS})
 
 # Fixup of variables and targets for (some) vendored find modules
-if(NOT z_vcpkg_using_vcpkg_find_ffmpeg)
+if(NOT z_vcpkg_using_vcpkg_find_ffmpeg AND NOT "@BUILD_SHARED_LIBS@")
 
 include(SelectLibraryConfigurations)
 
@@ -36,6 +36,19 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 set(PKG_CONFIG_USE_CMAKE_PREFIX_PATH ON) # Required for CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 3.1 which otherwise ignores CMAKE_PREFIX_PATH
+
+if(APPLE)
+  find_package(PkgConfig )
+  pkg_check_modules(PKG_libavcodec libavcodec)
+  foreach(framework IN ITEMS AudioToolbox CoreAudio)
+    if(PKG_libavcodec_LDFLAGS MATCHES " ${framework}")
+      list(APPEND FFMPEG_LIBRARIES "-framework ${framework}")
+      if(vcpkg_no_avcodec_target AND TARGET FFmpeg::avcodec)
+        target_link_libraries(FFmpeg::avcodec INTERFACE "-framework ${framework}")
+      endif()
+    endif()
+  endforeach()
+endif()
 
 if(@WITH_MP3LAME@)
   find_package(mp3lame CONFIG )
