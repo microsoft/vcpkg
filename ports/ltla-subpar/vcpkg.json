@@ -1,8 +1,8 @@
 {
-  "name": "ltla-aarand",
-  "version": "1.1.0",
-  "description": "Aaron's random distributions for C++",
-  "homepage": "https://github.com/LTLA/aarand",
+  "name": "ltla-subpar",
+  "version": "0.4.1",
+  "description": "Substitutable parallelization for C++ libraries",
+  "homepage": "https://github.com/LTLA/subpar",
   "license": "MIT",
   "dependencies": [
     {

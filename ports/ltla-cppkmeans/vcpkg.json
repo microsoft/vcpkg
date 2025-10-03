@@ -1,12 +1,13 @@
 {
   "name": "ltla-cppkmeans",
-  "version-date": "2023-03-20",
+  "version": "4.0.3",
   "description": "C++ port of R's Hartigan-Wong implementation",
   "homepage": "https://github.com/LTLA/CppKmeans",
   "license": "MIT",
   "dependencies": [
     "ltla-aarand",
-    "ltla-powerit",
+    "ltla-sanisizer",
+    "ltla-subpar",
     {
       "name": "vcpkg-cmake",
       "host": true

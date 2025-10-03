@@ -1,0 +1,19 @@
+{
+  "name": "knncolle-annoy",
+  "version": "0.2.0",
+  "description": "knncolle bindings for Annoy search ",
+  "homepage": "https://github.com/knncolle/knncolle_annoy",
+  "license": "MIT",
+  "dependencies": [
+    "annoy",
+    "knncolle",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

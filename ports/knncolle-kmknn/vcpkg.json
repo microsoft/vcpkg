@@ -1,12 +1,11 @@
 {
-  "name": "ltla-knncolle",
-  "version-date": "2023-05-09",
-  "description": "Collection of KNN algorithms in C++",
-  "homepage": "https://github.com/LTLA/knncolle",
+  "name": "knncolle-kmknn",
+  "version": "0.1.0",
+  "description": "knncolle bindings for KMKNN search ",
+  "homepage": "https://github.com/knncolle/knncolle_kmknn",
   "license": "MIT",
   "dependencies": [
-    "annoy",
-    "hnswlib",
+    "knncolle",
     "ltla-cppkmeans",
     {
       "name": "vcpkg-cmake",

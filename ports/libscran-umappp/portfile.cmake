@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO LTLA/knncolle
-    REF 3ad6b8cdbd281d78c77390d5a6ded4513bdf3860
-    SHA512 c6e66d8ea5501cb511fd88155d18b57b31661ad0e20f3289d9a7ec8fc558f91dd409487b53d41171111fdaa2baa11fe9548f01daf307a90121d17dc398203676
+    REPO libscran/umappp
+    REF "v${VERSION}"
+    SHA512 cb934d4989c63485d457423419dc749b5d775f800d8a0bee65566b5f5def00ce1720eb583cb1e5bd277bc04b9cd0f31a4b1b2cd65f50ac2564a1970b00e42d16
     HEAD_REF master
 )
 
@@ -11,14 +11,14 @@ set(VCPKG_BUILD_TYPE "release") # header-only port
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DKNNCOLLE_FETCH_EXTERN=OFF
-        -DKNNCOLLE_TESTS=OFF
+        -DUMAPPP_FETCH_EXTERN=OFF
+        -DUMAPPP_TESTS=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME ltla_knncolle
-    CONFIG_PATH lib/cmake/ltla_knncolle
+    PACKAGE_NAME libscran_umappp
+    CONFIG_PATH lib/cmake/libscran_umappp
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
