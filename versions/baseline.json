@@ -2637,8 +2637,8 @@
       "port-version": 0
     },
     "ecm": {
-      "baseline": "6.7.0",
-      "port-version": 1
+      "baseline": "6.18.0",
+      "port-version": 0
     },
     "ecos": {
       "baseline": "2.0.10",
@@ -4350,6 +4350,10 @@
     },
     "kfr": {
       "baseline": "6.3.1",
+      "port-version": 0
+    },
+    "kimageformats": {
+      "baseline": "6.18.0",
       "port-version": 0
     },
     "kinectsdk1": {
