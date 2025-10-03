@@ -1,7 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0030f17..e6c8fb7 100644
+index 0030f17..72d8f55 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -22,9 +22,9 @@ include( CheckTypeSize )
+ include( CTest )
+ include( CheckCXXSymbolExists )
+ include( CheckCXXCompilerFlag )
+-IF( CMAKE_BUILD_TYPE MATCHES Debug )
++IF(0)
+ include( CodeCoverage )
+-ENDIF( CMAKE_BUILD_TYPE MATCHES Debug )
++ENDIF()
+ 
+ find_package(PkgConfig REQUIRED)
+ 
 @@ -36,7 +36,7 @@ set( DBUS_CXX_INCLUDE_VERSION 2.0 )
  set( PKG_VERSION ${dbus-cxx_VERSION} )
  
