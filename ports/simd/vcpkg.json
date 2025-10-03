@@ -1,6 +1,6 @@
 {
   "name": "simd",
-  "version": "6.2.153",
+  "version": "6.2.154",
   "description": "Simd image processing and machine learning library, designed for C and C++ programmers",
   "homepage": "https://github.com/ermig1979/Simd",
   "license": "MIT",
