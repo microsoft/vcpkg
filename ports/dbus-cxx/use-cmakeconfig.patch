@@ -1,37 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0030f17..72d8f55 100644
+index 0030f17..0e19089 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -22,9 +22,9 @@ include( CheckTypeSize )
- include( CTest )
+@@ -23,7 +23,6 @@ include( CTest )
  include( CheckCXXSymbolExists )
  include( CheckCXXCompilerFlag )
--IF( CMAKE_BUILD_TYPE MATCHES Debug )
-+IF(0)
- include( CodeCoverage )
--ENDIF( CMAKE_BUILD_TYPE MATCHES Debug )
-+ENDIF()
+ IF( CMAKE_BUILD_TYPE MATCHES Debug )
+-include( CodeCoverage )
+ ENDIF( CMAKE_BUILD_TYPE MATCHES Debug )
  
  find_package(PkgConfig REQUIRED)
- 
-@@ -36,7 +36,7 @@ set( DBUS_CXX_INCLUDE_VERSION 2.0 )
+@@ -36,7 +35,8 @@ set( DBUS_CXX_INCLUDE_VERSION 2.0 )
  set( PKG_VERSION ${dbus-cxx_VERSION} )
  
  # Our required dependencies: libsigc++ 3.0
 -pkg_check_modules( sigc REQUIRED IMPORTED_TARGET sigc++-3.0 )
 +find_package(sigc++-3 CONFIG REQUIRED)
++add_library(PkgConfig::sigc ALIAS sigc-3.0)
  
  #
  # Check our options
-@@ -239,7 +239,7 @@ include_directories( ${DBUS_CXX_INCLUDE_DIRECTORIES} )
- #
- set( THREADS_PREFER_PTHREAD_FLAG ON )
- find_package( Threads REQUIRED )
--set( DBUS_CXX_LIBRARIES PkgConfig::sigc Threads::Threads )
-+set( DBUS_CXX_LIBRARIES sigc-3.0 Threads::Threads )
- 
- find_library( LIBRT rt )
- if( LIBRT )
 @@ -355,18 +355,26 @@ INSTALL( FILES "${PROJECT_BINARY_DIR}/dbus-cxx-2.0.pc"
  # Support for find_package
  #
@@ -65,18 +53,9 @@ index 0030f17..72d8f55 100644
  
  #
 diff --git a/dbus-cxx-glib/CMakeLists.txt b/dbus-cxx-glib/CMakeLists.txt
-index 6b98f27..4d679b7 100644
+index 6b98f27..cdcefe1 100644
 --- a/dbus-cxx-glib/CMakeLists.txt
 +++ b/dbus-cxx-glib/CMakeLists.txt
-@@ -22,7 +22,7 @@ set_target_properties( dbus-cxx-glib PROPERTIES
-     VERSION 2.0.0 SOVERSION 2
-     PUBLIC_HEADER "${dbus-cxx-glib-headers}"
- )
--target_link_libraries( dbus-cxx-glib PUBLIC dbus-cxx PkgConfig::sigc ${LIBRT} )
-+target_link_libraries( dbus-cxx-glib PUBLIC dbus-cxx sigc-3.0 ${LIBRT} )
- target_include_directories( dbus-cxx-glib INTERFACE
-     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-     $<INSTALL_INTERFACE:include/dbus-cxx-glib-${DBUS_CXX_INCLUDE_VERSION}>
 @@ -65,8 +65,30 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-glib-2.0.pc"
  # Library install information
  #
@@ -110,18 +89,9 @@ index 6b98f27..4d679b7 100644
 +  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-glib"
 +)
 diff --git a/dbus-cxx-qt/CMakeLists.txt b/dbus-cxx-qt/CMakeLists.txt
-index 9c637ed..12f5ab4 100644
+index 9c637ed..50c9890 100644
 --- a/dbus-cxx-qt/CMakeLists.txt
 +++ b/dbus-cxx-qt/CMakeLists.txt
-@@ -28,7 +28,7 @@ set_target_properties( dbus-cxx-qt PROPERTIES
-     VERSION 2.0.0 SOVERSION 2
-     PUBLIC_HEADER "${dbus-cxx-qt-headers}"
- )
--target_link_libraries( dbus-cxx-qt PUBLIC Qt5::Core dbus-cxx PkgConfig::sigc ${LIBRT} )
-+target_link_libraries( dbus-cxx-qt PUBLIC Qt5::Core dbus-cxx sigc-3.0 ${LIBRT} )
- target_include_directories( dbus-cxx-qt INTERFACE
-     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-     $<INSTALL_INTERFACE:include/dbus-cxx-qt-${DBUS_CXX_INCLUDE_VERSION}>
 @@ -71,8 +71,30 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qt-2.0.pc"
  # Library install information
  #
@@ -155,7 +125,7 @@ index 9c637ed..12f5ab4 100644
 +  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/dbus-cxx-qt"
 +)
 diff --git a/dbus-cxx-uv/CMakeLists.txt b/dbus-cxx-uv/CMakeLists.txt
-index 23d51c5..1a4e795 100644
+index 23d51c5..1e471d0 100644
 --- a/dbus-cxx-uv/CMakeLists.txt
 +++ b/dbus-cxx-uv/CMakeLists.txt
 @@ -18,7 +18,7 @@ else()
@@ -167,13 +137,7 @@ index 23d51c5..1a4e795 100644
  
  set( dbus-cxx-uv-headers dbus-cxx-uv.h uvdispatcher.h )
  set( dbus-cxx-uv-sources dbus-cxx-uv.cpp uvdispatcher.cpp )
-@@ -28,12 +28,12 @@ set_target_properties( dbus-cxx-uv PROPERTIES
-     VERSION 2.0.0 SOVERSION 2
-     PUBLIC_HEADER "${dbus-cxx-uv-headers}"
- )
--target_link_libraries( dbus-cxx-uv PUBLIC dbus-cxx PkgConfig::sigc ${LIBRT} )
-+target_link_libraries( dbus-cxx-uv PUBLIC dbus-cxx sigc-3.0 ${LIBRT} )
- target_include_directories( dbus-cxx-uv INTERFACE
+@@ -33,7 +33,7 @@ target_include_directories( dbus-cxx-uv INTERFACE
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
      $<INSTALL_INTERFACE:include/dbus-cxx-uv-${DBUS_CXX_INCLUDE_VERSION}>
  )
