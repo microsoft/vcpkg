@@ -8314,7 +8314,7 @@
     },
     "rbdl": {
       "baseline": "3.3.0",
-      "port-version": 7
+      "port-version": 8
     },
     "rbdl-orb": {
       "baseline": "3.2.0",
