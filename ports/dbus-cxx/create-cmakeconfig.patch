@@ -18,6 +18,16 @@ index 0000000..78320bb
 +    pkg_check_modules(glib REQUIRED IMPORTED_TARGET glib-2.0)
 +endif()
 +
++if(@ENABLE_UV_SUPPORT@)
++    find_dependency(libuv)
++endif()
++
++if(@ENABLE_QT_SUPPORT@)
++    find_dependency(Qt5 COMPONENTS Core)
++endif()
++
++include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxxTargets.cmake")
++
 +if("glib" IN_LIST dbus-cxx_FIND_COMPONENTS)
 +    if(@ENABLE_GLIB_SUPPORT@)
 +        if(TARGET dbus-cxx::dbus-cxx-glib)
@@ -34,10 +44,6 @@ index 0000000..78320bb
 +            message(FATAL_ERROR "Requested 'glib' component but dbus-cxx was built without glib support.")
 +        endif()
 +    endif()
-+endif()
-+
-+if(@ENABLE_UV_SUPPORT@)
-+    find_dependency(libuv)
 +endif()
 +
 +if("uv" IN_LIST dbus-cxx_FIND_COMPONENTS)
@@ -58,10 +64,6 @@ index 0000000..78320bb
 +    endif()
 +endif()
 +
-+if(@ENABLE_QT_SUPPORT@)
-+    find_dependency(Qt5 COMPONENTS Core)
-+endif()
-+
 +if("qt" IN_LIST dbus-cxx_FIND_COMPONENTS)
 +    if(@ENABLE_QT_SUPPORT@)
 +        if(TARGET dbus-cxx::dbus-cxx-qt)
@@ -80,5 +82,4 @@ index 0000000..78320bb
 +    endif()
 +endif()
 +
-+include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxxTargets.cmake")
 +check_required_components(dbus-cxx)
