@@ -1,61 +1,63 @@
-diff --git a/cmake/dbus-cxx-glibConfig.cmake.in b/cmake/dbus-cxx-glibConfig.cmake.in
-new file mode 100644
-index 0000000..e55076e
---- /dev/null
-+++ b/cmake/dbus-cxx-glibConfig.cmake.in
-@@ -0,0 +1,10 @@
-+@PACKAGE_INIT@
-+
-+include(CMakeFindDependencyMacro)
-+
-+find_dependency(dbus-cxx)
-+find_dependency(sigc++-3)
-+find_dependency(PkgConfig)
-+pkg_check_modules(glib REQUIRED IMPORTED_TARGET glib-2.0)
-+
-+include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxx-glibTargets.cmake")
-diff --git a/cmake/dbus-cxx-qtConfig.cmake.in b/cmake/dbus-cxx-qtConfig.cmake.in
-new file mode 100644
-index 0000000..68b7a4e
---- /dev/null
-+++ b/cmake/dbus-cxx-qtConfig.cmake.in
-@@ -0,0 +1,9 @@
-+@PACKAGE_INIT@
-+
-+include(CMakeFindDependencyMacro)
-+
-+find_dependency(dbus-cxx)
-+find_dependency(sigc++-3)
-+find_dependency(Qt5 COMPONENTS Core)
-+
-+include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxx-qtTargets.cmake")
-diff --git a/cmake/dbus-cxx-uvConfig.cmake.in b/cmake/dbus-cxx-uvConfig.cmake.in
-new file mode 100644
-index 0000000..ef45e33
---- /dev/null
-+++ b/cmake/dbus-cxx-uvConfig.cmake.in
-@@ -0,0 +1,9 @@
-+@PACKAGE_INIT@
-+
-+include(CMakeFindDependencyMacro)
-+
-+find_dependency(dbus-cxx)
-+find_dependency(sigc++-3)
-+find_dependency(libuv)
-+
-+include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxx-uvTargets.cmake")
 diff --git a/cmake/dbus-cxxConfig.cmake.in b/cmake/dbus-cxxConfig.cmake.in
 new file mode 100644
-index 0000000..2dbd443
+index 0000000..9ce3cc1
 --- /dev/null
 +++ b/cmake/dbus-cxxConfig.cmake.in
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,57 @@
 +@PACKAGE_INIT@
++
++set(dbus-cxx_KNOWN_COMPONENTS Runtime Development glib qt uv)
 +
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(Threads)
 +find_dependency(sigc++-3)
 +
++if(@ENABLE_GLIB_SUPPORT@)
++    find_dependency(PkgConfig)
++    pkg_check_modules(glib REQUIRED IMPORTED_TARGET glib-2.0)
++endif()
++
++if("glib" IN_LIST dbus-cxx_FIND_COMPONENTS)
++    if(TARGET dbus-cxx::dbus-cxx-glib)
++        set(dbus-cxx_glib_FOUND TRUE)
++    else()
++        set(dbus-cxx_glib_FOUND FALSE)
++        if(dbus-cxx_FIND_REQUIRED_glib)
++            message(FATAL_ERROR "Requested 'glib' component but target 'dbus-cxx::dbus-cxx-glib' is not available.")
++        endif()
++    endif()
++endif()
++
++if(@ENABLE_UV_SUPPORT@)
++    find_dependency(libuv)
++endif()
++
++if("uv" IN_LIST dbus-cxx_FIND_COMPONENTS)
++    if(TARGET dbus-cxx::dbus-cxx-uv)
++        set(dbus-cxx_uv_FOUND TRUE)
++    else()
++        set(dbus-cxx_uv_FOUND FALSE)
++        if(dbus-cxx_FIND_REQUIRED_uv)
++            message(FATAL_ERROR "Requested 'uv' component but target 'dbus-cxx::dbus-cxx-uv' is not available.")
++        endif()
++    endif()
++endif()
++
++if(@ENABLE_QT_SUPPORT@)
++    find_dependency(Qt5 COMPONENTS Core)
++endif()
++
++if("qt" IN_LIST dbus-cxx_FIND_COMPONENTS)
++    if(TARGET dbus-cxx::dbus-cxx-qt)
++        set(dbus-cxx_qt_FOUND TRUE)
++    else()
++        set(dbus-cxx_qt_FOUND FALSE)
++        if(dbus-cxx_FIND_REQUIRED_qt)
++            message(FATAL_ERROR "Requested 'qt' component but target 'dbus-cxx::dbus-cxx-qt' is not available.")
++        endif()
++    endif()
++endif()
++
 +include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxxTargets.cmake")
-
++check_required_components(dbus-cxx)
