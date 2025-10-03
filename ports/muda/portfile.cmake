@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "MuGdxy/muda"
     REF "${VERSION}"
-    SHA512 2bffd348476d81520bdfcddde0829aea6fdae7c9e0e8ee1aa4ed0cf995d0de17550b7ac474465f3241f52b83c8422ca16e365bbbe8ec7d01750cfd9d4acef2c8
+    SHA512 d554290aef699c538f6b39fde755329c986c792c8f017f2fe143cdfcd24edcf86e94f0c66c992ef391062268306e1d8509ccb6a227f8310b3a8527884b19230f
     HEAD_REF mini20
 )
 
@@ -38,7 +38,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/LICENSE")
