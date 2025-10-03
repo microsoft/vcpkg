@@ -9,4 +9,3 @@ int main()
    std::shared_ptr<DBus::Dispatcher> UvDisp = DBus::Uv::UvDispatcher::create();
    return 0;
 }
-
