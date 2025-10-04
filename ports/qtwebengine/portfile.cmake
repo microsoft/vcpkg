@@ -12,9 +12,9 @@ set(${PORT}_PATCHES
       "pdf-system-libpng.diff"
       "pkg-config.diff"
       "rpath.diff"
+      "include-dir-order.diff"
 )
 
-list(REMOVE_ITEM FEATURES "private-dependencies")
 set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")
 if(VCPKG_CROSSCOMPILING)
     if(NOT qtwebengine_host STREQUAL qtwebengine_target)
@@ -221,9 +221,11 @@ qt_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_GPerf=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Ninja=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Nodejs=ON
+        --trace-expand
     OPTIONS_MAYBE_UNUSED
         FEATURE_webengine_webrtc
 )
+message(FATAL_ERROR Stop.)
 
 vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
 file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/*/args.gn")
