@@ -36,7 +36,7 @@ index d8e02fcec..e6e6d66e6 100644
 +  target_link_libraries(boost_asio_deadline_timer
 +    INTERFACE
 +      Boost::asio_core # Internal dependency (this comment disables adding the internal library to the dependency list in BoostRoot.cmake)
-+      Boost::date_time
++      $<TARGET_NAME_IF_EXISTS:Boost::date_time>
 +  )
  
 -target_compile_features(boost_asio_deadline_timer INTERFACE cxx_std_11)
@@ -67,7 +67,7 @@ index d8e02fcec..e6e6d66e6 100644
 +  target_link_libraries(boost_asio_spawn
 +    INTERFACE
 +      Boost::asio_core # Internal dependency
-+      Boost::context
++      $<TARGET_NAME_IF_EXISTS:Boost::context>
 +  )
  
 -target_compile_features(boost_asio_spawn INTERFACE cxx_std_11)
