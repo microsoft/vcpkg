@@ -1,0 +1,16 @@
+diff --git a/Configurations/shared-info.pl b/Configurations/shared-info.pl
+index caf6f90..6d943de 100644
+--- a/Configurations/shared-info.pl
++++ b/Configurations/shared-info.pl
+@@ -32,11 +32,6 @@ my %shared_info;
+         return {
+             %{$shared_info{'gnu-shared'}},
+             shared_defflag    => '-Wl,--version-script=',
+-            dso_ldflags       =>
+-                (grep /(?:^|\s)-fsanitize/,
+-                 @{$config{CFLAGS}}, @{$config{cflags}})
+-                ? ''
+-                : '-Wl,-z,defs',
+         };
+     },
+     'bsd-gcc-shared' => sub { return $shared_info{'linux-shared'}; },
