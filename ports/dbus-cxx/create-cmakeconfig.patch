@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..78320bb
 --- /dev/null
 +++ b/cmake/dbus-cxxConfig.cmake.in
-@@ -0,0 +1,78 @@
+@@ -0,0 +1,83 @@
 +@PACKAGE_INIT@
 +
 +set(dbus-cxx_KNOWN_COMPONENTS "glib" "qt" "uv")
@@ -23,7 +23,7 @@ index 0000000..78320bb
 +endif()
 +
 +if(@ENABLE_QT_SUPPORT@)
-+    if(@USES_QT6@)
++    if(@QT_VERSION_MAJOR@ EQUAL 6)
 +        find_dependency(Qt6 COMPONENTS Core)
 +    else()
 +        find_dependency(Qt5 COMPONENTS Core)
