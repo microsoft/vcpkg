@@ -1,9 +1,9 @@
 diff --git a/cmake/dbus-cxxConfig.cmake.in b/cmake/dbus-cxxConfig.cmake.in
 new file mode 100644
-index 0000000..78320bb
+index 0000000..42181f0
 --- /dev/null
 +++ b/cmake/dbus-cxxConfig.cmake.in
-@@ -0,0 +1,83 @@
+@@ -0,0 +1,79 @@
 +@PACKAGE_INIT@
 +
 +set(dbus-cxx_KNOWN_COMPONENTS "glib" "qt" "uv")
@@ -23,11 +23,7 @@ index 0000000..78320bb
 +endif()
 +
 +if(@ENABLE_QT_SUPPORT@)
-+    if(@QT_VERSION_MAJOR@ EQUAL 6)
-+        find_dependency(Qt6 COMPONENTS Core)
-+    else()
-+        find_dependency(Qt5 COMPONENTS Core)
-+    endif()
++    find_dependency(Qt6 COMPONENTS Core)
 +endif()
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/dbus-cxxTargets.cmake")

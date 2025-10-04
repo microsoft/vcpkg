@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0030f17..559a61a 100644
+index 0030f17..0e19089 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -23,7 +23,6 @@ include( CTest )
@@ -20,25 +20,7 @@ index 0030f17..559a61a 100644
  
  #
  # Check our options
-@@ -299,6 +299,17 @@ endif( ENABLE_GLIB_SUPPORT )
- # If Qt should be supported, add in the appropriate code
- #
- if( ENABLE_QT_SUPPORT )
-+    find_package(Qt6 COMPONENTS Core)
-+    if(Qt6_FOUND)
-+        set(QT_VERSION_MAJOR 6)
-+    else()
-+        find_package(Qt5 COMPONENTS Core)
-+        if(Qt5_FOUND)
-+            set(QT_VERSION_MAJOR 5)
-+        else()
-+            message(FATAL_ERROR "Qt support requested but neither Qt5 nor Qt6 found")
-+        endif()
-+    endif()
-     add_subdirectory( dbus-cxx-qt )
- endif( ENABLE_QT_SUPPORT )
- 
-@@ -355,18 +366,26 @@ INSTALL( FILES "${PROJECT_BINARY_DIR}/dbus-cxx-2.0.pc"
+@@ -355,18 +355,26 @@ INSTALL( FILES "${PROJECT_BINARY_DIR}/dbus-cxx-2.0.pc"
  # Support for find_package
  #
  install(EXPORT dbus-cxxTargets
@@ -85,36 +67,28 @@ index 6b98f27..87c245c 100644
 +    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT glib
 +    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT glib)
 diff --git a/dbus-cxx-qt/CMakeLists.txt b/dbus-cxx-qt/CMakeLists.txt
-index 9c637ed..9233dcb 100644
+index 9c637ed..a7b75ca 100644
 --- a/dbus-cxx-qt/CMakeLists.txt
 +++ b/dbus-cxx-qt/CMakeLists.txt
-@@ -16,7 +16,15 @@ set(CMAKE_AUTOMOC ON)
+@@ -16,7 +16,7 @@ set(CMAKE_AUTOMOC ON)
  set(CMAKE_AUTORCC ON)
  set(CMAKE_AUTOUIC ON)
  
 -find_package(Qt5 COMPONENTS Core REQUIRED)
-+find_package(Qt6 COMPONENTS Core)
-+if(Qt6_FOUND)
-+    set(QT_VERSION_MAJOR 6)
-+    set(QT_CORE_TARGET Qt6::Core)
-+else()
-+    find_package(Qt5 COMPONENTS Core REQUIRED)
-+    set(QT_VERSION_MAJOR 5)
-+    set(QT_CORE_TARGET Qt5::Core)
-+endif()
++find_package(Qt6 COMPONENTS Core REQUIRED)
  
  set( dbus-cxx-qt-headers dbus-cxx-qt.h qtthreaddispatcher.h qtdispatcher.h )
  set( dbus-cxx-qt-sources dbus-cxx-qt.cpp qtthreaddispatcher.cpp qtdispatcher.cpp )
-@@ -28,7 +36,7 @@ set_target_properties( dbus-cxx-qt PROPERTIES
+@@ -28,7 +28,7 @@ set_target_properties( dbus-cxx-qt PROPERTIES
      VERSION 2.0.0 SOVERSION 2
      PUBLIC_HEADER "${dbus-cxx-qt-headers}"
  )
 -target_link_libraries( dbus-cxx-qt PUBLIC Qt5::Core dbus-cxx PkgConfig::sigc ${LIBRT} )
-+target_link_libraries( dbus-cxx-qt PUBLIC ${QT_CORE_TARGET} dbus-cxx PkgConfig::sigc ${LIBRT} )
++target_link_libraries( dbus-cxx-qt PUBLIC Qt6::Core dbus-cxx PkgConfig::sigc ${LIBRT} )
  target_include_directories( dbus-cxx-qt INTERFACE
      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
      $<INSTALL_INTERFACE:include/dbus-cxx-qt-${DBUS_CXX_INCLUDE_VERSION}>
-@@ -73,6 +81,6 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qt-2.0.pc"
+@@ -73,6 +73,6 @@ INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/dbus-cxx-qt-2.0.pc"
  install( TARGETS dbus-cxx-qt
      EXPORT dbus-cxxTargets
      COMPONENT qt
