@@ -4,6 +4,7 @@
   "description": "μ-Cuda, COVER THE LAST MILE OF CUDA. With features: intellisense-friendly, structured launch, automatic cuda graph generation and updating.",
   "supports": "(windows & x64) | (linux & x64)",
   "dependencies": [
+    "cuda",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -11,9 +12,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-        "name": "cuda"
     }
   ],
   "features": {
