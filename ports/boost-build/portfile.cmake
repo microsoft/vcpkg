@@ -13,9 +13,9 @@ vcpkg_from_github(
     SHA512 10d8a534541f3dc1ad0c04d2aaab4b66b23d7f56a01aa044a0f3dbaf3f00c4c0d593ef739d51c9dd3ccc3d42aaac7531391716d21ec6becf6200139b7366387c
     HEAD_REF master
     PATCHES
-        0002-fix-get-version.patch
-        0003-fix-emscripten.patch
-        0004-workaround-MSVC-codegen-bug-in-17.5-on-ARM64.patch
+        0001-fix-get-version.patch
+        0002-fix-emscripten.patch
+        0003-workaround-MSVC-codegen-bug-in-17.5-on-ARM64.patch
 )
 
 # This fixes the lib path to use desktop libs instead of uwp -- TODO: improve this with better "host" compilation
