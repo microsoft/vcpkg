@@ -2,16 +2,16 @@ diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 789f15bc6..be3ea630d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -167,7 +167,7 @@ endif()
+@@ -114,7 +114,7 @@ endif()
  #  HOST PROJECT
  ##
  
--if(CMAKE_CROSSCOMPILING AND NOT IOS AND NOT MACOS)
+-if(CMAKE_CROSSCOMPILING AND NOT IOS AND NOT MACOS AND NOT WIN32)
 +if(0)
  
      if(NOT Gn_FOUND)
          message(FATAL_ERROR "\nHost gn not found - cross compilation not possible")
-@@ -198,7 +198,7 @@ if(CMAKE_CROSSCOMPILING AND NOT IOS AND NOT MACOS)
+@@ -148,7 +148,7 @@ if(CMAKE_CROSSCOMPILING AND NOT IOS AND NOT MACOS)
  endif()
  
  # install gn for cross build

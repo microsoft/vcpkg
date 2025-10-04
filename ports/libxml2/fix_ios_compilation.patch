@@ -1,98 +1,18 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a48dbbfe..9f51cf6e 100644
+index b952d7bf..d555d25a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -136,7 +136,12 @@ if (NOT MSVC)
-     check_include_files(fcntl.h HAVE_FCNTL_H)
-     check_function_exists(fpclass HAVE_FPCLASS)
-     check_function_exists(ftime HAVE_FTIME)
--    check_function_exists(getentropy HAVE_GETENTROPY)
-+    if (APPLE)
-+        # In old macOS SDKs (ex: 10.15), sys/random.h fails to include header files it needs, so add them here.
-+        check_symbol_exists(getentropy "Availability.h;stddef.h;sys/random.h" HAVE_GETENTROPY)
-+    else()
-+        check_symbol_exists(getentropy sys/random.h HAVE_GETENTROPY)
-+    endif()
-     check_function_exists(gettimeofday HAVE_GETTIMEOFDAY)
-     check_library_exists(history append_history "" HAVE_LIBHISTORY)
-     check_library_exists(readline readline "" HAVE_LIBREADLINE)
-@@ -149,12 +154,6 @@ if (NOT MSVC)
-     check_function_exists(stat HAVE_STAT)
-     check_include_files(stdint.h HAVE_STDINT_H)
-     check_include_files(sys/mman.h HAVE_SYS_MMAN_H)
--    if (APPLE)
--        # In old macOS SDKs (ex: 10.15), sys/random.h fails to include header files it needs, so add them here.
--        check_include_files("Availability.h;stddef.h;sys/random.h" HAVE_SYS_RANDOM_H)
--    else()
--        check_include_files(sys/random.h HAVE_SYS_RANDOM_H)
--    endif()
-     check_include_files(sys/select.h HAVE_SYS_SELECT_H)
-     check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
-     check_include_files(sys/stat.h HAVE_SYS_STAT_H)
-diff --git a/config.h.cmake.in b/config.h.cmake.in
-index 2f4aeba3..36c068fd 100644
---- a/config.h.cmake.in
-+++ b/config.h.cmake.in
-@@ -69,9 +69,6 @@
- /* Define to 1 if you have the <sys/mman.h> header file. */
- #cmakedefine HAVE_SYS_MMAN_H 1
- 
--/* Define to 1 if you have the <sys/random.h> header file. */
--#cmakedefine HAVE_SYS_RANDOM_H 1
--
- /* Define to 1 if you have the <sys/select.h> header file. */
- #cmakedefine HAVE_SYS_SELECT_H 1
- 
-diff --git a/configure.ac b/configure.ac
-index 478bb4eb..ad49a9ac 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -305,7 +305,6 @@ AC_CHECK_HEADERS([stdint.h])
- AC_CHECK_HEADERS([fcntl.h unistd.h sys/stat.h])
- AC_CHECK_HEADERS([sys/mman.h])
- AC_CHECK_HEADERS([sys/time.h sys/timeb.h])
--AC_CHECK_HEADERS([sys/random.h])
- AC_CHECK_HEADERS([dl.h dlfcn.h])
- AC_CHECK_HEADERS([glob.h])
- AM_CONDITIONAL(WITH_GLOB, test "$ac_cv_header_glob_h" = "yes")
-@@ -318,9 +317,7 @@ AH_VERBATIM([HAVE_MUNMAP_AFTER],[/* mmap() is no good without munmap() */
- #  undef /**/ HAVE_MMAP
- #endif])
- 
--AC_CHECK_DECL([getentropy],
--              [AC_DEFINE([HAVE_GETENTROPY], [1], [getentropy])], [],
--              [#include <sys/random.h>])
-+AC_CHECK_DECLS([getentropy], [], [], [#include <sys/random.h>])
- 
- dnl
- dnl Checks for inet libraries
-diff --git a/dict.c b/dict.c
-index a238cd9d..ce501cb5 100644
---- a/dict.c
-+++ b/dict.c
-@@ -929,13 +929,11 @@ xmlDictQLookup(xmlDictPtr dict, const xmlChar *prefix, const xmlChar *name) {
-   #include <windows.h>
-   #include <bcrypt.h>
- #else
--  #if defined(HAVE_GETENTROPY)
-+  #if HAVE_GETENTROPY
-     #ifdef HAVE_UNISTD_H
-       #include <unistd.h>
-     #endif
--    #ifdef HAVE_SYS_RANDOM_H
--      #include <sys/random.h>
--    #endif
-+    #include <sys/random.h>
-   #endif
-   #include <time.h>
- #endif
-@@ -969,7 +967,7 @@ xmlInitRandom(void) {
- #else
-         int var;
- 
--#if defined(HAVE_GETENTROPY)
-+#if HAVE_GETENTROPY
-         while (1) {
-             if (getentropy(globalRngState, sizeof(globalRngState)) == 0)
-                 return;
-
+@@ -134,7 +134,12 @@ check_c_source_compiles("
+     f(void) {}
+     int main(void) { return 0; }
+ " HAVE_FUNC_ATTRIBUTE_DESTRUCTOR)
+-check_symbol_exists(getentropy "sys/random.h" HAVE_DECL_GETENTROPY)
++if (APPLE)
++    # In old macOS SDKs (ex: 10.15), sys/random.h fails to include header files it needs, so add them here.
++    check_symbol_exists(getentropy "Availability.h;stddef.h;sys/random.h" HAVE_GETENTROPY)
++else()
++    check_symbol_exists(getentropy sys/random.h HAVE_GETENTROPY)
++endif()
+ check_symbol_exists(glob "glob.h" HAVE_DECL_GLOB)
+ check_symbol_exists(mmap "sys/mman.h" HAVE_DECL_MMAP)
+ check_include_files(stdint.h HAVE_STDINT_H)

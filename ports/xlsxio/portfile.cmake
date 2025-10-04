@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO brechtsanders/xlsxio
     REF "${VERSION}"
-    SHA512 9608e208cd71669e2b38bd64b0f21c8642ff34dbbb1d03f1d3ea1a6c166ada4e945b781fbaeb0f7f43753a23c3a5e833dcb5c5d6fd39177c99a00f867cc040d6
+    SHA512 6d22aa23290da84fbbf9ed5fbfbc3203b0171b58de14e94283cdd240c65f7f2b0b5b9f7f044d0b0a5d925f645cac305718b338b806004d8f844a525292972d28
     HEAD_REF master
     PATCHES
         fix-dependencies.patch

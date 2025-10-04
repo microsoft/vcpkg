@@ -1,6 +1,6 @@
 {
   "name": "verdict",
-  "version": "1.4.0",
+  "version": "1.4.2",
   "description": "Compute quality functions of 2 and 3-dimensional regions.",
   "homepage": "https://github.com/sandialabs/verdict",
   "license": null,

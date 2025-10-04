@@ -7,6 +7,9 @@ vcpkg_from_github(
     PATCHES
         0001_cmakelists_fixes.patch
         0004_remove_broken_fake_ba_jac.patch
+        0005_link_cuda_static.patch
+        0006_fix_cuda_architectures.patch
+        0007_support_cuda_13.patch
 )
 file(REMOVE "${SOURCE_PATH}/cmake/FindGflags.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")
@@ -38,6 +41,11 @@ endif()
 if(VCPKG_TARGET_IS_IOS)
     # Note: CMake uses "OSX" not just for macOS, but also iOS, watchOS and tvOS.
     list(APPEND FEATURE_OPTIONS "-DIOS_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
+endif()
+
+# Add big object support for MinGW
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_CXX_FLAGS=-Wa,-mbig-obj")
 endif()
 
 vcpkg_cmake_configure(

@@ -6,7 +6,6 @@ set(${PORT}_PATCHES
       "cross-build.diff"
       "disable-host-pkgconfig.diff"
       "fix-error2275-2672.patch"
-      "blink-include-fixes.patch"
       "nested-name-fix.patch"
       "osx-sdk-info.diff"
       "pdf-system-libjpeg.diff"
@@ -227,7 +226,7 @@ qt_cmake_configure(
 )
 
 vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
-file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/core/Release/*/args.gn")
+file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/*/args.gn")
 if(NOT VCPKG_BUILD_TYPE)
     block(SCOPE_FOR VARIABLES)
     set(VCPKG_BUILD_TYPE debug)

@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
+        0005-dont-expect-gnu-diff.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -158,6 +159,8 @@ else()
         set(LIBVPX_TARGET_ARCH "armv7")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
         set(LIBVPX_TARGET_ARCH "arm64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL riscv64)
+        set(LIBVPX_TARGET_ARCH "riscv64")
     else()
         message(FATAL_ERROR "libvpx does not support architecture ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
@@ -186,7 +189,12 @@ else()
             set(LIBVPX_TARGET "x86_64-win64-gcc")
         endif()
     elseif(VCPKG_TARGET_IS_LINUX)
-        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
+        # RISCV64 use target generic-gnu
+        if(LIBVPX_TARGET_ARCH STREQUAL "riscv64")
+            set(LIBVPX_TARGET "generic-gnu")
+        else()
+            set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
+        endif()
     elseif(VCPKG_TARGET_IS_ANDROID)
         set(LIBVPX_TARGET "generic-gnu")
         # Settings
