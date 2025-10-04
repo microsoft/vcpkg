@@ -5,6 +5,7 @@
   "description": "Boost graph_parallel module",
   "homepage": "https://www.boost.org/libs/graph_parallel",
   "license": "BSL-1.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "boost-algorithm",
@@ -44,7 +45,6 @@
     },
     {
       "name": "boost-filesystem",
-      "platform": "!uwp",
       "version>=": "1.89.0"
     },
     {
@@ -73,7 +73,6 @@
     },
     {
       "name": "boost-mpi",
-      "platform": "!uwp",
       "version>=": "1.89.0"
     },
     {
@@ -94,7 +93,6 @@
     },
     {
       "name": "boost-random",
-      "platform": "!uwp",
       "version>=": "1.89.0"
     },
     {

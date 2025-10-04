@@ -208,6 +208,7 @@
     },
     {
       "name": "boost-geometry",
+      "platform": "!uwp",
       "version>=": "1.89.0"
     },
     {

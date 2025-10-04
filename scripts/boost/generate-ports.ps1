@@ -85,8 +85,15 @@ $portData = @{
         }
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
-    "boost-geometry"         = @{ "dependencies" = @("boost-crc", "boost-program-options"); };
-    "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
+    "boost-geometry"         = @{
+        "dependencies" = @("boost-crc", "boost-program-options");
+        "supports" = "!uwp";
+    };
+    "boost-graph"            = @{ "supports" = "!uwp" };
+    "boost-graph-parallel"   = @{
+        "dependencies" = @("mpi");
+        "supports" = "!uwp";
+    };
     "boost-iostreams"        = @{
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
         "supports"         = "!uwp";
@@ -129,8 +136,8 @@ $portData = @{
     };
     "boost-mpi"              = @{
         "dependencies" = @("mpi");
-        "supports"     = "!uwp";
-        "features"     = @{
+        "supports" = "!uwp";
+        "features" = @{
             "python3" = @{
                 "description"  = "Build Python3 bindings";
                 "supports"     = "!static";
@@ -138,6 +145,7 @@ $portData = @{
             }
         }
     };
+    "boost-mqtt5"            = @{ "supports" = "!uwp" };
     "boost-mysql"            = @{ "dependencies" = @("openssl"); };
     "boost-odeint"           = @{
         "features" = @{
@@ -183,11 +191,15 @@ $suppressPlatformForDependency = @{
     "boost-coroutine2"            = @("boost-context");
     "boost-dll"                   = @("boost-filesystem");
     "boost-process"               = @("boost-filesystem");
+    "boost-geometry"              = @("boost-graph");
     "boost-graph"                 = @("boost-random");
+    "boost-graph-parallel"        = @("boost-filesystem", "boost-graph", "boost-mpi", "boost-random");
     "boost-log"                   = @("boost-filesystem");
+    "boost-mpi"                   = @("boost-graph");
     "boost-mqtt5"                 = @("boost-random");
     "boost-parameter-python"      = @("boost-python");
     "boost-property-map-parallel" = @("boost-mpi");
+    "boost-python"                = @("boost-graph");
     "boost-wave"                  = @("boost-filesystem");
 }
 
