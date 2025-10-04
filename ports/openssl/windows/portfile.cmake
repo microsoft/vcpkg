@@ -73,9 +73,9 @@ cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_LINKER NORMALIZE ld)
 
 vcpkg_build_nmake(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_JOM
+#    PREFER_JOM
     CL_LANGUAGE NONE
-    PRERUN_SHELL_RELEASE "${PERL}" Configure
+    PRERUN_SHELL "${PERL}" Configure
         ${CONFIGURE_OPTIONS} 
         ${OPENSSL_ARCH}
         "--prefix=${install_dir_native}"
@@ -100,6 +100,8 @@ vcpkg_build_nmake(
         "ARFLAGS=${VCPKG_COMBINED_STATIC_LINKER_FLAGS_DEBUG}"
         "LD=${ld}"
         "LDFLAGS=${VCPKG_COMBINED_SHARED_LINKER_FLAGS_DEBUG}"
+    PRERUN_SHELL_RELEASE
+        "${CMAKE_COMMAND}" -E copy makefile ../makefile.log
     PROJECT_NAME "makefile"
     TARGET install_dev install_modules ${INSTALL_FIPS}
     LOGFILE_ROOT install
