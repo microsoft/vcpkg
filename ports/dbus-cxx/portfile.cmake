@@ -15,7 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "glib"          ENABLE_GLIB_SUPPORT
         "libuv"         ENABLE_UV_SUPPORT
-        "qt5"           ENABLE_QT_SUPPORT
+        "qt6"           ENABLE_QT_SUPPORT
 )
 
 if (EXISTS "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/libuv-static.pc")

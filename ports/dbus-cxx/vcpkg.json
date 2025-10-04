@@ -33,10 +33,10 @@
         "libuv"
       ]
     },
-    "qt5": {
-      "description": "Build dbus-cxx with QT5 module",
+    "qt6": {
+      "description": "Build dbus-cxx with QT6 module",
       "dependencies": [
-        "qt5-base"
+        "qtbase"
       ]
     }
   }
