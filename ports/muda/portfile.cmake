@@ -16,6 +16,7 @@ vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        ${options}
         -DCMAKE_CUDA_COMPILER=${NVCC}
         -DCUDAToolkit_ROOT=${cuda_toolkit_root}
         -DMUDA_BUILD_EXAMPLE=OFF
@@ -30,4 +31,5 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 vcpkg_install_copyright(FILE_LIST "${SOURE_PATH}/LICENSE")
