@@ -23,7 +23,7 @@ index 0000000..78320bb
 +endif()
 +
 +if(@ENABLE_QT_SUPPORT@)
-+    if(@QT_VERSION_MAJOR@ EQUAL 6)
++    if(@USES_QT6@)
 +        find_dependency(Qt6 COMPONENTS Core)
 +    else()
 +        find_dependency(Qt5 COMPONENTS Core)
