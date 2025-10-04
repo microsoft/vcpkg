@@ -1,8 +1,8 @@
 diff --git a/src/tools/clang-linux.jam b/src/tools/clang-linux.jam
-index 949e277..8934787 100644
+index ce270c584..f93d1fa86 100644
 --- a/src/tools/clang-linux.jam
 +++ b/src/tools/clang-linux.jam
-@@ -97,7 +97,7 @@ rule init ( version ? :  command * : options * ) {
+@@ -123,7 +123,7 @@ rule init ( version ? :  command * : options * ) {
  
  rule get-full-version ( command-string )
  {
