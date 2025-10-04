@@ -1,0 +1,69 @@
+#!/bin/sh
+
+# POST-REVPROP-CHANGE HOOK
+#
+# The post-revprop-change hook is invoked after a revision property
+# has been added, modified or deleted.  Subversion runs this hook by
+# invoking a program (script, executable, binary, etc.) named
+# 'post-revprop-change' (for which this file is a template), with the
+# following ordered arguments:
+#
+#   [1] REPOS-PATH   (the path to this repository)
+#   [2] REV          (the revision that was tweaked)
+#   [3] USER         (the username of the person tweaking the property)
+#   [4] PROPNAME     (the property that was changed)
+#   [5] ACTION       (the property was 'A'dded, 'M'odified, or 'D'eleted)
+#
+#   [STDIN] PROPVAL  ** the old property value is passed via STDIN.
+#
+# Because the propchange has already completed and cannot be undone,
+# the exit code of the hook program is ignored.  The hook program
+# can use the 'svnlook' utility to help it examine the
+# new property value.
+#
+# The default working directory for the invocation is undefined, so
+# the program should set one explicitly if it cares.
+#
+# On a Unix system, the normal procedure is to have 'post-revprop-change'
+# invoke other programs to do the real work, though it may do the
+# work itself too.
+#
+# Note that 'post-revprop-change' must be executable by the user(s) who will
+# invoke it (typically the user httpd runs as), and that user must
+# have filesystem-level permission to access the repository.
+#
+# On a Windows system, you should name the hook program
+# 'post-revprop-change.bat' or 'post-revprop-change.exe',
+# but the basic idea is the same.
+#
+# The hook program runs in an empty environment, unless the server is
+# explicitly configured otherwise.  For example, a common problem is for
+# the PATH environment variable to not be set to its usual value, so
+# that subprograms fail to launch unless invoked via absolute path.
+# If you're having unexpected problems with a hook program, the
+# culprit may be unusual (or missing) environment variables.
+#
+# CAUTION:
+# For security reasons, you MUST always properly quote arguments when
+# you use them, as those arguments could contain whitespace or other
+# problematic characters. Additionally, you should delimit the list
+# of options with "--" before passing the arguments, so malicious
+# clients cannot bootleg unexpected options to the commands your
+# script aims to execute.
+# For similar reasons, you should also add a trailing @ to URLs which
+# are passed to SVN commands accepting URLs with peg revisions.
+#
+# Here is an example hook script, for a Unix /bin/sh interpreter.
+# For more examples and pre-written hooks, see those in
+# the Subversion repository at
+# http://svn.apache.org/repos/asf/subversion/trunk/tools/hook-scripts/ and
+# http://svn.apache.org/repos/asf/subversion/trunk/contrib/hook-scripts/
+
+
+REPOS="$1"
+REV="$2"
+USER="$3"
+PROPNAME="$4"
+ACTION="$5"
+
+mailer.py propchange2 "$REPOS" "$REV" "$USER" "$PROPNAME" "$ACTION" /path/to/mailer.conf
