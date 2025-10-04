@@ -8,7 +8,6 @@ vcpkg_from_github(
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
-        python.diff
         sqlite3.diff
         target-is-valid.patch
 )
@@ -139,6 +138,11 @@ if(BUILD_PYTHON_BINDINGS)
     foreach(script IN LISTS command_scripts python_scripts shell_scripts)
         file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
+    endforeach()
+    # No hardcoded paths to build-time venv.
+    # User must set PATH to include host triplet python (venv) with numpy.
+    foreach(script IN LISTS python_scripts shell_scripts)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}" "^#![^\n]*" "#!/usr/bin/env python3" REGEX)
     endforeach()
 endif()
 
