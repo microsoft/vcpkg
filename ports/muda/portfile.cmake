@@ -6,11 +6,10 @@ vcpkg_from_github(
     HEAD_REF mini20
 )
 
-if("compute-graph" IN_LIST FEATURES)
-    set(MUDA_WITH_COMPUTE_GRAPH ON)
-else()
-    set(MUDA_WITH_COMPUTE_GRAPH OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        compute-graph   MUDA_WITH_COMPUTE_GRAPH
+)
 
 set(MUDA_WITH_NVTX3 OFF)
 
