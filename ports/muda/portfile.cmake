@@ -11,16 +11,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         compute-graph   MUDA_WITH_COMPUTE_GRAPH
 )
 
-set(MUDA_WITH_NVTX3 OFF)
-
-message(STATUS "[muda] Build with vcpkg port")
-message(STATUS "[muda] Configuring with options:")
-message(STATUS "[muda] - MUDA_BUILD_EXAMPLE=OFF")
-message(STATUS "[muda] - MUDA_BUILD_TEST=OFF")
-message(STATUS "[muda] - MUDA_WITH_CHECK=ON")
-message(STATUS "[muda] - MUDA_WITH_NVTX3=${MUDA_WITH_NVTX3}")
-message(STATUS "[muda] - MUDA_WITH_COMPUTE_GRAPH=${MUDA_WITH_COMPUTE_GRAPH}")
-
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
 
 vcpkg_cmake_configure(
