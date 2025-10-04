@@ -1542,7 +1542,6 @@ opencv4[cuda,cudnn,dc1394,dnn-cuda,vtk]:arm64-windows = cascade
 opencv4[cudnn](!((windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)) | !((windows & x64 & !uwp) | (linux & x64) | (linux & arm64))) = cascade
 opencv4[dc1394](windows) = cascade
 opencv4[dnn-cuda](!((windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)) | !((windows & x64 & !uwp) | (linux & x64) | (linux & arm64))) = cascade
-
 opencv4[dnn-cuda](osx) = cascade
 opencv4[freetype](uwp) = cascade
 opencv4[gdcm](uwp) = cascade
