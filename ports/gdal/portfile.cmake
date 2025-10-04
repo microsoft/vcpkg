@@ -75,16 +75,14 @@ if(VCPKG_TARGET_IS_ANDROID AND ANDROID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGE
 endif()
 
 if("python" IN_LIST FEATURES)
-    set(host_python "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python3${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        set(host_python "${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python.exe")
-    endif()
-    x_vcpkg_get_python_packages(PYTHON_EXECUTABLE "${host_python}" PACKAGES numpy setuptools OUT_PYTHON_VAR "PYTHON3")
+    include("${CURRENT_PORT_DIR}/../../get_python_packages.cmake")
+    z_vcpkg_get_gdal_python(PYTHON3)
     vcpkg_find_acquire_program(SWIG)
     list(APPEND FEATURE_OPTIONS
         "-DPython_EXECUTABLE=${PYTHON3}"
         "-DSWIG_EXECUTABLE:PATH=${SWIG}"
     )
+    set(ENV{GDAL_PYTHON_BINDINGS_WITHOUT_NUMPY} 1)
 endif()
 
 string(REPLACE "dynamic" "" qhull_target "Qhull::qhull${VCPKG_LIBRARY_LINKAGE}_r")
