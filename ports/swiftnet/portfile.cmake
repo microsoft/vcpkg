@@ -34,4 +34,9 @@ file(INSTALL
     FILES ${SOURCE_PATH}/src/swift_net.h
 )
 
+file(INSTALL
+    FILES "${SOURCE_PATH}/LICENSE"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
+
 vcpkg_copy_pdbs()
