@@ -611,7 +611,6 @@ halide[target-aarch64,target-all,target-amdgpu,target-arm,target-d3d12compute,ta
 llvm[target-aarch64,target-all,target-amdgpu,target-arc,target-arm,target-avr,target-bpf,target-csky,target-directx,target-hexagon,target-lanai,target-loongarch,target-m68k,target-mips,target-msp430,target-nvptx,target-powerpc,target-riscv,target-sparc,target-spirv,target-systemz,target-ve,target-webassembly,target-x86,target-xcore,target-xtensa] = no-separate-feature-test
 qtbase[doubleconversion,gui,sql,thread] = no-separate-feature-test # covered in many combinations
 vtk[atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,proj,python,qt,seacas,sql,tbb,utf8,vtkm] = no-separate-feature-test
-vtk[ioocct](!uwp) = skip
 
 # cascade
 3fd:x64-uwp = cascade
@@ -2237,9 +2236,9 @@ vlfeat[openmp](osx) = feature-fails # No openmp on osx
 vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32143 (error: inconsistent begin/end types in range-based ‘for’ statement)
 vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 vtk[all](!windows & !android & !osx) = feature-fails # Wait for fix: https://github.com/microsoft/vcpkg/pull/29260
+vtk[all,python]:x64-windows-static-md = feature-fails # vtk[*] dbg: defaultlib 'MSVCRT' conflicts with use of other libs due to python
 vtk[core,python,paraview]:x64-linux = options # paraview's transitive gfortran linkage breaks python
 vtk[openmp](osx) = feature-fails
-vtk[python](windows & x64 & !uwp) = feature-fails # vtk[*] dbg: defaultlib 'MSVCRT' conflicts with use of other libs
 vtk-m[cuda](windows & !arm64) = feature-fails
 vtk-m[omp](osx) = feature-fails # no openmp on default osx toolchain
 vtk-m[omp](windows) = feature-fails # needs openmp 4.0, msvc has openmp 2.0
@@ -2284,6 +2283,7 @@ qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](windows) = skip # no x11 in 
 qtwebengine = skip # Takes too long to feature test at ~3 hours per feature
 s2n = skip # builds too slow
 sciter = skip # The sciter port is deprecated by upstream and conflicts with upstream's replacement.
+vtk[ioocct](!uwp) = skip
 vtk-m[cuda]:x64-linux = skip # CUDA clash with default gcc in Ubuntu 22.04, and not a quick failure.
 winpcap = skip # Broken and merked for removal. See https://github.com/microsoft/vcpkg/pull/33215
 
