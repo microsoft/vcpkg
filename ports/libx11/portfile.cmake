@@ -21,14 +21,14 @@ vcpkg_from_gitlab(
         ${PATCHES}
         vcxserver.patch
         add_dl_pc.patch
-) 
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{CPP} "cl_cpp_wrapper")
-    list(APPEND OPTIONS 
+    list(APPEND OPTIONS
                 --enable-loadable-i18n=no #Pointer conversion errors
                 --enable-unix-transport=no
                 --disable-thread-safety-constructor
@@ -36,7 +36,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
 endif()
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS 
+    list(APPEND OPTIONS
         --enable-malloc0returnsnull=yes      #Configure fails to run the test for some reason
         --enable-ipv6
         --enable-hyperv
@@ -44,6 +44,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         --with-launchd=no
         --with-lint=no
         --disable-selective-werror
+        )
+endif()
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND OPTIONS
+        --enable-malloc0returnsnull=yes
         )
 endif()
 if(NOT XLSTPROC)
@@ -64,7 +69,7 @@ vcpkg_find_acquire_program(PERL)
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
-    OPTIONS 
+    OPTIONS
         ${OPTIONS}
 )
 
@@ -92,7 +97,7 @@ if(NOT VCPKG_CROSSCOMPILING)
     file(READ "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.log" config_contents)
     string(REGEX MATCH "ac_cv_objext=[^\n]+" objsuffix "${config_contents}")
     string(REPLACE "ac_cv_objext=" "." objsuffix "${objsuffix}")
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
+    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}" PERMISSIONS OWNER_EXECUTE)
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/util/makekeys${objsuffix}" DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}")
 endif()
 
