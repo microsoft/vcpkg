@@ -18,6 +18,7 @@ endif()
 vcpkg_configure_make(
     USE_WRAPPERS
     SOURCE_PATH "${SOURCE_PATH}"
+    DETERMINE_BUILD_TRIPLET
     OPTIONS
         ${OPTIONS}
 )
@@ -26,7 +27,7 @@ vcpkg_install_make()
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
                     "${CURRENT_PACKAGES_DIR}/libcroco/bin/croco-0.6-config"
                     "${CURRENT_PACKAGES_DIR}/libcroco/debug/bin")
 
