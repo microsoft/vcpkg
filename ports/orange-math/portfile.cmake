@@ -6,8 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orange-cpp/omath
     REF "v${VERSION}"
-    SHA512 60be12375e95c09a2a3d42b464f14dbd46bcccb6d9e0e48f3ccc1ac97149aa33759f17dc012c8cb36bdba45a423261376f8dd910abbd7d519aa43ce47faea866
+    SHA512 e5b2a3a0bafb5e11b1bad27e2c70ae8c8bd9abe96550764821a83a3886deff63ba1d9717f449550d61b1b6670f2e5f7c9621849f42e02042116dc78c44b9050a
     HEAD_REF master
+    PATCHES
+        enable-avx2-on-gcc.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
@@ -26,6 +28,9 @@ vcpkg_cmake_configure(
         -DOMATH_BUILD_TESTS=OFF
         -DOMATH_THREAT_WARNING_AS_ERROR=OFF
         -DOMATH_BUILD_AS_SHARED_LIBRARY=${OMATH_SHARED}
+        -DOMATH_BUILD_TESTS=OFF
+        -DOMATH_BUILD_BENCHMARK=OFF
+        -DOMATH_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

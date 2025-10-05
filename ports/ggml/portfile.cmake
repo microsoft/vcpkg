@@ -1,13 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
-    REF 38648430fce1422694f2f349a5fe60d5969d6f49  # before ggml_backend_sched_new change
-    SHA512 6c51c4b4757aecea3f713b2ee8fb08992c2bdcc203f8e44e307ab8bcd5ed575f154d438c1d036251441aedef1eae812dc7114f6ca5da8314b8e415d92f02f33d
+    REF v${VERSION}
+    SHA512 d2820f9d1a5f80a4ec154cd89fc944b9c8b172f547fdeeb630f43fa06186bf37cad2e02aafad781b4bda9d964a8daa02b90685c7e29a4beebf296d2e1e8a7b8f
     HEAD_REF master
     PATCHES
         cmake-config.diff
+        pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
+        vulkan-loader-storage.diff # backport of https://github.com/ggml-org/llama.cpp/pull/16224
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -43,6 +45,16 @@ if("opencl" IN_LIST FEATURES)
     )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    message(STATUS "The CPU backend is not supported for arm64 with MSVC.")
+    list(APPEND FEATURE_OPTIONS
+        "-DGGML_CPU=OFF"
+    )
+    if(FEATURES STREQUAL "core")
+        message(WARNING "No backend enabled!")
+    endif()
+endif()
+
 if("vulkan" IN_LIST FEATURES AND VCPKG_CROSSCOMPILING)
     list(APPEND FEATURE_OPTIONS
         "-DVulkan_GLSLC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/shaderc/glslc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
@@ -68,21 +80,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME ggml CONFIG_PATH "lib/cmake/ggml")
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME ggml CONFIG_PATH "lib/cmake/ggml")
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ggml.h" "#ifdef GGML_SHARED" "#if 1")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ggml-backend.h" "#ifdef GGML_BACKEND_SHARED" "#if 1")
 endif()
-
-if (NOT VCPKG_BUILD_TYPE)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/share/pkgconfig/ggml.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/ggml.pc")
-endif()
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/ggml.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ggml.pc")
-vcpkg_fixup_pkgconfig()
 
 if("vulkan" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
     vcpkg_copy_tools(TOOL_NAMES vulkan-shaders-gen AUTO_CLEAN)
@@ -90,6 +95,5 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

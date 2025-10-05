@@ -1,7 +1,7 @@
 vcpkg_download_distfile(distfile
-    URLS https://www.libssh.org/files/0.10/libssh-${VERSION}.tar.xz
+    URLS https://www.libssh.org/files/0.11/libssh-${VERSION}.tar.xz
     FILENAME libssh-${VERSION}.tar.xz
-    SHA512 40c62d63c44e882999b71552c237d73fc7364313bd00b15a211a34aeff1b73693da441d2c8d4e40108d00fb7480ec7c5b6d472f9c0784b2359a179632ab0d6c1
+    SHA512 0670bee29a7cf5507dba7dd82b82cd8a926b83a43cee441fa8a698be2523b16aacb392433f9e63887bd72e6eb817667f6ef986f292f335d1856759af4ede40c4
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${distfile}"
@@ -46,8 +46,14 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libssh)
 file(READ "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" cmake_config)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/libssh/libssh-config.cmake" "
 include(CMakeFindDependencyMacro)
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_dependency(Threads)
+if(MINGW32)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+    find_dependency(Threads)
+endif()
+find_dependency(OpenSSL)
+if(\"${WITH_ZLIB}\")
+    find_dependency(ZLIB)
+endif()
 ${cmake_config}"
 )
 

@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 74bc51caf30997e1d327ab8253e9d3556906cd14828794a72c4ba42f2c154b79c1d717e0833a6afc3f6ebff909b630326c11a052d7eb832008769157fad3760b
+    SHA512 4497d1afbccc15806cc11c22653e83d7900a009ad584a8d6b1ada6fac1ace9a70d834eb32653da567f0ddabc23ec641c5d69503282e303bf1bf2def72544b1b5
     HEAD_REF master
     PATCHES
         cxx-linkage-pkgconfig.diff
         find-modules.diff
         gdk-pixbuf.patch
+        symbol-exports.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,18 +36,23 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
+        -DPLUGIN_DIRECTORY=  # empty
         -DWITH_DAV1D=OFF
         -DWITH_EXAMPLES=OFF
-        -DWITH_OpenH264_DECODER=OFF
         -DWITH_LIBSHARPYUV=OFF
-        -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
+        -DWITH_OpenH264_DECODER=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_Brotli=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_LIBDE265=ON   # feature candidate
         -DVCPKG_LOCK_FIND_PACKAGE_PNG=OFF
         -DVCPKG_LOCK_FIND_PACKAGE_TIFF=OFF
         ${FEATURE_OPTIONS}
+    OPTIONS_RELEASE
+        "-DPLUGIN_INSTALL_DIRECTORY=${CURRENT_PACKAGES_DIR}/plugins/libheif"
+    OPTIONS_DEBUG
+        "-DPLUGIN_INSTALL_DIRECTORY=${CURRENT_PACKAGES_DIR}/debug/plugins/libheif"
     MAYBE_UNUSED_VARIABLES
         VCPKG_LOCK_FIND_PACKAGE_AOM
         VCPKG_LOCK_FIND_PACKAGE_Brotli
@@ -56,7 +62,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libheif/)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libheif")
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -69,6 +75,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libheif" "${CURRENT_PACKAGES_DIR}/debug/lib/libheif")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_version.h" "#define LIBHEIF_PLUGIN_DIRECTORY \"${CURRENT_PACKAGES_DIR}/lib/libheif\"" "")
+file(GLOB maybe_plugins "${CURRENT_PACKAGES_DIR}/plugins/libheif/*")
+if(maybe_plugins STREQUAL "")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/plugins" "${CURRENT_PACKAGES_DIR}/debug/plugins")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

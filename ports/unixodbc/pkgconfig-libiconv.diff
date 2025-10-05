@@ -1,0 +1,10 @@
+diff --git a/DriverManager/odbc.pc.in b/DriverManager/odbc.pc.in
+index defa7cd..db4dfe7 100644
+--- a/DriverManager/odbc.pc.in
++++ b/DriverManager/odbc.pc.in
+@@ -17,4 +17,4 @@ URL: http://unixodbc.org
+ Version: @PACKAGE_VERSION@
+ Cflags: -I${includedir}
+ Libs: -L${libdir} -lodbc
+-Libs.private: @LIBLTDL@ @LIBS@
++Libs.private: @LIBLTDL@ @LIBICONV@ @LIBS@

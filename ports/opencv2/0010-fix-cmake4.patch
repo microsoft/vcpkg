@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 940a018373..0e84287be9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -48,11 +48,6 @@ if(POLICY CMP0026)
+   cmake_policy(SET CMP0026 NEW)
+ endif()
+ 
+-if (POLICY CMP0042)
+-  # silence cmake 3.0+ warnings about MACOSX_RPATH
+-  cmake_policy(SET CMP0042 OLD)
+-endif()
+-
+ # must go before the project command
+ set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configs" FORCE)
+ if(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "2.8")
+diff --git a/cmake/OpenCVDetectCXXCompiler.cmake b/cmake/OpenCVDetectCXXCompiler.cmake
+index 23d493dd13..090ad4e362 100644
+--- a/cmake/OpenCVDetectCXXCompiler.cmake
++++ b/cmake/OpenCVDetectCXXCompiler.cmake
+@@ -5,11 +5,11 @@ if(CMAKE_CL_64)
+     set(MSVC64 1)
+ endif()
+ 
+-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND NOT MSVC)
+   set(CMAKE_COMPILER_IS_GNUCXX 1)
+   set(CMAKE_COMPILER_IS_CLANGCXX 1)
+ endif()
+-if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
++if(CMAKE_C_COMPILER_ID MATCHES "Clang" AND NOT MSVC)
+   set(CMAKE_COMPILER_IS_GNUCC 1)
+   set(CMAKE_COMPILER_IS_CLANGCC 1)
+ endif()

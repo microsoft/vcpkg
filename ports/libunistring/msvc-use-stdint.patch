@@ -1,0 +1,11 @@
+--- a/lib/Makefile.am	2025-09-18 14:31:56.883185700 +0100
++++ b/lib/Makefile.am	2025-09-18 14:32:34.860321900 +0100
+@@ -101,7 +101,7 @@
+ 	rm -f $@-t $@
+ 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
+ 	  echo '#include <stddef.h>'; \
+-	  echo '#if __GLIBC__ >= 2'; \
++	  echo '#if __GLIBC__ >= 2 || (defined(_MSC_VER) && _MSC_VER >= 1600)'; \
+ 	  echo '#include <stdint.h>'; \
+ 	  echo '#else'; \
+ 	  if test -f /usr/include/stdint.h; then \

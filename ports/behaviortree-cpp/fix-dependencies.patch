@@ -1,0 +1,15 @@
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index 77a7c18..7eeaceb 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -1,5 +1,10 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++
++find_dependency(Threads)
++find_dependency(lexy CONFIG)
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+ 
+ set(@PROJECT_NAME@_TARGETS "BT::@PROJECT_NAME@")
