@@ -25,6 +25,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
 
 unset(ENV{DBUSDIR})
 
+if(VCPKG_TARGET_IS_LINUX AND VCPKG_CROSSCOMPILING)
+    if(NOT $ENV{TMPDIR} STREQUAL "")
+        set(DBUS_SESSION_SOCKET_DIR $ENV{TMPDIR})
+    elseif(NOT $ENV{TEMP} STREQUAL "")
+        set(DBUS_SESSION_SOCKET_DIR $ENV{TEMP})
+    elseif(NOT $ENV{TMP} STREQUAL "")
+        set(DBUS_SESSION_SOCKET_DIR $ENV{TMP})
+    else()
+        set(DBUS_SESSION_SOCKET_DIR /tmp)
+    endif()
+    LIST(APPEND options "-DDBUS_SESSION_SOCKET_DIR=${DBUS_SESSION_SOCKET_DIR}")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
