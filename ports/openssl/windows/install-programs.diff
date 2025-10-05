@@ -1,5 +1,5 @@
 diff --git a/Configurations/windows-makefile.tmpl b/Configurations/windows-makefile.tmpl
-index b587212..7571fa0 100644
+index b587212..c031cfb 100644
 --- a/Configurations/windows-makefile.tmpl
 +++ b/Configurations/windows-makefile.tmpl
 @@ -134,7 +134,7 @@ INSTALL_FIPSMODULE={-
@@ -7,7 +7,7 @@ index b587212..7571fa0 100644
  INSTALL_FIPSMODULECONF=providers\fipsmodule.cnf
  INSTALL_PROGRAMS={-
 -        join(" ", map { quotify1(platform->bin($_)) }
-+        join(" ", map { platform->bin($_) }
++        join(" ", map {          platform->bin($_)  }
                    grep { !$unified_info{attributes}->{programs}->{$_}->{noinst} }
                    @{$unified_info{programs}})
  -}

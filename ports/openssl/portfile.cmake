@@ -18,7 +18,7 @@ vcpkg_from_github(
         script-prefix.patch
         windows/install-layout.patch
         windows/install-pdbs.patch
-        windows/install-programs.diff
+        windows/install-programs.diff # https://github.com/openssl/openssl/issues/28744
         unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
