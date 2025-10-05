@@ -79,7 +79,7 @@ elseif(VCPKG_TARGET_IS_OSX)
         set(OPENSSL_ARCH darwin64-x86_64)
     endif()
 elseif(VCPKG_TARGET_IS_BSD)
-    set(OPENSSL_ARCH BSD-generic64)
+    set(OPENSSL_ARCH BSD-nodef-generic64)
 elseif(VCPKG_TARGET_IS_SOLARIS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(OPENSSL_ARCH solaris64-x86_64-gcc)
@@ -89,6 +89,8 @@ elseif(VCPKG_TARGET_IS_SOLARIS)
 elseif(VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(OPENSSL_ARCH mingw64)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(OPENSSL_ARCH mingwarm64)
     else()
         set(OPENSSL_ARCH mingw)
     endif()
@@ -130,7 +132,7 @@ vcpkg_configure_make(
 )
 vcpkg_install_make(
     ${MAKEFILE_OPTIONS}
-    BUILD_TARGET build_sw
+    BUILD_TARGET build_inst_sw
 )
 vcpkg_fixup_pkgconfig()
 
