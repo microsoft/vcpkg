@@ -19,12 +19,6 @@ set(EXPECTED_LIBRARY_PREFIX  "not set" CACHE STRING "link library dir for curren
 set(Python_ARTIFACTS_PREFIX "_MEOW")
 set(Python3_ARTIFACTS_PREFIX "")
 
-# This test doesn't setup an interpreter.
-set(MAYBE_INTERPRETER "")
-if(NOT CMAKE_CROSSCOMPILING)
-    set(MAYBE_INTERPRETER "Interpreter")
-endif()
-
 
 # Test helpers
 
@@ -55,14 +49,12 @@ function(check_find_python_results)
         )
     endif()
 
-    if(NOT CMAKE_CROSSCOMPILING)
-        assert("${arg_EXPECTED}_EXECUTABLE")
-        assert("NOT ${arg_UNEXPECTED}_EXECUTABLE")
-        assert("${arg_EXPECTED}_STDLIB")
-        assert("NOT ${arg_UNEXPECTED}_STDLIB")
-        assert("TARGET ${arg_EXPECTED}::Interpreter")
-        assert("NOT TARGET ${arg_UNEXPECTED}::Interpreter")
-    endif()
+    assert("${arg_EXPECTED}_EXECUTABLE")
+    assert("NOT ${arg_UNEXPECTED}_EXECUTABLE")
+    assert("${arg_EXPECTED}_STDLIB")
+    assert("NOT ${arg_UNEXPECTED}_STDLIB")
+    assert("TARGET ${arg_EXPECTED}::Interpreter")
+    assert("NOT TARGET ${arg_UNEXPECTED}::Interpreter")
 endfunction()
 
 
@@ -89,7 +81,7 @@ endif()
 
 add_executable(main-python-target main.c)
 
-find_package(Python REQUIRED COMPONENTS ${MAYBE_INTERPRETER} Development)
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0)
     # With CMake is 4.0+, the find module outputs should use the prefix.
@@ -107,7 +99,7 @@ endif()
 
 add_executable(main-python3-libraries main.c)
 
-find_package(Python3 REQUIRED COMPONENTS ${MAYBE_INTERPRETER} Development)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 check_find_python_results(EXPECTED Python3 UNEXPECTED Python3_MEOW)
 
 target_include_directories(main-python3-libraries PRIVATE ${Python3_INCLUDE_DIRS})

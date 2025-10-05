@@ -10,6 +10,11 @@
       "default-features": false
     },
     {
+      "name": "python3",
+      "host": true,
+      "default-features": false
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     }
