@@ -10,6 +10,10 @@ endif()
 
 project(python3-test)
 
+# Options for matching library vs. build type
+set(EXPECTED_LIBRARY_KEYWORD "not set" CACHE STRING "debug or optimized")
+set(EXPECTED_LIBRARY_PREFIX  "not set" CACHE STRING "link library dir for current build type")
+
 # A goal of this test project is to ensure that we get the expected values
 # from the modern find modules with regard to Python[3]_ARTIFACTS_PREFIX.
 set(Python_ARTIFACTS_PREFIX "_MEOW")
@@ -42,6 +46,14 @@ function(check_find_python_results)
     assert("NOT TARGET ${arg_UNEXPECTED}::Python")
     assert("${arg_EXPECTED}_LIBRARIES")
     assert("NOT ${arg_UNEXPECTED}_LIBRARIES")
+
+    string(FIND "${EXPECTED_LIBRARY_KEYWORD};${${arg_EXPECTED}_LIBRARIES}" "${EXPECTED_LIBRARY_KEYWORD};${EXPECTED_LIBRARY_PREFIX}" prefix_index)
+    if("${prefix_index}" EQUAL "-1")
+        message(SEND_ERROR 
+            "Actual ${arg_EXPECTED} libraries: ${${arg_EXPECTED}_LIBRARIES}\n"
+            "Expected ${CMAKE_BUILD_TYPE} location: ${EXPECTED_LIBRARY_PREFIX}"
+        )
+    endif()
 
     if(NOT CMAKE_CROSSCOMPILING)
         assert("${arg_EXPECTED}_EXECUTABLE")
@@ -83,9 +95,11 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0)
     # With CMake is 4.0+, the find module outputs should use the prefix.
     check_find_python_results(EXPECTED Python_MEOW UNEXPECTED Python)
     target_link_libraries(main-python-target PRIVATE Python_MEOW::Python)
+    set(libraries_to_check "${Python_MEOW_LIBRARIES}")
 else()
     check_find_python_results(EXPECTED Python UNEXPECTED Python_MEOW)
     target_link_libraries(main-python-target PRIVATE Python::Python)
+    set(libraries_to_check "${Python_LIBRARIES}")
 endif()
 
 
