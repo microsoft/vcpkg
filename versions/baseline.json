@@ -7145,7 +7145,7 @@
       "port-version": 4
     },
     "openssl": {
-      "baseline": "3.5.3",
+      "baseline": "3.5.4",
       "port-version": 0
     },
     "opensubdiv": {
@@ -7746,7 +7746,7 @@
     },
     "python3": {
       "baseline": "3.12.9",
-      "port-version": 6
+      "port-version": 7
     },
     "qca": {
       "baseline": "2.3.7",
@@ -10029,7 +10029,7 @@
       "port-version": 1
     },
     "variant-lite": {
-      "baseline": "2.0.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "vbs-enclave-tooling-codegen": {
