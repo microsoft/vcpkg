@@ -5073,7 +5073,7 @@
       "port-version": 0
     },
     "libmem": {
-      "baseline": "5.0.5",
+      "baseline": "5.1.0",
       "port-version": 0
     },
     "libmesh": {
