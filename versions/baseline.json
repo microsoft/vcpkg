@@ -3269,7 +3269,7 @@
       "port-version": 9
     },
     "ggml": {
-      "baseline": "0.9.3",
+      "baseline": "0.9.4",
       "port-version": 0
     },
     "ghc-filesystem": {
