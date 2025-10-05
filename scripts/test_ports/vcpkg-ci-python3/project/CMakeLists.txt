@@ -19,6 +19,11 @@ set(EXPECTED_LIBRARY_PREFIX  "not set" CACHE STRING "link library dir for curren
 set(Python_ARTIFACTS_PREFIX "_MEOW")
 set(Python3_ARTIFACTS_PREFIX "")
 
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 4.0 AND DEFINED Python_EXECUTABLE AND NOT DEFINED Python_MEOW_EXECUTABLE)
+    set(Python_MEOW_EXECUTABLE "${Python_EXECUTABLE}")
+    unset(Python_EXECUTABLE CACHE)
+endif()
+
 
 # Test helpers
 
