@@ -147,7 +147,6 @@ boringssl:x64-windows-static-md=skip
 boringssl:x64-windows-static=skip
 boringssl:x64-windows=skip
 boringssl:x86-windows=skip
-brpc:x64-android=fail
 buck-yeh-bux:x64-uwp=skip
 buck-yeh-bux:x86-windows=skip
 caf:arm-neon-android=fail
