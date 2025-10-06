@@ -9205,7 +9205,7 @@
       "port-version": 3
     },
     "sqlgen": {
-      "baseline": "0.2.0",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "sqlite-modern-cpp": {
