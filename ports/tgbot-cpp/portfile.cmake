@@ -8,15 +8,33 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "disable-nagles"         TGBOT_DISABLE_NAGLES_ALGORITHM
-        "expand-read"        TGBOT_CHANGE_READ_BUFFER_SIZE
+        "disable-nagles"        TGBOT_DISABLE_NAGLES_ALGORITHM
+        "expand-read"           TGBOT_CHANGE_READ_BUFFER_SIZE
         "expand-socket"         TGBOT_CHANGE_SOCKET_BUFFER_SIZE
 )
+
+if(TGBOT_DISABLE_NAGLES_ALGORITHM)
+    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+        "add_library(${PROJECT_NAME} ${SRC_LIST})"
+        "add_library(${PROJECT_NAME} ${SRC_LIST})\ntarget_compile_definitions(${PROJECT_NAME} PRIVATE TGBOT_DISABLE_NAGLES_ALGORITHM)"
+    )
+endif()
+if(TGBOT_CHANGE_READ_BUFFER_SIZE)
+    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+        "add_library(${PROJECT_NAME} ${SRC_LIST})"
+        "add_library(${PROJECT_NAME} ${SRC_LIST})\ntarget_compile_definitions(${PROJECT_NAME} PRIVATE TGBOT_CHANGE_READ_BUFFER_SIZE)"
+    )   
+endif()
+if(TGBOT_CHANGE_SOCKET_BUFFER_SIZE)
+    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
+        "add_library(${PROJECT_NAME} ${SRC_LIST})"
+        "add_library(${PROJECT_NAME} ${SRC_LIST})\ntarget_compile_definitions(${PROJECT_NAME} PRIVATE TGBOT_CHANGE_SOCKET_BUFFER_SIZE)"
+    )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DENABLE_TESTS=OFF
         -DBUILD_DOCUMENTATION=OFF
 )
