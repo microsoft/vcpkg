@@ -1,19 +1,13 @@
-diff --git a/cmake/Functions.cmake b/cmake/Functions.cmake
-index 239eaa1dd..7ded50aa9 100644
---- a/cmake/Functions.cmake
-+++ b/cmake/Functions.cmake
-@@ -274,8 +274,14 @@ function(resolve_target_includes resultVar target)
-     foreach(includeDir  ${includeDirs})
-         if(includeDir MATCHES "\\$<BUILD_INTERFACE:([^,>]+)>")
-             list(APPEND includeDirList ${CMAKE_MATCH_1})
-+            set(maybe_protobuf_dir "${CMAKE_MATCH_1}")
-+            if(maybe_protobuf_dir MATCHES "src/3rdparty/chromium/third_party/protobuf/src\$")
-+                list(REMOVE_ITEM includeDirList "${maybe_protobuf_dir}")
-+                list(PREPEND includeDirList "${maybe_protobuf_dir}")
-+            endif()
-         endif()
-     endforeach()
-+    message(STATUS "${target} : ${includeDirList}")
-     set(${resultVar} ${includeDirList} PARENT_SCOPE)
- endfunction()
- 
+diff --git a/src/core/api/CMakeLists.txt b/src/core/api/CMakeLists.txt
+index e2456a4..a9f8ec0 100644
+--- a/src/core/api/CMakeLists.txt
++++ b/src/core/api/CMakeLists.txt
+@@ -54,6 +54,8 @@ qt_internal_add_module(WebEngineCore
+         ../../3rdparty/chromium/third_party/perfetto/include
+         ../../3rdparty/chromium/third_party/boringssl/src/include
+         ../../3rdparty/chromium/base/allocator/partition_allocator/src
++        # vendored protobuf must be listed before vcpkg include dir
++        ../../3rdparty/chromium/third_party/protobuf/src
+     LIBRARIES
+         Qt::CorePrivate
+         Qt::GuiPrivate

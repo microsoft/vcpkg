@@ -207,7 +207,7 @@ if(QT_UPDATE_VERSION)
 endif()
 
 qt_cmake_configure(
-    DISABLE_PARALLEL_CONFIGURE # due to in source changes.
+    DISABLE_PARALLEL_CONFIGURE # due to in-source changes.
     OPTIONS
         ${FEATURE_OPTIONS}
         "-DGPerf_EXECUTABLE=${GPERF}"
@@ -221,11 +221,9 @@ qt_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_GPerf=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Ninja=ON
         -DVCPKG_LOCK_FIND_PACKAGE_Nodejs=ON
-        --trace-expand
     OPTIONS_MAYBE_UNUSED
         FEATURE_webengine_webrtc
 )
-message(FATAL_ERROR Stop.)
 
 vcpkg_backup_env_variables(VARS PKG_CONFIG_PATH)
 file(GLOB target_args_gn RELATIVE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/core/Release/*/args.gn")
