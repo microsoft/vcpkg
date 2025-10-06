@@ -14,10 +14,14 @@
     "boost-variant",
     "curl",
     "openssl",
+    "zlib",
     {
       "name": "vcpkg-cmake",
       "host": true
     },
-    "zlib"
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
