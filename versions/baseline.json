@@ -513,7 +513,7 @@
       "port-version": 0
     },
     "azure-identity-cpp": {
-      "baseline": "1.13.1",
+      "baseline": "1.13.2",
       "port-version": 0
     },
     "azure-iot-sdk-c": {
