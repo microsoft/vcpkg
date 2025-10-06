@@ -10,8 +10,13 @@ vcpkg_from_github(
         cxx-linkage-pkgconfig.diff
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
+if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" OR "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
+    set(SDL_STATIC TRUE)
+    set(SDL_SHARED FALSE)
+else()
+    set(SDL_STATIC FALSE)
+    set(SDL_SHARED TRUE)
+endif()
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
