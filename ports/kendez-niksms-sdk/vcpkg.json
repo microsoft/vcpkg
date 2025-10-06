@@ -1,0 +1,43 @@
+{
+  "name": "kendez-niksms-sdk",
+  "version": "1.2.0",
+  "description": "C++ SDK for Kendez.NikSms SMS Web Service (REST & gRPC)",
+  "homepage": "https://webservice.niksms.com",
+  "license": "MIT",
+  "supports": "windows & linux & osx",
+  "dependencies": [
+    {
+      "name": "curl",
+      "features": ["ssl"]
+    },
+    {
+      "name": "grpc",
+      "features": ["codegen"]
+    },
+    {
+      "name": "protobuf",
+      "features": ["codegen"]
+    },
+    "nlohmann-json"
+  ],
+  "features": {
+    "grpc": {
+      "description": "Enable gRPC support",
+      "dependencies": [
+        {
+          "name": "grpc",
+          "features": ["codegen"]
+        }
+      ]
+    },
+    "examples": {
+      "description": "Build examples",
+      "dependencies": []
+    },
+    "tests": {
+      "description": "Build tests",
+      "dependencies": []
+    }
+  },
+  "default-features": ["grpc"]
+}
