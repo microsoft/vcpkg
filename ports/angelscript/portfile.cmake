@@ -4,12 +4,19 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 87c94042932f15d07fe6ede4c3671b1f73ac757b68ab360187591497eeabc56a4ddb7901e4567108e44886a2011a29c2884d4b7389557826f36a6c384f4a9c69
 )
 
+if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    set(fix-osx64 "fix-osx-x64.patch")
+else()
+    set(fix-osx64 "")
+endif()
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         mark-threads-private.patch
         fix-dependency.patch
+        "${fix-osx64}"
 )
 
 vcpkg_cmake_configure(
