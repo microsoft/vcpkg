@@ -9889,8 +9889,8 @@
       "port-version": 1
     },
     "tweeny": {
-      "baseline": "3.2.0",
-      "port-version": 1
+      "baseline": "3.2.1",
+      "port-version": 0
     },
     "type-lite": {
       "baseline": "0.2.0",
