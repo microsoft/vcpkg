@@ -9,8 +9,8 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "disable-nagles"         TGBOT_DISABLE_NAGLES_ALGORITHM
-        "expand-bufsize"         TGBOT_CHANGE_SOCKET_BUFFER_SIZE
-        "expand-readsize"        TGBOT_CHANGE_READ_BUFFER_SIZE
+        "expand-read"        TGBOT_CHANGE_READ_BUFFER_SIZE
+        "expand-socket"         TGBOT_CHANGE_SOCKET_BUFFER_SIZE
 )
 
 vcpkg_cmake_configure(

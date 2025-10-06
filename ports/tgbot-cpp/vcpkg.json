@@ -26,18 +26,18 @@
   ],
   "default-features": [
     "disable-nagles",
-    "expand-bufsize",
-    "expand-readsize"
+    "expand-read",
+    "expand-socket"
   ],
   "features": {
     "disable-nagles": {
       "description": "Disable Nagle's algorithm"
     },
-    "expand-bufsize": {
-      "description": "Socket Buffer Size Expansion"
-    },
-    "expand-readsize": {
+    "expand-read": {
       "description": "Read Buffer Size Expansion"
+    },
+    "expand-socket": {
+      "description": "Socket Buffer Size Expansion"
     }
   }
 }
