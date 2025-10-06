@@ -1,13 +1,15 @@
 {
-  "name": "ltla-umappp",
-  "version-date": "2023-05-11",
+  "name": "libscran-umappp",
+  "version": "3.1.0",
   "description": "UMAP C++ implementation",
-  "homepage": "https://github.com/LTLA/umappp",
+  "homepage": "https://github.com/libscran/umappp",
   "license": "BSD-2-Clause",
   "dependencies": [
+    "knncolle",
     "ltla-aarand",
     "ltla-cppirlba",
-    "ltla-knncolle",
+    "ltla-sanisizer",
+    "ltla-subpar",
     {
       "name": "vcpkg-cmake",
       "host": true

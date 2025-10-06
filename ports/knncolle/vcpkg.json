@@ -1,11 +1,10 @@
 {
-  "name": "ltla-powerit",
-  "version": "2.0.1",
-  "description": "Lightweight C++ library for power iterations",
-  "homepage": "https://github.com/LTLA/powerit",
+  "name": "knncolle",
+  "version": "3.0.1",
+  "description": "Collection of KNN algorithms in C++ ",
+  "homepage": "https://github.com/knncolle/knncolle",
   "license": "MIT",
   "dependencies": [
-    "ltla-aarand",
     "ltla-subpar",
     {
       "name": "vcpkg-cmake",
