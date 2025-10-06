@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://angelcode.com/angelscript/sdk/files/angelscript_${VERSION}.zip"
     FILENAME "angelscript_${VERSION}.zip"
-    SHA512 ba7d88a42e1443fd12196da723538b24d999bc7ade92c0231237e4c5b8b0cb586931262c941898c62f454fd453d653724c74b6857e8a43eea6e34669795fc9cd
+    SHA512 87c94042932f15d07fe6ede4c3671b1f73ac757b68ab360187591497eeabc56a4ddb7901e4567108e44886a2011a29c2884d4b7389557826f36a6c384f4a9c69
 )
 
 vcpkg_extract_source_archive(
