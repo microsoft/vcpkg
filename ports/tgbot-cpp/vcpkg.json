@@ -1,7 +1,6 @@
 {
   "name": "tgbot-cpp",
-  "version": "1.7.3",
-  "port-version": 1,
+  "version": "1.9.1",
   "description": "C++ library for Telegram bot API.",
   "homepage": "https://github.com/reo7sp/tgbot-cpp",
   "license": "MIT",
@@ -19,6 +18,21 @@
       "name": "vcpkg-cmake",
       "host": true
     },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
-  ]
+  ],
+  "features": {
+    "disable-nagles": {
+      "description": "Disable Nagle's algorithm"
+    },
+    "expand-read": {
+      "description": "Read Buffer Size Expansion"
+    },
+    "expand-socket": {
+      "description": "Socket Buffer Size Expansion"
+    }
+  }
 }
