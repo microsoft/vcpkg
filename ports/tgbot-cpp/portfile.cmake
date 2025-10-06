@@ -20,6 +20,7 @@ if(TGBOT_DISABLE_NAGLES_ALGORITHM)
 target_compile_definitions(${PROJECT_NAME} PRIVATE TGBOT_DISABLE_NAGLES_ALGORITHM)]]
     )
 endif()
+
 if(TGBOT_CHANGE_READ_BUFFER_SIZE)
     vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
         [[add_library(${PROJECT_NAME} ${SRC_LIST})]]
@@ -27,6 +28,7 @@ if(TGBOT_CHANGE_READ_BUFFER_SIZE)
 target_compile_definitions(${PROJECT_NAME} PRIVATE TGBOT_CHANGE_READ_BUFFER_SIZE)]]
     )   
 endif()
+
 if(TGBOT_CHANGE_SOCKET_BUFFER_SIZE)
     vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
         [[add_library(${PROJECT_NAME} ${SRC_LIST})]]
