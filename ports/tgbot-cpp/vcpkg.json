@@ -23,5 +23,21 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "default-features": [
+    "disable-nagles",
+    "expand-bufsize",
+    "expand-readsize"
+  ],
+  "features": {
+    "disable-nagles": {
+      "description": "Disable Nagle's algorithm"
+    },
+    "expand-bufsize": {
+      "description": "Socket Buffer Size Expansion"
+    },
+    "expand-readsize": {
+      "description": "Read Buffer Size Expansion"
+    }
+  }
 }

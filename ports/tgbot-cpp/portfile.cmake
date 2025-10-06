@@ -6,9 +6,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "disable-nagles"         TGBOT_DISABLE_NAGLES_ALGORITHM
+        "expand-bufsize"         TGBOT_CHANGE_SOCKET_BUFFER_SIZE
+        "expand-readsize"        TGBOT_CHANGE_READ_BUFFER_SIZE
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DENABLE_TESTS=OFF
         -DBUILD_DOCUMENTATION=OFF
 )
