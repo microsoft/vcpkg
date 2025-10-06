@@ -2378,7 +2378,7 @@
     },
     "dbus-cxx": {
       "baseline": "2.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "dcmtk": {
       "baseline": "3.6.9",

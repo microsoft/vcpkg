@@ -1,6 +1,7 @@
 {
   "name": "dbus-cxx",
   "version": "2.6.0",
+  "port-version": 1,
   "description": "DBus-cxx provides an object-oriented interface to DBus.",
   "homepage": "https://dbus-cxx.github.io/",
   "license": "LGPL-3.0-or-later AND BSD-3-Clause",
