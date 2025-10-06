@@ -18,10 +18,11 @@ elseif (VCPKG_TARGET_IS_WINDOWS)
     endforeach(GAS_PATH)
 endif()
 
-set(LIBRARY_TYPE ${VCPKG_LIBRARY_LINKAGE})
-if (LIBRARY_TYPE STREQUAL "dynamic")
+if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static" OR "${VCPKG_CRT_LINKAGE}" STREQUAL "static")
+    set(LIBRARY_TYPE "static")
+else()
     set(LIBRARY_TYPE "shared")
-endif(LIBRARY_TYPE STREQUAL "dynamic")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
