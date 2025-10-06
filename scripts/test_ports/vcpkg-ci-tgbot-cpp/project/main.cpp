@@ -1,7 +1,11 @@
-#include <libmem/libmem.h>
+#include <tgbot/tgbot.h>
+#include <string>
+using namespace TgBot;
 int main()
 {
-   lm_module_t moduled;
-   LM_FindModule("user32.dll", &moduled);
+   std::string token("TOKEN");
+   CurlHttpClient curlHttpClient;
+   Bot bot(token, curlHttpClient);
+   bot.getApi().deleteWebhook();
    return 0;
 }
