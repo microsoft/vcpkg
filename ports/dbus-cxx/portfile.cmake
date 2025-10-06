@@ -37,11 +37,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
 vcpkg_cmake_config_fixup(PACKAGE_NAME "dbus-cxx" CONFIG_PATH "lib/cmake/dbus-cxx")
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
