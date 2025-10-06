@@ -5,8 +5,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 set(PATCHES
-    mark-threads-private.patch
-    fix-dependency.patch
+    "mark-threads-private.patch"
+    "fix-dependency.patch"
 )
 
 if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")

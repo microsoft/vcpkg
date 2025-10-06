@@ -1,10 +1,13 @@
 diff --git a/angelscript/projects/cmake/CMakeLists.txt b/angelscript/projects/cmake/CMakeLists.txt
-index 6f9d540..0d9c329 100644
+index 6f9d540..2a5e1a4 100644
 --- a/angelscript/projects/cmake/CMakeLists.txt
 +++ b/angelscript/projects/cmake/CMakeLists.txt
-@@ -108,7 +108,7 @@ set(ANGELSCRIPT_SOURCE
+@@ -106,9 +106,9 @@ set(ANGELSCRIPT_SOURCE
+ )
+ 
  if(MSVC AND CMAKE_CL_64)
-     enable_language(ASM_MASM)
+-    enable_language(ASM_MASM)
++    enable_language(ASM_MARMASM)
      if(CMAKE_ASM_MASM_COMPILER_WORKS)
 -        set(ANGELSCRIPT_SOURCE ${ANGELSCRIPT_SOURCE} ../../source/as_callfunc_x64_msvc_asm.asm)
 +        set(ANGELSCRIPT_SOURCE ${ANGELSCRIPT_SOURCE} ../../source/as_callfunc_arm64_msvc.asm)
