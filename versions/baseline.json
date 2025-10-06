@@ -6529,7 +6529,7 @@
       "port-version": 4
     },
     "msh3": {
-      "baseline": "0.8.0",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "msinttypes": {
@@ -6545,8 +6545,8 @@
       "port-version": 5
     },
     "msquic": {
-      "baseline": "2.4.8",
-      "port-version": 1
+      "baseline": "2.5.4",
+      "port-version": 0
     },
     "mstch": {
       "baseline": "1.0.2",

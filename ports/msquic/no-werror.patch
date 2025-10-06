@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1010458..cc7ac39 100644
+index bb2c781..4779e28 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -201,7 +201,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${QUIC_OUTPUT_DIR})
- set(QUIC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/inc)
+@@ -206,7 +206,7 @@ set(QUIC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/inc)
+ include(GNUInstallDirs)
  
  if (WIN32)
 -    set(QUIC_WARNING_FLAGS /WX /W4 /sdl /wd4206 CACHE INTERNAL "")
@@ -11,7 +11,7 @@ index 1010458..cc7ac39 100644
      set(QUIC_COMMON_FLAGS "")
  
      include(CheckCCompilerFlag)
-@@ -305,7 +305,7 @@ else()
+@@ -326,7 +326,7 @@ else()
      if (HAS_SYSCTL)
           list(APPEND QUIC_COMMON_DEFINES HAS_SYSCTL)
      endif()
