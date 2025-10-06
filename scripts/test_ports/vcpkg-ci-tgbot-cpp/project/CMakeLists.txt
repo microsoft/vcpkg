@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.25.1)
 project(tgbot-cpp-test CXX)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 find_package(Boost COMPONENTS system REQUIRED)
+find_package(CURL REQUIRED)
 find_package(TgBot CONFIG REQUIRED)
+
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE TgBot::TgBot)
+target_compile_definitions(main PRIVATE HAVE_CURL)
+target_link_libraries(main PRIVATE Boost::system CURL::libcurl TgBot::TgBot)
