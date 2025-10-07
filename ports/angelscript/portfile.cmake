@@ -17,12 +17,23 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
     list(APPEND PATCHES "fix-win-arm64.patch")
 endif()
 
+if (VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    list(APPEND PATCHES "fix-ndk-arm.patch")
+endif()
+
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         ${PATCHES}
 )
+
+if (VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    vcpkg_replace_string("${SOURCE_PATH}/angelscript/source/as_callfunc_arm_gcc.S"
+[[.globl armFuncObjLast       /* Make the function globally accessible.*/]]
+[[.globl armFuncObjLast       /* Make the function globally accessible.*/
+.type armFuncObjLast, %function]])
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/angelscript/projects/cmake"
