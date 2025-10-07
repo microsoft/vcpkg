@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
-project(capstone-test CXX)
+project(angelscript-test CXX)
 set(CMAKE_CXX_STANDARD 11)
 add_executable(main main.cpp)
 find_package(Angelscript CONFIG REQUIRED)
