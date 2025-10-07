@@ -15,9 +15,12 @@ vcpkg_cmake_configure(
         -DTD_ENABLE_DOTNET=OFF
         -DTD_ENABLE_LTO=OFF
         -DTD_ENABLE_MULTI_PROCESSOR_COMPILATION=${VCPKG_DETECTED_MSVC}
+    MAYBE_UNUSED_VARIABLES
+        TD_ENABLE_MULTI_PROCESSOR_COMPILATION
 )
 
 vcpkg_cmake_install()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Td")
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
