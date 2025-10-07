@@ -31,7 +31,7 @@ index 9a99faf..4ee59ab 100644
  	#endif
  
 -	#if defined(_M_ARM64)
-+	#if defined(_M_ARM )
++	#if defined(_M_ARM)
  		#define AS_ARM64
  
  		// TODO: MORE HERE
