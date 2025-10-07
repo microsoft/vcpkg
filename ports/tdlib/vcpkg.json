@@ -1,6 +1,6 @@
 {
   "name": "tdlib",
-  "version": "1.8.0",
+  "version-date": "2025-09-19",
   "description": "Cross-platform library for building Telegram clients",
   "homepage": "https://github.com/tdlib/td",
   "license": "BSL-1.0",
