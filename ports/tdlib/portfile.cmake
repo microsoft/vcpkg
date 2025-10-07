@@ -7,6 +7,9 @@ vcpkg_from_github(
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
+vcpkg_find_acquire_program(GIT)
+get_filename_component(GIT_EXE_PATH "${GIT}" DIRECTORY)
+vcpkg_add_to_path(PREPEND "${GIT_EXE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
