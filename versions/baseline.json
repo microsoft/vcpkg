@@ -6984,6 +6984,10 @@
       "baseline": "1.10.0",
       "port-version": 0
     },
+    "octree": {
+      "baseline": "2025.10.7",
+      "port-version": 0
+    },
     "ode": {
       "baseline": "0.16.6",
       "port-version": 0
