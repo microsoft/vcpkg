@@ -9565,7 +9565,7 @@
       "port-version": 0
     },
     "tdlib": {
-      "baseline": "2025-09-19",
+      "baseline": "1.8.55",
       "port-version": 0
     },
     "tdscpp": {
