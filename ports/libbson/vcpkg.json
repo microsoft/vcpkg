@@ -1,6 +1,6 @@
 {
   "name": "libbson",
-  "version": "1.30.5",
+  "version": "1.30.6",
   "description": "libbson is a library providing useful routines related to building, parsing, and iterating BSON documents.",
   "homepage": "https://github.com/mongodb/mongo-c-driver/tree/master/src/libbson",
   "license": null,
