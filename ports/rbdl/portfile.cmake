@@ -6,6 +6,8 @@ vcpkg_from_github(
   REF 619175a441ba769ab1be34a727644f4dd13bf841
   SHA512 0c6cd78c4385e582f481a6f92d5c3a01f5d3bcd3a7cc3417a504209dae1856d788157db8d9f4173493619f103dea323bd57ddae0bc63162d72b03031dae9a822
   HEAD_REF master
+  PATCHES
+    fix-eigen3.patch
 )
 
 vcpkg_from_github(
@@ -38,4 +40,4 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/RBDL PACKAGE_NAME RBDL)
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
