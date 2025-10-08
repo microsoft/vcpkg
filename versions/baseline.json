@@ -3705,8 +3705,8 @@
       "port-version": 0
     },
     "halide": {
-      "baseline": "18.0.0",
-      "port-version": 1
+      "baseline": "21.0.0",
+      "port-version": 0
     },
     "hanjingo-high-jump": {
       "baseline": "1.0.4",
