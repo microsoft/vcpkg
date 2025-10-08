@@ -8533,7 +8533,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.4.0",
+      "baseline": "4.4.2",
       "port-version": 0
     },
     "robin-hood-hashing": {
