@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release)  # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nonstd-lite/bit-lite
@@ -16,17 +18,16 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
+    PACKAGE_NAME bit-lite
     CONFIG_PATH lib/cmake/bit-lite
 )
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
     "${CURRENT_PACKAGES_DIR}/lib"
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 file(INSTALL
-    "${CMAKE_CURRENT_LIST_DIR}/usage"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
