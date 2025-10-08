@@ -27,13 +27,19 @@ endif()
 
 # generation of font resources
 
-if (CMAKE_HOST_WIN32 AND WIN32 AND BIN2COFF_EXECUTABLE STREQUAL "bin2coff")
-  # cf. scripts/fontdump.nmake
-  add_executable(bin2coff EXCLUDE_FROM_ALL scripts/bin2coff.c)
-  install(TARGETS bin2coff DESTINATION manual-tools/libmupdf)
-  set(maybe_64bit "64bit")
-  if(CMAKE_SIZEOF_VOID_P EQUAL "4")
-    set(maybe_64bit "")
+if (CMAKE_HOST_WIN32 AND WIN32)
+  if(BIN2COFF_EXECUTABLE STREQUAL "bin2coff")
+    # cf. scripts/fontdump.nmake
+    add_executable(bin2coff EXCLUDE_FROM_ALL scripts/bin2coff.c)
+    install(TARGETS bin2coff DESTINATION manual-tools/libmupdf)
+  endif()
+  # cf. scripts/bin2coff.c
+  if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86")
+    set(coff_arch "x86")
+  elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")
+    set(coff_arch "aarch64")
+  else()
+    set(coff_arch "x64")
   endif()
 endif()
 
@@ -57,7 +63,7 @@ foreach(font IN LISTS fonts)
     set(font_object "${CMAKE_CURRENT_BINARY_DIR}/resources/${name}.obj")
     set_source_files_properties("${font_object}" PROPERTIES EXTERNAL_OBJECT 1)
     add_custom_command(OUTPUT "${font_object}"
-      COMMAND "${BIN2COFF_EXECUTABLE}" "${font}" "${font_object}" ${identifier} ${maybe_64bit}
+      COMMAND "${BIN2COFF_EXECUTABLE}" "${font}" "${font_object}" "${identifier}" ${coff_arch}
       VERBATIM
     )
     list(APPEND FONT_SOURCES "${font_object}")
