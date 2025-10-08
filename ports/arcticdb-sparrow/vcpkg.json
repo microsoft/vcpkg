@@ -15,5 +15,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "json_reader": {
+      "description": "Generate json_reader target",
+      "dependencies": [
+        "nlohmann_json"
+      ]
+    },
+    "examples": {
+      "description": "Build examples"
+    }
+  }
 }
