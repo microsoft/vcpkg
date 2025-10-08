@@ -1,8 +1,19 @@
 diff --git a/CMake/GeneratePkgConfig.cmake b/CMake/GeneratePkgConfig.cmake
-index 3d3fa01d1..edc3ce872 100644
+index 3d3fa01d1..2d10270cd 100644
 --- a/CMake/GeneratePkgConfig.cmake
 +++ b/CMake/GeneratePkgConfig.cmake
-@@ -31,17 +31,86 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -12,7 +12,9 @@ function(get_relative_link OUTPUT PATH)
+       set(${OUTPUT} "-l\"${DIRECTORY_NAME}/${NAME}\"" PARENT_SCOPE)
+     else()
+       get_filename_component(FULL_NAME "${PATH}" NAME)
+-      set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l:${FULL_NAME}" PARENT_SCOPE)
++      # Extract library name without lib prefix and extension for all platforms
++      string(REGEX REPLACE "^lib(.+)\\.[^.]+$" "\\1" LIB_NAME "${FULL_NAME}")
++      set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l${LIB_NAME}" PARENT_SCOPE)
+     endif()
+     return()
+   endif()
+@@ -31,17 +33,86 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    # message("Generating pkg-config for ${TARGET}")
    get_filename_component(PREFIX "${CMAKE_INSTALL_PREFIX}" REALPATH)
  
@@ -93,7 +104,7 @@ index 3d3fa01d1..edc3ce872 100644
          list(APPEND LIBS "${LINK}")
        endif()
      endif()
-@@ -77,6 +146,19 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -77,6 +148,19 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    endif()
  
    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig")
@@ -113,7 +124,7 @@ index 3d3fa01d1..edc3ce872 100644
    file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" CONTENT
  "prefix=${PREFIX}
  
-@@ -85,14 +167,14 @@ Description: ${DESCRIPTION}
+@@ -85,14 +169,14 @@ Description: ${DESCRIPTION}
  Version: ${PROJECT_VERSION}
  
  CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
