@@ -4,6 +4,7 @@
   "description": "C/C++ Memgraph Client ",
   "homepage": "https://github.com/memgraph/mgclient",
   "license": "Apache-2.0",
+  "supports": "!android",
   "dependencies": [
     "openssl",
     {

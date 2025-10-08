@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 92426e9..9af1543 100644
+index 92426e9..f96152a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -16,6 +16,8 @@ add_library(project_options INTERFACE)
@@ -84,15 +84,16 @@ index 92426e9..9af1543 100644
 +    if(BUILD_SHARED_LIBS)
 +    install(TARGETS mgclient-shared
 +            EXPORT unofficial-mgclient-export
-             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-             RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
++            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +    else()
 +    install(TARGETS mgclient-static
 +            EXPORT unofficial-mgclient-export
-+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-+            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
++            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 +    endif()
      install(DIRECTORY
              "${PROJECT_SOURCE_DIR}/include/"
