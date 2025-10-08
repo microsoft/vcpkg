@@ -9,5 +9,7 @@ target_link_libraries(main PRIVATE Td::TdStatic)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(tdclient REQUIRED IMPORTED_TARGET tdclient)
+find_package(OpenSSL REQUIRED)
+find_package(ZLIB REQUIRED)
 add_executable(main2 main.cpp)
-target_link_libraries(main2 PRIVATE PkgConfig::tdclient)
+target_link_libraries(main2 PRIVATE PkgConfig::tdclient OpenSSL::SSL OpenSSL::Crypto ZLIB::ZLIB)
