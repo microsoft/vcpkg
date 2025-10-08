@@ -21,16 +21,31 @@ vcpkg_check_features(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         ${FEATURE_OPTIONS}
 )
-
 vcpkg_cmake_install()
-
-file(COPY "${SOURCE_PATH}/include/mupdf" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-
 vcpkg_copy_pdbs()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+set(font_licenses "")
+foreach(item IN ITEMS urw/OFL.txt noto/COPYING han/LICENSE.txt droid/NOTICE sil/OFL.txt)
+    string(REPLACE "/" " " new_name "# Fonts - ${item}")
+    set(file "${CURRENT_BUILDTREES_DIR}/${new_name}")
+    file(COPY_FILE "${SOURCE_PATH}/resources/fonts/${item}" "${file}")
+    list(APPEND font_licenses "${file}")
+endforeach()
+
+vcpkg_install_copyright(
+    # Cf. source/fitz/noto.c
+    COMMENT [[
+This software includes Base 14 PDF fonts from URW, Noto fonts from Google.
+Source Han Serif from Adobe for CJK, DroidSansFallback from Android for CJK,
+Charis SIL from SIL.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/COPYING"
+        ${font_licenses}
+)
