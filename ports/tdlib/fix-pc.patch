@@ -1,9 +1,21 @@
 diff --git a/CMake/GeneratePkgConfig.cmake b/CMake/GeneratePkgConfig.cmake
-index 3d3fa01d1..2d10270cd 100644
+index 3d3fa01d1..9303a2f43 100644
 --- a/CMake/GeneratePkgConfig.cmake
 +++ b/CMake/GeneratePkgConfig.cmake
-@@ -12,7 +12,9 @@ function(get_relative_link OUTPUT PATH)
-       set(${OUTPUT} "-l\"${DIRECTORY_NAME}/${NAME}\"" PARENT_SCOPE)
+@@ -9,10 +9,20 @@ function(get_relative_link OUTPUT PATH)
+   if (IS_ABSOLUTE ${PATH})
+     get_filename_component(DIRECTORY_NAME "${PATH}" DIRECTORY)
+     if (WIN32)
+-      set(${OUTPUT} "-l\"${DIRECTORY_NAME}/${NAME}\"" PARENT_SCOPE)
++      # On Windows, library files can be libname.lib or name.lib
++      get_filename_component(FULL_NAME "${PATH}" NAME)
++      # Extract library name without lib prefix and extension
++      string(REGEX REPLACE "^lib(.+)\\.[^.]+$" "\\1" LIB_NAME "${FULL_NAME}")
++      # If the regex didn't match (no lib prefix), use the name without extension
++      if ("${LIB_NAME}" STREQUAL "${FULL_NAME}")
++        set(LIB_NAME "${NAME}")
++      endif()
++      set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l${LIB_NAME}" PARENT_SCOPE)
      else()
        get_filename_component(FULL_NAME "${PATH}" NAME)
 -      set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l:${FULL_NAME}" PARENT_SCOPE)
@@ -13,7 +25,7 @@ index 3d3fa01d1..2d10270cd 100644
      endif()
      return()
    endif()
-@@ -31,17 +33,86 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -31,17 +41,86 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    # message("Generating pkg-config for ${TARGET}")
    get_filename_component(PREFIX "${CMAKE_INSTALL_PREFIX}" REALPATH)
  
@@ -104,7 +116,7 @@ index 3d3fa01d1..2d10270cd 100644
          list(APPEND LIBS "${LINK}")
        endif()
      endif()
-@@ -77,6 +148,19 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -77,6 +156,19 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    endif()
  
    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig")
@@ -124,7 +136,7 @@ index 3d3fa01d1..2d10270cd 100644
    file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" CONTENT
  "prefix=${PREFIX}
  
-@@ -85,14 +169,14 @@ Description: ${DESCRIPTION}
+@@ -85,14 +177,14 @@ Description: ${DESCRIPTION}
  Version: ${PROJECT_VERSION}
  
  CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
