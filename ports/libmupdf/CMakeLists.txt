@@ -27,13 +27,13 @@ endif()
 
 # generation of font resources
 
-set(maybe_64bit "")
 if (CMAKE_HOST_WIN32 AND WIN32 AND BIN2COFF_EXECUTABLE STREQUAL "bin2coff")
   # cf. scripts/fontdump.nmake
   add_executable(bin2coff EXCLUDE_FROM_ALL scripts/bin2coff.c)
   install(TARGETS bin2coff DESTINATION manual-tools/libmupdf)
-  if(CMAKE_SIZEOF_VOID_P EQUAL "8")
-    set(maybe_64bit "64bit")
+  set(maybe_64bit "64bit")
+  if(NOT CMAKE_SIZEOF_VOID_P EQUAL "4")
+    set(maybe_64bit "")
   endif()
 endif()
 
@@ -53,7 +53,7 @@ file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources")
 foreach(font IN LISTS fonts)
   cmake_path(GET font FILENAME name)
   if (CMAKE_HOST_WIN32 AND WIN32)
-    string(REGEX REPLACE "[-.]" "_" identifier "_binary_${font}")
+    string(REGEX REPLACE "[-.]" "_" identifier "_binary_${name}")
     set(font_object "${CMAKE_CURRENT_BINARY_DIR}/resources/${name}.obj")
     set_source_files_properties("${font_object}" PROPERTIES EXTERNAL_OBJECT 1)
     add_custom_command(OUTPUT "${font_object}"
