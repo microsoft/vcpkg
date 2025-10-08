@@ -119,6 +119,7 @@ target_link_libraries(libmupdf
     JPEG::JPEG
     ${JBIG2DEC_LIB}
     ZLIB::ZLIB
+    $<$<BOOL:${ANDROID}>:log>
 )
 
 # installation
@@ -131,8 +132,3 @@ install(TARGETS libmupdf
 install(DIRECTORY include/mupdf
   DESTINATION include
 )
-
-if (BUILD_EXAMPLES)
-  add_executable(mu-office-test source/tests/mu-office-test.c)
-  target_link_libraries(mu-office-test PRIVATE libmupdf)
-endif()
