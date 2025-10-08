@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 92426e9..e43fd54 100644
+index 92426e9..9af1543 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -16,6 +16,8 @@ add_library(project_options INTERFACE)
@@ -11,7 +11,15 @@ index 92426e9..e43fd54 100644
  set(mgclient_src_files
          mgallocator.c
          mgclient.c
-@@ -62,14 +64,18 @@ else()
+@@ -50,6 +52,7 @@ else()
+     find_package(OpenSSL REQUIRED)
+     include(GenerateExportHeader)
+ 
++    if(NOT BUILD_SHARED_LIBS)
+     add_library(mgclient-static STATIC ${mgclient_src_files})
+ 
+     generate_export_header(mgclient-static
+@@ -62,18 +65,22 @@ else()
      target_include_directories(mgclient-static
              PRIVATE
              "${PROJECT_SOURCE_DIR}/src"
@@ -35,7 +43,12 @@ index 92426e9..e43fd54 100644
      if(MGCLIENT_ON_WINDOWS)
          target_link_libraries(mgclient-static PUBLIC ws2_32 crypt32 gdi32)
      endif()
-@@ -87,14 +93,18 @@ else()
+-
++    else()
+     add_library(mgclient-shared SHARED ${mgclient_src_files})
+ 
+     generate_export_header(mgclient-shared
+@@ -87,32 +94,44 @@ else()
      target_include_directories(mgclient-shared
              PRIVATE
              "${PROJECT_SOURCE_DIR}/src"
@@ -59,10 +72,12 @@ index 92426e9..e43fd54 100644
      if(MGCLIENT_ON_WINDOWS)
          target_link_libraries(mgclient-shared PUBLIC ws2_32 crypt32 gdi32)
      endif()
-@@ -103,16 +113,27 @@ else()
-             BASE_NAME "mgclient"
-             EXPORT_FILE_NAME "mgclient-export.h")
++    endif()
  
+-    generate_export_header(mgclient-shared
+-            BASE_NAME "mgclient"
+-            EXPORT_FILE_NAME "mgclient-export.h")
+-
 -    include(GNUInstallDirs)
 -
 -    install(TARGETS mgclient-static mgclient-shared
