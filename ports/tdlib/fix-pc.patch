@@ -1,8 +1,8 @@
 diff --git a/CMake/GeneratePkgConfig.cmake b/CMake/GeneratePkgConfig.cmake
-index 3d3fa01d1..9b0b08ebc 100644
+index 3d3fa01d1..edc3ce872 100644
 --- a/CMake/GeneratePkgConfig.cmake
 +++ b/CMake/GeneratePkgConfig.cmake
-@@ -31,17 +31,72 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -31,17 +31,86 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    # message("Generating pkg-config for ${TARGET}")
    get_filename_component(PREFIX "${CMAKE_INSTALL_PREFIX}" REALPATH)
  
@@ -24,12 +24,18 @@ index 3d3fa01d1..9b0b08ebc 100644
 +  
 +  # Special handling for tdcore interface library
 +  if ("${TARGET}" STREQUAL "tdcore" AND "${LIBRARY_TYPE}" STREQUAL "INTERFACE_LIBRARY")
-+    # For tdcore interface library, collect dependencies from the parts instead
++    # For tdcore interface library, we need to link to the actual part libraries
++    # instead of the non-existent tdcore library
++    set(TDCORE_LIBS "")
 +    set(COMBINED_REQS "")
 +    set(COMBINED_LIBS "")
 +    
 +    foreach (PART_LIB ${LIST})
 +      if (TARGET "${PART_LIB}" AND "${PART_LIB}" MATCHES "^tdcore_part[0-9]+$")
++        # Add the actual part library to link against
++        list(APPEND TDCORE_LIBS "-l${PART_LIB}")
++        
++        # Collect dependencies from the parts
 +        get_target_property(PART_LIST "${PART_LIB}" LINK_LIBRARIES)
 +        if (NOT "${PART_LIST}" STREQUAL "PART_LIST-NOTFOUND")
 +          foreach (PART_DEP ${PART_LIST})
@@ -54,10 +60,18 @@ index 3d3fa01d1..9b0b08ebc 100644
 +    if (COMBINED_LIBS)
 +      list(REMOVE_DUPLICATES COMBINED_LIBS)
 +    endif()
++    if (TDCORE_LIBS)
++      list(REMOVE_DUPLICATES TDCORE_LIBS)
++    endif()
 +    
 +    set(LIST "")
 +    list(APPEND LIST ${COMBINED_REQS})
 +    list(APPEND LIST ${COMBINED_LIBS})
++    
++    # Set a flag to use different Libs line for tdcore
++    set(USE_TDCORE_PARTS TRUE)
++  else()
++    set(USE_TDCORE_PARTS FALSE)
 +  endif()
 +  
    set(REQS "")
@@ -79,8 +93,32 @@ index 3d3fa01d1..9b0b08ebc 100644
          list(APPEND LIBS "${LINK}")
        endif()
      endif()
-@@ -88,11 +143,11 @@ CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
- Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET}
+@@ -77,6 +146,19 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+   endif()
+ 
+   file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig")
++  
++  # Generate the correct Libs line based on library type
++  if (USE_TDCORE_PARTS)
++    # For tdcore interface library, link to the actual part libraries
++    set(LIBS_LINE "")
++    foreach (PART_LIB ${TDCORE_LIBS})
++      set(LIBS_LINE "${LIBS_LINE} ${PART_LIB}")
++    endforeach()
++    set(LIBS_LINE "Libs: -L\"${PKGCONFIG_LIBDIR}\"${LIBS_LINE}")
++  else()
++    set(LIBS_LINE "Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET}")
++  endif()
++  
+   file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" CONTENT
+ "prefix=${PREFIX}
+ 
+@@ -85,14 +167,14 @@ Description: ${DESCRIPTION}
+ Version: ${PROJECT_VERSION}
+ 
+ CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
+-Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET}
++${LIBS_LINE}
  ${REQUIRES}${LIBRARIES}")
  
 -  get_target_property(LIBRARY_TYPE "${TARGET}" TYPE)
