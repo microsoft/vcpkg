@@ -1,3 +1,4 @@
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -6,6 +7,8 @@ vcpkg_from_github(
     REF 369ee922b45bfa7e8da357e4d62e93925862d86d
     HEAD_REF master
     SHA512 0985b70d2ba873d41347a276118d434936ee5359aaa70afc7442381972d6a36ad379fff56d659315974c97c5c6c5a141b8fede531c9607186e0a26008f761016
+    PATCHES
+        fix-pc.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
@@ -13,7 +16,7 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DTD_INSTALL_SHARED_LIBRARIES=OFF
+        -DTD_INSTALL_SHARED_LIBRARIES=ON
         -DTD_INSTALL_STATIC_LIBRARIES=ON
         -DTD_ENABLE_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DTD_ENABLE_DOTNET=OFF
