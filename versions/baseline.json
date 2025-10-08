@@ -6050,7 +6050,7 @@
     },
     "lunarg-vulkantools": {
       "baseline": "1.4.309.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lunasvg": {
       "baseline": "3.4.0",
@@ -8218,7 +8218,7 @@
     },
     "qtwebengine": {
       "baseline": "6.9.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qtwebsockets": {
       "baseline": "6.9.1",
