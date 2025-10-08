@@ -54,13 +54,13 @@ foreach(font IN LISTS fonts)
   cmake_path(GET font FILENAME name)
   if (CMAKE_HOST_WIN32 AND WIN32)
     string(REGEX REPLACE "[-.]" "_" identifier "_binary_${font}")
-    set(font_obj "${CMAKE_CURRENT_BINARY_DIR}/resources/${name}.obj")
-    set_source_files_properties("${font_obj}" PROPERTIES EXTERNAL_OBJECT 1)
-    add_custom_command(OUTPUT "${font_c_source}"
-      COMMAND "${BIN2COFF_EXECUTABLE}" "${font}" "${font_obj}" ${identifier} ${maybe_64bit}
+    set(font_object "${CMAKE_CURRENT_BINARY_DIR}/resources/${name}.obj")
+    set_source_files_properties("${font_object}" PROPERTIES EXTERNAL_OBJECT 1)
+    add_custom_command(OUTPUT "${font_object}"
+      COMMAND "${BIN2COFF_EXECUTABLE}" "${font}" "${font_object}" ${identifier} ${maybe_64bit}
       VERBATIM
     )
-    list(APPEND FONT_SOURCES "${font_obj}")
+    list(APPEND FONT_SOURCES "${font_object}")
   else()
     set(font_c_source "${CMAKE_CURRENT_BINARY_DIR}/resources/${name}.c")
     add_custom_command(OUTPUT "${font_c_source}"
