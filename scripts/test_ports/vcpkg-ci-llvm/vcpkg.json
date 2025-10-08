@@ -3,23 +3,28 @@
   "version-string": "0",
   "description": "LLVM features testing within CI.",
   "license": null,
-  "supports": "!uwp & !(arm & windows)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "llvm",
       "default-features": false,
       "features": [
         "clang",
+        "clang-enable-cir",
+        "clang-enable-static-analyzer",
+        "clang-tools-extra",
         "compiler-rt",
-        "default-targets",
         "enable-abi-breaking-checks",
         "enable-bindings",
-        "enable-eh",
+        "enable-libxml2",
         "enable-rtti",
-        "enable-terminfo",
         "enable-zlib",
+        "enable-zstd",
         "lld",
         "lldb",
+        "target-platform-specific",
+        "target-webassembly",
+        "target-x86",
         "tools"
       ]
     },
