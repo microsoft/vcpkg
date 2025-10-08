@@ -1,0 +1,4 @@
+bit-lite provides CMake targets:
+
+  find_package(bit-lite CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE bit-lite::bit-lite)
