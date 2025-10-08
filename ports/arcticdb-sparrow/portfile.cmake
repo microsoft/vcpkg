@@ -17,7 +17,7 @@ else()
 endif()
 
 # Check for features
-if("json_reader" IN_LIST FEATURES)
+if("json-reader" IN_LIST FEATURES)
     set(BUILD_JSON_READER ON)
 else()
     set(BUILD_JSON_READER OFF)
