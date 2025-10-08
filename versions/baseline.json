@@ -3120,6 +3120,10 @@
       "baseline": "3.7.1",
       "port-version": 0
     },
+    "ftetwild": {
+      "baseline": "2025.10.8",
+      "port-version": 0
+    },
     "ftgl": {
       "baseline": "2.4.0",
       "port-version": 6
