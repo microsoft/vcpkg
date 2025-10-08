@@ -1,120 +1,117 @@
 diff --git a/fc-cache/meson.build b/fc-cache/meson.build
-index 5e40fac..3c3e46b 100644
+index 1d66ccf3..30f65b19 100644
 --- a/fc-cache/meson.build
 +++ b/fc-cache/meson.build
-@@ -1,6 +1,7 @@
- fccache = executable('fc-cache', ['fc-cache.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fccache = executable('fc-cache', ['fc-cache.c', fcstdint_h, alias_headers, ft_al
    include_directories: [incbase, incsrc],
+   dependencies: [libintl_dep],
    link_with: [libfontconfig],
 +  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/fc-cat/meson.build b/fc-cat/meson.build
-index f26e4b8..476c0f9 100644
+index dd7ee29e..207f5c2d 100644
 --- a/fc-cat/meson.build
 +++ b/fc-cat/meson.build
-@@ -1,6 +1,7 @@
- fccat = executable('fc-cat', ['fc-cat.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fccat = executable('fc-cat', ['fc-cat.c', fcstdint_h, alias_headers, ft_alias_he
    include_directories: [incbase, incsrc],
+   dependencies: [libintl_dep],
    link_with: [libfontconfig],
 +  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/fc-conflist/meson.build b/fc-conflist/meson.build
-index f543cf9..f06640b 100644
+index 88208ff8..91eaab63 100644
 --- a/fc-conflist/meson.build
 +++ b/fc-conflist/meson.build
-@@ -1,6 +1,7 @@
- fcconflist = executable('fc-conflist', ['fc-conflist.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fcconflist = executable('fc-conflist', ['fc-conflist.c', fcstdint_h, alias_heade
    include_directories: [incbase, incsrc],
+   dependencies: [libintl_dep],
    link_with: [libfontconfig],
 +  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/fc-list/meson.build b/fc-list/meson.build
-index 2f679d5..4b0fb62 100644
+index 1be9df5d..0a8002ee 100644
 --- a/fc-list/meson.build
 +++ b/fc-list/meson.build
-@@ -1,6 +1,7 @@
- fclist = executable('fc-list', ['fc-list.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fclist = executable('fc-list', ['fc-list.c', fcstdint_h, alias_headers, ft_alias
    include_directories: [incbase, incsrc],
+   dependencies: [libintl_dep],
    link_with: [libfontconfig],
 +  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/fc-match/meson.build b/fc-match/meson.build
-index aca8bc8..cab4f09 100644
+index 1aa1b1b5..ead1f43f 100644
 --- a/fc-match/meson.build
 +++ b/fc-match/meson.build
-@@ -1,6 +1,7 @@
- fcmatch = executable('fc-match', ['fc-match.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fcmatch = executable('fc-match', ['fc-match.c', fcstdint_h, alias_headers, ft_al
    include_directories: [incbase, incsrc],
+   dependencies: [libintl_dep],
    link_with: [libfontconfig],
 +  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/fc-pattern/meson.build b/fc-pattern/meson.build
-index 07de245..b957c67 100644
+index d9b048cb..ed21b6fd 100644
 --- a/fc-pattern/meson.build
 +++ b/fc-pattern/meson.build
-@@ -1,6 +1,7 @@
- fcpattern = executable('fc-pattern', ['fc-pattern.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fcpattern = executable('fc-pattern', ['fc-pattern.c', fcstdint_h, alias_headers,
    include_directories: [incbase, incsrc],
+   dependencies: [libintl_dep],
    link_with: [libfontconfig],
 +  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/fc-query/meson.build b/fc-query/meson.build
-index d0f2dd4..940b021 100644
+index 629bc71e..b1cb855f 100644
 --- a/fc-query/meson.build
 +++ b/fc-query/meson.build
-@@ -1,7 +1,7 @@
- fcquery = executable('fc-query', ['fc-query.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fcquery = executable('fc-query', ['fc-query.c', fcstdint_h, alias_headers, ft_al
    include_directories: [incbase, incsrc],
+   dependencies: [freetype_dep, libintl_dep],
    link_with: [libfontconfig],
--  dependencies: [freetype_dep],
-+  dependencies: [freetype_dep, getopt_dep],
++  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/fc-scan/meson.build b/fc-scan/meson.build
-index 4de2134..c5b2b67 100644
+index 9049578f..17d80eb3 100644
 --- a/fc-scan/meson.build
 +++ b/fc-scan/meson.build
-@@ -1,7 +1,7 @@
- fcscan = executable('fc-scan', ['fc-scan.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fcscan = executable('fc-scan', ['fc-scan.c', fcstdint_h, alias_headers, ft_alias
    include_directories: [incbase, incsrc],
+   dependencies: [freetype_dep, libintl_dep],
    link_with: [libfontconfig],
--  dependencies: [freetype_dep],
-+  dependencies: [freetype_dep, getopt_dep],
++  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/fc-validate/meson.build b/fc-validate/meson.build
-index e2b956e..8902d59 100644
+index fcabf294..0137dd5f 100644
 --- a/fc-validate/meson.build
 +++ b/fc-validate/meson.build
-@@ -1,7 +1,7 @@
- fcvalidate = executable('fc-validate', ['fc-validate.c', fcstdint_h, alias_headers, ft_alias_headers],
+@@ -2,6 +2,7 @@ fcvalidate = executable('fc-validate', ['fc-validate.c', fcstdint_h, alias_heade
    include_directories: [incbase, incsrc],
+   dependencies: [freetype_dep, libintl_dep],
    link_with: [libfontconfig],
--  dependencies: [freetype_dep],
-+  dependencies: [freetype_dep, getopt_dep],
++  dependencies: [getopt_dep],
    c_args: c_args,
    install: true,
- )
+   install_tag: 'tools')
 diff --git a/meson.build b/meson.build
-index f616600..6d82a16 100644
+index e742ea61..92b8b6ce 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -202,6 +202,14 @@ if cc.links(files('meson-cc-tests/solaris-atomic-operations.c'), name: 'Solaris
-   conf.set('HAVE_SOLARIS_ATOMIC_OPS', 1)
+@@ -208,6 +208,14 @@ else
+   opt_nls = opt_nls.require(false)
  endif
  
 +if host_machine.system() == 'windows'
@@ -125,6 +122,6 @@ index f616600..6d82a16 100644
 +  getopt_dep = dependency('', required: false)
 +endif
 +
- 
  # Check iconv support
- iconv_dep = []
+ iconv = get_option('iconv')
+ iconv_dep = dependency('', required: false)
