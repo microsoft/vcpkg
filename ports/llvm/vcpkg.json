@@ -11,6 +11,14 @@
       "platform": "windows & !mingw"
     },
     {
+      "name": "llvm",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -25,7 +33,6 @@
   ],
   "default-features": [
     "clang",
-    "enable-bindings",
     "enable-libxml2",
     "enable-rtti",
     "enable-zlib",
@@ -36,28 +43,10 @@
   ],
   "features": {
     "bolt": {
-      "description": "BOLT is a post-link optimizer developed to speed up large applications.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "BOLT is a post-link optimizer developed to speed up large applications."
     },
     "clang": {
-      "description": "Include C Language Family Front-end.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "Include C Language Family Front-end."
     },
     "clang-enable-cir": {
       "description": "Include ClangIR.",
@@ -194,8 +183,7 @@
           "default-features": false,
           "features": [
             "clang",
-            "mlir",
-            "tools"
+            "mlir"
           ]
         }
       ]
@@ -208,8 +196,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "tools"
+            "clang"
           ]
         }
       ]
@@ -221,8 +208,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "tools"
+            "clang"
           ]
         }
       ]
@@ -235,8 +221,7 @@
           "default-features": false,
           "features": [
             "clang",
-            "libcxxabi",
-            "tools"
+            "libcxxabi"
           ]
         }
       ]
@@ -249,35 +234,16 @@
           "default-features": false,
           "features": [
             "clang",
-            "libcxx",
-            "tools"
+            "libcxx"
           ]
         }
       ]
     },
     "libunwind": {
-      "description": "Include libunwind library.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "Include libunwind library."
     },
     "lld": {
-      "description": "Include LLVM linker.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "Include LLVM linker."
     },
     "lldb": {
       "description": "Include LLVM debugger.",
@@ -286,8 +252,7 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "clang",
-            "tools"
+            "clang"
           ]
         }
       ]
@@ -299,7 +264,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools",
             "utils"
           ]
         }
@@ -325,7 +289,6 @@
           "name": "llvm",
           "default-features": false,
           "features": [
-            "tools",
             "utils"
           ]
         }
@@ -475,16 +438,7 @@
       "description": "Build LLVM tools."
     },
     "utils": {
-      "description": "Build LLVM utils.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "Build LLVM utils."
     }
   }
 }

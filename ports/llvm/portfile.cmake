@@ -273,6 +273,12 @@ if("${LLVM_TARGETS_TO_BUILD}" STREQUAL "")
     set(LLVM_TARGETS_TO_BUILD "all")
 endif()
 
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND FEATURE_OPTIONS
+        -DLLVM_NATIVE_TOOL_DIR="${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}"
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/llvm"
     OPTIONS
@@ -287,8 +293,8 @@ vcpkg_cmake_configure(
         -DPACKAGE_VERSION=${VERSION}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
         -DLLVM_PARALLEL_LINK_JOBS=1
-        -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/llvm
-        -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/llvm
+        -DLLVM_INSTALL_PACKAGE_DIR:PATH=share/${PORT}
+        -DLLVM_TOOLS_INSTALL_DIR:PATH=tools/${PORT}
         "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
         "-DLLVM_ENABLE_RUNTIMES=${LLVM_ENABLE_RUNTIMES}"
         "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
