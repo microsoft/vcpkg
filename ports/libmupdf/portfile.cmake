@@ -8,27 +8,31 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dont-generate-extract-3rd-party-things.patch
-        fix-NAN-on-Win11.patch # https://github.com/ArtifexSoftware/mupdf/pull/54
+#        fix-NAN-on-Win11.patch # https://github.com/ArtifexSoftware/mupdf/pull/54
 )
-
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
         ocr ENABLE_OCR
 )
+
+if(VCPKG_CROSSCOMPILING AND VCPKG_HOST_IS_WINDOWS AND VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS "-DBIN2COFF_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/bin2coff.exe")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        ${FEATURE_OPTIONS}
+        ${OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/manual-tools")
 
 set(font_licenses "")
 foreach(item IN ITEMS urw/OFL.txt noto/COPYING han/LICENSE.txt droid/NOTICE sil/OFL.txt)

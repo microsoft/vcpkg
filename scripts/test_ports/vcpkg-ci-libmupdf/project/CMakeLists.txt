@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
-project(libmupdf-test C)
+project(libmupdf-test C CXX)
 
-# Dependencies should eventually be provided CMake config package
+# Should eventually be provided by a CMake config package
 find_path(MUPDF_INCLUDE_DIR NAMES mupdf/memento.h REQUIRED)
 find_library(MUPDF_LIBRARY NAMES libmupdfd libmupdf NAMES_PER_DIR REQUIRED)
 
@@ -14,7 +14,7 @@ if(NOT WIN32)
 endif()
 
 # Copied from port/libmupdf/CMakeLists.txt, but
-# dependencies should eventually be provided CMake config package
+# dependencies should eventually be provided by a CMake config package
 find_package(freetype CONFIG REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(harfbuzz CONFIG REQUIRED)
@@ -30,6 +30,18 @@ target_link_libraries(mu-office-test
     ${JBIG2DEC_LIB}
     $<LINK_ONLY:ZLIB::ZLIB>
 )
+
+# Maybe OCR
+find_package(Leptonica CONFIG)
+find_package(Tesseract CONFIG)
+if(Leptonica_FOUND AND Tesseract_FOUND)
+    target_link_libraries(mu-office-test
+    PRIVATE
+        $<LINK_ONLY:leptonica>
+        $<LINK_ONLY:Tesseract::libtesseract>
+    )
+endif()
+
 # Missing even in port/libmupdf/CMakeLists.txt
 find_package(unofficial-gumbo CONFIG REQUIRED)
 target_link_libraries(mu-office-test PRIVATE unofficial::gumbo::gumbo)

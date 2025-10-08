@@ -28,10 +28,10 @@ endif()
 # generation of font resources
 
 set(maybe_64bit "")
-if (VCPKG_HOST_IS_WINDOWS AND VCPKG_TARGET_IS_WINDOWS AND BIN2COFF_EXECUTABLE STREQUAL "bin2coff")
+if (CMAKE_HOST_WIN32 AND WIN32 AND BIN2COFF_EXECUTABLE STREQUAL "bin2coff")
   # cf. scripts/fontdump.nmake
   add_executable(bin2coff EXCLUDE_FROM_ALL scripts/bin2coff.c)
-  install(TARGETS bin2coff DESTINATION manual-tools/libmupfd)
+  install(TARGETS bin2coff DESTINATION manual-tools/libmupdf)
   if(CMAKE_SIZEOF_VOID_P EQUAL "8")
     set(maybe_64bit "64bit")
   endif()
@@ -52,7 +52,7 @@ set(FONT_SOURCES "")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/resources")
 foreach(font IN LISTS fonts)
   cmake_path(GET font FILENAME name)
-  if (VCPKG_HOST_IS_WINDOWS AND VCPKG_TARGET_IS_WINDOWS)
+  if (CMAKE_HOST_WIN32 AND WIN32)
     string(REGEX REPLACE "[-.]" "_" identifier "_binary_${font}")
     set(font_obj "${CMAKE_CURRENT_BINARY_DIR}/resources/${name}.obj")
     set_source_files_properties("${font_obj}" PROPERTIES EXTERNAL_OBJECT 1)
@@ -88,6 +88,7 @@ target_include_directories(libmupdf
     include
   PRIVATE
     generated
+    ${Leptonica_INCLUDE_DIRS}
 )
 target_compile_definitions(libmupdf
   PRIVATE
