@@ -29,6 +29,7 @@ target_link_libraries(mu-office-test
     $<LINK_ONLY:JPEG::JPEG>
     ${JBIG2DEC_LIB}
     $<LINK_ONLY:ZLIB::ZLIB>
+    $<$<BOOL:${ANDROID}>:log>
 )
 
 # Maybe OCR

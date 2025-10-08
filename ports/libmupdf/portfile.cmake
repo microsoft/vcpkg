@@ -9,6 +9,14 @@ vcpkg_from_github(
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
+# 1.26.10 lacks bin2coff arm64 changes
+vcpkg_download_distfile(BIN2COFF_C
+    URLS "https://github.com/ArtifexSoftware/mupdf/raw/9c1af80cea03987b147b0dffd944075f3b3cf4cb/scripts/bin2coff.c"
+    FILENAME "ArtifexSoftware-mupdf-bin2coff-9c1af80.c"
+    SHA512 9f0e70cc0ade3a39c46425d968ff6493d47f36b9bfef2efbb0ae62aef29f71952690ab9716084c0161c7184cd654abc57c2b2f6a4cc3f9e184863e7bb7b64f52
+)
+file(COPY_FILE "${BIN2COFF_C}" "${SOURCE_PATH}/scripts/bin2coff.c")
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
