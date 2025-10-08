@@ -13,14 +13,20 @@ vcpkg_from_github(
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
+set(generator_param "")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(generator_param WINDOWS_USE_MSBUILD)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    ${generator_param}
     OPTIONS
         -DTD_INSTALL_SHARED_LIBRARIES=ON
         -DTD_INSTALL_STATIC_LIBRARIES=ON
         -DTD_ENABLE_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DTD_ENABLE_DOTNET=OFF
-        -DTD_GENERATE_SOURCE_FILES=ON
+        -DTD_GENERATE_SOURCE_FILES=${VCPKG_TARGET_IS_WINDOWS}
         -DTD_E2E_ONLY=OFF
         -DTD_ENABLE_DOTNET=OFF
         -DTD_ENABLE_LTO=ON
