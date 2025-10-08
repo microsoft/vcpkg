@@ -6,9 +6,7 @@
   "homepage": "https://github.com/ArtifexSoftware/mupdf",
   "license": "AGPL-3.0-only",
   "dependencies": [
-    "curl",
     "freetype",
-    "glfw3",
     "gumbo",
     "harfbuzz",
     "jbig2dec",

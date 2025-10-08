@@ -35,7 +35,7 @@ if (CMAKE_HOST_WIN32 AND WIN32)
   endif()
   # cf. scripts/bin2coff.c
   if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86")
-    set(coff_arch "x86")
+    set(coff_arch "Win32")
   elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "ARM64")
     set(coff_arch "aarch64")
   else()
