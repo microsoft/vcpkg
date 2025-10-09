@@ -1,0 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5e61516..6c16a64 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -154,28 +154,11 @@ if(ZLIB_FOUND)
+ endif()
+ 
+ if(ENABLE_7Z)
+-  target_sources(
+-    unarr
+-    PRIVATE lzmasdk/7z.h
+-            lzmasdk/7zArcIn.c
+-            lzmasdk/7zBuf.h
+-            lzmasdk/7zBuf.c
+-            lzmasdk/7zDec.c
+-            lzmasdk/7zStream.c
+-            lzmasdk/7zWindows.h
+-            lzmasdk/Bcj2.h
+-            lzmasdk/Bcj2.c
+-            lzmasdk/Bra.c
+-            lzmasdk/Bra.h
+-            lzmasdk/Bra86.c
+-            lzmasdk/7zCrc.h
+-            lzmasdk/Delta.h
+-            lzmasdk/Delta.c
+-            lzmasdk/Lzma2Dec.h
+-            lzmasdk/Lzma2Dec.c)
+-  if(LIBLZMA_FOUND) # TODO: Replace 7z lzma with system lzma
+-    target_sources(unarr PRIVATE lzmasdk/LzmaDec.h lzmasdk/LzmaDec.c)
+-  endif()
++  find_package(7zip CONFIG REQUIRED)
++  target_link_libraries(unarr PRIVATE 7zip::7zip)
++  # 7zip upstream does not supply a .pc file. Add it to Libs.private.
++  set(PROJECT_LIBS_PRIVATE "-I${7zip_INCLUDE_DIRS} -l${7zip_LIBRARIES}")
++  set(UNARR_DEPENDS_7zip "${UNARR_DEPENDS_7zip} find_dependency(7zip)")
+   target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
+ endif()
+ 
+diff --git a/unarr-config.cmake.in b/unarr-config.cmake.in
+index 1c95f9b..4d82965 100644
+--- a/unarr-config.cmake.in
++++ b/unarr-config.cmake.in
+@@ -5,6 +5,7 @@ include(CMakeFindDependencyMacro)
+ @UNARR_DEPENDS_BZip2@
+ @UNARR_DEPENDS_LibLZMA@
+ @UNARR_DEPENDS_ZLIB@
++@UNARR_DEPENDS_7zip@
+ 
+ if (NOT TARGET unarr::unarr)
+   include("${CMAKE_CURRENT_LIST_DIR}/unarr-targets.cmake")
