@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF mini20
 )
 
-# set(SOURCE_PATH "/Users/luxinyu/Projects/SpiriVcpkg/Octree")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
