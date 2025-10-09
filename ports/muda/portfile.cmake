@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "MuGdxy/muda"
-    REF "${VERSION}-1"
+    REF "${VERSION}"
     SHA512 19e9a86cdd7e3ed44fc06fdfe9319edfab022e9d3ffd063ceed8766b8c266937986faad4b07bb5c139edfa4b55542ffb1dab1f85ded2c4fdeb7c93718426f8ba
     HEAD_REF mini20
 )
