@@ -83,10 +83,10 @@ endforeach()
 
 # actual lib
 
-file(GLOB_RECURSE SOURCES "source/*.c" "generated/*.c")
-list(FILTER SOURCES EXCLUDE REGEX "source/tools/[a-z]*\\.c$")
-list(FILTER SOURCES EXCLUDE REGEX "source/tests/.*.c$")
-list(FILTER SOURCES EXCLUDE REGEX "source/fitz/output-docx.c")
+file(GLOB_RECURSE SOURCES "source/*.c")
+list(FILTER SOURCES EXCLUDE REGEX "/source/helpers/dummy.c")
+list(FILTER SOURCES EXCLUDE REGEX "/source/tests/")
+list(FILTER SOURCES EXCLUDE REGEX "/source/tools/")
 
 if (ENABLE_OCR)
   list(APPEND SOURCES "source/fitz/tessocr.cpp")
@@ -98,7 +98,6 @@ target_include_directories(libmupdf
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   PRIVATE
-    generated
     ${Leptonica_INCLUDE_DIRS}
 )
 target_compile_definitions(libmupdf
@@ -106,11 +105,11 @@ target_compile_definitions(libmupdf
     $<$<BOOL:${BUILD_SHARED_LIBS}>:FZ_DLL_CLIENT>
   PRIVATE
     $<$<BOOL:${BUILD_SHARED_LIBS}>:FZ_DLL>
-    FZ_ENABLE_BROTLI=0
-    FZ_ENABLE_DOCX_OUTPUT=0
-    FZ_ENABLE_ICC=0
-    FZ_ENABLE_JS=0
-    FZ_ENABLE_ODT_OUTPUT=0
+    FZ_ENABLE_BROTLI=0        # needs brotli
+    FZ_ENABLE_DOCX_OUTPUT=0   # needs https://github.com/ArtifexSoftware/extract
+    FZ_ENABLE_ICC=0           # needs lcsm2
+    FZ_ENABLE_JS=0            # needs mujs
+    FZ_ENABLE_ODT_OUTPUT=0    # needs FZ_ENABLE_DOCX_OUTPUT
     MEMENTO_MUPDF_HACKS
     SHARE_JPEG
     $<$<NOT:$<BOOL:${WIN32}>>:HAVE_PTHREAD>
