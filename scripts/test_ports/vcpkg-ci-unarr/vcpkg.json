@@ -1,9 +1,9 @@
 {
-  "name": "vcpkg-ci-libmem",
+  "name": "vcpkg-ci-unarr",
   "version-string": "ci",
-  "description": "Validates libmem",
+  "description": "Validates unarr",
   "dependencies": [
-    "libmem",
+    "unarr",
     {
       "name": "vcpkg-cmake",
       "host": true
