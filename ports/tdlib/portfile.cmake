@@ -13,6 +13,12 @@ vcpkg_from_github(
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
+if(VCPKG_DETECTED_MSVC)
+    set(ENABLE_LTO OFF)
+else()
+    set(ENABLE_LTO ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -22,7 +28,7 @@ vcpkg_cmake_configure(
         -DTD_ENABLE_DOTNET=OFF
         -DTD_GENERATE_SOURCE_FILES=OFF
         -DTD_E2E_ONLY=OFF
-        "-DTD_ENABLE_LTO=$<NOT:${VCPKG_DETECTED_MSVC}>"
+        -DTD_ENABLE_LTO=${ENABLE_LTO}
         -DTD_ENABLE_MULTI_PROCESSOR_COMPILATION=${VCPKG_DETECTED_MSVC}
         -DBUILD_TESTING=OFF
     MAYBE_UNUSED_VARIABLES
