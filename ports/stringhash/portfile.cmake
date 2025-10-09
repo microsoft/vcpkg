@@ -1,18 +1,14 @@
+# Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sushant-wayal/stringhash
     REF v1.0.1
     SHA512 372A902F08BF58D7AEF289982E7E16225C871334FDE54E34894B3F65FF05F7497CE228BB0870C2981D87FB50957668A1AA1B468FB3ADBCFB361A0AF68CB98DE8
+    HEAD_REF main
 )
 
-vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
-)
+# Install headers
+file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/stringhash)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
+# Install license
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
