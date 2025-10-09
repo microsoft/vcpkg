@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArtifexSoftware/mupdf
@@ -8,8 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-libmupdf-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-# 1.26.10 lacks bin2coff arm64 changes
+# 1.26.10 lacks bin2coff arm64 changes in host tool.
 vcpkg_download_distfile(BIN2COFF_C
     URLS "https://github.com/ArtifexSoftware/mupdf/raw/9c1af80cea03987b147b0dffd944075f3b3cf4cb/scripts/bin2coff.c"
     FILENAME "ArtifexSoftware-mupdf-bin2coff-9c1af80.c"
@@ -34,6 +33,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-libmupdf")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/manual-tools")

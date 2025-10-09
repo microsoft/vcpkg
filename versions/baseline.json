@@ -5165,8 +5165,8 @@
       "port-version": 0
     },
     "libmupdf": {
-      "baseline": "1.25.4",
-      "port-version": 1
+      "baseline": "1.26.10",
+      "port-version": 0
     },
     "libmypaint": {
       "baseline": "1.6.1",

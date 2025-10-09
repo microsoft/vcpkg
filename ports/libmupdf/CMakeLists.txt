@@ -10,13 +10,17 @@ option(ENABLE_OCR "Build with OCR" OFF)
 # dependencies
 
 find_package(freetype CONFIG REQUIRED)
-find_package(JPEG REQUIRED)
 find_package(harfbuzz CONFIG REQUIRED)
-find_package(ZLIB REQUIRED)
+find_package(JPEG REQUIRED)
 find_package(OpenJPEG CONFIG REQUIRED)
-find_library(JBIG2DEC_LIB NAMES jbig2decd jbig2dec NAMES_PER_DIR)
+find_package(unofficial-gumbo CONFIG REQUIRED)
+find_package(ZLIB REQUIRED)
+
+find_path(JBIG2DEC_INCLUDE_DIR NAMES jbig2.h REQUIRED)
+find_library(JBIG2DEC_LIBRARAY NAMES jbig2decd jbig2dec NAMES_PER_DIR REQUIRED)
 
 if (NOT WIN32)
+  set(THREADS_PREFER_PTHREAD_FLAG 1)
   find_package(Threads REQUIRED)
 endif()
 
@@ -91,12 +95,15 @@ endif()
 add_library(libmupdf ${SOURCES} ${FONT_SOURCES})
 target_include_directories(libmupdf
   PUBLIC
-    include
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
   PRIVATE
     generated
     ${Leptonica_INCLUDE_DIRS}
 )
 target_compile_definitions(libmupdf
+  INTERFACE
+    $<$<BOOL:${BUILD_SHARED_LIBS}>:FZ_DLL_CLIENT>
   PRIVATE
     $<$<BOOL:${BUILD_SHARED_LIBS}>:FZ_DLL>
     FZ_ENABLE_BROTLI=0
@@ -115,20 +122,33 @@ target_link_libraries(libmupdf
   PRIVATE
     freetype
     harfbuzz::harfbuzz
-    openjp2
+    ${JBIG2DEC_LIBRARAY}
     JPEG::JPEG
-    ${JBIG2DEC_LIB}
+    openjp2
+    unofficial::gumbo::gumbo
     ZLIB::ZLIB
+    $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads>
     $<$<BOOL:${ANDROID}>:log>
 )
 
+set_target_properties(libmupdf PROPERTIES PREFIX "")
+
 # installation
 
+install(DIRECTORY include/mupdf
+  DESTINATION include
+)
 install(TARGETS libmupdf
+  EXPORT unofficial-libmupdf-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
-install(DIRECTORY include/mupdf
-  DESTINATION include
+install(EXPORT unofficial-libmupdf-targets
+  NAMESPACE unofficial::libmupdf::
+  DESTINATION share/unofficial-libmupdf
+)
+configure_file(unofficial-libmupdf-config.cmake.in unofficial-libmupdf-config.cmake @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmupdf-config.cmake"
+  DESTINATION share/unofficial-libmupdf
 )
