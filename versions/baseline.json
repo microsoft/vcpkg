@@ -9957,8 +9957,8 @@
       "port-version": 6
     },
     "unixodbc": {
-      "baseline": "2.3.12",
-      "port-version": 1
+      "baseline": "2.3.14",
+      "port-version": 0
     },
     "unleash-client-cpp": {
       "baseline": "1.3.0",
