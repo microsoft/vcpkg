@@ -17,7 +17,7 @@ find_package(unofficial-gumbo CONFIG REQUIRED)
 find_package(ZLIB REQUIRED)
 
 find_path(JBIG2DEC_INCLUDE_DIR NAMES jbig2.h REQUIRED)
-find_library(JBIG2DEC_LIBRARAY NAMES jbig2decd jbig2dec NAMES_PER_DIR REQUIRED)
+find_library(JBIG2DEC_LIBRARY NAMES jbig2decd jbig2dec NAMES_PER_DIR REQUIRED)
 
 if (NOT WIN32)
   set(THREADS_PREFER_PTHREAD_FLAG 1)
@@ -98,6 +98,7 @@ target_include_directories(libmupdf
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   PRIVATE
+    ${JBIG2DEC_INCLUDE_DIR}
     ${Leptonica_INCLUDE_DIRS}
 )
 target_compile_definitions(libmupdf
@@ -121,11 +122,13 @@ target_link_libraries(libmupdf
   PRIVATE
     freetype
     harfbuzz::harfbuzz
-    ${JBIG2DEC_LIBRARAY}
+    ${JBIG2DEC_LIBRARY}
     JPEG::JPEG
     openjp2
     unofficial::gumbo::gumbo
     ZLIB::ZLIB
+    $<$<BOOL:${ENABLE_OCR}>:leptonica>
+    $<$<BOOL:${ENABLE_OCR}>:Tesseract::libtesseract>
     $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads>
     $<$<BOOL:${ANDROID}>:log>
 )
