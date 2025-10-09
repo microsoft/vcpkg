@@ -6,10 +6,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "enable-7z"            ENABLE_7Z
+        "zlib-crc32"           USE_ZLIB_CRC
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_7Z=ON
+        ${FEATURE_OPTIONS}
         -DUSE_SYSTEM_BZ2=ON
         -DUSE_SYSTEM_LZMA=ON
         -DUSE_SYSTEM_ZLIB=ON

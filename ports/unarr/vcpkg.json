@@ -16,5 +16,13 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "enable-7z": {
+      "description": "Build with 7z support"
+    },
+    "zlib-crc32": {
+      "description": "Use zlib crc32"
+    }
+  }
 }
