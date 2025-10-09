@@ -1,6 +1,6 @@
 {
   "name": "dataframe",
-  "version": "3.6.0",
+  "version": "3.7.0",
   "description": "C++ DataFrame for statistical, Financial, and ML analysis in modern C++",
   "homepage": "https://github.com/hosseinmoein/DataFrame",
   "license": "BSD-3-Clause",

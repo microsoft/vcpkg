@@ -1,6 +1,6 @@
 {
   "name": "libva",
-  "version": "2.22.0",
+  "version": "2.20.0",
   "description": "Libva is an implementation for VA-API (Video Acceleration API)",
   "homepage": "https://github.com/intel/libva",
   "license": "MIT",

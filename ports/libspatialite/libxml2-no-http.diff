@@ -1,0 +1,34 @@
+diff --git a/configure.ac b/configure.ac
+index 3a4f288..d9ba65f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -441,6 +441,15 @@ if test x"$enable_libxml2" != "xno"; then
+   AC_SUBST(LIBXML2_CFLAGS)
+   AC_SUBST(LIBXML2_LIBS)
+   AC_DEFINE(ENABLE_LIBXML2)
++  LIBS_SAVE="$LIBS"
++  LIBS="$LIBXML2_LIBS"
++  AC_SEARCH_LIBS(xmlNanoHTTPCleanup, [], [has_nanohttp="yes"], [has_nanohttp="no"])
++  if test "x$has_nanohttp" != "xno"; then
++    CPPFLAGS="$CFLAGS -DLIBXML2_HAS_NANOHTTP"
++  else
++    AC_MSG_WARN([No http support found in 'libxml2'])
++  fi
++  LIBS="$LIBS_SAVE"
+ fi
+ 
+ #-----------------------------------------------------------------------
+diff --git a/src/wfs/wfs_in.c b/src/wfs/wfs_in.c
+index fe07a0d..93dd778 100644
+--- a/src/wfs/wfs_in.c
++++ b/src/wfs/wfs_in.c
+@@ -4637,7 +4637,9 @@ SPATIALITE_DECLARE void
+ reset_wfs_http_connection (void)
+ {
+ /* Resets the libxml2 "nano HTTP": useful when changing the HTTP_PROXY settings */
++#if defined LIBXML2_HAS_NANOHTTP  /* removed in 2.15.0, and optional before */
+     xmlNanoHTTPCleanup ();
++#endif
+ }
+ 
+ #else /* LIBXML2 isn't enabled */

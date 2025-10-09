@@ -1,0 +1,19 @@
+{
+  "name": "knncolle-kmknn",
+  "version": "0.1.0",
+  "description": "knncolle bindings for KMKNN search ",
+  "homepage": "https://github.com/knncolle/knncolle_kmknn",
+  "license": "MIT",
+  "dependencies": [
+    "knncolle",
+    "ltla-cppkmeans",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

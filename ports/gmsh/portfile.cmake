@@ -5,10 +5,10 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gmsh/gmsh
     REF "${PORT}_${UNDERSCORES_VERSION}"
-    SHA512 af2574ec3aadfddeedf981faced20a6736be06fe30c7670b682837612ca5a42248444f7a782ca5e75556cb957b5cf4467d5e972ba3f60559cc719690e73f3dca
+    SHA512 45992b474b9e25aa681474740699dc5601abb1cdcbd4e6d3a0eca14a49cac576e085b3d2ffd11d39eab64aa2452c6a411975afabba668305650ec34b4b0040ff
     HEAD_REF master
     PATCHES
-        fix-install.patch
+        installdirs.diff
         linking-and-naming.diff
 )
 
@@ -33,6 +33,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DENABLE_BUILD_LIB=${BUILD_LIB}
         -DENABLE_BUILD_SHARED=${BUILD_SHARED}
+        -DENABLE_OS_SPECIFIC_INSTALL=OFF
         -DENABLE_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
         -DGMSH_RELEASE=ON
         -DENABLE_PACKAGE_STRIP=ON
@@ -110,8 +111,12 @@ vcpkg_cmake_install()
 
 vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-gmsh")
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

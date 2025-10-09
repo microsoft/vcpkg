@@ -1,11 +1,11 @@
 set(LIBCZI_REPO_NAME ZEISS/libczi)
-set(LIBCZI_REPO_REF cc79cffe2ff144c3b889102c30c7d1094d757993)
+set(LIBCZI_REPO_REF a9961845f465412abf1e468851afc5e8c764202b)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ${LIBCZI_REPO_NAME}
     REF ${LIBCZI_REPO_REF}
-    SHA512 e0c08c8e8f1abbfd029d7d47439960bc25f19f718a6fa732ba360a5e5cebdb6d0619f335e083686ef6e51e9a77316ecc447ec52cdbc3c57b64d6c2964c9d3c01
+    SHA512 895cd2956befd769c76d508087ba4b4a09fec0319ec2896f37e1a9ea86ceffa4c71a879bae46cbb3c7c7b360f05727cdacb77a559d3147b535392358b0b47621
 )
 
 # Translate enabled vcpkg features into CMake -D flags:
@@ -33,7 +33,10 @@ vcpkg_cmake_configure(
         # for cross-compilation scenarios, prevent execution of test-programs inside the libCZI-build-scripts
         -DCRASH_ON_UNALIGNED_ACCESS=FALSE
         -DIS_BIG_ENDIAN=FALSE
-        -DNEON_INTRINSICS_CAN_BE_USED=TRUE        
+        -DNEON_INTRINSICS_CAN_BE_USED=TRUE
+        # Intentionally empty: Must be defined to avoid try-run.
+        # Override in triplet if needed.
+        -DADDITIONAL_LIBS_REQUIRED_FOR_ATOMIC:STRING=
         # VCS metadata injection
         -DLIBCZI_REPOSITORY_HASH=${LIBCZI_REPO_REF}   
         -DLIBCZI_REPOSITORY_BRANCH=unknown
