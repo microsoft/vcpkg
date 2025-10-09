@@ -81,10 +81,10 @@ foreach(font IN LISTS fonts)
   endif()
 endforeach()
 
-# actual lib
+# libmupdf
 
 file(GLOB_RECURSE SOURCES "source/*.c")
-list(FILTER SOURCES EXCLUDE REGEX "/source/helpers/dummy.c")
+list(FILTER SOURCES EXCLUDE REGEX "/source/helpers/")
 list(FILTER SOURCES EXCLUDE REGEX "/source/tests/")
 list(FILTER SOURCES EXCLUDE REGEX "/source/tools/")
 
@@ -113,7 +113,6 @@ target_compile_definitions(libmupdf
     FZ_ENABLE_ODT_OUTPUT=0    # needs FZ_ENABLE_DOCX_OUTPUT
     MEMENTO_MUPDF_HACKS
     SHARE_JPEG
-    $<$<NOT:$<BOOL:${WIN32}>>:HAVE_PTHREAD>
     $<$<NOT:$<BOOL:${ENABLE_OCR}>>:OCR_DISABLED>
     $<$<BOOL:${ENABLE_OCR}>:HAVE_TESSERACT>
     $<$<BOOL:${ENABLE_OCR}>:HAVE_LEPTONICA>
@@ -129,18 +128,45 @@ target_link_libraries(libmupdf
     ZLIB::ZLIB
     $<$<BOOL:${ENABLE_OCR}>:leptonica>
     $<$<BOOL:${ENABLE_OCR}>:Tesseract::libtesseract>
-    $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads>
     $<$<BOOL:${ANDROID}>:log>
 )
 
 set_target_properties(libmupdf PROPERTIES PREFIX "")
+
+# mu-threads (MuThreads), no DLL export
+
+file(GLOB_RECURSE MU_THREADS_SOURCES "source/helpers/mu-threads/*.c")
+add_library(mu-threads STATIC ${MU_THREADS_SOURCES})
+target_include_directories(mu-threads
+  PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+target_compile_definitions(mu-threads
+  PUBLIC
+    $<$<NOT:$<BOOL:${WIN32}>>:HAVE_PTHREAD>
+)
+target_link_libraries(mu-threads
+  PRIVATE
+    $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads>
+)
+
+# mu-office-lib (MuOfficeLib), no DLL export
+
+file(GLOB_RECURSE MU_OFFICE_LIB_SOURCES "source/helpers/mu-office-lib/*.c")
+add_library(mu-office-lib STATIC ${MU_OFFICE_LIB_SOURCES})
+target_link_libraries(mu-office-lib
+  PUBLIC
+    libmupdf
+    mu-threads
+)
 
 # installation
 
 install(DIRECTORY include/mupdf
   DESTINATION include
 )
-install(TARGETS libmupdf
+install(TARGETS libmupdf mu-threads mu-office-lib
   EXPORT unofficial-libmupdf-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
