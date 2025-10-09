@@ -27,7 +27,3 @@ file(REMOVE_RECURSE
 )
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
-
-file(INSTALL
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
