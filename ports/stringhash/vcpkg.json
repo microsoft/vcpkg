@@ -1,6 +1,6 @@
 {
   "name": "stringhash",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A high-performance C++ header-only library for string hashing with rolling hash functionality",
   "homepage": "https://github.com/sushant-wayal/stringhash",
   "documentation": "https://github.com/sushant-wayal/stringhash#readme",
