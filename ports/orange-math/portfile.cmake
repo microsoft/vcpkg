@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 3c14aecdd6e4ab16d81beac4f1b489216bc8987f99fa5e247737f754573b579d4d3649b14ad54c620ca96870847d6c83ae4fa394a49ba73a3dfc0e12bbbbad96
     HEAD_REF master
+    PATCHES
+        fix-fastcall.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
