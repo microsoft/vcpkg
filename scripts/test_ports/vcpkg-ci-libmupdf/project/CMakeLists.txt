@@ -3,9 +3,5 @@ project(libmupdf-test C CXX)
 
 find_package(unofficial-libmupdf REQUIRED)
 
-add_executable(mu-office-test "${SOURCE_PATH}/source/tests/mu-office-test.c")
-target_link_libraries(mu-office-test PRIVATE unofficial::libmupdf::mu-office-lib)
-
-if(NOT WIN32)
-    target_include_directories(mu-office-test AFTER PRIVATE "${CMAKE_CURRENT_LIST_DIR}")
-endif()
+add_executable(example "${SOURCE_PATH}/docs/examples/example.c")
+target_link_libraries(example PRIVATE unofficial::libmupdf::libmupdf)
