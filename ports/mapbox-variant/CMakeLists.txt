@@ -28,9 +28,9 @@ if(UNIX AND NOT APPLE)
     target_link_libraries(variant INTERFACE rt)
 endif()
 
-install(FILES variant.hpp optional.hpp 
+file(COPY ${SOURCE_PATH}/include/mapbox/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    COMPONENT headers
+    FILES_MATCHING PATTERN "*.hpp"
 )
 
 install(TARGETS variant
