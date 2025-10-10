@@ -4,7 +4,7 @@ include(CMakeFindDependencyMacro)
 
 find_dependency(Boost CONFIG REQUIRED COMPONENTS timer system chrono)
 
-include("${CMAKE_CURRENT_LIST_DIR}/unofficial-mapbox-variant-targets")
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-mapbox-variant-targets.cmake")
 
 if(NOT TARGET unofficial::mapbox-variant::variant)
     add_library(unofficial::mapbox-variant::variant INTERFACE IMPORTED)
