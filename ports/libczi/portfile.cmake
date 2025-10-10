@@ -1,5 +1,5 @@
 set(LIBCZI_REPO_NAME ZEISS/libczi)
-set(LIBCZI_REPO_REF 75f94a14e8a7a7c6df8abc78cfa35b105d3e8ac6)
+set(LIBCZI_REPO_REF 2d6e9ac7b320373b099d55c8ebe0ac0cf16bb0da)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
