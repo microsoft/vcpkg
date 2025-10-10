@@ -10005,8 +10005,8 @@
       "port-version": 1
     },
     "usd": {
-      "baseline": "25.5.1",
-      "port-version": 1
+      "baseline": "25.8",
+      "port-version": 0
     },
     "usearch": {
       "baseline": "2.21.0",
