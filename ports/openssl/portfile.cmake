@@ -16,6 +16,7 @@ vcpkg_from_github(
         cmake-config.patch
         command-line-length.patch
         script-prefix.patch
+        aes_cfb128_vaes_encdec_wrapper.diff # https://github.com/openssl/openssl/issues/28745
         windows/install-layout.patch
         windows/install-pdbs.patch
         windows/install-programs.diff # https://github.com/openssl/openssl/issues/28744
