@@ -1,4 +1,3 @@
-# header-only
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapbox/variant
@@ -7,9 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Copy header files
-file(COPY ${SOURCE_PATH}/include/mapbox/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/mapbox FILES_MATCHING PATTERN "*.hpp")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/variant-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/mapbox-variant)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/mapbox-variant/LICENSE ${CURRENT_PACKAGES_DIR}/share/mapbox-variant/copyright)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/variant) # PACKAGE_NAME variant
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
