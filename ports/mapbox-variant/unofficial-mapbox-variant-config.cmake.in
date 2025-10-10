@@ -12,11 +12,6 @@ if(NOT TARGET unofficial::mapbox-variant::variant)
         INTERFACE_INCLUDE_DIRECTORIES "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@"
         INTERFACE_COMPILE_FEATURES "cxx_std_11"
     )
-    if(UNIX AND NOT APPLE)
-        set_property(TARGET unofficial::mapbox-variant::variant APPEND PROPERTY
-            INTERFACE_LINK_LIBRARIES "rt"
-        )
-    endif()
 endif()
 
 check_required_components(unofficial-mapbox-variant)
