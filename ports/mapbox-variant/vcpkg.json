@@ -5,7 +5,6 @@
   "description": "C++11/C++14 Variant",
   "homepage": "https://github.com/mapbox/variant",
   "license": "BSD-3-Clause AND BSL-1.0",
-  "supports": "!windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
