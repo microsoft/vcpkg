@@ -39,25 +39,25 @@ install(TARGETS variant
 
 install(EXPORT variant-targets
     FILE variant-targets.cmake
-    NAMESPACE mapbox::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/variant
+    NAMESPACE unofficial::mapbox-variant::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-mapbox-variant
 )
 
 configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/variant-config.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/variant-config.cmake"
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/variant
+    "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-mapbox-variant-config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mapbox-variant-config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-mapbox-variant
     PATH_VARS CMAKE_INSTALL_INCLUDEDIR
 )
 
 write_basic_package_version_file(
-    "${CMAKE_CURRENT_BINARY_DIR}/variant-config-version.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mapbox-variant-config-version.cmake"
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/variant-config.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/variant-config-version.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/variant
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mapbox-variant-config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/unofficial-mapbox-variant-config-version.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-mapbox-variant
 )

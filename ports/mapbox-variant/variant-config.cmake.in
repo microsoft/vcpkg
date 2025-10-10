@@ -1,13 +1,13 @@
 @PACKAGE_INIT@
 
-if(NOT TARGET mapbox::variant)
-    add_library(mapbox::variant INTERFACE IMPORTED)
-    set_target_properties(mapbox::variant PROPERTIES
+if(NOT TARGET unofficial::mapbox-variant::variant)
+    add_library(unofficial::mapbox-variant::variant INTERFACE IMPORTED)
+    set_target_properties(unofficial::mapbox-variant::variant PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_INCLUDEDIR@"
         INTERFACE_COMPILE_FEATURES "cxx_std_11"
     )
     if(APPLE)
-        set_property(TARGET mapbox::variant APPEND PROPERTY
+        set_property(TARGET unofficial::mapbox-variant::variant APPEND PROPERTY
             INTERFACE_LINK_OPTIONS "-framework CoreFoundation"
         )
     endif()
@@ -16,9 +16,9 @@ endif()
 find_dependency(Boost CONFIG REQUIRED COMPONENTS timer system chrono)
 
 if(UNIX AND NOT APPLE)
-    set_property(TARGET mapbox::variant APPEND PROPERTY
+    set_property(TARGET unofficial::mapbox-variant::variant APPEND PROPERTY
         INTERFACE_LINK_LIBRARIES "rt"
     )
 endif()
 
-check_required_components(variant)
+check_required_components(unofficial-mapbox-variant)
