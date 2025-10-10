@@ -231,7 +231,6 @@ libmicrodns:x64-uwp=fail
 libmodman:x64-windows-static=fail
 libmodplug:arm-uwp=fail
 libmodplug:x64-uwp=fail
-libmupdf:x64-osx=fail
 libopensp(android)=fail
 libopusenc:arm-uwp=fail
 libopusenc:x64-uwp=fail

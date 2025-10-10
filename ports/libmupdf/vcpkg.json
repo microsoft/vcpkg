@@ -1,21 +1,27 @@
 {
   "name": "libmupdf",
-  "version": "1.25.4",
-  "description": "a lightweight PDF, XPS, and E-book library",
-  "homepage": "https://github.com/ArtifexSoftware/mupdf",
+  "version": "1.26.10",
+  "description": "A lightweight PDF, XPS, and E-book library",
+  "homepage": "https://mupdf.com/core",
+  "documentation": "https://mupdf.readthedocs.io/",
   "license": "AGPL-3.0-only",
-  "supports": "!osx",
   "dependencies": [
-    "curl",
     "freetype",
-    "glfw3",
     "gumbo",
     "harfbuzz",
     "jbig2dec",
     "libjpeg-turbo",
+    {
+      "name": "libmupdf",
+      "host": true
+    },
     "openjpeg",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     },
     "zlib"
