@@ -7,8 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-find_package(Boost REQUIRED COMPONENTS timer system chrono)
-
 add_library(variant INTERFACE)
 
 target_include_directories(variant
@@ -19,12 +17,10 @@ target_include_directories(variant
 
 target_compile_features(variant INTERFACE cxx_std_11)
 
-if(APPLE)
-    target_link_libraries(variant INTERFACE "-framework CoreFoundation")
-endif()
+find_package(Threads)
 
-if(UNIX AND NOT APPLE)
-    target_link_libraries(variant INTERFACE rt)
+if(TARGET Threads::Threads)
+    target_link_libraries(variant INTERFACE Threads::Threads)
 endif()
 
 install(DIRECTORY "include/mapbox"

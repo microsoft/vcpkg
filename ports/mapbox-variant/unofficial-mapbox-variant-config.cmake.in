@@ -2,7 +2,7 @@
 
 include(CMakeFindDependencyMacro)
 
-find_dependency(Boost CONFIG REQUIRED COMPONENTS timer system chrono)
+find_dependency(Threads)
 
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-mapbox-variant-targets.cmake")
 
