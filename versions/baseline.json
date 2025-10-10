@@ -6597,7 +6597,7 @@
       "port-version": 0
     },
     "muda": {
-      "baseline": "2025.10.3",
+      "baseline": "2025.10.9",
       "port-version": 0
     },
     "mujoco": {
