@@ -30,7 +30,6 @@ endif()
 
 install(DIRECTORY "include/mapbox"
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    FILES_MATCHING PATTERN "*.hpp"
 )
 
 install(TARGETS variant
@@ -40,7 +39,7 @@ install(TARGETS variant
 
 install(EXPORT variant-targets
     FILE variant-targets.cmake
-    NAMESPACE variant::
+    NAMESPACE mapbox::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/variant
 )
 
