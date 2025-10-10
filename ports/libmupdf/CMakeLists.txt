@@ -19,11 +19,6 @@ find_package(ZLIB REQUIRED)
 find_path(JBIG2DEC_INCLUDE_DIR NAMES jbig2.h REQUIRED)
 find_library(JBIG2DEC_LIBRARY NAMES jbig2decd jbig2dec NAMES_PER_DIR REQUIRED)
 
-if (NOT WIN32)
-  set(THREADS_PREFER_PTHREAD_FLAG 1)
-  find_package(Threads REQUIRED)
-endif()
-
 if (ENABLE_OCR)
   find_package(Leptonica CONFIG REQUIRED)
   find_package(Tesseract CONFIG REQUIRED)
@@ -83,16 +78,23 @@ endforeach()
 
 # libmupdf
 
-file(GLOB_RECURSE SOURCES "source/*.c")
-list(FILTER SOURCES EXCLUDE REGEX "/source/helpers/")
-list(FILTER SOURCES EXCLUDE REGEX "/source/tests/")
-list(FILTER SOURCES EXCLUDE REGEX "/source/tools/")
+# cf. Makefile, libmupdf.vcxproj
+file(GLOB_RECURSE SOURCES
+  "source/fitz/*.c" # omitting unused *.cpp
+  "source/pdf/*.c"
+  "source/xps/*.c"
+  "source/svg/*.c"
+  "source/html/*.c"
+  "source/reflow/*.c"
+  "source/cbz/*.c"
+)
 
 if (ENABLE_OCR)
   list(APPEND SOURCES "source/fitz/tessocr.cpp")
 endif()
 
 add_library(libmupdf ${SOURCES} ${FONT_SOURCES})
+set_target_properties(libmupdf PROPERTIES PREFIX "")
 target_include_directories(libmupdf
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -131,42 +133,12 @@ target_link_libraries(libmupdf
     $<$<BOOL:${ANDROID}>:log>
 )
 
-set_target_properties(libmupdf PROPERTIES PREFIX "")
-
-# mu-threads (MuThreads), no DLL export
-
-file(GLOB_RECURSE MU_THREADS_SOURCES "source/helpers/mu-threads/*.c")
-add_library(mu-threads STATIC ${MU_THREADS_SOURCES})
-target_include_directories(mu-threads
-  PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
-target_compile_definitions(mu-threads
-  PUBLIC
-    $<$<NOT:$<BOOL:${WIN32}>>:HAVE_PTHREAD>
-)
-target_link_libraries(mu-threads
-  PRIVATE
-    $<$<NOT:$<BOOL:${WIN32}>>:Threads::Threads>
-)
-
-# mu-office-lib (MuOfficeLib), no DLL export
-
-file(GLOB_RECURSE MU_OFFICE_LIB_SOURCES "source/helpers/mu-office-lib/*.c")
-add_library(mu-office-lib STATIC ${MU_OFFICE_LIB_SOURCES})
-target_link_libraries(mu-office-lib
-  PUBLIC
-    libmupdf
-    mu-threads
-)
-
 # installation
 
 install(DIRECTORY include/mupdf
   DESTINATION include
 )
-install(TARGETS libmupdf mu-threads mu-office-lib
+install(TARGETS libmupdf
   EXPORT unofficial-libmupdf-targets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
