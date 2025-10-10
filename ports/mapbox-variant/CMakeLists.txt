@@ -10,7 +10,6 @@ include(CMakePackageConfigHelpers)
 find_package(Boost REQUIRED COMPONENTS timer system chrono)
 
 add_library(variant INTERFACE)
-add_library(variant::variant ALIAS variant)
 
 target_include_directories(variant
     INTERFACE
