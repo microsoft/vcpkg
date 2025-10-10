@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fontconfig/fontconfig
     REF ${VERSION}
-    SHA512 daa6d1e6058e12c694d9e1512e09be957ff7f3fa375246b9d13eb0a8cf2f21e1512a5cabe93f270e96790e2c20420bf7422d213e43ab9749da3255286ea65a7c
+    SHA512 8e05cad63cd0c5ca15d1359e19a605912198fcc0ec6ecc11d5a0ef596d72e795cd8128e4d350716e63cbc01612c3807b1455b8153901333790316170c9ef8e75
     HEAD_REF master
     PATCHES
         emscripten.diff
@@ -43,11 +43,11 @@ set(replacement "")
 if(VCPKG_TARGET_IS_WINDOWS)
     set(replacement "**invalid-fontconfig-dir-do-not-use**")
 endif()
-set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.h")
+set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/meson-config.h")
 vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}" "${replacement}")
 vcpkg_replace_string("${configfile}" "#define FC_TEMPLATEDIR \"/share/fontconfig/conf.avail\"" "#define FC_TEMPLATEDIR \"/usr/share/fontconfig/conf.avail\"" IGNORE_UNCHANGED)
 if(NOT VCPKG_BUILD_TYPE)
-    set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/config.h")
+    set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/meson-config.h")
     vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}/debug" "${replacement}")
     vcpkg_replace_string("${configfile}" "#define FC_TEMPLATEDIR \"/share/fontconfig/conf.avail\"" "#define FC_TEMPLATEDIR \"/usr/share/fontconfig/conf.avail\"" IGNORE_UNCHANGED)
 endif()
