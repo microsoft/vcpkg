@@ -20,7 +20,7 @@ target_include_directories(variant
 target_compile_features(variant INTERFACE cxx_std_11)
 
 if(APPLE)
-    target_link_options(variant INTERFACE "-framework CoreFoundation")
+    target_link_libraries(variant INTERFACE "-framework CoreFoundation")
 endif()
 
 if(UNIX AND NOT APPLE)
