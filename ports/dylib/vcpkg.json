@@ -1,9 +1,10 @@
 {
   "name": "dylib",
-  "version-semver": "2.2.1",
+  "version-semver": "3.0.1",
   "description": "C++ cross-platform wrapper around dynamic loading of shared libraries",
   "homepage": "https://github.com/martin-olivier/dylib",
   "license": "MIT",
+  "supports": "!android & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
