@@ -5353,7 +5353,7 @@
       "port-version": 0
     },
     "libraqm": {
-      "baseline": "0.10.2",
+      "baseline": "0.10.3",
       "port-version": 0
     },
     "libraw": {
