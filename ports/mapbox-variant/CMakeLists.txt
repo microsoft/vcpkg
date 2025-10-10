@@ -28,7 +28,7 @@ if(UNIX AND NOT APPLE)
     target_link_libraries(variant INTERFACE rt)
 endif()
 
-file(COPY ${SOURCE_PATH}/include/mapbox/
+file(COPY "include/mapbox"
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     FILES_MATCHING PATTERN "*.hpp"
 )
