@@ -7,9 +7,9 @@
   "license": "BSD-3-Clause AND BSL-1.0",
   "supports": "!windows",
   "dependencies": [
-    "boost-timer",
-    "boost-system",
     "boost-chrono",
+    "boost-system",
+    "boost-timer",
     {
       "name": "vcpkg-cmake",
       "host": true
