@@ -32,12 +32,12 @@ install(DIRECTORY "include/mapbox"
 )
 
 install(TARGETS variant
-    EXPORT variant-targets
+    EXPORT unofficial-mapbox-variant-targets
     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(EXPORT variant-targets
-    FILE variant-targets.cmake
+install(EXPORT unofficial-mapbox-variant-targets
+    FILE unofficial-mapbox-variant-targets.cmake
     NAMESPACE unofficial::mapbox-variant::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-mapbox-variant
 )
