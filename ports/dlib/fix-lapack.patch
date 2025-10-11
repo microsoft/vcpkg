@@ -6,8 +6,8 @@ index cc7b4a21d7..918707a418 100644
  if("@DLIB_LINK_WITH_SQLITE3@")
     find_dependency(unofficial-sqlite3 CONFIG)
  endif()
-+find_dependency(BLAS CONFIG)
-+find_dependency(LAPACK CONFIG)
++find_dependency(BLAS)
++find_dependency(LAPACK)
  
  set(dlib_LIBRARIES dlib::dlib)
  set(dlib_LIBS      dlib::dlib)
