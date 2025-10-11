@@ -11,11 +11,6 @@
       "platform": "linux"
     },
     {
-      "name": "fluidsynth",
-      "host": true,
-      "default-features": false
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
