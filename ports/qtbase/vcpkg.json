@@ -1,6 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.9.1",
+  "version": "6.9.2",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -536,6 +536,19 @@
           ]
         },
         "vulkan"
+      ]
+    },
+    "wayland": {
+      "description": "Enable Wayland platform plugin",
+      "supports": "linux | osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
       ]
     },
     "widgets": {
