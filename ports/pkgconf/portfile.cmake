@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "pkgconf-${VERSION}"
     SHA512 53244f372ea21125a1d97c5b89a84299740b55a66165782e807ed23adab3a07408a1547f1f40156e3060359660d07f49846c8b4893beef10ac9440ab7e8611cc
     HEAD_REF master
+    PATCHES
+        001-unveil-fixes.patch # https://github.com/pkgconf/pkgconf/pull/430
 )
 
 vcpkg_configure_meson(
@@ -21,25 +23,32 @@ set(PKG_DEFAULT_PATH "")
 set(SYSTEM_INCLUDEDIR "")
 set(PERSONALITY_PATH "personality.d")
 
-if(VCPKG_TARGET_IS_FREEBSD)
-    # These are taken from the FreeBSD port of pkgconf
-    set(SYSTEM_INCLUDEDIR "/usr/include")
-    set(SYSTEM_LIBDIR "/usr/lib")
-    set(PKG_DEFAULT_PATH "/usr/libdata/pkgconfig:/usr/local/libdata/pkgconfig:/usr/local/share/pkgconfig")
-elseif(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-    # These defaults are obtained from pkgconf/pkg-config on Ubuntu and OpenSuse
-    # vcpkg cannot do system introspection to obtain/set these values since it would break binary caching.
-    set(SYSTEM_INCLUDEDIR "/usr/include")
-    # System lib dirs will be stripped from -L from the pkg-config output
-    set(SYSTEM_LIBDIR "/lib:/lib/i386-linux-gnu:/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnux32:/lib64:/lib32:/libx32:/usr/lib:/usr/lib/i386-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnux32:/usr/lib64:/usr/lib32:/usr/libx32")
-    set(PKG_DEFAULT_PATH "/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
-    set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
-elseif(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CROSSCOMPILING AND VCPKG_TARGET_ARCHITECTURE MATCHES "riscv64")
-    # These defaults are obtained from pkgconf/pkg-config on Ubuntu
-    set(SYSTEM_INCLUDEDIR "/usr/include")
-    set(SYSTEM_LIBDIR "/lib:/lib/riscv64-linux-gnu:/usr/lib:/usr/lib/riscv64-linux-gnu")
-    set(PKG_DEFAULT_PATH "/usr/local/lib/riscv64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/riscv64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
-    set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
+if(NOT VCPKG_CROSSCOMPILING)
+    if(VCPKG_TARGET_IS_FREEBSD)
+        # These are taken from the FreeBSD port of pkgconf
+        set(SYSTEM_INCLUDEDIR "/usr/include")
+        set(SYSTEM_LIBDIR "/usr/lib")
+        set(PKG_DEFAULT_PATH "/usr/libdata/pkgconfig:/usr/local/libdata/pkgconfig:/usr/local/share/pkgconfig")
+    elseif(VCPKG_TARGET_IS_OPENBSD)
+        # Based on how new OpenBSD builds their version of pkgconf
+        set(SYSTEM_INCLUDEDIR "/usr/include")
+        set(SYSTEM_LIBDIR "/usr/lib")
+        set(PKG_DEFAULT_PATH "/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/X11R6/lib/pkgconfig:/usr/X11R6/share/pkgconfig")
+    elseif(NOT VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+        # These defaults are obtained from pkgconf/pkg-config on Ubuntu and OpenSuse
+        # vcpkg cannot do system introspection to obtain/set these values since it would break binary caching.
+        set(SYSTEM_INCLUDEDIR "/usr/include")
+        # System lib dirs will be stripped from -L from the pkg-config output
+        set(SYSTEM_LIBDIR "/lib:/lib/i386-linux-gnu:/lib/x86_64-linux-gnu:/lib/x86_64-linux-gnux32:/lib64:/lib32:/libx32:/usr/lib:/usr/lib/i386-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnux32:/usr/lib64:/usr/lib32:/usr/libx32")
+        set(PKG_DEFAULT_PATH "/usr/local/lib/x86_64-linux-gnu/pkgconfig:/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
+        set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
+    elseif(NOT VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "riscv64")
+        # These defaults are obtained from pkgconf/pkg-config on Ubuntu
+        set(SYSTEM_INCLUDEDIR "/usr/include")
+        set(SYSTEM_LIBDIR "/lib:/lib/riscv64-linux-gnu:/usr/lib:/usr/lib/riscv64-linux-gnu")
+        set(PKG_DEFAULT_PATH "/usr/local/lib/riscv64-linux-gnu/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/riscv64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig")
+        set(PERSONALITY_PATH "/usr/share/pkgconfig/personality.d:/etc/pkgconfig/personality.d")
+    endif()
 endif()
 
 if(DEFINED VCPKG_pkgconf_SYSTEM_LIBDIR)
