@@ -25,20 +25,25 @@ file(GLOB vendored_headers RELATIVE "${SOURCE_PATH}/src/external"
     # Do not use dirent from vcpkg: It is a different implementation which has
     # 'include <windows.h>', leading to duplicate and conflicting definitions.
     #"${SOURCE_PATH}/src/external/dirent.h"
-    "${SOURCE_PATH}/src/external/dr_*.h"  # from drlibs
-    "${SOURCE_PATH}/src/external/miniaudio.h"
     "${SOURCE_PATH}/src/external/nanosvg*.h"
     "${SOURCE_PATH}/src/external/qoi.h"
     "${SOURCE_PATH}/src/external/s*fl.h"  # from mmx
     "${SOURCE_PATH}/src/external/stb_*"
 )
+file(GLOB vendored_audio_headers RELATIVE "${SOURCE_PATH}/src/external"
+    "${SOURCE_PATH}/src/external/dr_*.h"
+    "${SOURCE_PATH}/src/external/miniaudio.h"
+)
 set(optional_vendored_headers
     "stb_image_resize2.h"  # not yet in vcpkg
 )
-foreach(header IN LISTS vendored_headers)
+foreach(header IN LISTS vendored_headers vendored_audio_headers)
     unset(vcpkg_file)
     find_file(vcpkg_file NAMES "${header}" PATHS "${CURRENT_INSTALLED_DIR}/include" PATH_SUFFIXES mmx nanosvg NO_DEFAULT_PATH NO_CACHE)
-    if(vcpkg_file)
+    if(header IN_LIST vendored_audio_headers AND NOT "audio" IN_LIST FEATURES)
+        message(STATUS "Emptying '${header}' (audio disabled)")
+        file(WRITE "${SOURCE_PATH}/src/external/${vcpkg_file}" "# audio disabled")
+    elseif(vcpkg_file)
         message(STATUS "De-vendoring '${header}'")
         file(COPY "${vcpkg_file}" DESTINATION "${SOURCE_PATH}/src/external")
     elseif(header IN_LIST optional_vendored_headers)
@@ -59,7 +64,8 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        use-audio USE_AUDIO
+        audio SUPPORT_MODULE_RAUDIO
+        audio USE_AUDIO
 )
 
 vcpkg_cmake_configure(
@@ -67,14 +73,13 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DCMAKE_POLICY_DEFAULT_CMP0072=NEW # Prefer GLVND
+        -DCUSTOMIZE_BUILD=ON
         ${PLATFORM_OPTIONS}
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 

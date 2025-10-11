@@ -2,14 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/ggml
     REF v${VERSION}
-    SHA512 d2820f9d1a5f80a4ec154cd89fc944b9c8b172f547fdeeb630f43fa06186bf37cad2e02aafad781b4bda9d964a8daa02b90685c7e29a4beebf296d2e1e8a7b8f
+    SHA512 e2c47e5bcdf3eda66757e63b93f4adf56e7894edeed0d39f182c850cae4dddb49f3cf82ac9e8546dfcd48abf02b7bf0a64d22bacba4360b2f7ef2cb09855eadb
     HEAD_REF master
     PATCHES
         cmake-config.diff
         pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
-        vulkan-loader-storage.diff # backport of https://github.com/ggml-org/llama.cpp/pull/16224
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
