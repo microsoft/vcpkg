@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 8f326db4049b3241c7a0472aa5db8c715dcfc0a1ce9c5fda492bf84e6c17e27a2298131a58a51e275797259a434e59bfe3f53d85358f903652dca8de753a3376
     HEAD_REF master
+    PATCHES
+        cmake-config-glib.diff
 )
 # Do not use or install FindSndFileLegacy.cmake and its deps
 file(REMOVE
@@ -60,7 +62,6 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         ${FEATURE_OPTIONS}
         ${ENABLED_OPTIONS}
         ${DISABLED_OPTIONS}
@@ -68,7 +69,6 @@ vcpkg_cmake_configure(
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
         ${OPTIONS_TO_DISABLE}
-        VCPKG_BUILD_MAKE_TABLES
         enable-coverage
         enable-framework
         enable-ubsan
