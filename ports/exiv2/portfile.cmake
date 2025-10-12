@@ -10,10 +10,10 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        xmp     EXIV2_ENABLE_XMP
-        png     EXIV2_ENABLE_PNG
-        nls     EXIV2_ENABLE_NLS
         bmff    EXIV2_ENABLE_BMFF
+        nls     EXIV2_ENABLE_NLS
+        png     EXIV2_ENABLE_PNG
+        xmp     EXIV2_ENABLE_XMP
 )
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND FEATURE_OPTIONS -DEXIV2_ENABLE_FILESYSTEM_ACCESS=OFF)
