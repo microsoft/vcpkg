@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.88.0",
+    $version = "1.89.0",
 # This script treats support statements as platform expressions. This is incorrect
 # in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
 # boost-python is not supported on uwp. Update $suppressPlatformForDependency as needed,
@@ -29,9 +29,6 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
-    'boost-charconv' = 1;
-    'boost-locale' = 1;
-    'boost-container' = 1;
 }
 
 function Get-PortVersion {
@@ -57,11 +54,20 @@ $portData = @{
         }
     };
     "boost-asio" = @{
+        "default-features" = @("deadline-timer"; @{ "name" = "spawn"; "platform" = "!uwp & !emscripten" };);
         "features" = @{
             "ssl" = @{
                 "description"  = "Build with SSL support";
                 "dependencies" = @(@{ "name" = "openssl"; "platform" = "!emscripten" });
+            };
+            "deadline-timer" = @{
+                "description"  = "Build with deadline_timer support";
+                "dependencies" = @("boost-date-time");
             }
+            "spawn" = @{
+                "description"  = "Build with spawn (stackful coroutines) support";
+                "dependencies" = @(@{ "name" = "boost-context"; "platform" = "!uwp & !emscripten" });
+            };
         }
     };
     "boost-beast"            = @{ "supports" = "!emscripten" };
@@ -79,8 +85,15 @@ $portData = @{
         }
     };
     "boost-filesystem"       = @{ "supports" = "!uwp" };
-    "boost-geometry"         = @{ "dependencies" = @("boost-crc", "boost-program-options"); };
-    "boost-graph-parallel"   = @{ "dependencies" = @("mpi"); };
+    "boost-geometry"         = @{
+        "dependencies" = @("boost-crc", "boost-program-options");
+        "supports" = "!uwp";
+    };
+    "boost-graph"            = @{ "supports" = "!uwp" };
+    "boost-graph-parallel"   = @{
+        "dependencies" = @("mpi");
+        "supports" = "!uwp";
+    };
     "boost-iostreams"        = @{
         "default-features" = @("bzip2", "lzma", "zlib", "zstd");
         "supports"         = "!uwp";
@@ -123,8 +136,8 @@ $portData = @{
     };
     "boost-mpi"              = @{
         "dependencies" = @("mpi");
-        "supports"     = "!uwp";
-        "features"     = @{
+        "supports" = "!uwp";
+        "features" = @{
             "python3" = @{
                 "description"  = "Build Python3 bindings";
                 "supports"     = "!static";
@@ -132,6 +145,7 @@ $portData = @{
             }
         }
     };
+    "boost-mqtt5"            = @{ "supports" = "!uwp" };
     "boost-mysql"            = @{ "dependencies" = @("openssl"); };
     "boost-odeint"           = @{
         "features" = @{
@@ -177,11 +191,15 @@ $suppressPlatformForDependency = @{
     "boost-coroutine2"            = @("boost-context");
     "boost-dll"                   = @("boost-filesystem");
     "boost-process"               = @("boost-filesystem");
+    "boost-geometry"              = @("boost-graph");
     "boost-graph"                 = @("boost-random");
+    "boost-graph-parallel"        = @("boost-filesystem", "boost-graph", "boost-mpi", "boost-random");
     "boost-log"                   = @("boost-filesystem");
+    "boost-mpi"                   = @("boost-graph");
     "boost-mqtt5"                 = @("boost-random");
     "boost-parameter-python"      = @("boost-python");
     "boost-property-map-parallel" = @("boost-mpi");
+    "boost-python"                = @("boost-graph");
     "boost-wave"                  = @("boost-filesystem");
 }
 
@@ -666,6 +684,13 @@ foreach ($library in $libraries) {
                 # Boost.Beast only used for MQTT connections over WebSocket
                 # See CMakeLists.txt
                 -not ($library -eq 'mqtt5' -and $_ -eq 'beast')
+            }
+        )
+
+        # Remove cyclic dependencies
+        $deps = @($deps `
+            | Where-Object {
+                -not ($library -eq 'graph' -and $_ -eq 'geometry')
             }
         )
 
