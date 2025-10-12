@@ -1,3 +1,9 @@
+vcpkg_download_distfile(fgPlatformDestroyContext_PATCH
+    URLS https://github.com/freeglut/freeglut/commit/800772e993a3ceffa01ccf3fca449d3279cde338.diff?full_index=1
+    FILENAME FreeGLUTProject-freeglut-800772e.diff
+    SHA512 08a20f3c2d3e093c9cdc973a021600e9e6169d37c035bc4c64480f23cb8a3338514087c68a2bbc4ffd7a9febe542f5d0172a638357a02c2f0af93d3273f5717e
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeGLUTProject/freeglut
@@ -10,6 +16,7 @@ vcpkg_from_github(
         fix-debug-macro.patch
         windows-output-name.patch
         cmake-version.patch
+        ${fgPlatformDestroyContext_PATCH}
 )
 
 if(VCPKG_TARGET_IS_OSX)
