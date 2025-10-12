@@ -10,6 +10,7 @@ vcpkg_from_github(
         0003-multi-definition.patch
         0004-remove-apple-sys-path.patch
 )
+# Will use vcpkg to find these packages
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
     "${SOURCE_PATH}/cmake_modules/FindRealSense2.cmake"
