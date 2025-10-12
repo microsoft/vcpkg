@@ -3321,7 +3321,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "5.7.2",
+      "baseline": "6.0.0",
       "port-version": 0
     },
     "glbinding": {
