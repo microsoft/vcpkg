@@ -126,7 +126,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
      OPTIONS
-        --trace-expand
         ${FEATURE_OPTIONS}
         -DPARAVIEW_USE_FORTRAN=OFF
         -DPARAVIEW_BUILD_SHARED_LIBS=${PARAVIEW_BUILD_SHARED_LIBS}
