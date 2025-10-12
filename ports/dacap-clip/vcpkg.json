@@ -1,6 +1,6 @@
 {
   "name": "dacap-clip",
-  "version": "1.11",
+  "version": "1.12",
   "description": "Cross-platform C++ library to copy/paste clipboard content.",
   "homepage": "https://github.com/dacap/clip",
   "license": "MIT",
