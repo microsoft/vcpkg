@@ -1,0 +1,13 @@
+diff --git a/FluidSynthConfig.cmake.in b/FluidSynthConfig.cmake.in
+index e6e9840..5831f9a 100644
+--- a/FluidSynthConfig.cmake.in
++++ b/FluidSynthConfig.cmake.in
+@@ -74,7 +74,7 @@ if(NOT FLUIDSYNTH_IS_SHARED)
+     find_dependency(Threads)
+   endif()
+ 
+-  if(FLUIDSYNTH_SUPPORT_GLIB AND NOT TARGET GLib2::glib-2 OR NOT TARGET GLib2::gthread-2)
++  if(FLUIDSYNTH_SUPPORT_GLIB AND (NOT TARGET GLib2::glib-2 OR NOT TARGET GLib2::gthread-2))
+     find_dependency(GLib2 @GLIB2_MINUMUM_VERSION@)
+   endif()
+ 
