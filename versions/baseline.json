@@ -8901,7 +8901,7 @@
       "port-version": 0
     },
     "sfl": {
-      "baseline": "2.0.0",
+      "baseline": "2.0.2",
       "port-version": 0
     },
     "sfml": {
