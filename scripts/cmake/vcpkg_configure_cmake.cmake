@@ -250,13 +250,13 @@ function(vcpkg_configure_cmake)
     endif()
 
     vcpkg_list(SET rel_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
         -G "${generator}"
         "-DCMAKE_BUILD_TYPE=Release"
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
         ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
     vcpkg_list(SET dbg_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
         -G "${generator}"
         "-DCMAKE_BUILD_TYPE=Debug"
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
@@ -298,7 +298,7 @@ function(vcpkg_configure_cmake)
                 "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
                 "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
         )
-        
+
         vcpkg_list(APPEND config_logs
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out.log"
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
@@ -331,7 +331,7 @@ function(vcpkg_configure_cmake)
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-err.log")
         endif()
     endif()
-    
+
     # Check unused variables
     vcpkg_list(SET all_unused_variables)
     foreach(config_log IN LISTS config_logs)
