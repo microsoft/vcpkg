@@ -1,7 +1,8 @@
 {
   "name": "muda",
-  "version": "2025.10.3",
+  "version": "2025.10.9",
   "description": "μ-Cuda, COVER THE LAST MILE OF CUDA. With features: intellisense-friendly, structured launch, automatic cuda graph generation and updating.",
+  "license": "Apache-2.0",
   "supports": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)",
   "dependencies": [
     "cuda",

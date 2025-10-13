@@ -1,13 +1,13 @@
 {
   "name": "stronk",
-  "version-semver": "0.3.1",
+  "version-semver": "0.13.3",
   "description": "An easy to customize, strong type library with built in support for unit-like behavior",
   "homepage": "https://github.com/twig-energy/stronk",
   "license": "MIT",
   "dependencies": [
     {
       "name": "boost-type-index",
-      "version>=": "1.78.0"
+      "version>=": "1.80.0"
     },
     {
       "name": "vcpkg-cmake",
@@ -17,25 +17,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "abseil": {
-      "description": "Dependencies for abseil extension",
-      "dependencies": [
-        {
-          "name": "abseil",
-          "version>=": "20211102.1"
-        }
-      ]
-    },
-    "fmt": {
-      "description": "Dependencies for fmt extension",
-      "dependencies": [
-        {
-          "name": "fmt",
-          "version>=": "9.0.0"
-        }
-      ]
-    }
-  }
+  ]
 }
