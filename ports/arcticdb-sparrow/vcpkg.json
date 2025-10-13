@@ -1,6 +1,7 @@
 {
   "name": "arcticdb-sparrow",
   "version": "1.2.0",
+  "port-version": 1,
   "description": "C++20 idiomatic APIs for the Apache Arrow Columnar Format",
   "homepage": "https://github.com/man-group/sparrow",
   "license": "Apache-2.0",
@@ -15,5 +16,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "examples": {
+      "description": "Build examples"
+    },
+    "json-reader": {
+      "description": "Generate json_reader target",
+      "dependencies": [
+        "nlohmann-json"
+      ]
+    }
+  }
 }
