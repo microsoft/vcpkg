@@ -1,7 +1,7 @@
 {
   "name": "hyperscan",
   "version": "5.4.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A regular expression library with O(length of input) match times that takes advantage of Intel hardware to provide blazing speed.",
   "homepage": "https://www.hyperscan.io",
   "license": "BSD-3-Clause",
@@ -27,7 +27,10 @@
     "boost-unordered",
     "boost-utility",
     "pcre",
-    "ragel",
+    {
+      "name": "ragel",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
