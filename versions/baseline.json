@@ -2597,7 +2597,7 @@
       "port-version": 0
     },
     "dylib": {
-      "baseline": "2.2.1",
+      "baseline": "3.0.1",
       "port-version": 0
     },
     "dyno": {
