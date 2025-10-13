@@ -6162,7 +6162,7 @@
     },
     "mapbox-variant": {
       "baseline": "1.2.0",
-      "port-version": 2
+      "port-version": 3
     },
     "mapbox-wagyu": {
       "baseline": "0.5.0",
