@@ -9977,7 +9977,7 @@
       "port-version": 0
     },
     "unordered-dense": {
-      "baseline": "4.6.0",
+      "baseline": "4.7.0",
       "port-version": 0
     },
     "unqlite": {
