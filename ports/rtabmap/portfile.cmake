@@ -150,6 +150,7 @@ if("tools" IN_LIST FEATURES)
             rtabmap-dataRecorder
             rtabmap-odometryViewer
             rtabmap-rgbd_camera
+            rtabmap-lidar_viewer
         AUTO_CLEAN
     )
     file(COPY "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qt.conf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
