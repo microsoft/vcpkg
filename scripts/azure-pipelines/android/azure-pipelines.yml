@@ -116,7 +116,7 @@ jobs:
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)\azcopy-logs'
       artifactName: "azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
-    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
+    condition: always()
   - bash: |
       cd scripts/azure-pipelines/owners-db && npm ci || true
       if [ "$(Build.Reason)" = "PullRequest" ]; then

@@ -72,7 +72,7 @@ jobs:
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)\azcopy-logs'
       artifactName: "azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
-    condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
+    condition: always()
   - task: UseNode@1
     displayName: 'Ensure Node.js is available'
     inputs:
