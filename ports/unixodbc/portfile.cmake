@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lurcher/unixODBC
-    REF ${VERSION}
-    SHA512 f0c0a995c90ff3abd00a031430e2f2034d45ca96c7fba34adc826a668c4eeb77ee2e1be27b7b1817c706f43df4fa434746362e746a39e779256e006deeb790c7
+    REF v${VERSION}
+    SHA512 c70c1eff4bf2f34a968bd8007dc02260d1f583d6295deccde9a2c22b2592e6daed4ee3ef40b0b3445c09444a7d08d128a854b56502675fa3e6d2f908a9b1bcdb
     HEAD_REF master
     PATCHES
-        pkgconfig-libiconv.diff
         subdirs.diff
 )
 

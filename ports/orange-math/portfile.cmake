@@ -6,10 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orange-cpp/omath
     REF "v${VERSION}"
-    SHA512 e5b2a3a0bafb5e11b1bad27e2c70ae8c8bd9abe96550764821a83a3886deff63ba1d9717f449550d61b1b6670f2e5f7c9621849f42e02042116dc78c44b9050a
+    SHA512 3c14aecdd6e4ab16d81beac4f1b489216bc8987f99fa5e247737f754573b579d4d3649b14ad54c620ca96870847d6c83ae4fa394a49ba73a3dfc0e12bbbbad96
     HEAD_REF master
     PATCHES
-        enable-avx2-on-gcc.patch
+        fix-fastcall.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
