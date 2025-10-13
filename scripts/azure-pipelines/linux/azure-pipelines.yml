@@ -113,7 +113,7 @@ jobs:
     inputs:
       targetPath: '$(Build.ArtifactStagingDirectory)\azcopy-logs'
       artifactName: "azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
-    condition: always()
+    condition: ne(variables['AZCOPY_LOGS_EMPTY'], 'True')
   - bash: |
       cd scripts/azure-pipelines/owners-db && npm ci || true
       # Construct the blob base url using the secret SAS token set earlier
