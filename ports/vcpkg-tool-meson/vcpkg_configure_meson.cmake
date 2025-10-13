@@ -156,6 +156,14 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
             OUTPUT_STRIP_TRAILING_WHITESPACE
             COMMAND_ERROR_IS_FATAL ANY)
 
+        if(CMAKE_HOST_SOLARIS)
+            execute_process(
+                COMMAND isainfo -k
+                OUTPUT_VARIABLE MACHINE
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                COMMAND_ERROR_IS_FATAL ANY)
+        endif()
+
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
@@ -174,6 +182,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         elseif(MACHINE MATCHES "i386")
             set(build_cpu_fam x86)
             set(build_cpu i386)
+        elseif(MACHINE MATCHES "riscv64")
+            set(build_cpu_fam riscv64)
+            set(build_cpu riscv64)
         elseif(MACHINE MATCHES "loongarch64")
             set(build_cpu_fam loongarch64)
             set(build_cpu loongarch64)
@@ -222,6 +233,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
         set(host_cpu_fam x86)
         set(host_cpu i686)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "riscv64")
+        set(host_cpu_fam riscv64)
+        set(host_cpu riscv64)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
         set(host_cpu_fam aarch64)
         set(host_cpu armv8)

@@ -7,7 +7,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Add apt repos
 
-# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "20.04") and format to "2004"
+# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "24.04") and format to "2404"
 UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
 NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
 
@@ -143,6 +143,9 @@ APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 
 ## required by robotraconteur
 APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
+
+## required by libmysql
+APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
 
 ## CUDA
 # The intent is to install everything that does not require an actual GPU, driver, or GUI.

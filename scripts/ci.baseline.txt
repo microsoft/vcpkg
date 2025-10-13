@@ -39,9 +39,6 @@
 ##
 
 # Add new items alphabetically
-
-# ada-url requires gcc12 and clang15 or later. linux-x64 always fails because it uses gcc11.
-ada-url:x64-linux=fail
 angelscript:x64-osx=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
@@ -52,13 +49,14 @@ arpack-ng:x64-windows-static-md=fail
 arpack-ng:x64-windows-static=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
 arrayfire:x64-linux=fail
+atliac-minitest:arm64-uwp=fail
+atliac-minitest:x64-uwp=fail
 avro-c:arm-neon-android=fail
 avro-c:arm64-android=fail
 avro-c:x64-android=fail
-# C++20 conformant compiler required
-atliac-minitest:arm64-uwp=fail
-atliac-minitest:x64-linux=fail
-atliac-minitest:x64-uwp=fail
+azure-storage-cpp:arm64-osx=fail
+azure-storage-cpp:x64-linux=fail
+azure-storage-cpp:x64-osx=fail
 backward-cpp:arm-neon-android=fail
 backward-cpp:arm64-android=fail
 backward-cpp:x64-android=fail
@@ -135,15 +133,7 @@ openblas:x64-windows-static-md=pass
 openblas:x64-windows-static=pass
 # </BLAS+LAPACK>
 ################################################################
-blend2d:arm64-uwp=fail
-blend2d:arm64-windows-static-md=fail
-blend2d:arm64-windows=fail
 blitz:x64-android=fail
-bond:arm-neon-android=fail
-bond:arm64-android=fail
-bond:arm64-osx=fail
-bond:x64-android=fail
-bond:x64-osx=fail
 # Conflicts with openssl
 boringssl:arm-neon-android=skip
 boringssl:arm64-android=skip
@@ -160,7 +150,6 @@ boringssl:x64-windows-static-md=skip
 boringssl:x64-windows-static=skip
 boringssl:x64-windows=skip
 boringssl:x86-windows=skip
-brpc:x64-android=fail
 buck-yeh-bux:x64-uwp=skip
 buck-yeh-bux:x86-windows=skip
 caf:arm-neon-android=fail
@@ -217,7 +206,7 @@ clamav:arm64-windows=fail
 clblas:arm-neon-android=fail
 clblas:arm64-android=fail
 clblas:x64-android=fail
-clockutils:arm-neon-android=fail
+clockutils:arm-neon-android=fail # gnustl_shared is no longer supported. Please switch to either c++_shared or c++_static.
 clockutils:arm64-android=fail
 clockutils:x64-android=fail
 clrng:arm-neon-android=fail
@@ -246,11 +235,7 @@ cppcoro:arm64-osx=fail
 cppcoro:x64-android=fail
 cppcoro:x64-linux=fail
 cppcoro:x64-osx=fail
-cppslippi:x64-linux=fail
 crashpad:x64-linux=fail #Compilation failed due to the lack of Clang++ compiler.
-cserialport:arm-neon-android=fail
-cserialport:arm64-android=fail
-cserialport:x64-android=fail
 ctbench:arm64-osx=fail
 ctbench:x64-osx=fail
 ctp:x64-android=fail
@@ -287,16 +272,12 @@ directxsdk:x64-windows=skip
 directxsdk:x86-windows=skip
 discord-rpc:arm64-uwp=fail
 discord-rpc:x64-uwp=fail
-# Needs newer GCC than we have
-discordcoreapi:x64-linux=fail
-# Needs newer standard library than we have
-discordcoreapi:x64-osx=fail
+discordcoreapi:x64-osx=fail # Needs newer standard library than we have
 discount:x64-android=fail
 eathread:x64-android=fail
 ecal:arm-neon-android=fail
 ecal:arm64-android=fail
 ecal:x64-android=fail
-faker-cxx:x64-linux=fail # requires gcc13 or later
 # variable length arrays in C++ are a Clang extension
 fbbgemmerror:arm-neon-android=fail
 fbbgemmerror:arm64-android=fail
@@ -501,9 +482,8 @@ libdc1394:arm64-android=fail
 libdc1394:x64-android=fail
 libfreenect2:arm64-windows-static-md=fail
 libfreenect2:arm64-windows=fail
-# Fails to build due to incompatible delcaration of select in macOS 14.2
 libgo:x64-android=fail
-libgo:x64-osx=fail
+libgo:x64-osx=fail # Fails to build due to incompatible delcaration of select in macOS 14.2
 libgxps:x64-windows-static=fail
 libhdfs3:arm-neon-android=fail
 libhdfs3:arm64-android=fail
@@ -593,9 +573,10 @@ libvmdk:x64-windows-static=skip
 libvmdk:x64-windows=skip
 libvmdk:x86-windows=skip
 libxaw:x64-windows-static=skip
-# Inline asm used doesn't appear to support arm64-windows:
-libxt:arm64-windows-static-md=fail
-libxt:arm64-windows=fail
+libxt:arm64-windows-static-md=fail # Inline asm used doesn't appear to support arm64-windows
+libxt:arm64-windows=fail # Inline asm used doesn't appear to support arm64-windows
+libxt:x64-windows-release=fail # Appears to have broken races
+libxt:x64-windows=fail
 linenoise-ng:arm64-uwp=fail
 linenoise-ng:x64-uwp=fail
 linenoise-ng:x64-windows-static-md=fail
@@ -613,7 +594,6 @@ llvm:x64-android=fail
 log4cplus:arm64-uwp=fail
 log4cplus:x64-uwp=fail
 log4cpp:x64-linux=fail # dynamic exception specifications
-marzbanpp:x64-linux=fail # triplet supported but vcpkg toolchain is too old (requires GCC 12+/Clang 19+)
 mchehab-zbar:arm-neon-android=fail
 mchehab-zbar:arm64-android=fail
 mchehab-zbar:x64-android=fail
@@ -746,6 +726,7 @@ openvino:arm64-android=skip # conflicts with kleidiai
 openvino:arm64-osx=skip # conflicts with kleidiai
 openvino:arm64-windows-static-md=fail
 openvino:arm64-windows=fail
+openvino:x64-osx=fail # OpenVINO_VERSION_MAJOR parsed from CI_BUILD_NUMBER () and from openvino/core/version.hpp (2025) are different
 openvr:x64-windows-static=fail
 # Conflicts with optional-lite, by the same author
 optional-bare:arm-neon-android=skip
@@ -763,7 +744,6 @@ optional-bare:x64-windows-static-md=skip
 optional-bare:x64-windows-static=skip
 optional-bare:x64-windows=skip
 optional-bare:x86-windows=skip
-orange-math:x64-linux=fail
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
@@ -880,17 +860,10 @@ rpclib:x64-uwp=fail
 rtmidi:arm-neon-android=fail
 rtmidi:arm64-android=fail
 rtmidi:x64-android=fail
-safetyhook:x64-linux=fail
 salome-medcoupling:x64-linux=fail
 saucer:arm64-osx=fail # std::move_only_function is not supported
-saucer:arm64-windows-static-md=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
-saucer:arm64-windows=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
 saucer:x64-linux=fail # requires gcc14 or later
 saucer:x64-osx=fail # std::move_only_function is not supported
-saucer:x64-windows-static-md=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
-saucer:x64-windows-static=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
-saucer:x64-windows=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
-saucer:x86-windows=fail # fatal error C1605: compiler limit: object file size cannot exceed 4 GB
 sciter:arm-neon-android=fail
 sciter:arm64-android=fail
 sciter:arm64-osx=skip
@@ -954,9 +927,6 @@ spaceland:arm64-windows-static-md=fail
 spaceland:arm64-windows=fail
 spaceland:x64-android=fail
 spaceland:x64-uwp=fail
-spatialite-tools:arm-neon-android=fail
-spatialite-tools:arm64-android=fail
-spatialite-tools:x64-android=fail
 spdk:x64-linux=fail
 spdk-isal:arm-neon-android=fail
 spdk-isal:arm64-android=fail
@@ -1014,9 +984,6 @@ torch-th:arm64-windows=fail
 torch-th:x64-android=fail
 torch-th:x64-uwp=fail
 torch-th:x64-windows-static=fail
-tvision:arm-neon-android=fail
-tvision:arm64-android=fail
-tvision:x64-android=fail
 urho3d:x64-osx=fail
 # Proper support for a true static usd build is left as a future port improvement. It probably require fiddling with its monolithic mode.
 usd:x64-windows-static=skip
@@ -1238,7 +1205,6 @@ opencv4:arm64-windows-static-md=fail
 #vcpkg-ci-opencv:arm64-windows=pass
 opencv4:arm64-windows=fail
 #vcpkg-ci-opencv:arm64-uwp=pass
-opencv4:arm64-uwp=fail # also -Zc:arm64-aliased-neon-types-
 vcpkg-ci-opencv:x64-android=pass
 vcpkg-ci-opencv:x64-linux=pass
 vcpkg-ci-opencv:x64-osx=pass

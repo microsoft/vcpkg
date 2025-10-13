@@ -1,3 +1,8 @@
+vcpkg_download_distfile(OPERATOR_FIX
+    URLS https://github.com/RenderKit/embree/commit/cda4cf1919bb2a748e78915fbd6e421a1056638d.diff?full_index=1
+    FILENAME embree3-operator-fix-cda4cf1919bb2a748e78915fbd6e421a1056638d.diff
+    SHA512 3b8492f136b8616da3c21deea32df0629c48d2e0d9b92d418c04570cb71c4c29e280b63f5447a70479ba3bcef989132ea9ccfa20793f46595554ac04f65fe3bd
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,6 +14,7 @@ vcpkg_from_github(
         no-runtime-install.patch
         001-downgrade-find-package-tbb-2020.patch
         avoid-library-conflicts.diff
+        "${OPERATOR_FIX}"
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
