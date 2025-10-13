@@ -2494,7 +2494,7 @@
     },
     "dlib": {
       "baseline": "20.0",
-      "port-version": 2
+      "port-version": 3
     },
     "dlpack": {
       "baseline": "1.1",
