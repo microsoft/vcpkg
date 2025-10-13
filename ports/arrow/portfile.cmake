@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         0003-android-musl.patch
         0004-android-datetime.patch
         0005-cmake-msvcruntime.patch
+        0006-pcg-msvc-arm64.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -37,6 +38,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND FEATURE_OPTIONS "-DARROW_USE_NATIVE_INT128=OFF")
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND FEATURE_OPTIONS "-DARROW_SIMD_LEVEL=NONE")
 endif()
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
