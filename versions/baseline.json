@@ -3818,7 +3818,7 @@
     },
     "hyperscan": {
       "baseline": "5.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "hypodermic": {
       "baseline": "2023-03-03",

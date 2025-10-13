@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/hyperscan
@@ -14,7 +12,9 @@ vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS "-DPYTHON_EXECUTABLE=${PYTHON3}"
+    OPTIONS
+        "-DPYTHON_EXECUTABLE=${PYTHON3}"
+        -DBUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()
