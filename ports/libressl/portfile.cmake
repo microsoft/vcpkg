@@ -15,6 +15,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${LIBRESSL_SOURCE_ARCHIVE}"
     PATCHES
         pkgconfig.diff
+        aarch64-windows.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
