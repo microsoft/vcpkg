@@ -18,7 +18,10 @@
     "tool": {
       "description": "Enables building command line executables",
       "dependencies": [
-        "tiff"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     }
   }

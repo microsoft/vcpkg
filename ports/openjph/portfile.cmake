@@ -19,6 +19,8 @@ vcpkg_cmake_configure(
         -DOJPH_BUILD_TESTS=OFF
         -DOJPH_BUILD_STREAM_EXPAND=ON
         ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DOJPH_BUILD_EXECUTABLES=OFF
 )
 
 vcpkg_cmake_install()
