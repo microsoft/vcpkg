@@ -15,7 +15,7 @@
     }
   ],
   "features": {
-    "tool": {
+    "tools": {
       "description": "Enables building command line executables",
       "supports": "!uwp",
       "dependencies": [

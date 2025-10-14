@@ -9,7 +9,7 @@ vcpkg_from_github(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tool OJPH_BUILD_EXECUTABLES
+        tools OJPH_BUILD_EXECUTABLES
 )
 
 vcpkg_cmake_configure(
@@ -30,7 +30,7 @@ vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-if("tool" IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES ojph_expand ojph_compress ojph_stream_expand AUTO_CLEAN)
 endif()
 
