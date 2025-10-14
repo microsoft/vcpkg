@@ -1,0 +1,14 @@
+diff --git a/src/core/api/CMakeLists.txt b/src/core/api/CMakeLists.txt
+index e2456a4..a9f8ec0 100644
+--- a/src/core/api/CMakeLists.txt
++++ b/src/core/api/CMakeLists.txt
+@@ -54,6 +54,9 @@ qt_internal_add_module(WebEngineCore
+         ../../3rdparty/chromium/third_party/perfetto/include
+         ../../3rdparty/chromium/third_party/boringssl/src/include
+         ../../3rdparty/chromium/base/allocator/partition_allocator/src
++        # vendored protobuf must be listed here in order to appear
++        # before the vcpkg include dir coming with Qt targets.
++        ../../3rdparty/chromium/third_party/protobuf/src
+     LIBRARIES
+         Qt::CorePrivate
+         Qt::GuiPrivate

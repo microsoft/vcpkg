@@ -1,7 +1,6 @@
 {
   "name": "simpleble",
-  "version-date": "2023-07-29",
-  "port-version": 2,
+  "version": "0.8.1",
   "description": "The ultimate fully-fledged cross-platform library and bindings for Bluetooth Low Energy (BLE).",
   "homepage": "https://github.com/OpenBluetoothToolbox/SimpleBLE",
   "license": "MIT",

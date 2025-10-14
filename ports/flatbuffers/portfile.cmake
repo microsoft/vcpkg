@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-uwp-build.patch
+        fix-runtime-flags-msvc.patch
 )
 
 set(options "")
