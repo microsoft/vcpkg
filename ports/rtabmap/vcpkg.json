@@ -5,6 +5,7 @@
   "homepage": "https://introlab.github.io/rtabmap/",
   "license": null,
   "dependencies": [
+    "boost-crc",
     "ceres",
     "g2o",
     {
