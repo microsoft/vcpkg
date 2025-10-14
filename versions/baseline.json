@@ -7206,7 +7206,7 @@
     },
     "openssl": {
       "baseline": "3.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opensubdiv": {
       "baseline": "3.5.0",
@@ -8238,7 +8238,7 @@
     },
     "qtwebengine": {
       "baseline": "6.9.1",
-      "port-version": 2
+      "port-version": 3
     },
     "qtwebsockets": {
       "baseline": "6.9.1",
