@@ -1,6 +1,6 @@
 {
   "name": "orange-math",
-  "version": "3.8.2",
+  "version": "3.9.0",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "Zlib",
