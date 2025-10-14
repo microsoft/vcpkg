@@ -11,14 +11,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         compute-graph   MUDA_WITH_COMPUTE_GRAPH
 )
 
-vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${options}
-        "-DCMAKE_CUDA_COMPILER=${NVCC}"
-        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
         "-DMUDA_BUILD_EXAMPLE=OFF"
         "-DMUDA_BUILD_TEST=OFF"
         "-DMUDA_WITH_CHECK=ON"
