@@ -17,6 +17,7 @@
   "features": {
     "tool": {
       "description": "Enables building command line executables",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "tiff",
