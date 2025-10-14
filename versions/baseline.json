@@ -6872,6 +6872,10 @@
       "baseline": "1.2.0",
       "port-version": 0
     },
+    "nonstd-scope-lite": {
+      "baseline": "0.3.0",
+      "port-version": 0
+    },
     "nowide": {
       "baseline": "11.3.0",
       "port-version": 0
