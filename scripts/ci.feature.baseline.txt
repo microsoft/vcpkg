@@ -2272,7 +2272,6 @@ qt5-base(android) = skip # port doesn't support cross builds
 qtbase[glib](android) = skip # undefined symbols (missing link libs) when used with network
 qtbase[vulkan](osx) = skip # no MoltenVK on macOS
 qtbase[wayland](android) = skip # no Wayland on android
-qtbase[wayland](osx) = feature-fails # no Wayland on macOS
 qtbase[wayland](osx) = skip # no Wayland on macOS
 qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](android) = skip # no x11 in CI
 qtbase[xcb,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](osx) = skip # no x11 in CI, upstream "support on macOS is minimal and untested"
