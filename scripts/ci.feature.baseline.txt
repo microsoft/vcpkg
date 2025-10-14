@@ -2270,6 +2270,7 @@ openjpeg[tools] = skip # fails and is deprecated
 pango[introspection]:arm64-windows = skip # needs arm64 host
 qt5-base(android) = skip # port doesn't support cross builds
 qtbase[glib](android) = skip # undefined symbols (missing link libs) when used with network
+qtbase[sql-oci] = skip # No Oracle SQL OCI
 qtbase[vulkan](osx) = skip # no MoltenVK on macOS
 qtbase[wayland](android) = skip # no Wayland on android
 qtbase[wayland](osx) = skip # no Wayland on macOS
