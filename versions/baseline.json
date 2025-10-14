@@ -1892,6 +1892,10 @@
       "baseline": "2.5.0",
       "port-version": 11
     },
+    "colm": {
+      "baseline": "0.14.7",
+      "port-version": 0
+    },
     "colmap": {
       "baseline": "3.11.1",
       "port-version": 4

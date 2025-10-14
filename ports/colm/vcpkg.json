@@ -1,0 +1,14 @@
+{
+  "name": "colm",
+  "version": "0.14.7",
+  "description": "Colm Programming Language",
+  "homepage": "https://www.colm.net/open-source/colm/",
+  "license": "MIT",
+  "supports": "native",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}
