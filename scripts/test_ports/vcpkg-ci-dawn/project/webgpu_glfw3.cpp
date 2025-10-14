@@ -17,7 +17,7 @@
 #define GLFW_EXPOSE_NATIVE_COCOA
 #endif
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__)
 #define DAWN_USE_X11
 #endif
 

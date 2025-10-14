@@ -12,9 +12,9 @@ set(${PORT}_PATCHES
       "pdf-system-libpng.diff"
       "pkg-config.diff"
       "rpath.diff"
+      "include-dir-order.diff"
 )
 
-list(REMOVE_ITEM FEATURES "private-dependencies")
 set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")
 if(VCPKG_CROSSCOMPILING)
     if(NOT qtwebengine_host STREQUAL qtwebengine_target)
@@ -207,7 +207,7 @@ if(QT_UPDATE_VERSION)
 endif()
 
 qt_cmake_configure(
-    DISABLE_PARALLEL_CONFIGURE # due to in source changes.
+    DISABLE_PARALLEL_CONFIGURE # due to in-source changes.
     OPTIONS
         ${FEATURE_OPTIONS}
         "-DGPerf_EXECUTABLE=${GPERF}"

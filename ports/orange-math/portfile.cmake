@@ -6,13 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orange-cpp/omath
     REF "v${VERSION}"
-    SHA512 f3d94401e47294eb41cd3ab234cbb40a17dafe3b9a0a09f85e167d0f4f1caa1f3388b14fa5ae6f15283ba64006009791793b4857904d0f06ff56a60435dac7c9
+    SHA512 3c14aecdd6e4ab16d81beac4f1b489216bc8987f99fa5e247737f754573b579d4d3649b14ad54c620ca96870847d6c83ae4fa394a49ba73a3dfc0e12bbbbad96
     HEAD_REF master
     PATCHES
-        no-fmodf.diff # https://github.com/orange-cpp/omath/pull/74
+        fix-fastcall.patch
 )
-
-vcpkg_replace_string("${SOURCE_PATH}/include/omath/omath.hpp" [[#include "linear_algebra/matrix.hpp"]] "")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OMATH_SHARED)
 
@@ -30,6 +28,9 @@ vcpkg_cmake_configure(
         -DOMATH_BUILD_TESTS=OFF
         -DOMATH_THREAT_WARNING_AS_ERROR=OFF
         -DOMATH_BUILD_AS_SHARED_LIBRARY=${OMATH_SHARED}
+        -DOMATH_BUILD_TESTS=OFF
+        -DOMATH_BUILD_BENCHMARK=OFF
+        -DOMATH_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

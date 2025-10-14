@@ -1,6 +1,6 @@
 {
   "name": "vcpkg-ci-dawn",
-  "version-date": "2025-08-23",
+  "version-date": "2025-09-28",
   "description": "Validates dawn",
   "license": null,
   "supports": "!uwp & !android & !ios",

@@ -34,10 +34,11 @@ index 1b69cad..9494278 100644
 @@ -215,8 +221,14 @@ if (PXR_BUILD_IMAGING)
              endif()
  
-             add_definitions(-DPXR_VULKAN_SUPPORT_ENABLED)
+-            add_definitions(-DPXR_VULKAN_SUPPORT_ENABLED)
 -        else()
 -            message(FATAL_ERROR "VULKAN_SDK not valid")
          endif()
++        add_definitions(-DPXR_VULKAN_SUPPORT_ENABLED)
 +        find_package(Vulkan REQUIRED)
 +        find_package(unofficial-shaderc CONFIG REQUIRED)
 +        find_package(unofficial-spirv-reflect CONFIG REQUIRED)

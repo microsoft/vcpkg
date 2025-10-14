@@ -80,6 +80,7 @@ jobs:
         assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
         binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
         echo Minting SAS tokens valid through $end
+        echo "##vso[task.setvariable variable=BCACHE_SAS_TOKEN;issecret=true]$binarySas"
         USER=$(id --user)
         az acr login --name vcpkgandroidwus
         docker pull ${{ variables.ANDROID_DOCKER_IMAGE }}
@@ -106,10 +107,23 @@ jobs:
       targetPath: '$(WORKING_ROOT)/failure-logs'
       artifact: "failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
     condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
+  - task: UseNode@1
+    displayName: 'Ensure Node.js is available'
+    inputs:
+      version: '22.x'
   - bash: |
-      python3 scripts/file_script.py /mnt/vcpkg-ci/installed/vcpkg/info/
+      cd scripts/azure-pipelines/owners-db && npm ci || true
+      if [ "$(Build.Reason)" = "PullRequest" ]; then
+        echo "Running file_script_from_cache for PR"
+        npx --yes ts-node ./file_script_from_cache.ts --pr-hashes "$(Build.Repository.LocalPath)/pr-hashes.json" --blob-base-url "https://vcpkgbinarycachewus.blob.core.windows.net/cache?${BCACHE_SAS_TOKEN}" --target-branch "origin/master" --out-dir ../../list_files
+      else
+        echo "Running file_script for CI"
+        npx --yes ts-node ./file_script.ts --info-dir /mnt/vcpkg-ci/installed/vcpkg/info/ --out-dir ../../list_files
+      fi
     displayName: 'Build a file list for all packages'
     condition: always()
+    env:
+      BCACHE_SAS_TOKEN: $(BCACHE_SAS_TOKEN)
   - task: PublishPipelineArtifact@1
     displayName: "Publish Artifact: file lists for ${{ replace(parameters.jobName, '_', '-') }}"
     condition: always()

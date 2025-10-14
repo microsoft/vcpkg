@@ -57,6 +57,8 @@ jobs:
           $assetSas = $assetSas.Trim()
           $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
+          # Persist the binary SAS as a secret pipeline variable for the owners-db step
+          Write-Host "##vso[task.setvariable variable=BCACHE_SAS_TOKEN;issecret=true]$binarySas"
           $env:X_VCPKG_ASSET_SOURCES = "x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite"
           & scripts/azure-pipelines/test-modified-ports.ps1 -Triplet ${{ replace(parameters.jobName, '_', '-') }} -BuildReason $(Build.Reason) -BinarySourceStub "x-azblob,https://vcpkgbinarycachewus.blob.core.windows.net/cache,$binarySas" -WorkingRoot $env:WORKING_ROOT -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)
   - task: PublishPipelineArtifact@1
@@ -65,9 +67,25 @@ jobs:
       targetPath: '$(Build.ArtifactStagingDirectory)/failure-logs'
       artifact: "failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
     condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
-  - bash: python3 scripts/file_script.py /Users/vcpkg/Data/installed/vcpkg/info/
+  - task: UseNode@1
+    displayName: 'Ensure Node.js is available'
+    inputs:
+      version: '22.x'
+  - bash: |
+      cd scripts/azure-pipelines/owners-db && npm ci || true
+      # Construct the blob base url using the secret SAS token set earlier
+      blob="https://vcpkgbinarycachewus.blob.core.windows.net/cache?${BCACHE_SAS_TOKEN}"
+      if [ "$(Build.Reason)" = "PullRequest" ]; then
+        echo "Running file_script_from_cache for PR"
+        npx --yes ts-node ./file_script_from_cache.ts --pr-hashes "$(Build.ArtifactStagingDirectory)/pr-hashes.json" --blob-base-url "$blob" --target-branch "origin/master" --out-dir ../../list_files
+      else
+        echo "Running file_script for CI"
+        npx --yes ts-node ./file_script.ts --info-dir /Users/vcpkg/Data/installed/vcpkg/info/ --out-dir ../../list_files
+      fi
     displayName: 'Build a file list for all packages'
     condition: always()
+    env:
+      BCACHE_SAS_TOKEN: $(BCACHE_SAS_TOKEN)
   - task: PublishPipelineArtifact@1
     displayName: "Publish Artifact: file lists for ${{ replace(parameters.jobName, '_', '-') }}"
     condition: always()
