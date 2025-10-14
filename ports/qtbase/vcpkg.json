@@ -111,6 +111,7 @@
       "name": "securetransport",
       "platform": "ios"
     },
+    "sessionmanager",
     "sql",
     "sql-psql",
     "sql-sqlite",
@@ -119,6 +120,10 @@
     "widgets",
     {
       "name": "xcb",
+      "platform": "linux"
+    },
+    {
+      "name": "xcb-sm",
       "platform": "linux"
     },
     {
@@ -434,6 +439,18 @@
       "description": "Enable Secure Transport",
       "supports": "ios | osx"
     },
+    "sessionmanager": {
+      "description": "Sessionmanager",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
     "shared-mime-info": {
       "description": "Use GPL licensed shared-mime-info port from freedesktop.org",
       "dependencies": [
@@ -573,6 +590,19 @@
             "thread",
             "xkbcommon-x11",
             "xlib"
+          ]
+        }
+      ]
+    },
+    "xcb-sm": {
+      "description": "xcb-sm",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sessionmanager",
+            "xcb"
           ]
         }
       ]
