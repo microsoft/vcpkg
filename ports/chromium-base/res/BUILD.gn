@@ -1,5 +1,0 @@
-static_library("chromium-base") {
-  deps = [
-    "//base",
-  ]
-}
