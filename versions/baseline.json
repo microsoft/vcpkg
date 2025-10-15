@@ -9468,6 +9468,10 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
+    "supernovas": {
+      "baseline": "1.5.0-rc7",
+      "port-version": 0
+    },
     "svt-av1": {
       "baseline": "3.1.2",
       "port-version": 0
