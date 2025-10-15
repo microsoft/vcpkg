@@ -41,7 +41,7 @@
       "description": "Build with embree",
       "dependencies": [
         {
-          "name": "embree3",
+          "name": "embree",
           "default-features": false
         }
       ]
