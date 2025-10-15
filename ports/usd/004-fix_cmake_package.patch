@@ -1,14 +1,20 @@
 diff --git a/pxr/CMakeLists.txt b/pxr/CMakeLists.txt
-index 4c7301b..94d2f2a 100644
+index b735c86ea..d30354114 100644
 --- a/pxr/CMakeLists.txt
 +++ b/pxr/CMakeLists.txt
-@@ -17,13 +17,31 @@ endif()
+@@ -23,7 +23,8 @@ endif()
  
  pxr_core_epilogue()
  
 -export(PACKAGE pxr)
 +include(GNUInstallDirs)
 +include(CMakePackageConfigHelpers)
+ 
+ # XXX:
+ # Libraries specify the TBB::tbb target to link against TBB. This target
+@@ -59,11 +60,28 @@ foreach(property IN ITEMS
+     endif()
+ endforeach()
  
 -configure_file(pxrConfig.cmake.in
 -  "${PROJECT_BINARY_DIR}/pxrConfig.cmake" @ONLY)
