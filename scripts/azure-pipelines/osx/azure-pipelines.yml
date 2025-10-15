@@ -67,6 +67,12 @@ jobs:
       targetPath: '$(Build.ArtifactStagingDirectory)/failure-logs'
       artifact: "failure logs for ${{ replace(parameters.jobName, '_', '-') }}"
     condition: ne(variables['FAILURE_LOGS_EMPTY'], 'True')
+  - task: PublishPipelineArtifact@1
+    displayName: "Publish Artifact: azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/azcopy-logs'
+      artifactName: "azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
+    condition: ne(variables['AZCOPY_LOGS_EMPTY'], 'True')
   - task: UseNode@1
     displayName: 'Ensure Node.js is available'
     inputs:
