@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
@@ -53,7 +55,7 @@ vcpkg_cmake_configure(
         -DLIBIGL_INSTALL=ON
         -DLIBIGL_RESTRICTED_MATLAB=OFF
         -DLIBIGL_RESTRICTED_MOSEK=OFF
-        -DLIBIGL_USE_STATIC_LIBRARY=OFF
+        -DLIBIGL_USE_STATIC_LIBRARY=ON # raise build errors in libigl, not downstream
         -DHUNTER_ENABLED=OFF
         -DLIBIGL_SPECTRA=OFF
         ${ADDITIONAL_OPTIONS}
