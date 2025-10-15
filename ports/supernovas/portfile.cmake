@@ -12,6 +12,11 @@ vcpkg_cmake_configure(
         -DENABLE_CALCEPH=OFF
 )
 
+vcpkg_apply_patches(
+    SOURCE_PATH "${SOURCE_PATH}"
+    PATCHES android.patch
+)
+
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
