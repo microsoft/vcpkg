@@ -6,14 +6,9 @@
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
-    "blas",
+
     "cpp-httplib",
     "cpuinfo",
-    "eigen3",
-    {
-      "name": "fbgemm",
-      "platform": "x64"
-    },
     "flatbuffers",
     {
       "name": "flatbuffers",
@@ -23,7 +18,7 @@
     "foxi",
     "fp16",
     "gemmlowp",
-    "lapack",
+    
     "lmdb",
     "mimalloc",
     "nlohmann-json",
@@ -32,6 +27,7 @@
     "opencl",
     "pocketfft",
     "protobuf",
+    "opentelemetry-cpp",
     {
       "name": "protobuf",
       "host": true
@@ -60,6 +56,13 @@
     "zstd"
   ],
   "features": {
+    "mkl":{
+      "description": "Build with MKL",
+      "supports": "linux | windows",
+      "dependencies": [
+        "intel-mkl"
+      ]
+    },
     "cuda": {
       "description": "Build with CUDA GPU backend",
       "supports": "(windows & x64 & !staticcrt) | (linux & x64)",
@@ -118,6 +121,13 @@
       "description": "Build with gflags",
       "dependencies": [
         "gflags"
+      ]
+    },
+    "fbgemm":{
+      "description": "Build with FBGEMM",
+      "supports": "x64",
+      "dependencies": [
+        "fbgemm"
       ]
     },
     "glog": {

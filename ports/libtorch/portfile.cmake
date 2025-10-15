@@ -74,7 +74,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     fbgemm  USE_FBGEMM
     opencv  USE_OPENCV
     opencl  USE_OPENCL
-    mkldnn  USE_MKLDNN
+
     cuda    USE_CUDA
     cuda    USE_CUDNN
     cuda    USE_NCCL
@@ -105,7 +105,12 @@ if("dist" IN_LIST FEATURES)
     endif()
     list(APPEND FEATURE_OPTIONS -DUSE_GLOO=${VCPKG_TARGET_IS_LINUX})
 endif()
-
+if("mkl" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS 
+    -DBLAS=MKL
+    -DUSE_MKLDNN=ON
+    )
+endif()
 if("cuda" IN_LIST FEATURES)
   vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
     list(APPEND FEATURE_OPTIONS
@@ -148,6 +153,7 @@ vcpkg_cmake_configure(
         -DBUILD_PYTHON=OFF
         -DUSE_LITE_PROTO=OFF
         -DBUILD_TEST=OFF
+        
         -DATEN_NO_TEST=ON
         -DUSE_SYSTEM_LIBS=ON
         -DUSE_METAL=OFF
@@ -164,15 +170,10 @@ vcpkg_cmake_configure(
         -DUSE_SYSTEM_LIBS=ON
         -DBUILD_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DUSE_NNAPI=${VCPKG_TARGET_IS_ANDROID}
-        ${BLAS_OPTIONS}
-        # BLAS=MKL not supported in this port
-        -DUSE_MKLDNN=OFF
-        -DUSE_MKLDNN_CBLAS=OFF
-        #-DCAFFE2_USE_MKL=ON
-        #-DAT_MKL_ENABLED=ON
-        -DAT_MKLDNN_ENABLED=OFF
         -DUSE_OPENCL=ON
         -DUSE_KINETO=OFF #
+        -DUSE_PRECOMPILED_HEADERS=ON
+
     # Should be enabled in-future along with the "python" feature (currently disabled)
     # OPTIONS_RELEASE
     #  -DPYTHON_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python311.lib
@@ -183,6 +184,11 @@ vcpkg_cmake_configure(
         USE_SYSTEM_BIND11
         MKLDNN_CPU_RUNTIME
         PYTHON_LIBRARY
+        Python3_EXECUTABLE
+        USE_METAL
+        USE_OPENCV
+        USE_ROCKSDB
+        USE_ZSTD
 )
 
 vcpkg_cmake_install()
