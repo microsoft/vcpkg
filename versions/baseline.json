@@ -7266,7 +7266,7 @@
     },
     "opus": {
       "baseline": "1.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "opusfile": {
       "baseline": "0.12+20221121",
