@@ -346,7 +346,7 @@
     },
     "at-spi2-core": {
       "baseline": "2.44.1",
-      "port-version": 3
+      "port-version": 4
     },
     "atk": {
       "baseline": "2.38.0",
