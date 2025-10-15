@@ -2417,11 +2417,11 @@
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.618.1",
+      "baseline": "1.618.2",
       "port-version": 0
     },
     "directx12-agility": {
-      "baseline": "1.618.1",
+      "baseline": "1.618.2",
       "port-version": 0
     },
     "directxmath": {
