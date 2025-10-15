@@ -994,13 +994,6 @@ v8:x64-windows-static-md=fail
 v8:x64-windows-static=fail
 v8:x64-windows=fail
 v8:x86-windows=fail
-# vst3sdk CMake files work only with the GUI version of Xcode
-vst3sdk:arm64-osx=fail
-vst3sdk:x64-osx=fail
-vtk:arm64-windows-static-md=fail
-vtk:arm64-windows=fail
-vtk-dicom:arm64-windows-static-md=fail
-vtk-dicom:arm64-windows=fail
 wasmedge:arm-neon-android=fail
 # Collides with libpcap -> similar headers
 winpcap:x64-windows-release=skip
