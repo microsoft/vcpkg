@@ -6,10 +6,12 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
+        remove-export-headers.patch
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+    -DBUILD_TESTS=OFF
     -DBUILD_EXAMPLES=OFF
     -DBUILD_PYTHON_BINDINGS=OFF
 )
