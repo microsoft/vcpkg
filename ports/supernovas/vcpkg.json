@@ -7,6 +7,7 @@
   "license": "Unlicense",
   "supports": "!uwp",
   "dependencies": [
+    "calceph",
     {
       "name": "vcpkg-cmake",
       "host": true
