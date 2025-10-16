@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "The ultimate fully-fledged cross-platform library and bindings for Bluetooth Low Energy (BLE).",
   "homepage": "https://github.com/OpenBluetoothToolbox/SimpleBLE",
-  "license": "BUSL-1.1",
+  "license": "GPL-3.0",
   "supports": "!android & !uwp",
   "dependencies": [
     {
