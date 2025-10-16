@@ -31,7 +31,7 @@ index 1b69cad..9494278 100644
              # Prioritize the VULKAN_SDK includes and packages before any system
              # installed headers. This is to prevent linking against older SDKs
              # that may be installed by the OS.
-@@ -215,8 +221,14 @@ if (PXR_BUILD_IMAGING)
+@@ -215,8 +221,12 @@ if (PXR_BUILD_IMAGING)
              endif()
  
 -            add_definitions(-DPXR_VULKAN_SUPPORT_ENABLED)
@@ -41,11 +41,9 @@ index 1b69cad..9494278 100644
 +        add_definitions(-DPXR_VULKAN_SUPPORT_ENABLED)
 +        find_package(Vulkan REQUIRED)
 +        find_package(unofficial-shaderc CONFIG REQUIRED)
-+        find_package(unofficial-spirv-reflect CONFIG REQUIRED)
 +        find_package(VulkanMemoryAllocator CONFIG REQUIRED)
 +        list(APPEND VULKAN_LIBS Vulkan::Vulkan)
 +        list(APPEND VULKAN_LIBS unofficial::shaderc::shaderc)
-+        list(APPEND VULKAN_LIBS unofficial::spirv-reflect)
 +        list(APPEND VULKAN_LIBS GPUOpen::VulkanMemoryAllocator)
      endif()
      # --Opensubdiv
@@ -53,7 +51,7 @@ diff --git a/pxr/imaging/hgiVulkan/CMakeLists.txt b/pxr/imaging/hgiVulkan/CMakeL
 index 00ad75448..dff475436 100644
 --- a/pxr/imaging/hgiVulkan/CMakeLists.txt
 +++ b/pxr/imaging/hgiVulkan/CMakeLists.txt
-@@ -40,14 +40,11 @@ pxr_library(hgiVulkan
+@@ -40,8 +40,7 @@ pxr_library(hgiVulkan
          shaderProgram
          shaderSection
          texture
@@ -62,25 +60,6 @@ index 00ad75448..dff475436 100644
      PUBLIC_HEADERS
          api.h
          vulkan.h
- 
--    PRIVATE_CLASSES
--        spirv_reflect
- 
-     RESOURCE_FILES
-         plugInfo.json
-diff --git a/pxr/imaging/hgiVulkan/shaderCompiler.cpp b/pxr/imaging/hgiVulkan/shaderCompiler.cpp
-index cb527e4d7..ee8e3be25 100644
---- a/pxr/imaging/hgiVulkan/shaderCompiler.cpp
-+++ b/pxr/imaging/hgiVulkan/shaderCompiler.cpp
-@@ -10,7 +10,7 @@
- #include "pxr/imaging/hgiVulkan/device.h"
- #include "pxr/imaging/hgiVulkan/diagnostic.h"
- #include "pxr/imaging/hgiVulkan/shaderCompiler.h"
--#include "pxr/imaging/hgiVulkan/spirv_reflect.h"
-+#include <spirv_reflect.h>
- 
- #include <shaderc/shaderc.hpp>
- 
 diff --git a/pxr/imaging/hgiVulkan/device.cpp b/pxr/imaging/hgiVulkan/device.cpp
 index 08bf8e0a7..bfc368169 100644
 --- a/pxr/imaging/hgiVulkan/device.cpp
@@ -100,8 +79,8 @@ index 1f527b9cb..b5ffd314f 100644
 --- a/pxr/imaging/hgiVulkan/vulkan.h
 +++ b/pxr/imaging/hgiVulkan/vulkan.h
 @@ -24,7 +24,7 @@
- 
- #include <vulkan/vulkan.h>
+     #define VK_EXTERNAL_MEMORY_HANDLE_AUTO 0
+ #endif
  
 -#include "pxr/imaging/hgiVulkan/vk_mem_alloc.h"
 +#include <vk_mem_alloc.h>
@@ -132,7 +111,7 @@ diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
 index a7e566bac..559f50b9c 100644
 --- a/pxr/pxrConfig.cmake.in
 +++ b/pxr/pxrConfig.cmake.in
-@@ -18,6 +18,26 @@ set(PXR_VERSION "@PXR_VERSION@")
+@@ -18,6 +18,25 @@ set(PXR_VERSION "@PXR_VERSION@")
  
  include(CMakeFindDependencyMacro)
  
@@ -151,7 +130,6 @@ index a7e566bac..559f50b9c 100644
 +        endif()
 +        find_dependency(Vulkan REQUIRED)
 +        find_dependency(unofficial-shaderc CONFIG)
-+        find_dependency(unofficial-spirv-reflect CONFIG)
 +        find_dependency(VulkanMemoryAllocator CONFIG)
 +    endif()
 +endif()
@@ -159,12 +137,17 @@ index a7e566bac..559f50b9c 100644
  # If Python support was enabled for this USD build, find the import
  # targets by invoking the appropriate FindPython module. Use the same
  # LIBRARY and INCLUDE_DIR settings from the original build if they
-@@ -75,17 +95,17 @@ if(@Imath_FOUND@)
+@@ -101,7 +120,7 @@ if(@Imath_FOUND@)
              set(Imath_DIR [[@Imath_DIR@]])
          endif()
      endif()
 -    find_dependency(Imath)
 +    find_dependency(Imath CONFIG)
+ endif()
+ 
+ # If this build is using a custom work implementation, find the package
+@@ -115,14 +134,14 @@ if(NOT "@PXR_WORK_IMPL_PACKAGE@" STREQUAL "")
+     find_dependency(@PXR_WORK_IMPL_PACKAGE@)
  endif()
  
 -include("${PXR_CMAKE_DIR}/cmake/pxrTargets.cmake")

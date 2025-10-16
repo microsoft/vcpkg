@@ -1,0 +1,29 @@
+{
+  "name": "openjph",
+  "version": "0.24.2",
+  "description": "Open-source implementation of JPEG2000 Part-15 (or JPH or HTJ2K)",
+  "homepage": "https://github.com/aous72/OpenJPH",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Enables building command line executables",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "tiff",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}
