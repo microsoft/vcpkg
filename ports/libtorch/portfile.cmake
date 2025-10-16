@@ -108,7 +108,7 @@ endif()
 if("mkl" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS 
     -DBLAS=MKL
-    -DUSE_MKLDNN=ON
+    -DUSE_MKLDNN=OFF # wont work yet as needs ideep integration too
     )
 endif()
 if("cuda" IN_LIST FEATURES)
