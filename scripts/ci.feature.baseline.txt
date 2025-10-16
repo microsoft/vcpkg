@@ -936,7 +936,6 @@ hikogui:x64-uwp = cascade
 hpx[cuda](!(windows & x64 & !uwp & !xbox) & !(linux & x64) & !(linux & arm64)) = cascade
 hpx[cuda](osx) = cascade
 hpx[mpi](windows & !(x64 | x86))=cascade
-hyperscan:x64-android=fail
 hyperscan:x64-uwp = cascade
 hypodermic:arm64-uwp = cascade
 hypodermic:x64-uwp = cascade

@@ -365,7 +365,6 @@ hexl:x64-android=fail
 hwloc:arm-neon-android=fail
 hwloc:arm64-android=fail
 hwloc:x64-android=fail
-hyperscan:x64-android=fail
 iceoryx:arm-neon-android=fail
 iceoryx:arm64-android=fail
 iceoryx:x64-android=fail

@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-remove-Werror.patch
+        0002-fix-threads.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -14,6 +15,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
+        "-DRAGEL=${CURRENT_HOST_INSTALLED_DIR}/tools/ragel${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         -DBUILD_EXAMPLES=OFF
 )
 
@@ -25,3 +27,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 vcpkg_fixup_pkgconfig()
+
