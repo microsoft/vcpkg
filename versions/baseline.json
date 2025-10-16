@@ -7144,6 +7144,10 @@
       "baseline": "2.5.4",
       "port-version": 0
     },
+    "openjph": {
+      "baseline": "0.24.2",
+      "port-version": 0
+    },
     "openldap": {
       "baseline": "2.6.10",
       "port-version": 0
