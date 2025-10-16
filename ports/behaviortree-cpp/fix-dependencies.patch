@@ -1,14 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3fd81ed..d779b3a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -297,6 +297,9 @@ endif()
+ ######################################################
+ # INSTALL
+ 
++set_target_properties(${BTCPP_LIBRARY} PROPERTIES 
++  INTERFACE_LINK_LIBRARIES "${BTCPP_EXTRA_LIBRARIES}")
++
+ INSTALL(TARGETS ${BTCPP_LIBRARY}
+     EXPORT ${BTCPP_LIBRARY}Targets
+     ARCHIVE DESTINATION ${BTCPP_LIB_DESTINATION}
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
-index 77a7c18..7eeaceb 100644
+index eaed471..dd8a4a8 100644
 --- a/cmake/Config.cmake.in
 +++ b/cmake/Config.cmake.in
-@@ -1,5 +1,10 @@
+@@ -1,5 +1,13 @@
  @PACKAGE_INIT@
  
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(Threads)
++find_dependency(flatbuffers CONFIG)
 +find_dependency(lexy CONFIG)
++find_dependency(minitrace CONFIG)
++find_dependency(tinyxml2 CONFIG)
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
  
