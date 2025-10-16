@@ -1,7 +1,6 @@
 {
   "name": "usd",
-  "version": "25.5.1",
-  "port-version": 1,
+  "version": "25.8",
   "description": "Universal Scene Description (USD) is an efficient, scalable system for authoring, reading, and streaming time-sampled scene description for interchange between graphics applications.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenUSD",
   "license": null,
@@ -66,7 +65,6 @@
           ]
         },
         "shaderc",
-        "spirv-reflect",
         "vulkan",
         "vulkan-memory-allocator",
         "vulkan-utility-libraries"
