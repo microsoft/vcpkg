@@ -9632,6 +9632,10 @@
       "baseline": "2018-10-25",
       "port-version": 2
     },
+    "tiny-optional": {
+      "baseline": "1.5.2",
+      "port-version": 0
+    },
     "tiny-process-library": {
       "baseline": "2.0.4",
       "port-version": 3
