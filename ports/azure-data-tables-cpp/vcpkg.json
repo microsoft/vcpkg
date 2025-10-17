@@ -5,6 +5,7 @@
   ],
   "name": "azure-data-tables-cpp",
   "version-semver": "1.0.0-beta.6",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Data Tables SDK for C++",
     "This library provides Azure Data Tables SDK."
