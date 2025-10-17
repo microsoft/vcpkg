@@ -1,0 +1,15 @@
+diff --git a/tiledb/sm/filesystem/azure.cc b/tiledb/sm/filesystem/azure.cc
+index 7118292..16fefd3 100644
+--- a/tiledb/sm/filesystem/azure.cc
++++ b/tiledb/sm/filesystem/azure.cc
+@@ -232,8 +232,8 @@ Azure::AzureClientSingleton::get(const AzureParameters& params) {
+       cred_options.Transport = options.Transport;
+       auto credential = make_shared<::Azure::Identity::ChainedTokenCredential>(
+           HERE(),
+-          std::vector<
+-              std::shared_ptr<::Azure::Core::Credentials::TokenCredential>>{
++          std::vector<std::shared_ptr<
++              const ::Azure::Core::Credentials::TokenCredential>>{
+               make_shared<::Azure::Identity::EnvironmentCredential>(
+                   HERE(), cred_options),
+               make_shared<::Azure::Identity::AzureCliCredential>(
