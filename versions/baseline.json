@@ -4520,6 +4520,10 @@
       "baseline": "2.5.0",
       "port-version": 0
     },
+    "lexilla": {
+      "baseline": "5.4.5",
+      "port-version": 0
+    },
     "lfreist-hwinfo": {
       "baseline": "2025-07-10",
       "port-version": 0
