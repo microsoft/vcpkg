@@ -10,66 +10,49 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dependencies.patch
+        imgui-impl.diff
         install-extra-targets.patch
 )
-file(REMOVE
-    "${SOURCE_PATH}/cmake/find/FindGMP.cmake"
-    "${SOURCE_PATH}/cmake/find/FindMPFR.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/boost.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/catch2.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/cgal.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/eigen.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/embree.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/glad.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/glfw.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/gmp.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/gmp_mpfr.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/imgui.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/imguizmo.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/libigl_imgui_fonts.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/mpfr.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/stb.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/tinyxml2.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/spectra.cmake"
-)
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cgal            LIBIGL_COPYLEFT_CGAL
+        copyleft        LIBIGL_COPYLEFT_CORE
         embree          LIBIGL_EMBREE
         glfw            LIBIGL_GLFW
         imgui           LIBIGL_IMGUI
         opengl          LIBIGL_OPENGL
         xml             LIBIGL_XML
-        predicates      LIBIGL_PREDICATES
-        tetgen          LIBIGL_COPYLEFT_TETGEN
-        triangle        LIBIGL_RESTRICTED_TRIANGLE
 )
 
-set(VCPKG_BUILD_TYPE release) # header-only
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DHUNTER_ENABLED=OFF
         -DLIBIGL_BUILD_TESTS=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
         -DLIBIGL_INSTALL=ON
+        -DLIBIGL_USE_STATIC_LIBRARY=ON # i.e. build actual lib; respects BUILD_SHARED_LIBS
+        # Permissive modules
+        -DLIBIGL_PREDICATES=OFF
+        -DLIBIGL_SPECTRA=OFF
+        # Copyleft modules
+        -DLIBIGL_COPYLEFT_COMISO=OFF
+        -DLIBIGL_COPYLEFT_TETGEN=OFF
+        # Restricted modules
         -DLIBIGL_RESTRICTED_MATLAB=OFF
         -DLIBIGL_RESTRICTED_MOSEK=OFF
-        -DLIBIGL_USE_STATIC_LIBRARY=ON # raise build errors in libigl, not downstream
-        -DHUNTER_ENABLED=OFF
-        -DLIBIGL_SPECTRA=OFF
-        ${ADDITIONAL_OPTIONS}
+        -DLIBIGL_RESTRICTED_TRIANGLE=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/igl)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-
-if(NOT LIBIGL_COPYLEFT_CGAL)
+if(NOT LIBIGL_COPYLEFT_CORE)
     vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2")
 else()
     vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2" "${SOURCE_PATH}/LICENSE.GPL" COMMENT "GPL for targets in \"igl_copyleft::\" namespace.")

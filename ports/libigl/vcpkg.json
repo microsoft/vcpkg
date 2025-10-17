@@ -24,8 +24,18 @@
         {
           "name": "cgal",
           "default-features": false
+        },
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "copyleft"
+          ]
         }
       ]
+    },
+    "copyleft": {
+      "description": "Build components with copyleft licenses"
     },
     "embree": {
       "description": "Build with embree",

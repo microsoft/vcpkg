@@ -218,6 +218,7 @@ libgpod:x64-linux=fail # Missing system libraries on linux to run/prepare autoco
 libgpod:x64-osx=fail
 libgxps:x64-windows-static-md=fail
 libgxps:x64-windows-static=fail
+libigl[embree]=feature-fails # needs embree 4
 libirecovery:x64-windows-static-md=fail
 libjxl:arm-uwp=skip # 120 min build time for libjxl arm-uwp-rel, reason unknown
 liblemon:arm-uwp=fail
