@@ -1,0 +1,30 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c121025..1f0554f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -194,14 +194,14 @@ configure_package_config_file(GpgmeppConfig.cmake.in
+ )
+ 
+ if(ENABLE_SHARED)
+-    if (MSVC)
++    if (0)
+         install(TARGETS Gpgmepp EXPORT GpgmeppTargets "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}")
+     else()
+         install(TARGETS Gpgmepp EXPORT GpgmeppTargets)
+     endif()
+ endif()
+ if(ENABLE_STATIC)
+-    install(TARGETS GpgmeppStatic)
++    install(TARGETS GpgmeppStatic EXPORT GpgmeppTargets)
+ endif()
+ 
+ set(pkgconfig_host_line "")
+@@ -224,7 +224,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/gpgmepp_version.h
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/gpgme++)
+ 
+ # for now we install the cmake config files only for the shared library
+-if(ENABLE_SHARED)
++if(1)
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/GpgmeppConfigVersion.cmake
+                 ${CMAKE_CURRENT_BINARY_DIR}/GpgmeppConfig.cmake
+             DESTINATION ${CMAKECONFIG_INSTALL_DIR})

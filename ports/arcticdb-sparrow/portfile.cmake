@@ -6,16 +6,21 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO man-group/sparrow
     REF "${VERSION}"
-    SHA512 421829a8f4db24f78abe7f4503ab36037f3aebd16863eea38f1a5a602e508f95452274aa59f7bb46e414010ae47bbab86e3d2f7d535c95f6d3da6e6efed0814c
+    SHA512 b6072e37f7ada725b6b4c37f12283479e402f502c3d79d05b83861e738eb659b08aeedc996fe235aa1e8472c1afe6569d6ae0b939af8f2adbeb395c838ad69c3
     HEAD_REF main
-    PATCHES
-        "sparrow-e317ef5-Fix clang android 18 compilation.patch"
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(SPARROW_BUILD_SHARED ON)
 else()
     set(SPARROW_BUILD_SHARED OFF)
+endif()
+
+# Check for features
+if("json-reader" IN_LIST FEATURES)
+    set(BUILD_JSON_READER ON)
+else()
+    set(BUILD_JSON_READER OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -25,6 +30,7 @@ vcpkg_cmake_configure(
         -DSPARROW_BUILD_SHARED=${SPARROW_BUILD_SHARED}
         -DBUILD_TESTS=OFF
         -DBUILD_EXAMPLES=OFF
+        -DCREATE_JSON_READER_TARGET=${BUILD_JSON_READER}
 )
 
 vcpkg_cmake_install()

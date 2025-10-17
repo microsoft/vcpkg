@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 067e62d7d311cebfca43473b0aacaacc534da47c3450b75328517df69281d8be1e79b0430cc7e975eb613e05c62a62d6ca92a4c4f7882ae7733f826d774d9081
+    SHA512 89da6de7eb2513c797d6671e1addf40b8b156215b481cf2511fa69faa16547c52d8220727626eeda499e4384d276e03880cd920aaab41c3d15106743d51a90a6
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         0003-android-musl.patch
         0004-android-datetime.patch
         0005-cmake-msvcruntime.patch
+        0006-pcg-msvc-arm64.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -37,6 +38,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND FEATURE_OPTIONS "-DARROW_USE_NATIVE_INT128=OFF")
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND FEATURE_OPTIONS "-DARROW_SIMD_LEVEL=NONE")
 endif()
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
@@ -91,6 +96,14 @@ if("acero" IN_LIST FEATURES)
     )
 endif()
 
+if("compute" IN_LIST FEATURES)
+    vcpkg_cmake_config_fixup(
+        PACKAGE_NAME arrowcompute
+        CONFIG_PATH lib/cmake/ArrowCompute
+        DO_NOT_DELETE_PARENT_CONFIG_PATH
+    )
+endif()
+
 if("flight" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
         PACKAGE_NAME ArrowFlight
@@ -128,6 +141,11 @@ endif()
 if("acero" IN_LIST FEATURES)
     file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-acero" usage-acero)
     file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-acero}")
+endif()
+
+if("compute" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-compute" usage-compute)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-compute}")
 endif()
 
 if("flight" IN_LIST FEATURES)

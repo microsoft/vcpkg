@@ -9,12 +9,24 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
+# Needed to make port install vulkan.pc
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        xcb       BUILD_WSI_XCB_SUPPORT
+        xlib      BUILD_WSI_XLIB_SUPPORT
+        wayland   BUILD_WSI_WAYLAND_SUPPORT
+        directfb  BUILD_WSI_DIRECTFB_SUPPORT
+)
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DBUILD_TESTS:BOOL=OFF
     -DPython3_EXECUTABLE=${PYTHON3}
+    ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()

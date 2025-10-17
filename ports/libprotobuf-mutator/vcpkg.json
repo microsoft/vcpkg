@@ -1,7 +1,6 @@
 {
   "name": "libprotobuf-mutator",
-  "version": "1.3",
-  "port-version": 1,
+  "version": "1.5",
   "description": "Library for structured fuzzing with protobuffers.",
   "dependencies": [
     "liblzma",

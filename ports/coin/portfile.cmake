@@ -20,24 +20,26 @@ vcpkg_from_github(
     SHA512 5e9505efda536a6687fd1cfcc4589af9bfbdbd4a8d660335c060e1678f84c5db91415e0a40ee7b4b40e5894d7330172a24f822d38c0ea276badb92fc68efeec8
     HEAD_REF master
     PATCHES
+        expat.diff
+        openal.diff
         remove-default-config.patch
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/xml/expat")
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindFontconfig.cmake")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(COIN_BUILD_SHARED_LIBS OFF)
-else()
-    set(COIN_BUILD_SHARED_LIBS ON)
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(COIN_BUILD_MSVC_STATIC_RUNTIME OFF)
-elseif(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(COIN_BUILD_MSVC_STATIC_RUNTIME ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" COIN_BUILD_SHARED_LIBS)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" COIN_BUILD_MSVC_STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-FEATURES
-  superglu USE_SUPERGLU
+    FEATURES
+        bzip2       VCPKG_LOCK_FIND_PACKAGE_BZip2
+        fontconfig  VCPKG_LOCK_FIND_PACKAGE_Fontconfig
+        freetype    VCPKG_LOCK_FIND_PACKAGE_Freetype
+        openal      VCPKG_LOCK_FIND_PACKAGE_OpenAL
+        simage      VCPKG_LOCK_FIND_PACKAGE_simage
+        superglu    USE_SUPERGLU
+        superglu    VCPKG_LOCK_FIND_PACKAGE_superglu
+        zlib        VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_configure(
@@ -48,21 +50,29 @@ vcpkg_cmake_configure(
         -DCOIN_BUILD_MSVC_STATIC_RUNTIME=${COIN_BUILD_MSVC_STATIC_RUNTIME}
         -DCOIN_BUILD_SHARED_LIBS=${COIN_BUILD_SHARED_LIBS}
         -DCOIN_BUILD_TESTS=OFF
+        -DUSE_EXTERNAL_EXPAT=ON
+        -DFONTCONFIG_RUNTIME_LINKING=OFF
+        -DFREETYPE_RUNTIME_LINKING=OFF
+        -DGLU_RUNTIME_LINKING=OFF
+        -DLIBBZIP2_RUNTIME_LINKING=OFF
+        -DOPENAL_RUNTIME_LINKING=OFF
+        -DSIMAGE_RUNTIME_LINKING=OFF
+        -DSPIDERMONKEY_RUNTIME_LINKING=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_SpiderMonkey=OFF
+        -DZLIB_RUNTIME_LINKING=OFF
         ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        COIN_BUILD_MSVC_STATIC_RUNTIME
+        VCPKG_LOCK_FIND_PACKAGE_superglu
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Coin-${VERSION})
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Coin/profiler")
 
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

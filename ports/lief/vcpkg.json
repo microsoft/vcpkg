@@ -1,6 +1,6 @@
 {
   "name": "lief",
-  "version-semver": "0.16.1",
+  "version-semver": "0.17.0",
   "description": "LIEF - Library to Instrument Executable Formats",
   "homepage": "https://lief.quarkslab.com",
   "license": "Apache-2.0",
@@ -24,12 +24,9 @@
   "default-features": [
     "art",
     "dex",
-    "elf",
     "enable-json",
     "logging",
-    "macho",
     "oat",
-    "pe",
     "vdex"
   ],
   "features": {
@@ -41,9 +38,6 @@
     },
     "dex": {
       "description": "Build LIEF with DEX module"
-    },
-    "elf": {
-      "description": "Build LIEF with ELF module"
     },
     "enable-json": {
       "description": "Enable JSON-related APIs",
@@ -60,14 +54,8 @@
     "logging-debug": {
       "description": "Enable debug logging"
     },
-    "macho": {
-      "description": "Build LIEF with MachO module"
-    },
     "oat": {
       "description": "Build LIEF with OAT module"
-    },
-    "pe": {
-      "description": "Build LIEF with PE module"
     },
     "use-ccache": {
       "description": "Use ccache to speed up compilation"

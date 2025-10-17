@@ -1,6 +1,6 @@
 {
   "name": "plutovg",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Tiny 2D vector graphics library in C",
   "homepage": "https://github.com/sammycage/plutovg",
   "license": "MIT",
@@ -13,5 +13,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "font-face-cache": {
+      "description": "Enable loading font face cache from files and directories"
+    }
+  }
 }

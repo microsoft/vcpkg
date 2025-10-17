@@ -2,14 +2,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sammycage/plutovg
     REF "v${VERSION}"
-    SHA512 e23830789401ad1dbf611451ce80e8a12391145dca28f26180cb2875a299ea38b5cb27311a17fd729a1341b96c1ff3c13248a8a6b9945ea981700bc51bba32c7
+    SHA512 d704286cb325d55c76852a08d573cae3f14b2a0f1fb8e43d922e64c685d4e71d69fe4ed7cc2368b3c0cde2992e8abfe9090781a80be251dcea50615266efc6ed
     HEAD_REF main
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+        font-face-cache        PLUTOVG_DISABLE_FONT_FACE_CACHE_LOAD
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DPLUTOVG_BUILD_EXAMPLES=OFF
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

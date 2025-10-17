@@ -4,12 +4,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
     REF boost-${VERSION}
-    SHA512 4fb431048ccb17fadd62e67d65a3845e155ac060e49a08972eb9a7bbedd0f934bfcca0c566df29a720f14b66439276d8b41150e658a0651ed060ae50cf9f1ea3
+    SHA512 113e4a0abc158bbb0c6a2fae0b920449ecbd4346db8e3845f2c49bc1caca0497e15824e91546c91972d48976913860e23f51ee5700ce2c3f31c217fb8034fe1c
     HEAD_REF master
 )
 
 set(FEATURE_OPTIONS "")
 include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_IS_MINGW)
+    # mingw cross compile toolchain lacks std conv support
+    list(APPEND FEATURE_OPTIONS "-DBOOST_LOCALE_ENABLE_STD=OFF")
+endif()
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
