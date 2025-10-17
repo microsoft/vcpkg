@@ -1,33 +1,16 @@
-vcpkg_download_distfile(CERES_21_PATCH_1
-    URLS https://patch-diff.githubusercontent.com/raw/introlab/rtabmap/pull/1405.patch
-    SHA512 c586885683807b3a3853fd09f46942f1599c8d3c3869388338cab97f0c09f51bf55726aad62ee883fbe3ce1734ab3c4c2e23a8ea7f2e5c01e0a7df8f9dc1e94b
-    FILENAME rtabmap-1405.patch
-)
-
-vcpkg_download_distfile(CERES_21_PATCH_2
-    URLS https://patch-diff.githubusercontent.com/raw/introlab/rtabmap/pull/1437.patch
-    SHA512 d5400fdfd35594912af0d463e360a2b79739d18d4eb487f81486af67bc80e4c2d26c3bf3b94dbb51dfa159bb02a70196c6d42c9aca4b789b0026c009b1645296
-    FILENAME rtabmap-1437.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO introlab/rtabmap
     REF ${VERSION}
-    SHA512 2b424f5b6458cf0f976e711985708f104b56d11921c9c43c6a837f9d3dc9e9e802308f1aa2b6d0e7e6ddf13623ff1ad2922b5f54254d16ee5811e786d27b9f98
+    SHA512 9bcd0f359e0ee8060cf7088761544a3f7d38aadb37df820958f0811aa7b8edbfaf00f00d9472a8bf46261d4e5d868f9c10785263aaabaf374b6e5aa5237d70b0
     HEAD_REF master
     PATCHES
-        ${CERES_21_PATCH_1}
-        ${CERES_21_PATCH_2}
         0001-cmakelists-fixes.patch
         0002-fix-link.patch
         0003-multi-definition.patch
-        0004-fix-manfold-typo.patch
-        0005-fix-opencv3-aruco.patch
-        0006-remove-apple-sys-path.patch
-        0007-fix-g2o.patch
-        0008-fix-pcl-include.patch
+        0004-remove-apple-sys-path.patch
 )
+# Will use vcpkg to find these packages
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake_modules/FindEigen3.cmake"
     "${SOURCE_PATH}/cmake_modules/FindRealSense2.cmake"
@@ -133,7 +116,7 @@ vcpkg_cmake_install()
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
 else()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.21)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/rtabmap-0.23)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -167,6 +150,7 @@ if("tools" IN_LIST FEATURES)
             rtabmap-dataRecorder
             rtabmap-odometryViewer
             rtabmap-rgbd_camera
+            rtabmap-lidar_viewer
         AUTO_CLEAN
     )
     file(COPY "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/qt.conf" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
