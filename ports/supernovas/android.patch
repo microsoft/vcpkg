@@ -7,7 +7,7 @@ index 50edfe2f..de8aefe0 100644
    struct timespec t = {};
  
 -#if __STDC_VERSION__ >= 201112L || defined(_MSC_VER)
-+#if !__ANDROID__ && (__STDC_VERSION__ >= 201112L || defined(_MSC_VER))
++#if (__STDC_VERSION__ >= 201112L && !defined(__ANDROID__)) || defined(_MSC_VER)
    timespec_get(&t, TIME_UTC);
  #else
    clock_gettime(CLOCK_REALTIME, &t);
@@ -20,7 +20,7 @@ index db6b6eaf..f411936f 100644
    novas_timespec t1 = {}, t2 = {};
  
 -#if __STDC_VERSION__ >= 201112L || defined(_MSC_VER)
-+#if !__ANDROID__ && (__STDC_VERSION__ >= 201112L || defined(_MSC_VER))
++#if (__STDC_VERSION__ >= 201112L && !defined(__ANDROID__)) || defined(_MSC_VER)
    timespec_get(&now, TIME_UTC);
  #else
    clock_gettime(CLOCK_REALTIME, &now);
