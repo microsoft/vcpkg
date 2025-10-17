@@ -1,0 +1,39 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KDE/kimageformats
+    REF 7858c4eeec712c59b3214386d7e5639cab636bba
+    SHA512 222a4a3aa5304aa6d36d694bf1fd3773456e134a162d835cba3ba8b36a8f6724bfb14900f09cd955a6e85184033e8e6b30cb70587c161b5d1a1d900940451512
+    HEAD_REF master
+    PATCHES
+        fixinstall.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dds     KIMAGEFORMATS_DDS
+        heif    KIMAGEFORMATS_HEIF
+        jxl     KIMAGEFORMATS_JXL
+        jp2     KIMAGEFORMATS_JP2
+        jxr     KIMAGEFORMATS_JXR
+        eps     BUILD_EPS_PLUGIN
+    INVERTED_FEATURES
+        kritaraster CMAKE_DISABLE_FIND_PACKAGE_KF6Archive
+        openexr CMAKE_DISABLE_FIND_PACKAGE_OpenEXR
+        avif    CMAKE_DISABLE_FIND_PACKAGE_libavif
+        raw     CMAKE_DISABLE_FIND_PACKAGE_LibRaw
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBUILD_TESTING=OFF
+)
+
+vcpkg_cmake_install()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
+
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
