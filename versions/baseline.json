@@ -5602,7 +5602,7 @@
     },
     "libunistring": {
       "baseline": "1.2",
-      "port-version": 2
+      "port-version": 3
     },
     "libunwind": {
       "baseline": "1.8.3",

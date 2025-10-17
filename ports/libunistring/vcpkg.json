@@ -1,7 +1,7 @@
 {
   "name": "libunistring",
   "version": "1.2",
-  "port-version": 2,
+  "port-version": 3,
   "description": "GNU libunistring provides functions for manipulating Unicode strings and for manipulating C strings according to the Unicode standard.",
   "homepage": "https://www.gnu.org/software/libunistring/",
   "license": "LGPL-3.0-or-later OR GPL-2.0-or-later",
