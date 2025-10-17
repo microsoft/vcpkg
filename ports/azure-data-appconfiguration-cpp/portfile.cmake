@@ -4,18 +4,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 9023c03ee855af430b7997541fefe836b6571e7e
-    SHA512 3be3cb75aa74c8ae20856b697175cee47c5fd3bd7250a463eabdbaf584519828fb94674d7e88847398a02be627aa3303dd71142155d660b344b78f6f7f59d5a0
+    REF 21e92f87125d0c14e40276b9781cb2a059ac9aca
+    SHA512 5058f1adf47c72118107eb696ed37859f23d87aa04c991bcc384e21db21f84b5cb48cc7887d410cc9e8a20f80e4e46fcd0724ae498cf28dfa3794755ac8ca9a3
     HEAD_REF main
 )
 
-if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-queues")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/storage/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/storage/azure-storage-queues" "${SOURCE_PATH}/sdk/storage/_")
-  file(RENAME "${SOURCE_PATH}/sdk/storage" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
