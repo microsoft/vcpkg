@@ -51,6 +51,7 @@ APT_PACKAGES="$APT_PACKAGES \
   autopoint \
   build-essential \
   cmake \
+  clang flang lld \
   gcc g++ gfortran \
   libnuma1 libnuma-dev \
   libtool libtool-bin libltdl-dev \
