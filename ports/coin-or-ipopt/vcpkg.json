@@ -1,11 +1,38 @@
 {
   "name": "coin-or-ipopt",
-  "version-date": "2023-02-01",
+  "version": "3.14.19",
+  "port-version":3,
   "description": "Ipopt (Interior Point OPTimizer, pronounced eye-pea-Opt) is a software package for large-scale nonlinear optimization",
   "homepage": "https://github.com/coin-or/Ipopt",
   "license": "EPL-2.0",
   "dependencies": [
     "coinutils",
-    "intel-mkl"
-  ]
+    "lapack",
+    "blas",
+    "pkgconf"
+
+  ],
+  "default-features": [
+    "mumps"
+  ],
+  "features": {
+    "openblas":{
+        "description": "use openblas backend",
+        "dependencies": [
+        {
+          "name":"openblas",
+          "features":["blas","lapack"]
+        }
+      ]
+    },
+    "mumps": {
+      "description": "Enable MUMPS linear solver",
+      "dependencies": [
+        "mumps-solver"
+      ]
+    },
+    "hsl": {
+      "description": "Enable HSL linear solvers (requires HSL sources)"
+    }
+  }
 }
