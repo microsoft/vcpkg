@@ -3,8 +3,8 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF ${curl_version}
-    SHA512 9530537a2e9b1e22fa75f3816a122f34b46348e462e74bae2eb3aaa8927de44ac1dd4ce9517f38937d32de4add3151071cc01bdd5554a2000aa9f4db18c0de9b
+    REF #[[ ${curl_version} ]] 66753bc1203167c2a07737963149e83d93e3788c
+    SHA512 961f3566ad8151ff5295dcf69280e5a9a47032c163674f001ab0c9dc5ad00bab9090ae2b22833f0b8b4abf7f57d910c417deee696b34cbc6231077cba83712b6
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -141,11 +141,6 @@ endif()
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(READ "${SOURCE_PATH}/lib/krb5.c" krb5_c)
-string(REGEX REPLACE "#i.*" "" krb5_c "${krb5_c}")
-set(krb5_copyright "${CURRENT_BUILDTREES_DIR}/krb5.c Notice")
-file(WRITE "${krb5_copyright}" "${krb5_c}")
-
 file(READ "${SOURCE_PATH}/lib/curlx/inet_ntop.c" inet_ntop_c)
 string(REGEX REPLACE "#i.*" "" inet_ntop_c "${inet_ntop_c}")
 set(inet_ntop_copyright "${CURRENT_BUILDTREES_DIR}/inet_ntop.c and inet_pton.c Notice")
@@ -154,6 +149,5 @@ file(WRITE "${inet_ntop_copyright}" "${inet_ntop_c}")
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/COPYING"
-        "${krb5_copyright}"
         "${inet_ntop_copyright}"
 )
