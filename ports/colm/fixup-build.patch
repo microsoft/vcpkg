@@ -1,0 +1,64 @@
+diff --git a/Makefile.am b/Makefile.am
+index 0eb09cb4..0c71bac1 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -19,8 +19,6 @@
+ # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ # SOFTWARE.
+ 
+-SUBDIRS = src doc test
++SUBDIRS = src doc
+ 
+-dist_doc_DATA = colm.vim
+-EXTRA_DIST = colm.vim sedsubst
+ ACLOCAL_AMFLAGS = -I m4
+diff --git a/configure.ac b/configure.ac
+index 4f4c4d1a..715c5674 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -424,6 +424,13 @@ test -e src/include/colm || ln -s .. src/include/colm
+ echo "#define VERSION \"$VERSION\"" > src/version.h
+ echo "#define PUBDATE \"$PUBDATE\"" >> src/version.h
+ 
++if test "x$enable_static" = "xyes"; then
++	AC_DEFINE([LINK_STATIC], [1], [Link static lib when invoking C compile and link])
++fi
++
++if test "x$enable_shared" = "xyes"; then
++	AC_DEFINE([LINK_SHARED], [1], [Link shared lib when invoking C compile and link])
++fi
+ 
+ dnl
+ dnl Wrap up.
+@@ -437,12 +444,6 @@ AC_OUTPUT([
+ 	src/libfsm/Makefile
+ 	src/cgil/Makefile
+ 	src/Makefile
+-	test/Makefile
+-	test/aapl.d/Makefile
+-	test/colm.d/Makefile
+-	test/rlhc.d/Makefile
+-	test/rlparse.d/Makefile
+-	test/trans.d/Makefile
+ 	doc/Makefile
+ 	doc/colm/Makefile
+ ])
+diff --git a/src/main.cc b/src/main.cc
+index 301fae91..8ca395f0 100644
+--- a/src/main.cc
++++ b/src/main.cc
+@@ -485,7 +485,14 @@ void compileOutput( const char *argv0, const bool inSource, char *srcLocation )
+ 				" -I%s/../aapl"
+ 				" -I%s/include"
+ 				" -L%s"
++#if defined(LINK_STATIC)
+ 				" %s/libcolm.a",
++#elif defined(LINK_SHARED)
++				" %s/libcolm.so",
++#else
++#				error "must enabled at least one of shared or static libs"
++#endif
++
+ 				binaryFn, intermedFn, srcLocation,
+ 				srcLocation, location, location );
+ 	}
