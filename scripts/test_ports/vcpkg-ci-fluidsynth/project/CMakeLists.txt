@@ -11,3 +11,4 @@ pkg_check_modules(fluidsynth_pc fluidsynth REQUIRED IMPORTED_TARGET)
 
 add_executable(main-pkconfig main.c)
 target_link_libraries(main-pkconfig PRIVATE PkgConfig::fluidsynth_pc)
+set_target_properties(main-pkconfig PROPERTIES LINKER_LANGUAGE CXX)
