@@ -1,0 +1,4 @@
+yandex-disk-cpp-client provides CMake targets:
+
+find_package(yandex-disk-cpp-client CONFIG REQUIRED)
+target_link_libraries(your_target PRIVATE yandex-disk-cpp-client)
