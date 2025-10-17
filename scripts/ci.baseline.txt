@@ -39,7 +39,6 @@
 ##
 
 # Add new items alphabetically
-angelscript:x64-osx=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:x64-android=fail
@@ -171,7 +170,6 @@ clockutils:arm-neon-android=fail # gnustl_shared is no longer supported. Please 
 clockutils:arm64-android=fail
 clockutils:x64-android=fail
 clrng:arm-neon-android=fail
-coin-or-ipopt:x64-linux=fail
 coin-or-ipopt:x64-windows-static-md=fail
 coin-or-ipopt:x64-windows-static=fail
 coroutine:arm-neon-android=fail

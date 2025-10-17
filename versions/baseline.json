@@ -9782,7 +9782,7 @@
     },
     "torch-th": {
       "baseline": "2019-04-19",
-      "port-version": 5
+      "port-version": 6
     },
     "tracy": {
       "baseline": "0.11.1",
