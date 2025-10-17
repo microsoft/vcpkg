@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:noble-20250805
+FROM ubuntu:noble-20251001
 
 ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
 ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14+7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
@@ -39,7 +39,7 @@ ENV APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
   libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev \
   libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev \
   libxcb-render-util0-dev libxcb-xinerama0-dev libxcb-xkb-dev libxcb-xinput-dev \
-  libxcb-cursor-dev libxkbcommon-x11-dev"
+  libxcb-cursor-dev libxkbcommon-x11-dev libsm6 libsm-dev"
 
 ## PowerShell
 ENV APT_PACKAGES="$APT_PACKAGES powershell azcopy"
