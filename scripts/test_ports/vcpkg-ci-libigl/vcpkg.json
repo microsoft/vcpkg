@@ -15,12 +15,40 @@
     }
   ],
   "default-features": [
+    "cgal",
     "glfw",
-    "imgui"
+    "imgui",
+    "xml"
   ],
   "features": {
+    "cgal": {
+      "description": "libigl[cgal]",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "cgal",
+            "glfw"
+          ]
+        }
+      ]
+    },
+    "embree": {
+      "description": "libigl[embree]",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "embree",
+            "glfw"
+          ]
+        }
+      ]
+    },
     "glfw": {
-      "description": "libigl[glfw]",
+      "description": "libigl[glfw] and stb",
       "dependencies": [
         {
           "name": "libigl",
@@ -32,13 +60,25 @@
       ]
     },
     "imgui": {
-      "description": "libigl[imgui]",
+      "description": "libigl[imgui] and stb",
       "dependencies": [
         {
           "name": "libigl",
           "default-features": false,
           "features": [
             "imgui"
+          ]
+        }
+      ]
+    },
+    "xml": {
+      "description": "libigl[xml]",
+      "dependencies": [
+        {
+          "name": "libigl",
+          "default-features": false,
+          "features": [
+            "xml"
           ]
         }
       ]

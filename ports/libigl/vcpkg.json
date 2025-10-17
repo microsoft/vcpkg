@@ -35,7 +35,7 @@
       ]
     },
     "copyleft": {
-      "description": "Build components with copyleft licenses"
+      "description": "Build copyleft core module"
     },
     "embree": {
       "description": "Build with embree",
