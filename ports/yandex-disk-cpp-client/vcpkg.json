@@ -5,5 +5,10 @@
   "homepage": "https://github.com/Krasnovvvvv/yandex-disk-cpp-client",
   "documentation": "https://krasnovvvvv.github.io/yandex-disk-cpp-client/",
   "license": "MIT",
-  "dependencies": ["nlohmann-json", "curl", "vcpkg-cmake", "vcpkg-cmake-config"]
+  "dependencies": [
+    "curl",
+    "nlohmann-json",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
 }
