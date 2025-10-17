@@ -1,0 +1,11 @@
+{
+  "name": "normancoresdk",
+  "version-string": "1.0.0",
+  "dependencies": [
+    "cpr",
+    "fmt",
+    "nlohmann-json",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}
