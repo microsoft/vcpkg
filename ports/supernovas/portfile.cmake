@@ -4,17 +4,13 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 4babecc41fbdfa515f2aea2f07f6b052605d16c1c3d6aa3ab44d13de6cf4ccd1a59f4e72e269623fd4ea73b83b72ff7bd6068c8cb09866a535412e50ee040446
     HEAD_REF main
+    PATCHES android.patch solsys-calceph.patch cmake.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_CALCEPH=OFF
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH "${SOURCE_PATH}"
-    PATCHES android.patch
+        -DBUILD_TESTING=OFF -DENABLE_CALCEPH=ON
 )
 
 vcpkg_cmake_install()
