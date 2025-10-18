@@ -266,7 +266,6 @@ spaceland:arm64-windows-static-md=fail
 spaceland:arm64-windows=fail
 spaceland:x64-android=fail
 spaceland:x64-uwp=fail
-spdk:x64-linux=fail
 stormlib(uwp)=fail
 stxxl:arm-uwp=fail
 stxxl:x64-uwp=fail
