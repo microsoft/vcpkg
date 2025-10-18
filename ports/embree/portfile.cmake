@@ -45,11 +45,17 @@ endif()
 if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # "Using Embree as static library is not supported with AppleClang >= 9.0
     #  when multiple ISAs are selected."
-    # The port follows the triplet and selects a single ISA for static linkage.
+    # The port follows linkage and selects a single ISA for static linkage.
     # Per-port customization may override VCPKG_LIBRARY_LINKAGE or ISA flags.
     list(APPEND FEATURE_OPTIONS "-DEMBREE_MAX_ISA=NONE")
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        list(APPEND FEATURE_OPTIONS "-DEMBREE_ISA_AVX2=ON")
+        list(APPEND FEATURE_OPTIONS
+            -DEMBREE_ISA_SSE2=OFF
+            -DEMBREE_ISA_SSE42=OFF
+            -DCOMPILER_SUPPORTS_AVX=OFF
+            -DEMBREE_ISA_AVX2=ON
+            -DCOMPILER_SUPPORTS_AVX512=OFF
+        )
     endif()
 endif()
 
