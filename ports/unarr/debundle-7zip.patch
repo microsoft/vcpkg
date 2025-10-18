@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f38b229..fc598b8 100644
+index f38b229..da527d4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,19 +52,6 @@ add_library(
@@ -35,8 +35,11 @@ index f38b229..fc598b8 100644
  
  if(USE_SYSTEM_BZ2)
    find_package(BZip2)
-@@ -154,28 +147,6 @@ if(ZLIB_FOUND)
+@@ -152,30 +145,9 @@ if(ZLIB_FOUND)
+   set(PROJECT_REQUIRES_PRIVATE "${PROJECT_REQUIRES_PRIVATE} zlib")
+   set(UNARR_DEPENDS_ZLIB "find_dependency(ZLIB)")
  endif()
++target_include_directories(unarr PRIVATE "${ZLIB_INCLUDE_DIR}")
  
  if(ENABLE_7Z)
 -  target_sources(
