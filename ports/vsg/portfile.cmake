@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 997ba97c4860c2b9e79589358b1471df5ec14e64329bc8c5e23b1db2e855e63433cc5141f5fe34f785f88c9b3bcfc27f6aa8e9f5fc5d11cfdd1dab43f0e448cc
     HEAD_REF master
+    PATCHES
+        cmakedefine01.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
