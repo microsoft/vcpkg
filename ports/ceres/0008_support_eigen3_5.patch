@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7e7e413..1ab96b1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -182,7 +182,7 @@ unset(CERES_COMPILE_OPTIONS)
+ 
+ # Eigen.
+ # Eigen delivers Eigen3Config.cmake since v3.3.3
+-find_package(Eigen3 3.3 REQUIRED)
++find_package(Eigen3 3.3...5 REQUIRED)
+ if (Eigen3_FOUND)
+   message("-- Found Eigen version ${Eigen3_VERSION}: ${Eigen3_DIR}")
+   if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*)" AND
+
+diff --git a/internal/ceres/covariance_impl.cc b/internal/ceres/covariance_impl.cc
+index 56221945a55927aff91ab96b37a9af19514ca508..930711fd01f0a61aad88b188acad4958f777f706 100644
+--- a/internal/ceres/covariance_impl.cc
++++ b/internal/ceres/covariance_impl.cc
+@@ -724,8 +724,13 @@ bool CovarianceImpl::ComputeCovarianceValuesUsingDenseSVD() {
+   }
+   event_logger.AddEvent("ConvertToDenseMatrix");
+ 
++#if EIGEN_VERSION_AT_LEAST(5, 0, 0)
++  Eigen::BDCSVD<Matrix, Eigen::ComputeThinU | Eigen::ComputeThinV> svd(
++      dense_jacobian);
++#else   // !EIGEN_VERSION_AT_LEAST(5, 0, 0)
+   Eigen::BDCSVD<Matrix> svd(dense_jacobian,
+                             Eigen::ComputeThinU | Eigen::ComputeThinV);
++#endif  // EIGEN_VERSION_AT_LEAST(5, 0, 0)
+ 
+   event_logger.AddEvent("SingularValueDecomposition");
+ 
+diff --git a/internal/ceres/invert_psd_matrix.h b/internal/ceres/invert_psd_matrix.h
+index 21ba2dc8a150725aae2a779b7551ad4b7973b379..dd3a0a34bf02f8852a7a71edbc8ac0e9a8865f51 100644
+--- a/internal/ceres/invert_psd_matrix.h
++++ b/internal/ceres/invert_psd_matrix.h
+@@ -67,7 +67,11 @@ typename EigenTypes<kSize, kSize>::Matrix InvertPSDMatrix(
+ 
+   // For a thin SVD the number of columns of the matrix need to be dynamic.
+   using SVDMType = typename EigenTypes<kSize, Eigen::Dynamic>::Matrix;
++#if EIGEN_VERSION_AT_LEAST(5, 0, 0)
++  Eigen::JacobiSVD<SVDMType, Eigen::ComputeThinU | Eigen::ComputeThinV> svd(m);
++#else   // !EIGEN_VERSION_AT_LEAST(5, 0, 0)
+   Eigen::JacobiSVD<SVDMType> svd(m, Eigen::ComputeThinU | Eigen::ComputeThinV);
++#endif  // EIGEN_VERSION_AT_LEAST(5, 0, 0)
+   return svd.solve(MType::Identity(size, size));
+ }
+ 
