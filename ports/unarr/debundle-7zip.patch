@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f38b229..9b30b35 100644
+index f38b229..a56a098 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,19 +52,6 @@ add_library(
@@ -22,7 +22,7 @@ index f38b229..9b30b35 100644
    rar/lzss.h
    rar/rar.h
    rar/rarvm.h
-@@ -102,6 +89,15 @@ target_include_directories(
+@@ -102,6 +89,12 @@ target_include_directories(
  if(BUILD_SHARED_LIBS)
    target_compile_definitions(unarr PUBLIC UNARR_IS_SHARED_LIBRARY)
  endif()
@@ -35,7 +35,7 @@ index f38b229..9b30b35 100644
  
  if(USE_SYSTEM_BZ2)
    find_package(BZip2)
-@@ -115,7 +111,7 @@ if(BZIP2_FOUND)
+@@ -115,7 +108,7 @@ if(BZIP2_FOUND)
    endif()
    target_compile_definitions(unarr PRIVATE -DHAVE_BZIP2)
    # Bzip2 upstream does not supply a .pc file. Add it to Libs.private.
@@ -44,7 +44,7 @@ index f38b229..9b30b35 100644
    set(UNARR_DEPENDS_BZip2 "find_dependency(BZip2)")
  endif()
  
-@@ -154,28 +150,6 @@ if(ZLIB_FOUND)
+@@ -154,28 +147,6 @@ if(ZLIB_FOUND)
  endif()
  
  if(ENABLE_7Z)
@@ -73,7 +73,7 @@ index f38b229..9b30b35 100644
    target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
  endif()
  
-@@ -194,8 +168,7 @@ if(UNIX
+@@ -194,8 +165,7 @@ if(UNIX
              -Werror-implicit-function-declaration
              $<$<CONFIG:Release>:-fomit-frame-pointer>
              $<$<C_COMPILER_ID:Clang,AppleClang>:
@@ -83,7 +83,7 @@ index f38b229..9b30b35 100644
    if(BUILD_FUZZER)
      target_compile_options(unarr PUBLIC "${sanitize_opts}")
      target_compile_definitions(
-@@ -218,7 +191,7 @@ if(UNIX
+@@ -218,7 +188,7 @@ if(UNIX
  
    # Clang linker needs -flto too when doing lto
    if("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
