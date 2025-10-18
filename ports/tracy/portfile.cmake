@@ -17,11 +17,14 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        on-demand TRACY_ON_DEMAND
-        fibers	  TRACY_FIBERS
-        verbose   TRACY_VERBOSE
+        on-demand        TRACY_ON_DEMAND
+        fibers           TRACY_FIBERS
+        verbose          TRACY_VERBOSE
+        manual-lifetime  TRACY_MANUAL_LIFETIME
+        manual-lifetime  TRACY_DELAYED_INIT
     INVERTED_FEATURES
-        crash-handler TRACY_NO_CRASH_HANDLER
+        crash-handler     TRACY_NO_CRASH_HANDLER
+        capture-callstack TRACY_NO_CALLSTACK
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS TOOLS_OPTIONS
