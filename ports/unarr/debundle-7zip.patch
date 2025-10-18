@@ -28,7 +28,7 @@ index f38b229..9b30b35 100644
  endif()
 +# Debundle 7zip
 +find_package(7zip CONFIG REQUIRED)
-+target_link_libraries(unarr PUBLIC 7zip::7zip)
++target_link_libraries(unarr PRIVATE 7zip::7zip)
 +# 7zip upstream does not supply a .pc file. Add it to Libs.private.
 +set(PROJECT_LIBS_PRIVATE "${PROJECT_LIBS_PRIVATE} -l7zip")
 +set(UNARR_DEPENDS_7zip "find_dependency(7zip CONFIG)")
