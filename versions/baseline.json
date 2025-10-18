@@ -10308,6 +10308,10 @@
       "baseline": "2025.05.19.00",
       "port-version": 0
     },
+    "wasm-micro-runtime": {
+      "baseline": "2.4.3",
+      "port-version": 0
+    },
     "wasmedge": {
       "baseline": "0.13.5",
       "port-version": 2
