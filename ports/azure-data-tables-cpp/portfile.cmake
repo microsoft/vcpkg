@@ -9,6 +9,9 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
+file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
+file(REMOVE_RECURSE ${unused})
+
 if(EXISTS "${SOURCE_PATH}/sdk/tables/azure-data-tables")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/tables/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
