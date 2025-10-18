@@ -10226,7 +10226,7 @@
     },
     "vsg": {
       "baseline": "1.1.11",
-      "port-version": 0
+      "port-version": 1
     },
     "vsgimgui": {
       "baseline": "0.3.0",
