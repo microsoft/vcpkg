@@ -35,7 +35,11 @@ vcpkg_cmake_configure(
         -DLIBIGL_BUILD_TESTS=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
         -DLIBIGL_INSTALL=ON
-        -DLIBIGL_USE_STATIC_LIBRARY=ON # i.e. build actual lib; respects BUILD_SHARED_LIBS
+        # This option enables building an actual binary library.
+        # It still respects BUILD_SHARED_LIBS.
+        # Missing symbols - i.e. explicit template instantiations -
+        # must be added to the implementation files (and upstreamed).
+        -DLIBIGL_USE_STATIC_LIBRARY=ON
         # Permissive modules
         -DLIBIGL_PREDICATES=OFF
         -DLIBIGL_SPECTRA=OFF
@@ -52,8 +56,13 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/igl)
 vcpkg_copy_pdbs()
 
-if(NOT LIBIGL_COPYLEFT_CORE)
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2")
-else()
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2" "${SOURCE_PATH}/LICENSE.GPL" COMMENT "GPL for targets in \"igl_copyleft::\" namespace.")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+set(comment "")
+set(licenses "${SOURCE_PATH}/LICENSE.MPL2")
+if(LIBIGL_COPYLEFT_CORE)
+    string(APPEND comment "GPL terms apply to the targets in the \"igl_copyleft::\" namespace.\n")
+    list(APPEND licenses "${SOURCE_PATH}/LICENSE.GPL")
 endif()
+vcpkg_install_copyright(FILE_LIST ${licenses} COMMENT "${comment}")
