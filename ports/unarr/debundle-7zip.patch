@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f38b229..9d055f9 100644
+index f38b229..f10083d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,19 +52,6 @@ add_library(
@@ -28,10 +28,10 @@ index f38b229..9d055f9 100644
  endif()
 +# Debundle 7zip
 +find_package(7zip CONFIG REQUIRED)
-+target_link_libraries(unarr PRIVATE 7zip::7zip)
++target_link_libraries(unarr PUBLIC 7zip::7zip)
 +# Ensure 7zip headers are accessible
 +get_target_property(7ZIP_INCLUDE_DIRS 7zip::7zip INTERFACE_INCLUDE_DIRECTORIES)
-+target_include_directories(unarr PRIVATE ${7ZIP_INCLUDE_DIRS})
++target_include_directories(unarr PUBLIC ${7ZIP_INCLUDE_DIRS})
 +# 7zip upstream does not supply a .pc file. Add it to Libs.private.
 +set(PROJECT_LIBS_PRIVATE "-I${7zip_INCLUDE_DIRS} -l${7zip_LIBRARIES}")
 +set(UNARR_DEPENDS_7zip "${UNARR_DEPENDS_7zip} find_dependency(7zip)")
