@@ -8,6 +8,8 @@ vcpkg_from_github(
         debundle-7zip.patch
 )
 
+file(REMOVE_RECURSE "${SOURCE_PATH}/lzmasdk")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
