@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f38b229..a56a098 100644
+index f38b229..3d5c150 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,19 +52,6 @@ add_library(
@@ -35,16 +35,17 @@ index f38b229..a56a098 100644
  
  if(USE_SYSTEM_BZ2)
    find_package(BZip2)
-@@ -115,7 +108,7 @@ if(BZIP2_FOUND)
+@@ -115,7 +108,8 @@ if(BZIP2_FOUND)
    endif()
    target_compile_definitions(unarr PRIVATE -DHAVE_BZIP2)
    # Bzip2 upstream does not supply a .pc file. Add it to Libs.private.
 -  set(PROJECT_LIBS_PRIVATE "-I${BZIP2_INCLUDE_DIRS} -l${BZIP2_LIBRARIES}")
-+  set(PROJECT_LIBS_PRIVATE "${PROJECT_LIBS_PRIVATE} -I${BZIP2_INCLUDE_DIRS} -l${BZIP2_LIBRARIES}")
++  set(PROJECT_CFLAGS "${PROJECT_CFLAGS} -I${BZIP2_INCLUDE_DIRS}")
++  set(PROJECT_LIBS_PRIVATE "${PROJECT_LIBS_PRIVATE} -l${BZIP2_LIBRARIES}")
    set(UNARR_DEPENDS_BZip2 "find_dependency(BZip2)")
  endif()
  
-@@ -154,28 +147,6 @@ if(ZLIB_FOUND)
+@@ -154,28 +148,6 @@ if(ZLIB_FOUND)
  endif()
  
  if(ENABLE_7Z)
@@ -73,7 +74,7 @@ index f38b229..a56a098 100644
    target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
  endif()
  
-@@ -194,8 +165,7 @@ if(UNIX
+@@ -194,8 +166,7 @@ if(UNIX
              -Werror-implicit-function-declaration
              $<$<CONFIG:Release>:-fomit-frame-pointer>
              $<$<C_COMPILER_ID:Clang,AppleClang>:
@@ -83,7 +84,7 @@ index f38b229..a56a098 100644
    if(BUILD_FUZZER)
      target_compile_options(unarr PUBLIC "${sanitize_opts}")
      target_compile_definitions(
-@@ -218,7 +188,7 @@ if(UNIX
+@@ -218,7 +189,7 @@ if(UNIX
  
    # Clang linker needs -flto too when doing lto
    if("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
@@ -108,6 +109,19 @@ index 7f207e1..f488e42 100644
  #endif
  
  typedef struct ar_archive_7z_s ar_archive_7z;
+diff --git a/pkg-config.pc.cmake b/pkg-config.pc.cmake
+index 9055aef..a8581e0 100644
+--- a/pkg-config.pc.cmake
++++ b/pkg-config.pc.cmake
+@@ -5,7 +5,7 @@ libdir=@PROJECT_INSTALL_LIBDIR@
+ Name: @PROJECT_NAME@
+ Description: @PROJECT_DESCRIPTION@
+ Version: @PROJECT_VERSION@
+-Cflags: -I${includedir}
++Cflags: -I${includedir}@PROJECT_CFLAGS@
+ Requires.private: @PROJECT_REQUIRES_PRIVATE@
+ Libs: -L${libdir} -l@PROJECT_NAME@
+ Libs.private: @PROJECT_LIBS_PRIVATE@
 diff --git a/rar/rar.h b/rar/rar.h
 index a0a420a..b522a33 100644
 --- a/rar/rar.h
