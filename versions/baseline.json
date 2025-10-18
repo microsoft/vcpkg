@@ -1650,7 +1650,7 @@
     },
     "ceres": {
       "baseline": "2.2.0",
-      "port-version": 5
+      "port-version": 6
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -2673,8 +2673,8 @@
       "port-version": 0
     },
     "eigen3": {
-      "baseline": "3.4.1",
-      "port-version": 1
+      "baseline": "5.0.0",
+      "port-version": 0
     },
     "eipscanner": {
       "baseline": "1.3.0",
@@ -2882,7 +2882,7 @@
     },
     "fcl": {
       "baseline": "0.7.0",
-      "port-version": 4
+      "port-version": 5
     },
     "fdk-aac": {
       "baseline": "2.0.2",
@@ -3518,7 +3518,7 @@
     },
     "gtsam": {
       "baseline": "4.2.0",
-      "port-version": 1
+      "port-version": 2
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -5978,7 +5978,7 @@
     },
     "ltla-cppirlba": {
       "baseline": "2.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ltla-cppkmeans": {
       "baseline": "4.0.3",
@@ -7310,7 +7310,7 @@
     },
     "pagmo2": {
       "baseline": "2.19.1",
-      "port-version": 0
+      "port-version": 1
     },
     "paho-mqtt": {
       "baseline": "1.3.15",
@@ -8346,7 +8346,7 @@
     },
     "rbdl": {
       "baseline": "3.3.0",
-      "port-version": 7
+      "port-version": 8
     },
     "re2": {
       "baseline": "2025-08-12",
