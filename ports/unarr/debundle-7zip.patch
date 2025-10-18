@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f38b229..f614f0d 100644
+index f38b229..40160a0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,19 +52,6 @@ add_library(
@@ -22,20 +22,21 @@ index f38b229..f614f0d 100644
    rar/lzss.h
    rar/rar.h
    rar/rarvm.h
-@@ -102,6 +89,12 @@ target_include_directories(
+@@ -102,6 +89,13 @@ target_include_directories(
  if(BUILD_SHARED_LIBS)
    target_compile_definitions(unarr PUBLIC UNARR_IS_SHARED_LIBRARY)
  endif()
-+#Debundle 7zip
++# Debundle 7zip
 +find_package(7zip CONFIG REQUIRED)
 +target_link_libraries(unarr PRIVATE 7zip::7zip)
++target_include_directories(unarr PRIVATE ${7zip_INCLUDE_DIRS})
 +# 7zip upstream does not supply a .pc file. Add it to Libs.private.
 +set(PROJECT_LIBS_PRIVATE "-I${7zip_INCLUDE_DIRS} -l${7zip_LIBRARIES}")
 +set(UNARR_DEPENDS_7zip "${UNARR_DEPENDS_7zip} find_dependency(7zip)")
  
  if(USE_SYSTEM_BZ2)
    find_package(BZip2)
-@@ -154,28 +147,6 @@ if(ZLIB_FOUND)
+@@ -154,28 +148,6 @@ if(ZLIB_FOUND)
  endif()
  
  if(ENABLE_7Z)
