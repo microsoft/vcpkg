@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e422554..53f9143 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -163,7 +163,7 @@ endif()
+ 
+ # Eigen3
+ if(PAGMO_WITH_EIGEN3)
+-    find_package(Eigen3 3.3 REQUIRED NO_MODULE)
++    find_package(Eigen3 3.3...5 REQUIRED NO_MODULE)
+ endif()
+ 
+ # NLopt
