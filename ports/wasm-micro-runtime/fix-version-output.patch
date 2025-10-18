@@ -1,0 +1,18 @@
+--- a/build-scripts/version.cmake
++++ b/build-scripts/version.cmake
+@@ -15,7 +15,7 @@
+ # Configure the version header file
+ configure_file(
+   ${WAMR_ROOT_DIR}/core/version.h.in
+-  ${WAMR_ROOT_DIR}/core/version.h
++  ${CMAKE_CURRENT_BINARY_DIR}/version.h
+ )
+ 
+ # Set the library version and SOVERSION
+@@ -26,3 +26,6 @@
+       SOVERSION ${WAMR_VERSION_MAJOR}
+ )
+ endfunction()
++
++# Include binary directory for generated version.h
++include_directories(${CMAKE_CURRENT_BINARY_DIR})

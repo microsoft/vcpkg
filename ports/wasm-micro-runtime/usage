@@ -1,0 +1,15 @@
+The package wasm-micro-runtime provides CMake targets:
+
+    find_package(iwasm CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE iwasm)
+
+The package wasm-micro-runtime also exports the library target `vmlib` which can be used directly:
+
+    find_package(iwasm CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE vmlib)
+
+Note: The default features include AOT compiler, classic interpreter, fast interpreter, 
+libc builtin, libc WASI, and reference types support. These match the default configuration 
+of WAMR.
+
+On Windows, hardware bound checking is disabled to avoid additional dependencies.
