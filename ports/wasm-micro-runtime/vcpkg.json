@@ -1,0 +1,70 @@
+{
+  "name": "wasm-micro-runtime",
+  "version": "2.4.3",
+  "description": "WebAssembly Micro Runtime (WAMR) is a lightweight standalone WebAssembly (Wasm) runtime with small footprint, high performance and highly configurable features for embedded, IoT and edge computing applications.",
+  "homepage": "https://github.com/bytecodealliance/wasm-micro-runtime",
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "supports": "!(uwp | arm | xbox)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "aot",
+    "classic-interpreter",
+    "fast-interpreter",
+    "libc-builtin",
+    "libc-wasi",
+    "ref-types"
+  ],
+  "features": {
+    "aot": {
+      "description": "Build with the Ahead-of-Time compiler support"
+    },
+    "classic-interpreter": {
+      "description": "Build with the classic interpreter support"
+    },
+    "copy-call-stack": {
+      "description": "Build with copy call stack support"
+    },
+    "fast-interpreter": {
+      "description": "Build with the fast interpreter support"
+    },
+    "fast-jit": {
+      "description": "Build with the fast JIT support"
+    },
+    "lib-pthread": {
+      "description": "Build with pthread library support"
+    },
+    "lib-wasi-threads": {
+      "description": "Build with WASI threads library support"
+    },
+    "libc-builtin": {
+      "description": "Build with libc builtin support"
+    },
+    "libc-wasi": {
+      "description": "Build with libc WASI support"
+    },
+    "llvm-jit": {
+      "description": "Build with the LLVM JIT support"
+    },
+    "mini-loader": {
+      "description": "Build with mini loader support"
+    },
+    "multi-module": {
+      "description": "Build with multiple module support"
+    },
+    "ref-types": {
+      "description": "Build with reference types support"
+    },
+    "simd": {
+      "description": "Build with SIMD support"
+    }
+  }
+}
