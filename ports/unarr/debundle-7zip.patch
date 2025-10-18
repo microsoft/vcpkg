@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f38b229..d16a222 100644
+index f38b229..9b30b35 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,19 +52,6 @@ add_library(
@@ -47,7 +47,7 @@ index f38b229..d16a222 100644
    set(UNARR_DEPENDS_BZip2 "find_dependency(BZip2)")
  endif()
  
-@@ -154,29 +150,7 @@ if(ZLIB_FOUND)
+@@ -154,28 +150,6 @@ if(ZLIB_FOUND)
  endif()
  
  if(ENABLE_7Z)
@@ -73,11 +73,9 @@ index f38b229..d16a222 100644
 -  if(LIBLZMA_FOUND) # TODO: Replace 7z lzma with system lzma
 -    target_sources(unarr PRIVATE lzmasdk/LzmaDec.h lzmasdk/LzmaDec.c)
 -  endif()
--  target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
-+  target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT -DZ7_EXTERNAL_CODECS)
+   target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
  endif()
  
- # Compiler specific settings
 @@ -194,8 +168,7 @@ if(UNIX
              -Werror-implicit-function-declaration
              $<$<CONFIG:Release>:-fomit-frame-pointer>
