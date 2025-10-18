@@ -1,7 +1,3 @@
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO selmf/unarr
@@ -12,15 +8,11 @@ vcpkg_from_github(
         debundle-7zip.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        "enable-7z"            ENABLE_7Z
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DENABLE_7Z=ON
         -DUSE_SYSTEM_BZ2=ON
         -DUSE_SYSTEM_LZMA=ON
         -DUSE_SYSTEM_ZLIB=ON
