@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f38b229..da527d4 100644
+index f38b229..6029798 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,19 +52,6 @@ add_library(
@@ -35,11 +35,8 @@ index f38b229..da527d4 100644
  
  if(USE_SYSTEM_BZ2)
    find_package(BZip2)
-@@ -152,30 +145,9 @@ if(ZLIB_FOUND)
-   set(PROJECT_REQUIRES_PRIVATE "${PROJECT_REQUIRES_PRIVATE} zlib")
-   set(UNARR_DEPENDS_ZLIB "find_dependency(ZLIB)")
+@@ -154,28 +147,6 @@ if(ZLIB_FOUND)
  endif()
-+target_include_directories(unarr PRIVATE "${ZLIB_INCLUDE_DIR}")
  
  if(ENABLE_7Z)
 -  target_sources(
@@ -67,6 +64,25 @@ index f38b229..da527d4 100644
    target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
  endif()
  
+@@ -194,8 +165,7 @@ if(UNIX
+             -Werror-implicit-function-declaration
+             $<$<CONFIG:Release>:-fomit-frame-pointer>
+             $<$<C_COMPILER_ID:Clang,AppleClang>:
+-            -Wno-missing-field-initializers>
+-            -flto)
++            -Wno-missing-field-initializers>)
+   if(BUILD_FUZZER)
+     target_compile_options(unarr PUBLIC "${sanitize_opts}")
+     target_compile_definitions(
+@@ -218,7 +188,7 @@ if(UNIX
+ 
+   # Clang linker needs -flto too when doing lto
+   if("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
+-    set(linker_opts "${linker_opts} -flto")
++    set(linker_opts "${linker_opts}")
+   endif()
+ 
+   set_target_properties(unarr PROPERTIES LINK_FLAGS "${linker_opts}")
 diff --git a/_7z/_7z.h b/_7z/_7z.h
 index 7f207e1..f488e42 100644
 --- a/_7z/_7z.h
