@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f38b229..6029798 100644
+index f38b229..9d055f9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -52,19 +52,6 @@ add_library(
@@ -22,20 +22,23 @@ index f38b229..6029798 100644
    rar/lzss.h
    rar/rar.h
    rar/rarvm.h
-@@ -102,6 +89,12 @@ target_include_directories(
+@@ -102,6 +89,15 @@ target_include_directories(
  if(BUILD_SHARED_LIBS)
    target_compile_definitions(unarr PUBLIC UNARR_IS_SHARED_LIBRARY)
  endif()
 +# Debundle 7zip
 +find_package(7zip CONFIG REQUIRED)
 +target_link_libraries(unarr PRIVATE 7zip::7zip)
++# Ensure 7zip headers are accessible
++get_target_property(7ZIP_INCLUDE_DIRS 7zip::7zip INTERFACE_INCLUDE_DIRECTORIES)
++target_include_directories(unarr PRIVATE ${7ZIP_INCLUDE_DIRS})
 +# 7zip upstream does not supply a .pc file. Add it to Libs.private.
 +set(PROJECT_LIBS_PRIVATE "-I${7zip_INCLUDE_DIRS} -l${7zip_LIBRARIES}")
 +set(UNARR_DEPENDS_7zip "${UNARR_DEPENDS_7zip} find_dependency(7zip)")
  
  if(USE_SYSTEM_BZ2)
    find_package(BZip2)
-@@ -154,28 +147,6 @@ if(ZLIB_FOUND)
+@@ -154,29 +150,7 @@ if(ZLIB_FOUND)
  endif()
  
  if(ENABLE_7Z)
@@ -61,10 +64,12 @@ index f38b229..6029798 100644
 -  if(LIBLZMA_FOUND) # TODO: Replace 7z lzma with system lzma
 -    target_sources(unarr PRIVATE lzmasdk/LzmaDec.h lzmasdk/LzmaDec.c)
 -  endif()
-   target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
+-  target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
++  target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT -DZ7_EXTERNAL_CODECS)
  endif()
  
-@@ -194,8 +165,7 @@ if(UNIX
+ # Compiler specific settings
+@@ -194,8 +168,7 @@ if(UNIX
              -Werror-implicit-function-declaration
              $<$<CONFIG:Release>:-fomit-frame-pointer>
              $<$<C_COMPILER_ID:Clang,AppleClang>:
@@ -74,7 +79,7 @@ index f38b229..6029798 100644
    if(BUILD_FUZZER)
      target_compile_options(unarr PUBLIC "${sanitize_opts}")
      target_compile_definitions(
-@@ -218,7 +188,7 @@ if(UNIX
+@@ -218,7 +191,7 @@ if(UNIX
  
    # Clang linker needs -flto too when doing lto
    if("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
