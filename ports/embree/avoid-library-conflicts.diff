@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1292e26..93a673a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -708,3 +708,9 @@ ENDIF()
+ ##############################################################
+ 
+ INCLUDE(CPack)
++
++foreach(lib IN ITEMS lexers math simd sys tasking)
++  if(TARGET ${lib})
++    set_target_properties(${lib} PROPERTIES OUTPUT_NAME ${EMBREE_LIBRARY_NAME}_${lib})
++  endif()
++endforeach()
