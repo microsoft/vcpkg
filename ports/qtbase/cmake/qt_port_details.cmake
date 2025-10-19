@@ -104,11 +104,11 @@ endif()
 
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
-set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)
+set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager qtinterfaceframework)
 # 3. These modules are mirrored to github and have branches matching the release
 set(QT_FROM_GITHUB_BRANCH qtdeviceutilities)
 # 4. These modules are not mirrored to github and not part of the release
-set(QT_FROM_QT_GIT qtinterfaceframework)
+set(QT_FROM_QT_GIT "")
 # For beta releases uncomment the next two lines and comment the lines with QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, QT_FROM_QT_GIT
 #set(QT_FROM_QT_GIT ${QT_PORTS})
 #list(POP_FRONT QT_FROM_QT_GIT)
