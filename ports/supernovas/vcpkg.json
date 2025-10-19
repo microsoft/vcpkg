@@ -7,7 +7,6 @@
   "license": "Unlicense",
   "supports": "!uwp",
   "dependencies": [
-    "calceph",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,5 +15,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "solsys-calceph": {
+      "description": "Solar-sytem ephemeris support via the CALCEPH library.",
+      "dependencies": [
+        "calceph"
+      ]
+    }
+  }
 }

@@ -7,10 +7,16 @@ vcpkg_from_github(
     PATCHES android.patch solsys-calceph.patch cmake.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        solsys-calceph   ENABLE_CALCEPH
+)
+
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTING=OFF -DENABLE_CALCEPH=ON
+        -DBUILD_TESTING=OFF ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
