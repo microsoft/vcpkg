@@ -4,7 +4,7 @@
   "description": "Cross-platform library for building Telegram clients",
   "homepage": "https://github.com/tdlib/td",
   "license": "BSL-1.0",
-  "supports": "(windows & static & !uwp & !arm & !arm64 & !xbox) | linux | osx",
+  "supports": "((windows & !uwp & !arm & !arm64 & !xbox) | linux | osx) & static",
   "dependencies": [
     {
       "name": "gperf",

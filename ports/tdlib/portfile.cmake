@@ -1,6 +1,3 @@
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tdlib/td
@@ -16,7 +13,7 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DTD_INSTALL_SHARED_LIBRARIES=ON
+        -DTD_INSTALL_SHARED_LIBRARIES=OFF
         -DTD_INSTALL_STATIC_LIBRARIES=ON
         -DTD_ENABLE_JNI=${VCPKG_TARGET_IS_ANDROID}
         -DTD_ENABLE_DOTNET=OFF
