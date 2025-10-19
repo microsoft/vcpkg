@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 498caee..3aefd74 100644
+index 498caee..f3ba717 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -166,7 +166,11 @@ if(LIBIGL_INSTALL)
@@ -7,11 +7,11 @@ index 498caee..3aefd74 100644
      set(export_dest_dir "${CMAKE_INSTALL_LIBDIR}/cmake/igl")
  
 -    foreach(suffix IN ITEMS "") #"_restricted" "_copyleft")
-+    set(optional_suffix "") #  "_restricted" "_copyleft"
-+    if(LIBIGL_COPYLEFT_CORE)
-+        list(APPEND optional_suffix "_copyleft")
-+    endif()
-+    foreach(suffix IN ITEMS "" LISTS optional_suffix)
++    get_directory_property(targets BUILDSYSTEM_TARGETS)
++    foreach(suffix IN ITEMS "" "_restricted" "_copyleft")
++        if(NOT targets MATCHES "igl${suffix}")
++            continue()
++        endif()
          install(EXPORT LibiglTargets${suffix}
              DESTINATION ${export_dest_dir}
              NAMESPACE igl${suffix}::
@@ -48,19 +48,18 @@ index d3ff19f..df11bf5 100644
 +include("${CMAKE_CURRENT_LIST_DIR}/LibiglConfigTargets_copyleft.cmake" OPTIONAL)
  check_required_components(Libigl)
 diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/cgal.cmake
-index 3caa2da..8dac0bf 100644
+index e3aa831..371dc7a 100644
 --- a/cmake/igl/modules/copyleft/cgal.cmake
 +++ b/cmake/igl/modules/copyleft/cgal.cmake
-@@ -9,7 +9,7 @@ target_include_directories(igl_copyleft_cgal ${IGL_SCOPE}
- )
+@@ -10,6 +10,7 @@ target_include_directories(igl_copyleft_cgal ${IGL_SCOPE}
  
  # 3. Target sources
--file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.h")
-+file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.h")# "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.hpp")
+ file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.h")
++list(APPEND INC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/CGAL_includes.hpp")
  file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
  igl_target_sources(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
  
-@@ -23,6 +23,9 @@ target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
+@@ -28,6 +29,9 @@ target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
      CGAL::CGAL_Core
  )
  
@@ -82,20 +81,18 @@ index 8d03a90..24eb6e5 100644
 +# n. Install target & headers
 +igl_install(igl_copyleft_core ${INC_FILES} ${SRC_FILES})
 diff --git a/cmake/igl/modules/core.cmake b/cmake/igl/modules/core.cmake
-index 137d30b..5e22c9b 100644
+index 137d30b..187a3ec 100644
 --- a/cmake/igl/modules/core.cmake
 +++ b/cmake/igl/modules/core.cmake
-@@ -12,8 +12,8 @@ target_include_directories(igl_core ${IGL_SCOPE}
+@@ -12,7 +12,7 @@ target_include_directories(igl_core ${IGL_SCOPE}
  )
  
  # 3. Target sources
 -file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/*.h")
--file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/*.cpp")
-+file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/*.h")# "${libigl_SOURCE_DIR}/include/igl/*.hpp")
-+file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/*.cpp")# "${libigl_SOURCE_DIR}/include/igl/*.c")
++file(GLOB INC_FILES "${libigl_SOURCE_DIR}/include/igl/*.h" "${libigl_SOURCE_DIR}/include/igl/*.hpp")
+ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/*.cpp")
  igl_target_sources(igl_core ${INC_FILES} ${SRC_FILES})
  
- # 4. Install target & headers
 diff --git a/cmake/igl/modules/embree.cmake b/cmake/igl/modules/embree.cmake
 index 7f333b0..5fbabe7 100644
 --- a/cmake/igl/modules/embree.cmake
