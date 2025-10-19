@@ -12,6 +12,7 @@ vcpkg_from_github(
         dependencies.patch
         imgui-impl.diff
         install-extra-targets.patch
+        instantiations.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 
@@ -51,8 +52,6 @@ vcpkg_cmake_configure(
         -DLIBIGL_RESTRICTED_MATLAB=OFF
         -DLIBIGL_RESTRICTED_MOSEK=OFF
         -DLIBIGL_RESTRICTED_TRIANGLE=OFF
-    OPTIONS_DEBUG
-        -DCGAL_DO_NOT_WARN_ABOUT_CMAKE_BUILD_TYPE=ON
 )
 
 vcpkg_cmake_install()
