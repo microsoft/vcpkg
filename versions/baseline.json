@@ -6186,7 +6186,7 @@
     },
     "manif": {
       "baseline": "0.0.5",
-      "port-version": 0
+      "port-version": 1
     },
     "manifold": {
       "baseline": "3.2.1",
