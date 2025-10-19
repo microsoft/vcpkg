@@ -13,5 +13,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "supports": "!(static & staticcrt) & !x86"
 }
