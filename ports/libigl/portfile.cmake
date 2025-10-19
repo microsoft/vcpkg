@@ -13,6 +13,8 @@ vcpkg_from_github(
         imgui-impl.diff
         install-extra-targets.patch
         instantiations.diff
+        msvc-snap-rounding.diff
+        uwp.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 
@@ -62,9 +64,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 set(comment "")
-set(licenses "${SOURCE_PATH}/LICENSE.MPL2")
 if(LIBIGL_COPYLEFT_CORE)
-    string(APPEND comment "GPL terms apply to the targets in the \"igl_copyleft::\" namespace.\n")
-    list(APPEND licenses "${SOURCE_PATH}/LICENSE.GPL")
+    set(comment "GPL-2.0 terms apply to include/igl/copyleft/marching_cubes_tables.h.")
 endif()
-vcpkg_install_copyright(FILE_LIST ${licenses} COMMENT "${comment}")
+vcpkg_install_copyright(COMMENT "${comment}" FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2")

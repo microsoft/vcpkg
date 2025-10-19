@@ -2,16 +2,11 @@ diff --git a/cmake/igl/modules/copyleft/cgal.cmake b/cmake/igl/modules/copyleft/
 index f6abe8c..e3aa831 100644
 --- a/cmake/igl/modules/copyleft/cgal.cmake
 +++ b/cmake/igl/modules/copyleft/cgal.cmake
-@@ -14,7 +14,12 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
+@@ -14,7 +14,7 @@ file(GLOB SRC_FILES "${libigl_SOURCE_DIR}/include/igl/copyleft/cgal/*.cpp")
  igl_target_sources(igl_copyleft_cgal ${INC_FILES} ${SRC_FILES})
  
  # 4. Dependencies
 -include(cgal)
-+if(MSVC)
-+    # libigl uses 'int64'. This type doesn't have a match in gmp with MSVC.
-+    # CGAL_Core already uses boost-multiprecision. Extend this to CGAL.
-+    set(CGAL_CMAKE_EXACT_NT_BACKEND BOOST_BACKEND)
-+endif()
 +find_package(CGAL CONFIG REQUIRED COMPONENTS Core)
  igl_include(copyleft core)
  target_link_libraries(igl_copyleft_cgal ${IGL_SCOPE}
