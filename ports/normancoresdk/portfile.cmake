@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO norman-ml/norman_core_sdk_cpp
-    REF v${VERSION}  
-    SHA512 c2d0350c4b29eec65ed501335bd3e912a7e8ad3eddcf3c91ccbdad27275df680995406ce3f173521a08622b4ec6fc63ce10042153ac6ba315684b368caecfd11
+    REF v${VERSION}
+    SHA512 178180d8fda0086371c234741addb06406a9e7571d69547746fc63d7bdcedbb44bd4b4f246a49bcb03902f067031b2a38385268ec1999ec22a921f011527da78
     HEAD_REF main
 )
 
@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
 
+vcpkg_cmake_build()
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
