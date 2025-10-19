@@ -18,6 +18,9 @@ vcpkg_check_features(
         winhttp BUILD_TRANSPORT_WINHTTP
 )
 
+file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
+file(REMOVE_RECURSE ${unused})
+
 if(EXISTS "${SOURCE_PATH}/sdk/core/azure-core")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/core/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
