@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "73a90e27dfaf176bb25ec339e8b3077054de52da",
+      "version-date": "2025-09-29",
+      "port-version": 0
+    },
+    {
+      "git-tree": "11501b3c7cff0f97a1c3e0200ff1b3c6d043e643",
+      "version-date": "2025-09-19",
+      "port-version": 0
+    },
+    {
+      "git-tree": "44c17835d45153d035bcc024b9bece05ad24d6ef",
+      "version-date": "2025-09-14",
+      "port-version": 0
+    },
+    {
+      "git-tree": "25cbb472c3760bcb8ab3d34271f1c1c674ebcac7",
+      "version-date": "2025-08-21",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a61503261b3d9410e844b52cab080cdf91b17685",
+      "version-date": "2025-07-09",
+      "port-version": 0
+    },
+    {
+      "git-tree": "7cfff860ea6693158e803e76511ef38117f86e08",
+      "version-date": "2025-06-10",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a7724d77ae5bf7883c2130706224d9c88e30b162",
+      "version-date": "2025-05-22",
+      "port-version": 0
+    },
+    {
+      "git-tree": "04845a7307c8b44a551bebca82a584470dcd5f1c",
+      "version-date": "2025-04-25",
+      "port-version": 0
+    },
+    {
+      "git-tree": "115b51724735334dca31f7af81e42b188da7dcde",
+      "version-date": "2025-04-10",
+      "port-version": 0
+    },
+    {
+      "git-tree": "21bab43155897b9b78dd1db4a12ada6c939efe83",
+      "version-date": "2025-04-02",
+      "port-version": 0
+    },
+    {
+      "git-tree": "84480c9e9de4cc4cf60f44d5de24c79d61dfe966",
+      "version-date": "2025-02-08",
+      "port-version": 0
+    },
+    {
+      "git-tree": "276b846fcad524729ffbf6fe1c8b7598cfeac91a",
+      "version-date": "2025-01-13",
+      "port-version": 1
+    },
+    {
+      "git-tree": "5af3456c1f7742c9d880d70dc678c061b91668c1",
+      "version-date": "2025-01-13",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ac1381c26cff8ab8365670f4fb00395e86c58dfa",
+      "version-date": "2024-12-27",
+      "port-version": 0
+    },
+    {
+      "git-tree": "50a2b6aaf3c272b1eff8ce757e14091c374d9855",
+      "version-date": "2023-05-15",
+      "port-version": 0
+    }
+  ]
+}

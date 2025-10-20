@@ -1,0 +1,68 @@
+{
+  "name": "ggml",
+  "version": "0.9.4",
+  "port-version": 1,
+  "description": "Tensor library for machine learning",
+  "homepage": "https://github.com/ggml-org/ggml",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "blas": {
+      "description": "Enable BLAS support",
+      "dependencies": [
+        "blas",
+        "cblas"
+      ]
+    },
+    "cuda": {
+      "description": "Enable CUDA support",
+      "supports": "!(windows & staticcrt)",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "metal": {
+      "description": "Enable Metal support",
+      "supports": "osx"
+    },
+    "opencl": {
+      "description": "Enable OpenCL support",
+      "supports": "!arm32",
+      "dependencies": [
+        "opencl"
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support",
+      "supports": "!osx"
+    },
+    "vulkan": {
+      "description": "Enable Vulkan support",
+      "dependencies": [
+        {
+          "name": "ggml",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "vulkan"
+          ]
+        },
+        {
+          "name": "shaderc",
+          "host": true
+        },
+        "vulkan"
+      ]
+    }
+  }
+}

@@ -1,0 +1,20 @@
+diff --git a/core/cmd/CMakeLists.txt b/core/cmd/CMakeLists.txt
+index 736f537..ace3d77 100644
+--- a/core/cmd/CMakeLists.txt
++++ b/core/cmd/CMakeLists.txt
+@@ -9,6 +9,7 @@ set(EXE_INSTALL_DIR ${CMAKE_INSTALL_LIBEXECDIR}/gz/${GZ_DESIGNATION}${PROJECT_VE
+ install(TARGETS ${msgs_executable} DESTINATION ${EXE_INSTALL_DIR})
+ set(executable_location "../../../${EXE_INSTALL_DIR}/$<TARGET_FILE_NAME:${msgs_executable}>")
+ 
++if(0)
+ set(cmd_script_generated "${CMAKE_CURRENT_BINARY_DIR}/cmd${GZ_DESIGNATION}${PROJECT_VERSION_MAJOR}.rb")
+ set(cmd_script_configured "${cmd_script_generated}.configured")
+ 
+@@ -23,6 +24,7 @@ file(GENERATE
+ 
+ install(FILES ${cmd_script_generated} DESTINATION lib/ruby/gz)
+ 
++endif()
+ #===============================================================================
+ # Bash completion
+ 

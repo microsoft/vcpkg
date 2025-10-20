@@ -1,6 +1,7 @@
 {
   "name": "srpc",
-  "version-semver": "0.10.1",
+  "version-semver": "0.10.3",
+  "port-version": 1,
   "description": "RPC based on Sogou C++ Workflow",
   "homepage": "https://github.com/sogou/srpc",
   "dependencies": [

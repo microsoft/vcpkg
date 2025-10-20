@@ -9,7 +9,7 @@ index 2eb8634..f8ff6f0 100644
 -                PUBLIC ${PUBLIC_HEADERS}
 +                # PUBLIC ${PUBLIC_HEADERS}
                  PRIVATE ${HEADERS} ${SOURCES} )
- 
+
  # additional target without the architecture suffix in the name
 @@ -246,3 +246,29 @@ endif()
  if( BIT7Z_BUILD_DOCS )

@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 ca1b7af7b4d05c9321a64b6083d618ca8a758547a8fc43eae5c2769110dcc784f9bb769d2ddb9479ebe62bb3f91ee9d5320fb4eaad3244b783f4fe31e6de33a0
+    SHA512 1d0f19e6aebc6aa273e749fb7968eff851dcfb15a0b5ef6cf268c74e77a81175d845c20c9285be7e9a7cb79871cb08bdac5c9d802a50fc5bd11a7225d510f48f
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
+        add-parameter-name.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -58,14 +59,21 @@ endif()
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_DEBUG -Dgobject=enabled -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dgobject=enabled -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
     list(APPEND OPTIONS -Dintrospection=disabled)
 endif()
 
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
-else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+set(cxx_link_libraries "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    block(PROPAGATE cxx_link_libraries)
+        vcpkg_list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_C_IMPLICIT_LINK_LIBRARIES;CMAKE_CXX_IMPLICIT_LINK_LIBRARIES")
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        list(REMOVE_ITEM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES ${VCPKG_DETECTED_CMAKE_C_IMPLICIT_LINK_LIBRARIES})
+        list(TRANSFORM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES PREPEND "-l")
+        string(JOIN " " cxx_link_libraries ${VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
+    endblock()
 endif()
 
 vcpkg_configure_meson(
@@ -83,27 +91,42 @@ vcpkg_configure_meson(
     ADDITIONAL_BINARIES
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
+        g-ir-compiler='${GIR_COMPILER}'
+        g-ir-scanner='${GIR_SCANNER}'
 )
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+if(cxx_link_libraries)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/harfbuzz.pc"
+        "(Libs:[^\r\n]*)"
+        "\\1 ${cxx_link_libraries}"
+        REGEX
+    )
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/harfbuzz.pc"
+            "(Libs:[^\r\n]*)"
+            "\\1 ${cxx_link_libraries}"
+            REGEX
+        )
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
-	file(GLOB PC_FILES 
-		"${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
-		"${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
-	
-	foreach(PC_FILE IN LISTS PC_FILES)
-		file(READ "${PC_FILE}" PC_FILE_CONTENT)
-		string(REGEX REPLACE 
-			"\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
-			"-l\\1" PC_FILE_CONTENT 
-			"${PC_FILE_CONTENT}")
-		file(WRITE "${PC_FILE}" ${PC_FILE_CONTENT})
-	endforeach()
+    file(GLOB pc_files 
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"
+    )
+    foreach(pc_file IN LISTS pc_files)
+        vcpkg_replace_string("${pc_file}"
+            "\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
+            "-l\\1"
+            REGEX
+            IGNORE_UNCHANGED
+        )
+    endforeach()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
@@ -113,7 +136,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure hb-info)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()

@@ -3,9 +3,11 @@ message(WARNING "Building ${PORT} requires a C++20 compliant compiler. GCC 12 an
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jpenuchot/ctbench
-    REF "v${VERSION}"
-    SHA512 862bfa72c4e98983fe8ac954de02b8f931c672ad3072ca84a0b9d527baa7572cafe235400d28e1f92b86154c9007d40cc2f034510ceda638e25c63625cb9cbf9
+    REF 7ddc634650f392923f0f511fb3b494a6e1add2a9
+    SHA512 7acc45c383541fa2fc518585b1358e61103ae52c9e880df3d44b857489ea5c2d5fe004c810f60f3246f5d175d61ba80435e09ac1f2ce6a8a4dc63b8c1881f0f3
     HEAD_REF main
+    PATCHES
+        fix_build_with_boost_1_88_0.diff
 )
 
 vcpkg_cmake_configure(

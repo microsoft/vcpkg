@@ -2,27 +2,36 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
     REF "v${VERSION}"
-    SHA512 7d77e70a3ceaa69f25edaf82d371899340a4713db0101d2058273cff675d57867242f23983c71a9482fae922734807ae06387381e76eae963b7c8af6a26fa66b
+    SHA512 5928c96ad0f223d44948a7f3ac2ceefe64803003cfaa630c23c35f5e88c6d3f42e58157b7985bbe3b5596c760a1ebb03d22e857366a81ca9744e87ea2305fc72
     HEAD_REF master
     PATCHES
-        disable-warnings.patch
         fix-buildsystem.patch
-        fix-cpu-set.patch
         fix-deps.patch
 )
 
+if("xar" IN_LIST FEATURES)
+    # Cf. https://github.com/libarchive/libarchive/pull/2388:
+    # xmllite is available since Windows XP, but mingw-w64 added it with delay.
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        list(APPEND FEATURES "xar/xmllite")
+    else()
+        list(APPEND FEATURES "xar/libxml2")
+    endif()
+endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bzip2   ENABLE_BZip2
         bzip2   CMAKE_REQUIRE_FIND_PACKAGE_BZip2
-        libxml2 ENABLE_LIBXML2
-        libxml2 CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         lz4     ENABLE_LZ4
         lz4     CMAKE_REQUIRE_FIND_PACKAGE_lz4
         lzma    ENABLE_LZMA
         lzma    CMAKE_REQUIRE_FIND_PACKAGE_LibLZMA
         lzo     ENABLE_LZO
         zstd    ENABLE_ZSTD
+        xar/libxml2  ENABLE_LIBXML2
+        xar/libxml2  CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
+        xar/xmllite  ENABLE_WIN32_XMLLITE
+        xar/xmllite  HAVE_XMLLITE_H
 )
 # Default crypto backend is OpenSSL, but it is ignored for DARWIN
 set(WRAPPER_ENABLE_OPENSSL OFF)
@@ -49,6 +58,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DENABLE_ZLIB=ON
+        -DZLIB_WINAPI=OFF
         -DENABLE_PCREPOSIX=OFF
         -DPOSIX_REGEX_LIB=NONE
         -DENABLE_MBEDTLS=OFF
@@ -56,6 +66,7 @@ vcpkg_cmake_configure(
         -DENABLE_EXPAT=OFF
         -DENABLE_LibGCC=OFF
         -DENABLE_CNG=OFF
+        -DENABLE_UNZIP=OFF
         -DENABLE_TAR=OFF
         -DENABLE_CPIO=OFF
         -DENABLE_CAT=OFF
@@ -71,6 +82,8 @@ vcpkg_cmake_configure(
         CMAKE_REQUIRE_FIND_PACKAGE_LibXml2
         CMAKE_REQUIRE_FIND_PACKAGE_lz4
         ENABLE_LibGCC
+        HAVE_XMLLITE_H
+        ZLIB_WINAPI
 )
 
 vcpkg_cmake_install()

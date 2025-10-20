@@ -1,11 +1,15 @@
 #!/usr/bin/bash
+
 # cl_cpp_wrapper
-# Wrapper around MS's cl.exe to make it act more like Unix cpp
+# Wrapper around MS's cl.exe to make it act more like Unix cpp,
+# in particular process stdin
 
 PATH="$PATH:/usr/bin"
 
-case $MACHTYPE in
-    *-msys)
+msys2_dll="$(test -f /usr/bin/msys-2.0.dll && echo yes)"
+
+case $msys2_dll,$MACHTYPE in
+    *-msys | yes,*-cygwin)
         slash="-"
         ;;
     *)
@@ -84,21 +88,12 @@ fi
 
 input_file="${file:-/proc/self/fd/0}"
 if [ "$input_file" == "/proc/self/fd/0" ]; then
-    #echo "STDIN"
     # CL does not support reading from STDIN so it is wrapped here. 
     tmpout=cpp_wrapper_$RANDOM.h
     /usr/bin/cp $input_file $tmpout
-    # from https://stackoverflow.com/questions/36313562/how-to-redirect-stdin-to-file-in-bash
-    #exec 3> cppstdtmp.h
-    #while IFS= read -r line; do
-    #  printf '%s' "$line"
-    #done
-    #exec 3<&-
-    #echo "$(</dev/stdin)" > cppstdtmp.h
     exec $prog ${cppopt[@]} $tmpout
     rm -f $tmpout
 else
-    #echo "FILE"
     exec $prog ${cppopt[@]} $input_file
 fi
 

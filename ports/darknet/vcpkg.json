@@ -1,7 +1,6 @@
 {
   "name": "darknet",
-  "version-date": "2022-03-06",
-  "port-version": 4,
+  "version-date": "2024-10-10",
   "description": "Darknet is an open source neural network framework written in C and CUDA. You only look once (YOLO) is a state-of-the-art, real-time object detection system, best example of darknet functionalities.",
   "homepage": "https://github.com/alexeyab/darknet",
   "license": null,
@@ -54,8 +53,6 @@
         {
           "name": "opencv",
           "features": [
-            "contrib",
-            "dnn",
             "ffmpeg"
           ]
         }
@@ -72,62 +69,6 @@
         },
         {
           "name": "opencv",
-          "features": [
-            "contrib",
-            "cuda",
-            "dnn",
-            "ffmpeg"
-          ]
-        }
-      ]
-    },
-    "opencv2-base": {
-      "description": "Build darknet with support for OpenCV2",
-      "dependencies": [
-        {
-          "name": "opencv2",
-          "features": [
-            "ffmpeg"
-          ]
-        }
-      ]
-    },
-    "opencv2-cuda": {
-      "description": "Build darknet with support for CUDA-enabled OpenCV2",
-      "dependencies": [
-        {
-          "name": "opencv2",
-          "features": [
-            "cuda",
-            "ffmpeg"
-          ]
-        }
-      ]
-    },
-    "opencv3-base": {
-      "description": "Build darknet with support for OpenCV3",
-      "dependencies": [
-        {
-          "name": "opencv3",
-          "features": [
-            "contrib",
-            "dnn",
-            "ffmpeg"
-          ]
-        }
-      ]
-    },
-    "opencv3-cuda": {
-      "description": "Build darknet with support for CUDA-enabled OpenCV3",
-      "dependencies": [
-        {
-          "name": "darknet",
-          "features": [
-            "cuda"
-          ]
-        },
-        {
-          "name": "opencv3",
           "features": [
             "contrib",
             "cuda",

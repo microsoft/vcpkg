@@ -1,0 +1,13 @@
+diff --git a/corelib/src/optimizer/OptimizerG2O.cpp b/corelib/src/optimizer/OptimizerG2O.cpp
+index f8c93af..4d77e1d 100644
+--- a/corelib/src/optimizer/OptimizerG2O.cpp
++++ b/corelib/src/optimizer/OptimizerG2O.cpp
+@@ -90,7 +90,7 @@ typedef g2o::LinearSolverCSparse<SlamBlockSolver::PoseMatrixType> SlamLinearCSpa
+ typedef g2o::LinearSolverCholmod<SlamBlockSolver::PoseMatrixType> SlamLinearCholmodSolver;
+ #endif
+ 
+-#ifdef G2O_SRC_DIR
++#if 1
+ namespace g2o {
+ typedef VertexPointXYZ VertexSBAPointXYZ;
+ }

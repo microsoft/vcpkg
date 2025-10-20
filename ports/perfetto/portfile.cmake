@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/perfetto
     REF "v${VERSION}"
-    SHA512 4aa83f121fdc9c8f8d1bfdb22bfa78a8658352ccef58e0efbfa88dbda5e1bc6bca4a3d2cb45bdc6c91d6cfced0e7df7dce678a034935aa247e0f92bfb6adf2b2
+    SHA512 a6d7b4e791c8640a12062d097805bc1e9feda2271f3e9e0a9dd683a8f25e2a5dec64167692f9a6efb121055d8a36f3e71a26e11b686cd251b8685a449546eb00
     HEAD_REF main
 )
 

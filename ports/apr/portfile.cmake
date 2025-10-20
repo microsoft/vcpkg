@@ -1,17 +1,25 @@
-
-set(VERSION 1.7.5)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://archive.apache.org/dist/apr/apr-${VERSION}.tar.bz2"
+    URLS "https://downloads.apache.org/apr/apr-${VERSION}.tar.bz2"
     FILENAME "apr-${VERSION}.tar.bz2"
-    SHA512 d8a7553642da0c81261ac3992536efd9d43ecb9154934ef1a10ae808d6a3ce8198b40433091d3a6d04f61e67c59426fb5276193a37e810ae4bc74a8a10fb651b
+    SHA512 629b60680d1244641828019db903a1b199e8a19c8f27a5132b93faacb381ce561f88463345ab019258f1f1e8cfdf8aa986ac815153a8e7e04a22b3932f9fedd2
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         unglue.patch
+        0100-add-host-tools-dir.diff
 )
+
+set(CURRENT_HOST_TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+
+set(CROSSCOMPILING_OPTIONS "")
+if(VCPKG_CROSSCOMPILING)
+    list(APPEND CROSSCOMPILING_OPTIONS
+        "-DUNOFFICIAL_APR_HOST_TOOLS_DIR=${CURRENT_HOST_TOOLS_DIR}"
+        "-DUNOFFICIAL_APR_HOST_EXECUTABLE_SUFFIX=${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+    )
+endif()
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -32,6 +40,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             -DMIN_WINDOWS_VER=Windows7
             -DAPR_HAVE_IPV6=ON
             ${FEATURE_OPTIONS}
+            ${CROSSCOMPILING_OPTIONS}
     )
 
     vcpkg_cmake_install()
@@ -42,6 +51,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
     # There is no way to suppress installation of the headers in debug builds.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    vcpkg_copy_tools(TOOL_NAMES gen_test_char AUTO_CLEAN)
 
     vcpkg_copy_pdbs()
 

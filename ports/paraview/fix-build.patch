@@ -43,3 +43,18 @@ index 06e517964b..fbf9f5c2df 100644
 +    //  libraryPath.c_str(), "paraview/__init__.py" /*landmark*/);
    }
  }
+diff --git a/VTKExtensions/Core/vtkCLIOptions.cxx b/VTKExtensions/Core/vtkCLIOptions.cxx
+--- a/VTKExtensions/Core/vtkCLIOptions.cxx
++++ b/VTKExtensions/Core/vtkCLIOptions.cxx
+@@ -52,9 +52,9 @@
+ 
+ public:
+   // overridden to add a new line before each group.
+-  std::string make_expanded(const CLI::App* sub) const override
++  std::string make_expanded(const CLI::App* sub, CLI::AppFormatMode mode) const override
+   {
+-    return "\n" + Superclass::make_expanded(sub);
++    return "\n" + Superclass::make_expanded(sub, mode);
+   }
+ 
+   // overridden to ensure good word wrapping for description text.

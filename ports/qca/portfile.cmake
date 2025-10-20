@@ -17,6 +17,7 @@ vcpkg_from_github(
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
         0003-Define-NOMINMAX-for-botan-plugin-with-MSVC.patch
+        0004-fix-cmake4.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -47,12 +48,17 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Importing certstore done")
 
-set(PLUGINS gnupg logger softstore wincrypto)
+set(PLUGINS gnupg logger wincrypto)
 if("botan" IN_LIST FEATURES)
     list(APPEND PLUGINS botan)
 endif()
 if ("ossl" IN_LIST FEATURES)
     list(APPEND PLUGINS ossl)
+endif()
+if (VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message(STATUS "Building with an osx-dynamic triplet: 'softstore' disabled.")
+else()
+    list(APPEND PLUGINS softstore)
 endif()
 
 # Configure and build

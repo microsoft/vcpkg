@@ -1,0 +1,36 @@
+{
+  "name": "blosc2",
+  "version": "2.21.3",
+  "description": "A fast, compressed, persistent binary data store library for C.",
+  "homepage": "https://github.com/Blosc/c-blosc2",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "lz4",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "zlib": {
+      "description": "Support zlib compression",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Support zstd compression",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

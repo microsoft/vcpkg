@@ -1,0 +1,24 @@
+{
+  "name": "sdformat",
+  "version": "15.1.1",
+  "port-version": 1,
+  "description": "Simulation Description Format (SDF) parser and description files.",
+  "homepage": "http://sdformat.org/",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "gz-math",
+    "gz-tools",
+    "gz-utils",
+    "tinyxml2",
+    "urdfdom",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

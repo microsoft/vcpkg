@@ -30,6 +30,15 @@ function(z_vcpkg_calculate_corrected_macho_rpath)
     set("${arg_OUT_NEW_RPATH_VAR}" "${new_rpath}" PARENT_SCOPE)
 endfunction()
 
+function(z_vcpkg_regex_escape)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+      ""
+      "STRING;OUT_REGEX_ESCAPED_STRING_VAR"
+      "")
+  string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" regex_escaped "${arg_STRING}")
+  set("${arg_OUT_REGEX_ESCAPED_STRING_VAR}" "${regex_escaped}" PARENT_SCOPE)
+endfunction()
+
 function(z_vcpkg_fixup_macho_rpath_in_dir)
     # We need to iterate through everything because we
     # can't predict where a Mach-O file will be located
@@ -95,6 +104,8 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                 continue()
             endif()
 
+            list(APPEND macho_executables_and_shared_libs "${macho_file}")
+
             get_filename_component(macho_file_dir "${macho_file}" DIRECTORY)
             get_filename_component(macho_file_name "${macho_file}" NAME)
 
@@ -106,15 +117,40 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             if("${file_type}" STREQUAL "shared")
                 # Set the install name for shared libraries
                 execute_process(
-                    COMMAND "${install_name_tool_cmd}" -id "@rpath/${macho_file_name}" "${macho_file}"
+                    COMMAND "${otool_cmd}" -D "${macho_file}"
+                    OUTPUT_VARIABLE get_id_ov
+                    RESULT_VARIABLE get_id_rv
+                )
+                if(NOT get_id_rv EQUAL 0)
+                    message(FATAL_ERROR "Could not obtain install name id from '${macho_file}'")
+                endif()
+                set(macho_new_id "@rpath/${macho_file_name}")
+                message(STATUS "Setting install name id of '${macho_file}' to '@rpath/${macho_file_name}'")
+                execute_process(
+                    COMMAND "${install_name_tool_cmd}" -id "${macho_new_id}" "${macho_file}"
                     OUTPUT_QUIET
                     ERROR_VARIABLE set_id_error
+                    RESULT_VARIABLE set_id_exit_code
                 )
-                message(STATUS "Set install name id of '${macho_file}' to '@rpath/${macho_file_name}'")
-                if(NOT "${set_id_error}" STREQUAL "")
+                if(NOT "${set_id_error}" STREQUAL "" AND NOT set_id_exit_code EQUAL 0)
                     message(WARNING "Couldn't adjust install name of '${macho_file}': ${set_id_error}")
                     continue()
                 endif()
+
+                # otool -D <macho_file> typically returns lines like:
+
+                # <macho_file>:
+                # <id>
+
+                # But also with ARM64 binaries, it can return:
+                # <macho_file> (architecture arm64):
+                # <id>
+
+                # Either way we need to remove the first line and trim the trailing newline char.
+                string(REGEX REPLACE "[^\n]+:\n" "" get_id_ov "${get_id_ov}")
+                string(REGEX REPLACE "\n.*" "" get_id_ov "${get_id_ov}")
+                list(APPEND adjusted_shared_lib_old_ids "${get_id_ov}")
+                list(APPEND adjusted_shared_lib_new_ids "${macho_new_id}")
             endif()
 
             # List all existing rpaths
@@ -142,7 +178,7 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             foreach(rpath IN LISTS rpath_list)
                 list(APPEND rpath_args "-delete_rpath" "${rpath}")
             endforeach()
-            if(rpath_args STREQUAL "")
+            if(NOT rpath_args)
                 continue()
             endif()
 
@@ -151,9 +187,10 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
                 COMMAND "${install_name_tool_cmd}" ${rpath_args} "${macho_file}"
                 OUTPUT_QUIET
                 ERROR_VARIABLE set_rpath_error
+                RESULT_VARIABLE set_rpath_exit_code
             )
 
-            if(NOT "${set_rpath_error}" STREQUAL "")
+            if(NOT "${set_rpath_error}" STREQUAL "" AND NOT set_rpath_exit_code EQUAL 0)
                 message(WARNING "Couldn't adjust RPATH of '${macho_file}': ${set_rpath_error}")
                 continue()
             endif()
@@ -161,4 +198,46 @@ function(z_vcpkg_fixup_macho_rpath_in_dir)
             message(STATUS "Adjusted RPATH of '${macho_file}' to '${new_rpath}'")
         endforeach()
     endforeach()
+
+    # Check for dependent libraries in executables and shared libraries that
+    # need adjusting after id change
+    list(LENGTH adjusted_shared_lib_old_ids last_adjusted_index)
+    if(NOT last_adjusted_index EQUAL 0)
+        math(EXPR last_adjusted_index "${last_adjusted_index} - 1")
+        foreach(macho_file IN LISTS macho_executables_and_shared_libs)
+            execute_process(
+                COMMAND "${otool_cmd}" -L "${macho_file}"
+                OUTPUT_VARIABLE get_deps_ov
+                RESULT_VARIABLE get_deps_rv
+            )
+            if(NOT get_deps_rv EQUAL 0)
+                message(FATAL_ERROR "Could not obtain dependencies list from '${macho_file}'")
+            endif()
+            # change adjusted_shared_lib_old_ids[i] -> adjusted_shared_lib_new_ids[i]
+            foreach(i RANGE ${last_adjusted_index})
+                list(GET adjusted_shared_lib_old_ids ${i} adjusted_old_id)
+                z_vcpkg_regex_escape(
+                    STRING "${adjusted_old_id}"
+                    OUT_REGEX_ESCAPED_STRING_VAR regex
+                )
+                if(NOT get_deps_ov MATCHES "[ \t]${regex} ")
+                    continue()
+                endif()
+                list(GET adjusted_shared_lib_new_ids ${i} adjusted_new_id)
+
+                # Replace the old id with the new id
+                execute_process(
+                    COMMAND "${install_name_tool_cmd}" -change "${adjusted_old_id}" "${adjusted_new_id}" "${macho_file}"
+                    OUTPUT_QUIET
+                    ERROR_VARIABLE change_id_error
+                    RESULT_VARIABLE change_id_exit_code
+                )
+                if(NOT "${change_id_error}" STREQUAL "" AND NOT change_id_exit_code EQUAL 0)
+                    message(WARNING "Couldn't adjust dependent shared library install name in '${macho_file}': ${change_id_error}")
+                    continue()
+                endif()
+                message(STATUS "Adjusted dependent shared library install name in '${macho_file}' (From '${adjusted_old_id}' -> To '${adjusted_new_id}')")
+            endforeach()
+        endforeach()
+    endif()
 endfunction()

@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "2.29.0",
+  "version": "2.37.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",
@@ -335,6 +335,18 @@
         }
       ]
     },
+    "chronicle": {
+      "description": "Chronicle API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "cloudbuild": {
       "description": "Cloud Build API C++ Client Library",
       "dependencies": [
@@ -602,6 +614,18 @@
         }
       ]
     },
+    "devicestreaming": {
+      "description": "Device Streaming API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
     "dialogflow-cx": {
       "description": "Cloud Dialogflow CX API C++ Client Library",
       "dependencies": [
@@ -722,22 +746,20 @@
         }
       ]
     },
-    "experimental-storage-grpc": {
-      "description": "The GCS+gRPC plugin",
+    "filestore": {
+      "description": "Cloud Filestore API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
-            "grpc-common",
-            "opentelemetry",
-            "storage"
+            "grpc-common"
           ]
         }
       ]
     },
-    "filestore": {
-      "description": "Cloud Filestore API C++ Client Library",
+    "financialservices": {
+      "description": "Financial Services API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -779,7 +801,8 @@
           "name": "google-cloud-cpp",
           "default-features": false,
           "features": [
-            "grpc-common"
+            "grpc-common",
+            "rest-common"
           ]
         }
       ]
@@ -1116,6 +1139,30 @@
     },
     "oslogin": {
       "description": "Cloud OS Login API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "parallelstore": {
+      "description": "Cloud Parallel Store API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
+          ]
+        }
+      ]
+    },
+    "parametermanager": {
+      "description": "Cloud Parameter Manager API C++ Client Library",
       "dependencies": [
         {
           "name": "google-cloud-cpp",
@@ -1508,6 +1555,32 @@
           "default-features": false,
           "features": [
             "rest-common"
+          ]
+        }
+      ]
+    },
+    "storage-grpc": {
+      "description": "The GCS+gRPC plugin",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common",
+            "opentelemetry",
+            "storage"
+          ]
+        }
+      ]
+    },
+    "storagebatchoperations": {
+      "description": "Cloud Storage Batch Operations API C++ Client Library",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "grpc-common"
           ]
         }
       ]

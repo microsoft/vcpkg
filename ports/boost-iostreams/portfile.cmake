@@ -4,15 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/iostreams
     REF boost-${VERSION}
-    SHA512 ee0a488e7095a59da68185e2590265aee5e7f32d128f8d1d50cdb5a28f91656618266156aefd14bd6ddfe6196a97006b675ca823cfff957a7ef92d3670350198
+    SHA512 8c5c7485090a0e2ae6a6ef296107cf3212aa89bd238c1424d0b013f737bf9398fe6df6c2712dec7e33ddec12180a702cf6061bc93b3271da6c5b04a97530832f
     HEAD_REF master
-    PATCHES
-        Removeseekpos.patch
-        fix-zstd.diff
 )
 
 set(FEATURE_OPTIONS "")
 include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
+if (BOOST_IOSTREAMS_ENABLE_ZSTD AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND FEATURE_OPTIONS "-DBOOST_IOSTREAMS_ZSTD_TARGET=zstd::libzstd_static")
+endif()
 boost_configure_and_install(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO samtools/htscodecs
     REF "v${VERSION}"
-    SHA512 7533570b8b1cad0b9ed118170e5a9ff34fdde40b090f4ba3756f7899e2cd7230f8172425ecf6bd7b83b0b0b1a2a24f3d21795db7f0bc2c3add0a55342b970d1a
+    SHA512 5e3e1f916cb14fe7e1292f3a07e9d9704b11be38014db5884b334235c25dbe61dffecf3f12c448a7a13f65c6d19dbc7cc5c77ba0861b31a0375d71030dd02480
     HEAD_REF master
     PATCHES
         0001-no-tests.patch # https://github.com/samtools/htscodecs/pull/120

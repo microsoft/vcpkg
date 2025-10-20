@@ -1,6 +1,7 @@
 {
   "name": "iceoryx",
-  "version": "2.0.5",
+  "version": "2.0.6",
+  "port-version": 1,
   "description": "True zero-copy inter-process-communication",
   "homepage": "https://iceoryx.io",
   "license": "Apache-2.0",

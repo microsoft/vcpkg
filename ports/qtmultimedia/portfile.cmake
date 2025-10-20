@@ -5,6 +5,9 @@ set(${PORT}_PATCHES
     static_find_modules.patch
     fix_avfoundation_target.patch
     remove-static-ssl-stub.patch
+    ffmpeg-compile-def.patch
+    ffmpeg.patch
+    9c33ede.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -20,10 +23,12 @@ INVERTED_FEATURES
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
 )
 
+set(unused "")
 if("gstreamer" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='yes'")
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
+    list(APPEND unused INPUT_gstreamer_gl INPUT_gstreamer_photography)
 endif()
 list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_gl='no'")
 list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_photography='no'")
@@ -57,11 +62,11 @@ endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
-                        --trace-expand
                         ${FEATURE_OPTIONS}
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
+                     CONFIGURE_OPTIONS_MAYBE_UNUSED ${unused}
                     )
 
 if("gstreamer" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")

@@ -1,0 +1,6 @@
+vxl provides CMake targets:
+
+  find_package(VXL CONFIG REQUIRED)
+  include("${VXL_CMAKE_DIR}/UseVXL.cmake")
+  # Example: numerics library 'vnl'.
+  target_link_libraries(main PRIVATE $<TARGET_NAME:vnl>)

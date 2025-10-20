@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/math
     REF boost-${VERSION}
-    SHA512 760b9c45ccf79209505cb028dbd70ae78c5d46f1b8bc422c453035ef50b438a13cfc9352b6efeb9ca5fa0b10f305bfa59f8aecc93fed080ef47ffd124eff2a78
+    SHA512 6f21b7aa18f2886dab7ad9c8c47a419a703a735e36a2fa2fbc36351fb9357214a8a1a12f9eca2ab22c92b869d4fa445075febc8630aef26b5176bd0cbc370294
     HEAD_REF master
     PATCHES
         build-old-libs.patch

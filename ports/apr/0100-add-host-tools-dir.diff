@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d16eec6..92146f4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,13 +87,17 @@ STRING(REGEX REPLACE ".*#define APR_PATCH_VERSION[ \t]+([0-9]+).*" "\\1" APR_PAT
+ 
+ CONFIGURE_FILE(include/apr.hwc
+                ${PROJECT_BINARY_DIR}/apr.h)
+
+ ADD_EXECUTABLE(gen_test_char tools/gen_test_char.c)
+
++set(UNOFFICIAL_APR_HOST_TOOLS_DIR "$<TARGET_FILE_DIR:gen_test_char>" CACHE STRING "")
++set(UNOFFICIAL_APR_HOST_EXECUTABLE_SUFFIX "$<TARGET_PROPERTY:gen_test_char,SUFFIX>" CACHE STRING "")
++install(TARGETS gen_test_char)
++
+ ADD_CUSTOM_COMMAND(
+   COMMENT "Generating character tables, apr_escape_test_char.h, for current locale"
+   DEPENDS gen_test_char
+-  COMMAND $<TARGET_FILE:gen_test_char> > ${PROJECT_BINARY_DIR}/apr_escape_test_char.h
++  COMMAND "${UNOFFICIAL_APR_HOST_TOOLS_DIR}/gen_test_char${UNOFFICIAL_APR_HOST_EXECUTABLE_SUFFIX}" > ${PROJECT_BINARY_DIR}/apr_escape_test_char.h
+   OUTPUT ${PROJECT_BINARY_DIR}/apr_escape_test_char.h
+ )
+ ADD_CUSTOM_TARGET(

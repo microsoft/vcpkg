@@ -1,0 +1,55 @@
+diff -u a/OpenXLSX/sources/XLXmlParser.cpp a/OpenXLSX/sources/XLXmlParser.cpp
+--- a/OpenXLSX/sources/XLXmlParser.cpp	2025-07-29 11:15:46.597045900 +0200
++++ a/OpenXLSX/sources/XLXmlParser.cpp	2025-07-29 11:22:20.936601800 +0200
+@@ -188,9 +188,9 @@
+     XMLNode XMLNode::next_sibling_of_type(pugi::xml_node_type type_) const
+     {
+         if (_root) {
+-            pugi::xml_node_struct* next = _root->next_sibling;
+-            while (next && (PUGI_IMPL_NODETYPE(next) != type_)) next = next->next_sibling;
+-            if (next)
++            pugi::xml_node next = next_sibling();
++            while (!next.empty() && (next.type() != type_)) next = next.next_sibling();
++            if (!next.empty())
+                 return XMLNode(next);
+         }
+         return XMLNode();    // if no node matching type_ was found: return an empty node
+@@ -203,9 +203,9 @@
+     XMLNode XMLNode::previous_sibling_of_type(pugi::xml_node_type type_) const
+     {
+         if (_root) {
+-            pugi::xml_node_struct* prev = _root->prev_sibling_c;
+-            while (prev->next_sibling && (PUGI_IMPL_NODETYPE(prev) != type_)) prev = prev->prev_sibling_c;
+-            if (prev->next_sibling)
++            pugi::xml_node prev = previous_sibling();
++            while (!prev.next_sibling().empty() && (prev.type() != type_)) prev = prev.previous_sibling();
++            if (!prev.next_sibling().empty())
+                 return XMLNode(prev);
+         }
+         return XMLNode();    // if no node matching type_ was found: return an empty node
+@@ -218,10 +218,9 @@
+     XMLNode XMLNode::next_sibling_of_type(const pugi::char_t* name_, pugi::xml_node_type type_) const
+     {
+         if (_root) {
+-            for (pugi::xml_node_struct* i = _root->next_sibling; i; i = i->next_sibling)
++            for (pugi::xml_node i = next_sibling(name_); !i.empty(); i = i.next_sibling(name_))
+             {
+-                const pugi::char_t* iname = i->name;
+-                if (iname && pugi::impl::strequal(name_, iname) && (PUGI_IMPL_NODETYPE(i) == type_))
++                if (i.type() == type_)
+                     return XMLNode(i);
+             }
+         }
+@@ -235,10 +234,9 @@
+     XMLNode XMLNode::previous_sibling_of_type(const pugi::char_t* name_, pugi::xml_node_type type_) const
+     {
+         if (_root) {
+-            for (pugi::xml_node_struct* i = _root->prev_sibling_c; i->next_sibling; i = i->prev_sibling_c)
++            for (pugi::xml_node i = previous_sibling(name_); !i.next_sibling().empty(); i = i.previous_sibling(name_))
+             {
+-                const pugi::char_t* iname = i->name;
+-                if (iname && pugi::impl::strequal(name_, iname) && (PUGI_IMPL_NODETYPE(i) == type_))
++                if (i.type() == type_)
+                     return XMLNode(i);
+             }
+         }

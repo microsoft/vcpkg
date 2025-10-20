@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gsl-lite/gsl-lite
-    REF 755ba124b54914e672737acace6a9314f59e8d6f
-    SHA512 d0b8397afc7704c5c9510fb62ce01f35faf9cc1cfd05ac3853bdc4b9fc4874aaa85aa70e93ff37867dc263b97926b15af2316e49a5787b246984fa086bf85563
+    REF "v${VERSION}"
+    SHA512 b872be42f8d17a55db61fd3862c4b4a9e095e77aeee8001e81b35c3597d3ed1e08edff6bb4e509b9b51fa7cdb09d313f4a7db538a2c3f19971fb4b6840efa42a
     HEAD_REF master
 )
 
@@ -11,14 +11,8 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-    CONFIG_PATH "lib/cmake/gsl-lite"
+    CONFIG_PATH "share/cmake/gsl-lite"
 )
-
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/gsl-lite.hpp "#ifndef GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED
-#define GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED
-#pragma message(\"The header <gsl-lite.hpp> is deprecated and provided by Vcpkg for compatibility only; please include <gsl/gsl-lite.hpp> instead.\")
-#include <gsl/gsl-lite.hpp>
-#endif // GSL_LITE_HPP_VCPKG_COMPAT_HEADER_INCLUDED")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib"
@@ -29,4 +23,9 @@ file(INSTALL
     "${SOURCE_PATH}/LICENSE"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
+)
+
+file(INSTALL
+    "${CMAKE_CURRENT_LIST_DIR}/usage"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )

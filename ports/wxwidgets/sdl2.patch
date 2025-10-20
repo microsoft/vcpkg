@@ -1,8 +1,8 @@
 diff --git a/build/cmake/init.cmake b/build/cmake/init.cmake
-index 7bd00d3..d903584 100644
+index 5447d33..f5440b4 100644
 --- a/build/cmake/init.cmake
 +++ b/build/cmake/init.cmake
-@@ -493,7 +493,9 @@ if(wxUSE_GUI)
+@@ -530,7 +530,9 @@ if(wxUSE_GUI)
      endif()
  
      if(wxUSE_SOUND AND wxUSE_LIBSDL AND UNIX AND NOT APPLE)
@@ -14,7 +14,7 @@ index 7bd00d3..d903584 100644
              find_package(SDL)
          endif()
 diff --git a/build/cmake/wxWidgetsConfig.cmake.in b/build/cmake/wxWidgetsConfig.cmake.in
-index 248a701..f617dc4 100644
+index 60cf762..202a8c3 100644
 --- a/build/cmake/wxWidgetsConfig.cmake.in
 +++ b/build/cmake/wxWidgetsConfig.cmake.in
 @@ -2,6 +2,9 @@
@@ -25,5 +25,5 @@ index 248a701..f617dc4 100644
 +    find_dependency(SDL2 CONFIG)
 +endif()
  
- # determine target from compiler, platform and library type
- if(WIN32 AND NOT CYGWIN AND NOT MSYS)
+ cmake_policy(PUSH)
+ # Set policies to prevent warnings

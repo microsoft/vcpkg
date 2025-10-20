@@ -1,6 +1,6 @@
 {
   "name": "astr",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Compile-time array string header-only library.",
   "homepage": "https://github.com/a4z/astr",
   "license": "MPL-2.0",

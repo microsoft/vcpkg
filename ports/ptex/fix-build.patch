@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2f8c3af..d4d4425 100644
+index 78f6531..b7ea30b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -27,7 +27,9 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
+@@ -28,7 +28,9 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
  include(GNUInstallDirs)
  
  include(CTest)
@@ -12,15 +12,17 @@ index 2f8c3af..d4d4425 100644
  
  # Setup platform-specific threading flags.
  find_package(Threads REQUIRED)
-@@ -112,7 +114,9 @@ endif ()
+@@ -113,9 +115,11 @@ endif ()
  include_directories(src/ptex)
  
  add_subdirectory(src/ptex)
 +if(0)
  add_subdirectory(src/utils)
  add_subdirectory(src/tests)
- add_subdirectory(src/doc)
-+endif()
+ if (PTEX_BUILD_DOCS)
+     add_subdirectory(src/doc)
+ endif ()
++endif ()
  add_subdirectory(src/build)
 diff --git a/src/ptex/CMakeLists.txt b/src/ptex/CMakeLists.txt
 index 4dfe372..4572dd5 100644

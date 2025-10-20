@@ -20,7 +20,7 @@ vcpkg_from_sourceforge(
 )
 
 set(IS_PCRE_SUPPORT_JIT YES)
-if(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch")
+if(VCPKG_TARGET_ARCHITECTURE MATCHES "(loongarch|^s390)")
     set(IS_PCRE_SUPPORT_JIT NO)
 endif()
 

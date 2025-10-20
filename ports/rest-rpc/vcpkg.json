@@ -1,9 +1,11 @@
 {
   "name": "rest-rpc",
   "version": "0.12",
+  "port-version": 1,
   "description": "c++11, high performance, cross platform, easy to use rpc framework",
   "homepage": "https://github.com/qicosmos/rest_rpc",
   "dependencies": [
-    "asio"
+    "asio",
+    "msgpack"
   ]
 }
