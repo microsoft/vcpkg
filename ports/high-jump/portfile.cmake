@@ -1,4 +1,4 @@
-﻿set(PORT "high-jump")
+set(PORT "high-jump")
 set(VERSION "1.0.3")
 
 vcpkg_from_github(
