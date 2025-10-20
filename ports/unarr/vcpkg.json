@@ -4,7 +4,7 @@
   "description": "A decompression library for rar, tar, zip and 7z archives.",
   "homepage": "https://github.com/selmf/unarr",
   "license": "LGPL-3.0-only",
-  "supports": "!(windows & !static)",
+  "supports": "!windows | static",
   "dependencies": [
     "7zip",
     "bzip2",
