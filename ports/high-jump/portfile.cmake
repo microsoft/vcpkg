@@ -1,3 +1,4 @@
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/hanjingo/high-jump/releases/download/v1.0.3/high-jump-source-v1.0.3.tar.gz"
     FILENAME "high-jump-source-v1.0.3.tar.gz"
