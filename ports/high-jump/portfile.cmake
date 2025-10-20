@@ -20,8 +20,17 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
+# Remove debug include files if they exist
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+# Remove empty debug directory if it exists
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug" AND IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
+    file(glob DEBUG_CONTENTS "${CURRENT_PACKAGES_DIR}/debug/*")
+    if(NOT DEBUG_CONTENTS)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
