@@ -14,7 +14,6 @@ vcpkg_from_github(
         install-extra-targets.patch
         instantiations.diff
         msvc-snap-rounding.diff
-        uwp.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 

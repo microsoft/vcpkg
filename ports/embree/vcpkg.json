@@ -4,7 +4,7 @@
   "description": "High Performance Ray Tracing Kernels.",
   "homepage": "https://github.com/RenderKit/embree",
   "license": null,
-  "supports": "linux | osx | (windows & !uwp)",
+  "supports": "linux | osx | (windows & !uwp & !arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
