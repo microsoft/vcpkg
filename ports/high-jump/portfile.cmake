@@ -1,23 +1,24 @@
-include(vcpkg_common_functions)
-
-vcpkg_from_hasharchive(
-    NAME high-jump
-    FILENAME high-jump-source-v${CURRENT_PACKAGES_VERSION}.tar.gz
-    URL https://github.com/hanjingo/high-jump/releases/download/v${CURRENT_PACKAGES_VERSION}/high-jump-source-v${CURRENT_PACKAGES_VERSION}.tar.gz
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO hanjingo/high-jump
+    REF v1.0.3
     SHA512 584886e5d8e574f6eaaed00bf9d8a3d4fef9fb6c55b8e94d7d04b8418da66156756471dbe64eeadde5e856964b91f53d78418fce3c6852d9799a7acca1745519
+    HEAD_REF master
 )
 
-set(VCPKG_CMAKE_SYSTEM_NAME "")
-
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-      -DBUILD_LIB=ON
-      -DBUILD_EXAMPLE=OFF
-      -DBUILD_TEST=OFF
+        -DBUILD_LIB=OFF
+        -DBUILD_EXAMPLE=OFF
+        -DBUILD_TEST=OFF
+        -DBUILD_BENCH=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
+vcpkg_cmake_config_fixup()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
