@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "release-${VERSION}"
     SHA512 93766ed1f2be0af75e82c05fcb1dc0aac29ded4d0ae9a98137edfc6a4ab85412ea51199d0469254e7e5751fb37d78daff8bc0cbbc20650972f182d976c6bcc61
     HEAD_REF main
+    PATCHES
+        fix-freebsd.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
