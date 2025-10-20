@@ -9536,6 +9536,10 @@
       "baseline": "1.0.3",
       "port-version": 0
     },
+    "tdlib": {
+      "baseline": "1.8.55",
+      "port-version": 0
+    },
     "tdscpp": {
       "baseline": "20250301",
       "port-version": 0
