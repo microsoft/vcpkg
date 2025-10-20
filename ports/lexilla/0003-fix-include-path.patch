@@ -8,7 +8,7 @@ index 82aa9b7..5eac42f 100644
       <WarningLevel>Level4</WarningLevel>
 -      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 -      <AdditionalIncludeDirectories>..\include;..\..\scintilla\include;..\lexlib;</AdditionalIncludeDirectories>
-+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;_USRDLL;LEXILLA_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 +      <AdditionalIncludeDirectories>..\include;$(VcpkgInstalledDir)\$(VcpkgTriplet)\include\scintilla;..\lexlib;</AdditionalIncludeDirectories>
        <BrowseInformation>true</BrowseInformation>
        <MultiProcessorCompilation>true</MultiProcessorCompilation>
