@@ -3740,6 +3740,10 @@
       "baseline": "0.15.0",
       "port-version": 1
     },
+    "high-jump": {
+      "baseline": "1.0.3",
+      "port-version": 0
+    },
     "highfive": {
       "baseline": "3.2.0",
       "port-version": 0
