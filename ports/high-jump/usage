@@ -10,3 +10,4 @@ Basic CMake usage:
 Notes:
 - The port builds the library (BUILD_LIB=ON) and disables examples/tests by default.
 - License: GPL-3.0-only. Ensure compatibility with your project before using.
+
