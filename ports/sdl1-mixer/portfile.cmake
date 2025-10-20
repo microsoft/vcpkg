@@ -57,12 +57,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                                                      </ItemDefinitionGroup>
                                                      </Project>")
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH VisualC/SDL_mixer_2017.sln
-        #INCLUDES_SUBPATH include
-        LICENSE_SUBPATH COPYING
-        #ALLOW_ROOT_INCLUDES
     )
     file(COPY "${SOURCE_PATH}/SDL_mixer.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/SDL")
 else()
@@ -74,7 +71,6 @@ else()
     )
     vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
-    
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
