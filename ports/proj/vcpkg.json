@@ -1,6 +1,6 @@
 {
   "name": "proj",
-  "version": "9.6.2",
+  "version": "9.7.0",
   "description": "PROJ library for cartographic projections",
   "homepage": "https://proj.org/",
   "license": "MIT",

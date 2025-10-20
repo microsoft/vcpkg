@@ -2,10 +2,9 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 cee56eef93728aef9b361f8b1080572532ce5247c80a9d1be53b30dab4d67e8588316890555d4c4ba423e87b09f954327d70615e1ba72d458d8238fa84e589f9
+    SHA512 7fc3f91b84ba2353b4216c0d0a71fd15f7349b8e22630dd727fc98a1f8c295a69fe21f3e1e878413966662047280ed4f195b51ee3302061c3903aea4958a6999
     PATCHES
         01-fix-dependency-resolve.patch
-        02-fix-pkgconfig.patch
         03-fix-android-install-path.patch
 )
 

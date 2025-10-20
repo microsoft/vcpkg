@@ -2,13 +2,14 @@ diff --git a/CMake/3rdparty.cmake b/CMake/3rdparty.cmake
 index 510027c..eb8fe90 100644
 --- a/CMake/3rdparty.cmake
 +++ b/CMake/3rdparty.cmake
-@@ -1,3 +1,10 @@
+@@ -1,3 +1,11 @@
 +set(CMAKE_REQUIRE_FIND_PACKAGE_Iconv "${DCMTK_WITH_ICONV}")
 +set(CMAKE_REQUIRE_FIND_PACKAGE_LibXml2 "${DCMTK_WITH_XML}")
 +set(CMAKE_REQUIRE_FIND_PACKAGE_OpenSSL "${DCMTK_WITH_OPENSSL}")
 +set(CMAKE_REQUIRE_FIND_PACKAGE_PNG "${DCMTK_WITH_PNG}")
 +set(CMAKE_REQUIRE_FIND_PACKAGE_TIFF "${DCMTK_WITH_TIFF}")
 +set(CMAKE_REQUIRE_FIND_PACKAGE_ZLIB "${DCMTK_WITH_ZLIB}")
++set(CMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG "${DCMTK_WITH_OPENJPEG}")
 +
  set(USE_FIND_PACKAGE_DOCS "Control whether libraries are searched via CMake's find_package() mechanism or a Windows specific fallback")
  # Advanced user (eg. vcpkg) may want to override this:

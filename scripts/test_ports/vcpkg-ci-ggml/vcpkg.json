@@ -27,8 +27,9 @@
       "platform": "!(windows & static)"
     },
     {
+      "$comment": "Lacks pkg-config link libs for static builds",
       "name": "cuda",
-      "platform": "(windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)"
+      "platform": "windows & x64 & !uwp & !xbox & !static"
     },
     {
       "name": "metal",

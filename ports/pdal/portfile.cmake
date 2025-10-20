@@ -7,14 +7,14 @@ vcpkg_from_github(
     #[[
         Attention: pdal-dimbuilder must be updated together with pdal
     #]]
-    SHA512 85aaab726d172ef46b8cf05bd72772da72cf5615db549cd262acc4d468f631f1093577b9866ca598b7bef72507f7774e599e66a6cbbf589bd1b5b85bb8107642
+    SHA512 4816c1ef8946937440541b5b8214dd5cbe706ccfbb82e5d67652e983eb6b386a02c1e0ba8ae7e22a0298a65b93953953bc4738d15a33f0f67a39dd6e48dfc076
     HEAD_REF master
     PATCHES
         dependencies.diff
         external-dimbuilder.diff
         find-library-suffix.diff
         no-rpath.patch
-        spz-zlib.diff  # https://github.com/PDAL/PDAL/issues/4745
+        rapidxml.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/modules/FindCurl.cmake"
@@ -37,6 +37,8 @@ file(APPEND "${SOURCE_PATH}/vendor/nlohmann/nlohmann/json_fwd.hpp" "\nnamespace 
 file(WRITE "${SOURCE_PATH}/pdal/JsonFwd.hpp" "/* vcpkg redacted */\n#include <nlohmann/json_fwd.hpp>\nnamespace NL = nlohmann;\n")
 file(MAKE_DIRECTORY "${SOURCE_PATH}/vendor/nlohmann/schema-validator")
 file(WRITE "${SOURCE_PATH}/vendor/nlohmann/schema-validator/json-schema.hpp" "/* vcpkg redacted */\n#include <nlohmann/json-schema.hpp>\n")
+# PDAL vendors arbiter vendors rapidxml
+file(COPY "${CURRENT_INSTALLED_DIR}/include/rapidxml/rapidxml.hpp" DESTINATION "${SOURCE_PATH}/vendor/arbiter/")
 
 unset(ENV{OSGEO4W_HOME})
 
@@ -47,6 +49,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         hdf5        BUILD_PLUGIN_HDF
         lzma        WITH_LZMA
         pgpointcloud BUILD_PLUGIN_PGPOINTCLOUD
+        spz         BUILD_PLUGIN_SPZ
         zstd        WITH_ZSTD
 )
 
@@ -107,14 +110,10 @@ file(READ "${SOURCE_PATH}/vendor/lepcc/src/LEPCC.h" license)
 string(REGEX REPLACE "^/\\*\n|\\*/.*\$" "" license "${license}")
 file(WRITE "${lepcc_license}" "${license}")
 
-set(spz_license "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/spz LICENSE")
-file(COPY_FILE "${SOURCE_PATH}/vendor/spz/LICENSE" "${spz_license}")
-
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/LICENSE.txt"
     "${arbiter_license}"
     "${kazhdan_license}"
     "${lazperf_license}"
     "${lepcc_license}"
-    "${spz_license}"
 )

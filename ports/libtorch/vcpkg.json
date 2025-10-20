@@ -1,16 +1,19 @@
 {
   "name": "libtorch",
-  "version": "2.1.2",
-  "port-version": 12,
+  "version": "2.7.1",
   "description": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
   "homepage": "https://pytorch.org/",
   "license": null,
   "supports": "(windows & !static) | osx | linux",
   "dependencies": [
     "blas",
+    "cpp-httplib",
     "cpuinfo",
     "eigen3",
-    "fftw3",
+    {
+      "name": "fbgemm",
+      "platform": "x64"
+    },
     "flatbuffers",
     {
       "name": "flatbuffers",
@@ -18,14 +21,12 @@
     },
     "fmt",
     "foxi",
-    "foxi",
     "fp16",
     "gemmlowp",
-    "gflags",
-    "glog",
     "lapack",
     "lmdb",
     "mimalloc",
+    "nlohmann-json",
     "onnx",
     "onnx-optimizer",
     "opencl",
@@ -36,6 +37,7 @@
       "host": true
     },
     "pthreadpool",
+    "pybind11",
     "sleef",
     {
       "name": "vcpkg-cmake",
@@ -52,21 +54,43 @@
     "xnnpack"
   ],
   "default-features": [
+    "gflags",
+    "glog",
     "opencv",
     "zstd"
   ],
   "features": {
     "cuda": {
       "description": "Build with CUDA GPU backend",
+      "supports": "(windows & x64 & !staticcrt) | (linux & x64)",
       "dependencies": [
         "cuda",
         "cudnn",
+        {
+          "name": "gloo",
+          "features": [
+            "cuda"
+          ],
+          "platform": "linux"
+        },
         "magma",
-        "nvidia-cutlass"
+        {
+          "name": "nccl",
+          "platform": "linux"
+        },
+        "nvidia-cutlass",
+        {
+          "name": "tensorpipe",
+          "features": [
+            "cuda"
+          ],
+          "platform": "linux"
+        }
       ]
     },
     "dist": {
       "description": "Use distributed with MPI, Gloo, libuv, TensorPipe",
+      "supports": "linux | windows",
       "dependencies": [
         {
           "name": "gloo",
@@ -86,15 +110,20 @@
         },
         {
           "name": "tensorpipe",
-          "platform": "linux | osx"
+          "platform": "linux"
         }
       ]
     },
-    "leveldb": {
-      "description": "Build with LevelDB",
+    "gflags": {
+      "description": "Build with gflags",
       "dependencies": [
-        "leveldb",
-        "snappy"
+        "gflags"
+      ]
+    },
+    "glog": {
+      "description": "Build with glog",
+      "dependencies": [
+        "glog"
       ]
     },
     "llvm": {
@@ -125,6 +154,10 @@
     "vulkan": {
       "description": "Build with Vulkan GPU backend",
       "dependencies": [
+        {
+          "name": "shaderc",
+          "host": true
+        },
         "vulkan",
         "vulkan-loader",
         "vulkan-memory-allocator"

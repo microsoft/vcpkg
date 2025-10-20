@@ -82,6 +82,15 @@
         }
       ]
     },
+    "curl": {
+      "description": "curl support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    },
     "cxsparse": {
       "description": "suitesparse-cxsparse support",
       "dependencies": [
@@ -114,6 +123,15 @@
       "dependencies": [
         {
           "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "graphicsmagick": {
+      "description": "graphicsmagick support",
+      "dependencies": [
+        {
+          "name": "graphicsmagick",
           "default-features": false
         }
       ]
@@ -168,6 +186,12 @@
           "name": "portaudio",
           "default-features": false
         }
+      ]
+    },
+    "qhull": {
+      "description": "qhull support",
+      "dependencies": [
+        "qhull"
       ]
     },
     "spqr": {

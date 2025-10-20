@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO slavenf/sfl-library
     REF "${VERSION}"
-    SHA512 e31ee88bdfbd345cfe3af8372e6fcb04ea9e4de62f8c0a0061780e2ad4edc89f3dfa0af8af2024a621481cc1ef3218f116012b33eadda84e3d688d8c354c74bb
+    SHA512 fe9f7adab569eb34b5a74b87f88f4bfaae8f555f87ec082b0960e748a18e722b5759fcc4a9c0604782fab24413dd813eb2a6dce5dd29263d8300128195788064
     HEAD_REF master
 )
 

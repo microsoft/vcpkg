@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "openvino",
-  "version": "2025.2.0",
+  "version": "2025.3.0",
   "maintainers": "OpenVINO Developers <openvino@intel.com>",
   "summary": "This is a port for Open Visual Inference And Optimization toolkit for AI inference",
   "description": [
@@ -134,7 +134,7 @@
       "description": "Enables TensorFlow frontend for reading models in TensorFlow format",
       "dependencies": [
         {
-          "$comment": "to workaround a linking issue for 2025.2.0 openvino[core,tensorflow]",
+          "$comment": "to workaround a linking issue for 2025.2.0, 2025.3.0 openvino[core,tensorflow]",
           "name": "openvino",
           "default-features": false,
           "features": [
@@ -167,7 +167,7 @@
           "version>=": "2.0.6"
         },
         {
-          "$comment": "to workaround a linking issue for 2025.2.0 openvino[core,tensorflow]",
+          "$comment": "to workaround a linking issue for 2025.2.0, 2025.3.0 openvino[core,tensorflow]",
           "name": "openvino",
           "default-features": false,
           "features": [

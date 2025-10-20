@@ -1,6 +1,6 @@
 {
   "name": "tinyexr",
-  "version": "1.0.9",
+  "version": "1.0.12",
   "description": "Library to load and save OpenEXR(.exr) images",
   "homepage": "https://github.com/syoyo/tinyexr",
   "license": "BSD-3-Clause",

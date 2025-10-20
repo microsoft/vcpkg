@@ -1,7 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.11.0",
-  "port-version": 3,
+  "port-version": 4,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -165,7 +165,8 @@
       ]
     },
     "dshow": {
-      "description": "Enable DirectShow"
+      "description": "Enable DirectShow",
+      "supports": "windows"
     },
     "eigen": {
       "description": "Eigen support for opencv",
