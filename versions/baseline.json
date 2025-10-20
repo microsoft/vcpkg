@@ -3736,6 +3736,10 @@
       "baseline": "2.8.0",
       "port-version": 0
     },
+    "high-jump": {
+      "baseline": "1.0.3",
+      "port-version": 0
+    },
     "hidapi": {
       "baseline": "0.15.0",
       "port-version": 1

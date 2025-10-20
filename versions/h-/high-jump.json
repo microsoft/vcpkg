@@ -1,0 +1,15 @@
+{
+  "version": "1.0.3",
+  "versions": [
+    {
+      "version": "1.0.3",
+      "port_version": 0,
+      "git-tree": "9eb0bb1de64179885aef9607c9a09903a5e53573",
+      "sha512": "584886e5d8e574f6eaaed00bf9d8a3d4fef9fb6c55b8e94d7d04b8418da66156756471dbe64eeadde5e856964b91f53d78418fce3c6852d9799a7acca1745519",
+      "source": {
+        "type": "tarball",
+        "url": "https://github.com/hanjingo/high-jump/releases/download/v1.0.3/high-jump-source-v1.0.3.tar.gz"
+      }
+    }
+  ]
+}

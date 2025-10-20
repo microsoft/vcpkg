@@ -1,0 +1,12 @@
+This port installs the High Jump (high-jump) C++17 library framework.
+
+Basic CMake usage:
+
+  find_package(hj CONFIG REQUIRED)
+
+  add_executable(myapp main.cpp)
+  target_link_libraries(myapp PRIVATE hj::hj)
+
+Notes:
+- The port builds the library (BUILD_LIB=ON) and disables examples/tests by default.
+- License: GPL-3.0-only. Ensure compatibility with your project before using.
