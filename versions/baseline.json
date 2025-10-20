@@ -8753,8 +8753,8 @@
       "port-version": 22
     },
     "sdl1-mixer": {
-      "baseline": "2023-03-25",
-      "port-version": 2
+      "baseline": "2025-09-10",
+      "port-version": 0
     },
     "sdl1-net": {
       "baseline": "1.2.8",
