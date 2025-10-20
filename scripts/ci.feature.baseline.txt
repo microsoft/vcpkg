@@ -2251,6 +2251,7 @@ qtbase[wayland](osx) = skip # no Wayland on macOS
 qtbase[xcb,xcb-sm,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](android) = skip # no x11 in CI
 qtbase[xcb,xcb-sm,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](osx) = skip # no x11 in CI, upstream "support on macOS is minimal and untested"
 qtbase[xcb,xcb-sm,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](windows) = skip # no x11 in CI
+qtwayland(osx) = skip # for good measures
 qtwebengine = skip # Takes too long to feature test at ~3 hours per feature
 s2n = skip # builds too slow
 vtk[ioocct](!uwp) = skip
