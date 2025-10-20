@@ -6,10 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
     REF "v${VERSION}"
-    SHA512 4e30976758015c76a146acc1bfc8501e2e5c61b81db77d253de0d58a8edef987669243f232210667b32ef8da3a33286642acb56ba526fd24c4ba925b44403730
+    SHA512 55262050f63868e3029cd929a74d312dc0f34b606534b1d0b3735eecc8eed68aae97523a50228b4ac4044e1e03192f2909440e3a27607e2d364607ac0bda828f
     HEAD_REF master
     PATCHES
-        vcpkg-tests.patch
+        build-type.diff
 )
 # Ensure that the test uses the installed mimalloc only
 file(REMOVE_RECURSE
@@ -21,12 +21,19 @@ file(REMOVE_RECURSE
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/vcpkg-tests.cmake"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        "-DVCPKG_TESTS=${CURRENT_PORT_DIR}/vcpkg-tests.cmake"
 )
+
+set(ENV{MIMALLOC_VERBOSE} 1)
+set(ENV{MIMALLOC_SHOW_ERRORS} 1)
+set(ENV{MIMALLOC_DISABLE_REDIRECT} 1)
+
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
-vcpkg_copy_tools(TOOL_NAMES pkgconfig-override-cxx AUTO_CLEAN)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES pkgconfig-override-cxx AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 

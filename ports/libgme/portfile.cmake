@@ -6,6 +6,7 @@ vcpkg_from_bitbucket(
     PATCHES
         disable-player-and-demo.patch
         disable-static-zlib-hack.patch
+        cmake4.patch
 )
 
 # This file is generated during the CMake build

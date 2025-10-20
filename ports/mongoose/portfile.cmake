@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cesanta/mongoose
     REF "${VERSION}"
-    SHA512 361e363711692483030dac5a4f4ead52d6e14e32bc8fef99db69d75f08a840e48e4110ad44e9b79d498986c98214a45b0b6e60e4aad8d15b3c1dc7474470a5ba
+    SHA512 791bc9fa4b9d87302c4e2dd59bbeaf9e5a3f48382d6d2b3d3026206e0ae4cd4d29adb150c4f75c5a230d2948c2f6df6f4a8defb49935d848a2229a4e5587563b
     HEAD_REF master
 )
 
@@ -13,6 +13,7 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ssl ENABLE_SSL
+        pack ENABLE_PACK
 )
 
 vcpkg_cmake_configure(
@@ -24,6 +25,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-${PORT} CONFIG_PATH share/unofficial-${PORT})
+if ("pack" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES pack)
+endif()
 
 if("ssl" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
@@ -34,6 +38,7 @@ find_dependency(OpenSSL)]])
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

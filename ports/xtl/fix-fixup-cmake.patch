@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2429881..a816142 100644
+index 796dc46..d2be91f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -30,7 +30,7 @@ message(STATUS "xtl v${${PROJECT_NAME}_VERSION}")
@@ -7,28 +7,28 @@ index 2429881..a816142 100644
  
  if(NOT TARGET nlohmann_json)
 -    find_package(nlohmann_json QUIET)
-+    find_package(nlohmann_json CONFIG REQUIRED)
++    find_package(nlohmann_json QUIET REQUIRED)
  endif()
  
  # Build
-@@ -85,6 +85,7 @@ set_target_properties(xtl
- endif()
+@@ -80,6 +80,7 @@ set_target_properties(xtl
+     PUBLIC_HEADER "${XTL_HEADERS}")
  
- target_compile_features(xtl INTERFACE cxx_std_14)
+ target_compile_features(xtl INTERFACE cxx_std_17)
 +target_link_libraries(xtl INTERFACE nlohmann_json::nlohmann_json)
  
  option(BUILD_TESTS "xtl test suite" OFF)
  option(DOWNLOAD_GTEST "build gtest from downloaded sources" OFF)
-@@ -119,7 +120,7 @@ install(FILES ${XTL_HEADERS}
-         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xtl)
- endif()
+@@ -104,7 +105,7 @@ install(TARGETS xtl
+ export(EXPORT ${PROJECT_NAME}-targets
+        FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake")
  
 -set(XTL_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATAROOTDIR}/cmake/${PROJECT_NAME}" CACHE
 +set(XTL_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE
      STRING "install path for xtlConfig.cmake")
  
  configure_package_config_file(${PROJECT_NAME}Config.cmake.in
-@@ -154,4 +155,4 @@ configure_file(${PROJECT_NAME}.pc.in
+@@ -133,4 +134,4 @@ configure_file(${PROJECT_NAME}.pc.in
                 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
                  @ONLY)
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"

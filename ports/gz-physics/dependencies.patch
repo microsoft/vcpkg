@@ -1,12 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b16b4dd1..0f5e2771 100644
+index b16b4dd..3c44e8d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -88,7 +88,6 @@ gz_find_package(DART
+@@ -85,10 +85,14 @@ gz_find_package(DART
+ 
+ #--------------------------------------
+ # Find bullet for the bullet plugin wrapper
++set(bullet_pkgconfig PKGCONFIG bullet)
++if(WIN32)
++  set(bullet_pkgconfig PKGCONFIG_IGNORE)
++endif()
  gz_find_package(GzBullet
    VERSION 2.87
    REQUIRED_BY bullet bullet-featherstone
 -  PKGCONFIG bullet
++  ${bullet_pkgconfig}
    PKGCONFIG_VER_COMPARISON >=)
  
  message(STATUS "-------------------------------------------\n")

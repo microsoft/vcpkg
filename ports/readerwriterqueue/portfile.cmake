@@ -1,12 +1,20 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cameron314/readerwriterqueue
-    REF v1.0.6
-    SHA512 93606d8337ec6bb8aad23a40a7d5e685f8b97f6c75ca4a6b11947aaef02c2283648c5352d3c7f451006b2244ce45d0c04384ba0e1da8ac515ce7644f83f49f2c
+    REF "v${VERSION}"
+    SHA512 adabc72f94dd9d9fedda9d1123bc1496c19e667c911b17058407718c79337a2532f7510abbcc1b6d69fb4bf54df8765b6ac64925929ef676912a5285eacc07c5
     HEAD_REF master
 )
 
-file(GLOB HEADER_FILES ${SOURCE_PATH}/*.h)
-file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
+vcpkg_cmake_configure( 
+    SOURCE_PATH "${SOURCE_PATH}"
+) 
+
+vcpkg_cmake_install() 
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT}) 
+vcpkg_fixup_pkgconfig() 
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

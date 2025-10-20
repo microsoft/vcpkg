@@ -1,9 +1,8 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.xiph.org
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/ogg
-    REF v1.3.5
-    SHA512 72bfad534a459bfca534eae9b209fa630ac20364a82e82f2707b210a40deaf9a7dc9031532a8b27120a9dd66f804655ddce79875758ef14b109bf869e57fb747
+    REF v${VERSION}
+    SHA512 c247e1da8b12f8b33272fafb6d7c171a1a2687c3632977439fa60b96ccc2ad751d88a2931bb3e18e1ddf2eea2e82cdd0aab087b2ec5393a9228c703476fa0167
     HEAD_REF master
 )
 

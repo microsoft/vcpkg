@@ -1,6 +1,6 @@
 {
   "name": "msdfgen",
-  "version": "1.12",
+  "version": "1.12.1",
   "description": "Multi-channel signed distance field generator",
   "homepage": "https://github.com/Chlumsky/msdfgen",
   "license": "MIT",

@@ -1,13 +1,12 @@
 {
   "name": "atk",
   "version": "2.38.0",
-  "port-version": 9,
+  "port-version": 10,
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
   "license": "LGPL-2.0-or-later",
   "supports": "!xbox",
   "dependencies": [
-    "gettext",
     {
       "name": "gettext",
       "host": true,
@@ -16,6 +15,7 @@
         "tools"
       ]
     },
+    "gettext-libintl",
     "glib",
     {
       "name": "glib",
@@ -28,7 +28,8 @@
   ],
   "features": {
     "introspection": {
-      "description": "build with introspection",
+      "description": "Build with introspection",
+      "supports": "!static",
       "dependencies": [
         "gobject-introspection"
       ]

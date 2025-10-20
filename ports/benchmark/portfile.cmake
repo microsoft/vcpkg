@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
     REF "v${VERSION}"
-    SHA512 fc787d3d60a55abb3edaa575bf947c72e1ad1404a35bfddf585299411bcd04d32503bba563f9a36dccf128fce6261b97d460d6c293ed2c2d0807cf0154c86aa7
+    SHA512 f9031f144a7deeed151d22676b50384c03e5bbd19b68dac9471e91e49c408b770158c5c325f58e6ac07437955fdab3f08aeee76ba7ca5f97d2b51f14f6782416
     HEAD_REF main
 )
 
@@ -11,6 +11,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBENCHMARK_ENABLE_TESTING=OFF
         -DBENCHMARK_INSTALL_DOCS=OFF
+        -DBENCHMARK_ENABLE_WERROR=OFF
         -Werror=old-style-cast
 )
 

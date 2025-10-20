@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://sourceware.org/pub/elfutils/${VERSION}/elfutils-${VERSION}.tar.bz2"
          "https://www.mirrorservice.org/sites/sourceware.org/pub/elfutils/${VERSION}/elfutils-${VERSION}.tar.bz2"
     FILENAME "elfutils-${VERSION}.tar.bz2"
-    SHA512 543188f5f2cfe5bc7955a878416c5f252edff9926754e5de0c6c57b132f21d9285c9b29e41281e93baad11d4ae7efbbf93580c114579c182103565fe99bd3909
+    SHA512 557e328e3de0d2a69d09c15a9333f705f3233584e2c6a7d3ce855d06a12dc129e69168d6be64082803630397bd64e1660a8b5324d4f162d17922e10ddb367d76
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -23,7 +23,9 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 set(options "")
 
-if(NOT "libdebuginfod" IN_LIST FEATURES)
+if("libdebuginfod" IN_LIST FEATURES)
+    list(APPEND options "--enable-libdebuginfod=yes")
+else()
     list(APPEND options "--enable-libdebuginfod=no")
 endif()
 

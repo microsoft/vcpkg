@@ -6,17 +6,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
     REF "${VERSION}"
-    SHA512 2a021faad807ee3e23548716ffa4785dc2409edbb4be676cc4bc01d47885760de340f0a4afdcbf0aaa835affd6d78f7bc319bbf7d337dbc30e7a559d0088e4bd
+    SHA512 d3ba654ed7dd7b432494918b2de5d8e2b0ad1c42752c5d726f20d6fe2841828fb4e8beb853e3570a11efecef725029ce5ffa3ebc434efff007e7f60735eb9856
     HEAD_REF master
+    PATCHES 
+        "001-mingw-dll.patch" # Upstreamed (not yet in a release): https://github.com/abseil/abseil-cpp/commit/f2dee57baf19ceeb6d12cf9af7cbb3c049396ba5
+        "string-view.patch"
 )
 
-# With ABSL_PROPAGATE_CXX_STD=ON abseil automatically detect if it is being
-# compiled with C++14 or C++17, and modifies the installed `absl/base/options.h`
-# header accordingly. This works even if CMAKE_CXX_STANDARD is not set. Abseil
-# uses the compiler default behavior to update `absl/base/options.h` as needed.
-set(ABSL_USE_CXX17_OPTION "")
-if("cxx17" IN_LIST FEATURES)
-    set(ABSL_USE_CXX17_OPTION "-DCMAKE_CXX_STANDARD=17")
+set(ABSL_TEST_HELPERS_OPTIONS "")
+if("test-helpers" IN_LIST FEATURES)
+    set(ABSL_TEST_HELPERS_OPTIONS "-DABSL_BUILD_TEST_HELPERS=ON" "-DABSL_USE_EXTERNAL_GOOGLETEST=ON" "-DABSL_FIND_GOOGLETEST=ON")
 endif()
 
 set(ABSL_STATIC_RUNTIME_OPTION "")
@@ -24,17 +23,39 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
     set(ABSL_STATIC_RUNTIME_OPTION "-DABSL_MSVC_STATIC_RUNTIME=ON")
 endif()
 
+set(ABSL_MINGW_OPTIONS "")
+if(VCPKG_TARGET_IS_MINGW)
+    # LIBRT-NOTFOUND is needed since the system librt may be found by cmake in
+    # a cross-compile setup.
+    # See https://github.com/pywinrt/pywinrt/pull/83 for the FIReference
+    # definition issue.
+    set(ABSL_MINGW_OPTIONS "-DLIBRT=LIBRT-NOTFOUND"
+        "-DCMAKE_CXX_FLAGS=-D____FIReference_1_boolean_INTERFACE_DEFINED__")
+    # Specify ABSL_BUILD_MONOLITHIC_SHARED_LIBS=ON when VCPKG_LIBRARY_LINKAGE is dynamic to match Abseil's Windows (MSVC) defaults
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        vcpkg_list(APPEND ABSL_MINGW_OPTIONS "-DABSL_BUILD_MONOLITHIC_SHARED_LIBS=ON")
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DABSL_PROPAGATE_CXX_STD=ON
-        ${ABSL_USE_CXX17_OPTION}
+        ${ABSL_TEST_HELPERS_OPTIONS}
         ${ABSL_STATIC_RUNTIME_OPTION}
+        ${ABSL_MINGW_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME absl CONFIG_PATH lib/cmake/absl)
+
+if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/absl_time.pc" "Libs.private: -framework CoreFoundation\n")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/absl_time.pc" "Libs.private: -framework CoreFoundation\n")
+    endif()
+endif()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()

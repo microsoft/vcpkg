@@ -1,6 +1,6 @@
 {
   "name": "blake3",
-  "version": "1.7.0",
+  "version": "1.8.1",
   "description": "BLAKE3 cryptographic hash function.",
   "homepage": "https://github.com/BLAKE3-team/BLAKE3",
   "license": "CC0-1.0 OR Apache-2.0",
@@ -13,5 +13,16 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tbb": {
+      "description": "Enable TBB multi-threading API support",
+      "dependencies": [
+        {
+          "name": "tbb",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

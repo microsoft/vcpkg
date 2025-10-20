@@ -7,10 +7,10 @@ vcpkg_from_github(
     SHA512 83eabcaf2114c8af1cabbc96b6ef2b57c934a06f68e7a870adf336feaa19edd57aedaf8507d5c40500e46d4e77f5059f9286e319fe7cadeb9ffc8fa018fb030c
     HEAD_REF master
     PATCHES
+        cmake.diff
         fix-asio-error.patch
 )
-
-vcpkg_replace_string("${SOURCE_PATH}/Microsoft.WindowsAzure.Storage/CMakeLists.txt" [[file(GLOB OPENSSL_ROOT_DIR /usr/local/Cellar/openssl/*)]] "")
+file(REMOVE_RECURSE "${SOURCE_PATH}/Microsoft.WindowsAzure.Storage/cmake/Modules/FindLibXML2.cmake")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Microsoft.WindowsAzure.Storage"
@@ -18,18 +18,10 @@ vcpkg_cmake_configure(
         -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF
         -DBUILD_SAMPLES=OFF
-    OPTIONS_RELEASE
-        "-DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/lib"
-    OPTIONS_DEBUG
-        "-DGETTEXT_LIB_DIR=${CURRENT_INSTALLED_DIR}/debug/lib"
 )
-
 vcpkg_cmake_install()
-
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include")
-
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

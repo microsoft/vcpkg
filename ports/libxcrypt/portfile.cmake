@@ -18,6 +18,7 @@ vcpkg_from_github(
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF
+    OPTIONS "--disable-werror"
 )
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()

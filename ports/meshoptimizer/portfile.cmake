@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/meshoptimizer
     REF v${VERSION}
-    SHA512 f2f1d951bfb5c9b51d1a8485b3ce5e6ba4b5d3475fbefb0129fd54ce6dfaaeb923ad03c603733ba3865cb7ff6516da92ccdf326e5d672ef2114f515fd3582395
+    SHA512 c00f2357c9c8d17804047c3c678f253bf13aa467b1dadc099a7958787e1725c501bd92a7837494d4831dd7c3428bbeb92353b70fd45ec71e88d753036318ab2f
     HEAD_REF master
 )
 
@@ -14,8 +14,8 @@ if ("gltfpack" IN_LIST FEATURES)
   vcpkg_from_github(
       OUT_SOURCE_PATH BASISU_PATH
       REPO zeux/basis_universal
-      REF 91ca86492bc046bf1d096067a1adcd2309e13dd2
-      SHA512 fe80533db60b40cdc72a64f766c2447ce5c923d84467a926c2e8af4ec42e278d9fa9823b41b3fc7d9b740dd2d41d2f606f0f9990f94d2398f253bc86350a4287
+      REF 6588a8a443f8ca1f0abb56ee4f46be10be1b2a2c
+      SHA512 a59e44d4406dde88b42718335be11a9bb0e07acaec955200b7f439151be01fa9e5321fa2ae1fe27173bbf76a3bd70ceca2f8bd4d0377b602aed6a75704cdcc73
       HEAD_REF gltfpack
   )
 endif()

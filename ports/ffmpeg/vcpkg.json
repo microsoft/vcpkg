@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "7.1.1",
+  "version": "7.1.2",
   "port-version": 1,
   "description": [
     "A library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -62,6 +62,7 @@
             "theora",
             "vorbis",
             "vpx",
+            "vulkan",
             "webp",
             "xml2",
             "zlib"
@@ -647,6 +648,17 @@
         "libtheora"
       ]
     },
+    "vaapi": {
+      "description": "VAAPI video decoding/encoding acceleration",
+      "supports": "linux",
+      "dependencies": [
+        {
+          "name": "libva",
+          "default-features": false,
+          "platform": "linux"
+        }
+      ]
+    },
     "version3": {
       "description": "Upgrade (L)GPL to version 3"
     },
@@ -667,6 +679,12 @@
           ]
         },
         "libvpx"
+      ]
+    },
+    "vulkan": {
+      "description": "H.264, HEVC and AV1 de/encoding via Vulkan",
+      "dependencies": [
+        "vulkan-headers"
       ]
     },
     "webp": {

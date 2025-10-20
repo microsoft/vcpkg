@@ -1,6 +1,6 @@
 {
   "name": "valijson",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Header-only C++ library for JSON Schema validation",
   "dependencies": [
     {

@@ -1,16 +1,12 @@
-set(DIRECTXTEX_TAG oct2024)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+set(DIRECTXTEX_TAG jul2025)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
     REF ${DIRECTXTEX_TAG}
-    SHA512 4ac9307ab6e36aa727afa5bd5bb945fb431c89fa01c9c8283eebf512707acfb15a0d7cd84f72349d4271b0eef2e13bca38a38226c1afafd8f1e36b38c1c4b07f
+    SHA512 72b075cf85ebcd4663417098a94c5d4e3cc19086233d9e968ccaa955195c4e0059b3290cd5f8d60757ec3fd5add3ddb46e62a5f56c326c231ab042e181582069
     HEAD_REF main
-    PATCHES
-      FixStdByteAndCMake.patch
-    )
+)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -69,21 +65,21 @@ if("tools" IN_LIST FEATURES)
       TEXASSEMBLE_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texassemble.exe"
       FILENAME "texassemble-${DIRECTXTEX_TAG}.exe"
-      SHA512 bb3c45d35305a56b80035bd7c076cd0000461cb37a5cd9495ac8f8a1647967fb6ecb02245336356674829f179ef05330d5aa9e768637e93b9db587d7eb684dfe
+      SHA512 4e2841f22416a847be2ebe41a1d605093c1784d96d48a97cf9ec2f8f3c8e9eeeacb7a5c3c1391a639dcb402fbe3c07e29c87fce6c2023003c73ab87f26d929c9
     )
 
     vcpkg_download_distfile(
       TEXCONV_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texconv.exe"
       FILENAME "texconv-${DIRECTXTEX_TAG}.exe"
-      SHA512 6376ee91dca0b53c043e1e86ec56f418029591885dd9fd49f8e932aa635e6668d430aeb30b497daa4e8c1f02ac42f7dc901ebec107d8bc1e611c9a0ec8747029
+      SHA512 de5cb6d2b1a9f33df7117266d14dca6f6429a96f28c3a7f2a9de7bc1793e509fd1bad6b9b027a3a256d0f132860b6bfe6d3614a1e84aa70f566d41d96945177c
     )
 
     vcpkg_download_distfile(
       TEXDIAG_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texdiag.exe"
       FILENAME "texdiag-${DIRECTXTEX_TAG}.exe"
-      SHA512 31261ceefc17ce30c7f21dff961bfe03b2dc65619f60c64891a5fc56847cd7468a6629c36b1fcbf4c6f967232ad88eb85cf5c2ea874084dfe0d8da4ffabc12c8
+      SHA512 47ffb105fa5bc83bad38953075cf77207bbc012c782dc9a9714d0449677bca9fdaaf167e910505000c1ade93d649f4c8b741c9607b410c16a1ce900ac7fd84e1
     )
 
     file(INSTALL
@@ -102,21 +98,21 @@ if("tools" IN_LIST FEATURES)
       TEXASSEMBLE_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texassemble_arm64.exe"
       FILENAME "texassemble-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 48b629b7aead482c0dc96c2fcfb28d534076d62dc77ce94256ad52df48596c1993645900873bf0dfd3d888087b423c350ba3f420b1305ef2ed7a43eafecfb523
+      SHA512 968a4544b1c6f52eec7b2c032893849a8e687786ed22dc7deec13e7b32a6da4618805054289693972af5dabded01d42f6c9711e80e77869c976a3fcb0e0a6b16
     )
 
     vcpkg_download_distfile(
       TEXCONV_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texconv_arm64.exe"
       FILENAME "texconv-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 53f319be7e739d9e3addc2e86648022ec802315a94c600eb6886a4474232aa25de0c9fb8d72868d2871d29eb36ee1dd6a186094edb6d9ab8f249b4eb4849a10c
+      SHA512 98e7fed35155fe98a897569c41ef73eb29023ca9ea492cf7b5e1fb0df640548edf2b847e2858720482ce4043183e6a50108f1fcd95833b34f3112dc981da1a0e
     )
 
     vcpkg_download_distfile(
       TEXDIAG_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texdiag_arm64.exe"
       FILENAME "texdiag-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 638b6b8443767ca390efdfdb8e4e8a655f0cc370a81b946678414481a6c3fc0c431a7082d08206fa86bc4ccf9c8b0027a427d483474a8c3d1ff0a030011779f7
+      SHA512 048abf5d7ee46cd1e9eab7131fdc788ee5353ca1e2ebc7c4f122a249b1ffcb2da4b451b47b15e6116ba217c2ef2364ff7cac64bfc6416dd9674da3ebbf986343
     )
 
     file(INSTALL
@@ -142,4 +138,10 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+if("xbox" IN_LIST FEATURES)
+    file(READ "${CMAKE_CURRENT_LIST_DIR}/xboxusage" USAGE_CONTENT)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" ${USAGE_CONTENT})
+endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

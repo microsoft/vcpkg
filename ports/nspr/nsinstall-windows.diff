@@ -1,0 +1,17 @@
+diff --git a/nspr/config/Makefile.in b/nspr/config/Makefile.in
+index 54357b7..fd59e1a 100644
+--- a/nspr/config/Makefile.in
++++ b/nspr/config/Makefile.in
+@@ -54,10 +54,10 @@ include $(topsrcdir)/config/rules.mk
+ 
+ PROGS	= $(OBJDIR)/now$(PROG_SUFFIX)
+ 
+-ifeq (,$(CROSS_COMPILE)$(filter-out WINNT,$(OS_ARCH)))
++ifneq (,$(CROSS_COMPILE))
+ TARGETS = $(PROGS)
+ else
+-ifeq (,$(filter-out WINCE,$(OS_ARCH)))
++ifeq (,$(filter-out WIN95 WINCE WINMO,$(OS_TARGET)))
+ TARGETS = $(PROGS)
+ else
+ PROGS	+= $(OBJDIR)/nsinstall$(PROG_SUFFIX)

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO karastojko/mailio
     REF "${VERSION}"
-    SHA512 f343ac56f4235bb4ab164630be78d1db112d5ad853dc9a41b55fee5b9755bc8215cc4a6e5d1dd65099b538d792e75d782932173533398d9e48b691a8e9f3182c
+    SHA512 550ab52400e3085d9dfeb1405ad34a5d26c65f9d0a9321933300da78e56e0469d2b79d1dd67559e3bdbf1f73899370d8feb7a9e9996bd309cbf4f8f9fd645605
     HEAD_REF master
 )
 
@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-     CONFIG_PATH share/mailio/cmake
+     CONFIG_PATH lib/cmake/mailio
 )
 
 vcpkg_fixup_pkgconfig()

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8f9f25..21e2c37 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,7 +19,7 @@ option(RAPIDOBJ_BuildExamples "Build Examples." OFF)
+ 
+ set(RAPIDOBJ_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}" CACHE STRING "Header Include Folder.")
+-set(RAPIDOBJ_CMAKE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake" CACHE STRING "CMake Config Folder.")
++set(RAPIDOBJ_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/share" CACHE STRING "CMake Config Folder.")
+ 
+ if (RAPIDOBJ_BuildTests OR RAPIDOBJ_BuildTools)
+     add_subdirectory(external EXCLUDE_FROM_ALL)
+ endif()

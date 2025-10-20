@@ -1,6 +1,7 @@
 {
   "name": "glibmm",
   "version": "2.80.1",
+  "port-version": 1,
   "description": "This is glibmm, a C++ API for parts of glib that are useful for C++.",
   "homepage": "https://www.gtkmm.org.",
   "license": "LGPL-2.1-or-later",
@@ -10,7 +11,7 @@
     "glib",
     "libffi",
     "libiconv",
-    "libsigcpp-3",
+    "libsigcpp",
     "pcre",
     {
       "name": "vcpkg-tool-meson",

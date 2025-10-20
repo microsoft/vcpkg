@@ -1,6 +1,7 @@
 {
   "name": "libsndfile",
   "version-semver": "1.2.2",
+  "port-version": 1,
   "description": "A library for reading and writing audio files",
   "homepage": "https://github.com/erikd/libsndfile",
   "license": "LGPL-2.1-or-later",
