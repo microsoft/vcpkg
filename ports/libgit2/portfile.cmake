@@ -1,16 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF v1.8.0
-    SHA512 e5634267bd9c6a594c9a954d09c657e7b8aadf213609bf7dd83b99863d0d0c7109a5277617dd508abc2da54ea3f12c2af1908d1aeb73c000e94056e2f3653144
+    REF "v${VERSION}"
+    SHA512 3bec01704ad1acdb4f7e9454101c2a205b7e288a4dffaa5e1afc2b1f849fa3a42b961c532bed2669841925ab8f84fb35bb82a2df8039b1caf76c5779665032d9
     HEAD_REF main
     PATCHES
         c-standard.diff # for 'inline' in system headers
         cli-include-dirs.diff
         dependencies.diff
         mingw-winhttp.diff
-        unofficial-config-export.diff
-        fix-arm64-windows.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindPCRE.cmake"
@@ -95,18 +93,13 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-git2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-git2")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libgit2-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libgit2")
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libgit2 CONFIG_PATH share/unofficial-libgit2)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES git2 AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 set(file_list "${SOURCE_PATH}/COPYING")
 if(NOT VCPKG_TARGET_IS_WINDOWS)

@@ -1,14 +1,14 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-DDS
     REF "v${VERSION}"
-    SHA512 c2b22f6355fc38ccf49d41f7fe074092c6962d2fa759351b37d83af863c60839d9579bfef0f96540276229bcdb2d3d218e18777db89cf16092d09c26f2e24533
+    SHA512 970b80dc87224183f730b32f21dba4cdd55cf9ac88ce662c0a0f710a2bca6233754d1274a71cca64a543407a4d5f09db3badf73201b6bb5f49ff68c81b368509
     HEAD_REF master
     PATCHES
-        fix-find-package-asio.patch
-        disable-symlink.patch
+        fix-deps.patch
         pdb-file.patch
+        disable-werror.patch
+        include-cstdint.patch
 )
 
 set(extra_opts "")
@@ -23,6 +23,8 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSECURITY=ON
+        -DFORCE_CXX=14 # foonathan memory debug needs C++14 constexpr
         ${extra_opts}
 )
 
@@ -33,13 +35,13 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/fastdds/cmake)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # copy tools from "bin" to "tools" folder
-    foreach(TOOL "fast-discovery-server-1.0.1.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+    foreach(TOOL "fast-discovery-server-1.0.1.exe" "fastdds.bat" "ros-discovery.bat")
         file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${TOOL}")
     endforeach()
 
     # remove tools from debug builds
-    foreach(TOOL "fast-discovery-serverd-1.0.1.exe" "fast-discovery-server.bat" "fastdds.bat" "ros-discovery.bat")
+    foreach(TOOL "fast-discovery-serverd-1.0.1.exe" "fastdds.bat" "ros-discovery.bat")
         if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
             file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
         endif()
@@ -72,7 +74,11 @@ elseif(VCPKG_TARGET_IS_LINUX)
 endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/fastdds/discovery/parser.py" "tool_path / '../../../bin'" "tool_path / '../../${PORT}'")
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fastdds/fast-discovery-server-targets-debug.cmake" [[${_IMPORT_PREFIX}/tools/fastdds/fast-discovery-serverd-1.0.1]] [[${_IMPORT_PREFIX}/tools/fastdds/fast-discovery-server-1.0.1]])
+endif()
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")

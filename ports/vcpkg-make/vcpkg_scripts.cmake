@@ -123,7 +123,7 @@ function(z_vcpkg_set_global_property property value)
     if(NOT ARGN STREQUAL "" AND NOT ARGN MATCHES "^APPEND(_STRING)?$")
         message(FATAL_ERROR "'${CMAKE_CURRENT_FUNCTION}' called with invalid arguments '${ARGN}'")
     endif()
-    set_property(GLOBAL ${ARGN} PROPERTY "z_vcpkg_global_property_${property}" ${value})
+    set_property(GLOBAL ${ARGN} PROPERTY "z_vcpkg_global_property_${property}" "${value}")
 endfunction()
 
 function(z_vcpkg_get_global_property outvar property)
@@ -154,14 +154,14 @@ function(vcpkg_prepare_pkgconfig config)
     endforeach()
 
     vcpkg_find_acquire_program(PKGCONFIG)
-    get_filename_component(pkgconfig_path "${PKGCONFIG}" DIRECTORY)
     set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
     vcpkg_host_path_list(PREPEND ENV{PKG_CONFIG_PATH} 
-                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig/"
-                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig/"
-                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig/"
-                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig/"
+                            # After installation, (merged) 'lib' is always searched before 'share'.
+                            "${CURRENT_PACKAGES_DIR}${subdir}/lib/pkgconfig"
+                            "${CURRENT_INSTALLED_DIR}${subdir}/lib/pkgconfig"
+                            "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
+                            "${CURRENT_INSTALLED_DIR}/share/pkgconfig"
                         )
 endfunction()
 
@@ -171,7 +171,7 @@ function(vcpkg_restore_pkgconfig)
         if(has_backup)
             z_vcpkg_get_global_property(backup "make-pkg-config-backup-${envvar}")
             set("ENV{${envvar}}" "${backup}")
-            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}")
+            z_vcpkg_set_global_property("make-pkg-config-backup-${envvar}" "")
         else()
             unset("ENV{${envvar}}")
         endif()

@@ -1,6 +1,6 @@
 {
   "name": "lib3mf",
-  "version": "2.3.2",
+  "version": "2.4.1",
   "description": "lib3mf is an implementation of the 3D Manufacturing Format file standard",
   "homepage": "https://github.com/3MFConsortium/lib3mf",
   "license": "BSD-2-Clause",

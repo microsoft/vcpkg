@@ -2,14 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 2bf3f00589d825b7f4ca40d43129d81af4ba62382f98b283a3a206e7661a7a69f178c6afafdde646db8d68cb7fc54ec5280d2f4ff4fbbffe24082cf6649dda29
+    SHA512 97241f147c4e74054b787b1bb694ab1051df661ae049e75d0ffa54cec71325155e2a54ded777f09709f7e6a7ff740c7e69d2f3bd73320f1711330d07e427922b
     HEAD_REF master
     PATCHES
-        # vcpkg specific patch, because OV creates a file in source tree, which is prohibited
-        001-disable-tools.patch
-        002-fix-onnx.patch
-        003-protobuf.patch
-        add-include-chrono.patch #https://github.com/openvinotoolkit/openvino/pull/27782
+        onednn_gpu_includes.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -38,8 +34,8 @@ if(ENABLE_INTEL_GPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/oneDNN
-        REF 4ccd07e3a10e1c08075cf824ac14708245fbc334
-        SHA512 c9a28f8427b5cd9c057a546b0b62303026f848045b26e0c9705e2f64d5bc84424ee15935d3bf5ee120d3c430a9dd41b7a6e26ef4fc0c53a2154ce83fcaee8b5a
+        REF 8edf6bb60fdaa2769f3cebf44bd2ee94da00744c
+        SHA512 4e413c93306d81b0c4823789990f9a99ce96cd7a523db9a347e399db0cdf0af3eb4aef449bc5821fe9023ae22655677b2be7897b9c4bfb974d11aab17b017d20
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
@@ -52,8 +48,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF c8ae8d96e963bd04214858319fa334968e5e73c9
-        SHA512 6877ca37c3678e738fa94767b70432d3fff73305342164d0902875d9bcce3fe12abaf52bfc6ae0ef288532324e746b01e604ab7e47f198e7776352b8f5b6f009
+        REF 3d7a6f1d068d8ae08f189aa4baa93d177bc07507
+        SHA512 f5de57f7a8972b4c3aefe359beeb51bd9a5cde6bbc6316891f73148555ef9f299145449faf7d761a8e801fb8ddee68b4455d2b9486067915fe7f445f6b099d6c
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -76,31 +72,36 @@ if(ENABLE_INTEL_CPU)
             OUT_PYTHON_VAR OV_PYTHON_WITH_SCONS
         )
 
+        list(APPEND FEATURE_OPTIONS "-DPython3_EXECUTABLE=${OV_PYTHON_WITH_SCONS}")
+
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v24.08
-            SHA512 82debaf8d8345b79b112afdabf6019c7ad8a9b30161d3061320a3da3040b2ad49153cc508caafe9fb1182c2669c958785acf2c361382080af273465d1727a71c
+            REF v25.03
+            SHA512 a7c9f8138631aabe24cfe68021d3cdaf6716b69dbcf183694217ca87720efd399f5d809f9fd4522a435a6a991855bcf40d5c6fa6189d77ee8ca5caa1f9ade95c
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
+
+        vcpkg_from_github(
+            OUT_SOURCE_PATH DEP_SOURCE_PATH
+            REPO ARM-software/kleidiai
+            REF eaf63a6ae9a903fb4fa8a4d004a974995011f444
+            SHA512 2eed2183927037ab3841daeae2a0df3dfaa680ae4dea5db98247d6d7dd3f897d5109929098eb1b08e3a0797ddc03013acdb449642435df12a11cffbe4f5d2674
+        )
+        file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/kleidiai")
     endif()
 endif()
 
 if(ENABLE_INTEL_NPU)
-    list(APPEND FEATURE_OPTIONS "-DENABLE_INTEL_NPU_INTERNAL=OFF")
-    vcpkg_from_github(
-        OUT_SOURCE_PATH DEP_SOURCE_PATH
-        REPO oneapi-src/level-zero
-        REF v1.17.6
-        SHA512 bb412e875d97d1c80a0e67087e6dac1a6ffb91fa50e22deb7649ee3250c0937679d225419b52bfd7938f71a66ac15742a6a215cee7714c27e0f935e04df5b88e
-    )
-    file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero")
+    list(APPEND FEATURE_OPTIONS
+        "-DENABLE_INTEL_NPU_INTERNAL=OFF"
+        "-DENABLE_SYSTEM_LEVEL_ZERO=ON")
 
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF 16c85231a82ee1a0b06ed7ab7da3f411a0878ed7
-        SHA512 983468c7706dc44cfc248c491cf51d2f69181c16ae1e400ca689df39c51112e03227c2f311173b1665115cdd33fa7d51d48e75adaf8353564a980b37c16aaa66
+        REF f8bba8915e0a5fe8317f7aa48007ecc5a8c179ca
+        SHA512 a93b907159c67fe76634869d71c5434756f32d6e6e81ae86cdc517499576dc5691221dde7821bbaf9d39bf3cd62066a032fd30be26e7662f2b78b046c0ddd2f6
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 endif()
@@ -139,6 +140,7 @@ vcpkg_cmake_configure(
         "-DENABLE_SYSTEM_TBB=ON"
         "-DENABLE_TBBBIND_2_5=OFF"
         "-DENABLE_TEMPLATE=OFF"
+        "-DENABLE_OV_JAX_FRONTEND=OFF"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 

@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
     REF v${VERSION}
-    SHA512 396ce2a36937d49ec96eb239312118c736f46383d2906b7142d9695e795f310af28255d8827cc98ad76ae4e6d5a22faf1188b7dd286791e3c85f22c96d0114b3
+    SHA512 be848c5f1ab3bdc7fe9826418cd5b6fc688dbcf452976039f7ca924acd4f529cd057b840b2135aadcbc8731baf46da15abbe440e57b016731d9ec159a06a45f1
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff
@@ -19,7 +19,7 @@ vcpkg_from_github(
         library-linkage.diff
         cmake-export.diff
         no-abs-path.diff
-        ushort-check.diff
+        android-patch.diff
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindIconv.cmake"

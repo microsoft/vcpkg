@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 671f79d..8eabae4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,8 +15,8 @@ include(cmake/CPM.cmake)
+ 
+ 
+ # Add stlab-copy-on-write as a dependency
+-CPMAddPackage("gh:stlab/copy-on-write@1.0.3")
+-target_link_libraries(stlab INTERFACE stlab::copy-on-write)
++find_package(stlab-copy-on-write CONFIG REQUIRED)
++target_link_libraries(stlab PUBLIC stlab::stlab-copy-on-write)
+ 
+ ########################################################
+ # clangd

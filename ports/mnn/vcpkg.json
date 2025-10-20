@@ -1,7 +1,7 @@
 {
   "name": "mnn",
   "version": "1.1.0",
-  "port-version": 6,
+  "port-version": 7,
   "description": "MNN is a blazing fast, lightweight deep learning framework, battle-tested by business-critical use cases in Alibaba",
   "homepage": "https://www.mnn.zone/",
   "license": "Apache-2.0",

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
     REF  "v${VERSION}"
-    SHA512 39b92ec4c2479a3c0a8e99b2890643c9d76a7e5b61b485c1a3a5f5abff1da4e62b67b879dbcf6e18a43f98172fc9f87f0a6c92b99e2a1900e6f1d2e809899b11
+    SHA512 7c6ae5b94020a01df5d6d0a358592293595d8d8bf04bf42e6acc09bcd6ed012071069373a71ed6f24ce878aa79447dd189b42bc8a3a70819ef05dccc60a2cf68
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -37,8 +37,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         imgui           LIBIGL_IMGUI
         opengl          LIBIGL_OPENGL
         xml             LIBIGL_XML
-        # Features removed: missing binary libs / separate ports
-        comiso          LIBIGL_COPYLEFT_COMISO
         predicates      LIBIGL_PREDICATES
         tetgen          LIBIGL_COPYLEFT_TETGEN
         triangle        LIBIGL_RESTRICTED_TRIANGLE

@@ -1,0 +1,13 @@
+{
+  "name": "sfl",
+  "version": "2.0.2",
+  "description": "header-only C++11 library that offers several new or less-known containers",
+  "homepage": "https://github.com/slavenf/sfl-library",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

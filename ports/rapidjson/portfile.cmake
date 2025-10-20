@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/rapidjson
-    REF a95e013b97ca6523f32da23f5095fcc9dd6067e5 # accessed on 2023-07-17
-    SHA512 19bf9a579df70cbeaf60c7ccf25c92c327bffe95b0df14f27f2132134d5bb214e98a45e021eb287c4790e301f84bb095e0bdb3c97f65a37fbeb254970d97c005
+    REF 24b5e7a8b27f42fa16b96fc70aade9106cf7102f # accessed on 2025-02-26
+    SHA512 50f8723414a6e63eadd45f97be5c44e9fff2d06216c8cc4df802f5bfc2a9416a039f2c69e9bb1882f7e756cd38a7097eea05cab76c739f45805dc41617140799
     FILE_DISAMBIGUATOR 2
     HEAD_REF master
 )
@@ -34,7 +34,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/RapidJSONConfig.cmake" _contents)
-string(REPLACE "VERSION 3.0" "VERSION 3.5" _contents "${_contents}")
+string(REPLACE "VERSION 3.0" "VERSION 3.5...3.30" _contents "${_contents}")
 string(REPLACE "\${RapidJSON_SOURCE_DIR}" "\${RapidJSON_CMAKE_DIR}/../.." _contents "${_contents}")
 string(REPLACE "set( RapidJSON_SOURCE_DIR \"${SOURCE_PATH}\")" "" _contents "${_contents}")
 string(REPLACE "set( RapidJSON_DIR \"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel\")" "" _contents "${_contents}")

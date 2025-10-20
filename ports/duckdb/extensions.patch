@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1300ab8..038c03b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1277,7 +1277,10 @@ endif()
+ # Load extensions passed through cmake config var
+ foreach(EXT IN LISTS BUILD_EXTENSIONS)
+   if(NOT "${EXT}" STREQUAL "")
+-    if (EXISTS "${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")
++    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/extension_config.cmake")  
++      # out-of-tree extension  
++      include("${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/extension_config.cmake")  
++    elseif (EXISTS "${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")  
+       # out-of-tree extension: load cmake file
+       include("${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")
+     else()

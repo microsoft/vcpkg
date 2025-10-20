@@ -1,9 +1,8 @@
 {
   "name": "cocoyaxi",
-  "version": "3.0.0",
-  "port-version": 1,
+  "version-date": "2024-09-04",
   "description": "A go-style coroutine library in C++11 and more",
-  "homepage": "https://github.com/idealvin/cocoyaxi",
+  "homepage": "https://github.com/idealvin/coost/",
   "license": "MIT",
   "supports": "!uwp & !(arm & windows)",
   "dependencies": [

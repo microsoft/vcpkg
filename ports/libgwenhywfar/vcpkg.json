@@ -1,20 +1,22 @@
 {
   "name": "libgwenhywfar",
-  "version-semver": "5.6.0",
-  "port-version": 5,
+  "version-semver": "5.12.0",
   "description": "A helper library for networking and security applications and libraries",
   "homepage": "https://www.aquamaniac.de/rdm/",
-  "supports": "!windows & !(osx & arm64)",
+  "supports": "!windows | mingw",
   "dependencies": [
-    "libgcrypt",
     {
-      "name": "libgnutls",
-      "features": [
-        "openssl"
-      ]
+      "name": "gettext",
+      "host": true
     },
+    "libgcrypt",
+    "libgnutls",
     {
       "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
       "host": true
     }
   ],
@@ -24,7 +26,7 @@
   ],
   "features": {
     "cpp": {
-      "description": "C++ bindings"
+      "description": "A C++ binding for the C module GWEN_GUI"
     },
     "libxml2": {
       "description": "Enables libXML2-depending functionality",
@@ -35,17 +37,22 @@
         }
       ]
     },
+    "openssl": {
+      "description": "OpenSSL support in gct-tool",
+      "supports": "!arm64",
+      "dependencies": [
+        "openssl"
+      ]
+    },
     "qt5": {
       "description": "Qt bindings",
+      "supports": "!(osx & static)",
       "dependencies": [
         {
           "name": "qt5-base",
           "default-features": false
         }
       ]
-    },
-    "tools": {
-      "description": "Some helper tools provided by Gwenhywfar and useful for applications using it"
     }
   }
 }

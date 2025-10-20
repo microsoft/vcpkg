@@ -1,0 +1,22 @@
+{
+  "name": "argus",
+  "version": "0.1.0",
+  "description": "Argus is a cross-platform modern feature-rich command-line argument parser for C",
+  "homepage": "https://github.com/lucocozz/argus",
+  "license": "MIT",
+  "supports": "!(windows & static) & !(windows & x86)",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "regex": {
+      "description": "Enable regex validation support using PCRE2",
+      "dependencies": [
+        "pcre2"
+      ]
+    }
+  }
+}

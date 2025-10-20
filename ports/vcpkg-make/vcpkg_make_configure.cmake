@@ -36,6 +36,10 @@ function(vcpkg_make_configure)
         list(APPEND prepare_flags_opts "LANGUAGES" ${arg_LANGUAGES})
     endif()
 
+    # Cache this invocation's desired cmake vars configuration.
+    set(Z_VCPKG_MAKE_GET_CMAKE_VARS_OPTS "ADDITIONAL_LANGUAGES;${arg_LANGUAGES}" CACHE INTERNAL "")
+    z_vcpkg_make_get_cmake_vars()
+
     set(escaping "")
     if(arg_DISABLE_MSVC_TRANSFORMATIONS)
       set(escaping NO_FLAG_ESCAPING)
@@ -44,12 +48,7 @@ function(vcpkg_make_configure)
     z_vcpkg_set_global_property(make_prepare_flags_opts "${prepare_flags_opts}")
     z_vcpkg_make_prepare_flags(${prepare_flags_opts} ${escaping} C_COMPILER_NAME ccname FRONTEND_VARIANT_OUT frontend)
 
-    if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
-        set(BUILD_TRIPLET "${VCPKG_MAKE_BUILD_TRIPLET}")
-    endif()
-    if(NOT DEFINED BUILD_TRIPLET)
-        z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME "${ccname}")
-    endif()
+    z_vcpkg_make_get_configure_triplets(BUILD_TRIPLET COMPILER_NAME "${ccname}")
 
     if(NOT arg_DISABLE_MSVC_WRAPPERS AND "${frontend}" STREQUAL "MSVC" )
         # Lets assume that wrappers are only required for MSVC like frontends.
@@ -75,8 +74,13 @@ function(vcpkg_make_configure)
         C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
     # Used by cl
         INCLUDE LIB LIBPATH _CL_ _LINK_
+    # Used by emscripten
+        EMMAKEN_JUST_CONFIGURE
     )
     z_vcpkg_make_set_common_vars()
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        set(EMMAKEN_JUST_CONFIGURE 1) # as in emconfigure
+    endif()
 
     foreach(config IN LISTS buildtypes)
         string(TOUPPER "${config}" configup)
@@ -94,7 +98,6 @@ function(vcpkg_make_configure)
         set(opts "")
         if(NOT arg_DISABLE_DEFAULT_OPTIONS)
           z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}")
-          vcpkg_list(APPEND arg_OPTIONS ${opts})
         endif()
 
         set(configure_path_from_wd "./${relative_build_path}/configure")
@@ -113,7 +116,8 @@ function(vcpkg_make_configure)
                                     "${configure_path_from_wd}"
                                  OPTIONS 
                                     ${BUILD_TRIPLET}
-                                    ${arg_OPTIONS} 
+                                    ${arg_OPTIONS}
+                                    ${opts}
                                     ${arg_OPTIONS_${configup}}
                                  WORKING_DIRECTORY 
                                     "${target_dir}" 
@@ -126,7 +130,12 @@ function(vcpkg_make_configure)
         ${cm_FLAGS} 
         C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH
         INCLUDE LIB LIBPATH _CL_ _LINK_
+        EMMAKEN_JUST_CONFIGURE
     )
 
-    find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
+    if(VCPKG_HOST_IS_BSD)
+        find_program(Z_VCPKG_MAKE gmake REQUIRED)
+    else()
+        find_program(Z_VCPKG_MAKE NAMES make gmake NAMES_PER_DIR REQUIRED)
+    endif()
 endfunction()

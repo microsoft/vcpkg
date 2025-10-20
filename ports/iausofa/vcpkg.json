@@ -1,0 +1,17 @@
+{
+  "name": "iausofa",
+  "version": "20231011",
+  "description": "This is C version of IAU sofa software.",
+  "homepage": "https://iausofa.org",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

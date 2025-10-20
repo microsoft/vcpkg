@@ -1,3 +1,14 @@
+vcpkg_download_distfile(INSTALL_PATCH
+    URLS https://github.com/LukasBanana/LLGL/commit/7eea7e5aa7008f0549a03d322a567566d9282b62.diff?full_index=1
+    FILENAME llgl-install-7eea7e5aa7008f0549a03d322a567566d9282b62.diff
+    SHA512 c627f4c0e7239c38e81d6c691b2c12bbb0ff8b8faf390c0832d5dea177b3034e1e2ddd232c0189b1bd0785bf0ac006e15983a712d871d021a124d583134a7212
+)
+
+vcpkg_download_distfile(ADD_CSTDINT_PATCH
+    URLS https://github.com/LukasBanana/LLGL/commit/95a613400fb7001306edbdb0c49cb32f8a284989.diff?full_index=1
+    FILENAME llgl-add-cstdint-95a613400fb7001306edbdb0c49cb32f8a284989.diff
+    SHA512 fa1b9f6a3199cecc9effd86171b1b4f12ae9e8b162e8638a63fa4d12cdfd20e93804b663f190b2a91d712f9387580f381d66f384b1f9fb4d1d959943bc39c44f
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,7 +17,8 @@ vcpkg_from_github(
     SHA512 a6e11573759ced048cc9b9b97dd6abbfb70cbc29770e040b0472d529a1cff14e529b7ed62e647d9b318f6633a41918a29d66762da08e4b093582e1a45284e6d3
     HEAD_REF master
     PATCHES 
-        install.patch # See https://github.com/LukasBanana/LLGL/pull/81
+        "${INSTALL_PATCH}"
+        "${ADD_CSTDINT_PATCH}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

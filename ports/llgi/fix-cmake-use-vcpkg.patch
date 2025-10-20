@@ -1,8 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 30cb2da..dbc051b 100644
+index 5fd2ce0..202bcfe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -232,8 +232,13 @@ if(BUILD_VULKAN_COMPILER OR BUILD_TOOL)
+@@ -27,10 +27,6 @@ option(SPIRVCROSS_WITHOUT_INSTALL "Compile with spirv-cross without install"
+        OFF)
+ option(USE_CREATE_COMPILER_FUNCTION "Whether LLGI::CreateCompiler is used." ON)
+ 
+-if(LINUX)
+-  set(BUILD_VULKAN TRUE)
+-endif()
+-
+ option(USE_MSVC_RUNTIME_LIBRARY_DLL "compile as multithreaded DLL" ON)
+ 
+ include(cmake/ClangFormat.cmake)
+@@ -234,8 +230,13 @@ if(BUILD_VULKAN_COMPILER OR BUILD_TOOL)
        spirv-cross-util)
  
    else()
@@ -19,7 +30,7 @@ index 30cb2da..dbc051b 100644
    endif()
  
 diff --git a/tools/ShaderTranspilerCore/CMakeLists.txt b/tools/ShaderTranspilerCore/CMakeLists.txt
-index 4ce40d4..d4950ce 100644
+index bf34437..09e428d 100644
 --- a/tools/ShaderTranspilerCore/CMakeLists.txt
 +++ b/tools/ShaderTranspilerCore/CMakeLists.txt
 @@ -24,6 +24,10 @@ else()
@@ -27,23 +38,9 @@ index 4ce40d4..d4950ce 100644
  endif()
  
 +target_link_libraries(ShaderTranspilerCore PUBLIC
-+  glslang::glslang glslang::SPIRV glslang::OSDependent glslang::MachineIndependent glslang::GenericCodeGen glslang::glslang-default-resource-limits glslang::OGLCompiler glslang::SPVRemapper glslang::HLSL
-+  spirv-cross-cpp spirv-cross-glsl spirv-cross-msl spirv-cross-hlsl
++  glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV glslang::SPVRemapper spirv-cross-cpp spirv-cross-glsl spirv-cross-msl spirv-cross-hlsl
 +)
++
  if(USE_THIRDPARTY_DIRECTORY)
    add_dependencies(ShaderTranspilerCore EP_glslang EP_SPIRV-Cross)
  endif()
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dbc051b..b898b4c 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -27,9 +27,6 @@ option(SPIRVCROSS_WITHOUT_INSTALL "Compile with spirv-cross without install"
-        OFF)
- option(USE_CREATE_COMPILER_FUNCTION "Whether LLGI::CreateCompiler is used." ON)
- 
--if(LINUX)
--  set(BUILD_VULKAN TRUE)
--endif()
- 
- option(USE_MSVC_RUNTIME_LIBRARY_DLL "compile as multithreaded DLL" ON)
- 

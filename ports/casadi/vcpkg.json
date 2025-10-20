@@ -1,0 +1,19 @@
+{
+  "name": "casadi",
+  "version": "3.6.7",
+  "port-version": 1,
+  "description": "CasADi is a symbolic framework for numeric optimization implementing automatic differentiation in forward and reverse modes on sparse matrix-valued computational graphs. It supports self-contained C-code generation and interfaces state-of-the-art codes such as SUNDIALS, IPOPT etc. It can be used from C++, Python or Matlab/Octave.",
+  "homepage": "https://web.casadi.org",
+  "license": "LGPL-3.0-only",
+  "supports": "!static & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

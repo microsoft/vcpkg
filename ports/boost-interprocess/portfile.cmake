@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/interprocess
     REF boost-${VERSION}
-    SHA512 f619d1e29e2ce2808d2edb6e022a877bcbf762ea1eb7bd2518dce2cd047be7402272f5e5bb7fc5120a7318f4643ab7107d908b4b7c15c4e3e0ee7231ed1fc7ee
+    SHA512 adda0609d7cf48dc44648eabe2047b12054928c14d7128fd78d44995171c22f25118739291049e67924efad08a30df479249baaf7d47d15fc0c0a721d6b2d5e2
     HEAD_REF master
-    PATCHES
-        unused-link-libs.diff
 )
 
 set(FEATURE_OPTIONS "")

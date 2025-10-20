@@ -1,0 +1,22 @@
+diff --git a/cmake/GzFindPackage.cmake b/cmake/GzFindPackage.cmake
+index 93da803..c16e3ba 100644
+--- a/cmake/GzFindPackage.cmake
++++ b/cmake/GzFindPackage.cmake
+@@ -177,6 +177,8 @@ macro(gz_find_package PACKAGE_NAME_)
+ 
+   if(gz_find_package_EXACT)
+     list(APPEND ${PACKAGE_NAME}_find_package_args EXACT)
++  elseif(gz_find_package_VERSION AND NOT gz_find_package_PKGCONFIG_VER_COMPARISON)
++    set(gz_find_package_PKGCONFIG_VER_COMPARISON >=)
+   endif()
+ 
+   if(gz_find_package_CONFIG)
+@@ -344,7 +346,7 @@ macro(gz_find_package PACKAGE_NAME_)
+       # ${component}_CMAKE_DEPENDENCIES variables that are specific to those
+       # componenets
+       foreach(component ${gz_find_package_REQUIRED_BY})
+-        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE)
++        if(NOT ${component}_${PACKAGE_NAME}_PRIVATE OR NOT BUILD_SHARED_LIBS)
+           gz_string_append(${component}_CMAKE_DEPENDENCIES "${${PACKAGE_NAME}_find_dependency}" DELIM "\n")
+         endif()
+       endforeach()

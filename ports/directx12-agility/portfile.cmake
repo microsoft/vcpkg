@@ -1,12 +1,12 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # headers are provided by the directx-headers port
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
-set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) # DX12 SDK Debug Layer is an extra DLL
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Direct3D.D3D12/${VERSION}"
     FILENAME "Microsoft.Direct3D.D3D12.${VERSION}.zip"
-    SHA512 05baa55231684ab10a3e905c9b85ce78f04ade9360f7de84a06bbae3bfc3123bcccaa563647a25e151cc759106bc19e37740ef78563592d28e3a723fd744b42f
+    SHA512 16f56830483c3e973b780dbac87d4d52ddbd14e3fdfae8c6241d7c0a275ab8f7b31b5663b0ee0b1c4ead8876146189acf49646486892f20fd8c8149afa797e65
 )
 
 vcpkg_extract_source_archive(

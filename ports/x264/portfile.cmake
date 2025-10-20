@@ -89,9 +89,11 @@ vcpkg_make_configure(
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
         --enable-strip
+        "--bindir=\\\${prefix}/bin"
     OPTIONS_DEBUG
         --enable-debug
         --disable-cli
+        "--bindir=\\\${prefix}/bin"
 )
 
 vcpkg_make_install()

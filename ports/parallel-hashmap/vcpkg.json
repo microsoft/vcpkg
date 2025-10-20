@@ -1,6 +1,6 @@
 {
   "name": "parallel-hashmap",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "A header-only, very fast and memory-friendly family of C++ hash map & btree containers.",
   "license": "Apache-2.0",
   "dependencies": [

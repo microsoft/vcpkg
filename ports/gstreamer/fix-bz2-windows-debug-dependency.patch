@@ -1,10 +1,10 @@
 diff --git a/subprojects/gst-plugins-bad/ext/bz2/meson.build b/subprojects/gst-plugins-bad/ext/bz2/meson.build
-index 08d1596..be5fa02 100644
+index e7d8feb..9908a4c 100644
 --- a/subprojects/gst-plugins-bad/ext/bz2/meson.build
 +++ b/subprojects/gst-plugins-bad/ext/bz2/meson.build
-@@ -4,7 +4,7 @@ bz2_sources = [
-   'gstbz2enc.c',
- ]
+@@ -18,7 +18,7 @@ plugin_sources += {
+   'bz2': pathsep.join(doc_sources)
+ }
  
 -bz2_dep = cc.find_library('bz2', required : get_option('bz2'))
 +bz2_dep = dependency('bzip2', required : get_option('bz2'))
@@ -12,12 +12,12 @@ index 08d1596..be5fa02 100644
  if bz2_dep.found() and cc.has_header_symbol('bzlib.h', 'BZ2_bzlibVersion')
    gstbz2 = library('gstbz2',
 diff --git a/subprojects/gst-plugins-good/gst/matroska/meson.build b/subprojects/gst-plugins-good/gst/matroska/meson.build
-index d8a6a96..dd03de2 100644
+index 3dc9292..747e608 100644
 --- a/subprojects/gst-plugins-good/gst/matroska/meson.build
 +++ b/subprojects/gst-plugins-good/gst/matroska/meson.build
-@@ -12,7 +12,7 @@ matroska_sources = [
-   'lzo.c',
- ]
+@@ -39,7 +39,7 @@ if get_option('matroska').disabled()
+   subdir_done()
+ endif
  
 -bz2_dep = cc.find_library('bz2', required : get_option('bz2'))
 +bz2_dep = dependency('bzip2', required : get_option('bz2'))

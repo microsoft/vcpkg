@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     PATCHES
         dependencies.patch
         subdirs.patch
+        android-builtin-iconv.diff
 )
 
 vcpkg_configure_make(

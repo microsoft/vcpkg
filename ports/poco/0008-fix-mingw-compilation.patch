@@ -2,7 +2,7 @@ diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
 index 41ba99936..b3986690f 100644
 --- a/Foundation/CMakeLists.txt
 +++ b/Foundation/CMakeLists.txt
-@@ -189,7 +189,6 @@ if(MINGW)
+@@ -193,7 +193,6 @@ if(MINGW)
  			_WIN32
  			MINGW32
  			WINVER=0x500
@@ -24,10 +24,12 @@ index 7a4e7e2fb..8caa6de06 100644
  
  #if defined(__clang__)
  	#define POCO_COMPILER_CLANG
-@@ -253,11 +256,6 @@
+@@ -255,13 +258,8 @@
  #elif defined (__GNUC__)
  	#define POCO_COMPILER_GCC
- 	#define POCO_HAVE_CXXABI_H
+ 	#if __has_include(<cxxabi.h>)
+ 		#define POCO_HAVE_CXXABI_H
+ 	#endif
 -	#if defined (__MINGW32__) || defined (__MINGW64__)
 -		#define POCO_COMPILER_MINGW
 -	#endif

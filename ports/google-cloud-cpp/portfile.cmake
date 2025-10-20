@@ -4,9 +4,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
     REF "v${VERSION}"
-    SHA512 f57857a0853fa0980bb2c07d25d22240ce27a005a41cc99bf25ca0148fe7c9d5717eeb393519a37f05b40d4c114dde30e959e994700aece1ca2c45e68cd9bf77
+    SHA512 a482008c81d12ffd6ec97b58fc25677f93ac59338e7092c28d2d3bace2f5263d575827b9837bb3413b3078bf5bb4feda4410eeeb269b888aa05f056ced42175f
     HEAD_REF main
+    PATCHES fix-googleapis-download.patch
 )
+
+# On update, update REF according to $/cmake/GoogleapisConfig.cmake 's
+# set(_GOOGLE_CLOUD_CPP_GOOGLEAPIS_COMMIT_SHA
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH_GOOGLEAPIS
+    REPO googleapis/googleapis
+    REF 079e5305050859d0e3a8c0768611283ee4863c07
+    SHA512 c02ce31b4a2c80596a6c786a49b59f42d6b104e911b8e10f2548768ed48d708fc46308aecf04611c62512a968d9c31e9d0a73f921fcf5d1ab533e5ce8d9cf72c
+    HEAD_REF master
+)
+
+if(NOT EXISTS "${SOURCE_PATH}/external/googleapis/src")
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/external/googleapis/src")
+    file(RENAME "${SOURCE_PATH_GOOGLEAPIS}" "${SOURCE_PATH}/external/googleapis/src/googleapis_download")
+endif()
 
 if ("grpc-common" IN_LIST FEATURES)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")

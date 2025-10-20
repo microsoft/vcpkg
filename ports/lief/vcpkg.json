@@ -1,0 +1,67 @@
+{
+  "name": "lief",
+  "version-semver": "0.17.0",
+  "description": "LIEF - Library to Instrument Executable Formats",
+  "homepage": "https://lief.quarkslab.com",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "fmt",
+    "frozen",
+    "mbedtls",
+    "spdlog",
+    "tcb-span",
+    "tl-expected",
+    "utfcpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "art",
+    "dex",
+    "enable-json",
+    "logging",
+    "oat",
+    "vdex"
+  ],
+  "features": {
+    "art": {
+      "description": "Build LIEF with ART module"
+    },
+    "c-api": {
+      "description": "C API"
+    },
+    "dex": {
+      "description": "Build LIEF with DEX module"
+    },
+    "enable-json": {
+      "description": "Enable JSON-related APIs",
+      "dependencies": [
+        "nlohmann-json"
+      ]
+    },
+    "extra-warnings": {
+      "description": "Enable extra warning from the compiler"
+    },
+    "logging": {
+      "description": "Enable logging"
+    },
+    "logging-debug": {
+      "description": "Enable debug logging"
+    },
+    "oat": {
+      "description": "Build LIEF with OAT module"
+    },
+    "use-ccache": {
+      "description": "Use ccache to speed up compilation"
+    },
+    "vdex": {
+      "description": "Build LIEF with VDEX module"
+    }
+  }
+}

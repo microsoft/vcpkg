@@ -1,0 +1,4 @@
+The package vanillapdf provides the following CMake targets:
+
+    find_package(vanillapdf CONFIG REQUIRED)
+    target_link_libraries(myapp PRIVATE vanillapdf::vanillapdf)

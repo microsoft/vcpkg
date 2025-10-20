@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1f6b036..abfca67 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -149,18 +149,6 @@ target_include_directories(
+     ${USEARCH_TARGET_NAME} ${USEARCH_SYSTEM_INCLUDE} INTERFACE $<BUILD_INTERFACE:${USEARCH_INCLUDE_BUILD_DIR}>
+                                                                $<INSTALL_INTERFACE:include>
+ )
+-if (USEARCH_USE_FP16LIB)
+-    target_include_directories(
+-        ${USEARCH_TARGET_NAME} ${USEARCH_SYSTEM_INCLUDE} INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/fp16/include>
+-                                                                   $<INSTALL_INTERFACE:fp16/include>
+-    )
+-endif ()
+-if (USEARCH_USE_SIMSIMD)
+-    target_include_directories(
+-        ${USEARCH_TARGET_NAME} ${USEARCH_SYSTEM_INCLUDE}
+-        INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/simsimd/include> $<INSTALL_INTERFACE:simsimd/include>
+-    )
+-endif ()
+ 
+ # Install a pkg-config file, so other tools can find this
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/pkg-config.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc")
+@@ -220,8 +208,7 @@ if (NOT CMAKE_BUILD_TYPE)
+ endif ()
+ 
+ # Include directories
+-set(USEARCH_HEADER_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include" "${CMAKE_CURRENT_SOURCE_DIR}/fp16/include"
+-                            "${CMAKE_CURRENT_SOURCE_DIR}/simsimd/include"
++set(USEARCH_HEADER_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/include"
+ )
+ 
+ # Function to setup target

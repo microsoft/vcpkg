@@ -8,12 +8,15 @@ if(NOT DEFINED QT6_DIRECTORY_PREFIX)
     set(QT6_DIRECTORY_PREFIX "Qt6/")
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID AND NOT ANDROID_SDK_ROOT)
-    message(FATAL_ERROR "${PORT} requires ANDROID_SDK_ROOT to be set. Consider adding it to the triplet." )
-endif()
-
-if(VCPKG_TARGET_IS_OSX AND (NOT VCPKG_OSX_DEPLOYMENT_TARGET OR VCPKG_OSX_DEPLOYMENT_TARGET VERSION_GREATER_EQUAL "15.0"))
-    message(WARNING "Qt6 does not yet cleanly support macOS 15.0, consider adding set(VCPKG_OSX_DEPLOYMENT_TARGET 14.0) or earlier to a custom triplet (https://learn.microsoft.com/en-us/vcpkg/users/examples/overlay-triplets-linux-dynamic#overriding-default-triplets).")
+if(VCPKG_TARGET_IS_ANDROID)
+    # ANDROID_HOME: canonical SDK environment variable
+    # ANDROID_SDK_ROOT: legacy qtbase triplet variable
+    if(NOT ANDROID_SDK_ROOT)
+        if("$ENV{ANDROID_HOME}" STREQUAL "")
+            message(FATAL_ERROR "${PORT} requires environment variable ANDROID_HOME to be set.")
+        endif()
+        set(ANDROID_SDK_ROOT "$ENV{ANDROID_HOME}")
+    endif()
 endif()
 
 function(qt_download_submodule_impl)
@@ -148,11 +151,16 @@ function(qt_cmake_configure)
         list(APPEND _qarg_OPTIONS "-DQT_MKSPECS_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share/Qt6/mkspecs")
     endif()
 
+    if(NOT DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
+        list(APPEND _qarg_OPTIONS "-DCMAKE_OSX_DEPLOYMENT_TARGET=14")
+    endif()
+
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         ${ninja_option}
         ${disable_parallel}
         OPTIONS
+            -DQT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK=ON
             -DQT_NO_FORCE_SET_CMAKE_BUILD_TYPE:BOOL=ON
             -DQT_USE_DEFAULT_CMAKE_OPTIMIZATION_FLAGS:BOOL=ON # We don't want Qt to mess with users toolchain settings.
             -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Because Qt doesn't correctly scope find_package calls. 
@@ -196,6 +204,7 @@ function(qt_cmake_configure)
             HOST_PERL
             QT_SYNCQT
             QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
+            QT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK
             ${_qarg_OPTIONS_MAYBE_UNUSED}
             INPUT_bundled_xcb_xinput
             INPUT_freetype
@@ -208,7 +217,14 @@ function(qt_cmake_configure)
             INPUT_xcb
             INPUT_xkbcommon
     )
-    set(Z_VCPKG_CMAKE_GENERATOR "${Z_VCPKG_CMAKE_GENERATOR}" PARENT_SCOPE)
+    foreach(suffix IN ITEMS dbg rel)
+        if(EXISTS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix}/config.summary")
+            file(COPY_FILE
+                "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${suffix}/config.summary"
+                "${CURRENT_BUILDTREES_DIR}/config.summary-${TARGET_TRIPLET}-${suffix}.log"
+            )
+        endif()
+    endforeach()
 endfunction()
 
 function(qt_fix_prl_files)
@@ -338,6 +354,14 @@ function(qt_install_submodule)
     set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
     qt_download_submodule(PATCHES ${_qis_PATCHES})
+
+    if(VCPKG_TARGET_IS_ANDROID)
+        # Qt only supports dynamic linkage on Android,
+        # https://bugreports.qt.io/browse/QTBUG-32618.
+        # It requires libc++_shared, cf. <qtbase>/cmake/QtPlatformAndroid.cmake
+        # and https://developer.android.com/ndk/guides/cpp-support#sr
+        vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+    endif()
 
     if(_qis_DISABLE_NINJA)
         set(_opt DISABLE_NINJA)
