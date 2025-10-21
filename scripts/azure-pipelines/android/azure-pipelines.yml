@@ -115,6 +115,7 @@ jobs:
     condition: ne(variables['AZCOPY_LOGS_EMPTY'], 'True')
   - task: UseNode@1
     displayName: 'Ensure Node.js is available'
+    condition: always()
     inputs:
       version: '22.x'
   - bash: |
