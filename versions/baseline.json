@@ -17,7 +17,7 @@
       "port-version": 0
     },
     "abseil": {
-      "baseline": "20250512.1",
+      "baseline": "20250512.2",
       "port-version": 0
     },
     "absent": {
