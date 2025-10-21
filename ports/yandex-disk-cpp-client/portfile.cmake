@@ -3,8 +3,8 @@ set(VCPKG_POLICY_ALLOW_DEBUG_SHARE enabled)
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Krasnovvvvv/yandex-disk-cpp-client
-        REF v1.0.1
-        SHA512 6edbcbb793475e8b90ed33793dc9f0d092a4ad86290010afbf6839adc494bb712a939f651440cb55d315d7f4650437df132e64fdb241a3a8f3ba196b0a8d3332
+        REF v1.0.3
+        SHA512 de0e68aa0419f9918afea9fa7741477941d63c21e08cbe50d27a5fe9de7160a7a1f5ce4d307c906001aa757f82951295189c5d213b788987449d1a1b102da945
         HEAD_REF main
 )
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
@@ -13,8 +13,8 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-        PACKAGE_NAME "yandex_disk_client"
-        CONFIG_PATH "lib/cmake/yandex_disk_client"
+        PACKAGE_NAME "yandex-disk-cpp-client"
+        CONFIG_PATH "lib/cmake/yandex-disk-cpp-client"
 )
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
