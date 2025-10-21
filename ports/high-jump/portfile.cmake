@@ -12,13 +12,16 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-    -DBUILD_LIB=OFF
+        -DBUILD_LIB=OFF
         -DBUILD_EXAMPLE=OFF
         -DBUILD_TEST=OFF
         -DBUILD_BENCH=OFF
 )
 
 vcpkg_cmake_install()
+
+# Remove unnecessary directories
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Install usage file so vcpkg post-build checks pass
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
