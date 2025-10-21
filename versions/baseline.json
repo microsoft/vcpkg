@@ -4522,7 +4522,7 @@
     },
     "lexilla": {
       "baseline": "5.4.5",
-      "port-version": 0
+      "port-version": 1
     },
     "lfreist-hwinfo": {
       "baseline": "2025-07-10",
