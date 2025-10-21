@@ -4,7 +4,6 @@
   "description": "A C++17 implementation of the Gossip protocol, designed for decentralized distributed systems.",
   "homepage": "https://github.com/caomengxuan666/libgossip",
   "license": "MIT",
-  "supports": "!windows | static",
   "dependencies": [
     "asio",
     {

@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # DLL broken in 1.1.2.0
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO caomengxuan666/libgossip
