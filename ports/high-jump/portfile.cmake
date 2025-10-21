@@ -1,6 +1,3 @@
-set(PORT "high-jump")
-set(VERSION "1.0.3")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanjingo/high-jump
