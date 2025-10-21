@@ -24,10 +24,7 @@
       "dependencies": [
         "abseil",
         {
-          "name": "gtest",
-          "features": [
-            "cxx17"
-          ]
+          "name": "gtest"
         }
       ]
     }
