@@ -20,16 +20,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Remove debug include files if they exist
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-endif()
-
-# Remove empty debug directory if it exists
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug" AND IS_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
-
 # Install usage file so vcpkg post-build checks pass
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 

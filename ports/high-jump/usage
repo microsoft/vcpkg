@@ -1,18 +1,8 @@
-This port installs the High Jump (high-jump) C++17 library framework.
+high-jump provides CMake targets:
 
-This library is header-only. The port configures the project with
-`-DBUILD_LIB=OFF` so no compiled library artifacts are installed — only
-the public headers are provided under the include directory.
-
-Basic CMake usage (header-only):
-
-  find_package(hj CONFIG REQUIRED)
-
-  add_executable(myapp main.cpp)
-  target_link_libraries(myapp PRIVATE hj::hj)
+    find_package(hj CONFIG REQUIRED)
+    target_link_libraries(myapp PRIVATE hj::hj)
 
 Notes:
-- The port installs headers to ${includedir}/hj so consumers can `find_package(hj)` and
-  link to the imported target `hj::hj` (header-only interface).
-- BUILD_LIB is intentionally set to OFF in the port because high-jump is header-only.
-- License: GPL-3.0-only. Ensure your project licensing is compatible before using.
+- Header-only: this port installs public headers under ${includedir}/hj.
+- License: GPL-3.0-only.
