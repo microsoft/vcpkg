@@ -7117,8 +7117,8 @@
       "port-version": 0
     },
     "openfbx": {
-      "baseline": "2024-05-08",
-      "port-version": 1
+      "baseline": "2024-12-28",
+      "port-version": 0
     },
     "openfx": {
       "baseline": "1.4",
