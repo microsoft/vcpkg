@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
     REF "v${VERSION}"
-    SHA512 a6704b54b6535a3a66b036c2563753575fc01bf735ec7f9cae6600390554f95f28cb50041fc3570f149924f4a3d99771fecdfa2d1ccdf12496cf8a2cf763b96b
+    SHA512 8ad17582c4ba721ffe76ada4bb8bd7bc4b050491220aca335fd0506a51354fb789d5bc3d965f0f459dc81784d6427c88272e2acc2099cddf73730231b5a16f62
     HEAD_REF master
     PATCHES
         install-layout.patch
@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-pcre2.patch
         gtk3-link-libraries.patch
         sdl2.patch
-        fix-cmake-msvc-naming.patch # v3.3.0-only, can be replaced with conditional `-DwxBUILD_WIN32_MSVC_NAMING=ON` in v3.3.1
 )
 
 # Submodule dependencies

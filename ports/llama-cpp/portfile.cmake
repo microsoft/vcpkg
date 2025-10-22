@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ggml-org/llama.cpp
     REF b${VERSION}
-    SHA512 39c9a5358d561a4c6675e24c67d810573d7589f9936d7a32e19ea99a7393fa435223c60824c6dad9ac3f1507d327fff704a6000988ddf60faeb219dace876a51
+    SHA512 c823aa1739a84b6fd50255a2c2c92e9da1cec55c62791886424b4ac126759bf9b63710e3c366fac6a004dbed0175b77756acef85ad495792142e671381b2026a
     HEAD_REF master
     PATCHES
         cmake-config.diff
+        pkgconfig.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/ggml/include" "${SOURCE_PATH}/ggml/src")
 

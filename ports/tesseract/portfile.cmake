@@ -44,6 +44,9 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cm
 find_dependency(CURL)
 find_dependency(Leptonica)
 find_dependency(LibArchive)
+if(ANDROID)
+    find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()
 ]]
 )
 

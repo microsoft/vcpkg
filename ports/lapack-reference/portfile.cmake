@@ -23,6 +23,7 @@ vcpkg_from_github(
     PATCHES
         cmake-config.patch
         fix_prefix.patch
+        implicit-link.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

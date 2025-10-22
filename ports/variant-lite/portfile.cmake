@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/variant-lite
-    REF v2.0.0
-    SHA512 dd255d3664b42305e58c14a0bfc7d6ba54462656001e4e79c14fdb64a6f54b57a00ec3cf10d006614c849528529c6897031df4b52a49ecb91531e89d366d6a9c
+    REF v3.0.0
+    SHA512 e85f27179a997777e3f9ad1db5f424f0838c474904c9df6a6b9cce817ca57144b0e23d561b9514edd97f8fff88b2a372c5afccc46a15b35e4b7d287e6b197a9e
 )
 
 vcpkg_cmake_configure(

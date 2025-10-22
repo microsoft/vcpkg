@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 09d57b2..57d3a2c 100644
+index 1361e94..5798f2e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,8 +4,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.5 FATAL_ERROR)
@@ -20,17 +20,16 @@ index 09d57b2..57d3a2c 100644
    OPTION(PTHREADPOOL_BUILD_TESTS "Build pthreadpool unit tests" ON)
    OPTION(PTHREADPOOL_BUILD_BENCHMARKS "Build pthreadpool micro-benchmarks" ON)
  ELSE()
-@@ -36,7 +34,8 @@ MACRO(PTHREADPOOL_TARGET_ENABLE_CXX11 target)
+@@ -40,7 +38,7 @@ MACRO(PTHREADPOOL_TARGET_ENABLE_CXX11 target)
  ENDMACRO()
  
  # ---[ Download deps
 -IF(NOT DEFINED FXDIV_SOURCE_DIR)
-+find_path(FXDIV_INCLUDE_DIRS "fxdiv.h")
 +IF(FALSE)
    MESSAGE(STATUS "Downloading FXdiv to ${CMAKE_BINARY_DIR}/FXdiv-source (define FXDIV_SOURCE_DIR to avoid it)")
    CONFIGURE_FILE(cmake/DownloadFXdiv.cmake "${CMAKE_BINARY_DIR}/FXdiv-download/CMakeLists.txt")
    EXECUTE_PROCESS(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
-@@ -87,21 +86,13 @@ ELSE()
+@@ -92,21 +90,13 @@ ELSE()
  ENDIF()
  
  ADD_LIBRARY(pthreadpool_interface INTERFACE)
@@ -54,29 +53,52 @@ index 09d57b2..57d3a2c 100644
  
  IF(PTHREADPOOL_SYNC_PRIMITIVE STREQUAL "condvar")
    TARGET_COMPILE_DEFINITIONS(pthreadpool PRIVATE PTHREADPOOL_USE_FUTEX=0)
-@@ -150,18 +141,22 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+@@ -155,6 +145,9 @@ IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
  ENDIF()
  
  # ---[ Configure FXdiv
--IF(NOT TARGET fxdiv)
-+IF(FALSE)
++
++find_package(unofficial-fxdiv CONFIG REQUIRED)
++add_library(fxdiv ALIAS unofficial::fxdiv::fxdiv)
+ IF(NOT TARGET fxdiv)
    SET(FXDIV_BUILD_TESTS OFF CACHE BOOL "")
    SET(FXDIV_BUILD_BENCHMARKS OFF CACHE BOOL "")
-   ADD_SUBDIRECTORY(
+@@ -162,12 +155,24 @@ IF(NOT TARGET fxdiv)
      "${FXDIV_SOURCE_DIR}"
      "${CMAKE_BINARY_DIR}/FXdiv")
  ENDIF()
 -TARGET_LINK_LIBRARIES(pthreadpool PRIVATE fxdiv)
-+TARGET_INCLUDE_DIRECTORIES(pthreadpool PRIVATE ${FXDIV_INCLUDE_DIRS})
++TARGET_LINK_LIBRARIES(pthreadpool PUBLIC fxdiv)
++
  
 -INSTALL(TARGETS pthreadpool
 +INSTALL(TARGETS pthreadpool pthreadpool_interface
-+  EXPORT unofficial-pthreadpool-config
++  EXPORT unofficial-pthreadpool-config-targets
 +  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+install(EXPORT unofficial-pthreadpool-config NAMESPACE unofficial::
-+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME}) # share/unofficial-pthreadpool
  
++install(EXPORT unofficial-pthreadpool-config-targets NAMESPACE unofficial::
++  FILE unofficial-pthreadpool-config-targets.cmake
++  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME}) # share/unofficial-pthreadpool
++
++include(CMakePackageConfigHelpers)
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/unofficial-pthreadpool-config.cmake" INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME})
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-pthreadpool-config.cmake DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/unofficial-${PROJECT_NAME})
++
++
  IF(PTHREADPOOL_BUILD_TESTS)
    # ---[ Build google test
+   IF(NOT TARGET gtest)
+diff --git a/Config.cmake.in b/Config.cmake.in
+new file mode 100644
+index 0000000..575b8b1
+--- /dev/null
++++ b/Config.cmake.in
+@@ -0,0 +1,6 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++find_dependency(unofficial-fxdiv)
++
++include ( "${CMAKE_CURRENT_LIST_DIR}/unofficial-pthreadpool-config-targets.cmake" )

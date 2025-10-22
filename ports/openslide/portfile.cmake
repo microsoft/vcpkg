@@ -8,6 +8,7 @@ vcpkg_from_github(
         cross-build.diff
         fix-win-build.patch
         slidetool-unicode.patch
+        windows-dll-name.patch
 )
 if(VCPKG_CROSSCOMPILING)
     file(COPY 

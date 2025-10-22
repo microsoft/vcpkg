@@ -1,6 +1,6 @@
 {
   "name": "half",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "C++ library for half precision floating point arithmetics.",
   "homepage": "https://sourceforge.net/projects/half/",
   "license": "MIT"

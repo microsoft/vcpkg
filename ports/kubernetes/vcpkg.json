@@ -1,11 +1,10 @@
 {
   "name": "kubernetes",
-  "version": "0.6.0",
-  "port-version": 1,
+  "version": "0.13.0",
   "description": "Kubernetes C client",
   "homepage": "https://github.com/kubernetes-client/c/",
   "license": "Apache-2.0",
-  "supports": "!uwp",
+  "supports": "!windows | mingw",
   "dependencies": [
     "curl",
     "libwebsockets",
