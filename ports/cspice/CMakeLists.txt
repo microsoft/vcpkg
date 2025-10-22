@@ -14,11 +14,7 @@ include(GNUInstallDirs)
 file(GLOB CSPICE_SOURCE ${PROJECT_SOURCE_DIR}/cspice/src/cspice/*.c)
 set(INCLUDE_PATH "${PROJECT_SOURCE_DIR}/cspice/include")
 
-if (_STATIC_BUILD)
-    add_library(cspice STATIC ${CSPICE_SOURCE})
-else()
-    add_library(cspice SHARED ${CSPICE_SOURCE})
-endif()
+add_library(cspice ${CSPICE_SOURCE})
 target_include_directories(cspice PUBLIC "${INCLUDE_PATH}")
 
 if (WIN32)

@@ -44,10 +44,6 @@ vcpkg_extract_source_archive(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(_STATIC_BUILD ON)
-endif()
-
 if (VCPKG_TARGET_IS_UWP)
     set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
     set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
@@ -55,7 +51,6 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -D_STATIC_BUILD=${_STATIC_BUILD}
     OPTIONS_DEBUG -D_SKIP_HEADERS=ON
 )
 
