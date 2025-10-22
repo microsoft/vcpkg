@@ -1,44 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index eecaf51..65dbfae 100644
+index 1300ab8..038c03b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1280,7 +1280,19 @@ endforeach()
+@@ -1277,7 +1277,10 @@ endif()
  # Load extensions passed through cmake config var
  foreach(EXT IN LISTS BUILD_EXTENSIONS)
    if(NOT "${EXT}" STREQUAL "")
--    duckdb_extension_load(${EXT})
-+    if("${EXT}" STREQUAL "httpfs")
-+      duckdb_extension_load(${EXT} 
-+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/httpfs
-+        INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/httpfs/extension/httpfs/include
-+      )
-+    elseif("${EXT}" STREQUAL "excel")
-+      duckdb_extension_load(${EXT} 
-+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/excel
-+        INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extension/excel/src/excel/include
-+      )
-+    else()
-+      duckdb_extension_load(${EXT})
-+    endif()
-   endif()
- endforeach()
- 
-diff --git a/DuckDBConfig.cmake.in b/DuckDBConfig.cmake.in
-index 7c5ce31..efb9ec3 100644
---- a/DuckDBConfig.cmake.in
-+++ b/DuckDBConfig.cmake.in
-@@ -10,6 +10,14 @@ if(NOT @WITH_INTERNAL_ICU@)
-     find_dependency(ICU COMPONENTS i18n uc data)
- endif()
- 
-+set(EXTENSION_LIST "@BUILD_EXTENSIONS@")
-+list(FIND EXTENSION_LIST "excel" EXCEL_INDEX)
-+
-+if(EXCEL_INDEX GREATER_EQUAL 0)
-+  find_dependency(expat CONFIG)
-+  find_dependency(minizip-ng CONFIG)
-+endif()
-+
- # Compute paths
- get_filename_component(DuckDB_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
- set(DuckDB_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+-    if (EXISTS "${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")
++    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/extension_config.cmake")  
++      # out-of-tree extension  
++      include("${CMAKE_CURRENT_SOURCE_DIR}/extension/${EXT}/extension_config.cmake")  
++    elseif (EXISTS "${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")  
+       # out-of-tree extension: load cmake file
+       include("${EXTENSION_CONFIG_BASE_DIR}/${EXT}.cmake")
+     else()

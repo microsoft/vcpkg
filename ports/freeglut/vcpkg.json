@@ -1,7 +1,7 @@
 {
   "name": "freeglut",
   "version": "3.6.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A free OpenGL utility toolkit, the open-sourced alternative to the GLUT library.",
   "homepage": "https://sourceforge.net/projects/freeglut/",
   "license": null,

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
     REF ${VERSION}
-    SHA512 7aa0a355937c70a49975f1f131e8cb8dd62ac5c880f4a2ad2a4c51cfdd87a60341160dfaf4c42d5a8c7d77316e4084d62d0baa2ff5abecee47b5413fd161ebad
+    SHA512 09e98f26ccc65afa6f739a90d64ca0be93a768cb01bf87932a18a07132fb8a5895a5b5194c80698e08d0fcbbaca926df6f0d9797901ecc82bd36a1cbe076464f
     HEAD_REF main
 )
 

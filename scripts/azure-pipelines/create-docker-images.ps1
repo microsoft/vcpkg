@@ -3,7 +3,8 @@
 [CmdletBinding()]
 param(
     [switch]$OnlyAndroid,
-    [switch]$OnlyLinux
+    [switch]$OnlyLinux,
+    [switch]$NoLogout
 )
 
 if ($OnlyAndroid -and $OnlyLinux) {
@@ -34,10 +35,8 @@ function Build-Image {
 
     Push-Location $Location
     try {
-        docker build . -t $ImageName --build-arg BUILD_DATE=$Date
         $remote = [string]::Format('{0}/{1}:{2}', $AcrRegistry.LoginServer, $ImageName, $Date)
-        docker image tag $ImageName $remote
-
+        docker build . -t $remote --build-arg BUILD_DATE=$Date
         docker push $remote
         Write-Host "Remote: $remote"
     } finally {
@@ -56,7 +55,7 @@ Connect-AzContainerRegistry -Name $registry.Name
 if ($BuildAndroid) {
     Build-Image -AcrRegistry $registry `
         -Location "$PSScriptRoot/android" `
-        -ImageName "vcpkg-android-r28c" `
+        -ImageName "vcpkg-android" `
         -Date $Date
 }
 
@@ -67,4 +66,6 @@ if ($BuildLinux) {
         -Date $Date
 }
 
-docker logout $registry.LoginServer
+if (-not $NoLogout) {
+  docker logout $registry.LoginServer
+}

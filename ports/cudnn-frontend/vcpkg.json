@@ -1,0 +1,19 @@
+{
+  "name": "cudnn-frontend",
+  "version-semver": "1.14.0",
+  "description": "cudnn_frontend provides a c++ wrapper for the cudnn backend API and samples on how to use it",
+  "homepage": "https://github.com/NVIDIA/cudnn-frontend",
+  "license": "MIT",
+  "dependencies": [
+    "cuda",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

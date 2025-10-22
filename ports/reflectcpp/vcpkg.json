@@ -1,13 +1,13 @@
 {
   "name": "reflectcpp",
-  "version": "0.20.0",
-  "description": "A C++ library for serialization and deserialization using reflection. Supports JSON, Avro, BSON, Cap'n Proto, CBOR, flexbuffers, msgpack, TOML, UBJSON, XML, YAML.",
+  "version": "0.21.0",
+  "description": "A C++ library for serialization and deserialization using reflection. Supports JSON, Avro, BSON, Cap'n Proto, CBOR, CSV, flexbuffers, msgpack, parquet, TOML, UBJSON, XML, YAML.",
   "homepage": "https://github.com/getml/reflect-cpp/",
   "license": "MIT",
   "dependencies": [
     {
       "name": "ctre",
-      "version>=": "3.9.0"
+      "version>=": "3.10.0"
     },
     {
       "name": "vcpkg-cmake",
@@ -46,7 +46,19 @@
       "dependencies": [
         {
           "name": "jsoncons",
-          "version>=": "0.176.0"
+          "version>=": "1.4.0"
+        }
+      ]
+    },
+    "csv": {
+      "description": "Enable CSV support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "features": [
+            "csv"
+          ],
+          "version>=": "21.0.0"
         }
       ]
     },
@@ -68,6 +80,18 @@
         }
       ]
     },
+    "parquet": {
+      "description": "Enable parquet support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "features": [
+            "parquet"
+          ],
+          "version>=": "21.0.0"
+        }
+      ]
+    },
     "toml": {
       "description": "Support for the TOML format",
       "dependencies": [
@@ -82,7 +106,7 @@
       "dependencies": [
         {
           "name": "jsoncons",
-          "version>=": "0.176.0"
+          "version>=": "1.4.0"
         }
       ]
     },

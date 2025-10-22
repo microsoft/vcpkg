@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         no-glu.diff
         fix-flann.patch
+        fix-variable-names.diff # from https://github.com/colmap/colmap/commit/203bf36c2d5e805f0eb26d8b7a2b8572e7b134e1
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))

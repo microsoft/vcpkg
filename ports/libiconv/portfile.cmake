@@ -20,7 +20,8 @@ if(NOT X_VCPKG_BUILD_GNU_LIBICONV)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
+    URLS "https://ftpmirror.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
+         "https://ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
     FILENAME "libiconv-${VERSION}.tar.gz"
     SHA512 a55eb3b7b785a78ab8918db8af541c9e11deb5ff4f89d54483287711ed797d87848ce0eafffa7ce26d9a7adb4b5a9891cb484f94bd4f51d3ce97a6a47b4c719a

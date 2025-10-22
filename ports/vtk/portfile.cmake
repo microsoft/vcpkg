@@ -14,9 +14,11 @@ vcpkg_from_github(
     SHA512 396ee901fafacae8aef860b9c9c17cb92ae8b4969527fd271ad8dd9f6a9e0dc8e3dc807c8d43cc585608ad101a64edcd7aff49e1580c7a61a817c2ea8e2655f5
     HEAD_REF master
     PATCHES
+        ffmpeg.diff
         FindLZMA.patch
         FindLZ4.patch
         libproj.patch
+        mysql.diff
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
@@ -40,7 +42,10 @@ vcpkg_from_github(
         no-libharu-for-ioexport.patch
         no-libproj-for-netcdf.patch
         octree.patch
-        fix-tbbsmptool.patch #https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
+        fix-tbbsmptool.patch  # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/11530
+        backport-bda8324.diff # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/12418
+        use-compile-tools.diff
+        zspace.diff # https://gitlab.kitware.com/vtk/vtk/-/commit/01a8bd7a917d33892f67a8d76ce7fc4b524d56b4
 )
 
 # =============================================================================
@@ -73,6 +78,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "cgns"        VCPKG_LOCK_FIND_PACKAGE_CGNS
         "cuda"        VTK_USE_CUDA
         "debugleaks"  VTK_DEBUG_LEAKS
+        "fontconfig"  VTK_MODULE_ENABLE_VTK_RenderingFreeTypeFontConfig
         "libharu"     VCPKG_LOCK_FIND_PACKAGE_LibHaru
         "libtheora"   VCPKG_LOCK_FIND_PACKAGE_THEORA
         "netcdf"      VCPKG_LOCK_FIND_PACKAGE_NetCDF
@@ -86,6 +92,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_YES_NO_OPTIONS
         "proj"        VTK_MODULE_ENABLE_VTK_GeovisCore
         "python"      VTK_WRAP_PYTHON
         "python"      VTK_MODULE_ENABLE_VTK_Python
+        "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
         "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
         "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASExodus
         "seacas"      VCPKG_LOCK_FIND_PACKAGE_SEACASIoss
@@ -112,9 +119,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS VTK_FEATURE_OPTIONS
         "qt"          VTK_MODULE_ENABLE_VTK_GUISupportQtSQL
         "qt"          VTK_MODULE_ENABLE_VTK_RenderingQt
         "qt"          VTK_MODULE_ENABLE_VTK_ViewsQt
-        "python"      VTK_MODULE_ENABLE_VTK_Python
-        "python"      VTK_MODULE_ENABLE_VTK_PythonContext2D
-        "python"      VTK_MODULE_ENABLE_VTK_PythonInterpreter
         "paraview"    VTK_MODULE_ENABLE_VTK_FiltersParallelStatistics
         "paraview"    VTK_MODULE_ENABLE_VTK_IOParallelExodus
         "paraview"    VTK_MODULE_ENABLE_VTK_RenderingParallel
@@ -222,7 +226,6 @@ if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
     list(APPEND ADDITIONAL_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
-        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     )
 endif()
 
@@ -244,9 +247,9 @@ if("openmp" IN_LIST FEATURES)
 	)
 endif()
 
-if(VCPKG_CROSSCOMPILING)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND ADDITIONAL_OPTIONS
-        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
+        -DVTK_MODULE_ENABLE_VTK_IOODBC=NO
     )
 endif()
 
@@ -270,27 +273,52 @@ vcpkg_cmake_configure(
         -DVTK_GROUP_ENABLE_StandAlone=YES
         -DVTK_GROUP_ENABLE_Rendering=YES
         -DVTK_GROUP_ENABLE_Views=YES
-        # Disable deps not in VCPKG
+        # Disable dependencies which are not in vcpkg or not in the manifest
+        -DVCPKG_LOCK_FIND_PACKAGE_Boost=OFF
+        -DVTK_ENABLE_OSPRAY=OFF
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
         # Select modules / groups to install
         -DVTK_USE_EXTERNAL:BOOL=ON
+        -DVTK_MODULE_ENABLE_VTK_CommonArchive=NO
+        -DVTK_MODULE_ENABLE_VTK_DomainsMicroscopy=NO
+        -DVTK_MODULE_ENABLE_VTK_fides=NO
+        -DVTK_MODULE_ENABLE_VTK_FiltersReebGraph=NO
+        -DVTK_MODULE_ENABLE_VTK_InfovisBoost=NO
+        -DVTK_MODULE_ENABLE_VTK_InfovisBoostGraphAlgorithms=NO
+        -DVTK_MODULE_ENABLE_VTK_IOADIOS2=NO
+        -DVTK_MODULE_ENABLE_VTK_IOAlembic=NO
+        -DVTK_MODULE_ENABLE_VTK_IOLAS=NO
+        -DVTK_MODULE_ENABLE_VTK_IOOpenVDB=NO
+        -DVTK_MODULE_ENABLE_VTK_IOPDAL=NO
+        -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=NO
+        -DVTK_MODULE_ENABLE_VTK_WrappingTools=YES
+        -DVTK_MODULE_ENABLE_VTK_xdmf3=NO
         -DVTK_MODULE_USE_EXTERNAL_VTK_token:BOOL=OFF # Not yet in VCPKG
-        #-DVTK_MODULE_ENABLE_VTK_jsoncpp=YES
+        # misc
         -DVTK_DEBUG_MODULE_ALL=ON
         -DVTK_DEBUG_MODULE=ON
         -DVTK_QT_VERSION=6
         -DCMAKE_INSTALL_QMLDIR:PATH=qml
+        "-DVTKCompileTools_DIR=${CURRENT_HOST_INSTALLED_DIR}/share/vtk-compile-tools"
         -DVCPKG_HOST_TRIPLET=${_HOST_TRIPLET}
+        -DCMAKE_POLICY_DEFAULT_CMP0174=NEW     # cmake_parse_arguments
+        -DCMAKE_POLICY_DEFAULT_CMP0177=NEW     # install() DESTINATION paths are normalized
         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON # Due to Qt6::Platform not being found on Linux platform
     MAYBE_UNUSED_VARIABLES
+        VTK_ENABLE_OSPRAY
         VTK_MODULE_ENABLE_VTK_PythonContext2D # Guarded by a conditional
         VTK_MODULE_ENABLE_VTK_GUISupportMFC # only windows
         VTK_MODULE_ENABLE_VTK_vtkm
+        VTK_MODULE_ENABLE_VTK_xdmf3
         VTK_MODULE_USE_EXTERNAL_VTK_mpi4py
+        # Some subprojects
+        CMAKE_POLICY_DEFAULT_CMP0174
+        CMAKE_POLICY_DEFAULT_CMP0177
         # Only with Qt
         CMAKE_INSTALL_QMLDIR
         VTK_QT_VERSION # Only with Qt
         # When working properly these should be unused
+        VCPKG_LOCK_FIND_PACKAGE_Boost
         VCPKG_LOCK_FIND_PACKAGE_CGNS
         VCPKG_LOCK_FIND_PACKAGE_LibHaru
         VCPKG_LOCK_FIND_PACKAGE_NetCDF

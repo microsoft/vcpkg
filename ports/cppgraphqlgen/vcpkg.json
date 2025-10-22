@@ -1,7 +1,6 @@
 {
   "name": "cppgraphqlgen",
-  "version": "4.5.7",
-  "port-version": 2,
+  "version": "4.5.9",
   "description": "C++ GraphQL schema service generator",
   "homepage": "https://github.com/microsoft/cppgraphqlgen",
   "license": "MIT",
