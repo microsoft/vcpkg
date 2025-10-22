@@ -10414,7 +10414,7 @@
     },
     "vowpal-wabbit": {
       "baseline": "9.10.0",
-      "port-version": 3
+      "port-version": 4
     },
     "vs-yasm": {
       "baseline": "0.5.0",
