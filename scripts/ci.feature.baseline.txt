@@ -439,7 +439,6 @@ dlib[cuda]:x86-windows = cascade
 dlib[cuda](osx) = cascade
 dlib[cuda](uwp) = cascade
 dv-processing:arm64-uwp = cascade
-dv-processing:arm64-windows = cascade
 dv-processing:x64-uwp = cascade
 dv-processing[tools](uwp) = cascade
 easycl:arm64-uwp = cascade
