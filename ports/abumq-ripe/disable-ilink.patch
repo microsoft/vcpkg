@@ -1,14 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ad7ae72..4c535a1 100644
+index ad7ae72..55ffe09 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -137,6 +137,11 @@ set_target_properties (ripe-bin PROPERTIES
+@@ -137,6 +137,12 @@ set_target_properties (ripe-bin PROPERTIES
      VERSION ${RIPE_VERSION}
      SOVERSION ${RIPE_SOVERSION}
  )
 +if(MSVC)
 +    set_target_properties(ripe-bin PROPERTIES
 +        LINK_FLAGS "/INCREMENTAL:NO"
++        PDB_NAME "ripe-bin"
 +    )
 +endif()
  install (TARGETS ripe-bin DESTINATION bin)
