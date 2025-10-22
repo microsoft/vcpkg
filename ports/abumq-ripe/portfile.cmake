@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         devendoring.patch
         cmake-config-exports.patch
+        disable-ilink.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
