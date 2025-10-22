@@ -15,17 +15,17 @@ file(GLOB CSPICE_SOURCE ${PROJECT_SOURCE_DIR}/cspice/src/cspice/*.c)
 set(INCLUDE_PATH "${PROJECT_SOURCE_DIR}/cspice/include")
 
 add_library(cspice ${CSPICE_SOURCE})
-target_include_directories(cspice PUBLIC "${INCLUDE_PATH}")
+target_include_directories(cspice PRIVATE "${INCLUDE_PATH}")
 
 if (WIN32)
-    target_compile_definitions(cspice PUBLIC "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO;_CRT_SECURE_NO_WARNINGS")
+    target_compile_definitions(cspice PRIVATE "_COMPLEX_DEFINED;MSDOS;OMIT_BLANK_CC;NON_ANSI_STDIO;_CRT_SECURE_NO_WARNINGS")
     set_target_properties(cspice PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 elseif (UNIX)
-    target_compile_definitions(cspice PUBLIC "NON_UNIX_STDIO")
+    target_compile_definitions(cspice PRIVATE "NON_UNIX_STDIO")
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        target_compile_options(cspice PUBLIC -m64 -ansi -fPIC)
+        target_compile_options(cspice PRIVATE -m64 -ansi)
     elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
-        target_compile_options(cspice PUBLIC -m32 -ansi -fPIC) 
+        target_compile_options(cspice PRIVATE -m32 -ansi) 
     endif()
     target_compile_options(cspice PRIVATE -Wno-error=implicit-function-declaration)
 endif ()
@@ -35,9 +35,10 @@ if (NOT _SKIP_HEADERS)
     install(FILES ${SPICE_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cspice)
 endif()
 
-set_target_properties(
-    cspice
-    PROPERTIES SOVERSION ${SOVERSION}
+set_target_properties(cspice PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${SOVERSION}
+    POSITION_INDEPENDENT_CODE ON
 )
 
 install(
