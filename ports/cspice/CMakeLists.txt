@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 3.1)
-project(cspice LANGUAGES C)
+project(cspice
+    VERSION 67
+    DESCRIPTION "The NAIF SPICE Toolkit (C version)"
+    HOMEPAGE_URL "https://naif.jpl.nasa.gov/naif/toolkit.html"
+    LANGUAGES C
+)
 
-set(SOVERSION 67)
+set(SOVERSION ${PROJECT_VERSION})
+
+include(GNUInstallDirs)
 
 # Include all *.c files from the library
 file(GLOB CSPICE_SOURCE ${PROJECT_SOURCE_DIR}/cspice/src/cspice/*.c)
@@ -29,7 +36,7 @@ endif ()
 
 if (NOT _SKIP_HEADERS)
     file(GLOB SPICE_HEADERS ${INCLUDE_PATH}/*.h)
-    install(FILES ${SPICE_HEADERS} DESTINATION include/cspice)
+    install(FILES ${SPICE_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cspice)
 endif()
 
 set_target_properties(
