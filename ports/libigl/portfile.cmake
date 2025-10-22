@@ -38,6 +38,9 @@ vcpkg_cmake_configure(
         -DLIBIGL_BUILD_TESTS=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
         -DLIBIGL_INSTALL=ON
+        # cf. cmake/recipes/external/cgal.cmake
+        -DCGAL_CMAKE_EXACT_NT_BACKEND=BOOST_BACKEND
+        -DCGAL_DISABLE_GMP=ON
         # This option enables building an actual binary library.
         # It still respects BUILD_SHARED_LIBS.
         # Missing symbols - i.e. explicit template instantiations -
@@ -53,6 +56,9 @@ vcpkg_cmake_configure(
         -DLIBIGL_RESTRICTED_MATLAB=OFF
         -DLIBIGL_RESTRICTED_MOSEK=OFF
         -DLIBIGL_RESTRICTED_TRIANGLE=OFF
+    MAYBE_UNUSED_VARIABLES
+        CGAL_CMAKE_EXACT_NT_BACKEND=BOOST_BACKEND
+        CGAL_DISABLE_GMP
 )
 
 vcpkg_cmake_install()

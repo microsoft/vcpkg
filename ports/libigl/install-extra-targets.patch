@@ -19,7 +19,7 @@ diff --git a/cmake/igl/libigl-config.cmake.in b/cmake/igl/libigl-config.cmake.in
 index d3ff19f..df11bf5 100644
 --- a/cmake/igl/libigl-config.cmake.in
 +++ b/cmake/igl/libigl-config.cmake.in
-@@ -3,5 +3,27 @@
+@@ -3,5 +3,30 @@
  include(CMakeFindDependencyMacro)
  find_dependency(Eigen3 REQUIRED)
  find_dependency(Threads REQUIRED)
@@ -41,6 +41,9 @@ index d3ff19f..df11bf5 100644
 +  find_dependency(tinyxml2)
 +endif()
 +if("@LIBIGL_COPYLEFT_CGAL@")
++  # cf. cmake/recipes/external/cgal.cmake
++  set(CGAL_CMAKE_EXACT_NT_BACKEND "BOOST_BACKEND" CACHE STRING "CGAL exact NT backend")
++  set(CGAL_DISABLE_GMP ON CACHE BOOL "Disable GMP")
 +  find_dependency(CGAL CONFIG COMPONENTS Core)
 +endif()
 +
