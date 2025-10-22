@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4500382..22e39ce 100644
+index 803fb6a..ad7ae72 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -100,9 +100,35 @@ target_compile_definitions(ripe PRIVATE
+@@ -97,9 +97,35 @@ target_compile_definitions(ripe PRIVATE
      ELPP_NO_DEFAULT_LOG_FILE
      ELPP_DEFAULT_LOGGING_FLAGS=4096
  )
@@ -39,4 +39,3 @@ index 4500382..22e39ce 100644
  ################################################ RIPE ##############################################
  
  add_executable (ripe-bin src/ripe.cc lib/Ripe.cc)
-
