@@ -1,0 +1,8 @@
+The package cutecpp provides CMake targets:
+
+    find_package(cutecpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE cutecpp::cutecpp)
+
+Public headers live under the `cutecpp/` include directory, for example:
+
+    #include <cutecpp/log.hpp>
