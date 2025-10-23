@@ -6,7 +6,7 @@
     },
     "7zip": {
       "baseline": "25.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ableton": {
       "baseline": "3.0.6",
@@ -18,7 +18,7 @@
     },
     "abseil": {
       "baseline": "20250512.1",
-      "port-version": 0
+      "port-version": 1
     },
     "absent": {
       "baseline": "0.3.1",
@@ -2178,7 +2178,7 @@
     },
     "cspice": {
       "baseline": "67",
-      "port-version": 3
+      "port-version": 4
     },
     "ctbench": {
       "baseline": "1.3.4",
@@ -4501,7 +4501,7 @@
       "port-version": 0
     },
     "lest": {
-      "baseline": "1.35.2",
+      "baseline": "1.36.0",
       "port-version": 0
     },
     "level-zero": {
@@ -5098,6 +5098,10 @@
     },
     "libmem": {
       "baseline": "5.1.0",
+      "port-version": 0
+    },
+    "libmemcached-awesome": {
+      "baseline": "1.1.4",
       "port-version": 0
     },
     "libmicrodns": {
@@ -6341,7 +6345,7 @@
       "port-version": 1
     },
     "mimicpp": {
-      "baseline": "8",
+      "baseline": "9.1.0",
       "port-version": 0
     },
     "minc": {
@@ -6793,7 +6797,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.16.0",
+      "baseline": "1.17.0",
       "port-version": 0
     },
     "nifly": {
@@ -7389,7 +7393,7 @@
       "port-version": 7
     },
     "pcre2": {
-      "baseline": "10.46",
+      "baseline": "10.47",
       "port-version": 0
     },
     "pdal": {
@@ -8461,7 +8465,7 @@
       "port-version": 0
     },
     "restinio": {
-      "baseline": "0.7.7",
+      "baseline": "0.7.8",
       "port-version": 0
     },
     "resultlib": {
@@ -9900,6 +9904,10 @@
       "baseline": "2022-01-21",
       "port-version": 1
     },
+    "unarr": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "uni-algo": {
       "baseline": "1.2.0",
       "port-version": 0
@@ -10065,7 +10073,7 @@
       "port-version": 0
     },
     "vcpkg-cmake": {
-      "baseline": "2024-04-23",
+      "baseline": "2025-08-07",
       "port-version": 0
     },
     "vcpkg-cmake-config": {
