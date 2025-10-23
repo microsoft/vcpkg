@@ -1,8 +1,0 @@
-high-jump provides CMake targets:
-
-    find_package(hj CONFIG REQUIRED)
-    target_link_libraries(myapp PRIVATE hj::hj)
-
-Notes:
-- Header-only: this port installs public headers under ${includedir}/hj.
-- License: GPL-3.0-only.
