@@ -15,7 +15,10 @@
     }
   ],
   "default-features": [
-    "cgal",
+    {
+      "name": "cgal",
+      "platform": "!(x86 & windows)"
+    },
     "embree",
     "glfw",
     "imgui",

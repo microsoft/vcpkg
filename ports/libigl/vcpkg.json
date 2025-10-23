@@ -21,6 +21,7 @@
   "features": {
     "cgal": {
       "description": "Build with cgal",
+      "supports": "!(x86 & windows & !mingw)",
       "dependencies": [
         {
           "name": "cgal",
