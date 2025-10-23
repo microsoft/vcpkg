@@ -6,7 +6,7 @@
     },
     "7zip": {
       "baseline": "25.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ableton": {
       "baseline": "3.0.6",
@@ -9899,6 +9899,10 @@
     "umock-c": {
       "baseline": "2022-01-21",
       "port-version": 1
+    },
+    "unarr": {
+      "baseline": "1.1.1",
+      "port-version": 0
     },
     "uni-algo": {
       "baseline": "1.2.0",
