@@ -3185,8 +3185,8 @@
       "port-version": 4
     },
     "g2o": {
-      "baseline": "2024-12-14",
-      "port-version": 5
+      "baseline": "2024-12-28",
+      "port-version": 0
     },
     "g3log": {
       "baseline": "2.6",
