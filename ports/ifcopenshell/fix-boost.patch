@@ -1,0 +1,32 @@
+diff --git a/src/ifcparse/IfcGlobalId.cpp b/src/ifcparse/IfcGlobalId.cpp
+index 4c3d681..7431a34 100644
+--- a/src/ifcparse/IfcGlobalId.cpp
++++ b/src/ifcparse/IfcGlobalId.cpp
+@@ -82,8 +82,12 @@ void expand(const std::string& s, std::vector<unsigned char>& v) {
+ 	}
+ }
+ 
+-// A random number generator for the UUID
+-static boost::uuids::basic_random_generator<boost::mt19937> gen;
++// Define the macro to handle different Boost versions
++#if BOOST_VERSION >= 108600
++    static boost::uuids::basic_random_generator<std::mt19937> gen;
++#else
++    static boost::uuids::basic_random_generator<boost::mt19937> gen;
++#endif
+ 
+ IfcParse::IfcGlobalId::IfcGlobalId() {
+ 	uuid_data = gen();
+diff --git a/src/ifcparse/IfcParse.cpp b/src/ifcparse/IfcParse.cpp
+index cad24a3..2920891 100644
+--- a/src/ifcparse/IfcParse.cpp
++++ b/src/ifcparse/IfcParse.cpp
+@@ -120,7 +120,7 @@ IfcSpfStream::IfcSpfStream(const std::string& fn)
+ 
+ #ifdef USE_MMAP
+ 	if (mmap) {
+-		mfs = boost::iostreams::mapped_file_source(boost::filesystem::wpath(fn_wide));
++		mfs = boost::iostreams::mapped_file_source(boost::filesystem::path(fn_wide));
+ 	} else {
+ #endif
+ 		stream = _wfopen(fn_wide, L"rb");
