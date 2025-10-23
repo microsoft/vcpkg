@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        generate-config.diff
         libkml.patch
         sqlite3.diff
         target-is-valid.patch

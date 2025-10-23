@@ -232,7 +232,7 @@
       ]
     },
     "parquet": {
-      "description": "Enable parquet reading support",
+      "description": "Enable parquet reading support. Combine with arrow[compute] or arrow[dataset] for additional capabilities.",
       "dependencies": [
         {
           "name": "arrow",
