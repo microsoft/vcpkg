@@ -1,7 +1,7 @@
 {
   "name": "vcpkg-ci-vsgqt",
   "version-string": "ci",
-  "description": "Port to fvalidate vsgqt CI",
+  "description": "Port to validate vsgqt in CI",
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
   "dependencies": [
