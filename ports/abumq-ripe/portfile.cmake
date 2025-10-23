@@ -14,10 +14,18 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-ripe-config.cmake"
      DESTINATION "${SOURCE_PATH}/cmake")
 
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND FEATURE_OPTIONS
+        -Ddll=ON
+        -Ddll_export=ON
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dtest=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
