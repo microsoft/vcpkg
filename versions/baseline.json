@@ -5100,6 +5100,10 @@
       "baseline": "5.1.0",
       "port-version": 0
     },
+    "libmemcached-awesome": {
+      "baseline": "1.1.4",
+      "port-version": 0
+    },
     "libmicrodns": {
       "baseline": "0.2.0",
       "port-version": 2
