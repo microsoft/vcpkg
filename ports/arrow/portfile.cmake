@@ -16,6 +16,8 @@ vcpkg_extract_source_archive(
         0006-pcg-msvc-arm64.patch
 )
 
+# Check cpp/cmake_modules/DefineOptions.cmake for option dependencies -
+# they must be modeled as feature dependencies in vcpkg.json.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         acero       ARROW_ACERO
