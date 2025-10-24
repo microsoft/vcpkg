@@ -27,6 +27,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openjpeg    WITH_OpenJPEG_DECODER
         openjpeg    WITH_OpenJPEG_ENCODER
         openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
+        openjph     WITH_OPENJPH_ENCODER
+        openjph     WITH_OPENJPH_DECODER
+        openjph     VCPKG_LOCK_FIND_PACKAGE_OPENJPH
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
