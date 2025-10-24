@@ -21,6 +21,12 @@
       "dependencies": [
         "openssl"
       ]
+    },
+    "mbedtl": {
+      "description": "with MbedTLS library",
+      "dependencies": [
+        "mbedtls"
+      ]
     }
   }
 }
