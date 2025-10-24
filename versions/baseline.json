@@ -4453,8 +4453,8 @@
       "port-version": 1
     },
     "lastools": {
-      "baseline": "2.0.3",
-      "port-version": 1
+      "baseline": "2.0.4",
+      "port-version": 0
     },
     "laszip": {
       "baseline": "3.4.4",
