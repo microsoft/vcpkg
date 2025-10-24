@@ -15,10 +15,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
         tools   BUILD_TOOLS
 )
 
-if(BUILD_TOOLS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "Feature tools is not supported for dynamic builds.")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

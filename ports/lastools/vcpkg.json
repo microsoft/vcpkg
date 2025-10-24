@@ -16,7 +16,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build tools"
+      "description": "Build tools",
+      "supports": "static"
     }
   }
 }
