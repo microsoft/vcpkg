@@ -5285,7 +5285,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "9.0.16",
+      "baseline": "9.0.17",
       "port-version": 0
     },
     "libplist": {
