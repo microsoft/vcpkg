@@ -12,6 +12,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ssl WITH_OPENSSL
+        mbedtls WITH_MBEDTLS
 )
 
 vcpkg_cmake_configure(
