@@ -10248,6 +10248,10 @@
       "baseline": "0.7.0",
       "port-version": 0
     },
+    "vsgqt": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
     "vsgxchange": {
       "baseline": "1.1.7",
       "port-version": 0

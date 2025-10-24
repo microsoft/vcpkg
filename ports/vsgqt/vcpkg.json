@@ -1,0 +1,25 @@
+{
+  "name": "vsgqt",
+  "version": "0.4.0",
+  "description": "Qt integration with VulkanSceneGraph",
+  "homepage": "https://github.com/vsg-dev/vsgQt/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "widgets"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "default-features": false
+    },
+    "vsg"
+  ]
+}
