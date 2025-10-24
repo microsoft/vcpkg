@@ -4,23 +4,21 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 a44e6df02b8f7fe8388420fc7d454b035c38bcfb43a59d15ecb634cb30165c70730258b8ea79f335c4625b482827feb8a3d7afa8e07b369c19d5f7cc7be15001
     HEAD_REF master
-    PATCHES 
+    PATCHES
         fix_install_paths_lastools.patch
         fix_include_directories_lastools.patch
-        build-tools.diff
+        build_tools.diff
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS options
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS_RELEASE
     FEATURES
         tools   BUILD_TOOLS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        ${options}
-    OPTIONS_DEBUG
-        -DBUILD_TOOLS=OFF
+    OPTIONS_RELEASE
+        ${FEATURE_OPTIONS_RELEASE}
 )
 
 vcpkg_cmake_install()
