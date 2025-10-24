@@ -1,0 +1,120 @@
+diff --git a/libs/imageio/src/BasisEncoder.cpp b/libs/imageio/src/BasisEncoder.cpp
+index 0c24e710d..2c3c4fdae 100644
+--- a/libs/imageio/src/BasisEncoder.cpp
++++ b/libs/imageio/src/BasisEncoder.cpp
+@@ -22,7 +22,7 @@
+ 
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Warray-bounds"
+-#include <basisu_comp.h>
++#include <basisu/encoder/basisu_comp.h>
+ #pragma clang diagnostic pop
+ 
+ namespace image {
+@@ -181,7 +181,7 @@ BasisEncoder* Builder::build() {
+     params.m_read_source_images = false;
+ 
+     // We do not want basis to write the file, we want to manually dump "get_output_ktx2_file()"
+-    params.m_write_output_basis_files = false;
++    params.m_write_output_basis_or_ktx2_files = false;
+ 
+     basisu::basis_compressor* encoder = new basisu::basis_compressor();
+ 
+diff --git a/libs/ktxreader/src/Ktx2Reader.cpp b/libs/ktxreader/src/Ktx2Reader.cpp
+index 5d5386146..f72c108ee 100644
+--- a/libs/ktxreader/src/Ktx2Reader.cpp
++++ b/libs/ktxreader/src/Ktx2Reader.cpp
+@@ -26,7 +26,7 @@
+ 
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Warray-bounds"
+-#include <basisu_transcoder.h>
++#include <basisu/transcoder/basisu_transcoder.h>
+ #pragma clang diagnostic pop
+ 
+ using namespace basist;
+diff --git a/third_party/basisu/README.md b/third_party/basisu/README.md
+index a96cdd894..090477b51 100644
+--- a/third_party/basisu/README.md
++++ b/third_party/basisu/README.md
+@@ -265,7 +265,7 @@ bool test()
+ 	basisCompressorParams.m_perceptual = false;
+ 	basisCompressorParams.m_mip_srgb = false;
+ 
+-	basisCompressorParams.m_write_output_basis_files = true;
++	basisCompressorParams.m_write_output_basis_or_ktx2_files = true;
+ 	basisCompressorParams.m_out_filename = "test.basis";
+ 
+ 	basisCompressorParams.m_uastc = true;
+diff --git a/third_party/basisu/basisu_tool.cpp b/third_party/basisu/basisu_tool.cpp
+index 13ed340ff..68d2c35f6 100644
+--- a/third_party/basisu/basisu_tool.cpp
++++ b/third_party/basisu/basisu_tool.cpp
+@@ -1054,8 +1054,8 @@ static bool compress_mode(command_line_params &opts)
+ 	}
+ 
+ 	params.m_read_source_images = true;
+-	params.m_write_output_basis_files = true;
+-	params.m_pGlobal_codebooks = pGlobal_codebook_data ? &pGlobal_codebook_data->m_transcoder.get_lowlevel_etc1s_decoder() : nullptr; 
++	params.m_write_output_basis_or_ktx2_files = true;
++	params.m_pGlobal_codebooks = pGlobal_codebook_data ? &pGlobal_codebook_data->m_transcoder.get_lowlevel_etc1s_decoder() : nullptr;
+ 	FILE *pCSV_file = nullptr;
+ 	if (opts.m_csv_file.size())
+ 	{
+diff --git a/third_party/basisu/encoder/basisu_comp.cpp b/third_party/basisu/encoder/basisu_comp.cpp
+index 166a1c4fe..6fb3baecd 100644
+--- a/third_party/basisu/encoder/basisu_comp.cpp
++++ b/third_party/basisu/encoder/basisu_comp.cpp
+@@ -1448,7 +1448,7 @@ namespace basisu
+ 		debug_printf("basis_compressor::write_output_files_and_compute_stats\n");
+ 
+ 		const uint8_vec& comp_data = m_params.m_create_ktx2_file ? m_output_ktx2_file : m_basis_file.get_compressed_data();
+-		if (m_params.m_write_output_basis_files)
++		if (m_params.m_write_output_basis_or_ktx2_files)
+ 		{
+ 			const std::string& output_filename = m_params.m_out_filename;
+ 
+@@ -2282,7 +2282,7 @@ namespace basisu
+ 		comp_params.m_multithreading = (flags_and_quality & cFlagThreaded) != 0;
+ 		comp_params.m_use_opencl = (flags_and_quality & cFlagUseOpenCL) != 0;
+ 
+-		comp_params.m_write_output_basis_files = false;
++		comp_params.m_write_output_basis_or_ktx2_files = false;
+ 
+ 		comp_params.m_perceptual = (flags_and_quality & cFlagSRGB) != 0;
+ 		comp_params.m_mip_srgb = comp_params.m_perceptual;
+diff --git a/third_party/basisu/encoder/basisu_comp.h b/third_party/basisu/encoder/basisu_comp.h
+index aa5ea6fec..233dd1296 100644
+--- a/third_party/basisu/encoder/basisu_comp.h
++++ b/third_party/basisu/encoder/basisu_comp.h
+@@ -368,10 +368,10 @@ namespace basisu
+ 		// Read source images from m_source_filenames/m_source_alpha_filenames
+ 		bool_param<false> m_read_source_images;
+ 
+-		// Write the output basis file to disk using m_out_filename
+-		bool_param<false> m_write_output_basis_files;
+-								
+-		// Compute and display image metrics 
++        // Write the output basis/ktx2 file to disk using m_out_filename
++        bool_param<false> m_write_output_basis_or_ktx2_files;
++
++        // Compute and display image metrics
+ 		bool_param<false> m_compute_stats;
+ 		
+ 		// Check to see if any input image has an alpha channel, if so then the output basis file will have alpha channels
+diff --git a/third_party/meshoptimizer/gltf/basisenc.cpp b/third_party/meshoptimizer/gltf/basisenc.cpp
+index 7ea0889d4..f20e55308 100644
+--- a/third_party/meshoptimizer/gltf/basisenc.cpp
++++ b/third_party/meshoptimizer/gltf/basisenc.cpp
+@@ -82,7 +82,7 @@ static void fillParams(basisu::basis_compressor_params& params, const char* inpu
+ 	}
+ 
+ 	params.m_read_source_images = true;
+-	params.m_write_output_basis_files = true;
++	params.m_write_output_basis_or_ktx2_files = true;
+ 
+ 	params.m_source_filenames.resize(1);
+ 	params.m_source_filenames[0] = input;
+-- 
+2.45.2
+
