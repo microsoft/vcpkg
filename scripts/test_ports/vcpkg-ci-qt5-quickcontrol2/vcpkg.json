@@ -1,0 +1,15 @@
+{
+  "name": "vcpkg-ci-qt5-quickcontrol2",
+  "version-date": "2024-12-22",
+  "description": "Validates qt5-quickcontrol2",
+  "license": null,
+  "dependencies": [
+    "qt5-base",
+    "qt5-declarative",
+    "qt5-quickcontrols2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
