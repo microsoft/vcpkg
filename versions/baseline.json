@@ -1736,6 +1736,10 @@
       "baseline": "1.16",
       "port-version": 2
     },
+    "cjf2-nbt-cpp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "cjson": {
       "baseline": "1.7.19",
       "port-version": 0
