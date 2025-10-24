@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "tbb",
   "version": "2022.2.0",
+  "port-version": 1,
   "description": "Intel's Threading Building Blocks.",
   "homepage": "https://github.com/oneapi-src/oneTBB",
   "license": "Apache-2.0",
@@ -19,13 +20,13 @@
   "default-features": [
     {
       "name": "hwloc",
-      "platform": "!static & !osx & !uwp"
+      "platform": "!static & !osx & !uwp & !xbox"
     }
   ],
   "features": {
     "hwloc": {
       "description": "Builds TBB with TBBBind support for Hybrid CPUs or NUMA architectures.",
-      "supports": "!static & !osx & !uwp",
+      "supports": "!static & !osx & !uwp & !xbox",
       "dependencies": [
         "hwloc"
       ]

@@ -16,6 +16,14 @@ foreach(component IN LISTS version_components)
 endforeach()
 string(JOIN "." USD_VERSION ${USD_VERSION})
 
+if (VCPKG_TARGET_IS_XBOX)
+    list(APPEND SCARLETT_PATCH 013-scarlett-support.patch)
+endif()
+
+if (CMAKE_CXX_STANDARD EQUAL 20)
+    list(APPEND CXX_STANDARD_PATCH 014-upgrade_to_cxx_standard_20.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
@@ -30,6 +38,8 @@ vcpkg_from_github(
         009-vcpkg_install_folder_conventions.patch
         010-cmake_export_plugin_as_modules.patch
         013-openimageio-3.patch
+        ${SCARLETT_PATCH}
+        ${CXX_STANDARD_PATCH}
 )
 
 # Changes accompanying 003-fix-dep.patch
