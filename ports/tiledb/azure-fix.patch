@@ -1,9 +1,9 @@
 diff --git a/tiledb/sm/filesystem/azure.cc b/tiledb/sm/filesystem/azure.cc
-index 7118292..16fefd3 100644
+index f664a3ab8ee..59f0780106c 100644
 --- a/tiledb/sm/filesystem/azure.cc
 +++ b/tiledb/sm/filesystem/azure.cc
-@@ -232,8 +232,8 @@ Azure::AzureClientSingleton::get(const AzureParameters& params) {
-       cred_options.Transport = options.Transport;
+@@ -152,8 +152,8 @@ tiledb::sm::Azure::ServiceCredentialType get_service_credential(
+       cred_options.Transport = transport_options;
        auto credential = make_shared<::Azure::Identity::ChainedTokenCredential>(
            HERE(),
 -          std::vector<

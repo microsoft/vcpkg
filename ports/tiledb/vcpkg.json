@@ -1,6 +1,6 @@
 {
   "name": "tiledb",
-  "version": "2.29.0",
+  "version": "2.29.1",
   "description": "Cloud-native embeddable array storage engine",
   "homepage": "https://github.com/TileDB-Inc/TileDB",
   "license": "MIT",
@@ -37,7 +37,8 @@
       "description": "Support Azure Blob Storage",
       "dependencies": [
         "azure-identity-cpp",
-        "azure-storage-blobs-cpp"
+        "azure-storage-blobs-cpp",
+        "azure-storage-files-datalake-cpp"
       ]
     },
     "gcs": {
