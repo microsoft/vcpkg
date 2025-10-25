@@ -1,0 +1,23 @@
+diff --git a/include/igl/copyleft/cgal/snap_rounding.cpp b/include/igl/copyleft/cgal/snap_rounding.cpp
+index 3018ffc..f48fe46 100644
+--- a/include/igl/copyleft/cgal/snap_rounding.cpp
++++ b/include/igl/copyleft/cgal/snap_rounding.cpp
+@@ -171,7 +171,18 @@ IGL_INLINE void igl::copyleft::cgal::snap_rounding(
+       {
+         cen = Vector_2(cen.x()+hit.x(), cen.y()+hit.y());
+       }
++#if defined(_MSC_VER)
++      /* hits.size() is of size_t, which is covered by gmp's long implementation on
++       * on most 64 bit platforms. But with MSVC, long is the same size as int, and
++       * so size_t doesn't have an unambiguously matching implementation in gmp.
++       * Now see above: max. 2x hits.push_back for j = 0;j<4;j++
++       * i.e. it doesn't really need a size_t implementation.
++       */
++      const auto hits_size = EScalar(static_cast<unsigned long>(hits.size()));
++      cen = Vector_2(cen.x()/hits_size,cen.y()/hits_size);
++#else
+       cen = Vector_2(cen.x()/EScalar(hits.size()),cen.y()/EScalar(hits.size()));
++#endif
+       const Point_2 rcen(round(cen.x()),round(cen.y()));
+       // after all of that, don't add as a steiner unless it's going to round
+       // to h
