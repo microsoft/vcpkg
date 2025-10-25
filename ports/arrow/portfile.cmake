@@ -128,8 +128,9 @@ if("parquet" IN_LIST FEATURES)
     )
 endif()
 
-file(GLOB extra_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/*/*Config.cmake")
-list(REMOVE_ITEM extra_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/Arrow/ArrowConfig.cmake")
+file(GLOB main_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/Arrow/*onfig.cmake")
+file(GLOB extra_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/*/*onfig.cmake")
+list(REMOVE_ITEM extra_configs ${main_configs})
 if(NOT "${extra_configs}" STREQUAL "")
     message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}"
         "Unhandled CMake config: ${extra_configs}\n"
