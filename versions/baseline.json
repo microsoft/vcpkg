@@ -270,7 +270,7 @@
     },
     "arrow": {
       "baseline": "21.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "arrow-adbc": {
       "baseline": "16",
@@ -3197,7 +3197,7 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.11.4",
+      "baseline": "3.12.0",
       "port-version": 0
     },
     "gdbm": {
@@ -7286,7 +7286,7 @@
     },
     "osgearth": {
       "baseline": "3.7.2",
-      "port-version": 3
+      "port-version": 4
     },
     "osmanip": {
       "baseline": "4.6.1",

@@ -31,6 +31,14 @@
     {
       "name": "gdal",
       "features": [
+        "arrow",
+        "parquet"
+      ],
+      "platform": "arm64 | x64"
+    },
+    {
+      "name": "gdal",
+      "features": [
         "mysql-libmariadb"
       ],
       "platform": "windows & x86"

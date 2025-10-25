@@ -1,0 +1,17 @@
+diff --git a/cmake/helpers/GdalDriverHelper.cmake b/cmake/helpers/GdalDriverHelper.cmake
+index 9eb19d80f6..48f1b4bb30 100644
+--- a/cmake/helpers/GdalDriverHelper.cmake
++++ b/cmake/helpers/GdalDriverHelper.cmake
+@@ -360,7 +360,11 @@ endfunction()
+ 
+ function(gdal_target_interfaces _TARGET)
+     foreach (_LIB IN ITEMS ${ARGN})
+-        if (TARGET ${_LIB})
++        if (NOT TARGET ${_LIB})
++            continue()
++        elseif (CMAKE_VERSION VERSION_GREATER_EQUAL "3.27")
++            target_link_libraries(${_TARGET} PRIVATE "$<COMPILE_ONLY:${_LIB}>")
++        else ()
+             get_property(_res TARGET ${_LIB} PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+             if (_res)
+                 target_include_directories(${_TARGET} PRIVATE ${_res})
