@@ -1,0 +1,13 @@
+diff --git a/cmake/FindGlew.cmake b/cmake/FindGlew.cmake
+index 4691a004..05908059 100644
+--- a/cmake/FindGlew.cmake
++++ b/cmake/FindGlew.cmake
+@@ -49,7 +49,7 @@ unset(GLEW_FOUND)
+ unset(GLEW_INCLUDE_DIRS)
+ unset(GLEW_LIBRARIES)
+ 
+-find_package(Glew CONFIG QUIET)
++find_package(GLEW CONFIG QUIET)
+ if(TARGET GLEW::GLEW)
+     set(GLEW_FOUND TRUE)
+     message(STATUS "Found Glew")

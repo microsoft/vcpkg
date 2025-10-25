@@ -1,0 +1,10 @@
+diff --git a/cmake/DARTFindEigen3.cmake b/cmake/DARTFindEigen3.cmake
+index f1f002e..d205773 100644
+--- a/cmake/DARTFindEigen3.cmake
++++ b/cmake/DARTFindEigen3.cmake
+@@ -6,4 +6,4 @@
+ #
+ # This file is provided under the "BSD-style" License
+ 
+-find_package(Eigen3 3.4.0 REQUIRED CONFIG)
++find_package(Eigen3 3.4.0...5 REQUIRED CONFIG)

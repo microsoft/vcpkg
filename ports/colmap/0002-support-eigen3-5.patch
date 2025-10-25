@@ -1,0 +1,13 @@
+diff --git a/src/colmap/util/types.h b/src/colmap/util/types.h
+index 6ff2ea1..4c2a3dd 100644
+--- a/src/colmap/util/types.h
++++ b/src/colmap/util/types.h
+@@ -49,6 +49,8 @@ typedef unsigned __int64 uint64_t;
+ #include <cstdint>
+ #endif
+ 
++#include <cassert>
++
+ // Define non-copyable or non-movable classes.
+ // NOLINTNEXTLINE(bugprone-macro-parentheses)
+ #define NON_COPYABLE(class_name)          \
