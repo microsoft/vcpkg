@@ -1,0 +1,26 @@
+diff --git a/cmake/onnxruntime.cmake b/cmake/onnxruntime.cmake
+index 6c1d448..69eef03 100644
+--- a/cmake/onnxruntime.cmake
++++ b/cmake/onnxruntime.cmake
+@@ -289,7 +289,7 @@ install(TARGETS onnxruntime
+         ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
+-        FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++        FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ 
+ if (WIN32 AND NOT CMAKE_CXX_STANDARD_LIBRARIES MATCHES kernel32.lib)
+diff --git a/cmake/external/abseil-cpp.cmake b/cmake/external/abseil-cpp.cmake
+index cd93a8d..0e48bcd 100644
+--- a/cmake/external/abseil-cpp.cmake
++++ b/cmake/external/abseil-cpp.cmake
+@@ -28,7 +28,7 @@ onnxruntime_fetchcontent_declare(
+     URL_HASH SHA1=${DEP_SHA1_abseil_cpp}
+     EXCLUDE_FROM_ALL
+     PATCH_COMMAND ${ABSL_PATCH_COMMAND}
+-    FIND_PACKAGE_ARGS 20240722 NAMES absl
++    FIND_PACKAGE_ARGS NAMES absl CONFIG
+ )
+ 
+ onnxruntime_fetchcontent_makeavailable(abseil_cpp)
