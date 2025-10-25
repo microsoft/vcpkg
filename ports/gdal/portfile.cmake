@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 bd4fd45e34ee2e55063d411d2adec00bec3879c182d2d9cadbbcac271a86b1c450042cd47c6cc77befca1296c59d539bce8dc698de93003730003c8bf8870486
     HEAD_REF master
     PATCHES
+        adopt-compile-only.diff
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         generate-config.diff
