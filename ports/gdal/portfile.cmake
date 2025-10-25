@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
-    REF "v${VERSION}beta1"
-    SHA512 bd4fd45e34ee2e55063d411d2adec00bec3879c182d2d9cadbbcac271a86b1c450042cd47c6cc77befca1296c59d539bce8dc698de93003730003c8bf8870486
+    REF "v${VERSION}"
+    SHA512 84a9bd58e9992d2d447788727228410184ef31e881026aee1f48766ed8b25039ab1b09afe95c97b66d3a0751bab524dc9bb57ab2c78af53632b52ec8dcd6f4ad
     HEAD_REF master
     PATCHES
         adopt-compile-only.diff
