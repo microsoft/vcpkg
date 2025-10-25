@@ -1,0 +1,18 @@
+{
+  "name": "cutecpp",
+  "version": "0.1.1",
+  "description": "Lightweight C++23 logging library that forwards structured telemetry to Cutelog.",
+  "homepage": "https://github.com/jkCXf9X4/cutecpp",
+  "license": "MIT",
+  "dependencies": [
+    "kissnet",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

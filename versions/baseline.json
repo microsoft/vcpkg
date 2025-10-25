@@ -2252,6 +2252,10 @@
       "baseline": "2019-09-20",
       "port-version": 2
     },
+    "cutecpp": {
+      "baseline": "0.1.1",
+      "port-version": 0
+    },
     "cutelyst2": {
       "baseline": "2.12.0",
       "port-version": 2
