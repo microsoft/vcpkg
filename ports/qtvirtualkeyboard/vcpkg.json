@@ -1,6 +1,6 @@
 {
   "name": "qtvirtualkeyboard",
-  "version": "6.9.1",
+  "version": "6.9.2",
   "description": "The Qt Virtual Keyboard project provides an input framework and reference keyboard frontend for Qt 6 on Linux Desktop/X11, Windows Desktop, and Boot2Qt targets.",
   "homepage": "https://www.qt.io/",
   "license": null,
