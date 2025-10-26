@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "inlined-vector",
+  "version": "5.7.0",
+  "description": "A C++17/20 header-only vector-like container with Small Buffer Optimization (SBO) and full allocator support. Zero external dependencies.",
+  "homepage": "https://github.com/lloyal-ai/inlined-vector",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": []
+}
