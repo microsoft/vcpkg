@@ -13,7 +13,6 @@ vcpkg_from_github(
         imgui-impl.diff
         install-extra-targets.patch
         instantiations.diff
-        #msvc-snap-rounding.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 
@@ -57,7 +56,7 @@ vcpkg_cmake_configure(
         -DLIBIGL_RESTRICTED_MOSEK=OFF
         -DLIBIGL_RESTRICTED_TRIANGLE=OFF
     MAYBE_UNUSED_VARIABLES
-        CGAL_CMAKE_EXACT_NT_BACKEND=BOOST_BACKEND
+        CGAL_CMAKE_EXACT_NT_BACKEND
         CGAL_DISABLE_GMP
 )
 
