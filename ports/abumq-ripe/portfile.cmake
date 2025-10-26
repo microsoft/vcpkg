@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Ripe has several issues with dynamic linkage on Windows
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abumq/ripe
@@ -7,19 +11,11 @@ vcpkg_from_github(
     PATCHES
         devendoring.patch
         cmake-config-exports.patch
-        disable-ilink.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-ripe-config.cmake"
      DESTINATION "${SOURCE_PATH}/cmake")
-
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND FEATURE_OPTIONS
-        -Ddll=ON
-        -Ddll_export=ON
-    )
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
