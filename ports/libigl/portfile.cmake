@@ -13,7 +13,7 @@ vcpkg_from_github(
         imgui-impl.diff
         install-extra-targets.patch
         instantiations.diff
-        msvc-snap-rounding.diff
+        #msvc-snap-rounding.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 
