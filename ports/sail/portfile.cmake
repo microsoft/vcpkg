@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 0e6bd4fb7910eda29e0cd6d96e31ff9a476d5836055e4653d6401ab72209eccd3624b8c1e92b7cd0d22ecdaa8ffde44b155da36da61c99ec0c06e1d388bd1d67
     HEAD_REF master
     PATCHES
+        fix-heif.patch
         fix-include-directory.patch
 )
 
