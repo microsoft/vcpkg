@@ -24,6 +24,16 @@ if ("openmp" IN_LIST FEATURES)
     set(SAIL_ENABLE_OPENMP ON)
 endif()
 
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+    if (VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        set(SAIL_WINDOWS_STATIC_CRT_FLAG "-DSAIL_WINDOWS_STATIC_CRT=OFF")
+    else()
+        set(SAIL_WINDOWS_STATIC_CRT_FLAG "-DSAIL_WINDOWS_STATIC_CRT=ON")
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -33,6 +43,7 @@ vcpkg_cmake_configure(
         -DSAIL_ONLY_CODECS=${ONLY_CODECS_ESCAPED}
         -DSAIL_BUILD_APPS=OFF
         -DSAIL_BUILD_EXAMPLES=OFF
+        ${SAIL_WINDOWS_STATIC_CRT_FLAG}
 )
 
 vcpkg_cmake_install()
