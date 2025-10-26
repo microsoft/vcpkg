@@ -34,7 +34,7 @@
         "arrow",
         "parquet"
       ],
-      "platform": "arm64 | x64"
+      "platform": "(arm64 | x64) & !linux"
     },
     {
       "name": "gdal",
