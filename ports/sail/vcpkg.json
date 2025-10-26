@@ -103,7 +103,7 @@
     "jpeg2000": {
       "description": "Enable JPEG2000 codec",
       "dependencies": [
-        "jasper"
+        "openjpeg"
       ]
     },
     "jpegxl": {
