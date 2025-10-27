@@ -1,4 +1,15 @@
-if(VCPKG_TARGET_IS_WINDOWS)
+# This triplet option enables building an actual binary library.
+# Despite the name (which follows upstream's choice), it respects
+# the triplet's library linkage for non-Windows targets.
+# Missing symbols - i.e. explicit template instantiations -
+# must be added to the implementation files (and upstreamed),
+# cf. https://libigl.github.io/static-library/
+if(NOT DEFINED LIBIGL_USE_STATIC_LIBRARY)
+    set(LIBIGL_USE_STATIC_LIBRARY OFF)
+endif()
+if(NOT LIBIGL_USE_STATIC_LIBRARY)
+    set(VCPKG_BUILD_TYPE release)  # header-only
+elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
@@ -37,14 +48,10 @@ vcpkg_cmake_configure(
         -DLIBIGL_BUILD_TESTS=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
         -DLIBIGL_INSTALL=ON
+        -DLIBIGL_USE_STATIC_LIBRARY=${LIBIGL_USE_STATIC_LIBRARY}
         # cf. cmake/recipes/external/cgal.cmake
         -DCGAL_CMAKE_EXACT_NT_BACKEND=BOOST_BACKEND
         -DCGAL_DISABLE_GMP=ON
-        # This option enables building an actual binary library.
-        # It still respects BUILD_SHARED_LIBS.
-        # Missing symbols - i.e. explicit template instantiations -
-        # must be added to the implementation files (and upstreamed).
-        -DLIBIGL_USE_STATIC_LIBRARY=ON
         # Permissive modules
         -DLIBIGL_PREDICATES=OFF
         -DLIBIGL_SPECTRA=OFF
@@ -64,8 +71,13 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/igl)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+if(LIBIGL_USE_STATIC_LIBRARY)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+else()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+endif()
 
 set(comment "")
 if(LIBIGL_COPYLEFT_CORE)
