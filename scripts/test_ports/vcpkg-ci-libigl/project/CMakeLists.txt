@@ -43,5 +43,5 @@ endif()
 
 if("xml" IN_LIST FEATURES)
     add_executable(601_Serialization "${SOURCE_PATH}/tutorial/601_Serialization/main.cpp")
-    target_link_libraries(601_Serialization PRIVATE igl::igl_glfw igl::igl_xml)
+    target_link_libraries(601_Serialization PRIVATE igl::igl_xml)
 endif()
