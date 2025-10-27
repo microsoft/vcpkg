@@ -6897,7 +6897,7 @@
       "port-version": 0
     },
     "nuklear": {
-      "baseline": "4.12.7",
+      "baseline": "4.12.8",
       "port-version": 0
     },
     "numactl": {
