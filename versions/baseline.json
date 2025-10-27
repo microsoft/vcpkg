@@ -9464,6 +9464,10 @@
       "baseline": "7.0.0",
       "port-version": 0
     },
+    "supernovas": {
+      "baseline": "1.5.0",
+      "port-version": 0
+    },
     "sushant-wayal-stringhash": {
       "baseline": "1.1.0",
       "port-version": 0
