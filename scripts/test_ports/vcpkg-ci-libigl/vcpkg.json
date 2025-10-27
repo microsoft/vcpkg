@@ -17,11 +17,20 @@
   "default-features": [
     {
       "name": "cgal",
-      "platform": "!(x86 & windows)"
+      "platform": "!android & !(x86 & windows)"
     },
-    "embree",
-    "glfw",
-    "imgui",
+    {
+      "name": "embree",
+      "platform": "linux | osx | (windows & !uwp & !arm)"
+    },
+    {
+      "name": "glfw",
+      "platform": "!android"
+    },
+    {
+      "name": "imgui",
+      "platform": "!android"
+    },
     "xml"
   ],
   "features": {
