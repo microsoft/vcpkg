@@ -2,13 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/brotli
     REF v${VERSION} # v1.1.0 
-    SHA512 6eb280d10d8e1b43d22d00fa535435923c22ce8448709419d676ff47d4a644102ea04f488fc65a179c6c09fee12380992e9335bad8dfebd5d1f20908d10849d9
+    SHA512 f94542afd2ecd96cc41fd21a805a3da314281ae558c10650f3e6d9ca732b8425bba8fde312823f0a564c7de3993bdaab5b43378edab65ebb798cefb6fd702256
     HEAD_REF master
     PATCHES
         install.patch
-        fix-arm-uwp.patch
+        # fix-arm-uwp.patch
         pkgconfig.patch
-        emscripten.patch
+        # emscripten.patch
 )
 
 vcpkg_cmake_configure(
