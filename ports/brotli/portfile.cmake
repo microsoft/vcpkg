@@ -20,6 +20,9 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/unofficial-brotli PACKAGE_NAME unofficial-brotli)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/man")
 
 # Under emscripten the brotli executable tool is produced with .js extension but vcpkg_copy_tools
 # has no special behaviour in this case and searches for the tool name with no extension
