@@ -17,7 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools   BUILD_TOOLS
 )
 
-if(tools IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
     # Tools targets are missing C++17 flag
     list(APPEND FEATURE_OPTIONS "-DCMAKE_CXX_STANDARD=17")
 endif()
