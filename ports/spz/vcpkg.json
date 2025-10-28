@@ -14,5 +14,10 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools"
+    }
+  }
 }
