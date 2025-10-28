@@ -742,7 +742,7 @@
     },
     "blend2d": {
       "baseline": "2025-03-08",
-      "port-version": 0
+      "port-version": 1
     },
     "blickfeld-qb2": {
       "baseline": "2.8.3",
