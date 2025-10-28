@@ -1,5 +1,4 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "lloyal-ai-inlined-vector",
   "version": "5.7.1",
   "description": "A C++17/20 header-only vector-like container with Small Buffer Optimization (SBO) and full allocator support. Zero external dependencies.",
