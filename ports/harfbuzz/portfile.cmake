@@ -2,50 +2,31 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 1d0f19e6aebc6aa273e749fb7968eff851dcfb15a0b5ef6cf268c74e77a81175d845c20c9285be7e9a7cb79871cb08bdac5c9d802a50fc5bd11a7225d510f48f
+    SHA512 f6fb44f1eeecd94d169034f398fdc6c9e149244b7bb1cc72239e9bedd2074e5cbb36c9d37636cffc6d9cfc818a18dca290ee0e03b9f68a07c1a02bd416f7a2f8
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
         add-parameter-name.patch
 )
 
-if("icu" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dicu=enabled) # Enable ICU library unicode functions
-else()
-    list(APPEND FEATURE_OPTIONS -Dicu=disabled)
-endif()
-if("graphite2" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dgraphite=enabled) #Enable Graphite2 complementary shaper
-else()
-    list(APPEND FEATURE_OPTIONS -Dgraphite=disabled)
-endif()
-if("coretext" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dcoretext=enabled) # Enable CoreText shaper backend on macOS
-else()
-    list(APPEND FEATURE_OPTIONS -Dcoretext=disabled)
-endif()
-if("directwrite" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Ddirectwrite=enabled) # Enable DirectWrite support on Windows
-else()
-    list(APPEND FEATURE_OPTIONS -Ddirectwrite=disabled)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS MODE meson
+    FEATURES
+        icu         icu
+        graphite2   graphite
+        coretext    coretext
+        directwrite directwrite
+        glib        glib
+        glib        gobject
+        cairo       cairo
+        freetype    freetype
+        gdi         gdi
+)
+
 if("glib" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dglib=enabled) # Enable GLib unicode functions
     list(APPEND FEATURE_OPTIONS -Dgobject=enabled) #Enable GObject bindings
     list(APPEND FEATURE_OPTIONS -Dchafa=disabled)
 else()
-    list(APPEND FEATURE_OPTIONS -Dglib=disabled)
     list(APPEND FEATURE_OPTIONS -Dgobject=disabled)
-endif()
-if("cairo" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dcairo=enabled) # Enable Cairo graphics library support
-else()
-    list(APPEND FEATURE_OPTIONS -Dcairo=disabled)
-endif()
-if("freetype" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dfreetype=enabled) #Enable freetype interop helpers
-else()
-    list(APPEND FEATURE_OPTIONS -Dfreetype=disabled)
 endif()
 if("experimental-api" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dexperimental_api=true) #Enable experimental api

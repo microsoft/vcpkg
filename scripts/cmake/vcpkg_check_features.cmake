@@ -20,11 +20,29 @@ function(z_vcpkg_check_features_get_feature idx features_list out_feature_name o
     set("${out_feature_var}" "${feature_var}" PARENT_SCOPE)
 endfunction()
 
+function(z_vcpkg_create_flag out_flag flag_name flag_value mode)
+    if("${mode}" STREQUAL "cmake")
+        if(flag_value)
+            set("${out_flag}" "-D${flag_name}=ON" PARENT_SCOPE)
+        else()
+            set("${out_flag}" "-D${flag_name}=OFF" PARENT_SCOPE)
+        endif()
+    elseif("${mode}" STREQUAL "meson")
+        if(flag_value)
+            set("${out_flag}" "-D${flag_name}=enabled" PARENT_SCOPE)
+        else()
+            set("${out_flag}" "-D${flag_name}=disabled" PARENT_SCOPE)
+        endif()
+    else()
+        message(FATAL_ERROR "Unknown flag mode: ${mode}")
+    endif()
+endfunction()
+
 function(vcpkg_check_features)
     cmake_parse_arguments(
         PARSE_ARGV 0 "arg"
         ""
-        "OUT_FEATURE_OPTIONS;PREFIX"
+        "OUT_FEATURE_OPTIONS;PREFIX;MODE"
         "FEATURES;INVERTED_FEATURES"
     )
 
@@ -35,6 +53,11 @@ function(vcpkg_check_features)
         set(prefix "")
     else()
         set(prefix "${arg_PREFIX}_")
+    endif()
+    if(NOT DEFINED arg_MODE)
+        set(mode "cmake")
+    else()
+        set(mode "${arg_MODE}")
     endif()
 
     set(feature_options)
@@ -49,8 +72,6 @@ function(vcpkg_check_features)
         message(FATAL_ERROR "vcpkg_check_features called with unknown arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-
-
     z_vcpkg_check_features_last_feature(last_feature "FEATURES" "${arg_FEATURES}")
     if(last_feature GREATER_EQUAL 0)
         foreach(feature_pair_idx RANGE "${last_feature}")
@@ -58,10 +79,12 @@ function(vcpkg_check_features)
 
             list(APPEND feature_variables "${feature_var}")
             if(feature_name IN_LIST FEATURES)
-                list(APPEND feature_options "-D${feature_var}=ON")
+                z_vcpkg_create_flag(flag "${feature_var}" ON "${mode}")
+                list(APPEND feature_options "${flag}")
                 set("${prefix}${feature_var}" ON PARENT_SCOPE)
             else()
-                list(APPEND feature_options "-D${feature_var}=OFF")
+                z_vcpkg_create_flag(flag "${feature_var}" OFF "${mode}")
+                list(APPEND feature_options "${flag}")
                 set("${prefix}${feature_var}" OFF PARENT_SCOPE)
             endif()
         endforeach()
@@ -74,10 +97,12 @@ function(vcpkg_check_features)
 
             list(APPEND feature_variables "${feature_var}")
             if(feature_name IN_LIST FEATURES)
-                list(APPEND feature_options "-D${feature_var}=OFF")
+                z_vcpkg_create_flag(flag "${feature_var}" OFF "${mode}")
+                list(APPEND feature_options "${flag}")
                 set("${prefix}${feature_var}" OFF PARENT_SCOPE)
             else()
-                list(APPEND feature_options "-D${feature_var}=ON")
+                z_vcpkg_create_flag(flag "${feature_var}" ON "${mode}")
+                list(APPEND feature_options "${flag}")
                 set("${prefix}${feature_var}" ON PARENT_SCOPE)
             endif()
         endforeach()
