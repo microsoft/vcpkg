@@ -1,4 +1,5 @@
-# vcpkg portfile for inlined-vector
+set(VCPKG_BUILD_TYPE release) # header-only library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lloyal-ai/inlined-vector
@@ -17,9 +18,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/inlined-vector)
-
-# Header-only library - remove empty lib directories
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
