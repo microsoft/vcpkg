@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lloyal-ai/inlined-vector
     REF "${VERSION}"
-    SHA512 45cb97f18053fa3079b4014cdcd5f4ecb1c508ec30160baf04026934e43cf18e67688d70f5499147a208685fcdace587455555a3696ce3aeecf5bc99257d3fc7
+    SHA512 619777f8dd930813e5be96cdfa5171485356fb8ac6ed3f32fca3ad68565a48c269a38a022d734b118c0e397f5f84ad591a27c42b7080616af5d7d0575e6a7a9b
     HEAD_REF main
 )
 
@@ -17,10 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/inlined-vector)
-
-# Remove lib directory (CMake config files have been moved by config_fixup)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+vcpkg_cmake_config_fixup(CONFIG_PATH share/inlined-vector/cmake)
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

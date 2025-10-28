@@ -5941,7 +5941,7 @@
       "port-version": 1
     },
     "lloyal-ai-inlined-vector": {
-      "baseline": "5.7.0",
+      "baseline": "5.7.1",
       "port-version": 0
     },
     "llvm": {
