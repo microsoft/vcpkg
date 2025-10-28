@@ -6,9 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         install.patch
-        # fix-arm-uwp.patch
         pkgconfig.patch
-        # emscripten.patch
 )
 
 vcpkg_cmake_configure(
