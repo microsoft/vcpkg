@@ -12,10 +12,16 @@ vcpkg_from_github(
 # Enable selected codecs
 set(ONLY_CODECS "")
 
-# The list is sorted by priority, with each priority group separated by triple space
-foreach(CODEC gif jpeg png svg webp   avif ico   heif openexr psd tiff   bmp hdr jpeg2000 jpegxl pnm qoi tga   jbig pcx wal xbm xpm xwd)
-    if (${CODEC} IN_LIST FEATURES)
-        list(APPEND ONLY_CODECS ${CODEC})
+# List of codecs copy-pased from SAIL
+set(HIGHEST_PRIORITY_CODECS gif jpeg png svg webp)
+set(HIGH_PRIORITY_CODECS    avif ico)
+set(MEDIUM_PRIORITY_CODECS  heif openexr psd tiff)
+set(LOW_PRIORITY_CODECS     bmp hdr jpeg2000 jpegxl pnm qoi tga)
+set(LOWEST_PRIORITY_CODECS  jbig pcx wal xbm xpm xwd)
+
+foreach(CODEC ${HIGHEST_PRIORITY_CODECS} ${HIGH_PRIORITY_CODECS} ${MEDIUM_PRIORITY_CODECS} ${LOW_PRIORITY_CODECS} ${LOWEST_PRIORITY_CODECS})
+    if (CODEC IN_LIST FEATURES)
+        list(APPEND ONLY_CODECS "${CODEC}")
     endif()
 endforeach()
 
