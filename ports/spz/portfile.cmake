@@ -30,7 +30,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(tools IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES
             ply_to_spz
