@@ -16,7 +16,7 @@
     }
   ],
   "default-features": [
-    "all"
+    "highest-priority-codecs"
   ],
   "features": {
     "all": {
