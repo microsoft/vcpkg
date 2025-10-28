@@ -3952,10 +3952,6 @@
       "baseline": "3.5.0",
       "port-version": 0
     },
-    "inlined-vector": {
-      "baseline": "5.7.0",
-      "port-version": 0
-    },
     "intel-ipsec": {
       "baseline": "1.1",
       "port-version": 0
