@@ -19,6 +19,9 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/inlined-vector)
 
+# Remove lib directory (CMake config files have been moved by config_fixup)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
