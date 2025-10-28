@@ -2229,7 +2229,7 @@
       "port-version": 16
     },
     "cudnn-frontend": {
-      "baseline": "1.14.0",
+      "baseline": "1.15.0",
       "port-version": 0
     },
     "cunit": {
