@@ -76,8 +76,8 @@ endfunction()
 
 function(vcpkg_run_autoreconf shell_cmd work_dir)
     find_program(ACLOCAL NAMES aclocal)
-    find_program(AUTORECONF NAMES autoreconf)             # from autoconf
-    find_program(LIBTOOLIZE NAMES libtoolize glibtoolize) # from libtool
+    find_program(AUTORECONF NAMES autoreconf)
+    find_program(LIBTOOLIZE NAMES libtoolize glibtoolize)
 
     set(missing "")
     if(NOT AUTORECONF)
@@ -105,7 +105,6 @@ function(vcpkg_run_autoreconf shell_cmd work_dir)
         list(APPEND missing "libtool")
     endif()
     if(missing)
-        list(JOIN missing " " missing)
         message(FATAL_ERROR "${PORT} currently requires the following programs from the system package manager:
     autoconf autoconf-archive automake libtoolize
 
