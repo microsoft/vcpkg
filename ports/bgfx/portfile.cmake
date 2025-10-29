@@ -6,7 +6,7 @@ vcpkg_download_distfile(
   ARCHIVE_FILE
   URLS https://github.com/bkaradzic/bgfx.cmake/releases/download/v${VERSION}/bgfx.cmake.v${VERSION}.tar.gz
   FILENAME bgfx.cmake.v${VERSION}.tar.gz
-  SHA512 f9131426eeb8eee71441a6cce7fb810843879b02531640cf749c5855b9278bf2608dbe089b093317e4e9b350260d9c2b9ffe3ccf950f721096f8269f17d68f50
+  SHA512 520c542b65e76e92eae818e32eeb62bb2347ac89a1e10fc07cd5059a3b8a9a543cadca87d451a3bc157c415f6183b1f0e5031248e38fae704b8efd54679d482b
 )
 
 vcpkg_extract_source_archive(
@@ -14,6 +14,19 @@ vcpkg_extract_source_archive(
   ARCHIVE "${ARCHIVE_FILE}"
   PATCHES
     fix-dependencies.patch
+)
+file(REMOVE_RECURSE
+  "${SOURCE_PATH}/bgfx/3rdparty/dear-imgui"
+  "${SOURCE_PATH}/bgfx/3rdparty/glslang"
+  "${SOURCE_PATH}/bgfx/3rdparty/meshoptimizer"
+  "${SOURCE_PATH}/bgfx/3rdparty/spirv-cross"
+  "${SOURCE_PATH}/bgfx/3rdparty/spirv-headers"
+  "${SOURCE_PATH}/bgfx/3rdparty/spirv-opt"
+  "${SOURCE_PATH}/bgfx/3rdparty/stb"
+  "${SOURCE_PATH}/bimg/3rdparty/libsquish"
+  "${SOURCE_PATH}/bimg/3rdparty/lodepng"
+  "${SOURCE_PATH}/bimg/3rdparty/stb"
+  "${SOURCE_PATH}/bimg/3rdparty/tinyexr"
 )
 
 vcpkg_check_features(
@@ -33,11 +46,9 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DBGFX_LIBRARY_TYPE=${BGFX_LIBRARY_TYPE}
-    -DBX_AMALGAMATED=ON
     -DBGFX_AMALGAMATED=ON
     -DBGFX_BUILD_EXAMPLES=OFF
     -DBGFX_OPENGLES_VERSION=30
-    "-DBGFX_CMAKE_USER_SCRIPT=${CURRENT_PORT_DIR}/vcpkg-inject-packages.cmake"
     "-DBGFX_ADDITIONAL_TOOL_PATHS=${CURRENT_INSTALLED_DIR}/../${HOST_TRIPLET}/tools/bgfx"
     ${FEATURE_OPTIONS}
   OPTIONS_DEBUG

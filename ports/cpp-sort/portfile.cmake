@@ -3,8 +3,8 @@ set(VCPKG_BUILD_TYPE release) # header-only
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Morwenn/cpp-sort
-    REF "${VERSION}"
-    SHA512 4ddb37e5724b0cf6f0889c889bc6a96f272f5eea1bf1ae151888d456b6a77fa64a2b887a8c8c7c42f2d0c77203c951e67a8358eed9694612e377e7233aef6c04
+    REF "v${VERSION}"
+    SHA512 4a81dc92f8b386a6c6303fa9f4787e9b214a79c342dad3dff1b876d0daf251e74b0ab94a068dcca0eeec838d19bc6b7ee1e777b9ee748cfd4a81aa7159e4fe14
     HEAD_REF 1.x.y-develop
 )
 

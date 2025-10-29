@@ -1,0 +1,5 @@
+neoslippi provides CMake targets:
+
+  find_package(NeoSlippi CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE NeoSlippi::NeoSlippi)
+
