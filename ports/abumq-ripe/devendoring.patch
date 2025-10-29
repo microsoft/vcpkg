@@ -18,9 +18,9 @@ index 4500382..e1a2c95 100644
 -find_package(CryptoPP REQUIRED)
 -message ("-- Crypto++ binary: " ${CRYPTOPP_LIBRARY})
 -include_directories (${CRYPTOPP_INCLUDE_DIRS})
-+find_package(cryptopp CONFIG REQUIRED)
-+message ("-- Crypto++ binary: " ${cryptopp_LIBRARY})
- 
++find_package(CRYPTOPP NAMES cryptopp CONFIG REQUIRED)
++set(CRYPTOPP_LIBRARIES cryptopp::cryptopp)
+
  find_package(ZLIB REQUIRED)
  if (ZLIB_FOUND)
 @@ -92,7 +89,7 @@ set_target_properties(ripe PROPERTIES
@@ -28,7 +28,7 @@ index 4500382..e1a2c95 100644
  
  target_link_libraries(ripe
 -    ${CRYPTOPP_LIBRARIES}
-+    PUBLIC cryptopp::cryptopp
++    cryptopp::cryptopp
      ${ZLIB_LIBRARIES}
  )
  
