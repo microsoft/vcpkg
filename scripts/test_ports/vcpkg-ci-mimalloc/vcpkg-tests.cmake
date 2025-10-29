@@ -26,10 +26,13 @@ pkg_check_modules(PC_MIMALLOC mimalloc IMPORTED_TARGET REQUIRED)
 add_executable(pkgconfig-override $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,main-override.c,main-override-static.c>)
 target_link_libraries(pkgconfig-override PRIVATE PkgConfig::PC_MIMALLOC)
 
-if(BUILD_SHARED_LIBS OR NOT WIN32)
-    add_executable(pkgconfig-override-cxx main-override.cpp)
-    target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC)
-endif()
+add_executable(pkgconfig-override-cxx main-override.cpp)
+# Order matters at runtime, cf.
+# https://github.com/microsoft/mimalloc/blob/dev/readme.md#dynamic-override-on-windows
+# but CMake seems offers little control, just interface link libs.
+pkg_check_modules(PC_MIMALLOC_FOR_OVERRIDE mimalloc IMPORTED_TARGET REQUIRED)
+target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC_FOR_OVERRIDE)
+set_property(TARGET PkgConfig::PC_MIMALLOC_FOR_OVERRIDE APPEND PROPERTY INTERFACE_LINK_LIBRARIES mimalloc-test-override-dep)
 
 # Runtime
 
@@ -37,12 +40,13 @@ if(NOT CMAKE_CROSSCOMPILING)
     if(BUILD_SHARED_LIBS)
         add_custom_target(run-dynamic-override ALL COMMAND $<TARGET_NAME:dynamic-override>)
         add_custom_target(run-dynamic-override-cxx ALL COMMAND $<TARGET_NAME:dynamic-override-cxx>)
-    elseif(NOT WIN32)
-        add_custom_target(run-static-override ALL COMMAND $<TARGET_NAME:static-override>)
-        add_custom_target(run-static-override-cxx ALL COMMAND $<TARGET_NAME:static-override-cxx>)
-    endif()
-    if(TARGET pkgconfig-override-cxx)
         add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
+    else()
+        add_custom_target(run-static-override ALL COMMAND $<TARGET_NAME:static-override>)
+        if(NOT WIN32 OR EXPECTED_FAILURE_DUE_TO_STATIC_CRT)
+            add_custom_target(run-static-override-cxx ALL COMMAND $<TARGET_NAME:static-override-cxx>)
+            add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
+        endif()
     endif()
 endif()
 
