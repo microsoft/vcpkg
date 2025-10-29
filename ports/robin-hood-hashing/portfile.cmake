@@ -2,7 +2,7 @@ vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO martinus/robin-hood-hashing
 	REF 3.11.5
-	SHA512 0
+	SHA512 5f73e089b1e8ec41a9bedded22bc64a789d3a3d04873a2ad9f8cc2970797a473b0f4d3436c2324b3ced85a0d983998a75b1dfaf2b7f3b77235b29806ff2fd489
 	HEAD_REF master
     PATCHES
         fix-missing-stdint.patch
