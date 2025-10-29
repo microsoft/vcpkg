@@ -23,7 +23,7 @@ vcpkg_from_github(
         dependencies.patch
         imgui-impl.diff
         install-extra-targets.patch
-        instantiations.diff
+        instantiations.diff # Fix size_t and ptrdiff_t issues in 32 bit builds (arm32, x86)
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 
