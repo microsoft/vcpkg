@@ -10,7 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         build-type.diff
-        vcpkg-tests.diff
+        config-version.diff
 )
 # Ensure that the test uses the installed mimalloc only
 file(REMOVE_RECURSE

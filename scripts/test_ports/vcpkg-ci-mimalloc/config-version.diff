@@ -1,0 +1,13 @@
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index c7a504b..40157c7 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -16,7 +16,7 @@ if (NOT CMAKE_BUILD_TYPE)
+ endif()
+ 
+ # Import mimalloc (if installed)
+-find_package(mimalloc 1.9 CONFIG REQUIRED)
++find_package(mimalloc 3.1 CONFIG REQUIRED)
+ message(STATUS "Found mimalloc installed at: ${MIMALLOC_LIBRARY_DIR} (${MIMALLOC_VERSION_DIR})")
+ 
+ 

@@ -32,7 +32,10 @@ add_executable(pkgconfig-override-cxx main-override.cpp)
 # but CMake seems offers little control, just interface link libs.
 pkg_check_modules(PC_MIMALLOC_FOR_OVERRIDE mimalloc IMPORTED_TARGET REQUIRED)
 target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC_FOR_OVERRIDE)
-set_property(TARGET PkgConfig::PC_MIMALLOC_FOR_OVERRIDE APPEND PROPERTY INTERFACE_LINK_LIBRARIES mimalloc-test-override-dep)
+if(WIN32)
+    add_library(mimalloc-test-override-dep SHARED main-override-dep.cpp)
+    set_property(TARGET PkgConfig::PC_MIMALLOC_FOR_OVERRIDE APPEND PROPERTY INTERFACE_LINK_LIBRARIES mimalloc-test-override-dep)
+endif()
 
 # Runtime
 
