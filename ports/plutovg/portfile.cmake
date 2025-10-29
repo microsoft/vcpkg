@@ -4,6 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 d06a1229b433d341fa3ee21060abab57e7ade8188d1cd5ef14019d6b1abba7a96454acd36ae0f2f9e9681c398f51244f216391b2afb07d32ca0b86dcdd50a248
     HEAD_REF main
+    PATCHES
+        # this patch is already upstreamed. Please remove it in next version bump
+        find_threads.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
