@@ -177,7 +177,7 @@ endif()
 
 set(LLVM_ENABLE_RUNTIMES)
 if("compiler-rt" IN_LIST FEATURES)
-    list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
+    list(APPEND LLVM_ENABLE_RUNTIMES "compiler-rt")
 endif()
 if("libc" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_RUNTIMES "libc")
