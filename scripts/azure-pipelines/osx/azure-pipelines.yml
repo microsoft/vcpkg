@@ -71,7 +71,7 @@ jobs:
     displayName: "Publish Artifact: azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
     inputs:
       targetPath: '$(WORKING_ROOT)/azcopy-logs'
-      artifactName: "azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
+      artifactName: "z azcopy logs for ${{ replace(parameters.jobName, '_', '-') }}"
     condition: ne(variables['AZCOPY_LOGS_EMPTY'], 'True')
   - task: UseNode@1
     displayName: 'Ensure Node.js is available'
