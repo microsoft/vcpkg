@@ -5718,7 +5718,7 @@
     },
     "libxcrypt": {
       "baseline": "4.4.38",
-      "port-version": 1
+      "port-version": 2
     },
     "libxcvt": {
       "baseline": "0.1.2",
@@ -10117,7 +10117,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-09-29",
+      "baseline": "2025-10-26",
       "port-version": 0
     },
     "vcpkg-msbuild": {
