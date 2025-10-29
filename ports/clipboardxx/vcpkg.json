@@ -1,6 +1,7 @@
 {
   "name": "clipboardxx",
   "version": "0.5",
+  "port-version": 1,
   "description": "Header only, lightweight and cross platform C++ library for copy and paste text from clipboard.",
   "homepage": "https://github.com/Arian8j2/ClipboardXX",
   "license": "MIT",

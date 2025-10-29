@@ -1,0 +1,39 @@
+{
+  "name": "libnotify",
+  "version": "0.8.7",
+  "description": "A library for sending desktop notifications",
+  "homepage": "https://gitlab.gnome.org/GNOME/libnotify",
+  "license": "LGPL-2.1-or-later",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "gdk-pixbuf",
+      "default-features": false
+    },
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "introspection": {
+      "description": "Enable GObject introspection",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "gdk-pixbuf",
+          "default-features": false,
+          "features": [
+            "introspection"
+          ]
+        },
+        "gobject-introspection"
+      ]
+    }
+  }
+}

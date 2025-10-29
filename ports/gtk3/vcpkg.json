@@ -1,7 +1,7 @@
 {
   "name": "gtk3",
   "version": "3.24.43",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
   "license": null,
@@ -47,6 +47,8 @@
       "host": true
     },
     "libepoxy",
+    "libxi",
+    "libxrandr",
     "pango",
     {
       "name": "vcpkg-tool-meson",
