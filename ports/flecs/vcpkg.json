@@ -5,6 +5,7 @@
   "homepage": "https://github.com/SanderMertens/flecs",
   "documentation": "https://www.flecs.dev/flecs/",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
