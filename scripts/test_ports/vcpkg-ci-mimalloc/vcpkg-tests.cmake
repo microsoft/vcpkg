@@ -34,8 +34,9 @@ pkg_check_modules(PC_MIMALLOC_FOR_OVERRIDE mimalloc IMPORTED_TARGET REQUIRED)
 target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC_FOR_OVERRIDE)
 
 # overriding allocation in a DLL that is compiled independent of mimalloc.
+# Also for static linking to resolve all symbols.
 
-if(WIN32 AND BUILD_SHARED_LIBS)
+if(WIN32)
     add_library(mimalloc-test-override-dep SHARED main-override-dep.cpp)
     target_link_libraries(dynamic-override-cxx PRIVATE mimalloc-test-override-dep)
     set_property(TARGET PkgConfig::PC_MIMALLOC_FOR_OVERRIDE APPEND PROPERTY INTERFACE_LINK_LIBRARIES mimalloc-test-override-dep)
