@@ -1,6 +1,7 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -23,7 +24,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/vcpkg-tests.cmake"
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 
 set(ENV{MIMALLOC_VERBOSE} 1)

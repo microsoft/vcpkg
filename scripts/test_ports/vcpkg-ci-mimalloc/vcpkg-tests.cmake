@@ -32,8 +32,12 @@ add_executable(pkgconfig-override-cxx main-override.cpp)
 # but CMake seems offers little control, just interface link libs.
 pkg_check_modules(PC_MIMALLOC_FOR_OVERRIDE mimalloc IMPORTED_TARGET REQUIRED)
 target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC_FOR_OVERRIDE)
-if(WIN32)
+
+# overriding allocation in a DLL that is compiled independent of mimalloc.
+
+if(WIN32 AND BUILD_SHARED_LIBS)
     add_library(mimalloc-test-override-dep SHARED main-override-dep.cpp)
+    target_link_libraries(dynamic-override-cxx PRIVATE mimalloc-test-override-dep)
     set_property(TARGET PkgConfig::PC_MIMALLOC_FOR_OVERRIDE APPEND PROPERTY INTERFACE_LINK_LIBRARIES mimalloc-test-override-dep)
 endif()
 
@@ -44,12 +48,10 @@ if(NOT CMAKE_CROSSCOMPILING)
         add_custom_target(run-dynamic-override ALL COMMAND $<TARGET_NAME:dynamic-override>)
         add_custom_target(run-dynamic-override-cxx ALL COMMAND $<TARGET_NAME:dynamic-override-cxx>)
         add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
-    else()
+    elseif(NOT WIN32)
         add_custom_target(run-static-override ALL COMMAND $<TARGET_NAME:static-override>)
-        if(NOT WIN32 OR EXPECTED_FAILURE_DUE_TO_STATIC_CRT)
-            add_custom_target(run-static-override-cxx ALL COMMAND $<TARGET_NAME:static-override-cxx>)
-            add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
-        endif()
+        add_custom_target(run-static-override-cxx ALL COMMAND $<TARGET_NAME:static-override-cxx>)
+        add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
     endif()
 endif()
 
