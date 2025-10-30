@@ -4,6 +4,7 @@
   "description": "Lightweight cryptography library wrapper",
   "homepage": "https://github.com/abumq/ripe",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "cryptopp",
