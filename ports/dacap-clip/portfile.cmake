@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO dacap/clip
-  REF v1.10
-  SHA512 a29531ef276650807233b635ecceaf408147e4e263268eaf8237d74c9a7641d28cda5c6d1eaad4dbe634e720a5969dd6cc82aaeffbc36e0c9598ded31e419ea6
+  REF v${VERSION}
+  SHA512 8cbe79d6189449be2a96141f97514e393ab7baccdcf37727f6dd54a3d5dacfe293ede39690d62dd4b7d346876973227dd9e29e14c7e8ca928223e6459005284c
   PATCHES
     "fix-install-header-and-force-static-compilation.patch")
 

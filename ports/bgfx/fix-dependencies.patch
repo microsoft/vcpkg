@@ -1,6 +1,5 @@
-Submodule bgfx contains modified content
 diff --git a/bgfx/examples/common/bgfx_utils.cpp b/bgfx/examples/common/bgfx_utils.cpp
-index baaeba382..f6bc8547f 100644
+index baaeba3..f6bc854 100644
 --- a/bgfx/examples/common/bgfx_utils.cpp
 +++ b/bgfx/examples/common/bgfx_utils.cpp
 @@ -17,7 +17,7 @@ namespace stl = tinystl;
@@ -13,7 +12,7 @@ index baaeba382..f6bc8547f 100644
  #include "bgfx_utils.h"
  
 diff --git a/bgfx/examples/common/font/font_manager.cpp b/bgfx/examples/common/font/font_manager.cpp
-index 92e497a41..85d149561 100644
+index 92e497a..85d1495 100644
 --- a/bgfx/examples/common/font/font_manager.cpp
 +++ b/bgfx/examples/common/font/font_manager.cpp
 @@ -4,7 +4,7 @@
@@ -26,7 +25,7 @@ index 92e497a41..85d149561 100644
  #include <bgfx/bgfx.h>
  
 diff --git a/bgfx/examples/common/imgui/imgui.cpp b/bgfx/examples/common/imgui/imgui.cpp
-index 2fe825849..1006741f7 100644
+index 2fe8258..1006741 100644
 --- a/bgfx/examples/common/imgui/imgui.cpp
 +++ b/bgfx/examples/common/imgui/imgui.cpp
 @@ -8,10 +8,10 @@
@@ -54,7 +53,7 @@ index 2fe825849..1006741f7 100644
 +#	include <stb_truetype.h>
  #endif // USE_LOCAL_STB
 diff --git a/bgfx/examples/common/imgui/imgui.h b/bgfx/examples/common/imgui/imgui.h
-index 865879eb1..c6a3d8433 100644
+index 865879e..c6a3d84 100644
 --- a/bgfx/examples/common/imgui/imgui.h
 +++ b/bgfx/examples/common/imgui/imgui.h
 @@ -7,7 +7,7 @@
@@ -67,7 +66,7 @@ index 865879eb1..c6a3d8433 100644
  #include <iconfontheaders/icons_font_awesome.h>
  
 diff --git a/bgfx/examples/common/nanovg/fontstash.h b/bgfx/examples/common/nanovg/fontstash.h
-index 39a48fb90..ca0056d58 100644
+index 39a48fb..ca0056d 100644
 --- a/bgfx/examples/common/nanovg/fontstash.h
 +++ b/bgfx/examples/common/nanovg/fontstash.h
 @@ -266,7 +266,7 @@ static void fons__tmpfree(void* ptr, void* up);
@@ -80,7 +79,7 @@ index 39a48fb90..ca0056d58 100644
  struct FONSttFontImpl {
  	stbtt_fontinfo font;
 diff --git a/bgfx/tools/geometryc/geometryc.cpp b/bgfx/tools/geometryc/geometryc.cpp
-index d79a80e96..77402727a 100644
+index d79a80e..7740272 100644
 --- a/bgfx/tools/geometryc/geometryc.cpp
 +++ b/bgfx/tools/geometryc/geometryc.cpp
 @@ -14,11 +14,11 @@
@@ -98,7 +97,7 @@ index d79a80e96..77402727a 100644
  #define BGFX_GEOMETRYC_VERSION_MAJOR 1
  #define BGFX_GEOMETRYC_VERSION_MINOR 0
 diff --git a/bgfx/tools/shaderc/shaderc_metal.cpp b/bgfx/tools/shaderc/shaderc_metal.cpp
-index 9f073b908..e8fd20820 100644
+index 9f073b9..e8fd208 100644
 --- a/bgfx/tools/shaderc/shaderc_metal.cpp
 +++ b/bgfx/tools/shaderc/shaderc_metal.cpp
 @@ -20,11 +20,11 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
@@ -119,7 +118,7 @@ index 9f073b908..e8fd20820 100644
  BX_PRAGMA_DIAGNOSTIC_POP()
  
 diff --git a/bgfx/tools/shaderc/shaderc_spirv.cpp b/bgfx/tools/shaderc/shaderc_spirv.cpp
-index f7910deee..a844cc054 100644
+index f7910de..a844cc0 100644
 --- a/bgfx/tools/shaderc/shaderc_spirv.cpp
 +++ b/bgfx/tools/shaderc/shaderc_spirv.cpp
 @@ -20,11 +20,11 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
@@ -139,7 +138,6 @@ index f7910deee..a844cc054 100644
  #include <spirv-tools/optimizer.hpp>
  BX_PRAGMA_DIAGNOSTIC_POP()
  
-Submodule bimg contains modified content
 diff --git a/bimg/src/image_decode.cpp b/bimg/src/image_decode.cpp
 index 798eaba..a4cd3ef 100644
 --- a/bimg/src/image_decode.cpp
@@ -188,7 +186,7 @@ index 798eaba..a4cd3ef 100644
  		}
  	}
 diff --git a/bimg/src/image_encode.cpp b/bimg/src/image_encode.cpp
-index 7c0cd76..9138f88 100644
+index 7c0cd76..530578f 100644
 --- a/bimg/src/image_encode.cpp
 +++ b/bimg/src/image_encode.cpp
 @@ -6,7 +6,7 @@
@@ -227,15 +225,13 @@ index 7c0cd76..9138f88 100644
  					, STBIR_FILTER_BOX
 -					, STBIR_COLORSPACE_LINEAR
 -					, NULL
--					);
-+				);
+ 					);
  
 -				if (1 != result)
-+				if (result == 0)
++				if (0 == result)
  				{
  					return false;
  				}
-Submodule bx contains modified content
 diff --git a/bx/src/settings.cpp b/bx/src/settings.cpp
 index 907c74c..ffcc442 100644
 --- a/bx/src/settings.cpp
@@ -258,22 +254,50 @@ index 907c74c..ffcc442 100644
  	}
  }
  
+diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
+index 33a3943..8eddd3f 100644
+--- a/cmake/Config.cmake.in
++++ b/cmake/Config.cmake.in
+@@ -1,5 +1,22 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(lodepng CONFIG)
++find_dependency(miniz CONFIG)
++find_dependency(tinyexr CONFIG)
++find_dependency(unofficial-libsquish CONFIG)
++if("@BGFX_BUILD_TOOLS_GEOMETRY@")
++	find_dependency(meshoptimizer CONFIG)
++endif()
++if("@BGFX_BUILD_TOOLS_SHADER@")
++	find_dependency(spirv_cross_core CONFIG)
++	find_dependency(spirv_cross_reflect CONFIG)
++	find_dependency(spirv_cross_glsl CONFIG)
++	find_dependency(spirv_cross_hlsl CONFIG)
++	find_dependency(spirv_cross_msl CONFIG)
++	find_dependency(glslang CONFIG REQUIRED)
++endif()
++
+ if(@BGFX_CMAKE_USER_SCRIPT_PRESENT@)
+ 	include("${CMAKE_CURRENT_LIST_DIR}/@BGFX_CMAKE_USER_SCRIPT_INSTALL_NAME@")
+ endif()
 diff --git a/cmake/bgfx/CMakeLists.txt b/cmake/bgfx/CMakeLists.txt
-index 0125da3..025d2b6 100644
+index 0125da3..9b10d09 100644
 --- a/cmake/bgfx/CMakeLists.txt
 +++ b/cmake/bgfx/CMakeLists.txt
-@@ -9,20 +9,21 @@
+@@ -9,20 +9,22 @@
  # this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  
  include(bgfx.cmake)
 -include(3rdparty/meshoptimizer.cmake)
 -include(3rdparty/dear-imgui.cmake)
  
--if(BGFX_BUILD_TOOLS_TEXTURE)
+ if(BGFX_BUILD_TOOLS_TEXTURE)
 -	include(texturev.cmake)
--endif()
+ endif()
  if(BGFX_BUILD_TOOLS_GEOMETRY)
-+        find_package(meshoptimizer CONFIG REQUIRED)
++	find_package(meshoptimizer CONFIG REQUIRED)
++	set(MESHOPTIMIZER_LIBRARIES "meshoptimizer::meshoptimizer" CACHE INTERNAL "")
  	include(geometryc.cmake)
 -	include(geometryv.cmake)
  endif()
@@ -281,79 +305,21 @@ index 0125da3..025d2b6 100644
 -	include(3rdparty/spirv-opt.cmake)
 -	include(3rdparty/spirv-cross.cmake)
 -	include(3rdparty/glslang.cmake)
-+	find_package(Threads REQUIRED)
++	find_package(spirv_cross_core CONFIG REQUIRED)
++	find_package(spirv_cross_reflect CONFIG REQUIRED)
++	find_package(spirv_cross_glsl CONFIG REQUIRED)
++	find_package(spirv_cross_hlsl CONFIG REQUIRED)
++	find_package(spirv_cross_msl CONFIG REQUIRED)
 +	find_package(glslang CONFIG REQUIRED)
-+
-+	find_package(spirv_cross_core CONFIG QUIET)
-+	find_package(spirv_cross_reflect CONFIG QUIET)
-+	find_package(spirv_cross_glsl CONFIG QUIET)
-+	find_package(spirv_cross_hlsl CONFIG QUIET)
-+	find_package(spirv_cross_msl CONFIG QUIET)
 +
  	include(3rdparty/glsl-optimizer.cmake)
  	include(3rdparty/fcpp.cmake)
  	include(3rdparty/webgpu.cmake)
-@@ -30,4 +31,3 @@ if(BGFX_BUILD_TOOLS_SHADER)
- endif()
- 
- include(shared.cmake)
--include(examples.cmake)
-diff --git a/cmake/bgfx/examples.cmake b/cmake/bgfx/examples.cmake
-index c8759f0..0a35008 100755
---- a/cmake/bgfx/examples.cmake
-+++ b/cmake/bgfx/examples.cmake
-@@ -127,14 +127,13 @@ function(add_example ARG_NAME)
- 	# Add target
- 	if(ARG_COMMON)
- 		add_library(
--			example-${ARG_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES} ${DEAR_IMGUI_SOURCES} ${MESHOPTIMIZER_SOURCES}
-+			example-${ARG_NAME} STATIC EXCLUDE_FROM_ALL ${SOURCES}
- 		)
- 		target_include_directories(
--			example-${ARG_NAME} PUBLIC ${BGFX_DIR}/examples/common ${DEAR_IMGUI_INCLUDE_DIR}
--									   ${MESHOPTIMIZER_INCLUDE_DIR}
-+			example-${ARG_NAME} PUBLIC ${BGFX_DIR}/examples/common ${BGFX_DIR}/3rdparty
- 		)
- 		target_link_libraries(
--			example-${ARG_NAME} PUBLIC bgfx bx bimg bimg_decode ${DEAR_IMGUI_LIBRARIES} ${MESHOPTIMIZER_LIBRARIES}
-+			example-${ARG_NAME} PUBLIC bgfx bx bimg bimg_decode imgui::imgui meshoptimizer::meshoptimizer
- 		)
- 
- 		if(BGFX_WITH_WAYLAND)
-@@ -269,6 +268,9 @@ endif()
- 
- # Add common library for examples
- if(BGFX_BUILD_EXAMPLE_COMMON)
-+	find_package(meshoptimizer CONFIG REQUIRED)
-+	find_package(imgui CONFIG REQUIRED)
-+
- 	add_example(
- 		common
- 		COMMON
-diff --git a/cmake/bgfx/geometryc.cmake b/cmake/bgfx/geometryc.cmake
-index e6efcd5..ae0a961 100644
---- a/cmake/bgfx/geometryc.cmake
-+++ b/cmake/bgfx/geometryc.cmake
-@@ -14,13 +14,10 @@ file(
- 	GEOMETRYC_SOURCES #
- 	${BGFX_DIR}/tools/geometryc/*.cpp #
- 	${BGFX_DIR}/tools/geometryc/*.h #
--	#
--	${MESHOPTIMIZER_SOURCES}
- )
- add_executable(geometryc ${GEOMETRYC_SOURCES})
- 
--target_include_directories(geometryc PRIVATE ${MESHOPTIMIZER_INCLUDE_DIR})
--target_link_libraries(geometryc PRIVATE bx bgfx-vertexlayout ${MESHOPTIMIZER_LIBRARIES})
-+target_link_libraries(geometryc PRIVATE bx bgfx-vertexlayout meshoptimizer::meshoptimizer)
- target_compile_definitions(geometryc PRIVATE "-D_CRT_SECURE_NO_WARNINGS")
- set_target_properties(
- 	geometryc PROPERTIES FOLDER "bgfx/tools" #
 diff --git a/cmake/bgfx/shaderc.cmake b/cmake/bgfx/shaderc.cmake
-index 0f50eab..a8d765d 100644
+index 0f50eab..8b13b28 100644
 --- a/cmake/bgfx/shaderc.cmake
 +++ b/cmake/bgfx/shaderc.cmake
-@@ -24,22 +24,11 @@ target_link_libraries(
+@@ -24,21 +24,10 @@ target_link_libraries(
  	PRIVATE bx
  			bgfx-vertexlayout
  			fcpp
@@ -369,32 +335,28 @@ index 0f50eab..a8d765d 100644
 -			bgfx-vertexlayout
 -			fcpp
 -			glslang
--			glsl-optimizer
++			glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV glslang::SPVRemapper
+ 			glsl-optimizer
 -			spirv-opt
 -			spirv-cross
- 			webgpu
-+			glslang::glslang glslang::glslang-default-resource-limits glslang::SPIRV glslang::SPVRemapper
 +			spirv-cross-core spirv-cross-reflect spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl
-+			glsl-optimizer
+ 			webgpu
  )
  if(BGFX_AMALGAMATED)
- 	target_link_libraries(shaderc PRIVATE bgfx-shader)
 diff --git a/cmake/bimg/CMakeLists.txt b/cmake/bimg/CMakeLists.txt
-index 200b29b..529005f 100644
+index 200b29b..1c857c0 100644
 --- a/cmake/bimg/CMakeLists.txt
 +++ b/cmake/bimg/CMakeLists.txt
-@@ -8,17 +8,19 @@
+@@ -8,17 +8,24 @@
  # You should have received a copy of the CC0 Public Domain Dedication along with
  # this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  
 -include(3rdparty/loadpng.cmake)
 -include(3rdparty/libsquish.cmake)
-+find_package(unofficial-libsquish CONFIG REQUIRED)
-+find_package(tinyexr CONFIG REQUIRED)
-+find_package(miniz CONFIG REQUIRED)
 +find_package(lodepng CONFIG REQUIRED)
-+find_package(Stb REQUIRED)
-+
++set(LOADPNG_LIBRARIES "$<BUILD_INTERFACE:lodepng>;$<INSTALL_INTERFACE:$<LINK_ONLY:lodepng>>")
++find_package(unofficial-libsquish CONFIG REQUIRED)
++set(LIBSQUISH_LIBRARIES "$<BUILD_INTERFACE:unofficial::libsquish::squish>;$<INSTALL_INTERFACE:$<LINK_ONLY:unofficial::libsquish::squish>>")
  include(3rdparty/astc_encoder.cmake)
  include(3rdparty/edtaa3.cmake)
  include(3rdparty/etc1.cmake)
@@ -402,147 +364,51 @@ index 200b29b..529005f 100644
  include(3rdparty/nvtt.cmake)
  include(3rdparty/pvrtc.cmake)
 -include(3rdparty/tinyexr.cmake)
++find_package(tinyexr CONFIG REQUIRED)
++set(TINYEXR_LIBRARIES "$<BUILD_INTERFACE:unofficial::tinyexr::tinyexr>;$<INSTALL_INTERFACE:$<LINK_ONLY:unofficial::tinyexr::tinyexr>>")
  include(3rdparty/iqa.cmake)
 -include(3rdparty/miniz.cmake)
++find_package(miniz CONFIG REQUIRED)
++set(MINIZ_LIBRARIES "$<BUILD_INTERFACE:miniz::miniz>;$<INSTALL_INTERFACE:$<LINK_ONLY:miniz::miniz>>")
++
++find_package(Stb REQUIRED)
++
  include(bimg.cmake)
  include(bimg_decode.cmake)
  include(bimg_encode.cmake)
-diff --git a/cmake/bimg/bimg.cmake b/cmake/bimg/bimg.cmake
-index 6f52fe1..debb4c6 100644
---- a/cmake/bimg/bimg.cmake
-+++ b/cmake/bimg/bimg.cmake
-@@ -22,7 +22,6 @@ file(
- 	${BIMG_DIR}/src/image_gnf.cpp #
- 	#
- 	${ASTC_ENCODER_SOURCES}
--	${MINIZ_SOURCES}
- )
- 
- add_library(bimg STATIC ${BIMG_SOURCES})
-@@ -33,14 +32,16 @@ set_target_properties(bimg PROPERTIES FOLDER "bgfx")
- target_include_directories(
- 	bimg PUBLIC $<BUILD_INTERFACE:${BIMG_DIR}/include>$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
- 	PRIVATE ${ASTC_ENCODER_INCLUDE_DIR} #
--			${MINIZ_INCLUDE_DIR} #
- )
- 
- target_link_libraries(
- 	bimg
- 	PUBLIC bx #
- 		   ${ASTC_ENCODER_LIBRARIES} #
--		   ${MINIZ_LIBRARIES} #
-+)
-+
-+target_link_libraries(bimg PRIVATE
-+        miniz::miniz
- )
- 
- if(BGFX_INSTALL)
 diff --git a/cmake/bimg/bimg_decode.cmake b/cmake/bimg/bimg_decode.cmake
-index a511e8f..4adf5c9 100644
+index a511e8f..da98152 100644
 --- a/cmake/bimg/bimg_decode.cmake
 +++ b/cmake/bimg/bimg_decode.cmake
-@@ -19,9 +19,6 @@ file(
- 	BIMG_DECODE_SOURCES #
- 	${BIMG_DIR}/include/* #
- 	${BIMG_DIR}/src/image_decode.* #
--	#
--	${LOADPNG_SOURCES} #
--	${MINIZ_SOURCES} #
- )
- 
- add_library(bimg_decode STATIC ${BIMG_DECODE_SOURCES})
-@@ -31,17 +28,18 @@ set_target_properties(bimg_decode PROPERTIES FOLDER "bgfx")
- target_include_directories(
- 	bimg_decode
- 	PUBLIC $<BUILD_INTERFACE:${BIMG_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
--	PRIVATE ${LOADPNG_INCLUDE_DIR} #
--			${MINIZ_INCLUDE_DIR} #
--			${TINYEXR_INCLUDE_DIR} #
-+        PRIVATE ${Stb_INCLUDE_DIR}
+@@ -34,6 +34,7 @@ target_include_directories(
+ 	PRIVATE ${LOADPNG_INCLUDE_DIR} #
+ 			${MINIZ_INCLUDE_DIR} #
+ 			${TINYEXR_INCLUDE_DIR} #
++			${Stb_INCLUDE_DIR}
  )
  
  target_link_libraries(
- 	bimg_decode
- 	PUBLIC bx #
--		   ${LOADPNG_LIBRARIES} #
--		   ${MINIZ_LIBRARIES} #
--		   ${TINYEXR_LIBRARIES} #
-+)
-+
-+target_link_libraries(bimg_decode PRIVATE
-+        unofficial::tinyexr::tinyexr
-+        miniz::miniz
-+        lodepng
- )
- 
- if(BGFX_INSTALL AND NOT BGFX_LIBRARY_TYPE MATCHES "SHARED")
 diff --git a/cmake/bimg/bimg_encode.cmake b/cmake/bimg/bimg_encode.cmake
-index 82d9fe0..a583a9b 100644
+index 82d9fe0..a0ba5df 100644
 --- a/cmake/bimg/bimg_encode.cmake
 +++ b/cmake/bimg/bimg_encode.cmake
-@@ -22,16 +22,14 @@ set_target_properties(bimg_encode PROPERTIES FOLDER "bgfx")
- target_include_directories(
- 	bimg_encode
- 	PUBLIC $<BUILD_INTERFACE:${BIMG_DIR}/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
--	PRIVATE ${LIBSQUISH_INCLUDE_DIR} #
--			${ASTC_ENCODER_INCLUDE_DIR} #
-+	PRIVATE ${ASTC_ENCODER_INCLUDE_DIR} #
- 			${EDTAA3_INCLUDE_DIR} #
- 			${ETC1_INCLUDE_DIR} #
- 			${ETC2_INCLUDE_DIR} #
- 			${NVTT_INCLUDE_DIR} #
- 			${PVRTC_INCLUDE_DIR} #
--			${TINYEXR_INCLUDE_DIR} #
+@@ -32,6 +32,7 @@ target_include_directories(
+ 			${TINYEXR_INCLUDE_DIR} #
  			${IQA_INCLUDE_DIR} #
--			${MINIZ_INCLUDE_DIR} #
+ 			${MINIZ_INCLUDE_DIR} #
 +			${Stb_INCLUDE_DIR} #
  )
  
  file(
-@@ -40,13 +38,11 @@ file(
- 	${BIMG_DIR}/include/* #
- 	${BIMG_DIR}/src/image_encode.* #
- 	${BIMG_DIR}/src/image_cubemap_filter.* #
--	${LIBSQUISH_SOURCES} #
- 	${EDTAA3_SOURCES} #
- 	${ETC1_SOURCES} #
- 	${ETC2_SOURCES} #
- 	${NVTT_SOURCES} #
- 	${PVRTC_SOURCES} #
--	${TINYEXR_SOURCES}
- 	${IQA_SOURCES} #
- )
- 
-@@ -55,17 +51,21 @@ target_sources(bimg_encode PRIVATE ${BIMG_ENCODE_SOURCES})
- target_link_libraries(
- 	bimg_encode
- 	PUBLIC bx #
--		   ${LIBSQUISH_LIBRARIES} #
- 		   ${ASTC_ENCODER_LIBRARIES} #
- 		   ${EDTAA3_LIBRARIES} #
- 		   ${ETC1_LIBRARIES} #
- 		   ${ETC2_LIBRARIES} #
- 		   ${NVTT_LIBRARIES} #
- 		   ${PVRTC_LIBRARIES} #
--		   ${TINYEXR_LIBRARIES} #
- 		   ${IQA_LIBRARIES} #
- )
- 
-+target_link_libraries(bimg_encode PRIVATE
-+       unofficial::libsquish::squish
-+       unofficial::tinyexr::tinyexr
-+       miniz::miniz
-+)
-+
- include(CheckCXXCompilerFlag)
- foreach(flag "-Wno-implicit-fallthrough" "-Wno-shadow" "-Wno-shift-negative-value" "-Wno-undef")
- 	check_cxx_compiler_flag(${flag} flag_supported)
 diff --git a/cmake/bx/bx.cmake b/cmake/bx/bx.cmake
-index d1a73c6..4689bc8 100644
+index d1a73c6..826c52b 100644
 --- a/cmake/bx/bx.cmake
 +++ b/cmake/bx/bx.cmake
-@@ -78,7 +78,6 @@ endif()
+@@ -75,13 +75,14 @@ elseif(UNIX)
+ endif()
+ 
+ # Add include directory of bx
++find_path(MGNLIBS_INCLUDE_DIR "mgnlibs/ini.h")
  target_include_directories(
  	bx
  	PUBLIC $<BUILD_INTERFACE:${BX_DIR}/include> #
@@ -550,13 +416,7 @@ index d1a73c6..4689bc8 100644
  		   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> #
  		   $<BUILD_INTERFACE:${BX_DIR}/include/compat/${BX_COMPAT_PLATFORM}> #
  		   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/bx/compat/${BX_COMPAT_PLATFORM}> #
-@@ -118,6 +117,9 @@ elseif(UNIX)
- 	target_link_libraries(bx rt)
- endif()
++	PRIVATE "${MGNLIBS_INCLUDE_DIR}"
+ )
  
-+find_path(MGNLIBS_INCLUDE_DIRS "mgnlibs/ini.h")
-+target_include_directories(bx PRIVATE ${MGNLIBS_INCLUDE_DIRS})
-+
- # Put in a "bgfx" folder in Visual Studio
- set_target_properties(bx PROPERTIES FOLDER "bgfx")
- 
+ # All configurations

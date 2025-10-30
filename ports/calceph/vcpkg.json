@@ -1,6 +1,7 @@
 {
   "name": "calceph",
   "version": "4.0.5",
+  "port-version": 1,
   "description": "C library to access the binary planetary ephemeris files.",
   "homepage": "https://www.imcce.fr/inpop/calceph/",
   "documentation": "https://calceph.imcce.fr/docs/latest/html/c/index.html",

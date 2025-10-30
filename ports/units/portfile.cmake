@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nholthaus/units
     REF v${VERSION}
-    SHA512 2280782fe020fb60fe16f304105de73b30fa51c36e075bfa9b4d0c9d585936084802dd8cca6b1967ad10c7ad949afce27937050184151c2a67f2113f14c38c1b
+    SHA512 75014265c1c327a95638ca4ae10021f6e5218db1c932bac222c50b8dfe14a3135eb360083491a3437fafd10b621d8b0ff82213602d905bc5244bbe24dd915a14
 )
 
 set(VCPKG_BUILD_TYPE "release")
@@ -10,7 +10,7 @@ set(VCPKG_BUILD_TYPE "release")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTS=OFF
+        -DUNITS_BUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()

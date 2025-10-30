@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO danielaparker/jsoncons
     REF v${VERSION}
-    SHA512 0d4344256fd0f8b9534f652f66330bea50cd838820d2ca5c114f7b161c218ce87379c56c1513bc11a60d362b0b8efc19ef7e81bb23cff04fc10c7cf5a5d58a52
+    SHA512 01b6df6354b3f6f29dcc341b74d94f6a45846546e67adf34cff3bd1befcf436390fa246faf5da4153f6ce3a5c5b3ec8c160e5bc9a0e1a7dc2b092a3e3f0fd69d
     HEAD_REF master
 )
 
