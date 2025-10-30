@@ -24,6 +24,10 @@
       "baseline": "0.3.1",
       "port-version": 3
     },
+    "abumq-ripe": {
+      "baseline": "4.2.2",
+      "port-version": 0
+    },
     "ace": {
       "baseline": "8.0.5",
       "port-version": 0
