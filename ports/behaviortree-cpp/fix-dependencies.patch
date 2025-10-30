@@ -1,17 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3fd81ed..d779b3a 100644
+index 3fd81ed..357ec01 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -297,6 +297,9 @@ endif()
- ######################################################
- # INSTALL
- 
-+set_target_properties(${BTCPP_LIBRARY} PROPERTIES 
-+  INTERFACE_LINK_LIBRARIES "${BTCPP_EXTRA_LIBRARIES}")
-+
- INSTALL(TARGETS ${BTCPP_LIBRARY}
-     EXPORT ${BTCPP_LIBRARY}Targets
-     ARCHIVE DESTINATION ${BTCPP_LIB_DESTINATION}
+@@ -233,7 +233,7 @@ target_link_libraries(${BTCPP_LIBRARY}
+         foonathan::lexy
+         minitrace::minitrace
+         tinyxml2::tinyxml2
+-        minicoro::minicoro
++        $<BUILD_INTERFACE:minicoro::minicoro>
+         flatbuffers::flatbuffers
+         $<$<BOOL:${BTCPP_GROOT_INTERFACE}>:cppzmq>
+         $<$<BOOL:${BTCPP_SQLITE_LOGGING}>:SQLite::SQLite3>
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
 index eaed471..dd8a4a8 100644
 --- a/cmake/Config.cmake.in
