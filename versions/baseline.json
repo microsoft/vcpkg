@@ -5468,6 +5468,10 @@
       "baseline": "0.8.0",
       "port-version": 2
     },
+    "libsocketcan": {
+      "baseline": "0.0.12",
+      "port-version": 0
+    },
     "libsodium": {
       "baseline": "1.0.20",
       "port-version": 3
