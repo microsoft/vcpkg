@@ -10,8 +10,7 @@ vcpkg_from_github(
 # We could modify this to support using the vcpkg version of basisu
 # but since this is only necessary for the gltfpack tool and not for the 
 # meshopt lib it shouldn't be too nasty to just grab this repo
-if ("gltfpack" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
-  message(STATUS "Using zeux fork for gltfpack basisu support")
+if ("gltfpack" IN_LIST FEATURES)
   vcpkg_from_github(
       OUT_SOURCE_PATH BASISU_PATH
       REPO zeux/basis_universal
