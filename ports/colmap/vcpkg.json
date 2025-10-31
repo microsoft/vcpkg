@@ -61,7 +61,8 @@
     "cuda-redist": {
       "description": "Redistributable CUDA support for common supported compute architectures.",
       "dependencies": [
-        "cuda"
+        "cuda",
+        "glew"
       ]
     },
     "gui": {
