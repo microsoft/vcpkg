@@ -1,0 +1,116 @@
+diff --git a/build/cmake/openzl-config.cmake.in b/build/cmake/openzl-config.cmake.in
+index 60a354f..c5f3d96 100644
+--- a/build/cmake/openzl-config.cmake.in
++++ b/build/cmake/openzl-config.cmake.in
+@@ -21,6 +21,8 @@ set_and_check(OPENZL_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@")
+ # openzl's prefix directory in the OPENZL_PREFIX_DIR variable
+ set(OPENZL_PREFIX_DIR "${PACKAGE_PREFIX_DIR}")
+ 
++find_dependency(zstd CONFIG)
++
+ # Include the openzl-targets.cmake file, which is generated from our CMake rules
+ if (NOT TARGET OpenZL::openzl)
+   include("${OPENZL_CMAKE_DIR}/openzl-targets.cmake")
+diff --git a/build/cmake/openzl-deps.cmake b/build/cmake/openzl-deps.cmake
+index 59b691a..c16d969 100644
+--- a/build/cmake/openzl-deps.cmake
++++ b/build/cmake/openzl-deps.cmake
+@@ -18,82 +18,24 @@ endif()
+ 
+ set(ZSTD_LEGACY_SUPPORT OFF)
+ 
+-# Two-tier zstd dependency resolution with automated hash verification
+-# 1. Git submodule (matches Makefile behavior)
+-# 2. FetchContent + URL (no git required, cryptographically verified)
+-
+-set(ZSTD_VERSION "1.5.7")
+-set(ZSTD_DIRNAME "zstd-${ZSTD_VERSION}")
+-set(ZSTD_TARBALL_SHA256 "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3")
+-set(ZSTD_EXPECTED_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/deps/zstd/lib/zstd.h")
+-set(ZSTD_EXPECTED_CMAKE "${CMAKE_CURRENT_SOURCE_DIR}/deps/zstd/build/cmake/CMakeLists.txt")
+-
+-# Helper function to check if zstd is available and working
+-function(check_zstd_available RESULT_VAR)
+-    if(EXISTS "${ZSTD_EXPECTED_HEADER}" AND EXISTS "${ZSTD_EXPECTED_CMAKE}")
+-        set(${RESULT_VAR} TRUE PARENT_SCOPE)
+-    else()
+-        set(${RESULT_VAR} FALSE PARENT_SCOPE)
+-    endif()
+-endfunction()
+-
+-message(STATUS "Attempting zstd dependency resolution...")
+-
+-# Check if zstd is already available
+-check_zstd_available(ZSTD_AVAILABLE)
+-if(ZSTD_AVAILABLE)
+-    message(STATUS "zstd dependency already present")
+-else()
+-    # Tier 1: Git Submodule (existing approach, matches Makefile)
+-    message(STATUS "Tier 1: Trying git submodule...")
+-    execute_process(
+-        COMMAND git submodule update --init --single-branch --depth 1 deps/zstd
+-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+-        RESULT_VARIABLE GIT_SUBMOD_RESULT
+-        OUTPUT_QUIET ERROR_QUIET
+-    )
+-
+-    check_zstd_available(ZSTD_AVAILABLE)
+-endif()
+-
+-# Tier 2: FetchContent + URL with Hash Verification
+-if(NOT ZSTD_AVAILABLE)
+-    message(STATUS "Tier 1 failed. Tier 2: Trying FetchContent with verified tarball...")
+-
+-    include(FetchContent)
+-
+-    # Clean up any partial downloads first
+-    file(REMOVE_RECURSE "${CMAKE_CURRENT_SOURCE_DIR}/deps/zstd")
+-    file(REMOVE_RECURSE "${CMAKE_CURRENT_SOURCE_DIR}/deps/${ZSTD_DIRNAME}")
+-
+-    message(STATUS "Using hash verification for tarball download")
+-    FetchContent_Declare(zstd_tarball
+-        URL https://github.com/facebook/zstd/releases/download/v${ZSTD_VERSION}/${ZSTD_DIRNAME}.tar.gz
+-        URL_HASH SHA256=${ZSTD_TARBALL_SHA256}
+-        DOWNLOAD_EXTRACT_TIMESTAMP ON
+-        SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/deps/zstd"
+-    )
+-
+-    FetchContent_MakeAvailable(zstd_tarball)
+-    check_zstd_available(ZSTD_AVAILABLE)
++find_package(zstd CONFIG QUIET)
++if(NOT zstd_FOUND)
++    message(FATAL_ERROR "OpenZL requires the zstd dependency. Provide it via the zstd CMake package.")
++endif()
++
++if(TARGET zstd::libzstd_shared)
++    set(ZSTD_TARGET zstd::libzstd_shared)
++elseif(TARGET zstd::libzstd_static)
++    set(ZSTD_TARGET zstd::libzstd_static)
++elseif(TARGET libzstd_shared)
++    set(ZSTD_TARGET libzstd_shared)
++elseif(TARGET libzstd_static)
++    set(ZSTD_TARGET libzstd_static)
++else()
++    message(FATAL_ERROR "Failed to locate a zstd library target after finding the package.")
+ endif()
+ 
+-# Final check
+-if(NOT ZSTD_AVAILABLE)
+-    message(FATAL_ERROR "Failed to obtain zstd dependency through all available methods (git submodule, FetchContent+tarball)")
+-endif()
+-
+-message(STATUS "zstd dependency resolved successfully")
+-
+-# Set zstd build options before making it available
+-set(ZSTD_BUILD_PROGRAMS OFF CACHE BOOL "")
+-set(ZSTD_BUILD_CONTRIB OFF CACHE BOOL "")
+-set(ZSTD_BUILD_TESTS OFF CACHE BOOL "")
+-
+-# Add zstd subdirectory directly instead of using FetchContent
+-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/deps/zstd/build/cmake" zstd_build)
+-# Note: find_package not needed when using add_subdirectory - targets are directly available
+-list(APPEND OPENZL_LINK_LIBRARIES libzstd)
++list(APPEND OPENZL_LINK_LIBRARIES ${ZSTD_TARGET})
+ 
+ find_library(MATH_LIBRARY m)
+ if(MATH_LIBRARY)
