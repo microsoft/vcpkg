@@ -1,6 +1,7 @@
 {
   "name": "opencv3",
   "version": "3.4.20",
+  "port-version": 1,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "BSD-3-Clause",
@@ -133,10 +134,7 @@
         "halide",
         {
           "name": "opencv3",
-          "default-features": false
-        },
-        {
-          "name": "opencv3",
+          "default-features": false,
           "features": [
             "dnn"
           ]
@@ -178,6 +176,7 @@
     },
     "opengl": {
       "description": "opengl support for opencv",
+      "supports": "!uwp & !android",
       "dependencies": [
         "opengl"
       ]
@@ -267,14 +266,9 @@
           "name": "opencv3",
           "default-features": false,
           "features": [
-            "contrib"
-          ]
-        },
-        {
-          "name": "opencv3",
-          "default-features": false,
-          "features": [
-            "eigen"
+            "contrib",
+            "eigen",
+            "flann"
           ]
         }
       ]
@@ -297,6 +291,7 @@
     },
     "vtk": {
       "description": "vtk support for opencv",
+      "supports": "!android & !uwp & !(windows & (arm | arm64))",
       "dependencies": [
         {
           "name": "opencv3",
