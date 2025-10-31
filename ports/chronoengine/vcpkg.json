@@ -1,7 +1,7 @@
 {
   "name": "chronoengine",
   "version": "8.0.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Multi-physics Simulation Engine.",
   "homepage": "https://projectchrono.org/",
   "license": "BSD-3-Clause",
