@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/vcpkg-tests.cmake"
+        "-DFEATURES=${FEATURES}"
 )
 
 set(ENV{MIMALLOC_VERBOSE} 1)

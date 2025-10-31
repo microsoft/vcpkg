@@ -31,17 +31,17 @@ if(BUILD_SHARED_LIBS OR NOT WIN32)
     target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC)
 endif()
 
-# overriding allocation in a DLL that is compiled independent of mimalloc.
-
-# Order matters at runtime, cf.
+# overriding allocation in a DLL that is compiled independent of mimalloc
 # https://github.com/microsoft/mimalloc/blob/dev/readme.md#dynamic-override-on-windows
-# but CMake seems offers little control, just dependencies.
 
-if(BUILD_SHARED_LIBS AND WIN32)
+
+if(BUILD_SHARED_LIBS AND WIN32 AND "ci" IN_LIST FEATURES)
+    # independent DLL, ide/vs2022/mimalloc-override-test-dep.vcxproj
     add_library(mimalloc-test-override-dep SHARED main-override-dep.cpp)
-    pkg_check_modules(PC_MIMALLOC_FOR_OVERRIDE mimalloc IMPORTED_TARGET REQUIRED)
-    set_property(TARGET PkgConfig::PC_MIMALLOC_FOR_OVERRIDE APPEND PROPERTY INTERFACE_LINK_LIBRARIES mimalloc-test-override-dep)
-    target_link_libraries(dynamic-override-cxx PRIVATE mimalloc-test-override-dep)
+
+    # dependent EXE, ide/vs2022/mimalloc-override-test.vcxproj
+    add_executable(mimalloc-test-override main-override.cpp)
+    target_link_libraries(mimalloc-test-override PRIVATE PkgConfig::PC_MIMALLOC mimalloc-test-override-dep)
 endif()
 
 # Runtime
