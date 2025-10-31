@@ -34,7 +34,7 @@ endif()
 # overriding allocation in a DLL that is compiled independent of mimalloc
 # https://github.com/microsoft/mimalloc/blob/dev/readme.md#dynamic-override-on-windows
 
-if(BUILD_SHARED_LIBS AND WIN32 AND "ci" IN_LIST FEATURES)
+if(BUILD_SHARED_LIBS AND WIN32 AND "override" IN_LIST FEATURES)
     add_library(mimalloc-test-override-dep SHARED main-override-dep.cpp)
     target_link_libraries(dynamic-override-cxx PRIVATE mimalloc-test-override-dep)
     target_link_libraries(pkgconfig-override-cxx PRIVATE mimalloc-test-override-dep)
