@@ -8758,7 +8758,7 @@
     },
     "sdflib": {
       "baseline": "2025-01-25",
-      "port-version": 0
+      "port-version": 1
     },
     "sdformat": {
       "baseline": "15.1.1",
