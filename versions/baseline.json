@@ -2704,9 +2704,9 @@
       "baseline": "0.3.0-beta.4",
       "port-version": 0
     },
-    "embree3": {
-      "baseline": "3.13.5",
-      "port-version": 6
+    "embree": {
+      "baseline": "4.4.0",
+      "port-version": 0
     },
     "enchantum": {
       "baseline": "0.3.0",
@@ -4990,7 +4990,7 @@
     },
     "libigl": {
       "baseline": "2.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libilbc": {
       "baseline": "3.0.4",
