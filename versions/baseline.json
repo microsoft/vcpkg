@@ -8650,7 +8650,7 @@
     },
     "robotraconteur-companion": {
       "baseline": "0.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "rocksdb": {
       "baseline": "10.4.2",
