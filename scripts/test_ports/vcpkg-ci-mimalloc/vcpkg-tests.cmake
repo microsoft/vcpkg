@@ -26,34 +26,35 @@ pkg_check_modules(PC_MIMALLOC mimalloc IMPORTED_TARGET REQUIRED)
 add_executable(pkgconfig-override $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,main-override.c,main-override-static.c>)
 target_link_libraries(pkgconfig-override PRIVATE PkgConfig::PC_MIMALLOC)
 
-add_executable(pkgconfig-override-cxx main-override.cpp)
-# Order matters at runtime, cf.
-# https://github.com/microsoft/mimalloc/blob/dev/readme.md#dynamic-override-on-windows
-# but CMake seems offers little control, just interface link libs.
-pkg_check_modules(PC_MIMALLOC_FOR_OVERRIDE mimalloc IMPORTED_TARGET REQUIRED)
-target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC_FOR_OVERRIDE)
+if(BUILD_SHARED_LIBS OR NOT WIN32)
+    add_executable(pkgconfig-override-cxx main-override.cpp)
+    target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC)
+endif()
 
 # overriding allocation in a DLL that is compiled independent of mimalloc.
-# Also for static linking to resolve all symbols.
 
-if(WIN32)
+# Order matters at runtime, cf.
+# https://github.com/microsoft/mimalloc/blob/dev/readme.md#dynamic-override-on-windows
+# but CMake seems offers little control, just dependencies.
+
+if(BUILD_SHARED_LIBS AND WIN32)
     add_library(mimalloc-test-override-dep SHARED main-override-dep.cpp)
-    target_link_libraries(dynamic-override-cxx PRIVATE mimalloc-test-override-dep)
+    pkg_check_modules(PC_MIMALLOC_FOR_OVERRIDE mimalloc IMPORTED_TARGET REQUIRED)
     set_property(TARGET PkgConfig::PC_MIMALLOC_FOR_OVERRIDE APPEND PROPERTY INTERFACE_LINK_LIBRARIES mimalloc-test-override-dep)
+    target_link_libraries(dynamic-override-cxx PRIVATE mimalloc-test-override-dep)
 endif()
 
 # Runtime
 
 if(NOT CMAKE_CROSSCOMPILING)
-    if(BUILD_SHARED_LIBS)
-        add_custom_target(run-dynamic-override ALL COMMAND $<TARGET_NAME:dynamic-override>)
-        add_custom_target(run-dynamic-override-cxx ALL COMMAND $<TARGET_NAME:dynamic-override-cxx>)
-        add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
-    elseif(NOT WIN32)
-        add_custom_target(run-static-override ALL COMMAND $<TARGET_NAME:static-override>)
-        add_custom_target(run-static-override-cxx ALL COMMAND $<TARGET_NAME:static-override-cxx>)
-        add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
-    endif()
+    get_directory_property(targets BUILDSYSTEM_TARGETS)
+    list(REMOVE_ITEM targets test-wrong)
+    foreach(target IN LISTS targets)
+        get_target_property(type ${target} TYPE)
+        if(type STREQUAL "EXECUTABLE")
+            add_custom_target(run-${target} ALL COMMAND ${target})
+        endif()       
+    endforeach()
 endif()
 
 # Deployment
