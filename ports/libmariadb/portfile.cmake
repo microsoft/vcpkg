@@ -2,8 +2,8 @@ if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-if("openssl" IN_LIST FEATURES AND "schannel" IN_LIST FEATURES)
-    message(FATAL_ERROR "Only one SSL backend must be selected.")
+if(VCPKG_TARGET_IS_WINDOWS AND "openssl" IN_LIST FEATURES)
+    message(WARNING "Using OpenSSL instead of schannel.")
 endif()
 
 vcpkg_download_distfile(fp_is_not_const_patch
@@ -47,10 +47,8 @@ endif()
 
 if("openssl" IN_LIST FEATURES)
     set(WITH_SSL OPENSSL)
-elseif("schannel" IN_LIST FEATURES)
-    set(WITH_SSL ON)
 else()
-    set(WITH_SSL OFF)
+    set(WITH_SSL SCHANNEL)
 endif()
 
 vcpkg_cmake_configure(
