@@ -6,10 +6,10 @@ index 806c51c..e37e3f4 100644
  
  size_t _mi_os_guard_page_size(void) {
    const size_t gsize = _mi_os_page_size();
-+  mi_assert(gsize == 4096); /* cf. line 24 */
-+  mi_assert(256 <= (MI_ARENA_SLICE_SIZE/8));
-+  mi_assert(1024 <= (MI_ARENA_SLICE_SIZE/8));
-+  mi_assert(2048 <= (MI_ARENA_SLICE_SIZE/8));
++  mi_assert((gsize == 4096) || (gsize == 16384)); /* default || apple Silicon runtime */
++  mi_assert(4096 <= (MI_ARENA_SLICE_SIZE/8));
++  mi_assert(8192 <= (MI_ARENA_SLICE_SIZE/8));
++  mi_assert(16384 <= (MI_ARENA_SLICE_SIZE/8));
    mi_assert(gsize <= (MI_ARENA_SLICE_SIZE/8));
    return gsize;
  }
