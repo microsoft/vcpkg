@@ -1,12 +1,10 @@
 string(REGEX MATCH "^[0-9]*" ICU_VERSION_MAJOR "${VERSION}")
-string(REPLACE "." "_" VERSION2 "${VERSION}")
-string(REPLACE "." "-" VERSION3 "${VERSION}")
 
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
-    FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 e6c7876c0f3d756f3a6969cad9a8909e535eeaac352f3a721338b9cbd56864bf7414469d29ec843462997815d2ca9d0dab06d38c37cdd4d8feb28ad04d8781b0
+    URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION}/icu4c-${VERSION}-sources.tgz"
+    FILENAME "icu4c-${VERSION}-sources.tgz"
+    SHA512 c366398fdb50afc6355a8c45ed1d68a18eaa5f07a5d1c4555becbcfb9d4073e65ebe1e9caf24b93779b11b36cd813c98dd59e4b19f008851f25c7262811c112d
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -21,7 +19,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
         fix-win-build.patch
         vcpkg-cross-data.patch
         darwin-rpath.patch
-        mingw-strict-ansi.diff # backport of https://github.com/unicode-org/icu/pull/3003
         cleanup_msvc.patch
 )
 
@@ -67,7 +64,7 @@ endif()
 
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}/source"
-    AUTORECONF
+    # AUTORECONF # needs Autoconf version 2.72
     OPTIONS
         ${CONFIGURE_OPTIONS}
         --disable-samples
