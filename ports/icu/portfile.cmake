@@ -10,16 +10,13 @@ vcpkg_download_distfile(
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
-        disable-escapestr-tool.patch
-        remove-MD-from-configure.patch
-        fix_parallel_build_on_windows.patch
-        fix-extra.patch
-        mingw-dll-install.patch
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
-        fix-win-build.patch
-        vcpkg-cross-data.patch
-        darwin-rpath.patch
-        cleanup_msvc.patch
+        fix_parallel_build_on_windows.patch
+        mh-darwin.patch
+        mh-mingw.patch
+        mh-msys-msvc.patch
+        subdirs.patch
+        #vcpkg-cross-data.patch # needs autoreconf
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -43,8 +40,8 @@ elseif(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND CONFIGURE_OPTIONS --enable-icu-build-win)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND CONFIGURE_OPTIONS ac_cv_lib_m_floor=no)
 endif()
 
 if("tools" IN_LIST FEATURES)
