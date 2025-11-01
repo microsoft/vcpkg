@@ -14,5 +14,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "supports": "!uwp"
 }
