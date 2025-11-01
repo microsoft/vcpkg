@@ -6,11 +6,17 @@ if("openssl" IN_LIST FEATURES AND "schannel" IN_LIST FEATURES)
     message(FATAL_ERROR "Only one SSL backend must be selected.")
 endif()
 
+vcpkg_download_distfile(fp_is_not_const_patch
+    URLS https://github.com/mariadb-corporation/mariadb-connector-c/commit/0ca807a210befe9c159d6b9a2c1d5de8f26869ad.diff?full_index=1
+    FILENAME mariadb-corporation-mariadb-connector-c-fp_is_not_const-0ca807a.diff
+    SHA512 1695ae5408fd54b148315aaa47806371e7db5f0001fc98bc480914aeaa41d48c0841ff64e99266b6c0ea1262ac65983507faf46306d98292c87926f74900fee2
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-c
     REF v${VERSION}
-    SHA512 be848c5f1ab3bdc7fe9826418cd5b6fc688dbcf452976039f7ca924acd4f529cd057b840b2135aadcbc8731baf46da15abbe440e57b016731d9ec159a06a45f1
+    SHA512 0e06452539fcea4e21c3922b58b7079aa5d467e2ac704fe586fcd83563f69c4e0536d40e0020170f7670320cc71cd9de2a110f3f4c6ed52233aa329c3e495fd5
     HEAD_REF 3.4
     PATCHES
         compiler-flags.diff
@@ -19,7 +25,7 @@ vcpkg_from_github(
         library-linkage.diff
         cmake-export.diff
         no-abs-path.diff
-        android-patch.diff
+        ${fp_is_not_const_patch}
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/cmake/FindIconv.cmake"
@@ -51,7 +57,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMAKE_POLICY_DEFAULT_CMP0153=OLD
+        -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
         -DINSTALL_INCLUDEDIR=include/mysql # legacy port decision
         -DINSTALL_LIBDIR=lib
         -DINSTALL_PLUGINDIR=plugins/${PORT}
