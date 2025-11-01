@@ -15,7 +15,7 @@ diff --git a/build/cmake/openzl-deps.cmake b/build/cmake/openzl-deps.cmake
 index 59b691a..c16d969 100644
 --- a/build/cmake/openzl-deps.cmake
 +++ b/build/cmake/openzl-deps.cmake
-@@ -18,82 +18,24 @@ endif()
+@@ -18,82 +18,8 @@ endif()
  
  set(ZSTD_LEGACY_SUPPORT OFF)
  
@@ -77,23 +77,8 @@ index 59b691a..c16d969 100644
 -
 -    FetchContent_MakeAvailable(zstd_tarball)
 -    check_zstd_available(ZSTD_AVAILABLE)
-+find_package(zstd CONFIG QUIET)
-+if(NOT zstd_FOUND)
-+    message(FATAL_ERROR "OpenZL requires the zstd dependency. Provide it via the zstd CMake package.")
-+endif()
-+
-+if(TARGET zstd::libzstd_shared)
-+    set(ZSTD_TARGET zstd::libzstd_shared)
-+elseif(TARGET zstd::libzstd_static)
-+    set(ZSTD_TARGET zstd::libzstd_static)
-+elseif(TARGET libzstd_shared)
-+    set(ZSTD_TARGET libzstd_shared)
-+elseif(TARGET libzstd_static)
-+    set(ZSTD_TARGET libzstd_static)
-+else()
-+    message(FATAL_ERROR "Failed to locate a zstd library target after finding the package.")
- endif()
- 
+-endif()
+-
 -# Final check
 -if(NOT ZSTD_AVAILABLE)
 -    message(FATAL_ERROR "Failed to obtain zstd dependency through all available methods (git submodule, FetchContent+tarball)")
@@ -109,8 +94,9 @@ index 59b691a..c16d969 100644
 -# Add zstd subdirectory directly instead of using FetchContent
 -add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/deps/zstd/build/cmake" zstd_build)
 -# Note: find_package not needed when using add_subdirectory - targets are directly available
++find_package(zstd CONFIG REQUIRED)
 -list(APPEND OPENZL_LINK_LIBRARIES libzstd)
-+list(APPEND OPENZL_LINK_LIBRARIES ${ZSTD_TARGET})
++list(APPEND OPENZL_LINK_LIBRARIES zstd::libzstd)
  
  find_library(MATH_LIBRARY m)
  if(MATH_LIBRARY)
