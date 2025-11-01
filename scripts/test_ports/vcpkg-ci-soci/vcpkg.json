@@ -2,7 +2,7 @@
   "name": "vcpkg-ci-soci",
   "version-string": "ci",
   "description": "Validates soci",
-  "supports": "x64 & (linux | osx | windows) & !uwp & !linux",
+  "supports": "x64 & (linux | osx | windows) & !uwp",
   "dependencies": [
     {
       "name": "soci",
