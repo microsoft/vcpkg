@@ -12,7 +12,7 @@
   "default-features": [
     {
       "name": "override",
-      "platform": "native & !(windows & static)"
+      "platform": "native | (windows & !static)"
     },
     {
       "name": "secure",
