@@ -5,6 +5,7 @@
   "homepage": "https://github.com/amrayn/licensepp",
   "supports": "!uwp",
   "dependencies": [
+    "abumq-ripe",
     {
       "name": "cryptopp",
       "features": [
