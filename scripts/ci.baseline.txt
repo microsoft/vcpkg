@@ -1,3 +1,4 @@
+# Bump to disable parent hashes: 0
 ###########################################################################
 ## This file defines the current expected build state of ports in CI.
 ##
