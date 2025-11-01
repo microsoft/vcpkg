@@ -9501,7 +9501,7 @@
       "port-version": 0
     },
     "systemc": {
-      "baseline": "3.0.1",
+      "baseline": "3.0.2",
       "port-version": 0
     },
     "tabulate": {
