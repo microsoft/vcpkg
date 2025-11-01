@@ -18,6 +18,5 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libversion)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
