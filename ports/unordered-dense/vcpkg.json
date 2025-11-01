@@ -1,6 +1,6 @@
 {
   "name": "unordered-dense",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "description": "A fast & densely stored hashmap and hashset based on robin-hood backward shift deletion",
   "homepage": "https://github.com/martinus/unordered_dense",
   "license": "MIT",

@@ -8,6 +8,20 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 5fbb5a0a864db73a6d18cdea7b31237da907fff0ef288f3a8db6ebdba8ef61ad8855e5fc780c2bbf632218d8fa59dd119734e5937ca64dc77f53f30f13b80b17
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS
+        # On windows during configure tests iconv is properly linked,
+        # but iconv-2.dll missing from the directory where check program is built
+        # causes one of the tests to fail and in result builds libunistring
+        # without iconv support, this flag allows to bypass the test.
+        #
+        # The failing test is "checking for working iconv", while in previous
+        # test "checking for iconv", configure only checks linking, in
+        # "checking for working iconv" it also runs resulting test application.
+        am_cv_func_iconv_works=yes
+    )
+endif()
+
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "v${VERSION}"
@@ -22,6 +36,8 @@ vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
     USE_WRAPPERS
+    OPTIONS
+        ${OPTIONS}
     OPTIONS
         "--with-libiconv-prefix=${CURRENT_INSTALLED_DIR}"
 )
