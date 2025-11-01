@@ -1,8 +1,8 @@
 diff --git a/cmake/helpers/GdalGenerateConfig.cmake b/cmake/helpers/GdalGenerateConfig.cmake
-index a2e9dfc..46ac413 100644
+index debddd7062..1ee07abf13 100644
 --- a/cmake/helpers/GdalGenerateConfig.cmake
 +++ b/cmake/helpers/GdalGenerateConfig.cmake
-@@ -176,14 +176,15 @@ function(gdal_split_library_to_lflags _lib_flag _path_flag _input)
+@@ -204,14 +204,15 @@ function(gdal_split_library_to_lflags _lib_flag _path_flag _input)
              string(FIND "${_name_we}" "${_prefix}" _pos)
          else()
              set(_pos 0)
@@ -20,23 +20,23 @@ index a2e9dfc..46ac413 100644
              else()
                  set(${_path_flag} "" PARENT_SCOPE)
              endif()
-@@ -203,6 +204,15 @@ function(gdal_get_lflags _result)
-     while(_libs_in)
-         list(GET _libs_in 0 _lib)
-         list(REMOVE_AT _libs_in 0)
-+        if(_lib MATCHES "^-framework ([^ ]+)\$")
-+            list(APPEND _libs_out "-framework" "${CMAKE_MATCH_1}")
-+            continue()
-+        elseif(_lib STREQUAL "-framework")
-+            list(GET _libs_in 0 _lib)
-+            list(REMOVE_AT _libs_in 0)
-+            list(APPEND _libs_out "-framework" "${_lib}")
-+            continue()
-+        endif()
+@@ -235,6 +236,7 @@ function(gdal_get_lflags _result)
+     gdal_flatten_link_libraries(_libs_in "${is_debug_build}" ${ARGN})
+ 
+     set(_libs_out "")
++    string(REPLACE "-framework;" "-framework " _libs_in "${_libs_in}")
+     foreach(_lib IN LISTS _libs_in)
          if(TARGET "${_lib}")
              get_property(_type TARGET ${_lib} PROPERTY TYPE)
-             if(_type STREQUAL "INTERFACE_LIBRARY")
-@@ -232,7 +242,7 @@ function(gdal_get_lflags _result)
+@@ -260,12 +262,15 @@ function(gdal_get_lflags _result)
+             # use _lib
+         elseif(CMAKE_LINK_LIBRARY_FLAG STREQUAL "-l" AND _lib MATCHES "^-l")
+             # use _lib
++        elseif(_lib MATCHES "^-framework +([^ ]+)\$")
++            list(APPEND _libs_out "-framework" "${CMAKE_MATCH_1}")
++            continue()
+         elseif(EXISTS "${_lib}")
+             if(GDAL_SPLIT_EXPORTED_LIBS)
                  gdal_split_library_to_lflags(_lib _other "${_lib}")
              endif()
          else()
@@ -45,7 +45,7 @@ index a2e9dfc..46ac413 100644
          endif()
          if(_other AND NOT _other IN_LIST _libs_out)
              list(APPEND _libs_out "${_other}")
-@@ -270,7 +280,11 @@ function(gdal_generate_config)
+@@ -303,7 +308,11 @@ function(gdal_generate_config)
      gdal_join_and_quote(CONFIG_CFLAGS)
  
      get_property(target_lib_name TARGET "${arg_TARGET}" PROPERTY OUTPUT_NAME)
