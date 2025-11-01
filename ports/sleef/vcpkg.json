@@ -1,7 +1,6 @@
 {
   "name": "sleef",
-  "version": "3.8",
-  "port-version": 1,
+  "version": "3.9.0",
   "description": "SIMD Library for Evaluating Elementary Functions, vectorized libm and DFT",
   "homepage": "https://sleef.org/",
   "license": "BSL-1.0",
@@ -19,5 +18,19 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "dft": {
+      "description": "Build the DFT library. Needs OpenMP.",
+      "dependencies": [
+        {
+          "name": "sleef",
+          "host": true,
+          "features": [
+            "dft"
+          ]
+        }
+      ]
+    }
+  }
 }

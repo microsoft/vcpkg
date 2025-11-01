@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-unarr",
+  "version-string": "ci",
+  "description": "Validates unarr",
+  "dependencies": [
+    "unarr",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

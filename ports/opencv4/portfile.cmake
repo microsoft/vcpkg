@@ -22,6 +22,8 @@ vcpkg_from_github(
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
+      0020-fix-narrow-filesystem.diff
+      0021-fix-qt-gen-def.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -430,6 +432,7 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_ZLIB_NG=OFF
+        -DCV_TRACE=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE

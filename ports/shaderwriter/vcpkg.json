@@ -1,6 +1,7 @@
 {
   "name": "shaderwriter",
   "version": "2.9.0",
+  "port-version": 1,
   "description": "Library to write shaders directly from C++ code, supports GLSL, HLSL and SPIRV outputs.",
   "homepage": "https://github.com/DragonJoker/ShaderWriter",
   "license": "MIT",

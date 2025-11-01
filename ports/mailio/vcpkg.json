@@ -1,6 +1,6 @@
 {
   "name": "mailio",
-  "version": "0.25.1",
+  "version": "0.25.3",
   "maintainers": "Tomislav Karastojković <contact@alepho.com>",
   "description": "mailio is a cross platform C++ library for MIME format and SMTP, POP3 and IMAP protocols. It is based on the standard C++ 17 and Boost library.",
   "homepage": "https://github.com/karastojko/mailio",

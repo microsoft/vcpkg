@@ -1,7 +1,6 @@
 {
   "name": "qt5-webengine",
-  "version": "5.15.16",
-  "port-version": 3,
+  "version": "5.15.17",
   "description": "Qt WebEngine provides functionality for rendering regions of dynamic web content.",
   "license": null,
   "supports": "!static",

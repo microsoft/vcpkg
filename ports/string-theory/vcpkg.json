@@ -1,6 +1,6 @@
 {
   "name": "string-theory",
-  "version": "3.8",
+  "version": "3.9",
   "description": "Flexible modern C++ string library with type-safe formatting.",
   "homepage": "https://github.com/zrax/string_theory",
   "license": "MIT",

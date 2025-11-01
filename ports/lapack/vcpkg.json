@@ -2,18 +2,18 @@
   "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "lapack",
   "version-date": "2023-06-10",
-  "port-version": 2,
+  "port-version": 3,
   "description": "Metapackage for packages which provide LAPACK",
   "license": null,
   "supports": "!android",
   "dependencies": [
     {
       "name": "clapack",
-      "platform": "uwp | (arm & windows)"
+      "platform": "!osx & !ios & (uwp | (arm & windows) | (static & windows & !mingw))"
     },
     {
       "name": "lapack-reference",
-      "platform": "!osx & !ios & !uwp & !(arm & windows)"
+      "platform": "!osx & !ios & (!uwp & !(arm & windows) & !(static & windows & !mingw))"
     },
     {
       "name": "vcpkg-cmake",
