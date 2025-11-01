@@ -16,7 +16,7 @@
     },
     {
       "name": "secure",
-      "platform": "arm64 & static & !osx"
+      "platform": "native"
     }
   ],
   "features": {

@@ -7,7 +7,7 @@ index c7a504b..40157c7 100644
  
  # Import mimalloc (if installed)
 -find_package(mimalloc 1.9 CONFIG REQUIRED)
-+find_package(mimalloc 3.1 CONFIG REQUIRED)
++find_package(mimalloc CONFIG REQUIRED)
  message(STATUS "Found mimalloc installed at: ${MIMALLOC_LIBRARY_DIR} (${MIMALLOC_VERSION_DIR})")
  
  
