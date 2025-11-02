@@ -10,10 +10,8 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_INSTALL_BINDIR=bin
-        -DCMAKE_INSTALL_LIBDIR=lib
-        -DCMAKE_INSTALL_INCLUDEDIR=include
-        -DBUILD_TESTING=OFF        # avoid gtest download/build in vcpkg
+        -DCMAKE_INSTALL_INCLUDEDIR=include # must be initialized
+        -DBUILD_TESTING=OFF # avoid gtest download/build in vcpkg
 )
 vcpkg_cmake_install()
 
