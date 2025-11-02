@@ -15,6 +15,5 @@
       "host": true
     }
   ],
-  "supports": "!uwp"
-
+  "supports": "!uwp & !x86"
 }
