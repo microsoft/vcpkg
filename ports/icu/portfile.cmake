@@ -14,7 +14,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         mh-mingw.patch
         mh-msys-msvc.patch
         subdirs.patch
-        #vcpkg-cross-data.patch # needs autoreconf
+        vcpkg-cross-data.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -135,7 +135,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_fixup_pkgconfig()
-
 set(cxx_link_libraries "")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     block(PROPAGATE cxx_link_libraries)
