@@ -4,6 +4,7 @@
   "description": "An SMTP client library built in C++ that support authentication and secure connections",
   "homepage": "https://github.com/jeremydumais/CPP-SMTPClient-library",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "openssl",
     {
@@ -14,6 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "supports": "!uwp & !x86"
+  ]
 }
