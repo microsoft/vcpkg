@@ -6,14 +6,28 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CURRENT_PORT_DIR}/libsocketcan-config.cmake.in" DESTINATION "${SOURCE_PATH}")
+vcpkg_execute_required_process(
+        ALLOW_IN_DOWNLOAD_MODE
+        COMMAND bash "${SOURCE_PATH}/autogen.sh"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME autogen-${TARGET_TRIPLET}
+)
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
-vcpkg_cmake_build()
-vcpkg_cmake_install()
+vcpkg_configure_make(
+        SOURCE_PATH "${SOURCE_PATH}"
+        AUTOCONFIG
+)
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME libsocketcan)
+vcpkg_build_make(
+        BUILD_TARGET all
+        MAKEFILE GNUmakefile
+)
+vcpkg_install_make(
+        MAKEFILE GNUmakefile
+)
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+
+file(COPY "${CURRENT_PORT_DIR}/libsocketcanConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/libsocketcan")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-
