@@ -4,7 +4,7 @@
   "description": "Cross-platform frameless window framework for Qt. Support Windows, macOS, Linux.",
   "homepage": "https://github.com/stdware/qwindowkit",
   "license": "Apache-2.0",
-  "supports": "!android & !uwp",
+  "supports": "!android & !uwp & (!windows | !arm64)",
   "dependencies": [
     "qmsetup",
     {

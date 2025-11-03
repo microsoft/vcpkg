@@ -4,7 +4,7 @@
   "description": "CMake Modules and Basic Libraries for C/C++ projects. Includes powerful CMake macros for Qt and more.",
   "homepage": "https://github.com/stdware/qmsetup",
   "license": "MIT",
-  "supports": "!android & !uwp",
+  "supports": "!android & !uwp & (!windows | !arm64)",
   "dependencies": [
     "syscmdline",
     {

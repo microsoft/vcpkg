@@ -4,7 +4,7 @@
   "description": "C++ Advanced Command Line Parser",
   "homepage": "https://github.com/SineStriker/syscmdline",
   "license": "MIT",
-  "supports": "!android & !uwp",
+  "supports": "!android & !uwp & (!windows | !arm64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
