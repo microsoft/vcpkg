@@ -16,7 +16,6 @@
     "boost-system",
     "boost-thread",
     "boost-uuid",
-    "boost-multiprecision",
     {
       "name": "vcpkg-cmake",
       "host": true
