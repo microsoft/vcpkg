@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SineStriker/syscmdline
     REF "main"
-    SHA512 5bcc38206cde9dc2a6aa511ec7f6eb7161dbd003a1d6b50f8c7c55848c731aecdff749a060342654e002352e580510fedaa36b81fb4e5e1c2986db1c1b8e1faa
+    SHA512 fe8bf89406f830357084ac7c229913b16abb96b5a236e13766fe58e3907d47a182f40206592596445c3d6ddb3e6acfda43ee463d6f95fd080da7fd3c87383d1f
     HEAD_REF master
 )
 
