@@ -164,7 +164,7 @@ if ($testFeatures) {
     if ($lastLastExitCode -ne 0)
     {
         Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$false"
-        Write-Error "vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. Check for failure logs attached to the run in Azure Pipelines."
+        Write-Host "##vso[task.logissue type=error]vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. See https://github.com/microsoft/vcpkg/discussions/31357 for how to access AZP failure logs."
         exit $lastLastExitCode
     }
 
@@ -266,7 +266,14 @@ Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
 
 if ($lastLastExitCode -ne 0)
 {
-    Write-Error "vcpkg ci testing failed; this is usually a bug in a port. Check for failure logs attached to the run in Azure Pipelines."
+    if (-Not $failureLogsEmpty)
+    {
+        Write-Host "##vso[task.logissue type=error]vcpkg ci testing failed; this is usually a bug in a port. See https://github.com/microsoft/vcpkg/discussions/31357 for how to access AZP failure logs."
+    }
+    else
+    {
+        Write-Host "##vso[task.logissue type=error]vcpkg ci testing failed, but no build failure logs were created for this error."
+    }
 }
 
 exit $lastLastExitCode

@@ -1,11 +1,10 @@
 {
-  "name": "embree3",
-  "version": "3.13.5",
-  "port-version": 6,
+  "name": "embree",
+  "version": "4.4.0",
   "description": "High Performance Ray Tracing Kernels.",
-  "homepage": "https://github.com/embree/embree",
-  "license": "Apache-2.0",
-  "supports": "!arm | osx",
+  "homepage": "https://github.com/RenderKit/embree",
+  "license": null,
+  "supports": "linux | osx | (windows & !uwp & !arm)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
