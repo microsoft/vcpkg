@@ -4656,6 +4656,10 @@
       "baseline": "3.1.0",
       "port-version": 0
     },
+    "libcoap": {
+      "baseline": "4.3.5",
+      "port-version": 0
+    },
     "libconfig": {
       "baseline": "1.8.1",
       "port-version": 0
