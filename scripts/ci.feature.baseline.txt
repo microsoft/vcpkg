@@ -449,6 +449,7 @@ collada-dom:x64-uwp = cascade
 colmap:arm64-uwp = cascade
 colmap:x64-uwp = cascade
 colmap[cuda,cuda-redist](arm64 & osx) = cascade
+colmap[cuda,cuda-redist]:x64-linux = feature-fails
 cppcms:arm64-uwp = cascade
 cppcms:x64-uwp = cascade
 cppkafka:arm64-uwp = cascade
