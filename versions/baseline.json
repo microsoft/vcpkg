@@ -5676,6 +5676,10 @@
       "baseline": "0.63.0",
       "port-version": 0
     },
+    "libversion": {
+      "baseline": "3.0.4",
+      "port-version": 0
+    },
     "libvhdi": {
       "baseline": "20231127",
       "port-version": 0
