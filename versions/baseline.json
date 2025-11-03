@@ -3832,6 +3832,10 @@
       "baseline": "20231011",
       "port-version": 0
     },
+    "iccdev": {
+      "baseline": "2.3.1",
+      "port-version": 0
+    },
     "icecream-cpp": {
       "baseline": "1.0.0",
       "port-version": 0
