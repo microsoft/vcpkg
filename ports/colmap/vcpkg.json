@@ -70,12 +70,6 @@
         "glew",
         "qt5-base"
       ]
-    },
-    "tests": {
-      "description": "Build all tests.",
-      "dependencies": [
-        "gtest"
-      ]
     }
   }
 }
