@@ -1,13 +1,16 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7c4e81a..5ef7605 100644
+index 7c4e81a..1c18b4e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -6,7 +6,7 @@ if(QMSETUP_STATIC_RUNTIME)
+@@ -6,8 +6,10 @@ if(QMSETUP_STATIC_RUNTIME)
      if(MINGW)
          add_link_options(-static -static-libgcc -static-libstdc++)
      elseif(MSVC)
 -        add_compile_options(/MT)
 +        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
      endif()
++elseif(MSVC)
++    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
  endif()
  
+ # Get syscmdline
