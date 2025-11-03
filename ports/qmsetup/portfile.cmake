@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "main"
     SHA512 021c2f3205c20dcdc240445395292fff406eec758c7a83de0e3f17633b11c188d582006eb47052abf3bb83e6544d29f660574dc2f711af3475c215309ac22354
     HEAD_REF master
+    PATCHES
+        fix-msvc-runtime.patch
 )
 
 vcpkg_cmake_configure(
