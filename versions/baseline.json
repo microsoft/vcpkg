@@ -4464,6 +4464,10 @@
       "baseline": "2.9.3",
       "port-version": 0
     },
+    "lazperf": {
+      "baseline": "3.4.0",
+      "port-version": 0
+    },
     "lazy-importer": {
       "baseline": "2023-08-03",
       "port-version": 0
