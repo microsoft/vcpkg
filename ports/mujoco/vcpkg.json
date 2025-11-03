@@ -1,10 +1,10 @@
 {
   "name": "mujoco",
   "version": "3.3.0",
+  "port-version": 1,
   "description": "Multi-Joint dynamics with Contact.",
   "homepage": "https://mujoco.org",
   "license": "Apache-2.0",
-  "supports": "!(windows & static)",
   "dependencies": [
     {
       "name": "ccd",
