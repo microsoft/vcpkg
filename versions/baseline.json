@@ -106,7 +106,7 @@
     },
     "alsa": {
       "baseline": "1.2.14",
-      "port-version": 0
+      "port-version": 1
     },
     "amd-adl-sdk": {
       "baseline": "17.1",
@@ -7654,7 +7654,7 @@
     },
     "portmidi": {
       "baseline": "2.0.6",
-      "port-version": 0
+      "port-version": 1
     },
     "portsmf": {
       "baseline": "239",
