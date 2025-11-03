@@ -1,6 +1,6 @@
 {
   "name": "sqlgen",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "sqlgen is an ORM and SQL query generator for C++-20, similar to Python's SQLAlchemy/SQLModel or Rust's Diesel.",
   "homepage": "https://github.com/getml/sqlgen/",
   "license": "MIT",
