@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9521fcf6a7..9c38142ec2 100644
+index 5fcd3a478f..8bb88b5554 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -460,6 +460,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
+@@ -479,6 +479,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
  ################################################################################
  # Run on all subdirectories
  ################################################################################
@@ -14,30 +14,51 @@ index 9521fcf6a7..9c38142ec2 100644
  add_subdirectory(third_party)
  
  # TODO(crbug.com/tint/455): Tint does not currently build with CMake when
+@@ -547,6 +552,10 @@ if (DAWN_BUILD_MONOLITHIC_LIBRARY AND DAWN_ENABLE_INSTALL)
+   write_basic_package_version_file(
+     "${CMAKE_CURRENT_BINARY_DIR}/DawnConfigVersion.cmake"
+     COMPATIBILITY AnyNewerVersion)
++  if(DAWN_ENABLE_VULKAN)
++    set(FIND_DEPENDENCY_VULKAN "find_dependency(VulkanHeaders CONFIG)
++find_dependency(VulkanUtilityLibraries CONFIG)")
++  endif()
+   # Configure config file
+   configure_package_config_file("${CMAKE_CURRENT_LIST_DIR}/src/cmake/DawnConfig.cmake.in"
+     "${CMAKE_CURRENT_BINARY_DIR}/DawnConfig.cmake"
 diff --git a/src/cmake/BundleLibraries.cmake b/src/cmake/BundleLibraries.cmake
-index 682a73924c..1ec358c54c 100644
+index 682a73924c..32aa025fa6 100644
 --- a/src/cmake/BundleLibraries.cmake
 +++ b/src/cmake/BundleLibraries.cmake
-@@ -92,7 +92,18 @@ function(bundle_libraries output_target library_type)
+@@ -92,15 +92,21 @@ function(bundle_libraries output_target library_type)
  
    # Collect $<TARGET_OBJECTS:...> from STATIC and OBJECT library dependencies
    set(all_objects "")
 +  set(all_libraries "")
 +  message(STATUS "all_dependencies: ${all_dependencies}")
    foreach(dependency IN LISTS all_dependencies)
-+    if("${dependency}" MATCHES "^absl::")
-+      list(APPEND all_libraries ${dependency})
-+      continue()
-+    endif()
-+    if("${dependency}" MATCHES "^Vulkan-Headers" OR "${dependency}" MATCHES "^VulkanUtility")
-+      list(APPEND all_libraries ${dependency})
-+      continue()
-+    endif()
-+
-     get_target_property(type ${dependency} TYPE)
+-    get_target_property(type ${dependency} TYPE)
++    if("${dependency}" MATCHES "^(webgpu|dawn|emdawnwebgpu|tint|partition_alloc|SPIRV)")
++      get_target_property(type ${dependency} TYPE)
  
-     # We only want object files from static or object libraries.
-@@ -112,6 +123,7 @@ function(bundle_libraries output_target library_type)
+-    # We only want object files from static or object libraries.
+-    # This correctly excludes shared libraries, modules, executables, interfaces, etc.
+-    if(${type} STREQUAL "STATIC_LIBRARY")
+-      list(APPEND all_objects $<TARGET_OBJECTS:${dependency}>)
+-    elseif(${type} STREQUAL "OBJECT_LIBRARY")
+-      list(APPEND all_objects $<TARGET_OBJECTS:${dependency}>)
++      # We only want object files from static or object libraries.
++      # This correctly excludes shared libraries, modules, executables, interfaces, etc.
++      if(${type} STREQUAL "STATIC_LIBRARY")
++        list(APPEND all_objects $<TARGET_OBJECTS:${dependency}>)
++      elseif(${type} STREQUAL "OBJECT_LIBRARY")
++        list(APPEND all_objects $<TARGET_OBJECTS:${dependency}>)
++      endif()
++    else()
++      list(APPEND all_libraries ${dependency})
+     endif()
+   endforeach()
+ 
+@@ -112,6 +118,7 @@ function(bundle_libraries output_target library_type)
    # Create the output library using the validated type and collected objects
    # If all_objects is empty, add_library will still create an empty library of the specified type.
    add_library(${output_target} ${library_type} ${all_objects})
@@ -46,10 +67,10 @@ index 682a73924c..1ec358c54c 100644
    # Add dependencies to ensure input targets are built before the bundled library.
    # This handles the build order correctly.
 diff --git a/src/cmake/DawnConfig.cmake.in b/src/cmake/DawnConfig.cmake.in
-index 8bfeda55bc..a0f9858530 100644
+index 8bfeda55bc..e5e817db20 100644
 --- a/src/cmake/DawnConfig.cmake.in
 +++ b/src/cmake/DawnConfig.cmake.in
-@@ -31,4 +31,9 @@
+@@ -31,4 +31,10 @@
  # 2. https://cmake.org/cmake/help/latest/guide/tutorial/Adding%20Export%20Configuration.html
  
  @PACKAGE_INIT@
@@ -57,13 +78,14 @@ index 8bfeda55bc..a0f9858530 100644
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(absl CONFIG)
++@FIND_DEPENDENCY_VULKAN@
 +
  include ("${CMAKE_CURRENT_LIST_DIR}/DawnTargets.cmake")
 diff --git a/src/dawn/native/CMakeLists.txt b/src/dawn/native/CMakeLists.txt
-index 21ef415451..7f4867fee6 100644
+index 081d6ef5d0..0d9476bd0c 100644
 --- a/src/dawn/native/CMakeLists.txt
 +++ b/src/dawn/native/CMakeLists.txt
-@@ -636,11 +636,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
+@@ -645,11 +645,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
  endif()
  
  if (DAWN_ENABLE_OPENGL)
@@ -83,7 +105,7 @@ index 21ef415451..7f4867fee6 100644
               "${Dawn_SOURCE_DIR}/src/dawn/native/opengl/supported_extensions.json"
          OUTPUT_HEADERS DAWN_NATIVE_OPENGL_AUTOGEN_HEADERS
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index b423c43d27..068a784b3d 100644
+index 368dc97453..07c6d72caa 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
 @@ -41,6 +41,7 @@ if (DAWN_FETCH_DEPENDENCIES)
@@ -102,7 +124,7 @@ index b423c43d27..068a784b3d 100644
  
  if (DAWN_BUILD_PROTOBUF AND EXISTS "${DAWN_PROTOBUF_DIR}/cmake")
      if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") AND WIN32)
-@@ -175,10 +177,12 @@ endif()
+@@ -177,10 +179,12 @@ endif()
  if (DAWN_ENABLE_DESKTOP_GL OR DAWN_ENABLE_OPENGLES)
      # Header-only library for khrplatform.h
      add_library(dawn_khronos_platform INTERFACE)
@@ -117,7 +139,7 @@ index b423c43d27..068a784b3d 100644
  if (NOT TARGET Vulkan::Headers AND DAWN_ENABLE_VULKAN)
      message(STATUS "Dawn: using Vulkan::Headers at ${DAWN_VULKAN_HEADERS_DIR}")
  
-@@ -190,6 +194,7 @@ if (NOT TARGET Vulkan::UtilityHeaders AND DAWN_ENABLE_VULKAN)
+@@ -192,6 +196,7 @@ if (NOT TARGET Vulkan::UtilityHeaders AND DAWN_ENABLE_VULKAN)
      message(STATUS "Dawn: using VulkanUtilityLibraries at ${DAWN_VULKAN_UTILITY_LIBRARIES_DIR}")
      add_subdirectory(${DAWN_VULKAN_UTILITY_LIBRARIES_DIR} "${CMAKE_CURRENT_BINARY_DIR}/vulkan-utility-libraries/src")
  endif()

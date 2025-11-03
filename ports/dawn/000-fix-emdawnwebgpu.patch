@@ -1,8 +1,8 @@
 diff --git a/emdawnwebgpu.port.py b/emdawnwebgpu.port.py
-index 4b90064..1956d0b 100644
+index 651ea19..70237d8 100644
 --- a/emdawnwebgpu.port.py
 +++ b/emdawnwebgpu.port.py
-@@ -70,10 +70,10 @@ def _walk(path):
+@@ -78,10 +78,10 @@ def _walk(path):
              yield os.path.join(dirpath, filename)
  
  

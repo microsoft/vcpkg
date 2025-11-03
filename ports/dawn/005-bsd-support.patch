@@ -1,5 +1,5 @@
 diff --git a/include/dawn/native/VulkanBackend.h b/include/dawn/native/VulkanBackend.h
-index 201bc324..3221ad2e 100644
+index 201bc3242f..3221ad2e37 100644
 --- a/include/dawn/native/VulkanBackend.h
 +++ b/include/dawn/native/VulkanBackend.h
 @@ -83,7 +83,7 @@ struct ExternalImageExportInfoVk : ExternalImageExportInfo {
@@ -12,7 +12,7 @@ index 201bc324..3221ad2e 100644
  // Common properties of external images represented by FDs. On successful import the file
  // descriptor's ownership is transferred to the Dawn implementation and they shouldn't be
 diff --git a/src/dawn/common/Platform.h b/src/dawn/common/Platform.h
-index b4ac6100..cbc5c7b8 100644
+index b4ac61004d..cbc5c7b8b5 100644
 --- a/src/dawn/common/Platform.h
 +++ b/src/dawn/common/Platform.h
 @@ -60,6 +60,11 @@
@@ -28,7 +28,7 @@ index b4ac6100..cbc5c7b8 100644
  #define DAWN_PLATFORM_IS_LINUX 1
  #define DAWN_PLATFORM_IS_POSIX 1
 diff --git a/src/dawn/native/vulkan/BackendVk.cpp b/src/dawn/native/vulkan/BackendVk.cpp
-index 058cbecc..9bae2d27 100644
+index 058cbecc94..9bae2d2747 100644
 --- a/src/dawn/native/vulkan/BackendVk.cpp
 +++ b/src/dawn/native/vulkan/BackendVk.cpp
 @@ -56,7 +56,7 @@ constexpr char kSwiftshaderLibName[] = "libvk_swiftshader.dylib";
