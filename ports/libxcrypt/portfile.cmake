@@ -1,7 +1,5 @@
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
-message(STATUS "${PORT} requires libltdl-dev from the system package manager (example: \"sudo apt install libltdl-dev\")")
-
 vcpkg_find_acquire_program(PERL)
 set(ENV{PERL} "${PERL}")
 

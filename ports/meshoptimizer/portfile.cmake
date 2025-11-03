@@ -32,7 +32,7 @@ vcpkg_cmake_configure(
     OPTIONS
       ${FEATURE_OPTIONS}
       -DMESHOPT_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
-      -DMESHOPT_BASISU_PATH=${BASISU_PATH}
+      "-DMESHOPT_GLTFPACK_BASISU_PATH=${BASISU_PATH}"
 )
 
 vcpkg_cmake_install()

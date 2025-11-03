@@ -132,9 +132,6 @@ APT_PACKAGES="$APT_PACKAGES libxdamage-dev libselinux1-dev"
 ## required by at-spi2-atk
 APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
-## required by bond
-APT_PACKAGES="$APT_PACKAGES haskell-stack"
-
 ## required by boringssl
 APT_PACKAGES="$APT_PACKAGES golang-go"
 

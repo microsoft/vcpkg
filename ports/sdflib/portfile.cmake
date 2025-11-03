@@ -3,7 +3,8 @@ vcpkg_from_github(
     REPO UPC-ViRVIG/SdfLib
     REF 109e9828710fa581616f7fdd6ed1c87d5cb11e2b
     SHA512 6908fb57de26da32de2b04c1202531d5e01f5135357e94a4a1141d9588c19d51be2d8b9a11f89b6f2c7884a46778775cc4f1156966cdcb3095578de0478792ec
-    PATCHES
+    PATCHES 
+        fix-build.patch
 )
 
 vcpkg_cmake_configure(
