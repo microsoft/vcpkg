@@ -6306,7 +6306,7 @@
     },
     "meshoptimizer": {
       "baseline": "0.25",
-      "port-version": 1
+      "port-version": 2
     },
     "metis": {
       "baseline": "2025-07-04",
