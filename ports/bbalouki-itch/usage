@@ -1,0 +1,4 @@
+itch provides CMake targets:
+
+find_package(itch CONFIG REQUIRED)
+target_link_libraries(main PRIVATE itch::itch)
