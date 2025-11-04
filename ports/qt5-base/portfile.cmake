@@ -51,8 +51,7 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
-                            # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
-                            patches/CVE-2024-39936-qtbase-5.15.patch
+                            # CVE fixes from https://download.qt.io/archive/qt/5.15/
                             patches/CVE-2025-4211-qtbase-5.15.diff
                             patches/CVE-2025-5455-qtbase-5.15.patch
                             patches/CVE-2025-30348-qtbase-5.15.diff
