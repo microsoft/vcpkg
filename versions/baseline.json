@@ -9881,7 +9881,7 @@
       "port-version": 0
     },
     "tsl-hopscotch-map": {
-      "baseline": "2.3.1",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "tsl-ordered-map": {
