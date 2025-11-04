@@ -1,0 +1,19 @@
+re2c provides:
+  - re2c executable for generating lexers from regular expression specifications
+
+The executable is available in the tools/re2c directory.
+
+To use re2c in your CMake project:
+
+```cmake
+find_program(RE2C_EXE re2c)
+
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp
+    COMMAND ${RE2C_EXE} -o ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp ${CMAKE_SOURCE_DIR}/lexer.re
+    DEPENDS ${CMAKE_SOURCE_DIR}/lexer.re
+    COMMENT "Generating lexer.cpp from lexer.re"
+    VERBATIM
+)
+
+add_executable(myapp main.cpp ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp)
