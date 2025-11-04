@@ -9757,8 +9757,8 @@
       "port-version": 0
     },
     "tinytoml": {
-      "baseline": "20180219",
-      "port-version": 3
+      "baseline": "20240621",
+      "port-version": 0
     },
     "tinyutf8": {
       "baseline": "4.4.3",
