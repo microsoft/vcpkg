@@ -9889,8 +9889,8 @@
       "port-version": 0
     },
     "tsl-sparse-map": {
-      "baseline": "0.6.2",
-      "port-version": 3
+      "baseline": "0.7.0",
+      "port-version": 0
     },
     "ttauri": {
       "baseline": "0.5.0",
