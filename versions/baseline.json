@@ -10357,7 +10357,7 @@
       "port-version": 0
     },
     "wabt": {
-      "baseline": "1.0.37",
+      "baseline": "1.0.38",
       "port-version": 0
     },
     "wampcc": {
