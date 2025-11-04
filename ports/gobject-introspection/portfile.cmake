@@ -3,7 +3,7 @@ string(REGEX REPLACE "^([0-9]+[.][0-9]+).*\$" "\\1" GI_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/gobject-introspection/${GI_MAJOR_MINOR}/gobject-introspection-${VERSION}.tar.xz"
     FILENAME "gobject-introspection-${VERSION}.tar.xz"
-    SHA512 e139fadb4174c72b648914f3774d89fc0e5eaee45bba0c13edf05de883664dad8276dbc34006217bb09871ed4bad23adab51ff232a17b9eb131329b2926cafb7
+    SHA512 60593bc3fdb2deed67d7b7351b5279810e2468bc5a48aabb3ab31de11ae383f40ae688b6999097a6258352c0d1407792235d67c7acbea69d747de104039d1264
 )
 
 vcpkg_extract_source_archive(
