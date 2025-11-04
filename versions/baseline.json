@@ -9545,7 +9545,7 @@
       "port-version": 2
     },
     "task-thread-pool": {
-      "baseline": "1.0.7",
+      "baseline": "1.0.10",
       "port-version": 0
     },
     "taskflow": {
