@@ -2845,7 +2845,7 @@
       "port-version": 0
     },
     "fastcdr": {
-      "baseline": "2.3.3",
+      "baseline": "2.3.4",
       "port-version": 0
     },
     "fastcgi": {
