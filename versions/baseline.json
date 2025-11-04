@@ -9880,6 +9880,10 @@
       "baseline": "1.0.1",
       "port-version": 0
     },
+    "tsl-array-hash": {
+      "baseline": "0.7.2",
+      "port-version": 0
+    },
     "tsl-hopscotch-map": {
       "baseline": "2.3.1",
       "port-version": 0
