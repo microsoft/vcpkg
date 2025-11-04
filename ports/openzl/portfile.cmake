@@ -6,7 +6,10 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         patches/use-system-zstd.patch
+        patches/use-system-xxhash.patch
 )
+
+file(REMOVE "${SOURCE_PATH}/src/openzl/shared/xxhash.h")
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")

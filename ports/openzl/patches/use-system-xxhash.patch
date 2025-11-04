@@ -1,0 +1,297 @@
+diff --git a/benchmark/unitBench/benchList.h b/benchmark/unitBench/benchList.h
+--- a/benchmark/unitBench/benchList.h
++++ b/benchmark/unitBench/benchList.h
+@@ -13,7 +13,8 @@
+ #include <stddef.h> // size_t
+ #include <stdio.h>  // printf, fflush
+ 
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ 
+ #include "benchmark/unitBench/bench_entry.h" // Bench_Entry
+ #include "openzl/compress/private_nodes.h"
+diff --git a/custom_parsers/parquet/parquet_lexer.cpp b/custom_parsers/parquet/parquet_lexer.cpp
+--- a/custom_parsers/parquet/parquet_lexer.cpp
++++ b/custom_parsers/parquet/parquet_lexer.cpp
+@@ -5,7 +5,8 @@
+ #include "custom_parsers/parquet/thrift_compact_reader.h"
+ #include "openzl/common/allocation.h"
+ #include "openzl/shared/mem.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ #include "openzl/zl_errors.h"
+ 
+ #include <stdlib.h>
+diff --git a/custom_parsers/parquet/tests/test_parquet_lexer.cpp b/custom_parsers/parquet/tests/test_parquet_lexer.cpp
+--- a/custom_parsers/parquet/tests/test_parquet_lexer.cpp
++++ b/custom_parsers/parquet/tests/test_parquet_lexer.cpp
+@@ -12,7 +12,8 @@
+ #include "custom_parsers/parquet/tests/test_utils.h"
+ #include "openzl/common/errors_internal.h"
+ #include "openzl/shared/mem.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ 
+ namespace zstrong {
+ namespace parquet {
+diff --git a/custom_transforms/thrift/probabilistic_selector.c b/custom_transforms/thrift/probabilistic_selector.c
+--- a/custom_transforms/thrift/probabilistic_selector.c
++++ b/custom_transforms/thrift/probabilistic_selector.c
+@@ -2,7 +2,8 @@
+ 
+ #include "custom_transforms/thrift/probabilistic_selector.h"
+ #include "openzl/common/assertion.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ #include "openzl/zl_graph_api.h"
+ 
+ #define ZS2_PROBABILISTIC_SELECTOR_PROBABILITIES_CTID 85
+diff --git a/src/openzl/codecs/tokenize/encode_tokenize4to2_kernel.c b/src/openzl/codecs/tokenize/encode_tokenize4to2_kernel.c
+--- a/src/openzl/codecs/tokenize/encode_tokenize4to2_kernel.c
++++ b/src/openzl/codecs/tokenize/encode_tokenize4to2_kernel.c
+@@ -8,7 +8,8 @@
+ #include "openzl/common/debug.h"
+ #include "openzl/shared/bits.h"
+ #include "openzl/shared/estimate.h"
+-#include "openzl/shared/xxhash.h" // XXH3_64bits
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h> // XXH3_64bits
+ 
+ // TODO :
+ // currently return a fixed value suitable for SAO speed vectors
+diff --git a/src/openzl/codecs/tokenize/encode_tokenizeVarto4_kernel.c b/src/openzl/codecs/tokenize/encode_tokenizeVarto4_kernel.c
+--- a/src/openzl/codecs/tokenize/encode_tokenizeVarto4_kernel.c
++++ b/src/openzl/codecs/tokenize/encode_tokenizeVarto4_kernel.c
+@@ -5,7 +5,8 @@
+ #include <assert.h> // assert
+ #include <string.h> // memcmp, memcpy
+ 
+-#include "openzl/shared/xxhash.h" // XXH3_64bits
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h> // XXH3_64bits
+ 
+ static uint32_t ZS_log2(uint32_t v)
+ {
+diff --git a/src/openzl/codecs/tokenize/encode_tokenize_kernel.h b/src/openzl/codecs/tokenize/encode_tokenize_kernel.h
+--- a/src/openzl/codecs/tokenize/encode_tokenize_kernel.h
++++ b/src/openzl/codecs/tokenize/encode_tokenize_kernel.h
+@@ -5,7 +5,8 @@
+ 
+ #include "openzl/common/map.h"
+ #include "openzl/shared/portability.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ #include "openzl/zl_data.h"
+ 
+ ZL_BEGIN_C_DECLS
+diff --git a/src/openzl/common/detail/table.h b/src/openzl/common/detail/table.h
+--- a/src/openzl/common/detail/table.h
++++ b/src/openzl/common/detail/table.h
+@@ -11,7 +11,8 @@
+ #include "openzl/shared/overflow.h"
+ #include "openzl/shared/portability.h"
+ #include "openzl/shared/utils.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ 
+ ZL_BEGIN_C_DECLS
+ 
+diff --git a/src/openzl/common/set.h b/src/openzl/common/set.h
+--- a/src/openzl/common/set.h
++++ b/src/openzl/common/set.h
+@@ -11,7 +11,8 @@
+ #include "openzl/shared/overflow.h"
+ #include "openzl/shared/portability.h"
+ #include "openzl/shared/utils.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ 
+ ZL_BEGIN_C_DECLS
+ 
+diff --git a/src/openzl/common/stream.c b/src/openzl/common/stream.c
+--- a/src/openzl/common/stream.c
++++ b/src/openzl/common/stream.c
+@@ -10,7 +10,8 @@
+ #include "openzl/shared/mem.h"                // ZL_memcpy
+ #include "openzl/shared/numeric_operations.h" // NUMOP_*
+ #include "openzl/shared/overflow.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ #include "openzl/zl_buffer.h"
+ #include "openzl/zl_data.h"
+ #include "openzl/zl_errors.h"
+diff --git a/src/openzl/compress/cnodes.c b/src/openzl/compress/cnodes.c
+--- a/src/openzl/compress/cnodes.c
++++ b/src/openzl/compress/cnodes.c
+@@ -9,7 +9,8 @@
+ #include "openzl/compress/cnode.h"
+ #include "openzl/compress/localparams.h"
+ #include "openzl/shared/mem.h" // ZL_memcpy
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ #include "openzl/zl_errors.h"
+ 
+ ZL_Report CTM_init(CNodes_manager* ctm)
+diff --git a/src/openzl/compress/compress2.c b/src/openzl/compress/compress2.c
+--- a/src/openzl/compress/compress2.c
++++ b/src/openzl/compress/compress2.c
+@@ -13,7 +13,8 @@
+ #include "openzl/compress/encode_frameheader.h" // EFH_writeFrameHeader
+ #include "openzl/compress/private_nodes.h"      // ZS2_GRAPH_xxx
+ #include "openzl/shared/mem.h"                  // writeLE32
+-#include "openzl/shared/xxhash.h"               // XXH3_64bits
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>               // XXH3_64bits
+ #include "openzl/zl_common_types.h" // ZL_TernaryParam_enable, ZL_TernaryParam_disable
+ #include "openzl/zl_compress.h" // ZS2_compress_*
+ #include "openzl/zl_data.h"
+diff --git a/src/openzl/compress/encode_frameheader.c b/src/openzl/compress/encode_frameheader.c
+--- a/src/openzl/compress/encode_frameheader.c
++++ b/src/openzl/compress/encode_frameheader.c
+@@ -15,7 +15,8 @@
+ #include "openzl/common/wire_format.h" // ZSTRONG_MAGIC_NUMBER, ZL_FrameProperties
+ #include "openzl/shared/mem.h"         // writeLE32
+ #include "openzl/shared/varint.h"      // ZL_varintEncode
+-#include "openzl/shared/xxhash.h"      // XXH3_64bits
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>      // XXH3_64bits
+ #include "openzl/zl_data.h"            // ZL_Type
+ #include "openzl/zl_errors.h"
+ #include "openzl/zl_version.h"
+diff --git a/src/openzl/compress/localparams.c b/src/openzl/compress/localparams.c
+--- a/src/openzl/compress/localparams.c
++++ b/src/openzl/compress/localparams.c
+@@ -8,7 +8,8 @@
+ #include "openzl/shared/mem.h" // ZL_memcpy
+ 
+ #define XXH_INLINE_ALL
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ 
+ static ZL_Report
+ LP_transferBuffer(Arena* alloc, void const** bufferPtr, size_t nbytes)
+diff --git a/src/openzl/decompress/decode_frameheader.c b/src/openzl/decompress/decode_frameheader.c
+--- a/src/openzl/decompress/decode_frameheader.c
++++ b/src/openzl/decompress/decode_frameheader.c
+@@ -17,7 +17,8 @@
+ #include "openzl/fse/hist.h"           // HIST_count_simple
+ #include "openzl/shared/bits.h"
+ #include "openzl/shared/mem.h"    // ZL_readLE32, etc.
+-#include "openzl/shared/xxhash.h" // XXH3_64bits
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h> // XXH3_64bits
+ #include "openzl/zl_data.h"
+ #include "openzl/zl_decompress.h" // ZS2_* public methods
+ #include "openzl/zl_errors.h"     // ZL_Report
+diff --git a/src/openzl/decompress/decompress2.c b/src/openzl/decompress/decompress2.c
+--- a/src/openzl/decompress/decompress2.c
++++ b/src/openzl/decompress/decompress2.c
+@@ -20,7 +20,8 @@
+ #include "openzl/decompress/dtransforms.h" // DTransforms_manager, TransformID
+ #include "openzl/decompress/gdparams.h"
+ #include "openzl/shared/mem.h"    // ZL_readLE32, etc.
+-#include "openzl/shared/xxhash.h" // XXH3_64bits
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h> // XXH3_64bits
+ #include "openzl/zl_buffer.h"     // ZL_RBuffer
+ #include "openzl/zl_data.h"
+ #include "openzl/zl_decompress.h" // ZL_TypedDecoderDesc
+diff --git a/src/openzl/shared/estimate.c b/src/openzl/shared/estimate.c
+--- a/src/openzl/shared/estimate.c
++++ b/src/openzl/shared/estimate.c
+@@ -14,7 +14,8 @@
+ #include "openzl/shared/hash.h"
+ #include "openzl/shared/portability.h"
+ #include "openzl/shared/utils.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ 
+ typedef struct {
+     size_t sizeLog;
+diff --git a/src/openzl/shared/string_view.h b/src/openzl/shared/string_view.h
+--- a/src/openzl/shared/string_view.h
++++ b/src/openzl/shared/string_view.h
+@@ -6,7 +6,8 @@
+ #include <string.h>
+ 
+ #include "openzl/common/assertion.h" // ZL_ASSERT
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ #include "openzl/zl_errors.h"
+ 
+ ZL_BEGIN_C_DECLS
+diff --git a/tests/zstrong/test_checksum.cpp b/tests/zstrong/test_checksum.cpp
+--- a/tests/zstrong/test_checksum.cpp
++++ b/tests/zstrong/test_checksum.cpp
+@@ -8,7 +8,8 @@
+ #include "openzl/common/assertion.h"
+ #include "openzl/decompress/decode_frameheader.h"
+ #include "openzl/shared/mem.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ #include "openzl/zl_common_types.h" // ZL_TernaryParam_enable, ZL_TernaryParam_disable
+ #include "openzl/zl_compress.h"
+ #include "openzl/zl_decompress.h"
+diff --git a/tools/training/ace/ace_compressor.cpp b/tools/training/ace/ace_compressor.cpp
+--- a/tools/training/ace/ace_compressor.cpp
++++ b/tools/training/ace/ace_compressor.cpp
+@@ -8,7 +8,8 @@
+ #include "openzl/common/a1cbor_helpers.h"
+ #include "openzl/common/allocation.h"
+ #include "openzl/shared/a1cbor.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ 
+ namespace openzl {
+ namespace training {
+diff --git a/tools/training/clustering/clustering_config.h b/tools/training/clustering/clustering_config.h
+--- a/tools/training/clustering/clustering_config.h
++++ b/tools/training/clustering/clustering_config.h
+@@ -4,7 +4,8 @@
+ #include <unordered_set>
+ #include <vector>
+ #include "openzl/compress/graphs/generic_clustering_graph.h"
+-#include "openzl/shared/xxhash.h"
++#include "openzl/shared/zs_xxhash.h"
++#include <xxhash.h>
+ 
+ namespace openzl::training {
+ 
+diff --git a/build/cmake/openzl-config.cmake.in b/build/cmake/openzl-config.cmake.in
+--- a/build/cmake/openzl-config.cmake.in
++++ b/build/cmake/openzl-config.cmake.in
+@@ -22,6 +22,7 @@
+ set(OPENZL_PREFIX_DIR "${PACKAGE_PREFIX_DIR}")
+ 
+ find_dependency(zstd CONFIG)
++find_dependency(xxHash CONFIG)
+ 
+ # Include the openzl-targets.cmake file, which is generated from our CMake rules
+ if (NOT TARGET OpenZL::openzl)
+diff --git a/build/cmake/openzl-deps.cmake b/build/cmake/openzl-deps.cmake
+--- a/build/cmake/openzl-deps.cmake
++++ b/build/cmake/openzl-deps.cmake
+@@ -20,6 +20,9 @@
+ 
+ find_package(zstd CONFIG REQUIRED)
+ list(APPEND OPENZL_LINK_LIBRARIES zstd::libzstd)
++
++find_package(xxHash CONFIG REQUIRED)
++list(APPEND OPENZL_LINK_LIBRARIES xxHash::xxhash)
+ 
+ find_library(MATH_LIBRARY m)
+ if(MATH_LIBRARY)

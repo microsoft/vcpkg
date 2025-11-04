@@ -18,6 +18,7 @@
       "name": "vcpkg-cmake-get-vars",
       "host": true
     },
+    "xxhash",
     "zstd"
   ]
 }
