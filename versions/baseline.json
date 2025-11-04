@@ -1733,7 +1733,7 @@
       "port-version": 1
     },
     "cista": {
-      "baseline": "0.15",
+      "baseline": "0.16",
       "port-version": 0
     },
     "cityhash": {
