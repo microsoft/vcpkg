@@ -6037,7 +6037,7 @@
       "port-version": 0
     },
     "luabridge": {
-      "baseline": "2.8",
+      "baseline": "2.10",
       "port-version": 0
     },
     "luabridge3": {
