@@ -8512,6 +8512,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "rewolf-wow64ext": {
+      "baseline": "1.0.0.9",
+      "port-version": 0
+    },
     "rexo": {
       "baseline": "0.2.2",
       "port-version": 0
