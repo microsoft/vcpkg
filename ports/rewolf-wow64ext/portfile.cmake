@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 bbd96200bb7ba581ce58c3935dff8f1cf336b58f88139ba53511fc9f9f3c98fc030db93b0586011a8afeb07a87b719a15498db2696c567beb4c6b55009c77e47
     HEAD_REF main
+    PATCHES
+        fix-duplicate.patch
 )
 
 vcpkg_msbuild_install(
