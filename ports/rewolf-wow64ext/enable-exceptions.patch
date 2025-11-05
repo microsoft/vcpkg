@@ -1,0 +1,13 @@
+diff --git a/src/wow64ext.vcxproj b/src/wow64ext.vcxproj
+index 91d0cac..94bae76 100644
+--- a/src/wow64ext.vcxproj
++++ b/src/wow64ext.vcxproj
+@@ -72,7 +72,7 @@
+       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;WOW64EXT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+       <BufferSecurityCheck>false</BufferSecurityCheck>
+-      <ExceptionHandling>false</ExceptionHandling>
++      <ExceptionHandling>true</ExceptionHandling>
+       <ControlFlowGuard>false</ControlFlowGuard>
+     </ClCompile>
+     <Link>
