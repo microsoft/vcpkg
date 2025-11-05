@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Format-aware compression framework delivering high ratios while preserving speed.",
   "homepage": "https://github.com/facebook/openzl",
-  "license": "BSD-3-Clause AND BSD-2-Clause AND Apache-2.0",
+  "license": "BSD-3-Clause AND Apache-2.0",
   "supports": "!uwp & !x86 & !arm32",
   "dependencies": [
     {

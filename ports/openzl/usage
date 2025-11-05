@@ -1,4 +1,4 @@
-The package OpenZL provides CMake targets:
+OpenZL provides CMake targets:
 
     find_package(OpenZL CONFIG REQUIRED)
     target_link_libraries(main PRIVATE OpenZL::openzl)

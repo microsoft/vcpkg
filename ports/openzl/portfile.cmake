@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 620ddbef22ba80266ad6f8655982a48d578bb0528bbeddc291e079a42883ec9bdeeb239cf5584eda0de4c7c493ced0a9c300e4cd4cd73f4c4a9449b54b3a477e
     HEAD_REF main
     PATCHES
-        patches/use-system-zstd.patch
+        use-system-zstd.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/src/openzl/shared/xxhash.h")
