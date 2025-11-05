@@ -1,77 +1,20 @@
 diff --git a/src/wow64ext.cpp b/src/wow64ext.cpp
-index fbba809..478835a 100644
+index fbba809..6f3d566 100644
 --- a/src/wow64ext.cpp
 +++ b/src/wow64ext.cpp
-@@ -29,44 +29,50 @@
+@@ -29,6 +29,7 @@
  HANDLE g_heap;
  BOOL g_isWow64;
  
-+#ifndef malloc
++/*
  void* malloc(size_t size)
  {
--	return HeapAlloc(g_heap, 0, size);
-+    return HeapAlloc(g_heap, 0, size);
+ 	return HeapAlloc(g_heap, 0, size);
+@@ -59,6 +60,7 @@ int _wcsicmp(const wchar_t *string1, const wchar_t *string2)
+ 	} while (c1 && c1 == c2);
+ 	return c1 - c2;
  }
-+#endif
- 
-+#ifndef free
- void free(void* ptr)
- {
--	if (nullptr != ptr)
--		HeapFree(g_heap, 0, ptr);
-+    if (nullptr != ptr)
-+        HeapFree(g_heap, 0, ptr);
- }
-+#endif
- 
-+#ifndef _wcsicmp
- int _wcsicmp(const wchar_t *string1, const wchar_t *string2)
- {
--	wchar_t c1;
--	wchar_t c2;
--	int i = 0;
--	do
--	{
--		c1 = string1[i];
--		if (c1 >= 'A' && c1 <= 'Z')
--			c1 += 0x20;
-+    wchar_t c1;
-+    wchar_t c2;
-+    int i = 0;
-+    do
-+    {
-+        c1 = string1[i];
-+        if (c1 >= 'A' && c1 <= 'Z')
-+            c1 += 0x20;
- 
--		c2 = string2[i];
--		if (c2 >= 'A' && c2 <= 'Z')
--			c2 += 0x20;
-+        c2 = string2[i];
-+        if (c2 >= 'A' && c2 <= 'Z')
-+            c2 += 0x20;
- 
--		i++;
--	} while (c1 && c1 == c2);
--	return c1 - c2;
-+        i++;
-+    } while (c1 && c1 == c2);
-+    return c1 - c2;
- }
-+#endif
++*/
  
  BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
  {
--	if (DLL_PROCESS_ATTACH == fdwReason)
--	{
--		IsWow64Process(GetCurrentProcess(), &g_isWow64);
--		g_heap = GetProcessHeap();
--	}
-+    if (DLL_PROCESS_ATTACH == fdwReason)
-+    {
-+        IsWow64Process(GetCurrentProcess(), &g_isWow64);
-+        g_heap = GetProcessHeap();
-+    }
-     return TRUE;
- }
- 

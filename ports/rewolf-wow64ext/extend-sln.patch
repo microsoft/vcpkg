@@ -1,0 +1,27 @@
+diff --git a/src/wow64ext.sln b/src/wow64ext.sln
+index a2d2495..9c8f4bd 100644
+--- a/src/wow64ext.sln
++++ b/src/wow64ext.sln
+@@ -7,10 +7,22 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wow64ext", "wow64ext.vcxpro
+ EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
++		Debug|x64 = Debug|x64
++		Release|x64 = Release|x64
++		Debug|ARM64 = Debug|ARM64
++		Release|ARM64 = Release|ARM64
+ 		Debug|Win32 = Debug|Win32
+ 		Release|Win32 = Release|Win32
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
++		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Debug|x64.ActiveCfg = Debug|x64
++		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Debug|x64.Build.0 = Debug|x64
++		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Release|x64.ActiveCfg = Release|x64
++		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Release|x64.Build.0 = Release|x64
++		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Debug|ARM64.ActiveCfg = Debug|ARM64
++		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Debug|ARM64.Build.0 = Debug|ARM64
++		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Release|ARM64.ActiveCfg = Release|ARM64
++		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Release|ARM64.Build.0 = Release|ARM64
+ 		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Debug|Win32.Build.0 = Debug|Win32
+ 		{9DA7F232-0096-45BC-A452-24C7F3AFA0F8}.Release|Win32.ActiveCfg = Release|Win32

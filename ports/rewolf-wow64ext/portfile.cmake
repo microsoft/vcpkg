@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-duplicate.patch
         extend-vcxproj.patch
+        extend-sln.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_MT)
