@@ -8,7 +8,23 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-duplicate.patch
+        extend-vcxproj.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_MT)
+
+if(NOT(MSVC_USE_MT))
+    vcpkg_replace_string(
+        "${SOURCE_PATH}/src/wow64ext.vcxproj"
+        "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"
+        "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>"
+    )
+    vcpkg_replace_string(
+        "${SOURCE_PATH}/src/wow64ext.vcxproj"
+        "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"
+        "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>"
+    )
+endif()
 
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
