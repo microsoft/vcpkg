@@ -9,9 +9,6 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
-        0001-g-ir-tool-template.in.patch
-        0004-fastcall.patch # https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/498
 )
 
 include("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake")
