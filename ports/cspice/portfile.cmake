@@ -24,47 +24,31 @@ else()
     endif()
 endif()
 
-set(VERSION 67)
 set(URL "https://naif.jpl.nasa.gov/pub/naif/misc/toolkit_N00${VERSION}/C/${SUBPATH}")
 get_filename_component(ext "${SUBPATH}" EXT)
 string(SUBSTRING "${SHA512}" 0 6 subsha)
 vcpkg_download_distfile(ARCHIVE URLS "${URL}" FILENAME "cspice-${subsha}${ext}" SHA512 "${SHA512}")
 
-set(PATCHES isatty.patch)
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES ${PATCHES} mktemp.patch)
-endif()
-
 vcpkg_extract_source_archive(
     SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    NO_REMOVE_ONE_LEVEL
-    PATCHES ${PATCHES}
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        isatty.patch
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(_STATIC_BUILD ON)
-endif()
-
-if (VCPKG_TARGET_IS_UWP)
-    set(VCPKG_C_FLAGS "/sdl- ${VCPKG_C_FLAGS}")
-    set(VCPKG_CXX_FLAGS "/sdl- ${VCPKG_CXX_FLAGS}")
-endif()
+file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -D_STATIC_BUILD=${_STATIC_BUILD}
-    OPTIONS_DEBUG -D_SKIP_HEADERS=ON
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DVERSION=${VERSION}"
 )
-
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
 
-file(
-    INSTALL ${CMAKE_CURRENT_LIST_DIR}/License.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-    RENAME copyright
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(
+    COMMENT "The complete rules are available at https://naif.jpl.nasa.gov/naif/rules.html."
+    FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/License.txt"
 )

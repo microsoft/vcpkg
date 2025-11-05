@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wjakob/nanobind
     REF "v${VERSION}"
-    SHA512 885668ee4ea9c551ccd60d2e056a90021badfeb7b358aeace184a23f9c2d34cb31a81ebe84db33fd6f15b7983dbb455d9c11f9367de091cb9b56c99d7634f9a0
+    SHA512 05b2541896e64bb513f915ebc09820b2d3659efa9a1a4bdda9da79a761a23d84e41db22031c02ae816b1f729dab95efcb7c888e926dbb89fb4b34c8a329d59bf
     HEAD_REF master
 )
 

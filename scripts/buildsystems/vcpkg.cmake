@@ -352,6 +352,10 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR (NOT CMAKE_SYSTEM_NAME AND CMAKE_H
     set(Z_VCPKG_TARGET_TRIPLET_PLAT osx)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     set(Z_VCPKG_TARGET_TRIPLET_PLAT ios)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "watchOS")
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT watchos)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "tvOS")
+    set(Z_VCPKG_TARGET_TRIPLET_PLAT tvos)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "visionOS")
     set(Z_VCPKG_TARGET_TRIPLET_PLAT visionos)
 elseif(MINGW)
@@ -826,7 +830,7 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     # the ROOT_PATH at apple OS initialization phase.
     # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
     # Fixed in CMake 3.15
-    if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "visionOS")
+    if(CMAKE_SYSTEM_NAME STREQUAL "iOS" OR CMAKE_SYSTEM_NAME STREQUAL "watchOS" OR CMAKE_SYSTEM_NAME STREQUAL "tvOS" OR CMAKE_SYSTEM_NAME STREQUAL "visionOS")
         list(APPEND z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_vars "CMAKE_FIND_ROOT_PATH")
         if(DEFINED CMAKE_FIND_ROOT_PATH)
             set(z_vcpkg_find_package_${z_vcpkg_find_package_backup_id}_backup_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}")
