@@ -1,0 +1,23 @@
+diff --git a/src/gpu/ganesh/PathRendererChain.cpp b/src/gpu/ganesh/PathRendererChain.cpp
+index d248e7bab5..2c55a6c15a 100644
+--- a/src/gpu/ganesh/PathRendererChain.cpp
++++ b/src/gpu/ganesh/PathRendererChain.cpp
+@@ -40,6 +40,9 @@ PathRendererChain::PathRendererChain(GrRecordingContext* context, const Options&
+     if (options.fGpuPathRenderers & GpuPathRenderers::kAALinearizing) {
+         fChain.push_back(sk_make_sp<AALinearizingConvexPathRenderer>());
+     }
++#if 0
++    // Disable the Atlas path renderer because it does not work correctly on many GPUs:
++    // https://issues.skia.org/issues/394350438
+     if (options.fGpuPathRenderers & GpuPathRenderers::kAtlas) {
+         if (auto atlasPathRenderer = AtlasPathRenderer::Make(context)) {
+             fAtlasPathRenderer = atlasPathRenderer.get();
+@@ -47,6 +50,7 @@ PathRendererChain::PathRendererChain(GrRecordingContext* context, const Options&
+             fChain.push_back(std::move(atlasPathRenderer));
+         }
+     }
++#endif
+ #if !defined(SK_ENABLE_OPTIMIZE_SIZE)
+     if (options.fGpuPathRenderers & GpuPathRenderers::kSmall) {
+         fChain.push_back(sk_make_sp<SmallPathRenderer>());
+
