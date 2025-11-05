@@ -10,7 +10,7 @@ vcpkg_from_github(
 
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH "src/wow64ext.vcxproj"
+    PROJECT_SUBPATH "src/wow64ext.sln"
 )
 
 file(
