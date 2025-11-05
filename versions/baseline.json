@@ -7230,7 +7230,7 @@
     },
     "openssl": {
       "baseline": "3.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "opensubdiv": {
       "baseline": "3.5.0",
