@@ -1,5 +1,17 @@
+diff --git a/CMake/FindGnuTLS.cmake b/CMake/FindGnuTLS.cmake
+index 4de4f82eee..f47e049101 100644
+--- a/CMake/FindGnuTLS.cmake
++++ b/CMake/FindGnuTLS.cmake
+@@ -40,6 +40,7 @@
+ 
+ set(GNUTLS_PC_REQUIRES "gnutls")
+ 
++unset(GNUTLS_LIBRARY CACHE) # from shiftmedia-libgnutls cmake wrapper
+ if(CURL_USE_PKGCONFIG AND
+    NOT DEFINED GNUTLS_INCLUDE_DIR AND
+    NOT DEFINED GNUTLS_LIBRARY)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 86add74..be7b193 100644
+index 4772a6219a..7befd05c34 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -401,7 +401,7 @@ set(LIBCURL_PC_REQUIRES_PRIVATE "")
