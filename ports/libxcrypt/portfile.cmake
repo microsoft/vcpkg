@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO besser82/libxcrypt
     REF "v${VERSION}"
-    SHA512 05b0288ca1f1371674516df2e6cc9034f34057bb86a4b1702577dcf1eb7ce4730fad3e660d69123f108aec1f1ab8a0f84aec50ada012fe523e94d10e2303835e
+    SHA512 e66f78adda1989e635d8df3f0273816c979d9bcb0396ed8bfa326541e7e8e0d092d63d19dba3dd5aafb887f74eff835d344d4cffc0a98d7e8ee8b2de3b88fabc
 )
 
 vcpkg_make_configure(
