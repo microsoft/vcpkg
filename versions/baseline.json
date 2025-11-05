@@ -5881,7 +5881,7 @@
       "port-version": 0
     },
     "libzim": {
-      "baseline": "9.0.0",
+      "baseline": "9.4.0",
       "port-version": 0
     },
     "libzip": {
