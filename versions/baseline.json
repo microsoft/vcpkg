@@ -630,7 +630,7 @@
     },
     "bbalouki-itch": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "bcg729": {
       "baseline": "1.1.1",
@@ -4954,7 +4954,7 @@
     },
     "libhat": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libhdfs3": {
       "baseline": "2019-11-05",

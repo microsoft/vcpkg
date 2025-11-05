@@ -19,15 +19,13 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"    LIBHAT_BUILD_STATIC)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "hint"  LIBHAT_HINT_X86_64
-    INVERTED_FEATURES
-        "sse"    LIBHAT_DISABLE_SSE
-        "avx"    LIBHAT_DISABLE_AVX512
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DLIBHAT_DISABLE_AVX512=ON # For AVX512, author an overlay-port that removes this line
         -DLIBHAT_SHARED_C_LIB=${LIBHAT_BUILD_SHARED}
         -DLIBHAT_STATIC_C_LIB=${LIBHAT_BUILD_STATIC}
         -DLIBHAT_TESTING=OFF

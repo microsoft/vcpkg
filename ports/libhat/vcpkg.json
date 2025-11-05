@@ -1,6 +1,7 @@
 {
   "name": "libhat",
   "version": "0.7.0",
+  "port-version": 1,
   "description": "A high-performance, modern, C++20 library designed around game hacking.",
   "homepage": "https://github.com/BasedInc/libhat",
   "license": "MIT",
@@ -16,16 +17,8 @@
     }
   ],
   "features": {
-    "avx": {
-      "description": "Enables AVX512 scanning",
-      "supports": "!arm"
-    },
     "hint": {
       "description": "Enables support for the x86_64 scan hint, requires a small (2KB) data table"
-    },
-    "sse": {
-      "description": "Enables SSE scanning",
-      "supports": "!arm"
     }
   }
 }
