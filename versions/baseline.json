@@ -3213,8 +3213,8 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.11.4",
-      "port-version": 1
+      "baseline": "3.11.5",
+      "port-version": 0
     },
     "gdbm": {
       "baseline": "1.24",
