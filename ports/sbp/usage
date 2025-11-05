@@ -1,6 +1,0 @@
-sbp can be used from CMake via:
-
-    find_path(libsbp_INCLUDE_DIR "libsbp/sbp.h")
-    find_library(libsbp_LIBRARY "libsbp.a")
-    target_include_directories(main PRIVATE ${libsbp_INCLUDE_DIR})
-    target_link_libraries(main PRIVATE ${libsbp_LIBRARY})
