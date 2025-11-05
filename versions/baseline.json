@@ -2457,11 +2457,11 @@
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2025-07-10",
+      "baseline": "2025-10-27",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2025-07-10",
+      "baseline": "2025-10-27",
       "port-version": 0
     },
     "dirent": {
