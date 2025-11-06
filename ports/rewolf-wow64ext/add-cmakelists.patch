@@ -1,15 +1,16 @@
-+diff --git a/CMakeLists.txt b/CMakeLists.txt
-+new file mode 100644
-+index 0000000..f015eb3
-+--- /dev/null
-+ b/CMakeLists.txt
-+@@ -0,0 1,68 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 0000000..06a9c75
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,64 @@
 +cmake_minimum_required(VERSION 3.14)
 +project(rewolf-wow64ext VERSION 1.0.0.9 LANGUAGES CXX)
 +
 +include(CMakePackageConfigHelpers)
 +
-+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++set(CMAKE_MSVC_RUNTIME_LIBRARY  "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++set(STATIC_MT_CPP_LIB           "libcpmt$<$<OR:$<CONFIG:Debug>,$<CONFIG:Checked>>:d>.lib")
 +
 +add_library(wow64ext SHARED
 +    src/wow64ext.cpp
@@ -29,7 +30,7 @@
 +    /ENTRY:DllMain
 +)
 +
-+target_link_libraries(wow64ext PRIVATE kernel32)
++target_link_libraries(wow64ext PRIVATE ${STATIC_MT_CPP_LIB} kernel32)
 +
 +install(
 +    TARGETS wow64ext
