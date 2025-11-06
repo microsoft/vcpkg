@@ -26,7 +26,6 @@ target_compile_options(wow64ext PRIVATE
 )
 
 target_link_options(wow64ext PRIVATE
-    /NODEFAULTLIB
     /SUBSYSTEM:WINDOWS
     /ENTRY:DllMain
     /d2:-FH4-
