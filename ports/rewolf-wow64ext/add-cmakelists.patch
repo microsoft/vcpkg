@@ -9,7 +9,7 @@ index 0000000..aee5bbc
 +
 +include(CMakePackageConfigHelpers)
 +
-+set(CMAKE_MSVC_RUNTIME_LIBRARY  "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++set(CMAKE_MSVC_RUNTIME_LIBRARY  "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 +set(STATIC_MT_CPP_LIB           "libcpmt$<$<OR:$<CONFIG:Debug>,$<CONFIG:Checked>>:d>.lib")
 +
 +add_library(wow64ext SHARED
