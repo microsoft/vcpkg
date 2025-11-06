@@ -9,7 +9,7 @@
 +
 +include(CMakePackageConfigHelpers)
 +
-+option(WOW64EXT_NO_EXCEPTIONS "Build without C++ exceptions" OFF)
++option(WOW64EXT_NO_EXCEPTIONS "Build without C++ exceptions" ON)
 +
 +add_library(wow64ext SHARED
 +    src/wow64ext.cpp
