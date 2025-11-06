@@ -11,14 +11,13 @@ vcpkg_from_github(
         add-cmakelists.patch
 )
 
-vcpkg_msbuild_install(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PROJECT_SUBPATH "src/wow64ext.sln"
 )
 
-file(
-    INSTALL        "${SOURCE_PATH}/src/wow64ext.h"
-    DESTINATION    "${CURRENT_PACKAGES_DIR}/include/wow64ext.h"
-)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
+vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/lgpl-3.0.txt")
