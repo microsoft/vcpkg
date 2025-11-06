@@ -1,7 +1,16 @@
 diff --git a/src/wow64ext.vcxproj b/src/wow64ext.vcxproj
-index 91d0cac..0110a87 100644
+index 91d0cac..407f086 100644
 --- a/src/wow64ext.vcxproj
 +++ b/src/wow64ext.vcxproj
+@@ -67,7 +67,7 @@
+       <PrecompiledHeader>
+       </PrecompiledHeader>
+       <Optimization>MaxSpeed</Optimization>
+-      <FunctionLevelLinking>true</FunctionLevelLinking>
++      <FunctionLevelLinking>false</FunctionLevelLinking>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;WOW64EXT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 @@ -80,7 +80,7 @@
        <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
        <EnableCOMDATFolding>true</EnableCOMDATFolding>
