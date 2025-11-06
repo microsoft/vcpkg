@@ -9,7 +9,7 @@
 +
 +include(CMakePackageConfigHelpers)
 +
-+option(WOW64EXT_NO_EXCEPTIONS "Build without C++ exceptions" ON)
++set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 +
 +add_library(wow64ext SHARED
 +    src/wow64ext.cpp
@@ -22,11 +22,7 @@
 +
 +target_compile_definitions(wow64ext PRIVATE WOW64EXT_EXPORTS)
 +
-+if(WOW64EXT_NO_EXCEPTIONS)
-+    target_compile_options(wow64ext PRIVATE /EHs-c-)
-+else()
-+    target_compile_options(wow64ext PRIVATE /EHsc)
-+endif()
++target_compile_options(wow64ext PRIVATE /EHsc)
 +
 +target_link_options(wow64ext PRIVATE
 +    /SUBSYSTEM:WINDOWS
