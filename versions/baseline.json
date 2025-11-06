@@ -652,10 +652,6 @@
       "baseline": "1.9.4",
       "port-version": 0
     },
-    "benchmarksuite": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "bento4": {
       "baseline": "1.6.0-641",
       "port-version": 0
@@ -8615,6 +8611,10 @@
     "rtaudio": {
       "baseline": "6.0.1",
       "port-version": 1
+    },
+    "rtc-benchmarksuite": {
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "rtlsdr": {
       "baseline": "2.0.2",
