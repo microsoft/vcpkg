@@ -11,6 +11,9 @@ vcpkg_from_github(
         add-cmakelists.patch
 )
 
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/wow64extConfig.cmake.in" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
