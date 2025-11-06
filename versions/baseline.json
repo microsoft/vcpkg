@@ -9460,6 +9460,10 @@
       "baseline": "2021-05-22",
       "port-version": 0
     },
+    "swiftnet": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "symengine": {
       "baseline": "0.11.2",
       "port-version": 2
