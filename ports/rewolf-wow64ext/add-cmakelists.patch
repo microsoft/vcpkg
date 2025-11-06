@@ -10,7 +10,7 @@ index 0000000..06a9c75
 +include(CMakePackageConfigHelpers)
 +
 +set(CMAKE_MSVC_RUNTIME_LIBRARY  "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-+set(STATIC_MT_CPP_LIB           "libcpmt$<$<OR:$<CONFIG:Debug>,$<CONFIG:Checked>>:d>.lib")
++set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /d2FH4-")
 +
 +add_library(wow64ext SHARED
 +    src/wow64ext.cpp
@@ -30,7 +30,7 @@ index 0000000..06a9c75
 +    /ENTRY:DllMain
 +)
 +
-+target_link_libraries(wow64ext PRIVATE ${STATIC_MT_CPP_LIB} kernel32)
++target_link_libraries(wow64ext PRIVATE kernel32)
 +
 +install(
 +    TARGETS wow64ext
