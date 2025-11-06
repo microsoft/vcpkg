@@ -28,7 +28,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
   REF "v${VERSION}"
-  SHA512 0
+  SHA512 0d0ee4eb70e8021882a1d6548cf757972388c0a561ee71bb0e4b330be61f1463f4eaec55202d7a35eef8b392ecf0b3888713692ba8cd88f850e7b9072504733e
   HEAD_REF main
   PATCHES
       enable-either-static-or-shared-build.patch
