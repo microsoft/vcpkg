@@ -1,13 +1,24 @@
 diff --git a/src/wow64ext.vcxproj b/src/wow64ext.vcxproj
-index 91d0cac..94bae76 100644
+index 91d0cac..37de1cc 100644
 --- a/src/wow64ext.vcxproj
 +++ b/src/wow64ext.vcxproj
-@@ -72,7 +72,7 @@
-       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;WOW64EXT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+@@ -74,14 +74,17 @@
        <BufferSecurityCheck>false</BufferSecurityCheck>
--      <ExceptionHandling>false</ExceptionHandling>
-+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+       <ExceptionHandling>false</ExceptionHandling>
        <ControlFlowGuard>false</ControlFlowGuard>
++      <RuntimeTypeInfo>false</RuntimeTypeInfo>
++      <AdditionalOptions>/EHs-c- /GR- %(AdditionalOptions)</AdditionalOptions>
      </ClCompile>
      <Link>
+       <SubSystem>Windows</SubSystem>
+       <GenerateDebugInformation>DebugFastLink</GenerateDebugInformation>
+       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+       <OptimizeReferences>true</OptimizeReferences>
+-      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+-      <AdditionalDependencies>kernel32.lib</AdditionalDependencies>
++      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
++      <IgnoreSpecificDefaultLibraries>msvcrt.lib;msvcrtd.lib;libcpmt.lib;libcpmtd.lib</IgnoreSpecificDefaultLibraries>
++      <AdditionalDependencies>kernel32.lib;libvcruntime.lib;libucrt.lib;libcmt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <EntryPointSymbol>DllMain</EntryPointSymbol>
+       <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+     </Link>
