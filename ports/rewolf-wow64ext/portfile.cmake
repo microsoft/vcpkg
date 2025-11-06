@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,20 +10,16 @@ vcpkg_from_github(
         enable-exceptions.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_MT)
-
-if(NOT(MSVC_USE_MT))
-    vcpkg_replace_string(
-        "${SOURCE_PATH}/src/wow64ext.vcxproj"
-        "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"
-        "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>"
-    )
-    vcpkg_replace_string(
-        "${SOURCE_PATH}/src/wow64ext.vcxproj"
-        "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"
-        "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>"
-    )
-endif()
+vcpkg_replace_string(
+    "${SOURCE_PATH}/src/wow64ext.vcxproj"
+    "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"
+    "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>"
+)
+vcpkg_replace_string(
+    "${SOURCE_PATH}/src/wow64ext.vcxproj"
+    "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"
+    "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>"
+)
 
 vcpkg_msbuild_install(
     SOURCE_PATH "${SOURCE_PATH}"
