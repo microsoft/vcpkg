@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 new file mode 100644
-index 0000000..9dec258
+index 0000000..aee5bbc
 --- /dev/null
 +++ b/CMakeLists.txt
-@@ -0,0 +1,69 @@
+@@ -0,0 +1,70 @@
 +cmake_minimum_required(VERSION 3.14)
 +project(rewolf-wow64ext VERSION 1.0.0.9 LANGUAGES CXX)
 +
@@ -33,6 +33,7 @@ index 0000000..9dec258
 +target_link_options(wow64ext PRIVATE
 +    /SUBSYSTEM:WINDOWS
 +    /ENTRY:DllMain
++    /d2:-FH4-
 +)
 +
 +target_link_libraries(wow64ext PRIVATE ${STATIC_MT_CPP_LIB} kernel32)
