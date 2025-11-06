@@ -7,7 +7,7 @@ index 91d0cac..94bae76 100644
        <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
        <BufferSecurityCheck>false</BufferSecurityCheck>
 -      <ExceptionHandling>false</ExceptionHandling>
-+      <ExceptionHandling>Sync</ExceptionHandling>
++      <RuntimeTypeInfo>false</RuntimeTypeInfo>
        <ControlFlowGuard>false</ControlFlowGuard>
      </ClCompile>
      <Link>
