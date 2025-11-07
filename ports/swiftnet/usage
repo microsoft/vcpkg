@@ -1,4 +1,4 @@
 swiftnet provides CMake targets:
 
   find_package(swiftnet REQUIRED)
-  target_link_libraries(main PRIVATE swiftnet::swift_net)
+  target_link_libraries(main PRIVATE swiftnet::swiftnet)
