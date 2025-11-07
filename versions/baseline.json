@@ -441,7 +441,7 @@
       "port-version": 0
     },
     "aws-c-cal": {
-      "baseline": "0.9.8",
+      "baseline": "0.9.10",
       "port-version": 0
     },
     "aws-c-common": {
@@ -630,7 +630,7 @@
     },
     "bbalouki-itch": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "bcg729": {
       "baseline": "1.1.1",
@@ -2253,7 +2253,7 @@
       "port-version": 8
     },
     "curl": {
-      "baseline": "8.16.0",
+      "baseline": "8.17.0",
       "port-version": 0
     },
     "curlcpp": {
@@ -2457,11 +2457,11 @@
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2025-07-10",
+      "baseline": "2025-10-27",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2025-07-10",
+      "baseline": "2025-10-27",
       "port-version": 0
     },
     "dirent": {
@@ -3213,8 +3213,8 @@
       "port-version": 0
     },
     "gdal": {
-      "baseline": "3.11.4",
-      "port-version": 1
+      "baseline": "3.11.5",
+      "port-version": 0
     },
     "gdbm": {
       "baseline": "1.24",
@@ -3245,7 +3245,7 @@
       "port-version": 0
     },
     "geographiclib": {
-      "baseline": "2.6",
+      "baseline": "2.7",
       "port-version": 0
     },
     "geos": {
@@ -3701,7 +3701,7 @@
       "port-version": 2
     },
     "harfbuzz": {
-      "baseline": "11.3.3",
+      "baseline": "12.2.0",
       "port-version": 0
     },
     "hash-library": {
@@ -4953,7 +4953,7 @@
       "port-version": 1
     },
     "libhat": {
-      "baseline": "0.7.0",
+      "baseline": "0.8.0",
       "port-version": 0
     },
     "libhdfs3": {
@@ -5330,6 +5330,10 @@
     },
     "libpng": {
       "baseline": "1.6.50",
+      "port-version": 0
+    },
+    "libpopcnt": {
+      "baseline": "3.1",
       "port-version": 0
     },
     "libpopt": {
@@ -5741,8 +5745,8 @@
       "port-version": 0
     },
     "libxcrypt": {
-      "baseline": "4.4.38",
-      "port-version": 2
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "libxcvt": {
       "baseline": "0.1.2",
@@ -5881,7 +5885,7 @@
       "port-version": 0
     },
     "libzim": {
-      "baseline": "9.0.0",
+      "baseline": "9.4.0",
       "port-version": 0
     },
     "libzip": {
@@ -6069,7 +6073,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.695",
+      "baseline": "0.698",
       "port-version": 0
     },
     "luminoengine": {
@@ -7153,7 +7157,7 @@
       "port-version": 1
     },
     "openexr": {
-      "baseline": "3.4.2",
+      "baseline": "3.4.3",
       "port-version": 0
     },
     "openfbx": {
@@ -7230,7 +7234,7 @@
     },
     "openssl": {
       "baseline": "3.6.0",
-      "port-version": 2
+      "port-version": 3
     },
     "opensubdiv": {
       "baseline": "3.5.0",
@@ -7275,6 +7279,10 @@
     "openxr-loader": {
       "baseline": "1.1.45",
       "port-version": 1
+    },
+    "openzl": {
+      "baseline": "0.1.0",
+      "port-version": 0
     },
     "optimus-cpp": {
       "baseline": "0.3.0",
@@ -8389,7 +8397,7 @@
       "port-version": 7
     },
     "re2": {
-      "baseline": "2025-08-12",
+      "baseline": "2025-11-05",
       "port-version": 0
     },
     "reaction": {
@@ -8573,7 +8581,7 @@
       "port-version": 2
     },
     "robin-map": {
-      "baseline": "1.4.0",
+      "baseline": "1.4.1",
       "port-version": 0
     },
     "robotraconteur": {
@@ -8635,6 +8643,10 @@
     "rtaudio": {
       "baseline": "6.0.1",
       "port-version": 1
+    },
+    "rtc-benchmarksuite": {
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "rtlsdr": {
       "baseline": "2.0.2",
@@ -8733,7 +8745,7 @@
       "port-version": 0
     },
     "sbp": {
-      "baseline": "6.2.1",
+      "baseline": "6.3.1",
       "port-version": 0
     },
     "scenepic": {
@@ -8833,8 +8845,8 @@
       "port-version": 12
     },
     "sdl3": {
-      "baseline": "3.2.24",
-      "port-version": 1
+      "baseline": "3.2.26",
+      "port-version": 0
     },
     "sdl3-image": {
       "baseline": "3.2.4",
@@ -9042,7 +9054,7 @@
     },
     "sleef": {
       "baseline": "3.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sleepy-discord": {
       "baseline": "2025-02-08",
@@ -9261,7 +9273,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.50.4",
+      "baseline": "3.51.0",
       "port-version": 0
     },
     "sqlitecpp": {

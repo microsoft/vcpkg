@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-pthread-flag.patch
         0003-no-tests.patch
         0004-fix-find-htscodecs.patch
+        bzip2-use-pkgconfig.diff
 )
 
 set(FEATURE_OPTIONS "")
