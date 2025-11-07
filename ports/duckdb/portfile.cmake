@@ -1,3 +1,5 @@
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # FIXME
+
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
@@ -87,10 +89,6 @@ elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/DuckDB")
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/DuckDB")
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
     vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE
