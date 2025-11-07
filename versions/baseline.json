@@ -8640,6 +8640,10 @@
       "baseline": "6.0.1",
       "port-version": 1
     },
+    "rtc-benchmarksuite": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "rtlsdr": {
       "baseline": "2.0.2",
       "port-version": 0
