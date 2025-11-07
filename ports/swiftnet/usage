@@ -1,5 +1,4 @@
-To use SwiftNet, add this to your CMakeLists.txt:
+swiftnet provides CMake targets:
 
-find_package(swiftnet REQUIRED)
-target_include_directories(main PRIVATE ${SWIFTNET_INCLUDE_DIRS})
-target_link_libraries(main PRIVATE ${SWIFTNET_LIBRARIES})
+  find_package(swiftnet REQUIRED)
+  target_link_libraries(main PRIVATE swiftnet::swift_net)
