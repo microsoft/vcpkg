@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-test.patch
         separate-build-type.patch
+        rename-static-lib.diff
 )
 
 vcpkg_cmake_configure(

@@ -1,6 +1,7 @@
 {
   "name": "libversion",
   "version": "3.0.4",
+  "port-version": 1,
   "description": "Advanced version string comparison library",
   "homepage": "https://github.com/repology/libversion",
   "license": "MIT",

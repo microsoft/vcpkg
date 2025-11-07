@@ -1,0 +1,45 @@
+diff --git a/libversion/CMakeLists.txt b/libversion/CMakeLists.txt
+index 52a6ba7..f05c54e 100644
+--- a/libversion/CMakeLists.txt
++++ b/libversion/CMakeLists.txt
+@@ -35,8 +35,7 @@ set_target_properties(libversion PROPERTIES
+ )
+ generate_export_header(libversion EXPORT_FILE_NAME export.h)
+ if(WIN32)
+-	# avoid clash with both c:/windows/system32/version.dll
+-	# and static version.lib from the next target
++	# avoid clash with both c:/windows/system32/version.dll and version.lib from the Windows SDK
+ 	set_target_properties(libversion PROPERTIES OUTPUT_NAME libversion)
+ endif()
+ 
+@@ -51,9 +50,17 @@ target_include_directories(libversion_static PUBLIC
+ target_compile_definitions(libversion_static PUBLIC
+ 	LIBVERSION_STATIC_DEFINE
+ )
++
++if(WIN32)
++	# avoid clash with version.lib from the Windows SDK and the dynamic target above
++	set(LIBVERSION_STATIC_OUTPUT_NAME libversion_static)
++else()
++	set(LIBVERSION_STATIC_OUTPUT_NAME version)
++endif()
++
+ set_target_properties(libversion_static PROPERTIES
+ 	POSITION_INDEPENDENT_CODE ON
+-	OUTPUT_NAME version
++	OUTPUT_NAME "${LIBVERSION_STATIC_OUTPUT_NAME}"
+ )
+ 
+ # object library
+diff --git a/libversion/libversion.pc.in b/libversion/libversion.pc.in
+index 4da0cb6..809962c 100644
+--- a/libversion/libversion.pc.in
++++ b/libversion/libversion.pc.in
+@@ -6,6 +6,6 @@ includedir=@includedir_for_pc_file@
+ Name: libversion
+ Description: Version comparison library
+ Version: @libversion_VERSION@
+-Libs: -L${libdir} -lversion
++Libs: -L${libdir} -l@LIBVERSION_STATIC_OUTPUT_NAME@
+ Cflags: -I${includedir}
+ Cflags.private: -DLIBVERSION_STATIC_DEFINE
