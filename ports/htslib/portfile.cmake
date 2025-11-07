@@ -10,6 +10,7 @@ vcpkg_from_github(
         0003-no-tests.patch
         0004-fix-find-htscodecs.patch
         0005-remove-duplicate-lhts.patch # https://github.com/samtools/htslib/pull/1852
+        bzip2-use-pkgconfig.diff
 )
 
 set(FEATURE_OPTIONS "")
