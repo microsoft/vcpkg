@@ -5,7 +5,6 @@
   "description": "libqrencode - a fast and compact QR Code encoding library",
   "homepage": "https://github.com/fukuchi/libqrencode",
   "dependencies": [
-    "libiconv",
     "libpng",
     {
       "name": "vcpkg-cmake",
