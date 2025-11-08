@@ -32,6 +32,7 @@
       "name": "gdal",
       "features": [
         "arrow",
+        "arrow-adbc",
         "parquet"
       ],
       "platform": "(arm64 | x64) & !linux"

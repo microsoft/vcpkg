@@ -1,6 +1,6 @@
 {
   "name": "yandex-disk-cpp-client",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Modern C++ client for Yandex.Disk REST API",
   "homepage": "https://github.com/Krasnovvvvv/yandex-disk-cpp-client",
   "documentation": "https://krasnovvvvv.github.io/yandex-disk-cpp-client/",

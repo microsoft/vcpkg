@@ -1,28 +1,41 @@
+vcpkg_download_distfile(ambiguous_safe_shift_left_patch
+    URLS https://github.com/BinomialLLC/basis_universal/commit/b738655c40efca3e0dc8c435617178fec9f7f13e.diff
+    FILENAME BinomialLLC_basis_universal_safe_shift_left.diff
+    SHA512 654ac6fbfc884396c1f34eee8057db796aafa811230373edc56e3d5a66ace4289a9d4f1981e1267dda7b320dc59e983b81b1bd930607f5337678246cb5d005ec
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BinomialLLC/basis_universal
-    REF "v1_50_0_2"
-    SHA512 845077e9c88a3610b4845bbf4856a2141d678751eb2b5eba26bb4cbbaa0199ad4eae6a37dee485bfcac9d583ee6dca983f300fb7e2b86dfbc9824b5059e11345
+    REF "v1_60"
+    SHA512 9464a944b2eaad5574e5f54b5d528be29d498f53463db1e00791ed61f0c497d4f1b9f8f78dba0e99c979ce70a894f8786b5ebef4b7741bfd244c7b56b7fb04fe
     HEAD_REF master
     PATCHES
-        # Remove once https://github.com/BinomialLLC/basis_universal/pull/383 merged
-        0001-cmake.patch
+        ${ambiguous_safe_shift_left_patch}
+        examples.diff
+        export-cmake-config.diff
+        skip-strip.diff
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DEXAMPLES=OFF
+        -DCMAKE_CXX_STANDARD=17
 )
-
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/basisu)
 
 vcpkg_copy_tools(TOOL_NAMES "basisu" AUTO_CLEAN)
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME basisu CONFIG_PATH lib/cmake/basisu)
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(COMMENT [[
+basis_universal is provided under Apache-2.0 license terms.
+But it includes third-party components with different licenses.]]
+    FILE_LIST
+        "${SOURCE_PATH}/.reuse/dep5"
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSES/BSD-3-clause.txt"
+        "${SOURCE_PATH}/LICENSES/MIT.txt"
+)
