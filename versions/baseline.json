@@ -5745,7 +5745,7 @@
       "port-version": 0
     },
     "libxcrypt": {
-      "baseline": "4.5.0",
+      "baseline": "4.5.1",
       "port-version": 0
     },
     "libxcvt": {
