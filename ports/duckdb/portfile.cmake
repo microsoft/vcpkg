@@ -1,5 +1,3 @@
-set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # FIXME
-
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
@@ -7,10 +5,8 @@ vcpkg_from_github(
         SHA512 4965071888bfd791ddc81ed9eb53cedcd0248b159e6db3492bf5d17557b0f7516aed0840408ff46a06e9a0989a42d7b2a7452fdaf619c8ca44de43e5d1c338b8
         HEAD_REF main
     PATCHES
-        extensions.patch
+        library-linkage.diff
 )
-
-# Remove vendored dependencies which are not properly namespaced
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/extension/third_party/icu"
     "${SOURCE_PATH}/third_party/catch"
@@ -21,13 +17,18 @@ file(REMOVE_RECURSE
 
 if("excel" IN_LIST FEATURES)
     vcpkg_from_github(
-        OUT_SOURCE_PATH DUCKDB_EXCCEL_SOURCE_PATH
+        OUT_SOURCE_PATH DUCKDB_EXCEL_SOURCE_PATH
         REPO duckdb/duckdb-excel
         REF 8504be9ec8183e4082141f9359b53a64d3a440b7
         SHA512 295bfe67c2902c09b584bee623dee7db69aad272a00e6bd4038ec65e2d8a977d1ace7261af8f67863c2fae709acc414e290e40f0bad43bae679c0a8639a0d6b5
         HEAD_REF main
     )
-    file(RENAME "${DUCKDB_EXCCEL_SOURCE_PATH}" "${SOURCE_PATH}/extension/excel")
+    file(WRITE "${SOURCE_PATH}/.github/config/extensions/excel.cmake" "
+duckdb_extension_load(excel
+    SOURCE_DIR \"${DUCKDB_EXCEL_SOURCE_PATH}\"
+    INCLUDE_DIR \"${DUCKDB_EXCEL_SOURCE_PATH}/src/excel/include\"
+)
+")
 endif()
 
 if("httpfs" IN_LIST FEATURES)
@@ -38,22 +39,34 @@ if("httpfs" IN_LIST FEATURES)
         SHA512 71461d522aa5338df81931f937ed538b453b274d22e91ad7e0f1a92e4437a29cc869a0f5be3bd5a9abf0045dfd4681a787923ee32374be471483909c0a60a21f
         HEAD_REF main
     )
-    file(RENAME "${DUCKDB_HTTPFS_SOURCE_PATH}" "${SOURCE_PATH}/extension/httpfs")
+    file(WRITE "${SOURCE_PATH}/.github/config/extensions/httpfs.cmake" "
+duckdb_extension_load(httpfs
+    SOURCE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}\"
+    INCLUDE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}/extension/httpfs/include\"
+)
+")
 endif()
 
 if("iceberg" IN_LIST FEATURES)
     vcpkg_from_github(
-        OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
+        OUT_SOURCE_PATH DUCKDB_ICEBERG_SOURCE_PATH
         REPO duckdb/duckdb-iceberg
         REF 6b636bff44aeeccf6f6d5b54de6edf280274beea
         SHA512 f8ce593117dd5423fd5445b6fa6c1f3b11ee7c8a2fdb988c3c0208a59d5ed980b941116866f7cb1d0597662e98c03687da071cbc5617c71086eb112621e31748
         HEAD_REF main
     )
-    file(RENAME "${DUCKDB_HTTPFS_SOURCE_PATH}" "${SOURCE_PATH}/extension/iceberg")
+    file(WRITE "${SOURCE_PATH}/.github/config/extensions/iceberg.cmake" "
+duckdb_extension_load(iceberg
+    SOURCE_DIR \"${DUCKDB_ICEBERG_SOURCE_PATH}\"
+    INCLUDE_DIR \"${DUCKDB_ICEBERG_SOURCE_PATH}/src/include\"
+)
+")
 endif()
 
 set(BUILD_EXTENSIONS "${FEATURES}")
 list(FILTER BUILD_EXTENSIONS INCLUDE REGEX "^(autocomplete|excel|httpfs|icu|json|tpcds|tpch)\$")
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" EXTENSION_STATIC_BUILD)
 
 vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
@@ -63,11 +76,14 @@ vcpkg_cmake_configure(
             "-DBUILD_EXTENSIONS=${BUILD_EXTENSIONS}"
             -DBUILD_SHELL=FALSE
             -DBUILD_UNITTESTS=OFF
+            -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
             -DENABLE_EXTENSION_AUTOINSTALL=1
             -DENABLE_EXTENSION_AUTOLOADING=1
             -DENABLE_SANITIZER=OFF
             -DENABLE_THREAD_SANITIZER=OFF
             -DENABLE_UBSAN=OFF
+            "-DEXTENSION_CONFIG_BASE_DIR=${SOURCE_PATH}/OUT_OF_TREE"
+            "-DEXTENSION_STATIC_BUILD=${EXTENSION_STATIC_BUILD}"
             "-DINSTALL_CMAKE_DIR:STRING=share/${PORT}"
             -DWITH_INTERNAL_ICU=OFF
 )
