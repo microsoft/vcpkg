@@ -3673,7 +3673,7 @@
       "port-version": 2
     },
     "h3": {
-      "baseline": "4.3.0",
+      "baseline": "4.4.0",
       "port-version": 0
     },
     "h5py-lzf": {
