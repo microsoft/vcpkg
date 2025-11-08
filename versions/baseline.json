@@ -9904,6 +9904,10 @@
       "baseline": "0.7.2",
       "port-version": 0
     },
+    "tsl-hat-trie": {
+      "baseline": "0.7.0",
+      "port-version": 0
+    },
     "tsl-hopscotch-map": {
       "baseline": "2.4.0",
       "port-version": 0
