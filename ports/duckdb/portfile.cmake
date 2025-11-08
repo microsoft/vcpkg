@@ -12,6 +12,7 @@ vcpkg_from_github(
 
 # Remove vendored dependencies which are not properly namespaced
 file(REMOVE_RECURSE
+    "${SOURCE_PATH}/extension/third_party/icu"
     "${SOURCE_PATH}/third_party/catch"
     "${SOURCE_PATH}/third_party/imdb"
     "${SOURCE_PATH}/third_party/snowball"
@@ -51,52 +52,33 @@ if("iceberg" IN_LIST FEATURES)
     file(RENAME "${DUCKDB_HTTPFS_SOURCE_PATH}" "${SOURCE_PATH}/extension/iceberg")
 endif()
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DUCKDB_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DUCKDB_BUILD_DYNAMIC)
-
-set(EXTENSION_LIST "autocomplete;excel;httpfs;icu;json;tpcds;tpch")
-set(BUILD_EXTENSIONS "")
-foreach(EXT ${EXTENSION_LIST})
-    if(${EXT} IN_LIST FEATURES)
-        list(APPEND BUILD_EXTENSIONS ${EXT})
-    endif()
-endforeach()
-if(NOT "${BUILD_EXTENSIONS}" STREQUAL "")
-    set(BUILD_EXTENSIONS_FLAG "-DBUILD_EXTENSIONS='${BUILD_EXTENSIONS}'")
-endif()
+set(BUILD_EXTENSIONS "${FEATURES}")
+list(FILTER BUILD_EXTENSIONS INCLUDE REGEX "^(autocomplete|excel|httpfs|icu|json|tpcds|tpch)\$")
 
 vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             -DOVERRIDE_GIT_DESCRIBE=v${VERSION}-0-g0123456789
             -DDUCKDB_EXPLICIT_VERSION=v${VERSION}
-            -DBUILD_UNITTESTS=OFF
+            "-DBUILD_EXTENSIONS=${BUILD_EXTENSIONS}"
             -DBUILD_SHELL=FALSE
-            "${BUILD_EXTENSIONS_FLAG}"
-            -DENABLE_EXTENSION_AUTOLOADING=1
+            -DBUILD_UNITTESTS=OFF
             -DENABLE_EXTENSION_AUTOINSTALL=1
-            -DWITH_INTERNAL_ICU=OFF
+            -DENABLE_EXTENSION_AUTOLOADING=1
             -DENABLE_SANITIZER=OFF
             -DENABLE_THREAD_SANITIZER=OFF
             -DENABLE_UBSAN=OFF
+            "-DINSTALL_CMAKE_DIR:STRING=share/${PORT}"
+            -DWITH_INTERNAL_ICU=OFF
 )
-
 vcpkg_cmake_install()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/CMake")
-    vcpkg_cmake_config_fixup(CONFIG_PATH CMake)
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/DuckDB")
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/DuckDB")
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
-    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
-endif()
-
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/include/duckdb/main/capi/header_generation"
-)
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+# empty dirs
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/duckdb/main/capi/header_generation")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/duckdb/storage/serialization")
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
