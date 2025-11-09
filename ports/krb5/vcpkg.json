@@ -10,7 +10,6 @@
   ],
   "homepage": "https://web.mit.edu/kerberos/",
   "license": "MIT",
-  "supports": "linux | osx | (x64 & windows & !static & !uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
