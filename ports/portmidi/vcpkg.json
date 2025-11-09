@@ -1,6 +1,7 @@
 {
   "name": "portmidi",
   "version": "2.0.6",
+  "port-version": 1,
   "description": "PortMidi is a cross platform (Windows, macOS, Linux, and BSDs which support alsalib) library for interfacing with operating systems' MIDI I/O APIs.",
   "homepage": "https://github.com/PortMidi/portmidi",
   "license": "MIT",
