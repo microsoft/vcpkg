@@ -116,6 +116,7 @@ vcpkg_cmake_configure(
             "-DBUILD_EXTENSIONS=${BUILD_EXTENSIONS}"
             -DBUILD_SHELL=FALSE
             -DBUILD_UNITTESTS=OFF
+            -DCMAKE_CXX_STANDARD=17
             -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
             -DENABLE_EXTENSION_AUTOINSTALL=1
             -DENABLE_EXTENSION_AUTOLOADING=1
