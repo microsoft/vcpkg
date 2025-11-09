@@ -1,3 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4e9d498..70414b4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -410,7 +410,6 @@ option(EXTENSION_STATIC_BUILD
+         FALSE)
+ 
+ if(WIN32 OR ZOS)
+-  set(EXTENSION_STATIC_BUILD TRUE)
+   add_definitions(-D_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS=1)
+ endif()
+ 
+@@ -857,6 +856,7 @@ if (NOT EXTENSION_CONFIG_BUILD AND NOT ${EXTENSION_TESTS_ONLY} AND NOT CLANG_TID
+     message(STATUS "Extensions will be deployed to: ${LOCAL_EXTENSION_REPO_DIR}")
+   endif()
+ endif()
++set_target_properties(duckdb_local_extension_repo PROPERTIES EXCLUDE_FROM_ALL 1)
+ 
+ function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTENSION_VERSION CAPI_VERSION PARAMETERS)
+   set(TARGET_NAME ${NAME}_loadable_extension)
+@@ -875,6 +875,8 @@ function(build_loadable_extension_directory NAME ABI_TYPE OUTPUT_DIRECTORY EXTEN
+ 
+   if(EMSCRIPTEN)
+      add_library(${TARGET_NAME} STATIC ${FILES})
++  elseif(WIN32)
++     add_library(${TARGET_NAME} MODULE ${FILES})
+   else()
+      add_library(${TARGET_NAME} SHARED ${FILES})
+   endif()
 diff --git a/DuckDBConfig.cmake.in b/DuckDBConfig.cmake.in
 index 7c5ce31..dcf5ada 100644
 --- a/DuckDBConfig.cmake.in

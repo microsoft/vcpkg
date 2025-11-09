@@ -4,8 +4,8 @@
   "port-version": 1,
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
-  "license": "MIT",
-  "supports": "!(uwp | android | (windows & arm64))",
+  "license": null,
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

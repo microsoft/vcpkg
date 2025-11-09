@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         library-linkage.diff
 )
+# Remove vendored dependencies which are optional or not properly namespaced
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/extension/third_party/icu"
     "${SOURCE_PATH}/third_party/catch"
@@ -14,6 +15,8 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/third_party/snowball"
     "${SOURCE_PATH}/third_party/tpce-tool"
 )
+
+set(extension_dirs "")
 
 if("excel" IN_LIST FEATURES)
     vcpkg_from_github(
@@ -23,6 +26,7 @@ if("excel" IN_LIST FEATURES)
         SHA512 295bfe67c2902c09b584bee623dee7db69aad272a00e6bd4038ec65e2d8a977d1ace7261af8f67863c2fae709acc414e290e40f0bad43bae679c0a8639a0d6b5
         HEAD_REF main
     )
+    list(APPEND extension_dirs "${DUCKDB_EXCEL_SOURCE_PATH}")
     file(WRITE "${SOURCE_PATH}/.github/config/extensions/excel.cmake" "
 duckdb_extension_load(excel
     SOURCE_DIR \"${DUCKDB_EXCEL_SOURCE_PATH}\"
@@ -39,6 +43,7 @@ if("httpfs" IN_LIST FEATURES)
         SHA512 71461d522aa5338df81931f937ed538b453b274d22e91ad7e0f1a92e4437a29cc869a0f5be3bd5a9abf0045dfd4681a787923ee32374be471483909c0a60a21f
         HEAD_REF main
     )
+    list(APPEND extension_dirs "${DUCKDB_HTTPFS_SOURCE_PATH}")
     file(WRITE "${SOURCE_PATH}/.github/config/extensions/httpfs.cmake" "
 duckdb_extension_load(httpfs
     SOURCE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}\"
@@ -55,6 +60,7 @@ if("iceberg" IN_LIST FEATURES)
         SHA512 f8ce593117dd5423fd5445b6fa6c1f3b11ee7c8a2fdb988c3c0208a59d5ed980b941116866f7cb1d0597662e98c03687da071cbc5617c71086eb112621e31748
         HEAD_REF main
     )
+    list(APPEND extension_dirs "${DUCKDB_ICEBERG_SOURCE_PATH}")
     file(WRITE "${SOURCE_PATH}/.github/config/extensions/iceberg.cmake" "
 duckdb_extension_load(iceberg
     SOURCE_DIR \"${DUCKDB_ICEBERG_SOURCE_PATH}\"
@@ -97,4 +103,24 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/duckdb/main/capi/header_gen
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/duckdb/storage/serialization")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+set(third_party_licenses "")
+file(COPY_FILE "${SOURCE_PATH}/third_party/thrift/thrift/LICENSE" "${SOURCE_PATH}/third_party/thrift/LICENSE")
+file(GLOB third_party_files "${SOURCE_PATH}/third_party/*")
+foreach(maybe_directory IN LISTS extension_dirs third_party_files)
+    if(IS_DIRECTORY "${maybe_directory}")
+        cmake_path(GET maybe_directory FILENAME package)
+        set(license_file "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/## ${package} license")
+        file(COPY_FILE "${maybe_directory}/LICENSE" "${license_file}")
+        list(APPEND third_party_licenses "${license_file}")
+    endif()
+endforeach()
+vcpkg_install_copyright(
+    COMMENT [[
+Duckdb contains copyies of many third-party packages which are subject to
+separate license terms.
+]]
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        ${third_party_licenses}
+)
