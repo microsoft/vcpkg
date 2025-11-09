@@ -25,6 +25,8 @@ if("excel" IN_LIST FEATURES)
         REF 8504be9ec8183e4082141f9359b53a64d3a440b7
         SHA512 295bfe67c2902c09b584bee623dee7db69aad272a00e6bd4038ec65e2d8a977d1ace7261af8f67863c2fae709acc414e290e40f0bad43bae679c0a8639a0d6b5
         HEAD_REF main
+        PATCHES
+            library-linkage-excel.diff
     )
     list(APPEND extension_dirs "${DUCKDB_EXCEL_SOURCE_PATH}")
     file(WRITE "${SOURCE_PATH}/.github/config/extensions/excel.cmake" "
@@ -42,6 +44,8 @@ if("httpfs" IN_LIST FEATURES)
         REF 0989823e43554e8a00b31959a853e29ab9bd07f9
         SHA512 71461d522aa5338df81931f937ed538b453b274d22e91ad7e0f1a92e4437a29cc869a0f5be3bd5a9abf0045dfd4681a787923ee32374be471483909c0a60a21f
         HEAD_REF main
+        PATCHES
+            library-linkage-httpfs.diff
     )
     list(APPEND extension_dirs "${DUCKDB_HTTPFS_SOURCE_PATH}")
     file(WRITE "${SOURCE_PATH}/.github/config/extensions/httpfs.cmake" "
@@ -74,10 +78,40 @@ list(FILTER BUILD_EXTENSIONS INCLUDE REGEX "^(autocomplete|excel|httpfs|icu|json
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" EXTENSION_STATIC_BUILD)
 
+if(VCPKG_CROSSCOMPILING AND NOT DEFINED DUCKDB_EXPLICIT_PLATFORM)
+    set(DUCKDB_EXPLICIT_PLATFORM "")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(DUCKDB_EXPLICIT_PLATFORM "arm64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(DUCKDB_EXPLICIT_PLATFORM "amd64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(DUCKDB_EXPLICIT_PLATFORM "i686")
+    endif()
+    if(DUCKDB_EXPLICIT_PLATFORM)
+        if(VCPKG_TARGET_IS_ANDROID)
+            string(APPEND DUCKDB_EXPLICIT_PLATFORM "-linux_android")
+        elseif(VCPKG_TARGET_IS_FREEBSD)
+            string(APPEND DUCKDB_EXPLICIT_PLATFORM "-freebsd")
+        elseif(VCPKG_TARGET_IS_LINUX)
+            string(APPEND DUCKDB_EXPLICIT_PLATFORM "-linux")
+        elseif(VCPKG_TARGET_IS_OSX)
+            string(APPEND DUCKDB_EXPLICIT_PLATFORM "-osx")
+        elseif(VCPKG_TARGET_IS_WINDOWS)
+            string(APPEND DUCKDB_EXPLICIT_PLATFORM "-windows")
+            if(VCPKG_TARGET_IS_MINGW)
+                string(APPEND DUCKDB_EXPLICIT_PLATFORM "_mingw")
+            endif()
+        elseif()
+            set(DUCKDB_EXPLICIT_PLATFORM "") # unknown. override in triplet file.
+        endif()
+    endif()
+endif()
+
 vcpkg_cmake_configure(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             -DOVERRIDE_GIT_DESCRIBE=v${VERSION}-0-g0123456789
+            -DDUCKDB_EXPLICIT_PLATFORM=${DUCKDB_EXPLICIT_PLATFORM}
             -DDUCKDB_EXPLICIT_VERSION=v${VERSION}
             "-DBUILD_EXTENSIONS=${BUILD_EXTENSIONS}"
             -DBUILD_SHELL=FALSE
