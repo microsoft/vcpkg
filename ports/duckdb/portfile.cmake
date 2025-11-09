@@ -130,6 +130,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    foreach(path IN ITEMS duckdb.h duckdb/common/winapi.hpp)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${path}" "#ifdef DUCKDB_STATIC_BUILD" "#if 1")
+    endforeach()
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # empty dirs
