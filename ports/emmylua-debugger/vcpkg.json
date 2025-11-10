@@ -18,9 +18,12 @@
       "host": true
     }
   ],
+  "default-features": [
+    "lua54"
+  ],
   "features": {
-    "core": {
-      "description": "Core emmylua-debugger functionality with Lua 5.4",
+    "lua54": {
+      "description": "Use standard Lua 5.4 (default)",
       "dependencies": [
         "lua"
       ]
