@@ -1,7 +1,7 @@
 {
   "name": "emmylua-debugger",
   "version": "1.8.7",
-  "port-version": 3,
+  "port-version": 4,
   "description": "High-performance cross-platform Lua debugger with full debugging features including breakpoints, step execution, variable watch, and stack trace",
   "homepage": "https://github.com/EmmyLua/EmmyLuaDebugger",
   "license": "MIT",

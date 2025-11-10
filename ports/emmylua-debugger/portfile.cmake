@@ -17,11 +17,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Copy tools (emmy_tool.exe on Windows)
-vcpkg_copy_tools(
-    TOOL_NAMES emmy_tool
-    AUTO_CLEAN
-)
+# Copy tools if they exist (platform-dependent)
+file(GLOB TOOLS_FOUND "${CURRENT_PACKAGES_DIR}/bin/*")
+if(TOOLS_FOUND)
+    vcpkg_copy_tools(AUTO_CLEAN)
+endif()
 
 # Fix CMake config files location if they exist
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
