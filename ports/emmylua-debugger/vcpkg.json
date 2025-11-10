@@ -8,10 +8,6 @@
   "supports": "!uwp & !xbox & !android & !ios & !(arm & windows)",
   "dependencies": [
     "libuv",
-    {
-      "$comment": "Default Lua 5.4 dependency, used unless luajit feature is enabled",
-      "name": "lua"
-    },
     "nlohmann-json",
     {
       "name": "vcpkg-cmake",
@@ -23,6 +19,12 @@
     }
   ],
   "features": {
+    "lua54": {
+      "description": "Use standard Lua 5.4 (default)",
+      "dependencies": [
+        "lua"
+      ]
+    },
     "luajit": {
       "description": "Use LuaJIT instead of standard Lua 5.4",
       "supports": "!uwp & !(arm64 & windows)",
@@ -30,5 +32,8 @@
         "luajit"
       ]
     }
-  }
+  },
+  "default-features": [
+    "lua54"
+  ]
 }
