@@ -6,8 +6,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Set policies for Windows-specific issues
+# Set policies for Windows-specific issues and tool port configuration
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+
+# Skip CMake config checks for tool ports - emmylua-debugger doesn't export CMake configs
+# Any detected CMake files are from dependencies, not the port itself
+set(VCPKG_POLICY_SKIP_MISPLACED_CMAKE_FILES_CHECK enabled)
+set(VCPKG_POLICY_SKIP_LIB_CMAKE_MERGE_CHECK enabled)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
