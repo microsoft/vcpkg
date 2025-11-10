@@ -8,15 +8,15 @@
   "supports": "!uwp & !xbox & !android & !ios & !(arm & windows)",
   "dependencies": [
     "libuv",
+    {
+      "$if": "!features.luajit",
+      "name": "lua"
+    },
+    {
+      "$if": "features.luajit",
+      "name": "luajit"
+    },
     "nlohmann-json",
-    {
-      "name": "lua",
-      "$if": "!features.luajit"
-    },
-    {
-      "name": "luajit",
-      "$if": "features.luajit"
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -31,13 +31,11 @@
   ],
   "features": {
     "lua": {
-      "description": "Use standard Lua 5.4",
-      "dependencies": []
+      "description": "Use standard Lua 5.4"
     },
     "luajit": {
       "description": "Use LuaJIT instead of standard Lua 5.4",
-      "supports": "!uwp & !(arm64 & windows)",
-      "dependencies": []
+      "supports": "!uwp & !(arm64 & windows)"
     }
   }
 }
