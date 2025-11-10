@@ -10,17 +10,23 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         luajit USE_LUAJIT
+        lua54 USE_LUA54
 )
 
-# Validate Lua feature selection - prevent conflicts
-if("luajit" IN_LIST FEATURES)
+# Validate Lua feature selection - prevent conflicts and ensure at least one is selected
+if("luajit" IN_LIST FEATURES AND "lua54" IN_LIST FEATURES)
+    message(FATAL_ERROR "Cannot use both 'luajit' and 'lua54' features at the same time. Please select only one.")
+elseif("luajit" IN_LIST FEATURES)
     # When luajit is explicitly enabled, use LuaJIT
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=jit")
     message(STATUS "emmylua-debugger: Using LuaJIT")
-else()
-    # Default to Lua 5.4
+elseif("lua54" IN_LIST FEATURES)
+    # When lua54 is explicitly enabled, use Lua 5.4
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=54")
     message(STATUS "emmylua-debugger: Using Lua 5.4")
+else()
+    # When neither feature is specified, require explicit selection
+    message(FATAL_ERROR "emmylua-debugger requires explicit Lua version selection. Please enable either 'lua54' or 'luajit' feature.")
 endif()
 
 # Set policies for Windows-specific issues and tool port configuration
