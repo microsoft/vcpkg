@@ -8,15 +8,15 @@
   "supports": "!uwp & !xbox & !android & !ios & !(arm & windows)",
   "dependencies": [
     "libuv",
+    {
+      "$if": "!features.luajit",
+      "name": "lua"
+    },
+    {
+      "$if": "features.luajit",
+      "name": "luajit"
+    },
     "nlohmann-json",
-    {
-      "name": "lua",
-      "$if": "!features.luajit"
-    },
-    {
-      "name": "luajit",
-      "$if": "features.luajit"
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
