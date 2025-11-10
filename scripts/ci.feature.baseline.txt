@@ -86,7 +86,6 @@ discord-game-sdk:x64-windows-static-md=fail
 discord-game-sdk:x64-windows-static=fail
 discord-rpc(uwp)=fail
 dmlc(uwp) = fail
-emmylua-debugger[lua54,luajit]=options # lua54 and luajit are mutually exclusive, lua54 is required
 ensmallen[openmp](osx) = feature-fails # No openmp on default osx toolchain
 epsilon(uwp)=fail
 faiss:arm64-windows=fail
