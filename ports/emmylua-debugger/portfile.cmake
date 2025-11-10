@@ -22,10 +22,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/emmy_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX
     vcpkg_copy_tools(TOOL_NAMES emmy_tool AUTO_CLEAN)
 endif()
 
-# Fix CMake config files location if they exist
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
-    vcpkg_cmake_config_fixup()
-endif()
+# emmylua-debugger is primarily a tool port and does not generate CMake config files
 
 # Install includes if they exist
 if(EXISTS "${SOURCE_PATH}/include")
