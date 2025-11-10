@@ -7193,7 +7193,7 @@
       "port-version": 0
     },
     "openjph": {
-      "baseline": "0.25.0",
+      "baseline": "0.25.2",
       "port-version": 0
     },
     "openldap": {
