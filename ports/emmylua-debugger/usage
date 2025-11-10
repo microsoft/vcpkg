@@ -1,5 +1,17 @@
 emmylua-debugger provides a high-performance cross-platform Lua debugger library.
 
+## Installation options
+
+### Default (Lua 5.4)
+```
+vcpkg install emmylua-debugger
+```
+
+### LuaJIT support
+```
+vcpkg install emmylua-debugger[luajit,-lua54]
+```
+
 ## Platform-specific usage:
 
 ### Windows

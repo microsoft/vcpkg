@@ -6,6 +6,20 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Check features to determine Lua version
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        luajit USE_LUAJIT
+)
+
+# Set Lua version based on features
+if("luajit" IN_LIST FEATURES)
+    set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=jit")
+else()
+    # Default to Lua 5.4
+    set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=54")
+endif()
+
 # Set policies for Windows-specific issues and tool port configuration
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 
@@ -17,13 +31,13 @@ set(VCPKG_POLICY_SKIP_LIB_CMAKE_MERGE_CHECK enabled)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DEMMY_LUA_VERSION=54
+        ${EMMY_LUA_VERSION_OPTION}
 )
 
 vcpkg_cmake_install()
 
 # Copy tools if they exist (Windows-specific - emmy_tool is only built on Windows)
-if(WIN32 AND EXISTS "${CURRENT_PACKAGES_DIR}/bin/emmy_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/bin/emmy_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES emmy_tool AUTO_CLEAN)
 endif()
 
