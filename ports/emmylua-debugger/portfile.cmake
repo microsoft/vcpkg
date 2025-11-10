@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EmmyLua/EmmyLuaDebugger
-    REF v1.8.7
+    REF 1.8.7
     SHA512 0  # Will be updated after first build attempt
     HEAD_REF master
 )
