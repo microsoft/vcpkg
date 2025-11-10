@@ -13,13 +13,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lua USE_LUA
 )
 
-# Determine Lua version based on features
+# Determine Lua version based on features with explicit validation
 if("luajit" IN_LIST FEATURES)
     # When luajit feature is enabled, use LuaJIT
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LUAJIT REQUIRED luajit)
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=jit")
     message(STATUS "emmylua-debugger: Using LuaJIT")
 else()
     # Default case: use Lua 5.4 (either via explicit lua feature or default)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(LUA REQUIRED lua5.4)
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=54")
     message(STATUS "emmylua-debugger: Using Lua 5.4")
 endif()
@@ -39,6 +43,17 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+# Remove duplicate libuv files that conflict with libuv package
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/include/uv"
+    "${CURRENT_PACKAGES_DIR}/include/uv.h"
+    "${CURRENT_PACKAGES_DIR}/lib/libuv.a"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libuv-static.pc"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/libuv.a"
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libuv-static.pc"
+    "${CURRENT_PACKAGES_DIR}/share/doc/libuv"
+)
 
 # Copy tools if they exist (Windows-specific - emmy_tool is only built on Windows)
 if(VCPKG_TARGET_IS_WINDOWS AND EXISTS "${CURRENT_PACKAGES_DIR}/bin/emmy_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
