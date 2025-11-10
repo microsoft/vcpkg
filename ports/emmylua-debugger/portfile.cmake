@@ -13,17 +13,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         lua USE_LUA
 )
 
-# Determine Lua version based on features with explicit validation
+# Determine Lua version based on features
 if("luajit" IN_LIST FEATURES)
     # When luajit feature is enabled, use LuaJIT
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LUAJIT REQUIRED luajit)
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=jit")
     message(STATUS "emmylua-debugger: Using LuaJIT")
 else()
     # Default case: use Lua 5.4 (either via explicit lua feature or default)
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LUA REQUIRED lua5.4)
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=54")
     message(STATUS "emmylua-debugger: Using Lua 5.4")
 endif()
