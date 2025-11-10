@@ -12,12 +12,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         luajit USE_LUAJIT
 )
 
-# Set Lua version based on features
+# Validate Lua feature selection - prevent conflicts
 if("luajit" IN_LIST FEATURES)
+    # When luajit is explicitly enabled, use LuaJIT
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=jit")
+    message(STATUS "emmylua-debugger: Using LuaJIT")
 else()
     # Default to Lua 5.4
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=54")
+    message(STATUS "emmylua-debugger: Using Lua 5.4")
 endif()
 
 # Set policies for Windows-specific issues and tool port configuration

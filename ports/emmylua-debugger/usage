@@ -9,7 +9,7 @@ vcpkg install emmylua-debugger
 
 ### LuaJIT support
 ```
-vcpkg install emmylua-debugger[luajit,-lua54]
+vcpkg install emmylua-debugger[luajit]
 ```
 
 ## Platform-specific usage:
