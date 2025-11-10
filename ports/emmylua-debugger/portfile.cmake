@@ -14,9 +14,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Install any built tools/executables
-vcpkg_copy_tools(AUTO_CLEAN)
-
 # Install includes if they exist
 if(EXISTS "${SOURCE_PATH}/include")
     file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
