@@ -32,6 +32,9 @@ set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
 set(VCPKG_POLICY_SKIP_MISPLACED_CMAKE_FILES_CHECK enabled)
 set(VCPKG_POLICY_SKIP_LIB_CMAKE_MERGE_CHECK enabled)
 
+# Allow empty include folder since this is a tool port, not a library
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -49,6 +52,14 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/lib/libuv.a"
     "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libuv-static.pc"
     "${CURRENT_PACKAGES_DIR}/share/doc/libuv"
+)
+
+# Remove empty directories as suggested by vcpkg
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/include"
+    "${CURRENT_PACKAGES_DIR}/lib/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
 )
 
 # Copy tools if they exist (Windows-specific - emmy_tool is only built on Windows)
