@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EmmyLua/EmmyLuaDebugger
     REF 1.8.7
-    SHA512 0  # Will be updated after first build attempt
+    SHA512 d697d0ea12ca24c4f692e8104f75f681b7c56635459f6af437064e0e45b5b1cde5480817a7bd2de98555ffe6ef42712c3797e7dfd807425bfa095e0780a8fb5e
     HEAD_REF master
 )
 
