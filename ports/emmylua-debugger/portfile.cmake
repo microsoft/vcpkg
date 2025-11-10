@@ -14,8 +14,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Fix CMake config files location
-vcpkg_cmake_config_fixup()
+# Fix CMake config files location if they exist
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+    vcpkg_cmake_config_fixup()
+endif()
 
 # Install includes if they exist
 if(EXISTS "${SOURCE_PATH}/include")
