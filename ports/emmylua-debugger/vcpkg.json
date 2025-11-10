@@ -3,6 +3,7 @@
   "version": "1.8.7",
   "description": "High-performance cross-platform Lua debugger with full debugging features including breakpoints, step execution, variable watch, and stack trace",
   "homepage": "https://github.com/EmmyLua/EmmyLuaDebugger",
+  "supports": "!uwp & !xbox & !android & !ios & !(arm & windows)",
   "dependencies": [
     "libuv",
     "nlohmann-json",
@@ -14,22 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "lua51": {
-      "description": "Build with Lua 5.1 support"
-    },
-    "lua52": {
-      "description": "Build with Lua 5.2 support"
-    },
-    "lua53": {
-      "description": "Build with Lua 5.3 support"
-    },
-    "lua54": {
-      "description": "Build with Lua 5.4 support (default)"
-    },
-    "luajit": {
-      "description": "Build with LuaJIT support"
-    }
-  }
+  ]
 }
