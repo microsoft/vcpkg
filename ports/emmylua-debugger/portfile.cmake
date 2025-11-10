@@ -10,6 +10,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         luajit USE_LUAJIT
+        lua USE_LUA
 )
 
 # Determine Lua version based on features
@@ -18,7 +19,7 @@ if("luajit" IN_LIST FEATURES)
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=jit")
     message(STATUS "emmylua-debugger: Using LuaJIT")
 else()
-    # Default case: use Lua 5.4
+    # Default case: use Lua 5.4 (either via explicit lua feature or default)
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=54")
     message(STATUS "emmylua-debugger: Using Lua 5.4")
 endif()

@@ -1,22 +1,22 @@
 {
   "name": "emmylua-debugger",
   "version": "1.8.7",
-  "port-version": 14,
+  "port-version": 15,
   "description": "High-performance cross-platform Lua debugger with full debugging features including breakpoints, step execution, variable watch, and stack trace",
   "homepage": "https://github.com/EmmyLua/EmmyLuaDebugger",
   "license": "MIT",
   "supports": "!uwp & !xbox & !android & !ios & !(arm & windows)",
   "dependencies": [
     "libuv",
-    {
-      "$if": "!features.luajit",
-      "name": "lua"
-    },
-    {
-      "$if": "features.luajit",
-      "name": "luajit"
-    },
     "nlohmann-json",
+    {
+      "name": "lua",
+      "$if": "!features.luajit"
+    },
+    {
+      "name": "luajit",
+      "$if": "features.luajit"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -26,10 +26,18 @@
       "host": true
     }
   ],
+  "default-features": [
+    "lua"
+  ],
   "features": {
+    "lua": {
+      "description": "Use standard Lua 5.4",
+      "dependencies": []
+    },
     "luajit": {
       "description": "Use LuaJIT instead of standard Lua 5.4",
-      "supports": "!uwp & !(arm64 & windows)"
+      "supports": "!uwp & !(arm64 & windows)",
+      "dependencies": []
     }
   }
 }
