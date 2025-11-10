@@ -1,6 +1,19 @@
 emmylua-debugger provides a high-performance cross-platform Lua debugger library.
 
-To use in your Lua application:
+## Platform-specific usage:
+
+### Windows
+Provides both emmy_tool.exe and emmy_core library:
+
+1. Using the standalone tool:
+   Run emmy_tool.exe from tools/emmylua-debugger/
+
+2. Using the library in Lua:
+   local dbg = require('emmy_core')
+   dbg.tcpConnect('localhost', 9966)
+
+### macOS and Linux
+Provides emmy_core library only (no standalone tool):
 
 1. Load the debugger module:
    local dbg = require('emmy_core')

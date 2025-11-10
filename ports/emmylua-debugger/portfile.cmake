@@ -22,8 +22,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Copy tools if they exist (platform-dependent)
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/emmy_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+# Copy tools if they exist (Windows-specific - emmy_tool is only built on Windows)
+if(WIN32 AND EXISTS "${CURRENT_PACKAGES_DIR}/bin/emmy_tool${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(TOOL_NAMES emmy_tool AUTO_CLEAN)
 endif()
 
