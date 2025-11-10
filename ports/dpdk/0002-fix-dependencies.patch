@@ -1,8 +1,8 @@
 diff --git a/config/meson.build b/config/meson.build
-index 722e114..0eb717b 100644
+index 34b85f10b5..5ed4625d9e 100644
 --- a/config/meson.build
 +++ b/config/meson.build
-@@ -234,12 +234,10 @@ if meson.is_cross_build() and not meson.get_cross_property('numa', true)
+@@ -236,12 +236,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
      find_libnuma = false
  endif
  if find_libnuma
@@ -18,7 +18,7 @@ index 722e114..0eb717b 100644
  endif
  
 diff --git a/lib/eal/linux/meson.build b/lib/eal/linux/meson.build
-index e99ebed..672c705 100644
+index e99ebed256..672c70547b 100644
 --- a/lib/eal/linux/meson.build
 +++ b/lib/eal/linux/meson.build
 @@ -21,5 +21,6 @@ sources += files(
@@ -29,7 +29,7 @@ index e99ebed..672c705 100644
      dpdk_conf.set10('RTE_EAL_NUMA_AWARE_HUGEPAGES', true)
  endif
 diff --git a/lib/vhost/meson.build b/lib/vhost/meson.build
-index 41b622a..afff033 100644
+index 51bcf17244..1099a0232f 100644
 --- a/lib/vhost/meson.build
 +++ b/lib/vhost/meson.build
 @@ -6,6 +6,7 @@ if not is_linux
