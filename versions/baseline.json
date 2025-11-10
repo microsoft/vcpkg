@@ -2718,7 +2718,7 @@
     },
     "emmylua-debugger": {
       "baseline": "1.8.7",
-      "port-version": 17
+      "port-version": 18
     },
     "enchantum": {
       "baseline": "0.3.0",
