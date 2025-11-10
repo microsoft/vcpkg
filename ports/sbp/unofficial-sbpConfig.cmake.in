@@ -1,0 +1,30 @@
+# Template for unofficial-sbpConfig.cmake
+
+# Protect against multiple inclusion
+if(TARGET @_LIB_TARGET@)
+    return()
+endif()
+
+# Compute the installation prefix relative to this file, which is located in ${_IMPORT_PREFIX}/share/@_LIB_NAME@
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+
+# Find the installed library.
+find_path(
+    UNOFFICIAL_SBP_INCLUDE_DIR
+    NAMES libsbp/sbp.h
+    PATHS "${_IMPORT_PREFIX}/include"
+)
+find_library(
+    UNOFFICIAL_SBP_LIBRARY
+    NAMES libsbp.a libsbp.so libsbp.dll libsbp.lib libsbp.dylib
+    PATHS "${_IMPORT_PREFIX}/lib" "${_IMPORT_PREFIX}/bin"
+)
+
+# Create an unofficial library target.
+if(UNOFFICIAL_SBP_INCLUDE_DIR AND UNOFFICIAL_SBP_LIBRARY)
+    add_library(@_LIB_TARGET@ UNKNOWN IMPORTED)
+    set_target_properties(@_LIB_TARGET@ PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${UNOFFICIAL_SBP_INCLUDE_DIR}"
+        IMPORTED_LOCATION "${UNOFFICIAL_SBP_LIBRARY}"
+    )
+endif()

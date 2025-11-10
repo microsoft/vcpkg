@@ -39,6 +39,15 @@ vcpkg_cmake_configure(
       -Dlibsbp_ENABLE_DOCS=OFF
 )
 
+set(_LIB_NAME unofficial-sbp)
+set(_LIB_TARGET unofficial::sbp::sbp)
+set(_PACKAGE_CONFIG_DIR "${CURRENT_PACKAGES_DIR}/share/${_LIB_NAME}")
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/${_LIB_NAME}Config.cmake.in
+    ${_PACKAGE_CONFIG_DIR}/${_LIB_NAME}Config.cmake
+    @ONLY
+)
+
 vcpkg_cmake_install()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
