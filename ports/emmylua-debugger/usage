@@ -1,6 +1,16 @@
-emmylua-debugger provides CMake targets:
+emmylua-debugger provides a high-performance cross-platform Lua debugger library.
+
+To use in your Lua application:
+
+1. Load the debugger module:
+   local dbg = require('emmy_core')
+
+2. Start debugging session:
+   dbg.tcpConnect('localhost', 9966)
+
+3. Connect your IDE (Visual Studio Code, IntelliJ IDEA, etc.) to port 9966
+
+For CMake projects embedding the debugger:
 
     find_package(emmylua-debugger CONFIG REQUIRED)
     target_link_libraries(main PRIVATE emmylua-debugger::emmylua-debugger)
-
-emmylua-debugger also provides executable tools for Lua debugging.

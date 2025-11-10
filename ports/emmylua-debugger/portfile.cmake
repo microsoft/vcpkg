@@ -14,13 +14,22 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+# Fix CMake config files location
+vcpkg_cmake_config_fixup()
+
 # Install includes if they exist
 if(EXISTS "${SOURCE_PATH}/include")
     file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 endif()
 
-# Remove debug includes
+# Remove debug includes and unwanted debug share
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+# Install usage documentation if it exists
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/usage")
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
 
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/copyright")
