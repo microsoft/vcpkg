@@ -1,6 +1,6 @@
 {
   "name": "openjph",
-  "version": "0.25.0",
+  "version": "0.25.2",
   "description": "Open-source implementation of JPEG2000 Part-15 (or JPH or HTJ2K)",
   "homepage": "https://github.com/aous72/OpenJPH",
   "license": "BSD-2-Clause",
