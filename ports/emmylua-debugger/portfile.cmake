@@ -10,18 +10,15 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         luajit USE_LUAJIT
-        lua54 USE_LUA54
 )
 
-# Validate Lua feature selection - prevent conflicts
-if("luajit" IN_LIST FEATURES AND "lua54" IN_LIST FEATURES)
-    message(FATAL_ERROR "Cannot use both 'luajit' and 'lua54' features at the same time. Please select only one.")
-elseif("luajit" IN_LIST FEATURES)
-    # When luajit is explicitly enabled, use LuaJIT
+# Determine Lua version based on features
+if("luajit" IN_LIST FEATURES)
+    # When luajit feature is enabled, use LuaJIT
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=jit")
     message(STATUS "emmylua-debugger: Using LuaJIT")
 else()
-    # Default to Lua 5.4 (either via lua54 feature or default)
+    # Default case: use Lua 5.4 (either via core feature or when no features specified)
     set(EMMY_LUA_VERSION_OPTION "-DEMMY_LUA_VERSION=54")
     message(STATUS "emmylua-debugger: Using Lua 5.4")
 endif()
