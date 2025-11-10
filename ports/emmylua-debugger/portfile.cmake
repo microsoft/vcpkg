@@ -6,6 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Set policies for Windows-specific issues
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -13,6 +16,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+# Copy tools (emmy_tool.exe on Windows)
+vcpkg_copy_tools(
+    TOOL_NAMES emmy_tool
+    AUTO_CLEAN
+)
 
 # Fix CMake config files location if they exist
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake" OR EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
