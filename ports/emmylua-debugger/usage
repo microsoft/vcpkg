@@ -1,0 +1,6 @@
+emmylua-debugger provides CMake targets:
+
+    find_package(emmylua-debugger CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE emmylua-debugger::emmylua-debugger)
+
+emmylua-debugger also provides executable tools for Lua debugging.
