@@ -3,9 +3,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
     REF "${release_tag}"
-    SHA512 40a6d73c308408f5bea71b779ad070b74609f7bff2cd28f6c4191e8a67981d81041b9c7acbdba36192ce7bcaac21e55c5ad58096d20d613c1a010d45491c7ba4
+    SHA512 1c5f0c0dc667cabaedce9e26b988a82a19677647c530ea16959a499472eb1de2338a0b3b0d74a6ff5320efd65c6eae55f98919f371a89d0ad40e0253909d4fbe
     HEAD_REF master
-    PATCHES 
+    PATCHES
         pkgconfig_fixes.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

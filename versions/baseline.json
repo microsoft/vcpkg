@@ -10653,7 +10653,7 @@
       "port-version": 0
     },
     "xmlsec": {
-      "baseline": "1.3.8",
+      "baseline": "1.3.9",
       "port-version": 0
     },
     "xnnpack": {
