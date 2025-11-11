@@ -3,8 +3,6 @@ project(rewolf-wow64ext VERSION 1.0.0.9 LANGUAGES CXX)
 
 include(CMakePackageConfigHelpers)
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY  "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-
 add_library(wow64ext SHARED
     src/wow64ext.cpp
     src/wow64ext.rc
