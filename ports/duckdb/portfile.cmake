@@ -158,7 +158,7 @@ foreach(maybe_directory IN LISTS extension_dirs third_party_files)
 endforeach()
 vcpkg_install_copyright(
     COMMENT [[
-Duckdb contains copyies of many third-party packages which are subject to
+Duckdb contains copies of many third-party packages which are subject to
 separate license terms.
 ]]
     FILE_LIST

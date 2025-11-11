@@ -1,0 +1,26 @@
+diff --git a/src/libm/dispatcher.h b/src/libm/dispatcher.h
+index 41b69d9..4d395c3 100644
+--- a/src/libm/dispatcher.h
++++ b/src/libm/dispatcher.h
+@@ -27,6 +27,14 @@ NOEXPORT int Sleef_internal_cpuSupportsExt(void (*tryExt)(), int *cache) {
+   static int cache = -1;
+   if (cache != -1) return cache;
+ 
++#ifdef _MSC_VER
++  __try {
++    (*tryExt)();
++    cache = 1;
++  } __except(1) {
++    cache = 0;
++  }
++#else
+   void (*org);
+   org = signal(SIGILL, sighandler);
+ 
+@@ -38,5 +46,6 @@ NOEXPORT int Sleef_internal_cpuSupportsExt(void (*tryExt)(), int *cache) {
+   }
+ 
+   signal(SIGILL, org);
++#endif
+   return cache;
+ }
