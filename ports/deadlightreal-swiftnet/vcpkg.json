@@ -9,5 +9,6 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "supports": "(osx & arm64) | (osx & x64) | (linux & arm64)"
 }
