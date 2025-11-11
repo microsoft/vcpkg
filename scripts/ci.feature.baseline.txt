@@ -86,6 +86,7 @@ discord-game-sdk:x64-windows-static-md=fail
 discord-game-sdk:x64-windows-static=fail
 discord-rpc(uwp)=fail
 dmlc(uwp) = fail
+dpdk[docs]:x64-linux = feature-fails # doxygen required to build docs
 ensmallen[openmp](osx) = feature-fails # No openmp on default osx toolchain
 epsilon(uwp)=fail
 faiss:arm64-windows=fail

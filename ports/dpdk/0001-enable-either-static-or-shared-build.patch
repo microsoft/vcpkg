@@ -1,5 +1,5 @@
 diff --git a/config/meson.build b/config/meson.build
-index 9484987..722e114 100644
+index b6b3558e11..34b85f10b5 100644
 --- a/config/meson.build
 +++ b/config/meson.build
 @@ -94,7 +94,9 @@ eal_pmd_path = join_paths(get_option('prefix'), driver_install_path)
@@ -10,14 +10,14 @@ index 9484987..722e114 100644
 +if get_option('default_library') == 'static'
 +    # skip
 +elif not is_windows
-     meson.add_install_script('../buildtools/symlink-drivers-solibs.sh',
-             get_option('libdir'), pmd_subdir_opt)
- elif meson.version().version_compare('>=0.55.0')
+     # skip symlink-drivers-solibs.sh execution on no sub directory
+     if pmd_subdir_opt != '' and pmd_subdir_opt != '.'
+         meson.add_install_script('../buildtools/symlink-drivers-solibs.sh',
 diff --git a/drivers/meson.build b/drivers/meson.build
-index 66931d4..65ded2e 100644
+index 495e21b54a..ff7b5983cb 100644
 --- a/drivers/meson.build
 +++ b/drivers/meson.build
-@@ -247,7 +247,7 @@ foreach subpath:subdirs
+@@ -252,7 +252,7 @@ foreach subpath:subdirs
                  include_directories: includes,
                  dependencies: static_deps,
                  c_args: cflags,
@@ -26,7 +26,7 @@ index 66931d4..65ded2e 100644
  
          # now build the shared driver
          version_map = '@0@/@1@/version.map'.format(meson.current_source_dir(), drv_path)
-@@ -295,7 +295,7 @@ foreach subpath:subdirs
+@@ -297,7 +297,7 @@ foreach subpath:subdirs
          else
              lk_args = ['-Wl,--version-script=' + version_map]
          endif
@@ -35,7 +35,7 @@ index 66931d4..65ded2e 100644
          shared_lib = shared_library(lib_name, sources,
                  objects: objs,
                  include_directories: includes,
-@@ -313,10 +313,13 @@ foreach subpath:subdirs
+@@ -315,10 +315,14 @@ foreach subpath:subdirs
          shared_dep = declare_dependency(link_with: shared_lib,
                  include_directories: includes,
                  dependencies: shared_deps)
@@ -43,7 +43,7 @@ index 66931d4..65ded2e 100644
          static_dep = declare_dependency(
                  include_directories: includes,
                  dependencies: static_deps)
--
+ 
 +      if get_option('default_library') == 'static'
 +        shared_dep = static_dep
 +      endif
@@ -51,7 +51,7 @@ index 66931d4..65ded2e 100644
  
          set_variable('shared_@0@'.format(lib_name), shared_dep)
 diff --git a/lib/meson.build b/lib/meson.build
-index 1622877..8ca5780 100644
+index ce92cb5537..40880bbf02 100644
 --- a/lib/meson.build
 +++ b/lib/meson.build
 @@ -249,7 +249,7 @@ foreach l:libraries
@@ -63,7 +63,7 @@ index 1622877..8ca5780 100644
      static_dep = declare_dependency(
              include_directories: includes,
              dependencies: static_deps)
-@@ -311,6 +311,7 @@ foreach l:libraries
+@@ -305,6 +305,7 @@ foreach l:libraries
                  output: name + '.sym_chk')
      endif
  
@@ -71,7 +71,7 @@ index 1622877..8ca5780 100644
      shared_lib = shared_library(libname,
              sources,
              objects: objs,
-@@ -327,6 +328,9 @@ foreach l:libraries
+@@ -321,6 +322,9 @@ foreach l:libraries
              dependencies: shared_deps)
  
      dpdk_libraries = [shared_lib] + dpdk_libraries

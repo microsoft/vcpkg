@@ -28,14 +28,14 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
   REF "v${VERSION}"
-  SHA512 1599ae78228307f612776e43160e8002c71024940813bc655b3e2631bfe3de9a93b09f2d5caae48d3d83e07c48e953838ba45f4965d2eb21d1e7955edbaa7d0d
+  SHA512 0d0ee4eb70e8021882a1d6548cf757972388c0a561ee71bb0e4b330be61f1463f4eaec55202d7a35eef8b392ecf0b3888713692ba8cd88f850e7b9072504733e
   HEAD_REF main
   PATCHES
-      enable-either-static-or-shared-build.patch
-      fix-dependencies.patch
-      remove-examples-src-from-datadir.patch
-      stop-building-apps.patch
-      no-absolute-driver-path.patch
+      0001-enable-either-static-or-shared-build.patch
+      0002-fix-dependencies.patch
+      0003-remove-examples-src-from-datadir.patch
+      0004-stop-building-apps.patch
+      0005-no-absolute-driver-path.patch
 )
 
 macro(append_bool_option feature_name option_name)
@@ -70,7 +70,15 @@ vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
 )
 vcpkg_install_meson()
 
-set(tools dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py dpdk-hugepages.py)
+set(tools
+  dpdk-cmdline-gen.py
+  dpdk-devbind.py
+  dpdk-pmdinfo.py
+  dpdk-telemetry.py
+  dpdk-hugepages.py
+  dpdk-rss-flows.py
+  dpdk-telemetry-exporter.py
+)
 vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()

@@ -1,8 +1,8 @@
 diff --git a/config/meson.build b/config/meson.build
-index 7f7b6c92fd..51c3572793 100644
+index 5ed4625d9e..3f89fd0768 100644
 --- a/config/meson.build
 +++ b/config/meson.build
-@@ -375,7 +375,7 @@ if not dpdk_conf.has('RTE_MAX_NUMA_NODES')
+@@ -445,7 +445,7 @@ Please install libnuma, or set 'max_numa_nodes' option to '1' to build without N
  endif
  
  # set the install path for the drivers
