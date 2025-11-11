@@ -10658,7 +10658,7 @@
     },
     "xmlsec": {
       "baseline": "1.3.9",
-      "port-version": 0
+      "port-version": 1
     },
     "xnnpack": {
       "baseline": "2024-08-20",
