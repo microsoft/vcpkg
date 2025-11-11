@@ -82,16 +82,14 @@ vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
-set(tools
-  dpdk-cmdline-gen.py
-  dpdk-devbind.py
-  dpdk-pmdinfo.py
-  dpdk-telemetry.py
-  dpdk-hugepages.py
-  dpdk-rss-flows.py
-  dpdk-telemetry-exporter.py
-)
-vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
+file(GLOB scripts "${CURRENT_PACKAGES_DIR}/bin/*.py")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+foreach(script IN LISTS scripts)
+  cmake_path(GET script FILENAME filename)
+  file(RENAME "${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${filename}")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${filename}")
+endforeach()
+vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
 if("docs" IN_LIST FEATURES)
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
