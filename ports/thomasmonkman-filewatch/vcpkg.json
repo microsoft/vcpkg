@@ -1,8 +1,0 @@
-{
-  "name": "thomasmonkman-filewatch",
-  "version-date": "2023-01-16",
-  "port-version": 2,
-  "description": "File watcher in C++.",
-  "homepage": "https://github.com/ThomasMonkman/filewatch",
-  "license": "MIT"
-}

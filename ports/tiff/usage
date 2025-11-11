@@ -1,9 +1,0 @@
-tiff is compatible with built-in CMake targets:
-
-    find_package(TIFF REQUIRED)
-    target_link_libraries(main PRIVATE TIFF::TIFF)
-
-tiff provides pkg-config modules:
-
-    #  Tag Image File Format (TIFF) library.
-    libtiff-4

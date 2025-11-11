@@ -1,4 +1,0 @@
-libirecovery provides CMake targets:
-
-    find_package(unofficial-libirecovery CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::libirecovery::libirecovery)

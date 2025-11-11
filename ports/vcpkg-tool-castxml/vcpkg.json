@@ -1,8 +1,0 @@
-{
-  "name": "vcpkg-tool-castxml",
-  "version": "0.6.5",
-  "description": "CastXML is a C-family abstract syntax tree XML output tool.",
-  "homepage": "https://github.com/CastXML/CastXML",
-  "license": "Apache-2.0",
-  "supports": "native"
-}

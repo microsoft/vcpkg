@@ -1,4 +1,0 @@
-libharu provides CMake targets:
-
-    find_package(unofficial-libharu CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::libharu::hpdf)

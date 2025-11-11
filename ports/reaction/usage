@@ -1,4 +1,0 @@
-reaction is a header-only library that provides CMake targets:
-
-  find_package(reaction CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE reaction::reaction)

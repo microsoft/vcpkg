@@ -1,4 +1,0 @@
-kubazip provides CMake targets:
-
-  find_package(zip CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE zip::zip)

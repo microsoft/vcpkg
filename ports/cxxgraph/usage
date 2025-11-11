@@ -1,4 +1,0 @@
-To use CXXGraph header files:
-
-    find_path(CXXGRAPH_INCLUDE_DIR CXXGraph/CXXGraph.hpp)
-    target_include_directories(main PRIVATE ${CXXGRAPH_INCLUDE_DIR})

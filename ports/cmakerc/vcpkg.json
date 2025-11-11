@@ -1,7 +1,0 @@
-{
-  "name": "cmakerc",
-  "version-date": "2023-07-24",
-  "description": "A Resource Compiler in a Single CMake Script",
-  "homepage": "https://github.com/vector-of-bool/cmrc",
-  "license": "MIT"
-}

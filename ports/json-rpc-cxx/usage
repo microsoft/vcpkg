@@ -1,4 +1,0 @@
-json-rpc-cxx provides CMake targets:
-
-    find_package(unofficial-json-rpc-cxx CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::json-rpc-cxx::json-rpc-cxx)

@@ -1,7 +1,0 @@
-file(READ "${CMAKE_CURRENT_LIST_DIR}/usage" usage)
-message(WARNING "find_package(unixodbc) is deprecated.\n${usage}")
-include(CMakeFindDependencyMacro)
-find_dependency(unofficial-unixodbc CONFIG REQUIRED)
-if(NOT TARGET UNIX::odbc)
-    add_library(#[[skip-usage-heuristics]] UNIX::odbc ALIAS unofficial::unixodbc::unixodbc)
-endif()

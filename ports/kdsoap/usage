@@ -1,7 +1,0 @@
-kdsoap provides CMake targets:
-
-  find_package(KDSoap-qt6 CONFIG REQUIRED)
-  # kdsoap library
-  target_link_libraries(main PRIVATE KDSoap::kdsoap)
-  # kdsoap-server library
-  target_link_libraries(main PRIVATE KDSoap::kdsoap-server)

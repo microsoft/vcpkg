@@ -1,4 +1,0 @@
-The Effects (FX) system for Direct3D 11 package is compatible with built-in CMake targets:
-
-    find_package(effects11 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Microsoft::Effects11)

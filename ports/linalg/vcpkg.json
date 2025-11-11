@@ -1,7 +1,0 @@
-{
-  "name": "linalg",
-  "version": "2.2",
-  "description": "linalg.h is a single header public domain linear algebra library for C++11",
-  "homepage": "https://github.com/sgorsten/linalg",
-  "license": "Unlicense"
-}

@@ -1,7 +1,0 @@
-future-config provides CMake targets and functions:
-
-  find_package(future-config CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE future-config::future-config)
-
-  run_fconfig_builder(...)
-  copy_master_config(...)

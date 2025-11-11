@@ -1,5 +1,0 @@
-Warning: Static TensorFlow build contains several external dependencies that may cause linking conflicts
-    (for example, one cannot use both openssl and TensorFlow in the same project, since TensorFlow contains boringssl).
-
-Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to convince the linker to include the whole library, i.e., link using options
-    '/WHOLEARCHIVE:tensorflow_cc.lib /WHOLEARCHIVE:tensorflow_cc-part2.lib /WHOLEARCHIVE:tensorflow_cc-part3.lib ...'

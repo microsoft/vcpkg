@@ -1,7 +1,0 @@
-{
-  "name": "pravila00-enumflag",
-  "version-date": "2024-04-12",
-  "description": "This C++ code provides a template for enabling bitwise operations on enum classes, which are not supported by default in C++.",
-  "homepage": "https://www.justsoftwaresolutions.co.uk/cplusplus/using-enum-classes-as-bitfields.html",
-  "license": "BSL-1.0"
-}

@@ -1,7 +1,0 @@
-{
-  "name": "fameta-counter",
-  "version-date": "2021-02-13",
-  "description": "Compile time counter that works with all major modern compilers, compatible with C++11 and above.",
-  "homepage": "https://github.com/falemagn/fameta-counter",
-  "license": "Unlicense"
-}

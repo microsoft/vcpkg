@@ -1,4 +1,0 @@
-libmatio-cpp provides CMake targets:
-
-  find_package(matioCpp REQUIRED)
-  target_link_libraries(yourTarget PRIVATE matioCpp::matioCpp)

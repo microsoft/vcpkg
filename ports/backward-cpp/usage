@@ -1,7 +1,0 @@
-backward-cpp provides CMake targets:
-
-  find_package(Backward CONFIG REQUIRED)
-  # To use the header library
-  target_link_libraries(main PRIVATE Backward::Interface)
-  # To use the prebuilt library
-  target_link_libraries(main PRIVATE Backward::Backward)

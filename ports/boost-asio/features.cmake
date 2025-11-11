@@ -1,7 +1,0 @@
-vcpkg_check_features(
-  OUT_FEATURE_OPTIONS
-    FEATURE_OPTIONS
-  FEATURES
-    "deadline-timer" BOOST_ASIO_SUPPORT_DEADLINE_TIMER
-    "spawn" BOOST_ASIO_SUPPORT_SPAWN
-)

@@ -1,4 +1,0 @@
-The rply port provides an unofficial CMake target:
-
-    find_package(rply REQUIRED)
-    target_link_libraries(main PRIVATE rply::rply)

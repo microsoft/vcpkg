@@ -1,7 +1,0 @@
-tinytiff provides CMake targets: 
-
-    find_package(TinyTIFF CONFIG REQUIRED)
-    find_package(TinyTIFFXX CONFIG REQUIRED)
-
-    target_link_libraries(main PRIVATE TinyTIFF::TinyTIFF TinyTIFF::TinyTIFFXX)
-    

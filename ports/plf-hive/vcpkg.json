@@ -1,6 +1,0 @@
-{
-  "name": "plf-hive",
-  "version-date": "2021-12-11",
-  "description": "plf::hive is a fork of plf::colony to match the current C++ standards proposal.",
-  "homepage": "https://plflib.org/colony.htm"
-}

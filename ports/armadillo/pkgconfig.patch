@@ -1,9 +1,0 @@
-diff --git a/misc/armadillo.pc.in b/misc/armadillo.pc.in
-index 27d35bb..1f079a5 100644
---- a/misc/armadillo.pc.in
-+++ b/misc/armadillo.pc.in
-@@ -7,3 +7,4 @@ URL: http://arma.sourceforge.net
- Version: @ARMA_VERSION_MAJOR@.@ARMA_VERSION_MINOR@.@ARMA_VERSION_PATCH@
- Cflags: -I${includedir}
- Libs: -L${libdir} -larmadillo
-+Requires.private: @REQUIRES_PRIVATE@

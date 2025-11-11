@@ -1,7 +1,0 @@
-{
-  "name": "aurora",
-  "version": "2017-06-21-c75699d2a8caa726260c29b6d7a0fd35f8f28933",
-  "port-version": 2,
-  "description": "Aurora is an open-source C++ library providing various rather uncommon C++ utilities",
-  "homepage": "https://github.com/Bromeon/Aurora"
-}

@@ -1,7 +1,0 @@
-{
-  "name": "canvas-ity",
-  "version": "1.0",
-  "description": "A tiny, single-header <canvas>-like 2D rasterizer for C++",
-  "homepage": "https://github.com/a-e-k/canvas_ity",
-  "license": "ISC"
-}

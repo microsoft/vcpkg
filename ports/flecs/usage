@@ -1,4 +1,0 @@
-The package flecs provides CMake targets:
-
-    find_package(flecs CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:flecs::flecs>,flecs::flecs,flecs::flecs_static>)

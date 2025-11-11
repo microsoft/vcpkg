@@ -1,4 +1,0 @@
-hanjingo-high-jump provides CMake targets:
-
-    find_package(hj CONFIG REQUIRED)
-    target_link_libraries(myapp PRIVATE hj::hj)

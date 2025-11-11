@@ -1,4 +1,0 @@
-Vulkan-Headers provides official find_package support:
-
-    find_package(VulkanHeaders CONFIG)
-    target_link_libraries(main PRIVATE Vulkan::Headers)

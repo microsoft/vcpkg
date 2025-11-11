@@ -1,5 +1,0 @@
-libsmb2 can be used from CMake via:
-
-    find_package(SMB2 REQUIRED)
-    target_include_directories(main PRIVATE ${SMB2_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${SMB2_LIBRARIES})

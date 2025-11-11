@@ -1,7 +1,0 @@
-{
-  "name": "inipp",
-  "version": "1.0.13",
-  "description": "Simple header-only C++ ini parser and generator",
-  "homepage": "https://github.com/mcmtroffaes/inipp",
-  "license": "MIT"
-}

@@ -1,8 +1,0 @@
-{
-  "name": "libcgroup",
-  "version": "3.1.0",
-  "description": "Library for working with cgroup",
-  "homepage": "https://github.com/libcgroup/libcgroup",
-  "license": "LGPL-2.1-only",
-  "supports": "linux"
-}

@@ -1,4 +1,0 @@
-The package blpapi provides CMake targets:
-
-    find_package(blpapi CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE blpapi)

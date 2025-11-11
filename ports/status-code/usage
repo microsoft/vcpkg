@@ -1,4 +1,0 @@
-The package status-code provides CMake targets:
-
-    find_package(status-code CONFIG REQUIRED)
-    target_link_libraries(main PUBLIC status-code::hl)

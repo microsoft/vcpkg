@@ -1,6 +1,0 @@
-{
-  "name": "lest",
-  "version": "1.36.0",
-  "description": "A modern, C++11-native, single-file header-only, tiny framework for unit-tests, TDD and BDD (includes C++98 variant)",
-  "homepage": "https://github.com/martinmoene/lest"
-}

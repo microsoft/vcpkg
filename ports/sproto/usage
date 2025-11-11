@@ -1,4 +1,0 @@
-The package sproto provides CMake targets:
-
-    find_package(unofficial-sproto CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::sproto::sproto)

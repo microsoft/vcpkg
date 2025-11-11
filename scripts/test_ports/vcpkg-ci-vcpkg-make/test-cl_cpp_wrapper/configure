@@ -1,6 +1,0 @@
-#!/bin/sh
-
-echo "${CPP:-cpp} ${CPPFLAGS} ${CFLAGS} ${TEST_FLAGS} > stdout.c < source.c" || exit 1
-${CPP:-cpp} ${CPPFLAGS} ${CFLAGS} ${TEST_FLAGS} > stdout.c < source.c || exit 2
-grep OOPS_ECHOED_INVOCATION stdout.c && exit 3
-exit 0

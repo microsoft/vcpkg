@@ -1,8 +1,0 @@
-{
-  "name": "constexpr",
-  "version": "1.0",
-  "port-version": 3,
-  "description": "Small MIT License Library of general stdlib functions written as C++11 constexpr functions.",
-  "homepage": "https://github.com/elbeno/constexpr",
-  "license": "MIT"
-}

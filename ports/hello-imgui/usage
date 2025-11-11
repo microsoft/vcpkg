@@ -1,8 +1,0 @@
-hello-imgui provides CMake integration:
-
-  set(CMAKE_CXX_STANDARD 17)
-  find_package(hello-imgui CONFIG REQUIRED)
-  # Usage with `hello_imgui_add_app` (recommended)
-  hello_imgui_add_app(main my_main.cpp)
-  # Usage with `target_link_libraries` (no tooling, no asset deployment)
-  target_link_libraries(main PRIVATE hello-imgui::hello_imgui)

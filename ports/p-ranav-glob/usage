@@ -1,4 +1,0 @@
-The package glob provides CMake targets:
-
-    find_package(Glob CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Glob)

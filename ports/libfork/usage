@@ -1,4 +1,0 @@
-libfork provides CMake targets:
-
-    find_package(libfork CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE libfork::libfork)

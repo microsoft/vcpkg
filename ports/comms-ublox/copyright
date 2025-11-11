@@ -1,5 +1,0 @@
-The generated code has no license, the vendor is free to pick any as long as it's compatibile with the license(s) of the relevant CommsChampion Ecosystem project:
-
-The protocol definition uses the COMMS Library, which is provided under the MPL-2.0 licence. It allows usage in any closed source projects as long as modifications to the COMMS Library itself remain open source.
-The CommsChampion Tools use open source Qt5 libraries, hence are licensed under the GPLv3. It means that any relevant plugin code must remain open source and is not really available to be used in the closed source commercial products.
-The code of this project (libraries and tools it contains) is licensed under Apache v2.0 license.

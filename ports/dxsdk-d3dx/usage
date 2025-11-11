@@ -1,6 +1,0 @@
-The legacy DirectX SDK D3DX package provides CMake targets:
-
-    find_package(dxsdk-d3dx CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Microsoft::D3DX9 Microsoft::D3DX10 Microsoft::D3DX11)
-
-NOTE: This port is not recommended for use in new projects and is incompatible with the deprecated directxsdk port.

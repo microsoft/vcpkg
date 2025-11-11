@@ -1,4 +1,0 @@
-libadlmidi provides CMake targets:
-
-    find_package(libADLMIDI CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE libADLMIDI::ADLMIDI)

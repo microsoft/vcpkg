@@ -1,4 +1,0 @@
-kealib provides CMake targets:
-
-  find_package(Kealib CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE Kealib::Kealib)

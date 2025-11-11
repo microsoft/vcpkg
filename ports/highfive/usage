@@ -1,4 +1,0 @@
-highfive provides CMake targets:
-
-  find_package(HighFive CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE HighFive)

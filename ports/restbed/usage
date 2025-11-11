@@ -1,4 +1,0 @@
-restbed provides CMake targets:
-
-    find_package(unofficial-restbed CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::restbed::restbed)

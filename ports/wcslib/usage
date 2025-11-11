@@ -1,6 +1,0 @@
-wcslib can be imported via CMake FindPkgConfig module:
-
-    find_package(PkgConfig)
-    pkg_check_modules(wcslib REQUIRED IMPORTED_TARGET wcslib)
-    target_include_directories(main PRIVATE PkgConfig::wcslib)
-    target_link_libraries(main PRIVATE PkgConfig::wcslib)

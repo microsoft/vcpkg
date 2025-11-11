@@ -1,7 +1,0 @@
-{
-  "name": "better-enums",
-  "version": "0.11.3",
-  "description": "C++ compile-time enum to string, iteration, in a single header file.",
-  "homepage": "http://aantron.github.io/better-enums/",
-  "license": "BSD-2-Clause"
-}

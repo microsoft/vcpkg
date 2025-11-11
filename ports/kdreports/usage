@@ -1,4 +1,0 @@
-kdreports provides CMake targets:
-
-  find_package(KDReports-qt6 CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE KDReports::kdreports)

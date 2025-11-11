@@ -1,4 +1,0 @@
-The package glew is compatible with built-in CMake targets:
-
-    find_package(GLEW REQUIRED)
-    target_link_libraries(main PRIVATE GLEW::GLEW)

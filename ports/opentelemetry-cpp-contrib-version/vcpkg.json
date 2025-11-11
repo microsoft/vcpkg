@@ -1,8 +1,0 @@
-{
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
-  "name": "opentelemetry-cpp-contrib-version",
-  "version-date": "2025-09-26",
-  "description": "This port manages the opentelemetry-cpp-version that will be used for opentelemetry-cpp",
-  "homepage": "https://github.com/open-telemetry/opentelemetry-cpp-contrib",
-  "license": "Apache-2.0"
-}

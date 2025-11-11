@@ -1,4 +1,0 @@
-c89stringutils provides CMake targets:
-
-    find_package(c89stringutils CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE c89stringutils)

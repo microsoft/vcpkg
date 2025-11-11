@@ -1,4 +1,0 @@
-dlpack provides CMake targets:
-
-    find_package(dlpack CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE dlpack::dlpack)

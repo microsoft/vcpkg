@@ -1,7 +1,0 @@
-{
-  "name": "scope-guard",
-  "version-semver": "1.1.0",
-  "description": "A public, general, simple, and fast C++11 scope guard that defends against implicitly ignored returns and optionally enforces noexcept at compile time (in C++17), all in a SFINAE-friendly maner.",
-  "homepage": "https://github.com/ricab/scope_guard",
-  "license": "Unlicense"
-}

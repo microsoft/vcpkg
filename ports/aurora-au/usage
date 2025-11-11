@@ -1,4 +1,0 @@
-The package aurora-au provides CMake targets:
-
-    find_package(Au REQUIRED)
-    target_link_libraries(main PRIVATE Au::au)

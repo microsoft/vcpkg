@@ -1,4 +1,0 @@
-The mman.h header deployed by mman is placed in mman/sys/mman.h to avoid accidental inclusion.
-
-    find_path(MMAN_DIR NAMES sys/mman.h PATH_SUFFIXES mman)
-    target_include_directories(main PRIVATE ${MMAN_DIR})

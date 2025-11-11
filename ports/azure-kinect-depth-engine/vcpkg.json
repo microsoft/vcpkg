@@ -1,8 +1,0 @@
-{
-  "name": "azure-kinect-depth-engine",
-  "version": "1.4.2",
-  "description": "The depth engine converts raw sensor data into a normalized depth map. It contains closed-source proprietary code.",
-  "homepage": "https://github.com/microsoft/Azure-Kinect-Sensor-SDK/blob/develop/docs/depthengine.md",
-  "license": null,
-  "supports": "(linux & (x64 | arm64)) | (windows & (x64 | x86))"
-}

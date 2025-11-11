@@ -1,8 +1,0 @@
-The package glm provides CMake targets:
-
-    find_package(glm CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE glm::glm)
-
-    # Or use the header-only version
-    find_package(glm CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE glm::glm-header-only)

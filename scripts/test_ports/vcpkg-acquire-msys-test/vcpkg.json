@@ -1,7 +1,0 @@
-{
-  "name": "vcpkg-acquire-msys-test",
-  "version-string": "0",
-  "port-version": 1,
-  "description": "Test port to exercise vcpkg_acquire_msys",
-  "supports": "x86 & windows"
-}

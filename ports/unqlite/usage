@@ -1,6 +1,0 @@
-unqlite can be used from CMake via:
-    find_path(UNQLITE_INCLUDE_DIRS "unqlite.h" REQUIRED)
-    find_library(UNQLITE_LIBRARIES unqlite REQUIRED)
-    
-    target_include_directories(main PRIVATE ${UNQLITE_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${UNQLITE_LIBRARIES})

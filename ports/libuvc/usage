@@ -1,8 +1,0 @@
-libuvc provides CMake targets:
-
-  find_package(libuvc CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:LibUVC::UVCStatic>,LibUVC::UVCStatic,LibUVC::UVCShared>)
-
-libuvc provides pkg-config modules:
-
-  libuvc

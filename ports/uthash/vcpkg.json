@@ -1,7 +1,0 @@
-{
-  "name": "uthash",
-  "version-semver": "2.3.0",
-  "description": "C macros for hash tables and more.",
-  "homepage": "https://troydhanson.github.io/uthash/",
-  "license": "BSD-1-Clause"
-}

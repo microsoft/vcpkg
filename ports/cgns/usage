@@ -1,4 +1,0 @@
-cgns provides CMake targets:
-
-  find_package(cgns CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:CGNS::cgns_shared>,CGNS::cgns_shared,CGNS::cgns_static>)

@@ -1,7 +1,0 @@
-{
-  "name": "tinydir",
-  "version": "1.2.6",
-  "description": "Lightweight, portable and easy to integrate C directory and file reader",
-  "homepage": "https://github.com/cxong/tinydir",
-  "license": "BSD-2-Clause"
-}

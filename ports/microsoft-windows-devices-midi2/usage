@@ -1,8 +1,0 @@
-microsoft-windows-devices-midi2 provides CMake integration:
-
-  find_package(microsoft-windows-devices-midi2 CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE Microsoft::Windows::Devices::Midi2)
-
-It also sets the following:
-  MIDI2_WINDOWS_SDK_VERSION to the version of the Windows SDK used to generate the projections
-  MIDI2_SDK_VERSION to the projected version of the Windows MIDI Services SDK

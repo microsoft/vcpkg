@@ -1,7 +1,0 @@
-lib3mf provides CMake targets:
-
-  find_package(lib3mf CONFIG REQUIRED)
-  target_link_libraries(target_name PRIVATE lib3mf::lib3mf) 
-
-For examples and use cases, kindly check
-https://github.com/3MFConsortium/lib3mf/tree/develop/SDK/CPackExamples

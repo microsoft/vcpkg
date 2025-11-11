@@ -1,4 +1,0 @@
-The package uriparser provides CMake targets:
-
-    find_package(uriparser CONFIG REQUIRED char wchar_t)
-    target_link_libraries(main PUBLIC uriparser::uriparser)

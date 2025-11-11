@@ -1,7 +1,0 @@
-{
-  "name": "komihash",
-  "version": "5.27",
-  "description": "Very fast, high-quality hash function, discrete-incremental and streamed hashing-capable",
-  "homepage": "https://github.com/avaneev/komihash",
-  "license": "MIT"
-}

@@ -1,7 +1,0 @@
-{
-  "name": "delaunator-cpp",
-  "version": "1.0.0",
-  "description": "A really fast C++ library for Delaunay triangulation of 2D points",
-  "homepage": "https://github.com/abellgithub/delaunator-cpp",
-  "license": "MIT"
-}

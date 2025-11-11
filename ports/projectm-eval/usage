@@ -1,9 +1,0 @@
-projectm-eval provides CMake targets:
-
-  find_package(projectM-Eval REQUIRED)
-  target_link_libraries(main PRIVATE projectM::Eval)
-
-To use the ns-eel2 shim with the Milkdrop codebase:
-
-  find_package(projectM-Eval REQUIRED COMPONENTS Milkdrop)
-  target_link_libraries(main PRIVATE projectM::ns-eel2)

@@ -1,7 +1,0 @@
-The package cmakerc provides additional cmake functions:
-
-    find_package(CMakeRC CONFIG REQUIRED)
-    cmrc_add_resource_library(foo-resources ALIAS foo::rc NAMESPACE foo  ...)
-    target_link_libraries(main PRIVATE foo::rc)
-
-See https://github.com/vector-of-bool/cmrc/blob/master/README.md

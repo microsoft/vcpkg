@@ -1,4 +1,0 @@
-libimobiledevice-glue provides CMake targets:
-
-    find_package(unofficial-libimobiledevice-glue CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::libimobiledevice-glue::libimobiledevice-glue)

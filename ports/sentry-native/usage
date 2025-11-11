@@ -1,4 +1,0 @@
-sentry-native provides CMake targets:
-
-    find_package(sentry CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE sentry::sentry)

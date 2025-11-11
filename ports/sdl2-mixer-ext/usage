@@ -1,4 +1,0 @@
-sdl2-mixer-ext provides CMake targets:
-
-    find_package(SDL2_mixer_ext CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:SDL2_mixer_ext::SDL2_mixer_ext>,SDL2_mixer_ext::SDL2_mixer_ext,SDL2_mixer_ext::SDL2_mixer_ext_Static>)

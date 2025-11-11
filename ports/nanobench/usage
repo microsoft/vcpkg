@@ -1,4 +1,0 @@
-nanobench provides CMake targets:
-
-    find_package(nanobench CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE nanobench::nanobench)

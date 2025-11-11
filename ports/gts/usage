@@ -1,5 +1,0 @@
-gts can be imported via CMake FindPkgConfig module:
-
-    find_package(PkgConfig REQUIRED)
-    pkg_check_modules(GTS gts REQUIRED IMPORTED_TARGET)
-    target_link_libraries(main PRIVATE PkgConfig::GTS)

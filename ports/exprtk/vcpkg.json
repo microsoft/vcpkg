@@ -1,7 +1,0 @@
-{
-  "name": "exprtk",
-  "version": "0.0.3",
-  "description": "Simple to use, easy to integrate and extremely efficient run-time C++ mathematical expression parser and evaluation engine.",
-  "homepage": "https://www.partow.net/programming/exprtk/index.html",
-  "license": "MIT"
-}

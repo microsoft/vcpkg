@@ -1,9 +1,0 @@
-spglib provides CMake targets:
-
-    find_package(Spglib CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Spglib::symspg)
-
-spglib provides pkg-config modules:
-
-    # The spglib library
-    spglib

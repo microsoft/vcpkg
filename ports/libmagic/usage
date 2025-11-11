@@ -1,6 +1,0 @@
-libmagic provides CMake targets:
-
-    find_package(unofficial-libmagic REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::libmagic::libmagic)
-
-The magic.mgc file can be accessed from the unofficial-libmagic_DICTIONARY variable.

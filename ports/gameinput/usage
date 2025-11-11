@@ -1,6 +1,0 @@
-The GameInput package provides CMake targets:
-
-    find_package(gameinput CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Microsoft::GameInput)
-
-Note that the GameInputRedist.msi must be installed on the target system for Windows.

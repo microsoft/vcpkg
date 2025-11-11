@@ -1,8 +1,0 @@
-{
-  "name": "pfring",
-  "version": "8.8.0",
-  "description": "Library to interface with the PF_RING™ kernel module for processing packets at high-rates while providing a consistent API.",
-  "homepage": "https://github.com/ntop/PF_RING",
-  "license": null,
-  "supports": "linux"
-}

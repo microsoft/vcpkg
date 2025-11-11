@@ -1,6 +1,0 @@
-@PACKAGE_INIT@
-include(CMakeFindDependencyMacro)
-
-find_dependency(Ogg CONFIG)
-
-include("${CMAKE_CURRENT_LIST_DIR}/unofficial-theora-targets.cmake")

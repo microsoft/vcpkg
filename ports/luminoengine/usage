@@ -1,4 +1,0 @@
-luminoengine provides CMake targets:
-
-    find_package(Lumino CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE lumino::Lumino)

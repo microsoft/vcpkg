@@ -1,4 +1,0 @@
-@PORT@ is compatible with built-in CMake variables. In case of multiple OpenCV version installed, set OpenCV_ROOT *before* the find_package call:
-
-    set(OpenCV_ROOT "${VCPKG_INSTALLED_DIR}/@TARGET_TRIPLET@/share/@PORT@")
-    find_package(OpenCV REQUIRED)

@@ -1,8 +1,0 @@
-{
-  "name": "tree-sitter-cli",
-  "version": "0.25.3",
-  "description": "Tree-sitter is a parser generator tool and an incremental parsing library. This port installs the CLI executable.",
-  "homepage": "https://github.com/tree-sitter/tree-sitter",
-  "license": null,
-  "supports": "native"
-}

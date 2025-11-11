@@ -1,4 +1,0 @@
-The port hpx provides CMake targets:
-
-    find_package(HPX REQUIRED)
-    target_link_libraries(main PRIVATE HPX::hpx)

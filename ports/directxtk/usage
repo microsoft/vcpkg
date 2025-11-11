@@ -1,4 +1,0 @@
-The DirectX Tool Kit for DX11 package provides CMake targets:
-
-    find_package(directxtk CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Microsoft::DirectXTK)

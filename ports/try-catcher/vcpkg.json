@@ -1,7 +1,0 @@
-{
-  "name": "try-catcher",
-  "version": "1.0.1",
-  "description": "C++ header uses RAII to try each step of a sequence of operations, catch all exceptions that may occur, and throw a single, composite message when TryCatcher goes out of scope.",
-  "homepage": "https://github.com/daleabarnard/try-catcher",
-  "license": "MIT"
-}

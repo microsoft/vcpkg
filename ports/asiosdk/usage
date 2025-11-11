@@ -1,4 +1,0 @@
-The package asiosdk provides CMake integration:
-
-    find_package(asiosdk REQUIRED)
-    target_include_directories(main PRIVATE ${ASIOSDK_INCLUDE_DIR})

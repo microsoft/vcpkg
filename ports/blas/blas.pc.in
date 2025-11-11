@@ -1,8 +1,0 @@
-prefix=${pcfiledir}/../..
-
-Name: BLAS
-Description: Implementation of BLAS
-Version: 
-Requires: @requires@
-Libs: @libs@
-Cflags: @cflags@

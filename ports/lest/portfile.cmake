@@ -1,9 +1,0 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO martinmoene/lest
-    REF "v${VERSION}"
-    SHA512 dd517430f9f04dbf5c25c1ffe9b65f9fe56abcbd32dc864f2248672e759cfe893637651bb9d7d4c02d11ccb2d4dae4ae5a670d4cd613152d2783d0bfc3e88ebc
-)
-
-file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/lest RENAME copyright)

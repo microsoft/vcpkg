@@ -1,4 +1,0 @@
-All boost packages are compatible with built-in CMake targets of FindBoost.cmake:
-
-    find_package(Boost REQUIRED [COMPONENTS <libs>...])
-    target_link_libraries(main PRIVATE Boost::boost Boost::<lib1> Boost::<lib2> ...)

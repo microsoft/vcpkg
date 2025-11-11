@@ -1,8 +1,0 @@
-{
-  "name": "libbacktrace",
-  "version-date": "2024-11-30",
-  "description": "The libbacktrace library may be linked into a program or library and used to produce symbolic backtraces.",
-  "homepage": "https://github.com/ianlancetaylor/libbacktrace",
-  "license": "BSD-3-Clause",
-  "supports": "!windows"
-}

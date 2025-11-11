@@ -1,7 +1,0 @@
-{
-  "name": "linmath",
-  "version-date": "2022-07-30",
-  "description": "linmath.h -- A small library for linear math as required for computer graphics",
-  "homepage": "https://github.com/datenwolf/linmath.h",
-  "license": "WTFPL"
-}

@@ -1,4 +1,0 @@
-copypp provides CMake targets:
-
-    find_package(copypp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE icurve::copypp)

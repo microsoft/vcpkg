@@ -1,8 +1,0 @@
-{
-  "name": "rpath-macho-test",
-  "version-string": "ci",
-  "description": "Test rpath macho fixup",
-  "dependencies": [
-    "rpath-macho-test-binaries"
-  ]
-}

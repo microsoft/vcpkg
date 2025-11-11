@@ -1,4 +1,0 @@
-avro-cpp provides CMake targets:
-
-    find_package(unofficial-avro-cpp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::avro-cpp::avrocpp)

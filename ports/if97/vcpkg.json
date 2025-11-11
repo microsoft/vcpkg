@@ -1,8 +1,0 @@
-{
-  "name": "if97",
-  "version": "2.1.3",
-  "port-version": 1,
-  "description": "This repository implements the IF97 formulation for the properties of pure water substance.",
-  "homepage": "https://github.com/CoolProp/IF97",
-  "license": "MIT"
-}

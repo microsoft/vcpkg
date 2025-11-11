@@ -1,7 +1,0 @@
-{
-  "name": "cthash",
-  "version-date": "2024-11-16",
-  "description": "constexpr implementation of SHA-2 and SHA-3 family of hashes",
-  "homepage": "https://github.com/hanickadot/cthash",
-  "license": "Apache-2.0"
-}

@@ -1,4 +1,0 @@
-argon2 provides CMake targets:
-
-    find_package(unofficial-argon2 CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::argon2::libargon2)

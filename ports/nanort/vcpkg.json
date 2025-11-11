@@ -1,7 +1,0 @@
-{
-  "name": "nanort",
-  "version-date": "2019-08-20",
-  "port-version": 3,
-  "description": "Single header only modern ray tracing kernel",
-  "homepage": "https://github.com/lighttransport/nanort"
-}

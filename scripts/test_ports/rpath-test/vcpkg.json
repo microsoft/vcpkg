@@ -1,8 +1,0 @@
-{
-  "name": "rpath-test",
-  "version-string": "ci",
-  "description": "Test rpath fixup",
-  "dependencies": [
-    "rpath-test-binaries"
-  ]
-}

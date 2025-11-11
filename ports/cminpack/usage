@@ -1,9 +1,0 @@
-cminpack provides CMake targets:
-
-    find_package(CMinpack CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE cminpack::cminpack)
-
-    # alternative for single precision
-    target_link_libraries(main PRIVATE cminpack::cminpacks)
-    # alternative for long double precision
-    target_link_libraries(main PRIVATE cminpack::cminpackld)

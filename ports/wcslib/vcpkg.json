@@ -1,7 +1,0 @@
-{
-  "name": "wcslib",
-  "version": "8.4",
-  "description": "World Coordinate System (WCS) (Library)",
-  "homepage": "https://www.atnf.csiro.au/people/mcalabre/WCS/",
-  "supports": "!windows"
-}

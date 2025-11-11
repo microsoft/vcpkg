@@ -1,8 +1,0 @@
-{
-  "name": "libdvdcss",
-  "version-semver": "1.4.3",
-  "description": "Accessing DVDs like a block device library",
-  "homepage": "https://www.videolan.org/developers/libdvdcss.html",
-  "license": "GPL-2.0-or-later",
-  "supports": "!uwp & !xbox"
-}

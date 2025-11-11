@@ -1,7 +1,0 @@
-The package mapnik provides CMake targets:
-
-    find_package(mapnik CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE mapnik::mapnik mapnik::json mapnik::wkt)
-    
-If you only need the compile definitions without any sources, use target mapnik::core.
-If any plugins were installed, call the function `mapnik_find_plugin_dir(MAPNIK_PLUGIN_DIR)` to get the plugin installation folder for the currently used configuration. See the docs for more information.

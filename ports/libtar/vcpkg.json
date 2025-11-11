@@ -1,8 +1,0 @@
-{
-  "name": "libtar",
-  "version": "1.2.20",
-  "port-version": 1,
-  "description": "libtar - C library for manipulating tar files",
-  "homepage": "https://repo.or.cz/libtar.git",
-  "supports": "!windows"
-}

@@ -1,8 +1,0 @@
-The DirectXMesh package provides CMake targets:
-
-    find_package(directxmesh CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Microsoft::DirectXMesh)
-
-The utilities headers FlexibleVertexFormat.h and WaveFrontReader.h have their own target:
-
-    target_link_libraries(main PRIVATE Microsoft::DirectXMesh::Utilities)

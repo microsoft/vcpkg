@@ -1,4 +1,0 @@
-cpp-async is header-only and can be used from CMake via:
-
-    find_path(CPP_ASYNC_INCLUDE_DIRS "async/task.h")
-    target_include_directories(main PRIVATE ${CPP_ASYNC_INCLUDE_DIRS})

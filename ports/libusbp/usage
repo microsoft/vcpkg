@@ -1,9 +1,0 @@
-libusbp provides pkg-config modules:
-
-  # Library for accessing USB devices.
-  libusbp
-
-libusbp provides CMake targets:
-
-  find_package(unofficial-libusbp CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE unofficial::libusbp::libusbp)

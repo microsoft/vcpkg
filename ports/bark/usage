@@ -1,4 +1,0 @@
-bark provides CMake targets:
-
-  find_package(bark CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE twig::bark)

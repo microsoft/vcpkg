@@ -1,5 +1,0 @@
-vulkan is compatible with built-in CMake targets:
-
-    # https://cmake.org/cmake/help/latest/module/FindVulkan.html
-    find_package(Vulkan REQUIRED)
-    target_link_libraries(main PRIVATE Vulkan::Vulkan)

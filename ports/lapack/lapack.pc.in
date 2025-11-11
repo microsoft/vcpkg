@@ -1,9 +1,0 @@
-prefix=${pcfiledir}/../..
-libdir=${prefix}/lib
-
-Name: LAPACK
-Description: Implementation of LAPACK
-Version: 
-Requires: @requires@
-Libs: @libs@
-Cflags: @cflags@

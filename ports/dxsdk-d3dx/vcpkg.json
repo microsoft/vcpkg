@@ -1,9 +1,0 @@
-{
-  "name": "dxsdk-d3dx",
-  "version": "9.29.952.8",
-  "port-version": 7,
-  "description": "Redistributable package for the legacy DirectX SDK's D3DX9, D3DX10, and/or D3DX11 utility libraries.",
-  "homepage": "https://walbourn.github.io/legacy-d3dx-on-nuget/",
-  "license": null,
-  "supports": "windows & !arm & !uwp & !xbox"
-}

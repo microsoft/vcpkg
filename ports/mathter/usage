@@ -1,4 +1,0 @@
-mathter provides CMake targets:
-
-  find_package(Mathter CONFIG REQUIRED)
-  target_link_libraries(TestMathter PRIVATE Mathter::Mathter)

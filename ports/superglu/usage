@@ -1,4 +1,0 @@
-The package superglu provides CMake targets:
-
-    find_package(superglu CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE superglu::GLU)

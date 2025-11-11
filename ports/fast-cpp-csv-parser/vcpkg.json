@@ -1,8 +1,0 @@
-{
-  "name": "fast-cpp-csv-parser",
-  "version-date": "2021-01-03",
-  "port-version": 2,
-  "description": "A small, easy-to-use and fast header-only library for reading comma separated value (CSV) files",
-  "homepage": "https://github.com/ben-strasser/fast-cpp-csv-parser",
-  "license": "BSD-3-Clause"
-}

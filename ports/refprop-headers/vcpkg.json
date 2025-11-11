@@ -1,7 +1,0 @@
-{
-  "name": "refprop-headers",
-  "version-date": "2022-12-07",
-  "description": "Header files for the REFPROP fluid property library",
-  "homepage": "https://github.com/CoolProp/REFPROP-headers",
-  "license": "MIT"
-}

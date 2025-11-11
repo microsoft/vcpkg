@@ -1,7 +1,0 @@
-{
-  "name": "msinttypes",
-  "version-date": "2018-02-25",
-  "port-version": 2,
-  "description": "msinttypes is a package to provide missing  ISO C9x  compliant headers for Microsoft Visual Studio",
-  "homepage": "https://github.com/chemeris/msinttypes"
-}

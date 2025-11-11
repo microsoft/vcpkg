@@ -1,9 +1,0 @@
-diff --git a/angelscript/projects/cmake/cmake/AngelscriptConfig.cmake b/angelscript/projects/cmake/cmake/AngelscriptConfig.cmake
-index 4d1ef0f..ec14fe9 100644
---- a/angelscript/projects/cmake/cmake/AngelscriptConfig.cmake
-+++ b/angelscript/projects/cmake/cmake/AngelscriptConfig.cmake
-@@ -1,2 +1,4 @@
- include("${CMAKE_CURRENT_LIST_DIR}/AngelscriptTargets.cmake")
-+include(CMakeFindDependencyMacro)
-+find_dependency(Threads REQUIRED)
- 

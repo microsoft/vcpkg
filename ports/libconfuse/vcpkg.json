@@ -1,7 +1,0 @@
-{
-  "name": "libconfuse",
-  "version": "3.3",
-  "description": "Small configuration file parser library for C",
-  "homepage": "https://github.com/libconfuse/libconfuse",
-  "license": "ISC"
-}

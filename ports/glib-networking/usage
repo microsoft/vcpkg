@@ -1,1 +1,0 @@
-glib-networking is a gio module, you should set GIO_MODULE_DIR to the location of dynamic libraries.

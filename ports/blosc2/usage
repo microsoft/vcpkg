@@ -1,4 +1,0 @@
-blosc2 provides CMake targets:
-
-  find_package(Blosc2 CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE Blosc2::blosc2)

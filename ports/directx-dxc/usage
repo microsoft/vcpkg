@@ -1,6 +1,0 @@
-The DirectX Shader Compiler package provides CMake targets:
-
-    find_package(directx-dxc CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Microsoft::DirectXShaderCompiler)
-
-The CMake variable DIRECTX_DXC_TOOL is also set to point to the appropriate DXC command-line tool.

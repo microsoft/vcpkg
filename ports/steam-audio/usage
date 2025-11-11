@@ -1,4 +1,0 @@
-steam-audio provides CMake targets:
-
-    find_package(steam-audio CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::steam-audio::phonon)

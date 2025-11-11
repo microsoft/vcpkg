@@ -1,4 +1,0 @@
-uvw provides CMake targets:
-
-    find_package(uvw CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE uvw::uvw)

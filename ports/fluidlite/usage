@@ -1,4 +1,0 @@
-fluidlite provides CMake targets:
-
-    find_package(fluidlite CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:fluidlite::fluidlite>,fluidlite::fluidlite,fluidlite::fluidlite-static>)

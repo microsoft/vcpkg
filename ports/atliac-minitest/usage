@@ -1,5 +1,0 @@
-minitest provides CMake targets:
-
-    # Note: the `MINITEST_RUN_TESTS(argc, argv);` must be called in the main function
-    find_package(${PORT} CONFIG REQUIRED)
-    minitest_discover_tests(target)

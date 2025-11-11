@@ -1,8 +1,0 @@
-{
-  "name": "libedit",
-  "version-date": "2024-08-08",
-  "description": "A command line editor library that provides generic line editing, history, and tokenization functions, similar to those found in GNU Readline.",
-  "homepage": "https://thrysoee.dk/editline/",
-  "license": "BSD-4-Clause-UC",
-  "supports": "(!windows | mingw) & !android"
-}

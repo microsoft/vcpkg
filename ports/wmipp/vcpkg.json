@@ -1,8 +1,0 @@
-{
-  "name": "wmipp",
-  "version": "1.3.0",
-  "description": "Streamlined Windows Management Instrumentation (WMI) integration for seamless C++ development",
-  "homepage": "https://github.com/sonodima/wmipp",
-  "license": "MIT",
-  "supports": "windows & !uwp"
-}

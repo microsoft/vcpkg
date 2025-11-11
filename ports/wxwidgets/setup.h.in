@@ -1,5 +1,0 @@
-#ifdef _DEBUG
-#include "../../debug/lib/@WX_SETUP_H_DBG_RELATIVE@/setup.h"
-#else
-#include "../../lib/@WX_SETUP_H_REL_RELATIVE@/setup.h"
-#endif

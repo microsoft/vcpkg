@@ -1,6 +1,0 @@
-The package plog is header only and can be used from CMake via:
-
-Modern CMake:
-    find_package(plog CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE plog::plog)
-

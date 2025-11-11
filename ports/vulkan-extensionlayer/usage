@@ -1,5 +1,0 @@
-vulkan-extensionlayer provides a JSON manifest directory
-which can be added to the environment variable VK_ADD_LAYER_PATH:
-
-  Windows: <vcpkg-install-root>/bin
-  Other:   <vcpkg-install-root>/share/vulkan/explicit_layers.d

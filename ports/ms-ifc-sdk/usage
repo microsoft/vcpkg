@@ -1,8 +1,0 @@
-The package Microsoft.IFC provides CMake targets:
-
-    find_package(Microsoft.IFC CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Microsoft.IFC::SDK)
-
-    # Or use the individual components of Microsoft.IFC::SDK for advanced use
-    find_package(Microsoft.IFC CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE Microsoft.IFC::Core Microsoft.IFC::DOM)

@@ -1,6 +1,0 @@
-{
-  "name": "jsmn",
-  "version-date": "2019-04-27",
-  "port-version": 2,
-  "description": "A minimalistic JSON parser in C."
-}

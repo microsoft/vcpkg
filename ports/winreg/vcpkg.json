@@ -1,8 +1,0 @@
-{
-  "name": "winreg",
-  "version": "6.3.2",
-  "description": "High-level C++ wrapper around the Windows Registry C API.",
-  "homepage": "https://github.com/GiovanniDicanio/WinReg",
-  "license": "MIT",
-  "supports": "windows | uwp"
-}

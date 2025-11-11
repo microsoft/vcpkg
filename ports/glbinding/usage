@@ -1,4 +1,0 @@
-The package glbinding:@TARGET_TRIPLET@ provides CMake targets:
-
-    find_package(glbinding CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE glbinding::glbinding glbinding::glbinding-aux)

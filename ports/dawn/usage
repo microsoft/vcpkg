@@ -1,8 +1,0 @@
-dawn provides CMake targets:
-
-  find_package(Dawn CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE dawn::webgpu_dawn)
-
-dawn provides pkg-config modules:
-
-  unofficial_webgpu_dawn

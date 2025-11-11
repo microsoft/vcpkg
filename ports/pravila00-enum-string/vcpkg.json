@@ -1,7 +1,0 @@
-{
-  "name": "pravila00-enum-string",
-  "version-date": "2023-10-16",
-  "description": "A utility to provide stringizing support for C++ enums.",
-  "homepage": "https://github.com/Pravila00/enum-string",
-  "license": "Unlicense"
-}

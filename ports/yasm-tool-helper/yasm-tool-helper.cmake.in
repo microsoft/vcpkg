@@ -1,1 +1,0 @@
-include("${CMAKE_CURRENT_LIST_DIR}/../../../@HOST_TRIPLET@/share/yasm/vcpkg-port-config.cmake")

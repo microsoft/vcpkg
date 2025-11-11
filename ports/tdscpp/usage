@@ -1,4 +1,0 @@
-tdscpp provides CMake targets:
-
-  find_package(tdscpp REQUIRED)
-  target_link_libraries(main tdscpp)

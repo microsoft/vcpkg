@@ -1,4 +1,0 @@
-zookeeper provides CMake targets:
-
-  find_package(unofficial-zookeeper CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE unofficial::zookeeper::zookeeper)

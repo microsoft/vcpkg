@@ -1,4 +1,0 @@
-libxmp provides CMake targets:
-
-    find_package(libxmp CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:libxmp::xmp_shared>,libxmp::xmp_shared,libxmp::xmp_static>)

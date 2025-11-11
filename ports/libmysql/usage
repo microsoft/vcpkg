@@ -1,4 +1,0 @@
-libmysql provides CMake targets:
-
-    find_package(unofficial-libmysql REQUIRED)
-    target_link_libraries(main PRIVATE unofficial::libmysql::libmysql)

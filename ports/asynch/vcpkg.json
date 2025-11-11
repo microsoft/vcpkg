@@ -1,7 +1,0 @@
-{
-  "name": "asynch",
-  "version-date": "2019-09-21",
-  "port-version": 3,
-  "description": "Async.h - asynchronous, stackless subroutines.",
-  "homepage": "https://github.com/naasking/async.h"
-}

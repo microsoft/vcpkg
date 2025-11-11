@@ -1,9 +1,0 @@
-The package promise-cpp is header only and can be used from CMake via:
-
-    find_path(PROMISE_CPP_INCLUDE_DIRS "promise-cpp/promise.hpp")
-    target_include_directories(main PRIVATE ${PROMISE_CPP_INCLUDE_DIRS})
-
-Make sure to define the pre-processor macro PROMISE_HEADONLY before including "promise-cpp/promise.hpp":
-
-    #define PROMISE_HEADONLY
-    #include "promise-cpp/promise.hpp"

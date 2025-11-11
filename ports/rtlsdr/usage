@@ -1,9 +1,0 @@
-rtlsdr provides CMake targets:
-
-  find_package(rtlsdr CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:rtlsdr::rtlsdr>,rtlsdr::rtlsdr,rtlsdr::rtlsdr_static>)
-
-rtlsdr provides pkg-config modules:
-
-  # C Utility Library
-  librtlsdr

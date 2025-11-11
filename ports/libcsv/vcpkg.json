@@ -1,9 +1,0 @@
-{
-  "name": "libcsv",
-  "version": "3.0.3",
-  "port-version": 1,
-  "description": "CSV parser and writer library",
-  "homepage": "https://github.com/rgamble/libcsv",
-  "license": "GPL-2.0-or-later",
-  "supports": "!xbox"
-}

@@ -1,4 +1,0 @@
-bext-ut provides CMake targets:
-
-find_package(ut CONFIG REQUIRED)
-target_link_libraries(main PRIVATE Boost::ut)

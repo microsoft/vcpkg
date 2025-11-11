@@ -1,4 +1,0 @@
-The package slikenet provides CMake targets:
-
-    find_package(slikenet CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE SLikeNet)

@@ -1,3 +1,0 @@
-
-    find_package(ArrowFlight CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE "$<IF:$<BOOL:${ARROW_BUILD_STATIC}>,ArrowFlight::arrow_flight_static,ArrowFlight::arrow_flight_shared>")

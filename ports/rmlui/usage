@@ -1,4 +1,0 @@
-rmlui provides CMake targets:
-
-    find_package(RmlUi CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE RmlUi::RmlUi)

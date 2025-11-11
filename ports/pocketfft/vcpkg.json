@@ -1,7 +1,0 @@
-{
-  "name": "pocketfft",
-  "version-date": "2023-09-25",
-  "description": "This is a heavily modified implementation of FFTPack",
-  "homepage": "https://github.com/mreineck/pocketfft",
-  "license": "BSD-3-Clause"
-}

@@ -1,7 +1,0 @@
-{
-  "name": "xorstr",
-  "version-date": "2021-11-20",
-  "description": "Heavily vectorized c++17 compile time string encryption",
-  "homepage": "https://github.com/JustasMasiulis/xorstr",
-  "license": "Apache-2.0"
-}

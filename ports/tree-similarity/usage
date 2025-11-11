@@ -1,4 +1,0 @@
-tree-similarity provides CMake targets:
-
-    find_path(TREE_SIMILARITY_INCLUDE_DIRS "tree-similiarity")
-    target_include_directories(main PRIVATE ${TREE_SIMILARITY_INCLUDE_DIRS})
