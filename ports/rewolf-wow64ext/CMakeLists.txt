@@ -35,9 +35,10 @@ target_link_libraries(wow64ext PRIVATE
 
 install(
     TARGETS wow64ext
-    RUNTIME DESTINATION "bin"
-    LIBRARY DESTINATION "lib"
+    EXPORT wow64extTargets
     ARCHIVE DESTINATION "lib"
+    LIBRARY DESTINATION "lib"
+    RUNTIME DESTINATION "bin"
 )
 
 install(
