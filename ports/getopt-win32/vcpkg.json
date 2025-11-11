@@ -1,6 +1,6 @@
 {
   "name": "getopt-win32",
-  "version": "1.1.0.20220925",
+  "version": "2.42",
   "description": "An implementation of getopt.",
   "homepage": "https://www.codeproject.com/Articles/157001/Full-getopt-Port-for-Unicode-and-Multibyte-Microso/",
   "license": "LGPL-3.0-only",
