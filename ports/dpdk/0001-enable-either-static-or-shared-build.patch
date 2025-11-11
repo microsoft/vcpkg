@@ -1,0 +1,83 @@
+diff --git a/config/meson.build b/config/meson.build
+index b6b3558e11..34b85f10b5 100644
+--- a/config/meson.build
++++ b/config/meson.build
+@@ -94,7 +94,9 @@ eal_pmd_path = join_paths(get_option('prefix'), driver_install_path)
+ # driver .so files often depend upon the bus drivers for their connect bus,
+ # e.g. ixgbe depends on librte_bus_pci. This means that the bus drivers need
+ # to be in the library path, so symlink the drivers from the main lib directory.
+-if not is_windows
++if get_option('default_library') == 'static'
++    # skip
++elif not is_windows
+     # skip symlink-drivers-solibs.sh execution on no sub directory
+     if pmd_subdir_opt != '' and pmd_subdir_opt != '.'
+         meson.add_install_script('../buildtools/symlink-drivers-solibs.sh',
+diff --git a/drivers/meson.build b/drivers/meson.build
+index 495e21b54a..ff7b5983cb 100644
+--- a/drivers/meson.build
++++ b/drivers/meson.build
+@@ -252,7 +252,7 @@ foreach subpath:subdirs
+                 include_directories: includes,
+                 dependencies: static_deps,
+                 c_args: cflags,
+-                install: true)
++                install: get_option('default_library') == 'static')
+ 
+         # now build the shared driver
+         version_map = '@0@/@1@/version.map'.format(meson.current_source_dir(), drv_path)
+@@ -297,7 +297,7 @@ foreach subpath:subdirs
+         else
+             lk_args = ['-Wl,--version-script=' + version_map]
+         endif
+-
++      if get_option('default_library') == 'shared'
+         shared_lib = shared_library(lib_name, sources,
+                 objects: objs,
+                 include_directories: includes,
+@@ -315,10 +315,14 @@ foreach subpath:subdirs
+         shared_dep = declare_dependency(link_with: shared_lib,
+                 include_directories: includes,
+                 dependencies: shared_deps)
++      endif
+         static_dep = declare_dependency(
+                 include_directories: includes,
+                 dependencies: static_deps)
+ 
++      if get_option('default_library') == 'static'
++        shared_dep = static_dep
++      endif
+         dpdk_drivers += static_lib
+ 
+         set_variable('shared_@0@'.format(lib_name), shared_dep)
+diff --git a/lib/meson.build b/lib/meson.build
+index ce92cb5537..40880bbf02 100644
+--- a/lib/meson.build
++++ b/lib/meson.build
+@@ -249,7 +249,7 @@ foreach l:libraries
+             c_args: cflags,
+             dependencies: static_deps,
+             include_directories: includes,
+-            install: true)
++            install: get_option('default_library') == 'static')
+     static_dep = declare_dependency(
+             include_directories: includes,
+             dependencies: static_deps)
+@@ -305,6 +305,7 @@ foreach l:libraries
+                 output: name + '.sym_chk')
+     endif
+ 
++  if get_option('default_library') == 'shared'
+     shared_lib = shared_library(libname,
+             sources,
+             objects: objs,
+@@ -321,6 +322,9 @@ foreach l:libraries
+             dependencies: shared_deps)
+ 
+     dpdk_libraries = [shared_lib] + dpdk_libraries
++  else
++    shared_dep = static_dep
++  endif
+     dpdk_static_libraries = [static_lib] + dpdk_static_libraries
+ 
+     set_variable('shared_rte_' + name, shared_dep)

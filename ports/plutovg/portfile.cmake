@@ -2,8 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sammycage/plutovg
     REF "v${VERSION}"
-    SHA512 d704286cb325d55c76852a08d573cae3f14b2a0f1fb8e43d922e64c685d4e71d69fe4ed7cc2368b3c0cde2992e8abfe9090781a80be251dcea50615266efc6ed
+    SHA512 d06a1229b433d341fa3ee21060abab57e7ade8188d1cd5ef14019d6b1abba7a96454acd36ae0f2f9e9681c398f51244f216391b2afb07d32ca0b86dcdd50a248
     HEAD_REF main
+    PATCHES
+        # this patch is already upstreamed. Please remove it in next version bump
+        find_threads.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

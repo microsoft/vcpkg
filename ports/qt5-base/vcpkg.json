@@ -1,7 +1,6 @@
 {
   "name": "qt5-base",
-  "version": "5.15.17",
-  "port-version": 2,
+  "version": "5.15.18",
   "description": "Qt Base provides the basic non-GUI functionality required by all Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,

@@ -1,12 +1,19 @@
 {
   "name": "exiv2",
   "version": "0.28.7",
+  "port-version": 1,
   "description": "Image metadata library and tools",
   "homepage": "https://exiv2.org",
   "license": "GPL-2.0-or-later",
   "supports": "!xbox",
   "dependencies": [
-    "inih",
+    {
+      "name": "inih",
+      "default-features": false,
+      "features": [
+        "cpp"
+      ]
+    },
     {
       "name": "libiconv",
       "platform": "!windows"
@@ -45,9 +52,6 @@
       "dependencies": [
         "zlib"
       ]
-    },
-    "video": {
-      "description": "Deprecated. it will be removed in the future."
     },
     "xmp": {
       "description": "Build with XMP metadata support",
