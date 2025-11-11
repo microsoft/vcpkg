@@ -36,6 +36,7 @@ vcpkg_from_github(
       0003-remove-examples-src-from-datadir.patch
       0004-stop-building-apps.patch
       0005-no-absolute-driver-path.patch
+      rename-sched.h.diff
 )
 
 macro(append_bool_option feature_name option_name)
@@ -72,6 +73,7 @@ endif()
 
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
+    -Ddeveloper_mode=disabled
     -Ddisable_drivers=regex/cn9k
     ${DPDK_OPTIONS}
   OPTIONS_RELEASE
