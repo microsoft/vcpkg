@@ -3,6 +3,8 @@ project(rewolf-wow64ext VERSION 1.0.0.9 LANGUAGES CXX)
 
 include(CMakePackageConfigHelpers)
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 add_library(wow64ext SHARED
     src/wow64ext.cpp
     src/wow64ext.rc
@@ -17,9 +19,12 @@ target_compile_features(wow64ext PRIVATE cxx_std_11)
 target_compile_definitions(wow64ext PRIVATE WOW64EXT_EXPORTS)
 
 target_compile_options(wow64ext PRIVATE
+    /GR-
+    /EHs-c-
+    /GS-
     /d2FH4-
 )
-
+    
 target_link_options(wow64ext PRIVATE
     /SUBSYSTEM:WINDOWS
     /ENTRY:DllMain
