@@ -1,7 +1,7 @@
 {
   "name": "deadlightreal-swiftnet",
   "version": "1.0.0",
-  "description": "SwiftNet is a C networking library made using raw sockets and no external libraries",
+  "description": "SwiftNet is a C networking library built on raw sockets with no external dependencies, providing a clean and readable API.",
   "homepage": "https://github.com/deadlightreal/SwiftNet",
   "license": "Apache-2.0",
   "dependencies": [
