@@ -17,9 +17,6 @@ target_compile_features(wow64ext PRIVATE cxx_std_11)
 target_compile_definitions(wow64ext PRIVATE WOW64EXT_EXPORTS)
 
 target_compile_options(wow64ext PRIVATE
-    /GR-
-    /EHs-c-
-    /GS-
     /d2FH4-
 )
 
