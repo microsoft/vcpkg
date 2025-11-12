@@ -43,7 +43,7 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://www.nuget.org/api/v2/package/Microsoft.GameInput/${VERSION}"
         FILENAME "gameinput.${VERSION}.zip"
-        SHA512 f130304cadf223204e234ae782127458082dfd9c92320fe6a75da14b25195379666ea1021ae75a1a9b3ebb46384b64ee7c0169c00d1eb5ec3b86083e2a7f720c
+        SHA512 144cff0bfe9ba9e66d3641bdaed5cf8445bcfe52e83c7c160c111b983545f5346304821200acefe3aed0913ab14f3a9a17f7da1f67b6f75e36bad259f1b312c5
     )
 
     vcpkg_extract_source_archive(
