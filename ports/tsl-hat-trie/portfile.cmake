@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tessil/hat-trie
     REF "v${VERSION}"
-    SHA512 24b7f2fd83f03ff30cfa186cd68b8110ee7ed40c378861de750c1c0957e3a9870dc434ee3ae184d8ce4b07687cb0ffa83e8c7ddadccd57d8e87c97ae7b066115
+    SHA512 0775b95d10535e1596f6dc79feadecdd98d63e99d4ca492bc64fa8c5bcfe6bdb864b52ee55cba26cdad00e64c2ee857f70663d3e4ed03c33af8055fc17e8c38e
     HEAD_REF master
 )
 
