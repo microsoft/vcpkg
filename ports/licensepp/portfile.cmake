@@ -3,14 +3,13 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO amrayn/licensepp
-    REF e9501da1470a3bd29254975577d806612a3d3e3c
-    SHA512 6f70904d1214036af3891dc54f71ea2052acd8f60c277dbd2a5f3190ce4610771f36108d4d5a123c0e7312aded410d652460018d74586fc4f41b05fabb6100bd
+    REF v${VERSION}
+    SHA512 a27b8e669cff2ce06dfb0b2b6f961406e4c488f4a55fc086754274c719632d53942d88192010b6af8cc46784aee6a7b5c40780792e9d6f0d51ec3da76576f259
     HEAD_REF master
     PATCHES
-        0001-use-old-pem-pack.patch
-        0002-fix-compilation-macos.patch
         add-stdint.diff
         remove-werror.diff
+        devendoring.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/FindCryptoPP.cmake" DESTINATION "${SOURCE_PATH}/cmake")

@@ -1,6 +1,6 @@
 {
   "name": "libzim",
-  "version": "9.0.0",
+  "version": "9.4.0",
   "description": "The Libzim is the reference implementation for the ZIM file format. It's a software library to read and write ZIM files on many systems and architectures. More information about the ZIM format and the openZIM project at https://openzim.org/.",
   "homepage": "https://github.com/openzim/libzim",
   "license": "GPL-2.0-or-later",

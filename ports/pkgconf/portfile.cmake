@@ -24,16 +24,19 @@ set(SYSTEM_INCLUDEDIR "")
 set(PERSONALITY_PATH "personality.d")
 
 if(NOT VCPKG_CROSSCOMPILING)
-    if(VCPKG_TARGET_IS_FREEBSD)
-        # These are taken from the FreeBSD port of pkgconf
+    if(VCPKG_TARGET_IS_BSD)
         set(SYSTEM_INCLUDEDIR "/usr/include")
         set(SYSTEM_LIBDIR "/usr/lib")
-        set(PKG_DEFAULT_PATH "/usr/libdata/pkgconfig:/usr/local/libdata/pkgconfig:/usr/local/share/pkgconfig")
-    elseif(VCPKG_TARGET_IS_OPENBSD)
-        # Based on how new OpenBSD builds their version of pkgconf
-        set(SYSTEM_INCLUDEDIR "/usr/include")
-        set(SYSTEM_LIBDIR "/usr/lib")
-        set(PKG_DEFAULT_PATH "/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/X11R6/lib/pkgconfig:/usr/X11R6/share/pkgconfig")
+        if(VCPKG_TARGET_IS_FREEBSD)
+            # These are taken from the FreeBSD port of pkgconf
+            set(PKG_DEFAULT_PATH "/usr/libdata/pkgconfig:/usr/local/libdata/pkgconfig:/usr/local/share/pkgconfig")
+        elseif(VCPKG_TARGET_IS_OPENBSD)
+            # Based on how new OpenBSD builds their version of pkgconf
+            set(PKG_DEFAULT_PATH "/usr/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/X11R6/lib/pkgconfig:/usr/X11R6/share/pkgconfig")
+        elseif(VCPKG_TARGET_IS_NETBSD)
+            # Based on NetBSD's pkgconf default values
+            set(PKG_DEFAULT_PATH "/usr/pkg/lib/pkgconfig:/usr/pkg/share/pkgconfig:/usr/lib/pkgconfig:/usr/X11R7/lib/pkgconfig")
+        endif()
     elseif(NOT VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
         # These defaults are obtained from pkgconf/pkg-config on Ubuntu and OpenSuse
         # vcpkg cannot do system introspection to obtain/set these values since it would break binary caching.

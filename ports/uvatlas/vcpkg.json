@@ -1,6 +1,6 @@
 {
   "name": "uvatlas",
-  "version-date": "2025-07-10",
+  "version-date": "2025-10-28",
   "description": "UVAtlas isochart texture atlas",
   "homepage": "https://github.com/Microsoft/UVAtlas",
   "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
@@ -37,7 +37,7 @@
       "description": "Build Spectre-mitigated library"
     },
     "tools": {
-      "description": "meshconvert command-line tool",
+      "description": "uvatlas command-line tool",
       "supports": "windows & !uwp & !xbox",
       "dependencies": [
         {

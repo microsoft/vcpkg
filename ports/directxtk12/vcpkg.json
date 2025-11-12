@@ -1,6 +1,6 @@
 {
   "name": "directxtk12",
-  "version-date": "2025-07-10",
+  "version-date": "2025-10-27",
   "description": "A collection of helper classes for writing DirectX 12 code in C++.",
   "homepage": "https://github.com/Microsoft/DirectXTK12",
   "documentation": "https://github.com/microsoft/DirectXTK12/wiki",
@@ -56,6 +56,10 @@
       "dependencies": [
         "xaudio2redist"
       ]
+    },
+    "xinput": {
+      "description": "Build using XInput for input processing",
+      "supports": "windows & !uwp & !xbox"
     }
   }
 }
