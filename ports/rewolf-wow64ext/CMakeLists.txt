@@ -33,6 +33,11 @@ target_link_libraries(wow64ext PRIVATE
     kernel32
 )
 
+target_include_directories(wow64ext
+    INTERFACE
+        $<INSTALL_INTERFACE:include>/src
+)
+
 install(
     TARGETS wow64ext
     EXPORT wow64extTargets
