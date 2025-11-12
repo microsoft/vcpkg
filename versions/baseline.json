@@ -1729,7 +1729,7 @@
       "port-version": 0
     },
     "cimg": {
-      "baseline": "3.6.2",
+      "baseline": "3.6.3",
       "port-version": 0
     },
     "cinatra": {
@@ -2437,7 +2437,7 @@
       "port-version": 0
     },
     "directx12-agility": {
-      "baseline": "1.618.2",
+      "baseline": "1.618.3",
       "port-version": 0
     },
     "directxmath": {
@@ -2558,7 +2558,7 @@
     },
     "duckdb": {
       "baseline": "1.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "duckx": {
       "baseline": "1.2.2",
@@ -3181,7 +3181,7 @@
       "port-version": 0
     },
     "gameinput": {
-      "baseline": "2.0.26100.5312",
+      "baseline": "2.2.26100.6114",
       "port-version": 0
     },
     "gamenetworkingsockets": {
@@ -3325,7 +3325,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "glbinding": {
@@ -3849,8 +3849,8 @@
       "port-version": 1
     },
     "icu": {
-      "baseline": "74.2",
-      "port-version": 6
+      "baseline": "78.1",
+      "port-version": 0
     },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
@@ -4441,7 +4441,7 @@
       "port-version": 0
     },
     "kubernetes": {
-      "baseline": "0.13.0",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "kuku": {
@@ -4537,7 +4537,7 @@
       "port-version": 3
     },
     "lexbor": {
-      "baseline": "2.5.0",
+      "baseline": "2.6.0",
       "port-version": 0
     },
     "lexilla": {
@@ -5745,7 +5745,7 @@
       "port-version": 0
     },
     "libxcrypt": {
-      "baseline": "4.5.1",
+      "baseline": "4.5.2",
       "port-version": 0
     },
     "libxcvt": {
@@ -9001,7 +9001,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "6.2.154",
+      "baseline": "6.2.155",
       "port-version": 0
     },
     "simde": {
@@ -9009,7 +9009,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "4.2.1",
+      "baseline": "4.2.2",
       "port-version": 0
     },
     "simdutf": {
@@ -9905,7 +9905,7 @@
       "port-version": 0
     },
     "tsl-hat-trie": {
-      "baseline": "0.7.0",
+      "baseline": "0.7.1",
       "port-version": 0
     },
     "tsl-hopscotch-map": {
