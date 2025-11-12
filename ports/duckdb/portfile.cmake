@@ -116,6 +116,7 @@ vcpkg_cmake_configure(
             "-DBUILD_EXTENSIONS=${BUILD_EXTENSIONS}"
             -DBUILD_SHELL=FALSE
             -DBUILD_UNITTESTS=OFF
+            -DCMAKE_CXX_STANDARD=17
             -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
             -DENABLE_EXTENSION_AUTOINSTALL=1
             -DENABLE_EXTENSION_AUTOLOADING=1
@@ -157,7 +158,7 @@ foreach(maybe_directory IN LISTS extension_dirs third_party_files)
 endforeach()
 vcpkg_install_copyright(
     COMMENT [[
-Duckdb contains copyies of many third-party packages which are subject to
+Duckdb contains copies of many third-party packages which are subject to
 separate license terms.
 ]]
     FILE_LIST
