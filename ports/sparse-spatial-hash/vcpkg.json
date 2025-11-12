@@ -4,7 +4,7 @@
   "description": "A generic N-dimensional sparse spatial hash grid for high-performance spatial indexing and neighbor queries with zero-overhead abstractions",
   "homepage": "https://github.com/queelius/sparse_spatial_hash",
   "license": "BSL-1.0",
-  "supports": "!uwp",
+  "supports": "!(x86 & windows)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
