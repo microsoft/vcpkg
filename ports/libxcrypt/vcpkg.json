@@ -1,6 +1,6 @@
 {
   "name": "libxcrypt",
-  "version": "4.5.1",
+  "version": "4.5.2",
   "description": "libxcrypt is a modern library for one-way hashing of passwords. On Linux-based systems, by default libxcrypt will be binary backward compatible with the libcrypt.so.1 shipped as part of the GNU C Library.",
   "homepage": "https://github.com/besser82/libxcrypt",
   "license": null,
