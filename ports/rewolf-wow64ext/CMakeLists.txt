@@ -35,7 +35,7 @@ target_link_libraries(wow64ext PRIVATE
 
 target_include_directories(wow64ext
     INTERFACE
-        $<INSTALL_INTERFACE:include>/src
+        $<INSTALL_INTERFACE:include>
 )
 
 install(
