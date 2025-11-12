@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sparse_spatial_hash)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/sparse_spatial_hash PACKAGE_NAME sparse_spatial_hash)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
