@@ -1,0 +1,11 @@
+{
+  "name": "relno-d1",
+  "version-string": "1.0.0",
+  "description": "RelNo_D1 - Relative Noise Dimension 1: 2D procedural noise generation library (White, Perlin, Simplex).",
+  "homepage": "https://github.com/adi5423/RelNo_D1",
+  "license": "MIT",
+  "dependencies": [
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}
