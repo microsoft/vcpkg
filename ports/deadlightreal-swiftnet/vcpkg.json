@@ -4,11 +4,11 @@
   "description": "SwiftNet is a C networking library built on raw sockets with no external dependencies, providing a clean and readable API.",
   "homepage": "https://github.com/deadlightreal/SwiftNet",
   "license": "Apache-2.0",
+  "supports": "(osx & arm64) | (osx & x64) | (linux & arm64)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ],
-  "supports": "(osx & arm64) | (osx & x64) | (linux & arm64)"
+  ]
 }
