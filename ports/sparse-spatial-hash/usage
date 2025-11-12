@@ -1,0 +1,20 @@
+sparse-spatial-hash provides CMake targets:
+
+  find_package(sparse_spatial_hash CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE sparse_spatial_hash::sparse_spatial_hash)
+
+Quick Start:
+
+  #include <spatial/sparse_spatial_hash.hpp>
+
+  using namespace spatial;
+
+  grid_config<3> cfg{
+      .cell_size = {10.0f, 10.0f, 10.0f},
+      .world_size = {1000.0f, 1000.0f, 1000.0f},
+      .topology_type = topology::toroidal
+  };
+
+  sparse_spatial_hash<Particle, 3> grid(cfg);
+  grid.rebuild(particles);
+  auto neighbors = grid.query_radius(50.0f, x, y, z);
