@@ -4,8 +4,7 @@
     "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
   ],
   "name": "azure-storage-files-datalake-cpp",
-  "version-semver": "12.12.0",
-  "port-version": 1,
+  "version-semver": "12.13.0",
   "description": [
     "Microsoft Azure Storage Files Data Lake SDK for C++",
     "This library provides Azure Storage Files Data Lake SDK."
@@ -16,7 +15,7 @@
     {
       "name": "azure-storage-blobs-cpp",
       "default-features": false,
-      "version>=": "12.13.0"
+      "version>=": "12.15.0"
     },
     {
       "name": "vcpkg-cmake",

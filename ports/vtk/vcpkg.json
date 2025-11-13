@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 10,
+  "port-version": 12,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
@@ -19,6 +19,7 @@
         "zlib"
       ]
     },
+    "gl2ps",
     "glew",
     {
       "name": "hdf5",
@@ -56,10 +57,18 @@
       "host": true
     },
     "verdict",
+    {
+      "name": "vtk-compile-tools",
+      "host": true
+    },
     "zlib"
   ],
   "default-features": [
     "cgns",
+    {
+      "name": "fontconfig",
+      "platform": "android | linux"
+    },
     "libharu",
     "libtheora",
     "netcdf",
@@ -71,13 +80,23 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
-        "ffmpeg",
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        },
         "libmysql",
         {
           "name": "vtk",
           "default-features": false,
           "features": [
             "cgns",
+            "fontconfig",
             "gdal",
             "geojson",
             "libharu",
@@ -128,6 +147,12 @@
     },
     "debugleaks": {
       "description": "Enables vtk debug leaks detection"
+    },
+    "fontconfig": {
+      "description": "Enables fontconfig for rendering",
+      "dependencies": [
+        "fontconfig"
+      ]
     },
     "gdal": {
       "description": "Support GDAL compilation",
@@ -213,13 +238,7 @@
       ]
     },
     "opengl": {
-      "description": "All opengl related modules",
-      "dependencies": [
-        {
-          "name": "vtk",
-          "default-features": false
-        }
-      ]
+      "description": "All opengl related modules"
     },
     "openmp": {
       "description": "Use openmp multithreading parallel implementation"
@@ -240,16 +259,17 @@
           "name": "vtk",
           "default-features": false,
           "features": [
-            "qt"
+            "libtheora",
+            "netcdf",
+            "qt",
+            "seacas"
           ]
         },
         {
           "name": "vtk",
           "default-features": false,
           "features": [
-            "atlmfc",
-            "libtheora",
-            "seacas"
+            "atlmfc"
           ],
           "platform": "windows"
         }
@@ -261,13 +281,6 @@
         {
           "name": "proj",
           "default-features": false
-        },
-        {
-          "name": "vtk",
-          "default-features": false,
-          "features": [
-            "sql"
-          ]
         }
       ]
     },
@@ -330,13 +343,7 @@
       ]
     },
     "utf8": {
-      "description": "Enables vtk reader/writer with utf-8 path support",
-      "dependencies": [
-        {
-          "name": "vtk",
-          "default-features": false
-        }
-      ]
+      "description": "Enables vtk reader/writer with utf-8 path support"
     },
     "vtkm": {
       "description": "Build with vtk-m accelerator and module.",

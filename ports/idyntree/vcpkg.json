@@ -1,6 +1,6 @@
 {
   "name": "idyntree",
-  "version": "12.4.0",
+  "version": "14.0.0",
   "description": "Multibody Dynamics Library designed for Free Floating Robots.",
   "homepage": "https://github.com/robotology/idyntree",
   "license": "BSD-3-Clause",
@@ -29,7 +29,7 @@
     },
     "irrlicht": {
       "description": "Add support for irrlicht-based visualizer",
-      "supports": "!windows",
+      "supports": "!windows & !osx",
       "dependencies": [
         "glfw3",
         "irrlicht"

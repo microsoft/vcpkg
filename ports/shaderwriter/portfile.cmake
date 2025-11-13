@@ -3,6 +3,8 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REF v${VERSION}
     SHA512 72b197f1185e3cee507fb1a5152709ee4c99317db61484d2427d96ae8426a127cd1cb234553be55616709f6f04bed6aec88fa4dfea48219ac1c5b36d9b349a2a
     HEAD_REF development
+    PATCHES
+        fix-template.diff # https://github.com/DragonJoker/ShaderWriter/pull/280
 )
 
 vcpkg_from_github(OUT_SOURCE_PATH CMAKE_SOURCE_PATH

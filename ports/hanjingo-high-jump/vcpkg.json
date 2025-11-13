@@ -1,0 +1,22 @@
+{
+  "name": "hanjingo-high-jump",
+  "version": "1.0.3",
+  "maintainers": [
+    "hanjingo",
+    "hehehunanchina@live.com"
+  ],
+  "description": "Modern C++ library framework implemented by C++17. High-jump(hj) is a comprehensive C++ library providing utilities for algorithms, compression, cryptography, databases, encoding, hardware, I/O, logging, math, networking, OS operations, synchronization, testing, time handling, types, and more.",
+  "homepage": "https://github.com/hanjingo/high-jump",
+  "license": "GPL-3.0-only",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

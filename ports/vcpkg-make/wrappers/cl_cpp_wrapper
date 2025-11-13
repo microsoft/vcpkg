@@ -82,7 +82,7 @@ if test -n "$verbose" ; then
     echo -n " \"$opt\""
   done
   echo ""
-fi
+fi 1>&2 # diagnostic, redirect to stderr
 
 [ $# -ge 1 -a -f "$1" ] && input="$file" || input="-"
 

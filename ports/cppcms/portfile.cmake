@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO artyom-beilis/cppcms
-    REF b72b19915794d1af63c9a9e9bea58e20a4ad93d4
-    SHA512 e99d34d14fbde22be725ac2c0bec069fb584e45c66767af75efaf454ca61a7a5e57434bf86109f910884c72202b8cf98fe16505e7d3d30d9218abd4d8b27d5df
+    REF v${VERSION}
+    SHA512 b91da68b3e277cf3814f6772a2580db95d55a9022b165b44f9d2fde0bc13779e9198b45e1ebdbd10189cb192109a61777888ce0670644da1e64a0e1008a827a7
     PATCHES
         dependencies.diff
         dllexport.diff
@@ -16,7 +16,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DISABLE_STATIC)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_CXX_STANDARD=11
+        -DCMAKE_CXX_STANDARD=17
         -DPYTHON=:
         -DUSE_WINDOWS6_API=ON
         -DDISABLE_SHARED=${DISABLE_SHARED}

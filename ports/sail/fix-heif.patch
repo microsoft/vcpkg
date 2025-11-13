@@ -1,0 +1,13 @@
+diff --git a/src/sail-codecs/heif/CMakeLists.txt b/src/sail-codecs/heif/CMakeLists.txt
+index d9c34f85..87981930 100644
+--- a/src/sail-codecs/heif/CMakeLists.txt
++++ b/src/sail-codecs/heif/CMakeLists.txt
+@@ -31,7 +31,7 @@ cmake_push_check_state(RESET)
+             set(TEST_CHROMA "heif_chroma_444")
+         endif()
+ 
+-        check_c_source_runs(
++        check_c_source_compiles(
+             "
+             #include <libheif/heif.h>
+             int main() {
