@@ -1,0 +1,37 @@
+{
+  "name": "libupnp",
+  "version": "1.14.25",
+  "description": "libupnp: Build UPnP-compliant control points, devices, and bridges on several operating systems.",
+  "homepage": "https://github.com/pupnp/pupnp/",
+  "documentation": "https://github.com/pupnp/pupnp/",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    "pthreads",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "client-api": {
+      "description": "Enable control point code (client)"
+    },
+    "ipv6": {
+      "description": "Enable IPv6 support"
+    },
+    "ssl": {
+      "description": "OpenSSL support for encrypted connections",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "webserver": {
+      "description": "Enable integrated webserver"
+    }
+  }
+}
