@@ -1,6 +1,6 @@
-{
+﻿{
   "name": "neko-log",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "An easy-to-use, modern, lightweight, and efficient C++20 logging library",
   "homepage": "https://github.com/moehoshio/NekoLog",
   "license": "MIT OR Apache-2.0",
@@ -15,7 +15,6 @@
       "host": true
     }
   ],
-  "default-features": ["tests"],
   "features": {
     "tests": {
       "description": "Build tests for NekoLog",
