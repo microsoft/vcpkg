@@ -51,8 +51,8 @@ target_link_libraries(idevicerestore PRIVATE
     ZLIB::ZLIB
 )
 if(WIN32)
-    find_package(unofficial-getopt-win32 REQUIRED)
-    target_link_libraries(idevicerestore PRIVATE unofficial::getopt-win32::getopt)
+    find_package(getopt CONFIG REQUIRED)
+    target_link_libraries(idevicerestore PRIVATE "$<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>")
 endif()
 
 install(TARGETS idevicerestore

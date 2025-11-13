@@ -101,7 +101,7 @@ install(
 
 if(BUILD_TOOLS)
     if(WIN32)
-        find_package(unofficial-getopt-win32 REQUIRED)
+        find_package(getopt CONFIG REQUIRED)
     endif()
 
     function(add_tool name source)
@@ -125,7 +125,7 @@ if(BUILD_TOOLS)
                 -DWIN32_LEAN_AND_MEAN
                 -DWIN32
             )
-            target_link_libraries("${name}" PRIVATE unofficial::getopt-win32::getopt Ws2_32)
+            target_link_libraries("${name}" PRIVATE "$<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>" Ws2_32)
         endif()
         if(UNIX)
             target_compile_definitions("${name}" PRIVATE

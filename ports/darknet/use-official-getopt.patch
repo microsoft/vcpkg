@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -437,9 +437,9 @@
+     ${CMAKE_CURRENT_LIST_DIR}/3rdparty/getopt/getopt.h
+   )
+ endif()
+ if((NOT USE_INTEGRATED_LIBS) AND MSVC)
+-  find_package(unofficial-getopt-win32 REQUIRED)
++  find_package(getopt CONFIG REQUIRED)
+ endif()
+ 
+ if(ENABLE_CUDA)
+   file(GLOB cuda_sources "${CMAKE_CURRENT_LIST_DIR}/src/*.cu")
+@@ -553,10 +553,10 @@
+   if(USE_INTEGRATED_LIBS)
+     target_include_directories(dark PRIVATE ${CMAKE_CURRENT_LIST_DIR}/3rdparty/getopt)
+     target_include_directories(darknet PRIVATE ${CMAKE_CURRENT_LIST_DIR}/3rdparty/getopt)
+   else()
+-    target_link_libraries(dark PRIVATE unofficial::getopt-win32::getopt)
+-    target_link_libraries(darknet PRIVATE unofficial::getopt-win32::getopt)
++    target_link_libraries(dark PRIVATE "$<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>")
++    target_link_libraries(darknet PRIVATE "$<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>")
+   endif()
+   target_compile_definitions(darknet PRIVATE -D_CRT_RAND_S -DNOMINMAX -D_USE_MATH_DEFINES)
+   target_compile_definitions(dark PRIVATE -D_CRT_RAND_S -DNOMINMAX -D_USE_MATH_DEFINES)
+   target_compile_definitions(dark PUBLIC -D_CRT_SECURE_NO_WARNINGS)

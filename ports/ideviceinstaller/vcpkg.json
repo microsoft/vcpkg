@@ -1,6 +1,7 @@
 {
   "name": "ideviceinstaller",
   "version-date": "2023-07-21",
+  "port-version": 1,
   "description": "Manage apps of iOS devices",
   "homepage": "https://libimobiledevice.org/",
   "license": "LGPL-2.0-or-later",

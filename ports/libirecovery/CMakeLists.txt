@@ -103,8 +103,8 @@ if(BUILD_TOOLS)
             -DWIN32_LEAN_AND_MEAN
             -DWIN32
         )
-        find_package(unofficial-getopt-win32 REQUIRED)
-        target_link_libraries(irecovery PRIVATE unofficial::getopt-win32::getopt Ws2_32)
+        find_package(getopt CONFIG REQUIRED)
+        target_link_libraries(irecovery PRIVATE "$<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>" Ws2_32)
     endif()
     if(APPLE)
         target_compile_definitions(irecovery PRIVATE -DHAVE_IOKIT)

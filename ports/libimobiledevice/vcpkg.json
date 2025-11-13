@@ -1,7 +1,7 @@
 {
   "name": "libimobiledevice",
   "version-date": "2023-07-05",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A cross-platform protocol library to communicate with iOS devices",
   "homepage": "http://www.libimobiledevice.org",
   "license": "LGPL-2.1-or-later",

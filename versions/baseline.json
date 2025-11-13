@@ -242,7 +242,7 @@
     },
     "argtable2": {
       "baseline": "2.13",
-      "port-version": 11
+      "port-version": 12
     },
     "argtable3": {
       "baseline": "3.3.1",
@@ -2318,7 +2318,7 @@
     },
     "darknet": {
       "baseline": "2024-10-10",
-      "port-version": 0
+      "port-version": 1
     },
     "darts-clone": {
       "baseline": "1767ab87cffe",
@@ -3265,7 +3265,7 @@
       "port-version": 3
     },
     "getopt-win32": {
-      "baseline": "1.1.0.20220925",
+      "baseline": "2.42.0",
       "port-version": 0
     },
     "gettext": {
@@ -3470,7 +3470,7 @@
     },
     "graphviz": {
       "baseline": "10.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "greatest": {
       "baseline": "1.5.0",
@@ -3854,11 +3854,11 @@
     },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
-      "port-version": 0
+      "port-version": 1
     },
     "idevicerestore": {
       "baseline": "2023-05-23",
-      "port-version": 0
+      "port-version": 1
     },
     "idyntree": {
       "baseline": "14.0.0",
@@ -5014,7 +5014,7 @@
     },
     "libimobiledevice": {
       "baseline": "2023-07-05",
-      "port-version": 1
+      "port-version": 2
     },
     "libimobiledevice-glue": {
       "baseline": "2023-05-13",
@@ -5026,7 +5026,7 @@
     },
     "libirecovery": {
       "baseline": "2023-05-13",
-      "port-version": 2
+      "port-version": 3
     },
     "libjpeg-turbo": {
       "baseline": "3.1.2",
@@ -5666,7 +5666,7 @@
     },
     "libusbmuxd": {
       "baseline": "2023-06-21",
-      "port-version": 1
+      "port-version": 2
     },
     "libusbp": {
       "baseline": "1.3.1",
@@ -5978,7 +5978,7 @@
     },
     "lmdb": {
       "baseline": "0.9.33",
-      "port-version": 0
+      "port-version": 1
     },
     "lockpp": {
       "baseline": "3.0",
@@ -6242,7 +6242,7 @@
     },
     "mathgl": {
       "baseline": "8.0.1",
-      "port-version": 7
+      "port-version": 8
     },
     "mathter": {
       "baseline": "2.0.0",
@@ -10026,7 +10026,7 @@
     },
     "usbmuxd": {
       "baseline": "2023-07-21",
-      "port-version": 1
+      "port-version": 2
     },
     "usd": {
       "baseline": "25.8",

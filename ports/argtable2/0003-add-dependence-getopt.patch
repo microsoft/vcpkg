@@ -6,7 +6,7 @@ index 8a4bd5b..7dc50f1 100644
  
  OPTION( HAVE_GETOPT_H "Have the getopt library" 0 )
  IF( HAVE_GETOPT_H )
-+	find_package(unofficial-getopt-win32 REQUIRED)
++	find_package(getopt CONFIG REQUIRED)
  	ADD_DEFINITIONS( -DHAVE_GETOPT_H )
  ENDIF( HAVE_GETOPT_H )
  
@@ -20,7 +20,7 @@ index 03e112c..8c58082 100644
  IF( WIN32 )
 +	if(HAVE_GETOPT_H)
 +	ADD_LIBRARY( argtable2 arg_dbl.c arg_end.c arg_file.c arg_int.c arg_lit.c arg_rem.c arg_str.c argtable2.c argtable2.h)
-+	target_link_libraries(argtable2 PRIVATE unofficial::getopt-win32::getopt)
++	target_link_libraries(argtable2 PRIVATE "$<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>")
 +	else()
  	ADD_LIBRARY( argtable2 arg_dbl.c arg_end.c arg_file.c arg_int.c arg_lit.c arg_rem.c arg_str.c argtable2.c argtable2.h getopt.c getopt.h getopt1.c )
 +	endif()

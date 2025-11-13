@@ -1,7 +1,7 @@
 {
   "name": "libusbmuxd",
   "version-date": "2023-06-21",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A client library to multiplex connections from and to iOS devices",
   "homepage": "https://libimobiledevice.org/",
   "license": "LGPL-2.1-or-later",

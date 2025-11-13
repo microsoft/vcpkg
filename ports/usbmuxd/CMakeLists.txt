@@ -44,8 +44,8 @@ target_link_libraries(usbmuxd PRIVATE
 )
 if(WIN32)
     find_package(PThreads4W REQUIRED)
-    find_package(unofficial-getopt-win32 REQUIRED)
-    target_link_libraries(usbmuxd PRIVATE PThreads4W::PThreads4W unofficial::getopt-win32::getopt)
+    find_package(getopt CONFIG REQUIRED)
+    target_link_libraries(usbmuxd PRIVATE PThreads4W::PThreads4W "$<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>")
 endif()
 
 install(TARGETS usbmuxd

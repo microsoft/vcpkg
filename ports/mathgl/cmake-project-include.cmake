@@ -1,5 +1,5 @@
 if(WIN32 AND NOT MINGW)
-    find_package(unofficial-getopt-win32 REQUIRED)
-    set(getopt_lib-static unofficial::getopt-win32::getopt)
+    find_package(getopt CONFIG REQUIRED)
+    set(getopt_lib-static "$<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>")
     set(MGL_HAVE_GETOPT 1 CACHE INTERNAL "From vcpkg")
 endif()
