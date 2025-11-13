@@ -1,4 +1,4 @@
-libdis provides CMake targets:
+disjoint-interval-set provides CMake targets:
 
     find_package(libdis CONFIG REQUIRED)
     target_link_libraries(main PRIVATE libdis::libdis)

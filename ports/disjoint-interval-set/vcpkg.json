@@ -1,5 +1,5 @@
 {
-  "name": "libdis",
+  "name": "disjoint-interval-set",
   "version-semver": "1.1.4",
   "description": "A modern C++ header-only library implementing Disjoint Interval Sets as a complete Boolean algebra",
   "homepage": "https://github.com/queelius/disjoint_interval_set",
