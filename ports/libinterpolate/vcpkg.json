@@ -1,6 +1,7 @@
 {
   "name": "libinterpolate",
   "version": "2.7.2",
+  "port-version": 1,
   "description": "Header-only C++ interpolation library.",
   "homepage": "https://github.com/CD3/libInterpolate",
   "license": "MIT",
