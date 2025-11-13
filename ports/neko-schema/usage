@@ -1,0 +1,8 @@
+NekoSchema provides CMake targets:
+
+    find_package(NekoSchema CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Neko::Schema)
+
+For C++20 module support (if available):
+
+    target_link_libraries(main PRIVATE Neko::Schema::Module)
