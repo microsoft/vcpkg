@@ -1,0 +1,8 @@
+NekoLog provides CMake targets:
+
+    find_package(NekoLog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Neko::Log)
+
+For C++20 module support (if available):
+
+    target_link_libraries(main PRIVATE Neko::Log::Module)
