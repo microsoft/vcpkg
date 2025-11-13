@@ -15,8 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    # Before NekoSchema is available, automatically fetch dependencies via FetchContent
-        -DNEKO_LOG_AUTO_FETCH_DEPS=ON
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
