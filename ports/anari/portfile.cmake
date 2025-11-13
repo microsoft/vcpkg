@@ -28,8 +28,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+file(GLOB ANARI_CMAKE_CONFIG_FILE RELATIVE ${CURRENT_PACKAGES_DIR} "${CURRENT_PACKAGES_DIR}/lib/cmake/*/anariConfig.cmake")
+cmake_path(GET ANARI_CMAKE_CONFIG_FILE PARENT_PATH ANARI_CMAKE_CONFIG_DIR)
 vcpkg_cmake_config_fixup(
-  CONFIG_PATH "lib/cmake/${PORT}-${VERSION}"
+  CONFIG_PATH ${ANARI_CMAKE_CONFIG_DIR}
 )
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
