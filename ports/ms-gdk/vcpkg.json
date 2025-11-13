@@ -1,11 +1,11 @@
 {
   "name": "ms-gdk",
-  "version": "2504.4.4108",
+  "version": "2510.0.6194",
   "description": "Microsoft Game Development Kit (GDK)",
   "homepage": "https://aka.ms/gdkx",
   "documentation": "https://aka.ms/gamedevdocs",
   "license": null,
-  "supports": "windows & x64 & !uwp & !xbox & !staticcrt",
+  "supports": "windows & (x64 | arm64) & !uwp & !xbox & !staticcrt",
   "dependencies": [
     {
       "name": "cpprestsdk",
@@ -22,7 +22,8 @@
   ],
   "features": {
     "playfab": {
-      "description": "Include PlayFab Extension Libraries"
+      "description": "Include PlayFab Extension Libraries",
+      "supports": "windows & x64 & !uwp & !xbox & !staticcrt"
     }
   }
 }
