@@ -8901,7 +8901,7 @@
       "port-version": 3
     },
     "serd": {
-      "baseline": "0.32.4",
+      "baseline": "0.32.6",
       "port-version": 0
     },
     "serdepp": {
