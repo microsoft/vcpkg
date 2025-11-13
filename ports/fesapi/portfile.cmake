@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO F2I-Consulting/fesapi
     REF "v${VERSION}"
-    SHA512 1ccbcef17f484f1aebbfff0347fd4aaf51d86d9389645cf2059cc6d47d69863c9bde368df438ac7d9146c6dd111d1da6bac1910146977629ff0a7cddb5848a08
+    SHA512 83823e3ce3acfc1428f5d0fa8fd96dd49befce3e2f8827b4894403b215f9ef117bcd55af981c33fc019cc5bfeac76c62265fc052285307fbabe2630d91bba14d
     HEAD_REF master
 )
 
