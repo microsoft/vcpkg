@@ -17,6 +17,7 @@ if ("${FAISS_ENABLE_GPU}")
     if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
         set(ENV{CUDACXX} "$ENV{CUDA_PATH}/bin/nvcc.exe")
     endif()
+    list(APPEND FEATURE_OPTIONS -DCMAKE_CUDA_ARCHITECTURES="50;60;70;80")
 endif()
 
 vcpkg_cmake_configure(
