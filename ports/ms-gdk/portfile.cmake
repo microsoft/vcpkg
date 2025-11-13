@@ -34,8 +34,10 @@ vcpkg_check_features(
 )
 
 # Install core tools
-file(INSTALL "${PACKAGE_PATH_CORE}/native/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
-file(INSTALL "${PACKAGE_PATH_CORE}/native/bin/GameConfigEditorDependencies" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    file(INSTALL "${PACKAGE_PATH_CORE}/native/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+    file(INSTALL "${PACKAGE_PATH_CORE}/native/bin/GameConfigEditorDependencies" DESTINATION "${CURRENT_PACKAGES_DIR}/tools")
+endif()
 
 set(WINDOWS_PATH "${PACKAGE_PATH}/native/${GDK_EDITION_NUMBER}/windows")
 
@@ -49,10 +51,8 @@ file(REMOVE_RECURSE "${WINDOWS_PATH}/include/cpprest")
 file(REMOVE_RECURSE "${WINDOWS_PATH}/include/pplx")
 
 # Install core content
-
 set(CORE_BINS xgameruntime.dll xgameruntime.pdb)
 set(CORE_INCLUDES grdk.h)
-
 set(CORE_LIBS xgameruntime.lib)
 
 file(GLOB HEADERS "${WINDOWS_PATH}/include/X*.*")
