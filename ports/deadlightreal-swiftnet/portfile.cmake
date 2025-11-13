@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO deadlightreal/SwiftNet
-    REF 1.0.0
-    SHA512 0c67fad499cfad53a9c87c5662f439336d99ae67bcb63240c364dad8cdfeb66f074d46b0b332eb54772cf2fb03795c07d8296a480de5e99053b0471497a32519
+    REF 0.1.0
+    SHA512 5248ddd2486d5892952c72a3c93fc7dec0320df1cdc9ae13cddcb7e57aa709c5bdbd5fa791d59e2b54c749a58b9f4ab6a9b912bd31193aa510eca0762b60ce4d
 )
 
 vcpkg_cmake_configure(
