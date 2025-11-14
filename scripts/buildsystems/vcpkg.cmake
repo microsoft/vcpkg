@@ -463,12 +463,18 @@ endif()
 
 set(VCPKG_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}")
 
+# by default we clobber our own source dir, but
+# this can be changed by setting X_VCPKG_BINARY_DIR
+if (NOT DEFINED ENV{X_VCPKG_BINARY_DIR})
+    set(ENV{X_VCPKG_BINARY_DIR} "${Z_VCPKG_ROOT_DIR}")
+endif()
+
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(Z_VCPKG_EXECUTABLE "${Z_VCPKG_ROOT_DIR}/vcpkg.exe")
+    set(Z_VCPKG_EXECUTABLE "$ENV{X_VCPKG_BINARY_DIR}/vcpkg.exe")
     set(Z_VCPKG_BOOTSTRAP_SCRIPT "${Z_VCPKG_ROOT_DIR}/bootstrap-vcpkg.bat")
 else()
-    set(Z_VCPKG_EXECUTABLE "${Z_VCPKG_ROOT_DIR}/vcpkg")
+    set(Z_VCPKG_EXECUTABLE "$ENV{X_VCPKG_BINARY_DIR}/vcpkg")
     set(Z_VCPKG_BOOTSTRAP_SCRIPT "${Z_VCPKG_ROOT_DIR}/bootstrap-vcpkg.sh")
 endif()
 
