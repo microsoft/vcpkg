@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8b756..34e7f5f 100644
+index ca8b756..349f27a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,9 +1,7 @@
@@ -13,27 +13,35 @@ index ca8b756..34e7f5f 100644
  
  option (optHAS_OPTIMIZED "Turn Optimizations ON"    OFF)
  option (optHAS_SYMBOLS   "Build with debug Symbols" ON)
-@@ -155,15 +153,15 @@ if (BEA_COMPILER STREQUAL msvc)
-   # determine code generation model
-   if (optHAS_OPTIMIZED)
-     if (optBUILD_DLL)
--      list (APPEND BEA_FLAGS /MD)
-+      #list (APPEND BEA_FLAGS /MD)
-     else ()
--      list (APPEND BEA_FLAGS /MT)
-+      #list (APPEND BEA_FLAGS /MT)
-     endif ()
-   else ()
-     if (optBUILD_DLL)
--      list (APPEND BEA_FLAGS /MDd)
-+      #list (APPEND BEA_FLAGS /MDd)
-     else ()
--      list (APPEND BEA_FLAGS /MTd)
-+      #list (APPEND BEA_FLAGS /MTd)
-     endif ()
+@@ -153,19 +151,15 @@ if (BEA_COMPILER STREQUAL msvc)
    endif ()
+ 
+   # determine code generation model
+-  if (optHAS_OPTIMIZED)
+-    if (optBUILD_DLL)
+-      list (APPEND BEA_FLAGS /MD)
+-    else ()
+-      list (APPEND BEA_FLAGS /MT)
+-    endif ()
+-  else ()
+-    if (optBUILD_DLL)
+-      list (APPEND BEA_FLAGS /MDd)
+-    else ()
+-      list (APPEND BEA_FLAGS /MTd)
++    if (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreaded")
++      list(APPEND BEA_FLAGS "/MT")
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDLL")
++      list(APPEND BEA_FLAGS "/MD")
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebug")
++      list(APPEND BEA_FLAGS "/MTd")
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebugDLL")
++      list(APPEND BEA_FLAGS "/MDd")
+     endif ()
+-  endif ()
  endif ()
-@@ -354,7 +352,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+ # =========================================
+ # Intel Compiler configuration
+@@ -354,7 +348,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
  
  
  
@@ -42,7 +50,7 @@ index ca8b756..34e7f5f 100644
  
  
  set (build_modules
-@@ -366,14 +364,14 @@ set (build_modules
+@@ -366,14 +360,14 @@ set (build_modules
  if (NOT ZLIB_FOUND)
    set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
  else ()
