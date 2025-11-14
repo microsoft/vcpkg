@@ -36,3 +36,28 @@ index ae8d8be..95898fe 100644
      HINTS ${X265_PKGCONF_LIBRARY_DIRS} ${X265_PKGCONF_LIBDIR}
  )
  
+diff --git a/cmake/modules/FindOPENJPH.cmake b/cmake/modules/FindOPENJPH.cmake
+index 443f9d6..fbb11ae 100644
+--- a/cmake/modules/FindOPENJPH.cmake
++++ b/cmake/modules/FindOPENJPH.cmake
+@@ -9,15 +9,16 @@ find_path(OPENJPH_INCLUDE_DIR
+ 
+ find_library(OPENJPH_LIBRARY
+     NAMES libopenjph openjph
++    NAMES_PER_DIR
+     HINTS ${OPENJPH_PKGCONF_LIBRARY_DIRS} ${OPENJPH_PKGCONF_LIBDIR}
+ )
+ 
+ set(OPENJPH_PROCESS_LIBS OPENJPH_LIBRARY)
+-set(OPENJPH_PROCESS_INCLUDES OPENJPH_INCLUDE_DIR)
+-libfind_process(OPENJPH)
++set(OPENJPH_PROCESS_INCLUDES openjph_INCLUDE_DIR)
++libfind_process(openjph)
+ 
+ include(FindPackageHandleStandardArgs)
+-find_package_handle_standard_args(OPENJPH
++find_package_handle_standard_args(openjph
+     REQUIRED_VARS
+-        OPENJPH_INCLUDE_DIR
++        openjph_INCLUDE_DIR
+         OPENJPH_LIBRARY
