@@ -82,7 +82,7 @@ index e9647d5..092f40d 100644
 +    src/gperftools/nallocx.h
 +    src/gperftools/profiler.h
 +    src/gperftools/stacktrace.h
-+    "${CMAKE_CURRENT_BINARY_DIR}/gperftools/tcmalloc.h"
++    src/gperftools/tcmalloc.h
 +  DESTINATION include/gperftools
 +)
 +
