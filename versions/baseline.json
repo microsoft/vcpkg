@@ -648,6 +648,10 @@
       "baseline": "8.2.10",
       "port-version": 0
     },
+    "beaengine": {
+      "baseline": "5.3.0",
+      "port-version": 0
+    },
     "beast": {
       "baseline": "0",
       "port-version": 2
