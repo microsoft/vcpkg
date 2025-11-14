@@ -20,6 +20,7 @@ vcpkg_from_github(
         allow-disabling-lib-dl.patch
         always-build-pathops.patch
         remove-directwrite-png-dependency.patch # merged in newer versions on upstream
+        skia-disable-atlas-renderer.patch
 )
 
 # De-vendor
