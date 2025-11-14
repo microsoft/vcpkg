@@ -7841,7 +7841,7 @@
       "port-version": 4
     },
     "qcbor": {
-      "baseline": "1.5.3",
+      "baseline": "1.6",
       "port-version": 0
     },
     "qcoro": {
