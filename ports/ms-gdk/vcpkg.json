@@ -10,14 +10,6 @@
     {
       "name": "cpprestsdk",
       "default-features": false
-    },
-    {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
     }
   ],
   "features": {

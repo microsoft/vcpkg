@@ -154,4 +154,4 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/gdk-config.cmake.in"
 
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
 
-message(STATUS "BY USING THE SOFTWARE, YOU ACCEPT THESE TERMS: https://www.nuget.org/packages/Microsoft.GDK.PC/${VERSION}/License")
+message(STATUS "BY USING THE SOFTWARE, YOU ACCEPT THESE TERMS: https://www.nuget.org/packages/Microsoft.GDK.Windows/${VERSION}/License")
