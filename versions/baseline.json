@@ -5722,7 +5722,7 @@
     },
     "libwebp": {
       "baseline": "1.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libwebsockets": {
       "baseline": "4.4.1",
