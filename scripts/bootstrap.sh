@@ -11,6 +11,7 @@ vcpkgDisableMetrics="OFF"
 vcpkgUseSystem=false
 vcpkgUseMuslC="OFF"
 vcpkgSkipDependencyChecks="OFF"
+vcpkgToolDir="$vcpkgRootDir"
 for var in "$@"
 do
     if [ "$var" = "-disableMetrics" -o "$var" = "--disableMetrics" ]; then
@@ -25,6 +26,8 @@ do
         vcpkgSkipDependencyChecks="ON"
     elif [ "$var" = "-musl" ]; then
         vcpkgUseMuslC="ON"
+    elif [ "${var#"-toolDir="}" != "$var" ]; then
+        vcpkgToolDir="${var#"-toolDir="}"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
         echo "Usage: ./bootstrap-vcpkg.sh [options]"
         echo
@@ -33,6 +36,7 @@ do
         echo "    -disableMetrics       Mark this vcpkg root to disable metrics."
         echo "    -skipDependencyChecks Skip checks for vcpkg prerequisites. vcpkg may not run."
         echo "    -musl                 Use the musl binary rather than the glibc binary on Linux."
+        echo "    -vcpkgToolDir         Install the vcpkg tool in this directory (defaults to vcpkg root)."
         exit 1
     else
         echo "Unknown argument $var. Use '-help' for help."
@@ -54,9 +58,15 @@ if [ "$unixKernelName" = CYGWIN_NT ] || [ "$unixKernelName" = MINGW_NT ] || [ "$
     exit 0
 fi
 
+# check whether we can install in the given tooldir
+if [ ! -d "$vcpkgToolDir" ]; then
+    echo "vcpkgToolDir was set to '$vcpkgToolDir', but that was not a directory."
+    exit 1
+fi
+
 # Determine the downloads directory.
 if [ -z ${VCPKG_DOWNLOADS+x} ]; then
-    downloadsDir="$vcpkgRootDir/downloads"
+    downloadsDir="$vcpkgToolDir/downloads"
 else
     downloadsDir="$VCPKG_DOWNLOADS"
     if [ ! -d "$VCPKG_DOWNLOADS" ]; then
@@ -209,11 +219,11 @@ fi
 
 # Do the download or build.
 if [ "$vcpkgDownloadTool" = "ON" ]; then
-    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
+    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgToolDir/vcpkg" $vcpkgToolReleaseSha
 else
     vcpkgToolReleaseArchive="$VCPKG_TOOL_RELEASE_TAG.zip"
     vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseArchive"
-    baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
+    baseBuildDir="$vcpkgToolDir/buildtrees/_vcpkg"
     buildDir="$baseBuildDir/build"
     archivePath="$downloadsDir/$vcpkgToolReleaseArchive"
     srcBaseDir="$baseBuildDir/src"
@@ -239,16 +249,16 @@ else
     (cd "$buildDir" && eval cmake "$srcDir" $cmakeConfigOptions) || exit 1
     (cd "$buildDir" && cmake --build .) || exit 1
 
-    rm -rf "$vcpkgRootDir/vcpkg"
-    cp "$buildDir/vcpkg" "$vcpkgRootDir/"
+    rm -rf "$vcpkgToolDir/vcpkg"
+    cp "$buildDir/vcpkg" "$vcpkgToolDir/"
 fi
 
-"$vcpkgRootDir/vcpkg" version --disable-metrics
+"$vcpkgToolDir/vcpkg" version --disable-metrics
 
 # Apply the disable-metrics marker file.
 if [ "$vcpkgDisableMetrics" = "ON" ]; then
-    touch "$vcpkgRootDir/vcpkg.disable-metrics"
-elif ! [ -f "$vcpkgRootDir/vcpkg.disable-metrics" ]; then
+    touch "$vcpkgToolDir/vcpkg.disable-metrics"
+elif ! [ -f "$vcpkgToolDir/vcpkg.disable-metrics" ]; then
     # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
     # opted out they should stay opted out.
     cat <<EOF
