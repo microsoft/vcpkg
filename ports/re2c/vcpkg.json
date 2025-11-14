@@ -1,0 +1,22 @@
+{
+  "name": "re2c",
+  "version": "4.3",
+  "description": "re2c is a free and open-source lexer generator for C, C++, Go, and Rust. It compiles regular expression specifications to deterministic finite automata and encodes them in the form of a program in the target language.",
+  "homepage": "https://re2c.org/",
+  "license": "Unlicense",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "re2c",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
