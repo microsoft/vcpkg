@@ -1,0 +1,16 @@
+diff --git a/modules/juce_dsp/juce_dsp.h b/modules/juce_dsp/juce_dsp.h
+index a76bc37189..54076969f3 100644
+--- a/modules/juce_dsp/juce_dsp.h
++++ b/modules/juce_dsp/juce_dsp.h
+@@ -92,7 +92,7 @@
+   #endif
+  #endif
+ 
+- #if JUCE_64BIT && JUCE_WINDOWS
++ #if JUCE_64BIT && JUCE_WINDOWS && !JUCE_CLANG
+   #include <arm64_neon.h>
+  #else
+   #include <arm_neon.h>
+-- 
+2.48.1
+
