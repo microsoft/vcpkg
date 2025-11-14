@@ -6,17 +6,12 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        module  NEKO_SCHEMA_ENABLE_MODULE
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DNEKO_SCHEMA_BUILD_TESTS=OFF
         -DNEKO_SCHEMA_AUTO_FETCH_DEPS=OFF
+        -DNEKO_SCHEMA_ENABLE_MODULE=OFF
 )
 
 vcpkg_cmake_install()

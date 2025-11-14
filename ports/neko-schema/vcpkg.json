@@ -14,10 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "module": {
-      "description": "Enable C++20 module support for NekoSchema"
-    }
-  }
+  ]
 }
