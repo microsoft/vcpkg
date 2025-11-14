@@ -1,0 +1,30 @@
+{
+  "name": "stardots-sdk-cpp",
+  "version": "1.0.0",
+  "description": "C++ SDK for StarDots platform",
+  "homepage": "https://stardots.io",
+  "documentation": "https://stardots.io/en/documentation/openapi",
+  "license": "MIT",
+  "supports": "x64 & !uwp & !android",
+  "dependencies": [
+    {
+      "name": "curl",
+      "features": [
+        "ssl"
+      ]
+    },
+    "openssl",
+    "nlohmann-json"
+  ],
+  "default-features": [
+    "examples"
+  ],
+  "features": {
+    "examples": {
+      "description": "Build examples"
+    },
+    "tests": {
+      "description": "Build tests"
+    }
+  }
+}
