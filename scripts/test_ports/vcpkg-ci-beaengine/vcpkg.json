@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-beaengine",
+  "version-string": "ci",
+  "description": "Validates beaengine",
+  "dependencies": [
+    "beaengine",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
