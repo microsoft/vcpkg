@@ -1,0 +1,184 @@
+diff --git a/builds/install/arch-specific/freebsd/install.sh.in b/builds/install/arch-specific/freebsd/install.sh.in
+index 20d848357a..f4adb96e33 100755
+--- a/builds/install/arch-specific/freebsd/install.sh.in
++++ b/builds/install/arch-specific/freebsd/install.sh.in
+@@ -43,6 +43,7 @@ TargetDir=             # Install in real FS
+ SecurityDatabase=security2.fdb
+ RunUser=firebird
+ RunGroup=firebird
++FBCLIENT_STATIC_FLG=@FBCLIENT_STATIC_FLG@
+ 
+ 
+ #------------------------------------------------------------------------
+@@ -236,6 +237,10 @@ copyFiles() {
+ 	#lib
+     copyIfExists $BuiltFBDir/lib/libfbembed.so* ${TargetDir}@FB_LIBDIR@
+     cp -f $BuiltFBDir/lib/libfbclient.so* ${TargetDir}@FB_LIBDIR@
++	if [ "$FBCLIENT_STATIC_FLG" = "Y" ] && [ -f $BuiltFBDir/lib/libfbclient_static.a ]; then
++		cp -f $BuiltFBDir/lib/libfbclient_static.a ${TargetDir}@FB_LIBDIR@/libfbclient_static.a
++		chmod 0644 ${TargetDir}@FB_LIBDIR@/libfbclient_static.a
++	fi
+     cp -f $BuiltFBDir/lib/libib_util.so ${TargetDir}@FB_LIBDIR@/libib_util.so
+     copyIfExists $BuiltFBDir/lib/libicu*.so* ${TargetDir}@FB_LIBDIR@
+ 
+diff --git a/builds/install/arch-specific/hpux/super/makeinstallImage.sh.in b/builds/install/arch-specific/hpux/super/makeinstallImage.sh.in
+index 07d86c00a6..b4ec0d8224 100644
+--- a/builds/install/arch-specific/hpux/super/makeinstallImage.sh.in
++++ b/builds/install/arch-specific/hpux/super/makeinstallImage.sh.in
+@@ -48,6 +48,7 @@ TargetDir=buildroot    # Where we want to build the install image
+ RealRootDir=/usr/local/firebird   # Where it will be installed on new machine
+ FBRootDir=${RealRootDir#/}   # strip off leading /
+ DestDir=$TargetDir/$FBRootDir
++FBCLIENT_STATIC_FLG=@FBCLIENT_STATIC_FLG@
+ 
+ 
+ #------------------------------------------------------------------------
+@@ -142,6 +143,10 @@ copyFiles() {
+ 
+ 
+     cp -f $BuiltFBDir/lib/libfbclient.sl* $DestDir/lib
++    if [ "$FBCLIENT_STATIC_FLG" = "Y" ] && [ -f $BuiltFBDir/lib/libfbclient_static.a ]; then
++        cp -f $BuiltFBDir/lib/libfbclient_static.a $DestDir/lib/libfbclient_static.a
++        chmod 0644 $DestDir/lib/libfbclient_static.a
++    fi
+ 
+     cp -f $BuiltFBDir/lib/libib_util.sl $DestDir/lib/libib_util.sl
+ 
+diff --git a/builds/install/arch-specific/linux/makeInstallImage.sh.in b/builds/install/arch-specific/linux/makeInstallImage.sh.in
+index 98c56abc0e..25caba22e9 100644
+--- a/builds/install/arch-specific/linux/makeInstallImage.sh.in
++++ b/builds/install/arch-specific/linux/makeInstallImage.sh.in
+@@ -40,6 +40,7 @@ TomCryptBuild="@TOMCRYPT_BUILD@"
+ OBJDUMP=@OBJDUMP@
+ CLIENT_ONLY_FLG=@CLIENT_ONLY_FLG@
+ WITH_TOMCRYPT=@WITH_TOMCRYPT@
++FBCLIENT_STATIC_FLG=@FBCLIENT_STATIC_FLG@
+ 
+ #------------------------------------------------------------------------
+ #  addLibs
+@@ -258,6 +259,10 @@ copyFiles() {
+ 
+ 	#lib
+ 	cp -df $BuiltFBDir/lib/libfbclient.so* ${TargetDir}@FB_LIBDIR@
++	if [ "$FBCLIENT_STATIC_FLG" = "Y" ] && [ -f $BuiltFBDir/lib/libfbclient_static.a ]; then
++		cp -f $BuiltFBDir/lib/libfbclient_static.a ${TargetDir}@FB_LIBDIR@/libfbclient_static.a
++		chmod 0644 ${TargetDir}@FB_LIBDIR@/libfbclient_static.a
++	fi
+ 	if [ "$CLIENT_ONLY_FLG" = "N" ]; then
+ 		cp -f $BuiltFBDir/lib/libib_util.so ${TargetDir}@FB_LIBDIR@/libib_util.so
+ 	fi
+diff --git a/builds/install/arch-specific/netbsd/install.sh.in b/builds/install/arch-specific/netbsd/install.sh.in
+index c234ee8cea..51c994cb00 100644
+--- a/builds/install/arch-specific/netbsd/install.sh.in
++++ b/builds/install/arch-specific/netbsd/install.sh.in
+@@ -51,6 +51,7 @@ copyIfExists() {
+ 
+ }
+ 
++FBCLIENT_STATIC_FLG=@FBCLIENT_STATIC_FLG@
+ InstallFirebirdPrefix=@prefix@
+ InstallPrefix=${InstallFirebirdPrefix%/firebird}
+ unset InstallFirebirdPrefix
+@@ -171,6 +172,10 @@ cp $BuiltFBDir/include/*.h $DestDir/include || exit
+ 
+ cp -Rf $BuiltFBDir/lib/libfbembed.so* $DestDir/lib || exit
+ cp -Rf $BuiltFBDir/lib/libfbclient.so* $DestDir/lib || exit
++if [ "$FBCLIENT_STATIC_FLG" = "Y" ] && [ -f $BuiltFBDir/lib/libfbclient_static.a ]; then
++	cp -f $BuiltFBDir/lib/libfbclient_static.a $DestDir/lib/libfbclient_static.a || exit
++	chmod 0644 $DestDir/lib/libfbclient_static.a || exit
++fi
+ 
+ cp -f $BuiltFBDir/lib/libib_util.so $DestDir/lib/libib_util.so  || exit
+ 
+diff --git a/builds/posix/Makefile.in b/builds/posix/Makefile.in
+index 063d2abedc..0e7b458f58 100644
+--- a/builds/posix/Makefile.in
++++ b/builds/posix/Makefile.in
+@@ -448,7 +448,14 @@ $(GPRE_BOOT):	$(GPRE_Boot_Objects) $(COMMON_LIB)
+ # yValve
+ #
+ 
++ifeq ($(FBCLIENT_STATIC_FLG),Y)
++DEC_FLOAT_LIB := $(STATIC_LIB)/libdecFloat$(CROSS).a
++endif
++
+ yvalve: $(LIBFIREBIRD_BASENAME)
++ifeq ($(FBCLIENT_STATIC_FLG),Y)
++yvalve: $(LIBFIREBIRD_STATIC)
++endif
+ 
+ ifneq ($(LibraryBaseName),$(LibrarySoName))
+ $(LIBFIREBIRD_BASENAME):	$(LIBFIREBIRD_SONAME)
+@@ -464,6 +471,23 @@ endif
+ $(LIBFIREBIRD_FULLNAME):	$(YValve_Objects) $(Remote_Client_Objects) $(COMMON_LIB)
+ 	$(LINK_FIREBIRD) -o $@ $^ $(LINK_FIREBIRD_LIBS) $(call LIB_LINK_DARWIN_INSTALL_NAME,lib/libfbclient.$(SHRLIB_EXT))
+ 
++ifeq ($(FBCLIENT_STATIC_FLG),Y)
++$(LIBFIREBIRD_STATIC):	$(YValve_Objects) $(Remote_Client_Objects) $(Common_Objects) $(DEC_FLOAT_LIB)
++	-$(RM) $@
++	$(STATICLIB_LINK) $@ $^
++
++	DEC_TMP="$(TMP_ROOT)/decFloat-extract"; \
++	rm -rf "$$DEC_TMP"; \
++	mkdir -p "$$DEC_TMP"; \
++	cd "$$DEC_TMP" && $(AR) x "$(DEC_FLOAT_LIB)"; \
++	if ls "$$DEC_TMP"/*.o >/dev/null 2>&1; then \
++		$(AR) q $@ "$$DEC_TMP"/*.o; \
++	fi; \
++	rm -rf "$$DEC_TMP"
++
++	$(RANLIB) $@
++endif
++
+ 
+ #___________________________________________________________________________
+ # core part - jrd's engine
+diff --git a/builds/posix/make.defaults b/builds/posix/make.defaults
+index 2bbf905236..e454d53caf 100755
+--- a/builds/posix/make.defaults
++++ b/builds/posix/make.defaults
+@@ -117,6 +117,7 @@ PLUSPLUS_FLAGS:= -fno-rtti -std=c++17
+ IsDeveloper = @DEVEL_FLG@
+ CLIENT_ONLY_FLG=@CLIENT_ONLY_FLG@
+ WITH_TOMCRYPT=@WITH_TOMCRYPT@
++FBCLIENT_STATIC_FLG=@FBCLIENT_STATIC_FLG@
+ 
+ CpuType=@CPU_TYPE@
+ PLATFORM=@PLATFORM@
+@@ -260,6 +261,7 @@ LibraryBaseName=$(LibraryFileName).${SHRLIB_EXT}
+ LIBFIREBIRD_FULLNAME = $(LIB)/$(LibraryFullName)
+ LIBFIREBIRD_SONAME = $(LIB)/$(LibraryBaseName)
+ LIBFIREBIRD_BASENAME = $(LIB)/$(LibrarySoName)
++LIBFIREBIRD_STATIC = $(LIB)/$(LibraryFileName)_static.a
+ 
+ # The firebird engine library name
+ 
+@@ -446,4 +448,3 @@ FIREBIRD_MSG    = $(FIREBIRD)/firebird.msg
+ # For want of a better suggestion we may as well default to posix
+ PLATFORM_PATH	=	os/posix
+ TRACE_OS_Sources	=
+-
+diff --git a/configure.ac b/configure.ac
+index 7f575754e2..4cb5eafbe6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -637,6 +637,16 @@ AC_ARG_ENABLE(client-only,
+    esac])
+ AC_SUBST(CLIENT_ONLY_FLG)
+ 
++FBCLIENT_STATIC_FLG=N
++AC_ARG_ENABLE(fbclient-static,
++  [  --enable-fbclient-static build libfbclient_static.a together with the shared client (default=no)],
++  [case "$enableval" in
++     yes) FBCLIENT_STATIC_FLG=Y;;
++     no)  FBCLIENT_STATIC_FLG=N;;
++     *)   AC_MSG_ERROR(bad value '${enableval}' for --enable-fbclient-static);;
++   esac])
++AC_SUBST(FBCLIENT_STATIC_FLG)
++
+ CROSS=
+ IS_CROSS=N
+ AC_ARG_WITH(cross-build,
+-- 
+2.51.0
+

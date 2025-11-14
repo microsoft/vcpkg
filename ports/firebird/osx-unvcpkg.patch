@@ -1,0 +1,66 @@
+diff --git a/configure.ac b/configure.ac
+index 7f575754e2..0407bc1aee 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -77,27 +77,6 @@ AC_CANONICAL_BUILD
+ CPU_TYPE=$build_cpu
+ AC_SUBST(CPU_TYPE)
+ 
+-case "$build" in
+-  aarch64-*-darwin*)
+-    VCPKG_TRIPLET=fb-arm64-osx
+-    ;;
+-
+-  x*64-*-darwin*)
+-    VCPKG_TRIPLET=fb-x64-osx
+-    ;;
+-esac
+-
+-if test "x$VCPKG_TRIPLET" != "x" ; then
+-  if ! test -f ./vcpkg/vcpkg; then
+-    ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+-  fi
+-
+-  ./vcpkg/vcpkg install --triplet=$VCPKG_TRIPLET
+-
+-  VCPKG_INSTALLED=`pwd`/vcpkg_installed/$VCPKG_TRIPLET
+-  AC_SUBST(VCPKG_INSTALLED)
+-fi
+-
+ dnl EKU: set appropiate defaults for each platform
+ dnl      EDITLINE_FLG     : support fancy command line editing in isql
+ dnl      SHRLIB_EXT       : suffix of shared library files
+@@ -711,14 +690,6 @@ CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+ CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
+ LIBS="$LIBS $PTHREAD_LIBS"
+ 
+-case "$build" in
+-  *-*-darwin*)
+-    CFLAGS="$CFLAGS -I${VCPKG_INSTALLED}/include"
+-    CXXFLAGS="$CXXFLAGS -nostdinc++ -isystem ${VCPKG_INSTALLED}/include/c++/v1 -I${VCPKG_INSTALLED}/include"
+-    LDFLAGS="$LDFLAGS -nostdlib++ -stdlib=libc++ -L${VCPKG_INSTALLED}/lib -lc++"
+-    ;;
+-esac
+-
+ AC_ARG_ENABLE(raw-devices,
+   [  --enable-raw-devices    enable databases on raw devices (default on POSIX)],
+   [case "$enableval" in
+@@ -1447,18 +1418,6 @@ dnl # output
+ 		fi
+ 	fi
+ 
+-  case "$build" in
+-    *-*-darwin*)
+-      cp -a $VCPKG_INSTALLED/lib/libicu* gen/\$fb_tgt/firebird/lib/
+-      install_name_tool -id @rpath/lib/libicuuc.dylib gen/\$fb_tgt/firebird/lib/libicuuc.dylib
+-      install_name_tool -id @rpath/lib/libicui18n.dylib gen/\$fb_tgt/firebird/lib/libicui18n.dylib
+-      install_name_tool -id @rpath/lib/libicudata.dylib gen/\$fb_tgt/firebird/lib/libicudata.dylib
+-      install_name_tool -change @rpath/libicudata.71.dylib @loader_path/libicudata.71.dylib gen/\$fb_tgt/firebird/lib/libicuuc.71.dylib
+-      install_name_tool -change @rpath/libicudata.71.dylib @loader_path/libicudata.71.dylib gen/\$fb_tgt/firebird/lib/libicui18n.71.dylib
+-      install_name_tool -change @rpath/libicuuc.71.dylib @loader_path/libicuuc.71.dylib gen/\$fb_tgt/firebird/lib/libicui18n.71.dylib
+-      ;;
+-  esac
+-
+ dnl ### TEMP ### directories for generated .cpp, .o and .d by module name
+ 	for src_dir in `cd src; ls -R -1 * | grep : | tr -d : | tr "\n" " "; cd ..`; do
+     	mkdir -p temp/\$fb_tgt/\$src_dir

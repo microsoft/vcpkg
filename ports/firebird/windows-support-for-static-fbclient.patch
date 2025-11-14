@@ -1,0 +1,1157 @@
+diff --git a/builds/win32/compile_static.bat b/builds/win32/compile_static.bat
+new file mode 100644
+index 0000000000..e09d2cc6b8
+--- /dev/null
++++ b/builds/win32/compile_static.bat
+@@ -0,0 +1,40 @@
++@echo off
++::==============
++:: compile.bat solution, output, [projects...]
++::
++::   Note: Our projects create object files in temp/$platform/$config
++::     but we call devenv with $config|$platform (note variable in reverse order
++::     and odd syntax).
++
++setlocal
++set solution=%1
++set output_path=%~dp2
++set output=%2
++set projects=
++
++@if "%FB_DBG%"=="" (
++	set config=releaseStatic
++) else (
++	set config=debugStatic
++)
++
++shift
++shift
++
++:loop_start
++
++if "%1" == "" goto loop_end
++
++set projects=%projects% /target:%1%FB_CLEAN%
++
++shift
++goto loop_start
++
++:loop_end
++
++if not exist "%output_path%" mkdir "%output_path%"
++msbuild "%FB_LONG_ROOT_PATH%\%solution%.sln" /maxcpucount /p:Configuration=%config% /p:Platform=%FB_TARGET_PLATFORM% %projects% /fileLoggerParameters:LogFile=%output%
++
++endlocal
++
++goto :EOF
+diff --git a/builds/win32/make_all.bat b/builds/win32/make_all.bat
+index ebeb3910dd..a370d3aec5 100644
+--- a/builds/win32/make_all.bat
++++ b/builds/win32/make_all.bat
+@@ -23,6 +23,11 @@ set ERRLEV=0
+ )
+ if errorlevel 1 call :ERROR build failed - see make_all_%FB_TARGET_PLATFORM%.log for details
+ 
++@if "%FB_ENABLE_FBCLIENT_STATIC%"=="TRUE" (
++	call compile_static.bat builds\win32\%VS_VER%\Firebird make_all_%FB_TARGET_PLATFORM%_static.log DLLs\yvalve
++	if errorlevel 1 call :ERROR build failed - see make_all_%FB_TARGET_PLATFORM%_static.log for details
++)
++
+ @if "%ERRLEV%"=="1" (
+   @goto :EOF
+ ) else (
+@@ -60,6 +65,10 @@ if errorlevel 1 call :ERROR build failed - see make_all_%FB_TARGET_PLATFORM%.log
+ @copy %FB_ROOT_PATH%\temp\%FB_OBJ_DIR%\firebird\plugins\*.dll %FB_OUTPUT_DIR%\plugins >nul
+ @copy %FB_ROOT_PATH%\temp\%FB_OBJ_DIR%\yvalve\fbclient.lib %FB_OUTPUT_DIR%\lib\fbclient_ms.lib >nul
+ 
++@if "%FB_ENABLE_FBCLIENT_STATIC%"=="TRUE" (
++	@copy %FB_ROOT_PATH%\temp\%FB_STATIC_OBJ_DIR%\yvalve\fbclient_static.lib %FB_OUTPUT_DIR%\lib\fbclient_static_ms.lib >nul
++)
++
+ @if "%FB_CLIENT_ONLY%"=="" (
+ 	copy %FB_ROOT_PATH%\temp\%FB_OBJ_DIR%\firebird\intl\* %FB_OUTPUT_DIR%\intl >nul
+ 	copy %FB_ROOT_PATH%\temp\%FB_OBJ_DIR%\firebird\plugins\udr\*.dll %FB_OUTPUT_DIR%\plugins\udr >nul
+diff --git a/builds/win32/msvc15/Firebird.sln b/builds/win32/msvc15/Firebird.sln
+index 4293fbe7bd..ddf87353b3 100644
+--- a/builds/win32/msvc15/Firebird.sln
++++ b/builds/win32/msvc15/Firebird.sln
+@@ -1,6 +1,6 @@
+ Microsoft Visual Studio Solution File, Format Version 12.00
+-# Visual Studio 15
+-VisualStudioVersion = 15.0.27703.2047
++# Visual Studio Version 17
++VisualStudioVersion = 17.14.36408.4 d17.14
+ MinimumVisualStudioVersion = 10.0.40219.1
+ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "alice", "alice.vcxproj", "{0D616380-1A5A-4230-A80B-021360E4E669}"
+ EndProject
+@@ -102,304 +102,464 @@ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Win32 = Debug|Win32
+ 		Debug|x64 = Debug|x64
++		DebugStatic|Win32 = DebugStatic|Win32
++		DebugStatic|x64 = DebugStatic|x64
+ 		Release|Win32 = Release|Win32
+ 		Release|x64 = Release|x64
++		ReleaseStatic|Win32 = ReleaseStatic|Win32
++		ReleaseStatic|x64 = ReleaseStatic|x64
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+ 		{0D616380-1A5A-4230-A80B-021360E4E669}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{0D616380-1A5A-4230-A80B-021360E4E669}.Debug|Win32.Build.0 = Debug|Win32
+ 		{0D616380-1A5A-4230-A80B-021360E4E669}.Debug|x64.ActiveCfg = Debug|x64
+ 		{0D616380-1A5A-4230-A80B-021360E4E669}.Debug|x64.Build.0 = Debug|x64
++		{0D616380-1A5A-4230-A80B-021360E4E669}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{0D616380-1A5A-4230-A80B-021360E4E669}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{0D616380-1A5A-4230-A80B-021360E4E669}.Release|Win32.ActiveCfg = Release|Win32
+ 		{0D616380-1A5A-4230-A80B-021360E4E669}.Release|Win32.Build.0 = Release|Win32
+ 		{0D616380-1A5A-4230-A80B-021360E4E669}.Release|x64.ActiveCfg = Release|x64
+ 		{0D616380-1A5A-4230-A80B-021360E4E669}.Release|x64.Build.0 = Release|x64
++		{0D616380-1A5A-4230-A80B-021360E4E669}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{0D616380-1A5A-4230-A80B-021360E4E669}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{D1507562-A363-4685-96AF-B036F5E5E47F}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{D1507562-A363-4685-96AF-B036F5E5E47F}.Debug|Win32.Build.0 = Debug|Win32
+ 		{D1507562-A363-4685-96AF-B036F5E5E47F}.Debug|x64.ActiveCfg = Debug|x64
+ 		{D1507562-A363-4685-96AF-B036F5E5E47F}.Debug|x64.Build.0 = Debug|x64
++		{D1507562-A363-4685-96AF-B036F5E5E47F}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{D1507562-A363-4685-96AF-B036F5E5E47F}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{D1507562-A363-4685-96AF-B036F5E5E47F}.Release|Win32.ActiveCfg = Release|Win32
+ 		{D1507562-A363-4685-96AF-B036F5E5E47F}.Release|Win32.Build.0 = Release|Win32
+ 		{D1507562-A363-4685-96AF-B036F5E5E47F}.Release|x64.ActiveCfg = Release|x64
+ 		{D1507562-A363-4685-96AF-B036F5E5E47F}.Release|x64.Build.0 = Release|x64
++		{D1507562-A363-4685-96AF-B036F5E5E47F}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{D1507562-A363-4685-96AF-B036F5E5E47F}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{15605F44-BFFD-444F-AD4C-55DC9D704465}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{15605F44-BFFD-444F-AD4C-55DC9D704465}.Debug|Win32.Build.0 = Debug|Win32
+ 		{15605F44-BFFD-444F-AD4C-55DC9D704465}.Debug|x64.ActiveCfg = Debug|x64
+ 		{15605F44-BFFD-444F-AD4C-55DC9D704465}.Debug|x64.Build.0 = Debug|x64
++		{15605F44-BFFD-444F-AD4C-55DC9D704465}.DebugStatic|Win32.ActiveCfg = DebugStatic|Win32
++		{15605F44-BFFD-444F-AD4C-55DC9D704465}.DebugStatic|Win32.Build.0 = DebugStatic|Win32
++		{15605F44-BFFD-444F-AD4C-55DC9D704465}.DebugStatic|x64.ActiveCfg = DebugStatic|x64
++		{15605F44-BFFD-444F-AD4C-55DC9D704465}.DebugStatic|x64.Build.0 = DebugStatic|x64
+ 		{15605F44-BFFD-444F-AD4C-55DC9D704465}.Release|Win32.ActiveCfg = Release|Win32
+ 		{15605F44-BFFD-444F-AD4C-55DC9D704465}.Release|Win32.Build.0 = Release|Win32
+ 		{15605F44-BFFD-444F-AD4C-55DC9D704465}.Release|x64.ActiveCfg = Release|x64
+ 		{15605F44-BFFD-444F-AD4C-55DC9D704465}.Release|x64.Build.0 = Release|x64
++		{15605F44-BFFD-444F-AD4C-55DC9D704465}.ReleaseStatic|Win32.ActiveCfg = ReleaseStatic|Win32
++		{15605F44-BFFD-444F-AD4C-55DC9D704465}.ReleaseStatic|Win32.Build.0 = ReleaseStatic|Win32
++		{15605F44-BFFD-444F-AD4C-55DC9D704465}.ReleaseStatic|x64.ActiveCfg = ReleaseStatic|x64
++		{15605F44-BFFD-444F-AD4C-55DC9D704465}.ReleaseStatic|x64.Build.0 = ReleaseStatic|x64
+ 		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.Debug|Win32.Build.0 = Debug|Win32
+ 		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.Debug|x64.ActiveCfg = Debug|x64
+ 		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.Debug|x64.Build.0 = Debug|x64
++		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.Release|Win32.ActiveCfg = Release|Win32
+ 		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.Release|Win32.Build.0 = Release|Win32
+ 		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.Release|x64.ActiveCfg = Release|x64
+ 		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.Release|x64.Build.0 = Release|x64
++		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{F8798A49-9D20-451E-A7BD-FEB5237103B5}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{E8397148-0E9C-449B-9F45-7FB377A08242}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{E8397148-0E9C-449B-9F45-7FB377A08242}.Debug|Win32.Build.0 = Debug|Win32
+ 		{E8397148-0E9C-449B-9F45-7FB377A08242}.Debug|x64.ActiveCfg = Debug|x64
+ 		{E8397148-0E9C-449B-9F45-7FB377A08242}.Debug|x64.Build.0 = Debug|x64
++		{E8397148-0E9C-449B-9F45-7FB377A08242}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{E8397148-0E9C-449B-9F45-7FB377A08242}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{E8397148-0E9C-449B-9F45-7FB377A08242}.Release|Win32.ActiveCfg = Release|Win32
+ 		{E8397148-0E9C-449B-9F45-7FB377A08242}.Release|Win32.Build.0 = Release|Win32
+ 		{E8397148-0E9C-449B-9F45-7FB377A08242}.Release|x64.ActiveCfg = Release|x64
+ 		{E8397148-0E9C-449B-9F45-7FB377A08242}.Release|x64.Build.0 = Release|x64
++		{E8397148-0E9C-449B-9F45-7FB377A08242}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{E8397148-0E9C-449B-9F45-7FB377A08242}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.Debug|Win32.Build.0 = Debug|Win32
+ 		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.Debug|x64.ActiveCfg = Debug|x64
+ 		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.Debug|x64.Build.0 = Debug|x64
++		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.Release|Win32.ActiveCfg = Release|Win32
+ 		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.Release|Win32.Build.0 = Release|Win32
+ 		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.Release|x64.ActiveCfg = Release|x64
+ 		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.Release|x64.Build.0 = Release|x64
++		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{BBD83ED3-8A48-4FE8-B4B7-CB27730986B2}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.Debug|Win32.Build.0 = Debug|Win32
+ 		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.Debug|x64.ActiveCfg = Debug|x64
+ 		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.Debug|x64.Build.0 = Debug|x64
++		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.Release|Win32.ActiveCfg = Release|Win32
+ 		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.Release|Win32.Build.0 = Release|Win32
+ 		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.Release|x64.ActiveCfg = Release|x64
+ 		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.Release|x64.Build.0 = Release|x64
++		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{23EC8DAA-6718-4EF3-979F-89F611C7D504}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.Debug|Win32.Build.0 = Debug|Win32
+ 		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.Debug|x64.ActiveCfg = Debug|x64
+ 		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.Debug|x64.Build.0 = Debug|x64
++		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.Release|Win32.ActiveCfg = Release|Win32
+ 		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.Release|Win32.Build.0 = Release|Win32
+ 		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.Release|x64.ActiveCfg = Release|x64
+ 		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.Release|x64.Build.0 = Release|x64
++		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{B732F5D2-B5D9-417F-B156-D790F466CB8E}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{44A9E4AD-B932-4620-B319-431A153BB341}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{44A9E4AD-B932-4620-B319-431A153BB341}.Debug|Win32.Build.0 = Debug|Win32
+ 		{44A9E4AD-B932-4620-B319-431A153BB341}.Debug|x64.ActiveCfg = Debug|x64
+ 		{44A9E4AD-B932-4620-B319-431A153BB341}.Debug|x64.Build.0 = Debug|x64
++		{44A9E4AD-B932-4620-B319-431A153BB341}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{44A9E4AD-B932-4620-B319-431A153BB341}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{44A9E4AD-B932-4620-B319-431A153BB341}.Release|Win32.ActiveCfg = Release|Win32
+ 		{44A9E4AD-B932-4620-B319-431A153BB341}.Release|Win32.Build.0 = Release|Win32
+ 		{44A9E4AD-B932-4620-B319-431A153BB341}.Release|x64.ActiveCfg = Release|x64
+ 		{44A9E4AD-B932-4620-B319-431A153BB341}.Release|x64.Build.0 = Release|x64
++		{44A9E4AD-B932-4620-B319-431A153BB341}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{44A9E4AD-B932-4620-B319-431A153BB341}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.Debug|Win32.Build.0 = Debug|Win32
+ 		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.Debug|x64.ActiveCfg = Debug|x64
+ 		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.Debug|x64.Build.0 = Debug|x64
++		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.Release|Win32.ActiveCfg = Release|Win32
+ 		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.Release|Win32.Build.0 = Release|Win32
+ 		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.Release|x64.ActiveCfg = Release|x64
+ 		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.Release|x64.Build.0 = Release|x64
++		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{D84F0839-28A4-40B2-B5F4-F5E1E7F48FD0}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.Debug|Win32.Build.0 = Debug|Win32
+ 		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.Debug|x64.ActiveCfg = Debug|x64
+ 		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.Debug|x64.Build.0 = Debug|x64
++		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.Release|Win32.ActiveCfg = Release|Win32
+ 		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.Release|Win32.Build.0 = Release|Win32
+ 		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.Release|x64.ActiveCfg = Release|x64
+ 		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.Release|x64.Build.0 = Release|x64
++		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{7043CC61-DEC1-4C6B-86B9-0E911D1094C9}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.Debug|Win32.Build.0 = Debug|Win32
+ 		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.Debug|x64.ActiveCfg = Debug|x64
+ 		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.Debug|x64.Build.0 = Debug|x64
++		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.Release|Win32.ActiveCfg = Release|Win32
+ 		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.Release|Win32.Build.0 = Release|Win32
+ 		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.Release|x64.ActiveCfg = Release|x64
+ 		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.Release|x64.Build.0 = Release|x64
++		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{B7F22B7F-9937-4874-9A8B-6AB4E36E74A5}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{7E862973-37C4-4202-80E7-490ED4DEDA14}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{7E862973-37C4-4202-80E7-490ED4DEDA14}.Debug|Win32.Build.0 = Debug|Win32
+ 		{7E862973-37C4-4202-80E7-490ED4DEDA14}.Debug|x64.ActiveCfg = Debug|x64
+ 		{7E862973-37C4-4202-80E7-490ED4DEDA14}.Debug|x64.Build.0 = Debug|x64
++		{7E862973-37C4-4202-80E7-490ED4DEDA14}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{7E862973-37C4-4202-80E7-490ED4DEDA14}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{7E862973-37C4-4202-80E7-490ED4DEDA14}.Release|Win32.ActiveCfg = Release|Win32
+ 		{7E862973-37C4-4202-80E7-490ED4DEDA14}.Release|Win32.Build.0 = Release|Win32
+ 		{7E862973-37C4-4202-80E7-490ED4DEDA14}.Release|x64.ActiveCfg = Release|x64
+ 		{7E862973-37C4-4202-80E7-490ED4DEDA14}.Release|x64.Build.0 = Release|x64
++		{7E862973-37C4-4202-80E7-490ED4DEDA14}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{7E862973-37C4-4202-80E7-490ED4DEDA14}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.Debug|Win32.Build.0 = Debug|Win32
+ 		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.Debug|x64.ActiveCfg = Debug|x64
+ 		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.Debug|x64.Build.0 = Debug|x64
++		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.Release|Win32.ActiveCfg = Release|Win32
+ 		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.Release|Win32.Build.0 = Release|Win32
+ 		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.Release|x64.ActiveCfg = Release|x64
+ 		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.Release|x64.Build.0 = Release|x64
++		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{EABA0FF3-1C4D-4FAB-8418-31C9061F3F0D}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.Debug|Win32.Build.0 = Debug|Win32
+ 		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.Debug|x64.ActiveCfg = Debug|x64
+ 		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.Debug|x64.Build.0 = Debug|x64
++		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.Release|Win32.ActiveCfg = Release|Win32
+ 		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.Release|Win32.Build.0 = Release|Win32
+ 		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.Release|x64.ActiveCfg = Release|x64
+ 		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.Release|x64.Build.0 = Release|x64
++		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{19470DE6-1975-4F9B-B1BE-E87A83240B15}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{72894398-38CA-47A6-95FE-9647DE2BE968}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{72894398-38CA-47A6-95FE-9647DE2BE968}.Debug|Win32.Build.0 = Debug|Win32
+ 		{72894398-38CA-47A6-95FE-9647DE2BE968}.Debug|x64.ActiveCfg = Debug|x64
+ 		{72894398-38CA-47A6-95FE-9647DE2BE968}.Debug|x64.Build.0 = Debug|x64
++		{72894398-38CA-47A6-95FE-9647DE2BE968}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{72894398-38CA-47A6-95FE-9647DE2BE968}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{72894398-38CA-47A6-95FE-9647DE2BE968}.Release|Win32.ActiveCfg = Release|Win32
+ 		{72894398-38CA-47A6-95FE-9647DE2BE968}.Release|Win32.Build.0 = Release|Win32
+ 		{72894398-38CA-47A6-95FE-9647DE2BE968}.Release|x64.ActiveCfg = Release|x64
+ 		{72894398-38CA-47A6-95FE-9647DE2BE968}.Release|x64.Build.0 = Release|x64
++		{72894398-38CA-47A6-95FE-9647DE2BE968}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{72894398-38CA-47A6-95FE-9647DE2BE968}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.Debug|Win32.Build.0 = Debug|Win32
+ 		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.Debug|x64.ActiveCfg = Debug|x64
+ 		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.Debug|x64.Build.0 = Debug|x64
++		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.Release|Win32.ActiveCfg = Release|Win32
+ 		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.Release|Win32.Build.0 = Release|Win32
+ 		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.Release|x64.ActiveCfg = Release|x64
+ 		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.Release|x64.Build.0 = Release|x64
++		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{DFFA2117-E6A8-4806-BB69-94DAC8F8F42A}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.Debug|Win32.Build.0 = Debug|Win32
+ 		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.Debug|x64.ActiveCfg = Debug|x64
+ 		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.Debug|x64.Build.0 = Debug|x64
++		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.Release|Win32.ActiveCfg = Release|Win32
+ 		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.Release|Win32.Build.0 = Release|Win32
+ 		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.Release|x64.ActiveCfg = Release|x64
+ 		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.Release|x64.Build.0 = Release|x64
++		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{DEE75AD5-F165-40E1-80B2-400E27725D5C}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{4BCC693D-1745-45ED-8302-E5E2F979549A}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{4BCC693D-1745-45ED-8302-E5E2F979549A}.Debug|Win32.Build.0 = Debug|Win32
+ 		{4BCC693D-1745-45ED-8302-E5E2F979549A}.Debug|x64.ActiveCfg = Debug|x64
+ 		{4BCC693D-1745-45ED-8302-E5E2F979549A}.Debug|x64.Build.0 = Debug|x64
++		{4BCC693D-1745-45ED-8302-E5E2F979549A}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{4BCC693D-1745-45ED-8302-E5E2F979549A}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{4BCC693D-1745-45ED-8302-E5E2F979549A}.Release|Win32.ActiveCfg = Release|Win32
+ 		{4BCC693D-1745-45ED-8302-E5E2F979549A}.Release|Win32.Build.0 = Release|Win32
+ 		{4BCC693D-1745-45ED-8302-E5E2F979549A}.Release|x64.ActiveCfg = Release|x64
+ 		{4BCC693D-1745-45ED-8302-E5E2F979549A}.Release|x64.Build.0 = Release|x64
++		{4BCC693D-1745-45ED-8302-E5E2F979549A}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{4BCC693D-1745-45ED-8302-E5E2F979549A}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.Debug|Win32.Build.0 = Debug|Win32
+ 		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.Debug|x64.ActiveCfg = Debug|x64
+ 		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.Debug|x64.Build.0 = Debug|x64
++		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.Release|Win32.ActiveCfg = Release|Win32
+ 		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.Release|Win32.Build.0 = Release|Win32
+ 		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.Release|x64.ActiveCfg = Release|x64
+ 		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.Release|x64.Build.0 = Release|x64
++		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{01A41DFA-8908-4576-A1F1-C8BC7EAE39A1}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{C6A31374-178C-4680-A404-76BE24D0229B}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{C6A31374-178C-4680-A404-76BE24D0229B}.Debug|Win32.Build.0 = Debug|Win32
+ 		{C6A31374-178C-4680-A404-76BE24D0229B}.Debug|x64.ActiveCfg = Debug|x64
+ 		{C6A31374-178C-4680-A404-76BE24D0229B}.Debug|x64.Build.0 = Debug|x64
++		{C6A31374-178C-4680-A404-76BE24D0229B}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{C6A31374-178C-4680-A404-76BE24D0229B}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{C6A31374-178C-4680-A404-76BE24D0229B}.Release|Win32.ActiveCfg = Release|Win32
+ 		{C6A31374-178C-4680-A404-76BE24D0229B}.Release|Win32.Build.0 = Release|Win32
+ 		{C6A31374-178C-4680-A404-76BE24D0229B}.Release|x64.ActiveCfg = Release|x64
+ 		{C6A31374-178C-4680-A404-76BE24D0229B}.Release|x64.Build.0 = Release|x64
++		{C6A31374-178C-4680-A404-76BE24D0229B}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{C6A31374-178C-4680-A404-76BE24D0229B}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.Debug|Win32.Build.0 = Debug|Win32
+ 		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.Debug|x64.ActiveCfg = Debug|Win32
++		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.DebugStatic|x64.ActiveCfg = Debug|Win32
+ 		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.Release|Win32.ActiveCfg = Release|Win32
+ 		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.Release|Win32.Build.0 = Release|Win32
+ 		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.Release|x64.ActiveCfg = Release|Win32
++		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{FAF9AD25-8238-49E9-9AC9-8C56E190440A}.ReleaseStatic|x64.ActiveCfg = Release|Win32
+ 		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.Debug|Win32.Build.0 = Debug|Win32
+ 		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.Debug|x64.ActiveCfg = Debug|x64
+ 		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.Debug|x64.Build.0 = Debug|x64
++		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.Release|Win32.ActiveCfg = Release|Win32
+ 		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.Release|Win32.Build.0 = Release|Win32
+ 		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.Release|x64.ActiveCfg = Release|x64
+ 		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.Release|x64.Build.0 = Release|x64
++		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{EFB07DBC-36E3-4C54-B941-3CDAFAACF47B}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.Debug|Win32.Build.0 = Debug|Win32
+ 		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.Debug|x64.ActiveCfg = Debug|x64
+ 		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.Debug|x64.Build.0 = Debug|x64
++		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.Release|Win32.ActiveCfg = Release|Win32
+ 		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.Release|Win32.Build.0 = Release|Win32
+ 		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.Release|x64.ActiveCfg = Release|x64
+ 		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.Release|x64.Build.0 = Release|x64
++		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{53F75437-15B8-4A5C-86BF-E238CC68FCBC}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{58C7E370-0EDD-4F5E-8617-3F5071170205}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{58C7E370-0EDD-4F5E-8617-3F5071170205}.Debug|Win32.Build.0 = Debug|Win32
+ 		{58C7E370-0EDD-4F5E-8617-3F5071170205}.Debug|x64.ActiveCfg = Debug|x64
+ 		{58C7E370-0EDD-4F5E-8617-3F5071170205}.Debug|x64.Build.0 = Debug|x64
++		{58C7E370-0EDD-4F5E-8617-3F5071170205}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{58C7E370-0EDD-4F5E-8617-3F5071170205}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{58C7E370-0EDD-4F5E-8617-3F5071170205}.Release|Win32.ActiveCfg = Release|Win32
+ 		{58C7E370-0EDD-4F5E-8617-3F5071170205}.Release|Win32.Build.0 = Release|Win32
+ 		{58C7E370-0EDD-4F5E-8617-3F5071170205}.Release|x64.ActiveCfg = Release|x64
+ 		{58C7E370-0EDD-4F5E-8617-3F5071170205}.Release|x64.Build.0 = Release|x64
++		{58C7E370-0EDD-4F5E-8617-3F5071170205}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{58C7E370-0EDD-4F5E-8617-3F5071170205}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.Debug|Win32.Build.0 = Debug|Win32
+ 		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.Debug|x64.ActiveCfg = Debug|x64
+ 		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.Debug|x64.Build.0 = Debug|x64
++		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.Release|Win32.ActiveCfg = Release|Win32
+ 		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.Release|Win32.Build.0 = Release|Win32
+ 		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.Release|x64.ActiveCfg = Release|x64
+ 		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.Release|x64.Build.0 = Release|x64
++		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{20DEBF08-EF0A-4C94-ADEB-FE9BBA14588B}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{2925B855-5975-44AE-BB00-1217A2A4E511}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{2925B855-5975-44AE-BB00-1217A2A4E511}.Debug|Win32.Build.0 = Debug|Win32
+ 		{2925B855-5975-44AE-BB00-1217A2A4E511}.Debug|x64.ActiveCfg = Debug|x64
+ 		{2925B855-5975-44AE-BB00-1217A2A4E511}.Debug|x64.Build.0 = Debug|x64
++		{2925B855-5975-44AE-BB00-1217A2A4E511}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{2925B855-5975-44AE-BB00-1217A2A4E511}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{2925B855-5975-44AE-BB00-1217A2A4E511}.Release|Win32.ActiveCfg = Release|Win32
+ 		{2925B855-5975-44AE-BB00-1217A2A4E511}.Release|Win32.Build.0 = Release|Win32
+ 		{2925B855-5975-44AE-BB00-1217A2A4E511}.Release|x64.ActiveCfg = Release|x64
+ 		{2925B855-5975-44AE-BB00-1217A2A4E511}.Release|x64.Build.0 = Release|x64
++		{2925B855-5975-44AE-BB00-1217A2A4E511}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{2925B855-5975-44AE-BB00-1217A2A4E511}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{4FE03933-98CD-4879-A135-FD9430087A6B}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{4FE03933-98CD-4879-A135-FD9430087A6B}.Debug|Win32.Build.0 = Debug|Win32
+ 		{4FE03933-98CD-4879-A135-FD9430087A6B}.Debug|x64.ActiveCfg = Debug|x64
+ 		{4FE03933-98CD-4879-A135-FD9430087A6B}.Debug|x64.Build.0 = Debug|x64
++		{4FE03933-98CD-4879-A135-FD9430087A6B}.DebugStatic|Win32.ActiveCfg = DebugStatic|Win32
++		{4FE03933-98CD-4879-A135-FD9430087A6B}.DebugStatic|Win32.Build.0 = DebugStatic|Win32
++		{4FE03933-98CD-4879-A135-FD9430087A6B}.DebugStatic|x64.ActiveCfg = DebugStatic|x64
++		{4FE03933-98CD-4879-A135-FD9430087A6B}.DebugStatic|x64.Build.0 = DebugStatic|x64
+ 		{4FE03933-98CD-4879-A135-FD9430087A6B}.Release|Win32.ActiveCfg = Release|Win32
+ 		{4FE03933-98CD-4879-A135-FD9430087A6B}.Release|Win32.Build.0 = Release|Win32
+ 		{4FE03933-98CD-4879-A135-FD9430087A6B}.Release|x64.ActiveCfg = Release|x64
+ 		{4FE03933-98CD-4879-A135-FD9430087A6B}.Release|x64.Build.0 = Release|x64
++		{4FE03933-98CD-4879-A135-FD9430087A6B}.ReleaseStatic|Win32.ActiveCfg = ReleaseStatic|Win32
++		{4FE03933-98CD-4879-A135-FD9430087A6B}.ReleaseStatic|Win32.Build.0 = ReleaseStatic|Win32
++		{4FE03933-98CD-4879-A135-FD9430087A6B}.ReleaseStatic|x64.ActiveCfg = ReleaseStatic|x64
++		{4FE03933-98CD-4879-A135-FD9430087A6B}.ReleaseStatic|x64.Build.0 = ReleaseStatic|x64
+ 		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.Debug|Win32.Build.0 = Debug|Win32
+ 		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.Debug|x64.ActiveCfg = Debug|x64
+ 		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.Debug|x64.Build.0 = Debug|x64
++		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.Release|Win32.ActiveCfg = Release|Win32
+ 		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.Release|Win32.Build.0 = Release|Win32
+ 		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.Release|x64.ActiveCfg = Release|x64
+ 		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.Release|x64.Build.0 = Release|x64
++		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{D836FBF5-071E-4E04-8D63-C7EB6701B296}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.Debug|Win32.Build.0 = Debug|Win32
+ 		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.Debug|x64.ActiveCfg = Debug|x64
+ 		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.Debug|x64.Build.0 = Debug|x64
++		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.Release|Win32.ActiveCfg = Release|Win32
+ 		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.Release|Win32.Build.0 = Release|Win32
+ 		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.Release|x64.ActiveCfg = Release|x64
+ 		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.Release|x64.Build.0 = Release|x64
++		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{BD00D28E-6667-414E-A4B1-6BEFC07ADB42}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{062BD3C7-2D01-44F6-8D79-070F688C559F}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{062BD3C7-2D01-44F6-8D79-070F688C559F}.Debug|Win32.Build.0 = Debug|Win32
+ 		{062BD3C7-2D01-44F6-8D79-070F688C559F}.Debug|x64.ActiveCfg = Debug|x64
+ 		{062BD3C7-2D01-44F6-8D79-070F688C559F}.Debug|x64.Build.0 = Debug|x64
++		{062BD3C7-2D01-44F6-8D79-070F688C559F}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{062BD3C7-2D01-44F6-8D79-070F688C559F}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{062BD3C7-2D01-44F6-8D79-070F688C559F}.Release|Win32.ActiveCfg = Release|Win32
+ 		{062BD3C7-2D01-44F6-8D79-070F688C559F}.Release|Win32.Build.0 = Release|Win32
+ 		{062BD3C7-2D01-44F6-8D79-070F688C559F}.Release|x64.ActiveCfg = Release|x64
+ 		{062BD3C7-2D01-44F6-8D79-070F688C559F}.Release|x64.Build.0 = Release|x64
++		{062BD3C7-2D01-44F6-8D79-070F688C559F}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{062BD3C7-2D01-44F6-8D79-070F688C559F}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.Debug|Win32.Build.0 = Debug|Win32
+ 		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.Debug|x64.ActiveCfg = Debug|x64
+ 		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.Debug|x64.Build.0 = Debug|x64
++		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.Release|Win32.ActiveCfg = Release|Win32
+ 		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.Release|Win32.Build.0 = Release|Win32
+ 		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.Release|x64.ActiveCfg = Release|x64
+ 		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.Release|x64.Build.0 = Release|x64
++		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{6794EB8C-6425-422D-A3B0-14EED54C0E98}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.Debug|Win32.Build.0 = Debug|Win32
+ 		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.Debug|x64.ActiveCfg = Debug|x64
+ 		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.Debug|x64.Build.0 = Debug|x64
++		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.Release|Win32.ActiveCfg = Release|Win32
+ 		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.Release|Win32.Build.0 = Release|Win32
+ 		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.Release|x64.ActiveCfg = Release|x64
+ 		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.Release|x64.Build.0 = Release|x64
++		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{F2E1A852-5A4B-4162-9DA8-0363805FCFD0}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{B32D1B09-8161-451E-8D20-D30F26094EC0}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{B32D1B09-8161-451E-8D20-D30F26094EC0}.Debug|Win32.Build.0 = Debug|Win32
+ 		{B32D1B09-8161-451E-8D20-D30F26094EC0}.Debug|x64.ActiveCfg = Debug|x64
+ 		{B32D1B09-8161-451E-8D20-D30F26094EC0}.Debug|x64.Build.0 = Debug|x64
++		{B32D1B09-8161-451E-8D20-D30F26094EC0}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{B32D1B09-8161-451E-8D20-D30F26094EC0}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{B32D1B09-8161-451E-8D20-D30F26094EC0}.Release|Win32.ActiveCfg = Release|Win32
+ 		{B32D1B09-8161-451E-8D20-D30F26094EC0}.Release|Win32.Build.0 = Release|Win32
+ 		{B32D1B09-8161-451E-8D20-D30F26094EC0}.Release|x64.ActiveCfg = Release|x64
+ 		{B32D1B09-8161-451E-8D20-D30F26094EC0}.Release|x64.Build.0 = Release|x64
++		{B32D1B09-8161-451E-8D20-D30F26094EC0}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{B32D1B09-8161-451E-8D20-D30F26094EC0}.ReleaseStatic|x64.ActiveCfg = Release|x64
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Debug|Win32.ActiveCfg = Debug|Win32
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Debug|Win32.Build.0 = Debug|Win32
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Debug|x64.ActiveCfg = Debug|x64
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Debug|x64.Build.0 = Debug|x64
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.DebugStatic|x64.ActiveCfg = Debug|x64
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Release|Win32.ActiveCfg = Release|Win32
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Release|Win32.Build.0 = Release|Win32
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Release|x64.ActiveCfg = Release|x64
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Release|x64.Build.0 = Release|x64
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{035D26F9-B406-4D60-A8B7-172098479254}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{035D26F9-B406-4D60-A8B7-172098479254}.Debug|Win32.Build.0 = Debug|Win32
+ 		{035D26F9-B406-4D60-A8B7-172098479254}.Debug|x64.ActiveCfg = Debug|x64
+ 		{035D26F9-B406-4D60-A8B7-172098479254}.Debug|x64.Build.0 = Debug|x64
++		{035D26F9-B406-4D60-A8B7-172098479254}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{035D26F9-B406-4D60-A8B7-172098479254}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{035D26F9-B406-4D60-A8B7-172098479254}.Release|Win32.ActiveCfg = Release|Win32
+ 		{035D26F9-B406-4D60-A8B7-172098479254}.Release|Win32.Build.0 = Release|Win32
+ 		{035D26F9-B406-4D60-A8B7-172098479254}.Release|x64.ActiveCfg = Release|x64
+ 		{035D26F9-B406-4D60-A8B7-172098479254}.Release|x64.Build.0 = Release|x64
++		{035D26F9-B406-4D60-A8B7-172098479254}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{035D26F9-B406-4D60-A8B7-172098479254}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.Debug|Win32.ActiveCfg = Debug|Win32
+ 		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.Debug|Win32.Build.0 = Debug|Win32
+ 		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.Debug|x64.ActiveCfg = Debug|x64
+ 		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.Debug|x64.Build.0 = Debug|x64
++		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.DebugStatic|Win32.ActiveCfg = Debug|Win32
++		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.DebugStatic|x64.ActiveCfg = Debug|x64
+ 		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.Release|Win32.ActiveCfg = Release|Win32
+ 		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.Release|Win32.Build.0 = Release|Win32
+ 		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.Release|x64.ActiveCfg = Release|x64
+ 		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.Release|x64.Build.0 = Release|x64
+-		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Debug|Win32.ActiveCfg = Debug|Win32
+-		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Debug|Win32.Build.0 = Debug|Win32
+-		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Debug|x64.ActiveCfg = Debug|x64
+-		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Debug|x64.Build.0 = Debug|x64
+-		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Release|Win32.ActiveCfg = Release|Win32
+-		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Release|Win32.Build.0 = Release|Win32
+-		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Release|x64.ActiveCfg = Release|x64
+-		{9821F2C0-4EC1-4ACB-BF32-DEB4C21032DE}.Release|x64.Build.0 = Release|x64
++		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
++		{3314D6AD-554F-4AE1-B297-6D2D6207DD7C}.ReleaseStatic|x64.ActiveCfg = Release|x64
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+diff --git a/builds/win32/msvc15/common.vcxproj b/builds/win32/msvc15/common.vcxproj
+index 3d3a267fdf..aad9fba5c6 100644
+--- a/builds/win32/msvc15/common.vcxproj
++++ b/builds/win32/msvc15/common.vcxproj
+@@ -5,18 +5,34 @@
+       <Configuration>Debug</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="DebugStatic|Win32">
++      <Configuration>DebugStatic</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug|x64">
+       <Configuration>Debug</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="DebugStatic|x64">
++      <Configuration>DebugStatic</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|Win32">
+       <Configuration>Release</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="ReleaseStatic|Win32">
++      <Configuration>ReleaseStatic</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|x64">
+       <Configuration>Release</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="ReleaseStatic|x64">
++      <Configuration>ReleaseStatic</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\src\common\Auth.cpp" />
+@@ -241,6 +257,14 @@
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseOfMfc>false</UseOfMfc>
++    <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+@@ -249,6 +273,14 @@
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseOfMfc>false</UseOfMfc>
++    <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+@@ -257,6 +289,14 @@
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseOfMfc>false</UseOfMfc>
++    <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+@@ -265,6 +305,14 @@
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseOfMfc>false</UseOfMfc>
++    <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
++  </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+   </ImportGroup>
+@@ -274,39 +322,75 @@
+     <Import Project="FirebirdCommon.props" />
+     <Import Project="FirebirdDebug.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++    <Import Project="FirebirdCommon.props" />
++    <Import Project="FirebirdDebug.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+     <Import Project="FirebirdCommon.props" />
+     <Import Project="FirebirdRelease.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++    <Import Project="FirebirdCommon.props" />
++    <Import Project="FirebirdRelease.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+     <Import Project="FirebirdCommon.props" />
+     <Import Project="FirebirdDebug.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++    <Import Project="FirebirdCommon.props" />
++    <Import Project="FirebirdDebug.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+     <Import Project="FirebirdCommon.props" />
+     <Import Project="FirebirdRelease.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++    <Import Project="FirebirdCommon.props" />
++    <Import Project="FirebirdRelease.props" />
++  </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
++    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
++    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'" />
++    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'" />
+     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
++    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
++    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'" />
++    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'" />
+     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
++    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
++    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'" />
++    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'" />
+     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
++    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
++    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'" />
++    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'" />
+   </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <ClCompile>
+@@ -353,6 +437,51 @@
+       <AdditionalDependencies>ws2_32.lib;../../../extern/libtommath/lib/$(PlatformName)\$(Configuration)\tommath.lib;../../../extern/libtomcrypt/lib/$(PlatformName)\$(Configuration)\tomcrypt.lib;../../../extern/decNumber/lib/$(PlatformName)\$(Configuration)\decnumber.lib;../../../extern/ttmath\$(Configuration)\ttmathuint_x86_64_msvc.obj;%(AdditionalDependencies)</AdditionalDependencies>
+     </Lib>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'">
++    <ClCompile>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;SUPERSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++    </ClCompile>
++    <Lib>
++      <AdditionalDependencies>ws2_32.lib;../../../extern/libtommath/lib/$(PlatformName)\Release\tommath.lib;../../../extern/libtomcrypt/lib/$(PlatformName)\Release\tomcrypt.lib;../../../extern/decNumber/lib/$(PlatformName)\Release\decnumber.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Lib>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'">
++    <ClCompile>
++      <Optimization>Disabled</Optimization>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;DEV_BUILD;SUPERSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PrecompiledHeader>
++      </PrecompiledHeader>
++      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
++    </ClCompile>
++    <Lib>
++      <AdditionalDependencies>ws2_32.lib;../../../extern/libtommath/lib/$(PlatformName)\Debug\tommath.lib;../../../extern/libtomcrypt/lib/$(PlatformName)\Debug\tomcrypt.lib;../../../extern/decNumber/lib/$(PlatformName)\Debug\decnumber.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Lib>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'">
++    <Midl>
++      <TargetEnvironment>X64</TargetEnvironment>
++    </Midl>
++    <ClCompile>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;SUPERSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++    </ClCompile>
++    <Lib>
++      <AdditionalDependencies>ws2_32.lib;../../../extern/decNumber/lib/$(PlatformName)\Release\decnumber.lib;../../../extern/ttmath\Release\ttmathuint_x86_64_msvc.obj;%(AdditionalDependencies)</AdditionalDependencies>
++    </Lib>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">
++    <Midl>
++      <TargetEnvironment>X64</TargetEnvironment>
++    </Midl>
++    <ClCompile>
++      <Optimization>Disabled</Optimization>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;DEV_BUILD;SUPERSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PrecompiledHeader>
++      </PrecompiledHeader>
++    </ClCompile>
++    <Lib>
++      <AdditionalDependencies>ws2_32.lib;../../../extern/decNumber/lib/$(PlatformName)\Debug\decnumber.lib;../../../extern/ttmath\Debug\ttmathuint_x86_64_msvc.obj;%(AdditionalDependencies)</AdditionalDependencies>
++    </Lib>
++  </ItemDefinitionGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+diff --git a/builds/win32/msvc15/yvalve.vcxproj b/builds/win32/msvc15/yvalve.vcxproj
+index 5772b98011..86616a4dc3 100644
+--- a/builds/win32/msvc15/yvalve.vcxproj
++++ b/builds/win32/msvc15/yvalve.vcxproj
+@@ -5,23 +5,38 @@
+       <Configuration>Debug</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="DebugStatic|Win32">
++      <Configuration>DebugStatic</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug|x64">
+       <Configuration>Debug</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="DebugStatic|x64">
++      <Configuration>DebugStatic</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|Win32">
+       <Configuration>Release</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="ReleaseStatic|Win32">
++      <Configuration>ReleaseStatic</Configuration>
++      <Platform>Win32</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|x64">
+       <Configuration>Release</Configuration>
+       <Platform>x64</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="ReleaseStatic|x64">
++      <Configuration>ReleaseStatic</Configuration>
++      <Platform>x64</Platform>
++    </ProjectConfiguration>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\src\auth\SecureRemotePassword\client\SrpClient.cpp" />
+     <ClCompile Include="..\..\..\src\auth\SecurityDatabase\LegacyClient.cpp" />
+-    <ClCompile Include="..\..\..\src\jrd\os\win32\ibinitdll.cpp" />
+     <ClCompile Include="..\..\..\src\plugins\crypt\arc4\Arc4.cpp" />
+     <ClCompile Include="..\..\..\src\remote\client\BlrFromMessage.cpp" />
+     <ClCompile Include="..\..\..\src\remote\client\interface.cpp" />
+@@ -39,6 +54,10 @@
+     <ClCompile Include="..\..\..\src\yvalve\user_dsql.cpp" />
+     <ClCompile Include="..\..\..\src\yvalve\utl.cpp" />
+     <ClCompile Include="..\..\..\src\yvalve\why.cpp" />
++    <ClCompile Include="..\..\..\src\jrd\os\win32\ibinitdll.cpp">
++      <ExcludedFromBuild Condition="'$(Configuration)'=='DebugStatic'">true</ExcludedFromBuild>
++      <ExcludedFromBuild Condition="'$(Configuration)'=='ReleaseStatic'">true</ExcludedFromBuild>
++    </ClCompile>
+   </ItemGroup>
+   <ItemGroup>
+     <ClInclude Include="..\..\..\src\auth\SecureRemotePassword\client\SrpClient.h" />
+@@ -78,7 +97,10 @@
+     </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+-    <ResourceCompile Include="..\..\..\src\jrd\version.rc" />
++    <ResourceCompile Include="..\..\..\src\jrd\version.rc">
++      <ExcludedFromBuild Condition="'$(Configuration)'=='DebugStatic'">true</ExcludedFromBuild>
++      <ExcludedFromBuild Condition="'$(Configuration)'=='ReleaseStatic'">true</ExcludedFromBuild>
++    </ResourceCompile>
+   </ItemGroup>
+   <ItemGroup>
+     <None Include="..\defs\firebird.def" />
+@@ -99,6 +121,14 @@
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseOfMfc>false</UseOfMfc>
++    <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+@@ -107,6 +137,14 @@
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseOfMfc>false</UseOfMfc>
++    <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+@@ -115,6 +153,14 @@
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseOfMfc>false</UseOfMfc>
++    <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+@@ -123,6 +169,14 @@
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
+     <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseOfMfc>false</UseOfMfc>
++    <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='15.0'">v141</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='16.0'">v142</PlatformToolset>
++    <PlatformToolset Condition="'$(VisualStudioVersion)'=='17.0'">v143</PlatformToolset>
++  </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+   </ImportGroup>
+@@ -132,43 +186,83 @@
+     <Import Project="FirebirdCommon.props" />
+     <Import Project="FirebirdDebug.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++    <Import Project="FirebirdCommon.props" />
++    <Import Project="FirebirdDebug.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+     <Import Project="FirebirdCommon.props" />
+     <Import Project="FirebirdRelease.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++    <Import Project="FirebirdCommon.props" />
++    <Import Project="FirebirdRelease.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+     <Import Project="FirebirdCommon.props" />
+     <Import Project="FirebirdDebug.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++    <Import Project="FirebirdCommon.props" />
++    <Import Project="FirebirdDebug.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+     <Import Project="FirebirdCommon.props" />
+     <Import Project="FirebirdRelease.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++    <Import Project="FirebirdCommon.props" />
++    <Import Project="FirebirdRelease.props" />
++  </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
++    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
++    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'" />
++    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'" />
+     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
++    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
++    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'" />
++    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'" />
+     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
++    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
++    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'" />
++    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'" />
+     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
+     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
+     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
++    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
++    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'" />
++    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'" />
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">fbclient</TargetName>
++    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'">fbclient_static</TargetName>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">fbclient</TargetName>
++    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'">fbclient_static</TargetName>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">fbclient</TargetName>
++    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">fbclient_static</TargetName>
+     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">fbclient</TargetName>
++    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'">fbclient_static</TargetName>
+     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\..\..\temp\$(PlatformName)\$(Configuration)\firebird\</OutDir>
+     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\..\..\temp\$(PlatformName)\$(Configuration)\firebird\</OutDir>
+     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\..\temp\$(PlatformName)\$(Configuration)\firebird\</OutDir>
+@@ -228,7 +322,40 @@
+       <SubSystem>Windows</SubSystem>
+     </Link>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'">
++    <ClCompile>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;SUPERSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++    </ClCompile>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'">
++    <ClCompile>
++      <Optimization>Disabled</Optimization>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;DEV_BUILD;SUPERSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PrecompiledHeader>
++      </PrecompiledHeader>
++      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
++    </ClCompile>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'">
++    <Midl>
++      <TargetEnvironment>X64</TargetEnvironment>
++    </Midl>
++    <ClCompile>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;SUPERSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++    </ClCompile>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">
++    <Midl>
++      <TargetEnvironment>X64</TargetEnvironment>
++    </Midl>
++    <ClCompile>
++      <Optimization>Disabled</Optimization>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;DEV_BUILD;SUPERSERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PrecompiledHeader>
++      </PrecompiledHeader>
++    </ClCompile>
++  </ItemDefinitionGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/builds/win32/msvc15/yvalve.vcxproj.filters b/builds/win32/msvc15/yvalve.vcxproj.filters
+index 09ca441a43..75a6132836 100644
+--- a/builds/win32/msvc15/yvalve.vcxproj.filters
++++ b/builds/win32/msvc15/yvalve.vcxproj.filters
+@@ -1,15 +1,15 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <ItemGroup>
+-    <Filter Include="headers">
+-      <UniqueIdentifier>{e851796a-334f-465a-87d4-3a8493cde72c}</UniqueIdentifier>
+-    </Filter>
+     <Filter Include="source">
+       <UniqueIdentifier>{c8501fd3-5859-4685-baad-969e1b6e2e1c}</UniqueIdentifier>
+     </Filter>
+     <Filter Include="Resource files">
+       <UniqueIdentifier>{a06a0231-22bb-432f-95c2-ee97b9a1cee8}</UniqueIdentifier>
+     </Filter>
++    <Filter Include="headers">
++      <UniqueIdentifier>{e851796a-334f-465a-87d4-3a8493cde72c}</UniqueIdentifier>
++    </Filter>
+     <Filter Include="GPRE files">
+       <UniqueIdentifier>{754afcc7-5b6d-4620-abe9-78b4653e08b0}</UniqueIdentifier>
+     </Filter>
+@@ -60,9 +60,6 @@
+     <ClCompile Include="..\..\..\src\auth\SecurityDatabase\LegacyClient.cpp">
+       <Filter>Auth</Filter>
+     </ClCompile>
+-    <ClCompile Include="..\..\..\src\jrd\os\win32\ibinitdll.cpp">
+-      <Filter>source</Filter>
+-    </ClCompile>
+     <ClCompile Include="..\..\..\src\remote\client\interface.cpp">
+       <Filter>Remote client</Filter>
+     </ClCompile>
+@@ -84,6 +81,17 @@
+     <ClCompile Include="..\..\..\src\yvalve\config\os\win32\config_root.cpp">
+       <Filter>source</Filter>
+     </ClCompile>
++    <ClCompile Include="..\..\..\src\jrd\os\win32\ibinitdll.cpp">
++      <Filter>source</Filter>
++    </ClCompile>
++  </ItemGroup>
++  <ItemGroup>
++    <ResourceCompile Include="..\..\..\src\jrd\version.rc">
++      <Filter>Resource files</Filter>
++    </ResourceCompile>
++  </ItemGroup>
++  <ItemGroup>
++    <None Include="..\defs\firebird.def" />
+   </ItemGroup>
+   <ItemGroup>
+     <ClInclude Include="..\..\..\src\yvalve\why_proto.h">
+@@ -138,12 +146,4 @@
+       <Filter>headers</Filter>
+     </ClInclude>
+   </ItemGroup>
+-  <ItemGroup>
+-    <ResourceCompile Include="..\..\..\src\jrd\version.rc">
+-      <Filter>Resource files</Filter>
+-    </ResourceCompile>
+-  </ItemGroup>
+-  <ItemGroup>
+-    <None Include="..\defs\firebird.def" />
+-  </ItemGroup>
+ </Project>
+diff --git a/builds/win32/setenvvar.bat b/builds/win32/setenvvar.bat
+index 332f67ad1b..6167c0336e 100644
+--- a/builds/win32/setenvvar.bat
++++ b/builds/win32/setenvvar.bat
+@@ -17,6 +17,7 @@ for %%v in ( %* )  do (
+   ( if /I "%%v"=="RELEASE" ( (set FB_DBG=) && (set FB_CONFIG=release) ) )
+   ( if /I "%%v"=="CLIENT_ONLY" (set FB_CLIENT_ONLY=TRUE) )
+   ( if /I "%%v"=="CLIENT_ONLY=FALSE" (set FB_CLIENT_ONLY=) )
++  ( if /I "%%v"=="ENABLE_FBCLIENT_STATIC" (set FB_ENABLE_FBCLIENT_STATIC=TRUE) )
+ )
+ 
+ @if not defined FB_CONFIG (
+@@ -123,10 +124,10 @@ rem NOTE 2 This code is likely to break again in the future !!!!
+   @setlocal EnableDelayedExpansion
+ 
+   if not exist "!VCToolsRedistDir!!VSCMD_ARG_TGT_ARCH!\Microsoft.VC!MSVC_RUNTIME_MAJOR_VERSION!!MSVC_RUNTIME_MINOR_VERSION!.CRT" (
+-    @endlocal  
++    @endlocal
+     set MSVC_RUNTIME_MINOR_VERSION=3
+   ) else (
+-    @endlocal  
++    @endlocal
+   )
+   set MSVC_RUNTIME_LIBRARY_VERSION=%MSVC_RUNTIME_MAJOR_VERSION%%MSVC_RUNTIME_MINOR_VERSION%
+ 
+@@ -160,6 +161,17 @@ rem NOTE 2 This code is likely to break again in the future !!!!
+ @set FIREBIRD_BOOT_BUILD=1
+ 
+ @set FB_OBJ_DIR=%FB_TARGET_PLATFORM%\%FB_CONFIG%
++@if /I "%FB_ENABLE_FBCLIENT_STATIC%"=="TRUE" (
++  @if /I "%FB_DBG%"=="TRUE" (
++    @set FB_STATIC_CONFIG=DebugStatic
++  ) else (
++    @set FB_STATIC_CONFIG=ReleaseStatic
++  )
++  @set FB_STATIC_OBJ_DIR=%FB_TARGET_PLATFORM%\%FB_STATIC_CONFIG%
++) else (
++  @set FB_STATIC_CONFIG=
++  @set FB_STATIC_OBJ_DIR=
++)
+ @set FB_BIN_DIR=%FB_ROOT_PATH%\temp\%FB_OBJ_DIR%\firebird
+ 
+ 
+@@ -195,6 +207,9 @@ goto :END
+ @echo    vs_ver=%VS_VER%
+ @echo    FB_VSCOMNTOOLS=%FB_VSCOMNTOOLS%
+ @echo    platform=%FB_TARGET_PLATFORM%
++@if /I "%FB_ENABLE_FBCLIENT_STATIC%"=="TRUE" (
++  @echo    fbclient_static_config=%FB_STATIC_CONFIG%
++)
+ @echo    msvc_version=%MSVC_VERSION%
+ @echo    db_path=%FB_DB_PATH%
+ @echo    root_path=%FB_ROOT_PATH%
