@@ -4,6 +4,8 @@ vcpkg_from_github(
   REF 19dde2f296941a75b0b9202cccd59528bde7f65a
   SHA512 3f24fd5c69a00032e63fc8479d46dedf9008909c5e0f37847f0427c39f35e68f35a5ee89820cd0a179cb282e49730e6b1465a027d89bef585e9a1cfca6e3d3a2
   HEAD_REF master
+  PATCHES
+    pdb-name.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
