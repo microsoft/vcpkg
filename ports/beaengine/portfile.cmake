@@ -13,11 +13,22 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/beaengine-config.cmake.in" DESTINATION "${S
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic"   BEAENGINE_BUILD_SHARED)
 
+set(extra_config)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>DLL)
+    else()
+        list(APPEND extra_config -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>)
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DoptBUILD_DLL=${BEAENGINE_BUILD_SHARED}
         -DVERSION=${VERSION}
+        ${extra_config}
 )
 
 vcpkg_cmake_install()
