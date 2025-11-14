@@ -1,0 +1,17 @@
+{
+  "name": "defer",
+  "version": "1.0",
+  "description": "Defines a defer statement for C++, similar to Go's defer.",
+  "homepage": "https://github.com/tonitaga/defer",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
