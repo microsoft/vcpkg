@@ -1,15 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8b756..db70df6 100644
+index ca8b756..34e7f5f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,5 +1,5 @@
+@@ -1,9 +1,7 @@
  project (BeaEngine)
 -cmake_minimum_required (VERSION 2.6)
 +cmake_minimum_required (VERSION 3.5)
  
- set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
  
-@@ -155,15 +155,15 @@ if (BEA_COMPILER STREQUAL msvc)
+-set (CMAKE_VERBOSE_MAKEFILE ON)
+ 
+ option (optHAS_OPTIMIZED "Turn Optimizations ON"    OFF)
+ option (optHAS_SYMBOLS   "Build with debug Symbols" ON)
+@@ -155,15 +153,15 @@ if (BEA_COMPILER STREQUAL msvc)
    # determine code generation model
    if (optHAS_OPTIMIZED)
      if (optBUILD_DLL)
@@ -29,7 +33,7 @@ index ca8b756..db70df6 100644
      endif ()
    endif ()
  endif ()
-@@ -354,7 +354,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+@@ -354,7 +352,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
  
  
  
@@ -38,7 +42,7 @@ index ca8b756..db70df6 100644
  
  
  set (build_modules
-@@ -366,14 +366,14 @@ set (build_modules
+@@ -366,14 +364,14 @@ set (build_modules
  if (NOT ZLIB_FOUND)
    set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
  else ()

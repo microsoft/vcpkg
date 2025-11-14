@@ -6,10 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-CMakeLists.patch
-        0001-support-install.patch
+        0002-support-install.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/beaengine-config.cmake.in" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/beaengine-config.cmake.in" DESTINATION "${SOURCE_PATH}/src")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic"   BEAENGINE_BUILD_SHARED)
 
@@ -17,6 +17,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DoptBUILD_DLL=${BEAENGINE_BUILD_SHARED}
+        -DVERSION=${VERSION}
 )
 
 vcpkg_cmake_install()

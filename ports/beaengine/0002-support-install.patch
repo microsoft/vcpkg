@@ -1,27 +1,28 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e8fcb05..36f5371 100644
+index e8fcb05..1f3ee92 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -7,3 +7,32 @@ else ()
+@@ -7,3 +7,33 @@ else ()
    add_library (${BEA_TARGET} STATIC BeaEngine.c)
    set_target_properties (${BEA_TARGET} PROPERTIES COMPILE_FLAGS "-DBEA_ENGINE_STATIC") 
  endif ()
-+
++target_include_directories(${BEA_TARGET} 
++  INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Includes>
++            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++# Override export name target_link_libraries(main PRIVATE beaengine::BeaEngine_s_d_l => beaengine::beaengine
++set_target_properties(${BEA_TARGET} PROPERTIES EXPORT_NAME "beaengine")
 +install(DIRECTORY
-+  "${CMAKE_CURRENT_SOURCE_DIR}/includes"
-+  DESTINATION "include"
-+  FILES_MATCHING PATTERN "*.h")
-+install(DIRECTORY
-+  "${CMAKE_CURRENT_SOURCE_DIR}/includes/instr_set"
-+  DESTINATION "include/instr_set"
++  "${PROJECT_SOURCE_DIR}/src/Includes/"
++  DESTINATION include
 +  FILES_MATCHING PATTERN "*.h")
 +install(TARGETS ${BEA_TARGET}
 + EXPORT beaengine-targets
 + RUNTIME DESTINATION "bin"
 + ARCHIVE DESTINATION "lib"
 + LIBRARY DESTINATION "lib"
++ INCLUDES DESTINATION "include"
 + )
-+install(EXPORT beaengine-targets NAMESPACE libhat:: DESTINATION "share/libhat")
++install(EXPORT beaengine-targets NAMESPACE beaengine:: DESTINATION "share/beaengine")
 +include(CMakePackageConfigHelpers)
 +configure_package_config_file(
 +"${CMAKE_CURRENT_LIST_DIR}/beaengine-config.cmake.in"
