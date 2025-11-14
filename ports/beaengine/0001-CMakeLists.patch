@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8b756..b47fe4f 100644
+index ca8b756..082ab06 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,9 +1,7 @@
@@ -33,6 +33,38 @@ index ca8b756..b47fe4f 100644
  endif ()
  # =========================================
  # Intel Compiler configuration
+@@ -309,23 +294,23 @@ endforeach ()
+ # ================================================
+ 
+ if (${CMAKE_BUILD_TYPE} STREQUAL RelWithDebInfo)
+-  set (CMAKE_C_FLAGS_RELWITHDEBINFO   ${myC_FLAGS})
+-  set (CMAKE_CXX_FLAGS_RELWITHDEBINFO ${myCXX_FLAGS})
++  set (CMAKE_C_FLAGS_RELWITHDEBINFO   ${CMAKE_C_FLAGS_RELWITHDEBINFO} ${myC_FLAGS})
++  set (CMAKE_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${myCXX_FLAGS})
+ endif ()
+ 
+ if (${CMAKE_BUILD_TYPE} STREQUAL Release)
+-  set (CMAKE_C_FLAGS_RELEASE   ${myC_FLAGS})
+-  set (CMAKE_CXX_FLAGS_RELEASE ${myCXX_FLAGS})
++  set (CMAKE_C_FLAGS_RELEASE   ${CMAKE_C_FLAGS_RELEASE} ${myC_FLAGS})
++  set (CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} ${myCXX_FLAGS})
+ endif ()
+ 
+ if (${CMAKE_BUILD_TYPE} STREQUAL DebugFull)
+-  set (CMAKE_C_FLAGS_DEBUGFULL   ${myC_FLAGS})
+-  set (CMAKE_CXX_FLAGS_DEBUGFULL ${myCXX_FLAGS})
++  set (CMAKE_C_FLAGS_DEBUGFULL   ${CMAKE_C_FLAGS_DEBUGFULL} ${myC_FLAGS})
++  set (CMAKE_CXX_FLAGS_DEBUGFULL ${CMAKE_CXX_FLAGS_DEBUGFULL} ${myCXX_FLAGS})
+ endif ()
+ 
+ if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
+-  set (CMAKE_C_FLAGS_DEBUG   ${myC_FLAGS})
+-  set (CMAKE_CXX_FLAGS_DEBUG ${myCXX_FLAGS})
++  set (CMAKE_C_FLAGS_DEBUG   ${CMAKE_C_FLAGS_DEBUG} ${myC_FLAGS})
++  set (CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG} ${myCXX_FLAGS})
+ endif ()
+ 
+ set (BEA_INCLUDE_PATH ${CMAKE_SOURCE_DIR}/include)
 @@ -354,7 +339,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
  
  
