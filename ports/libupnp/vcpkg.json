@@ -1,0 +1,50 @@
+{
+  "name": "libupnp",
+  "version": "1.14.25",
+  "description": "libupnp: Build UPnP-compliant control points, devices, and bridges on several operating systems.",
+  "homepage": "https://github.com/pupnp/pupnp/",
+  "documentation": "https://github.com/pupnp/pupnp/",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    "pthreads",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "client-api",
+    "ipv6",
+    "reuse-addr",
+    "ssl",
+    "webserver"
+  ],
+  "features": {
+    "blocking-tcp": {
+      "description": "Use blocking TCP connections"
+    },
+    "client-api": {
+      "description": "Enable control point code (client)"
+    },
+    "ipv6": {
+      "description": "Enable IPv6 support"
+    },
+    "reuse-addr": {
+      "description": "Bind the miniserver socket with SO_REUSEADDR to allow clean restarts"
+    },
+    "ssl": {
+      "description": "OpenSSL support for encrypted connections",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "webserver": {
+      "description": "Enable integrated webserver"
+    }
+  }
+}
