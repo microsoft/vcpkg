@@ -1,0 +1,57 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ca8b756..db70df6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ project (BeaEngine)
+-cmake_minimum_required (VERSION 2.6)
++cmake_minimum_required (VERSION 3.5)
+ 
+ set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+ 
+@@ -155,15 +155,15 @@ if (BEA_COMPILER STREQUAL msvc)
+   # determine code generation model
+   if (optHAS_OPTIMIZED)
+     if (optBUILD_DLL)
+-      list (APPEND BEA_FLAGS /MD)
++      #list (APPEND BEA_FLAGS /MD)
+     else ()
+-      list (APPEND BEA_FLAGS /MT)
++      #list (APPEND BEA_FLAGS /MT)
+     endif ()
+   else ()
+     if (optBUILD_DLL)
+-      list (APPEND BEA_FLAGS /MDd)
++      #list (APPEND BEA_FLAGS /MDd)
+     else ()
+-      list (APPEND BEA_FLAGS /MTd)
++      #list (APPEND BEA_FLAGS /MTd)
+     endif ()
+   endif ()
+ endif ()
+@@ -354,7 +354,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+ 
+ 
+ 
+-FIND_PACKAGE (ZLIB)
++find_package(ZLIB REQUIRED)
+ 
+ 
+ set (build_modules
+@@ -366,14 +366,14 @@ set (build_modules
+ if (NOT ZLIB_FOUND)
+   set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
+ else ()
+-  list (APPEND BEA_LIBS_PATH ${ZLIB_LIBRARIES})
++  list (APPEND BEA_LIBS_PATH ZLIB::ZLIB)
+ endif ()
+ 
+ 
+ add_definitions     (${BEA_DEFINITIONS})
+ include_directories (${BEA_SRC_ROOT}  ${BEA_INCLUDE_PATH}
+                      ${CMAKE_SOURCE_DIR} ${ZLIB_INCLUDE_DIR})
+-link_directories    (${BEA_LIBS_PATH})
++link_libraries      (${BEA_LIBS_PATH})
+ 
+ 
+ set (BEA_TARGET "BeaEngine")
