@@ -1,12 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8c65eef..4f929e5 100644
+index 8c65eef..babf711 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -472,6 +472,7 @@ if(BUILD_AS_CPP)
+@@ -472,6 +472,9 @@ if(BUILD_AS_CPP)
  endif()
  
  add_executable(darknet ${CMAKE_CURRENT_LIST_DIR}/src/darknet.c ${sources} ${headers} ${cuda_sources})
-+set_target_properties(darknet PROPERTIES PDB_NAME "darknet.exe")
++if(WIN32 AND NOT MINGW)
++  set_target_properties(darknet PROPERTIES OUTPUT_NAME "darknet.exe" RUNTIME_OUTPUT_NAME "darknet")
++endif()
  if(BUILD_AS_CPP)
    set_source_files_properties(${CMAKE_CURRENT_LIST_DIR}/src/darknet.c PROPERTIES LANGUAGE CXX)
    set_target_properties(darknet PROPERTIES LINKER_LANGUAGE CXX)
