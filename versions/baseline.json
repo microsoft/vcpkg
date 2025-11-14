@@ -2526,7 +2526,7 @@
     },
     "dpdk": {
       "baseline": "24.11.3",
-      "port-version": 0
+      "port-version": 1
     },
     "dpp": {
       "baseline": "10.1.3",
