@@ -69,7 +69,7 @@ else()
             "${CURRENT_BUILDTREES_DIR}/fixlib/CMakeLists.txt"
             COPYONLY)
 
-        vcpkg_configure_cmake(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/fixlib")
+        vcpkg_cmake_configure(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/fixlib")
 
         vcpkg_cmake_install()
 
