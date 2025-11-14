@@ -1,0 +1,41 @@
+diff --git a/configure.ac b/configure.ac
+--- configure.ac
++++ configure.ac
+@@ -1429,8 +1429,25 @@
+   AC_MSG_ERROR([to build Octave, you must have the PCRE or PCRE2 library and header files installed])
+ fi
+ 
+ ### Check for Qhull library.
++AC_ARG_WITH([qhull_r-pkg-config],
++  [AS_HELP_STRING([--with-qhull_r-pkg-config=LIB],
++    [search the qhull library with pkg-config (options: qhull_r (default) or qhullstatic_r)])
++dnl Second help string must not be indented for correct alignment
++AS_HELP_STRING([--without-qhull_r-pkg-config], [don't search qhull_r library with pkg-config])],
++  [case $withval in
++     yes | "")
++       qhull_pc_name="qhull_r"
++     ;;
++     no)
++       qhull_pc_name=""
++     ;;
++     *)
++       qhull_pc_name="$withval"
++     ;;
++   esac],
++  [qhull_pc_name="qhull_r"])
+ 
+ QHULL_CPPFLAGS=
+ QHULL_LDFLAGS=
+ QHULL_LIBS=
+@@ -1444,9 +1461,10 @@
+     [AC_DEFINE(HAVE_QHULL, 1, [Define to 1 if Qhull is available.])
+      QHULL_CPPFLAGS="$QHULL_R_CPPFLAGS"
+      QHULL_LDFLAGS="$QHULL_R_LDFLAGS"
+      QHULL_LIBS="$QHULL_R_LIBS"],
+-    [warn_qhull_r="Qhull library found, but does not seem to work properly.  This will result in loss of functionality for some geometry functions.  Please try recompiling the library with -fno-strict-aliasing."])])
++    [warn_qhull_r="Qhull library found, but does not seem to work properly.  This will result in loss of functionality for some geometry functions.  Please try recompiling the library with -fno-strict-aliasing."])],
++    [$qhull_pc_name])
+ AC_SUBST(QHULL_CPPFLAGS)
+ AC_SUBST(QHULL_LDFLAGS)
+ AC_SUBST(QHULL_LIBS)
+ 

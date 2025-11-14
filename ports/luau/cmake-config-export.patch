@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 03f235c..75aa1ec 100644
+index 4fb21c3..5ce6814 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -67,31 +67,31 @@ add_library(Luau.VM.Internals INTERFACE)
+@@ -66,41 +66,41 @@ add_library(Luau.VM.Internals INTERFACE)
  
  include(Sources.cmake)
  
@@ -28,6 +28,7 @@ index 03f235c..75aa1ec 100644
 -target_include_directories(Luau.Config PUBLIC Config/include)
 +target_include_directories(Luau.Config PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Config/include> $<INSTALL_INTERFACE:include/luau>)
  target_link_libraries(Luau.Config PUBLIC Luau.Ast)
+ target_link_libraries(Luau.Config PRIVATE Luau.Compiler Luau.VM)
  
  target_compile_features(Luau.Analysis PUBLIC cxx_std_17)
 -target_include_directories(Luau.Analysis PUBLIC Analysis/include)
@@ -41,7 +42,9 @@ index 03f235c..75aa1ec 100644
  target_link_libraries(Luau.EqSat PUBLIC Luau.Common)
  
  target_compile_features(Luau.CodeGen PRIVATE cxx_std_17)
-@@ -100,7 +100,7 @@ target_link_libraries(Luau.CodeGen PRIVATE Luau.VM Luau.VM.Internals) # Code gen
+-target_include_directories(Luau.CodeGen PUBLIC CodeGen/include)
++target_include_directories(Luau.VM PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CodeGen/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ target_link_libraries(Luau.CodeGen PRIVATE Luau.VM Luau.VM.Internals) # Code generation needs VM internals
  target_link_libraries(Luau.CodeGen PUBLIC Luau.Common)
  
  target_compile_features(Luau.VM PRIVATE cxx_std_11)
@@ -50,7 +53,7 @@ index 03f235c..75aa1ec 100644
  target_link_libraries(Luau.VM PUBLIC Luau.Common)
  
  target_compile_features(Luau.Require PUBLIC cxx_std_17)
-@@ -194,22 +194,6 @@ if(MSVC AND LUAU_BUILD_CLI)
+@@ -189,22 +189,6 @@ if(MSVC AND LUAU_BUILD_CLI)
      set_target_properties(Luau.Repl.CLI PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
  endif()
  
@@ -73,7 +76,7 @@ index 03f235c..75aa1ec 100644
  # On Windows and Android threads are provided, on Linux/Mac/iOS we use pthreads
  add_library(osthreads INTERFACE)
  if(CMAKE_SYSTEM_NAME MATCHES "Linux|Darwin|iOS")
-@@ -299,3 +283,54 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.EqSat Luau.Cod
+@@ -297,3 +281,54 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.EqSat Luau.Cod
          endif()
      endif()
  endforeach()

@@ -1,6 +1,7 @@
 {
   "name": "nlohmann-json",
   "version-semver": "3.12.0",
+  "port-version": 1,
   "description": "JSON for Modern C++",
   "homepage": "https://github.com/nlohmann/json",
   "license": "MIT",

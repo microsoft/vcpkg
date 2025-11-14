@@ -1,6 +1,7 @@
 {
   "name": "fbgemm",
   "version": "1.0.0",
+  "port-version": 1,
   "description": "FB (Facebook) + GEMM (General Matrix-Matrix Multiplication)",
   "homepage": "https://code.fb.com/ml-applications/fbgemm/",
   "license": "BSD-3-Clause",

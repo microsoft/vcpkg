@@ -1,7 +1,7 @@
 {
   "name": "x86-simd-sort",
-  "version": "5.0",
-  "description": "C++ header file library for high-performance SIMD-based sorting algorithms for primitive datatypes",
-  "homepage": "https://github.com/intel/x86-simd-sort",
+  "version": "7.0",
+  "description": "C++ template library for high performance SIMD based sorting algorithms",
+  "homepage": "https://github.com/numpy/x86-simd-sort",
   "license": "BSD-3-Clause"
 }

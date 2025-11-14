@@ -1,0 +1,13 @@
+diff --git a/lib/hostinfo.cpp b/lib/hostinfo.cpp
+index c1fde8a348..7302f1b526 100644
+--- a/lib/hostinfo.cpp
++++ b/lib/hostinfo.cpp
+@@ -448,7 +448,7 @@ bool HOST_INFO::get_docker_compose_version_string(
+ bool HOST_INFO::have_docker() {
+ #ifdef _WIN32
+     for (WSL_DISTRO &wd: wsl_distros.distros) {
+-        if (!empty(wd.docker_version)) return true;
++        if (!wd.docker_version.empty()) return true;
+     }
+     return false;
+ #else
