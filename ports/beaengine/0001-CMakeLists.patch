@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8b756..349f27a 100644
+index ca8b756..b47fe4f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,9 +1,7 @@
@@ -13,7 +13,7 @@ index ca8b756..349f27a 100644
  
  option (optHAS_OPTIMIZED "Turn Optimizations ON"    OFF)
  option (optHAS_SYMBOLS   "Build with debug Symbols" ON)
-@@ -153,19 +151,15 @@ if (BEA_COMPILER STREQUAL msvc)
+@@ -153,19 +151,6 @@ if (BEA_COMPILER STREQUAL msvc)
    endif ()
  
    # determine code generation model
@@ -28,20 +28,12 @@ index ca8b756..349f27a 100644
 -      list (APPEND BEA_FLAGS /MDd)
 -    else ()
 -      list (APPEND BEA_FLAGS /MTd)
-+    if (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreaded")
-+      list(APPEND BEA_FLAGS "/MT")
-+    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDLL")
-+      list(APPEND BEA_FLAGS "/MD")
-+    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebug")
-+      list(APPEND BEA_FLAGS "/MTd")
-+    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebugDLL")
-+      list(APPEND BEA_FLAGS "/MDd")
-     endif ()
+-    endif ()
 -  endif ()
  endif ()
  # =========================================
  # Intel Compiler configuration
-@@ -354,7 +348,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+@@ -354,7 +339,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
  
  
  
@@ -50,7 +42,7 @@ index ca8b756..349f27a 100644
  
  
  set (build_modules
-@@ -366,14 +360,14 @@ set (build_modules
+@@ -366,14 +351,14 @@ set (build_modules
  if (NOT ZLIB_FOUND)
    set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
  else ()
