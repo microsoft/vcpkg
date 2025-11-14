@@ -6,6 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(HDF5_PREFER_PARALLEL OFF)
+if(HDF5_WITH_PARALLEL)
+  set(HDF5_PREFER_PARALLEL ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -17,7 +22,7 @@ vcpkg_cmake_configure(
         -DWITH_JAVA_WRAPPING:BOOL=OFF
         -DWITH_PYTHON_WRAPPING:BOOL=OFF
         -DWITH_RESQML2_2:BOOL=ON
-        "-DHDF5_PREFER_PARALLEL=${HDF5_WITH_PARALLEL}"
+        -DHDF5_PREFER_PARALLEL=${HDF5_PREFER_PARALLEL}
 )
 
 vcpkg_cmake_install()
