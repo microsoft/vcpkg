@@ -125,6 +125,31 @@ unset(GN CACHE)
 set(GN "")
 unit_test_check_variable_equal([[_vcpkg_find_acquire_program(GN)]] GN "${expected_gn}")
 
+# Regular variable is NOTFOUNDish or empty value, and it hides a cache variable:
+# The cache variable takes effect.
+set(GN "THIS IS CACHED GN" CACHE INTERNAL "")
+set(GN "NOTFOUND")
+unit_test_check_variable_equal([[_vcpkg_find_acquire_program(GN)]] GN "THIS IS CACHED GN")
+
+set(GN "THIS IS CACHED GN" CACHE INTERNAL "")
+set(GN "GN-NOTFOUND")
+unit_test_check_variable_equal([[_vcpkg_find_acquire_program(GN)]] GN "THIS IS CACHED GN")
+
+set(GN "THIS IS CACHED GN" CACHE INTERNAL "")
+set(GN "")
+unit_test_check_variable_equal([[_vcpkg_find_acquire_program(GN)]] GN "THIS IS CACHED GN")
+
+set(GN "NOTFOUND" CACHE INTERNAL "")
+set(GN "NOTFOUND")
+unit_test_check_variable_equal([[_vcpkg_find_acquire_program(GN)]] GN "${expected_gn}")
+
+set(GN "CACHED-NOTFOUND" CACHE INTERNAL "")
+set(GN "NOTFOUND")
+unit_test_check_variable_equal([[_vcpkg_find_acquire_program(GN)]] GN "${expected_gn}")
+
+set(GN "" CACHE INTERNAL "")
+set(GN "NOTFOUND")
+unit_test_check_variable_equal([[_vcpkg_find_acquire_program(GN)]] GN "${expected_gn}")
 
 # If vfap cannot find or acquire the requested program, it raises a fatal error.
 unit_test_ensure_fatal_error([[_vcpkg_find_acquire_program(REALLY_NO_SUCH_PROGAM)]])
