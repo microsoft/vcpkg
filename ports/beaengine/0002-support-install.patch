@@ -1,0 +1,35 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e8fcb05..97629c3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -7,3 +7,30 @@ else ()
+   add_library (${BEA_TARGET} STATIC BeaEngine.c)
+   set_target_properties (${BEA_TARGET} PROPERTIES COMPILE_FLAGS "-DBEA_ENGINE_STATIC") 
+ endif ()
++# Override export name target_link_libraries(main PRIVATE beaengine::BeaEngine_s_d_l => beaengine::beaengine
++set_target_properties(${BEA_TARGET} PROPERTIES EXPORT_NAME "beaengine")
++install(DIRECTORY
++  "${PROJECT_SOURCE_DIR}/include/beaengine"
++  DESTINATION "include"
++  FILES_MATCHING PATTERN "*.h")
++install(TARGETS ${BEA_TARGET}
++ EXPORT beaengine-targets
++ RUNTIME DESTINATION "bin"
++ ARCHIVE DESTINATION "lib"
++ LIBRARY DESTINATION "lib"
++ INCLUDES DESTINATION "include"
++ )
++install(EXPORT beaengine-targets NAMESPACE beaengine:: DESTINATION "share/beaengine")
++include(CMakePackageConfigHelpers)
++configure_package_config_file(
++"${CMAKE_CURRENT_LIST_DIR}/beaengine-config.cmake.in"
++"${CMAKE_CURRENT_BINARY_DIR}/beaengine-config.cmake"
++INSTALL_DESTINATION "share/beaengine"
++)
++write_basic_package_version_file(
++  "${CMAKE_CURRENT_BINARY_DIR}/beaengine-config-version.cmake" VERSION "${VERSION}" COMPATIBILITY SameMajorVersion)
++install(FILES
++  "${CMAKE_CURRENT_BINARY_DIR}/beaengine-config.cmake"
++  "${CMAKE_CURRENT_BINARY_DIR}/beaengine-config-version.cmake"
++  DESTINATION "share/beaengine"
++)
