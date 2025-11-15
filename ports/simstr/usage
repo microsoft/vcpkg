@@ -1,0 +1,8 @@
+simstr provides CMake targets:
+
+  find_package(simstr CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE simstr::simstr)
+
+simstr provides pkg-config modules:
+
+  simstr
