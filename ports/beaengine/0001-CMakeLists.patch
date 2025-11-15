@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8b756..fbacb6e 100644
+index ca8b756..be4acc7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,9 +1,7 @@
@@ -13,7 +13,23 @@ index ca8b756..fbacb6e 100644
  
  option (optHAS_OPTIMIZED "Turn Optimizations ON"    OFF)
  option (optHAS_SYMBOLS   "Build with debug Symbols" ON)
-@@ -29,45 +27,33 @@ endif (optHAS_OPTIMIZED)
+@@ -13,61 +11,36 @@ option (optBUILD_STDCALL "Build using stdcall"      OFF)
+ option (optBUILD_LITE	 "Build without text disassembly"      OFF)
+ option (USE_CLANG "build application with clang" OFF)
+ 
+-if (optHAS_OPTIMIZED)
+-  if (optHAS_SYMBOLS)
+-    set (CMAKE_BUILD_TYPE RelWithDebInfo)
+-  else (optHAS_SYMBOLS)
+-    set (CMAKE_BUILD_TYPE Release)
+-  endif (optHAS_SYMBOLS)
+-else (optHAS_OPTIMIZED)
+-  if (optHAS_SYMBOLS)
+-    set (CMAKE_BUILD_TYPE Debug)
+-  else (optHAS_SYMBOLS)
+-    set (CMAKE_BUILD_TYPE Debug)
+-  endif (optHAS_SYMBOLS)
+-endif (optHAS_OPTIMIZED)
  
  # determine BEA_COMPILER
  if (NOT BEA_COMPILER)
@@ -85,7 +101,7 @@ index ca8b756..fbacb6e 100644
  # =========================================
  # clang configuration
  # =========================================
-@@ -153,19 +139,6 @@ if (BEA_COMPILER STREQUAL msvc)
+@@ -153,19 +126,6 @@ if (BEA_COMPILER STREQUAL msvc)
    endif ()
  
    # determine code generation model
@@ -105,7 +121,7 @@ index ca8b756..fbacb6e 100644
  endif ()
  # =========================================
  # Intel Compiler configuration
-@@ -354,7 +327,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+@@ -354,7 +314,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
  
  
  
@@ -114,7 +130,7 @@ index ca8b756..fbacb6e 100644
  
  
  set (build_modules
-@@ -366,14 +339,14 @@ set (build_modules
+@@ -366,14 +326,14 @@ set (build_modules
  if (NOT ZLIB_FOUND)
    set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
  else ()
