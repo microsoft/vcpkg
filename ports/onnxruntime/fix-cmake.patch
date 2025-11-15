@@ -1,0 +1,11 @@
+diff --git a/cmake/onnxruntime_framework.cmake b/cmake/onnxruntime_framework.cmake
+index 15f3105..af6609b 100644
+--- a/cmake/onnxruntime_framework.cmake
++++ b/cmake/onnxruntime_framework.cmake
+@@ -122,5 +122,5 @@ else()
+             ARCHIVE   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             LIBRARY   DESTINATION ${CMAKE_INSTALL_LIBDIR}
+             RUNTIME   DESTINATION ${CMAKE_INSTALL_BINDIR}
+-            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
++            FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ endif()
