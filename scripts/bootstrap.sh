@@ -54,9 +54,20 @@ if [ "$unixKernelName" = CYGWIN_NT ] || [ "$unixKernelName" = MINGW_NT ] || [ "$
     exit 0
 fi
 
+# Determine base dir to store the vcpkg executable
+if [ -z ${X_VCPKG_BINARY_DIR+x} ]; then
+    binaryDir="$vcpkgRootDir"
+else
+    binaryDir="$X_VCPKG_BINARY_DIR"
+    if [ ! -d "$X_VCPKG_BINARY_DIR" ]; then
+        echo "X_VCPKG_BINARY_DIR was set to '$X_VCPKG_BINARY_DIR', but that was not a directory."
+        exit 1
+    fi
+fi
+
 # Determine the downloads directory.
 if [ -z ${VCPKG_DOWNLOADS+x} ]; then
-    downloadsDir="$vcpkgRootDir/downloads"
+    downloadsDir="$binaryDir/downloads"
 else
     downloadsDir="$VCPKG_DOWNLOADS"
     if [ ! -d "$VCPKG_DOWNLOADS" ]; then
@@ -209,11 +220,11 @@ fi
 
 # Do the download or build.
 if [ "$vcpkgDownloadTool" = "ON" ]; then
-    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
+    vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$binaryDir/vcpkg" $vcpkgToolReleaseSha
 else
     vcpkgToolReleaseArchive="$VCPKG_TOOL_RELEASE_TAG.zip"
     vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseArchive"
-    baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
+    baseBuildDir="$binaryDir/buildtrees/_vcpkg"
     buildDir="$baseBuildDir/build"
     archivePath="$downloadsDir/$vcpkgToolReleaseArchive"
     srcBaseDir="$baseBuildDir/src"
@@ -239,16 +250,16 @@ else
     (cd "$buildDir" && eval cmake "$srcDir" $cmakeConfigOptions) || exit 1
     (cd "$buildDir" && cmake --build .) || exit 1
 
-    rm -rf "$vcpkgRootDir/vcpkg"
-    cp "$buildDir/vcpkg" "$vcpkgRootDir/"
+    rm -rf "$binaryDir/vcpkg"
+    cp "$buildDir/vcpkg" "$binaryDir/"
 fi
 
-"$vcpkgRootDir/vcpkg" version --disable-metrics
+"$binaryDir/vcpkg" version --disable-metrics
 
 # Apply the disable-metrics marker file.
 if [ "$vcpkgDisableMetrics" = "ON" ]; then
-    touch "$vcpkgRootDir/vcpkg.disable-metrics"
-elif ! [ -f "$vcpkgRootDir/vcpkg.disable-metrics" ]; then
+    touch "$binaryDir/vcpkg.disable-metrics"
+elif ! [ -f "$binaryDir/vcpkg.disable-metrics" ]; then
     # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
     # opted out they should stay opted out.
     cat <<EOF
