@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8b756..785dd78 100644
+index ca8b756..fbacb6e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,9 +1,7 @@
@@ -13,7 +13,79 @@ index ca8b756..785dd78 100644
  
  option (optHAS_OPTIMIZED "Turn Optimizations ON"    OFF)
  option (optHAS_SYMBOLS   "Build with debug Symbols" ON)
-@@ -153,19 +151,6 @@ if (BEA_COMPILER STREQUAL msvc)
+@@ -29,45 +27,33 @@ endif (optHAS_OPTIMIZED)
+ 
+ # determine BEA_COMPILER
+ if (NOT BEA_COMPILER)
+-  if (${CMAKE_SYSTEM_NAME} STREQUAL Linux)
+-    if (WATCOM)
+-      set (BEA_COMPILER watcom)
+-    else ()
+-      if (USE_CLANG)
+-        set (BEA_COMPILER clang)
+-      else ()
+-        set (BEA_COMPILER gnu)
++  if (USE_CLANG)
++    set(BEA_COMPILER clang)
++  else()
++    if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
++      set(BEA_COMPILER gnu)
++    elseif (CMAKE_C_COMPILER_ID STREQUAL "Clang")
++      set(BEA_COMPILER clang)
++    elseif (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
++      set(BEA_COMPILER msvc)
++    elseif (CMAKE_C_COMPILER_ID MATCHES "Intel")
++      set(BEA_COMPILER intel)
++    elseif (CMAKE_C_COMPILER_ID MATCHES "SunPro")
++      set(BEA_COMPILER suncc)
++    elseif (CMAKE_C_COMPILER_ID MATCHES "Watcom")
++      set(BEA_COMPILER watcom)
++    else()
++      if (BORLAND)
++        set(BEA_COMPILER borland)
++      elseif (MINGW OR MSYS OR CYGWIN)
++        set(BEA_COMPILER gnu)
++      else()
++        message(WARNING "Unknown compiler ID '${CMAKE_C_COMPILER_ID}'. Defaulting to 'gnu'. Set BEA_COMPILER manually if this is incorrect.")
++        set(BEA_COMPILER gnu)
+       endif()
+-    endif ()
+-  endif ()
+-  if (${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+-    set (BEA_COMPILER gnu)
+-  endif ()
+-  if (${CMAKE_SYSTEM_NAME} STREQUAL SunOS)
+-    set (BEA_COMPILER suncc)
+-  endif ()
+-  if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)
+-    if (MINGW OR MSYS)
+-      set (BEA_COMPILER gnu)
+-    else ()
+-      if (CYGWIN)
+-	set (BEA_COMPILER gnu)
+-      else ()
+-	if (BORLAND)
+-	  set (BEA_COMPILER borland)
+-	else ()
+-	  if (MSVC)
+-	    set (BEA_COMPILER msvc)
+-	  else ()
+-	    if (WATCOM)
+-	      set (BEA_COMPILER watcom)
+-	    endif ()
+-	  endif ()
+-	endif ()
+-      endif ()
+-    endif ()
+-  endif ()
+-endif ()
++    endif()
++  endif()
++endif()
+ # =========================================
+ # clang configuration
+ # =========================================
+@@ -153,19 +139,6 @@ if (BEA_COMPILER STREQUAL msvc)
    endif ()
  
    # determine code generation model
@@ -33,33 +105,7 @@ index ca8b756..785dd78 100644
  endif ()
  # =========================================
  # Intel Compiler configuration
-@@ -308,25 +293,9 @@ endforeach ()
- # pass compiler flags to cmake
- # ================================================
- 
--if (${CMAKE_BUILD_TYPE} STREQUAL RelWithDebInfo)
--  set (CMAKE_C_FLAGS_RELWITHDEBINFO   ${myC_FLAGS})
--  set (CMAKE_CXX_FLAGS_RELWITHDEBINFO ${myCXX_FLAGS})
--endif ()
- 
--if (${CMAKE_BUILD_TYPE} STREQUAL Release)
--  set (CMAKE_C_FLAGS_RELEASE   ${myC_FLAGS})
--  set (CMAKE_CXX_FLAGS_RELEASE ${myCXX_FLAGS})
--endif ()
- 
--if (${CMAKE_BUILD_TYPE} STREQUAL DebugFull)
--  set (CMAKE_C_FLAGS_DEBUGFULL   ${myC_FLAGS})
--  set (CMAKE_CXX_FLAGS_DEBUGFULL ${myCXX_FLAGS})
--endif ()
- 
--if (${CMAKE_BUILD_TYPE} STREQUAL Debug)
--  set (CMAKE_C_FLAGS_DEBUG   ${myC_FLAGS})
--  set (CMAKE_CXX_FLAGS_DEBUG ${myCXX_FLAGS})
--endif ()
- 
- set (BEA_INCLUDE_PATH ${CMAKE_SOURCE_DIR}/include)
- set (BEA_SRC_ROOT ${CMAKE_SOURCE_DIR}/src)
-@@ -354,7 +323,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+@@ -354,7 +327,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
  
  
  
@@ -68,7 +114,7 @@ index ca8b756..785dd78 100644
  
  
  set (build_modules
-@@ -366,14 +335,14 @@ set (build_modules
+@@ -366,14 +339,14 @@ set (build_modules
  if (NOT ZLIB_FOUND)
    set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
  else ()
