@@ -3,8 +3,10 @@
     REPO moehoshio/NekoSchema
     REF v1.0.3
     SHA512 48217CF53380C279498883F4632AB4A3B4646CBE301176FCC278BC955D7CBAA8A5C1E74C1E4625266F5FFF5A2F5809BC944A4EC2895E94D87B59463F090E76F4
-    HEAD_REF v1.0.3
+    HEAD_REF main
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -15,16 +17,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/NekoSchema)
-
-# Create neko-schemaConfig.cmake to match CMake's expected naming convention
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/neko-schemaConfig.cmake"
-    "include(\"\${CMAKE_CURRENT_LIST_DIR}/NekoSchemaConfig.cmake\")\n")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/NekoSchema PACKAGE_NAME nekoschema)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
