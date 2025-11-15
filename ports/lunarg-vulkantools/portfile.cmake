@@ -11,7 +11,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         disable-qtdeploy.patch
-        jsoncpp.diff
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES jsonschema OUT_PYTHON_VAR PYTHON3)
@@ -31,7 +30,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-vcpkg_copy_tools(TOOL_NAMES vkvia vkconfig vkconfig-gui AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES vkconfig vkconfig-gui AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
