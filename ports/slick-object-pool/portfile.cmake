@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick_object_pool
-    REF v0.1.2
+    REF "v${VERSION}"
     SHA512 fa1aac51f829b92ae297f0e4bc469af374e80c464d1e644139482782fa95ada99fd4e5b77b2fab6741c851afa612364a1d908eeb27a611c043720a3c47e1a986
     HEAD_REF main
 )
