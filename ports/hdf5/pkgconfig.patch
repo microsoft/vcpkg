@@ -12,28 +12,10 @@ index b276769..548a306 100644
            # on the target. The target returned is: ZLIB::ZLIB
            get_filename_component (libname ${ZLIB_LIBRARIES} NAME_WLE)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index bbdf92a..4b2397c 100644
+index bbdf92a..c36d5c2 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -1375,6 +1375,17 @@ set (_PKG_CONFIG_REQUIRES_PRIVATE)
- # to add to pkg-config files. Note that, for simplicity, the below
- # assumes dependency libraries don't have pkg-config support.
- foreach (lib ${LINK_LIBS})
-+  if(lib STREQUAL ZLIB::ZLIB)
-+    string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " zlib")
-+    continue()
-+  elseif(libs STREQUAL "libaec::sz")
-+    string(APPEND _PKG_CONFIG_LIBS_PRIVATE " ${libaec_LIBRARY}")
-+    continue()
-+  elseif(libs STREQUAL "libaec::aec")
-+    string(APPEND _PKG_CONFIG_LIBS_PRIVATE " ${SZIP_LIBRARY}")
-+    continue()
-+  endif()
-+
-   # If this is a regular library, add it to the list of
-   # libraries for the Libs.private field. Otherwise, do
-   # special processing for library targets.
-@@ -1450,6 +1461,13 @@ foreach (lib ${LINK_LIBS})
+@@ -1450,9 +1450,26 @@ foreach (lib ${LINK_LIBS})
    endif ()
  endforeach ()
  
@@ -47,3 +29,16 @@ index bbdf92a..4b2397c 100644
  # The settings for the compression libs depends on if they have pkconfig support
  # Assuming they don't
  foreach (libs ${LINK_COMP_LIBS})
++  if(libs STREQUAL ZLIB::ZLIB)
++    string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " zlib")
++    continue()
++  elseif(libs STREQUAL "libaec::sz")
++    string(APPEND _PKG_CONFIG_LIBS_PRIVATE " ${libaec_LIBRARY}")
++    continue()
++  elseif(libs STREQUAL "libaec::aec")
++    string(APPEND _PKG_CONFIG_LIBS_PRIVATE " ${SZIP_LIBRARY}")
++    continue()
++  endif()
+   get_target_property (libname ${libs} OUTPUT_NAME)
+   set (_PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE} -l${libname}")
+ endforeach ()
