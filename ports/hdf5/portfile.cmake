@@ -5,16 +5,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${hdf5_ref}"
-    SHA512 f3907abb530c4818cd9c0eb78b43073f3133260baa008ed52478e50e6bf9f1520365882acba21e0206e72c37c3e564d450def4edc3d2eef46275a41a2ad3f34b
+    SHA512 609e129f78c6777a0e64694de8ec638326a616ff9cbd916f310dc6f78435ef67194c5ab59faedda09c85c045c15ebe2ec4ce04fa905d5f74801600e067c27fcc
     HEAD_REF develop
     PATCHES
-        hdf5_config.patch
         pkgconfig.patch
 )
 
 set(ALLOW_UNSUPPORTED OFF)
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
-    message(WARNING "Feature 'Parallel' and 'cpp' are mutually exclusive, enabling option ALLOW_UNSUPPORTED automatically to enable them both.")
+    message(WARNING "Feature 'parallel' and 'cpp' are mutually exclusive, enabling option ALLOW_UNSUPPORTED automatically to enable them both.")
     set(ALLOW_UNSUPPORTED ON)
 endif()
 
@@ -35,11 +34,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         parallel     HDF5_ENABLE_PARALLEL
         tools        HDF5_BUILD_TOOLS
-        tools        HDF5_BUILD_HL_GIF_TOOLS
         cpp          HDF5_BUILD_CPP_LIB
         szip         HDF5_ENABLE_SZIP_SUPPORT
         szip         HDF5_ENABLE_SZIP_ENCODING
-        zlib         HDF5_ENABLE_Z_LIB_SUPPORT
+        zlib         HDF5_ENABLE_ZLIB_SUPPORT
         fortran      HDF5_BUILD_FORTRAN
         threadsafe   HDF5_ENABLE_THREADSAFE
         utils        HDF5_BUILD_UTILS
@@ -66,20 +64,12 @@ vcpkg_cmake_configure(
         -DHDF5_INSTALL_CMAKE_DIR=share/hdf5
         -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
         -DHDF5_MSVC_NAMING_CONVENTION=OFF
-        -DALLOW_UNSUPPORTED=${ALLOW_UNSUPPORTED}
-    OPTIONS_RELEASE
-        -DCMAKE_DEBUG_POSTFIX= # For lib name in pkgconfig files
+        -DHDF5_ALLOW_UNSUPPORTED=${ALLOW_UNSUPPORTED}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
-
-set(debug_suffix debug)
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(debug_suffix D)
-endif()
-
 vcpkg_fixup_pkgconfig()
 
 file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
@@ -152,7 +142,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-# Clean up
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -165,4 +154,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/H5public.h" "#define H5public_H" "#define H5public_H\n#ifndef H5_BUILT_AS_DYNAMIC_LIB\n#define H5_BUILT_AS_DYNAMIC_LIB\n#endif\n")
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
