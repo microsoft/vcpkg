@@ -20,17 +20,8 @@ target_compile_definitions(wow64ext PRIVATE
     WOW64EXT_EXPORTS
 )
 
-target_compile_options(wow64ext PRIVATE
-    /d2FH4-
-)
-    
 target_link_options(wow64ext PRIVATE
     /SUBSYSTEM:WINDOWS
-    /d2:-FH4-
-)
-
-target_link_libraries(wow64ext PRIVATE
-    kernel32
 )
 
 target_include_directories(wow64ext
