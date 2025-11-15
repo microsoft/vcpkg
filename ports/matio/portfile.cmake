@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 170a97fa639f16f1290c1fa7b15f4b10296db216a35d901ebd75141c462db9cf4243b4fffa6aa823eed0a33aa8c5a927f562487a1558867c53f11f343d673f10
     HEAD_REF master
     PATCHES
-        fix-dependencies.patch
+        cmake-config.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -15,7 +15,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         extended-sparse MATIO_EXTENDED_SPARSE
         mat73           MATIO_WITH_HDF5
         mat73           MATIO_MAT73
+        mat73           VCPKG_LOCK_FIND_PACKAGE_HDF5
         zlib            MATIO_WITH_ZLIB
+        zlib            VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 
 vcpkg_cmake_configure(
@@ -26,9 +28,13 @@ vcpkg_cmake_configure(
         -DMATIO_PIC=OFF  # Flags provided by the toolchain
         -DMATIO_SHARED=${BUILD_SHARED}
         -DMATIO_USE_CONAN=OFF
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_HDF5
+        VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
 
 set(prefix "${CURRENT_INSTALLED_DIR}")
 set(exec_prefix [[${prefix}]])
