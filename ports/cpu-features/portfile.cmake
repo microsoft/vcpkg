@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 40c314c584fcf109d9a641c055cb75f335fd5425dd336fe831828b956226eaf0ac2fd8ffceeaf10e02afa9cec01cb0ddc6af8ff78f20dd925783e6958d0b9304
     HEAD_REF master
+    PATCHES
+        0001-ndk-compat-export-include-dirs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
