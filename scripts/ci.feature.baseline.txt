@@ -2035,3 +2035,9 @@ osg:x64-osx=skip
 osg-qt:x64-osx=skip # due to dependency on osg
 osgearth:x64-osx=skip # due to dependency on osg
 sdformat:x64-osx=skip # due to dependency on gz-*
+
+# ms-gdkx require the Microsoft GDK with Xbox Extensions which is not installed on the CI pipeline machines
+ms-gdkx:x64-windows-release=skip
+ms-gdkx:x64-windows-static-md=skip
+ms-gdkx:x64-windows-static=skip
+ms-gdkx:x64-windows=skip
