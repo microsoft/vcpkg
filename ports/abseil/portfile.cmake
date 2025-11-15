@@ -6,11 +6,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
     REF "${VERSION}"
-    SHA512 d3ba654ed7dd7b432494918b2de5d8e2b0ad1c42752c5d726f20d6fe2841828fb4e8beb853e3570a11efecef725029ce5ffa3ebc434efff007e7f60735eb9856
+    SHA512 7083b73c3cf763f6f7a7edb70a5171f44d27045a0f5e52ca043e0a86379af2c50cf85dbfea30ebaa22a7bb2929452581d26b1ba18945023b057267d4c3bad2f7
     HEAD_REF master
     PATCHES 
-        "001-mingw-dll.patch" # Upstreamed (not yet in a release): https://github.com/abseil/abseil-cpp/commit/f2dee57baf19ceeb6d12cf9af7cbb3c049396ba5
-        "string-view.patch"
+        001-mingw-dll.patch # Upstreamed (not yet in a release): https://github.com/abseil/abseil-cpp/commit/f2dee57baf19ceeb6d12cf9af7cbb3c049396ba5
+        002-string-view.patch
+        003-force-cxx-17.patch
 )
 
 set(ABSL_TEST_HELPERS_OPTIONS "")
