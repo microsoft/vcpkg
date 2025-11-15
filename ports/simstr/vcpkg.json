@@ -5,7 +5,7 @@
   "homepage": "https://github.com/orefkov/simstr",
   "license": "MIT",
   "dependencies": [
-	"simdutf",
+    "simdutf",
     {
       "name": "vcpkg-cmake",
       "host": true
