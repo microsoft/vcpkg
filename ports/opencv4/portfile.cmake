@@ -24,6 +24,7 @@ vcpkg_from_github(
       0019-opencl-kernel.patch
       0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
+      0022-android-use-vcpkg-cpu-features.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -417,7 +418,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
         -DWITH_AVIF=OFF
-        -DWITH_CPUFEATURES=OFF
+        -DWITH_CPUFEATURES=ON
         -DWITH_ITT=OFF
         -DWITH_JASPER=OFF #Jasper is deprecated and will be removed in a future release, and is mutually exclusive with openjpeg that is preferred
         -DWITH_LAPACK=OFF
