@@ -5,7 +5,8 @@ vcpkg_from_github(
   SHA512 3f24fd5c69a00032e63fc8479d46dedf9008909c5e0f37847f0427c39f35e68f35a5ee89820cd0a179cb282e49730e6b1465a027d89bef585e9a1cfca6e3d3a2
   HEAD_REF master
   PATCHES
-    pdb-name.diff
+    android.diff
+    msvc-names.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules")
