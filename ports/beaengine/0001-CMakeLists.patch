@@ -1,15 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8b756..be4acc7 100644
+index ca8b756..1420cc4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,9 +1,7 @@
  project (BeaEngine)
 -cmake_minimum_required (VERSION 2.6)
-+cmake_minimum_required (VERSION 3.5)
++cmake_minimum_required (VERSION 3.15)
  
 -set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
- 
+-
 -set (CMAKE_VERBOSE_MAKEFILE ON)
++cmake_policy(SET CMP0091 NEW)
  
  option (optHAS_OPTIMIZED "Turn Optimizations ON"    OFF)
  option (optHAS_SYMBOLS   "Build with debug Symbols" ON)
@@ -101,10 +102,11 @@ index ca8b756..be4acc7 100644
  # =========================================
  # clang configuration
  # =========================================
-@@ -153,19 +126,6 @@ if (BEA_COMPILER STREQUAL msvc)
+@@ -152,20 +125,36 @@ if (BEA_COMPILER STREQUAL msvc)
+     endif ()
    endif ()
  
-   # determine code generation model
+-  # determine code generation model
 -  if (optHAS_OPTIMIZED)
 -    if (optBUILD_DLL)
 -      list (APPEND BEA_FLAGS /MD)
@@ -118,10 +120,59 @@ index ca8b756..be4acc7 100644
 -      list (APPEND BEA_FLAGS /MTd)
 -    endif ()
 -  endif ()
++  # Determine CRT linkage model
++  # First check if CMAKE_MSVC_RUNTIME_LIBRARY is set (CMake 3.15+)
++  if (DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
++    if (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreaded")
++      list(APPEND BEA_FLAGS /MT)
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDLL")
++      list(APPEND BEA_FLAGS /MD)
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebug")
++      list(APPEND BEA_FLAGS /MTd)
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebugDLL")
++      list(APPEND BEA_FLAGS /MDd)
++    endif()
++  else()
++    # Fallback based on build configuration options
++    if (optHAS_OPTIMIZED)
++      if (optBUILD_DLL)
++        list(APPEND BEA_FLAGS /MD)
++      else()
++        list(APPEND BEA_FLAGS /MT)
++      endif()
++    else()
++      if (optBUILD_DLL)
++        list(APPEND BEA_FLAGS /MDd)
++      else()
++        list(APPEND BEA_FLAGS /MTd)
++      endif()
++    endif()
++  endif()
++  
++  message(STATUS "BeaEngine MSVC: optHAS_OPTIMIZED=${optHAS_OPTIMIZED}, optBUILD_DLL=${optBUILD_DLL}, CMAKE_MSVC_RUNTIME_LIBRARY=${CMAKE_MSVC_RUNTIME_LIBRARY}")
  endif ()
  # =========================================
  # Intel Compiler configuration
-@@ -354,7 +314,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+@@ -308,6 +297,18 @@ endforeach ()
+ # pass compiler flags to cmake
+ # ================================================
+ 
++# For MSVC, remove default runtime flags that CMake adds automatically
++if (MSVC)
++  foreach(flag_var
++      CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
++      CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
++      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
++      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
++    # Remove any existing /MD, /MT, /MDd, /MTd flags
++    string(REGEX REPLACE "/M[DT]d?" "" ${flag_var} "${${flag_var}}")
++  endforeach()
++endif()
++
+ if (${CMAKE_BUILD_TYPE} STREQUAL RelWithDebInfo)
+   set (CMAKE_C_FLAGS_RELWITHDEBINFO   ${myC_FLAGS})
+   set (CMAKE_CXX_FLAGS_RELWITHDEBINFO ${myCXX_FLAGS})
+@@ -354,7 +355,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
  
  
  
@@ -130,7 +181,7 @@ index ca8b756..be4acc7 100644
  
  
  set (build_modules
-@@ -366,14 +326,14 @@ set (build_modules
+@@ -366,14 +367,14 @@ set (build_modules
  if (NOT ZLIB_FOUND)
    set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
  else ()
