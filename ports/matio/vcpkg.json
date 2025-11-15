@@ -34,9 +34,6 @@
         }
       ]
     },
-    "pic": {
-      "description": "Enable position-independent code (PIC), i.e., compilation with the -fPIC flag"
-    },
     "zlib": {
       "description": "Check for zlib library",
       "dependencies": [
