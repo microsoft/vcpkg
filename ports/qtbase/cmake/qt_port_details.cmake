@@ -7,7 +7,7 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.9.1)
+set(QT_VERSION 6.9.2)
 set(QT_DEV_BRANCH 0)
 
 set(QT_UPDATE_VERSION 0)
@@ -104,11 +104,11 @@ endif()
 
 # 1. By default, modules come from the official release
 # 2. These modules are mirrored to github and have tags matching the release
-set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager)
+set(QT_FROM_GITHUB qtcoap qtopcua qtmqtt qtapplicationmanager qtinterfaceframework)
 # 3. These modules are mirrored to github and have branches matching the release
 set(QT_FROM_GITHUB_BRANCH qtdeviceutilities)
 # 4. These modules are not mirrored to github and not part of the release
-set(QT_FROM_QT_GIT qtinterfaceframework)
+set(QT_FROM_QT_GIT "")
 # For beta releases uncomment the next two lines and comment the lines with QT_FROM_GITHUB, QT_FROM_GITHUB_BRANCH, QT_FROM_QT_GIT
 #set(QT_FROM_QT_GIT ${QT_PORTS})
 #list(POP_FRONT QT_FROM_QT_GIT)
@@ -153,6 +153,8 @@ if(QT_UPDATE_VERSION)
         string(REGEX REPLACE "\"version(-(string|semver))?\": [^\n]+\n" "\"version\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
         string(REGEX REPLACE "\"port-version\": [^\n]+\n" "" _control_contents "${_control_contents}")
         file(WRITE "${port_json}" "${_control_contents}")
+        
+        set(port_data "")
         if(qt_port STREQUAL "qt")
             continue()
         endif()
@@ -164,6 +166,8 @@ if(QT_UPDATE_VERSION)
             )
             string(SUBSTRING "${out}" 0 40 tag_sha)
             string(APPEND msg "set(${qt_port}_REF ${tag_sha})\n")
+            string(APPEND port_data "set(${qt_port}_REF ${tag_sha})\n")
+            string(APPEND port_data "set(${qt_port}_URL \"https://code.qt.io/cgit/qt/${qt_port}.git\")\n")
         else()
             qt_get_url_filename("${qt_port}" urls filename)
             vcpkg_download_distfile(archive
@@ -173,11 +177,15 @@ if(QT_UPDATE_VERSION)
             )
             file(SHA512 "${archive}" hash)
             string(APPEND msg "set(${qt_port}_HASH \"${hash}\")\n")
+            string(APPEND port_data "set(${qt_port}_HASH \"${hash}\")\n")
+            string(APPEND port_data "set(${qt_port}_URL \"${urls}\")\n")
+            string(APPEND port_data "set(${qt_port}_FILENAME \"${filename}\")\n")
         endif()
+        file(WRITE "${CMAKE_CURRENT_LIST_DIR}/../../${qt_port}/port.data.cmake" "${port_data}")
     endforeach()
     message("${msg}")
     file(WRITE "${CMAKE_CURRENT_LIST_DIR}/qt_port_data_new.cmake" "${msg}")
     message(FATAL_ERROR "Done downloading version and emitting hashes.")
 endif()
 
-include("${CMAKE_CURRENT_LIST_DIR}/qt_port_data.cmake")
+include("${CURRENT_PORT_DIR}/port.data.cmake")
