@@ -4,21 +4,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF 62663382da72507b557071f7157e421bc887cb32
-    SHA512 9d0da652290dca3fcaf08ee01a18eef58eb2cc3e03c9f90f64b882e3df57fddd5c4ff0b8c6f4b103f335382a6bad81cea3edfdba54ea39f81dd211e3884fd38c
+    REF 046252b0543cbf68e8ff29aec41cfbc474cb0015
+    SHA512 2e57f166790b24b9c27bcb60955ee0424e2fc88cdd2d3243f8fde1f772f9ad6d102a132e901b20e87350b9afd12024a1964e26c1764ed0fe2233be5d2a7b053d
     HEAD_REF main
 )
 
 file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
 file(REMOVE_RECURSE ${unused})
 
-if(EXISTS "${SOURCE_PATH}/sdk/keyvault/azure-security-keyvault-secrets")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/keyvault/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/keyvault/azure-security-keyvault-secrets" "${SOURCE_PATH}/sdk/keyvault/_")
-  file(RENAME "${SOURCE_PATH}/sdk/keyvault" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
