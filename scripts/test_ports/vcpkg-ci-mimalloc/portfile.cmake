@@ -1,15 +1,17 @@
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
     REF "v${VERSION}"
-    SHA512 55262050f63868e3029cd929a74d312dc0f34b606534b1d0b3735eecc8eed68aae97523a50228b4ac4044e1e03192f2909440e3a27607e2d364607ac0bda828f
+    SHA512 616351e549707318c1f8b164251141684a73d5bf8205b905736f48ab21fbb19bfaa4d52c4e63642fcb144345b6a5331944b6c8e0827925000553e46f2c2c31e9
     HEAD_REF master
     PATCHES
         build-type.diff
+        config-version.diff
 )
 # Ensure that the test uses the installed mimalloc only
 file(REMOVE_RECURSE
@@ -22,7 +24,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/test"
     OPTIONS
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/vcpkg-tests.cmake"
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-DFEATURES=${FEATURES}"
 )
 
 set(ENV{MIMALLOC_VERBOSE} 1)
