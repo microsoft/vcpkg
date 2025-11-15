@@ -83,7 +83,7 @@ if(VCPKG_TARGET_IS_OSX)
             OUTPUT_VARIABLE OSX_SDK_VERSION
             OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(${OSX_SDK_VERSION} VERSION_GREATER_EQUAL 26)
-        # macOS 26 Tahoe has removed OpenGL APIs https://bugreports.qt.io/browse/QTBUG-137687
+        # macOS 26 Tahoe has removed AGL APIs https://bugreports.qt.io/browse/QTBUG-137687
         list(APPEND PATCHES patches/macos26-opengl.patch)
     endif()
 endif()
