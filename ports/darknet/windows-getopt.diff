@@ -1,0 +1,28 @@
+diff --git a/src-cli/CMakeLists.txt b/src-cli/CMakeLists.txt
+index 4124877f..94750364 100644
+--- a/src-cli/CMakeLists.txt
++++ b/src-cli/CMakeLists.txt
+@@ -11,6 +11,9 @@ IF (WIN32)
+ 	INCLUDE_DIRECTORIES (windows)
+ 	FILE (GLOB WINRC windows/*.rc)
+ 	LIST (APPEND CLISRC ${WINRC})
++	INCLUDE_DIRECTORIES (../src-lib/windows)
++	FILE (GLOB WINSRC ../src-lib/windows/*.c)
++	LIST (APPEND CLISRC ${WINSRC})
+ ENDIF ()
+ 
+ LIST (SORT CLISRC)
+diff --git a/src-lib/CMakeLists.txt b/src-lib/CMakeLists.txt
+index 084ba24d..8adddb1f 100644
+--- a/src-lib/CMakeLists.txt
++++ b/src-lib/CMakeLists.txt
+@@ -33,9 +33,6 @@ IF (DARKNET_USE_CUDA OR DARKNET_USE_ROCM)
+ ENDIF ()
+ 
+ IF (WIN32)
+-	INCLUDE_DIRECTORIES (windows)
+-	FILE (GLOB WINSRC windows/*.c)
+-	LIST (APPEND LIBSRC ${WINSRC})
+ ENDIF ()
+ 
+ LIST (SORT LIBSRC)
