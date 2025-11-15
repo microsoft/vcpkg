@@ -2936,6 +2936,10 @@
       "baseline": "2023-07-31",
       "port-version": 0
     },
+    "firebird": {
+      "baseline": "5.0.3",
+      "port-version": 0
+    },
     "fixed-containers": {
       "baseline": "2024-09-19",
       "port-version": 0

@@ -1,0 +1,13 @@
+diff --git a/builds/win32/make_all.bat b/builds/win32/make_all.bat
+index ddea45b1c3..04f3271c55 100644
+--- a/builds/win32/make_all.bat
++++ b/builds/win32/make_all.bat
+@@ -36,7 +36,7 @@ if errorlevel 1 call :ERROR build failed - see make_all_%FB_TARGET_PLATFORM%.log
+ @rmdir /S /Q "%FB_OUTPUT_DIR%" 2>nul
+ 
+ :: short delay to let OS complete actions by rmdir above
+-@timeout 1 >nul
++@%SystemRoot%\System32\timeout /t 1 /nobreak >nul
+ 
+ @mkdir %FB_OUTPUT_DIR% 2>nul
+ @mkdir %FB_OUTPUT_DIR%\tzdata 2>nul
