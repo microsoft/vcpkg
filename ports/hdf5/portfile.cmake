@@ -8,6 +8,7 @@ vcpkg_from_github(
     SHA512 609e129f78c6777a0e64694de8ec638326a616ff9cbd916f310dc6f78435ef67194c5ab59faedda09c85c045c15ebe2ec4ce04fa905d5f74801600e067c27fcc
     HEAD_REF develop
     PATCHES
+        default-plugin-dir.diff # avoid absolute path
         pkgconfig.patch
 )
 
