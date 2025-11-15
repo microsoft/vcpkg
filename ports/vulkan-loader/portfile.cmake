@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "vulkan-sdk-${VERSION}"
     SHA512 154d5e58f929511134b352f81e4bddc4f4f9aa04524060235b87161b0ca55e640720bb1c8bc7e0e71c445e13c3eeef3c2b5124e900db4f8ceeb98d81725babbd
     HEAD_REF main
+    PATCHES
+        link-directfb.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
