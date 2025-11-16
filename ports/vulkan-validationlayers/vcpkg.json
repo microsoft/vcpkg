@@ -6,7 +6,7 @@
   "license": null,
   "dependencies": [
     "mimalloc",
-    "robin-hood-hashing",
+    "parallel-hashmap",
     "spirv-cross",
     "spirv-headers",
     "spirv-reflect",
