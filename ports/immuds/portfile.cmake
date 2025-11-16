@@ -1,0 +1,9 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO vlad-dobrescu/ImmuDS
+    REF v1.0.0
+    SHA512 a85fe1229f9c6e3f45e81e940dc4255a65192c5a0f4ed1b067f540cc97c863c4e0f261aee0d8e3784d1b30c198040423998540bfb4b9eb3a9864e31b9f5a9ace
+)
+
+file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
