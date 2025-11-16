@@ -14,14 +14,15 @@ vcpkg_cmake_configure(
 vcpkg_cmake_build()
 
 vcpkg_cmake_install()
+
 vcpkg_cmake_config_fixup()
+
+vcpkg_copy_pdbs()
 # Remove debug include directory to satisfy policy (headers identical)
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/include")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
 
-# Install license
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/modern-c-web-library RENAME copyright)
-
-# Usage message
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/modern-c-web-library/usage "modern-c-web-library provides a pure C web backend library.\nInclude: #include <weblib.h>\nLink: weblib (static) or weblib (shared).\n")
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE"
+)
