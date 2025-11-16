@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cae234fe..1b69fbe8 100644
+index 4d843b4d..257b41c6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -406,10 +406,14 @@ add_custom_target(spirv-tools-pkg-config
@@ -19,10 +19,10 @@ index cae234fe..1b69fbe8 100644
        ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
  endif()
 diff --git a/source/CMakeLists.txt b/source/CMakeLists.txt
-index fd2d963d..d2a595ba 100644
+index 641bc1f7..f6dff6c6 100644
 --- a/source/CMakeLists.txt
 +++ b/source/CMakeLists.txt
-@@ -383,6 +383,10 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+@@ -386,6 +386,10 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
  endif()
  
  if(ENABLE_SPIRV_TOOLS_INSTALL)
@@ -30,6 +30,6 @@ index fd2d963d..d2a595ba 100644
 +    set_target_properties(${SPIRV_TOOLS}-shared PROPERTIES EXCLUDE_FROM_ALL 1)
 +    list(REMOVE_ITEM SPIRV_TOOLS_TARGETS ${SPIRV_TOOLS}-shared)
 +  endif()
-   if (SPIRV_TOOLS_USE_MIMALLOC AND NOT SPIRV_TOOLS_BUILD_STATIC)
+   if (SPIRV_TOOLS_USE_MIMALLOC AND (NOT SPIRV_TOOLS_BUILD_STATIC OR SPIRV_TOOLS_USE_MIMALLOC_IN_STATIC_BUILD))
      list(APPEND SPIRV_TOOLS_TARGETS mimalloc-static)
    endif()
