@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         default-plugin-dir.diff # avoid absolute path
+        hdf5-config.diff
         pkgconfig.patch
 )
 

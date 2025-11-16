@@ -1,0 +1,13 @@
+diff --git a/config/install/hdf5-config.cmake.in b/config/install/hdf5-config.cmake.in
+index 6b82510..d1bc1b6 100644
+--- a/config/install/hdf5-config.cmake.in
++++ b/config/install/hdf5-config.cmake.in
+@@ -133,7 +133,7 @@ endif ()
+ 
+ if (${HDF5_PACKAGE_NAME}_PROVIDES_SZIP_SUPPORT)
+   if (NOT @SZIP_USE_EXTERNAL@)
+-    find_package (LIBAEC NAMES @LIBAEC_PACKAGE_NAME@ CONFIG OPTIONAL_COMPONENTS @LIBAEC_SEARCH_TYPE@)
++    find_package (@LIBAEC_PACKAGE_NAME@ CONFIG)
+   endif ()
+ endif ()
+ 
