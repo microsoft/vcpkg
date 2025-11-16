@@ -11,6 +11,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         disable-qtdeploy.patch
+        static-linkage.patch
 )
 
 x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES jsonschema OUT_PYTHON_VAR PYTHON3)
