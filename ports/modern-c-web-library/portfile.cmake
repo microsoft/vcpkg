@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_build()
 
 vcpkg_cmake_install()
-
+vcpkg_cmake_config_fixup()
 # Remove debug include directory to satisfy policy (headers identical)
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/include")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
