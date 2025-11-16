@@ -18,8 +18,15 @@ endif()
 
 set(RSVG_API_MAJOR_VERSION 2)
 set(RSVG_API_VERSION "2.0")
-Set(VERSION "2.40.20")
+Set(VERSION "2.40.23")
 set(LIBRSVG_TARGET "rsvg-${RSVG_API_MAJOR_VERSION}")
+
+# for rsvg-features.h
+set(LIBRSVG_MAJOR_VERSION 2)
+set(LIBRSVG_MINOR_VERSION 40)
+set(LIBRSVG_MICRO_VERSION 23)
+set(PACKAGE_VERSION "${VERSION}")
+configure_file(librsvg-features.h.in "${CMAKE_CURRENT_BINARY_DIR}/librsvg-features.h" @ONLY)
 
 Set(prefix "${CMAKE_INSTALL_PREFIX}")
 Set(exec_prefix "\${prefix}")
@@ -82,7 +89,6 @@ set(LIBRSVG_SOURCES
     rsvg-text.h
     rsvg-cond.c
     rsvg-base.c
-    librsvg-enum-types.c
     rsvg-cairo-draw.c
     rsvg-cairo-draw.h
     rsvg-cairo-render.c
@@ -96,14 +102,34 @@ set(LIBRSVG_SOURCES
     rsvg-size-callback.h
     rsvg-xml.c
     rsvg-xml.h
-    rsvg.h
+    librsvg/rsvg.h
     rsvg-cairo.h
-    librsvg-features.h
-    librsvg-enum-types.h
+    "${CMAKE_CURRENT_BINARY_DIR}/librsvg-features.h"
+)
+
+set(enums_headers
+    "${CMAKE_CURRENT_SOURCE_DIR}/librsvg/rsvg.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/rsvg-cairo.h"
+)
+add_custom_command(
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/librsvg-enum-types.h" "${CMAKE_CURRENT_BINARY_DIR}/librsvg-enum-types.c"
+    COMMAND "${PYTHON3}" "${CMAKE_CURRENT_SOURCE_DIR}/generate_enum_types.py"
+            --glib-mkenums "${GLIB_MKENUMS}"
+            --output-dir "${CMAKE_CURRENT_BINARY_DIR}"
+            "${enums_headers}"
+    DEPENDS ${enums_headers}
+    COMMENT "Generating librsvg-enum-types"
+    COMMAND_EXPAND_LISTS
+)
+add_custom_target(generate-enum-types DEPENDS librsvg-enum-types.h librsvg-enum-types.c)
+
+list(APPEND LIBRSVG_SOURCES
+    "${CMAKE_CURRENT_BINARY_DIR}/librsvg-enum-types.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/librsvg-enum-types.c"
 )
 
 if(WIN32)
-    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.win32" "${CMAKE_CURRENT_BINARY_DIR}/config.h" COPYONLY)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.win32.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h" COPYONLY)
     file(READ "${CMAKE_CURRENT_SOURCE_DIR}/rsvg.symbols" rsvg_symbols)
     string(REGEX REPLACE "/[*][^*]*[*]/" "" rsvg_symbols "${rsvg_symbols}")
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/rsvg.def" "EXPORTS\n${rsvg_symbols}")
@@ -117,8 +143,7 @@ add_library(${LIBRSVG_TARGET} ${LIBRSVG_SOURCES})
 target_compile_definitions(${LIBRSVG_TARGET} PRIVATE
     -DRSVG_COMPILATION
     -D_CRT_SECURE_NO_WARNINGS
-    -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}" 
-    -DGDK_PIXBUF_ENABLE_BACKEND 
+    -DGDK_PIXBUF_ENABLE_BACKEND
     -DG_LOG_DOMAIN="libpixbufloader-svg"
     -DSRCDIR=""
     $<$<BOOL:${MINGW}>:HAVE_STRTOK_R>
@@ -133,11 +158,14 @@ target_link_libraries(${LIBRSVG_TARGET} PRIVATE
     PkgConfig::LIBCROCO
 )
 
+add_dependencies(${LIBRSVG_TARGET} generate-enum-types)
+
 target_include_directories(${LIBRSVG_TARGET}
     PRIVATE
         "${CMAKE_CURRENT_BINARY_DIR}"
     PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/librsvg>"
         "$<INSTALL_INTERFACE:include/librsvg-${RSVG_API_VERSION}>"
 )
 target_link_libraries(${LIBRSVG_TARGET}
@@ -153,10 +181,10 @@ install(TARGETS ${LIBRSVG_TARGET}
 )
 install(
     FILES
-        rsvg.h
+        librsvg/rsvg.h
         rsvg-cairo.h
-        librsvg-features.h
-        librsvg-enum-types.h
+        "${CMAKE_CURRENT_BINARY_DIR}/librsvg-features.h"
+        "${CMAKE_CURRENT_BINARY_DIR}/librsvg-enum-types.h"
     DESTINATION include/librsvg-${RSVG_API_VERSION}/librsvg
 )
 
