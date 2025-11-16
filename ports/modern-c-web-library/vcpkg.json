@@ -1,0 +1,11 @@
+{
+  "name": "modern-c-web-library",
+  "version-string": "0.3.0",
+  "description": "Pure C web backend library: HTTP server (threaded & async), router, WebSocket (RFC6455), JSON parser.",
+  "homepage": "https://github.com/kamrankhan78694/modern-c-web-library",
+  "license": "MIT",
+  "dependencies": [
+    { "name": "vcpkg-cmake", "host": true },
+    { "name": "vcpkg-cmake-config", "host": true }
+  ]
+}
