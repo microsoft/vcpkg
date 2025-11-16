@@ -29,6 +29,9 @@
     "map": {
       "description": "Build the map API"
     },
+    "mirror": {
+      "description": "Build the Mirror Virtual File Driver"
+    },
     "parallel": {
       "description": "parallel support for HDF5",
       "supports": "!staticcrt",
@@ -54,9 +57,6 @@
     },
     "tools": {
       "description": "Build hdf tools"
-    },
-    "utils": {
-      "description": "Build HDF5 Utils"
     },
     "zlib": {
       "description": "Build with zlib",

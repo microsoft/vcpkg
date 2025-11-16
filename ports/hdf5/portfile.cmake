@@ -33,16 +33,17 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        parallel     HDF5_ENABLE_PARALLEL
-        tools        HDF5_BUILD_TOOLS
         cpp          HDF5_BUILD_CPP_LIB
+        fortran      HDF5_BUILD_FORTRAN
+        map          HDF5_ENABLE_MAP_API
+        mirror       HDF5_ENABLE_MIRROR_VFD
+        parallel     HDF5_ENABLE_PARALLEL
         szip         HDF5_ENABLE_SZIP_SUPPORT
         szip         HDF5_ENABLE_SZIP_ENCODING
-        zlib         HDF5_ENABLE_ZLIB_SUPPORT
-        fortran      HDF5_BUILD_FORTRAN
         threadsafe   HDF5_ENABLE_THREADSAFE
-        utils        HDF5_BUILD_UTILS
-        map          HDF5_ENABLE_MAP_API
+        tools        HDF5_BUILD_TOOLS
+        tools        HDF5_BUILD_UTILS
+        zlib         HDF5_ENABLE_ZLIB_SUPPORT
 )
 
 if("tools" IN_LIST FEATURES AND VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -97,51 +98,42 @@ endif()
 
 set(HDF5_TOOLS "")
 if("tools" IN_LIST FEATURES)
-    list(APPEND HDF5_TOOLS h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
-        h5format_convert h5jam h5unjam h5mkgrp h5repack h5repart h5watch h5import h5delete
-	h5perf_serial
+    list(APPEND HDF5_TOOLS
+        h5perf_serial
+        h5clear h5copy
+        h5debug h5delete h5diff h5dump
+        h5format_convert
+        h5import
+        h5jam
+        h5ls
+        h5mkgrp
+        h5repack h5repart
+        h5stat
+        h5unjam
+        h5watch
     )
 
-    if("parallel" IN_LIST FEATURES)
-        list(APPEND HDF5_TOOLS ph5diff)
-    endif()
-
-
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND HDF5_TOOLS h5cc h5hlcc)
-        if("cpp" IN_LIST FEATURES)
-            list(APPEND HDF5_TOOLS h5c++ h5hlc++)
-        endif()
+    if ("mirror" IN_LIST FEATURES)
+        list(APPEND HDF5_TOOLS mirror_server mirror_server_stop)
     endif()
 
     if("parallel" IN_LIST FEATURES)
-        list(APPEND HDF5_TOOLS h5perf )
-        if(NOT VCPKG_TARGET_IS_WINDOWS)
-            list(APPEND HDF5_TOOLS h5pcc)
-        endif()
+        list(APPEND HDF5_TOOLS ph5diff h5perf)
     endif()
-endif()
-
-if ("utils" IN_LIST FEATURES)
-    list(APPEND HDF5_TOOLS mirror_server mirror_server_stop)
 endif()
 
 if(HDF5_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
-    foreach(tool h5cc h5pcc h5hlcc)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}")
-            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}" "${CURRENT_INSTALLED_DIR}" "$(dirname \"$0\")/../.." IGNORE_UNCHANGED)
-        endif()
-    endforeach()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/h5fuse.sh")
-      file(RENAME "${CURRENT_PACKAGES_DIR}/bin/h5fuse.sh" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/h5fuse.sh")
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/h5fuse.sh")
+endif()
+foreach(script IN ITEMS h5cc h5c++ h5hlcc h5hlc++ h5pcc h5fuse.sh)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${script}")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}" "${CURRENT_INSTALLED_DIR}" "$(dirname \"$0\")/../.." IGNORE_UNCHANGED)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
     endif()
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+endforeach()
+vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
