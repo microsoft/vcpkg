@@ -9036,6 +9036,10 @@
       "baseline": "6.0.0",
       "port-version": 0
     },
+    "simstr": {
+      "baseline": "1.2.4",
+      "port-version": 0
+    },
     "sjpeg": {
       "baseline": "2021-10-31",
       "port-version": 0
