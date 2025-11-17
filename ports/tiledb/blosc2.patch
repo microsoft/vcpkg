@@ -1,5 +1,5 @@
 diff --git a/cmake/inputs/Config.cmake.in b/cmake/inputs/Config.cmake.in
-index 7e4b2bd..c366522 100644
+index c228086..04d2173 100644
 --- a/cmake/inputs/Config.cmake.in
 +++ b/cmake/inputs/Config.cmake.in
 @@ -14,6 +14,7 @@
@@ -69,7 +69,7 @@ index cad9f69..e6678dd 100644
 +  endif()
  endif()
 diff --git a/tiledb/CMakeLists.txt b/tiledb/CMakeLists.txt
-index 81ef162..e06410d 100644
+index 777986e..3343e55 100644
 --- a/tiledb/CMakeLists.txt
 +++ b/tiledb/CMakeLists.txt
 @@ -389,37 +389,12 @@ if (TILEDB_SERIALIZATION)
@@ -128,7 +128,7 @@ index 81ef162..e06410d 100644
  # Find OpenSSL first in case it's needed for S3 or Azure
  if (NOT WIN32)
    find_package(OpenSSL REQUIRED)
-@@ -570,6 +541,7 @@ endif()
+@@ -572,6 +543,7 @@ endif()
  # Required dependencies. These come last as any prior dependencies relying on
  # these must be listed first for Linux. E.g. AWSSDK and Curl depend on Zlib,
  # which is installed here.
@@ -136,183 +136,14 @@ index 81ef162..e06410d 100644
  find_package(BZip2 REQUIRED)
  find_package(LZ4 MODULE REQUIRED)
  find_package(nlohmann_json CONFIG REQUIRED)
-@@ -578,5 +550,6 @@ find_package(zstd CONFIG REQUIRED)
+@@ -580,6 +552,7 @@ find_package(ZLIB REQUIRED)
+ find_package(zstd CONFIG REQUIRED)
  target_link_libraries(TILEDB_CORE_OBJECTS_ILIB
    INTERFACE
 +    Blosc2::blosc2
      BZip2::BZip2
      lz4::lz4
      $<BUILD_INTERFACE:nlohmann_json::nlohmann_json>
-diff --git a/tiledb/sm/filter/bitshuffle_filter.cc b/tiledb/sm/filter/bitshuffle_filter.cc
-index 3e49bd9..7362872 100644
---- a/tiledb/sm/filter/bitshuffle_filter.cc
-+++ b/tiledb/sm/filter/bitshuffle_filter.cc
-@@ -37,7 +37,7 @@
- #include "tiledb/sm/enums/filter_type.h"
- #include "tiledb/sm/tile/tile.h"
- 
--#include "bitshuffle_core.h"
-+#include <blosc2.h>
- 
- using namespace tiledb::common;
- 
-@@ -124,37 +124,23 @@ Status BitshuffleFilter::compute_parts(
- Status BitshuffleFilter::shuffle_part(
-     const WriterTile&, const ConstBuffer* part, Buffer* output) const {
-   auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type_));
--  auto part_nelts = part->size() / tile_type_size;
--  auto bytes_processed = bshuf_bitshuffle(
--      part->data(), output->cur_data(), part_nelts, tile_type_size, 0);
--
--  switch (bytes_processed) {
--    case -1:
--      return LOG_STATUS(
--          Status_FilterError("Bitshuffle error; Failed to allocate memory."));
--    case -11:
--      return LOG_STATUS(Status_FilterError("Bitshuffle error; Missing SSE."));
--    case -12:
--      return LOG_STATUS(Status_FilterError("Bitshuffle error; Missing AVX."));
--    case -80:
--      return LOG_STATUS(Status_FilterError(
--          "Bitshuffle error; Input size not a multiple of 8."));
--    case -81:
--      return LOG_STATUS(Status_FilterError(
--          "Bitshuffle error; Block size not a multiple of 8."));
--    case -91:
--      return LOG_STATUS(
--          Status_FilterError("Bitshuffle error; Decompression error, wrong "
--                             "number of bytes processed."));
--    default: {
--      if (bytes_processed != (int64_t)part->size())
--        return LOG_STATUS(Status_FilterError(
--            "Bitshuffle error; Unhandled internal error code " +
--            std::to_string(bytes_processed)));
--      break;
--    }
-+  auto bytes_processed = blosc2_bitshuffle(
-+      tile_type_size,
-+      part->size(),
-+      (uint8_t*)part->data(),
-+      (uint8_t*)output->cur_data());
-+
-+  if (bytes_processed < 0) {
-+    return LOG_STATUS(Status_FilterError(
-+        std::string("Bitshuffle error; ") +
-+        blosc2_error_string(bytes_processed)));
-   }
- 
-+  if (bytes_processed != (int64_t)part->size())
-+    return LOG_STATUS(Status_FilterError(
-+        "Bitshuffle error; Unhandled internal error code " +
-+        std::to_string(bytes_processed)));
-+
-   return Status::Ok();
- }
- 
-@@ -207,37 +193,23 @@ Status BitshuffleFilter::run_reverse(
- Status BitshuffleFilter::unshuffle_part(
-     const Tile&, const ConstBuffer* part, Buffer* output) const {
-   auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type_));
--  auto part_nelts = part->size() / tile_type_size;
--  auto bytes_processed = bshuf_bitunshuffle(
--      part->data(), output->cur_data(), part_nelts, tile_type_size, 0);
--
--  switch (bytes_processed) {
--    case -1:
--      return LOG_STATUS(
--          Status_FilterError("Bitshuffle error; Failed to allocate memory."));
--    case -11:
--      return LOG_STATUS(Status_FilterError("Bitshuffle error; Missing SSE."));
--    case -12:
--      return LOG_STATUS(Status_FilterError("Bitshuffle error; Missing AVX."));
--    case -80:
--      return LOG_STATUS(Status_FilterError(
--          "Bitshuffle error; Input size not a multiple of 8."));
--    case -81:
--      return LOG_STATUS(Status_FilterError(
--          "Bitshuffle error; Block size not a multiple of 8."));
--    case -91:
--      return LOG_STATUS(
--          Status_FilterError("Bitshuffle error; Decompression error, wrong "
--                             "number of bytes processed."));
--    default: {
--      if (bytes_processed != (int64_t)part->size())
--        return LOG_STATUS(Status_FilterError(
--            "Bitshuffle error; Unhandled internal error code " +
--            std::to_string(bytes_processed)));
--      break;
--    }
-+  auto bytes_processed = blosc2_bitunshuffle(
-+      tile_type_size,
-+      part->size(),
-+      (uint8_t*)part->data(),
-+      (uint8_t*)output->cur_data());
-+
-+  if (bytes_processed < 0) {
-+    return LOG_STATUS(Status_FilterError(
-+        std::string("Bitunshuffle error; ") +
-+        blosc2_error_string(bytes_processed)));
-   }
- 
-+  if (bytes_processed != (int64_t)part->size())
-+    return LOG_STATUS(Status_FilterError(
-+        "Bitshuffle error; Unhandled internal error code " +
-+        std::to_string(bytes_processed)));
-+
-   return Status::Ok();
- }
- 
-diff --git a/tiledb/sm/filter/byteshuffle_filter.cc b/tiledb/sm/filter/byteshuffle_filter.cc
-index b142cd7..c11efe7 100644
---- a/tiledb/sm/filter/byteshuffle_filter.cc
-+++ b/tiledb/sm/filter/byteshuffle_filter.cc
-@@ -37,7 +37,7 @@
- #include "tiledb/sm/enums/filter_type.h"
- #include "tiledb/sm/tile/tile.h"
- 
--#include "blosc/tiledb-shuffle.h"
-+#include <blosc2.h>
- 
- using namespace tiledb::common;
- 
-@@ -94,12 +94,17 @@ Status ByteshuffleFilter::shuffle_part(
-     const WriterTile&, const ConstBuffer* part, Buffer* output) const {
-   auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type_));
- 
--  blosc::shuffle(
-+  int status = blosc2_shuffle(
-       tile_type_size,
-       part->size(),
-       (uint8_t*)part->data(),
-       (uint8_t*)output->cur_data());
- 
-+  if (status < 0) {
-+    return Status_FilterError(
-+        std::string("Shuffle error; ") + blosc2_error_string(status));
-+  }
-+
-   return Status::Ok();
- }
- 
-@@ -146,12 +151,17 @@ Status ByteshuffleFilter::unshuffle_part(
-     const Tile&, const ConstBuffer* part, Buffer* output) const {
-   auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type_));
- 
--  blosc::unshuffle(
-+  int status = blosc2_unshuffle(
-       tile_type_size,
-       part->size(),
-       (uint8_t*)part->data(),
-       (uint8_t*)output->cur_data());
- 
-+  if (status < 0) {
-+    return Status_FilterError(
-+        std::string("Unshuffle error; ") + blosc2_error_string(status));
-+  }
-+
-   return Status::Ok();
- }
- 
 diff --git a/tiledb/sm/filter/CMakeLists.txt b/tiledb/sm/filter/CMakeLists.txt
 index 54b4ebe..1489012 100644
 --- a/tiledb/sm/filter/CMakeLists.txt
@@ -375,3 +206,279 @@ index 54b4ebe..1489012 100644
  conclude(object_library)
  
  #
+diff --git a/tiledb/sm/filter/bitshuffle_filter.cc b/tiledb/sm/filter/bitshuffle_filter.cc
+index 3e49bd9..b3c8a6c 100644
+--- a/tiledb/sm/filter/bitshuffle_filter.cc
++++ b/tiledb/sm/filter/bitshuffle_filter.cc
+@@ -37,13 +37,16 @@
+ #include "tiledb/sm/enums/filter_type.h"
+ #include "tiledb/sm/tile/tile.h"
+ 
+-#include "bitshuffle_core.h"
++#include <blosc2.h>
+ 
+ using namespace tiledb::common;
+ 
+ namespace tiledb {
+ namespace sm {
+ 
++// https://github.com/kiyo-masui/bitshuffle/blob/526440a16baff44bd405e0741ebd285858a5408d/src/bitshuffle_internals.h#L36
++static constexpr size_t BSHUF_TARGET_BLOCK_SIZE_B = 8192;
++
+ BitshuffleFilter::BitshuffleFilter(Datatype filter_data_type)
+     : Filter(FilterType::FILTER_BITSHUFFLE, filter_data_type) {
+ }
+@@ -58,7 +61,7 @@ std::ostream& BitshuffleFilter::output(std::ostream& os) const {
+ }
+ 
+ void BitshuffleFilter::run_forward(
+-    const WriterTile& tile,
++    const WriterTile&,
+     WriterTile* const,
+     FilterBuffer* input_metadata,
+     FilterBuffer* input,
+@@ -91,7 +94,8 @@ void BitshuffleFilter::run_forward(
+       // Can't shuffle: just copy.
+       std::memcpy(output_buf->cur_data(), part.data(), part_size);
+     } else {
+-      throw_if_not_ok(shuffle_part(tile, &part, output_buf));
++      throw_if_not_ok(
++          shuffle_part(filter_data_type_, part, *output_buf, false));
+     }
+ 
+     if (output_buf->owns_data())
+@@ -122,44 +126,47 @@ Status BitshuffleFilter::compute_parts(
+ }
+ 
+ Status BitshuffleFilter::shuffle_part(
+-    const WriterTile&, const ConstBuffer* part, Buffer* output) const {
+-  auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type_));
+-  auto part_nelts = part->size() / tile_type_size;
+-  auto bytes_processed = bshuf_bitshuffle(
+-      part->data(), output->cur_data(), part_nelts, tile_type_size, 0);
+-
+-  switch (bytes_processed) {
+-    case -1:
+-      return LOG_STATUS(
+-          Status_FilterError("Bitshuffle error; Failed to allocate memory."));
+-    case -11:
+-      return LOG_STATUS(Status_FilterError("Bitshuffle error; Missing SSE."));
+-    case -12:
+-      return LOG_STATUS(Status_FilterError("Bitshuffle error; Missing AVX."));
+-    case -80:
++    Datatype filter_data_type,
++    const ConstBuffer& part,
++    Buffer& output,
++    bool invert) {
++  auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type));
++  auto input_data = (uint8_t*)part.data();
++  auto output_data = (uint8_t*)output.cur_data();
++  auto remaining_bytes = part.size();
++
++  while (remaining_bytes > 0) {
++    // For compatibility with kiyo-masui/bitshuffle, process input in blocks of
++    // BSHUF_TARGET_BLOCK_SIZE_B bytes. That library's functions accepted
++    // elements in its size argument instead of bytes, so the
++    // bshuf_default_block_size function does not have to be copied here.
++    auto part_size =
++        (int32_t)std::min<uint64_t>(remaining_bytes, BSHUF_TARGET_BLOCK_SIZE_B);
++    auto bytes_processed =
++        invert ? blosc2_bitunshuffle(
++                     tile_type_size, part_size, input_data, output_data) :
++                 blosc2_bitshuffle(
++                     tile_type_size, part_size, input_data, output_data);
++    if (bytes_processed < 0) {
+       return LOG_STATUS(Status_FilterError(
+-          "Bitshuffle error; Input size not a multiple of 8."));
+-    case -81:
+-      return LOG_STATUS(Status_FilterError(
+-          "Bitshuffle error; Block size not a multiple of 8."));
+-    case -91:
+-      return LOG_STATUS(
+-          Status_FilterError("Bitshuffle error; Decompression error, wrong "
+-                             "number of bytes processed."));
+-    default: {
+-      if (bytes_processed != (int64_t)part->size())
+-        return LOG_STATUS(Status_FilterError(
+-            "Bitshuffle error; Unhandled internal error code " +
+-            std::to_string(bytes_processed)));
+-      break;
++          std::string("Bitshuffle error; ") +
++          blosc2_error_string(bytes_processed)));
+     }
+-  }
+ 
++    if (bytes_processed != part_size)
++      return LOG_STATUS(Status_FilterError(
++          "Bitshuffle error; Unhandled internal error code " +
++          std::to_string(bytes_processed)));
++
++    input_data += part_size;
++    output_data += part_size;
++    remaining_bytes -= part_size;
++  }
+   return Status::Ok();
+ }
+ 
+ Status BitshuffleFilter::run_reverse(
+-    const Tile& tile,
++    const Tile&,
+     Tile*,
+     FilterBuffer* input_metadata,
+     FilterBuffer* input,
+@@ -186,7 +193,7 @@ Status BitshuffleFilter::run_reverse(
+       // Part was not shuffled; just copy.
+       std::memcpy(output_buf->cur_data(), part.data(), part_size);
+     } else {
+-      RETURN_NOT_OK(unshuffle_part(tile, &part, output_buf));
++      RETURN_NOT_OK(shuffle_part(filter_data_type_, part, *output_buf, true));
+     }
+ 
+     if (output_buf->owns_data())
+@@ -204,42 +211,5 @@ Status BitshuffleFilter::run_reverse(
+   return Status::Ok();
+ }
+ 
+-Status BitshuffleFilter::unshuffle_part(
+-    const Tile&, const ConstBuffer* part, Buffer* output) const {
+-  auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type_));
+-  auto part_nelts = part->size() / tile_type_size;
+-  auto bytes_processed = bshuf_bitunshuffle(
+-      part->data(), output->cur_data(), part_nelts, tile_type_size, 0);
+-
+-  switch (bytes_processed) {
+-    case -1:
+-      return LOG_STATUS(
+-          Status_FilterError("Bitshuffle error; Failed to allocate memory."));
+-    case -11:
+-      return LOG_STATUS(Status_FilterError("Bitshuffle error; Missing SSE."));
+-    case -12:
+-      return LOG_STATUS(Status_FilterError("Bitshuffle error; Missing AVX."));
+-    case -80:
+-      return LOG_STATUS(Status_FilterError(
+-          "Bitshuffle error; Input size not a multiple of 8."));
+-    case -81:
+-      return LOG_STATUS(Status_FilterError(
+-          "Bitshuffle error; Block size not a multiple of 8."));
+-    case -91:
+-      return LOG_STATUS(
+-          Status_FilterError("Bitshuffle error; Decompression error, wrong "
+-                             "number of bytes processed."));
+-    default: {
+-      if (bytes_processed != (int64_t)part->size())
+-        return LOG_STATUS(Status_FilterError(
+-            "Bitshuffle error; Unhandled internal error code " +
+-            std::to_string(bytes_processed)));
+-      break;
+-    }
+-  }
+-
+-  return Status::Ok();
+-}
+-
+ }  // namespace sm
+ }  // namespace tiledb
+diff --git a/tiledb/sm/filter/bitshuffle_filter.h b/tiledb/sm/filter/bitshuffle_filter.h
+index 129f60a..03063e1 100644
+--- a/tiledb/sm/filter/bitshuffle_filter.h
++++ b/tiledb/sm/filter/bitshuffle_filter.h
+@@ -104,6 +104,21 @@ class BitshuffleFilter : public Filter {
+       FilterBuffer* output,
+       const Config& config) const override;
+ 
++  /**
++   * Perform bit shuffling on the given input buffer.
++   *
++   * @param filter_data_type Datatype of the data to be shuffled.
++   * @param part Buffer containing data to be shuffled.
++   * @param output Buffer to hold shuffled data.
++   * @param invert If true, performs a bit unshuffle instead of a bit shuffle.
++   * @return Status
++   */
++  static Status shuffle_part(
++      Datatype filter_data_type,
++      const ConstBuffer& part,
++      Buffer& output,
++      bool invert);
++
+  protected:
+   /** Dumps the filter details in ASCII format in the selected output string. */
+   std::ostream& output(std::ostream& os) const override;
+@@ -122,26 +137,6 @@ class BitshuffleFilter : public Filter {
+    */
+   Status compute_parts(
+       FilterBuffer* input, std::vector<ConstBuffer>* parts) const;
+-
+-  /**
+-   * Perform bit shuffling on the given input buffer.
+-   *
+-   * @param part Buffer containing data to be shuffled.
+-   * @param output Buffer to hold shuffled data.
+-   * @return Status
+-   */
+-  Status shuffle_part(
+-      const WriterTile& tile, const ConstBuffer* part, Buffer* output) const;
+-
+-  /**
+-   * Perform bit unshuffling on the given input buffer.
+-   *
+-   * @param part Buffer containing shuffled data.
+-   * @param output Buffer to hold unshuffled data.
+-   * @return Status
+-   */
+-  Status unshuffle_part(
+-      const Tile& tile, const ConstBuffer* part, Buffer* output) const;
+ };
+ 
+ }  // namespace sm
+diff --git a/tiledb/sm/filter/byteshuffle_filter.cc b/tiledb/sm/filter/byteshuffle_filter.cc
+index b142cd7..c11efe7 100644
+--- a/tiledb/sm/filter/byteshuffle_filter.cc
++++ b/tiledb/sm/filter/byteshuffle_filter.cc
+@@ -37,7 +37,7 @@
+ #include "tiledb/sm/enums/filter_type.h"
+ #include "tiledb/sm/tile/tile.h"
+ 
+-#include "blosc/tiledb-shuffle.h"
++#include <blosc2.h>
+ 
+ using namespace tiledb::common;
+ 
+@@ -94,12 +94,17 @@ Status ByteshuffleFilter::shuffle_part(
+     const WriterTile&, const ConstBuffer* part, Buffer* output) const {
+   auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type_));
+ 
+-  blosc::shuffle(
++  int status = blosc2_shuffle(
+       tile_type_size,
+       part->size(),
+       (uint8_t*)part->data(),
+       (uint8_t*)output->cur_data());
+ 
++  if (status < 0) {
++    return Status_FilterError(
++        std::string("Shuffle error; ") + blosc2_error_string(status));
++  }
++
+   return Status::Ok();
+ }
+ 
+@@ -146,12 +151,17 @@ Status ByteshuffleFilter::unshuffle_part(
+     const Tile&, const ConstBuffer* part, Buffer* output) const {
+   auto tile_type_size = static_cast<uint8_t>(datatype_size(filter_data_type_));
+ 
+-  blosc::unshuffle(
++  int status = blosc2_unshuffle(
+       tile_type_size,
+       part->size(),
+       (uint8_t*)part->data(),
+       (uint8_t*)output->cur_data());
+ 
++  if (status < 0) {
++    return Status_FilterError(
++        std::string("Unshuffle error; ") + blosc2_error_string(status));
++  }
++
+   return Status::Ok();
+ }
+ 
