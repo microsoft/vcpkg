@@ -9,8 +9,9 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         default-plugin-dir.diff # avoid absolute path
-        hdf5-config.diff
+        libaec-config.diff
         pkgconfig.patch
+        win-compile-flags.diff
 )
 
 set(HDF5_ALLOW_UNSUPPORTED OFF)

@@ -33,7 +33,8 @@
       "description": "Build the map API"
     },
     "mirror": {
-      "description": "Build the Mirror Virtual File Driver"
+      "description": "Build the Mirror Virtual File Driver",
+      "supports": "!windows | mingw"
     },
     "parallel": {
       "description": "parallel support for HDF5",
