@@ -9,6 +9,7 @@ vcpkg_from_github(
   PATCHES
     installation.diff
     version-info.diff
+    system-processor.diff
     windows-getopt.diff
 )
 file(WRITE "${SOURCE_PATH}/src-examples/CMakeLists.txt" "# disabled by vcpkg")

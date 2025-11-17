@@ -4,6 +4,7 @@
   "description": "Darknet is an open source neural network framework written in C and CUDA for processing images or video frames in computer vision.",
   "homepage": "https://darknetcv.ai/",
   "license": null,
+  "supports": "!android & !uwp & !(static & staticcrt)",
   "dependencies": [
     {
       "name": "opencv",

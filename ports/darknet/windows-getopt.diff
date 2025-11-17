@@ -1,17 +1,16 @@
 diff --git a/src-lib/CMakeLists.txt b/src-lib/CMakeLists.txt
-index 084ba24..8adddb1 100644
+index 084ba24..49b725d 100644
 --- a/src-lib/CMakeLists.txt
 +++ b/src-lib/CMakeLists.txt
-@@ -33,9 +33,6 @@ IF (DARKNET_USE_CUDA OR DARKNET_USE_ROCM)
- ENDIF ()
+@@ -34,7 +34,7 @@ ENDIF ()
  
  IF (WIN32)
--	INCLUDE_DIRECTORIES (windows)
+ 	INCLUDE_DIRECTORIES (windows)
 -	FILE (GLOB WINSRC windows/*.c)
--	LIST (APPEND LIBSRC ${WINSRC})
++	FILE (GLOB WINSRC windows/gettimeofday.c)
+ 	LIST (APPEND LIBSRC ${WINSRC})
  ENDIF ()
  
- LIST (SORT LIBSRC)
 diff --git a/src-lib/darkunistd.hpp b/src-lib/darkunistd.hpp
 index 6c06aef..5f9c970 100644
 --- a/src-lib/darkunistd.hpp
@@ -24,27 +23,17 @@ index 6c06aef..5f9c970 100644
  #include <io.h>
  #include <process.h> /* for getpid() and the exec..() family */
  #include <stdlib.h>
-diff --git a/src-lib/utils.cpp b/src-lib/utils.cpp
-index 641b6ea..d7d7a93 100644
---- a/src-lib/utils.cpp
-+++ b/src-lib/utils.cpp
-@@ -6,7 +6,7 @@
- #include "darkunistd.hpp"
+diff --git a/src-lib/windows/gettimeofday.h b/src-lib/windows/gettimeofday.h
+index 3800350..6da9f65 100644
+--- a/src-lib/windows/gettimeofday.h
++++ b/src-lib/windows/gettimeofday.h
+@@ -6,6 +6,9 @@
+ #include <time.h>
+ #include "../darknet.h"
  
- #ifdef WIN32
--#include "gettimeofday.h"
-+#include "windows/gettimeofday.c"
- #include <dbghelp.h>
- #pragma comment(lib, "DbgHelp.lib")
- #else
-diff --git a/src-lib/windows/gettimeofday.c b/src-lib/windows/gettimeofday.c
-index 74f6789..74ef88b 100644
---- a/src-lib/windows/gettimeofday.c
-+++ b/src-lib/windows/gettimeofday.c
-@@ -1,4 +1,6 @@
- #ifdef _MSC_VER
 +#define gettimeofday darknet_gettimeofday
 +#define clock_gettime darknet_clock_gettime
- #include "gettimeofday.h"
++
+ #define CLOCK_REALTIME (1)
+ #define BILLION (1E9)
  
- int gettimeofday(struct timeval* tp, struct timezone* tzp)
