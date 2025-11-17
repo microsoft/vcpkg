@@ -129,7 +129,7 @@
       "port-version": 0
     },
     "anari": {
-      "baseline": "0.14.1",
+      "baseline": "0.15.0",
       "port-version": 0
     },
     "anax": {
@@ -389,7 +389,7 @@
       "port-version": 0
     },
     "audiofile": {
-      "baseline": "1.1.3",
+      "baseline": "1.1.4",
       "port-version": 0
     },
     "audit": {
@@ -1509,7 +1509,7 @@
       "port-version": 4
     },
     "bw-sqlitemap": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "bw-tempdir": {
@@ -1901,7 +1901,7 @@
       "port-version": 0
     },
     "commata": {
-      "baseline": "1.1.1",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "comms": {
@@ -2318,7 +2318,7 @@
     },
     "darknet": {
       "baseline": "2024-10-10",
-      "port-version": 0
+      "port-version": 1
     },
     "darts-clone": {
       "baseline": "1767ab87cffe",
@@ -3130,7 +3130,7 @@
     },
     "ftgl": {
       "baseline": "2.4.0",
-      "port-version": 6
+      "port-version": 7
     },
     "ftxui": {
       "baseline": "6.1.9",
@@ -3717,8 +3717,8 @@
       "port-version": 4
     },
     "hazelcast-cpp-client": {
-      "baseline": "5.3.0",
-      "port-version": 2
+      "baseline": "5.5.0",
+      "port-version": 0
     },
     "hdf5": {
       "baseline": "1.14.6",
@@ -3985,7 +3985,7 @@
       "port-version": 0
     },
     "intx": {
-      "baseline": "0.13.0",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "iowa-hills-dsp": {
@@ -5137,8 +5137,8 @@
       "port-version": 2
     },
     "libmicrohttpd": {
-      "baseline": "1.0.1",
-      "port-version": 2
+      "baseline": "1.0.2",
+      "port-version": 0
     },
     "libmidi2": {
       "baseline": "0.15",
@@ -5710,7 +5710,7 @@
     },
     "libvpx": {
       "baseline": "1.15.2",
-      "port-version": 2
+      "port-version": 3
     },
     "libwandio": {
       "baseline": "4.2.6-1",
@@ -6025,7 +6025,7 @@
       "port-version": 0
     },
     "ltla-cppkmeans": {
-      "baseline": "4.0.3",
+      "baseline": "4.0.4",
       "port-version": 0
     },
     "ltla-powerit": {
@@ -6249,7 +6249,7 @@
       "port-version": 0
     },
     "matio": {
-      "baseline": "1.5.28",
+      "baseline": "1.5.29",
       "port-version": 0
     },
     "matplotlib-cpp": {
@@ -6337,7 +6337,7 @@
       "port-version": 5
     },
     "mexce": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "mfl": {
@@ -6381,8 +6381,8 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "2.2.3",
-      "port-version": 1
+      "baseline": "2.2.4",
+      "port-version": 0
     },
     "mimicpp": {
       "baseline": "9.1.0",
@@ -6566,7 +6566,7 @@
     },
     "ms-gdkx": {
       "baseline": "1.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "ms-gltf": {
       "baseline": "2024-09-05",
@@ -6633,7 +6633,7 @@
       "port-version": 0
     },
     "mujs": {
-      "baseline": "1.3.7",
+      "baseline": "1.3.8",
       "port-version": 0
     },
     "munit": {
@@ -6709,7 +6709,7 @@
       "port-version": 8
     },
     "nanoflann": {
-      "baseline": "1.7.1",
+      "baseline": "1.8.0",
       "port-version": 0
     },
     "nanogui": {
@@ -7926,7 +7926,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.18",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-charts": {
       "baseline": "5.15.18",
@@ -8349,7 +8349,7 @@
       "port-version": 0
     },
     "rapidcsv": {
-      "baseline": "8.89",
+      "baseline": "8.90",
       "port-version": 0
     },
     "rapidfuzz": {
@@ -8514,6 +8514,10 @@
     },
     "resultlib": {
       "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "rewolf-wow64ext": {
+      "baseline": "1.0.0.9",
       "port-version": 0
     },
     "rexo": {
@@ -10013,7 +10017,7 @@
       "port-version": 0
     },
     "upa-url": {
-      "baseline": "2.3.0",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "urdfdom": {
@@ -10037,7 +10041,7 @@
       "port-version": 0
     },
     "usearch": {
-      "baseline": "2.21.0",
+      "baseline": "2.21.3",
       "port-version": 0
     },
     "usockets": {
@@ -10709,7 +10713,7 @@
       "port-version": 1
     },
     "xtl": {
-      "baseline": "0.8.0",
+      "baseline": "0.8.1",
       "port-version": 0
     },
     "xtrans": {
