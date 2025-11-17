@@ -1509,7 +1509,7 @@
       "port-version": 4
     },
     "bw-sqlitemap": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "bw-tempdir": {
