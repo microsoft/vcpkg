@@ -25,6 +25,7 @@
       "name": "hdf5",
       "default-features": false,
       "features": [
+        "hl",
         "zlib"
       ]
     },

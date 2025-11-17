@@ -13,7 +13,8 @@
       "name": "hdf5",
       "default-features": false,
       "features": [
-        "cpp"
+        "cpp",
+        "hl"
       ]
     },
     "libjpeg-turbo",
