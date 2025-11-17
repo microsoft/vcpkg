@@ -6709,7 +6709,7 @@
       "port-version": 8
     },
     "nanoflann": {
-      "baseline": "1.7.1",
+      "baseline": "1.8.0",
       "port-version": 0
     },
     "nanogui": {
