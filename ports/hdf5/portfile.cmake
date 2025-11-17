@@ -13,29 +13,26 @@ vcpkg_from_github(
         pkgconfig.patch
 )
 
-set(ALLOW_UNSUPPORTED OFF)
-if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
-    message(WARNING "Feature 'parallel' and 'cpp' are mutually exclusive, enabling option ALLOW_UNSUPPORTED automatically to enable them both.")
-    set(ALLOW_UNSUPPORTED ON)
-endif()
-
-if ("threadsafe" IN_LIST FEATURES AND
-    ("parallel" IN_LIST FEATURES
-     OR "fortran" IN_LIST FEATURES
-     OR "cpp" IN_LIST FEATURES)
-     )
-    message(WARNING "Feture 'threadsafe' and other features are mutually exclusive, enabling feature ALLOW_UNSUPPORTED automatically to enable them both.")
-    set(ALLOW_UNSUPPORTED ON)
-endif()
-
-if ("fortran" IN_LIST FEATURES)
-    message(WARNING "Feature 'fortran' is not yet officially supported within VCPKG. Build will most likly fail if ninja 1.10 and a Fortran compiler are not available.")
-endif()
+set(HDF5_ALLOW_UNSUPPORTED OFF)
+set(unsupported_with_parallel cpp)
+set(unsupported_with_threadsafe parallel fortran cpp hl)
+foreach(feature IN ITEMS parallel threadsafe)
+    if(NOT feature IN_LIST FEATURES)
+        continue()
+    endif()
+    foreach(other IN LISTS unsupported_with_${feature})
+        if(other IN_LIST FEATURES)
+            message(WARNING "Features '${feature}' and '${other}' are mutually exclusive. Implicitly enabling option HDF5_ALLOW_UNSUPPORTED to unlock the build with both.")
+            set(HDF5_ALLOW_UNSUPPORTED ON)
+        endif()
+    endforeach()
+endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cpp          HDF5_BUILD_CPP_LIB
         fortran      HDF5_BUILD_FORTRAN
+        hl           HDF5_BUILD_HL_LIB
         map          HDF5_ENABLE_MAP_API
         mirror       HDF5_ENABLE_MIRROR_VFD
         parallel     HDF5_ENABLE_PARALLEL
@@ -67,7 +64,7 @@ vcpkg_cmake_configure(
         -DHDF5_INSTALL_CMAKE_DIR=share/hdf5
         -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
         -DHDF5_MSVC_NAMING_CONVENTION=OFF
-        -DHDF5_ALLOW_UNSUPPORTED=${ALLOW_UNSUPPORTED}
+        -DHDF5_ALLOW_UNSUPPORTED=${HDF5_ALLOW_UNSUPPORTED}
 )
 
 vcpkg_cmake_install()

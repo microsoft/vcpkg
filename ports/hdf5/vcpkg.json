@@ -26,6 +26,9 @@
     "fortran": {
       "description": "Build with fortran"
     },
+    "hl": {
+      "description": "Build HIGH Level HDF5 Library"
+    },
     "map": {
       "description": "Build the map API"
     },
