@@ -1,19 +1,5 @@
-diff --git a/src-cli/CMakeLists.txt b/src-cli/CMakeLists.txt
-index 4124877f..94750364 100644
---- a/src-cli/CMakeLists.txt
-+++ b/src-cli/CMakeLists.txt
-@@ -11,6 +11,9 @@ IF (WIN32)
- 	INCLUDE_DIRECTORIES (windows)
- 	FILE (GLOB WINRC windows/*.rc)
- 	LIST (APPEND CLISRC ${WINRC})
-+	INCLUDE_DIRECTORIES (../src-lib/windows)
-+	FILE (GLOB WINSRC ../src-lib/windows/*.c)
-+	LIST (APPEND CLISRC ${WINSRC})
- ENDIF ()
- 
- LIST (SORT CLISRC)
 diff --git a/src-lib/CMakeLists.txt b/src-lib/CMakeLists.txt
-index 084ba24d..8adddb1f 100644
+index 084ba24..8adddb1 100644
 --- a/src-lib/CMakeLists.txt
 +++ b/src-lib/CMakeLists.txt
 @@ -33,9 +33,6 @@ IF (DARKNET_USE_CUDA OR DARKNET_USE_ROCM)
@@ -26,3 +12,15 @@ index 084ba24d..8adddb1f 100644
  ENDIF ()
  
  LIST (SORT LIBSRC)
+diff --git a/src-lib/darkunistd.hpp b/src-lib/darkunistd.hpp
+index 6c06aef..5f9c970 100644
+--- a/src-lib/darkunistd.hpp
++++ b/src-lib/darkunistd.hpp
+@@ -9,7 +9,6 @@
+ 
+ #include <winsock2.h>
+ #include <direct.h> /* for _getcwd() and _chdir() */
+-#include "getopt.h"
+ #include <io.h>
+ #include <process.h> /* for getpid() and the exec..() family */
+ #include <stdlib.h>
