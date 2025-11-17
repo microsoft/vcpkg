@@ -95,6 +95,7 @@ forge:x86-windows=fail
 freeglut(android)=fail
 freeglut(osx)=fail # Needs XQuartz
 freeopcua:arm64-windows=fail # Needs /bigobj
+ftgl(android)=fail
 functions-framework-cpp:x64-uwp=fail # https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
 g3log:arm-neon-android=fail
 g3log:arm64-android=fail
