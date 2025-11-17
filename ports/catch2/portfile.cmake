@@ -6,15 +6,21 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
     REF v${VERSION}
-    SHA512 4f577da378c9fa7c205abc145b92f8b81a998274c2e5a08fce233cd43326a6ae30645379e2c3e32abca21c2168a298fd4690893a13d65733d8bd1e7b19fefea8
+    SHA512 a95495142f915d6e9c2a23e80fe360343e9097680066a2f9d3037a070ba5f81ee5559a0407cc9e972dc2afae325873f1fc7ea07a64012c0f01aac6e549f03e3f
     HEAD_REF devel
     PATCHES
         fix-install-path.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
+    FEATURES
+        thread-safe-assertions CATCH_CONFIG_EXPERIMENTAL_THREAD_SAFE_ASSERTIONS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${OPTIONS}
         -DCATCH_INSTALL_DOCS=OFF
         -DCMAKE_CXX_STANDARD=17
 )

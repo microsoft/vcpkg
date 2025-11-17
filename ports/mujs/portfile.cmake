@@ -4,9 +4,10 @@ endif()
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
+  GITHUB_HOST https://codeberg.org
   REPO ccxvii/mujs
   REF "${VERSION}"
-  SHA512 0806684be5e6dc3cb7305355ab7c7babbfd3fd5bbd22515659a88a82c25f3f4b6af14f7ca07bacd154823b19110b749bba68311c9f317dd684e0fd5628ece573
+  SHA512 b553c09f2994b54ef6aa48ece3e6f8355ea69c6ec9ee2ea101fd33b3054dd6b57482c923c063929b3f108a5244ab51ffbd807d5a1d0f3f4ed4f40896ac97ab87
   HEAD_REF master
 )
 
@@ -26,5 +27,4 @@ vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-mujs)
 vcpkg_copy_pdbs()
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

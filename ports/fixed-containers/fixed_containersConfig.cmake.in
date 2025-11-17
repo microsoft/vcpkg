@@ -1,0 +1,9 @@
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(magic_enum CONFIG)
+
+include("${CMAKE_CURRENT_LIST_DIR}/fixed_containers-targets.cmake")
+

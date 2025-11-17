@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2e928ef..29e3d79 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,7 +19,7 @@
+ 
+ cmake_minimum_required (VERSION 3.16)
+ 
+-project (Proton C)
++project (Proton C CXX)
+ 
+ set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/tools/cmake/Modules")
+ set (CMAKE_THREAD_PREFER_PTHREAD TRUE)
+@@ -75,8 +75,7 @@ set(UNSET_CMAKE_CXX_COMPILER OFF)
+ if (NOT DEFINED CMAKE_CXX_COMPILER)
+   set(UNSET_CMAKE_CXX_COMPILER ON)
+ endif ()
+-check_language (CXX)
+-if (CMAKE_CXX_COMPILER)
++if(0)
+   if (UNSET_CMAKE_CXX_COMPILER)
+     # https://gitlab.kitware.com/cmake/cmake/-/issues/25535: check_language might set the variable incorrectly
+     unset(CMAKE_CXX_COMPILER)
+@@ -84,6 +83,7 @@ if (CMAKE_CXX_COMPILER)
+   endif ()
+ 
+   enable_language(CXX)
++else()
+ 
+   set(CMAKE_CXX_STANDARD 17)
+   set(CMAKE_CXX_EXTENSIONS OFF)

@@ -21,7 +21,7 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
        VCPKG_C_FLAGS_DEBUG VCPKG_CXX_FLAGS_DEBUG
        VCPKG_C_FLAGS_RELEASE VCPKG_CXX_FLAGS_RELEASE
        VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE VCPKG_LINKER_FLAGS_DEBUG
-       VCPKG_PLATFORM_TOOLSET
+       VCPKG_PLATFORM_TOOLSET XBOX_CONSOLE_TARGET
     )
 
     set(CMAKE_SYSTEM_NAME Windows CACHE STRING "")
@@ -41,19 +41,43 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     set(CMAKE_CROSSCOMPILING ON CACHE STRING "")
 
     # Add the Microsoft GDK if present
-    if (DEFINED ENV{GRDKLatest})
+    if (DEFINED ENV{GameDKCoreLatest})
+        # October 2025 or later
+        # No windows paths should be used for console targets.
+    elseif (DEFINED ENV{GRDKLatest})
+        # April 2025 or earlier
         cmake_path(SET _vcpkg_grdk "$ENV{GRDKLatest}")
 
         list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_grdk}/gameKit/Include")
         include_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Include")
         cmake_path(CONVERT "${_vcpkg_grdk}/gameKit/Include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
-        link_directories(BEFORE SYSTEM "${_vcpkg_grdk}/gameKit/Lib/amd64")
+        link_directories(BEFORE "${_vcpkg_grdk}/gameKit/Lib/amd64")
         cmake_path(CONVERT "${_vcpkg_grdk}/gameKit/Lib/amd64" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
     endif()
 
     # Add the Microsoft GDK Xbox Extensions if present
-    if (DEFINED ENV{GXDKLatest})
+    if (DEFINED ENV{GameDKXboxLatest})
+        # October 2025 or later
+        cmake_path(SET _vcpkg_gxdk "$ENV{GameDKXboxLatest}")
+
+        if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+            list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/xbox/include/gen9" "${_vcpkg_gxdk}/xbox/include")
+            include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/xbox/include/gen9" "${_vcpkg_gxdk}/xbox/include")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/xbox/include/gen9;${_vcpkg_gxdk}/xbox/include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
+
+            link_directories(BEFORE "${_vcpkg_gxdk}/xbox/lib/gen9" "${_vcpkg_gxdk}/xbox/lib/x64")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/xbox/lib/gen9;${_vcpkg_gxdk}/xbox/lib/x64" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+        elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+            list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/xbox/include/gen8" "${_vcpkg_gxdk}/xbox/include")
+            include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/xbox/include/gen8" "${_vcpkg_gxdk}/xbox/include")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/xbox/include/gen8;${_vcpkg_gxdk}/xbox/include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
+
+            link_directories(BEFORE "${_vcpkg_gxdk}/xbox/lib/gen8" "${_vcpkg_gxdk}/xbox/lib/x64")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/xbox/lib/gen8;${_vcpkg_gxdk}/xbox/lib/x64" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+        endif()
+    elseif (DEFINED ENV{GXDKLatest})
+        # April 2025 or earlier
         cmake_path(SET _vcpkg_gxdk "$ENV{GXDKLatest}")
 
         if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
@@ -61,15 +85,15 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
             include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/Scarlett")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
-            link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett")
-            cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+            link_directories(BEFORE "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Lib/amd64/Scarlett")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Lib/amd64/Scarlett" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
         elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
             list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
             include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Include" "${_vcpkg_gxdk}/gameKit/Include/XboxOne")
             cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Include;${_vcpkg_gxdk}/gameKit/Include/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
 
-            link_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne")
-            cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Include/Lib/amd64/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+            link_directories(BEFORE "${_vcpkg_gxdk}/gameKit/Lib/amd64" "${_vcpkg_gxdk}/gameKit/Lib/amd64/XboxOne")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/gameKit/Lib/amd64;${_vcpkg_gxdk}/gameKit/Lib/amd64/XboxOne" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
         endif()
     endif()
 
@@ -141,8 +165,8 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     unset(_vcpkg_cpp_flags)
     unset(_vcpkg_common_flags)
 
-    set(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX}d /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
-    set(CMAKE_C_FLAGS_DEBUG "/D_DEBUG ${VCPKG_CRT_LINK_FLAG_PREFIX}d /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}" CACHE STRING "")
+    set(CMAKE_CXX_FLAGS_DEBUG "${VCPKG_CRT_LINK_FLAG_PREFIX}d /Od /RTC1 ${VCPKG_CXX_FLAGS_DEBUG}" CACHE STRING "")
+    set(CMAKE_C_FLAGS_DEBUG "${VCPKG_CRT_LINK_FLAG_PREFIX}d /Od /RTC1 ${VCPKG_C_FLAGS_DEBUG}" CACHE STRING "")
 
     set(CMAKE_CXX_FLAGS_RELEASE "${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_CXX_FLAGS_RELEASE}" CACHE STRING "")
     set(CMAKE_C_FLAGS_RELEASE "${VCPKG_CRT_LINK_FLAG_PREFIX} /O2 /Oi /Gy /DNDEBUG ${VCPKG_C_FLAGS_RELEASE}" CACHE STRING "")

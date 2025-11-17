@@ -1,0 +1,14 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c8f3d859..8aa425f6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -117,9 +117,7 @@ if (NOT MSVC)
+         if (UNIX AND NOT APPLE)
+             set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.so")
+         endif()
+-        add_link_options(-static)
+         if (MINGW)
+-            add_link_options(-static-libgcc -static-libstdc++)
+         endif()
+     endif()
+     if (GGML_GPROF)

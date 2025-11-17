@@ -1,0 +1,11 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -124,6 +124,7 @@
+ endif()
+ 
+ set_target_properties(GLU PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${SUPERGLU_SO_VERSION})
++set_target_properties(GLU PROPERTIES OUTPUT_NAME "superglu")
+ 
+ target_compile_definitions(GLU PRIVATE HAVE_CONFIG_H LIBRARYBUILD GLU_INTERNAL GLU_DEBUG=$<CONFIG:Debug>)
+ 

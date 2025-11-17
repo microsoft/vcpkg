@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanopb/nanopb
     REF ${VERSION}
-    SHA512 635577498dfbfb46fd64b8ec83b2a4a9b03b57c665f3c9f67d35c272810c0330b0e9011d7c0e43623e9da74d6ee3a4c1f012878e2bff7e1a7e57fb7c0857ad42
+    SHA512 1580c94d558f707c88d8d2ddf4aa3bf4ef244ddc07b13e02de7124da8d156fb30a6999bb3c54ff0497abb033e498fb85ea671774f2fb817f55fa64937f537c77
     HEAD_REF master
     PATCHES 
         fix-cmakelist.patch
@@ -28,7 +28,7 @@ vcpkg_cmake_configure(
         -Dnanopb_BUILD_RUNTIME=ON
         -DBUILD_STATIC_LIBS=${nanopb_BUILD_STATIC_LIBS}
         -Dnanopb_MSVC_STATIC_RUNTIME=${nanopb_STATIC_LINKING}
-        -Dnanopb_PROTOC_PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+        "-Dnanopb_PROTOC_PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         ${FEATURE_OPTIONS}
         -DCMAKE_INSTALL_DATADIR=share/${PORT}
     MAYBE_UNUSED_VARIABLES

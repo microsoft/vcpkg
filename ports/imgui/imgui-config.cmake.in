@@ -14,8 +14,8 @@ if (@IMGUI_BUILD_GLUT_BINDING@)
     find_dependency(GLUT)
 endif()
 
-if (@IMGUI_BUILD_SDL2_BINDING@ OR @IMGUI_BUILD_SDL2_RENDERER_BINDING@)
-    find_dependency(SDL2 CONFIG)
+if (@IMGUI_BUILD_SDL3_BINDING@ OR @IMGUI_BUILD_SDL3_RENDERER_BINDING@ OR @IMGUI_BUILD_SDLGPU3_BINDING@)
+    find_dependency(SDL3 CONFIG)
 endif()
 
 if (@IMGUI_BUILD_VULKAN_BINDING@)
@@ -26,8 +26,8 @@ if (@IMGUI_FREETYPE@)
     find_dependency(freetype CONFIG)
 endif()
 
-if (@IMGUI_FREETYPE_LUNASVG@)
-    find_dependency(unofficial-lunasvg CONFIG)
+if (@IMGUI_FREETYPE_SVG@)
+    find_dependency(plutosvg CONFIG)
 endif()
 
 if (@IMGUI_BUILD_ALLEGRO5_BINDING@)

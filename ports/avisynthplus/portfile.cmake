@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 0e0daa83e3ab729fdc35a52c60c23c9142f1229187af893d0dbbd36f88eced36f63a3e8c767a3dc825edaa5395a49a5aad726f6b61de8f6b291557eec20de426
     HEAD_REF master
+    PATCHES
+        add-include-chrono.patch # https://github.com/AviSynth/AviSynthPlus/pull/414
 )
 
 vcpkg_download_distfile(GHC_ARCHIVE
@@ -27,4 +29,4 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/distrib/gpl.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/distrib/gpl.txt")

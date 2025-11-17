@@ -5,7 +5,6 @@
 # and assumes it is being run as an admin user.
 
 . "$PSScriptRoot\deploy-tlssettings.ps1" -RebootIfRequired 0
-. "$PSScriptRoot\deploy-windows-sdks.ps1"
 . "$PSScriptRoot\deploy-visual-studio.ps1"
 . "$PSScriptRoot\deploy-mpi.ps1"
 . "$PSScriptRoot\deploy-cuda.ps1"
@@ -13,6 +12,7 @@
 . "$PSScriptRoot\deploy-inteloneapi.ps1"
 . "$PSScriptRoot\deploy-pwsh.ps1"
 . "$PSScriptRoot\deploy-azure-cli.ps1"
+. "$PSScriptRoot\deploy-azcopy.ps1"
 try {
     Copy-Item "$PSScriptRoot\deploy-settings.txt" "$PSScriptRoot\deploy-settings.ps1"
     . "$PSScriptRoot\deploy-settings.ps1"

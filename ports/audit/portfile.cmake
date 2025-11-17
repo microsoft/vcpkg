@@ -1,17 +1,9 @@
-vcpkg_download_distfile(PATCH_FIX_MISSING_HEADERS_IN_AUDISP_FILTER
-    URLS https://github.com/linux-audit/audit-userspace/commit/f8e9bc5914d715cdacb2edc938ab339d5094d017.patch?full_index=1
-    SHA512 b9606c711befe99ce9540b9885e943733ab06faa55d32bf029b23e1984adf2e914d46bd95b81a2517380c6b9e714b3b3d2181b86586c97dc09a0418ae40bd33f
-    FILENAME 0000-fix-missing-header-in-audisp-filter.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO linux-audit/audit-userspace
-    SHA512 297664a55ab44b40c9280202c19612cfbfdacc209c4d226461ea5faa638e35617cb516e53d1f0bc3748cdd038d9524f3e5ebe11c8de4a5511ab4f12b7d06478c
+    SHA512 14fa19922cf6436284e1448d5a0e069ce5066d2d49d28679fe3ad019be60c133aee6e345b36e0f482ea1fdeadad7d78676f931aab1c25b91a2d0b445dce3eedf
     REF "v${VERSION}"
     HEAD_REF master
-    PATCHES
-        "${PATCH_FIX_MISSING_HEADERS_IN_AUDISP_FILTER}"
 )
 
 message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n"

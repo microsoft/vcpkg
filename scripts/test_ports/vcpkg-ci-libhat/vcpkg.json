@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-libhat",
+  "version-string": "ci",
+  "description": "Validates libhat",
+  "dependencies": [
+    "libhat",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Orc/discount
     REF "v${VERSION}"
-    SHA512 d86bfc6d3e11131622046418a1f54bd9dfa5f1233e510189cd2c89dc857da31e88ffbe6670cc506ca8b9763e8fb74ed215f1018f83e25767c77acb8a7c296b8a
+    SHA512 ab24722bb8513f64eed59bb2770276b91615033b494a0492a331f36c5fcd2e32b7a9f3bd7ef0bb74c107f1e0e955522c83ddba6c482fca7f18cf275334707c4d
     HEAD_REF master
     PATCHES
       generate-blocktags-command.patch

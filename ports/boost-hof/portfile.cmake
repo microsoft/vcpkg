@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/hof
     REF boost-${VERSION}
-    SHA512 43f1cff6b0906254d2803ee57d618dd6474d6042aed37211dea46f46c4d86b5ca36e6424b3b105116c312ce9f28e13e745e995aeadc55a0fa501b245e13cd045
+    SHA512 e2ddcbd5a64ba351341a61f9ebc92ae9a1808bedbc0e025f336ed97947bbd90f0267f06d4b88b3ffff5d76d6c4cdfdcb6fc77457c97918c48ae9ec52d47bf56b
     HEAD_REF master
 )
 

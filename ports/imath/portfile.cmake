@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/Imath
     REF "v${VERSION}"
-    SHA512 0bc86bea3a2aca89d02b501b4fba3c13ca861e914cec558e820fe9e4c43ab14cac34e31ff278b8c35b5fe76f7bea32f2c8105c0d33eb92224eb23d42d7a402e9
+    SHA512 492a624e4c0b59685d1ea58a3c2c63ddb4ba5ab9177c7d2a1b7e80be95d38ce02c74fafd2fe0982f7d21e5e75c938cc24a33a12d827dec32727cb8dcd5066450
     HEAD_REF master
 )
 

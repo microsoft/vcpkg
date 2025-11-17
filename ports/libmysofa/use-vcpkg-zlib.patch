@@ -1,0 +1,82 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 018f4ce..90ec50d 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -13,21 +13,25 @@ use_c99()
+ configure_file(config.h.in config.h)
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ 
++find_package(ZLIB REQUIRED)
++
+ if(NOT MSVC)
+   if(NOT WIN32)
+     find_library(MATH m)
+   else()
+     set(MATH "")
+   endif()
+-  include(FindZLIB)
++  #include(FindZLIB)
+ else()
+   set(MATH "")
++  #[[
+   find_program(NUGET nuget)
+   if(NUGET)
+     execute_process(COMMAND ${NUGET} install zlib)
+   endif()
+   include_directories(
+     ${PROJECT_SOURCE_DIR}/windows/third-party/zlib-1.2.11/include/)
++  ]]#
+ endif()
+ 
+ if(NOT MSVC)
+@@ -36,12 +40,13 @@ if(NOT MSVC)
+   else()
+     set(MATH "")
+   endif()
+-  include(FindZLIB)
+-  include_directories(${ZLIB_INCLUDE_DIRS})
++  #include(FindZLIB)
++  #include_directories(${ZLIB_INCLUDE_DIRS})
+   set(PKG_CONFIG_PRIVATELIBS "-lm ${PKG_CONFIG_PRIVATELIBS}")
+   set(PKG_CONFIG_PRIVATELIBS "-lz ${PKG_CONFIG_PRIVATELIBS}")
+ else()
+   set(MATH "")
++  #[[
+   find_program(NUGET nuget)
+   if(NOT NUGET)
+     message(
+@@ -53,6 +58,7 @@ else()
+   endif()
+   include_directories(
+     ${PROJECT_SOURCE_DIR}/windows/third-party/zlib-1.2.11/include/)
++    ]]#
+ endif()
+ 
+ set(libsrc
+@@ -81,6 +87,8 @@ set(public-headers
+     hrtf/mysofa.h
+ )
+ 
++install(FILES "${public-headers}" DESTINATION include)
++
+ if(BUILD_STATIC_LIBS)
+ add_library(mysofa-static STATIC ${libsrc})
+ target_include_directories(mysofa-static
+@@ -88,7 +96,7 @@ target_include_directories(mysofa-static
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hrtf>"
+   $<INSTALL_INTERFACE:include/>
+ )
+-target_link_libraries(mysofa-static LINK_PRIVATE ${MATH} ${ZLIB_LIBRARIES})
++target_link_libraries(mysofa-static LINK_PRIVATE ${MATH} ZLIB::ZLIB)
+ set_target_properties(
+   mysofa-static
+   PROPERTIES OUTPUT_NAME mysofa CLEAN_DIRECT_OUTPUT 1 POSITION_INDEPENDENT_CODE
+@@ -120,7 +128,7 @@ if(BUILD_SHARED_LIBS)
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/hrtf>"
+     $<INSTALL_INTERFACE:include/>
+   )
+-  target_link_libraries(mysofa-shared PRIVATE ${MATH} ${ZLIB_LIBRARIES})
++  target_link_libraries(mysofa-shared PRIVATE ${MATH} ZLIB::ZLIB)
+   set_target_properties(mysofa-shared
+                         PROPERTIES OUTPUT_NAME mysofa CLEAN_DIRECT_OUTPUT 1)
+   # Rename the Windows import library (stub) of the DLL to prevent a name clash

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO svi-opensource/libics
     REF "${VERSION}"
-    SHA512 290d6d7bd3f5611d0b46aa6406ef10449ee768bc14d0b34f0bb365ca46f98b7fd4065c94fd9594e357427a4d0644f2724a1f773c7f3b43adc3db2389b94ee88e
+    SHA512 0eba280c1174cbd0e1fe6da1502345720793df2f3f6ec31fe0043d79a31d7b79cac5d7da726891faacedc91056e6337a3a694e50d0baafa08314a2867ff3e62f
     HEAD_REF master
     PATCHES fix-integral-include.patch
 )

@@ -1,0 +1,110 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9ccfacb..4e28b38 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -219,7 +219,12 @@ INCLUDE(${CC_SOURCE_DIR}/cmake/SearchLibrary.cmake)
+ 
+ # Compression plugins: ZSTD, ZLIB
+ 
+-INCLUDE(${CC_SOURCE_DIR}/cmake/FindZStd.cmake)
++if(WITH_ZSTD)
++  find_package(ZSTD NAMES zstd REQUIRED)
++  set(ZSTD_LIBRARIES zstd::libzstd)
++else()
++  set(ZSTD_FOUND 0)
++endif()
+ 
+ IF(WITH_EXTERNAL_ZLIB)
+   IF(NOT ZLIB_FOUND)
+@@ -250,7 +255,7 @@ IF(UNIX)
+   SEARCH_LIBRARY(LIBNSL gethostbyname_r "nsl_r;nsl")
+   SEARCH_LIBRARY(LIBSOCKET setsockopt socket)
+   FIND_PACKAGE(Threads)
+-  SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${LIBNSL} ${LIBBIND} ${LIBICONV} ${ZLIB_LIBRARY} 
++  SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${LIBNSL} ${LIBBIND} ${LIBICONV} ${ZLIB_LIBRARIES}
+       ${LIBSOCKET} ${CMAKE_DL_LIBS} ${LIBM} ${LIBPTHREAD})
+   SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBNSL} ${LIBBIND} ${LIBICONV} 
+     ${LIBSOCKET} ${CMAKE_DL_LIBS} ${LIBM} ${LIBPTHREAD})
+@@ -307,7 +312,7 @@ IF(NOT WITH_SSL STREQUAL "OFF")
+       ADD_DEFINITIONS(-DHAVE_OPENSSL -DHAVE_TLS)
+       SET(SSL_SOURCES "${CC_SOURCE_DIR}/libmariadb/secure/openssl.c"
+                       "${CC_SOURCE_DIR}/libmariadb/secure/openssl_crypt.c")
+-      SET(SSL_LIBRARIES ${OPENSSL_SSL_LIBRARY} ${OPENSSL_CRYPTO_LIBRARY})
++      SET(SSL_LIBRARIES ${OPENSSL_LIBRARIES})
+       IF(WIN32 AND EXISTS ${OPENSSL_INCLUDE_DIR}/openssl/applink.c)
+        SET(HAVE_OPENSSL_APPLINK_C 1)
+       ENDIF()
+@@ -371,7 +376,12 @@ ENDIF()
+ 
+ IF(WITH_ICONV)
+   IF(NOT WIN32)
+-    INCLUDE(${CC_SOURCE_DIR}/cmake/FindIconv.cmake)
++    find_package(Iconv REQUIRED)
++    include_directories(${Iconv_INCLUDE_DIRS})
++    set(ICONV_LIBRARIES "${Iconv_LIBRARIES}")
++    if(NOT Iconv_IS_BUILT_IN)
++      set(ICONV_EXTERNAL 1)
++    endif()
+   ENDIF()
+ ENDIF()
+ 
+@@ -431,7 +441,7 @@ ENDIF()
+ INCLUDE(${CC_SOURCE_DIR}/plugins/CMakeLists.txt)
+ ADD_SUBDIRECTORY(include)
+ ADD_SUBDIRECTORY(libmariadb)
+-IF((NOT WIN32) OR CYGWIN)
++IF(1)
+   ADD_SUBDIRECTORY(mariadb_config)
+ ENDIF()
+ 
+diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
+index 852be8d..61ad0a6 100644
+--- a/libmariadb/CMakeLists.txt
++++ b/libmariadb/CMakeLists.txt
+@@ -293,7 +293,7 @@ SET(MARIADB_NONBLOCK_SYMBOLS
+ 
+ # handle static plugins
+ SET(LIBMARIADB_SOURCES ${LIBMARIADB_SOURCES} ${LIBMARIADB_PLUGIN_SOURCES})
+-SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBMARIADB_PLUGIN_LIBS} ${ZSTD_LIBRARY} ${ZLIB_LIBRARY})
++SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBMARIADB_PLUGIN_LIBS} ${ZSTD_LIBRARIES} ${ZLIB_LIBRARIES})
+ MESSAGE(STATUS "SYSTEM_LIBS: ${SYSTEM_LIBS}")
+ INCLUDE_DIRECTORIES(${LIBMARIADB_PLUGIN_INCLUDES})
+ ADD_DEFINITIONS(${LIBMARIADB_PLUGIN_DEFS})
+diff --git a/mariadb_config/CMakeLists.txt b/mariadb_config/CMakeLists.txt
+index 4cb0ba9..c15838a 100644
+--- a/mariadb_config/CMakeLists.txt
++++ b/mariadb_config/CMakeLists.txt
+@@ -30,6 +30,22 @@ IF(${rllength} GREATER 0)
+   LIST(REMOVE_DUPLICATES SYSTEM_LIBS)
+ ENDIF()
+ 
++set(REQUIRES_PRIVATE "" CACHE STRING "")
++list(REMOVE_ITEM SYSTEM_LIBS ${ZLIB_LIBRARIES})
++string(APPEND REQUIRES_PRIVATE " zlib")
++if(LIBM)
++  list(REMOVE_ITEM SYSTEM_LIBS ${LIBM})
++  list(APPEND SYSTEM_LIBS "m")
++endif()
++if(WITH_SSL STREQUAL "OPENSSL")
++  list(REMOVE_ITEM SYSTEM_LIBS ${SSL_LIBRARIES})
++  string(APPEND REQUIRES_PRIVATE " openssl")
++endif()
++if(WITH_ZSTD)
++  list(REMOVE_ITEM SYSTEM_LIBS ${ZSTD_LIBRARIES})
++  string(APPEND REQUIRES_PRIVATE " libzstd")
++endif()
++
+ FOREACH (LIB_NAME ${SYSTEM_LIBS})
+   GET_LIB_NAME(${LIB_NAME} LIB_OUT)
+   SET(extra_dynamic_LDFLAGS "${extra_dynamic_LDFLAGS} ${LIB_OUT}")
+diff --git a/mariadb_config/libmariadb.pc.in b/mariadb_config/libmariadb.pc.in
+index 968181a..3f0410d 100644
+--- a/mariadb_config/libmariadb.pc.in
++++ b/mariadb_config/libmariadb.pc.in
+@@ -16,5 +16,6 @@ Description: MariaDB Connector/C dynamic library
+ Cflags: -I${includedir}
+ Libs: -L${libdir} -lmariadb
+ Libs.private: @extra_dynamic_LDFLAGS@
++Requires.private: @REQUIRES_PRIVATE@
+ 
+ 

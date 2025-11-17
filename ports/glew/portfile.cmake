@@ -17,6 +17,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-LNK2019.patch
         base_address.patch # Accepted upstream as https://github.com/nigels-com/glew/commit/ef7d12ecb7f1f336f6d3a80cebd6163b2c094108
+        cmake_version.patch
 )
 
 vcpkg_cmake_configure(
@@ -30,6 +31,9 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/glew)
 # Skip check the required dependency opengl
 vcpkg_fixup_pkgconfig(SKIP_CHECK)
+
+# Burn-in CMake build config
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/GL/glew.h" "ifndef GLEW_NO_GLU" "if 0")
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 set(_targets_cmake_files)

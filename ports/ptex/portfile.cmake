@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wdas/ptex
     REF "v${VERSION}"
-    SHA512 3b9607b7803e7c857bb00a6d4d8bbe108810c622a3593fb5d655183f3e6689f274ee5e79bcaab6928de38daf05cf25eb56125f39477f134131a8ad45071551b3
+    SHA512 34fcaf1c4fe27cb4e66d66bb729137ef17ffeea2bc2d849f2f5f543b19acc250f425633142320ce797c2a086e04bc3e0870c94928ad45d94e34faee71af36890
     HEAD_REF master
     PATCHES
         fix-build.patch
@@ -21,7 +21,16 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Ptex)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Ptex )
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/ptex.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ptex.pc")
+if(NOT VCPKG_BUILD_TYPE)
+  file(COPY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/ptex.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/")
+endif()
+vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+
 vcpkg_copy_pdbs()
 
 foreach(HEADER PtexHalf.h Ptexture.h)

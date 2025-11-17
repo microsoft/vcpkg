@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/uuid
     REF boost-${VERSION}
-    SHA512 99f3f5094dce8258800db4d5d267f5f9a6df503e548b7700e0ede5131a04e8393c30a161d4b00d40ed0a3776802968282a1d20e076f9f3d385bc5a5f62f69618
+    SHA512 6776b22348e0e5bb357df5fc632198793c7d3bd73910f9ec1b99aab5f88ae6d3fbda2f2b47892106cb8dcb8850cd512f22f351864eb6ad097da49ab7d04cb6ce
     HEAD_REF master
-    PATCHES
-        opt-random.diff
 )
 
 set(FEATURE_OPTIONS "")

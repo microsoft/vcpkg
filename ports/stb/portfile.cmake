@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nothings/stb
-    REF 5736b15f7ea0ffb08dd38af21067c314d6a3aae9 # committed on 2023-04-11
-    SHA512 55bc75284cf8a092c527d1ae18c461c9d0ab6aacdcf3b873abde54c06d9b8a0ae249ce47c7ad25809e075bfbb58e9c879d43e1df2708083860c07ac3bbb30d60
+    REF f75e8d1cad7d90d72ef7a4661f1b994ef78b4e31 # committed on 2024-07-29
+    SHA512 4a733aefb816a366c999663e3d482144616721b26c321ee5dd0dce611a34050b6aef97d46bd2c4f8a9631d83b097491a7ce88607fd9493d880aaa94567a68cce
     HEAD_REF master
 )
 

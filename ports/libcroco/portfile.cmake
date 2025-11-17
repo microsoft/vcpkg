@@ -15,23 +15,18 @@ if(VCPKG_TARGET_IS_OSX)
     list(APPEND OPTIONS "--disable-Bsymbolic")
 endif()
 
-vcpkg_configure_make(
-    USE_WRAPPERS
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
 )
-
-vcpkg_install_make()
-
+vcpkg_make_install()
+vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
                     "${CURRENT_PACKAGES_DIR}/libcroco/bin/croco-0.6-config"
                     "${CURRENT_PACKAGES_DIR}/libcroco/debug/bin")
-
-vcpkg_copy_pdbs()
-vcpkg_fixup_pkgconfig()
 
 file(COPY "${CURRENT_PORT_DIR}/unofficial-libcroco-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-libcroco")
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

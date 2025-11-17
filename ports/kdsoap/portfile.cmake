@@ -7,6 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES "fix-license-text.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KDSoap_STATIC)
@@ -32,4 +33,17 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE.txt"
+        "${SOURCE_PATH}/LICENSES/BSD-3-Clause.txt"
+        "${SOURCE_PATH}/LICENSES/GPL-2.0-only.txt"
+        "${SOURCE_PATH}/LICENSES/LicenseRef-Microsoft.txt"
+        "${SOURCE_PATH}/LICENSES/LicenseRef-Novell.txt"
+        "${SOURCE_PATH}/LICENSES/LicenseRef-OASIS.txt"
+        "${SOURCE_PATH}/LICENSES/LicenseRef-SportingExchange.txt"
+        "${SOURCE_PATH}/LICENSES/MIT.txt"
+        "${SOURCE_PATH}/LICENSES/W3C.txt"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

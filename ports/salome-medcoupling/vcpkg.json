@@ -1,6 +1,7 @@
 {
   "name": "salome-medcoupling",
   "version": "9.10.0",
+  "port-version": 1,
   "description": "salome-medcoupling is a part of SALOME platform to manipulate meshes and fields in memory, and use salome-med format for files.",
   "homepage": "https://www.salome-platform.org",
   "license": "GPL-2.0-or-later",

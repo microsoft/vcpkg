@@ -1,10 +1,10 @@
 {
   "name": "libfabric",
-  "version-semver": "1.13.2",
-  "port-version": 2,
-  "description": "The OpenFabrics Interfaces Working Group (OFIWG) and the Libfabric open-source community are pleased to announce the release of version v1.6.2 of libfabric. See NEWS.md for the list of features and enhancements that have been added since the last release.",
-  "homepage": "https://github.com/ofiwg/libfabric",
-  "supports": "windows & !uwp & x64 & !static",
+  "version-semver": "1.22.0",
+  "description": "Libfabric, aka Open Fabrics Interfaces (OFI), defines a communication API for high-performance parallel and distributed applications.",
+  "homepage": "https://ofiwg.github.io/libfabric/",
+  "license": "BSD-2-Clause OR GPL-2.0-only",
+  "supports": "freebsd | linux | osx | (windows & x64 & !mingw & !uwp & !(static & staticcrt))",
   "dependencies": [
     {
       "name": "networkdirect-sdk",

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/opus
     REF "v${VERSION}"
-    SHA512 ba79ad035993e7bc4c09b7d77964ba913eb0b2be33305e8a04a8c49aaab21c4d96ac828e31ae45484896105851fdfc8c305c63c8400e4481dd76c62a1c12286b
+    SHA512 4ffefd9c035671024f9720c5129bfe395dea04f0d6b730041c2804e89b1db6e4d19633ad1ae58855afc355034233537361e707f26dc53adac916554830038fab
     HEAD_REF main
     PATCHES fix-pkgconfig-version.patch
 )
@@ -12,6 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         avx2 AVX2_SUPPORTED
 )
 
+set(STACK_PROTECTOR ON)
 set(ADDITIONAL_OPUS_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
     set(STACK_PROTECTOR OFF)
@@ -21,10 +22,12 @@ if(VCPKG_TARGET_IS_MINGW)
         list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_USE_NEON=OFF") # for version 1.3.1 (remove for future Opus release)
         list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_DISABLE_INTRINSICS=ON") # for HEAD (and future Opus release)
     endif()
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        list(APPEND ADDITIONAL_OPUS_OPTIONS "-DOPUS_STATIC_RUNTIME=ON")
+    endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(STACK_PROTECTOR OFF)
-else()
-    set(STACK_PROTECTOR ON)
 endif()
 
 vcpkg_cmake_configure(

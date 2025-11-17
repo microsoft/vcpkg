@@ -1,0 +1,8 @@
+{
+  "name": "lely-core",
+  "version": "2.3.5",
+  "description": "The Lely core libraries are a collection of C and C++ libraries and tools, providing hih-performance I/O and sensor/actuator control for robotics and IoT applications",
+  "homepage": "https://gitlab.com/lely_industries/lely-core",
+  "license": "Apache-2.0",
+  "supports": "linux"
+}

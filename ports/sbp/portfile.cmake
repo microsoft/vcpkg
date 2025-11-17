@@ -7,24 +7,26 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO swift-nav/libsbp
-    REF v3.4.10
-    SHA512 bbdcefad9ff8995759b577790bcffb94355bd0ee29f259fa8d51f54907e252b55871dc5a841e21d23e661fd5b33109761eb20b66c2fb73e9e7de8a34cc8d6528
+    REF "v${VERSION}"
+    SHA512 2dc626cc1667da271bca565f499471de0ec0d533694ffee1c72f25f8ba4a8944294cea67b8a35b48da80c66da623e23bc92a0a7478a6882b72485761fca36417
     HEAD_REF master
     PATCHES
-      "win32-install-fix.patch"
+        0000-install-include-directory.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH CMAKE_EXTRA_MODS
     REPO swift-nav/cmake
-    REF 373d4fcafbbc0c208dc9ecb278d36ed8c9448eda
-    SHA512 afefc8c7a3fb43ee65b9b8733968a5836938460abbf1bc9e8330f83c3ac4a5819f71a36dcb034004296161c592f4d61545ba10016d6666e7eaf1dca556d99e2e
+    REF d5558e3ad3c2cdabfb1ba31d20ea4defce570a95
+    SHA512 50c49b808b774c3fec1dd4488713f8fde423fda1d7e34a9ea8ecabc738d19f31ce8d52928c9d8012921d69130526ebd327635b1d4ca43f1b452066191c8756b7
     HEAD_REF master
 )
 
 # Copy cmake files to expected location
 file(INSTALL "${CMAKE_EXTRA_MODS}/CCache.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
 file(INSTALL "${CMAKE_EXTRA_MODS}/SwiftCmakeOptions.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/SwiftTargets.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
+file(INSTALL "${CMAKE_EXTRA_MODS}/ListTargets.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
 file(INSTALL "${CMAKE_EXTRA_MODS}/CompileOptions.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
 file(INSTALL "${CMAKE_EXTRA_MODS}/LanguageStandards.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
 file(INSTALL "${CMAKE_EXTRA_MODS}/ClangFormat.cmake" DESTINATION "${SOURCE_PATH}/c/cmake/common")
@@ -40,6 +42,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+vcpkg_cmake_config_fixup(CONFIG_PATH share/libsbp/cmake PACKAGE_NAME libsbp)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

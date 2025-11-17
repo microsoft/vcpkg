@@ -1,6 +1,7 @@
 {
   "name": "marble",
-  "version-string": "24.07.90",
+  "version-string": "24.08.2",
+  "port-version": 1,
   "description": "Marble KDE library",
   "homepage": "https://marble.kde.org",
   "license": "LGPL-2.1-or-later",

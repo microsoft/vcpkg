@@ -1,0 +1,6 @@
+eljonny-testcpp provides CMake targets:
+
+    find_package(TestCPP CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE cpptesting::TestCPP)
+
+See https://github.com/eljonny/TestCPP/blob/main/README.md for more information

@@ -72,30 +72,48 @@ elseif(VCPKG_TARGET_IS_IOS)
     endif()
     # disable that makes linkage error (e.g. require stderr usage)
     list(APPEND CONFIGURE_OPTIONS no-ui no-asm)
+elseif(VCPKG_TARGET_IS_TVOS OR VCPKG_TARGET_IS_WATCHOS)
+    set(OPENSSL_ARCH iphoneos-cross)
+    # disable that makes linkage error (e.g. require stderr usage)
+    list(APPEND CONFIGURE_OPTIONS no-ui no-asm)
 elseif(VCPKG_TARGET_IS_OSX)
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
         set(OPENSSL_ARCH darwin64-arm64)
     else()
         set(OPENSSL_ARCH darwin64-x86_64)
     endif()
-elseif(VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
-    set(OPENSSL_ARCH BSD-generic64)
+elseif(VCPKG_TARGET_IS_BSD)
+    set(OPENSSL_ARCH BSD-nodef-generic64)
+elseif(VCPKG_TARGET_IS_SOLARIS)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(OPENSSL_ARCH solaris64-x86_64-gcc)
+    else()
+        set(OPENSSL_ARCH solaris-x86-gcc)
+    endif()
 elseif(VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(OPENSSL_ARCH mingw64)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(OPENSSL_ARCH mingwarm64)
     else()
         set(OPENSSL_ARCH mingw)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(OPENSSL_ARCH linux-x32)
     vcpkg_list(APPEND CONFIGURE_OPTIONS
-        threads
         no-engine
         no-asm
         no-sse2
         no-srtp
         --cross-compile-prefix=
     )
+    # Cf. https://emscripten.org/docs/porting/pthreads.html:
+    # For Pthreads support, not just openssl but everything
+    # must be compiled and linked with `-pthread`.
+    # This makes it a triplet/toolchain-wide setting.
+    if(NOT " ${VCPKG_DETECTED_CMAKE_C_FLAGS} " MATCHES " -pthread ")
+        vcpkg_list(APPEND CONFIGURE_OPTIONS no-threads)
+    endif()
 else()
     message(FATAL_ERROR "Unknown platform")
 endif()
@@ -118,7 +136,7 @@ vcpkg_configure_make(
 )
 vcpkg_install_make(
     ${MAKEFILE_OPTIONS}
-    BUILD_TARGET build_sw
+    BUILD_TARGET build_inst_sw
 )
 vcpkg_fixup_pkgconfig()
 

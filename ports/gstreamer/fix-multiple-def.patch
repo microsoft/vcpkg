@@ -1,0 +1,35 @@
+diff --git a/subprojects/gst-plugins-bad/gst/siren/common.c b/subprojects/gst-plugins-bad/gst/siren/common.c
+index 2e07748..70f58f6 100644
+--- a/subprojects/gst-plugins-bad/gst/siren/common.c
++++ b/subprojects/gst-plugins-bad/gst/siren/common.c
+@@ -44,7 +44,7 @@ int max_bin[8] = {
+   1
+ };
+ 
+-float step_size[8] = {
++float stp_size[8] = {
+   0.3536f,
+   0.5f,
+   0.70709997f,
+@@ -87,7 +87,7 @@ siren_init (void)
+         (float) pow (10, (i - 24 + 0.5) * STEPSIZE);
+ 
+   for (i = 0; i < 8; i++)
+-    step_size_inverse[i] = (float) 1.0 / step_size[i];
++    step_size_inverse[i] = (float) 1.0 / stp_size[i];
+ 
+   siren_dct4_init ();
+   siren_rmlt_init ();
+diff --git a/subprojects/gst-plugins-bad/gst/siren/common.h b/subprojects/gst-plugins-bad/gst/siren/common.h
+index e09e533..123b888 100644
+--- a/subprojects/gst-plugins-bad/gst/siren/common.h
++++ b/subprojects/gst-plugins-bad/gst/siren/common.h
+@@ -95,7 +95,7 @@ extern int vector_dimension[8];
+ extern int number_of_vectors[8];
+ extern float dead_zone[8];
+ extern int max_bin[8];
+-extern float step_size[8];
++extern float stp_size[8];
+ extern float step_size_inverse[8];
+ 
+ 

@@ -1,16 +1,19 @@
-diff -u -r a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
+diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
+index 2620994..6e5f0a1 100644
 --- a/src/cmake/Config.cmake.in
 +++ b/src/cmake/Config.cmake.in
-@@ -6,6 +6,27 @@
+@@ -6,6 +6,32 @@
  
  include(CMakeFindDependencyMacro)
  
-+find_dependency(Boost COMPONENTS @Boost_COMPONENTS@)
 +if(@USE_GIF@)
 +    find_dependency(GIF)
 +endif()
 +if(@USE_LIBHEIF@)
 +    find_dependency(libheif CONFIG)
++endif()
++if(@USE_FREETYPE@)
++    find_dependency(freetype CONFIG)
 +endif()
 +find_dependency(PNG)
 +if(@USE_OPENCV@)
@@ -25,60 +28,61 @@ diff -u -r a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 +if(@USE_WEBP@)
 +    find_dependency(WebP CONFIG)
 +endif()
++if(@USE_LIBRAW@)
++    find_dependency(LibRaw)
++endif()
 +
  # add here all the find_dependency() whenever switching to config based dependencies
  if (NOT @OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH@ AND NOT OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH)
-     if (@OpenEXR_VERSION@ VERSION_GREATER_EQUAL 3.0)
-diff -u -r a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+     find_dependency(Imath @Imath_VERSION@
+diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
+index f8670a8..816ba08 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
-@@ -177,10 +177,13 @@
- checked_find_package (Freetype
-                    DEFINITIONS  -DUSE_FREETYPE=1 )
+@@ -125,16 +125,18 @@ checked_find_package (Freetype
+                       VERSION_MIN 2.10.0
+                       DEFINITIONS USE_FREETYPE=1 )
  
--checked_find_package (OpenColorIO
+-checked_find_package (OpenColorIO REQUIRED
+-                      VERSION_MIN 2.2
+-                      VERSION_MAX 2.9
+-                     )
++find_package(OpenColorIO CONFIG REQUIRED)
 +set(OPENCOLORIO_INCLUDES "")
 +set(OPENCOLORIO_LIBRARIES OpenColorIO::OpenColorIO)
-+checked_find_package (OpenColorIO CONFIG
-                       DEFINITIONS  -DUSE_OCIO=1 -DUSE_OPENCOLORIO=1
-                       # PREFER_CONFIG
-                       )
-+set(OPENCOLORIO_FOUND "${OpenColorIO_FOUND}")
- if (OpenColorIO_FOUND)
-     option (OIIO_DISABLE_BUILTIN_OCIO_CONFIGS
-            "For deveoper debugging/testing ONLY! Disable OCIO 2.2 builtin configs." OFF)
-@@ -191,7 +194,9 @@
-     set (OpenColorIO_FOUND 0)
++checked_find_package (OpenColorIO CONFIG)
+ if (NOT OPENCOLORIO_INCLUDES)
+     get_target_property(OPENCOLORIO_INCLUDES OpenColorIO::OpenColorIO INTERFACE_INCLUDE_DIRECTORIES)
  endif ()
+ include_directories(BEFORE ${OPENCOLORIO_INCLUDES})
  
--checked_find_package (OpenCV 3.0
+-checked_find_package (OpenCV 4.0
 +set(OPENCV_INCLUDES "")
 +set(OPENCV_LIBRARIES opencv_core)
 +checked_find_package (OpenCV CONFIG
-                    DEFINITIONS  -DUSE_OPENCV=1)
+                       DEFINITIONS USE_OPENCV=1)
  
  # Intel TBB
-@@ -205,12 +210,16 @@
-                       PREFER_CONFIG)
+@@ -146,11 +148,15 @@ checked_find_package (TBB 2017
+ # DCMTK is used to read DICOM images
+ checked_find_package (DCMTK CONFIG VERSION_MIN 3.6.1)
  
--checked_find_package (FFmpeg VERSION_MIN 3.0)
+-checked_find_package (FFmpeg VERSION_MIN 4.0)
 +checked_find_package (FFmpeg)
 +set(FFmpeg_FOUND "${FFMPEG_FOUND}")
 +set(FFMPEG_INCLUDES "${FFMPEG_INCLUDE_DIRS}")
- checked_find_package (GIF
-                       VERSION_MIN 4
-                       RECOMMEND_MIN 5.0
-                       RECOMMEND_MIN_REASON "for stability and thread safety")
+ 
+ checked_find_package (GIF VERSION_MIN 5.0)
  
  # For HEIF/HEIC/AVIF formats
 +set(LIBHEIF_INCLUDES "")
 +set(LIBHEIF_LIBRARIES heif)
- checked_find_package (Libheif VERSION_MIN 1.3
+ checked_find_package (Libheif VERSION_MIN 1.11
                        RECOMMEND_MIN 1.16
                        RECOMMEND_MIN_REASON "for orientation support")
-@@ -231,9 +240,8 @@
-     # set (LIBRAW_FOUND 0)
- endif ()
+@@ -159,9 +165,8 @@ checked_find_package (LibRaw
+                       VERSION_MIN 0.20.0
+                       PRINT LibRaw_r_LIBRARIES)
  
 -checked_find_package (OpenJPEG VERSION_MIN 2.0
 -                      RECOMMEND_MIN 2.2
@@ -88,12 +92,12 @@ diff -u -r a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
  # Note: Recent OpenJPEG versions have exported cmake configs, but we don't
  # find them reliable at all, so we stick to our FindOpenJPEG.cmake module.
  
-@@ -255,6 +263,8 @@
+@@ -178,6 +183,8 @@ if (NOT Ptex_FOUND OR NOT Ptex_VERSION)
      checked_find_package (Ptex)
  endif ()
  
 +set(WEBP_INCLUDES "")
 +set(WEBP_LIBRARIES WebP::webp WebP::webpdemux)
- checked_find_package (WebP)
- # Note: When WebP 1.1 (released late 2019) is our minimum, we can use their
- # exported configs and remove our FindWebP.cmake module.
+ checked_find_package (WebP VERSION_MIN 1.1)
+ 
+ option (USE_R3DSDK "Enable R3DSDK (RED camera) support" OFF)

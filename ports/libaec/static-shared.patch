@@ -1,0 +1,30 @@
+diff --git a/cmake/libaec-config.cmake.in b/cmake/libaec-config.cmake.in
+index 6f6c9e9..11ac99e 100644
+--- a/cmake/libaec-config.cmake.in
++++ b/cmake/libaec-config.cmake.in
+@@ -26,7 +26,7 @@
+ 
+ find_path(libaec_INCLUDE_DIR NAMES libaec.h DOC "AEC include directory")
+ find_path(SZIP_INCLUDE_DIR NAMES szlib.h DOC "SZIP include directory")
+-if (libaec_USE_STATIC_LIBS)
++if (libaec_USE_STATIC_LIBS OR (NOT DEFINED libaec_USE_STATIC_LIBS AND NOT "@BUILD_SHARED_LIBS@"))
+   if (MSVC)
+     find_library(libaec_LIBRARY NAMES aec-static.lib DOC "AEC library")
+     find_library(SZIP_LIBRARY NAMES szip-static.lib DOC "SZIP compatible version of the AEC library")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index f9c3031..b2aeb6c 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -75,4 +75,11 @@ set_target_properties(aec sz
+   PROPERTIES
+   COMPILE_DEFINITIONS "${libaec_COMPILE_DEFINITIONS}")
+ 
+-install(TARGETS aec_static aec_shared sz_static sz_shared)
++if(BUILD_SHARED_LIBS)
++  set(install_targets aec_shared sz_shared)
++  set_target_properties(aec_static graec sz_static PROPERTIES EXCLUDE_FROM_ALL 1)
++else()
++  set(install_targets aec_static sz_static)
++  set_target_properties(aec_shared graec sz_shared PROPERTIES EXCLUDE_FROM_ALL 1)
++endif()
++install(TARGETS ${install_targets})

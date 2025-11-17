@@ -6,7 +6,7 @@ index 13f11cb..92089a3 100644
    endif()
  endif ()
  
-+find_package(unofficial-asl CONFIG REQUIRED)
++find_package(ampl-asl CONFIG REQUIRED)
  add_subdirectory(doc)
  add_subdirectory(src/amplsig)
 -add_subdirectory(src/asl)

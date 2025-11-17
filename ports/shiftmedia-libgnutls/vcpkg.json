@@ -1,6 +1,6 @@
 {
   "name": "shiftmedia-libgnutls",
-  "version": "3.8.4",
+  "version": "3.8.7",
   "port-version": 2,
   "description": "Unofficial GnuTLS fork with added custom native Visual Studio project build tools. ",
   "homepage": "https://github.com/ShiftMediaProject/gnutls",
@@ -9,7 +9,6 @@
   "dependencies": [
     "gettext",
     "gmp",
-    "libidn2",
     "libtasn1",
     "nettle",
     {

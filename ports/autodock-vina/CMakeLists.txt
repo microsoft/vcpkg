@@ -3,8 +3,8 @@ cmake_policy(VERSION 3.11)
 
 project(autodock-vina)
 
-set(GIT_VERSION v1.2.5)
-set(CMAKE_CXX_STANDARD 11)
+set(GIT_VERSION v1.2.6)
+set(CMAKE_CXX_STANDARD 14)
 
 find_package(Boost REQUIRED COMPONENTS
     filesystem

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-CDR
     REF "v${VERSION}"
-    SHA512 4e3b39f371393e2be2b2a33cba1284f5eef9dea3e27ec8904db3f90b88b04aefbec2f095c078c7f4975bef4a7fb4a0dd53236636c4353a40378172559313f5c7
+    SHA512 49ffa82bca0db4968ba2baecbf46c020ac1b072226486678cfe26ab7c023ab6cbcb1b48c48d9ac2e7254ef6ce0c61f717c3cbbc5f546a13d8dff299ce382580c
     HEAD_REF master
     PATCHES
         pdb-file.patch

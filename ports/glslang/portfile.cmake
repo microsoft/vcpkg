@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/glslang
     REF "${VERSION}"
-    SHA512 ce6d09cc4d98b01d162ec5a196eec017c4a5f25eaf98c6612695d911f8d136c2f7193ff8f2c07931b2e94182d2c654833adc3b645f0c225e1d07c4e6e7abfd76
+    SHA512 8ba7e5f73746b221ff39387282e2d929d1142c60d1c79019f4c21c84b105fb59253e88f2f649a25e9bb7ab01094e455f002c7412aeea882548fac4a426eee809
     HEAD_REF master
-    PATCHES
-        0001-Fix-glslangValidator-installation.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

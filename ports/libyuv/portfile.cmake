@@ -1,20 +1,30 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/libyuv/libyuv
-    REF c21dda06dd8d19b6e50168c28c324c1f32e94407 # 6 commits after switch to 1895, reason: CMake changes
+    REF d98915a654d3564e4802a0004add46221c4e4348
     # Check https://chromium.googlesource.com/libyuv/libyuv/+/refs/heads/main/include/libyuv/version.h for a version!
     PATCHES
         cmake.diff
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools BUILD_TOOLS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DBUILD_TOOLS=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
-vcpkg_copy_pdbs()
-vcpkg_copy_tools(TOOL_NAMES yuvconvert AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES yuvconvert yuvconstants AUTO_CLEAN)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libyuv/basic_types.h" "defined(LIBYUV_USING_SHARED_LIBRARY)" "1")

@@ -7,6 +7,8 @@ vcpkg_from_github(
   REF "CRYPTOPP_${CRYPTOPP_VERSION}"
   SHA512 3ec33b107ab627a514e1ebbc4b6522ee8552525f36730d9b5feb85e61ba7fc24fd36eb6050e328c6789ff60d47796beaa8eebf7dead787a34395294fae9bb733
   HEAD_REF master
+  PATCHES
+    cmake-support-pem-pack.patch
 )
 
 vcpkg_from_github(
@@ -15,7 +17,9 @@ vcpkg_from_github(
   REF "CRYPTOPP_${CRYPTOPP_VERSION}"
   SHA512 28a67141155c9c15e3e6a2173b3a8487cc38a2a2ade73bf4a09814ca541be6b06e9a501be26f7e2f42a2f80df21b076aa5d8ad4224dc0a1f8d7f3b24deae465e
   HEAD_REF master
-  PATCHES patch.patch
+  PATCHES
+      patch.patch
+      cryptopp.patch
 )
 
 file(COPY "${CMAKE_SOURCE_PATH}/cryptopp" DESTINATION "${SOURCE_PATH}")
@@ -23,6 +27,11 @@ file(COPY "${CMAKE_SOURCE_PATH}/cmake" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_SOURCE_PATH}/test" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_SOURCE_PATH}/cryptopp/cryptoppConfig.cmake" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_SOURCE_PATH}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        pem-pack     CRYPTOPP_PEM_PACK
+)
 
 if("pem-pack" IN_LIST FEATURES)
     vcpkg_from_github(
@@ -37,7 +46,7 @@ if("pem-pack" IN_LIST FEATURES)
         ${PEM_PACK_SOURCE_PATH}/*.h
         ${PEM_PACK_SOURCE_PATH}/*.cpp
     )
-    file(INSTALL ${PEM_PACK_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
+    file(COPY ${PEM_PACK_FILES} DESTINATION ${SOURCE_PATH})
 endif()
 
 # disable assembly on ARM Windows to fix broken build
@@ -64,6 +73,7 @@ vcpkg_cmake_configure(
         -DDISABLE_ASM=${CRYPTOPP_DISABLE_ASM}
         -DUSE_INTERMEDIATE_OBJECTS_TARGET=OFF # Not required when we build static only
         -DCMAKE_POLICY_DEFAULT_CMP0063=NEW # Honor "<LANG>_VISIBILITY_PRESET" properties
+        ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         BUILD_STATIC
         USE_INTERMEDIATE_OBJECTS_TARGET

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankosterfeld/qtkeychain
     REF "${VERSION}"
-    SHA512 bf84b19090e667a2946297e63d9813574193d80e4eecbde2fdfca317a66da3f029b3abef326f4ffb32de032a48004f9cf1bc818468af612723d762652dc25eb6
+    SHA512 d1d87553db94bf54da1373016a847476e6cd608db6d427ed72532658e2272501daf45d7c9976efdde2f26ab3810ba9dbfec2518d46dee5a76ecaa369bfee2e4a
     HEAD_REF master
 )
 

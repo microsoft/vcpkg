@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ariya/FastLZ
-    REF c3bdfad9e0094d0fb15c12cd300e647c13dc85f9 #2021-5-10
-    SHA512 cb1c7e365e955f4cabfcb0bebf9cb57e88e81183fc0bec0713a88acee6bc3aeb31cdf8fa0b56b4b7c63f220ab7b50c299b13df15912a3b4a01ec70dd2a9513f7
+    REF b1342dabcf5257ab303743c9332fe75e9147a011 #2024-08-02
+    SHA512 a9c440c60e0d4fd9535a5438f3227e626c27ccd26cdcc9787c0dda5011b980c12ef46c7ddd2f197f6cc3bcef39755341d34214be9a508871ee3e1a24631a87b5
     HEAD_REF master
 )
 
@@ -19,4 +19,4 @@ vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MIT")

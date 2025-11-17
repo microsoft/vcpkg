@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO projectM-visualizer/projectm-eval
     REF "v${VERSION}"
-    SHA512 "ff5abf4c5deb5a665ed116a1a7a56cfaa0acedc6c211b16ef0c118bc1316f256667681c999c31880dd3aa6aec5ab92ce0747c42ba1ab98ac5046b6ef015de935"
+    SHA512 "5d7875b8cc64eb8fe5d2a9379d50e5dd0bb46cf72b36da65bf3b47f827ca3ec14f324d43518b2c34fb67c1b0431b7140006adbb4ea957f763a49445f438ee0cf"
     HEAD_REF master
 )
 
@@ -17,8 +17,14 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-  PACKAGE_NAME "projectm-eval"
-  CONFIG_PATH "lib/cmake/projectM-Eval"
+    PACKAGE_NAME "projectm-eval"
+    CONFIG_PATH "lib/cmake/projectM-Eval"
+    DO_NOT_DELETE_PARENT_CONFIG_PATH
+)
+
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME "projectM-EvalMilkdrop"
+    CONFIG_PATH "lib/cmake/projectM-EvalMilkdrop"
 )
 
 vcpkg_fixup_pkgconfig()

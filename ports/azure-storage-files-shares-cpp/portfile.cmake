@@ -5,9 +5,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
     REF "azure-storage-files-shares_${VERSION}"
-    SHA512 21a3510d6cd5530d079e4f9aa8586f77894f12af7d6b5ae2204161d349bdf4e69d199678307168afdcd0f6f53b253d13f2fbe027f9973f8926731fbff614a103
+    SHA512 ffe6d77fa579e5a15d5d41519e58116ca48986d79fc10671222a1eca6c27914473ae8a3e0d27d9b1b3408acce59308cef2c7169881673fb8c9b45ac8e16495c7
     HEAD_REF main
 )
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
+file(REMOVE_RECURSE ${unused})
 
 if(EXISTS "${SOURCE_PATH}/sdk/storage/azure-storage-files-shares")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/storage/_")

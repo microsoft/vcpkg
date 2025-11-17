@@ -6,9 +6,15 @@ vcpkg_from_git(
     REF 7e0af1d4d45b526f01677e74a56f4a951b70517d
     PATCHES
         fix-linux.patch
+        fix-lib-name-conflict.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
+x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3
+    PYTHON_EXECUTABLE "${PYTHON3}"
+    PYTHON_VERSION "3"
+    PACKAGES setuptools
+)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 
 # mini_chromium contains the toolchains and build configuration
@@ -19,6 +25,7 @@ if(NOT EXISTS "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/BUILD.gn")
         PATCHES
             fix-std-20.patch
             ndk-toolchain.diff
+            fix-lib-name-conflict-1.patch
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
     file(RENAME "${mini_chromium}" "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
@@ -34,13 +41,15 @@ if(NOT EXISTS "${SOURCE_PATH}/third_party/lss/lss/BUILD.gn" AND (VCPKG_TARGET_IS
 endif()
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
-    unset(_LIBRARY_DEB CACHE)
-    find_library(_LIBRARY_DEB NAMES ${LIBRARY_NAMES}
-        PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
-        NO_DEFAULT_PATH)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        unset(_LIBRARY_DEB CACHE)
+        find_library(_LIBRARY_DEB NAMES ${LIBRARY_NAMES}
+          PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
+          NO_DEFAULT_PATH)
 
-    if(_LIBRARY_DEB MATCHES "-NOTFOUND")
-        message(FATAL_ERROR "Could not find debug library with names: ${LIBRARY_NAMES}")
+        if(_LIBRARY_DEB MATCHES "-NOTFOUND")
+            message(FATAL_ERROR "Could not find debug library with names: ${LIBRARY_NAMES}")
+        endif()
     endif()
 
     unset(_LIBRARY_REL CACHE)
@@ -50,6 +59,10 @@ function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
 
     if(_LIBRARY_REL MATCHES "-NOTFOUND")
         message(FATAL_ERROR "Could not find library with names: ${LIBRARY_NAMES}")
+    endif()
+
+    if(VCPKG_BUILD_TYPE STREQUAL "release")
+        set(_LIBRARY_DEB ${_LIBRARY_REL})
     endif()
 
     set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
@@ -129,10 +142,26 @@ install_headers("${SOURCE_PATH}/util")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base")
 install_headers("${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build")
 
-file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
-file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/build")
+
+# On Windows/MSVC, mirror headers into the root include directory so MSBuild integration
+# (which adds only <installed>/include) can resolve un-namespaced includes like
+# "client/..." and "base/...".
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    message(STATUS "Mirroring headers into include root for MSBuild consumption...")
+    file(COPY "${SOURCE_PATH}/client" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
+    file(COPY "${SOURCE_PATH}/util" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
+    file(COPY "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/base" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
+    file(COPY "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/build" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen/build/chromeos_buildflags.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/build")
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gen/build/chromeos_buildflags.h.flags" DESTINATION "${CURRENT_PACKAGES_DIR}/include/build")
+endif()
+
 if(VCPKG_TARGET_IS_OSX)
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+    endif()
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/obj/util/libmig_output.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 
@@ -140,16 +169,35 @@ vcpkg_copy_tools(
     TOOL_NAMES crashpad_handler
     SEARCH_DIR "${CURRENT_PACKAGES_DIR}/tools")
 
+if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    file(CHMOD "${CURRENT_PACKAGES_DIR}/tools/crashpad_handler" FILE_PERMISSIONS
+      OWNER_READ OWNER_WRITE OWNER_EXECUTE
+      GROUP_READ GROUP_EXECUTE
+      WORLD_READ WORLD_EXECUTE
+    )
+endif()
+
 # remove empty directories
 file(REMOVE_RECURSE
     "${PACKAGES_INCLUDE_DIR}/util/net/testdata"
     "${PACKAGES_INCLUDE_DIR}/build/ios")
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/include/util/net/testdata"
+        "${CURRENT_PACKAGES_DIR}/include/build/ios")
+endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/crashpadConfig.cmake.in"
         "${CURRENT_PACKAGES_DIR}/share/${PORT}/crashpadConfig.cmake" @ONLY)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/build/config")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/${PORT}/util/mach/__pycache__")
+
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # Remove empty directory created under the mirrored root include
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/build/config")
+endif()
 
 vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

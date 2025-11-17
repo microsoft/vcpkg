@@ -1,0 +1,18 @@
+{
+  "name": "gegl",
+  "version": "0.4.62",
+  "description": "Generic Graphical Library.",
+  "homepage": "https://gegl.org/",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    "babl",
+    "json-glib",
+    "libjpeg-turbo",
+    "libpng",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}

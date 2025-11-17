@@ -1,8 +1,8 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(miniz)
+find_dependency(libdeflate)
 
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-openfbxTargets.cmake")
 
-check_required_components(miniz)
+check_required_components(libdeflate)

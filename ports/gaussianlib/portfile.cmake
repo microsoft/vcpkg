@@ -3,12 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LukasBanana/GaussianLib
-    REF 9b4a163a9a97c900b0febd93e22dc1be3faf6e20
-    SHA512 f16c3cd699e30d3fbd3ef6e80f64716d72383a1f2dc073325f785b63c2ba6edc62e2a7d360eba6a92a42bf4a2ad32accd4ce3e249ee510ff5133745b897a4f55
+    REF da580773dc65eefb4369894587864384e5e0dd7e # 2024-11-03
+    SHA512 4092c9d69c15e4aca08bde140dde2e7fa919dad4cb4f9138871efd9d23cd3d672201bc65608b8a379186e5d64b14e10852323a4a243c5ccd9911b7b9589cd927
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/include/Gauss DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(COPY "${SOURCE_PATH}/include/Gauss" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

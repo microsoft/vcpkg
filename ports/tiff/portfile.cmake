@@ -3,16 +3,16 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
     REF "v${VERSION}"
-    SHA512 ef2f1d424219d9e245069b7d23e78f5e817cf6ee516d46694915ab6c8909522166f84997513d20a702f4e52c3f18467813935b328fafa34bea5156dee00f66fa
+    SHA512 dcdabe2598db33a973d06f0009dd528aa1f38813bd6015e2595097b838a42240f9ccbe7524b5235ea2f4207a10d5d706339c7a6f4772b531e00a20281a00f67b
     HEAD_REF master
     PATCHES
         FindCMath.patch
-        requires-lerc.patch
+        prefer-config.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        cxx     cxx
+        cxx     tiff-cxx
         jpeg    jpeg
         jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
         libdeflate libdeflate
@@ -34,7 +34,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -Dtiff-docs=OFF
         -Dtiff-contrib=OFF
         -Dtiff-tests=OFF
@@ -74,9 +73,22 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRE
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES
+        fax2ps
+        fax2tiff
+        pal2rgb
+        ppm2tiff
+        raw2tiff
+        tiff2bw
+        tiff2pdf
+        tiff2ps
+        tiff2rgba
+        tiffcmp
         tiffcp
+        tiffcrop
+        tiffdither
         tiffdump
         tiffinfo
+        tiffmedian
         tiffset
         tiffsplit
         AUTO_CLEAN

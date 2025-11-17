@@ -5,8 +5,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
     REF "azure-core_${VERSION}"
-    SHA512 40af237726afe4f346d8bdd9c1dc4883ed6d71683e84ea2131c2b6558bf3d97312af4a9504a42c79d39612a927b8aabc0b4f6a0d0aede752ab1490abdc98bf72
+    SHA512 30b949e1154674b474287a4b36a29270d9fdd7a1f5b43d2507859f0a75176821a98c9a700665b513cc5e36a8089d48d614838ed0f900f42ef5c87dd92f2805b6
     HEAD_REF main
+    PATCHES
+        dt_android.patch
 )
 
 vcpkg_check_features(
@@ -15,6 +17,9 @@ vcpkg_check_features(
         curl BUILD_TRANSPORT_CURL
         winhttp BUILD_TRANSPORT_WINHTTP
 )
+
+file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
+file(REMOVE_RECURSE ${unused})
 
 if(EXISTS "${SOURCE_PATH}/sdk/core/azure-core")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/core/_")

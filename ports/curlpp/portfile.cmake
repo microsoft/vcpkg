@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-cmake.patch
         fix-findzliberror.patch
+        obsolete-curlopt.diff
 )
 
 vcpkg_cmake_configure(
@@ -28,8 +29,10 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT (VCPKG_LIBRARY_LINKAGE STREQUAL static))
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curlpp-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/..")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/bin/curlpp-config" "${CURRENT_INSTALLED_DIR}" "$(prefix)" IGNORE_UNCHANGED)
     if(NOT VCPKG_BUILD_TYPE)
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curlpp-config" "${CURRENT_PACKAGES_DIR}" "`dirname $0`/../..")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/bin/curlpp-config" "${CURRENT_INSTALLED_DIR}" "$(prefix)" IGNORE_UNCHANGED)
     endif()
 endif()
 
