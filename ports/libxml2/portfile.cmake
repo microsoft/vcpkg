@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
     REF "v${VERSION}"
-    SHA512 30bc2f10cd7c29ae4e8580afcf6626fb14e5ef5046bad1242c2e6b433a374d6eaaa6093cd3682b84392c9dd75ba90d7090b6899b732a5b98e8790173bddd3020
+    SHA512 c0ec62434379200615d5400345d1664f6b02af573d2e61ec343b463745fc9a7c74c7ff5d66023efdbabff81dc36e1d6c54921f619c81521c79e71611d5ed0268
     HEAD_REF master
     PATCHES
         cxx-for-icu.diff
-        disable-docs.patch
         disable-xml2-config.diff
         fix_cmakelist.patch
         fix_ios_compilation.patch
@@ -14,11 +13,9 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "http"      LIBXML2_WITH_HTTP
         "iconv"     LIBXML2_WITH_ICONV
         "icu"       LIBXML2_WITH_ICU
         "legacy"    LIBXML2_WITH_LEGACY
-        "lzma"      LIBXML2_WITH_LZMA
         "tools"     LIBXML2_WITH_PROGRAMS
         "zlib"      LIBXML2_WITH_ZLIB
 )
@@ -39,12 +36,10 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_OUTPUT=ON
         -DLIBXML2_WITH_PATTERN=ON
         -DLIBXML2_WITH_PUSH=ON
-        -DLIBXML2_WITH_PYTHON=OFF
         -DLIBXML2_WITH_READER=ON
         -DLIBXML2_WITH_REGEXPS=ON
         -DLIBXML2_WITH_SAX1=ON
         -DLIBXML2_WITH_SCHEMAS=ON
-        -DLIBXML2_WITH_SCHEMATRON=ON
         -DLIBXML2_WITH_THREADS=ON
         -DLIBXML2_WITH_THREAD_ALLOC=OFF
         -DLIBXML2_WITH_VALID=ON
@@ -59,7 +54,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2-${VERSION}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2")
 vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
@@ -67,7 +62,7 @@ if("tools" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h" "#ifdef LIBXML_STATIC" "#if 1 /* LIBXML_STATIC */")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h" "!defined(LIBXML_STATIC)" "0 /* LIBXML_STATIC */")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

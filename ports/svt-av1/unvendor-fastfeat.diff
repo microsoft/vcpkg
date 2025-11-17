@@ -1,0 +1,107 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57100575..47a9e709 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -721,6 +721,5 @@ if(BUILD_TESTING)
+     add_subdirectory(third_party/googletest)
+ endif()
+ 
+-add_subdirectory(third_party/fastfeat)
+ 
+ install(DIRECTORY ${PROJECT_SOURCE_DIR}/Source/API/ DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}/svt-av1" FILES_MATCHING PATTERN "*.h")
+diff --git a/Source/Lib/CMakeLists.txt b/Source/Lib/CMakeLists.txt
+index 03ffe4e2..43325e91 100644
+--- a/Source/Lib/CMakeLists.txt
++++ b/Source/Lib/CMakeLists.txt
+@@ -47,7 +47,7 @@ endif()
+ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/Codec/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/C_DEFAULT/
+-    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
++)
+ 
+ add_library(SvtAv1Enc)
+ # Required for cmake to be able to tell Xcode how to link all of the object files
+@@ -98,7 +98,6 @@ endif()
+ 
+ # Encoder Lib Source Files
+ target_sources(SvtAv1Enc PRIVATE
+-    $<TARGET_OBJECTS:FASTFEAT>
+     $<TARGET_OBJECTS:GLOBALS>
+     $<TARGET_OBJECTS:CODEC>
+     $<TARGET_OBJECTS:C_DEFAULT>)
+@@ -133,6 +132,14 @@ if(common_lib_source)
+     target_sources(SvtAv1Enc PRIVATE ${common_lib_source})
+ endif()
+ 
++find_library(FASTFEAT REQUIRED
++    NAMES fastfeat
++    PATHS "${FASTFEAT_LIB_DIR}"
++    NO_DEFAULT_PATH
++)
++list(APPEND PLATFORM_LIBS ${FASTFEAT})
++set(LIBS_PRIVATE "${LIBS_PRIVATE} -lfastfeat")
++
+ set_target_properties(SvtAv1Enc PROPERTIES VERSION ${ENC_VERSION})
+ set_target_properties(SvtAv1Enc PROPERTIES SOVERSION ${ENC_VERSION_MAJOR})
+ set_target_properties(SvtAv1Enc PROPERTIES C_VISIBILITY_PRESET hidden)
+diff --git a/Source/Lib/Codec/CMakeLists.txt b/Source/Lib/Codec/CMakeLists.txt
+index d3e95e4f..63b32eda 100644
+--- a/Source/Lib/Codec/CMakeLists.txt
++++ b/Source/Lib/Codec/CMakeLists.txt
+@@ -39,7 +39,7 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSE4_1/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX2/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX512/
+-    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
++)
+ elseif(NOT COMPILE_C_ONLY AND HAVE_ARM_PLATFORM)
+ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/Globals/
+@@ -50,14 +50,14 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_NEON_I8MM/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SVE/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SVE2/
+-    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
++)
+ else ()
+ # Include Encoder Subdirectories
+ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/Globals/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/Codec/
+     ${PROJECT_SOURCE_DIR}/Source/Lib/C_DEFAULT/
+-    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
++)
+ endif ()
+ 
+ set(all_files
+@@ -292,3 +292,4 @@ set(all_files
+         )
+ 
+ add_library(CODEC OBJECT ${all_files})
++target_include_directories(CODEC PRIVATE "${FASTFEAT_INCLUDE_DIR}")
+diff --git a/Source/Lib/Codec/corner_detect.c b/Source/Lib/Codec/corner_detect.c
+index 793919be..ca7e8537 100644
+--- a/Source/Lib/Codec/corner_detect.c
++++ b/Source/Lib/Codec/corner_detect.c
+@@ -18,7 +18,7 @@
+ #define FAST_BARRIER 18
+ int svt_av1_fast_corner_detect(unsigned char *buf, int width, int height, int stride, int *points, int max_points) {
+     int       num_points;
+-    xy *const frm_corners_xy = svt_aom_fast9_detect_nonmax(buf, width, height, stride, FAST_BARRIER, &num_points);
++    xy *const frm_corners_xy = fast9_detect_nonmax(buf, width, height, stride, FAST_BARRIER, &num_points);
+     num_points               = (num_points <= max_points ? num_points : max_points);
+     if (num_points > 0 && frm_corners_xy) {
+         svt_memcpy(points, frm_corners_xy, sizeof(*frm_corners_xy) * num_points);
+diff --git a/Source/Lib/Globals/CMakeLists.txt b/Source/Lib/Globals/CMakeLists.txt
+index 47e20736..0d8e99e1 100644
+--- a/Source/Lib/Globals/CMakeLists.txt
++++ b/Source/Lib/Globals/CMakeLists.txt
+@@ -15,7 +15,6 @@
+ include_directories(../../../API
+         ${PROJECT_BINARY_DIR}/Source/Lib/Codec/
+         ${PROJECT_SOURCE_DIR}/Source/Lib/C_DEFAULT/
+-        ${PROJECT_SOURCE_DIR}/third_party/fastfeat/
+         )
+ 
+ if(NOT COMPILE_C_ONLY AND HAVE_X86_PLATFORM)

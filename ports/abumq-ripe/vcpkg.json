@@ -1,0 +1,25 @@
+{
+  "name": "abumq-ripe",
+  "version": "4.2.2",
+  "description": "Lightweight cryptography library wrapper",
+  "homepage": "https://github.com/abumq/ripe",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "cryptopp",
+      "features": [
+        "pem-pack"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

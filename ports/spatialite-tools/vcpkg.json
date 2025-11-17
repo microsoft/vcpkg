@@ -1,10 +1,11 @@
 {
   "name": "spatialite-tools",
   "version": "5.1.0-a",
+  "port-version": 1,
   "description": "Contains spatialite.exe and other command line tools to work with SpatiaLite databases (import, export, SQL queries)",
   "homepage": "https://www.gaia-gis.it/fossil/spatialite-tools/index",
   "license": "GPL-3.0-or-later",
-  "supports": "!xbox",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     "expat",
     "libiconv",
@@ -17,15 +18,22 @@
     },
     {
       "name": "libxml2",
-      "features": [
-        "http"
-      ]
+      "default-features": false
     },
     "readosm",
-    "sqlite3",
+    {
+      "name": "sqlite3",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows | mingw"
+    },
     {
       "name": "vcpkg-pkgconfig-get-modules",
-      "host": true
+      "host": true,
+      "platform": "windows & !mingw"
     }
   ]
 }

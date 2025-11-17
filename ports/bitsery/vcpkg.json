@@ -1,6 +1,6 @@
 {
   "name": "bitsery",
-  "version": "5.2.4",
+  "version": "5.2.5",
   "description": "Header only C++ binary serialization library",
   "homepage": "https://github.com/fraillt/bitsery",
   "dependencies": [

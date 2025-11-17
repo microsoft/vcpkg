@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 11,
+  "port-version": 12,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
@@ -59,13 +59,16 @@
     "verdict",
     {
       "name": "vtk-compile-tools",
-      "host": true,
-      "platform": "!native"
+      "host": true
     },
     "zlib"
   ],
   "default-features": [
     "cgns",
+    {
+      "name": "fontconfig",
+      "platform": "android | linux"
+    },
     "libharu",
     "libtheora",
     "netcdf",
@@ -77,13 +80,23 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
-        "ffmpeg",
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swresample",
+            "swscale"
+          ]
+        },
         "libmysql",
         {
           "name": "vtk",
           "default-features": false,
           "features": [
             "cgns",
+            "fontconfig",
             "gdal",
             "geojson",
             "libharu",
@@ -134,6 +147,12 @@
     },
     "debugleaks": {
       "description": "Enables vtk debug leaks detection"
+    },
+    "fontconfig": {
+      "description": "Enables fontconfig for rendering",
+      "dependencies": [
+        "fontconfig"
+      ]
     },
     "gdal": {
       "description": "Support GDAL compilation",
@@ -240,16 +259,17 @@
           "name": "vtk",
           "default-features": false,
           "features": [
-            "qt"
+            "libtheora",
+            "netcdf",
+            "qt",
+            "seacas"
           ]
         },
         {
           "name": "vtk",
           "default-features": false,
           "features": [
-            "atlmfc",
-            "libtheora",
-            "seacas"
+            "atlmfc"
           ],
           "platform": "windows"
         }

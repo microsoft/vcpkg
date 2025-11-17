@@ -32,7 +32,7 @@ endif()
 
 set(USE_METAL OFF)
 if ("metal" IN_LIST FEATURES)
-    set(USE_METAL ON)
+  set(USE_METAL ON)
 endif()
 
 # chromium/7258

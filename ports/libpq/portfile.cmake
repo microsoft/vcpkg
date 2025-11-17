@@ -112,8 +112,8 @@ else()
         AUTOCONFIG
         ADDITIONAL_MSYS_PACKAGES autoconf-archive
             DIRECT_PACKAGES
-                "https://mirror.msys2.org/msys/x86_64/tzcode-2023c-1-x86_64.pkg.tar.zst"
-                7550b843964744607f736a7138f10c6cd92489406a1b84ac71d9a9d8aa16bc69048aa1b24e1f49291b010347047008194c334ca9c632e17fa8245e85549e3c7a
+                "https://mirror.msys2.org/msys/x86_64/tzcode-2025b-1-x86_64.pkg.tar.zst"
+                824779e3ac4857bb21cbdc92fa881fa24bf89dfa8bc2f9ca816e9a9837a6d963805e8e0991499c43337a134552215fdee50010e643ddc8bd699170433a4c83de
         OPTIONS
             ${BUILD_OPTS}
         OPTIONS_DEBUG
