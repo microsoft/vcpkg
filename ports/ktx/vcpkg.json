@@ -9,6 +9,7 @@
   "license": null,
   "supports": "arm64 | x64 | !windows",
   "dependencies": [
+    "opengl-registry",
     {
       "name": "vcpkg-cmake",
       "host": true
