@@ -10,6 +10,7 @@ vcpkg_from_github(
         0004-quirks.patch
         0005-no-vendored-libs.patch
         0006-fix-ios-install.patch
+        ktxread-libtool.diff
 )
 file(GLOB third_party "${SOURCE_PATH}/external/*" "${SOURCE_PATH}/external/basisu/zstd" "${SOURCE_PATH}/other_include/*")
 list(FILTER third_party EXCLUDE REGEX "/(astc-encoder|basisu|dfdutils|etcdec|imageio|glm|lodepng|SDL_gesture)\$")
@@ -30,6 +31,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
     vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
     vcpkg_list(APPEND OPTIONS "-DBASH_EXECUTABLE=${MSYS_ROOT}/usr/bin/bash.exe")
+endif()
+if(VCPKG_TARGET_IS_APPLE AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    vcpkg_list(APPEND OPTIONS "-DASTCENC_ISA_SSE41=ON") # use x86_64, not x64_64h
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
