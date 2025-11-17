@@ -11,12 +11,16 @@ vcpkg_from_github(
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES "with-dl" BUILD_WITH_DYNAMIC_LOADING
+    FEATURES
+        "tools"     BUILD_WITH_TOOLS
+        "with-dl"   BUILD_WITH_DYNAMIC_LOADING
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${FEATURE_OPTIONS}
-    OPTIONS_DEBUG -DINSTALL_HEADERS_TOOLS=OFF
+    OPTIONS_DEBUG
+        -DINSTALL_HEADERS=OFF
+        -DBUILD_WITH_TOOLS=OFF
 )
 
 vcpkg_cmake_install()

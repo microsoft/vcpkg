@@ -2,7 +2,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 4965071888bfd791ddc81ed9eb53cedcd0248b159e6db3492bf5d17557b0f7516aed0840408ff46a06e9a0989a42d7b2a7452fdaf619c8ca44de43e5d1c338b8
+        SHA512 28eabd8ee84c8b859c475f0fce5c4ee3df53143807fef2b0892caeb39abb006ff27c0c9549f1502ad4afa0aab715a5c751a592af86ce4ad1e3abb1a3b7c63c03
         HEAD_REF main
     PATCHES
         library-linkage.diff
@@ -41,8 +41,8 @@ if("httpfs" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
         REPO duckdb/duckdb_httpfs
-        REF 0989823e43554e8a00b31959a853e29ab9bd07f9
-        SHA512 71461d522aa5338df81931f937ed538b453b274d22e91ad7e0f1a92e4437a29cc869a0f5be3bd5a9abf0045dfd4681a787923ee32374be471483909c0a60a21f
+        REF 39ebaf77e93a55b2bb839b621794eba49b2e359b
+        SHA512 865bb9f686174043a6ddb7b804160cfb1859ed32a0d430a1a70de0437f8e5e0e80200863f3c1fa0be6512707834c012d00c18cf4a6fadb41969eefa1dc9db64e
         HEAD_REF main
         PATCHES
             library-linkage-httpfs.diff
@@ -51,7 +51,7 @@ if("httpfs" IN_LIST FEATURES)
     file(WRITE "${SOURCE_PATH}/.github/config/extensions/httpfs.cmake" "
 duckdb_extension_load(httpfs
     SOURCE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}\"
-    INCLUDE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}/extension/httpfs/include\"
+    INCLUDE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}/src/include\"
 )
 ")
 endif()
@@ -116,6 +116,7 @@ vcpkg_cmake_configure(
             "-DBUILD_EXTENSIONS=${BUILD_EXTENSIONS}"
             -DBUILD_SHELL=FALSE
             -DBUILD_UNITTESTS=OFF
+            -DCMAKE_CXX_STANDARD=17
             -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
             -DENABLE_EXTENSION_AUTOINSTALL=1
             -DENABLE_EXTENSION_AUTOLOADING=1
@@ -157,7 +158,7 @@ foreach(maybe_directory IN LISTS extension_dirs third_party_files)
 endforeach()
 vcpkg_install_copyright(
     COMMENT [[
-Duckdb contains copyies of many third-party packages which are subject to
+Duckdb contains copies of many third-party packages which are subject to
 separate license terms.
 ]]
     FILE_LIST

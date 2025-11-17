@@ -309,7 +309,7 @@
       "port-version": 0
     },
     "asmjit": {
-      "baseline": "2025-01-22",
+      "baseline": "2025-10-12",
       "port-version": 0
     },
     "asmtk": {
@@ -1665,7 +1665,7 @@
       "port-version": 6
     },
     "cgal": {
-      "baseline": "6.0.1",
+      "baseline": "6.1",
       "port-version": 0
     },
     "cgicc": {
@@ -1729,7 +1729,7 @@
       "port-version": 0
     },
     "cimg": {
-      "baseline": "3.6.2",
+      "baseline": "3.6.3",
       "port-version": 0
     },
     "cinatra": {
@@ -2313,7 +2313,7 @@
       "port-version": 1
     },
     "dacap-clip": {
-      "baseline": "1.12",
+      "baseline": "1.13",
       "port-version": 0
     },
     "darknet": {
@@ -2437,7 +2437,7 @@
       "port-version": 0
     },
     "directx12-agility": {
-      "baseline": "1.618.2",
+      "baseline": "1.618.3",
       "port-version": 0
     },
     "directxmath": {
@@ -2557,8 +2557,8 @@
       "port-version": 0
     },
     "duckdb": {
-      "baseline": "1.4.1",
-      "port-version": 1
+      "baseline": "1.4.2",
+      "port-version": 0
     },
     "duckx": {
       "baseline": "1.2.2",
@@ -2793,7 +2793,7 @@
       "port-version": 0
     },
     "ezc3d": {
-      "baseline": "1.6.0",
+      "baseline": "1.6.1",
       "port-version": 0
     },
     "ezfoundation": {
@@ -3181,7 +3181,7 @@
       "port-version": 0
     },
     "gameinput": {
-      "baseline": "2.0.26100.5312",
+      "baseline": "3.1.26100.6879",
       "port-version": 0
     },
     "gamenetworkingsockets": {
@@ -3689,7 +3689,7 @@
       "port-version": 1
     },
     "hanjingo-high-jump": {
-      "baseline": "1.0.3",
+      "baseline": "1.0.4",
       "port-version": 0
     },
     "happly": {
@@ -3849,8 +3849,8 @@
       "port-version": 1
     },
     "icu": {
-      "baseline": "74.2",
-      "port-version": 6
+      "baseline": "78.1",
+      "port-version": 0
     },
     "ideviceinstaller": {
       "baseline": "2023-07-21",
@@ -4441,7 +4441,7 @@
       "port-version": 0
     },
     "kubernetes": {
-      "baseline": "0.13.0",
+      "baseline": "0.14.0",
       "port-version": 0
     },
     "kuku": {
@@ -4953,7 +4953,7 @@
       "port-version": 1
     },
     "libhat": {
-      "baseline": "0.8.0",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "libhdfs3": {
@@ -5710,7 +5710,7 @@
     },
     "libvpx": {
       "baseline": "1.15.2",
-      "port-version": 2
+      "port-version": 3
     },
     "libwandio": {
       "baseline": "4.2.6-1",
@@ -5722,7 +5722,7 @@
     },
     "libwebp": {
       "baseline": "1.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libwebsockets": {
       "baseline": "4.4.1",
@@ -6073,7 +6073,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.698",
+      "baseline": "0.699",
       "port-version": 0
     },
     "luminoengine": {
@@ -6561,7 +6561,7 @@
       "port-version": 1
     },
     "ms-gdk": {
-      "baseline": "2504.3.4084",
+      "baseline": "2510.0.6194",
       "port-version": 0
     },
     "ms-gdkx": {
@@ -7301,7 +7301,7 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "4.2.0",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "orc": {
@@ -7473,7 +7473,7 @@
       "port-version": 3
     },
     "perfetto": {
-      "baseline": "52.0",
+      "baseline": "53.0",
       "port-version": 0
     },
     "pffft": {
@@ -7809,7 +7809,7 @@
       "port-version": 1
     },
     "pulsar-client-cpp": {
-      "baseline": "3.7.0",
+      "baseline": "3.8.0",
       "port-version": 0
     },
     "pulseaudio": {
@@ -7841,7 +7841,7 @@
       "port-version": 4
     },
     "qcbor": {
-      "baseline": "1.5.3",
+      "baseline": "1.6",
       "port-version": 0
     },
     "qcoro": {
@@ -8745,7 +8745,7 @@
       "port-version": 0
     },
     "sbp": {
-      "baseline": "6.3.1",
+      "baseline": "6.3.2",
       "port-version": 0
     },
     "scenepic": {
@@ -8901,7 +8901,7 @@
       "port-version": 3
     },
     "serd": {
-      "baseline": "0.32.4",
+      "baseline": "0.32.6",
       "port-version": 0
     },
     "serdepp": {
@@ -9009,7 +9009,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "4.2.1",
+      "baseline": "4.2.2",
       "port-version": 0
     },
     "simdutf": {
@@ -9905,7 +9905,7 @@
       "port-version": 0
     },
     "tsl-hat-trie": {
-      "baseline": "0.7.0",
+      "baseline": "0.7.1",
       "port-version": 0
     },
     "tsl-hopscotch-map": {
@@ -10057,7 +10057,7 @@
       "port-version": 1
     },
     "utf8proc": {
-      "baseline": "2.11.0",
+      "baseline": "2.11.1",
       "port-version": 0
     },
     "utfcpp": {
@@ -10658,7 +10658,7 @@
     },
     "xmlsec": {
       "baseline": "1.3.9",
-      "port-version": 0
+      "port-version": 1
     },
     "xnnpack": {
       "baseline": "2024-08-20",
