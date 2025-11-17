@@ -2317,7 +2317,7 @@
       "port-version": 0
     },
     "darknet": {
-      "baseline": "5.1",
+      "baseline": "5.0",
       "port-version": 0
     },
     "darts-clone": {

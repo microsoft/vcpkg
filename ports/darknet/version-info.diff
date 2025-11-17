@@ -1,17 +1,12 @@
 diff --git a/CM_version.cmake b/CM_version.cmake
-index 95f29db2..d363c1c6 100644
+index 88dc06f..095ea4b 100644
 --- a/CM_version.cmake
 +++ b/CM_version.cmake
-@@ -1,18 +1,14 @@
- # Darknet object detection framework
- 
--
- # Create a version string from the git tag and commit hash (see src/darknet_version.h.in).
- # Should look similar to this:
+@@ -6,13 +6,10 @@
  #
  #		v1.99-63-gc5c3569
  #
--EXECUTE_PROCESS (COMMAND git describe --tags --dirty --long OUTPUT_VARIABLE DARKNET_VERSION_STRING OUTPUT_STRIP_TRAILING_WHITESPACE)
+-EXECUTE_PROCESS (COMMAND git describe --tags --dirty OUTPUT_VARIABLE DARKNET_VERSION_STRING OUTPUT_STRIP_TRAILING_WHITESPACE)
  MESSAGE (STATUS "Darknet ${DARKNET_VERSION_STRING}")
  
  STRING (REGEX MATCH "v([0-9]+)\.([0-9]+)-([0-9]+)-g([0-9a-fA-F]+)" _ ${DARKNET_VERSION_STRING})

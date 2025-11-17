@@ -3,12 +3,11 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO hank-ai/darknet
-  # git ref v5.1 is ambiguous, https://github.com/hank-ai/darknet/issues/140
-  REF e1720f444420ffd354004e873219c6d8457a8735
-  SHA512 4b33b11696a6e891e51cd9c3f9636793e5c6bc7fd4eaeebe1c42595fbf918c9f466a9c34ab9b1a5f863d29695f7db63f7359867b3566706a662a837e6404155e
+  REF v5.0
+  SHA512 f19e8ff82111ce12da2cb06d7b4de18a2a965c67197f5d54b77a5502f658c4e837e2f346e2c8d24ad3f2bb1352845a35db665ac6f5455c022ffb1f37ad31f217
   HEAD_REF master
   PATCHES
-    install-dir.diff
+    installation.diff
     version-info.diff
     windows-getopt.diff
 )
@@ -40,14 +39,9 @@ vcpkg_cmake_configure(
     ${FEATURE_OPTIONS}
     "-DDARKNET_BRANCH_NAME=vcpkg"
     "-DDARKNET_VERSION_SHORT=${VERSION}"
-    "-DDARKNET_VERSION_STRING=${VERSION}-vcpkg"
-    -DDARKNET_TRY_ONNX=OFF
-    -DDARKNET_TRY_OPENBLAS=OFF
+    "-DDARKNET_VERSION_STRING=${VERSION}"
     -DDARKNET_TRY_ROCM=OFF
-    -DGTEST=OFF # disable find_library
     -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
-  MAYBE_UNUSED_VARIABLES
-    DARKNET_TRY_OPENBLAS
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
