@@ -109,8 +109,11 @@ if("tools" IN_LIST FEATURES)
         h5repack h5repart
         h5stat
         h5unjam
-        h5watch
     )
+
+    if ("hl" IN_LIST FEATURES)
+        list(APPEND HDF5_TOOLS h5watch)
+    endif()
 
     if ("mirror" IN_LIST FEATURES)
         list(APPEND HDF5_TOOLS mirror_server mirror_server_stop)
