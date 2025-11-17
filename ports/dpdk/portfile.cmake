@@ -54,7 +54,6 @@ append_bool_option("kmods" "enable_kmods")
 append_bool_option("tests" "tests")
 append_bool_option("trace" "enable_trace_fp")
 
-set(DOXYGEN "")
 set(PYTHON_PACKAGES "")
 if(VCPKG_TARGET_IS_WINDOWS)
   # https://doc.dpdk.org/guides/windows_gsg/build_dpdk.html#option-3-native-build-on-windows-using-msvc
