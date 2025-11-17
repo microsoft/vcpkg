@@ -13,10 +13,13 @@ else()
     set(_BUILD_SHARED_LIBS ON)
 endif()
 
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" LINK_CRT_STATIC)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_SHARED_LIBS=${_BUILD_SHARED_LIBS}
+        -DLINK_CRT_STATIC_LIBS=${LINK_CRT_STATIC}
         -DBUILD_DEMO=OFF
 )
 
