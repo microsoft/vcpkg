@@ -66,7 +66,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME TileDB CONFIG_PATH lib/cmake/TileDB)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/TileDB)
 
 file(REMOVE_RECURSE
     # pkgconfig files are currently broken.
