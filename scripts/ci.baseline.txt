@@ -201,9 +201,6 @@ ctp:x64-android=fail
 czmq:arm-neon-android=fail
 czmq:arm64-android=fail
 czmq:x64-android=fail
-darknet:arm-neon-android=fail
-darknet:arm64-android=fail
-darknet:x64-android=fail
 # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbghelp:arm64-uwp=skip
 dbghelp:arm64-windows-static-md=skip
