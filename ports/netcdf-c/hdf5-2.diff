@@ -11,3 +11,19 @@ index 917c73a..ed17fd3 100644
  #else
  #error "Cannot determine version of H5FD_class_t"
  #endif
+diff --git a/libhdf5/H5FDhttp.h b/libhdf5/H5FDhttp.h
+index 376609e..a8ac9bd 100644
+--- a/libhdf5/H5FDhttp.h
++++ b/libhdf5/H5FDhttp.h
+@@ -31,7 +31,11 @@
+ 
+ #if H5_VERSION_GE(1,13,2)
+ #define H5_VFD_HTTP     ((H5FD_class_value_t)(514))
++#if H5_VERSION_GE(2,0,0)
++#define H5FD_HTTP	(H5FD_http_init())
++#else
+ #define H5FD_HTTP	(H5FDperform_init(H5FD_http_init))
++#endif
+ #else
+ #define H5FD_HTTP	(H5FD_http_init())
+ #endif
