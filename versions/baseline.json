@@ -7308,6 +7308,10 @@
       "baseline": "2.1.0",
       "port-version": 0
     },
+    "orefkov-simstr": {
+      "baseline": "1.2.4",
+      "port-version": 0
+    },
     "orocos-kdl": {
       "baseline": "1.5.1",
       "port-version": 0
@@ -9034,10 +9038,6 @@
     },
     "simsimd": {
       "baseline": "6.0.0",
-      "port-version": 0
-    },
-    "simstr": {
-      "baseline": "1.2.4",
       "port-version": 0
     },
     "sjpeg": {
