@@ -2918,7 +2918,7 @@
     },
     "ffmpeg": {
       "baseline": "7.1.2",
-      "port-version": 2
+      "port-version": 3
     },
     "ffnvcodec": {
       "baseline": "12.2.72.0",
@@ -6901,7 +6901,7 @@
       "port-version": 4
     },
     "nonstd-bit-lite": {
-      "baseline": "1.2.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "nonstd-scope-lite": {
@@ -9078,6 +9078,10 @@
     },
     "slick-object-pool": {
       "baseline": "0.1.2",
+      "port-version": 0
+    },
+    "slick-queue": {
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "slikenet": {

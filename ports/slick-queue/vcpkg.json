@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "slick-queue",
+  "version": "1.1.2",
+  "description": "A C++ Lock-Free MPMC queue - header-only library for high throughput concurrent messaging with optional shared memory support",
+  "homepage": "https://github.com/SlickQuant/slick_queue",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
