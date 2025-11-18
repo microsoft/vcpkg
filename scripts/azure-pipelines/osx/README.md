@@ -23,9 +23,9 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
 - [ ] (Once only) install `macosvm` to `~` (this tarball is also backed up in our `vcpkg-image-minting` storage account). For example from a dev workstation:
     ```sh
     ssh vcpkg@HOSTMACHINE
-    curl -L -o macosvm-0.2-1-arm64-darwin21.tar.gz https://github.com/s-u/macosvm/releases/download/0.2-1/macosvm-0.2-1-arm64-darwin21.tar.gz
-    tar xvf macosvm-0.2-1-arm64-darwin21.tar.gz
-    rm macosvm-0.2-1-arm64-darwin21.tar.gz
+    curl -L -o macosvm-0.2-2-arm64-darwin21.tar.gz https://github.com/s-u/macosvm/releases/download/0.2-2/macosvm-0.2-2-arm64-darwin21.tar.gz
+    tar xvf macosvm-0.2-2-arm64-darwin21.tar.gz
+    rm macosvm-0.2-2-arm64-darwin21.tar.gz
     exit
     ```
 - [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example: https://updates.cdn-apple.com/2025FallFCS/fullrestores/089-04148/791B6F00-A30B-4EB0-B2E3-257167F7715B/UniversalMac_26.1_25B78_Restore.ipsw
@@ -106,9 +106,9 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
 - [ ] (Once only) install `macosvm` to `~` (this tarball is also backed up in our `vcpkg-image-minting` storage account). From a developer machine:
     ```sh
     ssh vcpkg@HOSTMACHINE
-    curl -L -o macosvm-0.2-1-arm64-darwin21.tar.gz https://github.com/s-u/macosvm/releases/download/0.2-1/macosvm-0.2-1-arm64-darwin21.tar.gz
-    tar xvf macosvm-0.2-1-arm64-darwin21.tar.gz
-    rm macosvm-0.2-1-arm64-darwin21.tar.gz
+    curl -L -o macosvm-0.2-2-arm64-darwin21.tar.gz https://github.com/s-u/macosvm/releases/download/0.2-2/macosvm-0.2-2-arm64-darwin21.tar.gz
+    tar xvf macosvm-0.2-2-arm64-darwin21.tar.gz
+    rm macosvm-0.2-2-arm64-darwin21.tar.gz
     exit
     ```
 - [ ] Skip if this is the image building machine. Mint a SAS token URI to the box to use from the Azure portal if you don't already have one, and download the VM. (Recommend running this via SSH from domain joined machine due to containing SAS tokens). From a developer machine:
@@ -133,7 +133,7 @@ Run these steps on each machine to add to the fleet. Skip steps that were done i
     ssh vcpkg@HOSTMACHINE
     rm .ssh/known_hosts
     chmod +x register-guest.sh
-    ./register-guest.sh PAT GOES HERE
+    ./register-guest.sh PAT-GOES-HERE AGENT-NUMBER-GOES-HERE
     rm register-guest.sh
     ```
 - [ ] That will cleanly shut down the VM. In the KVM's terminal, relaunch the VM in ephemeral mode with:

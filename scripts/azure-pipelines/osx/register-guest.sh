@@ -3,7 +3,11 @@ if [ -z "$1" ]; then
     echo "PAT missing"
     exit 1
 fi
-export AGENT=$(hostname | sed -nr 's/([^.]+).*/\1/p' | tr '[:lower:]' '[:upper:]')
+if [ -z "$2" ]; then
+    echo "Agent number missing"
+    exit 1
+fi
+export AGENT=CPPMAC-ARM64-$2
 echo "THIS IS AGENT: $AGENT"
 export POOL=`echo ~/Parallels/*/ | sed -nr 's/\/Users\/vcpkg\/Parallels\/vcpkg-osx-([0-9]{4}-[0-9]{2}-[0-9]{2})-arm64\/$/PrOsx-\1-arm64/p'`
 # on arm64, DNS works
