@@ -9064,6 +9064,10 @@
       "baseline": "2025-02-08",
       "port-version": 0
     },
+    "slick-object-pool": {
+      "baseline": "0.1.2",
+      "port-version": 0
+    },
     "slick-logger": {
       "baseline": "1.0.1",
       "port-version": 0
