@@ -2134,7 +2134,7 @@
     },
     "cpu-features": {
       "baseline": "0.10.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cpuid": {
       "baseline": "0.8.1",
@@ -2391,6 +2391,10 @@
     "dcmtk": {
       "baseline": "3.6.9",
       "port-version": 2
+    },
+    "deadlightreal-swiftnet": {
+      "baseline": "0.1.0",
+      "port-version": 0
     },
     "debug-assert": {
       "baseline": "1.3.4",
@@ -2697,7 +2701,7 @@
       "port-version": 0
     },
     "elements": {
-      "baseline": "2024-09-12",
+      "baseline": "2025-11-18",
       "port-version": 0
     },
     "elfio": {
@@ -3149,7 +3153,7 @@
       "port-version": 1
     },
     "future-config": {
-      "baseline": "0.1.0",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "fuzzylite": {
@@ -4433,8 +4437,8 @@
       "port-version": 0
     },
     "ktx": {
-      "baseline": "4.3.2",
-      "port-version": 2
+      "baseline": "4.4.2",
+      "port-version": 0
     },
     "kubazip": {
       "baseline": "0.3.5",
@@ -6780,6 +6784,10 @@
       "baseline": "2023-11-22",
       "port-version": 1
     },
+    "neko-schema": {
+      "baseline": "1.0.4",
+      "port-version": 0
+    },
     "neon2sse": {
       "baseline": "2024-11-24",
       "port-version": 0
@@ -7150,7 +7158,7 @@
     },
     "opencv4": {
       "baseline": "4.11.0",
-      "port-version": 5
+      "port-version": 6
     },
     "opendnp3": {
       "baseline": "3.1.1",
@@ -8850,7 +8858,7 @@
     },
     "sdl3": {
       "baseline": "3.2.26",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl3-image": {
       "baseline": "3.2.4",
@@ -9066,6 +9074,10 @@
     },
     "slick-queue": {
       "baseline": "1.1.2",
+      "port-version": 0
+    },
+    "slick-object-pool": {
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "slick-logger": {
