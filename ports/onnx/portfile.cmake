@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        "-DPython_EXECUTABLE:FILEPATH=${PYTHON3}"
         "-DPython3_EXECUTABLE:FILEPATH=${PYTHON3}"
         "-DProtobuf_PROTOC_EXECUTABLE:FILEPATH=${PROTOC}"
         -DONNX_ML=ON
@@ -39,6 +40,7 @@ vcpkg_cmake_configure(
         -DONNX_BUILD_CUSTOM_PROTOBUF=OFF
     MAYBE_UNUSED_VARIABLES
         ONNX_USE_MSVC_STATIC_RUNTIME
+        Python_EXECUTABLE
         Python3_EXECUTABLE
 )
 vcpkg_cmake_install()
