@@ -1,0 +1,28 @@
+{
+  "name": "neoactivemq-cpp",
+  "version": "1.1.2",
+  "port-version": 0,
+  "description": "Modern fork of Apache ActiveMQ-CPP with CMake support and OpenSSL integration",
+  "homepage": "https://github.com/blackb1rd/neoactivemq-cpp",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "asio",
+    "zlib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "ssl": {
+      "description": "Enable SSL support via OpenSSL",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+neoactivemq-cpp provides CMake targets:
+
+    find_package(neoactivemq-cpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE neoactivemq-cpp::neoactivemq-cpp)
+
+SSL Support:
+To enable SSL/TLS support, install with the ssl feature:
+    vcpkg install neoactivemq-cpp[ssl]
+
+The library defaults to building as shared libraries. To build as static:
+    vcpkg install neoactivemq-cpp --triplet=x64-windows-static
+
+For more information, see: https://github.com/blackb1rd/neoactivemq-cpp
