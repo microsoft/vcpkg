@@ -9072,6 +9072,10 @@
       "baseline": "2025-02-08",
       "port-version": 0
     },
+    "slick-queue": {
+      "baseline": "1.1.2",
+      "port-version": 0
+    },
     "slick-object-pool": {
       "baseline": "0.1.2",
       "port-version": 0
