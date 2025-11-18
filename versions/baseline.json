@@ -273,8 +273,8 @@
       "port-version": 8
     },
     "arrow": {
-      "baseline": "21.0.0",
-      "port-version": 2
+      "baseline": "22.0.0",
+      "port-version": 0
     },
     "arrow-adbc": {
       "baseline": "16",
@@ -9072,12 +9072,12 @@
       "baseline": "2025-02-08",
       "port-version": 0
     },
-    "slick-object-pool": {
-      "baseline": "0.1.2",
-      "port-version": 0
-    },
     "slick-logger": {
       "baseline": "1.0.1",
+      "port-version": 0
+    },
+    "slick-object-pool": {
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "slikenet": {
