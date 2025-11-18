@@ -1,15 +1,4 @@
-slick-object-pool provides CMake targets:
+slick-object-pool is header-only and can be used from CMake via:
 
     find_package(slick_object_pool CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE slick_object_pool)
-
-The package is header-only. Simply include the header in your code:
-
-    #include <slick/object_pool.h>
-
-Example usage:
-
-    slick::ObjectPool<MyStruct> pool(1024);  // Power of 2
-    auto* obj = pool.allocate();
-    obj->field = value;
-    pool.free(obj);
+    target_link_libraries(main PRIVATE slick::slick_object_pool)
