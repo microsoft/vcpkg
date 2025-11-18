@@ -1,7 +1,6 @@
 {
   "name": "ktx",
-  "version-semver": "4.3.2",
-  "port-version": 2,
+  "version-semver": "4.4.2",
   "description": [
     "The Khronos KTX library and tools.",
     "Functions for writing and reading KTX files, and instantiating OpenGL®, OpenGL ES™️ and Vulkan® textures from them."
@@ -10,6 +9,7 @@
   "license": null,
   "supports": "arm64 | x64 | !windows",
   "dependencies": [
+    "opengl-registry",
     {
       "name": "vcpkg-cmake",
       "host": true

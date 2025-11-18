@@ -8,7 +8,7 @@ index 34b85f10b5..5ed4625d9e 100644
  if find_libnuma
 -    numa_dep = cc.find_library('numa', required: false)
 -    if numa_dep.found() and cc.has_header('numaif.h')
-+    numa_dep = dependency('numa', method: 'pkg-config')
++    numa_dep = dependency('numa', method: 'pkg-config', required: false)
 +    if numa_dep.found()
          dpdk_conf.set10('RTE_HAS_LIBNUMA', true)
          has_libnuma = true

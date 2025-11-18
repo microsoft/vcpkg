@@ -1,0 +1,15 @@
+diff --git a/modules/core/src/system.cpp b/modules/core/src/system.cpp
+index fc3b533..94b3b03 100644
+--- a/modules/core/src/system.cpp
++++ b/modules/core/src/system.cpp
+@@ -50,6 +50,7 @@ direct,
+ 
+ #include "precomp.hpp"
+ #include <atomic>
++#include <exception>
+ #include <iostream>
+ #include <ostream>
+ 
+-- 
+2.50.0
+

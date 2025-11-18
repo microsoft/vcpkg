@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO unum-cloud/usearch
     REF "v${VERSION}"
-    SHA512 daea0cbdae65a5b1c09f7a85e1bbb4475d21c73fb427a287929c78b86528a2b01e787a7d4adb8a498f2251ade59996207f0f26cf062d34796032734f864340ae
+    SHA512 d4d48c7477c490aa89cfc5eaf3f98f64c3fec1174d21e14dd5e6cbf08b344a5483e2a851e41a4f6e0bdc933b945b7e8f3d116cc84822b235e404bca20d7951ea
     HEAD_REF main
     PATCHES
         use-vcpkg-ports.patch

@@ -1,0 +1,39 @@
+{
+  "name": "hazelcast-cpp-client",
+  "version": "5.5.0",
+  "description": "C++ client library for Hazelcast in-memory database.",
+  "homepage": "https://github.com/hazelcast/hazelcast-cpp-client",
+  "documentation": "https://docs.hazelcast.com/hazelcast/latest/clients/cplusplus",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-asio",
+    "boost-chrono",
+    "boost-format",
+    "boost-multiprecision",
+    "boost-optional",
+    "boost-property-tree",
+    "boost-system",
+    "boost-thread",
+    "boost-uuid",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "example": {
+      "description": "Build examples for Hazelcast C++ client"
+    },
+    "openssl": {
+      "description": "Build Hazelcast C++ client with SSL support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

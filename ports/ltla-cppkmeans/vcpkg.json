@@ -1,6 +1,6 @@
 {
   "name": "ltla-cppkmeans",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "C++ port of R's Hartigan-Wong implementation",
   "homepage": "https://github.com/LTLA/CppKmeans",
   "license": "MIT",

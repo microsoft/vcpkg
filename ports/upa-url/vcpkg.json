@@ -1,6 +1,6 @@
 {
   "name": "upa-url",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "An implementation of the WHATWG URL Standard in C++",
   "homepage": "https://github.com/upa-url/upa",
   "documentation": "https://upa-url.github.io/docs/",
