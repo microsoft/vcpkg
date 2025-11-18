@@ -45,7 +45,7 @@ install(
 install(
     EXPORT wow64extTargets
     FILE wow64extTargets.cmake
-    NAMESPACE wow64ext::
+    NAMESPACE unofficial::wow64ext::
     DESTINATION "lib/cmake/wow64ext"
 )
 
