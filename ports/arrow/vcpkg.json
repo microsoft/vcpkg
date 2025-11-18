@@ -13,7 +13,6 @@
     "bzip2",
     "gflags",
     "lz4",
-    "mimalloc",
     "openssl",
     "re2",
     "snappy",
