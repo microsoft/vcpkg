@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
         0004-android-datetime.patch
         0005-cmake-msvcruntime.patch
         0006-pcg-msvc-arm64.patch
+        0007-mimalloc-windows-no-patch-tool.patch
 )
 
 # Check cpp/cmake_modules/DefineOptions.cmake for option dependencies -
