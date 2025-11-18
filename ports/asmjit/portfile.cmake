@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO asmjit/asmjit
-    REF 4cd9198a6c68200e48d1d601ef8126767ea9a534 # commited on 2025-04-20
-    SHA512 22cbeecc1aa9339a8cbbbd687d1394bc1b2cb02d10d0cbfdc5c5cead0098422a57b782a2f34051dcfaa76ea5086ec273e63f1c70875f0db7b75ab2077f315583
+    REF 9eb6edbf711ceb25346ee40bae68b40a4505cdf5 # commited on 2025-05-08
+    SHA512 0
     HEAD_REF master
 )
 
