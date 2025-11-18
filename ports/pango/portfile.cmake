@@ -1,11 +1,14 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/pango
-    REF "${VERSION}"
-    SHA512 c980cfed2a4811c32ba473846d7d075e0b949a833089f4cafb436ce7442719307a60eb68956606c315dd6185cb8753df87d4bac140d752eaeaf0b67b17afbd79
-    HEAD_REF master
-) 
+string(REGEX MATCH "^([0-9]*[.][0-9]*)" PANGO_MAJOR_MINOR "${VERSION}")
+
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://download.gnome.org/sources/pango/${PANGO_MAJOR_MINOR}/pango-${VERSION}.tar.xz"
+    FILENAME "pango-${VERSION}.tar.xz"
+    SHA512 ce893f2f09922d3b8e862376d71465cd9eba45ac5de6b32681f3d3c226edb24b0949c705bb3f75a0c2eada46c524226c5b830b70719e6a95dfe374ce20f92011
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+)
 
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
