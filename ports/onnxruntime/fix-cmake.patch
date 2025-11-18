@@ -9,3 +9,16 @@ index 15f3105..af6609b 100644
 -            FRAMEWORK DESTINATION ${CMAKE_INSTALL_BINDIR})
 +            FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
  endif()
+diff --git a/cmake/external/abseil-cpp.cmake b/cmake/external/abseil-cpp.cmake
+index eede60a..07f5f77 100644
+--- a/cmake/external/abseil-cpp.cmake
++++ b/cmake/external/abseil-cpp.cmake
+@@ -122,7 +122,7 @@ absl::absl_check
+ absl::hash_function_defaults
+ absl::function_ref
+ absl::city
+-absl::low_level_hash
++# absl::low_level_hash # abseil 20250814.1+
+ absl::fixed_array
+ absl::variant
+ absl::meta
