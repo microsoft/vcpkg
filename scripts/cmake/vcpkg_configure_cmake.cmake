@@ -42,6 +42,8 @@ function(z_vcpkg_get_visual_studio_generator)
             set(generator "Visual Studio 16 2019")
         elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "17.99")
             set(generator "Visual Studio 17 2022")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "18.99")
+            set(generator "Visual Studio 18 2026")
         endif()
     endif()
 
