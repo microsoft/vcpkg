@@ -3149,7 +3149,7 @@
       "port-version": 1
     },
     "future-config": {
-      "baseline": "0.1.0",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "fuzzylite": {
