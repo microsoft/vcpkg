@@ -9268,6 +9268,10 @@
       "baseline": "0.4.0",
       "port-version": 0
     },
+    "sqlite-flux": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "sqlite-modern-cpp": {
       "baseline": "2023-12-03",
       "port-version": 0
