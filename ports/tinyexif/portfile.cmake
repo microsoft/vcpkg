@@ -7,11 +7,7 @@ vcpkg_from_github(
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
-if(BUILD_STATIC_LIBS)
-    set(_BUILD_SHARED_LIBS OFF)
-else()
-    set(_BUILD_SHARED_LIBS ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE" "dynamic" _BUILD_SHARED_LIBS)
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" LINK_CRT_STATIC)
 
