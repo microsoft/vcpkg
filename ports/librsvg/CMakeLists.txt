@@ -115,6 +115,7 @@ add_custom_command(
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/librsvg-enum-types.h" "${CMAKE_CURRENT_BINARY_DIR}/librsvg-enum-types.c"
     COMMAND "${PYTHON3}" "${CMAKE_CURRENT_SOURCE_DIR}/generate_enum_types.py"
             --glib-mkenums "${GLIB_MKENUMS}"
+            --input-dir "${CMAKE_CURRENT_SOURCE_DIR}"
             --output-dir "${CMAKE_CURRENT_BINARY_DIR}"
             "${enums_headers}"
     DEPENDS ${enums_headers}
