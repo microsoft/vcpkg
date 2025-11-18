@@ -1,0 +1,44 @@
+diff --git "a/CMakeUtilities/InstallCMakeExports.cmake" "b/CMakeUtilities/InstallCMakeExports.cmake"
+index 285136e9..4f06d2b6 100644
+--- "a/CMakeUtilities/InstallCMakeExports.cmake"
++++ "b/CMakeUtilities/InstallCMakeExports.cmake"
+@@ -102,6 +102,8 @@ endforeach()
+ # Get the absolute path out for use in the configured CMake file ImportSIMDIS_SDK.cmake
+ set(SDK_LIB_CMAKE_FULLPATH "${CMAKE_INSTALL_PREFIX}/${SDK_LIB_CMAKE_PATH}")
+ 
++if(USING_VCPKG)
++else()
+ # Create and install the FindSIMDIS_SDK.cmake file
+ configure_file(CMakeUtilities/FindSIMDIS_SDK.cmake.in
+     ${CMAKE_CURRENT_BINARY_DIR}/cmake/FindSIMDIS_SDK.cmake
+@@ -111,14 +113,14 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/FindSIMDIS_SDK.cmake
+     DESTINATION ${SDK_LIB_CMAKE_PATH}
+     COMPONENT Exports
+ )
++endif()
+ 
++if(USING_VCPKG)
+ # Configure and install the ImportSIMDIS_SDK.cmake useful for external projects
+-configure_file(CMakeUtilities/ImportSIMDIS_SDK.cmake.in
++configure_file(CMakeUtilities/FindSIMDIS_SDK.cmake.in
+     ${CMAKE_CURRENT_BINARY_DIR}/cmake/ImportSIMDIS_SDK.cmake
+     @ONLY
+ )
+-
+-if(USING_VCPKG)
+ install(FILES
+         ${CMAKE_CURRENT_BINARY_DIR}/cmake/ImportSIMDIS_SDK.cmake
+     DESTINATION share/simdissdk/ExternalSdkProject/CMakeModules/
+@@ -128,6 +130,12 @@ install(FILES
+ # Install files from the share folder
+ install(DIRECTORY share/ DESTINATION share/simdissdk COMPONENT Exports)
+ else()
++# Configure and install the ImportSIMDIS_SDK.cmake useful for external projects
++configure_file(CMakeUtilities/ImportSIMDIS_SDK.cmake.in
++    ${CMAKE_CURRENT_BINARY_DIR}/cmake/ImportSIMDIS_SDK.cmake
++    @ONLY
++)
++
+ install(FILES
+         ${CMAKE_CURRENT_BINARY_DIR}/cmake/ImportSIMDIS_SDK.cmake
+     DESTINATION share/ExternalSdkProject/CMakeModules/
