@@ -8,12 +8,17 @@ import sys
 def main():
     parser = argparse.ArgumentParser(description="Generate librsvg2 enum type definitions.")
     parser.add_argument("--glib-mkenums", type=str, required=True, help="Path to glib-mkenums tool")
+    parser.add_argument("--input-dir", type=str, required=True, help="Source path containing input enum definition files")
     parser.add_argument("--output-dir", type=str, required=True, help="Directory to output generated files")
     parser.add_argument("inputs", nargs='+', help="Input enum definition files")
     args = parser.parse_args()
 
     output_dir = pathlib.Path(args.output_dir)
+    input_dir = pathlib.Path(args.input_dir)
+
     output_dir.mkdir(parents=True, exist_ok=True)
+
+    inputs = [p.relative_to(input_dir) for p in map(pathlib.Path, args.inputs)]
 
     header_arguments = [
         sys.executable,
@@ -27,10 +32,10 @@ def main():
         "--ftail",
         R'G_END_DECLS\n\n#endif /* __LIBRSVG_ENUM_TYPES_H__ */',
         "--output",
-        "librsvg-enum-types.h"
-    ] + args.inputs
+        output_dir / "librsvg-enum-types.h"
+    ] + inputs
 
-    subprocess.run(header_arguments, cwd=output_dir, check=True)
+    subprocess.run(header_arguments, cwd=input_dir, check=True)
 
     source_arguments = [
         sys.executable,
@@ -46,10 +51,10 @@ def main():
         "--vtail",
         R'      { 0, NULL, NULL }\n    };\n    etype = g_@type@_register_static ("@EnumName@", values);\n  }\n  return etype;\n}\n ',
         "--output",
-        "librsvg-enum-types.c"
-    ] + args.inputs
+        output_dir / "librsvg-enum-types.c"
+    ] + inputs
 
-    subprocess.run(source_arguments, cwd=output_dir, check=True)
+    subprocess.run(source_arguments, cwd=input_dir, check=True)
 
     return 0
 
