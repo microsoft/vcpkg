@@ -1,16 +1,3 @@
-diff --git a/src-lib/CMakeLists.txt b/src-lib/CMakeLists.txt
-index 084ba24..49b725d 100644
---- a/src-lib/CMakeLists.txt
-+++ b/src-lib/CMakeLists.txt
-@@ -34,7 +34,7 @@ ENDIF ()
- 
- IF (WIN32)
- 	INCLUDE_DIRECTORIES (windows)
--	FILE (GLOB WINSRC windows/*.c)
-+	FILE (GLOB WINSRC windows/gettimeofday.c)
- 	LIST (APPEND LIBSRC ${WINSRC})
- ENDIF ()
- 
 diff --git a/src-lib/darkunistd.hpp b/src-lib/darkunistd.hpp
 index 6c06aef..5f9c970 100644
 --- a/src-lib/darkunistd.hpp
@@ -23,17 +10,3 @@ index 6c06aef..5f9c970 100644
  #include <io.h>
  #include <process.h> /* for getpid() and the exec..() family */
  #include <stdlib.h>
-diff --git a/src-lib/windows/gettimeofday.h b/src-lib/windows/gettimeofday.h
-index 3800350..6da9f65 100644
---- a/src-lib/windows/gettimeofday.h
-+++ b/src-lib/windows/gettimeofday.h
-@@ -6,6 +6,9 @@
- #include <time.h>
- #include "../darknet.h"
- 
-+#define gettimeofday darknet_gettimeofday
-+#define clock_gettime darknet_clock_gettime
-+
- #define CLOCK_REALTIME (1)
- #define BILLION (1E9)
- 

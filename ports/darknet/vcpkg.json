@@ -1,6 +1,6 @@
 {
   "name": "darknet",
-  "version": "5.0",
+  "version-date": "2025-10-24",
   "description": "Darknet is an open source neural network framework written in C and CUDA for processing images or video frames in computer vision.",
   "homepage": "https://darknetcv.ai/",
   "license": null,

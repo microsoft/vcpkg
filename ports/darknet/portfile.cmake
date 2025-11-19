@@ -1,10 +1,19 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
+# There are no curated versions.
+# Port updates must checkout the master branch, run
+#   git describe --tags --dirty --long
+# and put the result into this variable.
+set(darknet_version_string "v5.0-167-gfc780f8a")
+# We take from master but we also add patches.
+set(darknet_branch_name vcpkg)
+
+string(REGEX REPLACE "^.*-g" "" ref "${darknet_version_string}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO hank-ai/darknet
-  REF v5.0
-  SHA512 f19e8ff82111ce12da2cb06d7b4de18a2a965c67197f5d54b77a5502f658c4e837e2f346e2c8d24ad3f2bb1352845a35db665ac6f5455c022ffb1f37ad31f217
+  REF "${ref}"
+  SHA512 4403922273526862d6e899bfe4de2bc1205d004e8eb58f2a5837fda913565eff970405692d69f7c0155182a688d1ee91ca67f79edd1eae8c03228cdd24acac53
   HEAD_REF master
   PATCHES
     installation.diff
@@ -38,11 +47,13 @@ vcpkg_cmake_configure(
   DISABLE_PARALLEL_CONFIGURE # configuring darknet_version.h
   OPTIONS
     ${FEATURE_OPTIONS}
-    "-DDARKNET_BRANCH_NAME=vcpkg"
-    "-DDARKNET_VERSION_SHORT=${VERSION}"
-    "-DDARKNET_VERSION_STRING=${VERSION}"
+    "-DDARKNET_BRANCH_NAME=${darknet_branch_name}"
+    "-DDARKNET_VERSION_STRING=${darknet_version_string}"
+    -DDARKNET_TRY_ONNX=OFF
+    -DDARKNET_TRY_OPENBLAS=OFF
     -DDARKNET_TRY_ROCM=OFF
     -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
+    -DGTEST=OFF # disable find_library
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
