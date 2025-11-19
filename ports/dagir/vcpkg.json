@@ -1,0 +1,14 @@
+{
+  "name": "dagir",
+  "version-string": "0.1.0",
+  "description": "Header-only C++20 library for read-only external DAG views, traversal, and IR rendering",
+  "homepage": "https://github.com/Alan-Jowett/dagir",
+  "license": "MIT",
+  "default-features": [],
+  "features": {
+    "samples": {
+      "description": "Install example/sample programs"
+    }
+  },
+  "dependencies": []
+}
