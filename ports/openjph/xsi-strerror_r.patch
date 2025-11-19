@@ -1,0 +1,16 @@
+diff --git a/src/apps/others/ojph_sockets.cpp b/src/apps/others/ojph_sockets.cpp
+index 43b2105..85cd846 100644
+--- a/src/apps/others/ojph_sockets.cpp
++++ b/src/apps/others/ojph_sockets.cpp
+@@ -35,6 +35,11 @@
+ // Date: 17 April 2024
+ //***************************************************************************/
+ 
++// for XSI-compliant strerror_r
++#ifndef OJPH_OS_WINDOWS
++#define _POSIX_C_SOURCE 200112L
++#endif
++
+ #include <cassert>
+ #include <string.h>
+ #include "ojph_message.h"
