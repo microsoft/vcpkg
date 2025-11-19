@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 c8b1920bab954f5fa891956f330875478e5b17161d24f8b96db05108d61354dab0621f2a36c5ae421ffbfb9817d90c7a62fe1bd4f84ad149dd2d569c356a2788
     HEAD_REF master
+    PATCHES
+        pdb_name_conflict.patch
 )
 
 vcpkg_cmake_configure(
