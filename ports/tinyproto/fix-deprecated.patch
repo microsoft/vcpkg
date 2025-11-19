@@ -1,0 +1,28 @@
+diff --git a/src/proto/hdlc/low_level/hdlc.h b/src/proto/hdlc/low_level/hdlc.h
+index d8e85d7..416e254 100644
+--- a/src/proto/hdlc/low_level/hdlc.h
++++ b/src/proto/hdlc/low_level/hdlc.h
+@@ -40,6 +40,14 @@ extern "C"
+ /** Byte to fill gap between frames */
+ #define TINY_HDLC_FILL_BYTE 0xFF
+ 
++#if defined(__GNUC__) || defined(__clang__)
++#define TINY_HDLC_DEPRECATED __attribute__((deprecated))
++#elif defined(_MSC_VER)
++#define TINY_HDLC_DEPRECATED __declspec(deprecated)
++#else
++#define TINY_HDLC_DEPRECATED
++#endif
++
+     /**
+      * @defgroup HDLC_LOW_LEVEL_API HDLC low level protocol API
+      * @{
+@@ -218,7 +226,7 @@ extern "C"
+      * @note TINY_ERR_BUSY and TINY_ERR_INVALID_DATA refer to putting new frame to TX
+      *       hdlc queue.
+      */
+-    int hdlc_ll_put(hdlc_ll_handle_t handle, const void *data, int len) __attribute__((deprecated));
++    int hdlc_ll_put(hdlc_ll_handle_t handle, const void *data, int len) TINY_HDLC_DEPRECATED;
+ 
+     /**
+      * Puts next frame for sending.
