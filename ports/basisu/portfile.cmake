@@ -15,12 +15,15 @@ vcpkg_from_github(
         examples.diff
         export-cmake-config.diff
         skip-strip.diff
+        devendor-zstd.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/zstd")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_CXX_STANDARD=17
+        -DBASISU_SYSTEM_ZSTD=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
