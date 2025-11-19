@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 b78e5b3e9792fbebd47064c747be675022f2758c30ac2cd69ade5601d9693b8eb8786c46c56df76f04feef963310838042833b7a91e2cc6c9317a5c34717ade8
     HEAD_REF main
+    PATCHES
+    	cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
