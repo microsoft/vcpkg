@@ -43,14 +43,12 @@ diff --git a/basisu-config.cmake.in b/basisu-config.cmake.in
 index 15c0d7e..da4d9ee 100644
 --- a/basisu-config.cmake.in
 +++ b/basisu-config.cmake.in
-@@ -1,5 +1,12 @@
+@@ -1,5 +1,10 @@
  @PACKAGE_INIT@
  
-+if(NOT "@BUILD_SHARED_LIBS@")
-+  include(CMakeFindDependencyMacro)
-+  if("@ZSTD@" AND "@BASISU_SYSTEM_ZSTD@")
-+    find_dependency(zstd CONFIG)
-+  endif()
++include(CMakeFindDependencyMacro)
++if("@ZSTD@" AND "@BASISU_SYSTEM_ZSTD@")
++  find_dependency(zstd CONFIG)
 +endif()
 +
  include("${CMAKE_CURRENT_LIST_DIR}/basisu-targets.cmake")
