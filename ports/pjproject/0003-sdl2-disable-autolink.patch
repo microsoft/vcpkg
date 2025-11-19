@@ -1,0 +1,20 @@
+diff --git a/pjmedia/src/pjmedia-videodev/sdl_dev.c b/pjmedia/src/pjmedia-videodev/sdl_dev.c
+index fc5654db7..4d0def3e3 100644
+--- a/pjmedia/src/pjmedia-videodev/sdl_dev.c
++++ b/pjmedia/src/pjmedia-videodev/sdl_dev.c
+@@ -1548,6 +1548,7 @@ static pj_status_t job_queue_destroy(job_queue *jq)
+ }
+ 
+ #ifdef _MSC_VER
++#   if !defined(PJPROJECT_DISABLE_SDL_AUTOLINK)
+ #   if defined(PJMEDIA_SDL_LIB)
+ #       pragma comment( lib, PJMEDIA_SDL_LIB)
+ #   elif SDL_VERSION_ATLEAST(2,0,0)
+@@ -1555,6 +1556,7 @@ static pj_status_t job_queue_destroy(job_queue *jq)
+ #   elif SDL_VERSION_ATLEAST(1,3,0)
+ #       pragma comment( lib, "sdl.lib")
+ #   endif
++#   endif /* !PJPROJECT_DISABLE_SDL_AUTOLINK */
+ #   if PJMEDIA_VIDEO_DEV_SDL_HAS_OPENGL
+ #       pragma comment(lib, "OpenGL32.lib")
+ #   endif /* PJMEDIA_VIDEO_DEV_SDL_HAS_OPENGL */
