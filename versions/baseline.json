@@ -9084,10 +9084,6 @@
       "baseline": "1.1.2",
       "port-version": 0
     },
-    "slick-object-pool": {
-      "baseline": "0.1.2",
-      "port-version": 0
-    },
     "slikenet": {
       "baseline": "2021-06-07",
       "port-version": 3
