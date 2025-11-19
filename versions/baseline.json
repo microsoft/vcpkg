@@ -362,7 +362,7 @@
     },
     "atl": {
       "baseline": "0",
-      "port-version": 0
+      "port-version": 1
     },
     "atliac-minitest": {
       "baseline": "1.0.0",
@@ -370,7 +370,7 @@
     },
     "atlmfc": {
       "baseline": "0",
-      "port-version": 3
+      "port-version": 4
     },
     "atomic-queue": {
       "baseline": "1.7.1",
@@ -9072,16 +9072,16 @@
       "baseline": "2025-02-08",
       "port-version": 0
     },
-    "slick-queue": {
-      "baseline": "1.1.2",
+    "slick-logger": {
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "slick-object-pool": {
       "baseline": "0.1.2",
       "port-version": 0
     },
-    "slick-logger": {
-      "baseline": "1.0.1",
+    "slick-queue": {
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "slikenet": {
@@ -10578,7 +10578,7 @@
     },
     "wtl": {
       "baseline": "10.0.10320",
-      "port-version": 4
+      "port-version": 5
     },
     "wxchartdir": {
       "baseline": "2.0.0",
