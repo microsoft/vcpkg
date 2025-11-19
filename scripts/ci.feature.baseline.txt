@@ -336,7 +336,6 @@ adios2:x64-uwp = cascade
 adios2[cuda](osx) = cascade
 adios2[cuda,mpi]:x86-windows = cascade
 adios2[python]:x64-uwp = cascade
-alembic[hdf5]:arm64-windows = cascade
 aliyun-oss-c-sdk:arm64-windows = cascade
 allegro5:arm64-uwp = cascade
 allegro5:x64-uwp = cascade
