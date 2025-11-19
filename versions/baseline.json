@@ -5281,7 +5281,7 @@
       "port-version": 3
     },
     "liboqs": {
-      "baseline": "0.12.0",
+      "baseline": "0.15.0",
       "port-version": 0
     },
     "liborigin": {
