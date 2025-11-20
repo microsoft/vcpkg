@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF "vulkan-sdk-${VERSION}"
     SHA512 d98ae93e738fee540e4924c887497f06ca7296a22a1a450f08e5278bdc51fb440443361fdf839793bc632b6e6115754621f24a8e7f2548da58d1bf67713ccaf9
     HEAD_REF main
+    PATCHES
+        disable_vendored_phmap.diff
 )
 
 vcpkg_find_acquire_program(PYTHON3)
