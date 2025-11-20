@@ -3234,7 +3234,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.12",
-      "port-version": 4
+      "port-version": 5
     },
     "gegl": {
       "baseline": "0.4.62",
@@ -5413,8 +5413,8 @@
       "port-version": 0
     },
     "librsvg": {
-      "baseline": "2.40.21",
-      "port-version": 1
+      "baseline": "2.40.23",
+      "port-version": 0
     },
     "librsync": {
       "baseline": "2.3.4",
@@ -7386,7 +7386,7 @@
     },
     "pango": {
       "baseline": "1.56.1",
-      "port-version": 2
+      "port-version": 3
     },
     "pangolin": {
       "baseline": "0.9.4",
