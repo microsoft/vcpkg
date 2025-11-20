@@ -9129,7 +9129,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.8.4",
+      "baseline": "5.8.5",
       "port-version": 0
     },
     "soci": {
