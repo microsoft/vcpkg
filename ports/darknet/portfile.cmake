@@ -27,6 +27,7 @@ file(WRITE "${SOURCE_PATH}/src-examples/CMakeLists.txt" "# disabled by vcpkg")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     cuda          DARKNET_TRY_CUDA
+    openmp        VCPKG_LOCK_FIND_PACKAGE_OpenMP
 )
 
 if("cuda" IN_LIST FEATURES)
