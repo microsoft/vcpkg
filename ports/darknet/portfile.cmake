@@ -54,6 +54,8 @@ vcpkg_cmake_configure(
     -DDARKNET_TRY_ROCM=OFF
     -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
     -DGTEST=OFF # disable find_library
+  MAYBE_UNUSED_VARIABLES
+    DARKNET_TRY_OPENBLAS
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
