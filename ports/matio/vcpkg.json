@@ -1,12 +1,16 @@
 {
   "name": "matio",
-  "version": "1.5.28",
+  "version": "1.5.29",
   "description": "MATLAB MAT File I/O Library",
   "homepage": "https://github.com/tbeu/matio",
   "license": "BSD-2-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
@@ -33,9 +37,6 @@
           ]
         }
       ]
-    },
-    "pic": {
-      "description": "Enable position-independent code (PIC), i.e., compilation with the -fPIC flag"
     },
     "zlib": {
       "description": "Check for zlib library",
