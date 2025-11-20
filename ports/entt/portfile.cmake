@@ -12,6 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENTT_BUILD_TESTING=OFF
+        -DENTT_BUILD_TESTBED=OFF
         -DENTT_BUILD_DOCS=OFF
         -DENTT_INSTALL=ON
 )
@@ -22,7 +23,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/EnTT/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 # Install natvis files
-file(INSTALL "${SOURCE_PATH}/natvis/entt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/natvis")
+file(INSTALL "${SOURCE_PATH}/src/entt/natvis" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/natvis")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
