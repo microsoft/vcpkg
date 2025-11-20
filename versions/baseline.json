@@ -2316,6 +2316,10 @@
       "baseline": "1.13",
       "port-version": 0
     },
+    "dagir": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "darknet": {
       "baseline": "2024-10-10",
       "port-version": 1
