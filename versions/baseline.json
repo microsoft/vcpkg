@@ -2745,7 +2745,7 @@
       "port-version": 6
     },
     "entt": {
-      "baseline": "3.15.0",
+      "baseline": "3.16.0",
       "port-version": 0
     },
     "epoll-shim": {
