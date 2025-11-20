@@ -5890,7 +5890,7 @@
     },
     "libzim": {
       "baseline": "9.4.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libzip": {
       "baseline": "1.11.4",
