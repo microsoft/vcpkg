@@ -17,6 +17,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     installation.diff
+    purely-openmp_cxx-target.diff
     version-info.diff
     system-processor.diff
     windows-getopt.diff
