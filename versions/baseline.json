@@ -2436,6 +2436,10 @@
       "baseline": "0.1.0",
       "port-version": 0
     },
+    "directfb2": {
+      "baseline": "2025-11-25",
+      "port-version": 0
+    },
     "directx-dxc": {
       "baseline": "2025-10-10",
       "port-version": 0
