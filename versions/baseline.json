@@ -2789,7 +2789,7 @@
       "port-version": 0
     },
     "expected-lite": {
-      "baseline": "0.9.0",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "exprtk": {
