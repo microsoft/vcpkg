@@ -7,6 +7,9 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH} OPTIONS -DDAGIR_BUILD_TESTS=OFF -DDAGIR_EXAMPLES=OFF)
 vcpkg_cmake_install()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/include")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+endif()
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/share/dagir")
 vcpkg_cmake_config_fixup()
 
