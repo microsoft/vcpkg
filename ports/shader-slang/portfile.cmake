@@ -79,6 +79,7 @@ file(GLOB libs
 	"${BINDIST_PATH}/lib/*.lib"
 	"${BINDIST_PATH}/lib/*.dylib"
 	"${BINDIST_PATH}/lib/*.so"
+	"${BINDIST_PATH}/lib/*.so.0.${VERSION}" # On linux, some of the .so files are postfixed by the version.
 )
 file(INSTALL ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
@@ -117,10 +118,16 @@ file(INSTALL ${headers} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 block(SCOPE_FOR VARIABLES)
 	set(VCPKG_BUILD_TYPE Release) # no debug binaries anyways
-	file(COPY "${BINDIST_PATH}/cmake" DESTINATION "${CURRENT_PACKAGES_DIR}")
+
+	if (VCPKG_TARGET_IS_WINDOWS)
+		file(COPY "${BINDIST_PATH}/cmake" DESTINATION "${CURRENT_PACKAGES_DIR}")
+	else()
+		file(COPY "${BINDIST_PATH}/lib/cmake/slang" DESTINATION "${CURRENT_PACKAGES_DIR}/share")
+	endif()
+
 	vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME slang)
 	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfig.cmake"
-		[[HINTS ENV PATH "${PACKAGE_PREFIX_DIR}/bin"]]
+		[[HINTS "${PACKAGE_PREFIX_DIR}/bin" ENV PATH]]
 		[[PATHS "${PACKAGE_PREFIX_DIR}/tools/shader-slang" NO_DEFAULT_PATH REQUIRED]]
 	)
 	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfigVersion.cmake"
