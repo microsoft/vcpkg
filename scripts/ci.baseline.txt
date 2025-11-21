@@ -231,7 +231,6 @@ eathread:x64-android=fail
 ecal:arm-neon-android=fail
 ecal:arm64-android=fail
 ecal:x64-android=fail
-# variable length arrays in C++ are a Clang extension
 flint:arm-neon-android=fail
 flint:arm64-android=fail
 flint:x64-android=fail
