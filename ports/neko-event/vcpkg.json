@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "neko-event",
   "version": "1.0.1",
   "description": "A modern easy to use type-safe and high-performance event handling system for C++ ",
