@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DASMJIT_STATIC=${ASMJIT_STATIC}
-)
+ )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
