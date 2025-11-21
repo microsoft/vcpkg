@@ -1,7 +1,7 @@
 {
   "name": "arrow",
   "version": "21.0.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Cross-language development platform for in-memory analytics",
   "homepage": "https://arrow.apache.org",
   "license": "Apache-2.0",
@@ -39,7 +39,16 @@
   ],
   "features": {
     "acero": {
-      "description": "Acero support"
+      "description": "Acero support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "compute"
+          ]
+        }
+      ]
     },
     "compute": {
       "description": "Build all computational kernel functions"
@@ -54,7 +63,17 @@
       ]
     },
     "dataset": {
-      "description": "Dataset support"
+      "description": "Dataset support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "acero",
+            "filesystem"
+          ]
+        }
+      ]
     },
     "example": {
       "description": "Install the minimal example (source code)"
@@ -86,6 +105,13 @@
     "gcs": {
       "description": "GCS support",
       "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "filesystem"
+          ]
+        },
         {
           "name": "google-cloud-cpp",
           "default-features": false,
@@ -131,6 +157,13 @@
     "s3": {
       "description": "S3 support",
       "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "filesystem"
+          ]
+        },
         {
           "name": "aws-sdk-cpp",
           "default-features": false,

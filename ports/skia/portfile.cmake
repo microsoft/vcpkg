@@ -16,8 +16,10 @@ vcpkg_from_github(
         dawn.patch
         use-pkgconfig-to-find-gl.patch
         dont-use-response-file.patch
-        fix-openbsd.patch
+        fix-bsd.patch
         allow-disabling-lib-dl.patch
+        always-build-pathops.patch
+        remove-directwrite-png-dependency.patch # merged in newer versions on upstream
 )
 
 # De-vendor
@@ -25,11 +27,6 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
-declare_external_from_git(abseil-cpp
-    URL "https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp.git"
-    REF "cae4b6a3990e1431caa09c7b2ed1c76d0dfeab17"
-    LICENSE_FILE LICENSE
-)
 declare_external_from_git(d3d12allocator
     URL "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator.git"
     REF "169895d529dfce00390a20e69c2f516066fe7a3b"
@@ -81,12 +78,14 @@ declare_external_from_git(wuffs
     LICENSE_FILE LICENSE
 )
 
+declare_external_from_pkgconfig(abseil-cpp)
 declare_external_from_pkgconfig(expat)
 declare_external_from_pkgconfig(fontconfig PATH "third_party")
 declare_external_from_pkgconfig(freetype2)
 declare_external_from_pkgconfig(gl)
 declare_external_from_pkgconfig(harfbuzz MODULES harfbuzz harfbuzz-subset)
 declare_external_from_pkgconfig(icu MODULES icu-uc)
+declare_external_from_pkgconfig(libavif)
 declare_external_from_pkgconfig(libjpeg PATH "third_party/libjpeg-turbo" MODULES libturbojpeg libjpeg)
 declare_external_from_pkgconfig(libpng)
 declare_external_from_pkgconfig(libwebp MODULES libwebpdecoder libwebpdemux libwebpmux libwebp)
@@ -127,7 +126,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         string(APPEND OPTIONS " skia_enable_bentleyottmann=false")
     endif()
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
     string(APPEND OPTIONS " target_os=\"linux\"")
 endif()
 
@@ -137,7 +136,7 @@ else()
     string(APPEND OPTIONS " is_component_build=false")
 endif()
 
-if (VCPKG_TARGET_IS_OPENBSD)
+if (VCPKG_TARGET_IS_BSD AND NOT VCPKG_TARGET_IS_FREEBSD)
     string(APPEND OPTIONS " skia_vcpkg_has_lib_dl=false")
 else()
     string(APPEND OPTIONS " skia_vcpkg_has_lib_dl=true")
@@ -145,9 +144,6 @@ endif()
 
 set(required_externals
     expat
-    libjpeg
-    libpng
-    libwebp
     piex
     zlib
     wuffs
@@ -192,7 +188,7 @@ else()
 endif()
 
 if("gl" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
+    if (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD)
         list(APPEND required_externals gl)
     endif()
     string(APPEND OPTIONS " skia_use_gl=true")
@@ -223,12 +219,48 @@ endif()
 
 if("graphite" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_enable_graphite=true")
+else()
+    string(APPEND OPTIONS " skia_enable_graphite=false")
 endif()
 
 if("dawn" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_use_dawn=true")
     declare_external_from_pkgconfig(dawn PATH "third_party/dawn" MODULES unofficial_webgpu_dawn)
     list(APPEND required_externals dawn)
+endif()
+
+if("pdf" IN_LIST FEATURES)
+    string(APPEND OPTIONS " skia_enable_pdf=true")
+else()
+    string(APPEND OPTIONS " skia_enable_pdf=false")
+endif()
+
+if("jpeg" IN_LIST FEATURES)
+    list(APPEND required_externals libjpeg)
+    string(APPEND OPTIONS " skia_use_libjpeg_turbo_decode=true skia_use_libjpeg_turbo_encode=true skia_use_no_jpeg_encode=false")
+else()
+    string(APPEND OPTIONS " skia_use_libjpeg_turbo_decode=false skia_use_libjpeg_turbo_encode=false skia_use_no_jpeg_encode=true")
+endif()
+
+if("png" IN_LIST FEATURES)
+    list(APPEND required_externals libpng)
+    string(APPEND OPTIONS " skia_use_libpng_decode=true skia_use_libpng_encode=true skia_use_no_png_encode=false")
+else()
+    string(APPEND OPTIONS " skia_use_libpng_decode=false skia_use_libpng_encode=false skia_use_no_png_encode=true")
+endif()
+
+if("webp" IN_LIST FEATURES)
+    list(APPEND required_externals libwebp)
+    string(APPEND OPTIONS " skia_use_libwebp_decode=true skia_use_libwebp_encode=true skia_use_no_webp_encode=false")
+else()
+    string(APPEND OPTIONS " skia_use_libwebp_decode=false skia_use_libwebp_encode=false skia_use_no_webp_encode=true")
+endif()
+
+if("avif" IN_LIST FEATURES)
+    list(APPEND required_externals libavif)
+    string(APPEND OPTIONS " skia_use_libavif=true")
+else()
+    string(APPEND OPTIONS " skia_use_libavif=false")
 endif()
 
 get_externals(${required_externals})

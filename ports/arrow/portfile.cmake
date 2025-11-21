@@ -9,13 +9,14 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE_PATH}
     PATCHES
         0001-msvc-static-name.patch
-        0002-utf8proc.patch
         0003-android-musl.patch
         0004-android-datetime.patch
         0005-cmake-msvcruntime.patch
         0006-pcg-msvc-arm64.patch
 )
 
+# Check cpp/cmake_modules/DefineOptions.cmake for option dependencies -
+# they must be modeled as feature dependencies in vcpkg.json.
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         acero       ARROW_ACERO
@@ -65,7 +66,6 @@ vcpkg_cmake_configure(
         -DARROW_WITH_ZLIB=ON
         -DARROW_WITH_ZSTD=ON
         -DBUILD_WARNING_LEVEL=PRODUCTION
-        -DCMAKE_SYSTEM_PROCESSOR=${VCPKG_TARGET_ARCHITECTURE}
         -DZSTD_MSVC_LIB_PREFIX=
     MAYBE_UNUSED_VARIABLES
         ZSTD_MSVC_LIB_PREFIX
@@ -106,7 +106,7 @@ endif()
 
 if("flight" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
-        PACKAGE_NAME ArrowFlight
+        PACKAGE_NAME arrowflight
         CONFIG_PATH lib/cmake/ArrowFlight
         DO_NOT_DELETE_PARENT_CONFIG_PATH
     )
@@ -114,7 +114,7 @@ endif()
 
 if("flightsql" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(
-        PACKAGE_NAME ArrowFlightSql
+        PACKAGE_NAME arrowflightsql
         CONFIG_PATH lib/cmake/ArrowFlightSql
         DO_NOT_DELETE_PARENT_CONFIG_PATH
     )
@@ -127,36 +127,25 @@ if("parquet" IN_LIST FEATURES)
         DO_NOT_DELETE_PARENT_CONFIG_PATH
     )
 endif()
+
+file(GLOB main_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/Arrow/*onfig.cmake")
+file(GLOB extra_configs "${CURRENT_PACKAGES_DIR}/lib/cmake/*/*onfig.cmake")
+list(REMOVE_ITEM extra_configs ${main_configs})
+if(NOT "${extra_configs}" STREQUAL "")
+    message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}"
+        "Unhandled CMake config: ${extra_configs}\n"
+        "This might be caused by insufficient feature dependencies in ports/arrow/vcpkg.json."
+    )
+endif()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Arrow)
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-if("parquet" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-parquet" usage-parquet)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-parquet}")
-endif()
-if("dataset" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-dataset" usage-dataset)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-dataset}")
-endif()
-if("acero" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-acero" usage-acero)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-acero}")
-endif()
-
-if("compute" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-compute" usage-compute)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-compute}")
-endif()
-
-if("flight" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flight" usage-flight)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flight}")
-endif()
-
-if("flightsql" IN_LIST FEATURES)
-    file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-flightsql" usage-flightsql)
-    file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage-flightsql}")
-endif()
+foreach(feature IN ITEMS parquet dataset acero compute flight flightsql)
+    if(feature IN_LIST FEATURES)
+        file(READ "${CMAKE_CURRENT_LIST_DIR}/usage-${feature}" feature_usage)
+        file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${feature_usage}")
+    endif()
+endforeach()
 
 if("example" IN_LIST FEATURES)
     file(INSTALL "${SOURCE_PATH}/cpp/examples/minimal_build/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/example")

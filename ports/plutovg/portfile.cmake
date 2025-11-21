@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sammycage/plutovg
     REF "v${VERSION}"
-    SHA512 d704286cb325d55c76852a08d573cae3f14b2a0f1fb8e43d922e64c685d4e71d69fe4ed7cc2368b3c0cde2992e8abfe9090781a80be251dcea50615266efc6ed
+    SHA512 ecffd41cf24fb7db39fc8916146dceeae7b2c0428f8e57fe3f0b353a1d23f45a04a33f0da24090c42ecab48b10a54648c0b4a677958423b4456cbbb3fd9e2b6b
     HEAD_REF main
 )
 
