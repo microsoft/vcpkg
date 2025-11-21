@@ -5,8 +5,6 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 #   git describe --tags --dirty --long
 # and put the result into this variable.
 set(darknet_version_string "v5.0-167-gfc780f8a")
-# We take from master but we also add patches.
-set(darknet_branch_name vcpkg)
 
 string(REGEX REPLACE "^.*-g" "" ref "${darknet_version_string}")
 vcpkg_from_github(
@@ -23,6 +21,14 @@ vcpkg_from_github(
     windows-getopt.diff
 )
 file(WRITE "${SOURCE_PATH}/src-examples/CMakeLists.txt" "# disabled by vcpkg")
+file(REMOVE_RECURSE "${SOURCE_PATH}/src-other")
+
+# src-lib/col2im_kernels.cu, src-lib/gemm.cpp, src-lib/im2col.cpp, src-lib/im2col_kernels.cu
+vcpkg_download_distfile(caffe_license_file
+    URLS "https://github.com/BVLC/caffe/raw/9ab67099e08c03bf57e6a67538ca4746365beda8/LICENSE"
+    FILENAME "hunk-ai-darknet-caffe-LICENSE-9ab6709"
+    SHA512 333129c62f7c45df992ea4638d2b879608c1d01db80a5a6ce3e93970b414976374ef3e7b670f655b62f6fc4f8eb8c7ba17e94aad197e5e1a7ae8c0ef0b3587ba
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
@@ -49,13 +55,13 @@ vcpkg_cmake_configure(
   DISABLE_PARALLEL_CONFIGURE # configuring darknet_version.h
   OPTIONS
     ${FEATURE_OPTIONS}
-    "-DDARKNET_BRANCH_NAME=${darknet_branch_name}"
-    "-DDARKNET_VERSION_STRING=${darknet_version_string}"
+    -DDARKNET_BRANCH_NAME=vcpkg # actually master with extra patches.
+    -DDARKNET_VERSION_STRING=${darknet_version_string}
     -DDARKNET_TRY_ONNX=OFF
     -DDARKNET_TRY_OPENBLAS=OFF
     -DDARKNET_TRY_ROCM=OFF
-    -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
     -DGTEST=OFF # disable find_library
+    -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
   MAYBE_UNUSED_VARIABLES
     DARKNET_TRY_OPENBLAS
 )
@@ -63,9 +69,9 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet)
-file(COPY "${SOURCE_PATH}/cfg" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}/cfg" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${caffe_license_file}")
