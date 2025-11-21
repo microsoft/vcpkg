@@ -1,0 +1,11 @@
+diff --git a/internal/config.h.in b/internal/config.h.in
+index ebaf3dc..0c486a4 100644
+--- a/internal/config.h.in
++++ b/internal/config.h.in
+@@ -1,5 +1,3 @@
+ #pragma once
+ 
+-#define _YAML_SCHEMA_CPP_ROOT_DIR "${CMAKE_SOURCE_DIR}"
+-
+ #define _BOOST_FILESYSTEM_LIB ${BOOST_FILESYSTEM_LIB}
+\ No newline at end of file
