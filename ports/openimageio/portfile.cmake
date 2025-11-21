@@ -10,6 +10,7 @@ vcpkg_from_github(
         imath-version-guard.patch
         fix-openimageio_include_dir.patch
         fix-openexr-target-missing.patch
+        remove-agl-framework.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
