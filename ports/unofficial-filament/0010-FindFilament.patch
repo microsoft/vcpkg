@@ -1,0 +1,97 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2a6978042..700192871 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,7 +14,7 @@ endif()
+ # ==================================================================================================
+ # Project declaration
+ # ==================================================================================================
+-project(TNT)
++project(unofficial-filament VERSION 1.55.0)
+ 
+ # ==================================================================================================
+ # Options
+@@ -926,7 +926,51 @@ if (IS_HOST_PLATFORM)
+     add_subdirectory(${TOOLS}/uberz)
+ endif()
+ 
+-# Generate exported executables for cross-compiled builds (Android, WebGL, and iOS)
+-if (NOT CMAKE_CROSSCOMPILING)
+-    export(TARGETS matc cmgen filamesh mipgen resgen uberz glslminifier FILE ${IMPORT_EXECUTABLES})
+-endif()
++# version file
++include(CMakePackageConfigHelpers)
++include(GNUInstallDirs)
++write_basic_package_version_file("${CMAKE_BINARY_DIR}/unofficial-filamentConfigVersion.cmake"
++    VERSION ${PROJECT_VERSION}
++    COMPATIBILITY SameMajorVersion)
++install(FILES "${CMAKE_BINARY_DIR}/unofficial-filamentConfigVersion.cmake"
++    DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/unofficial-filament
++    COMPONENT unofficial-filament)
++
++# public header dependencies
++set(HEADER_DEPS cgltf jsmn)
++if(TARGET SPIRV-Headers)
++    list(APPEND HEADER_DEPS SPIRV-Headers)
++endif()
++foreach(_dep ${HEADER_DEPS})
++    if(TARGET ${_dep})
++        get_target_property(_dep_include ${_dep} INTERFACE_INCLUDE_DIRECTORIES)
++        set_target_properties(${_dep} PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
++            "$<BUILD_INTERFACE:${_dep_include}>$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
++        )
++    endif()
++endforeach()
++install(TARGETS ${HEADER_DEPS} EXPORT unofficial-filament-targets COMPONENT unofficial-filament-dependencies)
++export(TARGETS ${HEADER_DEPS}
++    NAMESPACE unofficial-filament::
++    FILE "${CMAKE_BINARY_DIR}/unofficial-filamentTargets-Dependencies.cmake")
++
++# config file
++set(PACKAGE_VERSION ${PROJECT_VERSION})
++configure_package_config_file("${CMAKE_CURRENT_LIST_DIR}/filamentConfig.cmake.in"
++    "${CMAKE_BINARY_DIR}/unofficial-filamentConfig.cmake"
++    INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/unofficial-filament)
++install(FILES "${CMAKE_BINARY_DIR}/unofficial-filamentConfig.cmake"
++    DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/unofficial-filament
++    COMPONENT unofficial-filament)
++
++# targets file - only include targets that actually exist
++set(TARGETS)
++foreach(_target camutils filabridge filaflat filagui filameshio uberarchive gltfio_core gltfio ibl ibl-lite filament-iblprefilter
++    image ktxreader math mathio uberzlib utils viewer backend backend_headers vkshaders filament
++    shaders geometry filamat matdbg_resources matdbg bluegl imageio cmgen cso-lut filamesh glslminifier matlang
++    matc matinfo matedit mipgen normal-blending resgen rgb-to-lmsr roughness-prefilter specular-color uberz
++    getopt smol-v vkmemalloc)
++    if(TARGET ${_target})
++        list(APPEND TARGETS ${_target})
++    endif()
++endforeach()
++install(TARGETS ${TARGETS} EXPORT unofficial-filament-targets COMPONENT unofficial-filament)
++export(TARGETS ${TARGETS}
++    NAMESPACE unofficial-filament::
++    FILE "${CMAKE_BINARY_DIR}/unofficial-filamentTargets.cmake")
++export(PACKAGE unofficial-filament)
++install(EXPORT unofficial-filament-targets
++    NAMESPACE unofficial-filament::
++    DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake/unofficial-filament
++    FILE "unofficial-filamentTargets.cmake"
++    COMPONENT unofficial-filament)
+diff --git a/filamentConfig.cmake.in b/filamentConfig.cmake.in
+new file mode 100644
+index 000000000..ee320541d
+--- /dev/null
++++ b/filamentConfig.cmake.in
+@@ -0,0 +1,9 @@
++set(unofficial-filament_VERSION @PACKAGE_VERSION@)
++
++@PACKAGE_INIT@
++
++@PACKAGE_DEPENDENCIES@
++
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-filamentTargets.cmake")
++
++@INCLUDED_CONTENT@
+-- 
+2.45.2
+
