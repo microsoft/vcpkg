@@ -1,0 +1,14 @@
+diff --git a/cmake/defaults/CXXDefaults.cmake b/cmake/defaults/CXXDefaults.cmake
+index 8218d50c2..a4938b79a 100644
+--- a/cmake/defaults/CXXDefaults.cmake
++++ b/cmake/defaults/CXXDefaults.cmake
+@@ -9,7 +9,7 @@ include(Version)
+ include(Options)
+ 
+ # Require C++17
+-set(CMAKE_CXX_STANDARD 17)
++set(CMAKE_CXX_STANDARD 20)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+ 
+

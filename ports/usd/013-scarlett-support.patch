@@ -1,0 +1,269 @@
+diff --git a/pxr/base/arch/fileSystem.cpp b/pxr/base/arch/fileSystem.cpp
+index b8195c2b3..72dfd6b2d 100644
+--- a/pxr/base/arch/fileSystem.cpp
++++ b/pxr/base/arch/fileSystem.cpp
+@@ -576,7 +576,11 @@ ArchMakeTmpFileName(const string& prefix, const string& suffix)
+     static std::atomic<int> nCalls(1);
+     const int n = nCalls++;
+ #if defined(ARCH_OS_WINDOWS)
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    int pid = 0;
++#else
+     int pid = _getpid();
++#endif
+ #else
+     int pid = getpid();
+ #endif
+@@ -1103,6 +1107,9 @@ int ArchFileAccess(const char* path, int mode)
+                 ? 0 : Arch_FileAccessError();
+     }
+ 
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    return 0;
++#else
+     const SECURITY_INFORMATION securityInfo = OWNER_SECURITY_INFORMATION |
+                                               GROUP_SECURITY_INFORMATION |
+                                               DACL_SECURITY_INFORMATION;
+@@ -1176,6 +1183,7 @@ int ArchFileAccess(const char* path, int mode)
+     CloseHandle(token);
+ 
+     return result ? 0 : -1;
++#endif
+ }
+ 
+ // https://msdn.microsoft.com/en-us/library/windows/hardware/ff552012.aspx
+diff --git a/pxr/base/arch/stackTrace.cpp b/pxr/base/arch/stackTrace.cpp
+index b93ec6fda..d207cef56 100644
+--- a/pxr/base/arch/stackTrace.cpp
++++ b/pxr/base/arch/stackTrace.cpp
+@@ -452,8 +452,11 @@ int _GetStackTraceName(char* buf, size_t len)
+         asstrlen(stackTracePrefix) +
+         1 +     // "_"
+         asstrlen(ArchGetProgramNameForErrors()) +
+-        1 +     // "."
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++        1 +     // "0"
++#else
+         asNumDigits(getpid()) +
++#endif
+         1;      // "\0"
+ 
+     // Fill in buf with the default name.
+@@ -469,8 +472,11 @@ int _GetStackTraceName(char* buf, size_t len)
+         end = asstrcpy(end, stackTracePrefix);
+         end = asstrcpy(end, "_");
+         end = asstrcpy(end, ArchGetProgramNameForErrors());
+-        end = asstrcpy(end, ".");
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++        end = asstrcpy(end, "0");
++#else
+         end = asitoa(end, getpid());
++#endif
+     }
+ 
+     // Return a name that isn't currently in use.  Simultaneously create
+@@ -712,7 +718,11 @@ int _LogStackTraceForPid(bool isFatal,
+ 
+     // Construct the substitutions.
+     char pidBuffer[numericBufferSize], timeBuffer[numericBufferSize];
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    asitoa(pidBuffer, 0);
++#else
+     asitoa(pidBuffer, getpid());
++#endif
+     asitoa(timeBuffer, _GetAppElapsedTime());
+     const char* const substitutions[4][2] = {
+         { "$pid", pidBuffer }, 
+@@ -911,7 +921,11 @@ _InvokeSessionLogger(const char* progname, const char *stackTrace)
+ 
+     // Construct the substitutions.
+     char pidBuffer[numericBufferSize], timeBuffer[numericBufferSize];
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    asitoa(pidBuffer, 0);
++#else
+     asitoa(pidBuffer, getpid());
++#endif
+     asitoa(timeBuffer, _GetAppElapsedTime());
+     const char* const substitutions[4][2] = {
+         {"$pid", pidBuffer}, {"$time", timeBuffer},
+diff --git a/pxr/base/arch/symbols.cpp b/pxr/base/arch/symbols.cpp
+index ac5b8ad44..fed3cf432 100644
+--- a/pxr/base/arch/symbols.cpp
++++ b/pxr/base/arch/symbols.cpp
+@@ -56,7 +56,7 @@ ArchGetAddressInfo(
+     }
+     return false;
+ 
+-#elif defined(ARCH_OS_WINDOWS)
++#elif defined(ARCH_OS_WINDOWS) && !WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
+ 
+     if (!address) {
+         return false;
+diff --git a/pxr/base/tf/fileUtils.cpp b/pxr/base/tf/fileUtils.cpp
+index 9f8282bed..53c20062d 100644
+--- a/pxr/base/tf/fileUtils.cpp
++++ b/pxr/base/tf/fileUtils.cpp
+@@ -35,9 +35,13 @@
+ #include <utime.h>
+ #else
+ #include <Windows.h>
++#include <sys/utime.h>
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++#include <filesystem>
++#else
+ #include <Shellapi.h>
+ #include <ShlwAPI.h>
+-#include <sys/utime.h>
++#endif
+ #endif
+ using std::set;
+ using std::string;
+@@ -86,9 +90,12 @@ Tf_HasAttribute(
+         // error code indicating an incomplete overlapped I/O function. We
+         // want to ignore this error.
+         DWORD olderr = GetLastError();
++        
++#if !WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
+         if (PathIsNetworkPathW(pathW.c_str())) {
+             attribs &= ~FILE_ATTRIBUTE_REPARSE_POINT;
+         }
++#endif
+         SetLastError(olderr);
+     }
+ 
+@@ -236,7 +243,12 @@ TfIsDirEmpty(string const& path)
+     if (!TfIsDir(path))
+         return false;
+ #if defined(ARCH_OS_WINDOWS)
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    auto p = std::filesystem::path(path);
++    return std::filesystem::is_directory(p) && std::filesystem::is_empty(p);
++#else
+     return PathIsDirectoryEmptyW(ArchWindowsUtf8ToUtf16(path).c_str()) == TRUE;
++#endif
+ #else
+     if (DIR *dirp = opendir(path.c_str()))
+     {
+@@ -261,6 +273,33 @@ bool
+ TfSymlink(string const& src, string const& dst)
+ {
+ #if defined(ARCH_OS_WINDOWS)
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    std::error_code ec;
++    
++    if(TfIsDir(src))
++    {
++        std::filesystem::create_directory_symlink(std::filesystem::path(src),
++                                                  std::filesystem::path(dst),
++                                                  ec);
++    }
++    else
++    {
++        std::filesystem::create_symlink(std::filesystem::path(src),
++                                        std::filesystem::path(dst),
++                                        ec);
++    }
++    
++    if(ec)
++    {
++        errno = EACCES;
++        if (ec.value() == ERROR_PRIVILEGE_NOT_HELD) {
++            errno = EPERM;
++        }
++        return false;
++    }
++    
++    return true;
++#else
+     if (CreateSymbolicLinkW(ArchWindowsUtf8ToUtf16(dst).c_str(),
+                             ArchWindowsUtf8ToUtf16(src).c_str(),
+                             TfIsDir(src) ? SYMBOLIC_LINK_FLAG_DIRECTORY : 0)) {
+@@ -275,6 +314,7 @@ TfSymlink(string const& src, string const& dst)
+         errno = EPERM;
+     }
+     return false;
++#endif
+ #else
+     return (symlink(src.c_str(), dst.c_str()) != -1);
+ #endif
+@@ -360,7 +400,12 @@ TfReadDir(
+     WIN32_FIND_DATAW fdFile;
+     HANDLE hFind = NULL;
+ 
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    wcsncpy(szPath, (std::filesystem::path(dirPath) / L"*.*").wstring().c_str(), MAX_PATH - 1);
++    szPath[MAX_PATH - 1] = L'\0';
++#else
+     PathCombineW(szPath, ArchWindowsUtf8ToUtf16(dirPath).c_str(), L"*.*");
++#endif
+ 
+     if((hFind = FindFirstFileW(szPath, &fdFile)) == INVALID_HANDLE_VALUE)
+     {
+diff --git a/pxr/base/tf/pathUtils.cpp b/pxr/base/tf/pathUtils.cpp
+index a0a902598..67c1f9dd6 100644
+--- a/pxr/base/tf/pathUtils.cpp
++++ b/pxr/base/tf/pathUtils.cpp
+@@ -25,7 +25,11 @@
+ 
+ #if defined(ARCH_OS_WINDOWS)
+ #include <Windows.h>
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++#include <filesystem>
++#else
+ #include <Shlwapi.h>
++#endif
+ #else
+ #include <glob.h>
+ #endif
+@@ -260,8 +264,12 @@ TfReadLink(string const& path)
+ bool TfIsRelativePath(std::string const& path)
+ {
+ #if defined(ARCH_OS_WINDOWS)
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    return path.empty() || (std::filesystem::path(path).is_relative() &&
++#else
+     return path.empty() ||
+         (PathIsRelativeW(ArchWindowsUtf8ToUtf16(path).c_str()) &&
++#endif
+          path[0] != '/' && path[0] != '\\');
+ #else
+     return path.empty() || path[0] != '/';
+diff --git a/pxr/base/tf/stringUtils.cpp b/pxr/base/tf/stringUtils.cpp
+index 7110aee3e..5f3c5b4e2 100644
+--- a/pxr/base/tf/stringUtils.cpp
++++ b/pxr/base/tf/stringUtils.cpp
+@@ -33,8 +33,12 @@
+ #include "pxrDoubleConversion/utils.h"
+ 
+ #if defined(ARCH_OS_WINDOWS)
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++#include <filesystem>
++#else
+ #include <Shlwapi.h>
+ #endif
++#endif
+ 
+ using std::list;
+ using std::make_pair;
+@@ -306,9 +310,11 @@ TfGetBaseName(const string& fileName)
+     if (i == fileName.size() - 1)    // ends in directory delimiter
+         return TfGetBaseName(fileName.substr(0, i));
+ #if defined(ARCH_OS_WINDOWS)
++#if WINAPI_FAMILY_PARTITION(WINAPI_FAMILY_GAMES)
++    return std::filesystem::path(fileName).filename().string();
++#else
+     const std::wstring wfileName{ ArchWindowsUtf8ToUtf16(fileName) };
+     LPWSTR result = PathFindFileNameW(wfileName.c_str());
+-
+     // If PathFindFilename returns the same string back, that means it didn't
+     // do anything.  That could mean that the patch has no basename, in which
+     // case we want to return the empty string, or it could mean that the
+@@ -322,7 +328,7 @@ TfGetBaseName(const string& fileName)
+         }
+     }
+     return ArchWindowsUtf16ToUtf8(result);
+-
++#endif
+ #else
+     if (i == string::npos)                      // no / in name
+         return fileName;
