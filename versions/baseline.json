@@ -9082,7 +9082,7 @@
     },
     "slick-logger": {
       "baseline": "1.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "slick-object-pool": {
       "baseline": "0.1.2",
