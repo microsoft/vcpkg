@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 531f4c5..beff998 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,7 +13,7 @@ endif()
+ 
+ find_package(RobotRaconteur 0.17.0 REQUIRED)
+ find_package(yaml-cpp REQUIRED)
+-find_package(Eigen3 3.3 REQUIRED NO_MODULE)
++find_package(Eigen3 3.3...5 REQUIRED NO_MODULE)
+ find_package(OpenCV)
+ 
+ if(NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/robdef/group1")
