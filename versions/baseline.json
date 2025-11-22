@@ -1986,7 +1986,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 9
+      "port-version": 10
     },
     "correlation-vector-cpp": {
       "baseline": "1.0",
@@ -6170,7 +6170,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 20
+      "port-version": 21
     },
     "magnum-extras": {
       "baseline": "2020.06",
