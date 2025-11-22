@@ -1,11 +1,10 @@
 {
   "name": "lunarg-vulkantools",
-  "version": "1.4.309.0",
-  "port-version": 1,
+  "version": "1.4.328.0",
   "description": "Tools to aid in Vulkan development",
   "homepage": "https://github.com/LunarG/VulkanTools",
   "license": null,
-  "supports": "!osx & !staticcrt",
+  "supports": "!osx & !(static & staticcrt)",
   "dependencies": [
     "jsoncpp",
     {

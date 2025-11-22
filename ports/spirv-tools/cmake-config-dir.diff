@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75830b44..367fe889 100644
+index 8c6fe41e..cae234fe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -270,7 +270,7 @@ else()
+@@ -274,7 +274,7 @@ else()
  endif()
  
  if(ENABLE_SPIRV_TOOLS_INSTALL)
