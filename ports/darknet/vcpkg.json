@@ -1,17 +1,18 @@
 {
   "name": "darknet",
-  "version-date": "2024-10-10",
-  "port-version": 1,
-  "description": "Darknet is an open source neural network framework written in C and CUDA. You only look once (YOLO) is a state-of-the-art, real-time object detection system, best example of darknet functionalities.",
-  "homepage": "https://github.com/alexeyab/darknet",
-  "license": null,
+  "version-date": "2025-10-24",
+  "description": "Darknet is an open source neural network framework written in C and CUDA for processing images or video frames in computer vision.",
+  "homepage": "https://darknetcv.ai/",
+  "license": "Apache-2.0 AND BSD-2-Clause",
+  "supports": "!android & !uwp & !(static & staticcrt)",
   "dependencies": [
     {
-      "name": "getopt",
-      "platform": "windows & !mingw"
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "highgui"
+      ]
     },
-    "pthreads",
-    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -25,59 +26,27 @@
     "cuda": {
       "description": "Build darknet with support for CUDA",
       "dependencies": [
-        "cuda"
+        "cuda",
+        {
+          "name": "opencv",
+          "default-features": false
+        }
       ]
     },
     "cudnn": {
       "description": "Build darknet with support for cuDNN",
       "dependencies": [
-        "cuda",
-        "cudnn"
-      ]
-    },
-    "full": {
-      "description": "Build darknet fully featured",
-      "dependencies": [
+        "cudnn",
         {
           "name": "darknet",
           "features": [
-            "cuda",
-            "cudnn",
-            "opencv-cuda"
+            "cuda"
           ]
         }
       ]
     },
-    "opencv-base": {
-      "description": "Build darknet with support for latest version of OpenCV",
-      "dependencies": [
-        {
-          "name": "opencv",
-          "features": [
-            "ffmpeg"
-          ]
-        }
-      ]
-    },
-    "opencv-cuda": {
-      "description": "Build darknet with support for latest version of CUDA-enabled OpenCV",
-      "dependencies": [
-        {
-          "name": "darknet",
-          "features": [
-            "cuda",
-            "opencv-base"
-          ]
-        },
-        {
-          "name": "opencv",
-          "features": [
-            "contrib",
-            "cuda",
-            "dnn"
-          ]
-        }
-      ]
+    "openmp": {
+      "description": "Build darknet with support for OpenMP"
     }
   }
 }
