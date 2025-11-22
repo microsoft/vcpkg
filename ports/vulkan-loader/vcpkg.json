@@ -19,7 +19,10 @@
   ],
   "features": {
     "directfb": {
-      "description": "Build DirectFB WSI support"
+      "description": "Build DirectFB WSI support",
+      "dependencies": [
+        "directfb"
+      ]
     },
     "wayland": {
       "description": "Build Wayland WSI support"
