@@ -1,0 +1,44 @@
+diff --git a/cmake/FindWrapOpenGL.cmake b/cmake/FindWrapOpenGL.cmake
+index 7295a159caf..fe73ab78211 100644
+--- a/cmake/FindWrapOpenGL.cmake
++++ b/cmake/FindWrapOpenGL.cmake
+@@ -37,16 +37,7 @@ if (OpenGL_FOUND)
+             set(__opengl_fw_path "-framework OpenGL")
+         endif()
+ 
+-        find_library(WrapOpenGL_AGL NAMES AGL)
+-        if(WrapOpenGL_AGL)
+-            set(__opengl_agl_fw_path "${WrapOpenGL_AGL}")
+-        endif()
+-        if(NOT __opengl_agl_fw_path)
+-            set(__opengl_agl_fw_path "-framework AGL")
+-        endif()
+-
+         target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE ${__opengl_fw_path})
+-        target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE ${__opengl_agl_fw_path})
+     else()
+         target_link_libraries(WrapOpenGL::WrapOpenGL INTERFACE OpenGL::GL)
+     endif()
+diff --git a/mkspecs/common/mac.conf b/mkspecs/common/mac.conf
+index 61bea952b22..9ba38d9949d 100644
+--- a/mkspecs/common/mac.conf
++++ b/mkspecs/common/mac.conf
+@@ -18,8 +18,7 @@ QMAKE_LIBDIR            =
+ 
+ # sdk.prf will prefix the proper SDK sysroot
+ QMAKE_INCDIR_OPENGL     = \
+-    /System/Library/Frameworks/OpenGL.framework/Headers \
+-    /System/Library/Frameworks/AGL.framework/Headers/
++    /System/Library/Frameworks/OpenGL.framework/Headers
+ 
+ QMAKE_FIX_RPATH         = install_name_tool -id
+ 
+@@ -30,7 +29,7 @@ QMAKE_LFLAGS_REL_RPATH  =
+ QMAKE_REL_RPATH_BASE    = @loader_path
+ 
+ QMAKE_LIBS_DYNLOAD      =
+-QMAKE_LIBS_OPENGL       = -framework OpenGL -framework AGL
++QMAKE_LIBS_OPENGL       = -framework OpenGL
+ QMAKE_LIBS_THREAD       =
+ 
+ QMAKE_INCDIR_WAYLAND    =

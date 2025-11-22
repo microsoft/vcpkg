@@ -56,6 +56,16 @@ if(VCPKG_TARGET_IS_LINUX)
     "libxkbcommon-x11-dev libegl1-mesa-dev.")
 endif()
 
+if(VCPKG_TARGET_IS_OSX)
+    execute_process(COMMAND xcrun --show-sdk-version
+            OUTPUT_VARIABLE OSX_SDK_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(${OSX_SDK_VERSION} VERSION_GREATER_EQUAL 26)
+        # macOS 26 Tahoe has removed AGL APIs https://bugreports.qt.io/browse/QTBUG-137687
+        list(APPEND ${PORT}_PATCHES macos26-opengl.patch)
+    endif()
+endif()
+
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
 # The files also contain information about the Platform for which it is searched
 # Always use FEATURE_<feature> in vcpkg_cmake_configure

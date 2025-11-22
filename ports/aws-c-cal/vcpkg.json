@@ -1,6 +1,6 @@
 {
   "name": "aws-c-cal",
-  "version": "0.9.10",
+  "version": "0.9.11",
   "description": "C99 wrapper for cryptography primitives.",
   "homepage": "https://github.com/awslabs/aws-c-cal",
   "license": "Apache-2.0",
