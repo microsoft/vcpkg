@@ -668,9 +668,6 @@ qtmultimedia:x64-android=fail
 qtopcua:arm-neon-android=fail
 qtopcua:arm64-android=fail
 qtopcua:x64-android=fail
-qtwayland:arm-neon-android=fail
-qtwayland:arm64-android=fail
-qtwayland:x64-android=fail
 # Missing system libraries
 qtwayland:arm64-osx=skip
 qtwayland:x64-osx=skip
