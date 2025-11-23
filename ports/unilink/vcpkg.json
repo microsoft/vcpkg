@@ -1,6 +1,6 @@
 {
   "name": "unilink",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Cross-platform communication middleware (Serial/TCP/UDP) using Boost.Asio.",
   "homepage": "https://github.com/jwsung91/unilink",
   "license": "Apache-2.0",

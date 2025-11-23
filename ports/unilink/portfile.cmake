@@ -1,8 +1,8 @@
  vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jwsung91/unilink
-    REF v0.1.4
-    SHA512 6cb670f8950c8e45da0d723af01ec31669b67fb739d121cb31e7aadbc328cadbf08b45b7a107561b7dcff472cc5f0a68eb374931e4b00f6d4e1680e082e56e70
+    REF v0.1.5
+    SHA512 9930b817d17dbc593d1b0ae30d7bc19e94f77782ed1af7ed05419a447244522497d70502ca432f0ad597e2d25ff838b935c1e859366c724e7b1ccc7bfc2b5ca0 
 )
 
 vcpkg_cmake_configure(
