@@ -8118,7 +8118,7 @@
     },
     "qtbase": {
       "baseline": "6.9.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qtcharts": {
       "baseline": "6.9.1",
