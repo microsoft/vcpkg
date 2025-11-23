@@ -22,3 +22,16 @@ index eede60a..07f5f77 100644
  absl::fixed_array
  absl::variant
  absl::meta
+diff --git a/cmake/onnxruntime_webassembly.cmake b/cmake/onnxruntime_webassembly.cmake
+index ffe8661..a3e9b4f 100644
+--- a/cmake/onnxruntime_webassembly.cmake
++++ b/cmake/onnxruntime_webassembly.cmake
+@@ -94,7 +94,7 @@ if (NOT onnxruntime_ENABLE_WEBASSEMBLY_THREADS)
+   )
+ 
+   # Override re2 compiler options to remove -pthread
+-  set_property(TARGET re2 PROPERTY COMPILE_OPTIONS )
++  # set_property(TARGET re2 PROPERTY COMPILE_OPTIONS )
+ endif()
+ 
+ if (NOT onnxruntime_USE_VCPKG)

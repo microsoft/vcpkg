@@ -4,7 +4,7 @@
   "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
   "homepage": "https://github.com/microsoft/onnxruntime",
   "license": "MIT",
-  "supports": "!(uwp | emscripten)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "abseil",
