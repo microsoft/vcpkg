@@ -1,6 +1,6 @@
 {
   "name": "intx",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Extended precision integer C++ library ",
   "homepage": "https://github.com/chfast/intx",
   "license": "Apache-2.0",

@@ -1,6 +1,7 @@
 {
   "name": "vsg",
   "version": "1.1.11",
+  "port-version": 1,
   "description": "A modern, cross platform, high performance scene graph library built upon Vulkan.",
   "homepage": "http://www.vulkanscenegraph.org/",
   "license": "MIT",
@@ -19,5 +20,27 @@
       "name": "xcb",
       "platform": "!(android | windows | osx)"
     }
-  ]
+  ],
+  "features": {
+    "shader-optimizer": {
+      "description": "shader optimizer support",
+      "dependencies": [
+        {
+          "name": "glslang",
+          "features": [
+            "opt"
+          ]
+        }
+      ]
+    },
+    "windowing": {
+      "description": "native windowing support providing a default implementation of vsg::Window::create()",
+      "dependencies": [
+        {
+          "name": "xcb",
+          "platform": "!(android | ios | osx | windows)"
+        }
+      ]
+    }
+  }
 }

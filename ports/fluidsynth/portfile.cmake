@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 2d5424d80234742be45f1c7cdf696182c96b684232bb92b079edf270d726c5d1292c5fc42c8b580ae1a89642ad7b536245977928bbeecedd94443f6e1f47d5fd
+    SHA512 8f326db4049b3241c7a0472aa5db8c715dcfc0a1ce9c5fda492bf84e6c17e27a2298131a58a51e275797259a434e59bfe3f53d85358f903652dca8de753a3376
     HEAD_REF master
     PATCHES
-        gentables.patch
-        pkgconfig-opensles.diff
+        cmake-config-glib.diff
 )
 # Do not use or install FindSndFileLegacy.cmake and its deps
 file(REMOVE
@@ -22,9 +21,9 @@ file(REMOVE
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        buildtools  VCPKG_BUILD_MAKE_TABLES
-        sndfile     enable-libsndfile
-        pulseaudio  enable-pulseaudio
+        libinstpatch enable-libinstpatch
+        sndfile      enable-libsndfile
+        pulseaudio   enable-pulseaudio
 )
 
 # enable platform-specific features, force the build to fail if the required libraries are not found,
@@ -35,7 +34,7 @@ set(LINUX_OPTIONS enable-alsa ALSA_FOUND)
 set(ANDROID_OPTIONS enable-opensles OpenSLES_FOUND)
 set(IGNORED_OPTIONS enable-coverage enable-dbus enable-floats enable-fpe-check enable-framework enable-jack
     enable-libinstpatch enable-midishare enable-oboe enable-openmp enable-oss enable-pipewire enable-portaudio
-    enable-profiling enable-readline enable-sdl2 enable-sdl3 enable-systemd enable-trap-on-fpe enable-ubsan)
+    enable-profiling enable-readline enable-sdl3 enable-systemd enable-trap-on-fpe enable-ubsan)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS_TO_ENABLE ${WINDOWS_OPTIONS})
@@ -63,14 +62,13 @@ vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}"
         ${FEATURE_OPTIONS}
         ${ENABLED_OPTIONS}
         ${DISABLED_OPTIONS}
+        "-Dosal=cpp11" 
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
         ${OPTIONS_TO_DISABLE}
-        VCPKG_BUILD_MAKE_TABLES
         enable-coverage
         enable-framework
         enable-ubsan
@@ -81,11 +79,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/fluidsynth)
 vcpkg_fixup_pkgconfig()
 
-set(tools fluidsynth)
-if("buildtools" IN_LIST FEATURES)
-    list(APPEND tools make_tables)
-endif()
-vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

@@ -1,7 +1,7 @@
 {
   "name": "skia",
   "version": "140",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",
@@ -11,10 +11,8 @@
   "license": "BSD-3-Clause",
   "supports": "!(windows & arm32) & !mingw",
   "dependencies": [
+    "abseil",
     "expat",
-    "libjpeg-turbo",
-    "libpng",
-    "libwebp",
     {
       "name": "opengl",
       "default-features": false,
@@ -49,11 +47,11 @@
     },
     {
       "name": "dng",
-      "platform": "!(freebsd | openbsd)"
+      "platform": "!bsd"
     },
     {
       "name": "fontconfig",
-      "platform": "linux | freebsd | openbsd"
+      "platform": "linux | bsd"
     },
     {
       "name": "freetype",
@@ -70,24 +68,33 @@
     {
       "name": "icu",
       "platform": "!uwp"
-    }
+    },
+    "jpeg",
+    "png",
+    "webp"
   ],
   "features": {
+    "avif": {
+      "description": "AVIF support",
+      "dependencies": [
+        "libavif"
+      ]
+    },
     "dawn": {
       "description": "dawn support for skia",
       "supports": "!android & !uwp",
       "dependencies": [
         {
           "name": "dawn",
-          "platform": "osx | windows"
-        },
-        {
-          "name": "dawn",
           "default-features": false,
           "features": [
             "x11"
           ],
-          "platform": "linux | freebsd | openbsd"
+          "platform": "linux | bsd"
+        },
+        {
+          "name": "dawn",
+          "platform": "osx | windows"
         },
         {
           "name": "skia",
@@ -104,7 +111,7 @@
     },
     "dng": {
       "description": "Support for DNG files",
-      "supports": "!(freebsd | openbsd)"
+      "supports": "!bsd"
     },
     "fontconfig": {
       "description": "Fontconfig support",
@@ -173,15 +180,36 @@
         "icu"
       ]
     },
+    "jpeg": {
+      "description": "Jpeg support",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
     "metal": {
       "description": "Metal support for skia",
       "supports": "ios, osx"
+    },
+    "pdf": {
+      "description": "PDF backend"
+    },
+    "png": {
+      "description": "PNG support",
+      "dependencies": [
+        "libpng"
+      ]
     },
     "vulkan": {
       "description": "Vulkan support for skia",
       "dependencies": [
         "vulkan-headers",
         "vulkan-memory-allocator"
+      ]
+    },
+    "webp": {
+      "description": "WebP support",
+      "dependencies": [
+        "libwebp"
       ]
     }
   }

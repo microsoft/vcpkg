@@ -1,6 +1,6 @@
 {
   "name": "commata",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Just another header-only C++17 CSV parser.",
   "homepage": "https://github.com/furfurylic/commata",
   "license": "Unlicense"

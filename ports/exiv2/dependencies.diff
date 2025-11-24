@@ -7,7 +7,7 @@ index 09b46df..85badd2 100644
  
    if(@EXIV2_ENABLE_BMFF@ AND @EXIV2_ENABLE_BROTLI@) # if(EXIV2_ENABLE_BMFF AND EXIV2_ENABLE_BROTLI)
 -    find_package(Brotli QUIET)
-+    find_package(unofficial-brotli QUIET)
++    find_dependency(Brotli NAMES unofficial-brotli)
      if (NOT Brotli_FOUND)
        message(FATAL_ERROR
          "Static builds of exiv2 require Brotli. "
@@ -16,7 +16,7 @@ index 09b46df..85badd2 100644
  
    if(@EXIV2_ENABLE_XMP@) # if(EXIV2_ENABLE_XMP)
 -    find_dependency(EXPAT REQUIRED)
-+    find_dependency(expat CONFIG REQUIRED)
++    find_dependency(EXPAT NAMES expat)
    elseif(@EXIV2_ENABLE_EXTERNAL_XMP@) # elseif(EXIV2_ENABLE_EXTERNAL_XMP)
      find_dependency(XmpSdk REQUIRED)
    endif()
@@ -25,7 +25,7 @@ index 09b46df..85badd2 100644
  
    if(@EXIV2_ENABLE_INIH@) # if(EXIV2_ENABLE_INIH)
 -    find_package(inih QUIET)
-+    find_package(unofficial-inih QUIET)
++    find_dependency(inih NAMES unofficial-inih)
      if (NOT inih_FOUND)
        message(FATAL_ERROR
          "Static builds of exiv2 require inih. "

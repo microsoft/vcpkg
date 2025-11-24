@@ -1,16 +1,8 @@
 The Microsoft GDK package provides CMake targets:
 
-  find_package(xbox.gameruntime CONFIG REQUIRED)
+  find_package(ms-gdk CONFIG REQUIRED)
   target_link_libraries(main PRIVATE Xbox::GameRuntime)
-
-  find_package(xbox.libhttpclient CONFIG REQUIRED)
   target_link_libraries(main PRIVATE Xbox::HTTPClient)
-
-  find_package(xbox.xcurl.api CONFIG REQUIRED)
   target_link_libraries(main PRIVATE Xbox::XCurl)
-
-  find_package(xbox.services.api.c CONFIG REQUIRED)
   target_link_libraries(main PRIVATE Xbox::XSAPI)
-
-  find_package(xbox.game.chat.2.cpp.api CONFIG REQUIRED)
   target_link_libraries(main PRIVATE Xbox::GameChat2)
