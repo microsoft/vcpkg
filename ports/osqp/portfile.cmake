@@ -1,41 +1,13 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "osqp/osqp"
-    REF v0.6.2     
-    SHA512 1e3e1e06891ba862d982f9f37503580268709bf1ea5008daab95393501c85aa69c79d321c45bc87dc53000274dd120c148b90c1797156e340fe361929ff2e324
+    REF v1.0.0
+    SHA512 00ead2c476aca935202c2a02e5a0309efee6db65ec4e7c56f3597324a2f224a16502a34e7552cd5600c085d327c308317894718f9ac825ec669895ac19a45c41
     PATCHES osqp.patch
-)
-
-vcpkg_download_distfile(
-    QDLDL
-    URLS "https://github.com/osqp/qdldl/archive/refs/tags/v0.1.5.tar.gz"
-    FILENAME "qdldl-0.1.5.tar.gz"
-    SHA512 3a224767708484d6728e4b0801210c5e7d4e906564c0855c7987876316cde7349c2717a169b4a6680495b0c71415be383e3e5c6826873fb92d7e93258a7a03a8
-)
-
-vcpkg_extract_source_archive(
-    QDLDL_SOURCE_PATH
-    ARCHIVE "${QDLDL}"
-    PATCHES qdldl.patch
-)
-
-vcpkg_execute_required_process(
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${QDLDL_SOURCE_PATH}" "${SOURCE_PATH}/lin_sys/direct/qdldl/qdldl_sources/" 
-    WORKING_DIRECTORY "${SOURCE_PATH}"
-    LOGNAME copy                
 )
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  OPTIONS
-    -DPYTHON=OFF
-    -DMATLAB=OFF
-    -DR_LANG=OFF
-    -DUNITTESTS=OFF
 )
 
 vcpkg_cmake_install()
@@ -43,10 +15,7 @@ vcpkg_cmake_config_fixup(
     CONFIG_PATH "lib/cmake/osqp"
 )
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
-file(
-  INSTALL "${SOURCE_PATH}/LICENSE"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
