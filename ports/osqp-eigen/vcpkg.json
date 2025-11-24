@@ -1,7 +1,6 @@
 {
   "name": "osqp-eigen",
   "version": "0.11.0",
-  "port-version": 0,
   "description": "Simple Eigen-C++ wrapper for OSQP library",
   "homepage": "https://robotology.github.io/osqp-eigen/",
   "dependencies": [
