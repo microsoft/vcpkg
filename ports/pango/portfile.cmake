@@ -6,6 +6,8 @@ vcpkg_download_distfile(SOURCE_ARCHIVE
 )
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${SOURCE_ARCHIVE}"
+    PATCHES
+        relax-gi-requirement.diff
 )
 
 if("introspection" IN_LIST FEATURES)
@@ -18,13 +20,16 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -Ddocumentation=false
+        -Dman-pages=false
+        -Dbuild-testsuite=false
+        -Dbuild-examples=false
         -Dfontconfig=enabled # Build with FontConfig support.
         -Dsysprof=disabled # include tracing support for sysprof
         -Dlibthai=disabled # Build with libthai support
         -Dcairo=enabled # Build with cairo support
         -Dxft=disabled # Build with xft support
         -Dfreetype=enabled # Build with freetype support
-        -Dgtk_doc=false #Build API reference for Pango using GTK-Doc
         ${OPTIONS}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
