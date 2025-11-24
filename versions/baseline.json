@@ -6792,6 +6792,10 @@
       "baseline": "1.0.1",
       "port-version": 0
     },
+    "neko-function": {
+      "baseline": "1.0.7",
+      "port-version": 0
+    },
     "neko-schema": {
       "baseline": "1.0.4",
       "port-version": 0
@@ -6849,7 +6853,7 @@
       "port-version": 2
     },
     "nghttp3": {
-      "baseline": "1.12.0",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "ngspice": {
@@ -6857,7 +6861,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.17.0",
+      "baseline": "1.18.0",
       "port-version": 0
     },
     "nifly": {
@@ -7098,7 +7102,7 @@
     },
     "onnx-optimizer": {
       "baseline": "0.3.19",
-      "port-version": 1
+      "port-version": 2
     },
     "onnxruntime-gpu": {
       "baseline": "1.19.2",
@@ -7117,7 +7121,7 @@
       "port-version": 0
     },
     "open62541pp": {
-      "baseline": "0.19.0",
+      "baseline": "0.20.0",
       "port-version": 0
     },
     "openal-soft": {
@@ -9609,7 +9613,7 @@
       "port-version": 0
     },
     "taskflow": {
-      "baseline": "3.10.0",
+      "baseline": "3.11.0",
       "port-version": 0
     },
     "tbb": {
