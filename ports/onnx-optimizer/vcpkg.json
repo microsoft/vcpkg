@@ -1,7 +1,7 @@
 {
   "name": "onnx-optimizer",
   "version-semver": "0.3.19",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Actively maintained ONNX Optimizer",
   "homepage": "https://github.com/onnx/optimizer",
   "license": "Apache-2.0",
