@@ -1207,7 +1207,6 @@ opencv4[halide](android | (windows & staticcrt) | uwp | (arm & windows))=cascade
 opencv4[opencl](uwp) = cascade
 opencv4[openexr](uwp) = cascade
 opencv4[opengl](uwp | xbox) = cascade
-opencv4[openvino]:arm64-osx=cascade
 opencv4[openvino](windows & arm) = cascade
 opencv4[qt](uwp | ios | xbox) = cascade
 opencv4[sfm](uwp) = cascade
