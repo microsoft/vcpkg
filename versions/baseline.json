@@ -9609,7 +9609,7 @@
       "port-version": 0
     },
     "taskflow": {
-      "baseline": "3.10.0",
+      "baseline": "3.11.0",
       "port-version": 0
     },
     "tbb": {
