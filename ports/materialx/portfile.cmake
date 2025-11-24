@@ -54,8 +54,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
 
     # MaterialXGenShader explicitely install resources
-    "${CURRENT_PACKAGES_DIR}/resources"
-    "${CURRENT_PACKAGES_DIR}/debug/resources"
     "${CURRENT_PACKAGES_DIR}/include/MaterialXRender/External/OpenImageIO" 
 
     # Based on how OSL does it, it could be that those `.mdl` source would be better located inside `libraries/pbrlib/genmdl/**`

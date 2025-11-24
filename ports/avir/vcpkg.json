@@ -1,0 +1,7 @@
+{
+  "name": "avir",
+  "version": "3.1",
+  "description": "High-quality pro HDR image resizing / scaling C++ library, including a very fast, precise, SIMD Lanczos resizer",
+  "homepage": "https://github.com/avaneev/avir",
+  "license": "MIT"
+}

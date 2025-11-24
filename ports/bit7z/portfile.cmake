@@ -4,11 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rikyoz/bit7z
     REF "v${VERSION}"
-    SHA512 02ee10a66598e9a2f5b47f35392dc8f3de11e01dac9d657e1321d1de97baf9832b1f1559054160d122dddd0427f54076820d7252185912c38b2f277d9c5fa1c0
+    SHA512 18bd18bc7186c04d9c2e731c76f23ab97a796a0ec027dc7163626f30ca807ba98733dbcd96bbca9af0cd0497cede4561c84560bf4e28030f59e1e34c1d98204d
     HEAD_REF master
     PATCHES
       fix_install.patch
       fix_dependency.patch
+      fix_compile_options.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-bit7z-config.cmake.in" DESTINATION "${SOURCE_PATH}")

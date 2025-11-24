@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ubarsc/kealib
     REF "kealib-${VERSION}"
-    SHA512 ccaaf9d5031eac32bf1a0e6b9e9efb4f5245fc730d33bd9931efb1a6f529990c6da8ddd400ec0d58ee527675057b74c81393d263c9b182ac5f9a8796273b001f
+    SHA512 f7b3e602cefab661621bd1b8f18d7c5dd34f4f514a187274160afd37ec45720bf0c7d0b8053ed422ea7ad301b25c418af60dbf54b86c646afdf660d1b5e57bdd
     HEAD_REF master
     PATCHES
         no-kea-config-script.diff

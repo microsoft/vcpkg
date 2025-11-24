@@ -2,17 +2,14 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO SFML/SFML
     REF "${VERSION}"
     HEAD_REF master
-    SHA512 d8a8bee3aa9acda4609104c2a9d4a2512e4be6d6e85fd4b24c287c03f60cfb888e669e61bfac4113dae35f0c3492559b65b3453baf38766d8c0223d9ab77aada
+    SHA512 7fc3f91b84ba2353b4216c0d0a71fd15f7349b8e22630dd727fc98a1f8c295a69fe21f3e1e878413966662047280ed4f195b51ee3302061c3903aea4958a6999
     PATCHES
-        fix-dependencies.patch
-        fix-dep-openal.patch
+        01-fix-dependency-resolve.patch
+        03-fix-android-install-path.patch
 )
 
-# The embedded FindFreetype doesn't properly handle debug libraries
-file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules/FindFreetype.cmake")
-
 if(VCPKG_TARGET_IS_LINUX)
-    message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxrandr\n    libxcursor\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev")
+    message(STATUS "SFML currently requires the following libraries from the system package manager:\n    libudev\n    libx11\n    libxi\n    libxrandr\n    libxcursor\n    opengl\n\nThese can be installed on Ubuntu systems via apt-get install libx11-dev libxi-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev")
 endif()
 
 vcpkg_check_features(
@@ -31,11 +28,9 @@ vcpkg_cmake_configure(
         -DSFML_USE_SYSTEM_DEPS=ON
         -DSFML_MISC_INSTALL_PREFIX=share/sfml
         -DSFML_GENERATE_PDB=OFF
-        -DSFML_WARNINGS_AS_ERRORS=OFF #Remove in the next version
         ${FEATURE_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         SFML_MISC_INSTALL_PREFIX
-        SFML_WARNINGS_AS_ERRORS
 )
 
 vcpkg_cmake_install()
@@ -46,7 +41,7 @@ vcpkg_copy_pdbs()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib")
     file(COPY "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/sfml-main.lib")
-    file(GLOB FILES "${CURRENT_PACKAGES_DIR}/share/sfml/SFML*Targets-*.cmake")
+    file(GLOB FILES "${CURRENT_PACKAGES_DIR}/share/sfml/SFMLMain*Targets-*.cmake")
     foreach(FILE ${FILES})
         vcpkg_replace_string("${FILE}" "/lib/sfml-main" "/lib/manual-link/sfml-main")
     endforeach()
@@ -57,27 +52,6 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/sfml-main-d.lib")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
-set(SHOULD_REMOVE_SFML_ALL 0)
-if(NOT "audio" IN_LIST FEATURES)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-audio.pc")
-    set(SHOULD_REMOVE_SFML_ALL 1)
-endif()
-if(NOT "graphics" IN_LIST FEATURES)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-graphics.pc")
-    set(SHOULD_REMOVE_SFML_ALL 1)
-endif()
-if(NOT "network" IN_LIST FEATURES)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-network.pc")
-    set(SHOULD_REMOVE_SFML_ALL 1)
-endif()
-if(NOT "window" IN_LIST FEATURES)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-window.pc")
-    set(SHOULD_REMOVE_SFML_ALL 1)
-endif()
-if(SHOULD_REMOVE_SFML_ALL)
-    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/sfml-all.pc")
-endif()
 
 vcpkg_fixup_pkgconfig()
 

@@ -4,61 +4,50 @@ set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 # Proper support for a true static usd build is left as a future port improvement.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-string(REGEX REPLACE "^([0-9]+)[.]([0-9])\$" "\\1.0\\2" USD_VERSION "${VERSION}")
+# zero-pad version components to two digits
+string(REPLACE "." ";" version_components ${VERSION})
+foreach(component IN LISTS version_components)
+    string(LENGTH ${component} component_length)
+    if(component_length LESS 2)
+        list(APPEND USD_VERSION "0${component}")
+    else()
+        list(APPEND USD_VERSION "${component}")
+    endif()
+endforeach()
+string(JOIN "." USD_VERSION ${USD_VERSION})
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 7d4404980579c4de3c155386184ca9d2eb96756ef6e090611bae7b4c21ad942c649f73a39b74ad84d0151ce6b9236c4b6c0c555e8e36fdd86304079e1c2e5cbe
+    SHA512 fbe1e632473883e47f4bfeb16cab314bbbe8a7b404a5c071ca613bbf288526e505edd7a5edfdd9f85dd16da6d0d91fa0d4f8c783882094d3691f77685817fea6
     HEAD_REF release
     PATCHES
-        001-fix_rename_find_package_to_find_dependency.patch # See PixarAnimationStudios/OpenUSD#3205
-        002-vcpkg_find_tbb.patch # See PixarAnimationStudios/OpenUSD#3207
-        003-vcpkg_find_opensubdiv.patch
-        004-vcpkg_find_openimageio.patch
-        005-vcpkg_find_shaderc.patch
-        006-vcpkg_find_spirv-reflect.patch
-        007-vcpkg_find_vma.patch
-        008-fix_cmake_package.patch
-        009-fix_cmake_hgi_interop.patch
-        010-fix_missing_find_dependency_vulkan.patch
-        011-fix_clang8_compiler_error.patch
-        012-vcpkg_install_folder_conventions.patch
-        013-cmake_export_plugin_as_modules.patch
-        014-MaterialX_v1.38-39.patch # PixarAnimationStudios/OpenUSD#3159
-        015-fix_missing_find_dependency_opengl.patch
-        016-TBB-2022.patch # Accomodate oneapi-src/oneTBB#1345 changes
+        003-fix-dep.patch
+        004-fix_cmake_package.patch
+        007-fix_cmake_hgi_interop.patch
+        008-fix_clang8_compiler_error.patch
+        009-vcpkg_install_folder_conventions.patch
+        010-cmake_export_plugin_as_modules.patch
+        013-openimageio-3.patch
 )
 
-# Changes accompanying 006-vcpkg_find_spirv-reflect.patch
-vcpkg_replace_string("${SOURCE_PATH}/pxr/imaging/hgiVulkan/shaderCompiler.cpp"
-    [[#include "pxr/imaging/hgiVulkan/spirv_reflect.h"]]
-    [[#include <spirv_reflect.h>]]
-)
+# Changes accompanying 003-fix-dep.patch
 file(REMOVE
-    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/spirv_reflect.cpp"
-    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/spirv_reflect.h"
+    "${SOURCE_PATH}/cmake/modules/FindOpenColorIO.cmake"
+    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/vk_mem_alloc.cpp"
+    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/vk_mem_alloc.h"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        imaging        PXR_BUILD_IMAGING
+        imaging        PXR_BUILD_USD_IMAGING
+        imaging        PXR_ENABLE_GL_SUPPORT
         materialx      PXR_ENABLE_MATERIALX_SUPPORT
-        metal          PXR_ENABLE_METAL_SUPPORT
         openimageio    PXR_BUILD_OPENIMAGEIO_PLUGIN
         vulkan         PXR_ENABLE_VULKAN_SUPPORT
 )
-
-if (PXR_ENABLE_MATERIALX_SUPPORT)
-    list(APPEND FEATURE_OPTIONS "-DMaterialX_DIR=${CURRENT_INSTALLED_DIR}/share/materialx")
-endif()
-
-# hgiInterop Metal and Vulkan backend requires garch which is only enabled if PXR_ENABLE_GL_SUPPORT is ON
-if(PXR_ENABLE_VULKAN_SUPPORT OR PXR_ENABLE_METAL_SUPPORT)
-    list(APPEND FEATURE_OPTIONS "-DPXR_ENABLE_GL_SUPPORT:BOOL=ON")
-else()
-    list(APPEND FEATURE_OPTIONS "-DPXR_ENABLE_GL_SUPPORT:BOOL=OFF")
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -74,15 +63,10 @@ vcpkg_cmake_configure(
         -DPXR_BUILD_EMBREE_PLUGIN:BOOL=OFF
         -DPXR_BUILD_PRMAN_PLUGIN:BOOL=OFF
 
-        -DPXR_BUILD_IMAGING:BOOL=ON 
-        -DPXR_BUILD_USD_IMAGING:BOOL=ON 
-
         -DPXR_ENABLE_OPENVDB_SUPPORT:BOOL=OFF
         -DPXR_ENABLE_PTEX_SUPPORT:BOOL=OFF
 
-        -DPXR_PREFER_SAFETY_OVER_SPEED:BOOL=ON 
-
-        -DPXR_ENABLE_PRECOMPILED_HEADERS:BOOL=OFF
+        -DPXR_PREFER_SAFETY_OVER_SPEED:BOOL=ON
 
         -DPXR_ENABLE_PYTHON_SUPPORT:BOOL=OFF
         -DPXR_USE_DEBUG_PYTHON:BOOL=OFF
@@ -118,8 +102,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # Move all dlls to bin
     file(GLOB RELEASE_DLL ${CURRENT_PACKAGES_DIR}/lib/*.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(GLOB DEBUG_DLL ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    if(NOT VCPKG_BUILD_TYPE)
+      file(GLOB DEBUG_DLL ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
+      file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
     foreach(CURRENT_FROM ${RELEASE_DLL} ${DEBUG_DLL})
         string(REPLACE "/lib/" "/bin/" CURRENT_TO ${CURRENT_FROM})
         file(RENAME ${CURRENT_FROM} ${CURRENT_TO})
@@ -132,7 +118,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endfunction()
 
     # fix dll path for cmake
-    file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
+    if(NOT VCPKG_BUILD_TYPE)
+      file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-debug.cmake "debug/lib/([a-zA-Z0-9_]+)\\.dll" "debug/bin/\\1.dll")
+    endif()
     file_replace_regex(${CURRENT_PACKAGES_DIR}/share/pxr/pxrTargets-release.cmake "lib/([a-zA-Z0-9_]+)\\.dll" "bin/\\1.dll")
 
     # fix plugInfo.json for runtime

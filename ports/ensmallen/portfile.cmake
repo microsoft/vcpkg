@@ -1,4 +1,5 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mlpack/ensmallen
@@ -9,16 +10,18 @@ vcpkg_from_github(
         dependencies.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openmp     USE_OPENMP
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_TESTS=OFF
+    OPTIONS ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
-
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/ensmallen)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/COPYRIGHT.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT.txt")

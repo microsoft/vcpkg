@@ -5,8 +5,9 @@ vcpkg_buildpath_length_warning(44)
 
 set(${PORT}_PATCHES "")
 
- set(TOOL_NAMES 
+ set(TOOL_NAMES
         qml
+        qmlaotstats
         qmlcachegen
         qmleasing
         qmlformat

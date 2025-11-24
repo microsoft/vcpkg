@@ -22,11 +22,19 @@ set(${PORT}_PATCHES
         fix-host-aliasing.patch
         fix_deploy_windows.patch
         fix-link-lib-discovery.patch
-        qmake-arm64.patch
+        macdeployqt-symlinks.patch
+        fix-missing-include.patch
+        moltenvk.patch
+        xcodebuild-not-installed.patch
+        fix-libresolv-test.patch
 )
-
+ 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     list(APPEND ${PORT}_PATCHES env.patch)
+endif()
+
+if("shared-mime-info" IN_LIST FEATURES)
+    list(APPEND ${PORT}_PATCHES use-shared-mime-info.patch)
 endif()
 
 list(APPEND ${PORT}_PATCHES 
@@ -37,11 +45,25 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
     message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
 endif()
 
+# Feature like glib depend on pkg-config
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 if(VCPKG_TARGET_IS_LINUX)
     message(WARNING "qtbase currently requires packages from the system package manager. "
     "They can be installed on Ubuntu systems via sudo apt-get install " 
     "'^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev "
     "libxkbcommon-x11-dev libegl1-mesa-dev.")
+endif()
+
+if(VCPKG_TARGET_IS_OSX)
+    execute_process(COMMAND xcrun --show-sdk-version
+            OUTPUT_VARIABLE OSX_SDK_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(${OSX_SDK_VERSION} VERSION_GREATER_EQUAL 26)
+        # macOS 26 Tahoe has removed AGL APIs https://bugreports.qt.io/browse/QTBUG-137687
+        list(APPEND ${PORT}_PATCHES macos26-opengl.patch)
+    endif()
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source:
@@ -117,7 +139,7 @@ FEATURES
     "icu"                 FEATURE_icu
     "pcre2"               FEATURE_pcre2
     #"icu"                 CMAKE_REQUIRE_FIND_PACKAGE_ICU
-    "glib"                CMAKE_REQUIRE_FIND_PACKAGE_GLIB2
+    #"glib"                CMAKE_REQUIRE_FIND_PACKAGE_GLIB2
 INVERTED_FEATURES
     #"doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion # Required
     #"pcre2"                 CMAKE_DISABLE_FIND_PACKAGE_WrapSystemPCRE2 # Bug in qt cannot be deactivated
@@ -154,7 +176,7 @@ else()
     list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=no)
 endif()
 
-if ("dnslookup" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+if ("dnslookup" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_NET_OPTIONS -DFEATURE_libresolv:BOOL=ON)
 endif()
 
@@ -312,7 +334,7 @@ set(TOOL_NAMES
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
-                        ##--trace-expand
+                        #--trace-expand
                         ${FEATURE_OPTIONS}
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}
@@ -328,11 +350,13 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DINPUT_bundled_xcb_xinput:STRING=no
                         -DFEATURE_force_debug_info:BOOL=ON
                         -DFEATURE_relocatable:BOOL=ON
+                        -DQT_AUTODETECT_ANDROID:BOOL=ON # Use vcpkg toolchain as is
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                         -DFEATURE_debug:BOOL=ON
                      CONFIGURE_OPTIONS_MAYBE_UNUSED
                         FEATURE_appstore_compliant # only used for android/ios
+                        QT_AUTODETECT_ANDROID
                     )
 
 # Install CMake helper scripts
@@ -345,6 +369,7 @@ file(COPY
 file(CONFIGURE OUTPUT "${CURRENT_PACKAGES_DIR}/share/${PORT}/port_status.cmake" CONTENT "set(qtbase_with_icu ${FEATURE_icu})\n")
 
 set(other_files qt-cmake
+                qt-cmake-create
                 qt-cmake-private
                 qt-cmake-standalone-test
                 qt-configure-module
@@ -356,7 +381,8 @@ set(other_files qt-cmake
                 qmake6
                 qtpaths
                 qtpaths6
-                 )
+)
+
 if(CMAKE_HOST_WIN32)
     set(script_suffix ".bat")
 else()
@@ -364,17 +390,18 @@ else()
 endif()
 list(TRANSFORM other_files APPEND "${script_suffix}")
 
-list(APPEND other_files 
+list(APPEND other_files
                 android_cmakelist_patcher.sh
                 android_emulator_launcher.sh
                 ensure_pro_file.cmake
-                syncqt.pl
-                target_qt.conf
+                qt-android-runner.py
                 qt-cmake-private-install.cmake
                 qt-testrunner.py
-                sanitizer-testrunner.py
                 qt-wasmtestrunner.py
-                )
+                sanitizer-testrunner.py
+                syncqt.pl
+                target_qt.conf
+)
 
 foreach(_config debug release)
     if(_config MATCHES "debug")
@@ -409,7 +436,7 @@ endforeach()
 set(qttoolchain "${CURRENT_PACKAGES_DIR}/share/Qt6/qt.toolchain.cmake")
 file(READ "${qttoolchain}" toolchain_contents)
 string(REGEX REPLACE "set\\\(__qt_initially_configured_toolchain_file [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
-string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__qt_chainload_toolchain_file \"\${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}\")" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__qt_chainload_toolchain_file \"\${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}\n\")" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(VCPKG_CHAINLOAD_TOOLCHAIN_FILE [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_c_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_cxx_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
@@ -463,6 +490,8 @@ set(CURRENT_HOST_INSTALLED_DIR "${BACKUP_CURRENT_HOST_INSTALLED_DIR}")
 set(REL_HOST_TO_DATA "\${CURRENT_INSTALLED_DIR}/")
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/Qt6/qt_debug.conf" @ONLY) # For vcpkg-qmake
 
+# target_qt_conf exists iff CMAKE_CROSSCOMPILING 
+# cf. qt_generate_qmake_and_qtpaths_wrapper_for_target in <src>/cmake/QtQmakeHelpers.cmake
 set(target_qt_conf "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/target_qt.conf")
 if(EXISTS "${target_qt_conf}")
     file(READ "${target_qt_conf}" qt_conf_contents)
@@ -470,6 +499,13 @@ if(EXISTS "${target_qt_conf}")
     string(REGEX REPLACE "HostData=[^\n]+" "HostData=./../${TARGET_TRIPLET}/share/Qt6" qt_conf_contents ${qt_conf_contents})
     string(REGEX REPLACE "HostPrefix=[^\n]+" "HostPrefix=./../../../../${_HOST_TRIPLET}" qt_conf_contents ${qt_conf_contents})
     file(WRITE "${target_qt_conf}" "${qt_conf_contents}")
+
+    if(script_suffix STREQUAL "")
+        foreach(name IN ITEMS qmake qmake6 qtpaths qtpaths6)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${name}" "${CURRENT_HOST_INSTALLED_DIR}/" "\"\$script_dir_path\"/../../../../${HOST_TRIPLET}/")
+        endforeach()
+    endif()
+
     if(NOT VCPKG_BUILD_TYPE)
       set(target_qt_conf_debug "${CURRENT_PACKAGES_DIR}/tools/Qt6/target_qt_debug.conf")
       configure_file("${target_qt_conf}" "${target_qt_conf_debug}" COPYONLY)
@@ -482,10 +518,16 @@ if(EXISTS "${target_qt_conf}")
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6AndroidMacros.cmake"
+        [[ set(cmake_dir "${prefix_path}/${${export_namespace_upper}_INSTALL_LIBS}/cmake")]]
+        [[ set(cmake_dir "${prefix_path}/share")]]
+    )
+endif()
+
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
 endif()
-
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_DLL_FILES brotlicommon brotlidec bz2 freetype harfbuzz libpng16)
@@ -506,8 +548,8 @@ file(WRITE "${hostinfofile}" "${_contents}")
 
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake"
-                         "PACKAGE_PREFIX_DIR}/bin/syncqt"
-                         "PACKAGE_PREFIX_DIR}/tools/Qt6/bin/syncqt"
+                         "CMAKE_CURRENT_LIST_DIR}/../../bin/syncqt"
+                         "CMAKE_CURRENT_LIST_DIR}/../../tools/Qt6/bin/syncqt"
                          IGNORE_UNCHANGED)
 endif()
 

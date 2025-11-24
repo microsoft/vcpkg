@@ -1,0 +1,49 @@
+diff --git a/src/hello_imgui/impl/imgui_theme.cpp b/src/hello_imgui/impl/imgui_theme.cpp
+index 8bc60cb..87f2de4 100644
+--- a/src/hello_imgui/impl/imgui_theme.cpp
++++ b/src/hello_imgui/impl/imgui_theme.cpp
+@@ -314,7 +314,7 @@ namespace ImGuiTheme
+             style.GrabRounding = 0.0f;
+             style.TabRounding = 0.0f;
+             style.TabBorderSize = 0.0f;
+-            style.TabMinWidthForCloseButton = 0.0f;
++            style.TabCloseButtonMinWidthUnselected = 0.0f;
+             style.ColorButtonPosition = ImGuiDir_Left;
+             style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+             style.SelectableTextAlign = ImVec2(0.0f, 0.0f);
+@@ -408,7 +408,7 @@ namespace ImGuiTheme
+             style.GrabRounding = 0.0f;
+             style.TabRounding = 0.0f;
+             style.TabBorderSize = 1.0f;
+-            style.TabMinWidthForCloseButton = 0.0f;
++            style.TabCloseButtonMinWidthUnselected = 0.0f;
+             style.ColorButtonPosition = ImGuiDir_Right;
+             style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+             style.SelectableTextAlign = ImVec2(0.0f, 0.0f);
+@@ -577,7 +577,7 @@ namespace ImGuiTheme
+             style.GrabRounding = 0.0f;
+             style.TabRounding = 4.0f;
+             style.TabBorderSize = 0.0f;
+-            style.TabMinWidthForCloseButton = 0.0f;
++            style.TabCloseButtonMinWidthUnselected = 0.0f;
+             style.ColorButtonPosition = ImGuiDir_Right;
+             style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+             style.SelectableTextAlign = ImVec2(0.0f, 0.0f);
+@@ -615,7 +615,7 @@ namespace ImGuiTheme
+             style.GrabRounding = 2.0f;
+             style.TabRounding = 4.0f;
+             style.TabBorderSize = 1.0f;
+-            style.TabMinWidthForCloseButton = 0.0f;
++            style.TabCloseButtonMinWidthUnselected = 0.0f;
+             style.ColorButtonPosition = ImGuiDir_Right;
+             style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+             style.SelectableTextAlign = ImVec2(0.0f, 0.0f);
+@@ -814,7 +814,7 @@ namespace ImGuiTheme
+             style.ScrollbarSize = 15.5f;
+             style.GrabMinSize = 10.89999961853027f;
+             style.TabBorderSize = 1.0f;
+-            style.TabMinWidthForCloseButton = 0.0f;
++            style.TabCloseButtonMinWidthUnselected = 0.0f;
+             style.ColorButtonPosition = ImGuiDir_Right;
+             style.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+             style.SelectableTextAlign = ImVec2(0.0f, 0.5f);

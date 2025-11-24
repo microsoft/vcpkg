@@ -1,11 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO json-c/json-c
-    REF b4c371fa0cbc4dcbaccc359ce9e957a22988fb34
-    SHA512 1338271a6f9ffb3b8a8d4f2ec36a374ed84b3c91f789b607693c08cbeb38c4fdd813593f530ff94e841a095ff367a3ae8c5f5e7dbcb64e8f9044f6affdf24505
+    REF "json-c-${VERSION}"
+
+    SHA512 219d8c0da9a4016b74af238cc15dbec1f369a07de160bcc548d80279028e1b5d8d928deb13fec09c96a085fc0ecf10090e309cbe72d0081aca864433c4ae01db
     HEAD_REF master
-    PATCHES pkgconfig.patch
-            fix-clang-cl.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSON_BUILD_STATIC)

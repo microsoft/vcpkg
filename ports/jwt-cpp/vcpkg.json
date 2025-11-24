@@ -1,13 +1,11 @@
 {
   "name": "jwt-cpp",
-  "version-semver": "0.7.0",
-  "port-version": 1,
+  "version-semver": "0.7.1",
   "description": "A header only library for creating and validating json web tokens in c++",
   "homepage": "https://github.com/Thalhammer/jwt-cpp",
   "license": "MIT",
   "dependencies": [
     "openssl",
-    "picojson",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,5 +14,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "picojson": {
+      "description": "Use picojson for JSON handling",
+      "dependencies": [
+        "picojson"
+      ]
+    }
+  }
 }

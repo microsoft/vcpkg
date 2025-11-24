@@ -1,6 +1,7 @@
 {
   "name": "libxfont",
   "version": "2.0.5",
+  "port-version": 1,
   "description": "X font handling library for server & utilities",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxfont",
   "license": null,

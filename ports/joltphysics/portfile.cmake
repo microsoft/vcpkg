@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
     REF "v${VERSION}"
-    SHA512 01c8b0b1857811876e2d9f75f1cd191e09c43b131d9d7c1f24cb0e28b913a5e896fb51cbf3aaa100b237ceaa2a235b8f925b31bf5a2165faaf0f2f0b186bc103
+    SHA512 353b2cdc791b46513dbf90b4833988a4c7a4c541ea711813102fc3c488b5b19442092d77e715ae07c8e24a63e7046e975d6d9cb560f9777701c354a18032f9b4
     HEAD_REF master
 )
 
@@ -14,6 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         debugrenderer       DEBUG_RENDERER_IN_DEBUG_AND_RELEASE
         profiler            PROFILER_IN_DEBUG_AND_RELEASE
+        rtti                CPP_RTTI_ENABLED
 )
 
 vcpkg_cmake_configure(

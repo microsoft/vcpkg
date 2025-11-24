@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 47817eaecaf987f8aa67dc9eb7f87c0cfc00705b192245063322a1c360501e47be20f745907302b8c497ab7d15f423fbf6d7766e437cf9871cf5c617b1590407
+    SHA512 016cd45720a466740c95bea1bb4eb97d218404536c7498a604d718b9301caf0aa88efef839b2b67823c8b65ae22a335a597580b6ba0dc1602e82287ee3eeb5c1
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
@@ -58,14 +58,21 @@ endif()
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_DEBUG -Dgobject=enabled -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dgobject=enabled -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
     list(APPEND OPTIONS -Dintrospection=disabled)
 endif()
 
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
-else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+set(cxx_link_libraries "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    block(PROPAGATE cxx_link_libraries)
+        vcpkg_list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_DEFAULT_VARS_TO_CHECK=CMAKE_C_IMPLICIT_LINK_LIBRARIES;CMAKE_CXX_IMPLICIT_LINK_LIBRARIES")
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        list(REMOVE_ITEM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES ${VCPKG_DETECTED_CMAKE_C_IMPLICIT_LINK_LIBRARIES})
+        list(TRANSFORM VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES PREPEND "-l")
+        string(JOIN " " cxx_link_libraries ${VCPKG_DETECTED_CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
+    endblock()
 endif()
 
 vcpkg_configure_meson(
@@ -83,27 +90,42 @@ vcpkg_configure_meson(
     ADDITIONAL_BINARIES
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-        g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
+        g-ir-compiler='${GIR_COMPILER}'
+        g-ir-scanner='${GIR_SCANNER}'
 )
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+if(cxx_link_libraries)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/harfbuzz.pc"
+        "(Libs:[^\r\n]*)"
+        "\\1 ${cxx_link_libraries}"
+        REGEX
+    )
+    if(NOT VCPKG_BUILD_TYPE)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/harfbuzz.pc"
+            "(Libs:[^\r\n]*)"
+            "\\1 ${cxx_link_libraries}"
+            REGEX
+        )
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
-	file(GLOB PC_FILES 
-		"${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
-		"${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc")
-	
-	foreach(PC_FILE IN LISTS PC_FILES)
-		file(READ "${PC_FILE}" PC_FILE_CONTENT)
-		string(REGEX REPLACE 
-			"\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
-			"-l\\1" PC_FILE_CONTENT 
-			"${PC_FILE_CONTENT}")
-		file(WRITE "${PC_FILE}" ${PC_FILE_CONTENT})
-	endforeach()
+    file(GLOB pc_files 
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"
+    )
+    foreach(pc_file IN LISTS pc_files)
+        vcpkg_replace_string("${pc_file}"
+            "\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
+            "-l\\1"
+            REGEX
+            IGNORE_UNCHANGED
+        )
+    endforeach()
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
@@ -113,7 +135,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure hb-info)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()

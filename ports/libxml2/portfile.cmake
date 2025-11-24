@@ -1,26 +1,27 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxml2
     REF "v${VERSION}"
-    SHA512 3f2de446657bf3c23c92358ce8946f59253b9fcc09577b59eecaffdbd97e051659855c79f4882ee9f8841dd194b6bd5de2a8017691473b505e905b9dde6a1bc9
+    SHA512 c0ec62434379200615d5400345d1664f6b02af573d2e61ec343b463745fc9a7c74c7ff5d66023efdbabff81dc36e1d6c54921f619c81521c79e71611d5ed0268
     HEAD_REF master
     PATCHES
-        disable-docs.patch
+        cxx-for-icu.diff
+        disable-xml2-config.diff
         fix_cmakelist.patch
+        fix_ios_compilation.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "ftp" LIBXML2_WITH_FTP
-        "http" LIBXML2_WITH_HTTP
-        "iconv" LIBXML2_WITH_ICONV
-        "legacy" LIBXML2_WITH_LEGACY
-        "lzma" LIBXML2_WITH_LZMA
-        "zlib" LIBXML2_WITH_ZLIB
-        "tools" LIBXML2_WITH_PROGRAMS
-        "icu"  LIBXML2_WITH_ICU
+        "iconv"     LIBXML2_WITH_ICONV
+        "icu"       LIBXML2_WITH_ICU
+        "legacy"    LIBXML2_WITH_LEGACY
+        "tools"     LIBXML2_WITH_PROGRAMS
+        "zlib"      LIBXML2_WITH_ZLIB
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -31,55 +32,41 @@ vcpkg_cmake_configure(
         -DLIBXML2_WITH_CATALOG=ON
         -DLIBXML2_WITH_DEBUG=ON
         -DLIBXML2_WITH_ISO8859X=ON
-        -DLIBXML2_WITH_MEM_DEBUG=OFF
         -DLIBXML2_WITH_MODULES=ON
         -DLIBXML2_WITH_OUTPUT=ON
         -DLIBXML2_WITH_PATTERN=ON
         -DLIBXML2_WITH_PUSH=ON
-        -DLIBXML2_WITH_PYTHON=OFF
         -DLIBXML2_WITH_READER=ON
         -DLIBXML2_WITH_REGEXPS=ON
         -DLIBXML2_WITH_SAX1=ON
         -DLIBXML2_WITH_SCHEMAS=ON
-        -DLIBXML2_WITH_SCHEMATRON=ON
         -DLIBXML2_WITH_THREADS=ON
         -DLIBXML2_WITH_THREAD_ALLOC=OFF
-        -DLIBXML2_WITH_TREE=ON
         -DLIBXML2_WITH_VALID=ON
         -DLIBXML2_WITH_WRITER=ON
         -DLIBXML2_WITH_XINCLUDE=ON
         -DLIBXML2_WITH_XPATH=ON
         -DLIBXML2_WITH_XPTR=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+    OPTIONS_DEBUG
+        -DLIBXML2_WITH_PROGRAMS=OFF
 )
 
 vcpkg_cmake_install()
-
+vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libxml2")
 vcpkg_fixup_pkgconfig()
-
-vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h" "!defined(LIBXML_STATIC)" "0 /* LIBXML_STATIC */")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(_file "${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h")
-    file(READ "${_file}" _contents)
-    string(REPLACE "#ifdef LIBXML_STATIC" "#undef LIBXML_STATIC\n#define LIBXML_STATIC\n#ifdef LIBXML_STATIC" _contents "${_contents}")
-    file(WRITE "${_file}" "${_contents}")
-endif()
-
-file(COPY "${CURRENT_PACKAGES_DIR}/include/libxml2/" DESTINATION "${CURRENT_PACKAGES_DIR}/include") # TODO: Fix usage in all dependent ports hardcoding the wrong include path.
-
-# Cleanup
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/xml2Conf.sh" "${CURRENT_PACKAGES_DIR}/debug/lib/xml2Conf.sh")
 
 file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"

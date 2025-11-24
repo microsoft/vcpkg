@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4da9921..14cef0d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,13 +44,16 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+   add_definitions(-Wall)
+ endif()
+ 
+-include(CheckCXXSymbolExists)
+-check_cxx_symbol_exists(_LIBCPP_VERSION cstdlib HAVE_LIBCPP)
+-if(HAVE_LIBCPP)
+-  set(LIBS_PRIVATE "-lc++")
+-else()
+-  set(LIBS_PRIVATE "-lstdc++")
+-endif()
++set(LIBS_PRIVATE "")
++foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++  if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++    continue()
++  elseif(EXISTS "${lib}")
++    string(APPEND LIBS_PRIVATE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++  else()
++    string(APPEND LIBS_PRIVATE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++  endif()
++endforeach()
+ 
+ option(BUILD_SHARED_LIBS "Build shared library" ON)
+ if(NOT BUILD_SHARED_LIBS)

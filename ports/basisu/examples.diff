@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e2c7a1d..d143ecf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.5)
+ project(basisu)
+ option(STATIC "static linking" FALSE)
+ option(SAN "sanitize" FALSE)
++option(EXAMPLES "Build examples" FALSE)
+ 
+ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+ 
+@@ -176,6 +177,9 @@ target_link_libraries(basisu PRIVATE basisu_encoder)
+ # Create the new example executable and link against the static library
+ add_executable(examples example/example.cpp)
+ target_link_libraries(examples PRIVATE basisu_encoder)
++if(NOT EXAMPLES)
++    set_target_properties(examples PROPERTIES EXCLUDE_FROM_ALL 1)
++endif()
+ 
+ if (ZSTD)
+     target_compile_definitions(basisu PRIVATE BASISD_SUPPORT_KTX2_ZSTD=1)

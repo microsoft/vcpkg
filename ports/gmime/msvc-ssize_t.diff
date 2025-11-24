@@ -1,0 +1,33 @@
+diff --git a/configure.ac b/configure.ac
+index 9d368e0..c534a09 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -168,6 +168,13 @@ AC_TYPE_MODE_T
+ AC_TYPE_OFF_T
+ AC_TYPE_SIZE_T
+ AC_TYPE_SSIZE_T
++AH_BOTTOM([
++#ifdef _MSC_VER
++#undef ssize_t;
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
++])
+ AC_TYPE_UINT32_T
+ AC_TYPE_UINT64_T
+ AC_TYPE_UINT8_T
+diff --git a/gmime/gmime.h b/gmime/gmime.h
+index ef6b93e..d3696ac 100644
+--- a/gmime/gmime.h
++++ b/gmime/gmime.h
+@@ -22,6 +22,10 @@
+ #ifndef __GMIME_H__
+ #define __GMIME_H__
+ 
++#ifdef _MSC_VER
++#include <BaseTsd.h>
++typedef SSIZE_T ssize_t;
++#endif
+ #include <glib.h>
+ #include <gmime/gmime-version.h>
+ #include <gmime/gmime-error.h>

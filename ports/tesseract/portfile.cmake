@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tesseract-ocr/tesseract
     REF "${VERSION}"
-    SHA512 206e7da2d28a6271217ff384b482aa45a50beee0c53327aa4fd3da7082dce83386c8b7600194cbc30282134013b6182a1bed9d128ed6378f2957d0b8d1770b2d
+    SHA512 37c9cc2ac1bcd26b783f76a0cd8ef266d2dd54746c73d983202d150bf885b50fd32d9f1745d1df65f4cddccd9fc24b1b871e8dea8dcba3454a27363297423cdd
     PATCHES
         fix_static_link_icu.patch
         fix-link-include-path.patch
@@ -13,6 +13,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         training-tools  BUILD_TRAINING_TOOLS
 )
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -26,6 +28,7 @@ vcpkg_cmake_configure(
         -DLeptonica_DIR=YES
         -DSW_BUILD=OFF
         -DLEPT_TIFF_RESULT=ON
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_OpenCL
 )
@@ -41,6 +44,9 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cm
 find_dependency(CURL)
 find_dependency(Leptonica)
 find_dependency(LibArchive)
+if(ANDROID)
+    find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()
 ]]
 )
 

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO syoyo/tinyexr
     REF "v${VERSION}"
-    SHA512 583404c77009ec88d75accf006f90ee8972d2205bbae41e460d2cbb9a54d9382735a82eba0657fcc5f4e8b3b0fadd51449cec440529570e75c307eb7f0fcc8fb
+    SHA512 74b9b72f58198ebf09c41f1bea04d24f9c13996411cb55f21ddb7732646ca9ddee7cf1fd538888a26d670fa73e168ad901c2a92fb23c7839a2821a79855a2350
     HEAD_REF master
     PATCHES
         fixtargets.patch

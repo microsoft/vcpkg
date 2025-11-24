@@ -1,0 +1,20 @@
+{
+  "name": "manifold",
+  "version": "3.2.1",
+  "port-version": 1,
+  "description": "Geometry library for topological robustness.",
+  "homepage": "https://github.com/elalish/manifold",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "clipper2",
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

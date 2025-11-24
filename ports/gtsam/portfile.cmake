@@ -21,7 +21,7 @@ vcpkg_cmake_configure(
         -DGTSAM_USE_SYSTEM_METIS=ON
         -DGTSAM_INSTALL_CPPUNITLITE=OFF
         -DGTSAM_BUILD_TYPE_POSTFIXES=OFF
-        -DCMAKE_CXX_STANDARD=11 # Boost v1.84.0 libraries require C++11
+        -DCMAKE_CXX_STANDARD=14 # Boost-math require C++14
 )
 
 vcpkg_cmake_install()

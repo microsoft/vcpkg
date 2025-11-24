@@ -1,0 +1,18 @@
+{
+  "name": "tree-sitter-c",
+  "version": "0.24.1",
+  "description": "C grammar for tree-sitter",
+  "homepage": "https://github.com/tree-sitter/tree-sitter-c",
+  "license": "MIT",
+  "dependencies": [
+    "tree-sitter",
+    {
+      "name": "tree-sitter-cli",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "ceres",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "port-version": 5,
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",
@@ -9,7 +9,7 @@
     "eigen3",
     {
       "name": "glog",
-      "platform": "!(arm & uwp)"
+      "platform": "!ios & !uwp"
     },
     {
       "name": "vcpkg-cmake",
@@ -23,24 +23,15 @@
   "features": {
     "cuda": {
       "description": "Support for CUDA based dense solvers",
-      "supports": "linux | (!osx & !uwp & !(arm64 & windows))",
       "dependencies": [
         "cuda"
       ]
     },
-    "cxsparse": {
-      "description": "CXSparse support for Ceres",
-      "dependencies": [
-        {
-          "name": "ceres",
-          "features": [
-            "suitesparse"
-          ]
-        }
-      ]
-    },
     "eigensparse": {
-      "description": "Use of Eigen as a sparse linear algebra library in Ceres"
+      "description": "Use of Eigen as a sparse linear algebra library in Ceres",
+      "dependencies": [
+        "metis"
+      ]
     },
     "lapack": {
       "description": "Use Lapack in Ceres",
@@ -61,15 +52,14 @@
           ]
         },
         {
-          "name": "suitesparse",
-          "default-features": false
-        }
-      ]
-    },
-    "tools": {
-      "description": "Ceres tools",
-      "dependencies": [
-        "gflags"
+          "name": "suitesparse-cholmod",
+          "default-features": false,
+          "features": [
+            "matrixops"
+          ]
+        },
+        "suitesparse-config",
+        "suitesparse-spqr"
       ]
     }
   }

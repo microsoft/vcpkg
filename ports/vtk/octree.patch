@@ -1,0 +1,13 @@
+diff --git a/Utilities/octree/octree/octree_node.txx b/Utilities/octree/octree/octree_node.txx
+index 6971c7c119..5f12bb7de7 100644
+--- a/Utilities/octree/octree/octree_node.txx
++++ b/Utilities/octree/octree/octree_node.txx
+@@ -210,7 +210,7 @@ const octree_node<T_, d_, A_>& octree_node<T_, d_, A_>::operator[](int child) co
+   {
+     throw std::domain_error("Attempt to access children of an octree leaf node.");
+   }
+-  return this->_M_chilren[child];
++  return this->m_children[child];
+ }
+ 
+ /**\brief Return a reference to a child node.

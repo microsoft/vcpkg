@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ipotrick/Daxa
     REF ${VERSION}
-    SHA512 53e31bd89170ee18f404ae778c6fd0d5a1cefa2faf9f28e98d793c79dddeb03acda5525c98b875e45024de5db9c5e9cd9216042978c3a107587fefb6343db1e0
+    SHA512 5843d95ced3ec154d46e31ad5bf822a8470c785415819d235d5b499c3de629c30f5e4afe12b68ef3505ef7287afc68a70f06e255379136fae2e63976310ca3e0
     HEAD_REF master
-    PATCHES
-        fix-std-sort.patch #https://github.com/Ipotrick/Daxa/pull/96
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

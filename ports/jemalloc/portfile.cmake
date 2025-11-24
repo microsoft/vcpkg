@@ -7,19 +7,21 @@ vcpkg_from_github(
     PATCHES
         fix-configure-ac.patch
         preprocessor.patch
+        fix-host-use-libc.patch # https://github.com/jemalloc/jemalloc/commit/45249cf5a9cfa13c2c62e68e272a391721523b4b
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     set(opts "ac_cv_search_log=none required" "--without-private-namespace")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    NO_WRAPPERS
+    DISABLE_MSVC_WRAPPERS
+    DISABLE_MSVC_TRANSFORMATIONS
     OPTIONS ${opts}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY "${SOURCE_PATH}/include/msvc_compat/strings.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/jemalloc/msvc_compat")

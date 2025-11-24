@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 701982a..3cedd7f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,10 +46,15 @@ endif()
+ 
+ if(BUILD_CLOUD_CLIENT)
+   target_sources(ruckig PRIVATE src/ruckig/cloud_client.cpp)
+-  target_include_directories(ruckig PUBLIC
+-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party>
+-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ruckig/third_party>
+-  )
++  find_package(nlohmann_json CONFIG REQUIRED)
++  find_package(httplib CONFIG REQUIRED)
++
++  target_link_libraries(ruckig PUBLIC nlohmann_json::nlohmann_json)
++  target_link_libraries(ruckig PRIVATE httplib::httplib)
++  #target_include_directories(ruckig PUBLIC
++  #  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third_party>
++  #  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ruckig/third_party>
++  #)
+   target_compile_definitions(ruckig PUBLIC WITH_CLOUD_CLIENT)
+ endif()
+ 
+@@ -130,9 +135,9 @@ include(CMakePackageConfigHelpers)
+ 
+ # Install headers
+ install(DIRECTORY include/ruckig DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+-if(BUILD_CLOUD_CLIENT)
+-  install(DIRECTORY third_party/httplib third_party/nlohmann DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ruckig/third_party)
+-endif()
++#if(BUILD_CLOUD_CLIENT)
++  #install(DIRECTORY third_party/httplib third_party/nlohmann DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ruckig/third_party)
++#endif()
+ 
+ # Install library
+ install(TARGETS ruckig
+diff --git a/src/ruckig/cloud_client.cpp b/src/ruckig/cloud_client.cpp
+index d5dc499..65ab347 100644
+--- a/src/ruckig/cloud_client.cpp
++++ b/src/ruckig/cloud_client.cpp
+@@ -1,4 +1,4 @@
+-#include <httplib/httplib.h>
++#include <httplib.h>
+ 
+ #include <ruckig/calculator_cloud.hpp>
+ 

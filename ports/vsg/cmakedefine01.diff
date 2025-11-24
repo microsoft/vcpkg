@@ -1,0 +1,13 @@
+diff --git a/src/vsg/core/Version.h.in b/src/vsg/core/Version.h.in
+index 1926da82..2c492bdb 100644
+--- a/src/vsg/core/Version.h.in
++++ b/src/vsg/core/Version.h.in
+@@ -43,7 +43,7 @@ extern "C"
+     #cmakedefine01 VSG_SUPPORTS_ShaderOptimizer
+ 
+     /// Native Windowing support provided with vsg::Window::create(windowTraits) enabled when 1, disabled when 0
+-    #define VSG_SUPPORTS_Windowing @VSG_SUPPORTS_Windowing@
++    #cmakedefine01 VSG_SUPPORTS_Windowing
+ 
+     struct VsgVersion
+     {

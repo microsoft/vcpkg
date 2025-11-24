@@ -31,7 +31,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO arvidn/libtorrent
         REF "v${VERSION}"
-        SHA512 fb55b04b57a6a1f39b81a4aff2ca899f9ac30b435c278c80181bdd3fef4775a3f91b2345c49b493503ae79ef89841e9a965af9974abe9022be3050922a4057f0
+        SHA512 375fb12754ce73b34b215c1ca077b0ec58a8c91f6a6e4a48e2ae55251be38f647405d135ebeae38f8b0dfb478bcea8d5f0d6509e97f1baddbc2cd2e788948f2a
         HEAD_REF RC_2_0
 )
 

@@ -1,0 +1,13 @@
+diff --git a/libsrc/meta.cpp b/libsrc/meta.cpp
+index 9cc8cc9..69fce79 100644
+--- a/libsrc/meta.cpp
++++ b/libsrc/meta.cpp
+@@ -23,7 +23,7 @@ namespace ISMRMRD {
+             pugi::xml_node value = meta.child("value");
+ 
+             if (!name || !value) {
+-                std::runtime_error("Malformed metadata value");
++                throw std::runtime_error("Malformed metadata value");
+             }
+ 
+             while (value) {

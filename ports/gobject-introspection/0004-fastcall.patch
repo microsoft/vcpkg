@@ -1,0 +1,12 @@
+diff --git a/giscanner/scannerlexer.l b/giscanner/scannerlexer.l
+index 38e21534edfa6c92f2ecb6c8a68b6d0360c21c64..4ca62d21f8fa8e663db152415d0ef85cfe6107f5 100644
+--- a/giscanner/scannerlexer.l
++++ b/giscanner/scannerlexer.l
+@@ -193,6 +193,7 @@ stringtext				([^\\\"])|(\\.)
+ "__declspec(deprecated(".*"))"		{ /* Ignore */ }
+ "__declspec"[\t ]*"("[a-z\t ]+")"	{ /* Ignore */ }
+ "__stdcall" 			        { /* ignore */ }
++"__fastcall" 			        { /* ignore */ }
+ "__w64"					{ /* ignore */ }
+ 
+ "G_GINT64_CONSTANT"			{ return INTL_CONST; }

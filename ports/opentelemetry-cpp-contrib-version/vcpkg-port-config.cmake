@@ -4,9 +4,9 @@ function(clone_opentelemetry_cpp_contrib CONTRIB_SOURCE_PATH)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO open-telemetry/opentelemetry-cpp-contrib
-        REF 93733bb2e52273474f4298d10645bf7d1157fc55
+        REF ec0b6cf82ec204e13ff9b0b231ffda05c6191196
         HEAD_REF main
-        SHA512 bfe297e313b8e960a4557dd8750c814af2f9b574dd248f8c30b452160f5b7aba53af85b2c5b87a423ea3878e8a852022e3ff3d08a983db073c68418e64f671b2
+        SHA512 3ea1780895e51a414713d3487dc82e071a4fd5b98dc055661b7d4267d5a099274d7cf2b043085f152174e870924086b9ef0c92a00efc7605ba53b5732ae55f33
     )
     set(${CONTRIB_SOURCE_PATH} ${SOURCE_PATH} CACHE INTERNAL "")
 endfunction()

@@ -1,7 +1,6 @@
 {
   "name": "libcopp",
-  "version": "2.2.0",
-  "port-version": 1,
+  "version": "2.3.1",
   "maintainers": "owent <admin@owent.net>",
   "description": "A cross-platfrom coroutine library for C++",
   "homepage": "https://github.com/owent/libcopp",

@@ -1,0 +1,26 @@
+diff --git a/src/BinaryStream/BinaryStream.cpp b/src/BinaryStream/BinaryStream.cpp
+index 655948f6..cea9ffcd 100644
+--- a/src/BinaryStream/BinaryStream.cpp
++++ b/src/BinaryStream/BinaryStream.cpp
+@@ -15,7 +15,7 @@
+  */
+ #include "LIEF/BinaryStream/BinaryStream.hpp"
+ #include "LIEF/DWARF/enums.hpp"
+-#include "third-party/utfcpp.hpp"
++#include <utf8cpp/utf8.h>
+ 
+ #include <mbedtls/x509.h>
+ #include <mbedtls/x509_crt.h>
+diff --git a/src/utils.cpp b/src/utils.cpp
+index dc3dda28..356d4ad3 100644
+--- a/src/utils.cpp
++++ b/src/utils.cpp
+@@ -23,7 +23,7 @@
+ #include "LIEF/errors.hpp"
+ #include "LIEF/version.h"
+ 
+-#include "third-party/utfcpp.hpp"
++#include <utf8cpp/utf8.h>
+ 
+ #include "LIEF/config.h"
+ 

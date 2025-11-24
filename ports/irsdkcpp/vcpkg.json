@@ -1,0 +1,49 @@
+{
+  "name": "irsdkcpp",
+  "version": "1.0.9",
+  "description": "iRacing Modern C++ SDK",
+  "license": "MIT",
+  "supports": "windows & !uwp & x64",
+  "dependencies": [
+    {
+      "name": "cppwinrt",
+      "version>=": "2.0.240111.5"
+    },
+    {
+      "name": "fmt",
+      "version>=": "10.1.1"
+    },
+    {
+      "name": "magic-enum",
+      "version>=": "0.9.7"
+    },
+    {
+      "name": "ms-gsl",
+      "version>=": "4.0.0#1"
+    },
+    {
+      "name": "nlohmann-json",
+      "version>=": "3.11.3"
+    },
+    {
+      "name": "range-v3",
+      "version>=": "0.12.0#1"
+    },
+    {
+      "name": "spdlog",
+      "version>=": "1.13.0#1"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "yaml-cpp",
+      "version>=": "0.8.0#1"
+    }
+  ]
+}
