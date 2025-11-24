@@ -479,7 +479,10 @@ if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target l
     )
   endif()
 endif()
-find_dependency(Threads)")
+find_dependency(Threads)
+if(ANDROID)
+  find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()")
 
 if("ade" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(ade)")
