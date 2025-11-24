@@ -78,6 +78,12 @@ jobs:
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
+- template: linux/azure-pipelines.yml
+  parameters:
+    jobName: x64_linux_clang
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
 - template: android/azure-pipelines.yml
   parameters:
     jobName: arm_neon_android
