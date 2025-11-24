@@ -1,18 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "robotology/osqp-eigen"
-    REF v${VERSION}
-    SHA512 92a801892ce11d3167e3f1eb98cd988e7be7cbc3caa070b1628977b7d881b34c1207d9c1443ba381d88be4133bda6d3e9195c931f9554537c86832841f1e61fb 
+    REF v0.11.0
+    SHA512 89f3e83dbaf925f7690c11a553c402c3cadda2d33c3f94f25096b11708f9f8753a3f4ef64d632c553399e95467e887fc37972be94fcad74c63de989ad3a1dde4
     PATCHES osqp-eigen.patch
 )
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+  SOURCE_PATH "${SOURCE_PATH}"
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "osqpeigen" CONFIG_PATH "lib/cmake/OsqpEigen")
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME  "OsqpEigen"
+    CONFIG_PATH "lib/cmake/OsqpEigen"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

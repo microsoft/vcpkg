@@ -1,14 +1,17 @@
 {
   "name": "osqp-eigen",
-  "version": "0.7.0",
-  "port-version": 2,
-  "description": "Simple C++ wrapper for the osqp library",
+  "version": "0.11.0",
+  "port-version": 0,
+  "description": "Simple Eigen-C++ wrapper for OSQP library",
   "homepage": "https://robotology.github.io/osqp-eigen/",
   "dependencies": [
-    "eigen3",
+    {
+      "name": "eigen3",
+      "version>=": "3.4.0"
+    },
     {
       "name": "osqp",
-      "version>=": "0.6.2"
+      "version>=": "1.0.0"
     },
     {
       "name": "vcpkg-cmake",
