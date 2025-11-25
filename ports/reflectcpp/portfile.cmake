@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO getml/reflect-cpp
     REF "v${VERSION}"
-    SHA512 3fb7235a72738dc21659a9b1cbdc5b783b1b5eb7eb4af8de35e0e6d5a886822c88cdd2a58b181c036ab36eac9892e65a9c9e260bf09d21f577bdd01e8d120410 
+    SHA512 ef157de2426c2961a04cfc3bef6c6dd86b76b44e18f1c7b76cbe7d1bd78efa1b2e236fe4fdefbd2ae4a1d876231916b2338d062d0837d1c1cb8e29f14110bb2c
     HEAD_REF main
 )
 

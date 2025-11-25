@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 f9a84d60198f69ecea477e1a63c635674cac4952c9897586f85f4e2a6e9445de09cf9736cd51e274a29a24d2ec8eb1a0d00b9cc0caa55839a205790e261f29af
+    SHA512 644a22f011fd31f2d91e73e26f0b4cfc1e9f8cf862440b08a9a81a5a94e921aeeb1dde2be24d6a9395e355d0ccbe89fd369b0cf7bb45582c2eb6f741036da775
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -41,16 +41,22 @@ if("client" IN_LIST FEATURES)
     endif()
 endif()
 
+set(HAS_SHADOW_SUBSYSTEM ON)
+
 if("server" IN_LIST FEATURES)
     # actual shadow platform subsystem
     if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS # implementation unmaintained
        OR NOT WITH_X11) # dependency
-        list(APPEND FEATURE_OPTIONS -DWITH_SHADOW_SUBSYSTEM=OFF)
+        set(HAS_SHADOW_SUBSYSTEM OFF)
     endif()
     # actual platform server implementation
     if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS) # implementation unmaintained
         list(APPEND FEATURE_OPTIONS -DWITH_PLATFORM_SERVER=OFF)
     endif()
+endif()
+
+if (NOT HAS_SHADOW_SUBSYSTEM)
+    list(APPEND FEATURE_OPTIONS -DWITH_SHADOW_SUBSYSTEM=OFF -DWITH_SERVER_SHADOW_CLI=OFF)
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -109,10 +115,13 @@ if("client" IN_LIST FEATURES AND "x11" IN_LIST FEATURES)
     list(APPEND tools xfreerdp)
 endif()
 if("server" IN_LIST FEATURES)
-    list(APPEND tools freerdp-proxy freerdp-shadow-cli)
+    list(APPEND tools freerdp-proxy)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Proxy3 PACKAGE_NAME freerdp-Proxy3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Server3 PACKAGE_NAME freerdp-server3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Shadow3 PACKAGE_NAME freerdp-shadow3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    if (HAS_SHADOW_SUBSYSTEM)
+        vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Shadow3 PACKAGE_NAME freerdp-shadow3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+        list(APPEND tools freerdp-shadow-cli)
+    endif()
     vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rdtk0 PACKAGE_NAME rdtk0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endif()
 if("winpr-tools" IN_LIST FEATURES)

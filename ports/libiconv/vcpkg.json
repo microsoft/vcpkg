@@ -1,7 +1,7 @@
 {
   "name": "libiconv",
   "version": "1.18",
-  "port-version": 2,
+  "port-version": 3,
   "description": [
     "iconv() text conversion.",
     "This port installs GNU libiconv if the system C runtime doesn't provide a suitable iconv() implementation."

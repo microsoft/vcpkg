@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-mzying2001-sw",
+  "version-string": "ci",
+  "description": "Validates mzying2001-sw",
+  "dependencies": [
+    "mzying2001-sw",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

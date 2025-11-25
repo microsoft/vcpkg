@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 90e274cc..b20534f9 100644
+index 56420587..98422c5c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -294,7 +294,7 @@ if (GGML_STANDALONE)
+@@ -328,7 +328,7 @@ if (GGML_STANDALONE)
          @ONLY)
  
      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ggml.pc
@@ -11,7 +11,7 @@ index 90e274cc..b20534f9 100644
  endif()
  
  #
-@@ -335,6 +335,7 @@ set(variable_set_statements
+@@ -349,6 +349,7 @@ set(variable_set_statements
  set(GGML_SHARED_LIB ${BUILD_SHARED_LIBS})
  
  get_cmake_property(all_variables VARIABLES)
@@ -20,25 +20,24 @@ index 90e274cc..b20534f9 100644
      if(variable_name MATCHES "^GGML_")
          string(REPLACE ";" "\\;"
 diff --git a/ggml.pc.in b/ggml.pc.in
-index 9be62dc3..a37b0478 100644
+index 3e0291e0..a7627339 100644
 --- a/ggml.pc.in
 +++ b/ggml.pc.in
 @@ -6,5 +6,7 @@ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
  Name: ggml
  Description: The GGML Tensor Library for Machine Learning
- Version: 0.0.0
+ Version: @GGML_VERSION@
 -Cflags: -I${includedir}
 -Libs: -L${libdir} -lggml
 +Cflags: -I${includedir} @GGML_PKGCONFIG_CFLAGS@
 +Libs: -L${libdir} -lggml @GGML_PKGCONFIG_LIBS_BACKEND@ -lggml-base
 +Libs.private: @GGML_PKGCONFIG_LIBS_PRIVATE@
 +Requires.private: @GGML_PKGCONFIG_REQUIRES_PRIVATE@
-\ No newline at end of file
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 2b5b8169..1a4475b5 100644
+index c8f3d859..d7c15992 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -183,6 +183,10 @@ endif()
+@@ -186,6 +186,10 @@ endif()
  
  # ggml
  
@@ -49,7 +48,7 @@ index 2b5b8169..1a4475b5 100644
  if (GGML_BACKEND_DL AND NOT BUILD_SHARED_LIBS)
      message(FATAL_ERROR "GGML_BACKEND_DL requires BUILD_SHARED_LIBS")
  endif()
-@@ -225,6 +229,7 @@ target_link_libraries(ggml PUBLIC ggml-base)
+@@ -228,6 +232,7 @@ target_link_libraries(ggml PUBLIC ggml-base)
  
  if (CMAKE_SYSTEM_NAME MATCHES "Linux")
      target_link_libraries(ggml PRIVATE dl)
@@ -57,7 +56,7 @@ index 2b5b8169..1a4475b5 100644
  endif()
  
  function(ggml_add_backend_library backend)
-@@ -269,12 +274,20 @@ function(ggml_add_backend backend)
+@@ -272,12 +277,20 @@ function(ggml_add_backend backend)
      string(TOUPPER "GGML_${backend}" backend_id)
      if (${backend_id})
          string(TOLOWER "ggml-${backend}" backend_target)
@@ -78,7 +77,7 @@ index 2b5b8169..1a4475b5 100644
      endif()
  endfunction()
  
-@@ -396,11 +409,15 @@ find_library(MATH_LIBRARY m)
+@@ -399,11 +412,15 @@ find_library(MATH_LIBRARY m)
  if (MATH_LIBRARY)
      if (NOT WIN32 OR NOT DEFINED ENV{ONEAPI_ROOT})
          target_link_libraries(ggml-base PRIVATE m)
@@ -94,7 +93,7 @@ index 2b5b8169..1a4475b5 100644
  endif()
  
  if(CMAKE_SYSTEM_NAME MATCHES "visionOS")
-@@ -413,4 +430,10 @@ if (BUILD_SHARED_LIBS)
+@@ -416,4 +433,10 @@ if (BUILD_SHARED_LIBS)
          target_compile_definitions(${target} PRIVATE GGML_BUILD)
          target_compile_definitions(${target} PUBLIC  GGML_SHARED)
      endforeach()
@@ -106,7 +105,7 @@ index 2b5b8169..1a4475b5 100644
 +set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE}" PARENT_SCOPE)
 +set(GGML_PKGCONFIG_REQUIRES_PRIVATE "${GGML_PKGCONFIG_REQUIRES_PRIVATE}" PARENT_SCOPE)
 diff --git a/src/ggml-blas/CMakeLists.txt b/src/ggml-blas/CMakeLists.txt
-index 76064c3f..69415049 100644
+index 60ce4b1e..058f65cd 100644
 --- a/src/ggml-blas/CMakeLists.txt
 +++ b/src/ggml-blas/CMakeLists.txt
 @@ -79,6 +79,7 @@ if (BLAS_FOUND)
@@ -118,7 +117,7 @@ index 76064c3f..69415049 100644
  else()
      message(FATAL_ERROR "BLAS not found, please refer to "
 diff --git a/src/ggml-cpu/CMakeLists.txt b/src/ggml-cpu/CMakeLists.txt
-index ce0a3e12..0eea5432 100644
+index 42041b71..b17aca1a 100644
 --- a/src/ggml-cpu/CMakeLists.txt
 +++ b/src/ggml-cpu/CMakeLists.txt
 @@ -52,6 +52,9 @@ function(ggml_add_cpu_backend_variant_impl tag_name)
@@ -172,10 +171,10 @@ index ce0a3e12..0eea5432 100644
          message(STATUS "ARM detected")
          list(APPEND GGML_CPU_SOURCES
 diff --git a/src/ggml-metal/CMakeLists.txt b/src/ggml-metal/CMakeLists.txt
-index 0ca8a3c5..9606a9ed 100644
+index 63418fe1..138996a1 100644
 --- a/src/ggml-metal/CMakeLists.txt
 +++ b/src/ggml-metal/CMakeLists.txt
-@@ -14,6 +14,11 @@ target_link_libraries(ggml-metal PRIVATE
+@@ -19,6 +19,11 @@ target_link_libraries(ggml-metal PRIVATE
                        ${METALKIT_FRAMEWORK}
                        )
  
@@ -188,7 +187,7 @@ index 0ca8a3c5..9606a9ed 100644
      add_compile_definitions(GGML_METAL_NDEBUG)
  endif()
 diff --git a/src/ggml-opencl/CMakeLists.txt b/src/ggml-opencl/CMakeLists.txt
-index 9a7ccbcf..e4c110e6 100644
+index 7e6c8438..de676a79 100644
 --- a/src/ggml-opencl/CMakeLists.txt
 +++ b/src/ggml-opencl/CMakeLists.txt
 @@ -7,6 +7,7 @@ ggml_add_backend_library(${TARGET_NAME}

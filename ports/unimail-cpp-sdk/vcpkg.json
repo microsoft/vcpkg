@@ -1,6 +1,6 @@
 {
   "name": "unimail-cpp-sdk",
-  "version": "0.0.6",
+  "version": "0.3.0",
   "description": "This is a cpp SDK for Unimail. Quickly integrate into your project.",
   "homepage": "https://github.com/unimails/unimail-cpp-sdk",
   "license": "BSD-3-Clause",

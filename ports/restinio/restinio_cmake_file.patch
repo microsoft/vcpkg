@@ -1,0 +1,14 @@
+diff --git a/dev/restinio/CMakeLists.txt b/dev/restinio/CMakeLists.txt
+index 4a5b4803..f622a87d 100644
+--- a/dev/restinio/CMakeLists.txt
++++ b/dev/restinio/CMakeLists.txt
+@@ -1,6 +1,8 @@
+ cmake_minimum_required(VERSION 3.10)
+ 
+-cmake_policy(SET CMP0177 NEW)
++if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.31.0")
++    cmake_policy(SET CMP0177 NEW)
++endif()
+ 
+ if(NOT RESTINIO_LIBRARY_NAME)
+     # That must be the case when RESTinio is used as a dependency.

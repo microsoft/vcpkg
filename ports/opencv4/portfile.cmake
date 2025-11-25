@@ -24,6 +24,8 @@ vcpkg_from_github(
       0019-opencl-kernel.patch
       0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
+      0022-android-use-vcpkg-cpu-features.patch
+      0022-fix-miss-exception-include.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -31,6 +33,7 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 # Disallow accidental build of vendored copies
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/cpufeatures")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
@@ -53,6 +56,11 @@ endif()
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
+
+set(WITH_CPUFEATURES OFF)
+if (VCPKG_TARGET_IS_ANDROID)
+  set(WITH_CPUFEATURES ON)
+endif()
 
 # Cannot use vcpkg_check_features() for "qt" because it requires the QT version number passed, not just a boolean
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -417,7 +425,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
         -DWITH_AVIF=OFF
-        -DWITH_CPUFEATURES=OFF
+        -DWITH_CPUFEATURES=${WITH_CPUFEATURES}
         -DWITH_ITT=OFF
         -DWITH_JASPER=OFF #Jasper is deprecated and will be removed in a future release, and is mutually exclusive with openjpeg that is preferred
         -DWITH_LAPACK=OFF
@@ -472,7 +480,10 @@ if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target l
     )
   endif()
 endif()
-find_dependency(Threads)")
+find_dependency(Threads)
+if(ANDROID)
+  find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()")
 
 if("ade" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(ade)")
