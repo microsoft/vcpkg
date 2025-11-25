@@ -1,12 +1,15 @@
 diff --git a/meson.build b/meson.build
-index ea3ae94..14d4867 100644
+index ea3ae94..dee2d33 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -218,6 +218,7 @@ current_library_path = run_command(
+@@ -217,6 +217,10 @@ current_library_path = run_command(
+   check: true,
  )
  
++if host_system in ['windows', 'cygwin']
++  # Let vcpkg set the PATH for the actual build type.
++  var = 'PATH_BY_MESON_BUILD'
++endif
  g_ir_scanner_env.set(var, current_library_path.stdout().strip())
-+g_ir_scanner_env.prepend(var, join_paths(get_option('prefix'), get_option('bindir')))
  if host_system in ['windows', 'cygwin']
    g_ir_scanner_env.prepend(var, gio_dep.get_variable('giomoduledir'))
- endif
