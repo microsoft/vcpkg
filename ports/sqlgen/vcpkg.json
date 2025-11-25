@@ -25,6 +25,7 @@
     "duckdb": {
       "description": "Enable DuckDB support",
       "dependencies": [
+	"icu",
         "duckdb"
       ]
     },
