@@ -1022,13 +1022,6 @@ vcpkg-ci-mathgl:x64-windows=pass
 vcpkg-ci-mathgl:x86-windows=pass
 vcpkg-ci-opencv:arm-neon-android=pass
 vcpkg-ci-opencv:arm64-android=pass
-vcpkg-ci-opencv:arm64-osx=pass
-# OpenCV appears to be trying to use __fp16 on a platform that does not support that
-# buildtrees\opencv4\src\4.11.0-46ecfbc8ae.clean\modules\dnn\src\layers\cpu_kernels\conv_winograd_f63.simd.hpp(1371): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-#vcpkg-ci-opencv:arm64-windows-static-md=pass
-opencv4:arm64-windows-static-md=fail
-#vcpkg-ci-opencv:arm64-windows=pass
-opencv4:arm64-windows=fail
 vcpkg-ci-opencv:arm64-uwp=pass
 vcpkg-ci-opencv:x64-android=pass
 vcpkg-ci-opencv:x64-linux=pass
