@@ -1,6 +1,6 @@
 {
   "name": "cimg",
-  "version": "3.6.2",
+  "version": "3.6.3",
   "description": "The CImg Library is a small, open-source, and modern C++ toolkit for image processing",
   "homepage": "https://github.com/dtschump/CImg",
   "license": "CECILL-C AND CECILL-2.0",

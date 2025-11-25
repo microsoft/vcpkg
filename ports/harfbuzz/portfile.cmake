@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 1d0f19e6aebc6aa273e749fb7968eff851dcfb15a0b5ef6cf268c74e77a81175d845c20c9285be7e9a7cb79871cb08bdac5c9d802a50fc5bd11a7225d510f48f
+    SHA512 016cd45720a466740c95bea1bb4eb97d218404536c7498a604d718b9301caf0aa88efef839b2b67823c8b65ae22a335a597580b6ba0dc1602e82287ee3eeb5c1
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
-        add-parameter-name.patch
 )
 
 if("icu" IN_LIST FEATURES)

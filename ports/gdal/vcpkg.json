@@ -1,6 +1,6 @@
 {
   "name": "gdal",
-  "version-semver": "3.11.4",
+  "version-semver": "3.12.0",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -83,6 +83,12 @@
           "name": "arrow",
           "default-features": false
         }
+      ]
+    },
+    "arrow-adbc": {
+      "description": "Arrow ADBC support",
+      "dependencies": [
+        "arrow-adbc"
       ]
     },
     "aws-ec2-windows": {
@@ -232,7 +238,7 @@
       ]
     },
     "parquet": {
-      "description": "Enable parquet reading support",
+      "description": "Enable parquet reading support. Combine with arrow[compute] or arrow[dataset] for additional capabilities.",
       "dependencies": [
         {
           "name": "arrow",

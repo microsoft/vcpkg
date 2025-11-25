@@ -1,6 +1,6 @@
 {
   "name": "asmjit",
-  "version-date": "2025-01-22",
+  "version-date": "2025-10-12",
   "description": "AsmJit is a lightweight library for machine code generation written in C++ language",
   "homepage": "https://asmjit.com/",
   "documentation": "https://asmjit.com/doc/",
