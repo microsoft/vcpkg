@@ -11,7 +11,6 @@ vcpkg_cmake_configure(
             -DUNILINK_BUILD_TESTS=OFF    
 )
 
-vcpkg_cmake_build()
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
