@@ -25,8 +25,8 @@
     "duckdb": {
       "description": "Enable DuckDB support",
       "dependencies": [
-	"icu",
-        "duckdb"
+        "duckdb",
+        "icu"
       ]
     },
     "mariadb": {
