@@ -11,7 +11,6 @@ vcpkg_cmake_configure(
     OPTIONS -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF
 )
 
-vcpkg_cmake_build()
 
 vcpkg_cmake_install()
 
