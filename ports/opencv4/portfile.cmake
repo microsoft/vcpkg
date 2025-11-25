@@ -33,6 +33,7 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 # Disallow accidental build of vendored copies
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/cpufeatures")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
@@ -479,7 +480,10 @@ if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target l
     )
   endif()
 endif()
-find_dependency(Threads)")
+find_dependency(Threads)
+if(ANDROID)
+  find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()")
 
 if("ade" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(ade)")
