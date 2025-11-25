@@ -6793,7 +6793,7 @@
       "port-version": 0
     },
     "neko-function": {
-      "baseline": "1.0.9",
+      "baseline": "1.0.10",
       "port-version": 0
     },
     "neko-schema": {
