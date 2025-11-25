@@ -8,6 +8,7 @@ vcpkg_from_github(
         cross-builds.diff
         dllexport.diff
         subdirs.diff
+        remove-sortpp-pass.diff # https://github.com/openzim/libzim/pull/1017
 )
 
 set(EXTRA_OPTIONS "")

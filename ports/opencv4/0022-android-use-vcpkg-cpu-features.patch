@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 79a0c96270..e6b1aefb9b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -789,7 +789,6 @@ endif()
+ # ----------------------------------------------------------------------------
+ 
+ if(ANDROID AND WITH_CPUFEATURES)
+-  add_subdirectory(3rdparty/cpufeatures)
+   set(HAVE_CPUFEATURES 1)
+ endif()
+ 
+diff --git a/cmake/OpenCVFindLibsPerf.cmake b/cmake/OpenCVFindLibsPerf.cmake
+index fce231e722..309e84341a 100644
+--- a/cmake/OpenCVFindLibsPerf.cmake
++++ b/cmake/OpenCVFindLibsPerf.cmake
+@@ -200,3 +200,9 @@ if(WITH_FASTCV)
+     set(FASTCV_LIBRARY "${FastCV_LIB_PATH}/libfastcvopt.so" CACHE PATH "FastCV library")
+   endif()
+ endif(WITH_FASTCV)
++
++
++if(ANDROID AND HAVE_CPUFEATURES)
++  find_package(CpuFeaturesNdkCompat CONFIG REQUIRED)
++  list(APPEND OPENCV_LINKER_LIBS CpuFeatures::ndk_compat)
++endif()
+diff --git a/modules/core/CMakeLists.txt b/modules/core/CMakeLists.txt
+index 95fe8d6a4c..11eae4cd78 100644
+--- a/modules/core/CMakeLists.txt
++++ b/modules/core/CMakeLists.txt
+@@ -98,7 +98,6 @@ ocv_glob_module_sources(SOURCES "${OPENCV_MODULE_opencv_core_BINARY_DIR}/version
+ ocv_module_include_directories(${the_module} ${ZLIB_INCLUDE_DIRS} ${OPENCL_INCLUDE_DIRS})
+ if(ANDROID AND HAVE_CPUFEATURES)
+   ocv_append_source_file_compile_definitions(${CMAKE_CURRENT_SOURCE_DIR}/src/system.cpp "HAVE_CPUFEATURES=1")
+-  ocv_module_include_directories(${CPUFEATURES_INCLUDE_DIRS})
+ endif()
+ if(ITT_INCLUDE_DIRS)
+   ocv_module_include_directories(${ITT_INCLUDE_DIRS})

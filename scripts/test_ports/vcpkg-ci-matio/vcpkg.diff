@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9085a40..e3a885e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,7 +10,7 @@ endif()
+ 
+ set(LIBS_DIR ${CMAKE_CURRENT_BINARY_DIR}/libs)
+ set(EIGEN_MATIO_URL https://raw.githubusercontent.com/tbeu/eigen-matio/master/MATio)
+-set(EIGEN_MATIO_DIR ${LIBS_DIR}/include)
++set(EIGEN_MATIO_DIR "${LIBS_DIR}/include" CACHE FILEPATH "Directory of the MATio C++ header")
+ set(EIGEN_MATIO_DEST ${EIGEN_MATIO_DIR}/MATio)
+ if(NOT EXISTS EIGEN_MATIO_DEST)
+   file(DOWNLOAD ${EIGEN_MATIO_URL} ${EIGEN_MATIO_DEST})
+@@ -27,4 +27,3 @@ target_compile_features(${EXAMPLE_LIB_NAME} PUBLIC cxx_std_17)
+ set_target_properties(${EXAMPLE_LIB_NAME} PROPERTIES CXX_EXTENSIONS OFF)
+ 
+ enable_testing()
+-add_subdirectory(test)

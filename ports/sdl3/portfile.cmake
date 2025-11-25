@@ -21,6 +21,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         x11      SDL_X11
 )
 
+if (VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS EMSCRIPTEN_FEATURE_OPTIONS
+        FEATURES
+            emscripten-pthreads     SDL_PTHREADS
+    )
+    vcpkg_list(APPEND FEATURE_OPTIONS "${EMSCRIPTEN_FEATURE_OPTIONS}")
+endif()
+
 if ("x11" IN_LIST FEATURES)
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
 endif()

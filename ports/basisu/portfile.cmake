@@ -1,3 +1,5 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ambiguous_safe_shift_left_patch
     URLS https://github.com/BinomialLLC/basis_universal/commit/b738655c40efca3e0dc8c435617178fec9f7f13e.diff
     FILENAME BinomialLLC_basis_universal_safe_shift_left.diff
@@ -15,12 +17,15 @@ vcpkg_from_github(
         examples.diff
         export-cmake-config.diff
         skip-strip.diff
+        devendor-zstd.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/zstd")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_CXX_STANDARD=17
+        -DBASISU_SYSTEM_ZSTD=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

@@ -2,8 +2,8 @@ diff --git a/src/plugins/multimedia/ffmpeg/CMakeLists.txt b/src/plugins/multimed
 index 77c459a..af5229e 100644
 --- a/src/plugins/multimedia/ffmpeg/CMakeLists.txt
 +++ b/src/plugins/multimedia/ffmpeg/CMakeLists.txt
-@@ -273,7 +273,7 @@ if(BUILD_SHARED_LIBS)
- else()
+@@ -285,7 +285,7 @@ else()
+     # applications need to link against the ffmpeg libs via qt_add_ios_ffmpeg_libraries
      foreach(ffmpeg_lib IN LISTS ffmpeg_libs)
          qt_internal_add_target_include_dirs(FFmpegMediaPluginImplPrivate ${ffmpeg_lib})
 -        target_include_directories(FFmpegMediaPluginImplPrivate PUBLIC
