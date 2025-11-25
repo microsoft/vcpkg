@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-g-ir-tool-template.in.patch
+        gir-scanner-runtime.diff
 )
 
 include("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake")
