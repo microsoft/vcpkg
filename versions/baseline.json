@@ -6906,7 +6906,7 @@
     },
     "node-api-headers": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "nodesoup": {
       "baseline": "2023-06-12",
