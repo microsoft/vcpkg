@@ -64,12 +64,6 @@
         },
         "qthttpserver"
       ]
-    },
-    "systemd-watchdog": {
-      "description": "Enable the systemd-watchdog component.",
-      "dependencies": [
-        "libsystemd"
-      ]
     }
   }
 }
