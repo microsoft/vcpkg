@@ -1,7 +1,6 @@
 {
   "name": "qdldl",
   "version": "0.1.9",
-  "port-version": "1",
   "description": "A free LDL factorisation routine",
   "homepage": "https://osqp.org/",
   "license": "Apache-2.0",
