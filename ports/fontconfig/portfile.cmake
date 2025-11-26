@@ -6,7 +6,6 @@ vcpkg_from_gitlab(
     SHA512 8e05cad63cd0c5ca15d1359e19a605912198fcc0ec6ecc11d5a0ef596d72e795cd8128e4d350716e63cbc01612c3807b1455b8153901333790316170c9ef8e75
     HEAD_REF master
     PATCHES
-        emscripten.diff
         no-etc-symlinks.patch
         libgetopt.patch
         fix-wasm-shared-memory-atomics.patch
