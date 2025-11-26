@@ -17,7 +17,6 @@
       "name": "mimalloc",
       "platform": "windows"
     },
-    "robin-hood-hashing",
     "sdl2",
     "shaderc",
     "spirv-cross",
