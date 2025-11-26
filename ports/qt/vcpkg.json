@@ -31,14 +31,6 @@
     },
     {
       "name": "qtapplicationmanager",
-      "default-features": false,
-      "features": [
-        "systemd-watchdog"
-      ],
-      "platform": "linux"
-    },
-    {
-      "name": "qtapplicationmanager",
       "features": [
         "installer",
         "package-server"
