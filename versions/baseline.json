@@ -2566,7 +2566,7 @@
     },
     "duckdb": {
       "baseline": "1.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "duckx": {
       "baseline": "1.2.2",
