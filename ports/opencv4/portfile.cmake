@@ -94,10 +94,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gstreamer"  WITH_GSTREAMER
  "gtk"        WITH_GTK
  "halide"     WITH_HALIDE
- "ipp"        WITH_IPP
- "ipp"        BUILD_IPP_IW
+ "hdf"        BUILD_opencv_hdf
  "highgui"    BUILD_opencv_highgui
  "intrinsics" CV_ENABLE_INTRINSICS
+ "ipp"        WITH_IPP
+ "ipp"        BUILD_IPP_IW
  "openjpeg"   WITH_OPENJPEG
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
@@ -496,7 +497,6 @@ if("contrib" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_I
   string(APPEND DEPS_STRING "
 # C language is required for try_compile tests in FindHDF5
 enable_language(C)
-find_dependency(HDF5)
 find_dependency(Tesseract)")
 endif()
 if("eigen" IN_LIST FEATURES)
@@ -510,6 +510,9 @@ if("freetype" IN_LIST FEATURES)
 endif()
 if("gdcm" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
+endif()
+if("hdf5" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(HDF5)")
 endif()
 if("omp" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
