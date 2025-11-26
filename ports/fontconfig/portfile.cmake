@@ -6,6 +6,7 @@ vcpkg_from_gitlab(
     SHA512 8e05cad63cd0c5ca15d1359e19a605912198fcc0ec6ecc11d5a0ef596d72e795cd8128e4d350716e63cbc01612c3807b1455b8153901333790316170c9ef8e75
     HEAD_REF master
     PATCHES
+        dllexport.diff
         no-etc-symlinks.patch
         libgetopt.patch
         fix-wasm-shared-memory-atomics.patch
@@ -43,12 +44,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(replacement "**invalid-fontconfig-dir-do-not-use**")
 endif()
 set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/meson-config.h")
-vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}" "${replacement}")
-vcpkg_replace_string("${configfile}" "#define FC_TEMPLATEDIR \"/share/fontconfig/conf.avail\"" "#define FC_TEMPLATEDIR \"/usr/share/fontconfig/conf.avail\"")
+vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}[^\"]+" "${replacement}" REGEX)
 if(NOT VCPKG_BUILD_TYPE)
     set(configfile "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/meson-config.h")
-    vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}/debug" "${replacement}")
-    vcpkg_replace_string("${configfile}" "#define FC_TEMPLATEDIR \"/share/fontconfig/conf.avail\"" "#define FC_TEMPLATEDIR \"/usr/share/fontconfig/conf.avail\"")
+    vcpkg_replace_string("${configfile}" "${CURRENT_PACKAGES_DIR}[^\"]+" "${replacement}" REGEX)
 endif()
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)
@@ -80,20 +79,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var"
                     "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/etc"
                     "${CURRENT_PACKAGES_DIR}/var")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        set(DEFINE_FC_PUBLIC "#define FcPublic __declspec(dllimport)")
-    else()
-        set(DEFINE_FC_PUBLIC "#define FcPublic __attribute__((visibility(\"default\")))")
-    endif()
-    foreach(HEADER IN ITEMS fcfreetype.h fontconfig.h)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER}"
-            "#define FcPublic"
-            "${DEFINE_FC_PUBLIC}"
-        IGNORE_UNCHANGED)
-    endforeach()
-endif()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
