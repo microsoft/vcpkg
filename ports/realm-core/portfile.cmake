@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         UWP_index_set.patch
         fix-zlib.patch
+        cstdlib.diff
 )
 
 vcpkg_list(SET REALMCORE_CMAKE_OPTIONS)
