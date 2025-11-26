@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfssl/wolfssl
     REF "v${VERSION}-stable"
-    SHA512 b3953692a87aada84d77a26aac3ee1791344af3cf6e3d0b4fa9913095bc0892dd4cfe1491a893b469469bdfba511fe067ee80d3c0beab8df5ac5e174fa5f5577
+    SHA512 6f191c218b270bd4dc90d6f07a80416e6bc8d049f3f49ea84c38a2af40ae9588a4fe306860fbb8696c5af15c4ca359818e3955069389d33269eee0101c270439
     HEAD_REF master
     PATCHES
     )
@@ -33,9 +33,6 @@ foreach(config RELEASE DEBUG)
   if ("secret-callback" IN_LIST FEATURES)
       string(APPEND VCPKG_COMBINED_C_FLAGS_${config} " -DHAVE_SECRET_CALLBACK")
   endif()
-  if ("curve25519-blinding" IN_LIST FEATURES)
-      string(APPEND VCPKG_COMBINED_C_FLAGS_${config} " -DWOLFSSL_CURVE25519_BLINDING")
-  endif()
 endforeach()
 
 vcpkg_cmake_configure(
@@ -52,7 +49,6 @@ vcpkg_cmake_configure(
       -DWOLFSSL_OCSPSTAPLING_V2=yes
       -DWOLFSSL_CRL=yes
       -DWOLFSSL_DES3=yes
-      -DWOLFSSL_ECH=yes
       -DWOLFSSL_HPKE=yes
       -DWOLFSSL_SNI=yes
       -DWOLFSSL_ASIO=${ENABLE_ASIO}

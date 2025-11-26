@@ -1,10 +1,11 @@
 {
   "name": "quarter",
   "version": "1.2.3",
+  "port-version": 1,
   "description": "Coin3D GUI binding for Qt",
   "homepage": "https://coin3d.github.io/quarter/",
   "license": "BSD-3-Clause",
-  "supports": "!arm & !android & !uwp",
+  "supports": "!android & !uwp",
   "dependencies": [
     "coin",
     {

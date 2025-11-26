@@ -1,11 +1,15 @@
 {
   "name": "opencv4",
   "version": "4.11.0",
-  "port-version": 1,
+  "port-version": 7,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
   "dependencies": [
+    {
+      "name": "cpu-features",
+      "platform": "android"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -165,7 +169,8 @@
       ]
     },
     "dshow": {
-      "description": "Enable DirectShow"
+      "description": "Enable DirectShow",
+      "supports": "windows"
     },
     "eigen": {
       "description": "Eigen support for opencv",

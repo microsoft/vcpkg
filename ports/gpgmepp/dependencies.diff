@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 33a55c7..ed169aa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -62,10 +62,8 @@ include(ECMUninstallTarget)
+ include(FeatureSummary)
+ include(GNUInstallDirs)
+ 
+-find_package(LibGpgError ${GPG_ERROR_REQUIRED_VERSION})
+-set_package_properties(LibGpgError PROPERTIES TYPE REQUIRED)
+-find_package(Gpgme ${GPGME_REQUIRED_VERSION})
+-set_package_properties(Gpgme PROPERTIES TYPE REQUIRED)
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(Gpgme "gpgme>=${GPGME_REQUIRED_VERSION}" "gpg-error>=${GPG_ERROR_REQUIRED_VERSION}" REQUIRED)
+ 
+ g10_get_full_version()
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d28ed8f..989a011 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -126,11 +126,11 @@ if(ENABLE_SHARED)
+     target_sources(Gpgmepp PRIVATE ${Gpgmepp_SOURCES})
+ 
+     target_include_directories(Gpgmepp
+-        PRIVATE ${LibGpgError_INCLUDE_DIRS}
++        PRIVATE ${Gpgme_INCLUDE_DIRS}
+         INTERFACE $<INSTALL_INTERFACE:include>
+     )
+ 
+-    target_link_libraries(Gpgmepp Gpgme::Gpgme)
++    target_link_libraries(Gpgmepp PRIVATE ${Gpgme_LINK_LIBRARIES})
+ 
+     set_target_properties(Gpgmepp PROPERTIES
+         OUTPUT_NAME gpgmepp
+@@ -142,11 +142,11 @@ if(ENABLE_STATIC)
+     target_sources(GpgmeppStatic PRIVATE ${Gpgmepp_SOURCES})
+ 
+     target_include_directories(GpgmeppStatic
+-        PRIVATE ${LibGpgError_INCLUDE_DIRS}
++        PRIVATE ${Gpgme_INCLUDE_DIRS}
+         INTERFACE $<INSTALL_INTERFACE:include>
+     )
+ 
+-    target_link_libraries(GpgmeppStatic Gpgme::Gpgme)
++    target_link_libraries(GpgmeppStatic PRIVATE ${Gpgme_LINK_LIBRARIES})
+ 
+     set_target_properties(GpgmeppStatic PROPERTIES
+         OUTPUT_NAME gpgmepp
+diff --git a/src/GpgmeppConfig.cmake.in b/src/GpgmeppConfig.cmake.in
+index 8969602..4d5fedd 100644
+--- a/src/GpgmeppConfig.cmake.in
++++ b/src/GpgmeppConfig.cmake.in
+@@ -20,9 +20,5 @@
+ 
+ @PACKAGE_INIT@
+ 
+-include(CMakeFindDependencyMacro)
+-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+-find_dependency(LibGpgError "@GPG_ERROR_REQUIRED_VERSION@")
+-find_dependency(Gpgme "@GPGME_REQUIRED_VERSION@")
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/GpgmeppTargets.cmake")

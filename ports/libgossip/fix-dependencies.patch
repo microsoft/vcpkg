@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5d6f2f9..fd8d384 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,7 +30,7 @@ add_library(libgossip ${LIBGOSSIP_CORE_SRC})
+ add_library(libgossip::core ALIAS libgossip)
+ 
+ # Handle ASIO dependency
+-setup_bundled_asio()
++find_package(asio CONFIG REQUIRED)
+ 
+ # Network library
+ set(LIBGOSSIP_NET_SRC src/net/udp_transport.cpp src/net/tcp_transport.cpp
+@@ -41,10 +41,10 @@ add_library(libgossip_net ${LIBGOSSIP_NET_SRC})
+ add_library(libgossip::network ALIAS libgossip_net)
+ 
+ # Find and link ASIO
+-if(ASIO_FOUND)
+-  target_include_directories(
+-    libgossip_net PUBLIC $<BUILD_INTERFACE:${ASIO_INCLUDE_DIR}>
+-                         $<INSTALL_INTERFACE:include>)
++if(1)
++  target_link_libraries(
++    libgossip_net PUBLIC $<BUILD_INTERFACE:asio::asio>
++  )
+ else()
+   message(FATAL_ERROR "ASIO is required for the network library")
+ endif()

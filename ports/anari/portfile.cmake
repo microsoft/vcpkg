@@ -4,7 +4,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/ANARI-SDK
   REF "v${VERSION}"
-  SHA512 02db5cdf5f84df213b4d14f93363b7949d6c1a51c9cda616ef3612cb072f6b30bc942c5a6b0b9e89ea8b76b048fabd6bafcabde3c55380c3d90837116fa8b237
+  SHA512 504be3b6e8b33def5c43e0c59927da0fccd8c9356f384ceab20740e49a26f6e2e62b142893afec028ce61207741de9e72d9a496b7981109f290bb580552a0965
   HEAD_REF next_release
   PATCHES anari-lib-maybe-static-lib.patch
 )
@@ -28,8 +28,10 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+file(GLOB ANARI_CMAKE_CONFIG_FILE RELATIVE ${CURRENT_PACKAGES_DIR} "${CURRENT_PACKAGES_DIR}/lib/cmake/*/anariConfig.cmake")
+cmake_path(GET ANARI_CMAKE_CONFIG_FILE PARENT_PATH ANARI_CMAKE_CONFIG_DIR)
 vcpkg_cmake_config_fixup(
-  CONFIG_PATH "lib/cmake/${PORT}-${VERSION}"
+  CONFIG_PATH ${ANARI_CMAKE_CONFIG_DIR}
 )
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()

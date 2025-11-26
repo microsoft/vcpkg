@@ -20,7 +20,6 @@ jobs:
               repo: context.repo.repo
             };
             let issue = await github.rest.issues.get(issue_query)
-            let issue_body = issue.data.body.replaceAll("\r\n", "\n");
             let commentLabelClose = async (comment, label) => {
               await github.rest.issues.removeAllLabels(issue_query);
               await github.rest.issues.setLabels({...issue_query, labels: [label]});
@@ -28,6 +27,13 @@ jobs:
               await github.rest.issues.update({...issue_query, state: "closed"});
             }
 
+            if (issue.data.body === null || issue.data.body.trim() === "") {
+              let body = "Please provide a description of the issue you are experiencing. If you are reporting a build failure, please see #30604 for how to properly report it.";
+              return await commentLabelClose(body, "requires:more-information");
+            }
+
+            let issue_body = issue.data.body.replaceAll("\r\n", "\n");
+              
             // missing-windows-sdk-issue
             let reg = /RC Pass 1: command "rc .*" failed \(exit code 0\) with the following output:/;
             if (reg.test(issue_body)){

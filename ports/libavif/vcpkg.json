@@ -1,6 +1,7 @@
 {
   "name": "libavif",
   "version-semver": "1.3.0",
+  "port-version": 1,
   "description": "Library for encoding and decoding AVIF files",
   "homepage": "https://github.com/AOMediaCodec/libavif",
   "license": "BSD-2-Clause AND Apache-2.0",

@@ -1,0 +1,75 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0a71747..954d985 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,7 +10,10 @@ project(boost_dll VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
+ 
+ option(BOOST_DLL_USE_STD_FS "Use std::filesystem instead of Boost.Filesystem" OFF)
+ 
++# Base library
++
+ add_library(boost_dll_base INTERFACE)
++add_library(Boost::dll_base ALIAS boost_dll_base)
+ target_include_directories(boost_dll_base INTERFACE include)
+ target_link_libraries(boost_dll_base
+   INTERFACE
+@@ -25,31 +28,50 @@ target_link_libraries(boost_dll_base
+     ${CMAKE_DL_LIBS}
+ )
+ 
++# Library with std::filesystem
+ 
+ add_library(boost_dll_std_fs INTERFACE)
+-target_link_libraries(boost_dll_std_fs
+-  INTERFACE
+-    boost_dll_base
+-)
++add_library(Boost::dll_std_fs ALIAS boost_dll_std_fs)
++target_include_directories(boost_dll_std_fs INTERFACE include)
++target_link_libraries(boost_dll_std_fs INTERFACE Boost::dll_base)
+ target_compile_definitions(boost_dll_std_fs INTERFACE BOOST_DLL_USE_STD_FS)
+ target_compile_features(boost_dll_std_fs INTERFACE cxx_std_17)
+ 
++# Library with Boost.Filesystem
++
+ add_library(boost_dll_boost_fs INTERFACE)
++add_library(Boost::dll_boost_fs ALIAS boost_dll_boost_fs)
++target_include_directories(boost_dll_boost_fs INTERFACE include)
+ target_link_libraries(boost_dll_boost_fs
+   INTERFACE
+-    boost_dll_base
++    Boost::dll_base # Internal dependency
+     Boost::filesystem
+ )
+ 
++# Detault library
+ 
+ add_library(boost_dll INTERFACE)
+-if(BOOST_DLL_USE_STD_FS)
+-  target_link_libraries(boost_dll INTERFACE boost_dll_std_fs)
++add_library(Boost::dll ALIAS boost_dll)
++target_include_directories(boost_dll INTERFACE include)
++if (BOOST_DLL_USE_STD_FS)
++  target_link_libraries(boost_dll INTERFACE Boost::dll_std_fs)
+ else()
+-  target_link_libraries(boost_dll INTERFACE boost_dll_boost_fs)
++  target_link_libraries(boost_dll INTERFACE Boost::dll_boost_fs)
+ endif()
+ 
+-add_library(Boost::dll ALIAS boost_dll)
++if (BOOST_SUPERPROJECT_VERSION AND NOT CMAKE_VERSION VERSION_LESS 3.13)
++  boost_install(
++    TARGETS
++      boost_dll
++      boost_dll_base
++      boost_dll_std_fs
++      boost_dll_boost_fs
++    VERSION
++      "${BOOST_SUPERPROJECT_VERSION}"
++    HEADER_DIRECTORY
++      include
++  )
++endif()
+ 
+ if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
+ 

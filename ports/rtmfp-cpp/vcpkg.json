@@ -1,6 +1,7 @@
 {
   "name": "rtmfp-cpp",
   "version": "1.5.1",
+  "port-version": 1,
   "description": "Secure Real-Time Media Flow Protocol Library (RTMFP)",
   "homepage": "https://github.com/zenomt/rtmfp-cpp",
   "license": "MIT",

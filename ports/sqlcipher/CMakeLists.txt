@@ -46,7 +46,7 @@ if (UNIX AND NOT APPLE)
     target_link_libraries(sqlcipher PRIVATE m)
 endif()
 
-target_link_libraries(sqlcipher PRIVATE OpenSSL::Crypto)
+target_link_libraries(sqlcipher PRIVATE OpenSSL::SSL OpenSSL::Crypto)
 
 if(CMAKE_SYSTEM_NAME MATCHES "WindowsStore")
     target_compile_definitions(sqlcipher PRIVATE -DSQLITE_OS_WINRT=1)
