@@ -16,7 +16,6 @@
       "name": "gperf",
       "host": true
     },
-    "libiconv",
     {
       "name": "libuuid",
       "platform": "!osx & !windows"
@@ -30,7 +29,19 @@
       "host": true
     }
   ],
+  "default-features": [
+    {
+      "name": "iconv",
+      "platform": "!windows"
+    }
+  ],
   "features": {
+    "iconv": {
+      "description": "Iconv support",
+      "dependencies": [
+        "libiconv"
+      ]
+    },
     "nls": {
       "description": "Native languages support",
       "dependencies": [

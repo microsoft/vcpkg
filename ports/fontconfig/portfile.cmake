@@ -14,6 +14,11 @@ vcpkg_from_gitlab(
 )
 
 set(options "")
+if("iconv" IN_LIST FEATURES)
+    list(APPEND options "-Diconv=enabled")
+else()
+    list(APPEND options "-Diconv=disabled")
+endif()
 if("nls" IN_LIST FEATURES)
     list(APPEND options "-Dnls=enabled")
 else()
@@ -31,7 +36,7 @@ vcpkg_configure_meson(
         ${options}
         -Ddoc=disabled
         -Dcache-build=disabled
-        -Diconv=enabled
+        -Dxml-backend=expat
         -Dtests=disabled
     ADDITIONAL_BINARIES
         "gperf = ['${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${VCPKG_HOST_EXECUTABLE_SUFFIX}']"
