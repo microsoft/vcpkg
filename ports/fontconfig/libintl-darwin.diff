@@ -1,0 +1,14 @@
+diff --git a/meson.build b/meson.build
+index e742ea6..cb07b99 100644
+--- a/meson.build
++++ b/meson.build
+@@ -204,6 +204,9 @@ libintl_dep = dependency('intl', required: opt_nls, fallback: ['libintl', 'libin
+ if libintl_dep.found()
+   conf.set('ENABLE_NLS', opt_nls.allowed().to_int())
+   deps += [libintl_dep]
++  if host_machine.system() == 'darwin'
++    deps += [dependency('CoreFoundation', method: 'extraframework')]
++  endif
+ else
+   opt_nls = opt_nls.require(false)
+ endif

@@ -9,6 +9,7 @@ vcpkg_from_gitlab(
         dllexport.diff
         no-etc-symlinks.patch
         libgetopt.patch
+        libintl-darwin.diff
         fix-wasm-shared-memory-atomics.patch
 )
 
