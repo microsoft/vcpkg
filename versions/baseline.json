@@ -6804,6 +6804,10 @@
       "baseline": "1.1.4",
       "port-version": 0
     },
+    "neko-system": {
+      "baseline": "1.0.1",
+      "port-version": 0
+    },
     "neko-threadpool": {
       "baseline": "1.0.1",
       "port-version": 0
