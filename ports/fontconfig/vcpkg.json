@@ -12,7 +12,6 @@
       "name": "freetype",
       "default-features": false
     },
-    "gettext-libintl",
     {
       "name": "gperf",
       "host": true
@@ -42,7 +41,8 @@
           "features": [
             "tools"
           ]
-        }
+        },
+        "gettext-libintl"
       ]
     },
     "tools": {
