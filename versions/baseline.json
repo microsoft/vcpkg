@@ -7360,6 +7360,14 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "osqp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "osqp-eigen": {
+      "baseline": "0.11.0",
+      "port-version": 0
+    },
     "otl": {
       "baseline": "4.0.494",
       "port-version": 0
