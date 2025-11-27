@@ -15,6 +15,9 @@
       "host": true
     }
   ],
+  "default-features": [
+    "ssl"
+  ],
   "features": {
     "ssl": {
       "description": "Enable SSL support",
