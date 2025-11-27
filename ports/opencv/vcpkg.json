@@ -259,7 +259,7 @@
           "name": "opencv4",
           "default-features": false,
           "features": [
-            "hdf5"
+            "hdf"
           ]
         }
       ]
