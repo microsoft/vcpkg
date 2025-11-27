@@ -142,21 +142,14 @@
       "default-features": false,
       "features": [
         "eigen",
+        "jasper",
         "jpeg",
+        "opengl",
         "png",
+        "qt",
         "tiff"
       ],
-      "platform": "!uwp & !(arm & windows) & !android"
-    },
-    {
-      "name": "opencv2",
-      "default-features": false,
-      "features": [
-        "jasper",
-        "opengl",
-        "qt"
-      ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+      "platform": "!android & !uwp & !(arm & windows)"
     },
     {
       "name": "opencv3",
