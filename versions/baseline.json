@@ -6909,7 +6909,7 @@
       "port-version": 4
     },
     "node-addon-api": {
-      "baseline": "8.3.1",
+      "baseline": "8.5.0",
       "port-version": 0
     },
     "node-api-headers": {
