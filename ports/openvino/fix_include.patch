@@ -1,0 +1,16 @@
+diff --git a/src/inference/src/system_conf.cpp b/src/inference/src/system_conf.cpp
+index dd47185947..7d11ca160b 100644
+--- a/src/inference/src/system_conf.cpp
++++ b/src/inference/src/system_conf.cpp
+@@ -41,6 +41,11 @@
+ #    include <sys/types.h>
+ #endif
+ 
++#ifdef _WIN32
++#    include <windows.h>
++#    include <processthreadsapi.h>
++#endif
++
+ #if defined(OPENVINO_ARCH_X86) || defined(OPENVINO_ARCH_X86_64)
+ #    define XBYAK_NO_OP_NAMES
+ #    define XBYAK_UNDEF_JNL
