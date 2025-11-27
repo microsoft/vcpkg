@@ -6913,7 +6913,7 @@
       "port-version": 0
     },
     "node-api-headers": {
-      "baseline": "1.5.0",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "nodesoup": {
