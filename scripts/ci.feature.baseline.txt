@@ -49,6 +49,8 @@
 
 halide = skip
 llvm = skip
+opencv = skip  # actual feature test is opencv4
+
 
 # Add new items alphabetically
 ace[tao]:arm-neon-android=feature-fails # tao requires a host tree with tao_idl compiled for the host
@@ -1070,19 +1072,6 @@ openal-soft[pipewire](!linux) = cascade
 openal-soft[pulseaudio](!linux) = cascade
 opencascade[vtk,freeimage](uwp) = cascade
 opencsg(uwp)=cascade
-opencv[cuda,cudnn](osx) = cascade
-opencv[cuda,cudnn,dc1394,dnn-cuda,freetype,gdcm,gstreamer,gtk,halide,openexr,opengl,ovis,python,qt,sfm,tbb,vtk]:arm64-uwp = cascade
-opencv[cuda,cudnn,dc1394,dnn-cuda,freetype,gdcm,gstreamer,gtk,openexr,opengl,ovis,qt,sfm,tbb,vtk]:x64-uwp = cascade
-opencv[cuda,cudnn,dc1394,dnn-cuda,gdcm,gtk,vtk]:arm64-windows = cascade
-opencv[cuda,cudnn,dc1394,dnn-cuda,gtk]:x86-windows = cascade
-opencv[dc1394,cudnn,dnn-cuda,gtk]:x64-windows = cascade
-opencv[dc1394,cudnn,dnn-cuda,gtk]:x64-windows-static-md = cascade
-opencv[dnn-cuda](osx) = cascade
-opencv[gtk]:arm64-osx = cascade
-opencv[halide,dc1394,cudnn,dnn-cuda,gtk]:x64-windows-static = cascade
-opencv[halide,python]:x64-uwp = cascade
-opencv[hdf](uwp) = cascade
-opencv[text](uwp) = cascade
 opencv2[dc1394](windows & !uwp & !arm) = cascade
 opencv2[gtk]:x64-windows-static = cascade
 opencv2[gtk]:x64-windows-static-md = cascade
@@ -1833,7 +1822,6 @@ libqcow=skip # The developer of libqcow does not offer stable release archives
 magnum[anyshaderconverter,shadertools,shaderconverter,vk-info] = skip # only available in head build
 magnum-plugins[cgltfimporter,glslangshaderconverter,ktximageconverter,ktximporter,openexrimageconverter,openexrimporter,spirvtoolsshaderconverter,stbdxtimageconverter] = skip # only available in head build
 octave(android)=skip
-opencv[ade,aravis,calib3d,directml,dnn,dshow,eigen,ffmpeg,fs,gapi,gstreamer,highgui,intrinsics,jpeg,jpegxl,msmf,nonfree,opencl,openexr,openmp,ovis,png,python,quirc,tbb,thread,tiff,webp,win32ui](arm)=no-separate-feature-test
 opencv3[world] = skip # fails in combinations with "viz"
 opencv4[ade,aravis,calib3d,directml,dnn,dshow,eigen,ffmpeg,fs,gapi,gstreamer,highgui,intrinsics,jpeg,jpegxl,msmf,nonfree,opencl,openexr,openmp,ovis,png,python,quirc,tbb,thread,tiff,webp,win32ui](arm)=no-separate-feature-test
 opencv4[dshow]:x64-uwp=feature-fails
