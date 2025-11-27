@@ -17,11 +17,14 @@
         "highgui",
         "intrinsics",
         "jpeg",
+        "jpegxl",
         "nonfree",
+        "openjpeg",
         "png",
         "quirc",
         "thread",
-        "tiff"
+        "tiff",
+        "vulkan"
       ]
     },
     {
@@ -36,9 +39,12 @@
       "name": "opencv",
       "default-features": false,
       "features": [
+        "freetype",
+        "gdcm",
         "hdf",
-        "jpegxl",
         "openexr",
+        "qt",
+        "sfm",
         "text"
       ],
       "platform": "!uwp"
@@ -118,22 +124,16 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "freetype",
-        "gdcm",
-        "ipp",
-        "openjpeg",
-        "qt",
-        "sfm",
-        "vtk",
-        "vulkan"
+        "ipp"
       ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
+      "platform": "(x86 | x64) & (linux | windows)"
     },
     {
       "name": "opencv",
       "default-features": false,
       "features": [
-        "aravis"
+        "aravis",
+        "vtk"
       ],
       "platform": "!android & !uwp"
     },
