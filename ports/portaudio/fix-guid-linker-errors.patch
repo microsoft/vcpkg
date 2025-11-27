@@ -1,0 +1,65 @@
+From bf5d562f6e35d2aa2d264e92f90666484212a88e Mon Sep 17 00:00:00 2001
+From: invertego <invertego@users.noreply.github.com>
+Date: Mon, 2 Oct 2023 16:44:48 -0700
+Subject: [PATCH 1/2] wdmks: declare GUIDs with selectany attribute
+
+Match the behavior of guiddef.h in both mingw and the Windows SDK
+headers. This prevents linking errors caused by multiply defined symbols
+when linking against certain Windows SDK libs (like dxguid.lib).
+---
+ src/hostapi/wdmks/pa_win_wdmks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/hostapi/wdmks/pa_win_wdmks.c b/src/hostapi/wdmks/pa_win_wdmks.c
+index bafc970d3..5d2a98743 100644
+--- a/src/hostapi/wdmks/pa_win_wdmks.c
++++ b/src/hostapi/wdmks/pa_win_wdmks.c
+@@ -165,11 +165,11 @@ Default is to use the pin category.
+ #define _NTRTL_ /* Turn off default definition of DEFINE_GUIDEX */
+ #undef DEFINE_GUID
+ #if defined(__clang__) || (defined(_MSVC_TRADITIONAL) && !_MSVC_TRADITIONAL) /* clang-cl and new msvc preprocessor: avoid too many arguments error */
+-    #define DEFINE_GUID(n, ...) EXTERN_C const GUID n = {__VA_ARGS__}
++    #define DEFINE_GUID(n, ...) EXTERN_C const GUID DECLSPEC_SELECTANY n = {__VA_ARGS__}
+     #define DEFINE_GUID_THUNK(n, ...) DEFINE_GUID(n, __VA_ARGS__)
+     #define DEFINE_GUIDEX(n) DEFINE_GUID_THUNK(n, STATIC_##n)
+ #else
+-    #define DEFINE_GUID(n, data) EXTERN_C const GUID n = {data}
++    #define DEFINE_GUID(n, data) EXTERN_C const GUID DECLSPEC_SELECTANY n = {data}
+     #define DEFINE_GUID_THUNK(n, data) DEFINE_GUID(n, data)
+     #define DEFINE_GUIDEX(n) DEFINE_GUID_THUNK(n, STATIC_##n)
+ #endif /* __clang__, !_MSVC_TRADITIONAL */
+
+From 63c6e189cafd6f184797776077a141809ef8cf0e Mon Sep 17 00:00:00 2001
+From: Ross Bencina <rossb@audiomulch.com>
+Date: Sat, 7 Oct 2023 09:49:19 +1100
+Subject: [PATCH 2/2] Make sure this works even if DECLSPEC_SELECTANY is not
+ defined
+
+---
+ src/hostapi/wdmks/pa_win_wdmks.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/src/hostapi/wdmks/pa_win_wdmks.c b/src/hostapi/wdmks/pa_win_wdmks.c
+index 5d2a98743..36cb396a8 100644
+--- a/src/hostapi/wdmks/pa_win_wdmks.c
++++ b/src/hostapi/wdmks/pa_win_wdmks.c
+@@ -164,12 +164,17 @@ Default is to use the pin category.
+ #define DYNAMIC_GUID(data) {data}
+ #define _NTRTL_ /* Turn off default definition of DEFINE_GUIDEX */
+ #undef DEFINE_GUID
++#ifdef DECLSPEC_SELECTANY
++#define PA_DECLSPEC_SELECTANY DECLSPEC_SELECTANY
++#else
++#define PA_DECLSPEC_SELECTANY
++#endif
+ #if defined(__clang__) || (defined(_MSVC_TRADITIONAL) && !_MSVC_TRADITIONAL) /* clang-cl and new msvc preprocessor: avoid too many arguments error */
+-    #define DEFINE_GUID(n, ...) EXTERN_C const GUID DECLSPEC_SELECTANY n = {__VA_ARGS__}
++    #define DEFINE_GUID(n, ...) EXTERN_C const GUID PA_DECLSPEC_SELECTANY n = {__VA_ARGS__}
+     #define DEFINE_GUID_THUNK(n, ...) DEFINE_GUID(n, __VA_ARGS__)
+     #define DEFINE_GUIDEX(n) DEFINE_GUID_THUNK(n, STATIC_##n)
+ #else
+-    #define DEFINE_GUID(n, data) EXTERN_C const GUID DECLSPEC_SELECTANY n = {data}
++    #define DEFINE_GUID(n, data) EXTERN_C const GUID PA_DECLSPEC_SELECTANY n = {data}
+     #define DEFINE_GUID_THUNK(n, data) DEFINE_GUID(n, data)
+     #define DEFINE_GUIDEX(n) DEFINE_GUID_THUNK(n, STATIC_##n)
+ #endif /* __clang__, !_MSVC_TRADITIONAL */

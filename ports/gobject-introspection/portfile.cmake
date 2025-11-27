@@ -3,7 +3,7 @@ string(REGEX REPLACE "^([0-9]+[.][0-9]+).*\$" "\\1" GI_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/gobject-introspection/${GI_MAJOR_MINOR}/gobject-introspection-${VERSION}.tar.xz"
     FILENAME "gobject-introspection-${VERSION}.tar.xz"
-    SHA512 e139fadb4174c72b648914f3774d89fc0e5eaee45bba0c13edf05de883664dad8276dbc34006217bb09871ed4bad23adab51ff232a17b9eb131329b2926cafb7
+    SHA512 a9d2edbe1cea710e10ef1ea8059a45cf5689bace43b5d2a6861809e863a6de7114b4763db8df3916ad6202c9967f48f7997acd0810a86e5e88dea7e0be88b585
 )
 
 vcpkg_extract_source_archive(
@@ -11,7 +11,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-g-ir-tool-template.in.patch
-        0004-fastcall.patch # https://gitlab.gnome.org/GNOME/gobject-introspection/-/merge_requests/498
+        gir-scanner-runtime.diff
 )
 
 include("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake")

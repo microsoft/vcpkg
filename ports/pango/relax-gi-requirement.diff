@@ -1,0 +1,25 @@
+diff --git a/meson.build b/meson.build
+index b8098c1..10033c8 100644
+--- a/meson.build
++++ b/meson.build
+@@ -209,7 +209,7 @@ glib_major_req = 2
+ glib_minor_req = 82
+ 
+ glib_req       = '>= @0@.@1@'.format(glib_major_req, glib_minor_req)
+-gi_req         = '>= 1.83.2'
++gi_req         = '>= 1.82.0'
+ fribidi_req    = '>= 1.0.6'
+ libthai_req    = '>= 0.1.9'
+ harfbuzz_req   = '>= 8.4.0'
+diff --git a/pango/meson.build b/pango/meson.build
+index f3c6d70..674b702 100644
+--- a/pango/meson.build
++++ b/pango/meson.build
+@@ -132,7 +132,6 @@ pango_dep_sources = [pango_enum_h]
+ if build_gir
+   gir_args = [
+     '--quiet',
+-    '--doc-format=gi-docgen',
+   ]
+   harfbuzz_gobject_dep = dependency('harfbuzz-gobject',
+                                     version: harfbuzz_req,

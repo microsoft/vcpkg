@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5f2b5d6..0db568b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -40,7 +40,7 @@ find_package(ONNX CONFIG REQUIRED)
+ file(READ "${PROJECT_SOURCE_DIR}/VERSION_NUMBER" ONNX_OPTIMIZER_VERSION)
+ string(STRIP "${ONNX_OPTIMIZER_VERSION}" ONNX_OPTIMIZER_VERSION)
+ 
+-file(GLOB onnx_opt_srcs "onnxoptimizer/*.cc"
++file(GLOB onnx_opt_srcs CONFIGURE_DEPENDS "onnxoptimizer/*.cc"
+     "onnxoptimizer/*.h"
+     "onnxoptimizer/passes/*.cc"
+     "onnxoptimizer/passes/*.h"
+@@ -58,7 +58,7 @@ onnxopt_add_executable(onnx_optimizer_exec examples/onnx_optimizer_exec.cpp)
+ target_link_libraries(onnx_optimizer_exec onnx_optimizer)
+ 
+ 
+-file(GLOB onnx_opt_c_api_srcs "onnxoptimizer/c_api/*.cc"
++file(GLOB onnx_opt_c_api_srcs CONFIGURE_DEPENDS "onnxoptimizer/c_api/*.cc"
+   "onnxoptimizer/c_api/*.h"
+     )
+ 
+diff --git a/onnxoptimizer/pass_registry.h b/onnxoptimizer/pass_registry.h
+index b8dc26f..e8f0faa 100644
+--- a/onnxoptimizer/pass_registry.h
++++ b/onnxoptimizer/pass_registry.h
+@@ -9,6 +9,7 @@
+ 
+ #include <unordered_set>
+ #include <vector>
++#include <map>
+ 
+ #include "onnx/common/ir.h"
+ #include "onnx/common/ir_pb_converter.h"
+diff --git a/onnxoptimizer/passes/fuse_add_bias_into_conv.h b/onnxoptimizer/passes/fuse_add_bias_into_conv.h
+index b4696b5..dea0369 100644
+--- a/onnxoptimizer/passes/fuse_add_bias_into_conv.h
++++ b/onnxoptimizer/passes/fuse_add_bias_into_conv.h
+@@ -134,7 +134,7 @@ struct FuseAddBiasIntoConv final : public PredicateBasedPass {
+         t.elem_type() = TensorProto_DataType_INT64;
+         Symbol sym = Symbol("value");
+         constant->t_(sym, t);
+-        std::vector<Dimension> s = {1};
++        std::vector<Dimension> s{Dimension{1}};
+         constant->output()->setSizes(s);
+         constant->output()->setElemType(TensorProto_DataType_INT64);
+         constant->insertBefore(orig_conv->node());

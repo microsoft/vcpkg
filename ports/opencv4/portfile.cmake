@@ -33,12 +33,17 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 # Disallow accidental build of vendored copies
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/cpufeatures")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
+  if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # cf. https://github.com/opencv/opencv/issues/25052, https://github.com/opencv/opencv/pull/27897
+    list(APPEND ADDITIONAL_BUILD_FLAGS -DHAVE_CPU_NEON_FP16_SUPPORT=0 -DHAVE_CPU_NEON_DOTPROD_SUPPORT=0)
+  endif()
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(TARGET_IS_ARM 1)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -479,7 +484,10 @@ if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target l
     )
   endif()
 endif()
-find_dependency(Threads)")
+find_dependency(Threads)
+if(ANDROID)
+  find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()")
 
 if("ade" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(ade)")

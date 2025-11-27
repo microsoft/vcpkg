@@ -8,8 +8,8 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
 }
 
 # See https://learn.microsoft.com/visualstudio/releases/2022/release-history
-# 17.14.17
-$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/5967a899-96aa-47e2-a7c5-1b7192f292ee/74cdb7178d623f27d405946de1860f7ee67acba537a9e43ce4b2d2ee87bd75b4/vs_Enterprise.exe'
+# 17.14.20
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/fd2adb86-9bef-4b89-baea-d9613327cd2d/71dce30bf45232a868005b8d7173015eea2b152b43bc5066caa15ef9fa7a751a/vs_Enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',

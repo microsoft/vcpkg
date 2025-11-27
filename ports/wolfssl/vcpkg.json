@@ -1,7 +1,6 @@
 {
   "name": "wolfssl",
-  "version": "5.8.2",
-  "port-version": 1,
+  "version": "5.8.4",
   "description": "TLS and Cryptographic library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-3.0-or-later",
@@ -23,9 +22,6 @@
   "features": {
     "asio": {
       "description": "Enable asio support"
-    },
-    "curve25519-blinding": {
-      "description": "Enables callback to provide TLS keys for debugging"
     },
     "dtls": {
       "description": "DTLS support"

@@ -1,5 +1,5 @@
 diff --git a/tools/g-ir-tool-template.in b/tools/g-ir-tool-template.in
-index 469af0c..f165a98 100755
+index 648c9ab..b5e3568 100755
 --- a/tools/g-ir-tool-template.in
 +++ b/tools/g-ir-tool-template.in
 @@ -1,4 +1,4 @@
@@ -36,8 +36,7 @@ index 469af0c..f165a98 100755
  
  # EXT_SUFFIX for py3 SO for py2
  py_mod_suffix = sysconfig.get_config_var('EXT_SUFFIX') or sysconfig.get_config_var('SO')
-@@ -89,13 +87,19 @@ if not os.path.isfile(os.path.join(pylibdir, 'giscanner', '_giscanner' + py_mod_
-         gdump_path = os.path.join(builddir, 'giscanner', 'gdump.c')
+@@ -90,12 +88,18 @@ if not os.path.isfile(os.path.join(pylibdir, 'giscanner', '_giscanner' + py_mod_
          if os.path.isfile(gdump_path):
              builtins.__dict__['GDUMP_PATH'] = gdump_path
      else:

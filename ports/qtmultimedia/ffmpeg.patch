@@ -1,26 +1,33 @@
 diff --git a/cmake/FindFFmpeg.cmake b/cmake/FindFFmpeg.cmake
-index 0aa3ff9..b651472 100644
+index decac97dc..672991080 100644
 --- a/cmake/FindFFmpeg.cmake
 +++ b/cmake/FindFFmpeg.cmake
-@@ -287,13 +287,15 @@ function(__ffmpeg_internal_set_dependencies _component)
-         set(prefix_l "(^| )\\-l")
+@@ -282,10 +282,10 @@ function(__ffmpeg_internal_set_dependencies _component)
          set(suffix_lib "\\.lib($| )")
+         set(framework_regex "-framework [A-Za-z0-9_]*")
  
 -        string(REGEX REPLACE ".*Libs:([^\n\r]+).*" "\\1" out "${pcfile}")
-+        string(REGEX MATCH "Libs:([^\n\r]+)" match "${pcfile}")
-+        set(out "${CMAKE_MATCH_1}")
 -        string(REGEX MATCHALL "${prefix_l}[^ ]+" libs_dependency ${out})
 -        string(REGEX MATCHALL "[^ ]+${suffix_lib}" libs_dependency_lib ${out})
+-        string(REGEX MATCHALL "${framework_regex}" framework_dependencies ${out})
++        string(REGEX MATCH "Libs:([^\n\r]+)" match "${pcfile}")
++        set(out "${CMAKE_MATCH_1}")
 +        string(REGEX MATCHALL "${prefix_l}[^ ]+" libs_dependency "${out}")
 +        string(REGEX MATCHALL "[^ ]+${suffix_lib}" libs_dependency_lib "${out}")
  
+         foreach(dependency IN LISTS libs_dependency)
+             string(REGEX REPLACE ${prefix_l} "" dependency ${dependency})
+@@ -298,9 +298,10 @@ function(__ffmpeg_internal_set_dependencies _component)
+         endforeach()
+ 
+         # we don't link private dependencies, but just populate the FFMPEG_STUBS
 -        string(REGEX REPLACE ".*Libs.private:([^\n\r]+).*" "\\1" out "${pcfile}")
-+        string(REGEX MATCH "Libs.private:([^\n\r]+)" match "${pcfile}")
-+        set(out "${CMAKE_MATCH_1}")
 -        string(REGEX MATCHALL "${prefix_l}[^ ]+" libs_private_dependency ${out})
 -        string(REGEX MATCHALL "[^ ]+${suffix_lib}" libs_private_dependency_lib ${out})
++        string(REGEX MATCH "Libs.private:([^\n\r]+)" match "${pcfile}")
++        set(out "${CMAKE_MATCH_1}")
 +        string(REGEX MATCHALL "${prefix_l}[^ ]+" libs_private_dependency "${out}")
 +        string(REGEX MATCHALL "[^ ]+${suffix_lib}" libs_private_dependency_lib "${out}")
  
-         list(APPEND deps_no_suffix ${libs_dependency} ${libs_private_dependency})
-         foreach(dependency ${deps_no_suffix})
+         foreach(dependency IN LISTS libs_private_dependency)
+             string(REGEX REPLACE ${prefix_l} "" dependency ${dependency})

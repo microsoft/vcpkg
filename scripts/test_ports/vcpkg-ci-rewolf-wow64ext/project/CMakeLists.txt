@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25.1)
 project(rewolf-wow64ext-test LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 11)
 find_package(wow64ext CONFIG REQUIRED)
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE wow64ext::wow64ext)
+target_compile_features(main PRIVATE cxx_std_11)
+target_link_libraries(main PRIVATE unofficial::wow64ext::wow64ext)

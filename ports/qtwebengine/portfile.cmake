@@ -6,7 +6,6 @@ set(${PORT}_PATCHES
       "cross-build.diff"
       "disable-host-pkgconfig.diff"
       "fix-error2275-2672.patch"
-      "nested-name-fix.patch"
       "osx-sdk-info.diff"
       "pdf-system-libjpeg.diff"
       "pdf-system-libpng.diff"

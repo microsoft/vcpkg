@@ -1,6 +1,7 @@
 {
   "name": "supernovas",
   "version": "1.5.0",
+  "port-version": 1,
   "description": "SuperNOVAS C/C++ high-precision astrometry library",
   "homepage": "https://smithsonian.github.io/SuperNOVAS/",
   "documentation": "https://smithsonian.github.io/SuperNOVAS/doc/html/",
