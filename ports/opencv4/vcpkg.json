@@ -95,10 +95,6 @@
           "features": [
             "calib3d"
           ]
-        },
-        {
-          "name": "tesseract",
-          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
         }
       ]
     },
@@ -469,6 +465,19 @@
       "supports": "!static",
       "dependencies": [
         "tbb"
+      ]
+    },
+    "text": {
+      "description": "Enable Scene Text Detection and Recognition",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        },
+        "tesseract"
       ]
     },
     "thread": {

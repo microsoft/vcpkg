@@ -38,7 +38,8 @@
       "features": [
         "hdf5",
         "jpegxl",
-        "openexr"
+        "openexr",
+        "text"
       ],
       "platform": "!uwp"
     },

@@ -528,6 +528,18 @@
         }
       ]
     },
+    "text": {
+      "description": "Enable Scene Text Detection and Recognition",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "text"
+          ]
+        }
+      ]
+    },
     "thread": {
       "description": "Enable thread support",
       "dependencies": [

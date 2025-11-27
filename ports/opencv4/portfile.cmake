@@ -120,6 +120,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "rgbd"       BUILD_opencv_rgbd
  "sfm"        BUILD_opencv_sfm
  "tbb"        WITH_TBB
+ "text"       BUILD_opencv_text
+ "text"       WITH_TESSERACT
  "tiff"       WITH_TIFF
  "vtk"        WITH_VTK
  "vulkan"     WITH_VULKAN
@@ -352,12 +354,6 @@ if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
 endif()
 
-if("contrib" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_UWP)
-    list(APPEND ADDITIONAL_BUILD_FLAGS "-DWITH_TESSERACT=OFF")
-  endif()
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -493,10 +489,6 @@ endif()")
 if("ade" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(ade)")
 endif()
-if("contrib" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_IOS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
-  string(APPEND DEPS_STRING "
-find_dependency(Tesseract)")
-endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
 endif()
@@ -551,6 +543,9 @@ if("sfm" IN_LIST FEATURES)
 endif()
 if("tbb" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
+endif()
+if("text" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(Tesseract)")
 endif()
 if("tiff" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
