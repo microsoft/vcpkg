@@ -9453,8 +9453,8 @@
       "port-version": 0
     },
     "stronk": {
-      "baseline": "0.13.3",
-      "port-version": 1
+      "baseline": "0.14.0",
+      "port-version": 0
     },
     "strtk": {
       "baseline": "2020-09-14",
