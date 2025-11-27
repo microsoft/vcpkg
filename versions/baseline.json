@@ -201,8 +201,8 @@
       "port-version": 0
     },
     "aravis": {
-      "baseline": "0.8.34",
-      "port-version": 1
+      "baseline": "0.8.35",
+      "port-version": 0
     },
     "arb": {
       "baseline": "2.21.1",
