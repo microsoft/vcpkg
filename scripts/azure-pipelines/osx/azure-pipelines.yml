@@ -9,9 +9,7 @@ parameters:
     default: 'use default'
   - name: jobName
     type: string
-    default: 'x64_osx'
-  - name: poolName
-    type: string
+    default: 'arm64_osx'
   - name: tripletPattern
     displayName: 'Enable the triplets which contain this substring'
     type: string
@@ -21,7 +19,7 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: ${{ parameters.poolName }}
+    name: PrOsx-2025-11-11-arm64
   workspace:
     clean: resources
   timeoutInMinutes: 2880 # 2 days
