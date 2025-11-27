@@ -26,7 +26,6 @@ vcpkg_from_github(
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
       0022-fix-miss-exception-include.patch
-      0023-fix-android-cmake-in.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -41,6 +40,10 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
+  if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # cf. https://github.com/opencv/opencv/issues/25052, https://github.com/opencv/opencv/pull/27897
+    list(APPEND ADDITIONAL_BUILD_FLAGS -DHAVE_CPU_NEON_FP16_SUPPORT=0 -DHAVE_CPU_NEON_DOTPROD_SUPPORT=0)
+  endif()
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(TARGET_IS_ARM 1)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
