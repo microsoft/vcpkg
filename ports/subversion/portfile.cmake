@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-expat-regex.patch
         fix-expat-libname.patch
+        fix-sysinfo-linux.patch
 )
 
 if(VERSION VERSION_GREATER_EQUAL "1.15.0")
@@ -115,10 +116,9 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
 
 else()
     set(CONFIGURE_OPTIONS
-        --with-apr=${CURRENT_INSTALLED_DIR}
-        --with-apr-util=${CURRENT_INSTALLED_DIR}
+        --with-apr=${CURRENT_INSTALLED_DIR}/tools/apr
+        --with-apr-util=${CURRENT_INSTALLED_DIR}/tools/apr-util
         --with-serf=${CURRENT_INSTALLED_DIR}
-        --with-zlib=${CURRENT_INSTALLED_DIR}
         --with-lz4=internal
         --with-utf8proc=internal
         --without-swig
@@ -128,16 +128,38 @@ else()
         --disable-nls
     )
 
+    vcpkg_execute_required_process(
+        COMMAND bash -c "PYTHON=python3 ./autogen.sh"
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME "autogen-${TARGET_TRIPLET}"
+    )
+
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        ADD_BIN_TO_PATH
         OPTIONS
             ${CONFIGURE_OPTIONS}
     )
 
     vcpkg_install_make()
+    
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/share/subversion/pkgconfig")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        file(GLOB PC_FILES "${CURRENT_PACKAGES_DIR}/share/subversion/pkgconfig/*.pc")
+        file(COPY ${PC_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/subversion/pkgconfig")
+    endif()
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share/subversion/pkgconfig")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+        file(GLOB PC_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/share/subversion/pkgconfig/*.pc")
+        file(COPY ${PC_FILES_DBG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/subversion/pkgconfig")
+    endif()
+    
     vcpkg_fixup_pkgconfig()
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(
     INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-subversion-config.cmake"
