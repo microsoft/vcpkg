@@ -1,8 +1,8 @@
-Index: subversion-1.14.5/build/generator/gen_win_dependencies.py
-===================================================================
---- subversion-1.14.5/build/generator/gen_win_dependencies.py	(revision 1925090)
-+++ subversion-1.14.5/build/generator/gen_win_dependencies.py	(working copy)
-@@ -593,13 +593,13 @@
+diff --git a/build/generator/gen_win_dependencies.py b/build/generator/gen_win_dependencies.py
+index 1111111..2222222 100644
+--- a/build/generator/gen_win_dependencies.py
++++ b/build/generator/gen_win_dependencies.py
+@@ -593,13 +593,13 @@ def _find_expat(self, show_warnings):
  
      txt = open(version_file_path).read()
  

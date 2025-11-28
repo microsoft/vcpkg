@@ -1,0 +1,17 @@
+diff --git a/build/generator/gen_win_dependencies.py b/build/generator/gen_win_dependencies.py
+index 1111111..2222222 100644
+--- a/build/generator/gen_win_dependencies.py
++++ b/build/generator/gen_win_dependencies.py
+@@ -604,8 +604,11 @@ def _find_expat(self, show_warnings):
+ 
+     # apr-Util 0.9-1.4 compiled expat to 'xml.lib', but apr-util 1.5 switched
+     # to the more common 'libexpat.lib'
++    # vcpkg uses 'libexpatMD.lib' for static-md builds.
+     libname = 'libexpat.lib'
+-    if not os.path.exists(os.path.join(lib_dir, 'libexpat.lib')):
++    if os.path.exists(os.path.join(lib_dir, 'libexpatMD.lib')):
++      libname = 'libexpatMD.lib'
++    elif not os.path.exists(os.path.join(lib_dir, 'libexpat.lib')):
+       libname = 'xml.lib'
+ 
+     version = (major, minor, patch)

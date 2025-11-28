@@ -35,28 +35,5 @@
       "platform": "windows"
     },
     "zlib"
-  ],
-  "features": {
-    "bdb": {
-      "description": "Build with Berkeley DB support",
-      "dependencies": [
-        "berkeleydb"
-      ]
-    },
-    "nls": {
-      "description": "Native Language Support (internationalization)",
-      "dependencies": [
-        "gettext"
-      ]
-    },
-    "sasl": {
-      "description": "Build with SASL authentication support",
-      "dependencies": [
-        "cyrus-sasl"
-      ]
-    },
-    "tools": {
-      "description": "Build command-line tools (svn, svnadmin, etc.)"
-    }
-  }
+  ]
 }

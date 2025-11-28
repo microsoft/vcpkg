@@ -5,7 +5,8 @@ vcpkg_from_github(
     SHA512 cc42f90e8a3a5df8a27c10ffd8f271292c5f3309e4efdcd1a9fb94f93689fb90b96c39bff8a4bd6fd2229cca32ce1baf6d5a6237d3427a1fb7130898698d17c3
     HEAD_REF trunk
     PATCHES
-        vcpkg-expat-regex.patch
+        fix-expat-regex.patch
+        fix-expat-libname.patch
 )
     
 if(VERSION VERSION_GREATER_EQUAL "1.15.0")
@@ -18,14 +19,6 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        bdb     ENABLE_BDB
-        nls     ENABLE_NLS
-        sasl    ENABLE_SASL
-        tools   ENABLE_TOOLS
-)
-
 if(USE_CMAKE_BUILD)
     vcpkg_execute_required_process(
         COMMAND ${PYTHON3} gen-make.py -t cmake
@@ -34,20 +27,12 @@ if(USE_CMAKE_BUILD)
     )
     
     set(CMAKE_OPTIONS
-        -DSVN_ENABLE_PROGRAMS=${ENABLE_TOOLS}
+        -DSVN_ENABLE_PROGRAMS=OFF
         -DSVN_ENABLE_TESTS=OFF
         -DSVN_ENABLE_RA_SERF=ON
         -DSVN_ENABLE_RA_SVN=ON
         -DSVN_ENABLE_RA_LOCAL=ON
     )
-    
-    if(ENABLE_BDB)
-        list(APPEND CMAKE_OPTIONS -DSVN_ENABLE_FS_BASE=ON)
-    endif()
-    
-    if(ENABLE_NLS)
-        list(APPEND CMAKE_OPTIONS -DSVN_ENABLE_NLS=ON)
-    endif()
     
     vcpkg_cmake_configure(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -62,20 +47,20 @@ if(USE_CMAKE_BUILD)
         vcpkg_copy_tools(
             TOOL_NAMES svn svnadmin svnlook svnsync svnrdump svnmucc svnserve
             AUTO_CLEAN
-        )
+    vcpkg_cmake_install()
+    vcpkg_cmake_fixup(CONFIG_PATH lib/cmake/subversion)
+    vcpkg_copy_pdbs()
+    
+elseif(VCPKG_TARGET_IS_WINDOWS)")
     endif()
     
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v143")
-        set(VSNET_VERSION "2022")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-        set(VSNET_VERSION "2019")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(VSNET_VERSION "2017")
-    else()
-        set(VSNET_VERSION "2022")
-    endif()
-    
+    set(GEN_MAKE_ARGS
+        "-t" "vcproj"
+        "--vsnet-version=${VSNET_VERSION}"
+        "--with-apr=${CURRENT_INSTALLED_DIR}"
+        "--with-apr-util=${CURRENT_INSTALLED_DIR}"
+        "--with-zlib=${CURRENT_INSTALLED_DIR}"
+        "--with-openssl=${CURRENT_INSTALLED_DIR}"
     set(GEN_MAKE_ARGS
         "-t" "vcproj"
         "--vsnet-version=${VSNET_VERSION}"
@@ -87,26 +72,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         "--with-sqlite=${CURRENT_INSTALLED_DIR}"
     )
 
-    if(ENABLE_BDB)
-        list(APPEND GEN_MAKE_ARGS "--with-berkeley-db=${CURRENT_INSTALLED_DIR}")
-    endif()
-
-    if(ENABLE_SASL)
-        list(APPEND GEN_MAKE_ARGS "--with-sasl=${CURRENT_INSTALLED_DIR}")
-    endif()
-
-    if(ENABLE_NLS)
-        list(APPEND GEN_MAKE_ARGS "--with-libintl=${CURRENT_INSTALLED_DIR}")
-    endif()
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND GEN_MAKE_ARGS "--disable-shared")
-        list(APPEND GEN_MAKE_ARGS "--with-static-apr")
-        list(APPEND GEN_MAKE_ARGS "--with-static-openssl")
-    endif()
-
-    vcpkg_execute_required_process(
-        COMMAND ${PYTHON3} gen-make.py ${GEN_MAKE_ARGS}
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")KE_ARGS}
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME "gen-make-${TARGET_TRIPLET}"
     )
@@ -156,12 +122,12 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
                         "${SOURCE_PATH}/Release/subversion/svnrdump/*.exe"
                         "${SOURCE_PATH}/Release/subversion/svnmucc/*.exe")
         if(TOOLS)
-            file(INSTALL ${TOOLS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/subversion")
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/subversion")
         endif()
     endif()
 
 else()
+    if(ENABLE_BDB)
+        list(APPEND CONFIGURE_OPTIONS "--with-berkeley-db=${CURRENT_INSTALLED_DIR}")
     set(CONFIGURE_OPTIONS
         --with-apr=${CURRENT_INSTALLED_DIR}
         --with-apr-util=${CURRENT_INSTALLED_DIR}
@@ -172,39 +138,11 @@ else()
         --without-swig
         --without-jdk
         --disable-mod-activation
+        --without-berkeley-db
+        --disable-nls
     )
-
-    if(ENABLE_BDB)
-        list(APPEND CONFIGURE_OPTIONS "--with-berkeley-db=${CURRENT_INSTALLED_DIR}")
-    else()
-        list(APPEND CONFIGURE_OPTIONS "--without-berkeley-db")
-    endif()
-
-    if(ENABLE_NLS)
-        list(APPEND CONFIGURE_OPTIONS "--enable-nls")
-    else()
-        list(APPEND CONFIGURE_OPTIONS "--disable-nls")
-    endif()
-
-    if(ENABLE_SASL)
-        list(APPEND CONFIGURE_OPTIONS "--with-sasl=${CURRENT_INSTALLED_DIR}")
-    endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
-        OPTIONS
-            ${CONFIGURE_OPTIONS}
-    )
-
-    vcpkg_install_make()
-    vcpkg_fixup_pkgconfig()
-endif()
-
-file(
-    INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-subversion-config.cmake"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-subversion"
-)
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/include")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
