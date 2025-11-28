@@ -1,6 +1,7 @@
 {
   "name": "llama-cpp",
-  "version": "6550",
+  "version": "7146",
+  "port-version": 1,
   "description": "LLM inference in C/C++",
   "homepage": "https://github.com/ggml-org/llama.cpp",
   "license": "MIT",
