@@ -23,8 +23,7 @@
         "png",
         "quirc",
         "thread",
-        "tiff",
-        "vulkan"
+        "tiff"
       ]
     },
     {
@@ -62,6 +61,7 @@
       "default-features": false,
       "features": [
         "dnn",
+        "vulkan",
         "webp"
       ],
       "platform": "!android"
