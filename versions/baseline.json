@@ -4529,7 +4529,7 @@
       "port-version": 0
     },
     "lest": {
-      "baseline": "1.36.0",
+      "baseline": "1.37.0",
       "port-version": 0
     },
     "level-zero": {
