@@ -13,7 +13,6 @@
         "avdevice",
         "avfilter",
         "avformat",
-        "postproc",
         "swresample",
         "swscale"
       ]
