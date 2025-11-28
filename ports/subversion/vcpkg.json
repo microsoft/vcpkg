@@ -1,0 +1,63 @@
+{
+  "name": "subversion",
+  "version": "1.14.5",
+  "port-version": 1,
+  "description": "Apache Subversion (SVN) - Enterprise-class centralized version control system",
+  "homepage": "https://subversion.apache.org/",
+  "license": "Apache-2.0",
+  "supports": "!uwp & !mingw",
+  "dependencies": [
+    "apr",
+    "apr-util",
+    "expat",
+    "openssl",
+    "serf",
+    "sqlite3",
+    "zlib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-get-python",
+      "host": true
+    }
+  ],
+  "features": {
+    "bdb": {
+      "description": "Build with Berkeley DB support",
+      "dependencies": [
+        "berkeleydb"
+      ]
+    },
+    "nls": {
+      "description": "Native Language Support (internationalization)",
+      "dependencies": [
+        "gettext"
+      ]
+    },
+    "sasl": {
+      "description": "Build with SASL authentication support",
+      "dependencies": [
+        "cyrus-sasl"
+      ]
+    },
+    "tools": {
+      "description": "Build command-line tools (svn, svnadmin, etc.)"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+Index: subversion-1.14.5/build/generator/gen_win_dependencies.py
+===================================================================
+--- subversion-1.14.5/build/generator/gen_win_dependencies.py	(revision 1925090)
++++ subversion-1.14.5/build/generator/gen_win_dependencies.py	(working copy)
+@@ -593,13 +593,13 @@
+ 
+     txt = open(version_file_path).read()
+ 
+-    vermatch = re.search(r'^\s*#define\s+XML_MAJOR_VERSION\s+(\d+)', txt, re.M)
++    vermatch = re.search(r'^\s*#\s*define\s+XML_MAJOR_VERSION\s+(\d+)', txt, re.M)
+     major = int(vermatch.group(1))
+ 
+-    vermatch = re.search(r'^\s*#define\s+XML_MINOR_VERSION\s+(\d+)', txt, re.M)
++    vermatch = re.search(r'^\s*#\s*define\s+XML_MINOR_VERSION\s+(\d+)', txt, re.M)
+     minor = int(vermatch.group(1))
+ 
+-    vermatch = re.search(r'^\s*#define\s+XML_MICRO_VERSION\s+(\d+)', txt, re.M)
++    vermatch = re.search(r'^\s*#\s*define\s+XML_MICRO_VERSION\s+(\d+)', txt, re.M)
+     patch = int(vermatch.group(1))
+ 
+     # apr-Util 0.9-1.4 compiled expat to 'xml.lib', but apr-util 1.5 switched
