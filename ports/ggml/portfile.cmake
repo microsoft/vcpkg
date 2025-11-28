@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         cmake-config.diff
         pkgconfig.diff
+        relax-link-options.diff
         vulkan-shaders-gen.diff
 )
 
