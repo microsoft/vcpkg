@@ -6973,7 +6973,7 @@
       "port-version": 1
     },
     "numcpp": {
-      "baseline": "2.14.2",
+      "baseline": "2.15.0",
       "port-version": 0
     },
     "nuspell": {
