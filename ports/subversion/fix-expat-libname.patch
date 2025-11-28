@@ -7,6 +7,7 @@ index 1111111..2222222 100644
      # apr-Util 0.9-1.4 compiled expat to 'xml.lib', but apr-util 1.5 switched
      # to the more common 'libexpat.lib'
      libname = 'libexpat.lib'
++    # vcpkg uses 'libexpatMD.lib' for static-md builds.
 -    if not os.path.exists(os.path.join(lib_dir, 'libexpat.lib')):
 +    if os.path.exists(os.path.join(lib_dir, 'libexpatMD.lib')):
 +      libname = 'libexpatMD.lib'
