@@ -1,0 +1,57 @@
+diff --git a/meson.build b/meson.build
+index baafa19..2cf6b7b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -6,7 +6,7 @@ project('libfprint', [ 'c', 'cpp' ],
+         'warning_level=1',
+         'c_std=gnu99',
+     ],
+-    meson_version: '>= 0.59.0')
++    meson_version: '>= 0.58.0')
+ 
+ fs = import('fs')
+ gnome = import('gnome')
+@@ -355,7 +355,11 @@ if get_option('gtk-examples')
+ endif
+ 
+ subdir('data')
+-subdir('tests')
++
++# Skip tests on Android as they require cairo and other dependencies not available in vcpkg
++if host_machine.system() != 'android'
++    subdir('tests')
++endif
+ 
+ subdir('examples')
+ 
+diff --git a/examples/meson.build b/examples/meson.build
+--- a/examples/meson.build
++++ b/examples/meson.build
+@@ -23,6 +23,10 @@ executable('cpp-test',
+     dependencies: libfprint_dep,
+ )
+ 
++# installed_tests is defined in tests/meson.build, but if tests are skipped, define it here
++if not is_variable('installed_tests')
++    installed_tests = false
++endif
+ if installed_tests
+     install_subdir('prints',
+         install_dir: installed_tests_testdir)
+ endif
+
+diff --git a/libfprint/fpi-device.c b/libfprint/fpi-device.c
+index a1be30c..8778339 100644
+--- a/libfprint/fpi-device.c
++++ b/libfprint/fpi-device.c
+@@ -1727,7 +1727,9 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
+             g_string_prepend (ports, port_str);
+             g_set_object (&dev, parent);
+           }
+-        g_string_set_size (ports, ports->len - 1);
++
++        if (ports->len > 0)
++            g_string_set_size (ports, ports->len - 1);
+ 
+         sysfs_wakeup = g_strdup_printf ("/sys/bus/usb/devices/%d-%s/power/wakeup", bus, ports->str);
+         res = update_attr (sysfs_wakeup, wakeup_command);
