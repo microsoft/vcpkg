@@ -1,5 +1,5 @@
 diff --git a/meson.build b/meson.build
-index baafa19..2cf6b7b 100644
+index baafa19..61f7a8c 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -6,7 +6,7 @@ project('libfprint', [ 'c', 'cpp' ],
@@ -11,7 +11,7 @@ index baafa19..2cf6b7b 100644
  
  fs = import('fs')
  gnome = import('gnome')
-@@ -355,7 +355,11 @@ if get_option('gtk-examples')
+@@ -358,7 +358,11 @@ if get_option('gtk-examples')
  endif
  
  subdir('data')
@@ -25,31 +25,34 @@ index baafa19..2cf6b7b 100644
  subdir('examples')
  
 diff --git a/examples/meson.build b/examples/meson.build
+index 250c055..4783aa9 100644
 --- a/examples/meson.build
 +++ b/examples/meson.build
-@@ -23,6 +23,10 @@ executable('cpp-test',
+@@ -23,6 +23,12 @@ executable('cpp-test',
      dependencies: libfprint_dep,
  )
  
++
 +# installed_tests is defined in tests/meson.build, but if tests are skipped, define it here
 +if not is_variable('installed_tests')
 +    installed_tests = false
 +endif
++
  if installed_tests
      install_subdir('prints',
          install_dir: installed_tests_testdir)
  endif
-
+ 
 diff --git a/libfprint/fpi-device.c b/libfprint/fpi-device.c
-index a1be30c..8778339 100644
+index a1be30c..569ccd5 100644
 --- a/libfprint/fpi-device.c
 +++ b/libfprint/fpi-device.c
-@@ -1727,7 +1727,9 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
+@@ -1730,7 +1730,9 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
              g_string_prepend (ports, port_str);
              g_set_object (&dev, parent);
            }
 -        g_string_set_size (ports, ports->len - 1);
-+
++        
 +        if (ports->len > 0)
 +            g_string_set_size (ports, ports->len - 1);
  
