@@ -121,11 +121,12 @@ block(SCOPE_FOR VARIABLES)
 
 	if (VCPKG_TARGET_IS_WINDOWS)
 		file(COPY "${BINDIST_PATH}/cmake" DESTINATION "${CURRENT_PACKAGES_DIR}")
+		vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME slang)
 	else()
-		file(COPY "${BINDIST_PATH}/lib/cmake/slang" DESTINATION "${CURRENT_PACKAGES_DIR}/share")
+		file(COPY "${BINDIST_PATH}/lib/cmake/slang" DESTINATION "${CURRENT_PACKAGES_DIR}")
+		vcpkg_cmake_config_fixup(CONFIG_PATH slang PACKAGE_NAME slang)
 	endif()
 
-	vcpkg_cmake_config_fixup(CONFIG_PATH cmake PACKAGE_NAME slang)
 	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/slang/slangConfig.cmake"
 		[[HINTS "${PACKAGE_PREFIX_DIR}/bin" ENV PATH]]
 		[[PATHS "${PACKAGE_PREFIX_DIR}/tools/shader-slang" NO_DEFAULT_PATH REQUIRED]]
