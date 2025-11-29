@@ -1,3 +1,14 @@
+# Determine patches to apply based on platform
+set(PATCHES_TO_APPLY "")
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND PATCHES_TO_APPLY fix-windows-build.patch)
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND PATCHES_TO_APPLY fix-macos-build.patch)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+    list(APPEND PATCHES_TO_APPLY fix-android-build.patch)
+endif()
+# Linux and other Unix-like systems should work without patches (native support)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -5,32 +16,8 @@ vcpkg_from_gitlab(
     REF master
     SHA512 7cb01e6cdd66c93ad956cc20e6cae6699d23c801a158c7c7e0d0b0299c90abeca7a71939691a731a69d0a8dc530721083b672de9710830dda41932f300874bea
     HEAD_REF master
+    PATCHES ${PATCHES_TO_APPLY}
 )
-
-# Apply platform-specific patches
-# Windows: comprehensive MSVC build fixes
-# macOS: disable version-script for darwin and fix overflow (libfprint only)
-# Android: fix overflow (libfprint only, check if gusb needs patches)
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_apply_patches(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PATCHES
-            fix-windows-build.patch
-    )
-elseif(VCPKG_TARGET_IS_OSX)
-    vcpkg_apply_patches(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PATCHES
-            fix-macos-build.patch
-    )
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-    vcpkg_apply_patches(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PATCHES
-            fix-android-build.patch
-    )
-endif()
-# Linux and other Unix-like systems should work without patches (native support)
 
 # Configure Meson with platform-specific options
 if(VCPKG_TARGET_IS_WINDOWS)
