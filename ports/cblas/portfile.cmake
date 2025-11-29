@@ -22,3 +22,4 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/cblas.pc.in" "${CURRENT_PACKAGES_DIR}/
 if(NOT VCPKG_BUILD_TYPE)
     configure_file("${CMAKE_CURRENT_LIST_DIR}/cblas.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cblas.pc" @ONLY)
 endif()
+vcpkg_fixup_pkgconfig() # includes validation
