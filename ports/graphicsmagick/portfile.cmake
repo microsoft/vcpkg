@@ -5,7 +5,7 @@ vcpkg_from_gitlab(
     GITLAB_URL https://foss.heptapod.net/
     REPO graphicsmagick/graphicsmagick
     REF ${graphicsmagick_version}
-    SHA512 fd0e517b2eeb14cec59d7e1d5e5e5adc2a172f5b7d13d42e152a768e897972316877cf730031150bff0a5f146d830fe9720fee5c0cf4a9bf3cd2cf396350830b
+    SHA512 687c27e41dfb2f29495ce6c8b8fba35d2b730c8fc1e7f6758e16e25ec9887f655e43501e925cb1847f998d9c862f1d4e34730d6556ac665e3c5e934197273d0c
     PATCHES
         dependencies.diff
         magick-types.diff
