@@ -118,5 +118,8 @@ vcpkg_install_meson()
 # Remove debug/share as it contains only test files which are not needed
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+# Remove installed test binaries (they require cairo and other test dependencies)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/libexec" "${CURRENT_PACKAGES_DIR}/libexec")
+
 vcpkg_fixup_pkgconfig()
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
