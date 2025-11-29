@@ -1,0 +1,34 @@
+diff --git a/libfprint/fpi-device.c b/libfprint/fpi-device.c
+index a1be30c..8778339 100644
+--- a/libfprint/fpi-device.c
++++ b/libfprint/fpi-device.c
+@@ -1730,7 +1730,9 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
+             g_string_prepend (ports, port_str);
+             g_set_object (&dev, parent);
+           }
+-        g_string_set_size (ports, ports->len - 1);
++
++        if (ports->len > 0)
++            g_string_set_size (ports, ports->len - 1);
+ 
+         sysfs_wakeup = g_strdup_printf ("/sys/bus/usb/devices/%d-%s/power/wakeup", bus, ports->str);
+         res = update_attr (sysfs_wakeup, wakeup_command);
+diff --git a/libfprint/meson.build b/libfprint/meson.build
+index 116c411..0addf24 100644
+--- a/libfprint/meson.build
++++ b/libfprint/meson.build
+@@ -282,7 +282,12 @@ if meson.version().version_compare('>=1.4')
+ else
+     mapfile_path = meson.project_source_root() / '@0@'.format(mapfile)
+ endif
+-vflag = '-Wl,--version-script,@0@'.format(mapfile_path)
++
++if host_machine.system() == 'darwin'
++    vflag = []
++else
++    vflag = ['-Wl,--version-script,@0@'.format(mapfile_path)]
++endif
+ 
+ libfprint = shared_library(versioned_libname.split('lib')[1],
+     sources: [
+
