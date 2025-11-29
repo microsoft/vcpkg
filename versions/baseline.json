@@ -382,7 +382,7 @@
     },
     "aubio": {
       "baseline": "2024-01-03",
-      "port-version": 0
+      "port-version": 1
     },
     "audioengine": {
       "baseline": "1.2",
