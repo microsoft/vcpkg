@@ -1,9 +1,5 @@
-#!/bin/bash
-# Simple exe_wrapper for Android cross-compilation
-# This wrapper is used by Meson when cross-compiling for Android
-# It doesn't actually run the binary (which is for Android), but satisfies Meson's requirement
-
-# For most cases, we can just return success
-# Meson uses exe_wrapper to test if binaries can run, but for Android we skip this
+#!/bin/sh
+# Dummy exe_wrapper for Android cross-compilation
+# Meson requires exe_wrapper for cross builds, but we can't run Android binaries on macOS
+# This wrapper simply returns success to satisfy Meson's requirement
 exit 0
-
