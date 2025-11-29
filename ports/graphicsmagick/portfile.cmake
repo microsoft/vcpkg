@@ -6,9 +6,6 @@ vcpkg_from_gitlab(
     REPO graphicsmagick/graphicsmagick
     REF ${graphicsmagick_version}
     SHA512 e0365f973c303237a11ab1983b9d8569c1859806b0dd5adee87ca3075ee681d3b61576032beedc982a7745d62bceb643787a098861159e2304fd8be408ae7e30
-    PATCHES
-        dependencies.diff
-        magick-types.diff
 )
 
 set(options "")
