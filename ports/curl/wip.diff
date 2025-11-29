@@ -1,0 +1,12 @@
+diff --git a/CMake/curl-config.cmake.in b/CMake/curl-config.cmake.in
+index 99949198a3..1951acd0b1 100644
+--- a/CMake/curl-config.cmake.in
++++ b/CMake/curl-config.cmake.in
+@@ -125,6 +125,7 @@ if("@HAVE_ZSTD@")
+   find_dependency(Zstd)
+   list(APPEND _libs CURL::zstd)
+ endif()
++list(REMOVE_ITEM CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ 
+ if(CMAKE_C_COMPILER_ID STREQUAL "GNU" AND WIN32 AND NOT TARGET CURL::win32_winsock)
+   add_library(CURL::win32_winsock INTERFACE IMPORTED)
