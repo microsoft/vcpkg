@@ -501,7 +501,7 @@ endif()
 if("gdcm" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
 endif()
-if("hdf5" IN_LIST FEATURES)
+if("hdf" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\n
 # C language is required for try_compile tests in FindHDF5
 enable_language(C)
