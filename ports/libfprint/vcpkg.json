@@ -1,0 +1,14 @@
+{
+    "name": "libfprint",
+    "version": "1.94.9",
+    "description": "Library for fingerprint readers",
+    "homepage": "https://fprint.freedesktop.org/",
+    "license": "LGPL-2.1-or-later",
+    "dependencies": [
+        "glib",
+        "libusb",
+        "gusb",
+        "openssl",
+        "pixman"
+    ]
+}
