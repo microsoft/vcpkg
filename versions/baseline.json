@@ -5209,7 +5209,7 @@
       "port-version": 1
     },
     "libmysofa": {
-      "baseline": "1.3.2",
+      "baseline": "1.3.3",
       "port-version": 0
     },
     "libmysql": {
