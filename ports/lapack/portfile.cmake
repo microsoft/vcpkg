@@ -1,16 +1,12 @@
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(BLA_STATIC ON)
-else()
-    set(BLA_STATIC OFF)
-endif()
-
-# See explanation of which lapack implementation is chosen in portfile.cmake in the blas port
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLA_STATIC)
 
 set(BLA_VENDOR Generic)
 set(installed_wrapper "${CURRENT_INSTALLED_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake")
 set(installed_module "${CURRENT_INSTALLED_DIR}/share/lapack/FindLAPACK.cmake")
+
+# See explanation in ports/blas/portfile.cmake for which lapack implementation is chosen.
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # Use Apple's accelerate framework where available
     set(BLA_VENDOR Apple)
@@ -25,6 +21,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
 elseif(VCPKG_TARGET_IS_UWP
         OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
         OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_MINGW))
+    # Use clapack
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/wrapper/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" COPYONLY)
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/FindLAPACK.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/FindLAPACK.cmake" COPYONLY)
     set(libs "-llapack -llibf2c")
@@ -33,6 +30,7 @@ elseif(VCPKG_TARGET_IS_UWP
         configure_file("${CMAKE_CURRENT_LIST_DIR}/lapack.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc" @ONLY)
     endif()
 else()
+    # Use lapack-reference
     configure_file("${CURRENT_INSTALLED_DIR}/share/lapack-reference/wrapper/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" COPYONLY)
     configure_file("${CURRENT_INSTALLED_DIR}/share/lapack-reference/FindLAPACK.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/FindLAPACK.cmake" COPYONLY)
     set(requires "lapack-reference")
