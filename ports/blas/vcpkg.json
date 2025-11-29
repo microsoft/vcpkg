@@ -2,7 +2,7 @@
   "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "blas",
   "version-date": "2023-04-14",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Metapackage for packages which provide BLAS",
   "license": null,
   "dependencies": [
