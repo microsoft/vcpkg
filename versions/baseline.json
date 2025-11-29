@@ -4622,7 +4622,7 @@
     },
     "libatomic-ops": {
       "baseline": "7.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libavif": {
       "baseline": "1.3.0",
