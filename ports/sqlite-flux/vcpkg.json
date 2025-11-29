@@ -1,6 +1,6 @@
 {
   "name": "sqlite-flux",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Modern C++20 type-safe, thread-safe SQLite query builder with fluent API and compile-time validation",
   "homepage": "https://github.com/a-alomran/sqlite-flux",
   "license": "MIT",
