@@ -1677,7 +1677,7 @@
       "port-version": 0
     },
     "cgltf": {
-      "baseline": "1.14",
+      "baseline": "1.15",
       "port-version": 0
     },
     "cgns": {
