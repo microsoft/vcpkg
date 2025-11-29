@@ -1203,9 +1203,7 @@ index a1be30c..3f3005f 100644
 +            g_set_object (&dev, parent);
 +#endif
            }
-+        # Fix overflow: check length before resizing
-+        if (ports->len > 0)
-+            g_string_set_size (ports, ports->len - 1);
+         g_string_set_size (ports, ports->len - 1);
  
 @@ -1747,6 +1798,14 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
          if (res < 0)
@@ -1646,14 +1644,8 @@ index 0ca1767..3fdf8db 100644
 +    else
 +        mapfile_path = meson.project_source_root() / '@0@'.format(mapfile)
 +    endif
-+    # macOS (darwin) does not support version-script, disable it
-+    if host_machine.system() == 'darwin'
-+        vflag = []
-+        mapfile_dep = []
-+    else
-+        vflag = '-Wl,--version-script,@0@'.format(mapfile_path)
-+        mapfile_dep = [mapfile]
-+    endif
++    vflag = '-Wl,--version-script,@0@'.format(mapfile_path)
++    mapfile_dep = [mapfile]
 +    deffile_dep = []
  else
 -    mapfile_path = meson.project_source_root() / '@0@'.format(mapfile)

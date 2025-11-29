@@ -1,3 +1,16 @@
+diff --git a/meson.build b/meson.build
+index baafa19..2cf6b7b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -6,7 +6,7 @@ project('libfprint', [ 'c', 'cpp' ],
+         'warning_level=1',
+         'c_std=gnu99',
+     ],
+-    meson_version: '>= 0.59.0')
++    meson_version: '>= 0.58.0')
+ 
+ fs = import('fs')
+ gnome = import('gnome')
 diff --git a/libfprint/fpi-device.c b/libfprint/fpi-device.c
 index a1be30c..8778339 100644
 --- a/libfprint/fpi-device.c
@@ -31,4 +44,3 @@ index 116c411..0addf24 100644
  
  libfprint = shared_library(versioned_libname.split('lib')[1],
      sources: [
-
