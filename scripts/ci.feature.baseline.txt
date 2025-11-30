@@ -1166,7 +1166,6 @@ onnx-optimizer[pybind11]:x64-windows-static = cascade
 onnx-optimizer[pybind11]:x64-windows-static-md = cascade
 onnx-optimizer[pybind11]:x86-windows = cascade
 onnxruntime[tensorrt](!((x64 & windows & !static) | (x64 & linux))) = cascade
-onnxruntime-gpu = skip
 openal-soft[pipewire](!linux) = cascade
 openal-soft[pulseaudio](!linux) = cascade
 opencascade[vtk,freeimage](uwp) = cascade
