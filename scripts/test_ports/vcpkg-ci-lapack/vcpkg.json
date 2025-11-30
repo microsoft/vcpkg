@@ -1,7 +1,7 @@
 {
-  "name": "lapack-test",
+  "name": "vcpkg-ci-lapack",
   "version-string": "ci",
-  "description": "Validate Metapackage which provides LAPACK",
+  "description": "Validate metapackage which provides LAPACK",
   "license": null,
   "dependencies": [
     "lapack",
