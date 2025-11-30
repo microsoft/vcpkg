@@ -83,6 +83,7 @@ discord-rpc(uwp)=fail
 dmlc(uwp) = fail
 ecal(android)=fail
 ensmallen[openmp](osx) = feature-fails # No openmp on default osx toolchain
+faiss(osx)=fail # No openmp on default osx toolchain
 fmi4cpp(uwp)=fail
 forge:x86-windows=fail
 freeglut(android)=fail
