@@ -9,5 +9,11 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build the serdi command-line tool",
+      "supports": "!emscripten"
+    }
+  }
 }
