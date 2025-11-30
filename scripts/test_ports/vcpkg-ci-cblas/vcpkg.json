@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-cblas",
+  "version-string": "ci",
+  "description": "Validate metapackage which provides CBLAS",
+  "license": null,
+  "dependencies": [
+    "cblas",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
