@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF
 )
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME Chromaprint CONFIG_PATH "lib/cmake/Chromaprint")
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
