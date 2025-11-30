@@ -21,6 +21,7 @@
   "features": {
     "gpu": {
       "description": "Whether to enable GPU support",
+      "supports": "!windows",
       "dependencies": [
         "cuda"
       ]
