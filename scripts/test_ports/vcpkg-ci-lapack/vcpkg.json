@@ -1,10 +1,10 @@
 {
-  "name": "vcpkg-ci-cblas",
+  "name": "lapack-test",
   "version-string": "ci",
-  "description": "Validate metapackage which provides CBLAS",
+  "description": "Validate Metapackage which provides LAPACK",
   "license": null,
   "dependencies": [
-    "cblas",
+    "lapack",
     {
       "name": "vcpkg-cmake",
       "host": true
