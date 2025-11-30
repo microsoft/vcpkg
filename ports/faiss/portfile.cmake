@@ -30,6 +30,7 @@ vcpkg_cmake_configure(
         -DFAISS_ENABLE_PYTHON=OFF  # Requires SWIG
         -DBUILD_TESTING=OFF
 )
+
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
