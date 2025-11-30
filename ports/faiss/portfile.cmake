@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 739641644a6a0b12430ab172fdd7c657b4c88e6389688c359919e2286bb494ff2011a33905719dc9dd95116c7c834f76969c457b67104223447ac04de339000d
     HEAD_REF master
     PATCHES
+        msvc-template.diff
         undef-small.diff
 )
 
