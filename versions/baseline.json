@@ -2825,7 +2825,7 @@
       "port-version": 2
     },
     "faiss": {
-      "baseline": "1.8.0",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "fakeit": {
