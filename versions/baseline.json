@@ -393,7 +393,7 @@
       "port-version": 0
     },
     "audit": {
-      "baseline": "4.0.5",
+      "baseline": "4.1.2",
       "port-version": 0
     },
     "aurora": {
@@ -637,7 +637,7 @@
       "port-version": 4
     },
     "bddisasm": {
-      "baseline": "2.2.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "bde": {
@@ -681,7 +681,7 @@
       "port-version": 0
     },
     "bext-sml": {
-      "baseline": "1.1.11",
+      "baseline": "1.1.12",
       "port-version": 0
     },
     "bext-sml2": {
@@ -697,7 +697,7 @@
       "port-version": 0
     },
     "bext-wintls": {
-      "baseline": "0.9.8",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "bfgroup-lyra": {
@@ -737,7 +737,7 @@
       "port-version": 0
     },
     "blake3": {
-      "baseline": "1.8.1",
+      "baseline": "1.8.2",
       "port-version": 0
     },
     "blas": {
@@ -1469,7 +1469,7 @@
       "port-version": 0
     },
     "brpc": {
-      "baseline": "1.14.1",
+      "baseline": "1.15.0",
       "port-version": 0
     },
     "brunocodutra-metal": {
@@ -1557,7 +1557,7 @@
       "port-version": 0
     },
     "caf": {
-      "baseline": "1.0.2",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "cairo": {
@@ -1573,7 +1573,7 @@
       "port-version": 1
     },
     "camport3": {
-      "baseline": "1.6.2",
+      "baseline": "1.6.75",
       "port-version": 0
     },
     "canvas-ity": {
@@ -1641,7 +1641,7 @@
       "port-version": 0
     },
     "cdt": {
-      "baseline": "1.4.1",
+      "baseline": "1.4.4",
       "port-version": 0
     },
     "celero": {
@@ -1677,7 +1677,7 @@
       "port-version": 0
     },
     "cgltf": {
-      "baseline": "1.14",
+      "baseline": "1.15",
       "port-version": 0
     },
     "cgns": {
@@ -1857,8 +1857,8 @@
       "port-version": 0
     },
     "coin": {
-      "baseline": "4.0.4",
-      "port-version": 2
+      "baseline": "4.0.6",
+      "port-version": 0
     },
     "coin-or-buildtools": {
       "baseline": "2023-02-02",
@@ -2436,6 +2436,10 @@
       "baseline": "0.1.0",
       "port-version": 0
     },
+    "directfb2": {
+      "baseline": "2025-11-25",
+      "port-version": 0
+    },
     "directx-dxc": {
       "baseline": "2025-10-10",
       "port-version": 0
@@ -2509,7 +2513,7 @@
       "port-version": 3
     },
     "dlpack": {
-      "baseline": "1.1",
+      "baseline": "1.2",
       "port-version": 0
     },
     "dmlc": {
@@ -3101,7 +3105,7 @@
       "port-version": 9
     },
     "freerdp": {
-      "baseline": "3.17.2",
+      "baseline": "3.18.0",
       "port-version": 0
     },
     "freetds": {
@@ -3165,7 +3169,7 @@
       "port-version": 6
     },
     "fxaudio": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "fxdiv": {
@@ -4121,8 +4125,8 @@
       "port-version": 0
     },
     "json-schema-validator": {
-      "baseline": "2.3.0",
-      "port-version": 2
+      "baseline": "2.4.0",
+      "port-version": 0
     },
     "json-spirit": {
       "baseline": "4.1.0",
@@ -4193,8 +4197,8 @@
       "port-version": 0
     },
     "kdsingleapplication": {
-      "baseline": "1.1.0",
-      "port-version": 1
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "kdsoap": {
       "baseline": "2.2.0",
@@ -4529,7 +4533,7 @@
       "port-version": 0
     },
     "lest": {
-      "baseline": "1.36.0",
+      "baseline": "1.37.0",
       "port-version": 0
     },
     "level-zero": {
@@ -10402,7 +10406,7 @@
     },
     "vulkan-loader": {
       "baseline": "1.4.309.0",
-      "port-version": 2
+      "port-version": 3
     },
     "vulkan-memory-allocator": {
       "baseline": "3.3.0",
@@ -10869,7 +10873,7 @@
       "port-version": 0
     },
     "zlib-ng": {
-      "baseline": "2.2.5",
+      "baseline": "2.3.1",
       "port-version": 0
     },
     "zlmediakit": {
