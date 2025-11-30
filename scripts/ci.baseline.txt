@@ -72,17 +72,17 @@ binlog:arm-neon-android=fail
 ################################################################
 # <BLAS+LAPACK>
 # These skips need to match the decision tree for which backends we use; see ports/blas/portfile.cmake
-lapack-test:arm64-osx=pass # accelerate framework
-lapack-test:arm64-uwp=pass # clapack
-lapack-test:arm64-windows-static-md=pass # clapack
-lapack-test:arm64-windows=pass # clapack
-lapack-test:x64-linux=pass # lapack-reference[noblas]
-lapack-test:x64-uwp=pass # clapack
-lapack-test:x64-windows-release=pass # lapack-reference[noblas]
-lapack-test:x64-windows-static-md=pass # clapack
-lapack-test:x64-windows-static=pass # clapack
-lapack-test:x64-windows=pass # lapack-reference[noblas]
-lapack-test:x86-windows=pass # lapack-reference[noblas]
+vcpkg-ci-lapack:arm64-osx=pass # accelerate framework
+vcpkg-ci-lapack:arm64-uwp=pass # clapack
+vcpkg-ci-lapack:arm64-windows-static-md=pass # clapack
+vcpkg-ci-lapack:arm64-windows=pass # clapack
+vcpkg-ci-lapack:x64-linux=pass # lapack-reference
+vcpkg-ci-lapack:x64-uwp=pass # clapack
+vcpkg-ci-lapack:x64-windows-release=pass # lapack-reference
+vcpkg-ci-lapack:x64-windows-static-md=pass # clapack
+vcpkg-ci-lapack:x64-windows-static=pass # clapack
+vcpkg-ci-lapack:x64-windows=pass # lapack-reference
+vcpkg-ci-lapack:x86-windows=pass # lapack-reference
 vcpkg-ci-blas:arm64-android=pass # openblas
 vcpkg-ci-blas:arm64-osx=pass # accelerate framework
 vcpkg-ci-blas:arm64-uwp=pass # openblas

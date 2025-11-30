@@ -1,5 +1,4 @@
 {
-  "$comment": "Keep the platform expressions in sync with the wrappers installed by the portfiles!",
   "name": "vcpkg-ci-cblas",
   "version-string": "ci",
   "description": "Validate metapackage which provides CBLAS",
