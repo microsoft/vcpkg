@@ -785,8 +785,8 @@
       "port-version": 0
     },
     "boinc": {
-      "baseline": "8.2.5",
-      "port-version": 1
+      "baseline": "8.2.8",
+      "port-version": 0
     },
     "boolinq": {
       "baseline": "3.0.4",
