@@ -231,7 +231,6 @@ vcpkg_cmake_configure(
         -DITK_USE_SYSTEM_MINC=ON
         -DITK_USE_SYSTEM_GOOGLETEST=ON
         -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
-        -DQNANHIBIT_VALUE=0
 
         -DITK_MINIMUM_COMPLIANCE_LEVEL:STRING=1 # To Display all remote modules within cmake-gui
         #-DModule_IOSTL=ON # example how to turn on a non-default module
