@@ -1,0 +1,4 @@
+sparse-spatial-hash provides CMake targets:
+
+  find_package(sparse_spatial_hash CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE sparse_spatial_hash::sparse_spatial_hash)
