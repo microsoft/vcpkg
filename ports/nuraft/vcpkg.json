@@ -4,7 +4,7 @@
   "description": "C++ implementation of Raft core logic as a replication library.",
   "homepage": "https://github.com/eBay/NuRaft",
   "license": "Apache-2.0",
-  "supports": "windows | linux | osx",
+  "supports": "!(arm & windows) & !uwp",
   "dependencies": [
     "asio",
     {
