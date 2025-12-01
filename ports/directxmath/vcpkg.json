@@ -1,7 +1,6 @@
 {
   "name": "directxmath",
-  "version-date": "2024-12-02",
-  "port-version": 1,
+  "version-date": "2025-04-03",
   "description": "DirectXMath SIMD C++ math library",
   "homepage": "https://github.com/Microsoft/DirectXMath",
   "documentation": "https://docs.microsoft.com/windows/win32/dxmath/directxmath-portal",
@@ -16,5 +15,24 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "dx11": {
+      "description": "C++ Spherical Harmonics Math Library for DirectX 11",
+      "supports": "windows & !xbox"
+    },
+    "dx12": {
+      "description": "C++ Spherical Harmonics Math Library for DirectX 12",
+      "supports": "(windows & !arm32) | linux",
+      "dependencies": [
+        {
+          "name": "directx-headers",
+          "platform": "windows & !xbox"
+        }
+      ]
+    },
+    "xdsp": {
+      "description": "XDSP Digital Signal Processing (DSP) for DirectXMath"
+    }
+  }
 }

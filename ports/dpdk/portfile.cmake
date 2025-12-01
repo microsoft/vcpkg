@@ -1,4 +1,4 @@
-if(VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX AND VCPKG_HOST_IS_LINUX)
   execute_process(
     COMMAND uname --kernel-release
     OUTPUT_VARIABLE KERNEL_VERSION
@@ -28,14 +28,15 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
   REF "v${VERSION}"
-  SHA512 1599ae78228307f612776e43160e8002c71024940813bc655b3e2631bfe3de9a93b09f2d5caae48d3d83e07c48e953838ba45f4965d2eb21d1e7955edbaa7d0d
+  SHA512 0d0ee4eb70e8021882a1d6548cf757972388c0a561ee71bb0e4b330be61f1463f4eaec55202d7a35eef8b392ecf0b3888713692ba8cd88f850e7b9072504733e
   HEAD_REF main
   PATCHES
-      enable-either-static-or-shared-build.patch
-      fix-dependencies.patch
-      remove-examples-src-from-datadir.patch
-      stop-building-apps.patch
-      no-absolute-driver-path.patch
+      0001-enable-either-static-or-shared-build.patch
+      0002-fix-dependencies.patch
+      0003-remove-examples-src-from-datadir.patch
+      0004-stop-building-apps.patch
+      0005-no-absolute-driver-path.patch
+      rename-sched.h.diff
 )
 
 macro(append_bool_option feature_name option_name)
@@ -47,40 +48,55 @@ macro(append_bool_option feature_name option_name)
 endmacro()
 
 set(DPDK_OPTIONS "")
+set(DPDK_OPTIONS_RELEASE "")
 append_bool_option("docs" "enable_docs")
 append_bool_option("kmods" "enable_kmods")
 append_bool_option("tests" "tests")
 append_bool_option("trace" "enable_trace_fp")
-string(REPLACE "-Denable_docs=true" "-Denable_docs=false" DPDK_OPTIONS_DEBUG "${DPDK_OPTIONS}")
 
-list(APPEND PYTHON_PACKAGES pyelftools)
+set(PYTHON_PACKAGES "")
+if(VCPKG_TARGET_IS_WINDOWS)
+  # https://doc.dpdk.org/guides/windows_gsg/build_dpdk.html#option-3-native-build-on-windows-using-msvc
+  list(APPEND DPDK_OPTIONS "-Denable_stdatomic=true")
+else()
+  list(APPEND PYTHON_PACKAGES pyelftools)
+endif()
 if("docs" IN_LIST FEATURES)
+  list(APPEND DPDK_OPTIONS_RELEASE "-Denable_docs=true")
+  vcpkg_find_acquire_program(DOXYGEN)
   list(APPEND PYTHON_PACKAGES packaging sphinx)
 endif()
-x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
+if(PYTHON_PACKAGES)
+  x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3 PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
+endif()
 
 vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
+    -Ddeveloper_mode=disabled
     -Ddisable_drivers=regex/cn9k
-    -Dexamples=
-  OPTIONS_RELEASE
     ${DPDK_OPTIONS}
-  OPTIONS_DEBUG
-    ${DPDK_OPTIONS_DEBUG}
+  OPTIONS_RELEASE
+    ${DPDK_OPTIONS_RELEASE}
+  ADDITIONAL_BINARIES
+    "doxygen = ['${DOXYGEN}']"
 )
 vcpkg_install_meson()
-
-set(tools dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py dpdk-hugepages.py)
-vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
-
 vcpkg_fixup_pkgconfig()
 
+file(GLOB scripts "${CURRENT_PACKAGES_DIR}/bin/*.py")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+foreach(script IN LISTS scripts)
+  cmake_path(GET script FILENAME filename)
+  file(RENAME "${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${filename}")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${filename}")
+endforeach()
+vcpkg_clean_executables_in_bin(FILE_NAMES none)
+
 if("docs" IN_LIST FEATURES)
-  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/dpdk")
-  file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/dpdk" "${CURRENT_PACKAGES_DIR}/share/dpdk/doc")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/dpdk" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/doc")
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license/README")

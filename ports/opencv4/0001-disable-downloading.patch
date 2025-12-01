@@ -1,6 +1,6 @@
 --- a/cmake/OpenCVDownload.cmake
 +++ b/cmake/OpenCVDownload.cmake
-@@ -203,6 +203,9 @@ function(ocv_download)
+@@ -206,6 +206,9 @@ function(ocv_download)
    # Download
    if(NOT EXISTS "${CACHE_CANDIDATE}")
      ocv_download_log("#cmake_download \"${CACHE_CANDIDATE}\" \"${DL_URL}\"")

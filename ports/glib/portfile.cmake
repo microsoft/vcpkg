@@ -1,8 +1,13 @@
 string(REGEX MATCH "^([0-9]*[.][0-9]*)" GLIB_MAJOR_MINOR "${VERSION}")
+# https://github.com/GNOME/glib/blob/main/SECURITY.md#supported-versions
+if(NOT GLIB_MAJOR_MINOR MATCHES "[02468]\$")
+    message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "glib ${GLIB_MAJOR_MINOR} is a not a \"stable release series\".")
+endif()
+# vcpkg_from_* is not used because the project uses submodules.
 vcpkg_download_distfile(GLIB_ARCHIVE
     URLS "https://download.gnome.org/sources/glib/${GLIB_MAJOR_MINOR}/glib-${VERSION}.tar.xz"
     FILENAME "glib-${VERSION}.tar.xz"
-    SHA512 1514d62aeb4c4a1a1048ae0f84f7db7f0dbf355772b2dadf6a34ec547045b163a5e28331b096e7616fe3c9c19bed98025a0202b05073f5d7ee901d0efaffe143
+    SHA512 b9ef7ea7e1eeff142a8ab76fb0552331fd642133a31505e2939f57d7d9c5ec86dcefddc725c715925a42c348d71e2a8bf2eb399150108199b6daeca2761e08d6
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
@@ -10,7 +15,6 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         use-libiconv-on-windows.patch
         libintl.patch
-        0005-pr-4133-4143-avoid-package-packaging.patch # Backport from 2.81.1
 )
 
 set(LANGUAGES C CXX)
@@ -19,7 +23,7 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
 endif()
 
 vcpkg_list(SET OPTIONS)
-if (selinux IN_LIST FEATURES)
+if ("selinux" IN_LIST FEATURES)
     if(NOT EXISTS "/usr/include/selinux")
         message(WARNING "SELinux was not found in its typical system location. Your build may fail. You can install SELinux with \"apt-get install selinux libselinux1-dev\".")
     endif()
@@ -28,7 +32,7 @@ else()
     list(APPEND OPTIONS -Dselinux=disabled)
 endif()
 
-if (libmount IN_LIST FEATURES)
+if ("libmount" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dlibmount=enabled)
 else()
     list(APPEND OPTIONS -Dlibmount=disabled)
@@ -49,10 +53,12 @@ vcpkg_configure_meson(
     OPTIONS
         ${OPTIONS}
         -Ddocumentation=false
+        -Ddtrace=disabled
         -Dinstalled_tests=false
         -Dintrospection=disabled
         -Dlibelf=disabled
         -Dman-pages=disabled
+        -Dsysprof=disabled
         -Dtests=false
         -Dxattr=false
 )

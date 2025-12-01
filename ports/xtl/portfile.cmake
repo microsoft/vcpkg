@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtl
     REF "${VERSION}"
-    SHA512 07c2a68db3dbac556dbb0397e54792ddc7a3e87573bff04faa4262dc433b710392ff9c915d428f5abd1ae892ac9bc7744645e75fdb2bb2cee83c523e087c793e
+    SHA512 cb032d27b2f7dff135c442fd92e3924eb108355769354c9eee9ec2d3ec7ebd867ee89ee2e10f41352447e08f185637f338fdc40e37d60d85cf2fffdcaac1ce6c
     HEAD_REF master
     PATCHES
         fix-fixup-cmake.patch

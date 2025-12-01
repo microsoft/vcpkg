@@ -3,6 +3,9 @@ if(POLICY CMP0174)
     # Use CMake 3.31 behavior for cmake_parse_arguments(PARSE_ARGV)
     cmake_policy(SET CMP0174 NEW)
 endif()
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "4.0")
+    set(ENV{CMAKE_POLICY_VERSION_MINIMUM} 3.5)
+endif()
 
 # Remove CMAKE_ variables from the script call
 foreach(i RANGE 0 "${CMAKE_ARGC}")
@@ -208,8 +211,8 @@ target system or to the host system. Use a prefixed variable instead.
     unset(z_post_portfile_include)
 
     if(DEFINED PORT)
-        # Always fixup RPATH on linux and osx unless explicitly disabled.
-        if(VCPKG_FIXUP_ELF_RPATH OR (VCPKG_TARGET_IS_LINUX AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
+        # Always fixup RPATH on linux, osx and bsds unless explicitly disabled.
+        if(VCPKG_FIXUP_ELF_RPATH OR ((VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD) AND NOT DEFINED VCPKG_FIXUP_ELF_RPATH))
             z_vcpkg_fixup_rpath_in_dir()
         endif()
         if(VCPKG_FIXUP_MACHO_RPATH OR (VCPKG_TARGET_IS_OSX AND NOT DEFINED VCPKG_FIXUP_MACHO_RPATH))

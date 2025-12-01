@@ -1,16 +1,11 @@
 {
   "name": "libheif",
-  "version": "1.19.5",
-  "port-version": 3,
+  "version": "1.20.2",
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
   "license": "LGPL-3.0-only",
   "supports": "!xbox",
   "dependencies": [
-    {
-      "name": "gdk-pixbuf",
-      "platform": "!windows"
-    },
     "libde265",
     {
       "name": "vcpkg-cmake",
@@ -32,6 +27,13 @@
         "aom"
       ]
     },
+    "gdk-pixbuf": {
+      "description": "Plugin for gdk-pixbuf",
+      "supports": "!windows | mingw",
+      "dependencies": [
+        "gdk-pixbuf"
+      ]
+    },
     "hevc": {
       "description": "HEVC encoding via x265",
       "license": "GPL-2.0-or-later",
@@ -40,8 +42,11 @@
       ]
     },
     "iso23001-17": {
-      "description": "Support for ISO23001-17 (uncompressed) codec",
-      "license": "LGPL-3.0-only"
+      "description": "Support for ISO23001-17 (uncompressed) codec (experimental)",
+      "license": "LGPL-3.0-only",
+      "dependencies": [
+        "zlib"
+      ]
     },
     "jpeg": {
       "description": "JPEG decoding and encoding via libjpeg-turbo",

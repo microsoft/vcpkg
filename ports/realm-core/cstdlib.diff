@@ -1,0 +1,12 @@
+diff --git a/src/realm/util/cli_args.cpp b/src/realm/util/cli_args.cpp
+index a199b2e..44455d0 100644
+--- a/src/realm/util/cli_args.cpp
++++ b/src/realm/util/cli_args.cpp
+@@ -3,6 +3,7 @@
+ #include <algorithm>
+ #include <cerrno>
+ #include <cstdint>
++#include <cstdlib>
+ #include <string>
+ 
+ namespace realm::util {

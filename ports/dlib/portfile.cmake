@@ -4,11 +4,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
     REF "v${VERSION}"
-    SHA512 548f15fcd345a56b6e7a0a568fa7c694beeeda3b863492f59bdaa0b0e6d48b21d6705e2ac56a06f349aa26b0e9b79aa0a437870940170772b5b30cf35841cbb4
+    SHA512 a4bcb2d013bd2b0000530d684c9c4b9f047f9fa6216174b3cb26d96f66c4a302d0bd1733d0ba35626d57133d9159f90114ab51a3af8fb9c493ff3e74dcc73911
     HEAD_REF master
     PATCHES
         fix-dependencies.patch
         find_blas.patch
+        fix-lapack.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
@@ -44,6 +45,7 @@ vcpkg_cmake_configure(
         -DDLIB_WEBP_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
         -DDLIB_USE_FFMPEG=OFF
+        -DDLIB_NO_GUI_SUPPORT=ON
     OPTIONS_DEBUG
         ${dbg_opts}
         #-DDLIB_ENABLE_STACK_TRACE=ON

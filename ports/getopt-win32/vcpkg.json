@@ -1,8 +1,8 @@
 {
   "name": "getopt-win32",
-  "version": "1.1.0.20220925",
-  "description": "An implementation of getopt.",
-  "homepage": "https://www.codeproject.com/Articles/157001/Full-getopt-Port-for-Unicode-and-Multibyte-Microso/",
+  "version": "2.42.0",
+  "description": "Full getopt port for unicode and multibyte windows applications",
+  "homepage": "https://github.com/ludvikjerabek/getopt-win/",
   "license": "LGPL-3.0-only",
   "supports": "windows & !mingw",
   "dependencies": [

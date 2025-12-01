@@ -11,7 +11,7 @@ vcpkg_from_github(
 # ====================================================
 
 # Windows
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS)
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make pkg-config)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-crt-cpp
     REF "v${VERSION}"
-    SHA512 d89038277b030ee7611447daf08521f9c08bf39143861518f7343d3c2397ddb46358a2911713b92d780c8bd49e50c5c06a8b8f93bd3f2cba1a1fdf27144bb0a8
+    SHA512 14a4aef4f8d1084ec352bb252c7b1a84263288bdcb6e1fa18bf54f218e3900fb46ce1e4d231f467c2f3e8b7749ea3a30c83bc1393a3a6cb24b851a7b35f07a43
     PATCHES
         no-werror.patch
 )
@@ -22,8 +22,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 string(REPLACE "dynamic" "shared" subdir "${VCPKG_LIBRARY_LINKAGE}")
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/${PORT}/cmake")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" [[/${type}/]] "/")
 
 file(REMOVE_RECURSE

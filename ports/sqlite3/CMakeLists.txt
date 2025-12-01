@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(sqlite3 C)
+project(sqlite3 C CXX)
 
 option(WITH_ZLIB "Build sqlite3 with zlib support" OFF)
 option(SQLITE3_SKIP_TOOLS "Disable build sqlite3 executable" OFF)
@@ -56,8 +56,7 @@ endif()
 if(NOT SQLITE3_SKIP_TOOLS)
     add_executable(sqlite3-bin shell.c)
     set_target_properties(sqlite3-bin PROPERTIES
-        OUTPUT_NAME sqlite3
-        PDB_NAME "sqlite3${CMAKE_EXECUTABLE_SUFFIX}.pdb"
+        RUNTIME_OUTPUT_NAME sqlite3
     )
 
     target_link_libraries(sqlite3-bin PRIVATE sqlite3)
@@ -67,7 +66,12 @@ if(NOT SQLITE3_SKIP_TOOLS)
         target_compile_definitions(sqlite3-bin PRIVATE SQLITE_HAVE_ZLIB)
     endif()
 
-    install(TARGETS sqlite3-bin sqlite3
+    find_library(HAVE_LIBM m)
+    if(HAVE_LIBM)
+        target_link_libraries(sqlite3-bin PRIVATE m)
+    endif()
+
+    install(TARGETS sqlite3-bin
       RUNTIME DESTINATION bin
       LIBRARY DESTINATION lib
       ARCHIVE DESTINATION lib

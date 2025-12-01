@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcpr/cpr
     REF ${VERSION}
-    SHA512 30caf9257e5e45f809f541a32daf8c6c7001fbaafef0ee0ae8dd59f49736953120cb7c8849ddbff2f7fbc54d80902ec2b905f90f68f63d1f2a2dc63eda577713
+    SHA512 4e9849f93181374699ed8564e58920eb9617aa2564221b23f8ef81871a9ae1015cc32ee820c700a325d0a9665eac4681efac6a92157040c6de83941590461b7e
     HEAD_REF master
     PATCHES
         disable_werror.patch
-        fix-static-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

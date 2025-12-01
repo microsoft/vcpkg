@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO linux-audit/audit-userspace
-    SHA512 558b9211a5dc1062eee98aa7bcd292797f06109a8ee735da1d704bc18d97b0bee93487ef9303404016df2e08cff32d90f1dd056797ac05beaabe3cccb5db5af2
+    SHA512 a47fec1041e11a76ad57b57bcf6e9b454188d95ec26cabf15e92e114d46c7c8f09ddb251d5aebef8bc7faacc6ccffe44c73543d8234af237548b4ad89a408fc3
     REF "v${VERSION}"
     HEAD_REF master
-    PATCHES
-        fix-multiple-def.patch
 )
 
 message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n"

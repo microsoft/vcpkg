@@ -1,6 +1,6 @@
 {
   "name": "spirv-tools",
-  "version": "1.4.304.1",
+  "version": "1.4.309.0",
   "description": "API and commands for processing SPIR-V modules",
   "homepage": "https://github.com/KhronosGroup/SPIRV-Tools",
   "license": "Apache-2.0",
@@ -17,7 +17,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build tools."
+      "description": "Build tools.",
+      "supports": "!android & !ios"
     }
   }
 }

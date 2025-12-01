@@ -1,6 +1,7 @@
 {
   "name": "simonbrunel-qtpromise",
   "version": "0.7.0",
+  "port-version": 1,
   "maintainers": "Simon Brunel",
   "description": "Promises/A+ implementation for Qt/C++",
   "homepage": "https://qtpromise.netlify.app/",

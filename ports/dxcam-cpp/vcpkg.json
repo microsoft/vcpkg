@@ -1,0 +1,24 @@
+{
+  "name": "dxcam-cpp",
+  "version": "0.2.4",
+  "maintainers": "Fidel Yin <fidel.yin@hotmail.com>",
+  "description": "A high performance screen capturing library for Windows rewriting DXcam in C++.",
+  "homepage": "https://github.com/Fidelxyz/DXCam-CPP",
+  "documentation": "https://dxcam-cpp.readthedocs.io/en/latest/",
+  "license": "MIT",
+  "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "opencv4",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

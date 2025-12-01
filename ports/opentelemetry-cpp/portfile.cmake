@@ -6,10 +6,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 639ca462dc2f3633f6b9c7b89000276d08ddbe1ee9d4322ac6568ad07d198000cf3c7c5d940e10db8142494b984f1f969956524cc2df4a65d072f4c10f367ddb
+    SHA512 bde103a04ef70a1dccd247f5ab4bca4fff23d081d1ae758286fb1a62409310a399dd90ae29f188e552fb96112c95f501dac5fafab4edc1df924ca43f21d0f150
     HEAD_REF main
     PATCHES
-        cmake-quirks.diff
         fix-target_link.patch
 )
 
@@ -19,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
+        otlp-file WITH_OTLP_FILE
         otlp-http WITH_OTLP_HTTP
         otlp-grpc WITH_OTLP_GRPC
         geneva WITH_GENEVA
@@ -29,12 +29,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
-    set(OTEL_PROTO_VERSION "1.4.0")
+if(WITH_OTLP_FILE OR WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
+    set(OTEL_PROTO_VERSION "1.8.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 9837485d7b9f7b95330a9a48f133b2a36ed5b670a6f0fe1e3bd23def46210a681525d47c7633b3c8bec2cc7ece4dfc373c859539a2729812ce7ceafc6d4c6896
+        SHA512 43e320c365f73e1302951cf69e4f395c8dec9fe3efba802dea10637b61721a64868fb0a45c33d2ac15f99a7ba0b865c268d268a543a4efeff10f5c59407e7ba9
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
@@ -42,9 +42,9 @@ if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
     file(COPY "${src}/." DESTINATION "${SOURCE_PATH}/third_party/opentelemetry-proto")
     # Create empty .git directory to prevent opentelemetry from cloning it during build time
     file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/opentelemetry-proto/.git")
-    list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
     list(APPEND FEATURE_OPTIONS "-DgRPC_CPP_PLUGIN_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/grpc/grpc_cpp_plugin${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
+list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
 
 set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 
@@ -77,7 +77,6 @@ vcpkg_cmake_configure(
         -DBUILD_TESTING=OFF
         -DWITH_EXAMPLES=OFF
         -DOPENTELEMETRY_INSTALL=ON
-        -DWITH_ABSEIL=ON
         -DWITH_BENCHMARK=OFF
         -DOPENTELEMETRY_EXTERNAL_COMPONENT_PATH=${OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS}
         ${FEATURE_OPTIONS}
@@ -85,12 +84,14 @@ vcpkg_cmake_configure(
         WITH_GENEVA
         WITH_USER_EVENTS
         BUILD_TRACEPOINTS
+        gRPC_CPP_PLUGIN_EXECUTABLE
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/opentelemetry/sdk/configuration")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

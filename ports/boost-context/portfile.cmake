@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/context
     REF boost-${VERSION}
-    SHA512 c3d8efd9cda7b2ba93299a7ce544cc074036516ce589fe6c2ce63fbf29c6f13fe8fd4929b7228d87a8a79fb938abe1ba408a46a8b419eba44d2f38ab39c7979c
+    SHA512 4ac38c31e576f02901fd889403466fb10d40513384468a971f7774a04479fced85c40809b8a5eef89daabd8f5eaed712061f2e25e84ac5a66acbb112a7954c89
     HEAD_REF master
     PATCHES
         marmasm.patch

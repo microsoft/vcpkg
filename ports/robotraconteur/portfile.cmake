@@ -6,11 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO robotraconteur/robotraconteur
     REF "v${VERSION}"
-    SHA512 d73621ff888ae8cfc9d6ac5a71b75920552948fb15ffe2fa13fb31a238fc92f6a271ea1653eed855ba04f371686dff6fdf46285f24a471a3147d7744563b4d0b
+    SHA512 ce66b853e8beab53f10b9df310446ac97d4ba61c616f9ced560eb1d26c3d1c44bbeadf33ab109fd64295d5f6521a39eddbd14c03d847a99cdcb2d0d0511d6a87
     HEAD_REF master
-    PATCHES
-        rr_boost_1_87_patch.diff
-        remove-openssl-dependencies.patch
 )
 
 vcpkg_cmake_configure(

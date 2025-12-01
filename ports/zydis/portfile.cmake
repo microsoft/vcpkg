@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zyantific/zydis
@@ -7,10 +6,14 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         zycore.patch
-
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYDIS_BUILD_SHARED_LIB)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools       ZYDIS_BUILD_TOOLS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -20,6 +23,7 @@ vcpkg_cmake_configure(
         -DZYDIS_BUILD_DOXYGEN=OFF
         -DZYDIS_BUILD_EXAMPLES=OFF
         -DZYDIS_BUILD_TESTS=OFF
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DZYDIS_BUILD_TOOLS=OFF
 )
@@ -28,7 +32,9 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zydis)
 
-vcpkg_copy_tools(TOOL_NAMES ZydisDisasm ZydisInfo AUTO_CLEAN)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES ZydisDisasm ZydisInfo AUTO_CLEAN)
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/Zydis/Defines.h" "defined(ZYDIS_STATIC_BUILD)" "1")

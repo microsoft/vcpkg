@@ -4,14 +4,13 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/libassuan/libassuan-${VERSION}.tar.bz2"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/libassuan/libassuan-${VERSION}.tar.bz2"
     FILENAME "libassuan-${VERSION}.tar.bz2"
-    SHA512 6914a02c20053bae0fc4c29c5c40655f1cec711983d57fa85e46df34e90b10e33d31256dd50ae7c7faa8d8d750a529bf9072da0cda3bdd77ebfedbc0e26e5e16
+    SHA512 a591eda350ecbf4fe8568b5087f69830df31f36ec67e2a50672aacea9bee16020f374a0bface459aeac1897c048072415ab5962a97034ce6fa413100b2a427fb
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${tarball}"
     PATCHES
         cross-tools.patch
-        upstream-69069bc.diff
 )
 
 if(VCPKG_CROSSCOMPILING)

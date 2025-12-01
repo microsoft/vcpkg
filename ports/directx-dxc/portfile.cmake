@@ -1,7 +1,7 @@
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
-set(DIRECTX_DXC_TAG v1.8.2502)
-set(DIRECTX_DXC_VERSION 2025_02_20)
+set(DIRECTX_DXC_TAG v1.8.2505.1)
+set(DIRECTX_DXC_VERSION 2025_07_14)
 
 if (NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
    message(STATUS "Note: ${PORT} always requires dynamic library linkage at runtime.")
@@ -11,13 +11,13 @@ if (VCPKG_TARGET_IS_LINUX)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/linux_dxc_${DIRECTX_DXC_VERSION}.x86_64.tar.gz"
         FILENAME "linux_dxc_${DIRECTX_DXC_VERSION}.tar.gz"
-        SHA512 48d246349a7b8c998d80969a3d0a383c9fd287c7130c0ea3b214a2e8630d36ac38b78c1263a954777d89760910092f7a9812d421784706efa182cefeb017c3c6
+        SHA512 4c4138f6720396c71474f3eef96f0d0b510fb612d0183c3b77588c42433889cc0f07fd4549538e9746b4066a2c83de40a6bc9acb7f9bbcd97b7e4ce1a07031ef
     )
 else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/microsoft/DirectXShaderCompiler/releases/download/${DIRECTX_DXC_TAG}/dxc_${DIRECTX_DXC_VERSION}.zip"
         FILENAME "dxc_${DIRECTX_DXC_VERSION}.zip"
-        SHA512 2381852e0d57be65ab919df00d79cda3564cd3695c6415065680738b66de1fc106106baae322973c6a48337b97e603294ee5118f71559298b7097181e73e4b31
+        SHA512 69dd74ee2bc8a7ac569fa71351209412f74ef901c58dc59d413277e3129ce78d31dbca0996c2910048bfd0575e7a10655d89d361b5a2ed2963c831385711380f
     )
 endif()
 
@@ -65,6 +65,11 @@ if (VCPKG_TARGET_IS_LINUX)
   set(dll_name_dxc "libdxcompiler.so")
   set(dll_name_dxil "libdxil.so")
   set(dll_dir  "lib")
+  if(NOT DEFINED VCPKG_BUILD_TYPE)
+    set(dll_debug_dir "debug/lib")
+  else()
+    set(dll_debug_dir "lib")
+  endif()
   set(lib_name "libdxcompiler.so")
   set(tool_path "tools/${PORT}/dxc")
 else()
@@ -112,6 +117,7 @@ else()
   set(dll_name_dxc "dxcompiler.dll")
   set(dll_name_dxil "dxil.dll")
   set(dll_dir  "bin")
+  set(dll_debug_dir "bin")
   set(lib_name "dxcompiler.lib")
   set(tool_path "tools/${PORT}/dxc.exe")
 endif()

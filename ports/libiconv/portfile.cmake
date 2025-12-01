@@ -1,4 +1,18 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TARGET_IS_IOS AND NOT VCPKG_TARGET_IS_FREEBSD AND NOT VCPKG_TARGET_IS_OPENBSD)
+if(NOT DEFINED X_VCPKG_BUILD_GNU_LIBICONV)
+    set(X_VCPKG_BUILD_GNU_LIBICONV 0)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_BSD)
+        set(X_VCPKG_BUILD_GNU_LIBICONV 1)
+    elseif(VCPKG_TARGET_IS_ANDROID)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        if(VCPKG_DETECTED_CMAKE_SYSTEM_VERSION VERSION_LESS "28")
+            set(X_VCPKG_BUILD_GNU_LIBICONV 1)
+        endif()
+    endif()
+endif()
+
+if(NOT X_VCPKG_BUILD_GNU_LIBICONV)
+    message(STATUS "Not building GNU libiconv.")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/iconv")
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/iconv")
@@ -6,7 +20,8 @@ if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_ANDROID AND NOT VCPKG_TAR
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
+    URLS "https://ftpmirror.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
+         "https://ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libiconv/libiconv-${VERSION}.tar.gz"
     FILENAME "libiconv-${VERSION}.tar.gz"
     SHA512 a55eb3b7b785a78ab8918db8af541c9e11deb5ff4f89d54483287711ed797d87848ce0eafffa7ce26d9a7adb4b5a9891cb484f94bd4f51d3ce97a6a47b4c719a

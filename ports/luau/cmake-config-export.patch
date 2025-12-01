@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5286fd9..9f5544b 100644
+index 0ca0bdb..36402d7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -65,31 +65,31 @@ add_library(Luau.VM.Internals INTERFACE)
- 
+@@ -67,45 +67,45 @@ add_library(Luau.VM.Internals INTERFACE)
  include(Sources.cmake)
  
--target_include_directories(Luau.Common INTERFACE Common/include)
-+target_include_directories(Luau.Common INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Common/include> $<INSTALL_INTERFACE:include/luau>)
+ target_compile_features(Luau.Common PUBLIC cxx_std_17)
+-target_include_directories(Luau.Common PUBLIC Common/include)
++target_include_directories(Luau.Common PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Common/include> $<INSTALL_INTERFACE:include/luau>)
  
  target_compile_features(Luau.CLI.lib PUBLIC cxx_std_17)
 -target_include_directories(Luau.CLI.lib PUBLIC CLI/include)
@@ -28,6 +28,7 @@ index 5286fd9..9f5544b 100644
 -target_include_directories(Luau.Config PUBLIC Config/include)
 +target_include_directories(Luau.Config PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Config/include> $<INSTALL_INTERFACE:include/luau>)
  target_link_libraries(Luau.Config PUBLIC Luau.Ast)
+ target_link_libraries(Luau.Config PRIVATE Luau.Compiler Luau.VM)
  
  target_compile_features(Luau.Analysis PUBLIC cxx_std_17)
 -target_include_directories(Luau.Analysis PUBLIC Analysis/include)
@@ -41,7 +42,9 @@ index 5286fd9..9f5544b 100644
  target_link_libraries(Luau.EqSat PUBLIC Luau.Common)
  
  target_compile_features(Luau.CodeGen PRIVATE cxx_std_17)
-@@ -98,7 +98,7 @@ target_link_libraries(Luau.CodeGen PRIVATE Luau.VM Luau.VM.Internals) # Code gen
+-target_include_directories(Luau.CodeGen PUBLIC CodeGen/include)
++target_include_directories(Luau.VM PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/CodeGen/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+ target_link_libraries(Luau.CodeGen PRIVATE Luau.VM Luau.VM.Internals) # Code generation needs VM internals
  target_link_libraries(Luau.CodeGen PUBLIC Luau.Common)
  
  target_compile_features(Luau.VM PRIVATE cxx_std_11)
@@ -49,8 +52,13 @@ index 5286fd9..9f5544b 100644
 +target_include_directories(Luau.VM PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/VM/include> $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
  target_link_libraries(Luau.VM PUBLIC Luau.Common)
  
+ target_compile_features(Luau.Require PUBLIC cxx_std_17)
+-target_include_directories(Luau.Require PUBLIC Require/include)
++target_include_directories(Luau.Require PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Require/include> $<INSTALL_INTERFACE:include/luau>)
+ target_link_libraries(Luau.Require PUBLIC Luau.Config Luau.VM)
+ 
  target_include_directories(isocline PUBLIC extern/isocline/include)
-@@ -183,22 +183,6 @@ if(MSVC AND LUAU_BUILD_CLI)
+@@ -190,22 +190,6 @@ if(MSVC AND LUAU_BUILD_CLI)
      set_target_properties(Luau.Repl.CLI PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
  endif()
  
@@ -73,7 +81,7 @@ index 5286fd9..9f5544b 100644
  # On Windows and Android threads are provided, on Linux/Mac/iOS we use pthreads
  add_library(osthreads INTERFACE)
  if(CMAKE_SYSTEM_NAME MATCHES "Linux|Darwin|iOS")
-@@ -288,3 +272,54 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.EqSat Luau.Cod
+@@ -298,3 +282,54 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.EqSat Luau.Cod
          endif()
      endif()
  endforeach()

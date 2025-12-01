@@ -1,0 +1,19 @@
+{
+  "name": "neko-log",
+  "version": "1.0.6",
+  "description": "An easy-to-use, modern, lightweight, and efficient C++20 logging library",
+  "homepage": "https://github.com/moehoshio/NekoLog",
+  "license": "MIT OR Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "neko-schema",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

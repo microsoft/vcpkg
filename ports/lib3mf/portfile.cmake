@@ -4,9 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO 3MFConsortium/lib3mf
     REF "v${VERSION}"
-    SHA512 875529759aff6128b32291d0719b95a75a72a3b19f98711b12c9b1076727b231668b3b14604e69bb1fec79b4725fd098f030b7e965072e566bfb061f3086279c
+    SHA512 91d3928315bd5d1a8553284505d28c7d839a3cbd8b07a87bca5a21087fffa8ba7a1738ed14313212815a09e33f7a82318f7b069f1bbe40456b57ec528379ab4b
     PATCHES
-        lib3mf_vcpkg.patch
+    lib3mf_vcpkg.patch
 )
 
 vcpkg_cmake_configure(

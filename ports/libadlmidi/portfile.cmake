@@ -1,30 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Wohlstand/libADLMIDI
-    REF v${VERSION}
-    SHA512 d827f13c60086b62bb4ffb098faeaa214fd83df52d3d5c19533b970d74b470c677e0aec76e91e05753574cf9bae1ccd02b77bd24d0ec1b2ad80b21cf541c7261
-    PATCHES
-        # patches from master, they should be removed when a new version is out
-        cmake-package-export.patch
-        cmake-build-shared-libs-support.patch
+    REF 809f7e0021dbb7a0e5b2f67d54da2298f30a53c3
+    SHA512 9b809ac96d1c1c9088073db3adc78ceb039974022a4937f32b7058bcba68fd3eaf5fb599176861f152cce9da7d079aa00dacdb3d61b66460d679c6d95a235a2f
+    HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        midi-sequencer  WITH_MIDI_SEQUENCER
-        embedded-banks  WITH_EMBEDDED_BANKS
-        mus             WITH_MUS_SUPPORT
-        xmi             WITH_XMI_SUPPORT
-        dosbox-emulator USE_DOSBOX_EMULATOR
-        nuked-emulator  USE_NUKED_EMULATOR
-        opal-emulator   USE_OPAL_EMULATOR
-        java-emulator   USE_JAVA_EMULATOR
+        hw-serial       USE_HW_SERIAL
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         ${FEATURE_OPTIONS}
+        -DUSE_NUKED_OPL2_LLE_EMULATOR=ON
+        -DUSE_NUKED_OPL3_LLE_EMULATOR=ON
+        -DUSE_HW_SERIAL=ON
+        -DWITH_HQ_RESAMPLER=OFF # requires zita-resampler
 )
 
 vcpkg_cmake_install()

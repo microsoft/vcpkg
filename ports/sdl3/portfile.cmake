@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 992834fd6903fa8e689d6a0c32bfb55e152aecaabc0f89b99d8d74a6cb92768ef4e0414302b91584f6cb0712d3a2b0a221aa1e0634c34b29eb5fa8f26d89a33f
+    SHA512 2c12c8870ad80306cd66a0177683f197b2c172f0947b32a2515721a82523bbba52d872d980be3cd1f56870135e005490de2685ad341d33cfb775d44c04f20e63
     HEAD_REF main
+    PATCHES
+        fix-freebsd.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -19,6 +21,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         x11      SDL_X11
 )
 
+if (VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS EMSCRIPTEN_FEATURE_OPTIONS
+        FEATURES
+            emscripten-pthreads     SDL_PTHREADS
+    )
+    vcpkg_list(APPEND FEATURE_OPTIONS "${EMSCRIPTEN_FEATURE_OPTIONS}")
+endif()
+
 if ("x11" IN_LIST FEATURES)
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
 endif()
@@ -27,6 +37,11 @@ if ("wayland" IN_LIST FEATURES)
 endif()
 if ("ibus" IN_LIST FEATURES)
     message(WARNING "You will need to install ibus dependencies to use feature ibus:\nsudo apt install libibus-1.0-dev\n")
+endif()
+# option for not need to show windows
+list(APPEND FEATURE_OPTIONS -DSDL_UNIX_CONSOLE_BUILD=ON)
+if (VCPKG_TARGET_IS_LINUX AND NOT "x11" IN_LIST FEATURES AND NOT "wayland" IN_LIST FEATURES)
+    message(WARNING "The selected features don't allow sdl3 to create windows, which is usually unintentional. You can get windowing support by installing the x11 and/or wayland features.")
 endif()
 
 vcpkg_cmake_configure(

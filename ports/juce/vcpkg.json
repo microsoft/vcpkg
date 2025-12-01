@@ -1,8 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "juce",
-  "version": "8.0.4",
-  "port-version": 2,
+  "version": "8.0.7",
   "description": "Open-source cross-platform C++ application framework for desktop and mobile applications, including VST, VST3, AU, AUv3, AAX and LV2 audio plug-ins and plug-in hosts",
   "homepage": "https://juce.com",
   "license": null,
