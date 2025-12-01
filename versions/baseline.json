@@ -6980,6 +6980,10 @@
       "baseline": "2.14.2",
       "port-version": 0
     },
+    "nuraft": {
+      "baseline": "3.0.0",
+      "port-version": 0
+    },
     "nuspell": {
       "baseline": "5.1.6",
       "port-version": 0
