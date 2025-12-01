@@ -6593,7 +6593,7 @@
       "port-version": 1
     },
     "msdfgen": {
-      "baseline": "1.12.1",
+      "baseline": "1.13",
       "port-version": 0
     },
     "msgpack": {
