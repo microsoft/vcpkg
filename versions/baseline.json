@@ -26,7 +26,7 @@
     },
     "abumq-ripe": {
       "baseline": "4.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ace": {
       "baseline": "8.0.5",
@@ -209,7 +209,7 @@
       "port-version": 2
     },
     "arcticdb-sparrow": {
-      "baseline": "1.3.0",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "arcus": {
@@ -309,7 +309,7 @@
       "port-version": 0
     },
     "asmjit": {
-      "baseline": "2025-10-12",
+      "baseline": "2025-10-13",
       "port-version": 0
     },
     "asmtk": {
@@ -441,7 +441,7 @@
       "port-version": 0
     },
     "aws-c-cal": {
-      "baseline": "0.9.11",
+      "baseline": "0.9.13",
       "port-version": 0
     },
     "aws-c-common": {
@@ -469,7 +469,7 @@
       "port-version": 0
     },
     "aws-c-s3": {
-      "baseline": "0.10.1",
+      "baseline": "0.11.2",
       "port-version": 0
     },
     "aws-c-sdkutils": {
@@ -742,7 +742,7 @@
     },
     "blas": {
       "baseline": "2023-04-14",
-      "port-version": 4
+      "port-version": 5
     },
     "blaze": {
       "baseline": "3.8.2",
@@ -1609,7 +1609,7 @@
       "port-version": 0
     },
     "cblas": {
-      "baseline": "2024-03-19",
+      "baseline": "2025-10-29",
       "port-version": 0
     },
     "cccapstone": {
@@ -1841,7 +1841,7 @@
       "port-version": 3
     },
     "cnats": {
-      "baseline": "3.10.1",
+      "baseline": "3.12.0",
       "port-version": 0
     },
     "cnl": {
@@ -1993,7 +1993,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.27.0",
+      "baseline": "0.28.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2129,7 +2129,7 @@
       "port-version": 0
     },
     "cpr": {
-      "baseline": "1.13.0",
+      "baseline": "1.14.1",
       "port-version": 0
     },
     "cpu-features": {
@@ -2185,8 +2185,8 @@
       "port-version": 0
     },
     "cryptopp": {
-      "baseline": "8.9.0",
-      "port-version": 2
+      "baseline": "2025-12-01",
+      "port-version": 0
     },
     "cserialport": {
       "baseline": "4.3.3",
@@ -3301,8 +3301,8 @@
       "port-version": 9
     },
     "ggml": {
-      "baseline": "0.9.4",
-      "port-version": 1
+      "baseline": "2025-11-17",
+      "port-version": 0
     },
     "ghc-filesystem": {
       "baseline": "1.5.14",
@@ -3565,7 +3565,7 @@
       "port-version": 0
     },
     "gul17": {
-      "baseline": "25.4.1",
+      "baseline": "25.7.0",
       "port-version": 0
     },
     "gumbo": {
@@ -3689,7 +3689,7 @@
       "port-version": 0
     },
     "h5py-lzf": {
-      "baseline": "3.12.1",
+      "baseline": "3.15.1",
       "port-version": 0
     },
     "half": {
@@ -3765,7 +3765,7 @@
       "port-version": 0
     },
     "hfsm2": {
-      "baseline": "2.9.0",
+      "baseline": "2.10.0",
       "port-version": 0
     },
     "hidapi": {
@@ -4621,7 +4621,7 @@
       "port-version": 0
     },
     "libatomic-ops": {
-      "baseline": "7.8.4",
+      "baseline": "7.10.0",
       "port-version": 0
     },
     "libavif": {
@@ -5209,7 +5209,7 @@
       "port-version": 1
     },
     "libmysofa": {
-      "baseline": "1.3.2",
+      "baseline": "1.3.3",
       "port-version": 0
     },
     "libmysql": {
@@ -5737,7 +5737,7 @@
       "port-version": 2
     },
     "libwebsockets": {
-      "baseline": "4.4.1",
+      "baseline": "4.5.0",
       "port-version": 0
     },
     "libx11": {
@@ -5957,7 +5957,7 @@
       "port-version": 0
     },
     "llama-cpp": {
-      "baseline": "6550",
+      "baseline": "7146",
       "port-version": 0
     },
     "llfio": {
@@ -6085,7 +6085,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.700",
+      "baseline": "0.701",
       "port-version": 0
     },
     "luminoengine": {
@@ -6593,7 +6593,7 @@
       "port-version": 1
     },
     "msdfgen": {
-      "baseline": "1.12.1",
+      "baseline": "1.13",
       "port-version": 0
     },
     "msgpack": {
@@ -6802,6 +6802,10 @@
     },
     "neko-log": {
       "baseline": "1.0.6",
+      "port-version": 0
+    },
+    "neko-network": {
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "neko-schema": {
@@ -7222,7 +7226,7 @@
     },
     "openimageio": {
       "baseline": "3.0.9.1",
-      "port-version": 1
+      "port-version": 2
     },
     "openjpeg": {
       "baseline": "2.5.4",
@@ -7345,7 +7349,7 @@
       "port-version": 0
     },
     "orocos-kdl": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.3",
       "port-version": 0
     },
     "oscpack": {
@@ -7765,7 +7769,7 @@
       "port-version": 0
     },
     "projectm": {
-      "baseline": "4.1.4",
+      "baseline": "4.1.6",
       "port-version": 0
     },
     "projectm-eval": {
@@ -8613,7 +8617,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.4.2",
+      "baseline": "4.4.3",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -8741,7 +8745,7 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.5.27",
+      "baseline": "1.6.1",
       "port-version": 0
     },
     "safeint": {
@@ -8925,7 +8929,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.12.1",
+      "baseline": "0.12.2",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9053,7 +9057,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "7.6.0",
+      "baseline": "7.7.0",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
@@ -9329,7 +9333,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.51.0",
+      "baseline": "3.51.1",
       "port-version": 0
     },
     "sqlitecpp": {
