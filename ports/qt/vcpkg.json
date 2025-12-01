@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version": "6.9.2",
+  "version": "6.9.3",
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -28,14 +28,6 @@
         "qml",
         "textcodec"
       ]
-    },
-    {
-      "name": "qtapplicationmanager",
-      "default-features": false,
-      "features": [
-        "systemd-watchdog"
-      ],
-      "platform": "linux"
     },
     {
       "name": "qtapplicationmanager",
