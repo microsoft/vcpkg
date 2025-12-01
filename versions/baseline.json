@@ -742,7 +742,7 @@
     },
     "blas": {
       "baseline": "2023-04-14",
-      "port-version": 4
+      "port-version": 5
     },
     "blaze": {
       "baseline": "3.8.2",
@@ -1609,7 +1609,7 @@
       "port-version": 0
     },
     "cblas": {
-      "baseline": "2024-03-19",
+      "baseline": "2025-10-29",
       "port-version": 0
     },
     "cccapstone": {
