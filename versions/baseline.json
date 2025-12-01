@@ -26,7 +26,7 @@
     },
     "abumq-ripe": {
       "baseline": "4.2.2",
-      "port-version": 0
+      "port-version": 1
     },
     "ace": {
       "baseline": "8.0.5",
@@ -2185,8 +2185,8 @@
       "port-version": 0
     },
     "cryptopp": {
-      "baseline": "8.9.0",
-      "port-version": 2
+      "baseline": "2025-12-01",
+      "port-version": 0
     },
     "cserialport": {
       "baseline": "4.3.3",
