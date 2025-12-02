@@ -4673,7 +4673,7 @@
       "port-version": 0
     },
     "libcgroup": {
-      "baseline": "3.1.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "libcoap": {
