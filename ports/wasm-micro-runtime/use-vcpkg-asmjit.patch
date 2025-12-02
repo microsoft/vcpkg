@@ -1,0 +1,63 @@
+diff --git a/core/iwasm/fast-jit/iwasm_fast_jit.cmake b/core/iwasm/fast-jit/iwasm_fast_jit.cmake
+index 6762580..8c533be 100644
+--- a/core/iwasm/fast-jit/iwasm_fast_jit.cmake
++++ b/core/iwasm/fast-jit/iwasm_fast_jit.cmake
+@@ -18,44 +18,21 @@ include_directories (${IWASM_FAST_JIT_DIR})
+ enable_language(CXX)
+ 
+ if (WAMR_BUILD_TARGET STREQUAL "X86_64" OR WAMR_BUILD_TARGET STREQUAL "AMD_64")
++    # Use asmjit from vcpkg
++    find_package(asmjit CONFIG REQUIRED)
++    add_definitions(-DASMJIT_STATIC)
++    add_definitions(-DASMJIT_NO_DEPRECATED)
++    add_definitions(-DASMJIT_NO_BUILDER)
++    add_definitions(-DASMJIT_NO_COMPILER)
++    add_definitions(-DASMJIT_NO_JIT)
++    add_definitions(-DASMJIT_NO_LOGGING)
++    add_definitions(-DASMJIT_NO_TEXT)
++    add_definitions(-DASMJIT_NO_VALIDATION)
++    add_definitions(-DASMJIT_NO_INTROSPECTION)
++    add_definitions(-DASMJIT_NO_INTRINSICS)
++    set(cpp_source_asmjit "")
++    
+     include(FetchContent)
+-    if (NOT WAMR_BUILD_PLATFORM STREQUAL "linux-sgx")
+-        FetchContent_Declare(
+-            asmjit
+-            GIT_REPOSITORY https://github.com/asmjit/asmjit.git
+-            GIT_TAG c1019f1642a588107148f64ba54584b0ae3ec8d1
+-        )
+-    else ()
+-        FetchContent_Declare(
+-            asmjit
+-            GIT_REPOSITORY https://github.com/asmjit/asmjit.git
+-            GIT_TAG c1019f1642a588107148f64ba54584b0ae3ec8d1
+-            PATCH_COMMAND  git apply ${IWASM_FAST_JIT_DIR}/asmjit_sgx_patch.diff
+-        )
+-    endif ()
+-    FetchContent_GetProperties(asmjit)
+-    if (NOT asmjit_POPULATED)
+-        message ("-- Fetching asmjit ..")
+-        FetchContent_Populate(asmjit)
+-        add_definitions(-DASMJIT_STATIC)
+-        add_definitions(-DASMJIT_NO_DEPRECATED)
+-        add_definitions(-DASMJIT_NO_BUILDER)
+-        add_definitions(-DASMJIT_NO_COMPILER)
+-        add_definitions(-DASMJIT_NO_JIT)
+-        add_definitions(-DASMJIT_NO_LOGGING)
+-        add_definitions(-DASMJIT_NO_TEXT)
+-        add_definitions(-DASMJIT_NO_VALIDATION)
+-        add_definitions(-DASMJIT_NO_INTROSPECTION)
+-        add_definitions(-DASMJIT_NO_INTRINSICS)
+-        add_definitions(-DASMJIT_NO_AARCH64)
+-        add_definitions(-DASMJIT_NO_AARCH32)
+-        include_directories("${asmjit_SOURCE_DIR}/src")
+-        add_subdirectory(${asmjit_SOURCE_DIR} ${asmjit_BINARY_DIR} EXCLUDE_FROM_ALL)
+-        file (GLOB_RECURSE cpp_source_asmjit
+-            ${asmjit_SOURCE_DIR}/src/asmjit/core/*.cpp
+-            ${asmjit_SOURCE_DIR}/src/asmjit/x86/*.cpp
+-        )
+-    endif ()
+     if (WAMR_BUILD_FAST_JIT_DUMP EQUAL 1)
+         FetchContent_Declare(
+             zycore
