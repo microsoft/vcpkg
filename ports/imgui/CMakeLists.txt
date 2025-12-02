@@ -115,6 +115,13 @@ if(IMGUI_BUILD_WIN32_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_win32.cpp)
 endif()
 
+if(IMGUI_BUILD_WEBGPU_BINDING)
+    find_package(Dawn CONFIG REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PUBLIC dawn::webgpu_dawn)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_IMPL_WEBGPU_BACKEND_DAWN)
+    target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_wgpu.cpp)
+endif()
+
 if(IMGUI_FREETYPE)
     find_package(freetype CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC freetype)
@@ -259,6 +266,10 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_WIN32_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_win32.h DESTINATION include)
+    endif()
+
+    if(IMGUI_BUILD_WEBGPU_BINDING)
+        install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_wgpu.h DESTINATION include)
     endif()
 
     if(IMGUI_FREETYPE)
