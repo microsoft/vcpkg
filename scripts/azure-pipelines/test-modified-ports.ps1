@@ -256,7 +256,8 @@ $prHashesFile = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
     @parentHashesArgs `
     @skipFailuresArgs `
     @knownFailuresFromArgs `
-    @allowUnexpectedPassingArgs
+    @allowUnexpectedPassingArgs `
+    --debug
 $lastLastExitCode = $LASTEXITCODE
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
