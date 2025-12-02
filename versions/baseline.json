@@ -9049,7 +9049,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "6.2.155",
+      "baseline": "6.2.156",
       "port-version": 0
     },
     "simde": {
