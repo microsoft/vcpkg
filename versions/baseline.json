@@ -7321,8 +7321,8 @@
       "port-version": 0
     },
     "openxr-loader": {
-      "baseline": "1.1.45",
-      "port-version": 1
+      "baseline": "1.1.53",
+      "port-version": 0
     },
     "openzl": {
       "baseline": "0.1.0",
