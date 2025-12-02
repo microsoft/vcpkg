@@ -457,7 +457,7 @@
       "port-version": 0
     },
     "aws-c-http": {
-      "baseline": "0.10.6",
+      "baseline": "0.10.7",
       "port-version": 0
     },
     "aws-c-io": {
