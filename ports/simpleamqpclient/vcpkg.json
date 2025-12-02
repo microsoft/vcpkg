@@ -4,6 +4,7 @@
   "description": "Simple C++ Interface to rabbitmq-c",
   "homepage": "https://github.com/alanxz/SimpleAmqpClient",
   "license": "MIT",
+  "supports": "!static",
   "dependencies": [
     "boost-algorithm",
     "boost-chrono",
