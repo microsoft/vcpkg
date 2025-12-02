@@ -9072,6 +9072,10 @@
       "baseline": "2020-06-14",
       "port-version": 2
     },
+    "simpleamqpclient": {
+      "baseline": "2.5.1",
+      "port-version": 0
+    },
     "simpleble": {
       "baseline": "0.8.1",
       "port-version": 1
