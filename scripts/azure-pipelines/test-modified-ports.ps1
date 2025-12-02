@@ -157,7 +157,7 @@ if ($testFeatures) {
     $ciFeatureBaselineArg = "--ci-feature-baseline=$ciFeatureBaselineFile"
     $knownFailingAbisFile = Join-Path $ArtifactStagingDirectory 'failing-abi-log.txt'
     $failingAbiLogArg = "--failing-abi-log=$knownFailingAbisFile"
-    & $vcpkgExe x-test-features --for-merge-with origin/master $tripletArg $failureLogsArg $ciBaselineArg $failingAbiLogArg $ciFeatureBaselineArg @commonArgs @cachingArgs
+    & $vcpkgExe x-test-features --for-merge-with origin/master $tripletArg $failureLogsArg $ciBaselineArg $failingAbiLogArg $ciFeatureBaselineArg @commonArgs @cachingArgs --debug
     $lastLastExitCode = $LASTEXITCODE
     $azcopyLogsEmpty = ((Get-ChildItem $env:AZCOPY_LOG_LOCATION).Count -eq 0)
     Write-Host "##vso[task.setvariable variable=AZCOPY_LOGS_EMPTY]$azcopyLogsEmpty"
