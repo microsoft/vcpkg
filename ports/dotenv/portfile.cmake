@@ -1,0 +1,16 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Ayush272002/dotenv
+    REF v1.0.0
+    SHA512 65588613c23c478f600e46200268f7645cfbf0da9b0b4dea572005314ea1009edaa702aa2900277a410b75260b6f4f46f1372fb438ed8d8f4009dae19e574d20
+)
+
+file(
+    INSTALL "${SOURCE_PATH}/include/dotenv"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+)
+
+file(
+    INSTALL "${SOURCE_PATH}/LICENSE.md"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright
+)
