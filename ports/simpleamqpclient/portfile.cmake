@@ -8,7 +8,7 @@ vcpkg_from_github(
         rabbitmqc-use-find-package-config.patch
 )
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
