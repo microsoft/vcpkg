@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ca8b756..1420cc4 100644
+index ca8b756..7c80840 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,9 +1,7 @@
@@ -102,7 +102,17 @@ index ca8b756..1420cc4 100644
  # =========================================
  # clang configuration
  # =========================================
-@@ -152,20 +125,36 @@ if (BEA_COMPILER STREQUAL msvc)
+@@ -140,9 +113,6 @@ if (BEA_COMPILER STREQUAL msvc)
+ 
+   if (optHAS_OPTIMIZED)
+     list (APPEND BEA_FLAGS /O2)
+-    list (APPEND BEA_DEFINITIONS "/DNDEBUG")
+-  else ()
+-    list (APPEND BEA_DEFINITIONS "/D_DEBUG")
+   endif ()
+ 
+   #generate PDB for Debug/RelWithDebInfo builds
+@@ -152,20 +122,36 @@ if (BEA_COMPILER STREQUAL msvc)
      endif ()
    endif ()
  
@@ -153,7 +163,7 @@ index ca8b756..1420cc4 100644
  endif ()
  # =========================================
  # Intel Compiler configuration
-@@ -308,6 +297,18 @@ endforeach ()
+@@ -308,6 +294,18 @@ endforeach ()
  # pass compiler flags to cmake
  # ================================================
  
@@ -172,7 +182,7 @@ index ca8b756..1420cc4 100644
  if (${CMAKE_BUILD_TYPE} STREQUAL RelWithDebInfo)
    set (CMAKE_C_FLAGS_RELWITHDEBINFO   ${myC_FLAGS})
    set (CMAKE_CXX_FLAGS_RELWITHDEBINFO ${myCXX_FLAGS})
-@@ -354,7 +355,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+@@ -354,7 +352,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
  
  
  
@@ -181,7 +191,7 @@ index ca8b756..1420cc4 100644
  
  
  set (build_modules
-@@ -366,14 +367,14 @@ set (build_modules
+@@ -366,14 +364,14 @@ set (build_modules
  if (NOT ZLIB_FOUND)
    set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
  else ()
@@ -192,8 +202,9 @@ index ca8b756..1420cc4 100644
  
  add_definitions     (${BEA_DEFINITIONS})
  include_directories (${BEA_SRC_ROOT}  ${BEA_INCLUDE_PATH}
-                      ${CMAKE_SOURCE_DIR} ${ZLIB_INCLUDE_DIR})
+-                     ${CMAKE_SOURCE_DIR} ${ZLIB_INCLUDE_DIR})
 -link_directories    (${BEA_LIBS_PATH})
++                     ${CMAKE_SOURCE_DIR})
 +link_libraries      (${BEA_LIBS_PATH})
  
  
