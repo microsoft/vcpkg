@@ -1,6 +1,6 @@
 {
   "name": "stringzilla",
-  "version": "4.2.3",
+  "version": "4.4.0",
   "description": "StringZilla is the GodZilla of string libraries, using SIMD and SWAR to accelerate string operations on modern CPUs.",
   "homepage": "https://github.com/ashvardanian/StringZilla",
   "license": "Apache-2.0"
