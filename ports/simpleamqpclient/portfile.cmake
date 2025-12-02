@@ -8,18 +8,18 @@ vcpkg_from_github(
         rabbitmqc-use-find-package-config.patch
 )
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ssl ENABLE_SSL_SUPPORT
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
+        -DBUILD_SHARED_LIBS=ON
         -DENABLE_TESTING=OFF
 )
 
