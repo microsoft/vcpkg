@@ -10101,7 +10101,7 @@
       "port-version": 0
     },
     "usearch": {
-      "baseline": "2.21.3",
+      "baseline": "2.21.4",
       "port-version": 0
     },
     "usockets": {
