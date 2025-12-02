@@ -1,7 +1,6 @@
 {
   "name": "fontconfig",
-  "version": "2.15.0",
-  "port-version": 4,
+  "version": "2.17.1",
   "description": "Library for configuring and customizing font access.",
   "homepage": "https://www.freedesktop.org/wiki/Software/fontconfig",
   "license": "MIT",
@@ -18,10 +17,6 @@
       "host": true
     },
     {
-      "name": "libiconv",
-      "platform": "!windows"
-    },
-    {
       "name": "libuuid",
       "platform": "!osx & !windows"
     },
@@ -34,7 +29,19 @@
       "host": true
     }
   ],
+  "default-features": [
+    {
+      "name": "iconv",
+      "platform": "!windows"
+    }
+  ],
   "features": {
+    "iconv": {
+      "description": "Iconv support",
+      "dependencies": [
+        "libiconv"
+      ]
+    },
     "nls": {
       "description": "Native languages support",
       "dependencies": [

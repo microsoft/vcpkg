@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO percipioxyz/camport3
-    REF v1.6.2
-    SHA512 e3b1fadb13b826e86aa174215430f5e4175aafd9a967f2401beb3768dcc489a8ce5a74c151d615bd3e34b837c81e201db55b290ef258612381141b0b94212fd1
+    REF "v${VERSION}"
+    SHA512 9d2ab3fdf4c46ca92afbf3c2ebc171df0a29415956e3a4325a4e5146d128e886c09f3b992fbad4c759cadcf22c08d149bb6c37fe33a27accacc66dc71b2b1dfa
     HEAD_REF master
 )
 
@@ -10,8 +10,10 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include")
 file(COPY
     "${SOURCE_PATH}/include/TYApi.h"
     "${SOURCE_PATH}/include/TYCoordinateMapper.h"
+    "${SOURCE_PATH}/include/TYDefs.h"
     "${SOURCE_PATH}/include/TYImageProc.h"
     "${SOURCE_PATH}/include/TyIsp.h"
+    "${SOURCE_PATH}/include/TYVer.h"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 if(VCPKG_TARGET_IS_WINDOWS)

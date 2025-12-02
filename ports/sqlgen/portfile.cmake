@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO getml/sqlgen
     REF "v${VERSION}"
-    SHA512 d7828fbcbb4e052a38d382a57f616a3380012e1f2bb3b7a871040c88d26e7b780e8e46f24072e662b928913fb8bac262df055759525583415ef8cd23711602e9 
+    SHA512 41a6dd9f510f9ccf7869d9caa26a1884ab3fddeeff2c5cb5129773cb7d7f52d7b8e9192c9a8277dec7f57eda812e40b300e905c065d3e4ddb7871b8fb5e397af 
     HEAD_REF main
 )
 
@@ -13,6 +13,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SQLGEN_BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        duckdb              SQLGEN_DUCKDB
         mariadb             SQLGEN_MYSQL
         postgres            SQLGEN_POSTGRES
 )
