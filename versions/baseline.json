@@ -2829,7 +2829,7 @@
       "port-version": 0
     },
     "fakeit": {
-      "baseline": "2.4.1",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "faker-cxx": {
