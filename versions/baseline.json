@@ -9437,7 +9437,7 @@
       "port-version": 0
     },
     "str-view": {
-      "baseline": "0.5.4",
+      "baseline": "0.7.0",
       "port-version": 0
     },
     "strict-variant": {
