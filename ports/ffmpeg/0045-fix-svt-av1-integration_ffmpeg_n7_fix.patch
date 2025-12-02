@@ -1,0 +1,14 @@
+# Source: https://gitlab.com/AOMediaCodec/SVT-AV1/-/blob/master/.gitlab/workflows/linux/ffmpeg_n7_fix.patch
+diff --git a/libavcodec/libsvtav1.c b/libavcodec/libsvtav1.c
+index 8fa42d590b..e99c656c5d 100644
+--- a/libavcodec/libsvtav1.c
++++ b/libavcodec/libsvtav1.c
+@@ -430,7 +430,7 @@ static av_cold int eb_enc_init(AVCodecContext *avctx)
+ 
+     svt_enc->eos_flag = EOS_NOT_REACHED;
+ 
+-    svt_ret = svt_av1_enc_init_handle(&svt_enc->svt_handle, svt_enc, &svt_enc->enc_params);
++    svt_ret = svt_av1_enc_init_handle(&svt_enc->svt_handle, &svt_enc->enc_params);
+     if (svt_ret != EB_ErrorNone) {
+         return svt_print_error(avctx, svt_ret, "Error initializing encoder handle");
+     }
