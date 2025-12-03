@@ -8,18 +8,32 @@ vcpkg_from_github(
         cmake-config.diff
         pkgconfig.diff
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/ggml")
+
+file(READ "${SOURCE_PATH}/CMakeLists.txt" CMAKE_CONTENT)
+string(REPLACE "install(TARGETS whisper LIBRARY PUBLIC_HEADER)" "install(TARGETS whisper LIBRARY RUNTIME PUBLIC_HEADER)" CMAKE_CONTENT "${CMAKE_CONTENT}")
+string(REPLACE "    else()
+        add_subdirectory(ggml)" "    else()
+        set(BUILD_SHARED_LIBS OFF)
+        add_subdirectory(ggml)
+        set(BUILD_SHARED_LIBS ON)" CMAKE_CONTENT "${CMAKE_CONTENT}")
+file(WRITE "${SOURCE_PATH}/CMakeLists.txt" "${CMAKE_CONTENT}")
+
+file(READ "${SOURCE_PATH}/ggml/CMakeLists.txt" GGML_CONTENT)
+string(REPLACE "install(TARGETS" "#install(TARGETS" GGML_CONTENT "${GGML_CONTENT}")
+file(WRITE "${SOURCE_PATH}/ggml/CMakeLists.txt" "${GGML_CONTENT}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # updating bindings/javascript/package.json
     OPTIONS
+        -DBUILD_SHARED_LIBS=ON
+        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
         -DWHISPER_ALL_WARNINGS=OFF
-        -DWHISPER_BUILD_EXAMPLES=OFF
+        -DWHISPER_BUILD_EXAMPLES=ON
         -DWHISPER_BUILD_SERVER=OFF
         -DWHISPER_BUILD_TESTS=OFF
         -DWHISPER_CCACHE=OFF
-        -DWHISPER_USE_SYSTEM_GGML=ON
+        -DWHISPER_USE_SYSTEM_GGML=OFF
 )
 
 vcpkg_cmake_install()

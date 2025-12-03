@@ -5,7 +5,6 @@
   "homepage": "https://github.com/ggml-org/whisper.cpp",
   "license": "MIT",
   "dependencies": [
-    "ggml",
     {
       "name": "vcpkg-cmake",
       "host": true

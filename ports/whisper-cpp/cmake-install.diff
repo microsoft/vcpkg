@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -179,3 +181,3 @@ set_target_properties(whisper PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/include/whisper.h)
+ 
+-install(TARGETS whisper LIBRARY PUBLIC_HEADER)
++install(TARGETS whisper LIBRARY RUNTIME PUBLIC_HEADER)
+ 
+ target_compile_definitions(whisper PRIVATE
+ 
+ target_compile_definitions(whisper PRIVATE
+     WHISPER_VERSION="${PROJECT_VERSION}"

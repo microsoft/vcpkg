@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 517f30bb..b030239a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -136,7 +136,9 @@ if (NOT TARGET ggml)
+         endif()
+         add_library(ggml ALIAS ggml::ggml)
+     else()
++        set(BUILD_SHARED_LIBS OFF)
+         add_subdirectory(ggml)
++        set(BUILD_SHARED_LIBS ON)
+         if(WIN32)
+             # The following adds a _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR macro and is a workaround for
+             # the Windows C++ standard library which does not support constexpr mutexes.
+@@ -176,7 +178,7 @@ set(WHISPER_BIN_INSTALL_DIR     ${CMAKE_INSTALL_BINDIR}     CACHE PATH "Location
+ get_directory_property(WHISPER_TRANSIENT_DEFINES COMPILE_DEFINITIONS)
+ 
+ set_target_properties(whisper PROPERTIES PUBLIC_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/include/whisper.h)
+-install(TARGETS whisper LIBRARY PUBLIC_HEADER)
++install(TARGETS whisper LIBRARY RUNTIME PUBLIC_HEADER)
+ 
+ target_compile_definitions(whisper PRIVATE
+     WHISPER_VERSION="${PROJECT_VERSION}"
