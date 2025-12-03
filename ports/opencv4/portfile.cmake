@@ -415,9 +415,10 @@ vcpkg_cmake_configure(
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
-        # CMAKE
+        # CMAKE/VCPKG
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Iconv=OFF # optional for contrib/wechat_qrcode
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
@@ -448,6 +449,8 @@ vcpkg_cmake_configure(
         ${PYTHON_EXTRA_DEFINES_RELEASE}
     OPTIONS_DEBUG
         ${PYTHON_EXTRA_DEFINES_DEBUG}
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_Iconv
 )
 
 vcpkg_cmake_install()
