@@ -5,8 +5,9 @@ string(REGEX REPLACE "^([0-9]+[.][0-9]+[.][0-9]+)[.]([0-9]+)\$" "\\1-\\2" VERSIO
 vcpkg_download_distfile(
     zookeeper_src_archive
     URLS "https://dlcdn.apache.org/zookeeper/stable/apache-zookeeper-${VERSION}.tar.gz"
+         "https://archive.apache.org/dist/zookeeper/zookeeper-${VERSION}/zookeeper-${VERSION}.tar.gz"
     FILENAME "apache-zookeeper-${VERSION}.tar.gz"
-    SHA512 78d909c92b3709cc2112d1b8df9ef006f78a81ee0aa1b6b6400b8fea771ebaafc03cde497c6080e3fd924b75facb28420c4970885914e5dc9cd47cd761e96dd4
+    SHA512 61c05f6064797994dc25c42df35d67d2c3839fd59a496924852a4d78b492b06746c8eb5445edb63cbc0107ef2b8b31babf23488f96a52b00682cd2e9b61be339
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -22,8 +23,9 @@ file(COPY "${CURRENT_PORT_DIR}/unofficial-zookeeperConfig.cmake" DESTINATION "${
 vcpkg_download_distfile(
     zookeeper_bin_archive
     URLS "https://dlcdn.apache.org/zookeeper/stable/apache-zookeeper-${VERSION}-bin.tar.gz"
+         "https://archive.apache.org/dist/zookeeper/zookeeper-${VERSION}/zookeeper-${VERSION}-bin.tar.gz"
     FILENAME "apache-zookeeper-${VERSION}-bin.tar.gz"
-    SHA512 4d85d6f7644d5f36d9c4d65e78bd662ab35ebe1380d762c24c12b98af029027eee453437c9245dbdf2b9beb77cd6b690b69e26f91cf9d11b0a183a979c73fa43
+    SHA512 ab9bf90649df19d8fd8378f2e8d9159bc8528d8e4c166a93d9fa4a9c98e39ee9de0279cc9dc58cd6d593141c0a45576d0df9db47d143d63951598a43efdc0a30
 )
 vcpkg_extract_source_archive(
     zookeeper_jute_path
