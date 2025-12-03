@@ -19,3 +19,13 @@ index 984b878f0..31003176a 100644
  else()
      message(STATUS "Using STL maps instead of custom hash maps")
  endif()
+@@ -468,7 +468,8 @@ if(MSVC)
+     target_link_options(vvl PRIVATE /DEF:${CMAKE_CURRENT_SOURCE_DIR}/${LAYER_NAME}.def)
+     target_compile_options(vvl PRIVATE /bigobj)
+ 
+-    set(NATVIS_FILES "${CMAKE_CURRENT_SOURCE_DIR}/types.natvis" "${CMAKE_CURRENT_SOURCE_DIR}/external/parallel_hashmap/natvis/phmap.natvis")
++    find_file(PHMAP_NATVIS "phmap.natvis" REQUIRED)
++    set(NATVIS_FILES "${CMAKE_CURRENT_SOURCE_DIR}/types.natvis" "${PHMAP_NATVIS}")
+     target_sources(vvl PRIVATE ${NATVIS_FILES})
+ elseif(MINGW)
+     target_sources(vvl PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/${LAYER_NAME}.def)
