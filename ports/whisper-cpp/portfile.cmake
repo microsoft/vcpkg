@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake-config.diff
-        pkgconfig.diff
         cmake-main.diff
         cmake-ggml.diff
 )
@@ -39,6 +38,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/whisper")
+
+# Modify whisper.pc to not link ggml since it's static
+file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/whisper.pc" _contents)
+string(REPLACE "-lggml -lggml-base -lwhisper" "-lwhisper" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/whisper.pc" "${_contents}")
+
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/models/convert-pt-to-ggml.py" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
