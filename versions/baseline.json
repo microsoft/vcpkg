@@ -7385,8 +7385,8 @@
       "port-version": 0
     },
     "outcome": {
-      "baseline": "2.2.12",
-      "port-version": 2
+      "baseline": "2.2.13",
+      "port-version": 0
     },
     "p-ranav-csv": {
       "baseline": "2019-07-11",
