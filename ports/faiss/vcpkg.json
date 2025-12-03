@@ -4,6 +4,7 @@
   "description": "Faiss is a library for efficient similarity search and clustering of dense vectors.",
   "homepage": "https://faiss.ai/",
   "license": "MIT",
+  "supports": "!x86 & !uwp",
   "dependencies": [
     "blas",
     "lapack",
