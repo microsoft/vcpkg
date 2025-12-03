@@ -73,9 +73,10 @@ jobs:
       scriptType: bash
       scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |
+        start=`date -u -d "-30 minutes" '+%Y-%m-%dT%H:%MZ'`
         end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
-        assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
-        binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
+        assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --start $start --expiry $end -o tsv`
+        binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --start $start --expiry $end -o tsv`
         echo Minting SAS tokens valid through $end
         # Persist the binary SAS as a secret pipeline variable for the owners-db step
         echo "##vso[task.setvariable variable=BCACHE_SAS_TOKEN;issecret=true]$binarySas"

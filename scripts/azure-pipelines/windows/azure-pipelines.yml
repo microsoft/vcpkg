@@ -66,10 +66,12 @@ jobs:
       inlineScript: |
           $current = Get-Date -AsUtc
           $endDate = $current.AddDays(2)
+          $startDate = $current.AddMinutes(-30)
           $end = Get-Date -Date $endDate -UFormat '+%Y-%m-%dT%H:%MZ'
-          $assetSas = az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv | Out-String
+          $start = Get-Date -Date $startDate -UFormat '+%Y-%m-%dT%H:%MZ'
+          $assetSas = az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --start $start --expiry $end -o tsv | Out-String
           $assetSas = $assetSas.Trim()
-          $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
+          $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --start $start --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
           # Persist the binary SAS as a secret pipeline variable for the owners-db step
           Write-Host "##vso[task.setvariable variable=BCACHE_SAS_TOKEN;issecret=true]$binarySas"

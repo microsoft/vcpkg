@@ -1,0 +1,45 @@
+diff --git a/fontconfig/fontconfig.h.in b/fontconfig/fontconfig.h.in
+index e8944f9..a76230b 100644
+--- a/fontconfig/fontconfig.h.in
++++ b/fontconfig/fontconfig.h.in
+@@ -39,7 +39,7 @@
+ #endif
+ 
+ #ifndef FcPublic
+-#  define FcPublic
++#  define FcPublic @DEFAULT_FCPUBLIC@
+ #endif
+ 
+ typedef unsigned char  FcChar8;
+diff --git a/fontconfig/meson.build b/fontconfig/meson.build
+index 1ad1e58..1d9ac14 100644
+--- a/fontconfig/meson.build
++++ b/fontconfig/meson.build
+@@ -1,5 +1,14 @@
+ fontconfig_h_conf = configuration_data()
+ fontconfig_h_conf.set('CACHE_VERSION', cacheversion)
++default_FcPublic = ''
++if get_option('default_library') != 'static'
++    if host_machine.system() == 'windows'
++        default_FcPublic = '__declspec(dllimport)'
++    else
++        default_FcPublic = '__attribute__((visibility(\"default\")))'
++    endif
++endif
++fontconfig_h_conf.set('DEFAULT_FCPUBLIC', default_FcPublic)
+ fontconfig_h = configure_file(output: 'fontconfig.h',
+                               input: 'fontconfig.h.in',
+                               configuration: fontconfig_h_conf)
+diff --git a/src/meson.build b/src/meson.build
+index bf5a781..c892a34 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -1,7 +1,7 @@
+ 
+ win_export_args = []
+ # Define FcPublic appropriately for exports on windows
+-if host_machine.system() == 'windows'
++if host_machine.system() == 'windows' and get_option('default_library') != 'static'
+   win_export_args += '-DFcPublic=__declspec(dllexport)'
+   win_export_args += '-DDLL_EXPORT'
+ endif

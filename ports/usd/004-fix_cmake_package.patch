@@ -1,5 +1,5 @@
 diff --git a/pxr/CMakeLists.txt b/pxr/CMakeLists.txt
-index b735c86ea..d30354114 100644
+index b735c86ea2..d303541145 100644
 --- a/pxr/CMakeLists.txt
 +++ b/pxr/CMakeLists.txt
 @@ -23,7 +23,8 @@ endif()

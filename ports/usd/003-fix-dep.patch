@@ -1,8 +1,18 @@
 diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
-index 1b69cad..9494278 100644
+index 8742546462..16bc7306e1 100644
 --- a/cmake/defaults/Packages.cmake
 +++ b/cmake/defaults/Packages.cmake
-@@ -178,7 +178,12 @@ if (PXR_BUILD_IMAGING)
+@@ -172,7 +172,8 @@ if (PXR_BUILD_IMAGING)
+     # --OpenImageIO
+     if (PXR_BUILD_OPENIMAGEIO_PLUGIN)
+         set(REQUIRES_Imath TRUE)
+-        find_package(OpenImageIO REQUIRED)
++        find_package(OpenImageIO CONFIG REQUIRED)
++        set(OIIO_LIBRARIES OpenImageIO::OpenImageIO)
+         add_definitions(-DPXR_OIIO_PLUGIN_ENABLED)
+         if (OIIO_idiff_BINARY)
+             set(IMAGE_DIFF_TOOL ${OIIO_idiff_BINARY} CACHE STRING "Uses idiff for image diffing")
+@@ -190,7 +191,12 @@ if (PXR_BUILD_IMAGING)
          if (POLICY CMP0072)
              cmake_policy(SET CMP0072 OLD)
          endif()
@@ -15,23 +25,17 @@ index 1b69cad..9494278 100644
          add_definitions(-DPXR_GL_SUPPORT_ENABLED)
      endif()
      # --Metal
-@@ -155,7 +160,8 @@ if (PXR_BUILD_IMAGING)
-     # --OpenImageIO
-     if (PXR_BUILD_OPENIMAGEIO_PLUGIN)
-         set(REQUIRES_Imath TRUE)
--        find_package(OpenImageIO REQUIRED)
-+        find_package(OpenImageIO CONFIG REQUIRED)
-+        set(OIIO_LIBRARIES OpenImageIO::OpenImageIO)
-         add_definitions(-DPXR_OIIO_PLUGIN_ENABLED)
-         if (OIIO_idiff_BINARY)
-             set(IMAGE_DIFF_TOOL ${OIIO_idiff_BINARY} CACHE STRING "Uses idiff for image diffing")
-@@ -189,4 +195,4 @@ if (PXR_BUILD_IMAGING)
+@@ -199,7 +205,7 @@ if (PXR_BUILD_IMAGING)
+     endif()
+     if (PXR_ENABLE_VULKAN_SUPPORT)
+         message(STATUS "Enabling experimental feature Vulkan support")
 -        if (EXISTS $ENV{VULKAN_SDK})
 +        if (0)
-             # Prioritize the VULKAN_SDK includes and packages before any system
-             # installed headers. This is to prevent linking against older SDKs
-             # that may be installed by the OS.
-@@ -215,8 +221,12 @@ if (PXR_BUILD_IMAGING)
+             find_package(Vulkan REQUIRED COMPONENTS shaderc_combined)
+             list(APPEND VULKAN_LIBS Vulkan::Vulkan Vulkan::shaderc_combined)
+ 
+@@ -211,10 +217,14 @@ if (PXR_BUILD_IMAGING)
+                 # No extra libs required
              endif()
  
 -            add_definitions(-DPXR_VULKAN_SUPPORT_ENABLED)
@@ -47,11 +51,12 @@ index 1b69cad..9494278 100644
 +        list(APPEND VULKAN_LIBS GPUOpen::VulkanMemoryAllocator)
      endif()
      # --Opensubdiv
+     set(OPENSUBDIV_USE_GPU ${PXR_BUILD_GPU_SUPPORT})
 diff --git a/pxr/imaging/hgiVulkan/CMakeLists.txt b/pxr/imaging/hgiVulkan/CMakeLists.txt
-index 00ad75448..dff475436 100644
+index e98893d3f0..772c3edb64 100644
 --- a/pxr/imaging/hgiVulkan/CMakeLists.txt
 +++ b/pxr/imaging/hgiVulkan/CMakeLists.txt
-@@ -40,8 +40,7 @@ pxr_library(hgiVulkan
+@@ -41,7 +41,6 @@ pxr_library(hgiVulkan
          shaderProgram
          shaderSection
          texture
@@ -59,9 +64,8 @@ index 00ad75448..dff475436 100644
  
      PUBLIC_HEADERS
          api.h
-         vulkan.h
 diff --git a/pxr/imaging/hgiVulkan/device.cpp b/pxr/imaging/hgiVulkan/device.cpp
-index 08bf8e0a7..bfc368169 100644
+index a1c44143a9..2ac706e89a 100644
 --- a/pxr/imaging/hgiVulkan/device.cpp
 +++ b/pxr/imaging/hgiVulkan/device.cpp
 @@ -11,7 +11,8 @@
@@ -75,10 +79,10 @@ index 08bf8e0a7..bfc368169 100644
  #include "pxr/base/tf/diagnostic.h"
  
 diff --git a/pxr/imaging/hgiVulkan/vulkan.h b/pxr/imaging/hgiVulkan/vulkan.h
-index 1f527b9cb..b5ffd314f 100644
+index 2e8f590646..7521f1f37e 100644
 --- a/pxr/imaging/hgiVulkan/vulkan.h
 +++ b/pxr/imaging/hgiVulkan/vulkan.h
-@@ -24,7 +24,7 @@
+@@ -35,7 +35,7 @@
      #define VK_EXTERNAL_MEMORY_HANDLE_AUTO 0
  #endif
  
@@ -88,7 +92,7 @@ index 1f527b9cb..b5ffd314f 100644
  // Use the default allocator (nullptr)
  inline VkAllocationCallbacks*
 diff --git a/pxr/imaging/plugin/hioOiio/CMakeLists.txt b/pxr/imaging/plugin/hioOiio/CMakeLists.txt
-index 0a055b7..de4b73a 100644
+index 0a055b711d..de4b73a47d 100644
 --- a/pxr/imaging/plugin/hioOiio/CMakeLists.txt
 +++ b/pxr/imaging/plugin/hioOiio/CMakeLists.txt
 @@ -7,6 +7,7 @@ if (NOT ${PXR_BUILD_GPU_SUPPORT})
@@ -108,7 +112,7 @@ index 0a055b7..de4b73a 100644
  pxr_plugin(hioOiio
      LIBRARIES
 diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
-index a7e566bac..559f50b9c 100644
+index b83cf3d730..611a29cbc1 100644
 --- a/pxr/pxrConfig.cmake.in
 +++ b/pxr/pxrConfig.cmake.in
 @@ -18,6 +18,25 @@ set(PXR_VERSION "@PXR_VERSION@")
@@ -152,8 +156,8 @@ index a7e566bac..559f50b9c 100644
  
 -include("${PXR_CMAKE_DIR}/cmake/pxrTargets.cmake")
 +include("${PXR_CMAKE_DIR}/pxrTargets.cmake")
- if (TARGET usd_ms)
-     set(libs "usd_ms")
+ if (TARGET usd_m)
+     set(libs "usd_m")
  else()
      set(libs "@PXR_ALL_LIBS@")
  endif()
