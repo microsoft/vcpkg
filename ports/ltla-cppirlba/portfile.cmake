@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 7ddeccfe0a0810e32fb4385cf5a6545831764acb0ea2c96373228beceee897b20251391421b85b08e51baf8d5dca7c4b88347145a784ec6d7c3e11ff05a1c5ad
     HEAD_REF master
+    PATCHES
+        0001-fix-eigen3.patch
 )
 
 set(VCPKG_BUILD_TYPE "release") # header-only port
