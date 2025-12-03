@@ -24,6 +24,8 @@ vcpkg_cmake_configure(
         -DWHISPER_BUILD_TESTS=OFF
         -DWHISPER_CCACHE=OFF
         -DWHISPER_USE_SYSTEM_GGML=OFF
+    MAYBE_UNUSED_VARIABLES
+        WHISPER_BLAS
 )
 
 vcpkg_cmake_install()
