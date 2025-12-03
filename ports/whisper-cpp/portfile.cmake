@@ -11,25 +11,29 @@ vcpkg_from_github(
         cmake-ggml.diff
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    vulkan GGML_VULKAN
+    cuda GGML_CUDA
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # updating bindings/javascript/package.json
     OPTIONS
         -DBUILD_SHARED_LIBS=ON
         -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
-        -DGGML_PERF=ON
+        ${FEATURE_OPTIONS}
         -DWHISPER_ALL_WARNINGS=OFF
         -DWHISPER_BLAS=ON
         -DWHISPER_BUILD_EXAMPLES=ON
         -DWHISPER_BUILD_SERVER=OFF
         -DWHISPER_BUILD_TESTS=OFF
         -DWHISPER_CCACHE=OFF
-        -DWHISPER_PERF=ON
         -DWHISPER_USE_SYSTEM_GGML=OFF
     MAYBE_UNUSED_VARIABLES
-        GGML_PERF
+        GGML_VULKAN
         WHISPER_BLAS
-        WHISPER_PERF
 )
 
 vcpkg_cmake_install()
