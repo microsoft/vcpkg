@@ -5,6 +5,7 @@
   "homepage": "https://github.com/ggml-org/whisper.cpp",
   "license": "MIT",
   "dependencies": [
+    "openblas",
     {
       "name": "vcpkg-cmake",
       "host": true
