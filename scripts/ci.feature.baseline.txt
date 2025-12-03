@@ -242,7 +242,6 @@ treehopper:x64-windows-static=fail
 usbmuxd:x64-windows-static-md=fail
 v8(windows)=fail # the version of v8 we have in the repo doesn't support VS2022
 vectorclass:arm64-windows=fail
-vulkan-loader[directfb](linux)=feature-fails # vcpkg CI machines don't have libdirectfb installed
 winreg:x64-linux=fail
 workflow:x64-uwp=fail
 zeroc-ice(uwp)=fail # ZeroC doesn't provide ARM tagets in project files.
