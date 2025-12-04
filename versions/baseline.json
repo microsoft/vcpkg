@@ -2081,7 +2081,7 @@
       "port-version": 0
     },
     "cppp-reiconv": {
-      "baseline": "2.1.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "cpprealm": {
