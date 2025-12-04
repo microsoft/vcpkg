@@ -1,0 +1,40 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0e5ac72..e165be8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -335,10 +335,6 @@ add_library(static_lib ${STATIC_LIB_SRC})
+ add_library(NuRaft::static_lib ALIAS static_lib)
+ set_target_properties(static_lib PROPERTIES OUTPUT_NAME ${LIBRARY_NAME} CLEAN_DIRECT_OUTPUT 1)
+ 
+-add_library(shared_lib SHARED ${STATIC_LIB_SRC})
+-add_library(NuRaft::shared_lib ALIAS shared_lib)
+-set_target_properties(shared_lib PROPERTIES OUTPUT_NAME ${LIBRARY_NAME} CLEAN_DIRECT_OUTPUT 1)
+-
+ # Include directories are necessary for dependents to use the targets.
+ target_include_directories(static_lib
+     PUBLIC
+@@ -346,15 +342,8 @@ target_include_directories(static_lib
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+ )
+ 
+-target_include_directories(shared_lib
+-    PUBLIC
+-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
+-)
+-
+ # if (APPLE)
+ # There is no harm in adding libraries; this is required when building with Conan
+-target_link_libraries(shared_lib ${LIBRARIES})
+ target_link_libraries(static_lib ${LIBRARIES})
+ 
+ # endif ()
+@@ -404,7 +393,7 @@ if(CODE_COVERAGE GREATER 0)
+ endif()
+ 
+ # === Install Targets ===
+-install(TARGETS shared_lib static_lib
++install(TARGETS static_lib
+     EXPORT nuraft-targets
+     LIBRARY DESTINATION lib
+     ARCHIVE DESTINATION lib
