@@ -1,0 +1,54 @@
+From 6a0a201501f2871c1aba52c9968de5ec5de12e11 Mon Sep 17 00:00:00 2001
+From: whyzix <whyzix@qq.com>
+Date: Thu, 29 May 2025 14:09:11 +0800
+Subject: [PATCH] change <moodycamel/concurrentqueue.h> to #include
+ <concurrentqueue/concurrentqueue.h>
+
+---
+ redGrapes/dispatch/thread/DefaultWorker.hpp | 2 +-
+ redGrapes/redGrapes.tpp                     | 2 +-
+ redGrapes/task/queue.hpp                    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/redGrapes/dispatch/thread/DefaultWorker.hpp b/redGrapes/dispatch/thread/DefaultWorker.hpp
+index d07c666..e4e5c02 100644
+--- a/redGrapes/dispatch/thread/DefaultWorker.hpp
++++ b/redGrapes/dispatch/thread/DefaultWorker.hpp
+@@ -11,7 +11,7 @@
+ #include "redGrapes/task/queue.hpp"
+ 
+ #include <hwloc.h>
+-#include <moodycamel/concurrentqueue.h>
++#include <concurrentqueue/concurrentqueue.h>
+ 
+ #include <atomic>
+ 
+diff --git a/redGrapes/redGrapes.tpp b/redGrapes/redGrapes.tpp
+index ced4361..73b1082 100644
+--- a/redGrapes/redGrapes.tpp
++++ b/redGrapes/redGrapes.tpp
+@@ -12,7 +12,7 @@
+ #include "redGrapes/redGrapes.hpp"
+ #include "redGrapes/util/trace.hpp"
+ 
+-#include <moodycamel/concurrentqueue.h>
++#include <concurrentqueue/concurrentqueue.h>
+ 
+ #include <functional>
+ 
+diff --git a/redGrapes/task/queue.hpp b/redGrapes/task/queue.hpp
+index e33b2c5..9e50d2b 100644
+--- a/redGrapes/task/queue.hpp
++++ b/redGrapes/task/queue.hpp
+@@ -11,7 +11,7 @@
+ #include "redGrapes/memory/block.hpp"
+ #include "redGrapes/util/trace.hpp"
+ 
+-#include <moodycamel/concurrentqueue.h>
++#include <concurrentqueue/concurrentqueue.h>
+ 
+ namespace redGrapes
+ {
+-- 
+2.47.1.windows.2
+

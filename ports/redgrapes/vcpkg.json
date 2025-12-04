@@ -1,0 +1,17 @@
+{
+  "name": "redgrapes",
+  "version": "20241028",
+  "description": "Resource-based, Declarative task-Graphs for Parallel, Event-driven Scheduling. ",
+  "homepage": "https://redgrapes.rtfd.io/",
+  "license": "MPL-2.0",
+  "dependencies": [
+    "boost-context",
+    "concurrentqueue",
+    "fmt",
+    "hwloc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
