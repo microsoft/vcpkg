@@ -7,7 +7,7 @@
 ## 6. The build should fail with "Done downloading version and emitting hashes." This will have changed out the vcpkg.json versions of the qt ports and rewritten qt_port_data.cmake
 ## 7. Set QT_UPDATE_VERSION back to 0
 
-set(QT_VERSION 6.9.3)
+set(QT_VERSION 6.10.0)
 set(QT_DEV_BRANCH 0)
 
 set(QT_UPDATE_VERSION 0)
@@ -121,7 +121,7 @@ function(qt_get_url_filename qt_port out_urls out_filename)
         set(urls "https://github.com/qt/${qt_port}/archive/${QT_VERSION}.tar.gz")
         set(filename "qt-${qt_port}-${QT_VERSION}.tar.gz")
     else()
-        string(SUBSTRING "${QT_VERSION}" 0 3 qt_major_minor)
+        string(SUBSTRING "${QT_VERSION}" 0 4 qt_major_minor)
 
         if(NOT QT_DEV_BRANCH)
             set(branch_subpath "archive")
