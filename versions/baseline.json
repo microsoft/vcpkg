@@ -3234,7 +3234,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.12",
-      "port-version": 4
+      "port-version": 5
     },
     "gegl": {
       "baseline": "0.4.62",
