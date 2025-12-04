@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 4ddfff2f44c0e98b2a110da57335fe119788f32e3924c8bdbe9afffbad5e037fdfe64f88f664b025a86134e17f14f6195107035b258fde06f946972f1f0456a8
     HEAD_REF main
+    PATCHES
+        fix-msvc-build.patch
 )
 
 vcpkg_cmake_configure(
