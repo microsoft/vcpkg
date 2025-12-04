@@ -8,7 +8,7 @@ index 09676a6..021bc66 100644
  vec2 get_dm(uint ib, uint a_offset) {
 -    const uint16_t[4] scales = data_a[a_offset + ib].scales;
 -    const u16vec4 s = u16vec4(scales[0], scales[1], scales[2], scales[3]) >> 12;
-+    u16vec4 s = u16vec4(
++    const u16vec4 s = u16vec4(
 +        data_a[a_offset + ib].scales[0],
 +        data_a[a_offset + ib].scales[1],
 +        data_a[a_offset + ib].scales[2],
