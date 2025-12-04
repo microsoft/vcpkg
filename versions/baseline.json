@@ -10753,7 +10753,7 @@
       "port-version": 4
     },
     "xsimd": {
-      "baseline": "13.2.0",
+      "baseline": "14.0.0",
       "port-version": 0
     },
     "xtensor": {
