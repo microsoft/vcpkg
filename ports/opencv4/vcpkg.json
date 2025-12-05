@@ -510,7 +510,8 @@
           "features": [
             "dnn"
           ]
-        }
+        },
+        "vulkan-headers"
       ]
     },
     "webp": {

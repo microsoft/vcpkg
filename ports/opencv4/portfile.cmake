@@ -11,6 +11,7 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-opencl.diff
+      0005-vulkan.diff
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
@@ -584,6 +585,9 @@ if("tiff" IN_LIST FEATURES)
 endif()
 if("vtk" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
+endif()
+if("vulkan" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(VulkanHeaders CONFIG)")
 endif()
 
 string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
