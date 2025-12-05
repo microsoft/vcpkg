@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LiveTuner)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LiveTuner PACKAGE_NAME livetuner)
 
 # Remove library files but keep cmake config files
 file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.a" "${CURRENT_PACKAGES_DIR}/lib/*.lib")
