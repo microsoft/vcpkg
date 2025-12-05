@@ -6,12 +6,17 @@ if(buildtrees_path_length GREATER warning_length AND CMAKE_HOST_WIN32)
     )
 endif()
 
-vcpkg_from_gitlab(
-    OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.gnome.org
-    REPO GNOME/gtk
-    REF "${VERSION}"
-    SHA512 19e5482e4e843aa946ab79c8ce283a7b44aaac43ad99b6913cbc3c91492bf722ebe0238457b75b82be6d6c65a394d32ebc8732832f3f800145e3cf69d5c1e77c
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/gtk/${VERSION_MAJOR_MINOR}/gtk-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/gtk/${VERSION_MAJOR_MINOR}/gtk-${VERSION}.tar.xz"
+    FILENAME "GNOME-gtk-${VERSION}.tar.xz"
+    SHA512 0
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-build.patch
         cairo-cpp-linkage.patch
