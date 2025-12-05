@@ -17,7 +17,9 @@
         "highgui",
         "intrinsics",
         "jpeg",
+        "jpegxl",
         "nonfree",
+        "openjpeg",
         "png",
         "quirc",
         "thread",
@@ -36,8 +38,13 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "jpegxl",
-        "openexr"
+        "freetype",
+        "gdcm",
+        "hdf",
+        "openexr",
+        "qt",
+        "sfm",
+        "text"
       ],
       "platform": "!uwp"
     },
@@ -54,6 +61,7 @@
       "default-features": false,
       "features": [
         "dnn",
+        "vulkan",
         "webp"
       ],
       "platform": "!android"
@@ -116,22 +124,16 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "freetype",
-        "gdcm",
-        "ipp",
-        "openjpeg",
-        "qt",
-        "sfm",
-        "vtk",
-        "vulkan"
+        "ipp"
       ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
+      "platform": "(x86 | x64) & (linux | windows)"
     },
     {
       "name": "opencv",
       "default-features": false,
       "features": [
-        "aravis"
+        "aravis",
+        "vtk"
       ],
       "platform": "!android & !uwp"
     },
@@ -140,21 +142,14 @@
       "default-features": false,
       "features": [
         "eigen",
+        "jasper",
         "jpeg",
+        "opengl",
         "png",
+        "qt",
         "tiff"
       ],
-      "platform": "!uwp & !(arm & windows) & !android"
-    },
-    {
-      "name": "opencv2",
-      "default-features": false,
-      "features": [
-        "jasper",
-        "opengl",
-        "qt"
-      ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64))"
+      "platform": "!android & !uwp & !(arm & windows)"
     },
     {
       "name": "opencv3",

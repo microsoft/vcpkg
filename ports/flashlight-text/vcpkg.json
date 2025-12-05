@@ -1,6 +1,6 @@
 {
   "name": "flashlight-text",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "description": "Flashlight Text is a library for tokenization, beam search, and text processing.",
   "homepage": "https://github.com/flashlight/text",
   "license": "MIT",

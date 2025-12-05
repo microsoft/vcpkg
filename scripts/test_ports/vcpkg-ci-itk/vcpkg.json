@@ -10,7 +10,7 @@
       "features": [
         "opencv"
       ],
-      "platform": "arm64"
+      "platform": "arm64 & !windows"
     },
     {
       "name": "itk",

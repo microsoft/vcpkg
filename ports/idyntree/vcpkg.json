@@ -1,6 +1,6 @@
 {
   "name": "idyntree",
-  "version": "14.0.0",
+  "version": "14.1.0",
   "description": "Multibody Dynamics Library designed for Free Floating Robots.",
   "homepage": "https://github.com/robotology/idyntree",
   "license": "BSD-3-Clause",
