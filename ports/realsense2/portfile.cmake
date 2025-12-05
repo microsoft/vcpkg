@@ -11,7 +11,6 @@ vcpkg_from_github(
     SHA512 e38350be3eba6fec97096abfff652a36d0e37ba95baf1b40841cc180e2d650c9abfa53d99e1c0a7767fa0c91ac4d9780702b51078f9c1564848121c1048749f4
     HEAD_REF master
     PATCHES
-        add-include-chrono.patch # https://github.com/IntelRealSense/librealsense/pull/13537
         android-config.diff
         build.diff
         "${lz4_patch}"
