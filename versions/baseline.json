@@ -7352,6 +7352,10 @@
       "baseline": "2.1.0",
       "port-version": 0
     },
+    "orefkov-simstr": {
+      "baseline": "1.2.7",
+      "port-version": 0
+    },
     "orocos-kdl": {
       "baseline": "1.5.3",
       "port-version": 0
