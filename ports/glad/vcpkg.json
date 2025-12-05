@@ -1,6 +1,6 @@
 {
   "name": "glad",
-  "version": "0.1.36",
+  "version": "2.0.8",
   "description": "Multi-Language Vulkan/GL/GLES/EGL/GLX/WGL Loader-Generator based on the official specs.",
   "homepage": "https://github.com/Dav1dde/glad",
   "documentation": "https://github.com/Dav1dde/glad/wiki",
@@ -15,14 +15,97 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
     }
   ],
   "default-features": [
+    "gl-api-latest",
     "loader"
   ],
   "features": {
-    "egl": {
-      "description": "Use `egl` spec instead of `gl`."
+    "alias": {
+      "description": "Enables function pointer aliasing."
+    },
+    "debug": {
+      "description": "Enables generation of a debug build."
+    },
+    "egl-api-10": {
+      "description": "Imports extensions from EGL API specification version 1.0."
+    },
+    "egl-api-11": {
+      "description": "Imports extensions from EGL API specification version 1.1.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "egl-api-10"
+          ]
+        }
+      ]
+    },
+    "egl-api-12": {
+      "description": "Imports extensions from EGL API specification version 1.2.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "egl-api-11"
+          ]
+        }
+      ]
+    },
+    "egl-api-13": {
+      "description": "Imports extensions from EGL API specification version 1.3.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "egl-api-12"
+          ]
+        }
+      ]
+    },
+    "egl-api-14": {
+      "description": "Imports extensions from EGL API specification version 1.4.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "egl-api-13"
+          ]
+        }
+      ]
+    },
+    "egl-api-15": {
+      "description": "Imports extensions from EGL API specification version 1.5.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "egl-api-14"
+          ]
+        }
+      ]
+    },
+    "egl-api-latest": {
+      "description": "Imports extensions from latest EGL API specification.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "egl-api-15"
+          ]
+        }
+      ]
     },
     "extensions": {
       "description": "Enables all extensions."
@@ -339,16 +422,169 @@
         }
       ]
     },
-    "glx": {
-      "description": "Use `glx` spec instead of `gl`. Only available with the X Window System.",
-      "supports": "!(windows | uwp)"
+    "glx-api-10": {
+      "description": "Imports extensions from GLX API specification version 1.0.",
+      "supports": "linux & !android",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "gl-api-latest"
+          ]
+        }
+      ]
+    },
+    "glx-api-11": {
+      "description": "Imports extensions from GLX API specification version 1.1.",
+      "supports": "linux & !android",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "glx-api-10"
+          ]
+        }
+      ]
+    },
+    "glx-api-12": {
+      "description": "Imports extensions from GLX API specification version 1.2.",
+      "supports": "linux & !android",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "glx-api-11"
+          ]
+        }
+      ]
+    },
+    "glx-api-13": {
+      "description": "Imports extensions from GLX API specification version 1.3.",
+      "supports": "linux & !android",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "glx-api-12"
+          ]
+        }
+      ]
+    },
+    "glx-api-14": {
+      "description": "Imports extensions from GLX API specification version 1.4.",
+      "supports": "linux & !android",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "glx-api-13"
+          ]
+        }
+      ]
+    },
+    "glx-api-latest": {
+      "description": "Imports extensions from latest GLX API specification.",
+      "supports": "linux & !android",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "glx-api-14"
+          ]
+        }
+      ]
     },
     "loader": {
-      "description": "Generate loader logic."
+      "description": "Include internal loaders for APIs."
     },
-    "wgl": {
-      "description": "Use `wgl` spec instead of `gl`. Only available for Windows and UWP platforms.",
-      "supports": "!(linux | osx)"
+    "mx": {
+      "description": "Enables support for multiple GL contexts."
+    },
+    "on-demand": {
+      "description": "On-demand function pointer loading, initialize on use (experimental)."
+    },
+    "vulkan-api-10": {
+      "description": "Imports extensions from Vulkan API specification version 1.0."
+    },
+    "vulkan-api-11": {
+      "description": "Imports extensions from Vulkan API specification version 1.1.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "vulkan-api-10"
+          ]
+        }
+      ]
+    },
+    "vulkan-api-12": {
+      "description": "Imports extensions from Vulkan API specification version 1.2.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "vulkan-api-11"
+          ]
+        }
+      ]
+    },
+    "vulkan-api-13": {
+      "description": "Imports extensions from Vulkan API specification version 1.3.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "vulkan-api-12"
+          ]
+        }
+      ]
+    },
+    "vulkan-api-latest": {
+      "description": "Imports extensions from latest Vulkan API specification.",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "vulkan-api-13"
+          ]
+        }
+      ]
+    },
+    "wgl-api-10": {
+      "description": "Imports extensions from WGL API specification version 1.0.",
+      "supports": "windows & !uwp",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "gl-api-latest"
+          ]
+        }
+      ]
+    },
+    "wgl-api-latest": {
+      "description": "Imports extensions from latest WGL API specification. Only available for Windows and UWP platforms.",
+      "supports": "windows & !uwp",
+      "dependencies": [
+        {
+          "name": "glad",
+          "default-features": false,
+          "features": [
+            "wgl-api-10"
+          ]
+        }
+      ]
     }
   }
 }
