@@ -1,0 +1,21 @@
+--- a/third-party/rsutils/src/control-c-handler.cpp
++++ b/third-party/rsutils/src/control-c-handler.cpp
+@@ -1,5 +1,6 @@
+ #include <atomic>
++#include <stdexcept>
+
+--- a/third-party/rsutils/src/special-folder.cpp
++++ b/third-party/rsutils/src/special-folder.cpp
+@@ -15,6 +15,7 @@
+ #include <unistd.h>
+ #include <pwd.h>
++#include <stdexcept>
+
+--- a/third-party/rsutils/src/network-adapter-watcher.cpp
++++ b/third-party/rsutils/src/network-adapter-watcher.cpp
+@@ -21,6 +21,8 @@
+ #include <sys/socket.h>
+ #include <linux/netlink.h>
+ #include <poll.h>
++#include <thread>
++#include <cstring>

@@ -13,6 +13,7 @@ vcpkg_from_github(
         libusb.diff
         using-firmware.diff
         add-stdexcept.diff # https://github.com/IntelRealSense/librealsense/pull/14299
+        fix-rsutils-includes.patch
 )
 file(GLOB extern "${SOURCE_PATH}/CMake/extern_*.cmake")
 file(REMOVE_RECURSE
