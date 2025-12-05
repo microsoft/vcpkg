@@ -7,14 +7,24 @@ vcpkg_from_gitlab(
     HEAD_REF main
 )
 
+if("tools" IN_LIST FEATURES)
+    set(tools_option -Dtools=enabled)
+else()
+    set(tools_option -Dtools=disabled)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${tools_option}
 )
 
 vcpkg_install_meson()
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_copy_tools(TOOL_NAMES serdi AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES serdi AUTO_CLEAN)
+endif()
 vcpkg_fixup_pkgconfig()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

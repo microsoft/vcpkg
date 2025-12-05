@@ -1,6 +1,7 @@
 {
   "name": "serd",
   "version": "0.32.6",
+  "port-version": 1,
   "description": "Serd is a lightweight C library for RDF syntax which supports reading and writing Turtle, TRiG, NTriples, and NQuads.",
   "homepage": "https://drobilla.net/software/serd",
   "license": "ISC",
@@ -9,5 +10,11 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build the serdi command-line tool",
+      "supports": "!emscripten"
+    }
+  }
 }
