@@ -1,0 +1,4 @@
+cpplivetutner provides CMake targets:
+
+    find_package(LiveTuner CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE LiveTuner::LiveTuner)
