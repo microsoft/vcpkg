@@ -8,8 +8,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-# Disable ASM on ARM Windows to fix broken build
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm")
+# Disable ASM on Windows except x64 (only x64 has proper MASM support)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(CRYPTOPP_DISABLE_ASM ON)
 else()
     set(CRYPTOPP_DISABLE_ASM OFF)
