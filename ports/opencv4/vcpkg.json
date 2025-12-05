@@ -296,7 +296,6 @@
     },
     "opencl": {
       "description": "Enable opencl support",
-      "supports": "!osx",
       "dependencies": [
         "opencl"
       ]

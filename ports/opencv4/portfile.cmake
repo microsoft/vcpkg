@@ -10,13 +10,13 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0004-opencl.diff
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
       0012-miss-openexr.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
-      0019-opencl-kernel.patch
       0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
@@ -514,6 +514,9 @@ find_dependency(HDF5)")
 endif()
 if("omp" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
+endif()
+if("opencl" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(OpenCL CONFIG)")
 endif()
 if("openexr" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
