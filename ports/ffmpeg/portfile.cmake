@@ -9,7 +9,6 @@ vcpkg_from_github(
         0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
-        0005-fix-nasm.patch
         0007-fix-lib-naming.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
@@ -60,7 +59,6 @@ endif()
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_DETECTED_MSVC)
-    string(APPEND OPTIONS " --disable-inline-asm") # clang-cl has inline assembly but this leads to undefined symbols.
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -O2")
