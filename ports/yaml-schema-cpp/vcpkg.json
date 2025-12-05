@@ -4,6 +4,7 @@
   "description": "a C++ library for specification and validation of YAML files.",
   "homepage": "https://github.com/joanvallve/yaml-schema-cpp",
   "license": "MIT",
+  "supports": "!windows | mingw",
   "dependencies": [
     "boost-filesystem",
     "eigen3",
