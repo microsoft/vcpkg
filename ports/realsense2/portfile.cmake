@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
     REF "v${VERSION}"
-    SHA512 5b5998560ab6a7d81a23b1d84194f4cf3e123af1d46711127d838dc37c3eb1414f232bf0e1a444c68212fabcd79c3e4e1c47ff87b878266558e0027bd522447f
+    SHA512 e38350be3eba6fec97096abfff652a36d0e37ba95baf1b40841cc180e2d650c9abfa53d99e1c0a7767fa0c91ac4d9780702b51078f9c1564848121c1048749f4
     HEAD_REF master
     PATCHES
         add-include-chrono.patch # https://github.com/IntelRealSense/librealsense/pull/13537
