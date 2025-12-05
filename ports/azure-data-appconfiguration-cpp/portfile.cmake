@@ -4,21 +4,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF b5ae8c9d8a06af471605c2e2c820eb90b5495c38
-    SHA512 75df4c36ff7e9eff2da42f11c8fb0bb8b58da274e04957eba61d5b451db0c466421aa721923dbb7c6c105d453afd19d38bb55a68b322ffae1eff9db1caf36a4b
+    REF bd2e0f09ff5626cb91e7d9062b79f55248d7247b
+    SHA512 4102bd6dc09adf6f716e4945eb30858a7226e898becaf2c8e976a43b6e1e759156e8681c185a07adac8a15d86e584902a4c79b2518729f2668837485d372df13
     HEAD_REF main
 )
 
 file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
 file(REMOVE_RECURSE ${unused})
 
-if(EXISTS "${SOURCE_PATH}/sdk/identity/azure-identity")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/identity/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/identity/azure-identity" "${SOURCE_PATH}/sdk/identity/_")
-  file(RENAME "${SOURCE_PATH}/sdk/identity" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
