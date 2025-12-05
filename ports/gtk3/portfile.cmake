@@ -12,7 +12,7 @@ vcpkg_download_distfile(ARCHIVE
         "https://download.gnome.org/sources/gtk/${VERSION_MAJOR_MINOR}/gtk-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/gtk/${VERSION_MAJOR_MINOR}/gtk-${VERSION}.tar.xz"
     FILENAME "GNOME-gtk-${VERSION}.tar.xz"
-    SHA512 0
+    SHA512 f96ee1c586284af315709ec38e841bd1b2558d09e2162834a132ffc4bbcddca272a92a828550a3accaa3e4da1964ad32b3b48291e929a108a913bd18c61cd73b
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
