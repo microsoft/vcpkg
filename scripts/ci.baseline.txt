@@ -558,6 +558,9 @@ ois:x64-android=fail
 omniorb:arm-neon-android=fail
 omniorb:arm64-android=fail
 omniorb:x64-android=fail
+onnxruntime:x64-linux=fail
+onnxruntime:x64-windows-release=fail
+onnxruntime:x64-windows=fail
 # opencc/deps/rapidjson-1.1.0/rapidjson.h: Unknown machine endianess detected
 # opencc/deps/marisa-0.2.5/lib/marisa/grimoire/io/mapper.cc currently doesn't support UWP.
 opencc:x64-android=fail
