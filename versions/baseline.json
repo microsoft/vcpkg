@@ -2528,10 +2528,6 @@
       "baseline": "2.4.12",
       "port-version": 0
     },
-    "doctpl": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "double-conversion": {
       "baseline": "3.3.1",
       "port-version": 0
