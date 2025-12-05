@@ -46,6 +46,7 @@ vcpkg_from_github(
         backport-bda8324.diff # https://gitlab.kitware.com/vtk/vtk/-/merge_requests/12418
         use-compile-tools.diff
         zspace.diff # https://gitlab.kitware.com/vtk/vtk/-/commit/01a8bd7a917d33892f67a8d76ce7fc4b524d56b4
+        mpi-language.diff
 )
 
 # =============================================================================
