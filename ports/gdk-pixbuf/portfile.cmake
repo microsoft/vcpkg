@@ -1,4 +1,3 @@
-
 string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/gdk-pixbuf/${VERSION_MAJOR_MINOR}/gdk-pixbuf-${VERSION}.tar.xz"
