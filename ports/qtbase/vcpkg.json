@@ -10,6 +10,7 @@
       "name": "libb2",
       "platform": "!windows"
     },
+    "m4dc",
     {
       "name": "pcre2",
       "default-features": false
