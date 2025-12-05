@@ -6,7 +6,6 @@ set(${PORT}_PATCHES
     remove-static-ssl-stub.patch
     ffmpeg-compile-def.patch
     ffmpeg.patch
-    853b15cc.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
