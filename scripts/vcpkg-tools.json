@@ -23,50 +23,50 @@
       "name": "cmake",
       "os": "windows",
       "arch": "amd64",
-      "version": "3.30.1",
-      "executable": "cmake-3.30.1-windows-i386/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-windows-i386.zip",
-      "sha512": "0b74bd4222064cfb6e42838987704eb21d57ad5f7bbd87714ab570f1d107fa19bd2f14316475338518292bc377bf38b581a07c73267a775cd385bbd1800879b4",
-      "archive": "cmake-3.30.1-windows-i386.zip"
+      "version": "3.31.10",
+      "executable": "cmake-3.31.10-windows-x86_64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-windows-x86_64.zip",
+      "sha512": "50c71aa15a05eaf8d7592d9648efb986df74ab716dc1f1a03795351284c6212b70ad439a1d9f3575d60cf49b0a5579cad551cc6a3fe2911ae8ecb08add60fc60",
+      "archive": "cmake-3.31.10-windows-x86_64.zip"
     },
     {
       "name": "cmake",
       "os": "windows",
       "arch": "arm64",
-      "version": "3.30.1",
-      "executable": "cmake-3.30.1-windows-arm64/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-windows-arm64.zip",
-      "sha512": "40bcdeff5ff40044629f49e0effc958a719353330ea39876b919fb7c2d441885c884acf43e644ab5dedcb95503d211c895da1c0b6360e71449bea6a981f8e128",
-      "archive": "cmake-3.30.1-windows-arm64.zip"
+      "version": "3.31.10",
+      "executable": "cmake-3.31.10-windows-arm64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-windows-arm64.zip",
+      "sha512": "a894518004b1e99c008e2554fd7a0b2f714ad6bf12e9c0bd34f62d808546e5773845e3f4c2a44f03cae30fa52bb604760aec6a452327ef38c5cf94e593eb8587",
+      "archive": "cmake-3.31.10-windows-arm64.zip"
     },
     {
       "name": "cmake",
       "os": "osx",
-      "version": "3.30.1",
-      "executable": "cmake-3.30.1-macos-universal/CMake.app/Contents/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-macos-universal.tar.gz",
-      "sha512": "71290d3b5e51724711e8784f5b21100cb0cffdbb889da7572a26dd171d9052601496de8d39c42d76ef3a9245af2ab35a590bf53ad68d7bb8a2047b64272d2647",
-      "archive": "cmake-3.30.1-macos-universal.tar.gz"
+      "version": "3.31.10",
+      "executable": "cmake-3.31.10-macos-universal/CMake.app/Contents/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-macos-universal.tar.gz",
+      "sha512": "5960326dee8227bf27cdd2d94c336835b7bf1b11c443c35ecf2b50a811c7874fcc3400a3b793e4720ef6505d66aed597ecdaf6c77b12db69abafcccd0659182d",
+      "archive": "cmake-3.31.10-macos-universal.tar.gz"
     },
     {
       "name": "cmake",
       "os": "linux",
       "arch": "arm64",
-      "version": "3.30.1",
-      "executable": "cmake-3.30.1-linux-aarch64/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-linux-aarch64.tar.gz",
-      "sha512": "ec6c1c682dda2381aa5ebef98a2597e4ab6b4563639c28b2f30c20360694b902a7b33c175c796169a9f99ed139f053916042caed58d83298680894c2840dbb87",
-      "archive": "cmake-3.30.1-linux-aarch64.tar.gz"
+      "version": "3.31.10",
+      "executable": "cmake-3.31.10-linux-aarch64/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-linux-aarch64.tar.gz",
+      "sha512": "e45c23cd756a9b4699a54d52bd196e3c1c2e63fab893846eeb8a0e1eabb2caa54629bd857518ab5ce5701d9179bb308bf6b4866d07bb8d7b87e04d895d10289d",
+      "archive": "cmake-3.31.10-linux-aarch64.tar.gz"
     },
     {
       "name": "cmake",
       "os": "linux",
-      "version": "3.30.1",
+      "version": "3.31.10",
       "arch": "amd64",
-      "executable": "cmake-3.30.1-linux-x86_64/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v3.30.1/cmake-3.30.1-linux-x86_64.tar.gz",
-      "sha512": "84ce1333ed696a1736986fba2853c5d8db0e4c9addaf4a4723911248c6d49ecf545adf8bd46091d198fc7bd1e6c896798661463aa1ce3a726a093883aaa19adf",
-      "archive": "cmake-3.30.1-linux-x86_64.tar.gz"
+      "executable": "cmake-3.31.10-linux-x86_64/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-linux-x86_64.tar.gz",
+      "sha512": "2555ae413b19a2acfc8d3c4520f0ecc87811ac1e121bec718b679006d03083dfe7218a68e0af0263a80bd8fbb2d23b5975f4533638b71ef9ad62272640f62356",
+      "archive": "cmake-3.31.10-linux-x86_64.tar.gz"
     },
     {
       "name": "git",
@@ -249,50 +249,50 @@
       "name": "ninja",
       "os": "windows",
       "arch": "arm64",
-      "version": "1.13.1",
+      "version": "1.13.2",
       "executable": "ninja.exe",
-      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-winarm64.zip",
-      "sha512": "6a3873522b3397a4d68c6a6c3e389085b81ba5ff20d4f5c289b3974c8bf7169de9cf2c8d9482c2b06846783492620008f486db44c2c651f007b3c335022a472d",
-      "archive": "ninja-winarm64-1.13.1.zip"
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-winarm64.zip",
+      "sha512": "11541733eede64fe928ad645cd6e5c06cfc2fb7d8c2225aea270a6ed91ffd17c3a13332a348af236e6732cb9f1972fca088cab186439907ca2455b79709d70f6",
+      "archive": "ninja-winarm64-1.13.2.zip"
     },
     {
       "name": "ninja",
       "os": "windows",
       "arch": "x64",
-      "version": "1.13.1",
+      "version": "1.13.2",
       "executable": "ninja.exe",
-      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-win.zip",
-      "sha512": "44955ef9e0053036dc316de3693523ce280338c816b445c27fcbe7dd219543b815812662c9082c409b17d823284506faa5b5c3c5f6d3721242dfc73e56d4ec34",
-      "archive": "ninja-win-1.13.1.zip"
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-win.zip",
+      "sha512": "55d3d891e8fc6c8ad7f92e172125319896761e57c5125944613d9bbfa5b9374387e9fc1468ad5bcb31464f43fb1c455ea251343942595f42955dc67090aa12ee",
+      "archive": "ninja-win-1.13.2.zip"
     },
     {
       "name": "ninja",
       "os": "linux",
       "arch": "arm64",
-      "version": "1.13.1",
+      "version": "1.13.2",
       "executable": "ninja",
-      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-linux-aarch64.zip",
-      "sha512": "7cd841409fd2a4f35566ab2f0add75d89d94cfaa5952bc550cf263878469ab8109e36553b66e6422018012a4e9af4c7eaf79c84af1733d061231ce3511e3c98e",
-      "archive": "ninja-linux-aarch64-1.13.1.zip"
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-linux-aarch64.zip",
+      "sha512": "318714ef0f7cb81fe5aab99032d19cfec07035e784ec9a1de63825ce8bed70f9ad6c5801b84bb7130a0b7acb6d5ed960b2953b27256ff51e18dfd720840faa39",
+      "archive": "ninja-linux-aarch64-1.13.2.zip"
     },
     {
       "name": "ninja",
       "os": "linux",
       "arch": "x64",
-      "version": "1.13.1",
+      "version": "1.13.2",
       "executable": "ninja",
-      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-linux.zip",
-      "sha512": "ca4e424c46c12f4e120ab2030edcff8e34cf5db9d05b4364f2d4be10f46e1a29eef64f7b4bf65fb33cd629b3bc3bcb9292341f92953968ef226f44b52959d916",
-      "archive": "ninja-linux-1.13.1.zip"
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-linux.zip",
+      "sha512": "714b900cf10b7ecb1b641c91f4ef696250c64984e5955a8088e4a538d6e8077f43e55f6da47efcedbe316c68d51a9e98feff51734eb0eac1b17aa85af5698753",
+      "archive": "ninja-linux-1.13.2.zip"
     },
     {
       "name": "ninja",
       "os": "osx",
-      "version": "1.13.1",
+      "version": "1.13.2",
       "executable": "ninja",
-      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-mac.zip",
-      "sha512": "72ce74b57d21bcd50c1d457a304a3f4f88d960631a945f754180153a7e747950bc2e34195d0490d2c298bba2c02f96d5a5925b4096ddb7c86b67d35f7579641f",
-      "archive": "ninja-mac-1.13.1.zip"
+      "url": "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-mac.zip",
+      "sha512": "bf71f820791bb2ef97da6e7f8376aaa1c51f3860884df1acde692d2df4c0747a2e167d843dcd5537813da2e5d14457d6ee3f48df13cdd678cea87e68fe73e9f0",
+      "archive": "ninja-mac-1.13.2.zip"
     },
     {
       "name": "powershell-core",

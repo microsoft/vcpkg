@@ -1,3 +1,3 @@
-set(qtscxml_HASH "3c21424f1941ea5e9e0a217149cb9bdd7b3ba729f40e506f2debde4aeaa314e214979436d38ac5c4b423e2a9fee5261a75df5fdc66731c911ae653a4d784e4ff")
-set(qtscxml_URL "https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtscxml-everywhere-src-6.9.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.9/6.9.2/submodules/qtscxml-everywhere-src-6.9.2.tar.xz")
-set(qtscxml_FILENAME "qtscxml-everywhere-src-6.9.2.tar.xz")
+set(qtscxml_HASH "61c7109f39a6db05eb9e14ad559531f6798aa23365a3d57e4431aa271edc0f1b163d7441294bb2f7a3a8249151d9d03c3d1f7ef8847c158f36ee9691dd633314")
+set(qtscxml_URL "https://download.qt.io/archive/qt/6.9/6.9.3/submodules/qtscxml-everywhere-src-6.9.3.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.9/6.9.3/submodules/qtscxml-everywhere-src-6.9.3.tar.xz")
+set(qtscxml_FILENAME "qtscxml-everywhere-src-6.9.3.tar.xz")
