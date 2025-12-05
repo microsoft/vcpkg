@@ -18,6 +18,11 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LiveTuner)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug")
+# Remove library files but keep cmake config files
+file(GLOB_RECURSE LIB_FILES "${CURRENT_PACKAGES_DIR}/lib/*.a" "${CURRENT_PACKAGES_DIR}/lib/*.lib")
+foreach(LIB_FILE ${LIB_FILES})
+    file(REMOVE "${LIB_FILE}")
+endforeach()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
