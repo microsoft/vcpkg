@@ -6005,8 +6005,8 @@
       "port-version": 0
     },
     "lockpp": {
-      "baseline": "3.0",
-      "port-version": 1
+      "baseline": "3.2.0",
+      "port-version": 0
     },
     "lodepng": {
       "baseline": "2021-12-04",
