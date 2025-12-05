@@ -6941,7 +6941,7 @@
       "port-version": 0
     },
     "nowide": {
-      "baseline": "11.3.0",
+      "baseline": "11.3.1",
       "port-version": 0
     },
     "nrf-ble-driver": {
