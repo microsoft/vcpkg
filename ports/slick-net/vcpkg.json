@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "slick-net",
+  "version": "1.2.1",
+  "description": "A modern C++20 networking library providing HTTP/HTTPS client, WebSocket/WebSocket Secure client, and HTTP streaming support built on Boost.Beast and Boost.Asio",
+  "homepage": "https://github.com/SlickQuant/slick_net",
+  "license": "MIT",
+  "supports": "!(uwp | arm)",
+  "dependencies": [
+    {
+      "name": "boost-asio",
+      "version>=": "1.83.0"
+    },
+    {
+      "name": "boost-beast",
+      "version>=": "1.83.0"
+    },
+    {
+      "name": "boost-context",
+      "version>=": "1.83.0"
+    },
+    {
+      "name": "boost-system",
+      "version>=": "1.83.0"
+    },
+    {
+      "name": "openssl",
+      "version>=": "3.0.2"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

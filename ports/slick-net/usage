@@ -1,0 +1,4 @@
+slick-net provides CMake targets:
+
+    find_package(slick_net CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE slick_net::slick_net)
