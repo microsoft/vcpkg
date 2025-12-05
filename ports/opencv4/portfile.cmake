@@ -26,7 +26,7 @@ vcpkg_from_github(
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
       0022-fix-miss-exception-include.patch
-      0023-ffmpeg8_support.patch
+      0023-ffmpeg8-support.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
