@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF "${VERSION}"
-    SHA512 3b6e0da8169449944715de9e66380977791069a1d8288534ec768eaa2fb68533821fd8e06eac925a26656baf42185258b13aa80579e1e9be3ebc18fcea66f24d
+    SHA512 8ac63ddd61e22cc0eaeafee4f30ae6e1cab05fc4929e2cea29070203b9ca8dfead12cc0fd7c4a87b65c1e20ec6b9ab4865a1b83fad33d114fc0708fdf107c51b
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -25,7 +25,6 @@ vcpkg_from_github(
       0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
-      0022-fix-miss-exception-include.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -195,7 +194,7 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF "${VERSION}"
-    SHA512 a5ebb6810a3b5e40858b7fd533f9eb7b3d475dfda843a489bc5168e72c5eaad0a7a23629aace1f43e1b62d9c24e5e1923d841059c297728fac464e00759886c2
+    SHA512 574121ca57328671741413df91fbf600cc04bb9a9beeacfb7bc20c15b2b4e8c9e031df30aafbcc34f82d85edfb098e5d008a744f4e6d833d6e47537a042045c6
     HEAD_REF master
     PATCHES
       0007-contrib-fix-hdf5.patch
@@ -292,9 +291,9 @@ if("ipp" IN_LIST FEATURES)
   if(VCPKG_TARGET_IS_OSX)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
       vcpkg_download_distfile(OCV_DOWNLOAD
-          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/0cc4aa06bf2bef4b05d237c69a5a96b9cd0cb85a/ippicv/ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
-          FILENAME "opencv-cache/ippicv/14f01c5a4780bfae9dde9b0aaf5e56fc-ippicv_2021.9.1_mac_intel64_20230919_general.tgz"
-          SHA512 e53aa1bf4336a94554bf40c29a74c85f595c0aec8d9102a158db7ae075db048c1ff7f50ed81eda3ac8e07b1460862970abc820073a53c0f237e584708c5295da
+          URLS "https://raw.githubusercontent.com/opencv/opencv_3rdparty/767426b2a40a011eb2fa7f44c677c13e60e205ad/ippicv/ippicv_2022.1.0_win_intel64_20250130_general.zip"
+          FILENAME "opencv-cache/ippicv/67a611ab22410f392239bddff6f91df7-ippicv_2022.1.0_win_intel64_20250130_general.zip"
+          SHA512 3a3d8a0aa4279dcbede489039eee3effea5263575fdd0a2d79dd14c0af48f90680fa7ce8567cbc47e9fec88e21d3d674a53c5939ded2d065b07e25fdefa690aa
       )
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
       message(FATAL_ERROR "IPP is not supported on arm64 macOS")
