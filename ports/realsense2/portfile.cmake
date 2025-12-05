@@ -1,9 +1,3 @@
-vcpkg_download_distfile(lz4_patch
-    URLS https://github.com/IntelRealSense/librealsense/commit/20748445a8e24bee148d8b6f67f3a6c3f259cced.diff?full_index=1
-    SHA512 90d754e7da6931b607429035c2fa14aa1137e28fa88d04f5e90220f57fc808fd256b516840922d0938d6b0f3f30b937ddc3568865c9a21fa1a2d8a51788e6f9a
-    FILENAME IntelRealSense-librealsense-lz4.diff
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
@@ -12,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         android-config.diff
-        build.diff
-        "${lz4_patch}"
         devendor-lz4.diff # https://github.com/IntelRealSense/librealsense/pull/13803#issuecomment-3072432118
         devendor-nlohmann-json.diff
         devendor-stb.diff
