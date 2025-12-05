@@ -34,6 +34,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         rtmp        USE_LIBRTMP
         httpsrr     USE_HTTPSRR
         ssls-export USE_SSLS_EXPORT
+        sectrust    USE_APPLE_SECTRUST
     INVERTED_FEATURES
         ldap        CURL_DISABLE_LDAP
         ldap        CURL_DISABLE_LDAPS
