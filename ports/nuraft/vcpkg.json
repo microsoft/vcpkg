@@ -18,6 +18,10 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "zlib",
+      "platform": "!windows"
     }
   ]
 }

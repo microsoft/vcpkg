@@ -1,7 +1,5 @@
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-    set(msvc_options "-DCMAKE_CXX_FLAGS=\"/permissive-\"")
-    set(msvc_patches "fix-build-compatibility-issues.patch")
 endif()
 
 vcpkg_from_github(
@@ -10,7 +8,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 16baaa9921228c48bfee2aa795b0c644228ceeae32430d2782593dd8087978359edcf47e17e551fbf475df22b127097d8d149fc0996c9ade7b5ae7bafd183f62
     HEAD_REF master
-    PATCHES ${msvc_patches}
+    PATCHES fix-build-compatibility-issues.patch
 )
 
 vcpkg_cmake_configure(
@@ -18,7 +16,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
-        ${msvc_options}
 )
 
 vcpkg_cmake_install()
