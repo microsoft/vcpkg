@@ -1,6 +1,7 @@
 {
   "name": "opencv",
   "version": "4.11.0",
+  "port-version": 1,
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "license": "Apache-2.0",
@@ -247,6 +248,18 @@
           "default-features": false,
           "features": [
             "halide"
+          ]
+        }
+      ]
+    },
+    "hdf": {
+      "description": "Enable Hierarchical Data Format (hdf) I/O",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "hdf"
           ]
         }
       ]
@@ -511,6 +524,18 @@
           "default-features": false,
           "features": [
             "tbb"
+          ]
+        }
+      ]
+    },
+    "text": {
+      "description": "Enable Scene Text Detection and Recognition",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "text"
           ]
         }
       ]

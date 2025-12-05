@@ -1,6 +1,6 @@
 {
   "name": "qtapplicationmanager",
-  "version": "6.9.2",
+  "version": "6.9.3",
   "description": "Qt component for application lifecycle management",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -63,12 +63,6 @@
           ]
         },
         "qthttpserver"
-      ]
-    },
-    "systemd-watchdog": {
-      "description": "Enable the systemd-watchdog component.",
-      "dependencies": [
-        "libsystemd"
       ]
     }
   }
