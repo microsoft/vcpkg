@@ -10,15 +10,10 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
-      0004-fix-eigen.patch
-      0005-fix-policy-CMP0057.patch
-      0006-fix-uwp.patch
       0008-devendor-quirc.patch
       0009-fix-protobuf.patch
       0010-fix-uwp-tiff-imgcodecs.patch
-      0011-remove-python2.patch
       0012-miss-openexr.patch
-      0014-fix-cmake-in-list.patch
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
@@ -26,16 +21,13 @@ vcpkg_from_github(
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
 )
+# Disallow accidental build of vendored copies
+file(GLOB third_party "${SOURCE_PATH}/3rdparty")
+file(REMOVE_RECURSE ${third_party})
+file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 vcpkg_find_acquire_program(PKGCONFIG)
 set(ENV{PKG_CONFIG} "${PKGCONFIG}")
-vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
-
-# Disallow accidental build of vendored copies
-file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/cpufeatures")
-file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
-file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
-file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
@@ -82,10 +74,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "dnn"        BUILD_opencv_dnn
  "dnn"        PROTOBUF_UPDATE_FILES
  "dnn"        UPDATE_PROTO_FILES
+ "dnn"        WITH_FLATBUFFERS
  "dnn"        WITH_PROTOBUF
  "dnn-cuda"   OPENCV_DNN_CUDA
  "dshow"      WITH_DSHOW
  "eigen"      WITH_EIGEN
+ "eigen"      VCPKG_LOCK_FIND_PACKAGE_Eigen3
  "ffmpeg"     WITH_FFMPEG
  "freetype"   WITH_FREETYPE
  "gapi"       BUILD_opencv_gapi
@@ -146,6 +140,9 @@ if("qt" IN_LIST FEATURES)
 endif()
 
 if("python" IN_LIST FEATURES)
+  if(EXISTS "${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}/cv2")
+    message(FATAL_ERROR "You cannot install opencv4[python] if opencv3[python] is already present.")
+  endif()
   x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES numpy OUT_PYTHON_VAR "PYTHON3")
   set(ENV{PYTHON} "${PYTHON3}")
   file(GLOB _py3_include_path "${CURRENT_INSTALLED_DIR}/include/python3*")
@@ -160,9 +157,6 @@ if("python" IN_LIST FEATURES)
     "-D__INSTALL_PATH_PYTHON3=${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}/cv2"
     "-DOPENCV_PYTHON_INSTALL_PATH=${CURRENT_PACKAGES_DIR}/debug/${PYTHON3_SITE}"
   )
-  if(EXISTS "${CURRENT_INSTALLED_DIR}/${PYTHON3_SITE}/cv2")
-    message(FATAL_ERROR "You cannot install opencv4[python] if opencv3[python] is already present.")
-  endif()
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -366,27 +360,30 @@ vcpkg_cmake_configure(
         -DARM=${TARGET_IS_ARM}
         ###### use c++17 to enable features that fail with c++11 (halide, protobuf, etc.)
         -DCMAKE_CXX_STANDARD=17
-        ###### ocv_options
+        ###### ocv installation dir options
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
+        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv4
         -DOPENCV_INCLUDE_INSTALL_PATH=include/opencv4
         -DOPENCV_LIB_INSTALL_PATH=lib
         -DOPENCV_3P_LIB_INSTALL_PATH=lib/manual-link/opencv4_thirdparty
-        -DOPENCV_CONFIG_INSTALL_PATH=share/opencv4
+        ###### ocv_options
+        -DCV_TRACE=OFF
+        -DCMAKE_DEBUG_POSTFIX=d
+        -DOPENCV_DEBUG_POSTFIX=d
+        -DOPENCV_DLLVERSION=4
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
         -DOPENCV_FFMPEG_SKIP_BUILD_CHECK=TRUE
-        -DCMAKE_DEBUG_POSTFIX=d
-        -DOPENCV_DLLVERSION=4
-        -DOPENCV_DEBUG_POSTFIX=d
-        -DOPENCV_GENERATE_SETUPVARS=OFF
+        -DOPENCV_FORCE_EIGEN_FIND_PACKAGE_CONFIG=ON
         -DOPENCV_GENERATE_PKGCONFIG=ON
-        # Do not build docs/examples
+        -DOPENCV_GENERATE_SETUPVARS=OFF
+        -DOPENCV_PYTHON2_SKIP_DETECTION=ON
+        # Do not build docs/examples/tests
         -DBUILD_DOCS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_PERF_TESTS=OFF
         -DBUILD_TESTS=OFF
-        -Dade_DIR=${ADE_DIR}
         ###### Disable build 3rd party libs
         -DBUILD_IPP_IW=OFF
         -DBUILD_ITT=OFF
@@ -424,7 +421,7 @@ vcpkg_cmake_configure(
         -DOPENCV_OTHER_INSTALL_PATH=share/opencv4
         ###### customized properties
         ${FEATURE_OPTIONS}
-        -DWITH_QT=${WITH_QT}
+        -Dade_DIR=${ADE_DIR}
         -DWITH_AVIF=OFF
         -DWITH_CPUFEATURES=${WITH_CPUFEATURES}
         -DWITH_ITT=OFF
@@ -435,13 +432,13 @@ vcpkg_cmake_configure(
         -DWITH_NVCUVENC=OFF
         -DWITH_OBSENSOR=OFF
         -DWITH_OPENCL_D3D11_NV=OFF
-        -DWITH_OPENCLAMDFFT=OFF
         -DWITH_OPENCLAMDBLAS=OFF
+        -DWITH_OPENCLAMDFFT=OFF
+        -DWITH_QT=${WITH_QT}
         -DWITH_SPNG=OFF #spng is mutually exclusive with png, which has been chosen since it's more widely used
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_ZLIB_NG=OFF
-        -DCV_TRACE=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
@@ -449,6 +446,9 @@ vcpkg_cmake_configure(
     OPTIONS_DEBUG
         ${PYTHON_EXTRA_DEFINES_DEBUG}
     MAYBE_UNUSED_VARIABLES
+        OPENCV_FORCE_EIGEN_FIND_PACKAGE_CONFIG
+        OPENCV_PYTHON2_SKIP_DETECTION
+        VCPKG_LOCK_FIND_PACKAGE_Eigen3
         VCPKG_LOCK_FIND_PACKAGE_Iconv
 )
 
@@ -490,6 +490,9 @@ endif()")
 
 if("ade" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(ade)")
+endif()
+if("dnn" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(flatbuffers CONFIG)")
 endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
