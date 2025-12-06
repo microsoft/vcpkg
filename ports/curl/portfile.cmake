@@ -11,6 +11,9 @@ vcpkg_from_github(
         #pkgconfig-curl-config.patch
         wip.diff
 )
+# The on-the-fly tarballs do not carry the details of release tarballs.
+vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[-DEV"]] [["]])
+vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[LIBCURL_TIMESTAMP "[unreleased]"]] [[LIBCURL_TIMESTAMP "[vcpkg]"]])
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
