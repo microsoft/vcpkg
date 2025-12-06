@@ -1,18 +1,14 @@
-vcpkg_download_distfile(PATCH_MISSING_CHRONO_INCLUDE
-    URLS https://github.com/wolfpld/tracy/commit/50ff279aaddfd91dc3cdcfd5b7aec3978e63da25.diff?full_index=1
-    SHA512 f9594297ea68612b68bd631497cd312ea01b34280a0f098de0d2b99810149345251a8985a6430337d0b55d2f181ceac10d563b64cfe48f78959f79ec7a6ea3b5
-    FILENAME wolfpld-tracy-PR982.diff
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
     REF "v${VERSION}"
-    SHA512 d3d99284e3c3172236c3f02b3bc52df111ef650fb8609e54fb3302ece28e55a06cd16713ed532f1e1aad66678ff09639dfc7e01a1e96880fb923b267a1b1b79b
+    SHA512 ee1c6596e7313bdccb8e2e9354c1e2ec14e78a6252b4f53861256807a09bac19f9ff0d7ffb95e60f1d16f5cec22cb95989a216f5c637d32cee9a8c4257a567fa
     HEAD_REF master
     PATCHES
         build-tools.patch
-		"${PATCH_MISSING_CHRONO_INCLUDE}"
+        fix-vendor-versions.patch
+        downgrade-capstone-5.patch
+        find-patch.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -40,16 +36,26 @@ vcpkg_cmake_configure(
     OPTIONS
         -DDOWNLOAD_CAPSTONE=OFF
         -DLEGACY=ON
+        -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
+        -DCPM_USE_LOCAL_PACKAGES=ON
+        -DCPM_LOCAL_PACKAGES_ONLY=ON
+        -DCPM_DONT_UPDATE_MODULE_PATH=ON
+        -DFETCHCONTENT_FULLY_DISCONNECTED=ON
+        -DFETCHCONTENT_TRY_FIND_PACKAGE_MODE=ALWAYS
         ${FEATURE_OPTIONS}
     OPTIONS_RELEASE
         ${TOOLS_OPTIONS}
     MAYBE_UNUSED_VARIABLES
         DOWNLOAD_CAPSTONE
         LEGACY
+        CPM_DONT_UPDATE_MODULE_PATH
+        CPM_LOCAL_PACKAGES_ONLY
+        CPM_USE_LOCAL_PACKAGES
+        FETCHCONTENT_TRY_FIND_PACKAGE_MODE
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
+vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy CONFIG_PATH "lib/cmake/Tracy")
 
 function(tracy_copy_tool tool_name tool_dir)
     vcpkg_copy_tools(
