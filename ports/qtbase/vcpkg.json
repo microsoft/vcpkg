@@ -1,6 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.9.3",
+  "version": "6.10.0",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -10,6 +10,7 @@
       "name": "libb2",
       "platform": "!windows"
     },
+    "md4c",
     {
       "name": "pcre2",
       "default-features": false
