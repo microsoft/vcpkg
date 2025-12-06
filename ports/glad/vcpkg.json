@@ -29,9 +29,6 @@
     "alias": {
       "description": "Enables function pointer aliasing."
     },
-    "debug": {
-      "description": "Enables generation of a debug build."
-    },
     "egl-api-10": {
       "description": "Imports extensions from EGL API specification version 1.0."
     },
@@ -505,9 +502,6 @@
     },
     "mx": {
       "description": "Enables support for multiple GL contexts."
-    },
-    "on-demand": {
-      "description": "On-demand function pointer loading, initialize on use (experimental)."
     },
     "vulkan-api-10": {
       "description": "Imports extensions from Vulkan API specification version 1.0."
