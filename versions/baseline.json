@@ -404,10 +404,6 @@
       "baseline": "0.5.0",
       "port-version": 0
     },
-    "ayush272002-dotenv": {
-      "baseline": "1.0.1",
-      "port-version": 0
-    },
     "autobahn": {
       "baseline": "20.8.1",
       "port-version": 2
@@ -494,6 +490,10 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.11.702",
+      "port-version": 0
+    },
+    "ayush272002-dotenv": {
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "azmq": {
