@@ -2,13 +2,16 @@ if(VCPKG_TARGET_IS_LINUX)
     message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n    libxi-dev\n    libxtst-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxi-dev libxtst-dev")
 endif()
 
-vcpkg_from_gitlab(
-    OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.gnome.org
-    REPO GNOME/at-spi2-core
-    REF AT_SPI2_CORE_2_44_1
-    SHA512 4e98b76e019f33af698a5e2b7ae7ce17ce0ff57784b4d505fe4bad58b097080899c1ca82b443502068c5504b60886e2d4a341bba833e0279ebef352211bf3813
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 8d85df75f886c4a19d829d14e5a9412b607b9cbe2d1b7ecb95b4082602f0624e90747fe955f96d378c3a52bc0e732074b97008bb34e6acc2722c7056b2c0504e
 )
+
+vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"

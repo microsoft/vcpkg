@@ -1,7 +1,7 @@
 {
   "name": "atk",
   "version": "2.38.0",
-  "port-version": 10,
+  "port-version": 11,
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
   "license": "LGPL-2.0-or-later",

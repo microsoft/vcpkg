@@ -1,11 +1,13 @@
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/libsoup
-    REF "${VERSION}"
-    SHA512 8edab1f6ccf9d17befd80b238b9d435cca3743316341336b2b92e4caf5d0d5f35a05269f5ddfcbbb1839f26cd011bf13ed66ee3f620b9b0c566894cdc1600f19
-    HEAD_REF main
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 cb44d93b16048d31ae04a8c2416bbe233e0e9bdaf2d9bfe2879260fd3da27e90a0bb05cddbd82cdf81a4a778bd451ad172a14dd31e2fd113c3bbbe13c0029b03
 )
+
+vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
