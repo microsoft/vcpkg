@@ -1,0 +1,24 @@
+{
+  "name": "ggmsg",
+  "version": "1.0.0.0",
+  "homepage": "https://github.com/xhk/ggmsg",
+  "description": "",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "boost"
+    }
+  ],
+
+  "default-features": [],
+  "features": {
+    "tools": {
+      "description": "net message middleware",
+      "dependencies": []
+    }
+  }
+}
