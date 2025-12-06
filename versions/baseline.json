@@ -6641,7 +6641,7 @@
       "port-version": 0
     },
     "mujoco": {
-      "baseline": "3.3.7",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "mujs": {
@@ -9961,7 +9961,7 @@
       "port-version": 4
     },
     "trianglemeshdistance": {
-      "baseline": "2024-08-17",
+      "baseline": "2025-12-05",
       "port-version": 0
     },
     "triton": {
