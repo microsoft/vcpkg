@@ -1,9 +1,10 @@
 {
   "name": "opencv4",
   "version": "4.12.0",
-  "description": "computer vision library",
-  "homepage": "https://github.com/opencv/opencv",
-  "license": "Apache-2.0",
+  "description": "Open Source Computer Vision Library",
+  "homepage": "https://opencv.org/",
+  "documentation": "https://docs.opencv.org/4.12.0/",
+  "license": null,
   "dependencies": [
     {
       "name": "cpu-features",
