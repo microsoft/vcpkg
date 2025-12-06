@@ -1,0 +1,25 @@
+diff --git a/fluid/CMakeLists.txt b/fluid/CMakeLists.txt
+index b9065616b..9ea2b7a97 100644
+--- a/fluid/CMakeLists.txt
++++ b/fluid/CMakeLists.txt
+@@ -144,14 +144,12 @@ target_link_libraries(fluid PRIVATE fluid-lib)
+ # Build the console app on Windows
+ # This is done for all Windows targets, even if cross-compiling.
+ 
+-if(WIN32)
+-  list(APPEND TARGETS fluid-cmd)
+-  add_executable(fluid-cmd fluid.cxx fluid.h)
+-  target_link_libraries(fluid-cmd PRIVATE fluid-lib)
+-  set(FLTK_FLUID_EXECUTABLE fltk::fluid-cmd)
+-else()
+-  set(FLTK_FLUID_EXECUTABLE fltk::fluid)
+-endif()
++
++list(APPEND TARGETS fluid-cmd)
++add_executable(fluid-cmd fluid.cxx fluid.h)
++target_link_libraries(fluid-cmd PRIVATE fluid-lib)
++set(FLTK_FLUID_EXECUTABLE fltk::fluid-cmd)
++
+ 
+ set(FLTK_FLUID_EXECUTABLE "${FLTK_FLUID_EXECUTABLE}" PARENT_SCOPE)
+ 
