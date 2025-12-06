@@ -297,11 +297,22 @@
     {
       "name": "powershell-core",
       "os": "windows",
-      "version": "7.5.3",
+      "arch":"x64",
+      "version": "7.5.4",
       "executable": "pwsh.exe",
-      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.3/PowerShell-7.5.3-win-x64.zip",
-      "sha512": "3ccac854b8764423d9da5ffd680f8a9d68f37bcac703d17afba89109433d383fbbc5fd55a8b80d406f0f5e8b76836edeb148621fd3b99a5aca549c8938b8c578",
-      "archive": "PowerShell-7.5.3-win-x64.zip"
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-x64.zip",
+      "sha512": "fb5af273bd5fe7293dbf34a9476a74a9d3ffbaaf5dcc47d986ba69a716f3c77b8285f94c15cfcb9ff764fa210c359e8721d1c9d46dc4394143a4206863bb3cf4",
+      "archive": "PowerShell-7.5.4-win-x64.zip"
+    },
+    {
+      "name": "powershell-core",
+      "os": "windows",
+      "arch":"arm64",
+      "version": "7.5.4",
+      "executable": "pwsh.exe",
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-arm64.zip",
+      "sha512": "5cdc32ecfe5a9fee17194c136a076876e6ebf255004e8890535beefbbaa0d38867712a7a65fc33717fc2a599a1c8a070d8c947d773289e4e0cfa8e4c9927501f",
+      "archive": "PowerShell-7.5.4-win-arm64.zip"
     },
     {
       "name": "node",
