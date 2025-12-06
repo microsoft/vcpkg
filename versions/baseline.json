@@ -3745,8 +3745,8 @@
       "port-version": 0
     },
     "hello-imgui": {
-      "baseline": "1.6.0",
-      "port-version": 3
+      "baseline": "1.92.5",
+      "port-version": 0
     },
     "hexi": {
       "baseline": "1.3.4",
@@ -3913,7 +3913,7 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.91.9",
+      "baseline": "1.92.5",
       "port-version": 0
     },
     "imgui-node-editor": {
@@ -3933,11 +3933,11 @@
       "port-version": 0
     },
     "implot": {
-      "baseline": "0.16",
+      "baseline": "0.17",
       "port-version": 0
     },
     "implot3d": {
-      "baseline": "0.2",
+      "baseline": "0.3",
       "port-version": 0
     },
     "indicators": {
