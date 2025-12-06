@@ -2,21 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 8411c45f71d2d61184b11e2a786137044a80d9b979a7e2e8513efc5e716b3360bff4533a13875dd4bca492b97b97f0384f7fb4f3d796802e81981b0857d18a2b
+    SHA512 f31769a7ed52865165e7db4a03e9378b3376012b7aaf0bbc022aa76c3e999e71c3927e6eb8639d8681e04e33362dd73eafa9e7c62a3c71599ff78da09f5cee0a
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
         0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
-        0005-fix-nasm.patch
         0007-fix-lib-naming.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
-        0041-add-const-for-opengl-definition.patch
-        0043-fix-miss-head.patch
         0044-fix-vulkan-debug-callback-abi.patch
 )
 
@@ -62,7 +59,6 @@ endif()
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 if(VCPKG_DETECTED_MSVC)
-    string(APPEND OPTIONS " --disable-inline-asm") # clang-cl has inline assembly but this leads to undefined symbols.
     set(OPTIONS "--toolchain=msvc ${OPTIONS}")
     # This is required because ffmpeg depends upon optimizations to link correctly
     string(APPEND VCPKG_COMBINED_C_FLAGS_DEBUG " -O2")
@@ -238,15 +234,6 @@ if("avfilter" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-avfilter")
     set(ENABLE_AVFILTER OFF)
-endif()
-
-if("postproc" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-postproc")
-    set(ENABLE_POSTPROC ON)
-    list(APPEND FFMPEG_PKGCONFIG_MODULES libpostproc)
-else()
-    set(OPTIONS "${OPTIONS} --disable-postproc")
-    set(ENABLE_POSTPROC OFF)
 endif()
 
 if("swresample" IN_LIST FEATURES)
@@ -618,7 +605,7 @@ if(VCPKG_TARGET_IS_UWP)
     set(ENV{LIBPATH} "$ENV{LIBPATH};$ENV{_WKITS10}references\\windows.foundation.foundationcontract\\2.0.0.0\\;$ENV{_WKITS10}references\\windows.foundation.universalapicontract\\3.0.0.0\\")
     string(APPEND OPTIONS " --disable-programs")
     string(APPEND OPTIONS " --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00")
-    string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib")
+    string(APPEND OPTIONS " --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib --extra-ldflags=dxguid.lib")
 endif()
 
 if (VCPKG_TARGET_IS_IOS)
@@ -895,7 +882,6 @@ function(append_dependencies_from_libs out)
     list(FILTER contents EXCLUDE REGEX "^avdevice$")
     list(FILTER contents EXCLUDE REGEX "^avfilter$")
     list(FILTER contents EXCLUDE REGEX "^avformat$")
-    list(FILTER contents EXCLUDE REGEX "^postproc$")
     list(FILTER contents EXCLUDE REGEX "^swresample$")
     list(FILTER contents EXCLUDE REGEX "^swscale$")
     if(VCPKG_TARGET_IS_WINDOWS)

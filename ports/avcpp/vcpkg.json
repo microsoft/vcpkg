@@ -1,6 +1,7 @@
 {
   "name": "avcpp",
   "version": "2.7.1",
+  "port-version": 1,
   "description": "Wrapper for the FFmpeg that simplify usage it from C++ projects.",
   "homepage": "https://github.com/h4tr3d/avcpp",
   "license": "LGPL-2.1-only OR BSD-3-Clause",
@@ -13,7 +14,6 @@
         "avdevice",
         "avfilter",
         "avformat",
-        "postproc",
         "swresample",
         "swscale"
       ]
