@@ -325,6 +325,7 @@ set(TOOL_NAMES
         androiddeployqt6
         syncqt
         tracepointgen
+        qtwaylandscanner
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
