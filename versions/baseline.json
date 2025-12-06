@@ -8854,7 +8854,7 @@
     },
     "sdl1": {
       "baseline": "1.2.15",
-      "port-version": 22
+      "port-version": 23
     },
     "sdl1-mixer": {
       "baseline": "2025-09-10",
