@@ -18,14 +18,6 @@ message(STATUS "This version of glad uses the compatibility profile. To use the 
 message(STATUS "This recipe is at ${CMAKE_CURRENT_LIST_DIR}")
 message(STATUS "See the overlay ports documentation at https://github.com/microsoft/vcpkg/blob/master/docs/specifications/ports-overlay.md")
 
-# Check for incompatible feature combinations
-if("debug" IN_LIST FEATURES AND "mx" IN_LIST FEATURES)
-    message(FATAL_ERROR "Error: The 'debug' and 'mx' features are incompatible and cannot be used together.")
-endif()
-if("on-demand" IN_LIST FEATURES AND "mx" IN_LIST FEATURES)
-    message(FATAL_ERROR "Error: The 'on-demand' and 'mx' features are incompatible and cannot be used together.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         extensions  GLAD_ALL_EXTENSIONS
@@ -35,17 +27,11 @@ set(GLAD_ARGS_LIST)
 if("alias" IN_LIST FEATURES)
     list(APPEND GLAD_ARGS_LIST "ALIAS")
 endif()
-if("debug" IN_LIST FEATURES)
-    list(APPEND GLAD_ARGS_LIST "DEBUG")
-endif()
 if("loader" IN_LIST FEATURES)
     list(APPEND GLAD_ARGS_LIST "LOADER")
 endif()
 if("mx" IN_LIST FEATURES)
     list(APPEND GLAD_ARGS_LIST "MX")
-endif()
-if("on-demand" IN_LIST FEATURES)
-    list(APPEND GLAD_ARGS_LIST "ON_DEMAND")
 endif()
 
 set(GLAD_API_LIST)
