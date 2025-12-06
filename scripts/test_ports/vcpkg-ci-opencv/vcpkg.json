@@ -52,16 +52,7 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "opencl"
-      ],
-      "platform": "!uwp & !osx"
-    },
-    {
-      "name": "opencv",
-      "default-features": false,
-      "features": [
         "dnn",
-        "vulkan",
         "webp"
       ],
       "platform": "!android"
@@ -81,6 +72,14 @@
       "name": "opencv",
       "default-features": false,
       "features": [
+        "opencl"
+      ],
+      "platform": "!osx & !uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
         "tbb"
       ],
       "platform": "!uwp & !static"
@@ -89,36 +88,11 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "gapi",
-        "gstreamer"
+        "aravis",
+        "vtk",
+        "vulkan"
       ],
-      "platform": "!uwp & !(windows & static) & !android"
-    },
-    {
-      "name": "opencv",
-      "default-features": false,
-      "features": [
-        "python"
-      ],
-      "platform": "!uwp & !(windows & static) & !android & !linux"
-    },
-    {
-      "name": "opencv",
-      "default-features": false,
-      "features": [
-        "ovis"
-      ],
-      "platform": "!uwp & !android & !(windows & static)"
-    },
-    {
-      "name": "opencv",
-      "default-features": false,
-      "features": [
-        "cuda",
-        "cudnn",
-        "dnn-cuda"
-      ],
-      "platform": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)"
+      "platform": "!android & !uwp"
     },
     {
       "name": "opencv",
@@ -132,10 +106,29 @@
       "name": "opencv",
       "default-features": false,
       "features": [
-        "aravis",
-        "vtk"
+        "gapi",
+        "gstreamer",
+        "ovis"
       ],
-      "platform": "!android & !uwp"
+      "platform": "!android & !uwp & !(windows & static)"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "python"
+      ],
+      "platform": "!android & !linux & !uwp & !(windows & static)"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "cuda",
+        "cudnn",
+        "dnn-cuda"
+      ],
+      "platform": "(windows & x64 & !uwp) | (linux & x64) | (linux & arm64)"
     },
     {
       "name": "opencv2",
@@ -149,7 +142,7 @@
         "qt",
         "tiff"
       ],
-      "platform": "!android & !uwp & !(arm & windows)"
+      "platform": "!android & !uwp & !(windows & arm)"
     },
     {
       "name": "opencv3",
@@ -196,7 +189,7 @@
       "features": [
         "gstreamer"
       ],
-      "platform": "!uwp & !android & !(windows & static)"
+      "platform": "!android & !uwp & !(windows & static)"
     },
     {
       "name": "opencv3",
@@ -212,7 +205,7 @@
         "sfm",
         "vtk"
       ],
-      "platform": "!uwp & !android & !(windows & (arm | arm64)) & !(osx & arm64)"
+      "platform": "!android & !osx & !uwp & !(windows & arm)"
     }
   ]
 }
