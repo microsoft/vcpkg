@@ -61,7 +61,6 @@
       "default-features": false,
       "features": [
         "dnn",
-        "vulkan",
         "webp"
       ],
       "platform": "!android"
@@ -133,7 +132,8 @@
       "default-features": false,
       "features": [
         "aravis",
-        "vtk"
+        "vtk",
+        "vulkan"
       ],
       "platform": "!android & !uwp"
     },
