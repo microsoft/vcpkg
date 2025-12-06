@@ -1,0 +1,15 @@
+set(VCPKG_BUILD_TYPE release)  # header-only
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO Ayush272002/dotenv
+    REF v${VERSION}
+    SHA512 595363a7005839a74b7032fdd1091169406c42ac3e2eb483887b4b5c699c4e677f64939c34d2999210166b13b39d5cb2067912c89f92472242473cbe4830ae8d
+)
+
+file(
+    INSTALL "${SOURCE_PATH}/include/dotenv"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
