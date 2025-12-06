@@ -20,6 +20,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     PATCHES
         0001-build.patch
         cairo-cpp-linkage.patch
+        egl-conditional.diff # https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9067
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
