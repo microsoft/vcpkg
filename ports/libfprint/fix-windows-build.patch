@@ -1,0 +1,2812 @@
+diff --git a/examples/meson.build b/examples/meson.build
+index 250c055..e5e86c4 100644
+--- a/examples/meson.build
++++ b/examples/meson.build
+@@ -1,29 +1,36 @@
++# Skip examples on Windows as they use Unix-specific headers
++if host_machine.system() != 'windows'
++    examples = [
++        'enroll',
++        'identify',
++        'img-capture',
++        'manage-prints',
++        'verify',
++        'clear-storage',
++    ]
+ 
+-examples = [
+-    'enroll',
+-    'identify',
+-    'img-capture',
+-    'manage-prints',
+-    'verify',
+-    'clear-storage',
+-]
++    foreach example: examples
++        executable(example,
++            [ example + '.c', 'storage.c', 'utilities.c' ],
++            dependencies: [
++                libfprint_dep,
++                glib_dep,
++            ],
++        )
++    endforeach
+ 
+-foreach example: examples
+-    executable(example,
+-        [ example + '.c', 'storage.c', 'utilities.c' ],
+-        dependencies: [
+-            libfprint_dep,
+-            glib_dep,
+-        ],
++    executable('cpp-test',
++        'cpp-test.cpp',
++        dependencies: libfprint_dep,
+     )
+-endforeach
+-
+-executable('cpp-test',
+-    'cpp-test.cpp',
+-    dependencies: libfprint_dep,
+-)
++endif
+ 
+-if installed_tests
+-    install_subdir('prints',
+-        install_dir: installed_tests_testdir)
++# Only install prints for installed-tests if not on Windows
++if host_machine.system() != 'windows'
++    installed_tests = get_option('installed-tests')
++    if installed_tests
++        installed_tests_testdir = datadir / 'installed-tests' / versioned_libname
++        install_subdir('prints',
++            install_dir: installed_tests_testdir)
++    endif
+ endif
+diff --git a/libfprint/drivers/aes2550.c b/libfprint/drivers/aes2550.c
+index fe60c78..e0dbae2 100644
+--- a/libfprint/drivers/aes2550.c
++++ b/libfprint/drivers/aes2550.c
+@@ -21,6 +21,8 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+  */
+ 
++#include <stdint.h>
++
+ #define FP_COMPONENT "aes2550"
+ 
+ #include "drivers_api.h"
+diff --git a/libfprint/drivers/aesx660.c b/libfprint/drivers/aesx660.c
+index dc0bc0d..6a99740 100644
+--- a/libfprint/drivers/aesx660.c
++++ b/libfprint/drivers/aesx660.c
+@@ -23,6 +23,7 @@
+ 
+ #define FP_COMPONENT "aesX660"
+ 
++#include <stdint.h>
+ #include "drivers_api.h"
+ #include "aeslib.h"
+ #include "aesx660.h"
+diff --git a/libfprint/drivers/egismoc/egismoc.c b/libfprint/drivers/egismoc/egismoc.c
+index 8f35a67..5835667 100644
+--- a/libfprint/drivers/egismoc/egismoc.c
++++ b/libfprint/drivers/egismoc/egismoc.c
+@@ -29,7 +29,9 @@
+ 
+ #include <stdio.h>
+ #include <glib.h>
++#ifndef _WIN32
+ #include <sys/param.h>
++#endif
+ 
+ #include "drivers_api.h"
+ #include "fpi-byte-writer.h"
+diff --git a/libfprint/drivers/etes603.c b/libfprint/drivers/etes603.c
+index fcece3c..056b143 100644
+--- a/libfprint/drivers/etes603.c
++++ b/libfprint/drivers/etes603.c
+@@ -146,6 +146,9 @@
+ #define MSG_HDR_SIZE 6
+ 
+ /* This structure must be packed because it is a the raw message sent. */
++#ifdef _MSC_VER
++#pragma pack(push, 1)
++#endif
+ struct egis_msg
+ {
+   guint8 magic[5];       /* out: 'EGIS' 0x09 / in: 'SIGE' 0x0A */
+@@ -190,7 +193,13 @@ struct egis_msg
+     } sige_misc;
+     guint8 padding[0x40 - 6];           /* Ensure size of 0x40 */
+   };
+-} __attribute__((packed));
++}
++#ifdef _MSC_VER
++;
++#pragma pack(pop)
++#else
++__attribute__((packed));
++#endif
+ 
+ 
+ /* Structure to keep information between asynchronous functions. */
+diff --git a/libfprint/drivers/fpcmoc/fpc.h b/libfprint/drivers/fpcmoc/fpc.h
+index 389c63f..00a7d46 100644
+--- a/libfprint/drivers/fpcmoc/fpc.h
++++ b/libfprint/drivers/fpcmoc/fpc.h
+@@ -20,6 +20,7 @@
+ 
+ #include "fpi-device.h"
+ #include "fpi-ssm.h"
++#include "fpi-compat.h"
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -134,21 +135,25 @@ typedef struct
+   guint16   fw_capabilities;
+ } evt_initiated_t;
+ 
++FP_PACKED_BEGIN
+ typedef struct
+ {
+   guint8  subfactor;
+   guint32 identity_type;
+   guint32 identity_size;
+   guint8  identity[SECURITY_MAX_SID_SIZE];
+-} __attribute__((packed)) fpc_fid_data_t;
++} fpc_fid_data_t;
++FP_PACKED_END
+ 
++FP_PACKED_BEGIN
+ typedef struct
+ {
+   evt_hdr_t      hdr;
+   gint           status;
+   guint32        num_ids;
+   fpc_fid_data_t fid_data[FPC_TEMPLATES_MAX];
+-} __attribute__((packed)) evt_enum_fids_t;
++} evt_enum_fids_t;
++FP_PACKED_END
+ 
+ typedef struct _fp_cmd_response
+ {
+diff --git a/libfprint/drivers/upektc_img.c b/libfprint/drivers/upektc_img.c
+index f2c6edb..3c185a9 100644
+--- a/libfprint/drivers/upektc_img.c
++++ b/libfprint/drivers/upektc_img.c
+@@ -20,6 +20,7 @@
+ #define FP_COMPONENT "upektc_img"
+ 
+ #include "drivers_api.h"
++#include "fpi-compat.h"
+ #include "upek_proto.h"
+ #include "upektc_img.h"
+ 
+@@ -415,7 +416,11 @@ capture_sm_complete (FpiSsm *ssm, FpDevice *_dev, GError *error_arg)
+   FpImageDevice *dev = FP_IMAGE_DEVICE (_dev);
+   FpiDeviceUpektcImg *self = FPI_DEVICE_UPEKTC_IMG (_dev);
+ 
++#ifndef _MSC_VER
+   g_autoptr(GError) error = error_arg;
++#else
++  GError *error = error_arg;
++#endif
+ 
+ 
+   /* Note: We assume that the error is a cancellation in the deactivation case */
+diff --git a/libfprint/drivers/vfs0050.h b/libfprint/drivers/vfs0050.h
+index f4ebb17..377e16e 100644
+--- a/libfprint/drivers/vfs0050.h
++++ b/libfprint/drivers/vfs0050.h
+@@ -51,6 +51,9 @@
+ #define EP3_IN 0x83
+ 
+ /* Fingerprint horizontal line */
++#ifdef _MSC_VER
++#pragma pack(push, 1)
++#endif
+ struct vfs_line
+ {
+   /* It must be always 0x01 */
+@@ -76,7 +79,13 @@ struct vfs_line
+ 
+   /* scan_data is 0xfb except some rare cases, it's skipped */
+   unsigned char scan_data[8];
+-} __attribute__((__packed__));
++}
++#ifdef _MSC_VER
++;
++#pragma pack(pop)
++#else
++__attribute__((__packed__));
++#endif
+ 
+ /* The main driver structure */
+ struct _FpDeviceVfs0050
+diff --git a/libfprint/drivers/vfs301_proto.c b/libfprint/drivers/vfs301_proto.c
+index 122a889..2873a31 100644
+--- a/libfprint/drivers/vfs301_proto.c
++++ b/libfprint/drivers/vfs301_proto.c
+@@ -30,7 +30,9 @@
+ #include <errno.h>
+ #include <string.h>
+ #include <stdio.h>
++#ifndef _WIN32
+ #include <unistd.h>
++#endif
+ #include <stdlib.h>
+ #include <glib.h>
+ 
+@@ -68,7 +70,11 @@ usb_recv (FpDeviceVfs301 *dev, guint8 endpoint, int max_bytes, FpiUsbTransfer **
+ {
+   GError *err = NULL;
+ 
++#ifndef _MSC_VER
+   g_autoptr(FpiUsbTransfer) transfer = NULL;
++#else
++  FpiUsbTransfer *transfer = NULL;
++#endif
+ 
+   /* XXX: This function swallows any transfer errors, that is obviously
+    *      quite bad (it used to assert on no-error)! */
+@@ -99,7 +105,11 @@ usb_send (FpDeviceVfs301 *dev, const guint8 *data, gssize length, GError **error
+ {
+   GError *err = NULL;
+ 
++#ifndef _MSC_VER
+   g_autoptr(FpiUsbTransfer) transfer = NULL;
++#else
++  FpiUsbTransfer *transfer = NULL;
++#endif
+ 
+   /* XXX: This function swallows any transfer errors, that is obviously
+    *      quite bad (it used to assert on no-error)! */
+@@ -464,8 +474,13 @@ vfs301_proto_request_fingerprint (FpDeviceVfs301 *dev)
+ int
+ vfs301_proto_peek_event (FpDeviceVfs301 *dev)
+ {
++#ifndef _MSC_VER
+   g_autoptr(GError) error = NULL;
+   g_autoptr(FpiUsbTransfer) transfer = NULL;
++#else
++  GError *error = NULL;
++  FpiUsbTransfer *transfer = NULL;
++#endif
+ 
+   const char no_event[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+   const char got_event[] = {0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00};
+@@ -488,14 +503,27 @@ vfs301_proto_peek_event (FpDeviceVfs301 *dev)
+  *      time. However, as this driver is currently all synchronous (yikes),
+  *      we will run into timeouts randomly and need to then try again.
+  */
++#ifndef _MSC_VER
+ #define PARALLEL_RECEIVE(e1, l1, e2, l2) \
+   { \
+     g_autoptr(GError) error = NULL; \
+     usb_recv (dev, e1, l1, NULL, &error); \
+     usb_recv (dev, e2, l2, NULL, NULL); \
+     if (g_error_matches (error, G_USB_DEVICE_ERROR, G_USB_DEVICE_ERROR_TIMED_OUT)) \
+-    usb_recv (dev, e1, l1, NULL, NULL); \
++      usb_recv (dev, e1, l1, NULL, NULL); \
+   }
++#else
++#define PARALLEL_RECEIVE(e1, l1, e2, l2) \
++  { \
++    GError *error = NULL; \
++    usb_recv (dev, e1, l1, NULL, &error); \
++    usb_recv (dev, e2, l2, NULL, NULL); \
++    if (g_error_matches (error, G_USB_DEVICE_ERROR, G_USB_DEVICE_ERROR_TIMED_OUT)) \
++      usb_recv (dev, e1, l1, NULL, NULL); \
++    if (error != NULL) \
++      g_error_free (error); \
++  }
++#endif
+ 
+ static void
+ vfs301_proto_process_event_cb (FpiUsbTransfer *transfer,
+diff --git a/libfprint/fp-context.h b/libfprint/fp-context.h
+index aeaeca0..3ebc516 100644
+--- a/libfprint/fp-context.h
++++ b/libfprint/fp-context.h
+@@ -19,6 +19,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(LIBFPRINT_COMPILATION)
++#  define FP_API __declspec(dllexport)
++# else
++#  define FP_API __declspec(dllimport)
++# endif
++#else
++# define FP_API
++#endif
++
+ #include "fp-device.h"
+ 
+ G_BEGIN_DECLS
+@@ -43,10 +53,10 @@ struct _FpContextClass
+                                            FpDevice  *device);
+ };
+ 
+-FpContext *fp_context_new (void);
++FP_API FpContext *fp_context_new (void);
+ 
+-void fp_context_enumerate (FpContext *context);
++FP_API void fp_context_enumerate (FpContext *context);
+ 
+-GPtrArray *fp_context_get_devices (FpContext *context);
++FP_API GPtrArray *fp_context_get_devices (FpContext *context);
+ 
+ G_END_DECLS
+diff --git a/libfprint/fp-device.c b/libfprint/fp-device.c
+index ab06e7f..e5a2fe5 100644
+--- a/libfprint/fp-device.c
++++ b/libfprint/fp-device.c
+@@ -384,7 +384,7 @@ fp_device_async_initable_init_async (GAsyncInitable     *initable,
+                                      GAsyncReadyCallback callback,
+                                      gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevice *self = FP_DEVICE (initable);
+   FpDevicePrivate *priv = fp_device_get_instance_private (self);
+ 
+@@ -816,7 +816,7 @@ fp_device_open (FpDevice           *device,
+                 GAsyncReadyCallback callback,
+                 gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+   GError *error = NULL;
+ 
+@@ -902,7 +902,7 @@ fp_device_close (FpDevice           *device,
+                  GAsyncReadyCallback callback,
+                  gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+ 
+   task = g_task_new (device, cancellable, callback, user_data);
+@@ -978,7 +978,7 @@ fp_device_suspend (FpDevice           *device,
+                    GAsyncReadyCallback callback,
+                    gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+ 
+   task = g_task_new (device, cancellable, callback, user_data);
+@@ -1043,7 +1043,7 @@ fp_device_resume (FpDevice           *device,
+                   GAsyncReadyCallback callback,
+                   gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+ 
+   task = g_task_new (device, cancellable, callback, user_data);
+@@ -1130,7 +1130,7 @@ fp_device_enroll (FpDevice           *device,
+                   GAsyncReadyCallback callback,
+                   gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+   FpEnrollData *data;
+   FpiPrintType print_type;
+@@ -1268,7 +1268,7 @@ fp_device_verify (FpDevice           *device,
+                   GAsyncReadyCallback callback,
+                   gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+   FpDeviceClass *cls = FP_DEVICE_GET_CLASS (device);
+   FpMatchData *data;
+@@ -1394,7 +1394,7 @@ fp_device_identify (FpDevice           *device,
+                     GAsyncReadyCallback callback,
+                     gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+   FpDeviceClass *cls = FP_DEVICE_GET_CLASS (device);
+   FpMatchData *data;
+@@ -1529,7 +1529,7 @@ fp_device_capture (FpDevice           *device,
+                    GAsyncReadyCallback callback,
+                    gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+   FpDeviceClass *cls = FP_DEVICE_GET_CLASS (device);
+ 
+@@ -1620,7 +1620,7 @@ fp_device_delete_print (FpDevice           *device,
+                         GAsyncReadyCallback callback,
+                         gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+   FpDeviceClass *cls = FP_DEVICE_GET_CLASS (device);
+ 
+@@ -1698,7 +1698,7 @@ fp_device_list_prints (FpDevice           *device,
+                        GAsyncReadyCallback callback,
+                        gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+   FpDeviceClass *cls = FP_DEVICE_GET_CLASS (device);
+ 
+@@ -1775,7 +1775,7 @@ fp_device_clear_storage (FpDevice           *device,
+                          GAsyncReadyCallback callback,
+                          gpointer            user_data)
+ {
+-  g_autoptr(GTask) task = NULL;
++  GTask * task = NULL;
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+   FpDeviceClass *cls = FP_DEVICE_GET_CLASS (device);
+ 
+@@ -1865,7 +1865,7 @@ fp_device_open_sync (FpDevice     *device,
+                      GCancellable *cancellable,
+                      GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -1891,7 +1891,7 @@ fp_device_close_sync (FpDevice     *device,
+                       GCancellable *cancellable,
+                       GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -1925,7 +1925,7 @@ fp_device_enroll_sync (FpDevice        *device,
+                        gpointer         progress_data,
+                        GError         **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -1963,7 +1963,7 @@ fp_device_verify_sync (FpDevice     *device,
+                        FpPrint     **print,
+                        GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -2003,7 +2003,7 @@ fp_device_identify_sync (FpDevice     *device,
+                          FpPrint     **print,
+                          GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -2036,7 +2036,7 @@ fp_device_capture_sync (FpDevice     *device,
+                         GCancellable *cancellable,
+                         GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -2067,7 +2067,7 @@ fp_device_delete_print_sync (FpDevice     *device,
+                              GCancellable *cancellable,
+                              GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -2096,7 +2096,7 @@ fp_device_list_prints_sync (FpDevice     *device,
+                             GCancellable *cancellable,
+                             GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -2125,7 +2125,7 @@ fp_device_clear_storage_sync (FpDevice     *device,
+                               GCancellable *cancellable,
+                               GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -2153,7 +2153,7 @@ fp_device_suspend_sync (FpDevice     *device,
+                         GCancellable *cancellable,
+                         GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+@@ -2179,7 +2179,7 @@ fp_device_resume_sync (FpDevice     *device,
+                        GCancellable *cancellable,
+                        GError      **error)
+ {
+-  g_autoptr(GAsyncResult) task = NULL;
++  GAsyncResult * task = NULL;
+ 
+   g_return_val_if_fail (FP_IS_DEVICE (device), FALSE);
+ 
+diff --git a/libfprint/fp-device.h b/libfprint/fp-device.h
+index e82cb53..8957876 100644
+--- a/libfprint/fp-device.h
++++ b/libfprint/fp-device.h
+@@ -20,6 +20,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(LIBFPRINT_COMPILATION)
++#  define FP_API __declspec(dllexport)
++# else
++#  define FP_API __declspec(dllimport)
++# endif
++#else
++# define FP_API
++#endif
++
+ #include "fp-image.h"
+ #include <glib-object.h>
+ #include <gio/gio.h>
+@@ -163,8 +173,8 @@ typedef enum {
+   FP_DEVICE_ERROR_TOO_HOT,
+ } FpDeviceError;
+ 
+-GQuark fp_device_retry_quark (void);
+-GQuark fp_device_error_quark (void);
++FP_API GQuark fp_device_retry_quark (void);
++FP_API GQuark fp_device_error_quark (void);
+ 
+ /**
+  * FpEnrollProgress:
+@@ -220,41 +230,41 @@ typedef void (*FpMatchCb) (FpDevice *device,
+                            gpointer  user_data,
+                            GError   *error);
+ 
+-const gchar *fp_device_get_driver (FpDevice *device);
+-const gchar *fp_device_get_device_id (FpDevice *device);
+-const gchar *fp_device_get_name (FpDevice *device);
+-gboolean     fp_device_is_open (FpDevice *device);
+-FpScanType   fp_device_get_scan_type (FpDevice *device);
+-FpFingerStatusFlags fp_device_get_finger_status (FpDevice *device);
+-gint         fp_device_get_nr_enroll_stages (FpDevice *device);
+-FpTemperature fp_device_get_temperature (FpDevice *device);
+-
+-FpDeviceFeature     fp_device_get_features (FpDevice *device);
+-gboolean            fp_device_has_feature (FpDevice       *device,
++FP_API const gchar *fp_device_get_driver (FpDevice *device);
++FP_API const gchar *fp_device_get_device_id (FpDevice *device);
++FP_API const gchar *fp_device_get_name (FpDevice *device);
++FP_API gboolean     fp_device_is_open (FpDevice *device);
++FP_API FpScanType   fp_device_get_scan_type (FpDevice *device);
++FP_API FpFingerStatusFlags fp_device_get_finger_status (FpDevice *device);
++FP_API gint         fp_device_get_nr_enroll_stages (FpDevice *device);
++FP_API FpTemperature fp_device_get_temperature (FpDevice *device);
++
++FP_API FpDeviceFeature     fp_device_get_features (FpDevice *device);
++FP_API gboolean            fp_device_has_feature (FpDevice       *device,
+                                            FpDeviceFeature feature);
+ 
+ /* Opening the device */
+-void fp_device_open (FpDevice           *device,
++FP_API void fp_device_open (FpDevice           *device,
+                      GCancellable       *cancellable,
+                      GAsyncReadyCallback callback,
+                      gpointer            user_data);
+ 
+-void fp_device_close (FpDevice           *device,
++FP_API void fp_device_close (FpDevice           *device,
+                       GCancellable       *cancellable,
+                       GAsyncReadyCallback callback,
+                       gpointer            user_data);
+ 
+-void fp_device_suspend (FpDevice           *device,
++FP_API void fp_device_suspend (FpDevice           *device,
+                         GCancellable       *cancellable,
+                         GAsyncReadyCallback callback,
+                         gpointer            user_data);
+ 
+-void fp_device_resume (FpDevice           *device,
++FP_API void fp_device_resume (FpDevice           *device,
+                        GCancellable       *cancellable,
+                        GAsyncReadyCallback callback,
+                        gpointer            user_data);
+ 
+-void fp_device_enroll (FpDevice           *device,
++FP_API void fp_device_enroll (FpDevice           *device,
+                        FpPrint            *template_print,
+                        GCancellable       *cancellable,
+                        FpEnrollProgress    progress_cb,
+@@ -263,7 +273,7 @@ void fp_device_enroll (FpDevice           *device,
+                        GAsyncReadyCallback callback,
+                        gpointer            user_data);
+ 
+-void fp_device_verify (FpDevice           *device,
++FP_API void fp_device_verify (FpDevice           *device,
+                        FpPrint            *enrolled_print,
+                        GCancellable       *cancellable,
+                        FpMatchCb           match_cb,
+@@ -272,7 +282,7 @@ void fp_device_verify (FpDevice           *device,
+                        GAsyncReadyCallback callback,
+                        gpointer            user_data);
+ 
+-void fp_device_identify (FpDevice           *device,
++FP_API void fp_device_identify (FpDevice           *device,
+                          GPtrArray          *prints,
+                          GCancellable       *cancellable,
+                          FpMatchCb           match_cb,
+@@ -281,79 +291,79 @@ void fp_device_identify (FpDevice           *device,
+                          GAsyncReadyCallback callback,
+                          gpointer            user_data);
+ 
+-void fp_device_capture (FpDevice           *device,
++FP_API void fp_device_capture (FpDevice           *device,
+                         gboolean            wait_for_finger,
+                         GCancellable       *cancellable,
+                         GAsyncReadyCallback callback,
+                         gpointer            user_data);
+ 
+-void fp_device_delete_print (FpDevice           *device,
++FP_API void fp_device_delete_print (FpDevice           *device,
+                              FpPrint            *enrolled_print,
+                              GCancellable       *cancellable,
+                              GAsyncReadyCallback callback,
+                              gpointer            user_data);
+ 
+-void fp_device_list_prints (FpDevice           *device,
++FP_API void fp_device_list_prints (FpDevice           *device,
+                             GCancellable       *cancellable,
+                             GAsyncReadyCallback callback,
+                             gpointer            user_data);
+ 
+-void fp_device_clear_storage (FpDevice           *device,
++FP_API void fp_device_clear_storage (FpDevice           *device,
+                               GCancellable       *cancellable,
+                               GAsyncReadyCallback callback,
+                               gpointer            user_data);
+ 
+-gboolean fp_device_open_finish (FpDevice     *device,
++FP_API gboolean fp_device_open_finish (FpDevice     *device,
+                                 GAsyncResult *result,
+                                 GError      **error);
+-gboolean fp_device_close_finish (FpDevice     *device,
++FP_API gboolean fp_device_close_finish (FpDevice     *device,
+                                  GAsyncResult *result,
+                                  GError      **error);
+-gboolean fp_device_suspend_finish (FpDevice     *device,
++FP_API gboolean fp_device_suspend_finish (FpDevice     *device,
+                                    GAsyncResult *result,
+                                    GError      **error);
+-gboolean fp_device_resume_finish (FpDevice     *device,
++FP_API gboolean fp_device_resume_finish (FpDevice     *device,
+                                   GAsyncResult *result,
+                                   GError      **error);
+-FpPrint *fp_device_enroll_finish (FpDevice     *device,
++FP_API FpPrint *fp_device_enroll_finish (FpDevice     *device,
+                                   GAsyncResult *result,
+                                   GError      **error);
+-gboolean fp_device_verify_finish (FpDevice     *device,
++FP_API gboolean fp_device_verify_finish (FpDevice     *device,
+                                   GAsyncResult *result,
+                                   gboolean     *match,
+                                   FpPrint     **print,
+                                   GError      **error);
+-gboolean fp_device_identify_finish (FpDevice     *device,
++FP_API gboolean fp_device_identify_finish (FpDevice     *device,
+                                     GAsyncResult *result,
+                                     FpPrint     **match,
+                                     FpPrint     **print,
+                                     GError      **error);
+-FpImage * fp_device_capture_finish (FpDevice     *device,
++FP_API FpImage * fp_device_capture_finish (FpDevice     *device,
+                                     GAsyncResult *result,
+                                     GError      **error);
+-gboolean fp_device_delete_print_finish (FpDevice     *device,
++FP_API gboolean fp_device_delete_print_finish (FpDevice     *device,
+                                         GAsyncResult *result,
+                                         GError      **error);
+-GPtrArray * fp_device_list_prints_finish (FpDevice     *device,
++FP_API GPtrArray * fp_device_list_prints_finish (FpDevice     *device,
+                                           GAsyncResult *result,
+                                           GError      **error);
+-gboolean fp_device_clear_storage_finish (FpDevice     *device,
++FP_API gboolean fp_device_clear_storage_finish (FpDevice     *device,
+                                          GAsyncResult *result,
+                                          GError      **error);
+ 
+-gboolean fp_device_open_sync (FpDevice     *device,
++FP_API gboolean fp_device_open_sync (FpDevice     *device,
+                               GCancellable *cancellable,
+                               GError      **error);
+-gboolean fp_device_close_sync (FpDevice     *device,
++FP_API gboolean fp_device_close_sync (FpDevice     *device,
+                                GCancellable *cancellable,
+                                GError      **error);
+-FpPrint * fp_device_enroll_sync (FpDevice        *device,
++FP_API FpPrint * fp_device_enroll_sync (FpDevice        *device,
+                                  FpPrint         *template_print,
+                                  GCancellable    *cancellable,
+                                  FpEnrollProgress progress_cb,
+                                  gpointer         progress_data,
+                                  GError         **error);
+-gboolean fp_device_verify_sync (FpDevice     *device,
++FP_API gboolean fp_device_verify_sync (FpDevice     *device,
+                                 FpPrint      *enrolled_print,
+                                 GCancellable *cancellable,
+                                 FpMatchCb     match_cb,
+@@ -361,7 +371,7 @@ gboolean fp_device_verify_sync (FpDevice     *device,
+                                 gboolean     *match,
+                                 FpPrint     **print,
+                                 GError      **error);
+-gboolean fp_device_identify_sync (FpDevice     *device,
++FP_API gboolean fp_device_identify_sync (FpDevice     *device,
+                                   GPtrArray    *prints,
+                                   GCancellable *cancellable,
+                                   FpMatchCb     match_cb,
+@@ -369,33 +379,33 @@ gboolean fp_device_identify_sync (FpDevice     *device,
+                                   FpPrint     **match,
+                                   FpPrint     **print,
+                                   GError      **error);
+-FpImage * fp_device_capture_sync (FpDevice     *device,
++FP_API FpImage * fp_device_capture_sync (FpDevice     *device,
+                                   gboolean      wait_for_finger,
+                                   GCancellable *cancellable,
+                                   GError      **error);
+-gboolean fp_device_delete_print_sync (FpDevice     *device,
++FP_API gboolean fp_device_delete_print_sync (FpDevice     *device,
+                                       FpPrint      *enrolled_print,
+                                       GCancellable *cancellable,
+                                       GError      **error);
+-GPtrArray * fp_device_list_prints_sync (FpDevice     *device,
++FP_API GPtrArray * fp_device_list_prints_sync (FpDevice     *device,
+                                         GCancellable *cancellable,
+                                         GError      **error);
+-gboolean fp_device_clear_storage_sync (FpDevice     *device,
++FP_API gboolean fp_device_clear_storage_sync (FpDevice     *device,
+                                        GCancellable *cancellable,
+                                        GError      **error);
+-gboolean fp_device_suspend_sync (FpDevice     *device,
++FP_API gboolean fp_device_suspend_sync (FpDevice     *device,
+                                  GCancellable *cancellable,
+                                  GError      **error);
+-gboolean fp_device_resume_sync (FpDevice     *device,
++FP_API gboolean fp_device_resume_sync (FpDevice     *device,
+                                 GCancellable *cancellable,
+                                 GError      **error);
+ 
+ /* Deprecated functions */
+ G_DEPRECATED_FOR (fp_device_get_features)
+-gboolean     fp_device_supports_identify (FpDevice *device);
++FP_API gboolean     fp_device_supports_identify (FpDevice *device);
+ G_DEPRECATED_FOR (fp_device_get_features)
+-gboolean     fp_device_supports_capture (FpDevice *device);
++FP_API gboolean     fp_device_supports_capture (FpDevice *device);
+ G_DEPRECATED_FOR (fp_device_get_features)
+-gboolean     fp_device_has_storage (FpDevice *device);
++FP_API gboolean     fp_device_has_storage (FpDevice *device);
+ 
+ G_END_DECLS
+diff --git a/libfprint/fp-image.c b/libfprint/fp-image.c
+index f9c60b3..fedb2a8 100644
+--- a/libfprint/fp-image.c
++++ b/libfprint/fp-image.c
+@@ -225,7 +225,11 @@ static void
+ vflip (guint8 *data, gint width, gint height)
+ {
+   int data_len = width * height;
++#ifdef _MSC_VER
++  unsigned char *rowbuf = g_alloca(width);
++#else
+   unsigned char rowbuf[width];
++#endif
+   int i;
+ 
+   for (i = 0; i < height / 2; i++)
+@@ -247,7 +251,11 @@ vflip (guint8 *data, gint width, gint height)
+ static void
+ hflip (guint8 *data, gint width, gint height)
+ {
++#ifdef _MSC_VER
++  unsigned char *rowbuf = g_alloca(width);
++#else
+   unsigned char rowbuf[width];
++#endif
+   int i, j;
+ 
+   for (i = 0; i < height; i++)
+diff --git a/libfprint/fp-image.h b/libfprint/fp-image.h
+index 7de9f1a..196b7ba 100644
+--- a/libfprint/fp-image.h
++++ b/libfprint/fp-image.h
+@@ -20,6 +20,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(LIBFPRINT_COMPILATION)
++#  define FP_API __declspec(dllexport)
++# else
++#  define FP_API __declspec(dllimport)
++# endif
++#else
++# define FP_API
++#endif
++
+ #include <gio/gio.h>
+ 
+ G_BEGIN_DECLS
+@@ -30,29 +40,29 @@ typedef struct fp_minutia FpMinutia;
+ 
+ G_DECLARE_FINAL_TYPE (FpImage, fp_image, FP, IMAGE, GObject)
+ 
+-FpImage     *fp_image_new (gint width,
++FP_API FpImage     *fp_image_new (gint width,
+                            gint height);
+ 
+-guint         fp_image_get_width (FpImage *self);
+-guint         fp_image_get_height (FpImage *self);
+-gdouble       fp_image_get_ppmm (FpImage *self);
++FP_API guint         fp_image_get_width (FpImage *self);
++FP_API guint         fp_image_get_height (FpImage *self);
++FP_API gdouble       fp_image_get_ppmm (FpImage *self);
+ 
+-GPtrArray *   fp_image_get_minutiae (FpImage *self);
++FP_API GPtrArray *   fp_image_get_minutiae (FpImage *self);
+ 
+-void          fp_image_detect_minutiae (FpImage            *self,
++FP_API void          fp_image_detect_minutiae (FpImage            *self,
+                                         GCancellable       *cancellable,
+                                         GAsyncReadyCallback callback,
+                                         gpointer            user_data);
+-gboolean      fp_image_detect_minutiae_finish (FpImage      *self,
++FP_API gboolean      fp_image_detect_minutiae_finish (FpImage      *self,
+                                                GAsyncResult *result,
+                                                GError      **error);
+ 
+-const guchar * fp_image_get_data (FpImage *self,
++FP_API const guchar * fp_image_get_data (FpImage *self,
+                                   gsize   *len);
+-const guchar * fp_image_get_binarized (FpImage *self,
++FP_API const guchar * fp_image_get_binarized (FpImage *self,
+                                        gsize   *len);
+ 
+-void           fp_minutia_get_coords (FpMinutia *min,
++FP_API void           fp_minutia_get_coords (FpMinutia *min,
+                                       gint      *x,
+                                       gint      *y);
+ 
+diff --git a/libfprint/fp-print.h b/libfprint/fp-print.h
+index ac6820d..2476757 100644
+--- a/libfprint/fp-print.h
++++ b/libfprint/fp-print.h
+@@ -20,6 +20,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(LIBFPRINT_COMPILATION)
++#  define FP_API __declspec(dllexport)
++# else
++#  define FP_API __declspec(dllimport)
++# endif
++#else
++# define FP_API
++#endif
++
+ #include "fp-image.h"
+ #include "fp-enums.h"
+ 
+@@ -78,38 +88,38 @@ typedef enum {
+   FP_FINGER_STATUS_PRESENT = 1 << 1,
+ } FpFingerStatusFlags;
+ 
+-FpPrint *fp_print_new (FpDevice *device);
++FP_API FpPrint *fp_print_new (FpDevice *device);
+ 
+-const gchar *fp_print_get_driver (FpPrint *print);
+-const gchar *fp_print_get_device_id (FpPrint *print);
+-FpImage     *fp_print_get_image (FpPrint *print);
++FP_API const gchar *fp_print_get_driver (FpPrint *print);
++FP_API const gchar *fp_print_get_device_id (FpPrint *print);
++FP_API FpImage     *fp_print_get_image (FpPrint *print);
+ 
+-FpFinger     fp_print_get_finger (FpPrint *print);
+-const gchar *fp_print_get_username (FpPrint *print);
+-const gchar *fp_print_get_description (FpPrint *print);
+-const GDate *fp_print_get_enroll_date (FpPrint *print);
+-gboolean     fp_print_get_device_stored (FpPrint *print);
++FP_API FpFinger     fp_print_get_finger (FpPrint *print);
++FP_API const gchar *fp_print_get_username (FpPrint *print);
++FP_API const gchar *fp_print_get_description (FpPrint *print);
++FP_API const GDate *fp_print_get_enroll_date (FpPrint *print);
++FP_API gboolean     fp_print_get_device_stored (FpPrint *print);
+ 
+-void         fp_print_set_finger (FpPrint *print,
++FP_API void         fp_print_set_finger (FpPrint *print,
+                                   FpFinger finger);
+-void         fp_print_set_username (FpPrint     *print,
++FP_API void         fp_print_set_username (FpPrint     *print,
+                                     const gchar *username);
+-void         fp_print_set_description (FpPrint     *print,
++FP_API void         fp_print_set_description (FpPrint     *print,
+                                        const gchar *description);
+-void         fp_print_set_enroll_date (FpPrint     *print,
++FP_API void         fp_print_set_enroll_date (FpPrint     *print,
+                                        const GDate *enroll_date);
+ 
+-gboolean fp_print_compatible (FpPrint  *self,
++FP_API gboolean fp_print_compatible (FpPrint  *self,
+                               FpDevice *device);
+-gboolean fp_print_equal (FpPrint *self,
++FP_API gboolean fp_print_equal (FpPrint *self,
+                          FpPrint *other);
+ 
+-gboolean fp_print_serialize (FpPrint *print,
++FP_API gboolean fp_print_serialize (FpPrint *print,
+                              guchar **data,
+                              gsize   *length,
+                              GError **error);
+ 
+-FpPrint *fp_print_deserialize (const guchar *data,
++FP_API FpPrint *fp_print_deserialize (const guchar *data,
+                                gsize         length,
+                                GError      **error);
+ 
+diff --git a/libfprint/fpi-compat.h b/libfprint/fpi-compat.h
+index efb7772..ad8ba8b 100644
+--- a/libfprint/fpi-compat.h
++++ b/libfprint/fpi-compat.h
+@@ -1,27 +1,62 @@
+ /*
+- * Copyright (C) 2020 Benjamin Berg <bberg@redhat.com>
++ * Compatibility header for Windows/MSVC
++ * Copyright (C) 2024
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+  * License as published by the Free Software Foundation; either
+  * version 2.1 of the License, or (at your option) any later version.
+- *
+- * This library is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+- * Lesser General Public License for more details.
+- *
+- * You should have received a copy of the GNU Lesser General Public
+- * License along with this library; if not, write to the Free Software
+- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+  */
+ 
+ #pragma once
+ 
+-#include <glib-object.h>
++#include <glib.h>
++#include <gio/gio.h>
++
++#ifdef _WIN32
++/* Windows headers define macros that conflict with identifiers we use. */
++#ifdef interface
++#undef interface
++#endif
++#endif
++
++#ifdef _MSC_VER
++/* MSVC compatibility macros */
++/* FP_GNUC_ACCESS is a macro for GCC attributes that MSVC doesn't support */
++#ifndef FP_GNUC_ACCESS
++#define FP_GNUC_ACCESS(...) /* empty on MSVC */
++#endif
++
++/* __attribute__((packed)) support for MSVC */
++#define FP_PACKED_BEGIN __pragma(pack(push, 1))
++#define FP_PACKED_END __pragma(pack(pop))
+ 
+-#if  __GNUC__ > 10 || (__GNUC__ == 10 && __GNUC_MINOR__ >= 1)
+-#define FP_GNUC_ACCESS(m, p, s) __attribute__((access (m, p, s)))
++/* Provide fallbacks for GLib auto-cleanup helpers on MSVC */
++/* Note: g_autoptr requires G_DEFINE_AUTOPTR_CLEANUP_FUNC to be defined for each type */
++/* For GTask, we need to use GTask * directly and manual cleanup on MSVC */
++#ifdef g_autoptr
++#undef g_autoptr
++#endif
++#define g_autoptr(Type) Type *
++#ifndef g_autofree
++#define g_autofree
++#endif
++#ifndef g_auto
++#define g_auto(Type) Type *
++#endif
++#ifndef G_DEFINE_AUTOPTR_CLEANUP_FUNC
++#define G_DEFINE_AUTOPTR_CLEANUP_FUNC(Type, func)
++#endif
+ #else
+-#define FP_GNUC_ACCESS(m, p, s)
++/* GCC/Clang compatibility macros */
++#define FP_PACKED_BEGIN /* empty on GCC/Clang */
++#define FP_PACKED_END /* empty on GCC/Clang */
++/* On GCC/Clang, use GLib's G_GNUC_ACCESS if available */
++#ifndef FP_GNUC_ACCESS
++#ifdef G_GNUC_ACCESS
++#define FP_GNUC_ACCESS G_GNUC_ACCESS
++#else
++#define FP_GNUC_ACCESS(...) /* fallback */
++#endif
++#endif
+ #endif
+diff --git a/libfprint/fpi-device.c b/libfprint/fpi-device.c
+index a1be30c..3f3005f 100644
+--- a/libfprint/fpi-device.c
++++ b/libfprint/fpi-device.c
+@@ -24,6 +24,7 @@
+ #include <errno.h>
+ 
+ #include "fpi-log.h"
++#include "fpi-compat.h"
+ 
+ #include "fp-device-private.h"
+ 
+@@ -732,11 +733,18 @@ fpi_device_action_error (FpDevice *device,
+ 
+   if (error != NULL)
+     {
++#ifndef _MSC_VER
+       g_autofree char *action_str = NULL;
++#else
++      char *action_str = NULL;
++#endif
+ 
+       action_str = g_enum_to_string (FPI_TYPE_DEVICE_ACTION, priv->current_action);
+       g_debug ("Device reported generic error (%s) during action; action was: %s",
+                error->message, action_str);
++#ifdef _MSC_VER
++      g_free (action_str);
++#endif
+     }
+   else
+     {
+@@ -951,11 +959,16 @@ fp_device_task_return_in_idle_cb (gpointer user_data)
+ {
+   FpDeviceTaskReturnData *data = user_data;
+   FpDevicePrivate *priv = fp_device_get_instance_private (data->device);
++#ifndef _MSC_VER
+   g_autofree char *action_str = NULL;
+-  FpiDeviceAction action;
+-
+   g_autoptr(GTask) task = NULL;
+   g_autoptr(GError) cancellation_reason = NULL;
++#else
++  char *action_str = NULL;
++  GTask *task = NULL;
++  GError *cancellation_reason = NULL;
++#endif
++  FpiDeviceAction action;
+ 
+ 
+   action_str = g_enum_to_string (FPI_TYPE_DEVICE_ACTION, priv->current_action);
+@@ -1260,7 +1273,11 @@ fpi_device_enroll_complete (FpDevice *device, FpPrint *print, GError *error)
+       if (FP_IS_PRINT (print))
+         {
+           FpiPrintType print_type;
++#ifndef _MSC_VER
+           g_autofree char *finger_str = NULL;
++#else
++          char *finger_str = NULL;
++#endif
+ 
+           g_object_get (print, "fpi-type", &print_type, NULL);
+           if (print_type == FPI_PRINT_UNDEFINED)
+@@ -1276,6 +1293,9 @@ fpi_device_enroll_complete (FpDevice *device, FpPrint *print, GError *error)
+ 
+           finger_str = g_enum_to_string (FP_TYPE_FINGER, fp_print_get_finger (print));
+           g_debug ("Print for finger %s enrolled", finger_str);
++#ifdef _MSC_VER
++          g_free (finger_str);
++#endif
+ 
+           fpi_device_return_task_in_idle (device, FP_DEVICE_TASK_RETURN_OBJECT, print);
+         }
+@@ -1594,13 +1614,20 @@ update_attr (const char *attr, const char *value)
+ static void
+ complete_suspend_resume_task (FpDevice *device)
+ {
++#ifndef _MSC_VER
+   g_autoptr(GTask) task = NULL;
++#else
++  GTask *task = NULL;
++#endif
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+ 
+   g_assert (priv->suspend_resume_task);
+   task = g_steal_pointer (&priv->suspend_resume_task);
+ 
+   g_task_return_boolean (task, TRUE);
++#ifdef _MSC_VER
++  g_clear_object (&task);
++#endif
+ }
+ 
+ void
+@@ -1703,12 +1730,22 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
+     {
+     case FP_DEVICE_TYPE_USB:
+       {
++#ifndef _MSC_VER
+         g_autoptr(GString) ports = NULL;
+         g_autoptr(GUsbDevice) dev = NULL;
++#else
++        GString *ports = NULL;
++        GUsbDevice *dev = NULL;
++#endif
+         const char *wakeup_command = enabled ? "enabled" : "disabled";
+         guint8 bus;
++#ifndef _MSC_VER
+         g_autofree gchar *sysfs_wakeup = NULL;
+         g_autofree gchar *sysfs_persist = NULL;
++#else
++        gchar *sysfs_wakeup = NULL;
++        gchar *sysfs_persist = NULL;
++#endif
+         int res;
+ 
+         ports = g_string_new (NULL);
+@@ -1718,17 +1755,31 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
+         g_set_object (&dev, priv->usb_device);
+         while (TRUE)
+           {
++#ifndef _MSC_VER
+             g_autoptr(GUsbDevice) parent = g_usb_device_get_parent (dev);
+             g_autofree gchar *port_str = NULL;
++#else
++            GUsbDevice *parent = g_usb_device_get_parent (dev);
++            gchar *port_str = NULL;
++#endif
+             guint8 port;
+ 
+             if (!parent)
+               break;
+ 
++#ifdef _MSC_VER
+             port = g_usb_device_get_port_number (dev);
+             port_str = g_strdup_printf ("%d.", port);
+             g_string_prepend (ports, port_str);
+             g_set_object (&dev, parent);
++            g_free (port_str);
++            g_clear_object (&parent);
++#else
++            port = g_usb_device_get_port_number (dev);
++            port_str = g_strdup_printf ("%d.", port);
++            g_string_prepend (ports, port_str);
++            g_set_object (&dev, parent);
++#endif
+           }
+         g_string_set_size (ports, ports->len - 1);
+ 
+@@ -1747,6 +1798,14 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
+         if (res < 0)
+           g_warning ("Failed to disable USB persist by writing to %s", sysfs_persist);
+ 
++#ifdef _MSC_VER
++        g_free (sysfs_wakeup);
++        g_free (sysfs_persist);
++        if (ports)
++          g_string_free (ports, TRUE);
++        g_clear_object (&dev);
++#endif
++
+         break;
+       }
+ 
+@@ -1765,7 +1824,11 @@ fpi_device_configure_wakeup (FpDevice *device, gboolean enabled)
+ static void
+ fpi_device_suspend_completed (FpDevice *device)
+ {
++#ifndef _MSC_VER
+   g_autoptr(GTask) task = NULL;
++#else
++  GTask *task = NULL;
++#endif
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+ 
+   /* We have an ongoing operation, allow the device to wake up the machine. */
+@@ -1781,6 +1844,9 @@ fpi_device_suspend_completed (FpDevice *device)
+     g_task_return_error (task, g_steal_pointer (&priv->suspend_error));
+   else
+     g_task_return_boolean (task, TRUE);
++#ifdef _MSC_VER
++  g_clear_object (&task);
++#endif
+ }
+ 
+ /**
+@@ -1845,7 +1911,11 @@ void
+ fpi_device_resume_complete (FpDevice *device,
+                             GError   *error)
+ {
++#ifndef _MSC_VER
+   g_autoptr(GTask) task = NULL;
++#else
++  GTask *task = NULL;
++#endif
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
+ 
+   g_return_if_fail (FP_IS_DEVICE (device));
+@@ -1860,6 +1930,9 @@ fpi_device_resume_complete (FpDevice *device,
+     g_task_return_error (task, error);
+   else
+     g_task_return_boolean (task, TRUE);
++#ifdef _MSC_VER
++  g_clear_object (&task);
++#endif
+ }
+ 
+ /**
+@@ -2117,13 +2190,20 @@ fpi_device_report_finger_status (FpDevice           *device,
+                                  FpFingerStatusFlags finger_status)
+ {
+   FpDevicePrivate *priv = fp_device_get_instance_private (device);
++#ifndef _MSC_VER
+   g_autofree char *status_string = NULL;
++#else
++  char *status_string = NULL;
++#endif
+ 
+   if (priv->finger_status == finger_status)
+     return FALSE;
+ 
+   status_string = g_flags_to_string (FP_TYPE_FINGER_STATUS_FLAGS, finger_status);
+   fp_dbg ("Device reported finger status change: %s", status_string);
++#ifdef _MSC_VER
++  g_free (status_string);
++#endif
+ 
+   priv->finger_status = finger_status;
+   g_object_notify (G_OBJECT (device), "finger-status");
+@@ -2184,8 +2264,13 @@ fpi_device_update_temp (FpDevice *device, gboolean is_active)
+   gdouble next_threshold;
+   gdouble old_ratio;
+   FpTemperature old_temp;
++#ifndef _MSC_VER
+   g_autofree char *old_temp_str = NULL;
+   g_autofree char *new_temp_str = NULL;
++#else
++  char *old_temp_str = NULL;
++  char *new_temp_str = NULL;
++#endif
+ 
+   if (priv->temp_hot_seconds < 0)
+     {
+@@ -2246,6 +2331,11 @@ fpi_device_update_temp (FpDevice *device, gboolean is_active)
+            old_temp_str,
+            new_temp_str);
+ 
++#ifdef _MSC_VER
++  g_free (old_temp_str);
++  g_free (new_temp_str);
++#endif
++
+   if (priv->temp_current != old_temp)
+     g_object_notify (G_OBJECT (device), "temperature");
+ 
+diff --git a/libfprint/fpi-image-device.c b/libfprint/fpi-image-device.c
+index 8184d3a..f58b645 100644
+--- a/libfprint/fpi-image-device.c
++++ b/libfprint/fpi-image-device.c
+@@ -19,6 +19,7 @@
+ 
+ #define FP_COMPONENT "image_device"
+ #include "fpi-log.h"
++#include "fpi-compat.h"
+ 
+ #include "fp-image-device-private.h"
+ #include "fp-image-device.h"
+@@ -88,8 +89,13 @@ static void
+ fp_image_device_change_state (FpImageDevice *self, FpiImageDeviceState state)
+ {
+   FpImageDevicePrivate *priv = fp_image_device_get_instance_private (self);
++#ifndef _MSC_VER
+   g_autofree char *prev_state_str = NULL;
+   g_autofree char *state_str = NULL;
++#else
++  char *prev_state_str = NULL;
++  char *state_str = NULL;
++#endif
+   gboolean transition_is_valid = FALSE;
+   gint i;
+ 
+@@ -141,6 +147,11 @@ fp_image_device_change_state (FpImageDevice *self, FpiImageDeviceState state)
+   g_object_notify (G_OBJECT (self), "fpi-image-device-state");
+   g_signal_emit_by_name (self, "fpi-image-device-state-changed", priv->state);
+ 
++#ifdef _MSC_VER
++  g_free (prev_state_str);
++  g_free (state_str);
++#endif
++
+   if (state == FPI_IMAGE_DEVICE_STATE_AWAIT_FINGER_ON)
+     {
+       fpi_device_report_finger_status_changes (FP_DEVICE (self),
+@@ -235,8 +246,13 @@ fp_image_device_maybe_complete_action (FpImageDevice *self, GError *error)
+ static void
+ fpi_image_device_minutiae_detected (GObject *source_object, GAsyncResult *res, gpointer user_data)
+ {
++#ifndef _MSC_VER
+   g_autoptr(FpImage) image = FP_IMAGE (source_object);
+   g_autoptr(FpPrint) print = NULL;
++#else
++  FpImage *image = FP_IMAGE (source_object);
++  FpPrint *print = NULL;
++#endif
+   GError *error = NULL;
+   FpImageDevice *self = FP_IMAGE_DEVICE (user_data);
+   FpDevice *device = FP_DEVICE (self);
+diff --git a/libfprint/fpi-print.c b/libfprint/fpi-print.c
+index 00289b4..77d57e9 100644
+--- a/libfprint/fpi-print.c
++++ b/libfprint/fpi-print.c
+@@ -326,8 +326,13 @@ fpi_print_fill_from_user_id (FpPrint *print, const char *user_id)
+   if (g_str_has_prefix (user_id, "FP1-") && strlen (user_id) >= 24 &&
+       user_id[12] == '-' && user_id[14] == '-' && user_id[23] == '-')
+     {
++#ifndef _MSC_VER
+       g_autofree gchar *copy = g_strdup (user_id);
+       g_autoptr(GDate) date = NULL;
++#else
++      gchar *copy = g_strdup (user_id);
++      GDate *date = NULL;
++#endif
+       gint32 date_ymd;
+       gint32 finger;
+       gchar *username;
+@@ -355,6 +360,11 @@ fpi_print_fill_from_user_id (FpPrint *print, const char *user_id)
+       if (strlen (username) > 0 && g_strcmp0 (username, "nobody") != 0)
+         fp_print_set_username (print, username);
+ 
++#ifdef _MSC_VER
++      g_free (copy);
++      g_date_free (date);
++#endif
++
+       return TRUE;
+     }
+ 
+diff --git a/libfprint/fpi-ssm.c b/libfprint/fpi-ssm.c
+index b816945..2f84f04 100644
+--- a/libfprint/fpi-ssm.c
++++ b/libfprint/fpi-ssm.c
+@@ -22,6 +22,7 @@
+ #define FP_COMPONENT "SSM"
+ 
+ #include "drivers_api.h"
++#include "fpi-compat.h"
+ #include "fpi-ssm.h"
+ 
+ 
+@@ -392,7 +393,11 @@ void
+ fpi_ssm_mark_completed_delayed (FpiSsm *machine,
+                                 int     delay)
+ {
++#ifndef _MSC_VER
+   g_autofree char *source_name = NULL;
++#else
++  char *source_name = NULL;
++#endif
+ 
+   g_return_if_fail (machine != NULL);
+ 
+@@ -404,6 +409,9 @@ fpi_ssm_mark_completed_delayed (FpiSsm *machine,
+                                  fp_device_get_device_id (machine->dev),
+                                  machine->name, machine->cur_state + 1);
+   g_source_set_name (machine->timeout, source_name);
++#ifdef _MSC_VER
++  g_free (source_name);
++#endif
+ }
+ 
+ /**
+@@ -501,7 +509,11 @@ void
+ fpi_ssm_next_state_delayed (FpiSsm *machine,
+                             int     delay)
+ {
++#ifndef _MSC_VER
+   g_autofree char *source_name = NULL;
++#else
++  char *source_name = NULL;
++#endif
+ 
+   g_return_if_fail (machine != NULL);
+ 
+@@ -513,6 +525,9 @@ fpi_ssm_next_state_delayed (FpiSsm *machine,
+                                  fp_device_get_device_id (machine->dev),
+                                  machine->name, machine->cur_state + 1);
+   g_source_set_name (machine->timeout, source_name);
++#ifdef _MSC_VER
++  g_free (source_name);
++#endif
+ }
+ 
+ /**
+@@ -573,7 +588,11 @@ fpi_ssm_jump_to_state_delayed (FpiSsm *machine,
+                                int     delay)
+ {
+   FpiSsmJumpToStateDelayedData *data;
++#ifndef _MSC_VER
+   g_autofree char *source_name = NULL;
++#else
++  char *source_name = NULL;
++#endif
+ 
+   g_return_if_fail (machine != NULL);
+   BUG_ON (state < 0 || state > machine->nr_states);
+@@ -590,6 +609,9 @@ fpi_ssm_jump_to_state_delayed (FpiSsm *machine,
+                                  fp_device_get_device_id (machine->dev),
+                                  machine->name, state);
+   g_source_set_name (machine->timeout, source_name);
++#ifdef _MSC_VER
++  g_free (source_name);
++#endif
+ }
+ 
+ /**
+diff --git a/libfprint/fpi-usb-transfer.c b/libfprint/fpi-usb-transfer.c
+index ac4f60c..36a2500 100644
+--- a/libfprint/fpi-usb-transfer.c
++++ b/libfprint/fpi-usb-transfer.c
+@@ -18,6 +18,7 @@
+  */
+ 
+ #include "fpi-usb-transfer.h"
++#include "fpi-compat.h"
+ 
+ /**
+  * SECTION:fpi-usb-transfer
+@@ -42,7 +43,11 @@ log_transfer (FpiUsbTransfer *transfer, gboolean submit, GError *error)
+     {
+       if (!submit)
+         {
++#ifndef _MSC_VER
+           g_autofree gchar *error_str = NULL;
++#else
++          gchar *error_str = NULL;
++#endif
+           if (error)
+             error_str = g_strdup_printf ("with error (%s)", error->message);
+           else
+@@ -54,6 +59,9 @@ log_transfer (FpiUsbTransfer *transfer, gboolean submit, GError *error)
+                    transfer->length,
+                    transfer->actual_length,
+                    transfer->endpoint);
++#ifdef _MSC_VER
++          g_free (error_str);
++#endif
+         }
+       else
+         {
+@@ -65,7 +73,11 @@ log_transfer (FpiUsbTransfer *transfer, gboolean submit, GError *error)
+ 
+       if (!submit == !!(transfer->endpoint & FPI_USB_ENDPOINT_IN))
+         {
++#ifndef _MSC_VER
+           g_autoptr(GString) line = NULL;
++#else
++          GString *line = NULL;
++#endif
+           gssize dump_len;
+ 
+           dump_len = (transfer->endpoint & FPI_USB_ENDPOINT_IN) ? transfer->actual_length : transfer->length;
+@@ -84,6 +96,9 @@ log_transfer (FpiUsbTransfer *transfer, gboolean submit, GError *error)
+ 
+           if (line->len)
+             g_debug ("%s", line->str);
++#ifdef _MSC_VER
++          g_string_free (line, TRUE);
++#endif
+         }
+     }
+ }
+diff --git a/libfprint/fprint.h b/libfprint/fprint.h
+index 6db6cfd..cb96755 100644
+--- a/libfprint/fprint.h
++++ b/libfprint/fprint.h
+@@ -19,6 +19,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(LIBFPRINT_COMPILATION)
++#  define FP_API __declspec(dllexport)
++# else
++#  define FP_API __declspec(dllimport)
++# endif
++#else
++# define FP_API
++#endif
++
+ #include "fp-context.h"
+ #include "fp-device.h"
+ #include "fp-image.h"
+diff --git a/libfprint/meson.build b/libfprint/meson.build
+index 0ca1767..3fdf8db 100644
+--- a/libfprint/meson.build
++++ b/libfprint/meson.build
+@@ -179,7 +179,11 @@ foreach helper : driver_helpers
+     drivers_sources += helper_sources[helper]
+ endforeach
+ 
++# Store actual source files for depend_files (before adding custom_target)
++drivers_sources_files = drivers_sources
+ 
++# Use gnome.mkenums_simple - it will use glib_mkenums_prog if found
++# If glib_mkenums_prog is not found, gnome.mkenums_simple will try to find it automatically
+ fp_enums = gnome.mkenums_simple('fp-enums',
+     sources: libfprint_public_headers,
+     install_header: true,
+@@ -219,6 +223,21 @@ drivers_type_list += ''
+ drivers_type_func += '  return drivers;'
+ drivers_type_func += '}'
+ 
++# Use custom_target instead of configure_file with echo for Windows compatibility
++# Find python3 first (needed for Windows)
++python3_prog = find_program('python3', 'python', required: false)
++if host_machine.system() == 'windows' and python3_prog.found()
++    fpi_drivers_c = custom_target('fpi-drivers.c',
++        output: 'fpi-drivers.c',
++        command: [
++            python3_prog,
++            '-c', 'import sys; sys.stdout.write(sys.argv[1])',
++            '\n'.join(drivers_type_list + [] + drivers_type_func)
++        ],
++        capture: true,
++    )
++    drivers_sources += fpi_drivers_c
++else
+ drivers_sources += configure_file(input: 'empty_file',
+     output: 'fpi-drivers.c',
+     capture: true,
+@@ -226,6 +245,7 @@ drivers_sources += configure_file(input: 'empty_file',
+         'echo',
+         '\n'.join(drivers_type_list + [] + drivers_type_func)
+     ])
++endif
+ 
+ deps = [
+     enums_dep,
+@@ -246,6 +266,14 @@ deps += declare_dependency(include_directories: [
+     include_directories('nbis/libfprint-include'),
+ ])
+ 
++# Workaround for Meson bug: avoid "csr" in LINK_ARGS for static libraries on Windows
++# Explicitly set empty link_args for Windows to override Meson's buggy default
++if host_machine.system() == 'windows'
++    static_link_args = []
++else
++    static_link_args = []
++endif
++
+ libnbis = static_library('nbis',
+     nbis_sources,
+     dependencies: deps,
+@@ -256,6 +284,7 @@ libnbis = static_library('nbis',
+         '-Wno-array-bounds',
+         '-Wno-array-parameter',
+     ]),
++    link_args: static_link_args,
+     install: false)
+ 
+ libfprint_private = static_library('fprint-private',
+@@ -265,6 +294,7 @@ libfprint_private = static_library('fprint-private',
+     ],
+     dependencies: deps,
+     link_with: libnbis,
++    link_args: static_link_args,
+     install: false)
+ 
+ libfprint_drivers = static_library('fprint-drivers',
+@@ -272,15 +302,33 @@ libfprint_drivers = static_library('fprint-drivers',
+     c_args: drivers_cflags,
+     dependencies: deps,
+     link_with: libfprint_private,
++    link_args: static_link_args,
+     install: false)
+ 
++# Version script only works on Unix (not Windows)
++# For Windows, use .def file instead
+ mapfile = files('libfprint.ver')[0]
+-if meson.version().version_compare('>=1.4')
+-    mapfile_path = mapfile.full_path()
++deffile = files('libfprint.def')[0]
++if host_machine.system() != 'windows'
++    if meson.version().version_compare('>=1.4')
++        mapfile_path = mapfile.full_path()
++    else
++        mapfile_path = meson.project_source_root() / '@0@'.format(mapfile)
++    endif
++    vflag = '-Wl,--version-script,@0@'.format(mapfile_path)
++    mapfile_dep = [mapfile]
++    deffile_dep = []
+ else
+-    mapfile_path = meson.project_source_root() / '@0@'.format(mapfile)
++    vflag = []
++    mapfile_dep = []
++    if meson.version().version_compare('>=1.4')
++        deffile_path = deffile.full_path()
++    else
++        deffile_path = meson.project_source_root() / '@0@'.format(deffile)
++    endif
++    vflag = ['/DEF:@0@'.format(deffile_path)]
++    deffile_dep = [deffile]
+ endif
+-vflag = '-Wl,--version-script,@0@'.format(mapfile_path)
+ 
+ libfprint = shared_library(versioned_libname.split('lib')[1],
+     sources: [
+@@ -290,7 +338,7 @@ libfprint = shared_library(versioned_libname.split('lib')[1],
+     soversion: soversion,
+     version: libversion,
+     link_args : vflag,
+-    link_depends : mapfile,
++    link_depends : mapfile_dep + deffile_dep,
+     link_with: [libfprint_drivers, libfprint_private],
+     dependencies: deps,
+     install: true)
+@@ -326,26 +374,30 @@ udev_hwdb = executable('fprint-list-udev-hwdb',
+ 
+ udev_hwdb_generator = custom_target('udev-hwdb',
+     output: 'autosuspend.hwdb',
+-    depend_files: drivers_sources,
++    depend_files: drivers_sources_files,
+     capture: true,
+     command: [ udev_hwdb ],
+     install: false,
+ )
+ 
+-metainfo = executable('fprint-list-metainfo',
+-    'fprint-list-metainfo.c',
+-    dependencies: libfprint_private_dep,
+-    link_with: libfprint_drivers,
+-    install: false)
++# Metainfo generator is only needed for Linux desktop environments
++# Skip on Windows as it requires DLL dependencies and metainfo is not used on Windows
++if host_machine.system() != 'windows'
++    metainfo = executable('fprint-list-metainfo',
++        'fprint-list-metainfo.c',
++        dependencies: libfprint_private_dep,
++        link_with: libfprint_drivers,
++        install: false)
+ 
+-metainfo_generator = custom_target('metainfo',
+-    output: 'org.freedesktop.libfprint.metainfo.xml',
+-    depend_files: drivers_sources,
+-    capture: true,
+-    command: [ metainfo ],
+-    install: true,
+-    install_dir: datadir / 'metainfo'
+-)
++    metainfo_generator = custom_target('metainfo',
++        output: 'org.freedesktop.libfprint.metainfo.xml',
++        depend_files: drivers_sources_files,
++        capture: true,
++        command: [ metainfo ],
++        install: true,
++        install_dir: datadir / 'metainfo'
++    )
++endif
+ 
+ if install_udev_rules
+     udev_rules = executable('fprint-list-udev-rules',
+@@ -356,7 +408,7 @@ if install_udev_rules
+ 
+     custom_target('udev-rules',
+         output: '70-@0@.rules'.format(versioned_libname),
+-        depend_files: drivers_sources,
++        depend_files: drivers_sources_files,
+         capture: true,
+         command: [ udev_rules ],
+         install: true,
+@@ -364,6 +416,21 @@ if install_udev_rules
+     )
+ endif
+ 
++# Use python to copy file on Windows (cp is not available)
++if host_machine.system() == 'windows'
++    python3_prog = find_program('python3', 'python', required: true)
++    sync_udev_udb = custom_target('sync-udev-hwdb',
++        depends: udev_hwdb_generator,
++        output: 'sync-udev-hwdb',
++        install: false,
++        command: [
++            python3_prog,
++            '-c', 'import shutil, sys; shutil.copy2(sys.argv[1], sys.argv[2])',
++            udev_hwdb_generator.full_path(),
++            meson.project_source_root() / 'data' / udev_hwdb_generator.full_path().split('/')[-1]
++        ]
++    )
++else
+ sync_udev_udb = custom_target('sync-udev-hwdb',
+     depends: udev_hwdb_generator,
+     output: 'sync-udev-hwdb',
+@@ -374,6 +441,7 @@ sync_udev_udb = custom_target('sync-udev-hwdb',
+         meson.project_source_root() / 'data'
+     ]
+ )
++endif
+ 
+ alias_target('sync-udev-hwdb', sync_udev_udb)
+ 
+diff --git a/libfprint/nbis/bozorth3/bozorth3.c b/libfprint/nbis/bozorth3/bozorth3.c
+index e2e668f..39b9b3a 100644
+--- a/libfprint/nbis/bozorth3/bozorth3.c
++++ b/libfprint/nbis/bozorth3/bozorth3.c
+@@ -684,7 +684,7 @@ INT_SET( (int *) &yl, YL_SIZE_1 * YL_SIZE_2, 0 );
+ 
+ 
+ 
+-INT_SET( (int *) &sc, SC_SIZE, 0 );
++INT_SET( (int *) &sc, NBIS_SC_SIZE, 0 );
+ INT_SET( (int *) &cp, CP_SIZE, 0 );
+ INT_SET( (int *) &rp, RP_SIZE, 0 );
+ INT_SET( (int *) &tq, TQ_SIZE, 0 );
+@@ -1463,7 +1463,7 @@ return match_score;
+ /***********************************************************************/
+ /* These globals signficantly used by bz_sift () */
+ /* Now externally defined in bozorth.h */
+-/* extern int sc[ SC_SIZE ]; */
++/* extern int sc[ NBIS_SC_SIZE ]; */
+ /* extern int rq[ RQ_SIZE ]; */
+ /* extern int tq[ TQ_SIZE ]; */
+ /* extern int rf[ RF_SIZE_1 ][ RF_SIZE_2 ]; */
+diff --git a/libfprint/nbis/bozorth3/bz_gbls.c b/libfprint/nbis/bozorth3/bz_gbls.c
+index ea283d8..1d25d75 100644
+--- a/libfprint/nbis/bozorth3/bz_gbls.c
++++ b/libfprint/nbis/bozorth3/bz_gbls.c
+@@ -75,7 +75,7 @@ int * scolpt[ SCOLPT_SIZE ];			/* Subject's list of pointers to pointwise compar
+ 						/*	Distance, min(BetaK,BetaJ), then max(BetaK,BetaJ) */
+ int * fcolpt[ FCOLPT_SIZE ];			/* On-File Record's list of pointers to pointwise comparison rows sorted on: */
+ 						/*	Distance, min(BetaK,BetaJ), then max(BetaK,BetaJ) */
+-int sc[ SC_SIZE ];				/* Flags all compatible edges in the Subject's Web */
++int sc[ NBIS_SC_SIZE ];				/* Flags all compatible edges in the Subject's Web */
+ 
+ int yl[ YL_SIZE_1 ][ YL_SIZE_2 ];
+ 
+diff --git a/libfprint/nbis/bozorth3/bz_io.c b/libfprint/nbis/bozorth3/bz_io.c
+index 5d2f863..aff2269 100644
+--- a/libfprint/nbis/bozorth3/bz_io.c
++++ b/libfprint/nbis/bozorth3/bz_io.c
+@@ -92,7 +92,12 @@ of the software.
+ 
+ #include <string.h>
+ #include <ctype.h>
++#ifndef _WIN32
+ #include <sys/time.h>
++#else
++#include <time.h>
++#include <windows.h>
++#endif
+ #include <bozorth.h>
+ 
+ /***********************************************************************/
+diff --git a/libfprint/nbis/fix-scan-build-reports.patch b/libfprint/nbis/fix-scan-build-reports.patch
+index 46b8661..98790e5 100644
+--- a/libfprint/nbis/fix-scan-build-reports.patch
++++ b/libfprint/nbis/fix-scan-build-reports.patch
+@@ -19,7 +19,7 @@ index 0b29aa0..77cf09d 100644
+                              dmapval, bdata, iw, ih, lfsparms);
+  
+     /* If minuitia IGNORED and not added to the minutia list ... */
+--   if(ret == IGNORE)
++-   if(ret == NBIS_IGNORE)
+ +   if(ret != 0)
+        /* Deallocate the minutia. */
+        free_minutia(minutia);
+@@ -28,7 +28,7 @@ index 0b29aa0..77cf09d 100644
+                              dmapval, bdata, iw, ih, lfsparms);
+  
+     /* If minuitia IGNORED and not added to the minutia list ... */
+--   if(ret == IGNORE)
++-   if(ret == NBIS_IGNORE)
+ +   if(ret != 0)
+        /* Deallocate the minutia. */
+        free_minutia(minutia);
+diff --git a/libfprint/nbis/include/bozorth.h b/libfprint/nbis/include/bozorth.h
+index fd8975b..cba9b9c 100644
+--- a/libfprint/nbis/include/bozorth.h
++++ b/libfprint/nbis/include/bozorth.h
+@@ -52,7 +52,12 @@ of the software.
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/types.h>
++#ifndef _WIN32
+ #include <unistd.h> /* Needed for type pid_t */
++#else
++#include <process.h> /* Windows alternative for pid_t */
++typedef int pid_t;
++#endif
+ #include <errno.h>
+ 
+ /* If not defined in sys/param.h */
+@@ -91,8 +96,10 @@ of the software.
+ #define PI_SINGLE	3.14159F
+ #endif
+ 
+-/* Provide prototype for atanf() */
++/* Provide prototype for atanf() when not declared by the C library */
++#if !defined(_MSC_VER)
+ extern float atanf( float );
++#endif
+ 
+ /**************************************************************************/
+ /* Array Length Definitions */
+@@ -227,7 +234,7 @@ extern int scols[ SCOLS_SIZE_1 ][ COLS_SIZE_2 ];
+ extern int fcols[ FCOLS_SIZE_1 ][ COLS_SIZE_2 ];
+ extern int * scolpt[ SCOLPT_SIZE ];
+ extern int * fcolpt[ FCOLPT_SIZE ];
+-extern int sc[ SC_SIZE ];
++extern int sc[ NBIS_SC_SIZE ];
+ extern int yl[ YL_SIZE_1 ][ YL_SIZE_2 ];
+ /* Global arrays supporting "core" bozorth algorithm continued: */
+ /*    Globals used significantly by sift() */
+diff --git a/libfprint/nbis/include/bz_array.h b/libfprint/nbis/include/bz_array.h
+index 296f674..38d914e 100644
+--- a/libfprint/nbis/include/bz_array.h
++++ b/libfprint/nbis/include/bz_array.h
+@@ -57,7 +57,10 @@ of the software.
+ #define SCOLPT_SIZE 20000
+ #define FCOLPT_SIZE 20000
+ 
+-#define SC_SIZE 20000
++#define NBIS_SC_SIZE 20000
++#ifndef _WIN32
++#define SC_SIZE NBIS_SC_SIZE
++#endif
+ 
+ 
+ #define RQ_SIZE 20000
+diff --git a/libfprint/nbis/include/defs.h b/libfprint/nbis/include/defs.h
+index f2953d3..e8b4495 100644
+--- a/libfprint/nbis/include/defs.h
++++ b/libfprint/nbis/include/defs.h
+@@ -57,10 +57,6 @@ of the software.
+ #endif
+ #define Yes		True
+ #define No		False
+-#define Empty		NULL
+-#ifndef None
+-#define None		-1
+-#endif
+ #ifndef FOUND
+ #define FOUND            1
+ #endif
+@@ -69,6 +65,14 @@ of the software.
+ #ifndef DEG2RAD
+ #define DEG2RAD	(double)(57.29578)
+ #endif
++#ifdef _WIN32
++#ifdef max
++#undef max
++#endif
++#ifdef min
++#undef min
++#endif
++#endif
+ #define max(a, b)   ((a) > (b) ? (a) : (b))
+ #define min(a, b)   ((a) < (b) ? (a) : (b))
+ #define sround(x) ((int) (((x)<0) ? (x)-0.5 : (x)+0.5))
+diff --git a/libfprint/nbis/include/lfs.h b/libfprint/nbis/include/lfs.h
+index 8b12e73..b3e79ce 100644
+--- a/libfprint/nbis/include/lfs.h
++++ b/libfprint/nbis/include/lfs.h
+@@ -92,6 +92,14 @@ of the software.
+ /*        MACRO DEFINITIONS                                              */
+ /*************************************************************************/
+ 
++#ifdef _WIN32
++#ifdef max
++#undef max
++#endif
++#ifdef min
++#undef min
++#endif
++#endif
+ #define max(a, b)   ((a) > (b) ? (a) : (b))
+ #define min(a, b)   ((a) < (b) ? (a) : (b))
+ #define sround(x) ((int) (((x)<0) ? (x)-0.5 : (x)+0.5))
+@@ -673,7 +681,10 @@ typedef struct g_lfsparms{
+ 
+ #define HOOK_FOUND               1
+ #define LOOP_FOUND               1
+-#define IGNORE                   2
++#define NBIS_IGNORE              2
++#ifndef _WIN32
++#define IGNORE                   NBIS_IGNORE
++#endif
+ #define LIST_FULL                3
+ #define INCOMPLETE               3
+ 
+diff --git a/libfprint/nbis/include/mytime.h b/libfprint/nbis/include/mytime.h
+index e052a25..df32741 100644
+--- a/libfprint/nbis/include/mytime.h
++++ b/libfprint/nbis/include/mytime.h
+@@ -52,7 +52,10 @@ of the software.
+ #include <sys/types.h>
+ #endif
+ 
+-#ifdef __MSYS__
++#ifdef _WIN32
++#include <time.h>
++#include <windows.h>
++#elif defined(__MSYS__)
+ #include <sys/time.h>
+ #else
+ #include <sys/times.h>
+diff --git a/libfprint/nbis/libfprint-include/nbis.h b/libfprint/nbis/libfprint-include/nbis.h
+index e3f667f..2ae73b0 100644
+--- a/libfprint/nbis/libfprint-include/nbis.h
++++ b/libfprint/nbis/libfprint-include/nbis.h
+@@ -20,8 +20,10 @@
+ 
+ #pragma once
+ 
++#ifndef _MSC_VER
+ #pragma GCC diagnostic push
+ #pragma GCC diagnostic ignored "-Wredundant-decls"
++#endif
+ 
+ #include <bozorth.h>
+ #include <bz_array.h>
+@@ -32,4 +34,6 @@
+ #include <mytime.h>
+ #include <sunrast.h>
+ 
++#ifndef _MSC_VER
+ #pragma GCC diagnostic pop
++#endif
+diff --git a/libfprint/nbis/mindtct/contour.c b/libfprint/nbis/mindtct/contour.c
+index 31f32d0..11384cf 100644
+--- a/libfprint/nbis/mindtct/contour.c
++++ b/libfprint/nbis/mindtct/contour.c
+@@ -224,7 +224,7 @@ int get_high_curvature_contour(int **ocontour_x, int **ocontour_y,
+                   SCAN_CLOCKWISE, bdata, iw, ih))){
+ 
+       /* If trace was not possible ... */
+-      if(ret == IGNORE)
++      if(ret == NBIS_IGNORE)
+          /* Return, with nothing allocated and contour length equal to 0. */
+          return(0);
+ 
+@@ -297,7 +297,7 @@ int get_high_curvature_contour(int **ocontour_x, int **ocontour_y,
+                  SCAN_COUNTER_CLOCKWISE, bdata, iw, ih))){
+ 
+       /* If 2nd trace was not possible ... */
+-      if(ret == IGNORE){
++      if(ret == NBIS_IGNORE){
+          /* Deallocate the 1st half contour. */
+          free_contour(half1_x, half1_y, half1_ex, half1_ey);
+          /* Return, with nothing allocated and contour length equal to 0. */
+@@ -422,7 +422,7 @@ int get_high_curvature_contour(int **ocontour_x, int **ocontour_y,
+    Return Code:
+       Zero       - resulting contour was successfully extracted or is empty
+       LOOP_FOUND - resulting contour forms a complete loop
+-      IGNORE     - contour could not be traced due to problem starting
++      NBIS_IGNORE     - contour could not be traced due to problem starting
+                    conditions
+       INCOMPLETE - resulting contour was not long enough
+       Negative   - system error
+@@ -461,9 +461,9 @@ int get_centered_contour(int **ocontour_x, int **ocontour_y,
+    }
+ 
+    /* If trace was not possible ... */
+-   if(ret == IGNORE)
+-      /* Return IGNORE, with nothing allocated. */
+-      return(IGNORE);
++   if(ret == NBIS_IGNORE)
++      /* Return NBIS_IGNORE, with nothing allocated. */
++      return(NBIS_IGNORE);
+ 
+    /* If 1st half contour forms a loop ... */
+    if(ret == LOOP_FOUND){
+@@ -499,11 +499,11 @@ int get_centered_contour(int **ocontour_x, int **ocontour_y,
+    }
+ 
+    /* If 2nd trace was not possible ... */
+-   if(ret == IGNORE){
++   if(ret == NBIS_IGNORE){
+       /* Deallocate the 1st half contour. */
+       free_contour(half1_x, half1_y, half1_ex, half1_ey);
+       /* Return, with nothing allocated and contour length equal to 0. */
+-      return(IGNORE);
++      return(NBIS_IGNORE);
+    }
+ 
+    /* If 2nd trace forms a loop ... */
+@@ -624,7 +624,7 @@ int get_centered_contour(int **ocontour_x, int **ocontour_y,
+    Return Code:
+       Zero       - resulting contour was successfully allocated and extracted
+       LOOP_FOUND - resulting contour forms a complete loop
+-      IGNORE     - trace is not possible due to state of inputs
++      NBIS_IGNORE     - trace is not possible due to state of inputs
+       Negative   - system error
+ **************************************************************************/
+ int trace_contour(int **ocontour_x, int **ocontour_y,
+@@ -645,8 +645,8 @@ int trace_contour(int **ocontour_x, int **ocontour_y,
+    /* Check to make sure that the feature and edge values are opposite. */
+    if(*(bdata+(y_loc*iw)+x_loc) ==
+       *(bdata+(y_edge*iw)+x_edge))
+-      /* If not opposite, then the trace will not work, so return IGNORE. */
+-      return(IGNORE);
++      /* If not opposite, then the trace will not work, so return NBIS_IGNORE. */
++      return(NBIS_IGNORE);
+ 
+    /* Allocate contour buffers. */
+    if((ret = allocate_contour(&contour_x, &contour_y,
+@@ -1068,7 +1068,7 @@ int next_scan_nbr(const int nbr_i, const int scan_clock)
+       omin_theta - minimum angle found along the contour
+    Return Code:
+       Zero       - minimum angle successfully located
+-      IGNORE     - ignore the contour
++      NBIS_IGNORE     - ignore the contour
+       Negative   - system error
+ **************************************************************************/
+ int min_contour_theta(int *omin_i, double *omin_theta,
+@@ -1082,8 +1082,8 @@ int min_contour_theta(int *omin_i, double *omin_theta,
+ 
+    /* If the contour length is too short for processing... */
+    if(ncontour < (angle_edge<<1)+1)
+-      /* Return IGNORE. */
+-      return(IGNORE);
++      /* Return NBIS_IGNORE. */
++      return(NBIS_IGNORE);
+ 
+    /* Intialize running minimum values. */
+    min_theta = M_PI;
+diff --git a/libfprint/nbis/mindtct/loop.c b/libfprint/nbis/mindtct/loop.c
+index 6ab8ea2..6a12ed5 100644
+--- a/libfprint/nbis/mindtct/loop.c
++++ b/libfprint/nbis/mindtct/loop.c
+@@ -112,7 +112,7 @@ of the software.
+       iw            - width (in pixels) of image
+       ih            - height (in pixels) of image
+    Return Code:
+-      IGNORE     - minutia contour could not be traced
++      NBIS_IGNORE     - minutia contour could not be traced
+       LOOP_FOUND - minutia determined to lie on qualifying loop
+       FALSE      - minutia determined not to lie on qualifying loop
+       Negative   - system error
+@@ -132,7 +132,7 @@ int on_loop(const MINUTIA *minutia, const int max_loop_len,
+                        SCAN_CLOCKWISE, bdata, iw, ih);
+ 
+    /* If trace was not possible ... */
+-   if(ret == IGNORE)
++   if(ret == NBIS_IGNORE)
+       return(ret);
+ 
+    /* If the trace completed a loop ... */
+@@ -172,7 +172,7 @@ int on_loop(const MINUTIA *minutia, const int max_loop_len,
+       ocontour_y  - y coord of each contour point's edge pixel
+       oncontour   - number of points in the contour.
+    Return Code:
+-      IGNORE     - contour could not be traced
++      NBIS_IGNORE     - contour could not be traced
+       LOOP_FOUND - minutiae determined to lie on same qualifying loop
+       FALSE      - minutiae determined not to lie on same qualifying loop
+       Negative   - system error
+@@ -197,8 +197,8 @@ int on_island_lake(int **ocontour_x, int **ocontour_y,
+                        minutia1->ex, minutia1->ey,
+                        SCAN_CLOCKWISE, bdata, iw, ih);
+ 
+-   /* If trace was not possible, return IGNORE. */
+-   if(ret == IGNORE)
++   /* If trace was not possible, return NBIS_IGNORE. */
++   if(ret == NBIS_IGNORE)
+       return(ret);
+ 
+    /* If the trace encounters 2nd minutia point ... */
+@@ -214,8 +214,8 @@ int on_island_lake(int **ocontour_x, int **ocontour_y,
+                         minutia2->ex, minutia2->ey,
+                         SCAN_CLOCKWISE, bdata, iw, ih);
+ 
+-      /* If trace was not possible, return IGNORE. */
+-      if(ret == IGNORE){
++      /* If trace was not possible, return NBIS_IGNORE. */
++      if(ret == NBIS_IGNORE){
+          free_contour(contour1_x, contour1_y, contour1_ex, contour1_ey);
+          return(ret);
+       }
+@@ -318,7 +318,7 @@ int on_island_lake(int **ocontour_x, int **ocontour_y,
+       iw            - width (in pixels) of image
+       ih            - height (in pixels) of image
+    Return Code:
+-      IGNORE     - contour could not be traced
++      NBIS_IGNORE     - contour could not be traced
+       HOOK_FOUND - minutiae determined to lie on same qualifying hook
+       FALSE      - minutiae determined not to lie on same qualifying hook
+       Negative   - system error
+@@ -344,8 +344,8 @@ int on_hook(const MINUTIA *minutia1, const MINUTIA *minutia2,
+                        minutia1->x, minutia1->y,
+                        SCAN_CLOCKWISE, bdata, iw, ih);
+ 
+-   /* If trace was not possible, return IGNORE. */
+-   if(ret == IGNORE)
++   /* If trace was not possible, return NBIS_IGNORE. */
++   if(ret == NBIS_IGNORE)
+       return(ret);
+ 
+    /* If the trace encountered the second minutia point ... */
+@@ -374,8 +374,8 @@ int on_hook(const MINUTIA *minutia1, const MINUTIA *minutia2,
+                        minutia1->x, minutia1->y,
+                        SCAN_COUNTER_CLOCKWISE, bdata, iw, ih);
+ 
+-   /* If trace was not possible, return IGNORE. */
+-   if(ret == IGNORE)
++   /* If trace was not possible, return NBIS_IGNORE. */
++   if(ret == NBIS_IGNORE)
+       return(ret);
+ 
+    /* If the trace encountered the second minutia point ... */
+@@ -591,7 +591,7 @@ int process_loop_V2(MINUTIAE *minutiae,
+             ret = update_minutiae(minutiae, minutia, bdata, iw, ih, lfsparms);
+ 
+             /* If minuitia IGNORED and not added to the minutia list ... */
+-            if(ret == IGNORE)
++            if(ret == NBIS_IGNORE)
+                /* Deallocate the minutia. */
+                free_minutia(minutia);
+ 
+@@ -639,7 +639,7 @@ int process_loop_V2(MINUTIAE *minutiae,
+             ret = update_minutiae(minutiae, minutia, bdata, iw, ih, lfsparms);
+ 
+             /* If minuitia IGNORED and not added to the minutia list ... */
+-            if(ret == IGNORE)
++            if(ret == NBIS_IGNORE)
+                /* Deallocate the minutia. */
+                free_minutia(minutia);
+ 
+diff --git a/libfprint/nbis/mindtct/minutia.c b/libfprint/nbis/mindtct/minutia.c
+index 77cf09d..ec46a75 100644
+--- a/libfprint/nbis/mindtct/minutia.c
++++ b/libfprint/nbis/mindtct/minutia.c
+@@ -267,7 +267,7 @@ int detect_minutiae_V2(MINUTIAE *minutiae,
+       minutiae   - points to a list of detected minutia structures
+    Return Code:
+       Zero      - minutia added to successfully added to minutiae list
+-      IGNORE    - minutia is to be ignored (already in the minutiae list)
++      NBIS_IGNORE    - minutia is to be ignored (already in the minutiae list)
+       Negative  - system error
+ **************************************************************************/
+ int update_minutiae(MINUTIAE *minutiae, MINUTIA *minutia,
+@@ -320,7 +320,7 @@ int update_minutiae(MINUTIAE *minutiae, MINUTIA *minutia,
+                      if((dx==0) && (dy==0)){
+                         /* Then the minutiae match, so don't add the new one */
+                         /* to the list.                                     */
+-                        return(IGNORE);
++                        return(NBIS_IGNORE);
+                      }
+                      /* Othewise, check if they share the same contour. */
+                      /* Start by searching "max_minutia_delta" steps    */
+@@ -334,7 +334,7 @@ int update_minutiae(MINUTIAE *minutiae, MINUTIA *minutia,
+                         /* Consider the new minutia to be the same as the */
+                         /* current list minutia, so don't add the new one */
+                         /* to the list.                                   */
+-                        return(IGNORE);
++                        return(NBIS_IGNORE);
+                      }
+                      /* Now search "max_minutia_delta" steps counter-  */
+                      /* clockwise along contour.                       */
+@@ -347,7 +347,7 @@ int update_minutiae(MINUTIAE *minutiae, MINUTIA *minutia,
+                         /* Consider the new minutia to be the same as the */
+                         /* current list minutia, so don't add the new one */
+                         /* to the list.                                   */
+-                        return(IGNORE);
++                        return(NBIS_IGNORE);
+                      }
+ 
+                      /* Otherwise, new minutia and current list minutia do */
+@@ -390,7 +390,7 @@ int update_minutiae(MINUTIAE *minutiae, MINUTIA *minutia,
+       minutiae   - points to a list of detected minutia structures
+    Return Code:
+       Zero      - minutia added to successfully added to minutiae list
+-      IGNORE    - minutia is to be ignored (already in the minutiae list)
++      NBIS_IGNORE    - minutia is to be ignored (already in the minutiae list)
+       Negative  - system error
+ **************************************************************************/
+ int update_minutiae_V2(MINUTIAE *minutiae, MINUTIA *minutia,
+@@ -445,7 +445,7 @@ int update_minutiae_V2(MINUTIAE *minutiae, MINUTIA *minutia,
+                      if((dx==0) && (dy==0)){
+                         /* Then the minutiae match, so don't add the new one */
+                         /* to the list.                                     */
+-                        return(IGNORE);
++                        return(NBIS_IGNORE);
+                      }
+                      /* Othewise, check if they share the same contour. */
+                      /* Start by searching "max_minutia_delta" steps    */
+@@ -481,7 +481,7 @@ int update_minutiae_V2(MINUTIAE *minutiae, MINUTIA *minutia,
+                               /* Othersize, scan directions not compatible...*/
+                               /* so choose to keep the current minutia in    */
+                               /* the list and ignore the new one.            */
+-                              return(IGNORE);
++                              return(NBIS_IGNORE);
+                         }
+                         else{
+                            /* Otherwise, no reason to believe new minutia    */
+@@ -489,7 +489,7 @@ int update_minutiae_V2(MINUTIAE *minutiae, MINUTIA *minutia,
+                            /* so consider the new minutia to be the same as  */
+                            /* the current list minutia, and don't add the new*/
+                            /*  one to the list.                              */
+-                           return(IGNORE);
++                           return(NBIS_IGNORE);
+                         }
+                      }
+ 
+@@ -1104,10 +1104,10 @@ int scan4minutiae_horizontally_V2(MINUTIAE *minutiae,
+                                          lfsparms))){
+                            /* Return code may be:                       */
+                            /* 1.  ret< 0 (implying system error)        */
+-                           /* 2. ret==IGNORE (ignore current feature)   */
++                           /* 2. ret==NBIS_IGNORE (ignore current feature)   */
+                            if(ret < 0)
+                               return(ret);
+-                           /* Otherwise, IGNORE and continue. */
++                           /* Otherwise, NBIS_IGNORE and continue. */
+                         }
+                      }
+ 
+@@ -1255,10 +1255,10 @@ int scan4minutiae_vertically_V2(MINUTIAE *minutiae,
+                                          lfsparms))){
+                            /* Return code may be:                       */
+                            /* 1.  ret< 0 (implying system error)        */
+-                           /* 2. ret==IGNORE (ignore current feature)   */
++                           /* 2. ret==NBIS_IGNORE (ignore current feature)   */
+                            if(ret < 0)
+                               return(ret);
+-                           /* Otherwise, IGNORE and continue. */
++                           /* Otherwise, NBIS_IGNORE and continue. */
+                         }
+                      }
+ 
+@@ -1505,7 +1505,7 @@ int scan4minutiae_vertically_V2(MINUTIAE *minutiae,
+       minutiae   - points to a list of detected minutia structures
+    Return Code:
+       Zero      - successful completion
+-      IGNORE    - minutia is to be ignored
++      NBIS_IGNORE    - minutia is to be ignored
+       Negative  - system error
+ **************************************************************************/
+ 
+@@ -1534,7 +1534,7 @@ int scan4minutiae_vertically_V2(MINUTIAE *minutiae,
+       minutiae   - points to a list of detected minutia structures
+    Return Code:
+       Zero      - successful completion
+-      IGNORE    - minutia is to be ignored
++      NBIS_IGNORE    - minutia is to be ignored
+       Negative  - system error
+ **************************************************************************/
+ int process_horizontal_scan_minutia_V2(MINUTIAE *minutiae,
+@@ -1582,8 +1582,8 @@ int process_horizontal_scan_minutia_V2(MINUTIAE *minutiae,
+ 
+    /* If the minutia point is in a block with INVALID direction ... */
+    if(dmapval == INVALID_DIR)
+-      /* Then, IGNORE the point. */
+-      return(IGNORE);
++      /* Then, NBIS_IGNORE the point. */
++      return(NBIS_IGNORE);
+ 
+    /* If current minutia is in a HIGH CURVATURE block ... */
+    if(cmapval){
+@@ -1591,7 +1591,7 @@ int process_horizontal_scan_minutia_V2(MINUTIAE *minutiae,
+       if((ret = adjust_high_curvature_minutia_V2(&idir, &x_loc, &y_loc,
+                            &x_edge, &y_edge, x_loc, y_loc, x_edge, y_edge,
+                            bdata, iw, ih, plow_flow_map, minutiae, lfsparms))){
+-         /* Could be a system error or IGNORE minutia. */
++         /* Could be a system error or NBIS_IGNORE minutia. */
+          return(ret);
+       }
+       /* Otherwise, we have our high-curvature minutia attributes. */
+@@ -1657,7 +1657,7 @@ int process_horizontal_scan_minutia_V2(MINUTIAE *minutiae,
+       minutiae   - points to a list of detected minutia structures
+    Return Code:
+       Zero      - successful completion
+-      IGNORE    - minutia is to be ignored
++      NBIS_IGNORE    - minutia is to be ignored
+       Negative  - system error
+ **************************************************************************/
+ 
+@@ -1686,7 +1686,7 @@ int process_horizontal_scan_minutia_V2(MINUTIAE *minutiae,
+       minutiae   - points to a list of detected minutia structures
+    Return Code:
+       Zero      - successful completion
+-      IGNORE    - minutia is to be ignored
++      NBIS_IGNORE    - minutia is to be ignored
+       Negative  - system error
+ **************************************************************************/
+ int process_vertical_scan_minutia_V2(MINUTIAE *minutiae,
+@@ -1733,8 +1733,8 @@ int process_vertical_scan_minutia_V2(MINUTIAE *minutiae,
+ 
+    /* If the minutia point is in a block with INVALID direction ... */
+    if(dmapval == INVALID_DIR)
+-      /* Then, IGNORE the point. */
+-      return(IGNORE);
++      /* Then, NBIS_IGNORE the point. */
++      return(NBIS_IGNORE);
+ 
+    /* If current minutia is in a HIGH CURVATURE block... */
+    if(cmapval){
+@@ -1742,7 +1742,7 @@ int process_vertical_scan_minutia_V2(MINUTIAE *minutiae,
+       if((ret = adjust_high_curvature_minutia_V2(&idir, &x_loc, &y_loc,
+                            &x_edge, &y_edge, x_loc, y_loc, x_edge, y_edge,
+                            bdata, iw, ih, plow_flow_map, minutiae, lfsparms))){
+-         /* Could be a system error or IGNORE minutia. */
++         /* Could be a system error or NBIS_IGNORE minutia. */
+          return(ret);
+       }
+       /* Otherwise, we have our high-curvature minutia attributes. */
+@@ -1817,7 +1817,7 @@ int process_vertical_scan_minutia_V2(MINUTIAE *minutiae,
+       minutiae   - points to a list of detected minutia structures
+    Return Code:
+       Zero      - minutia point processed successfully
+-      IGNORE    - minutia point is to be ignored
++      NBIS_IGNORE    - minutia point is to be ignored
+       Negative  - system error
+ **************************************************************************/
+ 
+@@ -1855,7 +1855,7 @@ int process_vertical_scan_minutia_V2(MINUTIAE *minutiae,
+       minutiae   - points to a list of detected minutia structures
+    Return Code:
+       Zero      - minutia point processed successfully
+-      IGNORE    - minutia point is to be ignored
++      NBIS_IGNORE    - minutia point is to be ignored
+       Negative  - system error
+ **************************************************************************/
+ int adjust_high_curvature_minutia_V2(int *oidir, int *ox_loc, int *oy_loc,
+@@ -1916,7 +1916,7 @@ int adjust_high_curvature_minutia_V2(int *oidir, int *ox_loc, int *oy_loc,
+          /* work being done here!                                          */
+          /* Is_loop_clockwise takes a default value to be returned if the  */
+          /* routine is unable to determine the direction of the contour.   */
+-         /* In this case, we want to IGNORE the loop if we can't tell its  */
++         /* In this case, we want to NBIS_IGNORE the loop if we can't tell its  */
+          /* direction so that we do not inappropriately fill the loop, so  */
+          /* we are passing the default value TRUE.                         */
+          if((ret = is_loop_clockwise(contour_x, contour_y, ncontour, TRUE))){
+@@ -1926,8 +1926,8 @@ int adjust_high_curvature_minutia_V2(int *oidir, int *ox_loc, int *oy_loc,
+             if(ret < 0)
+                /* Return the error code. */
+                return(ret);
+-            /* Otherwise, loop is clockwise, so return IGNORE. */
+-            return(IGNORE);
++            /* Otherwise, loop is clockwise, so return NBIS_IGNORE. */
++            return(NBIS_IGNORE);
+          }
+ 
+          /* Otherwise, process the clockwise-ordered contour of the loop */
+@@ -1946,9 +1946,9 @@ int adjust_high_curvature_minutia_V2(int *oidir, int *ox_loc, int *oy_loc,
+          /* If loop processed successfully ... */
+          if(ret == 0)
+             /* Then either a minutia pair was extracted or the loop was */
+-            /* filled.  Either way we want to IGNORE the minutia that   */
++            /* filled.  Either way we want to NBIS_IGNORE the minutia that   */
+             /* started the whole loop processing in the beginning.      */
+-            return(IGNORE);
++            return(NBIS_IGNORE);
+ 
+          /* Otherwise, there was a system error. */
+          /* Return the resulting code.           */
+@@ -1961,10 +1961,10 @@ int adjust_high_curvature_minutia_V2(int *oidir, int *ox_loc, int *oy_loc,
+    }
+ 
+    /* If contour is empty ... then contour lists were not allocated, so */
+-   /* simply return IGNORE.  The contour comes back empty when there    */
++   /* simply return NBIS_IGNORE.  The contour comes back empty when there    */
+    /* were not a sufficient number of points found on the contour.      */
+    if(ncontour == 0)
+-      return(IGNORE);
++      return(NBIS_IGNORE);
+ 
+    /* Otherwise, there are contour points to process. */
+ 
+@@ -1974,7 +1974,7 @@ int adjust_high_curvature_minutia_V2(int *oidir, int *ox_loc, int *oy_loc,
+                               contour_x, contour_y, ncontour))){
+       /* Deallocate contour lists. */
+       free_contour(contour_x, contour_y, contour_ex, contour_ey);
+-      /* Returns IGNORE or system error.  Either way */
++      /* Returns NBIS_IGNORE or system error.  Either way */
+       /* free the contour and return the code.       */
+       return(ret);
+    }
+@@ -1983,8 +1983,8 @@ int adjust_high_curvature_minutia_V2(int *oidir, int *ox_loc, int *oy_loc,
+    if(min_theta >= lfsparms->max_high_curve_theta){
+       /* Deallocate contour lists. */
+       free_contour(contour_x, contour_y, contour_ex, contour_ey);
+-      /* Reject the high-curvature minutia, and return IGNORE. */
+-      return(IGNORE);
++      /* Reject the high-curvature minutia, and return NBIS_IGNORE. */
++      return(NBIS_IGNORE);
+    }
+ 
+    /* Test to see if interior of curvature is OK.  Compute midpoint   */
+@@ -1997,8 +1997,8 @@ int adjust_high_curvature_minutia_V2(int *oidir, int *ox_loc, int *oy_loc,
+    if(mid_pix != feature_pix){
+       /* Deallocate contour lists. */
+       free_contour(contour_x, contour_y, contour_ex, contour_ey);
+-      /* Reject the high-curvature minutia and return IGNORE. */
+-      return(IGNORE);
++      /* Reject the high-curvature minutia and return NBIS_IGNORE. */
++      return(NBIS_IGNORE);
+    }
+ 
+    /* Compute new direction based on line connecting adjusted feature */
+diff --git a/libfprint/nbis/mindtct/remove.c b/libfprint/nbis/mindtct/remove.c
+index 7311f1c..66f00b6 100644
+--- a/libfprint/nbis/mindtct/remove.c
++++ b/libfprint/nbis/mindtct/remove.c
+@@ -238,7 +238,7 @@ int remove_holes(MINUTIAE *minutiae,
+          /* Check to see if it is on a loop of specified length (ex. 15). */
+          ret = on_loop(minutia, lfsparms->small_loop_len, bdata, iw, ih);
+          /* If minutia is on a loop ... or loop test IGNORED */
+-         if((ret == LOOP_FOUND) || (ret == IGNORE)){
++         if((ret == LOOP_FOUND) || (ret == NBIS_IGNORE)){
+ 
+             print2log("%d,%d RM\n", minutia->x, minutia->y);
+ 
+@@ -417,7 +417,7 @@ int remove_hooks(MINUTIAE *minutiae,
+                               to_remove[s] = TRUE;
+                            }
+                            /* If hook test IGNORED ... */
+-                           else if (ret == IGNORE){
++                           else if (ret == NBIS_IGNORE){
+ 
+                               print2log("RM\n");
+ 
+@@ -689,7 +689,7 @@ int remove_islands_and_lakes(MINUTIAE *minutiae,
+                               free_contour(loop_x,loop_y,loop_ex,loop_ey);
+                            }
+                            /* If island/lake test IGNORED ... */
+-                           else if (ret == IGNORE){
++                           else if (ret == NBIS_IGNORE){
+ 
+                               print2log("RM\n");
+ 
+@@ -824,7 +824,7 @@ int remove_malformations(MINUTIAE *minutiae,
+ 
+       /* If trace was not possible OR loop found OR */
+       /* contour is incomplete ...                  */
+-      if((ret == IGNORE) ||
++      if((ret == NBIS_IGNORE) ||
+          (ret == LOOP_FOUND) ||
+          (ncontour < lfsparms->malformation_steps_2)){
+          /* If contour allocated and returned ... */
+@@ -868,7 +868,7 @@ int remove_malformations(MINUTIAE *minutiae,
+ 
+          /* If trace was not possible OR loop found OR */
+          /* contour is incomplete ...                  */
+-         if((ret == IGNORE) ||
++         if((ret == NBIS_IGNORE) ||
+             (ret == LOOP_FOUND) ||
+             (ncontour < lfsparms->malformation_steps_2)){
+             /* If contour allocated and returned ... */
+@@ -1882,7 +1882,7 @@ int remove_pores_V2(MINUTIAE *minutiae,
+ 
+                /* If trace was not possible OR loop found OR */
+                /* contour is incomplete ...                  */
+-               if((ret == IGNORE) ||
++               if((ret == NBIS_IGNORE) ||
+                   (ret == LOOP_FOUND) ||
+                   (ncontour < lfsparms->pores_steps_fwd)){
+                   /* If contour allocated and returned ... */
+@@ -1926,7 +1926,7 @@ int remove_pores_V2(MINUTIAE *minutiae,
+ 
+                   /* If trace was not possible OR loop found OR */
+                   /* contour is incomplete ...                  */
+-                  if((ret == IGNORE) ||
++                  if((ret == NBIS_IGNORE) ||
+                      (ret == LOOP_FOUND) ||
+                      (ncontour < lfsparms->pores_steps_bwd)){
+                      /* If contour allocated and returned ... */
+@@ -1981,7 +1981,7 @@ int remove_pores_V2(MINUTIAE *minutiae,
+ 
+                         /* If trace was not possible OR loop found OR */
+                         /* contour is incomplete ...                  */
+-                        if((ret == IGNORE) ||
++                        if((ret == NBIS_IGNORE) ||
+                            (ret == LOOP_FOUND) ||
+                            (ncontour < lfsparms->pores_steps_fwd)){
+                            /* If contour allocated and returned ... */
+@@ -2026,7 +2026,7 @@ int remove_pores_V2(MINUTIAE *minutiae,
+ 
+                            /* If trace was not possible OR loop found OR */
+                            /* contour is incomplete ...                  */
+-                           if((ret == IGNORE) ||
++                           if((ret == NBIS_IGNORE) ||
+                               (ret == LOOP_FOUND) ||
+                               (ncontour < lfsparms->pores_steps_bwd)){
+                               /* If contour allocated and returned ... */
+@@ -2222,7 +2222,7 @@ int remove_or_adjust_side_minutiae_V2(MINUTIAE *minutiae,
+       /* If we didn't succeed in extracting a complete contour for any */
+       /* other reason ...                                              */
+       if((ret == LOOP_FOUND) ||
+-         (ret == IGNORE) ||
++         (ret == NBIS_IGNORE) ||
+          (ret == INCOMPLETE)){
+ 
+          print2log("%d,%d RM1\n", minutia->x, minutia->y);
+diff --git a/libfprint/nbis/mindtct/ridges.c b/libfprint/nbis/mindtct/ridges.c
+index 9902585..0d4b6ed 100644
+--- a/libfprint/nbis/mindtct/ridges.c
++++ b/libfprint/nbis/mindtct/ridges.c
+@@ -796,14 +796,14 @@ int validate_ridge_crossing(const int ridge_start, const int ridge_end,
+    /* Otherwise, if the trace was not IGNORED, then a contour was */
+    /* was generated and returned.  We aren't interested in the    */
+    /* actual contour, so deallocate it.                           */
+-   if(ret != IGNORE)
++   if(ret != NBIS_IGNORE)
+       free_contour(contour_x, contour_y, contour_ex, contour_ey);
+ 
+    /* If the trace was IGNORED, then we had some sort of initialization */
+    /* problem, so treat this the same as if was actually located the    */
+    /* ridge start point (in which case LOOP_FOUND is returned).         */
+    /* So, If not IGNORED and ridge start not encounted in trace ...     */
+-   if((ret != IGNORE) &&
++   if((ret != NBIS_IGNORE) &&
+       (ret != LOOP_FOUND)){
+ 
+       /* Now conduct contour trace scanning for edge neighbors counter- */
+@@ -822,18 +822,18 @@ int validate_ridge_crossing(const int ridge_start, const int ridge_end,
+       /* Otherwise, if the trace was not IGNORED, then a contour was */
+       /* was generated and returned.  We aren't interested in the    */
+       /* actual contour, so deallocate it.                           */
+-      if(ret != IGNORE)
++      if(ret != NBIS_IGNORE)
+          free_contour(contour_x, contour_y, contour_ex, contour_ey);
+ 
+       /* If trace not IGNORED and ridge start not encounted in 2nd trace ... */
+-      if((ret != IGNORE) &&
++      if((ret != NBIS_IGNORE) &&
+          (ret != LOOP_FOUND)){
+          /* If we get here, assume we have a ridge crossing. */
+          return(TRUE);
+       }
+-      /* Otherwise, second trace returned IGNORE or ridge start found. */
++      /* Otherwise, second trace returned NBIS_IGNORE or ridge start found. */
+    }
+-   /* Otherwise, first trace returned IGNORE or ridge start found. */
++   /* Otherwise, first trace returned NBIS_IGNORE or ridge start found. */
+ 
+    /* If we get here, then we failed to validate a ridge crossing. */
+    return(FALSE);
+diff --git a/tests/test-device-fake.c b/tests/test-device-fake.c
+index 558ea91..181a6e0 100644
+--- a/tests/test-device-fake.c
++++ b/tests/test-device-fake.c
+@@ -21,6 +21,7 @@
+ #define FP_COMPONENT "fake_test_dev"
+ 
+ #include "fpi-log.h"
++#include "fpi-compat.h"
+ #include "test-device-fake.h"
+ 
+ G_DEFINE_TYPE (FpiDeviceFake, fpi_device_fake, FP_TYPE_DEVICE)
+diff --git a/tests/test-utils.c b/tests/test-utils.c
+index a14d1ca..83b1996 100644
+--- a/tests/test-utils.c
++++ b/tests/test-utils.c
+@@ -20,8 +20,22 @@
+ #include <libfprint/fprint.h>
+ #include <glib/gstdio.h>
+ 
++#include "fpi-compat.h"
+ #include "test-utils.h"
+ 
++#ifdef _WIN32
++/* Windows doesn't have these signal constants */
++#ifndef SIGKILL
++#define SIGKILL 9
++#endif
++#ifndef SIGQUIT
++#define SIGQUIT 3
++#endif
++#ifndef SIGPIPE
++#define SIGPIPE 13
++#endif
++#endif
++
+ struct
+ {
+   const char *envvar;
+
+
+diff --git a/libfprint/libfprint.def b/libfprint/libfprint.def
+new file mode 100644
+index 0000000..516d065
+--- /dev/null
++++ b/libfprint/libfprint.def
+@@ -0,0 +1,90 @@
++EXPORTS
++fp_context_new
++fp_context_enumerate
++fp_context_get_devices
++fp_context_get_type
++fp_device_get_driver
++fp_device_get_device_id
++fp_device_get_name
++fp_device_is_open
++fp_device_get_scan_type
++fp_device_get_finger_status
++fp_device_get_nr_enroll_stages
++fp_device_get_temperature
++fp_device_get_features
++fp_device_has_feature
++fp_device_open
++fp_device_close
++fp_device_suspend
++fp_device_resume
++fp_device_enroll
++fp_device_verify
++fp_device_identify
++fp_device_capture
++fp_device_list_prints
++fp_device_delete_print
++fp_device_clear_storage
++fp_device_open_finish
++fp_device_close_finish
++fp_device_suspend_finish
++fp_device_resume_finish
++fp_device_enroll_finish
++fp_device_verify_finish
++fp_device_identify_finish
++fp_device_capture_finish
++fp_device_list_prints_finish
++fp_device_delete_print_finish
++fp_device_clear_storage_finish
++fp_device_open_sync
++fp_device_close_sync
++fp_device_enroll_sync
++fp_device_verify_sync
++fp_device_identify_sync
++fp_device_capture_sync
++fp_device_list_prints_sync
++fp_device_delete_print_sync
++fp_device_clear_storage_sync
++fp_device_supports_identify
++fp_device_supports_capture
++fp_device_has_storage
++fp_device_retry_quark
++fp_device_error_quark
++fp_device_get_type
++fp_image_new
++fp_image_get_width
++fp_image_get_height
++fp_image_get_ppmm
++fp_image_get_minutiae
++fp_image_detect_minutiae
++fp_image_detect_minutiae_finish
++fp_image_get_data
++fp_image_get_binarized
++fp_image_get_type
++fp_print_new
++fp_print_get_driver
++fp_print_get_device_id
++fp_print_get_image
++fp_print_get_finger
++fp_print_get_username
++fp_print_get_description
++fp_print_get_enroll_date
++fp_print_get_device_stored
++fp_print_set_finger
++fp_print_set_username
++fp_print_set_description
++fp_print_set_enroll_date
++fp_print_compatible
++fp_print_equal
++fp_print_serialize
++fp_print_deserialize
++fp_print_get_type
++fp_image_device_get_type
++fp_temperature_get_type
++fp_finger_get_type
++fp_finger_status_flags_get_type
++fp_scan_type_get_type
++fp_device_type_get_type
++fp_device_feature_get_type
++fp_device_retry_get_type
++fp_device_error_get_type
++
+diff --git a/meson.build b/meson.build
+index baafa19..2cf6b7b 100644
+--- a/meson.build
++++ b/meson.build
+@@ -6,7 +6,7 @@ project('libfprint', [ 'c', 'cpp' ],
+         'warning_level=1',
+         'c_std=gnu99',
+     ],
+-    meson_version: '>= 0.59.0')
++    meson_version: '>= 0.58.0')
+ 
+ fs = import('fs')
+ gnome = import('gnome')
+@@ -91,13 +91,51 @@ versioned_libname = meson.project_name() + '-' + soversion.to_string()
+ 
+ # Dependencies
+ glib_dep = dependency('glib-2.0', version: '>=' + glib_min_version)
+-gio_dep = dependency('gio-unix-2.0', version: '>=' + glib_min_version)
++if host_machine.system() == 'windows'
++    gio_dep = dependency('gio-2.0', version: '>=' + glib_min_version)
++else
++    gio_dep = dependency('gio-unix-2.0', version: '>=' + glib_min_version)
++endif
+ gobject_dep = dependency('gobject-2.0', version: '>=' + glib_min_version)
+ gusb_dep = dependency('gusb', version: '>= 0.2.0')
+ mathlib_dep = cc.find_library('m', required: false)
+ 
++# Find glib-mkenums explicitly (required for gnome.mkenums_simple)
++# gnome.mkenums_simple will automatically find glib-mkenums if it's in PATH
++# On Windows with vcpkg, glib-mkenums is in tools/glib directory
++glib_mkenums_prog = find_program('glib-mkenums', required: false)
++if not glib_mkenums_prog.found() and host_machine.system() == 'windows'
++    # Try to find it from vcpkg tools directory
++    cmake_prefix_path = get_option('cmake_prefix_path')
++    if cmake_prefix_path.length() > 0
++        # Try all prefix paths (debug and release may have different paths)
++        foreach prefix_path : cmake_prefix_path
++            # Try common vcpkg paths
++            tools_paths = [
++                prefix_path / '../tools/glib/glib-mkenums',
++                prefix_path / '../../tools/glib/glib-mkenums',
++            ]
++            foreach tools_path : tools_paths
++                if fs.exists(tools_path)
++                    glib_mkenums_prog = find_program(tools_path, required: false)
++                    if glib_mkenums_prog.found()
++                        break
++                    endif
++                endif
++            endforeach
++            if glib_mkenums_prog.found()
++                break
++            endif
++        endforeach
++    endif
++endif
++# Override find_program for glib-mkenums if we found it
++if glib_mkenums_prog.found()
++    meson.override_find_program('glib-mkenums', glib_mkenums_prog)
++endif
++
+ # The following dependencies are only used for tests
+-sh = find_program('sh', required: true)
++sh = find_program('sh', required: false)
+ cairo_dep = dependency('cairo', required: false)
+ 
+ # introspection scanning and Gio-2.0.gir
+@@ -358,7 +396,11 @@ if get_option('gtk-examples')
+ endif
+ 
+ subdir('data')
+-subdir('tests')
++
++# Skip tests on Windows as they require Unix-specific features and are not needed for library usage
++if host_machine.system() != 'windows'
++    subdir('tests')
++endif
+ 
+ subdir('examples')
+ 
