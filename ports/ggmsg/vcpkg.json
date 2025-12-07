@@ -3,6 +3,7 @@
   "version": "1.0.0.0",
   "homepage": "https://github.com/xhk/ggmsg",
   "description": "",
+  "supports": "(windows & x64) | (linux & x64)",
   "license": "MIT",
   "dependencies": [
     {
