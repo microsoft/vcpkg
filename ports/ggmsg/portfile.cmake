@@ -35,9 +35,9 @@
 #  vcpkg_from_bitbucket
 #  vcpkg_from_sourceforge
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/xhk/ggmsg/archive/refs/tags/version-20251206.tar.gz"
-    FILENAME "version-20251206.tar.gz"
-    SHA512 d8d895bfd965352dbfedc271e465254f61cc2abf3f706153500183622a165eb31a4b46093e2e55580a4ab054ffb21a7799ad19a035854e75286e19d5cc7dec5f
+    URLS "https://github.com/xhk/ggmsg/archive/refs/tags/version-20251207.tar.gz"
+    FILENAME "version-20251207.tar.gz"
+    SHA512 bceb8b327656878e4a3b0e2d66cb6e7ae8eb1c7e682bbd03750cc3d0b104f812543cb0ffbcc1fa0575c9d52e2712267dd00e00b59b82f7bca04eca773f82dd41
 )
 
 vcpkg_extract_source_archive_ex(
