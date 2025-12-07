@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 11b2662..5844943 100644
+index 11b2662..ed5face 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1300,6 +1300,9 @@ if(ENABLE_OCC)
@@ -59,6 +59,14 @@ index 11b2662..5844943 100644
          find_library(OCC_CAF_LIB ${OCC} HINTS ENV CASROOT PATH_SUFFIXES
                       lib ${OCC_SYS_NAME}/vc8/lib  ${OCC_SYS_NAME}/vc9/lib
                           ${OCC_SYS_NAME}/vc10/lib ${OCC_SYS_NAME}/vc11/lib
+@@ -1423,7 +1437,6 @@ if(ENABLE_OCC)
+       add_definitions(-DOCC_CONVERT_SIGNALS)
+     endif()
+     if(WIN32 AND MSVC)
+-      add_definitions(-D "Standard_EXPORT=__declspec(dllimport)")
+     endif()
+   endif()
+ endif()
 diff --git a/utils/misc/gmsh-config.cmake.in b/utils/misc/gmsh-config.cmake.in
 index 1c211e2..073c3ab 100644
 --- a/utils/misc/gmsh-config.cmake.in
