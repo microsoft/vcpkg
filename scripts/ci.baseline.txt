@@ -627,7 +627,6 @@ qt5-webengine:x86-windows=skip
 # Missing system libraries
 qt5-x11extras:arm64-osx=skip
 qtmultimedia:arm64-android=fail
-qtmultimedia:x64-android=fail
 qtopcua:arm-neon-android=fail
 qtopcua:arm64-android=fail
 qtopcua:x64-android=fail
