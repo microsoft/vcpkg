@@ -204,20 +204,24 @@ index 37ebfe1114..f566eb70c7 100644
    set(NGHTTP3_FOUND TRUE)
    set(NGHTTP3_VERSION ${_nghttp3_VERSION})
 diff --git a/CMake/FindNGTCP2.cmake b/CMake/FindNGTCP2.cmake
-index 416ea459f6..98f93a2db1 100644
+index 416ea459f6..400e4cc77b 100644
 --- a/CMake/FindNGTCP2.cmake
 +++ b/CMake/FindNGTCP2.cmake
-@@ -81,6 +81,15 @@ if(CURL_USE_PKGCONFIG AND
+@@ -81,6 +81,19 @@ if(CURL_USE_PKGCONFIG AND
    set(_tried_pkgconfig TRUE)
  endif()
  
 +find_package(_ngtcp2_cmake NAMES ngtcp2)
-+if((TARGET ngtcp2::ngtcp2 OR TARGET ngtcp2::ngtcp2_static) AND NOT TARGET CURL::ngtcp2)
++set(_ngtcp2_cmake_target ngtcp2::ngtcp2)
++if(_ngtcp2_crypto_backend)
++  set(_ngtcp2_cmake_target ngtcp2::ngtcp2_crypto_${_ngtcp2_crypto_backend})
++endif()
++if((TARGET ${_ngtcp2_cmake_target} OR TARGET ${_ngtcp2_cmake_target}_static) AND NOT TARGET CURL::ngtcp2)
 +  add_library(CURL::ngtcp2 INTERFACE IMPORTED)
 +  set_target_properties(CURL::ngtcp2 PROPERTIES
 +    INTERFACE_CURL_CONFIG_LIBS "${_ngtcp2_LINK_LIBRARIES}"
 +    INTERFACE_LIBCURL_PC_MODULES "${_ngtcp2_pc_requires}"
-+    INTERFACE_LINK_LIBRARIES $<IF:$<TARGET_EXISTS:ngtcp2::ngtcp2>,ngtcp2::ngtcp2,ngtcp2::ngtcp2_static>)
++    INTERFACE_LINK_LIBRARIES $<IF:$<TARGET_EXISTS:${_ngtcp2_cmake_target}>,${_ngtcp2_cmake_target},${_ngtcp2_cmake_target}_static>)
 +endif()
 +
  if(_ngtcp2_FOUND)
