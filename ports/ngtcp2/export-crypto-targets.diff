@@ -1,0 +1,58 @@
+diff --git a/crypto/ossl/CMakeLists.txt b/crypto/ossl/CMakeLists.txt
+index da2ef2df..1a108ada 100644
+--- a/crypto/ossl/CMakeLists.txt
++++ b/crypto/ossl/CMakeLists.txt
+@@ -29,14 +29,11 @@ set(ngtcp2_crypto_ossl_SOURCES
+ )
+ 
+ set(ngtcp2_crypto_ossl_INCLUDE_DIRS
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/includes"
+-  "${CMAKE_CURRENT_BINARY_DIR}/../../lib/includes"
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../../lib"
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../../crypto/includes"
+-  "${CMAKE_CURRENT_BINARY_DIR}/../../crypto/includes"
+-  "${CMAKE_CURRENT_SOURCE_DIR}/../../crypto"
+-  "${CMAKE_CURRENT_BINARY_DIR}/../../crypto"
+-  "${OPENSSL_INCLUDE_DIRS}"
++  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>"
++  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/crypto/includes>"
++  "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/crypto/includes>"
++  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/crypto>"
++  "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/crypto>"
+ )
+ 
+ foreach(name libngtcp2_crypto_ossl.pc)
+@@ -55,9 +52,10 @@ if(ENABLE_SHARED_LIB)
+   )
+   target_include_directories(ngtcp2_crypto_ossl PUBLIC
+     ${ngtcp2_crypto_ossl_INCLUDE_DIRS})
+-  target_link_libraries(ngtcp2_crypto_ossl ngtcp2 ${OPENSSL_LIBRARIES})
++  target_link_libraries(ngtcp2_crypto_ossl PUBLIC ngtcp2 OpenSSL::SSL)
+ 
+   install(TARGETS ngtcp2_crypto_ossl
++    EXPORT "${PROJECT_NAME}Targets"
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+@@ -77,8 +75,10 @@ if(ENABLE_STATIC_LIB)
+     "-DNGTCP2_STATICLIB")
+   target_include_directories(ngtcp2_crypto_ossl_static PUBLIC
+     ${ngtcp2_crypto_ossl_INCLUDE_DIRS})
++  target_link_libraries(ngtcp2_crypto_ossl_static PUBLIC ngtcp2_static OpenSSL::SSL)
+ 
+   install(TARGETS ngtcp2_crypto_ossl_static
++    EXPORT "${PROJECT_NAME}Targets"
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+ endif()
+ 
+diff --git a/lib/config.cmake.in b/lib/config.cmake.in
+index 435a4d4a..fffcd517 100644
+--- a/lib/config.cmake.in
++++ b/lib/config.cmake.in
+@@ -1,3 +1,6 @@
+ include(CMakeFindDependencyMacro)
++if("@HAVE_OSSL@")
++    find_dependency(OpenSSL)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/@NGTCP2_TARGETS_EXPORT_NAME@.cmake")
