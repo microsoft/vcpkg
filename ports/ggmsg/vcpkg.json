@@ -2,8 +2,8 @@
   "name": "ggmsg",
   "version": "1.0.0.0",
   "homepage": "https://github.com/xhk/ggmsg",
-  "description": "",
-  "supports": "(windows & x64) | (linux & x64)",
+  "description": "Library for net message middleware",
+  "supports": "!x86",
   "license": "MIT",
   "dependencies": [
     {
