@@ -1,0 +1,4 @@
+hueplusplus provides CMake targets:
+
+find_package(hueplusplus REQUIRED)
+target_link_libraries(<executable> PUBLIC hueplusplusstatic)
