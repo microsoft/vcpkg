@@ -1,17 +1,12 @@
 {
   "name": "vbs-enclave-tooling-codegen",
-  "version": "0.1.1-prerelease",
+  "version": "0.1.2-prerelease.250820.1",
   "description": "Supports code generation for VBS enclaves.",
   "homepage": "https://github.com/microsoft/vbsEnclaveTooling",
   "license": "MIT",
   "supports": "(windows & arm64) | (windows & x64)",
   "dependencies": [
     "flatbuffers",
-    "ms-gsl",
-    {
-      "name": "vcpkg-msbuild",
-      "host": true
-    },
     "wil"
   ]
 }
