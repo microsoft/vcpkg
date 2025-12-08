@@ -1729,11 +1729,11 @@
       "port-version": 0
     },
     "cimg": {
-      "baseline": "3.6.3",
+      "baseline": "3.6.4",
       "port-version": 0
     },
     "cinatra": {
-      "baseline": "0.9.6",
+      "baseline": "0.9.7",
       "port-version": 0
     },
     "cista": {
@@ -2549,7 +2549,7 @@
       "port-version": 0
     },
     "drlibs": {
-      "baseline": "2025-09-10",
+      "baseline": "2025-12-01",
       "port-version": 0
     },
     "drogon": {
@@ -3062,7 +3062,7 @@
     },
     "fontconfig": {
       "baseline": "2.17.1",
-      "port-version": 0
+      "port-version": 1
     },
     "foonathan-lexy": {
       "baseline": "2025.5.0",
@@ -3234,7 +3234,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.42.12",
-      "port-version": 4
+      "port-version": 5
     },
     "gegl": {
       "baseline": "0.4.62",
@@ -3298,7 +3298,7 @@
     },
     "ggml": {
       "baseline": "2025-11-17",
-      "port-version": 0
+      "port-version": 1
     },
     "ghc-filesystem": {
       "baseline": "1.5.14",
@@ -5325,7 +5325,7 @@
       "port-version": 2
     },
     "libphonenumber": {
-      "baseline": "9.0.19",
+      "baseline": "9.0.20",
       "port-version": 0
     },
     "libplist": {
@@ -5337,7 +5337,7 @@
       "port-version": 1
     },
     "libpng": {
-      "baseline": "1.6.51",
+      "baseline": "1.6.53",
       "port-version": 0
     },
     "libpopcnt": {
@@ -5953,7 +5953,7 @@
       "port-version": 0
     },
     "livepp": {
-      "baseline": "2.11.0",
+      "baseline": "2.11.1",
       "port-version": 0
     },
     "llama-cpp": {
@@ -6093,8 +6093,8 @@
       "port-version": 1
     },
     "lunarg-vulkantools": {
-      "baseline": "1.4.309.0",
-      "port-version": 1
+      "baseline": "1.4.328.0",
+      "port-version": 0
     },
     "lunasvg": {
       "baseline": "3.5.0",
@@ -6941,7 +6941,7 @@
       "port-version": 0
     },
     "nowide": {
-      "baseline": "11.3.0",
+      "baseline": "11.3.1",
       "port-version": 0
     },
     "nrf-ble-driver": {
@@ -7413,7 +7413,7 @@
       "port-version": 0
     },
     "paho-mqttpp3": {
-      "baseline": "1.5.2",
+      "baseline": "1.5.3",
       "port-version": 0
     },
     "palsigslot": {
@@ -7745,7 +7745,7 @@
       "port-version": 5
     },
     "ppqsort": {
-      "baseline": "1.0.5",
+      "baseline": "1.0.6",
       "port-version": 0
     },
     "pprint": {
@@ -8625,7 +8625,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.4.3",
+      "baseline": "4.5.0",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -8753,7 +8753,7 @@
       "port-version": 0
     },
     "s2n": {
-      "baseline": "1.6.1",
+      "baseline": "1.6.2",
       "port-version": 0
     },
     "safeint": {
@@ -8854,7 +8854,7 @@
     },
     "sdl1": {
       "baseline": "1.2.15",
-      "port-version": 22
+      "port-version": 23
     },
     "sdl1-mixer": {
       "baseline": "2025-09-10",
@@ -9120,6 +9120,10 @@
       "baseline": "1.0.1",
       "port-version": 1
     },
+    "slick-net": {
+      "baseline": "1.2.1",
+      "port-version": 0
+    },
     "slick-object-pool": {
       "baseline": "0.1.2",
       "port-version": 0
@@ -9289,19 +9293,19 @@
       "port-version": 4
     },
     "spirv-cross": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "spirv-reflect": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "spout2": {
@@ -9333,7 +9337,7 @@
       "port-version": 0
     },
     "sqlite-flux": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.1",
       "port-version": 0
     },
     "sqlite-modern-cpp": {
@@ -9465,7 +9469,7 @@
       "port-version": 1
     },
     "stringzilla": {
-      "baseline": "4.4.1",
+      "baseline": "4.4.2",
       "port-version": 0
     },
     "strong-type": {
@@ -10333,7 +10337,7 @@
       "port-version": 0
     },
     "vk-bootstrap": {
-      "baseline": "1.4.312",
+      "baseline": "1.4.328",
       "port-version": 0
     },
     "vkfft": {
@@ -10357,7 +10361,7 @@
       "port-version": 0
     },
     "volk": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "voro": {
@@ -10413,11 +10417,11 @@
       "port-version": 0
     },
     "vulkan-extensionlayer": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "vulkan-headers": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "vulkan-hpp": {
@@ -10425,8 +10429,8 @@
       "port-version": 0
     },
     "vulkan-loader": {
-      "baseline": "1.4.309.0",
-      "port-version": 3
+      "baseline": "1.4.328.0",
+      "port-version": 0
     },
     "vulkan-memory-allocator": {
       "baseline": "3.3.0",
@@ -10437,19 +10441,19 @@
       "port-version": 1
     },
     "vulkan-sdk-components": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "vulkan-tools": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "vulkan-utility-libraries": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "vulkan-validationlayers": {
-      "baseline": "1.4.309.0",
+      "baseline": "1.4.328.0",
       "port-version": 0
     },
     "vvenc": {
@@ -10509,7 +10513,7 @@
       "port-version": 0
     },
     "webview2": {
-      "baseline": "1.0.3240.44",
+      "baseline": "1.0.3595.46",
       "port-version": 0
     },
     "wepoll": {
@@ -10593,7 +10597,7 @@
       "port-version": 0
     },
     "wolfmqtt": {
-      "baseline": "1.20.0",
+      "baseline": "1.21.0",
       "port-version": 0
     },
     "wolfssl": {
@@ -10601,8 +10605,8 @@
       "port-version": 0
     },
     "wolftpm": {
-      "baseline": "3.9.2",
-      "port-version": 1
+      "baseline": "3.10.0",
+      "port-version": 0
     },
     "wordnet": {
       "baseline": "3.0",
