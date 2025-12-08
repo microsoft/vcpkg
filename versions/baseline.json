@@ -7153,8 +7153,8 @@
       "port-version": 0
     },
     "opencascade": {
-      "baseline": "7.9.2",
-      "port-version": 1
+      "baseline": "7.9.3",
+      "port-version": 0
     },
     "opencc": {
       "baseline": "1.1.9",
