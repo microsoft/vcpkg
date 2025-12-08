@@ -4913,7 +4913,7 @@
       "port-version": 0
     },
     "libgit2": {
-      "baseline": "1.9.1",
+      "baseline": "1.9.2",
       "port-version": 0
     },
     "libgme": {
