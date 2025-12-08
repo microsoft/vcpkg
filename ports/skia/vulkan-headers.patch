@@ -1,8 +1,8 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index 3626895824..31a7fdbc33 100644
+index c6966d249d..d795e2b783 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -938,6 +938,7 @@ optional("gpu_shared") {
+@@ -906,6 +906,7 @@ optional("gpu_shared") {
    }
 
    if (skia_use_vulkan) {
@@ -26,18 +26,18 @@ index 1e962ad60a..535ac6b88f 100644
  #include "include/third_party/vulkan/vulkan/vulkan_core.h"
  #else
 diff --git a/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h b/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
-index 487ea7cee4..9662c8cbf6 100644
+index 4f7120200f..067c1dc154 100644
 --- a/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
 +++ b/src/gpu/vk/vulkanmemoryallocator/VulkanMemoryAllocatorWrapper.h
-@@ -39,7 +39,11 @@
- // VMA outside of Skia, the client should instead tell Skia not to use VMA.
- // Then they should wrap their own instance of VMA into an implementation of
- // Skia's VulkanMemoryAllocator interface, and pass that object into context creation.
+@@ -45,7 +45,11 @@
+ #pragma clang diagnostic ignored "-Wc++98-compat-extra-semi"
+ #endif
+ 
 +#ifdef _WIN32
 +#include "vma/vk_mem_alloc.h"  // NO_G3_REWRITE
 +#else
  #include "vk_mem_alloc.h"  // NO_G3_REWRITE
 +#endif
- #ifdef GR_NEEDED_TO_DEFINE_VULKAN_H
- #undef VULKAN_H_
- #endif
+ 
+ #if defined(__clang__)
+ #pragma clang diagnostic pop

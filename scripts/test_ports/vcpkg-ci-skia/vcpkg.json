@@ -6,7 +6,10 @@
   "dependencies": [
     {
       "name": "skia",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "pathediting"
+      ]
     },
     {
       "name": "skia",
