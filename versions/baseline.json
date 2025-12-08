@@ -5089,8 +5089,8 @@
       "port-version": 0
     },
     "liblsquic": {
-      "baseline": "3.3.2",
-      "port-version": 1
+      "baseline": "4.4.1",
+      "port-version": 0
     },
     "libltdl": {
       "baseline": "2.5.4",
