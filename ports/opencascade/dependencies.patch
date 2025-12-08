@@ -93,13 +93,13 @@ index 5079ba63..137206bb 100644
 +  endif()
 +endif()
 +if("@USE_RAPIDJSON@")
-+  find_package(RapidJSON CONFIG REQUIRED)
++  find_dependency(RapidJSON CONFIG)
 +endif()
 +if("@USE_TBB@")
 +  find_dependency(TBB CONFIG)
 +endif()
 +if("@USE_VTK@")
-+  find_dependency(VTK REQUIRED)
++  find_dependency(VTK)
 +endif()
 +
  # Import OpenCASCADE compile definitions, C and C++ flags for each installed configuration.

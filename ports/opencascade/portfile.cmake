@@ -62,7 +62,7 @@ file(GLOB extra_headers
 list(JOIN extra_headers "|" extra_headers)
 file(GLOB files "${CURRENT_PACKAGES_DIR}/include/opencascade/*.[hgl]xx")
 foreach(file_name IN LISTS files)
-    vcpkg_replace_string("${file_name}" "(# *include) <([a-zA-Z0-9_]*[.][hgl]xx|${extra_headers})>" [[\1 "\2"]] IGNORE_UNCHANGED)
+    vcpkg_replace_string("${file_name}" "(# *include) <([a-zA-Z0-9_]*[.][hgl]xx|${extra_headers})>" [[\1 "\2"]] REGEX IGNORE_UNCHANGED)
 endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
