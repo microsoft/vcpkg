@@ -1,6 +1,6 @@
 {
   "name": "livepp",
-  "version-semver": "2.11.0",
+  "version-semver": "2.11.1",
   "description": "Hot-reload for C & C++ transforms workflows and decreases iteration times.",
   "homepage": "https://liveplusplus.tech/",
   "documentation": "https://liveplusplus.tech/docs/documentation.html",
