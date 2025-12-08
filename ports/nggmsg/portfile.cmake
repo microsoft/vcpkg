@@ -13,8 +13,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME nggmsg CONFIG_PATH share/nggmsg/cmake)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+# 清理debug目录
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
