@@ -1,0 +1,4 @@
+The package alpaca provides CMake targets:
+
+    find_package(alpaca CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE alpaca::alpaca)

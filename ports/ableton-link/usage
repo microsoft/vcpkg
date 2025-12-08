@@ -1,0 +1,4 @@
+The package ableton-link provides CMake targets:
+
+    find_package(ableton-link CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE ableton-link::ableton-link)

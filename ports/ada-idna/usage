@@ -1,0 +1,4 @@
+The package ada-idna provides CMake targets:
+
+    find_package(ada-idna CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE ada-idna::ada-idna)

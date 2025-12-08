@@ -1,0 +1,4 @@
+The package 3fd provides CMake targets:
+
+    find_package(3fd CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE 3fd::3fd)

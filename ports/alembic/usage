@@ -1,0 +1,4 @@
+The package alembic provides CMake targets:
+
+    find_package(alembic CONFIG REQUIRED)
+    target_link_libraries(your_target PRIVATE Alembic::Alembic)

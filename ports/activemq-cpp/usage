@@ -1,0 +1,4 @@
+The package activemq-cpp provides CMake targets:
+
+    find_package(activemq-cpp CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE activemq-cpp::activemq-cpp)

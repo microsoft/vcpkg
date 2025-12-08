@@ -1,0 +1,4 @@
+The package ada-url provides CMake targets:
+
+    find_package(ada-url CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE ada-url::ada-url)

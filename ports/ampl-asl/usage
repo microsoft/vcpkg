@@ -1,0 +1,4 @@
+The package ampl-asl provides CMake targets:
+
+    find_package(ampl-asl CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE ampl-asl::ampl-asl)
