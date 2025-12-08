@@ -1,0 +1,17 @@
+{
+  "name": "nggmsg",
+  "version": "20251208-2",
+  "description": "nggmsg - a message library",
+  "homepage": "https://github.com/xhk/nggmsg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
