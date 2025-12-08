@@ -395,6 +395,9 @@ libdc1394:x64-android=fail
 libfreenect2:arm64-windows-static-md=fail
 libfreenect2:arm64-windows=fail
 libgo:x64-android=fail
+libgwenhywfar:arm-neon-android=fail
+libgwenhywfar:arm64-android=fail
+libgwenhywfar:x64-android=fail
 libgxps:x64-windows-static=fail
 libhdfs3:arm-neon-android=fail
 libhdfs3:arm64-android=fail
@@ -574,6 +577,7 @@ openmpi:arm-neon-android=fail
 openmpi:arm64-android=fail
 openmpi:x64-android=fail
 openmvg:arm64-windows-static-md=fail
+openmvg:arm64-windows=fail
 openmvs:arm64-windows-static-md=fail # no _M_ARM64 detection
 # MSVC is not supported
 openslide:x64-windows-release=fail
