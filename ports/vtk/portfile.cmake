@@ -159,6 +159,13 @@ list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=ON" "=YES")
 list(TRANSFORM VTK_FEATURE_OPTIONS REPLACE "=OFF" "=DONT_WANT")
 
 if("qt" IN_LIST FEATURES)
+    if(VCPKG_CROSSCOMPILING)
+        list(APPEND VTK_FEATURE_OPTIONS
+            "-DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR}"
+            "-DQT_HOST_PATH_CMAKE_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share"
+        )
+    endif()
+
     file(READ "${CURRENT_INSTALLED_DIR}/share/qtbase/vcpkg_abi_info.txt" qtbase_abi_info)
     if(qtbase_abi_info MATCHES "(^|;)gles2(;|$)")
         message(FATAL_ERROR "VTK assumes qt to be build with desktop opengl. As such trying to build vtk with qt using GLES will fail.") 
