@@ -1533,8 +1533,8 @@
       "port-version": 0
     },
     "c-ares": {
-      "baseline": "1.34.5",
-      "port-version": 1
+      "baseline": "1.34.6",
+      "port-version": 0
     },
     "c4core": {
       "baseline": "0.2.7",
