@@ -1,0 +1,38 @@
+{
+  "name": "mumps-solver",
+  "version": "5.8.1",
+  "port-version": 1,
+  "description": "MUMPS (MUltifrontal Massively Parallel sparse direct Solver) build with scivision harness",
+  "homepage": "https://mumps-solver.org/index.php",
+  "supports": "x64 & (linux | windows)",
+  "license": "CeCILL-C",
+  "dependencies": [
+    {
+      "name": "pkgconf",
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "lapack",
+    "blas",
+    "metis"
+  ],
+  "features": {
+    "mpi": {
+      "description": "Enable MPI support",
+      "dependencies": [
+        "mpi",
+        "scalapack"
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support"
+    }
+  }
+}
