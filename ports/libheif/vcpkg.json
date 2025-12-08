@@ -1,6 +1,7 @@
 {
   "name": "libheif",
   "version": "1.20.2",
+  "port-version": 1,
   "description": "libheif is an HEIF and AVIF file format decoder and encoder.",
   "homepage": "http://www.libheif.org/",
   "license": "LGPL-3.0-only",
@@ -60,6 +61,13 @@
       "license": "BSD-2-Clause",
       "dependencies": [
         "openjpeg"
+      ]
+    },
+    "openjph": {
+      "description": "OpenJPH HT-J2K decoding and encoding via OpenJPH",
+      "license": "BSD-2-Clause",
+      "dependencies": [
+        "openjph"
       ]
     }
   }
