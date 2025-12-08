@@ -2357,8 +2357,8 @@
       "port-version": 1
     },
     "dawn": {
-      "baseline": "20250922.223923",
-      "port-version": 1
+      "baseline": "20251202.213730",
+      "port-version": 0
     },
     "daxa": {
       "baseline": "3.3.1",
