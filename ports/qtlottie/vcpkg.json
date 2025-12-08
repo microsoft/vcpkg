@@ -15,6 +15,11 @@
     {
       "name": "qtdeclarative",
       "default-features": false
+    },
+    {
+      "name": "qtlottie",
+      "host": true,
+      "default-features": false
     }
   ],
   "features": {
