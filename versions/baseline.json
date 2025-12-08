@@ -6589,8 +6589,8 @@
       "port-version": 0
     },
     "ms-ifc-sdk": {
-      "baseline": "0.43.1",
-      "port-version": 1
+      "baseline": "0.43.5",
+      "port-version": 0
     },
     "msdfgen": {
       "baseline": "1.13",
