@@ -3,6 +3,7 @@
   "version": "20251208-2",
   "description": "nggmsg - a message library",
   "homepage": "https://github.com/xhk/nggmsg",
+  "supports": "!x86",
   "license": "MIT",
   "dependencies": [
     {
