@@ -1,0 +1,17 @@
+# Usage
+
+nggmsg is a simple message library.
+
+## Features
+- Simple API
+- Header only
+- Cross-platform
+
+## Example
+```cpp
+#include <nggmsg.h>
+
+int main() {
+    // 使用nggmsg库
+    return 0;
+}

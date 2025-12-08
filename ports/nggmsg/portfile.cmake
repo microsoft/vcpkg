@@ -8,8 +8,6 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
@@ -17,4 +15,16 @@ vcpkg_cmake_install()
 # 清理debug目录
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+# 安装usage文件
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+# 清理空目录
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib" "${CURRENT_PACKAGES_DIR}/lib")
+
+# 安装版权文件
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+# 禁用特定策略警告
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
+set(VCPKG_POLICY_ALLOW_EMPTY_FOLDERS enabled)
