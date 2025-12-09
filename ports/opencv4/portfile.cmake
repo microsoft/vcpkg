@@ -21,7 +21,6 @@ vcpkg_from_github(
       0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
-      0022-android-use-vcpkg-cpu-features.patch
       0023-ffmpeg8-support.patch
 )
 # Disallow accidental build of vendored copies
