@@ -1,13 +1,13 @@
 diff --git a/CMake/setup.cmake b/CMake/setup.cmake
-index 60b7da1..6831d29 100644
+index 266e1299a..35d968dc9 100644
 --- a/CMake/setup.cmake
 +++ b/CMake/setup.cmake
-@@ -65,6 +65,8 @@ else ()
-   set (FLTK_CONFIG_PATH ${FLTK_DATADIR}/fltk)
- endif (WIN32 AND NOT CYGWIN)
+@@ -94,7 +94,7 @@ set(STATICIMAGELIBS "")
  
-+set(FLTK_CONFIG_PATH share/fltk)
-+
- include(TestBigEndian)
- TEST_BIG_ENDIAN(WORDS_BIGENDIAN)
- 
+ # set where config files go
+ if(WIN32 AND NOT CYGWIN)
+-  set(FLTK_CONFIG_PATH CMake)
++  set(FLTK_CONFIG_PATH share/fltk)
+ elseif(APPLE AND NOT FLTK_BACKEND_X11)
+   set(FLTK_CONFIG_PATH ${FLTK_DATADIR}/fltk)
+ else()
