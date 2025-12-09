@@ -7197,8 +7197,8 @@
       "port-version": 9
     },
     "opendnp3": {
-      "baseline": "3.1.1",
-      "port-version": 1
+      "baseline": "3.1.2",
+      "port-version": 0
     },
     "openexr": {
       "baseline": "3.4.3",
