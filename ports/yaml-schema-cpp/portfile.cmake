@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         remove-root-dir-for-tests.patch
+        fix-windows-build.patch
 )
 
 vcpkg_cmake_configure(
