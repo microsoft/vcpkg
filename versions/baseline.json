@@ -6585,7 +6585,7 @@
       "port-version": 0
     },
     "ms-gsl": {
-      "baseline": "4.2.0",
+      "baseline": "4.2.1",
       "port-version": 0
     },
     "ms-ifc-sdk": {
