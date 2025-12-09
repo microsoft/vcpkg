@@ -3860,6 +3860,10 @@
       "baseline": "2.0.6",
       "port-version": 1
     },
+    "iceoryx2": {
+      "baseline": "2025-12-09",
+      "port-version": 0
+    },
     "icu": {
       "baseline": "78.1",
       "port-version": 0
