@@ -9649,7 +9649,7 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2022.2.0",
+      "baseline": "2022.3.0",
       "port-version": 0
     },
     "tcb-span": {
