@@ -3293,8 +3293,8 @@
       "port-version": 1
     },
     "gflags": {
-      "baseline": "2.2.2",
-      "port-version": 9
+      "baseline": "2.3.0",
+      "port-version": 0
     },
     "ggml": {
       "baseline": "2025-11-17",
