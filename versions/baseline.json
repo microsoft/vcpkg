@@ -2697,7 +2697,7 @@
       "port-version": 0
     },
     "egl-registry": {
-      "baseline": "2024-01-25",
+      "baseline": "2025-05-27",
       "port-version": 0
     },
     "eigen3": {
