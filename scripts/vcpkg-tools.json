@@ -4,20 +4,40 @@
     {
       "name": "python3",
       "os": "windows",
-      "version": "3.12.7",
+      "version": "3.14.2",
       "executable": "python.exe",
-      "url": "https://www.python.org/ftp/python/3.12.7/python-3.12.7-embed-win32.zip",
-      "sha512": "15542080e0cc25c574391218107fe843006e8c5a7161d1cd48cf14a3c47155c0244587273d9c747f35b15ea17676869ecce079214824214c1a62abfc86ad9f9b",
-      "archive": "python-3.12.7-embed-win32.zip"
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-win32.zip",
+      "sha512": "05703133a3371493ccd3552dd12db6385cbb1a34874056c8a3f26dda6b813bf2bd535549c30aa4c0827287d9c4ff3250a49330282ad8535a06937b016d483010",
+      "archive": "python-3.14.2-embed-win32.zip"
+    },
+    {
+      "name": "python3",
+      "os": "windows",
+      "arch": "amd64",
+      "version": "3.14.2",
+      "executable": "python.exe",
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-amd64.zip",
+      "sha512": "d72d4f036c4dd563c4ac15c7162bf63406d3fd83a44877300ff87e4168f211d66b8209fdd3ad39ea549b8bc46c092b4ecab3b24b0da2f8950e0e5642828e99f2",
+      "archive": "python-3.14.2-embed-amd64.zip"
+    },
+    {
+      "name": "python3",
+      "os": "windows",
+      "arch": "arm64",
+      "version": "3.14.2",
+      "executable": "python.exe",
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-arm64.zip",
+      "sha512": "410c785d1bc8f3d1352e5386e53ab0aef39e1212680e2e05daad5672dcc749ccfab96e204c84b3c1e9544002088e1412ca733b1a86ca4cc920549c41774f6c58",
+      "archive": "python-3.14.2-embed-arm64.zip"
     },
     {
       "name": "python3_with_venv",
       "os": "windows",
-      "version": "3.12.7",
+      "version": "3.14.2",
       "executable": "tools/python.exe",
-      "url": "https://www.nuget.org/api/v2/package/python/3.12.7",
-      "sha512": "6d5cac329808e31d4d8d593da6eeaa9ea4ec0296679335e7b7811f6c6fa6cbb96948d2f7845071798c6f73f83852dd731dc2b0fda48c520b9bec8a86cc56134e",
-      "archive": "python-3.12.7.nupkg.zip"
+      "url": "https://www.nuget.org/api/v2/package/python/3.14.2",
+      "sha512": "42ac4b553aecea8ee751998de5c08e8af40c06c0594685b02d7b77679017b7c7559c9236332913dea1d0783edee06e4cf1f793149cecbd515e7624f974065272",
+      "archive": "python-3.14.2.nupkg.zip"
     },
     {
       "name": "cmake",
