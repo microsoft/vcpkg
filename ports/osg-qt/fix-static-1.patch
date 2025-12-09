@@ -1,0 +1,51 @@
+From 2afd77a983a0b61c7129073671c32ccd9ec2c25f Mon Sep 17 00:00:00 2001
+From: Daniel Emminizer <daniel.m.emminizer.civ@us.navy.mil>
+Date: Mon, 19 May 2025 10:13:12 -0400
+Subject: [PATCH 1/4] Export Target fixes for transitive properties: Include
+ directory now correctly set; Qt5 and OSG are now correctly searched for if
+ needed; link libraries and include path are now set transitively based on
+ current system's OSG libraries, improving portability of install.
+
+---
+ src/osgQOpenGL/CMakeLists.txt |  1 +
+ 1 files changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/src/osgQOpenGL/CMakeLists.txt b/src/osgQOpenGL/CMakeLists.txt
+index eb7b077..21e6ce0 100644
+--- a/src/osgQOpenGL/CMakeLists.txt
++++ b/src/osgQOpenGL/CMakeLists.txt
+@@ -50,6 +50,7 @@ IF ( Qt5Widgets_FOUND )
+ 
+     SETUP_LIBRARY(${LIB_NAME})
+ 
++    target_include_directories(${LIB_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
+     generate_export_header(${LIB_NAME} EXPORT_FILE_NAME "Export")
+ 
+ ENDIF()
+-- 
+2.37.2.windows.2
+
+From bfa769f5c928a89888d556a651f56716921e5887 Mon Sep 17 00:00:00 2001
+From: Daniel Emminizer <daniel.m.emminizer.civ@us.navy.mil>
+Date: Mon, 19 May 2025 11:29:23 -0400
+Subject: [PATCH 2/4] CMakeLists: Use GNUInstallDirs to fix Linux duplication
+ issue of lib64 vs lib.
+
+---
+ CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 640ce99..d83e105 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -92,6 +92,7 @@ ENDIF()
+ 
+ PROJECT(osgQt)
+ 
++INCLUDE(GNUInstallDirs)
+ FIND_PACKAGE(OpenSceneGraph 3.6.0 REQUIRED osgDB osgGA osgUtil osgText osgViewer osgWidget)
+ SET(OPENSCENEGRAPH_SOVERSION 145)
+ 
+-- 
+2.37.2.windows.2
