@@ -3,13 +3,8 @@ vcpkg_from_github(
     REPO TileDB-Inc/TileDB
     REF "${VERSION}"
     HEAD_REF main
-    SHA512 4359836f85911db067b7cb3502c5a5f4272971c8f5276e0375a7faf483e3a9003fc9ee392e1b830e254048914dc61eca5f858d189454a35b157462677b210955
+    SHA512 fdf8b41ec3b412874dbed4d8420a95821accf31a627f0746ca81656a98e60326aa479ffe7c8561b11c6fd7bc78dcaa8e9750bb2fcc94f92319c73379160caed9
     PATCHES
-        azure-fix.patch
-        exclude-from-all.patch # https://github.com/TileDB-Inc/TileDB/pull/5606
-        rm-vendored-nlohmann-json.patch # https://github.com/TileDB-Inc/TileDB/pull/5609
-        rm-vendored-bufferstream.patch # https://github.com/TileDB-Inc/TileDB/pull/5619
-        blosc2.patch # https://github.com/TileDB-Inc/TileDB/pull/5620
         rm-cpp17-pmr.patch
 )
 

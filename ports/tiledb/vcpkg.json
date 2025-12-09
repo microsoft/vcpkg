@@ -1,6 +1,6 @@
 {
   "name": "tiledb",
-  "version": "2.29.1",
+  "version": "2.30.0",
   "description": "Cloud-native embeddable array storage engine",
   "homepage": "https://github.com/TileDB-Inc/TileDB",
   "license": "MIT",
