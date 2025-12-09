@@ -3,14 +3,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO greg7mdp/gtl
-    REF 1.00
-    SHA512 842a5e2634919a04fdd87995a8ada2f949c51a070a7c175043e0f9105a93248325023f85b28f9406276c2912a0fb4015a2e9ba30113d4a0214492da0dc5e5716
+    REF "v${VERSION}"
+    SHA512 068d37b7028979538884db5956a76e1de301202eb6b015104c6d8b246e894f9166b1d2b97aff47b2641b6948e7dd1cd20a74396f1a6d276e2ade74469d27c3c2
     HEAD_REF main
 )
 
 # Use greg7mdp/gtl's own build process, skipping examples and tests
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DGTL_BUILD_TESTS=OFF
+        -DGTL_BUILD_EXAMPLES=OFF
+        -DGTL_BUILD_BENCHMARKS=OFF
 )
 vcpkg_cmake_install()
 

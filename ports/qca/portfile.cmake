@@ -11,19 +11,23 @@ vcpkg_add_to_path("${PERL_EXE_PATH}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
-    REF v2.3.4
-    SHA512 04583da17531538fc2a7ae18a1a4f89f1e8d303e2bb390520a8f55a20bab17f8407ab07aefef2a75587e2a0521f41b37a9fdd8430ec483daf5d02c05556b8ddb
+    REF "v${VERSION}"
+    SHA512 de06173aaea32aac19a24510b5dbb4bb79681217eb1e4256de36db9f7158ad485fa450ffba5e13c12a0425866923b54f9b4d6164d0eaf659fdf40e458f5ee017
     PATCHES
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
+        0003-Define-NOMINMAX-for-botan-plugin-with-MSVC.patch
+        0004-fix-cmake4.patch
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
-  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
 else()
-  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/Qca)
-  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/lib/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/Qca)
+  set(QCA_PLUGIN_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/lib/Qca)
 endif()
 
 # According to:
@@ -44,10 +48,17 @@ vcpkg_execute_required_process(
 )
 message(STATUS "Importing certstore done")
 
+set(PLUGINS gnupg logger wincrypto)
 if("botan" IN_LIST FEATURES)
-    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN=yes)
+    list(APPEND PLUGINS botan)
+endif()
+if ("ossl" IN_LIST FEATURES)
+    list(APPEND PLUGINS ossl)
+endif()
+if (VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    message(STATUS "Building with an osx-dynamic triplet: 'softstore' disabled.")
 else()
-    list(APPEND QCA_OPTIONS -DWITH_botan_PLUGIN=no)
+    list(APPEND PLUGINS softstore)
 endif()
 
 # Configure and build
@@ -55,16 +66,18 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DUSE_RELATIVE_PATHS=ON
+        "-DBUILD_PLUGINS=${PLUGINS}"
         -DBUILD_TESTS=OFF
         -DBUILD_TOOLS=OFF
+        -DBUILD_WITH_QT6=ON
         -DQCA_SUFFIX=OFF
-        -DQCA_FEATURE_INSTALL_DIR=share/qca/mkspecs/features
+        -DQCA_FEATURE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/qca/mkspecs/features
         -DOSX_FRAMEWORK=OFF
-        ${QCA_OPTIONS}
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
     OPTIONS_DEBUG
-        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
+        -DQCA_PLUGINS_INSTALL_DIR=${QCA_PLUGIN_INSTALL_DIR_DEBUG}
     OPTIONS_RELEASE
-        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_RELEASE}
+        -DQCA_PLUGINS_INSTALL_DIR=${QCA_PLUGIN_INSTALL_DIR_RELEASE}
 )
 
 vcpkg_cmake_install()
@@ -88,4 +101,4 @@ file(REMOVE_RECURSE
 vcpkg_fixup_pkgconfig()
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

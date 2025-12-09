@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 53ddaed..a851c00 100644
+index 53ddaed..3d75dd5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -47,8 +47,9 @@ if ((NOT LEVELDB_INCLUDE_PATH) OR (NOT LEVELDB_LIB))
@@ -14,3 +14,18 @@ index 53ddaed..a851c00 100644
  if ((NOT GFLAGS_INCLUDE_PATH) OR (NOT GFLAGS_LIB))
      message(FATAL_ERROR "Fail to find gflags")
  endif()
+@@ -77,13 +78,7 @@ if (NOT PROTOBUF_PROTOC_EXECUTABLE)
+     set (PROTOBUF_PROTOC_EXECUTABLE "${PROTO_LIB_DIR}/../bin/protoc")
+ endif()
+ 
+-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+-    set(OPENSSL_ROOT_DIR
+-        "/usr/local/opt/openssl"    # Homebrew installed OpenSSL
+-        )
+-endif()
+-
+-include(FindOpenSSL)
++find_package(OpenSSL REQUIRED)
+ 
+ include_directories(
+         ${GFLAGS_INCLUDE_PATH}

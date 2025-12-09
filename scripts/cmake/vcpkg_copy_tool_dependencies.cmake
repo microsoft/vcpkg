@@ -34,7 +34,7 @@ function(vcpkg_copy_tool_dependencies tool_dir)
             BASE_DIRECTORY "${CURRENT_PACKAGES_DIR}"
             OUTPUT_VARIABLE relative_tool_dir
         )
-        if(relative_tool_dir MATCHES "/debug/")
+        if(relative_tool_dir MATCHES "^debug/|/debug/")
             z_vcpkg_copy_tool_dependencies_search("${tool_dir}" "${CURRENT_PACKAGES_DIR}/debug/bin")
             z_vcpkg_copy_tool_dependencies_search("${tool_dir}" "${CURRENT_INSTALLED_DIR}/debug/bin")
         else()

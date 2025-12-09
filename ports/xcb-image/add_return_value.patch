@@ -1,0 +1,13 @@
+diff --git a/image/xcb_bitops.h b/image/xcb_bitops.h
+index a6872a1f3..bf6fdc179 100644
+--- a/image/xcb_bitops.h	
++++ b/image/xcb_bitops.h
+@@ -207,6 +207,8 @@ xcb_host_byte_order(void) {
+       return XCB_IMAGE_ORDER_LSB_FIRST;
+   }
+   assert(0);
++  exit(EXIT_FAILURE);
++  return -1;
+ }
+ 
+ #endif /* __XCB_BITOPS_H__ */

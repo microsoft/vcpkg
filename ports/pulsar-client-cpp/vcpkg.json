@@ -1,0 +1,41 @@
+{
+  "name": "pulsar-client-cpp",
+  "version": "3.8.0",
+  "description": "The Apache Pulsar C++ library",
+  "homepage": "https://github.com/apache/pulsar-client-cpp",
+  "license": "Apache-2.0",
+  "supports": "!((arm | x86) & windows) & !android",
+  "dependencies": [
+    "asio",
+    "boost-accumulators",
+    "boost-format",
+    "boost-property-tree",
+    {
+      "name": "curl",
+      "default-features": false,
+      "features": [
+        "openssl"
+      ]
+    },
+    {
+      "name": "dlfcn-win32",
+      "platform": "windows"
+    },
+    "openssl",
+    {
+      "name": "protobuf",
+      "version>=": "3.21.12"
+    },
+    "snappy",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ]
+}

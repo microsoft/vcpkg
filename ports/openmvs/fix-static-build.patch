@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 39ec359ac3..03225b8940 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -177,10 +177,10 @@ if(Boost_FOUND)
+ 	LIST(APPEND OpenMVS_DEFINITIONS -D_USE_BOOST)
+ 	ADD_DEFINITIONS(${Boost_DEFINITIONS})
+ 	LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+-	if(NOT MSVC AND DEFINED CMAKE_TOOLCHAIN_FILE)
+-		# work around this missing library link in vcpkg
+-		LIST(APPEND Boost_LIBRARIES zstd)
+-	endif()
++  LINK_LIBRARIES(${Boost_LIBRARIES})
++  find_package(zstd CONFIG REQUIRED)
++  LINK_LIBRARIES($<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>)
++
+ 	SET(_USE_BOOST TRUE)
+ endif()
+ 

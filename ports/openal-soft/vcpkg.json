@@ -1,16 +1,21 @@
 {
   "name": "openal-soft",
-  "version-semver": "1.22.2",
+  "version": "1.24.3",
   "port-version": 1,
   "description": "OpenAL Soft is an LGPL-licensed, cross-platform, software implementation of the OpenAL 3D audio API.",
   "homepage": "https://github.com/kcat/openal-soft",
-  "license": "GPL-2.0-or-later",
-  "supports": "!uwp",
+  "license": "LGPL-2.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
     {
       "name": "alsa",
       "platform": "linux"
     },
+    {
+      "name": "cppwinrt",
+      "platform": "uwp"
+    },
+    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -19,5 +24,19 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "pipewire": {
+      "description": "Enable PipeWire backend",
+      "dependencies": [
+        "pipewire"
+      ]
+    },
+    "pulseaudio": {
+      "description": "Enable PulseAudio backend",
+      "dependencies": [
+        "pulseaudio"
+      ]
+    }
+  }
 }

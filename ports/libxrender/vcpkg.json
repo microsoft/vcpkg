@@ -1,0 +1,11 @@
+{
+  "name": "libxrender",
+  "version": "0.9.10",
+  "description": "library for the Render Extension to the X11 protocol",
+  "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxrender",
+  "license": null,
+  "dependencies": [
+    "libx11",
+    "xorg-macros"
+  ]
+}

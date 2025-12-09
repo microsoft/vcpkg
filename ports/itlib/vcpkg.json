@@ -1,0 +1,7 @@
+{
+  "name": "itlib",
+  "version": "1.11.8",
+  "description": "A collection of std-like single-header C++ libraries.",
+  "homepage": "https://github.com/iboB/itlib",
+  "license": "MIT"
+}

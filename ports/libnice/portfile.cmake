@@ -2,13 +2,13 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libnice/libnice
-    REF 55b71d47f2b427b3baa8812818ed3f059acc748d # 0.1.18
-    SHA512 78575c487d74734d2dff1c04103fd55c76cf5e78edde03ffd68050348881a3efc985513cfd30553bfce0568c8edfcd61be7dea8991731efc749ee4fee2f503d6
+    REF 0.1.22
+    SHA512 545c759a827e039d0aed262a4ec31b17610f7e67d93389c939763ed3d99530a4a6c3d13864ff05a2011fb3c3847ce3380a988e554de0f92b1348ebb76f5e3da4
     HEAD_REF master
-) 
+)
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -Dgtk_doc=disabled #Enable generating the API reference (depends on GTK-Doc)
         -Dintrospection=disabled #Enable GObject Introspection (depends on GObject)'
@@ -16,13 +16,11 @@ vcpkg_configure_meson(
         -Dexamples=disabled
         -Dgstreamer=disabled
         -Dcrypto-library=openssl
-    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
-    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                               glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
-# Could be features: 
+# Could be features:
 # option('gupnp', type: 'feature', value: 'auto',
   # description: 'Enable or disable GUPnP IGD support')
 # option('ignored-network-interface-prefix', type: 'array', value: ['docker', 'veth', 'virbr', 'vnet'],
@@ -35,6 +33,9 @@ vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES stunbdc stund AUTO_CLEAN)
 vcpkg_fixup_pkgconfig()
 
-file(COPY "${SOURCE_PATH}/COPYING.LGPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(COPY "${SOURCE_PATH}/COPYING.MPL" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(
+  FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/COPYING.LGPL"
+    "${SOURCE_PATH}/COPYING.MPL"
+)

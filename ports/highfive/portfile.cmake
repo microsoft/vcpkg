@@ -1,47 +1,44 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO BlueBrain/HighFive
-    REF v2.3
-    SHA512 5bf8bc6d3a57be39a4fd15f28f8c839706e2c8d6e2270f45ea39c28a2ac1e3c7f31ed2f48390a45a868c714c85f03f960a0bc8fad945c80b41f495e6f4aca36a
+    REPO highfive-devs/highfive
+    REF "v${VERSION}"
+    SHA512 0f72eadfff9b0dd8bcf70654ae5ac526565df58be47d432e5f44fbc5b36b47989061308629ea34d403b9b96362abc2e42e9cbd6eaa78d1ba0326737493468d05
     HEAD_REF master
-    PATCHES 
-        fix-dependency-hdf5.patch
-        fix-error-C1128.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        boost   HIGHFIVE_USE_BOOST
-        tests   HIGHFIVE_UNIT_TESTS
-        xtensor HIGHFIVE_USE_XTENSOR
-        eigen3  HIGHFIVE_USE_EIGEN
+        boost       HIGHFIVE_TEST_BOOST
+        opencv      HIGHFIVE_TEST_OPENCV
+        xtensor     HIGHFIVE_TEST_XTENSOR
+        eigen3      HIGHFIVE_TEST_EIGEN
 )
+
+if(HDF5_WITH_PARALLEL)
+    message(STATUS "${HDF5_WITH_PARALLEL} Enabling HIGHFIVE_PARALLEL_HDF5.")
+    list(APPEND FEATURE_OPTIONS "-DHIGHFIVE_PARALLEL_HDF5=ON")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DHIGHFIVE_UNIT_TESTS=OFF
         -DHIGHFIVE_EXAMPLES=OFF
         -DHIGHFIVE_BUILD_DOCS=OFF
 )
 
 vcpkg_cmake_install()
 
-if("tests" IN_LIST FEATURES)
-    vcpkg_copy_tools(
-        TOOL_NAMES 
-            tests_high_five_base
-            tests_high_five_easy
-            tests_high_five_multi_dims
-        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/tests/unit" # Tools are not installed so release version tools are manually copied
-    )
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/HighFive)
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/HighFive/HighFiveConfig.cmake")
+    # left over with mixed case
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/HighFive")
 endif()
 
-# Use PACKAGE_NAME to avoid folder HighFive and highfive are exist at same time
-vcpkg_cmake_config_fixup(PACKAGE_NAME HighFive CONFIG_PATH share/HighFive/CMake)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

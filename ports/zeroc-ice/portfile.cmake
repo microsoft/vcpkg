@@ -1,26 +1,26 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeroc-ice/ice
-    REF v3.7.7
-    SHA512 73c3a2bb14c9e145383e4026206edd3e03b29c60a33af628611bfdab71d69a3aed108ce4e6cbfd67eb852560110e3495b4bd238c8cdf0de9d1f8e2f1088513ee
-    PATCHES md5i_fix.patch slice2swift.patch mcppd_fix.patch
+    REF "v${VERSION}"
+    SHA512 638ca8721db1559aae80c43663a1210ba9c8f72d58003f2d9457048c9100bee74036910917d1d10bf5b998ba49f0878177e094b436c83d3deb63613f9075483d
+    PATCHES
+        mcppd_fix.patch
+        no-werror.patch
 )
 
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
-get_filename_component(SOURCE_PATH_SUFFIX ${SOURCE_PATH} NAME)
 set(UNIX_BUILD_DIR "${SOURCE_PATH}")
-set(WIN_DEBUG_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/${SOURCE_PATH_SUFFIX})
-set(WIN_RELEASE_BUILD_DIR ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/${SOURCE_PATH_SUFFIX})
+set(WIN_DEBUG_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}")
+set(WIN_RELEASE_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}")
 
 # install_includes
 function(install_includes ORIGINAL_PATH RELATIVE_PATHS)
     foreach(RELATIVE_PATH ${RELATIVE_PATHS})
         file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.h)
-        if(EXISTS ${ORIGINAL_PATH}/${RELATIVE_PATH})
-            file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH})
+        if(EXISTS "${ORIGINAL_PATH}/${RELATIVE_PATH}")
+            file(COPY ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH}")
         endif()
     endforeach()
 endfunction()
@@ -30,7 +30,7 @@ function(install_slices ORIGINAL_PATH RELATIVE_PATHS)
     foreach(RELATIVE_PATH ${RELATIVE_PATHS})
         file(GLOB HEADER_FILES ${ORIGINAL_PATH}/${RELATIVE_PATH}/*.ice)
         if(EXISTS ${ORIGINAL_PATH}/${RELATIVE_PATH})
-            file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/ice/slice/${RELATIVE_PATH})
+            file(COPY ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/ice/slice/${RELATIVE_PATH}")
         endif()
     endforeach()
 endfunction()
@@ -38,6 +38,7 @@ endfunction()
 vcpkg_list(SET ICE_INCLUDE_SUB_DIRECTORIES
   "Glacier2"
   "Ice"
+  "IceUtil"
   "IceBT"
   "IceBox"
   "IceBT"
@@ -52,6 +53,7 @@ vcpkg_list(SET ICE_INCLUDE_SUB_DIRECTORIES
 
 set(ICE_OPTIONAL_COMPONENTS_MSBUILD "")
 set(ICE_OPTIONAL_COMPONENTS_MAKE "Ice") # Intentional!
+set(pkgconfig_packages "")
 
 # IceSSL
 if("icessl" IN_LIST FEATURES)
@@ -101,6 +103,7 @@ if("icegridtools" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridnode")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridregistry")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "icegridnode")
+    list(APPEND pkgconfig_packages expat)
 endif()
 
 # IceStorm
@@ -129,6 +132,12 @@ endif()
 if("icediscovery" IN_LIST FEATURES)
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icediscovery++11")
     vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceDiscovery")
+endif()
+
+# IceLocatorDiscovery
+if("icelocatordiscovery" IN_LIST FEATURES)
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MSBUILD "/t:C++11\\icelocatordiscovery++11")
+    vcpkg_list(APPEND ICE_OPTIONAL_COMPONENTS_MAKE "IceLocatorDiscovery")
 endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -160,46 +169,46 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(ICE_BUILD_CONFIG "static cpp11-static")
     endif()
-
+    if(NOT VCPKG_BUILD_TYPE)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_build_process(
-        COMMAND make
-            V=1
-            "prefix=${CURRENT_PACKAGES_DIR}/debug"
-            linux_id=vcpkg
-            "CONFIGS=${ICE_BUILD_CONFIG}"
-            USR_DIR_INSTALL=yes
-            OPTIMIZE=no
-            ${ICE_OPTIONAL_COMPONENTS_MAKE}
-            "-j${VCPKG_CONCURRENCY}"
-        WORKING_DIRECTORY ${SOURCE_PATH}/cpp
-        LOGNAME make-${TARGET_TRIPLET}-dbg
-    )
+        vcpkg_execute_build_process(
+            COMMAND make
+                V=1
+                "prefix=${CURRENT_PACKAGES_DIR}/debug"
+                linux_id=vcpkg
+                "CONFIGS=${ICE_BUILD_CONFIG}"
+                USR_DIR_INSTALL=yes
+                OPTIMIZE=no
+                ${ICE_OPTIONAL_COMPONENTS_MAKE}
+                "-j${VCPKG_CONCURRENCY}"
+            WORKING_DIRECTORY ${SOURCE_PATH}/cpp
+            LOGNAME make-${TARGET_TRIPLET}-dbg
+        )
 
-    # Install debug libraries to packages directory
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
-        file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib64/*")
-    else()
-        file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib/*")
-    endif()
-    file(COPY ${ICE_DEBUG_LIBRARIES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        # Install debug libraries to packages directory
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib")
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
+            file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib64/*")
+        else()
+            file(GLOB ICE_DEBUG_LIBRARIES "${UNIX_BUILD_DIR}/cpp/lib/*")
+        endif()
+        file(COPY ${ICE_DEBUG_LIBRARIES} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-    # Clean up for the next round
-    vcpkg_execute_build_process(
-        COMMAND make distclean
-        WORKING_DIRECTORY ${SOURCE_PATH}/cpp
-        LOGNAME make-clean-${TARGET_TRIPLET}
-    )
+        # Clean up for the next round
+        vcpkg_execute_build_process(
+            COMMAND make distclean
+            WORKING_DIRECTORY ${SOURCE_PATH}/cpp
+            LOGNAME make-clean-${TARGET_TRIPLET}
+        )
 
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib")
-        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib")
-    endif()
-    if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
-        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib64")
-    endif()
-    file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/bin")
-
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib")
+            file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib")
+        endif()
+        if(EXISTS "${UNIX_BUILD_DIR}/cpp/lib64")
+            file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/lib64")
+        endif()
+        file(REMOVE_RECURSE "${UNIX_BUILD_DIR}/cpp/bin")
+    endif() # TODO: get-cmake-vars!
     # Release build
     set(ENV{LDFLAGS} "-L${CURRENT_INSTALLED_DIR}/lib")
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
@@ -264,14 +273,16 @@ else() # VCPKG_TARGET_IS_WINDOWS
     )
 
     # Build Ice
-    vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
+    vcpkg_msbuild_install(
+        SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "cpp/msbuild/ice.${VCPKG_PLATFORM_TOOLSET}.sln"
-        SKIP_CLEAN
         TARGET "C++11\\ice++11"
-        USE_VCPKG_INTEGRATION
         OPTIONS
             ${MSBUILD_OPTIONS}
+        DEPENDENT_PKGCONFIG bzip2 ${pkgconfig_packages}
+        ADDITIONAL_LIBS lmdb.lib
+        ADDITIONAL_LIBS_RELEASE mcpp.lib ${libs_rel}
+        ADDITIONAL_LIBS_DEBUG mcppd.lib ${libs_dbg}
     )
 
     if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/zeroc.icebuilder.msbuild.dll")
@@ -303,4 +314,4 @@ list(FILTER PRLIBS INCLUDE REGEX ".*(([Ii]ce[Uu]til|[Ss]lice)d?\.([a-z]+))$")
 file(REMOVE ${PDLIBS} ${PRLIBS})
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/zeroc-ice RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

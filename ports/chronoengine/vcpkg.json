@@ -1,0 +1,32 @@
+{
+  "name": "chronoengine",
+  "version": "8.0.0",
+  "port-version": 1,
+  "description": "Multi-physics Simulation Engine.",
+  "homepage": "https://projectchrono.org/",
+  "license": "BSD-3-Clause",
+  "supports": "(windows & x64 & !static & !uwp) | linux | osx",
+  "dependencies": [
+    "eigen3",
+    "tbb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "irrlicht": {
+      "description": "Default visualization system for interactive 3D viewing of Chrono simulations.",
+      "dependencies": [
+        "irrlicht"
+      ]
+    },
+    "vehicle": {
+      "description": "Enables template-based ground vehicle modeling and simulation within Chrono."
+    }
+  }
+}

@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO epezent/implot
-    REF v0.13
-    SHA512 ed653a14f1174b1689c7b8e5761455644e41e75a3cdf5a76d96adf8e286893418660809c1c158fa405c1c48a82752ae9c3b8e1eb14bd0015081604cdb44d95f4
+    REF v${VERSION}
+    SHA512 117cb08122d900e7db857897bfec4c9ac3300a1d429c8f0303415bc693840baa9bbbb91ca3f13853d8efd3a6ebf538b7114401d4fbfe0d067256e58cbdbd4919
     HEAD_REF master
 )
 
@@ -21,4 +21,4 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

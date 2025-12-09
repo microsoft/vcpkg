@@ -1,7 +1,7 @@
 {
   "name": "qttools",
-  "version": "6.3.1",
-  "description": "Qt Tools",
+  "version": "6.9.3",
+  "description": "A collection of tools and utilities that come with the Qt framework to assist developers in the creation, management, and deployment of Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
@@ -14,7 +14,6 @@
       "host": true,
       "default-features": false,
       "features": [
-        "assistant",
         "linguist"
       ]
     }
@@ -24,11 +23,25 @@
       "description": "Build Qt Assistant",
       "dependencies": [
         {
+          "name": "litehtml",
+          "default-features": false
+        },
+        {
           "name": "qtbase",
           "default-features": false,
           "features": [
             "network",
-            "sql-sqlite"
+            "png",
+            "sql-sqlite",
+            "widgets"
+          ]
+        },
+        {
+          "name": "qttools",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "assistant"
           ]
         }
       ]
@@ -40,7 +53,9 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "network"
+            "network",
+            "png",
+            "widgets"
           ]
         }
       ]
@@ -57,10 +72,31 @@
         }
       ]
     },
-    "qdoc": {
-      "description": "Build QDoc.",
+    "qdbus": {
+      "description": "Build QDBusViewer",
       "dependencies": [
-        "llvm"
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "dbus",
+            "widgets"
+          ]
+        }
+      ]
+    },
+    "qdoc": {
+      "description": "Build QDoc",
+      "supports": "!android",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false,
+          "features": [
+            "clang",
+            "enable-rtti"
+          ]
+        }
       ]
     },
     "qml": {
@@ -70,7 +106,8 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "gui"
+            "gui",
+            "widgets"
           ]
         },
         {

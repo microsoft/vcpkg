@@ -1,31 +1,29 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO knik0/faad2
-    REF 043d37b60cdded2abed7c4054f954e # 2_9_1
-    SHA512 8658256bbcb3ce641eef67c4f5d22d54b348805a06b2954718a44910861a9882371c887feb085060c524f955993ae26c211c6bb4fb8d95f9e9d1d0b5dca0ebe4
+    REF "${VERSION}"
+    SHA512 b8f17680610b2f47344ea52b54412a02810a85eaf9d4c91b97ca09b2c6415c62d4af1b0771bfcacb9dfee400ed34504c0bd3c28369921c0392b3809e7de46ec5
     HEAD_REF master
     PATCHES
-        0001-Fix-non-x86-msvc.patch    # https://github.com/knik0/faad2/pull/42
-        0002-Fix-unary-minus.patch     # https://github.com/knik0/faad2/pull/43
-        0003-Initialize-pointers.patch # https://github.com/knik0/faad2/pull/44
-)
-
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    build-decoder   FAAD_BUILD_BINARIES
+        fix-install.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES faad_cli AUTO_CLEAN)
+else()
+    vcpkg_copy_tools(TOOL_NAMES faad AUTO_CLEAN)
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

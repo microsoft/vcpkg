@@ -1,0 +1,25 @@
+diff --git a/ThirdParty/ioss/CMakeLists.txt b/ThirdParty/ioss/CMakeLists.txt
+index 3066c4bb5..44e1eb1bf 100644
+--- a/ThirdParty/ioss/CMakeLists.txt
++++ b/ThirdParty/ioss/CMakeLists.txt
+@@ -5,7 +5,7 @@ vtk_module_third_party(
+     STANDARD_INCLUDE_DIRS
+   EXTERNAL
+     PACKAGE SEACASIoss
+-    TARGETS Ioss
++    TARGETS Ioss Ionit
+     USE_VARIABLES SEACASIoss_INCLUDE_DIRS
+     STANDARD_INCLUDE_DIRS)
+ 
+diff --git a/IO/IOSS/vtkIOSSReader.cxx b/IO/IOSS/vtkIOSSReader.cxx
+index 04de56cb20..b905e84a3e 100644
+--- a/IO/IOSS/vtkIOSSReader.cxx
++++ b/IO/IOSS/vtkIOSSReader.cxx
+@@ -61,6 +61,7 @@
+ #include VTK_IOSS(Ioss_SideBlock.h)
+ #include VTK_IOSS(Ioss_SideSet.h)
+ #include VTK_IOSS(Ioss_StructuredBlock.h)
++#include VTK_IOSS(Iotr_Factory.h)
+ // clang-format on
+ 
+ #include <array>

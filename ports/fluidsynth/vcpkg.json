@@ -1,31 +1,36 @@
 {
   "name": "fluidsynth",
-  "version": "2.2.8",
+  "version": "2.5.1",
   "description": "FluidSynth reads and handles MIDI events from the MIDI input device. It is the software analogue of a MIDI synthesizer. FluidSynth can also play midifiles using a Soundfont.",
   "homepage": "https://github.com/FluidSynth/fluidsynth",
   "license": "LGPL-2.1-or-later",
+  "supports": "!(uwp | xbox)",
   "dependencies": [
     {
       "name": "alsa",
       "platform": "linux"
     },
     {
-      "name": "fluidsynth",
-      "host": true,
-      "default-features": false,
-      "features": [
-        "buildtools"
-      ]
-    },
-    "glib",
-    {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],
   "features": {
-    "buildtools": {
-      "description": "Build tools gentables"
+    "libinstpatch": {
+      "description": "Use libinstpatch for DLS support. Required if C++17 is not available",
+      "dependencies": [
+        "glib"
+      ]
+    },
+    "pulseaudio": {
+      "description": "Build with PulseAudio support",
+      "dependencies": [
+        "pulseaudio"
+      ]
     },
     "sndfile": {
       "description": "Enable rendering to file and SF3 support",

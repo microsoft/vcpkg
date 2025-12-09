@@ -1,12 +1,11 @@
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/orc
-    REF 23ecc03e87548f6d6783c2d8af2b46672c52214c  # rel/release-1.6.4
-    SHA512 907984c7e036ddaa90e7cbfabb9af4f6fd3520820b9a8732b304f2213030f7d67cef89ad87d50e028a51bff06f68ff359345ad6894850e299b2fca343d7c0c3e
-    HEAD_REF master
-    PATCHES
-        0003-dependencies-from-vcpkg.patch
-        0005-disable-tzdata.patch
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO apache/orc
+  REF "v${VERSION}"
+  SHA512 eabee16a6e984452a8cb715d0524041b20dd1bd88d78bb32534db93e5dbdd786aa4df8c05975406cb0728241eb3025a506c4fefb8c334ef0d8a27e6cb920d44c
+  HEAD_REF master
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindGTest.cmake")
@@ -15,8 +14,6 @@ file(REMOVE "${SOURCE_PATH}/cmake_modules/FindZSTD.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindProtobuf.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindSnappy.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake_modules/FindZLIB.cmake")
-
-set(PROTOBUF_EXECUTABLE "${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
   set(BUILD_TOOLS OFF)
@@ -43,9 +40,9 @@ vcpkg_cmake_configure(
     -DBUILD_JAVA=OFF
     -DINSTALL_VENDORED_LIBS=OFF
     -DBUILD_LIBHDFSPP=OFF
-    -DPROTOBUF_EXECUTABLE:FILEPATH=${PROTOBUF_EXECUTABLE}
     -DSTOP_BUILD_ON_WARNING=OFF
     -DENABLE_TEST=OFF
+    -DORC_PACKAGE_KIND=vcpkg
   MAYBE_UNUSED_VARIABLES
     ENABLE_TEST
 )
@@ -64,9 +61,12 @@ if(NOT BINS)
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

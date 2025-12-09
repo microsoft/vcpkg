@@ -4,8 +4,8 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/fbgemm
-    REF 51bc2ecc7086980fd9e6190163b04486cd37ac2a
-    SHA512 43e59ff25ec9365061be6a8db7ec592f096e74897e338dd3e17401f2188986cf3b7e26f82f7c1e2adf34496fb32cb4b50d40731bee3bf9fa5b1f2ac92a09e671
+    REF 73a64e75ff31be7ece6f68929ee5682b0bf9eb10
+    SHA512 2757d986a977d14bd32d482452627b55aae216f77a262b2b1b88a643a2977c6c27c5a99ee91b7a7bdbb66248239ecc1a57d1953251049d787317b6355369af26
     PATCHES
         fix-cmakelists.patch
 )
@@ -20,7 +20,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME fbgemmLibrary CONFIG_PATH share/cmake/${PORT})
+vcpkg_cmake_config_fixup(PACKAGE_NAME fbgemmLibrary)
 
 # this internal header is required by pytorch
 file(INSTALL     "${SOURCE_PATH}/src/RefImplementations.h"

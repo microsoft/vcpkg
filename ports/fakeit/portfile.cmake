@@ -1,11 +1,26 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eranpeer/FakeIt
-    REF 38c118c2be2fe33148545b1c32dc568eeabe1f23 #v2.1.1
-    SHA512 32b91a1d2fc156cd2293774fea0196492356411ad2437acde1488e087a62f921e13dd75d850be3d50c380e3d525759273eba5b40771fe140581d5ffaefe16842
+    REF "${VERSION}"
+    SHA512 19ed2000837574598f72f28b42a4ecc7f3a7f46f69b744025521f6668da469fefbbf91f30d00460d3a7d72722fec2030d43365272953947bb530f04c707e5d65
     HEAD_REF master
 )
 
-file(COPY "${SOURCE_PATH}/single_header/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+set(VCPKG_BUILD_TYPE release) # header-only port
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_INSTALL_INCLUDEDIR=include/fakeit/single_header
+        -DENABLE_TESTING=OFF
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FakeIt)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,41 +1,23 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-set(OPTIONS -DSHARED=OFF)
-
-set(METIS_VERSION 5.1.0)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-${METIS_VERSION}.tar.gz"
-    FILENAME "metis-${METIS_VERSION}.tar.gz"
-    SHA512 deea47749d13bd06fbeaf98a53c6c0b61603ddc17a43dae81d72c8015576f6495fd83c11b0ef68d024879ed5415c14ebdbd87ce49c181bdac680573bea8bdb25
-)
-
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${METIS_VERSION}
+vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
+    REPO KarypisLab/METIS
+    REF a6e6a2cfa92f93a3ee2971ebc9ddfc3b0b581ab2
+    SHA512 c41168788c287ed9baea3c43c1ea8ef7d0bbdaa340a03cbbb5d0ba2d928d8a6dd83e2b77e7d3fabc58ac6d2b59a4be0492940e31460fe5e1807849cb98e80d2e
     PATCHES
-        enable-install.patch
-        disable-programs.patch
-        fix-runtime-install-destination.patch
-        fix-metis-vs14-math.patch
-        fix-gklib-vs14-math.patch
-        fix-linux-build-error.patch
-        install-metisConfig.patch
-        fix-INT_MIN_define.patch
+        build-fixes.patch
 )
+file(COPY "${SOURCE_PATH}/include/" DESTINATION "${SOURCE_PATH}/build/xinclude")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/install_config.cmake" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${OPTIONS}
-)
-
-vcpkg_install_cmake()
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/metis)
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/metis.h" "#ifdef _WINDLL" "#if 1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/metis.h" "__declspec(dllexport)" "__declspec(dllimport)")
+endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/metis)
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

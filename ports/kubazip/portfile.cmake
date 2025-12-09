@@ -1,22 +1,29 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kuba--/zip
-    REF 96924c94dabe362bbb1588aa70209e638e6fb35c
-    SHA512 bc3e9ecf39d54321314d09209f356a2491893591a016b1619abcdea8c1fb1fa8ba1f9858f4e758641df083ed237a2ec9f0af13e0f1d802502257644168ae8907
+    REF "v${VERSION}"
+    SHA512 2bd11d2f7c33a882a32da764c1b19cb6fad3d2453e6d2004b60d6986c098dd5df5d66171857fd2737125622e7d17fc35e851e7ef0e0315e227bf69458518b5da
     HEAD_REF master
     PATCHES
-        fix_targets.patch
+        fix-name-conflict.diff
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_DISABLE_TESTING=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/kubazip)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/zip" PACKAGE_NAME "zip-kuba--")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/kubazip/zip/zip.h" "#ifndef ZIP_SHARED" "#if 0")
+endif()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/UNLICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+# legacy polyfill
+file(INSTALL "${CURRENT_PORT_DIR}/kubazipConfig.cmake" "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

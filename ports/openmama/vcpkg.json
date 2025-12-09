@@ -1,13 +1,30 @@
 {
   "name": "openmama",
-  "version-semver": "6.3.1",
-  "port-version": 1,
+  "version-semver": "6.3.2",
+  "port-version": 3,
   "description": "OpenMAMA is a high performance vendor neutral lightweight wrapper that provides a common API interface to different middleware and messaging solutions across a variety of platforms and languages",
   "homepage": "https://github.com/finos/OpenMAMA",
-  "supports": "windows & (x64 | x86)",
+  "license": "LGPL-2.1",
+  "supports": "!xbox",
   "dependencies": [
     "apr",
+    "apr-util",
     "libevent",
-    "qpid-proton"
+    {
+      "name": "libuuid",
+      "platform": "!windows & !osx"
+    },
+    {
+      "name": "qpid-proton",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

@@ -5,5 +5,11 @@ vcpkg_from_github(
     SHA512 c37c0df1dd3f7bc1dfcceea83ed9303cf9388ba400ee645f26a24bca50bf85209f7b8a2169f6b98b0267ece986a29a27605ff3eaef50a44629fb7e042d06f26a
 )
 
-file(COPY ${SOURCE_PATH}/strtk.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/strtk)
+file(COPY "${SOURCE_PATH}/strtk.hpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+if("boost" IN_LIST FEATURES)
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/strtk.hpp" "#ifndef strtk_no_tr1_or_boost" "#if 0")
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${CMAKE_CURRENT_LIST_DIR}/copyright")

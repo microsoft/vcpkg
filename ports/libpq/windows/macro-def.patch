@@ -1,0 +1,18 @@
+diff --git a/src/include/common/checksum_helper.h b/src/include/common/checksum_helper.h
+index cac7570ea..d0ca1243c 100644
+--- a/src/include/common/checksum_helper.h
++++ b/src/include/common/checksum_helper.h
+@@ -33,7 +28,13 @@
+  */
+ typedef enum pg_checksum_type
+ {
++#pragma push_macro("CHECKSUM_TYPE_NONE")
++#ifdef CHECKSUM_TYPE_NONE
++// winioctl.h defines CHECKSUM_TYPE_NONE to 0 as a macro. 
++#undef CHECKSUM_TYPE_NONE
++#endif
+ 	CHECKSUM_TYPE_NONE,
++#pragma pop_macro("CHECKSUM_TYPE_NONE")
+ 	CHECKSUM_TYPE_CRC32C,
+ 	CHECKSUM_TYPE_SHA224,
+ 	CHECKSUM_TYPE_SHA256,

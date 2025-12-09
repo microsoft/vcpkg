@@ -1,13 +1,28 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sbmlteam/libsbml
-    REF 118ffbf11f1a5245cc544c1eac71019d979ecb20 #libSBML-5.19.0
-    SHA512 7fe8b4d594876c6408e01c646187cb1587d0b4e12707a43286150d4e4646841e547bde971de917de1cdfbbb9365172aeac43c8e02f7d354400f9166f0f1c2c3d
+    REF "v${VERSION}"
+    SHA512 d4960b2ef12d00ae93ea883f945acf435a99763a0e2e751d94a15c7ff22fd41ff31cb16c1f37aa23257b3eb0de894201420962b008a6fe43ef0511fa2612846a
     HEAD_REF development
+    PATCHES
+        dependencies.diff
+        dirent.diff
+        no-docs.diff
+        test-shared.diff
+)
+file(REMOVE
+    "${SOURCE_PATH}/CMakeModules/FindBZ2.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindEXPAT.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindLIBXML.cmake"
+    "${SOURCE_PATH}/CMakeModules/FindZLIB.cmake"
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC_LIBRARY)
+
+if("expat" IN_LIST FEATURES AND "libxml2" IN_LIST FEATURES)
+    message(WARNING "Feature expat conflicts with feature libxml2. Selecting libxml2.")
+    list(REMOVE_ITEM FEATURES "expat")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -18,71 +33,52 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         multi       ENABLE_MULTI
         qual        ENABLE_QUAL
         render      ENABLE_RENDER
-        render      ENABLE_LAYOUT
         bzip2       WITH_BZIP2
+        expat       WITH_EXPAT
+        libxml2     WITH_LIBXML
         zlib        WITH_ZLIB
         test        WITH_CHECK
         namespace   WITH_CPP_NAMESPACE
 )
 
-# Handle conflict features
-set(WITH_EXPAT OFF)
-if ("expat" IN_LIST FEATURES)
-    set(WITH_EXPAT ON)
-endif()
-
-set(WITH_LIBXML OFF)
-if ("libxml2" IN_LIST FEATURES)
-    set(WITH_LIBXML ON)
-endif()
-
-if (WITH_EXPAT AND WITH_LIBXML)
-    message("Feature expat conflict with feature libxml2, currently using libxml2...")
-    set(WITH_EXPAT OFF)
-endif()
-
-if ("test" IN_LIST FEATURES AND WIN32)
-    message(FATAL_ERROR "Feature test only support UNIX.")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${FEATURE_OPTIONS}
-        -DWITH_EXPAT=${WITH_EXPAT}
-        -DWITH_LIBXML=${WITH_LIBXML}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DENABLE_L3V2EXTENDEDMATH:BOOL=ON
         -DWITH_STATIC_RUNTIME=${STATIC_RUNTIME}
-        -DLIBSBML_SKIP_SHARED_LIBRARY=${STATIC_LIBRARY}
+        -DWITH_SWIG=OFF
+    MAYBE_UNUSED_VARIABLES
+        WITH_STATIC_RUNTIME
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
-
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
+
+foreach(name IN ITEMS libsbml libsbml-static sbml sbml-static)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${name}-config.cmake")
+        vcpkg_cmake_config_fixup(PACKAGE_NAME "${name}" CONFIG_PATH lib/cmake)
+        if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake")
+            configure_file("${CURRENT_PORT_DIR}/libsbml-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" @ONLY)
+        endif()
+        break()
+    endif()
+endforeach()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sbml/common/extern.h" "defined LIBSBML_STATIC" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/sbml/xml/XMLExtern.h" "defined(LIBLAX_STATIC)" "1")
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libsbml.pc" " -lsbml" " -lsbml-static")
+        if(NOT VCPKG_BUILD_TYPE)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libsbml.pc" " -lsbml" " -lsbml-static")
+        endif()
+    endif()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(GLOB TXT_FILES "${CURRENT_PACKAGES_DIR}/debug/*.txt")
-if (TXT_FILES)
-    file(REMOVE ${TXT_FILES})
-endif()
-file(GLOB TXT_FILES "${CURRENT_PACKAGES_DIR}/*.txt")
-if (TXT_FILES)
-    file(REMOVE ${TXT_FILES})
-endif()
-
-if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/share")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-endif()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/README.md")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.md")
-endif()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/README.md")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.md")
-endif()
-
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-vcpkg_fixup_pkgconfig()
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

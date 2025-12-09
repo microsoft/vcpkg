@@ -1,40 +1,38 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO awslabs/aws-c-cal
-    REF c4c5b175e05f2affe5e3f0203ca6c8bc5cdd8f51 # v0.5.12
-    SHA512 25dd1d7f207f1324aed418555dda1c3d4ec64baf76431c9efd88fd3c34b163a2e5a6778192d2c0caf937f3efd31b2f21e6a0d0f7230684d176164da0e8bcc92e
+    REF "v${VERSION}"
+    SHA512 62b84c3bbe9deb1618c66e29f2211c4462fdd85a1a71d63cc815f57cdbde653e659435630471c067688bf0975825717ee1148ab4e1c25e764e37917fb59dff11
     HEAD_REF master
-    PATCHES fix-cmake-target-path.patch
-            remove-libcrypto-messages.patch
+    PATCHES remove-libcrypto-messages.patch
 )
+
+if (NOT (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX))
+    set(USE_OPENSSL ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         "-DCMAKE_MODULE_PATH=${CURRENT_INSTALLED_DIR}/share/aws-c-common" # use extra cmake files
         -DBUILD_TESTING=FALSE
+        -DUSE_OPENSSL=${USE_OPENSSL}
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/aws-c-cal/cmake)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE 
-        "${CURRENT_PACKAGES_DIR}/bin"
-        "${CURRENT_PACKAGES_DIR}/debug/bin"
-    )
-endif()
+string(REPLACE "dynamic" "shared" subdir "${VCPKG_LIBRARY_LINKAGE}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}/${subdir}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/${PORT}-config.cmake" [[/${type}/]] "/")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/aws-c-cal"
-    "${CURRENT_PACKAGES_DIR}/lib/aws-c-cal"
-    )
+    "${CURRENT_PACKAGES_DIR}/debug/lib/${PORT}"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/lib/${PORT}"
+)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE	"${CURRENT_PACKAGES_DIR}/debug/share")
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

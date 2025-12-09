@@ -1,41 +1,80 @@
 {
   "name": "libosmscout",
-  "version-string": "1.1.1",
+  "version": "1.1.1",
+  "port-version": 8,
   "description": "libosmscout offers applications simple, high-level interfaces for offline location and POI lokup, rendering and routing functionalities based on OpenStreetMap (OSM) data.",
-  "homepage": "http://libosmscout.sourceforge.net/",
-  "documentation": "http://libosmscout.sourceforge.net/documentation/",
-  "supports": "!uwp & !arm & !arm64 & !static & !wasm32 & !emscripten",
+  "homepage": "https://libosmscout.sourceforge.net/",
+  "documentation": "https://libosmscout.sourceforge.net/documentation/",
+  "supports": "!uwp",
   "dependencies": [
     "libiconv",
     "liblzma",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ],
   "features": {
     "cairo": {
       "description": "Cairo backend renderer",
       "dependencies": [
-        "cairo",
-        "freetype",
-        "harfbuzz",
+        {
+          "name": "cairo",
+          "default-features": false
+        },
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        },
         "libpng",
         "pango"
       ]
     },
     "directx": {
-      "description": "Direct2D backend renderer"
+      "description": "Direct2D backend renderer",
+      "supports": "windows"
     },
     "gdi": {
-      "description": "GDI+ backend renderer"
+      "description": "GDI+ backend renderer",
+      "supports": "windows"
+    },
+    "qt5": {
+      "description": "Enable build of Qt5 map drawing backend",
+      "dependencies": [
+        "qt5-base",
+        "qt5-svg"
+      ]
     },
     "svg": {
       "description": "SVG backend renderer",
       "dependencies": [
-        "freetype",
-        "harfbuzz",
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        },
         "pango"
       ]
+    },
+    "tools": {
+      "description": "Install tools"
     }
   }
 }

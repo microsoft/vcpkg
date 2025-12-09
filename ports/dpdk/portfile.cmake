@@ -1,4 +1,4 @@
-if(VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX AND VCPKG_HOST_IS_LINUX)
   execute_process(
     COMMAND uname --kernel-release
     OUTPUT_VARIABLE KERNEL_VERSION
@@ -24,17 +24,20 @@ if(VCPKG_TARGET_IS_LINUX)
   endif()
 endif()
 
-set(PORT_VERSION 22.03)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
-  REF v${PORT_VERSION}
-  SHA512 ff80a9f87e71cd743ea5e62f515849bc6746fe7496a0d4b63ecf2bfe0d88da74f0e6c0257c07838c1f9ff41abd81827932b97731fb0fce60d56a8bab7e32347c
+  REF "v${VERSION}"
+  SHA512 0d0ee4eb70e8021882a1d6548cf757972388c0a561ee71bb0e4b330be61f1463f4eaec55202d7a35eef8b392ecf0b3888713692ba8cd88f850e7b9072504733e
   HEAD_REF main
   PATCHES
-      enable-either-static-or-shared-build.patch
-      remove-examples-src-from-datadir.patch
-      stop-building-apps.patch)
+      0001-enable-either-static-or-shared-build.patch
+      0002-fix-dependencies.patch
+      0003-remove-examples-src-from-datadir.patch
+      0004-stop-building-apps.patch
+      0005-no-absolute-driver-path.patch
+      rename-sched.h.diff
+)
 
 macro(append_bool_option feature_name option_name)
   if("${feature_name}" IN_LIST FEATURES)
@@ -44,43 +47,56 @@ macro(append_bool_option feature_name option_name)
   endif()
 endmacro()
 
+set(DPDK_OPTIONS "")
+set(DPDK_OPTIONS_RELEASE "")
 append_bool_option("docs" "enable_docs")
 append_bool_option("kmods" "enable_kmods")
 append_bool_option("tests" "tests")
 append_bool_option("trace" "enable_trace_fp")
 
-list(APPEND PYTHON_PACKAGES pyelftools)
+set(PYTHON_PACKAGES "")
+if(VCPKG_TARGET_IS_WINDOWS)
+  # https://doc.dpdk.org/guides/windows_gsg/build_dpdk.html#option-3-native-build-on-windows-using-msvc
+  list(APPEND DPDK_OPTIONS "-Denable_stdatomic=true")
+else()
+  list(APPEND PYTHON_PACKAGES pyelftools)
+endif()
 if("docs" IN_LIST FEATURES)
+  list(APPEND DPDK_OPTIONS_RELEASE "-Denable_docs=true")
+  vcpkg_find_acquire_program(DOXYGEN)
   list(APPEND PYTHON_PACKAGES packaging sphinx)
 endif()
-x_vcpkg_get_python_packages(PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
+if(PYTHON_PACKAGES)
+  x_vcpkg_get_python_packages(OUT_PYTHON_VAR PYTHON3 PYTHON_VERSION "3" PACKAGES ${PYTHON_PACKAGES})
+endif()
 
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH} OPTIONS
-                      -Ddisable_drivers=regex/cn9k -Dexamples= ${DPDK_OPTIONS})
+vcpkg_configure_meson(SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -Ddeveloper_mode=disabled
+    -Ddisable_drivers=regex/cn9k
+    ${DPDK_OPTIONS}
+  OPTIONS_RELEASE
+    ${DPDK_OPTIONS_RELEASE}
+  ADDITIONAL_BINARIES
+    "doxygen = ['${DOXYGEN}']"
+)
 vcpkg_install_meson()
-
-vcpkg_copy_tools(TOOL_NAMES dpdk-devbind.py dpdk-pmdinfo.py dpdk-telemetry.py
-                 dpdk-hugepages.py AUTO_CLEAN)
-
 vcpkg_fixup_pkgconfig()
 
-vcpkg_find_acquire_program(PKGCONFIG)
-configure_file(
-  "${CMAKE_CURRENT_LIST_DIR}/unofficial-${PORT}-config.cmake.in"
-  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
-  @ONLY)
+file(GLOB scripts "${CURRENT_PACKAGES_DIR}/bin/*.py")
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+foreach(script IN LISTS scripts)
+  cmake_path(GET script FILENAME filename)
+  file(RENAME "${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${filename}")
+  file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${filename}")
+endforeach()
+vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+if("docs" IN_LIST FEATURES)
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+  file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc/dpdk" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
+endif()
 
-file(
-  INSTALL "${SOURCE_PATH}/license/README"
-  DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-  RENAME copyright)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/doc")
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config-version.cmake"
-  VERSION ${PORT_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license/README")

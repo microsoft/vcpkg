@@ -1,7 +1,9 @@
 {
   "name": "cppxaml",
   "version": "0.0.16",
+  "port-version": 1,
   "description": "CppXaml is a library to facilitate usage of the XAML UI framework in C++ Windows apps.",
   "homepage": "https://asklar.github.io/xaml-islands",
-  "supports": "windows"
+  "license": "MIT",
+  "supports": "windows & !xbox"
 }

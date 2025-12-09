@@ -1,0 +1,16 @@
+{
+  "name": "portable-file-dialogs",
+  "version": "0.1.0",
+  "description": "Portable GUI dialogs library",
+  "homepage": "https://github.com/samhocevar/portable-file-dialogs",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

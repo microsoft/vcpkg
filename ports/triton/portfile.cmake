@@ -1,12 +1,11 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO JonathanSalwan/Triton
-  REF 243026c9c1e07a5ca834c4aaf628d1079f6a85ea
-  SHA512 9e46c500203647de545286b78a7d4ae6da1796b8eed30fe7346ae6e51865ef70de1adb858c402c3687c471ad654cc6aefdff8893196f5ef7b45e4cee6dd9c577
+  REF e312eafcdf507d9aebd0f8a7daf2eb4c28a19d30
+  SHA512 eb184859fe3023f188f7828335924da36c45dea90dc1ece7d8cf770dc7951022d4e51647cdd520e9bc91a8e01cab4a8801808e469900bdbbc3806624c132ad8d
+  HEAD_REF master
   PATCHES
-    001-fix-dependency-z3.patch
-    002-fix-capstone-5.patch
-    003-fix-python.patch
+    fix_bin_path.patch
 )
 
 string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DYNAMICLIB)
@@ -20,7 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 set(ADDITIONAL_OPTIONS "")
 if(PYTHON_BINDINGS)
-    vcpkg_find_acquire_program(PYTHON3)
+    vcpkg_get_vcpkg_installed_python(PYTHON3)
     list(APPEND ADDITIONAL_OPTIONS
         "-DPYTHON_EXECUTABLE=${PYTHON3}"
     )
@@ -31,7 +30,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DZ3_INTERFACE=ON
-        -DTRITON_BOOST_INTERFACE=OFF
         -DBUILD_SHARED_LIBS=${DYNAMICLIB}
         -DMSVC_STATIC=${STATICCRT}
         -DBUILD_EXAMPLES=OFF
@@ -50,4 +48,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

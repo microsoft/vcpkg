@@ -1,0 +1,13 @@
+diff --git a/gme/CMakeLists.txt b/gme/CMakeLists.txt
+index b1b2bf0aee0d79dbeb76fd46756ad9709af57ae3..aacb5a8067f77cfeac560d65cc1538dd75008c9b 100644
+--- a/gme/CMakeLists.txt
++++ b/gme/CMakeLists.txt
+@@ -17,7 +17,7 @@ set(libgme_SRCS Blip_Buffer.cpp
+ # static builds need to find static zlib (and static forms of other needed
+ # libraries.  Ensure CMake looks only for static libs if we're doing a static
+ # build.  See https://stackoverflow.com/a/44738756
+-if(NOT BUILD_SHARED_LIBS)
++if(0)
+     set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+ endif()
+ 

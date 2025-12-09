@@ -1,8 +1,10 @@
+
+string(REPLACE "." "" LIBSVM_VERSION "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cjlin1/libsvm
-    REF v325
-    SHA512 D5323B128DFCDC7F64B2161E70FA7999C0A93D47C90B366BE066AA01EA92B5817F04812DEF2E05469DEE1F26C6A83DA5E50EEAE3F50B4062D9B24AC0944C6203
+    REF "v${LIBSVM_VERSION}"
+    SHA512 b05d1153c17bb585495785372810807ff695afbda23dd88ecb67a282d7c752068e2a0f6fa779aca2132c6bf3396bdf10b97665849e4aae4c76de98c2f095beab
     HEAD_REF master
 )
 
@@ -29,7 +31,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-${PORT}" CONFIG_PATH "share/unofficial-${PORT}")
 
 if("tools" IN_LIST FEATURES)
-    if(WIN32)
+    if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(TOOL_NAMES svm-predict svm-scale svm-toy svm-train AUTO_CLEAN)
     else()
         vcpkg_copy_tools(TOOL_NAMES svm-predict svm-scale svm-train AUTO_CLEAN)

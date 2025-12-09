@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariusbancila/stduuid
-    REF v1.2.2
-    SHA512 30970c25992e1ba35d96e3b2fc8530466c1070b8b913b8c37e9f698f39121a5a74361e2c4db4c2ba2feddb0ce9b2f14b78c4761cdac09b89a6a0117b179b08a7
+    REF "v${VERSION}"
+    SHA512 3d2fb21f680fb12559642d6787a5744d4f4fb48a6284bfef77537cb51f9bdbbe271b24a8c3bb1f954b4c845145f22c6d89a09e663df2f96a2e24d1d6f22fdf22
     HEAD_REF master
     PATCHES
         fix-install-directory.patch
@@ -20,15 +20,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gsl-span UUID_USING_CXX20_SPAN
 )
 
-vcpkg_cmake_configure(SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -DUUID_BUILD_TESTS=OFF
+        -DUUID_ENABLE_INSTALL=ON
         ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 if("gsl-span" IN_LIST FEATURES)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/stduuid/uuid.h" "#ifdef __cpp_lib_span" "#if 0")
@@ -37,4 +38,4 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/stduuid/uuid.h" "#ifdef __cpp_lib_span" "#if 1")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

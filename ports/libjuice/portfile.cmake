@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libjuice
-    REF e7218e30fef3cd4437355aca817fa0980863973a #v1.0.2
-    SHA512 b54c827774509915e98faec9891b5121ff50c01c33081480b805ca2f0910f26446cb75d7f721a0b8dfcc87ea7988c7020793befd2788ed132c0f608d434c7eca
+    REF "v${VERSION}"
+    SHA512 20800c54231188982f75bf823e1a450c6e501247fdb7348f4dc1dfaee6c6bf1394b681cd7e576156ddf2a1936668ebda10a1e74b9778f5bdd2a46c26173b68ac
     HEAD_REF master
     PATCHES
-        fix-for-vcpkg.patch
+        dependencies.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -21,10 +21,13 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LibJuice)
+vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/juice/juice.h" "#ifndef JUICE_STATIC" "#if 0")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME LibJuice CONFIG_PATH lib/cmake/LibJuice)
-vcpkg_fixup_pkgconfig()
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,0 +1,96 @@
+diff --git a/util/StrDefs.ct b/util/StrDefs.ct
+index b597b2051..b682255ad 100644
+--- a/util/StrDefs.ct
++++ b/util/StrDefs.ct
+@@ -46,6 +46,8 @@ SOFTWARE.
+ ******************************************************************/
+ 
+ #define Const const
++#include "StringDefs.h"
++#include "Shell.h"
+ 
+ <<<STRING_TABLE_GOES_HERE>>>
+ 
+diff --git a/util/StrDefs.ht b/util/StrDefs.ht
+index 2ce20562f..ceab2610f 100644
+--- a/util/StrDefs.ht
++++ b/util/StrDefs.ht
+@@ -52,6 +52,18 @@ SOFTWARE.
+ #define _XtStringDefs_h_Const const
+ #endif
+ 
++#ifndef XT_EXTERN_API
++# if defined(_MSC_VER) && defined(XT_DLL_EXPORTS)
++#  ifdef XT_BUILD
++#   define XT_EXTERN_API extern __declspec(dllexport)
++#  else
++#   define XT_EXTERN_API extern __declspec(dllimport)
++#  endif
++# else
++#  define XT_EXTERN_API extern
++# endif
++#endif
++
+ <<<STRING_TABLE_GOES_HERE>>>
+ 
+ #ifndef XTSTRINGDEFINES
+diff --git a/util/string.list b/util/string.list
+index 49ba7476e..753c592b3 100644
+--- a/util/string.list
++++ b/util/string.list
+@@ -6,7 +6,7 @@
+ 
+ #prefix Xt
+ #feature XTSTRINGDEFINES
+-#externref extern
++#externref XT_EXTERN_API
+ #externdef
+ ! note that the trailing space is required in the #externdef line.
+ #ctmpl util/StrDefs.ct
+diff --git a/util/Shell.ht b/util/Shell.ht
+index 500e0fd75..ac8fc2a2e 100644
+--- a/util/Shell.ht
++++ b/util/Shell.ht
+@@ -64,6 +64,18 @@ SOFTWARE.
+ #define _XtShell_h_Const const
+ #endif
+ 
++#ifndef XT_EXTERN_API
++# if defined(_MSC_VER) && defined(XT_DLL_EXPORTS)
++#  ifdef XT_BUILD
++#   define XT_EXTERN_API extern __declspec(dllexport)
++#  else
++#   define XT_EXTERN_API extern __declspec(dllimport)
++#  endif
++# else
++#  define XT_EXTERN_API extern
++# endif
++#endif
++
+ <<<STRING_TABLE_GOES_HERE>>>
+ 
+ #ifndef XTSTRINGDEFINES
+diff --git a/include/X11/Intrinsic.h b/include/X11/Intrinsic.h
+index 559697aa0..d11eb0955 100644
+--- a/include/X11/Intrinsic.h
++++ b/include/X11/Intrinsic.h
+@@ -106,7 +106,18 @@ typedef char *String;
+ #define externalref globalref
+ #define externaldef(psect) globaldef {"psect"} noshare
+ #else
+-#define externalref extern
++#ifndef XT_EXTERN_API
++# if defined(_MSC_VER) && defined(XT_DLL_EXPORTS)
++#  ifdef XT_BUILD
++#   define XT_EXTERN_API extern __declspec(dllexport)
++#  else
++#   define XT_EXTERN_API extern __declspec(dllimport)
++#  endif
++# else
++#  define XT_EXTERN_API extern
++# endif
++#endif
++#define externalref XT_EXTERN_API
+ #define externaldef(psect)
+ #endif /* VMS */
+ 

@@ -3,17 +3,17 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookexperimental/libunifex
-    REF 9df21c58d34ce8a1cd3b15c3a7347495e29417a0
-    SHA512 2a1c6dbe0e66893be888c301e53b5d2813049047a817e9e1562acf2dec4ae79dec7db90409cd415c59238f2f3e2738e52f86a424041459390c720568ee52d860 
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 9625a248b9ed43f7ac8e3da054020e7c5c71d3da253cfa587ee62eb8a1d4cfee794758b7d28896e4038c1924b204c92be7230c20cf525684e2c304ceaa4a6321
+    HEAD_REF main
     PATCHES
         fix-compile-error.patch
+        fix-linux-timespec.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        test    BUILD_TESTING
-        test    UNIFEX_BUILD_EXAMPLES
+        coroutines CXX_COROUTINES_HAVE_COROUTINES
 )
 
 vcpkg_cmake_configure(
@@ -21,6 +21,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DCMAKE_CXX_STANDARD:STRING=20
+        -DBUILD_TESTING=OFF
+        -DUNIFEX_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

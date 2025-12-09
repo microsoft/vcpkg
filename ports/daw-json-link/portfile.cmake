@@ -2,11 +2,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO beached/daw_json_link
-    REF 6275cd9dadfed96e1b21e552657680ea9fce24cb  #v3.0.4
-    SHA512 7ba326480047b1cfc3cf40114d2793e368d5bc8e90a4e690f17fbac1066e6a89b2c031bef19abab9199b83314dff327651b67f73654e306b17b070b85c50a0f6
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 1a74a943b06dd9c058ba1be6352da1c2f7b9a3a6fe95f298ad69f72aa092a912c1aa971952e8b123b61f01b3345269f9607675666bf58293cd91023a86431ac3
+    HEAD_REF release
 )
 
+file(REMOVE "${SOURCE_PATH}/include/daw/daw_tuple_forward.h")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -37,4 +38,4 @@ file(APPEND "${SOURCE_PATH}/copyright" [=[
 
 file(READ "${SOURCE_PATH}/LICENSE_Dragonbox" dragonbox_copywrite)
 file(APPEND "${SOURCE_PATH}/copyright" ${dragonbox_copywrite})
-file(INSTALL "${SOURCE_PATH}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/copyright")

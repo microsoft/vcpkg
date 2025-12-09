@@ -1,10 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
+string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" MAJOR_MINOR "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
-    REF client_release/7.20/7.20.2
-    SHA512 0309d5585ece96a5d9021058870dce9a96c89ece269650961a9b22d5219529e242a55dc1e466f5364535033198ca5c36496ca23125a9cda0c308bfdb4372abbb
+    REF "client_release/${MAJOR_MINOR}/${VERSION}"
+    SHA512 5d38adcaefc99bd79d54e7e47bcc38099844157802852b9de9eb910ce80e2f6d6b333b3ece3f6c619e3c66d9dda9a9c5a8290ce583f77e1727bd7064e81b11af
     HEAD_REF master
 )
 
@@ -30,13 +30,28 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
     endif()
 endif()
 
+set(build_options "")
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND build_options "-DHAVE_STRCASECMP=ON")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
+        ${build_options}
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup()
+file(READ "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" BOINC_CONFIG)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(OpenSSL)
+find_dependency(libzip)
+${BOINC_CONFIG}
+")
 
 vcpkg_copy_pdbs()
 

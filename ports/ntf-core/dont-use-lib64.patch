@@ -1,0 +1,30 @@
+diff --git a/repository.cmake b/repository.cmake
+index f02ba90..4dbd81f 100644
+--- a/repository.cmake
++++ b/repository.cmake
+@@ -3151,11 +3151,7 @@ function (ntf_adapter_end)
+         set(target_output_name "${target}")
+     endif()
+ 
+-    if (${is_64_bit} AND NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+-        set(lib_name "lib64" CACHE INTERNAL "")
+-    else()
+-        set(lib_name "lib" CACHE INTERNAL "")
+-    endif()
++    set(lib_name "lib" CACHE INTERNAL "")
+ 
+     # Set the relative path to the library directory under the prefix. For
+     # example: lib64
+@@ -4028,11 +4024,7 @@ function (ntf_group_end)
+         set(target_output_name "${target}")
+     endif()
+ 
+-    if (${is_64_bit} AND NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
+-        set(lib_name "lib64" CACHE INTERNAL "")
+-    else()
+-        set(lib_name "lib" CACHE INTERNAL "")
+-    endif()
++    set(lib_name "lib" CACHE INTERNAL "")
+ 
+     # Set the relative path to the library directory under the prefix. For
+     # example: lib64

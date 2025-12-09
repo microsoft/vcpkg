@@ -1,0 +1,17 @@
+{
+  "name": "aklomp-base64",
+  "version": "0.5.2",
+  "description": "Implementation of a base64 stream encoding/decoding library in C99 with SIMD (AVX2, AVX512, NEON, AArch64/NEON, SSSE3, SSE4.1, SSE4.2, AVX) and OpenMP acceleration",
+  "homepage": "https://github.com/aklomp/base64",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

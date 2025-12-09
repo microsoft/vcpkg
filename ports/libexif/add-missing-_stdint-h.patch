@@ -1,7 +1,0 @@
-diff --git a/libexif/_stdint.h b/libexif/_stdint.h
-new file mode 100644
-index 0000000..9a6118b
---- /dev/null
-+++ b/libexif/_stdint.h
-@@ -0,0 +1 @@
-+#include <stdint.h>

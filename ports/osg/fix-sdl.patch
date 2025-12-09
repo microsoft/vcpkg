@@ -12,16 +12,3 @@ index 81328ea..c735419 100644
      FIND_PACKAGE(SDL)
      FIND_PACKAGE(Poppler-glib)
      FIND_PACKAGE(RSVG)
-diff --git a/examples/osgmovie/osgmovie.cpp b/examples/osgmovie/osgmovie.cpp
-index 9de15b1..ae96e11 100644
---- a/examples/osgmovie/osgmovie.cpp
-+++ b/examples/osgmovie/osgmovie.cpp
-@@ -691,7 +691,7 @@ int main(int argc, char** argv)
- 
- #if USE_SDL || USE_SDL2
- 
--#include "SDL.h"
-+#include <SDL/SDL.h>
- 
- static void soundReadCallback(void * user_data, uint8_t * data, int datalen)
- {

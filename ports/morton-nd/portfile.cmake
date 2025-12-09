@@ -8,23 +8,23 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
     OPTIONS
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/morton-nd/cmake TARGET_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/morton-nd/cmake)
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug
-    ${CURRENT_PACKAGES_DIR}/share/doc
+    "${CURRENT_PACKAGES_DIR}/debug"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
 )
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-file(COPY ${SOURCE_PATH}/NOTICE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+file(COPY "${SOURCE_PATH}/NOTICE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

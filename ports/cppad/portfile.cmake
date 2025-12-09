@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CppAD
-    REF 90c510458b61049c51f937fc6ed2e611fbb17b8b #20210000.7
-    SHA512 112a4663a3e13f2d852c4ce4e57f6bee2dc7584915fcbab75972568258faab0d4a5761c4eaa4c664543cb8674e8e70c0623054c07dff933f9513a47f1c7d6261
+    REF "${VERSION}"
+    SHA512 c94637d1859a8f3ac2ac3064d8f9f0baefefe8da6d4534bfa6a1602d610844bb3838bd9a2fcaf8ae1cce5dc2a2adb5e7eacaeccf006d746552eb2ff3ca75494a
     HEAD_REF master
-    PATCHES
-        windows-fix.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,14 +13,18 @@ vcpkg_cmake_configure(
         -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
     OPTIONS_RELEASE
         -Dcmake_install_libdirs=lib
-        -Dcppad_debug_which:STRING=debug_none
     OPTIONS_DEBUG
         -Dcmake_install_libdirs=debug/lib
 )
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
+    # Remove empty dirs
+    "${CURRENT_PACKAGES_DIR}/include/cppad/local/sweep/template"
+    "${CURRENT_PACKAGES_DIR}/include/cppad/local/var_op/template"
+)
 
 # Add the copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

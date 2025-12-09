@@ -1,0 +1,12 @@
+diff --git a/sdk/attestation/azure-security-attestation/CMakeLists.txt b/sdk/attestation/azure-security-attestation/CMakeLists.txt
+index 8dec8cfa5..dee51d63f 100644
+--- a/sdk/attestation/azure-security-attestation/CMakeLists.txt
++++ b/sdk/attestation/azure-security-attestation/CMakeLists.txt
+@@ -86,6 +86,7 @@ create_code_coverage(attestation azure-security-attestation azure-security-attes
+ 
+ 
+ get_az_version("${CMAKE_CURRENT_SOURCE_DIR}/src/private/package_version.hpp")
++set_target_properties(azure-security-attestation PROPERTIES VERSION ${AZ_LIBRARY_VERSION})
+ generate_documentation(azure-security-attestation ${AZ_LIBRARY_VERSION})
+ 
+ az_vcpkg_export(

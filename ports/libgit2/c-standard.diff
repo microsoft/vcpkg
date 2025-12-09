@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5be7bef..5f9ed79 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,7 +57,7 @@ option(DEPRECATE_HARD          "Do not include deprecated functions in the libra
+ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Android")
+    set(CMAKE_C_STANDARD        "99" CACHE STRING "The C standard to compile against")
+ else()
+-   set(CMAKE_C_STANDARD        "90" CACHE STRING "The C standard to compile against")
++   set(CMAKE_C_STANDARD        "99" CACHE STRING "The C standard to compile against")
+ endif()
+ option(CMAKE_C_EXTENSIONS      "Whether compiler extensions are supported"             OFF)
+ option(ENABLE_WERROR           "Enable compilation with -Werror"                       OFF)
+/tmp/bbb.patch (END)diff --git a/src/libgit2/CMakeLists.txt b/src/libgit2/CMakeLists.txt
+index 0dddb02..af85510 100644
+--- a/src/libgit2/CMakeLists.txt
++++ b/src/libgit2/CMakeLists.txt
+@@ -60,7 +60,7 @@ target_link_libraries(libgit2package ${LIBGIT2_SYSTEM_LIBS})
+ target_include_directories(libgit2package SYSTEM PRIVATE ${LIBGIT2_INCLUDES})
+ target_include_directories(libgit2package INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+-set_target_properties(libgit2package PROPERTIES C_STANDARD 90)
++set_target_properties(libgit2package PROPERTIES C_STANDARD 99)
+ set_target_properties(libgit2package PROPERTIES C_EXTENSIONS OFF)
+ set_target_properties(libgit2package PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+ set_target_properties(libgit2package PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})

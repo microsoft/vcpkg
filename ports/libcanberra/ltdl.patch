@@ -1,0 +1,29 @@
+diff --git a/configure.ac b/configure.ac
+index f68602d..a4e24b3 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -140,8 +140,12 @@ dnl We don't need any special variable for this though, since the user
+ dnl can give the proper place to find libltdl through the standard
+ dnl variables like LDFLAGS and CPPFLAGS.
+ 
++LTDL_INIT
++if test -n "$LTDL_LDFLAGS"; then
++    LDFLAGS="$LDFLAGS $LTDL_LDFLAGS"
++fi
+ AC_CHECK_HEADER([ltdl.h],
+-    [AC_CHECK_LIB([ltdl], [lt_dladvise_init], [LIBLTDL=-lltdl], [LIBLTDL=])],
++    [AC_CHECK_LIB([ltdl], [lt_dladvise_init], [LIBLTDL="-lltdl $LTDL_LDFLAGS $lt_cv_dlopen_libs"], [LIBLTDL=])],
+     [LIBLTDL=])
+ 
+ AS_IF([test "x$LIBLTDL" = "x"],
+diff --git a/libcanberra.pc.in b/libcanberra.pc.in
+index 0a5c7a1..a6a989b 100644
+--- a/libcanberra.pc.in
++++ b/libcanberra.pc.in
+@@ -7,5 +7,6 @@ Name: libcanberra
+ Description: Event Sound API
+ Version: @PACKAGE_VERSION@
+ Libs: -L${libdir} -lcanberra @PTHREAD_LIBS@
++Libs.private: @LIBLTDL@
+ Cflags: -D_REENTRANT -I${includedir}
+ Requires:

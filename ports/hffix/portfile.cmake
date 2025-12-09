@@ -1,23 +1,21 @@
-# header only library
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jamesdbrock/hffix
-    REF v1.0.0
-    SHA512 0043b789e6ffdc32eaf2736a8621dd7fd54e1a16aae33bb1d5f642da1b04d150ed42d8f9ddd046013242164854d9091540452153f09459d05f9bf4a186c7b860
+    REF "v${VERSION}"
+    SHA512 155c0e0bd57d952523343e94b0160baf3b20d366ff8260340d96c2ec4e638c94d192c08b7204303b0fa8610beb5c71046f62fa8b0212b477aaab88e49974cac1
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/hffix")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

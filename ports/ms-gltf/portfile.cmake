@@ -5,12 +5,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/glTF-SDK
-    REF eaccf166e2718c6133db426545b6d008cb7ad79f # 28-06-2022
-    SHA512 112e31d2f42d2fb22060a687f7d33f22e677d8d7eca006eb8c1edef6a61b8bad637df15492665656ea88a5a0b980851eb978a180b4a01d307d1bbc92f63500f1
+    REF 4888f0a386e174af6170c3c53b3396945f4a65a0 # 05-09-2024
+    SHA512 5bee9c056d3d6eb809d8336cedc0fad58bc5b33128d4094cccfca5d0180b78e237d63c2c7c7beb08dd09f49a613a35bc0c08642b150ae8482ef9643165d7822b
     HEAD_REF master
     PATCHES
         fix-install.patch
-        fix-apple-filesystem.patch
 )
 
 # note: Test/Sample executables won't be installed
@@ -37,4 +36,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

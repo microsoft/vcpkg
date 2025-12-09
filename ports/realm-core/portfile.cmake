@@ -1,0 +1,50 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO realm/realm-core
+    REF "v${VERSION}"
+    SHA512 b95fbccdddcad2a4ad68fe5fe5358a67f668bdd2cd4bef68f8fc74f9d11690c317156ba28942c4c9db446c796a0d760387c8154209f6039d92a880d7e64e3847
+    HEAD_REF master
+    PATCHES 
+        UWP_index_set.patch
+        fix-zlib.patch
+        cstdlib.diff
+)
+
+vcpkg_list(SET REALMCORE_CMAKE_OPTIONS)
+if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+    list(APPEND REALMCORE_CMAKE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_OpenSSL=ON)
+else()
+    if(VCPKG_TARGET_IS_EMSCRIPTEN)
+        list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_FORCE_OPENSSL=ON)
+        list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_ENABLE_SYNC=OFF) # https://github.com/realm/realm-core/issues/7752
+    endif()
+    list(APPEND REALMCORE_CMAKE_OPTIONS -DREALM_USE_SYSTEM_OPENSSL=ON)
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DREALM_BUILD_LIB_ONLY=ON
+        -DREALM_CORE_SUBMODULE_BUILD=OFF
+        -DREALM_NO_TESTS=ON
+        -DREALM_VERSION=${VERSION}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Backtrace=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_BISON=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_FLEX=ON
+        ${REALMCORE_CMAKE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_OpenSSL
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/Realm")
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/debug/doc"
+    "${CURRENT_PACKAGES_DIR}/doc"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${SOURCE_PATH}/THIRD-PARTY-NOTICES")

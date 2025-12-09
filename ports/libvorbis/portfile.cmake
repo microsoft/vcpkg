@@ -8,10 +8,15 @@ vcpkg_from_github(
         0001-Dont-export-vorbisenc-functions.patch
         0002-Fixup-pkgconfig-libs.patch
         0003-def-mingw-compat.patch
+        0004-ogg-find-dependency.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 # https://github.com/xiph/vorbis/issues/113
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_POLICY_VERSION_MINIMUM
 )
 
 vcpkg_cmake_install()

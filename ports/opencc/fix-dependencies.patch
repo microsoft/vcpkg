@@ -1,0 +1,35 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 7768c89..70292d6 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -115,7 +115,7 @@ add_library(libopencc ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
+ add_library(OpenCC::OpenCC ALIAS libopencc)
+ set_target_properties(libopencc PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ source_group(libopencc FILES ${LIBOPENCC_SOURCES} ${LIBOPENCC_HEADERS})
+-target_link_libraries(libopencc marisa)
++target_link_libraries(libopencc ${LIBMARISA})
+ target_include_directories(libopencc PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+     $<INSTALL_INTERFACE:${DIR_INCLUDE}/opencc>
+@@ -144,6 +144,21 @@ set_target_properties(
+       ${OPENCC_VERSION_MAJOR}.${OPENCC_VERSION_MINOR}
+ )
+ 
++if(USE_SYSTEM_RAPIDJSON)
++  find_package(RapidJSON CONFIG REQUIRED)
++  target_link_libraries(libopencc rapidjson)
++endif()
++
++if(USE_SYSTEM_TCLAP)
++  find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
++  target_include_directories(libopencc PUBLIC ${TCLAP_INCLUDE_DIRS})
++endif()
++
++if(USE_SYSTEM_DARTS)
++  find_path(DARTS_INCLUDE_DIRS "darts.h")
++  target_include_directories(libopencc PUBLIC ${DARTS_INCLUDE_DIRS})
++endif()
++
+ # Installation
+ 
+ if (USE_SYSTEM_MARISA)

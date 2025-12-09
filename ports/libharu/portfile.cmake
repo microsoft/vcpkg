@@ -1,8 +1,10 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libharu/libharu
-    REF 6997cf775b2345e3db82ac774fe2931faf348458 #2.4.0-rc1
-    SHA512 758753b0f977c6b9f0b6309958e1edfba491851682c9b04cead6ebebc9af726fdec7265f36ca1b1e80f1849f9b4a43ad329a688b4844eb911c64d42a92cd7823
+    REF v${VERSION}
+    SHA512 422210b09f89643cb25808559aeea109db5cce8a71c779d51f87222cdd50434f4f0f92322ebe429fca8f85ad73592bcabb14c3e36cd0bea19b6ec4c729220522
     HEAD_REF master
     PATCHES
         fix-include-path.patch
@@ -39,21 +41,25 @@ file(REMOVE_RECURSE
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf.h" _contents)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
-else()
-    string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
-endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf.h" "${_contents}")
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" _contents)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
-else()
-    string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf.h" _contents)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
+    else()
+        string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
+    endif()
+    file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf.h" "${_contents}")
+    
+    file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" _contents)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
+    else()
+        string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
+    endif()
+    file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" "${_contents}")
 endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" "${_contents}")
 
 vcpkg_copy_pdbs()
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

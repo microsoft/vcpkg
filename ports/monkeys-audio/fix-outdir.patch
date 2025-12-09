@@ -1,0 +1,18 @@
+diff --git a/Source/Projects/VS2022/MACDll/MACDll.vcxproj b/Source/Projects/VS2022/MACDll/MACDll.vcxproj
+index f5b20e8eb..d9fd63c20 100644
+--- a/Source/Projects/VS2022/MACDll/MACDll.vcxproj
++++ b/Source/Projects/VS2022/MACDll/MACDll.vcxproj
+@@ -150,10 +150,10 @@
+     <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+-    <OutDir>C:\Applications\Winamp\plugins\</OutDir>
+-    <IntDir>$(Configuration)\</IntDir>
++    <OutDir>$(Platform)\$(Configuration)\</OutDir>
++    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+     <LinkIncremental>false</LinkIncremental>
+-    <TargetName>in_APE</TargetName>
++    <TargetName>MACDll</TargetName>
+     <TargetExt>.dll</TargetExt>
+     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+     <ClangTidyChecks>-clang-diagnostic-c++98-compat,-clang-diagnostic-zero-as-null-pointer-constant,-clang-diagnostic-language-extension-token,-clang-diagnostic-global-constructors,-clang-diagnostic-exit-time-destructors</ClangTidyChecks>

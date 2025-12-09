@@ -1,0 +1,24 @@
+diff --git a/sqlite3.c b/sqlite3.c
+index 80433f6..cfd213b 100644
+--- a/sqlite3.c
++++ b/sqlite3.c
+@@ -25,6 +25,7 @@
+ #ifndef SQLITE_AMALGAMATION
+ #define SQLITE_CORE 1
+ #define SQLITE_AMALGAMATION 1
++#include "sqlite3-vcpkg-config.h"
+ #ifndef SQLITE_PRIVATE
+ # define SQLITE_PRIVATE static
+ #endif
+diff --git a/sqlite3.h b/sqlite3.h
+index 4ed8428..f1cf6d4 100644
+--- a/sqlite3.h
++++ b/sqlite3.h
+@@ -32,6 +32,7 @@
+ */
+ #ifndef SQLITE3_H
+ #define SQLITE3_H
++#include "sqlite3-vcpkg-config.h"
+ #include <stdarg.h>     /* Needed for the definition of va_list */
+ 
+ /*

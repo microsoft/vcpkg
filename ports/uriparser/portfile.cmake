@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
-    REF 1ebc4811d2a986d68142587eca2256837be0da85 # uriparser-0.9.6
-    SHA512 fda7a92afddf12362691718a220ff23363c9684d0f2b500362f7060abd04440a8baaad1cd3d3ba6ab7e94a16e29763ca67c415aa66c284102bea6b80a8058045
+    REF uriparser-${VERSION}
+    SHA512 0ab98e3172d9767ec0a62018c70190efb5aec813c310e7305fb4ffeb187976734d35ba2f83f6ea0b3f390f13740491d9538e5960b93ca1bbb848a1fe41c559a3
     HEAD_REF master
 )
 
@@ -10,6 +10,11 @@ if("tool" IN_LIST FEATURES)
     set(URIPARSER_BUILD_TOOLS ON)
 else()
     set(URIPARSER_BUILD_TOOLS OFF)
+endif()
+
+# On Android, we need to set C standard to C99 (headers on ndk uses `inline`)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_C_STANDARD 90)" "set(CMAKE_C_STANDARD 99)")
 endif()
 
 vcpkg_cmake_configure(
@@ -36,7 +41,7 @@ endif()
 
 set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
 file(STRINGS
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/config.h"
+	"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/UriConfig.h"
     _package_version_define REGEX "${_package_version_re}"
 )
 string(REGEX REPLACE "${_package_version_re}" "\\1" _package_version ${_package_version_define})
@@ -53,6 +58,12 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING.Apache-2.0"
+    "${SOURCE_PATH}/COPYING.BSD-3-Clause"
+    "${SOURCE_PATH}/COPYING.LGPL-2.1"
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_fixup_pkgconfig()

@@ -1,11 +1,10 @@
 # test application for this port: https://github.com/mathisloge/mapnik-vcpkg-test
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
-    REF d7b83c0f7d11397aff5b5d8e0bb294ef6ea4354d
-    SHA512 62b47cb753e9698e55fe88593009016676b6c0c0a90c3f29be6f44a45f9f783ec5beca6916e549f9adbdc750e2e0334a9e927fc0dcb6a88431e40c2e920ff962
+    REF v${VERSION}
+    SHA512 ac3cda35240eca404fedc77e6c36d9b3d0596a077857fb7c41e8d4d5dce2a292f425ce0c134ac6e8577b50c6a126ba56e5de1103e63c752ebe9f6fa3db62dd3d
     HEAD_REF master
 )
 
@@ -41,10 +40,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "utility-svg2png"           BUILD_UTILITY_SVG2PNG
 )
 
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(BUILD_SHARED_CRT ON)
+else()
+    set(BUILD_SHARED_CRT OFF)
+endif()
+vcpkg_find_acquire_program(PKGCONFIG)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS   
         ${FEATURE_OPTIONS}
+        -DBUILD_SHARED_CRT=${BUILD_SHARED_CRT}
         -DINSTALL_DEPENDENCIES=OFF
         -DBUILD_TESTING=OFF
         -DBUILD_BENCHMARK=OFF
@@ -57,6 +64,7 @@ vcpkg_cmake_configure(
         -DMAPNIK_CMAKE_DIR=share/mapnik/cmake
         -DFONTS_INSTALL_DIR=share/mapnik/fonts
         -DMAPNIK_PKGCONF_DIR=lib/pkgconfig
+        -DPKG_CONFIG_EXECUTABLE="${PKGCONFIG}"
 )
 
 vcpkg_cmake_install()

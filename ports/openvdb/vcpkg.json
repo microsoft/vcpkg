@@ -1,9 +1,10 @@
 {
   "name": "openvdb",
-  "version": "9.0.0",
+  "version": "12.0.1",
   "description": "Sparse volume data structure and tools",
-  "homepage": "https://github.com/dreamworksanimation/openvdb",
-  "license": "MPL-2.0",
+  "homepage": "https://www.openvdb.org",
+  "license": "Apache-2.0",
+  "supports": "!xbox",
   "dependencies": [
     "blosc",
     "boost-any",
@@ -14,7 +15,7 @@
     "boost-system",
     "boost-thread",
     "boost-uuid",
-    "ilmbase",
+    "imath",
     "openexr",
     "tbb",
     {
@@ -28,7 +29,31 @@
   ],
   "features": {
     "ax": {
-      "description": "Provides a powerful and easy way of interacting with OpenVDB volume and point data."
+      "description": "Provides a powerful and easy way of interacting with OpenVDB volume and point data.",
+      "supports": "!windows",
+      "dependencies": [
+        {
+          "name": "llvm",
+          "default-features": false
+        }
+      ]
+    },
+    "nanovdb": {
+      "description": "A lightweight GPU friendly version of VDB initially targeting rendering applications",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "nanovdb-tools": {
+      "description": "NanoVDB tools: print, validate, and convert.",
+      "dependencies": [
+        {
+          "name": "openvdb",
+          "features": [
+            "nanovdb"
+          ]
+        }
+      ]
     },
     "tools": {
       "description": "OpenVDB utilities: view, print and render",

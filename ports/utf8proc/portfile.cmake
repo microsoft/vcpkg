@@ -1,10 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JuliaLang/utf8proc
-    REF 8ca6144c85c165987cb1c5d8395c7314e13d4cd7 # v2.7.0
-    SHA512 a33e2335e9978e7a49bc0ecf9128abd93466d9daffb052f9db88097e771588547df6ba07b6028c77621e60f3b85eab78a368d9b8266ecb97ad7bdfae2b4866fc
-    PATCHES
-        export-cmake-targets.patch
+    REF v${VERSION}
+    SHA512 59109d6e4e4f34e23ee9c112199f6eb781f4f58300749dabe418ac5fc1a914e5d522129b86e35f59c224e1bb099a091307206d0cf8012f82c42b92127c1b1aba
 )
 
 vcpkg_cmake_configure(
@@ -15,21 +13,26 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-utf8proc CONFIG_PATH share/unofficial-utf8proc)
-
 vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
-file(READ "${CURRENT_PACKAGES_DIR}/include/utf8proc.h" UTF8PROC_H)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    string(REPLACE "defined UTF8PROC_SHARED" "0" UTF8PROC_H "${UTF8PROC_H}")
-else()
-    string(REPLACE "defined UTF8PROC_SHARED" "1" UTF8PROC_H "${UTF8PROC_H}")
-endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/utf8proc.h" "${UTF8PROC_H}")
-
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/utf8proc)
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/utf8proc.h" "#ifdef UTF8PROC_STATIC" "#if 1 /* UTF8PROC_STATIC */")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/utf8proc_static.lib")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libutf8proc.pc" " -lutf8proc" " -lutf8proc_static")
+        if(NOT VCPKG_BUILD_TYPE)
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libutf8proc.pc" " -lutf8proc" " -lutf8proc_static")
+        endif()
+    endif()
+endif()
+
+# Legacy
+file(INSTALL "${CURRENT_PORT_DIR}/unofficial-utf8proc-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-utf8proc")
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")

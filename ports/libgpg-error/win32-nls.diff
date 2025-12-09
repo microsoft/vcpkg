@@ -1,0 +1,25 @@
+diff --git a/Makefile.am b/Makefile.am
+index 0f07509..65e058a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -105,6 +105,7 @@ gen-ChangeLog:
+ 
+ if HAVE_W32_SYSTEM
+ install-data-hook:
++install-data-hook-orig:
+ 	set -e; \
+ 	for i in $$(sed -e '/^#/d' -e 's/#.*//' $(top_srcdir)/po/LINGUAS); do \
+            $(MKDIR_P) "$(DESTDIR)$(localedir)/$$i/LC_MESSAGES" || true;       \
+diff --git a/configure.ac b/configure.ac
+index 9aa0f69..ce369af 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -207,7 +207,7 @@ AH_BOTTOM([
+ /* Force using of NLS for W32 even if no libintl has been found.  This is
+    okay because we have our own gettext implementation for W32.  */
+ #if defined(HAVE_W32_SYSTEM) && !defined(ENABLE_NLS)
+-#define ENABLE_NLS 1
++/* keep NLS controlled by libgpg-error[nls] */
+ #endif
+ 
+ /* Connect the generic estream-printf.c to our framework.  */

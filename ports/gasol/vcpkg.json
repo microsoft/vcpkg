@@ -1,8 +1,14 @@
 {
   "name": "gasol",
   "version-date": "2018-01-04",
-  "port-version": 2,
+  "port-version": 4,
   "description": "A general Genetic Algorithm Solver in C++",
   "homepage": "https://github.com/PytLab/GASol",
-  "supports": "!uwp & !arm"
+  "supports": "!uwp & !arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

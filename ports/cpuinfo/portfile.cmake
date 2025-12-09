@@ -6,16 +6,17 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/cpuinfo
-    REF b40bae27785787b6dd70788986fd96434cf90ae2
-    SHA512 dbbe4f3e1d5ae74ffc8ba2cba0ab745a23f4993788f4947825ef5125dd1cbed3e13e0c98e020e6fcfa9879f54f06d7cba4de73ec29f77649b6a27b4ab82c8f1c
+    REF 877328f188a3c7d1fa855871a278eb48d530c4c0
+    SHA512 b6d5a9ce9996eee3b2f09f39115f7ae178fe4d4814cc35b049a59d04a82228e268aa52d073c307ccb56a427428622940e1c77f004c99851dfca0d3a5d803658b
     HEAD_REF master
     PATCHES
-        check-for-x86-correctly.patch # https://github.com/pytorch/cpuinfo/pull/93
+        add-clog-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools CPUINFO_BUILD_TOOLS
+        clog CPUINFO_BUILD_CLOG
 )
 
 set(LINK_OPTIONS "")
@@ -39,10 +40,13 @@ vcpkg_cmake_configure(
         -DCPUINFO_BUILD_UNIT_TESTS=OFF
         -DCPUINFO_BUILD_MOCK_TESTS=OFF
         -DCPUINFO_BUILD_BENCHMARKS=OFF
+        -DCLOG_BUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DCPUINFO_LOG_LEVEL=debug
     OPTIONS_RELEASE
         -DCPUINFO_LOG_LEVEL=default
+    MAYBE_UNUSED_VARIABLES
+        CLOG_BUILD_TESTS
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
@@ -52,8 +56,12 @@ vcpkg_fixup_pkgconfig() # pkg_check_modules(libcpuinfo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if("tools" IN_LIST FEATURES)
+    set(additional_tools "")
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cpuid-dump${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        list(APPEND additional_tools "cpuid-dump")
+    endif()
     vcpkg_copy_tools(
-        TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
+        TOOL_NAMES cache-info cpu-info isa-info ${additional_tools}
         AUTO_CLEAN
     )
 endif()

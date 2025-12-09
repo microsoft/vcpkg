@@ -1,0 +1,13 @@
+diff --git a/cmake/CompilerWarnings.cmake b/cmake/CompilerWarnings.cmake
+index 34f1cc8..bda884d 100644
+--- a/cmake/CompilerWarnings.cmake
++++ b/cmake/CompilerWarnings.cmake
+@@ -79,7 +79,7 @@ function(set_project_warnings project_name)
+ 
+     if(MSVC)
+         set(PROJECT_WARNINGS ${MSVC_WARNINGS})
+-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
++    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+         set(PROJECT_WARNINGS ${CLANG_WARNINGS})
+     else()
+         set(PROJECT_WARNINGS ${GCC_WARNINGS})

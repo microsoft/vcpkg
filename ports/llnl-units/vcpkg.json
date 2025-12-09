@@ -1,0 +1,23 @@
+{
+  "name": "llnl-units",
+  "version": "0.13.1",
+  "port-version": 1,
+  "description": "A run-time C++ library for working with units of measurement and conversions between them and with string representations of units and measurements",
+  "homepage": "https://github.com/LLNL/units",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build the command line tool",
+      "supports": "!uwp"
+    }
+  }
+}

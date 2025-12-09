@@ -1,0 +1,35 @@
+{
+  "name": "msquic",
+  "version": "2.4.8",
+  "port-version": 1,
+  "description": "Cross-platform, C implementation of the IETF QUIC protocol",
+  "homepage": "https://github.com/microsoft/msquic",
+  "license": "MIT",
+  "supports": "!mingw & !(static & staticcrt)",
+  "dependencies": [
+    {
+      "name": "msquic",
+      "features": [
+        "0-rtt"
+      ],
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "0-rtt": {
+      "description": [
+        "Enable 0-RTT connection support.",
+        "This feature requires the use of (a fork of) OpenSSL 3 also on Windows."
+      ],
+      "license": "Apache-2.0"
+    }
+  }
+}

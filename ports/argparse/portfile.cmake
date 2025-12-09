@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO p-ranav/argparse
-    REF b0cb28ab177cdbd19d439c02cdc217bdfc508ba9 # v2.2
-    SHA512 247f27aa45994ee4629b947e3fe1b1df8fae4e773992c740a7c3d544e45ce83a68ecdcfdedf38c461ccb81cf93d88dfee21dc4f7d027677a3c7d930170446971
+    REF "v${VERSION}"
+    SHA512 83bebae6fd022c729bc589942a2aba7d601948a93eff3c170352885ab95a30fc7d0ff15a2f42fc935ee6c2db18f4a70ecd855a45af5f37383f77745271f01d78
     HEAD_REF master
 )
 

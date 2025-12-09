@@ -6,27 +6,26 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_CONSOLE_TOOLS=ON
         -DBUILD_GRAPHICAL_TOOLS=OFF #${BUILD_GRAPHICAL_TOOLS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/MOOS)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/MOOS")
 if (VCPKG_TARGET_IS_WINDOWS)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke.exe ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke.exe)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite.exe ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite.exe)
+	file(RENAME "${CURRENT_PACKAGES_DIR}/bin/uPoke.exe" "${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke.exe")
+	file(RENAME "${CURRENT_PACKAGES_DIR}/bin/iRemoteLite.exe" "${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite.exe")
 else()
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/uPoke ${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke)
-	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/iRemoteLite ${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite)
+	file(RENAME "${CURRENT_PACKAGES_DIR}/bin/uPoke" "${CURRENT_PACKAGES_DIR}/tools/MOOS/uPoke")
+	file(RENAME "${CURRENT_PACKAGES_DIR}/bin/iRemoteLite" "${CURRENT_PACKAGES_DIR}/tools/MOOS/iRemoteLite")
 endif()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/MOOS) 
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/MOOS") 
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug")
 
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/fake_header_ui.h "// fake header to pass vcpkg post install check \n")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright "see moos-core for copyright\n" )
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/fake_header_ui.h" "// fake header to pass vcpkg post install check \n")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "see moos-core for copyright\n" )

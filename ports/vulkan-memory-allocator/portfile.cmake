@@ -1,13 +1,24 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-    REF 42be483bd5c6605e789e011aac684e0b95d05359 #v3.0.0
-    SHA512 5bb2240481511e51f1617f2c010a3e93a1c72a63713ed4aecf94488e7f46c78a3cfc591e8f94e14b1262b264bc06e1a78cfe69967b41e02441fad1a433747ee6
+    REF "v${VERSION}"
+    SHA512 deb5902ef8db0e329fbd5f3f4385eb0e26bdd9f14f3a2334823fb3fe18f36bc5d235d620d6e5f6fe3551ec3ea7038638899db8778c09f6d5c278f5ff95c3344b
     HEAD_REF master
 )
 
-file(COPY "${SOURCE_PATH}/include/vk_mem_alloc.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+set(opts "")
+if(VCPKG_TARGET_IS_WINDOWS)
+  set(opts "-DCMAKE_INSTALL_INCLUDEDIR=include/vma") # Vulkan SDK layout!
+endif()
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-vulkan-memory-allocator-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-vulkan-memory-allocator")
+set(VCPKG_BUILD_TYPE release) # header-only port
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS ${opts}
 
-configure_file("${SOURCE_PATH}/LICENSE.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME VulkanMemoryAllocator CONFIG_PATH "share/cmake/VulkanMemoryAllocator")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

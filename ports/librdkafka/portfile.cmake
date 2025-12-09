@@ -1,23 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO edenhill/librdkafka
-    REF v1.9.0
-    SHA512 d7bff9ef29befa2cb35b52003f7b7da4425f284600dd268b268a36fb1b915917b26cb1a3e78da40eec78cbb12e2f745d2c1e88ac82f19d2beb38aa20b511438f
+    REPO confluentinc/librdkafka
+    REF "v${VERSION}"
+    SHA512 13c13bcb1cdafb845214bc57cc195cd6708f743a9327b9f4658da8edea88c92449a4e4e4b1b14ab5af02592368ef17c060513aa510dcdef84cc231cd071176ec
     HEAD_REF master
     PATCHES
         lz4.patch
-        fix_curl.patch
+        # remove it when https://github.com/confluentinc/librdkafka/pull/5136 is merged
+        fix_oauthbearer_check.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        curl    WITH_CURL
+        sasl    WITH_SASL
+        sasl    WITH_SASL_CYRUS
         ssl     WITH_SSL
+        ssl     WITH_SASL_OAUTHBEARER
+        ssl     WITH_SASL_SCRAM
         zlib    WITH_ZLIB
         zstd    WITH_ZSTD
-        snappy  WITH_SNAPPY
-        curl    WITH_CURL
 )
 
 vcpkg_cmake_configure(
@@ -46,14 +50,12 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME RdKafka
-    CONFIG_PATH lib/cmake/RdKafka
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/RdKafka" PACKAGE_NAME "rdkafka")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/rdkafka/FindLZ4.cmake"
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -67,7 +69,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-configure_file("${SOURCE_PATH}/LICENSES.txt" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSES.txt" )
 
 # Install usage
 configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" @ONLY)

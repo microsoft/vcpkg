@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 429bcb0..5779652 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -114,13 +114,10 @@ set(sdl_required_components Headers)
+ 
+ if(SDLTTF_BUILD_SHARED_LIBS)
+     set(sdl3_ttf_target_name SDL3_ttf-shared)
+-    set(sdl3_target_name SDL3::SDL3-shared)
+-
+-    list(APPEND sdl_required_components SDL3-shared)
+ else()
+     set(sdl3_ttf_target_name SDL3_ttf-static)
+-    set(sdl3_target_name SDL3::SDL3)
+ endif()
++set(sdl3_target_name SDL3::SDL3)
+ 
+ if(NOT TARGET SDL3::Headers OR NOT TARGET ${sdl3_target_name})
+     find_package(SDL3 ${SDL_REQUIRED_VERSION} REQUIRED COMPONENTS ${sdl_required_components})
+@@ -160,9 +157,7 @@ target_compile_definitions(${sdl3_ttf_target_name} PRIVATE
+     SDL_BUILD_MICRO_VERSION=${MICRO_VERSION}
+ )
+ target_link_libraries(${sdl3_ttf_target_name} PUBLIC SDL3::Headers)
+-if(SDLTTF_BUILD_SHARED_LIBS)
+-    target_link_libraries(${sdl3_ttf_target_name} PRIVATE SDL3::SDL3-shared)
+-endif()
++target_link_libraries(${sdl3_ttf_target_name} PRIVATE SDL3::SDL3)
+ sdl_add_warning_options(${sdl3_ttf_target_name} WARNING_AS_ERROR ${SDLTTF_WERROR})
+ if ("c_std_99" IN_LIST CMAKE_C_COMPILE_FEATURES)
+     target_compile_features(${sdl3_ttf_target_name} PRIVATE c_std_99)
+diff --git a/cmake/SDL3_ttfConfig.cmake.in b/cmake/SDL3_ttfConfig.cmake.in
+index 4600afd..7902d9d 100644
+--- a/cmake/SDL3_ttfConfig.cmake.in
++++ b/cmake/SDL3_ttfConfig.cmake.in
+@@ -23,6 +23,9 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SDL3_ttf-shared-targets.cmake")
+     set(SDL3_ttf_SDL3_ttf-shared_FOUND TRUE)
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(SDL3 @SDL_REQUIRED_VERSION@)
++
+ set(SDL3_ttf_SDL3_ttf-static_FOUND FALSE)
+ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SDL3_ttf-static-targets.cmake")
+     if(SDLTTF_VENDORED)

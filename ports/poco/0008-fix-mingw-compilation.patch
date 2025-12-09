@@ -1,0 +1,40 @@
+diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
+index 41ba99936..b3986690f 100644
+--- a/Foundation/CMakeLists.txt
++++ b/Foundation/CMakeLists.txt
+@@ -193,7 +193,6 @@ if(MINGW)
+ 			_WIN32
+ 			MINGW32
+ 			WINVER=0x500
+-			ODBCVER=0x0300
+ 			POCO_THREAD_STACK_SIZE
+ 	)
+ endif()
+diff --git a/Foundation/include/Poco/Platform.h b/Foundation/include/Poco/Platform.h
+index 7a4e7e2fb..8caa6de06 100644
+--- a/Foundation/include/Poco/Platform.h
++++ b/Foundation/include/Poco/Platform.h
+@@ -244,6 +244,9 @@
+ #define POCO_NO_FPENVIRONMENT
+ #endif
+ 
++#if defined (__MINGW32__) || defined (__MINGW64__)
++	#define POCO_COMPILER_MINGW
++#endif
+ 
+ #if defined(__clang__)
+ 	#define POCO_COMPILER_CLANG
+@@ -255,13 +258,8 @@
+ #elif defined (__GNUC__)
+ 	#define POCO_COMPILER_GCC
+ 	#if __has_include(<cxxabi.h>)
+ 		#define POCO_HAVE_CXXABI_H
+ 	#endif
+-	#if defined (__MINGW32__) || defined (__MINGW64__)
+-		#define POCO_COMPILER_MINGW
+-	#endif
+-#elif defined (__MINGW32__) || defined (__MINGW64__)
+-	#define POCO_COMPILER_MINGW
+ #elif defined (__INTEL_COMPILER) || defined(__ICC) || defined(__ECC) || defined(__ICL)
+ 	#define POCO_COMPILER_INTEL
+ #elif defined (__SUNPRO_CC)

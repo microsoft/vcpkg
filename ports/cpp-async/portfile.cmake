@@ -1,0 +1,13 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO microsoft/cpp-async
+    REF "v${VERSION}"
+    SHA512 3ee150d37b8d5f9f4153407a796ec23b10d567bc316253091cf1f052ad96a1097e730496db49ec1333d3a824856a5d242500dfe6b8bba4a1e0ac942168548df9
+    HEAD_REF main
+)
+
+file(COPY "${SOURCE_PATH}/include/async" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -4,17 +4,25 @@ vcpkg_from_github(
     REF 613debeaea72ee66626dace9ba1a2eff11b5d37d
     SHA512 5b8ff9665ba73621a9859a6e86717b980b67f8d79d6c78cbf5672bce66aed671f7d64fcbec457bca79eef2e17e105f136017afdf442bb430b9f4a059d7cb93c3
     HEAD_REF master
-    PATCHES 
+    PATCHES
         include-qhullcpp-shared.patch
         fix-missing-symbols.patch # upstream https://github.com/qhull/qhull/pull/93
+        noapp.patch # upstream https://github.com/qhull/qhull/pull/124
+        fix-qhullcpp-cpp20-support.patch # upstream https://github.com/qhull/qhull/pull/122
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
+if("tools" IN_LIST FEATURES)
+    list(APPEND QHULL_OPTIONS -DBUILD_APPLICATIONS:BOOL=ON)
+else()
+    list(APPEND QHULL_OPTIONS -DBUILD_APPLICATIONS:BOOL=OFF)
+endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        ${QHULL_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -53,15 +61,17 @@ if(NOT DEFINED VCPKG_BUILD_TYPE)
 endif()
 vcpkg_fixup_pkgconfig()
 
-vcpkg_copy_tools(TOOL_NAMES
-    qconvex
-    qdelaunay
-    qhalf
-    qhull
-    qvoronoi
-    rbox
-    AUTO_CLEAN
-)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES
+        qconvex
+        qdelaunay
+        qhalf
+        qhull
+        qvoronoi
+        rbox
+        AUTO_CLEAN
+    )
+endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME usage)
 file(INSTALL "${SOURCE_PATH}/COPYING.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,9 +1,9 @@
 {
   "name": "vtk-m",
-  "version-semver": "1.6.0",
-  "port-version": 2,
+  "version": "2.3.0",
   "description": "VTK-m is a toolkit of scientific visualization algorithms for emerging processor architectures.",
   "homepage": "https://gitlab.kitware.com/vtk/vtk-m/",
+  "license": null,
   "supports": "!x86 & !uwp",
   "dependencies": [
     {

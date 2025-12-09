@@ -1,5 +1,5 @@
 diff --git a/libexslt.pc.in b/libexslt.pc.in
-index 1d60563..50089e8 100644
+index f448bb83..791bcdda 100644
 --- a/libexslt.pc.in
 +++ b/libexslt.pc.in
 @@ -7,7 +7,8 @@ includedir=@includedir@
@@ -9,6 +9,6 @@ index 1d60563..50089e8 100644
 -Requires: libxml-2.0, libxslt
 +Requires: libxslt
 +Requires.private: @EXSLT_PRIVATE_REQUIRES@
- Cflags: @EXSLT_INCLUDEDIR@
+ Cflags: @EXSLT_INCLUDEDIR@ @LIBEXSLT_CFLAGS@
  Libs: @EXSLT_LIBDIR@ -lexslt
  Libs.private: @EXSLT_PRIVATE_LIBS@

@@ -1,3 +1,10 @@
+vcpkg_download_distfile(
+    CUDA_PATCHES
+    URLS "https://github.com/arrayfire/arrayfire/pull/3552/commits/674e7bec90b90467139d32bf633467fe60824617.diff?full_index=1"
+    FILENAME "fix-cuda-674e7bec90b90467139d32bf633467fe60824617.patch"
+    SHA512 201ba8c46f5eafd5d8dbc78ddc1fb4c24b8d820f034e081b8ff30712705fe059c2850bbb7394d81931620619071559fed0e98b13cc4f985103e354c44a322e78
+)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO arrayfire/arrayfire
@@ -7,7 +14,10 @@ vcpkg_from_github(
   PATCHES
     build.patch
     Fix-constexpr-error-with-vs2019-with-half.patch
-  )
+    fix-dependency-clfft.patch
+    fix-miss-header-file.patch
+    "${CUDA_PATCHES}"
+)
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
 vcpkg_from_github(
@@ -16,7 +26,7 @@ vcpkg_from_github(
   REF b666773940269179f19ef11c8f1eb77005e85d9a
   SHA512 b3e8b54acf3a588b1f821c2774d5da2d8f8441962c6d99808d513f7117278b9066eb050b8b501bddbd3882e68eb5cc5da0b2fca54e15ab1923fe068a3fe834f5
   HEAD_REF master
-  )
+)
 
 # Get forge. We only need headers and aren't actually linking.
 # We don't want to use the vcpkg dependency since it is broken in many
@@ -44,8 +54,17 @@ set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DAF_CPU_THREAD_PATH=${CPU_THREADS_PATH} # for building the arrayfire cpu threads lib
   -DAF_FORGE_PATH=${FORGE_PATH} # forge headers for building the graphics lib
   -DAF_BUILD_FORGE=OFF
-  -DAF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
-  )
+)
+
+if("cpu" IN_LIST FEATURES)
+    if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
+      list(APPEND AF_DEFAULT_VCPKG_CMAKE_FLAGS "-DMKL_THREAD_LAYER=Sequential")
+    endif()
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        list(APPEND AF_DEFAULT_VCPKG_CMAKE_FLAGS "-DINT_SIZE=8")
+        # This seems scary but only selects the MKL interface. 4 = lp; 8 = ilp; Since x64 has ilp as the default use it!
+    endif()
+endif()
 
 # bin/dll directory for Windows non-static builds for the unified backend dll
 if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -70,19 +89,33 @@ vcpkg_check_features(
 # Build and install
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
+  DISABLE_PARALLEL_CONFIGURE
   OPTIONS
     ${AF_DEFAULT_VCPKG_CMAKE_FLAGS}
     ${AF_BACKEND_FEATURE_OPTIONS}
-  )
+  MAYBE_UNUSED_VARIABLES
+    AF_CPU_THREAD_PATH
+)
 vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/examples")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/LICENSES")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/ArrayFire/cmake)
+else()
+    vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" 
+    "${CURRENT_PACKAGES_DIR}/debug/examples"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/examples"
+    "${CURRENT_PACKAGES_DIR}/LICENSES"
+    "${CURRENT_PACKAGES_DIR}/debug/LICENSES")
+if(FEATURES STREQUAL "core")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
 
 # Copyright and license
 file(INSTALL "${SOURCE_PATH}/COPYRIGHT.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/GSL
-    REF a3534567187d2edc428efd3f13466ff75fe5805c
-    SHA512 5bd6aad37fee3b56a2ee2fed10d6ef02fdcf37a1f40b3fb1bbec8146a573e235169b315405d010ab75175674ed82658c8202f40b128a849c5250b4a1b8b0a1b3
+    REF v${VERSION}
+    SHA512 c613937d225a72cd6fb66d68019ffe70bb16e99a8b9c13664dbaebf3c5bfde4888b2299174b3d668cb234f74821e20d9de3fa19febdee8fb733cb30a50089cd4
     HEAD_REF main
 )
 
@@ -22,5 +22,4 @@ vcpkg_cmake_config_fixup(
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

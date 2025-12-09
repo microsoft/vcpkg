@@ -1,33 +1,37 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} doesn't currently support UWP.")
-endif()
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LAStools/LAStools
-    REF 7c444a4bbae16fe43c676824a26419bb740a6ab8
-    SHA512 4503b033a5319caee5570f25a05009c0d05a8c61a43ed78317899faaeba82fbc1f9a8c8433772bb36547c74e850a2e68d20a16f6f22b12b3004da7e1aa2f334b
+    REF "v${VERSION}"
+    SHA512 a44e6df02b8f7fe8388420fc7d454b035c38bcfb43a59d15ecb634cb30165c70730258b8ea79f335c4625b482827feb8a3d7afa8e07b369c19d5f7cc7be15001
     HEAD_REF master
-    PATCHES 
-        "fix_install_paths_lastools.patch"
+    PATCHES
+        fix_install_paths_lastools.patch
+        fix_include_directories_lastools.patch
+        build_tools.diff
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS_RELEASE
+    FEATURES
+        tools   BUILD_TOOLS
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS_RELEASE
+        ${FEATURE_OPTIONS_RELEASE}
+)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LASlib PACKAGE_NAME laslib)
+
+if(BUILD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES las2las64 las2txt64 lascopcindex64 lasdiff64 lasindex64 lasinfo64 lasmerge64 lasprecision64 laszip64 txt2las64 AUTO_CLEAN)
+
+    # Copy CSV files that are used as lookup tables by las2las.
+    file(COPY "${SOURCE_PATH}/bin/serf/geo" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/serf")
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt" "${SOURCE_PATH}/COPYING.txt")

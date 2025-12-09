@@ -1,18 +1,14 @@
-From 6a3e539ea26eec1bfc2a6e722e923bd5221f8d26 Mon Sep 17 00:00:00 2001
-From: "Matthias C. M. Troffaes" <matthias.troffaes@gmail.com>
-Date: Thu, 8 Jul 2021 10:47:30 +0100
-Subject: [PATCH] Fix Libs.private in .pc file.
-
----
- CMakeLists.txt   | 7 +++++--
- libmodplug.pc.in | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 468f1a3..3164fc6 100644
+index 2ada51b..a0a28d5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -141,7 +141,11 @@ if(HAVE_SINF)
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 2.8.0)
++cmake_minimum_required(VERSION 3.5)
+ 
+ project(libmodplug)
+ add_definitions(-DMODPLUG_BUILD)
+@@ -131,7 +131,24 @@ if(HAVE_SINF)
    add_definitions(-DHAVE_SINF)
  endif(HAVE_SINF)
  
@@ -20,12 +16,25 @@ index 468f1a3..3164fc6 100644
 +if(WIN32)
 +  set(LIBS_PRIVATE "-luser32")
 +else(WIN32)
-+  set(LIBS_PRIVATE "-lstdc++ -lm")
++  set(FAKE_CXX_LINKAGE "")
++  foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
++    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++      continue()
++    elseif(EXISTS "${lib}")
++      string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++    else()
++      string(APPEND FAKE_CXX_LINKAGE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++    endif()
++  endforeach()
++  set(LIBS_PRIVATE " ${FAKE_CXX_LINKAGE} ")
++  if(NOT LIBS_PRIVATE MATCHES " -lm ")
++    string(APPEND LIBS_PRIVATE "-lm")
++  endif()
 +endif(WIN32)
    set(prefix "${CMAKE_INSTALL_PREFIX}")
    set(exec_prefix "${CMAKE_INSTALL_PREFIX}")
    set(libdir "${CMAKE_INSTALL_PREFIX}/lib")
-@@ -152,4 +156,3 @@ if (NOT WIN32)
+@@ -142,4 +159,3 @@ if (NOT WIN32)
    install(FILES "${PROJECT_BINARY_DIR}/libmodplug.pc"
      DESTINATION lib/pkgconfig
    )
@@ -41,6 +50,3 @@ index bbf05f9..e4a43cc 100644
 -Libs.private: -lstdc++ -lm
 +Libs.private: @LIBS_PRIVATE@
  Cflags: -I${includedir}
--- 
-2.21.0.windows.1
-

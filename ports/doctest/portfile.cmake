@@ -1,8 +1,9 @@
+# header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO doctest/doctest
-    REF v2.4.9
-    SHA512 c7337e2de371c18973a0f4cb76458d6ae387e78874c9bc8aa367ffd2d592514b774e7c5ebf44f83b7046f6b33c6905fd079c36f4c33eadf52b3d651d978182cb
+    REF "v${VERSION}"
+    SHA512 d55aae632e6d66add7b65d0e97bde5063cdae7512836f278613af35957c62dbc6b0b0febbe2eb1eddd334a7a5343faca7357a2eeebbf1428cafffeb5d18e610c
     HEAD_REF master
 )
 
@@ -19,4 +20,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

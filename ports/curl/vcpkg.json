@@ -1,9 +1,9 @@
 {
   "name": "curl",
-  "version": "7.84.0",
+  "version": "8.17.0",
   "description": "A library for transferring data with URLs",
   "homepage": "https://curl.se/",
-  "license": null,
+  "license": "curl AND ISC AND BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -32,6 +32,32 @@
         "c-ares"
       ]
     },
+    "gnutls": {
+      "description": "TLS support (gnutls)",
+      "dependencies": [
+        {
+          "name": "libgnutls",
+          "platform": "!windows | mingw"
+        },
+        {
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !mingw"
+        }
+      ]
+    },
+    "gsasl": {
+      "description": "GSASL support (libgsasl)",
+      "dependencies": [
+        "gsasl"
+      ]
+    },
+    "gssapi": {
+      "description": "krb5 support",
+      "supports": "!windows",
+      "dependencies": [
+        "krb5"
+      ]
+    },
     "http2": {
       "description": "HTTP2 support",
       "dependencies": [
@@ -44,6 +70,29 @@
         },
         "nghttp2"
       ]
+    },
+    "http3": {
+      "description": "HTTP3 support with ngtcp2 on openssl",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        },
+        "nghttp3",
+        {
+          "name": "ngtcp2",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
+        }
+      ]
+    },
+    "httpsrr": {
+      "description": "enable support for HTTPS RR"
     },
     "idn": {
       "description": "Default IDN support",
@@ -72,35 +121,49 @@
         "libidn2"
       ]
     },
-    "mbedtls": {
-      "description": "SSL support (mbedTLS)",
-      "dependencies": [
-        "mbedtls"
-      ]
-    },
-    "non-http": {
-      "description": "Enables protocols beyond HTTP/HTTPS/HTTP2"
-    },
-    "openssl": {
-      "description": "SSL support (OpenSSL)",
-      "dependencies": [
-        "openssl"
-      ]
-    },
-    "schannel": {
-      "description": "SSL support (Secure Channel)",
+    "ldap": {
+      "description": "LDAP support",
+      "supports": "!uwp",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "sspi"
+            "non-http"
           ]
+        },
+        {
+          "name": "openldap",
+          "platform": "!windows"
         }
       ]
     },
-    "sectransp": {
-      "description": "SSL support (sectransp)"
+    "mbedtls": {
+      "description": "TLS support (mbedTLS)",
+      "dependencies": [
+        "mbedtls"
+      ]
+    },
+    "non-http": {
+      "description": "Enables protocols beyond HTTP/HTTPS/HTTP2/HTTP3"
+    },
+    "openssl": {
+      "description": "TLS support (OpenSSL)",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "psl": {
+      "description": "Use psl support (libpsl)",
+      "dependencies": [
+        "libpsl"
+      ]
+    },
+    "rtmp": {
+      "description": "RTMP support",
+      "dependencies": [
+        "librtmp"
+      ]
     },
     "ssh": {
       "description": "SSH support via libssh2",
@@ -123,63 +186,63 @@
       ]
     },
     "ssl": {
-      "description": "Default SSL backend",
+      "description": "Default SSL / TLS implementation.",
       "dependencies": [
         {
+          "$comment": "Defaults to schannel on Windows, unless http3 is also enabled",
           "name": "curl",
           "default-features": false,
           "features": [
-            "sectransp"
-          ],
-          "platform": "osx"
-        },
-        {
-          "name": "curl",
-          "default-features": false,
-          "features": [
-            "schannel"
+            "sspi"
           ],
           "platform": "(windows & !uwp) | mingw"
         },
         {
+          "$comment": "Otherwise, defaults to OpenSSL.",
           "name": "curl",
           "default-features": false,
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !osx & !mingw"
+          "platform": "(uwp | !windows) & !mingw"
         }
       ]
     },
-    "sspi": {
-      "description": "SSPI support"
-    },
-    "tool": {
-      "description": "Builds curl executable"
-    },
-    "winidn": {
-      "description": "WinIDN support"
-    },
-    "winldap": {
-      "description": "LDAP support (WinLDAP). This feature does not include LDAPS support.",
+    "ssls-export": {
+      "description": "SSL session import/export",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "non-http"
+            "ssl"
           ]
         }
       ]
     },
-    "winssl": {
-      "description": "Legacy name for schannel",
+    "sspi": {
+      "description": "SSPI support",
+      "supports": "(windows & !uwp) | mingw"
+    },
+    "tool": {
+      "description": "Builds curl executable",
+      "supports": "!uwp"
+    },
+    "websockets": {
+      "description": "WebSocket support"
+    },
+    "winidn": {
+      "description": "WinIDN support",
+      "supports": "windows"
+    },
+    "winldap": {
+      "description": "Obsolete. Use feature 'ldap' instead.",
       "dependencies": [
         {
           "name": "curl",
           "default-features": false,
           "features": [
-            "schannel"
+            "ldap"
           ]
         }
       ]
@@ -188,6 +251,12 @@
       "description": "SSL support (wolfSSL)",
       "dependencies": [
         "wolfssl"
+      ]
+    },
+    "zstd": {
+      "description": "ZStandard support (zstd)",
+      "dependencies": [
+        "zstd"
       ]
     }
   }

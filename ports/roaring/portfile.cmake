@@ -1,33 +1,29 @@
-if (TARGET_TRIPLET MATCHES "^x86")
-    message(WARNING "The CRoaring authors recommend users of this lib against using a 32-bit build.")
-endif ()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RoaringBitmap/CRoaring
-    REF ac3eaf56af8691374b63e53e842feff0322169f0
-    SHA512 db10331559df1503bcd25f7f5cab1fdf6b29984634dbfd54289cd7750032a1dd25cd0b57b490cac3d0d3fd5bc785730617536a7162c6e59f66fadb77f972b1c4
+    REF "v${VERSION}"
+    SHA512 201e769de027d7cb467d27f756013a4ce4fd8cff82a2048efa0a4b177ea633ca7a4b8a8c53dd22d03883f25275394cd22dfac57d87ed06486ac8c4b5998b4d0f
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ROARING_BUILD_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DROARING_BUILD_STATIC=${ROARING_BUILD_STATIC}
         -DENABLE_ROARING_TESTS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/roaring)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_fixup_pkgconfig()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

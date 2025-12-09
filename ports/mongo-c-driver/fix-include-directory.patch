@@ -1,8 +1,8 @@
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index a5767ac..3656efa 100644
+index 4675313..847e073 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -998,7 +998,7 @@ else ()
+@@ -1255,7 +1255,7 @@ else ()
  endif ()
  
  set (MONGOC_HEADER_INSTALL_DIR

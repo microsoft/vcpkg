@@ -1,10 +1,17 @@
 {
   "name": "sord",
-  "version-string": "0.16.4",
+  "version": "0.16.18",
   "description": "Sord is a lightweight C library for storing RDF statements in memory.",
   "homepage": "https://drobilla.net/software/sord",
   "license": "ISC",
+  "supports": "!uwp",
   "dependencies": [
-    "serd"
+    "pcre2",
+    "serd",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
+    "zix"
   ]
 }

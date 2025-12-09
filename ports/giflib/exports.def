@@ -42,7 +42,7 @@ EXPORTS
     GifAsciiTable8x8 @41 DATA
     GifBitSize @42
     GifDrawBox @43
-    ; needs strtok_r: GifDrawBoxedText8x8 @44
+    GifDrawBoxedText8x8 @44
     GifDrawRectangle @45
     GifDrawText8x8 @46
     GifErrorString @47

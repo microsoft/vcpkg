@@ -1,26 +1,43 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sahlberg/libsmb2
-    REF d8c85a3119a0bd769590e448216130b368cd1099
-    SHA512 d15a040ed6314ad6f7984cfa7b52d9ede9934b2a7ec9827e833f574c25c9f694b5372b3e0950e258a6244b7aaf32b9e59987a75a88681d8031d9837ba94629d5
+    REF libsmb2-${VERSION}
+    SHA512 db3675d5b6d9242a23b2b259fd3140143edcf5aa8e203b5a4781ce8279046f7f9044a506d1323e9aa6a5ff52eaed4db93dc7a03954af735971ba933bccba6a3e
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+if(VCPKG_TARGET_IS_IOS)
+    list(TRANSFORM FEATURES REPLACE "krb5" "krb5_gssapi")
+endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        krb5        ENABLE_LIBKRB5
+        krb5_gssapi ENABLE_GSSAPI
+    INVERTED_FEATURES
+        krb5        CMAKE_DISABLE_FIND_PACKAGE_LibKrb5
+        krb5_gssapi CMAKE_DISABLE_FIND_PACKAGE_GSSAPI
 )
 
-vcpkg_install_cmake()
-vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_GSSAPI
+        CMAKE_DISABLE_FIND_PACKAGE_LibKrb5
+        ENABLE_GSSAPI
+        ENABLE_LIBKRB5
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME smb2 CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-#the debug/share folder is generated empty by the provided cmake system
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/smb2")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

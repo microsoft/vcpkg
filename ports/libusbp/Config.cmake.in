@@ -1,0 +1,19 @@
+if(NOT TARGET unofficial::libusbp::libusbp)
+    add_library(unofficial::libusbp::libusbp UNKNOWN IMPORTED)
+
+    set_target_properties(unofficial::libusbp::libusbp PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/libusbp-1"
+    )
+
+    find_library(libusbp_LIBRARY_RELEASE NAMES usbp-1 PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
+    if(EXISTS "${libusbp_LIBRARY_RELEASE}")
+        set_property(TARGET unofficial::libusbp::libusbp APPEND PROPERTY IMPORTED_CONFIGURATIONS "Release")
+        set_target_properties(unofficial::libusbp::libusbp PROPERTIES IMPORTED_LOCATION_RELEASE "${libusbp_LIBRARY_RELEASE}")
+    endif()
+
+    find_library(libusbp_LIBRARY_DEBUG NAMES usbp-1 PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH)
+    if(EXISTS "${libusbp_LIBRARY_DEBUG}")
+        set_property(TARGET unofficial::libusbp::libusbp APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
+        set_target_properties(unofficial::libusbp::libusbp PROPERTIES IMPORTED_LOCATION_DEBUG "${libusbp_LIBRARY_DEBUG}")
+    endif()
+endif()

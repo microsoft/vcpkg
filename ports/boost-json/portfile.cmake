@@ -3,21 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/json
-    REF boost-1.79.0
-    SHA512 1243e4bdf5f2570c1f92e12dbe9cdef55d72d73d0e6abc6253eae928280ba913bfbc3a4d92d09a9c9b98e06ef95345c2c99dd0983d8dd2a7f1d8f0826530e1dd
+    REF boost-${VERSION}
+    SHA512 1e063c00e8f9361b6989795774bcd1d70d945cbaf79388928ec916a2f95e44a6ad63f74f6c81fa02cc0713fb8a988fdcd87c97c62ba904a67765092df6746c5b
     HEAD_REF master
-    PATCHES 0001-json-array-erase-relocate.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile" 
-    "import ../../config/checks/config"
-    "import ../config/checks/config"
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(
-    SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
-)
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
-    REF v1.12
-    SHA512 63c96297d65486450908bda7cc1583ec338fa5a56a7c088fc37d6e125e1ee76e6d20343556a8f3d36f5b7e5187c58a5d15be964c996e3586ea1438910152b1a6
+    REF "v${VERSION}"
+    SHA512 79f333dbe8ed44076010e33803e3418410516df4b70203962bbefea81ce0a6989a54a9791022488e64f1876573580cbe93920da4b2a7277d6a3f48c946e518fc
     HEAD_REF master
-    PATCHES msvc-disable-deprecated-warnings.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
@@ -13,19 +12,23 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${WINRT_OPTIONS}
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
+        ${WINRT_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/taglib)
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/taglib.pc")
 if(EXISTS "${pcfile}")
-    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: zlib")
+    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: zlib" IGNORE_UNCHANGED)
     vcpkg_replace_string("${pcfile}" " -lz" "")
 endif()
 set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/taglib.pc")
 if(EXISTS "${pcfile}")
-    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: zlib")
+    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: zlib" IGNORE_UNCHANGED)
     vcpkg_replace_string("${pcfile}" " -lz" "")
 endif()
 

@@ -3,13 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mpi
-    REF boost-1.79.0
-    SHA512 280b35c991741480a4ee9ae97c11ed14a108b200344ac5b4af2e5956041275dceeb1370320a90e30ac12a0ab0667afd80910776b1f0e404d5bc3637f53993010
+    REF boost-${VERSION}
+    SHA512 67a303c294048f64f64927bc706881a4502c0cdea149a4b65bee9827d415ff268400c6104b78ff3a34528be9786cc023b2b651b26bb4b0b94c2079e531789500
     HEAD_REF master
-    PATCHES fix-build-boost_mpi_python-on-windows.patch
+    PATCHES
+        revert_mpi_cxx_bool.diff
 )
 
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

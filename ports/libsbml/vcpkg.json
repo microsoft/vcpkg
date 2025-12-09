@@ -1,9 +1,10 @@
 {
   "name": "libsbml",
-  "version": "5.19.0",
-  "port-version": 2,
+  "version": "5.20.4",
   "description": "A library for reading / writing SBML files",
-  "supports": "!uwp",
+  "homepage": "https://github.com/sbmlteam/libsbml",
+  "license": null,
+  "supports": "!uwp & !xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -16,7 +17,6 @@
   ],
   "default-features": [
     "comp",
-    "expat",
     "fbc",
     "groups",
     "layout",
@@ -51,7 +51,10 @@
     "libxml2": {
       "description": "libsbml using libxml2 parser",
       "dependencies": [
-        "libxml2"
+        {
+          "name": "libxml2",
+          "default-features": false
+        }
       ]
     },
     "multi": {
@@ -64,12 +67,23 @@
       "description": "support for Qualitative Modeling"
     },
     "render": {
-      "description": "support for Rendering information"
+      "description": "support for Rendering information",
+      "dependencies": [
+        {
+          "name": "libsbml",
+          "default-features": false,
+          "features": [
+            "layout"
+          ]
+        }
+      ]
     },
     "test": {
       "description": "Unit testing of libSBMLs implementation",
+      "supports": "!windows | mingw | (windows & static)",
       "dependencies": [
-        "check"
+        "check",
+        "dirent"
       ]
     },
     "zlib": {

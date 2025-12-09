@@ -1,0 +1,34 @@
+From 3c43def510e7c4c115fbe3938db8e4fe9bc2e311 Mon Sep 17 00:00:00 2001
+From: Max Khon <fjoe@samodelkin.net>
+Date: Tue, 8 Feb 2022 12:58:30 +0700
+Subject: [PATCH 08/11] python.pc
+
+Fix pkgconfig for debug Linux builds (#22529)
+---
+ Misc/python-embed.pc.in | 2 +-
+ Misc/python.pc.in       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Misc/python-embed.pc.in b/Misc/python-embed.pc.in
+index 2be9df8143..92142dfe68 100644
+--- a/Misc/python-embed.pc.in
++++ b/Misc/python-embed.pc.in
+@@ -10,4 +10,4 @@ Requires:
+ Version: @VERSION@
+ Libs.private: @LIBS@
+ Libs: -L${libdir} -lpython@VERSION@@ABIFLAGS@
+-Cflags: -I${includedir}/python@VERSION@@ABIFLAGS@
++Cflags: -I${includedir}/python@VERSION@
+diff --git a/Misc/python.pc.in b/Misc/python.pc.in
+index 87e04decc2..0349dc81ba 100644
+--- a/Misc/python.pc.in
++++ b/Misc/python.pc.in
+@@ -10,4 +10,4 @@ Requires:
+ Version: @VERSION@
+ Libs.private: @LIBS@
+ Libs: -L${libdir} @LIBPYTHON@
+-Cflags: -I${includedir}/python@VERSION@@ABIFLAGS@
++Cflags: -I${includedir}/python@VERSION@
+-- 
+2.37.3.windows.1
+

@@ -17,7 +17,7 @@ endfunction()
 
 function(z_vcpkg_get_visual_studio_generator)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "OUT_GENERATOR;OUT_ARCH" "")
-    
+
     if (NOT DEFINED arg_OUT_GENERATOR)
         message(FATAL_ERROR "OUT_GENERATOR must be defined.")
     endif()
@@ -27,16 +27,24 @@ function(z_vcpkg_get_visual_studio_generator)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
             message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    if("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v120" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        set(generator "Visual Studio 12 2013")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v140" AND NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
-        set(generator "Visual Studio 14 2015")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v141")
-        set(generator "Visual Studio 15 2017")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v142")
-        set(generator "Visual Studio 16 2019")
-    elseif("${VCPKG_PLATFORM_TOOLSET}" STREQUAL "v143")
-        set(generator "Visual Studio 17 2022")
+
+    if(DEFINED ENV{VisualStudioVersion})
+        if("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "12.99" AND
+           "$ENV{VisualStudioVersion}" VERSION_GREATER_EQUAL  "12.0" AND
+           NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+            set(generator "Visual Studio 12 2013")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "14.99" AND
+               NOT "${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "arm64")
+            set(generator "Visual Studio 14 2015")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "15.99")
+            set(generator "Visual Studio 15 2017")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "16.99")
+            set(generator "Visual Studio 16 2019")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "17.99")
+            set(generator "Visual Studio 17 2022")
+        elseif("$ENV{VisualStudioVersion}" VERSION_LESS_EQUAL  "18.99")
+            set(generator "Visual Studio 18 2026")
+        endif()
     endif()
 
     if("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
@@ -53,28 +61,7 @@ function(z_vcpkg_get_visual_studio_generator)
 endfunction()
 
 function(z_vcpkg_select_default_vcpkg_chainload_toolchain)
-    # Try avoiding adding more defaults here. 
-    # Set VCPKG_CHAINLOAD_TOOLCHAIN_FILE explicitly in the triplet.
-    if(DEFINED Z_VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${Z_VCPKG_CHAINLOAD_TOOLCHAIN_FILE}")
-    elseif(VCPKG_TARGET_IS_MINGW)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
-    elseif(VCPKG_TARGET_IS_WINDOWS)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
-    elseif(VCPKG_TARGET_IS_ANDROID)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
-    elseif(VCPKG_TARGET_IS_OSX)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-    elseif(VCPKG_TARGET_IS_IOS)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
-    elseif(VCPKG_TARGET_IS_FREEBSD)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
-    elseif(VCPKG_TARGET_IS_OPENBSD)
-        set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
-    endif()
-    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE ${VCPKG_CHAINLOAD_TOOLCHAIN_FILE} PARENT_SCOPE)
+    set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${Z_VCPKG_CHAINLOAD_TOOLCHAIN_FILE}" PARENT_SCOPE)
 endfunction()
 
 
@@ -149,8 +136,12 @@ function(vcpkg_configure_cmake)
         if("${generator}" STREQUAL "" OR "${generator_arch}" STREQUAL "")
             message(FATAL_ERROR
                 "Unable to determine appropriate generator for triplet ${TARGET_TRIPLET}:
+    ENV{VisualStudioVersion} : $ENV{VisualStudioVersion}
     platform toolset: ${VCPKG_PLATFORM_TOOLSET}
     architecture    : ${VCPKG_TARGET_ARCHITECTURE}")
+        endif()
+        if(DEFINED VCPKG_PLATFORM_TOOLSET)
+            vcpkg_list(APPEND arg_OPTIONS "-T${VCPKG_PLATFORM_TOOLSET}")
         endif()
     endif()
 
@@ -173,6 +164,10 @@ function(vcpkg_configure_cmake)
         elseif(VCPKG_TARGET_IS_ANDROID AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 21)
         endif()
+    endif()
+
+    if(DEFINED VCPKG_XBOX_CONSOLE_TARGET)
+        vcpkg_list(APPEND arg_OPTIONS "-DXBOX_CONSOLE_TARGET=${VCPKG_XBOX_CONSOLE_TARGET}")
     endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
@@ -257,13 +252,13 @@ function(vcpkg_configure_cmake)
     endif()
 
     vcpkg_list(SET rel_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
         -G "${generator}"
         "-DCMAKE_BUILD_TYPE=Release"
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
         ${arg_OPTIONS} ${arg_OPTIONS_RELEASE})
     vcpkg_list(SET dbg_command
-        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}" 
+        "${CMAKE_COMMAND}" "${arg_SOURCE_PATH}"
         -G "${generator}"
         "-DCMAKE_BUILD_TYPE=Debug"
         "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
@@ -301,9 +296,11 @@ function(vcpkg_configure_cmake)
             COMMAND "${NINJA}" -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGNAME}"
-            SAVE_LOG_FILES ../../${TARGET_TRIPLET}-dbg/CMakeCache.txt ../CMakeCache.txt
+            SAVE_LOG_FILES
+                "../../${TARGET_TRIPLET}-dbg/CMakeCache.txt" ALIAS "dbg-CMakeCache.txt.log"
+                "../CMakeCache.txt" ALIAS "rel-CMakeCache.txt.log"
         )
-        
+
         vcpkg_list(APPEND config_logs
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out.log"
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
@@ -336,7 +333,7 @@ function(vcpkg_configure_cmake)
                 "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-err.log")
         endif()
     endif()
-    
+
     # Check unused variables
     vcpkg_list(SET all_unused_variables)
     foreach(config_log IN LISTS config_logs)

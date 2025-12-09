@@ -1,0 +1,15 @@
+diff --git a/configure b/configure
+index 6f95e2314..e677e36f4 100644
+--- a/configure
++++ b/configure
+@@ -606,9 +606,9 @@ if [[ $host_os = mingw* || $host_os = msys* || $host_os = cygwin* ]]; then
+         if cc_check '' -Qdiag-error:10006,10157 ; then
+             CHECK_CFLAGS="$CHECK_CFLAGS -Qdiag-error:10006,10157"
+         fi
+-    elif [[ "$cc_base" = cl || "$cc_base" = cl[\ .]* ]]; then
++    elif [[ "$cc_base" = cl || "$cc_base" = cl[\ .]* || "$cc_base" = clang-cl || "$cc_base" = clang-cl[\ .]* ]]; then
+         # Standard Microsoft Visual Studio
+         compiler=CL
+         compiler_style=MS
+         CFLAGS="$CFLAGS -nologo -GS- -DHAVE_STRING_H -I\$(SRCPATH)/extras"
+         cpp_check '' '' '_MSC_VER > 1800 || (_MSC_VER == 1800 && _MSC_FULL_VER >= 180030324)' || die "Microsoft Visual Studio support requires Visual Studio 2013 Update 2 or newer"

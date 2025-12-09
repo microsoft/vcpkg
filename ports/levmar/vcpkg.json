@@ -1,8 +1,14 @@
 {
   "name": "levmar",
   "version": "2.6",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Levenberg-Marquardt nonlinear least squares optimization algorithm",
   "homepage": "http://users.ics.forth.gr/~lourakis/levmar/",
-  "supports": "windows & !uwp"
+  "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

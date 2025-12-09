@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pvigier/Quadtree
-    REF fec2e1a011f656353ba12c58cefe33482e1a27b5
-    SHA512 8291afb29b9ff5714125e411122f6f10e1c2e4c2109384e25afa834548dc1f63c90b2d09c7cfed213ad69a8c54cf32fc598783b3ff0882bc86562594895d5c35
+    REF a28cb41eeee3f020eb807cf9d7fd5859f62bbacd
+    SHA512 52fcf3b48d87f18a05feb216f5439eba3f19608b4453c27a3c689242ba638588c054c7b5a39f0686073314ed6ac53717a37b6cdc66f9cd6e5d96f0fe84d90d54
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         -DCODE_COVERAGE=OFF

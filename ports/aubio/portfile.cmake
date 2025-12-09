@@ -3,9 +3,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aubio/aubio
-    REF 0.4.9
-    SHA512 a22c7c581ce1f428270021591649273396e6dc222b3c7b3d46f5c4abf94a98be1ab89320cdbf1b6b60d4330eef23976439e3fc9e0f8d3cdd867dac4542fa48c9
+    REF 152d6819b360c2e7b379ee3f373d444ab3df0895
+    SHA512 923529eb27e460293bd2b8b8c53d5eb96553e3e1ece7071904808d8f20f86b7af70bde97d271da9a07ee1898d0840190f265e326e67f48c6f5cadefa034abf0f
     HEAD_REF master
+    PATCHES
+        ffmpeg7.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
@@ -31,6 +33,10 @@ vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES aubiomfcc aubionotes aubioonset aubiopitch aubioquiet aubiotrack
+        SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/aubio
+        AUTO_CLEAN)
+endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

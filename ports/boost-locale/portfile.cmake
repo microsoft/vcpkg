@@ -3,23 +3,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.79.0
-    SHA512 2f036406e8343895b3749bd7769b1dadb48d7552862898842b43eccf51c62153f4683c46cef91fd97228d6022e60a9bdb0726a00bcc74f519e0539b3a69dc0bf
+    REF boost-${VERSION}
+    SHA512 113e4a0abc158bbb0c6a2fae0b920449ecbd4346db8e3845f2c49bc1caca0497e15824e91546c91972d48976913860e23f51ee5700ce2c3f31c217fb8034fe1c
     HEAD_REF master
-    PATCHES
-        0001-Fix-boost-ICU-support.patch
-        allow-force-finding-iconv.patch
 )
 
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"
-    "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
-    @ONLY
+set(FEATURE_OPTIONS "")
+include("${CMAKE_CURRENT_LIST_DIR}/features.cmake")
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_IS_MINGW)
+    # mingw cross compile toolchain lacks std conv support
+    list(APPEND FEATURE_OPTIONS "-DBOOST_LOCALE_ENABLE_STD=OFF")
+endif()
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-boost_modular_build(
-    SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
-)
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

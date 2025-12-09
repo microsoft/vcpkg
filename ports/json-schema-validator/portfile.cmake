@@ -1,30 +1,26 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pboettch/json-schema-validator
-    REF 27fc1d094503623dfe39365ba82581507524545c
-    SHA512 4fd05087743f43871586a53d119acd1a19d0bdec8a5620f62b6eee7a926d285842e8439127eec52eeb11069c92b8d9af28558897d48e2422ecafca39d9f23cdb
+    REF "${VERSION}"
+    SHA512 67d7ffbee7fe0761171d021d66955c760ee02161a1fb3a3eb89e15cb3f320cb4646f5ae7f9c15ddf50b9ad4312dd03af4eb5c88f7427da9426f0ce4afb67ee59
     HEAD_REF master
-    PATCHES
-        fix-ambiguous-assignment.patch
-        cmake-find-package.patch
-        forward-find-package.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" BUILD_SHARED_LIBS)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
+        -DJSON_VALIDATOR_INSTALL=ON
+        -DJSON_VALIDATOR_BUILD_TESTS=OFF
+        -DJSON_VALIDATOR_BUILD_EXAMPLES=OFF
+        -DJSON_VALIDATOR_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-set(PKG_NAME "nlohmann_json_schema_validator")
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PKG_NAME} TARGET_PATH share/${PKG_NAME})
+vcpkg_cmake_config_fixup(PACKAGE_NAME "nlohmann_json_schema_validator" CONFIG_PATH "lib/cmake/nlohmann_json_schema_validator")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

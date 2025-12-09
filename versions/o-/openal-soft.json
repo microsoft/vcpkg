@@ -1,6 +1,81 @@
 {
   "versions": [
     {
+      "git-tree": "e6c23049e3c80b2f0a031b0531fc92be404754a4",
+      "version": "1.24.3",
+      "port-version": 1
+    },
+    {
+      "git-tree": "f783908f96ce29c1b94aa4fb26ea8660168f6ac6",
+      "version": "1.24.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "368c76c235972804893059e75da4584486a8a0d0",
+      "version": "1.24.2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a204aed6d6c40cb7978806f705a7bde193b275e6",
+      "version": "1.24.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "137257eb7378d83836adecdaf83807ef8f7f120c",
+      "version": "1.24.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "f6ba0a57ee95816ceac7fc3b882bdcc6029591cb",
+      "version": "1.23.1",
+      "port-version": 2
+    },
+    {
+      "git-tree": "8000875d5dc94ae2b77e940befb113655efd55c1",
+      "version": "1.23.1",
+      "port-version": 1
+    },
+    {
+      "git-tree": "d23d6573247830bd439e418fe0e31321de778d85",
+      "version": "1.23.1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "98c0f637759df2df98bf090cb115ad19cc2fdc06",
+      "version": "1.23.0",
+      "port-version": 2
+    },
+    {
+      "git-tree": "2179403cae57a853e75e3d30363750c39e370bc6",
+      "version": "1.23.0",
+      "port-version": 1
+    },
+    {
+      "git-tree": "3c25d8ead902160593b570f4696cf2eba2d86511",
+      "version": "1.23.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "971382f7c68a055694a35b455deab6384e8cfb25",
+      "version-semver": "1.22.2",
+      "port-version": 5
+    },
+    {
+      "git-tree": "8f028dc8de3d983f0844c0b586c1b6ddfad5d899",
+      "version-semver": "1.22.2",
+      "port-version": 4
+    },
+    {
+      "git-tree": "a0e8008cd2061bcaeaf0ed725438edae4386aac1",
+      "version-semver": "1.22.2",
+      "port-version": 3
+    },
+    {
+      "git-tree": "a964545a6c1ea12eb653de3d4739431ddf1cce85",
+      "version-semver": "1.22.2",
+      "port-version": 2
+    },
+    {
       "git-tree": "2a5b37e3c3d9cd16ebbcdaddcce6cb7249aa21ec",
       "version-semver": "1.22.2",
       "port-version": 1

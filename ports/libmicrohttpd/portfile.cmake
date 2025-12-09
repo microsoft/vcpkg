@@ -1,16 +1,15 @@
-set(MICROHTTPD_VERSION 0.9.75)
-
 vcpkg_download_distfile(ARCHIVE
     URLS
-        "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz"
-        "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz"
-    FILENAME "libmicrohttpd-${MICROHTTPD_VERSION}.tar.gz"
-    SHA512 4dc62ed191342a61cc2767171bb1ff4050f390db14ef7100299888237b52ea0b04b939c843878fe7f5daec2b35a47b3c1b7e7c11fb32d458184fe6b19986a37c
+        "https://ftpmirror.gnu.org/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
+        "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
+    FILENAME "libmicrohttpd-${VERSION}.tar.gz"
+    SHA512 7092f307a00ba04b539be79a7c94ddf9b4b6e43343a66da49c6602fa860f77cf7f9017d7e40f9b7400d85a828a503248eb12dd121413aad68133003a20bb2c4a
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES remove_pdb_install.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -20,33 +19,43 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(CFG_SUFFIX "static")
     endif()
 
-    vcpkg_install_msbuild(
+    vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH w32/VS2015/libmicrohttpd.vcxproj
+        PROJECT_SUBPATH w32/VS-Any-Version/libmicrohttpd.vcxproj
         RELEASE_CONFIGURATION "Release-${CFG_SUFFIX}"
         DEBUG_CONFIGURATION "Debug-${CFG_SUFFIX}"
     )
     
-    file(GLOB MICROHTTPD_HEADERS "${SOURCE_PATH}/src/include/microhttpd*.h")
+    file(GLOB MICROHTTPD_HEADERS "${SOURCE_PATH}/src/include/microhttpd.h")
     file(COPY ${MICROHTTPD_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 else()
+    vcpkg_list(SET config_args)
     if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(ENV{LIBS} "$ENV{LIBS} -framework Foundation -framework AppKit") # TODO: Get this from the extracted cmake vars somehow
     endif()
-    vcpkg_configure_make(
+    if("https" IN_LIST FEATURES)
+        vcpkg_list(APPEND config_args "--enable-https")
+    else()
+        vcpkg_list(APPEND config_args "--disable-https")
+    endif()
+
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        AUTORECONF
         OPTIONS
             --disable-doc
             --disable-examples
             --disable-curl
-            --disable-https
-            --with-gnutls=no
+            --disable-tools
+            ${config_args}
+        OPTIONS_DEBUG --enable-asserts
+        OPTIONS_RELEASE --disable-asserts
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

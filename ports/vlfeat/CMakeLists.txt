@@ -1,50 +1,24 @@
-cmake_minimum_required (VERSION 3.10)
-project (vlfeat)
+cmake_minimum_required(VERSION 3.10)
+project(vlfeat LANGUAGES C)
 
-set(INSTALL_BIN_DIR      "bin"                      CACHE PATH "Path where exe and dll will be installed")
-set(INSTALL_LIB_DIR      "lib"                      CACHE PATH "Path where lib will be installed")
-set(INSTALL_INCLUDE_DIR  "include/vlfeat"           CACHE PATH "Path where headers will be installed")
-set(INSTALL_CMAKE_DIR    "share/vlfeat"             CACHE PATH "Path where cmake configs will be installed")
-
-# Make relative paths absolute (needed later on)
-set(RELATIVE_INSTALL_INCLUDE_DIR ${INSTALL_INCLUDE_DIR})
-foreach(p LIB BIN INCLUDE CMAKE)
-  set(var INSTALL_${p}_DIR)
-  if(NOT IS_ABSOLUTE "${${var}}")
-    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-  endif()
-endforeach()
-
-# make sure that the default is a RELEASE
-set(default_build_type "Release")
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
-  set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
-      STRING "Choose the type of build." FORCE)
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-endif()
-
-if(ENABLE_OPENMP)
-  find_package(OpenMP REQUIRED)
-  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+if(NOT DEFINED CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
   add_definitions(-D__LITTLE_ENDIAN__)
-  add_definitions(/Zp8)
-  add_definitions(/wd4146)
+  add_compile_options(/Zp8)
+  add_compile_options(/wd4146)
   if(CMAKE_C_FLAGS MATCHES "/W[0-4]")
     string(REGEX REPLACE "/W[0-4]" "/W1" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
   endif()
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCC)
-  add_definitions(-std=c99)
-  add_definitions(-Wno-unused-function)
-  add_definitions(-Wno-long-long)
-  add_definitions(-Wno-variadic-macros)
+  add_compile_options(-Wno-unused-function)
+  add_compile_options(-Wno-long-long)
+  add_compile_options(-Wno-variadic-macros)
 endif()
 
 if(USE_SSE)
@@ -138,22 +112,30 @@ set (H_SOURCES
   vl/vlad.h
 )
 
+include(GNUInstallDirs)
+
 add_library(vl ${C_SOURCES} ${H_SOURCES})
 set_property(TARGET vl PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_compile_definitions(vl PRIVATE -DVL_BUILD_DLL)
-target_include_directories(vl PUBLIC $<INSTALL_INTERFACE:${RELATIVE_INSTALL_INCLUDE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/vl>)
-set_target_properties(vl PROPERTIES PUBLIC_HEADER "${H_SOURCES}")
+target_include_directories(vl PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_compile_features(vl PRIVATE c_std_99)
 
-install(TARGETS vl EXPORT vlfeatTargets
-  RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
-  LIBRARY DESTINATION "${INSTALL_LIB_DIR}"
-  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}"
-  COMPONENT dev
+if(ENABLE_OPENMP)
+  find_package(OpenMP REQUIRED)
+  # PRIVATE because '#pragma omp' is only used in .c files
+  target_link_libraries(vl PRIVATE OpenMP::OpenMP_C)
+endif()
+
+install(TARGETS vl
+    EXPORT vlfeatTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+install(FILES ${H_SOURCES} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/vl")
 
 install(EXPORT vlfeatTargets
   FILE vlfeatConfig.cmake
   NAMESPACE unofficial::vlfeat::
-  DESTINATION "${INSTALL_CMAKE_DIR}"
+  DESTINATION "share/vlfeat"
 )

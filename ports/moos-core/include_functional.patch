@@ -1,0 +1,12 @@
+diff --git a/Core/libMOOS/Utils/MOOSUtilityFunctions.cpp b/Core/libMOOS/Utils/MOOSUtilityFunctions.cpp
+index 9d4473f..3f91018 100644
+--- a/Core/libMOOS/Utils/MOOSUtilityFunctions.cpp
++++ b/Core/libMOOS/Utils/MOOSUtilityFunctions.cpp
+@@ -47,6 +47,7 @@
+ #include <time.h>
+ #include <stdarg.h>
+ #include <math.h>
++#include <functional>
+ 
+ #ifndef _WIN32
+ #include <unistd.h>

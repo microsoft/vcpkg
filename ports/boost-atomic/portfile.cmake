@@ -3,17 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/atomic
-    REF boost-1.79.0
-    SHA512 0ac0c72b3455440ad93b3659ce3796916cf718ce4161d9391a397c8f687d2f73efe2a68bb134b178f4d004de769fc75ff75717802ca6c56968c28f46c50ce1eb
+    REF boost-${VERSION}
+    SHA512 70f79e273c87849645d3faa6decc21f354f731b3e5297278ebc2e9398b82b7a93e33e146eee016f2b6e8e05485c303e5edc5a7e3bbe6ef23806ed86ef5654f63
     HEAD_REF master
+    PATCHES
+        fix-include.patch
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
-    "project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ]"
-    "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]"
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

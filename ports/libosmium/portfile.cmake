@@ -1,22 +1,23 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osmcode/libosmium
-    REF v2.17.1
-    SHA512 08d1eb272b82364118b97213310e5d62fdbb071cfad74989bdc5bb25f9e14b067d53016d19bfed3972d3385343fc74edf86407860be83c59e74902cd1f26bb33
+    REF "v${VERSION}"
+    SHA512 0d2b5e8e316d05c8e2d05b58d1c79136b1d78fffb116cb39987d007a4c68b325d8d7551e4c55b67e5c46927c92df720a0360c9abbc8784b9af9f86846297dae2
 )
-set(BOOST_ROOT "${CURRENT_INSTALLED_DIR}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_GDAL=ON
+        # for transitive dependencies via pkgconf 
+        -DPKG_CONFIG_USE_CMAKE_PREFIX_PATH=1
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
 )
-
 vcpkg_cmake_install()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

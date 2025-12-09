@@ -3,11 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fnc12/sqlite_orm
-    REF v1.7.1
-    SHA512 ab934959245e8e0aaefd543ef0c1ab336547e4c311aff9dda916c7577c006622dec917313350d0d8bde4366d42b458c915fc2ea2fb927c01910fe429e55c8bbc
+    REF "v${VERSION}"
+    SHA512 3e939ddb31e8f03a5f885e459b1ba8040b58e697a715148b829b075d612d1c8a5686ec889155ec9804929e11ec11285a39af3f1eb27a4edf0bcc56c4ee7530b1
     HEAD_REF master
     PATCHES 
-        fix-features-build-error.patch
         fix-dependency.patch
 )
 
@@ -22,6 +21,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DSQLITE_ORM_ENABLE_CXX_17=OFF
+        -DSQLITE_ORM_ENABLE_CXX_20=OFF
 )
 
 vcpkg_cmake_install()

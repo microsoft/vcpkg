@@ -3,21 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/log
-    REF boost-1.79.0
-    SHA512 da3fff9756f991a6b3a1529499c4f58fa4ac6167c2dfaf1b7debd45e5a2c1f0687dee1e0edb21d28859971f9e0afab3e1aae3a48b6a39a98dc6d52a697b0f2c4
+    REF boost-${VERSION}
+    SHA512 8acb1655e070429b025c3252d223c4e539c208d6f7a57b40acfdd5d01cfdcedf724b2ef34b70a458b64118e133b6a62802196398891987c17bd018908827fd16
     HEAD_REF master
 )
 
-file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
-string(REPLACE "import ../../config/checks/config" "import ../config/checks/config" _contents "${_contents}")
-string(REPLACE " <conditional>@select-arch-specific-sources" "#<conditional>@select-arch-specific-sources" _contents "${_contents}")
-file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
-vcpkg_replace_string("${SOURCE_PATH}/build/log-arch-config.jam"
-    "project.load [ path.join [ path.make $(here:D) ] ../../config/checks/architecture ]"
-    "project.load [ path.join [ path.make $(here:D) ] ../config/checks/architecture ]"
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/config")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

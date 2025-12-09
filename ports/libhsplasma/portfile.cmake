@@ -1,8 +1,10 @@
+string(REGEX REPLACE "-" "." REF_DOT_VERSION_DATE ${VERSION})
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO H-uru/libhsplasma
-    REF 2327302a62b891f551b5f6daf899cf86997dce72 # 2022.05.19
-    SHA512 89755e502e4a66a56013e3ff52c8d0c2350e5681be49c1b47f580591e3c3da24c587dee5af4f9524ea43f2d86f24ecef611d62d6045b293eb8d09cd5f0ac3d18
+    REF "${REF_DOT_VERSION_DATE}"
+    SHA512 bf882347b8272a06335776454c339ccb36edcc4068978c2675700cf124f319eccc23a739427a3e2f57e1f27c3f4c5281db9ce5a914de78e97704f8b94af61d8e
     HEAD_REF master
 )
 
@@ -18,6 +20,10 @@ vcpkg_cmake_configure(
         -DENABLE_PHYSX=OFF
         -DENABLE_PYTHON=OFF
         -DENABLE_TOOLS=OFF
+
+        # Catch2 test discovery has some odd interactions with PATH, which
+        # appear to still be unresolved.  For simplicity, just skip tests.
+        -DENABLE_TESTS=OFF
 )
 
 vcpkg_cmake_install()

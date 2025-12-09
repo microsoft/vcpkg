@@ -1,9 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mdadams/jasper
-    REF fe00207dc10db1d7cc6f2757961c5c6bdfd10973 # version-2.0.33
-    SHA512 887bb8e6096b41d5b61970d70b0e7b9cc1c31dd63467386aa35003c146d200bbae9ad46825a3313aeed403ac6fb26d504f489386cbc7ca364d95deeb5a94af46
+    REPO jasper-software/jasper
+    REF "version-${VERSION}"
+    SHA512 57d33b988f92a0aa2b30af983280c2210f4ed9548dc8a38ed34fce76698489ed37d05b11b1aa92d9c4d0223deb306fbbb11900b696ba080926d4aaf2b62b2740
     HEAD_REF master
+    PATCHES
+        no_stdc_check.patch
+        fix-library-name.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -13,22 +16,19 @@ endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" JAS_ENABLE_SHARED)
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        opengl    JAS_ENABLE_OPENGL        
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DJAS_ENABLE_AUTOMATIC_DEPENDENCIES=OFF
+        ${FEATURE_OPTIONS}
+        -DJAS_ENABLE_LIBHEIF=OFF # found via find_library instead of find_package
         -DJAS_ENABLE_LIBJPEG=ON
-        -DJAS_ENABLE_OPENGL=${JAS_ENABLE_OPENGL}
         -DJAS_ENABLE_DOC=OFF
+        -DJAS_ENABLE_LATEX=OFF
+        -DJAS_ENABLE_OPENGL=OFF  # only used by programs, which are turned off
         -DJAS_ENABLE_PROGRAMS=OFF
         -DJAS_ENABLE_SHARED=${JAS_ENABLE_SHARED}
     OPTIONS_DEBUG
-        -DCMAKE_DEBUG_POSTFIX=d # Due to CMakes FindJasper
+        -DCMAKE_DEBUG_POSTFIX=d # Due to CMakes FindJasper; Default for multi config generators.
 )
 
 vcpkg_cmake_install()
@@ -39,4 +39,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE.txt)

@@ -8,13 +8,14 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${LIBRTTOPO_PACKAGE_SUM}
 )
 
-vcpkg_extract_source_archive_ex(
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         fix-makefiles.patch
         geos-config.patch
         fix-pc-file.patch
+        constant-nan.patch # https://developercommunity.visualstudio.com/t/NAN-is-no-longer-compile-time-constant-i/10688907
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -27,6 +28,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_build_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
         TARGET librttopo.lib
+        CL_LANGUAGE C
         OPTIONS
             "OPTFLAGS=${OPTFLAGS}"
             "CFLAGS=-I. -Iheaders ${OPTFLAGS}"

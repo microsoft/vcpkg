@@ -1,0 +1,26 @@
+diff --git a/c-sdk-common/src/ldvalue.c b/c-sdk-common/src/ldvalue.c
+index c3fbce9..53f0515 100644
+--- a/c-sdk-common/src/ldvalue.c
++++ b/c-sdk-common/src/ldvalue.c
+@@ -166,7 +166,7 @@ unsigned int LDValue_Count(struct LDValue *value) {
+     return cJSON_GetArraySize(AS_CJSON(value));
+ }
+ 
+-struct LDObject *LDObject_New() {
++struct LDObject *LDObject_New(void) {
+     return AS_LDOBJECT(cJSON_CreateObject());
+ }
+ 
+diff --git a/src/integrations/test_data.c b/src/integrations/test_data.c
+index 24146c9..4a2587f 100644
+--- a/src/integrations/test_data.c
++++ b/src/integrations/test_data.c
+@@ -96,7 +96,7 @@ LDBoolean LDi_isBooleanFlag(struct LDFlagBuilder *flagBuilder) {
+ }
+ 
+ struct LDTestData *
+-LDTestDataInit() {
++LDTestDataInit(void) {
+     struct LDTestData *res;
+     struct LDJSON *currentFlags;
+     if(!ALLOCATE(struct LDTestData, res)) {

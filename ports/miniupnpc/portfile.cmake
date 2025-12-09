@@ -1,19 +1,17 @@
+string(REPLACE "." "_" MINIUPNPC_VERSION "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO miniupnp/miniupnp
-    REF miniupnpc_2_1
-    SHA512 f2ab5116c094982f7838ccab460d3db07a99de1094448277fc45841e0e64ea1b4216d75a7e5dd471c79ff9b0132b89e4d801c3ad1b60d55631c12c916df658f5
+    REF "miniupnpc_${MINIUPNPC_VERSION}"
+    SHA512 f8c79d2fb19de0ec3d053200320abf2ce3f7552b04f8f3f0b175577ee93e6c0bfb5c18a863197216436ebe9d44dd429fba407e0da83a1270dd3d46b380ac6ee1
     HEAD_REF master
-    PATCHES
-        cmakelists.diff
 )
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" MINIUPNPC_BUILD_SHARED)
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" MINIUPNPC_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MINIUPNPC_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MINIUPNPC_BUILD_STATIC)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/miniupnpc
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}/miniupnpc"
     OPTIONS
     -DUPNPC_BUILD_STATIC=${MINIUPNPC_BUILD_STATIC}
     -DUPNPC_BUILD_SHARED=${MINIUPNPC_BUILD_SHARED}
@@ -21,7 +19,20 @@ vcpkg_configure_cmake(
     -DUPNPC_BUILD_SAMPLE=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/miniupnpc RENAME copyright)
+vcpkg_cmake_config_fixup(CONFIG_PATH "/lib/cmake/${PORT}")
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+else()
+    file(GLOB RELEASE_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+    if(${RELEASE_TOOLS})
+        vcpkg_copy_tools(TOOL_NAMES ${RELEASE_TOOLS} AUTO_CLEAN)
+    endif()
+endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,9 +1,10 @@
 {
   "name": "pango",
-  "version": "1.50.7",
+  "version": "1.56.4",
   "description": "Text and font handling library.",
   "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pango/",
-  "license": "LGPL-2.0-only",
+  "license": "LGPL-2.0-or-later",
+  "supports": "!xbox",
   "dependencies": [
     {
       "name": "cairo",
@@ -14,7 +15,15 @@
     "fontconfig",
     "freetype",
     "fribidi",
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "gettext-libintl",
     "glib",
     {
       "name": "glib",
@@ -32,5 +41,21 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "introspection": {
+      "description": "Build with introspection",
+      "supports": "!static",
+      "dependencies": [
+        "gobject-introspection",
+        {
+          "name": "harfbuzz",
+          "default-features": false,
+          "features": [
+            "introspection"
+          ]
+        }
+      ]
+    }
+  }
 }

@@ -12,8 +12,8 @@ vcpkg_download_distfile(LICENSE
     SHA512 7d79aae4c9beb85811a3e122a2b12aad231f519dd12a461ac49d52864a735a6b05a263d433c11ede1406d2e49b6dc62dd38487eb7bd8c079d7198a20cf85fc4d
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
 )

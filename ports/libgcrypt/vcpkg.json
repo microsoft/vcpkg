@@ -1,10 +1,19 @@
 {
   "name": "libgcrypt",
-  "version": "1.10.1",
+  "version": "1.11.1",
   "description": "A general purpose cryptographic library",
   "homepage": "https://gnupg.org/software/libgcrypt/index.html",
-  "supports": "linux | osx",
+  "license": null,
+  "supports": "!windows | mingw",
   "dependencies": [
-    "libgpg-error"
+    {
+      "name": "libgcrypt",
+      "host": true
+    },
+    "libgpg-error",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ]
 }

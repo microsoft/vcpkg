@@ -1,11 +1,16 @@
+string(REPLACE "." "_" UNDERSCORES_VERSION "${VERSION}")
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.onelab.info
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gmsh/gmsh
-    REF gmsh_4_9_0
-    SHA512 e70a09741a86a9131094e77742078aec1cc94517e1d7c855c257bc93c21c057e25c7ac5168d31ec4d905d78f31d5704faf63bfd3a81b4b9e2ebbcfacf2fdaa8b
+    REF "${PORT}_${UNDERSCORES_VERSION}"
+    SHA512 45992b474b9e25aa681474740699dc5601abb1cdcbd4e6d3a0eca14a49cac576e085b3d2ffd11d39eab64aa2452c6a411975afabba668305650ec34b4b0040ff
     HEAD_REF master
-    PATCHES fix-install.patch
+    PATCHES
+        installdirs.diff
+        linking-and-naming.diff
+        opencascade.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_LIB)
@@ -14,10 +19,9 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        opencascade ENABLE_OCC
-        opencascade ENABLE_OCC_CAF
-        opencascade ENABLE_OCC_TBB
         mpi         ENABLE_MPI
+        occ         ENABLE_OCC
+        occ         ENABLE_OCC_CAF
         zipper      ENABLE_ZIPPER
 )
 
@@ -30,10 +34,12 @@ vcpkg_cmake_configure(
         -DENABLE_BUILD_LIB=${BUILD_LIB}
         -DENABLE_BUILD_SHARED=${BUILD_SHARED}
         -DENABLE_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
+        -DENABLE_OS_SPECIFIC_INSTALL=OFF
+        -DGMSH_PACKAGER=vcpkg
         -DGMSH_RELEASE=ON
         -DENABLE_PACKAGE_STRIP=ON
         -DENABLE_SYSTEM_CONTRIB=ON
-        # Not implement
+        # Not implemented
         -DENABLE_GRAPHICS=OFF # Requires mesh, post, plugins and onelab
         -DENABLE_POST=OFF
         -DENABLE_PLUGINS=OFF
@@ -103,9 +109,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

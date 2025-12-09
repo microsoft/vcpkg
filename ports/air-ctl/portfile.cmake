@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  inie0722/CTL
-    REF fc9129720646b7e4e2bda9565aff8b2f447fbc2c #v1.1.2
-    SHA512 23cd6d17997ab6bba8fba117fc0bd5a50fd4a37a2f2ce11164596b19fe3284536dbe19108ca27576842fdf808c40961c471c898844fe74580d3d6d1877833920
+    REPO  inie0722/air-ctl
+    REF "v${VERSION}"
+    SHA512 88a20b0d833770820a8ef56725441cd4258b222ed12bb731a695c17a29c76709ed185f3a8e038d7f7437295847ff9ba77a65c5165ad7d70645c044a24365bfe9
     HEAD_REF master
+    PATCHES
+        fix-resize-error.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,4 +17,4 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

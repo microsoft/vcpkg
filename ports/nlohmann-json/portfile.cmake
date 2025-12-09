@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nlohmann/json
-    REF v3.10.5
-    SHA512 4a9d6416f383e76bf95425fc02a4e12c605fcbcae910b704e354396a493454cf8a1ffbecba11f231e020ffd2842908df7e67dbc09f62d1202d40b6815c24cfd2
+    REF "v${VERSION}"
+    SHA512 6cc1e86261f8fac21cc17a33da3b6b3c3cd5c116755651642af3c9e99bb3538fd42c1bd50397a77c8fb6821bc62d90e6b91bcdde77a78f58f2416c62fc53b97d
     HEAD_REF master
+    PATCHES
+        fix-4742_std_optional.patch
 )
 
 if(NOT DEFINED nlohmann-json_IMPLICIT_CONVERSIONS)
@@ -24,13 +26,14 @@ vcpkg_cmake_configure(
         -DJSON_ImplicitConversions=${nlohmann-json_IMPLICIT_CONVERSIONS}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "nlohmann_json" CONFIG_PATH "lib/cmake/nlohmann_json")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "nlohmann_json" CONFIG_PATH "share/cmake/nlohmann_json")
 vcpkg_fixup_pkgconfig()
 
 vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/nlohmann_json/nlohmann_jsonTargets.cmake"
     "{_IMPORT_PREFIX}/nlohmann_json.natvis"
     "{_IMPORT_PREFIX}/share/nlohmann_json/nlohmann_json.natvis"
+    IGNORE_UNCHANGED
 )
 if(EXISTS "${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis")
     file(RENAME
@@ -39,9 +42,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/nlohmann_json.natvis")
     )
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/nlohmann_json.natvis")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

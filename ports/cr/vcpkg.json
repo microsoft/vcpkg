@@ -1,7 +1,7 @@
 {
   "name": "cr",
-  "version-string": "2020-04-26",
-  "port-version": 1,
+  "version-date": "2020-04-26",
+  "port-version": 2,
   "description": "cr.h: A Simple C Hot Reload Header-only Library",
   "homepage": "https://fungos.github.io/cr-simple-c-hot-reload/"
 }

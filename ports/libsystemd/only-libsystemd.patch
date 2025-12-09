@@ -1,0 +1,56 @@
+diff --git a/meson.build b/meson.build
+index a4730f0..32ec825 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2148,12 +2148,11 @@ libsystemd_includes = [basic_includes, include_directories(
+ includes = [libsystemd_includes, include_directories('src/shared')]
+ 
+ subdir('po')
+-subdir('catalog')
++support_url='https://github.com/microsoft/vcpkg/issues'
+ subdir('src/fundamental')
+ subdir('src/basic')
+ subdir('src/libsystemd')
+-subdir('src/shared')
+-subdir('src/libudev')
++static_libudev='unused'
+ 
+ libsystemd = shared_library(
+         'systemd',
+@@ -2169,7 +2168,8 @@ libsystemd = shared_library(
+                         threads,
+                         userspace],
+         link_depends : libsystemd_sym,
+-        install : true,
++        build_by_default : static_libsystemd == 'false',
++        install : static_libsystemd == 'false',
+         install_tag: 'libsystemd',
+         install_dir : libdir)
+ 
+@@ -2205,6 +2205,8 @@ else
+         alias_target('libsystemd', libsystemd)
+ endif
+ 
++if false
++
+ libudev = shared_library(
+         'udev',
+         version : libudev_version,
+@@ -2940,6 +2942,17 @@ custom_target(
+         install_dir : testdata_dir,
+         command : [meson_extract_unit_files, meson.project_build_root()])
+ 
++else
++  # headers
++  subdir('src/systemd')
++  # subdir man
++  want_html=false
++  want_man=false
++  # subdir shell-completion/*
++  bashcompletiondir='no'
++  zshcompletiondir='no'
++endif
++
+ #####################################################################
+ 
+ alt_time_epoch = run_command('date', '-Is', '-u', '-d', '@@0@'.format(time_epoch),

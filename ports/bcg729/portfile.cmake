@@ -8,6 +8,9 @@ vcpkg_from_github(
         disable-alt-packaging.patch
 )
 
+# Already removed upstream: https://github.com/BelledonneCommunications/bcg729/pull/19
+file(REMOVE "${SOURCE_PATH}/include/MSVC/stdint.h")
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 

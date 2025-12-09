@@ -1,0 +1,21 @@
+{
+  "name": "robotraconteur-companion",
+  "version-semver": "0.4.2",
+  "homepage": "https://github.com/robotraconteur/robotraconteur_companion",
+  "license": "Apache-2.0",
+  "supports": "(windows & (x86 | x64)) | (linux & (x86 | x64 | arm64 | arm32)) | (osx & (x64 | arm64))",
+  "dependencies": [
+    "eigen3",
+    "opencv",
+    "robotraconteur",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "yaml-cpp"
+  ]
+}

@@ -1,0 +1,3 @@
+EXPORTS
+    lzf_compress
+    lzf_decompress

@@ -10,19 +10,15 @@ index ead87caff..47abb90f0 100644
    AC_ARG_WITH([geosconfig],
          [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
  	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
-@@ -327,6 +328,7 @@ if test x"$enable_geos" != "xno"; then
-   # Extract the linker and include flags
-   GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
-   GEOS_CFLAGS=-I`$GEOSCONFIG --includes`
-+ fi
-   AC_SUBST([GEOS_LDFLAGS])
-   AC_SUBST([GEOS_CFLAGS])	
+@@ -327,14 +328,17 @@ if test x"$enable_geos" != "xno"; then
    # Ensure that we can parse geos_c.h
-@@ -335,11 +337,13 @@ if test x"$enable_geos" != "xno"; then
+   CPPFLAGS_SAVE="$CPPFLAGS"
+   CPPFLAGS="$GEOS_CFLAGS"
++ fi
    AC_CHECK_HEADERS([geos_c.h],, [AC_MSG_ERROR([could not find geos_c.h - you may need to specify the directory of a geos-config file using --with-geosconfig])])
++ if 0; then
    CPPFLAGS="$CPPFLAGS_SAVE"	
    # Ensure we can link against libgeos_c
-+ if 0; then
    LIBS_SAVE="$LIBS"
    LIBS="$GEOS_LDFLAGS"
    AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([could not find libgeos_c (or obsolete 'libgeos_c' < v.3.3.0 found) - you may need to specify the directory of a geos-config file using --with-geosconfig]))

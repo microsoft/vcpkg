@@ -8,58 +8,58 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
-# Handle features
-set(_COMPONENT_FLAGS "")
-foreach(_feature IN LISTS ALL_FEATURES)
-    # Uppercase the feature name and replace "-" with "_"
-    string(TOUPPER "${_feature}" _FEATURE)
-    string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        bullet WITH_BULLET
+        eigen  WITH_EIGEN
+        glm    WITH_GLM
+        imgui  WITH_IMGUI
+)
 
-    # Turn "-DWITH_*=" ON or OFF depending on whether the feature
-    # is in the list.
-    if(_feature IN_LIST FEATURES)
-        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
-    else()
-        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
-    endif()
-endforeach()
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${_COMPONENT_FLAGS}
+        ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME MagnumIntegration CONFIG_PATH share/cmake/MagnumIntegration)
 
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
 # Clean up empty directories
 if("${FEATURES}" STREQUAL "core")
     file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/lib
-        ${CURRENT_PACKAGES_DIR}/debug
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/lib"
+        "${CURRENT_PACKAGES_DIR}/debug"
     )
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+else()
+    file(GLOB FILES "${CURRENT_PACKAGES_DIR}/debug/*")
+    list(LENGTH FILES COUNT)
+    if(COUNT EQUAL 0)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    endif()
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+file(INSTALL "${SOURCE_PATH}/COPYING"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright)
 
 vcpkg_copy_pdbs()

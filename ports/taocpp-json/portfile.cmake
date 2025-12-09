@@ -1,4 +1,4 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,26 +8,26 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DTAOCPP_JSON_BUILD_TESTS=OFF
         -DTAOCPP_JSON_BUILD_EXAMPLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/taocpp-json/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/taocpp-json/cmake)
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug
-    ${CURRENT_PACKAGES_DIR}/share/doc
+    "${CURRENT_PACKAGES_DIR}/debug"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
 )
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-file(COPY ${SOURCE_PATH}/LICENSE.double-conversion DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(COPY ${SOURCE_PATH}/LICENSE.itoa DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(COPY ${SOURCE_PATH}/LICENSE.ryu DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE.double-conversion"
+        "${SOURCE_PATH}/LICENSE.itoa"
+        "${SOURCE_PATH}/LICENSE.ryu"
+)

@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index ce369af..95cbba2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -633,6 +633,7 @@ if test x"$gl_use_threads" = xno; then
+   AC_MSG_NOTICE([generated src/lock-obj-pub.native.h for $host])
+ elif test x$cross_compiling = xyes; then
+   case $host in
++    *-*-linux-android* | \
+     *-*-gnu* | *-*-linux-gnu* | *-*-linux-musl*)
+     AC_CHECK_TOOL(OBJDUMP, [objdump])
+     if test -n "$OBJDUMP"; then

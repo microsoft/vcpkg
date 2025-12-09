@@ -2,27 +2,27 @@
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO zserge/webview
-    REF 16c93bcaeaeb6aa7bb5a1432de3bef0b9ecc44f3
-    SHA512 153824bd444eafe6cc5ae00800422b41d4047dc85a164c465990c3be06d82003b532e1e869bb40e3a77cbe4789ff970fcda50ef00ac7b3e2f22ef3f566340026
+    REPO webview/webview
+    REF ${VERSION}
+    SHA512 f198e414145101693fd2b5724fb017df578770c6edda319ce312cf9e9e1fdc1b1d94beba2e64e75d9746dee16010cc525be8ae7ca0713ee541b75a0a1d9bc791
     HEAD_REF master
 )
 
-file(COPY ${SOURCE_PATH}/webview.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY "${SOURCE_PATH}/core/include/webview.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
 set(WEBVIEW_GTK "0")
-set(WEBVIEW_WINAPI "0")
+set(WEBVIEW_EDGE "0")
 set(WEBVIEW_COCOA "0")
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(WEBVIEW_WINAPI "1")
+    set(WEBVIEW_EDGE "1")
 elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         set(WEBVIEW_COCOA "1")
 elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
         set(WEBVIEW_GTK "1")
 endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/webview.h _contents)
+file(READ "${CURRENT_PACKAGES_DIR}/include/webview.h" _contents)
 string(REPLACE
     "#ifdef WEBVIEW_STATIC"
     "#if 1 // #ifdef WEBVIEW_STATIC"
@@ -48,7 +48,7 @@ string(REPLACE
     "${WEBVIEW_COCOA} // defined(WEBVIEW_COCOA)"
     _contents "${_contents}"
 )
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/webview.h "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/webview.h" "${_contents}")
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

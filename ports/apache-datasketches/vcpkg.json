@@ -1,0 +1,17 @@
+{
+  "name": "apache-datasketches",
+  "version": "5.1.0",
+  "description": "Apache DataSketches Core C++ Library Component.",
+  "homepage": "https://datasketches.apache.org/",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

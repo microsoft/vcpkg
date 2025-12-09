@@ -1,0 +1,4 @@
+The package cppslippi provides CMake targets:
+
+    find_package(CppSlippi CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE CppSlippi::CppSlippi)

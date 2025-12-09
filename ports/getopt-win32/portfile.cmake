@@ -1,23 +1,35 @@
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS "enabled")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO libimobiledevice-win32/getopt
-    REF 0.1
-    SHA512 40e2a901241a5d751cec741e5de423c8f19b105572c7cae18adb6e69be0b408efc6c9a2ecaeb62f117745eac0d093f30d6b91d88c1a27e1f7be91f0e84fdf199
-    HEAD_REF master
-    PATCHES getopt.h.patch
+    REPO ludvikjerabek/getopt-win
+    REF v${VERSION}
+    SHA512 9ca4e7ed7a1fe7bad9d9ef91b5e65c18a716f4c999818e3dd4f644fc861e1ae12e64255c27f12c0df3b1e44757d3d36c068682dd86d184c6f957b2cabda7bbf3
+    HEAD_REF getopt_glibc_2.42_port
+    PATCHES
+        static-output-name.diff
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        -DBUILD_TESTING=OFF
+)
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH  "lib/cmake/getopt")
 
-file(COPY "${SOURCE_PATH}/getopt.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/getopt.h"
-        "	#define __GETOPT_H_" "	#define __GETOPT_H_\n	#define STATIC_GETOPT"
-    )
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/getopt.h" "defined(STATIC_GETOPT)" "1")
 endif()
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
-set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+# Legacy polyfill
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-getopt-win32-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-getopt-win32")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

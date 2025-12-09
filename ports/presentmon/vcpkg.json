@@ -1,9 +1,14 @@
 {
   "name": "presentmon",
-  "version-semver": "1.7.0",
-  "port-version": 1,
+  "version-semver": "2.3.0",
   "description": "PresentMon is a tool to capture and analyze ETW events related to swap chain presentation on Windows.",
   "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
   "features": {
     "tools": {
       "description": "Build tool PresentMon"

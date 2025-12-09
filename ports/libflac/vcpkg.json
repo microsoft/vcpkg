@@ -1,9 +1,9 @@
 {
   "name": "libflac",
-  "version": "1.3.4",
+  "version": "1.5.0",
   "description": "Library for manipulating FLAC files",
   "homepage": "https://xiph.org/flac/",
-  "license": "GFDL-1.2-or-later",
+  "license": "BSD-3-Clause",
   "dependencies": [
     "libogg",
     {
@@ -15,9 +15,23 @@
       "host": true
     }
   ],
+  "default-features": [
+    {
+      "name": "stack-protector",
+      "platform": "!emscripten"
+    }
+  ],
   "features": {
     "asm": {
-      "description": "Use any assembly optimization routines"
+      "description": "Use any assembly optimization routines",
+      "supports": "x86"
+    },
+    "multithreading": {
+      "description": "Enable multithreading if pthreads is available"
+    },
+    "stack-protector": {
+      "description": "Build with stack smashing protection",
+      "supports": "!emscripten"
     }
   }
 }

@@ -1,14 +1,26 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/hidapi
-    REF hidapi-0.12.0
-    SHA512 866268927698db6fa553e000ead3c0c4b8df67ea768d36acac9c71f06f0bd8283778e90eee03f81aaa930f38dbb5719391906c7d2742b74479ffa436104f5fa4
+    REF hidapi-${VERSION}
+    SHA512 a4ddd13a80a84956872fa52aa861b40e4959f301d8d91afe0feaf9dbd87394561e1fdd20cbf8cf47200845f80a8db8a934bc2e3025fe6f16435e37c17621e7b6
     HEAD_REF master
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+FEATURES
+    "pp-data-dump"           HIDAPI_BUILD_PP_DATA_DUMP
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DHIDAPI_BUILD_HIDTEST=OFF
+    OPTIONS
+        -DHIDAPI_BUILD_HIDTEST=OFF
+        -DHIDAPI_WITH_TESTS=OFF
+        ${FEATURE_OPTIONS}
+    MAYBE_UNUSED_VARIABLES
+        # Windows only
+        HIDAPI_BUILD_PP_DATA_DUMP
+        HIDAPI_WITH_TESTS
 )
 vcpkg_cmake_install()
 
@@ -16,8 +28,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hidapi/libhidapi.cmake" "\"/hidapi\"" "\"\${_IMPORT_PREFIX}/include\"")
+if ("pp-data-dump" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES pp_data_dump AUTO_CLEAN)
+endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE-bsd.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-bsd.txt")

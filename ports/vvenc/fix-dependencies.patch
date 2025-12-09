@@ -1,0 +1,77 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 551ec4b..8405ad0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -161,6 +161,8 @@ set_property( GLOBAL PROPERTY USE_FOLDERS ON )
+ # Enable multithreading
+ find_package( Threads REQUIRED )
+ 
++find_package(nlohmann_json CONFIG REQUIRED)
++
+ # set _WIN32_WINNT
+ if( WIN32 )
+   # set _WIN32_WINT version global
+
+diff --git a/source/App/vvencFFapp/CMakeLists.txt b/source/App/vvencFFapp/CMakeLists.txt
+index 869b6ac..452301c 100644
+--- a/source/App/vvencFFapp/CMakeLists.txt
++++ b/source/App/vvencFFapp/CMakeLists.txt
+@@ -34,7 +34,7 @@ target_compile_options( ${EXE_NAME} PRIVATE $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CX
+                                             $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /wd4100 /wd4244 /wd4251 /wd4459 /wd4996>)
+ 
+ target_include_directories( ${EXE_NAME} PRIVATE ../../Lib )
+-target_link_libraries( ${EXE_NAME} Threads::Threads vvenc )
++target_link_libraries( ${EXE_NAME} Threads::Threads vvenc nlohmann_json::nlohmann_json )
+ 
+ # example: place header files in different folders
+ source_group( "Header Files"   FILES ${INC_FILES} )
+
+diff --git a/source/App/vvencapp/CMakeLists.txt b/source/App/vvencapp/CMakeLists.txt
+index a0e764b..98e5bb4 100644
+--- a/source/App/vvencapp/CMakeLists.txt
++++ b/source/App/vvencapp/CMakeLists.txt
+@@ -31,7 +31,7 @@ target_compile_options( ${EXE_NAME} PRIVATE $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CX
+                                             $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX /wd4244 /wd4251 /wd4996>)
+ 
+ target_include_directories( ${EXE_NAME} PRIVATE ../../Lib )
+-target_link_libraries( ${EXE_NAME} Threads::Threads vvenc )
++target_link_libraries( ${EXE_NAME} Threads::Threads vvenc nlohmann_json::nlohmann_json )
+ 
+ # example: place header files in different folders
+ source_group( "Header Files"   FILES ${INC_FILES} )
+diff --git a/source/Lib/apputils/LogoRenderer.h b/source/Lib/apputils/LogoRenderer.h
+index 6f990e6..bbf40d7 100644
+--- a/source/Lib/apputils/LogoRenderer.h
++++ b/source/Lib/apputils/LogoRenderer.h
+@@ -58,7 +58,7 @@ POSSIBILITY OF SUCH DAMAGE.
+ #include "FileIOHelper.h"
+ 
+ #ifdef VVENC_ENABLE_THIRDPARTY_JSON
+-#include "../../../thirdparty/nlohmann_json/single_include/nlohmann/json.hpp"
++#include "nlohmann/json.hpp"
+ using nlohmann::json;
+ #endif
+ 
+diff --git a/source/Lib/vvenc/CMakeLists.txt b/source/Lib/vvenc/CMakeLists.txt
+index 5ee3740..827cf41 100644
+--- a/source/Lib/vvenc/CMakeLists.txt
++++ b/source/Lib/vvenc/CMakeLists.txt
+@@ -70,7 +70,8 @@ add_compile_definitions( ${LIB_NAME_UC}_SOURCE )
+ # set PRIVATE include directories for all targets in this directory
+ include_directories( $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../include> $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}> )
+ include_directories( . .. ../DecoderLib ../EncoderLib ../CommonLib ../CommonLib/x86 ../apputils )
+-include_directories( SYSTEM ../../../thirdparty )
++find_path(SIMDE_INCLUDE_DIRS "simde/arm/neon.h")
++include_directories(SYSTEM ${SIMDE_INCLUDE_DIRS})
+ 
+ # set common warning flags
+ add_compile_options( "$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wall;-Werror;-Wno-deprecated-register;-Wno-unused-const-variable;-Wno-unknown-attributes>" )
+@@ -140,7 +141,7 @@ endif()
+ if( VVENC_ENABLE_THIRDPARTY_JSON )
+   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DVVENC_ENABLE_THIRDPARTY_JSON" )
+   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVVENC_ENABLE_THIRDPARTY_JSON" )
+-  target_include_directories( ${LIB_NAME} PRIVATE ../../../thirdparty/nlohmann_json/single_include )
++  target_link_libraries( ${LIB_NAME} PRIVATE nlohmann_json::nlohmann_json )
+ endif()
+ 
+ if( TARGET INTEL_ITT)

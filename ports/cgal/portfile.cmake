@@ -1,19 +1,12 @@
-# Header only
-vcpkg_buildpath_length_warning(37)
+set(VCPKG_BUILD_TYPE release)  # header-only
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF v5.5
-    SHA512 d689b0d4e04ff0a4297939dc0d4c001de88e811583b73fe6173f46b38d51f31f336a09a66c47cf79a1511942a4f5cf4df5d57871deec926bec71183c63b3d2f1
+    REF v${VERSION}
+    SHA512 6519fc7bb73a5c608fab0ce867766ce8bbac9fef75347dfc49937bab08de7de6836730019c52f1717e569fe76e0a6c48b18b1e9d0349617220138fd0380c3a02
     HEAD_REF master
 )
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        qt WITH_CGAL_Qt5
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -26,7 +19,6 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         CGAL_BUILD_THREE_DOC
         CGAL_HEADER_ONLY
-        WITH_CGAL_Qt5
 )
 
 vcpkg_cmake_install()
@@ -49,15 +41,16 @@ else()
     endforeach()
 endif()
 
-file(INSTALL "${SOURCE_PATH}/Installation/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/man")
 
-file(
-    COPY
+set(LICENSES
+    "${SOURCE_PATH}/Installation/LICENSE"
         "${SOURCE_PATH}/Installation/LICENSE.BSL"
         "${SOURCE_PATH}/Installation/LICENSE.RFL"
         "${SOURCE_PATH}/Installation/LICENSE.GPL"
         "${SOURCE_PATH}/Installation/LICENSE.LGPL"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
+
+vcpkg_install_copyright(FILE_LIST ${LICENSES})
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -8,10 +8,10 @@ vcpkg_from_github(
     REF ${OATPP_VERSION}
     SHA512 574f0440cbb2cd2bc14ad89e33538a1a300ad23ecc941629b74aa8ccb9aeae5158b1b57e2f1af09d7a6b9b97430a5685354677002dab2261120afa9c6ea74381
     HEAD_REF master
+    PATCHES
+        missing-find_dependency.patch
+        fix-usage.patch
 )
-
-set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
-set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

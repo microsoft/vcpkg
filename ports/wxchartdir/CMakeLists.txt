@@ -12,7 +12,7 @@ add_library(wxchartdir STATIC wxdemo/common/wxchartviewer.cpp)
 target_include_directories(wxchartdir PUBLIC
     $<INSTALL_INTERFACE:include>
 )
-
+target_compile_features(wxchartdir PRIVATE cxx_std_11)
 target_link_libraries(wxchartdir 
     PRIVATE ${wxWidgets_LIBRARIES}
     PRIVATE chartdir

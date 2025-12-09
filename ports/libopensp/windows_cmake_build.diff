@@ -1,12 +1,8 @@
 diff -Nru -x '*~' OpenSP-1.5.2.orig/CMakeLists.txt OpenSP-1.5.2/CMakeLists.txt
 --- OpenSP-1.5.2.orig/CMakeLists.txt	1970-01-01 02:00:00.000000000 +0200
 +++ OpenSP-1.5.2/CMakeLists.txt	2014-08-24 17:23:19.941495700 +0300
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,20 @@
 +project(opensp)
-+
-+set (VERSION_MAJOR 1)
-+set (VERSION_MINOR 5)
-+set (VERSION_PATH 2)
 +
 +cmake_minimum_required(VERSION 2.6)
 +
@@ -54,7 +50,7 @@ diff -Nru -x '*~' OpenSP-1.5.2.orig/config.h OpenSP-1.5.2/config.h
  #define SP_HAVE_SETMODE
  #define SP_DLLEXPORT __declspec(dllexport)
  #define SP_DLLIMPORT __declspec(dllimport)
-@@ -301,15 +312,8 @@
+@@ -301,12 +312,5 @@
  #define PATH_SEPARATOR ':'
  #endif
  
@@ -66,12 +62,7 @@ diff -Nru -x '*~' OpenSP-1.5.2.orig/config.h OpenSP-1.5.2/config.h
 -#endif
 -
  // NOTE: This is processed as a Makefile, not as a header by autoconf.
--#define SP_PACKAGE "OpenSP"
--#define SP_VERSION "1.5.2"
-+#define SP_PACKAGE "@PACKAGE@"
-+#define SP_VERSION "@VERSION@"
- 
- #endif /* not config_INCLUDED */
+ #define SP_PACKAGE "OpenSP"
 diff -Nru -x '*~' OpenSP-1.5.2.orig/generic/SGMLApplication.h OpenSP-1.5.2/generic/SGMLApplication.h
 --- OpenSP-1.5.2.orig/generic/SGMLApplication.h	2005-05-14 12:17:41.000000000 +0300
 +++ OpenSP-1.5.2/generic/SGMLApplication.h	2014-08-24 17:23:19.957120700 +0300

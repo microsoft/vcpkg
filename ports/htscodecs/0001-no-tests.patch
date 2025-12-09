@@ -1,0 +1,13 @@
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 873ad3e..0ab3638 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -31,7 +31,7 @@
+ # 
+ 
+ # Standalone test programs
+-noinst_PROGRAMS = rans4x16pr tokenise_name3 arith_dynamic rans4x8 rans4x16pr fqzcomp_qual varint entropy
++check_PROGRAMS = rans4x16pr tokenise_name3 arith_dynamic rans4x8 rans4x16pr fqzcomp_qual varint entropy
+ 
+ LDADD = $(top_builddir)/htscodecs/libhtscodecs.la
+ AM_CPPFLAGS = -I$(top_srcdir)

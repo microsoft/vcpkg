@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libical/libical
-    REF v3.0.11
-    SHA512 cdee86c50edc2373ab2024d7d4ae26dd4b9a728dbc13083472c4923c67f61ff3cef7d43edca762c6a11979d2040fc1576a033eaa23a19e58af8f14a7d67fc139
+    REF "v${VERSION}"
+    SHA512 2506320240ba0e4287b6ef1b90b653eacd51105d392b91f8c772f3b0745fecbf55eecfe81f89413cc56106b71ccca780754df31f5190ffce6c372126e27bf1da
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -23,7 +23,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_BDB=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_BerkeleyDB=ON
         -DUSE_BUILTIN_TZDATA=ON
         -DICAL_GLIB=OFF
         -DICAL_BUILD_DOCS=OFF
@@ -39,4 +39,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,8 +1,9 @@
+string(REGEX REPLACE "^([0-9]+[.][0-9]+[.][0-9]+)[.]" "\\1-" git_tag "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO andrewrk/libsoundio
-    REF 2.0.0
-    SHA512 347a9be1789a41e778ea8d0efa1d00e03e725a4ab65e3aaf6c71e49138643f08a50a81bd60087d86a3b4d63beaeec617e47ba6b81f829ece8a3ac17418eb5309
+    REF "${git_tag}"
+    SHA512 e854f066087f72438c9f014336a611d73b55a7b932747f94464477bd9f7daf9da440bad820d9c8e3d90ae3679af62a051e9645f0e0a2ddaed9726245a81f1e66
     HEAD_REF master
     PATCHES
         fix_cmakelists.patch
@@ -18,9 +19,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         pulseaudio ENABLE_PULSEAUDIO
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_DYNAMIC_LIBS=${BUILD_DYNAMIC_LIBS}
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
@@ -31,13 +31,15 @@ vcpkg_configure_cmake(
         -DENABLE_WASAPI=${VCPKG_TARGET_IS_WINDOWS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/soundio/soundio.h" "defined(SOUNDIO_STATIC_LIBRARY)" "1")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsoundio RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

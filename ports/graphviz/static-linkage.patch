@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 14f2847..e56a970 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,9 @@ if(WIN32)
+   # libraries, so the GVDLL symbol can be unconditionally set until
+   # such support is introduced.
+   add_definitions(-DGVDLL)
++  if(NOT BUILD_SHARED_LIBS)
++    add_definitions(-DEXPORT_CDT -DEXPORT_CGHDR -DEXPORT_CGRAPH -DGVC_EXPORTS -DPATHPLAN_EXPORTS -DEXPORT_XDOT)
++  endif()
+ 
+   option(install_win_dependency_dlls "Install 3rd party dependencies" ON)
+ endif()
+diff --git a/plugin/gd/gvrender_gd.c b/plugin/gd/gvrender_gd.c
+index 76bbbf2..f877fa7 100644
+--- a/plugin/gd/gvrender_gd.c
++++ b/plugin/gd/gvrender_gd.c
+@@ -242,7 +242,7 @@ static void gdgen_end_page(GVJ_t * job)
+ #else
+ #define GD_IMPORT
+ #endif
+-GD_IMPORT extern gdFontPtr gdFontTiny, gdFontSmall, gdFontMediumBold, gdFontLarge, gdFontGiant;
++BGD_EXPORT_DATA_PROT extern gdFontPtr gdFontTiny, gdFontSmall, gdFontMediumBold, gdFontLarge, gdFontGiant;
+ 
+ void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fontsize, int fontdpi, double fontangle, char *fontname, char *str)
+ {
+diff --git a/plugin/pango/CMakeLists.txt b/plugin/pango/CMakeLists.txt
+index aca7eec..901f118 100644
+--- a/plugin/pango/CMakeLists.txt
++++ b/plugin/pango/CMakeLists.txt
+@@ -58,6 +58,7 @@ if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
+   set_target_properties(gvplugin_pango PROPERTIES
+     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
+     SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
++    LINKER_LANGUAGE CXX # for cairo
+   )
+ 
+   if(MINGW)

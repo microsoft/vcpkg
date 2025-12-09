@@ -1,0 +1,25 @@
+diff --git a/meson.build b/meson.build
+index 71300d3..25bbf9f 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,9 +1,9 @@
+ project('libzim', ['c', 'cpp'],
+   version : '9.4.0',
+   license : 'GPL2',
+-  default_options : ['c_std=c11', 'cpp_std=c++17', 'werror=true'])
++  default_options : ['c_std=c11', 'cpp_std=c++17'])
+ 
+-if build_machine.system() != 'windows'
++if host_machine.system() != 'windows' or meson.get_compiler('cpp').get_id() == 'gcc'
+   add_project_arguments('-D_LARGEFILE64_SOURCE=1', '-D_FILE_OFFSET_BITS=64', language: 'cpp')
+ endif
+ 
+@@ -69,7 +69,7 @@ else
+ endif
+ 
+ compiler = meson.get_compiler('cpp')
+-if (compiler.get_id() == 'gcc' and build_machine.system() == 'linux') or host_machine.system() == 'freebsd'
++if (compiler.get_id() == 'gcc' and host_machine.system() == 'linux') or host_machine.system() == 'freebsd'
+   # C++ std::thread is implemented using pthread on linux by gcc
+   thread_dep = dependency('threads')
+ else

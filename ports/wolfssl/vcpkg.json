@@ -1,9 +1,9 @@
 {
   "name": "wolfssl",
-  "version": "5.3.0",
-  "description": "TLS and Cryptographic libraray for many platforms",
+  "version": "5.8.4",
+  "description": "TLS and Cryptographic library for many platforms",
   "homepage": "https://wolfssl.com",
-  "license": "GPL-2.0-or-later",
+  "license": "GPL-3.0-or-later",
   "supports": "!uwp",
   "dependencies": [
     {
@@ -13,6 +13,24 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
     }
-  ]
+  ],
+  "features": {
+    "asio": {
+      "description": "Enable asio support"
+    },
+    "dtls": {
+      "description": "DTLS support"
+    },
+    "quic": {
+      "description": "Enable quic support"
+    },
+    "secret-callback": {
+      "description": "Enables callback to provide TLS keys for debugging"
+    }
+  }
 }

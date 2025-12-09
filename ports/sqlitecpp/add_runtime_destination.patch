@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e5723d0..ecc1ac2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -337,6 +337,7 @@ target_include_directories(SQLiteCpp
+ include(GNUInstallDirs)
+ install(TARGETS SQLiteCpp
+     EXPORT ${PROJECT_NAME}Targets
++    RUNTIME DESTINATION bin
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT libraries)

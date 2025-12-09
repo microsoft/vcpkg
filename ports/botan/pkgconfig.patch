@@ -1,0 +1,14 @@
+diff --git a/src/build-data/botan.pc.in b/src/build-data/botan.pc.in
+index c18b522..a5722c9 100644
+--- a/src/build-data/botan.pc.in
++++ b/src/build-data/botan.pc.in
+@@ -1,7 +1,7 @@
+ prefix=%{prefix}
+ exec_prefix=${prefix}
+-libdir=%{libdir}
+-includedir=${prefix}/include/botan-%{version_major}
++libdir=${prefix}/lib
++includedir=${prefix}/include
+ 
+ Name: Botan
+ Description: Crypto and TLS for Modern C++

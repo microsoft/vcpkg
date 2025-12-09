@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 098df7d..9314d03 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -730,7 +730,7 @@ endmacro()
+ # use when cross compiling or building multi-architecture binaries.
+ # We also provide a C++ binary implementation so that Python is not
+ # required (for backward compatibility).
+-if (OPENGL_FOUND OR OPENCL_FOUND OR DXSDK_FOUND OR METAL_FOUND)
++if (OPENGL_FOUND OR OPENCL_FOUND OR DXSDK_FOUND OR METAL_FOUND OR CUDA_FOUND)
+     if(Python_Interpreter_FOUND)
+         set(OSD_STRINGIFY_TOOL ${CMAKE_CURRENT_SOURCE_DIR}/tools/stringify/stringify.py)
+         set(OSD_STRINGIFY ${Python_EXECUTABLE} ${OSD_STRINGIFY_TOOL})

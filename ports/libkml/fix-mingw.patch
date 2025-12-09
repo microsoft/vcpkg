@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 028f50a..bb63ffb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,6 +26,9 @@ set(LIBKML_DATA_DIR  ${CMAKE_SOURCE_DIR}/testdata CACHE "Directory containing te
+ if(CMAKE_COMPILER_IS_GNUCXX)
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -pedantic -fno-rtti")
+ set(TEST_FLAGS "-Wall -Wextra -Wno-unused-parameter -fno-rtti -DGTEST_HAS_RTTI=0")
++if(WIN32)
++  add_definitions(-DUNICODE -D_UNICODE)
++endif()
+ 
+ else()
+  if(MSVC)
+diff --git a/src/kml/base/file_win32.cc b/src/kml/base/file_win32.cc
+index 28ccb36..6ba79cd 100644
+--- a/src/kml/base/file_win32.cc
++++ b/src/kml/base/file_win32.cc
+@@ -34,7 +34,9 @@
+ #include "kml/base/file.h"
+ #include <windows.h>
+ #include <tchar.h>
++#ifndef __MINGW32__
+ #include <xstring>
++#endif
+ #include <algorithm>
+ 
+ namespace kmlbase {
+diff --git a/src/kml/base/string_util.cc b/src/kml/base/string_util.cc
+index b3a9654..842f1cd 100644
+--- a/src/kml/base/string_util.cc
++++ b/src/kml/base/string_util.cc
+@@ -113,7 +113,7 @@ bool StringEndsWith(const string& str, const string& end) {
+ }
+ 
+ bool StringCaseEqual(const string& a, const string& b) {
+-#ifdef WIN32
++#if defined(WIN32) && !defined(__MINGW32__)
+ # define strncasecmp(s1, s2, n) _strnicmp (s1, s2, n)
+ #endif
+   return a.size() == b.size() && strncasecmp(a.data(), b.data(), a.size()) == 0;

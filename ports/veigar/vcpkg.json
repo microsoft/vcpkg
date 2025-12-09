@@ -1,0 +1,19 @@
+{
+  "name": "veigar",
+  "version": "1.4",
+  "maintainers": "winsoft666 <winsoft666@outlook.com>",
+  "description": "Cross platform RPC library using shared memory.",
+  "homepage": "https://github.com/winsoft666/veigar",
+  "license": "GPL-3.0-or-later",
+  "supports": "linux | (windows & !uwp & !xbox)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

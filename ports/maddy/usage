@@ -1,0 +1,4 @@
+maddy provides CMake targets:
+
+    find_package(maddy CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE maddy::maddy)

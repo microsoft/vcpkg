@@ -1,0 +1,21 @@
+diff --git a/src/activation.c b/src/activation.c
+index 4260c20..29bb2e8 100644
+--- a/src/activation.c
++++ b/src/activation.c
+@@ -90,6 +90,7 @@ struct idevice_activation_response_private {
+ 	int has_errors;
+ };
+ 
++#ifndef LIBIDEVICEACTIVATION_STATIC  // disable dll constructor
+ 
+ static void internal_libideviceactivation_init(void)
+ {
+@@ -162,6 +163,8 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
+ #warning No compiler support for constructor/destructor attributes, some features might not be available.
+ #endif
+ 
++#endif  // disable dll constructor
++
+ static int debug_level = 0;
+ 
+ IDEVICE_ACTIVATION_API void idevice_activation_set_debug_level(int level) {

@@ -19,7 +19,7 @@ function(z_vcpkg_apply_patches)
         message(STATUS "Applying patch ${patch}")
         set(logname "patch-${TARGET_TRIPLET}-${patchnum}")
         vcpkg_execute_in_download_mode(
-            COMMAND "${GIT}" -c core.longpaths=true -c core.autocrlf=false --work-tree=. --git-dir=.git apply "${absolute_patch}" --ignore-whitespace --whitespace=nowarn --verbose
+            COMMAND "${GIT}" -c core.longpaths=true -c core.autocrlf=false -c core.filemode=true --work-tree=. --git-dir=.git apply "${absolute_patch}" --ignore-whitespace --whitespace=nowarn --verbose
             OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${logname}-out.log"
             ERROR_VARIABLE error
             WORKING_DIRECTORY "${arg_SOURCE_PATH}"

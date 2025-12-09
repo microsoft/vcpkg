@@ -1,36 +1,20 @@
 {
   "name": "cmake-user",
-  "version-date": "2022-07-02",
+  "version-string": "ci",
   "description": "Test port to verify the vcpkg toolchain in cmake user projects",
   "license": "MIT",
   "default-features": [
-    "ci"
+    {
+      "name": "cmake-3-16",
+      "platform": "x64 & (windows | linux | osx) & !uwp"
+    },
+    "cmake-current",
+    "find-package",
+    "pkg-check-modules"
   ],
   "features": {
-    "ci": {
-      "description": "The CI set of features to test",
-      "dependencies": [
-        {
-          "name": "cmake-user",
-          "default-features": false,
-          "features": [
-            "cmake-current",
-            "find-package",
-            "pkg-check-modules"
-          ]
-        },
-        {
-          "name": "cmake-user",
-          "default-features": false,
-          "features": [
-            "cmake-3-7"
-          ],
-          "platform": "x64 & (windows | linux | osx) & !uwp"
-        }
-      ]
-    },
-    "cmake-3-7": {
-      "description": "Run the tests with CMake 3.7"
+    "cmake-3-16": {
+      "description": "Run the tests with CMake 3.16"
     },
     "cmake-current": {
       "description": "Run the tests with vcpkg's current version of CMake"
@@ -38,6 +22,16 @@
     "find-package": {
       "description": "Ports to be tested via find_package($package)",
       "dependencies": [
+        {
+          "$package": "ALSA",
+          "name": "alsa",
+          "platform": "linux"
+        },
+        {
+          "$package": "Boost",
+          "name": "boost",
+          "platform": "!uwp"
+        },
         {
           "$package": "BZip2",
           "name": "bzip2"
@@ -53,9 +47,13 @@
         },
         {
           "$package": "Fontconfig",
-          "$since": "3.14",
           "name": "fontconfig",
           "platform": "!mingw & !uwp"
+        },
+        {
+          "$package": "GLUT",
+          "name": "freeglut",
+          "platform": "!android & !osx & !uwp"
         },
         {
           "$package": "Freetype",
@@ -63,8 +61,14 @@
           "default-features": false
         },
         {
+          "$package": "GDAL",
+          "name": "gdal",
+          "default-features": false,
+          "platform": "!uwp"
+        },
+        {
           "$package": "Intl",
-          "name": "gettext"
+          "name": "gettext-libintl"
         },
         {
           "$package": "GIF",
@@ -76,8 +80,17 @@
           "platform": "!uwp"
         },
         {
+          "$package": "LAPACK",
+          "name": "lapack",
+          "platform": "!android & !(uwp & arm)"
+        },
+        {
+          "$package": "GnuTLS",
+          "name": "libgnutls",
+          "platform": "!android & (!windows | mingw)"
+        },
+        {
           "$package": "Iconv",
-          "$since": "3.11",
           "name": "libiconv"
         },
         {
@@ -99,30 +112,56 @@
           "platform": "!uwp & !mingw"
         },
         {
-          "$comment": "CMake 3.11 because it needs Iconv",
           "$package": "LibXml2",
-          "$since": "3.11",
           "name": "libxml2",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "icu"
+          ]
         },
         {
-          "$comment": "CMake 3.11 because it needs Iconv",
           "$package": "LibXslt",
-          "$since": "3.11",
           "name": "libxslt",
           "default-features": false,
           "platform": "!uwp & !mingw"
         },
         {
+          "$package": "Curses",
+          "name": "ncurses",
+          "platform": "!windows | mingw"
+        },
+        {
+          "$package": "PhysFS",
+          "name": "physfs"
+        },
+        {
+          "$package": "GnuTLS",
+          "name": "shiftmedia-libgnutls",
+          "platform": "windows & !arm & !mingw & !uwp & !xbox"
+        },
+        {
+          "$package": "SQLite3",
+          "name": "sqlite3",
+          "default-features": false,
+          "features": [
+            "unicode"
+          ]
+        },
+        {
           "$package": "TIFF",
           "name": "tiff",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "lerc",
+            "libdeflate",
+            "zstd"
+          ]
         },
         {
           "$package": "wxWidgets",
           "name": "wxwidgets",
           "default-features": false,
-          "platform": "!linux & !mingw & !uwp"
+          "platform": "!android & !uwp"
         },
         {
           "$package": "ZLIB",

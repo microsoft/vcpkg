@@ -1,21 +1,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mobius3/tweeny
-    REF v3.2.0
-    SHA512 809b8250f7df6c3e9d27e9967c586d1ca4be29e3b551b57285da1060a6928c91e0afa6b3ef6b546cae48035383939f19d67889b632dd60a2fbb0a22aafaabe89
+    REF v${VERSION}
+    SHA512 f752db8ff5fdff696eb6449adc98af875753e22a9235c059f052dd43aa245e2c510b6c3d25dc52cd350d5f0712f8565364e07790998e4aebf0eb2658f7754bc3
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "/lib/cmake/Tweeny/")
+vcpkg_cmake_config_fixup(CONFIG_PATH "/lib/cmake/Tweeny/")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake/Tweeny)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake/Tweeny")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,6 +1,6 @@
 function(vcpkg_execute_required_process)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "ALLOW_IN_DOWNLOAD_MODE"
+        "ALLOW_IN_DOWNLOAD_MODE;OUTPUT_STRIP_TRAILING_WHITESPACE;ERROR_STRIP_TRAILING_WHITESPACE"
         "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
         "COMMAND;SAVE_LOG_FILES"
     )
@@ -27,28 +27,33 @@ Halting portfile execution.
 ]])
     endif()
 
-    set(log_out "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out.log")
-    set(log_err "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
-
     set(timeout_param "")
-    set(output_and_error_same OFF)
-    set(output_variable_param "")
-    set(error_variable_param "")
-
     if(DEFINED arg_TIMEOUT)
         set(timeout_param TIMEOUT "${arg_TIMEOUT}")
     endif()
+
+    set(log_out "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out.log")
+    set(log_err "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
+    set(output_param OUTPUT_FILE "${log_out}")
+    set(error_param ERROR_FILE "${log_err}")
+    set(output_and_error_same OFF)
     if(DEFINED arg_OUTPUT_VARIABLE AND DEFINED arg_ERROR_VARIABLE AND arg_OUTPUT_VARIABLE STREQUAL arg_ERROR_VARIABLE)
-        set(output_variable_param OUTPUT_VARIABLE out_err_var)
-        set(error_variable_param ERROR_VARIABLE out_err_var)
+        set(output_param OUTPUT_VARIABLE out_err_var)
+        set(error_param ERROR_VARIABLE out_err_var)
         set(output_and_error_same ON)
     else()
         if(DEFINED arg_OUTPUT_VARIABLE)
-            set(output_variable_param OUTPUT_VARIABLE out_var)
+            set(output_param OUTPUT_VARIABLE out_var)
         endif()
         if(DEFINED arg_ERROR_VARIABLE)
-            set(error_variable_param ERROR_VARIABLE err_var)
+            set(error_param ERROR_VARIABLE err_var)
         endif()
+    endif()
+    if(arg_OUTPUT_STRIP_TRAILING_WHITESPACE)
+        list(APPEND output_param OUTPUT_STRIP_TRAILING_WHITESPACE)
+    endif()
+    if(arg_ERROR_STRIP_TRAILING_WHITESPACE)
+        list(APPEND error_param ERROR_STRIP_TRAILING_WHITESPACE)
     endif()
 
     if(X_PORT_PROFILE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
@@ -57,26 +62,52 @@ Halting portfile execution.
 
     vcpkg_execute_in_download_mode(
         COMMAND ${arg_COMMAND}
-        OUTPUT_FILE "${log_out}"
-        ERROR_FILE "${log_err}"
         RESULT_VARIABLE error_code
         WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         ${timeout_param}
-        ${output_variable_param}
-        ${error_variable_param}
+        ${output_param}
+        ${error_param}
     )
+
+    if(output_and_error_same)
+        file(WRITE "${log_out}" "${out_err_var}")
+        file(WRITE "${log_err}" "")
+    else()
+        if(DEFINED arg_OUTPUT_VARIABLE)
+            file(WRITE "${log_out}" "${out_var}")
+        endif()
+        if(DEFINED arg_ERROR_VARIABLE)
+            file(WRITE "${log_err}" "${err_var}")
+        endif()
+    endif()
+    vcpkg_list(SET logfiles)
+    vcpkg_list(SET logfile_copies)
+    set(expect_alias FALSE)
+    foreach(item IN LISTS arg_SAVE_LOG_FILES)
+        if(expect_alias)
+            vcpkg_list(POP_BACK logfile_copies)
+            vcpkg_list(APPEND logfile_copies "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-${item}")
+            set(expect_alias FALSE)
+        elseif(item STREQUAL "ALIAS")
+            if(NOT logfiles)
+                message(FATAL_ERROR "ALIAS used without source file")
+            endif()
+            set(expect_alias TRUE)
+        else()
+            vcpkg_list(APPEND logfiles "${arg_WORKING_DIRECTORY}/${item}")
+            cmake_path(GET item FILENAME filename)
+            if(NOT filename MATCHES "[.]log\$")
+                string(APPEND filename ".log")
+            endif()
+            vcpkg_list(APPEND logfile_copies "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-${filename}")
+        endif()
+    endforeach()
     vcpkg_list(SET saved_logs)
-    foreach(logfile IN LISTS arg_SAVE_LOG_FILES)
-        set(filepath "${arg_WORKING_DIRECTORY}/${logfile}")
-        if(NOT EXISTS "${filepath}")
-            continue()
+    foreach(logfile logfile_copy IN ZIP_LISTS logfiles logfile_copies)
+        if(EXISTS "${logfile}")
+            configure_file("${logfile}" "${logfile_copy}" COPYONLY)
+            vcpkg_list(APPEND saved_logs "${logfile_copy}")
         endif()
-        cmake_path(GET filepath FILENAME filename)
-        if(NOT filename MATCHES "[.]log\$")
-            string(APPEND filename ".log")
-        endif()
-        configure_file("${filepath}" "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-${filename}" COPYONLY)
-        vcpkg_list(APPEND saved_logs "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-${filename}")
     endforeach()
     if(NOT error_code EQUAL 0)
         set(stringified_logs "")

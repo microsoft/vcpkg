@@ -1,0 +1,11 @@
+{
+  "name": "gz-common5",
+  "version": "5.4.1",
+  "port-version": 4,
+  "description": "Common libraries for robotics applications",
+  "homepage": "https://ignitionrobotics.org/libs/common",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "gz-common"
+  ]
+}

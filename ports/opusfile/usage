@@ -1,0 +1,7 @@
+The package opusfile provides CMake targets:
+
+    find_package(OpusFile CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE OpusFile::opusfile)
+
+    # To use the opusurl API
+    target_link_libraries(main PRIVATE OpusFile::opusurl)

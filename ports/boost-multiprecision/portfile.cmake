@@ -3,10 +3,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/multiprecision
-    REF boost-1.79.0
-    SHA512 feb6f97d124032a22fe48989fd783242ca2db1adc3f821e36b6798fd068e038037dd32cc6c7cb0c3c76fe96074c9e7ff287809edc944d4f1c4f1aff686fda57d
+    REF boost-${VERSION}
+    SHA512 666a91bd5a74df6c129cf1ff36497eecd7bff2e82deef7a8b8334983b70204af3764a9268d1f85c441c2efb2d834a6e8a683005600a1b4d38e564aaa69a018b5
     HEAD_REF master
+    PATCHES
+        optional-random.diff
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

@@ -1,10 +1,15 @@
 {
   "name": "curlpp",
   "version-date": "2018-06-15",
-  "port-version": 7,
+  "port-version": 11,
   "description": "C++ wrapper around libcURL",
+  "homepage": "https://github.com/jpbarrette/curlpp",
+  "license": "MIT",
   "dependencies": [
-    "curl",
+    {
+      "name": "curl",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

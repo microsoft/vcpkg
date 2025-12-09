@@ -1,0 +1,19 @@
+{
+  "name": "imgui-node-editor",
+  "version": "0.9.3",
+  "port-version": 2,
+  "description": "Node Editor built using Dear ImGui",
+  "homepage": "https://github.com/thedmd/imgui-node-editor",
+  "license": "MIT",
+  "dependencies": [
+    "imgui",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

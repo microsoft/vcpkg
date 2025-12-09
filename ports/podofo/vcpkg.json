@@ -1,17 +1,28 @@
 {
   "name": "podofo",
-  "version": "0.9.7",
-  "port-version": 2,
+  "version": "1.0.3",
   "description": "PoDoFo is a library to work with the PDF file format",
-  "homepage": "https://sourceforge.net/projects/podofo/",
-  "license": "LGPL-2.0-only",
-  "supports": "!uwp",
+  "homepage": "https://github.com/podofo/podofo",
+  "license": "LGPL-2.0-or-later",
+  "supports": "!uwp & !xbox",
   "dependencies": [
+    "date",
+    "fast-float",
+    "fmt",
     "freetype",
     "libjpeg-turbo",
     "libpng",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "openssl",
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
+    "utf8proc",
+    "utfcpp",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -22,11 +33,27 @@
     },
     "zlib"
   ],
+  "default-features": [
+    "fontmanager"
+  ],
   "features": {
     "fontconfig": {
-      "description": "Enable font manager support on Unix platforms",
+      "description": "Use Fontconfig",
       "dependencies": [
         "fontconfig"
+      ]
+    },
+    "fontmanager": {
+      "description": "Enable font manager",
+      "dependencies": [
+        {
+          "name": "podofo",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "!windows"
+        }
       ]
     }
   }

@@ -1,10 +1,10 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.lua.org/ftp/lua-5.4.4.tar.gz"
-    FILENAME "lua-5.4.4.tar.gz"
-    SHA512 af0c35d5ba00fecbb2dd617bd7b825edf7418a16a73076e04f2a0df58cdbf098dc3ff4402e974afd789eb5d86d2e12ec6df9c84b99b23656ea694a85f83bcd21
+    URLS "https://www.lua.org/ftp/lua-${VERSION}.tar.gz"
+    FILENAME "lua-${VERSION}.tar.gz"
+    SHA512 875ad1f6df3ba63722b5069564c9d3a4057b4c3564c691061bb49cf6cdf5d2e303f05762bd46797b444aaf992c03021f423df142123eebf86751fd77edaf8060
 )
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         vs2015-impl-c99.patch

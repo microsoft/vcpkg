@@ -1,20 +1,30 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdutf/simdutf
-    REF v1.0.0
-    SHA512 3ab09aa61cb9765bf1a77de59c5b823ee58ae5e4badfd5dd70e511fd4f378f8d3917a5b577e7f275720b975740344968132ce0b3f628452bde67f2ab6cc82337
+    REF "v${VERSION}"
+    SHA512 9af2121d235e5b13589f64a9a9e2a2c83d287fbb1ebe1d5dee500bb229bf856efbb80ac2af1d8b764ca1f9d822a3c1b5b3aac0da958d661b1c84fc0f9a757a5b
     HEAD_REF master
-    PATCHES
-        disable-tests-and-benchmarks.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    "tools" SIMDUTF_TOOLS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+        -DSIMDUTF_TESTS=OFF
+        -DSIMDUTF_BENCHMARKS=OFF
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_pkgconfig()
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES fastbase64 sutf AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL "${SOURCE_PATH}/LICENSE-APACHE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-APACHE")

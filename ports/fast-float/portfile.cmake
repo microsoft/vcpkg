@@ -1,18 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fastfloat/fast_float
-    REF v3.2.0
-    SHA512 8c0819501f854688942bf2676a9592c537b14b472a942695d589a75499f43bef57a8cb98b41b285dcfc0122f804c85e477d5aee82750a69308bdbf16c98ce2a7
+    REF "v${VERSION}"
+    SHA512 5d8c5594e1999b7274e6d28248d269155673c1d02509111338b8518e3ebe6767530cbd2108d6406d7ef023a0cf9b33a2aa5a2dea3ffadf34f426a148d087c197
     HEAD_REF master
 )
 
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DFASTFLOAT_INSTALL=ON
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME FastFloat CONFIG_PATH share/cmake/FastFloat)
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME FastFloat CONFIG_PATH share/FastFloat)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-file(INSTALL "${SOURCE_PATH}/LICENSE-MIT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE-APACHE" "${SOURCE_PATH}/LICENSE-BOOST" "${SOURCE_PATH}/LICENSE-MIT")
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

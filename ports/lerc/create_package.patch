@@ -1,9 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e90fcdd..17c79e8 100644
+index ab733f5..a52dc59 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,9 +26,16 @@ add_library(LercLib ${SOURCES})
- endif()
+@@ -38,11 +38,18 @@ endif()
  
  install(
      TARGETS Lerc
@@ -19,3 +18,6 @@ index e90fcdd..17c79e8 100644
 +  NAMESPACE unofficial::Lerc::
 +  DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/unofficial-lerc"
 +)
+ 
+ # Handle both absolute paths (e.g. NixOS) and relative for a relocatable package
+ if(IS_ABSOLUTE "${CMAKE_INSTALL_INCLUDEDIR}")

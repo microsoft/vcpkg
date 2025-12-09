@@ -1,0 +1,14 @@
+diff --git a/src/sound-theme-spec.c b/src/sound-theme-spec.c
+index 32affd0..371e380 100644
+--- a/src/sound-theme-spec.c
++++ b/src/sound-theme-spec.c
+@@ -28,6 +28,9 @@
+ #include <unistd.h>
+ 
+ #include <locale.h>
++#ifndef LC_MESSAGES
++#include <libintl.h>
++#endif
+ 
+ #include "sound-theme-spec.h"
+ #include "malloc.h"

@@ -1,0 +1,9 @@
+{
+  "name": "coin-or-osi",
+  "version-date": "2024-04-16",
+  "description": "Osi (Open Solver Interface) provides an abstract base class to a generic linear programming (LP) solver, along with derived classes for specific solvers. Many applications may be able to use the Osi to insulate themselves from a specific LP solver.",
+  "license": "EPL-2.0",
+  "dependencies": [
+    "coinutils"
+  ]
+}

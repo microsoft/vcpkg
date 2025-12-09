@@ -1,0 +1,15 @@
+diff --git a/libosmscout-import/CMakeLists.txt b/libosmscout-import/CMakeLists.txt
+index 36fa3585c..404f61aff 100644
+--- a/libosmscout-import/CMakeLists.txt
++++ b/libosmscout-import/CMakeLists.txt
+@@ -146,8 +146,8 @@ endif()
+ 
+ if (PROTOBUF_FOUND)
+ 	target_include_directories(OSMScoutImport PRIVATE ${Protobuf_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
+-	target_link_libraries(OSMScoutImport ${Protobuf_LIBRARIES})
+-	if(WIN32)
++	target_link_libraries(OSMScoutImport protobuf::libprotobuf)
++	if(0)
+ 		target_compile_definitions(OSMScoutImport PRIVATE -DPROTOBUF_USE_DLLS)
+ 	endif()
+ 	target_compile_definitions(OSMScoutImport PRIVATE -DOSMSCOUT_IMPORT_CMAKE_BUILD)

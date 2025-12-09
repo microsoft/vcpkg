@@ -1,0 +1,27 @@
+{
+  "name": "guile",
+  "version": "3.0.10",
+  "port-version": 1,
+  "description": "GNU's programming and extension language",
+  "homepage": "https://www.gnu.org/software/guile/",
+  "documentation": "https://www.gnu.org/software/guile/manual/",
+  "license": "LGPL-3.0-or-later",
+  "supports": "linux",
+  "dependencies": [
+    "bdwgc",
+    {
+      "name": "gettext",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "gmp",
+    {
+      "name": "gperf",
+      "host": true
+    },
+    "libffi",
+    "libunistring"
+  ]
+}

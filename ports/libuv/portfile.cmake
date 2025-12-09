@@ -1,16 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
-    REF e8b7eb6908a847ffbe6ab2eec7428e43a0aa53a2  #v1.44.1
-    SHA512 c8918fe3cdfcfec7c7da4af8286b5fd28805f41a40a283a22ff578631835539d9f52b46310f1ac0a464a570f9664d6793bb6c63541f01a4f379b3ad2f7c56aea
+    REF "v${VERSION}"
+    SHA512 cf3ca916fc3a762a194dac86718a5a7fe24f230e34172a48f9b3401ad72fbc1cf21b46ceaba956cdf6783d323e518d40f8632fff965943869819a1c26992a3c1
     HEAD_REF v1.x
-    PATCHES fix-build-type.patch
+    PATCHES
+        fix-build-type.patch
+        ssize_t.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBUV_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBUV_BUILD_TESTS=OFF
+        -DLIBUV_BUILD_BENCH=OFF
+        -DLIBUV_BUILD_SHARED=${LIBUV_BUILD_SHARED}
         -DQEMU=OFF
         -DASAN=OFF
         -DTSAN=OFF
@@ -32,4 +38,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DI
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-

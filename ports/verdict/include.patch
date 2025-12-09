@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 73c4de3..2cdd102 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,7 +54,7 @@ configure_file(
+ 
+ add_library(verdict ${verdict_SOURCES} ${verdict_HEADERS} ${CMAKE_CURRENT_BINARY_DIR}/verdict_config.h)
+ target_include_directories(verdict PUBLIC
+-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> $<INSTALL_INTERFACE:include>)
+ if(UNIX)
+   target_link_libraries(verdict PRIVATE m)
+ endif()

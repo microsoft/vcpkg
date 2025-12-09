@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/rapidyaml
-    REF 213b201d264139cd1b887790197e08850af628e3 #v0.4.1
-    SHA512 f76e3c41284441dc195402fadda5ceb56fd48c7954a24c29457e14d2f1996d46e9cfb01dd366b00c588108777735b7ccc1d68215c6ecc609cc7b805535c77309
+    REF "v${VERSION}"
+    SHA512 e0dd2409e08e556c65fb906de546c1012627aea97a36964d65a1265e7c2465bee1d7dceafebb843ae294a348f8c5fe7b6887e7ddffbc1b1eb419e924d94b41fa
     HEAD_REF master
     PATCHES cmake-fix.patch
 )
@@ -58,7 +58,7 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/include/ryml_std.hpp" "${CURRENT_PACKAGES_D
 file(RENAME "${CURRENT_PACKAGES_DIR}/include/ryml.natvis" "${CURRENT_PACKAGES_DIR}/include/ryml/ryml.natvis")
 
 # Fix paths in headers file
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ryml/ryml.hpp" "./c4" "../c4")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ryml/ryml.hpp" "./c4" "../c4" IGNORE_UNCHANGED)
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ryml/ryml_std.hpp" "./c4" "../c4")
 
 # Fix paths in config file
@@ -68,4 +68,4 @@ file(WRITE "${CURRENT_PACKAGES_DIR}/share/ryml/rymlConfig.cmake" "${_contents}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

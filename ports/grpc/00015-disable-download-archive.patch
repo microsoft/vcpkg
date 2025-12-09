@@ -1,5 +1,5 @@
 diff --git a/cmake/download_archive.cmake b/cmake/download_archive.cmake
-index 820aafafb7..a59b785c7e 100644
+index 820aafa..a59b785 100644
 --- a/cmake/download_archive.cmake
 +++ b/cmake/download_archive.cmake
 @@ -19,6 +19,7 @@ file(MAKE_DIRECTORY ${_download_archive_TEMPORARY_DIR})

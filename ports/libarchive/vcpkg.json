@@ -1,9 +1,8 @@
 {
   "name": "libarchive",
-  "version": "3.6.1",
-  "port-version": 1,
+  "version": "3.8.4",
   "description": "Library for reading and writing streaming archives",
-  "homepage": "https://github.com/libarchive/libarchive",
+  "homepage": "https://www.libarchive.org",
   "license": null,
   "supports": "!uwp",
   "dependencies": [
@@ -15,10 +14,10 @@
   ],
   "default-features": [
     "bzip2",
-    "libxml2",
+    "crypto",
     "lz4",
     "lzma",
-    "openssl",
+    "xar",
     "zstd"
   ],
   "features": {
@@ -28,10 +27,17 @@
         "bzip2"
       ]
     },
-    "libxml2": {
-      "description": "Libxml2 support",
+    "crypto": {
+      "description": "Support for cryptographic features",
       "dependencies": [
-        "libxml2"
+        {
+          "name": "mbedtls",
+          "platform": "osx"
+        },
+        {
+          "name": "openssl",
+          "platform": "!osx"
+        }
       ]
     },
     "lz4": {
@@ -52,12 +58,13 @@
         "lzo"
       ]
     },
-    "openssl": {
-      "description": "OpenSSL support (not available on macOS)",
+    "xar": {
+      "description": "Xar support",
       "dependencies": [
         {
-          "name": "openssl",
-          "platform": "!osx"
+          "name": "libxml2",
+          "default-features": false,
+          "platform": "!windows | mingw"
         }
       ]
     },

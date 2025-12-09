@@ -3,16 +3,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OctoMap/octomap
-    REF v1.9.5
-    SHA512 e58c6d33c351b14e9596e18a8702715d167c136fd029b1078ddd13a5926fe451d3b619231b5a8ccfb64b6e5fc6db8b57e6ef329099828d2f5195c0988700b581
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 1cbee4f6b3569587986774447ad9ec4190f597310c4d6865ffa7cd8865ece2492e4a42fa369b633d9d7a9da782560d49deaa62a18601ea4f56396bdf1a6a5f52
+    HEAD_REF devel
     PATCHES
-      "001-fix-exported-targets.patch"
+      001-fix-exported-targets.patch
+      fix-isnan.patch # Remove this patch in the next update
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTING=OFF
@@ -20,26 +20,26 @@ vcpkg_configure_cmake(
         -DBUILD_DYNAMICETD3D_SUBPROJECT=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_copy_tools(
     TOOL_NAMES binvox2bt bt2vrml compare_octrees convert_octree edit_octree eval_octree_accuracy graph2tree log2graph
     AUTO_CLEAN)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/octomap")
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/octomap/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/octomap/LICENSE.txt")
 
 vcpkg_copy_pdbs()
 

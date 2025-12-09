@@ -3,9 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArthurSonzogni/FTXUI
-    REF c033ca61ae8fb264542d0326d1309e0a3bde945a # 3.0.0
-    SHA512 ca1468f30f90c3a886fbb6dea113699623d601da10b39a6a33d89780cd825bec8deb431872a2515fce05c7a5d581d4b56860b19654df8cf90e389dfa964f013c
-    HEAD_REF master
+    REF "v${VERSION}"
+    SHA512 55921a42081630947760f46b533fa1e1f65abfad8976db74018fa48889ba352a01b6adaa56fba482f100f15e450df7e0e3120f899d89685612bf19199a7f7c59
+    HEAD_REF main
 )
 
 vcpkg_cmake_configure(
@@ -21,6 +21,8 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
+vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

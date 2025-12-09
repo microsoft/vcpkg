@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO trailofbits/pe-parse
-    REF v1.3.0
-    SHA512 b723e90821e0ac67b4d6b15e5a46cf13544f21380a4d2add013eedcaa309e1be2cff6789247397c6fb4a938e4a240a835cbe21c8221bd558a4fccf8e93ce1548
+    REF "v${VERSION}"
+    SHA512 fae9060c48e2cebdfbb742c52bc39c36335c1ad4fc7e6bc75a7da012f59d16497630d40ca814c8da71acc44dcce82983ebe13da3a0d389cc53032261fcd1f6bb
     HEAD_REF master
     PATCHES
         arm64-windows-fix.patch
+        no-werror.patch
 )
 
 vcpkg_cmake_configure(

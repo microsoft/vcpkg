@@ -1,7 +1,7 @@
 {
   "name": "mygui",
-  "version": "3.4.1",
-  "port-version": 3,
+  "version": "3.4.3",
+  "port-version": 4,
   "description": "Fast, flexible and simple GUI",
   "homepage": "http://mygui.info",
   "license": "MIT",
@@ -19,14 +19,22 @@
     }
   ],
   "features": {
+    "obsolete": {
+      "description": "Keep obsolete functions."
+    },
     "opengl": {
       "description": "Use OpenGL render system.",
+      "supports": "!android",
       "dependencies": [
         "opengl"
       ]
     },
+    "plugins": {
+      "description": "Build MyGUI plugins."
+    },
     "tools": {
-      "description": "Install MyGUI tools."
+      "description": "Install MyGUI tools.",
+      "supports": "!android"
     }
   }
 }

@@ -3,12 +3,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/graph_parallel
-    REF boost-1.79.0
-    SHA512 18c4a3272d08445bf6dfe23546d5380740979014207620b67890e20df21a7cd0d2c9c9f9b96ea240ceab5f4e1af98cc09518667959b4782595f36fa290e88a8e
+    REF boost-${VERSION}
+    SHA512 37278a262ce4c263c3d4ad2bf9903da08e21f9691b06cbd7704107b5aac25044c398944e0c36420e348de12d3690279aea7c1e66056d5528ee75bd36c7a54459
     HEAD_REF master
 )
 
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)

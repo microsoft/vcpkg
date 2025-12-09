@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index b5280f3..4927ed5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -333,7 +333,7 @@ tiff_opt = get_option('tiff')
+ if not tiff_opt.disabled() and not native_windows_loaders
+   # We currently don't have a fallback subproject, but this handles error
+   # reporting if tiff_opt is enabled.
+-  tiff_dep = dependency(is_msvc_like ? 'tiff' : 'libtiff-4', required: tiff_opt)
++  tiff_dep = dependency(false ? 'tiff' : 'libtiff-4', required: tiff_opt)
+ 
+   if tiff_dep.found()
+     enabled_loaders += 'tiff'

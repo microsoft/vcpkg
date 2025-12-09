@@ -1,3 +1,0 @@
-The package ignition-cmake2 provides CMake integration:
-
-    find_package(ignition-cmake2 CONFIG REQUIRED)

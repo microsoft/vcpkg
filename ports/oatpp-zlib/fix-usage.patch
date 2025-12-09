@@ -1,0 +1,13 @@
+diff --git a/cmake/module-utils.cmake b/cmake/module-utils.cmake
+index 8f1d35a..cade49d 100644
+--- a/cmake/module-utils.cmake
++++ b/cmake/module-utils.cmake
+@@ -5,7 +5,7 @@ macro(target_link_oatpp target)
+         message("target_link_oatpp(${target}) to installed oatpp lib")
+ 
+         target_link_libraries(${target}
+-                PRIVATE oatpp::oatpp
++                PUBLIC oatpp::oatpp
+                 PRIVATE oatpp::oatpp-test
+         )
+ 

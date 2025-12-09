@@ -1,10 +1,21 @@
 {
   "name": "strtk",
-  "version-string": "2020-09-14",
-  "port-version": 1,
+  "version-date": "2020-09-14",
+  "port-version": 4,
   "description": "robust, optimized and portable string processing algorithms for the C++ language",
   "homepage": "https://github.com/ArashPartow/strtk",
-  "dependencies": [
-    "boost"
-  ]
+  "license": null,
+  "features": {
+    "boost": {
+      "description": "Request boost libraries",
+      "dependencies": [
+        "boost-algorithm",
+        "boost-lexical-cast",
+        "boost-random",
+        "boost-regex",
+        "boost-spirit",
+        "boost-tokenizer"
+      ]
+    }
+  }
 }

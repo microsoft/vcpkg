@@ -1,145 +1,158 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF 40ee5d3bcc70343af6c0300d71968858c1f1948f #v2.7.0
-    SHA512 b18fa4830a6b4367e28e92fe91b9ae925d5d4fd517b2f6f8655eae7306f181b98e9e611c0cde576f642987c12af6eb862952179f5d7b60019cd7b024fd2db142
+    REF "${VERSION}"
+    SHA512 12b75a6a9af6f0cd115eeaf38f227598131404536f0bdbadca87740e289a3c6a298d474661e056391b442197a719ce92cbb14033b369fff0ad1f34fbcac95a05
     HEAD_REF master
     PATCHES
-        DontInstallSystemRuntimeLibs.patch
-        fix-linux-build.patch
-        openssl_threads.patch
-        fix-include-path.patch
-        fix-libusb.patch
-        install-dirs.patch
+        dependencies.patch
+        ffmpeg.diff
+        install-layout.patch
+        windows-linkage.patch
 )
+file(WRITE "${SOURCE_PATH}/.source_version" "${VERSION}-vcpkg")
+file(WRITE "${SOURCE_PATH}/CMakeCPack.cmake" "")
 
-if (NOT VCPKG_TARGET_IS_WINDOWS)
-    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libxfixes-dev\n")
+if("x11" IN_LIST FEATURES)
+    message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n    libxfixes-dev\n")
 endif()
-set(FREERDP_WITH_CLIENT)
-if (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
-    set(FREERDP_WITH_CLIENT -DWITH_CLIENT=OFF)
-endif()
-
-set(FREERDP_CRT_LINKAGE)
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    set(FREERDP_CRT_LINKAGE -DMSVC_RUNTIME=static)
-endif()
-
-get_filename_component(SOURCE_VERSION "${SOURCE_PATH}" NAME)
-file(WRITE "${SOURCE_PATH}/.source_version" "${SOURCE_VERSION}-vcpkg")
-
-file(REMOVE "${SOURCE_PATH}/cmake/FindOpenSSL.cmake") # Remove outdated Module
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    urbdrc CHANNEL_URBDRC
+        client      WITH_CLIENT
+        ffmpeg      WITH_DSP_FFMPEG
+        ffmpeg      WITH_FFMPEG
+        ffmpeg      WITH_SWSCALE
+        server      WITH_SERVER
+        urbdrc      CHANNEL_URBDRC
+        winpr-tools WITH_WINPR_TOOLS
+        x11         WITH_X11
+        x11         VCPKG_LOCK_FIND_PACKAGE_X11
 )
+
+if("client" IN_LIST FEATURES)
+    # Xcode dependency and untested installation paths
+    if(VCPKG_TARGET_IS_IOS)
+        message(STATUS "Not building native client components.")
+        list(APPEND FEATURE_OPTIONS -DWITH_CLIENT_IOS=OFF)
+    elseif(VCPKG_TARGET_IS_OSX)
+        message(STATUS "Not building native client components.")
+        list(APPEND FEATURE_OPTIONS -DWITH_CLIENT_MAC=OFF)
+    endif()
+endif()
+
+set(HAS_SHADOW_SUBSYSTEM ON)
+
+if("server" IN_LIST FEATURES)
+    # actual shadow platform subsystem
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS # implementation unmaintained
+       OR NOT WITH_X11) # dependency
+        set(HAS_SHADOW_SUBSYSTEM OFF)
+    endif()
+    # actual platform server implementation
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS) # implementation unmaintained
+        list(APPEND FEATURE_OPTIONS -DWITH_PLATFORM_SERVER=OFF)
+    endif()
+endif()
+
+if (NOT HAS_SHADOW_SUBSYSTEM)
+    list(APPEND FEATURE_OPTIONS -DWITH_SHADOW_SUBSYSTEM=OFF -DWITH_SERVER_SHADOW_CLI=OFF)
+endif()
+
+vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    ${GENERATOR_OPTION}
     OPTIONS
-        ${FREERDP_CRT_LINKAGE}
-        ${FREERDP_WITH_CLIENT}
         ${FEATURE_OPTIONS}
+        "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
+        -DUSE_VERSION_FROM_GIT_TAG=OFF
+        -DWITH_ABSOLUTE_PLUGIN_LOAD_PATHS=OFF
+        -DWITH_AAD=ON
+        -DWITH_CCACHE=OFF
+        -DWITH_CJSON_REQUIRED=ON
+        -DWITH_CLANG_FORMAT=OFF
+        -DWITH_MANPAGES=OFF
+        -DWITH_OPENSSL=ON
+        -DWITH_SAMPLE=OFF
+        -DWITH_UNICODE_BUILTIN=ON
+        "-DMSVC_RUNTIME=${VCPKG_CRT_LINKAGE}"
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        # Unmaintained
+        -DWITH_CLIENT_WINDOWS=OFF
+        -DWITH_WAYLAND=OFF
+        # Uncontrolled dependencies w.r.t. vcpkg ports, system libs, or tools
+        # Can be overriden in custom triplet file
+        -DUSE_UNWIND=OFF
+        -DWITH_ALSA=OFF
+        -DWITH_CAIRO=OFF
+        -DWITH_CLIENT_SDL=OFF
+        -DWITH_CUPS=OFF
+        -DWITH_FUSE=OFF
+        -DWITH_KRB5=OFF
+        -DWITH_LIBSYSTEMD=OFF
+        -DWITH_OPUS=OFF
+        -DWITH_OSS=OFF
+        -DWITH_PCSC=OFF
+        -DWITH_PKCS11=OFF
+        -DWITH_PROXY_MODULES=OFF
+        -DWITH_PULSE=OFF
+        -DWITH_URIPARSER=OFF
+    OPTIONS_RELEASE
+        -DWITH_VERBOSE_WINPR_ASSERT=OFF
+    MAYBE_UNUSED_VARIABLES
+        MSVC_RUNTIME
+        USE_UNWIND
+        VCPKG_LOCK_FIND_PACKAGE_X11
+        WITH_CLIENT_WINDOWS
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(GLOB_RECURSE TOOLS_RELEASE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
+vcpkg_list(SET tools)
+if("client" IN_LIST FEATURES AND "x11" IN_LIST FEATURES)
+    list(APPEND tools xfreerdp)
+endif()
+if("server" IN_LIST FEATURES)
+    list(APPEND tools freerdp-proxy)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Proxy3 PACKAGE_NAME freerdp-Proxy3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Server3 PACKAGE_NAME freerdp-server3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    if (HAS_SHADOW_SUBSYSTEM)
+        vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Shadow3 PACKAGE_NAME freerdp-shadow3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+        list(APPEND tools freerdp-shadow-cli)
+    endif()
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rdtk0 PACKAGE_NAME rdtk0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endif()
+if("winpr-tools" IN_LIST FEATURES)
+    list(APPEND tools winpr-hash winpr-makecert)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WinPR-tools3 PACKAGE_NAME winpr-tools3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Client3 PACKAGE_NAME freerdp-client3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WinPR3 PACKAGE_NAME winpr3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP3 PACKAGE_NAME freerdp)
 
-if(TOOLS_RELEASE)
-    file(COPY ${TOOLS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-
-    file(GLOB_RECURSE TOOLS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-    file(REMOVE ${TOOLS_RELEASE} ${TOOLS_DEBUG})
+if(tools)
+    vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
-    foreach(FREERDP_DLL ${FREERDP_DLLS})
-        file(COPY "${FREERDP_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE "${FREERDP_DLL}")
-    endforeach()
-
-    file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-    foreach(FREERDP_DLL ${FREERDP_DLLS})
-        file(COPY "${FREERDP_DLL}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(REMOVE "${FREERDP_DLL}")
-    endforeach()
-else()
-    file(GLOB_RECURSE FREERDP_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
-    foreach(FREERDP_TOOL ${FREERDP_TOOLS})
-        file(COPY "${FREERDP_TOOL}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-        file(REMOVE "${FREERDP_TOOL}")
-    endforeach()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/winpr3/winpr/build-config.h" "\"${CURRENT_PACKAGES_DIR}" "/* vcpkg redacted */ \"")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # They build static with dllexport, so it must be used with dllexport. Proper fix needs invasive patching.
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
+    if(WITH_SERVER)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rdtk0/rdtk/api.h" "#ifdef RDTK_EXPORTS" "#if 1")
+    endif()
 endif()
 
-foreach(PACKAGE FreeRDP-Client2 FreeRDP2 WinPR2)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/cmake/${PACKAGE}_temp")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake/${PACKAGE}" "${CURRENT_PACKAGES_DIR}/lib/cmake/${PACKAGE}_temp/${PACKAGE}")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}_temp")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}" "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/${PACKAGE}_temp/${PACKAGE}")
-endforeach()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Client2_temp/FreeRDP-Client2 PACKAGE_NAME FreeRDP-Client)
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP2_temp/FreeRDP2 PACKAGE_NAME FreeRDP)
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/WinPR2_temp/WinPR2 PACKAGE_NAME WinPR)
-
-vcpkg_fixup_pkgconfig(SKIP_CHECK)
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake"
-    "debug/lib/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "debug/bin/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake"
-    "debug/lib/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "debug/bin/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-release.cmake"
-    "lib/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "bin/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-release.cmake"
-    "lib/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "bin/winpr-tools2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP/FreeRDPTargets-debug.cmake"
-    "debug/lib/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "debug/bin/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP/FreeRDPTargets-release.cmake"
-    "lib/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "bin/freerdp2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP-Client/FreeRDP-ClientTargets-debug.cmake"
-    "debug/lib/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "debug/bin/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/FreeRDP-Client/FreeRDP-ClientTargets-release.cmake"
-    "lib/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
-    "bin/freerdp-client2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
+file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")
+file(REMOVE_RECURSE
+    ${cmakefiles}
+    "${CURRENT_PACKAGES_DIR}/include/winpr3/config"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(GLOB OBJS "${CURRENT_PACKAGES_DIR}/debug/*.lib")
-    file(REMOVE ${OBJS})
-    file(GLOB OBJS "${CURRENT_PACKAGES_DIR}/*.lib")
-    file(REMOVE ${OBJS})
-endif()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include"
-                    "${CURRENT_PACKAGES_DIR}/debug/share"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake"
-                    "${CURRENT_PACKAGES_DIR}/lib/cmake")
-
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" ".")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}/" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp/build-config.h" "${CURRENT_PACKAGES_DIR}" "")
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

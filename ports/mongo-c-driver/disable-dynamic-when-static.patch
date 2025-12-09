@@ -1,0 +1,65 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3a40f52..d080479 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -358,11 +358,11 @@ if (USE_SYSTEM_LIBBSON)
+ 
+    set (USING_SYSTEM_BSON TRUE)
+    if (NOT TARGET mongo::bson_shared)
+-           message (FATAL_ERROR "System libbson built without shared library target")
++
+    endif ()
+    set (BSON_LIBRARIES mongo::bson_shared)
+    if (NOT TARGET mongo::bson_static)
+-           message (FATAL_ERROR "System libbson built without static library target")
++
+    endif ()
+    set (BSON_STATIC_LIBRARIES mongo::bson_static)
+ endif ()
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index fcab819..be0bfb2 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -889,7 +889,7 @@ set (
+    "${mongo-c-driver_SOURCE_DIR}/src/uthash"
+ )
+ 
+-if (ENABLE_SHARED)
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+    add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+    if(WIN32)
+       # Add resource-definition script for Windows shared library (.dll).
+@@ -966,7 +966,7 @@ if (ENABLE_SHARED)
+                RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    endif () # ENABLE_SHM_COUNTERS
+ 
+-endif () # ENABLE_SHARED
++endif () # NOT MONGOC_ENABLE_STATIC_BUILD
+ 
+ if (MONGOC_ENABLE_STATIC_BUILD)
+    add_library (mongoc_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+@@ -1364,7 +1364,7 @@ if (MONGOC_ENABLE_STATIC_INSTALL)
+    list (APPEND TARGETS_TO_INSTALL mongoc_static)
+ endif ()
+ 
+-if (ENABLE_SHARED)
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+    list (APPEND TARGETS_TO_INSTALL mongoc_shared)
+ endif ()
+ 
+@@ -1419,6 +1419,7 @@ endif()
+ set_property(TARGET ${TARGETS_TO_INSTALL} APPEND PROPERTY pkg_config_INCLUDE_DIRECTORIES "${MONGOC_HEADER_INSTALL_DIR}")
+ 
+ # Deprecated alias for libmongoc-1.0.pc, see CDRIVER-2086.
++if (NOT MONGOC_ENABLE_STATIC_BUILD)
+ if (MONGOC_ENABLE_SSL)
+    configure_file (
+       ${CMAKE_CURRENT_SOURCE_DIR}/src/libmongoc-ssl-1.0.pc.in
+@@ -1429,6 +1430,7 @@ if (MONGOC_ENABLE_SSL)
+       DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+    )
+ endif ()
++endif ()
+ 
+ include (CMakePackageConfigHelpers)
+ 

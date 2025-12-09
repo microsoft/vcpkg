@@ -1,42 +1,48 @@
+set(VCPKG_BUILD_TYPE release)  # header-only lib
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rbock/sqlpp11
-    REF 2bc89b34ad3cc37b6bca9a44a3529ff2d8fe211f # 0.61
-    SHA512 6e2496959749422987aca21f333abb01648702b85e02acc711bbac398ca6a67d8be93a3d89fc1f8bad5446865725ff9bcc053e6229cb34627120b59469426266
-    HEAD_REF master
+    REF ${VERSION}
+    SHA512 8227bc613c9ca279fef8549472da518b81151d1d6e43600617017ebaf359a7c8d0bb7a17c96db232754fc7bc002ad44c4392826857710c18c65e2eb728a97dd5
+    HEAD_REF main
     PATCHES
         ddl2cpp_path.patch
+        dependencies.diff
+        fix-miss-header.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        sqlite3  BUILD_SQLITE3_CONNECTOR
-        mariadb  BUILD_MARIADB_CONNECTOR
-        mysql    BUILD_MYSQL_CONNECTOR
+        sqlite3    BUILD_SQLITE3_CONNECTOR
+        mariadb    BUILD_MARIADB_CONNECTOR
+        mysql      BUILD_MYSQL_CONNECTOR
+        postgresql BUILD_POSTGRESQL_CONNECTOR
 )
 
-# Use sqlpp11's own build process
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING:BOOL=OFF
-        # Use vcpkg as source for the date library
+        -DSQLPP11_INSTALL_CMAKEDIR=share/${PORT}
         -DUSE_SYSTEM_DATE:BOOL=ON
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
-# Move CMake config files to the right place
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Sqlpp11)
+set(usage "sqlpp11 provides CMake targets:\n")
+if(FEATURES STREQUAL "core")
+    set(usage "This build of sqlpp11 doesn't include any connector.\n(Available via features: sqlite3, mariadb, mysql, postgresql.)\n")
+endif()
+foreach(component IN ITEMS SQLite3 SQLCipher MySQL MariaDB PostgreSQL)
+    string(TOLOWER "${component}" lib)
+    if("${lib}" IN_LIST FEATURES)
+        string(APPEND usage "\n  find_package(Sqlpp11 CONFIG REQUIRED COMPONENTS ${component})\n  target_link_libraries(main PRIVATE sqlpp11::${lib})\n")
+    endif()
+endforeach()
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}")
 
-# Delete redundant and unnecessary directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/include/date)
-
-# Move python script from bin directory
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/sqlpp11-ddl2cpp DESTINATION ${CURRENT_PACKAGES_DIR}/scripts)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

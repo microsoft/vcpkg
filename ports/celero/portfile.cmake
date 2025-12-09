@@ -1,8 +1,10 @@
+vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
-    REF v2.8.3
-    SHA512 f6774f6076bae5d37d4f5bd12153bc99b97893f43fe9253fe805b5b0c2475ffe878e32f3fc7391544ea24020e59d5ae48e44e5b3a302f7280ad15b6a6820f70b
+    REF "v${VERSION}"
+    SHA512 18bd6443ff09e72dca0bf98d1bc0543c4839c18239b60c0c7a8bc30c67681b97fd23e8c8892b90a9f3a63a81ed6cac794fa63d58dd60f5daae9f48fc75c8a637
     HEAD_REF master
     PATCHES
         fix-bin-install-path.patch
@@ -16,7 +18,7 @@ vcpkg_cmake_configure(
         -DCELERO_ENABLE_EXPERIMENTS=OFF
         -DCELERO_ENABLE_TESTS=OFF
         -DCELERO_COMPILE_DYNAMIC_LIBRARIES=${CELERO_COMPILE_DYNAMIC_LIBRARIES}
-        -DCELERO_TREAT_WARNINGS_AS_ERRORS=OFF
+        -DCELERO_ENABLE_WARNINGS_AS_ERRORS=OFF
 )
 
 vcpkg_cmake_install()

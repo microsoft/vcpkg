@@ -1,0 +1,24 @@
+# Package information for LuaJIT to be used by pkg-config.
+majver=2
+minver=1
+relver=0
+version=${majver}.${minver}.${relver}-beta3
+abiver=51
+
+prefix=handled-by-fixup
+multilib=lib
+exec_prefix=${prefix}
+libdir=${exec_prefix}/${multilib}
+libname=lua${abiver}
+includedir=${prefix}/include/luajit
+
+INSTALL_LMOD=${prefix}/share/lua/${abiver}
+INSTALL_CMOD=${prefix}/${multilib}/lua/${abiver}
+
+Name: LuaJIT
+Description: Just-in-time compiler for Lua
+URL: https://luajit.org
+Version: ${version}
+Requires:
+Libs: -L${libdir} -l${libname}
+Cflags: -I${includedir}

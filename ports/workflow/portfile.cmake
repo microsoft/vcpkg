@@ -2,25 +2,31 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
-        REF v0.9.7-win
-        SHA512 c23b8c1910c4ca5d57fa732e3084f56e17fdfead5561a8eab7be469d8f6081d830555365b2cf74e27956ffa88a6fb284dbde4654b23b130da9fbb4eb404686bd
+        REF "v${VERSION}-win"
+        SHA512 4d33904742c41b9cc5efb38a0950dd1f1ef5a0aacab1d3c1fda899244af5b63e734c74dcb5a231623518880b90fa1db5280bf03c4186e94d293fcd2ad6286929
         HEAD_REF windows
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
-        REF v0.9.7
-        SHA512 4866d9cfe2d9ba30f2f7866819ee8f425b91082d7f86994c1194a6b4406e8ee99e22ce6b0bafeb22c5f098f7da30029fb6b12895c2ac45810d33c28d4bfad006
+        REF "v${VERSION}"
+        SHA512 ea90fb1a9c289a76dfa02b077cb0d99ec27157747f1b73d4437a089560a2659baebd463e2e6f699fbd44ec01e59bcd4d4b2f4556377dd57834f02bde0aefdca3
         HEAD_REF master
     )
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+    set(CONFIGURE_OPTIONS "-DWORKFLOW_BUILD_STATIC_RUNTIME=ON")
+else()
+    set(CONFIGURE_OPTIONS "-DWORKFLOW_BUILD_STATIC_RUNTIME=OFF")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
+    OPTIONS ${CONFIGURE_OPTIONS}
 )
-
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_copy_pdbs()
@@ -29,4 +35,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

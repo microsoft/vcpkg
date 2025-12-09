@@ -1,6 +1,6 @@
 {
   "name": "tinyobjloader",
-  "version": "2.0.0-rc9",
+  "version-string": "2.0.0rc13",
   "description": "Tiny but powerful single file wavefront obj loader",
   "license": "MIT",
   "dependencies": [

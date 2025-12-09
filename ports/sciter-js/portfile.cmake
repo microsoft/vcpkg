@@ -6,8 +6,8 @@ endif()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION 52bfe183983118c884294c864ee7b3d0dd199de6)
-set(SCITER_SHA d31ef2a07525bf1c91b9f36ee434db6227bead732f5779cb4ee28ab6d92957bfb3d4656a960d3c47e64f3efc207f78be64853a56b1e1a14f56fd3c829b022155)
+set(SCITER_REVISION 1a35354adaef9a9940ceac7c209f2aa8157c7fb0)
+set(SCITER_SHA 9d7bc33a5aefb6759ca380cc690ea8a92fe707846045ab5f4d3fd178d4b5c2a43de1a1be8fad97e1c3b4f2c763b5f95f8089a9006de706fa87ef8b1930eb7ad3)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -17,11 +17,12 @@ else()
 	message(FATAL_ERROR "Sciter only supports x86/x64")
 endif()
 
-# check out the `https://github.com/c-smile/sciter-js-sdk/archive/${SCITER_REVISION}.tar.gz`
+# check out the `https://gitlab.com/sciter-engine/sciter-js-sdk/-/archive/${SCITER_REVISION}/sciter-js-sdk-${SCITER_REVISION}.tar.gz`
 # hash checksum can be obtained with `curl -L -o tmp.tgz ${URL} && vcpkg hash tmp.tgz`
-vcpkg_from_github(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO c-smile/sciter-js-sdk
+    REPO sciter-engine/sciter-js-sdk
     REF ${SCITER_REVISION}
     SHA512 ${SCITER_SHA}
 )
@@ -40,7 +41,7 @@ set(SCITER_TOOLS ${CURRENT_PACKAGES_DIR}/tools/sciter-js)
 set(TOOL_PERMS FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # license
-file(COPY ${SOURCE_PATH}/logfile.md DESTINATION ${SCITER_SHARE})
+file(COPY ${SOURCE_PATH}/CHANGELOG.md DESTINATION ${SCITER_SHARE})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${SCITER_SHARE} RENAME copyright)
 
 # tools
@@ -55,10 +56,6 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     file(INSTALL ${SCITER_BIN}/inspector DESTINATION ${SCITER_TOOLS} ${TOOL_PERMS})
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${SCITER_TOOLS})
-
-    if ("windowless" IN_LIST FEATURES)
-        set(SCITER_BIN ${SOURCE_PATH}/bin.lite/linux/x64)
-    endif()
 
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -96,10 +93,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SCITER_BIN}/inspector.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/window-mixin.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${SCITER_TOOLS})
-
-    if ("windowless" IN_LIST FEATURES)
-        set(SCITER_BIN ${SOURCE_PATH}/bin.lite/windows/${SCITER_ARCH})
-    endif()
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)

@@ -29,3 +29,13 @@ index de68e5c..9356486 100644
 -install(TARGETS libproxy DESTINATION ${LIB_INSTALL_DIR})
 +install(TARGETS libproxy RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
  install(FILES   proxy.h  DESTINATION ${INCLUDE_INSTALL_DIR})
+diff --git a/libproxy/cmake/pkgconfig.cmk b/libproxy/cmake/pkgconfig.cmk
+index 89bfc62..ffa0897 100644
+--- a/libproxy/cmake/pkgconfig.cmk
++++ b/libproxy/cmake/pkgconfig.cmk
+@@ -1,4 +1,4 @@
+-if(NOT WIN32 AND NOT APPLE)
++if(NOT WIN32)
+   find_package(PkgConfig)
+
+   # Define our magical px_check_modules function

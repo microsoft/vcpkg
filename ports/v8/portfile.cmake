@@ -1,3 +1,14 @@
+vcpkg_get_windows_sdk(WINDOWS_SDK)
+
+if (WINDOWS_SDK MATCHES "10.")
+    set(LIBFILEPATH "$ENV{WindowsSdkDir}Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\Ws2_32.Lib")
+    set(HEADERSPATH "$ENV{WindowsSdkDir}Include\\${WINDOWS_SDK}\\um")
+elseif(WINDOWS_SDK MATCHES "8.")
+    set(LIBFILEPATH "$ENV{WindowsSdkDir}Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\Ws2_32.Lib")
+    set(HEADERSPATH "$ENV{WindowsSdkDir}Include\\um")
+else()
+    message(FATAL_ERROR "Portfile not yet configured for Windows SDK with version: ${WINDOWS_SDK}")
+endif()
 
 set(pkgver "9.1.269.39")
 
@@ -17,7 +28,7 @@ vcpkg_add_to_path(PREPEND "${GIT_PATH}")
 vcpkg_add_to_path(PREPEND "${PYTHON2_PATH}")
 vcpkg_add_to_path(PREPEND "${GN_PATH}")
 vcpkg_add_to_path(PREPEND "${NINJA_PATH}")
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
   vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 endif()
@@ -118,16 +129,16 @@ file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/icu")
 configure_file("${CURRENT_PORT_DIR}/zlib.gn" "${SOURCE_PATH}/third_party/zlib/BUILD.gn" COPYONLY)
 configure_file("${CURRENT_PORT_DIR}/icu.gn" "${SOURCE_PATH}/third_party/icu/BUILD.gn" COPYONLY)
 file(WRITE "${SOURCE_PATH}/build/config/gclient_args.gni" "checkout_google_benchmark = false\n")
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
 	string(REGEX REPLACE "\\\\+$" "" WindowsSdkDir $ENV{WindowsSdkDir})
 	file(APPEND "${SOURCE_PATH}/build/config/gclient_args.gni" "windows_sdk_path = \"${WindowsSdkDir}\"\n")
 endif()
 
-if(UNIX)
+if(VCPKG_TARGET_IS_LINUX)
     set(UNIX_CURRENT_INSTALLED_DIR ${CURRENT_INSTALLED_DIR})
     set(LIBS "-ldl -lpthread")
     set(REQUIRES ", gmodule-2.0, gobject-2.0, gthread-2.0")
-elseif(WIN32)
+elseif(VCPKG_TARGET_IS_WINDOWS)
     execute_process(COMMAND cygpath "${CURRENT_INSTALLED_DIR}" OUTPUT_VARIABLE UNIX_CURRENT_INSTALLED_DIR)
     string(STRIP ${UNIX_CURRENT_INSTALLED_DIR} UNIX_CURRENT_INSTALLED_DIR)
     set(LIBS "-lWinmm -lDbgHelp")
@@ -147,7 +158,7 @@ endif()
 
 message(STATUS "Generating v8 build files. Please wait...")
 
-vcpkg_configure_gn(
+vcpkg_gn_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS "is_component_build=${is_component_build} target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\" v8_monolithic=${v8_monolithic} v8_use_external_startup_data=${v8_use_external_startup_data} use_sysroot=false is_clang=false use_custom_libcxx=false v8_enable_verify_heap=false icu_use_data_file=false" 
     OPTIONS_DEBUG "is_debug=true enable_iterator_debugging=true pkg_config_libdir=\"${UNIX_CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig\""
@@ -156,7 +167,7 @@ vcpkg_configure_gn(
 
 message(STATUS "Building v8. Please wait...")
 
-vcpkg_install_gn(
+vcpkg_gn_install(
     SOURCE_PATH "${SOURCE_PATH}"
     TARGETS ${targets}
 )
@@ -171,7 +182,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PREFIX ${CURRENT_PACKAGES_DIR})
     configure_file("${CURRENT_PORT_DIR}/v8.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8.pc" @ONLY)
     configure_file("${CURRENT_PORT_DIR}/v8_libbase.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libbase.pc" @ONLY)
-    configure_file("${CURRENT_PORT_DIR}/v8_libplatform.pc.in" "{CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libplatform.pc" @ONLY)
+    configure_file("${CURRENT_PORT_DIR}/v8_libplatform.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libplatform.pc" @ONLY)
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/snapshot_blob.bin" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
 
     set(PREFIX ${CURRENT_PACKAGES_DIR}/debug)

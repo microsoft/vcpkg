@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "glpk",
+  "version": "5.0",
+  "port-version": 3,
+  "maintainers": "Fabio A. Correa Duran",
+  "description": [
+    "The GNU Linear Programming Kit (GLPK) solves large-scale linear programming (LP), mixed integer programming (MIP), and related problems.",
+    "GLPK includes the following main components:",
+    "Primal and dual simplex methods",
+    "Primal-dual interior-point method",
+    "Branch-and-cut method",
+    "Translator for GNU MathProg",
+    "Application program interface (API)",
+    "Stand-alone LP/MIP solver "
+  ],
+  "homepage": "https://www.gnu.org/software/glpk/",
+  "documentation": "https://www.gnu.org/software/glpk/#documentation",
+  "license": "GPL-3.0-or-later",
+  "supports": "!xbox",
+  "features": {
+    "dl": {
+      "description": "Enable shared library support",
+      "dependencies": [
+        "dlfcn-win32"
+      ]
+    },
+    "gmp": {
+      "description": "Use the GNU Multiple Precision Arithmetic Library",
+      "dependencies": [
+        "gmp"
+      ]
+    },
+    "mysql": {
+      "description": "Sharing between MathProg objects and MySQL databases (libmysql)",
+      "dependencies": [
+        {
+          "name": "glpk",
+          "features": [
+            "dl"
+          ]
+        },
+        "libmysql"
+      ]
+    },
+    "odbc": {
+      "description": "Sharing between MathProg objects and databases through ODBC (libiodbc)",
+      "dependencies": [
+        {
+          "name": "glpk",
+          "features": [
+            "dl"
+          ]
+        }
+      ]
+    }
+  }
+}

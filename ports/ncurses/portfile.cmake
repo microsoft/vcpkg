@@ -1,35 +1,34 @@
-set(NCURSES_VERSION_STR 6.3)
 vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS
-        "https://invisible-mirror.net/archives/ncurses/ncurses-${NCURSES_VERSION_STR}.tar.gz"
-        "ftp://ftp.invisible-island.net/ncurses/ncurses-${NCURSES_VERSION_STR}.tar.gz"
-        "https://ftp.gnu.org/gnu/ncurses/ncurses-${NCURSES_VERSION_STR}.tar.gz"
-    FILENAME "ncurses-${NCURSES_VERSION_STR}.tgz"
-    SHA512 5373f228cba6b7869210384a607a2d7faecfcbfef6dbfcd7c513f4e84fbd8bcad53ac7db2e7e84b95582248c1039dcfc7c4db205a618f7da22a166db482f0105
+        "https://invisible-mirror.net/archives/ncurses/ncurses-${VERSION}.tar.gz"
+        "ftp://ftp.invisible-island.net/ncurses/ncurses-${VERSION}.tar.gz"
+        "https://ftp.gnu.org/gnu/ncurses/ncurses-${VERSION}.tar.gz"
+    FILENAME "ncurses-${VERSION}.tgz"
+    SHA512 fc5a13409d2a530a1325776dcce3a99127ddc2c03999cfeb0065d0eee2d68456274fb1c7b3cc99c1937bc657d0e7fca97016e147f93c7821b5a4a6837db821e8
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE "${ARCHIVE_PATH}"
 )
 
-set(OPTIONS
-    --disable-db-install
-    --enable-pc-files
-    --without-ada
-    --without-manpages
-    --without-progs
-    --without-tack
-    --without-tests
-)
+vcpkg_list(SET OPTIONS)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND OPTIONS
-        --with-shared
         --with-cxx-shared
-        --without-normal
+        --with-shared    # "lib model"
+        --without-normal # "lib model"
     )
 endif()
+
+if(NOT VCPKG_TARGET_IS_MINGW)
+    list(APPEND OPTIONS
+        --enable-mixed-case
+    )
+endif()
+
 if(VCPKG_TARGET_IS_MINGW)
     list(APPEND OPTIONS
         --disable-home-terminfo
@@ -38,27 +37,48 @@ if(VCPKG_TARGET_IS_MINGW)
     )
 endif()
 
-set(OPTIONS_DEBUG
-    "--with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig"
-    --with-debug
-    --without-normal
-)
-set(OPTIONS_RELEASE
-    "--with-pkg-config-libdir=${CURRENT_INSTALLED_DIR}/lib/pkgconfig"
-    --without-debug
-    --with-normal
-)
+if("check-size" IN_LIST FEATURES)
+    list(APPEND OPTIONS
+        --enable-check-size
+    )
+endif()
+
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+
+# There are compilation errors on gcc 15. adding `-std=c17` to CFLAGS for workaround.
+# ref: https://gitlab.archlinux.org/archlinux/packaging/packages/ncurses/-/issues/3
+if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND VCPKG_DETECTED_CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 15)
+    set(ENV{CFLAGS} "$ENV{CFLAGS} -std=c17")
+endif()
 
 vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${OPTIONS}
-    OPTIONS_DEBUG ${OPTIONS_DEBUG}
-    OPTIONS_RELEASE ${OPTIONS_RELEASE}
+    SOURCE_PATH "${SOURCE_PATH}"
+    CONFIGURE_ENVIRONMENT_VARIABLES CFLAGS
+    DETERMINE_BUILD_TRIPLET
     NO_ADDITIONAL_PATHS
+    OPTIONS
+        ${OPTIONS}
+        --disable-db-install
+        --disable-pkg-ldflags
+        --disable-rpath-hack
+        --enable-pc-files
+        --without-ada
+        --without-debug # "lib model"
+        --without-manpages
+        --without-progs
+        --without-tack
+        --without-tests
+        --with-pkg-config-libdir=libdir
 )
 vcpkg_install_make()
-
 vcpkg_fixup_pkgconfig()
+
+# Prefer local files over search path
+file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/ncursesw/*.h")
+foreach(file IN LISTS headers)
+    vcpkg_replace_string("${file}" [[#include <ncursesw/([^>]*)>]] [[#include "\1"]] REGEX IGNORE_UNCHANGED)
+endforeach()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
@@ -66,4 +86,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

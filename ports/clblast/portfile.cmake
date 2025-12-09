@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CNugteren/CLBlast
-    REF 1.5.2
-    SHA512 6693704321bb7623a632ebfc71dcf07bbe4ba6c6f03a2ecf52bc10b401ae546bf82cdd3f6cc28aa9ea10f40dc7b2e86a6530f32cfbd522e24d4cf6a75c8c1100
+    REF "${VERSION}"
+    SHA512 cc93afd4e4860789c4fed8a82bb0019f039285060e74aa65a1916bf061aaa67cc6dc675000b28500046062f40570472abd9c34c210d130e10b8e5c591ceb8ad7
     HEAD_REF master
 )
 
@@ -14,17 +14,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/clblast.dll" "${CURRENT_PACKAGES_DIR}/bin/clblast.dll")
-    
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/clblast.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/clblast.dll")
-    endif()
-endif()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CLBLast)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/CLBlast)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

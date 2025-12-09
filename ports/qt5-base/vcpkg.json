@@ -1,14 +1,18 @@
 {
   "name": "qt5-base",
-  "version": "5.15.5",
+  "version": "5.15.18",
   "port-version": 1,
-  "description": "Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
+  "description": "Qt Base provides the basic non-GUI functionality required by all Qt applications.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
     {
-      "name": "angle",
-      "platform": "!windows"
+      "name": "at-spi2-core",
+      "platform": "linux"
+    },
+    {
+      "name": "dbus",
+      "platform": "linux"
     },
     "double-conversion",
     "egl-registry",
@@ -16,37 +20,83 @@
       "name": "fontconfig",
       "platform": "!windows"
     },
-    "freetype",
-    "harfbuzz",
     {
-      "name": "icu",
-      "platform": "!uwp"
+      "name": "freetype",
+      "default-features": false,
+      "features": [
+        "png",
+        "zlib"
+      ]
+    },
+    {
+      "name": "harfbuzz",
+      "default-features": false,
+      "features": [
+        "freetype"
+      ]
     },
     "libjpeg-turbo",
     "libpng",
-    "openssl",
-    "pcre2",
+    {
+      "name": "opengl",
+      "platform": "!windows"
+    },
+    {
+      "name": "pcre2",
+      "default-features": false
+    },
     {
       "name": "qt5-base",
       "host": true,
       "default-features": false
     },
-    "sqlite3",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
     {
       "name": "vcpkg-pkgconfig-get-modules",
       "host": true
     },
-    "zlib",
-    "zstd"
+    "zlib"
+  ],
+  "default-features": [
+    "openssl"
   ],
   "features": {
+    "cups": {
+      "description": "Provides support for the Common Unix Printing System",
+      "supports": "linux | osx"
+    },
+    "icu": {
+      "description": "Enable ICU support",
+      "dependencies": [
+        {
+          "name": "icu",
+          "platform": "!uwp"
+        }
+      ]
+    },
     "latest": {
       "description": "(deprecated)"
     },
     "mysqlplugin": {
       "description": "Build the sql plugin for connecting to mysql databases",
       "dependencies": [
-        "libmysql"
+        "libmysql",
+        {
+          "name": "qt5-base",
+          "default-features": false,
+          "features": [
+            "zstd"
+          ]
+        }
+      ]
+    },
+    "openssl": {
+      "description": "Build with OpenSSL support",
+      "dependencies": [
+        "openssl"
       ]
     },
     "postgresqlplugin": {
@@ -55,10 +105,25 @@
         "libpq"
       ]
     },
+    "sqlite3plugin": {
+      "description": "Build the sql plugin for connecting to sqlite3 databases",
+      "dependencies": [
+        {
+          "name": "sqlite3",
+          "default-features": false
+        }
+      ]
+    },
     "vulkan": {
       "description": "Enable Vulkan support in QtGui",
       "dependencies": [
         "vulkan"
+      ]
+    },
+    "zstd": {
+      "description": "Zstandard support",
+      "dependencies": [
+        "zstd"
       ]
     }
   }

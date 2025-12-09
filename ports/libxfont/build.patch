@@ -1,0 +1,38 @@
+diff --git a/Makefile.am b/Makefile.am
+index 5af2e237a..e75fd1755 100644
+--- a/Makefile.am	
++++ b/Makefile.am
+@@ -159,14 +159,14 @@ endif
+ EXTRA_DIST = src/builtins/buildfont README.md
+ 
+ # Test utilities
+-EXTRA_DIST += test/utils/README
++# EXTRA_DIST += test/utils/README
+ 
+-TEST_UTIL_SRCS = test/utils/font-test-utils.c test/utils/font-test-utils.h
++# TEST_UTIL_SRCS = test/utils/font-test-utils.c test/utils/font-test-utils.h
+ 
+-noinst_PROGRAMS = lsfontdir
++# noinst_PROGRAMS = lsfontdir
+ 
+-lsfontdir_SOURCES = test/utils/lsfontdir.c $(TEST_UTIL_SRCS)
+-lsfontdir_LDADD = libXfont2.la $(LTLIBOBJS)
++# lsfontdir_SOURCES = test/utils/lsfontdir.c $(TEST_UTIL_SRCS)
++# lsfontdir_LDADD = libXfont2.la $(LTLIBOBJS)
+ 
+ 
+ MAINTAINERCLEANFILES = ChangeLog INSTALL
+diff --git a/include/X11/fonts/fontmisc.h b/include/X11/fonts/fontmisc.h
+index 06e49f5f0..6b68dfcb8 100644
+--- a/include/X11/fonts/fontmisc.h	
++++ b/include/X11/fonts/fontmisc.h
+@@ -34,7 +34,9 @@ in this Software without prior written authorization from The Open Group.
+ #include <X11/Xfuncs.h>
+ #include <stdlib.h>
+ #include <stdio.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <X11/Xdefs.h>
+ 
+ 

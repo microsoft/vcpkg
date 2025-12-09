@@ -1,22 +1,35 @@
 {
   "name": "pdal",
-  "version": "2.4.0",
+  "version": "2.9.3",
   "description": "PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.",
-  "homepage": "https://pdal.io/",
+  "homepage": "https://pdal.org/",
   "license": null,
-  "supports": "!(windows & staticcrt)",
+  "supports": "!(static & staticcrt)",
   "dependencies": [
     {
       "name": "curl",
       "default-features": false
     },
+    "eigen3",
     {
       "name": "gdal",
       "default-features": false
     },
+    "h3",
+    "json-schema-validator",
     "libgeotiff",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "nanoflann",
+    "nlohmann-json",
+    {
+      "name": "pdal-dimbuilder",
+      "host": true
+    },
+    "rapidxml",
+    "utfcpp",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -24,7 +37,8 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "default-features": [
     "supported-plugins"
@@ -51,15 +65,6 @@
         }
       ]
     },
-    "i3s": {
-      "description": "Build the SLPK/I3S plugins",
-      "dependencies": [
-        "zlib"
-      ]
-    },
-    "laszip": {
-      "description": "Obsolete. PDAL includes LAZperf."
-    },
     "liblzma": {
       "description": "Support for compression/decompression with LZMA",
       "dependencies": [
@@ -69,7 +74,16 @@
     "pgpointcloud": {
       "description": "Build the PgPointCloud plugin",
       "dependencies": [
-        "libpq"
+        {
+          "name": "libpq",
+          "default-features": false
+        }
+      ]
+    },
+    "spz": {
+      "description": "Build the SPZ plugin",
+      "dependencies": [
+        "spz"
       ]
     },
     "supported-plugins": {
@@ -80,8 +94,7 @@
           "default-features": false,
           "features": [
             "draco",
-            "e57",
-            "i3s"
+            "e57"
           ]
         },
         {

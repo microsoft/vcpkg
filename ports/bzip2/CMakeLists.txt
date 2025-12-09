@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5...3.29)
 project(bzip2 C)
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
@@ -17,7 +17,7 @@ set(BZ2_SOURCES
 add_library(bz2 ${BZ2_SOURCES})
 set_target_properties(bz2 PROPERTIES
     DEBUG_POSTFIX d
-    VERSION 1.0.6
+    VERSION "${BZ2_VERSION}"
     SOVERSION 1.0)
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(bz2 PRIVATE -DBZ_BUILD_DLL)

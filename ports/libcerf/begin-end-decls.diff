@@ -1,0 +1,44 @@
+diff --git a/lib/cerf.h b/lib/cerf.h
+index 28576ab..c9bc6dd 100644
+--- a/lib/cerf.h
++++ b/lib/cerf.h
+@@ -55,25 +55,23 @@
+      typedef double _Complex _cerf_cmplx;
+ #  endif
+ 
+-#  undef __BEGIN_DECLS
+-#  undef __END_DECLS
+ #  ifdef CERF_AS_CPP
+ #    ifndef __cplusplus
+        impossible_case
+ #    endif
+-#    define __BEGIN_DECLS
+-#    define __END_DECLS
++#    define LIBCERF_BEGIN_DECLS
++#    define LIBCERF_END_DECLS
+ #  else
+ #    ifdef __cplusplus // this include file called from C++ while library is compiled as C
+-#      define __BEGIN_DECLS extern "C" {
+-#      define __END_DECLS }
++#      define LIBCERF_BEGIN_DECLS extern "C" {
++#      define LIBCERF_END_DECLS }
+ #    else
+-#      define __BEGIN_DECLS
+-#      define __END_DECLS
++#      define LIBCERF_BEGIN_DECLS
++#      define LIBCERF_END_DECLS
+ #    endif
+ #  endif
+ 
+-__BEGIN_DECLS
++LIBCERF_BEGIN_DECLS
+ 
+ #if _WIN32
+ #define EXPORT __declspec(dllexport)
+@@ -111,5 +109,5 @@ EXPORT double voigt(double x, double sigma, double gamma);
+ // compute the full width at half maximum of the Voigt function
+ EXPORT double voigt_hwhm(double sigma, double gamma);
+ 
+-__END_DECLS
++LIBCERF_END_DECLS
+ #endif /* __CERF_H__ */

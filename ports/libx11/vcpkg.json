@@ -1,0 +1,22 @@
+{
+  "name": "libx11",
+  "version": "1.8.1",
+  "port-version": 4,
+  "description": "The X Window System is a network-transparent window system that was designed at MIT.",
+  "homepage": "https://www.x.org/wiki/",
+  "license": "MIT",
+  "dependencies": [
+    "bzip2",
+    {
+      "name": "libx11",
+      "host": true
+    },
+    {
+      "name": "libxslt",
+      "host": true
+    },
+    "xcb",
+    "xproto",
+    "xtrans"
+  ]
+}

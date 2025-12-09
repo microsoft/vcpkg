@@ -1,0 +1,22 @@
+{
+  "name": "lib3mf",
+  "version": "2.4.1",
+  "description": "lib3mf is an implementation of the 3D Manufacturing Format file standard",
+  "homepage": "https://github.com/3MFConsortium/lib3mf",
+  "license": "BSD-2-Clause",
+  "supports": "(windows & (x86 | x64) & !static & !staticcrt) | (linux & x64) | (osx & (x64 | arm64))",
+  "dependencies": [
+    "cpp-base64",
+    "fast-float",
+    "libzip",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

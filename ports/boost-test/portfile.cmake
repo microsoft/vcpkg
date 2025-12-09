@@ -3,31 +3,26 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/test
-    REF boost-1.79.0
-    SHA512 040eb3137f5842e65a4a607417410d09a118baf1f92645974ba65e9dae4d6b6e727f28954d1733a96a83978da8d742d050c7ffc3013afa5d936efc47841547b9
+    REF boost-${VERSION}
+    SHA512 17c800ba7ed020cc70327ce86f654b1c3bd986a2dfe72ae61032d04c0557dd8602a7584c6f3f27307cc76efcef658e9f3ff4b662376c5958deb9f43431e5a7d0
     HEAD_REF master
 )
 
-vcpkg_replace_string("${SOURCE_PATH}/build/Jamfile.v2"
-    "import ../../predef/check/predef"
-    "import ../predef/check/predef"
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
 )
-file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${SOURCE_PATH}/predef")
-include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(GLOB MONITOR_LIBS ${CURRENT_PACKAGES_DIR}/lib/*_exec_monitor*)
-    file(COPY ${MONITOR_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/manual-link)
+    file(COPY ${MONITOR_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib/manual-link")
     file(REMOVE ${MONITOR_LIBS})
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
     file(GLOB DEBUG_MONITOR_LIBS ${CURRENT_PACKAGES_DIR}/debug/lib/*_exec_monitor*)
-    file(COPY ${DEBUG_MONITOR_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/manual-link)
+    file(COPY ${DEBUG_MONITOR_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/manual-link")
     file(REMOVE ${DEBUG_MONITOR_LIBS})
 endif()
-

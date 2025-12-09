@@ -1,36 +1,83 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  strukturag/libheif 
-    REF 56c8a2613370562fc330af2c70c1510aa5fd9ff6 #v1.12.0
-    SHA512 11ac7f32d1f49963046b1a4479a41f39004475211563ba7f41b2398f07f7b4d90339ea663e528b3cc80deeef1fff374987208d48b447116a806564ef05487e97
+    REPO  strukturag/libheif
+    REF "v${VERSION}"
+    SHA512 4497d1afbccc15806cc11c22653e83d7900a009ad584a8d6b1ada6fac1ace9a70d834eb32653da567f0ddabc23ec641c5d69503282e303bf1bf2def72544b1b5
     HEAD_REF master
     PATCHES
+        cxx-linkage-pkgconfig.diff
+        find-modules.diff
         gdk-pixbuf.patch
+        symbol-exports.diff
 )
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        aom         WITH_AOM_DECODER
+        aom         WITH_AOM_ENCODER
+        aom         VCPKG_LOCK_FIND_PACKAGE_AOM
+        gdk-pixbuf  WITH_GDK_PIXBUF
+        hevc        WITH_X265
+        hevc        VCPKG_LOCK_FIND_PACKAGE_X265
+        iso23001-17 WITH_UNCOMPRESSED_CODEC
+        iso23001-17 VCPKG_LOCK_FIND_PACKAGE_ZLIB
+        jpeg        WITH_JPEG_DECODER
+        jpeg        WITH_JPEG_ENCODER
+        jpeg        VCPKG_LOCK_FIND_PACKAGE_JPEG
+        openjpeg    WITH_OpenJPEG_DECODER
+        openjpeg    WITH_OpenJPEG_ENCODER
+        openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
+)
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DWITH_EXAMPLES=OFF
+        -DBUILD_TESTING=OFF
+        -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
+        -DPLUGIN_DIRECTORY=  # empty
         -DWITH_DAV1D=OFF
+        -DWITH_EXAMPLES=OFF
+        -DWITH_LIBSHARPYUV=OFF
+        -DWITH_OpenH264_DECODER=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Brotli=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_LIBDE265=ON   # feature candidate
+        -DVCPKG_LOCK_FIND_PACKAGE_PNG=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_TIFF=OFF
+        ${FEATURE_OPTIONS}
+    OPTIONS_RELEASE
+        "-DPLUGIN_INSTALL_DIRECTORY=${CURRENT_PACKAGES_DIR}/plugins/libheif"
+    OPTIONS_DEBUG
+        "-DPLUGIN_INSTALL_DIRECTORY=${CURRENT_PACKAGES_DIR}/debug/plugins/libheif"
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_AOM
+        VCPKG_LOCK_FIND_PACKAGE_Brotli
+        VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
+        VCPKG_LOCK_FIND_PACKAGE_X265
+        VCPKG_LOCK_FIND_PACKAGE_ZLIB
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libheif/)
-# libheif's pc file assumes libstdc++, which isn't always true.
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libheif.pc" " -lstdc++" "")
-if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libheif.pc" " -lstdc++" "")
-endif()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libheif")
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "1")
 else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libheif/heif_library.h" "!defined(LIBHEIF_STATIC_BUILD)" "0")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libheif" "${CURRENT_PACKAGES_DIR}/debug/lib/libheif")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(GLOB maybe_plugins "${CURRENT_PACKAGES_DIR}/plugins/libheif/*")
+if(maybe_plugins STREQUAL "")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/plugins" "${CURRENT_PACKAGES_DIR}/debug/plugins")
+endif()
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

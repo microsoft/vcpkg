@@ -1,16 +1,24 @@
 {
   "name": "glib",
-  "version": "2.72.3",
+  "version": "2.86.2",
   "description": "Portable, general-purpose utility library.",
   "homepage": "https://developer.gnome.org/glib/",
-  "license": "LGPL-2.1-only",
-  "supports": "!uwp & !(windows & static)",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp & !xbox",
   "dependencies": [
     "dirent",
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "gettext-libintl",
     "libffi",
     "libiconv",
-    "pcre",
+    "pcre2",
     {
       "name": "vcpkg-tool-meson",
       "host": true
@@ -26,7 +34,8 @@
       ]
     },
     "selinux": {
-      "description": "Build with selinux support."
+      "description": "Build with selinux support.",
+      "supports": "linux"
     }
   }
 }

@@ -1,15 +1,10 @@
-set(LUASEC_REVISION v1.1.0)
-set(LUASEC_HASH ce08be2c62e97ebfab30e867790874030d404d195ce336b149d9501d652e9b8efe201cc2d0bcbb3be16214d7e4763b5871e45cbc22db758724baab9f7cd78568)
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO brunoos/luasec
-    REF ${LUASEC_REVISION}
-    SHA512 ${LUASEC_HASH}
+    REPO lunarmodules/luasec
+    REF "v${VERSION}"
+    SHA512 8f0c4b5ff87c024685b23770e1d342467554b8dc19a1704076e184d9e84b966f171091c31d1da135ab009e850275adc2bf2720fc9f32c83ac23f0a42f13d311f
     HEAD_REF master
 )
 
@@ -26,7 +21,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST ${SOURCE_PATH}/LICENSE)
 
 # Allow empty include directory
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)

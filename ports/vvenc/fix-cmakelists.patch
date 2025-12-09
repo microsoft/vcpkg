@@ -1,0 +1,51 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 551ec4b..ae36bc8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -288,8 +288,11 @@ endif()
+ 
+ 
+ add_subdirectory( "source/Lib/vvenc" )
++if(BUILD_TOOLS)
+ add_subdirectory( "source/App/vvencapp" )
+ add_subdirectory( "source/App/vvencFFapp" )
++endif()
++if(BUILD_TESTING)
+ add_subdirectory( "test/vvenclibtest" )
+ add_subdirectory( "test/vvencinterfacetest" )
+ 
+@@ -378,6 +381,7 @@ add_vvenc_test( compare_output-medium_rc2p_statsFile_easy 30 NO_OUTPUT "${OUT_VV
+ 
+ add_test( NAME Cleanup_remove_temp_files COMMAND ${CMAKE_COMMAND} -E remove -f ${CLEANUP_TEST_FILES} rec.yuv stats_exp.json stats_easy.json )
+ set_tests_properties( Cleanup_remove_temp_files PROPERTIES FIXTURES_CLEANUP cleanup )
++endif()
+ 
+ if( VVENC_ENABLE_INSTALL )
+   # include installer
+diff --git a/cmake/modules/vvencInstall.cmake b/cmake/modules/vvencInstall.cmake
+index 4945f1d..7006bf6 100644
+--- a/cmake/modules/vvencInstall.cmake
++++ b/cmake/modules/vvencInstall.cmake
+@@ -16,9 +16,11 @@ macro( install_targets config_ )
+            RUNTIME DESTINATION ${RUNTIME_DEST}
+            LIBRARY DESTINATION ${LIBRARY_DEST}
+            ARCHIVE DESTINATION ${ARCHIVE_DEST} )
++  if(BUILD_TOOLS)
+   install( TARGETS             vvencapp vvencFFapp
+            CONFIGURATIONS      ${config_}
+            RUNTIME DESTINATION ${RUNTIME_DEST} )
++  endif()
+ endmacro( install_targets )
+ 
+ # install pdb file for static and shared libraries
+@@ -61,8 +63,10 @@ install_targets( RelWithDebInfo )
+ 
+ # install pdb files
+ install_lib_pdb( vvenc )
++if(BUILD_TOOLS)
+ install_exe_pdb( vvencapp )
+ install_exe_pdb( vvencFFapp )
++endif()
+ 
+ # configure version file
+ configure_file( cmake/install/vvencConfigVersion.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/vvencConfigVersion.cmake @ONLY )

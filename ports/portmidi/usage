@@ -1,0 +1,4 @@
+portmidi provides CMake targets:
+
+    find_package(PortMidi CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE PortMidi::portmidi)

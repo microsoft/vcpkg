@@ -1,0 +1,56 @@
+diff --git a/gettext-runtime/gnulib-lib/fcntl.c b/gettext-runtime/gnulib-lib/fcntl.c
+index f9753c4..3a3caee 100644
+--- a/gettext-runtime/gnulib-lib/fcntl.c
++++ b/gettext-runtime/gnulib-lib/fcntl.c
+@@ -38,6 +38,12 @@
+ # define WIN32_LEAN_AND_MEAN
+ # include <windows.h>
+ 
++# if defined(WINAPI_FAMILY_PARTITION)
++#  if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++#   define HANDLE_FLAG_INHERIT 0
++#  endif
++# endif
++
+ /* Get _get_osfhandle.  */
+ # if GNULIB_MSVC_NOTHROW
+ #  include "msvc-nothrow.h"
+diff --git a/gettext-runtime/gnulib-lib/localcharset.c b/gettext-runtime/gnulib-lib/localcharset.c
+index ec75427..9e063e4 100644
+--- a/gettext-runtime/gnulib-lib/localcharset.c
++++ b/gettext-runtime/gnulib-lib/localcharset.c
+@@ -34,6 +34,9 @@
+ #if defined _WIN32 && !defined __CYGWIN__
+ # define WINDOWS_NATIVE
+ # include <locale.h>
++# if !defined(WINAPI_FAMILY_PARTITION)
++#  define WINAPI_FAMILY_PARTITION(x) (0)
++# endif
+ #endif
+ 
+ #if defined __EMX__
+@@ -912,6 +915,8 @@ locale_charset (void)
+     /* The canonical name cannot be determined.  */
+     codeset = "";
+ 
++# elif WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++    codeset = "";
+ # elif defined WINDOWS_NATIVE
+ 
+   char buf[2 + 10 + 1];
+diff --git a/gettext-runtime/gnulib-lib/localename-unsafe.c b/gettext-runtime/gnulib-lib/localename-unsafe.c
+index d77bb81..3c6e055 100644
+--- a/gettext-runtime/gnulib-lib/localename-unsafe.c
++++ b/gettext-runtime/gnulib-lib/localename-unsafe.c
+@@ -69,6 +69,11 @@ extern char * getlocalename_l(int, locale_t);
+ 
+ #if defined _WIN32 && !defined __CYGWIN__
+ # define WINDOWS_NATIVE
++# if defined(WINAPI_FAMILY_PARTITION)
++#  if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)
++#   undef WIN32_NATIVE
++#  endif
++# endif
+ # include "glthread/lock.h"
+ #endif
+

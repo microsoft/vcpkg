@@ -1,32 +1,35 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/incubator-brpc
-    REF 29491107cbf405a494aaf80ee32344ba34e1d7e4 #1.2.0
-    SHA512 bd4c67967796592030903041ddb9205e24c9f196e63ebc153e08fbce723d93d27cd4f30f3c2cf904a93cda66ffa9db7d465d6e5fdac27a045ae84afad3dd1dc3
+    REPO apache/brpc
+    REF "${VERSION}"
+    SHA512 93366c2b073de8a1af5ededa9ef5a6803ccd393bbb5fe1f9872c230e4997995759517fa4dd1a51ffd120a5c9040dcb00b1c580c5ccf032dd70561c0c3283f990
     HEAD_REF master
     PATCHES
         fix-build.patch
-        fix-boost-ptr.patch
-        brpc-1783.diff #https://github.com/apache/incubator-brpc/pull/1783
+        fix-warnings.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DWITH_THRIFT=ON
-        -DWITH_MESALINK=OFF
-        -DWITH_GLOG=ON
+        -DBUILD_BRPC_TOOLS=OFF
         -DDOWNLOAD_GTEST=OFF
+        -DWITH_THRIFT=ON
+        -DWITH_GLOG=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_OpenSSL=ON
 )
 
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-brpc CONFIG_PATH share/unofficial-brpc)
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/unofficial-brpc/unofficial-brpc-targets.cmake"
+    "add_library(unofficial::brpc::brpc-"
+    "add_library(#[[skip-usage-heuristics]] unofficial::brpc::brpc-"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/butil/third_party/superfasthash")
 
-vcpkg_copy_pdbs()
-
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
-vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

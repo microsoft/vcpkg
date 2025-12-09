@@ -82,6 +82,8 @@ endfunction()
 function(vcpkg_install_gn)
     if(Z_VCPKG_GN_INSTALL_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-gn; using both vcpkg-gn and vcpkg_install_gn in the same port is unsupported.")
+    else()
+        message("${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}" "This function 'vcpkg_install_gn' is obsolete. Use 'vcpkg_gn_install' in port 'vcpkg-gn'.")
     endif()
 
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "SOURCE_PATH" "TARGETS")

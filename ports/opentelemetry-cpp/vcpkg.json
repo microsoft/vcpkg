@@ -1,16 +1,15 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "opentelemetry-cpp",
-  "version-semver": "1.4.1",
+  "version-semver": "1.24.0",
   "description": [
     "OpenTelemetry is a collection of tools, APIs, and SDKs.",
     "You use it to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) for analysis in order to understand your software's performance and behavior."
   ],
   "homepage": "https://github.com/open-telemetry/opentelemetry-cpp",
   "license": "Apache-2.0",
-  "supports": "!(windows & !static)",
   "dependencies": [
-    "curl",
+    "abseil",
     "nlohmann-json",
     {
       "name": "vcpkg-cmake",
@@ -23,21 +22,58 @@
   ],
   "features": {
     "elasticsearch": {
-      "description": "Whether to include the Elasticsearch Client in the SDK"
-    },
-    "etw": {
-      "description": "Whether to include the ETW Exporter in the SDK"
-    },
-    "jaeger": {
-      "description": "Whether to include the Jaeger exporter",
+      "description": "Whether to include the Elasticsearch Client in the SDK",
       "dependencies": [
-        "thrift"
+        {
+          "name": "curl",
+          "default-features": false
+        }
       ]
     },
-    "otlp": {
-      "description": "Whether to include the OpenTelemetry Protocol in the SDK",
+    "etw": {
+      "description": "Whether to include the ETW Exporter in the SDK",
+      "supports": "windows"
+    },
+    "geneva": {
+      "description": "Whether to include the Geneva Exporter from the opentelemetry-cpp-contrib repository",
+      "dependencies": [
+        {
+          "name": "opentelemetry-cpp",
+          "features": [
+            "etw"
+          ],
+          "platform": "windows"
+        },
+        "opentelemetry-cpp-contrib-version"
+      ]
+    },
+    "opentracing": {
+      "description": "Whether to include the Opentracing shim",
+      "dependencies": [
+        "opentracing"
+      ]
+    },
+    "otlp-file": {
+      "description": "Whether to include the OpenTelemetry Protocol to File exporter in the SDK",
+      "supports": "!uwp",
+      "dependencies": [
+        "protobuf"
+      ]
+    },
+    "otlp-grpc": {
+      "description": "Whether to include the OTLP gRPC exporter in the SDK",
       "dependencies": [
         "grpc",
+        {
+          "name": "grpc",
+          "host": true
+        }
+      ]
+    },
+    "otlp-http": {
+      "description": "Whether to include the OpenTelemetry Protocol over HTTP in the SDK",
+      "dependencies": [
+        "curl",
         "protobuf"
       ]
     },
@@ -47,11 +83,26 @@
         "prometheus-cpp"
       ]
     },
-    "zipkin": {
-      "description": "Whether to include the Zipkin exporter in the SDK"
+    "user-events": {
+      "description": "Whether to include the User Events Exporter from the opentelemetry-cpp-contrib repository",
+      "supports": "linux",
+      "dependencies": [
+        "libeventheader-tracepoint",
+        "libtracepoint",
+        {
+          "name": "opentelemetry-cpp",
+          "features": [
+            "otlp-http"
+          ]
+        },
+        "opentelemetry-cpp-contrib-version"
+      ]
     },
-    "zpages": {
-      "description": "Whether to include the Zpages Server in the SDK"
+    "zipkin": {
+      "description": "Whether to include the Zipkin exporter in the SDK",
+      "dependencies": [
+        "curl"
+      ]
     }
   }
 }

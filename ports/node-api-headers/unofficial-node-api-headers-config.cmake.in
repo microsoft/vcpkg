@@ -1,0 +1,41 @@
+if(NOT TARGET unofficial::node-api-headers::node-api-headers)
+  if(WIN32)
+    add_library(unofficial::node-api-headers::node-api-headers UNKNOWN IMPORTED)
+  else()
+    add_library(unofficial::node-api-headers::node-api-headers INTERFACE IMPORTED)
+  endif()
+
+  set(node-api-headers_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../../include/node)
+
+  set_target_properties(unofficial::node-api-headers::node-api-headers PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${node-api-headers_INCLUDE_DIR}"
+  )
+
+  if(APPLE)
+    # setting those properties like cmake-js does
+    # https://github.com/cmake-js/cmake-js/blob/272ec1883bc1207205abae948022eecdea02e225/lib/toolset.js#L126
+    set_target_properties(unofficial::node-api-headers::node-api-headers PROPERTIES
+      INTERFACE_LINK_OPTIONS "LINKER:SHELL:-undefined dynamic_lookup"
+    )
+    set_target_properties(unofficial::node-api-headers::node-api-headers PROPERTIES
+      INTERFACE_COMPILE_DEFINITIONS "_DARWIN_USE_64_BIT_INODE=1;_LARGEFILE_SOURCE;_FILE_OFFSET_BITS=64"
+    )
+  endif()
+
+  set_property(TARGET unofficial::node-api-headers::node-api-headers APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS "BUILDING_NODE_EXTENSION")
+
+  if(WIN32)
+    find_library(node-api-headers_LIBRARY_RELEASE NAMES node PATHS "${CMAKE_CURRENT_LIST_DIR}/../../lib" NO_DEFAULT_PATH REQUIRED)
+    set_target_properties(unofficial::node-api-headers::node-api-headers PROPERTIES
+      IMPORTED_LOCATION_RELEASE "${node-api-headers_LIBRARY_RELEASE}"
+      IMPORTED_CONFIGURATIONS RELEASE
+    )
+    if("@VCPKG_BUILD_TYPE@" STREQUAL "")
+      find_library(node-api-headers_LIBRARY_DEBUG NAMES node PATHS "${CMAKE_CURRENT_LIST_DIR}/../../debug/lib" NO_DEFAULT_PATH REQUIRED)
+      set_target_properties(unofficial::node-api-headers::node-api-headers PROPERTIES
+        IMPORTED_LOCATION_DEBUG "${node-api-headers_LIBRARY_DEBUG}"
+      )
+      set_property(TARGET unofficial::node-api-headers::node-api-headers APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+    endif()
+  endif()
+endif()

@@ -1,13 +1,32 @@
 {
   "name": "g2o",
-  "version-string": "2020-02-07",
-  "port-version": 2,
+  "version-date": "2024-12-14",
+  "port-version": 5,
   "description": "g2o: A General Framework for Graph Optimization",
   "homepage": "https://openslam.org/g2o.html",
+  "license": null,
+  "supports": "!uwp",
   "dependencies": [
     "ceres",
     "eigen3",
     "lapack",
-    "suitesparse"
-  ]
+    "suitesparse-cholmod",
+    "suitesparse-cxsparse",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "spdlog": {
+      "description": "Use spdlog for logging",
+      "dependencies": [
+        "spdlog"
+      ]
+    }
+  }
 }

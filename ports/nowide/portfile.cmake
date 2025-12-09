@@ -1,17 +1,18 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/boostorg/nowide/releases/download/v11.2.0/nowide_standalone_v11.2.0.tar.gz"
-    FILENAME "nowide_standalone_v11.2.0.tar.gz"
-    SHA512 c3748921b85648aa0e89970f2ab24588cbc72d05edd7ddf4f61a607d9ecbddd45e9e6799d2ed83386c43045b9487693e027494a81b11a6a7bdfaa939d1251938
+    URLS "https://github.com/boostorg/nowide/releases/download/v${VERSION}/nowide_standalone_v${VERSION}.tar.gz"
+    FILENAME "nowide_standalone_v${VERSION}.tar.gz"
+    SHA512 81bd088024a4682f4caf7524358982cdbdd4657b7533f4bb5135a88d228a74c4c3afee7ca2e13af8ead291450b6ef5f6849685875ef0f2aabe8eb9f0cab20688
 )
 
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH
+vcpkg_extract_source_archive(
+    SOURCE_PATH
     ARCHIVE ${ARCHIVE}
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DBUILD_TESTING=OFF
+    OPTIONS
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
@@ -20,4 +21,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/nowide)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/string-view-lite
-    REF v1.6.0
-    SHA512 a21c4c956360b76cf6f530ae7c26d97777d4c37164e6fc0da0dc931d41378aa020a235e40d7f8e8160c1b9dab552c6d7bf3aa7697e9048effef2b3cee8573553
+    REF "v${VERSION}"
+    SHA512 c581ea08f25e70e84322da39abb36c4af4c31c4fbb33f9e9a723c3c68ecaff6d4553bc85902a1b7851e94581804d7f3d9a7765f128515d56621b30131e58722b
 )
+
+set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -13,16 +15,8 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-vcpkg_cmake_config_fixup(
-    CONFIG_PATH "lib/cmake/${PORT}"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
-    "${CURRENT_PACKAGES_DIR}/lib"
-)
-
-file(INSTALL
-    "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

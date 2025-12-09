@@ -1,11 +1,12 @@
 {
   "name": "tgui",
-  "version-date": "2021-04-19",
-  "port-version": 3,
+  "version": "1.8.0",
+  "port-version": 2,
   "description": "TGUI is an easy to use, cross-platform, C++ GUI for SFML.",
   "homepage": "https://tgui.eu",
   "license": "Zlib",
   "dependencies": [
+    "stb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -16,46 +17,51 @@
     }
   ],
   "default-features": [
-    "sdl2",
     "sfml"
   ],
   "features": {
-    "sdl2": {
-      "description": "build the SDL backend",
+    "raylib": {
+      "description": "Build the RAYLIB backend",
       "dependencies": [
+        "raylib"
+      ]
+    },
+    "sdl2": {
+      "description": "Build the SDL backend",
+      "dependencies": [
+        {
+          "name": "opengl",
+          "platform": "!android & !ios"
+        },
         "sdl2",
         "sdl2-ttf"
       ]
     },
-    "sfml": {
-      "description": "build the SFML backend",
+    "sdl3": {
+      "description": "Build the SDL3 backend",
       "dependencies": [
-        {
-          "name": "glad",
-          "features": [
-            "egl"
-          ],
-          "platform": "!android & !ios"
-        },
         {
           "name": "opengl",
-          "platform": "android | ios"
+          "platform": "!android & !ios"
         },
-        "sfml",
-        "stb"
+        "sdl3",
+        "sdl3-ttf"
       ]
     },
-    "tool": {
-      "description": "Build GUI builder",
+    "sfml": {
+      "description": "Build the SFML backend",
       "dependencies": [
         {
-          "name": "tgui",
+          "name": "sfml",
+          "default-features": false,
           "features": [
-            "sdl2",
-            "sfml"
+            "graphics"
           ]
         }
       ]
+    },
+    "tool": {
+      "description": "Build GUI builder"
     }
   }
 }

@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ccd4223..a0f58a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,9 +34,9 @@ else()
+ endif()
+ 
+ find_package(ICU COMPONENTS data i18n uc QUIET)
+-#option(BOOST_REGEX_ENABLE_ICU "Boost.Regex: enable ICU support" ${ICU_FOUND})
++option(BOOST_REGEX_ENABLE_ICU "Boost.Regex: enable ICU support" ${ICU_FOUND})
+ 
+-if(ICU_FOUND)
++if(BOOST_REGEX_ENABLE_ICU)
+ 
+    add_library(boost_regex_icu INTERFACE)
+    add_library(Boost::regex_icu ALIAS boost_regex_icu)

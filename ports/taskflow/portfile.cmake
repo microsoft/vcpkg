@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taskflow/taskflow
-    REF bfad4b9a0cc5acad5fc99fb6ff6b904b79f27f93 #v3.3.0
-    SHA512 489807c84438a727832e9d530c9b2948240bebee48f210ce4a8c69917cbb71306df378440621b1bf091e4aa62c86681d71afd38a3343c8ea872a4eefcabc496e
+    REF "v${VERSION}"
+    SHA512 ca56f07db18767483ef6c2371a0dd9675e4f848cce891fe0ade85ec38609c08ddac2152a227a511c65901ade27439a988cdf70ad6841489f2bdbf712cde97f44
     HEAD_REF master
 )
 
@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
         -DTF_BUILD_CUDA=OFF
         -DTF_BUILD_TESTS=OFF
         -DTF_BUILD_EXAMPLES=OFF
-        -DBUILD_TESTING=OFF
         -DCMAKE_CUDA_COMPILER=OFF
 )
 
@@ -25,4 +24,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Taskflow)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

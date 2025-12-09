@@ -1,33 +1,29 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(SYSTEMC_VERSION 2.3.3)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.accellera.org/images/downloads/standards/systemc/systemc-${SYSTEMC_VERSION}.zip"
-    FILENAME "systemc-${SYSTEMC_VERSION}.zip"
-    SHA512 f4df172addf816a1928d411dcab42c1679dc4c9d772f406c10d798a2c174d89cdac7a83947fa8beea1e3aff93da522d2d2daf61a4841ec456af7b7446c5c4a14
-)
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${SYSTEMC_VERSION}
+    REPO accellera-official/systemc
+    REF "${VERSION}"
+    SHA512 50ebda68ef253a4ddbbafaabf2f1351a31c43e92198e161e19b63165426357b20f137c8b4b03b9f6ebfd56b2170d8ab2b256392e21e9e4ad9a4e7aa65a262d7d
+    HEAD_REF main
     PATCHES
         install.patch
 )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_CXX_STANDARD=17
         -DDISABLE_COPYRIGHT_MESSAGE=ON
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SystemCLanguage TARGET_PATH share/systemclanguage)
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/SystemCTLM TARGET_PATH share/systemctlm)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SystemCLanguage PACKAGE_NAME systemclanguage)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/SystemCTLM PACKAGE_NAME systemctlm)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/sysc/packages/qt/time)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/sysc/packages/boost")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/sysc/packages/qt/time")
 
-file(INSTALL ${SOURCE_PATH}/NOTICE DESTINATION ${CURRENT_PACKAGES_DIR}/share/systemc RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/NOTICE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

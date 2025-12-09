@@ -1,0 +1,9 @@
+--- a/PC/launcher.c
++++ b/PC/launcher.c
+@@ -1,3 +1,6 @@
++#if defined(_CONSOLE)
++#undef _WINDOWS
++#endif
+ /*
+  * Copyright (C) 2011-2013 Vinay Sajip.
+  * Licensed to PSF under a contributor agreement.

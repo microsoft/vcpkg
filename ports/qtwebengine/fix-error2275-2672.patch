@@ -1,0 +1,13 @@
+diff --git a/src/3rdparty/chromium/v8/src/compiler/backend/instruction-selector.cc b/src/3rdparty/chromium/v8/src/compiler/backend/instruction-selector.cc
+index ce06089..61534f1 100644
+--- a/src/3rdparty/chromium/v8/src/compiler/backend/instruction-selector.cc
++++ b/src/3rdparty/chromium/v8/src/compiler/backend/instruction-selector.cc
+@@ -875,7 +875,7 @@ class InstructionSelectorT<Adapter>::CachedStateValuesBuilder {
+   InstructionSelectorT<Adapter>::CachedStateValues* Build(Zone* zone) {
+     DCHECK(CanCache());
+     DCHECK(values_->nested_count() == nested_start_);
+-    return zone->New<InstructionSelectorT<Adapter>::CachedStateValues>(
++    return zone->New<typename InstructionSelectorT<Adapter>::CachedStateValues>(
+         zone, values_, values_start_, inputs_, inputs_start_);
+   }
+ 

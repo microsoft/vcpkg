@@ -1,7 +1,16 @@
 {
   "name": "torch-th",
-  "version-string": "2019-04-19",
-  "port-version": 3,
+  "version-date": "2019-04-19",
+  "port-version": 6,
   "description": "Torch's TH library",
-  "homepage": "https://github.com/torch/torch7"
+  "homepage": "https://github.com/torch/torch7",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "blas",
+    "lapack",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
 }

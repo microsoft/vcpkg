@@ -1,0 +1,18 @@
+{
+  "name": "libxdf",
+  "version": "0.99.9",
+  "description": "C++ library for loading multimodal, multi-rate signals stored in XDF files.",
+  "homepage": "https://xdf-modules.github.io/libxdf/",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    "pugixml",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

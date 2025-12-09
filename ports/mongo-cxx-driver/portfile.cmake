@@ -1,111 +1,56 @@
-set(VERSION_MAJOR 3)
-set(VERSION_MINOR 6)
-set(VERSION_PATCH 5)
-set(VERSION_FULL ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-set(BSONCXX_STANDARD 11)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-cxx-driver
-    REF r${VERSION_FULL}
-    SHA512 fe304d2f406f65d79a030dcfd1509543a9ab3057e46328d5ca1fc58da04758b9a2c6666a6194d574f9b42022324972d41c37d00d6fba87dfba63fbfb99e821de
+    REF "r${VERSION}"
+    SHA512 7b6564cb5087b03886f3c99aa5da9e87a898b1bd1098393a7668e39d673d6203a39f7fa95e5bef995f5e53c18654ef1806823cf643a994a8c19a1df75b9eb306
     HEAD_REF master
     PATCHES
-        fix-uwp.patch
-        disable-c2338-mongo-cxx-driver.patch
-        disable_test_and_example.patch
-        github-654.patch
         fix-dependencies.patch
 )
 
-if ("mnmlstc" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Feature mnmlstc only supports UNIX")
-    endif()
-    set(BSONCXX_POLY MNMLSTC)
-elseif ("system-mnmlstc" IN_LIST FEATURES)
-    message("Please make sure you have mnmlstc installed via the package manager")
-    set(BSONCXX_POLY SYSTEM_MNMLSTC)
-elseif ("boost" IN_LIST FEATURES)
-    set(BSONCXX_POLY BOOST)
-elseif("std-experimental" IN_LIST FEATURES)
-    set(BSONCXX_POLY STD_EXPERIMENTAL)
-    set(BSONCXX_STANDARD 17)
-else()
-  if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(BSONCXX_POLY BOOST)
-  else()
-    set(BSONCXX_POLY MNMLSTC)
-  endif()
-endif()
+file(WRITE "${SOURCE_PATH}/build/VERSION_CURRENT" "${VERSION}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DMONGOCXX_HEADER_INSTALL_DIR=include
+        "-DCMAKE_PROJECT_MONGO_CXX_DRIVER_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DBSONCXX_HEADER_INSTALL_DIR=include
-        -DBSONCXX_POLY_USE_${BSONCXX_POLY}=1
-        -DCMAKE_CXX_STANDARD=${BSONCXX_STANDARD}
-        -DBUILD_VERSION=${VERSION_FULL}
+        -DENABLE_TESTS=OFF
+        -DENABLE_UNINSTALL=OFF
+        -DMONGOCXX_HEADER_INSTALL_DIR=include
+        -DNEED_DOWNLOAD_C_DRIVER=OFF
+    MAYBE_UNUSED_VARIABLES
+        BSONCXX_HEADER_INSTALL_DIR
+        MONGOCXX_HEADER_INSTALL_DIR
 )
-
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME bsoncxx CONFIG_PATH "lib/cmake/bsoncxx-${VERSION_FULL}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-vcpkg_cmake_config_fixup(PACKAGE_NAME mongocxx CONFIG_PATH "lib/cmake/mongocxx-${VERSION_FULL}")
-
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/libbsoncxx/libbsoncxx-config.cmake"
-"
-message(WARNING \"This CMake target is deprecated.  Use mongo::bsoncxx instead.\")
-
-set(LIBBSONCXX_VERSION_MAJOR ${VERSION_MAJOR})
-set(LIBBSONCXX_VERSION_MINOR ${VERSION_MINOR})
-set(LIBBSONCXX_VERSION_PATCH ${VERSION_PATCH})
-set(LIBBSONCXX_PACKAGE_VERSION ${VERSION_FULL})
-
-include(CMakeFindDependencyMacro)
-find_dependency(bsoncxx CONFIG REQUIRED)
-get_filename_component(LIBBSONCXX_INCLUDE_DIRS \"\${CMAKE_CURRENT_LIST_DIR}/../../include\" ABSOLUTE)
-if (TARGET mongo::bsoncxx_shared)
-    set(LIBBSONCXX_LIBRARIES mongo::bsoncxx_shared)
-else()
-    set(LIBBSONCXX_LIBRARIES mongo::bsoncxx_static)
-endif()
-"
-)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/libmongocxx/libmongocxx-config.cmake
-"
-message(WARNING \"This CMake target is deprecated.  Use mongo::mongocxx instead.\")
-
-set(LIBMONGOCXX_VERSION_MAJOR ${VERSION_MAJOR})
-set(LIBMONGOCXX_VERSION_MINOR ${VERSION_MINOR})
-set(LIBMONGOCXX_VERSION_PATCH ${VERSION_PATCH})
-set(LIBMONGOCXX_PACKAGE_VERSION ${VERSION_FULL})
-
-include(CMakeFindDependencyMacro)
-find_dependency(mongocxx CONFIG REQUIRED)
-get_filename_component(LIBMONGOCXX_INCLUDE_DIRS \"\${CMAKE_CURRENT_LIST_DIR}/../../include\" ABSOLUTE)
-if (TARGET mongo::bsoncxx_shared)
-    set(LIBMONGOCXX_LIBRARIES mongo::mongocxx_shared)
-else()
-    set(LIBMONGOCXX_LIBRARIES mongo::mongocxx_static)
-endif()
-"
-)
-
 vcpkg_fixup_pkgconfig()
 
-if (NOT BSONCXX_POLY STREQUAL MNMLSTC)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/bsoncxx/third_party")
-endif()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "bsoncxx" CONFIG_PATH "lib/cmake/bsoncxx-${VERSION}" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME "mongocxx" CONFIG_PATH "lib/cmake/mongocxx-${VERSION}")
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
 )
-file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/uninstall.sh")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-file(COPY "${SOURCE_PATH}/THIRD-PARTY-NOTICES" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+function(auto_clean dir)
+    file(GLOB entries "${dir}/*")
+    file(GLOB files LIST_DIRECTORIES false "${dir}/*")
+    foreach(entry IN LISTS entries)
+        if(entry IN_LIST files)
+            continue()
+        endif()
+        file(GLOB_RECURSE children "${entry}/*")
+        if(children)
+            auto_clean("${entry}")
+        else()
+            file(REMOVE_RECURSE "${entry}")
+        endif()
+    endforeach()
+endfunction()
+auto_clean("${CURRENT_PACKAGES_DIR}/include")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

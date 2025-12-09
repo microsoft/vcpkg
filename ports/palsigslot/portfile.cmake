@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO palacaze/sigslot
-    REF v1.2.1
-    SHA512 cd79985a09ad41562dc8e582d30bc9df0fdc9409ee3676919b56d0d70a6c1af9414587b61977d2fa2ba763ef8df65b30c7b7dc883629e016660baeb998e708f5
+    REF "v${VERSION}"
+    SHA512 fb08cec33cc126e0973179068ce2d1c45f36ab85339849c1a5cac746147f7cee244702fad5fe5f38fc8e73f0fce62f81b7642fba0ff3edfd8c22089bc9ddb1db
     HEAD_REF master
 )
 
@@ -22,4 +22,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib"
 )
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

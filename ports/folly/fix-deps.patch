@@ -1,0 +1,225 @@
+diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
+index 0b96f0a..d5a200f 100644
+--- a/CMake/folly-config.cmake.in
++++ b/CMake/folly-config.cmake.in
+@@ -29,10 +29,31 @@ endif()
+ set(FOLLY_LIBRARIES Folly::folly)
+ 
+ # Find folly's dependencies
+-find_dependency(fmt)
++find_dependency(fmt CONFIG)
++find_dependency(double-conversion CONFIG)
++find_dependency(FastFloat CONFIG)
++set(z_vcpkg_folly_gflags_backup ${GFLAGS_USE_TARGET_NAMESPACE})
++set(GFLAGS_USE_TARGET_NAMESPACE ON)
++find_dependency(gflags CONFIG)
++set(GFLAGS_USE_TARGET_NAMESPACE ${z_vcpkg_folly_gflags_backup})
++find_dependency(glog CONFIG)
++find_dependency(Libevent CONFIG)
++find_dependency(ZLIB)
++if("@VCPKG_LOCK_FIND_PACKAGE_LZ4@")
++  find_dependency(lz4 CONFIG)
++endif()
++if("@VCPKG_LOCK_FIND_PACKAGE_ZSTD@")
++  find_dependency(zstd CONFIG)
++endif()
++if("@VCPKG_LOCK_FIND_PACKAGE_SNAPPY@")
++  find_dependency(Snappy CONFIG)
++endif()
++if("@VCPKG_LOCK_FIND_PACKAGE_LIBSODIUM@")
++  find_dependency(unofficial-sodium CONFIG)
++endif()
+ 
+ set(Boost_USE_STATIC_LIBS "@FOLLY_BOOST_LINK_STATIC@")
+-find_dependency(Boost 1.51.0 MODULE
++find_dependency(Boost
+   COMPONENTS
+     context
+     filesystem
+diff --git a/CMake/folly-config.h.cmake b/CMake/folly-config.h.cmake
+index 9a309fb..7e6e05f 100644
+--- a/CMake/folly-config.h.cmake
++++ b/CMake/folly-config.h.cmake
+@@ -16,6 +16,9 @@
+ 
+ #pragma once
+ 
++#cmakedefine01 FOLLY_HAS_LIBURING
++#cmakedefine01 FOLLY_HAS_LIBAIO
++
+ #ifdef __APPLE__
+ #include <TargetConditionals.h> // @manual
+ #endif
+diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
+index 6ce4c67..a347cf0 100644
+--- a/CMake/folly-deps.cmake
++++ b/CMake/folly-deps.cmake
+@@ -35,7 +35,7 @@ else()
+ endif()
+ set(Boost_USE_STATIC_LIBS "${FOLLY_BOOST_LINK_STATIC}")
+ 
+-find_package(Boost 1.51.0 MODULE
++find_package(Boost
+   COMPONENTS
+     context
+     filesystem
+@@ -45,17 +45,21 @@ find_package(Boost 1.51.0 MODULE
+     thread
+   REQUIRED
+ )
++set(Boost_LIBRARIES Boost::boost Boost::context Boost::filesystem Boost::program_options Boost::regex Boost::system Boost::thread)
+ list(APPEND FOLLY_LINK_LIBRARIES ${Boost_LIBRARIES})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
+ 
+-find_package(DoubleConversion MODULE REQUIRED)
++find_package(double-conversion CONFIG REQUIRED)
++set(DOUBLE_CONVERSION_LIBRARY double-conversion::double-conversion)
+ list(APPEND FOLLY_LINK_LIBRARIES ${DOUBLE_CONVERSION_LIBRARY})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${DOUBLE_CONVERSION_INCLUDE_DIR})
+ 
+-find_package(FastFloat MODULE REQUIRED)
+-list(APPEND FOLLY_INCLUDE_DIRECTORIES ${FASTFLOAT_INCLUDE_DIR})
++find_package(FastFloat CONFIG REQUIRED)
++list(APPEND FOLLY_LINK_LIBRARIES FastFloat::fast_float)
+ 
+-find_package(Gflags MODULE)
++set(GFLAGS_USE_TARGET_NAMESPACE ON)
++find_package(LIBGFLAGS NAMES gflags REQUIRED)
++set(LIBGFLAGS_LIBRARY gflags::gflags)
+ set(FOLLY_HAVE_LIBGFLAGS ${LIBGFLAGS_FOUND})
+ if(LIBGFLAGS_FOUND)
+   list(APPEND FOLLY_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
+@@ -64,16 +68,22 @@ if(LIBGFLAGS_FOUND)
+   set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
+ endif()
+ 
+-find_package(Glog MODULE)
++find_package(GLOG NAMES glog REQUIRED)
++set(GLOG_LIBRARY glog::glog)
+ set(FOLLY_HAVE_LIBGLOG ${GLOG_FOUND})
+ list(APPEND FOLLY_LINK_LIBRARIES ${GLOG_LIBRARY})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${GLOG_INCLUDE_DIR})
+ 
+-find_package(LibEvent MODULE REQUIRED)
++find_package(LIBEVENT NAMES Libevent REQUIRED)
++set(LIBEVENT_LIB libevent::core libevent::extra)
++if(NOT WIN32)
++  list(APPEND LIBEVENT_LIB libevent::pthreads)
++endif()
+ list(APPEND FOLLY_LINK_LIBRARIES ${LIBEVENT_LIB})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
+ 
+ find_package(ZLIB MODULE)
++set(ZLIB_LIBRARIES ZLIB::ZLIB)  # consistent with proxygen
+ set(FOLLY_HAVE_LIBZ ${ZLIB_FOUND})
+ if (ZLIB_FOUND)
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRS})
+@@ -106,21 +116,24 @@ if (LIBLZMA_FOUND)
+   list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
+ endif()
+ 
+-find_package(LZ4 MODULE)
++find_package(LZ4 NAMES lz4)
++set(LZ4_LIBRARY lz4::lz4)
+ set(FOLLY_HAVE_LIBLZ4 ${LZ4_FOUND})
+ if (LZ4_FOUND)
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LZ4_INCLUDE_DIR})
+   list(APPEND FOLLY_LINK_LIBRARIES ${LZ4_LIBRARY})
+ endif()
+ 
+-find_package(Zstd MODULE)
++find_package(ZSTD NAMES zstd)
++set(ZSTD_LIBRARY zstd::libzstd)
+ set(FOLLY_HAVE_LIBZSTD ${ZSTD_FOUND})
+ if(ZSTD_FOUND)
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZSTD_INCLUDE_DIR})
+   list(APPEND FOLLY_LINK_LIBRARIES ${ZSTD_LIBRARY})
+ endif()
+ 
+-find_package(Snappy MODULE)
++find_package(SNAPPY NAMES Snappy)
++set(SNAPPY_LIBRARY Snappy::snappy)
+ set(FOLLY_HAVE_LIBSNAPPY ${SNAPPY_FOUND})
+ if (SNAPPY_FOUND)
+   list(APPEND FOLLY_INCLUDE_DIRECTORIES ${SNAPPY_INCLUDE_DIR})
+@@ -136,14 +149,19 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBIBERTY_INCLUDE_DIRS})
+ 
+ find_package(LibAIO)
++set(FOLLY_HAS_LIBAIO ${VCPKG_LOCK_FIND_PACKAGE_LibAIO})
+ list(APPEND FOLLY_LINK_LIBRARIES ${LIBAIO_LIBRARIES})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBAIO_INCLUDE_DIRS})
+ 
+ find_package(LibUring)
++set(FOLLY_HAS_LIBURING ${VCPKG_LOCK_FIND_LibUring})
+ list(APPEND FOLLY_LINK_LIBRARIES ${LIBURING_LIBRARIES})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBURING_INCLUDE_DIRS})
+ 
+-find_package(Libsodium)
++find_package(LIBSODIUM NAMES unofficial-sodium)
++if(LIBSODIUM_FOUND)
++  set(LIBSODIUM_LIBRARIES unofficial-sodium::sodium)
++endif()
+ list(APPEND FOLLY_LINK_LIBRARIES ${LIBSODIUM_LIBRARIES})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBSODIUM_INCLUDE_DIRS})
+ 
+@@ -160,6 +178,8 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
+ if (LIBUNWIND_FOUND)
+   set(FOLLY_HAVE_LIBUNWIND ON)
++  list(REMOVE_ITEM FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
++  list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
+ endif()
+ if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+   list(APPEND FOLLY_LINK_LIBRARIES "execinfo")
+diff --git a/folly/io/async/AsyncIO.cpp b/folly/io/async/AsyncIO.cpp
+index 93cda44..ac090bb 100644
+--- a/folly/io/async/AsyncIO.cpp
++++ b/folly/io/async/AsyncIO.cpp
+@@ -35,7 +35,7 @@
+ #include <sys/eventfd.h>
+ #endif
+ 
+-#if __has_include(<libaio.h>)
++#if FOLLY_HAS_LIBAIO
+ 
+ // debugging helpers
+ namespace {
+diff --git a/folly/io/async/AsyncIO.h b/folly/io/async/AsyncIO.h
+index b1a6f52..ba84609 100644
+--- a/folly/io/async/AsyncIO.h
++++ b/folly/io/async/AsyncIO.h
+@@ -18,7 +18,7 @@
+ 
+ #include <folly/experimental/io/AsyncBase.h>
+ 
+-#if __has_include(<libaio.h>)
++#if FOLLY_HAS_LIBAIO
+ 
+ #include <libaio.h>
+ 
+diff --git a/folly/io/async/Liburing.h b/folly/io/async/Liburing.h
+index 8e81aaa..c7f4a67 100644
+--- a/folly/io/async/Liburing.h
++++ b/folly/io/async/Liburing.h
+@@ -17,7 +17,5 @@
+ #pragma once
+ 
+ #if defined(__linux__) && __has_include(<liburing.h>)
+-#define FOLLY_HAS_LIBURING 1
+ #else
+-#define FOLLY_HAS_LIBURING 0
+ #endif
+diff --git a/folly/io/async/SimpleAsyncIO.cpp b/folly/io/async/SimpleAsyncIO.cpp
+index 807a2be..551a003 100644
+--- a/folly/io/async/SimpleAsyncIO.cpp
++++ b/folly/io/async/SimpleAsyncIO.cpp
+@@ -25,7 +25,7 @@
+ 
+ namespace folly {
+ 
+-#if __has_include(<libaio.h>)
++#if FOLLY_HAS_LIBAIO
+ static constexpr bool has_aio = true;
+ using aio_type = AsyncIO;
+ #else

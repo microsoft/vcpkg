@@ -4,17 +4,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tlx/tlx
-    REF 903b9b35df8731496a90d8d74f8bedbad2517d9b
-    SHA512 17087973f2f4751538c589e9f80d2b5ea872d2e7d90659769ae3350d441bda0b64aec9a4150d01a7cf5323ce327ebd104cdca7b4a3bc4eebdf574e71e013ba6e
+    REF "v${VERSION}"
+    SHA512 62115a6741fd8f0c84ea514b4aaccb62a8ed8e74ef2ad1d2822719ea6b8e3543f3eb1cca4324b4b10cbab9c208f1f021f5a73b76a6f03ae2038f7edad9c922a0
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DVERBOSE=1
         -DTLX_BUILD_TESTS=off
@@ -25,16 +24,16 @@ vcpkg_configure_cmake(
         -DTLX_BUILD_SHARED_LIBS=${BUILD_SHARED}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "CMake/")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "CMake/")
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/tlx")
+    vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/tlx")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_fixup_pkgconfig()

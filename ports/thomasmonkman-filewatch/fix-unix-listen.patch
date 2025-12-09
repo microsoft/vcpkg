@@ -1,0 +1,37 @@
+diff --git a/FileWatch.hpp b/FileWatch.hpp
+index 4eba08b..2c0ff6d 100644
+--- a/FileWatch.hpp
++++ b/FileWatch.hpp
+@@ -276,7 +276,7 @@ namespace filewatch {
+ 
+ 		FolderInfo  _directory;
+ 
+-		const std::uint32_t _listen_filters = IN_MODIFY | IN_CREATE | IN_DELETE;
++		const std::uint32_t _listen_filters = IN_MODIFY | IN_CREATE | IN_DELETE | IN_MOVE;
+ 
+ 		const static std::size_t event_size = (sizeof(struct inotify_event));
+ #endif // __unix__
+@@ -604,7 +604,7 @@ namespace filewatch {
+ 				}
+ 			}();
+ 
+-			const auto watch = inotify_add_watch(folder, watch_path.c_str(), IN_MODIFY | IN_CREATE | IN_DELETE);
++			const auto watch = inotify_add_watch(folder, watch_path.c_str(), IN_MODIFY | IN_CREATE | IN_DELETE | IN_MOVE);
+ 			if (watch < 0) 
+ 			{
+ 				throw std::system_error(errno, std::system_category());
+@@ -644,6 +644,14 @@ namespace filewatch {
+ 								{
+ 									parsed_information.emplace_back(StringType{ changed_file }, Event::modified);
+ 								}
++                               			else if (event->mask & IN_MOVED_FROM)
++                               			{
++                               			    parsed_information.emplace_back(StringType{ changed_file }, Event::renamed_old);
++                               			}
++                               			else if (event->mask & IN_MOVED_TO)
++                               			{
++                               			    parsed_information.emplace_back(StringType{ changed_file }, Event::renamed_new);
++                               			}
+ 							}
+ 						}
+ 						i += event_size + event->len;

@@ -3,17 +3,20 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/config
-    REF boost-1.79.0
-    SHA512 e8d4f44d08865f83599b7580612055ab76b482c7ce6196d4e44c39480a39293685f1b4c683987c6eebe992141deb9c6be1f69ade4c68cbd30f7f97aa92134ebb
+    REF boost-${VERSION}
+    SHA512 456b3d648e4ca2b25a70159d282ee25ee3451b05450d2bb0e16b03e0f96860e4e678e4c8f75200b65cff0d073138083df8f1876cf6c5c227feb62de180ff7f3d
     HEAD_REF master
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
-boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
-file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#ifndef BOOST_ALL_NO_LIB\n#define BOOST_ALL_NO_LIB\n#endif\n")
-file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#undef BOOST_ALL_DYN_LINK\n")
+set(FEATURE_OPTIONS "")
+boost_configure_and_install(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS ${FEATURE_OPTIONS}
+)
+file(APPEND "${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp" "\n#ifndef BOOST_ALL_NO_LIB\n#define BOOST_ALL_NO_LIB\n#endif\n")
+file(APPEND "${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp" "\n#undef BOOST_ALL_DYN_LINK\n")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(APPEND ${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp "\n#define BOOST_ALL_DYN_LINK\n")
+    file(APPEND "${CURRENT_PACKAGES_DIR}/include/boost/config/user.hpp" "\n#define BOOST_ALL_DYN_LINK\n")
 endif()
-file(COPY ${SOURCE_PATH}/checks DESTINATION ${CURRENT_PACKAGES_DIR}/share/boost-config)
+file(COPY "${SOURCE_PATH}/libs/config/checks" DESTINATION "${CURRENT_PACKAGES_DIR}/share/boost-config")

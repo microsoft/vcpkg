@@ -2,7 +2,7 @@ diff --git a/build/cmake/lib/CMakeLists.txt b/build/cmake/lib/CMakeLists.txt
 index 8234060..765f003 100644
 --- a/build/cmake/lib/CMakeLists.txt
 +++ b/build/cmake/lib/CMakeLists.txt
-@@ -112,7 +112,7 @@ endif ()
+@@ -118,7 +118,7 @@ endif ()
  
  # With MSVC static library needs to be renamed to avoid conflict with import library
  if (MSVC OR (WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT MINGW))

@@ -1,9 +1,10 @@
 {
   "name": "osg",
   "version": "3.6.5",
-  "port-version": 15,
+  "port-version": 27,
   "description": "The OpenSceneGraph is an open source high performance 3D graphics toolkit.",
-  "homepage": "https://github.com/openscenegraph/OpenSceneGraph",
+  "homepage": "https://www.openscenegraph.com/",
+  "license": null,
   "supports": "!uwp",
   "dependencies": [
     {
@@ -13,6 +14,7 @@
     "opengl-registry",
     {
       "name": "openimageio",
+      "default-features": false,
       "platform": "osx"
     },
     {
@@ -26,8 +28,19 @@
     "zlib"
   ],
   "default-features": [
-    "default-features",
+    {
+      "name": "fontconfig",
+      "platform": "!android & !ios & !uwp"
+    },
     "freetype",
+    {
+      "name": "nvtt",
+      "platform": "x64 & (linux | osx | windows) & !uwp"
+    },
+    {
+      "name": "openexr",
+      "platform": "!uwp"
+    },
     "plugins"
   ],
   "features": {
@@ -37,48 +50,12 @@
         "collada-dom"
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "openexr"
-          ],
-          "platform": "!uwp"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "rest-http-device"
-          ],
-          "platform": "!windows"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "fontconfig"
-          ],
-          "platform": "!android & !ios & !uwp"
-        },
-        {
-          "name": "osg",
-          "default-features": false,
-          "features": [
-            "nvtt"
-          ],
-          "platform": "!x86 & !(windows & arm64) & !uwp"
-        }
-      ]
-    },
     "docs": {
       "description": "Build OpenSceneGraph reference documentation using doxygen (use: make doc_openscenegraph doc_openthreads"
     },
     "examples": {
       "description": "Enable to build OSG Examples",
+      "supports": "!android",
       "dependencies": [
         {
           "name": "libiconv",
@@ -88,7 +65,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         },
         "sdl2"
@@ -125,7 +103,6 @@
     "openexr": {
       "description": "Build the exr plugin",
       "dependencies": [
-        "ilmbase",
         "openexr"
       ]
     },
@@ -133,10 +110,16 @@
       "description": "Set to ON to generate CPack configuration files and packaging targets"
     },
     "plugins": {
-      "description": "Build most OSG Plugins",
+      "description": "Build most OSG plugins",
       "dependencies": [
-        "curl",
-        "gdal",
+        {
+          "name": "curl",
+          "default-features": false
+        },
+        {
+          "name": "gdal",
+          "default-features": false
+        },
         {
           "name": "giflib",
           "platform": "windows"
@@ -156,21 +139,10 @@
           "name": "libxml2",
           "platform": "windows"
         },
-        "tiff"
-      ]
-    },
-    "rest-http-device": {
-      "description": "Build RestHttpDevice plugin",
-      "supports": "!windows",
-      "dependencies": [
-        "boost-array",
-        "boost-asio",
-        "boost-bind",
-        "boost-core",
-        "boost-lexical-cast",
-        "boost-logic",
-        "boost-smart-ptr",
-        "boost-tuple"
+        {
+          "name": "tiff",
+          "default-features": false
+        }
       ]
     },
     "sdl1": {
@@ -181,8 +153,12 @@
     },
     "tools": {
       "description": "Enable to build OSG Applications (e.g. osgviewer)",
+      "supports": "!android",
       "dependencies": [
-        "curl",
+        {
+          "name": "curl",
+          "default-features": false
+        },
         {
           "name": "libiconv",
           "platform": "windows"
@@ -193,7 +169,8 @@
           "name": "osg",
           "default-features": false,
           "features": [
-            "freetype"
+            "freetype",
+            "plugins"
           ]
         }
       ]

@@ -1,16 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO log4cplus/log4cplus
-    REF REL_2_0_7
-    SHA512 FE5FCEB346AC19A6D953661A20E8AA02AB48E872F427D958EA99C62F534DDF1FA4511FFD67A662605B1F225E3A6C06B0EE2C1B0EB62DE3AA0316F47F778DF06D
+    REF REL_2_1_2
+    SHA512 37d37107f327cf343784d68ea4a18ee7eaa0a943e56075ebd14318b8905954649501f0228c6086058d89f97a332e73cabfc64ea7290ae79578fd583590661b94
     HEAD_REF master
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH THREADPOOL_SOURCE_PATH
     REPO log4cplus/ThreadPool
-    REF 3507796e172d36555b47d6191f170823d9f6b12c
-    SHA512 6b46ce287d68fd0cda0c69fda739eaeda89e1ed4f086e28a591f4e50aaf80ee2defc28ee14a5bf65be005c1a6ec4f2848d5723740726c54d5cc1d20f8e98aa0c
+    REF 251db61ff3e3c7b16436c9936c53e6f68ff07720
+    SHA512 41452423720762246380ec7e8c3a8e4f5bd1e8e0467a66126419d50a30ffead1c87a5af6f322275e188870a3e5d4abc9802967ab4453dc29c65ec0add0b5ae31
     HEAD_REF master
 )
 
@@ -40,13 +40,18 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/log4cplus)
-
 vcpkg_copy_pdbs()
+
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/log4cplus.pc" "-llog4cplus" "-llog4cplusD")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/ChangeLog"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/README.md")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

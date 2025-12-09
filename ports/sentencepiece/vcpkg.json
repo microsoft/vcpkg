@@ -1,10 +1,12 @@
 {
   "name": "sentencepiece",
-  "version": "0.1.96",
-  "port-version": 1,
+  "version": "0.2.1",
   "description": "SentencePiece is an unsupervised text tokenizer and detokenizer mainly for Neural Network-based text generation systems where the vocabulary size is predetermined prior to the neural model training",
-  "supports": "!((windows | uwp) & !static)",
+  "homepage": "https://github.com/google/sentencepiece",
+  "license": "Apache-2.0",
   "dependencies": [
+    "abseil",
+    "protobuf",
     {
       "name": "vcpkg-cmake",
       "host": true

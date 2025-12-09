@@ -1,10 +1,10 @@
 {
   "name": "ashes",
-  "version-date": "2022-06-08",
+  "version-date": "2023-03-12",
   "description": "Drop-in replacement to Vulkan's shared library, allowing the use of OpenGL or Direct3D11 in addition to Vulkan.",
   "homepage": "https://github.com/DragonJoker/Ashes",
   "license": "MIT",
-  "supports": "!osx & !linux & !ios & !android & !uwp & !x86 & !arm & !static",
+  "supports": "!ios & !android & !uwp & !x86 & !arm32 & !static",
   "dependencies": [
     "opengl",
     "spirv-cross",
@@ -17,5 +17,20 @@
       "host": true
     },
     "vulkan-headers"
-  ]
+  ],
+  "default-features": [
+    "opengl",
+    "vulkan"
+  ],
+  "features": {
+    "direct3d11": {
+      "description": "Compiles Direct3D11 renderer."
+    },
+    "opengl": {
+      "description": "Compiles OpenGL renderer."
+    },
+    "vulkan": {
+      "description": "Compiles Vulkan renderer."
+    }
+  }
 }
