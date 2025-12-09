@@ -3406,7 +3406,7 @@
     },
     "gmsh": {
       "baseline": "4.14.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gobject-introspection": {
       "baseline": "1.86.0",
@@ -7153,7 +7153,7 @@
       "port-version": 0
     },
     "opencascade": {
-      "baseline": "7.9.2",
+      "baseline": "7.9.3",
       "port-version": 0
     },
     "opencc": {
