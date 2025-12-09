@@ -1,6 +1,6 @@
 {
   "name": "libxlsxwriter",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Libxlsxwriter is a C library that can be used to write text, numbers, formulas and hyperlinks to multiple worksheets in an Excel 2007+ XLSX file.",
   "homepage": "https://github.com/jmcnamara/libxlsxwriter",
   "documentation": "https://libxlsxwriter.github.io",
@@ -12,5 +12,20 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "dtoa": {
+      "description": "Use the Milo Yip DTOA library"
+    },
+    "mem-file": {
+      "description": "Use memory files instead of temp files",
+      "supports": "!windows"
+    },
+    "openssl-md5": {
+      "description": "Use Openssl MD5",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
 }

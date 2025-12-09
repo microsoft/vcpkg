@@ -2,7 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/restinio
     REF "v${VERSION}"
-    SHA512 2ce55df175d7a92601c36e0a765366207853f9e5886d25765f56443a79feeefa56e61add11024f9595b8094e303574df853d6a10b8fbf0c3aa31729668c67471
+    SHA512 66b1b2109258179685e2daa7f08d6684c2900a65a7e427e2c9ff7671571eafff102d19da7c1a9ac76cefa21d5cfce66b88ea0ed0ee4be614392e6fccb6d07bf4
+    PATCHES "restinio_cmake_file.patch"
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only

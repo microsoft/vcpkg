@@ -1,7 +1,7 @@
 {
   "name": "mysvac-jsonlib",
-  "version": "2.1.1",
-  "description": "A lightweight and efficient C++17 JSON library.",
+  "version": "3.0.0",
+  "description": "A lightweight and efficient C++20 JSON library.",
   "homepage": "https://github.com/Mysvac/cpp-jsonlib",
   "license": "MIT",
   "dependencies": [

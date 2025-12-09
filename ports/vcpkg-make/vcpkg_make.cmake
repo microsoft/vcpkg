@@ -75,20 +75,72 @@ function(vcpkg_run_shell_as_build)
 endfunction()
 
 function(vcpkg_run_autoreconf shell_cmd work_dir)
+    find_program(ACLOCAL NAMES aclocal)
     find_program(AUTORECONF NAMES autoreconf)
+    find_program(LIBTOOLIZE NAMES libtoolize glibtoolize)
+
+    set(missing "")
     if(NOT AUTORECONF)
+        list(APPEND missing "autoconf")
+    endif()
+    if(NOT ACLOCAL)
+        list(APPEND missing "automake")
+    else()
+        set(aclocal_check_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-aclocal")
+        file(REMOVE_RECURSE "${aclocal_check_dir}")
+        file(MAKE_DIRECTORY "${aclocal_check_dir}")
+        file(COPY_FILE "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/configure.ac" "${aclocal_check_dir}/configure.ac")
+        vcpkg_run_shell(
+            SHELL ${shell_cmd}
+            COMMAND "${ACLOCAL}" --dry-run
+            WORKING_DIRECTORY "${aclocal_check_dir}"
+            LOGNAME "aclocal-${TARGET_TRIPLET}"
+        )
+        file(STRINGS "${CURRENT_BUILDTREES_DIR}/aclocal-${TARGET_TRIPLET}-err.log" autoconf_archive REGEX "autoconf-archive")
+        if(autoconf_archive MATCHES "missing")
+            string(APPEND missing "autoconf-archive")
+        endif()
+    endif()
+    if(NOT LIBTOOLIZE)
+        list(APPEND missing "libtool")
+    endif()
+    if(missing)
         message(FATAL_ERROR "${PORT} currently requires the following programs from the system package manager:
-        autoconf automake autoconf-archive
+    autoconf autoconf-archive automake libtoolize
+
     On Debian and Ubuntu derivatives:
-        sudo apt-get install autoconf automake autoconf-archive
+        sudo apt install autoconf autoconf-archive automake libtool
     On recent Red Hat and Fedora derivatives:
-        sudo dnf install autoconf automake autoconf-archive
+        sudo dnf install autoconf autoconf-archive automake libtool
     On Arch Linux and derivatives:
-        sudo pacman -S autoconf automake autoconf-archive
+        sudo pacman -S autoconf autoconf-archive automake libtool
     On Alpine:
-        apk add autoconf automake autoconf-archive
+        apk add autoconf autoconf-archive automake libtool
     On macOS:
-        brew install autoconf automake autoconf-archive\n")
+        brew install autoconf autoconf-archive automake libtool\n")
+    endif()
+    if(EXISTS "${work_dir}/configure.ac")
+        # Modeled after autoreconf's tracing behavior.
+        file(READ "${work_dir}/configure.ac" configure_ac)
+        find_program(AUTOPOINT NAMES autopoint)
+        if(configure_ac MATCHES "AM_GNU_GETTEXT" AND NOT AUTOPOINT AND "$ENV{AUTOPOINT}" STREQUAL "")
+            message(STATUS "${PORT} depends on gettext infrastructure.")
+            message(STATUS "'set(ENV{AUTOPOINT} true)' might disable this dependency.")
+        endif()
+        find_program(GTKDOCIZE NAMES gtkdocize)
+        if(configure_ac MATCHES "GTK_DOC_CHECK" AND NOT GTKDOCIZE AND "$ENV{GTKDOCIZE}" STREQUAL "")
+            message(STATUS "${PORT} depends on gtk-doc infrastructure.")
+            message(STATUS "'set(ENV{GTKDOCIZE} true)' might disable this dependency.")
+        endif()
+        file(STRINGS "${CURRENT_BUILDTREES_DIR}/aclocal-${TARGET_TRIPLET}-err.log" libltdl REGEX "libltdl")
+        if(configure_ac MATCHES "LT_CONFIG_LTDL_DIR|LT_SYS_SYMBOL_USCORE" AND libltdl MATCHES "missing")
+            message(FATAL_ERROR "${PORT} depends on ltdl development files from the system package manager:
+        
+    On Debian and Ubuntu derivatives:
+        sudo apt install libltdl-dev
+    On recent Red Hat and Fedora derivatives:
+        sudo dnf install libtool-ltdl-devel\n")
+        endif()
     endif()
     message(STATUS "Generating configure for ${TARGET_TRIPLET}")
     vcpkg_run_shell(
@@ -122,7 +174,7 @@ function(vcpkg_make_get_shell out_var)
     set("${out_var}" "${shell_cmd}" ${shell_options} PARENT_SCOPE)
 endfunction()
 
-function(z_vcpkg_make_get_configure_triplets out)
+function(z_vcpkg_make_determine_target_triplet out)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         ""
         "COMPILER_NAME"
@@ -136,35 +188,54 @@ function(z_vcpkg_make_get_configure_triplets out)
     # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
     z_vcpkg_make_determine_target_arch(TARGET_ARCH)
     z_vcpkg_make_determine_host_arch(BUILD_ARCH)
-
-    set(build_triplet_opt "")
-    if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS)
-        # This is required since we are running in a msys
-        # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-        set(build_triplet_opt "--build=${BUILD_ARCH}-pc-mingw32") 
+    set(output "")
+    if(VCPKG_MAKE_BUILD_TRIPLET MATCHES "--host=([^;]*)")
+        set(output "${CMAKE_MATCH_1}")
+    elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+        set(output "${TARGET_ARCH}-unknown-emscripten")
+    elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+        set(output "${TARGET_ARCH}-apple-darwin")
+    elseif(VCPKG_TARGET_IS_UWP)
+        # Needs to be different from --build to enable cross builds.
+        set(output "${TARGET_ARCH}-unknown-mingw32")
+    elseif(VCPKG_TARGET_IS_WINDOWS)
+        set(output "${TARGET_ARCH}-pc-mingw32")
+    elseif("${arg_COMPILER_NAME}" MATCHES "([^/]+)-(gcc|clang)(-[0-9]+)?$")
+        # --host activates crosscompilation and provides the prefix of the host tools for the target.
+        set(output "${CMAKE_MATCH_1}")
+    elseif(NOT VCPKG_CROSSCOMPILING AND VCPKG_MAKE_BUILD_TRIPLET MATCHES "--build=([^;]+)")
+        set(output "${CMAKE_MATCH_1}")
+    elseif(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
+        message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL}
+            "Unable to determine autotools host triplet for cross-build. "
+            "You can set the VCPKG_MAKE_HOST_TRIPLET variable for ${TARGET_TRIPLET}."
+        )
     endif()
+    set("${out}" "${output}" PARENT_SCOPE)
+endfunction()
 
-    set(host_triplet_opt "")
-    if(VCPKG_CROSSCOMPILING)
-        if(VCPKG_TARGET_IS_UWP)
-            # Needs to be different from --build to enable cross builds.
-            set(host_triplet_opt "--host=${TARGET_ARCH}-unknown-mingw32")
-        elseif(VCPKG_TARGET_IS_WINDOWS)
-            set(host_triplet_opt "--host=${TARGET_ARCH}-pc-mingw32")
-        elseif(VCPKG_TARGET_IS_IOS)
-            set(host_triplet_opt "--host=${TARGET_ARCH}-apple-darwin")
-        elseif(VCPKG_TARGET_IS_OSX AND NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
-            set(host_triplet_opt "--host=${TARGET_ARCH}-apple-darwin")
-        elseif("${arg_COMPILER_NAME}" MATCHES "([^/]+)-(gcc|clang)(-[0-9]+)?$")
-            # --host activates crosscompilation and provides the prefix of the host tools for the target.
-            set(host_triplet_opt "--host=${CMAKE_MATCH_1}")
-        elseif(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}")
-            message(${Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL} "Unable to determine --host for cross-build.")
+function(z_vcpkg_make_get_configure_triplets out)
+    cmake_parse_arguments(PARSE_ARGV 1 arg
+        ""
+        "COMPILER_NAME"
+        ""
+    )
+    z_vcpkg_unparsed_args(FATAL_ERROR)
+
+    set(output "${VCPKG_MAKE_BUILD_TRIPLET}")
+    if(NOT output MATCHES "--host")
+        z_vcpkg_make_determine_target_triplet(host_opt_triplet COMPILER_NAME "${arg_COMPILER_NAME}")
+        if(host_opt_triplet)
+            list(APPEND output "--host=${host_opt_triplet}")
+        endif()
+    endif()
+    if(output MATCHES "--host" AND NOT output MATCHES "--build")
+        file(STRINGS "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/build_opt_triplet.txt" build_opt_triplet LIMIT_COUNT 1)
+        if(build_opt_triplet)
+            list(APPEND output "--build=${build_opt_triplet}")
         endif()
     endif()
 
-    set(output "${build_triplet_opt}")
-    list(APPEND output ${host_triplet_opt})
     set("${out}" "${output}" PARENT_SCOPE)
 endfunction()
 

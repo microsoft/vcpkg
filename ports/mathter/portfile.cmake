@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 da4fc266a8e3bdbe388e85e5f65e7a8b54fe65264175f5348f1fbb1a5bfbcf1b2ddf4ffaecd4a1f0ac22e78fdc665a52f4929a872592ce20ce69112187d6a6e0
     HEAD_REF master
+    PATCHES
+        support-xsimd-14.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port

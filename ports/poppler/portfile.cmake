@@ -4,31 +4,29 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO poppler/poppler
     REF "poppler-${POPPLER_VERSION}"
-    SHA512 5997af5698a793aefcc1d0d98ea2e0732c0ce0adfa1e5be182ba2d425b1691ba84dfa89f0cdafacf19756d411b2b2de665d1a4682acf21ad5d3353dfeac0727c
+    SHA512 24184d73503c77d614b20d8a2c2f8d77e40fd445ea2ceabdc5b77b5241ed45e053cc582af563284b1c9fd585bde3af5695cfe8fceff2efaf380499fb5f620f8c
     HEAD_REF master
     PATCHES
         export-unofficial-poppler.patch
         private-namespace.patch
 )
-file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindFontconfig.cmake")
 
 set(POPPLER_PC_REQUIRES "freetype2 libjpeg libopenjp2 libpng libtiff-4 poppler-vcpkg-iconv")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cairo       WITH_Cairo
-        cairo       CMAKE_REQUIRE_FIND_PACKAGE_CAIRO
-        curl        ENABLE_LIBCURL
-        curl        CMAKE_REQUIRE_FIND_PACKAGE_CURL
-        private-api ENABLE_UNSTABLE_API_ABI_HEADERS
-        zlib        ENABLE_ZLIB
-        zlib        CMAKE_REQUIRE_FIND_PACKAGE_ZLIB
-        glib        ENABLE_GLIB
-        glib        CMAKE_REQUIRE_FIND_PACKAGE_GLIB
-        qt          ENABLE_QT6
-        qt          CMAKE_REQUIRE_FIND_PACKAGE_Qt6
-        cms         CMAKE_REQUIRE_FIND_PACKAGE_LCMS2
+        cairo       VCPKG_LOCK_FIND_PACKAGE_CAIRO
         cms         ENABLE_LCMS
+        cms         VCPKG_LOCK_FIND_PACKAGE_LCMS2
+        curl        ENABLE_LIBCURL
+        curl        VCPKG_LOCK_FIND_PACKAGE_CURL
+        glib        ENABLE_GLIB
+        glib        VCPKG_LOCK_FIND_PACKAGE_GLIB
+        private-api ENABLE_UNSTABLE_API_ABI_HEADERS
+        qt          ENABLE_QT6
+        qt          VCPKG_LOCK_FIND_PACKAGE_Qt6
+        zlib        ENABLE_ZLIB_UNCOMPRESS
 )
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DFONT_CONFIGURATION=fontconfig")
@@ -71,27 +69,28 @@ vcpkg_cmake_configure(
         -DENABLE_UTILS=OFF
         -DENABLE_GOBJECT_INTROSPECTION=OFF
         -DENABLE_QT5=OFF
-        -DRUN_GPERF_IF_PRESENT=OFF
         -DENABLE_RELOCATABLE=OFF # https://gitlab.freedesktop.org/poppler/poppler/-/issues/1209
-        -DENABLE_NSS3=OFF
-        -DENABLE_GPGME=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_ECM=ON
+        -DCMAKE_REQUIRE_FIND_PACKAGE_PkgConfig=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_OpenJPEG=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_JPEG=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_TIFF=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_PNG=ON
         -DCMAKE_REQUIRE_FIND_PACKAGE_Boost=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_GObjectIntrospection=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_GTK=ON
+        -DENABLE_NSS3=OFF
+        -DENABLE_GPGME=OFF
+        -DRUN_GPERF_IF_PRESENT=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_ECM=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_GTK=OFF
         ${FEATURE_OPTIONS}
+-DVCPKG_TRACE_FIND_PACKAGE=1
     MAYBE_UNUSED_VARIABLES
-        CMAKE_DISABLE_FIND_PACKAGE_GObjectIntrospection
-        CMAKE_DISABLE_FIND_PACKAGE_GTK
-        CMAKE_REQUIRE_FIND_PACKAGE_CAIRO
-        CMAKE_REQUIRE_FIND_PACKAGE_CURL
-        CMAKE_REQUIRE_FIND_PACKAGE_GLIB
-        CMAKE_REQUIRE_FIND_PACKAGE_LCMS2
-        CMAKE_REQUIRE_FIND_PACKAGE_Qt6
+        GLIB2_MKENUMS_PYTHON
+        VCPKG_LOCK_FIND_PACKAGE_CURL
+        VCPKG_LOCK_FIND_PACKAGE_GLIB
+        VCPKG_LOCK_FIND_PACKAGE_LCMS2
+        VCPKG_LOCK_FIND_PACKAGE_CAIRO
+        VCPKG_LOCK_FIND_PACKAGE_GTK
+        VCPKG_LOCK_FIND_PACKAGE_Qt6
 )
 vcpkg_cmake_install()
 

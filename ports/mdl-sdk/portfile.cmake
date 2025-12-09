@@ -73,12 +73,15 @@ endif()
 # Required for plugins.
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
+# The libraries are supposed to be loaded at runtime, not linked.
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/MDL-SDK
     REF "${VERSION}"
-    SHA512 e4f32a8ee7a073f2518613126c0cee581f35108c01cbd2f3d9fe962abaa948f55de6e30e6f093a5117f9f429252b51d073a2246dac66363a6849b739c2ff8cc5
-    HEAD_REF release/2024.1
+    SHA512 27ef1a0d43669d3a6ee1918b5673ecb8cec078fa2911e9e7456c2c17ea1264e1089d01627fedc83a2d9e6337441033c41422f68acf8292e969311059ff892de5
+    HEAD_REF master
 )
 
 vcpkg_find_acquire_program(PYTHON3)

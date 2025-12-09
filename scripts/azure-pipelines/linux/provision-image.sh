@@ -7,7 +7,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Add apt repos
 
-# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "20.04") and format to "2004"
+# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "24.04") and format to "2404"
 UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
 NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
 
@@ -127,13 +127,10 @@ APT_PACKAGES="$APT_PACKAGES python-is-python3"
 APT_PACKAGES="$APT_PACKAGES guile-2.2-dev"
 
 ## required by gtk
-APT_PACKAGES="$APT_PACKAGES libxdamage-dev"
+APT_PACKAGES="$APT_PACKAGES libxdamage-dev libselinux1-dev"
 
 ## required by at-spi2-atk
 APT_PACKAGES="$APT_PACKAGES libxtst-dev"
-
-## required by bond
-APT_PACKAGES="$APT_PACKAGES haskell-stack"
 
 ## required by boringssl
 APT_PACKAGES="$APT_PACKAGES golang-go"
@@ -144,13 +141,30 @@ APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 ## required by robotraconteur
 APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
 
+## required by libmysql
+APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
+
 ## CUDA
-APT_PACKAGES="$APT_PACKAGES cuda-compiler-12-8 cuda-libraries-dev-12-8 cuda-driver-dev-12-8 \
-  cuda-cudart-dev-12-8 libcublas-12-8 libcurand-dev-12-8 cuda-nvml-dev-12-8 libcudnn9-dev-cuda-12 \
-  libnccl2 libnccl-dev"
+# The intent is to install everything that does not require an actual GPU, driver, or GUI.
+# Intentionally omitted: cuda-demo-suite-12-9 cuda-documentation-12-9 cuda-driver-*
+#                        cuda-gdb-12-9 cuda-gdb-src-12-9 cuda-nsight-* cuda-nvdisasm
+#                        cuda-nvprof cuda-nvprune cuda-profiler-api* cuda-sandbox-*
+#                        cuda-visual-tools-12-9 nvidia-gds-12-9 cuda-nvvp-12-9
+#                        cuda-toolkit-12-9 cuda-tools-12-9 cuda-command-line-tools-12-9
+#                        cuda-runtime-12-9
+#                        All libraries for which there is a -dev suffix included here
+# cudnn9-jit-cuda-12-9 : Depends: libcudnn9-jit-dev-cuda-12 (= 9.12.0.46-1) but it is not installable
+APT_PACKAGES="$APT_PACKAGES cuda-cccl-12-9 cuda-compat-12-9 cuda-compiler-12-9 cuda-crt-12-9 \
+  cuda-cudart-dev-12-9 cuda-cuobjdump-12-9 cuda-cupti-dev-12-9 cuda-cuxxfilt-12-9 \
+  cuda-driver-dev-12-9 cuda-libraries-dev-12-9 cuda-minimal-build-12-9 cuda-nvcc-12-9 \
+  cuda-nvml-dev-12-9 cuda-nvrtc-dev-12-9 cuda-nvtx-12-9 cuda-nvvm-12-9 cuda-opencl-dev-12-9 \
+  cuda-sanitizer-12-9 cuda-toolkit-12-9-config-common cudnn9-cuda-12-9 gds-tools-12-9 \
+  libcublas-12-9 libcudnn9-dev-cuda-12 libcufft-dev-12-9 libcurand-dev-12-9 libcusolver-dev-12-9 \
+  libcusparse-dev-12-9 libnccl-dev libnpp-dev-12-9 libnvfatbin-dev-12-9 libnvjitlink-dev-12-9 \
+  libnvjpeg-dev-12-9"
 
 ## PowerShell + Azure
-APT_PACKAGES="$APT_PACKAGES powershell azure-cli"
+APT_PACKAGES="$APT_PACKAGES powershell azcopy azure-cli"
 
 ## Additionally required/installed by Azure DevOps Scale Set Agents, skip on WSL
 if [[ $(grep microsoft /proc/version) ]]; then

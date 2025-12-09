@@ -1,6 +1,6 @@
 {
   "name": "deniskovalchuk-libftp",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "maintainers": "Denis Kovalchuk <denis.kovalchuk.main@gmail.com>",
   "description": "A cross-platform FTP/FTPS client library based on Boost.Asio.",
   "homepage": "https://github.com/deniskovalchuk/libftp",

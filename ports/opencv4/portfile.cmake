@@ -22,6 +22,10 @@ vcpkg_from_github(
       0015-fix-freetype.patch
       0017-fix-flatbuffers.patch
       0019-opencl-kernel.patch
+      0020-fix-narrow-filesystem.diff
+      0021-fix-qt-gen-def.patch
+      0022-android-use-vcpkg-cpu-features.patch
+      0022-fix-miss-exception-include.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -29,12 +33,17 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 vcpkg_host_path_list(APPEND ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
 
 # Disallow accidental build of vendored copies
+file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/cpufeatures")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/openexr")
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/flatbuffers")
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
   set(TARGET_IS_AARCH64 1)
+  if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    # cf. https://github.com/opencv/opencv/issues/25052, https://github.com/opencv/opencv/pull/27897
+    list(APPEND ADDITIONAL_BUILD_FLAGS -DHAVE_CPU_NEON_FP16_SUPPORT=0 -DHAVE_CPU_NEON_DOTPROD_SUPPORT=0)
+  endif()
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
   set(TARGET_IS_ARM 1)
 elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -51,6 +60,11 @@ endif()
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE CMake Config file")
+
+set(WITH_CPUFEATURES OFF)
+if (VCPKG_TARGET_IS_ANDROID)
+  set(WITH_CPUFEATURES ON)
+endif()
 
 # Cannot use vcpkg_check_features() for "qt" because it requires the QT version number passed, not just a boolean
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -80,10 +94,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "gstreamer"  WITH_GSTREAMER
  "gtk"        WITH_GTK
  "halide"     WITH_HALIDE
- "ipp"        WITH_IPP
- "ipp"        BUILD_IPP_IW
+ "hdf"        BUILD_opencv_hdf
  "highgui"    BUILD_opencv_highgui
  "intrinsics" CV_ENABLE_INTRINSICS
+ "ipp"        WITH_IPP
+ "ipp"        BUILD_IPP_IW
  "openjpeg"   WITH_OPENJPEG
  "openmp"     WITH_OPENMP
  "jpeg"       WITH_JPEG
@@ -105,6 +120,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "rgbd"       BUILD_opencv_rgbd
  "sfm"        BUILD_opencv_sfm
  "tbb"        WITH_TBB
+ "text"       BUILD_opencv_text
+ "text"       WITH_TESSERACT
  "tiff"       WITH_TIFF
  "vtk"        WITH_VTK
  "vulkan"     WITH_VULKAN
@@ -337,12 +354,6 @@ if("qt" IN_LIST FEATURES)
   list(APPEND ADDITIONAL_BUILD_FLAGS "-DCMAKE_AUTOMOC=ON")
 endif()
 
-if("contrib" IN_LIST FEATURES)
-  if(VCPKG_TARGET_IS_UWP)
-    list(APPEND ADDITIONAL_BUILD_FLAGS "-DWITH_TESSERACT=OFF")
-  endif()
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -404,9 +415,10 @@ vcpkg_cmake_configure(
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
-        # CMAKE
+        # CMAKE/VCPKG
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
+        -DVCPKG_LOCK_FIND_PACKAGE_Iconv=OFF # optional for contrib/wechat_qrcode
         ###### OPENCV vars
         "-DOPENCV_DOWNLOAD_PATH=${DOWNLOADS}/opencv-cache"
         ${BUILD_WITH_CONTRIB_FLAG}
@@ -415,7 +427,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DWITH_QT=${WITH_QT}
         -DWITH_AVIF=OFF
-        -DWITH_CPUFEATURES=OFF
+        -DWITH_CPUFEATURES=${WITH_CPUFEATURES}
         -DWITH_ITT=OFF
         -DWITH_JASPER=OFF #Jasper is deprecated and will be removed in a future release, and is mutually exclusive with openjpeg that is preferred
         -DWITH_LAPACK=OFF
@@ -430,12 +442,15 @@ vcpkg_cmake_configure(
         -DWITH_VA=OFF
         -DWITH_VA_INTEL=OFF
         -DWITH_ZLIB_NG=OFF
+        -DCV_TRACE=OFF
         ###### Additional build flags
         ${ADDITIONAL_BUILD_FLAGS}
     OPTIONS_RELEASE
         ${PYTHON_EXTRA_DEFINES_RELEASE}
     OPTIONS_DEBUG
         ${PYTHON_EXTRA_DEFINES_DEBUG}
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_Iconv
 )
 
 vcpkg_cmake_install()
@@ -469,17 +484,13 @@ if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target l
     )
   endif()
 endif()
-find_dependency(Threads)")
+find_dependency(Threads)
+if(ANDROID)
+  find_dependency(CpuFeaturesNdkCompat CONFIG)
+endif()")
 
 if("ade" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(ade)")
-endif()
-if("contrib" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_IS_IOS AND NOT (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "^arm"))
-  string(APPEND DEPS_STRING "
-# C language is required for try_compile tests in FindHDF5
-enable_language(C)
-find_dependency(HDF5)
-find_dependency(Tesseract)")
 endif()
 if("eigen" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
@@ -492,6 +503,12 @@ if("freetype" IN_LIST FEATURES)
 endif()
 if("gdcm" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
+endif()
+if("hdf" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\n
+# C language is required for try_compile tests in FindHDF5
+enable_language(C)
+find_dependency(HDF5)")
 endif()
 if("omp" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
@@ -529,6 +546,9 @@ if("sfm" IN_LIST FEATURES)
 endif()
 if("tbb" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
+endif()
+if("text" IN_LIST FEATURES)
+  string(APPEND DEPS_STRING "\nfind_dependency(Tesseract)")
 endif()
 if("tiff" IN_LIST FEATURES)
   string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
@@ -619,6 +639,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc")
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
+    "-lharfbuzz::harfbuzz"
+    "-lharfbuzz"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/opencv4.pc"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/"
     "\${prefix}"
     IGNORE_UNCHANGED
@@ -649,6 +674,11 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
     "-lTesseract::libtesseract"
     "-ltesseract"
+    IGNORE_UNCHANGED
+  )
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"
+    "-lharfbuzz::harfbuzz"
+    "-lharfbuzz"
     IGNORE_UNCHANGED
   )
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/opencv4.pc"

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrogier/ocilib
     REF "v${VERSION}"
-    SHA512 8a2c716ceba5c941d2f55ca99ba2b563bc754f2e7a8b6632421a62b3b2a298afb9a05ae13a1997995cea811c36f737ae1e0e5c676d72f573dbebc7f5073c8206
+    SHA512 1205f333fa7fa6c813dfbb93fefcec5203110ee0dc1c5d52b4f67df9e8fd5894b94e1f0f87cff79f6ad1d33dffbc9faa6535b7bf81ab36bb742cb4fd2dc5d966
     HEAD_REF master
     PATCHES fix-DisableWC4191.patch
 )

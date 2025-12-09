@@ -2,23 +2,22 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO sammycage/lunasvg
   REF "v${VERSION}"
-  SHA512 6ea8ef74a18047e2714aacc6c162c42519246c38061290053461e7c5c0922234534a031bdb84eaff7bea46da4d8edd1e3cdd00d710c066600c9024fa2a134a03
+  SHA512 62cf1433f4d158008ab07c9b6a83dca2322e1adf97a7f30a2021be5610af7b28e2ed54c75292fb382a3dcc6205f0e7b8d815b8a59aa11843a059883203d191c1
   HEAD_REF master
-  PATCHES
-    # temporary patch. It should be removed once the new version of lunasvg is released.
-    fix-plutovg.patch
 )
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
     -DCMAKE_REQUIRE_FIND_PACKAGE_plutovg=1
+    -DUSE_SYSTEM_PLUTOVG=ON
     -DLUNASVG_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/lunasvg)
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/lunasvg/lunasvg.h" "defined(LUNASVG_BUILD_STATIC)" "1")

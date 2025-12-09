@@ -1,0 +1,31 @@
+diff --git a/layers/CMakeLists.txt b/layers/CMakeLists.txt
+index 984b878f0..31003176a 100644
+--- a/layers/CMakeLists.txt
++++ b/layers/CMakeLists.txt
+@@ -112,14 +112,8 @@ endif()
+ if (USE_CUSTOM_HASH_MAP)
+     message(STATUS "Using parallel_hashmap as custom hash maps")
+     target_compile_definitions(VkLayer_utils PUBLIC USE_CUSTOM_HASH_MAP)
+-    # Prefer using a locally installed parallel-hashmap package before using the in-tree sources.
+-    # This approach supports installation with package managers such as conan
+-    find_package(phmap CONFIG)
+-    if (TARGET phmap)
+-        target_link_libraries(VkLayer_utils PRIVATE phmap)
+-    else()
+-        add_subdirectory(external/parallel_hashmap)
+-    endif()
++    find_path(PARALLEL_HASHMAP_INCLUDE_DIRS "parallel_hashmap/btree.h" REQUIRED)
++    target_include_directories(VkLayer_utils PRIVATE ${PARALLEL_HASHMAP_INCLUDE_DIRS})
+ else()
+     message(STATUS "Using STL maps instead of custom hash maps")
+ endif()
+@@ -468,7 +468,8 @@ if(MSVC)
+     target_link_options(vvl PRIVATE /DEF:${CMAKE_CURRENT_SOURCE_DIR}/${LAYER_NAME}.def)
+     target_compile_options(vvl PRIVATE /bigobj)
+ 
+-    set(NATVIS_FILES "${CMAKE_CURRENT_SOURCE_DIR}/types.natvis" "${CMAKE_CURRENT_SOURCE_DIR}/external/parallel_hashmap/natvis/phmap.natvis")
++    find_file(PHMAP_NATVIS "phmap.natvis" REQUIRED)
++    set(NATVIS_FILES "${CMAKE_CURRENT_SOURCE_DIR}/types.natvis" "${PHMAP_NATVIS}")
+     target_sources(vvl PRIVATE ${NATVIS_FILES})
+ elseif(MINGW)
+     target_sources(vvl PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/${LAYER_NAME}.def)

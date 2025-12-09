@@ -1,27 +1,21 @@
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow-nanoarrow
-    REF "apache-arrow-nanoarrow-${VERSION}"
-    SHA512 6d2bb68e4f35b42f543cf33aa5acf585690da5ffafe9d144da03473dc1e0a0834944abea719ba9b88296832bd3cc2e09a97f69552dec61a8d4a95fb78f0df405
+    REF "2cfba631b40886f1418a463f3b7c4552c8ae0dc7"
+    SHA512 9892e7e06be4c53ba884b50e0c4efbe7bccca229060e8ee534999c3a31cf74f1e3f2ec8ad778cc3b50e8834b8f11ac52b86e68c4e28365dae581917aded7ca6f
     HEAD_REF main
-    PATCHES
-        fix_install_dir.patch
-        no_werror.patch
 )
-
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" NANOARROW_ARROW_STATIC)
+string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" NANOARROW_INSTALL_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DNANOARROW_ARROW_STATIC=${NANOARROW_ARROW_STATIC}
+        -DNANOARROW_INSTALL_SHARED=${NANOARROW_INSTALL_SHARED}
+        -DNANOARROW_DEBUG_EXTRA_WARNINGS=OFF
 )
 
 vcpkg_cmake_install()

@@ -1,6 +1,6 @@
 {
   "name": "projectm",
-  "version": "4.1.4",
+  "version": "4.1.6",
   "description": "The projectM Music Visualizer. A cross-platform, OpenGL-based reimplementation of Milkdrop as a reusable library.",
   "homepage": "https://github.com/projectM-visualizer/projectm",
   "license": "LGPL-2.1-only AND MIT AND MIT-0",

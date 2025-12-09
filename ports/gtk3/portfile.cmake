@@ -25,21 +25,11 @@ vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gdk-pixbuf")
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 
 
-vcpkg_list(SET ADDITIONAL_BINARIES)
 if("introspection" IN_LIST FEATURES)
-    list(APPEND OPTIONS_DEBUG -Dintrospection=false)
     list(APPEND OPTIONS_RELEASE -Dintrospection=true)
-    if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(GIR_TOOL_DIR "${CURRENT_INSTALLED_DIR}")
-    else()
-        set(GIR_TOOL_DIR "${CURRENT_HOST_INSTALLED_DIR}")
-    endif()
-    vcpkg_list(APPEND ADDITIONAL_BINARIES
-        "g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
-    )
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
-    list(APPEND OPTIONS -Dintrospection=false)
+    list(APPEND OPTIONS_RELEASE -Dintrospection=false)
 endif()
 
 vcpkg_configure_meson(
@@ -57,17 +47,18 @@ vcpkg_configure_meson(
         -Dprofiler=false            # include tracing support for sysprof
         -Dtracker3=false            # Enable Tracker3 filechooser search
         -Dcolord=no                 # Build colord support for the CUPS printing backend
-    OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        -Dintrospection=false
     ADDITIONAL_BINARIES
         "glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
         "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
         "glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
         "gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'"
         "glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        ${ADDITIONAL_BINARIES}
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 
 # Reduce command line lengths, in particular for static windows builds.
@@ -95,4 +86,4 @@ vcpkg_copy_tools(TOOL_NAMES ${GTK_TOOLS} AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/etc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

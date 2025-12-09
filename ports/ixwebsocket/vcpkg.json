@@ -1,6 +1,6 @@
 {
   "name": "ixwebsocket",
-  "version-semver": "11.4.5",
+  "version-semver": "11.4.6",
   "description": "Lightweight WebSocket Client and Server + HTTP Client and Server",
   "homepage": "https://github.com/machinezone/IXWebSocket",
   "license": "BSD-3-Clause",

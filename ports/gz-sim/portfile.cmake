@@ -12,9 +12,9 @@ ignition_modular_library(
    OPTIONS
       -DSKIP_PYBIND11=ON
       "-DPython3_EXECUTABLE=${PYTHON3}"
+      "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
    PATCHES
       dependencies.patch
-      cxx_flags.patch
 )
 
 IF(EXISTS "${CURRENT_PACKAGES_DIR}/lib/${PORT}-${VERSION_MAJOR}/")

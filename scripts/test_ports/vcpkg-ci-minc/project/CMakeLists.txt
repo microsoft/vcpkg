@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(minc-test C)
+project(minc-test C CXX)
 
 find_package(LIBMINC CONFIG REQUIRED)
 

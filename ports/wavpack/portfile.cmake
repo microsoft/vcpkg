@@ -1,6 +1,6 @@
 vcpkg_list(SET PATCHES)
 
-if (VCPKG_TARGET_IS_ANDROID)
+if (VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND PATCHES "enable-asm.diff")
 endif()
 

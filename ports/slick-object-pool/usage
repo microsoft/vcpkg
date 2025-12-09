@@ -1,0 +1,4 @@
+slick-object-pool is header-only and can be used from CMake via:
+
+    find_package(slick_object_pool CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE slick::slick_object_pool)

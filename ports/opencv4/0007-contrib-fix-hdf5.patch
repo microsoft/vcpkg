@@ -1,6 +1,6 @@
 --- a/modules/hdf/CMakeLists.txt
 +++ b/modules/hdf/CMakeLists.txt
-@@ -1,25 +1,8 @@
+@@ -1,25 +1,7 @@
  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
  
 -if(WIN32)
@@ -19,9 +19,10 @@
 -     set(HDF5_FOUND "NO")
 -  endif()
 -else()
-   if(NOT CMAKE_CROSSCOMPILING) # iOS build should not reuse OSX package
+-  if(NOT CMAKE_CROSSCOMPILING) # iOS build should not reuse OSX package
      find_package(HDF5)
-   endif()
++    set(HDF5_INCLUDE_DIRS "${HDF5_INCLUDE_DIR}")
+-  endif()
 -endif()
  
  if(NOT HDF5_FOUND)

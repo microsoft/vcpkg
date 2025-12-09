@@ -8,8 +8,8 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
 }
 
 # See https://learn.microsoft.com/visualstudio/releases/2022/release-history
-# 17.13.6
-$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/8fada5c7-8417-4239-acc3-bd499af09222/b9e51a6eacaa38415ad70c4e0f0034d7c213fcdfabea2d96101e2255eb717250/vs_Enterprise.exe'
+# 17.14.20
+$VisualStudioBootstrapperUrl = 'https://download.visualstudio.microsoft.com/download/pr/fd2adb86-9bef-4b89-baea-d9613327cd2d/71dce30bf45232a868005b8d7173015eea2b152b43bc5066caa15ef9fa7a751a/vs_Enterprise.exe'
 $Workloads = @(
   'Microsoft.VisualStudio.Workload.NativeDesktop',
   'Microsoft.VisualStudio.Workload.Universal',
@@ -22,7 +22,7 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.ATL.ARM64',
   'Microsoft.VisualStudio.Component.VC.MFC.ARM64',
   'Microsoft.VisualStudio.Component.Windows11SDK.26100',
-  'Microsoft.VisualStudio.Component.Windows10SDK.20348', # As of 2024-11-15, CMake explicitly needs a Windows 10 SDK for Store
+  'Microsoft.VisualStudio.Component.Windows10SDK.19041', # As of 2024-11-15, CMake explicitly needs a Windows 10 SDK for Store
   # These .NET parts are needed for easyhook, openni2
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Net.Component.4.7.2.TargetingPack',

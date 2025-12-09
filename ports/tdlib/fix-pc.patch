@@ -1,0 +1,158 @@
+diff --git a/CMake/GeneratePkgConfig.cmake b/CMake/GeneratePkgConfig.cmake
+index 3d3fa01d1..9303a2f43 100644
+--- a/CMake/GeneratePkgConfig.cmake
++++ b/CMake/GeneratePkgConfig.cmake
+@@ -9,10 +9,20 @@ function(get_relative_link OUTPUT PATH)
+   if (IS_ABSOLUTE ${PATH})
+     get_filename_component(DIRECTORY_NAME "${PATH}" DIRECTORY)
+     if (WIN32)
+-      set(${OUTPUT} "-l\"${DIRECTORY_NAME}/${NAME}\"" PARENT_SCOPE)
++      # On Windows, library files can be libname.lib or name.lib
++      get_filename_component(FULL_NAME "${PATH}" NAME)
++      # Extract library name without lib prefix and extension
++      string(REGEX REPLACE "^lib(.+)\\.[^.]+$" "\\1" LIB_NAME "${FULL_NAME}")
++      # If the regex didn't match (no lib prefix), use the name without extension
++      if ("${LIB_NAME}" STREQUAL "${FULL_NAME}")
++        set(LIB_NAME "${NAME}")
++      endif()
++      set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l${LIB_NAME}" PARENT_SCOPE)
+     else()
+       get_filename_component(FULL_NAME "${PATH}" NAME)
+-      set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l:${FULL_NAME}" PARENT_SCOPE)
++      # Extract library name without lib prefix and extension for all platforms
++      string(REGEX REPLACE "^lib(.+)\\.[^.]+$" "\\1" LIB_NAME "${FULL_NAME}")
++      set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l${LIB_NAME}" PARENT_SCOPE)
+     endif()
+     return()
+   endif()
+@@ -31,17 +41,86 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+   # message("Generating pkg-config for ${TARGET}")
+   get_filename_component(PREFIX "${CMAKE_INSTALL_PREFIX}" REALPATH)
+ 
+-  get_target_property(LIST "${TARGET}" LINK_LIBRARIES)
++  # Get the target type to handle interface libraries differently
++  get_target_property(LIBRARY_TYPE "${TARGET}" TYPE)
++  
++  # For interface libraries, use INTERFACE_LINK_LIBRARIES instead of LINK_LIBRARIES
++  if ("${LIBRARY_TYPE}" STREQUAL "INTERFACE_LIBRARY")
++    get_target_property(LIST "${TARGET}" INTERFACE_LINK_LIBRARIES)
++  else()
++    get_target_property(LIST "${TARGET}" LINK_LIBRARIES)
++  endif()
++  
++  # Handle the case when no libraries are found
++  if ("${LIST}" STREQUAL "LIST-NOTFOUND")
++    set(LIST "")
++  endif()
++  
++  # Special handling for tdcore interface library
++  if ("${TARGET}" STREQUAL "tdcore" AND "${LIBRARY_TYPE}" STREQUAL "INTERFACE_LIBRARY")
++    # For tdcore interface library, we need to link to the actual part libraries
++    # instead of the non-existent tdcore library
++    set(TDCORE_LIBS "")
++    set(COMBINED_REQS "")
++    set(COMBINED_LIBS "")
++    
++    foreach (PART_LIB ${LIST})
++      if (TARGET "${PART_LIB}" AND "${PART_LIB}" MATCHES "^tdcore_part[0-9]+$")
++        # Add the actual part library to link against
++        list(APPEND TDCORE_LIBS "-l${PART_LIB}")
++        
++        # Collect dependencies from the parts
++        get_target_property(PART_LIST "${PART_LIB}" LINK_LIBRARIES)
++        if (NOT "${PART_LIST}" STREQUAL "PART_LIST-NOTFOUND")
++          foreach (PART_DEP ${PART_LIST})
++            if (TARGET "${PART_DEP}")
++              list(APPEND COMBINED_REQS "${PART_DEP}")
++            else()
++              list(APPEND COMBINED_LIBS "${PART_DEP}")
++            endif()
++          endforeach()
++        endif()
++      elseif (TARGET "${PART_LIB}")
++        list(APPEND COMBINED_REQS "${PART_LIB}")
++      else()
++        list(APPEND COMBINED_LIBS "${PART_LIB}")
++      endif()
++    endforeach()
++    
++    # Remove duplicates
++    if (COMBINED_REQS)
++      list(REMOVE_DUPLICATES COMBINED_REQS)
++    endif()
++    if (COMBINED_LIBS)
++      list(REMOVE_DUPLICATES COMBINED_LIBS)
++    endif()
++    if (TDCORE_LIBS)
++      list(REMOVE_DUPLICATES TDCORE_LIBS)
++    endif()
++    
++    set(LIST "")
++    list(APPEND LIST ${COMBINED_REQS})
++    list(APPEND LIST ${COMBINED_LIBS})
++    
++    # Set a flag to use different Libs line for tdcore
++    set(USE_TDCORE_PARTS TRUE)
++  else()
++    set(USE_TDCORE_PARTS FALSE)
++  endif()
++  
+   set(REQS "")
+   set(LIBS "")
+   foreach (LIB ${LIST})
+     if (TARGET "${LIB}")
+-      set(HAS_REQS 1)
+-      list(APPEND REQS "${LIB}")
++      # Skip internal tdcore parts as they don't have their own .pc files
++      if (NOT "${LIB}" MATCHES "^tdcore_part[0-9]+$")
++        set(HAS_REQS 1)
++        list(APPEND REQS "${LIB}")
++      endif()
+     else()
+       set(HAS_LIBS 1)
+       get_relative_link(LINK "${LIB}")
+-      if (NOT LINK EQUAL "")
++      if (NOT "${LINK}" STREQUAL "")
+         list(APPEND LIBS "${LINK}")
+       endif()
+     endif()
+@@ -77,6 +156,19 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+   endif()
+ 
+   file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig")
++  
++  # Generate the correct Libs line based on library type
++  if (USE_TDCORE_PARTS)
++    # For tdcore interface library, link to the actual part libraries
++    set(LIBS_LINE "")
++    foreach (PART_LIB ${TDCORE_LIBS})
++      set(LIBS_LINE "${LIBS_LINE} ${PART_LIB}")
++    endforeach()
++    set(LIBS_LINE "Libs: -L\"${PKGCONFIG_LIBDIR}\"${LIBS_LINE}")
++  else()
++    set(LIBS_LINE "Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET}")
++  endif()
++  
+   file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" CONTENT
+ "prefix=${PREFIX}
+ 
+@@ -85,14 +177,14 @@ Description: ${DESCRIPTION}
+ Version: ${PROJECT_VERSION}
+ 
+ CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
+-Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET}
++${LIBS_LINE}
+ ${REQUIRES}${LIBRARIES}")
+ 
+-  get_target_property(LIBRARY_TYPE "${TARGET}" TYPE)
+-  if (LIBRARY_TYPE STREQUAL "STATIC_LIBRARY" OR LIBRARY_TYPE STREQUAL "SHARED_LIBRARY")
++  if ("${LIBRARY_TYPE}" STREQUAL "STATIC_LIBRARY" OR "${LIBRARY_TYPE}" STREQUAL "SHARED_LIBRARY")
++    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
++  elseif ("${LIBRARY_TYPE}" STREQUAL "INTERFACE_LIBRARY")
++    # Interface libraries are also supported, install the .pc file
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+-  elseif (LIBRARY_TYPE STREQUAL "INTERFACE_LIBRARY")
+-    # TODO: support interface libraries
+   else()
+     message(FATAL_ERROR "Don't know how to handle ${TARGET} of type ${LIBRARY_TYPE}")
+   endif()

@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-interface-include.patch
+        pkgconfig-cxx-linkage.diff
 )
 
 vcpkg_cmake_configure(

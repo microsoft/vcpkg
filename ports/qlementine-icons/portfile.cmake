@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oclero/qlementine-icons
     REF "v${VERSION}"
-    SHA512 a459cb8fa40bf57f1ad536bd67ee68cc1036b33884d5b83128e93aab8152fd7439a41ff238f47a123e0268adeeb3828dccaac21c139a3a3f60b709570554b58c
+    SHA512 1df1c98399a4babff46239f00182f751bbdd77bbf9616f8c9dc488ddb966969a084f8a2aa2921e1568d53f697858acd584a0042e18363f3066bb584234bc9661
 )
 
 vcpkg_cmake_configure(

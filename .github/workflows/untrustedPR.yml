@@ -1,5 +1,8 @@
 name: Check For Common Mistakes
 
+permissions:
+  contents: read
+
 on:
   pull_request:
 

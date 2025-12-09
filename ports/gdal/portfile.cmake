@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 02dfa7d57c37b0f0c5994cae6632286a8671039b5aa9853360c08df8210d93227e42b0f22e74e167dc888761e8118b1b2dd2fe365bdc6c75daf7283c4be89b4c
+    SHA512 497e585479b01e0b046ab2343971644746305719f8c6be19764580b818c37b26284f16bdf463e22475f1a2ecb9bf22231f3d51b349458990e75d894c217ae68e
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
         libkml.patch
+        sqlite3.diff
         target-is-valid.patch
 )
 # `vcpkg clean` stumbles over one subdir
@@ -23,6 +24,7 @@ vcpkg_replace_string("${SOURCE_PATH}/ogr/ogrsf_frmts/flatgeobuf/flatbuffers/base
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         arrow            GDAL_USE_ARROW
+        arrow-adbc       GDAL_USE_ADBCDRIVERMANAGER
         archive          GDAL_USE_ARCHIVE
         cfitsio          GDAL_USE_CFITSIO
         curl             GDAL_USE_CURL
@@ -120,6 +122,7 @@ list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 if (BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
+            gdal
             gdal_contour
             gdal_create
             gdal_footprint
