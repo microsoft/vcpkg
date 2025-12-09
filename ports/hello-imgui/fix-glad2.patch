@@ -1,0 +1,27 @@
+diff --git a/src/hello_imgui/hello_imgui_include_opengl.h b/src/hello_imgui/hello_imgui_include_opengl.h
+index 1c95c09..ba0ae9e 100644
+--- a/src/hello_imgui/hello_imgui_include_opengl.h
++++ b/src/hello_imgui/hello_imgui_include_opengl.h
+@@ -21,7 +21,7 @@
+         #include <GLES2/gl2ext.h>
+     #endif
+ #elif defined(HELLOIMGUI_USE_GLAD)
+-#include <glad/glad.h>
++#include <glad/gl.h>
+ #endif
+ 
+ #endif // #ifdef HELLOIMGUI_HAS_OPENGL
+\ No newline at end of file
+diff --git a/src/hello_imgui/internal/backend_impls/opengl_setup_helper/opengl_setup_glfw.cpp b/src/hello_imgui/internal/backend_impls/opengl_setup_helper/opengl_setup_glfw.cpp
+index ed89c8b..9806a46 100644
+--- a/src/hello_imgui/internal/backend_impls/opengl_setup_helper/opengl_setup_glfw.cpp
++++ b/src/hello_imgui/internal/backend_impls/opengl_setup_helper/opengl_setup_glfw.cpp
+@@ -150,7 +150,7 @@ namespace HelloImGui { namespace BackendApi
+             #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLEW)
+                 bool err = glewInit() != GLEW_OK;
+             #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLAD)
+-                bool err = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0;
++                bool err = gladLoadGL(glfwGetProcAddress) == 0;
+             #else
+                 bool err = false;  // If you use IMGUI_IMPL_OPENGL_LOADER_CUSTOM, your loader is likely to requires
+                                    // some form of initialization.

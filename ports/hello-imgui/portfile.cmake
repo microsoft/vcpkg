@@ -11,6 +11,7 @@ vcpkg_from_github(
         imgui-test-engine.diff
         # PR has been merged into https://github.com/pthom/hello_imgui/pull/142. This patch should not be needed in the next release.
         support-imgui-1_91_9.patch
+        fix-glad2.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/external/imgui"
