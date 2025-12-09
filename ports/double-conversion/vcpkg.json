@@ -1,6 +1,6 @@
 {
   "name": "double-conversion",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "description": "Efficient binary-decimal and decimal-binary conversion routines for IEEE doubles.",
   "homepage": "https://github.com/google/double-conversion",
   "dependencies": [
