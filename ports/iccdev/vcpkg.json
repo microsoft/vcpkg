@@ -1,0 +1,18 @@
+{
+  "name": "iccdev",
+  "version": "2.3.1",
+  "description": "Developer tools for ICC color profiles",
+  "homepage": "https://github.com/InternationalColorConsortium/iccDEV",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp & !android & (!windows | (x64 & !arm64 & !static & !staticcrt))",
+  "dependencies": [
+    "libiconv",
+    "libjpeg-turbo",
+    "libpng",
+    "libxml2",
+    "nlohmann-json",
+    "tiff",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}
