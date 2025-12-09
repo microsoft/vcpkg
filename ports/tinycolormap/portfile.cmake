@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release) # Header only without TINYCOLORMAP_WITH_EIGEN, TINYCOLORMAP_WITH_QT5,
+                              # TINYCOLORMAP_WITH_GLM, or TINYCOLORMAP_BUILD_TOOLS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yuki-koyama/tinycolormap
