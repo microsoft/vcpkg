@@ -17,6 +17,7 @@ vcpkg_from_github(
     fix-dependency-clfft.patch
     fix-miss-header-file.patch
     "${CUDA_PATCHES}"
+    fix-glad2.patch
 )
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
