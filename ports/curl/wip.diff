@@ -419,7 +419,7 @@ index 7f346c832c..083fddbc04 100644
  
  set(CURL_SUPPORTED_PROTOCOLS "@CURL_SUPPORTED_PROTOCOLS_LIST@")
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 685335667b..32fd68591d 100644
+index 685335667b..8e49f291c7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -754,6 +754,12 @@ if(CURL_USE_OPENSSL)
@@ -456,11 +456,12 @@ index 685335667b..32fd68591d 100644
        list(APPEND CURL_LIBS ${_lib})
      endif()
    endforeach()
-@@ -1815,6 +1822,45 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+@@ -1815,6 +1822,46 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
    endif()
  endif()
  
 +# avoid downstream pkg-config requirement for CURL::dependency interface targets
++# changing CURL_LIBS before add_subdirectory(src)
 +set(CURL_LIBS_RAW "${CURL_LIBS}")
 +set(CURL_LIBS "")
 +find_library(_libdl_absolute dl NO_CACHE)
@@ -502,7 +503,7 @@ index 685335667b..32fd68591d 100644
  if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")  # MSVC but exclude clang-cl
    set_property(DIRECTORY APPEND PROPERTY COMPILE_OPTIONS "-MP")  # Parallel compilation
  endif()
-@@ -2109,7 +2155,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2109,7 +2156,7 @@ if(NOT CURL_DISABLE_INSTALL)
    set(_explicit_libdirs "")
    set(LIBCURL_PC_REQUIRES_PRIVATE "")
    set(LIBCURL_PC_LIBS_PRIVATE_LIST "")
@@ -511,7 +512,7 @@ index 685335667b..32fd68591d 100644
      if(TARGET "${_lib}")
        set(_explicit_libs "")
        get_target_property(_imported "${_lib}" IMPORTED)
-@@ -2143,8 +2189,18 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2143,8 +2190,18 @@ if(NOT CURL_DISABLE_INSTALL)
        get_target_property(_modules "${_lib}" INTERFACE_LIBCURL_PC_MODULES)
        if(_modules)
          list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "${_modules}")
@@ -530,7 +531,7 @@ index 685335667b..32fd68591d 100644
        foreach(_lib IN LISTS _explicit_libs)
          if(_lib MATCHES "/")
            # This gets a bit more complex, because we want to specify the
-@@ -2163,24 +2219,43 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2163,24 +2220,47 @@ if(NOT CURL_DISABLE_INSTALL)
              list(FIND _sys_libdirs "${_libdir}" _libdir_index)
              if(_libdir_index LESS 0)
                list(APPEND _ldflags "-L${_libdir}")
@@ -546,6 +547,10 @@ index 685335667b..32fd68591d 100644
 +            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
              list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
            endif()
++        elseif(_lib MATCHES "^-")  # '-framework <name>'
++          list(APPEND _ldflags "${_lib}")
++          list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
++          list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
          else()
 +          list(REMOVE_ITEM CURL_CONFIG_LIBS "-l${_lib}")
            list(APPEND LIBCURL_PC_LIBS_PRIVATE "-l${_lib}")
@@ -574,7 +579,7 @@ index 685335667b..32fd68591d 100644
        list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
      endif()
    endforeach()
-@@ -2204,6 +2279,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2204,6 +2284,7 @@ if(NOT CURL_DISABLE_INSTALL)
    if(LIBCURL_PC_LIBS_PRIVATE)
      string(REPLACE ";" " " LIBCURL_PC_LIBS_PRIVATE "${LIBCURL_PC_LIBS_PRIVATE}")
    endif()
