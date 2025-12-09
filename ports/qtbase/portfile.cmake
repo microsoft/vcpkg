@@ -612,3 +612,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
   endforeach()
   file(COPY ${qtbase_owned_dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
 endif()
+
+if(VCPKG_CROSSCOMPILING)
+  configure_file("${CURRENT_INSTALLED_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_INSTALLED_DIR}/share/Qt6/vcpkg-cmake-wrapper.cmake" @ONLY)
+endif()
