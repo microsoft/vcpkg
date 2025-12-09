@@ -1,0 +1,54 @@
+diff --git a/src/backend/opengl/gl_helpers.hpp b/src/backend/opengl/gl_helpers.hpp
+index 5a4bb98..af64840 100644
+--- a/src/backend/opengl/gl_helpers.hpp
++++ b/src/backend/opengl/gl_helpers.hpp
+@@ -10,7 +10,7 @@
+ #pragma once
+ 
+ #include <fg/defines.h>
+-#include <glad/glad.h>
++#include <glad/gl.h>
+ 
+ namespace forge {
+ namespace opengl {
+diff --git a/src/backend/opengl/glfw/window.cpp b/src/backend/opengl/glfw/window.cpp
+index ce0f9ad..e7bae37 100644
+--- a/src/backend/opengl/glfw/window.cpp
++++ b/src/backend/opengl/glfw/window.cpp
+@@ -229,8 +229,8 @@ long long Widget::getDisplayHandle() {
+     return opengl::getCurrentDisplayHandle();
+ }
+ 
+-GLADloadproc Widget::getProcAddr() {
+-    return reinterpret_cast<GLADloadproc>(glfwGetProcAddress);
++GLADloadfunc Widget::getProcAddr() {
++    return reinterpret_cast<GLADloadfunc>(glfwGetProcAddress);
+ }
+ 
+ void Widget::setTitle(const char* pTitle) {
+diff --git a/src/backend/opengl/glfw/window.hpp b/src/backend/opengl/glfw/window.hpp
+index de04875..fb7ccd1 100644
+--- a/src/backend/opengl/glfw/window.hpp
++++ b/src/backend/opengl/glfw/window.hpp
+@@ -74,7 +74,7 @@ class Widget {
+ 
+     long long getDisplayHandle();
+ 
+-    GLADloadproc getProcAddr();
++    GLADloadfunc getProcAddr();
+ 
+     void setTitle(const char* pTitle);
+ 
+diff --git a/src/backend/opengl/window_impl.cpp b/src/backend/opengl/window_impl.cpp
+index 5845aba..9d0e403 100644
+--- a/src/backend/opengl/window_impl.cpp
++++ b/src/backend/opengl/window_impl.cpp
+@@ -150,7 +150,7 @@ window_impl::window_impl(int pWidth, int pHeight, const char* pTitle,
+ 
+     mWidget->makeContextCurrent();
+ 
+-    gladLoadGLLoader(mWidget->getProcAddr());
++    gladLoadGL(mWidget->getProcAddr());
+ 
+     mCxt = mWidget->getGLContextHandle();
+     mDsp = mWidget->getDisplayHandle();
