@@ -1,0 +1,23 @@
+{
+  "name": "microsoft-windows-devices-midi2",
+  "version": "1.0.13-preview.13.192",
+  "maintainers": "Pete Brown pmbrown@microsoft.com",
+  "description": "Application SDK for using Windows MIDI Services (MIDI 1.0 and MIDI 2.0) from C++ apps. Microsoft.Windows.Devices.Midi2",
+  "homepage": "https://aka.ms/midi",
+  "license": "MIT",
+  "supports": "windows & (arm64 | arm64ec | x64)",
+  "dependencies": [
+    {
+      "name": "cppwinrt",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

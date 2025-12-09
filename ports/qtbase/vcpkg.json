@@ -1,7 +1,6 @@
 {
   "name": "qtbase",
-  "version": "6.8.3",
-  "port-version": 4,
+  "version": "6.9.3",
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -112,6 +111,7 @@
       "name": "securetransport",
       "platform": "ios"
     },
+    "sessionmanager",
     "sql",
     "sql-psql",
     "sql-sqlite",
@@ -120,6 +120,10 @@
     "widgets",
     {
       "name": "xcb",
+      "platform": "linux"
+    },
+    {
+      "name": "xcb-sm",
       "platform": "linux"
     },
     {
@@ -256,6 +260,13 @@
         {
           "name": "freetype",
           "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
         }
       ]
     },
@@ -316,13 +327,6 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "freetype"
-          ]
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
             "opengl"
           ],
           "platform": "osx"
@@ -332,6 +336,7 @@
           "default-features": false,
           "features": [
             "egl",
+            "freetype",
             "gles2",
             "opengl"
           ],
@@ -434,6 +439,18 @@
       "description": "Enable Secure Transport",
       "supports": "ios | osx"
     },
+    "sessionmanager": {
+      "description": "Sessionmanager",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
     "shared-mime-info": {
       "description": "Use GPL licensed shared-mime-info port from freedesktop.org",
       "dependencies": [
@@ -468,7 +485,6 @@
     "sql-oci": {
       "description": "Enable SQL Driver Oracle OCI",
       "dependencies": [
-        "ocilib",
         {
           "name": "qtbase",
           "default-features": false,
@@ -480,7 +496,6 @@
     },
     "sql-odbc": {
       "description": "Enable SQL Driver odbc",
-      "supports": "windows",
       "dependencies": [
         {
           "name": "qtbase",
@@ -488,6 +503,10 @@
           "features": [
             "sql"
           ]
+        },
+        {
+          "name": "unixodbc",
+          "platform": "!windows"
         }
       ]
     },
@@ -536,6 +555,19 @@
         "vulkan"
       ]
     },
+    "wayland": {
+      "description": "Enable Wayland platform plugin",
+      "supports": "linux | osx",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
     "widgets": {
       "description": "Qt Widgets",
       "dependencies": [
@@ -558,6 +590,19 @@
             "thread",
             "xkbcommon-x11",
             "xlib"
+          ]
+        }
+      ]
+    },
+    "xcb-sm": {
+      "description": "xcb-sm",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "sessionmanager",
+            "xcb"
           ]
         }
       ]

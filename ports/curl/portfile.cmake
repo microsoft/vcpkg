@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 c7dfb38fe317243b4b556c5f851042c8bd48ad8a062df73b75077df24328801c34b4e336bc1b76683e678e82cbc48b95571357f49a2385b5e4f93daadc428a0c
+    SHA512 ec2fa6c47d52feed943421b00e98370971bcc73b82842a85426ea9e42d36eaab51258a8d00197fdaaf5ec39e19385280fe387765f27e3b3dc1086c46236dc0bf
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -14,16 +14,16 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         http2       USE_NGHTTP2
+        http3       USE_NGTCP2
         wolfssl     CURL_USE_WOLFSSL
         openssl     CURL_USE_OPENSSL
+        openssl     CURL_CA_FALLBACK
         mbedtls     CURL_USE_MBEDTLS
         ssh         CURL_USE_LIBSSH2
         tool        BUILD_CURL_EXE
         c-ares      ENABLE_ARES
         sspi        CURL_WINDOWS_SSPI
         brotli      CURL_BROTLI
-        schannel    CURL_USE_SCHANNEL
-        sectransp   CURL_USE_SECTRANSP
         idn2        USE_LIBIDN2
         winidn      USE_WIN32_IDN
         zstd        CURL_ZSTD
@@ -41,11 +41,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         websockets  CURL_DISABLE_WEBSOCKETS
 )
 
-set(OPTIONS "")
-
-if("sectransp" IN_LIST FEATURES)
-    list(APPEND OPTIONS -DCURL_CA_PATH=none -DCURL_CA_BUNDLE=none)
+if("ssl" IN_LIST FEATURES AND
+    NOT "http3" IN_LIST FEATURES AND
+    # (windows & !uwp) | mingw to match curl[ssl]'s "platform"
+    ((VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP) OR VCPKG_TARGET_IS_MINGW))
+    list(APPEND FEATURE_OPTIONS -DCURL_USE_SCHANNEL=ON)
 endif()
+
+if("http3" IN_LIST FEATURES AND
+    ("wolfssl" IN_LIST FEATURES OR
+     "mbedtls" IN_LIST FEATURES OR
+     "gnutls" IN_LIST FEATURES))
+    message(FATAL_ERROR "http3 is incompatible with curl multi-ssl, preventing combination with wolfssl, mbedtls or \
+gnutls in vcpkg's curated registry. To use curl http3 on ngtcp2 on one of the other TLS backends, author an \
+overlay-port which exchanges curl[ssl]'s and curl[http3]'s openssl dependencies with the backend you want.")
+endif()
+
+set(OPTIONS "")
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS
@@ -71,7 +83,6 @@ vcpkg_cmake_configure(
         -DENABLE_CURL_MANUAL=OFF
         -DIMPORT_LIB_SUFFIX=   # empty
         -DSHARE_LIB_OBJECT=OFF
-        -DCURL_CA_FALLBACK=ON
         -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
     MAYBE_UNUSED_VARIABLES
@@ -130,12 +141,7 @@ endif()
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(READ "${SOURCE_PATH}/lib/krb5.c" krb5_c)
-string(REGEX REPLACE "#i.*" "" krb5_c "${krb5_c}")
-set(krb5_copyright "${CURRENT_BUILDTREES_DIR}/krb5.c Notice")
-file(WRITE "${krb5_copyright}" "${krb5_c}")
-
-file(READ "${SOURCE_PATH}/lib/inet_ntop.c" inet_ntop_c)
+file(READ "${SOURCE_PATH}/lib/curlx/inet_ntop.c" inet_ntop_c)
 string(REGEX REPLACE "#i.*" "" inet_ntop_c "${inet_ntop_c}")
 set(inet_ntop_copyright "${CURRENT_BUILDTREES_DIR}/inet_ntop.c and inet_pton.c Notice")
 file(WRITE "${inet_ntop_copyright}" "${inet_ntop_c}")
@@ -143,6 +149,5 @@ file(WRITE "${inet_ntop_copyright}" "${inet_ntop_c}")
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/COPYING"
-        "${krb5_copyright}"
         "${inet_ntop_copyright}"
 )

@@ -1,9 +1,10 @@
 {
   "name": "lwlog",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "Very fast synchronous and asynchronous C++17 logging library",
   "homepage": "https://github.com/ChristianPanov/lwlog",
   "license": "MIT",
+  "supports": "!android & !(arm & windows)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

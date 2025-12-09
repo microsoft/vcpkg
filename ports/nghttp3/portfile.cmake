@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/nghttp3
     REF v${VERSION}
-    SHA512 d662f37db7794f2de0460bc46185aae7a35fbe230dbe9c94e54a471332ea9b75c369535f77e1749fff049a1d37e7b806f9c54f72233939073d0215e57b4d22fb
+    SHA512 0f27080ae8de0f2842484b1cd0d31999b537edf31150156b6a3ec2b1f292103c8d63ca9308086a75b0c372bbb31f0d02b920b7d7e081244ea6d0121a14bc8fca
     HEAD_REF main
     PATCHES
 )
@@ -54,6 +54,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
     file(APPEND "${CURRENT_PACKAGES_DIR}/include/nghttp3/version.h" [[
 ]])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nghttp3/nghttp3.h"
+    "#ifdef NGHTTP3_STATICLIB"
+    "#if 1"
+    )
 endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

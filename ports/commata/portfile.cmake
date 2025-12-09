@@ -3,7 +3,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO furfurylic/commata
   REF "v${VERSION}"
-  SHA512 5ce3028b7bb854ce51d6cc7683b71a90e3758a7ceae03f1fba4fbfaa9b324907163f23e6330e87dc902a25fc2901f05c55be1aca34ada208b88898f1800e8858
+  SHA512 aaf2343c81db642ec17f35a3a33d637f300ade7f7aab14a7f0c1b87ec66aec9bc4bad845c67ade7931e81427510fde6f1af66ddbef9bc700dd8b01015debc3a0
   HEAD_REF master
 )
 

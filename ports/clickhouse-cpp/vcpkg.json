@@ -1,6 +1,6 @@
 {
   "name": "clickhouse-cpp",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "C++ client for Yandex ClickHouse",
   "homepage": "https://github.com/ClickHouse/clickhouse-cpp",
   "license": "Apache-2.0",
@@ -11,7 +11,8 @@
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    "zstd"
   ],
   "features": {
     "openssl": {

@@ -1,0 +1,4 @@
+deadlightreal-swiftnet provides CMake targets:
+
+  find_package(deadlightreal-swiftnet REQUIRED)
+  target_link_libraries(main PRIVATE swiftnet::swiftnet)

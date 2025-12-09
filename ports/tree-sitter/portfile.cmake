@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tree-sitter/tree-sitter
     REF "v${VERSION}"
-    SHA512 47213b68233d376e145e3f42b4674d64e7ff27436f4a028e751d9ad8494469ff67b002ce184346d3f6848df2c91386c28127827c43a8bea34da5e84f2530f02f
+    SHA512 f0465a2fabe303c1b62f1f55ed08aa57372ac11370d229adcccd99b5e8067be53e92da281cdfbcd034e2ecefb33ac90a119eeac9035670ac8fbaa4242cb87a11
     HEAD_REF master
     PATCHES
         unofficial-cmake.diff

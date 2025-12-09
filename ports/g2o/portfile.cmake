@@ -19,18 +19,22 @@ vcpkg_from_github(
     SHA512 22d3d546fbc92bff4767b66dcc9a001b5ed0cac0787874dda8712140aa03004b0312f702ea7d61c5fdcfa0bb00654c873f8b99899cd9e2b89667d8d99667d5cd
     HEAD_REF master
     PATCHES
+        dependencies.diff
         fix-absolute.patch
-        0003-dependency-spdlog.diff
         "${FIX_UPSTREAM_37d17a9}"
         "${FIX_UPSTREAM_100af05}"
 )
+file(REMOVE
+    "${SOURCE_PATH}/cmake_modules/FindBLAS.cmake"
+    "${SOURCE_PATH}/cmake_modules/FindCSparse.cmake"
+)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_LGPL_SHARED_LIBS)
-file(REMOVE "${SOURCE_PATH}/cmake_modules/FindBLAS.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         spdlog      G2O_USE_LOGGING
+        spdlog      VCPKG_LOCK_FIND_PACKAGE_spdlog
 )
 
 vcpkg_cmake_configure(
@@ -38,32 +42,36 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_LGPL_SHARED_LIBS=${BUILD_LGPL_SHARED_LIBS}
-        -DG2O_BUILD_EXAMPLES=OFF
         -DG2O_BUILD_APPS=OFF
-        -DBUILD_CSPARSE=OFF
+        -DG2O_BUILD_EXAMPLES=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_QGLViewer=OFF
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_spdlog
 )
-
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/g2o")
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/g2o)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB_RECURSE HEADERS "${CURRENT_PACKAGES_DIR}/include/*")
-    foreach(HEADER ${HEADERS})
-        file(READ ${HEADER} HEADER_CONTENTS)
-        string(REPLACE "#ifdef G2O_SHARED_LIBS" "#if 1" HEADER_CONTENTS "${HEADER_CONTENTS}")
-        file(WRITE ${HEADER} "${HEADER_CONTENTS}")
+    foreach(HEADER IN LISTS HEADERS)
+        vcpkg_replace_string("${HEADER}" "#ifdef G2O_SHARED_LIBS" "#if 1" IGNORE_UNCHANGED)
     endforeach()
 endif()
 
-file(GLOB EXE "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-file(GLOB DEBUG_EXE "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-if(EXE OR DEBUG_EXE)
-    file(REMOVE ${EXE} ${DEBUG_EXE})
-endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/doc/license-bsd.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(READ "${SOURCE_PATH}/README.md" readme)
+string(REGEX REPLACE "^.*## License" "" readme "${readme}")
+string(REGEX REPLACE "\n##.*" "" readme "${readme}")
+string(STRIP "${readme}" readme)
+set(ceres_license "${CURRENT_PACKAGES_DIR}/include/g2o/autodiff/Ceres Solver in autodiff")
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/g2o/autodiff/LICENSE" "${ceres_license}")
+vcpkg_install_copyright(
+    COMMENT "${readme}"
+    FILE_LIST
+        "${SOURCE_PATH}/doc/license-bsd.txt"
+        "${ceres_license}"
+        "${SOURCE_PATH}/doc/license-lgpl.txt"
+)
+file(REMOVE "${ceres_license}")

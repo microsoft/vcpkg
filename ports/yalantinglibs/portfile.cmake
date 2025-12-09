@@ -3,11 +3,15 @@ set(VCPKG_BUILD_TYPE release)  # header-only
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alibaba/yalantinglibs
-    REF ${VERSION} 
-    SHA512 417e0817941d9446d5746771fcf4a4a20bd0bc58bea75926a177b702cd9b80e02a4851f8523bd086d7164955fc7306f4c084d601c3d65d3e8dede49414ea9283
+    REF "${VERSION}"
+    SHA512 b63de698b92470b9442b459ac90a6dc59b811532cc2fc90d58da13e30c57dda86f5733c0d12d7a287cb1c943e47490bc67944e4e8922f9087b1efccaff827c3f
     HEAD_REF main
+    PATCHES
+        use-external-libs.patch
 )
 
+# Remove the vendored iguana and cinatra sources
+file(REMOVE_RECURSE "${SOURCE_PATH}/include/ylt/standalone")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -16,6 +20,7 @@ vcpkg_cmake_configure(
       -DBUILD_EXAMPLES=OFF
       -DBUILD_UNIT_TESTS=OFF
       -DINSTALL_THIRDPARTY=OFF
+      -DINSTALL_STANDALONE=OFF
 )
 
 vcpkg_cmake_install()

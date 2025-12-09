@@ -1,5 +1,5 @@
---- a/cspice/src/cspice/fio.h	2019-11-01 20:51:53.198400000 +0300
-+++ b/cspice/src/cspice/fio.h	2019-11-01 21:19:58.123200000 +0300
+--- a/src/cspice/fio.h	2019-11-01 20:51:53.198400000 +0300
++++ b/src/cspice/fio.h	2019-11-01 21:19:58.123200000 +0300
 @@ -1,3 +1,6 @@
 +#ifdef _WIN32
 +#include <io.h> /* for isatty() */

@@ -1,10 +1,11 @@
 {
   "name": "netcdf-c",
-  "version": "4.8.1",
-  "port-version": 6,
+  "version": "4.9.3",
   "description": "A set of self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.",
   "homepage": "https://github.com/Unidata/netcdf-c",
+  "license": null,
   "dependencies": [
+    "tinyxml2",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,20 +13,23 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ],
   "default-features": [
     "dap",
     {
-      "name": "hdf5",
-      "platform": "!uwp & !(arm64 & windows)"
+      "name": "nczarr",
+      "platform": "!uwp"
     },
-    "nczarr",
-    "netcdf-4"
+    {
+      "name": "netcdf-4",
+      "platform": "!uwp"
+    }
   ],
   "features": {
     "dap": {
-      "description": "Build with DAP remote access client support",
+      "description": "DAP remote access client support",
       "dependencies": [
         {
           "name": "curl",
@@ -33,31 +37,8 @@
         }
       ]
     },
-    "hdf5": {
-      "description": "Build with HDF5 support",
-      "dependencies": [
-        {
-          "name": "hdf5",
-          "default-features": false,
-          "features": [
-            "zlib"
-          ]
-        },
-        {
-          "name": "netcdf-c",
-          "default-features": false,
-          "features": [
-            "netcdf-4"
-          ]
-        },
-        {
-          "name": "vcpkg-pkgconfig-get-modules",
-          "host": true
-        }
-      ]
-    },
     "nczarr": {
-      "description": "Build with NCZarr cloud storage access support",
+      "description": "NCZarr cloud storage access support",
       "dependencies": [
         {
           "name": "curl",
@@ -73,7 +54,7 @@
       ]
     },
     "nczarr-zip": {
-      "description": "Build with NCZarr ZIP support",
+      "description": "NCZarr ZIP support",
       "dependencies": [
         {
           "name": "libzip",
@@ -89,10 +70,56 @@
       ]
     },
     "netcdf-4": {
-      "description": "Build with netCDF-4 support"
+      "description": "netCDF-4 support",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "default-features": false,
+          "features": [
+            "zlib"
+          ]
+        }
+      ]
+    },
+    "plugins": {
+      "description": "Enable plugin support",
+      "supports": "!static & !uwp",
+      "dependencies": [
+        {
+          "name": "bzip2",
+          "default-features": false
+        },
+        "zlib"
+      ]
+    },
+    "szip": {
+      "description": "Szip compression plugin",
+      "dependencies": [
+        "libaec",
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "plugins"
+          ]
+        }
+      ]
     },
     "tools": {
       "description": "Build utilities"
+    },
+    "zstd": {
+      "description": "Zstandard compression plugin",
+      "dependencies": [
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "plugins"
+          ]
+        },
+        "zstd"
+      ]
     }
   }
 }
