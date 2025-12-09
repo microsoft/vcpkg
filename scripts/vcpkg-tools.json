@@ -4,20 +4,40 @@
     {
       "name": "python3",
       "os": "windows",
-      "version": "3.12.7",
+      "version": "3.14.2",
       "executable": "python.exe",
-      "url": "https://www.python.org/ftp/python/3.12.7/python-3.12.7-embed-win32.zip",
-      "sha512": "15542080e0cc25c574391218107fe843006e8c5a7161d1cd48cf14a3c47155c0244587273d9c747f35b15ea17676869ecce079214824214c1a62abfc86ad9f9b",
-      "archive": "python-3.12.7-embed-win32.zip"
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-win32.zip",
+      "sha512": "05703133a3371493ccd3552dd12db6385cbb1a34874056c8a3f26dda6b813bf2bd535549c30aa4c0827287d9c4ff3250a49330282ad8535a06937b016d483010",
+      "archive": "python-3.14.2-embed-win32.zip"
+    },
+    {
+      "name": "python3",
+      "os": "windows",
+      "arch": "amd64",
+      "version": "3.14.2",
+      "executable": "python.exe",
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-amd64.zip",
+      "sha512": "d72d4f036c4dd563c4ac15c7162bf63406d3fd83a44877300ff87e4168f211d66b8209fdd3ad39ea549b8bc46c092b4ecab3b24b0da2f8950e0e5642828e99f2",
+      "archive": "python-3.14.2-embed-amd64.zip"
+    },
+    {
+      "name": "python3",
+      "os": "windows",
+      "arch": "arm64",
+      "version": "3.14.2",
+      "executable": "python.exe",
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-arm64.zip",
+      "sha512": "410c785d1bc8f3d1352e5386e53ab0aef39e1212680e2e05daad5672dcc749ccfab96e204c84b3c1e9544002088e1412ca733b1a86ca4cc920549c41774f6c58",
+      "archive": "python-3.14.2-embed-arm64.zip"
     },
     {
       "name": "python3_with_venv",
       "os": "windows",
-      "version": "3.12.7",
+      "version": "3.14.2",
       "executable": "tools/python.exe",
-      "url": "https://www.nuget.org/api/v2/package/python/3.12.7",
-      "sha512": "6d5cac329808e31d4d8d593da6eeaa9ea4ec0296679335e7b7811f6c6fa6cbb96948d2f7845071798c6f73f83852dd731dc2b0fda48c520b9bec8a86cc56134e",
-      "archive": "python-3.12.7.nupkg.zip"
+      "url": "https://www.nuget.org/api/v2/package/python/3.14.2",
+      "sha512": "42ac4b553aecea8ee751998de5c08e8af40c06c0594685b02d7b77679017b7c7559c9236332913dea1d0783edee06e4cf1f793149cecbd515e7624f974065272",
+      "archive": "python-3.14.2.nupkg.zip"
     },
     {
       "name": "cmake",
@@ -168,56 +188,56 @@
     {
       "name": "coscli",
       "os": "windows",
-      "version": "1.0.3",
+      "version": "1.0.7",
       "arch": "amd64",
-      "executable": "coscli-v1.0.3-windows-amd64.exe",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-windows-amd64.exe",
-      "sha512": "909b1c48e3c0dc0c3a4bd32d865db914307f65d6266c4f9025a4a6aea1e75b817581b8257633e74b3cab86b4f2e343d049a9ce65ceaf6b85dacdd55afd74d183"
+      "executable": "coscli-v1.0.7-windows-amd64.exe",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.7/coscli-v1.0.7-windows-amd64.exe",
+      "sha512": "89b94f9b5b2b33bc367972d0c025028e2b08e96a76bd50e49f479068425a3c4e4e497b678730d597625c39ac3d01e598a45ae9b7f5d120d0b58823b18b2c3ae8"
     },
     {
       "name": "coscli",
       "os": "linux",
-      "version": "1.0.3",
+      "version": "1.0.7",
       "arch": "arm",
-      "executable": "coscli-v1.0.3-linux-arm",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-linux-arm",
-      "sha512": "28f43cc678665b87da19a26838037552638aea96b541171f0e5f71eb3098fff3b2325f96c81532fb102dcb09f8bbd707b8d269d14879a4404b2b31336ced15f7"
+      "executable": "coscli-v1.0.7-linux-arm",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.7/coscli-v1.0.7-linux-arm",
+      "sha512": "c593690f74014f4b5443ef2cb579f050dd86dc40784219933daeda5e5b0b8c010dcea7dc573ad661c9edf20a6e1ae86e0f2d933e879b03a2006fded3440a6084"
     },
     {
       "name": "coscli",
       "os": "linux",
-      "version": "1.0.3",
+      "version": "1.0.7",
       "arch": "arm64",
-      "executable": "coscli-v1.0.3-linux-arm64",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-linux-arm64",
-      "sha512": "c277b8b921df9459045c7a9d4faefa8a86df93d75ab58f228ca168175226d58adeb9b78af2aac0638feb2232c0fa5d5f24bf4a76f7bd2822a9f21662b23fa3d6"
+      "executable": "coscli-v1.0.7-linux-arm64",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.7/coscli-v1.0.7-linux-arm64",
+      "sha512": "4a99cc57bd69c7bfe27357cfdb8856378ed3e4f7fc73bad9d35faa5729c851f0e668f06845e94b39bce3202bec00be4ba30e4f84777c963480583574887d5774"
     },
     {
       "name": "coscli",
       "os": "linux",
-      "version": "1.0.3",
+      "version": "1.0.7",
       "arch": "amd64",
-      "executable": "coscli-v1.0.3-linux-amd64",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-linux-amd64",
-      "sha512": "6c55a2b6e00afcc3cd3d724c50f8b07ab8b54b7d04f0e2a55f2b82a8735504422132431c4a70b152b94d7f02f9c03cea25f98013f884f099ba2bfd414ed9521a"
+      "executable": "coscli-v1.0.7-linux-amd64",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.7/coscli-v1.0.7-linux-amd64",
+      "sha512": "39ce8ebaac4e141d65077e806cfd586750c7a8639aef4007675954017cb3feb20ef5885e37fc9f05e035fc90d9987b849062bbe1951eeb3d3ffeb83b3668110b"
     },
     {
       "name": "coscli",
       "os": "osx",
-      "version": "1.0.3",
+      "version": "1.0.7",
       "arch": "arm64",
-      "executable": "coscli-v1.0.3-darwin-arm64",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-darwin-arm64",
-      "sha512": "c91b2665682969e389b3c70c663eb694024b2f7ed68e059d2b9f44000259f6c6466cc33667b8557a2999b2d2ed912b405f997420c56df6dea50576368b1b8536"
+      "executable": "coscli-v1.0.7-darwin-arm64",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.7/coscli-v1.0.7-darwin-arm64",
+      "sha512": "fa53e0328beae0a971b14e86769d903bb0bf1c7057ccd575b92645720762dcef7b9140ec5760d78aac1bd863b56b1e0488d7b349f6704c9b20bb83a286a37d88"
     },
     {
       "name": "coscli",
       "os": "osx",
-      "version": "1.0.3",
+      "version": "1.0.7",
       "arch": "amd64",
-      "executable": "coscli-v1.0.3-darwin-amd64",
-      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.3/coscli-v1.0.3-darwin-amd64",
-      "sha512": "aaa7fe9e71ef46246d08a59777898ea59a4ca6261ca9139e02ed2ebdc026295fa8d24d48cda2973c05fefe82379ad007196e08973dde6ce36c816df1dcfead2e"
+      "executable": "coscli-v1.0.7-darwin-amd64",
+      "url": "https://github.com/tencentyun/coscli/releases/download/v1.0.7/coscli-v1.0.7-darwin-amd64",
+      "sha512": "33939376e2ea3b83a84ca345b1f994100014da26a2827dada887803ae84de5d28a7fe22ee2c608e977d9dbc9a762e2b1e2a23228778ed185e43555b570b08abd"
     },
     {
       "name": "7zip_msi",
@@ -297,11 +317,22 @@
     {
       "name": "powershell-core",
       "os": "windows",
-      "version": "7.5.3",
+      "arch":"x64",
+      "version": "7.5.4",
       "executable": "pwsh.exe",
-      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.3/PowerShell-7.5.3-win-x64.zip",
-      "sha512": "3ccac854b8764423d9da5ffd680f8a9d68f37bcac703d17afba89109433d383fbbc5fd55a8b80d406f0f5e8b76836edeb148621fd3b99a5aca549c8938b8c578",
-      "archive": "PowerShell-7.5.3-win-x64.zip"
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-x64.zip",
+      "sha512": "fb5af273bd5fe7293dbf34a9476a74a9d3ffbaaf5dcc47d986ba69a716f3c77b8285f94c15cfcb9ff764fa210c359e8721d1c9d46dc4394143a4206863bb3cf4",
+      "archive": "PowerShell-7.5.4-win-x64.zip"
+    },
+    {
+      "name": "powershell-core",
+      "os": "windows",
+      "arch":"arm64",
+      "version": "7.5.4",
+      "executable": "pwsh.exe",
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-arm64.zip",
+      "sha512": "5cdc32ecfe5a9fee17194c136a076876e6ebf255004e8890535beefbbaa0d38867712a7a65fc33717fc2a599a1c8a070d8c947d773289e4e0cfa8e4c9927501f",
+      "archive": "PowerShell-7.5.4-win-arm64.zip"
     },
     {
       "name": "node",
