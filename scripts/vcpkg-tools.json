@@ -164,26 +164,26 @@
     {
       "name": "nuget",
       "os": "windows",
-      "version": "6.10.0",
+      "version": "7.0.1",
       "executable": "nuget.exe",
-      "url": "https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe",
-      "sha512": "71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf"
+      "url": "https://dist.nuget.org/win-x86-commandline/v7.0.1/nuget.exe",
+      "sha512": "ef1d4af5d0efceee529de9aeb7a2da6e18a330b148f61b63cf367b150f68b06380a1500e2b144d1e82b1a0227399df448c9c60c6ef10a1fa928af4a52299d51d"
     },
     {
       "name": "nuget",
       "os": "linux",
-      "version": "6.10.0",
+      "version": "7.0.1",
       "executable": "nuget.exe",
-      "url": "https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe",
-      "sha512": "71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf"
+      "url": "https://dist.nuget.org/win-x86-commandline/v7.0.1/nuget.exe",
+      "sha512": "ef1d4af5d0efceee529de9aeb7a2da6e18a330b148f61b63cf367b150f68b06380a1500e2b144d1e82b1a0227399df448c9c60c6ef10a1fa928af4a52299d51d"
     },
     {
       "name": "nuget",
       "os": "osx",
-      "version": "6.10.0",
+      "version": "7.0.1",
       "executable": "nuget.exe",
-      "url": "https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe",
-      "sha512": "71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf"
+      "url": "https://dist.nuget.org/win-x86-commandline/v7.0.1/nuget.exe",
+      "sha512": "ef1d4af5d0efceee529de9aeb7a2da6e18a330b148f61b63cf367b150f68b06380a1500e2b144d1e82b1a0227399df448c9c60c6ef10a1fa928af4a52299d51d"
     },
     {
       "name": "coscli",
