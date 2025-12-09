@@ -1,7 +1,7 @@
 {
   "name": "openctm",
   "version": "1.0.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "OpenCTM — the Open Compressed Triangle Mesh file format — is a file format, a software library and a tool set for compression of 3D triangle meshes.",
   "homepage": "https://openctm.sourceforge.net/",
   "license": "Zlib",

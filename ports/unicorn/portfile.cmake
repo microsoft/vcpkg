@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO unicorn-engine/unicorn
     REF "${VERSION}"
-    SHA512 49aa53cd981e88857cf579010e3e86a6808fbfc9723fbf73c3d5bcebf945c5d78ffcdf426a4bbcd06b13337a3a0ce76bce8815497e3521023ae432a053d3e4bb
+    SHA512 c9ae4230a20b77e0187cde33dbf4827b3504b6c24debd61fc79ec9c13fa2051335c834c101433cebbbc8e3baadae56212b79c5922bf37ea1f777d66d8e67b495
     HEAD_REF master
     PATCHES
         fix-build.patch

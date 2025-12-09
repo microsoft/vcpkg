@@ -1,12 +1,12 @@
 {
   "name": "vulkan-validationlayers",
-  "version": "1.4.309.0",
+  "version": "1.4.328.0",
   "description": "Vulkan Validation Layers (VVL)",
   "homepage": "https://github.com/KhronosGroup/Vulkan-ValidationLayers",
   "license": null,
   "dependencies": [
     "mimalloc",
-    "robin-hood-hashing",
+    "parallel-hashmap",
     "spirv-cross",
     "spirv-headers",
     "spirv-reflect",

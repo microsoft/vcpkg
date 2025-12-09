@@ -1,10 +1,11 @@
 {
   "name": "duckdb",
-  "version": "1.2.2",
+  "version": "1.4.2",
+  "port-version": 1,
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
-  "license": "MIT",
-  "supports": "!(uwp | android | (windows & arm64))",
+  "license": null,
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -23,13 +24,30 @@
       "description": "Statically link the excel extension into DuckDB",
       "dependencies": [
         "expat",
-        "minizip-ng"
+        {
+          "name": "minizip-ng",
+          "default-features": false
+        }
       ]
     },
     "httpfs": {
       "description": "Statically link the httpfs extension into DuckDB",
       "dependencies": [
-        "openssl"
+        {
+          "name": "curl",
+          "default-features": false
+        },
+        "openssl",
+        {
+          "name": "zlib",
+          "platform": "mingw"
+        }
+      ]
+    },
+    "iceberg": {
+      "description": "Statically link the iceberg extension into DuckDB",
+      "dependencies": [
+        "roaring"
       ]
     },
     "icu": {

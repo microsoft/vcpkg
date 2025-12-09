@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
     REF "n${VERSION}"
-    SHA512 6b9a5ee501be41d6abc7579a106263b31f787321cbc45dedee97abf992bf8236cdb2394571dd256a74154f4a20018d429ae7e7f0409611ddc4d6f529d924d175
+    SHA512 8411c45f71d2d61184b11e2a786137044a80d9b979a7e2e8513efc5e716b3360bff4533a13875dd4bca492b97b97f0384f7fb4f3d796802e81981b0857d18a2b
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -17,6 +17,7 @@ vcpkg_from_github(
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0041-add-const-for-opengl-definition.patch
         0043-fix-miss-head.patch
+        0044-fix-vulkan-debug-callback-abi.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -437,10 +438,6 @@ else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
         string(APPEND OPTIONS " --enable-schannel")
-    elseif(VCPKG_TARGET_IS_OSX)
-        string(APPEND OPTIONS " --enable-securetransport")
-    elseif(VCPKG_TARGET_IS_IOS)
-        string(APPEND OPTIONS " --enable-securetransport")
     endif()
 endif()
 
@@ -526,6 +523,12 @@ else()
     set(WITH_VPX OFF)
 endif()
 
+if("vulkan" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-vulkan")
+else()
+    set(OPTIONS "${OPTIONS} --disable-vulkan")
+endif()
+
 if("webp" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libwebp")
     set(WITH_WEBP ON)
@@ -578,6 +581,14 @@ if ("qsv" IN_LIST FEATURES)
 else()
     set(OPTIONS "${OPTIONS} --disable-libmfx")
     set(WITH_MFX OFF)
+endif()
+
+if ("vaapi" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-vaapi")
+    set(WITH_VAAPI ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-vaapi")
+    set(WITH_VAAPI OFF)
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")

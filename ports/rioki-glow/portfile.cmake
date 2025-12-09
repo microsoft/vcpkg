@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO rioki/glow
     REF v0.2.1
     SHA512 410d0bcc98f9587321dceab498ed84fe2cffbf1f38ba59592d5f7eded9eea67c17e40415966d14f548b7e91f23e17fc0162c216c34b905c641647f90274af5b1
+    PATCHES
+        add-iostream.diff # https://github.com/rioki/glow/pull/21
 )
 
 vcpkg_cmake_configure(

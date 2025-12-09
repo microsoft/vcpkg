@@ -85,6 +85,19 @@ $buildtreesRoot = Join-Path $WorkingRoot 'b'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'p'
 
+$env:AZCOPY_LOG_LOCATION = Join-Path $WorkingRoot 'azcopy-logs'
+$env:AZCOPY_JOB_PLAN_LOCATION = Join-Path $WorkingRoot 'azcopy-plans'
+if ($Triplet -eq 'x64-osx') {
+    $env:AZCOPY_BUFFER_GB = 2
+    $env:AZCOPY_CONCURRENCY_VALUE = 8
+}
+if (!(Test-Path $env:AZCOPY_LOG_LOCATION))
+{
+    New-Item -ItemType Directory -Path $env:AZCOPY_LOG_LOCATION | Out-Null
+}
+Write-Host "AzCopy logs location: $env:AZCOPY_LOG_LOCATION"
+Write-Host "##vso[task.setvariable variable=AZCOPY_LOGS_EMPTY]$true"
+
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
@@ -146,10 +159,12 @@ if ($testFeatures) {
     $failingAbiLogArg = "--failing-abi-log=$knownFailingAbisFile"
     & $vcpkgExe x-test-features --for-merge-with origin/master $tripletArg $failureLogsArg $ciBaselineArg $failingAbiLogArg $ciFeatureBaselineArg @commonArgs @cachingArgs
     $lastLastExitCode = $LASTEXITCODE
+    $azcopyLogsEmpty = ((Get-ChildItem $env:AZCOPY_LOG_LOCATION).Count -eq 0)
+    Write-Host "##vso[task.setvariable variable=AZCOPY_LOGS_EMPTY]$azcopyLogsEmpty"
     if ($lastLastExitCode -ne 0)
     {
         Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$false"
-        Write-Error "vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. Check for failure logs attached to the run in Azure Pipelines."
+        Write-Host "##vso[task.logissue type=error]vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. See https://github.com/microsoft/vcpkg/discussions/31357 for how to access AZP failure logs."
         exit $lastLastExitCode
     }
 
@@ -166,6 +181,13 @@ if ($lastLastExitCode -ne 0)
 {
     Write-Error "vcpkg x-ci-clean failed. This is usually an infrastructure problem; trying again may help."
     exit $lastLastExitCode
+}
+
+if ($IsMacOS)
+{
+    Write-Host "macOS disk space report:"
+    & df -h | Where-Object { $_ -match "Avail|/System/Volumes/Data$" }
+    & du -sh $WorkingRoot
 }
 
 $parentHashesArgs = @()
@@ -222,15 +244,36 @@ if ($AllowUnexpectedPassing) {
 Add-ToolchainToTestCMake
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 $xunitArg = "--x-xunit=$xunitFile"
-& $vcpkgExe ci $tripletArg $failureLogsArg $xunitArg $ciBaselineArg @commonArgs @cachingArgs @parentHashesArgs @skipFailuresArgs @knownFailuresFromArgs @allowUnexpectedPassingArgs
+$prHashesFile = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
+& $vcpkgExe ci `
+    $tripletArg `
+    $failureLogsArg `
+    "--output-hashes=$prHashesFile" `
+    $xunitArg `
+    $ciBaselineArg `
+    @commonArgs `
+    @cachingArgs `
+    @parentHashesArgs `
+    @skipFailuresArgs `
+    @knownFailuresFromArgs `
+    @allowUnexpectedPassingArgs
 $lastLastExitCode = $LASTEXITCODE
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
+$azcopyLogsEmpty = ((Get-ChildItem $env:AZCOPY_LOG_LOCATION).Count -eq 0)
+Write-Host "##vso[task.setvariable variable=AZCOPY_LOGS_EMPTY]$azcopyLogsEmpty"
 Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
 
 if ($lastLastExitCode -ne 0)
 {
-    Write-Error "vcpkg ci testing failed; this is usually a bug in a port. Check for failure logs attached to the run in Azure Pipelines."
+    if (-Not $failureLogsEmpty)
+    {
+        Write-Host "##vso[task.logissue type=error]vcpkg ci testing failed; this is usually a bug in a port. See https://github.com/microsoft/vcpkg/discussions/31357 for how to access AZP failure logs."
+    }
+    else
+    {
+        Write-Host "##vso[task.logissue type=error]vcpkg ci testing failed, but no build failure logs were created for this error."
+    }
 }
 
 exit $lastLastExitCode
