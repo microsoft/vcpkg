@@ -4481,7 +4481,7 @@
       "port-version": 0
     },
     "laszip": {
-      "baseline": "3.4.4",
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "launch-darkly-server": {
