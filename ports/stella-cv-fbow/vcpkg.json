@@ -4,7 +4,6 @@
   "description": "This is a modified version of the original Fast Bag of Words by @rmsalinas.",
   "homepage": "https://github.com/stella-cv/FBoW",
   "license": "MIT",
-  "supports": "!(arm64 & windows)",
   "dependencies": [
     {
       "name": "opencv4",
