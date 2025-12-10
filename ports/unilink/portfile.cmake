@@ -8,7 +8,9 @@
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-            -DUNILINK_BUILD_TESTS=OFF    
+        -DUNILINK_BUILD_TESTS=OFF
+        -DUNILINK_BUILD_EXAMPLES=OFF
+        -DUNILINK_BUILD_DOCS=OFF 
 )
 
 vcpkg_cmake_install()
