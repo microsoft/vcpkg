@@ -568,7 +568,6 @@ openmpi:arm-neon-android=fail
 openmpi:arm64-android=fail
 openmpi:x64-android=fail
 openmvg:arm64-windows-static-md=fail
-openmvg:arm64-windows=fail
 openmvs:arm64-windows-static-md=fail # no _M_ARM64 detection
 # MSVC is not supported
 openslide:x64-windows-release=fail
