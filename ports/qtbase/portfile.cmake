@@ -614,5 +614,5 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_CROSSCOMPILING)
-  configure_file("${CURRENT_INSTALLED_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_INSTALLED_DIR}/share/Qt6/vcpkg-cmake-wrapper.cmake" @ONLY)
+  configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_INSTALLED_DIR}/share/Qt6/vcpkg-cmake-wrapper.cmake" @ONLY)
 endif()
