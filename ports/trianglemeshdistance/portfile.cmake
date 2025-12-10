@@ -1,10 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InteractiveComputerGraphics/TriangleMeshDistance
-    REF 2cb643de1436e1ba8e2be49b07ec5491ac604457 # 2024-08-17
-    SHA512 92a9e7c6e09c9184a3762ae7bb89ffae1ebe0ceead8fe5853cb809ec19c516ce4b3c2fcb3ecc5c2927e3578ebd548b571085527209ea0d58934440f932b554b0
+    REF 566c9486533082fe7d9a3ffae15799bc5c125528 # 2025-12-05
+    SHA512 642bac995d6c42f9a898929cbdbbbe99f19eb2c1e5c067bad9b883d788be4797075062277fd7b0b510767888b2412f7a212039e68f8fd0982f36c019f0cb43aa
     PATCHES
-        cmake-export.patch
+        remove-tests.patch
 )
 
 vcpkg_cmake_configure(

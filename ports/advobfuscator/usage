@@ -1,0 +1,4 @@
+advobfuscator provides CMake targets:
+
+  find_package(advobfuscator CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE advobfuscator::advobfuscator)
