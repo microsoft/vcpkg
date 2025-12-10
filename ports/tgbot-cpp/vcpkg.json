@@ -5,6 +5,7 @@
   "description": "C++ library for Telegram bot API.",
   "homepage": "https://github.com/reo7sp/tgbot-cpp",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "boost-algorithm",
     "boost-asio",
