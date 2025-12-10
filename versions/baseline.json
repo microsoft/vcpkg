@@ -9222,7 +9222,7 @@
     },
     "solid3": {
       "baseline": "3.5.8",
-      "port-version": 2
+      "port-version": 3
     },
     "sophus": {
       "baseline": "1.24.6-r1",
