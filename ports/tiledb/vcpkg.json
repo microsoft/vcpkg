@@ -29,9 +29,6 @@
     "zlib",
     "zstd"
   ],
-  "default-features": [
-    "webp"
-  ],
   "features": {
     "azure": {
       "description": "Support Azure Blob Storage",
