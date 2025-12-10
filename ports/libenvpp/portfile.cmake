@@ -1,5 +1,10 @@
 vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
 
+# No DLL export(yet)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ph3at/libenvpp
