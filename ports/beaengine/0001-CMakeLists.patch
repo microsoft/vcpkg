@@ -1,0 +1,211 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ca8b756..7c80840 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,9 +1,7 @@
+ project (BeaEngine)
+-cmake_minimum_required (VERSION 2.6)
++cmake_minimum_required (VERSION 3.15)
+ 
+-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+-
+-set (CMAKE_VERBOSE_MAKEFILE ON)
++cmake_policy(SET CMP0091 NEW)
+ 
+ option (optHAS_OPTIMIZED "Turn Optimizations ON"    OFF)
+ option (optHAS_SYMBOLS   "Build with debug Symbols" ON)
+@@ -13,61 +11,36 @@ option (optBUILD_STDCALL "Build using stdcall"      OFF)
+ option (optBUILD_LITE	 "Build without text disassembly"      OFF)
+ option (USE_CLANG "build application with clang" OFF)
+ 
+-if (optHAS_OPTIMIZED)
+-  if (optHAS_SYMBOLS)
+-    set (CMAKE_BUILD_TYPE RelWithDebInfo)
+-  else (optHAS_SYMBOLS)
+-    set (CMAKE_BUILD_TYPE Release)
+-  endif (optHAS_SYMBOLS)
+-else (optHAS_OPTIMIZED)
+-  if (optHAS_SYMBOLS)
+-    set (CMAKE_BUILD_TYPE Debug)
+-  else (optHAS_SYMBOLS)
+-    set (CMAKE_BUILD_TYPE Debug)
+-  endif (optHAS_SYMBOLS)
+-endif (optHAS_OPTIMIZED)
+ 
+ # determine BEA_COMPILER
+ if (NOT BEA_COMPILER)
+-  if (${CMAKE_SYSTEM_NAME} STREQUAL Linux)
+-    if (WATCOM)
+-      set (BEA_COMPILER watcom)
+-    else ()
+-      if (USE_CLANG)
+-        set (BEA_COMPILER clang)
+-      else ()
+-        set (BEA_COMPILER gnu)
++  if (USE_CLANG)
++    set(BEA_COMPILER clang)
++  else()
++    if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
++      set(BEA_COMPILER gnu)
++    elseif (CMAKE_C_COMPILER_ID STREQUAL "Clang")
++      set(BEA_COMPILER clang)
++    elseif (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
++      set(BEA_COMPILER msvc)
++    elseif (CMAKE_C_COMPILER_ID MATCHES "Intel")
++      set(BEA_COMPILER intel)
++    elseif (CMAKE_C_COMPILER_ID MATCHES "SunPro")
++      set(BEA_COMPILER suncc)
++    elseif (CMAKE_C_COMPILER_ID MATCHES "Watcom")
++      set(BEA_COMPILER watcom)
++    else()
++      if (BORLAND)
++        set(BEA_COMPILER borland)
++      elseif (MINGW OR MSYS OR CYGWIN)
++        set(BEA_COMPILER gnu)
++      else()
++        message(WARNING "Unknown compiler ID '${CMAKE_C_COMPILER_ID}'. Defaulting to 'gnu'. Set BEA_COMPILER manually if this is incorrect.")
++        set(BEA_COMPILER gnu)
+       endif()
+-    endif ()
+-  endif ()
+-  if (${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+-    set (BEA_COMPILER gnu)
+-  endif ()
+-  if (${CMAKE_SYSTEM_NAME} STREQUAL SunOS)
+-    set (BEA_COMPILER suncc)
+-  endif ()
+-  if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)
+-    if (MINGW OR MSYS)
+-      set (BEA_COMPILER gnu)
+-    else ()
+-      if (CYGWIN)
+-	set (BEA_COMPILER gnu)
+-      else ()
+-	if (BORLAND)
+-	  set (BEA_COMPILER borland)
+-	else ()
+-	  if (MSVC)
+-	    set (BEA_COMPILER msvc)
+-	  else ()
+-	    if (WATCOM)
+-	      set (BEA_COMPILER watcom)
+-	    endif ()
+-	  endif ()
+-	endif ()
+-      endif ()
+-    endif ()
+-  endif ()
+-endif ()
++    endif()
++  endif()
++endif()
+ # =========================================
+ # clang configuration
+ # =========================================
+@@ -140,9 +113,6 @@ if (BEA_COMPILER STREQUAL msvc)
+ 
+   if (optHAS_OPTIMIZED)
+     list (APPEND BEA_FLAGS /O2)
+-    list (APPEND BEA_DEFINITIONS "/DNDEBUG")
+-  else ()
+-    list (APPEND BEA_DEFINITIONS "/D_DEBUG")
+   endif ()
+ 
+   #generate PDB for Debug/RelWithDebInfo builds
+@@ -152,20 +122,36 @@ if (BEA_COMPILER STREQUAL msvc)
+     endif ()
+   endif ()
+ 
+-  # determine code generation model
+-  if (optHAS_OPTIMIZED)
+-    if (optBUILD_DLL)
+-      list (APPEND BEA_FLAGS /MD)
+-    else ()
+-      list (APPEND BEA_FLAGS /MT)
+-    endif ()
+-  else ()
+-    if (optBUILD_DLL)
+-      list (APPEND BEA_FLAGS /MDd)
+-    else ()
+-      list (APPEND BEA_FLAGS /MTd)
+-    endif ()
+-  endif ()
++  # Determine CRT linkage model
++  # First check if CMAKE_MSVC_RUNTIME_LIBRARY is set (CMake 3.15+)
++  if (DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
++    if (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreaded")
++      list(APPEND BEA_FLAGS /MT)
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDLL")
++      list(APPEND BEA_FLAGS /MD)
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebug")
++      list(APPEND BEA_FLAGS /MTd)
++    elseif (CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebugDLL")
++      list(APPEND BEA_FLAGS /MDd)
++    endif()
++  else()
++    # Fallback based on build configuration options
++    if (optHAS_OPTIMIZED)
++      if (optBUILD_DLL)
++        list(APPEND BEA_FLAGS /MD)
++      else()
++        list(APPEND BEA_FLAGS /MT)
++      endif()
++    else()
++      if (optBUILD_DLL)
++        list(APPEND BEA_FLAGS /MDd)
++      else()
++        list(APPEND BEA_FLAGS /MTd)
++      endif()
++    endif()
++  endif()
++  
++  message(STATUS "BeaEngine MSVC: optHAS_OPTIMIZED=${optHAS_OPTIMIZED}, optBUILD_DLL=${optBUILD_DLL}, CMAKE_MSVC_RUNTIME_LIBRARY=${CMAKE_MSVC_RUNTIME_LIBRARY}")
+ endif ()
+ # =========================================
+ # Intel Compiler configuration
+@@ -308,6 +294,18 @@ endforeach ()
+ # pass compiler flags to cmake
+ # ================================================
+ 
++# For MSVC, remove default runtime flags that CMake adds automatically
++if (MSVC)
++  foreach(flag_var
++      CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
++      CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
++      CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
++      CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
++    # Remove any existing /MD, /MT, /MDd, /MTd flags
++    string(REGEX REPLACE "/M[DT]d?" "" ${flag_var} "${${flag_var}}")
++  endforeach()
++endif()
++
+ if (${CMAKE_BUILD_TYPE} STREQUAL RelWithDebInfo)
+   set (CMAKE_C_FLAGS_RELWITHDEBINFO   ${myC_FLAGS})
+   set (CMAKE_CXX_FLAGS_RELWITHDEBINFO ${myCXX_FLAGS})
+@@ -354,7 +352,7 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${myBIN_OUTPUT})
+ 
+ 
+ 
+-FIND_PACKAGE (ZLIB)
++find_package(ZLIB REQUIRED)
+ 
+ 
+ set (build_modules
+@@ -366,14 +364,14 @@ set (build_modules
+ if (NOT ZLIB_FOUND)
+   set (ZLIB_INCLUDE_DIR unittest/thirdparty/zlib)
+ else ()
+-  list (APPEND BEA_LIBS_PATH ${ZLIB_LIBRARIES})
++  list (APPEND BEA_LIBS_PATH ZLIB::ZLIB)
+ endif ()
+ 
+ 
+ add_definitions     (${BEA_DEFINITIONS})
+ include_directories (${BEA_SRC_ROOT}  ${BEA_INCLUDE_PATH}
+-                     ${CMAKE_SOURCE_DIR} ${ZLIB_INCLUDE_DIR})
+-link_directories    (${BEA_LIBS_PATH})
++                     ${CMAKE_SOURCE_DIR})
++link_libraries      (${BEA_LIBS_PATH})
+ 
+ 
+ set (BEA_TARGET "BeaEngine")
