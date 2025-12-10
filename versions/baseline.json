@@ -2361,8 +2361,8 @@
       "port-version": 0
     },
     "daw-utf-range": {
-      "baseline": "2.2.5",
-      "port-version": 1
+      "baseline": "2.2.6",
+      "port-version": 0
     },
     "dawn": {
       "baseline": "20250922.223923",
