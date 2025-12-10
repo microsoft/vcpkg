@@ -2533,7 +2533,7 @@
       "port-version": 0
     },
     "double-conversion": {
-      "baseline": "3.3.1",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "dp-thread-pool": {
