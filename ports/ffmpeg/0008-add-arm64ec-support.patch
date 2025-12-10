@@ -1,0 +1,77 @@
+diff --git a/compat/windows/makedef b/compat/windows/makedef
+index add8222d13..af42f08fd5 100755
+--- a/compat/windows/makedef
++++ b/compat/windows/makedef
+@@ -48,7 +48,13 @@ trap 'rm -f -- $libname' EXIT
+ if [ -n "$AR" ]; then
+     $AR rcs ${libname} $@ >/dev/null
+ else
+-    lib.exe -out:${libname} $@ >/dev/null
++    machine_flag=""
++    case "$LDFLAGS" in
++    *"machine:arm64ec"*)
++        machine_flag="-machine:arm64ec"
++        ;;
++    esac
++    lib.exe ${machine_flag} -out:${libname} $@ >/dev/null
+ fi
+ if [ $? != 0 ]; then
+     echo "Could not create temporary library." >&2
+@@ -106,12 +112,21 @@ if [ -n "$NM" ]; then
+               grep -v : |
+               grep -v ^$ |
+               cut -d' ' -f3 |
+-              sed -e "s/^${prefix}//")
++              sed -e "s/^${prefix}//" -e "s/^#//" |
++              grep -v '\$entry_thunk' |
++              grep -v '\$exit_thunk')
+ else
+-    dump=$(dumpbin.exe -linkermember:1 ${libname} |
+-              sed -e '/public symbols/,$!d' -e '/^ \{1,\}Summary/,$d' -e "s/ \{1,\}${prefix}/ /" -e 's/ \{1,\}/ /g' |
++    member=1
++    case "$LDFLAGS" in
++    *"machine:arm64ec"*)
++        member=32
++        ;;
++    esac
++    dump=$(dumpbin.exe -linkermember:${member} ${libname} |
++              sed -e '/public symbols/,$!d' -e '/^ \{1,\}Summary/,$d' -e 's/^[[:space:]]*[0-9A-Fa-f]\{1,\}[[:space:]]\{1,\}//' -e "s/^${prefix}//" -e 's/^#//' |
+               tail -n +2 |
+-              cut -d' ' -f3)
++              grep -v '\$entry_thunk' |
++              grep -v '\$exit_thunk')
+ fi
+ 
+ rm ${libname}
+diff --git a/configure b/configure
+index 98b582a5d5..589be1b1cf 100755
+--- a/configure
++++ b/configure
+@@ -4623,7 +4623,7 @@ case "$toolchain" in
+         nm_default="dumpbin.exe -symbols"
+         ar_default="lib.exe"
+         case "${arch:-$arch_default}" in
+-        aarch64|arm64)
++        aarch64|arm64|arm64ec)
+             as_default="armasm64.exe"
+             ;;
+         arm*)
+@@ -5250,7 +5250,7 @@ fi
+ 
+ # Deal with common $arch aliases
+ case "$arch" in
+-    aarch64|arm64)
++    aarch64|arm64|arm64ec)
+         arch="aarch64"
+     ;;
+     arm*|iPad*|iPhone*)
+@@ -5895,7 +5895,7 @@ case $target_os in
+         SLIBSUF=".dll"
+         SLIBNAME_WITH_VERSION='$(SLIBPREF)$(FULLNAME)-$(LIBVERSION)$(SLIBSUF)'
+         SLIBNAME_WITH_MAJOR='$(SLIBPREF)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)'
+-        SLIB_CREATE_DEF_CMD='EXTERN_PREFIX="$(EXTERN_PREFIX)" $(SRC_PATH)/compat/windows/makedef $(SUBDIR)lib$(NAME).ver $(OBJS) > $$(@:$(SLIBSUF)=.def)'
++        SLIB_CREATE_DEF_CMD='LDFLAGS="$(LDFLAGS)" EXTERN_PREFIX="$(EXTERN_PREFIX)" $(SRC_PATH)/compat/windows/makedef $(SUBDIR)lib$(NAME).ver $(OBJS) > $$(@:$(SLIBSUF)=.def)'
+         SLIB_INSTALL_NAME='$(SLIBNAME_WITH_MAJOR)'
+         SLIB_INSTALL_LINKS=
+         SLIB_INSTALL_EXTRA_SHLIB='$(SLIBNAME:$(SLIBSUF)=.lib)'
+ 

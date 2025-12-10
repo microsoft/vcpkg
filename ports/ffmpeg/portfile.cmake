@@ -11,6 +11,7 @@ vcpkg_from_github(
         0004-dependencies.patch
         0005-fix-nasm.patch
         0007-fix-lib-naming.patch
+        0008-add-arm64ec-support.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
         0024-fix-osx-host-c11.patch
@@ -122,8 +123,12 @@ if(VCPKG_DETECTED_CMAKE_AR)
     get_filename_component(AR_path "${VCPKG_DETECTED_CMAKE_AR}" DIRECTORY)
     get_filename_component(AR_filename "${VCPKG_DETECTED_CMAKE_AR}" NAME)
     if(AR_filename MATCHES [[^(llvm-)?lib\.exe$]])
-        set(ENV{AR} "ar-lib ${AR_filename}")
-        string(APPEND OPTIONS " --ar='ar-lib ${AR_filename}'")
+        set(AR_MACHINE "")
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64ec")
+            set(AR_MACHINE " -machine:arm64ec")
+        endif()
+        set(ENV{AR} "ar-lib ${AR_filename}${AR_MACHINE}")
+        string(APPEND OPTIONS " --ar='ar-lib ${AR_filename}${AR_MACHINE}'")
     else()
         set(ENV{AR} "${AR_filename}")
         string(APPEND OPTIONS " --ar='${AR_filename}'")
@@ -608,7 +613,7 @@ else()
     set(BUILD_ARCH ${VCPKG_TARGET_ARCHITECTURE})
 endif()
 
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64ec")
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_find_acquire_program(GASPREPROCESSOR)
         foreach(GAS_PATH ${GASPREPROCESSOR})
@@ -616,6 +621,11 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
             vcpkg_add_to_path("${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
     endif()
+endif()
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64ec")
+    string(APPEND OPTIONS " --as=\"armasm64.exe -machine ARM64EC\"")
+    string(APPEND OPTIONS " --extra-ldflags=/machine:arm64ec")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
@@ -813,6 +823,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
             set(LIB_MACHINE_ARG /machine:ARM)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             set(LIB_MACHINE_ARG /machine:ARM64)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64ec")
+            set(LIB_MACHINE_ARG /machine:ARM64EC)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
             set(LIB_MACHINE_ARG /machine:x86)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
