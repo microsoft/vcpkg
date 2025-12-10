@@ -28,15 +28,20 @@ index 4e9d498..70414b4 100644
       add_library(${TARGET_NAME} SHARED ${FILES})
    endif()
 diff --git a/DuckDBConfig.cmake.in b/DuckDBConfig.cmake.in
-index 7c5ce31..dcf5ada 100644
+index 7c5ce31..bc4f40d 100644
 --- a/DuckDBConfig.cmake.in
 +++ b/DuckDBConfig.cmake.in
-@@ -9,6 +9,22 @@ find_dependency(Threads)
- if(NOT @WITH_INTERNAL_ICU@)
-     find_dependency(ICU COMPONENTS i18n uc data)
- endif()
+@@ -6,8 +6,24 @@
+ 
+ include(CMakeFindDependencyMacro)
+ find_dependency(Threads)
+-if(NOT @WITH_INTERNAL_ICU@)
+-    find_dependency(ICU COMPONENTS i18n uc data)
 +if(NOT "@BUILD_SHARED_LIBS@")
 +    set(z_vcpkg_duckdb_extensions_names "@DUCKDB_EXTENSION_NAMES@")
++    if("icu" IN_LIST z_vcpkg_duckdb_extensions_names AND NOT "@WITH_INTERNAL_ICU@")
++        find_dependency(ICU COMPONENTS i18n uc data)
++    endif()
 +    if("excel" IN_LIST z_vcpkg_duckdb_extensions_names)
 +        find_dependency(EXPAT)
 +        find_dependency(ZLIB)
@@ -50,10 +55,9 @@ index 7c5ce31..dcf5ada 100644
 +        endif()
 +    endif()
 +    unset(z_vcpkg_duckdb_extensions_names)
-+endif()
+ endif()
  
  # Compute paths
- get_filename_component(DuckDB_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 @@ -18,7 +34,7 @@ if(NOT TARGET duckdb AND NOT DuckDB_BINARY_DIR)
      include("${DuckDB_CMAKE_DIR}/DuckDBExports.cmake")
  endif()

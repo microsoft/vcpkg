@@ -1,6 +1,7 @@
 {
   "name": "rewolf-wow64ext",
   "version": "1.0.0.9",
+  "port-version": 1,
   "description": "Helper library for x86 programs that runs under WOW64 layer on x64 versions of Microsoft Windows operating systems.",
   "homepage": "https://github.com/rwfpl/rewolf-wow64ext/",
   "license": "LGPL-3.0-or-later",

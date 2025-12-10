@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dc65543..5bccbce 100644
+index ca5a692..e0651b4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -158,12 +158,9 @@ if (WITH_TESTS)
+@@ -161,12 +161,9 @@ if (WITH_TESTS)
  endif()
  add_subdirectory(dimbuilder)
  add_subdirectory(vendor/arbiter)
@@ -31,7 +31,7 @@ index dc65543..5bccbce 100644
  target_include_directories(${PDAL_LIB_NAME}
      PRIVATE
          ${ROOT_DIR}
-@@ -263,6 +261,8 @@ target_link_libraries(${PDAL_LIB_NAME}
+@@ -269,6 +267,8 @@ target_link_libraries(${PDAL_LIB_NAME}
          ${PDAL_LIBDIR}
          ${WINSOCK_LIBRARY}
  )
@@ -40,7 +40,7 @@ index dc65543..5bccbce 100644
  
  if (ZSTD_FOUND)
      target_link_libraries(${PDAL_LIB_NAME}
-@@ -307,9 +307,6 @@ target_include_directories(${PDAL_LIB_NAME}
+@@ -304,9 +304,6 @@ target_include_directories(${PDAL_LIB_NAME}
      INTERFACE
          $<INSTALL_INTERFACE:include>)
  
@@ -50,20 +50,6 @@ index dc65543..5bccbce 100644
  
  if(WIN32)
      target_compile_definitions(${PDAL_LIB_NAME}
-diff --git a/cmake/gdal.cmake b/cmake/gdal.cmake
-index 5f68579..a407c60 100644
---- a/cmake/gdal.cmake
-+++ b/cmake/gdal.cmake
-@@ -12,7 +12,8 @@ function(gdal_find_version _version)
-     set(${_version} ${MAJOR}.${MINOR}.${REV} PARENT_SCOPE)
- endfunction(gdal_find_version)
- 
--find_package(GDAL 3.4 REQUIRED)
-+find_package(GDAL CONFIG REQUIRED)
-+set(GDAL_LIBRARY GDAL::GDAL)
- set_package_properties(GDAL PROPERTIES TYPE REQUIRED
-     PURPOSE "Provides general purpose raster, vector, and reference system support")
- if (GDAL_FOUND)
 diff --git a/cmake/h3.cmake b/cmake/h3.cmake
 index 398ad6d..fb3c9ad 100644
 --- a/cmake/h3.cmake
@@ -102,7 +88,7 @@ index 6543ff6..dc6fac8 100644
  set(UTFCPP_LIB_NAME utf8::cpp)
  
 diff --git a/pdal/JsonFwd.hpp b/pdal/JsonFwd.hpp
-index f764961..f64dcc6 100644
+index 507c456..6b502d0 100644
 --- a/pdal/JsonFwd.hpp
 +++ b/pdal/JsonFwd.hpp
 @@ -1,3 +1,4 @@
@@ -152,14 +138,14 @@ index 473ffba..a69431f 100644
          params.sorted = true;
  
 diff --git a/tools/lasdump/CMakeLists.txt b/tools/lasdump/CMakeLists.txt
-index b15d595..a452d14 100644
+index d0d4d64..595d724 100644
 --- a/tools/lasdump/CMakeLists.txt
 +++ b/tools/lasdump/CMakeLists.txt
-@@ -10,6 +10,7 @@ add_executable(lasdump
+@@ -11,6 +11,7 @@ add_executable(lasdump
  )
  
  target_link_libraries(lasdump PRIVATE
 +    ${UTFCPP_LIB_NAME}
      ${PDAL_LAZPERF_LIB_NAME}
-     ${GDAL_LIBRARY}
- )
+     GDAL::GDAL
+     "$<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,9.0>>:-lstdc++fs>"

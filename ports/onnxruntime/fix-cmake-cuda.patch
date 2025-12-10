@@ -1,0 +1,46 @@
+diff --git a/cmake/external/cuDNN.cmake b/cmake/external/cuDNN.cmake
+index b428ccb..9b73acb 100644
+--- a/cmake/external/cuDNN.cmake
++++ b/cmake/external/cuDNN.cmake
+@@ -1,3 +1,5 @@
++find_package(CUDNN REQUIRED) # vcpkg port 'cudnn'
++get_filename_component(cudnn_LIBRARY "${CUDNN_LIBRARY}" ABSOLUTE)
+ add_library(CUDNN::cudnn_all INTERFACE IMPORTED)
+ 
+ find_path(
+diff --git a/cmake/external/cudnn_frontend.cmake b/cmake/external/cudnn_frontend.cmake
+index d89ab0f..c28568f 100644
+--- a/cmake/external/cudnn_frontend.cmake
++++ b/cmake/external/cudnn_frontend.cmake
+@@ -1,4 +1,5 @@
+-
++find_package(cudnn_frontend CONFIG REQUIRED) # cudnn-frontend 1.13.0+
++return()
+ onnxruntime_fetchcontent_declare(
+   cudnn_frontend
+   URL ${DEP_URL_cudnn_frontend}
+diff --git a/cmake/onnxruntime_providers_cuda.cmake b/cmake/onnxruntime_providers_cuda.cmake
+index 91707c4..243783b 100644
+--- a/cmake/onnxruntime_providers_cuda.cmake
++++ b/cmake/onnxruntime_providers_cuda.cmake
+@@ -149,6 +149,9 @@
+     onnxruntime_add_shared_library_module(onnxruntime_providers_cuda ${onnxruntime_providers_cuda_all_srcs})
+   endif()
+ 
++  if(MSVC)
++    target_compile_options(onnxruntime_providers_cuda PRIVATE $<$<COMPILE_LANGUAGE:CXX>:/bigobj>)
++  endif()
+   if(WIN32)
+     # FILE_NAME preprocessor definition is used in onnxruntime_providers_cuda.rc
+     target_compile_definitions(onnxruntime_providers_cuda PRIVATE FILE_NAME=\"onnxruntime_providers_cuda.dll\")
+@@ -241,8 +244,8 @@
+               ${ABSEIL_LIBS} ${ONNXRUNTIME_PROVIDERS_SHARED} Boost::mp11 safeint_interface)
+     endif()
+ 
+-    include(cutlass)
+-    target_include_directories(${target} PRIVATE ${cutlass_SOURCE_DIR}/include ${cutlass_SOURCE_DIR}/examples ${cutlass_SOURCE_DIR}/tools/util/include)
++    find_package(NvidiaCutlass REQUIRED)
++    target_link_libraries(${target} PRIVATE nvidia::cutlass::cutlass nvidia::cutlass::tools::util)
+     target_link_libraries(${target} PRIVATE Eigen3::Eigen)
+     target_include_directories(${target} PRIVATE ${ONNXRUNTIME_ROOT} ${CMAKE_CURRENT_BINARY_DIR} PUBLIC ${CUDAToolkit_INCLUDE_DIRS})
+     # ${CMAKE_CURRENT_BINARY_DIR} is so that #include "onnxruntime_config.h" inside tensor_shape.h is found

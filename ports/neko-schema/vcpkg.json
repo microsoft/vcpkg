@@ -1,6 +1,6 @@
 {
   "name": "neko-schema",
-  "version": "1.0.4",
+  "version": "1.1.4",
   "description": "A lightweight C++20 header-only library providing fundamental type definitions and utilities for the Neko ecosystem",
   "homepage": "https://github.com/moehoshio/NekoSchema",
   "license": "MIT OR Apache-2.0",
