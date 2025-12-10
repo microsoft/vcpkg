@@ -1,22 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0e5ac72..59a0032 100644
+index 0e5ac72..ef6d42c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -170,7 +170,12 @@ else()
-     # === Other shared libraries ===
-     if(NOT WIN32)
-         set(LIBDL dl)
--        set(LIBZ z)
-+        find_package(ZLIB QUIET)
-+        if(ZLIB_FOUND)
-+            set(LIBZ ZLIB::ZLIB)
-+        else()
-+            set(LIBZ z)
-+        endif()
-     endif()
- endif(WITH_CONAN)
+@@ -177,9 +177,7 @@ endif(WITH_CONAN)
+ set(LIBRARIES
+     ${LIBSSL}
+     ${LIBCRYPTO}
+-    ${LIBBOOST_SYSTEM}
+-    ${LIBDL}
+-    ${LIBZ})
++    ${LIBBOOST_SYSTEM})
  
-@@ -208,7 +213,7 @@ if(NOT WIN32)
+ # === Compiler flags ===
+ option(USE_PTHREAD_EXIT "Call pthread_exit on server threads" OFF)
+@@ -208,7 +206,7 @@ if(NOT WIN32)
      endif()
  
  else()
@@ -25,7 +22,7 @@ index 0e5ac72..59a0032 100644
      message(STATUS "---- WIN32 ----")
  
      if(USE_PTHREAD_EXIT)
-@@ -335,10 +340,6 @@ add_library(static_lib ${STATIC_LIB_SRC})
+@@ -335,10 +333,6 @@ add_library(static_lib ${STATIC_LIB_SRC})
  add_library(NuRaft::static_lib ALIAS static_lib)
  set_target_properties(static_lib PROPERTIES OUTPUT_NAME ${LIBRARY_NAME} CLEAN_DIRECT_OUTPUT 1)
  
@@ -36,7 +33,7 @@ index 0e5ac72..59a0032 100644
  # Include directories are necessary for dependents to use the targets.
  target_include_directories(static_lib
      PUBLIC
-@@ -346,17 +347,25 @@ target_include_directories(static_lib
+@@ -346,17 +340,25 @@ target_include_directories(static_lib
      $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include>
  )
  
@@ -69,7 +66,7 @@ index 0e5ac72..59a0032 100644
  # endif ()
  if(WIN32)
      set(LIBRARY_OUTPUT_NAME "${LIBRARY_NAME}.lib")
-@@ -404,7 +413,7 @@ if(CODE_COVERAGE GREATER 0)
+@@ -404,7 +406,7 @@ if(CODE_COVERAGE GREATER 0)
  endif()
  
  # === Install Targets ===
