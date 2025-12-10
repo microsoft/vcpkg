@@ -1,0 +1,21 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO "osqp/qdldl"
+    REF v0.1.9
+    SHA512 67722bb872cbafe61bdbe4a582cc7e4ebc729a1eca933cc8b758e9a9a5648903ee6ac147c14b33a136c11a647f39ea42cfe3c71147366ed294258b5b66d7d1da
+    PATCHES qdldl.patch
+)
+
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(
+    CONFIG_PATH "lib/cmake/qdldl"
+)
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
