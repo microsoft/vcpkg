@@ -7,9 +7,7 @@ vcpkg_from_github(
     SHA512 5223c84dc5fc48353e0743d7443e26dbe0c691241862f81cbcaf9ca009c65f9e1d5ead5b1ac70cc056e07fb1b6aa700a2e6a0878929fe82cbd7ac067249323f3
     HEAD_REF master
     PATCHES
-        #dependencies.patch
-        #pkgconfig-curl-config.patch
-        wip.diff
+        dependencies.patch
 )
 # The on-the-fly tarballs do not carry the details of release tarballs.
 vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[-DEV"]] [["]])
