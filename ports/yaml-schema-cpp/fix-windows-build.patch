@@ -1,5 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0399267..afd6ef7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,6 +37,11 @@ SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+ SET(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+ SET(LIB_INSTALL_DIR lib)
+ 
++# support alternative tokens in MSVC
++if(MSVC)
++  add_compile_options(/permissive-)
++endif()
++
+ # ------ PROJECT OPTIONS ------
+ IF(NOT BUILD_TESTS)
+     OPTION(BUILD_TESTS "Build Unit tests" ON)
 diff --git a/include/yaml-schema-cpp/type_check.hpp b/include/yaml-schema-cpp/type_check.hpp
-index a73df4c..3c50cfb 100644
+index a73df4c..0f769e9 100644
 --- a/include/yaml-schema-cpp/type_check.hpp
 +++ b/include/yaml-schema-cpp/type_check.hpp
 @@ -18,12 +18,12 @@ namespace yaml_schema_cpp
@@ -44,10 +60,19 @@ index a73df4c..3c50cfb 100644
      {
          // both sequences
 -        if (not node1.IsSequence() or not node2.IsSequence()) return false;
-+        if (not node1.IsSequence() || not node2.IsSequence()) return false;
++        if (!node1.IsSequence() || !node2.IsSequence()) return false;
  
          // same size
          if (node1.size() != node2.size()) return false;
+@@ -149,7 +149,7 @@ static bool compare(const YAML::Node& node1, const YAML::Node& node2, const std:
+         // compare all elements
+         for (auto i = 0; i < node1.size(); i++)
+         {
+-            if (not compare(node1[i], node2[i], type.substr(1, type.size() - 2))) return false;
++            if (!compare(node1[i], node2[i], type.substr(1, type.size() - 2))) return false;
+         }
+         return true;
+     }
 @@ -185,11 +185,11 @@ static bool compare(const YAML::Node& node1, const YAML::Node& node2, const std:
  }
  
@@ -128,118 +153,3 @@ index 81114e8..d660f8a 100644
              {
                  std::cout << "Empty input sequence with not dynamic matrix" << std::endl;
                  return false;
-diff --git a/src/expression.cpp b/src/expression.cpp
-index 1117b65..849d0bd 100644
---- a/src/expression.cpp
-+++ b/src/expression.cpp
-@@ -93,8 +93,8 @@ struct schema_USR : public parser_t::unknown_symbol_resolver
-             error_message = "checkExpression: The parameter '" + unknown_symbol + "' is not a basic type";
-         }
-         // mandatory (bool and true or with default
--        else if (not(tryNodeAs(schema_[unknown_symbol][MANDATORY], "bool") and
--                     (schema_[unknown_symbol][MANDATORY].as<bool>() or schema_[unknown_symbol][DEFAULT])))
-+        else if (not(tryNodeAs(schema_[unknown_symbol][MANDATORY], "bool") &&
-+                     (schema_[unknown_symbol][MANDATORY].as<bool>() || schema_[unknown_symbol][DEFAULT])))
-         {
-             error_message = "checkExpression: The parameter '" + unknown_symbol +
-                             "' is not mandatory (expressions with optional parameters not implemented yet)";
-diff --git a/src/yaml_schema.cpp b/src/yaml_schema.cpp
-index 0089c43..1e0d454 100644
---- a/src/yaml_schema.cpp
-+++ b/src/yaml_schema.cpp
-@@ -70,7 +70,7 @@ void checkSchema(const YAML::Node&               node_schema,
-                  const std::vector<std::string>& folders_schema)
- {
-     // skip scalars and not defined (empty schemas)
--    if (node_schema.IsScalar() or node_schema.IsNull()) return;
-+    if (node_schema.IsScalar() || node_schema.IsNull()) return;
- 
-     // Check that node_schema is map
-     if (not node_schema.IsMap())
-@@ -209,7 +209,7 @@ void checkSchema(const YAML::Node&               node_schema,
- 
-             // if 'value', 'mandatory' should be false (no sense requiring user to define something already
-             // defined)
--            if (isExpression(node_schema[MANDATORY]) or node_schema[MANDATORY].as<bool>())
-+            if (isExpression(node_schema[MANDATORY]) || node_schema[MANDATORY].as<bool>())
-             {
-                 throw std::runtime_error("YAML schema: " + node_field + ", if " + VALUE + " defined, " + MANDATORY +
-                                          " should be false");
-@@ -624,7 +624,7 @@ bool applySchemaRecursive(YAML::Node&                     node_input,
-             // Check if it is mandatory
-             else
-             {
--                assert(tryNodeAs(node_schema[MANDATORY], "bool") or isExpression(node_schema[MANDATORY]));
-+                assert(tryNodeAs(node_schema[MANDATORY], "bool") || isExpression(node_schema[MANDATORY]));
-                 bool mandatory;
-                 if (isExpression(node_schema[MANDATORY]))
-                 {
-diff --git a/src/yaml_template_generator.cpp b/src/yaml_template_generator.cpp
-index 71182a3..c524f0d 100644
---- a/src/yaml_template_generator.cpp
-+++ b/src/yaml_template_generator.cpp
-@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
-      */
- 
-     // HELP
--    if (argc == 2 and (std::string(argv[1]) == "-h" or std::string(argv[1]) == "--help"))
-+    if (argc == 2 && (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help"))
-     {
-         cout << "--------- yaml_template_generator HELP ---------- \nCall it with:" << endl;
-         cout << "yaml_template_generator schema_name schema_folders output_file" << endl << endl;
-@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
-         return 0;
-     }
-     // Call
--    if (argc == 3 or argc == 4)
-+    if (argc == 3 || argc == 4)
-     {
-         filesystem::path current_path(filesystem::current_path());
- 
-@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
-         // schema folders
-         std::string              schema_folders_input(argv[2]);
-         std::vector<std::string> schema_folders;
--        if (schema_folders_input.front() == '[' and schema_folders_input.back() == ']')
-+        if (schema_folders_input.front() == '[' && schema_folders_input.back() == ']')
-         {
-             // remove '[' and ']'
-             schema_folders_input.erase(0, 1);
-diff --git a/src/yaml_utils.cpp b/src/yaml_utils.cpp
-index ad14bd2..5047188 100644
---- a/src/yaml_utils.cpp
-+++ b/src/yaml_utils.cpp
-@@ -199,8 +199,8 @@ void addNodeYaml(YAML::Node&        node,
-     if (node[key].Type() == YAML::NodeType::Scalar)
-     {
-         std::string value_str = node[key].as<std::string>();
--        if ((value_str.size() > 1 and value_str.substr(0, 2) == "./") or
--            (value_str.size() > 2 and value_str.substr(0, 3) == "../"))
-+        if ((value_str.size() > 1 && value_str.substr(0, 2) == "./") ||
-+            (value_str.size() > 2 && value_str.substr(0, 3) == "../"))
-         {
-             filesystem::path path_value = filesystem::path(parent_path) / filesystem::path(value.as<std::string>());
-             node[key]                   = path_value.string();
-@@ -212,11 +212,11 @@ std::string findFileRecursive(const std::string& name_with_extension, const std:
- {
-     for (auto folder : folders)
-     {
--        if (filesystem::exists(folder) and filesystem::is_directory(folder))
-+        if (filesystem::exists(folder) && filesystem::is_directory(folder))
-         {
-             for (auto const& entry : filesystem::recursive_directory_iterator(folder))
-             {
--                if (filesystem::is_regular_file(entry) and entry.path().filename().string() == name_with_extension)
-+                if (filesystem::is_regular_file(entry) && entry.path().filename().string() == name_with_extension)
-                 {
-                     return entry.path().string();
-                 }
-@@ -263,7 +263,7 @@ std::vector<std::string> getAllSchemas(const std::vector<std::string>& root_fold
-     std::vector<std::string> schemas_found;
-     for (auto root_folder : root_folders)
-         for (auto const& entry : filesystem::recursive_directory_iterator(root_folder))
--            if (filesystem::is_regular_file(entry) and entry.path().extension() == SCHEMA_EXTENSION)
-+            if (filesystem::is_regular_file(entry) && entry.path().extension() == SCHEMA_EXTENSION)
-                 schemas_found.push_back(entry.path().filename().string());
- 
-     return schemas_found;
