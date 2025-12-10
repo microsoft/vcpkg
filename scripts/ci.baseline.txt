@@ -220,6 +220,7 @@ eathread:x64-android=fail
 ecal:arm-neon-android=fail
 ecal:arm64-android=fail
 ecal:x64-android=fail
+faiss:arm64-osx=fail # No openmp on default osx toolchain
 flint:arm-neon-android=fail
 flint:arm64-android=fail
 flint:x64-android=fail

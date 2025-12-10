@@ -1,13 +1,13 @@
 {
   "name": "faiss",
-  "version": "1.8.0",
+  "version": "1.13.1",
   "description": "Faiss is a library for efficient similarity search and clustering of dense vectors.",
-  "homepage": "https://github.com/facebookresearch/faiss",
+  "homepage": "https://faiss.ai/",
   "license": "MIT",
-  "supports": "!uwp & !osx & !x86 & !(arm64 & windows)",
+  "supports": "!x86 & !uwp",
   "dependencies": [
+    "blas",
     "lapack",
-    "openblas",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,7 +20,6 @@
   "features": {
     "gpu": {
       "description": "Whether to enable GPU support",
-      "supports": "!uwp & !osx & !x86 & !windows",
       "dependencies": [
         "cuda"
       ]
