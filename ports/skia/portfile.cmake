@@ -26,6 +26,7 @@ vcpkg_from_github(
 
 # De-vendor
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/third_party/vulkan")
+file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/dawn")
 
 # these following aren't available in vcpkg
 # to update, visit the DEPS file in Skia's root directory
