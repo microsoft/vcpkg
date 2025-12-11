@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "my_sample_lib")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "nggmsg")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
