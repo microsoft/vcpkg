@@ -81,9 +81,9 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME "gen-make-${TARGET_TRIPLET}"
     )
     
-    # Build MSBuild options - add ICU libraries for static linkage
+    # Build MSBuild options - add ICU libraries for x64-windows-static-md
     set(MSBUILD_OPTIONS "/p:Platform=${VCPKG_TARGET_ARCHITECTURE}")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_TARGET_TRIPLET STREQUAL "x64-windows-static-md")
         # SQLite3 is built with ICU support, so we need to link ICU libraries
         string(APPEND MSBUILD_OPTIONS " \"/p:AdditionalDependencies=icuuc.lib;icuin.lib;icudt.lib;%(AdditionalDependencies)\"")
     endif()
