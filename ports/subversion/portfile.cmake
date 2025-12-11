@@ -77,13 +77,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME "gen-make-${TARGET_TRIPLET}"
     )
-    
-    # Build MSBuild options - add ICU libraries for x64-windows-static-md
-    set(MSBUILD_OPTIONS "/p:Platform=${VCPKG_TARGET_ARCHITECTURE}")
-    if(VCPKG_TARGET_TRIPLET STREQUAL "x64-windows-static-md")
-        # SQLite3 is built with ICU support, so we need to link ICU libraries
-        string(APPEND MSBUILD_OPTIONS " \"/p:AdditionalDependencies=icuuc.lib;icuin.lib;icudt.lib;%(AdditionalDependencies)\"")
-    endif()
 
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -91,7 +84,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         TARGET "Rebuild"
         RELEASE_CONFIGURATION "Release"
         DEBUG_CONFIGURATION "Debug"
-        OPTIONS ${MSBUILD_OPTIONS}
+        OPTIONS "/p:Platform=${VCPKG_TARGET_ARCHITECTURE}"
     )
 
     file(INSTALL "${SOURCE_PATH}/subversion/include/"

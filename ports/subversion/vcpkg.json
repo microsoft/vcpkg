@@ -14,10 +14,7 @@
     "serf",
     {
       "name": "sqlite3",
-      "default-features": false,
-      "features": [
-        "unicode"
-      ]
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
