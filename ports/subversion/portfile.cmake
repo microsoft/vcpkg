@@ -81,23 +81,12 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         LOGNAME "gen-make-${TARGET_TRIPLET}"
     )
     
-    # Patch all generated vcxproj files to add ICU library dependencies
-    # This is needed because sqlite3 is built with ICU support
-    file(GLOB_RECURSE VCXPROJ_FILES "${SOURCE_PATH}/*.vcxproj")
-    foreach(VCXPROJ_FILE IN LISTS VCXPROJ_FILES)
-        file(READ "${VCXPROJ_FILE}" VCXPROJ_CONTENT)
-        
-        # For static linkage, add ICU libraries after sqlite3.lib in AdditionalDependencies
-        # We need to add both the ICU data library (icudt) and the ICU libraries (icuuc, icuin)
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            # Add ICU libraries for Release builds
-            string(REPLACE "sqlite3.lib;" "sqlite3.lib;icuuc.lib;icuin.lib;icudt.lib;" VCXPROJ_CONTENT "${VCXPROJ_CONTENT}")
-            # Add ICU libraries for Debug builds  
-            string(REPLACE "sqlite3d.lib;" "sqlite3d.lib;icuucd.lib;icuind.lib;icudtd.lib;" VCXPROJ_CONTENT "${VCXPROJ_CONTENT}")
-        endif()
-        
-        file(WRITE "${VCXPROJ_FILE}" "${VCXPROJ_CONTENT}")
-    endforeach()
+    # Build MSBuild options - add ICU libraries for static linkage
+    set(MSBUILD_OPTIONS "/p:Platform=${VCPKG_TARGET_ARCHITECTURE}")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        # SQLite3 is built with ICU support, so we need to link ICU libraries
+        string(APPEND MSBUILD_OPTIONS " \"/p:AdditionalDependencies=icuuc.lib;icuin.lib;icudt.lib;%(AdditionalDependencies)\"")
+    endif()
 
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -105,7 +94,7 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         TARGET "Rebuild"
         RELEASE_CONFIGURATION "Release"
         DEBUG_CONFIGURATION "Debug"
-        OPTIONS "/p:Platform=${VCPKG_TARGET_ARCHITECTURE}"
+        OPTIONS ${MSBUILD_OPTIONS}
     )
 
     file(INSTALL "${SOURCE_PATH}/subversion/include/"
