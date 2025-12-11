@@ -2402,7 +2402,7 @@
     },
     "morcules-swiftnet": {
       "baseline": "0.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "debug-assert": {
       "baseline": "1.3.4",
