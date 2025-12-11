@@ -1,0 +1,22 @@
+diff --git a/src/qtwidgets/views/ClassicIndicatorsWindow.cpp b/src/qtwidgets/views/ClassicIndicatorsWindow.cpp
+index 7ea64ef23..6ddc9d233 100644
+--- a/src/qtwidgets/views/ClassicIndicatorsWindow.cpp
++++ b/src/qtwidgets/views/ClassicIndicatorsWindow.cpp
+@@ -24,7 +24,7 @@
+ 
+ #ifdef QT_X11EXTRAS_LIB
+ #include <QtX11Extras/QX11Info>
+-#elif QT_VERSION >= QT_VERSION_CHECK(6, 0, 0) && defined(Q_OS_LINUX)
++#elif QT_VERSION >= QT_VERSION_CHECK(6, 0, 0) && defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
+ #include <QtGui/private/qtx11extras_p.h>
+ #endif
+ 
+@@ -45,7 +45,7 @@ static bool windowManagerHasTranslucency()
+         || (Config::self().internalFlags() & Config::InternalFlag_DisableTranslucency))
+         return false;
+ 
+-#if defined(QT_X11EXTRAS_LIB) || (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0) && defined(Q_OS_LINUX))
++#if defined(QT_X11EXTRAS_LIB) || (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0) && defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID))
+     if (isXCB())
+         return QX11Info::isCompositingManagerRunning();
+ #endif
