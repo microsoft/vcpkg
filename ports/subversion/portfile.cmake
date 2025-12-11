@@ -65,9 +65,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         "--with-serf=${CURRENT_INSTALLED_DIR}"
         "--with-sqlite=${CURRENT_INSTALLED_DIR}"
     )
-    
-    # ICU is required because sqlite3 is built with unicode support
-    find_package(ICU COMPONENTS uc i18n dt REQUIRED)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND GEN_MAKE_ARGS "--disable-shared")
