@@ -3,7 +3,7 @@ set(VCPKG_BUILD_TYPE release) # header-only
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO dtschump/CImg
     REF "v.${VERSION}"
-    SHA512 2d192f3403b76dae2932209dae34b4b7d1f9ee260bbfbc7a9b32b159596505a528f7308001ae2632f3c3fd42722fd524ab0a5e7636df68e0eaa60a21a7c9ea48
+    SHA512 dd9f53817aca7317adde6ba26bba4f84160b3a03c755551d3a2a5604354315254b0f6c9581c9feea00e534ae494dc6def9ab64dbaca7fe493df94a7f0dd3986f
     HEAD_REF master
 )
 
