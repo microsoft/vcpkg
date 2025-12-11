@@ -65,7 +65,7 @@ if(key STREQUAL "Windows-x64" OR VCPKG_TREE_SITTER_UPDATE)
     vcpkg_download_distfile(archive_path
         URLS "https://github.com/tree-sitter/tree-sitter/releases/download/v${VERSION}/tree-sitter-windows-x64.gz"
         FILENAME "${filename}"
-        SHA512 d59a933adc82818570444e09394d28261a416887d12c5fc11839807f01fcd3719ef982344bb4827ffd5c1b72462ed625520803aff86fd24f4f566873fbd9dcd83333
+        SHA512 d59a933adc82818570444e09394d28261a416887d12c5fc11839807f01fcd3719ef982344bb4827ffd5c1b72462ed625520803aff86fd24f4f566873fbd9dcd8
     )
 endif()
 if(NOT archive_path)
