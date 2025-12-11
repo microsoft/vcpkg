@@ -5210,7 +5210,7 @@
     },
     "libmypaint": {
       "baseline": "1.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libmysofa": {
       "baseline": "1.3.3",
