@@ -1,20 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e0c6fa084d..d8a4d0f513 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,6 +41,16 @@ project(
+ )
+ enable_testing()
+ 
++if(WIN32)
++  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR MSVC)
++    if(DAWN_MSVC_DYNAMIC_RUNTIME)
++      set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
++    else()
++      set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
++    endif()
++  endif()
++endif()
++
+ list(INSERT CMAKE_MODULE_PATH 0 "${Dawn_SOURCE_DIR}/src/cmake")
+ 
+ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 diff --git a/src/cmake/DawnLibrary.cmake b/src/cmake/DawnLibrary.cmake
-index a5352433f0..d8aa1788d2 100644
+index f80426804a..250b6c8848 100644
 --- a/src/cmake/DawnLibrary.cmake
 +++ b/src/cmake/DawnLibrary.cmake
-@@ -180,12 +180,12 @@ function(dawn_install_target name)
+@@ -180,14 +180,14 @@ function(dawn_install_target name)
      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
    )
    # When building in debug mode with MSVC, install PDB files together with binaries
 -  if (MSVC)
 -    get_target_property(target_type "${name}" TYPE)
--    if ((target_type STREQUAL "STATIC_LIBRARY") OR (target_type STREQUAL "SHARED_LIBRARY") OR (target_type STREQUAL "EXECUTABLE"))
+-    # Only shared libraries and executables generate PDB files through the linker
+-    # Static libraries are created by the archiver and don't generate PDB files
+-    if ((target_type STREQUAL "SHARED_LIBRARY") OR (target_type STREQUAL "EXECUTABLE"))
 -      install(FILES $<TARGET_PDB_FILE:${name}> DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
 -    endif()
 -  endif (MSVC)
 +  # if (MSVC)
 +  #   get_target_property(target_type "${name}" TYPE)
-+  #   if ((target_type STREQUAL "STATIC_LIBRARY") OR (target_type STREQUAL "SHARED_LIBRARY") OR (target_type STREQUAL "EXECUTABLE"))
++  #   # Only shared libraries and executables generate PDB files through the linker
++  #   # Static libraries are created by the archiver and don't generate PDB files
++  #   if ((target_type STREQUAL "SHARED_LIBRARY") OR (target_type STREQUAL "EXECUTABLE"))
 +  #     install(FILES $<TARGET_PDB_FILE:${name}> DESTINATION ${CMAKE_INSTALL_BINDIR} OPTIONAL)
 +  #   endif()
 +  # endif (MSVC)
