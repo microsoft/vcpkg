@@ -9,7 +9,6 @@
     "apr",
     "apr-util",
     "expat",
-    "icu",
     "openssl",
     "serf",
     {
