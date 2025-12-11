@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
     PATCHES
         installdirs.diff
         linking-and-naming.diff
+        opencascade.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_LIB)
@@ -18,10 +19,9 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        opencascade ENABLE_OCC
-        opencascade ENABLE_OCC_CAF
-        opencascade ENABLE_OCC_TBB
         mpi         ENABLE_MPI
+        occ         ENABLE_OCC
+        occ         ENABLE_OCC_CAF
         zipper      ENABLE_ZIPPER
 )
 
@@ -33,12 +33,13 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DENABLE_BUILD_LIB=${BUILD_LIB}
         -DENABLE_BUILD_SHARED=${BUILD_SHARED}
-        -DENABLE_OS_SPECIFIC_INSTALL=OFF
         -DENABLE_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
+        -DENABLE_OS_SPECIFIC_INSTALL=OFF
+        -DGMSH_PACKAGER=vcpkg
         -DGMSH_RELEASE=ON
         -DENABLE_PACKAGE_STRIP=ON
         -DENABLE_SYSTEM_CONTRIB=ON
-        # Not implement
+        # Not implemented
         -DENABLE_GRAPHICS=OFF # Requires mesh, post, plugins and onelab
         -DENABLE_POST=OFF
         -DENABLE_PLUGINS=OFF
@@ -108,10 +109,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
-
-vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
