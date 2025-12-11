@@ -7,6 +7,7 @@ find_package(OpenSSL QUIET)
 find_package(ZLIB QUIET)
 find_package(expat CONFIG QUIET)
 find_package(unofficial-sqlite3 CONFIG QUIET)
+find_package(ICU COMPONENTS uc i18n QUIET)
 
 if(NOT TARGET unofficial::apr::apr)
     find_library(APR_LIBRARY
@@ -120,6 +121,10 @@ foreach(_lib ${_subversion_libs})
         
         if(TARGET unofficial::sqlite3::sqlite3)
             list(APPEND _link_libs unofficial::sqlite3::sqlite3)
+        endif()
+        
+        if(TARGET ICU::uc)
+            list(APPEND _link_libs ICU::uc ICU::i18n)
         endif()
         
         if(WIN32)
