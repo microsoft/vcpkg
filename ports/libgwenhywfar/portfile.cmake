@@ -44,16 +44,16 @@ vcpkg_make_configure(
         --disable-nls
         ${options}
     OPTIONS_RELEASE
-        "--with-qt5-qmake=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/qmake"
-        "--with-qt5-moc=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/moc"
-        "--with-qt5-uic=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/uic"
+        "QMAKE=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/qmake"
+        "QT_MOC=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/moc"
+        "QT_UIC=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/uic"
         "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config gpg-error"
         "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
         "LIBGCRYPT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgcrypt/bin/libgcrypt-config"
     OPTIONS_DEBUG
-        "--with-qt5-qmake=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/qmake"
-        "--with-qt5-moc=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/moc"
-        "--with-qt5-uic=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/uic"
+        "QMAKE=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/qmake"
+        "QT_MOC=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/moc"
+        "QT_UIC=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/uic"
         "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config gpg-error"
         "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
         "LIBGCRYPT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgcrypt/debug/bin/libgcrypt-config"
