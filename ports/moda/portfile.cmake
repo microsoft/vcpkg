@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dudenzz/moda
     REF "${VERSION}"
-    SHA512 ebc87e613646304a37e21a5b05974ac01ee6a534049f1f27a6ea7404cd415f674eec125cad4beee907e9b9959c61da0a3ac7a78b91cdf4d4699f1fc232a576b9
+    SHA512 65a8260ef5d24a1e9c105eacac8f0ee68a46f085aefb326d42459229e67f8a53faf3da5fd2d8c2372f124dec2e0df77942c55e40fefde560c98723534d9913d2
     HEAD_REF cmake-sample-lib
 )
 
