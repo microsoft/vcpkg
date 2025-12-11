@@ -1,6 +1,6 @@
 {
   "name": "moda",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A comprehensive suite of hypervolume-related algorithms designed for efficient multi-objective optimization.",
   "homepage": "https://github.com/dudenzz/moda",
   "license": "MIT",
