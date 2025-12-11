@@ -12,7 +12,13 @@
     "icu",
     "openssl",
     "serf",
-    "sqlite3",
+    {
+      "name": "sqlite3",
+      "default-features": false,
+      "features": [
+        "unicode"
+      ]
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

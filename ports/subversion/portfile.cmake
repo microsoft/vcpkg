@@ -65,6 +65,9 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         "--with-serf=${CURRENT_INSTALLED_DIR}"
         "--with-sqlite=${CURRENT_INSTALLED_DIR}"
     )
+    
+    # ICU is required because sqlite3 is built with unicode support
+    find_package(ICU COMPONENTS uc i18n dt REQUIRED)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND GEN_MAKE_ARGS "--disable-shared")
@@ -77,6 +80,24 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME "gen-make-${TARGET_TRIPLET}"
     )
+    
+    # Patch all generated vcxproj files to add ICU library dependencies
+    # This is needed because sqlite3 is built with ICU support
+    file(GLOB_RECURSE VCXPROJ_FILES "${SOURCE_PATH}/*.vcxproj")
+    foreach(VCXPROJ_FILE IN LISTS VCXPROJ_FILES)
+        file(READ "${VCXPROJ_FILE}" VCXPROJ_CONTENT)
+        
+        # For static linkage, add ICU libraries after sqlite3.lib in AdditionalDependencies
+        # We need to add both the ICU data library (icudt) and the ICU libraries (icuuc, icuin)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            # Add ICU libraries for Release builds
+            string(REPLACE "sqlite3.lib;" "sqlite3.lib;icuuc.lib;icuin.lib;icudt.lib;" VCXPROJ_CONTENT "${VCXPROJ_CONTENT}")
+            # Add ICU libraries for Debug builds  
+            string(REPLACE "sqlite3d.lib;" "sqlite3d.lib;icuucd.lib;icuind.lib;icudtd.lib;" VCXPROJ_CONTENT "${VCXPROJ_CONTENT}")
+        endif()
+        
+        file(WRITE "${VCXPROJ_FILE}" "${VCXPROJ_CONTENT}")
+    endforeach()
 
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
