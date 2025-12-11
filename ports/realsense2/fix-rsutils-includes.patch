@@ -1,0 +1,21 @@
+--- a/third-party/rsutils/src/control-c-handler.cpp
++++ b/third-party/rsutils/src/control-c-handler.cpp
+@@ -1,4 +1,5 @@
+ #include <atomic>
++#include <stdexcept>
+
+--- a/third-party/rsutils/src/special-folder.cpp
++++ b/third-party/rsutils/src/special-folder.cpp
+@@ -1,6 +1,7 @@
+ #include <string>
+ #include <vector>
+ #include <sstream>
++#include <stdexcept>
+
+--- a/third-party/rsutils/src/network-adapter-watcher.cpp
++++ b/third-party/rsutils/src/network-adapter-watcher.cpp
+@@ -1,6 +1,8 @@
+ #include <chrono>
+ #include <regex>
++#include <thread>
++#include <cstring>
