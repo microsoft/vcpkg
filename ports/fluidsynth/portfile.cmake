@@ -58,15 +58,13 @@ foreach(_option IN LISTS OPTIONS_TO_DISABLE IGNORED_OPTIONS)
     list(APPEND DISABLED_OPTIONS "-D${_option}:BOOL=OFF")
 endforeach()
 
-vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${ENABLED_OPTIONS}
         ${DISABLED_OPTIONS}
-        "-Dosal=cpp11" 
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
+        "-Dosal=cpp11"
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
     MAYBE_UNUSED_VARIABLES
         ${OPTIONS_TO_DISABLE}
@@ -88,6 +86,6 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-    
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
