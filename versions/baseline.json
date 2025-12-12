@@ -57,7 +57,7 @@
       "port-version": 0
     },
     "advobfuscator": {
-      "baseline": "2.1",
+      "baseline": "2.1.1",
       "port-version": 0
     },
     "air-ctl": {
@@ -441,7 +441,7 @@
       "port-version": 2
     },
     "aws-c-auth": {
-      "baseline": "0.9.3",
+      "baseline": "0.9.4",
       "port-version": 0
     },
     "aws-c-cal": {
@@ -465,7 +465,7 @@
       "port-version": 0
     },
     "aws-c-io": {
-      "baseline": "0.23.3",
+      "baseline": "0.24.0",
       "port-version": 0
     },
     "aws-c-mqtt": {
@@ -1681,7 +1681,7 @@
       "port-version": 2
     },
     "cglm": {
-      "baseline": "0.9.4",
+      "baseline": "0.9.6",
       "port-version": 0
     },
     "cgltf": {
@@ -1737,7 +1737,7 @@
       "port-version": 0
     },
     "cimg": {
-      "baseline": "3.6.4",
+      "baseline": "3.6.5",
       "port-version": 0
     },
     "cinatra": {
@@ -2777,7 +2777,7 @@
       "port-version": 3
     },
     "etl": {
-      "baseline": "20.44.1",
+      "baseline": "20.44.2",
       "port-version": 0
     },
     "eve": {
@@ -2826,7 +2826,7 @@
     },
     "fadbad": {
       "baseline": "2.1.0",
-      "port-version": 2
+      "port-version": 3
     },
     "faiss": {
       "baseline": "1.13.1",
@@ -2917,8 +2917,8 @@
       "port-version": 4
     },
     "fdk-aac": {
-      "baseline": "2.0.2",
-      "port-version": 4
+      "baseline": "2.0.3",
+      "port-version": 0
     },
     "fdlibm": {
       "baseline": "5.3",
@@ -2933,8 +2933,8 @@
       "port-version": 3
     },
     "ffnvcodec": {
-      "baseline": "12.2.72.0",
-      "port-version": 2
+      "baseline": "13.0.19.0",
+      "port-version": 0
     },
     "fftw3": {
       "baseline": "3.3.10",
@@ -3034,7 +3034,7 @@
     },
     "fluidsynth": {
       "baseline": "2.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "flux": {
       "baseline": "0.4.0",
@@ -3937,7 +3937,7 @@
       "port-version": 1
     },
     "immer": {
-      "baseline": "0.8.1",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "implot": {
@@ -4957,7 +4957,7 @@
       "port-version": 0
     },
     "libgwenhywfar": {
-      "baseline": "5.12.0",
+      "baseline": "5.14.1",
       "port-version": 0
     },
     "libgxps": {
@@ -5210,7 +5210,7 @@
     },
     "libmypaint": {
       "baseline": "1.6.1",
-      "port-version": 1
+      "port-version": 2
     },
     "libmysofa": {
       "baseline": "1.3.3",
@@ -6686,7 +6686,7 @@
     },
     "mypaint-brushes": {
       "baseline": "1.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "mysql-connector-cpp": {
       "baseline": "9.1.0",
@@ -7837,8 +7837,8 @@
       "port-version": 1
     },
     "ptex": {
-      "baseline": "2.4.3",
-      "port-version": 1
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "pthread": {
       "baseline": "3.0.0",
@@ -8466,7 +8466,7 @@
     },
     "reactphysics3d": {
       "baseline": "0.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "readerwriterqueue": {
       "baseline": "1.0.7",
@@ -9222,7 +9222,7 @@
     },
     "solid3": {
       "baseline": "3.5.8",
-      "port-version": 2
+      "port-version": 3
     },
     "sophus": {
       "baseline": "1.24.6-r1",
@@ -9768,6 +9768,10 @@
       "baseline": "4.7.1",
       "port-version": 0
     },
+    "tiledb": {
+      "baseline": "2.30.0",
+      "port-version": 0
+    },
     "tinkerforge": {
       "baseline": "2.1.25",
       "port-version": 3
@@ -9965,7 +9969,7 @@
       "port-version": 0
     },
     "tree-sitter-cli": {
-      "baseline": "0.25.3",
+      "baseline": "0.26.2",
       "port-version": 0
     },
     "treehh": {
@@ -9981,7 +9985,7 @@
       "port-version": 4
     },
     "trianglemeshdistance": {
-      "baseline": "2025-12-05",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "triton": {
@@ -10977,7 +10981,7 @@
       "port-version": 0
     },
     "zycore": {
-      "baseline": "1.5.1",
+      "baseline": "1.5.2",
       "port-version": 0
     },
     "zydis": {
