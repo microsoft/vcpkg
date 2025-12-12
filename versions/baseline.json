@@ -6770,7 +6770,7 @@
     },
     "nativefiledialog-extended": {
       "baseline": "1.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "nayuki-qr-code-generator": {
       "baseline": "1.8.0",
@@ -9762,7 +9762,7 @@
     },
     "tidy-html5": {
       "baseline": "5.8.0",
-      "port-version": 2
+      "port-version": 3
     },
     "tiff": {
       "baseline": "4.7.1",
@@ -9941,8 +9941,8 @@
       "port-version": 6
     },
     "tracy": {
-      "baseline": "0.11.1",
-      "port-version": 2
+      "baseline": "0.13.0",
+      "port-version": 0
     },
     "transwarp": {
       "baseline": "2.2.3",

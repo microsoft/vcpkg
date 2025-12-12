@@ -10,6 +10,7 @@ vcpkg_from_github(
         debug-postfix.patch
         fix_unsupport_func_uwp.patch
         cmake_find_package_support.patch
+        fix-version.cmake
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIB)
