@@ -1629,6 +1629,7 @@ cgns[fortran](windows | android) = feature-fails # No fortran compiler installed
 coroutine(osx) = fail # requires c++20
 crashrpt(windows) = fail # precompiled header errors. See https://github.com/microsoft/vcpkg/issues/33470
 ctbench(osx) = fail # requires C++ 20
+darknet[openmp](osx) = feature-fails # openmp setup needed
 date[remote-api](uwp) = feature-fails # error C2065: 'FOLDERID_ProgramFiles': undeclared identifier. See https://github.com/microsoft/vcpkg/issues/33610
 dcmtk[core,iconv,icu,openssl,png,tiff,tools,xml2,zlib](osx) = combination-fails # missing symbols from libtiff. See https://github.com/microsoft/vcpkg/issues/33512
 dcmtk[iconv](arm64 & windows & !uwp) = feature-fails # try_run
