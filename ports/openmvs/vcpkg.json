@@ -22,7 +22,10 @@
     "libpng",
     {
       "name": "opencv",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "highgui"
+      ]
     },
     {
       "name": "tiff",

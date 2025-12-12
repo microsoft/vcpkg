@@ -12,6 +12,9 @@ vcpkg_from_github(
         fix-static-build.patch
         fix-lib-name-conflict.patch
 )
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindCGAL.cmake")
+file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -22,9 +25,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools       OpenMVS_BUILD_TOOLS
 )
 
-file(REMOVE "${SOURCE_PATH}/build/Modules/FindCERES.cmake")
-file(REMOVE "${SOURCE_PATH}/build/Modules/FindCGAL.cmake")
-file(REMOVE "${SOURCE_PATH}/build/Modules/FindEIGEN.cmake")
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+    )
+endif()
 
 set(USE_SSE OFF)
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
