@@ -2365,8 +2365,8 @@
       "port-version": 0
     },
     "dawn": {
-      "baseline": "20250922.223923",
-      "port-version": 1
+      "baseline": "20251202.213730",
+      "port-version": 0
     },
     "daxa": {
       "baseline": "3.3.1",
@@ -9109,8 +9109,8 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "140",
-      "port-version": 2
+      "baseline": "144",
+      "port-version": 0
     },
     "skyr-url": {
       "baseline": "1.13.0",
