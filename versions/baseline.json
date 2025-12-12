@@ -9969,7 +9969,7 @@
       "port-version": 0
     },
     "tree-sitter-cli": {
-      "baseline": "0.25.3",
+      "baseline": "0.26.2",
       "port-version": 0
     },
     "treehh": {
