@@ -1,0 +1,75 @@
+diff --git a/include/fbow/cpu.h b/include/fbow/cpu.h
+index 7781c3a..f640b8c 100644
+--- a/include/fbow/cpu.h
++++ b/include/fbow/cpu.h
+@@ -31,7 +31,7 @@ THE SOFTWARE.
+ #include <cstdint>
+ #include <cstring>
+ #include <string>
+-#if defined(__ANDROID__) || defined(__arm64__) || defined(__arm__) || defined(__aarch64__)
++#if defined(__ANDROID__) || defined(__arm64__) || defined(__arm__) || defined(__aarch64__) || defined(_M_ARM64) || defined(_M_ARM64EC) || defined(_M_ARM)
+ 
+ #else
+ #if defined(__x86_64__) || defined(_M_X64) || defined(__i386) || defined(_M_IX86)
+@@ -76,7 +76,7 @@ private:
+     static bool inline detect_OS_AVX512();
+     static inline uint64_t xgetbv(unsigned int x);
+ };
+-#if defined(__ANDROID__) || defined(__arm64__) || defined(__arm__) || defined(__aarch64__)
++#if defined(__ANDROID__) || defined(__arm64__) || defined(__arm__) || defined(__aarch64__) || defined(_M_ARM64) || defined(_M_ARM64EC) || defined(_M_ARM)
+ 
+ void cpu::cpuid(int32_t out[4], int32_t x){}
+ #else
+@@ -119,7 +119,7 @@ bool  cpu::detect_OS_x64(){ return true;}
+ ////////////////////////////////////////////////////////////////////////////////
+ bool cpu::detect_OS_AVX(){
+     //  Copied from: http://stackoverflow.com/a/22521619/922184
+-#if !defined(__ANDROID__) && !defined(__arm64__) && !defined(__arm__) && !defined(__aarch64__)
++#if !defined(__ANDROID__) && !defined(__arm64__) && !defined(__arm__) && !defined(__aarch64__) && !defined(_M_ARM64) && !defined(_M_ARM64EC) && !defined(_M_ARM)
+ 
+     bool avxSupported = false;
+     int cpuInfo[4]; cpuid(cpuInfo, 1);
+@@ -133,7 +133,7 @@ bool cpu::detect_OS_AVX(){
+ }
+ bool cpu::detect_OS_AVX512(){
+ 
+-#if !defined(__ANDROID__) && !defined(__arm64__) && !defined(__arm__) && !defined(__aarch64__)
++#if !defined(__ANDROID__) && !defined(__arm64__) && !defined(__arm__) && !defined(__aarch64__) && !defined(_M_ARM64) && !defined(_M_ARM64EC) && !defined(_M_ARM)
+     if (!detect_OS_AVX())
+         return false;
+     uint64_t xcrFeatureMask = xgetbv(_XCR_XFEATURE_ENABLED_MASK);
+@@ -146,7 +146,7 @@ bool cpu::detect_OS_AVX512(){
+ std::string cpu::get_vendor_string(){ int32_t CPUInfo[4]; char name[13];cpuid(CPUInfo, 0); memcpy(name + 0, &CPUInfo[1], 4);memcpy(name + 4, &CPUInfo[3], 4); memcpy(name + 8, &CPUInfo[2], 4); name[12] = '\0'; return name;}
+ void cpu::detect_host(){
+ 
+-#if !defined(__ANDROID__) && !defined(__arm64__) && !defined(__arm__) && !defined(__aarch64__)
++#if !defined(__ANDROID__) && !defined(__arm64__) && !defined(__arm__) && !defined(__aarch64__) && !defined(_M_ARM64) && !defined(_M_ARM64EC) && !defined(_M_ARM)
+ 
+     OS_x64 = detect_OS_x64();
+     OS_AVX = detect_OS_AVX();
+diff --git a/include/fbow/vocabulary.h b/include/fbow/vocabulary.h
+index 7160560..cd8447b 100644
+--- a/include/fbow/vocabulary.h
++++ b/include/fbow/vocabulary.h
+@@ -36,7 +36,7 @@ THE SOFTWARE.
+ #include <map>
+ #include <memory>
+ #include <bitset>
+-#if !defined(__ANDROID__) && !defined(__arm64__) && !defined(__arm__) && !defined(__aarch64__)
++#if !defined(__ANDROID__) && !defined(__arm64__) && !defined(__arm__) && !defined(__aarch64__) && !defined(_M_ARM64) && !defined(_M_ARM64EC) && !defined(_M_ARM)
+ #if defined(USE_AVX)
+ #include <immintrin.h>
+ #endif
+diff --git a/src/fbow.cpp b/src/fbow.cpp
+index 024fcf7..ef4bcf1 100644
+--- a/src/fbow.cpp
++++ b/src/fbow.cpp
+@@ -99,7 +99,7 @@ struct L2_generic : public Lx<float, float, 4> {
+         return d;
+     }
+ };
+-#if defined(__ANDROID__) || defined(__arm64__) || defined(__arm__) || defined(__aarch64__) || !defined(USE_AVX)
++#if defined(__ANDROID__) || defined(__arm64__) || defined(__arm__) || defined(__aarch64__) || defined(_M_ARM64) || defined(_M_ARM64EC) || defined(_M_ARM) || !defined(USE_AVX)
+ //fake elements to allow compilation
+ struct L2_avx_generic : public Lx<uint64_t, float, 32> {
+     inline float computeDist(uint64_t* ptr) { return std::numeric_limits<float>::max(); }

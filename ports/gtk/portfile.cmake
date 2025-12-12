@@ -1,13 +1,17 @@
 # It installs only shared libs, regardless build type.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/gtk
-    REF ${VERSION}
-    SHA512 2e2d3135ebf8cb176a4e5e6f1faa26ae9ea5c3e2441e2c820372a76b78e641f207257600d6a207aa05883e04f29fac1452673bffa0395789b8e482cc6b204673
-    HEAD_REF master # branch name
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 7a6f4c48ea57c7cd1946bd33c9fdacfbb4a5ed9c02034f3cd483099539d6bcd5448144fe13f66815cdd51a693ccb317872accf1b150730404fb2d618222a78ca
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-build.patch
         fix_vulkan_enabled.patch
@@ -37,16 +41,10 @@ list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (o
 list(APPEND OPTIONS -Dmacos-backend=${osx}) #Enable the macOS gdk backend (only when building on macOS)
 
 if("introspection" IN_LIST FEATURES)
-    list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
-    list(APPEND OPTIONS -Dintrospection=disabled)
-endif()
-
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
-else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+    list(APPEND OPTIONS_RELEASE -Dintrospection=disabled)
 endif()
 
 vcpkg_configure_meson(
@@ -67,10 +65,10 @@ vcpkg_configure_meson(
         -Dtracker=disabled          # Enable Tracker3 filechooser search
         -Dcolord=disabled           # Build colord support for the CUPS printing backend
         -Df16c=disabled             # Enable F16C fast paths (requires F16C)
-    OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        -Dintrospection=disabled
     ADDITIONAL_BINARIES
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
@@ -78,8 +76,8 @@ vcpkg_configure_meson(
         gdbus-codegen='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/gdbus-codegen'
         glib-compile-schemas='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
         sassc='${CURRENT_HOST_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-compiler='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'
-        g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)

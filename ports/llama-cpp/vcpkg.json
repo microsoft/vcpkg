@@ -1,10 +1,9 @@
 {
   "name": "llama-cpp",
-  "version": "4743",
+  "version": "7146",
   "description": "LLM inference in C/C++",
   "homepage": "https://github.com/ggml-org/llama.cpp",
   "license": "MIT",
-  "supports": "!android",
   "dependencies": [
     "ggml",
     {
@@ -15,5 +14,19 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "download": {
+      "description": "Support downloading a model from an URL",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    },
+    "tools": {
+      "description": "Build tools"
+    }
+  }
 }

@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/volk
     REF "vulkan-sdk-${VERSION}"
-    SHA512 fd3815c35e1c7f2d1e0d34f25a4411c3199b2994ec93bdc44b2d5b21803463b9cae34896a5f46eaa3ecece0dc6fe89a3bbd4b092b533ce81942a86a58f2017bc
+    SHA512 967673bac3f489e3c20e914085c854fc450e18fffe30a35ec69dedbb64a7df7e059c9492c88afc257c24ff808871cefff4c1dbd03e7bbc2ad4ad94800bfe33b3
     HEAD_REF master
 )
 

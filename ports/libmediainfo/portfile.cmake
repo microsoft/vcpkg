@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MediaArea/MediaInfoLib
     REF "v${MEDIAINFO_VERSION}"
-    SHA512 b6a7482d7e7af7ceaf20dc1bdffeac2cf35ceea6f6a1311a8df4658940202cf190a599ba03a1e8d5dad2bd623263b55edd3b20ee0fce78ee1c4f938a014af3b4
+    SHA512 897d319a4ab2e4c05711b3e28d19316a76af9d7981527f4f92ec471b9e8a7336cf78857d03af956a4c5b1fc35725750cedb56713d70a3e67019b4dc7248ba534
     HEAD_REF master
     PATCHES
         dependencies.diff

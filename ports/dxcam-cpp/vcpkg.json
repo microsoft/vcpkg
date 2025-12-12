@@ -1,6 +1,6 @@
 {
   "name": "dxcam-cpp",
-  "version": "0.2.1",
+  "version": "0.2.4",
   "maintainers": "Fidel Yin <fidel.yin@hotmail.com>",
   "description": "A high performance screen capturing library for Windows rewriting DXcam in C++.",
   "homepage": "https://github.com/Fidelxyz/DXCam-CPP",

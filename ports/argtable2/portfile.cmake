@@ -10,6 +10,7 @@ vcpkg_from_sourceforge(
         0001-fix-install-dirs.patch
         0002-include-correct-headers.patch
         0003-add-dependence-getopt.patch
+        undef-eoverflow.diff
 )
 
 set(HAVE_GETOPT_H "")

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xproperty
-    REF 0.8.1
-    SHA512 70fcce3a3cc84be98d844aa59c14686945907db3c8fa1c9a916f0bab811ef96512464031e53f00d29cba7db750a0032f4b59d6ca524f52bc7cfe8de5cebad5e5
+    REF ${VERSION}
+    SHA512 e070427d75e5f1b7edab67599c9e61eb375b68e683db864ec1758d331bb0fcf8d20051831f69a36db5a2e9efc6eb2822f62f8cc1ed563d728a534c1cbec40d77
     HEAD_REF master
     PATCHES
         fix-target.patch
@@ -14,7 +14,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTS=OFF
-        -DDOWNLOAD_GTEST=OFF
 )
 
 vcpkg_cmake_install()

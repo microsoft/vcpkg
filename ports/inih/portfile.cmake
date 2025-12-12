@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO benhoyt/inih
     REF "r${VERSION}"
-    SHA512 cd5ee8796c1be1ff7f589069ec90fee6fc4464ae7b2f0b39600ab08cf01cda9e4c006aa1cba0ee3c78df0111de5da23fa314816bfd327e34211a0dfcfa1d993b
+    SHA512 206ddfaa55d29396c3a44f8d1dfcf578c5ebf892e81fe875cd6b4ec2af5cccf400ca13fc6585b6d8232bd122bd8aef7522bfc83898b5609b29c20bad9390ee02
     HEAD_REF master
 )
 

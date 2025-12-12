@@ -1,0 +1,7 @@
+{
+  "name": "rgfw",
+  "version": "1.70",
+  "description": "A cross platform lightweight single-header simple-to-use window abstraction library for creating graphical programs or libraries.",
+  "homepage": "https://github.com/ColleagueRiley/RGFW",
+  "license": "Zlib"
+}

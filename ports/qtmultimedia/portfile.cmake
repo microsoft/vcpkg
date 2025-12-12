@@ -3,9 +3,9 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
     static_find_modules.patch
-    fix_avfoundation_target.patch
     remove-static-ssl-stub.patch
     ffmpeg-compile-def.patch
+    ffmpeg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -60,7 +60,6 @@ endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
-                        --trace-expand
                         ${FEATURE_OPTIONS}
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_RELEASE

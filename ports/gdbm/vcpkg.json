@@ -1,6 +1,7 @@
 {
   "name": "gdbm",
   "version": "1.24",
+  "port-version": 1,
   "description": "GDBM is a library of database functions that use extensible hashing and works similar to the standard UNIX dbm.",
   "homepage": "https://www.gnu.org.ua/software/gdbm/gdbm.html",
   "license": "GPL-3.0-only",

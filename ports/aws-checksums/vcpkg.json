@@ -1,6 +1,6 @@
 {
   "name": "aws-checksums",
-  "version": "0.2.4",
+  "version": "0.2.7",
   "description": "Cross-Platform HW accelerated CRC32c and CRC32 with fallback to efficient SW implementations.",
   "homepage": "https://github.com/awslabs/aws-checksums",
   "license": "Apache-2.0",

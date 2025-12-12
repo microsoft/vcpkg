@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AravisProject/aravis
     REF "${VERSION}"
-    SHA512 3a71228fdd3d2fc6926b4efc99f268130ad4c460a8d8573d7cfa9bc0833355e88e5fc8900302eb8b891a1cc1a7f4b8753a295e5fe10d9653b32258ab62ed2113
+    SHA512 c00feefb89757ad56cf6781ff347cc2e11d9d17c54e7053916e41a15656e9ebaf24c9f62f521fce760e0e97b2dba3002a270555d6c084461f968f9572a53bb58
     HEAD_REF main
 )
 
@@ -25,14 +25,9 @@ else()
 endif()
 if("introspection" IN_LIST FEATURES)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
     list(APPEND OPTIONS_RELEASE -Dintrospection=disabled)
-endif()
-
-set(GLIB_TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/glib")
-set(GIR_TOOLS_DIR "${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection")
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOLS_DIR "${CURRENT_INSTALLED_DIR}/tools/gobject-introspection")
 endif()
 
 vcpkg_configure_meson(
@@ -47,12 +42,12 @@ vcpkg_configure_meson(
     OPTIONS_DEBUG
         -Dintrospection=disabled
     ADDITIONAL_BINARIES
-        "glib-mkenums='${GLIB_TOOLS_DIR}/glib-mkenums'"
-        "glib-compile-resources='${GLIB_TOOLS_DIR}/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-compiler='${GIR_TOOLS_DIR}/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-scanner='${GIR_TOOLS_DIR}/g-ir-scanner'"
+        "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
+        "glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
-vcpkg_install_meson()
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 

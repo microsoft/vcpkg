@@ -2,14 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO samtools/htslib
     REF "${VERSION}"
-    SHA512 6df1a493ac9f13cae5a510537bdf83aa9635a79efe635b8a5a5cbd89345c75c9a42e686c4f0497761ddfad3b86a9814ed35ba2ac340d0f1c7b5e2e186b152875
+    SHA512 3537149d4118bf27424845a44fdfdb5ffce2376bf956ba15cd61686b84efa320c66fed76eab2fc381f344d61607f7e63494fdd6ef8cf4e40cdb3ac6fe29f86ad
     HEAD_REF develop
     PATCHES
         0001-set-linkage.patch
         0002-pthread-flag.patch
         0003-no-tests.patch
         0004-fix-find-htscodecs.patch
-        0005-remove-duplicate-lhts.patch # https://github.com/samtools/htslib/pull/1852
+        bzip2-use-pkgconfig.diff
 )
 
 set(FEATURE_OPTIONS "")
