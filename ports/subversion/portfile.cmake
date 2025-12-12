@@ -62,7 +62,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         FILES_MATCHING PATTERN "*.h"
     )
 
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    if(EXISTS "${SOURCE_PATH}/Release/subversion")
         file(GLOB RELEASE_LIBS "${SOURCE_PATH}/Release/subversion/libsvn_*/*.lib")
         list(FILTER RELEASE_LIBS EXCLUDE REGEX "libsvn_test")
         file(INSTALL ${RELEASE_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
@@ -73,7 +73,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         endif()
     endif()
 
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    if(EXISTS "${SOURCE_PATH}/Debug/subversion")
         file(GLOB DEBUG_LIBS "${SOURCE_PATH}/Debug/subversion/libsvn_*/*.lib")
         list(FILTER DEBUG_LIBS EXCLUDE REGEX "libsvn_test")
         file(INSTALL ${DEBUG_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
