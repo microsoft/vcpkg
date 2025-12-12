@@ -2186,7 +2186,7 @@
     },
     "crow": {
       "baseline": "1.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cryptopp": {
       "baseline": "2025-12-01",
