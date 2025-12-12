@@ -2,8 +2,9 @@
 
 string(REGEX REPLACE "^([0-9]*[.][0-9]*)[.].*" "\\1" MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.gnome.org/sources/librsvg/${MAJOR_MINOR}/librsvg-${VERSION}.tar.xz"
-         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/librsvg/${MAJOR_MINOR}/librsvg-${VERSION}.tar.xz"
+    URLS
+        "https://download.gnome.org/sources/librsvg/${MAJOR_MINOR}/librsvg-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/librsvg/${MAJOR_MINOR}/librsvg-${VERSION}.tar.xz"
     FILENAME "librsvg-${VERSION}.tar.xz"
     SHA512 db0563d8e0edaae642a6b2bcd239cf54191495058ac8c7ff614ebaf88c0e30bd58dbcd41f58d82a9d5ed200ced45fc5bae22f2ed3cf3826e9348a497009e1280
 )
