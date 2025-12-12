@@ -1,10 +1,8 @@
-include(CMakeFindDependencyMacro)
-
 find_package(unofficial-apr CONFIG QUIET)
-find_dependency(OpenSSL QUIET)
-find_dependency(ZLIB QUIET)
-find_dependency(expat CONFIG QUIET)
-find_dependency(unofficial-sqlite3 CONFIG QUIET)
+find_package(OpenSSL QUIET)
+find_package(ZLIB QUIET)
+find_package(expat CONFIG QUIET)
+find_package(unofficial-sqlite3 CONFIG QUIET)
 
 find_library(APR_LIBRARY
     NAMES apr-1 libapr-1
