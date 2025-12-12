@@ -16,16 +16,6 @@ The package subversion provides the following libraries:
   * libsvn_subr
   * libsvn_wc
 
-Additionally, the following command-line tools are available when the 'tools' feature is enabled:
-
-  * svn - Subversion command line client
-  * svnadmin - Subversion repository administration tool
-  * svnlook - Subversion repository examination tool
-  * svnserve - Subversion server
-  * svnsync - Subversion repository synchronization tool
-  * svnrdump - Subversion remote repository dumping tool
-  * svnmucc - Subversion multiple URL command client
-
 To use the libraries in your CMake project:
 
     find_package(unofficial-subversion CONFIG REQUIRED)
