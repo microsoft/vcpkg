@@ -10,41 +10,11 @@ vcpkg_from_github(
         fix-sysinfo-linux.patch
 )
 
-if(VERSION VERSION_GREATER_EQUAL "1.15.0")
-    set(USE_CMAKE_BUILD TRUE)
-else()
-    set(USE_CMAKE_BUILD FALSE)
-endif()
-
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-if(USE_CMAKE_BUILD)
-    vcpkg_execute_required_process(
-        COMMAND ${PYTHON3} gen-make.py -t cmake
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME "gen-make-${TARGET_TRIPLET}"
-    )
-
-    set(CMAKE_OPTIONS
-        -DSVN_ENABLE_PROGRAMS=OFF
-        -DSVN_ENABLE_TESTS=OFF
-        -DSVN_ENABLE_RA_SERF=ON
-        -DSVN_ENABLE_RA_SVN=ON
-        -DSVN_ENABLE_RA_LOCAL=ON
-    )
-
-    vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS ${CMAKE_OPTIONS}
-    )
-
-    vcpkg_cmake_install()
-    vcpkg_cmake_fixup(CONFIG_PATH lib/cmake/subversion)
-    vcpkg_copy_pdbs()
-
-elseif(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v143")
         set(VSNET_VERSION "2022")
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
