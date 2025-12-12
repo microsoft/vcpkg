@@ -1128,6 +1128,10 @@
       "baseline": "1.89.0",
       "port-version": 0
     },
+    "boost-modular-build-helper": {
+      "baseline": "1.84.0",
+      "port-version": 4
+    },
     "boost-move": {
       "baseline": "1.89.0",
       "port-version": 0
