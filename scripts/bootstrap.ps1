@@ -49,10 +49,16 @@ Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 $Config = ConvertFrom-StringData (Get-Content "$PSScriptRoot\vcpkg-tool-metadata.txt" -Raw)
 $versionDate = $Config.VCPKG_TOOL_RELEASE_TAG
 
-if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match "ARMv[8,9] \(64-bit\)") {
-    & "$scriptsDir/tls12-download-arm64.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe" "$vcpkgRootDir\vcpkg.exe"
+if ($null -eq $env:X_VCPKG_BINARY_DIR) {
+    $vcpkgBinaryDir=$vcpkgRootDir
 } else {
-    & "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
+    $vcpkgBinaryDir="$env:X_VCPKG_BINARY_DIR"
+}
+
+if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_IDENTIFIER -match "ARMv[8,9] \(64-bit\)") {
+    & "$scriptsDir/tls12-download-arm64.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg-arm64.exe" "$vcpkgBinaryDir\vcpkg.exe"
+} else {
+    & "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/$versionDate/vcpkg.exe" "$vcpkgBinaryDir\vcpkg.exe"
 }
 
 Write-Host ""
@@ -63,13 +69,13 @@ if ($LASTEXITCODE -ne 0)
     throw
 }
 
-& "$vcpkgRootDir\vcpkg.exe" version --disable-metrics
+& "$vcpkgBinaryDir\vcpkg.exe" version --disable-metrics
 
 if ($disableMetrics)
 {
-    Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.disable-metrics" -Force
+    Set-Content -Value "" -Path "$vcpkgBinaryDir\vcpkg.disable-metrics" -Force
 }
-elseif (-Not (Test-Path "$vcpkgRootDir\vcpkg.disable-metrics"))
+elseif (-Not (Test-Path "$vcpkgBinaryDir\vcpkg.disable-metrics"))
 {
     # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
     # opted out they should stay opted out.
