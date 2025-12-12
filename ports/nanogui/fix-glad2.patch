@@ -1,0 +1,57 @@
+diff --git a/include/nanogui/opengl.h b/include/nanogui/opengl.h
+index 1c20653..967c40d 100644
+--- a/include/nanogui/opengl.h
++++ b/include/nanogui/opengl.h
+@@ -17,7 +17,7 @@
+ 
+ #ifndef DOXYGEN_SHOULD_SKIP_THIS
+ #if defined(NANOGUI_GLAD)
+-    #include <glad/glad.h>
++    #include <glad/gl.h>
+ #else
+     #if defined(__APPLE__)
+         #define GLFW_INCLUDE_GLCOREARB
+diff --git a/src/example3.cpp b/src/example3.cpp
+index 72deaa8..f9c68e4 100644
+--- a/src/example3.cpp
++++ b/src/example3.cpp
+@@ -14,7 +14,7 @@
+ // GLFW
+ //
+ #if defined(NANOGUI_GLAD)
+-    #include <glad/glad.h>
++    #include <glad/gl.h>
+ #else
+     #if defined(__APPLE__)
+         #define GLFW_INCLUDE_GLCOREARB
+@@ -76,7 +76,7 @@ int main(int /* argc */, char ** /* argv */) {
+     glfwMakeContextCurrent(window);
+ 
+ #if defined(NANOGUI_GLAD)
+-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
++    if (!gladLoadGL(glfwGetProcAddress))
+         throw std::runtime_error("Could not initialize GLAD!");
+     glGetError(); // pull and ignore unhandled errors like GL_INVALID_ENUM
+ #endif
+diff --git a/src/screen.cpp b/src/screen.cpp
+index 5c9920f..5dedc03 100644
+--- a/src/screen.cpp
++++ b/src/screen.cpp
+@@ -173,7 +173,7 @@ Screen::Screen(const Vector2i &size, const std::string &caption, bool resizable,
+ #if defined(NANOGUI_GLAD)
+     if (!gladInitialized) {
+         gladInitialized = true;
+-        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
++        if (!gladLoadGL(glfwGetProcAddress))
+             throw std::runtime_error("Could not initialize GLAD!");
+         glGetError(); // pull and ignore unhandled errors like GL_INVALID_ENUM
+     }
+@@ -318,7 +318,7 @@ void Screen::initialize(GLFWwindow *window, bool shutdownGLFWOnDestruct) {
+ #if defined(NANOGUI_GLAD)
+     if (!gladInitialized) {
+         gladInitialized = true;
+-        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
++        if (!gladLoadGL(glfwGetProcAddress))
+             throw std::runtime_error("Could not initialize GLAD!");
+         glGetError(); // pull and ignore unhandled errors like GL_INVALID_ENUM
+     }

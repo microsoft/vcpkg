@@ -1,0 +1,84 @@
+cmake_minimum_required(VERSION 3.12)
+project(glad C)
+
+# Use the Python executable provided by vcpkg
+set(Python3_EXECUTABLE "${PYTHON_EXECUTABLE}")
+set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
+
+if(GLAD_ARGS)
+    string(REPLACE "|" ";" GLAD_ARGS_LIST "${GLAD_ARGS}")
+else()
+    set(GLAD_ARGS_LIST)
+endif()
+
+if(GLAD_API)
+    string(REPLACE "|" ";" GLAD_API_LIST "${GLAD_API}")
+else()
+    set(GLAD_API_LIST)
+endif()
+
+# Add glad's cmake directory
+set(GLAD_SOURCES_DIR "${PROJECT_SOURCE_DIR}")
+add_subdirectory("${PROJECT_SOURCE_DIR}/cmake" glad_cmake)
+
+set(GLAD_LIBRARY_ARGS glad)
+list(APPEND GLAD_LIBRARY_ARGS ${GLAD_ARGS_LIST})
+if(BUILD_SHARED_LIBS)
+    list(APPEND GLAD_LIBRARY_ARGS SHARED)
+else()
+    list(APPEND GLAD_LIBRARY_ARGS STATIC)
+endif()
+
+set(GLAD_GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/glad-generated")
+list(APPEND GLAD_LIBRARY_ARGS LOCATION "${GLAD_GENERATED_DIR}")
+
+list(APPEND GLAD_LIBRARY_ARGS API ${GLAD_API_LIST})
+list(APPEND GLAD_LIBRARY_ARGS REPRODUCIBLE)
+
+if(NOT GLAD_ALL_EXTENSIONS)
+    list(APPEND GLAD_LIBRARY_ARGS EXTENSIONS NONE)
+endif()
+glad_add_library(${GLAD_LIBRARY_ARGS})
+
+if(WIN32)
+    target_link_libraries(glad opengl32)
+endif()
+
+
+# Fix INTERFACE_INCLUDE_DIRECTORIES to avoid build directory path
+# This is necessary because glad_add_library sets an absolute build path
+set_target_properties(glad PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "$<INSTALL_INTERFACE:include>")
+
+if(GLAD_INSTALL)
+    include(GNUInstallDirs)
+    include(CMakePackageConfigHelpers)
+    
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/glad-config-version.cmake"
+        VERSION "${GLAD_VERSION}"
+        COMPATIBILITY AnyNewerVersion
+    )
+    
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/glad-config-version.cmake"
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/glad-config.cmake"
+        DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/glad"
+    )
+    
+    install(TARGETS glad
+        EXPORT glad-targets
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        INCLUDES DESTINATION include
+    )
+    
+    install(DIRECTORY "${GLAD_GENERATED_DIR}/include/" DESTINATION include)
+    
+    install(
+        EXPORT glad-targets
+        NAMESPACE glad::
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/glad"
+    )
+endif()
