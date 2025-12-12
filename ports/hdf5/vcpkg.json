@@ -1,6 +1,6 @@
 {
   "name": "hdf5",
-  "version": "1.14.6",
+  "version": "2.0.0",
   "description": "HDF5 is a data model, library, and file format for storing and managing data",
   "homepage": "https://www.hdfgroup.org/downloads/hdf5/",
   "license": "BSD-3-Clause",
@@ -26,8 +26,15 @@
     "fortran": {
       "description": "Build with fortran"
     },
+    "hl": {
+      "description": "Build HIGH Level HDF5 Library"
+    },
     "map": {
       "description": "Build the map API"
+    },
+    "mirror": {
+      "description": "Build the Mirror Virtual File Driver",
+      "supports": "!windows | mingw"
     },
     "parallel": {
       "description": "parallel support for HDF5",
@@ -54,9 +61,6 @@
     },
     "tools": {
       "description": "Build hdf tools"
-    },
-    "utils": {
-      "description": "Build HDF5 Utils"
     },
     "zlib": {
       "description": "Build with zlib",
