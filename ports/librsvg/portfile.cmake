@@ -27,15 +27,17 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
+set(RSVG_API_VERSION 2.0)
+
 block(SCOPE_FOR VARIABLES)
     set(RSVG_API_MAJOR_VERSION 2)
     set(prefix "")
     set(libdir [[${prefix}/lib]])
     set(exec_prefix [[${prefix}]])
     set(includedir [[${prefix}/include]])
-    configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/librsvg-${MAJOR_MINOR}.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/librsvg-${RSVG_API_VERSION}.pc" @ONLY)
     if(NOT VCPKG_BUILD_TYPE)
-        configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/librsvg-${MAJOR_MINOR}.pc" @ONLY)
+        configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/librsvg-${RSVG_API_VERSION}.pc" @ONLY)
     endif()
 endblock()
 
@@ -59,7 +61,7 @@ file(COPY
         "${SOURCE_PATH}/rsvg-cairo.h"
         "${GEN_HEADERS_DIR}/librsvg-features.h"
         "${GEN_HEADERS_DIR}/librsvg-enum-types.h"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/include/librsvg-${MAJOR_MINOR}/librsvg"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/librsvg-${RSVG_API_VERSION}/librsvg"
 )
 
 file(COPY "${CURRENT_PORT_DIR}/unofficial-librsvg-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-librsvg")
