@@ -3937,7 +3937,7 @@
       "port-version": 1
     },
     "immer": {
-      "baseline": "0.8.1",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "implot": {
