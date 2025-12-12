@@ -29,15 +29,44 @@ vcpkg_copy_pdbs()
 
 set(RSVG_API_VERSION 2.0)
 
+set(CURRENT_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+if(NOT VCPKG_BUILD_TYPE)
+    set(CURRENT_BUILD_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+endif()
+
+# Create and install pkg-config file
 block(SCOPE_FOR VARIABLES)
     set(RSVG_API_MAJOR_VERSION 2)
     set(prefix "")
     set(libdir [[${prefix}/lib]])
     set(exec_prefix [[${prefix}]])
     set(includedir [[${prefix}/include]])
-    configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/librsvg-${RSVG_API_VERSION}.pc" @ONLY)
-    if(NOT VCPKG_BUILD_TYPE)
-        configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/librsvg-${RSVG_API_VERSION}.pc" @ONLY)
+    
+    set(librsvg_pc_requires_private
+        libxml-2.0
+        pangocairo
+        pangoft2
+        cairo-png
+        libcroco-0.6
+        gthread-2.0
+        gmodule-2.0
+        gobject-2.0
+        gio-unix-2.0
+        fontconfig
+    )
+    if(VCPKG_TARGET_IS_WINDOWS)
+        string(REPLACE "gio-unix" "gio-windows" librsvg_pc_requires_private "${librsvg_pc_requires_private}")
+    endif()
+
+    configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_BUILD_DIR}/librsvg.pc" @ONLY)
+    file(READ "${CURRENT_BUILD_DIR}/librsvg.pc" librsvg_pc_contents)
+    list(JOIN librsvg_pc_requires_private " " requires_private)
+    string(REPLACE "Requires.private:" "Requires.private: ${requires_private}" librsvg_pc_contents "${librsvg_pc_contents}")
+    file(WRITE "${CURRENT_BUILD_DIR}/librsvg-${RSVG_API_VERSION}.pc" ${librsvg_pc_contents})
+ 
+    file(COPY "${CURRENT_BUILD_DIR}/librsvg-${RSVG_API_VERSION}.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+    if (NOT VCPKG_BUILD_TYPE)
+        file(COPY "${CURRENT_BUILD_DIR}/librsvg-${RSVG_API_VERSION}.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
     endif()
 endblock()
 
@@ -51,16 +80,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 endif()
 
 # install headers
-set(GEN_HEADERS_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-if(NOT VCPKG_BUILD_TYPE)
-    set(GEN_HEADERS_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-endif()
-
 file(COPY
         "${SOURCE_PATH}/librsvg/rsvg.h"
         "${SOURCE_PATH}/rsvg-cairo.h"
-        "${GEN_HEADERS_DIR}/librsvg-features.h"
-        "${GEN_HEADERS_DIR}/librsvg-enum-types.h"
+        "${CURRENT_BUILD_DIR}/librsvg-features.h"
+        "${CURRENT_BUILD_DIR}/librsvg-enum-types.h"
     DESTINATION "${CURRENT_PACKAGES_DIR}/include/librsvg-${RSVG_API_VERSION}/librsvg"
 )
 
