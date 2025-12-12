@@ -20,7 +20,7 @@
     },
     "pango",
     {
-      "name": "vcpkg-cmake",
+      "name": "vcpkg-tool-meson",
       "host": true
     }
   ]

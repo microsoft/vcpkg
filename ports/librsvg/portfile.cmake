@@ -14,21 +14,31 @@ vcpkg_from_github(
         fix-libxml2-2.13.5.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" "${CMAKE_CURRENT_LIST_DIR}/config.h.linux" "${CMAKE_CURRENT_LIST_DIR}/generate_enum_types.py" DESTINATION "${SOURCE_PATH}")
-
-vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_find_acquire_program(PYTHON3)
-
-vcpkg_cmake_configure(
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DPYTHON3=${PYTHON3}"
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
-        "-DGLIB_MKENUMS=${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums"
+        "-Dtests=disabled"
+        "-Drsvg-convert=disabled"
+        "-Drsvg-view-3=disabled"
+    ADDITIONAL_BINARIES
+        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
-vcpkg_cmake_install()
+vcpkg_install_meson()
 vcpkg_copy_pdbs()
+
+block(SCOPE_FOR VARIABLES)
+    set(RSVG_API_MAJOR_VERSION 2)
+    set(prefix "")
+    set(libdir [[${prefix}/lib]])
+    set(exec_prefix [[${prefix}]])
+    set(includedir [[${prefix}/include]])
+    configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/librsvg-${MAJOR_MINOR}.pc" @ONLY)
+    if(NOT VCPKG_BUILD_TYPE)
+        configure_file("${SOURCE_PATH}/librsvg.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/librsvg-${MAJOR_MINOR}.pc" @ONLY)
+    endif()
+endblock()
+
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -38,7 +48,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endforeach()
 endif()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+# install headers
+set(GEN_HEADERS_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+if(NOT VCPKG_BUILD_TYPE)
+    set(GEN_HEADERS_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+endif()
+
+file(COPY
+        "${SOURCE_PATH}/librsvg/rsvg.h"
+        "${SOURCE_PATH}/rsvg-cairo.h"
+        "${GEN_HEADERS_DIR}/librsvg-features.h"
+        "${GEN_HEADERS_DIR}/librsvg-enum-types.h"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/include/librsvg-${MAJOR_MINOR}/librsvg"
+)
 
 file(COPY "${CURRENT_PORT_DIR}/unofficial-librsvg-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-librsvg")
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
