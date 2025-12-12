@@ -6817,7 +6817,7 @@
       "port-version": 0
     },
     "neko-schema": {
-      "baseline": "1.1.4",
+      "baseline": "1.1.5",
       "port-version": 0
     },
     "neko-system": {
