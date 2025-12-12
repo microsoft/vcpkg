@@ -189,9 +189,6 @@
       "description": "Metal support for skia",
       "supports": "ios, osx"
     },
-    "pathediting": {
-      "description": "Deprecated SkPath editing support"
-    },
     "pdf": {
       "description": "PDF backend"
     },

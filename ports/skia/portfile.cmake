@@ -19,7 +19,7 @@ vcpkg_from_github(
         allow-disabling-lib-dl.patch
         always-build-pathops.patch
         skstrendswith-dllexport.patch
-        skia-pathediting.patch
+        skpath-enable-edit-methods.patch # See SkPath section in https://github.com/google/skia/blob/chrome/m143/RELEASE_NOTES.md
         dawn.patch
         skcms-dllexport.patch
 )
@@ -232,12 +232,6 @@ if("dawn" IN_LIST FEATURES)
     string(APPEND OPTIONS " skia_use_dawn=true")
     declare_external_from_pkgconfig(dawn PATH "third_party/dawn" MODULES unofficial_webgpu_dawn)
     list(APPEND required_externals dawn)
-endif()
-
-if("pathediting" IN_LIST FEATURES)
-    string(APPEND OPTIONS " skia_enable_pathediting=true")
-else()
-    string(APPEND OPTIONS " skia_enable_pathediting=false")
 endif()
 
 if("pdf" IN_LIST FEATURES)
