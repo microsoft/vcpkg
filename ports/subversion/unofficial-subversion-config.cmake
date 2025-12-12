@@ -1,6 +1,6 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(unofficial-apr CONFIG QUIET)
+find_package(unofficial-apr CONFIG QUIET)
 find_dependency(OpenSSL QUIET)
 find_dependency(ZLIB QUIET)
 find_dependency(expat CONFIG QUIET)
