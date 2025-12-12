@@ -2933,8 +2933,8 @@
       "port-version": 3
     },
     "ffnvcodec": {
-      "baseline": "12.2.72.0",
-      "port-version": 2
+      "baseline": "13.0.19.0",
+      "port-version": 0
     },
     "fftw3": {
       "baseline": "3.3.10",
