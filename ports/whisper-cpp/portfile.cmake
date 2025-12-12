@@ -6,25 +6,44 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake-config.diff
-        pkgconfig.diff
+        cmake-main.diff
+        cmake-ggml.diff
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/ggml")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    vulkan GGML_VULKAN
+    cuda GGML_CUDA
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # updating bindings/javascript/package.json
     OPTIONS
+        -DBUILD_SHARED_LIBS=ON
+        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
+        ${FEATURE_OPTIONS}
         -DWHISPER_ALL_WARNINGS=OFF
-        -DWHISPER_BUILD_EXAMPLES=OFF
+        -DWHISPER_BLAS=OFF
+        -DWHISPER_BUILD_EXAMPLES=ON
         -DWHISPER_BUILD_SERVER=OFF
         -DWHISPER_BUILD_TESTS=OFF
         -DWHISPER_CCACHE=OFF
-        -DWHISPER_USE_SYSTEM_GGML=ON
+        -DWHISPER_USE_SYSTEM_GGML=OFF
+    MAYBE_UNUSED_VARIABLES
+        GGML_VULKAN
+        WHISPER_BLAS
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/whisper")
+
+# Modify whisper.pc to not link ggml since it's static
+file(READ "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/whisper.pc" _contents)
+string(REPLACE "-lggml -lggml-base -lwhisper" "-lwhisper" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/whisper.pc" "${_contents}")
+
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${SOURCE_PATH}/models/convert-pt-to-ggml.py" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
