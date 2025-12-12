@@ -7837,8 +7837,8 @@
       "port-version": 1
     },
     "ptex": {
-      "baseline": "2.4.3",
-      "port-version": 1
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "pthread": {
       "baseline": "3.0.0",
