@@ -153,3 +153,19 @@ index 81114e8..d660f8a 100644
              {
                  std::cout << "Empty input sequence with not dynamic matrix" << std::endl;
                  return false;
+diff --git a/src/yaml_generator.cpp b/src/yaml_generator.cpp
+index 8478e59..f45dc80 100644
+--- a/src/yaml_generator.cpp
++++ b/src/yaml_generator.cpp
+@@ -67,7 +67,11 @@ std::string generateTemplate(std::string                     filepath,
+     std::ofstream template_file;
+     template_file = std::ofstream(fp.c_str(), std::ofstream::out);  // open log file
+     if (not template_file.is_open())
++#ifdef _WIN32
++        throw std::runtime_error(std::string("Failed to open the template_file: ") + fp.string());
++#else
+         throw std::runtime_error(std::string("Failed to open the template_file: ") + fp.c_str());
++#endif
+     else
+         template_file << template_string;
+ 
