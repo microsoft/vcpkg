@@ -52,9 +52,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "subversion_vcnet.sln"
         TARGET "Rebuild"
-        RELEASE_CONFIGURATION "Release"
-        DEBUG_CONFIGURATION "Debug"
-        OPTIONS "/p:Platform=${VCPKG_TARGET_ARCHITECTURE}"
     )
 
     file(INSTALL "${SOURCE_PATH}/subversion/include/"
@@ -107,8 +104,7 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         ADD_BIN_TO_PATH
-        OPTIONS
-            ${CONFIGURE_OPTIONS}
+        OPTIONS ${CONFIGURE_OPTIONS}
     )
 
     vcpkg_install_make()
