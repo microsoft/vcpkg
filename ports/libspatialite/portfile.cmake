@@ -35,7 +35,12 @@ if(ENABLE_RTTOPO)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(target spatialite.lib)
     set(CL_FLAGS "")
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        set(target spatialite_i.lib)
+        string(APPEND CL_FLAGS " /DDLL_EXPORT")
+    endif()
     if(NOT ENABLE_FREEXL)
         string(APPEND CL_FLAGS " /DOMIT_FREEXL")
     endif()
@@ -66,8 +71,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
-        PREFER_JOM
         CL_LANGUAGE C
+        OPTIONS
+            "TARGET=${target}"
         OPTIONS_RELEASE
             "CL_FLAGS=${CL_FLAGS_RELEASE}"
             "INST_DIR=${INST_DIR}"
@@ -82,20 +88,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+    file(GLOB_RECURSE headers "${CURRENT_PACKAGES_DIR}/include/*.h")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib")
-        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib")
-        endif()
+        foreach(file IN LISTS headers)
+            vcpkg_replace_string("${file}" "#ifdef DLL_EXPORT" "#if 0" IGNORE_UNCHANGED)
+        endforeach()
     else()
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
-        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
-        endif()
+        foreach(file IN LISTS headers)
+            vcpkg_replace_string("${file}" "#ifdef DLL_EXPORT" "#if 1" IGNORE_UNCHANGED)
+            vcpkg_replace_string("${file}" "__declspec(dllexport)" "__declspec(dllimport)" IGNORE_UNCHANGED)
+        endforeach()
     endif()
 
     set(infile "${SOURCE_PATH}/spatialite.pc.in")
