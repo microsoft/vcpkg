@@ -6,17 +6,15 @@ vcpkg_from_github(
 
 # Follow the triplet linkage (dynamic/shared vs static)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" UNILINK_BUILD_SHARED)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  UNILINK_BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_SHARED_LIBS=${UNILINK_BUILD_SHARED}
         -DUNILINK_BUILD_SHARED=${UNILINK_BUILD_SHARED}
-        -DUNILINK_BUILD_STATIC=${UNILINK_BUILD_STATIC}
         -DUNILINK_BUILD_TESTS=OFF
         -DUNILINK_BUILD_EXAMPLES=OFF
-        -DUNILINK_BUILD_DOCS=OFF 
+        -DUNILINK_BUILD_DOCS=OFF
 )
 
 vcpkg_cmake_install()
