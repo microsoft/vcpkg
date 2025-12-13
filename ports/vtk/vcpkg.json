@@ -1,7 +1,7 @@
 {
   "name": "vtk",
   "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 13,
+  "port-version": 14,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
