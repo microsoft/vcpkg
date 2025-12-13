@@ -1,0 +1,115 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 920e4c3..91299b8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -197,8 +197,6 @@ if(Boost_FOUND)
+ 	ADD_DEFINITIONS(${Boost_DEFINITIONS})
+ 	LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+ 	if(NOT MSVC AND DEFINED CMAKE_TOOLCHAIN_FILE)
+-		# work around this missing library link in vcpkg
+-		LIST(APPEND Boost_LIBRARIES zstd)
+ 	endif()
+ 	SET(_USE_BOOST TRUE)
+ 	if(OpenMVS_USE_PYTHON AND Boost_${Boost_EXTRA_COMPONENTS}_FOUND)
+diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
+index 9747b3e..8f406ad 100644
+--- a/build/Templates/OpenMVSConfig.cmake.in
++++ b/build/Templates/OpenMVSConfig.cmake.in
+@@ -15,6 +15,53 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+ 
+ set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
+ 
++if (MSVC)
++    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /GL")
++    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
++    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
++    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /LTCG")
++endif()
++
++set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++
++include(CMakeFindDependencyMacro)
++
++find_dependency(Boost COMPONENTS iostreams program_options system serialization)
++add_definitions(${Boost_DEFINITIONS} -D_USE_BOOST)
++include_directories(${Boost_INCLUDE_DIRS})
++
++find_dependency(Eigen3)
++add_definitions(${EIGEN3_DEFINITIONS} -D_USE_EIGEN)
++include_directories(${EIGEN3_INCLUDE_DIRS})
++
++find_dependency(OpenCV)
++add_definitions(${OpenCV_DEFINITIONS})
++
++find_dependency(CGAL)
++add_definitions(${CGAL_DEFINITIONS})
++
++if(@OpenMVS_USE_CERES@)
++    find_dependency(Ceres)
++    add_definitions(${CERES_DEFINITIONS})
++endif()
++
++if(@OpenMVS_USE_CUDA@)
++    find_dependency(CUDA)
++    add_definitions(-D_USE_CUDA)
++    include_directories(${CUDA_INCLUDE_DIRS})
++endif()
++
++if(@OpenMVS_USE_OPENGL@)
++    find_dependency(OpenGL)
++    add_definitions(${OpenGL_DEFINITIONS} -D_USE_OPENGL)
++endif()
++
++if(@OpenMVS_USE_OPENMP@)
++    find_dependency(OpenMP)
++    add_definitions(-D_USE_OPENMP)
++endif()
++
+ # These are IMPORTED targets created by OpenMVSTargets.cmake
+ set(OpenMVS_LIBRARIES MVS)
+ set(OpenMVS_BINARIES InterfaceCOLMAP DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
+diff --git a/build/Utils.cmake b/build/Utils.cmake
+index 86d3430..c963ee1 100644
+--- a/build/Utils.cmake
++++ b/build/Utils.cmake
+@@ -174,6 +174,7 @@ macro(ComposePackageLibSuffix)
+ 	set(PACKAGE_LIB_SUFFIX_DBG "")
+ 	set(PACKAGE_LIB_SUFFIX_REL "")
+ 	if(MSVC)
++	elseif(0)
+ 		if("${MSVC_VERSION}" STRGREATER "1929")
+ 			set(PACKAGE_LIB_SUFFIX "/vc17")
+ 		elseif("${MSVC_VERSION}" STRGREATER "1916")
+@@ -819,6 +820,7 @@ macro(ConfigLibrary)
+ 	set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+ 	# Make relative paths absolute (needed later on)
+ 	foreach(p LIB BIN INCLUDE CMAKE)
++		break() # keep relative paths
+ 		set(var INSTALL_${p}_DIR)
+ 		set(varp INSTALL_${p}_DIR_PREFIX)
+ 		if(IS_ABSOLUTE "${${varp}}")
+@@ -847,6 +849,10 @@ function(cxx_library_with_type name folder type cxx_flags)
+   if(BUILD_SHARED_LIBS OR PARTIAL_BUILD_SHARED_LIBS)
+     set_target_properties("${name}" PROPERTIES POSITION_INDEPENDENT_CODE ON)
+   endif()
++  set(ambiguous_names Common IO Math)
++  if(name IN_LIST ambiguous_names)
++    set_target_properties("${name}" PROPERTIES OUTPUT_NAME "MVS_${name}")
++  endif()
+ endfunction()
+ 
+ # cxx_executable_with_flags(name cxx_flags libs srcs...)
+diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
+index 8533865..9595914 100644
+--- a/libs/MVS/CMakeLists.txt
++++ b/libs/MVS/CMakeLists.txt
+@@ -48,7 +48,7 @@ endif()
+ if(_USE_CUDA)
+ 	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
+ endif()
+-TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
++TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_LIBRARIES})
+ 
+ if(OpenMVS_USE_PYTHON)
+ 	# Create the Python wrapper

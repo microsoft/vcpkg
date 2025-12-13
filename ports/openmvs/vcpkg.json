@@ -1,9 +1,8 @@
 {
   "name": "openmvs",
-  "version": "2.1.0",
-  "port-version": 7,
+  "version": "2.3.0",
   "description": "OpenMVS: open Multi-View Stereo reconstruction library",
-  "homepage": "https://cdcseacave.github.io/openMVS",
+  "homepage": "https://cdcseacave.github.io/",
   "license": "AGPL-3.0-only",
   "supports": "!xbox",
   "dependencies": [
@@ -17,8 +16,7 @@
       "default-features": false
     },
     "eigen3",
-    "glew",
-    "glfw3",
+    "libjpeg-turbo",
     "libpng",
     {
       "name": "opencv",
@@ -27,6 +25,7 @@
         "highgui"
       ]
     },
+    "opengl",
     {
       "name": "tiff",
       "default-features": false
@@ -42,9 +41,6 @@
     },
     "zlib"
   ],
-  "default-features": [
-    "nonfree"
-  ],
   "features": {
     "ceres": {
       "description": "CERES support for openmvs",
@@ -58,19 +54,21 @@
         "cuda"
       ]
     },
-    "nonfree": {
-      "description": "nonfree support for openmvs"
-    },
     "openmp": {
       "description": "OpenMP support for openmvs"
     },
     "tools": {
-      "description": "Build tools",
+      "description": "Install tools"
+    },
+    "viewer": {
+      "description": "Install Viewer tool",
       "dependencies": [
+        "glew",
+        "glfw3",
         {
-          "name": "openmvg",
+          "name": "openmvs",
           "features": [
-            "software"
+            "tools"
           ]
         }
       ]
