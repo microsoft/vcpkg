@@ -1,0 +1,10 @@
+moda provides CMake targets:
+    find_package(moda CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE moda::moda)
+moda provides the following include path:
+    include/moda/*.h
+include the moda headers with:
+    #include <moda/DataSet.h>
+    #include <moda/Solver.h>
+moda requires C++17
+    
