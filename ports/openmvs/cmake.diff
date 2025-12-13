@@ -1,0 +1,130 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 920e4c3..6f317c2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -109,7 +109,10 @@ if(OpenMVS_USE_OPENGL)
+ endif()
+ 
+ if(OpenMVS_USE_CUDA)
+-	FIND_PACKAGE(CUDA)
++	FIND_PACKAGE(CUDAToolkit REQUIRED)
++	set(CUDA_FOUND 1)
++	set(CUDA_INCLUDE_DIRS "")
++	set(CUDA_CUDA_LIBRARY CUDA::cuda_driver)
+ 	if(CUDA_FOUND)
+ 		ENABLE_LANGUAGE(CUDA)
+ 		# CUDA-11.x can not be compiled using C++14 standard on Windows
+@@ -197,8 +200,6 @@ if(Boost_FOUND)
+ 	ADD_DEFINITIONS(${Boost_DEFINITIONS})
+ 	LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+ 	if(NOT MSVC AND DEFINED CMAKE_TOOLCHAIN_FILE)
+-		# work around this missing library link in vcpkg
+-		LIST(APPEND Boost_LIBRARIES zstd)
+ 	endif()
+ 	SET(_USE_BOOST TRUE)
+ 	if(OpenMVS_USE_PYTHON AND Boost_${Boost_EXTRA_COMPONENTS}_FOUND)
+@@ -282,11 +283,11 @@ INCLUDE(CMakePackageConfigHelpers)
+ write_basic_package_version_file("${PROJECT_BINARY_DIR}/OpenMVSConfigVersion.cmake"
+ 	VERSION ${OpenMVS_VERSION}
+ 	COMPATIBILITY AnyNewerVersion)
+-SET(INSTALL_INCLUDE_DIR_IN ${INSTALL_INCLUDE_DIR_PREFIX} ${OpenMVS_EXTRA_INCLUDES})
+-SET(INSTALL_CMAKE_DIR_IN ${INSTALL_CMAKE_DIR_PREFIX})
++SET(INSTALL_INCLUDE_DIR_IN "${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR}" ${OpenMVS_EXTRA_INCLUDES})
++SET(INSTALL_CMAKE_DIR_IN "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
+ configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/build/Templates/OpenMVSConfig.cmake.in"
+ 	"${PROJECT_BINARY_DIR}/OpenMVSConfig.cmake"
+-	INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
++	INSTALL_DESTINATION "${INSTALL_CMAKE_DIR}"
+ 	NO_SET_AND_CHECK_MACRO)
+ # Install the OpenMVSConfig.cmake and OpenMVSConfigVersion.cmake
+ INSTALL(FILES
+diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
+index 9747b3e..ec42575 100644
+--- a/build/Templates/OpenMVSConfig.cmake.in
++++ b/build/Templates/OpenMVSConfig.cmake.in
+@@ -15,8 +15,54 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+ 
+ set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
+ 
++if (MSVC)
++    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /GL")
++    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
++    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
++    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /LTCG")
++endif()
++
++set(CMAKE_CXX_STANDARD 14)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++
++include(CMakeFindDependencyMacro)
++
++find_dependency(Boost COMPONENTS iostreams program_options system serialization)
++add_definitions(${Boost_DEFINITIONS})
++
++find_dependency(Eigen3)
++add_definitions(${EIGEN3_DEFINITIONS})
++
++find_dependency(OpenCV)
++add_definitions(${OpenCV_DEFINITIONS})
++
++find_dependency(CGAL)
++add_definitions(${CGAL_DEFINITIONS})
++
++if(@OpenMVS_USE_CERES@)
++    find_dependency(Ceres)
++    add_definitions(${CERES_DEFINITIONS})
++endif()
++
++if(@OpenMVS_USE_CUDA@)
++    find_dependency(CUDAToolkit)
++#    include_directories(${CUDA_INCLUDE_DIRS})
++endif()
++
++if(@OpenMVS_USE_OPENGL@)
++    find_dependency(OpenGL)
++    add_definitions(${OpenGL_DEFINITIONS})
++endif()
++
++if(@OpenMVS_USE_OPENMP@)
++    find_dependency(OpenMP)
++endif()
++
+ # These are IMPORTED targets created by OpenMVSTargets.cmake
+ set(OpenMVS_LIBRARIES MVS)
++if(NOT "@BUILD_SHARED_LIBS@")
++    set(OpenMVS_LIBRARIES OpenMVS::MVS)
++endif()
+ set(OpenMVS_BINARIES InterfaceCOLMAP DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/OpenMVSTargets.cmake")
+diff --git a/build/Utils.cmake b/build/Utils.cmake
+index 86d3430..c963ee1 100644
+--- a/build/Utils.cmake
++++ b/build/Utils.cmake
+@@ -174,6 +174,7 @@ macro(ComposePackageLibSuffix)
+ 	set(PACKAGE_LIB_SUFFIX_DBG "")
+ 	set(PACKAGE_LIB_SUFFIX_REL "")
+ 	if(MSVC)
++	elseif(0)
+ 		if("${MSVC_VERSION}" STRGREATER "1929")
+ 			set(PACKAGE_LIB_SUFFIX "/vc17")
+ 		elseif("${MSVC_VERSION}" STRGREATER "1916")
+@@ -819,6 +820,7 @@ macro(ConfigLibrary)
+ 	set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+ 	# Make relative paths absolute (needed later on)
+ 	foreach(p LIB BIN INCLUDE CMAKE)
++		break() # keep relative paths
+ 		set(var INSTALL_${p}_DIR)
+ 		set(varp INSTALL_${p}_DIR_PREFIX)
+ 		if(IS_ABSOLUTE "${${varp}}")
+@@ -847,6 +849,10 @@ function(cxx_library_with_type name folder type cxx_flags)
+   if(BUILD_SHARED_LIBS OR PARTIAL_BUILD_SHARED_LIBS)
+     set_target_properties("${name}" PROPERTIES POSITION_INDEPENDENT_CODE ON)
+   endif()
++  set(ambiguous_names Common IO Math)
++  if(name IN_LIST ambiguous_names)
++    set_target_properties("${name}" PROPERTIES OUTPUT_NAME "MVS_${name}")
++  endif()
+ endfunction()
+ 
+ # cxx_executable_with_flags(name cxx_flags libs srcs...)
