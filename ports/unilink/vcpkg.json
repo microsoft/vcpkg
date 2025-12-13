@@ -4,6 +4,7 @@
   "description": "Cross-platform communication middleware (Serial/TCP/UDP) using Boost.Asio.",
   "homepage": "https://github.com/jwsung91/unilink",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
     "boost-asio",
     "boost-system",
