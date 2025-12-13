@@ -2,12 +2,12 @@ diff --git a/config/meson.build b/config/meson.build
 index 5ed4625d9e..3f89fd0768 100644
 --- a/config/meson.build
 +++ b/config/meson.build
-@@ -445,7 +445,7 @@ Please install libnuma, or set 'max_numa_nodes' option to '1' to build without N
+@@ -461,7 +461,7 @@ Please install libnuma, or set 'max_numa_nodes' option to '1' to build without N
  endif
  
  # set the install path for the drivers
 -dpdk_conf.set_quoted('RTE_EAL_PMD_PATH', eal_pmd_path)
 +dpdk_conf.set_quoted('RTE_EAL_PMD_PATH', '')
  
- install_headers(['rte_config.h'],
-         subdir: get_option('include_subdir_arch'))
+ dpdk_arch_headers += files('rte_config.h')
+ 

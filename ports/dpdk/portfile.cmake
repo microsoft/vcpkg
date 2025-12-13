@@ -28,7 +28,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
   REF "v${VERSION}"
-  SHA512 0d0ee4eb70e8021882a1d6548cf757972388c0a561ee71bb0e4b330be61f1463f4eaec55202d7a35eef8b392ecf0b3888713692ba8cd88f850e7b9072504733e
+  SHA512 21b1fd1b87797a61c3480e9b049a38ea5be2fb174b8d1d397db25a0d6c04281f1951e402276299fd605763ef6aa867f1285b2321f03214aa6122553cfb53771e
   HEAD_REF main
   PATCHES
       0001-enable-either-static-or-shared-build.patch
@@ -36,7 +36,7 @@ vcpkg_from_github(
       0003-remove-examples-src-from-datadir.patch
       0004-stop-building-apps.patch
       0005-no-absolute-driver-path.patch
-      rename-sched.h.diff
+      0006-rename-sched.h.patch
 )
 
 macro(append_bool_option feature_name option_name)
@@ -50,7 +50,6 @@ endmacro()
 set(DPDK_OPTIONS "")
 set(DPDK_OPTIONS_RELEASE "")
 append_bool_option("docs" "enable_docs")
-append_bool_option("kmods" "enable_kmods")
 append_bool_option("tests" "tests")
 append_bool_option("trace" "enable_trace_fp")
 
