@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)  # needs fixes
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/openMVS
@@ -13,9 +17,11 @@ file(REMOVE "${SOURCE_PATH}/build/Modules/FindEigen3.cmake")
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         ceres       OpenMVS_USE_CERES
+        ceres       VCPKG_LOCK_FIND_PACKAGE_Ceres
         cuda        OpenMVS_USE_CUDA
         cuda        VCPKG_LOCK_FIND_PACKAGE_CUDA
         openmp      OpenMVS_USE_OPENMP
+        openmp      VCPKG_LOCK_FIND_PACKAGE_OpenMP
         tools       OpenMVS_BUILD_TOOLS
         viewer      VCPKG_LOCK_FIND_PACKAGE_GLEW
         viewer      VCPKG_LOCK_FIND_PACKAGE_GLFW
@@ -41,7 +47,6 @@ vcpkg_cmake_configure(
         -DCMAKE_POLICY_DEFAULT_CMP0072=NEW  # OpenGL VND
         -DCMAKE_POLICY_DEFAULT_CMP0167=NEW  # Boost
         -DCMAKE_POLICY_DEFAULT_CMP0177=NEW  # install() DESTINATION
-        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON  # Avoid libs\Common\List.h(1204): error C2541: 'delete': cannot delete objects that are not pointers
         -DINSTALL_CMAKE_DIR:STRING=share/openmvs
         -DINSTALL_INCLUDE_DIR:STRING=include/openmvs
         -DOpenMVS_ENABLE_TESTS=OFF
@@ -61,9 +66,11 @@ vcpkg_cmake_configure(
         -DOpenMVS_BUILD_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES
         # subject to features
+        VCPKG_LOCK_FIND_PACKAGE_Ceres
         VCPKG_LOCK_FIND_PACKAGE_CUDA
         VCPKG_LOCK_FIND_PACKAGE_GLEW
         VCPKG_LOCK_FIND_PACKAGE_GLFW
+        VCPKG_LOCK_FIND_PACKAGE_OpenMP
         VCPKG_LOCK_FIND_PACKAGE_OpenMVG
 )
 

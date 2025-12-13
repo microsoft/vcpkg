@@ -1,7 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 920e4c3..6f317c2 100644
+index 920e4c3..28c7c00 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -87,8 +87,8 @@ if(OpenMVS_USE_OPENMP)
+ 		#https://github.com/Kitware/CMake/blob/42212f7539040139ecec092547b7d58ef12a4d72/Modules/FindOpenMP.cmake#L252
+ 		if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang" AND (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7.0"))
+ 			SET(OpenMP_LIBS ${OpenMP_libomp_LIBRARY})
+-			LIST(APPEND OpenMVS_EXTRA_LIBS ${OpenMP_LIBS})
+ 		endif()
++		LIST(APPEND OpenMVS_EXTRA_LIBS OpenMP::OpenMP_CXX)
+ 	else()
+ 		MESSAGE("-- Can't find OpenMP. Continuing without it.")
+ 	endif()
 @@ -109,7 +109,10 @@ if(OpenMVS_USE_OPENGL)
  endif()
  
@@ -9,7 +19,7 @@ index 920e4c3..6f317c2 100644
 -	FIND_PACKAGE(CUDA)
 +	FIND_PACKAGE(CUDAToolkit REQUIRED)
 +	set(CUDA_FOUND 1)
-+	set(CUDA_INCLUDE_DIRS "")
++	set(CUDA_INCLUDE_DIRS "${CUDAToolkit_INCLUDE_DIRS}")
 +	set(CUDA_CUDA_LIBRARY CUDA::cuda_driver)
  	if(CUDA_FOUND)
  		ENABLE_LANGUAGE(CUDA)
@@ -39,10 +49,10 @@ index 920e4c3..6f317c2 100644
  # Install the OpenMVSConfig.cmake and OpenMVSConfigVersion.cmake
  INSTALL(FILES
 diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
-index 9747b3e..ec42575 100644
+index 9747b3e..f1b981c 100644
 --- a/build/Templates/OpenMVSConfig.cmake.in
 +++ b/build/Templates/OpenMVSConfig.cmake.in
-@@ -15,8 +15,54 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+@@ -15,8 +15,49 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
  
  set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
  
@@ -59,30 +69,25 @@ index 9747b3e..ec42575 100644
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(Boost COMPONENTS iostreams program_options system serialization)
-+add_definitions(${Boost_DEFINITIONS})
 +
 +find_dependency(Eigen3)
-+add_definitions(${EIGEN3_DEFINITIONS})
++list(APPEND OpenMVS_DEFINITIONS ${EIGEN3_DEFINITIONS})
 +
 +find_dependency(OpenCV)
-+add_definitions(${OpenCV_DEFINITIONS})
 +
 +find_dependency(CGAL)
-+add_definitions(${CGAL_DEFINITIONS})
 +
 +if(@OpenMVS_USE_CERES@)
 +    find_dependency(Ceres)
-+    add_definitions(${CERES_DEFINITIONS})
 +endif()
 +
 +if(@OpenMVS_USE_CUDA@)
 +    find_dependency(CUDAToolkit)
-+#    include_directories(${CUDA_INCLUDE_DIRS})
++    list(APPEND OpenMVS_INCLUDE_DIRS ${CUDAToolkit_INCLUDE_DIRS})
 +endif()
 +
 +if(@OpenMVS_USE_OPENGL@)
 +    find_dependency(OpenGL)
-+    add_definitions(${OpenGL_DEFINITIONS})
 +endif()
 +
 +if(@OpenMVS_USE_OPENMP@)
@@ -128,3 +133,22 @@ index 86d3430..c963ee1 100644
  endfunction()
  
  # cxx_executable_with_flags(name cxx_flags libs srcs...)
+diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
+index 8533865..2182b8b 100644
+--- a/libs/MVS/CMakeLists.txt
++++ b/libs/MVS/CMakeLists.txt
+@@ -49,6 +49,14 @@ if(_USE_CUDA)
+ 	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
+ endif()
+ TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
++target_link_libraries(MVS PRIVATE
++	"$<INSTALL_INTERFACE:OpenMP::OpenMP_CXX>"
++)
++target_include_directories(MVS PUBLIC
++	"$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>"
++	"$<INSTALL_INTERFACE:${EIGEN3_INCLUDE_DIR}>"
++	"$<INSTALL_INTERFACE:${OpenCV_INCLUDE_DIRS}>"
++)
+ 
+ if(OpenMVS_USE_PYTHON)
+ 	# Create the Python wrapper
