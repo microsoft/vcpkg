@@ -6,10 +6,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxxf86vm
-    REF 7fe2d41f164d3015216c1079cc7fbce1eea90c98
-    SHA512 c7ee07478bcc5db18e47a5a7b8965d89172bbab733f60fb13b9527b7888445fdd86d5d99aa67d6436fc2ef3ea0bd8d9c6e4f10fbef351f229de982bd6f21f9c9
+    REF 4f7497ee3b0deb0418ce48dcd862fd6c23e20064
+    SHA512 ae7461b3f5895042c0d91454556e14dc614feb10af6d21c8b4e9371cc8048361585c890953253d2d6cfc9eda863a002887dbd98669a3db3cabd2e607df0f826d
     HEAD_REF master
-    PATCHES no-undefined.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -31,5 +30,5 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 endif()
