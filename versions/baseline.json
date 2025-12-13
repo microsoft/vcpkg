@@ -10517,7 +10517,7 @@
       "port-version": 0
     },
     "wcslib": {
-      "baseline": "8.4",
+      "baseline": "8.5",
       "port-version": 0
     },
     "websocketpp": {
