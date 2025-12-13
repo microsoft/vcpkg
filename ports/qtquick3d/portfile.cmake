@@ -22,7 +22,7 @@ else()
     list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=no)
 endif()
 
-set(TOOL_NAMES balsam balsamui meshdebug shadergen instancer materialeditor shapegen)
+set(TOOL_NAMES balsam balsamui meshdebug shadergen instancer materialeditor shapegen lightmapviewer)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}

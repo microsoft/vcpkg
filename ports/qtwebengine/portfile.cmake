@@ -5,7 +5,6 @@ set(${PORT}_PATCHES
       "clang-cl.patch"
       "cross-build.diff"
       "disable-host-pkgconfig.diff"
-      "fix-error2275-2672.patch"
       "osx-sdk-info.diff"
       "pdf-system-libjpeg.diff"
       "pdf-system-libpng.diff"
