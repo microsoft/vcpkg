@@ -1,0 +1,14 @@
+--- a/subversion/libsvn_subr/sysinfo.c
++++ b/subversion/libsvn_subr/sysinfo.c
+@@ -646,7 +646,11 @@ debian_release(apr_pool_t *pool)
+ static const char *
+ linux_release_name(apr_pool_t *pool)
+ {
++#if HAVE_UNAME && !defined(SVN_HAVE_MACOS_PLIST)
+   const char *uname_release = release_name_from_uname(pool);
++#else
++  const char *uname_release = NULL;
++#endif
+ 
+   /* Try anything that has /usr/bin/lsb_release.
+      Covers, for example, Debian, Ubuntu and SuSE.  */
