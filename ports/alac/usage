@@ -1,0 +1,4 @@
+The package alac provides CMake targets:
+
+    find_package(alac CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE alac::alac)

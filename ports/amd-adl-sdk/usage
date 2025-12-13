@@ -1,0 +1,4 @@
+The package amd-adl-sdk provides CMake targets:
+
+    find_package(amd-adl-sdk CONFIG REQUIRED)
+    target_link_libraries(your_target PRIVATE amd-adl-sdk::amd-adl-sdk)

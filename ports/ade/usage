@@ -1,0 +1,4 @@
+The package ade provides CMake targets:
+
+    find_package(ade REQUIRED)
+    target_link_libraries(your_target_name PRIVATE ade::ade)

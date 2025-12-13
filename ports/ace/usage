@@ -1,0 +1,4 @@
+The package ace provides CMake targets:
+
+    find_package(ACE REQUIRED)
+    target_link_libraries(your_target_name PRIVATE ACE::ACE)

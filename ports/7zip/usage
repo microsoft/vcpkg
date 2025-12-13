@@ -1,0 +1,4 @@
+The package 7zip provides CMake targets:
+
+    find_package(7zip REQUIRED)
+    target_link_libraries(your_target_name PRIVATE 7zip::7zip)

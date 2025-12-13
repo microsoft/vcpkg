@@ -1,0 +1,4 @@
+The package air-ctl provides CMake targets:
+
+    find_package(air-ctl CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE air-ctl::air-ctl)

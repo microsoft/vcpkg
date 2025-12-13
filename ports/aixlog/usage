@@ -1,0 +1,4 @@
+The package aixlog provides CMake targets:
+
+    find_package(aixlog CONFIG REQUIRED)
+    target_link_libraries(your_target PRIVATE aixlog::aixlog)

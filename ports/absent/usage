@@ -1,0 +1,4 @@
+The package absent provides CMake targets:
+
+    find_package(absent CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE absent::absent)

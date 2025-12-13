@@ -1,0 +1,4 @@
+The package aliyun-oss-c-sdk provides CMake targets:
+
+    find_package(aliyun-oss-c-sdk CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE aliyun-oss-c-sdk::aliyun-oss-c-sdk)

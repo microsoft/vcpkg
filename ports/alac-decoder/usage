@@ -1,0 +1,4 @@
+The package alac-decoder provides CMake targets:
+
+    find_package(alac-decoder CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE alac-decoder::alac-decoder)

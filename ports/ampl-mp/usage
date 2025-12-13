@@ -1,0 +1,4 @@
+The package ampl-mp provides CMake targets:
+
+    find_package(ampl-mp CONFIG REQUIRED)
+    target_link_libraries(your_target_name PRIVATE ampl-mp::ampl-mp)
