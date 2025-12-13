@@ -2,7 +2,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
         FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
-        SHA512 a0544b3bf2d81abee91fb43901d384b021005d4158b43fec996977607f08852b211940a3ca71d37ac8bda52821c361bbaa93d0e4e63f72ff186863ef48a6a3d0
+        SHA512 B54650FE7B4D8653DAB70E892DEADA5C7DDC9EF0D5655EED67FD5A70913643B6CA2BD5A52A961EC975E5559D8683974DEE3B73FC1228F6D62159B781A0056CDA
     )
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -30,7 +30,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
     REF "v${VERSION}"
-    SHA512 6962d1526ac88d4e00d236b4ae86bd885d67f493d6b7342117e3b658fa6f37bf6d6b8617af4d74ef0bf9e3e95cf91aed567fb0f90bf836ad132dff4a304525f8
+    SHA512 7F0DF70609FEC78E9D94E36D0DB549D0B759B993D172BC61B233D80EB295060813D7A532496591E60A44B182EBD3CB89CBACB3254CCD0C1695351DD839D8ABBA
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
@@ -38,7 +38,10 @@ vcpkg_from_github(
         003-fix-d3d11.patch
         004-deps.patch
         005-bsd-support.patch
-        006-fix-x11-include-dirs.patch
+        # https://github.com/google/dawn/commit/fa4a364b9ff215f9fe95823ec89ccc922cf7b254 added a tint writer for the null backend.
+        # When building dawn[core] which only enables dawns null backend and tints null writer, src/dawn/native/ShaderModule.cpp failed to compile
+        # as it was expecting a transitive include of tint::Bindings from a shader language writer.
+        007-fix-tint-null-only-writer.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
@@ -51,6 +54,7 @@ vcpkg_from_github(
 #
 
 function(checkout_in_path PATH URL REF)
+    cmake_parse_arguments(EXTERNAL "" "" "PATCHES" ${ARGN})
     if(EXISTS "${PATH}")
         file(GLOB_RECURSE subdirectory_children "${CURRENT_PACKAGES_DIR}/include/${directory_child}/*")
         if(NOT "${subdirectory_children}" STREQUAL "")
@@ -64,6 +68,7 @@ function(checkout_in_path PATH URL REF)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
+        PATCHES ${EXTERNAL_PATCHES}
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
@@ -72,25 +77,34 @@ endfunction()
 checkout_in_path(
     "${SOURCE_PATH}/third_party/jinja2"
     "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
-    "e2d024354e11cc6b041b0cff032d73f0c7e43a07"
+    "c3027d884967773057bf74b957e3fea87e5df4d7"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/markupsafe"
     "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
-    "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
+    "4256084ae14175d38a3ff7d739dca83ae49ccec6"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-headers/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers"
-    "a8637796c28386c3cf3b4e8107020fbb52c46f3f"
+    "b824a462d4256d720bebb40e78b9eb8f78bbb305"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-tools/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools"
-    "f386417185be0601894b20d9ad000aceb73d898b"
+    "f410b3c178740f9f5bd28d5b22a71d4bc10acd49"
+    PATCHES
+        # Dawn sets SPIRV_WERROR to OFF when building SPIRV-Tools, but https://github.com/KhronosGroup/SPIRV-Tools/commit/337fdb6a284fe7f7e374a14271f8e20e579f3263 ignores that CMake variable and forces /WX
+        006-msvc-spirv-tools-disable-warnaserror.patch
+)
+
+checkout_in_path(
+    "${SOURCE_PATH}/third_party/webgpu-headers/src"
+    "https://chromium.googlesource.com/external/github.com/webgpu-native/webgpu-headers"
+    "12c1d34e7464cac58cc41a24aeee1d48a2f21b74"
 )
 
 vcpkg_find_acquire_program(PYTHON3)

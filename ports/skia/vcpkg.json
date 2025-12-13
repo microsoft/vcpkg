@@ -1,7 +1,6 @@
 {
   "name": "skia",
-  "version": "140",
-  "port-version": 2,
+  "version": "144",
   "description": [
     "Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.",
     "It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.",

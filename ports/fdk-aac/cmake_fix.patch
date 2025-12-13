@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cc40c55..072838b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -103,16 +103,10 @@ set(AACDEC_SRC
+   libAACdec/src/block.h
+   libAACdec/src/channel.h
+   libAACdec/src/channelinfo.h
+-  libAACdec/src/conceal.h
+-  libAACdec/src/conceal_types.h
+   libAACdec/src/FDK_delay.h
+   libAACdec/src/ldfiltbank.h
+   libAACdec/src/overlapadd.h
+   libAACdec/src/pulsedata.h
+-  libAACdec/src/rvlc.h
+-  libAACdec/src/rvlc_info.h
+-  libAACdec/src/rvlcbit.h
+-  libAACdec/src/rvlcconceal.h
+   libAACdec/src/stereo.h
+ )
+ 

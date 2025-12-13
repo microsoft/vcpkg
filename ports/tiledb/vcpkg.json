@@ -1,0 +1,90 @@
+{
+  "name": "tiledb",
+  "version": "2.30.0",
+  "description": "Cloud-native embeddable array storage engine",
+  "homepage": "https://github.com/TileDB-Inc/TileDB",
+  "license": "MIT",
+  "supports": "!(x86 | arm32 | uwp)",
+  "dependencies": [
+    {
+      "name": "blosc2",
+      "default-features": false
+    },
+    "bzip2",
+    "lz4",
+    "nlohmann-json",
+    {
+      "name": "openssl",
+      "platform": "!windows"
+    },
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "azure": {
+      "description": "Support Azure Blob Storage",
+      "dependencies": [
+        "azure-identity-cpp",
+        "azure-storage-blobs-cpp",
+        "azure-storage-files-datalake-cpp"
+      ]
+    },
+    "gcs": {
+      "description": "Support Google Cloud Storage",
+      "dependencies": [
+        {
+          "name": "google-cloud-cpp",
+          "default-features": false,
+          "features": [
+            "storage"
+          ]
+        }
+      ]
+    },
+    "s3": {
+      "description": "Support Amazon S3",
+      "dependencies": [
+        {
+          "name": "aws-sdk-cpp",
+          "default-features": false,
+          "features": [
+            "identity-management",
+            "s3",
+            "sts"
+          ]
+        }
+      ]
+    },
+    "serialization": {
+      "description": "Support TileDB Cloud",
+      "dependencies": [
+        "capnproto",
+        {
+          "name": "capnproto",
+          "host": true
+        },
+        {
+          "name": "curl",
+          "features": [
+            "zstd"
+          ]
+        }
+      ]
+    },
+    "webp": {
+      "description": "Support WebP filtering",
+      "dependencies": [
+        "libwebp"
+      ]
+    }
+  }
+}

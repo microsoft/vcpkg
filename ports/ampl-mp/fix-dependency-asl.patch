@@ -1,18 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 13f11cb..92089a3 100644
+index 2b53eb0..05fc783 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -323,9 +323,9 @@ check_cxx_source_compiles("
-   endif()
- endif ()
+@@ -497,7 +497,7 @@ if (NOT SKIP_BUILD_MP)
+ 		struct S { typedef typename S<Types...>::type type; };
+ 		int main() {}" MP_VARIADIC_TEMPLATES)
  
-+find_package(ampl-asl CONFIG REQUIRED)
- add_subdirectory(doc)
- add_subdirectory(src/amplsig)
--add_subdirectory(src/asl)
- add_subdirectory(src/cp)
- add_subdirectory(solvers)
- 
+-	add_subdirectory(src/asl)
++	find_package(ampl-asl CONFIG REQUIRED)
+ 	add_subdirectory(src/amplsig)
+ 	add_subdirectory(src/cp)
+ 	add_subdirectory(solvers)
 diff --git a/src/cp/cp.cc b/src/cp/cp.cc
 index d4adc35..ca8f35b 100644
 --- a/src/cp/cp.cc

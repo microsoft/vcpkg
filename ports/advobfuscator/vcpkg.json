@@ -1,6 +1,6 @@
 {
   "name": "advobfuscator",
-  "version": "2.1",
+  "version": "2.1.1",
   "description": "Obfuscation library based on C++20 and metaprogramming",
   "homepage": "https://github.com/andrivet/ADVobfuscator",
   "license": "BSD-3-Clause-Clear",

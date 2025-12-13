@@ -1,12 +1,12 @@
 {
   "name": "ptex",
-  "version": "2.4.3",
-  "port-version": 1,
+  "version": "2.5.0",
   "description": "Per-Face Texture Mapping for Production Rendering.",
   "homepage": "https://github.com/wdas/ptex",
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
+    "libdeflate",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -14,7 +14,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "zlib"
+    }
   ]
 }

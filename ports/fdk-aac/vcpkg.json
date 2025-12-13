@@ -1,7 +1,6 @@
 {
   "name": "fdk-aac",
-  "version-semver": "2.0.2",
-  "port-version": 4,
+  "version-semver": "2.0.3",
   "description": "A standalone Third-Party Modified Version of the Fraunhofer FDK AAC Codec Library for Android. Uses a fork without HE-AAC, HE-AACv2, or xHE-AAC support to avoid patent licensing and GPL compatibility issues when built without the he-aac option.",
   "homepage": "https://gitlab.freedesktop.org/wtaymans/fdk-aac-stripped",
   "license": "FDK-AAC",

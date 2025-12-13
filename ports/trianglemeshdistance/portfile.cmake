@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO InteractiveComputerGraphics/TriangleMeshDistance
-    REF 566c9486533082fe7d9a3ffae15799bc5c125528 # 2025-12-05
-    SHA512 642bac995d6c42f9a898929cbdbbbe99f19eb2c1e5c067bad9b883d788be4797075062277fd7b0b510767888b2412f7a212039e68f8fd0982f36c019f0cb43aa
+    REF v${VERSION}
+    SHA512 5ef10d9b6376c1d399481e7cda645091823a463e92d4fb5c53a537ea3dec9dcd97459584d1c960081f80f00ff18c000733f4da79e1ea77dd66e63a17a1c08bbb
     PATCHES
         remove-tests.patch
 )

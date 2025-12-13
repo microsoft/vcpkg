@@ -9,6 +9,8 @@ vcpkg_from_github(
         devendoring.patch
 )
 
+file(WRITE "${SOURCE_PATH}/cmake/CPM.cmake" "# disabled by vcpkg")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS

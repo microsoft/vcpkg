@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4d843b4d..db498e60 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -112,7 +112,7 @@ if(${COMPILER_IS_LIKE_GNU})
+     set(SPIRV_WARNINGS ${SPIRV_WARNINGS} -Werror)
+   endif()
+ elseif(MSVC)
+-  set(SPIRV_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS /wd4800 /wd4819 /wd4251 /W2 /WX)
++  set(SPIRV_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS /wd4800 /wd4819 /wd4251 /W2)
+ 
+   if(${SPIRV_WERROR})
+     set(SPIRV_WARNINGS ${SPIRV_WARNINGS} /WX)

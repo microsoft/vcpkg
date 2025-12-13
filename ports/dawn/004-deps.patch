@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9521fcf6a7..9c38142ec2 100644
+index 59e3eab590..59404a561d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -460,6 +460,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
+@@ -466,6 +466,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
  ################################################################################
  # Run on all subdirectories
  ################################################################################
@@ -60,10 +60,10 @@ index 8bfeda55bc..a0f9858530 100644
 +
  include ("${CMAKE_CURRENT_LIST_DIR}/DawnTargets.cmake")
 diff --git a/src/dawn/native/CMakeLists.txt b/src/dawn/native/CMakeLists.txt
-index 21ef415451..7f4867fee6 100644
+index 0c5dc4dbba..bf518be937 100644
 --- a/src/dawn/native/CMakeLists.txt
 +++ b/src/dawn/native/CMakeLists.txt
-@@ -636,11 +636,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
+@@ -651,11 +651,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
  endif()
  
  if (DAWN_ENABLE_OPENGL)
@@ -77,13 +77,13 @@ index 21ef415451..7f4867fee6 100644
          SCRIPT "${Dawn_SOURCE_DIR}/generator/opengl_loader_generator.py"
          PRINT_NAME "OpenGL function loader"
          EXTRA_PARAMETERS "--gl-xml"
--             "${Dawn_SOURCE_DIR}/third_party/khronos/OpenGL-Registry/xml/gl.xml"
+-             "${DAWN_OPENGL_REGISTRY_DIR}/xml/gl.xml"
 +             "${OPENGL_XML_FILE}"
               "--supported-extensions"
               "${Dawn_SOURCE_DIR}/src/dawn/native/opengl/supported_extensions.json"
          OUTPUT_HEADERS DAWN_NATIVE_OPENGL_AUTOGEN_HEADERS
 diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
-index b423c43d27..068a784b3d 100644
+index f7812f211e..68644c04f6 100644
 --- a/third_party/CMakeLists.txt
 +++ b/third_party/CMakeLists.txt
 @@ -41,6 +41,7 @@ if (DAWN_FETCH_DEPENDENCIES)
@@ -102,22 +102,22 @@ index b423c43d27..068a784b3d 100644
  
  if (DAWN_BUILD_PROTOBUF AND EXISTS "${DAWN_PROTOBUF_DIR}/cmake")
      if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") AND WIN32)
-@@ -175,10 +177,12 @@ endif()
+@@ -183,10 +185,12 @@ endif()
  if (DAWN_ENABLE_DESKTOP_GL OR DAWN_ENABLE_OPENGLES)
      # Header-only library for khrplatform.h
      add_library(dawn_khronos_platform INTERFACE)
--    target_sources(dawn_khronos_platform INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/khronos/EGL-Registry/api/KHR/khrplatform.h")
--    target_include_directories(dawn_khronos_platform INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/khronos/EGL-Registry/api")
+-    target_sources(dawn_khronos_platform INTERFACE "${DAWN_EGL_REGISTRY_DIR}/api/KHR/khrplatform.h")
+-    target_include_directories(dawn_khronos_platform INTERFACE "${DAWN_EGL_REGISTRY_DIR}/api")
 +    find_path(EGL_REGISTRY_INCLUDE_DIRS "EGL/egl.h")
 +    target_sources(dawn_khronos_platform INTERFACE "${EGL_REGISTRY_INCLUDE_DIRS}/KHR/khrplatform.h")
 +    target_include_directories(dawn_khronos_platform INTERFACE "${EGL_REGISTRY_INCLUDE_DIRS}")
  endif()
  
-+if (0)
++if(0)
  if (NOT TARGET Vulkan::Headers AND DAWN_ENABLE_VULKAN)
      message(STATUS "Dawn: using Vulkan::Headers at ${DAWN_VULKAN_HEADERS_DIR}")
  
-@@ -190,6 +194,7 @@ if (NOT TARGET Vulkan::UtilityHeaders AND DAWN_ENABLE_VULKAN)
+@@ -198,6 +202,7 @@ if (NOT TARGET Vulkan::UtilityHeaders AND DAWN_ENABLE_VULKAN)
      message(STATUS "Dawn: using VulkanUtilityLibraries at ${DAWN_VULKAN_UTILITY_LIBRARIES_DIR}")
      add_subdirectory(${DAWN_VULKAN_UTILITY_LIBRARIES_DIR} "${CMAKE_CURRENT_BINARY_DIR}/vulkan-utility-libraries/src")
  endif()
