@@ -25,6 +25,7 @@ if("cuda" IN_LIST FEATURES)
     vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
     list(APPEND FEATURE_OPTIONS
         "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
     )
 endif()
 
@@ -40,6 +41,7 @@ vcpkg_cmake_configure(
         -DCMAKE_POLICY_DEFAULT_CMP0072=NEW  # OpenGL VND
         -DCMAKE_POLICY_DEFAULT_CMP0167=NEW  # Boost
         -DCMAKE_POLICY_DEFAULT_CMP0177=NEW  # install() DESTINATION
+        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON  # Avoid libs\Common\List.h(1204): error C2541: 'delete': cannot delete objects that are not pointers
         -DINSTALL_CMAKE_DIR:STRING=share/openmvs
         -DINSTALL_INCLUDE_DIR:STRING=include/openmvs
         -DOpenMVS_ENABLE_TESTS=OFF

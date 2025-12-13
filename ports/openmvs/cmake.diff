@@ -1,8 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 920e4c3..91299b8 100644
+index 920e4c3..6f317c2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -197,8 +197,6 @@ if(Boost_FOUND)
+@@ -109,7 +109,10 @@ if(OpenMVS_USE_OPENGL)
+ endif()
+ 
+ if(OpenMVS_USE_CUDA)
+-	FIND_PACKAGE(CUDA)
++	FIND_PACKAGE(CUDAToolkit REQUIRED)
++	set(CUDA_FOUND 1)
++	set(CUDA_INCLUDE_DIRS "")
++	set(CUDA_CUDA_LIBRARY CUDA::cuda_driver)
+ 	if(CUDA_FOUND)
+ 		ENABLE_LANGUAGE(CUDA)
+ 		# CUDA-11.x can not be compiled using C++14 standard on Windows
+@@ -197,8 +200,6 @@ if(Boost_FOUND)
  	ADD_DEFINITIONS(${Boost_DEFINITIONS})
  	LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
  	if(NOT MSVC AND DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -11,11 +23,26 @@ index 920e4c3..91299b8 100644
  	endif()
  	SET(_USE_BOOST TRUE)
  	if(OpenMVS_USE_PYTHON AND Boost_${Boost_EXTRA_COMPONENTS}_FOUND)
+@@ -282,11 +283,11 @@ INCLUDE(CMakePackageConfigHelpers)
+ write_basic_package_version_file("${PROJECT_BINARY_DIR}/OpenMVSConfigVersion.cmake"
+ 	VERSION ${OpenMVS_VERSION}
+ 	COMPATIBILITY AnyNewerVersion)
+-SET(INSTALL_INCLUDE_DIR_IN ${INSTALL_INCLUDE_DIR_PREFIX} ${OpenMVS_EXTRA_INCLUDES})
+-SET(INSTALL_CMAKE_DIR_IN ${INSTALL_CMAKE_DIR_PREFIX})
++SET(INSTALL_INCLUDE_DIR_IN "${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR}" ${OpenMVS_EXTRA_INCLUDES})
++SET(INSTALL_CMAKE_DIR_IN "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
+ configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/build/Templates/OpenMVSConfig.cmake.in"
+ 	"${PROJECT_BINARY_DIR}/OpenMVSConfig.cmake"
+-	INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
++	INSTALL_DESTINATION "${INSTALL_CMAKE_DIR}"
+ 	NO_SET_AND_CHECK_MACRO)
+ # Install the OpenMVSConfig.cmake and OpenMVSConfigVersion.cmake
+ INSTALL(FILES
 diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
-index 9747b3e..8f406ad 100644
+index 9747b3e..ec42575 100644
 --- a/build/Templates/OpenMVSConfig.cmake.in
 +++ b/build/Templates/OpenMVSConfig.cmake.in
-@@ -15,6 +15,53 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+@@ -15,8 +15,54 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
  
  set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
  
@@ -32,12 +59,10 @@ index 9747b3e..8f406ad 100644
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(Boost COMPONENTS iostreams program_options system serialization)
-+add_definitions(${Boost_DEFINITIONS} -D_USE_BOOST)
-+include_directories(${Boost_INCLUDE_DIRS})
++add_definitions(${Boost_DEFINITIONS})
 +
 +find_dependency(Eigen3)
-+add_definitions(${EIGEN3_DEFINITIONS} -D_USE_EIGEN)
-+include_directories(${EIGEN3_INCLUDE_DIRS})
++add_definitions(${EIGEN3_DEFINITIONS})
 +
 +find_dependency(OpenCV)
 +add_definitions(${OpenCV_DEFINITIONS})
@@ -51,24 +76,27 @@ index 9747b3e..8f406ad 100644
 +endif()
 +
 +if(@OpenMVS_USE_CUDA@)
-+    find_dependency(CUDA)
-+    add_definitions(-D_USE_CUDA)
-+    include_directories(${CUDA_INCLUDE_DIRS})
++    find_dependency(CUDAToolkit)
++#    include_directories(${CUDA_INCLUDE_DIRS})
 +endif()
 +
 +if(@OpenMVS_USE_OPENGL@)
 +    find_dependency(OpenGL)
-+    add_definitions(${OpenGL_DEFINITIONS} -D_USE_OPENGL)
++    add_definitions(${OpenGL_DEFINITIONS})
 +endif()
 +
 +if(@OpenMVS_USE_OPENMP@)
 +    find_dependency(OpenMP)
-+    add_definitions(-D_USE_OPENMP)
 +endif()
 +
  # These are IMPORTED targets created by OpenMVSTargets.cmake
  set(OpenMVS_LIBRARIES MVS)
++if(NOT "@BUILD_SHARED_LIBS@")
++    set(OpenMVS_LIBRARIES OpenMVS::MVS)
++endif()
  set(OpenMVS_BINARIES InterfaceCOLMAP DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/OpenMVSTargets.cmake")
 diff --git a/build/Utils.cmake b/build/Utils.cmake
 index 86d3430..c963ee1 100644
 --- a/build/Utils.cmake
@@ -100,16 +128,3 @@ index 86d3430..c963ee1 100644
  endfunction()
  
  # cxx_executable_with_flags(name cxx_flags libs srcs...)
-diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
-index 8533865..9595914 100644
---- a/libs/MVS/CMakeLists.txt
-+++ b/libs/MVS/CMakeLists.txt
-@@ -48,7 +48,7 @@ endif()
- if(_USE_CUDA)
- 	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
- endif()
--TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
-+TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_LIBRARIES})
- 
- if(OpenMVS_USE_PYTHON)
- 	# Create the Python wrapper
