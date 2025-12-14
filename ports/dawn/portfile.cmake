@@ -42,6 +42,7 @@ vcpkg_from_github(
         # When building dawn[core] which only enables dawns null backend and tints null writer, src/dawn/native/ShaderModule.cpp failed to compile
         # as it was expecting a transitive include of tint::Bindings from a shader language writer.
         007-fix-tint-null-only-writer.patch
+        008-directx-dxc.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
@@ -128,6 +129,10 @@ set(DAWN_ENABLE_D3D12 OFF)
 if("d3d12" IN_LIST FEATURES)
     set(DAWN_ENABLE_D3D12 ON)
 endif()
+set(DAWN_USE_BUILT_DXC OFF)
+if("dxc" IN_LIST FEATURES)
+    set(DAWN_USE_BUILT_DXC ON)
+endif()
 set(DAWN_ENABLE_DESKTOP_GL OFF)
 if("gl" IN_LIST FEATURES)
     set(DAWN_ENABLE_DESKTOP_GL ON)
@@ -169,6 +174,7 @@ vcpkg_cmake_configure(
         -DDAWN_ENABLE_NULL=${DAWN_ENABLE_NULL}
         -DDAWN_ENABLE_D3D11=${DAWN_ENABLE_D3D11}
         -DDAWN_ENABLE_D3D12=${DAWN_ENABLE_D3D12}
+        -DDAWN_USE_BUILT_DXC=${DAWN_USE_BUILT_DXC}
         -DDAWN_ENABLE_DESKTOP_GL=${DAWN_ENABLE_DESKTOP_GL}
         -DDAWN_ENABLE_OPENGLES=${DAWN_ENABLE_OPENGLES}
         -DDAWN_ENABLE_METAL=${DAWN_ENABLE_METAL}

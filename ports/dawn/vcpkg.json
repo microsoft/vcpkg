@@ -1,6 +1,7 @@
 {
   "name": "dawn",
   "version": "20251202.213730",
+  "port-version": 1,
   "description": "Dawn is an open-source and cross-platform implementation of the WebGPU standard.",
   "homepage": "https://dawn.googlesource.com/dawn",
   "license": "BSD-3-Clause",
@@ -60,6 +61,20 @@
     "d3d12": {
       "description": "Direct3D 12 backend support",
       "supports": "windows"
+    },
+    "dxc": {
+      "description": "DirectX Shader Compiler support for Direct3D 12 backend",
+      "supports": "windows",
+      "dependencies": [
+        {
+          "name": "dawn",
+          "default-features": false,
+          "features": [
+            "d3d12"
+          ]
+        },
+        "directx-dxc"
+      ]
     },
     "gl": {
       "description": "Desktop OpenGL backend support",
