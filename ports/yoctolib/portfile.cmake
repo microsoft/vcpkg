@@ -7,12 +7,7 @@ vcpkg_from_github(
     PATCHES
         001-cmake_config.patch
         002-add_missing_win32_bcrypt_linkage.patch
-        003-fix_win32_shared_build.patch
-        004-fix_cmake_proj_version.patch
-        005-find_linux_depends.patch
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
@@ -24,13 +19,13 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Sources"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
+        -DVERSION=${VERSION}
         -DCMAKE_INSTALL_INCLUDEDIR=include/yoctolib
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-yoctolib)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

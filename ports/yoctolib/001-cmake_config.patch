@@ -1,5 +1,5 @@
 diff --git a/Sources/CMakeLists.txt b/Sources/CMakeLists.txt
-index 678fff5..2684a6c 100644
+index 678fff5..f60b212 100644
 --- a/Sources/CMakeLists.txt
 +++ b/Sources/CMakeLists.txt
 @@ -181,10 +181,41 @@ add_library (YoctoLib ${YoctoLibCppSources} ${YoctoLibHSources})
@@ -22,14 +22,14 @@ index 678fff5..2684a6c 100644
 +
 +include(CMakePackageConfigHelpers)
 +write_basic_package_version_file(
-+	"${CMAKE_CURRENT_BINARY_DIR}/YoctoLibConfigVersion.cmake"
-+	VERSION ${PROJECT_VERSION}
++	"${CMAKE_CURRENT_BINARY_DIR}/unofficial-yoctolib-version.cmake"
++	VERSION ${VERSION}
 +	COMPATIBILITY SameMajorVersion
 +)
 +configure_package_config_file(
-+	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/YoctoLibConfig.cmake.in"
-+	"${CMAKE_CURRENT_BINARY_DIR}/YoctoLibConfig.cmake"
-+	INSTALL_DESTINATION share/YoctoLib
++	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/unofficial-yoctolib-config.cmake.in"
++	"${CMAKE_CURRENT_BINARY_DIR}/unofficial-yoctolib-config.cmake"
++	INSTALL_DESTINATION share/unofficial-yoctolib
 +)
 +install(TARGETS YoctoLib yapi
 +	EXPORT YoctoLibTargets
@@ -38,41 +38,41 @@ index 678fff5..2684a6c 100644
 +	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +)
 +install(EXPORT YoctoLibTargets
-+	FILE YoctoLibTargets.cmake
-+	NAMESPACE YoctoLib::
-+	DESTINATION share/YoctoLib
++	FILE unofficial-yoctolib-targets.cmake
++	NAMESPACE unofficial::yoctolib::
++	DESTINATION share/unofficial-yoctolib
 +)
 +install(FILES
-+	"${CMAKE_CURRENT_BINARY_DIR}/YoctoLibConfig.cmake"
-+	"${CMAKE_CURRENT_BINARY_DIR}/YoctoLibConfigVersion.cmake"
-+	DESTINATION share/YoctoLib
++	"${CMAKE_CURRENT_BINARY_DIR}/unofficial-yoctolib-config.cmake"
++	"${CMAKE_CURRENT_BINARY_DIR}/unofficial-yoctolib-version.cmake"
++	DESTINATION share/unofficial-yoctolib
 +)
-\ No newline at end of file
-diff --git a/Sources/cmake/YoctoLibConfig.cmake.in b/Sources/cmake/YoctoLibConfig.cmake.in
+diff --git a/Sources/cmake/unofficial-yoctolib-config.cmake.in b/Sources/cmake/unofficial-yoctolib-config.cmake.in
 new file mode 100644
-index 0000000..f7d558a
+index 0000000..6f442b2
 --- /dev/null
-+++ b/Sources/cmake/YoctoLibConfig.cmake.in
-@@ -0,0 +1,13 @@
++++ b/Sources/cmake/unofficial-yoctolib-config.cmake.in
+@@ -0,0 +1,14 @@
 +@PACKAGE_INIT@
 +
 +include(CMakeFindDependencyMacro)
 +
-+# Find platform-specific dependencies
-+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
++if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++    set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 +    find_dependency(Threads REQUIRED)
-+    find_dependency(libusb REQUIRED)
++    find_dependency(PkgConfig REQUIRED)
++    pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
 +endif()
 +
-+include(${CMAKE_CURRENT_LIST_DIR}/YoctoLibTargets.cmake)
++include(${CMAKE_CURRENT_LIST_DIR}/unofficial-yoctolib-targets.cmake)
 +
-+check_required_components(YoctoLib)
++check_required_components(unofficial-yoctolib)
 \ No newline at end of file
 diff --git a/Sources/yapi/CMakeLists.txt b/Sources/yapi/CMakeLists.txt
-index f6b571f..da7102e 100644
+index f6b571f..ca02890 100644
 --- a/Sources/yapi/CMakeLists.txt
 +++ b/Sources/yapi/CMakeLists.txt
-@@ -139,7 +139,10 @@ if(USE_YSSL)
+@@ -139,11 +139,18 @@ if(USE_YSSL)
  	target_include_directories(yapi PRIVATE mbedtls/include)
  endif()
  
@@ -84,14 +84,33 @@ index f6b571f..da7102e 100644
  
  # add pthread usb-1.0 library only on linux
  if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-@@ -158,8 +161,4 @@ if (APPLE)
- 	target_link_libraries(yapi LINK_PUBLIC ${IOKIT_FRAMEWORK} ${CORE_FRAMEWORK})
+-target_link_libraries (yapi LINK_PUBLIC pthread usb-1.0)
++	set(THREADS_PREFER_PTHREAD_FLAG TRUE)
++	find_package(Threads REQUIRED)
++	find_package(PkgConfig REQUIRED)
++	pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
++	target_link_libraries(yapi LINK_PUBLIC Threads::Threads PkgConfig::libusb)
  endif()
  
--set_target_properties(yapi PROPERTIES SOVERSION 1)
+ if (APPLE)
+@@ -159,7 +166,3 @@ if (APPLE)
+ endif()
+ 
+ set_target_properties(yapi PROPERTIES SOVERSION 1)
 -install(TARGETS yapi DESTINATION ${CMAKE_INSTALL_LIBDIR})
 -install(FILES yapi.h ydef.h yversion.h yjson.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/yapi)
 -
 -
-+set_target_properties(yapi PROPERTIES SOVERSION 1)
-\ No newline at end of file
+diff --git a/Sources/yapi/yproto.h b/Sources/yapi/yproto.h
+index 5fbadb3..ab0a801 100644
+--- a/Sources/yapi/yproto.h
++++ b/Sources/yapi/yproto.h
+@@ -163,7 +163,7 @@ typedef struct {
+ /*****************************************************************************
+   LINUX SPECIFIC HEADER
+  ****************************************************************************/
+-#include <libusb-1.0/libusb.h>
++#include <libusb.h>
+ #endif
+ 
+ /*****************************************************************************
