@@ -9,6 +9,7 @@ vcpkg_from_github(
         002-add_missing_win32_bcrypt_linkage.patch
         003-fix_win32_shared_build.patch
         004-fix_cmake_proj_version.patch
+        005-find_linux_depends.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
