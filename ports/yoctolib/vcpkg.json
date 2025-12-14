@@ -4,7 +4,7 @@
   "description": "Official Yoctopuce Library for C++",
   "homepage": "https://github.com/yoctopuce/yoctolib_cpp",
   "license": null,
-  "supports": "!uwp & static",
+  "supports": "!(uwp | android) & static",
   "dependencies": [
     {
       "name": "libusb",
