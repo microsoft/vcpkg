@@ -1,5 +1,5 @@
 diff --git a/Sources/yapi/CMakeLists.txt b/Sources/yapi/CMakeLists.txt
-index 4ff6314..721379a 100644
+index 4ff6314..bfbb80f 100644
 --- a/Sources/yapi/CMakeLists.txt
 +++ b/Sources/yapi/CMakeLists.txt
 @@ -146,7 +146,11 @@ target_include_directories(yapi PUBLIC
@@ -15,3 +15,16 @@ index 4ff6314..721379a 100644
  endif()
  
  if (APPLE)
+diff --git a/Sources/yapi/yproto.h b/Sources/yapi/yproto.h
+index 5fbadb3..ab0a801 100644
+--- a/Sources/yapi/yproto.h
++++ b/Sources/yapi/yproto.h
+@@ -163,7 +163,7 @@ typedef struct {
+ /*****************************************************************************
+   LINUX SPECIFIC HEADER
+  ****************************************************************************/
+-#include <libusb-1.0/libusb.h>
++#include <libusb.h>
+ #endif
+ 
+ /*****************************************************************************
