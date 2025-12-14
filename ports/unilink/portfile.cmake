@@ -4,7 +4,6 @@ vcpkg_from_github(
     REF v0.1.9
     SHA512 0c159181c2fc5ca3ec0dd913770ab771f659ccf71e16cb3ddb84030c37e24ce187f0141ac073d8c1514c20795f6da145ecd7a14663711b0a9ce3edf178a1251c)
 
-# Follow the triplet linkage (dynamic/shared vs static)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" UNILINK_BUILD_SHARED)
 
 vcpkg_cmake_configure(
