@@ -4,11 +4,11 @@
   "description": "Official Yoctopuce Library for C++",
   "homepage": "https://github.com/yoctopuce/yoctolib_cpp",
   "license": null,
-  "supports": "static",
+  "supports": "!uwp & static",
   "dependencies": [
     {
       "name": "libusb",
-      "platform": "linux"
+      "platform": "!(windows | osx)"
     },
     {
       "name": "vcpkg-cmake",
