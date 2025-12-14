@@ -1,12 +1,11 @@
-# ports/webcraft/portfile.cmake
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO adityarao2005/WebCraft   # <--- CHANGE THIS to your actual User/Repo
-    REF v${VERSION}                         # <--- The tag/commit you want to release (can be empty if only using --head)
+    REPO adityarao2005/WebCraft
+    REF v${VERSION}
     SHA512 8ebdd1eb2976457269cc37f1e75c9fdad46460b3ca2314dd138889488d6b0c940bf6659dfd16cdd06dc399d507a9952940c360e4298f614cc474e08eecc7b2c7
-    HEAD_REF main                      # <--- The branch to use when building with --head
+    HEAD_REF main
 )
 
 if (VCPKG_TARGET_IS_LINUX)
