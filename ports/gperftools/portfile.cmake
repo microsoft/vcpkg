@@ -9,6 +9,7 @@ vcpkg_from_github(
         install.diff
         win32-override.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/vendor/googletest")
 
 if("override" IN_LIST FEATURES)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
@@ -33,10 +34,7 @@ vcpkg_cmake_configure(
         "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
         -Dgperftools_build_benchmark=OFF
         ${OPTIONS}
-    OPTIONS_DEBUG
-        -DGPERFTOOLS_BUILD_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES
-        GPERFTOOLS_BUILD_TOOLS
         GPERFTOOLS_WIN32_OVERRIDE
 )
 vcpkg_cmake_install()
