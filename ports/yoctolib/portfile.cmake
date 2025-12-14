@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         001-cmake_config.patch
         002-add_missing_win32_bcrypt_linkage.patch
+        003-fix_win32_shared_build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
