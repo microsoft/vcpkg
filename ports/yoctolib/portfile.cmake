@@ -19,12 +19,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     ssl USE_YSSL
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Sources"
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_SHARED_LIBS=${BUILD_SHARED}
         -DCMAKE_INSTALL_INCLUDEDIR=include/yoctolib
+        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
 vcpkg_cmake_install()
 

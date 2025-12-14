@@ -2,14 +2,16 @@ diff --git a/Sources/yapi/CMakeLists.txt b/Sources/yapi/CMakeLists.txt
 index 4ff6314..721379a 100644
 --- a/Sources/yapi/CMakeLists.txt
 +++ b/Sources/yapi/CMakeLists.txt
-@@ -146,7 +146,9 @@ target_include_directories(yapi PUBLIC
+@@ -146,7 +146,11 @@ target_include_directories(yapi PUBLIC
  
  # add pthread usb-1.0 library only on linux
  if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 -target_link_libraries (yapi LINK_PUBLIC pthread usb-1.0)
++	set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 +	find_package(Threads REQUIRED)
-+	find_package(libusb REQUIRED)
-+	target_link_libraries(yapi LINK_PUBLIC pthread usb-1.0)
++	find_package(PkgConfig REQUIRED)
++	pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
++	target_link_libraries(yapi LINK_PUBLIC Threads::Threads PkgConfig::libusb)
  endif()
  
  if (APPLE)
