@@ -49,36 +49,46 @@ endif()
 #########################
 ## Downloading Qt5-Base
 
-qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
-                        PATCHES
-                            # CVE fixes from https://download.qt.io/official_releases/qt/5.15/
-                            patches/CVE-2024-39936-qtbase-5.15.patch
-                            patches/CVE-2025-4211-qtbase-5.15.diff
-                            patches/CVE-2025-5455-qtbase-5.15.patch
-                            patches/CVE-2025-30348-qtbase-5.15.diff
+set(PATCHES
+    # CVE fixes from https://download.qt.io/archive/qt/5.15/
+    patches/CVE-2025-4211-qtbase-5.15.diff
+    patches/CVE-2025-5455-qtbase-5.15.patch
+    patches/CVE-2025-30348-qtbase-5.15.diff
 
-                            patches/winmain_pro.patch          #Moves qtmain to manual-link
-                            patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
-                            patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
-                            patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
-                            patches/vulkan-windows.diff        #Forces QMake to use vulkan from vcpkg instead of VULKAN_SDK system variable
-                            patches/egl.patch                  #Fix egl detection logic.
-                            patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
-                            patches/mysql_plugin_include.patch #Fix include path of mysql plugin
-                            patches/mysql-configure.patch      #Fix mysql project
-                            patches/patch-qtbase-memory_resource.diff # From https://bugreports.qt.io/browse/QTBUG-114316
-                            #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
-                                                               #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the
-                                                               #the windows supplied gl.h header and the angle gl.h otherwise.
-                            # CMake fixes
-                            patches/Qt5BasicConfig.patch
-                            patches/Qt5PluginTarget.patch
-                            patches/create_cmake.patch
-                            patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
-                            patches/fix_angle.patch            # Failed to create OpenGL context for format QSurfaceFormat ...
-                            patches/mingw9.patch               # Fix compile with MinGW-W64 9.0.0: Redefinition of 'struct _FILE_ID_INFO'
-                            patches/qmake-arm64.patch          # Fix by Oliver Wolff to support ARM64 hosts on Windows
-                    )
+    patches/winmain_pro.patch          #Moves qtmain to manual-link
+    patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
+    patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
+    patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+    patches/vulkan-windows.diff        #Forces QMake to use vulkan from vcpkg instead of VULKAN_SDK system variable
+    patches/egl.patch                  #Fix egl detection logic.
+    patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
+    patches/mysql_plugin_include.patch #Fix include path of mysql plugin
+    patches/mysql-configure.patch      #Fix mysql project
+    patches/patch-qtbase-memory_resource.diff # From https://bugreports.qt.io/browse/QTBUG-114316
+    #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
+                                       #Be careful since it requires defining _GDI32_ for all dependent projects due to redefinition errors in the
+                                       #the windows supplied gl.h header and the angle gl.h otherwise.
+
+    # CMake fixes
+    patches/Qt5BasicConfig.patch
+    patches/Qt5PluginTarget.patch
+    patches/create_cmake.patch
+    patches/Qt5GuiConfigExtras.patch   # Patches the library search behavior for EGL since angle is not build with Qt
+    patches/fix_angle.patch            # Failed to create OpenGL context for format QSurfaceFormat ...
+    patches/mingw9.patch               # Fix compile with MinGW-W64 9.0.0: Redefinition of 'struct _FILE_ID_INFO'
+    patches/qmake-arm64.patch          # Fix by Oliver Wolff to support ARM64 hosts on Windows
+)
+if(VCPKG_TARGET_IS_OSX)
+    execute_process(COMMAND xcrun --show-sdk-version
+            OUTPUT_VARIABLE OSX_SDK_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(${OSX_SDK_VERSION} VERSION_GREATER_EQUAL 26)
+        # macOS 26 Tahoe has removed AGL APIs https://bugreports.qt.io/browse/QTBUG-137687
+        list(APPEND PATCHES patches/macos26-opengl.patch)
+    endif()
+endif()
+
+qt_download_submodule(OUT_SOURCE_PATH SOURCE_PATH PATCHES ${PATCHES})
 
 # Remove vendored dependencies to ensure they are not picked up by the build
 foreach(DEPENDENCY zlib freetype harfbuzz-ng libjpeg libpng double-conversion sqlite pcre2)
@@ -322,9 +332,6 @@ elseif(VCPKG_TARGET_IS_OSX)
     if(DEFINED VCPKG_OSX_DEPLOYMENT_TARGET)
         set(ENV{QMAKE_MACOSX_DEPLOYMENT_TARGET} ${VCPKG_OSX_DEPLOYMENT_TARGET})
     else()
-        execute_process(COMMAND xcrun --show-sdk-version
-                OUTPUT_VARIABLE OSX_SDK_VERSION
-                OUTPUT_STRIP_TRAILING_WHITESPACE)
         message(STATUS "Detected OSX SDK Version: ${OSX_SDK_VERSION}")
         string(REGEX MATCH "^([0-9]+)\\.([0-9]+)" OSX_SDK_VERSION "${OSX_SDK_VERSION}")
         message(STATUS "Major.Minor OSX SDK Version: ${OSX_SDK_VERSION}")

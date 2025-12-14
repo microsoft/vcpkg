@@ -12,15 +12,24 @@ vcpkg_check_features(
   FEATURES
   mpi USE_MPI
   redis USE_REDIS
+  cuda USE_CUDA
+  cuda USE_NCCL
   )
 
 if ("cuda" IN_LIST FEATURES)
-  list(APPEND GLOO_FEATURE_OPTIONS "-DUSE_CUDA=1" "-DUSE_NCCL=1")
+  vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root) 
+  list(APPEND GLOO_FEATURE_OPTIONS
+    "-DCMAKE_CUDA_COMPILER:FILEPATH=${NVCC}"
+    "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+  ) 
 endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS ${GLOO_FEATURE_OPTIONS}
+  MAYBE_UNUSED_VARIABLES
+    CMAKE_CUDA_COMPILER
+    CUDAToolkit_ROOT
   )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -29,4 +38,4 @@ vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/Gloo)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

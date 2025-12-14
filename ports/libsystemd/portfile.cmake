@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO systemd/systemd
   REF "v${VERSION}"
-  SHA512 0357f1b61a07e594aff118dec54bd7233f37b69ccdfa393b91f46f32f08238fa7dd44df70d1df858464c866e114868ae1bec66dc685703d425cbd4c86baddfb8
+  SHA512 30331df5eb7a1556da8c017a0e6c07b8b99f0cb31da055c1b86c9b9e6fd7074f7c6746efa3e69711b73af48a15d61a84f35ad6e554d32a23441ba910398f7f65
   PATCHES
     disable-warning-nonnull.patch
     only-libsystemd.patch
@@ -13,6 +13,13 @@ set(static false)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(static pic)
 endif()
+
+vcpkg_find_acquire_program(PYTHON3)
+x_vcpkg_get_python_packages(
+    PYTHON_VERSION 3
+    PYTHON_EXECUTABLE "${PYTHON3}"
+    PACKAGES "jinja2"
+)
 
 vcpkg_configure_meson(
   SOURCE_PATH "${SOURCE_PATH}"

@@ -7,9 +7,9 @@ parameters:
     type: string
     default:  'use default'
   - name: tripletPattern
-    displayName: 'Enable triplets which contain this substring'
+    displayName: 'Enable triplets which contain this substring (^ matches begin, $ matches end)'
     type: string
-    default: '-'
+    default: '^'
 
 jobs:
 - template: windows/azure-pipelines.yml
@@ -68,15 +68,7 @@ jobs:
 
 - template: osx/azure-pipelines.yml
   parameters:
-    jobName: x64_osx
-    poolName: 'PrOsx-2025-01-24'
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-
-- template: osx/azure-pipelines.yml
-  parameters:
     jobName: arm64_osx
-    poolName: 'PrOsx-2025-01-24-arm64'
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 

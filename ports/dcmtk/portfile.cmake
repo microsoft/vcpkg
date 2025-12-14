@@ -15,6 +15,7 @@ vcpkg_from_github(
 file(REMOVE
     "${SOURCE_PATH}/CMake/FindICONV.cmake"
     "${SOURCE_PATH}/CMake/FindJPEG.cmake"
+    "${SOURCE_PATH}/CMake/FindOpenJPEG.cmake"
 )
 
 # Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
@@ -39,13 +40,14 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "iconv"   DCMTK_WITH_ICONV
-        "openssl" DCMTK_WITH_OPENSSL
-        "png"     DCMTK_WITH_PNG
-        "tiff"    DCMTK_WITH_TIFF
-        "xml2"    DCMTK_WITH_XML
-        "zlib"    DCMTK_WITH_ZLIB
-        "tools"   BUILD_APPS
+        "iconv"     DCMTK_WITH_ICONV
+        "openssl"   DCMTK_WITH_OPENSSL
+        "png"       DCMTK_WITH_PNG
+        "tiff"      DCMTK_WITH_TIFF
+        "xml2"      DCMTK_WITH_XML
+        "zlib"      DCMTK_WITH_ZLIB
+        "openjpeg"  DCMTK_WITH_OPENJPEG
+        "tools"     BUILD_APPS
 )
 
 if("external-dict" IN_LIST FEATURES)
@@ -72,7 +74,6 @@ vcpkg_cmake_configure(
         -DDCMTK_USE_FIND_PACKAGE=ON
         -DDCMTK_WIDE_CHAR_FILE_IO_FUNCTIONS=ON
         -DDCMTK_WIDE_CHAR_MAIN_FUNCTION=ON
-        -DDCMTK_WITH_OPENJPEG=OFF
         -DDCMTK_WITH_DOXYGEN=OFF
         -DDCMTK_WITH_SNDFILE=OFF
         -DDCMTK_WITH_WRAP=OFF
@@ -156,6 +157,10 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
 
 # no absolute paths
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h"

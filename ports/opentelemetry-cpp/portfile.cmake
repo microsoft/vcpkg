@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 a85869d2858f350e4a3b85e5d68e669a5fff42a2222ba7782bba92f5fe6856a110b3ddc9744a6c3e68c1ddfdc7bdb2b570bbeff78275a4e98cea889a8fda0120
+    SHA512 bde103a04ef70a1dccd247f5ab4bca4fff23d081d1ae758286fb1a62409310a399dd90ae29f188e552fb96112c95f501dac5fafab4edc1df924ca43f21d0f150
     HEAD_REF main
     PATCHES
         fix-target_link.patch
@@ -18,6 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zipkin WITH_ZIPKIN
         prometheus WITH_PROMETHEUS
         elasticsearch WITH_ELASTICSEARCH
+        otlp-file WITH_OTLP_FILE
         otlp-http WITH_OTLP_HTTP
         otlp-grpc WITH_OTLP_GRPC
         geneva WITH_GENEVA
@@ -28,12 +29,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 # opentelemetry-proto is a third party submodule and opentelemetry-cpp release did not pack it.
-if(WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
-    set(OTEL_PROTO_VERSION "1.6.0")
+if(WITH_OTLP_FILE OR WITH_OTLP_GRPC OR WITH_OTLP_HTTP)
+    set(OTEL_PROTO_VERSION "1.8.0")
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/open-telemetry/opentelemetry-proto/archive/v${OTEL_PROTO_VERSION}.tar.gz"
         FILENAME "opentelemetry-proto-${OTEL_PROTO_VERSION}.tar.gz"
-        SHA512 0e72e0c32d2d699d7a832a4c57a9dbe60e844d4c4e8d7b39eb45e4282cde89fccfeef893eae70b9d018643782090a7228c3ef60863b00747498e80f0cf1db8ae
+        SHA512 43e320c365f73e1302951cf69e4f395c8dec9fe3efba802dea10637b61721a64868fb0a45c33d2ac15f99a7ba0b865c268d268a543a4efeff10f5c59407e7ba9
     )
 
     vcpkg_extract_source_archive(src ARCHIVE "${ARCHIVE}")
@@ -90,6 +91,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 vcpkg_copy_pdbs()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/opentelemetry/sdk/configuration")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

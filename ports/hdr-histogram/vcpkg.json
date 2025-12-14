@@ -1,6 +1,6 @@
 {
   "name": "hdr-histogram",
-  "version-semver": "0.11.8",
+  "version-semver": "0.11.9",
   "description": "'C' port of High Dynamic Range (HDR) Histogram",
   "homepage": "https://github.com/HdrHistogram/HdrHistogram_c",
   "license": "CC0-1.0",

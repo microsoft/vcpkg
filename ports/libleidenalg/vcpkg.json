@@ -1,6 +1,6 @@
 {
   "name": "libleidenalg",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "maintainers": "Andrew Robbins <andrew@robbinsa.me>",
   "description": "Leiden is a general algorithm for methods of community detection in large networks.",
   "homepage": "https://github.com/vtraag/libleidenalg",
@@ -9,7 +9,7 @@
   "dependencies": [
     {
       "name": "igraph",
-      "version>=": "0.10.1"
+      "version>=": "1.0.0"
     },
     {
       "name": "vcpkg-cmake",
