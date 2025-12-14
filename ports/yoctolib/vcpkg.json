@@ -1,0 +1,26 @@
+{
+  "name": "yoctolib",
+  "version": "2.1.6320",
+  "description": "Official Yoctopuce Library for C++",
+  "homepage": "https://github.com/yoctopuce/yoctolib_cpp",
+  "license": null,
+  "dependencies": [
+    {
+      "name": "libusb",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "ssl": {
+      "description": "Enable SSL/TLS support"
+    }
+  }
+}

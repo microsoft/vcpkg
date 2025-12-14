@@ -1,0 +1,13 @@
+diff --git a/Sources/CMakeLists.txt b/Sources/CMakeLists.txt
+index 96886bd..a004a21 100644
+--- a/Sources/CMakeLists.txt
++++ b/Sources/CMakeLists.txt
+@@ -2,7 +2,7 @@
+ cmake_minimum_required(VERSION 3.8)
+ 
+ 
+-project(YoctoLib VERSION 1.0.1 DESCRIPTION "Yoctopuce C++ V2 library")
++project(YoctoLib VERSION 2.1.6320 DESCRIPTION "Yoctopuce C++ V2 library")
+ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND ${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+ SET(CMAKE_INSTALL_PREFIX "/usr")
+ endif()

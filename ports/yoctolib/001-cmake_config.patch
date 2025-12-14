@@ -1,0 +1,97 @@
+diff --git a/Sources/CMakeLists.txt b/Sources/CMakeLists.txt
+index 678fff5..2684a6c 100644
+--- a/Sources/CMakeLists.txt
++++ b/Sources/CMakeLists.txt
+@@ -181,10 +181,41 @@ add_library (YoctoLib ${YoctoLibCppSources} ${YoctoLibHSources})
+ 
+ # add yapi low level api
+ add_subdirectory(yapi)
+-target_link_libraries(YoctoLib PRIVATE yapi)
+-target_include_directories (YoctoLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
++target_link_libraries(YoctoLib PUBLIC yapi)
++target_include_directories (YoctoLib
++	PUBLIC
++		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++)
+ set_target_properties(YoctoLib PROPERTIES SOVERSION 1)
+ set_target_properties(YoctoLib PROPERTIES LIBRARY_OUTPUT_NAME yocto)
+-install(TARGETS YoctoLib DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ install(FILES ${YoctoLibHSources} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ install(FILES yapi/yapi.h yapi/ydef.h yapi/yversion.h yapi/yjson.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/yapi)
++
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file(
++	"${CMAKE_CURRENT_BINARY_DIR}/YoctoLibConfigVersion.cmake"
++	VERSION ${PROJECT_VERSION}
++	COMPATIBILITY SameMajorVersion
++)
++configure_package_config_file(
++	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/YoctoLibConfig.cmake.in"
++	"${CMAKE_CURRENT_BINARY_DIR}/YoctoLibConfig.cmake"
++	INSTALL_DESTINATION share/YoctoLib
++)
++install(TARGETS YoctoLib yapi
++	EXPORT YoctoLibTargets
++	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
++install(EXPORT YoctoLibTargets
++	FILE YoctoLibTargets.cmake
++	NAMESPACE YoctoLib::
++	DESTINATION share/YoctoLib
++)
++install(FILES
++	"${CMAKE_CURRENT_BINARY_DIR}/YoctoLibConfig.cmake"
++	"${CMAKE_CURRENT_BINARY_DIR}/YoctoLibConfigVersion.cmake"
++	DESTINATION share/YoctoLib
++)
+\ No newline at end of file
+diff --git a/Sources/cmake/YoctoLibConfig.cmake.in b/Sources/cmake/YoctoLibConfig.cmake.in
+new file mode 100644
+index 0000000..f7d558a
+--- /dev/null
++++ b/Sources/cmake/YoctoLibConfig.cmake.in
+@@ -0,0 +1,13 @@
++@PACKAGE_INIT@
++
++include(CMakeFindDependencyMacro)
++
++# Find platform-specific dependencies
++if(CMAKE_SYSTEM_NAME STREQUAL Linux)
++    find_dependency(Threads REQUIRED)
++    find_dependency(libusb REQUIRED)
++endif()
++
++include(${CMAKE_CURRENT_LIST_DIR}/YoctoLibTargets.cmake)
++
++check_required_components(YoctoLib)
+\ No newline at end of file
+diff --git a/Sources/yapi/CMakeLists.txt b/Sources/yapi/CMakeLists.txt
+index f6b571f..da7102e 100644
+--- a/Sources/yapi/CMakeLists.txt
++++ b/Sources/yapi/CMakeLists.txt
+@@ -139,7 +139,10 @@ if(USE_YSSL)
+ 	target_include_directories(yapi PRIVATE mbedtls/include)
+ endif()
+ 
+-target_include_directories (yapi PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
++target_include_directories(yapi PUBLIC
++	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/yapi>
++)
+ 
+ # add pthread usb-1.0 library only on linux
+ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+@@ -158,8 +161,4 @@ if (APPLE)
+ 	target_link_libraries(yapi LINK_PUBLIC ${IOKIT_FRAMEWORK} ${CORE_FRAMEWORK})
+ endif()
+ 
+-set_target_properties(yapi PROPERTIES SOVERSION 1)
+-install(TARGETS yapi DESTINATION ${CMAKE_INSTALL_LIBDIR})
+-install(FILES yapi.h ydef.h yversion.h yjson.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/yapi)
+-
+-
++set_target_properties(yapi PROPERTIES SOVERSION 1)
+\ No newline at end of file
