@@ -39,6 +39,7 @@ vcpkg_check_features(
         media   wxUSE_MEDIACTRL
         secretstore wxUSE_SECRETSTORE
         sound   wxUSE_SOUND
+        unicode-utf8 wxUSE_UNICODE_UTF8
         webview wxUSE_WEBVIEW
         webview wxUSE_WEBVIEW_EDGE
 )
