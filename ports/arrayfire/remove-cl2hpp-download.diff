@@ -1,0 +1,15 @@
+diff --git a/CMakeModules/build_cl2hpp.cmake b/CMakeModules/build_cl2hpp.cmake
+index 70a94c5..768a056 100644
+--- a/CMakeModules/build_cl2hpp.cmake
++++ b/CMakeModules/build_cl2hpp.cmake
+@@ -18,9 +18,7 @@ set(cl2hpp_file "${ArrayFire_BINARY_DIR}/include/CL/cl2.hpp")
+ 
+ if(OpenCL_FOUND)
+   if (NOT EXISTS ${cl2hpp_file})
+-      message(STATUS "Downloading ${cl2hpp_file_url}")
+-      file(DOWNLOAD ${cl2hpp_file_url} ${cl2hpp_file}
+-        EXPECTED_HASH MD5=c38d1b78cd98cc809fa2a49dbd1734a5)
++      file(COPY_FILE "${CMAKE_CURRENT_LIST_DIR}/../cl2.hpp" "${cl2hpp_file}")
+   endif()
+   get_filename_component(download_dir ${cl2hpp_file} DIRECTORY)
+ 
