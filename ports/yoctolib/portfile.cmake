@@ -10,20 +10,16 @@ vcpkg_from_github(
         003-fix_win32_shared_build.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    ssl USE_YSSL
-)
-
+set(OPTIONS "-DUSE_YSSL=OFF")
 if(VCPKG_TARGET_IS_LINUX)
     vcpkg_find_acquire_program(PKGCONFIG)
-    list(APPEND FEATURE_OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
+    list(APPEND OPTIONS "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Sources"
     OPTIONS
-        ${FEATURE_OPTIONS}
+        ${OPTIONS}
         -DVERSION=${VERSION}
         -DCMAKE_INSTALL_INCLUDEDIR=include/yoctolib
 )

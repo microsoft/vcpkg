@@ -18,10 +18,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "ssl": {
-      "description": "Enable SSL/TLS support"
-    }
-  }
+  ]
 }
