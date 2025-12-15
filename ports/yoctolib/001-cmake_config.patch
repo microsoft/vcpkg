@@ -59,8 +59,8 @@ index 0000000..6f442b2
 +
 +if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 +    set(THREADS_PREFER_PTHREAD_FLAG TRUE)
-+    find_dependency(Threads REQUIRED)
-+    find_dependency(PkgConfig REQUIRED)
++    find_dependency(Threads)
++    find_dependency(PkgConfig)
 +    pkg_check_modules(libusb REQUIRED IMPORTED_TARGET libusb-1.0)
 +endif()
 +
