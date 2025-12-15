@@ -7561,7 +7561,7 @@
       "port-version": 1
     },
     "picobench": {
-      "baseline": "2.8",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "picojson": {
