@@ -9282,7 +9282,7 @@
     },
     "spatialite-tools": {
       "baseline": "5.1.0-a",
-      "port-version": 1
+      "port-version": 2
     },
     "spdlog": {
       "baseline": "1.16.0",
