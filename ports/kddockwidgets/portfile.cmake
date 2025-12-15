@@ -9,9 +9,7 @@ endif()
 if(FRONTEND_LIST)
     list(JOIN FRONTEND_LIST ";" FRONTENDS)
 else()
-    message(STATUS "No front-ends selected for ${PORT}, package will not be built")
-    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    return()
+    message(FATAL_ERROR "No front-ends selected for ${PORT}, cannot build package")
 endif()
 
 vcpkg_from_github(
