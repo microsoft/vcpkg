@@ -3321,7 +3321,7 @@
       "port-version": 2
     },
     "ginkgo": {
-      "baseline": "1.10.0",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "gklib": {
