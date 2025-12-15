@@ -4189,8 +4189,8 @@
       "port-version": 0
     },
     "kddockwidgets": {
-      "baseline": "2.1.0",
-      "port-version": 1
+      "baseline": "2.4.0",
+      "port-version": 0
     },
     "kdreports": {
       "baseline": "2.3.0",
