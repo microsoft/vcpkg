@@ -5,7 +5,6 @@
   "homepage": "https://github.com/gabime/spdlog",
   "license": "MIT",
   "dependencies": [
-    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -20,6 +19,12 @@
       "description": "Use google benchmark",
       "dependencies": [
         "benchmark"
+      ]
+    },
+    "fmt": {
+      "description": "Use fmt library",
+      "dependencies": [
+        "fmt"
       ]
     },
     "wchar": {

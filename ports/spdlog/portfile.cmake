@@ -10,6 +10,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         benchmark SPDLOG_BUILD_BENCH
         wchar     SPDLOG_WCHAR_SUPPORT
+        fmt       SPDLOG_FMT_EXTERNAL
 )
 
 # SPDLOG_WCHAR_FILENAMES can only be configured in triplet file since it is an alternative (not additive)
@@ -19,6 +20,11 @@ endif()
 if(NOT VCPKG_TARGET_IS_WINDOWS AND SPDLOG_WCHAR_FILENAMES)
     message(FATAL_ERROR "Build option 'SPDLOG_WCHAR_FILENAMES' is for Windows.")
 endif()
+if(SPDLOG_FMT_EXTERNAL)
+    set(SPDLOG_USE_STD_FORMAT OFF)
+else()
+    set(SPDLOG_USE_STD_FORMAT ON)
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPDLOG_BUILD_SHARED)
 
@@ -26,7 +32,8 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DSPDLOG_FMT_EXTERNAL=ON
+        -DSPDLOG_USE_STD_FORMAT=${SPDLOG_USE_STD_FORMAT}
+        -DSPDLOG_FMT_EXTERNAL=${SPDLOG_FMT_EXTERNAL}
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
         -DSPDLOG_WCHAR_FILENAMES=${SPDLOG_WCHAR_FILENAMES}
@@ -43,10 +50,12 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 
 # add support for integration other than cmake
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
-    "// #define SPDLOG_FMT_EXTERNAL"
-    "#ifndef SPDLOG_FMT_EXTERNAL\n#define SPDLOG_FMT_EXTERNAL\n#endif"
-)
+if(SPDLOG_FMT_EXTERNAL)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
+        "// #define SPDLOG_FMT_EXTERNAL"
+        "#ifndef SPDLOG_FMT_EXTERNAL\n#define SPDLOG_FMT_EXTERNAL\n#endif"
+    )
+endif()
 if(SPDLOG_WCHAR_SUPPORT)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
         "// #define SPDLOG_WCHAR_TO_UTF8_SUPPORT"
