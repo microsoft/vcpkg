@@ -4037,7 +4037,7 @@
       "port-version": 0
     },
     "itlib": {
-      "baseline": "1.11.8",
+      "baseline": "1.12.0",
       "port-version": 0
     },
     "itpp": {
