@@ -4685,7 +4685,7 @@
       "port-version": 0
     },
     "libconfig": {
-      "baseline": "1.8.1",
+      "baseline": "1.8.2",
       "port-version": 0
     },
     "libconfuse": {
