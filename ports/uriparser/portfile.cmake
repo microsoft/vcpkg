@@ -12,11 +12,6 @@ else()
     set(URIPARSER_BUILD_TOOLS OFF)
 endif()
 
-# On Android, we need to set C standard to C99 (headers on ndk uses `inline`)
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_C_STANDARD 90)" "set(CMAKE_C_STANDARD 99)")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
