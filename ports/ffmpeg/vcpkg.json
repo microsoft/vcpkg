@@ -732,12 +732,10 @@
       ]
     },
     "zmq": {
-      "description": "Enable the zmq filter (requires zeromq)",
+      "description": "Enable ZeroMQ support",
+      "platform": "!(windows & static) & !android",
       "dependencies": [
-        {
-          "name": "zeromq",
-          "platform": "!(windows & static) & !android"
-        }
+        "zeromq"
       ]
     }
   }
