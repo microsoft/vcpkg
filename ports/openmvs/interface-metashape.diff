@@ -1,14 +1,13 @@
 diff --git a/apps/InterfaceMetashape/InterfaceMetashape.cpp b/apps/InterfaceMetashape/InterfaceMetashape.cpp
-index 5df6a21..b11ae7d 100644
+index 03a80ce..5df6a21 100644
 --- a/apps/InterfaceMetashape/InterfaceMetashape.cpp
 +++ b/apps/InterfaceMetashape/InterfaceMetashape.cpp
-@@ -625,7 +625,8 @@ bool ParseSceneXML(Scene& scene, PlatformDistCoeffs& pltDistCoeffs, size_t& nCam
+@@ -625,7 +625,7 @@ bool ParseSceneXML(Scene& scene, PlatformDistCoeffs& pltDistCoeffs, size_t& nCam
  		}
  		const size_t nLen(pStream->getSize());
  		String str; str.resize(nLen);
--		pStream->read(str.data(), nLen);
-+		char* str_data = str.data();
-+		pStream->read(str_data, nLen);
+-		pStream->read(&str[0], nLen);
++		pStream->read(str.data(), nLen);
  		doc.Parse(str.c_str(), nLen);
  	}
  	if (doc.ErrorID() != tinyxml2::XML_SUCCESS) {

@@ -10,7 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.diff
-        #interface-metashape.diff
+        interface-metashape.diff
         missing-include.diff
         no-absolute-paths.patch
 )
@@ -58,7 +58,6 @@ vcpkg_cmake_configure(
         -DOpenMVS_USE_FAST_CBRT=ON
         -DOpenMVS_USE_FAST_FLOAT2INT=ON
         -DOpenMVS_USE_FAST_INVSQRT=OFF
-        -DOpenMVS_USE_OPENGL=ON
         -DOpenMVS_USE_PYTHON=OFF
         -DOpenMVS_USE_SSE=${USE_SSE}
         -DVCPKG_LOCK_FIND_PACKAGE_JPEG=ON
