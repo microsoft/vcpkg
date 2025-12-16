@@ -15,19 +15,9 @@ get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v143")
-        set(VSNET_VERSION "2022")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-        set(VSNET_VERSION "2019")
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(VSNET_VERSION "2017")
-    else()
-        set(VSNET_VERSION "2022")
-    endif()
-
     set(GEN_MAKE_ARGS
         "-t" "vcproj"
-        "--vsnet-version=${VSNET_VERSION}"
+        "--vsnet-version=2022"
         "--with-apr=${CURRENT_INSTALLED_DIR}"
         "--with-apr-util=${CURRENT_INSTALLED_DIR}"
         "--with-zlib=${CURRENT_INSTALLED_DIR}"
