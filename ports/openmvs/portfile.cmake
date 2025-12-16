@@ -10,7 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.diff
-        interface-metashape.diff
+        #interface-metashape.diff
         missing-include.diff
         no-absolute-paths.patch
 )
