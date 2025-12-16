@@ -1,11 +1,11 @@
 {
   "name": "spdlog",
   "version-semver": "1.16.0",
+  "port-version": 1,
   "description": "Very fast, header-only/compiled, C++ logging library.",
   "homepage": "https://github.com/gabime/spdlog",
   "license": "MIT",
   "dependencies": [
-    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,11 +15,20 @@
       "host": true
     }
   ],
+  "default-features": [
+    "fmt"
+  ],
   "features": {
     "benchmark": {
       "description": "Use google benchmark",
       "dependencies": [
         "benchmark"
+      ]
+    },
+    "fmt": {
+      "description": "Use fmt library",
+      "dependencies": [
+        "fmt"
       ]
     },
     "wchar": {
