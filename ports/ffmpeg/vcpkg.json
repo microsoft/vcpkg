@@ -733,7 +733,7 @@
     },
     "zmq": {
       "description": "Enable ZeroMQ support",
-      "supports": "!(windows & static)",
+      "supports": "windows & !static",
       "dependencies": [
         "zeromq"
       ]
