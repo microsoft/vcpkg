@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
     REF uriparser-${VERSION}
-    SHA512 0ab98e3172d9767ec0a62018c70190efb5aec813c310e7305fb4ffeb187976734d35ba2f83f6ea0b3f390f13740491d9538e5960b93ca1bbb848a1fe41c559a3
+    SHA512 17526795bf78211ecff2b6b6f632c168ba33ed7763c5ad94fcc5bdff19542025be8a7079701e261d8992fff9077f59448fb9b8983cfab38d972228b7e353c9cd
     HEAD_REF master
 )
 
@@ -39,7 +39,7 @@ if(URIPARSER_BUILD_TOOLS)
     )
 endif()
 
-set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
+set(_package_version_re "#[ ]*define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
 file(STRINGS
 	"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/UriConfig.h"
     _package_version_define REGEX "${_package_version_re}"

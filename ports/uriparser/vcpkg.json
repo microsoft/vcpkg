@@ -1,6 +1,6 @@
 {
   "name": "uriparser",
-  "version": "0.9.9",
+  "version": "1.0.0",
   "description": "Strictly RFC 3986 compliant URI parsing and handling library written in C89.",
   "homepage": "https://uriparser.github.io/",
   "license": "BSD-3-Clause",

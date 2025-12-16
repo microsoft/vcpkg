@@ -10133,7 +10133,7 @@
       "port-version": 0
     },
     "uriparser": {
-      "baseline": "0.9.9",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "usbmuxd": {
