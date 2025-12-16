@@ -1,6 +1,7 @@
 {
   "name": "stella-cv-fbow",
   "version": "0.0.1",
+  "port-version": 1,
   "description": "This is a modified version of the original Fast Bag of Words by @rmsalinas.",
   "homepage": "https://github.com/stella-cv/FBoW",
   "license": "MIT",
