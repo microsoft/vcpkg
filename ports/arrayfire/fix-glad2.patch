@@ -1,0 +1,58 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a8cbec8df..e4d2c1b41 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,6 +45,7 @@ find_package(CBLAS)
+ find_package(LAPACKE)
+ find_package(Doxygen)
+ find_package(MKL)
++find_package(glfw3 CONFIG REQUIRED)
+ 
+ include(boost_package)
+ 
+diff --git a/src/backend/common/CMakeLists.txt b/src/backend/common/CMakeLists.txt
+index 8c128fa6a..fceeb0e59 100644
+--- a/src/backend/common/CMakeLists.txt
++++ b/src/backend/common/CMakeLists.txt
+@@ -86,6 +86,7 @@ target_link_libraries(afcommon_interface
+     Boost::boost
+     ${CMAKE_DL_LIBS}
+     glad::glad
++    glfw
+ )
+ 
+ if(AF_BUILD_FORGE)
+diff --git a/src/backend/common/forge_loader.hpp b/src/backend/common/forge_loader.hpp
+index bf1cce8c5..bf266443c 100644
+--- a/src/backend/common/forge_loader.hpp
++++ b/src/backend/common/forge_loader.hpp
+@@ -11,7 +11,7 @@
+ 
+ #include <common/DependencyModule.hpp>
+ 
+-#include <glad/glad.h>
++#include <glad/gl.h>
+ 
+ #include <forge.h>
+ 
+diff --git a/src/backend/common/graphics_common.cpp b/src/backend/common/graphics_common.cpp
+index e8e24834b..6eacf982c 100644
+--- a/src/backend/common/graphics_common.cpp
++++ b/src/backend/common/graphics_common.cpp
+@@ -14,6 +14,7 @@
+ #include <platform.hpp>
+ #include <mutex>
+ #include <utility>
++#include <GLFW/glfw3.h>
+ 
+ using std::make_pair;
+ using std::string;
+@@ -263,7 +264,7 @@ fg_window ForgeManager::getMainWindow() {
+             this->setWindowChartGrid(w, 1, 1);
+             this->mPlugin->fg_make_window_current(w);
+             this->mMainWindow.reset(new Window({w}));
+-            if (!gladLoadGL()) { error = AF_ERR_LOAD_LIB; }
++            if (!gladLoadGL(glfwGetProcAddress)) { error = AF_ERR_LOAD_LIB; }
+         });
+         if (error == AF_ERR_LOAD_LIB) {
+             string error_message =
