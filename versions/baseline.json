@@ -10221,8 +10221,8 @@
       "port-version": 5
     },
     "vanillapdf": {
-      "baseline": "2.1.0",
-      "port-version": 1
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "variant-lite": {
       "baseline": "3.0.0",
