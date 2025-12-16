@@ -591,6 +591,45 @@ else()
     set(WITH_VAAPI OFF)
 endif()
 
+if("zmq" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libzmq")
+
+    if(VCPKG_TARGET_IS_WINDOWS)
+        if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            message(FATAL_ERROR "ZeroMQ support is only available for dynamic builds on Windows")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "debug")
+            set(ZMQ_LIB_DIR "${CURRENT_INSTALLED_DIR}/debug/lib")
+        else()
+            set(ZMQ_LIB_DIR "${CURRENT_INSTALLED_DIR}/lib")
+        endif()
+
+        file(GLOB ZMQ_IMPORT_LIBS "${ZMQ_LIB_DIR}/libzmq-*.lib")
+        if(NOT ZMQ_IMPORT_LIBS)
+            message(FATAL_ERROR "ZeroMQ import library not found in ${ZMQ_LIB_DIR}")
+        endif()
+
+        list(GET ZMQ_IMPORT_LIBS 0 ZMQ_SOURCE_LIB)
+        set(ZMQ_ALIAS_LIB "${ZMQ_LIB_DIR}/zmq.lib")
+
+        message(STATUS "Refreshing ZeroMQ alias library: zmq.lib ← ${ZMQ_SOURCE_LIB}")
+
+        if(EXISTS "${ZMQ_ALIAS_LIB}")
+            file(REMOVE "${ZMQ_ALIAS_LIB}")
+        endif()
+
+        file(COPY "${ZMQ_SOURCE_LIB}" DESTINATION "${ZMQ_LIB_DIR}")
+
+        get_filename_component(_src_name "${ZMQ_SOURCE_LIB}" NAME)
+        if(NOT _src_name STREQUAL "zmq.lib")
+            file(RENAME "${ZMQ_LIB_DIR}/${_src_name}" "${ZMQ_ALIAS_LIB}")
+        endif()
+
+        set(OPTIONS "${OPTIONS} --extra-ldflags=/LIBPATH:${ZMQ_LIB_DIR}")
+    endif()
+endif()
+
 set(OPTIONS_CROSS "--enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
