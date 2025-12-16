@@ -1,0 +1,14 @@
+diff --git a/Sources/yapi/CMakeLists.txt b/Sources/yapi/CMakeLists.txt
+index da7102e..a06e04c 100644
+--- a/Sources/yapi/CMakeLists.txt
++++ b/Sources/yapi/CMakeLists.txt
+@@ -161,4 +161,8 @@ if (APPLE)
+ 	target_link_libraries(yapi LINK_PUBLIC ${IOKIT_FRAMEWORK} ${CORE_FRAMEWORK})
+ endif()
+ 
++if (WIN32)
++	target_link_libraries(yapi PRIVATE bcrypt)
++endif()
++
+ set_target_properties(yapi PROPERTIES SOVERSION 1)
+\ No newline at end of file
