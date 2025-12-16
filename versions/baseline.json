@@ -5673,7 +5673,7 @@
       "port-version": 0
     },
     "liburing": {
-      "baseline": "2.12",
+      "baseline": "2.13",
       "port-version": 0
     },
     "libusb": {
