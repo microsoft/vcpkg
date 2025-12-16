@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.diff
+        missing-include.diff
         no-absolute-paths.patch
 )
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindEigen3.cmake")
@@ -45,6 +46,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DCMAKE_POLICY_DEFAULT_CMP0072=NEW  # OpenGL VND
+        -DCMAKE_POLICY_DEFAULT_CMP0091=NEW  # MSVC runtime, needed for CUDA
         -DCMAKE_POLICY_DEFAULT_CMP0167=NEW  # Boost
         -DCMAKE_POLICY_DEFAULT_CMP0177=NEW  # install() DESTINATION
         -DINSTALL_CMAKE_DIR:STRING=share/openmvs
@@ -61,7 +63,6 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_OpenGL=ON
         -DVCPKG_LOCK_FIND_PACKAGE_PNG=ON
         -DVCPKG_LOCK_FIND_PACKAGE_TIFF=ON
--DVCPKG_TRACE_FIND_PACKAGE=1
     OPTIONS_DEBUG
         -DOpenMVS_BUILD_TOOLS=OFF
     MAYBE_UNUSED_VARIABLES

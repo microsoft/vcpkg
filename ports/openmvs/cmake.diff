@@ -103,10 +103,26 @@ index 9747b3e..f1b981c 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/OpenMVSTargets.cmake")
 diff --git a/build/Utils.cmake b/build/Utils.cmake
-index 86d3430..c963ee1 100644
+index 86d3430..431864e 100644
 --- a/build/Utils.cmake
 +++ b/build/Utils.cmake
-@@ -174,6 +174,7 @@ macro(ComposePackageLibSuffix)
+@@ -119,6 +119,7 @@ macro(GetOperatingSystemArchitectureBitness)
+ 	# Detect GNU version:
+ 	set(CMAKE_FLG_GCC_VERSION_NUM 0)
+ 	if(CMAKE_COMPILER_IS_GNUCXX)
++	  if(0) # informational, breaking for Android
+ 		execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
+ 					  OUTPUT_VARIABLE CMAKE_FLG_GCC_VERSION_FULL
+ 					  OUTPUT_STRIP_TRAILING_WHITESPACE)
+@@ -144,6 +145,7 @@ macro(GetOperatingSystemArchitectureBitness)
+ 		set(CMAKE_FLG_GCC_VERSION ${CMAKE_FLG_GCC_VERSION_MAJOR}${CMAKE_FLG_GCC_VERSION_MINOR})
+ 		math(EXPR CMAKE_FLG_GCC_VERSION_NUM "${CMAKE_FLG_GCC_VERSION_MAJOR}*100 + ${CMAKE_FLG_GCC_VERSION_MINOR}")
+ 		message(STATUS "Detected version of GNU GCC: ${CMAKE_FLG_GCC_VERSION} (${CMAKE_FLG_GCC_VERSION_NUM})")
++	  endif()
+ 
+ 		if(WIN32)
+ 			execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpmachine
+@@ -174,6 +176,7 @@ macro(ComposePackageLibSuffix)
  	set(PACKAGE_LIB_SUFFIX_DBG "")
  	set(PACKAGE_LIB_SUFFIX_REL "")
  	if(MSVC)
@@ -114,7 +130,7 @@ index 86d3430..c963ee1 100644
  		if("${MSVC_VERSION}" STRGREATER "1929")
  			set(PACKAGE_LIB_SUFFIX "/vc17")
  		elseif("${MSVC_VERSION}" STRGREATER "1916")
-@@ -819,6 +820,7 @@ macro(ConfigLibrary)
+@@ -819,6 +822,7 @@ macro(ConfigLibrary)
  	set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
  	# Make relative paths absolute (needed later on)
  	foreach(p LIB BIN INCLUDE CMAKE)
@@ -122,7 +138,7 @@ index 86d3430..c963ee1 100644
  		set(var INSTALL_${p}_DIR)
  		set(varp INSTALL_${p}_DIR_PREFIX)
  		if(IS_ABSOLUTE "${${varp}}")
-@@ -847,6 +849,10 @@ function(cxx_library_with_type name folder type cxx_flags)
+@@ -847,6 +851,10 @@ function(cxx_library_with_type name folder type cxx_flags)
    if(BUILD_SHARED_LIBS OR PARTIAL_BUILD_SHARED_LIBS)
      set_target_properties("${name}" PROPERTIES POSITION_INDEPENDENT_CODE ON)
    endif()
