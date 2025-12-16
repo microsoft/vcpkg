@@ -1734,6 +1734,7 @@ openmvg[core](arm & windows & !uwp) = combination-fails # nmmintrin.h(17): fatal
 openmvg[openmp](arm & windows & !uwp) = feature-fails
 openmvs[cuda]:x64-linux = feature-fails
 openmvs[cuda]:x64-windows-static = feature-fails
+openmvs[opengl](android) = feature-fails
 openscap[python](!windows) = feature-fails # CI image lacks swig
 opentelemetry-cpp[otlp](uwp) = feature-fails # --grpc_out: protoc-gen-grpc: The system cannot find the file specified. See https://github.com/microsoft/vcpkg/issues/34847
 osgearth[tools](osx) = feature-fails # Undefined _NSSearchPathForDirectoriesInDomains

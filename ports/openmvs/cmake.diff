@@ -103,7 +103,7 @@ index 9747b3e..f1b981c 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/OpenMVSTargets.cmake")
 diff --git a/build/Utils.cmake b/build/Utils.cmake
-index 86d3430..431864e 100644
+index 86d3430..5306186 100644
 --- a/build/Utils.cmake
 +++ b/build/Utils.cmake
 @@ -119,6 +119,7 @@ macro(GetOperatingSystemArchitectureBitness)
@@ -130,7 +130,24 @@ index 86d3430..431864e 100644
  		if("${MSVC_VERSION}" STRGREATER "1929")
  			set(PACKAGE_LIB_SUFFIX "/vc17")
  		elseif("${MSVC_VERSION}" STRGREATER "1916")
-@@ -819,6 +822,7 @@ macro(ConfigLibrary)
+@@ -422,6 +425,7 @@ macro(optimize_default_compiler_settings)
+ 		endif()
+ 	else()
+ 		list(FIND CMAKE_CXX_COMPILE_FEATURES "cxx_std_20" CXX_STD_INDEX)
++		set(CXX_STD_INDEX -1) # std::shared_ptr<>::unique() in libs/Common/FastDelegateCPP11.h
+ 		if(${CXX_STD_INDEX} GREATER -1)
+ 			set(CMAKE_CXX_STANDARD 20)
+ 		else()
+@@ -624,7 +628,7 @@ macro(optimize_default_compiler_settings)
+ 
+ 	  if(NOT MSVC64)
+ 		# 64-bit MSVC compiler uses SSE/SSE2 by default
+-		if(ENABLE_SSE)
++		if(ENABLE_SSE AND NOT ENABLE_SSE2)
+ 		  set(BUILD_EXTRA_FLAGS "${BUILD_EXTRA_FLAGS} /arch:SSE")
+ 		endif()
+ 		if(ENABLE_SSE2)
+@@ -819,6 +823,7 @@ macro(ConfigLibrary)
  	set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
  	# Make relative paths absolute (needed later on)
  	foreach(p LIB BIN INCLUDE CMAKE)
@@ -138,7 +155,7 @@ index 86d3430..431864e 100644
  		set(var INSTALL_${p}_DIR)
  		set(varp INSTALL_${p}_DIR_PREFIX)
  		if(IS_ABSOLUTE "${${varp}}")
-@@ -847,6 +851,10 @@ function(cxx_library_with_type name folder type cxx_flags)
+@@ -847,6 +852,10 @@ function(cxx_library_with_type name folder type cxx_flags)
    if(BUILD_SHARED_LIBS OR PARTIAL_BUILD_SHARED_LIBS)
      set_target_properties("${name}" PROPERTIES POSITION_INDEPENDENT_CODE ON)
    endif()

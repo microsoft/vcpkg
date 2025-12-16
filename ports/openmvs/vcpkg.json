@@ -25,7 +25,6 @@
         "highgui"
       ]
     },
-    "opengl",
     {
       "name": "tiff",
       "default-features": false
@@ -54,6 +53,12 @@
         "cuda"
       ]
     },
+    "opengl": {
+      "description": "OpenGL support for openmvs",
+      "dependencies": [
+        "opengl"
+      ]
+    },
     "openmp": {
       "description": "OpenMP support for openmvs"
     },
@@ -68,6 +73,7 @@
         {
           "name": "openmvs",
           "features": [
+            "opengl",
             "tools"
           ]
         }

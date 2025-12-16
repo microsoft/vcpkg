@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.diff
+        interface-metashape.diff
         missing-include.diff
         no-absolute-paths.patch
 )
@@ -21,6 +22,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ceres       VCPKG_LOCK_FIND_PACKAGE_Ceres
         cuda        OpenMVS_USE_CUDA
         cuda        VCPKG_LOCK_FIND_PACKAGE_CUDA
+        opengl      OpenMVS_USE_OPENGL
+        opengl      VCPKG_LOCK_FIND_PACKAGE_OpenGL
         openmp      OpenMVS_USE_OPENMP
         openmp      VCPKG_LOCK_FIND_PACKAGE_OpenMP
         tools       OpenMVS_BUILD_TOOLS
@@ -45,7 +48,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DCMAKE_POLICY_DEFAULT_CMP0072=NEW  # OpenGL VND
         -DCMAKE_POLICY_DEFAULT_CMP0091=NEW  # MSVC runtime, needed for CUDA
         -DCMAKE_POLICY_DEFAULT_CMP0167=NEW  # Boost
         -DCMAKE_POLICY_DEFAULT_CMP0177=NEW  # install() DESTINATION
@@ -71,6 +73,7 @@ vcpkg_cmake_configure(
         VCPKG_LOCK_FIND_PACKAGE_CUDA
         VCPKG_LOCK_FIND_PACKAGE_GLEW
         VCPKG_LOCK_FIND_PACKAGE_GLFW
+        VCPKG_LOCK_FIND_PACKAGE_OpenGL
         VCPKG_LOCK_FIND_PACKAGE_OpenMP
         VCPKG_LOCK_FIND_PACKAGE_OpenMVG
 )
