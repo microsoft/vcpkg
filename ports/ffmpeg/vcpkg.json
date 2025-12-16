@@ -730,6 +730,15 @@
       "dependencies": [
         "zlib"
       ]
+    },
+    "zmq": {
+      "description": "Enable the zmq filter (requires zeromq)",
+      "dependencies": [
+        {
+          "name": "zeromq",
+          "platform": "!(windows & static)"
+        }
+      ]
     }
   }
 }
