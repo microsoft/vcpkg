@@ -68,7 +68,7 @@ index 9747b3e..f1b981c 100644
 +
 +include(CMakeFindDependencyMacro)
 +
-+find_dependency(Boost COMPONENTS iostreams program_options system serialization)
++find_dependency(Boost COMPONENTS iostreams program_options system serialization throw_exception)
 +
 +find_dependency(Eigen3)
 +list(APPEND OpenMVS_DEFINITIONS ${EIGEN3_DEFINITIONS})

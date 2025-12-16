@@ -1,0 +1,13 @@
+diff --git a/libs/Common/Log.cpp b/libs/Common/Log.cpp
+index da19bd1..f85aef7 100644
+--- a/libs/Common/Log.cpp
++++ b/libs/Common/Log.cpp
+@@ -8,6 +8,8 @@
+ #include "Common.h"
+ #include "Log.h"
+ 
++#include <cstdio> // FILE
++
+ using namespace SEACAVE;
+ 
+ 

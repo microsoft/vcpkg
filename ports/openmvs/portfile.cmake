@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake.diff
+        common-log.diff
         interface-metashape.diff
         missing-include.diff
         no-absolute-paths.patch
