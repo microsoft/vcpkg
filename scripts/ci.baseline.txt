@@ -537,6 +537,8 @@ openmpi:arm64-android=fail
 openmpi:x64-android=fail
 openmvg:arm64-windows-static-md=fail
 openmvg:arm64-windows=fail
+openmvs:arm64-windows-static-md=fail # no _M_ARM64 detection
+openmvs:arm64-windows=fail # no _M_ARM64 detection
 # MSVC is not supported
 openslide:x64-windows-release=fail
 openslide:x64-windows=fail
@@ -636,7 +638,6 @@ soem:x64-android=fail
 soil:arm-neon-android=fail
 soil:arm64-android=fail
 soil:x64-android=fail
-solid3:arm64-android=fail
 spaceland:arm64-android=fail
 spaceland:arm64-uwp=fail
 spaceland:arm64-windows-static-md=fail
