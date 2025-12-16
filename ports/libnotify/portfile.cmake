@@ -1,10 +1,14 @@
-vcpkg_from_gitlab(
-    GITLAB_URL "https://gitlab.gnome.org"
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO "GNOME/libnotify"
-    REF "${VERSION}"
-    HEAD_REF "master"
-    SHA512 731f874676347e18b45eb63ae6a968bce8b34d57aadef444733b73a51b3b29297751699f3aeae9dfd2779afffc7e9c15d3a4141504cfe6cd46f51f79d3ee85d5
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 75f8e605cd5331c91f502da61eec5bf5dfed6f1cf8c966e5c4356be48e24c32fe4be481dc16d0ccd4e25b2e9e207898124b349a0dc4575211e0044c9d81fc7ce
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-fix-parameter-name-omitted-error.patch
 )

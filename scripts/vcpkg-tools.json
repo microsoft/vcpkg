@@ -129,29 +129,29 @@
     {
       "name": "gsutil",
       "os": "windows",
-      "version": "4.65",
+      "version": "5.35",
       "executable": "google-cloud-sdk/bin/gsutil.cmd",
-      "url": "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-347.0.0-windows-x86_64-bundled-python.zip",
-      "sha512": "e2792e17b132aad77f7c0b9fd26faf415e9437923d9227a9e6d253554e6843d29a6ddad0a7fb5e9aea4a130fd4c521e6ece8844fd4a4f9e8d580348775425389",
-      "archive": "google-cloud-sdk-347.0.0-windows-x86_64-bundled-python.zip"
+      "url": "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-548.0.0-windows-x86_64-bundled-python.zip",
+      "sha512": "db15ad86e523099d899ce1b3846f702997d3a425e7bedd167b8ac04753433420156bbfba176de67ff0fd4bf6d47795fef6853fab0d2a793a2d92d4daab8ad45a",
+      "archive": "google-cloud-sdk-548.0.0-windows-x86_64-bundled-python.zip"
     },
     {
       "name": "gsutil",
       "os": "osx",
-      "version": "4.65",
+      "version": "5.35",
       "executable": "gsutil/gsutil",
-      "url": "https://storage.googleapis.com/pub/gsutil_4.65.tar.gz",
-      "sha512": "2c5c9dea48147f97180a491bbb9e24e8cbcd4f3452620e2f80338b781e4dfc90bb754e3bbfa05e1b990e44bff52d990d8c2dd51bc83d112339d8e6096a2f21c8",
-      "archive": "gsutil_4.65.tar.gz"
+      "url": "https://storage.googleapis.com/pub/gsutil_5.35.tar.gz",
+      "sha512": "c051bb71d127fe2a32af338b673218976b4ead6a7c8f76778c9130fdf1d31939bacdc3aef06b3b42d13dc1b8d4a6177b6fdba5bde62ff34af399a2ed9a3eda47",
+      "archive": "gsutil_5.35.tar.gz"
     },
     {
       "name": "gsutil",
       "os": "linux",
-      "version": "4.65",
+      "version": "5.35",
       "executable": "gsutil/gsutil",
-      "url": "https://storage.googleapis.com/pub/gsutil_4.65.tar.gz",
-      "sha512": "2c5c9dea48147f97180a491bbb9e24e8cbcd4f3452620e2f80338b781e4dfc90bb754e3bbfa05e1b990e44bff52d990d8c2dd51bc83d112339d8e6096a2f21c8",
-      "archive": "gsutil_4.65.tar.gz"
+      "url": "https://storage.googleapis.com/pub/gsutil_5.35.tar.gz",
+      "sha512": "c051bb71d127fe2a32af338b673218976b4ead6a7c8f76778c9130fdf1d31939bacdc3aef06b3b42d13dc1b8d4a6177b6fdba5bde62ff34af399a2ed9a3eda47",
+      "archive": "gsutil_5.35.tar.gz"
     },
     {
       "name": "vswhere",
@@ -164,26 +164,26 @@
     {
       "name": "nuget",
       "os": "windows",
-      "version": "6.10.0",
+      "version": "7.0.1",
       "executable": "nuget.exe",
-      "url": "https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe",
-      "sha512": "71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf"
+      "url": "https://dist.nuget.org/win-x86-commandline/v7.0.1/nuget.exe",
+      "sha512": "ef1d4af5d0efceee529de9aeb7a2da6e18a330b148f61b63cf367b150f68b06380a1500e2b144d1e82b1a0227399df448c9c60c6ef10a1fa928af4a52299d51d"
     },
     {
       "name": "nuget",
       "os": "linux",
-      "version": "6.10.0",
+      "version": "7.0.1",
       "executable": "nuget.exe",
-      "url": "https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe",
-      "sha512": "71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf"
+      "url": "https://dist.nuget.org/win-x86-commandline/v7.0.1/nuget.exe",
+      "sha512": "ef1d4af5d0efceee529de9aeb7a2da6e18a330b148f61b63cf367b150f68b06380a1500e2b144d1e82b1a0227399df448c9c60c6ef10a1fa928af4a52299d51d"
     },
     {
       "name": "nuget",
       "os": "osx",
-      "version": "6.10.0",
+      "version": "7.0.1",
       "executable": "nuget.exe",
-      "url": "https://dist.nuget.org/win-x86-commandline/v6.10.0/nuget.exe",
-      "sha512": "71d7307bb89de2df3811419c561efa00618a4c68e6ce481b0bdfc94c7c6c6d126a54eb26a0015686fabf99f109744ca41fead99e97139cdc86dde16a5ec3e7cf"
+      "url": "https://dist.nuget.org/win-x86-commandline/v7.0.1/nuget.exe",
+      "sha512": "ef1d4af5d0efceee529de9aeb7a2da6e18a330b148f61b63cf367b150f68b06380a1500e2b144d1e82b1a0227399df448c9c60c6ef10a1fa928af4a52299d51d"
     },
     {
       "name": "coscli",

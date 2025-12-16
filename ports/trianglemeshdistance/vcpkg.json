@@ -1,6 +1,6 @@
 {
   "name": "trianglemeshdistance",
-  "version-date": "2025-12-05",
+  "version": "1.1.0",
   "description": "Header only library to compute the signed distance function (SDF) to a triangle mesh.",
   "homepage": "https://github.com/InteractiveComputerGraphics/TriangleMeshDistance",
   "license": "MIT",

@@ -10,14 +10,10 @@ vcpkg_from_github(
         no-sse.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(DYNAMIC_SOLID OFF)
-else()
-    set(DYNAMIC_SOLID ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DYNAMIC_SOLID)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DDYNAMIC_SOLID=${DYNAMIC_SOLID}
 )
@@ -26,14 +22,19 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/solid3)
 
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/solid3/README.md ${CURRENT_PACKAGES_DIR}/share/solid3/copyright)
-file(COPY ${SOURCE_PATH}/LICENSE_GPL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3)
-file(COPY ${SOURCE_PATH}/LICENSE_QPL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin"
+        "${CURRENT_PACKAGES_DIR}/debug/bin"
+    )
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(
+    FILE_LIST
+        "${SOURCE_PATH}/README.md"
+        "${SOURCE_PATH}/LICENSE_GPL.txt"
+        "${SOURCE_PATH}/LICENSE_QPL.txt"
+)
