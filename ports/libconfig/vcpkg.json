@@ -12,10 +12,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "cxx": {
-      "description": "uild the C++ library in addition to the C library"
-    }
-  }
+  ]
 }
