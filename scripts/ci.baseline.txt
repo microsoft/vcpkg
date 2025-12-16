@@ -638,7 +638,6 @@ soem:x64-android=fail
 soil:arm-neon-android=fail
 soil:arm64-android=fail
 soil:x64-android=fail
-solid3:arm64-android=fail
 spaceland:arm64-android=fail
 spaceland:arm64-uwp=fail
 spaceland:arm64-windows-static-md=fail
