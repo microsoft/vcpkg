@@ -2,10 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hyperrealm/libconfig
     REF "v${VERSION}"
-    SHA512 1d9d7b21baf73259c09b503ca02942bdf847741378f8c3d7e138c9b4979c5304aae510595958fe1842b726778cedf2aaeb1844f8b209a61ccb24debea592bd0c
+    SHA512 c3ed6c8f500b449c4d94976745a3acba1c7176f87497d5cb0deb05e62f2ff009ca0636c7c9848601f6d92dd113d82983cbd1132735f0f2d4e40b32d257f4aaa7
     HEAD_REF master
     PATCHES
         static-build.diff
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        cxx BUILD_CXX
 )
 
 vcpkg_cmake_configure(
@@ -13,6 +18,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
@@ -23,7 +29,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libconfig.h" "defined(LIBCONFIG_STATIC)" "1")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libconfig.h++" "defined(LIBCONFIGXX_STATIC)" "1")
+    if ("cxx" IN_LIST FEATURES)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/libconfig.h++" "defined(LIBCONFIGXX_STATIC)" "1")
+    endif()
 endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
