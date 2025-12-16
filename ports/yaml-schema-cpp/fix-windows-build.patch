@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0399267..afd6ef7 100644
+index 0399267..bda2eb3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -37,6 +37,11 @@ SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)
@@ -8,7 +8,7 @@ index 0399267..afd6ef7 100644
  
 +# support alternative tokens in MSVC
 +if(MSVC)
-+  add_compile_options(/permissive-)
++  add_compile_options(/permissive- /bigobj)
 +endif()
 +
  # ------ PROJECT OPTIONS ------
