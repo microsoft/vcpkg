@@ -167,16 +167,16 @@ index 86d3430..5306186 100644
  
  # cxx_executable_with_flags(name cxx_flags libs srcs...)
 diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
-index 8533865..2182b8b 100644
+index 8533865..0a013ea 100644
 --- a/libs/MVS/CMakeLists.txt
 +++ b/libs/MVS/CMakeLists.txt
 @@ -49,6 +49,14 @@ if(_USE_CUDA)
  	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
  endif()
  TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
-+target_link_libraries(MVS PRIVATE
-+	"$<INSTALL_INTERFACE:OpenMP::OpenMP_CXX>"
-+)
++if(OpenMVS_USE_OPENMP)
++	target_link_libraries(MVS PRIVATE "$<INSTALL_INTERFACE:OpenMP::OpenMP_CXX>")
++endif()
 +target_include_directories(MVS PUBLIC
 +	"$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>"
 +	"$<INSTALL_INTERFACE:${EIGEN3_INCLUDE_DIR}>"
