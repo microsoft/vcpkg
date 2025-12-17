@@ -17,7 +17,9 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/fbow)
+vcpkg_cmake_config_fixup(
+	CONFIG_PATH share/cmake/fbow
+	PACKAGE_NAME fbow)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
