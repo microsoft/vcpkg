@@ -49,7 +49,7 @@ index 920e4c3..28c7c00 100644
  # Install the OpenMVSConfig.cmake and OpenMVSConfigVersion.cmake
  INSTALL(FILES
 diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
-index 9747b3e..f1b981c 100644
+index 9747b3e..31860d4 100644
 --- a/build/Templates/OpenMVSConfig.cmake.in
 +++ b/build/Templates/OpenMVSConfig.cmake.in
 @@ -15,8 +15,49 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
@@ -91,7 +91,7 @@ index 9747b3e..f1b981c 100644
 +endif()
 +
 +if(@OpenMVS_USE_OPENMP@)
-+    find_dependency(OpenMP)
++    find_dependency(OpenMP COMPONENT CXX)
 +endif()
 +
  # These are IMPORTED targets created by OpenMVSTargets.cmake
