@@ -1,0 +1,4 @@
+defer provides CMake targets:
+
+  find_package(defer REQUIRED)
+  target_link_libraries(main PRIVATE defer::defer)
