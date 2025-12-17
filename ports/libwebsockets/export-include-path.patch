@@ -1,7 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	(revision b0a749c8e7a8294b68581ce4feac0e55045eb00b)
-+++ b/CMakeLists.txt	(date 1669850632899)
-@@ -1071,8 +1071,8 @@
+index e067e99..35dbddd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1230,8 +1230,8 @@ file(RELATIVE_PATH
      "${LWS_ABSOLUTE_INSTALL_CMAKE_DIR}"
      "${LWS_ABSOLUTE_INSTALL_INCLUDE_DIR}") # Calculate the relative directory from the cmake dir.
  
@@ -12,24 +13,3 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  endif()
  if (DEFINED OPENSSL_INCLUDE_DIRS)
  	set(LWS__INCLUDE_DIRS "${LWS__INCLUDE_DIRS};${OPENSSL_INCLUDE_DIRS}")
-diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
---- a/lib/CMakeLists.txt	(revision b0a749c8e7a8294b68581ce4feac0e55045eb00b)
-+++ b/lib/CMakeLists.txt	(date 1669850782017)
-@@ -174,7 +174,7 @@
- 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
- 		$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
- 	)
--	target_include_directories(websockets PRIVATE ${LWS_LIB_BUILD_INC_PATHS})
-+	target_include_directories(websockets PRIVATE $<BUILD_INTERFACE:${LWS_LIB_BUILD_INC_PATHS}> PUBLIC $<INSTALL_INTERFACE:include>)
- 	target_compile_definitions(websockets PRIVATE LWS_BUILDING_STATIC)
- 	target_include_directories(websockets PUBLIC ${LWS_PUBLIC_INCLUDES})
- 	set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} PARENT_SCOPE)
-@@ -202,7 +202,7 @@
- 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
- 		$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include>
- 	)
--	target_include_directories(websockets_shared PRIVATE ${LWS_LIB_BUILD_INC_PATHS})
-+	target_include_directories(websockets_shared PRIVATE $<BUILD_INTERFACE:${LWS_LIB_BUILD_INC_PATHS}> PUBLIC $<INSTALL_INTERFACE:include>)
- 	target_compile_definitions(websockets_shared PRIVATE LWS_BUILDING_SHARED)
- 	target_include_directories(websockets_shared PUBLIC ${LWS_PUBLIC_INCLUDES})
- 	set(LWS_PUBLIC_INCLUDES ${LWS_PUBLIC_INCLUDES} PARENT_SCOPE)

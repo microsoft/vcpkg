@@ -18,6 +18,28 @@ vcpkg_extract_source_archive(
     hdf5-2.patch      # source patches to fix API version of HDF5
     more-fixes.patch  # include fixes
 )
+
+foreach(_source_file IN ITEMS "CMakeLists.txt" "CMakeLists.txt.in")
+    vcpkg_replace_string("${SOURCE_PATH}/${_source_file}"
+        "SET(INSTALL_CMAKE_CONFIG_DIR "
+        "SET(INSTALL_CMAKE_CONFIG_DIR share/MEDFile) #"
+    )
+endforeach()
+foreach(_source_file IN ITEMS "src/CMakeLists.txt" "src/CMakeLists.txt.in" "tools/medimport/CMakeLists.txt" "tools/medimport/CMakeLists.txt.in")
+    vcpkg_replace_string("${SOURCE_PATH}/${_source_file}"
+        " DESTINATION lib\${LIB_SUFFIX})"
+        " DESTINATION lib\${LIB_SUFFIX} RUNTIME DESTINATION bin)"
+    )
+endforeach()
+vcpkg_replace_string("${SOURCE_PATH}/tools/mdump/CMakeLists.txt"
+    "{CMAKE_COMMAND} -E create_symlink mdump4 mdump "
+    "{CMAKE_COMMAND} -E copy mdump4${VCPKG_TARGET_EXECUTABLE_SUFFIX} mdump${VCPKG_TARGET_EXECUTABLE_SUFFIX} "
+)
+vcpkg_replace_string("${SOURCE_PATH}/tools/mdump/CMakeLists.txt"
+    "{CMAKE_COMMAND} -E create_symlink xmdump4 xmdump "
+    "{CMAKE_COMMAND} -E copy xmdump4 xmdump "
+)
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  MEDFILE_BUILD_STATIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic"  MEDFILE_BUILD_SHARED_LIBS)
 
@@ -34,50 +56,25 @@ vcpkg_cmake_configure(
     )
 
 vcpkg_cmake_install()
-if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_cmake_config_fixup(PACKAGE_NAME MEDFile CONFIG_PATH cmake)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/MEDFile/MEDFileConfig.cmake" "/cmake/" "/share/MEDFile/")
-else()
-  vcpkg_cmake_config_fixup(PACKAGE_NAME MEDFile CONFIG_PATH share/cmake/medfile-4.1.1)
-  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/MEDFile/MEDFileConfig.cmake" "share/cmake/medfile-${VERSION}" "share/MEDFile")
-endif()
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME MEDFile)
+
+set(tool_list mdump mdump2 mdump3 mdump4 medconforme)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(EXTRA_TOOLS medimport)
+    list(APPEND tool_list medimport)
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES mdump2 mdump3 mdump4 medconforme ${EXTRA_TOOLS} AUTO_CLEAN)
-foreach(xdump IN ITEMS xmdump2 xmdump3 xmdump4)
-  file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${xdump}" "${CURRENT_PACKAGES_DIR}/debug/bin/${xdump}")
+vcpkg_copy_tools(TOOL_NAMES ${tool_list} AUTO_CLEAN)
+
+foreach(xdump_file IN ITEMS xmdump xmdump2 xmdump3 xmdump4)
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${xdump_file}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${xdump_file}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${xdump_file}" "${CURRENT_PACKAGES_DIR}/bin/" [[`dirname $0`/]])
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${xdump_file}")
 endforeach()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-elseif(VCPKG_TARGET_IS_WINDOWS) #dynamic builds on windows
-  file(GLOB dll_files "${CURRENT_PACKAGES_DIR}/lib/*.dll")
-  foreach(dll_file IN LISTS dll_files)
-    string(REPLACE "/lib/" "/bin/" dll_file_moved "${dll_file}")
-    file(RENAME "${dll_file}" "${dll_file_moved}")
-  endforeach()
-  if(NOT VCPKG_BUILD_TYPE)
-    file(GLOB dll_files "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-    foreach(dll_file IN LISTS dll_files)
-      string(REPLACE "/lib/" "/bin/" dll_file_moved "${dll_file}")
-      file(RENAME "${dll_file}" "${dll_file_moved}")
-    endforeach()
-  endif()
-  set(file "${CURRENT_PACKAGES_DIR}/share/MEDFile/MEDFileTargets-release.cmake")
-  file(READ "${file}" contents)
-  string(REGEX REPLACE "/lib/([^.]+)\\.dll" "/bin/\\1.dll" contents "${contents}")
-  file(WRITE "${file}" "${contents}")
-  if(NOT VCPKG_BUILD_TYPE)
-    set(file "${CURRENT_PACKAGES_DIR}/share/MEDFile/MEDFileTargets-debug.cmake")
-    file(READ "${file}" contents)
-    string(REGEX REPLACE "/lib/([^.]+)\\.dll" "/bin/\\1.dll" contents "${contents}")
-    file(WRITE "${file}" "${contents}")
-  endif()
 endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.LESSER") # GPL seems to be mentioned due to autotools stuff

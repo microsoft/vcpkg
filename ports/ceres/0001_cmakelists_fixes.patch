@@ -1,56 +1,116 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8e49c19e..f8c61d92 100644
+index 8e49c19..4ea82bc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -430,28 +430,7 @@ if (MINIGLOG)
-   mark_as_advanced(FORCE GLOG_INCLUDE_DIR
-                          GLOG_LIBRARY)
- else (MINIGLOG)
--  unset(MINIGLOG_MAX_LOG_LEVEL CACHE)
--  # Don't search with REQUIRED so that configuration continues if not found and
--  # we can output an error messages explaining MINIGLOG option.
+@@ -292,10 +292,23 @@ if (SUITESPARSE)
+   # built with SuiteSparse support.
+ 
+   # Check for SuiteSparse and dependencies.
+-  find_package(SuiteSparse 4.5.6 COMPONENTS CHOLMOD SPQR
+-    OPTIONAL_COMPONENTS Partition)
++  find_package(CHOLMOD REQUIRED)
++  include(CheckCSourceCompiles)
++  block(SCOPE_FOR VARIABLES)
++  set(CMAKE_REQUIRED_INCLUDES "")
++  set(CMAKE_REQUIRED_LIBRARIES SuiteSparse::CHOLMOD)
++  set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
++  check_c_source_compiles([[
++    #include <cholmod.h>
++    #ifndef CHOLMOD_HAS_PARTITION
++    #error "partition not enabled"
++    #endif
++  ]] SuiteSparse_Partition_FOUND)
++  endblock()
++  find_package(SPQR CONFIG REQUIRED)
++  find_package(SuiteSparse NAMES SuiteSparse_config REQUIRED)
+   if (SuiteSparse_FOUND)
+-    set(SuiteSparse_DEPENDENCY "find_dependency(SuiteSparse ${SuiteSparse_VERSION})")
++    set(SuiteSparse_DEPENDENCY "find_dependency(CHOLMOD CONFIG)\nfind_dependency(SPQR CONFIG)")
+     # By default, if all of SuiteSparse's dependencies are found, Ceres is
+     # built with SuiteSparse support.
+     message("-- Found SuiteSparse ${SuiteSparse_VERSION}, "
+@@ -323,13 +336,14 @@ if (NOT SuiteSparse_Partition_FOUND)
+ endif (NOT SuiteSparse_Partition_FOUND)
+ 
+ if (EIGENMETIS)
+-  find_package (METIS)
++  find_package (METIS NAMES metis REQUIRED)
++  add_library(METIS::METIS ALIAS metis)
+   if (METIS_FOUND)
+     # Since METIS is a private dependency of Ceres, it requires access to the
+     # link-only METIS::METIS target to avoid undefined linker errors in projects
+     # relying on Ceres. We do not actually need to propagate anything besides
+     # the link libraries (such as include directories.)
+-    set(METIS_DEPENDENCY "find_dependency(METIS ${METIS_VERSION})")
++    set(METIS_DEPENDENCY "find_dependency(metis CONFIG)")
+     # METIS find module must be installed unless a package config is being used.
+     if (NOT METIS_DIR)
+       install(FILES ${Ceres_SOURCE_DIR}/cmake/FindMETIS.cmake
+@@ -433,7 +447,9 @@ else (MINIGLOG)
+   unset(MINIGLOG_MAX_LOG_LEVEL CACHE)
+   # Don't search with REQUIRED so that configuration continues if not found and
+   # we can output an error messages explaining MINIGLOG option.
 -  find_package(Glog)
--  if (NOT GLOG_FOUND)
--    message(FATAL_ERROR "Can't find Google Log (glog). Please set either: "
--      "glog_DIR (newer CMake built versions of glog) or GLOG_INCLUDE_DIR & "
--      "GLOG_LIBRARY or enable MINIGLOG option to use minimal glog "
--      "implementation.")
--  endif(NOT GLOG_FOUND)
--  # By default, assume gflags was found, updating the message if it was not.
--  set(GLOG_GFLAGS_DEPENDENCY_MESSAGE
--    " Assuming glog was built with gflags support as gflags was found. "
--    "This will make gflags a public dependency of Ceres.")
--  if (NOT gflags_FOUND)
--    set(GLOG_GFLAGS_DEPENDENCY_MESSAGE
--      " Assuming glog was NOT built with gflags support as gflags was "
--      "not found.  If glog was built with gflags, please set the "
--      "gflags search locations such that it can be found by Ceres.  "
--      "Otherwise, Ceres may fail to link due to missing gflags symbols.")
--  endif(NOT gflags_FOUND)
--  message("-- Found Google Log (glog)." ${GLOG_GFLAGS_DEPENDENCY_MESSAGE})
-+  find_package(Glog REQUIRED)
- endif (MINIGLOG)
- 
- if (NOT SCHUR_SPECIALIZATIONS)
-@@ -466,7 +445,7 @@ endif (NOT CUSTOM_BLAS)
- 
- if (BUILD_BENCHMARKS)
-   # Version 1.3 was first to provide import targets
--  find_package(benchmark 1.3 QUIET)
-+  find_package(benchmark CONFIG REQUIRED)
-   if (benchmark_FOUND)
-      message("-- Found Google benchmark library. Building Ceres benchmarks.")
++  find_package(GLOG NAMES glog REQUIRED)
++  set(FOUND_INSTALLED_GLOG_CMAKE_CONFIGURATION TRUE)
++  set(GLOG_LIBRARIES glog::glog)
+   if (NOT GLOG_FOUND)
+     message(FATAL_ERROR "Can't find Google Log (glog). Please set either: "
+       "glog_DIR (newer CMake built versions of glog) or GLOG_INCLUDE_DIR & "
+diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
+index ceb7e26..a5eb833 100644
+--- a/cmake/CeresConfig.cmake.in
++++ b/cmake/CeresConfig.cmake.in
+@@ -195,7 +195,7 @@ set(CERES_EIGEN_VERSION @Eigen3_VERSION@)
+ # Search quietly to control the timing of the error message if not found. The
+ # search should be for an exact match, but for usability reasons do a soft
+ # match and reject with an explanation below.
+-find_package(Eigen3 ${CERES_EIGEN_VERSION} QUIET)
++find_dependency(Eigen3 CONFIG ${CERES_EIGEN_VERSION})
+ if (Eigen3_FOUND)
+   if (NOT Eigen3_VERSION VERSION_EQUAL CERES_EIGEN_VERSION)
+     # CMake's VERSION check in FIND_PACKAGE() will accept any version >= the
+@@ -233,7 +233,7 @@ if (CERES_USES_MINIGLOG)
+     "for glog, beware this will likely cause problems if glog is later linked.")
+ else(CERES_USES_MINIGLOG)
+   if (CERES_GLOG_WAS_BUILT_WITH_CMAKE)
+-    find_package(glog ${CERES_GLOG_VERSION} CONFIG QUIET)
++    find_dependency(glog)
+     set(GLOG_FOUND ${glog_FOUND})
    else()
-@@ -722,12 +705,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
-         DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
- install(FILES "${Ceres_BINARY_DIR}/CeresConfigVersion.cmake"
-         DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
--if (GLOG_FOUND AND NOT FOUND_INSTALLED_GLOG_CMAKE_CONFIGURATION)
--  # Version of glog detected was not built with CMake, install our glog module
--  # file to enable detection in CeresConfig.
--  install(FILES "${Ceres_SOURCE_DIR}/cmake/FindGlog.cmake"
--          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
--endif()
+     # Version of glog against which Ceres was built was not built with CMake,
+diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
+index f9fc241..9f6f25b 100644
+--- a/internal/ceres/CMakeLists.txt
++++ b/internal/ceres/CMakeLists.txt
+@@ -104,15 +104,14 @@ if (SUITESPARSE AND SuiteSparse_FOUND)
+     SuiteSparse::SPQR)
  
- if (PROVIDE_UNINSTALL_TARGET)
-   # Create an uninstall target to remove all installed files.
+   if (SuiteSparse_Partition_FOUND)
+-    list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES SuiteSparse::Partition)
+   endif (SuiteSparse_Partition_FOUND)
+ endif (SUITESPARSE AND SuiteSparse_FOUND)
+ 
+-if (SuiteSparse_Partition_FOUND OR EIGENMETIS)
++if (EIGENMETIS)
+   # Define version information for use in Solver::FullReport.
+   add_definitions(-DCERES_METIS_VERSION="${METIS_VERSION}")
+   list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES METIS::METIS)
+-endif (SuiteSparse_Partition_FOUND OR EIGENMETIS)
++endif (EIGENMETIS)
+ 
+ if (ACCELERATESPARSE AND AccelerateSparse_FOUND)
+   list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES ${AccelerateSparse_LIBRARIES})
+diff --git a/internal/ceres/solver_utils.cc b/internal/ceres/solver_utils.cc
+index 3356f3b..35a6109 100644
+--- a/internal/ceres/solver_utils.cc
++++ b/internal/ceres/solver_utils.cc
+@@ -62,7 +62,7 @@ constexpr char kVersion[] =
+   "-suitesparse-(" CERES_SUITESPARSE_VERSION ")"
+ #endif
+ 
+-#if !defined(CERES_NO_EIGEN_METIS) || !defined(CERES_NO_CHOLMOD_PARTITION)
++#if !defined(CERES_NO_EIGEN_METIS)
+   "-metis-(" CERES_METIS_VERSION ")"
+ #endif
+ 

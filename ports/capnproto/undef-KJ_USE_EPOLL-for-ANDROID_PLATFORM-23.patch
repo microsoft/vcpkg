@@ -22,7 +22,7 @@ index 665305ea..c5f195cf 100644
 +#if __linux__ && !(__ANDROID__ && __ANDROID_API__ < 23)
  // Default to epoll on Linux.
  #define KJ_USE_EPOLL 1
- #elif __APPLE__ || __FreeBSD__ || __OpenBSD__ || __NetBSD__ || __DragonFly__
+ #elif __APPLE__ || __FreeBSD__ || __NetBSD__ || __DragonFly__
 -- 
 2.41.0.windows.3
 

@@ -1,10 +1,10 @@
 {
   "name": "opencv",
-  "version": "4.10.0",
-  "port-version": 2,
-  "description": "computer vision library",
-  "homepage": "https://github.com/opencv/opencv",
-  "license": "Apache-2.0",
+  "version": "4.12.0",
+  "description": "Open Source Computer Vision Library",
+  "homepage": "https://opencv.org/",
+  "documentation": "https://docs.opencv.org/4.12.0/",
+  "license": null,
   "dependencies": [
     {
       "name": "opencv4",
@@ -20,6 +20,18 @@
           "default-features": false,
           "features": [
             "ade"
+          ]
+        }
+      ]
+    },
+    "aravis": {
+      "description": "aravis",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "aravis"
           ]
         }
       ]
@@ -240,6 +252,18 @@
         }
       ]
     },
+    "hdf": {
+      "description": "Enable Hierarchical Data Format (hdf) I/O",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "hdf"
+          ]
+        }
+      ]
+    },
     "highgui": {
       "description": "highgui module",
       "dependencies": [
@@ -276,18 +300,6 @@
         }
       ]
     },
-    "jasper": {
-      "description": "JPEG 2000 support for opencv (deprecated)",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "jasper"
-          ]
-        }
-      ]
-    },
     "jpeg": {
       "description": "JPEG support for opencv",
       "dependencies": [
@@ -296,6 +308,18 @@
           "default-features": false,
           "features": [
             "jpeg"
+          ]
+        }
+      ]
+    },
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "jpegxl"
           ]
         }
       ]
@@ -500,6 +524,18 @@
           "default-features": false,
           "features": [
             "tbb"
+          ]
+        }
+      ]
+    },
+    "text": {
+      "description": "Enable Scene Text Detection and Recognition",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "text"
           ]
         }
       ]

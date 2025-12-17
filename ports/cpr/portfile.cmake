@@ -1,10 +1,8 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcpr/cpr
     REF ${VERSION}
-    SHA512 cde62f13b43bad143695e54f5f69dfd250be52d2f6a76ebb3fde3db1e1059eb3c2e9d62e71f4c90f98a33f0053aea7c97bf55d8a7fa8584a37298e6a1bc3b18a
+    SHA512 1ce3f035fe1050eb83fc2920a201adafe7e1b52932974778dc8d201fb33da02a42a2cf7ca9613000537efc6a5bdbbed6887e8f76884ca6cf0784f3344e01613c
     HEAD_REF master
     PATCHES
         disable_werror.patch

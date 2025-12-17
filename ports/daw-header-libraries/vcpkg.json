@@ -1,6 +1,6 @@
 {
   "name": "daw-header-libraries",
-  "version": "2.118.0",
+  "version": "2.123.2",
   "description": "Set of header-only algorithms used in daw-utf8-range and daw-json-link.",
   "homepage": "https://github.com/beached/header_libraries",
   "license": "BSL-1.0",

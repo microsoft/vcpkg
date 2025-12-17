@@ -1,0 +1,12 @@
+diff --git a/nspr/config/rules.mk b/nspr/config/rules.mk
+index 37bd49a..d6c6f6d 100644
+--- a/nspr/config/rules.mk
++++ b/nspr/config/rules.mk
+@@ -495,7 +495,6 @@ $(filter $(OBJDIR)/%.$(OBJ_SUFFIX),$(OBJS)): $(OBJDIR)/%.$(OBJ_SUFFIX): $(DUMMY_
+ # parallel.
+ #
+ ifeq (,$(filter-out 1200 1300 1310,$(MSC_VER)))
+-.NOTPARALLEL:
+ endif
+ 
+ #

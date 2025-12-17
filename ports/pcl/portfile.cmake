@@ -1,21 +1,22 @@
+vcpkg_download_distfile(BOOST_1_89_0_COMPAT_PATCH
+    URLS https://github.com/PointCloudLibrary/pcl/commit/99333442ac63971297b4cdd05fab9d2bd2ff57a4.patch?full_index=1
+    FILENAME PointCloudLibrary-pcl-boost-1-89-0-compat.patch
+    SHA512 2fefaeaeda9fe423b481cddf4de85eff58418286f24f065be8610216e87d8faeb869406b72b3a7158abd22d17e25742b54f6b9eb3c81f82a1718f938bb8e0d26
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
     REF "pcl-${VERSION}"
-    SHA512 8e2d2839fe73a955d49b9a72861de2becf2da9a0dc906bd10ab8a3518e270a2f1900d801922d02871d704f2ed380273d35c2d0e04d8da7e24a21eb351c43c00b
+    SHA512 ca9e742bc24b38f31c42c9ea08e19054e18d045f487269b64a7b831dada89936445d90a5b46870d8c24c2d25b33a59df2d904fe7e51bc0b231317cdb319951e9
     HEAD_REF master
     PATCHES
-        add-gcc-version-check.patch
         fix-check-sse.patch
         fix-numeric-literals-flag.patch
         install-layout.patch
         install-examples.patch
         fix-clang-cl.patch
-        gh-5985-inline.patch
-        io_ply.patch
-        6053.diff # https://github.com/PointCloudLibrary/pcl/pull/6053
-        6990a3b0d7dd3c1ca04a1a473cc172a937418060.diff # https://github.com/PointCloudLibrary/pcl/pull/6105
-        0012-msvc-optimizer-workaround.patch # backport pcl #6143 and #6154
+        "${BOOST_1_89_0_COMPAT_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
@@ -31,6 +32,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cuda            BUILD_CUDA
         cuda            BUILD_GPU
         examples        BUILD_examples
+        examples        VCPKG_LOCK_FIND_PACKAGE_cJSON
         libusb          WITH_LIBUSB
         opengl          WITH_OPENGL
         openni2         WITH_OPENNI2
@@ -38,6 +40,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         qt              WITH_QT
         simulation      BUILD_simulation
         surface-on-nurbs BUILD_surface_on_nurbs
+        surface-on-nurbs VCPKG_LOCK_FIND_PACKAGE_ZLIB
         tools           BUILD_tools
         visualization   WITH_VTK
         visualization   BUILD_visualization
@@ -57,6 +60,7 @@ vcpkg_cmake_configure(
         -DPCL_SHARED_LIBS=${PCL_SHARED_LIBS}
         -DPCL_ENABLE_MARCHNATIVE=OFF
         ${PCL_DONT_TRY_SSE}
+        -DUSE_HOMEBREW_FALLBACK=OFF
         # WITH
         -DWITH_DAVIDSDK=OFF
         -DWITH_DOCS=OFF
@@ -67,6 +71,8 @@ vcpkg_cmake_configure(
         -DWITH_QHULL=ON
         -DWITH_RSSDK=OFF
         -DWITH_RSSDK2=OFF
+        # Misc
+        -DVCPKG_LOCK_FIND_PACKAGE_ClangFormat=OFF
         # FEATURES
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG

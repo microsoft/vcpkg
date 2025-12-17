@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DCMTK/dcmtk
     REF "DCMTK-${VERSION}"
-    SHA512 fcb222182ea653304a1c49db31899a8b08d881916f90d3d35bfab2896aa11473232ac0c0f2195e4d478a6188d3b2c5f54d5172f29c42688c5d05f9bf738ca775
+    SHA512 6c7699d222b3a26f2bf52fddbf3278946429f9b4b5cdd0607fb3c3fa82f5a13c6289c831d7a584700c9f59ae4244d94ea678a22a34aee988399056436f600a95
     HEAD_REF master
     PATCHES
         dcmtk.patch
@@ -15,6 +15,7 @@ vcpkg_from_github(
 file(REMOVE
     "${SOURCE_PATH}/CMake/FindICONV.cmake"
     "${SOURCE_PATH}/CMake/FindJPEG.cmake"
+    "${SOURCE_PATH}/CMake/FindOpenJPEG.cmake"
 )
 
 # Prefix all exported API symbols of vendored libjpeg with "dcmtk_"
@@ -39,13 +40,14 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        "iconv"   DCMTK_WITH_ICONV
-        "openssl" DCMTK_WITH_OPENSSL
-        "png"     DCMTK_WITH_PNG
-        "tiff"    DCMTK_WITH_TIFF
-        "xml2"    DCMTK_WITH_XML
-        "zlib"    DCMTK_WITH_ZLIB
-        "tools"   BUILD_APPS
+        "iconv"     DCMTK_WITH_ICONV
+        "openssl"   DCMTK_WITH_OPENSSL
+        "png"       DCMTK_WITH_PNG
+        "tiff"      DCMTK_WITH_TIFF
+        "xml2"      DCMTK_WITH_XML
+        "zlib"      DCMTK_WITH_ZLIB
+        "openjpeg"  DCMTK_WITH_OPENJPEG
+        "tools"     BUILD_APPS
 )
 
 if("external-dict" IN_LIST FEATURES)
@@ -72,7 +74,6 @@ vcpkg_cmake_configure(
         -DDCMTK_USE_FIND_PACKAGE=ON
         -DDCMTK_WIDE_CHAR_FILE_IO_FUNCTIONS=ON
         -DDCMTK_WIDE_CHAR_MAIN_FUNCTION=ON
-        -DDCMTK_WITH_OPENJPEG=OFF
         -DDCMTK_WITH_DOXYGEN=OFF
         -DDCMTK_WITH_SNDFILE=OFF
         -DDCMTK_WITH_WRAP=OFF
@@ -98,11 +99,13 @@ if ("tools" IN_LIST FEATURES)
         dcmcjpls
         dcmconv
         dcmcrle
+        dcmdecap
         dcmdjpeg
         dcmdjpls
         dcmdrle
         dcmdspfn
         dcmdump
+        dcmencap
         dcmftest
         dcmgpdir
         dcmicmp
@@ -139,6 +142,7 @@ if ("tools" IN_LIST FEATURES)
         findscu
         getscu
         img2dcm
+        json2dcm
         mkcsmapper
         mkesdb
         movescu
@@ -156,6 +160,10 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+endif()
 
 # no absolute paths
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/dcmtk/config/osconfig.h"

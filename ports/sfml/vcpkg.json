@@ -1,9 +1,10 @@
 {
   "name": "sfml",
-  "version": "2.6.2",
+  "version": "3.0.2",
   "description": "Simple and fast multimedia library",
   "homepage": "https://github.com/SFML/SFML",
   "license": "Zlib",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -27,7 +28,7 @@
         "libflac",
         "libogg",
         "libvorbis",
-        "openal-soft"
+        "miniaudio"
       ]
     },
     "graphics": {

@@ -1,6 +1,6 @@
 {
   "name": "ampl-asl",
-  "version-date": "2024-02-01",
+  "version": "1.0.1",
   "description": "AMPL Solver Library",
   "homepage": "https://github.com/ampl/asl",
   "license": "BSD-3-Clause",

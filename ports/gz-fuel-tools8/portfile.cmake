@@ -1,11 +1,1 @@
-set(PACKAGE_NAME fuel-tools)
-
-ignition_modular_library(
-   NAME ${PACKAGE_NAME}
-   REF ${PORT}_${VERSION}
-   VERSION ${VERSION}
-   SHA512 6a31719441c7ea835007d82b6aea99b10fa124ebad71683b8c1c58c41b435d4801e016464dc30d760cc9464e642dab4ff910375f5244ebf7c565845174e65cbf
-   OPTIONS 
-   PATCHES
-      remove_docs.patch
-)
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)

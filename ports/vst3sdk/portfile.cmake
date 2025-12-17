@@ -113,7 +113,7 @@ endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
 
-if (VCPKG_TARGET_IS_APPLE AND NOT "audiounit-wrapper" IN_LIST FEATURES)
+if (VCPKG_TARGET_IS_OSX AND NOT "audiounit-wrapper" IN_LIST FEATURES)
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/aaxwrapper/resource"
         "${CURRENT_PACKAGES_DIR}/include/vst3sdk/public.sdk/source/vst/auv3wrapper/AUv3WrappermacOS"

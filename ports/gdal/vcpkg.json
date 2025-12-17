@@ -1,7 +1,6 @@
 {
   "name": "gdal",
-  "version-semver": "3.10.1",
-  "port-version": 1,
+  "version-semver": "3.12.0",
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -54,7 +53,7 @@
     "lzma",
     {
       "name": "netcdf",
-      "platform": "!uwp & !(windows & arm64) & !android & !ios"
+      "platform": "!android & !ios & !(windows & arm64) & !uwp"
     },
     "openjpeg",
     "openssl",
@@ -77,6 +76,21 @@
         }
       ]
     },
+    "arrow": {
+      "description": "Enable arrow support",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false
+        }
+      ]
+    },
+    "arrow-adbc": {
+      "description": "Arrow ADBC support",
+      "dependencies": [
+        "arrow-adbc"
+      ]
+    },
     "aws-ec2-windows": {
       "description": "Optimized detection of AWS EC2 Windows hosts",
       "dependencies": [
@@ -85,6 +99,7 @@
     },
     "cfitsio": {
       "description": "Enable cfitsio support",
+      "supports": "!(android & arm32)",
       "dependencies": [
         "cfitsio"
       ]
@@ -174,7 +189,10 @@
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [
-        "libspatialite"
+        {
+          "name": "libspatialite",
+          "default-features": false
+        }
       ]
     },
     "libxml2": {
@@ -217,6 +235,25 @@
       "description": "Use OpenSSL library",
       "dependencies": [
         "openssl"
+      ]
+    },
+    "parquet": {
+      "description": "Enable parquet reading support. Combine with arrow[compute] or arrow[dataset] for additional capabilities.",
+      "dependencies": [
+        {
+          "name": "arrow",
+          "default-features": false,
+          "features": [
+            "parquet"
+          ]
+        },
+        {
+          "name": "gdal",
+          "default-features": false,
+          "features": [
+            "arrow"
+          ]
+        }
       ]
     },
     "pcre2": {
@@ -284,10 +321,6 @@
           ]
         }
       ]
-    },
-    "system-libraries": {
-      "$supports": "!windows",
-      "description": "This feature does nothing. It is retained for compatibility."
     },
     "tools": {
       "description": "Builds gdal and ogr executables"

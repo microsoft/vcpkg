@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pyomeca/ezc3d
     REF "Release_${VERSION}"
-    SHA512 343b4c6a03ff6cdf01e4443929a05eb15c14ed50d77f3a4e7783ace118f628e16873c8cd41ac58ecc2f29bf1ee6dd58851d45e5d64e2afc0d283c8c0a4eca576
+    SHA512 36c0a3ebd3d1a6f60d842dd459cb87f6fb2ff39b63f1b6b193f4a0359a83da3ad1435fc3e33bb9f8319cedd743e8587fcde3e854f915a9ee5c1851cd64bf786e
     HEAD_REF dev
 )
 

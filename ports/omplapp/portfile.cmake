@@ -1,32 +1,31 @@
 vcpkg_buildpath_length_warning(37)
 
-set(OMPL_VERSION 1.5.1)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/ompl/omplapp/releases/download/1.5.1/omplapp-1.5.1-Source.tar.gz"
-    FILENAME "omplapp-${OMPL_VERSION}.tar.gz"
-    SHA512 83b1b09d6be776f7e15a748402f0c2f072459921de61a92731daf5171bd1f91a829fbeb6e10a489b92fba0297f6272e7bb6b8f07830c387bb29ccdbc7b3731f3
-)
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(STATIC_PATCH fix_boost_static_link.patch)
+# See https://github.com/ompl/omplapp/blob/1.7.0/src/omplapp/CMakeLists.txt#L20-L24
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+else()
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    SOURCE_BASE ${OMPL_VERSION}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ompl/omplapp
+    REF "${VERSION}"
+    SHA512 cb68791c39b6b2aceb4204c72b7678f2f0d895f0ae2500803f93dab0918f85c322d62c28693c60b50c6b7bc0fb4c448a33e3951c608a68befe21227c1c68a7ec
+    HEAD_REF main
     PATCHES
-        fix_dependency.patch
-        ${STATIC_PATCH}
-        add-include-chrono.patch #https://github.com/ompl/ompl/pull/1201
+        0001-use-external-libs.patch
 )
+
+# Remove internal find module files
+file(GLOB find_modules "${SOURCE_PATH}/CMakeModules/Find*.cmake")
+file(REMOVE_RECURSE ${find_modules})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        ode     OMPLAPP_WITH_ODE
-        opengl  OMPLAPP_WITH_OPENGL
-        threads OMPLAPP_WITH_THREADS
+        opengl CMAKE_REQUIRE_FIND_PACKAGE_OpenGL
+    INVERTED_FEATURES
+        opengl CMAKE_DISABLE_FIND_PACKAGE_OpenGL
 )
 
 vcpkg_cmake_configure(
@@ -35,50 +34,31 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DOMPL_VERSIONED_INSTALL=OFF
-        -DOMPL_REGISTRATION=OFF
         -DOMPL_BUILD_DEMOS=OFF
-        -DOMPL_BUILD_TESTS=OFF
         -DOMPL_BUILD_PYBINDINGS=OFF
-        -DOMPL_BUILD_PYTESTS=OFF
-        # Not implement
-        -DOMPLAPP_WITH_PYTHON=OFF
-        -DOMPLAPP_WITH_TRIANGLE=OFF
-        -DOMPLAPP_WITH_OCTOMAP=OFF
-        -DOMPLAPP_WITH_FLANN=OFF # Requires 1.8.3
-        # Missing dependencies in vcpkg
-        -DOMPLAPP_WITH_SPOT=OFF
-        -DOMPLAPP_WITH_MORSE=OFF
-        -DOMPLAPP_WITH_DRAWSTUFF=OFF
-        -DOMPLAPP_WITH_PQP=OFF
-        -DOMPLAPP_WITH_DOXYGEN=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_flann=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_PQP=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_spot=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Triangle=ON
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH share/ompl/cmake)
-
-# Remove debug distribution and other, move ompl_benchmark to tools/ dir
-vcpkg_copy_tools(TOOL_NAMES ompl_benchmark AUTO_CLEAN)
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/include/ompl"
-    "${CURRENT_PACKAGES_DIR}/bin"
-    "${CURRENT_PACKAGES_DIR}/include/omplapp/CMakeFiles"
-    "${CURRENT_PACKAGES_DIR}/lib/ompl.lib"
-    "${CURRENT_PACKAGES_DIR}/share/ompl"
-    "${CURRENT_PACKAGES_DIR}/share/man"
-    "${CURRENT_PACKAGES_DIR}/debug/bin"
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/lib/ompl.lib"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
-)
+# Extending the ompl CMake package
+vcpkg_cmake_config_fixup(PACKAGE_NAME ompl)
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/omplapp/config.h" "#define OMPLAPP_RESOURCE_DIR \"${CURRENT_PACKAGES_DIR}/share/ompl/resources\"" "")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+vcpkg_copy_tools(TOOL_NAMES ompl_benchmark AUTO_CLEAN)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/include/omplapp/CMakeFiles"
+    "${CURRENT_PACKAGES_DIR}/share/man"
+    "${CURRENT_PACKAGES_DIR}/share/ompl/demos"
+    "${CURRENT_PACKAGES_DIR}/share/ompl/resources"
+)
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

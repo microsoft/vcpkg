@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bw-hro/TempDir
     REF "v${VERSION}"
-    SHA512 75c271b9f84c8eb9256a99683828faecd17f86b9c7a9066266157bf2d10acfe2d057470295b2dc05dbad5cc6fb1d6af60aed2924fba391c0bc292afc37d9e1ea
+    SHA512 bae89ee0e5d3df75d23d83865e5c2d7a9fdb82ee4b8fead11ea89e7fc032c789e257411ff82d2de3d15b8a9947fdfcb98050531d7b0b5c20b4f8f247c6d11de0
     HEAD_REF master
 )
 
@@ -18,4 +18,4 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

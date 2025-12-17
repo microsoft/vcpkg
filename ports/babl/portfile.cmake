@@ -1,27 +1,43 @@
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+
 vcpkg_download_distfile(ARCHIVE
-    URLS https://download.gimp.org/pub/babl/0.1/babl-${VERSION}.tar.xz
+    URLS "https://download.gimp.org/pub/babl/${VERSION_MAJOR_MINOR}/babl-${VERSION}.tar.xz"
     FILENAME "babl-${VERSION}.tar.xz"
-    SHA512 20e40baa6654785d69642e6e85542968db3c5d08da630adc590ff066a52c5938f4ce8a77c0097e00010a905c8c31d8f131eb0308a3f8b6439ab6be4133eae246
+    SHA512 ff410c9839f4fe4d6afd4dec7e4d02af34b1c8a4edbc05483784ed82f91045b1102414fc1c58357866044b7f1ab499eda24fe744f5dd692af5804020c76b2382
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
-    PATCHES
 )
+
+set(feature_options "")
+if("cmyk-icc" IN_LIST FEATURES)
+    list(APPEND feature_options "-Dwith-lcms=true")
+else()
+    list(APPEND feature_options "-Dwith-lcms=false")
+endif()
+
+if("introspection" IN_LIST FEATURES)
+    list(APPEND feature_options "-Denable-gir=true")
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
+else()
+    list(APPEND feature_options "-Denable-gir=false")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    -Dwith-docs=false
+        ${feature_options}
+        -Dwith-docs=false
+    ADDITIONAL_BINARIES
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
-
 vcpkg_install_meson()
-
 vcpkg_copy_pdbs()
-
 vcpkg_fixup_pkgconfig()
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

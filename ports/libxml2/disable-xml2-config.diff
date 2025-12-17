@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3850f6b..8beb11e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -669,7 +669,6 @@ if(1)
+     set(prefix "\$(cd \"\$(dirname \"\$0\")\"; pwd -P)/..")
+ endif()
+ configure_file(xml2-config.in xml2-config @ONLY)
+-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/xml2-config DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT development)
+ 
+ set(XML_INCLUDEDIR "-I${CMAKE_INSTALL_FULL_INCLUDEDIR}/libxml2")
+ set(XML_LIBDIR "-L${CMAKE_INSTALL_FULL_LIBDIR}")

@@ -1,4 +1,4 @@
-# header-only library
+set(VCPKG_BUILD_TYPE release)  # header-only library
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,24 +8,17 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
-
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-concurrentqueue)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/concurrentqueue")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+# transitional polyfill
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/include/concurrentqueue/unofficial/concurrentqueue")
+file(WRITE "${CURRENT_PACKAGES_DIR}/include/concurrentqueue/unofficial/concurrentqueue/concurrentqueue.h" [[#include "../../moodycamel/concurrentqueue.h"]])
+file(COPY "${CURRENT_PORT_DIR}/unofficial-concurrentqueue-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-concurrentqueue")
 
-configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/unofficial-concurrentqueue-config.in.cmake"
-    "${CURRENT_PACKAGES_DIR}/share/unofficial-concurrentqueue/unofficial-concurrentqueue-config.cmake"
-    @ONLY
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
-file(GLOB HEADER_FILES "${SOURCE_PATH}/*.h")
-file(INSTALL ${HEADER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
+file(RENAME "${CURRENT_PACKAGES_DIR}/include/concurrentqueue/moodycamel/LICENSE.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

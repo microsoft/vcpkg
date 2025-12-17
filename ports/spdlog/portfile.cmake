@@ -2,14 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
     REF "v${VERSION}"
-    SHA512 d6575b5cd53638345078a1c6a886293892359a07ee6de45e23d0c805bb33f59350f33060bce38824e09ce84525b575acdae7b94fc6e82191f5fd576f6c9252b2
+    SHA512 3c330162201fb405a08040327e08bc3f90336f431b8865d250e1cf171e48eb8a07a0245a8f60118022869de1ee38209b14da76bf6bcc2ec3da60f1853adaf958
     HEAD_REF v1.x
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         benchmark SPDLOG_BUILD_BENCH
+        fmt       SPDLOG_FMT_EXTERNAL
         wchar     SPDLOG_WCHAR_SUPPORT
+    INVERTED_FEATURES
+        fmt       SPDLOG_USE_STD_FORMAT
 )
 
 # SPDLOG_WCHAR_FILENAMES can only be configured in triplet file since it is an alternative (not additive)
@@ -26,7 +29,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
         -DSPDLOG_WCHAR_FILENAMES=${SPDLOG_WCHAR_FILENAMES}
@@ -38,11 +40,23 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/spdlog)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/spdlog.pc" " -lspdlog" " -lspdlogd")
+endif()
+
 # add support for integration other than cmake
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
-    "// #define SPDLOG_FMT_EXTERNAL"
-    "#ifndef SPDLOG_FMT_EXTERNAL\n#define SPDLOG_FMT_EXTERNAL\n#endif"
-)
+if(SPDLOG_FMT_EXTERNAL)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
+        "// #define SPDLOG_FMT_EXTERNAL"
+        "#ifndef SPDLOG_FMT_EXTERNAL\n#define SPDLOG_FMT_EXTERNAL\n#endif"
+    )
+endif()
+if(SPDLOG_USE_STD_FORMAT)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
+        "// #define SPDLOG_USE_STD_FORMAT"
+	"#ifndef SPDLOG_USE_STD_FORMAT\n#define SPDLOG_USE_STD_FORMAT\n#endif"
+    )
+endif()
 if(SPDLOG_WCHAR_SUPPORT)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
         "// #define SPDLOG_WCHAR_TO_UTF8_SUPPORT"

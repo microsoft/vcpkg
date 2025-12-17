@@ -19,12 +19,12 @@ include("${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake")
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(GPERF)
-vcpkg_find_acquire_program(PYTHON2)
+vcpkg_find_acquire_program(PYTHON3)
 vcpkg_find_acquire_program(NINJA)
 set(NODEJS "${CURRENT_HOST_INSTALLED_DIR}/tools/node/node${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
 get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
+get_filename_component(PYTHON2_DIR "${PYTHON3}" DIRECTORY )
 get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY )
 get_filename_component(NINJA_DIR "${NINJA}" DIRECTORY )
 get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
@@ -40,7 +40,7 @@ endif()
 
 vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
 vcpkg_add_to_path(PREPEND "${BISON_DIR}")
-vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
+vcpkg_add_to_path(PREPEND "${PYTHON3_DIR}")
 vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
@@ -58,16 +58,16 @@ if(ninja_version VERSION_GREATER_EQUAL "1.12.1")
     )
 endif()
 
-set(PATCHES common.pri.patch
-            gl.patch
-            build_1.patch
-            0001-Support-ICU-74-in-LazyTextBreakIterator.patch
-            workaround-protobuf-issue.patch
-            0001-Fix-jumbo-build-error-due-to-ResolveColor-redefiniti.patch
-	    fix-spellcheck-buildflags.patch
-            )
+set(PATCHES
+    common.pri.patch
+    gl.patch
+    build_1.patch
+    workaround-protobuf-issue.patch
+    0001-Fix-jumbo-build-error-due-to-ResolveColor-redefiniti.patch
+    fix-spellcheck-buildflags.patch
+)
 
-set(OPTIONS)
+set(OPTIONS "-webengine-python-version" "python3")
 if("proprietary-codecs" IN_LIST FEATURES)
     list(APPEND OPTIONS "-webengine-proprietary-codecs")
 endif()

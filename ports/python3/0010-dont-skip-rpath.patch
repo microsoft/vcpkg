@@ -17,9 +17,9 @@ index 61b3266..4c2cfb4 100644
  
 +if test "$ac_sys_system" != "Darwin"; then
 +AS_VAR_IF([GNULD], [yes], [
-+  LDFLAGS="-Wl,--enable-new-dtags,-rpath,$vcpkg_rpath"
++  LDFLAGS="$LDFLAGS -Wl,--enable-new-dtags,-rpath,$vcpkg_rpath"
 +], [
-+  LDFLAGS="-Wl,-rpath,$vcpkg_rpath"
++  LDFLAGS="$LDFLAGS -Wl,-rpath,$vcpkg_rpath"
 +])
 +fi
 +

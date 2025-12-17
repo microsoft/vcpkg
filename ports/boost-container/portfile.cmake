@@ -4,9 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/container
     REF boost-${VERSION}
-    SHA512 bac716c525f83337551a029497d923eaad3b6e02b14a227bc5bffae593637bae8aac7715a0ff5819857999e2b9b9e526806c7d460203556dbb9baa0d4a216e66
+    SHA512 1f7ec9f6e21c107ff07ad0e1b82a815dcad6dca2ac817c34ffa27e42d140209e67f09c7959f307eda31efb6dd9a66bc695004f203c93c65e30927c8062816e10
     HEAD_REF master
     PATCHES
+        fix_msvc_c4146_warnings.diff
         posix-threads.diff
 )
 

@@ -1,4 +1,0 @@
-The package quickfast provides CMake targets:
-
-    find_package(quickfast CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE quickfast)

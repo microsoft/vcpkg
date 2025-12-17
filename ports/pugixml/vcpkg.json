@@ -1,6 +1,7 @@
 {
   "name": "pugixml",
   "version": "1.15",
+  "port-version": 1,
   "description": "Light-weight, simple and fast XML parser for C++ with XPath support",
   "homepage": "https://github.com/zeux/pugixml",
   "license": "MIT",
@@ -13,5 +14,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "compact": {
+      "description": "Enable compact memory mode (reduces memory consumption at the cost of performance)"
+    }
+  }
 }

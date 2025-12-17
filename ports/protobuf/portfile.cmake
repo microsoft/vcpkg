@@ -2,13 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
     REF "v${VERSION}"
-    SHA512 2f8b1c52fae3cea6188d2ea10da90314167eb150b23005928b4d2186a81b33c4ba0d79967fc1637ed3f96f9fb3b365433cbd4a1ce01d4c319927538cd63852ec
+    SHA512 46d60de626480f5bac256a09c57300fe5ec990664876edbe04c9385769b500ec88409da976acc28fcb2b2e987afc1bbbf5669f4fed4033c5464ab8bbd38723bc
     HEAD_REF master
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
         fix-utf8-range.patch
         fix-install-dirs.patch
+        fix-mingw-tail-call.patch
+        fix-abseil.patch
+        fix-constinit-with-clang-cl.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)
@@ -43,6 +46,7 @@ file(REMOVE_RECURSE
     "${SOURCE_PATH}/python"
     "${SOURCE_PATH}/ruby"
     "${SOURCE_PATH}/rust"
+    "${SOURCE_PATH}/go"
 )
 
 vcpkg_cmake_configure(
@@ -76,7 +80,7 @@ endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake"
     "if(protobuf_MODULE_COMPATIBLE)"
-    "if(1)"
+    "if(protobuf_MODULE_COMPATIBLE OR CMAKE_FIND_PACKAGE_NAME STREQUAL \"Protobuf\")"
 )
 if(NOT protobuf_BUILD_LIBPROTOC)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-module.cmake"

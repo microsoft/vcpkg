@@ -1,6 +1,7 @@
 {
   "name": "wildmidi",
   "version": "0.4.6",
+  "port-version": 1,
   "description": "MIDI software synthesizer library.",
   "homepage": "https://github.com/Mindwerks/wildmidi",
   "license": "LGPL-3.0-only",
