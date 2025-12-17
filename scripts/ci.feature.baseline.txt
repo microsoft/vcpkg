@@ -1727,7 +1727,6 @@ opencv3[ffmpeg] = feature-fails # ffmpeg5+ is not supported under opencv3. See h
 opencv3[halide](linux | osx) = feature-fails # Same as opencv4[halide]
 opencv3[opengl](android) = feature-fails
 opencv3[opengl](linux | osx) = no-separate-feature-test # needs gui (gtk | qt)
-opencv3[sfm](android) = feature-fails
 opencv4[core,cuda,world](windows)=options
 opencv4[halide](!android & !(windows & staticcrt) & !uwp & !(arm & windows))=feature-fails  # error C2039: 'attachHalide': is not a member of 'cv::dnn::GeluFunctor'
 opencv4[opengl]:x64-linux=feature-fails
