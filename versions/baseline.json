@@ -2401,8 +2401,8 @@
       "port-version": 1
     },
     "dcmtk": {
-      "baseline": "3.6.9",
-      "port-version": 2
+      "baseline": "3.7.0",
+      "port-version": 0
     },
     "debug-assert": {
       "baseline": "1.3.4",
