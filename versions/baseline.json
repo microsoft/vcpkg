@@ -4672,6 +4672,10 @@
       "baseline": "0.13.0",
       "port-version": 0
     },
+    "libcdatetime": {
+      "baseline": "20240414",
+      "port-version": 0
+    },
     "libcds": {
       "baseline": "2.3.3",
       "port-version": 4
@@ -4686,6 +4690,10 @@
     },
     "libcoap": {
       "baseline": "4.3.5",
+      "port-version": 0
+    },
+    "libcerror": {
+      "baseline": "20240413",
       "port-version": 0
     },
     "libconfig": {
@@ -10274,6 +10282,10 @@
     },
     "vcpkg-make": {
       "baseline": "2025-10-26",
+      "port-version": 0
+    },
+    "vcpkg-libyal-vstools": {
+      "baseline": "2023-12-18",
       "port-version": 0
     },
     "vcpkg-msbuild": {
