@@ -686,8 +686,6 @@ spscqueue:x64-android=fail
 # sqlpp11-connector-mysql: CI issues resolved by overlay port
 stormlib:arm64-uwp=fail
 stormlib:x64-uwp=fail
-# SQLite3 ICU linking issue with static-md builds
-subversion:x64-windows-static-md=fail
 # _Interlocked* intrinsic functions are not available on x86
 suitesparse-graphblas:x86-windows=fail
 systemc:arm64-uwp=fail

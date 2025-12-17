@@ -85,7 +85,7 @@ foreach(_lib ${_subversion_libs})
             INTERFACE_INCLUDE_DIRECTORIES "${SUBVERSION_INCLUDE_DIR}"
         )
         
-        target_link_libraries(unofficial::subversion::${_lib} INTERFACE apr::libapr-1)
+        target_link_libraries(unofficial::subversion::${_lib} INTERFACE apr::apr-1)
         
         if(NOT BUILD_SHARED_LIBS)
             find_dependency(OpenSSL REQUIRED)
