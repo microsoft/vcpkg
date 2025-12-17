@@ -1,0 +1,201 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 61e2c19..4dc2616 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -18,7 +18,14 @@ set(API_VERSION ${VER_MAJOR}.${VER_MINOR}.${API_VER_PATCH})
+ 
+ project(o2)
+ 
+-option(o2_WITH_QT5 "Use Qt5" ON)
++if(NOT QT_DEFAULT_MAJOR_VERSION)
++    set(QT_DEFAULT_MAJOR_VERSION 5 CACHE STRING "Qt version to use (4, 5 or 6), defaults to 5")
++endif()
++if(QT_DEFAULT_MAJOR_VERSION STREQUAL "4")
++    set(o2_WITH_QT4 ON)
++else()
++    set(o2_WITH_QT4 OFF)
++endif()
+ 
+ set(o2_LIB_SUFFIX "" CACHE STRING "Suffix for install 'lib' directory, e.g. 64 for lib64")
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 39536cb..7720117 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -4,18 +4,18 @@ set(CMAKE_AUTOMOC ON)
+ set(CMAKE_INCLUDE_CURRENT_DIR ON)
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+ 
+-if(o2_WITH_QT5)
+-    find_package(Qt5 COMPONENTS Core Network REQUIRED)
+-else(o2_WITH_QT5)
++if(o2_WITH_QT4)
+     set(QT_USE_QTNETWORK true)
+     set(QT_USE_QTSCRIPT true)
+     find_package(Qt4 REQUIRED)
+-endif(o2_WITH_QT5)
++else()
++    find_package(Qt${QT_DEFAULT_MAJOR_VERSION} COMPONENTS Core Network REQUIRED)
++endif(o2_WITH_QT4)
+ #find_package(QJson REQUIRED)
+ 
+-if (NOT o2_WITH_QT5)
++if(o2_WITH_QT4)
+     include( ${QT_USE_FILE} )
+-endif(NOT o2_WITH_QT5)
++endif(o2_WITH_QT4)
+ 
+ 
+ set( o2_SRCS
+@@ -192,10 +192,10 @@ if(o2_WITH_MSGRAPH)
+ endif(o2_WITH_MSGRAPH)
+ 
+ if(o2_WITH_KEYCHAIN)
+-    if (Qt5Core_DIR)
+-        find_package(Qt5Keychain REQUIRED)
+-    else()
++    if (o2_WITH_QT4)
+         find_package(QtKeychain REQUIRED)
++    else()
++        find_package(Qt5Keychain REQUIRED)
+     endif()
+     if(QTKEYCHAIN_FOUND OR QT5KEYCHAIN_FOUND)
+         MESSAGE("Found QTKeychain")
+@@ -219,9 +219,9 @@ endif(o2_WITH_KEYCHAIN)
+ 
+ 
+ 
+-if(NOT o2_WITH_QT5)
++if(o2_WITH_QT4)
+     add_definitions(${QT4_DEFINITIONS})
+-endif(NOT o2_WITH_QT5)
++endif(o2_WITH_QT4)
+ 
+ if(BUILD_SHARED_LIBS AND APPLE AND POLICY CMP0042) # in CMake >= 2.8.12
+     cmake_policy(SET CMP0042 OLD)
+@@ -234,11 +234,11 @@ if(BUILD_SHARED_LIBS)
+     add_definitions( -DO2_SHARED_LIB )
+ endif(BUILD_SHARED_LIBS)
+ 
+-if(o2_WITH_QT5)
+-    target_link_libraries( o2 Qt5::Core Qt5::Network ${LINK_TARGETS})
+-else(o2_WITH_QT5)
++if(o2_WITH_QT4)
+     target_link_libraries( o2 ${QT_LIBRARIES} ${LINK_TARGETS})
+-endif(o2_WITH_QT5)
++else()
++    target_link_libraries( o2 Qt${QT_DEFAULT_MAJOR_VERSION}::Core Qt${QT_DEFAULT_MAJOR_VERSION}::Network ${LINK_TARGETS})
++endif(o2_WITH_QT4)
+ 
+ if(BUILD_SHARED_LIBS)
+     if(APPLE)
+diff --git a/src/o1.cpp b/src/o1.cpp
+index e1bf393..b3c4f7d 100644
+--- a/src/o1.cpp
++++ b/src/o1.cpp
+@@ -266,7 +266,11 @@ void O1::link() {
+     headers.append(O0RequestParameter(O2_OAUTH_CALLBACK, callbackUrl().arg(localPort()).toLatin1()));
+     headers.append(O0RequestParameter(O2_OAUTH_CONSUMER_KEY, clientId().toLatin1()));
+     headers.append(O0RequestParameter(O2_OAUTH_NONCE, nonce()));
++#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
++    headers.append(O0RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch()).toLatin1()));
++#else
+     headers.append(O0RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toTime_t()).toLatin1()));
++#endif
+     headers.append(O0RequestParameter(O2_OAUTH_VERSION, "1.0"));
+     headers.append(O0RequestParameter(O2_OAUTH_SIGNATURE_METHOD, signatureMethod().toLatin1()));
+     headers.append(O0RequestParameter(O2_OAUTH_SIGNATURE, generateSignature(headers, request, requestParameters(), QNetworkAccessManager::PostOperation)));
+@@ -350,7 +354,11 @@ void O1::exchangeToken() {
+     QList<O0RequestParameter> oauthParams;
+     oauthParams.append(O0RequestParameter(O2_OAUTH_CONSUMER_KEY, clientId().toLatin1()));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_VERSION, "1.0"));
++#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
++    oauthParams.append(O0RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch()).toLatin1()));
++#else
+     oauthParams.append(O0RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toTime_t()).toLatin1()));
++#endif
+     oauthParams.append(O0RequestParameter(O2_OAUTH_NONCE, nonce()));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_TOKEN, requestToken_.toLatin1()));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_VERFIER, verifier_.toLatin1()));
+@@ -415,7 +423,11 @@ QMap<QString, QString> O1::parseResponse(const QByteArray &response) {
+ }
+ 
+ QByteArray O1::nonce() {
++#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
++    QString u = QString::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
++#else
+     QString u = QString::number(QDateTime::currentDateTimeUtc().toTime_t());
++#endif
+ #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+     u.append(QString::number(QRandomGenerator::global()->generate()));
+ #else
+diff --git a/src/o1requestor.cpp b/src/o1requestor.cpp
+index c08012b..351f318 100644
+--- a/src/o1requestor.cpp
++++ b/src/o1requestor.cpp
+@@ -45,7 +45,11 @@ QNetworkRequest O1Requestor::setup(const QNetworkRequest &req, const QList<O0Req
+     oauthParams.append(O0RequestParameter(O2_OAUTH_TOKEN, authenticator_->token().toLatin1()));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_SIGNATURE_METHOD, authenticator_->signatureMethod().toLatin1()));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_NONCE, O1::nonce()));
++#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
++    oauthParams.append(O0RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch()).toLatin1()));
++#else
+     oauthParams.append(O0RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toTime_t()).toLatin1()));
++#endif
+ 
+     // Add signature parameter
+     oauthParams.append(O0RequestParameter(O2_OAUTH_SIGNATURE, authenticator_->generateSignature(oauthParams, req, signingParameters, operation)));
+diff --git a/src/o2.cpp b/src/o2.cpp
+index a1aa97b..769546d 100644
+--- a/src/o2.cpp
++++ b/src/o2.cpp
+@@ -11,6 +11,9 @@
+ #include <QTimer>
+ #include <QVariantMap>
+ #include <QUuid>
++#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
++#include <QRegularExpression>
++#endif
+ 
+ #if QT_VERSION >= 0x050000
+ #include <QUrlQuery>
+@@ -187,7 +190,11 @@ void O2::link() {
+ 
+     if (grantFlow_ == GrantFlowAuthorizationCode || grantFlow_ == GrantFlowImplicit) {
+ 
++#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
++        QString uniqueState = QUuid::createUuid().toString().remove(QRegularExpression("([^a-zA-Z0-9]|[-])"));
++#else
+         QString uniqueState = QUuid::createUuid().toString().remove(QRegExp("([^a-zA-Z0-9]|[-])"));
++#endif
+         if (useExternalWebInterceptor_) {
+             // Save redirect URI, as we have to reuse it when requesting the access token
+             redirectUri_ = localhostPolicy_.arg(localPort());
+diff --git a/src/o2simplecrypt.cpp b/src/o2simplecrypt.cpp
+index ffe9d9d..92c21f7 100644
+--- a/src/o2simplecrypt.cpp
++++ b/src/o2simplecrypt.cpp
+@@ -31,6 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include <QDateTime>
+ #include <QCryptographicHash>
+ #include <QDataStream>
++#include <QIODevice>
+ 
+ O0SimpleCrypt::O0SimpleCrypt():
+     m_key(0),
+diff --git a/src/oxtwitter.cpp b/src/oxtwitter.cpp
+index f1ae5f4..f9e10d5 100644
+--- a/src/oxtwitter.cpp
++++ b/src/oxtwitter.cpp
+@@ -51,7 +51,11 @@ void OXTwitter::link() {
+     oauthParams.append(O0RequestParameter(O2_OAUTH_SIGNATURE_METHOD, O2_SIGNATURE_TYPE_HMAC_SHA1));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_CONSUMER_KEY, clientId().toLatin1()));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_VERSION, "1.0"));
++#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
++    oauthParams.append(O0RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toSecsSinceEpoch()).toLatin1()));
++#else
+     oauthParams.append(O0RequestParameter(O2_OAUTH_TIMESTAMP, QString::number(QDateTime::currentDateTimeUtc().toTime_t()).toLatin1()));
++#endif
+     oauthParams.append(O0RequestParameter(O2_OAUTH_NONCE, nonce()));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_TOKEN, QByteArray("")));
+     oauthParams.append(O0RequestParameter(O2_OAUTH_VERFIER, QByteArray("")));
