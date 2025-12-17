@@ -1,0 +1,15 @@
+{
+  "name": "mpdecimal",
+  "version": "4.0.1",
+  "description": "mpdecimal is a package for correctly-rounded arbitrary precision decimal floating point arithmetic.",
+  "homepage": "https://www.bytereef.org/mpdecimal/",
+  "license": "BSD-2-Clause",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows"
+    }
+  ]
+}
