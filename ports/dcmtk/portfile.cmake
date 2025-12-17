@@ -99,11 +99,13 @@ if ("tools" IN_LIST FEATURES)
         dcmcjpls
         dcmconv
         dcmcrle
+        dcmdecap
         dcmdjpeg
         dcmdjpls
         dcmdrle
         dcmdspfn
         dcmdump
+        dcmencap
         dcmftest
         dcmgpdir
         dcmicmp
@@ -140,6 +142,7 @@ if ("tools" IN_LIST FEATURES)
         findscu
         getscu
         img2dcm
+        json2dcm
         mkcsmapper
         mkesdb
         movescu
