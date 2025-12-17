@@ -21,6 +21,7 @@ vcpkg_from_github(
       0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
+      fix-buildjs-notrespected.patch
 )
 # Disallow accidental build of vendored copies
 file(GLOB third_party "${SOURCE_PATH}/3rdparty/*")
