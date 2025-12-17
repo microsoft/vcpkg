@@ -8,7 +8,7 @@ index 192178b..d8356be 100644
  if(MSVC)
  	FILE(GLOB LIBRARY_FILES_C "*.cpp" "*.rc")
  else()
-@@ -7,6 +9,16 @@ FILE(GLOB LIBRARY_FILES_H "*.h" "*.inl")
+@@ -7,6 +9,17 @@ FILE(GLOB LIBRARY_FILES_H "*.h" "*.inl")
  
  ADD_DEFINITIONS(-D_DATA_PATH="${CMAKE_CURRENT_SOURCE_DIR}/data/")
  
@@ -19,6 +19,7 @@ index 192178b..d8356be 100644
 +add_executable(OpenMVS-Test-Vars ${LIBRARY_FILES_C})
 +target_compile_definitions(OpenMVS-Test-Vars PRIVATE ${OpenMVS_DEFINITIONS})
 +target_include_directories(OpenMVS-Test-Vars PRIVATE ${OpenMVS_INCLUDE_DIRS})
++target_include_directories(OpenMVS-Test-Vars PRIVATE ${Boost_INCLUDE_DIRS})
 +target_link_libraries(OpenMVS-Test-Vars PRIVATE ${OpenMVS_LIBRARIES})
 +return()
 +
