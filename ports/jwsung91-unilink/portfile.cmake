@@ -18,6 +18,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
+    PACKAGE_NAME unilink
     CONFIG_PATH "lib/cmake/unilink"
 )
 
