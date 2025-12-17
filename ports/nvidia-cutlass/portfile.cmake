@@ -16,6 +16,11 @@ list(APPEND FEATURE_OPTIONS
     "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
 )
 
+list(APPEND CMAKE_MODULE_PATH "${CURRENT_INSTALLED_DIR}/share/cudnn")
+find_package(CUDNN REQUIRED)
+get_filename_component(CUDNN_LIBRARY_DIR "${CUDNN_LIBRARIES}" DIRECTORY)
+set(ENV{CUDNN_PATH} "${CUDNN_LIBRARY_DIR};${CUDNN_INCLUDE_DIRS}")
+
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
