@@ -18,6 +18,7 @@ vcpkg_from_github(
         0041-add-const-for-opengl-definition.patch
         0043-fix-miss-head.patch
         0044-fix-vulkan-debug-callback-abi.patch
+        0050-libzmq-pkgconfig.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
