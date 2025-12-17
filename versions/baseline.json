@@ -10532,10 +10532,6 @@
       "baseline": "8.5",
       "port-version": 0
     },
-    "webcraft": {
-      "baseline": "1.0.2",
-      "port-version": 0
-    },
     "websocketpp": {
       "baseline": "0.8.2",
       "port-version": 4
