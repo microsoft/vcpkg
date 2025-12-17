@@ -1,49 +1,38 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 12fd424..11371df 100644
+index 1ea6465..a3e7857 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -185,12 +185,14 @@ find_package(PkgConfig)
- if(PkgConfig_FOUND)
-   pkg_check_modules(GDK gdk-2.0)
-   pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0)
+@@ -327,8 +327,8 @@ if(PkgConfig_FOUND)
+       message(FATAL_ERROR "-DWITH_GDK=ON and GDK not found")
+     endif()
+   endif()
+-  pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0)
 -  pkg_check_modules(LASI lasi)
--  pkg_check_modules(POPPLER poppler-glib)
++  set(GDK_PIXBUF_FOUND 0)
 +  set(LASI_FOUND 0)
-+  set(POPPLER_FOUND 0)
-   pkg_check_modules(RSVG librsvg-2.0)
-   pkg_check_modules(WEBP libwebp)
-+  if(UNIX)
-   pkg_check_modules(X11 x11)
-   pkg_check_modules(XRENDER xrender)
-+  endif()
- else()
-   set(GDK_FOUND 0)
-   set(GDK_PIXBUF_FOUND 0)
+   if(AUTO_POPPLER)
+     pkg_check_modules(POPPLER poppler-glib)
+   elseif(WITH_POPPLER)
 diff --git a/cmake/FindCAIRO.cmake b/cmake/FindCAIRO.cmake
-index 65bb42f..47949f6 100644
+index a6fdf8e..a469065 100644
 --- a/cmake/FindCAIRO.cmake
 +++ b/cmake/FindCAIRO.cmake
-@@ -1,6 +1,6 @@
+@@ -1,8 +1,11 @@
  include(FindPackageHandleStandardArgs)
  
--if(WIN32)
-+if(0)
-   find_path(
-     CAIRO_INCLUDE_DIR cairo.h
-     PATH_SUFFIXES cairo
-@@ -39,7 +39,9 @@ if(WIN32)
-   )
- else()
-   find_package(PkgConfig)
--  pkg_check_modules(CAIRO cairo)
-+  pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
+ find_package(PkgConfig)
+-pkg_check_modules(CAIRO cairo)
+-if(MINGW)
++pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
++if(CAIRO_FOUND)
 +  set(CAIRO_LIBRARIES PkgConfig::CAIRO)
 +  set(CAIRO_LINK_LIBRARIES PkgConfig::CAIRO)
- 
-   find_package_handle_standard_args(CAIRO DEFAULT_MSG
-     CAIRO_INCLUDE_DIRS
++elseif(MINGW)
+   find_program(CAIRO_RUNTIME_LIBRARY NAMES libcairo-2.dll)
+   find_program(EXPAT_RUNTIME_LIBRARY NAMES libexpat-1.dll)
+   find_program(FONTCONFIG_RUNTIME_LIBRARY NAMES libfontconfig-1.dll)
 diff --git a/cmake/FindGD.cmake b/cmake/FindGD.cmake
-index 0deb5e6..ef42889 100644
+index 49d372c..2ed7e42 100644
 --- a/cmake/FindGD.cmake
 +++ b/cmake/FindGD.cmake
 @@ -1,3 +1,11 @@
@@ -57,33 +46,30 @@ index 0deb5e6..ef42889 100644
 +
  find_path(GD_INCLUDE_DIR gd.h)
  find_library(GD_LIBRARY NAMES gd libgd)
- find_program(GD_RUNTIME_LIBRARY libgd.dll)
+ 
 diff --git a/cmake/FindGTS.cmake b/cmake/FindGTS.cmake
-index 8e544e9..88dd849 100644
+index bc1d5ea..8114884 100644
 --- a/cmake/FindGTS.cmake
 +++ b/cmake/FindGTS.cmake
-@@ -1,5 +1,5 @@
+@@ -1,9 +1,11 @@
  include(FindPackageHandleStandardArgs)
--if(WIN32)
-+if(0)
-   find_path(GTS_INCLUDE_DIR gts.h)
-   find_path(GLIB_INCLUDE_DIR glib.h PATH_SUFFIXES glib-2.0)
-   find_path(GLIBCONFIG_INCLUDE_DIR glibconfig.h
-@@ -40,7 +40,8 @@ if(WIN32)
-   )
- else()
-   find_package(PkgConfig)
--  pkg_check_modules(GTS gts)
-+  pkg_check_modules(GTS gts IMPORTED_TARGET)
-+  set(GTS_LINK_LIBRARIES PkgConfig::GTS)
  
-   find_package_handle_standard_args(GTS DEFAULT_MSG
-     GTS_INCLUDE_DIRS
+ find_package(PkgConfig)
+-pkg_check_modules(GTS gts)
++pkg_check_modules(GTS gts IMPORTED_TARGET)
+ 
+-if(MINGW)
++if(GTS_FOUND)
++  set(GTS_LINK_LIBRARIES PkgConfig::GTS)
++elseif(MINGW)
+   find_package(GLIB)
+ 
+   find_program(GTS_RUNTIME_LIBRARY NAMES libgts-0-7-5.dll)
 diff --git a/cmake/FindLTDL.cmake b/cmake/FindLTDL.cmake
-index e955b74..046e9e8 100644
+index e74d23f..42d9ae2 100644
 --- a/cmake/FindLTDL.cmake
 +++ b/cmake/FindLTDL.cmake
-@@ -17,4 +17,7 @@ mark_as_advanced(LTDL_INCLUDE_DIR LTDL_LIBRARY)
+@@ -20,4 +20,7 @@ mark_as_advanced(LTDL_INCLUDE_DIR LTDL_LIBRARY)
  set(LTDL_INCLUDE_DIRS ${LTDL_INCLUDE_DIR})
  if(NOT WIN32 OR MINGW)
    set(LTDL_LIBRARIES ${LTDL_LIBRARY})
@@ -92,60 +78,21 @@ index e955b74..046e9e8 100644
 +  endif()
  endif()
 diff --git a/cmake/FindPANGOCAIRO.cmake b/cmake/FindPANGOCAIRO.cmake
-index b92e5be..01c4cc7 100644
+index d185f0b..222789a 100644
 --- a/cmake/FindPANGOCAIRO.cmake
 +++ b/cmake/FindPANGOCAIRO.cmake
-@@ -1,6 +1,6 @@
+@@ -1,9 +1,12 @@
  include(FindPackageHandleStandardArgs)
+ find_package(PkgConfig)
  
--if(WIN32)
-+if(0)
-   find_path(PANGOCAIRO_INCLUDE_DIR pango/pangocairo.h PATH_SUFFIXES pango-1.0)
-   find_path(GLIB_INCLUDE_DIR glib.h PATH_SUFFIXES glib-2.0)
-   find_path(GLIBCONFIG_INCLUDE_DIR glibconfig.h
-@@ -78,7 +78,9 @@ if(WIN32)
-   )
- else()
-   find_package(PkgConfig)
--  pkg_check_modules(PANGOCAIRO pangocairo)
-+  pkg_check_modules(PANGOCAIRO pangocairo IMPORTED_TARGET)
+-pkg_check_modules(PANGOCAIRO pangocairo)
++pkg_check_modules(PANGOCAIRO pangocairo IMPORTED_TARGET)
+ 
+-if(MINGW)
++if(1)
 +  set(PANGOCAIRO_LIBRARIES PkgConfig::PANGOCAIRO)
 +  set(PANGOCAIRO_LINK_LIBRARIES PkgConfig::PANGOCAIRO) # https://gitlab.kitware.com/cmake/cmake/-/issues/16154
++elseif(MINGW)
+   find_package(GLIB)
  
-   find_package_handle_standard_args(PANGOCAIRO DEFAULT_MSG
-     PANGOCAIRO_INCLUDE_DIRS
-diff --git a/cmd/dot/CMakeLists.txt b/cmd/dot/CMakeLists.txt
-index d2ea435..3b068b0 100644
---- a/cmd/dot/CMakeLists.txt
-+++ b/cmd/dot/CMakeLists.txt
-@@ -146,7 +146,6 @@ endif()
- 
- find_package(PkgConfig)
- if(PkgConfig_FOUND)
--  pkg_check_modules(GTS gts)
-   if(GTS_FOUND)
-     target_include_directories(dot SYSTEM PRIVATE ${GTS_INCLUDE_DIRS})
-     target_link_libraries(dot PRIVATE ${GTS_LINK_LIBRARIES})
-@@ -223,7 +222,7 @@ if(WEBP_FOUND)
- endif()
- 
- find_library(SOCKET socket)
--if(SOCKET)
-+if(0)
-   target_link_libraries(dot PRIVATE ${SOCKET})
- endif()
- 
-diff --git a/lib/cdt/CMakeLists.txt b/lib/cdt/CMakeLists.txt
-index 4057b57..bf1a913 100644
---- a/lib/cdt/CMakeLists.txt
-+++ b/lib/cdt/CMakeLists.txt
-@@ -68,3 +68,9 @@ set_target_properties(cdt PROPERTIES
-   VERSION 5.0.0
-   SOVERSION 5
- )
-+
-+set(THREADS_PREFER_PTHREAD_FLAG ON)
-+find_package(Threads)
-+if(TARGET Threads::Threads)
-+  target_link_libraries(cdt Threads::Threads)
-+endif()
+   find_program(GOBJECT_RUNTIME_LIBRARY NAMES libgobject-2.0-0.dll)
