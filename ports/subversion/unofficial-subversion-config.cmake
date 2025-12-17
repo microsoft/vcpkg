@@ -1,10 +1,6 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(unofficial-apr CONFIG QUIET)
-find_dependency(OpenSSL QUIET)
-find_dependency(ZLIB QUIET)
-find_dependency(expat CONFIG QUIET)
-find_dependency(unofficial-sqlite3 CONFIG QUIET)
+find_dependency(apr CONFIG REQUIRED)
 
 find_library(APR_LIBRARY
     NAMES apr-1 libapr-1
@@ -89,19 +85,26 @@ foreach(_lib ${_subversion_libs})
             INTERFACE_INCLUDE_DIRECTORIES "${SUBVERSION_INCLUDE_DIR}"
         )
         
-        set(_link_libs "")
+        target_link_libraries(unofficial::subversion::${_lib} INTERFACE apr::libapr-1)
         
-        list(APPEND _link_libs unofficial::apr::apr)
-        list(APPEND _link_libs OpenSSL::SSL OpenSSL::Crypto)
-        list(APPEND _link_libs ZLIB::ZLIB)
-        list(APPEND _link_libs expat::expat)
-        list(APPEND _link_libs unofficial::sqlite3::sqlite3)
-        
-        if(WIN32)
-            list(APPEND _link_libs crypt32 ws2_32 version)
+        if(NOT BUILD_SHARED_LIBS)
+            find_dependency(OpenSSL REQUIRED)
+            find_dependency(ZLIB REQUIRED)
+            find_dependency(expat CONFIG REQUIRED)
+            find_dependency(unofficial-sqlite3 CONFIG REQUIRED)
+            
+            target_link_libraries(unofficial::subversion::${_lib} INTERFACE
+                OpenSSL::SSL
+                OpenSSL::Crypto
+                ZLIB::ZLIB
+                expat::expat
+                unofficial::sqlite3::sqlite3
+            )
+            
+            if(WIN32)
+                target_link_libraries(unofficial::subversion::${_lib} INTERFACE crypt32 ws2_32 version)
+            endif()
         endif()
-        
-        target_link_libraries(unofficial::subversion::${_lib} INTERFACE ${_link_libs})
     endif()
 endforeach()
 
