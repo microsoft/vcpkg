@@ -2404,10 +2404,6 @@
       "baseline": "3.7.0",
       "port-version": 0
     },
-    "deadlightreal-swiftnet": {
-      "baseline": "0.2.0",
-      "port-version": 0
-    },
     "debug-assert": {
       "baseline": "1.3.4",
       "port-version": 0
