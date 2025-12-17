@@ -1,51 +1,77 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
+# There are no curated versions.
+# Port updates must checkout the master branch, run
+#   git describe --tags --dirty --long
+# and put the result into this variable.
+set(darknet_version_string "v5.0-167-gfc780f8a")
+
+string(REGEX REPLACE "^.*-g" "" ref "${darknet_version_string}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
-  REPO AlexeyAB/darknet
-  REF 19dde2f296941a75b0b9202cccd59528bde7f65a
-  SHA512 3f24fd5c69a00032e63fc8479d46dedf9008909c5e0f37847f0427c39f35e68f35a5ee89820cd0a179cb282e49730e6b1465a027d89bef585e9a1cfca6e3d3a2
+  REPO hank-ai/darknet
+  REF "${ref}"
+  SHA512 4403922273526862d6e899bfe4de2bc1205d004e8eb58f2a5837fda913565eff970405692d69f7c0155182a688d1ee91ca67f79edd1eae8c03228cdd24acac53
   HEAD_REF master
   PATCHES
-    android.diff
-    msvc-names.diff
+    installation.diff
+    purely-openmp_cxx-target.diff
+    version-info.diff
+    system-processor.diff
+    windows-getopt.diff
 )
-file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty")
-file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/Modules")
+file(WRITE "${SOURCE_PATH}/src-examples/CMakeLists.txt" "# disabled by vcpkg")
+file(REMOVE_RECURSE "${SOURCE_PATH}/src-other")
+
+# src-lib/col2im_kernels.cu, src-lib/gemm.cpp, src-lib/im2col.cpp, src-lib/im2col_kernels.cu
+vcpkg_download_distfile(caffe_license_file
+    URLS "https://github.com/BVLC/caffe/raw/9ab67099e08c03bf57e6a67538ca4746365beda8/LICENSE"
+    FILENAME "hunk-ai-darknet-caffe-LICENSE-9ab6709"
+    SHA512 333129c62f7c45df992ea4638d2b879608c1d01db80a5a6ce3e93970b414976374ef3e7b670f655b62f6fc4f8eb8c7ba17e94aad197e5e1a7ae8c0ef0b3587ba
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    cuda          ENABLE_CUDA
-    cudnn         ENABLE_CUDNN
-    opencv-base   ENABLE_OPENCV
+    cuda          DARKNET_TRY_CUDA
+    openmp        VCPKG_LOCK_FIND_PACKAGE_OpenMP
 )
 
 if("cuda" IN_LIST FEATURES)
-    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
-    list(APPEND FEATURE_OPTIONS "-DCMAKE_CUDA_COMPILER=${NVCC}")
+  vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+  list(APPEND FEATURE_OPTIONS "-DCMAKE_CUDA_COMPILER=${NVCC}")
+  if(DEFINED CUDA_ARCHITECTURES)
+    list(APPEND FEATURE_OPTIONS "-DDARKNET_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}")
+  else()
+    message(STATUS "CUDA_ARCHITECTURES is not set. Choice is made by darknet.")
+  endif()
+
+  if(NOT "cudnn" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-Dcudnn=OFF") # disable find_library
+  endif()
 endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  DISABLE_PARALLEL_CONFIGURE
+  DISABLE_PARALLEL_CONFIGURE # configuring darknet_version.h
   OPTIONS
     ${FEATURE_OPTIONS}
-    -DINSTALL_BIN_DIR:STRING=bin
-    -DINSTALL_LIB_DIR:STRING=lib
-    -DSKIP_INSTALL_RUNTIME_LIBS:BOOL=ON
+    -DDARKNET_BRANCH_NAME=vcpkg # actually master with extra patches.
+    -DDARKNET_VERSION_STRING=${darknet_version_string}
+    -DDARKNET_TRY_ONNX=OFF
+    -DDARKNET_TRY_OPENBLAS=OFF
+    -DDARKNET_TRY_ROCM=OFF
+    -DGTEST=OFF # disable find_library
+    -DVCPKG_LOCK_FIND_PACKAGE_Doxygen=OFF
+  MAYBE_UNUSED_VARIABLES
+    DARKNET_TRY_OPENBLAS
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
-vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib kmeansiou)
-if ("opencv-cuda" IN_LIST FEATURES)
-  vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
-endif()
-file(COPY "${SOURCE_PATH}/cfg" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(COPY "${SOURCE_PATH}/data" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(INSTALL "${SOURCE_PATH}/scripts/download_weights.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/scripts")
+vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet)
+file(COPY "${CURRENT_PACKAGES_DIR}/share/${PORT}/cfg" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-message(STATUS "To download weight files, please go to ${CURRENT_INSTALLED_DIR}/tools/${PORT}/scripts and run ./download_weights.ps1")
-
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE" "${caffe_license_file}")
