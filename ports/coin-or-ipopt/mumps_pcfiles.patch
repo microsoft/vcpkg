@@ -1,0 +1,11 @@
+--- a/configure.ac
++++ b/configure.ac
+@@ -122,7 +122,7 @@
+ # MUMPS #
+ #########
+ 
+-AC_COIN_CHK_PKG(Mumps,[IpoptLib],[coinmumps])
++AC_COIN_CHK_PKG(Mumps,[IpoptLib],[mumps-solver])
+ 
+ # Check whether MPI_Initialized is available
+ #   we assume that MPI_Finalized is present if MPI_Initialized is present
