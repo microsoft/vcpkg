@@ -8502,7 +8502,7 @@
     },
     "readosm": {
       "baseline": "1.1.0a",
-      "port-version": 4
+      "port-version": 5
     },
     "realm-core": {
       "baseline": "14.14.0",
