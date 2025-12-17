@@ -7,9 +7,9 @@ endif()
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO litespeedtech/lsquic
     REF v${VERSION}
-    SHA512 40d742779bfa2dc6fdaf0ee8e9349498d373dcffcc6dd27867c18d87309a288ea6811d693043b5d98364d816b818b49445214497475844201241193c0f37b349
+    SHA512 2f1f01761499f834d5ef43a80e2f9eb94f008c17bc1417eef6cde42d33de485627a9b921fc4ebb288b87cb2c9478fb7149d426a60a0e9abbf5067b9edfb97cde
     HEAD_REF master
-    PATCHES 
+    PATCHES
         disable-asan.patch
         fix-found-boringssl.patch
 )
@@ -17,9 +17,9 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
 # Submodules
 vcpkg_from_github(OUT_SOURCE_PATH LSQPACK_SOURCE_PATH
     REPO litespeedtech/ls-qpack
-    REF v2.5.3
+    REF v2.6.2
     HEAD_REF master
-    SHA512 f90502c763abc84532f33d1b8f952aea7869e4e0c5f6bd344532ddd51c4a180958de4086d88b9ec96673a059c806eec9e70007651d4d4e1a73395919dee47ce0
+    SHA512 9b38ba1b4b12d921385a285e8c833a0ae9cdcc153cff4f1857f88ceb82174304decb5fccbdf9267d08a21c5a26c71fdd884dcacd12afd19256a347a8306b9b90
 )
 if(NOT EXISTS "${SOURCE_PATH}/src/ls-hpack/CMakeLists.txt")
     file(REMOVE_RECURSE "${SOURCE_PATH}/src/liblsquic/ls-qpack")
@@ -28,9 +28,9 @@ endif()
 
 vcpkg_from_github(OUT_SOURCE_PATH LSHPACK_SOURCE_PATH
     REPO litespeedtech/ls-hpack
-    REF v2.3.2
+    REF v2.3.4
     HEAD_REF master
-    SHA512 45d6c8296e8eee511e6a083f89460d5333fc9a49bc078dac55fdec6c46db199de9f150379f02e054571f954a5e3c79af3864dbc53dc57d10a8d2ed26a92d4278
+    SHA512 86a3c869597f4f181e3ecc9648a7ce73139c8e201547072203ad60802a1df37885389c332231efb0521b1bf2357cdb9d866ade48f59af1cbb6c5cbba8148a0ff
 )
 if(NOT EXISTS "${SOURCE_PATH}/src/lshpack/CMakeLists.txt")
     file(REMOVE_RECURSE "${SOURCE_PATH}/src/lshpack")
@@ -67,8 +67,8 @@ endif()
 vcpkg_cmake_config_fixup(PACKAGE_NAME lsquic)
 
 # Concatenate license files and install
-vcpkg_install_copyright(FILE_LIST 
-  "${SOURCE_PATH}/LICENSE" 
+vcpkg_install_copyright(FILE_LIST
+  "${SOURCE_PATH}/LICENSE"
   "${SOURCE_PATH}/LICENSE.chrome"
 )
 
