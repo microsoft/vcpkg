@@ -13,5 +13,7 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/libs")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/apps/Tests"
+    OPTIONS
+        -DVCPKG_TRACE_FIND_PACKAGE=1
 )
 vcpkg_cmake_build()
