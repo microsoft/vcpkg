@@ -18,7 +18,7 @@ vcpkg_from_github(
         0041-add-const-for-opengl-definition.patch
         0043-fix-miss-head.patch
         0044-fix-vulkan-debug-callback-abi.patch
-        0050-libzmq-pkgconfig.patch
+        0050-libzmq-configure.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -594,6 +594,47 @@ endif()
 
 if("zmq" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libzmq")
+
+    set(ZEROMQ_PACKAGE_DIR
+        "${VCPKG_ROOT_DIR}/packages/zeromq_${TARGET_TRIPLET}"
+    )
+
+    file(GLOB ZMQ_RELEASE_LIBS
+        "${ZEROMQ_PACKAGE_DIR}/lib/libzmq*.lib"
+    )
+    file(GLOB ZMQ_DEBUG_LIBS
+        "${ZEROMQ_PACKAGE_DIR}/debug/lib/libzmq*.lib"
+    )
+
+    if(NOT ZMQ_RELEASE_LIBS)
+        message(FATAL_ERROR "ZeroMQ release import library not found")
+    endif()
+    if(NOT ZMQ_DEBUG_LIBS)
+        message(FATAL_ERROR "ZeroMQ debug import library not found")
+    endif()
+
+    list(GET ZMQ_RELEASE_LIBS 0 ZMQ_RELEASE_LIB)
+    list(GET ZMQ_DEBUG_LIBS   0 ZMQ_DEBUG_LIB)
+
+    get_filename_component(ZMQ_RELEASE_NAME "${ZMQ_RELEASE_LIB}" NAME)
+    get_filename_component(ZMQ_DEBUG_NAME   "${ZMQ_DEBUG_LIB}"   NAME)
+
+    message(STATUS "ZeroMQ release lib: ${ZMQ_RELEASE_NAME}")
+    message(STATUS "ZeroMQ debug lib:   ${ZMQ_DEBUG_NAME}")
+
+    file(COPY "${ZMQ_RELEASE_LIB}"
+         DESTINATION "${CURRENT_INSTALLED_DIR}/lib")
+    file(RENAME
+        "${CURRENT_INSTALLED_DIR}/lib/${ZMQ_RELEASE_NAME}"
+        "${CURRENT_INSTALLED_DIR}/lib/zmq.lib"
+    )
+
+    file(COPY "${ZMQ_DEBUG_LIB}"
+         DESTINATION "${CURRENT_INSTALLED_DIR}/debug/lib")
+    file(RENAME
+        "${CURRENT_INSTALLED_DIR}/debug/lib/${ZMQ_DEBUG_NAME}"
+        "${CURRENT_INSTALLED_DIR}/debug/lib/zmq.lib"
+    )
 endif()
 
 set(OPTIONS_CROSS "--enable-cross-compile")
