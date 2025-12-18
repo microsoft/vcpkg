@@ -4393,7 +4393,7 @@
       "port-version": 0
     },
     "kfr": {
-      "baseline": "6.3.1",
+      "baseline": "7.0.1",
       "port-version": 0
     },
     "kinectsdk1": {
