@@ -9133,7 +9133,7 @@
       "port-version": 1
     },
     "sleepy-discord": {
-      "baseline": "2025-02-08",
+      "baseline": "2025-12-18",
       "port-version": 0
     },
     "slick-logger": {
