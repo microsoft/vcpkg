@@ -305,6 +305,14 @@ if(@WITH_VAAPI@)
   endif()
 endif()
 
+if(@WITH_ZMQ@)
+  pkg_check_modules(libzmq IMPORTED_TARGET libzmq)
+  list(APPEND FFMPEG_LIBRARIES PkgConfig::libzmq)
+  if(vcpkg_no_avcodec_target AND TARGET FFmpeg::avcodec)
+    target_link_libraries(FFmpeg::avcodec INTERFACE PkgConfig::libzmq)
+  endif()
+endif()
+
 endif()
 unset(z_vcpkg_using_vcpkg_find_ffmpeg)
 
