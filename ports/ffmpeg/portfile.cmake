@@ -9,6 +9,7 @@ vcpkg_from_github(
         0002-fix-msvc-link.patch
         0003-fix-windowsinclude.patch
         0004-dependencies.patch
+        0005-fix-nasm.patch
         0007-fix-lib-naming.patch
         0013-define-WINVER.patch
         0020-fix-aarch64-libswscale.patch
@@ -27,7 +28,7 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQU
     vcpkg_add_to_path("${NASM_EXE_PATH}")
 endif()
 
-set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect --disable-autodetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-runtime-cpudetect --disable-autodetect")
 
 if(VCPKG_TARGET_IS_MINGW)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -727,7 +728,7 @@ if (VCPKG_TARGET_IS_IOS)
     set(OPTIONS "${OPTIONS} --extra-ldflags=-isysroot\"${vcpkg_osx_sysroot}\"")
 endif ()
 
-set(OPTIONS_DEBUG "--disable-optimizations")
+set(OPTIONS_DEBUG "--disable-optimizations --enable-debug")
 set(OPTIONS_RELEASE "--enable-optimizations")
 
 set(OPTIONS "${OPTIONS} ${OPTIONS_CROSS}")
