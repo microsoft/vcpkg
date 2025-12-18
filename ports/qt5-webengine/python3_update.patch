@@ -1,0 +1,140 @@
+diff --git a/src/3rdparty/chromium/mojo/public/tools/mojom/mojom/fileutil.py b/src/3rdparty/chromium/mojo/public/tools/mojom/mojom/fileutil.py/g
+--- a/src/3rdparty/chromium/mojo/public/tools/mojom/mojom/fileutil.py
++++ b/src/3rdparty/chromium/mojo/public/tools/mojom/mojom/fileutil.py
+@@ -3,7 +3,6 @@
+ # found in the LICENSE file.
+
+ import errno
+-import imp
+ import os.path
+ import sys
+
+diff --git a/src/3rdparty/chromium/mojo/public/tools/mojom/mojom/parse/lexer.py b/src/3rdparty/chromium/mojo/public/tools/mojom/mojom/parse/lexer.py/g
+--- a/src/3rdparty/chromium/mojo/public/tools/mojom/mojom/parse/lexer.py
++++ b/src/3rdparty/chromium/mojo/public/tools/mojom/mojom/parse/lexer.py
+@@ -2,7 +2,6 @@
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
+
+-import imp
+ import os.path
+ import sys
+
+diff --git a/src/3rdparty/chromium/tools/grit/grit/util.py b/src/3rdparty/chromium/tools/grit/grit/util.py
+index 6e8cdb0eb..27f9aba5a 100644
+--- a/src/3rdparty/chromium/tools/grit/grit/util.py
++++ b/src/3rdparty/chromium/tools/grit/grit/util.py
+@@ -8,6 +8,7 @@
+ from __future__ import print_function
+ 
+ import codecs
++import html.entities
+ import io
+ import os
+ import re
+@@ -17,8 +18,6 @@ import tempfile
+ from xml.sax import saxutils
+ 
+ import six
+-from six import StringIO
+-from six.moves import html_entities as entities
+ 
+ from grit import lazy_re
+ 
+@@ -226,7 +225,7 @@ def WrapOutputStream(stream, encoding = 'utf-8'):
+ def ChangeStdoutEncoding(encoding = 'utf-8'):
+   '''Changes STDOUT to print characters using the specified encoding.'''
+   # If we're unittesting, don't reconfigure.
+-  if isinstance(sys.stdout, StringIO):
++  if isinstance(sys.stdout, io.StringIO):
+     return
+ 
+   if sys.version_info.major < 3:
+@@ -280,8 +279,8 @@ def UnescapeHtml(text, replace_nbsp=True):
+       if name == 'nbsp' and not replace_nbsp:
+         return match.group()  # Don't replace &nbsp;
+       assert name != None
+-      if name in entities.name2codepoint:
+-        return six.unichr(entities.name2codepoint[name])
++      if name in html.entities.name2codepoint:
++        return six.unichr(html.entities.name2codepoint[name])
+       else:
+         return match.group()  # Unknown HTML character entity - don't replace
+ 
+diff --git a/src/3rdparty/chromium/build/android/gyp/util/build_utils.py b/src/3rdparty/chromium/build/android/gyp/util/build_utils.py
+index 022980517..f7fc6511b 100644
+--- a/src/3rdparty/chromium/build/android/gyp/util/build_utils.py
++++ b/src/3rdparty/chromium/build/android/gyp/util/build_utils.py
+@@ -12,8 +12,8 @@ import fnmatch
+ import json
+ import logging
+ import os
+-import pipes
+ import re
++import shlex
+ import shutil
+ import stat
+ import subprocess
+@@ -198,7 +198,7 @@ class CalledProcessError(Exception):
+     # A user should be able to simply copy and paste the command that failed
+     # into their shell.
+     copyable_command = '( cd {}; {} )'.format(os.path.abspath(self.cwd),
+-        ' '.join(map(pipes.quote, self.args)))
++        shlex.join(self.args))
+     return 'Command failed: {}\n{}'.format(copyable_command, self.output)
+ 
+ 
+@@ -625,7 +625,7 @@ def ExpandFileArgs(args):
+   """
+   new_args = list(args)
+   file_jsons = dict()
+-  r = re.compile('@FileArg\((.*?)\)')
++  r = re.compile(r'@FileArg\((.*?)\)')
+   for i, arg in enumerate(args):
+     match = r.search(arg)
+     if not match:
+diff --git a/src/3rdparty/chromium/third_party/protobuf/python/google/protobuf/internal/python_message.py b/src/3rdparty/chromium/third_party/protobuf/python/google/protobuf/internal/python_message.py
+index 803ae8484..7768d8284 100755
+--- a/src/3rdparty/chromium/third_party/protobuf/python/google/protobuf/internal/python_message.py
++++ b/src/3rdparty/chromium/third_party/protobuf/python/google/protobuf/internal/python_message.py
+@@ -55,9 +55,6 @@ import struct
+ import sys
+ import weakref
+ 
+-import six
+-from six.moves import range
+-
+ # We use "as" to avoid name collisions with variables.
+ from google.protobuf.internal import api_implementation
+ from google.protobuf.internal import containers
+@@ -467,7 +464,7 @@ def _ReraiseTypeErrorWithFieldName(message_name, field_name):
+     exc = TypeError('%s for field %s.%s' % (str(exc), message_name, field_name))
+ 
+   # re-raise possibly-amended exception with original traceback:
+-  six.reraise(type(exc), exc, sys.exc_info()[2])
++  raise exc.with_traceback(sys.exc_info()[2])
+ 
+ 
+ def _AddInitMethod(message_descriptor, cls):
+@@ -480,7 +477,7 @@ def _AddInitMethod(message_descriptor, cls):
+     enum_type with the same name.  If the value is not a string, it's
+     returned as-is.  (No conversion or bounds-checking is done.)
+     """
+-    if isinstance(value, six.string_types):
++    if isinstance(value, str):
+       try:
+         return enum_type.values_by_name[value].number
+       except KeyError:
+@@ -1116,12 +1113,6 @@ def _AddSerializePartialToStringMethod(message_descriptor, cls):
+ def _AddMergeFromStringMethod(message_descriptor, cls):
+   """Helper for _AddMessageMethods()."""
+   def MergeFromString(self, serialized):
+-    if isinstance(serialized, memoryview) and six.PY2:
+-      raise TypeError(
+-          'memoryview not supported in Python 2 with the pure Python proto '
+-          'implementation: this is to maintain compatibility with the C++ '
+-          'implementation')
+-
+     serialized = memoryview(serialized)
+     length = len(serialized)
+     try:

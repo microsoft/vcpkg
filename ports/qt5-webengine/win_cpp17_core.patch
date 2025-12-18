@@ -1,0 +1,17 @@
+diff --git a/src/core/core_common.pri b/src/core/core_common.pri
+index e10d14267..90569dce2 100644
+--- a/src/core/core_common.pri
++++ b/src/core/core_common.pri
+@@ -15,6 +15,10 @@ qtConfig(webengine-webchannel): QT += webchannel
+ # LTO does not work for Chromium at the moment, so disable it completely for core.
+ CONFIG -= ltcg
+ 
+-# Chromium requires C++14
+-CONFIG += c++14
++# Modern Windows ICU requires c++17
++win32 {
++    CONFIG += c++17
++} else {
++    CONFIG += c++14
++}
+ 

@@ -1,0 +1,15 @@
+diff --git a/src/3rdparty/chromium/third_party/crc32c/BUILD.gn b/src/3rdparty/chromium/third_party/crc32c/BUILD.gn
+index 05cea35e1..c7041a2ac 100644
+--- a/src/3rdparty/chromium/third_party/crc32c/BUILD.gn
++++ b/src/3rdparty/chromium/third_party/crc32c/BUILD.gn
+@@ -122,6 +122,10 @@ source_set("crc32c_arm64") {
+         "-target-feature",
+         "-Xclang",
+         "+crypto",
++        "-Xclang",
++        "-target-feature",
++        "-Xclang",
++        "+aes",
+       ]
+     } else {
+       cflags = [ "-march=armv8-a+crc+crypto" ]
