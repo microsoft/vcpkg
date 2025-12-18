@@ -42,6 +42,8 @@ vcpkg_from_github(
         # When building dawn[core] which only enables dawns null backend and tints null writer, src/dawn/native/ShaderModule.cpp failed to compile
         # as it was expecting a transitive include of tint::Bindings from a shader language writer.
         007-fix-tint-null-only-writer.patch
+        008-wrong-dxcapi-include.patch
+        009-fix-tint-install.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
@@ -153,6 +155,16 @@ if("x11" IN_LIST FEATURES)
     set(DAWN_USE_X11 ON)
 endif()
 
+set(TINT_BUILD_CMD_TOOLS OFF)
+if("tint" IN_LIST FEATURES)
+	set(TINT_BUILD_CMD_TOOLS ON)
+endif()
+
+set(TINT_HLSL OFF)
+if(DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
+	set(TINT_HLSL ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -165,7 +177,15 @@ vcpkg_cmake_configure(
         -DDAWN_BUILD_TESTS=OFF
         -DTINT_BUILD_TESTS=OFF
         -DTINT_ENABLE_INSTALL=OFF
-        -DTINT_BUILD_CMD_TOOLS=OFF
+        -DTINT_BUILD_CMD_TOOLS=${TINT_BUILD_CMD_TOOLS}
+		-DTINT_BUILD_WGSL_READER=ON
+		-DTINT_BUILD_WGSL_WRITER=ON
+		-DTINT_BUILD_GLSL_WRITER=OFF
+		-DTINT_BUILD_GLSL_VALIDATOR=OFF
+		-DTINT_BUILD_SPV_READER=OFF
+		-DTINT_BUILD_SPV_WRITER=OFF
+		-DTINT_BUILD_HLSL_WRITER=${TINT_HLSL}
+		-DTINT_BUILD_MSL_WRITER=OFF
         -DDAWN_ENABLE_NULL=${DAWN_ENABLE_NULL}
         -DDAWN_ENABLE_D3D11=${DAWN_ENABLE_D3D11}
         -DDAWN_ENABLE_D3D12=${DAWN_ENABLE_D3D12}
@@ -217,6 +237,7 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
 endif()
 vcpkg_fixup_pkgconfig()
+vcpkg_copy_tools(TOOL_NAMES tint AUTO_CLEAN)
 
 # Restore the original library linkage
 set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
