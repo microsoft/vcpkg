@@ -54,10 +54,6 @@
     }
   ],
   "features": {
-    "tint": {
-      "description": "Compiles a minimal tint compiler (mainly for WGSL validation)",
-      "supports": "windows | linux | freebsd | openbsd | osx"
-    },
     "d3d11": {
       "description": "Direct3D 11 backend support",
       "supports": "windows"
@@ -85,6 +81,10 @@
     "metal": {
       "description": "Metal backend support",
       "supports": "osx | ios"
+    },
+    "tint": {
+      "description": "Compiles a minimal tint compiler (mainly for WGSL validation)",
+      "supports": "windows | linux | freebsd | openbsd | osx"
     },
     "vulkan": {
       "description": "Vulkan backend support",
