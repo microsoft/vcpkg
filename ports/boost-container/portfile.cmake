@@ -7,7 +7,6 @@ vcpkg_from_github(
     SHA512 35ff7d7435704d3b004970b321ffff1d59db976723de2d6543ab0788a349d9acca894655136835ed6bbd3d5027872a2b5e4faba8202adf1834688bec9ed39a1c
     HEAD_REF master
     PATCHES
-        fix_msvc_c4146_warnings.diff
         posix-threads.diff
 )
 
