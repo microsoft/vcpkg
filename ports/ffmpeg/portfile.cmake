@@ -79,6 +79,7 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
+    string(APPEND OPTIONS " --host-cc=${CC_filename}")
     list(APPEND prog_env "${CC_path}")
 endif()
 
@@ -103,6 +104,7 @@ if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_
     get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
     set(ENV{LD} "${LD_filename}")
     string(APPEND OPTIONS " --ld=${LD_filename}")
+    string(APPEND OPTIONS " --host-ld=${LD_filename}")
     list(APPEND prog_env "${LD_path}")
 endif()
 
@@ -194,7 +196,6 @@ if(VCPKG_CROSSCOMPILING AND
     string(APPEND OPTIONS
         " --host-ldflags='${HOST_LDFLAGS}'"
     )
-
 endif()
 
 if(VCPKG_DETECTED_CMAKE_STRIP)
