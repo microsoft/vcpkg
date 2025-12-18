@@ -11,10 +11,8 @@
     "expat",
     "openssl",
     "serf",
-    {
-      "name": "sqlite3",
-      "default-features": false
-    },
+    "zlib",
+    "sqlite3",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -36,7 +34,6 @@
       "name": "vcpkg-msbuild",
       "host": true,
       "platform": "windows"
-    },
-    "zlib"
+    }
   ]
 }
