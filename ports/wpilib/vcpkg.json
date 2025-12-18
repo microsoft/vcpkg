@@ -1,7 +1,6 @@
 {
   "name": "wpilib",
-  "version-date": "2023-08-24",
-  "port-version": 2,
+  "version": "2025.3.2",
   "description": "WPILib is the software library package for the FIRST Robotics Competition. The core install includes wpiutil, a common utilies library, and ntcore, the base NetworkTables library.",
   "homepage": "https://github.com/wpilibsuite/allwpilib",
   "license": null,
@@ -24,22 +23,40 @@
   ],
   "features": {
     "allwpilib": {
-      "description": "Enables the simulation HAL, and the high level wpilibc library.",
+      "description": "This option will build the HAL and wpilibc/j during the build. The HAL is the simulation HAL, unless the external HAL options are used. The CMake build has no capability to build for the roboRIO.",
       "dependencies": [
-        "opencv",
         {
           "name": "wpilib",
           "features": [
-            "cameraserver"
+            "ntcore",
+            "wpimath"
           ]
         }
       ]
     },
     "cameraserver": {
-      "description": "Enables the CameraServer and CSCore libraries for manipulating USB Cameras and HTTP Camera Streams",
+      "description": "This option will cause cscore to be built. Turning this off will implicitly disable cameraserver. If this is off, the OpenCV build requirement is removed.",
       "dependencies": [
         "opencv"
       ]
+    },
+    "gui": {
+      "description": "This option will build GUI items. If this is off, and simulationmodules is on, the simulation GUI will not be built."
+    },
+    "ntcore": {
+      "description": "This option will cause ntcore to be built. Turning this off will implicitly disable wpinet, and will cause an error if allwpilib is enabled."
+    },
+    "protobuf": {
+      "description": "This option will build with the protobuf library.",
+      "dependencies": [
+        "protobuf"
+      ]
+    },
+    "simulationmodules": {
+      "description": "This option will build simulation modules."
+    },
+    "wpimath": {
+      "description": "This option will build the wpimath library. This option must be on to build wpilib."
     }
   }
 }

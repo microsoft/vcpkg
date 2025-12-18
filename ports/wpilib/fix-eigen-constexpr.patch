@@ -1,0 +1,471 @@
+diff --git a/wpimath/src/main/native/include/frc/StateSpaceUtil.h b/wpimath/src/main/native/include/frc/StateSpaceUtil.h
+index 1e8ae2a10..2df42ab4b 100644
+--- a/wpimath/src/main/native/include/frc/StateSpaceUtil.h
++++ b/wpimath/src/main/native/include/frc/StateSpaceUtil.h
+@@ -211,7 +211,7 @@ Vectord<N> MakeWhiteNoiseVector(const std::array<double, N>& stdDevs) {
+  *     Pose2d.ToMatrix() instead.
+  */
+ [[deprecated("Use Pose2d.ToMatrix() instead.")]]
+-WPILIB_DLLEXPORT constexpr Eigen::Vector3d PoseTo3dVector(const Pose2d& pose) {
++WPILIB_DLLEXPORT Eigen::Vector3d PoseTo3dVector(const Pose2d& pose) {
+   return Eigen::Vector3d{{pose.Translation().X().value(),
+                           pose.Translation().Y().value(),
+                           pose.Rotation().Radians().value()}};
+@@ -228,7 +228,7 @@ WPILIB_DLLEXPORT constexpr Eigen::Vector3d PoseTo3dVector(const Pose2d& pose) {
+  *     Pose2d.ToMatrix() instead.
+  */
+ [[deprecated("Use Pose2d.ToMatrix() instead.")]]
+-WPILIB_DLLEXPORT constexpr Eigen::Vector4d PoseTo4dVector(const Pose2d& pose) {
++WPILIB_DLLEXPORT Eigen::Vector4d PoseTo4dVector(const Pose2d& pose) {
+   return Eigen::Vector4d{{pose.Translation().X().value(),
+                           pose.Translation().Y().value(), pose.Rotation().Cos(),
+                           pose.Rotation().Sin()}};
+@@ -322,7 +322,7 @@ bool IsDetectable(const Matrixd<States, States>& A,
+  *     Pose2d.ToMatrix() instead.
+  */
+ [[deprecated("Use Pose2d.ToMatrix() instead.")]]
+-WPILIB_DLLEXPORT constexpr Eigen::Vector3d PoseToVector(const Pose2d& pose) {
++WPILIB_DLLEXPORT Eigen::Vector3d PoseToVector(const Pose2d& pose) {
+   return Eigen::Vector3d{
+       {pose.X().value(), pose.Y().value(), pose.Rotation().Radians().value()}};
+ }
+diff --git a/wpimath/src/main/native/include/frc/controller/DifferentialDriveFeedforward.h b/wpimath/src/main/native/include/frc/controller/DifferentialDriveFeedforward.h
+index da66a439b..1ad771dac 100644
+--- a/wpimath/src/main/native/include/frc/controller/DifferentialDriveFeedforward.h
++++ b/wpimath/src/main/native/include/frc/controller/DifferentialDriveFeedforward.h
+@@ -39,7 +39,7 @@ class WPILIB_DLLEXPORT DifferentialDriveFeedforward {
+    * @param trackwidth The distance between the differential drive's left and
+    * right wheels, in meters.
+    */
+-  constexpr DifferentialDriveFeedforward(
++  DifferentialDriveFeedforward(
+       decltype(1_V / 1_mps) kVLinear, decltype(1_V / 1_mps_sq) kALinear,
+       decltype(1_V / 1_rad_per_s) kVAngular,
+       decltype(1_V / 1_rad_per_s_sq) kAAngular, units::meter_t trackwidth)
+@@ -61,7 +61,7 @@ class WPILIB_DLLEXPORT DifferentialDriveFeedforward {
+    * @param kAAngular The angular acceleration gain in volts per (meters per
+    * second squared).
+    */
+-  constexpr DifferentialDriveFeedforward(decltype(1_V / 1_mps) kVLinear,
++  DifferentialDriveFeedforward(decltype(1_V / 1_mps) kVLinear,
+                                          decltype(1_V / 1_mps_sq) kALinear,
+                                          decltype(1_V / 1_mps) kVAngular,
+                                          decltype(1_V / 1_mps_sq) kAAngular)
+diff --git a/wpimath/src/main/native/include/frc/geometry/Pose2d.h b/wpimath/src/main/native/include/frc/geometry/Pose2d.h
+index 2d8825caa..6e3d519b5 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Pose2d.h
++++ b/wpimath/src/main/native/include/frc/geometry/Pose2d.h
+@@ -59,7 +59,7 @@ class WPILIB_DLLEXPORT Pose2d {
+    * @param matrix The affine transformation matrix.
+    * @throws std::domain_error if the affine transformation matrix is invalid.
+    */
+-  constexpr explicit Pose2d(const Eigen::Matrix3d& matrix)
++  explicit Pose2d(const Eigen::Matrix3d& matrix)
+       : m_translation{Eigen::Vector2d{{matrix(0, 2)}, {matrix(1, 2)}}},
+         m_rotation{Eigen::Matrix2d{{matrix(0, 0), matrix(0, 1)},
+                                    {matrix(1, 0), matrix(1, 1)}}} {
+@@ -233,7 +233,7 @@ class WPILIB_DLLEXPORT Pose2d {
+   /**
+    * Returns an affine transformation matrix representation of this pose.
+    */
+-  constexpr Eigen::Matrix3d ToMatrix() const {
++  Eigen::Matrix3d ToMatrix() const {
+     auto vec = m_translation.ToVector();
+     auto mat = m_rotation.ToMatrix();
+     return Eigen::Matrix3d{{mat(0, 0), mat(0, 1), vec(0)},
+diff --git a/wpimath/src/main/native/include/frc/geometry/Pose3d.h b/wpimath/src/main/native/include/frc/geometry/Pose3d.h
+index 110faf735..733b57611 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Pose3d.h
++++ b/wpimath/src/main/native/include/frc/geometry/Pose3d.h
+@@ -61,7 +61,7 @@ class WPILIB_DLLEXPORT Pose3d {
+    * @param matrix The affine transformation matrix.
+    * @throws std::domain_error if the affine transformation matrix is invalid.
+    */
+-  constexpr explicit Pose3d(const Eigen::Matrix4d& matrix)
++  explicit Pose3d(const Eigen::Matrix4d& matrix)
+       : m_translation{Eigen::Vector3d{
+             {matrix(0, 3)}, {matrix(1, 3)}, {matrix(2, 3)}}},
+         m_rotation{
+@@ -239,7 +239,7 @@ class WPILIB_DLLEXPORT Pose3d {
+    *
+    * @return The new pose of the robot.
+    */
+-  constexpr Pose3d Exp(const Twist3d& twist) const;
++  Pose3d Exp(const Twist3d& twist) const;
+ 
+   /**
+    * Returns a Twist3d that maps this pose to the end pose. If c is the output
+@@ -249,12 +249,12 @@ class WPILIB_DLLEXPORT Pose3d {
+    *
+    * @return The twist that maps this to end.
+    */
+-  constexpr Twist3d Log(const Pose3d& end) const;
++  Twist3d Log(const Pose3d& end) const;
+ 
+   /**
+    * Returns an affine transformation matrix representation of this pose.
+    */
+-  constexpr Eigen::Matrix4d ToMatrix() const {
++  Eigen::Matrix4d ToMatrix() const {
+     auto vec = m_translation.ToVector();
+     auto mat = m_rotation.ToMatrix();
+     return Eigen::Matrix4d{{mat(0, 0), mat(0, 1), mat(0, 2), vec(0)},
+@@ -301,7 +301,7 @@ namespace detail {
+  * @param rotation The rotation vector.
+  * @return The rotation vector as a 3x3 rotation matrix.
+  */
+-constexpr ct_matrix3d RotationVectorToMatrix(const ct_vector3d& rotation) {
++ct_matrix3d RotationVectorToMatrix(const ct_vector3d& rotation) {
+   // Given a rotation vector <a, b, c>,
+   //         [ 0 -c  b]
+   // Omega = [ c  0 -a]
+@@ -320,7 +320,7 @@ constexpr ct_matrix3d RotationVectorToMatrix(const ct_vector3d& rotation) {
+  * @param rotation The rotation vector.
+  * @return The rotation vector as a 3x3 rotation matrix.
+  */
+-constexpr Eigen::Matrix3d RotationVectorToMatrix(
++Eigen::Matrix3d RotationVectorToMatrix(
+     const Eigen::Vector3d& rotation) {
+   // Given a rotation vector <a, b, c>,
+   //         [ 0 -c  b]
+@@ -348,7 +348,7 @@ constexpr Pose3d Pose3d::RelativeTo(const Pose3d& other) const {
+   return {transform.Translation(), transform.Rotation()};
+ }
+ 
+-constexpr Pose3d Pose3d::Exp(const Twist3d& twist) const {
++Pose3d Pose3d::Exp(const Twist3d& twist) const {
+   // Implementation from Section 3.2 of https://ethaneade.org/lie.pdf
+ 
+   auto impl = [this]<typename Matrix3d, typename Vector3d>(
+@@ -408,7 +408,7 @@ constexpr Pose3d Pose3d::Exp(const Twist3d& twist) const {
+   }
+ }
+ 
+-constexpr Twist3d Pose3d::Log(const Pose3d& end) const {
++Twist3d Pose3d::Log(const Pose3d& end) const {
+   // Implementation from Section 3.2 of https://ethaneade.org/lie.pdf
+ 
+   auto impl = [this]<typename Matrix3d, typename Vector3d>(
+diff --git a/wpimath/src/main/native/include/frc/geometry/Quaternion.h b/wpimath/src/main/native/include/frc/geometry/Quaternion.h
+index 65c6a8265..8a312b477 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Quaternion.h
++++ b/wpimath/src/main/native/include/frc/geometry/Quaternion.h
+@@ -263,7 +263,7 @@ class WPILIB_DLLEXPORT Quaternion {
+    *
+    * This is also the log operator of SO(3).
+    */
+-  constexpr Eigen::Vector3d ToRotationVector() const {
++  Eigen::Vector3d ToRotationVector() const {
+     // See equation (31) in "Integrating Generic Sensor Fusion Algorithms with
+     // Sound State Representation through Encapsulation of Manifolds"
+     //
+@@ -292,7 +292,7 @@ class WPILIB_DLLEXPORT Quaternion {
+    *
+    * source: wpimath/algorithms.md
+    */
+-  constexpr static Quaternion FromRotationVector(const Eigen::Vector3d& rvec) {
++  static Quaternion FromRotationVector(const Eigen::Vector3d& rvec) {
+     // 𝑣⃗ = θ * v̂
+     // v̂ = 𝑣⃗ / θ
+ 
+diff --git a/wpimath/src/main/native/include/frc/geometry/Rotation2d.h b/wpimath/src/main/native/include/frc/geometry/Rotation2d.h
+index 82d9e39d7..e95376b66 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Rotation2d.h
++++ b/wpimath/src/main/native/include/frc/geometry/Rotation2d.h
+@@ -75,7 +75,7 @@ class WPILIB_DLLEXPORT Rotation2d {
+    * @param rotationMatrix The rotation matrix.
+    * @throws std::domain_error if the rotation matrix isn't special orthogonal.
+    */
+-  constexpr explicit Rotation2d(const Eigen::Matrix2d& rotationMatrix) {
++  explicit Rotation2d(const Eigen::Matrix2d& rotationMatrix) {
+     auto impl =
+         []<typename Matrix2d>(const Matrix2d& R) -> std::pair<double, double> {
+       // Require that the rotation matrix is special orthogonal. This is true if
+@@ -201,7 +201,7 @@ class WPILIB_DLLEXPORT Rotation2d {
+   /**
+    * Returns matrix representation of this rotation.
+    */
+-  constexpr Eigen::Matrix2d ToMatrix() const {
++  Eigen::Matrix2d ToMatrix() const {
+     // R = [cosθ  −sinθ]
+     //     [sinθ   cosθ]
+     return Eigen::Matrix2d{{m_cos, -m_sin}, {m_sin, m_cos}};
+diff --git a/wpimath/src/main/native/include/frc/geometry/Rotation3d.h b/wpimath/src/main/native/include/frc/geometry/Rotation3d.h
+index 8d1e97529..ad93cc1f3 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Rotation3d.h
++++ b/wpimath/src/main/native/include/frc/geometry/Rotation3d.h
+@@ -106,7 +106,7 @@ class WPILIB_DLLEXPORT Rotation3d {
+    * @param rotationMatrix The rotation matrix.
+    * @throws std::domain_error if the rotation matrix isn't special orthogonal.
+    */
+-  constexpr explicit Rotation3d(const Eigen::Matrix3d& rotationMatrix) {
++  explicit Rotation3d(const Eigen::Matrix3d& rotationMatrix) {
+     auto impl = []<typename Matrix3d>(const Matrix3d& R) -> Quaternion {
+       // Require that the rotation matrix is special orthogonal. This is true if
+       // the matrix is orthogonal (RRᵀ = I) and normalized (determinant is 1).
+@@ -389,7 +389,7 @@ class WPILIB_DLLEXPORT Rotation3d {
+   /**
+    * Returns the axis in the axis-angle representation of this rotation.
+    */
+-  constexpr Eigen::Vector3d Axis() const {
++  Eigen::Vector3d Axis() const {
+     double norm = gcem::hypot(m_q.X(), m_q.Y(), m_q.Z());
+     if (norm == 0.0) {
+       return Eigen::Vector3d{{0.0, 0.0, 0.0}};
+@@ -409,7 +409,7 @@ class WPILIB_DLLEXPORT Rotation3d {
+   /**
+    * Returns rotation matrix representation of this rotation.
+    */
+-  constexpr Eigen::Matrix3d ToMatrix() const {
++  Eigen::Matrix3d ToMatrix() const {
+     double w = m_q.W();
+     double x = m_q.X();
+     double y = m_q.Y();
+@@ -429,7 +429,7 @@ class WPILIB_DLLEXPORT Rotation3d {
+    *
+    * @return Rotation vector representation of this rotation.
+    */
+-  constexpr Eigen::Vector3d ToVector() const { return m_q.ToRotationVector(); }
++  Eigen::Vector3d ToVector() const { return m_q.ToRotationVector(); }
+ 
+   /**
+    * Returns a Rotation2d representing this Rotation3d projected into the X-Y
+diff --git a/wpimath/src/main/native/include/frc/geometry/Transform2d.h b/wpimath/src/main/native/include/frc/geometry/Transform2d.h
+index 88c00550d..ecb4900a4 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Transform2d.h
++++ b/wpimath/src/main/native/include/frc/geometry/Transform2d.h
+@@ -55,7 +55,7 @@ class WPILIB_DLLEXPORT Transform2d {
+    * @param matrix The affine transformation matrix.
+    * @throws std::domain_error if the affine transformation matrix is invalid.
+    */
+-  constexpr explicit Transform2d(const Eigen::Matrix3d& matrix)
++  explicit Transform2d(const Eigen::Matrix3d& matrix)
+       : m_translation{Eigen::Vector2d{{matrix(0, 2)}, {matrix(1, 2)}}},
+         m_rotation{Eigen::Matrix2d{{matrix(0, 0), matrix(0, 1)},
+                                    {matrix(1, 0), matrix(1, 1)}}} {
+@@ -94,7 +94,7 @@ class WPILIB_DLLEXPORT Transform2d {
+    * Returns an affine transformation matrix representation of this
+    * transformation.
+    */
+-  constexpr Eigen::Matrix3d ToMatrix() const {
++  Eigen::Matrix3d ToMatrix() const {
+     auto vec = m_translation.ToVector();
+     auto mat = m_rotation.ToMatrix();
+     return Eigen::Matrix3d{{mat(0, 0), mat(0, 1), vec(0)},
+diff --git a/wpimath/src/main/native/include/frc/geometry/Transform3d.h b/wpimath/src/main/native/include/frc/geometry/Transform3d.h
+index bd6ca9c41..b58996806 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Transform3d.h
++++ b/wpimath/src/main/native/include/frc/geometry/Transform3d.h
+@@ -57,7 +57,7 @@ class WPILIB_DLLEXPORT Transform3d {
+    * @param matrix The affine transformation matrix.
+    * @throws std::domain_error if the affine transformation matrix is invalid.
+    */
+-  constexpr explicit Transform3d(const Eigen::Matrix4d& matrix)
++  explicit Transform3d(const Eigen::Matrix4d& matrix)
+       : m_translation{Eigen::Vector3d{
+             {matrix(0, 3)}, {matrix(1, 3)}, {matrix(2, 3)}}},
+         m_rotation{
+@@ -118,7 +118,7 @@ class WPILIB_DLLEXPORT Transform3d {
+    * Returns an affine transformation matrix representation of this
+    * transformation.
+    */
+-  constexpr Eigen::Matrix4d ToMatrix() const {
++  Eigen::Matrix4d ToMatrix() const {
+     auto vec = m_translation.ToVector();
+     auto mat = m_rotation.ToMatrix();
+     return Eigen::Matrix4d{{mat(0, 0), mat(0, 1), mat(0, 2), vec(0)},
+diff --git a/wpimath/src/main/native/include/frc/geometry/Translation2d.h b/wpimath/src/main/native/include/frc/geometry/Translation2d.h
+index aa6c4753e..f8152a02a 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Translation2d.h
++++ b/wpimath/src/main/native/include/frc/geometry/Translation2d.h
+@@ -59,7 +59,7 @@ class WPILIB_DLLEXPORT Translation2d {
+    *
+    * @param vector The translation vector.
+    */
+-  constexpr explicit Translation2d(const Eigen::Vector2d& vector)
++  explicit Translation2d(const Eigen::Vector2d& vector)
+       : m_x{units::meter_t{vector.x()}}, m_y{units::meter_t{vector.y()}} {}
+ 
+   /**
+@@ -94,7 +94,7 @@ class WPILIB_DLLEXPORT Translation2d {
+    *
+    * @return A 2D translation vector representation of this translation.
+    */
+-  constexpr Eigen::Vector2d ToVector() const {
++  Eigen::Vector2d ToVector() const {
+     return Eigen::Vector2d{{m_x.value(), m_y.value()}};
+   }
+ 
+diff --git a/wpimath/src/main/native/include/frc/geometry/Translation3d.h b/wpimath/src/main/native/include/frc/geometry/Translation3d.h
+index 72e220f08..f6817c9e5 100644
+--- a/wpimath/src/main/native/include/frc/geometry/Translation3d.h
++++ b/wpimath/src/main/native/include/frc/geometry/Translation3d.h
+@@ -61,7 +61,7 @@ class WPILIB_DLLEXPORT Translation3d {
+    *
+    * @param vector The translation vector.
+    */
+-  constexpr explicit Translation3d(const Eigen::Vector3d& vector)
++  explicit Translation3d(const Eigen::Vector3d& vector)
+       : m_x{units::meter_t{vector.x()}},
+         m_y{units::meter_t{vector.y()}},
+         m_z{units::meter_t{vector.z()}} {}
+@@ -118,7 +118,7 @@ class WPILIB_DLLEXPORT Translation3d {
+    *
+    * @return A 3D translation vector representation of this translation.
+    */
+-  constexpr Eigen::Vector3d ToVector() const {
++  Eigen::Vector3d ToVector() const {
+     return Eigen::Vector3d{{m_x.value(), m_y.value(), m_z.value()}};
+   }
+ 
+diff --git a/wpimath/src/main/native/include/frc/spline/CubicHermiteSpline.h b/wpimath/src/main/native/include/frc/spline/CubicHermiteSpline.h
+index 98a27be65..6057d82a4 100644
+--- a/wpimath/src/main/native/include/frc/spline/CubicHermiteSpline.h
++++ b/wpimath/src/main/native/include/frc/spline/CubicHermiteSpline.h
+@@ -101,7 +101,7 @@ class WPILIB_DLLEXPORT CubicHermiteSpline : public Spline<3> {
+    * Returns the hermite basis matrix for cubic hermite spline interpolation.
+    * @return The hermite basis matrix for cubic hermite spline interpolation.
+    */
+-  static constexpr Eigen::Matrix4d MakeHermiteBasis() {
++  static Eigen::Matrix4d MakeHermiteBasis() {
+     // Given P(i), P'(i), P(i+1), P'(i+1), the control vectors, we want to find
+     // the coefficients of the spline P(t) = a₃t³ + a₂t² + a₁t + a₀.
+     //
+@@ -137,7 +137,7 @@ class WPILIB_DLLEXPORT CubicHermiteSpline : public Spline<3> {
+    *
+    * @return The control vector matrix for a dimension.
+    */
+-  static constexpr Eigen::Vector4d ControlVectorFromArrays(
++  static Eigen::Vector4d ControlVectorFromArrays(
+       wpi::array<double, 2> initialVector, wpi::array<double, 2> finalVector) {
+     return Eigen::Vector4d{{initialVector[0]},
+                            {initialVector[1]},
+diff --git a/wpimath/src/main/native/include/frc/spline/QuinticHermiteSpline.h b/wpimath/src/main/native/include/frc/spline/QuinticHermiteSpline.h
+index 293bb3e94..fb439c493 100644
+--- a/wpimath/src/main/native/include/frc/spline/QuinticHermiteSpline.h
++++ b/wpimath/src/main/native/include/frc/spline/QuinticHermiteSpline.h
+@@ -100,7 +100,7 @@ class WPILIB_DLLEXPORT QuinticHermiteSpline : public Spline<5> {
+    * Returns the hermite basis matrix for quintic hermite spline interpolation.
+    * @return The hermite basis matrix for quintic hermite spline interpolation.
+    */
+-  static constexpr Matrixd<6, 6> MakeHermiteBasis() {
++  static Matrixd<6, 6> MakeHermiteBasis() {
+     // Given P(i), P'(i), P"(i), P(i+1), P'(i+1), P"(i+1), the control vectors,
+     // we want to find the coefficients of the spline
+     // P(t) = a₅t⁵ + a₄t⁴ + a₃t³ + a₂t² + a₁t + a₀.
+@@ -145,7 +145,7 @@ class WPILIB_DLLEXPORT QuinticHermiteSpline : public Spline<5> {
+    *
+    * @return The control vector matrix for a dimension.
+    */
+-  static constexpr Vectord<6> ControlVectorFromArrays(
++  static Vectord<6> ControlVectorFromArrays(
+       wpi::array<double, 3> initialVector, wpi::array<double, 3> finalVector) {
+     return Vectord<6>{{initialVector[0]}, {initialVector[1]},
+                       {initialVector[2]}, {finalVector[0]},
+diff --git a/wpimath/src/main/native/include/frc/spline/Spline.h b/wpimath/src/main/native/include/frc/spline/Spline.h
+index a10c42f00..504b6e3ee 100644
+--- a/wpimath/src/main/native/include/frc/spline/Spline.h
++++ b/wpimath/src/main/native/include/frc/spline/Spline.h
+@@ -131,7 +131,7 @@ class Spline {
+    * @param translation The Translation2d to convert.
+    * @return The vector.
+    */
+-  static constexpr Eigen::Vector2d ToVector(const Translation2d& translation) {
++  static Eigen::Vector2d ToVector(const Translation2d& translation) {
+     return Eigen::Vector2d{{translation.X().value()},
+                            {translation.Y().value()}};
+   }
+diff --git a/wpimath/src/main/native/include/frc/system/plant/LinearSystemId.h b/wpimath/src/main/native/include/frc/system/plant/LinearSystemId.h
+index f26c8a037..fb8608d8b 100644
+--- a/wpimath/src/main/native/include/frc/system/plant/LinearSystemId.h
++++ b/wpimath/src/main/native/include/frc/system/plant/LinearSystemId.h
+@@ -46,7 +46,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+    * @param gearing Gear ratio from motor to carriage.
+    * @throws std::domain_error if mass <= 0, radius <= 0, or gearing <= 0.
+    */
+-  static constexpr LinearSystem<2, 1, 2> ElevatorSystem(DCMotor motor,
++  static LinearSystem<2, 1, 2> ElevatorSystem(DCMotor motor,
+                                                         units::kilogram_t mass,
+                                                         units::meter_t radius,
+                                                         double gearing) {
+@@ -83,7 +83,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+    * @param gearing Gear ratio from motor to arm.
+    * @throws std::domain_error if J <= 0 or gearing <= 0.
+    */
+-  static constexpr LinearSystem<2, 1, 2> SingleJointedArmSystem(
++  static LinearSystem<2, 1, 2> SingleJointedArmSystem(
+       DCMotor motor, units::kilogram_square_meter_t J, double gearing) {
+     if (J <= 0_kg_sq_m) {
+       throw std::domain_error("J must be greater than zero.");
+@@ -127,7 +127,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+   template <typename Distance>
+     requires std::same_as<units::meter, Distance> ||
+              std::same_as<units::radian, Distance>
+-  static constexpr LinearSystem<1, 1, 1> IdentifyVelocitySystem(
++  static LinearSystem<1, 1, 1> IdentifyVelocitySystem(
+       decltype(1_V / Velocity_t<Distance>(1)) kV,
+       decltype(1_V / Acceleration_t<Distance>(1)) kA) {
+     if (kV < decltype(kV){0}) {
+@@ -170,7 +170,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+   template <typename Distance>
+     requires std::same_as<units::meter, Distance> ||
+              std::same_as<units::radian, Distance>
+-  static constexpr LinearSystem<2, 1, 2> IdentifyPositionSystem(
++  static LinearSystem<2, 1, 2> IdentifyPositionSystem(
+       decltype(1_V / Velocity_t<Distance>(1)) kV,
+       decltype(1_V / Acceleration_t<Distance>(1)) kA) {
+     if (kV < decltype(kV){0}) {
+@@ -210,7 +210,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+    * @see <a
+    * href="https://github.com/wpilibsuite/sysid">https://github.com/wpilibsuite/sysid</a>
+    */
+-  static constexpr LinearSystem<2, 2, 2> IdentifyDrivetrainSystem(
++  static LinearSystem<2, 2, 2> IdentifyDrivetrainSystem(
+       decltype(1_V / 1_mps) kVLinear, decltype(1_V / 1_mps_sq) kALinear,
+       decltype(1_V / 1_mps) kVAngular, decltype(1_V / 1_mps_sq) kAAngular) {
+     if (kVLinear <= decltype(kVLinear){0}) {
+@@ -271,7 +271,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+    * @see <a
+    * href="https://github.com/wpilibsuite/sysid">https://github.com/wpilibsuite/sysid</a>
+    */
+-  static constexpr LinearSystem<2, 2, 2> IdentifyDrivetrainSystem(
++  static LinearSystem<2, 2, 2> IdentifyDrivetrainSystem(
+       decltype(1_V / 1_mps) kVLinear, decltype(1_V / 1_mps_sq) kALinear,
+       decltype(1_V / 1_rad_per_s) kVAngular,
+       decltype(1_V / 1_rad_per_s_sq) kAAngular, units::meter_t trackwidth) {
+@@ -317,7 +317,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+    * @param gearing Gear ratio from motor to flywheel.
+    * @throws std::domain_error if J <= 0 or gearing <= 0.
+    */
+-  static constexpr LinearSystem<1, 1, 1> FlywheelSystem(
++  static LinearSystem<1, 1, 1> FlywheelSystem(
+       DCMotor motor, units::kilogram_square_meter_t J, double gearing) {
+     if (J <= 0_kg_sq_m) {
+       throw std::domain_error("J must be greater than zero.");
+@@ -348,7 +348,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+    * @see <a
+    * href="https://github.com/wpilibsuite/sysid">https://github.com/wpilibsuite/sysid</a>
+    */
+-  static constexpr LinearSystem<2, 1, 2> DCMotorSystem(
++  static LinearSystem<2, 1, 2> DCMotorSystem(
+       DCMotor motor, units::kilogram_square_meter_t J, double gearing) {
+     if (J <= 0_kg_sq_m) {
+       throw std::domain_error("J must be greater than zero.");
+@@ -392,7 +392,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+   template <typename Distance>
+     requires std::same_as<units::meter, Distance> ||
+              std::same_as<units::radian, Distance>
+-  static constexpr LinearSystem<2, 1, 2> DCMotorSystem(
++  static LinearSystem<2, 1, 2> DCMotorSystem(
+       decltype(1_V / Velocity_t<Distance>(1)) kV,
+       decltype(1_V / Acceleration_t<Distance>(1)) kA) {
+     if (kV < decltype(kV){0}) {
+@@ -425,7 +425,7 @@ class WPILIB_DLLEXPORT LinearSystemId {
+    * @throws std::domain_error if mass <= 0, r <= 0, rb <= 0, J <= 0, or
+    *         gearing <= 0.
+    */
+-  static constexpr LinearSystem<2, 2, 2> DrivetrainVelocitySystem(
++  static LinearSystem<2, 2, 2> DrivetrainVelocitySystem(
+       const DCMotor& motor, units::kilogram_t mass, units::meter_t r,
+       units::meter_t rb, units::kilogram_square_meter_t J, double gearing) {
+     if (mass <= 0_kg) {
