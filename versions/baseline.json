@@ -6309,7 +6309,7 @@
       "port-version": 0
     },
     "mdl-sdk": {
-      "baseline": "2025",
+      "baseline": "2025.0.3",
       "port-version": 0
     },
     "mdns": {
