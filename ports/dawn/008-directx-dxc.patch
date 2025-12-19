@@ -1,0 +1,37 @@
+diff --git a/src/dawn/native/CMakeLists.txt b/src/dawn/native/CMakeLists.txt
+index bf518be937..e6531283c4 100644
+--- a/src/dawn/native/CMakeLists.txt
++++ b/src/dawn/native/CMakeLists.txt
+@@ -956,7 +956,6 @@ if (DAWN_ENABLE_D3D12)
+     if (DAWN_USE_BUILT_DXC)
+         target_compile_definitions(dawn_native PRIVATE "DAWN_USE_BUILT_DXC")
+         target_compile_definitions(dawn_native_objects PRIVATE "DAWN_USE_BUILT_DXC")
+-        add_dependencies(dawn_native copy_dxil_dll)
+     endif()
+ endif()
+ 
+@@ -1057,7 +1056,8 @@ endif ()
+ # They happen because dxcompiler is declared a shared library and bundle_libraries
+ # doesn't work well with shared libs
+ if (DAWN_USE_BUILT_DXC)
+-    target_link_libraries(dawn_native PRIVATE dxcompiler)
++    find_package(directx-dxc CONFIG REQUIRED)
++    target_link_libraries(dawn_native PRIVATE Microsoft::DirectXShaderCompiler)
+ endif()
+ 
+ # Copy d3dcompiler_47.dll from Windows SDK when not using system component loading
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index 68497c0867..a1478d5c7f 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -366,10 +366,6 @@ function(AddSubdirectoryDXC)
+     endif()
+ endfunction()
+ 
+-if (DAWN_USE_BUILT_DXC)
+-    AddSubdirectoryDXC()
+-endif()
+-
+ if (TINT_BUILD_TINTD)
+     set(LANGSVR_JSON_LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp")
+     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp" EXCLUDE_FROM_ALL)
