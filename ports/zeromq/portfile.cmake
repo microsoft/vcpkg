@@ -34,6 +34,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_STATIC=${BUILD_STATIC}
         -DBUILD_SHARED=${BUILD_SHARED}
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW  # IN_LIST
         -DCMAKE_REQUIRE_FIND_PACKAGE_GnuTLS=ON
         -DWITH_DOCS=OFF
         -DWITH_PERF_TOOL=OFF
@@ -69,14 +70,16 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zmq.h" "defined ZMQ_STATIC" "(1)")
+      file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin") # empty
+endif()
+
 file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/zmq")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin") # empty
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
