@@ -18,6 +18,7 @@ vcpkg_cmake_configure(
         -DVERSION=${VERSION}
 )
 
-vcpkg_cmake_build(TARGET qzxing)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
