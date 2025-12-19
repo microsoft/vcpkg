@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5b8e604..074c868 100644
+index 5b8e604..14c6904 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -140,22 +140,29 @@ endif ()
@@ -13,6 +13,7 @@ index 5b8e604..074c868 100644
      install(
          TARGETS simsimd_shared
 -        ARCHIVE
++        EXPORT unofficial-simsimd-config
 +        ARCHIVE DESTINATION lib
          BUNDLE
          FRAMEWORK
@@ -24,7 +25,6 @@ index 5b8e604..074c868 100644
          RESOURCE
 -        RUNTIME
 +        RUNTIME DESTINATION bin
-+        EXPORT unofficial-simsimd-config
 +    )
 +
 +    install(EXPORT unofficial-simsimd-config
