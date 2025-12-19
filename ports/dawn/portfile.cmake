@@ -44,6 +44,7 @@ vcpkg_from_github(
         007-fix-tint-null-only-writer.patch
         008-wrong-dxcapi-include.patch
         009-fix-tint-install.patch
+        010-fix-glslang.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
