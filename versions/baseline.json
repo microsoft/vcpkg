@@ -2761,7 +2761,7 @@
       "port-version": 0
     },
     "eraser": {
-      "baseline": "2.2.1",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "ereignis": {
@@ -8814,7 +8814,7 @@
     },
     "saucer": {
       "baseline": "6.0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "sbgecom": {
       "baseline": "5.3.2276",
