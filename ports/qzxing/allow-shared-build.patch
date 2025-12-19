@@ -1,13 +1,17 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 427ae19..10992f5 100644
+index f8cb91a..8af58db 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -110,7 +110,7 @@ endif()
+@@ -114,7 +114,11 @@ endif()
  
  
  # Change Global Definitions depending on how you want to use the library
 -target_compile_definitions(qzxing PUBLIC DISABLE_LIBRARY_FEATURES)
-+target_compile_definitions(qzxing PUBLIC QZXING_LIBRARY)
++if(BUILD_SHARED_LIBS)
++    target_compile_definitions(qzxing PUBLIC QZXING_LIBRARY)
++else()
++    target_compile_definitions(qzxing PUBLIC DISABLE_LIBRARY_FEATURES)
++endif()
  
  # Target includes
  target_include_directories(qzxing

@@ -6,15 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-qt6.patch
+        allow-shared-build.patch
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_apply_patches(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PATCHES
-            build-shared-lib.patch
-    )
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/src"
@@ -34,16 +27,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qzxing${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
              DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         if(VCPKG_TARGET_IS_WINDOWS)
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qzxing${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}"
+            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qzxing.lib"
                  DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qzxing.pdb"
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         endif()
     endif()
     if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qzxing${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
              DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         if(VCPKG_TARGET_IS_WINDOWS)
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qzxing${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}"
+            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qzxing.lib"
                  DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qzxing.pdb"
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         endif()
     endif()
 else()
