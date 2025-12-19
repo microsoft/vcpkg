@@ -9018,7 +9018,7 @@
     },
     "shaderc": {
       "baseline": "2025.2",
-      "port-version": 0
+      "port-version": 1
     },
     "shaderwriter": {
       "baseline": "2.9.0",
