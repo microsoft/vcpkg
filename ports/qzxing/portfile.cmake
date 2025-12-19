@@ -29,7 +29,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         if(VCPKG_TARGET_IS_WINDOWS)
             file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qzxing.lib"
                  DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/qzxing.pdb"
+            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/qzxing.pdb"
                  DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         endif()
     endif()
