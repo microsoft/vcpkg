@@ -3941,7 +3941,7 @@
       "port-version": 0
     },
     "implot": {
-      "baseline": "0.16",
+      "baseline": "0.17",
       "port-version": 0
     },
     "implot3d": {
