@@ -1,8 +1,9 @@
 {
   "name": "libgwenhywfar",
-  "version-semver": "5.12.0",
+  "version-semver": "5.14.1",
   "description": "A helper library for networking and security applications and libraries",
   "homepage": "https://www.aquamaniac.de/rdm/",
+  "license": "LGPL-2.1-or-later",
   "supports": "!windows | mingw",
   "dependencies": [
     {

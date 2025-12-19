@@ -1,7 +1,7 @@
 {
   "name": "librsvg",
   "version": "2.40.21",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A small library to render Scalable Vector Graphics (SVG)",
   "homepage": "https://gitlab.gnome.org/GNOME/librsvg",
   "license": "LGPL-2.0-or-later",

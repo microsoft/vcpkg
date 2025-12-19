@@ -1,8 +1,10 @@
 {
   "name": "reactphysics3d",
   "version": "0.10.2",
+  "port-version": 1,
   "description": "Open source C++ physics engine library in 3D",
-  "homepage": "www.reactphysics3d.com",
+  "homepage": "https://www.reactphysics3d.com",
+  "documentation": "https://www.reactphysics3d.com/documentation/",
   "license": "Zlib",
   "dependencies": [
     {

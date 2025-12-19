@@ -1,7 +1,6 @@
 {
   "name": "meshoptimizer",
-  "version": "0.25",
-  "port-version": 2,
+  "version": "1.0",
   "description": "Mesh optimization library that makes meshes smaller and faster to render",
   "homepage": "https://github.com/zeux/meshoptimizer",
   "license": "MIT",

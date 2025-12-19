@@ -1,7 +1,7 @@
 {
   "$comment": "Dependencies extracted from e.g. https://sdk.lunarg.com/sdk/download/1.3.290.0/windows/config.json",
   "name": "vulkan-sdk-components",
-  "version": "1.4.309.0",
+  "version": "1.4.328.0",
   "description": "Installs packages which are part of the Vulkan SDK.",
   "license": null,
   "supports": "!uwp & !xbox",
@@ -17,7 +17,6 @@
       "name": "mimalloc",
       "platform": "windows"
     },
-    "robin-hood-hashing",
     "sdl2",
     "shaderc",
     "spirv-cross",

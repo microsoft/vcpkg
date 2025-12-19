@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-ExtensionLayer
     REF "vulkan-sdk-${VERSION}"
-    SHA512 a58d52dfdb73624a739784bfcb5e775ba7318478d6844a09a3fbbf71d092e080664b3dbde2eba282c671286e2f925b3f70986a09d97784256b88de8cabb67d47
+    SHA512 69699c0fa3e3d66c3eb3ef8206c5d530d0c46a850b182ab011f75b1a6e3fa6076b3f3ff9aee0f329416753a74e8eeff232a3c2df7fc94b6e486acd870b88c0d9
     HEAD_REF main
 )
 
@@ -25,4 +25,11 @@ if(VCPKG_TARGET_IS_ANDROID)
 else()
     file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 endif()
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(GLOB LICENSE_FILES
+     LIST_DIRECTORIES false
+     "${SOURCE_PATH}/LICENSES/*")
+if(EXISTS "${SOURCE_PATH}/LICENSE")
+    list(APPEND LICENSE_FILES "${SOURCE_PATH}/LICENSE")
+endif()
+vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
