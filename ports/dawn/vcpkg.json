@@ -85,7 +85,9 @@
     "tint": {
       "description": "Compiles a minimal tint compiler (mainly for WGSL validation)",
       "supports": "(windows & !uwp) | linux | freebsd | openbsd | osx",
-      "dependencies": ["glslang"]
+      "dependencies": [
+        "glslang"
+      ]
     },
     "vulkan": {
       "description": "Vulkan backend support",
