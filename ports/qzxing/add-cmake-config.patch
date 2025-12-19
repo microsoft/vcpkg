@@ -46,10 +46,8 @@ new file mode 100644
 index 0000000..2563ca8
 --- /dev/null
 +++ b/src/cmake/unofficial-qzxing-config.cmake.in
-@@ -0,0 +1,7 @@
+@@ -0,0 +1,5 @@
 +@PACKAGE_INIT@
-+
-+include(CMakeFindDependencyMacro)
 +
 +include(${CMAKE_CURRENT_LIST_DIR}/unofficial-qzxing-targets.cmake)
 +
