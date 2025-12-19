@@ -1,0 +1,19 @@
+if(NOT TARGET unofficial::qzxing::qzxing)
+    add_library(unofficial::qzxing::qzxing UNKNOWN IMPORTED)
+
+    set_target_properties(unofficial::qzxing::qzxing PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
+    )
+
+    find_library(qzxing_LIBRARY_RELEASE NAMES qzxing PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
+    if(EXISTS "${qzxing_LIBRARY_RELEASE}")
+        set_property(TARGET unofficial::qzxing::qzxing APPEND PROPERTY IMPORTED_CONFIGURATIONS "Release")
+        set_target_properties(unofficial::qzxing::qzxing PROPERTIES IMPORTED_LOCATION_RELEASE "${qzxing_LIBRARY_RELEASE}")
+    endif()
+
+    find_library(qzxing_LIBRARY_DEBUG NAMES qzxing PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib" NO_DEFAULT_PATH)
+    if(EXISTS "${qzxing_LIBRARY_DEBUG}")
+        set_property(TARGET unofficial::qzxing::qzxing APPEND PROPERTY IMPORTED_CONFIGURATIONS "Debug")
+        set_target_properties(unofficial::qzxing::qzxing PROPERTIES IMPORTED_LOCATION_DEBUG "${qzxing_LIBRARY_DEBUG}")
+    endif()
+endif()
