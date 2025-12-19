@@ -209,7 +209,7 @@
       "port-version": 2
     },
     "arcticdb-sparrow": {
-      "baseline": "1.4.0",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "arcticdb-sparrow-extensions": {
@@ -1593,7 +1593,7 @@
       "port-version": 0
     },
     "capnproto": {
-      "baseline": "1.2.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "capstone": {
@@ -1742,7 +1742,7 @@
     },
     "cimg": {
       "baseline": "3.6.5",
-      "port-version": 0
+      "port-version": 1
     },
     "cinatra": {
       "baseline": "0.9.7",
@@ -1910,7 +1910,7 @@
     },
     "colmap": {
       "baseline": "3.12.6",
-      "port-version": 0
+      "port-version": 1
     },
     "color-console": {
       "baseline": "2022-03-20",
@@ -2361,7 +2361,7 @@
       "port-version": 1
     },
     "daw-header-libraries": {
-      "baseline": "2.123.2",
+      "baseline": "2.131.0",
       "port-version": 0
     },
     "daw-json-link": {
@@ -2405,8 +2405,8 @@
       "port-version": 1
     },
     "dcmtk": {
-      "baseline": "3.6.9",
-      "port-version": 2
+      "baseline": "3.7.0",
+      "port-version": 0
     },
     "debug-assert": {
       "baseline": "1.3.4",
@@ -2609,7 +2609,7 @@
       "port-version": 3
     },
     "dxcam-cpp": {
-      "baseline": "0.2.4",
+      "baseline": "0.2.5",
       "port-version": 0
     },
     "dxsdk-d3dx": {
@@ -3409,7 +3409,7 @@
       "port-version": 1
     },
     "gmmlib": {
-      "baseline": "22.5.2",
+      "baseline": "22.9.0",
       "port-version": 0
     },
     "gmp": {
@@ -3825,7 +3825,7 @@
       "port-version": 0
     },
     "htslib": {
-      "baseline": "1.22.1",
+      "baseline": "1.23",
       "port-version": 0
     },
     "http-parser": {
@@ -3881,7 +3881,7 @@
       "port-version": 0
     },
     "idyntree": {
-      "baseline": "14.1.0",
+      "baseline": "14.2.0",
       "port-version": 0
     },
     "if97": {
@@ -3965,8 +3965,8 @@
       "port-version": 0
     },
     "influxdb-cxx": {
-      "baseline": "0.7.4",
-      "port-version": 1
+      "baseline": "0.8.0",
+      "port-version": 0
     },
     "infoware": {
       "baseline": "2023-04-12",
@@ -4170,7 +4170,7 @@
     },
     "jwsung91-unilink": {
       "baseline": "0.1.9",
-      "port-version": 0
+      "port-version": 1
     },
     "jwt-cpp": {
       "baseline": "0.7.1",
@@ -5053,7 +5053,7 @@
       "port-version": 2
     },
     "libjpeg-turbo": {
-      "baseline": "3.1.2",
+      "baseline": "3.1.3",
       "port-version": 0
     },
     "libjuice": {
@@ -6313,7 +6313,7 @@
       "port-version": 0
     },
     "mdl-sdk": {
-      "baseline": "2025",
+      "baseline": "2025.0.3",
       "port-version": 0
     },
     "mdns": {
@@ -7010,7 +7010,7 @@
     },
     "nvidia-cutlass": {
       "baseline": "4.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "nvtt": {
       "baseline": "2.1.2",
@@ -7923,6 +7923,10 @@
     "qcustomplot": {
       "baseline": "2.1.1",
       "port-version": 1
+    },
+    "qgis-o2": {
+      "baseline": "1.1",
+      "port-version": 0
     },
     "qhttpengine": {
       "baseline": "1.0.2",
@@ -9137,7 +9141,7 @@
       "port-version": 1
     },
     "sleepy-discord": {
-      "baseline": "2025-02-08",
+      "baseline": "2025-12-18",
       "port-version": 0
     },
     "slick-logger": {
@@ -9458,7 +9462,7 @@
     },
     "stella-cv-fbow": {
       "baseline": "0.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "stftpitchshift": {
       "baseline": "1.4.1",
@@ -10537,7 +10541,7 @@
       "port-version": 0
     },
     "webcraft": {
-      "baseline": "1.0.2",
+      "baseline": "1.0.3",
       "port-version": 0
     },
     "websocketpp": {
