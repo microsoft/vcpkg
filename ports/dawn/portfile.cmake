@@ -237,7 +237,10 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
 endif()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_tools(TOOL_NAMES tint AUTO_CLEAN)
+
+if(TINT_BUILD_CMD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES tint AUTO_CLEAN)
+endif
 
 # Restore the original library linkage
 set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
