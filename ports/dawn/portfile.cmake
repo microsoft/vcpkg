@@ -209,7 +209,7 @@ vcpkg_fixup_pkgconfig()
 
 if(TINT_BUILD_CMD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES tint AUTO_CLEAN)
-endif
+endif()
 
 # Restore the original library linkage
 set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
