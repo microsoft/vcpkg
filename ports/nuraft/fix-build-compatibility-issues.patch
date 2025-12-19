@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0e5ac72..ef6d42c 100644
+index 0e5ac72..0fb7c75 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -177,9 +177,7 @@ endif(WITH_CONAN)
@@ -13,15 +13,6 @@ index 0e5ac72..ef6d42c 100644
  
  # === Compiler flags ===
  option(USE_PTHREAD_EXIT "Call pthread_exit on server threads" OFF)
-@@ -208,7 +206,7 @@ if(NOT WIN32)
-     endif()
- 
- else()
--    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd5045 /wd4571 /wd4774 /wd4820 /wd5039 /wd4626 /wd4625 /wd5026 /wd5027 /wd4623 /wd4996 /wd4530 /wd4267 /wd4244 /W3")
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd5045 /wd4571 /wd4774 /wd4820 /wd5039 /wd4626 /wd4625 /wd5026 /wd5027 /wd4623 /wd4996 /wd4530 /wd4267 /wd4244 /W3 /permissive-")
-     message(STATUS "---- WIN32 ----")
- 
-     if(USE_PTHREAD_EXIT)
 @@ -335,10 +333,6 @@ add_library(static_lib ${STATIC_LIB_SRC})
  add_library(NuRaft::static_lib ALIAS static_lib)
  set_target_properties(static_lib PROPERTIES OUTPUT_NAME ${LIBRARY_NAME} CLEAN_DIRECT_OUTPUT 1)
@@ -75,3 +66,16 @@ index 0e5ac72..ef6d42c 100644
      EXPORT nuraft-targets
      LIBRARY DESTINATION lib
      ARCHIVE DESTINATION lib
+diff --git a/src/tracer.hxx b/src/tracer.hxx
+index ac5f100..e10b30a 100644
+--- a/src/tracer.hxx
++++ b/src/tracer.hxx
+@@ -53,7 +53,7 @@ static inline std::string msg_if_given(const char* format, ...) {
+     }
+ 
+     // Get rid of newline at the end.
+-    if ((not msg.empty()) && (msg.back() == '\n')) {
++    if ((!msg.empty()) && (msg.back() == '\n')) {
+         msg.pop_back();
+     }
+     return msg;
