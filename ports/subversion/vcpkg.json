@@ -4,7 +4,7 @@
   "description": "Apache Subversion (SVN) - Enterprise-class centralized version control system",
   "homepage": "https://subversion.apache.org/",
   "license": "Apache-2.0",
-  "supports": "!uwp & !mingw",
+  "supports": "!uwp & !mingw & !android",
   "dependencies": [
     "apr",
     "apr-util",
