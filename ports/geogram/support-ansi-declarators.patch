@@ -1,0 +1,169 @@
+diff --git a/src/lib/geogram/third_party/CMakeLists.txt b/src/lib/geogram/third_party/CMakeLists.txt
+index 8df3c82..9a158c4 100644
+--- a/src/lib/geogram/third_party/CMakeLists.txt
++++ b/src/lib/geogram/third_party/CMakeLists.txt
+@@ -48,7 +48,7 @@ if(BUILD_SHARED_LIBS)
+       add_definitions(-DLUA_USE_DLOPEN)   
+    endif()
+ endif()
+-
++add_definitions(-DANSI_DECLARATORS)
+ aux_source_directories(SOURCES "Source Files"               .)
+ aux_source_directories(SOURCES "Source Files\\libMeshb"     libMeshb/sources)
+ aux_source_directories(SOURCES "Source Files\\rply"         rply)
+diff --git a/src/lib/third_party/numerics/SUPERLU/cgstrs.c b/src/lib/third_party/numerics/SUPERLU/cgstrs.c
+index f0cc2fc..fd8614e 100644
+--- a/src/lib/third_party/numerics/SUPERLU/cgstrs.c
++++ b/src/lib/third_party/numerics/SUPERLU/cgstrs.c
+@@ -120,7 +120,7 @@ cgstrs (trans_t trans, SuperMatrix *L, SuperMatrix *U,
+     int      i, j, k, iptr, jcol, n, ldb, nrhs;
+     complex   *work, *rhs_work, *soln;
+     flops_t  solve_ops;
+-    void cprint_soln();
++    void cprint_soln(int n, int nrhs, complex *soln);
+ 
+     /* Test input parameters ... */
+     *info = 0;
+diff --git a/src/lib/third_party/numerics/SUPERLU/cpanel_bmod.c b/src/lib/third_party/numerics/SUPERLU/cpanel_bmod.c
+index 0c3177e..248f286 100644
+--- a/src/lib/third_party/numerics/SUPERLU/cpanel_bmod.c
++++ b/src/lib/third_party/numerics/SUPERLU/cpanel_bmod.c
+@@ -45,7 +45,7 @@ at the top-level directory.
+  */
+ void clsolve(int, int, complex *, complex *);
+ void cmatvec(int, int, int, complex *, complex *, complex *);
+-extern void ccheck_tempv();
++extern void ccheck_tempv(int, complex *);
+ 
+ /*! \brief
+  *
+diff --git a/src/lib/third_party/numerics/SUPERLU/creadtriple.c b/src/lib/third_party/numerics/SUPERLU/creadtriple.c
+index 97cf70a..e8c6f22 100644
+--- a/src/lib/third_party/numerics/SUPERLU/creadtriple.c
++++ b/src/lib/third_party/numerics/SUPERLU/creadtriple.c
+@@ -134,7 +134,7 @@ creadtriple(int *m, int *n, int *nonz,
+ 
+ void creadrhs(int m, complex *b)
+ {
+-    FILE *fp, *fopen();
++    FILE *fp;
+     int i;
+     /*int j;*/
+ 
+diff --git a/src/lib/third_party/numerics/SUPERLU/dgstrs.c b/src/lib/third_party/numerics/SUPERLU/dgstrs.c
+index c846b32..e31c472 100644
+--- a/src/lib/third_party/numerics/SUPERLU/dgstrs.c
++++ b/src/lib/third_party/numerics/SUPERLU/dgstrs.c
+@@ -119,7 +119,7 @@ dgstrs (trans_t trans, SuperMatrix *L, SuperMatrix *U,
+     int      i, j, k, iptr, jcol, n, ldb, nrhs;
+     double   *work, *rhs_work, *soln;
+     flops_t  solve_ops;
+-    void dprint_soln();
++    void dprint_soln(int n, int nrhs, double *soln);
+ 
+     /* Test input parameters ... */
+     *info = 0;
+diff --git a/src/lib/third_party/numerics/SUPERLU/dpanel_bmod.c b/src/lib/third_party/numerics/SUPERLU/dpanel_bmod.c
+index af9e89f..e8b1a47 100644
+--- a/src/lib/third_party/numerics/SUPERLU/dpanel_bmod.c
++++ b/src/lib/third_party/numerics/SUPERLU/dpanel_bmod.c
+@@ -45,7 +45,7 @@ at the top-level directory.
+  */
+ void dlsolve(int, int, double *, double *);
+ void dmatvec(int, int, int, double *, double *, double *);
+-extern void dcheck_tempv();
++extern void dcheck_tempv(int, double *);
+ 
+ /*! \brief
+  *
+diff --git a/src/lib/third_party/numerics/SUPERLU/dreadtriple.c b/src/lib/third_party/numerics/SUPERLU/dreadtriple.c
+index 3e2451f..549755e 100644
+--- a/src/lib/third_party/numerics/SUPERLU/dreadtriple.c
++++ b/src/lib/third_party/numerics/SUPERLU/dreadtriple.c
+@@ -134,7 +134,7 @@ dreadtriple(int *m, int *n, int *nonz,
+ 
+ void dreadrhs(int m, double *b)
+ {
+-    FILE *fp, *fopen();
++    FILE *fp;
+     int i;
+     /*int j;*/
+ 
+diff --git a/src/lib/third_party/numerics/SUPERLU/sgstrs.c b/src/lib/third_party/numerics/SUPERLU/sgstrs.c
+index b675073..db6aa0c 100644
+--- a/src/lib/third_party/numerics/SUPERLU/sgstrs.c
++++ b/src/lib/third_party/numerics/SUPERLU/sgstrs.c
+@@ -119,7 +119,7 @@ sgstrs (trans_t trans, SuperMatrix *L, SuperMatrix *U,
+     int      i, j, k, iptr, jcol, n, ldb, nrhs;
+     float   *work, *rhs_work, *soln;
+     flops_t  solve_ops;
+-    void sprint_soln();
++    void sprint_soln(int n, int nrhs, float *soln);
+ 
+     /* Test input parameters ... */
+     *info = 0;
+diff --git a/src/lib/third_party/numerics/SUPERLU/spanel_bmod.c b/src/lib/third_party/numerics/SUPERLU/spanel_bmod.c
+index 2f6fd93..0d9ec4c 100644
+--- a/src/lib/third_party/numerics/SUPERLU/spanel_bmod.c
++++ b/src/lib/third_party/numerics/SUPERLU/spanel_bmod.c
+@@ -45,7 +45,7 @@ at the top-level directory.
+  */
+ void slsolve(int, int, float *, float *);
+ void smatvec(int, int, int, float *, float *, float *);
+-extern void scheck_tempv();
++extern void scheck_tempv(int, float *);
+ 
+ /*! \brief
+  *
+diff --git a/src/lib/third_party/numerics/SUPERLU/sreadtriple.c b/src/lib/third_party/numerics/SUPERLU/sreadtriple.c
+index a3d9233..0a21ec1 100644
+--- a/src/lib/third_party/numerics/SUPERLU/sreadtriple.c
++++ b/src/lib/third_party/numerics/SUPERLU/sreadtriple.c
+@@ -134,7 +134,7 @@ sreadtriple(int *m, int *n, int *nonz,
+ 
+ void sreadrhs(int m, float *b)
+ {
+-    FILE *fp, *fopen();
++    FILE *fp;
+     int i;
+     /*int j;*/
+ 
+diff --git a/src/lib/third_party/numerics/SUPERLU/zgstrs.c b/src/lib/third_party/numerics/SUPERLU/zgstrs.c
+index df95d6f..2311143 100644
+--- a/src/lib/third_party/numerics/SUPERLU/zgstrs.c
++++ b/src/lib/third_party/numerics/SUPERLU/zgstrs.c
+@@ -120,7 +120,7 @@ zgstrs (trans_t trans, SuperMatrix *L, SuperMatrix *U,
+     int      i, j, k, iptr, jcol, n, ldb, nrhs;
+     doublecomplex   *work, *rhs_work, *soln;
+     flops_t  solve_ops;
+-    void zprint_soln();
++    void zprint_soln(int n, int nrhs, doublecomplex *soln);
+ 
+     /* Test input parameters ... */
+     *info = 0;
+diff --git a/src/lib/third_party/numerics/SUPERLU/zpanel_bmod.c b/src/lib/third_party/numerics/SUPERLU/zpanel_bmod.c
+index 9f5d8da..f7e2cb2 100644
+--- a/src/lib/third_party/numerics/SUPERLU/zpanel_bmod.c
++++ b/src/lib/third_party/numerics/SUPERLU/zpanel_bmod.c
+@@ -45,7 +45,7 @@ at the top-level directory.
+  */
+ void zlsolve(int, int, doublecomplex *, doublecomplex *);
+ void zmatvec(int, int, int, doublecomplex *, doublecomplex *, doublecomplex *);
+-extern void zcheck_tempv();
++extern void zcheck_tempv(int, doublecomplex *);
+ 
+ /*! \brief
+  *
+diff --git a/src/lib/third_party/numerics/SUPERLU/zreadtriple.c b/src/lib/third_party/numerics/SUPERLU/zreadtriple.c
+index fc834ec..599d0b9 100644
+--- a/src/lib/third_party/numerics/SUPERLU/zreadtriple.c
++++ b/src/lib/third_party/numerics/SUPERLU/zreadtriple.c
+@@ -134,7 +134,7 @@ zreadtriple(int *m, int *n, int *nonz,
+ 
+ void zreadrhs(int m, doublecomplex *b)
+ {
+-    FILE *fp, *fopen();
++    FILE *fp;
+     int i;
+     /*int j;*/
+ 
