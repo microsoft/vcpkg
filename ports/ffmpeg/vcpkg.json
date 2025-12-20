@@ -23,7 +23,6 @@
     "avdevice",
     "avfilter",
     "avformat",
-    "mediafoundation",
     "swresample",
     "swscale"
   ],
