@@ -4413,7 +4413,7 @@
       "port-version": 0
     },
     "kleidiai": {
-      "baseline": "1.8.0",
+      "baseline": "1.19.0",
       "port-version": 0
     },
     "klein": {
