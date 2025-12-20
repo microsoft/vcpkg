@@ -10,15 +10,11 @@ vcpkg_extract_source_archive(
 )
 file(REMOVE "${SOURCE_PATH}/version")
 
-file(COPY
-  "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
-  "${CMAKE_CURRENT_LIST_DIR}/config.unix.h.in"
-  DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/config.h" DESTINATION "${SOURCE_PATH}/odb/boost/details")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    # config.unix.h.in is copied to the source directory; see CMakeLists.txt:L4
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
