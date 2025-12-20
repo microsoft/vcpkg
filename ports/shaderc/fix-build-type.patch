@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b2e92ef..cf0832b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -152,6 +152,18 @@ function(define_pkg_config_file NAME LIBS)
+@@ -152,6 +152,17 @@ function(define_pkg_config_file NAME LIBS)
    endif()
  endfunction()
  
@@ -19,7 +19,7 @@ index b2e92ef..cf0832b 100644
 +    endif()
 +endforeach()
 +define_pkg_config_file(shaderc "-lshaderc ${EXTRA_STATIC_PKGCONFIG_LIBS} -lshaderc_util")
- define_pkg_config_file(shaderc_static "-lshaderc ${EXTRA_STATIC_PKGCONFIG_LIBS} -lshaderc_util")
+-define_pkg_config_file(shaderc_static "-lshaderc ${EXTRA_STATIC_PKGCONFIG_LIBS} -lshaderc_util")
 -define_pkg_config_file(shaderc_combined -lshaderc_combined)
 +endif()
 diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
