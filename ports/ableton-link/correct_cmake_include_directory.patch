@@ -1,20 +1,21 @@
 diff --git "a/AbletonLinkConfig.cmake" "b/AbletonLinkConfig.cmake"
 index 43b66e7..1e84fa5 100644
---- "a/AbletonLinkConfig.cmake"
-+++ "b/AbletonLinkConfig.cmake"
-@@ -5,7 +5,7 @@ endif()
- add_library(Ableton::Link IMPORTED INTERFACE)
- set_property(TARGET Ableton::Link APPEND PROPERTY
-   INTERFACE_INCLUDE_DIRECTORIES
--  ${CMAKE_CURRENT_LIST_DIR}/include
-+  ${CMAKE_CURRENT_LIST_DIR}/../../include/ableton
- )
+--- "a/cmake_include/ConfigureAbletonLink.cmake"
++++ "b/cmake_include/ConfigureAbletonLink.cmake"
+@@ -4,7 +4,7 @@ function(ConfigureAbletonLink PATH_TO_LINK)
+   add_library(Ableton::Link IMPORTED INTERFACE)
+   set_property(TARGET Ableton::Link APPEND PROPERTY
+     INTERFACE_INCLUDE_DIRECTORIES
+-    ${PATH_TO_LINK}/include
++    ${PATH_TO_LINK}/../../include/ableton
+   )
  
- # Force C++11 support for consuming targets
-@@ -46,5 +46,5 @@ set_property(TARGET Ableton::Link APPEND PROPERTY
+   # Force C++11 support for consuming targets
+@@ -51,6 +51,6 @@ function(ConfigureAbletonLink PATH_TO_LINK)
  
- set_property(TARGET Ableton::Link APPEND PROPERTY
-   INTERFACE_SOURCES
--  ${CMAKE_CURRENT_LIST_DIR}/include/ableton/Link.hpp
-+  ${CMAKE_CURRENT_LIST_DIR}/../../include/ableton/Link.hpp
- )
+   set_property(TARGET Ableton::Link APPEND PROPERTY
+     INTERFACE_SOURCES
+-    ${PATH_TO_LINK}/include/ableton/Link.hpp
++    ${PATH_TO_LINK}/../../include/ableton/Link.hpp
+   )
+ endfunction()
