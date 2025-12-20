@@ -379,6 +379,12 @@ else()
     set(WITH_MP3LAME OFF)
 endif()
 
+if("mediafoundation" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-mediafoundation")
+else()
+    set(OPTIONS "${OPTIONS} --disable-mediafoundation")
+endif()
+
 if("modplug" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libmodplug")
     set(WITH_MODPLUG ON)

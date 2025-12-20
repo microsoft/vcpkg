@@ -24,7 +24,8 @@
     "avfilter",
     "avformat",
     "swresample",
-    "swscale"
+    "swscale",
+    "mediafoundation"
   ],
   "features": {
     "all": {
@@ -474,6 +475,10 @@
       "dependencies": [
         "liblzma"
       ]
+    },
+    "mediafoundation": {
+      "description": "Media Foundation support",
+      "supports": "windows | uwp"
     },
     "modplug": {
       "description": "ModPlug via libmodplug",
