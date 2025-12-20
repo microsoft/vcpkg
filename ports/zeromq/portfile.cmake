@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES 
         fix-arm.patch
         pkgconfig.diff
+        rename-sha1.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
