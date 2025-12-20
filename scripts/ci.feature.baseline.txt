@@ -274,9 +274,6 @@ vtk[atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,ne
 
 # cascade
 3fd:x64-uwp = cascade
-ableton-link[hut]:arm64-uwp = cascade
-ableton-link[hut]:arm64-windows = cascade
-ableton-link[hut]:x64-uwp = cascade
 ace[xml-utils]:x64-linux = cascade
 ace[xml-utils](osx) = cascade
 activemq-cpp:arm64-windows = cascade
@@ -1625,7 +1622,6 @@ zyre:arm64-uwp = cascade
 zyre:x64-uwp = cascade
 
 # failures
-ableton-link[hut](linux) = feature-fails # libportaudiocpp0 must be installed in ci. See https://github.com/microsoft/vcpkg/pull/32144
 adios2[cuda]:x64-windows-static = feature-fails # try_run() invoked in cross-compiling mode
 adios2[mpi]:x86-windows = feature-fails
 adios2[python](!uwp) = feature-fails # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)

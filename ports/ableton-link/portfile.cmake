@@ -12,6 +12,7 @@ vcpkg_from_github(
         replace_asiosdk_download_by_vcpkg_asiosdk.patch
         replace_local_catch_by_vcpkg_catch2.patch
         no-werror.patch
+        fix_android_build.patch
 )
 # Note that the dependencies ASIO and ASIOSDK are completely different things:
 # -ASIO (ASyncronous IO) is a cross-platform C++ library for network and low-level I/O programming
@@ -52,22 +53,28 @@ vcpkg_cmake_configure(
         -DLINK_BUILD_ASIO=${NEED_ASIOSDK}
 )
 
-if ("coretest" IN_LIST FEATURES)
-    vcpkg_cmake_build(TARGET LinkCoreTest)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkCoreTest${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-endif()
-if ("discoverytest" IN_LIST FEATURES)
-    vcpkg_cmake_build(TARGET LinkDiscoveryTest)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkDiscoveryTest${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-endif()
-if ("hut" IN_LIST FEATURES)
-    vcpkg_cmake_build(TARGET LinkHut)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkHut${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-endif()
-if ("hutsilent" IN_LIST FEATURES)
-    vcpkg_cmake_build(TARGET LinkHutSilent)
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/LinkHutSilent${VCPKG_TARGET_EXECUTABLE_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-endif()
+# Helper function to build and install helper executables
+function(install_test_executable FEATURE_NAME TARGET_NAME)
+    if(${FEATURE_NAME} IN_LIST FEATURES)
+        vcpkg_cmake_build(TARGET ${TARGET_NAME})
+        
+        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/${TARGET_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
+        endif()
+        
+        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/${TARGET_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        endif()
+    endif()
+endfunction()
+
+# Install test executables
+install_test_executable("coretest" "LinkCoreTest")
+install_test_executable("discoverytest" "LinkDiscoveryTest")
+install_test_executable("hut" "LinkHut")
+install_test_executable("hutsilent" "LinkHutSilent")
 
 # We must not correct the CMake include path before build
 vcpkg_apply_patches(

@@ -11,7 +11,7 @@ index 43b66e7..1e84fa5 100644
    )
  
    # Force C++11 support for consuming targets
-@@ -51,6 +51,6 @@ function(ConfigureAbletonLink PATH_TO_LINK)
+@@ -56,6 +56,6 @@ function(ConfigureAbletonLink PATH_TO_LINK)
  
    set_property(TARGET Ableton::Link APPEND PROPERTY
      INTERFACE_SOURCES
