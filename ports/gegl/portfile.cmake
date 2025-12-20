@@ -3,7 +3,7 @@ string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS https://download.gimp.org/pub/gegl/${VERSION_MAJOR_MINOR}/gegl-${VERSION}.tar.xz
     FILENAME "gegl-${VERSION}.tar.xz"
-    SHA512 bf4801588abe8b568ae3d1daafa97af28516bbbdd44d2a0798c87412b49301f621db3cf1c7a3ec33f19d96ab4dbd37d80824f04460116a896dd7415aa0d5229d
+    SHA512 ed1f809aaea8768b1eff2a6adcf66b3ef7c11e03d410ef8952051822017f9a6bcee0e29dd32708dd6937d49416c6db55cd8d34458619022ea750311253899ae9
 )
 
 vcpkg_extract_source_archive(
@@ -12,13 +12,21 @@ vcpkg_extract_source_archive(
     PATCHES
         disable_tests.patch
         remove_execinfo_support.patch
+        remove-consistency-check.patch
 )
+
+if("introspection" IN_LIST FEATURES)
+    list(APPEND feature_options "-Dintrospection=true")
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
+else()
+    list(APPEND feature_options "-Dintrospection=false")
+endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${feature_options}
         -Ddocs=false
-        -Dintrospection=false
         -Dgdk-pixbuf=disabled
         -Dgexiv2=disabled
         -Dgraphviz=disabled
@@ -45,6 +53,9 @@ vcpkg_configure_meson(
         -Dsdl2=disabled
         -Dumfpack=disabled
         -Dwebp=disabled
+    ADDITIONAL_BINARIES
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 
 vcpkg_install_meson()
