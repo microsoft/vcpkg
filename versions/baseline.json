@@ -3589,8 +3589,8 @@
       "port-version": 3
     },
     "gtkmm": {
-      "baseline": "4.14.0",
-      "port-version": 1
+      "baseline": "4.20.0",
+      "port-version": 0
     },
     "gtl": {
       "baseline": "1.2.0",
