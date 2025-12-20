@@ -17,6 +17,8 @@ file(COPY
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    # config.unix.h.in is copied to the source directory; see CMakeLists.txt:L4
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS_DEBUG
         -DLIBODB_INSTALL_HEADERS=OFF
 )
