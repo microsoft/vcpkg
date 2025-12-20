@@ -501,7 +501,7 @@
       "port-version": 0
     },
     "azmq": {
-      "baseline": "2023-03-23",
+      "baseline": "2025-11-30",
       "port-version": 0
     },
     "azure-c-shared-utility": {
