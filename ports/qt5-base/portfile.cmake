@@ -79,7 +79,7 @@ set(PATCHES
     patches/qmake-arm64.patch          # Fix by Oliver Wolff to support ARM64 hosts on Windows
 )
 if(VCPKG_TARGET_IS_OSX)
-    execute_process(COMMAND xcrun --show-sdk-version
+    execute_process(COMMAND xcrun --sdk macosx --show-sdk-version
             OUTPUT_VARIABLE OSX_SDK_VERSION
             OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(${OSX_SDK_VERSION} VERSION_GREATER_EQUAL 26)
