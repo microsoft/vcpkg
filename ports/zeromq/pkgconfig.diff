@@ -27,7 +27,7 @@ index 0346227..56d34e6 100644
    find_library(RT_LIBRARY rt)
    if(RT_LIBRARY)
 diff --git a/src/libzmq.pc.in b/src/libzmq.pc.in
-index 233bc3a..49527d3 100644
+index 233bc3a..3c2bf0d 100644
 --- a/src/libzmq.pc.in
 +++ b/src/libzmq.pc.in
 @@ -7,6 +7,6 @@ Name: libzmq
@@ -35,6 +35,6 @@ index 233bc3a..49527d3 100644
  Version: @VERSION@
  Libs: -L${libdir} -lzmq
 -Libs.private: -lstdc++ @pkg_config_libs_private@
-+Libs.private: @pkg_config_libs_private@ @pkg_config_libs_cxx@
++Libs.private: @pkg_config_libs_private@
  Requires.private: @pkg_config_names_private@
  Cflags: -I${includedir} @pkg_config_defines@
