@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,9 +1,8 @@
+ cmake_minimum_required(VERSION 3.1)
+ project(TriangleMeshDistance)
+ set(CMAKE_CXX_STANDARD 11)
+ 
+-add_subdirectory(tests)
+ 
+ if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
+     SET(CMAKE_INSTALL_INCLUDEDIR include CACHE
+         PATH "Output directory for header files")

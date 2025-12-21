@@ -9,6 +9,7 @@ vcpkg_from_github(
         pkgconfig.diff
         relax-link-options.diff
         vulkan-shaders-gen.diff
+        fix-dequant_funcs.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

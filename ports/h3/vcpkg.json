@@ -1,6 +1,6 @@
 {
   "name": "h3",
-  "version-semver": "4.4.0",
+  "version-semver": "4.4.1",
   "description": "A Hexagonal Hierarchical Geospatial Indexing System",
   "homepage": "https://github.com/uber/h3",
   "license": "Apache-2.0",

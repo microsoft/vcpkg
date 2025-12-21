@@ -1,6 +1,6 @@
 {
   "name": "drlibs",
-  "version-date": "2025-09-10",
+  "version-date": "2025-12-13",
   "description": "Single-file audio decoding libraries for C/C++",
   "homepage": "https://github.com/mackron/dr_libs",
   "license": "Unlicense OR MIT-0"

@@ -1,7 +1,7 @@
 {
   "name": "saucer",
   "version": "6.0.1",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Next-gen desktop apps with web-frontend in C++",
   "homepage": "https://saucer.github.io/",
   "license": "MIT",
