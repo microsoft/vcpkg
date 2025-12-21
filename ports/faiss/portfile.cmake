@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookresearch/faiss
     REF "v${VERSION}"
-    SHA512 1a04ec120aee8f1111a2224d4cccfe59e0108a90c35cfa38dfc53fd75a433ea557f8adf56b3aab09d04c7332cf033d87bc77b8c806421b061a5fde847c7c357c
+    SHA512 64d333e3cf561a65a9dcb78bb04f76073047b1149ce4778e4d65aa809928bedbd43b2b0a3362e8336664feae3d09167702ef68abddce3c86bc70cdb9551bc65c
     HEAD_REF master
     PATCHES
         msvc-template.diff
