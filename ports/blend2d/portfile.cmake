@@ -35,7 +35,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         "#if !defined(BL_STATIC)"
         "#if 0"
     )
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blend2d-debug.h"
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blend2d/blend2d-debug.h"
         "#if defined(BL_STATIC)"
         "#if 1"
     )
