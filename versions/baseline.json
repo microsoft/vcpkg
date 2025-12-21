@@ -317,8 +317,8 @@
       "port-version": 0
     },
     "asmtk": {
-      "baseline": "2022-11-06",
-      "port-version": 1
+      "baseline": "2025-08-06",
+      "port-version": 0
     },
     "asock": {
       "baseline": "1.0.7",
