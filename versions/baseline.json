@@ -5258,7 +5258,7 @@
     },
     "libodb-boost": {
       "baseline": "2.4.0",
-      "port-version": 7
+      "port-version": 8
     },
     "libodb-mysql": {
       "baseline": "2.4.0",
