@@ -1,3 +1,15 @@
+function(z_vcpkg_curl_libraries_warning variable access value current_list_file stack)
+    if(variable STREQUAL "CURL_LIBRARIES"
+       AND access STREQUAL "READ_ACCESS"
+       AND NOT z_vcpkg_curl_libraries_warning_issued)
+        set(z_vcpkg_curl_libraries_warning_issued 1 PARENT_SCOPE)
+        message(FATAL_ERROR # TODO: WARNING
+            "CURL_LIBRARIES is '${CURL_LIBRARIES}'. "
+            "When linking imported targets, exported CMake config must use \"find_dependency(CURL)\"."
+        )
+    endif()
+endfunction()
+
 list(REMOVE_ITEM ARGS "NO_MODULE" "CONFIG" "MODULE")
 list(GET ARGS 0 _z_vcpg_curl_name)
 _find_package(${ARGS} CONFIG)
@@ -23,8 +35,8 @@ if(${_z_vcpg_curl_name}_FOUND)
         string(REGEX REPLACE "([\$]<[^;]*)?OpenSSL::(SSL|Crypto)([^;]*>)?" "${OPENSSL_LIBRARIES}" _curl_link_libraries "${_curl_link_libraries}")
     endif()
     if(_curl_link_libraries MATCHES "::")
-        # leave CURL_LIBRARIES as set by upstream (imported target)
-        message(WARNING "Cannot easily unroll CURL_LIBRARIES (\"${CURL_LIBRARIES}\") to filepaths. Exported CMake config must use \"find_dependency(CURL)\".")
+        # leave CURL_LIBRARIES as set by upstream (imported target), but add information.
+        variable_watch(CURL_LIBRARIES "z_vcpkg_curl_libraries_warning")
     else()
         # resolve CURL_LIBRARIES to filepaths.
         if(WIN32)

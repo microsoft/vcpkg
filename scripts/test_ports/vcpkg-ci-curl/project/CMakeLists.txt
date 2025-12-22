@@ -8,8 +8,11 @@ block(SCOPE_FOR VARIABLES)
 
     find_package(CURL COMPONENTS libz REQUIRED)
 
-    add_executable(main main.c)
-    target_link_libraries(main PRIVATE CURL::libcurl)
+    add_executable(main-targets main.c)
+    target_link_libraries(main-targets PRIVATE CURL::libcurl)
+
+    add_executable(main-variable main.c)
+    target_link_libraries(main-variable PRIVATE ${CURL_LIBRARIES})
 
     unset(PKG_CONFIG_EXECUTABLE CACHE)
     unset(PKG_CONFIG_ARGN CACHE)
