@@ -6065,7 +6065,7 @@
       "port-version": 0
     },
     "lua": {
-      "baseline": "5.4.8",
+      "baseline": "5.5.0",
       "port-version": 0
     },
     "lua-compat53": {
@@ -6082,7 +6082,7 @@
     },
     "luafilesystem": {
       "baseline": "1.8.0",
-      "port-version": 7
+      "port-version": 8
     },
     "luajit": {
       "baseline": "2023-01-04",
