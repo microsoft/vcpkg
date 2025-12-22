@@ -1,6 +1,6 @@
 {
   "name": "tcp-pubsub",
-  "version": "1.0.3",
+  "version": "2.0.1",
   "description": "TCP based publish-subscribe library for C++",
   "homepage": "https://github.com/eclipse-ecal/tcp_pubsub",
   "license": "MIT",
