@@ -8,6 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+vcpkg_add_to_path("${PYTHON3_DIR}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
@@ -17,15 +21,16 @@ vcpkg_cmake_build(TARGET godot-cpp)
 file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${SOURCE_PATH}/gdextension" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 
-file(GLOB DEBUG_LIBS 
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/*.lib"
+file(GLOB_RECURSE DEBUG_LIBS 
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.a"
 )
+
 file(INSTALL ${DEBUG_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-file(GLOB RELEASE_LIBS 
-    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/*.lib"
+file(GLOB_RECURSE RELEASE_LIBS 
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.lib"
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/*.a"
 )
 file(INSTALL ${RELEASE_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
