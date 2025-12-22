@@ -10925,7 +10925,7 @@
       "port-version": 1
     },
     "zint": {
-      "baseline": "2.15.0",
+      "baseline": "2.16.0",
       "port-version": 0
     },
     "zix": {
