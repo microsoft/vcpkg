@@ -11,7 +11,8 @@
       "features": [
         "concurrent",
         "gui",
-        "network"
+        "network",
+        "thread"
       ]
     },
     {
