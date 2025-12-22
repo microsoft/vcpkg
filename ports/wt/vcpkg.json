@@ -1,6 +1,6 @@
 {
   "name": "wt",
-  "version": "4.12.0",
+  "version": "4.12.1",
   "description": "Wt is a C++ library for developing web applications",
   "homepage": "https://github.com/emweb/wt",
   "license": "GPL-2.0-only",
