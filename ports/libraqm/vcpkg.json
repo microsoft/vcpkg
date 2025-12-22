@@ -7,6 +7,9 @@
     "freetype",
     "fribidi",
     "harfbuzz",
-    "vcpkg-tool-meson"
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
   ]
 }
