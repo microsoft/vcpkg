@@ -1,5 +1,5 @@
 diff --git a/include/outcome/experimental/result.h b/include/outcome/experimental/result.h
-index b912a55..401c6ca 100644
+index b912a55..1370e9e 100644
 --- a/include/outcome/experimental/result.h
 +++ b/include/outcome/experimental/result.h
 @@ -278,14 +278,14 @@ extern "C"

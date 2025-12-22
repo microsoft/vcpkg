@@ -1,6 +1,7 @@
 {
   "name": "llgl",
   "version-date": "2023-03-05",
+  "port-version": 1,
   "description": "Low Level Graphics Library (LLGL) is a thin abstraction layer for the modern graphics APIs OpenGL, Direct3D, Vulkan, and Metal.",
   "homepage": "https://github.com/LukasBanana/LLGL",
   "license": "BSD-3-Clause",

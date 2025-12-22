@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/uvw
-    REF "v${VERSION}_libuv_v1.46"
-    SHA512 a790f74a4d151319d3d692167b7d2229e6660dee34e7dc266815c3e5579dbe99e1da55e0466832ac8ec1881073317b744e384908de60bf62ef16420ee2fbc318
+    REF "v${VERSION}_libuv_v1.48"
+    SHA512 dbf03c63b0693263b77b405e8f6bf4c207795be9bd024bbc06484e523b55257add1eab632067a956d03399d91ee389c46312603e7754b152c4caf51b40f6bec4
     PATCHES
         fix-find-libuv.patch
 )

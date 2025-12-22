@@ -1,0 +1,22 @@
+{
+  "name": "jwsung91-unilink",
+  "version": "0.1.9",
+  "port-version": 1,
+  "description": "Cross-platform communication middleware (Serial/TCP/UDP) using Boost.Asio.",
+  "homepage": "https://github.com/jwsung91/unilink",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-asio",
+    "boost-system",
+    "boost-thread",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

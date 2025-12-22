@@ -1,0 +1,4 @@
+knncolle_annoy is header-only and can be used from CMake via:
+
+    find_package(knncolle_knncolle_annoy CONFIG REQUIRED)
+    target_link_libraries(mylib INTERFACE knncolle::knncolle_annoy)

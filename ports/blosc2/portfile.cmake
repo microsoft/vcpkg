@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blosc/c-blosc2
     REF "v${VERSION}"
-    SHA512 ab9f1846edd7fde710508597e3dfe43f80bb35a20ce913984dfc3c4212c71c009cfc711a330beb6c19858170911c658df463b2b50bd6a1422e656e2bf6e53813
+    SHA512 10471a3bdefc0b8e6a9f02655d3a5e922faab9a73127685f5996643c2e85f8da7733c273083a600d7451f9381ed289922e06dcf9c9e31422a5508386254f610d
     HEAD_REF main
-    PATCHES
-        config-typo.patch # https://github.com/Blosc/c-blosc2/pull/690
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLOSC2_STATIC)
@@ -53,6 +51,6 @@ vcpkg_fixup_pkgconfig()
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Modules") # Find modules that should not be used by vcpkg.
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/Modules") # Find modules that should not be used by vcpkg.
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

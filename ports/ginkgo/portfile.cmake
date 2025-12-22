@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
     REF "v${VERSION}"
-    SHA512 9a52534cf19f908f776ed54b43791e621a9bd5da1fec93a4f035cf4535ddb0ce9cb9e6623ee57c631c76012b4f3ed5066ec731dc3ecac722f6b5d705ec7fd4c7
+    SHA512 f151c99738847ae2e3fb42131c3d3a8c67d39fc985e1d294060134499d96bc802c10cb6c1388bca7acab16e546c2549221f2854e02277f913726a543139b143b
     HEAD_REF main
 )
 
@@ -16,7 +16,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda      GINKGO_BUILD_CUDA
     mpi       GINKGO_BUILD_MPI
     half      GINKGO_ENABLE_HALF
+    bfloat16  GINKGO_ENABLE_BFLOAT16
 )
+
+if("cuda" IN_LIST FEATURES)
+    vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT cuda_toolkit_root)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_CUDA_COMPILER=${NVCC}"
+        "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
+        "-DCMAKE_CUDA_ARCHITECTURES=native"
+     )
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -25,13 +35,14 @@ vcpkg_cmake_configure(
         -DGINKGO_BUILD_TESTS=OFF
         -DGINKGO_BUILD_EXAMPLES=OFF
         -DGINKGO_BUILD_HIP=OFF
-        -DGINKGO_BUILD_DPCPP=OFF
+        -DGINKGO_BUILD_SYCL=OFF
         -DGINKGO_BUILD_HWLOC=OFF
         -DGINKGO_BUILD_BENCHMARKS=OFF
         -DGINKGO_DEVEL_TOOLS=OFF
         -DGINKGO_SKIP_DEPENDENCY_UPDATE=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         ${FEATURE_OPTIONS}
+        ${CUDA_ARCHITECTURES_OPTION}
 )
 
 vcpkg_cmake_install()

@@ -5,13 +5,12 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ValveSoftware/steam-audio
-  REF "3a030b0ec02311a9778563313f2db1ba4a490a67"
-  SHA512 c0f0fe678f7b82b95b1736dbc308e041621873a57fdb5b1ba9ec5acf8bf6f06718566ade05b2193e24ae7295c4ea2383e45cf95c70ccd36308ed4cdfbfb045a9
+  REF "v${VERSION}"
+  SHA512 f237b355f50edf8953b4cba9a1134d32f62b4993a65a64c56b73974122c1de48ef18a0f8faa70221b95ec09b7b007567c711394af3fbabe49fad8feaac780ea0
   HEAD_REF "v${VERSION}"
   PATCHES
     use-vcpkg-deps.patch
     fix-arm64-windows.patch
-    add-include-chrono.patch
 )
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)

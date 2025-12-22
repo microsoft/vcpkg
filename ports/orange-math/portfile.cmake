@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO orange-cpp/omath
     REF "v${VERSION}"
-    SHA512 f6ee4356df67bfd624444fbdbee27840d6124d03797e9d4e5ebc6524c4d54fffc8999ddbf1381132891ca7d1a45d61cd84fac515ef1a3c8005f15d70d1b93c5b
+    SHA512 e827efc412eae2aae367f58063e74eccbcdae574f26e1d76e2b48e6e1c812cf1b654e2487e3e6c05e53b4943b7dc07bb9ba3dbc7434344f736b6aeee3b78b50a
     HEAD_REF master
 )
 
@@ -26,6 +26,9 @@ vcpkg_cmake_configure(
         -DOMATH_BUILD_TESTS=OFF
         -DOMATH_THREAT_WARNING_AS_ERROR=OFF
         -DOMATH_BUILD_AS_SHARED_LIBRARY=${OMATH_SHARED}
+        -DOMATH_BUILD_TESTS=OFF
+        -DOMATH_BUILD_BENCHMARK=OFF
+        -DOMATH_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_cmake_install()

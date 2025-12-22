@@ -1,17 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dd17367..f02cba9 100644
+index dd17367..3ebf359 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,6 +1,8 @@
+@@ -1,6 +1,7 @@
  cmake_minimum_required(VERSION 2.8.7)
  project(jsonnet C CXX)
  
 +add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-+
  include(ExternalProject)
  include(GNUInstallDirs)
  
-@@ -33,6 +35,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${GLOBAL_OUTPUT_PATH})
+@@ -33,6 +34,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${GLOBAL_OUTPUT_PATH})
  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${GLOBAL_OUTPUT_PATH})
  
  # Compiler flags.
@@ -19,17 +18,16 @@ index dd17367..f02cba9 100644
  if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" OR
          ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
      set(OPT "-O3")
-@@ -42,7 +45,7 @@ else()
-     # TODO: Windows support.
+@@ -43,6 +45,7 @@ else()
      message(FATAL_ERROR "Compiler ${CMAKE_CXX_COMPILER_ID} not supported")
  endif()
--
+ 
 +endif()
  set(CMAKE_CXX_STANDARD 17)
  
  
 diff --git a/cmd/CMakeLists.txt b/cmd/CMakeLists.txt
-index c032f02..b5db01d 100644
+index c032f02..d80d2a0 100644
 --- a/cmd/CMakeLists.txt
 +++ b/cmd/CMakeLists.txt
 @@ -13,5 +13,5 @@ if (BUILD_JSONNETFMT OR BUILD_TESTS)
@@ -37,7 +35,7 @@ index c032f02..b5db01d 100644
      target_link_libraries(jsonnetfmt libjsonnet_for_binaries)
  
 -	install(TARGETS jsonnetfmt DESTINATION "${CMAKE_INSTALL_BINDIR}")
-+    install(TARGETS jsonnetfmt DESTINATION tools/jsonnet)
++	install(TARGETS jsonnetfmt DESTINATION tools/jsonnet)
  endif()
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
 index 8ab3777..9e8ffe2 100644
@@ -62,20 +60,21 @@ index 8ab3777..9e8ffe2 100644
  target_include_directories(libjsonnet INTERFACE
    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>)
 diff --git a/stdlib/CMakeLists.txt b/stdlib/CMakeLists.txt
-index a481d9f..d4829f8 100644
+index a481d9f..002006f 100644
 --- a/stdlib/CMakeLists.txt
 +++ b/stdlib/CMakeLists.txt
-@@ -1,7 +1,7 @@
- # Utility to convert file to a list of integeters.
+@@ -2,6 +2,7 @@
  
  add_executable(to_c_array to_c_array.cpp)
--
+ 
 +if(0)
  # Custom command that will only build stdlib when it changes.
  add_custom_command(
  	OUTPUT ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h
-@@ -13,3 +13,4 @@ add_custom_command(
+@@ -13,3 +14,6 @@ add_custom_command(
  # Standard library build target that libjsonnet can depend on.
  add_custom_target(stdlib ALL
  	DEPENDS ${PROJECT_SOURCE_DIR}/core/std.jsonnet.h)
++else()
++add_custom_target(stdlib)
 +endif()
