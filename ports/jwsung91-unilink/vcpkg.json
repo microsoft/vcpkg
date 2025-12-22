@@ -1,7 +1,6 @@
 {
   "name": "jwsung91-unilink",
-  "version": "0.1.9",
-  "port-version": 1,
+  "version": "0.2.1",
   "description": "Cross-platform communication middleware (Serial/TCP/UDP) using Boost.Asio.",
   "homepage": "https://github.com/jwsung91/unilink",
   "license": "Apache-2.0",
