@@ -1,0 +1,12 @@
+diff --git a/groups/bdl/CMakeLists.txt b/groups/bdl/CMakeLists.txt
+index 4f2371511..8483947ff 100644
+--- a/groups/bdl/CMakeLists.txt
++++ b/groups/bdl/CMakeLists.txt
+@@ -24,6 +24,7 @@ target_compile_options(bdlde-iface
+ # TODO: probably, make sense to make it default argument in
+ # the cl toolchain.
+ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++    target_compile_options(bdlar PUBLIC /bigobj)
+     target_compile_options(bdlf INTERFACE /bigobj)
+     target_compile_options(bdlcc INTERFACE /bigobj)
+     target_link_libraries(bdlb-iface PRIVATE bcrypt)
