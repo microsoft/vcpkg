@@ -37,7 +37,9 @@ function(vcpkg_make_configure)
     endif()
 
     # Cache this invocation's desired cmake vars configuration.
-    set(Z_VCPKG_MAKE_GET_CMAKE_VARS_OPTS "ADDITIONAL_LANGUAGES;${arg_LANGUAGES}" CACHE INTERNAL "")
+    if(DEFINED arg_LANGUAGES)
+        set(Z_VCPKG_MAKE_GET_CMAKE_VARS_OPTS "ADDITIONAL_LANGUAGES;${arg_LANGUAGES}" CACHE INTERNAL "")
+    endif()
     z_vcpkg_make_get_cmake_vars()
 
     set(escaping "")
