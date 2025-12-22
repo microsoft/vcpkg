@@ -2,7 +2,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO godotengine/godot-cpp
+    REPO "godotengine/godot-cpp"
     REF "godot-${VERSION}-stable"
     SHA512 "7fe4d02e409fa2c4c4476fb02c0cf6deb79bb1daa6aa370369587542283dc9d9d51fa6cd9604ac6b5cbd28e9ee5dd8844482c44c3d535f5e0190a7031feab68c"
     HEAD_REF master
@@ -12,8 +12,10 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "/MT" "")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "/MD" "")
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "/MT" "" IGNORE_UNCHANGED)
+vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "/MD" "" IGNORE_UNCHANGED)
+
+file(APPEND "${SOURCE_PATH}/CMakeLists.txt" "\nif(MSVC)\n  set(CMAKE_MSVC_RUNTIME_LIBRARY \"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\")\nendif()")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -28,7 +30,6 @@ file(GLOB_RECURSE DEBUG_LIBS
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.lib"
     "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.a"
 )
-
 file(INSTALL ${DEBUG_LIBS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
 
 file(GLOB_RECURSE RELEASE_LIBS 
