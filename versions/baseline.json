@@ -9113,7 +9113,7 @@
       "port-version": 0
     },
     "simsimd": {
-      "baseline": "6.5.10",
+      "baseline": "6.5.12",
       "port-version": 0
     },
     "sjpeg": {
