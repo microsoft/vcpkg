@@ -7,7 +7,6 @@
   "supports": "!xbox",
   "dependencies": [
     "boost-iostreams",
-    "boost-program-options",
     "boost-serialization",
     "boost-system",
     "boost-throw-exception",
@@ -63,7 +62,10 @@
       "description": "OpenMP support for openmvs"
     },
     "tools": {
-      "description": "Install tools"
+      "description": "Install tools",
+      "dependencies": [
+        "boost-program-options"
+      ]
     },
     "viewer": {
       "description": "Install Viewer tool",
