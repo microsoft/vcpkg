@@ -1,0 +1,62 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 0000000..d4fba04
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,46 @@
++cmake_minimum_required(VERSION 3.25)
++project(whereami)
++
++add_library(whereami STATIC src/whereami.c src/whereami.h)
++add_library(whereami::whereami ALIAS whereami)
++target_include_directories(whereami PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
++
++set_target_properties(whereami PROPERTIES PUBLIC_HEADER "src/whereami.h")
++
++include(GNUInstallDirs)
++install(TARGETS whereami
++        EXPORT whereamiTargets
++        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++)
++
++# Create and install package files
++include(CMakePackageConfigHelpers)
++configure_package_config_file(
++    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/unofficial-whereamiConfig.cmake.in
++    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-whereamiConfig.cmake
++    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-whereami
++    NO_CHECK_REQUIRED_COMPONENTS_MACRO
++)
++write_basic_package_version_file(
++    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-whereamiConfigVersion.cmake
++    VERSION 0.0.1
++    COMPATIBILITY SameMajorVersion
++)
++install(FILES
++    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-whereamiConfig.cmake
++    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-whereamiConfigVersion.cmake
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-whereami
++)
++
++# Export Targets and install that to unofficial-whereamiTargets.cmake
++export(
++    TARGETS whereami
++    NAMESPACE unofficial::whereami::
++    FILE "${PROJECT_BINARY_DIR}/unofficial-whereamiTargets.cmake"
++)
++install(
++    EXPORT whereamiTargets
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-whereami
++    NAMESPACE unofficial::whereami::
++    FILE unofficial-whereamiTargets.cmake
++)
+diff --git a/cmake/unofficial-whereamiConfig.cmake.in b/cmake/unofficial-whereamiConfig.cmake.in
+new file mode 100644
+index 0000000..0e74f8f
+--- /dev/null
++++ b/cmake/unofficial-whereamiConfig.cmake.in
+@@ -0,0 +1,4 @@
++@PACKAGE_INIT@
++
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-whereamiTargets.cmake")
++
