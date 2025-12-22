@@ -7,6 +7,6 @@
     "freetype",
     "fribidi",
     "harfbuzz",
-    "vcpkg-cmake"
+    "vcpkg-tool-meson"
   ]
 }
