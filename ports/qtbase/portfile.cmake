@@ -569,7 +569,15 @@ if(EXISTS "${configfile}")
 endif()
 
 if(VCPKG_CROSSCOMPILING)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
+    set(dep_file "${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake")
+    file(READ "${dep_file}" dep_contents)
+    string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}" dep_contents "${dep_contents}")
+    
+    file(WRITE "${dep_file}"
+      "set(QT_HOST_PATH \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
+set(QT_HOST_PATH_CMAKE_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/share\" CACHE STRING \"\" FORCE)\n \
+${dep_contents} \
+    ")
 endif()
 
 function(remove_original_cmake_path file)
@@ -614,5 +622,5 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_CROSSCOMPILING)
-  configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_INSTALLED_DIR}/share/Qt6/vcpkg-cmake-wrapper.cmake" @ONLY)
+
 endif()
