@@ -12,13 +12,11 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "/MT" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "/MD" "" IGNORE_UNCHANGED)
-
-file(APPEND "${SOURCE_PATH}/CMakeLists.txt" "\nif(MSVC)\n  set(CMAKE_MSVC_RUNTIME_LIBRARY \"MultiThreaded$<$<CONFIG:Debug>:Debug>DLL\")\nendif()")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW" 
+        "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL"
 )
 
 vcpkg_cmake_build(TARGET godot-cpp)
