@@ -3421,7 +3421,7 @@
       "port-version": 1
     },
     "godot-cpp": {
-      "baseline": "4.4",
+      "baseline": "4.5",
       "port-version": 0
     },
     "google-cloud-cpp": {
