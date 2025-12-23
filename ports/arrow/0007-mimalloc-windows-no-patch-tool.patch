@@ -1,0 +1,11 @@
+--- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+@@ -2287,7 +2287,7 @@ if(ARROW_MIMALLOC)
+   endif()
+
+   set(MIMALLOC_PATCH_COMMAND "")
+-  if(${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG")
++  if(${UPPERCASE_BUILD_TYPE} STREQUAL "DEBUG" AND NOT WIN32)
+     find_program(PATCH patch REQUIRED)
+     set(MIMALLOC_PATCH_COMMAND ${PATCH} -p1 -i
+                                ${CMAKE_CURRENT_LIST_DIR}/mimalloc-1138.patch)
