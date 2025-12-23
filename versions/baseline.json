@@ -2977,7 +2977,7 @@
       "port-version": 0
     },
     "flagpp": {
-      "baseline": "2.1",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "flann": {
