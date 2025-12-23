@@ -34,7 +34,6 @@ set(_subversion_libs
     svn_delta
     svn_diff
     svn_fs
-    svn_fs_base
     svn_fs_fs
     svn_fs_util
     svn_fs_x

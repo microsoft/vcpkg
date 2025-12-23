@@ -4,7 +4,6 @@ The package subversion provides the following libraries:
   * libsvn_delta
   * libsvn_diff
   * libsvn_fs
-  * libsvn_fs_base
   * libsvn_fs_fs
   * libsvn_fs_util
   * libsvn_fs_x
