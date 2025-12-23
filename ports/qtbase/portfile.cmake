@@ -575,7 +575,7 @@ if(VCPKG_CROSSCOMPILING)
     
     file(WRITE "${dep_file}"
       "set(QT_HOST_PATH \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
-set(QT_HOST_PATH_CMAKE_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}/share\" CACHE STRING \"\" FORCE)\n \
+set(QT_HOST_PATH_CMAKE_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
 ${dep_contents} \
     ")
 endif()
