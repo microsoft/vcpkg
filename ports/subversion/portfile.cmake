@@ -20,6 +20,21 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_copy_tools(TOOL_NAMES 
+    svn
+    svnadmin
+    svnbench
+    svndumpfilter
+    svnfsfs
+    svnlook
+    svnmucc
+    svnrdump
+    svnserve
+    svnsync
+    svnversion
+    AUTO_CLEAN
+)
+
 vcpkg_fixup_pkgconfig()
 
 # Install headers
