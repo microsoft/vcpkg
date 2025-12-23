@@ -1832,6 +1832,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "cluestering": {
+      "baseline": "2.9.0",
+      "port-version": 0
+    },
     "cmakerc": {
       "baseline": "2023-07-24",
       "port-version": 0
