@@ -14,9 +14,10 @@ vcpkg_from_github(
         no-werror.patch
         fix_android_build.patch
 )
+
 # Note that the dependencies ASIO and ASIOSDK are completely different things:
 # -ASIO (ASyncronous IO) is a cross-platform C++ library for network and low-level I/O programming
-# -ASIOSDK is the SDK for the Steinberg ASIO (Audio Stream Input/Output) driver, for profesional Windows audio applications
+# -ASIOSDK is the SDK for the Steinberg ASIO (Audio Stream Input/Output) driver, for professional Windows audio applications
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -57,15 +58,11 @@ vcpkg_cmake_configure(
 function(install_test_executable FEATURE_NAME TARGET_NAME)
     if(${FEATURE_NAME} IN_LIST FEATURES)
         vcpkg_cmake_build(TARGET ${TARGET_NAME})
-        
-        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/${TARGET_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        if(NOT VCPKG_BUILD_TYPE)
             file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/${TARGET_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
                  DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools/${PORT}")
-        endif()
-        
-        if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/${TARGET_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
-                 DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         endif()
     endif()
 endfunction()
@@ -86,6 +83,4 @@ vcpkg_apply_patches(
 file(INSTALL "${SOURCE_PATH}/AbletonLinkConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/abletonlink")
 file(INSTALL "${SOURCE_PATH}/cmake_include/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/abletonlink/cmake_include/")
 file(INSTALL "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include" PATTERN "CMakeLists.txt" EXCLUDE)
-
-# Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
