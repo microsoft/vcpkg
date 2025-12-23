@@ -95,6 +95,8 @@ foreach(_lib ${_subversion_libs})
             find_dependency(ZLIB REQUIRED)
             find_dependency(expat CONFIG REQUIRED)
             find_dependency(unofficial-sqlite3 CONFIG REQUIRED)
+            find_dependency(unofficial-apr-util CONFIG REQUIRED)
+            find_dependency(serf CONFIG REQUIRED)
             
             target_link_libraries(unofficial::subversion::${_lib} INTERFACE
                 OpenSSL::SSL
@@ -102,6 +104,8 @@ foreach(_lib ${_subversion_libs})
                 ZLIB::ZLIB
                 expat::expat
                 unofficial::sqlite3::sqlite3
+                unofficial::apr::aprutil
+                serf::serf
             )
             
             if(WIN32)
