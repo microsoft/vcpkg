@@ -1,12 +1,11 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "aurora-au",
-  "version-semver": "0.5.0",
+  "version-semver": "0.5.1",
   "description": "A C++14-compatible physical units library with no dependencies and a single-file delivery option. Emphasis on safety, accessibility, performance, and developer experience.",
   "homepage": "https://github.com/aurora-opensource/au",
   "documentation": "https://aurora-opensource.github.io/au/main/",
   "license": "Apache-2.0",
-  "supports": "!osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

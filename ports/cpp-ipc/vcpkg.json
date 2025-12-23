@@ -1,9 +1,9 @@
 {
   "name": "cpp-ipc",
-  "version": "1.3.0",
+  "version": "1.4.1",
   "description": "C++ IPC Library: A high-performance inter-process communication using shared memory on Linux/Windows.",
   "homepage": "https://github.com/mutouyun/cpp-ipc",
-  "supports": "!osx",
+  "supports": "!osx & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

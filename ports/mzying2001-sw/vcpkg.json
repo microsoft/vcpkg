@@ -1,6 +1,6 @@
 {
   "name": "mzying2001-sw",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "A C++ GUI framework for building Windows desktop applications.",
   "homepage": "https://github.com/Mzying2001/sw",
   "license": "MIT",

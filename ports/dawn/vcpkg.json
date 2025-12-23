@@ -1,6 +1,6 @@
 {
   "name": "dawn",
-  "version": "20250922.223923",
+  "version": "20251202.213730",
   "port-version": 1,
   "description": "Dawn is an open-source and cross-platform implementation of the WebGPU standard.",
   "homepage": "https://dawn.googlesource.com/dawn",
@@ -81,6 +81,13 @@
     "metal": {
       "description": "Metal backend support",
       "supports": "osx | ios"
+    },
+    "tint": {
+      "description": "Compiles a minimal tint compiler (mainly for WGSL validation)",
+      "supports": "(windows & !uwp) | linux | freebsd | openbsd | osx",
+      "dependencies": [
+        "glslang"
+      ]
     },
     "vulkan": {
       "description": "Vulkan backend support",

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
     REF "${VERSION}"
-    SHA512 0899fbf37e9a51abd9a4ded90b5fc0500432b497e27e05b21c524935621098399120cf3151e8ee4637b79943bd7ee31cda75f064a7f9ef47de5199d96ca92aa4
+    SHA512 c5ca62e34612a764cf5cef15e7313ac9e3dccf698e045ac09f8d24e4c109ebf9ee207bcd9d5d698b3f6ecb35d98ec621672f58d130e0eefce74705c3152f374c
     HEAD_REF master
     PATCHES
         fix-proj4-targets-cmake.patch
