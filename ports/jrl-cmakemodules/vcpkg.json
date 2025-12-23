@@ -4,6 +4,7 @@
   "description": "CMake utility modules used by the stack-of-tasks projects",
   "homepage": "https://github.com/jrl-umi3218/jrl-cmakemodules",
   "license": "LGPL-3.0-or-later",
+  "supports": "!android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
