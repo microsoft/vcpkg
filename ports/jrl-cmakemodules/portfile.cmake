@@ -1,15 +1,17 @@
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO jrl-umi3218/jrl-cmakemodules
-        REF v${VERSION}
-        SHA512 32198c5778586b0be83398fd5e99901d08be266cec441e1f7e75700e6a3d8734db4888b7a1e779005095e3a842d6cafcebba6a8bf1c6f10fd3ac5ed366fd0011
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO jrl-umi3218/jrl-cmakemodules
+    REF v${VERSION}
+    SHA512 32198c5778586b0be83398fd5e99901d08be266cec441e1f7e75700e6a3d8734db4888b7a1e779005095e3a842d6cafcebba6a8bf1c6f10fd3ac5ed366fd0011
+    PATCHES
+        support_sdformat_15.diff
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
-        SOURCE_PATH "${SOURCE_PATH}"
-        OPTIONS
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
         -DBUILD_DOCUMENTATION=OFF
         -DBUILDING_ROS2_PACKAGE=OFF
 )

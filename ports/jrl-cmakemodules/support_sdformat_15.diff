@@ -1,0 +1,11 @@
+diff --git a/sdformat.cmake b/sdformat.cmake
+--- a/sdformat.cmake	(revision 0e356df8e6c596496639120c37807c402f799f82)
++++ b/sdformat.cmake	(date 1766485289526)
+@@ -13,6 +13,7 @@
+ macro(SEARCH_FOR_SDFORMAT)
+   set(
+     SDF_VERSIONS
++    "15"
+     "14"
+     "13"
+     "12"
