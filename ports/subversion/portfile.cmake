@@ -37,14 +37,6 @@ vcpkg_copy_tools(TOOL_NAMES
 
 vcpkg_fixup_pkgconfig()
 
-# Install headers
-if(EXISTS "${SOURCE_PATH}/subversion/include")
-    file(INSTALL "${SOURCE_PATH}/subversion/include/"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/include/subversion-1"
-        FILES_MATCHING PATTERN "*.h"
-    )
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(

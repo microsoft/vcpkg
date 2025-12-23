@@ -5,7 +5,6 @@
 #include <svn_fs.h>
 #include <svn_ra.h>
 #include <svn_repos.h>
-#include <svn_subr.h>
 #include <svn_wc.h>
 #include <private/svn_fs_fs_private.h>
 #include <private/svn_fs_util.h>
