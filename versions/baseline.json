@@ -3109,7 +3109,7 @@
       "port-version": 9
     },
     "freerdp": {
-      "baseline": "3.19.0",
+      "baseline": "3.20.0",
       "port-version": 0
     },
     "freetds": {
