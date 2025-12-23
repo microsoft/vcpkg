@@ -4512,10 +4512,6 @@
       "baseline": "2.17",
       "port-version": 0
     },
-    "leaf": {
-      "baseline": "0.2.2",
-      "port-version": 2
-    },
     "lely-core": {
       "baseline": "2.3.5",
       "port-version": 0
