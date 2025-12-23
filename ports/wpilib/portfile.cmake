@@ -34,6 +34,14 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
+set(WPI_CONFIG_FILE_PATH "${CURRENT_PACKAGES_DIR}/share/wpilib/wpilib-config.cmake")
+
+file(READ "${WPI_CONFIG_FILE_PATH}" WPI_CONFIG_FILE_CONTENTS)
+
+string(REPLACE "find_dependency(wpilibj)" "" WPI_CONFIG_FILE_CONTENTS "${WPI_CONFIG_FILE_CONTENTS}")
+
+file(WRITE "${WPI_CONFIG_FILE_PATH}" WPI_CONFIG_FILE_CONTENTS)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGE_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
