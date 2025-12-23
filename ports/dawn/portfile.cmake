@@ -42,6 +42,9 @@ vcpkg_from_github(
         # When building dawn[core] which only enables dawns null backend and tints null writer, src/dawn/native/ShaderModule.cpp failed to compile
         # as it was expecting a transitive include of tint::Bindings from a shader language writer.
         007-fix-tint-null-only-writer.patch
+        008-wrong-dxcapi-include.patch
+        009-fix-tint-install.patch
+        010-fix-glslang.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
@@ -119,39 +122,19 @@ endif()
 set(VCPKG_LIBRARY_LINKAGE_BACKUP ${VCPKG_LIBRARY_LINKAGE})
 set(VCPKG_LIBRARY_LINKAGE static)
 
-set(DAWN_ENABLE_NULL ON)
-set(DAWN_ENABLE_D3D11 OFF)
-if("d3d11" IN_LIST FEATURES)
-    set(DAWN_ENABLE_D3D11 ON)
-endif()
-set(DAWN_ENABLE_D3D12 OFF)
-if("d3d12" IN_LIST FEATURES)
-    set(DAWN_ENABLE_D3D12 ON)
-endif()
-set(DAWN_ENABLE_DESKTOP_GL OFF)
-if("gl" IN_LIST FEATURES)
-    set(DAWN_ENABLE_DESKTOP_GL ON)
-endif()
-set(DAWN_ENABLE_OPENGLES OFF)
-if("gles" IN_LIST FEATURES)
-    set(DAWN_ENABLE_OPENGLES ON)
-endif()
-set(DAWN_ENABLE_METAL OFF)
-if("metal" IN_LIST FEATURES)
-    set(DAWN_ENABLE_METAL ON)
-endif()
-set(DAWN_ENABLE_VULKAN OFF)
-if("vulkan" IN_LIST FEATURES)
-    set(DAWN_ENABLE_VULKAN ON)
-endif()
-set(DAWN_USE_WAYLAND OFF)
-if("wayland" IN_LIST FEATURES)
-    set(DAWN_USE_WAYLAND ON)
-endif()
-set(DAWN_USE_X11 OFF)
-if("x11" IN_LIST FEATURES)
-    set(DAWN_USE_X11 ON)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        d3d11   DAWN_ENABLE_D3D11
+        d3d12   DAWN_ENABLE_D3D12
+        gl      DAWN_ENABLE_DESKTOP_GL
+        gles    DAWN_ENABLE_OPENGLES
+        metal   DAWN_ENABLE_METAL
+        vulkan  DAWN_ENABLE_VULKAN
+        wayland DAWN_USE_WAYLAND
+        x11     DAWN_USE_X11
+        tint    TINT_BUILD_CMD_TOOLS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -165,8 +148,12 @@ vcpkg_cmake_configure(
         -DDAWN_BUILD_TESTS=OFF
         -DTINT_BUILD_TESTS=OFF
         -DTINT_ENABLE_INSTALL=OFF
-        -DTINT_BUILD_CMD_TOOLS=OFF
-        -DDAWN_ENABLE_NULL=${DAWN_ENABLE_NULL}
+        -DTINT_BUILD_CMD_TOOLS=${TINT_BUILD_CMD_TOOLS}
+		-DTINT_BUILD_WGSL_READER=ON
+		-DTINT_BUILD_WGSL_WRITER=ON
+		-DTINT_BUILD_SPV_READER=OFF
+		-DTINT_BUILD_SPV_WRITER=OFF
+        -DDAWN_ENABLE_NULL=ON
         -DDAWN_ENABLE_D3D11=${DAWN_ENABLE_D3D11}
         -DDAWN_ENABLE_D3D12=${DAWN_ENABLE_D3D12}
         -DDAWN_ENABLE_DESKTOP_GL=${DAWN_ENABLE_DESKTOP_GL}
@@ -217,6 +204,10 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
 endif()
 vcpkg_fixup_pkgconfig()
+
+if(TINT_BUILD_CMD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES tint AUTO_CLEAN)
+endif()
 
 # Restore the original library linkage
 set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
