@@ -1,6 +1,20 @@
 message(WARNING "find_package(unofficial-apr) is deprecated.\nUse find_package(apr) instead")
 include(CMakeFindDependencyMacro)
-find_dependency(apr CONFIG)
+
+# Try to find apr CONFIG (available on Windows)
+# If not found, use pkg-config (Unix-like systems)
+find_package(apr CONFIG QUIET)
+
+if(NOT TARGET apr::apr-1 AND NOT TARGET apr::libapr-1)
+    find_package(PkgConfig QUIET)
+    if(PKG_CONFIG_FOUND)
+        pkg_check_modules(APR QUIET IMPORTED_TARGET apr-1)
+        if(APR_FOUND)
+            add_library(apr::apr-1 INTERFACE IMPORTED)
+            target_link_libraries(apr::apr-1 INTERFACE PkgConfig::APR)
+        endif()
+    endif()
+endif()
 
 if(TARGET apr::apr-1 AND NOT TARGET unofficial::apr::apr-1)
     add_library(unofficial::apr::apr-1 INTERFACE IMPORTED)
