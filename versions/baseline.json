@@ -425,8 +425,8 @@
       "port-version": 0
     },
     "avisynthplus": {
-      "baseline": "3.7.3",
-      "port-version": 1
+      "baseline": "3.7.5",
+      "port-version": 0
     },
     "avro-c": {
       "baseline": "1.12.0",
