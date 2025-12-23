@@ -1,0 +1,25 @@
+The package jrl-cmakemodules provides CMake macros to manage projects.
+To use it correctly with vcpkg, you MUST find it before the main project() call:
+
+    cmake_minimum_required(VERSION 3.22)
+
+    # 1. Bootstrapping: Trigger vcpkg to set paths without detecting compilers yet
+    project(MyProject_vcpkg_helper LANGUAGES NONE)
+
+    # 2. Find the modules
+    find_package(jrl-cmakemodules CONFIG REQUIRED)
+
+    # 3. MANDATORY: Define metadata required by jrl-cmakemodules
+    set(PROJECT_NAME MyProject)
+    set(PROJECT_DESCRIPTION "Description of my project")
+    set(PROJECT_URL "https://github.com/user/project")
+
+    # 4. Include the base infrastructure
+    include(${jrl-cmakemodules_DIR}/base.cmake)
+
+    # 5. Setup project arguments (Version, Policies, etc.)
+    COMPUTE_PROJECT_ARGS(PROJECT_ARGS LANGUAGES CXX)
+    project(MyProject ${PROJECT_ARGS})
+
+    # 6. (Optional) Link to the target if you need its include directories
+    target_link_libraries(main PRIVATE jrl-cmakemodules::jrl-cmakemodules)

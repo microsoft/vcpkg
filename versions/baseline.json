@@ -4108,6 +4108,10 @@
       "baseline": "2020-07-21",
       "port-version": 3
     },
+    "jrl-cmakemodules": {
+      "baseline": "1.1.2",
+      "port-version": 0
+    },
     "jsmn": {
       "baseline": "2019-04-27",
       "port-version": 2
