@@ -477,7 +477,7 @@
     },
     "mediafoundation": {
       "description": "Media Foundation support",
-      "supports": "windows | uwp"
+      "supports": "windows"
     },
     "modplug": {
       "description": "ModPlug via libmodplug",
