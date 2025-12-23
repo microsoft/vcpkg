@@ -2934,7 +2934,7 @@
     },
     "ffmpeg": {
       "baseline": "7.1.2",
-      "port-version": 3
+      "port-version": 4
     },
     "ffnvcodec": {
       "baseline": "13.0.19.0",
@@ -10914,7 +10914,7 @@
     },
     "zeromq": {
       "baseline": "4.3.5",
-      "port-version": 2
+      "port-version": 3
     },
     "zfp": {
       "baseline": "1.0.1",
