@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/subversion
     REF f9f57162357a0be89f4e07bf0c011b7c3c79e453
-    SHA512 0
+    SHA512 e7329594a793625aa2bde8016b81fbf899e95b69a678fef244f621808dd2685e5ff39b39dc1775fb86e2ce8356d09821aa3e6f89159b2f6d17eff86c1de65a80
     HEAD_REF trunk
 )
 
