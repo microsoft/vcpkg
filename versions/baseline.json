@@ -8509,7 +8509,7 @@
       "port-version": 1
     },
     "rebind": {
-      "baseline": "5.2.2",
+      "baseline": "5.3.1",
       "port-version": 0
     },
     "recast": {
@@ -8810,7 +8810,7 @@
     },
     "saucer": {
       "baseline": "6.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "sbgecom": {
       "baseline": "5.3.2276",
