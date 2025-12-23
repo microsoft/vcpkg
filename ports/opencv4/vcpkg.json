@@ -1,6 +1,7 @@
 {
   "name": "opencv4",
   "version": "4.12.0",
+  "port-version": 1,
   "description": "Open Source Computer Vision Library",
   "homepage": "https://opencv.org/",
   "documentation": "https://docs.opencv.org/4.12.0/",

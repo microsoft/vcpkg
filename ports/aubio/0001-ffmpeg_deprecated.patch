@@ -1,8 +1,18 @@
 diff --git a/src/io/source_avcodec.c b/src/io/source_avcodec.c
-index 71ea8b5f..ad91f5eb 100644
+index 71ea8b5..e4bd848 100644
 --- a/src/io/source_avcodec.c
 +++ b/src/io/source_avcodec.c
-@@ -345,8 +345,8 @@ void aubio_source_avcodec_reset_resampler(aubio_source_avcodec_t * s)
+@@ -67,6 +67,9 @@
+ #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(56, 56, 0)
+ #define AUBIO_AVCODEC_MAX_BUFFER_SIZE FF_MIN_BUFFER_SIZE
+ #else
++	#ifndef AV_INPUT_BUFFER_MIN_SIZE
++		#define AV_INPUT_BUFFER_MIN_SIZE 16384
++	#endif
+ #define AUBIO_AVCODEC_MAX_BUFFER_SIZE AV_INPUT_BUFFER_MIN_SIZE
+ #endif
+ 
+@@ -345,8 +348,8 @@ void aubio_source_avcodec_reset_resampler(aubio_source_avcodec_t * s)
      av_channel_layout_default(&input_layout, s->input_channels);
      av_channel_layout_default(&output_layout, s->input_channels);
  
