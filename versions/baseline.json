@@ -7624,6 +7624,10 @@
       "baseline": "2021-12-11",
       "port-version": 0
     },
+    "plf-indiesort": {
+      "baseline": "1.4.4",
+      "port-version": 0
+    },
     "plf-list": {
       "baseline": "2019-08-10",
       "port-version": 2
