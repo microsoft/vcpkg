@@ -1,0 +1,19 @@
+### This file is an example hook script environment configuration file.
+### Hook scripts run in an empty environment by default.
+### As shown below each section defines environment variables for a
+### particular hook script. The [default] section defines environment
+### variables for all hook scripts, unless overridden by a hook-specific
+### section.
+
+### This example configures a UTF-8 locale for all hook scripts, so that 
+### special characters, such as umlauts, may be printed to stderr.
+### If UTF-8 is used with a mod_dav_svn server, the SVNUseUTF8 option must
+### also be set to 'yes' in httpd.conf.
+### With svnserve, the LANG environment variable of the svnserve process
+### must be set to the same value as given here.
+[default]
+LANG = en_US.UTF-8
+
+### This sets the PATH environment variable for the pre-commit hook.
+[pre-commit]
+PATH = /usr/local/bin:/usr/bin:/usr/sbin
