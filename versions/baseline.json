@@ -9525,7 +9525,7 @@
       "port-version": 9
     },
     "subversion": {
-      "baseline": "1.14.5",
+      "baseline": "2025-12-23",
       "port-version": 0
     },
     "suitesparse": {
