@@ -111,18 +111,6 @@ else()
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/build-1/apr_rules.mk" "${CURRENT_INSTALLED_DIR}/debug" "$(INCLUDE)/..")
     endif()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-    
-    # Install config file for CMake on non-Windows platforms
-    file(
-        INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-apr-config.cmake"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-        RENAME "apr-config.cmake"
-    )
-    # Also install for backward compatibility
-    file(
-        INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-apr-config.cmake"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-apr"
-    )
 endif()
 
 # Handle copyright
