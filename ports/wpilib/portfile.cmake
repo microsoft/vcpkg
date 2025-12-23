@@ -23,7 +23,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DUSE_SYSTEM_EIGEN=ON
+        -DUSE_SYSTEM_EIGEN=OFF
         -DUSE_SYSTEM_LIBUV=ON
 	-DUSE_SYSTEM_FMTLIB=ON
         -DWITH_JAVA=OFF
