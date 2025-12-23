@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF boost-${VERSION}
     SHA512 8aae293adc7ff5cf408a442673beda910902d29a1939aaa8ec6f0fa701f414744ece767cf6b0b4a3d5bf20ece02ecd23a3e2c9fd0a562502404e9f9cb9017b96
     HEAD_REF master
-    PATCHES
 )
 
 set(FEATURE_OPTIONS "")
