@@ -105,4 +105,10 @@ else()
     endif()
 endif()
 
+# Install unofficial CMake config wrapper
+file(
+    INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-apr-util-config.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-apr-util"
+)
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
