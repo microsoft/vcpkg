@@ -1,0 +1,609 @@
+diff --git a/src/3rdparty/chromium/third_party/perfetto/include/perfetto/tracing/internal/track_event_data_source.h b/src/3rdparty/chromium/third_party/perfetto/include/perfetto/tracing/internal/track_event_data_source.h
+index bbae795a0..5a6538ff3 100644
+--- a/src/3rdparty/chromium/third_party/perfetto/include/perfetto/tracing/internal/track_event_data_source.h
++++ b/src/3rdparty/chromium/third_party/perfetto/include/perfetto/tracing/internal/track_event_data_source.h
+@@ -107,7 +107,7 @@ class TrackEventDataSource
+   }
+ 
+   static void Flush() {
+-    Base::template Trace([](typename Base::TraceContext ctx) { ctx.Flush(); });
++    Base::Trace([](typename Base::TraceContext ctx) { ctx.Flush(); });
+   }
+ 
+   // Determine if tracing for the given static category is enabled.
+@@ -121,7 +121,7 @@ class TrackEventDataSource
+   static bool IsDynamicCategoryEnabled(
+       const DynamicCategory& dynamic_category) {
+     bool enabled = false;
+-    Base::template Trace([&](typename Base::TraceContext ctx) {
++    Base::Trace([&](typename Base::TraceContext ctx) {
+       enabled = IsDynamicCategoryEnabled(&ctx, dynamic_category);
+     });
+     return enabled;
+@@ -428,7 +428,7 @@ class TrackEventDataSource
+                                  const protos::gen::TrackDescriptor& desc) {
+     PERFETTO_DCHECK(track.uuid == desc.uuid());
+     TrackRegistry::Get()->UpdateTrack(track, desc.SerializeAsString());
+-    Base::template Trace([&](typename Base::TraceContext ctx) {
++    Base::Trace([&](typename Base::TraceContext ctx) {
+       TrackEventInternal::WriteTrackDescriptor(
+           track, ctx.tls_inst_->trace_writer.get());
+     });
+@@ -545,7 +545,7 @@ class TrackEventDataSource
+   static void TraceWithInstances(uint32_t instances,
+                                  Lambda lambda) PERFETTO_ALWAYS_INLINE {
+     if (CategoryIndex == TrackEventCategoryRegistry::kDynamicCategoryIndex) {
+-      Base::template TraceWithInstances(instances, std::move(lambda));
++      Base::TraceWithInstances(instances, std::move(lambda));
+     } else {
+       Base::template TraceWithInstances<
+           CategoryTracePointTraits<CategoryIndex>>(instances,
+@@ -560,7 +560,7 @@ class TrackEventDataSource
+       const TrackType& track,
+       std::function<void(protos::pbzero::TrackDescriptor*)> callback) {
+     TrackRegistry::Get()->UpdateTrack(track, std::move(callback));
+-    Base::template Trace([&](typename Base::TraceContext ctx) {
++    Base::Trace([&](typename Base::TraceContext ctx) {
+       TrackEventInternal::WriteTrackDescriptor(
+           track, ctx.tls_inst_->trace_writer.get());
+     });
+diff --git a/src/3rdparty/chromium/third_party/harfbuzz-ng/src/src/hb-ft.cc b/src/3rdparty/chromium/third_party/harfbuzz-ng/src/src/hb-ft.cc
+index 2680873c2..2723dea0c 100644
+--- a/src/3rdparty/chromium/third_party/harfbuzz-ng/src/src/hb-ft.cc
++++ b/src/3rdparty/chromium/third_party/harfbuzz-ng/src/src/hb-ft.cc
+@@ -30,6 +30,9 @@
+ #include "hb.hh"
+ 
+ #ifdef HAVE_FREETYPE
++#ifdef __GNUC__
++#pragma GCC diagnostic ignored "-Wcast-function-type-strict"
++#endif
+ 
+ #include "hb-ft.h"
+ 
+diff --git a/src/3rdparty/chromium/third_party/blink/renderer/platform/wtf/hash_table.h b/src/3rdparty/chromium/third_party/blink/renderer/platform/wtf/hash_table.h
+index e222dca..2b65753 100644
+--- a/src/3rdparty/chromium/third_party/blink/renderer/platform/wtf/hash_table.h
++++ b/src/3rdparty/chromium/third_party/blink/renderer/platform/wtf/hash_table.h
+@@ -1786,7 +1786,7 @@ HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits, Allocator>::
+     }
+   }
+   table_ = temporary_table;
+-  Allocator::template BackingWriteBarrier(&table_);
++  Allocator::BackingWriteBarrier(&table_);
+ 
+   if (Traits::kEmptyValueIsZero) {
+     memset(original_table, 0, new_table_size * sizeof(ValueType));
+@@ -1844,7 +1844,7 @@ HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits, Allocator>::
+   // This swaps the newly allocated buffer with the current one. The store to
+   // the current table has to be atomic to prevent races with concurrent marker.
+   AsAtomicPtr(&table_)->store(new_hash_table.table_, std::memory_order_relaxed);
+-  Allocator::template BackingWriteBarrier(&table_);
++  Allocator::BackingWriteBarrier(&table_);
+   table_size_ = new_table_size;
+ 
+   new_hash_table.table_ = old_table;
+@@ -2012,8 +2012,8 @@ void HashTable<Key,
+   // on the mutator thread, which is also the only one that writes to them, so
+   // there is *no* risk of data races when reading.
+   AtomicWriteSwap(table_, other.table_);
+-  Allocator::template BackingWriteBarrier(&table_);
+-  Allocator::template BackingWriteBarrier(&other.table_);
++  Allocator::BackingWriteBarrier(&table_);
++  Allocator::BackingWriteBarrier(&other.table_);
+   if (IsWeak<ValueType>::value) {
+     // Weak processing is omitted when no backing store is present. In case such
+     // an empty table is later on used it needs to be strongified.
+diff --git a/src/3rdparty/chromium/v8/src/base/bit-field.h b/src/3rdparty/chromium/v8/src/base/bit-field.h
+index ca5fb45..416c364 100644
+--- a/src/3rdparty/chromium/v8/src/base/bit-field.h
++++ b/src/3rdparty/chromium/v8/src/base/bit-field.h
+@@ -38,9 +38,7 @@ class BitField final {
+   static constexpr U kMask = ((U{1} << kShift) << kSize) - (U{1} << kShift);
+   static constexpr int kLastUsedBit = kShift + kSize - 1;
+   static constexpr U kNumValues = U{1} << kSize;
+-
+-  // Value for the field with all bits set.
+-  static constexpr T kMax = static_cast<T>(kNumValues - 1);
++  static constexpr U kMax = kNumValues - 1;
+ 
+   template <class T2, int size2>
+   using Next = BitField<T2, kShift + kSize, size2, U>;
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-date-time-format.h b/src/3rdparty/chromium/v8/src/objects/js-date-time-format.h
+index 64c89eeae..7460fe0b9 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-date-time-format.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-date-time-format.h
+@@ -104,23 +104,24 @@ class JSDateTimeFormat
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_DATE_TIME_FORMAT_FLAGS()
+ 
+-  STATIC_ASSERT(HourCycle::kUndefined <= HourCycleBits::kMax);
+-  STATIC_ASSERT(HourCycle::kH11 <= HourCycleBits::kMax);
+-  STATIC_ASSERT(HourCycle::kH12 <= HourCycleBits::kMax);
+-  STATIC_ASSERT(HourCycle::kH23 <= HourCycleBits::kMax);
+-  STATIC_ASSERT(HourCycle::kH24 <= HourCycleBits::kMax);
+-
+-  STATIC_ASSERT(DateTimeStyle::kUndefined <= DateStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kFull <= DateStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kLong <= DateStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kMedium <= DateStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kShort <= DateStyleBits::kMax);
+-
+-  STATIC_ASSERT(DateTimeStyle::kUndefined <= TimeStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kFull <= TimeStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kLong <= TimeStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kMedium <= TimeStyleBits::kMax);
+-  STATIC_ASSERT(DateTimeStyle::kShort <= TimeStyleBits::kMax);
++  static_assert(HourCycleBits::is_valid(HourCycle::kUndefined));
++  static_assert(HourCycleBits::is_valid(HourCycle::kH11));
++  static_assert(HourCycleBits::is_valid(HourCycle::kH12));
++  static_assert(HourCycleBits::is_valid(HourCycle::kH23));
++  static_assert(HourCycleBits::is_valid(HourCycle::kH24));
++
++  static_assert(DateStyleBits::is_valid(DateTimeStyle::kUndefined));
++  static_assert(DateStyleBits::is_valid(DateTimeStyle::kFull));
++  static_assert(DateStyleBits::is_valid(DateTimeStyle::kLong));
++  static_assert(DateStyleBits::is_valid(DateTimeStyle::kMedium));
++  static_assert(DateStyleBits::is_valid(DateTimeStyle::kShort));
++
++  static_assert(TimeStyleBits::is_valid(DateTimeStyle::kUndefined));
++  static_assert(TimeStyleBits::is_valid(DateTimeStyle::kFull));
++  static_assert(TimeStyleBits::is_valid(DateTimeStyle::kLong));
++  static_assert(TimeStyleBits::is_valid(DateTimeStyle::kMedium));
++  static_assert(TimeStyleBits::is_valid(DateTimeStyle::kShort));  
++
+ 
+   DECL_ACCESSORS(icu_locale, Managed<icu::Locale>)
+   DECL_ACCESSORS(icu_simple_date_format, Managed<icu::SimpleDateFormat>)
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-display-names.h b/src/3rdparty/chromium/v8/src/objects/js-display-names.h
+index cd3ca1ea4..2ea3008f4 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-display-names.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-display-names.h
+@@ -69,11 +69,11 @@ class JSDisplayNames
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_DISPLAY_NAMES_FLAGS()
+ 
+-  STATIC_ASSERT(Style::kLong <= StyleBits::kMax);
+-  STATIC_ASSERT(Style::kShort <= StyleBits::kMax);
+-  STATIC_ASSERT(Style::kNarrow <= StyleBits::kMax);
+-  STATIC_ASSERT(Fallback::kCode <= FallbackBit::kMax);
+-  STATIC_ASSERT(Fallback::kNone <= FallbackBit::kMax);
++  static_assert(StyleBits::is_valid(Style::kLong));
++  static_assert(StyleBits::is_valid(Style::kShort));
++  static_assert(StyleBits::is_valid(Style::kNarrow));
++  static_assert(FallbackBit::is_valid(Fallback::kCode));
++  static_assert(FallbackBit::is_valid(Fallback::kNone));
+ 
+   DECL_ACCESSORS(internal, Managed<DisplayNamesInternal>)
+ 
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-list-format.h b/src/3rdparty/chromium/v8/src/objects/js-list-format.h
+index 34878b566..6d7e0aa0c 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-list-format.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-list-format.h
+@@ -84,12 +84,12 @@ class JSListFormat
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_LIST_FORMAT_FLAGS()
+ 
+-  STATIC_ASSERT(Style::LONG <= StyleBits::kMax);
+-  STATIC_ASSERT(Style::SHORT <= StyleBits::kMax);
+-  STATIC_ASSERT(Style::NARROW <= StyleBits::kMax);
+-  STATIC_ASSERT(Type::CONJUNCTION <= TypeBits::kMax);
+-  STATIC_ASSERT(Type::DISJUNCTION <= TypeBits::kMax);
+-  STATIC_ASSERT(Type::UNIT <= TypeBits::kMax);
++  static_assert(StyleBits::is_valid(Style::LONG));
++  static_assert(StyleBits::is_valid(Style::SHORT));
++  static_assert(StyleBits::is_valid(Style::NARROW));
++  static_assert(TypeBits::is_valid(Type::CONJUNCTION));
++  static_assert(TypeBits::is_valid(Type::DISJUNCTION));
++  static_assert(TypeBits::is_valid(Type::UNIT));
+ 
+   DECL_PRINTER(JSListFormat)
+ 
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-plural-rules.h b/src/3rdparty/chromium/v8/src/objects/js-plural-rules.h
+index eac9d5e92..40d356b31 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-plural-rules.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-plural-rules.h
+@@ -60,8 +60,8 @@ class JSPluralRules
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_PLURAL_RULES_FLAGS()
+ 
+-  STATIC_ASSERT(Type::CARDINAL <= TypeBit::kMax);
+-  STATIC_ASSERT(Type::ORDINAL <= TypeBit::kMax);
++  static_assert(TypeBit::is_valid(Type::CARDINAL));
++  static_assert(TypeBit::is_valid(Type::ORDINAL));
+ 
+   DECL_ACCESSORS(icu_plural_rules, Managed<icu::PluralRules>)
+   DECL_ACCESSORS(icu_number_formatter,
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-relative-time-format.h b/src/3rdparty/chromium/v8/src/objects/js-relative-time-format.h
+index 79e079b05..040206e4b 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-relative-time-format.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-relative-time-format.h
+@@ -75,8 +75,8 @@ class JSRelativeTimeFormat
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_RELATIVE_TIME_FORMAT_FLAGS()
+ 
+-  STATIC_ASSERT(Numeric::AUTO <= NumericBit::kMax);
+-  STATIC_ASSERT(Numeric::ALWAYS <= NumericBit::kMax);
++  static_assert(NumericBit::is_valid(Numeric::AUTO));
++  static_assert(NumericBit::is_valid(Numeric::ALWAYS));
+ 
+   DECL_PRINTER(JSRelativeTimeFormat)
+ 
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-segment-iterator.h b/src/3rdparty/chromium/v8/src/objects/js-segment-iterator.h
+index 45e03c06f..9be21cabf 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-segment-iterator.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-segment-iterator.h
+@@ -53,9 +53,9 @@ class JSSegmentIterator
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_SEGMENT_ITERATOR_FLAGS()
+ 
+-  STATIC_ASSERT(JSSegmenter::Granularity::GRAPHEME <= GranularityBits::kMax);
+-  STATIC_ASSERT(JSSegmenter::Granularity::WORD <= GranularityBits::kMax);
+-  STATIC_ASSERT(JSSegmenter::Granularity::SENTENCE <= GranularityBits::kMax);
++  static_assert(GranularityBits::is_valid(JSSegmenter::Granularity::GRAPHEME));
++  static_assert(GranularityBits::is_valid(JSSegmenter::Granularity::WORD));
++  static_assert(GranularityBits::is_valid(JSSegmenter::Granularity::SENTENCE));
+ 
+   TQ_OBJECT_CONSTRUCTORS(JSSegmentIterator)
+ };
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-segmenter.h b/src/3rdparty/chromium/v8/src/objects/js-segmenter.h
+index e46204271..5bbe1b8b0 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-segmenter.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-segmenter.h
+@@ -63,9 +63,9 @@ class JSSegmenter : public TorqueGeneratedJSSegmenter<JSSegmenter, JSObject> {
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_SEGMENTER_FLAGS()
+ 
+-  STATIC_ASSERT(Granularity::GRAPHEME <= GranularityBits::kMax);
+-  STATIC_ASSERT(Granularity::WORD <= GranularityBits::kMax);
+-  STATIC_ASSERT(Granularity::SENTENCE <= GranularityBits::kMax);
++  static_assert(GranularityBits::is_valid(Granularity::GRAPHEME));
++  static_assert(GranularityBits::is_valid(Granularity::WORD));
++  static_assert(GranularityBits::is_valid(Granularity::SENTENCE));
+ 
+   DECL_PRINTER(JSSegmenter)
+ 
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-segments.h b/src/3rdparty/chromium/v8/src/objects/js-segments.h
+index b33323d6f..d11ad0ada 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-segments.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-segments.h
+@@ -57,9 +57,9 @@ class JSSegments : public TorqueGeneratedJSSegments<JSSegments, JSObject> {
+   // Bit positions in |flags|.
+   DEFINE_TORQUE_GENERATED_JS_SEGMENT_ITERATOR_FLAGS()
+ 
+-  STATIC_ASSERT(JSSegmenter::Granularity::GRAPHEME <= GranularityBits::kMax);
+-  STATIC_ASSERT(JSSegmenter::Granularity::WORD <= GranularityBits::kMax);
+-  STATIC_ASSERT(JSSegmenter::Granularity::SENTENCE <= GranularityBits::kMax);
++  static_assert(GranularityBits::is_valid(JSSegmenter::Granularity::GRAPHEME));
++  static_assert(GranularityBits::is_valid(JSSegmenter::Granularity::WORD));
++  static_assert(GranularityBits::is_valid(JSSegmenter::Granularity::SENTENCE));
+ 
+   TQ_OBJECT_CONSTRUCTORS(JSSegments)
+ };
+diff --git a/src/3rdparty/chromium/v8/src/objects/shared-function-info.h b/src/3rdparty/chromium/v8/src/objects/shared-function-info.h
+index def04f05b..33770d5d3 100644
+--- a/src/3rdparty/chromium/v8/src/objects/shared-function-info.h
++++ b/src/3rdparty/chromium/v8/src/objects/shared-function-info.h
+@@ -655,12 +655,12 @@ class SharedFunctionInfo : public HeapObject {
+   class BodyDescriptor;
+ 
+   // Bailout reasons must fit in the DisabledOptimizationReason bitfield.
+-  STATIC_ASSERT(BailoutReason::kLastErrorMessage <=
+-                DisabledOptimizationReasonBits::kMax);
++  static_assert(DisabledOptimizationReasonBits::is_valid(
++      BailoutReason::kLastErrorMessage));
+ 
+-  STATIC_ASSERT(kLastFunctionKind <= FunctionKindBits::kMax);
+-  STATIC_ASSERT(FunctionSyntaxKind::kLastFunctionSyntaxKind <=
+-                FunctionSyntaxKindBits::kMax);
++  static_assert(FunctionKindBits::is_valid(FunctionKind::kLastFunctionKind));
++  static_assert(FunctionSyntaxKindBits::is_valid(
++      FunctionSyntaxKind::kLastFunctionSyntaxKind));
+ 
+   // Indicates that this function uses a super property (or an eval that may
+   // use a super property).
+diff --git a/src/3rdparty/chromium/v8/src/base/logging.h b/src/3rdparty/chromium/v8/src/base/logging.h
+index 7c774ed30..3384c400a 100644
+--- a/src/3rdparty/chromium/v8/src/base/logging.h
++++ b/src/3rdparty/chromium/v8/src/base/logging.h
+@@ -276,6 +276,30 @@ struct is_signed_vs_unsigned {
+ template <typename Lhs, typename Rhs>
+ struct is_unsigned_vs_signed : public is_signed_vs_unsigned<Rhs, Lhs> {};
+ 
++static_assert(!is_signed_vs_unsigned<unsigned, int>::value);
++static_assert(is_unsigned_vs_signed<unsigned, int>::value);
++static_assert(is_signed_vs_unsigned<int, unsigned>::value);
++static_assert(!is_unsigned_vs_signed<int, unsigned>::value);
++static_assert(!is_signed_vs_unsigned<unsigned, unsigned>::value);
++static_assert(!is_signed_vs_unsigned<int, int>::value);
++
++// Define the default implementation of Cmp##NAME##Impl to be used by
++// CHECK##NAME##Impl.
++// Note the specializations below for integral types with mismatching
++// signedness.
++#define DEFINE_CMP_IMPL(NAME, op)                              \
++  template <typename Lhs, typename Rhs>                        \
++  V8_INLINE constexpr bool Cmp##NAME##Impl(Lhs lhs, Rhs rhs) { \
++    return lhs op rhs;                                         \
++  }
++DEFINE_CMP_IMPL(EQ, ==)
++DEFINE_CMP_IMPL(NE, !=)
++DEFINE_CMP_IMPL(LE, <=)
++DEFINE_CMP_IMPL(LT, <)
++DEFINE_CMP_IMPL(GE, >=)
++DEFINE_CMP_IMPL(GT, >)
++#undef DEFINE_CMP_IMPL
++
+ // Specialize the compare functions for signed vs. unsigned comparisons.
+ // std::enable_if ensures that this template is only instantiable if both Lhs
+ // and Rhs are integral types, and their signedness does not match.
+diff --git a/src/3rdparty/chromium/v8/src/base/logging.h b/src/3rdparty/chromium/v8/src/base/logging.h
+index 3384c400a..762c7c920 100644
+--- a/src/3rdparty/chromium/v8/src/base/logging.h
++++ b/src/3rdparty/chromium/v8/src/base/logging.h
+@@ -334,37 +334,25 @@ DEFINE_SIGNED_MISMATCH_COMP(is_unsigned_vs_signed, GE, CmpLEImpl(rhs, lhs))
+ #undef MAKE_UNSIGNED
+ #undef DEFINE_SIGNED_MISMATCH_COMP
+ 
+-// Helper functions for CHECK_OP macro.
+-// The (float, float) and (double, double) instantiations are explicitly
+-// externalized to ensure proper 32/64-bit comparisons on x86.
+-// The Cmp##NAME##Impl function is only instantiable if one of the two types is
+-// not integral or their signedness matches (i.e. whenever no specialization is
+-// required, see above). Otherwise it is disabled by the enable_if construct,
+-// and the compiler will pick a specialization from above.
+-#define DEFINE_CHECK_OP_IMPL(NAME, op)                                        \
+-  template <typename Lhs, typename Rhs>                                       \
+-  V8_INLINE constexpr                                                         \
+-      typename std::enable_if<!is_signed_vs_unsigned<Lhs, Rhs>::value &&      \
+-                                  !is_unsigned_vs_signed<Lhs, Rhs>::value,    \
+-                              bool>::type Cmp##NAME##Impl(Lhs lhs, Rhs rhs) { \
+-    return lhs op rhs;                                                        \
+-  }                                                                           \
+-  template <typename Lhs, typename Rhs>                                       \
+-  V8_INLINE constexpr std::string* Check##NAME##Impl(Lhs lhs, Rhs rhs,        \
+-                                                     char const* msg) {       \
+-    using LhsPassT = typename pass_value_or_ref<Lhs>::type;                   \
+-    using RhsPassT = typename pass_value_or_ref<Rhs>::type;                   \
+-    bool cmp = Cmp##NAME##Impl<LhsPassT, RhsPassT>(lhs, rhs);                 \
+-    return V8_LIKELY(cmp)                                                     \
+-               ? nullptr                                                      \
+-               : MakeCheckOpString<LhsPassT, RhsPassT>(lhs, rhs, msg);        \
++// Define the implementation of Check##NAME##Impl, using Cmp##NAME##Impl defined
++// above.
++#define DEFINE_CHECK_OP_IMPL(NAME)                                      \
++  template <typename Lhs, typename Rhs>                                 \
++  V8_INLINE constexpr std::string* Check##NAME##Impl(Lhs lhs, Rhs rhs,  \
++                                                     char const* msg) { \
++    using LhsPassT = typename pass_value_or_ref<Lhs>::type;             \
++    using RhsPassT = typename pass_value_or_ref<Rhs>::type;             \
++    bool cmp = Cmp##NAME##Impl<LhsPassT, RhsPassT>(lhs, rhs);           \
++    return V8_LIKELY(cmp)                                               \
++               ? nullptr                                                \
++               : MakeCheckOpString<LhsPassT, RhsPassT>(lhs, rhs, msg);  \
+   }
+-DEFINE_CHECK_OP_IMPL(EQ, ==)
+-DEFINE_CHECK_OP_IMPL(NE, !=)
+-DEFINE_CHECK_OP_IMPL(LE, <=)
+-DEFINE_CHECK_OP_IMPL(LT, < )
+-DEFINE_CHECK_OP_IMPL(GE, >=)
+-DEFINE_CHECK_OP_IMPL(GT, > )
++DEFINE_CHECK_OP_IMPL(EQ)
++DEFINE_CHECK_OP_IMPL(NE)
++DEFINE_CHECK_OP_IMPL(LE)
++DEFINE_CHECK_OP_IMPL(LT)
++DEFINE_CHECK_OP_IMPL(GE)
++DEFINE_CHECK_OP_IMPL(GT)
+ #undef DEFINE_CHECK_OP_IMPL
+ 
+ #define CHECK_EQ(lhs, rhs) CHECK_OP(EQ, ==, lhs, rhs)
+diff --git a/src/3rdparty/chromium/v8/src/base/logging.h b/src/3rdparty/chromium/v8/src/base/logging.h
+index 762c7c920..cab33e78d 100644
+--- a/src/3rdparty/chromium/v8/src/base/logging.h
++++ b/src/3rdparty/chromium/v8/src/base/logging.h
+@@ -283,23 +283,6 @@ static_assert(!is_unsigned_vs_signed<int, unsigned>::value);
+ static_assert(!is_signed_vs_unsigned<unsigned, unsigned>::value);
+ static_assert(!is_signed_vs_unsigned<int, int>::value);
+ 
+-// Define the default implementation of Cmp##NAME##Impl to be used by
+-// CHECK##NAME##Impl.
+-// Note the specializations below for integral types with mismatching
+-// signedness.
+-#define DEFINE_CMP_IMPL(NAME, op)                              \
+-  template <typename Lhs, typename Rhs>                        \
+-  V8_INLINE constexpr bool Cmp##NAME##Impl(Lhs lhs, Rhs rhs) { \
+-    return lhs op rhs;                                         \
+-  }
+-DEFINE_CMP_IMPL(EQ, ==)
+-DEFINE_CMP_IMPL(NE, !=)
+-DEFINE_CMP_IMPL(LE, <=)
+-DEFINE_CMP_IMPL(LT, <)
+-DEFINE_CMP_IMPL(GE, >=)
+-DEFINE_CMP_IMPL(GT, >)
+-#undef DEFINE_CMP_IMPL
+-
+ // Specialize the compare functions for signed vs. unsigned comparisons.
+ // std::enable_if ensures that this template is only instantiable if both Lhs
+ // and Rhs are integral types, and their signedness does not match.
+@@ -334,25 +317,37 @@ DEFINE_SIGNED_MISMATCH_COMP(is_unsigned_vs_signed, GE, CmpLEImpl(rhs, lhs))
+ #undef MAKE_UNSIGNED
+ #undef DEFINE_SIGNED_MISMATCH_COMP
+ 
+-// Define the implementation of Check##NAME##Impl, using Cmp##NAME##Impl defined
+-// above.
+-#define DEFINE_CHECK_OP_IMPL(NAME)                                      \
+-  template <typename Lhs, typename Rhs>                                 \
+-  V8_INLINE constexpr std::string* Check##NAME##Impl(Lhs lhs, Rhs rhs,  \
+-                                                     char const* msg) { \
+-    using LhsPassT = typename pass_value_or_ref<Lhs>::type;             \
+-    using RhsPassT = typename pass_value_or_ref<Rhs>::type;             \
+-    bool cmp = Cmp##NAME##Impl<LhsPassT, RhsPassT>(lhs, rhs);           \
+-    return V8_LIKELY(cmp)                                               \
+-               ? nullptr                                                \
+-               : MakeCheckOpString<LhsPassT, RhsPassT>(lhs, rhs, msg);  \
++// Helper functions for CHECK_OP macro.
++// The (float, float) and (double, double) instantiations are explicitly
++// externalized to ensure proper 32/64-bit comparisons on x86.
++// The Cmp##NAME##Impl function is only instantiable if one of the two types is
++// not integral or their signedness matches (i.e. whenever no specialization is
++// required, see above). Otherwise it is disabled by the enable_if construct,
++// and the compiler will pick a specialization from above.
++#define DEFINE_CHECK_OP_IMPL(NAME, op)                                        \
++  template <typename Lhs, typename Rhs>                                       \
++  V8_INLINE constexpr                                                         \
++      typename std::enable_if<!is_signed_vs_unsigned<Lhs, Rhs>::value &&      \
++                                  !is_unsigned_vs_signed<Lhs, Rhs>::value,    \
++                              bool>::type Cmp##NAME##Impl(Lhs lhs, Rhs rhs) { \
++    return lhs op rhs;                                                        \
++  }                                                                           \
++  template <typename Lhs, typename Rhs>                                       \
++  V8_INLINE constexpr std::string* Check##NAME##Impl(Lhs lhs, Rhs rhs,        \
++                                                     char const* msg) {       \
++    using LhsPassT = typename pass_value_or_ref<Lhs>::type;                   \
++    using RhsPassT = typename pass_value_or_ref<Rhs>::type;                   \
++    bool cmp = Cmp##NAME##Impl<LhsPassT, RhsPassT>(lhs, rhs);                 \
++    return V8_LIKELY(cmp)                                                     \
++               ? nullptr                                                      \
++               : MakeCheckOpString<LhsPassT, RhsPassT>(lhs, rhs, msg);        \
+   }
+-DEFINE_CHECK_OP_IMPL(EQ)
+-DEFINE_CHECK_OP_IMPL(NE)
+-DEFINE_CHECK_OP_IMPL(LE)
+-DEFINE_CHECK_OP_IMPL(LT)
+-DEFINE_CHECK_OP_IMPL(GE)
+-DEFINE_CHECK_OP_IMPL(GT)
++DEFINE_CHECK_OP_IMPL(EQ, ==)
++DEFINE_CHECK_OP_IMPL(NE, !=)
++DEFINE_CHECK_OP_IMPL(LE, <=)
++DEFINE_CHECK_OP_IMPL(LT, < )
++DEFINE_CHECK_OP_IMPL(GE, >=)
++DEFINE_CHECK_OP_IMPL(GT, > )
+ #undef DEFINE_CHECK_OP_IMPL
+ 
+ #define CHECK_EQ(lhs, rhs) CHECK_OP(EQ, ==, lhs, rhs)
+diff --git a/src/3rdparty/chromium/v8/src/codegen/source-position.h b/src/3rdparty/chromium/v8/src/codegen/source-position.h
+index 0db12aea2..61310e990 100644
+--- a/src/3rdparty/chromium/v8/src/codegen/source-position.h
++++ b/src/3rdparty/chromium/v8/src/codegen/source-position.h
+@@ -110,12 +110,10 @@ class SourcePosition final {
+ 
+   void SetScriptOffset(int script_offset) {
+     DCHECK(IsJavaScript());
+-    DCHECK(script_offset <= ScriptOffsetField::kMax - 2);
+     DCHECK_GE(script_offset, kNoSourcePosition);
+     value_ = ScriptOffsetField::update(value_, script_offset + 1);
+   }
+   void SetInliningId(int inlining_id) {
+-    DCHECK(inlining_id <= InliningIdField::kMax - 2);
+     DCHECK_GE(inlining_id, kNotInlined);
+     value_ = InliningIdField::update(value_, inlining_id + 1);
+   }
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-display-names-inl.h b/src/3rdparty/chromium/v8/src/objects/js-display-names-inl.h
+index 40bea22c9..29d1a08da 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-display-names-inl.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-display-names-inl.h
+@@ -23,7 +23,7 @@ ACCESSORS(JSDisplayNames, internal, Managed<DisplayNamesInternal>,
+ TQ_OBJECT_CONSTRUCTORS_IMPL(JSDisplayNames)
+ 
+ inline void JSDisplayNames::set_style(Style style) {
+-  DCHECK_GE(StyleBits::kMax, style);
++  DCHECK(StyleBits::is_valid(style));
+   set_flags(StyleBits::update(flags(), style));
+ }
+ 
+@@ -32,7 +32,7 @@ inline JSDisplayNames::Style JSDisplayNames::style() const {
+ }
+ 
+ inline void JSDisplayNames::set_fallback(Fallback fallback) {
+-  DCHECK_GE(FallbackBit::kMax, fallback);
++  DCHECK(FallbackBit::is_valid(fallback));
+   int hints = flags();
+   hints = FallbackBit::update(hints, fallback);
+   set_flags(hints);
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-list-format-inl.h b/src/3rdparty/chromium/v8/src/objects/js-list-format-inl.h
+index 5cf95db4d..fe905ecbf 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-list-format-inl.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-list-format-inl.h
+@@ -25,7 +25,7 @@ ACCESSORS(JSListFormat, icu_formatter, Managed<icu::ListFormatter>,
+           kIcuFormatterOffset)
+ 
+ inline void JSListFormat::set_style(Style style) {
+-  DCHECK_GE(StyleBits::kMax, style);
++  DCHECK(StyleBits::is_valid(style));
+   int hints = flags();
+   hints = StyleBits::update(hints, style);
+   set_flags(hints);
+@@ -36,7 +36,7 @@ inline JSListFormat::Style JSListFormat::style() const {
+ }
+ 
+ inline void JSListFormat::set_type(Type type) {
+-  DCHECK_GE(TypeBits::kMax, type);
++  DCHECK(TypeBits::is_valid(type)); 
+   int hints = flags();
+   hints = TypeBits::update(hints, type);
+   set_flags(hints);
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-plural-rules-inl.h b/src/3rdparty/chromium/v8/src/objects/js-plural-rules-inl.h
+index 60340931f..12bb921fd 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-plural-rules-inl.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-plural-rules-inl.h
+@@ -28,7 +28,7 @@ ACCESSORS(JSPluralRules, icu_number_formatter,
+           kIcuNumberFormatterOffset)
+ 
+ inline void JSPluralRules::set_type(Type type) {
+-  DCHECK_LE(type, TypeBit::kMax);
++  DCHECK(TypeBit::is_valid(type));
+   int hints = flags();
+   hints = TypeBit::update(hints, type);
+   set_flags(hints);
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-relative-time-format-inl.h b/src/3rdparty/chromium/v8/src/objects/js-relative-time-format-inl.h
+index 52d9d1226..3f8d3cc73 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-relative-time-format-inl.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-relative-time-format-inl.h
+@@ -25,7 +25,7 @@ ACCESSORS(JSRelativeTimeFormat, icu_formatter,
+           Managed<icu::RelativeDateTimeFormatter>, kIcuFormatterOffset)
+ 
+ inline void JSRelativeTimeFormat::set_numeric(Numeric numeric) {
+-  DCHECK_GE(NumericBit::kMax, numeric);
++  DCHECK(NumericBit::is_valid(numeric));  
+   int hints = flags();
+   hints = NumericBit::update(hints, numeric);
+   set_flags(hints);
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-segment-iterator-inl.h b/src/3rdparty/chromium/v8/src/objects/js-segment-iterator-inl.h
+index e6a1c4a53..bc4a8b51c 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-segment-iterator-inl.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-segment-iterator-inl.h
+@@ -27,7 +27,7 @@ ACCESSORS(JSSegmentIterator, unicode_string, Managed<icu::UnicodeString>,
+ 
+ inline void JSSegmentIterator::set_granularity(
+     JSSegmenter::Granularity granularity) {
+-  DCHECK_GE(GranularityBits::kMax, granularity);
++  DCHECK(GranularityBits::is_valid(granularity));  
+   int hints = flags();
+   hints = GranularityBits::update(hints, granularity);
+   set_flags(hints);
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-segmenter-inl.h b/src/3rdparty/chromium/v8/src/objects/js-segmenter-inl.h
+index 98bc2e863..76b9d76ab 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-segmenter-inl.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-segmenter-inl.h
+@@ -24,7 +24,7 @@ ACCESSORS(JSSegmenter, icu_break_iterator, Managed<icu::BreakIterator>,
+           kIcuBreakIteratorOffset)
+ 
+ inline void JSSegmenter::set_granularity(Granularity granularity) {
+-  DCHECK_GE(GranularityBits::kMax, granularity);
++  DCHECK(GranularityBits::is_valid(granularity));
+   int hints = flags();
+   hints = GranularityBits::update(hints, granularity);
+   set_flags(hints);
+diff --git a/src/3rdparty/chromium/v8/src/objects/js-segments-inl.h b/src/3rdparty/chromium/v8/src/objects/js-segments-inl.h
+index ceabd6741..a51d33bd2 100644
+--- a/src/3rdparty/chromium/v8/src/objects/js-segments-inl.h
++++ b/src/3rdparty/chromium/v8/src/objects/js-segments-inl.h
+@@ -26,7 +26,7 @@ ACCESSORS(JSSegments, unicode_string, Managed<icu::UnicodeString>,
+           kUnicodeStringOffset)
+ 
+ inline void JSSegments::set_granularity(JSSegmenter::Granularity granularity) {
+-  DCHECK_GE(GranularityBits::kMax, granularity);
++  DCHECK(GranularityBits::is_valid(granularity));
+   int hints = flags();
+   hints = GranularityBits::update(hints, granularity);
+   set_flags(hints);

@@ -1,6 +1,7 @@
 {
   "name": "qt5-webengine",
   "version": "5.15.18",
+  "port-version": 1,
   "description": "Qt WebEngine provides functionality for rendering regions of dynamic web content.",
   "license": null,
   "supports": "!static",
@@ -35,6 +36,10 @@
     "qt5-quickcontrols2",
     "qt5-tools",
     "qt5-webchannel",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
     {
       "name": "vcpkg-tool-nodejs",
       "host": true

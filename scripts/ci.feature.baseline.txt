@@ -202,7 +202,7 @@ pmdk:x64-windows-static=fail
 qt-advanced-docking-system(android)=fail
 # qt5-base: no cross builds
 qt5-base(arm & windows & !uwp)=fail
-qt5-webengine(!(arm & windows) & !uwp) = fail # Missing prerequisites for CI success
+qt5-webengine(!(arm & windows) & !uwp & !osx) = fail # Missing prerequisites for CI success
 qt5-x11extras(osx)=fail # Missing system libraries
 qt5-x11extras(windows)=fail # Missing libraries
 restbed(uwp)=fail
