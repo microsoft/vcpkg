@@ -42,6 +42,6 @@ string(REPLACE "find_dependency(wpilibj)" "" WPI_CONFIG_FILE_CONTENTS "${WPI_CON
 
 file(WRITE "${WPI_CONFIG_FILE_PATH}" "${WPI_CONFIG_FILE_CONTENTS}")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGE_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
