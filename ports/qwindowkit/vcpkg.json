@@ -23,5 +23,19 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "widgets"
+  ],
+  "features": {
+    "quick": {
+      "description": "Build quick module",
+      "dependencies": [
+        "qtdeclarative"
+      ]
+    },
+    "widgets": {
+      "description": "Build widgets module"
+    }
+  }
 }

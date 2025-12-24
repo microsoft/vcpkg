@@ -8,10 +8,17 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" QWINDOWKIT_BUILD_STATIC)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        quick   QWINDOWKIT_BUILD_QUICK
+        widgets QWINDOWKIT_BUILD_WIDGETS
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DQWINDOWKIT_BUILD_STATIC=${QWINDOWKIT_BUILD_STATIC}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

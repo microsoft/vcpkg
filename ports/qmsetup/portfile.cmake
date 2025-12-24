@@ -10,10 +10,12 @@ set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DQMSETUP_STATIC_RUNTIME=OFF
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/qmsetup)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 vcpkg_copy_tools(TOOL_NAMES qmcorecmd AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
