@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9e0ad1e..2247fcf 100644
+index 9e0ad1e..8de2cde 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -38,9 +38,20 @@ include(CheckIncludeFile)
+@@ -38,9 +38,18 @@ include(CheckIncludeFile)
  check_include_file("unistd.h" HAVE_UNISTD_H)
  
  include(CheckLibraryExists)
@@ -18,15 +18,13 @@ index 9e0ad1e..2247fcf 100644
 +    set(HAVE_SNAPPY 1)
 +endif()
 +if (WITH_TCMALLOC)
-+    check_library_exists(tcmalloc malloc "" HAVE_TCMALLOC)
-+    if (NOT HAVE_TCMALLOC)
-+      message(FATAL_ERROR "tcmalloc not found but marked as required")
-+    endif()
++		find_package(PkgConfig REQUIRED)
++		pkg_check_modules(libtcmalloc REQUIRED)
 +endif()
  
  include(CheckCXXSymbolExists)
  # Using check_cxx_symbol_exists() instead of check_c_symbol_exists() because
-@@ -268,10 +279,10 @@ if(HAVE_CLANG_THREAD_SAFETY)
+@@ -268,13 +277,13 @@ if(HAVE_CLANG_THREAD_SAFETY)
  endif(HAVE_CLANG_THREAD_SAFETY)
  
  if(HAVE_CRC32C)
@@ -38,4 +36,8 @@ index 9e0ad1e..2247fcf 100644
 +  target_link_libraries(leveldb Snappy::snappy)
  endif(HAVE_SNAPPY)
  if(HAVE_TCMALLOC)
-   target_link_libraries(leveldb tcmalloc)
+-  target_link_libraries(leveldb tcmalloc)
++  target_link_libraries(leveldb PkgConfig::libtcmalloc)
+ endif(HAVE_TCMALLOC)
+ 
+ # Needed by port_stdcxx.h

@@ -30,7 +30,10 @@
       ]
     },
     "tcmalloc": {
-      "description": "Build with tcmalloc"
+      "description": "Build with tcmalloc",
+      "dependencies": [
+        "tcmalloc"
+      ]
     }
   }
 }
