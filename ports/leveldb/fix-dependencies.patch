@@ -1,13 +1,14 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f8285b8..39536fc 100644
+index 9e0ad1e..cc9781e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -38,8 +38,14 @@ include(CheckIncludeFile)
+@@ -38,9 +38,20 @@ include(CheckIncludeFile)
  check_include_file("unistd.h" HAVE_UNISTD_H)
  
  include(CheckLibraryExists)
 -check_library_exists(crc32c crc32c_value "" HAVE_CRC32C)
 -check_library_exists(snappy snappy_compress "" HAVE_SNAPPY)
+-check_library_exists(tcmalloc malloc "" HAVE_TCMALLOC)
 +if (WITH_CRC32C)
 +    find_package(Crc32c CONFIG REQUIRED)
 +    set(HAVE_CRC32C 1)
@@ -16,19 +17,12 @@ index f8285b8..39536fc 100644
 +    find_package(Snappy CONFIG REQUIRED)
 +    set(HAVE_SNAPPY 1)
 +endif()
- check_library_exists(tcmalloc malloc "" HAVE_TCMALLOC)
++if (WITH_TCMALLOC)
++    check_library_exists(tcmalloc malloc "" HAVE_TCMALLOC)
++    if (NOT HAVE_TCMALLOC)
++      message(FATAL_ERROR "tcmalloc not found but marked as required")
++    endif()
++endif()
  
  include(CheckCXXSymbolExists)
-@@ -268,10 +274,10 @@ if(HAVE_CLANG_THREAD_SAFETY)
- endif(HAVE_CLANG_THREAD_SAFETY)
- 
- if(HAVE_CRC32C)
--  target_link_libraries(leveldb crc32c)
-+  target_link_libraries(leveldb Crc32c::crc32c)
- endif(HAVE_CRC32C)
- if(HAVE_SNAPPY)
--  target_link_libraries(leveldb snappy)
-+  target_link_libraries(leveldb Snappy::snappy)
- endif(HAVE_SNAPPY)
- if(HAVE_TCMALLOC)
-   target_link_libraries(leveldb tcmalloc)
+ # Using check_cxx_symbol_exists() instead of check_c_symbol_exists() because

@@ -15,8 +15,9 @@ file(COPY "${CURRENT_PORT_DIR}/leveldbConfig.cmake.in" DESTINATION "${SOURCE_PAT
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        crc32c WITH_CRC32C
-        snappy WITH_SNAPPY
+        crc32c   WITH_CRC32C
+        snappy   WITH_SNAPPY
+        tcmalloc WITH_TCMALLOC
 )
 
 vcpkg_cmake_configure(
