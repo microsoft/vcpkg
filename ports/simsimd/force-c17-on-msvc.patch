@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 14c6904..ac2e4fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,7 +8,11 @@ project(
+     HOMEPAGE_URL "https://github.com/ashvardanian/simsimd"
+ )
+
+-set(CMAKE_C_STANDARD 23)
++if(MSVC)
++    set(CMAKE_C_STANDARD 17)
++else()
++    set(CMAKE_C_STANDARD 23)
++endif()
+ set(CMAKE_C_STANDARD_REQUIRED YES)
+ set(CMAKE_C_EXTENSIONS NO)
+
