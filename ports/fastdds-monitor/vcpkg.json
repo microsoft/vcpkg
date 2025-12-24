@@ -1,0 +1,25 @@
+{
+  "name": "fastdds-monitor",
+  "version": "3.1.0",
+  "description": "eProsima Fast DDS Monitor is a graphical desktop application aimed at monitoring DDS environments deployed using the eProsima Fast DDS library.",
+  "homepage": "https://github.com/eProsima/Fast-DDS-monitor",
+  "license": "Apache-2.0",
+  "supports": "!uwp",
+  "dependencies": [
+    "asio",
+    "fastcdr",
+    "fastdds",
+    "fastdds-statistics-backend",
+    "foonathan-memory",
+    "openssl",
+    "tinyxml2",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
