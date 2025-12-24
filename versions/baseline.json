@@ -4550,7 +4550,7 @@
     },
     "leveldb": {
       "baseline": "1.23",
-      "port-version": 0
+      "port-version": 1
     },
     "levmar": {
       "baseline": "2.6",
@@ -9699,6 +9699,10 @@
     "tclap": {
       "baseline": "1.2.5",
       "port-version": 0
+    },
+    "tcmalloc": {
+      "baseline": "1.2.14",
+      "port-version": 1
     },
     "tcp-pubsub": {
       "baseline": "1.0.3",
