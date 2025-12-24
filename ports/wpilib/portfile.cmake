@@ -32,6 +32,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(PACKAGE_NAME wpiutil)
+
 set(WPI_CONFIG_FILE_PATH "${CURRENT_PACKAGES_DIR}/share/wpilib/wpilib-config.cmake")
 
 file(READ "${WPI_CONFIG_FILE_PATH}" WPI_CONFIG_FILE_CONTENTS)
