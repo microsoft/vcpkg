@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 11b5394efbc54e724a48a93d960d69befecf38fd22457074458283e7e42fa011865a80022ff18162e65074e0bf9f008d298471b6ec76636361ba4eadbfdb512c
     HEAD_REF main
-    PATCHES
-        fix-eigen-constexpr.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
