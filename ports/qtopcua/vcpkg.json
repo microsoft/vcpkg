@@ -62,9 +62,6 @@
           "default-features": false
         }
       ]
-    },
-    "uacpp": {
-      "description": "Unified Automation C++ SDK"
     }
   }
 }
