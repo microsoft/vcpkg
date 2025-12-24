@@ -3341,7 +3341,7 @@
       "port-version": 5
     },
     "glad": {
-      "baseline": "0.1.36",
+      "baseline": "v2.0.8",
       "port-version": 0
     },
     "glaze": {
