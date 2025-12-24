@@ -30,6 +30,8 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        --trace-expand
+        --debug-find-pkg=Qt6LinguistTools
         -DBUILD_WITH_QT6=ON
          ${QTKEYCHAIN_OPTIONS}
 )
