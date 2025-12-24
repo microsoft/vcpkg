@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/TinyNPY
-    REF v1.1
+    REF "v${VERSION}"
     SHA512 3510c1da36a6260e0e3d0a2f0c4c9c12b673574a221ea6e217e5ed2c1c14d4f2937ef00dd9bd8407e52e3961821ccf1301c74691ac562f242c9b80bc8ddd4314
     HEAD_REF master
 )
