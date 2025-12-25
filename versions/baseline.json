@@ -7633,8 +7633,8 @@
       "port-version": 0
     },
     "plf-nanotimer": {
-      "baseline": "2019-08-10",
-      "port-version": 2
+      "baseline": "1.0.8",
+      "port-version": 0
     },
     "plf-queue": {
       "baseline": "2.2",
