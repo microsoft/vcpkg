@@ -4,6 +4,7 @@
   "description": "Qt WebView provides a way to display web content in a QML application without necessarily including a full web browser stack by using native APIs where it makes sense.",
   "homepage": "https://www.qt.io/",
   "license": null,
+  "supports": "x64 | arm64",
   "dependencies": [
     {
       "name": "qtbase",

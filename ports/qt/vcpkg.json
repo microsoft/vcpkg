@@ -190,7 +190,8 @@
     },
     {
       "name": "qtwebview",
-      "default-features": false
+      "default-features": false,
+      "platform": "x64 | arm64"
     },
     {
       "name": "qtwebview",
