@@ -2058,7 +2058,7 @@
     },
     "cppad": {
       "baseline": "20250000.3",
-      "port-version": 0
+      "port-version": 1
     },
     "cppcms": {
       "baseline": "2.0.1",
