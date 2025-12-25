@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 5a10e1e..4a4732b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -690,14 +690,16 @@ IF(MINGW)
+@@ -691,14 +691,16 @@ IF(MINGW)
  ENDIF()
  
  INCLUDE(symlink)
@@ -20,7 +20,7 @@ index 5a10e1e..4a4732b 100644
    IF(WITH_MSI)
      ADD_CUSTOM_COMMAND(TARGET ${LIBRARY_NAME} POST_BUILD
        COMMAND ${CMAKE_COMMAND} ARGS -DDRIVER_LIB_DIR=$<TARGET_FILE_DIR:${LIBRARY_NAME}>
-@@ -714,13 +716,30 @@ ELSE()
+@@ -715,13 +717,30 @@ ELSE()
      #MESSAGE(STATUS "Configuring to generate PKG package")
      #ADD_SUBDIRECTORY(osxinstall)
    ENDIF()
