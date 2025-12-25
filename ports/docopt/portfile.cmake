@@ -6,17 +6,33 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if("boost-regex" IN_LIST FEATURES)
+    set(USE_BOOST_REGEX ON)
+else()
+    set(USE_BOOST_REGEX OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DWITH_EXAMPLE=OFF
         -DWITH_TESTS=OFF
-        -DUSE_BOOST_REGEX=OFF
+        -DUSE_BOOST_REGEX=${USE_BOOST_REGEX}
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/docopt)
+
+# Add find_dependency for Boost if boost-regex feature is enabled
+if("boost-regex" IN_LIST FEATURES)
+    file(READ "${CURRENT_PACKAGES_DIR}/share/docopt/docopt-config.cmake" _contents)
+    string(REPLACE "include(\"\${CMAKE_CURRENT_LIST_DIR}/docopt-targets.cmake\")" 
+        "include(CMakeFindDependencyMacro)\nfind_dependency(Boost REQUIRED COMPONENTS regex)\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/docopt-targets.cmake\")" 
+        _contents "${_contents}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/docopt/docopt-config.cmake" "${_contents}")
+endif()
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -2530,7 +2530,7 @@
     },
     "docopt": {
       "baseline": "2022-03-15",
-      "port-version": 1
+      "port-version": 2
     },
     "doctest": {
       "baseline": "2.4.12",
