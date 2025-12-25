@@ -7641,8 +7641,8 @@
       "port-version": 0
     },
     "plf-stack": {
-      "baseline": "2019-08-10",
-      "port-version": 2
+      "baseline": "2.0.13",
+      "port-version": 0
     },
     "plib": {
       "baseline": "1.8.5",
