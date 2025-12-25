@@ -6121,7 +6121,7 @@
       "port-version": 1
     },
     "lwlog": {
-      "baseline": "1.4.0",
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "lz4": {
