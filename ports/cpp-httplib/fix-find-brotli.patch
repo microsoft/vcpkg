@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0353b0c..5c0cd33 100644
+index 7566dcd..7687c8b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -151,10 +151,10 @@ endif()
+@@ -178,10 +178,10 @@ endif()
  # This is so we can use our custom FindBrotli.cmake
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
  if(HTTPLIB_REQUIRE_BROTLI)
@@ -15,9 +15,9 @@ index 0353b0c..5c0cd33 100644
  	set(HTTPLIB_IS_USING_BROTLI ${Brotli_FOUND})
  endif()
  
-@@ -236,9 +236,9 @@ target_link_libraries(${PROJECT_NAME} ${_INTERFACE_OR_PUBLIC}
- 		# Needed for API from MacOS Security framework
- 		"$<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>,$<BOOL:${HTTPLIB_USE_CERTS_FROM_MACOSX_KEYCHAIN}>>:-framework CoreFoundation -framework Security>"
+@@ -280,9 +280,9 @@ target_link_libraries(${PROJECT_NAME} ${_INTERFACE_OR_PUBLIC}
+ 		# Needed for non-blocking getaddrinfo on MacOS
+ 		"$<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${HTTPLIB_USE_NON_BLOCKING_GETADDRINFO}>>:-framework CFNetwork>"
  		# Can't put multiple targets in a single generator expression or it bugs out.
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::common>
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::encoder>
@@ -28,7 +28,7 @@ index 0353b0c..5c0cd33 100644
  		$<$<BOOL:${HTTPLIB_IS_USING_ZLIB}>:ZLIB::ZLIB>
  		$<$<BOOL:${HTTPLIB_IS_USING_ZSTD}>:zstd::libzstd>
  		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::SSL>
-@@ -296,9 +296,6 @@ if(HTTPLIB_INSTALL)
+@@ -341,9 +341,6 @@ if(HTTPLIB_INSTALL)
  	install(FILES
  		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
  		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
@@ -39,10 +39,10 @@ index 0353b0c..5c0cd33 100644
  	)
  
 diff --git a/cmake/httplibConfig.cmake.in b/cmake/httplibConfig.cmake.in
-index bf57364..1c6fe62 100644
+index 8ca8b99..9c61742 100644
 --- a/cmake/httplibConfig.cmake.in
 +++ b/cmake/httplibConfig.cmake.in
-@@ -34,8 +34,8 @@ if(@HTTPLIB_IS_USING_BROTLI@)
+@@ -35,8 +35,8 @@ if(@HTTPLIB_IS_USING_BROTLI@)
  	# Note that the FindBrotli.cmake file is installed in the same dir as this file.
  	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
  	set(BROTLI_USE_STATIC_LIBS @BROTLI_USE_STATIC_LIBS@)
