@@ -3,33 +3,28 @@ cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
 cmake_policy(SET CMP0057 NEW)
 
-include(CMakeFindDependencyMacro)
-
-# Traditional find module variables (vcpkg polyfill)
-set(RAQM_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" CACHE INTERNAL "")
-set(RAQM_INCLUDE_DIRS "${RAQM_INCLUDE_DIR}")
-set(RAQM_LIBRARY RAQM::RAQM CACHE INTERNAL "")
-set(RAQM_LIBRARIES RAQM::RAQM)
-
-if(TARGET RAQM)
+if(TARGET libraqm)
     set(RAQM_FOUND TRUE)
     return()
 endif()
 
-add_library(RAQM UNKNOWN IMPORTED)
-add_library(RAQM::RAQM ALIAS RAQM)
+include(CMakeFindDependencyMacro)
 
+add_library(libraqm UNKNOWN IMPORTED)
+add_library(unofficial::libraqm::libraqm ALIAS libraqm)
+
+set(RAQM_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" CACHE INTERNAL "")
 find_library(RAQM_LIBRARY_DEBUG NAMES raqm PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
 find_library(RAQM_LIBRARY_RELEASE NAMES raqm PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" PATH_SUFFIXES lib NO_DEFAULT_PATH)
 
 if(NOT RAQM_LIBRARY_DEBUG)
-	set_target_properties(RAQM PROPERTIES
+	set_target_properties(libraqm PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${RAQM_INCLUDE_DIR}"
         IMPORTED_CONFIGURATIONS "RELEASE"
         IMPORTED_LOCATION_RELEASE "${RAQM_LIBRARY_RELEASE}"
     )
 else()
-	set_target_properties(RAQM PROPERTIES
+	set_target_properties(libraqm PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${RAQM_INCLUDE_DIR}"
         IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
         IMPORTED_LOCATION_RELEASE "${RAQM_LIBRARY_RELEASE}"
@@ -39,12 +34,12 @@ endif()
 
 find_dependency(freetype CONFIG)
 find_dependency(harfbuzz CONFIG)
-target_link_libraries(RAQM INTERFACE harfbuzz freetype)
+target_link_libraries(libraqm INTERFACE harfbuzz freetype)
 
 find_library(FRIBIDI_LIBRARY_DEBUG NAMES fribidi PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
 find_library(FRIBIDI_LIBRARY_RELEASE NAMES fribidi PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" PATH_SUFFIXES lib NO_DEFAULT_PATH)
 if(NOT FRIBIDI_LIBRARY_DEBUG)
-	target_link_libraries(RAQM INTERFACE "${FRIBIDI_LIBRARY_RELEASE}")
+	target_link_libraries(libraqm INTERFACE "${FRIBIDI_LIBRARY_RELEASE}")
 else()
-	target_link_libraries(RAQM INTERFACE "$<$<NOT:$<CONFIG:DEBUG>>:${FRIBIDI_LIBRARY_RELEASE}>$<$<CONFIG:DEBUG>:${FRIBIDI_LIBRARY_DEBUG}>")
+	target_link_libraries(libraqm INTERFACE "$<$<NOT:$<CONFIG:DEBUG>>:${FRIBIDI_LIBRARY_RELEASE}>$<$<CONFIG:DEBUG>:${FRIBIDI_LIBRARY_DEBUG}>")
 endif()
