@@ -13,12 +13,24 @@ vcpkg_extract_source_archive(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
-    OPTIONS_DEBUG
-        -DDISABLE_INSTALL_HEADERS=ON
+        -DCMAKE_POLICY_DEFAULT_CMP0057=NEW
+        -DVCPKG_LOCK_FIND_PACKAGE_GLUT=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_LATEX=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_OpenGL=ON
 )
-
 vcpkg_cmake_install()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gl2ps.h" "defined\(GL2PSDLL\)" "(1)")
+endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gl2ps.h" "defined(HAVE_ZLIB)" "(1)")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gl2ps.h" "defined(HAVE_LIBPNG)" "(1)")
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/doc"
+)
 
 vcpkg_install_copyright(
     FILE_LIST

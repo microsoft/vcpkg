@@ -3334,7 +3334,7 @@
     },
     "gl2ps": {
       "baseline": "1.4.2",
-      "port-version": 4
+      "port-version": 5
     },
     "gl3w": {
       "baseline": "2018-05-31",
