@@ -35,7 +35,6 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        --trace-expand # TODO: remove
         ${_qarg_OPTIONS}
         -DKDDockWidgets_QT6=ON
         "-DKDDockWidgets_FRONTENDS=${FRONTENDS}"

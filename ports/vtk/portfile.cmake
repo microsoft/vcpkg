@@ -262,7 +262,7 @@ endif()
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS --trace-expand
+    OPTIONS
         ${VTK_FEATURE_OPTIONS}
         ${VTK_YES_NO_OPTIONS}
         ${ADDITIONAL_OPTIONS}
