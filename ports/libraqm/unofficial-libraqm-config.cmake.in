@@ -9,6 +9,8 @@ if(TARGET libraqm)
 endif()
 
 include(CMakeFindDependencyMacro)
+find_dependency(freetype CONFIG)
+find_dependency(harfbuzz CONFIG)
 
 add_library(libraqm UNKNOWN IMPORTED)
 add_library(unofficial::libraqm::libraqm ALIAS libraqm)
@@ -32,9 +34,7 @@ else()
     )
 endif()
 
-find_dependency(freetype CONFIG)
-find_dependency(harfbuzz CONFIG)
-target_link_libraries(libraqm INTERFACE harfbuzz freetype)
+target_link_libraries(libraqm INTERFACE $<LINK_ONLY:harfbuzz::harfbuzz> $<LINK_ONLY:Freetype::Freetype>)
 
 find_library(FRIBIDI_LIBRARY_DEBUG NAMES fribidi PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
 find_library(FRIBIDI_LIBRARY_RELEASE NAMES fribidi PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" PATH_SUFFIXES lib NO_DEFAULT_PATH)
