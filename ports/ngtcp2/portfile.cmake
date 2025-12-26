@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 bd68cc652edba8b5619370729b88cc0dccd9c0542391b12b87b5a106e7982a984c9a1f1dea8817f8953318bc12967878498fbc50e221ec465e77422e5ae1ddcf
     HEAD_REF main
-    PATCHES
-        export-crypto-targets.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC_LIB)
