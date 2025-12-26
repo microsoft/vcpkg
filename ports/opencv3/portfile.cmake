@@ -22,6 +22,7 @@ vcpkg_from_github(
       0015-fix-supportqnx.patch
       0017-enable-gtk.patch
       0019-enable-pkgconf.patch
+      0020-protobuf-6.patch # 1db93911aeb65599f22db47d5d39f75bc94a821d
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)

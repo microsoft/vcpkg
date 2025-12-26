@@ -1,7 +1,6 @@
 {
   "name": "gz-common",
-  "version": "6.0.2",
-  "port-version": 2,
+  "version": "6.1.0",
   "description": "Common libraries for robotics applications",
   "homepage": "https://gazebosim.org/libs/common/",
   "license": "Apache-2.0",
