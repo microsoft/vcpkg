@@ -1,6 +1,6 @@
 {
   "name": "gz-tools",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "Gazebo tools provide the ign command line tool that accepts multiple subcommands.",
   "homepage": "https://gazebosim.org",
   "license": "Apache-2.0",

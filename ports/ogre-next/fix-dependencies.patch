@@ -1,5 +1,5 @@
 diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
-index cdb097a..967d33b 100644
+index b0ca7c12f8..7e52ca668a 100644
 --- a/CMake/CMakeLists.txt
 +++ b/CMake/CMakeLists.txt
 @@ -21,9 +21,7 @@ endif()
@@ -12,13 +12,12 @@ index cdb097a..967d33b 100644
    Packages/FindOGRE.cmake
    Utils/FindPkgMacros.cmake
    Utils/MacroLogFeature.cmake
-@@ -45,12 +43,8 @@ endif ()
+@@ -44,11 +42,7 @@ if (OGRE_CONFIG_THREAD_PROVIDER STREQUAL "tbb")
+ endif ()
  
  set(STATIC_INST_FILES
-   Packages/FindDirectX.cmake
 -  Packages/FindFreeImage.cmake
 -  Packages/FindFreetype.cmake
-   Packages/FindOpenGLES.cmake
    Packages/FindOpenGLES2.cmake
 -  Packages/FindZLIB.cmake
 -  Packages/FindZZip.cmake
@@ -26,10 +25,10 @@ index cdb097a..967d33b 100644
  )
  if (WIN32)
 diff --git a/CMake/Dependencies.cmake b/CMake/Dependencies.cmake
-index 74cb0f4..2cad26a 100644
+index 7dd36f2ab2..e83d040e83 100644
 --- a/CMake/Dependencies.cmake
 +++ b/CMake/Dependencies.cmake
-@@ -74,21 +74,24 @@ set(CMAKE_FRAMEWORK_PATH ${OGRE_DEP_SEARCH_PATH} ${CMAKE_FRAMEWORK_PATH})
+@@ -74,26 +74,32 @@ set(CMAKE_FRAMEWORK_PATH ${OGRE_DEP_SEARCH_PATH} ${CMAKE_FRAMEWORK_PATH})
  #######################################################################
  
  # Find zlib
@@ -58,7 +57,15 @@ index 74cb0f4..2cad26a 100644
  macro_log_feature(FREETYPE_FOUND "freetype" "Portable font engine" "http://www.freetype.org" FALSE "" "")
  
  find_package(Vulkan)
-@@ -105,7 +108,7 @@ if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+ macro_log_feature(Vulkan_FOUND "vulkan-sdk" "Vulkan SDK" "https://vulkan.lunarg.com/" FALSE "" "")
+ 
++find_package(glslang CONFIG)
++macro_log_feature(glslang_FOUND "glslang" "glslang" "https://github.com/KhronosGroup/glslang" FALSE "" "")
++
+ # Find X11
+ if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+   find_package(X11)
+@@ -105,7 +111,7 @@ if (UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
  endif ()
  
  # Find rapidjson
@@ -67,3 +74,16 @@ index 74cb0f4..2cad26a 100644
  macro_log_feature(Rapidjson_FOUND "rapidjson" "C++ JSON parser" "https://rapidjson.org/" FALSE "" "")
  
  find_package(RenderDoc)
+diff --git a/RenderSystems/Vulkan/CMakeLists.txt b/RenderSystems/Vulkan/CMakeLists.txt
+index 2fc1859d86..ae8e4e29df 100644
+--- a/RenderSystems/Vulkan/CMakeLists.txt
++++ b/RenderSystems/Vulkan/CMakeLists.txt
+@@ -35,7 +35,7 @@ include_directories(
+ include_directories( ${Vulkan_INCLUDE_DIRS} )
+ 
+ ogre_add_library(RenderSystem_Vulkan ${OGRE_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES})
+-target_link_libraries(RenderSystem_Vulkan ${OGRE_NEXT}Main ${Vulkan_LIBRARIES})
++target_link_libraries(RenderSystem_Vulkan ${OGRE_NEXT}Main ${Vulkan_LIBRARIES} glslang::glslang)
+ 
+ if( OGRE_VULKAN_WINDOW_XCB )
+ 	target_link_libraries(RenderSystem_Vulkan xcb-randr X11-xcb)

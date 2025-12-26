@@ -6,7 +6,7 @@ set(PACKAGE_NAME ${CMAKE_MATCH_1})
 ignition_modular_library(NAME ${PACKAGE_NAME}
                          REF ${PORT}${VERSION_MAJOR}_${VERSION}
                          VERSION ${VERSION}
-                         SHA512 0dc78d30876f2091c5a545feb70e769d65967c6f77bca7bc17aec62a5069601657fd4bf03f7a913ef5ad8bb58ca8aba4b2b911c6d4de4d46f827edb609acd61c
+                         SHA512 d74eb686c05c62dea5303e629136a187aa09db67305cdc46577e8ff6dd420b70b074d25474669c9d3f1286d141d1e30cf9b4b32b726f0e6d2bae4dabc298160b
                          PATCHES
                         )
 

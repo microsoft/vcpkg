@@ -1,9 +1,9 @@
 {
   "name": "srpc",
-  "version-semver": "0.10.3",
-  "port-version": 1,
+  "version-semver": "0.10.4",
   "description": "RPC based on Sogou C++ Workflow",
   "homepage": "https://github.com/sogou/srpc",
+  "license": "Apache-2.0",
   "dependencies": [
     "lz4",
     "openssl",
