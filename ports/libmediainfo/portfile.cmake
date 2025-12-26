@@ -8,17 +8,23 @@ vcpkg_from_github(
     PATCHES
         dependencies.diff
 )
+file(REMOVE_RECURSE "${SOURCE_PATH}/Source/ThirdParty/tinyxml2")
 
 vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG "${PKGCONFIG}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+    FEATURES
+        curl    VCPKG_LOCK_FIND_PACKAGE_CURL
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/Project/CMake"
     OPTIONS
+        ${options}
         -DBUILD_ZENLIB=0
         -DBUILD_ZLIB=0
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DCMAKE_REQUIRE_FIND_PACKAGE_PkgConfig=1
-        -DCMAKE_REQUIRE_FIND_PACKAGE_TinyXML=1
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME mediainfolib)
