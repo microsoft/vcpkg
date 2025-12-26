@@ -6,11 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre-next
     REF v${VERSION}
-    SHA512 52ed2d2a3375c0d35f0dc695b986514484ad1d47966c5c18351d3b09913123b2487b9729738c6b8b1219c1a992a8c8509a2303e097a6eb26497e152a14d48830
+    SHA512 2ef8f16517c96cc7ddb31986857e4d0002e33c2eeff845b4af0b8e5848c3e92289dc3b10ededbe66fb63ef6234cbee88ed513466182bd4e70d710d0507f98418
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
-        avoid-name-clashes.patch
         fix-dependencies.patch
 )
 file(REMOVE
@@ -74,7 +73,6 @@ vcpkg_cmake_configure(
         -DOGRE_INSTALL_SAMPLES=OFF
         -DOGRE_INSTALL_TOOLS=OFF
         -DOGRE_INSTALL_VSPROPS=OFF
-        -DOGRE_SKIP_BOOST_SEARCHING=ON
         -DOGRE_STATIC=${OGRE_STATIC}
         -DOGRE_USE_NEW_PROJECT_NAME=ON
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
