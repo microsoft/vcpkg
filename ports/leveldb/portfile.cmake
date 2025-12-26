@@ -26,13 +26,9 @@ vcpkg_cmake_configure(
         -DLEVELDB_BUILD_TESTS=OFF
         -DLEVELDB_BUILD_BENCHMARKS=OFF
         -DHAVE_TCMALLOC=OFF
-    OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
 )
-
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/leveldb")
 
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
