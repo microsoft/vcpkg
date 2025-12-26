@@ -22,6 +22,12 @@ else()
     list(APPEND feature_options "-Dintrospection=false")
 endif()
 
+if("cairo" IN_LIST FEATURES)
+    list(APPEND feature_options "-Dcairo=enabled")
+else()
+    list(APPEND feature_options "-Dcairo=disabled")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -45,7 +51,6 @@ vcpkg_configure_meson(
         -Dmaxflow=disabled
         -Dopenexr=disabled
         -Dopenmp=disabled
-        -Dcairo=disabled
         -Dpango=disabled
         -Dpangocairo=disabled
         -Dpoppler=disabled
