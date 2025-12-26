@@ -1,7 +1,7 @@
 {
   "name": "gexiv2",
   "version": "0.14.3",
-  "port-version": 1,
+  "port-version": 3,
   "description": "A GObject-based Exiv2 wrapper.",
   "homepage": "https://gitlab.gnome.org/GNOME/gexiv2/",
   "license": "GPL-2.0-or-later",
@@ -16,5 +16,14 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "introspection": {
+      "description": "Enable introspection",
+      "supports": "!static & !windows",
+      "dependencies": [
+        "gobject-introspection"
+      ]
+    }
+  }
 }

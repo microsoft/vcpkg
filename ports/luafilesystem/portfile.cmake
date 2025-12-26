@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF ${LUAFILESYSTEM_REVISION}
     SHA512 ${LUAFILESYSTEM_HASH}
     HEAD_REF master
+    PATCHES
+        support-lua-5.5.patch # https://github.com/lunarmodules/luafilesystem/pull/180
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

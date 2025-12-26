@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mattreecebentley/plf_hive
-    REF 39dfcc5712125cc645df123c120006b7a6fd95d6
-    SHA512 81a1f185ca8293b6fb83605c05ecf14d024194334cb64932daa29ecae064918241fa7f3e4a688dc2b19b4b5dd8a2605d60947bd513f7cd30299fd6ba25aa8b35
+    REF 5d4f13cafdc1bd5e23c4b5435e0f33f347d3b003
+    SHA512 9f32c8ad70851ba9e2db32c6d47999c2fe554f5e7fdab5803c3743c5df5ca881afacebeb37594dbb8a587df793eab9c7ccae05f20c48e7931cfbb30dd680f5ee
     HEAD_REF master
 )
 
