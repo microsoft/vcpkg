@@ -25,7 +25,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/docopt)
 
 # Add find_dependency for Boost if boost-regex feature is enabled
-if("boost-regex" IN_LIST FEATURES)
+if(USE_BOOST_REGEX)
     file(READ "${CURRENT_PACKAGES_DIR}/share/docopt/docopt-config.cmake" _contents)
     string(REPLACE "include(\"\${CMAKE_CURRENT_LIST_DIR}/docopt-targets.cmake\")" 
         "include(CMakeFindDependencyMacro)\nfind_dependency(Boost REQUIRED COMPONENTS regex)\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/docopt-targets.cmake\")" 
