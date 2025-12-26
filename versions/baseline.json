@@ -3417,8 +3417,8 @@
       "port-version": 3
     },
     "gmsh": {
-      "baseline": "4.14.0",
-      "port-version": 1
+      "baseline": "4.15.0",
+      "port-version": 0
     },
     "gobject-introspection": {
       "baseline": "1.86.0",
