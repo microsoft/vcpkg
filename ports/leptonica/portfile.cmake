@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DanBloomberg/leptonica
     REF "${VERSION}"
-    SHA512 c430f6ddb72c4983be767d7a6a3d660a0172d2d02e27c65b8f4ac9d2521eb9ea6f0a6f9ef5f6d02cd1aeead02b00a5e5f155cc128bb3d54c3d5b189e3d8068b4
+    SHA512 2a1953dd0c962a05dac9bb30eac311896f414c658d976008b0c2d1b3b85ec25c5fd811be3f98a37f2131ded134799ea609a667fb1eaacf42d1aca9cc5cf1bd92
     HEAD_REF master
     PATCHES
         fix-pc-and-config.patch
