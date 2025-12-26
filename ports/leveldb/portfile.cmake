@@ -25,6 +25,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DLEVELDB_BUILD_TESTS=OFF
         -DLEVELDB_BUILD_BENCHMARKS=OFF
+        -DHAVE_TCMALLOC=OFF
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
 )
