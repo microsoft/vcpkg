@@ -1,7 +1,6 @@
 {
   "name": "dpdk",
-  "version": "24.11.3",
-  "port-version": 1,
+  "version": "25.11",
   "description": "A set of libraries and drivers for fast packet processing",
   "homepage": "https://www.dpdk.org/",
   "documentation": "https://doc.dpdk.org/guides/",
@@ -28,9 +27,6 @@
   "features": {
     "docs": {
       "description": "Build and install docs"
-    },
-    "kmods": {
-      "description": "Build and install kernel modules"
     },
     "tests": {
       "description": "Build and install tests"
