@@ -1,7 +1,4 @@
-# For old projects where the minimum CMake version is lower than 3.3.
-cmake_policy(SET CMP0012 NEW)
-cmake_policy(SET CMP0054 NEW)
-cmake_policy(SET CMP0057 NEW)
+cmake_minimum_required(VERSION 3.5)
 
 if(TARGET unofficial::libraqm::libraqm)
     return()
