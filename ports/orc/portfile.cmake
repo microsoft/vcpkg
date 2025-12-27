@@ -8,8 +8,10 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     external-project.diff
+    tools-build.diff
 )
 file(GLOB modules "${SOURCE_PATH}/cmake_modules/Find*.cmake")
+file(REMOVE ${modules} "${SOURCE_PATH}/c++/libs/libhdfspp/libhdfspp.tar.gz")
 
 set(orc_format_version 1.1.1)
 vcpkg_download_distfile(ORC_FORMAT_ARCHIVE
