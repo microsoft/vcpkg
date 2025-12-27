@@ -45,6 +45,7 @@ vcpkg_from_github(
         008-wrong-dxcapi-include.patch
         009-fix-tint-install.patch
         010-fix-glslang.patch
+		011-fix-dxc.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
@@ -162,6 +163,7 @@ vcpkg_cmake_configure(
         -DDAWN_ENABLE_VULKAN=${DAWN_ENABLE_VULKAN}
         -DDAWN_USE_WAYLAND=${DAWN_USE_WAYLAND}
         -DDAWN_USE_X11=${DAWN_USE_X11}
+		-DDAWN_USE_BUILT_DXC=${VCPKG_TARGET_IS_WINDOWS}
 )
 
 vcpkg_cmake_install()
