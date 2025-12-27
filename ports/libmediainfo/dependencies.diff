@@ -55,7 +55,7 @@ index 76fec5d..97d8286 100644
  set(MediaInfoLib_VERSION "@MediaInfoLib_VERSION@")
  set(MediaInfoLib_VERSION_MAJOR @MediaInfoLib_MAJOR_VERSION@)
 diff --git a/Project/CMake/libmediainfo.pc.in b/Project/CMake/libmediainfo.pc.in
-index 31e53fe..0829d71 100644
+index 31e53fe..2382088 100644
 --- a/Project/CMake/libmediainfo.pc.in
 +++ b/Project/CMake/libmediainfo.pc.in
 @@ -8,6 +8,6 @@ Name: libmediainfo
@@ -64,6 +64,6 @@ index 31e53fe..0829d71 100644
  Requires: libzen
 -Requires.private:@CURL_PC@
 -Libs: -L${libdir} -lmediainfo -lz
-+Requires.private: libcurl tinyxml2 zlib
++Requires.private: @CURL_PC@ tinyxml2 zlib
 +Libs: -L${libdir} -lmediainfo
  Cflags: -I${includedir}

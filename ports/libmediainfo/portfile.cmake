@@ -11,7 +11,7 @@ vcpkg_from_github(
 file(REMOVE_RECURSE "${SOURCE_PATH}/Source/ThirdParty/tinyxml2")
 
 vcpkg_find_acquire_program(PKGCONFIG)
-set(ENV{PKG_CONFIG "${PKGCONFIG}")
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
