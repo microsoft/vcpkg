@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 920e4c3..d2e8abc 100644
+index 920e4c3..4d810ea 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -87,8 +87,8 @@ if(OpenMVS_USE_OPENMP)
@@ -24,7 +24,7 @@ index 920e4c3..d2e8abc 100644
  	if(CUDA_FOUND)
  		ENABLE_LANGUAGE(CUDA)
  		# CUDA-11.x can not be compiled using C++14 standard on Windows
-@@ -190,15 +193,11 @@ if(OpenMVS_USE_PYTHON)
+@@ -190,15 +193,10 @@ if(OpenMVS_USE_PYTHON)
  	endif()
  endif()
  
@@ -35,14 +35,13 @@ index 920e4c3..d2e8abc 100644
 -	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 -	ADD_DEFINITIONS(${Boost_DEFINITIONS})
 -	LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
-+	set(Boost_LIBRARIES Boost::iostreams Boost::system Boost::serialization)
  	if(NOT MSVC AND DEFINED CMAKE_TOOLCHAIN_FILE)
 -		# work around this missing library link in vcpkg
 -		LIST(APPEND Boost_LIBRARIES zstd)
  	endif()
  	SET(_USE_BOOST TRUE)
  	if(OpenMVS_USE_PYTHON AND Boost_${Boost_EXTRA_COMPONENTS}_FOUND)
-@@ -206,11 +205,9 @@ if(Boost_FOUND)
+@@ -206,11 +204,9 @@ if(Boost_FOUND)
  	endif()
  endif()
  
@@ -56,7 +55,7 @@ index 920e4c3..d2e8abc 100644
  	SET(_USE_EIGEN TRUE)
  	MESSAGE(STATUS "Eigen ${EIGEN3_VERSION} found (include: ${EIGEN3_INCLUDE_DIR})")
  endif()
-@@ -282,11 +279,11 @@ INCLUDE(CMakePackageConfigHelpers)
+@@ -282,11 +278,11 @@ INCLUDE(CMakePackageConfigHelpers)
  write_basic_package_version_file("${PROJECT_BINARY_DIR}/OpenMVSConfigVersion.cmake"
  	VERSION ${OpenMVS_VERSION}
  	COMPATIBILITY AnyNewerVersion)
@@ -82,20 +81,13 @@ index 3bb00c6..e54c840 100644
  ADD_SUBDIRECTORY(InterfaceCOLMAP)
  ADD_SUBDIRECTORY(InterfaceMetashape)
 diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
-index 9747b3e..7f1f177 100644
+index 9747b3e..0831483 100644
 --- a/build/Templates/OpenMVSConfig.cmake.in
 +++ b/build/Templates/OpenMVSConfig.cmake.in
-@@ -15,8 +15,46 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+@@ -15,8 +15,39 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
  
  set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
  
-+if (MSVC)
-+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /GL")
-+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
-+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
-+    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /LTCG")
-+endif()
-+
 +set(CMAKE_CXX_STANDARD 14)
 +set(CMAKE_CXX_STANDARD_REQUIRED ON)
 +
@@ -198,14 +190,20 @@ index 86d3430..5306186 100644
  
  # cxx_executable_with_flags(name cxx_flags libs srcs...)
 diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
-index 18899af..a2a0559 100644
+index 18899af..676fca7 100644
 --- a/libs/Common/CMakeLists.txt
 +++ b/libs/Common/CMakeLists.txt
-@@ -13,6 +13,7 @@ endif()
+@@ -12,7 +12,12 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
+ endif()
  
  # Link its dependencies
- TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
+-TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
++TARGET_LINK_LIBRARIES(Common                    ${OpenCV_LIBS})
++TARGET_LINK_LIBRARIES(Common Boost::iostreams Boost::system Boost::serialization)
 +TARGET_LINK_LIBRARIES(Common Eigen3::Eigen)
++if(BUILD_EXTRA_FLAGS MATCHES "/Zc:__cplusplus")
++	target_compile_options(Common PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>")
++endif()
  
  # Install
  SET_TARGET_PROPERTIES(Common PROPERTIES

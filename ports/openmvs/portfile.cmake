@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 c8af808393836d0ac508cf4f1d123cf297b451927fe4ad95dd27e041099818cd6d077f95b03e34cd9fe92bf0277cce8e9386311531093d6469b8e07f08b15aba
     HEAD_REF master
     PATCHES
+        ambiguous-uint_t.diff
         cmake.diff
         common-log.diff
         interface-metashape.diff

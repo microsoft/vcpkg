@@ -1,0 +1,12 @@
+diff --git a/libs/Common/EventQueue.cpp b/libs/Common/EventQueue.cpp
+index 82f835b..26a9283 100644
+--- a/libs/Common/EventQueue.cpp
++++ b/libs/Common/EventQueue.cpp
+@@ -9,6 +9,7 @@
+ #include "EventQueue.h"
+ 
+ using namespace SEACAVE;
++using SEACAVE::uint_t;
+ 
+ 
+ // D E F I N E S ///////////////////////////////////////////////////
