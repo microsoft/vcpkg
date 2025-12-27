@@ -19,6 +19,11 @@ vcpkg_download_distfile(ORC_FORMAT_ARCHIVE
 )
 set(ENV{ORC_FORMAT_URL} "file://${ORC_FORMAT_ARCHIVE}")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS options
+  FEATURES
+    tools   BUILD_TOOLS
+)
+
 if(VCPKG_TARGET_IS_WINDOWS)
   set(BUILD_TOOLS OFF)
   # when cross compiling, we can't run their test. however:
@@ -38,6 +43,7 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   ${configure_opts}
   OPTIONS
+    ${options}
     ${time_t_checks}
     -DBUILD_TOOLS=${BUILD_TOOLS}
     -DBUILD_CPP_TESTS=OFF
@@ -55,19 +61,8 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
 
-file(GLOB TOOLS ${CURRENT_PACKAGES_DIR}/bin/orc-*)
-if(TOOLS)
-  file(COPY ${TOOLS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/orc")
-  file(REMOVE ${TOOLS})
-endif()
-
-file(GLOB BINS "${CURRENT_PACKAGES_DIR}/bin/*")
-if(NOT BINS)
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+if("tools" IN_LIST FEATURES)
+  vcpkg_copy_tools(TOOL_NAMES csv-import orc-contents orc-memory orc-metadata orc-scan orc-statistics timezone-dump AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

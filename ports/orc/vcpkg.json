@@ -23,5 +23,10 @@
     },
     "zlib",
     "zstd"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build toolsS"
+    }
+  }
 }
