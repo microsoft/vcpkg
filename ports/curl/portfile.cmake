@@ -3,13 +3,15 @@ string(REPLACE "." "_" curl_version "curl-${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF ${curl_version}
-    SHA512 ec2fa6c47d52feed943421b00e98370971bcc73b82842a85426ea9e42d36eaab51258a8d00197fdaaf5ec39e19385280fe387765f27e3b3dc1086c46236dc0bf
+    REF #[[ ${curl_version} ]] 6b9c75e219cdcfd3e17e7858e8ac3b59eb386ade
+    SHA512 804abbaa7d321e98ebc149e389c8fea56970d816403cbe8e2255a6a5c0e578b75c2634a940ee2b4b5822dd2e048eda62c2a4190c69d3356ecfc9b6ec03ffb195
     HEAD_REF master
     PATCHES
         dependencies.patch
-        pkgconfig-curl-config.patch
 )
+# The on-the-fly tarballs do not carry the details of release tarballs.
+vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[-DEV"]] [["]])
+vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[LIBCURL_TIMESTAMP "[unreleased]"]] [[LIBCURL_TIMESTAMP "[vcpkg]"]])
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
