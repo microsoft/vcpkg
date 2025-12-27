@@ -25,38 +25,19 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-  set(BUILD_TOOLS OFF)
-  # when cross compiling, we can't run their test. however:
-  #  - Windows doesn't support time_t < 0 => HAS_PRE_1970 test returns false
-  #  - Windows doesn't support setenv => HAS_POST_2038 test fails to compile
-  set(time_t_checks "-DHAS_PRE_1970=OFF" "-DHAS_POST_2038=OFF")
-else()
-  set(BUILD_TOOLS ON)
-  set(time_t_checks "")
-endif()
-
-if(VCPKG_TARGET_IS_UWP)
-    set(configure_opts WINDOWS_USE_MSBUILD)
+  list(APPEND options "-DHAS_PRE_1970=OFF" "-DHAS_POST_2038=OFF")
 endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  ${configure_opts}
   OPTIONS
     ${options}
-    ${time_t_checks}
-    -DBUILD_TOOLS=${BUILD_TOOLS}
     -DBUILD_CPP_TESTS=OFF
     -DBUILD_JAVA=OFF
     -DINSTALL_VENDORED_LIBS=OFF
-    -DBUILD_LIBHDFSPP=OFF
-    -DSTOP_BUILD_ON_WARNING=OFF
-    -DENABLE_TEST=OFF
     -DORC_PACKAGE_KIND=vcpkg
-  MAYBE_UNUSED_VARIABLES
-    ENABLE_TEST
+    -DSTOP_BUILD_ON_WARNING=OFF
 )
-
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
@@ -68,5 +49,4 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/NOTICE" "${SOURCE_PATH}/LICENSE")
