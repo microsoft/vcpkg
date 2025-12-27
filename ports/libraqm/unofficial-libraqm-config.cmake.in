@@ -3,7 +3,7 @@ cmake_policy(SET CMP0012 NEW)
 cmake_policy(SET CMP0054 NEW)
 cmake_policy(SET CMP0057 NEW)
 
-if(TARGET libraqm)
+if(TARGET unofficial::libraqm::libraqm)
     return()
 endif()
 
@@ -11,21 +11,20 @@ include(CMakeFindDependencyMacro)
 find_dependency(freetype CONFIG)
 find_dependency(harfbuzz CONFIG)
 
-add_library(libraqm UNKNOWN IMPORTED)
-add_library(unofficial::libraqm::libraqm ALIAS libraqm)
+add_library(unofficial::libraqm::libraqm UNKNOWN IMPORTED)
 
 set(RAQM_INCLUDE_DIR "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" CACHE INTERNAL "")
 find_library(RAQM_LIBRARY_DEBUG NAMES raqm PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH)
 find_library(RAQM_LIBRARY_RELEASE NAMES raqm PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" PATH_SUFFIXES lib NO_DEFAULT_PATH)
 
 if(NOT RAQM_LIBRARY_DEBUG)
-	set_target_properties(libraqm PROPERTIES
+	set_target_properties(unofficial::libraqm::libraqm PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${RAQM_INCLUDE_DIR}"
         IMPORTED_CONFIGURATIONS "RELEASE"
         IMPORTED_LOCATION_RELEASE "${RAQM_LIBRARY_RELEASE}"
     )
 else()
-	set_target_properties(libraqm PROPERTIES
+	set_target_properties(unofficial::libraqm::libraqm PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${RAQM_INCLUDE_DIR}"
         IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
         IMPORTED_LOCATION_RELEASE "${RAQM_LIBRARY_RELEASE}"
@@ -33,12 +32,12 @@ else()
     )
 endif()
 
-target_link_libraries(libraqm INTERFACE $<LINK_ONLY:harfbuzz::harfbuzz> $<LINK_ONLY:Freetype::Freetype>)
+target_link_libraries(unofficial::libraqm::libraqm INTERFACE $<LINK_ONLY:harfbuzz::harfbuzz> $<LINK_ONLY:Freetype::Freetype>)
 
 find_library(FRIBIDI_LIBRARY_DEBUG NAMES fribidi PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" PATH_SUFFIXES lib NO_DEFAULT_PATH NO_CACHE)
 find_library(FRIBIDI_LIBRARY_RELEASE NAMES fribidi PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" PATH_SUFFIXES lib NO_DEFAULT_PATH NO_CACHE)
 if(NOT FRIBIDI_LIBRARY_DEBUG)
-	target_link_libraries(libraqm INTERFACE "${FRIBIDI_LIBRARY_RELEASE}")
+	target_link_libraries(unofficial::libraqm::libraqm INTERFACE "${FRIBIDI_LIBRARY_RELEASE}")
 else()
-	target_link_libraries(libraqm INTERFACE "$<$<NOT:$<CONFIG:DEBUG>>:${FRIBIDI_LIBRARY_RELEASE}>$<$<CONFIG:DEBUG>:${FRIBIDI_LIBRARY_DEBUG}>")
+	target_link_libraries(unofficial::libraqm::libraqm INTERFACE "$<$<NOT:$<CONFIG:DEBUG>>:${FRIBIDI_LIBRARY_RELEASE}>$<$<CONFIG:DEBUG>:${FRIBIDI_LIBRARY_DEBUG}>")
 endif()
