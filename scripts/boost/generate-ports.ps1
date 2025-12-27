@@ -29,6 +29,7 @@ $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 # Clear this array when moving to a new boost version
 $defaultPortVersion = 0
 $portVersions = @{
+    "boost-dll" = 1;
 }
 
 function Get-PortVersion {
@@ -75,7 +76,16 @@ $portData = @{
     "boost-cobalt"           = @{ "supports" = "!uwp" };
     "boost-context"          = @{ "supports" = "!uwp & !emscripten" };
     "boost-coroutine"        = @{ "supports" = "!(arm & windows) & !uwp & !emscripten" };
-    "boost-dll"              = @{ "supports" = "!uwp" };
+    "boost-dll"              = @{ 
+        "supports" = "!uwp"; 
+        "default-features" = @("boost-filesystem");
+        "features" = @{
+            "boost-filesystem" = @{
+                "description" = "Use Boost.Filesystem instead of std::filesystem";
+                "dependencies" = @("boost-filesystem");
+            };
+        };
+    };
     "boost-fiber"            = @{
         "supports" = "!uwp & !(arm & windows) & !emscripten";
         "features" = @{
@@ -189,7 +199,6 @@ $portData = @{
 # and no "platform" field shall be added to the dependency.
 $suppressPlatformForDependency = @{
     "boost-coroutine2"            = @("boost-context");
-    "boost-dll"                   = @("boost-filesystem");
     "boost-process"               = @("boost-filesystem");
     "boost-geometry"              = @("boost-graph");
     "boost-graph"                 = @("boost-random");
@@ -670,6 +679,11 @@ foreach ($library in $libraries) {
 
         # Remove optional dependencies
         $deps = @($deps `
+            | Where-Object {
+                # Boost.SmartPtr is not linked by default
+                # See https://github.com/apolukhin/Boost.DLL/blob/develop/CMakeLists.txt
+                -not ($library -eq 'dll' -and $_ -eq 'smart_ptr')
+            } `
             | Where-Object {
                 # Boost.Filesystem only used for tests or examples
                 # See https://github.com/boostorg/gil#requirements

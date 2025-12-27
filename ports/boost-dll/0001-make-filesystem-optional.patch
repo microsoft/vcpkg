@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ef20753..2720563 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,7 +45,7 @@ target_include_directories(boost_dll_boost_fs INTERFACE include)
+ target_link_libraries(boost_dll_boost_fs
+   INTERFACE
+     Boost::dll_base # Internal dependency
+-    Boost::filesystem
++    $<TARGET_NAME_IF_EXISTS:Boost::filesystem>
+ )
+ 
+ # Detault library
