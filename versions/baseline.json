@@ -7369,7 +7369,7 @@
       "port-version": 0
     },
     "orc": {
-      "baseline": "2.1.0",
+      "baseline": "2.2.1",
       "port-version": 0
     },
     "orefkov-simstr": {
