@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version": "6.9.3",
+  "version": "6.10.0",
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -190,7 +190,8 @@
     },
     {
       "name": "qtwebview",
-      "default-features": false
+      "default-features": false,
+      "platform": "x64 | arm64"
     },
     {
       "name": "qtwebview",

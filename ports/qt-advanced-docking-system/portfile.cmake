@@ -1,9 +1,18 @@
+vcpkg_download_distfile(
+    patch_gui_private
+    URLS https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System/commit/893af516b2a312751edc460f5a9117e319865485.diff
+    FILENAME 893af516b2a312751edc460f5a9117e319865485.diff
+    SHA512 7ab7f02546723225a9869e39b0525a8e3f9f2e6b6265c883a399249482522d883b062250972c66c78c611046eba48a323a9cfecac90400dc676302f68c3cc8ac
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
     REF "${VERSION}"
     SHA512 c5a7ddeb18e86cbda32829d0fc1e8fa7f14fdc7057dff1d1fb416a29f394ca676bcc611c3d537ebf496929ea4090ca9c1b2c9d1273117022de863565cdc3a1a6
     HEAD_REF master
+    PATCHES
+      ${patch_gui_private}
 )
 
 if(VCPKG_CROSSCOMPILING)

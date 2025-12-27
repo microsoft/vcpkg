@@ -1,6 +1,6 @@
 {
   "name": "qtmultimedia",
-  "version": "6.9.3",
+  "version": "6.10.0",
   "description": "Qt Multimedia is an add-on module that provides a rich set of QML types and C++ classes to handle multimedia content.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -11,7 +11,8 @@
       "features": [
         "concurrent",
         "gui",
-        "network"
+        "network",
+        "thread"
       ]
     },
     {

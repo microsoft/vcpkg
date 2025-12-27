@@ -1,6 +1,6 @@
 {
   "name": "qt5compat",
-  "version": "6.9.3",
+  "version": "6.10.0",
   "description": "The Qt 5 Core Compat module contains the Qt 5 Core APIs that were removed in Qt 6. The module facilitates the transition to Qt 6.",
   "homepage": "https://www.qt.io/",
   "license": null,
