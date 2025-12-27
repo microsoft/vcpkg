@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 920e4c3..6c2401a 100644
+index 920e4c3..d2e8abc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -87,8 +87,8 @@ if(OpenMVS_USE_OPENMP)
@@ -42,7 +42,21 @@ index 920e4c3..6c2401a 100644
  	endif()
  	SET(_USE_BOOST TRUE)
  	if(OpenMVS_USE_PYTHON AND Boost_${Boost_EXTRA_COMPONENTS}_FOUND)
-@@ -282,11 +281,11 @@ INCLUDE(CMakePackageConfigHelpers)
+@@ -206,11 +205,9 @@ if(Boost_FOUND)
+ 	endif()
+ endif()
+ 
+-FIND_PACKAGE(Eigen3 3.4 REQUIRED)
++FIND_PACKAGE(Eigen3 3.4...5 CONFIG REQUIRED)
++set(EIGEN3_FOUND 1)
+ if(EIGEN3_FOUND)
+-	LIST(APPEND OpenMVS_EXTRA_INCLUDES ${EIGEN3_INCLUDE_DIR})
+-	INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
+-	ADD_DEFINITIONS(${EIGEN3_DEFINITIONS})
+ 	SET(_USE_EIGEN TRUE)
+ 	MESSAGE(STATUS "Eigen ${EIGEN3_VERSION} found (include: ${EIGEN3_INCLUDE_DIR})")
+ endif()
+@@ -282,11 +279,11 @@ INCLUDE(CMakePackageConfigHelpers)
  write_basic_package_version_file("${PROJECT_BINARY_DIR}/OpenMVSConfigVersion.cmake"
  	VERSION ${OpenMVS_VERSION}
  	COMPATIBILITY AnyNewerVersion)
@@ -68,10 +82,10 @@ index 3bb00c6..e54c840 100644
  ADD_SUBDIRECTORY(InterfaceCOLMAP)
  ADD_SUBDIRECTORY(InterfaceMetashape)
 diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
-index 9747b3e..34d4148 100644
+index 9747b3e..7f1f177 100644
 --- a/build/Templates/OpenMVSConfig.cmake.in
 +++ b/build/Templates/OpenMVSConfig.cmake.in
-@@ -15,8 +15,49 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+@@ -15,8 +15,46 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
  
  set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
  
@@ -89,35 +103,33 @@ index 9747b3e..34d4148 100644
 +
 +find_dependency(Boost COMPONENTS iostreams system serialization)
 +
-+find_dependency(Eigen3)
++find_dependency(Eigen3 CONFIG)
 +list(APPEND OpenMVS_DEFINITIONS ${EIGEN3_DEFINITIONS})
 +
 +find_dependency(OpenCV)
 +
 +find_dependency(CGAL)
 +
-+if(@OpenMVS_USE_CERES@)
++if("@OpenMVS_USE_CERES@")
 +    find_dependency(Ceres)
 +endif()
 +
-+if(@OpenMVS_USE_CUDA@)
++if("@OpenMVS_USE_CUDA@")
 +    find_dependency(CUDAToolkit)
 +    list(APPEND OpenMVS_INCLUDE_DIRS ${CUDAToolkit_INCLUDE_DIRS})
 +endif()
 +
-+if(@OpenMVS_USE_OPENGL@)
++if("@OpenMVS_USE_OPENGL@")
 +    find_dependency(OpenGL)
 +endif()
 +
-+if(@OpenMVS_USE_OPENMP@)
++if("@OpenMVS_USE_OPENMP@")
 +    find_dependency(OpenMP COMPONENTS CXX)
 +endif()
 +
  # These are IMPORTED targets created by OpenMVSTargets.cmake
- set(OpenMVS_LIBRARIES MVS)
-+if(NOT "@BUILD_SHARED_LIBS@")
-+    set(OpenMVS_LIBRARIES OpenMVS::MVS)
-+endif()
+-set(OpenMVS_LIBRARIES MVS)
++set(OpenMVS_LIBRARIES OpenMVS::MVS)
  set(OpenMVS_BINARIES InterfaceCOLMAP DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
  
  include("${CMAKE_CURRENT_LIST_DIR}/OpenMVSTargets.cmake")
@@ -185,22 +197,33 @@ index 86d3430..5306186 100644
  endfunction()
  
  # cxx_executable_with_flags(name cxx_flags libs srcs...)
+diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
+index 18899af..a2a0559 100644
+--- a/libs/Common/CMakeLists.txt
++++ b/libs/Common/CMakeLists.txt
+@@ -13,6 +13,7 @@ endif()
+ 
+ # Link its dependencies
+ TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
++TARGET_LINK_LIBRARIES(Common Eigen3::Eigen)
+ 
+ # Install
+ SET_TARGET_PROPERTIES(Common PROPERTIES
 diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
-index 8533865..0a013ea 100644
+index 8533865..47a6a7e 100644
 --- a/libs/MVS/CMakeLists.txt
 +++ b/libs/MVS/CMakeLists.txt
-@@ -49,6 +49,14 @@ if(_USE_CUDA)
+@@ -48,7 +48,12 @@ endif()
+ if(_USE_CUDA)
  	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
  endif()
- TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
+-TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
++TARGET_LINK_LIBRARIES(MVS PRIVATE        Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
++TARGET_LINK_LIBRARIES(MVS PUBLIC Common)
 +if(OpenMVS_USE_OPENMP)
 +	target_link_libraries(MVS PRIVATE "$<INSTALL_INTERFACE:OpenMP::OpenMP_CXX>")
 +endif()
-+target_include_directories(MVS PUBLIC
-+	"$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>"
-+	"$<INSTALL_INTERFACE:${EIGEN3_INCLUDE_DIR}>"
-+	"$<INSTALL_INTERFACE:${OpenCV_INCLUDE_DIRS}>"
-+)
++TARGET_INCLUDE_DIRECTORIES(MVS PUBLIC "$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>")
  
  if(OpenMVS_USE_PYTHON)
  	# Create the Python wrapper
