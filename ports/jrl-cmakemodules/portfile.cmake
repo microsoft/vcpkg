@@ -25,4 +25,7 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL
+        "${CMAKE_CURRENT_LIST_DIR}/usage"
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
