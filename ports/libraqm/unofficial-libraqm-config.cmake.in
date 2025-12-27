@@ -4,7 +4,6 @@ cmake_policy(SET CMP0054 NEW)
 cmake_policy(SET CMP0057 NEW)
 
 if(TARGET libraqm)
-    set(RAQM_FOUND TRUE)
     return()
 endif()
 
