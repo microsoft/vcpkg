@@ -1,0 +1,18 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 341a4c3..1aaff3e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -112,6 +112,13 @@ SET(CPACK_PACKAGE_CONTACT "Apache ORC <dev@orc.apache.org>")
+ 
+ INCLUDE(CPack)
+ INCLUDE(ExternalProject)
++function(ExternalProject_Add name)
++  z_vcpkg_function_arguments(args 1)
++  if(NOT "${name}" MATCHES "^orc-format")
++    message(FATAL_ERROR "Unexpected external project: ${name}")
++  endif()
++  _ExternalProject_Add(${name} "${args}")
++endfunction()
+ 
+ if (BUILD_POSITION_INDEPENDENT_LIB)
+   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
