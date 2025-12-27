@@ -31,6 +31,10 @@
         {
           "name": "getopt-win32",
           "platform": "windows & !mingw"
+        },
+        {
+          "name": "gettimeofday",
+          "platform": "windows & !mingw"
         }
       ]
     }

@@ -1,5 +1,5 @@
 diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
-index d247f90..e9ba9a3 100644
+index d247f90..5c38a59 100644
 --- a/tools/src/CMakeLists.txt
 +++ b/tools/src/CMakeLists.txt
 @@ -36,8 +36,12 @@
@@ -49,3 +49,16 @@ index d247f90..e9ba9a3 100644
    )
  
  target_link_libraries (orc-memory
+@@ -108,6 +108,12 @@ add_executable (csv-import
+ target_link_libraries (csv-import
+   orc-tools-common
+   )
++if(WIN32 AND NOT MINGW)
++  find_file(GETTIMEOFDAY_H gettimeofday.h REQUIRED)
++  file(COPY "${GETTIMEOFDAY_H}" DESTINATION "${PROJECT_SOURCE_DIR}/c++/include/sys" RENAME "time.h")
++  find_library(GETTIMEOFDAY_LIBRARY gettimeofday PATH_SUFFIXES manual-link REQUIRED)
++  target_link_libraries(csv-import "${GETTIMEOFDAY_LIBRARY}")
++endif()
+ 
+ set(CPP_TOOL_NAMES
+   orc-contents
