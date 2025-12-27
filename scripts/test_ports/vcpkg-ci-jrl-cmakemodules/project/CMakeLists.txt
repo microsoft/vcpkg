@@ -1,8 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
-set(PROJECT_NAME jrl-cmakemodules-test)
-
 # 1. MANDATORY: Define metadata required by jrl-cmakemodules
+set(PROJECT_NAME jrl-cmakemodules-test)
 set(PROJECT_DESCRIPTION "Description of my project")
 set(PROJECT_URL "https://github.com/user/project")
 
