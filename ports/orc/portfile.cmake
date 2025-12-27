@@ -39,6 +39,8 @@ vcpkg_cmake_configure(
     -DINSTALL_VENDORED_LIBS=OFF
     -DORC_PACKAGE_KIND=vcpkg
     -DSTOP_BUILD_ON_WARNING=OFF
+  OPTIONS_DEBUG
+    -DBUILD_TOOLS=OFF
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
