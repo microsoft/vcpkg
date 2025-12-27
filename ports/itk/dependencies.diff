@@ -40,10 +40,38 @@ index 135c1d3..f644a32 100644
    set(ITKDoubleConversion_INCLUDE_DIRS
      ${ITKDoubleConversion_SOURCE_DIR}/src
 diff --git a/Modules/ThirdParty/Eigen3/CMakeLists.txt b/Modules/ThirdParty/Eigen3/CMakeLists.txt
-index 8dbbb86..428d335 100644
+index 8dbbb86..a3d2efe 100644
 --- a/Modules/ThirdParty/Eigen3/CMakeLists.txt
 +++ b/Modules/ThirdParty/Eigen3/CMakeLists.txt
-@@ -88,7 +88,7 @@ find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFI
+@@ -52,12 +52,12 @@ set(_Eigen3_min_version 3.3)
+ 
+ if(ITK_USE_SYSTEM_EIGEN)
+   set(_Eigen3_SYSTEM_OR_INTERNAL "Eigen3")
+-  find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFIG)
++  find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version}...5 REQUIRED CONFIG)
+   set(Eigen3_DIR_INSTALL ${Eigen3_DIR})
+   set(Eigen3_DIR_BUILD ${Eigen3_DIR})
+ else()
+   set(_Eigen3_SYSTEM_OR_INTERNAL "ITKInternalEigen3")
+-  find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFIG)
++  find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version}...5 REQUIRED CONFIG)
+   set(Eigen3_DIR_INSTALL "\${ITK_MODULES_DIR}")
+   set(_eigen3_build_dir "${ITK_BINARY_DIR}/ITKInternalEigen3-build")
+   set(Eigen3_DIR_BUILD "${_eigen3_build_dir}")
+@@ -77,18 +77,18 @@ set(ITKEigen3_INCLUDE_DIRS
+ set(ITKEigen3_EXPORT_CODE_INSTALL "
+ set(ITK_USE_SYSTEM_EIGEN \"${ITK_USE_SYSTEM_EIGEN}\")
+ set(${_Eigen3_SYSTEM_OR_INTERNAL}_DIR \"${Eigen3_DIR_INSTALL}\")
+-find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFIG)
++find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version}...5 REQUIRED CONFIG)
+ ")
+ set(ITKEigen3_EXPORT_CODE_BUILD "
+ set(ITK_USE_SYSTEM_EIGEN \"${ITK_USE_SYSTEM_EIGEN}\")
+ set(${_Eigen3_SYSTEM_OR_INTERNAL}_DIR \"${Eigen3_DIR_BUILD}\")
+-find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version} REQUIRED CONFIG)
++find_package(${_Eigen3_SYSTEM_OR_INTERNAL} ${_Eigen3_min_version}...5 REQUIRED CONFIG)
+ ")
+ 
  # Eigen3 targets are not installed if ITK_USE_SYSTEM_EIGEN==True
  itk_module_impl()
  
