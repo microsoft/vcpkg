@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 15065d874..540c12253 100644
+index 2b9ca8ed6..a9798c35e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -302,6 +302,7 @@ endif (protobuf_BUILD_TESTS)
+@@ -274,6 +274,7 @@ endif (protobuf_BUILD_TESTS)
  include(${protobuf_SOURCE_DIR}/cmake/abseil-cpp.cmake)
  
  if (protobuf_BUILD_PROTOBUF_BINARIES)
@@ -11,25 +11,48 @@ index 15065d874..540c12253 100644
    include(${protobuf_SOURCE_DIR}/cmake/libprotobuf-lite.cmake)
    if (NOT DEFINED protobuf_LIB_PROTOBUF_LITE)
 diff --git a/cmake/libprotobuf-lite.cmake b/cmake/libprotobuf-lite.cmake
-index 9aa81fb88..699c92ddd 100644
+index 6a923f6c8..d910c8499 100644
 --- a/cmake/libprotobuf-lite.cmake
 +++ b/cmake/libprotobuf-lite.cmake
-@@ -46,4 +46,4 @@ set_target_properties(libprotobuf-lite PROPERTIES
+@@ -43,4 +43,4 @@ set_target_properties(libprotobuf-lite PROPERTIES
  )
  add_library(protobuf::libprotobuf-lite ALIAS libprotobuf-lite)
  
 -target_link_libraries(libprotobuf-lite PRIVATE utf8_validity)
 +target_link_libraries(libprotobuf-lite PRIVATE utf8_range::utf8_validity)
 diff --git a/cmake/libprotobuf.cmake b/cmake/libprotobuf.cmake
-index 11c09b1bc..33ebac7cc 100644
+index 22df1fd14..ea9a1054b 100644
 --- a/cmake/libprotobuf.cmake
 +++ b/cmake/libprotobuf.cmake
-@@ -48,4 +48,4 @@ set_target_properties(libprotobuf PROPERTIES
+@@ -45,4 +45,4 @@ set_target_properties(libprotobuf PROPERTIES
  )
  add_library(protobuf::libprotobuf ALIAS libprotobuf)
  
--target_link_libraries(libprotobuf PRIVATE utf8_validity)
-+target_link_libraries(libprotobuf PRIVATE utf8_range::utf8_validity)
+-target_link_libraries(libprotobuf PUBLIC utf8_validity)
++target_link_libraries(libprotobuf PUBLIC utf8_range::utf8_validity)
+diff --git a/cmake/libupb.cmake b/cmake/libupb.cmake
+index 1cbbaa209..4feb0345e 100644
+--- a/cmake/libupb.cmake
++++ b/cmake/libupb.cmake
+@@ -48,4 +48,4 @@ set_target_properties(libupb PROPERTIES
+     VISIBILITY_INLINES_HIDDEN ON
+ )
+ add_library(protobuf::libupb ALIAS libupb)
+-target_link_libraries(libupb PRIVATE utf8_range)
++target_link_libraries(libupb PRIVATE utf8_range::utf8_range)
+diff --git a/cmake/upb_generators.cmake b/cmake/upb_generators.cmake
+index 7a55f851e..de897a079 100644
+--- a/cmake/upb_generators.cmake
++++ b/cmake/upb_generators.cmake
+@@ -24,7 +24,7 @@ foreach(generator upb upbdefs upb_minitable)
+   endif()
+   target_link_libraries(protoc-gen-${generator}
+     libprotobuf
+-    utf8_validity
++    utf8_range::utf8_validity
+     ${protobuf_LIB_UPB}
+     ${protobuf_ABSL_USED_TARGETS}
+   )
 diff --git a/cmake/utf8_range.cmake b/cmake/utf8_range.cmake
 index f411a8c5b..21bf8235b 100644
 --- a/cmake/utf8_range.cmake

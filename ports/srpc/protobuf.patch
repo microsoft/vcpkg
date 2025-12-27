@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6c1aafc..97854a6 100644
+index 7d61f98..2681c22 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -58,11 +58,10 @@ else ()
@@ -16,7 +16,7 @@ index 6c1aafc..97854a6 100644
  		message("Workflow third_party FOUND. Use for source code dependencies.")
  		set(WORKFLOW_INSTALLED 0)
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 3b47ee6..15c8009 100644
+index 7c2d5b3..89ff1ab 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -16,7 +16,7 @@ set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
@@ -28,12 +28,15 @@ index 3b47ee6..15c8009 100644
  endif ()
  
  if (WIN32)
-@@ -59,8 +59,8 @@ if (WIN32)
+@@ -57,10 +57,10 @@ include_directories(
+ 
+ if (WIN32)
  	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   /MP /wd4200")
- 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /wd4200 /Zc:__cplusplus /std:c++14")
+-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /wd4200 /Zc:__cplusplus /std:c++14")
++	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /wd4200 /Zc:__cplusplus")
  else ()
 -	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -fPIC -pipe -std=gnu90")
--	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -pipe -std=c++11 -fno-exceptions")
+-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -pipe -std=c++14 -fno-exceptions")
 +	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -fPIC -pipe")
 +	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -pipe -fno-exceptions")
  endif ()

@@ -1,0 +1,24 @@
+diff --git a/src/PlatformSocket_p.h b/src/PlatformSocket_p.h
+index f2dbd1c..b0f8ca7 100644
+--- a/src/PlatformSocket_p.h
++++ b/src/PlatformSocket_p.h
+@@ -21,6 +21,7 @@
+ 
+ #include <memory>
+ #include <string>
++#include <cstdint>
+ 
+ namespace Arcus
+ {
+diff --git a/src/Types.h b/src/Types.h
+index ac55c0e..50320dc 100644
+--- a/src/Types.h
++++ b/src/Types.h
+@@ -21,6 +21,7 @@
+ 
+ #include <string>
+ #include <memory>
++#include <cstdint>
+ 
+ namespace google
+ {

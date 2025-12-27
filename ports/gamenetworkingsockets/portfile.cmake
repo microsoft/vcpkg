@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-depend-protobuf.patch
+        protobuf-6.patch
 )
 
 set(CRYPTO_BACKEND OpenSSL)
