@@ -10,5 +10,16 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "sdformat"
+  ],
+  "features": {
+    "sdformat": {
+      "description": "Test for search_for_sdformat in jrl-cmakemodules",
+      "dependencies": [
+        "sdformat"
+      ]
+    }
+  }
 }

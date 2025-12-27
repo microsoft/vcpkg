@@ -1,5 +1,25 @@
-The package jrl-cmakemodules provides CMake macros to manage projects.
-To use it correctly with vcpkg, you MUST find it before the main project() call:
+The package jrl-cmakemodules provides a collection of CMake macros
+used to manage projects in the jrl-umi3218 ecosystem.
+
+It is primarily intended for internal use by libraries such as
+coal and pinocchio.
+
+This package relies on several non-standard and non-modern CMake
+patterns. As a result, it is generally **not recommended** to use
+jrl-cmakemodules directly in new projects unless you know exactly
+what you are doing.
+
+Due to these design choices, jrl-cmakemodules **must be located and
+initialized before the main `project()` call** when used with vcpkg.
+In particular, it is strongly recommended to define the environment
+variable
+
+    ENV{jrl-cmakemodules_ROOT}
+
+ahead of time, so that `find_package(jrl-cmakemodules CONFIG REQUIRED)`
+can succeed before `project()` is invoked.
+
+A minimal working example is shown below.
 
     cmake_minimum_required(VERSION 3.22)
 
@@ -15,7 +35,7 @@ To use it correctly with vcpkg, you MUST find it before the main project() call:
     include(${jrl-cmakemodules_DIR}/base.cmake)
 
     # 4. Setup project arguments (Version, Policies, etc.)
-    COMPUTE_PROJECT_ARGS(PROJECT_ARGS LANGUAGES CXX)
+    compute_project_args(PROJECT_ARGS LANGUAGES CXX)
     project(${PROJECT_NAME} ${PROJECT_ARGS})
 
     # 5. (Optional) Link to the target if you need its include directories

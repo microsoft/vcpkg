@@ -12,5 +12,12 @@ find_package(jrl-cmakemodules CONFIG REQUIRED)
 include(${jrl-cmakemodules_DIR}/base.cmake)
 
 # 4. Setup project arguments (Version, Policies, etc.)
-COMPUTE_PROJECT_ARGS(PROJECT_ARGS LANGUAGES CXX)
+compute_project_args(PROJECT_ARGS LANGUAGES CXX)
 project(${PROJECT_NAME} ${PROJECT_ARGS})
+
+# 5. Find sdformat
+option(TEST_SDFORMAT "Test for search_for_sdformat in jrl-cmakemodules" OFF)
+if (TEST_SDFORMAT)
+    include(${jrl-cmakemodules_DIR}/sdformat.cmake)
+    search_for_sdformat(REQUIRED)
+endif ()

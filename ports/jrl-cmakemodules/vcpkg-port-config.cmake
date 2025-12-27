@@ -1,2 +1,2 @@
 include_guard(GLOBAL)
-set(jrl-cmakemodules_DIR "${CMAKE_CURRENT_LIST_DIR}")
+set(ENV{jrl-cmakemodules_ROOT} "${CMAKE_CURRENT_LIST_DIR}")
