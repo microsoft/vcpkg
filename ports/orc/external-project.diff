@@ -16,3 +16,16 @@ index 341a4c3..1aaff3e 100644
  
  if (BUILD_POSITION_INDEPENDENT_LIB)
    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+diff --git a/cmake_modules/ThirdpartyToolchain.cmake b/cmake_modules/ThirdpartyToolchain.cmake
+index 851cdc4..a23115e 100644
+--- a/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cmake_modules/ThirdpartyToolchain.cmake
+@@ -397,7 +397,7 @@ add_library (orc::lz4 ALIAS orc_lz4)
+ # ----------------------------------------------------------------------
+ # IANA - Time Zone Database
+ 
+-if (WIN32)
++if (WIN32 AND BUILD_CPP_TESTS)
+   SET(CURRENT_TZDATA_FILE "")
+   SET(CURRENT_TZDATA_SHA512 "")
+   File(DOWNLOAD "https://ftp.osuosl.org/pub/cygwin/noarch/release/tzdata/sha512.sum" ${CMAKE_CURRENT_BINARY_DIR}/sha512.sum)

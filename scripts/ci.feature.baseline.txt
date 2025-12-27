@@ -199,6 +199,7 @@ openzl:x64-windows-release=fail
 openzl:x64-windows-static-md=fail
 openzl:x64-windows-static=fail
 openzl:x64-windows=fail
+orc(android)=fail  # try_run for time_t properties
 paho-mqtt(uwp)=fail
 paraview(arm64 & windows & !uwp)=fail # in-build host tools
 pfring:arm64-osx=fail
