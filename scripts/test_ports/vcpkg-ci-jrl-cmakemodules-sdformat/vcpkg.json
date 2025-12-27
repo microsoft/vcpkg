@@ -1,0 +1,15 @@
+{
+  "name": "vcpkg-ci-jrl-cmakemodules-sdformat",
+  "version-string": "ci",
+  "description": "Port to force features of jrl-cmakemodules sdformat within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    "jrl-cmakemodules",
+    "sdformat",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

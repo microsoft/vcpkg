@@ -4,7 +4,7 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 32198c5778586b0be83398fd5e99901d08be266cec441e1f7e75700e6a3d8734db4888b7a1e779005095e3a842d6cafcebba6a8bf1c6f10fd3ac5ed366fd0011
     PATCHES
-        support_sdformat_15.diff
+        sdformat_auto_version.diff
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
