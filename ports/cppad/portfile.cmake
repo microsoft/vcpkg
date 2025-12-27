@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CppAD
     REF "${VERSION}"
-    SHA512 c94637d1859a8f3ac2ac3064d8f9f0baefefe8da6d4534bfa6a1602d610844bb3838bd9a2fcaf8ae1cce5dc2a2adb5e7eacaeccf006d746552eb2ff3ca75494a
+    SHA512 f2dffaeaaf46dcd051a3354478c7ba61ed6a3538cdcc39c066fd9eb22ef58f0cde30079595e9db273d6484a31c8f73c84061ac7f5a5028f920ec74ef26c8e7c1
     HEAD_REF master
 )
 

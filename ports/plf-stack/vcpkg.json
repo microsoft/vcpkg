@@ -1,7 +1,6 @@
 {
   "name": "plf-stack",
-  "version-date": "2019-08-10",
-  "port-version": 2,
+  "version": "2.0.13",
   "description": "A C++ data container replicating std::stack functionality but with better performance",
   "homepage": "https://www.plflib.org/"
 }

@@ -14,6 +14,7 @@ vcpkg_from_github(
         interface-metashape.diff
         missing-include.diff
         no-absolute-paths.patch
+        fix-eigen3.patch
 )
 file(REMOVE "${SOURCE_PATH}/build/Modules/FindEigen3.cmake")
 

@@ -4,8 +4,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 2745b373e31cea58623224def6090c491b58409803bb71231450dfa2cfdf3aafc3fc6f680585d55d085008f8cf362c3062ae67ffc7d80257775a22eb81ef1e57
 )
 
-vcpkg_extract_source_archive(
-    SOURCE_PATH
+vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-makefiles.patch
@@ -35,67 +34,62 @@ if(ENABLE_RTTOPO)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    set(CL_FLAGS "")
-    if(NOT ENABLE_FREEXL)
-        string(APPEND CL_FLAGS " /DOMIT_FREEXL")
-    endif()
-    if(ENABLE_GCP)
-        string(APPEND CL_FLAGS " /DENABLE_GCP")
-    endif()
-    if(ENABLE_RTTOPO)
-        string(APPEND CL_FLAGS " /DENABLE_RTTOPO")
-    endif()
-
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
         MODULES --msvc-syntax ${pkg_config_modules}
-        LIBS
         CFLAGS
+        LIBS
     )
-    
-    set(CL_FLAGS_RELEASE "${CL_FLAGS} ${PKGCONFIG_CFLAGS_RELEASE}")
-    set(CL_FLAGS_DEBUG "${CL_FLAGS} ${PKGCONFIG_CFLAGS_DEBUG}")
 
-    # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
-    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
-        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
-        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
+    # cherry-picked from Makefile.vc (CFLAGS) and nmake.opt (OPTFLAGS)
+    set(CFLAGS "/fp:precise /W4 /D_CRT_SECURE_NO_WARNINGS /DYY_NO_UNISTD_H -I./src/headers -I./src/topology -I.")
+    set(WANT_LIB spatialite.lib)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        string(APPEND CFLAGS " /DDLL_EXPORT")
+        set(WANT_LIB spatialite_i.lib)
     endif()
+    if(NOT ENABLE_FREEXL)
+        string(APPEND CFLAGS " /DOMIT_FREEXL")
+    endif()
+    if(ENABLE_GCP)
+        string(APPEND CFLAGS " /DENABLE_GCP")
+    endif()
+    if(ENABLE_RTTOPO)
+        string(APPEND CFLAGS " /DENABLE_RTTOPO")
+    endif()
+
+    set(SYSTEM_LIBS "iconv.lib charset.lib")
 
     file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
 
     vcpkg_install_nmake(
         SOURCE_PATH "${SOURCE_PATH}"
-        PREFER_JOM
         CL_LANGUAGE C
-        OPTIONS_RELEASE
-            "CL_FLAGS=${CL_FLAGS_RELEASE}"
-            "INST_DIR=${INST_DIR}"
-            "LIBS_ALL=${PKGCONFIG_LIBS_RELEASE} iconv.lib charset.lib"
+        OPTIONS
+            "WANT_LIB=${WANT_LIB}"
+         OPTIONS_RELEASE
+            "CFLAGS=${CFLAGS} ${PKGCONFIG_CFLAGS_RELEASE}"
+            "LIBS=${PKGCONFIG_LIBS_RELEASE} ${SYSTEM_LIBS}"
+            "INSTDIR=${INST_DIR}"
         OPTIONS_DEBUG
-            "CL_FLAGS=${CL_FLAGS_DEBUG}"
-            "INST_DIR=${INST_DIR}\\debug"
-            "LIBS_ALL=${PKGCONFIG_LIBS_DEBUG} iconv.lib charset.lib"
-            "LINK_FLAGS=/debug"
+            "CFLAGS=${CFLAGS} ${PKGCONFIG_CFLAGS_DEBUG}"
+            "LIBS=${PKGCONFIG_LIBS_DEBUG} ${SYSTEM_LIBS}"
+            "INSTDIR=${INST_DIR}\\debug"
     )
     vcpkg_copy_pdbs()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+    file(GLOB_RECURSE headers "${CURRENT_PACKAGES_DIR}/include/*.h")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib")
-        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib")
-        endif()
+        foreach(file IN LISTS headers)
+            vcpkg_replace_string("${file}" "#ifdef DLL_EXPORT" "#if 0" IGNORE_UNCHANGED)
+        endforeach()
     else()
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/lib/spatialite.lib")
-        if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib")
-        endif()
+        foreach(file IN LISTS headers)
+            vcpkg_replace_string("${file}" "#ifdef DLL_EXPORT" "#if 1" IGNORE_UNCHANGED)
+            vcpkg_replace_string("${file}" "__declspec(dllexport)" "__declspec(dllimport)" IGNORE_UNCHANGED)
+        endforeach()
     endif()
 
     set(infile "${SOURCE_PATH}/spatialite.pc.in")
@@ -140,7 +134,7 @@ else()
     list(REMOVE_ITEM pkg_config_modules libxml2) # handled properly by configure
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
-        MODULES ${pkg_config_modules} 
+        MODULES ${pkg_config_modules}
         LIBS
     )
     if(VCPKG_TARGET_IS_MINGW)

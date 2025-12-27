@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
     REF "v${VERSION}"
-    SHA512 0e897a1a3e1499150c26dc0ce4fc1fa4e5323cd84e0f1b6cdf305b4cfd3fd46cbefddf490241e8645a9bd291e485a830d109b1c7a83e13b816f0345839c4c36c
+    SHA512 5c376d9bf6388f04e5d48375a70682f9d7edcd65809383afc0190c77140b086492abc17a8d3a2aa07e59dde681ab17a919e9b8b7e174a91a2951c30b262c10e4
     HEAD_REF master
     PATCHES fix-gcem.patch
 )
@@ -53,7 +53,7 @@ endif()
 foreach(_option IN LISTS OPTIONS_TO_ENABLE)
     list(APPEND ENABLED_OPTIONS "-D${_option}:BOOL=ON")
 endforeach()
-    
+
 foreach(_option IN LISTS OPTIONS_TO_DISABLE IGNORED_OPTIONS)
     list(APPEND DISABLED_OPTIONS "-D${_option}:BOOL=OFF")
 endforeach()
