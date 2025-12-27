@@ -38,7 +38,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+if(NOT VCPKG_BUILD_TYPE)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/shaderc.pc" "-lglslang" "-lglslangd")
     endif()
