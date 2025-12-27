@@ -4533,7 +4533,7 @@
       "port-version": 2
     },
     "leptonica": {
-      "baseline": "1.85.0",
+      "baseline": "1.87.0",
       "port-version": 0
     },
     "lerc": {

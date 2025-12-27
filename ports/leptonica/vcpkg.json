@@ -1,6 +1,6 @@
 {
   "name": "leptonica",
-  "version": "1.85.0",
+  "version": "1.87.0",
   "description": "An open source library containing software that is broadly useful for image processing and image analysis applications",
   "homepage": "https://github.com/DanBloomberg/leptonica",
   "license": null,
