@@ -1,0 +1,18 @@
+{
+  "name": "beaengine",
+  "version": "5.3.0",
+  "description": "BeaEngine is a C library designed to decode instructions from 16 bits, 32 bits and 64 bits intel architectures.",
+  "homepage": "https://github.com/BeaEngine/beaengine",
+  "license": "LGPL-3.0-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}
