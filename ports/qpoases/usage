@@ -1,0 +1,10 @@
+The package quarter provides CMake targets:
+
+    find_package(qpOASES CONFIG REQUIRED)
+
+    target_link_libraries(your_target PRIVATE qpOASES::qpOASES)
+
+    For backward compatibility, the following variables are also provided:
+
+    target_include_directories(your_target PRIVATE ${qpOASES_INCLUDE_DIR})
+    target_link_libraries(your_target PRIVATE ${qpOASES_LIBRARY})
