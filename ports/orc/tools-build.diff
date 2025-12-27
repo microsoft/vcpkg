@@ -1,5 +1,5 @@
 diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
-index d247f90..f096e01 100644
+index d247f90..e9ba9a3 100644
 --- a/tools/src/CMakeLists.txt
 +++ b/tools/src/CMakeLists.txt
 @@ -36,8 +36,12 @@
@@ -11,7 +11,7 @@ index d247f90..f096e01 100644
 +add_library (orc-tools-common STATIC ToolsHelper.cc)
 +if(WIN32 AND NOT MINGW)
 +  find_package(getopt CONFIG REQUIRED)
-+  target_link_libraries(orc-tools-common PRIVATE $<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>)
++  target_link_libraries(orc-tools-common PUBLIC $<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>)
 +endif()
 +target_include_directories (orc-tools-common PUBLIC
    ${PROJECT_BINARY_DIR}/c++/include
