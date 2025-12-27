@@ -5405,7 +5405,7 @@
       "port-version": 1
     },
     "libraw": {
-      "baseline": "0.21.4",
+      "baseline": "0.21.5",
       "port-version": 0
     },
     "librdkafka": {
