@@ -1,18 +1,61 @@
-diff --git a/Project/CMake/cmake/modules/FindTinyXML.cmake b/Project/CMake/cmake/modules/FindTinyXML.cmake
-index af97107..4667b65 100644
---- a/Project/CMake/cmake/modules/FindTinyXML.cmake
-+++ b/Project/CMake/cmake/modules/FindTinyXML.cmake
-@@ -23,7 +23,7 @@ endif(PKG_CONFIG_FOUND)
+diff --git a/Project/CMake/CMakeLists.txt b/Project/CMake/CMakeLists.txt
+index 700dce3..449a6dd 100644
+--- a/Project/CMake/CMakeLists.txt
++++ b/Project/CMake/CMakeLists.txt
+@@ -80,7 +80,7 @@ endif()
+ set(MediaInfoLib_SOURCES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../Source)
  
- set(TinyXML_INCLUDE_DIRS ${PC_TINYXML_INCLUDE_DIRS} CACHE PATH "TinyXML include directory" FORCE)
- set(TinyXML_LIBRARY_DIRS ${PC_TINYXML_LIBRARY_DIRS} CACHE PATH "TinyXML library directory" FORCE)
--set(TinyXML_LIBRARIES ${PC_TINYXML_LIBRARIES} CACHE STRING "TinyXML libraries" FORCE)
-+set(TinyXML_LIBRARIES ${PC_TINYXML_LINK_LIBRARIES} CACHE STRING "TinyXML libraries" FORCE)
- include(FindPackageHandleStandardArgs)
+ # use bundled tinyxml only if no system
+-find_package(TinyXML)
++find_package(TinyXML NAMES TinyXML2 REQUIRED)
  
- find_package_handle_standard_args(TinyXML
+ # use system curl if is present
+ find_package(CURL)
+@@ -389,8 +389,7 @@ target_compile_definitions(mediainfo PRIVATE FMT_UNICODE=0)
+ if(NOT CURL_FOUND)
+   target_compile_definitions(mediainfo PRIVATE MEDIAINFO_LIBCURL_NO)
+ else()
+-  include_directories(${CURL_INCLUDE_DIRS})
+-  target_link_libraries(mediainfo ${CURL_LIBRARIES})
++  target_link_libraries(mediainfo PRIVATE CURL::libcurl)
+   set(CURL_PC " libcurl")
+   set(CURL_LIB " -lcurl")
+ endif()
+@@ -411,14 +410,14 @@ target_include_directories(mediainfo PRIVATE
+ if(NOT TinyXML_FOUND)
+   target_include_directories(mediainfo PRIVATE ${MediaInfoLib_SOURCES_PATH}/ThirdParty/tinyxml2/)
+ else()
+-  target_link_libraries(mediainfo "${TinyXML_LIBRARIES}")
++  target_link_libraries(mediainfo PRIVATE tinyxml2::tinyxml2)
+ endif()
+ 
+ if(BUILD_ZENLIB)
+   target_include_directories(mediainfo PRIVATE ${ZLIB_INCLUDE_DIRS})
+ endif()
+ 
+-target_link_libraries(mediainfo ${ZenLib_LIBRARY} ${ZLIB_LIBRARIES})
++target_link_libraries(mediainfo PUBLIC zen PRIVATE ZLIB::ZLIB)
+ 
+ if(MSVC AND BUILD_SHARED_LIBS)
+   install(FILES $<TARGET_PDB_FILE:mediainfo> DESTINATION ${BIN_INSTALL_DIR} OPTIONAL)
+diff --git a/Project/CMake/MediaInfoLibConfig.cmake.in b/Project/CMake/MediaInfoLibConfig.cmake.in
+index 76fec5d..97d8286 100644
+--- a/Project/CMake/MediaInfoLibConfig.cmake.in
++++ b/Project/CMake/MediaInfoLibConfig.cmake.in
+@@ -1,3 +1,11 @@
++include(CMakeFindDependencyMacro)
++find_dependency(tinyxml2 CONFIG)
++find_dependency(ZenLib CONFIG)
++find_dependency(ZLIB)
++if("@VCPKG_LOCK_FIND_PACKAGE_CURL@")
++  find_dependency(CURL)
++endif()
++
+ # known at buildtime
+ set(MediaInfoLib_VERSION "@MediaInfoLib_VERSION@")
+ set(MediaInfoLib_VERSION_MAJOR @MediaInfoLib_MAJOR_VERSION@)
 diff --git a/Project/CMake/libmediainfo.pc.in b/Project/CMake/libmediainfo.pc.in
-index 31e53fe..0829d71 100644
+index 31e53fe..2382088 100644
 --- a/Project/CMake/libmediainfo.pc.in
 +++ b/Project/CMake/libmediainfo.pc.in
 @@ -8,6 +8,6 @@ Name: libmediainfo
@@ -21,6 +64,6 @@ index 31e53fe..0829d71 100644
  Requires: libzen
 -Requires.private:@CURL_PC@
 -Libs: -L${libdir} -lmediainfo -lz
-+Requires.private: libcurl tinyxml2 zlib
++Requires.private: @CURL_PC@ tinyxml2 zlib
 +Libs: -L${libdir} -lmediainfo
  Cflags: -I${includedir}
