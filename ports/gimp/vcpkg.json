@@ -1,0 +1,96 @@
+{
+  "name": "gimp",
+  "version": "3.2.0",
+  "description": "GNU Image Manipulation Program which is useful for photo retouching, image composition and image authoring.",
+  "homepage": "https://www.gimp.org/",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!static & (!windows | mingw)",
+  "dependencies": [
+    "appstream",
+    {
+      "name": "babl",
+      "default-features": false,
+      "features": [
+        "introspection"
+      ]
+    },
+    "cairo",
+    "exiv2",
+    "fontconfig",
+    "freetype",
+    {
+      "name": "gdk-pixbuf",
+      "default-features": false,
+      "features": [
+        "introspection",
+        "others"
+      ]
+    },
+    {
+      "name": "gegl",
+      "default-features": false,
+      "features": [
+        "cairo",
+        "introspection"
+      ]
+    },
+    {
+      "name": "gettext",
+      "host": true
+    },
+    {
+      "name": "gexiv2",
+      "default-features": false,
+      "features": [
+        "introspection"
+      ]
+    },
+    {
+      "name": "glib-networking",
+      "default-features": false,
+      "features": [
+        "openssl"
+      ]
+    },
+    {
+      "name": "gobject-introspection",
+      "features": [
+        "cairo"
+      ]
+    },
+    {
+      "name": "gtk3",
+      "default-features": false,
+      "features": [
+        "introspection"
+      ]
+    },
+    "harfbuzz",
+    "json-glib",
+    "lcms",
+    "libarchive",
+    "libmypaint",
+    "librsvg",
+    "libxml2",
+    "mypaint-brushes",
+    {
+      "name": "pango",
+      "default-features": false,
+      "features": [
+        "introspection"
+      ]
+    },
+    {
+      "name": "poppler",
+      "features": [
+        "glib"
+      ]
+    },
+    "poppler-data",
+    "tiff",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ]
+}
