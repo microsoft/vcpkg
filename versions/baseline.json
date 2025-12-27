@@ -6805,8 +6805,8 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "2023-11-22",
-      "port-version": 1
+      "baseline": "2025-12-16",
+      "port-version": 0
     },
     "neko-event": {
       "baseline": "1.0.1",
