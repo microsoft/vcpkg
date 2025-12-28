@@ -9413,8 +9413,8 @@
       "port-version": 0
     },
     "srpc": {
-      "baseline": "0.10.3",
-      "port-version": 1
+      "baseline": "0.10.4",
+      "port-version": 0
     },
     "sse2neon": {
       "baseline": "1.8.0",
