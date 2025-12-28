@@ -6,7 +6,10 @@
   "license": "AGPL-3.0-only",
   "supports": "!xbox",
   "dependencies": [
+    "boost-assert",
+    "boost-graph",
     "boost-iostreams",
+    "boost-pool",
     "boost-serialization",
     "boost-system",
     "boost-throw-exception",

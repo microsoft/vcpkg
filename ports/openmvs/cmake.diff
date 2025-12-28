@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 920e4c3..4d810ea 100644
+index 920e4c3..5f7e936 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -87,8 +87,8 @@ if(OpenMVS_USE_OPENMP)
@@ -29,7 +29,7 @@ index 920e4c3..4d810ea 100644
  endif()
  
 -FIND_PACKAGE(Boost REQUIRED COMPONENTS iostreams program_options system serialization OPTIONAL_COMPONENTS ${Boost_EXTRA_COMPONENTS})
-+FIND_PACKAGE(Boost REQUIRED COMPONENTS iostreams                 system serialization OPTIONAL_COMPONENTS ${Boost_EXTRA_COMPONENTS})
++FIND_PACKAGE(Boost REQUIRED COMPONENTS assert graph iostreams pool serialization throw_exception OPTIONAL_COMPONENTS ${Boost_EXTRA_COMPONENTS})
  if(Boost_FOUND)
  	LIST(APPEND OpenMVS_EXTRA_INCLUDES ${Boost_INCLUDE_DIRS})
 -	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
@@ -81,7 +81,7 @@ index 3bb00c6..e54c840 100644
  ADD_SUBDIRECTORY(InterfaceCOLMAP)
  ADD_SUBDIRECTORY(InterfaceMetashape)
 diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
-index 9747b3e..714cbb0 100644
+index 9747b3e..514f5a0 100644
 --- a/build/Templates/OpenMVSConfig.cmake.in
 +++ b/build/Templates/OpenMVSConfig.cmake.in
 @@ -15,8 +15,27 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
@@ -89,7 +89,7 @@ index 9747b3e..714cbb0 100644
  set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(Boost COMPONENTS iostreams system serialization)
++find_dependency(Boost COMPONENTS iostreams pool serialization throw_exception)
 +find_dependency(Eigen3 CONFIG)
 +find_dependency(OpenCV)
 +find_dependency(CGAL)
@@ -178,18 +178,20 @@ index 86d3430..b69fe50 100644
  
  # cxx_executable_with_flags(name cxx_flags libs srcs...)
 diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
-index 18899af..f483ea4 100644
+index 18899af..258ada0 100644
 --- a/libs/Common/CMakeLists.txt
 +++ b/libs/Common/CMakeLists.txt
-@@ -12,7 +12,16 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
+@@ -12,7 +12,18 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
  endif()
  
  # Link its dependencies
 -TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
 +TARGET_LINK_LIBRARIES(Common
++	$<BUILD_INTERFACE:Boost::assert>
 +	Boost::iostreams
-+	Boost::system
++	Boost::pool
 +	Boost::serialization
++	Boost::throw_exception
 +	${OpenCV_LIBS}
 +	Eigen3::Eigen
 +)
@@ -200,16 +202,17 @@ index 18899af..f483ea4 100644
  # Install
  SET_TARGET_PROPERTIES(Common PROPERTIES
 diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
-index 8533865..47a6a7e 100644
+index 8533865..2a13923 100644
 --- a/libs/MVS/CMakeLists.txt
 +++ b/libs/MVS/CMakeLists.txt
-@@ -48,7 +48,12 @@ endif()
+@@ -48,7 +48,13 @@ endif()
  if(_USE_CUDA)
  	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
  endif()
 -TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
 +TARGET_LINK_LIBRARIES(MVS PRIVATE        Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
 +TARGET_LINK_LIBRARIES(MVS PUBLIC Common)
++TARGET_LINK_LIBRARIES(MVS PRIVATE $<BUILD_INTERFACE:Boost::graph>)
 +if(OpenMVS_USE_OPENMP)
 +	target_link_libraries(MVS PRIVATE "$<INSTALL_INTERFACE:OpenMP::OpenMP_CXX>")
 +endif()
