@@ -1,12 +1,13 @@
 diff --git a/libs/Common/EventQueue.cpp b/libs/Common/EventQueue.cpp
-index 82f835b..26a9283 100644
+index 82f835b..fccfa41 100644
 --- a/libs/Common/EventQueue.cpp
 +++ b/libs/Common/EventQueue.cpp
-@@ -9,6 +9,7 @@
- #include "EventQueue.h"
+@@ -80,7 +80,7 @@ bool EventQueue::IsEmpty() const
+ 	return m_events.IsEmpty();
+ }
  
- using namespace SEACAVE;
-+using SEACAVE::uint_t;
- 
- 
- // D E F I N E S ///////////////////////////////////////////////////
+-uint_t EventQueue::GetSize() const
++SEACAVE::uint_t EventQueue::GetSize() const
+ {
+ 	Lock l(m_cs);
+ 	return m_events.GetSize();

@@ -190,7 +190,7 @@ index 86d3430..5306186 100644
  
  # cxx_executable_with_flags(name cxx_flags libs srcs...)
 diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
-index 18899af..676fca7 100644
+index 18899af..1b84353 100644
 --- a/libs/Common/CMakeLists.txt
 +++ b/libs/Common/CMakeLists.txt
 @@ -12,7 +12,12 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
@@ -202,7 +202,7 @@ index 18899af..676fca7 100644
 +TARGET_LINK_LIBRARIES(Common Boost::iostreams Boost::system Boost::serialization)
 +TARGET_LINK_LIBRARIES(Common Eigen3::Eigen)
 +if(BUILD_EXTRA_FLAGS MATCHES "/Zc:__cplusplus")
-+	target_compile_options(Common PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>")
++	target_compile_options(Common PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-Zc:__cplusplus>")
 +endif()
  
  # Install
