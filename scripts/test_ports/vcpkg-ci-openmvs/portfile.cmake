@@ -13,8 +13,5 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/libs")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/apps/Tests"
-    DISABLE_PARALLEL_CONFIGURE
-    OPTIONS
-        --trace-expand
 )
 vcpkg_cmake_build()
