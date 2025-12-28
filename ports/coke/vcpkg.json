@@ -4,7 +4,7 @@
   "description": "Coroutine Workflow based on C++ 20",
   "homepage": "https://github.com/kedixa/coke",
   "license": "Apache-2.0",
-  "supports": "osx | linux",
+  "supports": "osx | linux | freebsd",
   "dependencies": [
     "openssl",
     {
