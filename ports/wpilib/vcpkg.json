@@ -51,7 +51,8 @@
         {
           "name": "wpilib",
           "features": [
-            "ntcore"
+            "ntcore",
+            "wpimath"
           ]
         }
       ]
