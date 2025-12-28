@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 32fdea7..cc311e0 100644
+index 32fdea7..e1dea41 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -286,62 +286,26 @@ endif()
+@@ -286,62 +286,22 @@ endif()
  include("cmake/nuget.cmake")
  include("cmake/module.cmake")
  
@@ -62,22 +62,18 @@ index 32fdea7..cc311e0 100644
 -
 -target_link_libraries(${PROJECT_NAME} ${saucer_linkage} boost_preprocessor cr::lockpp cr::flagpp)
 -target_link_libraries(${PROJECT_NAME} PUBLIC            boost_callable_traits cr::ereignis fmt::fmt cr::rebind cr::poolparty cr::eraser)
-+find_path(FLAGPP_INCLUDE_DIRS "flagpp")
-+add_library(cr::flagpp INTERFACE IMPORTED)
-+target_include_directories(cr::flagpp INTERFACE ${FLAGPP_INCLUDE_DIRS})
 +find_path(EREIGNIS_INCLUDE_DIRS "ereignis")
 +add_library(cr::ereignis INTERFACE IMPORTED)
 +target_include_directories(cr::ereignis INTERFACE ${EREIGNIS_INCLUDE_DIRS})
-+find_path(REBIND_INCLUDE_DIRS "rebind")
-+add_library(cr::rebind INTERFACE IMPORTED)
-+target_include_directories(cr::rebind INTERFACE ${REBIND_INCLUDE_DIRS})
 +find_path(POOLPARTY_INCLUDE_DIRS "poolparty")
 +add_library(cr::poolparty INTERFACE IMPORTED)
 +target_include_directories(cr::poolparty INTERFACE ${POOLPARTY_INCLUDE_DIRS})
 +
 +find_package(fmt CONFIG REQUIRED)
 +find_package(eraser REQUIRED)
++find_package(flagpp REQUIRED)
 +find_package(lockpp REQUIRED)
++find_package(rebind REQUIRED)
 +find_package(Boost REQUIRED COMPONENTS callable_traits preprocessor)
 +
 +target_link_libraries(${PROJECT_NAME} ${saucer_linkage} Boost::preprocessor cr::lockpp cr::flagpp)
@@ -85,7 +81,7 @@ index 32fdea7..cc311e0 100644
  
  # --------------------------------------------------------------------------------------------------------
  # Setup Backends
-@@ -405,7 +369,7 @@ if (saucer_backend STREQUAL "WebView2")
+@@ -405,7 +365,7 @@ if (saucer_backend STREQUAL "WebView2")
    target_compile_definitions(${PROJECT_NAME} PRIVATE UNICODE=1 _UNICODE=1 NOMINMAX=1)
  
    include("cmake/webview2.cmake")
@@ -94,7 +90,7 @@ index 32fdea7..cc311e0 100644
  endif()
  
  # --------------------------------------------------------------------------------------------------------
-@@ -418,12 +382,8 @@ if (saucer_serializer STREQUAL "Glaze")
+@@ -418,12 +378,8 @@ if (saucer_serializer STREQUAL "Glaze")
    )
  
    target_sources(${PROJECT_NAME} PRIVATE ${glaze_sources})

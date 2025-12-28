@@ -37,7 +37,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         quicklib-depheaders.patch
-        fix-list_filter.patch
 )
 
 vcpkg_from_github(
