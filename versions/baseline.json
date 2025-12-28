@@ -649,7 +649,7 @@
       "port-version": 0
     },
     "bde": {
-      "baseline": "4.18.0.0",
+      "baseline": "4.32.0.0",
       "port-version": 0
     },
     "bdwgc": {
