@@ -1904,6 +1904,10 @@
       "baseline": "2024-04-08",
       "port-version": 0
     },
+    "coke": {
+      "baseline": "0.7.0",
+      "port-version": 0
+    },
     "collada-dom": {
       "baseline": "2.5.0",
       "port-version": 11
