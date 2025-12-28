@@ -30,7 +30,7 @@
 ##                            feature as first one to add no feature to every test combination.
 ##
 ## You could select ports by triplet or supports expression:
-##    curl[wchar]:arm64-osx = feature-fails # the wchar feature does not work on !windows
+##    curl[wchar]:arm64-osx =feature-fails # the wchar feature does not work on !windows
 ##    curl[wchar](!windows) = feature-fails # Using support expressions is often shorter than listing all triplets
 ##
 ## Examples:
@@ -42,7 +42,7 @@
 ##    vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 ##
 ##    entt[experimental] = skip # required head build
-##    realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core] only supports native & windows
+##    realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core]  only supports native & windows
 ##
 ##    # Testing all targets separately would be too time consuming:
 ##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test
@@ -1766,6 +1766,7 @@ vtk-m[omp](osx) = feature-fails # no openmp on default osx toolchain
 vtk-m[omp](windows) = feature-fails # needs openmp 4.0, msvc has openmp 2.0
 wasmedge[aot] = feature-fails # ar: /libzstd.a: No such file or directory. See https://github.com/microsoft/vcpkg/issues/32146
 wayland[force-build](native) = feature-fails # error: To build wayland libraries the `force-build` feature must be enabled and the X_VCPKG_FORCE_VCPKG_WAYLAND_LIBRARIES triplet variable must be set.
+wpilib[simulationmodules](static) = feature-fails
 xbitmaps(osx) = fail # error: must install xorg-macros 1.3 or later before running autoconf/autogen
 xerces-c[xmlch-wchar](!windows) = feature-fails # wchar_t must be 16 bit and not 32
 
