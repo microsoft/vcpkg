@@ -42,7 +42,7 @@
 ##    vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 ##
 ##    entt[experimental] = skip # required head build
-##    realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core]  only supports native & windows
+##    realsense2[openni2](!windows) = cascade # cpkg-tool-lessmsi[core] only supports native & windows
 ##
 ##    # Testing all targets separately would be too time consuming:
 ##    halide[target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-powerpc,target-riscv,target-x86] = no-separate-feature-test
