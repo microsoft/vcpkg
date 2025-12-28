@@ -11,12 +11,11 @@ what you are doing.
 
 Due to these design choices, jrl-cmakemodules **must be located and
 initialized before the main `project()` call** when used with vcpkg.
-In particular, it is strongly recommended to define the environment
-variable
+In particular, it is strongly recommended to define the cmake variable
 
-    ENV{jrl-cmakemodules_ROOT}
+    jrl-cmakemodules_ROOT
 
-ahead of time, so that `find_package(jrl-cmakemodules CONFIG REQUIRED)`
+So that `find_package(jrl-cmakemodules CONFIG REQUIRED)`
 can succeed before `project()` is invoked.
 
 A minimal working example is shown below.
