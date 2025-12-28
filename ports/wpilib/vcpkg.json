@@ -36,11 +36,25 @@
     "cameraserver": {
       "description": "This option will cause cscore to be built. Turning this off will implicitly disable cameraserver. If this is off, the OpenCV build requirement is removed.",
       "dependencies": [
-        "opencv"
+        "opencv",
+        {
+          "name": "wpilib",
+          "features": [
+            "ntcore"
+          ]
+        }
       ]
     },
     "gui": {
-      "description": "This option will build GUI items. If this is off, and simulationmodules is on, the simulation GUI will not be built."
+      "description": "This option will build GUI items. If this is off, and simulationmodules is on, the simulation GUI will not be built.",
+      "dependencies": [
+        {
+          "name": "wpilib",
+          "features": [
+            "ntcore"
+          ]
+        }
+      ]
     },
     "ntcore": {
       "description": "This option will cause ntcore to be built. Turning this off will implicitly disable wpinet, and will cause an error if allwpilib is enabled."
@@ -52,7 +66,15 @@
       ]
     },
     "simulationmodules": {
-      "description": "This option will build simulation modules."
+      "description": "This option will build simulation modules.",
+      "dependencies": [
+        {
+          "name": "wpilib",
+          "features": [
+            "allwpilib"
+          ]
+        }
+      ]
     },
     "wpimath": {
       "description": "This option will build the wpimath library. This option must be on to build wpilib."
