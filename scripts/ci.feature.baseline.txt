@@ -30,7 +30,7 @@
 ##                            feature as first one to add no feature to every test combination.
 ##
 ## You could select ports by triplet or supports expression:
-##    curl[wchar]:arm64-osx =feature-fails # the wchar feature does not work on !windows
+##    curl[wchar]:arm64-osx = feature-fails # the wchar feature does not work on !windows
 ##    curl[wchar](!windows) = feature-fails # Using support expressions is often shorter than listing all triplets
 ##
 ## Examples:
