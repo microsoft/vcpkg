@@ -81,40 +81,28 @@ index 3bb00c6..e54c840 100644
  ADD_SUBDIRECTORY(InterfaceCOLMAP)
  ADD_SUBDIRECTORY(InterfaceMetashape)
 diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
-index 9747b3e..0831483 100644
+index 9747b3e..714cbb0 100644
 --- a/build/Templates/OpenMVSConfig.cmake.in
 +++ b/build/Templates/OpenMVSConfig.cmake.in
-@@ -15,8 +15,39 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+@@ -15,8 +15,27 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
  
  set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
  
-+set(CMAKE_CXX_STANDARD 14)
-+set(CMAKE_CXX_STANDARD_REQUIRED ON)
-+
 +include(CMakeFindDependencyMacro)
-+
 +find_dependency(Boost COMPONENTS iostreams system serialization)
-+
 +find_dependency(Eigen3 CONFIG)
-+list(APPEND OpenMVS_DEFINITIONS ${EIGEN3_DEFINITIONS})
-+
 +find_dependency(OpenCV)
-+
 +find_dependency(CGAL)
-+
 +if("@OpenMVS_USE_CERES@")
 +    find_dependency(Ceres)
 +endif()
-+
 +if("@OpenMVS_USE_CUDA@")
 +    find_dependency(CUDAToolkit)
 +    list(APPEND OpenMVS_INCLUDE_DIRS ${CUDAToolkit_INCLUDE_DIRS})
 +endif()
-+
 +if("@OpenMVS_USE_OPENGL@")
 +    find_dependency(OpenGL)
 +endif()
-+
 +if("@OpenMVS_USE_OPENMP@")
 +    find_dependency(OpenMP COMPONENTS CXX)
 +endif()
@@ -126,7 +114,7 @@ index 9747b3e..0831483 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/OpenMVSTargets.cmake")
 diff --git a/build/Utils.cmake b/build/Utils.cmake
-index 86d3430..5306186 100644
+index 86d3430..b69fe50 100644
 --- a/build/Utils.cmake
 +++ b/build/Utils.cmake
 @@ -119,6 +119,7 @@ macro(GetOperatingSystemArchitectureBitness)
@@ -149,7 +137,7 @@ index 86d3430..5306186 100644
  	set(PACKAGE_LIB_SUFFIX_DBG "")
  	set(PACKAGE_LIB_SUFFIX_REL "")
  	if(MSVC)
-+	elseif(0)
++	elseif(0) # do not use subdirs per vc version/config
  		if("${MSVC_VERSION}" STRGREATER "1929")
  			set(PACKAGE_LIB_SUFFIX "/vc17")
  		elseif("${MSVC_VERSION}" STRGREATER "1916")
@@ -190,17 +178,21 @@ index 86d3430..5306186 100644
  
  # cxx_executable_with_flags(name cxx_flags libs srcs...)
 diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
-index 18899af..1b84353 100644
+index 18899af..f483ea4 100644
 --- a/libs/Common/CMakeLists.txt
 +++ b/libs/Common/CMakeLists.txt
-@@ -12,7 +12,12 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
+@@ -12,7 +12,16 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
  endif()
  
  # Link its dependencies
 -TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
-+TARGET_LINK_LIBRARIES(Common                    ${OpenCV_LIBS})
-+TARGET_LINK_LIBRARIES(Common Boost::iostreams Boost::system Boost::serialization)
-+TARGET_LINK_LIBRARIES(Common Eigen3::Eigen)
++TARGET_LINK_LIBRARIES(Common
++	Boost::iostreams
++	Boost::system
++	Boost::serialization
++	${OpenCV_LIBS}
++	Eigen3::Eigen
++)
 +if(BUILD_EXTRA_FLAGS MATCHES "/Zc:__cplusplus")
 +	target_compile_options(Common PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-Zc:__cplusplus>")
 +endif()
