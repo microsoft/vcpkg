@@ -1712,6 +1712,10 @@
       "baseline": "7.0.3",
       "port-version": 7
     },
+    "chlog": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "chmlib": {
       "baseline": "0.40",
       "port-version": 8

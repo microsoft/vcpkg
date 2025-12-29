@@ -1,0 +1,15 @@
+{
+  "name": "chlog",
+  "version-string": "1.0.0",
+  "description": "Header-only C++20 logging library with optional async and extensible sinks",
+  "homepage": "https://github.com/jiannanya/chlog",
+  "license": "MIT",
+  "features": {
+    "fmt": {
+      "description": "Enable optional {fmt} backend integration (consumer defines CHLOG_USE_FMT)",
+      "dependencies": [
+        "fmt"
+      ]
+    }
+  }
+}
