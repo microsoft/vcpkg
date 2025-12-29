@@ -1,10 +1,10 @@
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO joaoleal/CppADCodeGen
-        REF "v${VERSION}"
-        SHA512 e197b9a9cb5e091dceead33e3d82a77f8b2a80e5e37d99b23d67ded19f6a7fb0b5b99e4322b9cb053b98d0e730cdab547a73b3073d921109acf83d7aade2e3fa
-        HEAD_REF master
-        PATCHES
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO joaoleal/CppADCodeGen
+    REF "v${VERSION}"
+    SHA512 e197b9a9cb5e091dceead33e3d82a77f8b2a80e5e37d99b23d67ded19f6a7fb0b5b99e4322b9cb053b98d0e730cdab547a73b3073d921109acf83d7aade2e3fa
+    HEAD_REF master
+    PATCHES
         change_main_cmake.diff
         undef_CONST.diff
 )
@@ -12,7 +12,7 @@ vcpkg_from_github(
 set(VCPKG_BUILD_TYPE release) # header-only port
 
 vcpkg_cmake_configure(
-        SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}
 )
 
 vcpkg_cmake_install()
