@@ -12,6 +12,7 @@ vcpkg_from_github(
         ambiguous-uint_t.diff
         cmake.diff
         common-log.diff
+        devendor.diff
         interface-metashape.diff
         missing-include.diff
         no-absolute-paths.patch

@@ -20,6 +20,7 @@
     "eigen3",
     "libjpeg-turbo",
     "libpng",
+    "nlohmann-json",
     {
       "name": "opencv",
       "default-features": false,
@@ -31,6 +32,8 @@
       "name": "tiff",
       "default-features": false
     },
+    "tinygltf",
+    "tinyxml2",
     "vcglib",
     {
       "name": "vcpkg-cmake",
