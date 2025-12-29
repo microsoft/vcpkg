@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF f2fd7252322b1b52be248b9ef96f8981de3b86ff
     SHA512 64502b4d1ca4296eb979a67f6058a80e931bb6db0cb29b94f6cb3285efe9a216e0014ea379a4018004f9354369bb98e5160474263568a825842e1e4d83a74225
     HEAD_REF master
+    PATCHES
+        disable-examples-tests.patch
 )
 
 configure_file(
