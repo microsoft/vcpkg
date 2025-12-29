@@ -1,7 +1,7 @@
 {
   "name": "openmvs",
   "version": "2.1.0",
-  "port-version": 7,
+  "port-version": 8,
   "description": "OpenMVS: open Multi-View Stereo reconstruction library",
   "homepage": "https://cdcseacave.github.io/openMVS",
   "license": "AGPL-3.0-only",
