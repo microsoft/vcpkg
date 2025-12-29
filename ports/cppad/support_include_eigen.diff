@@ -1,0 +1,109 @@
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision baf37ba33d98d19c2eb0aac2535cc58da903f158)
++++ b/CMakeLists.txt	(date 1767023874397)
+@@ -127,11 +127,11 @@
+    )
+ ENDIF( cmake_needs_dot_slash )
+ #
+-IF( include_eigen )
+-   MESSAGE(FATAL_ERROR
+-      "include_eigen was removed; see release notes for 2024-10-02"
+-   )
+-ENDIF( )
++# IF( include_eigen )
++#    MESSAGE(FATAL_ERROR
++#       "include_eigen was removed; see release notes for 2024-10-02"
++#    )
++# ENDIF( )
+ # -----------------------------------------------------------------------------
+ # Current Arguments
+ #
+Index: cmake/eigen_info.cmake
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+diff --git a/cmake/eigen_info.cmake b/cmake/eigen_info.cmake
+--- a/cmake/eigen_info.cmake	(revision baf37ba33d98d19c2eb0aac2535cc58da903f158)
++++ b/cmake/eigen_info.cmake	(date 1767024793360)
+@@ -4,8 +4,14 @@
+ # ----------------------------------------------------------------------------
+ # eigen_info()
+ #
++# include_eigen: (in)
++# is set by this macro to a cache BOOL variable initialized as false.
++# It can be changed by the cmake command line or gui.
++# If it is true, there must be a pkg-config file for eigen3 and
++# the corresponding include directories added using INCLUDE_DIRECTORIES.
++#
+ # cppad_has_eigen: (out)
+-# is 1 (0) if eigen is found (not found)
++# is 1 if include_eigen is true and eigen is found, 0 otherwise.
+ # If this is 1, the include directory for eigen will automatically be
+ # added using INCLUDE_DIRECTORIES with the SYSTEM flag.
+ #
+@@ -17,27 +23,38 @@
+ # This macro may use variables with the name eigen_*
+ MACRO(eigen_info)
+    #
+-   # check for pkg-config
+-   IF( NOT PKG_CONFIG_FOUND )
+-      FIND_PACKAGE(PkgConfig REQUIRED)
+-   ENDIF( )
+-   #
+-   #
+-   IF( NOT ${use_cplusplus_2014_ok} )
+-      MESSAGE(STATUS "Eigen not supportedL: because c++14 not supported")
+-      SET(cppad_has_eigen 0)
+-   ELSE( )
+-      #
+-      # eigen_*
+-      pkg_check_modules(eigen QUIET eigen3 )
+-      #
+-      IF( eigen_FOUND )
+-         MESSAGE(STATUS "Eigen found")
+-         SET(cppad_has_eigen 1)
+-         INCLUDE_DIRECTORIES( SYSTEM ${eigen_INCLUDE_DIRS} )
+-      ELSE( )
+-         MESSAGE(STATUS "Eigen not Found: eigen3.pc not in PKG_CONFIG_PATH")
+-         SET(cppad_has_eigen 0)
++   # include_eigen
++   SET(
++      include_eigen
++      FALSE CACHE BOOL "include eigen using its pkgconfig file"
++   )
++   print_variable( include_eigen )
++   IF( NOT include_eigen )
++      SET(cppad_has_eigen 0)
++   ELSE( )
++      #
++      # check for pkg-config
++      IF( NOT PKG_CONFIG_FOUND )
++         FIND_PACKAGE(PkgConfig REQUIRED)
++      ENDIF( )
++      #
++      #
++      IF( NOT ${use_cplusplus_2014_ok} )
++         MESSAGE(STATUS "Eigen not supportedL: because c++14 not supported")
++         SET(cppad_has_eigen 0)
++      ELSE( )
++         #
++         # eigen_*
++         pkg_check_modules(eigen QUIET eigen3 )
++         #
++         IF( eigen_FOUND )
++            MESSAGE(STATUS "Eigen found")
++            SET(cppad_has_eigen 1)
++            INCLUDE_DIRECTORIES( SYSTEM ${eigen_INCLUDE_DIRS} )
++         ELSE( )
++            MESSAGE(STATUS "Eigen not Found: eigen3.pc not in PKG_CONFIG_PATH")
++            SET(cppad_has_eigen 0)
++         ENDIF( )
+       ENDIF( )
+    ENDIF( )
+    #

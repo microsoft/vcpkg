@@ -4,6 +4,13 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 f2dffaeaaf46dcd051a3354478c7ba61ed6a3538cdcc39c066fd9eb22ef58f0cde30079595e9db273d6484a31c8f73c84061ac7f5a5028f920ec74ef26c8e7c1
     HEAD_REF master
+    PATCHES
+        support_include_eigen.diff
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        eigen   include_eigen
 )
 
 vcpkg_cmake_configure(
@@ -11,6 +18,7 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
+        ${FEATURE_OPTIONS}
     OPTIONS_RELEASE
         -Dcmake_install_libdirs=lib
     OPTIONS_DEBUG
