@@ -1617,7 +1617,7 @@
       "port-version": 1
     },
     "catch2": {
-      "baseline": "3.11.0",
+      "baseline": "3.12.0",
       "port-version": 0
     },
     "cblas": {
