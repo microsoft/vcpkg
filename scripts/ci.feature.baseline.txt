@@ -1181,6 +1181,7 @@ paraview[cuda](!(windows & x64 & !uwp & !xbox) & !(linux & x64) & !(linux & arm6
 paraview[mpi]:arm64-windows = cascade
 paraview[mpi]:arm64-windows-static-md = cascade
 paraview[mpi,vtkm]:x86-windows = cascade
+paraview[python]:arm64-windows = cascade
 paraview[python]:arm64-windows-static-md = feature-fails
 paraview(uwp) = cascade
 parmetis:arm64-windows = cascade
