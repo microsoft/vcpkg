@@ -1,4 +1,4 @@
-# Header-only library
+set(VCPKG_BUILD_TYPE release) # Header-only library
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Curve/coco
@@ -22,9 +22,8 @@ file(RENAME "${PACKAGE_PROJECT_PATH}" "${SOURCE_PATH}/cmake/packageproject.cmake
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/coco-${VERSION})
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/coco-${VERSION}" PACKAGE_NAME "coco")
 
-# remove empty lib and debug/lib directories (and duplicate files from debug/include)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")  # from CMake config
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
