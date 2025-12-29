@@ -3,7 +3,7 @@
   "version": "3.2.2",
   "description": "Open-source C++ implementation of the online active set strategy for quadratic programming",
   "homepage": "https://github.com/coin-or/qpOASES",
-  "license": "LGPL-2.1",
+  "license": "LGPL-2.1-only",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
