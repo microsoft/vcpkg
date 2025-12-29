@@ -15,19 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "dae": {
-      "description": "Enable DAE index reduction (Eigen required)",
-      "dependencies": [
-        "eigen3"
-      ]
-    },
-    "jit": {
-      "description": "Enable JIT compilation using Clang/LLVM",
-      "dependencies": [
-        "llvm"
-      ]
-    }
-  }
+  ]
 }
