@@ -9469,7 +9469,7 @@
       "port-version": 1
     },
     "stlab-copy-on-write": {
-      "baseline": "1.0.3",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "stormlib": {
