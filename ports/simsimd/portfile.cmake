@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         export-target.patch
         force-c17-on-msvc.patch
+        support-msvc.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
