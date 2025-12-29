@@ -1,14 +1,13 @@
 {
-  "$comment": "See related issue for compilation failure on UWP and ARM: https://github.com/microsoft/vcpkg/pull/12560#issuecomment-668412073",
   "name": "cppad",
   "version": "20250000.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "CppAD: A Package for Differentiation of C++ Algorithms",
   "homepage": "https://github.com/coin-or/CppAD",
-  "license": "EPL-2.0",
-  "supports": "!uwp & !(windows & arm64)",
+  "license": "EPL-2.0 OR GPL-2.0-or-later",
   "dependencies": [
-    "pkgconf",
+    "boost-thread",
+    "eigen3",
     {
       "name": "vcpkg-cmake",
       "host": true
