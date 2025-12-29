@@ -23,6 +23,15 @@ endforeach()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZYRE_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZYRE_BUILD_STATIC)
 
+set(RUNTIME_FLAGS)
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+        list(APPEND RUNTIME_FLAGS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>DLL)
+    else()
+        list(APPEND RUNTIME_FLAGS -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>)
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -30,6 +39,7 @@ vcpkg_cmake_configure(
         -DZYRE_BUILD_SHARED=${ZYRE_BUILD_SHARED}
         -DZYRE_BUILD_STATIC=${ZYRE_BUILD_STATIC}
         -DENABLE_DRAFTS=OFF
+        ${RUNTIME_FLAGS}
 )
 
 vcpkg_cmake_install()
