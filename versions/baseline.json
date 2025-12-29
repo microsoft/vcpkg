@@ -8533,7 +8533,7 @@
       "port-version": 1
     },
     "recycle": {
-      "baseline": "7.0.0",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "red0124-ssp": {
