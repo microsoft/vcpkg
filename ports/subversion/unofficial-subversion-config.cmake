@@ -1,28 +1,6 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(apr CONFIG REQUIRED)
-
-find_library(APR_LIBRARY
-    NAMES apr-1 libapr-1
-    PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib
-    NO_DEFAULT_PATH
-)
-find_library(APR_LIBRARY_DEBUG
-    NAMES apr-1 libapr-1 apr-1d libapr-1d
-    PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib
-    NO_DEFAULT_PATH
-)
-
-find_library(APRUTIL_LIBRARY
-    NAMES aprutil-1 libaprutil-1
-    PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib
-    NO_DEFAULT_PATH
-)
-find_library(APRUTIL_LIBRARY_DEBUG
-    NAMES aprutil-1 libaprutil-1 aprutil-1d libaprutil-1d
-    PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib
-    NO_DEFAULT_PATH
-)
+find_dependency(apr CONFIG)
 
 find_path(SUBVERSION_INCLUDE_DIR 
     NAMES svn_client.h
