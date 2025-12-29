@@ -467,12 +467,17 @@ endif()
 
 set(VCPKG_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}")
 
+# by default we clobber our own source dir, but
+# this can be changed by setting X_VCPKG_TOOL_DIR
+set(X_VCPKG_TOOL_DIR "${Z_VCPKG_ROOT_DIR}"
+    CACHE PATH "The path to the directory the vcpkg tool is installed.")
+
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(Z_VCPKG_EXECUTABLE "${Z_VCPKG_ROOT_DIR}/vcpkg.exe")
+    set(Z_VCPKG_EXECUTABLE "${X_VCPKG_TOOL_DIR}/vcpkg.exe")
     set(Z_VCPKG_BOOTSTRAP_SCRIPT "${Z_VCPKG_ROOT_DIR}/bootstrap-vcpkg.bat")
 else()
-    set(Z_VCPKG_EXECUTABLE "${Z_VCPKG_ROOT_DIR}/vcpkg")
+    set(Z_VCPKG_EXECUTABLE "${X_VCPKG_TOOL_DIR}/vcpkg")
     set(Z_VCPKG_BOOTSTRAP_SCRIPT "${Z_VCPKG_ROOT_DIR}/bootstrap-vcpkg.sh")
 endif()
 
@@ -483,7 +488,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         set(Z_VCPKG_BOOTSTRAP_LOG "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log")
         file(TO_NATIVE_PATH "${Z_VCPKG_BOOTSTRAP_LOG}" Z_NATIVE_VCPKG_BOOTSTRAP_LOG)
         execute_process(
-            COMMAND "${Z_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS}
+            COMMAND "${Z_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS} -toolDir=${X_VCPKG_TOOL_DIR}
             OUTPUT_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
             ERROR_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
             RESULT_VARIABLE Z_VCPKG_BOOTSTRAP_RESULT)
