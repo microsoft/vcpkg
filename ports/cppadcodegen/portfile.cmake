@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release) # header-only port
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO joaoleal/CppADCodeGen
@@ -9,16 +11,12 @@ vcpkg_from_github(
         undef_CONST.diff
 )
 
-set(VCPKG_BUILD_TYPE release) # header-only port
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/pkgconfig/" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
 vcpkg_fixup_pkgconfig()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/epl-v10.txt" "${SOURCE_PATH}/gpl3.txt")
