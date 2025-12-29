@@ -6,13 +6,13 @@ set(${PORT}_PATCHES
       "cross-build.diff"
       "disable-host-pkgconfig.diff"
       "fix-error2275-2672.patch"
-      "nested-name-fix.patch"
       "osx-sdk-info.diff"
       "pdf-system-libjpeg.diff"
       "pdf-system-libpng.diff"
       "pkg-config.diff"
       "rpath.diff"
       "include-dir-order.diff"
+      "allow-msvc-145.diff"
 )
 
 set(qtwebengine_target "${VCPKG_TARGET_TRIPLET}-${VCPKG_CMAKE_SYSTEM_NAME}")

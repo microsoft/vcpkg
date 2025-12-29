@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/brpc
     REF "${VERSION}"
-    SHA512 954be2562f598ca9a0939a96cb6f0af98dbbd9b3d191db613516239be63643ccfd1836eeb0510549f3526915af92e7c1b7f3cab4c55b0257cfc0a3c5eb4fb7dd
+    SHA512 93366c2b073de8a1af5ededa9ef5a6803ccd393bbb5fe1f9872c230e4997995759517fa4dd1a51ffd120a5c9040dcb00b1c580c5ccf032dd70561c0c3283f990
     HEAD_REF master
     PATCHES
         fix-build.patch
@@ -33,4 +33,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/butil/third_party/superfasthash")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
-

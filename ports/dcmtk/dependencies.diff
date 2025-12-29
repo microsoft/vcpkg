@@ -1,5 +1,5 @@
 diff --git a/CMake/3rdparty.cmake b/CMake/3rdparty.cmake
-index 510027c..eb8fe90 100644
+index 837900575..2e1c0a2ef 100644
 --- a/CMake/3rdparty.cmake
 +++ b/CMake/3rdparty.cmake
 @@ -1,3 +1,11 @@
@@ -14,7 +14,7 @@ index 510027c..eb8fe90 100644
  set(USE_FIND_PACKAGE_DOCS "Control whether libraries are searched via CMake's find_package() mechanism or a Windows specific fallback")
  # Advanced user (eg. vcpkg) may want to override this:
  if(NOT DEFINED DCMTK_USE_FIND_PACKAGE_WIN_DEFAULT)
-@@ -42,7 +49,7 @@ if(DCMTK_USE_FIND_PACKAGE)
+@@ -42,7 +50,7 @@ if(DCMTK_USE_FIND_PACKAGE)
        else()
          message(STATUS "Info: DCMTK TIFF support will be enabled")
          include_directories(${TIFF_INCLUDE_DIR} ${JPEG_INCLUDE_DIR})
@@ -23,16 +23,16 @@ index 510027c..eb8fe90 100644
        endif()
      endif()
    endif()
-@@ -58,7 +65,7 @@ if(DCMTK_USE_FIND_PACKAGE)
+@@ -58,7 +66,7 @@ if(DCMTK_USE_FIND_PACKAGE)
        message(STATUS "Info: DCMTK PNG support will be enabled")
        set(WITH_LIBPNG 1)
        include_directories(${PNG_INCLUDE_DIR})
--      set(LIBPNG_LIBS ${PNG_LIBRARY})
+-      set(LIBPNG_LIBS ${PNG_LIBRARY} ${LIBPNG_EXTRA_LIBS_STATIC})
 +      set(LIBPNG_LIBS ${PNG_LIBRARIES})
      endif()
    endif()
  
-@@ -103,7 +110,7 @@ if(DCMTK_USE_FIND_PACKAGE)
+@@ -103,7 +111,7 @@ if(DCMTK_USE_FIND_PACKAGE)
      else()
        message(STATUS "Info: DCMTK XML support will be enabled")
        set(WITH_LIBXML 1)
@@ -41,7 +41,7 @@ index 510027c..eb8fe90 100644
        set(LIBXML_LIBS ${LIBXML2_LIBRARIES} ${LIBXML2_EXTRA_LIBS_STATIC})
      endif()
    endif()
-@@ -141,7 +148,10 @@ if(DCMTK_USE_FIND_PACKAGE)
+@@ -141,7 +149,10 @@ if(DCMTK_USE_FIND_PACKAGE)
    # Find libiconv
    if(DCMTK_WITH_ICONV)
      find_package(Iconv QUIET)
