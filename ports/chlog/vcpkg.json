@@ -1,6 +1,6 @@
 {
   "name": "chlog",
-  "version-string": "1.0.0",
+  "version": "1.0.0",
   "description": "Header-only C++20 logging library with optional async and extensible sinks",
   "homepage": "https://github.com/jiannanya/chlog",
   "license": "MIT",
