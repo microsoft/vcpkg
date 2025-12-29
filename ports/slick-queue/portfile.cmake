@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick_queue
     REF "v${VERSION}"
-    SHA512 52254f1e271e39ccaa9ca52bad7c53c261ee271803ed89e718798d93f9c78d8303eb3916f88933191595ed278b540d24afe351c5a55ee1f09cbdf09631c32dd3
+    SHA512 3d0dff64edcbf3d4f5e45f844ee440ccfedb508fd5801a051eaa1f9b7fb9108cb6558c5d9ba8ea351d45ee83cfdaeec304eccf472feb7cc45875ee52e3752bf3 
     HEAD_REF main
 )
 
@@ -24,3 +24,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

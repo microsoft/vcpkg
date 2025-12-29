@@ -47,10 +47,11 @@ vcpkg_from_github(
         use-compile-tools.diff
         zspace.diff # https://gitlab.kitware.com/vtk/vtk/-/commit/01a8bd7a917d33892f67a8d76ce7fc4b524d56b4
         mpi-language.diff
+        fix-eigen3.patch
 )
 
 # =============================================================================
-#Overwrite outdated modules if they have not been patched:
+# Overwrite outdated modules if they have not been patched:
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 
 file(REMOVE "${SOURCE_PATH}/CMake/FindOGG.cmake")
@@ -256,8 +257,6 @@ endif()
 
 # =============================================================================
 # Configure & Install
-
-
 
 # We set all libraries to "system" and explicitly list the ones that should use embedded copies
 vcpkg_cmake_configure(

@@ -716,6 +716,12 @@
       "dependencies": [
         "zlib"
       ]
+    },
+    "zmq": {
+      "description": "Enable ZeroMQ support",
+      "dependencies": [
+        "zeromq"
+      ]
     }
   }
 }

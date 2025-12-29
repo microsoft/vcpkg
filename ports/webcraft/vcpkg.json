@@ -1,6 +1,6 @@
 {
   "name": "webcraft",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An async first C++ networking library leveraging powerful features of C++23 built for scale, speed, and ease.",
   "homepage": "https://github.com/adityarao2005/WebCraft/",
   "license": "MIT",
