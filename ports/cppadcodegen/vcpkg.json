@@ -1,0 +1,33 @@
+{
+  "name": "cppadcodegen",
+  "version": "2.5.0",
+  "description": "Source code generation for automatic differentiation using operator overloading (extension of CppAD)",
+  "homepage": "https://github.com/joaoleal/CppADCodeGen",
+  "license": "EPL-1.0 OR GPL-3.0-only",
+  "supports": "!uwp & !(windows & arm64)",
+  "dependencies": [
+    "cppad",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "dae": {
+      "description": "Enable DAE index reduction (Eigen required)",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "jit": {
+      "description": "Enable JIT compilation using Clang/LLVM",
+      "dependencies": [
+        "llvm"
+      ]
+    }
+  }
+}

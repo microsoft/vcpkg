@@ -2044,6 +2044,10 @@
       "baseline": "20250000.3",
       "port-version": 1
     },
+    "cppadcodegen": {
+      "baseline": "2.5.0",
+      "port-version": 0
+    },
     "cppcms": {
       "baseline": "2.0.1",
       "port-version": 0
