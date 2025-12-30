@@ -1,6 +1,6 @@
 {
   "name": "geogram",
-  "version": "1.9.5",
+  "version": "1.9.8",
   "description": "Geogram is a programming library of geometric algorithms.",
   "homepage": "https://github.com/BrunoLevy/geogram",
   "license": "BSD-3-Clause",
@@ -8,6 +8,7 @@
   "dependencies": [
     "blas",
     "lapack",
+    "superlu",
     {
       "name": "vcpkg-cmake",
       "host": true

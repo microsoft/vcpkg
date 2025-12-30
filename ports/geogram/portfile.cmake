@@ -2,10 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BrunoLevy/geogram
     REF "v${VERSION}"
-    SHA512 056ff12967b0aeba34fd662304a5945e2816bfbae46c8100101147330f473cc3a863c3a794ee83d4c88695490c1952ee755b70f184b7961767a0f1e7e7ce18f7
+    SHA512 d6e2b8e399c9806b6f7de1c4b635ea242701489fd47c8997cf45748ba335c705c503fd547f21260cfa31c24ede7592daad318559eb2ea44efab66f23b7130cc9
     PATCHES
         fix-vcpkg-install.patch
-        support-ansi-declarators.patch
+        devendoring.patch
         fix-cmake-dir.patch
 )
 
@@ -33,12 +33,21 @@ vcpkg_from_github(
     SHA512 b236279d3f0e6e1062703555415236183da31a9e40c49d478954586725f8dc6c0582aef0db7b605cb7967c3bd4a96d2fe8e6601cc56b8a1d53129a25efa7d1f2
 )
 
+#third_party: OpenNL
+vcpkg_from_github(
+    OUT_SOURCE_PATH OPENNL_SOURCE_PATH
+    REPO BrunoLevy/OpenNL
+    REF ae782db2db40cc40fcd7659629fc652e5eab1f9e
+    SHA512 a3cc653c721815c81360e0dbbebb56f413c0ebb2e9d84629a6385079c2dd923de2a0f47e8c03f36aaa59bc9259fa0747287a4b99b5084181e90400c665c68380
+)
+
 file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
     "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb"
 	"${SOURCE_PATH}/src/lib/geogram/third_party/rply")
 file(RENAME "${AMGCL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl")
 file(RENAME "${LIBMESHB_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb")
 file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+file(RENAME "${OPENNL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/OpenNL")
 
 file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/cmake")
 
@@ -102,21 +111,21 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Remove all empty directories. 
-function(auto_clean dir) 
-     file(GLOB entries "${dir}/*") 
-     file(GLOB files LIST_DIRECTORIES false "${dir}/*") 
-     foreach(entry IN LISTS entries) 
-         if(entry IN_LIST files) 
-             continue() 
-         endif() 
-         file(GLOB_RECURSE children "${entry}/*") 
-         if(children) 
-             auto_clean("${entry}") 
-         else() 
-             file(REMOVE_RECURSE "${entry}") 
-         endif() 
-     endforeach() 
+# Remove all empty directories.
+function(auto_clean dir)
+    file(GLOB entries "${dir}/*")
+    file(GLOB files LIST_DIRECTORIES false "${dir}/*")
+    foreach(entry IN LISTS entries)
+        if(entry IN_LIST files)
+            continue()
+        endif()
+        file(GLOB_RECURSE children "${entry}/*")
+        if(children)
+            auto_clean("${entry}")
+        else()
+            file(REMOVE_RECURSE "${entry}")
+        endif()
+    endforeach()
 endfunction()
 auto_clean("${CURRENT_PACKAGES_DIR}/include")
 
