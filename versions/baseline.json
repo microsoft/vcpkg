@@ -3693,7 +3693,7 @@
       "port-version": 2
     },
     "harfbuzz": {
-      "baseline": "12.2.0",
+      "baseline": "12.3.0",
       "port-version": 0
     },
     "hash-library": {
