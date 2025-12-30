@@ -1,6 +1,6 @@
 {
   "name": "libmultisense",
-  "version": "7.2.0",
+  "version": "7.4.0",
   "description": "A C++ library for interfacing with the MultiSense S family of sensors from Carnegie Robotics.",
   "homepage": "https://github.com/carnegierobotics/LibMultiSense",
   "dependencies": [
