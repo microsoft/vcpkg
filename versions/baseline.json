@@ -7709,8 +7709,8 @@
       "port-version": 0
     },
     "ppconsul": {
-      "baseline": "0.5",
-      "port-version": 5
+      "baseline": "2022-02-15",
+      "port-version": 0
     },
     "ppqsort": {
       "baseline": "1.0.6",
