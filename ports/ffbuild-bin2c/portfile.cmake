@@ -9,9 +9,8 @@ vcpkg_from_github(
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/ffbuild")
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/ffbuild"
-    PREFER_NINJA
 )
 
 vcpkg_cmake_install()
