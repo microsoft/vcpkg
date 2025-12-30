@@ -11,6 +11,9 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS
     FEATURE_OPTIONS

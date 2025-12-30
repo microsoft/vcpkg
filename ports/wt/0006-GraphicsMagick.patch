@@ -27,7 +27,7 @@ index f22e7eb..6565e9e 100644
 +  find_package(PkgConfig)
 +  pkg_check_modules(GRAPHICSMAGICK REQUIRED GraphicsMagick)
 +  target_include_directories(wt PRIVATE ${GRAPHICSMAGICK_INCLUDE_DIRS})
-+  target_link_libraries(wt PRIVATE ${GRAPHICSMAGICK_LIBRARIES})
++  target_link_libraries(wt PRIVATE ${GRAPHICSMAGICK_LINK_LIBRARIES})
    ADD_DEFINITIONS(-DHAVE_GRAPHICSMAGICK)
  ELSEIF("${WT_WRASTERIMAGE_IMPLEMENTATION}" STREQUAL "Direct2D")
    TARGET_LINK_LIBRARIES(wt PRIVATE d2d1 dwrite windowscodecs shlwapi)
