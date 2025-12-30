@@ -6,25 +6,27 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" cppad_static_lib)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -Dcppad_prefix=${CURRENT_PACKAGES_DIR}
-    OPTIONS_RELEASE
-        -Dcmake_install_libdirs=lib
-    OPTIONS_DEBUG
-        -Dcmake_install_libdirs=debug/lib
+        -Dcppad_static_lib=${cppad_static_lib}
 )
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/pkgconfig" # redundant
     # Remove empty dirs
     "${CURRENT_PACKAGES_DIR}/include/cppad/local/sweep/template"
     "${CURRENT_PACKAGES_DIR}/include/cppad/local/var_op/template"
 )
 
-# Add the copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
