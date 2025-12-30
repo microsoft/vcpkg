@@ -10,9 +10,10 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 #
 # If we are on Windows and arm or uwp, that we use gfortran as our fortran compiler creates an issue
 # because there is no available libgfortran. This means we can't use lapack-reference at all.
+# We choose clapack instead.
 #
 # If we are on Windows and static, there is a linking problem caused by static gfortran in the same
-# link as openblas, so we have to use the blas implementation from lapack-reference.
+# link as openblas, so we choose clapack again.
 #
 # That results in roughly the following decision tree:
 #
@@ -31,8 +32,8 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 #     };
 # } else {
 #     return {
-#         "blas": "lapack-reference[blas]",
-#         "lapack": "lapack-reference[blas]"
+#         "blas": "openblas",
+#         "lapack": "clapack"
 #     };
 # }
 #

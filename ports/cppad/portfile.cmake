@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CppAD
     REF "${VERSION}"
-    SHA512 a2e9b90246a78319d2a50347e03ee7a4e807e059200d834290981b5fc4ff99e1964c420f606a36b6cacb21d5b254f34edbafa660242b260a828e2259686f40cd
+    SHA512 f2dffaeaaf46dcd051a3354478c7ba61ed6a3538cdcc39c066fd9eb22ef58f0cde30079595e9db273d6484a31c8f73c84061ac7f5a5028f920ec74ef26c8e7c1
     HEAD_REF master
 )
 
@@ -19,7 +19,12 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/share/pkgconfig"
+    # Remove empty dirs
+    "${CURRENT_PACKAGES_DIR}/include/cppad/local/sweep/template"
+    "${CURRENT_PACKAGES_DIR}/include/cppad/local/var_op/template"
+)
 
 # Add the copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

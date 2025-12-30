@@ -5,6 +5,13 @@ vcpkg_download_distfile(
     SHA512 201ba8c46f5eafd5d8dbc78ddc1fb4c24b8d820f034e081b8ff30712705fe059c2850bbb7394d81931620619071559fed0e98b13cc4f985103e354c44a322e78
 )
 
+# When updating arrayfire check $/CMakeModules/build_cl2hpp.cmake for this to match
+vcpkg_download_distfile(CL2HPP
+  URLS "https://github.com/KhronosGroup/OpenCL-CLHPP/releases/download/v2.0.10/cl2.hpp"
+  FILENAME "arrayfire-${VERSION}-cl2hpp.hpp"
+  SHA512 f220e3dd013596fe3134bf43e2957c293186071460f2a03f6e81e0e7def3213a568d4b29a06b4921cd3488e8626200dcd4693808f0f6c8f88e67d4147ff474e8
+)
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO arrayfire/arrayfire
@@ -16,8 +23,11 @@ vcpkg_from_github(
     Fix-constexpr-error-with-vs2019-with-half.patch
     fix-dependency-clfft.patch
     fix-miss-header-file.patch
+    remove-cl2hpp-download.diff
     "${CUDA_PATCHES}"
 )
+
+file(COPY_FILE "${CL2HPP}" "${SOURCE_PATH}/cl2.hpp")
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
 vcpkg_from_github(

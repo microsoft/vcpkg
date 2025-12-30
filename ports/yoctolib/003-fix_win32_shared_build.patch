@@ -1,0 +1,39 @@
+diff --git a/Sources/CMakeLists.txt b/Sources/CMakeLists.txt
+index 33af30d..2c0d1c5 100644
+--- a/Sources/CMakeLists.txt
++++ b/Sources/CMakeLists.txt
+@@ -178,14 +178,19 @@ set(YoctoLibCppSources
+ )
+ 
+ add_library (YoctoLib ${YoctoLibCppSources} ${YoctoLibHSources})
++if(WIN32 AND BUILD_SHARED_LIBS)
++	target_compile_definitions(YoctoLib PRIVATE GENERATE_DLL)
++endif()
+ 
+ # add yapi low level api
+ add_subdirectory(yapi)
+-target_link_libraries(YoctoLib PUBLIC yapi)
+-target_include_directories (YoctoLib
++target_link_libraries(YoctoLib PRIVATE yapi)
++target_include_directories(YoctoLib
+ 	PUBLIC
+ 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/yapi>
+ 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/yapi>
+ )
+ set_target_properties(YoctoLib PROPERTIES SOVERSION 1)
+ set_target_properties(YoctoLib PROPERTIES LIBRARY_OUTPUT_NAME yocto)
+diff --git a/Sources/yapi/CMakeLists.txt b/Sources/yapi/CMakeLists.txt
+index f825a5c..28a7669 100644
+--- a/Sources/yapi/CMakeLists.txt
++++ b/Sources/yapi/CMakeLists.txt
+@@ -134,7 +134,7 @@ set(YAPI_C_FILES
+ 	yssl.c
+ )
+ 
+-add_library (yapi ${YAPI_C_FILES}  ${MBEDTLS_C_FILES})
++add_library (yapi STATIC ${YAPI_C_FILES}  ${MBEDTLS_C_FILES})
+ if(USE_YSSL)
+ 	target_include_directories(yapi PRIVATE mbedtls/include)
+ endif()
