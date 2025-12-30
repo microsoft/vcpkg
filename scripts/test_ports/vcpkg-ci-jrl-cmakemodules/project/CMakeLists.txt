@@ -21,3 +21,12 @@ if (TEST_SDFORMAT)
     include(${jrl-cmakemodules_DIR}/sdformat.cmake)
     search_for_sdformat(REQUIRED)
 endif ()
+
+# 6. Find numpy
+option(TEST_NUMPY "Test for search numpy from python")
+if (TEST_NUMPY)
+    include("${JRL_CMAKE_MODULES}/python.cmake")
+    set(PYTHON_COMPONENTS Interpreter Development.Module NumPy)
+    findpython(REQUIRED)
+    find_numpy()
+endif ()

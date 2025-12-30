@@ -20,6 +20,16 @@
       "dependencies": [
         "sdformat"
       ]
+    },
+    "numpy": {
+      "description": "Test for search numpy from python",
+      "dependencies": [
+        "python3",
+        {
+          "name": "vcpkg-get-python-packages",
+          "host": true
+        }
+      ]
     }
   }
 }

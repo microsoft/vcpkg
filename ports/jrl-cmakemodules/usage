@@ -2,7 +2,7 @@ The package jrl-cmakemodules provides a collection of CMake macros
 used to manage projects in the jrl-umi3218 ecosystem.
 
 It is primarily intended for internal use by libraries such as
-coal and pinocchio.
+eigenpy, coal and pinocchio.
 
 This package relies on several non-standard and non-modern CMake
 patterns. As a result, it is generally **not recommended** to use
