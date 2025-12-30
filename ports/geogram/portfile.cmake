@@ -41,9 +41,12 @@ vcpkg_from_github(
     SHA512 a3cc653c721815c81360e0dbbebb56f413c0ebb2e9d84629a6385079c2dd923de2a0f47e8c03f36aaa59bc9259fa0747287a4b99b5084181e90400c665c68380
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
+file(REMOVE_RECURSE
+    "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl"
     "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb"
-	"${SOURCE_PATH}/src/lib/geogram/third_party/rply")
+	"${SOURCE_PATH}/src/lib/geogram/third_party/rply"
+	"${SOURCE_PATH}/src/lib/geogram/third_party/OpenNL"
+)
 file(RENAME "${AMGCL_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/amgcl")
 file(RENAME "${LIBMESHB_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/libMeshb")
 file(RENAME "${RPLY_SOURCE_PATH}" "${SOURCE_PATH}/src/lib/geogram/third_party/rply")
