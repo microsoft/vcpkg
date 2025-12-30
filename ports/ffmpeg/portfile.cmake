@@ -16,10 +16,15 @@ vcpkg_from_github(
         0024-fix-osx-host-c11.patch
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0044-fix-vulkan-debug-callback-abi.patch
+        0045-use-prebuilt-bin2c.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
+endif()
+
+if(VCPKG_CROSSCOMPILING)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/ffbuild-bin2c")
 endif()
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
@@ -80,7 +85,6 @@ if(VCPKG_DETECTED_CMAKE_C_COMPILER)
     get_filename_component(CC_filename "${VCPKG_DETECTED_CMAKE_C_COMPILER}" NAME)
     set(ENV{CC} "${CC_filename}")
     string(APPEND OPTIONS " --cc=${CC_filename}")
-    string(APPEND OPTIONS " --host-cc=${CC_filename}")
     list(APPEND prog_env "${CC_path}")
 endif()
 
@@ -105,7 +109,6 @@ if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_
     get_filename_component(LD_filename "${VCPKG_DETECTED_CMAKE_LINKER}" NAME)
     set(ENV{LD} "${LD_filename}")
     string(APPEND OPTIONS " --ld=${LD_filename}")
-    string(APPEND OPTIONS " --host-ld=${LD_filename}")
     list(APPEND prog_env "${LD_path}")
 endif()
 
@@ -136,67 +139,6 @@ if(VCPKG_DETECTED_CMAKE_RANLIB)
     set(ENV{RANLIB} "${RANLIB_filename}")
     string(APPEND OPTIONS " --ranlib=${RANLIB_filename}")
     list(APPEND prog_env "${RANLIB_path}")
-endif()
-
-if(VCPKG_CROSSCOMPILING AND 
-    VCPKG_TARGET_IS_WINDOWS AND 
-    VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND 
-    VCPKG_DETECTED_MSVC)
-    # HOST_CL and HOST_LINK should already be full paths (found via find_program earlier).
-    if(NOT DEFINED HOST_CL)
-        find_program(HOST_CL cl.exe
-            PATHS
-                "$ENV{VCToolsInstallDir}/bin/Hostx64/x64"
-                "$ENV{VSINSTALLDIR}/VC/Tools/MSVC/*/bin/Hostx64/x64"
-            NO_DEFAULT_PATH
-        )
-    endif()
-    if(NOT DEFINED HOST_LINK)
-        find_program(HOST_LINK link.exe
-            PATHS
-                "$ENV{VCToolsInstallDir}/bin/Hostx64/x64"
-                "$ENV{VSINSTALLDIR}/VC/Tools/MSVC/*/bin/Hostx64/x64"
-            NO_DEFAULT_PATH
-        )
-    endif()
-
-    if(NOT HOST_CL OR NOT HOST_LINK)
-        message(FATAL_ERROR "Failed to find x64 host compiler/linker for arm64 build")
-    endif()
-
-    set(HOST_WRAPPER_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-hosttools")
-    file(MAKE_DIRECTORY "${HOST_WRAPPER_DIR}")
-
-    # Create .cmd wrappers that forward all args to the real tool (quotes preserve spaces)
-    file(WRITE "${HOST_WRAPPER_DIR}/cl.cmd" "@\"${HOST_CL}\" %*\n")
-    file(WRITE "${HOST_WRAPPER_DIR}/link.cmd" "@\"${HOST_LINK}\" %*\n")
-
-    # Add wrapper dir to PATH so make can find these names
-    list(APPEND prog_env "${HOST_WRAPPER_DIR}")
-    vcpkg_add_to_path(PREPEND ${prog_env})
-
-    # Pass only the wrapper names to configure (no spaces)
-    string(APPEND OPTIONS " --host-cc=cl.cmd --host-ld=link.cmd")
-
-    # Host library paths for x64 tools
-    set(HOST_MSVCRT_LIB "$ENV{VCToolsInstallDir}/lib/x64")
-
-    file(GLOB HOST_UCRT_LIB
-        "$ENV{UniversalCRTSdkDir}/Lib/*/ucrt/x64"
-    )
-
-    file(GLOB HOST_UM_LIB
-        "$ENV{WindowsSdkDir}/Lib/*/um/x64"
-    )
-
-    set(HOST_LDFLAGS "")
-    foreach(libdir ${HOST_MSVCRT_LIB} ${HOST_UCRT_LIB} ${HOST_UM_LIB})
-        string(APPEND HOST_LDFLAGS " /LIBPATH:\"${libdir}\"")
-    endforeach()
-
-    string(APPEND OPTIONS
-        " --host-ldflags='${HOST_LDFLAGS}'"
-    )
 endif()
 
 if(VCPKG_DETECTED_CMAKE_STRIP)

@@ -9,6 +9,10 @@
   "license": null,
   "dependencies": [
     {
+      "name": "ffbuild-bin2c",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake-get-vars",
       "host": true
     },
