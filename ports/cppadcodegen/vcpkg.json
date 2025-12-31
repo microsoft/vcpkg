@@ -4,10 +4,8 @@
   "description": "Source code generation for automatic differentiation using operator overloading (extension of CppAD)",
   "homepage": "https://github.com/joaoleal/CppADCodeGen",
   "license": "EPL-1.0 OR GPL-3.0-only",
-  "supports": "!uwp & !(windows & arm64)",
   "dependencies": [
     "cppad",
-    "eigen3",
     {
       "name": "vcpkg-cmake",
       "host": true
