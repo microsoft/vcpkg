@@ -1,0 +1,223 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 65a357678..5aaad97e2 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -47,9 +47,19 @@ if(with_cxx_api)
+   add_subdirectory(gvc++)
+ endif()
+ 
+-if(BUILD_SHARED_LIBS)
++if(1)
++  foreach(name IN ITEMS common label ortho pack util)
++    set_target_properties(${name} PROPERTIES OUTPUT_NAME graphviz${name})
++    install(TARGETS ${name} EXPORT private) # existing config which needs most of above
++  endforeach()
++  install(EXPORT private FILE private.cmake NAMESPACE graphviz::private::
++    DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
++  )
+   install(
+     FILES graphvizConfig.cmake
+     DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
+   )
+ endif()
++
++set(LIBGVC_PC_LIBS_PRIVATE "${LIBGVC_PC_LIBS_PRIVATE}" PARENT_SCOPE)
++set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
+diff --git a/lib/cdt/CMakeLists.txt b/lib/cdt/CMakeLists.txt
+index ed192dac8..069cb6301 100644
+--- a/lib/cdt/CMakeLists.txt
++++ b/lib/cdt/CMakeLists.txt
+@@ -69,7 +69,7 @@ set_target_properties(cdt PROPERTIES
+   SOVERSION 6
+ )
+ 
+-if(BUILD_SHARED_LIBS)
++if(1)
+   install(
+     EXPORT cdtConfig
+     FILE cdtConfig.cmake
+diff --git a/lib/cgraph/CMakeLists.txt b/lib/cgraph/CMakeLists.txt
+index 794b5c186..159206046 100644
+--- a/lib/cgraph/CMakeLists.txt
++++ b/lib/cgraph/CMakeLists.txt
+@@ -107,7 +107,7 @@ set_target_properties(cgraph PROPERTIES
+   SOVERSION 8
+ )
+ 
+-if(BUILD_SHARED_LIBS)
++if(1)
+   install(
+     EXPORT cgraphConfig
+     FILE cgraphConfig.cmake
+diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
+index be815ef72..e05c9872a 100644
+--- a/lib/common/CMakeLists.txt
++++ b/lib/common/CMakeLists.txt
+@@ -122,11 +122,10 @@ if(APPLE)
+   target_compile_options(common_obj PRIVATE "-fno-common")
+ endif()
+ 
+-add_library(common STATIC
+-  $<TARGET_OBJECTS:common_obj>
++add_library(common INTERFACE
+ )
+ 
+-target_link_libraries(common PRIVATE
++target_link_libraries(common INTERFACE
+   cgraph
+   pathplan
+   label
+@@ -135,9 +134,10 @@ target_link_libraries(common PRIVATE
+ )
+ 
+ if(EXPAT_FOUND)
+-  target_link_libraries(common PRIVATE
++  target_link_libraries(common INTERFACE
+     ${EXPAT_LIBRARIES}
+   )
++  string(APPEND LIBGVC_PC_REQUIRES_PRIVATE " expat")
+ endif()
+ 
+ # Specify headers to be installed
+@@ -151,3 +151,5 @@ install(
+     usershape.h
+   DESTINATION ${HEADER_INSTALL_DIR}
+ )
++
++set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
+diff --git a/lib/graphvizConfig.cmake b/lib/graphvizConfig.cmake
+index e8c07cd73..5788d2975 100644
+--- a/lib/graphvizConfig.cmake
++++ b/lib/graphvizConfig.cmake
+@@ -1,3 +1,5 @@
++# independent sets first.
++include(${CMAKE_CURRENT_LIST_DIR}/private.cmake)
+ include(${CMAKE_CURRENT_LIST_DIR}/cdtConfig.cmake)
+ include(${CMAKE_CURRENT_LIST_DIR}/cgraphConfig.cmake)
+ include(${CMAKE_CURRENT_LIST_DIR}/gvcConfig.cmake)
+diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
+index 8530818a8..146853fb6 100644
+--- a/lib/gvc/CMakeLists.txt
++++ b/lib/gvc/CMakeLists.txt
+@@ -41,6 +41,7 @@ target_include_directories(gvc
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../cgraph>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../common>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../pathplan>
++    $<INSTALL_INTERFACE:include>
+     $<INSTALL_INTERFACE:include/graphviz>
+   PRIVATE
+     ../..
+@@ -52,9 +53,8 @@ if(WIN32 AND NOT MINGW)
+   )
+ endif()
+ 
+-target_link_libraries(gvc PRIVATE
++target_sources(gvc PRIVATE
+   $<TARGET_OBJECTS:common_obj>
+-  $<TARGET_OBJECTS:pack_obj>
+ )
+ 
+ target_link_libraries(gvc PRIVATE
+@@ -69,18 +69,21 @@ if(LTDL_FOUND)
+   target_include_directories(gvc SYSTEM PRIVATE ${LTDL_INCLUDE_DIRS})
+   if(NOT WIN32 OR MINGW)
+     target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
++    string(PREPEND LIBGVC_PC_LIBS_PRIVATE " -lltdl")
+   endif()
+ endif()
+ 
++if(MATH_LIB STREQUAL "m")
++    string(APPEND LIBGVC_PC_LIBS_PRIVATE " -lm")
++endif()
++
+ if(ZLIB_FOUND)
+   target_include_directories(gvc SYSTEM PRIVATE ${ZLIB_INCLUDE_DIRS})
+   target_link_libraries(gvc PUBLIC ${ZLIB_LIBRARIES})
++  string(APPEND LIBGVC_PC_REQUIRES_PRIVATE " zlib")
+ endif()
+ 
+ if(with_ortho)
+-  target_link_libraries(gvc PRIVATE
+-    $<TARGET_OBJECTS:ortho_obj>
+-  )
+   target_link_libraries(gvc PRIVATE ortho)
+ endif()
+ 
+@@ -155,7 +158,7 @@ if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
+   )
+ endif()
+ 
+-if(BUILD_SHARED_LIBS)
++if(1)
+   install(
+     EXPORT gvcConfig
+     FILE gvcConfig.cmake
+@@ -163,3 +166,6 @@ if(BUILD_SHARED_LIBS)
+     DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
+   )
+ endif()
++
++set(LIBGVC_PC_LIBS_PRIVATE "${LIBGVC_PC_LIBS_PRIVATE}" PARENT_SCOPE)
++set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE} libpathplan libxdot" PARENT_SCOPE)
+diff --git a/lib/gvc/libgvc.pc.in b/lib/gvc/libgvc.pc.in
+index f12b472e1..326803d26 100644
+--- a/lib/gvc/libgvc.pc.in
++++ b/lib/gvc/libgvc.pc.in
+@@ -7,6 +7,7 @@ plugins=@GVPLUGIN_VERSION@
+ Name: libgvc
+ Description: The GraphVizContext library 
+ Version: @VERSION@
++Requires.private: @LIBGVC_PC_REQUIRES_PRIVATE@
++Libs.private: @LIBGVC_PC_LIBS_PRIVATE@
+ Libs: -L${libdir} -lgvc -lcgraph -lcdt
+ Cflags: -I${includedir} -I${includedir}/@PACKAGE@
+-
+diff --git a/lib/gvpr/CMakeLists.txt b/lib/gvpr/CMakeLists.txt
+index 35fccf805..8fbc56aaf 100644
+--- a/lib/gvpr/CMakeLists.txt
++++ b/lib/gvpr/CMakeLists.txt
+@@ -99,7 +99,7 @@ set_target_properties(gvpr PROPERTIES
+   SOVERSION 2
+ )
+ 
+-if(BUILD_SHARED_LIBS)
++if(1)
+   install(
+     EXPORT gvprConfig
+     FILE gvprConfig.cmake
+diff --git a/lib/pathplan/CMakeLists.txt b/lib/pathplan/CMakeLists.txt
+index 6dfc79ad6..31fff4e42 100644
+--- a/lib/pathplan/CMakeLists.txt
++++ b/lib/pathplan/CMakeLists.txt
+@@ -74,7 +74,7 @@ set_target_properties(pathplan PROPERTIES
+   SOVERSION 4
+ )
+ 
+-if(BUILD_SHARED_LIBS)
++if(1)
+   install(
+     EXPORT pathplanConfig
+     FILE pathplanConfig.cmake
+diff --git a/lib/util/CMakeLists.txt b/lib/util/CMakeLists.txt
+index 04344ed5d..e6e8bdcc7 100644
+--- a/lib/util/CMakeLists.txt
++++ b/lib/util/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-add_library(util STATIC
++add_library(util OBJECT
+   arena.c
+   base64.c
+   gv_find_me.c
+diff --git a/lib/xdot/CMakeLists.txt b/lib/xdot/CMakeLists.txt
+index 70a317d72..834ecb323 100644
+--- a/lib/xdot/CMakeLists.txt
++++ b/lib/xdot/CMakeLists.txt
+@@ -58,7 +58,7 @@ set_target_properties(xdot PROPERTIES
+   SOVERSION 4
+ )
+ 
+-if(BUILD_SHARED_LIBS)
++if(1)
+   install(
+     EXPORT xdotConfig
+     FILE xdotConfig.cmake

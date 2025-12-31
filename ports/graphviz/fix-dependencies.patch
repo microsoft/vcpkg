@@ -13,6 +13,20 @@ index 1ea6465..a3e7857 100644
    if(AUTO_POPPLER)
      pkg_check_modules(POPPLER poppler-glib)
    elseif(WITH_POPPLER)
+@@ -682,7 +682,12 @@ endif()
+ 
+ if(UNIX)
+   find_library(MATH_LIB m)
+-  link_libraries(${MATH_LIB})
++  if(MATH_LIB)
++    set(MATH_LIB m CACHE INTERNAL "")
++    link_libraries(${MATH_LIB})
++  else()
++    set(MATH_LIB "")
++  endif()
+ endif()
+ 
+ if(WIN32)
 diff --git a/cmake/FindCAIRO.cmake b/cmake/FindCAIRO.cmake
 index a6fdf8e..a469065 100644
 --- a/cmake/FindCAIRO.cmake

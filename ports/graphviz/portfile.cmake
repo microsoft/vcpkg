@@ -3,9 +3,10 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO graphviz/graphviz
     REF "${VERSION}"
-    SHA512 993a39a1c18d1b4d34596ee2e3e16189b7ac757bfc1feee28efd928525f83c54a1b785579e5a4b0f9c8ce8269063a3542398c592c397d338053443e8f93ca3a2
+    SHA512 c486175bbdb62f6d8123ba9623921eb8948a472a2fa31c99f22775b383e6a6380a29224ae8e959617de8960c2a2ad346bb34b20dbf5bc780e5590f4f29930e23
     HEAD_REF main
     PATCHES
+        cmake-config.diff
         fix-dependencies.patch
         no-absolute-paths.patch
         version.diff
@@ -63,8 +64,12 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         install_win_dependency_dlls
 )
-vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/graphviz)
+# Resolve cyclic dependency for static linkage.
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/private.cmake" [[if(DEFINED ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE_targets)]] "if(0)")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/private.cmake" [[add_library(]] "add_library(#[[skip-usage-heuristics]] ")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/graphviz/*.h")

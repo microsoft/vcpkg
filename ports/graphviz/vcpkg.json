@@ -1,6 +1,6 @@
 {
   "name": "graphviz",
-  "version-semver": "14.0.4",
+  "version-semver": "14.1.1",
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "license": "EPL-1.0",
@@ -33,6 +33,10 @@
     "pango",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     },
     "zlib"
