@@ -4,5 +4,5 @@
   "description": "Chromium Embedded Framework (CEF) prebuilt binary distribution",
   "homepage": "https://bitbucket.org/chromiumembedded/cef/",
   "license": "BSD-3-Clause",
-  "supports": "windows & x64 & !uwp"
+  "supports": "windows & x64 & !uwp & !static & !mingw"
 }
