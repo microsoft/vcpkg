@@ -111,7 +111,7 @@ if("python" IN_LIST FEATURES)
     endif()
     list(APPEND ADDITIONAL_OPTIONS
         -DPython3_FIND_REGISTRY=NEVER
-        "-DPython3_EXECUTABLE:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+        "-DPython3_EXECUTABLE:PATH=${CURRENT_INSTALLED_DIR}/tools/python3/python${python_ver}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
         "-DPARAVIEW_PYTHON_SITE_PACKAGES_SUFFIX=${PYTHON3_SITE}" # from vcpkg-port-config.cmake
         -DVTK_MODULE_ENABLE_ParaView_PythonCatalyst:STRING=YES
         )
