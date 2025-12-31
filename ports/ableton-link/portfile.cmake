@@ -51,6 +51,7 @@ vcpkg_cmake_configure(
     OPTIONS    
         -DNEED_CATCH2=${NEED_CATCH2}
         -DLINK_BUILD_ASIO=${NEED_ASIOSDK}
+        ${FEATURE_OPTIONS}
 )
 
 # Helper function to build and install helper executables
