@@ -1729,8 +1729,8 @@
       "port-version": 0
     },
     "cimg": {
-      "baseline": "3.6.5",
-      "port-version": 2
+      "baseline": "3.6.6",
+      "port-version": 0
     },
     "cinatra": {
       "baseline": "0.9.7",
