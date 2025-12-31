@@ -45,7 +45,10 @@
     "tools": {
       "description": "Install graphviz executables",
       "dependencies": [
-        "getopt"
+        {
+          "name": "getopt-win32",
+          "platform": "windows & !mingw"
+        }
       ]
     }
   }
