@@ -45,6 +45,7 @@ vcpkg_from_github(
         008-wrong-dxcapi-include.patch
         009-fix-tint-install.patch
         010-fix-glslang.patch
+		011-fix-dxc.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
@@ -136,6 +137,11 @@ vcpkg_check_features(
         tint    TINT_BUILD_CMD_TOOLS
 )
 
+set(DAWN_USE_BUILT_DXC OFF)
+if(DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
+	set(DAWN_USE_BUILT_DXC ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -162,6 +168,7 @@ vcpkg_cmake_configure(
         -DDAWN_ENABLE_VULKAN=${DAWN_ENABLE_VULKAN}
         -DDAWN_USE_WAYLAND=${DAWN_USE_WAYLAND}
         -DDAWN_USE_X11=${DAWN_USE_X11}
+		-DDAWN_USE_BUILT_DXC=${DAWN_USE_BUILT_DXC}
 )
 
 vcpkg_cmake_install()
