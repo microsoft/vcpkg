@@ -1644,7 +1644,7 @@
       "baseline": "1.4.4",
       "port-version": 0
     },
-    "cef": {
+    "cef-binary": {
       "baseline": "143.0.13+g30cb3bd+chromium-143.0.7499.170",
       "port-version": 0
     },
