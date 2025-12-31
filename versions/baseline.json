@@ -9069,8 +9069,8 @@
       "port-version": 0
     },
     "skyr-url": {
-      "baseline": "1.13.0",
-      "port-version": 2
+      "baseline": "3.0.0",
+      "port-version": 0
     },
     "sleef": {
       "baseline": "3.9.0",
