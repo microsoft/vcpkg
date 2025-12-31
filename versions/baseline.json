@@ -9416,6 +9416,10 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
+    "stlab-enum-ops": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "stormlib": {
       "baseline": "9.26",
       "port-version": 0
