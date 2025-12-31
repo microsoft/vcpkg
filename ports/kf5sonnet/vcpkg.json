@@ -1,6 +1,6 @@
 {
   "name": "kf5sonnet",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Multi-language spell checker",
   "homepage": "https://api.kde.org/frameworks/sonnet/html/index.html",
   "dependencies": [
@@ -20,7 +20,11 @@
     "hunspell": {
       "description": "Spell checking support via Hunspell",
       "dependencies": [
-        "hunspell"
+        "hunspell",
+        {
+          "name": "pkgconf",
+          "host": true
+        }
       ]
     }
   }
