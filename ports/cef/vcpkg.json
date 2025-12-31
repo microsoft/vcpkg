@@ -1,0 +1,8 @@
+{
+  "name": "cef",
+  "version-string": "143.0.13+g30cb3bd+chromium-143.0.7499.170",
+  "description": "Chromium Embedded Framework (CEF) binary distribution",
+  "homepage": "https://bitbucket.org/chromiumembedded/cef/",
+  "license": "BSD-3-Clause",
+  "supports": "windows & x64 & !uwp"
+}

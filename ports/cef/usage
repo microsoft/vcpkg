@@ -1,0 +1,20 @@
+cef is provided as an unofficial CMake package:
+
+  find_package(unofficial-cef CONFIG REQUIRED)
+  target_link_libraries(your_target PRIVATE unofficial::cef::libcef)
+
+At runtime, deploy:
+
+Mandatory:
+- <vcpkg>/installed/<triplet>/bin:
+  libcef.dll, vulkan-1.dll, vk_swiftshader.dll, vk_swiftshader_icd.json, v8_context_snapshot.bin
+- <vcpkg>/installed/<triplet>/share/cef/Resources
+
+Optional (kept out of bin to avoid DLL name collisions with other ports):
+- <vcpkg>/installed/<triplet>/share/cef/redist/Release
+- <vcpkg>/installed/<triplet>/share/cef/redist/Debug
+
+The CMake package also exposes:
+- unofficial_cef_resources_dir
+- unofficial_cef_redist_release_dir
+- unofficial_cef_redist_debug_dir
