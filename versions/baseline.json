@@ -10113,7 +10113,7 @@
       "port-version": 1
     },
     "utf8proc": {
-      "baseline": "2.11.2",
+      "baseline": "2.11.3",
       "port-version": 0
     },
     "utfcpp": {
