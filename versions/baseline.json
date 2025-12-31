@@ -5105,7 +5105,7 @@
       "port-version": 0
     },
     "libmediainfo": {
-      "baseline": "25.9",
+      "baseline": "25.10",
       "port-version": 0
     },
     "libmem": {
