@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenColorIO
     REF "v${VERSION}"
-    SHA512 d626007d7a7ae26f4cf2fa8e5675963af9127f500f824548ccc4e659ddb2cd275b988822b4f66e0170971426dc330d106e281cdae63a5bd141b9aadaa874a746
+    SHA512 2d3d6dcda60b10386a3dacb1cdb966b640917739091237d5788c4984a4c498a55b94c464b2076d6d82ee5fe0271150ee1767ebff14a94dc49039890b87189a29
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -62,7 +62,7 @@ vcpkg_replace_string(
 
 if(OCIO_BUILD_APPS)
     vcpkg_copy_tools(
-        TOOL_NAMES ocioarchive ociobakelut ociocheck ociochecklut ocioconvert ociocpuinfo ociolutimage ociomakeclf ocioperf ociowrite
+        TOOL_NAMES ociomergeconfigs ocioarchive ociobakelut ociocheck ociochecklut ocioconvert ociocpuinfo ociolutimage ociomakeclf ocioperf ociowrite
         AUTO_CLEAN
     )
 endif()
