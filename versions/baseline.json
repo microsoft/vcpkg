@@ -8609,7 +8609,7 @@
       "port-version": 1
     },
     "rocksdb": {
-      "baseline": "10.4.2",
+      "baseline": "10.7.5",
       "port-version": 0
     },
     "rp-ntuples": {
