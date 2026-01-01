@@ -1,7 +1,6 @@
 {
   "name": "asmtk",
-  "version-date": "2022-11-06",
-  "port-version": 1,
+  "version-date": "2025-08-06",
   "description": "Assembler toolkit based on AsmJit ",
   "homepage": "https://github.com/asmjit/asmtk",
   "supports": "!arm",
