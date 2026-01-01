@@ -1,0 +1,24 @@
+diff --git a/ffbuild/common.mak b/ffbuild/common.mak
+index ddf4892..7d9f311 100644
+--- a/ffbuild/common.mak
++++ b/ffbuild/common.mak
+@@ -12,8 +12,7 @@ endif
+ 
+ ifndef SUBDIR
+ 
+-BIN2CEXE = ffbuild/bin2c$(HOSTEXESUF)
+-BIN2C = $(BIN2CEXE)
++BIN2C = bin2c
+ 
+ ifndef V
+ Q      = @
+@@ -112,9 +111,6 @@ COMPILE_LASX = $(call COMPILE,CC,LASXFLAGS)
+ %.h.c:
+ 	$(Q)echo '#include "$*.h"' >$@
+ 
+-$(BIN2CEXE): ffbuild/bin2c_host.o
+-	$(HOSTLD) $(HOSTLDFLAGS) $(HOSTLD_O) $^ $(HOSTEXTRALIBS)
+-
+ %.metal.air: %.metal
+ 	$(METALCC) $< -o $@
+ 

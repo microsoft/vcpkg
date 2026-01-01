@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 923529eb27e460293bd2b8b8c53d5eb96553e3e1ece7071904808d8f20f86b7af70bde97d271da9a07ee1898d0840190f265e326e67f48c6f5cadefa034abf0f
     HEAD_REF master
     PATCHES
-        ffmpeg7.patch
+        0001-ffmpeg-deprecated.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
