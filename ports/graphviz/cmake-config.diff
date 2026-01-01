@@ -65,24 +65,25 @@ index 794b5c186..159206046 100644
      EXPORT cgraphConfig
      FILE cgraphConfig.cmake
 diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
-index be815ef72..e05c9872a 100644
+index be815ef72..250ba9f28 100644
 --- a/lib/common/CMakeLists.txt
 +++ b/lib/common/CMakeLists.txt
-@@ -122,11 +122,10 @@ if(APPLE)
+@@ -122,11 +122,9 @@ if(APPLE)
    target_compile_options(common_obj PRIVATE "-fno-common")
  endif()
  
 -add_library(common STATIC
 -  $<TARGET_OBJECTS:common_obj>
-+add_library(common INTERFACE
- )
- 
+-)
+-
 -target_link_libraries(common PRIVATE
++# legacy; target objects in gvc
++add_library(common INTERFACE)
 +target_link_libraries(common INTERFACE
    cgraph
    pathplan
    label
-@@ -135,9 +134,10 @@ target_link_libraries(common PRIVATE
+@@ -135,9 +133,10 @@ target_link_libraries(common PRIVATE
  )
  
  if(EXPAT_FOUND)
@@ -94,21 +95,21 @@ index be815ef72..e05c9872a 100644
  endif()
  
  # Specify headers to be installed
-@@ -151,3 +151,5 @@ install(
+@@ -151,3 +150,5 @@ install(
      usershape.h
    DESTINATION ${HEADER_INSTALL_DIR}
  )
 +
 +set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
 diff --git a/lib/dotgen/CMakeLists.txt b/lib/dotgen/CMakeLists.txt
-index e7802eb46..6a58c5c6d 100644
+index e7802eb46..931a18b1f 100644
 --- a/lib/dotgen/CMakeLists.txt
 +++ b/lib/dotgen/CMakeLists.txt
 @@ -35,5 +35,6 @@ target_include_directories(dotgen PRIVATE
  
  target_link_libraries(dotgen PRIVATE
    cgraph
-+  pack
++  gvc # ortho, pack
    util
  )
 diff --git a/lib/graphvizConfig.cmake b/lib/graphvizConfig.cmake
@@ -122,7 +123,7 @@ index e8c07cd73..5788d2975 100644
  include(${CMAKE_CURRENT_LIST_DIR}/cgraphConfig.cmake)
  include(${CMAKE_CURRENT_LIST_DIR}/gvcConfig.cmake)
 diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
-index 8530818a8..c17f4eb3f 100644
+index 8530818a8..abfebe2b8 100644
 --- a/lib/gvc/CMakeLists.txt
 +++ b/lib/gvc/CMakeLists.txt
 @@ -41,6 +41,7 @@ target_include_directories(gvc
@@ -150,7 +151,7 @@ index 8530818a8..c17f4eb3f 100644
    util
  )
  
-@@ -69,18 +69,21 @@ if(LTDL_FOUND)
+@@ -69,19 +69,22 @@ if(LTDL_FOUND)
    target_include_directories(gvc SYSTEM PRIVATE ${LTDL_INCLUDE_DIRS})
    if(NOT WIN32 OR MINGW)
      target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
@@ -172,9 +173,11 @@ index 8530818a8..c17f4eb3f 100644
 -  target_link_libraries(gvc PRIVATE
 -    $<TARGET_OBJECTS:ortho_obj>
 -  )
-   target_link_libraries(gvc PRIVATE ortho)
+-  target_link_libraries(gvc PRIVATE ortho)
++  target_sources(gvc PRIVATE $<TARGET_OBJECTS:ortho_obj>)
  endif()
  
+ # Installation location of library files
 @@ -155,7 +158,7 @@ if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
    )
  endif()
@@ -217,20 +220,38 @@ index 35fccf805..8fbc56aaf 100644
    install(
      EXPORT gvprConfig
      FILE gvprConfig.cmake
+diff --git a/lib/ortho/CMakeLists.txt b/lib/ortho/CMakeLists.txt
+index 7c2b83832..62f1bc5d7 100644
+--- a/lib/ortho/CMakeLists.txt
++++ b/lib/ortho/CMakeLists.txt
+@@ -35,10 +35,7 @@ target_include_directories(ortho_obj PRIVATE
+ 
+ target_link_libraries(ortho_obj PRIVATE util)
+ 
+-add_library(ortho STATIC
+-  $<TARGET_OBJECTS:ortho_obj>
+-)
+-
+-target_link_libraries(ortho PRIVATE util)
++add_library(ortho INTERFACE) # legacy
++target_link_libraries(ortho INTERFACE gvc) # target objects in gvc
+ 
+ endif()
 diff --git a/lib/pack/CMakeLists.txt b/lib/pack/CMakeLists.txt
-index 585fefe9f..15c5eeb43 100644
+index 585fefe9f..13e2eb99e 100644
 --- a/lib/pack/CMakeLists.txt
 +++ b/lib/pack/CMakeLists.txt
-@@ -21,11 +21,10 @@ target_include_directories(pack_obj PRIVATE
+@@ -21,11 +21,9 @@ target_include_directories(pack_obj PRIVATE
  
  target_link_libraries(pack_obj PRIVATE util)
  
 -add_library(pack STATIC
 -  $<TARGET_OBJECTS:pack_obj>
-+add_library(pack INTERFACE
- )
- 
+-)
+-
 -target_link_libraries(pack PRIVATE util)
++# legacy; target objects in gvc
++add_library(pack INTERFACE)
 +target_link_libraries(pack INTERFACE gvc)
  
  # Specify headers to be installed
