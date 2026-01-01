@@ -5,7 +5,7 @@ project(graphviz-test)
 find_package(graphviz CONFIG REQUIRED)
 
 add_executable(simple-cmake "${GRAPHVIZ_PATH}/dot.demo/simple.c")
-target_link_libraries(simple-cmake PRIVATE  graphviz::gvc)
+target_link_libraries(simple-cmake PRIVATE graphviz::gvc graphviz::cgraph)
 
 
 find_package(PkgConfig REQUIRED)
