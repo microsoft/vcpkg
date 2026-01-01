@@ -9,7 +9,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/ffbuild")
 
 vcpkg_cmake_configure(
