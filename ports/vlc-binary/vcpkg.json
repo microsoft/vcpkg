@@ -1,0 +1,8 @@
+{
+  "name": "vlc-binary",
+  "version": "3.0.22",
+  "description": "VideoLAN VLC (libVLC) prebuilt runtime distribution for Windows x64",
+  "homepage": "https://www.videolan.org/vlc/",
+  "license": "GPL-2.0-or-later",
+  "supports": "windows & x64 & !uwp & !static"
+}

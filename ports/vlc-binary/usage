@@ -1,0 +1,19 @@
+vlc-binary is provided as an unofficial CMake package:
+
+  find_package(unofficial-vlc CONFIG REQUIRED)
+
+This port installs the VLC runtime distribution under:
+  <vcpkg>/installed/<triplet>/share/vlc-binary/vlc
+
+The CMake package exposes:
+- unofficial_vlc_runtime_dir
+- unofficial_vlc_plugins_dir
+
+At runtime, deploy the VLC folder (keep plugins/ relative to libvlc.dll):
+- Copy the contents of:
+    <vcpkg>/installed/<triplet>/share/vlc-binary/vlc
+  into a folder shipped with your application.
+
+If you do not keep plugins/ next to libvlc.dll, set:
+- VLC_PLUGIN_PATH to:
+    <that folder>/plugins
