@@ -200,18 +200,6 @@ index 35fccf805..8fbc56aaf 100644
    install(
      EXPORT gvprConfig
      FILE gvprConfig.cmake
-diff --git a/lib/gvpr/gvpr.c b/lib/gvpr/gvpr.c
-index 480dbbd6d..698724750 100644
---- a/lib/gvpr/gvpr.c
-+++ b/lib/gvpr/gvpr.c
-@@ -20,7 +20,6 @@
- #include <cgraph/cgraph.h>
- #include <cgraph/ingraphs.h>
- #include <common/globals.h>
--#include <getopt.h>
- #include <gvpr/actions.h>
- #include <gvpr/compile.h>
- #include <gvpr/gprstate.h>
 diff --git a/lib/pathplan/CMakeLists.txt b/lib/pathplan/CMakeLists.txt
 index 6dfc79ad6..31fff4e42 100644
 --- a/lib/pathplan/CMakeLists.txt
@@ -248,3 +236,21 @@ index 70a317d72..834ecb323 100644
    install(
      EXPORT xdotConfig
      FILE xdotConfig.cmake
+diff --git a/plugin/CMakeLists.txt b/plugin/CMakeLists.txt
+index 3eac7cd4d..9e41c2fd2 100644
+--- a/plugin/CMakeLists.txt
++++ b/plugin/CMakeLists.txt
+@@ -24,3 +24,13 @@ add_subdirectory(rsvg)
+ add_subdirectory(vt)
+ add_subdirectory(webp)
+ add_subdirectory(xlib)
++
++if(NOT BUILD_SHARED_LIBS)
++  get_directory_property(subdirs SUBDIRECTORIES)
++  foreach(dir IN LISTS subdirs)
++    get_directory_property(targets DIRECTORY "${dir}" BUILDSYSTEM_TARGETS)
++    if(targets)
++      install(TARGETS ${targets})
++    endif()
++  endforeach()
++endif()
