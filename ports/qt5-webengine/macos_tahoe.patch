@@ -1,0 +1,71 @@
+diff --git a/src/3rdparty/chromium/third_party/zlib/zutil.h b/src/3rdparty/chromium/third_party/zlib/zutil.h
+index fb57176..fa84cc5 100644
+--- a/src/3rdparty/chromium/third_party/zlib/zutil.h
++++ b/src/3rdparty/chromium/third_party/zlib/zutil.h
+@@ -154,15 +154,6 @@
+
+ #if defined(MACOS) || defined(TARGET_OS_MAC)
+ #  define OS_CODE  7
+-#  ifndef Z_SOLO
+-#    if defined(__MWERKS__) && __dest_os != __be_os && __dest_os != __win32_os
+-#      include <unix.h> /* for fdopen */
+-#    else
+-#      ifndef fdopen
+-#        define fdopen(fd,mode) NULL /* No fdopen() */
+-#      endif
+-#    endif
+-#  endif
+ #endif
+
+ #ifdef __acorn
+diff --git a/src/3rdparty/chromium/third_party/libpng/pngpriv.h b/src/3rdparty/chromium/third_party/libpng/pngpriv.h
+index 583c26f..8c082db 100644
+--- a/src/3rdparty/chromium/third_party/libpng/pngpriv.h
++++ b/src/3rdparty/chromium/third_party/libpng/pngpriv.h
+@@ -517,18 +517,8 @@
+     */
+ #  include <float.h>
+ 
+-#  if (defined(__MWERKS__) && defined(macintosh)) || defined(applec) || \
+-    defined(THINK_C) || defined(__SC__) || defined(TARGET_OS_MAC)
+-   /* We need to check that <math.h> hasn't already been included earlier
+-    * as it seems it doesn't agree with <fp.h>, yet we should really use
+-    * <fp.h> if possible.
+-    */
+-#    if !defined(__MATH_H__) && !defined(__MATH_H) && !defined(__cmath__)
+-#      include <fp.h>
+-#    endif
+-#  else
+-#    include <math.h>
+-#  endif
++#include <math.h>
++
+ #  if defined(_AMIGA) && defined(__SASC) && defined(_M68881)
+    /* Amiga SAS/C: We must include builtin FPU functions when compiling using
+     * MATH=68881
+diff --git a/src/3rdparty/chromium/third_party/freetype/src/src/gzip/ftzconf.h b/src/3rdparty/chromium/third_party/freetype/src/src/gzip/ftzconf.h
+index 3abf0ba03..d88a82a2e 100644
+--- a/src/3rdparty/chromium/third_party/freetype/src/src/gzip/ftzconf.h
++++ b/src/3rdparty/chromium/third_party/freetype/src/src/gzip/ftzconf.h
+@@ -215,7 +215,7 @@
+ #   define FAR
+ #endif
+ 
+-#if !defined(MACOS) && !defined(TARGET_OS_MAC)
++#if !defined(__MACTYPES__)
+ typedef unsigned char  Byte;  /* 8 bits */
+ #endif
+ typedef unsigned int   uInt;  /* 16 bits or more */
+diff --git a/src/3rdparty/chromium/base/strings/utf_string_conversions.cc b/src/3rdparty/chromium/base/strings/utf_string_conversions.cc
+index 12ed1f3e0..ee23ff3a2 100644
+--- a/src/3rdparty/chromium/base/strings/utf_string_conversions.cc
++++ b/src/3rdparty/chromium/base/strings/utf_string_conversions.cc
+@@ -15,7 +15,7 @@
+ #include "base/third_party/icu/icu_utf.h"
+ #include "build/build_config.h"
+ 
+-#if defined(OS_MAC)
++#if defined(OS_MAC) && !defined(WCHAR_T_IS_UTF32)
+ namespace std {
+ inline namespace __1 {
+ template class basic_string<base::char16, base::string16_internals::string16_char_traits>;
