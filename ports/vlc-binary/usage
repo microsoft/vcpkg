@@ -2,6 +2,8 @@ vlc-binary is provided as an unofficial CMake package:
 
   find_package(unofficial-vlc CONFIG REQUIRED)
 
+This port is runtime-only. It does not provide headers or import libraries for linking.
+
 This port installs the VLC runtime distribution under:
   <vcpkg>/installed/<triplet>/share/vlc-binary/vlc
 
