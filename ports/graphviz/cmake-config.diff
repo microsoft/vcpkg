@@ -22,6 +22,16 @@ index 245e44e04..3193c4d7f 100644
    install(
      TARGETS dot
      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+diff --git a/cmd/gvpr/CMakeLists.txt b/cmd/gvpr/CMakeLists.txt
+index 7bca2427a..2a49d2c8b 100644
+--- a/cmd/gvpr/CMakeLists.txt
++++ b/cmd/gvpr/CMakeLists.txt
+@@ -1,5 +1,3 @@
+-add_definitions(-DEXPORT_GVPR)
+-
+ add_executable(gvpr-bin
+   # Source files
+   gvprmain.c
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
 index 65a357678..5aaad97e2 100644
 --- a/lib/CMakeLists.txt
@@ -48,10 +58,17 @@ index 65a357678..5aaad97e2 100644
 +set(LIBGVC_PC_LIBS_PRIVATE "${LIBGVC_PC_LIBS_PRIVATE}" PARENT_SCOPE)
 +set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
 diff --git a/lib/cdt/CMakeLists.txt b/lib/cdt/CMakeLists.txt
-index ed192dac8..069cb6301 100644
+index ed192dac8..f37d48414 100644
 --- a/lib/cdt/CMakeLists.txt
 +++ b/lib/cdt/CMakeLists.txt
-@@ -69,7 +69,7 @@ set_target_properties(cdt PROPERTIES
+@@ -1,4 +1,6 @@
++if(BUILD_SHARED_LIBS)
+ add_definitions(-DEXPORT_CDT)
++endif()
+ 
+ add_library(cdt
+   # Header files
+@@ -69,7 +71,7 @@ set_target_properties(cdt PROPERTIES
    SOVERSION 6
  )
  
@@ -61,10 +78,20 @@ index ed192dac8..069cb6301 100644
      EXPORT cdtConfig
      FILE cdtConfig.cmake
 diff --git a/lib/cgraph/CMakeLists.txt b/lib/cgraph/CMakeLists.txt
-index 794b5c186..159206046 100644
+index 794b5c186..c267c5410 100644
 --- a/lib/cgraph/CMakeLists.txt
 +++ b/lib/cgraph/CMakeLists.txt
-@@ -107,7 +107,7 @@ set_target_properties(cgraph PROPERTIES
+@@ -7,7 +7,9 @@ FLEX_TARGET(Scan
+ )
+ ADD_FLEX_BISON_DEPENDENCY(Scan Grammar)
+ 
++if(BUILD_SHARED_LIBS)
+ add_definitions(-DEXPORT_CGRAPH -DEXPORT_CGHDR)
++endif()
+ if(WIN32 AND NOT MINGW)
+   add_definitions(-DYY_NO_UNISTD_H)
+ endif()
+@@ -107,7 +109,7 @@ set_target_properties(cgraph PROPERTIES
    SOVERSION 8
  )
  
@@ -217,10 +244,17 @@ index f12b472e1..326803d26 100644
  Cflags: -I${includedir} -I${includedir}/@PACKAGE@
 -
 diff --git a/lib/gvpr/CMakeLists.txt b/lib/gvpr/CMakeLists.txt
-index 35fccf805..8fbc56aaf 100644
+index 35fccf805..27442f045 100644
 --- a/lib/gvpr/CMakeLists.txt
 +++ b/lib/gvpr/CMakeLists.txt
-@@ -99,7 +99,7 @@ set_target_properties(gvpr PROPERTIES
+@@ -1,4 +1,6 @@
++if(BUILD_SHARED_LIBS)
+ add_definitions(-DEXPORT_GVPR)
++endif()
+ 
+ add_library(gvpr
+   # Header files
+@@ -99,7 +101,7 @@ set_target_properties(gvpr PROPERTIES
    SOVERSION 2
  )
  
@@ -289,10 +323,17 @@ index 04344ed5d..e6e8bdcc7 100644
    base64.c
    gv_find_me.c
 diff --git a/lib/xdot/CMakeLists.txt b/lib/xdot/CMakeLists.txt
-index 70a317d72..834ecb323 100644
+index 70a317d72..e614c539c 100644
 --- a/lib/xdot/CMakeLists.txt
 +++ b/lib/xdot/CMakeLists.txt
-@@ -58,7 +58,7 @@ set_target_properties(xdot PROPERTIES
+@@ -1,4 +1,6 @@
++if(BUILD_SHARED_LIBS)
+ add_definitions(-DEXPORT_XDOT)
++endif()
+ 
+ add_library(xdot
+   # Header files
+@@ -58,7 +60,7 @@ set_target_properties(xdot PROPERTIES
    SOVERSION 4
  )
  
