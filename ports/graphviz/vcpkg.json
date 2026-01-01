@@ -10,11 +10,11 @@
       "default-features": false
     },
     "expat",
+    "gdk-pixbuf",
     {
       "name": "getopt-win32",
       "platform": "windows & !mingw"
     },
-    "gdk-pixbuf",
     "gts",
     {
       "name": "libgd",
