@@ -25,10 +25,6 @@ vcpkg_fixup_cmake_targets(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib")
 
-# Header-only: remove debug tree if produced.
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
-endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
