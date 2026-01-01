@@ -9,7 +9,7 @@
   "license": null,
   "dependencies": [
     {
-      "name": "ffbuild-bin2c",
+      "name": "ffmpeg-bin2c",
       "host": true
     },
     {

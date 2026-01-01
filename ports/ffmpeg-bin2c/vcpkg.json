@@ -1,8 +1,8 @@
 {
-  "name": "ffbuild-bin2c",
+  "name": "ffmpeg-bin2c",
   "version": "8.0.1",
   "description": "Host tool bin2c for FFmpeg build",
-  "license": null,
+  "license": "LGPL-2.1-or-later",
   "supports": "native",
   "dependencies": [
     {

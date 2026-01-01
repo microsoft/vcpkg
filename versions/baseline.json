@@ -2916,11 +2916,11 @@
       "baseline": "2024-08-19",
       "port-version": 0
     },
-    "ffbuild-bin2c": {
+    "ffmpeg": {
       "baseline": "8.0.1",
       "port-version": 0
     },
-    "ffmpeg": {
+    "ffmpeg-bin2c": {
       "baseline": "8.0.1",
       "port-version": 0
     },
