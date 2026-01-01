@@ -5,4 +5,4 @@ project(ffbuild-bin2c C)
 add_executable(bin2c bin2c.c)
 
 # Install rule to put it into the standard bin directory
-install(TARGETS bin2c DESTINATION bin)
+install(TARGETS bin2c DESTINATION manual-tools/ffbuild-bin2c)
