@@ -11,6 +11,10 @@
       "default-features": false
     },
     "expat",
+    {
+      "name": "getopt-win32",
+      "platform": "windows & !mingw"
+    },
     "gdk-pixbuf",
     "gts",
     {
@@ -43,13 +47,7 @@
   ],
   "features": {
     "tools": {
-      "description": "Install graphviz executables",
-      "dependencies": [
-        {
-          "name": "getopt-win32",
-          "platform": "windows & !mingw"
-        }
-      ]
+      "description": "Install graphviz executables"
     }
   }
 }
