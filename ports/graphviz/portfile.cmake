@@ -61,6 +61,8 @@ vcpkg_cmake_configure(
         -DVCPKG_LOCK_FIND_PACKAGE_GTS=ON
         -DVCPKG_LOCK_FIND_PACKAGE_PANGOCAIRO=ON
         ${OPTIONS}
+    OPTIONS_DEBUG
+        -DGRAPHVIZ_CLI=OFF
     MAYBE_UNUSED_VARIABLES
         install_win_dependency_dlls
 )
@@ -100,7 +102,6 @@ if("tools" IN_LIST FEATURES)
     foreach(script_or_link IN ITEMS "dot2gxl${VCPKG_TARGET_EXECUTABLE_SUFFIX}" gvmap.sh dot_sandbox)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${script_or_link}")
             file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script_or_link}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script_or_link}")
-            file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script_or_link}")
         endif()
     endforeach()
     vcpkg_copy_tools(
