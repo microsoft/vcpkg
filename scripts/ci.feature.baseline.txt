@@ -585,7 +585,6 @@ hdf5[parallel](arm64 & windows) = cascade
 hexl:x64-uwp = cascade
 highfive:arm64-uwp = cascade
 highfive:x64-uwp = cascade
-highfive[opencv]:arm64-windows = cascade
 hikogui:x64-uwp = cascade
 hpx[cuda](!(windows & x64 & !uwp & !xbox) & !(linux & x64) & !(linux & arm64)) = cascade
 hpx[mpi](windows & !(x64 | x86))=cascade
