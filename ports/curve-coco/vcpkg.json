@@ -1,0 +1,17 @@
+{
+  "name": "curve-coco",
+  "version": "4.3.0",
+  "description": "a C++20 coroutine library that aims to be convenient and simple to use.",
+  "homepage": "https://github.com/Curve/coco",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
