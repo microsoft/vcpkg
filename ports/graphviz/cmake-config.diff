@@ -100,6 +100,17 @@ index be815ef72..e05c9872a 100644
  )
 +
 +set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
+diff --git a/lib/dotgen/CMakeLists.txt b/lib/dotgen/CMakeLists.txt
+index e7802eb46..6a58c5c6d 100644
+--- a/lib/dotgen/CMakeLists.txt
++++ b/lib/dotgen/CMakeLists.txt
+@@ -35,5 +35,6 @@ target_include_directories(dotgen PRIVATE
+ 
+ target_link_libraries(dotgen PRIVATE
+   cgraph
++  pack
+   util
+ )
 diff --git a/lib/graphvizConfig.cmake b/lib/graphvizConfig.cmake
 index e8c07cd73..5788d2975 100644
 --- a/lib/graphvizConfig.cmake
@@ -254,18 +265,6 @@ index 3eac7cd4d..9e41c2fd2 100644
 +    endif()
 +  endforeach()
 +endif()
-diff --git a/plugin/dot_layout/CMakeLists.txt b/plugin/dot_layout/CMakeLists.txt
-index 04b777e04..a7eafaa2a 100644
---- a/plugin/dot_layout/CMakeLists.txt
-+++ b/plugin/dot_layout/CMakeLists.txt
-@@ -17,6 +17,7 @@ target_include_directories(gvplugin_dot_layout PRIVATE
- target_link_libraries(gvplugin_dot_layout PRIVATE
-   dotgen
-   gvc
-+  pack
- )
- 
- if(BUILD_SHARED_LIBS)
 diff --git a/plugin/neato_layout/CMakeLists.txt b/plugin/neato_layout/CMakeLists.txt
 index fe0dcfaf2..f17bf2d83 100644
 --- a/plugin/neato_layout/CMakeLists.txt
