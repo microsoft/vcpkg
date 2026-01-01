@@ -254,3 +254,27 @@ index 3eac7cd4d..9e41c2fd2 100644
 +    endif()
 +  endforeach()
 +endif()
+diff --git a/plugin/dot_layout/CMakeLists.txt b/plugin/dot_layout/CMakeLists.txt
+index 04b777e04..a7eafaa2a 100644
+--- a/plugin/dot_layout/CMakeLists.txt
++++ b/plugin/dot_layout/CMakeLists.txt
+@@ -17,6 +17,7 @@ target_include_directories(gvplugin_dot_layout PRIVATE
+ target_link_libraries(gvplugin_dot_layout PRIVATE
+   dotgen
+   gvc
++  pack
+ )
+ 
+ if(BUILD_SHARED_LIBS)
+diff --git a/plugin/neato_layout/CMakeLists.txt b/plugin/neato_layout/CMakeLists.txt
+index fe0dcfaf2..f17bf2d83 100644
+--- a/plugin/neato_layout/CMakeLists.txt
++++ b/plugin/neato_layout/CMakeLists.txt
+@@ -20,6 +20,7 @@ target_link_libraries(gvplugin_neato_layout PRIVATE
+   gvc
+   neatogen
+   osage
++  pack
+   patchwork
+   rbtree
+   sparse
