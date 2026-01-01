@@ -52,11 +52,9 @@ if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND VCPKG_DETECTED_CMAKE_
     set(ENV{CFLAGS} "$ENV{CFLAGS} -std=c17")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    CONFIGURE_ENVIRONMENT_VARIABLES CFLAGS
-    DETERMINE_BUILD_TRIPLET
-    NO_ADDITIONAL_PATHS
+    DEFAULT_OPTIONS_EXCLUDE "^--docdir"
     OPTIONS
         ${OPTIONS}
         --disable-db-install
@@ -71,7 +69,7 @@ vcpkg_configure_make(
         --without-tests
         --with-pkg-config-libdir=libdir
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 # Prefer local files over search path
