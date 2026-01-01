@@ -9,6 +9,8 @@ vcpkg_from_github(
     0002-fix-android.patch
     # TODO: This patch should be deleted after following PR will be merged. https://github.com/facebook/rocksdb/pull/13573
     0003-include_cstdint.patch
+    # TODO: This patch should be deleted on upstream next release. https://github.com/facebook/rocksdb/commit/1d18c4ed0177f184f228a7cdfb78eb85d0dab540
+    0004-support-apple.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
