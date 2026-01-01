@@ -12,7 +12,7 @@ index 7689975..2a559ff 100755
      install(FILES
          ${CMAKE_CURRENT_LIST_DIR}/share/cmake/macros/VersionUtils.cmake
 diff --git a/share/cmake/modules/FindExtPackages.cmake b/share/cmake/modules/FindExtPackages.cmake
-index 9bf17cf..dc43786 100644
+index 9bf17cf..8376ac5 100644
 --- a/share/cmake/modules/FindExtPackages.cmake
 +++ b/share/cmake/modules/FindExtPackages.cmake
 @@ -55,6 +55,7 @@ message(STATUS "Checking for mandatory dependencies...")
@@ -55,15 +55,17 @@ index 9bf17cf..dc43786 100644
                           MIN_VERSION 4.0.0
                           RECOMMENDED_VERSION 4.0.10
                           RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
-@@ -132,6 +135,7 @@ if(OCIO_BUILD_APPS)
+@@ -132,8 +135,7 @@ if(OCIO_BUILD_APPS)
      # lcms2
      # https://github.com/mm2/Little-CMS
      ocio_handle_dependency(  lcms2 REQUIRED ALLOW_INSTALL
+-                             MIN_VERSION 2.2
+-                             RECOMMENDED_VERSION 2.17
 +                             CONFIG
-                              MIN_VERSION 2.2
-                              RECOMMENDED_VERSION 2.17
                               RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
-@@ -218,6 +222,7 @@ if((OCIO_BUILD_APPS AND OCIO_USE_OIIO_FOR_APPS) OR OCIO_BUILD_TESTS)
+ endif()
+ 
+@@ -218,6 +220,7 @@ if((OCIO_BUILD_APPS AND OCIO_USE_OIIO_FOR_APPS) OR OCIO_BUILD_TESTS)
          # Calling find_package in CONFIG mode using PREFER_CONFIG option as OIIO support
          # config file since 2.1+ and OCIO minimum version is over that.
          ocio_handle_dependency(  OpenImageIO PREFER_CONFIG
