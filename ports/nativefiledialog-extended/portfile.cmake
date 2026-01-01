@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 4ec3e174a90354c524d9be2776422740f80b73021df94e1942e60ab4310995245554f83097b9b2dcca04d016a8548d3fc0760f73daf724c5c3d72c15cf776bed
     HEAD_REF master
+    PATCHES
+      fix-version.cmake  # https://github.com/btzy/nativefiledialog-extended/pull/173
 )
 
 vcpkg_cmake_configure(
