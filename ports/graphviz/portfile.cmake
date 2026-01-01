@@ -66,7 +66,7 @@ vcpkg_cmake_configure(
     MAYBE_UNUSED_VARIABLES
         install_win_dependency_dlls
 )
-vcpkg_cmake_install()
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/graphviz)
 # Resolve cyclic dependency for static linkage.

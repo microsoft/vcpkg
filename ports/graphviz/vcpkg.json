@@ -4,7 +4,6 @@
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "license": "EPL-1.0",
-  "supports": "!(static & staticcrt)",
   "dependencies": [
     {
       "name": "cairo",
