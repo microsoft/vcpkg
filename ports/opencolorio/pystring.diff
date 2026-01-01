@@ -193,3 +193,16 @@ index 33da5f3..7609dda 100755
  
  #include <OpenColorIO/OpenColorIO.h>
  
+diff --git a/src/apps/ociomergeconfigs/main.cpp b/src/apps/ociomergeconfigs/main.cpp
+index 7069e15..3e5deb8 100644
+--- a/src/apps/ociomergeconfigs/main.cpp
++++ b/src/apps/ociomergeconfigs/main.cpp
+@@ -5,7 +5,7 @@
+ #include <fstream>
+ #include <vector>
+ 
+-#include <pystring.h>
++#include <pystring/pystring.h>
+ 
+ #include <OpenColorIO/OpenColorIO.h>
+ #include "utils/StringUtils.h"
