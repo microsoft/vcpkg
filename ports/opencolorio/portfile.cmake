@@ -62,7 +62,7 @@ vcpkg_replace_string(
 
 if(OCIO_BUILD_APPS)
     vcpkg_copy_tools(
-        TOOL_NAMES ocioarchive ociobakelut ociocheck ociochecklut ocioconvert ociocpuinfo ociolutimage ociomakeclf ocioperf ociowrite
+        TOOL_NAMES ociomergeconfigs ocioarchive ociobakelut ociocheck ociochecklut ocioconvert ociocpuinfo ociolutimage ociomakeclf ocioperf ociowrite
         AUTO_CLEAN
     )
 endif()
