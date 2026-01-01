@@ -9,6 +9,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         disable-static-prefix.patch # https://gitlab.kitware.com/cmake/cmake/-/issues/16617; also mingw.
+        fix_bsd_and_solaris.patch
         fix_parallel_build_on_windows.patch
         mh-darwin.patch
         mh-mingw.patch
