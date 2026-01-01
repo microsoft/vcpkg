@@ -54,7 +54,12 @@
     "snappy": {
       "description": "build with SNAPPY",
       "dependencies": [
-        "snappy"
+        {
+          "name": "snappy",
+          "features": [
+            "rtti"
+          ]
+        }
       ]
     },
     "tbb": {
