@@ -576,7 +576,7 @@ endfunction()
 function(z_vcpkg_make_default_path_and_configure_options out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
         "" 
-        "CONFIG;EXCLUDE_FILTER;INCLUDE_FILTER"
+        "CONFIG;EXCLUDE_FILTER"
         ""
     )
     z_vcpkg_unparsed_args(FATAL_ERROR)
@@ -647,10 +647,6 @@ function(z_vcpkg_make_default_path_and_configure_options out_var)
 
     if(NOT arg_EXCLUDE_FILTER STREQUAL "")
         list(FILTER opts EXCLUDE REGEX "${arg_EXCLUDE_FILTER}")
-    endif()
-
-    if(arg_INCLUDE_FILTER STREQUAL "")
-        list(FILTER opts INCLUDE REGEX "${arg_INCLUDE_FILTER}")
     endif()
 
     set("${out_var}" ${opts} PARENT_SCOPE)
