@@ -646,11 +646,11 @@ function(z_vcpkg_make_default_path_and_configure_options out_var)
         vcpkg_list(APPEND opts --disable-shared --enable-static)
     endif()
 
-    if(DEFINED arg_EXCLUDE_FILTER)
+    if(NOT arg_EXCLUDE_FILTER STREQUAL "")
         list(FILTER opts EXCLUDE REGEX "${arg_EXCLUDE_FILTER}")
     endif()
 
-    if(DEFINED arg_INCLUDE_FILTER)
+    if(arg_INCLUDE_FILTER STREQUAL "")
         list(FILTER opts INCLUDE REGEX "${arg_INCLUDE_FILTER}")
     endif()
 
