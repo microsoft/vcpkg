@@ -19,16 +19,4 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-# Move the tool to a location where it can be referenced as a host tool
-file(INSTALL 
-    "${CURRENT_PACKAGES_DIR}/bin/bin2c${VCPKG_HOST_EXECUTABLE_SUFFIX}" 
-    DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}"
-    FILE_PERMISSIONS 
-        OWNER_READ OWNER_WRITE OWNER_EXECUTE 
-        GROUP_READ GROUP_EXECUTE 
-        WORLD_READ WORLD_EXECUTE
-)
-
-# Clean up
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug")
 file(INSTALL "${SOURCE_PATH}/COPYING.LGPLv2.1" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
