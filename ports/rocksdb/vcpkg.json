@@ -56,7 +56,9 @@
       "dependencies": [
         {
           "name": "snappy",
-          "features": ["rtti"]
+          "features": [
+            "rtti"
+          ]
         }
       ]
     },
