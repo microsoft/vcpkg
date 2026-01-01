@@ -97,7 +97,7 @@ function(vcpkg_make_configure)
 
         set(opts "")
         if(NOT arg_DISABLE_DEFAULT_OPTIONS)
-            z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}"
+            z_vcpkg_make_default_path_and_configure_options(opts CONFIG "${configup}"
                 EXCLUDE_FILTER "${arg_DEFAULT_OPTIONS_EXCLUDE}"
                 INCLUDE_FILTER "${arg_DEFAULT_OPTIONS_INCLUDE}"
             )

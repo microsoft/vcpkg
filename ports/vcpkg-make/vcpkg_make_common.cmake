@@ -575,7 +575,7 @@ endfunction()
 
 function(z_vcpkg_make_default_path_and_configure_options out_var)
     cmake_parse_arguments(PARSE_ARGV 1 arg
-        "AUTOMAKE" 
+        "" 
         "CONFIG;EXCLUDE_FILTER;INCLUDE_FILTER"
         ""
     )
@@ -635,10 +635,9 @@ function(z_vcpkg_make_default_path_and_configure_options out_var)
                             "--docdir=\\\${prefix}/share/${PORT}"
                             "--datarootdir=\\\${prefix}/share/${PORT}")
     endif()
+
     # Setup common options
-    if(NOT arg_AUTOMAKE)
-        vcpkg_list(APPEND opts --disable-silent-rules --verbose)
-    endif()
+    vcpkg_list(APPEND opts --disable-silent-rules --verbose)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_list(APPEND opts --enable-shared --disable-static)
