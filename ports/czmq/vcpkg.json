@@ -1,7 +1,7 @@
 {
   "name": "czmq",
   "version-semver": "4.2.1",
-  "port-version": 4,
+  "port-version": 5,
   "description": "High-level C binding for ZeroMQ",
   "homepage": "https://github.com/zeromq/czmq",
   "license": "MPL-2.0",
