@@ -55,6 +55,7 @@ llvm = skip
 ace[tao]:arm-neon-android=feature-fails # tao requires a host tree with tao_idl compiled for the host
 ace[tao]:arm64-android=feature-fails
 ace[tao]:x64-android=feature-fails
+aeron[archive]=skip # archive feature requires Java for SBE code generation
 allegro5:arm64-windows=fail # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
 apr:arm64-windows=fail # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 blitz:arm64-windows=fail
