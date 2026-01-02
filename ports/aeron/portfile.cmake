@@ -30,8 +30,26 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/aeron)
 
-# Move DLLs from lib to bin (aeron builds both static and shared libraries)
-if(VCPKG_TARGET_IS_WINDOWS)
+# Aeron always builds both static and shared libraries regardless of VCPKG_LIBRARY_LINKAGE.
+# Handle the shared library artifacts based on linkage type.
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # For static builds, remove shared library artifacts (DLLs, SOs, DYLIBs and their import libs)
+    file(REMOVE
+        "${CURRENT_PACKAGES_DIR}/lib/aeron.dll"
+        "${CURRENT_PACKAGES_DIR}/lib/aeron_client_shared.dll"
+        "${CURRENT_PACKAGES_DIR}/lib/aeron_driver.dll"
+        "${CURRENT_PACKAGES_DIR}/lib/aeron.lib"
+        "${CURRENT_PACKAGES_DIR}/lib/aeron_client_shared.lib"
+        "${CURRENT_PACKAGES_DIR}/lib/aeron_driver.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/aeron.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/aeron_client_shared.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/aeron_driver.dll"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/aeron.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/aeron_client_shared.lib"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/aeron_driver.lib"
+    )
+else()
+    # For dynamic builds, move DLLs from lib to bin
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(GLOB RELEASE_DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
     file(GLOB DEBUG_DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
