@@ -6,9 +6,12 @@ vcpkg_from_gitlab(
     SHA512 c486175bbdb62f6d8123ba9623921eb8948a472a2fa31c99f22775b383e6a6380a29224ae8e959617de8960c2a2ad346bb34b20dbf5bc780e5590f4f29930e23
     HEAD_REF main
     PATCHES
-        cmake-config.diff
-        fix-dependencies.patch
+        build.diff
+        dependencies.diff
+        install.diff
         no-absolute-paths.patch
+        official-include-dir.diff  # https://gitlab.com/graphviz/graphviz/-/issues/2798
+        skip-configure-plugins.diff
         version.diff
 )
 
@@ -39,7 +42,6 @@ vcpkg_cmake_configure(
         -Duse_win_pre_inst_libs=OFF
         -DENABLE_LTDL=ON
         -DENABLE_SWIG=OFF
-        -DENABLE_TCL=OFF
         -DWITH_EXPAT=ON
         -DWITH_GDK=OFF
         -DWITH_GHOSTSCRIPT=OFF
