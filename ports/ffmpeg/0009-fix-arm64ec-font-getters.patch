@@ -1,0 +1,415 @@
+diff --git a/libavcodec/ansi.c b/libavcodec/ansi.c
+index d8d32bafbd..9d9d045106 100644
+--- a/libavcodec/ansi.c
++++ b/libavcodec/ansi.c
+@@ -82,7 +82,7 @@ static av_cold int decode_init(AVCodecContext *avctx)
+     avctx->pix_fmt = AV_PIX_FMT_PAL8;
+ 
+     /* defaults */
+-    s->font        = avpriv_vga16_font;
++    s->font        = avpriv_vga16_font_get();
+     s->font_height = 16;
+     s->fg          = DEFAULT_FG_COLOR;
+     s->bg          = DEFAULT_BG_COLOR;
+@@ -217,19 +217,19 @@ static int execute_code(AVCodecContext * avctx, int c)
+             s->args[0] = DEFAULT_SCREEN_MODE;
+         switch(s->args[0]) {
+         case 0: case 1: case 4: case 5: case 13: case 19: //320x200 (25 rows)
+-            s->font = avpriv_cga_font;
++            s->font = avpriv_cga_font_get();
+             s->font_height = 8;
+             width  = 40<<3;
+             height = 25<<3;
+             break;
+         case 2: case 3: //640x400 (25 rows)
+-            s->font = avpriv_vga16_font;
++            s->font = avpriv_vga16_font_get();
+             s->font_height = 16;
+             width  = 80<<3;
+             height = 25<<4;
+             break;
+         case 6: case 14: //640x200 (25 rows)
+-            s->font = avpriv_cga_font;
++            s->font = avpriv_cga_font_get();
+             s->font_height = 8;
+             width  = 80<<3;
+             height = 25<<3;
+@@ -237,13 +237,13 @@ static int execute_code(AVCodecContext * avctx, int c)
+         case 7: //set line wrapping
+             break;
+         case 15: case 16: //640x350 (43 rows)
+-            s->font = avpriv_cga_font;
++            s->font = avpriv_cga_font_get();
+             s->font_height = 8;
+             width  = 80<<3;
+             height = 43<<3;
+             break;
+         case 17: case 18: //640x480 (60 rows)
+-            s->font = avpriv_cga_font;
++            s->font = avpriv_cga_font_get();
+             s->font_height = 8;
+             width  = 80<<3;
+             height = 60<<4;
+diff --git a/libavcodec/bintext.c b/libavcodec/bintext.c
+index b20d6ce176..52fd1acc15 100644
+--- a/libavcodec/bintext.c
++++ b/libavcodec/bintext.c
+@@ -93,10 +93,10 @@ static av_cold int decode_init(AVCodecContext *avctx)
+             av_log(avctx, AV_LOG_WARNING, "font height %i not supported\n", s->font_height);
+             s->font_height = 8;
+         case 8:
+-            s->font = avpriv_cga_font;
++            s->font = avpriv_cga_font_get();
+             break;
+         case 16:
+-            s->font = avpriv_vga16_font;
++            s->font = avpriv_vga16_font_get();
+             break;
+         }
+     }
+diff --git a/libavcodec/tmv.c b/libavcodec/tmv.c
+index 2ff1424bd8..beb5848899 100644
+--- a/libavcodec/tmv.c
++++ b/libavcodec/tmv.c
+@@ -40,6 +40,7 @@ static int tmv_decode_frame(AVCodecContext *avctx, AVFrame *frame,
+                             int *got_frame, AVPacket *avpkt)
+ {
+     const uint8_t *src = avpkt->data;
++    const uint8_t *cga_font = avpriv_cga_font_get();
+     uint8_t *dst;
+     unsigned char_cols = avctx->width >> 3;
+     unsigned char_rows = avctx->height >> 3;
+@@ -72,7 +73,7 @@ FF_ENABLE_DEPRECATION_WARNINGS
+             bg = *src  >> 4;
+             fg = *src++ & 0xF;
+             ff_draw_pc_font(dst + x * 8, frame->linesize[0],
+-                            avpriv_cga_font, 8, c, fg, bg);
++                            cga_font, 8, c, fg, bg);
+         }
+         dst += frame->linesize[0] * 8;
+     }
+diff --git a/libavfilter/af_aiir.c b/libavfilter/af_aiir.c
+index dfeeb34c9b..eab061c652 100644
+--- a/libavfilter/af_aiir.c
++++ b/libavfilter/af_aiir.c
+@@ -1038,7 +1038,7 @@ static void drawtext(AVFrame *pic, int x, int y, const char *txt, uint32_t color
+     int font_height;
+     int i;
+ 
+-    font = avpriv_cga_font, font_height = 8;
++    font = avpriv_cga_font_get(), font_height = 8;
+ 
+     for (i = 0; txt[i]; i++) {
+         int char_y, mask;
+diff --git a/libavfilter/avf_showcqt.c b/libavfilter/avf_showcqt.c
+index 9fc5b00dde..4643effcb0 100644
+--- a/libavfilter/avf_showcqt.c
++++ b/libavfilter/avf_showcqt.c
+@@ -655,6 +655,7 @@ fail:
+ static int render_default_font(AVFrame *tmp)
+ {
+     const char *str = "EF G A BC D ";
++    const uint8_t *vga16_font = avpriv_vga16_font_get();
+     int x, u, v, mask;
+     uint8_t *data = tmp->data[0];
+     int linesize = tmp->linesize[0];
+@@ -666,7 +667,7 @@ static int render_default_font(AVFrame *tmp)
+             for (v = 0; v < height; v++) {
+                 uint8_t *p = startptr + v * linesize + height/2 * 4 * u;
+                 for (mask = 0x80; mask; mask >>= 1, p += 4) {
+-                    if (mask & avpriv_vga16_font[str[u] * 16 + v])
++                    if (mask & vga16_font[str[u] * 16 + v])
+                         p[3] = 255;
+                     else
+                         p[3] = 0;
+diff --git a/libavfilter/avf_showspectrum.c b/libavfilter/avf_showspectrum.c
+index 565f23c28b..c3e9717143 100644
+--- a/libavfilter/avf_showspectrum.c
++++ b/libavfilter/avf_showspectrum.c
+@@ -501,7 +501,7 @@ static void drawtext(AVFrame *pic, int x, int y, const char *txt, int o)
+     const uint8_t *font;
+     int font_height;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (int i = 0; txt[i]; i++) {
+         int char_y, mask;
+diff --git a/libavfilter/avf_showvolume.c b/libavfilter/avf_showvolume.c
+index d26fc8841d..467beb973e 100644
+--- a/libavfilter/avf_showvolume.c
++++ b/libavfilter/avf_showvolume.c
+@@ -234,7 +234,7 @@ static void drawtext(AVFrame *pic, int x, int y, const char *txt, int o)
+     int font_height;
+     int i;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (i = 0; txt[i]; i++) {
+         int char_y, mask;
+diff --git a/libavfilter/f_ebur128.c b/libavfilter/f_ebur128.c
+index f71c230b45..c4e64bcc07 100644
+--- a/libavfilter/f_ebur128.c
++++ b/libavfilter/f_ebur128.c
+@@ -253,8 +253,8 @@ static void drawtext(AVFrame *pic, int x, int y, int ftid, const uint8_t *color,
+     int font_height;
+     va_list vl;
+ 
+-    if      (ftid == FONT16) font = avpriv_vga16_font, font_height = 16;
+-    else if (ftid == FONT8)  font = avpriv_cga_font,   font_height =  8;
++    if      (ftid == FONT16) font = avpriv_vga16_font_get(), font_height = 16;
++    else if (ftid == FONT8)  font = avpriv_cga_font_get(),   font_height =  8;
+     else return;
+ 
+     va_start(vl, fmt);
+diff --git a/libavfilter/f_graphmonitor.c b/libavfilter/f_graphmonitor.c
+index 0ed1085610..2d072114cc 100644
+--- a/libavfilter/f_graphmonitor.c
++++ b/libavfilter/f_graphmonitor.c
+@@ -185,7 +185,7 @@ static void drawtext(AVFrame *pic, int x, int y, const char *txt,
+     int font_height;
+     int i;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     if (y + 8 >= pic->height ||
+         x + len * 8 >= pic->width)
+diff --git a/libavfilter/src_avsynctest.c b/libavfilter/src_avsynctest.c
+index f78cdd1dec..f082962988 100644
+--- a/libavfilter/src_avsynctest.c
++++ b/libavfilter/src_avsynctest.c
+@@ -247,6 +247,7 @@ static int audio_frame(AVFilterLink *outlink)
+ static void draw_text(FFDrawContext *draw, AVFrame *out, FFDrawColor *color,
+                       int x0, int y0, const uint8_t *text)
+ {
++    const uint8_t *cga_font = avpriv_cga_font_get();
+     int x = x0;
+ 
+     for (; *text; text++) {
+@@ -257,7 +258,7 @@ static void draw_text(FFDrawContext *draw, AVFrame *out, FFDrawColor *color,
+         }
+         ff_blend_mask(draw, color, out->data, out->linesize,
+                       out->width, out->height,
+-                      avpriv_cga_font + *text * 8, 1, 8, 8, 0, 0, x, y0);
++                      &cga_font[*text * 8], 1, 8, 8, 0, 0, x, y0);
+         x += 8;
+     }
+ }
+diff --git a/libavfilter/vf_datascope.c b/libavfilter/vf_datascope.c
+index 7b4cb52ee8..d5b797d145 100644
+--- a/libavfilter/vf_datascope.c
++++ b/libavfilter/vf_datascope.c
+@@ -85,6 +85,7 @@ static int query_formats(AVFilterContext *ctx)
+ static void draw_text(FFDrawContext *draw, AVFrame *frame, FFDrawColor *color,
+                       int x0, int y0, const uint8_t *text, int vertical)
+ {
++    const uint8_t *cga_font = avpriv_cga_font_get();
+     int x = x0;
+ 
+     for (; *text; text++) {
+@@ -95,7 +96,7 @@ static void draw_text(FFDrawContext *draw, AVFrame *frame, FFDrawColor *color,
+         }
+         ff_blend_mask(draw, color, frame->data, frame->linesize,
+                       frame->width, frame->height,
+-                      avpriv_cga_font + *text * 8, 1, 8, 8, 0, 0, x, y0);
++                      &cga_font[*text * 8], 1, 8, 8, 0, 0, x, y0);
+         if (vertical) {
+             x = x0;
+             y0 += 8;
+diff --git a/libavfilter/vf_vectorscope.c b/libavfilter/vf_vectorscope.c
+index efaf7d9279..65fc91f429 100644
+--- a/libavfilter/vf_vectorscope.c
++++ b/libavfilter/vf_vectorscope.c
+@@ -968,7 +968,7 @@ static void draw_ihtext(AVFrame *out, int x, int y, float o1, float o2, const ch
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -993,7 +993,7 @@ static void draw_ihtext16(AVFrame *out, int x, int y, float o1, float o2, const
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -1019,7 +1019,7 @@ static void draw_htext(AVFrame *out, int x, int y, float o1, float o2, const cha
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -1045,7 +1045,7 @@ static void draw_htext16(AVFrame *out, int x, int y, float o1, float o2, const c
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+diff --git a/libavfilter/vf_waveform.c b/libavfilter/vf_waveform.c
+index 8b54e12e3d..b162a0385b 100644
+--- a/libavfilter/vf_waveform.c
++++ b/libavfilter/vf_waveform.c
+@@ -2635,7 +2635,7 @@ static void draw_htext(AVFrame *out, int x, int y, int mult, float o1, float o2,
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -2661,7 +2661,7 @@ static void draw_htext16(AVFrame *out, int x, int y, int mult, float o1, float o
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -2687,7 +2687,7 @@ static void draw_vtext(AVFrame *out, int x, int y, int mult, float o1, float o2,
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -2712,7 +2712,7 @@ static void draw_vtext16(AVFrame *out, int x, int y, int mult, float o1, float o
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -2779,7 +2779,7 @@ static void idraw_htext(AVFrame *out, int x, int y, int mult, float o1, float o2
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -2805,7 +2805,7 @@ static void idraw_htext16(AVFrame *out, int x, int y, int mult, float o1, float
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -2831,7 +2831,7 @@ static void idraw_vtext(AVFrame *out, int x, int y, int mult, float o1, float o2
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+@@ -2856,7 +2856,7 @@ static void idraw_vtext16(AVFrame *out, int x, int y, int mult, float o1, float
+     int font_height;
+     int i, plane;
+ 
+-    font = avpriv_cga_font,   font_height =  8;
++    font = avpriv_cga_font_get(),   font_height =  8;
+ 
+     for (plane = 0; plane < 4 && out->data[plane]; plane++) {
+         for (i = 0; txt[i]; i++) {
+diff --git a/libavfilter/vsrc_testsrc.c b/libavfilter/vsrc_testsrc.c
+index f14e36a95b..60e92cab21 100644
+--- a/libavfilter/vsrc_testsrc.c
++++ b/libavfilter/vsrc_testsrc.c
+@@ -732,6 +732,7 @@ static uint32_t color_gradient(unsigned index)
+ static void draw_text(TestSourceContext *s, AVFrame *frame, FFDrawColor *color,
+                       int x0, int y0, const uint8_t *text)
+ {
++    const uint8_t *vga16_font = avpriv_vga16_font_get();
+     int x = x0;
+ 
+     for (; *text; text++) {
+@@ -742,7 +743,7 @@ static void draw_text(TestSourceContext *s, AVFrame *frame, FFDrawColor *color,
+         }
+         ff_blend_mask(&s->draw, color, frame->data, frame->linesize,
+                       frame->width, frame->height,
+-                      avpriv_vga16_font + *text * 16, 1, 8, 16, 0, 0, x, y0);
++                      &vga16_font[*text * 16], 1, 8, 16, 0, 0, x, y0);
+         x += 8;
+     }
+ }
+diff --git a/libavutil/xga_font_data.c b/libavutil/xga_font_data.c
+index 3aed3142cf..e4b21760f8 100644
+--- a/libavutil/xga_font_data.c
++++ b/libavutil/xga_font_data.c
+@@ -26,6 +26,9 @@
+ #include <stdint.h>
+ #include "xga_font_data.h"
+ 
++#if LIBAVUTIL_VERSION_MAJOR > 60
++static
++#endif
+ const uint8_t avpriv_cga_font[2048] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7e, 0x81, 0xa5, 0x81, 0xbd, 0x99, 0x81, 0x7e,
+  0x7e, 0xff, 0xdb, 0xff, 0xc3, 0xe7, 0xff, 0x7e, 0x6c, 0xfe, 0xfe, 0xfe, 0x7c, 0x38, 0x10, 0x00,
+@@ -157,6 +160,14 @@ const uint8_t avpriv_cga_font[2048] = {
+  0x00, 0x00, 0x3c, 0x3c, 0x3c, 0x3c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ };
+ 
++const uint8_t *avpriv_cga_font_get(void)
++{
++    return avpriv_cga_font;
++}
++
++#if LIBAVUTIL_VERSION_MAJOR > 60
++static
++#endif
+ const uint8_t avpriv_vga16_font[4096] = {
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x7e, 0x81, 0xa5, 0x81, 0x81, 0xbd, 0x99, 0x81, 0x81, 0x7e, 0x00, 0x00, 0x00, 0x00,
+@@ -415,3 +426,8 @@ const uint8_t avpriv_vga16_font[4096] = {
+  0x00, 0x00, 0x00, 0x00, 0x7c, 0x7c, 0x7c, 0x7c, 0x7c, 0x7c, 0x7c, 0x00, 0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+ };
++
++const uint8_t *avpriv_vga16_font_get(void)
++{
++    return avpriv_vga16_font;
++}
+diff --git a/libavutil/xga_font_data.h b/libavutil/xga_font_data.h
+index 69dc337120..90d3cec4ce 100644
+--- a/libavutil/xga_font_data.h
++++ b/libavutil/xga_font_data.h
+@@ -28,8 +28,14 @@
+ 
+ #include <stdint.h>
+ #include "internal.h"
++#include "version.h"
+ 
++#if LIBAVUTIL_VERSION_MAJOR < 61
+ extern av_export_avutil const uint8_t avpriv_cga_font[2048];
+ extern av_export_avutil const uint8_t avpriv_vga16_font[4096];
++#endif
++
++const uint8_t *avpriv_cga_font_get(void);
++const uint8_t *avpriv_vga16_font_get(void);
+ 
+ #endif /* AVUTIL_XGA_FONT_DATA_H */
+ 
