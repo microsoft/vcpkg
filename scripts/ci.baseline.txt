@@ -38,6 +38,8 @@
 ##
 
 # Add new items alphabetically
+# aeron requires CMake 3.30+ which may not be available in CI
+aeron:arm64-osx=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:x64-android=fail
