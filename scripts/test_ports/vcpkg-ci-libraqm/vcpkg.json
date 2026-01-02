@@ -5,10 +5,7 @@
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
   "dependencies": [
-    {
-      "name": "libraqm",
-      "default-features": false
-    },
+    "libraqm",
     {
       "name": "vcpkg-cmake",
       "host": true
