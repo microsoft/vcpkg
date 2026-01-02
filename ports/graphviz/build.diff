@@ -14,7 +14,7 @@ index 245e44e04..3193c4d7f 100644
      TARGETS dot
      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
 diff --git a/cmd/gvpr/CMakeLists.txt b/cmd/gvpr/CMakeLists.txt
-index 7bca2427a..2a49d2c8b 100644
+index 7bca2427a..98b7016d7 100644
 --- a/cmd/gvpr/CMakeLists.txt
 +++ b/cmd/gvpr/CMakeLists.txt
 @@ -1,5 +1,3 @@
@@ -23,6 +23,19 @@ index 7bca2427a..2a49d2c8b 100644
  add_executable(gvpr-bin
    # Source files
    gvprmain.c
+@@ -13,12 +11,9 @@ target_include_directories(gvpr-bin PRIVATE
+ )
+ 
+ target_link_libraries(gvpr-bin PRIVATE
+-  ast
+   cgraph
+   gvc
+   gvpr
+-  expr
+-  sfio
+ )
+ 
+ set_target_properties(gvpr-bin
 diff --git a/lib/ast/CMakeLists.txt b/lib/ast/CMakeLists.txt
 index a77af5574..000d71b77 100644
 --- a/lib/ast/CMakeLists.txt
@@ -220,16 +233,6 @@ index d92a13201..841fb495f 100644
    # Header files
    sfhdr.h
    sfio.h
-diff --git a/lib/util/CMakeLists.txt b/lib/util/CMakeLists.txt
-index 04344ed5d..e6e8bdcc7 100644
---- a/lib/util/CMakeLists.txt
-+++ b/lib/util/CMakeLists.txt
-@@ -1,4 +1,4 @@
--add_library(util STATIC
-+add_library(util OBJECT
-   arena.c
-   base64.c
-   gv_find_me.c
 diff --git a/lib/xdot/CMakeLists.txt b/lib/xdot/CMakeLists.txt
 index 70a317d72..12788b3d8 100644
 --- a/lib/xdot/CMakeLists.txt

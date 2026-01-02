@@ -122,6 +122,17 @@ index 65a357678..e656b1228 100644
 +
 +set(LIBGVC_PC_LIBS_PRIVATE "${LIBGVC_PC_LIBS_PRIVATE}" PARENT_SCOPE)
 +set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
+diff --git a/lib/cgraph/libcgraph.pc.in b/lib/cgraph/libcgraph.pc.in
+index 2b8c8f47b..168ce85f0 100644
+--- a/lib/cgraph/libcgraph.pc.in
++++ b/lib/cgraph/libcgraph.pc.in
+@@ -6,5 +6,6 @@ includedir=@includedir@
+ Name: libcgraph
+ Description: Graph library (file i/o, dot language parsing, graph, subgraph, node, edge, attribute, data structure manipulation)
+ Version: @VERSION@
++Libs.private: -lutil
+ Libs: -L${libdir} -lcgraph -lcdt
+ Cflags: -I${includedir} -I${includedir}/@PACKAGE@
 diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
 index 3b0e469f4..265de0354 100644
 --- a/lib/common/CMakeLists.txt
@@ -172,15 +183,15 @@ index 11dba53f3..1d54de861 100644
 +set(LIBGVC_PC_LIBS_PRIVATE "${LIBGVC_PC_LIBS_PRIVATE}" PARENT_SCOPE)
 +set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE} libpathplan libxdot" PARENT_SCOPE)
 diff --git a/lib/gvc/libgvc.pc.in b/lib/gvc/libgvc.pc.in
-index f12b472e1..326803d26 100644
+index f12b472e1..9b89519f8 100644
 --- a/lib/gvc/libgvc.pc.in
 +++ b/lib/gvc/libgvc.pc.in
-@@ -7,6 +7,7 @@ plugins=@GVPLUGIN_VERSION@
+@@ -7,6 +7,8 @@ plugins=@GVPLUGIN_VERSION@
  Name: libgvc
  Description: The GraphVizContext library 
  Version: @VERSION@
 +Requires.private: @LIBGVC_PC_REQUIRES_PRIVATE@
-+Libs.private: @LIBGVC_PC_LIBS_PRIVATE@
++Libs.private: @LIBGVC_PC_LIBS_PRIVATE@ -lutil
  Libs: -L${libdir} -lgvc -lcgraph -lcdt
  Cflags: -I${includedir} -I${includedir}/@PACKAGE@
--
+ 
