@@ -1,0 +1,13 @@
+diff --git a/libgimp/meson.build b/libgimp/meson.build
+index c12e60c2cd..bd4ef1b8cd 100644
+--- a/libgimp/meson.build
++++ b/libgimp/meson.build
+@@ -381,6 +381,8 @@ else
+   gio_specific_gir = ''
+   gio_specific_vapi = ''
+ endif
++gio_specific_gir = ''
++gio_specific_vapi = ''
+ 
+ libgimp_deps_table = [
+     { 'gir': 'Babl-0.1',          'vapi': 'babl-0.1',        },
