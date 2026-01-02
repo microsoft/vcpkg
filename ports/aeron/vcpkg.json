@@ -15,5 +15,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "archive": {
+      "description": "Build Aeron Archive API for recording and replaying message streams (requires Java)",
+      "supports": "!uwp & !xbox & !android"
+    }
+  }
 }
