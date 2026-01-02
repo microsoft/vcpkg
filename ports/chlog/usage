@@ -1,0 +1,8 @@
+chlog provides a CMake package.
+
+find_package(chlog CONFIG REQUIRED)
+target_link_libraries(your_target PRIVATE chlog::chlog)
+
+# Optional: if you want to use {fmt} backend
+# find_package(fmt CONFIG REQUIRED)
+# target_compile_definitions(your_target PRIVATE CHLOG_USE_FMT=1)
