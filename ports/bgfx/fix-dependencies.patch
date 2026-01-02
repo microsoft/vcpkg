@@ -60,6 +60,7 @@ index 865879e..c6a3d84 100644
  #define IMGUI_H_HEADER_GUARD
  
  #include <bgfx/bgfx.h>
+ #include <bx/bx.h>
 -#include <dear-imgui/imgui.h>
 +#include <imgui.h>
  #include <iconfontheaders/icons_kenney.h>
@@ -97,22 +98,18 @@ index d79a80e..7740272 100644
  #define BGFX_GEOMETRYC_VERSION_MAJOR 1
  #define BGFX_GEOMETRYC_VERSION_MINOR 0
 diff --git a/bgfx/tools/shaderc/shaderc_metal.cpp b/bgfx/tools/shaderc/shaderc_metal.cpp
-index 9f073b9..e8fd208 100644
+index f7910de..a844cc0 100644
 --- a/bgfx/tools/shaderc/shaderc_metal.cpp
 +++ b/bgfx/tools/shaderc/shaderc_metal.cpp
-@@ -20,11 +20,11 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
- #include <spirv_reflect.hpp>
- 
+@@ -22,7 +22,7 @@
  #define ENABLE_OPT 1
 -#include <ShaderLang.h>
 -#include <ResourceLimits.h>
 -#include <SPIRV/GlslangToSpv.h>
--#include <SPIRV/SPVRemapper.h>
 -#include <SPIRV/SpvTools.h>
 +#include <glslang/Public/ShaderLang.h>
 +#include <glslang/Include/ResourceLimits.h>
 +#include <glslang/SPIRV/GlslangToSpv.h>
-+#include <glslang/SPIRV/SPVRemapper.h>
 +#include <glslang/SPIRV/SpvTools.h>
  #include <spirv-tools/optimizer.hpp>
  BX_PRAGMA_DIAGNOSTIC_POP()
@@ -121,23 +118,20 @@ diff --git a/bgfx/tools/shaderc/shaderc_spirv.cpp b/bgfx/tools/shaderc/shaderc_s
 index f7910de..a844cc0 100644
 --- a/bgfx/tools/shaderc/shaderc_spirv.cpp
 +++ b/bgfx/tools/shaderc/shaderc_spirv.cpp
-@@ -20,11 +20,11 @@ BX_PRAGMA_DIAGNOSTIC_IGNORED_CLANG_GCC("-Wshadow") // warning: declaration of 'u
- #include <spirv_reflect.hpp>
- 
+@@ -22,7 +22,7 @@
  #define ENABLE_OPT 1
 -#include <ShaderLang.h>
 -#include <ResourceLimits.h>
--#include <SPIRV/SPVRemapper.h>
 -#include <SPIRV/GlslangToSpv.h>
 -#include <SPIRV/SpvTools.h>
 +#include <glslang/Public/ShaderLang.h>
 +#include <glslang/Include/ResourceLimits.h>
-+#include <glslang/SPIRV/SPVRemapper.h>
 +#include <glslang/SPIRV/GlslangToSpv.h>
 +#include <glslang/SPIRV/SpvTools.h>
  #include <spirv-tools/optimizer.hpp>
  BX_PRAGMA_DIAGNOSTIC_POP()
- 
+
+
 diff --git a/bimg/src/image_decode.cpp b/bimg/src/image_decode.cpp
 index 798eaba..a4cd3ef 100644
 --- a/bimg/src/image_decode.cpp
