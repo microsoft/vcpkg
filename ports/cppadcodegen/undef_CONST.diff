@@ -1,0 +1,18 @@
+Index: include/cppad/cg/cppadcg.hpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+diff --git a/include/cppad/cg/cppadcg.hpp b/include/cppad/cg/cppadcg.hpp
+--- a/include/cppad/cg/cppadcg.hpp	(revision 656d23e3c06e0e3d573f02336eb457e1f30896f2)
++++ b/include/cppad/cg/cppadcg.hpp	(date 1766646866207)
+@@ -239,6 +239,9 @@
+ #include <cppad/cg/model/threadpool/pthread_pool_h.hpp>
+ #include <cppad/cg/model/threadpool/openmp_c.hpp>
+ #include <cppad/cg/model/threadpool/openmp_h.hpp>
++#ifdef CONST
++#undef CONST
++#endif
+ #include <cppad/cg/model/model_c_source_gen.hpp>
+ #include <cppad/cg/model/model_c_source_gen_impl.hpp>
+ #include <cppad/cg/model/model_library_c_source_gen.hpp>
