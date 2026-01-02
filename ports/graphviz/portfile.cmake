@@ -71,6 +71,12 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/graphviz)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(READ "${CURRENT_PACKAGES_DIR}/share/${PORT}/graphvizConfig.cmake" cmake-config)
+    file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/graphvizConfig.cmake"
+        "include(CMakeFindDependencyMacro)\nfind_dependency(getopt CONFIG)\n${cmake-config}"
+    )
+endif()
 # Resolve cyclic dependency for static linkage.
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/private.cmake" [[if(DEFINED ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE_targets)]] "if(0)")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/private.cmake" [[add_library(]] "add_library(#[[skip-usage-heuristics]] ")

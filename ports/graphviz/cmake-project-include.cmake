@@ -1,5 +1,5 @@
 if(WIN32 AND NOT MINGW)
-    find_package(unofficial-getopt-win32 CONFIG REQUIRED)
+    find_package(getopt CONFIG REQUIRED)
     if(TARGET getopt::getopt_shared)
         set(GETOPT_LIBRARY "getopt::getopt_shared" CACHE INTERNAL "vcpkg")
     else()
