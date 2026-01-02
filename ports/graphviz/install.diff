@@ -1,18 +1,17 @@
 diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index e656b1228..e26d58d7b 100644
+index e656b1228..41faad061 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -47,7 +47,14 @@ if(with_cxx_api)
+@@ -47,7 +47,13 @@ if(with_cxx_api)
    add_subdirectory(gvc++)
  endif()
  
 -if(BUILD_SHARED_LIBS)
 +if(1)
-+  foreach(name IN ITEMS common label ortho pack util)
-+    set_target_properties(${name} PROPERTIES OUTPUT_NAME gvprivate_${name})
-+    install(TARGETS ${name} EXPORT private) # existing config which needs most of above
-+  endforeach()
-+  install(EXPORT private FILE private.cmake NAMESPACE graphviz::private::
++  set_target_properties(util PROPERTIES OUTPUT_NAME gvutil)
++  install(TARGETS common util EXPORT private)
++  install(EXPORT private
++    NAMESPACE graphviz::private::
 +    DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
 +  )
    install(
@@ -66,10 +65,10 @@ index e8c07cd73..2995c48a0 100644
  include(${CMAKE_CURRENT_LIST_DIR}/cgraphConfig.cmake)
  include(${CMAKE_CURRENT_LIST_DIR}/gvcConfig.cmake)
 diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
-index 116322e51..bd5834462 100644
+index 9f523354c..a6fb51f1d 100644
 --- a/lib/gvc/CMakeLists.txt
 +++ b/lib/gvc/CMakeLists.txt
-@@ -157,7 +157,7 @@ if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
+@@ -158,7 +158,7 @@ if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
    )
  endif()
  
@@ -79,7 +78,7 @@ index 116322e51..bd5834462 100644
      EXPORT gvcConfig
      FILE gvcConfig.cmake
 diff --git a/lib/gvc/libgvc.pc.in b/lib/gvc/libgvc.pc.in
-index 9b89519f8..bcd6ffa4b 100644
+index 9b89519f8..22ee26e4c 100644
 --- a/lib/gvc/libgvc.pc.in
 +++ b/lib/gvc/libgvc.pc.in
 @@ -8,7 +8,7 @@ Name: libgvc
@@ -87,7 +86,7 @@ index 9b89519f8..bcd6ffa4b 100644
  Version: @VERSION@
  Requires.private: @LIBGVC_PC_REQUIRES_PRIVATE@
 -Libs.private: @LIBGVC_PC_LIBS_PRIVATE@ -lutil
-+Libs.private: @LIBGVC_PC_LIBS_PRIVATE@ -lgvprivate_util
++Libs.private: @LIBGVC_PC_LIBS_PRIVATE@ -lgvutil
  Libs: -L${libdir} -lgvc -lcgraph -lcdt
  Cflags: -I${includedir} -I${includedir}/@PACKAGE@
  

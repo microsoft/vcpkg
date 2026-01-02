@@ -77,7 +77,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKA
         "include(CMakeFindDependencyMacro)\nfind_dependency(getopt CONFIG)\n${cmake-config}"
     )
 endif()
-# Resolve cyclic dependency for static linkage.
+# Resolve cyclic dependency for static cmake targets. Hide from usage heuristics.
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/private.cmake" [[if(DEFINED ${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE_targets)]] "if(0)")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/private.cmake" [[add_library(]] "add_library(#[[skip-usage-heuristics]] ")
 

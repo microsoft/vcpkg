@@ -42,7 +42,7 @@ index a77af5574..000d71b77 100644
 +++ b/lib/ast/CMakeLists.txt
 @@ -1,4 +1,4 @@
 -add_library(ast STATIC
-+add_library(ast OBJECT  # in gvpr
++add_library(ast OBJECT  # private in gvpr
    # Header files
    ast.h
    error.h
@@ -72,10 +72,10 @@ index 794b5c186..d05d87a22 100644
    add_definitions(-DYY_NO_UNISTD_H)
  endif()
 diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
-index be815ef72..3b0e469f4 100644
+index be815ef72..0a6c703dc 100644
 --- a/lib/common/CMakeLists.txt
 +++ b/lib/common/CMakeLists.txt
-@@ -122,11 +122,9 @@ if(APPLE)
+@@ -122,20 +122,17 @@ if(APPLE)
    target_compile_options(common_obj PRIVATE "-fno-common")
  endif()
  
@@ -89,8 +89,9 @@ index be815ef72..3b0e469f4 100644
 +target_link_libraries(common INTERFACE
    cgraph
    pathplan
-   label
-@@ -135,7 +133,7 @@ target_link_libraries(common PRIVATE
+-  label
+   xdot
+   util
  )
  
  if(EXPAT_FOUND)
@@ -119,24 +120,26 @@ index 452ecc9c2..fbb1f99e5 100644
  )
  
 -add_library(expr STATIC
-+add_library(expr OBJECT  # in gvpr
++add_library(expr OBJECT  # private in gvpr
    # Header files
    exgram.h
    exlib.h
 diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
-index 8530818a8..11dba53f3 100644
+index 8530818a8..45a669e6a 100644
 --- a/lib/gvc/CMakeLists.txt
 +++ b/lib/gvc/CMakeLists.txt
-@@ -52,7 +52,7 @@ if(WIN32 AND NOT MINGW)
+@@ -52,8 +52,9 @@ if(WIN32 AND NOT MINGW)
    )
  endif()
  
 -target_link_libraries(gvc PRIVATE
 +target_sources(gvc PRIVATE
    $<TARGET_OBJECTS:common_obj>
++  $<TARGET_OBJECTS:label>
    $<TARGET_OBJECTS:pack_obj>
  )
-@@ -61,7 +61,6 @@ target_link_libraries(gvc PRIVATE
+ 
+@@ -61,7 +62,6 @@ target_link_libraries(gvc PRIVATE
    cdt
    cgraph
    common
@@ -144,7 +147,7 @@ index 8530818a8..11dba53f3 100644
    util
  )
  
-@@ -78,10 +77,7 @@ if(ZLIB_FOUND)
+@@ -78,10 +78,7 @@ if(ZLIB_FOUND)
  endif()
  
  if(with_ortho)
@@ -187,6 +190,18 @@ index 35fccf805..eb3b50596 100644
  )
  
  if(NOT HAVE_GETOPT_H)
+diff --git a/lib/label/CMakeLists.txt b/lib/label/CMakeLists.txt
+index a9f690150..aa33a6871 100644
+--- a/lib/label/CMakeLists.txt
++++ b/lib/label/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ add_definitions(-DGVC_EXPORTS)
+ 
+-add_library(label STATIC
++add_library(label OBJECT  # export with gvc
+   # Header files
+   index.h
+   node.h
 diff --git a/lib/ortho/CMakeLists.txt b/lib/ortho/CMakeLists.txt
 index 7c2b83832..62f1bc5d7 100644
 --- a/lib/ortho/CMakeLists.txt
@@ -224,12 +239,12 @@ index 585fefe9f..13e2eb99e 100644
  # Specify headers to be installed
  install(
 diff --git a/lib/sfio/CMakeLists.txt b/lib/sfio/CMakeLists.txt
-index d92a13201..841fb495f 100644
+index d92a13201..237872715 100644
 --- a/lib/sfio/CMakeLists.txt
 +++ b/lib/sfio/CMakeLists.txt
 @@ -1,4 +1,4 @@
 -add_library(sfio STATIC
-+add_library(sfio OBJECT  # in gvpr
++add_library(sfio OBJECT  # private in gvpr
    # Header files
    sfhdr.h
    sfio.h
