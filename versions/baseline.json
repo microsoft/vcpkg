@@ -653,7 +653,7 @@
       "port-version": 0
     },
     "behaviortree-cpp": {
-      "baseline": "4.8.2",
+      "baseline": "4.8.3",
       "port-version": 0
     },
     "benchmark": {
