@@ -1,11 +1,9 @@
 {
   "name": "graphviz",
-  "version-semver": "10.0.1",
-  "port-version": 3,
+  "version-semver": "14.1.1",
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "license": "EPL-1.0",
-  "supports": "!staticcrt",
   "dependencies": [
     {
       "name": "cairo",
@@ -13,7 +11,10 @@
     },
     "expat",
     "gdk-pixbuf",
-    "getopt",
+    {
+      "name": "getopt-win32",
+      "platform": "windows & !mingw"
+    },
     "gts",
     {
       "name": "libgd",
@@ -26,17 +27,26 @@
         "tiff"
       ]
     },
+    {
+      "name": "libltdl",
+      "platform": "!windows | mingw"
+    },
     "librsvg",
     "libwebp",
     "pango",
     {
-      "name": "pkgconf",
-      "host": true
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Install graphviz executables"
+    }
+  }
 }

@@ -1,0 +1,197 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b02632b1f..cce1f3e9b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -327,8 +327,8 @@ if(PkgConfig_FOUND)
+       message(FATAL_ERROR "-DWITH_GDK=ON and GDK not found")
+     endif()
+   endif()
+-  pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0)
+-  pkg_check_modules(LASI lasi)
++  set(GDK_PIXBUF_FOUND 0)
++  set(LASI_FOUND 0)
+   if(AUTO_POPPLER)
+     pkg_check_modules(POPPLER poppler-glib)
+   elseif(WITH_POPPLER)
+@@ -682,7 +682,13 @@ endif()
+ 
+ if(UNIX)
+   find_library(MATH_LIB m)
+-  link_libraries(${MATH_LIB})
++  if(MATH_LIB)
++    set(MATH_LIB m CACHE INTERNAL "")
++    link_libraries(${MATH_LIB})
++    string(APPEND LIBGVC_PC_LIBS_PRIVATE " -lm")
++  else()
++    set(MATH_LIB "")
++  endif()
+ endif()
+ 
+ if(WIN32)
+diff --git a/cmake/FindCAIRO.cmake b/cmake/FindCAIRO.cmake
+index a6fdf8e3c..a4690653b 100644
+--- a/cmake/FindCAIRO.cmake
++++ b/cmake/FindCAIRO.cmake
+@@ -1,8 +1,11 @@
+ include(FindPackageHandleStandardArgs)
+ 
+ find_package(PkgConfig)
+-pkg_check_modules(CAIRO cairo)
+-if(MINGW)
++pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
++if(CAIRO_FOUND)
++  set(CAIRO_LIBRARIES PkgConfig::CAIRO)
++  set(CAIRO_LINK_LIBRARIES PkgConfig::CAIRO)
++elseif(MINGW)
+   find_program(CAIRO_RUNTIME_LIBRARY NAMES libcairo-2.dll)
+   find_program(EXPAT_RUNTIME_LIBRARY NAMES libexpat-1.dll)
+   find_program(FONTCONFIG_RUNTIME_LIBRARY NAMES libfontconfig-1.dll)
+diff --git a/cmake/FindGD.cmake b/cmake/FindGD.cmake
+index 49d372c37..2ed7e42af 100644
+--- a/cmake/FindGD.cmake
++++ b/cmake/FindGD.cmake
+@@ -1,3 +1,11 @@
++find_package(PkgConfig)
++pkg_check_modules(GD gdlib IMPORTED_TARGET)
++set(GD_LIBRARIES PkgConfig::GD)
++foreach(item IN ITEMS FONTCONFIG FREETYPE GIF JPEG PNG)
++  set(HAVE_GD_${item} 1)
++endforeach()
++return()
++
+ find_path(GD_INCLUDE_DIR gd.h)
+ find_library(GD_LIBRARY NAMES gd libgd)
+ 
+diff --git a/cmake/FindGTS.cmake b/cmake/FindGTS.cmake
+index bc1d5ea35..8114884a5 100644
+--- a/cmake/FindGTS.cmake
++++ b/cmake/FindGTS.cmake
+@@ -1,9 +1,11 @@
+ include(FindPackageHandleStandardArgs)
+ 
+ find_package(PkgConfig)
+-pkg_check_modules(GTS gts)
++pkg_check_modules(GTS gts IMPORTED_TARGET)
+ 
+-if(MINGW)
++if(GTS_FOUND)
++  set(GTS_LINK_LIBRARIES PkgConfig::GTS)
++elseif(MINGW)
+   find_package(GLIB)
+ 
+   find_program(GTS_RUNTIME_LIBRARY NAMES libgts-0-7-5.dll)
+diff --git a/cmake/FindLTDL.cmake b/cmake/FindLTDL.cmake
+index e74d23f52..42d9ae23c 100644
+--- a/cmake/FindLTDL.cmake
++++ b/cmake/FindLTDL.cmake
+@@ -20,4 +20,7 @@ mark_as_advanced(LTDL_INCLUDE_DIR LTDL_LIBRARY)
+ set(LTDL_INCLUDE_DIRS ${LTDL_INCLUDE_DIR})
+ if(NOT WIN32 OR MINGW)
+   set(LTDL_LIBRARIES ${LTDL_LIBRARY})
++  if(CMAKE_DL_LIBS AND NOT BUILD_SHARED_LIBS)
++    set(LTDL_LIBRARIES "${LTDL_LIBRARIES};${CMAKE_DL_LIBS}")
++  endif()
+ endif()
+diff --git a/cmake/FindPANGOCAIRO.cmake b/cmake/FindPANGOCAIRO.cmake
+index d185f0bf7..222789a96 100644
+--- a/cmake/FindPANGOCAIRO.cmake
++++ b/cmake/FindPANGOCAIRO.cmake
+@@ -1,9 +1,12 @@
+ include(FindPackageHandleStandardArgs)
+ find_package(PkgConfig)
+ 
+-pkg_check_modules(PANGOCAIRO pangocairo)
++pkg_check_modules(PANGOCAIRO pangocairo IMPORTED_TARGET)
+ 
+-if(MINGW)
++if(1)
++  set(PANGOCAIRO_LIBRARIES PkgConfig::PANGOCAIRO)
++  set(PANGOCAIRO_LINK_LIBRARIES PkgConfig::PANGOCAIRO) # https://gitlab.kitware.com/cmake/cmake/-/issues/16154
++elseif(MINGW)
+   find_package(GLIB)
+ 
+   find_program(GOBJECT_RUNTIME_LIBRARY NAMES libgobject-2.0-0.dll)
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 65a357678..e656b1228 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -53,3 +53,6 @@ if(BUILD_SHARED_LIBS)
+     DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
+   )
+ endif()
++
++set(LIBGVC_PC_LIBS_PRIVATE "${LIBGVC_PC_LIBS_PRIVATE}" PARENT_SCOPE)
++set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
+diff --git a/lib/cgraph/libcgraph.pc.in b/lib/cgraph/libcgraph.pc.in
+index 2b8c8f47b..168ce85f0 100644
+--- a/lib/cgraph/libcgraph.pc.in
++++ b/lib/cgraph/libcgraph.pc.in
+@@ -6,5 +6,6 @@ includedir=@includedir@
+ Name: libcgraph
+ Description: Graph library (file i/o, dot language parsing, graph, subgraph, node, edge, attribute, data structure manipulation)
+ Version: @VERSION@
++Libs.private: -lutil
+ Libs: -L${libdir} -lcgraph -lcdt
+ Cflags: -I${includedir} -I${includedir}/@PACKAGE@
+diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
+index 3b0e469f4..265de0354 100644
+--- a/lib/common/CMakeLists.txt
++++ b/lib/common/CMakeLists.txt
+@@ -137,6 +137,9 @@ if(EXPAT_FOUND)
+     ${EXPAT_LIBRARIES}
+   )
+ endif()
++if(EXPAT_FOUND)
++  string(APPEND LIBGVC_PC_REQUIRES_PRIVATE " expat")
++endif()
+ 
+ # Specify headers to be installed
+ install(
+@@ -149,3 +152,5 @@ install(
+     usershape.h
+   DESTINATION ${HEADER_INSTALL_DIR}
+ )
++
++set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE}" PARENT_SCOPE)
+diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
+index 11dba53f3..1d54de861 100644
+--- a/lib/gvc/CMakeLists.txt
++++ b/lib/gvc/CMakeLists.txt
+@@ -68,12 +68,17 @@ if(LTDL_FOUND)
+   target_include_directories(gvc SYSTEM PRIVATE ${LTDL_INCLUDE_DIRS})
+   if(NOT WIN32 OR MINGW)
+     target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
++    string(APPEND LIBGVC_PC_LIBS_PRIVATE " -lltdl")
++    if(CMAKE_DL_LIBS STREQUAL "dl")
++      string(APPEND LIBGVC_PC_LIBS_PRIVATE " -ldl")
++    endif()
+   endif()
+ endif()
+ 
+ if(ZLIB_FOUND)
+   target_include_directories(gvc SYSTEM PRIVATE ${ZLIB_INCLUDE_DIRS})
+   target_link_libraries(gvc PUBLIC ${ZLIB_LIBRARIES})
++  string(APPEND LIBGVC_PC_REQUIRES_PRIVATE " zlib")
+ endif()
+ 
+ if(with_ortho)
+@@ -159,3 +164,6 @@ if(BUILD_SHARED_LIBS)
+     DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
+   )
+ endif()
++
++set(LIBGVC_PC_LIBS_PRIVATE "${LIBGVC_PC_LIBS_PRIVATE}" PARENT_SCOPE)
++set(LIBGVC_PC_REQUIRES_PRIVATE "${LIBGVC_PC_REQUIRES_PRIVATE} libpathplan libxdot" PARENT_SCOPE)
+diff --git a/lib/gvc/libgvc.pc.in b/lib/gvc/libgvc.pc.in
+index f12b472e1..9b89519f8 100644
+--- a/lib/gvc/libgvc.pc.in
++++ b/lib/gvc/libgvc.pc.in
+@@ -7,6 +7,8 @@ plugins=@GVPLUGIN_VERSION@
+ Name: libgvc
+ Description: The GraphVizContext library 
+ Version: @VERSION@
++Requires.private: @LIBGVC_PC_REQUIRES_PRIVATE@
++Libs.private: @LIBGVC_PC_LIBS_PRIVATE@ -lutil
+ Libs: -L${libdir} -lgvc -lcgraph -lcdt
+ Cflags: -I${includedir} -I${includedir}/@PACKAGE@
+ 

@@ -1,10 +1,9 @@
-if(MSVC)
-    find_package(unofficial-getopt-win32 CONFIG REQUIRED)
-    set(GETOPT_LIBRARY "unofficial::getopt-win32::getopt" CACHE INTERNAL "vcpkg")
+if(WIN32 AND NOT MINGW)
+    find_package(getopt CONFIG REQUIRED)
+    if(TARGET getopt::getopt_shared)
+        set(GETOPT_LIBRARY "getopt::getopt_shared" CACHE INTERNAL "vcpkg")
+    else()
+        set(GETOPT_LIBRARY "getopt::getopt_static" CACHE INTERNAL "vcpkg")
+    endif()
     set(GETOPT_RUNTIME_LIBRARY "unused" CACHE INTERNAL "vcpkg")
-endif()
-
-if(MINGW AND BUILD_SHARED_LIBS AND NOT CMAKE_CROSSCOMPILING)
-    # Prevent running `configure_plugins.cmake`.
-    set(CMAKE_CROSSCOMPILING 1)
 endif()
