@@ -1,0 +1,28 @@
+diff --git a/src/d3d11/meson.build b/src/d3d11/meson.build
+index d4c4b441..ee59a522 100644
+--- a/src/d3d11/meson.build
++++ b/src/d3d11/meson.build
+@@ -4,8 +4,19 @@ d3d11_headers_extra = [ # needed internally
+   cc.check_header('d3d11_4.h', required: d3d11),
+   cc.check_header('dxgi1_6.h', required: d3d11),
+ ]
++is_win_debug = get_option('debug') and host_machine.system() == 'windows'
++dirs = get_option('cmake_prefix_path')[0] / 'lib'
+ d3d11_deps = [
+-  dependency('spirv-cross-c-shared', version: '>=0.29.0', required: d3d11),
++  dependency('spirv-cross-c', version: '>=0.29.0', required: d3d11),
++  cc.find_library(is_win_debug ? 'spirv-cross-cored' : 'spirv-cross-core', required: d3d11, dirs: dirs),
++  cc.find_library(is_win_debug ? 'spirv-cross-glsld' : 'spirv-cross-glsl', required: d3d11, dirs: dirs),
++  cc.find_library(is_win_debug ? 'spirv-cross-hlsld' : 'spirv-cross-hlsl', required: d3d11, dirs: dirs),
++  cc.find_library(is_win_debug ? 'spirv-cross-msld' : 'spirv-cross-msl', required: d3d11, dirs: dirs),
++  cc.find_library(is_win_debug ? 'spirv-cross-reflectd' : 'spirv-cross-reflect', required: d3d11, dirs: dirs),
++  cc.find_library(is_win_debug ? 'spirv-cross-utild' : 'spirv-cross-util', required: d3d11, dirs: dirs),
++  cc.find_library(is_win_debug ? 'spirv-cross-cppd' : 'spirv-cross-cpp', required: d3d11, dirs: dirs),
+-  cc.find_library('version', required: d3d11),
+ ]
++if not meson.get_external_property('no_static_windows_libs', false)
++  d3d11_deps += cc.find_library('version', required: d3d11)
++endif
+ 
+ d3d11 = d3d11.require(d3d11_header)
+ foreach h : d3d11_headers_extra
