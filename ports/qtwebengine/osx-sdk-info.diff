@@ -1,15 +1,3 @@
-diff --git a/cmake/Functions.cmake b/cmake/Functions.cmake
-index 8d5a97777..239eaa1dd 100644
---- a/cmake/Functions.cmake
-+++ b/cmake/Functions.cmake
-@@ -401,6 +401,6 @@ function(add_archiver_options target buildDir completeStatic)
-     get_target_property(cmakeTarget ${target} CMAKE_TARGET)
-     set(objects_out "${buildDir}/${cmakeTarget}_objects.o")
-     add_library(GnObject_${cmakeTarget}_${config} OBJECT IMPORTED GLOBAL)
--    target_link_libraries(${cmakeTarget} PRIVATE $<$<CONFIG:${config}>:GnObject_${cmakeTarget}_${config}>)
-+    target_link_libraries(${cmakeTarget} PRIVATE $<BUILD_LOCAL_INTERFACE:$<$<CONFIG:${config}>:GnObject_${cmakeTarget}_${config}>>)
-     set_property(TARGET GnObject_${cmakeTarget}_${config} PROPERTY IMPORTED_OBJECTS_${cfg} ${objects_out})
- endfunction()
 diff --git a/cmake/QtToolchainHelpers.cmake b/cmake/QtToolchainHelpers.cmake
 index 8d5a97777..239eaa1dd 100644
 --- a/cmake/QtToolchainHelpers.cmake
