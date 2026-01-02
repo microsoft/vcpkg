@@ -1,19 +1,22 @@
-diff  a/cmake_include/AsioStandaloneConfig.cmake b/AsioStandaloneConfig.cmake
+diff  a/cmake_include/ConfigureAsioStandalone.cmake b/ConfigureAsioStandalone.cmake
 
---- a/cmake_include/AsioStandaloneConfig.cmake
-+++ b/cmake_include/AsioStandaloneConfig.cmake
-@@ -1,6 +1,10 @@
- add_library(AsioStandalone::AsioStandalone IMPORTED INTERFACE)
+--- a/cmake_include/ConfigureAsioStandalone.cmake
++++ b/cmake_include/ConfigureAsioStandalone.cmake
+@@ -2,9 +2,13 @@ function(ConfigureAsioStandalone PATH_TO_LINK)
  
--set_property(TARGET AsioStandalone::AsioStandalone APPEND PROPERTY
--  INTERFACE_INCLUDE_DIRECTORIES
--  ${CMAKE_CURRENT_LIST_DIR}/../modules/asio-standalone/asio/include
--)
-+find_package(asio REQUIRED)
-+if(asio_FOUND)
-+  message(STATUS "Dependency asio found in ${asio_DIR}")   
-+  set_property(TARGET AsioStandalone::AsioStandalone APPEND PROPERTY
-+    INTERFACE_INCLUDE_DIRECTORIES
-+    ${asio_DIR}/../../include
-+  )
-+endif()
+   add_library(AsioStandalone::AsioStandalone IMPORTED INTERFACE)
+ 
+-  set_property(TARGET AsioStandalone::AsioStandalone APPEND PROPERTY
+-    INTERFACE_INCLUDE_DIRECTORIES
+-    ${PATH_TO_LINK}/modules/asio-standalone/asio/include
+-  )
++  find_package(asio REQUIRED)
++  if(asio_FOUND)
++    message(STATUS "Dependency asio found in ${asio_DIR}")
++    set_property(TARGET AsioStandalone::AsioStandalone APPEND PROPERTY
++      INTERFACE_INCLUDE_DIRECTORIES
++      ${asio_DIR}/../../include
++    )
++  endif()
+ 
+ endfunction()
