@@ -4,69 +4,89 @@
     {
       "name": "python3",
       "os": "windows",
-      "version": "3.12.7",
+      "version": "3.14.2",
       "executable": "python.exe",
-      "url": "https://www.python.org/ftp/python/3.12.7/python-3.12.7-embed-win32.zip",
-      "sha512": "15542080e0cc25c574391218107fe843006e8c5a7161d1cd48cf14a3c47155c0244587273d9c747f35b15ea17676869ecce079214824214c1a62abfc86ad9f9b",
-      "archive": "python-3.12.7-embed-win32.zip"
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-win32.zip",
+      "sha512": "05703133a3371493ccd3552dd12db6385cbb1a34874056c8a3f26dda6b813bf2bd535549c30aa4c0827287d9c4ff3250a49330282ad8535a06937b016d483010",
+      "archive": "python-3.14.2-embed-win32.zip"
+    },
+    {
+      "name": "python3",
+      "os": "windows",
+      "arch": "amd64",
+      "version": "3.14.2",
+      "executable": "python.exe",
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-amd64.zip",
+      "sha512": "d72d4f036c4dd563c4ac15c7162bf63406d3fd83a44877300ff87e4168f211d66b8209fdd3ad39ea549b8bc46c092b4ecab3b24b0da2f8950e0e5642828e99f2",
+      "archive": "python-3.14.2-embed-amd64.zip"
+    },
+    {
+      "name": "python3",
+      "os": "windows",
+      "arch": "arm64",
+      "version": "3.14.2",
+      "executable": "python.exe",
+      "url": "https://www.python.org/ftp/python/3.14.2/python-3.14.2-embed-arm64.zip",
+      "sha512": "410c785d1bc8f3d1352e5386e53ab0aef39e1212680e2e05daad5672dcc749ccfab96e204c84b3c1e9544002088e1412ca733b1a86ca4cc920549c41774f6c58",
+      "archive": "python-3.14.2-embed-arm64.zip"
     },
     {
       "name": "python3_with_venv",
       "os": "windows",
-      "version": "3.12.7",
+      "version": "3.14.2",
       "executable": "tools/python.exe",
-      "url": "https://www.nuget.org/api/v2/package/python/3.12.7",
-      "sha512": "6d5cac329808e31d4d8d593da6eeaa9ea4ec0296679335e7b7811f6c6fa6cbb96948d2f7845071798c6f73f83852dd731dc2b0fda48c520b9bec8a86cc56134e",
-      "archive": "python-3.12.7.nupkg.zip"
+      "url": "https://www.nuget.org/api/v2/package/python/3.14.2",
+      "sha512": "42ac4b553aecea8ee751998de5c08e8af40c06c0594685b02d7b77679017b7c7559c9236332913dea1d0783edee06e4cf1f793149cecbd515e7624f974065272",
+      "archive": "python-3.14.2.nupkg.zip"
     },
     {
       "name": "cmake",
       "os": "windows",
       "arch": "amd64",
-      "version": "4.2.0",
-      "executable": "cmake-4.2.0-windows-x86_64/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-windows-x86_64.zip",
-      "sha512": "1768d324542cf2e5a7173aeb4e6a254a9e24f7d92d69f7dbf4fa014539748d67e549f3d68c8f7817b211f6698f25cbe0daa59d707fda745ddc8f4bc6970b372a",
-      "archive": "cmake-4.2.0-windows-x86_64.zip"
+      "version": "3.31.10",
+      "executable": "cmake-3.31.10-windows-x86_64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-windows-x86_64.zip",
+      "sha512": "50c71aa15a05eaf8d7592d9648efb986df74ab716dc1f1a03795351284c6212b70ad439a1d9f3575d60cf49b0a5579cad551cc6a3fe2911ae8ecb08add60fc60",
+      "archive": "cmake-3.31.10-windows-x86_64.zip"
     },
     {
       "name": "cmake",
       "os": "windows",
       "arch": "arm64",
-      "version": "4.2.0",
-      "executable": "cmake-4.2.0-windows-arm64/bin/cmake.exe",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-windows-arm64.zip",
-      "sha512": "2630a702dc69d3fb03e3c0441f3f20211135eeb31deb95576eccb6c4e7c2dccf9977ccfee2738f3ad4f960a4b2d8080f43c9f66bf00a0c8f60eff29e85b7367d",
-      "archive": "cmake-4.2.0-windows-arm64.zip"
+      "version": "3.31.10",
+      "executable": "cmake-3.31.10-windows-arm64/bin/cmake.exe",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-windows-arm64.zip",
+      "sha512": "a894518004b1e99c008e2554fd7a0b2f714ad6bf12e9c0bd34f62d808546e5773845e3f4c2a44f03cae30fa52bb604760aec6a452327ef38c5cf94e593eb8587",
+      "archive": "cmake-3.31.10-windows-arm64.zip"
     },
     {
       "name": "cmake",
       "os": "osx",
-      "version": "4.2.0",
-      "executable": "cmake-4.2.0-macos-universal/CMake.app/Contents/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-macos-universal.tar.gz",
-      "sha512": "cba878b4482397af3ff4848d0249eafe7f5597fd129c8ee5f13247b3e3ec2aa52f1f9daa98155bdeff65af8d1a77046cc3d67cbf36638898abad5594b3535c95",
-      "archive": "cmake-4.2.0-macos-universal.tar.gz"
+      "version": "3.31.10",
+      "executable": "cmake-3.31.10-macos-universal/CMake.app/Contents/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-macos-universal.tar.gz",
+      "sha512": "5960326dee8227bf27cdd2d94c336835b7bf1b11c443c35ecf2b50a811c7874fcc3400a3b793e4720ef6505d66aed597ecdaf6c77b12db69abafcccd0659182d",
+      "archive": "cmake-3.31.10-macos-universal.tar.gz"
     },
     {
       "name": "cmake",
       "os": "linux",
       "arch": "arm64",
-      "version": "4.2.0",
-      "executable": "cmake-4.2.0-linux-aarch64/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-linux-aarch64.tar.gz",
-      "sha512": "c7fd2d25a27219b97ec54e3bcc239cedbbf50a09c519ca8bb6ce2117a736115313926334ba06163d18436ba5ce30ecb36d94dd3b9356eda8a3af4d372ad01f18",
-      "archive": "cmake-4.2.0-linux-aarch64.tar.gz"
+      "version": "3.31.10",
+      "executable": "cmake-3.31.10-linux-aarch64/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-linux-aarch64.tar.gz",
+      "sha512": "e45c23cd756a9b4699a54d52bd196e3c1c2e63fab893846eeb8a0e1eabb2caa54629bd857518ab5ce5701d9179bb308bf6b4866d07bb8d7b87e04d895d10289d",
+      "archive": "cmake-3.31.10-linux-aarch64.tar.gz"
     },
     {
       "name": "cmake",
       "os": "linux",
-      "version": "4.2.0",
+      "version": "3.31.10",
       "arch": "amd64",
-      "executable": "cmake-4.2.0-linux-x86_64/bin/cmake",
-      "url": "https://github.com/Kitware/CMake/releases/download/v4.2.0/cmake-4.2.0-linux-x86_64.tar.gz",
-      "sha512": "2edd47e14bd3ffeca7e6803808873c3c8f88440cd2940e69863618220e54dba1cbf74e3c138875a430563869d73e8b606cd89c5042c80829655ab1582f41a295",
-      "archive": "cmake-4.2.0-linux-x86_64.tar.gz"
+      "executable": "cmake-3.31.10-linux-x86_64/bin/cmake",
+      "url": "https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-linux-x86_64.tar.gz",
+      "sha512": "2555ae413b19a2acfc8d3c4520f0ecc87811ac1e121bec718b679006d03083dfe7218a68e0af0263a80bd8fbb2d23b5975f4533638b71ef9ad62272640f62356",
+      "archive": "cmake-3.31.10-linux-x86_64.tar.gz"
     },
     {
       "name": "git",
@@ -74,9 +94,9 @@
       "arch": "arm64",
       "version": "2.7.4",
       "executable": "clangarm64/bin/git.exe",
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-arm64.7z.exe",
-      "sha512": "877b4cc5c91108488c55b9a75059d864915f50929cc4ebfa741074216e5e597ae3b7f4e35dea7a1e667f8d712ba8d1f6813d66d11d00bf42b0bb681322386e76",
-      "archive": "PortableGit-2.47.1.2-arm64.7z.exe"
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/PortableGit-2.52.0-arm64.7z.exe",
+      "sha512": "3727c345f18888300f1a99d45c6464ccb17e39b2377c3747bc44deee2c7c4b7a5e942b92a2887f850fe198f5d5358df0b93b788a38abcce928885f38429cf11d",
+      "archive": "PortableGit-2.52.0-arm64.7z.exe"
     },
     {
       "name": "git",
@@ -84,9 +104,9 @@
       "arch": "amd64",
       "version": "2.7.4",
       "executable": "mingw64/bin/git.exe",
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/PortableGit-2.51.0-64-bit.7z.exe",
-      "sha512": "74680d7d4573e2f428bbaa0d38d6506ddf870f2a20f4ec3118bc3012cb9ca766e03508f074fd4b3b0b034bbd05d2c4eecde321c73e18613fe11fbc7510c731c7",
-      "archive": "PortableGit-2.47.1.2-64-bit.7z.exe"
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/PortableGit-2.52.0-64-bit.7z.exe",
+      "sha512": "b56f64b17954a060beb775c26ae03cbd165878b504b4c91ae5102fc84079fb3f8c2fa9886337c594ea905dad48a854eb1497849dab837d6a877b5b4f73b9b31e",
+      "archive": "PortableGit-2.52.0-64-bit.7z.exe"
     },
     {
       "name": "git",
