@@ -1,7 +1,6 @@
 {
   "name": "ggml",
-  "version-date": "2025-11-17",
-  "port-version": 1,
+  "version-date": "2025-12-31",
   "description": "Tensor library for machine learning",
   "homepage": "https://github.com/ggml-org/ggml",
   "license": "MIT",
