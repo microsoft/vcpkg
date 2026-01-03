@@ -1,6 +1,6 @@
 {
   "name": "fast-float",
-  "version": "8.2.1",
+  "version": "8.2.2",
   "description": "Fast and exact implementation of the C++ from_chars functions for float and double types: 4x faster than strtod",
   "homepage": "https://github.com/fastfloat/fast_float",
   "license": "Apache-2.0 OR BSL-1.0 OR MIT",
