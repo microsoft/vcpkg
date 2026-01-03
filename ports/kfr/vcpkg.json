@@ -1,6 +1,6 @@
 {
   "name": "kfr",
-  "version-semver": "6.3.1",
+  "version-semver": "7.0.1",
   "description": "Fast, modern C++ DSP framework.",
   "homepage": "https://www.kfr.dev/",
   "license": null,
@@ -16,6 +16,9 @@
     }
   ],
   "features": {
+    "audio": {
+      "description": "Enable Audio modules"
+    },
     "capi": {
       "description": "Enable C API build.",
       "dependencies": [
@@ -30,6 +33,12 @@
     },
     "dft": {
       "description": "Enable DFT and related algorithms."
+    },
+    "dsp": {
+      "description": "Enable DSP modules"
+    },
+    "io": {
+      "description": "Enable IO modules"
     }
   }
 }

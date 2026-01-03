@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kfrlib/kfr
     REF "${VERSION}"
-    SHA512 2bf6698efc4eb577104308bcb0477bf631f39848842129993222227fcaad7793e776c04dbe7ec66b155018a5e9f09c15fe0864576860362effc63ced8f22bba5
+    SHA512 5cd65ee75a0526d4be6923e25cf3adcf91083192f4e81248205c6822e230c36590a281bf65a1421f21bb842548b7522093dc8e36a375ee7b74aac11170dbc55a
     HEAD_REF main
 )
 
@@ -13,6 +13,9 @@ vcpkg_check_features(
     FEATURES
         capi KFR_ENABLE_CAPI_BUILD
         dft KFR_ENABLE_DFT
+	audio KFR_ENABLE_AUDIO
+	io KFR_ENABLE_IO
+	dsp KFR_ENABLE_DSP
 )
 
 vcpkg_cmake_configure(
