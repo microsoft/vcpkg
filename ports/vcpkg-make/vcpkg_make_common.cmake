@@ -180,6 +180,15 @@ function(z_vcpkg_make_prepare_compile_flags)
         endforeach()
     endif()
 
+    set(library_path_flag "${VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG}")
+    string(REPLACE " " "\\ " current_installed_dir_escaped "${CURRENT_INSTALLED_DIR}")
+    if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
+        vcpkg_list(PREPEND LDFLAGS "${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib/manual-link")
+    endif()
+    if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
+        vcpkg_list(PREPEND LDFLAGS "${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
+    endif()
+
     # libtool tries to filter CFLAGS passed to the link stage via a allow list.
 
     # This approach is flawed since it fails to pass flags unknown to libtool
@@ -196,7 +205,6 @@ function(z_vcpkg_make_prepare_compile_flags)
         list(TRANSFORM CXXFLAGS PREPEND "${compiler_flag_escape};")
     endif()
 
-    set(library_path_flag "${VCPKG_DETECTED_CMAKE_LIBRARY_PATH_FLAG}")
     set(linker_flag_escape "")
     if(arg_COMPILER_FRONTEND STREQUAL "MSVC" AND NOT arg_NO_FLAG_ESCAPING)
         # Removed by libtool
@@ -214,13 +222,6 @@ function(z_vcpkg_make_prepare_compile_flags)
         string(STRIP "${linker_flag_escape}" linker_flag_escape_stripped)
         string(REPLACE " " ";" linker_flag_escape_stripped "${linker_flag_escape_stripped};")
         list(TRANSFORM LDFLAGS PREPEND "${linker_flag_escape_stripped}")
-    endif()
-    string(REPLACE " " "\\ " current_installed_dir_escaped "${CURRENT_INSTALLED_DIR}")
-    if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib/manual-link")
-        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib/manual-link")
-    endif()
-    if(EXISTS "${CURRENT_INSTALLED_DIR}${path_suffix_${var_suffix}}/lib")
-        vcpkg_list(PREPEND LDFLAGS "${linker_flag_escape}${library_path_flag}${current_installed_dir_escaped}${path_suffix_${var_suffix}}/lib")
     endif()
 
     if(ARFLAGS AND NOT arg_COMPILER_FRONTEND STREQUAL "MSVC")
