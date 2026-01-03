@@ -275,7 +275,7 @@ if ($env:VCPKG_DOWNLOADS) {
     @skipFailuresArgs `
     @knownFailuresFromArgs `
     @allowUnexpectedPassingArgs
-$lastLastExitCode = $LASTEXITCODE (only if ccache exists)
+$lastLastExitCode = $LASTEXITCODE
 if ($env:VCPKG_DOWNLOADS) {
     if ($IsWindows -or (-not $PSVersionTable.Platform)) {
         $ccacheExe = Join-Path $env:VCPKG_DOWNLOADS "tools/ccache/ccache-4.12.2-windows-x86_64/ccache.exe"
