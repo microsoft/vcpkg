@@ -8,5 +8,17 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "ccache": {
+      "description": "Enable ccache for faster compilation",
+      "dependencies": [
+        {
+          "name": "vcpkg-cmake",
+          "host": true,
+          "features": ["ccache"]
+        }
+      ]
+    }
+  }
 }

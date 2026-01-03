@@ -26,6 +26,11 @@ function(vcpkg_cmake_get_vars out_file)
             Z_CMAKE_GET_VARS_USAGE # be quiet, don't set variables...
         )
         configure_file("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/cmake-get-vars.cmake.in" "${Z_VCPKG_CMAKE_GET_VARS_FILE${configuration_suffix}}" @ONLY)
+        
+        # If ccache is available, update compiler symlinks with detected compiler info
+        if(COMMAND vcpkg_ccache_setup_compiler_symlinks)
+            vcpkg_ccache_setup_compiler_symlinks(DETECTED_CMAKE_VARS_FILE "${Z_VCPKG_CMAKE_GET_VARS_FILE${configuration_suffix}}")
+        endif()
     endif()
 
     set("${out_file}" "${Z_VCPKG_CMAKE_GET_VARS_FILE${configuration_suffix}}" PARENT_SCOPE)

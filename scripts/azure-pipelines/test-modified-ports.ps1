@@ -245,6 +245,24 @@ Add-ToolchainToTestCMake
 $xunitFile = Join-Path $ArtifactStagingDirectory "$Triplet-results.xml"
 $xunitArg = "--x-xunit=$xunitFile"
 $prHashesFile = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
+
+# Clear ccache statistics before the build (only if ccache is already downloaded)
+if ($env:VCPKG_DOWNLOADS) {
+    if ($IsWindows -or (-not $PSVersionTable.Platform)) {
+        $ccacheExe = Join-Path $env:VCPKG_DOWNLOADS "tools/ccache/ccache-4.12.2-windows-x86_64/ccache.exe"
+    } elseif ($IsMacOS) {
+        $ccacheExe = Join-Path $env:VCPKG_DOWNLOADS "tools/ccache/ccache-4.12.2-darwin/ccache"
+    } else {
+        $ccacheExe = Join-Path $env:VCPKG_DOWNLOADS "tools/ccache/ccache-4.12.2-linux-x86_64/ccache"
+    }
+
+    if (Test-Path $ccacheExe) {
+        Write-Host "Clearing ccache statistics..."
+        $env:CCACHE_DIR = Join-Path $PSScriptRoot "../../.ccache"
+        & $ccacheExe --zero-stats
+    }
+}
+
 & $vcpkgExe ci `
     $tripletArg `
     $failureLogsArg `
@@ -257,7 +275,27 @@ $prHashesFile = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
     @skipFailuresArgs `
     @knownFailuresFromArgs `
     @allowUnexpectedPassingArgs
-$lastLastExitCode = $LASTEXITCODE
+$lastLastExitCode = $LASTEXITCODE (only if ccache exists)
+if ($env:VCPKG_DOWNLOADS) {
+    if ($IsWindows -or (-not $PSVersionTable.Platform)) {
+        $ccacheExe = Join-Path $env:VCPKG_DOWNLOADS "tools/ccache/ccache-4.12.2-windows-x86_64/ccache.exe"
+    } elseif ($IsMacOS) {
+        $ccacheExe = Join-Path $env:VCPKG_DOWNLOADS "tools/ccache/ccache-4.12.2-darwin/ccache"
+    } else {
+        $ccacheExe = Join-Path $env:VCPKG_DOWNLOADS "tools/ccache/ccache-4.12.2-linux-x86_64/ccache"
+    }
+
+    if (Test-Path $ccacheExe) {
+        Write-Host ""
+        Write-Host "==================== CCache Statistics ===================="
+        & $ccacheExe --show-stats
+        Write-Host "==========================================================="
+        Write-Host ""
+    }
+    Write-Host "==========================================================="
+    Write-Host ""
+}
+
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
 $azcopyLogsEmpty = ((Get-ChildItem $env:AZCOPY_LOG_LOCATION).Count -eq 0)

@@ -1,0 +1,59 @@
+vcpkg-tool-ccache provides ccache, a compiler cache that speeds up recompilation.
+
+## Usage
+
+To enable ccache for vcpkg builds, set the environment variable:
+
+```bash
+export VCPKG_USE_CCACHE=1  # Linux/macOS
+```
+
+```powershell
+$env:VCPKG_USE_CCACHE = "1"  # Windows
+```
+
+Then install any port:
+
+```bash
+vcpkg install <port>
+```
+
+## Configuration
+
+CCCache can be configured via environment variables:
+
+- `CCACHE_DIR` - Cache directory (default: `<vcpkg-root>/.ccache`)
+- `CCACHE_MAXSIZE` - Maximum cache size (default: 10G)
+- `CCACHE_BASEDIR` - Base directory for relative paths (auto-set by vcpkg)
+
+## Statistics
+
+View cache statistics:
+
+```bash
+<vcpkg-root>/installed/<triplet>/tools/ccache/ccache -s
+```
+
+Or add ccache to your PATH:
+
+```bash
+ccache -s
+```
+
+## Benefits
+
+- Speeds up rebuilds of the same port
+- Speeds up builds across similar triplets (x64-windows, x64-windows-release)
+- Speeds up feature testing (testing different feature combinations)
+- Especially beneficial in CI/CD pipelines
+
+## CMake Integration
+
+The port automatically provides `CMAKE_C_COMPILER_LAUNCHER` and `CMAKE_CXX_COMPILER_LAUNCHER` when enabled.
+
+For manual integration in your CMakeLists.txt:
+
+```cmake
+find_package(vcpkg-tool-ccache CONFIG REQUIRED)
+vcpkg_enable_ccache()
+```

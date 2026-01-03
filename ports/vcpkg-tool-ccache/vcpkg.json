@@ -1,0 +1,10 @@
+{
+  "name": "vcpkg-tool-ccache",
+  "version": "4.12.2",
+  "description": "ccache is a compiler cache that speeds up recompilation by caching previous compilations",
+  "homepage": "https://ccache.dev/",
+  "license": "GPL-3.0-or-later",
+  "supports": "native",
+  "dependencies": [
+  ]
+}
