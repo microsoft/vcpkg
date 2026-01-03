@@ -13,9 +13,9 @@ vcpkg_check_features(
     FEATURES
         capi KFR_ENABLE_CAPI_BUILD
         dft KFR_ENABLE_DFT
-	audio KFR_ENABLE_AUDIO
-	io KFR_ENABLE_IO
-	dsp KFR_ENABLE_DSP
+        audio KFR_ENABLE_AUDIO
+        io KFR_ENABLE_IO
+        dsp KFR_ENABLE_DSP
 )
 
 vcpkg_cmake_configure(
