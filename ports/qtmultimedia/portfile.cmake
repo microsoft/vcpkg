@@ -6,7 +6,6 @@ set(${PORT}_PATCHES
     remove-static-ssl-stub.patch
     ffmpeg-compile-def.patch
     ffmpeg.patch
-    853b15cc.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,12 +30,6 @@ else()
 endif()
 list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_gl='no'")
 list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_photography='no'")
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=ON")
-else()
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
-endif()
 
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows

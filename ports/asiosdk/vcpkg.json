@@ -1,7 +1,8 @@
 {
   "name": "asiosdk",
   "version": "2.3.4",
+  "port-version": 1,
   "description": "ASIO is a low latency audio API from Steinberg.",
   "homepage": "https://www.steinberg.net/developers/asiosdk-open/",
-  "supports": "windows & !(arm | uwp)"
+  "supports": "windows & !uwp"
 }

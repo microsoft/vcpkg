@@ -1,3 +1,3 @@
-set(qt5compat_HASH "281e60fdc9559279fb249d80fd04ea52282db9db402cc81365acafea1d87e96923bfb5a9607163182736a9ca30618da5578cce7271083c08692e95396bbf307c")
-set(qt5compat_URL "https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qt5compat-everywhere-src-6.9.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.9/6.9.2/submodules/qt5compat-everywhere-src-6.9.2.tar.xz")
-set(qt5compat_FILENAME "qt5compat-everywhere-src-6.9.2.tar.xz")
+set(qt5compat_HASH "688483f91a838c976e9af79a5f19c3fa80127756a627ab0e8a9ef9d37c4c4f9d1d2aa461e8afb1dd61d7759c55f9761119d27e8bf626bf81d33e300e8d97ffcc")
+set(qt5compat_URL "https://download.qt.io/archive/qt/6.10/6.10.0/submodules/qt5compat-everywhere-src-6.10.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.0/submodules/qt5compat-everywhere-src-6.10.0.tar.xz")
+set(qt5compat_FILENAME "qt5compat-everywhere-src-6.10.0.tar.xz")

@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.16.3) # See https://learn.microsoft.com/en-us/vcpkg/concepts/supported-hosts#linux-1
+
 project(nodelib C)
 
 if (MINGW)

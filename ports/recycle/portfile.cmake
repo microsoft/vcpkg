@@ -2,7 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO steinwurf/recycle
     REF "${VERSION}"
-    SHA512 c30cd3d388eeeea6a3db344e0e448878686c4a7bc106260c7de9d1eeb3477435eb1783bca09151356ba51200ecf14182891f97a38943959032c54b17ea0abac3
+    SHA512 cc11dffe5a5aa6cf1f1c1b0c53830332edf784d7bac21608c8d04f8e077381df2e4a65c8664319f23bb80fc01240a79d314bd60c70b90b988e0319b2704da60d
+    PATCHES
+        disable-tests.patch
 )
 
 vcpkg_cmake_configure(
