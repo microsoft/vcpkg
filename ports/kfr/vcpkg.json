@@ -4,7 +4,6 @@
   "description": "Fast, modern C++ DSP framework.",
   "homepage": "https://www.kfr.dev/",
   "license": null,
-  "supports": "!(arm64 & windows) & !xbox",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
