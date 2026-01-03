@@ -8453,8 +8453,8 @@
       "port-version": 0
     },
     "realsense2": {
-      "baseline": "2.56.3",
-      "port-version": 1
+      "baseline": "2.56.5",
+      "port-version": 0
     },
     "rebind": {
       "baseline": "5.3.1",
