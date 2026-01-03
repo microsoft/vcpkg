@@ -282,7 +282,7 @@ else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTORECONF
-        DEFAULT_OPTIONS_EXCLUDE "^--disable-silent-rules|^--enable-static"
+        DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}
             py_cv_module__curses=n/a

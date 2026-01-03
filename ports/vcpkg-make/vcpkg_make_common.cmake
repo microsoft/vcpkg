@@ -637,8 +637,6 @@ function(z_vcpkg_make_default_path_and_configure_options out_var)
     endif()
 
     # Setup common options
-    vcpkg_list(APPEND opts --disable-silent-rules --verbose)
-
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_list(APPEND opts --enable-shared --disable-static)
     else()
