@@ -34,19 +34,16 @@ if(NOT CCACHE_EXECUTABLE)
     SHA512 "${CCACHE_SHA512}"
   )
   
+  file(REMOVE_RECURSE "${CCACHE_PATHS}")
   # Extract archive
-  vcpkg_extract_source_archive(CCACHE_EXTRACTED_PATH
+  vcpkg_extract_archive(
     ARCHIVE "${CCACHE_ARCHIVE_PATH}"
-    NO_REMOVE_ONE_LEVEL
+    DESTINATION "${CCACHE_PATHS}/.."
   )
-  
-  # On Windows, create cl.exe wrapper
-  if(CMAKE_HOST_WIN32)
-    file(COPY "${CCACHE_EXTRACTED_PATH}/ccache-${CCACHE_VERSION}-windows-x86_64/ccache.exe"
-        DESTINATION "${CCACHE_PATHS}")
-  endif()
-  
+
   set(CCACHE_EXECUTABLE "${CCACHE_PATHS}/${CCACHE_EXECUTABLE_NAME}")
+else()
+  message(STATUS "Using CCache: ${CCACHE_EXECUTABLE}")
 endif()
 
 set(CCACHE_DIR "${CCACHE_PATHS}")
@@ -75,7 +72,7 @@ set(ENV{CCACHE_DIR} "${CCACHE_CONFIG_DIR}")
 
 # Set base directory to current port's buildtrees directory if available
 if(DEFINED CURRENT_BUILDTREES_DIR AND DEFINED PORT)
-    set(ENV{CCACHE_BASEDIR} "${CURRENT_BUILDTREES_DIR}/${PORT}")
+    set(ENV{CCACHE_BASEDIR} "${CURRENT_BUILDTREES_DIR}")
 endif()
 
 # Disable hash_dir when using base_dir for relative path matching
@@ -106,8 +103,8 @@ function(vcpkg_ccache_setup_compiler_symlinks)
     endif()
     
     # Create symlinks in the buildtree (unique per port/triplet)
-    set(CCACHE_SYMLINKS_DIR "${CURRENT_BUILDTREES_DIR}/${PORT}/ccache-symlinks" PARENT_SCOPE)
-    set(CCACHE_SYMLINKS_DIR "${CURRENT_BUILDTREES_DIR}/${PORT}/ccache-symlinks")
+    set(CCACHE_SYMLINKS_DIR "${CURRENT_BUILDTREES_DIR}/ccache-symlinks" PARENT_SCOPE)
+    set(CCACHE_SYMLINKS_DIR "${CURRENT_BUILDTREES_DIR}/ccache-symlinks")
     
     # Load compiler information
     include("${arg_DETECTED_CMAKE_VARS_FILE}")
@@ -151,7 +148,7 @@ endfunction()
 
 # Prepend symlinks directory to PATH for non-CMake build systems (if it exists)
 if(DEFINED CURRENT_BUILDTREES_DIR AND DEFINED PORT)
-    set(CCACHE_SYMLINKS_DIR "${CURRENT_BUILDTREES_DIR}/${PORT}/ccache-symlinks")
+    set(CCACHE_SYMLINKS_DIR "${CURRENT_BUILDTREES_DIR}/ccache-symlinks")
     if(EXISTS "${CCACHE_SYMLINKS_DIR}")
         vcpkg_add_to_path(PREPEND "${CCACHE_SYMLINKS_DIR}")
     endif()
