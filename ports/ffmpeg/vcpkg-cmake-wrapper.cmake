@@ -313,6 +313,14 @@ if(@WITH_ZMQ@)
   endif()
 endif()
 
+if(@WITH_RUBBERBAND@)
+  pkg_check_modules(rubberband IMPORTED_TARGET rubberband)
+  list(APPEND FFMPEG_LIBRARIES PkgConfig::rubberband)
+  if(vcpkg_no_avfilter_target AND TARGET FFmpeg::avfilter)
+    target_link_libraries(FFmpeg::avfilter INTERFACE PkgConfig::rubberband)
+  endif()
+endif()
+
 endif()
 unset(z_vcpkg_using_vcpkg_find_ffmpeg)
 
