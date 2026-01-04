@@ -15,7 +15,8 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-if(NOT ANDROID)
+
+if(NOT VCPKG_TARGET_IS_ANDROID)
 	vcpkg_copy_tools(TOOL_NAMES sonivoxrender AUTO_CLEAN)
 endif()
 
