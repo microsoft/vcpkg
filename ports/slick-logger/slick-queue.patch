@@ -13,7 +13,7 @@ index 9b40db2..a5d0662 100644
 -FetchContent_Declare(
 -    slick_queue
 -    GIT_REPOSITORY https://github.com/SlickQuant/slick_queue.git
--    GIT_TAG v1.1.2
+-    GIT_TAG v1.2.1
 -)
 -FetchContent_MakeAvailable(slick_queue)
 +find_package(slick_queue REQUIRED)
