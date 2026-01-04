@@ -1,10 +1,10 @@
 diff --git a/meson.build b/meson.build
-index 71300d3..25bbf9f 100644
+index 92bb537..7183df3 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -1,9 +1,9 @@
  project('libzim', ['c', 'cpp'],
-   version : '9.4.0',
+   version : '9.4.1',
    license : 'GPL2',
 -  default_options : ['c_std=c11', 'cpp_std=c++17', 'werror=true'])
 +  default_options : ['c_std=c11', 'cpp_std=c++17'])
@@ -14,7 +14,7 @@ index 71300d3..25bbf9f 100644
    add_project_arguments('-D_LARGEFILE64_SOURCE=1', '-D_FILE_OFFSET_BITS=64', language: 'cpp')
  endif
  
-@@ -69,7 +69,7 @@ else
+@@ -68,7 +68,7 @@ else
  endif
  
  compiler = meson.get_compiler('cpp')
