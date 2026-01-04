@@ -385,7 +385,7 @@
       "port-version": 0
     },
     "audioengine": {
-      "baseline": "1.2",
+      "baseline": "1.3",
       "port-version": 0
     },
     "audiofile": {
