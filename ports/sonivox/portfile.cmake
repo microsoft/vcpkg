@@ -15,7 +15,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_copy_tools(TOOL_NAMES sonivoxrender AUTO_CLEAN)
+if(NOT ANDROID)
+	vcpkg_copy_tools(TOOL_NAMES sonivoxrender AUTO_CLEAN)
+endif()
 
 vcpkg_cmake_config_fixup(
 	PACKAGE_NAME "sonivox"
