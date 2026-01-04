@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 f87fd53ba029b05d3c233ea8d8a9dbb7b2aba2aec55a38b26cfd0f6e1c49d8c1297c06d634175ccc5bbbce00261a3387a2da3c705011e9cbae538eae2723fef3
     HEAD_REF master
+    PATCHES explicit_cast_enum.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
