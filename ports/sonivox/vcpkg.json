@@ -5,7 +5,6 @@
   "homepage": "https://github.com/EmbeddedSynth/sonivox",
   "license": "Apache-2.0",
   "dependencies": [
-    "zlib",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -13,6 +12,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ]
 }
