@@ -7273,8 +7273,8 @@
       "port-version": 0
     },
     "openvpn3": {
-      "baseline": "3.10",
-      "port-version": 1
+      "baseline": "3.11.5",
+      "port-version": 0
     },
     "openvr": {
       "baseline": "2.12.14",
