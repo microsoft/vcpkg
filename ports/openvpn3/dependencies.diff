@@ -1,20 +1,30 @@
 diff --git a/cmake/findcoredeps.cmake b/cmake/findcoredeps.cmake
-index b7d00d4..e180dc1 100644
+index a9dd56ac..2f5819de 100644
 --- a/cmake/findcoredeps.cmake
 +++ b/cmake/findcoredeps.cmake
-@@ -29,8 +29,10 @@ endif ()
- 
+@@ -30,18 +30,9 @@ endif ()
  function(add_ssl_library target)
+     find_package(PkgConfig REQUIRED)
      if (${USE_MBEDTLS})
-+        # Works with mbedtls 2.x and 3.x
-+        set(CMAKE_FIND_PACKAGE_PREFER_CONFIG OFF)
-         find_package(mbedTLS REQUIRED)
--        set(SSL_LIBRARY mbedTLS::mbedTLS)
-+        set(SSL_LIBRARY "${MBEDTLS_LIBRARIES}")
+-        # mbedtls3.6 for Fedora 41+
+-        pkg_search_module(mbedTLS IMPORTED_TARGET mbedtls3.6 mbedtls)
+-        if (mbedTLS_FOUND)
+-            # Only added as Requires.Private, so we need to look them up ourselves
+-            pkg_search_module(mbedCrypto REQUIRED IMPORTED_TARGET mbedcrypto3.6 mbedcrypto)
+-            pkg_search_module(mbedX509 REQUIRED IMPORTED_TARGET mbedx5093.6 mbedx509)
+-            set(SSL_LIBRARY PkgConfig::mbedTLS PkgConfig::mbedCrypto PkgConfig::mbedX509)
+-        else ()
+-            # mbedTLS 2.x doesn't have pkg-config files
+-            find_package(mbedTLS REQUIRED)
+-            set(SSL_LIBRARY mbedTLS::mbedTLS)
+-        endif ()
++	set(CMAKE_FIND_PACKAGE_PREFER_CONFIG OFF)
++        find_package(mbedTLS REQUIRED)
++	set(SSL_LIBRARY "${MBEDTLS_LIBRARIES}")
          target_compile_definitions(${target} PRIVATE -DUSE_MBEDTLS)
      else ()
-         find_package(OpenSSL REQUIRED)
-@@ -38,7 +40,7 @@ function(add_ssl_library target)
+         pkg_search_module(OpenSSL REQUIRED IMPORTED_TARGET openssl)
+@@ -49,7 +40,7 @@ function(add_ssl_library target)
          target_compile_definitions(${target} PRIVATE -DUSE_OPENSSL)
      endif ()
  
@@ -23,7 +33,7 @@ index b7d00d4..e180dc1 100644
  endfunction()
  
  
-@@ -93,10 +95,10 @@ function(add_core_dependencies target)
+@@ -126,10 +117,10 @@ function(add_corelibrary_dependencies target)
      # a patched version. So we want to prefer its include
      # directories.
      find_package(asio REQUIRED)
@@ -36,19 +46,19 @@ index b7d00d4..e180dc1 100644
  
      add_ssl_library(${target})
  
-@@ -105,14 +107,16 @@ function(add_core_dependencies target)
+@@ -138,14 +129,16 @@ function(add_corelibrary_dependencies target)
          find_library(iokit IOKit)
          find_library(coreServices CoreServices)
          find_library(systemConfiguration SystemConfiguration)
 -        target_link_libraries(${target} ${coreFoundation} ${iokit} ${coreServices} ${systemConfiguration} ${lz4})
-+        target_link_libraries(${target} PUBLIC ${coreFoundation} ${iokit} ${coreServices} ${systemConfiguration} ${lz4})
++	target_link_libraries(${target} PUBLIC ${coreFoundation} ${iokit} ${coreServices} ${systemConfiguration} ${lz4})
      endif()
  
      if(UNIX)
 -        target_link_libraries(${target} pthread)
 +        set(THREADS_PREFER_PTHREAD_FLAG 1)
-+        find_package(Threads REQUIRED)
-+        target_link_libraries(${target} PUBLIC Threads::Threads)
++	find_package(Threads REQUIRED)
++	target_link_libraries(${target} PUBLIC Threads::Threads)
      endif()
  
 -    target_link_libraries(${target} ${EXTRA_LIBS})

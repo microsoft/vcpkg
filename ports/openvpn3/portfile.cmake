@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenVPN/openvpn3
     REF "release/${VERSION}"
-    SHA512 f096644078c10022685c1a8f7e0afddf352b4a5c229a772d24adbc6ec3f44e27501beabd28c4da1b6b182ae9d220b80865757693d52d085817d42f2322b71213
+    SHA512 ff763703eb7d292c768b569cff3c575993d1f304221dcc423c869b84aa13d07bfd3c572977792fed8eb8c24f6fce9a462d6190468d1ce071fcc41ed7aba62603
     HEAD_REF master
     PATCHES
         dependencies.diff
@@ -46,4 +46,4 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-openvpn3)
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-openvpnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-openvpn")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.rst" "${SOURCE_PATH}/COPYRIGHT.AGPLV3")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
