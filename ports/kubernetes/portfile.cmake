@@ -8,19 +8,15 @@ vcpkg_from_github(
         001-fix-destination.patch
         002-disable-werror.patch
 )
+file(COPY "${CURRENT_PORT_DIR}/Config.cmake.in" DESTINATION "${SOURCE_PATH}/kubernetes")
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}/kubernetes
+    SOURCE_PATH "${SOURCE_PATH}/kubernetes"
 )
-
 vcpkg_cmake_install()
-
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-endif()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
-
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/kubernetes)
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

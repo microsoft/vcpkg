@@ -1,8 +1,9 @@
 {
   "name": "openmvg",
   "version": "2.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": "open Multiple View Geometry library. Basis for 3D computer vision and Structure from Motion.",
+  "homepage": "https://github.com/openMVG/openMVG",
   "license": null,
   "supports": "(x86 | x64 | arm64) & !xbox",
   "dependencies": [
