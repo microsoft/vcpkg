@@ -106,6 +106,20 @@ else()
     if(VCPKG_DETECTED_CMAKE_OSX_SYSROOT)
         list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
     endif()
+    if(NOT VCPKG_TARGET_IS_WINDOWS)
+        # Pass the location of timezone data. This is necessary, because
+        # fix-configure.patch sets cross_compiling=yes to avoid conftest issues.
+        set(TZDATA_PATH "/usr/share/zoneinfo")
+
+        # Allow override from triplet for non-standard system configurations
+        if(DEFINED VCPKG_SYSTEM_TZDATA_PATH)
+            set(TZDATA_PATH "${VCPKG_SYSTEM_TZDATA_PATH}")
+        endif()
+
+        if(EXISTS "${TZDATA_PATH}")
+            list(APPEND BUILD_OPTS --with-system-tzdata=${TZDATA_PATH})
+        endif()
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
