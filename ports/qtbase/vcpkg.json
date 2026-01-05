@@ -55,7 +55,11 @@
     },
     {
       "name": "vcpkg-cmake",
-      "host": true
+      "host": true,
+      "features": 
+      [
+        "ccache"
+      ]
     },
     {
       "name": "vcpkg-cmake-config",
