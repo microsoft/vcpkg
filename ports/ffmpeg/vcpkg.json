@@ -557,6 +557,19 @@
         "mfx-dispatch"
       ]
     },
+    "rubberband": {
+      "description": "Enable rubberband support",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "gpl"
+          ]
+        },
+        "rubberband"
+      ]
+    },
     "sdl2": {
       "description": "Sdl2 support",
       "dependencies": [
