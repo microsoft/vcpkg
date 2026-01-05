@@ -27,5 +27,7 @@ set(TOOL_NAMES
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
+                        --trace-expand
+                        --debug-find-pkg=Qt6OpcUaTools
                         ${FEATURE_OPTIONS}
                     )

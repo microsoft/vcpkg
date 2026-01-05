@@ -332,6 +332,7 @@ set(TOOL_NAMES
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
+                        --trace-expand
                         ${FEATURE_OPTIONS}
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}
@@ -620,4 +621,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
   endforeach()
   file(COPY ${qtbase_owned_dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
+endif()
+
+if(VCPKG_CROSSCOMPILING)
+
 endif()
