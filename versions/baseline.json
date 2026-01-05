@@ -10508,6 +10508,10 @@
       "baseline": "2019-08-13",
       "port-version": 2
     },
+    "whereami": {
+      "baseline": "2024-08-26",
+      "port-version": 0
+    },
     "whisper-cpp": {
       "baseline": "1.8.2",
       "port-version": 0
