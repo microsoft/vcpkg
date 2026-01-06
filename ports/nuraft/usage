@@ -1,0 +1,4 @@
+nuraft provides CMake targets:
+
+  find_package(NuRaft CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE NuRaft::static_lib)

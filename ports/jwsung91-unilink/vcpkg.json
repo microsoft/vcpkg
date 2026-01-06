@@ -1,8 +1,7 @@
 {
   "name": "jwsung91-unilink",
-  "version": "0.1.9",
-  "port-version": 1,
-  "description": "Cross-platform communication middleware (Serial/TCP/UDP) using Boost.Asio.",
+  "version": "0.3.1",
+  "description": "Simple, cross-platform async C++ communication library for Serial, TCP, and UDP",
   "homepage": "https://github.com/jwsung91/unilink",
   "license": "Apache-2.0",
   "supports": "!uwp",

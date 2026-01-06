@@ -279,9 +279,6 @@ gobject-introspection:arm64-windows=fail
 gobject-introspection:x64-android=fail
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
-graphviz:arm-neon-android=fail
-graphviz:arm64-android=fail
-graphviz:x64-android=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-android=fail
 gsoap:x64-windows-release=skip

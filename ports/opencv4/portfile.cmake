@@ -1,5 +1,13 @@
 set(USE_QT_VERSION "6")
 
+# fix to get version from eigen after v3.4.0
+vcpkg_download_distfile(
+    PATCH1_FILE
+    URLS https://github.com/opencv/opencv/commit/468de9b36740b3355f0d5cd8be2ce28b340df120.patch?full_index=1
+    SHA512 09ee552fcd9a96359230104d7bf8610a63e05d743a3b51d58c6469331729a6440444e05c616464380dbebaefdd7ee6fb06cac5fc70694af85f9c8d40201aad10
+    FILENAME 468de9b36740b3355f0d5cd8be2ce28b340df120.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
@@ -21,6 +29,7 @@ vcpkg_from_github(
       0020-fix-narrow-filesystem.diff
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
+      "${PATCH1_FILE}"
 )
 # Disallow accidental build of vendored copies
 file(GLOB third_party "${SOURCE_PATH}/3rdparty/*")
