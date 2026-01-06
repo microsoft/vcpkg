@@ -1,0 +1,12 @@
+diff --git a/third-party/rsutils/src/control-c-handler.cpp b/third-party/rsutils/src/control-c-handler.cpp
+index 53f5e1e2b..ed85bd556 100644
+--- a/third-party/rsutils/src/control-c-handler.cpp
++++ b/third-party/rsutils/src/control-c-handler.cpp
+@@ -6,6 +6,7 @@
+ 
+ #include <signal.h>
+ #include <atomic>
++#include <stdexcept>
+ 
+ 
+ namespace rsutils {
