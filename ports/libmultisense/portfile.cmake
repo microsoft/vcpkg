@@ -45,6 +45,7 @@ if ("utilities" IN_LIST FEATURES)
     set(_tool_names
         ChangeIpUtility
         ImageCalUtility
+        MultiChannelUtility
         PointCloudUtility
         RectifiedFocalLengthUtility
         SaveImageUtility
@@ -65,6 +66,7 @@ if ("utilities" IN_LIST FEATURES)
         change_ip_utility.py
         device_info_utility.py
         image_cal_utility.py
+        multi_channel_utility.py
         point_cloud_utility.py
         rectified_focal_length_utility.py
         save_image_utility.py
