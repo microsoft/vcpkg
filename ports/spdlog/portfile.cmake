@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
     REF "v${VERSION}"
-    SHA512 3c330162201fb405a08040327e08bc3f90336f431b8865d250e1cf171e48eb8a07a0245a8f60118022869de1ee38209b14da76bf6bcc2ec3da60f1853adaf958
+    SHA512 8df117055d19ff21c9c9951881c7bdf27cc0866ea3a4aa0614b2c3939cedceab94ac9abaa63dc4312b51562b27d708cb2f014c68c603fd1c1051d3ed5c1c3087
     HEAD_REF v1.x
 )
 
@@ -13,6 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         wchar     SPDLOG_WCHAR_SUPPORT
     INVERTED_FEATURES
         fmt       SPDLOG_USE_STD_FORMAT
+        tz-offset SPDLOG_NO_TZ_OFFSET
 )
 
 # SPDLOG_WCHAR_FILENAMES can only be configured in triplet file since it is an alternative (not additive)
