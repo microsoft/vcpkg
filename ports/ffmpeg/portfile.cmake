@@ -599,6 +599,14 @@ else()
     set(WITH_ZMQ OFF)
 endif()
 
+if("rubberband" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-librubberband")
+    set(WITH_RUBBERBAND ON)
+else()
+    set(OPTIONS "${OPTIONS} --disable-librubberband")
+    set(WITH_RUBBERBAND OFF)
+endif()
+
 set(OPTIONS_CROSS "--enable-cross-compile")
 
 # ffmpeg needs --cross-prefix option to use appropriate tools for cross-compiling.
