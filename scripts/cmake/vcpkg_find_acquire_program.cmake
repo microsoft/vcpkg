@@ -109,11 +109,9 @@ function(z_use_vcpkg_fetch program)
     endif()
     vcpkg_execute_in_download_mode(
         COMMAND "$ENV{VCPKG_COMMAND}" fetch "${arg_FETCH_NAME}" --x-stderr-status
-        RESULT_VARIABLE error_code
         OUTPUT_VARIABLE ${program}
-        ERROR_VARIABLE error_pipe
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        WORKING_DIRECTORY "${DOWNLOADS}"
+        COMMAND_ERROR_IS_FATAL ANY
     )
     set("${program}" "${${program}}" CACHE STRING "" FORCE)
     set(z_uses_vcpkg_fetch ON PARENT_SCOPE)
