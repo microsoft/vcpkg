@@ -7320,6 +7320,10 @@
       "baseline": "1.3.0",
       "port-version": 0
     },
+    "ormpp": {
+      "baseline": "0.2.0",
+      "port-version": 0
+    },
     "orocos-kdl": {
       "baseline": "1.5.3",
       "port-version": 0
