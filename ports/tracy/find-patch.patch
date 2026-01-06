@@ -1,0 +1,26 @@
+diff --git a/cmake/vendor.cmake b/cmake/vendor.cmake
+index a54f7c53..bb2ec5a9 100644
+--- a/cmake/vendor.cmake
++++ b/cmake/vendor.cmake
+@@ -14,6 +14,21 @@ option(DOWNLOAD_FREETYPE "Force download freetype" OFF)
+ option(DOWNLOAD_LIBCURL "Force download libcURL" OFF)
+ option(DOWNLOAD_PUGIXML "Force download pugixml" OFF)
+ 
++find_program(PATCH_EXECUTABLE patch)
++if(NOT PATCH_EXECUTABLE)
++   find_package(Git REQUIRED)
++   if(GIT_EXECUTABLE)
++      get_filename_component(extra_search_path ${GIT_EXECUTABLE} DIRECTORY)
++      get_filename_component(extra_search_path_1up ${extra_search_path} DIRECTORY)
++      get_filename_component(extra_search_path_2up ${extra_search_path_1up} DIRECTORY)
++      find_program(
++        PATCH_EXECUTABLE patch HINTS "${extra_search_path_1up}/usr/bin"
++                                     "${extra_search_path_2up}/usr/bin"
++      )
++   endif()
++endif()
++
++
+ # capstone
+ 
+ pkg_check_modules(CAPSTONE capstone)
