@@ -7,7 +7,7 @@ endif()
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
     REPO litespeedtech/lsquic
     REF v${VERSION}
-    SHA512 2f1f01761499f834d5ef43a80e2f9eb94f008c17bc1417eef6cde42d33de485627a9b921fc4ebb288b87cb2c9478fb7149d426a60a0e9abbf5067b9edfb97cde
+    SHA512 cd6525b3328d3496c49d2b4f9587b0683c192b02de0214c79215a9100600821868e9b19bf45b5ebe616a53946688ebe7a3471f604a43541bbfdde07b6cf40227
     HEAD_REF master
     PATCHES
         disable-asan.patch
