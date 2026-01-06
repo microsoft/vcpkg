@@ -6721,7 +6721,7 @@
       "port-version": 6
     },
     "nativefiledialog-extended": {
-      "baseline": "1.2.1",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "nayuki-qr-code-generator": {
