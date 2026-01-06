@@ -27,6 +27,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openjpeg    WITH_OpenJPEG_DECODER
         openjpeg    WITH_OpenJPEG_ENCODER
         openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
+        h264        WITH_X264
+        openh264    WITH_OpenH264_DECODER
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
