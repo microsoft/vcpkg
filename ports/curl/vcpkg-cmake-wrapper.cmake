@@ -3,7 +3,7 @@ function(z_vcpkg_curl_libraries_warning variable access value current_list_file 
        AND access STREQUAL "READ_ACCESS"
        AND NOT z_vcpkg_curl_libraries_warning_issued)
         set(z_vcpkg_curl_libraries_warning_issued 1 PARENT_SCOPE)
-        message(FATAL_ERROR # TODO: WARNING
+        message(WARNING
             "CURL_LIBRARIES is '${CURL_LIBRARIES}'. "
             "When linking imported targets, exported CMake config must use \"find_dependency(CURL)\"."
         )
@@ -38,6 +38,7 @@ if(${_z_vcpg_curl_name}_FOUND)
         # leave CURL_LIBRARIES as set by upstream (imported target), but add information.
         variable_watch(CURL_LIBRARIES "z_vcpkg_curl_libraries_warning")
     else()
+        get_target_property(CURL_INCLUDE_DIRS ${_curl_target} INTERFACE_INCLUDE_DIRECTORIES)
         # resolve CURL_LIBRARIES to filepaths.
         if(WIN32)
             get_target_property(_curl_location_debug ${_curl_target} IMPORTED_IMPLIB_DEBUG)
