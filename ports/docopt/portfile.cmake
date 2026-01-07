@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TAGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS)
     set(USE_BOOST_REGEX ON)
 else()
     set(USE_BOOST_REGEX OFF)
