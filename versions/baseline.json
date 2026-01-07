@@ -4649,7 +4649,7 @@
       "port-version": 0
     },
     "libcoap": {
-      "baseline": "4.3.5",
+      "baseline": "4.3.5a",
       "port-version": 0
     },
     "libconfig": {
