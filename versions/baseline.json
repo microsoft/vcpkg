@@ -3982,7 +3982,7 @@
     },
     "intel-mkl": {
       "baseline": "2025.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
