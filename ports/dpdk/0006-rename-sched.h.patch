@@ -43,8 +43,8 @@ index 9d69467..4df82dd 100644
 --- a/lib/eal/windows/include/rte_os.h
 +++ b/lib/eal/windows/include/rte_os.h
 @@ -14,7 +14,7 @@
- #include <stdlib.h>
  #include <string.h>
+ #include <malloc.h>
  
 -#include <sched.h>
 +#include <sched_from_dpdk.h>
