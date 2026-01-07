@@ -2013,7 +2013,7 @@
       "port-version": 0
     },
     "cpp-lazy": {
-      "baseline": "8.0.1",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "cpp-netlib": {
