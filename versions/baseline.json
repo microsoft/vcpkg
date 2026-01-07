@@ -2270,7 +2270,7 @@
     },
     "curve-coco": {
       "baseline": "4.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "cute-headers": {
       "baseline": "2019-09-20",
@@ -2765,7 +2765,7 @@
       "port-version": 0
     },
     "ereignis": {
-      "baseline": "4.3",
+      "baseline": "6.3.0",
       "port-version": 0
     },
     "esaxx": {

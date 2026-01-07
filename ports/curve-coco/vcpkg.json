@@ -1,6 +1,7 @@
 {
   "name": "curve-coco",
   "version": "4.3.0",
+  "port-version": 1,
   "description": "a C++20 coroutine library that aims to be convenient and simple to use.",
   "homepage": "https://github.com/Curve/coco",
   "license": "MIT",
