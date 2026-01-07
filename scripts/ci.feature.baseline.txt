@@ -255,7 +255,6 @@ zookeeper:x64-windows-static-md=fail
 zookeeper:x64-windows-static=fail
 zookeeper:x64-windows=fail
 zookeeper:x86-windows=fail
-zyre:x64-windows-static-md=fail
 
 
 # testing all features would be too slow:
