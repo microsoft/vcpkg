@@ -1,5 +1,5 @@
 {
-  "name": "coke",
+  "name": "kedixa-coke",
   "version": "0.7.0",
   "description": "Coroutine Workflow based on C++ 20",
   "homepage": "https://github.com/kedixa/coke",
@@ -15,9 +15,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    {
-      "name": "workflow",
-      "version>=": "0.11.8"
-    }
+    "workflow"
   ]
 }
