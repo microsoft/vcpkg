@@ -1,8 +1,9 @@
 {
   "name": "alembic",
   "version": "1.8.10",
+  "port-version": 1,
   "description": "Alembic is an open framework for storing and sharing scene data that includes a C++ library, a file format, and client plugins and applications.",
-  "homepage": "https://alembic.io/",
+  "homepage": "https://www.alembic.io",
   "supports": "!(windows & x86) & !uwp",
   "dependencies": [
     "imath",
