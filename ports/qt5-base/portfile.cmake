@@ -62,6 +62,7 @@ set(PATCHES
     patches/vulkan-windows.diff        #Forces QMake to use vulkan from vcpkg instead of VULKAN_SDK system variable
     patches/egl.patch                  #Fix egl detection logic.
     patches/qtbug_96392.patch          #Backport fix for QTBUG-96392
+    patches/md4c.diff                  #Include vcpkg md4c.h
     patches/mysql_plugin_include.patch #Fix include path of mysql plugin
     patches/mysql-configure.patch      #Fix mysql project
     patches/patch-qtbase-memory_resource.diff # From https://bugreports.qt.io/browse/QTBUG-114316
@@ -91,12 +92,9 @@ endif()
 qt_download_submodule(OUT_SOURCE_PATH SOURCE_PATH PATCHES ${PATCHES})
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY zlib freetype harfbuzz-ng libjpeg libpng double-conversion sqlite pcre2)
-    if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
-        file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
-    endif()
+foreach(DEPENDENCY IN ITEMS double-conversion freetype harfbuzz-ng libjpeg libpng md4c pcre2 sqlite zlib)
+    file(REMOVE_RECURSE "${SOURCE_PATH}/src/3rdparty/${DEPENDENCY}")
 endforeach()
-#file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 
 #########################
 ## Setup Configure options
@@ -118,6 +116,7 @@ set(CORE_OPTIONS
 list(APPEND CORE_OPTIONS
     -system-zlib
     -system-libjpeg
+    -system-libmd4c
     -system-libpng
     -system-pcre
     -system-doubleconversion
