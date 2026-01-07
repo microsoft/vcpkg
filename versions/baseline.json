@@ -9441,8 +9441,8 @@
       "port-version": 0
     },
     "stlab": {
-      "baseline": "2.0.2",
-      "port-version": 2
+      "baseline": "2.2.0",
+      "port-version": 0
     },
     "stlab-copy-on-write": {
       "baseline": "1.1.0",
