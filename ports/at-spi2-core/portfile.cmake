@@ -8,18 +8,29 @@ vcpkg_download_distfile(ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
-    SHA512 8d85df75f886c4a19d829d14e5a9412b607b9cbe2d1b7ecb95b4082602f0624e90747fe955f96d378c3a52bc0e732074b97008bb34e6acc2722c7056b2c0504e
+    SHA512 46bed060b61e62d0e53047bb59741367cf5e4a79ff4aa4486c62ca282aacd0d9d77f6f711bac3b9215fc120126685b9c6fdfea451841bcefbf0665b9c742da6b
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
+if("introspection" IN_LIST FEATURES)
+    list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
+else()
+    list(APPEND OPTIONS_RELEASE -Dintrospection=disabled)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -Dintrospection=no
+    OPTIONS_RELEASE
+        ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        -Dintrospection=disabled
     ADDITIONAL_BINARIES
         glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
         glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 
 vcpkg_install_meson()

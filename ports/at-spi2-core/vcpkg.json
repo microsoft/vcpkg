@@ -1,7 +1,6 @@
 {
   "name": "at-spi2-core",
-  "version": "2.44.1",
-  "port-version": 5,
+  "version": "2.59.0",
   "description": "Base DBus XML interfaces for accessibility, the accessibility registry daemon, and atspi library.",
   "homepage": "https://www.gtk.org/",
   "license": null,
@@ -23,5 +22,14 @@
       "name": "vcpkg-tool-meson",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "introspection": {
+      "description": "Build with introspection",
+      "supports": "!static",
+      "dependencies": [
+        "gobject-introspection"
+      ]
+    }
+  }
 }

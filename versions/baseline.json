@@ -353,8 +353,8 @@
       "port-version": 2
     },
     "at-spi2-core": {
-      "baseline": "2.44.1",
-      "port-version": 5
+      "baseline": "2.59.0",
+      "port-version": 0
     },
     "atk": {
       "baseline": "2.38.0",
@@ -2542,7 +2542,7 @@
     },
     "dpdk": {
       "baseline": "25.11",
-      "port-version": 0
+      "port-version": 1
     },
     "dpp": {
       "baseline": "10.1.4",

@@ -1,11 +1,12 @@
 {
   "name": "dpdk",
   "version": "25.11",
+  "port-version": 1,
   "description": "A set of libraries and drivers for fast packet processing",
   "homepage": "https://www.dpdk.org/",
   "documentation": "https://doc.dpdk.org/guides/",
   "license": "BSD-3-Clause",
-  "supports": "freebsd | linux | (windows & x64)",
+  "supports": "freebsd | linux",
   "dependencies": [
     {
       "name": "libarchive",
