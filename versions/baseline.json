@@ -413,8 +413,8 @@
       "port-version": 2
     },
     "autodock-vina": {
-      "baseline": "1.2.6",
-      "port-version": 1
+      "baseline": "1.2.7",
+      "port-version": 0
     },
     "avcpp": {
       "baseline": "2.7.1",
