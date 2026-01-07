@@ -1,6 +1,7 @@
 {
   "name": "level-zero",
   "version": "1.26.1",
+  "port-version": 1,
   "description": "oneAPI Level Zero Specification Headers and Loader.",
   "homepage": "https://github.com/oneapi-src/level-zero",
   "license": "MIT",
