@@ -8356,6 +8356,10 @@
       "baseline": "3.1.0",
       "port-version": 5
     },
+    "qzxing": {
+      "baseline": "3.3.0",
+      "port-version": 0
+    },
     "rabit": {
       "baseline": "0.1",
       "port-version": 5
