@@ -8948,6 +8948,10 @@
       "baseline": "6.0.0",
       "port-version": 0
     },
+    "sintra": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "sjpeg": {
       "baseline": "2021-10-31",
       "port-version": 0
