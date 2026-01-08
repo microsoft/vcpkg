@@ -1843,6 +1843,7 @@ qtbase[xcb,xcb-sm,xcb-xlib,xkb,xkbcommon-x11,xlib,xrender](windows) = skip # no 
 qtvirtualkeyboard[t9write] = skip # depends on the port 't9write' that does not exists
 qtwebengine = skip # Takes too long to feature test at ~3 hours per feature
 s2n = skip # builds too slow
+stlab-enum-ops = skip # conflicts with stlab
 usd=skip # USD has set official policy that they will not update to be compatible with TBB in the near term (https://github.com/PixarAnimationStudios/USD/issues/1600)
 vtk[ioocct](!uwp) = skip
 vtk-m[cuda]:x64-linux = skip # CUDA clash with default gcc in Ubuntu 22.04, and not a quick failure.
