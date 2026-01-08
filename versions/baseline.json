@@ -2158,7 +2158,7 @@
     },
     "crashrpt": {
       "baseline": "1.4.3",
-      "port-version": 3
+      "port-version": 4
     },
     "crc32c": {
       "baseline": "1.1.2",
@@ -4578,7 +4578,7 @@
     },
     "libaiff": {
       "baseline": "5.0",
-      "port-version": 9
+      "port-version": 10
     },
     "libaio": {
       "baseline": "0.3.113",
@@ -4750,7 +4750,7 @@
     },
     "libdisasm": {
       "baseline": "0.23",
-      "port-version": 11
+      "port-version": 12
     },
     "libdivide": {
       "baseline": "5.2.0",
@@ -5522,7 +5522,7 @@
     },
     "libsquish": {
       "baseline": "1.15",
-      "port-version": 14
+      "port-version": 15
     },
     "libsrt": {
       "baseline": "1.5.4",
@@ -5674,7 +5674,7 @@
     },
     "libuuid": {
       "baseline": "1.0.3",
-      "port-version": 15
+      "port-version": 16
     },
     "libuv": {
       "baseline": "1.51.0",
@@ -6514,7 +6514,7 @@
     },
     "mp3lame": {
       "baseline": "3.100",
-      "port-version": 15
+      "port-version": 16
     },
     "mpark-patterns": {
       "baseline": "2019-10-03",
@@ -8358,7 +8358,7 @@
     },
     "qwt": {
       "baseline": "6.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qwtw": {
       "baseline": "3.1.0",
@@ -8418,7 +8418,7 @@
     },
     "rapidxml": {
       "baseline": "1.13",
-      "port-version": 8
+      "port-version": 9
     },
     "rapidxml-ns": {
       "baseline": "1.13.2",
@@ -9882,7 +9882,7 @@
     },
     "tinyxml": {
       "baseline": "2.6.2",
-      "port-version": 10
+      "port-version": 11
     },
     "tinyxml2": {
       "baseline": "11.0.0",
@@ -10786,7 +10786,7 @@
     },
     "xqilla": {
       "baseline": "2.3.4",
-      "port-version": 4
+      "port-version": 5
     },
     "xsimd": {
       "baseline": "14.0.0",
