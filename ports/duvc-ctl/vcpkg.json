@@ -5,5 +5,15 @@
   "description": "Windows DirectShow UVC camera control library",
   "homepage": "https://github.com/allanhanan/duvc-ctl",
   "license": "MIT",
-  "supports": "windows"
+  "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
