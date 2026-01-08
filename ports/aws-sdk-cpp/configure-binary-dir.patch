@@ -1,5 +1,5 @@
 diff --git a/cmake/initialize_project_version.cmake b/cmake/initialize_project_version.cmake
-index c9b42f603da..894c10f95b8 100644
+index c9b42f603..894c10f95 100644
 --- a/cmake/initialize_project_version.cmake
 +++ b/cmake/initialize_project_version.cmake
 @@ -6,9 +6,8 @@ if(GIT_FOUND)
@@ -15,7 +15,7 @@ index c9b42f603da..894c10f95b8 100644
  
  set(PROJECT_VERSION "${VERSION_STRING}")
 diff --git a/src/aws-cpp-sdk-core/CMakeLists.txt b/src/aws-cpp-sdk-core/CMakeLists.txt
-index c6a0f1c262e..c9ea5e8d70b 100644
+index c6a0f1c26..c9ea5e8d7 100644
 --- a/src/aws-cpp-sdk-core/CMakeLists.txt
 +++ b/src/aws-cpp-sdk-core/CMakeLists.txt
 @@ -20,7 +20,7 @@ if(VERSION_STRING)
@@ -73,7 +73,7 @@ index c6a0f1c262e..c9ea5e8d70b 100644
  install (FILES ${AWS_AUTH_SIGNER_PROVIDER_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/auth/signer-provider)
 diff --git a/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h b/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h
 deleted file mode 100644
-index 06609b4b3fe..00000000000
+index 816c0579a..000000000
 --- a/src/aws-cpp-sdk-core/include/aws/core/VersionConfig.h
 +++ /dev/null
 @@ -1,10 +0,0 @@
@@ -83,7 +83,7 @@ index 06609b4b3fe..00000000000
 - */
 -#pragma once
 -
--#define AWS_SDK_VERSION_STRING "1.11.710"
+-#define AWS_SDK_VERSION_STRING "1.11.724"
 -#define AWS_SDK_VERSION_MAJOR 1
 -#define AWS_SDK_VERSION_MINOR 11
--#define AWS_SDK_VERSION_PATCH 710
+-#define AWS_SDK_VERSION_PATCH 724
