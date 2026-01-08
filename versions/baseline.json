@@ -4212,6 +4212,10 @@
       "baseline": "2014-09-08",
       "port-version": 2
     },
+    "kedixa-coke": {
+      "baseline": "0.7.0",
+      "port-version": 0
+    },
     "kenlm": {
       "baseline": "20230531",
       "port-version": 1
