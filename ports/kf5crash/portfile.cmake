@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcrash
-    REF v5.98.0
-    SHA512 5b6527167dd7b8947ae4e6a20d4d7d563d11246c6e3b697582abcc82fd0e0049de21c8e312d5c8cb6495fa82cf6ec338919280ee49600a21896161158a4dbce4
+    REF "v${VERSION}"
+    SHA512 23897cf1b0bc02776f2fc70cc9ae3c34d17dba212b4c8866f4ed2167a9b3a4a37d33a3116c58d0084d98fab5ed6ef35a7d4527700a165d283975e714350150bf
     HEAD_REF master
 )
 
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Crash CONFIG_PATH lib/cmake/KF5Crash)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Crash)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -28,4 +28,3 @@ endif()
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

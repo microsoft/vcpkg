@@ -5,8 +5,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
-    REF v5.98.0
-    SHA512 5bb2c216825448d207dbcaa521503ddb78f77ba52668992447c792bcc4f48f8a0d6de7d3f564dc917a14765ae7f0ad7e43dd0ce8f368e97eb8dfe077fa8b4c46
+    REF "v${VERSION}"
+    SHA512 418aee5a836fcdb7a8901282c256e8bdb3ff1f1f346c882feb548b9ef39951ff1709dd2ac924e281441d86c7744e086ca82178f952dbb24173aab910d336d7e4
+    HEAD_REF master
     PATCHES ${PATCHES}
 )
 
@@ -25,7 +26,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5I18n CONFIG_PATH lib/cmake/KF5I18n)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5I18n)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -43,7 +44,7 @@ vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
 # # The Python executable used for building ki18n will be used as a fallback
 # # solution if it cannot be found in $PATH when building applications.
 # set(_KI18N_PYTHON_EXECUTABLE "C:/Dev/vcpkg-downloads/tools/python/python-3.10.7-x64/python.exe")
-# 
+#
 # find_program(KI18N_PYTHON_EXECUTABLE NAMES python3 python2 python)
 # if(NOT KI18N_PYTHON_EXECUTABLE)
 #     set(KI18N_PYTHON_EXECUTABLE "${_KI18N_PYTHON_EXECUTABLE}")
