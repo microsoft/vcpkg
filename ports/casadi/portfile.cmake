@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-message(STATUS "VCPKG_LIBRARY_LINKAGE: ${VCPKG_LIBRARY_LINKAGE}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(ENABLE_SHARED ON)
     set(ENABLE_STATIC OFF)
@@ -15,11 +14,19 @@ else()
     set(ENABLE_STATIC ON)
 endif()
 
+# Do not build deepbind on unsupported platforms
+if(VCPKG_TARGET_IS_ANDROID)
+    set(WITH_DEEPBIND OFF)
+else()
+    set(WITH_DEEPBIND ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
      -DENABLE_STATIC=${ENABLE_STATIC}
      -DENABLE_SHARED=${ENABLE_SHARED}
+     -DWITH_DEEPBIND=${WITH_DEEPBIND}
      -DWITH_SELFCONTAINED=OFF
      -DWITH_TINYXML=OFF
      -DWITH_BUILD_TINYXML=OFF
