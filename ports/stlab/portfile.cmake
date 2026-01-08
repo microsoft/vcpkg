@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         cross-build.patch
         devendoring.patch
+        use-cxx-20.patch
 )
 
 file(WRITE "${SOURCE_PATH}/cmake/CPM.cmake" "# disabled by vcpkg")
