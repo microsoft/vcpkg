@@ -11,8 +11,9 @@ block(SCOPE_FOR VARIABLES)
     add_executable(main-targets main.c)
     target_link_libraries(main-targets PRIVATE CURL::libcurl)
 
-    add_executable(main-variable main.c)
-    target_link_libraries(main-variable PRIVATE ${CURL_LIBRARIES})
+    add_executable(main-variables main.c)
+    target_include_directories(main-variables PRIVATE ${CURL_INCLUDE_DIRS})
+    target_link_libraries(main-variables PRIVATE ${CURL_LIBRARIES})
 
     unset(PKG_CONFIG_EXECUTABLE CACHE)
     unset(PKG_CONFIG_ARGN CACHE)
