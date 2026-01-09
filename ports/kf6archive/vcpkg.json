@@ -1,6 +1,7 @@
 {
   "name": "kf6archive",
   "version": "6.7.0",
+  "port-version": 1,
   "description": "File compression",
   "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
   "license": "LGPL-2.0-or-later",

@@ -61,6 +61,7 @@ vcpkg_from_github(
         fix-configure.patch
         protobuf-version.patch
         plugin.patch
+        explicit_int_cast_2.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -89,6 +90,8 @@ vcpkg_from_gitlab(
     REPO paraview/qttesting
     REF 375c33053704e2d99dda4d2e1dfc9f6f85b3e73f
     SHA512  4d42352394017f4a07ed96dea6b5c0caf3bc6b22bbe0c8f5df6d2740cb7b2946e0b04ac7b79b88bc7c4281bb8d48071878f42c41c042de8ef6979818d26490e5
+    PATCHES
+      explicit_int_cast.patch
 )
 
 vcpkg_from_gitlab(
