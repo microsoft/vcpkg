@@ -1,8 +1,8 @@
 {
   "name": "sintra",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Header-only C++17 IPC library using shared-memory ring buffers.",
   "homepage": "https://github.com/imakris/sintra",
   "license": "BSD-2-Clause",
-  "supports": "(windows | linux | osx | freebsd) & (x86 | x64 | arm | arm64)"
+  "supports": "!android"
 }
