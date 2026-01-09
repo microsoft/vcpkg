@@ -5169,8 +5169,8 @@
       "port-version": 0
     },
     "libmount": {
-      "baseline": "2.40",
-      "port-version": 1
+      "baseline": "2.41.3",
+      "port-version": 0
     },
     "libmpeg2": {
       "baseline": "0.5.1",
