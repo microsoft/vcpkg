@@ -4188,6 +4188,10 @@
       "baseline": "2.4.0",
       "port-version": 1
     },
+    "kdiagram": {
+      "baseline": "2.8.0",
+      "port-version": 0
+    },
     "kdreports": {
       "baseline": "2.3.0",
       "port-version": 0
@@ -4277,8 +4281,8 @@
       "port-version": 0
     },
     "kf5diagram": {
-      "baseline": "2.8.0",
-      "port-version": 1
+      "baseline": "deprecated",
+      "port-version": 0
     },
     "kf5globalaccel": {
       "baseline": "5.98.0",
