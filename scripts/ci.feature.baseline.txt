@@ -273,7 +273,7 @@ llvm[target-aarch64,target-all,target-amdgpu,target-arc,target-arm,target-avr,ta
 opencascade[freeimage,freetype,rapidjson,samples,tbb,vtk]=no-separate-feature-test
 opencv[ade,aravis,calib3d,contrib,cuda,cudnn,dc1394,directml,dnn,dnn-cuda,dshow,eigen,ffmpeg,freetype,fs,gapi,gdcm,gstreamer,gtk,halide,hdf,highgui,intrinsics,ipp,jpeg,jpegxl,msmf,nonfree,opencl,openexr,opengl,openjpeg,openmp,openvino,ovis,png,python,qt,quality,quirc,rgbd,sfm,tbb,text,thread,tiff,vtk,vulkan,webp,win32ui,world]=no-separate-feature-test
 qtbase[doubleconversion,gui,sql,thread] = no-separate-feature-test # covered in many combinations
-vtk[atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,proj,python,qt,seacas,sql,tbb,utf8,vtkm] = no-separate-feature-test
+vtk[atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,proj,qt,seacas,sql,tbb,utf8,vtkm] = no-separate-feature-test
 
 # cascade
 3fd:x64-uwp = cascade
@@ -1546,11 +1546,12 @@ vtk[python](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only su
 vtk[qt](uwp) = cascade # dbus[core] only supports !uwp & !staticcrt & !android & !ios, harfbuzz[core] only supports !uwp, hdf5[core] only supports !uwp, libpq[core] only supports !uwp, opengl[core] only supports !uwp & !xbox, qtbase[core] only supports !uwp
 vtk[seacas](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only supports !uwp & !xbox
 vtk[vtkm](arm64 & windows) = cascade # vtk-m[core] only supports !x86 & !uwp & !(arm & windows)
+vtk(uwp) = cascade # hdf5[core] only supports !uwp
+# vtk-*
 vtk-dicom(uwp) = cascade
 # cuda[core] only supports (windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)
 vtk-m[cuda](arm64 & windows) = cascade
 vtk-m[cuda](osx) = cascade
-vtk(uwp) = cascade # hdf5[core] only supports !uwp
 vulkan[tools](osx) = cascade
 vulkan-sdk-components[tools]( osx | staticcrt) = cascade
 wampcc:x64-uwp = cascade
