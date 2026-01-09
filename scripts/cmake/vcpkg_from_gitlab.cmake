@@ -25,6 +25,28 @@ function(vcpkg_from_gitlab)
         message(WARNING "vcpkg_from_gitlab was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
+    # Editable mode: delegate to consolidated helper
+    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCE_PATH)
+        set(_git_url "${arg_GITLAB_URL}/${arg_REPO}.git")
+        if(DEFINED arg_REF)
+            set(_git_ref "${arg_REF}")
+        elseif(DEFINED arg_HEAD_REF)
+            set(_git_ref "${arg_HEAD_REF}")
+        else()
+            message(FATAL_ERROR "Editable mode: REF or HEAD_REF must be specified")
+        endif()
+
+        include("${SCRIPTS}/cmake/z_vcpkg_from_git_editable.cmake")
+        z_vcpkg_from_git_editable(
+            URL "${_git_url}"
+            REF "${_git_ref}"
+            OUT_SOURCE_PATH "${arg_OUT_SOURCE_PATH}"
+            PATCHES ${arg_PATCHES}
+        )
+        set("${arg_OUT_SOURCE_PATH}" "${${arg_OUT_SOURCE_PATH}}" PARENT_SCOPE)
+        return()
+    endif()
+
     if(NOT DEFINED arg_GITLAB_URL)
         message(FATAL_ERROR "GITLAB_URL must be specified.")
     endif()

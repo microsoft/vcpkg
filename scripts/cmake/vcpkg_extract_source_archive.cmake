@@ -101,11 +101,14 @@ function(vcpkg_extract_source_archive)
         OUTPUT_VARIABLE source_path
     )
 
-    if(_VCPKG_EDITABLE AND EXISTS "${source_path}")
+    # Preserve source for:
+    # - _VCPKG_EDITABLE: this specific port is editable
+    # - _VCPKG_EDITABLE_MODE: any port in the project is editable (enables incremental builds for all)
+    if((_VCPKG_EDITABLE OR _VCPKG_EDITABLE_MODE) AND EXISTS "${source_path}")
         set("${out_source_path}" "${source_path}" PARENT_SCOPE)
         message(STATUS "Using source at ${source_path}")
         return()
-    elseif(NOT _VCPKG_EDITABLE)
+    elseif(NOT _VCPKG_EDITABLE AND NOT _VCPKG_EDITABLE_MODE)
         cmake_path(APPEND_STRING source_path ".clean")
         if(EXISTS "${source_path}")
             message(STATUS "Cleaning sources at ${source_path}. Use --editable to skip cleaning for the packages you specify.")
