@@ -29,6 +29,7 @@ set(${PORT}_PATCHES
         fix-libresolv-test.patch
         2d4915.diff
         framework.patch
+        use_inotify_on_freebsd.patch
 )
  
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
