@@ -1,7 +1,7 @@
 {
   "name": "libodb-boost",
   "version": "2.4.0",
-  "port-version": 7,
+  "port-version": 8,
   "description": "Description: Boost support for the ODB ORM library",
   "dependencies": [
     "libodb",

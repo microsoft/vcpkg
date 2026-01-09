@@ -1,6 +1,6 @@
 {
   "name": "ggml",
-  "version": "0.9.4",
+  "version-date": "2025-11-17",
   "port-version": 1,
   "description": "Tensor library for machine learning",
   "homepage": "https://github.com/ggml-org/ggml",

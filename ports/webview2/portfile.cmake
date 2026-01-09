@@ -5,7 +5,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/${VERSION}"
     FILENAME "microsoft.web.webview2.${VERSION}.zip"
-    SHA512 dd447d7526e82a0e4522447d0e861f347ad72f2a73dfa82cca2537f633afe54b2764c2d437f717cf22aeb339641f79c04f9cbce0b68a100eef716bd58c1a8989
+    SHA512 cce1e82cc057469ada77c116b9192957e83553c32fb794874dc7723148a81408b1d9d544e6eb4b61c2fe1ce99b6b8a705068f8f0e037eb39b556f7a093674fad
 )
 
 vcpkg_extract_source_archive(

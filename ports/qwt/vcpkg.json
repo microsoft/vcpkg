@@ -1,8 +1,9 @@
 {
   "name": "qwt",
   "version": "6.3.0",
+  "port-version": 1,
   "description": "Widgets library for technical applications",
-  "homepage": "https://sourceforge.net/projects/qwt",
+  "homepage": "https://qwt.sourceforge.io",
   "license": null,
   "dependencies": [
     {

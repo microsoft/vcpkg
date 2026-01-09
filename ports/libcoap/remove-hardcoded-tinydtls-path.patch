@@ -1,0 +1,14 @@
+# A path to binary dir is hardcoded.
+# tinydtls is never used because openssl is forced.
+# Just remove the wrong line.
+--- v4.3.5-4285a765ed.clean/CMakeLists.old.txt	2024-09-06 12:13:56.000000000 +0200
++++ v4.3.5-4285a765ed.clean/CMakeLists.txt	2025-11-03 13:22:08.834295900 +0100
+@@ -808,7 +808,7 @@ target_include_directories(
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/>
+          $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include/>
+          $<INSTALL_INTERFACE:include/>
+-         $<$<AND:$<BOOL:${COAP_WITH_LIBTINYDTLS}>,$<BOOL:${USE_VENDORED_TINYDTLS}>>:${CMAKE_BINARY_DIR}/include/tinydtls>
++#         $<$<AND:$<BOOL:${COAP_WITH_LIBTINYDTLS}>,$<BOOL:${USE_VENDORED_TINYDTLS}>>:${CMAKE_BINARY_DIR}/include/tinydtls>
+         $<$<BOOL:${COAP_WITH_LIBGNUTLS}>:${GNUTLS_INCLUDE_DIR}>
+         $<$<BOOL:${COAP_WITH_LIBMBEDTLS}>:${MBEDTLS_INCLUDE_DIRS}>
+         $<$<BOOL:${COAP_WITH_LIBWOLFSSL}>:${WOLFSSL_INCLUDE_DIR}>)

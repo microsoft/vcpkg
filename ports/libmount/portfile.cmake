@@ -21,6 +21,9 @@ else()
     set(ENV{AUTOPOINT} true) # true, the program
     vcpkg_list(APPEND options "--disable-nls")
 endif()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+    vcpkg_list(APPEND options "--disable-year2038")
+endif()
 
 vcpkg_configure_make(
     AUTOCONFIG
