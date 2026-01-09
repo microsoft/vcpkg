@@ -1,6 +1,6 @@
 {
   "name": "nvidia-cutlass",
-  "version": "4.3.3",
+  "version": "4.3.4",
   "description": "CUDA Templates for Linear Algebra Subroutines",
   "homepage": "https://github.com/NVIDIA/cutlass",
   "license": "BSD-3-Clause",

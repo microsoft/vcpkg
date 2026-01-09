@@ -261,7 +261,6 @@ zookeeper:x64-windows-static-md=fail
 zookeeper:x64-windows-static=fail
 zookeeper:x64-windows=fail
 zookeeper:x86-windows=fail
-zyre:x64-windows-static-md=fail
 
 
 # testing all features would be too slow:
@@ -412,6 +411,7 @@ cppkafka:arm64-uwp = cascade
 cppkafka:x64-uwp = cascade
 cppzmq:arm64-uwp = cascade
 cppzmq:x64-uwp = cascade
+crashrpt(windows) = cascade
 cuda-api-wrappers(uwp | osx) = cascade
 cutelyst2:arm64-uwp = cascade
 cutelyst2:arm64-windows = cascade
@@ -1635,7 +1635,6 @@ awlib[graphics](osx) = feature-fails # Broken code. See https://github.com/micro
 cgns[core,fortran,hdf5,legacy,lfs,mpi,tests](osx | linux) = combination-fails # ["fortran","hdf5","mpi"]: Could NOT find MPI (missing: MPI_Fortran_FOUND) (found version "3.1")
 cgns[fortran](windows | android) = feature-fails # No fortran compiler installed
 coroutine(osx) = fail # requires c++20
-crashrpt(windows) = fail # precompiled header errors. See https://github.com/microsoft/vcpkg/issues/33470
 ctbench(osx) = fail # requires C++ 20
 darknet[openmp](osx) = feature-fails # openmp setup needed
 date[remote-api](uwp) = feature-fails # error C2065: 'FOLDERID_ProgramFiles': undeclared identifier. See https://github.com/microsoft/vcpkg/issues/33610

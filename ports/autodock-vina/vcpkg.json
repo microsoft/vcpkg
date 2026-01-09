@@ -1,9 +1,8 @@
 {
   "name": "autodock-vina",
-  "version-semver": "1.2.6",
-  "port-version": 1,
+  "version-semver": "1.2.7",
   "description": "AutoDock Vina is one of the fastest and most widely used open-source docking engines.",
-  "homepage": "https://vina.scripps.edu/",
+  "homepage": "https://autodock-vina.readthedocs.io",
   "dependencies": [
     "boost-algorithm",
     "boost-array",
