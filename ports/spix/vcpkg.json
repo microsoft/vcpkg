@@ -8,10 +8,6 @@
   "dependencies": [
     "anyrpc",
     {
-      "name": "qtbase",
-      "default-features": false
-    },
-    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -25,7 +21,7 @@
   ],
   "features": {
     "qtquick": {
-      "description": "Build QtQuick support",
+      "description": "Build the QtQuick scene library.",
       "dependencies": [
         {
           "name": "qtdeclarative",
@@ -34,7 +30,16 @@
       ]
     },
     "qtwidgets": {
-      "description": "Build QtWidgets support (Qt6 only)"
+      "description": "Build the QtWidgets scene library.",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "widgets"
+          ]
+        }
+      ]
     }
   }
 }
