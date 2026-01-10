@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO SlickQuant/slick_shm
+    REPO SlickQuant/slick-shm
     REF "v${VERSION}"
-    SHA512 bffa11f9c1171c13ce31c0f2a3da0194ed679557fa7162463115334caf04c8308492d52c8fc6e1a7fbda14ebba355607f67dd1df329176a23d31e92127925a26 
+    SHA512 b43bde89dbd318c48b04e01cad4065a42410ca95d3b9c3de3f3c816ee3fe27b768d59321f302b34257b897c4d9d26decb380a6c359e14e03ed49a88d67f54c14 
     HEAD_REF main
 )
 
@@ -17,8 +17,8 @@ vcpkg_cmake_install()
 
 # Fix up CMake config files before removing lib directory
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME slick_shm
-    CONFIG_PATH lib/cmake/slick_shm
+    PACKAGE_NAME slick-shm
+    CONFIG_PATH lib/cmake/slick-shm
 )
 
 # Header-only library - remove lib directory after config fixup
