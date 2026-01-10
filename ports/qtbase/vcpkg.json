@@ -1,7 +1,7 @@
 {
   "name": "qtbase",
   "version": "6.10.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Qt Base (Core, Gui, Widgets, Network, ...)",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -556,6 +556,9 @@
         },
         "vulkan"
       ]
+    },
+    "wasm-exceptions": {
+      "description": "Enable WASM Exceptions"
     },
     "wayland": {
       "description": "Enable Wayland platform plugin",

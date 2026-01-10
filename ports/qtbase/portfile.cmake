@@ -124,6 +124,12 @@ if(VCPKG_QT_NAMESPACE)
     list(APPEND FEATURE_OPTIONS "-DQT_NAMESPACE:STRING=${VCPKG_QT_NAMESPACE}")
 endif()
 
+if("wasm-exceptions" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DFEATURE_wasm_exceptions=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DFEATURE_wasm_exceptions=OFF)
+endif()
+
 # Corelib features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
 FEATURES
