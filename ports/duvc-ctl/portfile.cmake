@@ -6,13 +6,8 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(DUVC_BUILD_SHARED ON)
-    set(DUVC_BUILD_STATIC OFF)
-else()
-    set(DUVC_BUILD_SHARED OFF)
-    set(DUVC_BUILD_STATIC ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" DUVC_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DUVC_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -44,9 +39,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/share")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-     RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
      DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
