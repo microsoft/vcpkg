@@ -7833,8 +7833,8 @@
       "port-version": 2
     },
     "pthread-stubs": {
-      "baseline": "0.4",
-      "port-version": 1
+      "baseline": "0.5",
+      "port-version": 0
     },
     "pthreadpool": {
       "baseline": "2024-11-04",
