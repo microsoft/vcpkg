@@ -3789,7 +3789,7 @@
       "port-version": 0
     },
     "hjson-cpp": {
-      "baseline": "2.4.1",
+      "baseline": "2.6",
       "port-version": 0
     },
     "hlslpp": {
