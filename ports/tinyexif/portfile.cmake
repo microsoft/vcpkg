@@ -2,16 +2,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cdcseacave/TinyEXIF
     REF ${VERSION}
-    SHA512 1285566c70f4de3c882a433d65595f18d848ecf8e9b16e1ea3aa7a1773fb70ba090c7cc726238132cccfc403c3750950175c675d25206be38cddb64f16193795
-    HEAD_REF master
+    SHA512 cb4e1f15758bb65465e2234065e3b46493200278e7c2e12fa7b4e31e7bff52a93158f07252a642829bad1a7da5e47612aca33fb833f3188595c6bc56cc950f63
+    HEAD_REF 1.0.4
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" LINK_CRT_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        -DLINK_CRT_STATIC_LIBS=${LINK_CRT_STATIC}
         -DBUILD_DEMO=OFF
 )
 
@@ -23,11 +23,5 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/tinyexif/TinyEXIFConfig.cmake" _contents)
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/tinyexif/TinyEXIFConfig.cmake" "
-include(CMakeFindDependencyMacro)
-find_dependency(tinyxml2)
-${_contents}")
-
 # Handle copyright
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/README.md")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

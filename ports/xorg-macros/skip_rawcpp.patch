@@ -1,5 +1,5 @@
 diff --git a/xorg-macros.m4.in b/xorg-macros.m4.in
-index f0a16da3a..e1c0ff1ed 100644
+index b15daf1..3bddfcb 100644
 --- a/xorg-macros.m4.in
 +++ b/xorg-macros.m4.in
 @@ -63,38 +63,6 @@ AC_PATH_TOOL(RAWCPP, [cpp], [${CPP}],
@@ -26,10 +26,10 @@ index f0a16da3a..e1c0ff1ed 100644
 -
 -AC_MSG_CHECKING([if $RAWCPP requires -traditional])
 -AC_LANG_CONFTEST([AC_LANG_SOURCE([[Does cpp preserve   "whitespace"?]])])
--if test `${RAWCPP} < conftest.$ac_ext | grep -c 'preserve   \"'` -eq 1 ; then
+-if test `${RAWCPP} < conftest.$ac_ext | grep -c 'preserve   "'` -eq 1 ; then
 -	AC_MSG_RESULT([no])
 -else
--	if test `${RAWCPP} -traditional < conftest.$ac_ext | grep -c 'preserve   \"'` -eq 1 ; then
+-	if test `${RAWCPP} -traditional < conftest.$ac_ext | grep -c 'preserve   "'` -eq 1 ; then
 -		TRADITIONALCPPFLAGS="-traditional"
 -		RAWCPPFLAGS="${RAWCPPFLAGS} -traditional"
 -		AC_MSG_RESULT([yes])

@@ -1,11 +1,12 @@
-diff --git a/license++/license.h b/license++/license.h
-index 677529e..0c50876 100644
---- a/license++/license.h
-+++ b/license++/license.h
-@@ -11,6 +11,7 @@
- #ifndef License_h
- #define License_h
+diff --git a/include/license++/license.h b/include/license++/license.h
+index eab392d..67b405e 100644
+--- a/include/license++/license.h
++++ b/include/license++/license.h
+@@ -9,7 +9,7 @@
  
+ #ifndef LICENSEPP_License_h
+ #define LICENSEPP_License_h
+-
 +#include <stdint.h>
  #include <string>
  

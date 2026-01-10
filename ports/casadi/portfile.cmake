@@ -1,18 +1,32 @@
-# Currently no upstream support for static libraries
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO casadi/casadi
     REF "${VERSION}"
-    SHA512 2c95368281f0bda385c6c451e361c168589f13aa66af6bc6fadf01f899bcd6c785ea7da3dee0fb5835559e58982e499182a4d244af3ea208ac05f672ea99cfd1
+    SHA512 ebd1d91f18b29620c8898fd014e35eefce2d621f9a698a14454b478cded78087bffa3651d808908a16ed8864571c7ddae99e387e53cb79a451ca60a8d690c8bb
     HEAD_REF main
-    PATCHES relocatable.patch disable_fortran.patch namespace.cmake
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(ENABLE_SHARED ON)
+    set(ENABLE_STATIC OFF)
+else()
+    set(ENABLE_SHARED OFF)
+    set(ENABLE_STATIC ON)
+endif()
+
+# Do not build deepbind on unsupported platforms
+if(VCPKG_TARGET_IS_ANDROID)
+    set(WITH_DEEPBIND OFF)
+else()
+    set(WITH_DEEPBIND ON)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+     -DENABLE_STATIC=${ENABLE_STATIC}
+     -DENABLE_SHARED=${ENABLE_SHARED}
+     -DWITH_DEEPBIND=${WITH_DEEPBIND}
      -DWITH_SELFCONTAINED=OFF
      -DWITH_TINYXML=OFF
      -DWITH_BUILD_TINYXML=OFF

@@ -1,6 +1,7 @@
 {
   "name": "xcb-util",
-  "version": "0.4.0",
+  "version": "0.4.1",
+  "port-version": 1,
   "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": null,

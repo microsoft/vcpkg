@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif
     REF "v${VERSION}"
-    SHA512 4497d1afbccc15806cc11c22653e83d7900a009ad584a8d6b1ada6fac1ace9a70d834eb32653da567f0ddabc23ec641c5d69503282e303bf1bf2def72544b1b5
+    SHA512 556cc0e365aacad662d8c20282b68856b51af168659acd0f2662dcb399e5fed9dea9c259f5d5ffcd383f4b4a00a93acbdc06e90b340cc1dd2098e94c30c8a606
     HEAD_REF master
     PATCHES
         cxx-linkage-pkgconfig.diff
@@ -27,6 +27,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         openjpeg    WITH_OpenJPEG_DECODER
         openjpeg    WITH_OpenJPEG_ENCODER
         openjpeg    VCPKG_LOCK_FIND_PACKAGE_OpenJPEG
+        h264        WITH_X264
+        openh264    WITH_OpenH264_DECODER
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)

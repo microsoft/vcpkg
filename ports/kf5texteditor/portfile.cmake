@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ktexteditor
-    REF v5.98.0
-    SHA512 06aad3993cd2133b99ef9e8b510c8b89a844ce778a71351797122c6b05e31e6277d238a8563653a42aafe773457ec89842bbd6184277d471069969c177304696
+    REF "v${VERSION}"
+    SHA512 e860b06bf111c57d3f0c4380c87741ec8cc32e2d8dad0356520ecbd6fdfbd0ac5b323c9967a1b4a431d4186277fea1a6d335d226fb03fe2fd3f02e37b184d2ef
     HEAD_REF master
 )
 
@@ -41,7 +41,7 @@ vcpkg_cmake_configure(
         -DVCPKG_HOST_TRIPLET=${VCPKG_HOST_TRIPLET}
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5TextEditor CONFIG_PATH lib/cmake/KF5TextEditor)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5TextEditor)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

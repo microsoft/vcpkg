@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kconfig
-    REF v5.98.0
-    SHA512 08d78422ae3df90f4ee2e88d2b2e3f485ecffc6f56c40e05825ecdc3321b95b4d18cfb3c11c327dce330ec50e09a8398e07f4d70243e0e2222f09de2005d9020
+    REF "v${VERSION}"
+    SHA512 dfd6e09ccaf132745f3bcba6276c6f5d0394c4aa2dd50ac234415e2fca3c5681d1c11e8f4141fdb9dc18aba806922c99dd6195d9013962e11de7c50cc2ca01a7
     HEAD_REF master
 )
 
@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Config CONFIG_PATH lib/cmake/KF5Config)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Config)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(
@@ -47,4 +47,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

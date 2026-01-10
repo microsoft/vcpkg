@@ -3,8 +3,9 @@ project (xmlsec1 C CXX) # CXX needed when libxml2 is built with icu
 
 include(CMakeDependentOption)
 
+option(INSTALL_HEADERS "Install headers" ON)
 cmake_dependent_option(BUILD_WITH_DYNAMIC_LOADING "Enable dynamic loading of xmlsec-crypto libraries" OFF BUILD_SHARED_LIBS OFF)
-option(INSTALL_HEADERS_TOOLS "Install public header files and tools" ON)
+option(BUILD_WITH_TOOLS "Build tools" ON)
 
 find_package(LibXml2 REQUIRED)
 find_package(OpenSSL REQUIRED)
@@ -17,15 +18,6 @@ FILE(GLOB SOURCESXMLSECOPENSSL
     src/openssl/*.c
     src/strings.c
 )
-
-# Generate xmlexports with fixed definition of XMLSEC_STATIC
-file(READ include/xmlsec/exports.h EXPORTS_H)
-if(BUILD_SHARED_LIBS)
-    string(REPLACE "!defined(XMLSEC_STATIC)" "1" EXPORTS_H "${EXPORTS_H}")
-else()
-    string(REPLACE "!defined(XMLSEC_STATIC)" "0" EXPORTS_H "${EXPORTS_H}")
-endif()
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/exports.h "${EXPORTS_H}")
 
 message(STATUS "Reading version info from configure.ac")
 
@@ -49,8 +41,15 @@ message(STATUS "XMLSEC_VERSION_SUBMINOR: ${XMLSEC_VERSION_SUBMINOR}")
 message(STATUS "XMLSEC_VERSION_INFO: ${XMLSEC_VERSION_INFO}")
 
 message(STATUS "Generating version.h")
-
 configure_file(include/xmlsec/version.h.in include/xmlsec/version.h)
+# Generate xmlexports with fixed definition of XMLSEC_STATIC
+file(READ include/xmlsec/exports.h EXPORTS_H)
+if(BUILD_SHARED_LIBS)
+    string(REPLACE "!defined(XMLSEC_STATIC)" "1" EXPORTS_H "${EXPORTS_H}")
+else()
+    string(REPLACE "!defined(XMLSEC_STATIC)" "0" EXPORTS_H "${EXPORTS_H}")
+endif()
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/include/xmlsec/exports.h "${EXPORTS_H}")
 
 if(MSVC)
     add_compile_options(/wd4130 /wd4127 /wd4152)
@@ -71,20 +70,20 @@ target_link_libraries(xmlsec1 PUBLIC LibXml2::LibXml2)
 target_link_libraries(xmlsec1-openssl PUBLIC xmlsec1 OpenSSL::Crypto)
 
 add_compile_definitions(
-	inline=__inline
-	PACKAGE="xmlsec1"
-	HAVE_STDIO_H
-	HAVE_STDLIB_H
-	HAVE_STRING_H
-	HAVE_CTYPE_H
-	HAVE_MALLOC_H
-	HAVE_MEMORY_H
-	XMLSEC_DEFAULT_CRYPTO="openssl"
-	UNICODE
-	_UNICODE
-	_MBCS
-	_REENTRANT
-	WIN32_LEAN_AND_MEAN
+    inline=__inline
+    PACKAGE="xmlsec1"
+    HAVE_STDIO_H
+    HAVE_STDLIB_H
+    HAVE_STRING_H
+    HAVE_CTYPE_H
+    HAVE_MALLOC_H
+    HAVE_MEMORY_H
+    XMLSEC_DEFAULT_CRYPTO="openssl"
+    UNICODE
+    _UNICODE
+    _MBCS
+    _REENTRANT
+    WIN32_LEAN_AND_MEAN
 )
 
 set_target_properties(xmlsec1 xmlsec1-openssl PROPERTIES VERSION ${XMLSEC_VERSION_MAJOR}.${XMLSEC_VERSION_MINOR})
@@ -130,32 +129,23 @@ install(EXPORT unofficial-xmlsec-targets
     DESTINATION share/unofficial-xmlsec
 )
 
-if(INSTALL_HEADERS_TOOLS)
-	file(GLOB PUBLIC_HEADERS
-		include/xmlsec/*.h
-		include/xmlsec/openssl/*.h)
-	list(FILTER PUBLIC_HEADERS EXCLUDE REGEX "exports\\.h$")
+if(INSTALL_HEADERS)
+    install(DIRECTORY include/xmlsec DESTINATION include FILES_MATCHING PATTERN "*.h")
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/xmlsec DESTINATION include)
+endif()
 
-	foreach(file IN LISTS PUBLIC_HEADERS)
-		get_filename_component(dir ${file} DIRECTORY)
-		file(RELATIVE_PATH rel_dir ${CMAKE_SOURCE_DIR}/xmlsec/${LIB} ${dir})
-		install(FILES ${file} DESTINATION "include/${rel_dir}")
-	endforeach()
+if(BUILD_WITH_TOOLS)
+    # xmlsec application
+    add_executable(xmlsec
+        apps/crypto.c
+        apps/cmdline.c
+        apps/xmlsec.c)
 
-	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/include/xmlsec/version.h DESTINATION "include/xmlsec")
-	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/exports.h DESTINATION "include/xmlsec")
+    if(WIN32)
+        target_link_libraries(xmlsec PRIVATE crypt32.lib)
+    endif()
 
-	# xmlsec application
-	add_executable(xmlsec
-		apps/crypto.c
-		apps/cmdline.c
-		apps/xmlsec.c)
-
-	if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-		target_link_libraries(xmlsec PRIVATE crypt32.lib)
-	endif()
-
-	target_link_libraries(xmlsec PRIVATE xmlsec1-openssl)
+    target_link_libraries(xmlsec PRIVATE xmlsec1-openssl)
 
     if(NOT BUILD_SHARED_LIBS)
         # needed when libxml2 is built with icu

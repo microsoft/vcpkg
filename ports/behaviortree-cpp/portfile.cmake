@@ -1,22 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BehaviorTree/BehaviorTree.CPP
-    REF ${VERSION}
-    SHA512 b2460f24915ab3aa803b95ca8a07a3d6d96c9e6d17f6b20297c45572162fe83f50e0cb51dd62da783ce6b962838bc0e74e7e137b8ef29a92f1805058beccc404
+    REF "${VERSION}"
+    SHA512 5e445fdb5ba8bcd12f03c87ba5b4b3146f3a6508bfd84873157daf6b4c5817ca7b8eb5c4f189bbb777cd59bd38620f5d3f0d97ce2080ac294363efc4b08380a1
     HEAD_REF master
     PATCHES
         fix-x86_build.patch
         remove-source-charset.diff
-        use-external-lexy.patch
         fix-dependencies.patch
 )
 
 # Set BTCPP_SHARED_LIBS based on VCPKG_LIBRARY_LINKAGE
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BTCPP_SHARED_LIBS ON)
-else()
-    set(BTCPP_SHARED_LIBS OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BTCPP_SHARED_LIBS)
 
 # Remove vendored lexy directory to prevent conflicts with foonathan-lexy port
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/lexy")
@@ -32,6 +27,10 @@ vcpkg_cmake_configure(
         -DBTCPP_GROOT_INTERFACE=OFF
         -DBTCPP_SQLITE_LOGGING=OFF
         -DBTCPP_SHARED_LIBS=${BTCPP_SHARED_LIBS}
+        -DUSE_VENDORED_FLATBUFFERS=OFF
+        -DUSE_VENDORED_LEXY=OFF
+        -DUSE_VENDORED_MINITRACE=OFF
+        -DUSE_VENDORED_TINYXML2=OFF
     MAYBE_UNUSED_VARIABLES
         CMAKE_DISABLE_FIND_PACKAGE_Curses
 )

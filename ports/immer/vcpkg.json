@@ -1,6 +1,6 @@
 {
   "name": "immer",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "Postmodern immutable and persistent data structures for C++",
   "homepage": "https://sinusoid.es/immer/",
   "license": "BSL-1.0",
