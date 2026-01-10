@@ -4342,7 +4342,7 @@
     },
     "kf5plotting": {
       "baseline": "5.116.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5service": {
       "baseline": "5.116.0",
