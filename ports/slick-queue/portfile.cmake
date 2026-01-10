@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO SlickQuant/slick_queue
+    REPO SlickQuant/slick-queue
     REF "v${VERSION}"
-    SHA512 3d0dff64edcbf3d4f5e45f844ee440ccfedb508fd5801a051eaa1f9b7fb9108cb6558c5d9ba8ea351d45ee83cfdaeec304eccf472feb7cc45875ee52e3752bf3 
+    SHA512 aa25b726c8ab670d515063511f240dad7d4d48bbf3b46c103a47c7f14681e5121b18c12b54a1f9fb5829b4b96bf92a87a4fe30f6637beaa8be3e0a6dc860c894
     HEAD_REF main
 )
 
@@ -15,8 +15,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME slick_queue
-    CONFIG_PATH lib/cmake/slick_queue
+    PACKAGE_NAME slick-queue
+    CONFIG_PATH lib/cmake/slick-queue
 )
 
 # Header-only library - remove lib directory
