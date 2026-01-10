@@ -1,11 +1,14 @@
 {
   "name": "kf5dbusaddons",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Convenience classes for D-Bus",
-  "homepage": "https://api.kde.org/frameworks/kdbusaddons/html/index.html",
+  "homepage": "https://api.kde.org/kdbusaddons-index.html",
   "dependencies": [
     "ecm",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",
