@@ -7,11 +7,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
     REF "v${VERSION}"
-    SHA512 616351e549707318c1f8b164251141684a73d5bf8205b905736f48ab21fbb19bfaa4d52c4e63642fcb144345b6a5331944b6c8e0827925000553e46f2c2c31e9
+    SHA512 a674dbe119e080630de0af12a972af9fb1ac3611413fd5a7eb14f61e47af620f6368a28e8849757136fcc1c3c4f8f776cfa0f351d3f0ef463eff98fdf8c4db52
     HEAD_REF master
     PATCHES
         build-type.diff
-        config-version.diff
 )
 # Ensure that the test uses the installed mimalloc only
 file(REMOVE_RECURSE

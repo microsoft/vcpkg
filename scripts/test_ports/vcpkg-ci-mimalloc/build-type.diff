@@ -1,8 +1,8 @@
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index 5905613..6096033 100644
+index 199f4809..beae8345 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
-@@ -20,6 +20,7 @@ find_package(mimalloc 1.9 CONFIG REQUIRED)
+@@ -20,6 +20,7 @@ find_package(mimalloc CONFIG REQUIRED)
  message(STATUS "Found mimalloc installed at: ${MIMALLOC_LIBRARY_DIR} (${MIMALLOC_VERSION_DIR})")
  
  
