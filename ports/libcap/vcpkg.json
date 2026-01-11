@@ -1,7 +1,6 @@
 {
   "name": "libcap",
-  "version": "2.73",
-  "port-version": 1,
+  "version": "2.77",
   "description": "A library for getting and setting POSIX.1e (formerly POSIX 6) draft 15 capabilities.",
   "homepage": "https://sites.google.com/site/fullycapable/",
   "license": "BSD-3-Clause OR GPL-2.0-only",

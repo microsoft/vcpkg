@@ -1,7 +1,6 @@
 {
   "name": "pango",
-  "version": "1.56.4",
-  "port-version": 1,
+  "version": "1.57.0",
   "description": "Text and font handling library.",
   "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pango/",
   "license": "LGPL-2.0-or-later",

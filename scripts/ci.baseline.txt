@@ -744,7 +744,6 @@ zookeeper:x64-windows-static=fail
 zookeeper:x64-windows=fail
 zookeeper:x86-windows=fail
 zyre:arm64-windows-static-md=fail
-zyre:x64-windows-static-md=fail
 
 # Ports which needs to pass in CI
 cmake:arm64-osx=pass
@@ -1006,6 +1005,7 @@ vcpkg-ci-vxl:x64-windows-static-md=pass
 vcpkg-ci-vxl:x64-windows-static=pass
 vcpkg-ci-vxl:x64-windows=pass
 vcpkg-ci-vxl:x86-windows=pass
+vcpkg-ci-wxwidgets:arm64-osx=pass
 vcpkg-ci-wxwidgets:arm64-windows-static-md=pass
 vcpkg-ci-wxwidgets:arm64-windows=pass
 vcpkg-ci-wxwidgets:x64-linux=pass

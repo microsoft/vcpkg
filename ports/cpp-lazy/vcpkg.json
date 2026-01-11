@@ -1,10 +1,11 @@
 {
   "name": "cpp-lazy",
-  "version": "8.0.1",
+  "version": "9.0.0",
   "description": "C++11 (and onwards) library for lazy evaluation ",
   "homepage": "https://github.com/Kaaserne/cpp-lazy",
   "license": "MIT",
   "dependencies": [
+    "fmt",
     {
       "name": "vcpkg-cmake",
       "host": true
