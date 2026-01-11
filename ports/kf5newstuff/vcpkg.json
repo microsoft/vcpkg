@@ -32,6 +32,10 @@
       "name": "qt5-base",
       "default-features": false
     },
+    {
+      "name": "qt5-declarative",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",
@@ -44,24 +48,7 @@
   ],
   "features": {
     "designer-plugin": {
-      "description": "Build plugin for Qt Designer",
-      "dependencies": [
-        {
-          "name": "kf5newstuff",
-          "features": [
-            "qml"
-          ]
-        }
-      ]
-    },
-    "qml": {
-      "description": "Enable QML support",
-      "dependencies": [
-        {
-          "name": "qt5-declarative",
-          "default-features": false
-        }
-      ]
+      "description": "Build plugin for Qt Designer"
     }
   }
 }

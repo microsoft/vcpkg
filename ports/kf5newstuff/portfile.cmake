@@ -9,9 +9,6 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS options
     FEATURES
         designer-plugin BUILD_DESIGNERPLUGIN
-        qml             CMAKE_REQUIRE_FIND_PACKAGE_Qt5Quick # Qt5 COMPONENTS Qml Quick
-    INVERTED_FEATURES
-        qml             CMAKE_DISABLE_FIND_PACKAGE_Qt5Qml   # Qt5 COMPONENTS Qml Quick
 )
 
 vcpkg_cmake_configure(
@@ -21,6 +18,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=1
         -DCMAKE_DISABLE_FIND_PACKAGE_KF5Kirigami2=1
         -DCMAKE_DISABLE_FIND_PACKAGE_KF5Syndication=1
+        -DCMAKE_REQUIRE_FIND_PACKAGE_Qt5Quick=1
         ${options}
 )
 
