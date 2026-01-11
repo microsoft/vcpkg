@@ -23,8 +23,9 @@ vcpkg_cmake_config_fixup(
 set(slick_queue_share "${CURRENT_PACKAGES_DIR}/share/slick_queue")
 file(MAKE_DIRECTORY "${slick_queue_share}")
 
-file(WRITE "${slick_queue_share}/slick_queueConfig.cmake"
-"include(\"${slick_queue_share}/../slick-queue/slick-queueConfig.cmake\")\n")
+file(WRITE "${slick_queue_share}/slick_queueConfig.cmake" [=[
+include("${CMAKE_CURRENT_LIST_DIR}/../slick-queue/slick-queueConfig.cmake")
+]=])
 
 file(COPY "${CURRENT_PACKAGES_DIR}/share/slick-queue/slick-queueConfigVersion.cmake"
      DESTINATION "${slick_queue_share}")
