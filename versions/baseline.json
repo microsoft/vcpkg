@@ -4326,7 +4326,7 @@
     },
     "kf5newstuff": {
       "baseline": "5.116.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5notifications": {
       "baseline": "5.116.0",
