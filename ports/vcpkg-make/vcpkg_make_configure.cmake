@@ -10,6 +10,10 @@ function(vcpkg_make_configure)
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
 
+    if(arg_DISABLE_DEFAULT_OPTIONS AND arg_DEFAULT_OPTIONS_EXCLUDE)
+        message(FATAL_ERROR "DISABLE_DEFAULT_OPTIONS cannot be used together with DEFAULT_OPTIONS_EXCLUDE.")
+    endif()
+
     # Can be set in the triplet to append options for configure
     if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
         list(APPEND arg_OPTIONS ${VCPKG_MAKE_CONFIGURE_OPTIONS})
@@ -100,8 +104,6 @@ function(vcpkg_make_configure)
             z_vcpkg_make_default_path_and_configure_options(opts CONFIG "${configup}"
                 EXCLUDE_FILTER "${arg_DEFAULT_OPTIONS_EXCLUDE}"
             )
-        elseif(arg_DEFAULT_OPTIONS_EXCLUDE OR arg_DEFAULT_OPTIONS_INCLUDE)
-            message(FATAL_ERROR "DISABLE_DEFAULT_OPTIONS cannot be used together with DEFAULT_OPTIONS_EXCLUDE.")
         endif()
 
         set(configure_path_from_wd "./${relative_build_path}/configure")
