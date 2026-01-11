@@ -1,8 +1,10 @@
 {
   "name": "kf5kcmutils",
   "version": "5.116.0",
+  "port-version": 1,
   "description": "Utilities for KDE System Settings modules",
-  "homepage": "https://api.kde.org/kcmutils-index.html",
+  "homepage": "https://invent.kde.org/frameworks/kcmutils",
+  "documentation": "https://api.kde.org/kcmutils-index.html",
   "dependencies": [
     "ecm",
     {
