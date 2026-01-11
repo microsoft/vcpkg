@@ -1779,7 +1779,6 @@ vtk[all](!windows & !android & !osx) = feature-fails # Wait for fix: https://git
 vtk[core,all,atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,paraview,proj,qt,seacas,sql,tbb,utf8,vtkm]:x64-windows-static-md = combination-fails
 vtk[core,python,paraview]:x64-linux = options # paraview's transitive gfortran linkage breaks python
 vtk[openmp](osx) = feature-fails
-vtk[python]:x64-windows-static-md = feature-fails # vtk[*] dbg: defaultlib 'MSVCRT' conflicts with use of other libs due to python
 vtk-m[cuda](windows & !arm64) = feature-fails
 vtk-m[omp](osx) = feature-fails # no openmp on default osx toolchain
 vtk-m[omp](windows) = feature-fails # needs openmp 4.0, msvc has openmp 2.0
