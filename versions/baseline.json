@@ -4242,7 +4242,7 @@
     },
     "kf5auth": {
       "baseline": "5.116.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5bookmarks": {
       "baseline": "5.116.0",
