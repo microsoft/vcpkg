@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SlickQuant/slick-queue
     REF "v${VERSION}"
-    SHA512 aa25b726c8ab670d515063511f240dad7d4d48bbf3b46c103a47c7f14681e5121b18c12b54a1f9fb5829b4b96bf92a87a4fe30f6637beaa8be3e0a6dc860c894
+    SHA512 7817da2e24f6b0077c692db5bc1f6f379916d9deb4c221a30b64ab66676c590d6532d2171591e0e25ce623323165c2a6a6e59404e89a64c0c9eff084ce297f59
     HEAD_REF main
 )
 
@@ -18,6 +18,19 @@ vcpkg_cmake_config_fixup(
     PACKAGE_NAME slick-queue
     CONFIG_PATH lib/cmake/slick-queue
 )
+
+# Temporary fix for legacy package name compatibility
+set(slick_queue_share "${CURRENT_PACKAGES_DIR}/share/slick_queue")
+file(MAKE_DIRECTORY "${slick_queue_share}")
+
+file(WRITE "${slick_queue_share}/slick_queueConfig.cmake"
+"include(\"${slick_queue_share}/../slick-queue/slick-queueConfig.cmake\")\n")
+
+file(COPY "${CURRENT_PACKAGES_DIR}/share/slick-queue/slick-queueConfigVersion.cmake"
+     DESTINATION "${slick_queue_share}")
+file(RENAME
+     "${slick_queue_share}/slick-queueConfigVersion.cmake"
+     "${slick_queue_share}/slick_queueConfigVersion.cmake")
 
 # Header-only library - remove lib directory
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
