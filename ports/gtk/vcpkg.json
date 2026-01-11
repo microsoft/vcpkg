@@ -22,6 +22,10 @@
       ],
       "platform": "linux"
     },
+    {
+      "name": "directx-headers",
+      "platform": "windows & !arm32 & !xbox"
+    },
     "gdk-pixbuf",
     {
       "name": "gettext",
