@@ -5,8 +5,6 @@ vcpkg_from_github(
     SHA512 e860b06bf111c57d3f0c4380c87741ec8cc32e2d8dad0356520ecbd6fdfbd0ac5b323c9967a1b4a431d4186277fea1a6d335d226fb03fe2fd3f02e37b184d2ef
     HEAD_REF master
 )
-# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 # A trick for `kcoreaddons_desktop_to_json` (see KF5CoreAddonsMacros.cmake) to generate katepart.desktop
 # The copied *.desktop files should be removed after vcpkg_cmake_install

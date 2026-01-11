@@ -7,8 +7,6 @@ vcpkg_from_github(
     PATCHES
         zstd.diff
 )
-# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES

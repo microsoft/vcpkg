@@ -15,6 +15,8 @@ vcpkg_from_github(
         uniform-dataroot-dir.patch
         uniform-libexec-dir.patch
         uniform-plugin-dir.patch
+        # Avoid race while configuring downstream ports
+        kde-clang-format.diff
 )
 
 vcpkg_cmake_configure(
@@ -29,5 +31,6 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/ECM/cmake)
 
+file(COPY "${CURRENT_PORT_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING-CMAKE-SCRIPTS")

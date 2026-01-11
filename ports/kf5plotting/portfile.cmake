@@ -5,8 +5,6 @@ vcpkg_from_github(
     SHA512 c82c72b72100afabc350392e5293f80e374a98c648d707e5386d4f92917833ef1cfb7d090a415162a48517b092f51752668e63099407e267df1ac11d3c2367e2
     HEAD_REF master
 )
-# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
