@@ -7,7 +7,7 @@ index 24308ad..c975b3c 100644
          QML_INSTALL_DIR)
  else()
 -    set(_pluginsDirParent LIBDIR)
-+    set(_pluginsDirParent)
++    set(_pluginsDirParent "")
      if (ANDROID)
          set(_pluginsDirParent)
          #androiddeployqt wants plugins right in the prefix
@@ -16,7 +16,7 @@ index 24308ad..c975b3c 100644
          IMPORTS_INSTALL_DIR)
  
 -    _define_relative(QMLDIR LIBDIR "qml"
-+    _define_relative(QMLDIR "qml"
++    _define_relative(QMLDIR "" "qml"
          "QtQuick2 imports"
          QML_INSTALL_DIR)
  endif()
