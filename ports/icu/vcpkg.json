@@ -1,6 +1,7 @@
 {
   "name": "icu",
   "version": "78.1",
+  "port-version": 1,
   "description": "Mature and widely used Unicode and localization library.",
   "homepage": "https://icu.unicode.org/home",
   "license": "ICU",

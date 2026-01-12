@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kwallet
-    REF v5.98.0
-    SHA512 8fae6e689f190f2f6d110ed4ccd45856d4202c9f4e08fd88851c120c1bfaa38d00f3571a08e036f60054740702084927f09809d68cde7c073f5ba1cd8124c2de
+    REF "v${VERSION}"
+    SHA512 1655478825de202870e1cd3c2c7eb98476df3d42ea861538a4ee1c1c6e26d3aa470cc4fd865e64b957bf82654fe46d8c779d9dcd399f97bf594b9c7f375e8fa2
     HEAD_REF master
 )
 
@@ -18,7 +18,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Wallet CONFIG_PATH lib/cmake/KF5Wallet)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Wallet)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -30,4 +30,3 @@ endif()
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

@@ -1,6 +1,6 @@
 {
   "name": "recycle",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "Simple resource pool for recycling resources in C++",
   "homepage": "https://github.com/steinwurf/recycle",
   "license": "BSD-3-Clause",

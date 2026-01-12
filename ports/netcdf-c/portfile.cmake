@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-pkgconfig.patch
         mremap.diff
         plugin-install-dir.diff
+        fstat.patch
 )
 file(GLOB_RECURSE modules "${SOURCE_PATH}/cmake/modules/Find*.cmake")
 set(vendored_bzip2 blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c bzlib.h bzlib_private.h)

@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Blickfeld/blickfeld-qb2
     REF "v${VERSION}"
-    SHA512 03711c34b2d36a4b0d6a15c0bcdf725ffbfe8b319f10dab4909550f3adae4a7990fc468956fbf7e2c5dd5cc65964b622ebd988c81641d3e78688e6f9f86beadb
+    SHA512 d1bbec6fdb0cc407f5ec08042bb291c459cebdb5e713daa70be8136bd34a95737dcb9961e7c134d3f325f4219e32c7099e94b17691b69cffdfca845fc4387456
     HEAD_REF main
 )
 
