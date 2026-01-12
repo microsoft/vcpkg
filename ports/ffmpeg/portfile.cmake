@@ -17,6 +17,7 @@ vcpkg_from_github(
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0044-fix-vulkan-debug-callback-abi.patch
         0045-use-prebuilt-bin2c.patch
+        0046-fix-msvc-detection.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
