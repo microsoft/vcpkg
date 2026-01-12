@@ -4505,7 +4505,7 @@
       "port-version": 7
     },
     "lcms": {
-      "baseline": "2.17",
+      "baseline": "2.18",
       "port-version": 0
     },
     "lely-core": {
