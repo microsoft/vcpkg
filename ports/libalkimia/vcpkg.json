@@ -29,6 +29,10 @@
       "name": "qt5-base",
       "default-features": false
     },
+    {
+      "name": "qt5-declarative",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",
@@ -40,15 +44,6 @@
     }
   ],
   "features": {
-    "qml": {
-      "description": "Enables QML support",
-      "dependencies": [
-        {
-          "name": "qt5-declarative",
-          "default-features": false
-        }
-      ]
-    },
     "tools": {
       "description": "Enables tools, including Online Quotes Editor"
     },

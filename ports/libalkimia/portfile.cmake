@@ -8,7 +8,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        qml         VCPKG_LOCK_FIND_PACKAGE_Qt5Qml
         tools       BUILD_TOOLS
         webengine   BUILD_WITH_WEBENGINE
 )
@@ -18,7 +17,6 @@ vcpkg_cmake_configure(
     OPTIONS 
         -DBUNDLE_INSTALL_DIR=bin
         -DBUILD_TESTING=OFF
-        -DBUILD_DOXYGEN_DOCS=OFF
         -DBUILD_WITH_WEBKIT=OFF
         -DBUILD_APPLETS=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=1
