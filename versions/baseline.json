@@ -6021,8 +6021,8 @@
       "port-version": 0
     },
     "ltla-cppirlba": {
-      "baseline": "2.0.2",
-      "port-version": 1
+      "baseline": "3.0.1",
+      "port-version": 0
     },
     "ltla-cppkmeans": {
       "baseline": "4.0.4",
