@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 ae9345e0876a80e2f2dfa393d12176215cdcf17ed1985d2e46527d12a3abf4ea2b7796217871b562aaab9c7c876bef226de661d5e9cbdc862c8f49d57e9e8173
     HEAD_REF master
+    PATCHES
+        set_cmake_module_path.patch
 )
 
 if(VCPKG_CROSSCOMPILING)
