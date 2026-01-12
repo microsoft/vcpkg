@@ -92,6 +92,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dds           MDL_BUILD_DDS_PLUGIN
         df-vulkan     MDL_BUILD_SDK_EXAMPLES
         df-vulkan     MDL_ENABLE_VULKAN_EXAMPLES
+        materialx     MDL_ENABLE_MATERIALX
         openimageio   MDL_BUILD_OPENIMAGEIO_PLUGIN
 )
 
