@@ -9129,7 +9129,7 @@
       "port-version": 0
     },
     "slick-object-pool": {
-      "baseline": "0.1.2",
+      "baseline": "0.1.3",
       "port-version": 0
     },
     "slick-queue": {
