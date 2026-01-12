@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         set_cmake_module_path.patch
+        fix_windows_version_resources_generation.patch
 )
 
 if(VCPKG_CROSSCOMPILING)
