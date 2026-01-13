@@ -1,9 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "slick-shm",
-  "version-semver": "0.1.1",
+  "version-semver": "0.1.2",
   "description": "A modern C++17 header-only, cross-platform shared memory library",
-  "homepage": "https://github.com/SlickQuant/slick_shm",
+  "homepage": "https://github.com/SlickQuant/slick-shm",
   "license": "MIT",
   "supports": "windows | linux | osx",
   "dependencies": [
