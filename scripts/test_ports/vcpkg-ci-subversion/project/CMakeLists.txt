@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.30)
-project(subversion-test C)
+project(subversion-test CXX)
 
 block(SCOPE_FOR VARIABLES)
-    add_executable(main main.c)
+    add_executable(main main.cpp)
 
     find_package(unofficial-subversion CONFIG REQUIRED)
     target_link_libraries(main PRIVATE 
