@@ -6,7 +6,7 @@
   "description": "Efficient reliable UDP unicast, UDP multicast, and IPC message transport",
   "homepage": "https://github.com/aeron-io/aeron",
   "license": "Apache-2.0",
-  "supports": "(x64 & !uwp & !xbox) | ((x64 | arm64) & !windows & !android)",
+  "supports": "(x64 & windows & !uwp & !xbox) | ((x64 | arm64) & !windows & !android)",
   "dependencies": [
     {
       "name": "libuuid",
@@ -24,7 +24,7 @@
   "features": {
     "archive": {
       "description": "Build Aeron Archive API for recording and replaying message streams (requires Java)",
-      "supports": "(x64 & !uwp & !xbox) | ((x64 | arm64) & !windows & !android)"
+      "supports": "(x64 & windows & !uwp & !xbox) | ((x64 | arm64) & !windows & !android)"
     }
   }
 }

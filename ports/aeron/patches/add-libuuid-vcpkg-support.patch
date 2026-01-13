@@ -1,8 +1,10 @@
 diff --git a/aeron-driver/src/main/c/CMakeLists.txt b/aeron-driver/src/main/c/CMakeLists.txt
-index xxxxxxx..yyyyyyy 100644
+index 1234567..abcdefg 100644
 --- a/aeron-driver/src/main/c/CMakeLists.txt
 +++ b/aeron-driver/src/main/c/CMakeLists.txt
-@@ -26,19 +26,35 @@ if (NOT MSVC)
+@@ -36,15 +36,39 @@ if (NOT MSVC)
+ endif ()
+
  check_include_file("bsd/stdlib.h" BSDSTDLIB_H_EXISTS)
 -check_include_file("uuid/uuid.h" UUID_H_EXISTS)
  find_library(LIBBSD_EXISTS NAMES bsd libbsd)
@@ -36,12 +38,21 @@ index xxxxxxx..yyyyyyy 100644
 
  if (LIBBSD_EXISTS)
      set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -lbsd")
- endif()
+ endif ()
 
 -if (LIBUUID_EXISTS)
--    set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -luuid")
--endif()
--
 +if (LIBUUID_EXISTS AND NOT AERON_LIB_UUID_LIBS)
-+    set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -luuid")
+     set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -luuid")
+ endif ()
+
+@@ -64,7 +88,9 @@ if (MSVC AND "${CMAKE_SYSTEM_NAME}" MATCHES "Windows")
+     set(WSAPOLL_PROTOTYPE_EXISTS True)
+ endif ()
+
+-check_symbol_exists(uuid_generate "uuid/uuid.h" UUID_GENERATE_PROTOTYPE_EXISTS)
++if(NOT DEFINED UUID_GENERATE_PROTOTYPE_EXISTS OR NOT UUID_GENERATE_PROTOTYPE_EXISTS)
++    check_symbol_exists(uuid_generate "uuid/uuid.h" UUID_GENERATE_PROTOTYPE_EXISTS)
 +endif()
+
+ check_symbol_exists(poll "poll.h" POLL_PROTOTYPE_EXISTS)
+ check_symbol_exists(epoll_create "sys/epoll.h" EPOLL_PROTOTYPE_EXISTS)
