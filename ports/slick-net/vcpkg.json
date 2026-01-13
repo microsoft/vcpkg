@@ -1,9 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "slick-net",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A modern C++20 networking library providing HTTP/HTTPS client, WebSocket/WebSocket Secure client, and HTTP streaming support built on Boost.Beast and Boost.Asio",
-  "homepage": "https://github.com/SlickQuant/slick_net",
+  "homepage": "https://github.com/SlickQuant/slick-net",
   "license": "MIT",
   "supports": "!(uwp | arm)",
   "dependencies": [
@@ -26,6 +26,10 @@
     {
       "name": "openssl",
       "version>=": "3.0.2"
+    },
+    {
+      "name": "slick-queue",
+      "version>=": "1.2.2"
     },
     {
       "name": "vcpkg-cmake",

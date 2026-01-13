@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0b2b6fd..89493aa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,15 +25,5 @@
+ find_package(Boost CONFIG REQUIRED COMPONENTS beast context)
+ find_package(OpenSSL REQUIRED)
+-
+-include(FetchContent)
+-
+-# Disable tests for slick-queue
+-set(BUILD_SLICK_QUEUE_TESTS OFF CACHE BOOL "" FORCE)
+-FetchContent_Declare(
+-    slick-queue
+-    GIT_REPOSITORY https://github.com/SlickQuant/slick-queue.git
+-    GIT_TAG v1.2.2
+-)
+-FetchContent_MakeAvailable(slick-queue)
++find_package(slick-queue 1.2.2 CONFIG REQUIRED)
+ 
+ message(STATUS "OpenSSL: ${OPENSSL_INCLUDE_DIR}")
