@@ -5777,7 +5777,7 @@
       "port-version": 0
     },
     "libxext": {
-      "baseline": "1.3.4",
+      "baseline": "1.3.6",
       "port-version": 0
     },
     "libxfixes": {
