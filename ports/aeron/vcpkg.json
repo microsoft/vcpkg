@@ -8,7 +8,10 @@
   "license": "Apache-2.0",
   "supports": "(x64 & !uwp & !xbox) | ((x64 | arm64) & !windows & !android)",
   "dependencies": [
-    "libuuid",
+    {
+      "name": "libuuid",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
