@@ -1,11 +1,12 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO steinm/pxlib
     REF cd65ac2255a02612a9b2c25bf4f17684ab391d38
     SHA512 c113cf00b876ce4ec28d97b11fb4ace16a6798756fbcb398d0f5a54064cbe03834610925890463356d9ae16514717b4637fa2a87a8f2504ed13703ecd4ce64da
     HEAD_REF master
+    PATCHES
+        add_cmake_config.patch
+        add_extern_c.patch
 )
 
 vcpkg_cmake_configure(
@@ -14,27 +15,12 @@ vcpkg_cmake_configure(
         -DENABLE_GSF=OFF
 )
 
-vcpkg_cmake_build(TARGET pxlib)
-
-if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pxlib.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/pxlib.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    else()
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}pxlib${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-    endif()
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/include/paradox.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-endif()
-if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pxlib.dll" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/pxlib.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    else()
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${VCPKG_TARGET_SHARED_LIBRARY_PREFIX}pxlib${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-    endif()
-    file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/include/paradox.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
-endif()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-pxlib)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
