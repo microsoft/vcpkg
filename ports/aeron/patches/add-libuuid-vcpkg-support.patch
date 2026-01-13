@@ -9,8 +9,8 @@ index xxxxxxx..yyyyyyy 100644
 -find_library(LIBUUID_EXISTS NAMES uuid libuuid libuuid.dll)
 +find_library(LIBUUID_SYSTEM NAMES uuid libuuid libuuid.dll)
 +
-+# In vcpkg builds, use vcpkg's libuuid
-+if(DEFINED VCPKG_TOOLCHAIN)
++# In vcpkg builds on Linux, use vcpkg's libuuid
++if(DEFINED VCPKG_TOOLCHAIN AND CMAKE_SYSTEM_NAME MATCHES "Linux")
 +    find_package(unofficial-libuuid QUIET CONFIG)
 +    if(TARGET unofficial::UUID::uuid)
 +        get_target_property(UUID_INCLUDE_DIR unofficial::UUID::uuid INTERFACE_INCLUDE_DIRECTORIES)
