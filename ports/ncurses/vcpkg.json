@@ -1,7 +1,7 @@
 {
   "name": "ncurses",
   "version": "6.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "Free software emulation of curses in System V Release 4.0, and more.",
     "This port installs a wide character configuration (ncursesw)."
@@ -12,6 +12,10 @@
   "dependencies": [
     {
       "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-make",
       "host": true
     }
   ],

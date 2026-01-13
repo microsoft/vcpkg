@@ -6766,7 +6766,7 @@
     },
     "ncurses": {
       "baseline": "6.5",
-      "port-version": 1
+      "port-version": 2
     },
     "ndis-driver-library": {
       "baseline": "1.2.0",
@@ -7882,7 +7882,7 @@
     },
     "python3": {
       "baseline": "3.12.9",
-      "port-version": 7
+      "port-version": 8
     },
     "qca": {
       "baseline": "2.3.7",
@@ -10273,7 +10273,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-10-26",
+      "baseline": "2026-01-01",
       "port-version": 0
     },
     "vcpkg-msbuild": {
