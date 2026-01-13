@@ -2873,8 +2873,8 @@
       "port-version": 0
     },
     "fastcgi": {
-      "baseline": "2020-09-11",
-      "port-version": 5
+      "baseline": "2.4.7",
+      "port-version": 0
     },
     "fastdds": {
       "baseline": "3.4.1",
