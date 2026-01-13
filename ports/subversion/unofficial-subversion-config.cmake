@@ -1,10 +1,15 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(apr CONFIG)
+find_package(apr CONFIG QUIET)
+if(NOT apr_FOUND)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(APR REQUIRED IMPORTED_TARGET apr-1)
+endif()
 
 find_path(SUBVERSION_INCLUDE_DIR 
     NAMES svn_client.h
     PATH_SUFFIXES subversion-1
+    HINTS "${CMAKE_CURRENT_LIST_DIR}/../../include"
 )
 
 set(_subversion_libs
@@ -24,16 +29,18 @@ set(_subversion_libs
     svn_wc
 )
 
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
+
 foreach(_lib ${_subversion_libs})
     find_library(SUBVERSION_${_lib}_LIBRARY_RELEASE
-        NAMES ${_lib}-1 lib${_lib}-1
-        PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib
+        NAMES ${_lib}-1.a ${_lib}-1 lib${_lib}-1.a lib${_lib}-1
+        PATHS "${_IMPORT_PREFIX}/lib"
         NO_DEFAULT_PATH
     )
     
     find_library(SUBVERSION_${_lib}_LIBRARY_DEBUG
-        NAMES ${_lib}-1 lib${_lib}-1 ${_lib}-1d lib${_lib}-1d
-        PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib
+        NAMES ${_lib}-1.a ${_lib}-1 lib${_lib}-1.a lib${_lib}-1 ${_lib}-1d.a ${_lib}-1d lib${_lib}-1d.a lib${_lib}-1d
+        PATHS "${_IMPORT_PREFIX}/debug/lib"
         NO_DEFAULT_PATH
     )
     
@@ -62,10 +69,12 @@ foreach(_lib ${_subversion_libs})
             INTERFACE_INCLUDE_DIRECTORIES "${SUBVERSION_INCLUDE_DIR}"
         )
         
-        if(WIN32 AND BUILD_SHARED_LIBS)
+        if(TARGET apr::libapr-1)
             target_link_libraries(unofficial::subversion::${_lib} INTERFACE apr::libapr-1)
-        else()
+        elseif(TARGET apr::apr-1)
             target_link_libraries(unofficial::subversion::${_lib} INTERFACE apr::apr-1)
+        elseif(TARGET PkgConfig::APR)
+            target_link_libraries(unofficial::subversion::${_lib} INTERFACE PkgConfig::APR)
         endif()
 
         if(NOT BUILD_SHARED_LIBS)
@@ -74,6 +83,12 @@ foreach(_lib ${_subversion_libs})
             find_dependency(expat CONFIG REQUIRED)
             find_dependency(unofficial-sqlite3 CONFIG REQUIRED)
             
+            # Find serf and apr-util libraries directly on non-Windows
+            if(NOT WIN32)
+                find_library(_SERF_LIBRARY NAMES serf-1 libserf-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
+                find_library(_APR_UTIL_LIBRARY NAMES aprutil-1 libaprutil-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
+            endif()
+            
             target_link_libraries(unofficial::subversion::${_lib} INTERFACE
                 OpenSSL::SSL
                 OpenSSL::Crypto
@@ -81,6 +96,15 @@ foreach(_lib ${_subversion_libs})
                 expat::expat
                 unofficial::sqlite3::sqlite3
             )
+            
+            if(NOT WIN32)
+                if(_SERF_LIBRARY)
+                    target_link_libraries(unofficial::subversion::${_lib} INTERFACE "${_SERF_LIBRARY}")
+                endif()
+                if(_APR_UTIL_LIBRARY)
+                    target_link_libraries(unofficial::subversion::${_lib} INTERFACE "${_APR_UTIL_LIBRARY}")
+                endif()
+            endif()
             
             if(WIN32)
                 target_link_libraries(unofficial::subversion::${_lib} INTERFACE crypt32 ws2_32 version)
