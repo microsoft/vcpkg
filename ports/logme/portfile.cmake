@@ -1,0 +1,49 @@
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO efmsoft/logme
+  REF v1.6.0
+  SHA512 6749152e0c79ae5979867b0368234459040f7dcac861d47585fce53095512d06c3a2325a6160b7a7ac53a34a5279419e0715a8f28ea8f00aee6cff40b5f0bf63
+  HEAD_REF master
+)
+
+vcpkg_check_features(
+  OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    examples LOGME_BUILD_EXAMPLES
+    tests    LOGME_BUILD_TESTS
+    tools    LOGME_BUILD_TOOLS
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  set(_LOGME_BUILD_STATIC ON)
+  set(_LOGME_BUILD_DYNAMIC OFF)
+  set(_USE_LOGME_SHARED OFF)
+else()
+  set(_LOGME_BUILD_STATIC OFF)
+  set(_LOGME_BUILD_DYNAMIC ON)
+  set(_USE_LOGME_SHARED ON)
+endif()
+
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -DLOGME_BUILD_STATIC=${_LOGME_BUILD_STATIC}
+    -DLOGME_BUILD_DYNAMIC=${_LOGME_BUILD_DYNAMIC}
+    -DUSE_LOGME_SHARED=${_USE_LOGME_SHARED}
+    ${FEATURE_OPTIONS}
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(
+  PACKAGE_NAME logme
+  CONFIG_PATH lib/cmake/logme
+)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

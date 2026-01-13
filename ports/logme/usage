@@ -1,0 +1,8 @@
+logme provides CMake package config files.
+
+In your CMakeLists.txt:
+
+  find_package(logme CONFIG REQUIRED)
+  target_link_libraries(your_target PRIVATE logme::logme)
+
+The logme::logme target is stable for both static and shared builds.

@@ -1,0 +1,25 @@
+{
+  "name": "logme",
+  "version": "1.6.0",
+  "description": "Cross-platform C/C++ logging framework: channels and routing, multiple backends, colored output, and runtime dynamic control.",
+  "homepage": "https://github.com/efmsoft/logme",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ],
+  "features": {
+    "examples": {
+      "description": "Build examples."
+    },
+    "tests": {
+      "description": "Build tests.",
+      "dependencies": [
+        "gtest"
+      ]
+    },
+    "tools": {
+      "description": "Build command-line tools."
+    }
+  }
+}
