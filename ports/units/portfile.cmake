@@ -14,6 +14,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH share/units/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/units)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")  # from CMake config
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
