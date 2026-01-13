@@ -38,12 +38,12 @@
 ##
 
 # Add new items alphabetically
-apr:arm-neon-android=fail
-apr:arm64-android=fail
-apr:x64-android=fail
 aeron:arm-neon-android=fail
 aeron:arm64-android=fail
 aeron:x64-android=fail
+apr:arm-neon-android=fail
+apr:arm64-android=fail
+apr:x64-android=fail
 apsi:arm-neon-android=fail
 apsi:x64-android=fail
 arpack-ng:x64-windows-static-md=fail
