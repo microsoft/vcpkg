@@ -56,3 +56,21 @@ index 1234567..abcdefg 100644
 
  check_symbol_exists(poll "poll.h" POLL_PROTOTYPE_EXISTS)
  check_symbol_exists(epoll_create "sys/epoll.h" EPOLL_PROTOTYPE_EXISTS)
+@@ -387,7 +413,7 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+         set(AERON_LIB_BSD_LIBS bsd)
+     endif ()
+
+-    if (LIBUUID_EXISTS)
++    if (LIBUUID_EXISTS AND NOT AERON_LIB_UUID_LIBS)
+         set(AERON_LIB_UUID_LIBS uuid)
+     endif ()
+
+@@ -400,7 +426,7 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+ endif ()
+
+ if (CYGWIN)
+-    if (LIBUUID_EXISTS)
++    if (LIBUUID_EXISTS AND NOT AERON_LIB_UUID_LIBS)
+         set(AERON_LIB_UUID_LIBS uuid)
+     endif ()
+ endif ()
