@@ -1,6 +1,6 @@
 {
   "name": "stlab-copy-on-write",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "stlab copy-on-write library",
   "homepage": "https://github.com/stlab/copy-on-write",
   "license": "BSL-1.0",

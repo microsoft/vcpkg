@@ -1,0 +1,6 @@
+include(CMakeFindDependencyMacro)
+find_dependency(CURL)
+find_dependency(libwebsockets)
+find_dependency(OpenSSL)
+find_dependency(yaml)
+include("${CMAKE_CURRENT_LIST_DIR}/kubernetesTargets.cmake")

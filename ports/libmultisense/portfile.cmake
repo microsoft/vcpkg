@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO carnegierobotics/LibMultiSense
     REF ${VERSION}
-    SHA512 69472f288de46c0ecdbbbcb8c280610c1c80778d660098e3b639ab653b108096c3fb4cd92a21afd4745b959a0c80812c5bf2d42053760bbceeafd90e67c20388
+    SHA512 ccb865c6bfaed6a415cd7acf22ca24921ef53e8ac71f2f213f89fe2cdd24893d60507cba6ea60f2d690b834d3eb3631fc80da657936738028ee5ffac986f0ae8
     HEAD_REF master
     PATCHES
         0000-platform-specific-links.patch
         0001-find-public-api-dependencies.patch
         0002-disable-error-on-warning.patch
-        0003-utilities-cc-unreachable-code.patch
 )
 
 vcpkg_check_features(
@@ -46,6 +45,7 @@ if ("utilities" IN_LIST FEATURES)
     set(_tool_names
         ChangeIpUtility
         ImageCalUtility
+        MultiChannelUtility
         PointCloudUtility
         RectifiedFocalLengthUtility
         SaveImageUtility
@@ -66,6 +66,7 @@ if ("utilities" IN_LIST FEATURES)
         change_ip_utility.py
         device_info_utility.py
         image_cal_utility.py
+        multi_channel_utility.py
         point_cloud_utility.py
         rectified_focal_length_utility.py
         save_image_utility.py

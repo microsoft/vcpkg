@@ -1,6 +1,7 @@
 {
   "name": "gegl",
   "version": "0.4.66",
+  "port-version": 1,
   "description": "Generic Graphical Library.",
   "homepage": "https://gegl.org/",
   "license": "LGPL-3.0-or-later",
@@ -16,6 +17,15 @@
     }
   ],
   "features": {
+    "cairo": {
+      "description": "Add cairo support",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false
+        }
+      ]
+    },
     "introspection": {
       "description": "Enable introspection",
       "supports": "!static",

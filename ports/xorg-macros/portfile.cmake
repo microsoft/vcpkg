@@ -3,7 +3,8 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(PATCHES skip_rawcpp.patch)
@@ -13,8 +14,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO util/macros
-    REF  b8766308d2f78bc572abe5198007cf7aeec9b761 #v1.19.3
-    SHA512 dc7383b1579dc6ef0473161764096c8161f23a4c4ba2182e7abd7f73f443eb0520e02f1dfaaba2f8ebb43e0ed93c1e6e5e7cf517561476b858d2471a8ecaf907
+    REF  "util-macros-${VERSION}"
+    SHA512 e3c8b625ac7bcb1d34869bece133d6c557e1c6e92ae7ecbfcb4e05a61006a600515e2aab51af2e1a00d9482a270265eda8e7c05f599dc5a007e996aac32db46b
     HEAD_REF master
     PATCHES ${PATCHES}
 ) 
@@ -64,4 +65,3 @@ vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()

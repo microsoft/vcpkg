@@ -279,9 +279,6 @@ gobject-introspection:arm64-windows=fail
 gobject-introspection:x64-android=fail
 graphicsmagick:arm64-uwp=fail
 graphicsmagick:x64-uwp=fail
-graphviz:arm-neon-android=fail
-graphviz:arm64-android=fail
-graphviz:x64-android=fail
 # gsoap does not offer stable public source downloads
 gsoap:x64-android=fail
 gsoap:x64-windows-release=skip
@@ -731,6 +728,7 @@ xbitmaps:arm-neon-android=fail
 xbitmaps:arm64-android=fail
 xbitmaps:arm64-osx=skip
 xbitmaps:x64-android=fail
+xbitmaps:x64-linux=fail
 zeroc-ice:arm-neon-android=fail
 zeroc-ice:arm64-android=fail
 zeroc-ice:x64-android=fail
@@ -747,7 +745,6 @@ zookeeper:x64-windows-static=fail
 zookeeper:x64-windows=fail
 zookeeper:x86-windows=fail
 zyre:arm64-windows-static-md=fail
-zyre:x64-windows-static-md=fail
 
 # Ports which needs to pass in CI
 cmake:arm64-osx=pass
@@ -1009,6 +1006,7 @@ vcpkg-ci-vxl:x64-windows-static-md=pass
 vcpkg-ci-vxl:x64-windows-static=pass
 vcpkg-ci-vxl:x64-windows=pass
 vcpkg-ci-vxl:x86-windows=pass
+vcpkg-ci-wxwidgets:arm64-osx=pass
 vcpkg-ci-wxwidgets:arm64-windows-static-md=pass
 vcpkg-ci-wxwidgets:arm64-windows=pass
 vcpkg-ci-wxwidgets:x64-linux=pass

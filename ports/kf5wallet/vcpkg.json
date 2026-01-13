@@ -1,8 +1,8 @@
 {
   "name": "kf5wallet",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Safe desktop-wide storage for passwords",
-  "homepage": "https://api.kde.org/frameworks/kwallet/html/index.html",
+  "homepage": "https://api.kde.org/kwallet-index.html",
   "dependencies": [
     "ecm",
     "gettext",
