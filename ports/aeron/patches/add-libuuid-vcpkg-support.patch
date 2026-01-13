@@ -2,9 +2,9 @@ diff --git a/aeron-driver/src/main/c/CMakeLists.txt b/aeron-driver/src/main/c/CM
 index xxxxxxx..yyyyyyy 100644
 --- a/aeron-driver/src/main/c/CMakeLists.txt
 +++ b/aeron-driver/src/main/c/CMakeLists.txt
-@@ -26,7 +26,20 @@ if (NOT MSVC)
+@@ -26,19 +26,35 @@ if (NOT MSVC)
  check_include_file("bsd/stdlib.h" BSDSTDLIB_H_EXISTS)
- check_include_file("uuid/uuid.h" UUID_H_EXISTS)
+-check_include_file("uuid/uuid.h" UUID_H_EXISTS)
  find_library(LIBBSD_EXISTS NAMES bsd libbsd)
 -find_library(LIBUUID_EXISTS NAMES uuid libuuid libuuid.dll)
 +find_library(LIBUUID_SYSTEM NAMES uuid libuuid libuuid.dll)
@@ -23,9 +23,25 @@ index xxxxxxx..yyyyyyy 100644
 +        set(UUID_H_EXISTS TRUE)
 +        set(UUID_GENERATE_PROTOTYPE_EXISTS TRUE)
 +    endif()
-+else()
++endif()
++
++if(NOT DEFINED LIBUUID_EXISTS OR NOT LIBUUID_EXISTS)
 +    set(LIBUUID_EXISTS ${LIBUUID_SYSTEM})
 +endif()
- 
++
++# Only check for uuid headers if not found via vcpkg
++if(NOT DEFINED UUID_H_EXISTS OR NOT UUID_H_EXISTS)
++    check_include_file("uuid/uuid.h" UUID_H_EXISTS)
++endif()
+
  if (LIBBSD_EXISTS)
      set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -lbsd")
+ endif()
+
+-if (LIBUUID_EXISTS)
+-    set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -luuid")
+-endif()
+-
++if (LIBUUID_EXISTS AND NOT AERON_LIB_UUID_LIBS)
++    set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -luuid")
++endif()
