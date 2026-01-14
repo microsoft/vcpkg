@@ -7145,7 +7145,7 @@
       "port-version": 0
     },
     "openblas": {
-      "baseline": "0.3.29",
+      "baseline": "0.3.30",
       "port-version": 0
     },
     "opencascade": {
