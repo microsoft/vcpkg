@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF trunk
 )
 
-# Generate the CMake targets file required by the build
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_execute_required_process(
     COMMAND "${PYTHON3}" gen-make.py -t cmake
@@ -38,15 +37,12 @@ vcpkg_copy_tools(TOOL_NAMES
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(
     INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-subversion-config.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-subversion"
 )
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

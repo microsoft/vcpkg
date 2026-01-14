@@ -31,6 +31,11 @@ set(_subversion_libs
 
 get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_DIR}/../../" ABSOLUTE)
 
+find_library(_SERF_LIBRARY_RELEASE NAMES serf-1 libserf-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
+find_library(_SERF_LIBRARY_DEBUG NAMES serf-1 libserf-1 PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
+find_library(_APR_UTIL_LIBRARY_RELEASE NAMES aprutil-1 libaprutil-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
+find_library(_APR_UTIL_LIBRARY_DEBUG NAMES aprutil-1 libaprutil-1 PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
+
 foreach(_lib ${_subversion_libs})
     find_library(SUBVERSION_${_lib}_LIBRARY_RELEASE
         NAMES ${_lib}-1.a ${_lib}-1 lib${_lib}-1.a lib${_lib}-1
@@ -83,12 +88,6 @@ foreach(_lib ${_subversion_libs})
             find_dependency(expat CONFIG REQUIRED)
             find_dependency(unofficial-sqlite3 CONFIG REQUIRED)
             
-            # Find serf and apr-util libraries
-            find_library(_SERF_LIBRARY_RELEASE NAMES serf-1 libserf-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
-            find_library(_APR_UTIL_LIBRARY_RELEASE NAMES aprutil-1 libaprutil-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
-            find_library(_SERF_LIBRARY_DEBUG NAMES serf-1 libserf-1 PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
-            find_library(_APR_UTIL_LIBRARY_DEBUG NAMES aprutil-1 libaprutil-1 PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
-            
             target_link_libraries(unofficial::subversion::${_lib} INTERFACE
                 OpenSSL::SSL
                 OpenSSL::Crypto
@@ -99,14 +98,13 @@ foreach(_lib ${_subversion_libs})
             
             if(_SERF_LIBRARY_RELEASE OR _SERF_LIBRARY_DEBUG)
                 target_link_libraries(unofficial::subversion::${_lib} INTERFACE
-                    "$<$<CONFIG:Release>:${_SERF_LIBRARY_RELEASE}>"
-                    "$<$<CONFIG:Debug>:${_SERF_LIBRARY_DEBUG}>"
+                    "$<IF:$<CONFIG:Debug>,${_SERF_LIBRARY_DEBUG},${_SERF_LIBRARY_RELEASE}>"
                 )
             endif()
+
             if(_APR_UTIL_LIBRARY_RELEASE OR _APR_UTIL_LIBRARY_DEBUG)
                 target_link_libraries(unofficial::subversion::${_lib} INTERFACE
-                    "$<$<CONFIG:Release>:${_APR_UTIL_LIBRARY_RELEASE}>"
-                    "$<$<CONFIG:Debug>:${_APR_UTIL_LIBRARY_DEBUG}>"
+                    "$<IF:$<CONFIG:Debug>,${_APR_UTIL_LIBRARY_DEBUG},${_APR_UTIL_LIBRARY_RELEASE}>"
                 )
             endif()
             
@@ -172,3 +170,10 @@ find_package_handle_standard_args(unofficial-subversion
 )
 
 mark_as_advanced(SUBVERSION_INCLUDE_DIR)
+
+unset(_IMPORT_PREFIX)
+unset(_subversion_libs)
+unset(_SERF_LIBRARY_RELEASE CACHE)
+unset(_SERF_LIBRARY_DEBUG CACHE)
+unset(_APR_UTIL_LIBRARY_RELEASE CACHE)
+unset(_APR_UTIL_LIBRARY_DEBUG CACHE)
