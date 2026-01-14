@@ -1,7 +1,7 @@
 {
   "name": "python3",
   "version": "3.12.9",
-  "port-version": 7,
+  "port-version": 8,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -73,10 +73,6 @@
         {
           "name": "liblzma",
           "default-features": false
-        },
-        {
-          "name": "ncurses",
-          "platform": "!windows | mingw"
         },
         {
           "name": "openssl",
