@@ -3697,8 +3697,8 @@
       "port-version": 0
     },
     "halide": {
-      "baseline": "18.0.0",
-      "port-version": 1
+      "baseline": "21.0.0",
+      "port-version": 0
     },
     "hanjingo-high-jump": {
       "baseline": "1.0.4",
@@ -5138,7 +5138,7 @@
     },
     "libmem": {
       "baseline": "5.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libmemcached-awesome": {
       "baseline": "1.1.4",
@@ -5985,8 +5985,8 @@
       "port-version": 0
     },
     "llvm": {
-      "baseline": "18.1.6",
-      "port-version": 5
+      "baseline": "21.1.8",
+      "port-version": 0
     },
     "lmdb": {
       "baseline": "0.9.33",
@@ -9637,8 +9637,8 @@
       "port-version": 0
     },
     "symengine": {
-      "baseline": "0.11.2",
-      "port-version": 2
+      "baseline": "0.14.0",
+      "port-version": 0
     },
     "syscalls-cpp": {
       "baseline": "1.1.1",
