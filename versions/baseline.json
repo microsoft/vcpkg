@@ -7521,8 +7521,8 @@
       "port-version": 0
     },
     "pffft": {
-      "baseline": "2021-10-09",
-      "port-version": 1
+      "baseline": "1.0.0",
+      "port-version": 0
     },
     "pfring": {
       "baseline": "8.8.0",
