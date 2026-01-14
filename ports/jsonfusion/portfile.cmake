@@ -6,8 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# Install JsonFusion headers, excluding experimental 3party directory
+# (3party is only used with JSONFUSION_FP_BACKEND=1, default is 0 with in-house implementation)
 file(INSTALL "${SOURCE_PATH}/include/JsonFusion" 
-     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+     DESTINATION "${CURRENT_PACKAGES_DIR}/include"
+     PATTERN "3party" EXCLUDE)
 
 # Install license
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.md")
