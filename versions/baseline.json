@@ -7453,7 +7453,7 @@
       "port-version": 0
     },
     "parson": {
-      "baseline": "2023-10-31",
+      "baseline": "1.5.3",
       "port-version": 0
     },
     "pbc": {
