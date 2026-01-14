@@ -5777,7 +5777,7 @@
       "port-version": 4
     },
     "libxdmcp": {
-      "baseline": "1.1.3",
+      "baseline": "1.1.5",
       "port-version": 0
     },
     "libxext": {
