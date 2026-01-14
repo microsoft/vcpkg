@@ -5745,7 +5745,7 @@
       "port-version": 4
     },
     "libxau": {
-      "baseline": "1.0.9",
+      "baseline": "1.0.12",
       "port-version": 0
     },
     "libxaw": {
