@@ -10,6 +10,7 @@ vcpkg_extract_source_archive(
     PATCHES
       serf-fix-expat.patch
       serf-use-debug-libs.patch
+      add-msvc145-support.patch
 )
 
 # Note: custom architecture is not supported on Unix.

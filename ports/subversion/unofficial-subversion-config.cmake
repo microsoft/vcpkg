@@ -83,11 +83,11 @@ foreach(_lib ${_subversion_libs})
             find_dependency(expat CONFIG REQUIRED)
             find_dependency(unofficial-sqlite3 CONFIG REQUIRED)
             
-            # Find serf and apr-util libraries directly on non-Windows
-            if(NOT WIN32)
-                find_library(_SERF_LIBRARY NAMES serf-1 libserf-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
-                find_library(_APR_UTIL_LIBRARY NAMES aprutil-1 libaprutil-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
-            endif()
+            # Find serf and apr-util libraries
+            find_library(_SERF_LIBRARY_RELEASE NAMES serf-1 libserf-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
+            find_library(_APR_UTIL_LIBRARY_RELEASE NAMES aprutil-1 libaprutil-1 PATHS "${_IMPORT_PREFIX}/lib" NO_DEFAULT_PATH)
+            find_library(_SERF_LIBRARY_DEBUG NAMES serf-1 libserf-1 PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
+            find_library(_APR_UTIL_LIBRARY_DEBUG NAMES aprutil-1 libaprutil-1 PATHS "${_IMPORT_PREFIX}/debug/lib" NO_DEFAULT_PATH)
             
             target_link_libraries(unofficial::subversion::${_lib} INTERFACE
                 OpenSSL::SSL
@@ -97,17 +97,21 @@ foreach(_lib ${_subversion_libs})
                 unofficial::sqlite3::sqlite3
             )
             
-            if(NOT WIN32)
-                if(_SERF_LIBRARY)
-                    target_link_libraries(unofficial::subversion::${_lib} INTERFACE "${_SERF_LIBRARY}")
-                endif()
-                if(_APR_UTIL_LIBRARY)
-                    target_link_libraries(unofficial::subversion::${_lib} INTERFACE "${_APR_UTIL_LIBRARY}")
-                endif()
+            if(_SERF_LIBRARY_RELEASE OR _SERF_LIBRARY_DEBUG)
+                target_link_libraries(unofficial::subversion::${_lib} INTERFACE
+                    "$<$<CONFIG:Release>:${_SERF_LIBRARY_RELEASE}>"
+                    "$<$<CONFIG:Debug>:${_SERF_LIBRARY_DEBUG}>"
+                )
+            endif()
+            if(_APR_UTIL_LIBRARY_RELEASE OR _APR_UTIL_LIBRARY_DEBUG)
+                target_link_libraries(unofficial::subversion::${_lib} INTERFACE
+                    "$<$<CONFIG:Release>:${_APR_UTIL_LIBRARY_RELEASE}>"
+                    "$<$<CONFIG:Debug>:${_APR_UTIL_LIBRARY_DEBUG}>"
+                )
             endif()
             
             if(WIN32)
-                target_link_libraries(unofficial::subversion::${_lib} INTERFACE crypt32 ws2_32 version)
+                target_link_libraries(unofficial::subversion::${_lib} INTERFACE crypt32 ws2_32 version secur32)
             endif()
         endif()
     endif()
