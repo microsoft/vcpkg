@@ -1685,8 +1685,8 @@
       "port-version": 0
     },
     "cgns": {
-      "baseline": "4.5.0",
-      "port-version": 1
+      "baseline": "4.5.1",
+      "port-version": 0
     },
     "chaiscript": {
       "baseline": "6.1.0",
