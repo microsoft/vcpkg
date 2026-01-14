@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO man-group/sparrow
     REF "${VERSION}"
-    SHA512 d64ce9eb8b99aeae63cfe16187bdf1182039d4c5fcf76f5de9f1863c65d74650fbac7f2f05200e2b5458fa67a4844f6379cb92015fde49b3f9abc2f8ef5183c4
+    SHA512 9076fa8ddf284f54bb94437b4e5242ef3b8ee4b4127512e8f18fe8798d5715a21acc8fe9402ec7dec2f272c0b1a832cb091640fd67b2bcbc4fa2fdc096e6c935
     HEAD_REF main
 )
 
