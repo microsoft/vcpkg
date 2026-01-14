@@ -4,13 +4,15 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
 else()
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
+    GITLAB_URL "https://gitlab.freedesktop.org/xorg"
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxi
-    REF f24d7f43ab4d97203e60677a3d42e11dbc80c8b4 # 1.8
-    SHA512 bc98d03f1c53f26d0c2063de5a0b58951c9db44dfcfb44519efca89f20c8f8f50599c264d11546357164430f3486dd263742657de426cc7fbb3a306be0bc8866
+    REPO "lib/libxi"
+    REF "libXi-${VERSION}"
+    SHA512 3928777184c89f93182d5d6b0d8e37e0ec797c37c0e73305ac843a8c874c3c1261e37338d61edf526e9ca74120bf6dcc1832760ebe9af2550e9f8279dd2f6f6f
     HEAD_REF master
-) 
+    PATCHES
+        fix-configure.patch
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -31,5 +33,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 endif()
