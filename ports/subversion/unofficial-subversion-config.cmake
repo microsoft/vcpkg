@@ -1,7 +1,7 @@
 include(CMakeFindDependencyMacro)
 
 find_package(apr CONFIG QUIET)
-if(NOT apr_FOUND)
+if(NOT apr_FOUND AND NOT WIN32)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(APR REQUIRED IMPORTED_TARGET apr-1)
 endif()
