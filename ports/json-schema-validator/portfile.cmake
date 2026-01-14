@@ -1,17 +1,9 @@
-vcpkg_download_distfile(PATCH_JSON_SCHEMA_VALIDATOR_PR_315
-    URLS https://github.com/pboettch/json-schema-validator/commit/0034c113477f83c28d4380de1ee189c25b1168e6.patch
-    SHA512 5c165b50813b0d9937ff0eb4d4a81e2d1e77718ac3b0d02b93931c8eddb4e06e4fae1822c5cc97a5b01c995916a29d0af03fcbcd8f059cb29cfeb0e2371b15e3
-    FILENAME 0034c113477f83c28d4380de1ee189c25b1168e6.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pboettch/json-schema-validator
     REF "${VERSION}"
-    SHA512 6d207031acdb94c44f96ff6346dccaf98f2c9d3619d71e419ddabff548ea34d50e8eb103622c99ae28ecb7fddedd687b297e5ad934aa0106c58ac59fc4d65ea9
+    SHA512 67d7ffbee7fe0761171d021d66955c760ee02161a1fb3a3eb89e15cb3f320cb4646f5ae7f9c15ddf50b9ad4312dd03af4eb5c88f7427da9426f0ce4afb67ee59
     HEAD_REF master
-    PATCHES
-        "${PATCH_JSON_SCHEMA_VALIDATOR_PR_315}"
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" BUILD_SHARED_LIBS)

@@ -1,29 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3fd81ed..357ec01 100644
+index c9528bd..0fd9f26 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -233,7 +233,7 @@ target_link_libraries(${BTCPP_LIBRARY}
-         foonathan::lexy
-         minitrace::minitrace
-         tinyxml2::tinyxml2
--        minicoro::minicoro
-+        $<BUILD_INTERFACE:minicoro::minicoro>
-         flatbuffers::flatbuffers
-         $<$<BOOL:${BTCPP_GROOT_INTERFACE}>:cppzmq>
-         $<$<BOOL:${BTCPP_SQLITE_LOGGING}>:SQLite::SQLite3>
+@@ -231,7 +231,7 @@ target_link_libraries(${BTCPP_LIBRARY}
+         ${CMAKE_DL_LIBS}
+         $<BUILD_INTERFACE:foonathan::lexy>
+         $<BUILD_INTERFACE:minitrace::minitrace>
+-        $<BUILD_INTERFACE:tinyxml2::tinyxml2>
++        tinyxml2::tinyxml2
+         $<BUILD_INTERFACE:minicoro::minicoro>
+         $<BUILD_INTERFACE:flatbuffers::flatbuffers>
+     PUBLIC
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
 index eaed471..dd8a4a8 100644
 --- a/cmake/Config.cmake.in
 +++ b/cmake/Config.cmake.in
-@@ -1,5 +1,13 @@
+@@ -1,5 +1,10 @@
  @PACKAGE_INIT@
  
 +include(CMakeFindDependencyMacro)
 +
 +find_dependency(Threads)
-+find_dependency(flatbuffers CONFIG)
-+find_dependency(lexy CONFIG)
-+find_dependency(minitrace CONFIG)
 +find_dependency(tinyxml2 CONFIG)
 +
  include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")

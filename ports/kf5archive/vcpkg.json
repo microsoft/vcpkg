@@ -1,14 +1,17 @@
 {
   "name": "kf5archive",
-  "version": "5.98.0",
-  "port-version": 1,
+  "version": "5.116.0",
   "description": "File compression",
-  "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
+  "homepage": "https://api.kde.org/karchive-index.html",
   "license": "LGPL-2.0-or-later",
   "supports": "!xbox",
   "dependencies": [
     "ecm",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-tools",
     {
       "name": "vcpkg-cmake",
       "host": true

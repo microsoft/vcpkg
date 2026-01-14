@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/karchive
-    REF v5.98.0
-    SHA512 3477280f319cb37e18c59d874f5bcf4db5c76e3572af6e2c91bad1135f16a2eb1c9fcc0ec9895790031e6d459b94eeb14be10ea7aab0660d037241bdf6662358
+    REF "v${VERSION}"
+    SHA512 2423f6f99a610cf376f14f95fe8af9f9b66a7ce95d082773442cb27046a0bde9d0b80cb5e9798bb44147e27b6749b834034321b13f109482daef60634ee97a69
     HEAD_REF master
     PATCHES
         control-dependencies.patch
@@ -27,7 +27,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Archive CONFIG_PATH lib/cmake/KF5Archive)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Archive)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -39,4 +39,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

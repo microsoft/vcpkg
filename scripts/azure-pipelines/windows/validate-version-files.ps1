@@ -1,4 +1,4 @@
-./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose |
+./vcpkg.exe x-ci-verify-versions --verbose |
 ForEach-Object -Begin {
   $long_error = ''
 } -Process {

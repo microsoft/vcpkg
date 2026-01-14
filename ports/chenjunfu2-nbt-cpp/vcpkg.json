@@ -1,6 +1,6 @@
 {
   "name": "chenjunfu2-nbt-cpp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A header-only C++ library for [NBT(Named Binary Tag)]",
   "homepage": "https://github.com/chenjunfu2/NBT_CPP",
   "license": "MIT",

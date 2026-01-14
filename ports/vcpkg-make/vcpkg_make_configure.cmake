@@ -4,11 +4,15 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 function(vcpkg_make_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "AUTORECONF;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_TRANSFORMATIONS"
-        "SOURCE_PATH"
+        "SOURCE_PATH;DEFAULT_OPTIONS_EXCLUDE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
 
     z_vcpkg_unparsed_args(FATAL_ERROR)
+
+    if(arg_DISABLE_DEFAULT_OPTIONS AND arg_DEFAULT_OPTIONS_EXCLUDE)
+        message(FATAL_ERROR "DISABLE_DEFAULT_OPTIONS cannot be used together with DEFAULT_OPTIONS_EXCLUDE.")
+    endif()
 
     # Can be set in the triplet to append options for configure
     if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
@@ -97,7 +101,9 @@ function(vcpkg_make_configure)
 
         set(opts "")
         if(NOT arg_DISABLE_DEFAULT_OPTIONS)
-          z_vcpkg_make_default_path_and_configure_options(opts AUTOMAKE CONFIG "${configup}")
+            z_vcpkg_make_default_path_and_configure_options(opts CONFIG "${configup}"
+                EXCLUDE_FILTER "${arg_DEFAULT_OPTIONS_EXCLUDE}"
+            )
         endif()
 
         set(configure_path_from_wd "./${relative_build_path}/configure")

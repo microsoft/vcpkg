@@ -1,8 +1,8 @@
 {
   "name": "kf5newstuff",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Framework for downloading and sharing additional application data",
-  "homepage": "https://api.kde.org/frameworks/knewstuff/html/index.html",
+  "homepage": "https://api.kde.org/knewstuff-index.html",
   "dependencies": [
     "ecm",
     {
