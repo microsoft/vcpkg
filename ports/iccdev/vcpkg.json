@@ -1,18 +1,35 @@
 {
   "name": "iccdev",
-  "version": "2.3.1",
-  "description": "Developer tools for ICC color profiles",
-  "homepage": "https://github.com/InternationalColorConsortium/iccDEV",
+  "version": "2.3.1.2",
+  "description": "Open source libraries and tools for ICC-based color management profiles. Supports both ICC v2/v4 and iccMAX specifications.",
+  "homepage": "https://github.com/InternationalColorConsortium/iccdev",
   "license": "BSD-3-Clause",
-  "supports": "!uwp & !android & (!windows | (x64 & !arm64 & !static & !staticcrt))",
+  "supports": "windows & !(uwp | arm)",
   "dependencies": [
-    "libiconv",
-    "libjpeg-turbo",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "libpng",
+    "libjpeg-turbo",
+    "tiff",
     "libxml2",
     "nlohmann-json",
-    "tiff",
-    "vcpkg-cmake",
-    "vcpkg-cmake-config"
-  ]
+    "liblzma"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build command-line tools (IccFromXml, IccToXml, IccDumpProfile, etc.)",
+      "dependencies": [
+        {
+          "name": "wxwidgets",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

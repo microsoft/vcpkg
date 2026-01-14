@@ -1,0 +1,19 @@
+iccdev provides ICC color profile libraries and tools.
+
+The package provides the following libraries:
+  - IccProfLib2: Core ICC profile library
+  - IccXML2: XML serialization/deserialization for ICC profiles
+
+Usage with CMake:
+  find_package(RefIccMAX CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE IccProfLib2 IccXML2)
+
+Command-line tools (if built with 'tools' feature):
+  - IccFromXml: Create ICC profiles from XML
+  - IccToXml: Convert ICC profiles to XML
+  - IccDumpProfile: Display profile information
+  - IccApplyToLink: Apply ICC profiles to images
+  - IccTiffDump: Extract ICC profiles from TIFF files
+  - And more in ${VCPKG_INSTALLED_DIR}/tools/iccdev/
+
+Documentation: https://github.com/InternationalColorConsortium/iccdev

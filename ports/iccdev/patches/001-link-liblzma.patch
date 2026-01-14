@@ -1,0 +1,41 @@
+diff --git a/Build/Cmake/Tools/IccTiffDump/CMakeLists.txt b/Build/Cmake/Tools/IccTiffDump/CMakeLists.txt
+index abc123..def456 100644
+--- a/Build/Cmake/Tools/IccTiffDump/CMakeLists.txt
++++ b/Build/Cmake/Tools/IccTiffDump/CMakeLists.txt
+@@ -22,8 +22,14 @@ SET( TARGET_NAME iccTiffDump )
+ INCLUDE_DIRECTORIES ( ${SRC_PATH}/Tools/CmdLine/IccApplyProfiles/ )
+ 
+ ADD_EXECUTABLE( ${TARGET_NAME} ${SOURCES} )
+-# TARGET_LINK_LIBRARIES( ${TARGET_NAME} ${TARGET_LIB_ICCPROFLIB} ${TIFF_LIBRARY} )
+-TARGET_LINK_LIBRARIES( ${TARGET_NAME} ${TARGET_LIB_ICCPROFLIB} ${TIFF_LIBRARY} ${JPEG_LIBRARY} ${ZLIB_LIBRARY} )
++
++# Find liblzma for TIFF dependency
++find_package(LibLZMA QUIET)
++
++TARGET_LINK_LIBRARIES( ${TARGET_NAME} ${TARGET_LIB_ICCPROFLIB} ${TIFF_LIBRARY} ${JPEG_LIBRARY} ${ZLIB_LIBRARY})
++if(LIBLZMA_FOUND)
++  TARGET_LINK_LIBRARIES( ${TARGET_NAME} ${LIBLZMA_LIBRARIES})
++endif()
+ IF(ENABLE_INSTALL_RIM)
+   INSTALL (TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
+ ENDIF(ENABLE_INSTALL_RIM)
+diff --git a/Build/Cmake/Tools/IccSpecSepToTiff/CMakeLists.txt b/Build/Cmake/Tools/IccSpecSepToTiff/CMakeLists.txt
+index 111222..333444 100644
+--- a/Build/Cmake/Tools/IccSpecSepToTiff/CMakeLists.txt
++++ b/Build/Cmake/Tools/IccSpecSepToTiff/CMakeLists.txt
+@@ -5,7 +5,14 @@ SET( TARGET_NAME iccSpecSepToTiff )
+ INCLUDE_DIRECTORIES ( ${SRC_PATH}/Tools/CmdLine/IccApplyProfiles/ )
+ 
+ ADD_EXECUTABLE( ${TARGET_NAME} ${SOURCES} )
+-TARGET_LINK_LIBRARIES( ${TARGET_NAME} ${TARGET_LIB_ICCPROFLIB} ${TIFF_LIBRARY} )
++
++# Find liblzma for TIFF dependency
++find_package(LibLZMA QUIET)
++
++TARGET_LINK_LIBRARIES( ${TARGET_NAME} ${TARGET_LIB_ICCPROFLIB} ${TIFF_LIBRARY} ${JPEG_LIBRARY} ${ZLIB_LIBRARY})
++if(LIBLZMA_FOUND)
++  TARGET_LINK_LIBRARIES( ${TARGET_NAME} ${LIBLZMA_LIBRARIES})
++endif()
+ IF(ENABLE_INSTALL_RIM)
+   INSTALL (TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
+ ENDIF(ENABLE_INSTALL_RIM)
