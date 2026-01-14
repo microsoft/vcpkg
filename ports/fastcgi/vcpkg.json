@@ -1,9 +1,8 @@
 {
   "name": "fastcgi",
-  "version-date": "2020-09-11",
-  "port-version": 5,
+  "version": "2.4.7",
   "description": "The FastCGI interface combines the best aspects of CGI and vendor APIs. Like CGI, FastCGI applications run in separate, isolated processes.",
-  "homepage": "https://fastcgi-archives.github.io/",
+  "homepage": "https://fastcgi-archives.github.io",
   "license": "OML",
   "supports": "!uwp"
 }
