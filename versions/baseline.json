@@ -1997,7 +1997,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.30.0",
+      "baseline": "0.30.1",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2596,6 +2596,10 @@
       "baseline": "2.0.3",
       "port-version": 0
     },
+    "duvc-ctl": {
+      "baseline": "2.0.1",
+      "port-version": 0
+    },
     "dv-processing": {
       "baseline": "2.0.2",
       "port-version": 0
@@ -2625,7 +2629,7 @@
       "port-version": 0
     },
     "eabase": {
-      "baseline": "2024-08-18",
+      "baseline": "2025-08-01",
       "port-version": 0
     },
     "earcut-hpp": {
@@ -2633,7 +2637,7 @@
       "port-version": 0
     },
     "eastl": {
-      "baseline": "3.21.23",
+      "baseline": "3.27.1",
       "port-version": 0
     },
     "easycl": {
@@ -2837,7 +2841,7 @@
       "port-version": 0
     },
     "faker-cxx": {
-      "baseline": "4.0.1",
+      "baseline": "4.2.0",
       "port-version": 0
     },
     "fameta-counter": {
@@ -3365,8 +3369,8 @@
       "port-version": 2
     },
     "glib": {
-      "baseline": "2.86.2",
-      "port-version": 1
+      "baseline": "2.86.3",
+      "port-version": 0
     },
     "glib-networking": {
       "baseline": "2.78.0",
@@ -3549,8 +3553,8 @@
       "port-version": 2
     },
     "guile": {
-      "baseline": "3.0.10",
-      "port-version": 1
+      "baseline": "3.0.11",
+      "port-version": 0
     },
     "guilite": {
       "baseline": "2022-05-05",
@@ -4153,7 +4157,7 @@
       "port-version": 0
     },
     "jwsung91-unilink": {
-      "baseline": "0.3.1",
+      "baseline": "0.3.2",
       "port-version": 0
     },
     "jwt-cpp": {
@@ -4989,7 +4993,7 @@
       "port-version": 0
     },
     "libice": {
-      "baseline": "1.1.1",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "libiconv": {
@@ -6021,8 +6025,8 @@
       "port-version": 0
     },
     "ltla-cppirlba": {
-      "baseline": "2.0.2",
-      "port-version": 1
+      "baseline": "3.0.1",
+      "port-version": 0
     },
     "ltla-cppkmeans": {
       "baseline": "4.0.4",
@@ -6073,7 +6077,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.703",
+      "baseline": "0.704",
       "port-version": 0
     },
     "luminoengine": {
@@ -6273,8 +6277,8 @@
       "port-version": 0
     },
     "mcpp": {
-      "baseline": "2.7.2.14",
-      "port-version": 5
+      "baseline": "2.7.2.19",
+      "port-version": 0
     },
     "md4c": {
       "baseline": "0.5.2",
@@ -6377,7 +6381,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "2.2.4",
+      "baseline": "2.2.6",
       "port-version": 0
     },
     "mimicpp": {
@@ -6762,7 +6766,7 @@
     },
     "ncurses": {
       "baseline": "6.5",
-      "port-version": 1
+      "port-version": 2
     },
     "ndis-driver-library": {
       "baseline": "1.2.0",
@@ -7337,7 +7341,7 @@
       "port-version": 0
     },
     "orc": {
-      "baseline": "2.2.1",
+      "baseline": "2.2.2",
       "port-version": 0
     },
     "orefkov-simstr": {
@@ -7777,7 +7781,7 @@
       "port-version": 0
     },
     "projectm-eval": {
-      "baseline": "1.0.5",
+      "baseline": "1.0.6",
       "port-version": 0
     },
     "prometheus-cpp": {
@@ -7864,6 +7868,10 @@
       "baseline": "0.9.18",
       "port-version": 0
     },
+    "pxlib": {
+      "baseline": "2025-12-16",
+      "port-version": 0
+    },
     "pybind11": {
       "baseline": "3.0.1",
       "port-version": 0
@@ -7878,7 +7886,7 @@
     },
     "python3": {
       "baseline": "3.12.9",
-      "port-version": 7
+      "port-version": 8
     },
     "qca": {
       "baseline": "2.3.7",
@@ -8405,6 +8413,10 @@
       "port-version": 0
     },
     "rapidfuzz": {
+      "baseline": "deprecated",
+      "port-version": 0
+    },
+    "rapidfuzz-cpp": {
       "baseline": "3.3.3",
       "port-version": 0
     },
@@ -9129,15 +9141,15 @@
       "port-version": 0
     },
     "slick-object-pool": {
-      "baseline": "0.1.2",
+      "baseline": "0.1.3",
       "port-version": 0
     },
     "slick-queue": {
-      "baseline": "1.2.1",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "slick-shm": {
-      "baseline": "0.1.1",
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "slikenet": {
@@ -9861,7 +9873,7 @@
       "port-version": 0
     },
     "tinyply": {
-      "baseline": "2.3.4",
+      "baseline": "3.0",
       "port-version": 0
     },
     "tinyproto": {
@@ -10001,7 +10013,7 @@
       "port-version": 0
     },
     "trompeloeil": {
-      "baseline": "48",
+      "baseline": "49",
       "port-version": 0
     },
     "try-catcher": {
@@ -10165,7 +10177,7 @@
       "port-version": 0
     },
     "utfcpp": {
-      "baseline": "4.0.6",
+      "baseline": "4.0.9",
       "port-version": 0
     },
     "utfz": {
@@ -10265,7 +10277,7 @@
       "port-version": 0
     },
     "vcpkg-make": {
-      "baseline": "2025-10-26",
+      "baseline": "2026-01-01",
       "port-version": 0
     },
     "vcpkg-msbuild": {
@@ -10401,8 +10413,8 @@
       "port-version": 2
     },
     "vsg": {
-      "baseline": "1.1.11",
-      "port-version": 1
+      "baseline": "1.1.13",
+      "port-version": 0
     },
     "vsgimgui": {
       "baseline": "0.7.0",
@@ -10413,7 +10425,7 @@
       "port-version": 1
     },
     "vsgxchange": {
-      "baseline": "1.1.7",
+      "baseline": "1.1.9",
       "port-version": 0
     },
     "vst3sdk": {
@@ -10555,6 +10567,10 @@
     "wg21-sg14": {
       "baseline": "2019-08-13",
       "port-version": 2
+    },
+    "whereami": {
+      "baseline": "2024-08-26",
+      "port-version": 0
     },
     "whisper-cpp": {
       "baseline": "1.8.2",
@@ -10701,7 +10717,7 @@
       "port-version": 0
     },
     "xbitmaps": {
-      "baseline": "1.1.2",
+      "baseline": "1.1.3",
       "port-version": 0
     },
     "xbyak": {

@@ -728,6 +728,7 @@ xbitmaps:arm-neon-android=fail
 xbitmaps:arm64-android=fail
 xbitmaps:arm64-osx=skip
 xbitmaps:x64-android=fail
+xbitmaps:x64-linux=fail
 zeroc-ice:arm-neon-android=fail
 zeroc-ice:arm64-android=fail
 zeroc-ice:x64-android=fail
