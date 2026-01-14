@@ -1,0 +1,42 @@
+--- a/tests/ChannelRedirect/CMakeLists.txt
++++ b/tests/ChannelRedirect/CMakeLists.txt
+@@ -36,5 +36,10 @@
+ target_compile_definitions(${PROJECT_NAME} PRIVATE LOGME_INRELEASE)
+ 
+ include(GoogleTest)
+-gtest_discover_tests(${PROJECT_NAME})
++
++if(NOT CMAKE_CROSSCOMPILING)
++  gtest_discover_tests(${PROJECT_NAME})
++else()
++  message(STATUS "Skipping gtest_discover_tests() while cross-compiling")
++endif()
+ set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Tests")
+--- a/tests/LevelFilter/CMakeLists.txt
++++ b/tests/LevelFilter/CMakeLists.txt
+@@ -36,5 +36,10 @@
+ target_compile_definitions(${PROJECT_NAME} PRIVATE LOGME_INRELEASE)
+ 
+ include(GoogleTest)
+-gtest_discover_tests(${PROJECT_NAME})
++
++if(NOT CMAKE_CROSSCOMPILING)
++  gtest_discover_tests(${PROJECT_NAME})
++else()
++  message(STATUS "Skipping gtest_discover_tests() while cross-compiling")
++endif()
+ set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Tests")
+--- a/tests/OutputFlags/CMakeLists.txt
++++ b/tests/OutputFlags/CMakeLists.txt
+@@ -35,5 +35,10 @@
+ target_compile_definitions(${PROJECT_NAME} PRIVATE LOGME_INRELEASE)
+ 
+ include(GoogleTest)
+-gtest_discover_tests(${PROJECT_NAME})
++
++if(NOT CMAKE_CROSSCOMPILING)
++  gtest_discover_tests(${PROJECT_NAME})
++else()
++  message(STATUS "Skipping gtest_discover_tests() while cross-compiling")
++endif()
+ set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER "Tests")
