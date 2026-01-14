@@ -1590,7 +1590,6 @@ sqlite-orm[test](uwp) = feature-fails # error LNK2019: unresolved external symbo
 sqlpp11[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
 sqlpp11-connector-mysql[core,mariadb,mysql] = options # can not select mariadb and mysql at the same time
 suitesparse-graphblas[openmp](osx) = feature-fails # No openmp on default osx toolchain
-symengine[tcmalloc](windows) = feature-fails # tcmalloc not found. See https://github.com/microsoft/vcpkg/issues/33576
 tgui[sdl2] = options # At least one of the backend features must be selected: sdl2 sfml
 vlfeat[openmp](osx) = feature-fails # No openmp on osx
 vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issues/32143 (error: inconsistent begin/end types in range-based ‘for’ statement)

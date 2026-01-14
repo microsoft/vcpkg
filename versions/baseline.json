@@ -9645,8 +9645,8 @@
       "port-version": 0
     },
     "symengine": {
-      "baseline": "0.11.2",
-      "port-version": 2
+      "baseline": "0.14.0",
+      "port-version": 0
     },
     "syscalls-cpp": {
       "baseline": "1.1.1",
