@@ -4477,7 +4477,7 @@
       "port-version": 1
     },
     "lager": {
-      "baseline": "2023-03-19",
+      "baseline": "2026-01-13",
       "port-version": 0
     },
     "lapack": {

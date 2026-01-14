@@ -1,6 +1,6 @@
 {
   "name": "lager",
-  "version-date": "2023-03-19",
+  "version-date": "2026-01-13",
   "description": "C++ library for value-oriented design using the unidirectional data-flow architecture",
   "homepage": "https://sinusoid.es/lager/",
   "dependencies": [
