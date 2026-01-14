@@ -5797,7 +5797,7 @@
       "port-version": 0
     },
     "libxi": {
-      "baseline": "1.8",
+      "baseline": "1.8.2",
       "port-version": 0
     },
     "libxinerama": {
