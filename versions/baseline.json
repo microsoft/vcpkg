@@ -5237,8 +5237,8 @@
       "port-version": 0
     },
     "libnotify": {
-      "baseline": "0.8.7",
-      "port-version": 1
+      "baseline": "0.8.8",
+      "port-version": 0
     },
     "libobfuscate": {
       "baseline": "2024-07-10",
