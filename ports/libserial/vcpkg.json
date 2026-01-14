@@ -4,6 +4,7 @@
   "description": "Serial Port Programming in C++ ",
   "homepage": "https://github.com/crayzeewulf/libserial",
   "license": "BSD-3-Clause",
+  "supports": "linux | osx",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
