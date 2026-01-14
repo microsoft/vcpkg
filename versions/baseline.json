@@ -1877,7 +1877,7 @@
       "port-version": 0
     },
     "coin-or-clp": {
-      "baseline": "2023-02-01",
+      "baseline": "1.17.10",
       "port-version": 0
     },
     "coin-or-ipopt": {
