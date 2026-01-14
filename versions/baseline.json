@@ -9081,7 +9081,7 @@
       "port-version": 0
     },
     "simdutf": {
-      "baseline": "7.7.1",
+      "baseline": "8.0.0",
       "port-version": 0
     },
     "simonbrunel-qtpromise": {
