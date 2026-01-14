@@ -5460,6 +5460,10 @@
       "baseline": "1.3.2",
       "port-version": 1
     },
+    "libserial": {
+      "baseline": "2025-09-03",
+      "port-version": 0
+    },
     "libsersi": {
       "baseline": "0.1.0",
       "port-version": 0
