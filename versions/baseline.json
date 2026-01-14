@@ -8557,8 +8557,8 @@
       "port-version": 0
     },
     "rest-rpc": {
-      "baseline": "0.12",
-      "port-version": 1
+      "baseline": "0.21",
+      "port-version": 0
     },
     "restbed": {
       "baseline": "4.8",
