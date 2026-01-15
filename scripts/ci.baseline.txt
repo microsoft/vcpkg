@@ -38,6 +38,9 @@
 ##
 
 # Add new items alphabetically
+aeron:arm-neon-android=fail
+aeron:arm64-android=fail
+aeron:x64-android=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:x64-android=fail
