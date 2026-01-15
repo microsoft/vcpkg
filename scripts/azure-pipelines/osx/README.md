@@ -28,13 +28,13 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     rm macosvm-0.2-2-arm64-darwin21.tar.gz
     exit
     ```
-- [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example: https://updates.cdn-apple.com/2025FallFCS/fullrestores/089-04148/791B6F00-A30B-4EB0-B2E3-257167F7715B/UniversalMac_26.1_25B78_Restore.ipsw
-- [ ] Determine the VM name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2025-11-11-arm64".
-- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2025-11-11-arm64 and UniversalMac_26.1_25B78_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
+- [ ] Download the matching `.ipsw` for the macOS copy to install. See https://mrmacintosh.com/apple-silicon-m1-full-macos-restore-ipsw-firmware-files-database/ ; links there to find the .ipsw. Example: https://updates.cdn-apple.com/2025FallFCS/fullrestores/093-37399/E144C918-CF99-4BBC-B1D0-3E739B9A3F2D/UniversalMac_26.2_25C56_Restore.ipsw
+- [ ] Determine the VM name using the form "vcpkg-osx-<date>-arm64", for example "vcpkg-osx-2026-01-12-arm64".
+- [ ] Open a terminal and run the following commands to create the VM with vcpkg-osx-2026-01-12-arm64 and UniversalMac_26.2_25C56_Restore.ipsw replaced as appropriate. This must be run in the KVM as it uses a GUI:
     ```sh
-    mkdir -p ~/Parallels/vcpkg-osx-2025-11-11-arm64
-    cd ~/Parallels/vcpkg-osx-2025-11-11-arm64
-    ~/macosvm --disk disk.img,size=500g --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_26.1_25B78_Restore.ipsw ./vm.json
+    mkdir -p ~/Parallels/vcpkg-osx-2026-01-12-arm64
+    cd ~/Parallels/vcpkg-osx-2026-01-12-arm64
+    ~/macosvm --disk disk.img,size=500g --aux aux.img -c 8 -r 12g --restore ~/UniversalMac_26.2_25C56_Restore.ipsw ./vm.json
     ~/macosvm -g ./vm.json
     ```
 - [ ] Follow prompts as you would on real hardware.
@@ -66,7 +66,7 @@ This is the checklist for what the vcpkg team does when updating the macOS machi
     exit
     ```
 - [ ] Open Xcode from Applications in the guest GUI. Uncheck the "code completion model" and accept the EULA.
-- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://download.agent.dev.azure.com/agent/4.264.2/vsts-agent-osx-arm64-4.264.2.tar.gz
+- [ ] Update the Azure Agent URI in setup-box.sh to the current version. You can find this by going to the agent pool, selecting "New agent", picking macOS, and copying the link. For example https://download.agent.dev.azure.com/agent/4.266.2/vsts-agent-osx-arm64-4.266.2.tar.gz
 - [ ] Copy setup-box.sh and the xcode installer renamed to 'clt.dmg' to the host. For example from a dev workstation:
     ```sh
     scp ./setup-guest.sh vcpkg@HOSTMACHINE:/Users/vcpkg
