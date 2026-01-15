@@ -52,6 +52,8 @@ arpack-ng:x64-windows-static=fail
 arrayfire:x64-linux=fail
 atliac-minitest:arm64-uwp=fail
 atliac-minitest:x64-uwp=fail
+# Conflicts with at-spi2-core
+atk:x64-linux=skip
 avro-c:arm-neon-android=fail
 avro-c:arm64-android=fail
 avro-c:x64-android=fail
