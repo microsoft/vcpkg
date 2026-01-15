@@ -6621,8 +6621,8 @@
       "port-version": 5
     },
     "msmpi": {
-      "baseline": "10.1.12498",
-      "port-version": 5
+      "baseline": "10.1.12498.52",
+      "port-version": 0
     },
     "msquic": {
       "baseline": "2.4.8",
