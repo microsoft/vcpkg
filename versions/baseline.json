@@ -10773,7 +10773,7 @@
       "port-version": 1
     },
     "xcb-util-m4": {
-      "baseline": "2022-01-24",
+      "baseline": "2022-07-01",
       "port-version": 0
     },
     "xcb-util-wm": {
