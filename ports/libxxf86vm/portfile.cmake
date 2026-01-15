@@ -1,16 +1,20 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxxf86vm
-    REF 7fe2d41f164d3015216c1079cc7fbce1eea90c98
-    SHA512 c7ee07478bcc5db18e47a5a7b8965d89172bbab733f60fb13b9527b7888445fdd86d5d99aa67d6436fc2ef3ea0bd8d9c6e4f10fbef351f229de982bd6f21f9c9
-    HEAD_REF master
-    PATCHES no-undefined.patch
-) 
+    return()
+endif()
+
+vcpkg_download_distfile(
+    LIBXXF86VM_ARCHIVE
+    URLS "https://www.x.org/releases/individual/lib/libXxf86vm-${VERSION}.tar.xz"
+    FILENAME "libXxf86vm-${VERSION}.tar.xz"
+    SHA512 7fb3ac4302eea43b70d5106f6c7a113e28e2807da22d2bb7f040e0c4afd322cad4b7f258a5bd6da3940b6b6b39065e1acb218a6dc0ba06b9dd86ea3849231266
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXXF86VM_ARCHIVE}"
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -31,5 +35,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

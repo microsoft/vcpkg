@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BehaviorTree/BehaviorTree.CPP
-    REF ${VERSION}
-    SHA512 b4450226ad2036e64e1c56c99e3fca670d8ca472e563721eaf4bdc4416562d682748b4aeaaea699f3c6be337f9ac51cc453cf28ca13fdea1886e40224786ed8a
+    REF "${VERSION}"
+    SHA512 5e445fdb5ba8bcd12f03c87ba5b4b3146f3a6508bfd84873157daf6b4c5817ca7b8eb5c4f189bbb777cd59bd38620f5d3f0d97ce2080ac294363efc4b08380a1
     HEAD_REF master
     PATCHES
         fix-x86_build.patch
@@ -11,11 +11,7 @@ vcpkg_from_github(
 )
 
 # Set BTCPP_SHARED_LIBS based on VCPKG_LIBRARY_LINKAGE
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BTCPP_SHARED_LIBS ON)
-else()
-    set(BTCPP_SHARED_LIBS OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BTCPP_SHARED_LIBS)
 
 # Remove vendored lexy directory to prevent conflicts with foonathan-lexy port
 file(REMOVE_RECURSE "${SOURCE_PATH}/3rdparty/lexy")

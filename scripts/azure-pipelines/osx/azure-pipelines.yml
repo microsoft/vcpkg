@@ -19,7 +19,7 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: PrOsx-2025-11-11-arm64
+    name: PrOsx-2026-01-12-arm64
   workspace:
     clean: resources
   timeoutInMinutes: 2880 # 2 days

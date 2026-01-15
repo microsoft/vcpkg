@@ -1,12 +1,14 @@
 {
   "name": "kf5solid",
-  "version": "5.98.0",
-  "port-version": 3,
+  "version": "5.116.0",
   "description": "Desktop hardware abstraction",
-  "homepage": "https://api.kde.org/frameworks/solid/html/index.html",
+  "homepage": "https://api.kde.org/solid-index.html",
   "dependencies": [
     "ecm",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",

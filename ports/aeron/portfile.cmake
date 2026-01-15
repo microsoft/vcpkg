@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 6302b235285d897bb58d388c1883145c486f931575174b68161e67a04ae2efb48993d8045855d6e04ba378fdb58050c5339561c85fffb6b222abaa1952103d37
     HEAD_REF master
+    PATCHES
+        patches/add-libuuid-vcpkg-support.patch
 )
 
 # Set archive option based on feature

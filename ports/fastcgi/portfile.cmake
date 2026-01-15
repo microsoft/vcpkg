@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FastCGI-Archives/fcgi2
-    REF fc8c6547ae38faf9926205a23075c47fbd4370c8
-    SHA512   7f27b1060fbeaf0de9b8a43aa4ff954a004c49e99f7d6ea11119a438fcffe575fb469ba06262e71ac8132f92e74189e2097fd049595a6a61d4d5a5bac2733f7a
+    REF "${VERSION}"
+    SHA512   a8b49fe7d88fa5404ec6f9b9aba59f1c37c479820ba1ed7024260fe2539ff98dae9f71fb7c46192a257401b0eab1ce8cb6b2825286c85a73a33457f8cd9dd926
     HEAD_REF master
     PATCHES
         dll.patch
@@ -32,10 +32,6 @@ file(RENAME "${CURRENT_PACKAGES_DIR}/include2" "${CURRENT_PACKAGES_DIR}/include/
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_fixup_pkgconfig()
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/fcgi.pc" "Version: 2.4.2\n" "Version: 2.4.2\nCflags: -I\"\${prefix}/include/fastcgi\"\n")
-if(NOT VCPKG_BUILD_TYPE)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fcgi.pc" "Version: 2.4.2\n" "Version: 2.4.2\nCflags: -I\"\${prefix}/../include/fastcgi\"\n")
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/${PORT}/fcgiapp.h" "ifdef LIBFCGI_DLL_IMPORT" "if 1")
@@ -43,5 +39,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
 endif()
 vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE.TERMS" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

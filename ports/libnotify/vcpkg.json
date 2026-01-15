@@ -1,7 +1,6 @@
 {
   "name": "libnotify",
-  "version": "0.8.7",
-  "port-version": 1,
+  "version": "0.8.8",
   "description": "A library for sending desktop notifications",
   "homepage": "https://gitlab.gnome.org/GNOME/libnotify",
   "license": "LGPL-2.1-or-later",
