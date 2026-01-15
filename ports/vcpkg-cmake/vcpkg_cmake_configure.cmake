@@ -128,10 +128,8 @@ function(vcpkg_cmake_configure)
 
     set(build_dir_release "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
     set(build_dir_debug "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-    # Preserve build directories for incremental builds when:
-    # - _VCPKG_EDITABLE: this specific port is editable
-    # - _VCPKG_EDITABLE_MODE: any port in the project is editable (enables incremental builds for all)
-    if(_VCPKG_EDITABLE OR _VCPKG_EDITABLE_MODE)
+    # Preserve build directories for incremental builds
+    if(_VCPKG_EDITABLE_SUBTREE)
         # Editable mode: preserve build directories for incremental builds
         if(NOT EXISTS "${build_dir_release}")
             file(MAKE_DIRECTORY "${build_dir_release}")
@@ -262,7 +260,7 @@ function(vcpkg_cmake_configure)
     # In editable mode, skip configure if CMakeCache.txt already exists
     # This enables truly incremental builds by letting ninja handle reconfiguration
     set(_vcpkg_skip_configure OFF)
-    if(_VCPKG_EDITABLE OR _VCPKG_EDITABLE_MODE)
+    if(_VCPKG_EDITABLE OR _VCPKG_EDITABLE_SUBTREE OR _VCPKG_EDITABLE_MODE)
         set(_vcpkg_has_release_cache OFF)
         set(_vcpkg_has_debug_cache OFF)
         if(EXISTS "${build_dir_release}/CMakeCache.txt")
