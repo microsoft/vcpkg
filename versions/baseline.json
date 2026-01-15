@@ -5853,7 +5853,7 @@
       "port-version": 0
     },
     "libxrender": {
-      "baseline": "0.9.10",
+      "baseline": "0.9.12",
       "port-version": 0
     },
     "libxres": {
