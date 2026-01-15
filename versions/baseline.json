@@ -4216,6 +4216,10 @@
       "baseline": "2.0.0",
       "port-version": 2
     },
+    "kdutils": {
+      "baseline": "0.1.12",
+      "port-version": 0
+    },
     "kealib": {
       "baseline": "1.6.2",
       "port-version": 0

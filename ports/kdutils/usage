@@ -1,0 +1,7 @@
+kdutils provides CMake targets:
+
+find_package(KDUtils REQUIRED)
+find_package(KDFoundation REQUIRED)
+find_package(KDGui REQUIRED)
+
+target_link_libraries(main PRIVATE KDUtils::KDUtils KDUtils::KDFoundation KDUtils::KDGui)
