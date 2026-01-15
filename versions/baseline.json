@@ -4152,6 +4152,10 @@
       "baseline": "1.9.6",
       "port-version": 0
     },
+    "jsonfusion": {
+      "baseline": "0.707.0",
+      "port-version": 0
+    },
     "jsonifier": {
       "baseline": "0.9.98",
       "port-version": 0
