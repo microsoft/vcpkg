@@ -4,13 +4,15 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
 else()
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
+    GITLAB_URL "https://gitlab.freedesktop.org/xorg"
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxtst
-    REF 99b89c3bcb0ebb0b6dd86bfdc9d276715eaea889 
-    SHA512  6479294057c73e91a086891e461e98d2717ae1fbe746cd74c9d13036a59bce931b8b0d5293d3c5ab4feeea426f2297647335179997e06a040b847697c7557199
+    REPO "lib/libxtst"
+    REF "libXtst-${VERSION}"
+    SHA512 d48df671f212a1784ef1aefe69b16bc42395ff4ae083b7087dc55827fa6f8635b17adb5e26d976c8f8c7f02aeeb51f66c9808a037ef783c44139483c1c76ce3e
     HEAD_REF master
-) 
+    PATCHES
+        fix-configure.patch
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -26,5 +28,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 endif()
