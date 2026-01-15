@@ -2,11 +2,11 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "aeron",
   "version": "1.49.3",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Efficient reliable UDP unicast, UDP multicast, and IPC message transport",
   "homepage": "https://github.com/aeron-io/aeron",
   "license": "Apache-2.0",
-  "supports": "(x64 & windows & !uwp & !xbox) | ((x64 | arm64) & !windows & !android)",
+  "supports": "!((x86 | arm64) & windows) & !android & !uwp & !xbox",
   "dependencies": [
     {
       "name": "libuuid",
@@ -24,7 +24,7 @@
   "features": {
     "archive": {
       "description": "Build Aeron Archive API for recording and replaying message streams (requires Java)",
-      "supports": "(x64 & windows & !uwp & !xbox) | ((x64 | arm64) & !windows & !android)"
+      "supports": "!((x86 | arm64) & windows) & !android & !uwp & !xbox"
     }
   }
 }
