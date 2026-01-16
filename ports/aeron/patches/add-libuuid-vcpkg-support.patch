@@ -1,0 +1,76 @@
+diff --git a/aeron-driver/src/main/c/CMakeLists.txt b/aeron-driver/src/main/c/CMakeLists.txt
+index 1234567..abcdefg 100644
+--- a/aeron-driver/src/main/c/CMakeLists.txt
++++ b/aeron-driver/src/main/c/CMakeLists.txt
+@@ -36,15 +36,39 @@ if (NOT MSVC)
+ endif ()
+
+ check_include_file("bsd/stdlib.h" BSDSTDLIB_H_EXISTS)
+-check_include_file("uuid/uuid.h" UUID_H_EXISTS)
+ find_library(LIBBSD_EXISTS NAMES bsd libbsd)
+-find_library(LIBUUID_EXISTS NAMES uuid libuuid libuuid.dll)
++find_library(LIBUUID_SYSTEM NAMES uuid libuuid libuuid.dll)
++
++# In vcpkg builds on Linux, use vcpkg's libuuid
++if(DEFINED VCPKG_TOOLCHAIN AND CMAKE_SYSTEM_NAME MATCHES "Linux")
++    find_package(unofficial-libuuid QUIET CONFIG)
++    if(TARGET unofficial::UUID::uuid)
++        get_target_property(UUID_INCLUDE_DIR unofficial::UUID::uuid INTERFACE_INCLUDE_DIRECTORIES)
++        if(UUID_INCLUDE_DIR)
++            list(APPEND CMAKE_REQUIRED_INCLUDES "${UUID_INCLUDE_DIR}")
++        endif()
++        list(APPEND CMAKE_REQUIRED_LIBRARIES "unofficial::UUID::uuid")
++        set(LIBUUID_EXISTS TRUE)
++        set(AERON_LIB_UUID_LIBS "unofficial::UUID::uuid")
++        set(UUID_H_EXISTS TRUE)
++        set(UUID_GENERATE_PROTOTYPE_EXISTS TRUE)
++    endif()
++endif()
++
++if(NOT DEFINED LIBUUID_EXISTS OR NOT LIBUUID_EXISTS)
++    set(LIBUUID_EXISTS ${LIBUUID_SYSTEM})
++endif()
++
++# Only check for uuid headers if not found via vcpkg
++if(NOT DEFINED UUID_H_EXISTS OR NOT UUID_H_EXISTS)
++    check_include_file("uuid/uuid.h" UUID_H_EXISTS)
++endif()
+
+ if (LIBBSD_EXISTS)
+     set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -lbsd")
+ endif ()
+
+-if (LIBUUID_EXISTS)
++if (LIBUUID_EXISTS AND NOT AERON_LIB_UUID_LIBS)
+     set(CMAKE_REQUIRED_LIBRARIES "${CMAKE_REQUIRED_LIBRARIES} -luuid")
+ endif ()
+
+@@ -64,7 +88,9 @@ if (MSVC AND "${CMAKE_SYSTEM_NAME}" MATCHES "Windows")
+     set(WSAPOLL_PROTOTYPE_EXISTS True)
+ endif ()
+
+-check_symbol_exists(uuid_generate "uuid/uuid.h" UUID_GENERATE_PROTOTYPE_EXISTS)
++if(NOT DEFINED UUID_GENERATE_PROTOTYPE_EXISTS OR NOT UUID_GENERATE_PROTOTYPE_EXISTS)
++    check_symbol_exists(uuid_generate "uuid/uuid.h" UUID_GENERATE_PROTOTYPE_EXISTS)
++endif()
+
+ check_symbol_exists(poll "poll.h" POLL_PROTOTYPE_EXISTS)
+ check_symbol_exists(epoll_create "sys/epoll.h" EPOLL_PROTOTYPE_EXISTS)
+@@ -387,7 +413,7 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+         set(AERON_LIB_BSD_LIBS bsd)
+     endif ()
+
+-    if (LIBUUID_EXISTS)
++    if (LIBUUID_EXISTS AND NOT AERON_LIB_UUID_LIBS)
+         set(AERON_LIB_UUID_LIBS uuid)
+     endif ()
+
+@@ -400,7 +426,7 @@ if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+ endif ()
+
+ if (CYGWIN)
+-    if (LIBUUID_EXISTS)
++    if (LIBUUID_EXISTS AND NOT AERON_LIB_UUID_LIBS)
+         set(AERON_LIB_UUID_LIBS uuid)
+     endif ()
+ endif ()

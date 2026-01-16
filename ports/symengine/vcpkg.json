@@ -1,7 +1,6 @@
 {
   "name": "symengine",
-  "version": "0.11.2",
-  "port-version": 2,
+  "version": "0.14.0",
   "description": "SymEngine is a fast symbolic manipulation library",
   "homepage": "https://github.com/symengine/symengine",
   "license": "BSD-3-Clause",

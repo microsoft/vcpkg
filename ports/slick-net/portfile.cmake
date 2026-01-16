@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO SlickQuant/slick_net
+    REPO SlickQuant/slick-net
     REF "v${VERSION}"
-    SHA512 b56901ea8c819076c4b5ef979a57dd69279bfbb0cf408e822896dd2123b9475a5e1b5a09ac8f9e6b7ff47ae2acbbb3a458f8cae8a70f293a69b506b418ad8d1d
+    SHA512 5871099ac415fb8afa223798e5590afeded1e7a40aa071e727408e07bb8920293354f16024cbe6cbfb53c0935de8be27828f4681e53ea790e5404f06dbcdf603
     HEAD_REF main
+    PATCHES
+        slick-queue.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,7 +17,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME slick_net CONFIG_PATH share/slick_net)
+vcpkg_cmake_config_fixup(PACKAGE_NAME slick-net CONFIG_PATH share/slick-net)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 

@@ -10,8 +10,12 @@ if(VCPKG_TARGET_IS_OSX)
     execute_process(COMMAND xcrun --show-sdk-version
             OUTPUT_VARIABLE OSX_SDK_VERSION
             OUTPUT_STRIP_TRAILING_WHITESPACE)
-    if(${OSX_SDK_VERSION} VERSION_GREATER_EQUAL 26)
-        # macOS 26 Tahoe has removed AGL APIs https://bugreports.qt.io/browse/QTBUG-137687
+    # macOS 26 Tahoe has removed AGL APIs https://bugreports.qt.io/browse/QTBUG-137687
+    #
+    # macOS 26.2 fails to query this with the following error, so we conservatively apply the patch in that case
+    # xcodebuild: error: SDK "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk" cannot be located.
+    # xcrun: error: unable to lookup item 'SDKVersion' in SDK '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+    if(NOT OSX_SDK_VERSION OR OSX_SDK_VERSION VERSION_GREATER_EQUAL 26)
         list(APPEND PATCHES remove-agl-framework.patch)
     endif()
 endif()

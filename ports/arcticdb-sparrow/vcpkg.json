@@ -1,6 +1,6 @@
 {
   "name": "arcticdb-sparrow",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "C++20 idiomatic APIs for the Apache Arrow Columnar Format",
   "homepage": "https://github.com/man-group/sparrow",
   "license": "Apache-2.0",
