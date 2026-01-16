@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO data/bitmaps
-    REF  61eebdfde170841ae933cf65ba27346fbf2f8018
-    SHA512 dd8acefc6f96d65e4b5d4807221aa3b87faca7b8b50e9de76081351503c9abb127a3063f3bb23ca71a0e3521640e7fdf7686e33cca5c7b7ad8d67a7ac26e65b5
+    REF  "xbitmaps-${VERSION}"
+    SHA512 e9a90555cf38c9c8800f58e1ec92bae3c44cedc491fb6184ad6da575e7fbaf3ee380a3fc2d33072d0ef5f313204588ff9c3668a58726b1251dbb2a4ad362d119
     HEAD_REF master
 )
 
@@ -20,5 +20,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/pkgconfig/")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage")
