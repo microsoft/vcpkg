@@ -9548,6 +9548,10 @@
       "baseline": "2018-11-15",
       "port-version": 9
     },
+    "subversion": {
+      "baseline": "2025-12-23",
+      "port-version": 0
+    },
     "suitesparse": {
       "baseline": "7.8.3",
       "port-version": 0
