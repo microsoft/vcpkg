@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO efmsoft/logme
-  REF v1.6.0
-  SHA512 6749152e0c79ae5979867b0368234459040f7dcac861d47585fce53095512d06c3a2325a6160b7a7ac53a34a5279419e0715a8f28ea8f00aee6cff40b5f0bf63
+  REF v2.4.1
+  SHA512 5a2e761c855a66fbec82235e47ec921ca0021f046447cc7cdb876a548786729e7695d6201843ba0359a5fea78de3261edf3d068ba85d1875600096adfcc05811
   HEAD_REF master
 )
 
@@ -10,25 +10,24 @@ vcpkg_check_features(
   OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     examples LOGME_BUILD_EXAMPLES
-    tests    LOGME_BUILD_TESTS
     tools    LOGME_BUILD_TOOLS
 )
 
-vcpkg_apply_patches(
-  SOURCE_PATH "${SOURCE_PATH}"
-  PATCHES
-    disable-gtest-discovery-cross.patch
-)
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" _LOGME_BUILD_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" _LOGME_BUILD_DYNAMIC)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  set(_logme_static_opt  ON)
+  set(_logme_dynamic_opt OFF)
+else()
+  set(_logme_static_opt  OFF)
+  set(_logme_dynamic_opt ON)
+endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
   OPTIONS
-    -DLOGME_BUILD_STATIC=${_LOGME_BUILD_STATIC}
-    -DLOGME_BUILD_DYNAMIC=${_LOGME_BUILD_DYNAMIC}
-    -DUSE_LOGME_SHARED=${_LOGME_BUILD_DYNAMIC}
+    -DLOGME_BUILD_STATIC=${_logme_static_opt}
+    -DLOGME_BUILD_DYNAMIC=${_logme_dynamic_opt}
+    -DLOGME_BUILD_TESTS=OFF
+    -DUSE_JSONCPP=ON
     ${FEATURE_OPTIONS}
 )
 
@@ -44,5 +43,9 @@ file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -6009,7 +6009,7 @@
       "port-version": 0
     },
     "logme": {
-      "baseline": "1.6.0",
+      "baseline": "2.4.1",
       "port-version": 0
     },
     "loguru": {
