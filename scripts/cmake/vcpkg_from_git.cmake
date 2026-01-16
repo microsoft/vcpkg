@@ -13,7 +13,7 @@ function(vcpkg_from_git)
     endif()
 
     # Editable mode: delegate to consolidated helper
-    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCE_PATH)
+    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
         if(DEFINED arg_REF)
             set(_git_ref "${arg_REF}")
         elseif(DEFINED arg_HEAD_REF)

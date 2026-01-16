@@ -1,9 +1,10 @@
 # Internal helper for editable mode in vcpkg_from_git/github/gitlab
 # This function handles cloning and patching for editable ports.
+# Supports multiple source downloads via numbered subdirectories (src1, src2, etc.)
 #
 # Prerequisites (caller must check before calling):
 #   _VCPKG_EDITABLE must be TRUE
-#   _VCPKG_EDITABLE_SOURCE_PATH must be defined
+#   _VCPKG_EDITABLE_SOURCES_PATH must be defined
 #
 # Arguments:
 #   URL           - Git URL to clone from
@@ -12,10 +13,10 @@
 #   PATCHES       - List of patches to apply
 #
 # Sets in PARENT_SCOPE:
-#   ${OUT_SOURCE_PATH} - Path to the editable source
+#   ${OUT_SOURCE_PATH} - Path to the editable source (e.g., sources/src1)
 #
-# Sets as CACHE variable:
-#   _VCPKG_EDITABLE_SOURCE_ALREADY_SET - Global marker to detect multiple source calls
+# Uses CACHE variables:
+#   _VCPKG_EDITABLE_SOURCE_COUNT - Counter for multiple source downloads
 
 function(z_vcpkg_from_git_editable)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
@@ -28,21 +29,19 @@ function(z_vcpkg_from_git_editable)
         message(FATAL_ERROR "z_vcpkg_from_git_editable was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    set(_editable_source_path "${_VCPKG_EDITABLE_SOURCE_PATH}")
-
-    # Check if SOURCE_PATH was already set by another vcpkg_from_* call
-    if(_VCPKG_EDITABLE_SOURCE_ALREADY_SET)
-        message(FATAL_ERROR
-            "Editable mode error: This port has multiple source downloads.\n"
-            "Editable mode only supports ports with a single vcpkg_from_github/git/gitlab call.\n"
-            "Please manually manage the sources or disable editable mode for this port.")
+    # Increment source counter (starts at 0, so first call gets src1)
+    if(NOT DEFINED _VCPKG_EDITABLE_SOURCE_COUNT)
+        set(_VCPKG_EDITABLE_SOURCE_COUNT 0 CACHE INTERNAL "Editable source download counter")
     endif()
-    # Set as cache variable so it persists across function scopes within this port build
-    set(_VCPKG_EDITABLE_SOURCE_ALREADY_SET TRUE CACHE INTERNAL "Editable source already set marker")
+    math(EXPR _new_count "${_VCPKG_EDITABLE_SOURCE_COUNT} + 1")
+    set(_VCPKG_EDITABLE_SOURCE_COUNT ${_new_count} CACHE INTERNAL "Editable source download counter" FORCE)
+
+    # Compute source path: sources/src1, sources/src2, etc.
+    set(_editable_source_path "${_VCPKG_EDITABLE_SOURCES_PATH}/src${_new_count}")
 
     # Source already exists - use it as-is
     if(EXISTS "${_editable_source_path}/.git")
-        message(STATUS "Editable mode: using existing source from ${_editable_source_path}")
+        message(STATUS "Editable mode: using existing source at ${_editable_source_path}")
         set("${arg_OUT_SOURCE_PATH}" "${_editable_source_path}" PARENT_SCOPE)
         return()
     endif()
@@ -125,4 +124,3 @@ function(z_vcpkg_from_git_editable)
     message(STATUS "Editable mode: source ready at ${_editable_source_path}")
     set("${arg_OUT_SOURCE_PATH}" "${_editable_source_path}" PARENT_SCOPE)
 endfunction()
-

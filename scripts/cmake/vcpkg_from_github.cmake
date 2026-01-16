@@ -9,7 +9,7 @@ function(vcpkg_from_github)
     endif()
 
     # Editable mode: delegate to consolidated helper
-    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCE_PATH)
+    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
         if(NOT DEFINED arg_GITHUB_HOST)
             set(_github_host "https://github.com")
         else()
