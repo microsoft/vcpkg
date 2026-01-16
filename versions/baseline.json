@@ -5105,7 +5105,7 @@
       "port-version": 0
     },
     "liblsl": {
-      "baseline": "1.17.4",
+      "baseline": "1.17.5",
       "port-version": 0
     },
     "liblsquic": {
