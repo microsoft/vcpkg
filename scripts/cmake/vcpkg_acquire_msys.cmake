@@ -284,6 +284,11 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         DEPS awk bash diffutils m4 perl sed
     )
     z_vcpkg_acquire_msys_declare_package(
+        URL "https://mirror.msys2.org/msys/x86_64/autoconf2.71-2.71-3-any.pkg.tar.zst"
+        SHA512 dd312c428b2e19afd00899eb53ea4255794dea4c19d1d6dea2419cb6a54209ea2130d48abbc20af12196b9f628143436f736fbf889809c2c2291be0c69c0e306
+        DEPS awk bash diffutils m4 perl sed
+    )
+    z_vcpkg_acquire_msys_declare_package(
         URL "https://mirror.msys2.org/msys/x86_64/autoconf-archive-2024.10.16-1-any.pkg.tar.zst"
         SHA512 bb7a1a14d5e291da646c00e0bcc6663500c9c0ac00079a88d06956fa2e37749c3c2431cba647e41ce3840f323b73198ea0cf54e07014ac2345de47e7069d0581
     )
