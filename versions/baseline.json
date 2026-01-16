@@ -2636,6 +2636,10 @@
       "baseline": "2019-11-13",
       "port-version": 0
     },
+    "e-dant-watcher": {
+      "baseline": "0.14.3",
+      "port-version": 0
+    },
     "eabase": {
       "baseline": "2025-08-01",
       "port-version": 0
