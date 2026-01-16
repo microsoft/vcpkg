@@ -4212,6 +4212,10 @@
       "baseline": "2.4.0",
       "port-version": 1
     },
+    "kdgpu": {
+      "baseline": "0.10.0",
+      "port-version": 0
+    },
     "kdiagram": {
       "baseline": "2.8.0",
       "port-version": 0
