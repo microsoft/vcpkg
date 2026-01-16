@@ -17,7 +17,7 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Auth)
 
 if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/kauth/kauth-policy-gen${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool(
+    vcpkg_copy_tools(
         TOOL_NAMES kauth/kauth-policy-gen
         AUTO_CLEAN
     )
