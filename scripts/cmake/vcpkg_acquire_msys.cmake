@@ -276,7 +276,7 @@ macro(z_vcpkg_acquire_msys_declare_all_packages)
         URL "https://mirror.msys2.org/msys/x86_64/autoconf-wrapper-20250528-1-any.pkg.tar.zst"
         SHA512 a25b4d2a239bce094e6d4019d943c8381df92e3f982464f01cdb6fd79a449094ba44e0e45032270bd0f9e6c98cdaf0ab3560fc97084aaaeb708812297ee62996
         PROVIDES autoconf
-        DEPS autoconf2.72 bash sed
+        DEPS autoconf2.72 autoconf2.71 bash sed
     )
     z_vcpkg_acquire_msys_declare_package(
         URL "https://mirror.msys2.org/msys/x86_64/autoconf2.72-2.72-3-any.pkg.tar.zst"
