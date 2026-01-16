@@ -58,7 +58,7 @@
     },
     "aeron": {
       "baseline": "1.49.3",
-      "port-version": 1
+      "port-version": 2
     },
     "air-ctl": {
       "baseline": "1.1.2",
@@ -2550,7 +2550,7 @@
     },
     "dpdk": {
       "baseline": "25.11",
-      "port-version": 0
+      "port-version": 1
     },
     "dpp": {
       "baseline": "10.1.4",
