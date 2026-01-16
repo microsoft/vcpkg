@@ -338,61 +338,61 @@
       "name": "node",
       "os": "windows",
       "arch":"x64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-win-x64/node.exe",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-win-x64.7z",
-      "sha512": "df7099033a60f746f2a9eb0374d41fb68e7b0cce57f07a1819d3500ce8db36e3da2a6c77227f82e3373f1fe1cdec565f22ee8092274853d8f249fcdc0af5da06",
-      "archive": "node-v24.8.0-win-x64.7z"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-win-x64/node.exe",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-win-x64.7z",
+      "sha512": "48a502b242f55ca7e05dcca49be64cfccc50be150227131e742a0b8bf9823b82cf71977d6e9d919ee05a84ed2985c7e670f3fb830e929b5fb16b6c2459d7e119",
+      "archive": "node-v24.13.0-win-x64.7z"
     },
     {
       "name": "node",
       "os": "windows",
       "arch":"arm64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-win-arm64/node.exe",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-win-arm64.7z",
-      "sha512": "f80a971d6c818aaea423d7b7171e27636d2701715bb1f6b760872d240121b1eb79bd717977bb3f4909ada81fbb7a941e1c1892707f758c7861d15fcdd623ede5",
-      "archive": "node-v24.8.0-win-arm64.7z"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-win-arm64/node.exe",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-win-arm64.7z",
+      "sha512": "26c1b63d9e11c4b7c9d46101728ad5829fdfc7eee7ffe36fa7f8e3e3143ebce59a60baf8bc150869461ee7fcb96d1b815b2c89cc0df8d8b01b32bf4478f7f942",
+      "archive": "node-v24.13.0-win-arm64.7z"
     },
     {
       "name": "node",
       "os": "linux",
       "arch":"x64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-linux-x64/bin/node",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-linux-x64.tar.gz",
-      "sha512": "c008d04c1976353fc9cf0efde11ab1cacbc726122ebe22cabf2d5eff156072266bc5a214caf0e064c59899ed4ce674f52fffb9aeec399ce0f94e347086ecf114",
-      "archive": "node-v24.8.0-linux-x64.tar.gz"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-linux-x64/bin/node",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-linux-x64.tar.gz",
+      "sha512": "ff59bbf130f68fbb251e4a0ae0b50cf18c4135f3b8a90ef1f8c0263174128fed88a12d1c32df4c3da9cd4cbc67e430508f8b3d46ea3da69b244405fac5413c26",
+      "archive": "node-v24.13.0-linux-x64.tar.gz"
     },
     {
       "name": "node",
       "os": "linux",
       "arch": "arm64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-linux-arm64/bin/node",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-linux-arm64.tar.gz",
-      "sha512": "58bcef57e47179ac9f0b81a2118c4ecb464fd8e38809e9744026af466f4ef1c7df16dd075e7f58b90d80e67241151d623cd48cba8a83cf898c42774b387c8d27",
-      "archive": "node-v24.8.0-linux-arm64.tar.gz"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-linux-arm64/bin/node",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-linux-arm64.tar.gz",
+      "sha512": "e419670361af0c549596ef02781dfae728f607649b64831d512ea222df6533aa49ad67afc094e14b9360500be2910bec36927be2a857d928b8a5fd5542cf424d",
+      "archive": "node-v24.13.0-linux-arm64.tar.gz"
     },
     {
       "name": "node",
       "os": "osx",
       "arch":"x64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-darwin-x64/bin/node",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-darwin-x64.tar.gz",
-      "sha512": "7537027ce5d7b46e7241625d95a18df15e41233de4ec11ba17e9c500f7eb1b26004921f966f1a862c079fe56143934dd903a29cd5f41d22995811b6fd0842ca7",
-      "archive": "node-v24.8.0-darwin-x64.tar.gz"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-darwin-x64/bin/node",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-darwin-x64.tar.gz",
+      "sha512": "30c2254f6f2d7f535779281b116bb0c1592eb5403da01b12a0146ef33619a0b1d5d68a030e0b75f32de1ec435274fd7722eb35b6d4efb44dffcb68da98fc0ac6",
+      "archive": "node-v24.13.0-darwin-x64.tar.gz"
     },
     {
       "name": "node",
       "os": "osx",
       "arch": "arm64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-darwin-arm64/bin/node",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-darwin-arm64.tar.gz",
-      "sha512": "54e33d0397148e805aff9e3732a71c4f0e6de89a5c4cbe55606c5886e16df2df7812dc8c48f001e1ea2902002a4388221a86af3eb491d8c2287da4b7acdd57a6",
-      "archive": "node-v24.8.0-darwin-arm64.tar.gz"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-darwin-arm64/bin/node",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-darwin-arm64.tar.gz",
+      "sha512": "c1cedaac4030c42a54c505208d99be59703bf626c8b7ef559cb41d332d2d5aab93772f0f3136f06930c80bbd71f83ca78386d252e1bbb9e43c61146204a78b2e",
+      "archive": "node-v24.13.0-darwin-arm64.tar.gz"
     },
     {
       "name": "azcopy",
