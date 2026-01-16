@@ -338,121 +338,121 @@
       "name": "node",
       "os": "windows",
       "arch":"x64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-win-x64/node.exe",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-win-x64.7z",
-      "sha512": "df7099033a60f746f2a9eb0374d41fb68e7b0cce57f07a1819d3500ce8db36e3da2a6c77227f82e3373f1fe1cdec565f22ee8092274853d8f249fcdc0af5da06",
-      "archive": "node-v24.8.0-win-x64.7z"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-win-x64/node.exe",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-win-x64.7z",
+      "sha512": "48a502b242f55ca7e05dcca49be64cfccc50be150227131e742a0b8bf9823b82cf71977d6e9d919ee05a84ed2985c7e670f3fb830e929b5fb16b6c2459d7e119",
+      "archive": "node-v24.13.0-win-x64.7z"
     },
     {
       "name": "node",
       "os": "windows",
       "arch":"arm64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-win-arm64/node.exe",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-win-arm64.7z",
-      "sha512": "f80a971d6c818aaea423d7b7171e27636d2701715bb1f6b760872d240121b1eb79bd717977bb3f4909ada81fbb7a941e1c1892707f758c7861d15fcdd623ede5",
-      "archive": "node-v24.8.0-win-arm64.7z"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-win-arm64/node.exe",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-win-arm64.7z",
+      "sha512": "26c1b63d9e11c4b7c9d46101728ad5829fdfc7eee7ffe36fa7f8e3e3143ebce59a60baf8bc150869461ee7fcb96d1b815b2c89cc0df8d8b01b32bf4478f7f942",
+      "archive": "node-v24.13.0-win-arm64.7z"
     },
     {
       "name": "node",
       "os": "linux",
       "arch":"x64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-linux-x64/bin/node",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-linux-x64.tar.gz",
-      "sha512": "c008d04c1976353fc9cf0efde11ab1cacbc726122ebe22cabf2d5eff156072266bc5a214caf0e064c59899ed4ce674f52fffb9aeec399ce0f94e347086ecf114",
-      "archive": "node-v24.8.0-linux-x64.tar.gz"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-linux-x64/bin/node",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-linux-x64.tar.gz",
+      "sha512": "ff59bbf130f68fbb251e4a0ae0b50cf18c4135f3b8a90ef1f8c0263174128fed88a12d1c32df4c3da9cd4cbc67e430508f8b3d46ea3da69b244405fac5413c26",
+      "archive": "node-v24.13.0-linux-x64.tar.gz"
     },
     {
       "name": "node",
       "os": "linux",
       "arch": "arm64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-linux-arm64/bin/node",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-linux-arm64.tar.gz",
-      "sha512": "58bcef57e47179ac9f0b81a2118c4ecb464fd8e38809e9744026af466f4ef1c7df16dd075e7f58b90d80e67241151d623cd48cba8a83cf898c42774b387c8d27",
-      "archive": "node-v24.8.0-linux-arm64.tar.gz"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-linux-arm64/bin/node",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-linux-arm64.tar.gz",
+      "sha512": "e419670361af0c549596ef02781dfae728f607649b64831d512ea222df6533aa49ad67afc094e14b9360500be2910bec36927be2a857d928b8a5fd5542cf424d",
+      "archive": "node-v24.13.0-linux-arm64.tar.gz"
     },
     {
       "name": "node",
       "os": "osx",
       "arch":"x64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-darwin-x64/bin/node",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-darwin-x64.tar.gz",
-      "sha512": "7537027ce5d7b46e7241625d95a18df15e41233de4ec11ba17e9c500f7eb1b26004921f966f1a862c079fe56143934dd903a29cd5f41d22995811b6fd0842ca7",
-      "archive": "node-v24.8.0-darwin-x64.tar.gz"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-darwin-x64/bin/node",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-darwin-x64.tar.gz",
+      "sha512": "30c2254f6f2d7f535779281b116bb0c1592eb5403da01b12a0146ef33619a0b1d5d68a030e0b75f32de1ec435274fd7722eb35b6d4efb44dffcb68da98fc0ac6",
+      "archive": "node-v24.13.0-darwin-x64.tar.gz"
     },
     {
       "name": "node",
       "os": "osx",
       "arch": "arm64",
-      "version": "24.8.0",
-      "executable": "node-v24.8.0-darwin-arm64/bin/node",
-      "url": "https://nodejs.org/dist/v24.8.0/node-v24.8.0-darwin-arm64.tar.gz",
-      "sha512": "54e33d0397148e805aff9e3732a71c4f0e6de89a5c4cbe55606c5886e16df2df7812dc8c48f001e1ea2902002a4388221a86af3eb491d8c2287da4b7acdd57a6",
-      "archive": "node-v24.8.0-darwin-arm64.tar.gz"
+      "version": "24.13.0",
+      "executable": "node-v24.13.0-darwin-arm64/bin/node",
+      "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-darwin-arm64.tar.gz",
+      "sha512": "c1cedaac4030c42a54c505208d99be59703bf626c8b7ef559cb41d332d2d5aab93772f0f3136f06930c80bbd71f83ca78386d252e1bbb9e43c61146204a78b2e",
+      "archive": "node-v24.13.0-darwin-arm64.tar.gz"
     },
     {
       "name": "azcopy",
       "os": "linux",
       "arch": "amd64",
-      "version": "10.31.0",
-      "executable": "azcopy_linux_amd64_10.31.0/azcopy",
-      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.0/azcopy_linux_amd64_10.31.0.tar.gz",
-      "sha512": "ea38174f1bbdf37e5d8e0fb4d3dccde447b83b0438b14d42ac9c47d8880a3567b8cb94b1debc6846d200f7fbd63bb9be50a7d6a43ae6092e4dfe299ac9fa8de8",
-      "archive": "azcopy_linux_amd64_10.31.0.tar.gz"
+      "version": "10.31.1",
+      "executable": "azcopy_linux_amd64_10.31.1/azcopy",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.1/azcopy_linux_amd64_10.31.1.tar.gz",
+      "sha512": "87de37caec3e52ce23840e75d11f3c0b0312a661939d6a3d7175e4e42733f5d8451d0925706d0b992bb8c401e7c128d8a63ccb16c05722d50abcd301a28a8a35",
+      "archive": "azcopy_linux_amd64_10.31.1.tar.gz"
     },
     {
       "name": "azcopy",
       "os": "linux",
       "arch": "arm64",
-      "version": "10.31.0",
-      "executable": "azcopy_linux_arm64_10.31.0/azcopy",
-      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.0/azcopy_linux_arm64_10.31.0.tar.gz",
-      "sha512": "4f519ba08ac26d88a350558f760e82bed782d1cf4438be1ddcbec6ba5ff576a772ce304e970a2e8ef2450994927ab4af0bbd1c264cd6ddd39dc058d9998309e3",
-      "archive": "azcopy_linux_arm64_10.31.0.tar.gz"
+      "version": "10.31.1",
+      "executable": "azcopy_linux_arm64_10.31.1/azcopy",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.1/azcopy_linux_arm64_10.31.1.tar.gz",
+      "sha512": "e79777c346b990cb15ac6cefc21ef2b7bab2f454bd6df056e68043648048036f453914c4cd4d4ba66af8cbe2b9f2e45ed19feb3bd1bfaa6760fffbfb7b1b038a",
+      "archive": "azcopy_linux_arm64_10.31.1.tar.gz"
     },
     {
       "name": "azcopy",
       "os": "osx",
       "arch": "amd64",
-      "version": "10.31.0",
-      "executable": "azcopy_darwin_amd64_10.31.0/azcopy",
-      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.0/azcopy_darwin_amd64_10.31.0.zip",
-      "sha512": "f6f61315735d6df86e83766638fd1fe21e83ecd8c58ccdc8fadb52f62f72f07e0bb89ae9fe4b98d173529559654800e7e500d381a34cd7917812a1d1c0e8dc7d",
-      "archive": "azcopy_darwin_amd64_10.31.0.zip"
+      "version": "10.31.1",
+      "executable": "azcopy_darwin_amd64_10.31.1/azcopy",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.1/azcopy_darwin_amd64_10.31.1.zip",
+      "sha512": "ffc0f58475bf7095094084257aa2bfb38b8d7b58615da13d297ddec215e88c29a367f942008de5fc3339ba2c37b93d7164b9d7ee32b6d8b9e6dfc574372b0561",
+      "archive": "azcopy_darwin_amd64_10.31.1.zip"
     },
     {
       "name": "azcopy",
       "os": "osx",
       "arch": "arm64",
-      "version": "10.31.0",
-      "executable": "azcopy_darwin_arm64_10.31.0/azcopy",
-      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.0/azcopy_darwin_arm64_10.31.0.zip",
-      "sha512": "be320020701886ff1c77c9e7d5bf4bce15971b606dca02adad795f8421cfb9ee5790515e1754e7ef60435626b7f55595fdbebe5c63774b7b239a142af8bdfdcb",
-      "archive": "azcopy_darwin_arm64_10.31.0.zip"
+      "version": "10.31.1",
+      "executable": "azcopy_darwin_arm64_10.31.1/azcopy",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.1/azcopy_darwin_arm64_10.31.1.zip",
+      "sha512": "7c37e1b767c195e8b7bf27e6b52ac3fc583b77db015cc95bf49c59e43bd3ff264498103649c78475aff9ae7b8dc4441b6e8ee5872a195d12fc4909a24a811101",
+      "archive": "azcopy_darwin_arm64_10.31.1.zip"
     },
     {
       "name": "azcopy",
       "os": "windows",
       "arch": "amd64",
-      "version": "10.31.0",
-      "executable": "azcopy_windows_amd64_10.31.0/azcopy.exe",
-      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.0/azcopy_windows_amd64_10.31.0.zip",
-      "sha512": "540f74612af166fe155fd8d6d22999e4242b4cf3c3e3fe81403d8f7f58a8a418f9279391b33be31a5848e9dbd99a62b307f7a154da96ee7419bbe7b918e1df35",
-      "archive": "azcopy_windows_amd64_10.31.0.zip"
+      "version": "10.31.1",
+      "executable": "azcopy_windows_amd64_10.31.1/azcopy.exe",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.1/azcopy_windows_amd64_10.31.1.zip",
+      "sha512": "bf2aca121a60c3267967e1a740520c2bd67fb4c26411347f7ae8071bfb0bdab2dd9ad5a301893a12ce0245ac1b4b655412dfb7b9217528b0da767021d2b19ede",
+      "archive": "azcopy_windows_amd64_10.31.1.zip"
     },
     {
       "name": "azcopy",
       "os": "windows",
       "arch": "arm64",
-      "version": "10.31.0",
-      "executable": "azcopy_windows_arm64_10.31.0/azcopy.exe",
-      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.0/azcopy_windows_arm64_10.31.0.zip",
-      "sha512": "a426c43244adc6e39efb422a73faaad2a8d93d3805d2d4e3bd3f011daf491871366f371936c68da184596167a2b8de746dd8f9276aa30996b23e4b51f9f56da4",
-      "archive": "azcopy_windows_arm64_10.31.0.zip"
+      "version": "10.31.1",
+      "executable": "azcopy_windows_arm64_10.31.1/azcopy.exe",
+      "url": "https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.1/azcopy_windows_arm64_10.31.1.zip",
+      "sha512": "2f267aa119544ffab5ae0f79ea2431631a8c2e927a0a74113b7c2974f28728316777770fa950ec6243267b483c3cecdab97b2343c022f5f21020f1d5e824a448",
+      "archive": "azcopy_windows_arm64_10.31.1.zip"
     }
   ]
 }

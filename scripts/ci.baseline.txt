@@ -38,6 +38,9 @@
 ##
 
 # Add new items alphabetically
+aeron:arm-neon-android=fail
+aeron:arm64-android=fail
+aeron:x64-android=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:x64-android=fail
@@ -333,12 +336,6 @@ juce:x64-android=fail
 kf6archive:arm-neon-android=skip
 kf6archive:arm64-android=skip
 kf6archive:x64-android=skip
-lcm:arm-neon-android=fail
-lcm:arm64-android=fail
-lcm:arm64-windows-static-md=fail
-lcm:x64-android=fail
-lcm:x64-windows-static-md=fail
-lcm:x64-windows-static=fail
 leptonica:arm64-uwp=fail
 leptonica:x64-uwp=fail
 libaiff:x64-linux=fail
@@ -728,6 +725,7 @@ xbitmaps:arm-neon-android=fail
 xbitmaps:arm64-android=fail
 xbitmaps:arm64-osx=skip
 xbitmaps:x64-android=fail
+xbitmaps:x64-linux=fail
 zeroc-ice:arm-neon-android=fail
 zeroc-ice:arm64-android=fail
 zeroc-ice:x64-android=fail
