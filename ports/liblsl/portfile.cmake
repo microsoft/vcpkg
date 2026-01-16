@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sccn/liblsl
     REF v${VERSION}
-    SHA512 b50d2e276a6c824da5a19e517e3684b1f4c33fa31ed839772f33faa5756b19c934bc4f1587bb488819345549fa063533ad05d2ec41d2798f158150b4f4a48ff5
+    SHA512 5b540c9b7c0b6fb5827dbb8afdc85267d8e36e3b807704af11ed89865754f1d786f28414adf1c3c7df15956143a0bfc82c449c5ff8656d18f1a6e03c4c1e89ce
     HEAD_REF master
     PATCHES
         use-find-package-asio.patch
