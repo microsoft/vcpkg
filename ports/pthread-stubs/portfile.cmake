@@ -1,10 +1,10 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
+    GITLAB_URL "https://gitlab.freedesktop.org/xorg"
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/pthread-stubs
-    REF 50f0755a7f894acae168f19c66e52a3f139ca4ec # 0.4.0
-    SHA512  15fcb2144a8abb7b9b1b8f6d9732759351268fb440c7a59380b0ca6ddf48b74a37ce5afbf777ce58fc1993df0c8d6ffb82e452800ce2fcaf16edcbcc1750e338
+    REPO "lib/pthread-stubs"
+    REF "libpthread-stubs-${VERSION}"
+    SHA512 b2429828f51cc6c9bbb9879c9933ff747354574626ff8fcfbec22c41ded1e9bdf4049715485f580e72c561dfd54d48d731c1f6ae9fff229976890361e3276f2e
     HEAD_REF master
 )
 
@@ -19,8 +19,7 @@ vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pthread-stubs.pc")
 file(READ "${_file}" _contents)
