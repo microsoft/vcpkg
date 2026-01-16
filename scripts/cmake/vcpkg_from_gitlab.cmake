@@ -26,7 +26,7 @@ function(vcpkg_from_gitlab)
     endif()
 
     # Editable mode: delegate to consolidated helper
-    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCE_PATH)
+    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
         set(_git_url "${arg_GITLAB_URL}/${arg_REPO}.git")
         if(DEFINED arg_REF)
             set(_git_ref "${arg_REF}")
