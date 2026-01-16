@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wpilibsuite/allwpilib
     REF "v${VERSION}"
-    SHA512 11b5394efbc54e724a48a93d960d69befecf38fd22457074458283e7e42fa011865a80022ff18162e65074e0bf9f008d298471b6ec76636361ba4eadbfdb512c
+    SHA512 7055b38800aa00cf7d44b2ed38367c3b6f1f8c6e5022b7ba34c7088a7710d187358ec2bdfea919524cdd5daba28c875cd8d18d3feec55295881afe79f909d0ad
     HEAD_REF main
 )
 
@@ -15,6 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         protobuf           WITH_PROTOBUF
         simulationmodules  WITH_SIMULATION_MODULES
         wpimath            WITH_WPIMATH
+	wpical             WITH_WPICAL
 )
 
 vcpkg_cmake_configure(
@@ -27,20 +28,13 @@ vcpkg_cmake_configure(
         -DWITH_JAVA=OFF
         -DWITH_EXAMPLES=OFF
         -DWITH_TESTS=OFF
+	-DWITH_BENCHMARK=OFF
         -DNO_WERROR=ON
 )
 
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME wpiutil)
-
-set(WPI_CONFIG_FILE_PATH "${CURRENT_PACKAGES_DIR}/share/wpilib/wpilib-config.cmake")
-
-file(READ "${WPI_CONFIG_FILE_PATH}" WPI_CONFIG_FILE_CONTENTS)
-
-string(REPLACE "find_dependency(wpilibj)" "" WPI_CONFIG_FILE_CONTENTS "${WPI_CONFIG_FILE_CONTENTS}")
-
-file(WRITE "${WPI_CONFIG_FILE_PATH}" "${WPI_CONFIG_FILE_CONTENTS}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
