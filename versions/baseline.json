@@ -3432,6 +3432,10 @@
       "baseline": "4.4",
       "port-version": 0
     },
+    "goldy": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "google-cloud-cpp": {
       "baseline": "2.37.0",
       "port-version": 0
