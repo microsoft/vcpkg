@@ -5,6 +5,7 @@
   "homepage": "https://github.com/xlnt-community/xlnt",
   "documentation": "https://xlnt-community.gitbook.io/xlnt",
   "license": "MIT AND BSD-3-Clause AND BSD-2-Clause",
+  "supports": "windows & linux & osx",
   "dependencies": [
     "fast-float",
     "fmt",
