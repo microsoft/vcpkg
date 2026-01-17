@@ -2,14 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeGLUTProject/freeglut
     REF "v${VERSION}"
-    SHA512 9be8dcc266daacc21aa0e11261bfe864260de6802e98e7dc84964904df4a89e52960eba94d58f4c18fc1f0ff3f13810d59fc33313c2a6e3f07d18f0b50b95849
+    SHA512 5e891e838a11ffbd5c2aea1f39004be6a0ccc1da11d661a37302c316734e0986ed86622f174ae91f40572ce9d0fbe9c43e0976ee8636f2de25aa8e1ecf256785
     HEAD_REF master
     PATCHES
         android.patch
         x11-dependencies-export.patch
         fix-debug-macro.patch
         windows-output-name.patch
-        cmake-version.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)
@@ -60,6 +59,7 @@ endif()
 
 # Clean
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/glut")
 

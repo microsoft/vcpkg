@@ -3,9 +3,9 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES
     static_find_modules.patch
-    fix_avfoundation_target.patch
     remove-static-ssl-stub.patch
     ffmpeg-compile-def.patch
+    ffmpeg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,12 +31,6 @@ endif()
 list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_gl='no'")
 list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_photography='no'")
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=ON")
-else()
-    list(APPEND FEATURE_OPTIONS "-DFEATURE_wmf=OFF")
-endif()
-
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
@@ -60,7 +54,6 @@ endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
-                        --trace-expand
                         ${FEATURE_OPTIONS}
                         -DCMAKE_FIND_PACKAGE_TARGETS_GLOBAL=ON
                      CONFIGURE_OPTIONS_RELEASE

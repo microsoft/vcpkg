@@ -146,7 +146,7 @@ index 41bd634..87f1406 100644
  if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
 +  find_package(imgui CONFIG REQUIRED)
 +elseif(0)
-   set(IMGUI_DIR "${PROJECT_BINARY_DIR}/imgui-1.91.2" CACHE PATH "")
+   set(IMGUI_DIR "${PROJECT_BINARY_DIR}/imgui-1.91.9b" CACHE PATH "")
    if(NOT EXISTS ${IMGUI_DIR})
      message(STATUS "Downloading imgui")
 @@ -63,6 +65,8 @@ elseif(UNIX)

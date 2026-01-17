@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index e0d2256..6113dfd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -26,7 +26,6 @@ AC_INIT([libXtst], [1.2.5],
+ 	[https://gitlab.freedesktop.org/xorg/lib/libxtst/-/issues], [libXtst])
+ AC_CONFIG_SRCDIR([Makefile.am])
+ AC_CONFIG_HEADERS([config.h])
+-AC_CONFIG_MACRO_DIRS([m4])
+ 
+ # Initialize Automake
+ AM_INIT_AUTOMAKE([foreign dist-xz])

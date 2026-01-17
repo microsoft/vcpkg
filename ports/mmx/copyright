@@ -1,18 +1,10 @@
-Licenses are stated in each header file
+Licenses are stated in each header file.
 
 json.h - public domain - Micha Mettke
-
-lexer.h - zlib LICENSE
-LICENSE: (zlib)
-Copyright (c) 2016 Micha Mettke
 
 sched.h - zlib LICENSE
 LICENSE: (zlib)
 Copyright (c) 2016 Doug Binks
-
-vec.h - zlib LICENSE
-LICENSE: (zlib)
-Copyright (c) 2015 Micha Mettke
 
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages
@@ -28,6 +20,11 @@ freely, subject to the following restrictions:
     misrepresented as being the original software.
 3.  This notice may not be removed or altered from any source distribution.
 
+sdefl.h - MIT License or Public Domain (www.unlicense.org)
+Copyright (c) 2020-2023 Micha Mettke
+
+sinfl.h - MIT License or Public Domain (www.unlicense.org)
+Copyright (c) 2020-2023 Micha Mettke
 
 web.h - BSD LICENSE - Andreas Fredriksson
 LICENSE: (BSD)

@@ -8,7 +8,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/argtable/argtable3/releases/download/v${VERSION}/argtable-v${VERSION}.zip"
     FILENAME "argtable-v${VERSION}.zip"
-    SHA512 5591d510a1c739148aa356e5fa9827e037c4a0f1d171453635fad0cca4030d1fa3cce1e50671a944d12abfd4793df1f5cd1125825a23c63e54e9362def56e9f9
+    SHA512 cdcb67f6d56ef4a02254cd210c035d2b037bd2844a3b14c261500eecd307ca9ab40c6cfa753aa32d4873773ddadc708966fb0772478e575d134399bd4743869f
 )
 
 vcpkg_extract_source_archive(

@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO Fidelxyz/DXCam-CPP
     HEAD_REF main
     REF "v${VERSION}"
-    SHA512 cd8463a687030da020ffaa8c8438c90185f4bf41f14b50e72ba3aea695828dd12c52e249d290ad0f0fdc1e1109a8a800d9ddf954e38037ff9da90d9ab5fa01cc
+    SHA512 1e5f8e0d1c92197a87280c901a81fb9b9f21cc754113de72f590525dcec3879536431cb15acc79190e9e39a3d429bb06badf9f5cf24a4eed8af9eea797bbcd52
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")

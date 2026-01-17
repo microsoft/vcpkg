@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 0b1348fe2d76af0a298d5bc2e4a121531846b91965eb3d427856c281d3923709821d89635467ba0c6b2afd1b326f0da531df83295e48652c86ce86424597c186
+    SHA512 be5b01dc101bf9fb54f332eb494222829af2dbae39f69c37df82ecb0351aa9c88f399d64766d3b3c3091031681bb232416f6959e57cb607928efa16906928f27
     HEAD_REF main
+    PATCHES
+        fix-freebsd.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -18,6 +20,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         wayland  SDL_WAYLAND
         x11      SDL_X11
 )
+
+if (VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS EMSCRIPTEN_FEATURE_OPTIONS
+        FEATURES
+            emscripten-pthreads     SDL_PTHREADS
+    )
+    vcpkg_list(APPEND FEATURE_OPTIONS "${EMSCRIPTEN_FEATURE_OPTIONS}")
+endif()
 
 if ("x11" IN_LIST FEATURES)
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\nsudo apt install libx11-dev libxft-dev libxext-dev\n")
@@ -44,6 +54,7 @@ vcpkg_cmake_configure(
         -DSDL_LIBC=ON
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
+        -DSDL_X11_XSCRNSAVER=OFF
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
         # Specifying the revision skips the need to use git to determine a version
         -DSDL_REVISION=vcpkg

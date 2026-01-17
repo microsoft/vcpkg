@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85bb21e..5a9878f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,16 +1,6 @@
+ cmake_minimum_required(VERSION 3.24)
+ 
+-include(cmake/CPM.cmake)
+-
+-# Fetch cpp-library before project()
+-# Check https://github.com/stlab/cpp-library/releases for the latest version
+-# CPMAddPackage(
+-#     NAME cpp-library
+-#     SOURCE_DIR "${CMAKE_SOURCE_DIR}/../cpp-library"
+-# )
+-# CPMAddPackage("gh:stlab/cpp-library#65dbed9fff9a0331355bd51dc1e8156262390154")
+-CPMAddPackage("gh:stlab/cpp-library@5.0.0")
+-include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
++include(cmake/cpp-library/cpp-library.cmake/)
+ 
+ # Enable dependency tracking before project()
+ cpp_library_enable_dependency_tracking()

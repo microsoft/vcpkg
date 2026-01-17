@@ -24,7 +24,7 @@ function(vcpkg_from_git)
     if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
         message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
     endif()
-    if(NOT DEFINED arg_LFS AND "LFS" IN_LIST arg_KEYWORDS_MISSING_VALUES)
+    if(DEFINED arg_LFS AND arg_LFS STREQUAL "")
         set(arg_LFS "${arg_URL}")
     endif()
 

@@ -10,10 +10,12 @@ vcpkg_from_github(
     SHA512 3c621245c5dc1bf26932c33c940e2b09aaebd1a15f3620616c60296f18a67e1044728543b4f640f92caf8f98295e350679b70eb11aecadea9e4a28aaf370ea75
     HEAD_REF main
     PATCHES
-        dependencies.diff
-        devendor-lodepng.diff
-        disable_unit_tests_examples_and_tutorials.patch
-        pkgconfig.diff
+        0001-dependencies.patch
+        0002-devendor-lodepng.patch
+        0003-disable_unit_tests_examples_and_tutorials.patch
+        0004-pkgconfig.patch
+        0005-add-cassert.patch
+        0006-support-eigen3-5.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/dart/external/imgui")
 
@@ -41,6 +43,7 @@ vcpkg_cmake_configure(
     OPTIONS
         ${options}
         -DDART_VERBOSE=ON
+        -DDART_TREAT_WARNINGS_AS_ERRORS=OFF
         -DDART_MSVC_DEFAULT_OPTIONS=ON
         -DDART_USE_SYSTEM_IMGUI=ON
         -DDART_BUILD_DARTPY=OFF

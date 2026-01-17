@@ -1,6 +1,6 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/gdbm/gdbm-${VERSION}.tar.gz"
-         "https://ftpmirror.gnu.org/gdbm/gdbm-${VERSION}.tar.gz"
+    URLS "https://ftpmirror.gnu.org/gdbm/gdbm-${VERSION}.tar.gz"
+         "https://ftp.gnu.org/gnu/gdbm/gdbm-${VERSION}.tar.gz"
          "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/gdbm/gdbm-${VERSION}.tar.gz"
     FILENAME "gdbm-${VERSION}.tar.gz"
     SHA512 401ff8c707079f21da1ac1d6f4714a87f224b6f41943078487dc891be49f51fd1ac7a32fd599aae0fad185f2c6ba7432616d328fd6aaab068eb54db9562ff7fa

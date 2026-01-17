@@ -8,10 +8,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
     REF "${VERSION}"
-    SHA512 5712d318e222f1ffcd2f748b0f2c32b3859253a4ed4e13ae134f4445e0ca06efc258c7653b6924b39815ae078f6a9177e098c89684d2c886161a0a4118122e8d
+    SHA512 d95bf0689fb2862ad5ea9e902b73724098d911d9c312aa69157bec9de77f32e4d5ac7dfa105d844110cc66dbdb0336056ba7f96781fcbc848b72fd0661604d50
     HEAD_REF master
     PATCHES
-        add-options-for-exes-docs-headers.patch
+        add-options-for-docs-headers.patch
         # workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
 )
@@ -39,6 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         jpeg7 WITH_JPEG7
         jpeg8 WITH_JPEG8
+        tools WITH_TOOLS
 )
 
 vcpkg_cmake_configure(
@@ -46,19 +47,25 @@ vcpkg_cmake_configure(
     OPTIONS
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
-        -DENABLE_EXECUTABLES=OFF
-        -DINSTALL_DOCS=OFF
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
-    OPTIONS_DEBUG
-        -DINSTALL_HEADERS=OFF
     MAYBE_UNUSED_VARIABLES
         WITH_CRT_DLL
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
+
+if(WITH_TOOLS)
+    vcpkg_copy_tools(
+        TOOL_NAMES cjpeg djpeg jpegtran rdjpgcom wrjpgcom
+        AUTO_CLEAN
+    )
+    vcpkg_clean_executables_in_bin(
+        FILE_NAMES tjbench
+    )
+endif()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/libjpeg-turbo)
@@ -73,9 +80,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib")
     endif()
-    
+
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    
+
     if (EXISTS "${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-debug.cmake")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-debug.cmake"
             "jpeg-static${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" "jpeg${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" IGNORE_UNCHANGED)

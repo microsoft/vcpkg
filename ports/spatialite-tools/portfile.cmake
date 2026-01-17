@@ -1,4 +1,5 @@
-# Allow empty include directory
+# only executables
+set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
 string(REPLACE "-" "" SPATIALITE_TOOLS_VERSION_STR "${VERSION}")
@@ -11,51 +12,21 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        android-builtin-iconv.diff
+        configure.diff
         fix-makefiles.patch
 )
 file(REMOVE "${SOURCE_PATH}/config.h")
 
-set(PKGCONFIG_MODULES expat libxml-2.0 sqlite3)
-
 if (VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND PKGCONFIG_MODULES readosm spatialite)
     x_vcpkg_pkgconfig_get_modules(
         PREFIX PKGCONFIG
-        MODULES --msvc-syntax ${PKGCONFIG_MODULES}
+        MODULES --msvc-syntax expat libxml-2.0 readosm spatialite sqlite3
         LIBS
     )
 
-    # vcpkg_build_nmake doesn't supply cmake's implicit link libraries
-    if(PKGCONFIG_LIBS_DEBUG MATCHES "libcrypto")
-        string(APPEND PKGCONFIG_LIBS_DEBUG " user32.lib")
-    endif()
-    if(PKGCONFIG_LIBS_RELEASE MATCHES "libcrypto")
-        string(APPEND PKGCONFIG_LIBS_RELEASE " user32.lib")
-    endif()
-
-    set(ICONV_LIBS "iconv.lib")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        string(APPEND ICONV_LIBS " charset.lib")
-    endif()
-
-    set(UWP_LIBS "")
-    if(VCPKG_TARGET_IS_UWP)
-        set(UWP_LIBS "windowsapp.lib /APPCONTAINER")
-    endif()
-
-    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
-
-    vcpkg_install_nmake(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PREFER_JOM
-        CL_LANGUAGE C
-        OPTIONS_RELEASE
-            "INSTDIR=${INST_DIR}"
-            "LIBS_ALL=/link ${PKGCONFIG_LIBS_RELEASE} ${ICONV_LIBS} ${UWP_LIBS}"
-        OPTIONS_DEBUG
-            "INSTDIR=${INST_DIR}\\debug"
-            "LIBS_ALL=/link ${PKGCONFIG_LIBS_DEBUG} ${ICONV_LIBS} ${UWP_LIBS}"
-        )
+    # cherry-picked from makefile.vc (CFLAGS) and nmake.opt (OPTFLAGS)
+    set(CFLAGS "/fp:precise /W3 /D_CRT_SECURE_NO_WARNINGS /D_LARGE_FILE=1 /D_FILE_OFFSET_BITS=64 /D_LARGEFILE_SOURCE=1")
 
     set(TOOL_EXES
         shp_sanitize
@@ -70,35 +41,37 @@ if (VCPKG_TARGET_IS_WINDOWS)
         shp_doctor
         spatialite
     )
-    vcpkg_copy_tools(TOOL_NAMES ${TOOL_EXES} AUTO_CLEAN)
+    list(TRANSFORM TOOL_EXES APPEND ".exe" OUTPUT_VARIABLE TARGETS)
 
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
 
-else()
-    x_vcpkg_pkgconfig_get_modules(
-        PREFIX PKGCONFIG
-        MODULES ${PKGCONFIG_MODULES}
-        LIBS
+    vcpkg_install_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        CL_LANGUAGE C
+        # Use this explicit sequence of targets to mitigate linker race.
+        TARGET ${TARGETS} install
+        OPTIONS_RELEASE
+            "CFLAGS=${CFLAGS} ${PKGCONFIG_CFLAGS_RELEASE}"
+            "LIBS=${PKGCONFIG_LIBS_RELEASE} iconv.lib charset.lib user32.lib"
+            "INSTDIR=${INST_DIR}"
+        OPTIONS_DEBUG
+            --DISABLED--
     )
 
-    vcpkg_configure_make(
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_EXES} AUTO_CLEAN)
+
+else()
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTOCONFIG
+        AUTORECONF
         OPTIONS
             --disable-minizip
             --disable-readline
             --enable-readosm
-        OPTIONS_DEBUG
-            "LIBS=${PKGCONFIG_LIBS_DEBUG} \$LIBS"
-        OPTIONS_RELEASE
-            "LIBS=${PKGCONFIG_LIBS_RELEASE} \$LIBS"
     )
+    vcpkg_make_install()
 
-    vcpkg_install_make()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

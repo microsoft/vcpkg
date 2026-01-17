@@ -28,7 +28,6 @@ set(PATCHES
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
-    0012-force-disable-modules.patch
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
@@ -102,12 +101,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
         find_library(FFI_DEBUG NAMES ffi PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(LZMA_RELEASE NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(LZMA_DEBUG NAMES lzma PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-        find_library(SQLITE_DEBUG NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE3 MODULES sqlite3 LIBRARIES USE_MSVC_SYNTAX_ON_WINDOWS)
+        separate_arguments(SQLITE3_LIBRARIES_DEBUG UNIX_COMMAND "${PC_SQLITE3_LIBRARIES_DEBUG}")
+        separate_arguments(SQLITE3_LIBRARIES_RELEASE UNIX_COMMAND "${PC_SQLITE3_LIBRARIES_RELEASE}")
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SSL_DEBUG NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE_RELEASE}")
-        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE_DEBUG}")
+        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE3_LIBRARIES_RELEASE}")
+        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE3_LIBRARIES_DEBUG}")
     else()
         message(STATUS "WARNING: Extensions have been disabled. No C extension modules will be available.")
     endif()
@@ -248,7 +248,7 @@ else()
         "--with-system-expat"
         "--disable-test-modules"
     )
-    if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_BSD)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
 
@@ -282,8 +282,12 @@ else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTORECONF
+        DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}
+            py_cv_module__curses=n/a
+            py_cv_module__curses_panel=n/a
+            py_cv_module__tkinter=n/a
         OPTIONS_DEBUG
             "--with-pydebug"
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"
@@ -349,7 +353,7 @@ string(REPLACE "@PYTHON_VERSION_MINOR@" "${PYTHON_VERSION_MINOR}" usage_extra "$
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}\n${usage_extra}")
 
 function(_generate_finder)
-    cmake_parse_arguments(PythonFinder "NO_OVERRIDE" "DIRECTORY;PREFIX" "" ${ARGN})
+    cmake_parse_arguments(PythonFinder "NO_OVERRIDE;SUPPORTS_ARTIFACTS_PREFIX" "DIRECTORY;PREFIX" "" ${ARGN})
     configure_file(
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
         "${CURRENT_PACKAGES_DIR}/share/${PythonFinder_DIRECTORY}/vcpkg-cmake-wrapper.cmake"
@@ -358,8 +362,8 @@ function(_generate_finder)
 endfunction()
 
 message(STATUS "Installing cmake wrappers")
-_generate_finder(DIRECTORY "python" PREFIX "Python")
-_generate_finder(DIRECTORY "python3" PREFIX "Python3")
+_generate_finder(DIRECTORY "python" PREFIX "Python" SUPPORTS_ARTIFACTS_PREFIX)
+_generate_finder(DIRECTORY "python3" PREFIX "Python3" SUPPORTS_ARTIFACTS_PREFIX)
 _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)

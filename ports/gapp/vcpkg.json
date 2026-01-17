@@ -1,10 +1,9 @@
 {
   "name": "gapp",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "A genetic algorithms library in C++ for single- and multi-objective optimization.",
   "homepage": "https://github.com/KRM7/gapp",
   "license": "MIT",
-  "supports": "(windows | linux) & !arm",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

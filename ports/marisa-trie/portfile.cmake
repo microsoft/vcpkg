@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO s-yata/marisa-trie
     REF v${VERSION}
-    SHA512 6d72b13daec877c9c42e2c93e591e3a5e9c738bb130c5d90d6adfde81d5b500684ca176439b7502d9243b6417f34c7b39750ff3fb3a5c52d8d06cb9bc5f14c22
+    SHA512 60757e354e4f0ff47662930af5c32a762c5f348c60019abb2d502c6c21ec220731edd9be8ea36e3ec68df90a6584eb311fe1e3d4258b3392609a87b0ef427121
     HEAD_REF master
     PATCHES
         enable-debug.patch

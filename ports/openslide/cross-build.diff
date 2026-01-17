@@ -1,0 +1,32 @@
+diff --git a/meson.build b/meson.build
+index 0b4d7d4..de8773c 100644
+--- a/meson.build
++++ b/meson.build
+@@ -45,7 +45,7 @@ versions = {
+ 
+ # Compiler flags
+ cc = meson.get_compiler('c')
+-cc_native = meson.get_compiler('c', native : true)
++cc_native = meson.get_compiler('c')
+ add_project_arguments(
+   cc.get_supported_arguments(
+     '-Wstrict-prototypes',
+diff --git a/src/meson.build b/src/meson.build
+index e886eea..97309e5 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -1,3 +1,6 @@
++if meson.is_cross_build()
++  openslide_tables_c = [ '../openslide-tables.c' ]
++else
+ # generate openslide-tables.c
+ make_tables = executable(
+   'make-tables', 'make-tables.c',
+@@ -9,6 +12,7 @@ openslide_tables_c = custom_target(
+   output : 'openslide-tables.c',
+   command : [make_tables, '@OUTPUT@'],
+ )
++endif
+ 
+ # Windows resources
+ openslide_dll_manifest = configure_file(

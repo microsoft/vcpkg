@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
     REF "${VERSION}"
-    SHA512 065545fe93bd2f2904f27c891b7ef960b709b7021bbf978e82eeffddd2c7625b7da21a2239987215a0974918ddde5ff400913216a25ac6c590048afc8f309411
+    SHA512 aedce62ca581de21afb0b5985b52b9f23f1ec467a0097c696367cd16cc158b901805387455cb010fee463e4cffe0abbd56a16cb760776161acb40b9137d30784
     HEAD_REF master
     PATCHES
         fix_build_with_vs2017.patch
-        pkgconfig.diff
 )
 
 vcpkg_cmake_configure(

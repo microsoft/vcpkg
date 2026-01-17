@@ -5,7 +5,7 @@ vcpkg_download_distfile(
         "ftp://ftp.invisible-island.net/ncurses/ncurses-${VERSION}.tar.gz"
         "https://ftp.gnu.org/gnu/ncurses/ncurses-${VERSION}.tar.gz"
     FILENAME "ncurses-${VERSION}.tgz"
-    SHA512 1c2efff87a82a57e57b0c60023c87bae93f6718114c8f9dc010d4c21119a2f7576d0225dab5f0a227c2cfc6fb6bdbd62728e407f35fce5bf351bb50cf9e0fd34
+    SHA512 fc5a13409d2a530a1325776dcce3a99127ddc2c03999cfeb0065d0eee2d68456274fb1c7b3cc99c1937bc657d0e7fca97016e147f93c7821b5a4a6837db821e8
 )
 
 vcpkg_extract_source_archive(
@@ -37,6 +37,12 @@ if(VCPKG_TARGET_IS_MINGW)
     )
 endif()
 
+if("check-size" IN_LIST FEATURES)
+    list(APPEND OPTIONS
+        --enable-check-size
+    )
+endif()
+
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
@@ -46,14 +52,14 @@ if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND VCPKG_DETECTED_CMAKE_
     set(ENV{CFLAGS} "$ENV{CFLAGS} -std=c17")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    CONFIGURE_ENVIRONMENT_VARIABLES CFLAGS
-    DETERMINE_BUILD_TRIPLET
-    NO_ADDITIONAL_PATHS
+    DEFAULT_OPTIONS_EXCLUDE "^--docdir"
     OPTIONS
         ${OPTIONS}
         --disable-db-install
+        --disable-pkg-ldflags
+        --disable-rpath-hack
         --enable-pc-files
         --without-ada
         --without-debug # "lib model"
@@ -63,9 +69,22 @@ vcpkg_configure_make(
         --without-tests
         --with-pkg-config-libdir=libdir
 )
-vcpkg_install_make()
-
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
+
+# Prefer local files over search path
+file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/ncursesw/*.h")
+foreach(file IN LISTS headers)
+    vcpkg_replace_string("${file}" [[#include <ncursesw/([^>]*)>]] [[#include "\1"]] REGEX IGNORE_UNCHANGED)
+endforeach()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/bin/ncursesw6-config"  "${CURRENT_INSTALLED_DIR}" "\${prefix}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/bin/ncursesw6-config"  "\nprefix=\"\${prefix}\"" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/debug/bin/ncursesw6-config"  "${CURRENT_INSTALLED_DIR}" "\${prefix}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/debug/bin/ncursesw6-config"  "\nprefix=\"\${prefix}/debug\"" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)/debug]=])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/debug/bin/ncursesw6-config"  "\${prefix}/share" "\${prefix}/../share")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")

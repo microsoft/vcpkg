@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 962f580..b898742 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -83,6 +83,12 @@ else()
+     add_library(base64 STATIC)
+ endif()
+ 
++set_target_properties(base64 PROPERTIES
++    OUTPUT_NAME "${PROJECT_NAME}"
++    ARCHIVE_OUTPUT_NAME "${PROJECT_NAME}"
++    RUNTIME_OUTPUT_NAME "${PROJECT_NAME}"
++)
++
+ foreach(_obj ${_b64_objs})
+     set_target_properties(${_obj} PROPERTIES POSITION_INDEPENDENT_CODE ${BUILD_SHARED_LIBS})
+     target_sources(base64 PRIVATE $<TARGET_OBJECTS:${_obj}>)

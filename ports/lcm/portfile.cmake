@@ -1,19 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lcm-proj/lcm
-    REF v1.4.0
-    SHA512 ca036aa2c31911e0bfaeab9665188c97726201267314693a1c333c4efe13ea598b39a55a19bc1d48e65462ac9d1716adfda5af86c645d59c3247192631247cc6
+    REF "v${VERSION}"
+    SHA512 3da9739a03769e609d44a93ae0f6790a604ca05c93639860bdc67843738452894582ca5eccabc3ade61afe519f40d3147f6bf2fe6ec5abcb03c8dd74dd22fb9c
     HEAD_REF master
     PATCHES 
         only-install-one-flavor.patch
-        fix-build-error.patch
         glib.link.patch
         disable-docs.patch
-        avoid-fake-stdint-h.patch # https://github.com/lcm-proj/lcm/pull/563
 )
 
-# Remove fake stdint.h that conficts with the real one in VS2022 17.13 targeting arm64
-file(REMOVE "${SOURCE_PATH}/WinSpecific/include/inttypes.h" "${SOURCE_PATH}/WinSpecific/include/stdint.h")
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
      SOURCE_PATH "${SOURCE_PATH}"
@@ -48,4 +46,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6980eb5bd4..fdf16f5236 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -125,7 +125,7 @@ if(KDSME_QT6)
+     set(QT_VERSION_MAJOR 6)
+     set(QT_MIN_VERSION "6.1.0")
+     find_package(
+-        Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Quick QuickControls2 QuickWidgets Test Widgets StateMachine
++        Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Gui GuiPrivate ScxmlPrivate Quick QuickControls2 QuickWidgets Test Widgets StateMachine
+     )
+     find_package(Qt6Core5Compat ${QT_MIN_VERSION} CONFIG QUIET)
+     set_package_properties(

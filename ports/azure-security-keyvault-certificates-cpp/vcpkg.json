@@ -5,7 +5,7 @@
   ],
   "name": "azure-security-keyvault-certificates-cpp",
   "version-semver": "4.2.1",
-  "port-version": 3,
+  "port-version": 4,
   "description": [
     "Microsoft Azure Key Vault Certificates SDK for C++",
     "This library provides Azure Key Vault Certificates SDK."

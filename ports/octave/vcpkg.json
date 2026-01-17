@@ -1,6 +1,6 @@
 {
   "name": "octave",
-  "version": "9.4.0",
+  "version": "10.2.0",
   "port-version": 1,
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
@@ -82,6 +82,15 @@
         }
       ]
     },
+    "curl": {
+      "description": "curl support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    },
     "cxsparse": {
       "description": "suitesparse-cxsparse support",
       "dependencies": [
@@ -118,6 +127,40 @@
         }
       ]
     },
+    "graphicsmagick": {
+      "description": "graphicsmagick support",
+      "dependencies": [
+        {
+          "name": "graphicsmagick",
+          "default-features": false
+        }
+      ]
+    },
+    "gui": {
+      "description": "build with gui support",
+      "dependencies": [
+        {
+          "name": "freeglut",
+          "platform": "linux"
+        },
+        {
+          "name": "octave",
+          "default-features": false,
+          "features": [
+            "fontconfig",
+            "freetype"
+          ]
+        },
+        {
+          "name": "qt5-base",
+          "default-features": false
+        },
+        {
+          "name": "qt5-tools",
+          "default-features": false
+        }
+      ]
+    },
     "hdf5": {
       "description": "hdf5 support",
       "dependencies": [
@@ -143,6 +186,12 @@
           "name": "portaudio",
           "default-features": false
         }
+      ]
+    },
+    "qhull": {
+      "description": "qhull support",
+      "dependencies": [
+        "qhull"
       ]
     },
     "spqr": {
