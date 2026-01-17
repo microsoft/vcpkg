@@ -1,0 +1,19 @@
+{
+  "name": "libfyaml",
+  "version": "0.9.3",
+  "description": "A fully-featured YAML 1.2 and JSON parser/writer with zero-copy operation and no artificial limits.",
+  "homepage": "https://github.com/pantoniou/libfyaml",
+  "license": "MIT",
+  "supports": "!windows | mingw",
+  "dependencies": [
+    "pthreads",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

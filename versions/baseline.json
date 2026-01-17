@@ -4920,6 +4920,10 @@
       "baseline": "3.17.3",
       "port-version": 0
     },
+    "libfyaml": {
+      "baseline": "0.9.3",
+      "port-version": 0
+    },
     "libgcrypt": {
       "baseline": "1.11.1",
       "port-version": 0
