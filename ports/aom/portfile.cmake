@@ -6,6 +6,7 @@ vcpkg_from_git(
     PATCHES
         aom-rename-static.diff
         aom-uninitialized-pointer.diff
+        aom-fix-nasm.diff # TODO: remove this patch after the next release
 )
 
 vcpkg_find_acquire_program(NASM)

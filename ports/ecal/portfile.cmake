@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-ecal/ecal
     REF "v${VERSION}"
-    SHA512 8134873a3ac0ba48955fdb837aaeaccbd76b81cde6af0099060daedb26bca107cb472af39058358ad094da02ead8f735afb73acd627b19ab210c42039ffa92b8 
+    SHA512 ae34bfc4aa021ab049758373dbac90dfcee34e92f94590813797d88b854420f9e4419f35fbd0db41c7b8aedbfcd24e46dd385f3017a7e0c1a04ee6863c4f948a 
     HEAD_REF master
     PATCHES
         0001-disable-app-plugins.patch
@@ -67,9 +67,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # global ini files not strictly required
 if (VCPKG_TARGET_IS_WINDOWS)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cfg" "${CURRENT_PACKAGES_DIR}/debug/cfg")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cfg" "${CURRENT_PACKAGES_DIR}/debug/cfg")
 else()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc" "${CURRENT_PACKAGES_DIR}/debug/etc")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc" "${CURRENT_PACKAGES_DIR}/debug/etc")
 endif()
 
 # Install copyright and usage

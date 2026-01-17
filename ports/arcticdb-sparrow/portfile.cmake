@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO man-group/sparrow
     REF "${VERSION}"
-    SHA512 063cfeaa59d275ac8b8fc030b33695b2d4ac2d7d37b45e9cae2a9bd025c589413d840848a65a963869f5da5d8e42f57e7a7c709a14ad071014be035fe4217dfe
+    SHA512 9076fa8ddf284f54bb94437b4e5242ef3b8ee4b4127512e8f18fe8798d5715a21acc8fe9402ec7dec2f272c0b1a832cb091640fd67b2bcbc4fa2fdc096e6c935
     HEAD_REF main
 )
 
@@ -28,9 +28,8 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DSPARROW_BUILD_SHARED=${SPARROW_BUILD_SHARED}
-        -DBUILD_TESTS=OFF
-        -DBUILD_EXAMPLES=OFF
         -DCREATE_JSON_READER_TARGET=${BUILD_JSON_READER}
+        -DUSE_DATE_POLYFILL=ON
 )
 
 vcpkg_cmake_install()

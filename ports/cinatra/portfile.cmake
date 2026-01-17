@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qicosmos/cinatra
     REF ${VERSION}
-    SHA512 1432a5d799736469c34faffec540c5908484e5581edaceb1f809fce619fb357b182f8a6a1e7f814d2ba81ae94d31bfda30923af61ee557449363ef7cc084a902
+    SHA512 43d0fffade96f3d187045e20dc61f4cf4f2aaba0ea4b6e54c145d2ef9a9aa67b06538f4c1817f4ad5cc8c1e68dfc5fcb460e376d45ae6ebde9b4fde4498b8637
     HEAD_REF master
 )
 

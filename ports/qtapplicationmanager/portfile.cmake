@@ -3,7 +3,6 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
         wrapper-fixes.patch
-        stack-walker-arm64.patch
     )
 
 set(TOOL_NAMES appman
@@ -32,13 +31,6 @@ if("package-server" IN_LIST FEATURES)
     list(APPEND options -DINPUT_package_server=yes)
 else()
     list(APPEND options -DINPUT_package_server=no)
-endif()
-if("systemd-watchdog" IN_LIST FEATURES)
-    list(APPEND options -DINPUT_systemd_watchdog=yes)
-    vcpkg_find_acquire_program(PKGCONFIG)
-    list(APPEND options "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}")
-else()
-    list(APPEND options -DINPUT_systemd_watchdog=no)
 endif()
 
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})

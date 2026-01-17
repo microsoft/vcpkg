@@ -1,11 +1,12 @@
 {
   "name": "dpdk",
-  "version-string": "24.07",
+  "version": "25.11",
+  "port-version": 1,
   "description": "A set of libraries and drivers for fast packet processing",
   "homepage": "https://www.dpdk.org/",
-  "documentation": "https://doc.dpdk.org/guides/index.html",
+  "documentation": "https://doc.dpdk.org/guides/",
   "license": "BSD-3-Clause",
-  "supports": "linux | freebsd",
+  "supports": "freebsd | linux",
   "dependencies": [
     {
       "name": "libarchive",
@@ -15,7 +16,6 @@
       "name": "numactl",
       "platform": "linux"
     },
-    "python3",
     {
       "name": "vcpkg-get-python-packages",
       "host": true
@@ -28,9 +28,6 @@
   "features": {
     "docs": {
       "description": "Build and install docs"
-    },
-    "kmods": {
-      "description": "Build and install kernel modules"
     },
     "tests": {
       "description": "Build and install tests"

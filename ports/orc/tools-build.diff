@@ -1,0 +1,66 @@
+diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
+index d247f90..498d369 100644
+--- a/tools/src/CMakeLists.txt
++++ b/tools/src/CMakeLists.txt
+@@ -36,8 +36,12 @@
+ 
+ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ${CXX17_FLAGS} ${WARN_FLAGS}")
+ 
+-add_library (orc-tools-common INTERFACE)
+-target_include_directories (orc-tools-common INTERFACE
++add_library (orc-tools-common STATIC ToolsHelper.cc)
++if(WIN32 AND NOT MINGW)
++  find_package(getopt CONFIG REQUIRED)
++  target_link_libraries(orc-tools-common PUBLIC $<IF:$<TARGET_EXISTS:getopt::getopt_shared>,getopt::getopt_shared,getopt::getopt_static>)
++endif()
++target_include_directories (orc-tools-common PUBLIC
+   ${PROJECT_BINARY_DIR}/c++/include
+   ${PROJECT_BINARY_DIR}/c++/src
+   ${PROJECT_SOURCE_DIR}/c++/include
+@@ -50,7 +54,6 @@ target_link_libraries (orc-tools-common INTERFACE
+ 
+ add_executable (orc-contents
+   FileContents.cc
+-  ToolsHelper.cc
+   )
+ 
+ target_link_libraries (orc-contents
+@@ -59,7 +62,6 @@ target_link_libraries (orc-contents
+ 
+ add_executable (orc-scan
+   FileScan.cc
+-  ToolsHelper.cc
+   )
+ 
+ target_link_libraries (orc-scan
+@@ -68,7 +70,6 @@ target_link_libraries (orc-scan
+ 
+ add_executable (orc-metadata
+   FileMetadata.cc
+-  ToolsHelper.cc
+   )
+ 
+ target_link_libraries (orc-metadata
+@@ -86,7 +87,6 @@ target_link_libraries (orc-statistics
+ 
+ add_executable (orc-memory
+   FileMemory.cc
+-  ToolsHelper.cc
+   )
+ 
+ target_link_libraries (orc-memory
+@@ -108,6 +108,14 @@ add_executable (csv-import
+ target_link_libraries (csv-import
+   orc-tools-common
+   )
++if(WIN32 AND NOT MINGW)
++  find_path(GETTIMEOFDAY_INCLUDE_DIR gettimeofday.h REQUIRED)
++  target_include_directories(csv-import PRIVATE "${GETTIMEOFDAY_INCLUDE_DIR}")
++  file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/c++/include/sys")
++  file(WRITE "${PROJECT_BINARY_DIR}/c++/include/sys/time.h" "extern \"C\" {\n#include <gettimeofday.h>\n}\n")
++  find_library(GETTIMEOFDAY_LIBRARY gettimeofday PATH_SUFFIXES manual-link REQUIRED)
++  target_link_libraries(csv-import "${GETTIMEOFDAY_LIBRARY}")
++endif()
+ 
+ set(CPP_TOOL_NAMES
+   orc-contents

@@ -1,0 +1,40 @@
+diff --git a/cmake/src.cmake b/cmake/src.cmake
+index 8f60bcf..0dc5c53 100644
+--- a/cmake/src.cmake
++++ b/cmake/src.cmake
+@@ -60,8 +60,9 @@ endif()
+ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+ 
+ target_include_directories(${PROJECT_NAME}
+-    INTERFACE ${PROJECT_SOURCE_DIR}/src
+-    PUBLIC    ${PROJECT_BINARY_DIR}/src
++    INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
++              $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++    PUBLIC    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+ )
+ if(STDINT_MSVC)
+     target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/visual_studio)
+@@ -117,3 +118,23 @@ install(TARGETS ${PROJECT_NAME} EXPORT lib${PROJECT_NAME}
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ )
++install(EXPORT lib${PROJECT_NAME}
++    FILE matio-targets.cmake
++    NAMESPACE ${PROJECT_NAME}::
++    DESTINATION share/matio
++)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/matio-config.cmake" "
++include(CMakeFindDependencyMacro)
++if(\"${MATIO_WITH_HDF5}\" AND NOT TARGET MATIO::HDF5)
++    find_dependency(HDF5)
++    add_library(MATIO::HDF5 ALIAS HDF5::HDF5)
++endif()
++if(\"${MATIO_WITH_ZLIB}\" AND NOT TARGET MATIO::ZLIB)
++    find_dependency(ZLIB)
++    add_library(MATIO::ZLIB ALIAS ZLIB::ZLIB)
++endif()
++include(\"\${CMAKE_CURRENT_LIST_DIR}/matio-targets.cmake\")
++")
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/matio-config.cmake"
++    DESTINATION share/matio
++)
