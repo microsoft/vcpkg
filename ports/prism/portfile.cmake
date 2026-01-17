@@ -2,8 +2,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ethindp/prism
-    REF v0.3.3
-    SHA512 51f5d71b9420b6048c80fb833a0b5709a78c4ff9e7f9fbaf74ea4259c2808b4f2aadd76c0477df16a6c6c3fdb38e5afef83b25cc5352f526b8e64898a8968556
+    REF v0.3.4
+    SHA512 10bbafd5cfd4561846efb9a7b4c7745418158852c33485a3a9c38dfca1e87a931b118f813bdcddf2ce94188c0e1fcc99315b2d7b1f38e7752c7b3b7f1e0b44ff
     HEAD_REF master
 )
 vcpkg_cmake_configure(
