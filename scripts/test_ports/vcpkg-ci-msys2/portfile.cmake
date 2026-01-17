@@ -26,6 +26,7 @@ vcpkg_list(SET ignored_dependencies
     less
     libiconv-devel
     libltdl
+    mingw-w64-i686-tzdata
     mingw-w64-x86_64-tzdata
 )
 

@@ -1,0 +1,17 @@
+{
+  "name": "e-dant-watcher",
+  "version": "0.14.3",
+  "description": "Filesystem watcher. Works anywhere. Simple, efficient and friendly.",
+  "homepage": "https://github.com/e-dant/watcher",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

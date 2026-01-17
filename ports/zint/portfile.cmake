@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zint/zint
     REF ${VERSION}
-    SHA512 70838fdc88aa8e157ce8a0099fe1184b98c8e5fd0a980a8ecdb40d7e4cbf1519b99a2326ffe7a1b3272dc58aa20fafa06fa0d3e6fb26f445eaa59b4b20be18cc
+    SHA512 819d1f91186106acf7dacada85b69e409358e3d39ad9b714297d00168c76d363f92c12c57ca8b11bc08fbe2c078ed4ac5c0cfc0e3e6391048acafa59b662c098
     HEAD_REF master
 )
 
@@ -26,7 +26,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/zint)
 vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES zint AUTO_CLEAN)

@@ -28,9 +28,9 @@ jobs:
   - name: ANDROID_NDK_HOME
     value: /android-ndk-r28c
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2025-10-16'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-14'
   - name: LINUX_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2025-10-16'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-14'
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
@@ -76,9 +76,10 @@ jobs:
       scriptType: bash
       scriptLocation: 'inlineScript'  # Be very very careful that the exit code from the last pwsh is reported correctly
       inlineScript: |
+        start=`date -u -d "-30 minutes" '+%Y-%m-%dT%H:%MZ'`
         end=`date -u -d "2 days" '+%Y-%m-%dT%H:%MZ'`
-        assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv`
-        binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv`
+        assetSas=`az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --start $start --expiry $end -o tsv`
+        binarySas=`az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --start $start --expiry $end -o tsv`
         echo Minting SAS tokens valid through $end
         echo "##vso[task.setvariable variable=BCACHE_SAS_TOKEN;issecret=true]$binarySas"
         USER=$(id --user)

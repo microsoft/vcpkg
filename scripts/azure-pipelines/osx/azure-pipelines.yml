@@ -9,9 +9,7 @@ parameters:
     default: 'use default'
   - name: jobName
     type: string
-    default: 'x64_osx'
-  - name: poolName
-    type: string
+    default: 'arm64_osx'
   - name: tripletPattern
     displayName: 'Enable the triplets which contain this substring'
     type: string
@@ -21,7 +19,7 @@ jobs:
 - job: ${{ parameters.jobName }}
   condition: and(succeeded(), contains('^${{ replace(parameters.jobName, '_', '-') }}$', '${{ parameters.tripletPattern }}'))
   pool:
-    name: ${{ parameters.poolName }}
+    name: PrOsx-2026-01-12-arm64
   workspace:
     clean: resources
   timeoutInMinutes: 2880 # 2 days
@@ -51,11 +49,13 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
           $current = Get-Date -AsUtc
+          $startDate = $current.AddMinutes(-30)
           $endDate = $current.AddDays(2)
+          $start = Get-Date -Date $startDate -UFormat '+%Y-%m-%dT%H:%MZ'
           $end = Get-Date -Date $endDate -UFormat '+%Y-%m-%dT%H:%MZ'
-          $assetSas = az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --expiry $end -o tsv | Out-String
+          $assetSas = az storage container generate-sas --name cache --account-name vcpkgassetcachewus --as-user --auth-mode login --https-only --permissions rcl --start $start --expiry $end -o tsv | Out-String
           $assetSas = $assetSas.Trim()
-          $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --expiry $end -o tsv | Out-String
+          $binarySas = az storage container generate-sas --name cache --account-name vcpkgbinarycachewus --as-user --auth-mode login --https-only --permissions rclw --start $start --expiry $end -o tsv | Out-String
           $binarySas = $binarySas.Trim()
           # Persist the binary SAS as a secret pipeline variable for the owners-db step
           Write-Host "##vso[task.setvariable variable=BCACHE_SAS_TOKEN;issecret=true]$binarySas"

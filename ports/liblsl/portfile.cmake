@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sccn/liblsl
     REF v${VERSION}
-    SHA512 141f364034a7156caf9ffafbb2f43cc9a932116a3ef1c1b76822649996d6b99b3017b18d91d9c25a9cd718419c5c3b037fa97b2845540bda195f55dd9de27ab1
+    SHA512 5b540c9b7c0b6fb5827dbb8afdc85267d8e36e3b807704af11ed89865754f1d786f28414adf1c3c7df15956143a0bfc82c449c5ff8656d18f1a6e03c4c1e89ce
     HEAD_REF master
     PATCHES
         use-find-package-asio.patch
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DLSL_BUILD_STATIC=${LSL_BUILD_STATIC}
         -DLSL_BUNDLED_BOOST=OFF # we use the boost vcpkg packages instead
         -DLSL_BUNDLED_PUGIXML=OFF # we use the pugixml vcpkg package instead
+        -DLSL_FRAMEWORK=OFF
         -Dlslgitrevision=v${VERSION}
         -Dlslgitbranch=master
 )
@@ -23,7 +24,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES lslver AUTO_CLEAN)
-vcpkg_cmake_config_fixup(PACKAGE_NAME LSL CONFIG_PATH lib/cmake/LSL)
+vcpkg_cmake_config_fixup(PACKAGE_NAME LSL CONFIG_PATH lib/cmake/lsl)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

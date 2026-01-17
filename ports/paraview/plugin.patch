@@ -1,0 +1,18 @@
+diff --git a/CMake/paraview_plugin.cxx.in b/CMake/paraview_plugin.cxx.in
+index 26242fd2d3..9ac0038462 100644
+--- a/CMake/paraview_plugin.cxx.in	
++++ b/CMake/paraview_plugin.cxx.in
+@@ -145,11 +145,12 @@ static void initialize_@_paraview_build_plugin@_plugin_qt_resources()
+   // For static builds, initialize the Qt resources.
+ @_paraview_add_plugin_resources_init@
+ #endif
++}
++
+ #if !_paraview_add_plugin_built_shared && _paraview_add_plugin_with_ui
+   // For static builds, initialize the Qt plugin.
+   Q_IMPORT_PLUGIN(@_paraview_build_plugin@Plugin)
+ #endif
+-}
+ 
+ //-----------------------------------------------------------------------------
+ @_paraview_build_plugin@Plugin::@_paraview_build_plugin@Plugin()
