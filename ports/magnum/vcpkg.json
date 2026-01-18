@@ -221,7 +221,7 @@
     },
     "glfwapplication": {
       "description": "GlfwApplication library",
-      "supports": "!ios & !android & !emscripten",
+      "supports": "!ios & !android & !emscripten & !uwp",
       "dependencies": [
         "glfw3"
       ]
