@@ -31,6 +31,9 @@
     },
     "secret-callback": {
       "description": "Enables callback to provide TLS keys for debugging"
+    },
+    "curve25519": {
+      "description": "Enables curve25519 algorithm support"
     }
   }
 }
