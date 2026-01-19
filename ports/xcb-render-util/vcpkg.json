@@ -1,10 +1,11 @@
 {
   "name": "xcb-render-util",
   "version": "0.3.10",
+  "port-version": 1,
   "description": "XCB convenience functions for the Render extension.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": null,
   "dependencies": [
-    "xcb"
+    "libxcb"
   ]
 }
