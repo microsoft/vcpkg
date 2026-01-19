@@ -6421,7 +6421,7 @@
       "port-version": 0
     },
     "miniaudio": {
-      "baseline": "0.11.23",
+      "baseline": "0.11.24",
       "port-version": 0
     },
     "minifb": {
