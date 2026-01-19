@@ -1,6 +1,6 @@
 {
   "name": "babl",
-  "version": "0.1.118",
+  "version": "0.1.120",
   "description": "A pixel encoding and color space conversion engine.",
   "homepage": "https://gegl.org/babl/",
   "license": "LGPL-3.0-or-later",
