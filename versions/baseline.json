@@ -554,7 +554,7 @@
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
-      "port-version": 7
+      "port-version": 8
     },
     "azure-security-keyvault-administration-cpp": {
       "baseline": "4.0.0-beta.5",
@@ -2045,7 +2045,7 @@
       "port-version": 0
     },
     "cpp-sort": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "cpp-timsort": {
@@ -2565,7 +2565,7 @@
       "port-version": 0
     },
     "drlibs": {
-      "baseline": "2025-12-13",
+      "baseline": "2026-01-16",
       "port-version": 0
     },
     "drogon": {
@@ -6101,7 +6101,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.704",
+      "baseline": "0.705",
       "port-version": 0
     },
     "luminoengine": {
@@ -6405,7 +6405,7 @@
       "port-version": 3
     },
     "mimalloc": {
-      "baseline": "2.2.6",
+      "baseline": "2.2.7",
       "port-version": 0
     },
     "mimicpp": {
@@ -6421,7 +6421,7 @@
       "port-version": 0
     },
     "miniaudio": {
-      "baseline": "0.11.23",
+      "baseline": "0.11.24",
       "port-version": 0
     },
     "minifb": {
