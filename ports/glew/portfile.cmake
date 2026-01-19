@@ -44,7 +44,7 @@ if(NOT VCPKG_BUILD_TYPE)
     if(VCPKG_TARGET_IS_WINDOWS)
         set(libname glew32)
     endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glew.pc" " -l${libname}" " -l${libname}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glew.pc" " -l${libname}" " -l${libname}d")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
