@@ -1,12 +1,10 @@
 {
-  "name": "xcb",
-  "version": "1.14",
-  "port-version": 4,
+  "name": "libxcb",
+  "version": "1.17.0",
   "description": "C interface to the X Window System protocol, which replaces the traditional Xlib interface.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": "X11-distribute-modifications-variant",
   "dependencies": [
-    "bzip2",
     "libxau",
     "libxdmcp",
     {
@@ -17,7 +15,6 @@
         "tools"
       ]
     },
-    "pthread",
     "pthread-stubs",
     {
       "name": "vcpkg-make",
@@ -25,7 +22,6 @@
     },
     "xcb-proto",
     "xcb-util-m4",
-    "xorg-macros",
-    "xproto"
+    "xorg-macros"
   ]
 }

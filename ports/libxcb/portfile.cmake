@@ -1,20 +1,21 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcb
-    REF  ddafdba11f6919e6fcf977c09c78b06f94de47aa #v1.14 + some patches
-    SHA512 d8382b04f2b00671cded9e22d6066164511ee4c08e2cf5de4ec28d09e41228e30d3ba7d0e6b5141abf4e4bc777aa662fe9d1d04f3e1e26e0b323549e845c8072
+    REF  "libxcb-${VERSION}"
+    SHA512 d70661de130c07cefbd7186069d508a9070c43cba44555b31f728f0031acf9328ca6f88ee7edf3abd25283455d42db4d971d5b1414b69e01ef249728e1a830da
     HEAD_REF master
-    PATCHES makefile.patch # without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
-            configure.patch 
-            use_xwindows_includes.patch # use the X11 include wrappers for windows headers
-            getpid_include.patch # add include for getpid on windows
-            win-fixes.patch # avoid: 'close' undefined; assuming extern returning int
+    PATCHES
+        makefile.patch # without the patch target xproto.c is missing target XCBPROTO_XCBINCLUDEDIR
+        configure.patch 
+        use_xwindows_includes.patch # use the X11 include wrappers for windows headers
+        getpid_include.patch # add include for getpid on windows
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -51,23 +52,12 @@ vcpkg_make_configure(
 )
 
 vcpkg_make_install()
-
-set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb.pc")
-if(EXISTS "${pcfile}")
-    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: xau xdmcp " IGNORE_UNCHANGED)
-endif()
-set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/xcb.pc")
-if(EXISTS "${pcfile}")
-    vcpkg_replace_string("${pcfile}" "Requires: " "Requires: xau xdmcp " IGNORE_UNCHANGED)
-endif()
-
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT VCPKG_TARGET_IS_MINGW)
     set(extensions 
@@ -104,5 +94,4 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT 
                      "extern xcb_extension_t"
                      "__declspec(dllimport) extern xcb_extension_t")
     endforeach()
-endif()
 endif()
