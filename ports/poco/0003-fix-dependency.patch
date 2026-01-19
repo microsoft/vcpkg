@@ -1,17 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 861c27c..d2701ce 100644
+index e88e561..0f5544d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -80,8 +80,6 @@ option(ENABLE_NETSSL_WIN "Enable NetSSL Windows" OFF)
- 
- if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
- 	find_package(OpenSSL REQUIRED)
--else()
--	find_package(OpenSSL)
- endif()
- 
- if(OPENSSL_FOUND)
-@@ -111,24 +109,19 @@ else()
+@@ -111,24 +111,19 @@ else()
  	option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
  endif()
  
@@ -30,11 +21,11 @@ index 861c27c..d2701ce 100644
 -	option(ENABLE_DATA "Enable Data" OFF)
 -	option(ENABLE_DATA_MYSQL "Enable Data MySQL or MariaDB" OFF)
 +if(ENABLE_DATA_MYSQL)
-+    find_package(libmysql)
-+    if (NOT libmysql_FOUND)
-+        find_package(unofficial-libmariadb CONFIG REQUIRED)
-+        set(MYSQL_LIBRARIES unofficial::libmariadb)
-+    endif()
++	find_package(libmysql)
++	if (NOT libmysql_FOUND)
++		find_package(unofficial-libmariadb CONFIG REQUIRED)
++		set(MYSQL_LIBRARIES unofficial::libmariadb)
++	endif()
  endif()
  
  if(ENABLE_DATA_POSTGRESQL)
@@ -44,13 +35,13 @@ index 861c27c..d2701ce 100644
  endif()
  
  if(PostgreSQL_FOUND)
-@@ -266,6 +259,9 @@ include(DefinePlatformSpecific)
+@@ -265,7 +260,8 @@ include(DefinePlatformSpecific)
+ 
  # Collect the built libraries and include dirs, the will be used to create the PocoConfig.cmake file
  set(Poco_COMPONENTS "")
- 
+-
 +# Do not declare the link library in the code!
 +add_definitions(-DPOCO_NO_AUTOMATIC_LIBS)
-+
  if(ENABLE_TESTS)
  	add_subdirectory(CppUnit)
  	set(ENABLE_XML ON CACHE BOOL "Enable XML" FORCE)
@@ -130,7 +121,7 @@ index 7141112..0c73beb 100644
  		POCO_UNBUNDLED
  		SQLITE_THREADSAFE=1
 diff --git a/XML/CMakeLists.txt b/XML/CMakeLists.txt
-index cf66250..89e6c8f 100644
+index 4d7b36d..89e6c8f 100644
 --- a/XML/CMakeLists.txt
 +++ b/XML/CMakeLists.txt
 @@ -20,7 +20,7 @@ endif()
@@ -146,42 +137,29 @@ index cf66250..89e6c8f 100644
  )
  
  if(POCO_UNBUNDLED)
--	target_link_libraries(XML PUBLIC EXPAT::EXPAT)
+-	target_link_libraries(XML PRIVATE EXPAT::EXPAT)
 +	target_link_libraries(XML PUBLIC expat::expat)
  	target_compile_definitions(XML PUBLIC POCO_UNBUNDLED)
  else()
  	if(WIN32)
-diff --git a/XML/cmake/PocoXMLConfig.cmake b/XML/cmake/PocoXMLConfig.cmake
-index ef58207..4ed94ec 100644
---- a/XML/cmake/PocoXMLConfig.cmake
-+++ b/XML/cmake/PocoXMLConfig.cmake
-@@ -4,7 +4,7 @@ if(@POCO_UNBUNDLED@)
- 	if(CMAKE_VERSION VERSION_LESS "3.10")
- 		list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/V39")
- 	endif()
--	find_dependency(EXPAT REQUIRED)
-+	find_dependency(expat CONFIG REQUIRED)
- endif()
- 
- include("${CMAKE_CURRENT_LIST_DIR}/PocoXMLTargets.cmake")
 diff --git a/cmake/PocoConfig.cmake.in b/cmake/PocoConfig.cmake.in
-index 173eacd..90f68fc 100644
+index 173eacd..e7ced26 100644
 --- a/cmake/PocoConfig.cmake.in
 +++ b/cmake/PocoConfig.cmake.in
-@@ -8,6 +8,12 @@ if (NOT Poco_FIND_COMPONENTS)
+@@ -7,7 +7,11 @@ if (NOT Poco_FIND_COMPONENTS)
+     set(Poco_FOUND False)
      return()
  endif()
- 
+-
 +include(CMakeFindDependencyMacro)
 +find_dependency(ZLIB REQUIRED)
 +if(Poco_FIND_REQUIRED_XML)
 +    find_dependency(expat CONFIG REQUIRED)
 +endif()
-+
  set(_Poco_FIND_PARTS_REQUIRED)
  if (Poco_FIND_REQUIRED)
      set(_Poco_FIND_PARTS_REQUIRED REQUIRED)
-@@ -23,7 +29,7 @@ set(_Poco_NOTFOUND_MESSAGE)
+@@ -23,7 +27,7 @@ set(_Poco_NOTFOUND_MESSAGE)
  
  # Let components find each other, but don't overwrite CMAKE_PREFIX_PATH
  set(_Poco_CMAKE_PREFIX_PATH_old ${CMAKE_PREFIX_PATH})
@@ -190,16 +168,3 @@ index 173eacd..90f68fc 100644
  
  foreach(module ${Poco_FIND_COMPONENTS})
      find_package(Poco${module}
-diff --git a/Foundation/cmake/PocoFoundationConfig.cmake b/Foundation/cmake/PocoFoundationConfig.cmake
-index 82c5788..739adef 100644
---- a/Foundation/cmake/PocoFoundationConfig.cmake
-+++ b/Foundation/cmake/PocoFoundationConfig.cmake
-@@ -3,7 +3,7 @@ if(@POCO_UNBUNDLED@)
- 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
- 	find_dependency(ZLIB REQUIRED)
- 	find_dependency(PCRE2 REQUIRED)
--	find_dependency(Utf8Proc REQUIRED)
-+	find_dependency(unofficial-utf8proc REQUIRED)
- endif()
- 
- include("${CMAKE_CURRENT_LIST_DIR}/PocoFoundationTargets.cmake")

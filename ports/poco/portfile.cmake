@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
     REF "poco-${VERSION}-release"
-    SHA512 e192818a5f731ec6f6bddf062573d7bedfd15754157f145882c2c9d9bce497b92cf23f639f989d9e5605cb83029c4f303752cab655b525b5a5b5e5b704714725
+    SHA512 3bd90fd270f8becc583e6615a9399a2abe6f1e06fd42cbb33fb8eac061ac29ba36c3831f0a88451c173c1fa0ef2505ddd773c29c842e4924be835f4f570b1468
     HEAD_REF devel
     PATCHES
         # Fix embedded copy of pcre in static linking mode
@@ -59,7 +59,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cpp-parser              ENABLE_CPPPARSER
 )
 
-# POCO_ENABLE_NETSSL_WIN: 
+# POCO_ENABLE_NETSSL_WIN:
 # Use the unreleased NetSSL_Win module instead of (OpenSSL) NetSSL.
 # This is a variable which can be set in the triplet file.
 if(POCO_ENABLE_NETSSL_WIN)
