@@ -18,7 +18,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
         dynamic-arch   DYNAMIC_ARCH
 )
 
-# If not explicitly configured for a cross build, OpenBLAS wants to run 
+# If not explicitly configured for a cross build, OpenBLAS wants to run
 # getarch executables in order to optimize for the target.
 # Adapting this to vcpkg triplets:
 # - install-getarch.diff introduces and uses GETARCH_BINARY_DIR,
@@ -44,6 +44,11 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
     )
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+    # Android ndk doesn't support AVX512
+    list(APPEND OPTIONS -DNO_AVX512=ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -64,7 +69,7 @@ vcpkg_fixup_pkgconfig()
 # Required from native builds, optional from cross builds.
 if(NOT VCPKG_CROSSCOMPILING OR EXISTS "${CURRENT_PACKAGES_DIR}/bin/getarch${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
     vcpkg_copy_tools(
-        TOOL_NAMES getarch getarch_2nd 
+        TOOL_NAMES getarch getarch_2nd
         DESTINATION "${CURRENT_PACKAGES_DIR}/manual-tools/${PORT}/${SYSTEM_KEY}"
         AUTO_CLEAN
     )
