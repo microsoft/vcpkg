@@ -1039,7 +1039,6 @@ plplot[x11]:x64-windows-static = cascade
 plplot[x11]:x64-windows-static-md = cascade
 plplot[x11]:x86-windows = cascade
 pmdk:x64-uwp=cascade
-poco[mysql]:x86-windows = cascade
 prometheus-cpp[pull]:arm64-uwp = cascade
 prometheus-cpp[pull]:arm64-windows = cascade
 prometheus-cpp[pull]:x64-uwp = cascade
