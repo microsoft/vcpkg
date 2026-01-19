@@ -38,9 +38,6 @@
 ##
 
 # Add new items alphabetically
-aeron:arm-neon-android=fail
-aeron:arm64-android=fail
-aeron:x64-android=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
 apr:x64-android=fail
@@ -52,9 +49,6 @@ arpack-ng:x64-windows-static=fail
 arrayfire:x64-linux=fail
 atliac-minitest:arm64-uwp=fail
 atliac-minitest:x64-uwp=fail
-avro-c:arm-neon-android=fail
-avro-c:arm64-android=fail
-avro-c:x64-android=fail
 azure-storage-cpp:arm64-osx=fail
 azure-storage-cpp:x64-linux=fail
 backward-cpp:arm-neon-android=fail
@@ -162,9 +156,6 @@ cppcoro:x64-linux=fail
 crashpad:x64-linux=fail #Compilation failed due to the lack of Clang++ compiler.
 ctbench:arm64-osx=fail
 ctp:x64-android=fail
-czmq:arm-neon-android=fail
-czmq:arm64-android=fail
-czmq:x64-android=fail
 # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbghelp:arm64-uwp=skip
 dbghelp:arm64-windows-static-md=skip
@@ -336,12 +327,6 @@ juce:x64-android=fail
 kf6archive:arm-neon-android=skip
 kf6archive:arm64-android=skip
 kf6archive:x64-android=skip
-lcm:arm-neon-android=fail
-lcm:arm64-android=fail
-lcm:arm64-windows-static-md=fail
-lcm:x64-android=fail
-lcm:x64-windows-static-md=fail
-lcm:x64-windows-static=fail
 leptonica:arm64-uwp=fail
 leptonica:x64-uwp=fail
 libaiff:x64-linux=fail
@@ -426,8 +411,6 @@ libxt:x64-windows-release=fail # Appears to have broken races
 libxt:x64-windows=fail
 live555:arm64-uwp=fail
 live555:x64-uwp=fail
-llfio:arm-neon-android=fail
-llfio:arm64-android=fail
 llfio:x64-android=fail
 llgl:arm-neon-android=fail
 llgl:arm64-android=fail
@@ -595,10 +578,6 @@ qtopcua:x64-android=fail
 qtwayland:arm64-osx=skip
 quickfix:arm-neon-android=fail
 quickfix:arm64-android=fail
-# file conflicts with rbdl
-rbdl:arm-neon-android=fail
-rbdl:arm64-android=fail
-rbdl:x64-android=fail
 restbed:arm-neon-android=fail
 restbed:arm64-android=fail
 restbed:arm64-uwp=fail
@@ -747,7 +726,6 @@ zookeeper:x64-windows-static-md=fail
 zookeeper:x64-windows-static=fail
 zookeeper:x64-windows=fail
 zookeeper:x86-windows=fail
-zyre:arm64-windows-static-md=fail
 
 # Ports which needs to pass in CI
 cmake:arm64-osx=pass

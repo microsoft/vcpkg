@@ -58,7 +58,7 @@
     },
     "aeron": {
       "baseline": "1.49.3",
-      "port-version": 1
+      "port-version": 2
     },
     "air-ctl": {
       "baseline": "1.1.2",
@@ -513,8 +513,8 @@
       "port-version": 2
     },
     "azure-core-cpp": {
-      "baseline": "1.16.1",
-      "port-version": 1
+      "baseline": "1.16.2",
+      "port-version": 0
     },
     "azure-core-tracing-opentelemetry-cpp": {
       "baseline": "1.0.0-beta.4",
@@ -525,8 +525,8 @@
       "port-version": 1
     },
     "azure-identity-cpp": {
-      "baseline": "1.13.2",
-      "port-version": 1
+      "baseline": "1.13.3",
+      "port-version": 0
     },
     "azure-iot-sdk-c": {
       "baseline": "2025-03-31",
@@ -554,7 +554,7 @@
     },
     "azure-security-attestation-cpp": {
       "baseline": "1.1.0",
-      "port-version": 7
+      "port-version": 8
     },
     "azure-security-keyvault-administration-cpp": {
       "baseline": "4.0.0-beta.5",
@@ -613,7 +613,7 @@
       "port-version": 2
     },
     "babl": {
-      "baseline": "0.1.118",
+      "baseline": "0.1.120",
       "port-version": 0
     },
     "backward-cpp": {
@@ -1792,6 +1792,10 @@
       "baseline": "3.0.14",
       "port-version": 2
     },
+    "cleishm-frequency-cpp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "cleishm-thermo-cpp": {
       "baseline": "1.0.0",
       "port-version": 0
@@ -2045,7 +2049,7 @@
       "port-version": 0
     },
     "cpp-sort": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "cpp-timsort": {
@@ -2550,7 +2554,7 @@
     },
     "dpdk": {
       "baseline": "25.11",
-      "port-version": 0
+      "port-version": 1
     },
     "dpp": {
       "baseline": "10.1.4",
@@ -2565,7 +2569,7 @@
       "port-version": 0
     },
     "drlibs": {
-      "baseline": "2025-12-13",
+      "baseline": "2026-01-16",
       "port-version": 0
     },
     "drogon": {
@@ -2634,6 +2638,10 @@
     },
     "dyno": {
       "baseline": "2019-11-13",
+      "port-version": 0
+    },
+    "e-dant-watcher": {
+      "baseline": "0.14.3",
       "port-version": 0
     },
     "eabase": {
@@ -2909,7 +2917,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "25.12",
+      "baseline": "26.1",
       "port-version": 0
     },
     "fawdlstty-libfv": {
@@ -4521,8 +4529,8 @@
       "port-version": 0
     },
     "lcm": {
-      "baseline": "1.4.0",
-      "port-version": 7
+      "baseline": "1.5.2",
+      "port-version": 0
     },
     "lcms": {
       "baseline": "2.18",
@@ -4989,7 +4997,7 @@
       "port-version": 6
     },
     "libheif": {
-      "baseline": "1.21.1",
+      "baseline": "1.21.2",
       "port-version": 0
     },
     "libhsplasma": {
@@ -5105,7 +5113,7 @@
       "port-version": 0
     },
     "liblsl": {
-      "baseline": "1.17.4",
+      "baseline": "1.17.5",
       "port-version": 0
     },
     "liblsquic": {
@@ -6097,7 +6105,7 @@
       "port-version": 1
     },
     "luau": {
-      "baseline": "0.704",
+      "baseline": "0.705",
       "port-version": 0
     },
     "luminoengine": {
@@ -6417,7 +6425,7 @@
       "port-version": 0
     },
     "miniaudio": {
-      "baseline": "0.11.23",
+      "baseline": "0.11.24",
       "port-version": 0
     },
     "minifb": {
@@ -9548,6 +9556,10 @@
       "baseline": "2018-11-15",
       "port-version": 9
     },
+    "subversion": {
+      "baseline": "2025-12-23",
+      "port-version": 0
+    },
     "suitesparse": {
       "baseline": "7.8.3",
       "port-version": 0
@@ -10666,7 +10678,7 @@
     },
     "wolfssl": {
       "baseline": "5.8.4",
-      "port-version": 0
+      "port-version": 1
     },
     "wolftpm": {
       "baseline": "3.10.0",

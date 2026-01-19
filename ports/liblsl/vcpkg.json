@@ -1,6 +1,6 @@
 {
   "name": "liblsl",
-  "version": "1.17.4",
+  "version": "1.17.5",
   "description": "C++ lsl library for multi-modal time-synched data transmission over the local network",
   "homepage": "https://github.com/sccn/liblsl",
   "license": "MIT",
