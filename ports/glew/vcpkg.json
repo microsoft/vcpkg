@@ -15,18 +15,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "egl": {
-      "description": "Enable EGL mode",
-      "supports": "!windows",
-      "dependencies": [
-        "egl"
-      ]
-    },
-    "x11": {
-      "description": "Enable X11 mode",
-      "supports": "!ios & !osx & !windows"
-    }
-  }
+  ]
 }

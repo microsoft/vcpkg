@@ -18,11 +18,10 @@ vcpkg_extract_source_archive(
         fix-LNK2019.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS options
-    FEATURES
-        egl     GLEW_EGL
-        x11     GLEW_X11
-)
+set(options "")
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND options "-DGLEW_X11=OFF")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build/cmake"
