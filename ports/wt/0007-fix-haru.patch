@@ -1,0 +1,51 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5826718..37ce1fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -275,8 +275,7 @@ find_package(GLEW)
+ 
+ find_package(Asciidoctor)
+ 
+-set(HPDF_ROOT ${HARU_PREFIX})
+-find_package(HPDF)
++find_package(unofficial-libharu CONFIG REQUIRED)
+ 
+ set(OPENSSL_ROOT_DIR ${SSL_PREFIX})
+ find_package(OpenSSL)
+@@ -578,7 +577,7 @@ IF(NOT EXISTS ${CONFIGDIR}/wt_config.xml)
+   INSTALL(FILES ${WT_BINARY_DIR}/wt_config.xml DESTINATION ${CONFIGDIR})
+ ENDIF (NOT EXISTS ${CONFIGDIR}/wt_config.xml)
+ 
+-if(ENABLE_HARU AND HPDF_FOUND)
++if(ENABLE_HARU)
+   set(HAVE_HARU ON)
+   set(WT_HAS_WPDFIMAGE true)
+ endif()
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 4033d78..939d8aa 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -654,7 +654,7 @@ if(HAVE_HARU)
+   # Even though WPdfImage.h exposes <hpdf.h>, we mark it as private here, because most users of Wt don't need it.
+   # We don't want to include it in the INTERFACE_LINK_LIBRARIES in the generated wt-target-wt.cmake file, since
+   # FindHPDF.cmake is not a standard find module.
+-  target_link_libraries(wt PRIVATE HPDF::HPDF)
++  target_link_libraries(wt PRIVATE unofficial::libharu::hpdf)
+ else()
+   message("** Disabling PDF support (WPdfImage, WPdfRenderer): requires libharu.")
+   if(ENABLE_HARU)
+diff --git a/wt-config.cmake.in b/wt-config.cmake.in
+index a3693d3..4df41c2 100644
+--- a/wt-config.cmake.in
++++ b/wt-config.cmake.in
+@@ -5,7 +5,9 @@ if(@_WTCONFIG_CMAKE_FIND_BOOST@)
+   find_package(Boost QUIET
+     COMPONENTS @Boost_COMPONENTS@)
+ endif()
+-
++if(@ENABLE_HARU@)
++  find_package(unofficial-libharu QUIET)
++endif()
+ # Required target
+ include(${CMAKE_CURRENT_LIST_DIR}/wt-target-wt.cmake)
+ # Optional targets
