@@ -1,11 +1,10 @@
 {
   "name": "qdldl",
   "version": "0.1.9",
-  "port-version": 2,
   "description": "A free LDL factorisation routine",
   "homepage": "https://osqp.org/",
   "license": "Apache-2.0",
-  "supports": "(windows | linux | osx) & !x86",
+  "supports": "!x86",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
