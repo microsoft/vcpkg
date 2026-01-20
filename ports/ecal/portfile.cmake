@@ -5,19 +5,48 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-ecal/ecal
-    REF "v${VERSION}"
-    SHA512 ae34bfc4aa021ab049758373dbac90dfcee34e92f94590813797d88b854420f9e4419f35fbd0db41c7b8aedbfcd24e46dd385f3017a7e0c1a04ee6863c4f948a 
+    REF "v6.0.1"
+    SHA512 c7743990b444fa982ef6df9b35816074cae1067ee671d9ffd5ee16fd25769dce09b2a09fb35e0fd759948b88857de8d6a1d8b6fa8ab4173651c3faeab854e0c4
     HEAD_REF master
     PATCHES
-        0001-disable-app-plugins.patch
-        0002-fix-build.patch
-        0003-fix-dependencies.patch
-        0004-install-cmake-files-to-share.patch
-        0005-remove-install-prefix-macro-value.patch
-        0006-use-find_dependency-in-cmake-config.patch
-        0007-allow-static-build-of-core.patch
-        0008-protobuf-linkage.patch
+        #0001-disable-app-plugins.patch
+        #0002-fix-build.patch
+        #0003-fix-dependencies.patch
+        #0004-install-cmake-files-to-share.patch
+        #0005-remove-install-prefix-macro-value.patch
+        #0006-use-find_dependency-in-cmake-config.patch
+        #0007-allow-static-build-of-core.patch
+        #0008-protobuf-linkage.patch
 )
+
+# ====== 修复安装路径 ======
+# 修复 1: 主 CMakeLists.txt
+file(READ "${SOURCE_PATH}/CMakeLists.txt" ECAL_CMAKE_CONTENT)
+string(REPLACE
+    "set(eCAL_install_cmake_dir         \${CMAKE_INSTALL_LIBDIR}/cmake/eCAL)"
+    "set(eCAL_install_cmake_dir         share/eCAL)"
+    ECAL_CMAKE_CONTENT "${ECAL_CMAKE_CONTENT}"
+)
+file(WRITE "${SOURCE_PATH}/CMakeLists.txt" "${ECAL_CMAKE_CONTENT}")
+ # 修复 2: 内部 CMakeFunctions 文件 (使用你提供的最新代码进行匹配)
+file(READ "${SOURCE_PATH}/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt" CMAKE_FUNCTIONS_CONTENT)
+string(REPLACE
+[[if (MSVC)
+# Variable definitions
+set(cmake_functions_install_cmake_dir   cmake)
+else (MSVC)
+set(cmake_functions_install_cmake_dir   "\${CMAKE_INSTALL_LIBDIR}/cmake/\${PROJECT_NAME}-\${PROJECT_VERSION}")
+endif (MSVC)]]
+[[set(cmake_functions_install_cmake_dir "share/\${PROJECT_NAME}")]]
+    CMAKE_FUNCTIONS_CONTENT "${CMAKE_FUNCTIONS_CONTENT}"
+)
+file(WRITE "${SOURCE_PATH}/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt" "${CMAKE_FUNCTIONS_CONTENT}")
+
+file(WRITE "${SOURCE_PATH}/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt" "${CMAKE_FUNCTIONS_CONTENT}")
+# ====== 修复结束 ======
+
+# 明确设置Ninja路径，解决CMake找不到的问题
+set(CMAKE_MAKE_PROGRAM "C:/Users/34035/vcpkg/downloads/tools/ninja-1.13.2-windows/ninja.exe")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -34,6 +63,7 @@ vcpkg_cmake_configure(
         -DBUILD_PY_BINDING=OFF
         -DBUILD_CSHARP_BINDING=OFF
         -DBUILD_ECAL_TESTS=OFF
+        -DECAL_USE_QT=OFF
         -DECAL_INCLUDE_PY_SAMPLES=OFF
         -DECAL_INSTALL_SAMPLE_SOURCES=OFF
         -DECAL_NPCAP_SUPPORT=OFF
