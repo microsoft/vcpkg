@@ -20,6 +20,12 @@
       "host": true
     }
   ],
+  "default-features": [
+    {
+      "name": "asio",
+      "platform": "windows"
+    }
+  ],
   "features": {
     "asio": {
       "description": "Enable support for the Steinberg Audio Streaming Input Output (ASIO) library",
