@@ -28,7 +28,7 @@
   ],
   "features": {
     "asio": {
-      "description": "Enable support for the Steinberg Audio Streaming Input Output (ASIO) library",
+      "description": "Enable support for Steinberg Audio Stream Input/Output (ASIO)",
       "dependencies": [
         "asiosdk"
       ]
