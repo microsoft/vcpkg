@@ -19,18 +19,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         -DPA_DLL_LINK_WITH_STATIC_RUNTIME=${PA_DLL_LINK_WITH_STATIC_RUNTIME}
         -DPA_LIBNAME_ADD_SUFFIX=OFF
     )
-
     if("asio" IN_LIST FEATURES)
-        if(NOT ASIOSDK_FOUND)
-            message(FATAL_ERROR "Steinberg ASIO audio driver SDK not found")
-        endif()
         vcpkg_list(APPEND options
             -DPA_USE_ASIO=ON
-            -DASIOSDK_ROOT_DIR="${ASIOSDK_ROOT_DIR}"
-        )
-    else()
-        vcpkg_list(APPEND options
-            -DPA_USE_ASIO=OFF
         )
     endif()
 elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
