@@ -7754,7 +7754,7 @@
     },
     "portaudio": {
       "baseline": "19.7",
-      "port-version": 8
+      "port-version": 9
     },
     "portmidi": {
       "baseline": "2.0.6",
