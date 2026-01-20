@@ -3973,7 +3973,7 @@
       "port-version": 0
     },
     "influxdb-cxx": {
-      "baseline": "0.8.0",
+      "baseline": "0.8.1",
       "port-version": 0
     },
     "infoware": {
