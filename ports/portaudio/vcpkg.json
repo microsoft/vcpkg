@@ -19,5 +19,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "asio": {
+      "description": "Enable support for the Steinberg Audio Streaming Input Output (ASIO) library",
+      "dependencies": [
+        "asiosdk"
+      ]
+    }
+  }
 }

@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 122fe93..cfff7e4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -146,12 +146,6 @@ IF(WIN32)
+ 
+   # Try to find ASIO SDK (assumes that portaudio and asiosdk folders are side-by-side, see
+   # http://www.portaudio.com/trac/wiki/TutorialDir/Compile/WindowsASIOMSVC)
+-  FIND_PACKAGE(ASIOSDK)
+-  IF(ASIOSDK_FOUND)
+-    OPTION(PA_USE_ASIO "Enable support for ASIO" ON)
+-  ELSE()
+-    OPTION(PA_USE_ASIO "Enable support for ASIO" OFF)
+-  ENDIF()
+   IF(PA_USE_ASIO)
+     SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${ASIOSDK_ROOT_DIR}/common)
+     SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${ASIOSDK_ROOT_DIR}/host)
