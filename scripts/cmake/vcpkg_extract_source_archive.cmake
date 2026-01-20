@@ -104,7 +104,27 @@ function(vcpkg_extract_source_archive)
     # Preserve source for:
     # - _VCPKG_EDITABLE: this specific port is editable
     # - _VCPKG_EDITABLE_SUBTREE: this port is in the dependency tree of an editable port
-    if((_VCPKG_EDITABLE OR _VCPKG_EDITABLE_SUBTREE) AND EXISTS "${source_path}")
+    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
+        # Editable mode: extract to the dedicated sources folder using per-port counter
+        set(_counter_var "_VCPKG_EDITABLE_SOURCE_COUNT_${PORT}")
+        if(NOT DEFINED ${_counter_var})
+            set(${_counter_var} 0 CACHE INTERNAL "Editable source download counter for ${PORT}")
+        endif()
+        math(EXPR _new_count "${${_counter_var}} + 1")
+        set(${_counter_var} ${_new_count} CACHE INTERNAL "Editable source download counter for ${PORT}" FORCE)
+        
+        set(_source_name "${PORT}-src${_new_count}")
+        set(_editable_source_path "${_VCPKG_EDITABLE_SOURCES_PATH}/${_source_name}")
+        
+        if(EXISTS "${_editable_source_path}")
+            set("${out_source_path}" "${_editable_source_path}" PARENT_SCOPE)
+            message(STATUS "Editable mode: using existing source at ${_editable_source_path}")
+            return()
+        endif()
+        
+        # Will extract to editable path below
+        set(source_path "${_editable_source_path}")
+    elseif((_VCPKG_EDITABLE OR _VCPKG_EDITABLE_SUBTREE) AND EXISTS "${source_path}")
         set("${out_source_path}" "${source_path}" PARENT_SCOPE)
         message(STATUS "Using source at ${source_path}")
         return()
