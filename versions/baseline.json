@@ -637,8 +637,8 @@
       "port-version": 1
     },
     "bbalouki-itch": {
-      "baseline": "1.0.0",
-      "port-version": 1
+      "baseline": "1.1.0",
+      "port-version": 0
     },
     "bbstrader": {
       "baseline": "2.0.0",
