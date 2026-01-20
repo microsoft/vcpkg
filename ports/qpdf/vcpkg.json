@@ -1,6 +1,6 @@
 {
   "name": "qpdf",
-  "version": "12.3.0",
+  "version": "12.3.1",
   "description": "A content-preserving PDF document transformer",
   "homepage": "https://qpdf.sourceforge.io/",
   "license": "Apache-2.0 AND MIT",
