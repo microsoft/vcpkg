@@ -13,17 +13,17 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" PA_DLL_LINK_WITH_STATIC_RUN
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PA_BUILD_SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PA_BUILD_STATIC)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        asio PA_USE_ASIO
+)
+
 vcpkg_list(SET options)
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_list(APPEND options
         -DPA_DLL_LINK_WITH_STATIC_RUNTIME=${PA_DLL_LINK_WITH_STATIC_RUNTIME}
         -DPA_LIBNAME_ADD_SUFFIX=OFF
     )
-    if("asio" IN_LIST FEATURES)
-        vcpkg_list(APPEND options
-            -DPA_USE_ASIO=ON
-        )
-    endif()
 elseif(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
     vcpkg_list(APPEND options
         # avoid absolute paths
@@ -47,6 +47,7 @@ vcpkg_cmake_configure(
         ${options}
         -DPA_BUILD_SHARED=${PA_BUILD_SHARED}
         -DPA_BUILD_STATIC=${PA_BUILD_STATIC}
+        -DPA_USE_ASIO=${PA_USE_ASIO}
     OPTIONS_DEBUG
         -DPA_ENABLE_DEBUG_OUTPUT:BOOL=ON
 )

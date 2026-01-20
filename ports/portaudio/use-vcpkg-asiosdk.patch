@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 122fe93..5cd36c4 100644
+index 122fe93..616b6a9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -144,15 +144,8 @@ IF(WIN32)
+@@ -144,15 +144,11 @@ IF(WIN32)
  
    SET(PA_LIBRARY_DEPENDENCIES ${PA_LIBRARY_DEPENDENCIES} winmm)
  
@@ -15,7 +15,10 @@ index 122fe93..5cd36c4 100644
 -    OPTION(PA_USE_ASIO "Enable support for ASIO" OFF)
 -  ENDIF()
    IF(PA_USE_ASIO)
-+    find_package(asiosdk REQUIRED)
++    # If -DASIOSDK_ROOT_DIR=/path/to/asiosdk is not provided, vcpkg's asiosdk will be used
++    if(NOT ASIOSDK_ROOT_DIR)
++      find_package(asiosdk REQUIRED)
++    endif()
      SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${ASIOSDK_ROOT_DIR}/common)
      SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${ASIOSDK_ROOT_DIR}/host)
      SET(PA_PRIVATE_INCLUDE_PATHS ${PA_PRIVATE_INCLUDE_PATHS} ${ASIOSDK_ROOT_DIR}/host/pc)
