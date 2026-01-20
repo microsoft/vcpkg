@@ -28,7 +28,6 @@ vcpkg_cmake_configure(
 
 set(ENV{MIMALLOC_VERBOSE} 1)
 set(ENV{MIMALLOC_SHOW_ERRORS} 1)
-set(ENV{MIMALLOC_DISABLE_REDIRECT} 1)
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
