@@ -10806,7 +10806,7 @@
     },
     "xlnt": {
       "baseline": "1.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "xlsxio": {
       "baseline": "0.2.36",

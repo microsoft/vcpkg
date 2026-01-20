@@ -1,11 +1,12 @@
 {
   "name": "xlnt",
   "version": "1.6.1",
+  "port-version": 1,
   "description": "Cross-platform user-friendly xlsx (Microsoft Excel®) library for C++11 (and above)",
   "homepage": "https://github.com/xlnt-community/xlnt",
   "documentation": "https://xlnt-community.gitbook.io/xlnt",
   "license": "MIT AND BSD-3-Clause AND BSD-2-Clause",
-  "supports": "windows & linux & osx",
+  "supports": "windows | linux | osx",
   "dependencies": [
     "fast-float",
     "fmt",
