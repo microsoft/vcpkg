@@ -5,7 +5,7 @@
   "description": "Simple Eigen-C++ wrapper for OSQP library",
   "homepage": "https://gbionics.github.io/osqp-eigen/",
   "license": "BSD-3-Clause-Clear",
-  "supports": "(windows | linux | osx) & !x86",
+  "supports": "!x86",
   "dependencies": [
     {
       "name": "eigen3",
