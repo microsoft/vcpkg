@@ -1,5 +1,5 @@
 diff --git a/build/cmake/CMakeLists.txt b/build/cmake/CMakeLists.txt
-index c5c1fb8..a08cfc9 100644
+index c5c1fb8..b1f41bf 100644
 --- a/build/cmake/CMakeLists.txt
 +++ b/build/cmake/CMakeLists.txt
 @@ -162,8 +162,10 @@ endforeach()
@@ -13,3 +13,11 @@ index c5c1fb8..a08cfc9 100644
  endif()
  
  install ( TARGETS ${targets_to_install}
+@@ -235,6 +237,7 @@ if(WIN32 AND MSVC AND (NOT MSVC_VERSION LESS 1600))
+         DESTINATION ${CMAKE_INSTALL_LIBDIR}
+         CONFIGURATIONS Debug RelWithDebInfo
+         COMPONENT Runtime
++        OPTIONAL  # subject to BUILD_SHARED_LIBS
+     )
+ endif()
+ 
