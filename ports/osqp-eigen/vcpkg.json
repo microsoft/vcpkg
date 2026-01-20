@@ -7,10 +7,7 @@
   "license": "BSD-3-Clause-Clear",
   "supports": "!x86",
   "dependencies": [
-    {
-      "name": "eigen3",
-      "version>=": "3.4.0"
-    },
+    "eigen",
     {
       "name": "osqp",
       "version>=": "1.0.0"
