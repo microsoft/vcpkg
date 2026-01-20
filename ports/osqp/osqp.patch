@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9ed43468..591c3b60 100644
+index 9ed43468..04470715 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -29,6 +29,8 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
@@ -11,28 +11,7 @@ index 9ed43468..591c3b60 100644
  endif()
  
  # OSQP Versioning
-@@ -56,12 +58,17 @@ include(Utils)
- 
- # Set options
- # ----------------------------------------------
--option(OSQP_BUILD_SHARED_LIB "Build the shared library" ON)
--option(OSQP_BUILD_STATIC_LIB "Build the static library" ON)
-+if(BUILD_SHARED_LIBS)
-+  option(OSQP_BUILD_SHARED_LIB "Build the shared library" ON)
-+  option(OSQP_BUILD_STATIC_LIB "Build the static library" OFF)
-+else()
-+  option(OSQP_BUILD_SHARED_LIB "Build the shared library" OFF)
-+  option(OSQP_BUILD_STATIC_LIB "Build the static library" ON)
-+endif()
- 
- cmake_dependent_option( OSQP_BUILD_DEMO_EXE
-                         "Build the demo executable (requires the static library)"
--                        ON    # Default to on
-+                        OFF    # Default to on
-                         OSQP_BUILD_STATIC_LIB OFF ) # Force off if the static library isn't built
- 
- cmake_dependent_option( OSQP_BUILD_UNITTESTS
-@@ -93,6 +100,7 @@ mark_as_advanced(OSQP_LIB_SUFFIX)
+@@ -93,6 +95,7 @@ mark_as_advanced(OSQP_LIB_SUFFIX)
  # Set the relevant boolean values for the algebra
  if(${OSQP_ALGEBRA_BACKEND} STREQUAL "builtin")
    set(OSQP_ALGEBRA_BUILTIN ON)
@@ -40,7 +19,7 @@ index 9ed43468..591c3b60 100644
  elseif(${OSQP_ALGEBRA_BACKEND} STREQUAL "mkl")
    set(OSQP_ALGEBRA_MKL ON)
  elseif(${OSQP_ALGEBRA_BACKEND} STREQUAL "cuda")
-@@ -389,32 +397,32 @@ if(PYTHON OR R_LANG)
+@@ -389,32 +392,32 @@ if(PYTHON OR R_LANG)
  endif()
  
  # ----------------------------------------------
@@ -81,7 +60,7 @@ index 9ed43468..591c3b60 100644
                        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/osqp>")
  endif()
  
-@@ -429,7 +437,7 @@ if(OSQP_BUILD_SHARED_LIB)
+@@ -429,7 +432,7 @@ if(OSQP_BUILD_SHARED_LIB)
                "${CMAKE_CURRENT_SOURCE_DIR}/src/osqp_api.c")
    if(OSQP_ALGEBRA_BUILTIN)
      # Transitive dependency on OBJECT library does not work. See https://gitlab.kitware.com/cmake/cmake/-/issues/18682
@@ -90,7 +69,7 @@ index 9ed43468..591c3b60 100644
    endif()
    target_include_directories(osqp PRIVATE ${osqplib_includes})
    target_include_directories(osqp PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/public;${CMAKE_CURRENT_BINARY_DIR}/include/public>"
-@@ -461,7 +469,7 @@ if(OSQP_BUILD_DEMO_EXE)
+@@ -461,7 +464,7 @@ if(OSQP_BUILD_DEMO_EXE)
  
    add_executable(osqp_simple_demo
                   ${OSQP_EXAMPLES_DIR}/osqp_simple_demo.c )
@@ -99,7 +78,7 @@ index 9ed43468..591c3b60 100644
  
    add_executable(osqp_demo
                   ${OSQP_EXAMPLES_DIR}/osqp_demo.c
-@@ -475,11 +483,11 @@ if(OSQP_BUILD_DEMO_EXE)
+@@ -475,11 +478,11 @@ if(OSQP_BUILD_DEMO_EXE)
    target_include_directories(osqp_demo PRIVATE
                                ${osqplib_includes}
                                ${OSQP_EXAMPLES_DIR}/problems )
@@ -113,7 +92,7 @@ index 9ed43468..591c3b60 100644
    endif()
  endif()
  
-@@ -496,20 +504,20 @@ install(FILES ${osqp_headers}
+@@ -496,20 +499,20 @@ install(FILES ${osqp_headers}
  ############################################################
  if(OSQP_BUILD_STATIC_LIB)
    install(

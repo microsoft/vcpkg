@@ -10,6 +10,16 @@ vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OSQP_BUILD_STATIC_LIB)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OSQP_BUILD_SHARED_LIB)
+
+vcpkg_cmake_configure(
+OPTIONS
+  -DOSQP_BUILD_SHARED_LIB=${OSQP_BUILD_SHARED_LIB}
+  -DOSQP_BUILD_STATIC_LIB=${OSQP_BUILD_STATIC_LIB}
+  -DOSQP_BUILD_DEMO_EXE=OFF
+)
+
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     CONFIG_PATH "lib/cmake/osqp"
