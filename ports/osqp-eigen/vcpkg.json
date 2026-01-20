@@ -1,7 +1,6 @@
 {
   "name": "osqp-eigen",
   "version": "0.11.0",
-  "port-version": 2,
   "description": "Simple Eigen-C++ wrapper for OSQP library",
   "homepage": "https://gbionics.github.io/osqp-eigen/",
   "license": "BSD-3-Clause-Clear",
