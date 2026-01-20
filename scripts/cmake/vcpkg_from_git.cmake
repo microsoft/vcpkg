@@ -14,22 +14,32 @@ function(vcpkg_from_git)
 
     # Editable mode: delegate to consolidated helper
     if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
+        # Build optional parameters
+        set(_editable_extra_args "")
         if(DEFINED arg_REF)
-            set(_git_ref "${arg_REF}")
-        elseif(DEFINED arg_HEAD_REF)
-            set(_git_ref "${arg_HEAD_REF}")
-        else()
-            message(FATAL_ERROR "Editable mode: REF or HEAD_REF must be specified")
+            list(APPEND _editable_extra_args REF "${arg_REF}")
+        endif()
+        if(DEFINED arg_HEAD_REF)
+            list(APPEND _editable_extra_args HEAD_REF "${arg_HEAD_REF}")
+        endif()
+        if(DEFINED arg_FETCH_REF)
+            list(APPEND _editable_extra_args FETCH_REF "${arg_FETCH_REF}")
+        endif()
+        if(DEFINED arg_LFS)
+            list(APPEND _editable_extra_args LFS "${arg_LFS}")
         endif()
 
         include("${SCRIPTS}/cmake/z_vcpkg_from_git_editable.cmake")
         z_vcpkg_from_git_editable(
             URL "${arg_URL}"
-            REF "${_git_ref}"
             OUT_SOURCE_PATH "${arg_OUT_SOURCE_PATH}"
             PATCHES ${arg_PATCHES}
+            ${_editable_extra_args}
         )
         set("${arg_OUT_SOURCE_PATH}" "${${arg_OUT_SOURCE_PATH}}" PARENT_SCOPE)
+        if(DEFINED VCPKG_HEAD_VERSION)
+            set(VCPKG_HEAD_VERSION "${VCPKG_HEAD_VERSION}" PARENT_SCOPE)
+        endif()
         return()
     endif()
 
