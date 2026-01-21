@@ -1,0 +1,10 @@
+{
+  "name": "jsonfusion",
+  "version": "0.707.0",
+  "description": "Type-driven JSON/CBOR parser with declarative validation. Header-only C++23 library.",
+  "homepage": "https://github.com/tucher/JsonFusion",
+  "license": "MIT",
+  "dependencies": [
+    "boost-pfr"
+  ]
+}

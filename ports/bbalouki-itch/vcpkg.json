@@ -1,7 +1,6 @@
 {
   "name": "bbalouki-itch",
-  "version": "1.0.0",
-  "port-version": 1,
+  "version": "1.1.0",
   "maintainers": "Bertin Balouki SIMYELI",
   "description": "A High-Performance C++ library for parsing the ITCH 5.0 protocol.",
   "homepage": "https://github.com/bbalouki/itchcpp",

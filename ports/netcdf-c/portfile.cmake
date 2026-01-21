@@ -11,6 +11,7 @@ vcpkg_from_github(
         mremap.diff
         plugin-install-dir.diff
         fstat.patch
+        backport-d7895f6.diff  # cf. https://github.com/Unidata/netcdf-c/pull/3237
 )
 file(GLOB_RECURSE modules "${SOURCE_PATH}/cmake/modules/Find*.cmake")
 set(vendored_bzip2 blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c bzlib.h bzlib_private.h)
