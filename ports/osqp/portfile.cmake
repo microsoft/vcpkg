@@ -17,6 +17,7 @@ vcpkg_cmake_configure(
     -DOSQP_BUILD_DEMO_EXE=OFF
 )
 
+
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     CONFIG_PATH "lib/cmake/osqp"
