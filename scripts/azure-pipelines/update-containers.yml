@@ -1,0 +1,39 @@
+trigger: none
+schedules:
+- cron: "0 0 * * 1"  # weekly on Mondays at 00:00 UTC
+  displayName: Weekly build
+  branches:
+    include:
+    - main
+  always: true
+jobs:
+- job: update_amd64_job
+  displayName: Update AMD64 Containers
+  timeoutInMinutes: 720
+  pool:
+    name: PrAzureLinux3Docker
+    os: linux
+  steps:
+  - checkout: self
+  - task: AzureCLI@2
+    displayName: Build and Tag Containers
+    inputs:
+      azureSubscription: 'containers-updater'
+      scriptType: bash
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        export BuildDate=$(date -u +"%Y-%m-%d")
+        export EndDate=$(date -u -d "1 day" +"%Y-%m-%d")
+        echo "BUILD_DATE=$BuildDate"
+        echo "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate"
+        az acr login --name vcpkgandroidwus --resource-group PrAnd-WUS --subscription 7fcb00fa-a761-49de-8a2f-d67190e62882
+        # Note that this is marking the *previous* image as EOL, not the one we're building as it attaches
+        # to the SHA to which the tag points, not the tag itself.
+        oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-20
+        oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20
+        cd scripts/azure-pipelines/android
+        docker build . -t vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-20 --build-arg BUILD_DATE=$BuildDate
+        docker push vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-20
+        cd ../linux
+        docker build . -t vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20 --build-arg BUILD_DATE=$BuildDate
+        docker push vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20
