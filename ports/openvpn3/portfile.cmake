@@ -24,6 +24,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
         -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
         -DUSE_MBEDTLS=1   # vcpkg legacy choice
+	-DPKG_CONFIG_EXECUTABLE="${CURRENT_INSTALLED_DIR}/tools/pkgconf/pkgconf${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
 )
 
 vcpkg_cmake_install()

@@ -10,10 +10,7 @@
     "jsoncpp",
     "lz4",
     "mbedtls",
-    {
-      "name": "pkgconf",
-      "host": true
-    },
+    "pkgconf",
     {
       "name": "tap-windows6",
       "platform": "windows"
