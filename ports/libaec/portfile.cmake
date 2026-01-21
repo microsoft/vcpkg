@@ -14,10 +14,11 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_STATIC_LIBS=${BUILD_STATIC}
+        -Dlibaec_INSTALL_CMAKEDIR=share/${PORT}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libaec")
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
