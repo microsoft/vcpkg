@@ -60,7 +60,7 @@ vcpkg_from_github(
         fix-build.patch
         fix-configure.patch
         protobuf-version.patch
-        plugin.patch
+        #plugin.patch
         explicit_int_cast_2.patch
 )
 
