@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dependencies.patch
+        winsock.diff
 )
 # The on-the-fly tarballs do not carry the details of release tarballs.
 vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[-DEV"]] [["]])
