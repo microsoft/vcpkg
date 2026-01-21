@@ -1,8 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e88e561..0f5544d 100644
+index e88e561..6ec85e5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -111,24 +111,19 @@ else()
+@@ -80,8 +80,6 @@ option(ENABLE_NETSSL_WIN "Enable NetSSL Windows" OFF)
+ 
+ if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
+ 	find_package(OpenSSL REQUIRED)
+-else()
+-	find_package(OpenSSL)
+ endif()
+ 
+ if(OPENSSL_FOUND)
+@@ -111,24 +109,19 @@ else()
  	option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
  endif()
  
@@ -35,7 +44,7 @@ index e88e561..0f5544d 100644
  endif()
  
  if(PostgreSQL_FOUND)
-@@ -265,7 +260,8 @@ include(DefinePlatformSpecific)
+@@ -265,7 +258,8 @@ include(DefinePlatformSpecific)
  
  # Collect the built libraries and include dirs, the will be used to create the PocoConfig.cmake file
  set(Poco_COMPONENTS "")
@@ -45,7 +54,7 @@ index e88e561..0f5544d 100644
  if(ENABLE_TESTS)
  	add_subdirectory(CppUnit)
  	set(ENABLE_XML ON CACHE BOOL "Enable XML" FORCE)
-@@ -398,8 +394,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Prometheus AND ENABLE_PROMETHEUS)
+@@ -398,8 +392,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Prometheus AND ENABLE_PROMETHEUS)
  	list(APPEND Poco_COMPONENTS "Prometheus")
  endif()
  
