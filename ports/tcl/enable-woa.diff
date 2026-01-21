@@ -1,0 +1,197 @@
+diff -Naur 3f1ffc8c8e-0b0ee3e2ba.clean/generic/tclInt.h 3f1ffc8c8e-0b0ee3e2ba/generic/tclInt.h
+--- 3f1ffc8c8e-0b0ee3e2ba.clean/generic/tclInt.h	2019-11-26 17:57:56.000000000 +0000
++++ 3f1ffc8c8e-0b0ee3e2ba/generic/tclInt.h	2026-01-16 16:10:32.105057400 +0000
+@@ -103,7 +103,7 @@
+  */
+ 
+ #if !defined(INT2PTR) && !defined(PTR2INT)
+-#   if defined(HAVE_INTPTR_T) || defined(intptr_t)
++#   if defined(HAVE_INTPTR_T) || defined(intptr_t) || defined(_INTPTR_T_DEFINED)
+ #	define INT2PTR(p) ((void *)(intptr_t)(p))
+ #	define PTR2INT(p) ((intptr_t)(p))
+ #   else
+@@ -112,7 +112,7 @@
+ #   endif
+ #endif
+ #if !defined(UINT2PTR) && !defined(PTR2UINT)
+-#   if defined(HAVE_UINTPTR_T) || defined(uintptr_t)
++#   if defined(HAVE_UINTPTR_T) || defined(uintptr_t) || defined(_UINTPTR_T_DEFINED)
+ #	define UINT2PTR(p) ((void *)(uintptr_t)(p))
+ #	define PTR2UINT(p) ((uintptr_t)(p))
+ #   else
+diff -Naur 3f1ffc8c8e-0b0ee3e2ba.clean/generic/tclTest.c 3f1ffc8c8e-0b0ee3e2ba/generic/tclTest.c
+--- 3f1ffc8c8e-0b0ee3e2ba.clean/generic/tclTest.c	2019-11-26 17:57:56.000000000 +0000
++++ 3f1ffc8c8e-0b0ee3e2ba/generic/tclTest.c	2026-01-15 17:39:16.343680900 +0000
+@@ -448,7 +448,7 @@
+ static int		TestInterpResolverCmd(void *clientData,
+ 			    Tcl_Interp *interp, int objc,
+ 			    Tcl_Obj *const objv[]);
+-#if defined(HAVE_CPUID) || defined(_WIN32)
++#if defined(HAVE_CPUID)
+ static int		TestcpuidCmd(void *dummy,
+ 			    Tcl_Interp* interp, int objc,
+ 			    Tcl_Obj *const objv[]);
+@@ -727,7 +727,7 @@
+ 	    NULL, NULL);
+     Tcl_CreateCommand(interp, "testexitmainloop", TestexitmainloopCmd,
+ 	    NULL, NULL);
+-#if defined(HAVE_CPUID) || defined(_WIN32)
++#if defined(HAVE_CPUID)
+     Tcl_CreateObjCommand(interp, "testcpuid", TestcpuidCmd,
+ 	    NULL, NULL);
+ #endif
+@@ -6989,7 +6989,7 @@
+     return TCL_OK;
+ }
+ 
+-#if defined(HAVE_CPUID) || defined(_WIN32)
++#if defined(HAVE_CPUID)
+ /*
+  *----------------------------------------------------------------------
+  *
+diff -Naur 3f1ffc8c8e-0b0ee3e2ba.clean/tests/env.test 3f1ffc8c8e-0b0ee3e2ba/tests/env.test
+--- 3f1ffc8c8e-0b0ee3e2ba.clean/tests/env.test	2019-11-26 17:57:56.000000000 +0000
++++ 3f1ffc8c8e-0b0ee3e2ba/tests/env.test	2026-01-15 17:40:11.145121500 +0000
+@@ -104,7 +104,9 @@
+     SHLIB_PATH SYSTEMDRIVE SYSTEMROOT DYLD_LIBRARY_PATH DYLD_FRAMEWORK_PATH
+     DYLD_NEW_LOCAL_SHARED_REGIONS DYLD_NO_FIX_PREBINDING
+     __CF_USER_TEXT_ENCODING SECURITYSESSIONID LANG WINDIR TERM
+-    CommonProgramFiles ProgramFiles CommonProgramW6432 ProgramW6432
++    CommonProgramFiles CommonProgramFiles(x86) ProgramFiles
++    ProgramFiles(x86) CommonProgramW6432 ProgramW6432
++    WINECONFIGDIR WINEDATADIR WINEDLLDIR0 WINEHOMEDIR PROCESSOR_ARCHITECTURE
+ }
+ 
+ variable printenvScript [makeFile [string map [list @keep@ [list $keep]] {
+diff -Naur 3f1ffc8c8e-0b0ee3e2ba.clean/win/configure 3f1ffc8c8e-0b0ee3e2ba/win/configure
+--- 3f1ffc8c8e-0b0ee3e2ba.clean/win/configure	2019-11-26 17:57:56.000000000 +0000
++++ 3f1ffc8c8e-0b0ee3e2ba/win/configure	2026-01-21 17:17:13.458017800 +0000
+@@ -4270,10 +4270,15 @@
+ 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result:    Using 64-bit $MACHINE mode" >&5
+ $as_echo "   Using 64-bit $MACHINE mode" >&6; }
+ 		;;
++	    arm64)
++		MACHINE="ARM64"
++		echo "$as_me:$LINENO: result:    Using ARM64 $MACHINE mode" >&5
++echo "${ECHO_T}   Using ARM64 $MACHINE mode" >&6
++		;;
+ 	    ia64)
+ 		MACHINE="IA64"
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result:    Using 64-bit $MACHINE mode" >&5
+-$as_echo "   Using 64-bit $MACHINE mode" >&6; }
++		{ $as_echo "$as_me:${as_lineno-$LINENO}: result:    Using IA64 $MACHINE mode" >&5
++$as_echo "   Using IA64 $MACHINE mode" >&6; }
+ 		;;
+ 	    *)
+ 		cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+@@ -4351,6 +4356,9 @@
+ 		    MACHINE="AMD64" ; # assume AMD64 as default 64-bit build
+ 		    PATH64="${MSSDK}/Bin/Win64/x86/AMD64"
+ 		    ;;
++		arm64)
++		    MACHINE="ARM64"
++		    ;;
+ 		ia64)
+ 		    MACHINE="IA64"
+ 		    PATH64="${MSSDK}/Bin/Win64"
+diff -Naur 3f1ffc8c8e-0b0ee3e2ba.clean/win/rules.vc 3f1ffc8c8e-0b0ee3e2ba/win/rules.vc
+--- 3f1ffc8c8e-0b0ee3e2ba.clean/win/rules.vc	2019-11-26 17:57:56.000000000 +0000
++++ 3f1ffc8c8e-0b0ee3e2ba/win/rules.vc	2026-01-16 15:42:41.635433600 +0000
+@@ -438,6 +438,8 @@
+     && ![echo ARCH=IX86 >> vercl.x] \
+     && ![echo $(_HASH)elif defined(_M_AMD64) >> vercl.x] \
+     && ![echo ARCH=AMD64 >> vercl.x] \
++    && ![echo $(_HASH)elif defined(_M_ARM64) >> vercl.x] \
++    && ![echo ARCH=ARM64 >> vercl.x] \
+     && ![echo $(_HASH)endif >> vercl.x] \
+     && ![$(cc32) -nologo -TC -P vercl.x 2>NUL]
+ !include vercl.i
+@@ -465,6 +467,9 @@
+ !elseif "$(MACHINE)" == "x64"
+ !undef MACHINE
+ MACHINE = AMD64
++!elseif "$(MACHINE)" == "ARM64"
++!undef MACHINE
++MACHINE = ARM64
+ !endif
+ !if "$(MACHINE)" != "$(ARCH)"
+ !error Specified MACHINE macro $(MACHINE) does not match detected target architecture $(ARCH).
+@@ -478,6 +483,8 @@
+ # the Tcl platform::identify command
+ !if "$(MACHINE)" == "AMD64"
+ PLATFORM_IDENTIFY = win32-x86_64
++!elseif "$(MACHINE)" == "ARM64"
++PLATFORM_IDENTIFY = win32-arm64
+ !else
+ PLATFORM_IDENTIFY = win32-ix86
+ !endif
+@@ -493,6 +500,8 @@
+ 
+ !if ![reg query HKLM\Hardware\Description\System\CentralProcessor\0 /v Identifier | findstr /i x86]
+ NATIVE_ARCH=IX86
++!elseif ![reg query HKLM\Hardware\Description\System\CentralProcessor\0 /v Identifier | findstr /i ARM | findstr /i 64-bit]
++NATIVE_ARCH=ARM64
+ !else
+ NATIVE_ARCH=AMD64
+ !endif
+@@ -1388,6 +1397,11 @@
+ carch =
+ !endif
+ 
++# cpuid is only available on intel machines
++!if "$(MACHINE)" == "IX86" || "$(MACHINE)" == "AMD64"
++carch = $(carch) /DHAVE_CPUID=1
++!endif
++
+ !if $(DEBUG)
+ # Turn warnings into errors
+ cwarn = $(cwarn) -WX
+diff -Naur 3f1ffc8c8e-0b0ee3e2ba.clean/win/tcl.m4 3f1ffc8c8e-0b0ee3e2ba/win/tcl.m4
+--- 3f1ffc8c8e-0b0ee3e2ba.clean/win/tcl.m4	2019-11-26 17:57:56.000000000 +0000
++++ 3f1ffc8c8e-0b0ee3e2ba/win/tcl.m4	2026-01-16 11:17:22.708265800 +0000
+@@ -717,7 +717,7 @@
+ 		;;
+ 	    ia64)
+ 		MACHINE="IA64"
+-		AC_MSG_RESULT([   Using 64-bit $MACHINE mode])
++		AC_MSG_RESULT([   Using IA64 $MACHINE mode])
+ 		;;
+ 	    *)
+ 		AC_TRY_COMPILE([
+@@ -778,6 +778,9 @@
+ 		    MACHINE="AMD64" ; # assume AMD64 as default 64-bit build
+ 		    PATH64="${MSSDK}/Bin/Win64/x86/AMD64"
+ 		    ;;
++		arm64)
++		    MACHINE="ARM64"
++			;;
+ 		ia64)
+ 		    MACHINE="IA64"
+ 		    PATH64="${MSSDK}/Bin/Win64"
+diff -Naur 3f1ffc8c8e-0b0ee3e2ba.clean/win/tclWin32Dll.c 3f1ffc8c8e-0b0ee3e2ba/win/tclWin32Dll.c
+--- 3f1ffc8c8e-0b0ee3e2ba.clean/win/tclWin32Dll.c	2019-11-26 17:57:56.000000000 +0000
++++ 3f1ffc8c8e-0b0ee3e2ba/win/tclWin32Dll.c	2026-01-16 14:59:03.992811300 +0000
+@@ -445,12 +445,12 @@
+ {
+     int status = TCL_ERROR;
+ 
+-#if defined(HAVE_INTRIN_H) && defined(_WIN64)
++#if defined(HAVE_INTRIN_H) && defined(_WIN64) && defined(HAVE_CPUID)
+ 
+     __cpuid((int *)regsPtr, index);
+     status = TCL_OK;
+ 
+-#elif defined(__GNUC__)
++#elif defined(__GNUC__) && defined(HAVE_CPUID)
+ #   if defined(_WIN64)
+     /*
+      * Execute the CPUID instruction with the given index, and store results
+@@ -567,7 +567,7 @@
+ 
+ #   endif /* !_WIN64 */
+ #elif defined(_MSC_VER)
+-#   if defined(_WIN64)
++#   if defined(_WIN64) && defined(HAVE_CPUID)
+ 
+     __cpuid(regsPtr, index);
+     status = TCL_OK;
