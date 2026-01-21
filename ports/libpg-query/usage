@@ -1,0 +1,10 @@
+The package libpg-query provides C headers and a library for the PostgreSQL parser.
+
+Example CMake usage:
+
+  find_package(unofficial-libpg-query CONFIG REQUIRED)
+  target_link_libraries(your_target PRIVATE unofficial::libpg-query::libpg-query)
+
+If you use the protobuf APIs (pg_query_parse_protobuf, pg_query_scan, etc.),
+also add the protobuf-c headers to your include path, for example by adding
+"protobuf-c" to your vcpkg.json dependencies.
