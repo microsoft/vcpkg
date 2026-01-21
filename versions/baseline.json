@@ -4800,6 +4800,10 @@
       "baseline": "1.1.5",
       "port-version": 0
     },
+    "libds4": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "libdshowcapture": {
       "baseline": "2025-02-08",
       "port-version": 0
