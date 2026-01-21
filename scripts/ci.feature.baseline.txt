@@ -271,7 +271,7 @@ llvm[target-aarch64,target-all,target-amdgpu,target-arc,target-arm,target-avr,ta
 opencascade[freeimage,freetype,rapidjson,samples,tbb,vtk]=no-separate-feature-test
 opencv[ade,aravis,calib3d,contrib,cuda,cudnn,dc1394,directml,dnn,dnn-cuda,dshow,eigen,ffmpeg,freetype,fs,gapi,gdcm,gstreamer,gtk,halide,hdf,highgui,intrinsics,ipp,jpeg,jpegxl,msmf,nonfree,opencl,openexr,opengl,openjpeg,openmp,openvino,ovis,png,python,qt,quality,quirc,rgbd,sfm,tbb,text,thread,tiff,vtk,vulkan,webp,win32ui,world]=no-separate-feature-test
 qtbase[doubleconversion,gui,sql,thread] = no-separate-feature-test # covered in many combinations
-vtk[atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,proj,python,qt,seacas,sql,tbb,utf8,vtkm] = no-separate-feature-test
+vtk[atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,proj,qt,seacas,sql,tbb,utf8,vtkm] = no-separate-feature-test
 
 # cascade
 3fd:x64-uwp = cascade
@@ -1364,16 +1364,16 @@ vtk[openvr]:arm64-osx = cascade
 vtk[openvr]:x64-windows-static = cascade
 vtk[openvr](arm64 & windows) = cascade # openvr[core] only supports !(arm | uwp | osx | android)
 vtk[paraview](android) = cascade
-vtk[python](osx) = cascade
 vtk[python](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only supports !uwp & !xbox, python3[core] only supports !uwp & !mingw
 vtk[qt](uwp) = cascade # dbus[core] only supports !uwp & !staticcrt & !android & !ios, harfbuzz[core] only supports !uwp, hdf5[core] only supports !uwp, libpq[core] only supports !uwp, opengl[core] only supports !uwp & !xbox, qtbase[core] only supports !uwp
 vtk[seacas](uwp) = cascade # hdf5[core] only supports !uwp, opengl[core] only supports !uwp & !xbox
 vtk[vtkm](arm64 & windows) = cascade # vtk-m[core] only supports !x86 & !uwp & !(arm & windows)
+vtk(uwp) = cascade # hdf5[core] only supports !uwp
+# vtk-*
 vtk-dicom(uwp) = cascade
 # cuda[core] only supports (windows & x64 & !uwp & !xbox) | (linux & x64) | (linux & arm64)
 vtk-m[cuda](arm64 & windows) = cascade
 vtk-m[cuda](osx) = cascade
-vtk(uwp) = cascade # hdf5[core] only supports !uwp
 vulkan[tools](osx) = cascade
 vulkan-sdk-components[tools]( osx | staticcrt) = cascade
 wampcc:x64-uwp = cascade
@@ -1594,10 +1594,9 @@ vlpp[tools](linux) = feature-fails # See https://github.com/microsoft/vcpkg/issu
 vlpp[tools](osx) = feature-fails # error: use of undeclared identifier 'PATH_MAX'
 vsgqt(android) = fail # https://github.com/vsg-dev/vsgQt/pull/53
 vtk[all](!windows & !android & !osx) = feature-fails # Wait for fix: https://github.com/microsoft/vcpkg/pull/29260
-vtk[core,all,atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,paraview,proj,qt,seacas,sql,tbb,utf8,vtkm]:x64-windows-static-md = combination-fails
+vtk[core,all,atlmfc,cgns,cuda,debugleaks,fontconfig,gdal,geojson,libharu,libtheora,mpi,netcdf,opengl,openmp,openvr,paraview,proj,python,qt,seacas,sql,tbb,utf8,vtkm]:x64-windows-static-md=combination-fails
 vtk[core,python,paraview]:x64-linux = options # paraview's transitive gfortran linkage breaks python
 vtk[openmp](osx) = feature-fails
-vtk[python]:x64-windows-static-md = feature-fails # vtk[*] dbg: defaultlib 'MSVCRT' conflicts with use of other libs due to python
 vtk-m[cuda](windows & !arm64) = feature-fails
 vtk-m[omp](osx) = feature-fails # no openmp on default osx toolchain
 vtk-m[omp](windows) = feature-fails # needs openmp 4.0, msvc has openmp 2.0
