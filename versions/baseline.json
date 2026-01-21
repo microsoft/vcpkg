@@ -1853,8 +1853,8 @@
       "port-version": 0
     },
     "cminpack": {
-      "baseline": "1.3.8",
-      "port-version": 4
+      "baseline": "1.3.11",
+      "port-version": 0
     },
     "cmocka": {
       "baseline": "2.0.2",
