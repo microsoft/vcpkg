@@ -13,7 +13,7 @@ index d91e3a6c3..249d04c0f 100644
 +    check_library_exists(m pow "${CMAKE_C_IMPLICIT_LINK_DIRECTORIES}" PNG_HAVE_LIBM_POW)
 +  endblock()
    check_library_exists(m pow "" PNG_HAVE_LIBM_POW)
- endif() 
+ endif()
  if(PNG_HAVE_LIBM_POW)
 @@ -240,9 +246,9 @@ if(PNG_HARDWARE_OPTIMIZATIONS)
  
