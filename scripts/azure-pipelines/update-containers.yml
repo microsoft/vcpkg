@@ -1,4 +1,5 @@
 trigger: none
+pr: none
 schedules:
 - cron: "0 0 * * 1"  # weekly on Mondays at 00:00 UTC
   displayName: Weekly build
