@@ -4,6 +4,8 @@ vcpkg_from_gitlab(
     REPO k202009/libaec
     REF "v${VERSION}"
     SHA512 320060f59f29d0f2124c79e60ab6205fed31d96101b654393e4ba3154c55903247ef844e1d4f658094b76e19fe950437e9ecbbcd04dfe53a8b570fe9a17b5f87
+    PATCHES
+        alias_target.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
