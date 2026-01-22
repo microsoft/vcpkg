@@ -4,11 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/optimizer
     REF "v${VERSION}"
-    SHA512 552d6fa261c3ce2db2e0938a5b5261676335bce9bd828b46a1e2631f3b362c748ae9a6cfe7d62072fc3774b3f506bc54aa5827b52241e6f48d78a08dea1d9316
+    SHA512 ed9844c3ff30406e28dd06fe8a2ed202f301aacdc2c489b5a77dfa7ce6f33647939a00a059a47a5d474797aca6396ceb28c403d4054ff3714c2f6388a34279bf
     HEAD_REF master
     PATCHES
-        fix-pr-201.patch # https://github.com/onnx/optimizer/pull/201
-        fix-cmakelists.patch
+        fix-cmake.patch
 )
 
 vcpkg_cmake_configure(
