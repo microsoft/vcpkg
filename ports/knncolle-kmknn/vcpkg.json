@@ -1,6 +1,6 @@
 {
   "name": "knncolle-kmknn",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "knncolle bindings for KMKNN search ",
   "homepage": "https://github.com/knncolle/knncolle_kmknn",
   "license": "MIT",
