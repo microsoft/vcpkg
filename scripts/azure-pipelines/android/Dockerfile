@@ -99,10 +99,10 @@ rm -f android-ndk-r28c-linux.zip
 
 END_OF_SCRIPT
 
-ENV JAVA_HOME /jdk-17.0.14+7
+ENV JAVA_HOME="/jdk-17.0.14+7"
 
-ENV ANDROID_HOME /android-sdk
+ENV ANDROID_HOME="/android-sdk"
 
-ENV ANDROID_NDK_HOME /android-ndk-r28c
+ENV ANDROID_NDK_HOME="/android-ndk-r28c"
 
 WORKDIR /vcpkg
