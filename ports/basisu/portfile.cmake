@@ -21,9 +21,15 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/zstd")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    sse SSE
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DCMAKE_CXX_STANDARD=17
         -DBASISU_SYSTEM_ZSTD=ON
 )
