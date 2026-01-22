@@ -32,3 +32,17 @@ index 8bc05ee..00ec3cc 100644
  
  git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
  set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
+diff --git a/ecal/core/CMakeLists.txt b/ecal/core/CMakeLists.txt
+index 17c32c6..9405012 100644
+--- a/ecal/core/CMakeLists.txt
++++ b/ecal/core/CMakeLists.txt
+@@ -40,7 +40,8 @@ project(core VERSION ${eCAL_VERSION_STRING})
+ 
+ find_package(asio             REQUIRED)
+ find_package(Threads          REQUIRED)
+-find_package(ecaludp          REQUIRED)
++
++include(${CMAKE_CURRENT_LIST_DIR}/../thirdparty/ecaludp/build-ecaludp.cmake)
+ 
+ if (ECAL_CORE_CONFIGURATION)
+   find_package(yaml-cpp       REQUIRED)

@@ -17,6 +17,21 @@ vcpkg_from_github(
         # 0007-allow-static-build-of-core.patch
 )
 
+# ecaludp is a git submodule; pull it explicitly for vcpkg builds.
+set(ECALUDP_VERSION "0.1.2")
+vcpkg_download_distfile(ECALUDP_ARCHIVE
+    URLS "https://github.com/eclipse-ecal/ecaludp/archive/refs/tags/v${ECALUDP_VERSION}.tar.gz"
+    FILENAME "ecaludp-${ECALUDP_VERSION}.tar.gz"
+    SHA512 4f9d8c67777a63b569bd7069ca2a43eaaaa898a429c206bccfd5e90b10a733aa5f138be059cef2fcebda53987fdf0583b1d1859ecd154b9a48b5d39afd21c637
+)
+vcpkg_extract_source_archive_ex(
+    OUT_SOURCE_PATH ECALUDP_SOURCE_PATH
+    ARCHIVE "${ECALUDP_ARCHIVE}"
+    REF "v${ECALUDP_VERSION}"
+)
+file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty/ecaludp/ecaludp")
+file(COPY "${ECALUDP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/thirdparty/ecaludp/ecaludp")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
