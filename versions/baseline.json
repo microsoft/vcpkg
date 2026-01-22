@@ -7137,8 +7137,8 @@
       "port-version": 0
     },
     "onnx-optimizer": {
-      "baseline": "0.3.19",
-      "port-version": 2
+      "baseline": "0.4.2",
+      "port-version": 0
     },
     "onnxruntime": {
       "baseline": "1.23.2",
