@@ -1,6 +1,6 @@
 {
   "name": "ecal",
-  "version-semver": "5.13.4",
+  "version-semver": "6.0.1",
   "description": "eCAL - enhanced Communication Abstraction Layer",
   "homepage": "https://eclipse-ecal.github.io/ecal/",
   "license": "Apache-2.0",

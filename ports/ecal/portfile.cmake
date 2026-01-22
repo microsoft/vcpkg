@@ -6,37 +6,35 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-ecal/ecal
     REF "v${VERSION}"
-    SHA512 ae34bfc4aa021ab049758373dbac90dfcee34e92f94590813797d88b854420f9e4419f35fbd0db41c7b8aedbfcd24e46dd385f3017a7e0c1a04ee6863c4f948a 
+    SHA512 c7743990b444fa982ef6df9b35816074cae1067ee671d9ffd5ee16fd25769dce09b2a09fb35e0fd759948b88857de8d6a1d8b6fa8ab4173651c3faeab854e0c4 
     HEAD_REF master
     PATCHES
-        0001-disable-app-plugins.patch
         0002-fix-build.patch
-        0003-fix-dependencies.patch
-        0004-install-cmake-files-to-share.patch
-        0005-remove-install-prefix-macro-value.patch
-        0006-use-find_dependency-in-cmake-config.patch
-        0007-allow-static-build-of-core.patch
-        0008-protobuf-linkage.patch
+        # 0003-fix-dependencies.patch
+        # 0004-install-cmake-files-to-share.patch
+        # 0005-remove-install-prefix-macro-value.patch
+        # 0006-use-find_dependency-in-cmake-config.patch
+        # 0007-allow-static-build-of-core.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DHAS_HDF5=ON
-        -DHAS_QT5=OFF
-        -DHAS_CURL=OFF
-        -DHAS_CAPNPROTO=OFF
-        -DHAS_FTXUI=OFF
-        -DBUILD_DOCS=OFF
-        -DBUILD_APPS=OFF
-        -DBUILD_SAMPLES=OFF
-        -DBUILD_TIME=OFF
-        -DBUILD_PY_BINDING=OFF
-        -DBUILD_CSHARP_BINDING=OFF
-        -DBUILD_ECAL_TESTS=OFF
+        -DECAL_USE_HDF5=ON
+        -DECAL_USE_QT=OFF
+        -DECAL_USE_CURL=OFF
+        -DECAL_USE_CAPNPROTO=OFF
+        -DECAL_USE_FTXUI=OFF
+        -DECAL_BUILD_DOCS=OFF
+        -DECAL_BUILD_APP_SDK=OFF
+        -DECAL_BUILD_SAMPLES=OFF
+        -DECAL_BUILD_TIMEPLUGINS=OFF
+        -DECAL_BUILD_PY_BINDING=OFF
+        -DECAL_BUILD_CSHARP_BINDING=OFF
+        -DECAL_BUILD_TESTS=OFF
         -DECAL_INCLUDE_PY_SAMPLES=OFF
         -DECAL_INSTALL_SAMPLE_SOURCES=OFF
-        -DECAL_NPCAP_SUPPORT=OFF
+        -DECAL_USE_NPCAP=OFF
         -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON
         -DECAL_THIRDPARTY_BUILD_SPDLOG=OFF
         -DECAL_THIRDPARTY_BUILD_TINYXML2=OFF
@@ -51,7 +49,7 @@ vcpkg_cmake_configure(
         -DECAL_THIRDPARTY_BUILD_YAML-CPP=OFF
         -DECAL_THIRDPARTY_BUILD_CURL=OFF
         -DECAL_THIRDPARTY_BUILD_HDF5=OFF
-        -DCPACK_PACK_WITH_INNOSETUP=OFF
+        -DECAL_CPACK_PACK_WITH_INNOSETUP=OFF
         -DECAL_BUILD_VERSION="${VERSION}"
 )
 
