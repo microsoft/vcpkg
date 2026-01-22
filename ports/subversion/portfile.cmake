@@ -15,6 +15,9 @@ vcpkg_execute_required_process(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DSVN_USE_PKG_CONFIG=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_PkgConfig=OFF
 )
 
 vcpkg_cmake_install()

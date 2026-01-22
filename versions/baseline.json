@@ -9558,7 +9558,7 @@
     },
     "subversion": {
       "baseline": "2025-12-23",
-      "port-version": 0
+      "port-version": 1
     },
     "suitesparse": {
       "baseline": "7.8.3",
