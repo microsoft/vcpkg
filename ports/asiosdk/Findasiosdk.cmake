@@ -32,7 +32,7 @@ if (NOT "${ASIOSDK_ROOT_DIR}" STREQUAL "")
 	set (ASIOSDK_INCLUDE_DIR
 		${ASIOSDK_ROOT_DIR}/common
 		${ASIOSDK_ROOT_DIR}/host
-		${ASIOSDK_ROOT_DIR}/hostpc
+		${ASIOSDK_ROOT_DIR}/host/pc
 	)
 endif()
 
