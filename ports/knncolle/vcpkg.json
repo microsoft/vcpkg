@@ -1,6 +1,6 @@
 {
   "name": "knncolle",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Collection of KNN algorithms in C++ ",
   "homepage": "https://github.com/knncolle/knncolle",
   "license": "MIT",
