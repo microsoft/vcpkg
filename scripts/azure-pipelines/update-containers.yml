@@ -32,8 +32,8 @@ jobs:
         oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-20
         oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20
         cd scripts/azure-pipelines/android
-        docker buildx . -t vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-20 --build-arg BUILD_DATE=$BuildDate
+        docker build . -t vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-20 --build-arg BUILD_DATE=$BuildDate
         docker push vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-20
         cd ../linux
-        docker buildx . -t vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20 --build-arg BUILD_DATE=$BuildDate
+        docker build . -t vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20 --build-arg BUILD_DATE=$BuildDate
         docker push vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20
