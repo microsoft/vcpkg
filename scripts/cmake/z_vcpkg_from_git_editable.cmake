@@ -298,20 +298,6 @@ function(z_vcpkg_from_git_editable)
             )
         endif()
 
-        # Fetch latest changes from remote (non-blocking, for user convenience)
-        message(STATUS "Editable mode: fetching latest changes from remote...")
-        set(fetch_logname "git-fetch-${TARGET_TRIPLET}")
-        vcpkg_execute_in_download_mode(
-            COMMAND "${GIT}" ${git_config_options} fetch origin
-            WORKING_DIRECTORY "${editable_source_path}"
-            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${fetch_logname}-out.log"
-            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/${fetch_logname}-err.log"
-            RESULT_VARIABLE git_fetch_result
-        )
-        if(NOT git_fetch_result EQUAL 0)
-            message(WARNING "Editable mode: git fetch failed (continuing with existing source)")
-        endif()
-
         # Export HEAD version if using head
         if(using_head_version)
             set(rev_parse_logname "git-rev-parse-${TARGET_TRIPLET}")
