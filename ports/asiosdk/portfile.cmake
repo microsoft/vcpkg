@@ -33,4 +33,6 @@ file(
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-asiosdk-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-asiosdk")
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
