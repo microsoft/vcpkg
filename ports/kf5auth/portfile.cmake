@@ -21,6 +21,8 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/kauth/kauth-policy-gen${VCPKG_TARGET_EXEC
         TOOL_NAMES kauth/kauth-policy-gen
         AUTO_CLEAN
     )
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/kauth")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/kauth")
     vcpkg_clean_executables_in_bin(FILE_NAMES none)
 endif()
 
