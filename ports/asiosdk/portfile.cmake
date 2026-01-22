@@ -8,6 +8,8 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "${VERSION}"
+    PATCHES
+        fix-new-delete-mismatch.patch
 )
 
 file(INSTALL "${SOURCE_PATH}/asio/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/asio")
