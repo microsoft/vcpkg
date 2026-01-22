@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8bc05ee..3cd16b0 100644
+index 8bc05ee..00ec3cc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,10 +26,13 @@ endif (POLICY CMP0077)
+@@ -26,13 +26,16 @@ endif (POLICY CMP0077)
  
  list(APPEND CMAKE_MODULE_PATH
    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
@@ -12,13 +12,16 @@ index 8bc05ee..3cd16b0 100644
 +)
  set(eCAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
  
-+include(${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmakefunctions/build-cmakefunctions.cmake)
-+set(CMakeFunctions_FOUND TRUE)
-+
  project(eCAL)
  set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
  
-@@ -289,9 +292,13 @@ if(MSVC)
++include(${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmakefunctions/build-cmakefunctions.cmake)
++set(CMakeFunctions_FOUND TRUE)
++
+ # --------------------------------------------------------
+ # set msvc specific options
+ # --------------------------------------------------------
+@@ -289,7 +292,9 @@ if(MSVC)
    endif()
  endif()
  
@@ -27,9 +30,5 @@ index 8bc05ee..3cd16b0 100644
 +  find_package(CMakeFunctions REQUIRED)
 +endif()
  
-+if(NOT DEFINED ECAL_BUILD_VERSION)
  git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
-+endif()
  set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
- set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
- set(eCAL_VERSION_PATCH  ${GIT_REVISION_PATCH})
