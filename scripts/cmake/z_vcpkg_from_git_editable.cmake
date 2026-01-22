@@ -3,9 +3,9 @@
 # Supports multiple source downloads via numbered subdirectories (${PORT}-src1, ${PORT}-src2, etc.)
 #
 # Prerequisites (caller must check before calling):
+#   PORT must be defined (standard vcpkg variable)
 #   _VCPKG_EDITABLE must be TRUE
 #   _VCPKG_EDITABLE_SOURCES_PATH must be defined
-#   PORT must be defined (standard vcpkg variable)
 #
 # Arguments:
 #   URL               - Git URL to clone from
@@ -180,24 +180,33 @@ function(z_vcpkg_from_git_editable)
         "PATCHES"
     )
 
+    # Validate arguments
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: unexpected arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
+    if(NOT DEFINED arg_OUT_SOURCE_PATH)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: OUT_SOURCE_PATH must be specified")
+    endif()
+    if(NOT DEFINED arg_URL)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: URL must be specified")
+    endif()
+    if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: At least one of REF or HEAD_REF must be specified")
+    endif()
+    if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: REF must be specified if FETCH_REF is specified")
+    endif()
+
     # Validate prerequisites (caller should check, but be defensive)
+    if(NOT DEFINED PORT)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: PORT must be defined")
+    endif()
     if(NOT _VCPKG_EDITABLE)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: _VCPKG_EDITABLE must be TRUE")
     endif()
     if(NOT DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: _VCPKG_EDITABLE_SOURCES_PATH must be defined")
-    endif()
-    if(NOT DEFINED PORT)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: PORT must be defined")
-    endif()
-
-    # Validate required arguments upfront
-    if(NOT DEFINED arg_OUT_SOURCE_PATH)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: OUT_SOURCE_PATH must be specified")
     endif()
 
     # Find git once at the start
@@ -331,11 +340,6 @@ function(z_vcpkg_from_git_editable)
     # This ensures we never leave a half-baked repository.
     # Future: Update mode will NOT cleanup on failure, allowing recovery.
     set(is_initial_clone TRUE)
-
-    # Validate required arguments
-    if(NOT DEFINED arg_URL)
-        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: URL must be specified")
-    endif()
 
     # Ensure parent directory exists
     file(MAKE_DIRECTORY "${_VCPKG_EDITABLE_SOURCES_PATH}")
