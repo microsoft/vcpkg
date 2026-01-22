@@ -18,6 +18,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gdal     VCPKG_LOCK_FIND_PACKAGE_GDAL
         openexr  vsgXchange_openexr
         openexr  VCPKG_LOCK_FIND_PACKAGE_OpenEXR
+        ktx      vsgXchange_ktx
+        ktx      VCPKG_LOCK_FIND_PACKAGE_Ktx
 )
 
 vcpkg_cmake_configure(
