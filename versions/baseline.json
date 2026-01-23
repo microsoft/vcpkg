@@ -310,7 +310,7 @@
     },
     "asiosdk": {
       "baseline": "2.3.4",
-      "port-version": 1
+      "port-version": 2
     },
     "asmjit": {
       "baseline": "2025-10-13",
@@ -4161,7 +4161,7 @@
       "port-version": 0
     },
     "jsonfusion": {
-      "baseline": "0.707.0",
+      "baseline": "0.710.0",
       "port-version": 0
     },
     "jsonifier": {
@@ -7754,7 +7754,7 @@
     },
     "portaudio": {
       "baseline": "19.7",
-      "port-version": 8
+      "port-version": 9
     },
     "portmidi": {
       "baseline": "2.0.6",
@@ -8941,7 +8941,7 @@
       "port-version": 0
     },
     "sdl3-image": {
-      "baseline": "3.2.6",
+      "baseline": "3.4.0",
       "port-version": 0
     },
     "sdl3-ttf": {
