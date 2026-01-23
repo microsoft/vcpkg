@@ -44,7 +44,7 @@ if(VCPKG_DETECTED_MSVC)
 
     vcpkg_copy_pdbs()
 
-    file(COPY "${SOURCE_PATH}/src/jit/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/luajit/lua")
+    file(COPY "${SOURCE_PATH}/src/jit" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/luajit/lua")
 
 else()
     vcpkg_list(SET options)
