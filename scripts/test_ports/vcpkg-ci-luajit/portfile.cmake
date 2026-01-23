@@ -9,12 +9,19 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if("run-programs" IN_LIST FEATURES)
-    # luajit executable and "${CURRENT_INSTALLED_DIR}/tools/luajit/jit/v.lua"
+    # luajit executable"
     message(STATUS "Running luajit")
+    vcpkg_execute_required_process(
+        COMMAND "${CURRENT_INSTALLED_DIR}/tools/luajit/luajit" -e "print(package.path)"
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME execute-luajit-${TARGET_TRIPLET}
+    )
+    # luajit executable and "${CURRENT_INSTALLED_DIR}/tools/luajit/jit/v.lua"
+    message(STATUS "Running luajit with v.lua")
     vcpkg_execute_required_process(
         COMMAND "${CURRENT_INSTALLED_DIR}/tools/luajit/luajit" -jv -e "for i=1,1000 do for j=1,1000 do end end"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-        LOGNAME execute-luajit-${TARGET_TRIPLET}
+        LOGNAME execute-luajit-v.lua-${TARGET_TRIPLET}
     )
     # user executable (this port)
     if(CMAKE_HOST_WIN32)
