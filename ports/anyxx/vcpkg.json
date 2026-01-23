@@ -1,0 +1,7 @@
+{
+  "name": "anyxx",
+  "version": "0.3.1",
+  "description": "any++ / header only C++ vocabulary for programming on a large scale",
+  "homepage": "https://github.com/bitfactory-software/anyxx",
+  "license": "MIT"
+}
