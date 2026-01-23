@@ -44,7 +44,8 @@ if(VCPKG_DETECTED_MSVC)
 
     vcpkg_copy_pdbs()
 
-    file(COPY "${SOURCE_PATH}/src/jit" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/luajit/lua")
+    # jit together with the vmdef.lua generated during the build
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/jit" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/luajit/lua")
 
 else()
     vcpkg_list(SET options)
