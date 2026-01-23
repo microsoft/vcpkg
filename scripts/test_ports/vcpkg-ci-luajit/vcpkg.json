@@ -1,0 +1,26 @@
+{
+  "name": "vcpkg-ci-luajit",
+  "version-string": "ci",
+  "description": "Validate port luajit",
+  "dependencies": [
+    {
+      "name": "luajit",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "run-programs",
+      "platform": "native | !native"
+    }
+  ],
+  "features": {
+    "run-programs": {
+      "description": "Run luajit and user program"
+    }
+  }
+}
