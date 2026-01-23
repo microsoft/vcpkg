@@ -28,7 +28,7 @@ int main()
     if (result != LUAJIT_SETMODE_SUCCESS) {
         printf("luaJIT_setmode failed\n");        
     }
-    else if (luaL_dostring(L, "print('luaJIT_setmode succeeded')") == LUA_OK) {
+    else if (luaL_dostring(L, "print('luaJIT_setmode succeeded')\nprint(package.path)") == LUA_OK) {
         lua_pop(L, lua_gettop(L));
     }
 

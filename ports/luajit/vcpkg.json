@@ -1,7 +1,7 @@
 {
   "name": "luajit",
   "version-date": "2023-01-04",
-  "port-version": 7,
+  "port-version": 8,
   "description": "LuaJIT is a Just-In-Time (JIT) compiler for the Lua programming language.",
   "homepage": "https://github.com/LuaJIT/LuaJIT",
   "license": "MIT",
@@ -39,7 +39,7 @@
   "features": {
     "buildvm-32": {
       "description": "Install host tools for 32 bit targets",
-      "supports": "native & ((arm & !arm64) | x86) & (!windows | mingw)"
+      "supports": "native & (arm32 | x86) & (!windows | mingw)"
     },
     "buildvm-64": {
       "description": "Install host tools for 64 bit targets",
