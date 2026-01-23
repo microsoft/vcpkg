@@ -16,11 +16,5 @@
       "host": true
     },
     "zstd"
-  ],
-  "features": {
-    "sse": {
-      "description": "Enable SSE support",
-      "supports": "x86 | x64"
-    }
-  }
+  ]
 }
