@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DCMAKE_CXX_STANDARD=17
         -DBASISU_SYSTEM_ZSTD=ON
-        -DBASISU_SSE=${SSE_FLAG}
+        -DSSE=${SSE_FLAG}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
