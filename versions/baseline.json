@@ -9445,8 +9445,8 @@
       "port-version": 0
     },
     "stdexec": {
-      "baseline": "2024-06-16",
-      "port-version": 2
+      "baseline": "2026-01-23",
+      "port-version": 0
     },
     "stduuid": {
       "baseline": "1.2.3",
