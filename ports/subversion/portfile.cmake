@@ -13,11 +13,16 @@ vcpkg_execute_required_process(
     LOGNAME gen-make-${TARGET_TRIPLET}
 )
 
+set(VCPKG_LOCK_FIND_PACKAGE_PkgConfig ON)
+if (VCPKG_HOST_IS_WINDOWS)
+    set(VCPKG_LOCK_FIND_PACKAGE_PkgConfig OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSVN_USE_PKG_CONFIG=OFF
-        -DVCPKG_LOCK_FIND_PACKAGE_PkgConfig=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_PkgConfig=${VCPKG_LOCK_FIND_PACKAGE_PkgConfig}
 )
 
 vcpkg_cmake_install()
