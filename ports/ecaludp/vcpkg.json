@@ -4,6 +4,7 @@
   "description": "UDP transport library for eCAL with fragmentation/reassembly support.",
   "homepage": "https://github.com/eclipse-ecal/ecaludp",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
     "asio",
     "recycle",
