@@ -3,7 +3,8 @@
   "version": "5.116.0",
   "port-version": 1,
   "description": "Network transparent access to files and data",
-  "homepage": "https://api.kde.org/kio-index.html",
+  "homepage": "https://invent.kde.org/frameworks/kio",
+  "documentation": "https://api.kde.org/kio-index.html ",
   "license": null,
   "dependencies": [
     "ecm",

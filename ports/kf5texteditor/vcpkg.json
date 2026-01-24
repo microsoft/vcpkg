@@ -3,7 +3,8 @@
   "version": "5.116.0",
   "port-version": 1,
   "description": "Full text editor component",
-  "homepage": "https://api.kde.org/ktexteditor-index.html",
+  "homepage": "https://invent.kde.org/frameworks/ktexteditor",
+  "documentation": "https://api.kde.org/ktexteditor-index.html",
   "dependencies": [
     "ecm",
     {
