@@ -23,6 +23,6 @@ endif()
 set(Lua_FOUND TRUE)
 
 # Compatibility with this port's old behavior
-set(Lua_INCLUDE_DIR ${Lua_INCLUDE_DIR})
-set(Lua_LIBRARIES ${Lua_LIBRARIES})
-set(Lua_FOUND ${Lua_FOUND})
+set(LUA_INCLUDE_DIR ${Lua_INCLUDE_DIR})
+set(LUA_LIBRARIES ${Lua_LIBRARIES})
+set(LUA_FOUND ${Lua_FOUND})
