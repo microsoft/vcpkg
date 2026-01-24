@@ -13,9 +13,6 @@ vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
 if(VCPKG_DETECTED_MSVC)
-    # Due to lack of better MSVC cross-build support, just always build the host
-    # minilua tool with the target toolchain. This will work for native builds and
-    # for targeting x86 from x64 hosts. (UWP and ARM64 is unsupported.)
     vcpkg_list(SET options)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND options "MSVCBUILD_OPTIONS=static")

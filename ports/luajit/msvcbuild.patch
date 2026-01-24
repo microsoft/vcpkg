@@ -1,21 +1,25 @@
 diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
-index e0df88bc..40e0e8e6 100644
+index e0df88bc..45d1acca 100644
 --- a/src/msvcbuild.bat
 +++ b/src/msvcbuild.bat
-@@ -20,10 +20,12 @@
+@@ -18,12 +18,14 @@
+ @rem Add more debug flags here, e.g. DEBUGCFLAGS=/DLUA_USE_ASSERT
+ @set DEBUGCFLAGS=
  @set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE /D_CRT_STDIO_INLINE=__declspec(dllexport)__inline
- @set LJDYNBUILD=/DLUA_BUILD_AS_DLL /MD
- @set LJDYNBUILD_DEBUG=/DLUA_BUILD_AS_DLL /MDd
+-@set LJDYNBUILD=/DLUA_BUILD_AS_DLL /MD
+-@set LJDYNBUILD_DEBUG=/DLUA_BUILD_AS_DLL /MDd
 -@set LJCOMPILETARGET=/Zi
 -@set LJLINKTYPE=/DEBUG /RELEASE
 -@set LJLINKTYPE_DEBUG=/DEBUG
 -@set LJLINKTARGET=/OPT:REF /OPT:ICF /INCREMENTAL:NO
-+@rem vvv Using vcpkg flags instead
++@rem vvv vcpkg flags via env
++@set LJDYNBUILD=/DLUA_BUILD_AS_DLL
++@set LJDYNBUILD_DEBUG=/DLUA_BUILD_AS_DLL
 +@set LJCOMPILETARGET=
 +@set LJLINKTYPE=
 +@set LJLINKTYPE_DEBUG=
 +@set LJLINKTARGET=
-+@rem ^^^ Using vcpkg flags instead
++@rem ^^^ vcpkg flags via env
  @set LJLINK=link /nologo
  @set LJMT=mt /nologo
  @set LJLIB=lib /nologo /nodefaultlib
