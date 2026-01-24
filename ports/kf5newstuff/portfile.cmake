@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_KF5Syndication=1
         -DCMAKE_REQUIRE_FIND_PACKAGE_Qt5Quick=1
         ${options}
+        --trace-expand
     MAYBE_UNUSED_VARIABLES
         CMAKE_MACOSX_BUNDLE
 )
