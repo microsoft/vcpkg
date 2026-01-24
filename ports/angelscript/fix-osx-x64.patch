@@ -1,0 +1,29 @@
+diff --git a/angelscript/projects/cmake/CMakeLists.txt b/angelscript/projects/cmake/CMakeLists.txt
+index 6f9d540..1adea0b 100644
+--- a/angelscript/projects/cmake/CMakeLists.txt
++++ b/angelscript/projects/cmake/CMakeLists.txt
+@@ -74,11 +74,7 @@ set(ANGELSCRIPT_SOURCE
+     ../../source/as_builder.cpp
+     ../../source/as_bytecode.cpp
+     ../../source/as_callfunc.cpp
+-    ../../source/as_callfunc_mips.cpp
+-    ../../source/as_callfunc_x86.cpp
+     ../../source/as_callfunc_x64_gcc.cpp
+-    ../../source/as_callfunc_x64_msvc.cpp
+-    ../../source/as_callfunc_x64_mingw.cpp
+     ../../source/as_compiler.cpp
+     ../../source/as_configgroup.cpp
+     ../../source/as_context.cpp
+diff --git a/angelscript/source/as_callfunc_x64_gcc.cpp b/angelscript/source/as_callfunc_x64_gcc.cpp
+index 1111148..d15c4e9 100644
+--- a/angelscript/source/as_callfunc_x64_gcc.cpp
++++ b/angelscript/source/as_callfunc_x64_gcc.cpp
+@@ -141,7 +141,7 @@ static asQWORD __attribute__((noinline))
+ 
+ 	// Restore stack pointer
+ 		"  mov %%r15, %%rsp \n"
+-#if defined(__clang__) && defined(__OPTIMIZE__)
++#if defined(__clang__) && defined(__OPTIMIZE__) && !(defined(__APPLE__) && defined(__x86_64__))
+ 	// Inform the stack unwind logic that the stack pointer has been restored
+ 	// This should only be done if any optimization is done. If no optimization (-O0) is used,
+ 	// then the compiler already backups the rsp before entering the inline assembler code

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 45550a8..0ebd2c7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,7 +42,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ 
+ find_package(Boost REQUIRED)
+-find_package(Eigen3 3.3.7 REQUIRED) # v3.3.7 adds support for cmake targets
++find_package(Eigen3 3.3.7...5 REQUIRED) # v3.3.7 adds support for cmake targets
+ 
+ add_library(Interpolate INTERFACE)
+ add_library(libInterpolate::Interpolate ALIAS Interpolate)

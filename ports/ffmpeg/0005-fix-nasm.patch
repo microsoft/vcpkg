@@ -1,3 +1,19 @@
+diff --git a/libavcodec/x86/apv_dsp.asm b/libavcodec/x86/apv_dsp.asm
+index 60e0f03..12668d3 100644
+--- a/libavcodec/x86/apv_dsp.asm
++++ b/libavcodec/x86/apv_dsp.asm
+@@ -18,7 +18,10 @@
+ 
+ %include "libavutil/x86/x86util.asm"
+ 
+-%if ARCH_X86_64
++%ifn ARCH_X86_64
++SECTION .rdata
++apv_dsp_placeholder: times 4 db 0
++%else
+ 
+ SECTION_RODATA 32
+ 
 diff --git a/libavcodec/x86/mlpdsp.asm b/libavcodec/x86/mlpdsp.asm
 index 3dc641e..609b834 100644
 --- a/libavcodec/x86/mlpdsp.asm
@@ -29,10 +45,42 @@ index 65c9fad..5ad73f3 100644
  
  SECTION_RODATA
  
-diff --git a/libavcodec/x86/vvc/vvc_mc.asm b/libavcodec/x86/vvc/vvc_mc.asm
+diff --git a/libavcodec/x86/vp9itxfm_16bpp_avx512.asm b/libavcodec/x86/vp9itxfm_16bpp_avx512.asm
+index 1924233..17a0ce4 100644
+--- a/libavcodec/x86/vp9itxfm_16bpp_avx512.asm
++++ b/libavcodec/x86/vp9itxfm_16bpp_avx512.asm
+@@ -22,7 +22,10 @@
+ 
+ %include "libavutil/x86/x86util.asm"
+ 
+-%if ARCH_X86_64 && HAVE_AVX512ICL_EXTERNAL
++%ifn ARCH_X86_64 && HAVE_AVX512ICL_EXTERNAL
++SECTION .rdata
++vp9itxfm_16bpp_avx512_placeholder: times 4 db 0
++%else
+ 
+ SECTION_RODATA 64
+ 
+diff --git a/libavcodec/x86/vp9itxfm_avx512.asm b/libavcodec/x86/vp9itxfm_avx512.asm
+index d51c507..1f16ba2 100644
+--- a/libavcodec/x86/vp9itxfm_avx512.asm
++++ b/libavcodec/x86/vp9itxfm_avx512.asm
+@@ -22,7 +22,10 @@
+ 
+ %include "libavutil/x86/x86util.asm"
+ 
+-%if ARCH_X86_64 && HAVE_AVX512ICL_EXTERNAL
++%ifn ARCH_X86_64 && HAVE_AVX512ICL_EXTERNAL
++SECTION .rdata
++vp9itxfm_avx512_placeholder: times 4 db 0
++%else
+ 
+ SECTION_RODATA 64
+ 
+diff --git a/libavcodec/x86/vvc/mc.asm b/libavcodec/x86/vvc/mc.asm
 index 30aa97c..3975f98 100644
---- a/libavcodec/x86/vvc/vvc_mc.asm
-+++ b/libavcodec/x86/vvc/vvc_mc.asm
+--- a/libavcodec/x86/vvc/mc.asm
++++ b/libavcodec/x86/vvc/mc.asm
 @@ -31,7 +31,9 @@
  
  SECTION_RODATA 32

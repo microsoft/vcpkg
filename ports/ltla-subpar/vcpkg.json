@@ -1,0 +1,17 @@
+{
+  "name": "ltla-subpar",
+  "version": "0.4.1",
+  "description": "Substitutable parallelization for C++ libraries",
+  "homepage": "https://github.com/LTLA/subpar",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

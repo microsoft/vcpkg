@@ -1,6 +1,7 @@
 diff --git a/src/misc.c b/src/misc.c
---- a/src/misc.c	(revision 9941e89f307e73352d887cac14e4e26b481a0a82)
-+++ b/src/misc.c	(date 1675868320486)
+index 774211f..33d37b4 100644
+--- a/src/misc.c
++++ b/src/misc.c
 @@ -24,6 +24,11 @@
  
  #include "config.h"

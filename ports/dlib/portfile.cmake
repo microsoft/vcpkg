@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         find_blas.patch
+        fix-lapack.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")
@@ -44,6 +45,7 @@ vcpkg_cmake_configure(
         -DDLIB_WEBP_SUPPORT=OFF
         -DDLIB_USE_MKL_FFT=OFF
         -DDLIB_USE_FFMPEG=OFF
+        -DDLIB_NO_GUI_SUPPORT=ON
     OPTIONS_DEBUG
         ${dbg_opts}
         #-DDLIB_ENABLE_STACK_TRACE=ON

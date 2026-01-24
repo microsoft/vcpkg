@@ -1,10 +1,13 @@
-vcpkg_from_gitlab(
-    OUT_SOURCE_PATH SOURCE_PATH
-    GITLAB_URL https://gitlab.gnome.org
-    REPO GNOME/at-spi2-atk
-    REF AT_SPI2_ATK_2_38_0
-    SHA512 d065a22e46f5d9459e14bc81050795e8b60ba8d6650ec9edf90ec6c205e68eb4ea3cc01f096cf636b066439b85892f203bc7a1c9d41f8ca899f29777556aa6cd
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 2f40ecbc55b0fbaa57ade952a75583bc8fbfde234cce9248489e9ae06e0597d98c2f4c77d8279758dec29da97e06cde5708d30a1238d91bebd023b2320f38528
 )
+
+vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"

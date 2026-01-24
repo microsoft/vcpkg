@@ -25,6 +25,8 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
+# Add these libraries to the pkgconfig file since we patch the build to link against these
+set(EXTRA_STATIC_PKGCONFIG_LIBS "-lglslang -lSPIRV-Tools-opt -lSPIRV-Tools")
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -32,9 +34,16 @@ vcpkg_cmake_configure(
         "-DCMAKE_PROJECT_INCLUDE=${CMAKE_CURRENT_LIST_DIR}/cmake-project-include.cmake"
         -DSHADERC_ENABLE_EXAMPLES=OFF
         -DSHADERC_SKIP_TESTS=true 
+        "-DEXTRA_STATIC_PKGCONFIG_LIBS=${EXTRA_STATIC_PKGCONFIG_LIBS}"
 )
 
 vcpkg_cmake_install()
+if(NOT VCPKG_BUILD_TYPE)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/shaderc.pc" "-lglslang" "-lglslangd")
+    endif()
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/shaderc.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-shaderc CONFIG_PATH share/unofficial-shaderc)

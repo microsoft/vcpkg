@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gstreamer/gstreamer
     REF "${VERSION}"
-    SHA512 60ca414d05e219b760c6b22c693a5d127b368736a160217919719ad99d7e0ec7bc7a10390edeb27cc65fc647fd41e4bd9edddb60cb429f81e267c6e78a229c60
+    SHA512 2870d76fffd68bb5c702766a5dd3aa95f864c56a1d19444a3ad0a0e38fa1c66b25d61d5eb31046a3c53b875499ce7b784277cc9bf0bcbf698f35df0fb6a7b3f1
     HEAD_REF main
     PATCHES
         fix-clang-cl.patch
@@ -17,9 +17,10 @@ vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(NASM)
 
-# gstreamer/meson tends to pick host modules (e.g. libdrm),
-# so clean the search root unless explicitly set externally.
-if(VCPKG_CROSSCOMPILING AND "$ENV{PKG_CONFIG}$ENV{PKG_CONFIG_LIBDIR}" STREQUAL "")
+# gstreamer/meson tends to pick host modules (e.g. libdrm)
+# or X11 etc. from brew, so control installation order by
+# explicitly cleaning the search root unless set externally.
+if((VCPKG_CROSSCOMPILING OR VCPKG_TARGET_IS_OSX) AND "$ENV{PKG_CONFIG}$ENV{PKG_CONFIG_LIBDIR}" STREQUAL "")
     set(ENV{PKG_CONFIG_LIBDIR} "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
 endif()
 
@@ -89,6 +90,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         fdkaac          gst-plugins-bad:fdkaac
         fluidsynth      gst-plugins-bad:fluidsynth
         gl              gst-plugins-bad:gl
+        hls             gst-plugins-bad:hls
         libde265        gst-plugins-bad:libde265
         microdns        gst-plugins-bad:microdns
         modplug         gst-plugins-bad:modplug
@@ -110,6 +112,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         wildmidi        gst-plugins-bad:wildmidi
         x11             gst-plugins-bad:x11
         x265            gst-plugins-bad:x265
+        amd-amf         gst-plugins-bad:amfcodec
 )
 
 string(REPLACE "OFF" "disabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
@@ -244,6 +247,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:gme=disabled
         -Dgst-plugins-bad:gs=disabled # Error during plugin configuration (abseil pkg-config file missing)
         -Dgst-plugins-bad:gsm=disabled
+        -Dgst-plugins-bad:hls-crypto=openssl
         -Dgst-plugins-bad:ipcpipeline=auto
         -Dgst-plugins-bad:iqa=disabled
         -Dgst-plugins-bad:kms=disabled

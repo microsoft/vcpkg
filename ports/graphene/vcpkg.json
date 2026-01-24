@@ -1,7 +1,7 @@
 {
   "name": "graphene",
   "version": "1.10.8",
-  "port-version": 5,
+  "port-version": 6,
   "description": "A thin layer of types for graphic libraries.",
   "homepage": "https://www.gtk.org/",
   "license": "MIT",

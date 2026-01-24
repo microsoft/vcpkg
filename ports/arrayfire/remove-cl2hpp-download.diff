@@ -1,0 +1,20 @@
+diff --git a/CMakeModules/build_cl2hpp.cmake b/CMakeModules/build_cl2hpp.cmake
+index 70a94c5..083f7c2 100644
+--- a/CMakeModules/build_cl2hpp.cmake
++++ b/CMakeModules/build_cl2hpp.cmake
+@@ -17,12 +17,11 @@ set(cl2hpp_file_url "https://github.com/KhronosGroup/OpenCL-CLHPP/releases/downl
+ set(cl2hpp_file "${ArrayFire_BINARY_DIR}/include/CL/cl2.hpp")
+ 
+ if(OpenCL_FOUND)
++  get_filename_component(download_dir ${cl2hpp_file} DIRECTORY)
+   if (NOT EXISTS ${cl2hpp_file})
+-      message(STATUS "Downloading ${cl2hpp_file_url}")
+-      file(DOWNLOAD ${cl2hpp_file_url} ${cl2hpp_file}
+-        EXPECTED_HASH MD5=c38d1b78cd98cc809fa2a49dbd1734a5)
++      file(MAKE_DIRECTORY "${download_dir}")
++      file(COPY_FILE "${CMAKE_CURRENT_LIST_DIR}/../cl2.hpp" "${cl2hpp_file}")
+   endif()
+-  get_filename_component(download_dir ${cl2hpp_file} DIRECTORY)
+ 
+   if (NOT TARGET OpenCL::cl2hpp OR
+       NOT TARGET cl2hpp)

@@ -1,0 +1,15 @@
+diff --git a/src/H5pubconf.h.in b/src/H5pubconf.h.in
+index 82fc2f5..73ef147 100644
+--- a/src/H5pubconf.h.in
++++ b/src/H5pubconf.h.in
+@@ -27,7 +27,9 @@
+ #cmakedefine H5_HAVE_VISUAL_STUDIO @H5_HAVE_VISUAL_STUDIO@
+ 
+ /* Define the default plugins path to compile */
+-#cmakedefine H5_DEFAULT_PLUGINDIR "@H5_DEFAULT_PLUGINDIR@"
++#ifndef H5_DEFAULT_PLUGINDIR
++#define H5_DEFAULT_PLUGINDIR ""
++#endif
+ 
+ /* Define if your system is IBM ppc64le and cannot convert some long double
+    values correctly. */

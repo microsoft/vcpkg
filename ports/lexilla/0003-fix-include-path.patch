@@ -1,0 +1,14 @@
+diff --git a/src/Lexilla.vcxproj b/src/Lexilla.vcxproj
+index 82aa9b7..5eac42f 100644
+--- a/src/Lexilla.vcxproj
++++ b/src/Lexilla.vcxproj
+@@ -75,7 +75,7 @@
+   <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <AdditionalIncludeDirectories>..\include;..\..\scintilla\include;..\lexlib;</AdditionalIncludeDirectories>
++      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_DEPRECATE;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <AdditionalIncludeDirectories>..\include;$(VcpkgInstalledDir)\$(VcpkgTriplet)\include\scintilla;..\lexlib;</AdditionalIncludeDirectories>
+       <BrowseInformation>true</BrowseInformation>
+       <MultiProcessorCompilation>true</MultiProcessorCompilation>

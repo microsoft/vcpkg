@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
     REF uriparser-${VERSION}
-    SHA512 4222e6d7dcdb525514ca8f42e5a9b314e0f09102ef2e72131702b6297d7cb9f509f757b9bec64c4ef88146667a60b992ff71e3c1fea50a82e45c3a14b8992326
+    SHA512 0ab98e3172d9767ec0a62018c70190efb5aec813c310e7305fb4ffeb187976734d35ba2f83f6ea0b3f390f13740491d9538e5960b93ca1bbb848a1fe41c559a3
     HEAD_REF master
 )
 
@@ -10,6 +10,11 @@ if("tool" IN_LIST FEATURES)
     set(URIPARSER_BUILD_TOOLS ON)
 else()
     set(URIPARSER_BUILD_TOOLS OFF)
+endif()
+
+# On Android, we need to set C standard to C99 (headers on ndk uses `inline`)
+if(VCPKG_TARGET_IS_ANDROID)
+    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_C_STANDARD 90)" "set(CMAKE_C_STANDARD 99)")
 endif()
 
 vcpkg_cmake_configure(
@@ -53,7 +58,12 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING.Apache-2.0"
+    "${SOURCE_PATH}/COPYING.BSD-3-Clause"
+    "${SOURCE_PATH}/COPYING.LGPL-2.1"
+)
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_fixup_pkgconfig()

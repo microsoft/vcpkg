@@ -1,0 +1,8 @@
+{
+  "name": "ayush272002-dotenv",
+  "version-semver": "1.0.1",
+  "description": "A modern C++23 header-only library for loading and parsing .env files at runtime.",
+  "homepage": "https://github.com/Ayush272002/dotenv",
+  "license": "MIT",
+  "supports": "!uwp"
+}

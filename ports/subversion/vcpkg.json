@@ -1,0 +1,29 @@
+{
+  "name": "subversion",
+  "version-date": "2025-12-23",
+  "description": "Apache Subversion (SVN) - Enterprise-class centralized version control system",
+  "homepage": "https://subversion.apache.org/",
+  "license": "Apache-2.0",
+  "supports": "!uwp & !mingw & !android",
+  "dependencies": [
+    "apr",
+    "apr-util",
+    "expat",
+    "openssl",
+    "serf",
+    "sqlite3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python",
+      "host": true
+    },
+    "zlib"
+  ]
+}

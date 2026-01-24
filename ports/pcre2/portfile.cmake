@@ -2,19 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PCRE2Project/pcre2
     REF "pcre2-${VERSION}"
-    SHA512 2c4fd0bcd6c4f606627c17336d583e14d7bd3f5cd5ab0219ded46e7d784a792a8bbd33332fd06772f451041c046e15d1feaa6b48d8f9aa00dcddbc6cdb89be92
+    SHA512 4deef8ce95711e65fe07624e6b2aace794594adb15e8363a0279a7b947bf5c75a5858fbdc5251d0a28a7ca97ae8bba561aa5f85805d5c07d417d3e7b3b3486a4
     HEAD_REF master
     PATCHES
         pcre2-10.35_fix-uwp.patch
         no-static-suffix.patch
-        fix-cmake.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SLJIT_SOURCE_PATH
     REPO zherczeg/sljit
-    REF 8481dde366d0346ac5475aa03ae48ee44fa74ca4
-    SHA512 99a6ab54ee6b9b3b2e241d2f29eb24217c8385bb3b756411116eaed0d91f008401822406710431ccf17ddf687828b8ab6933230e44144bea03f550c0f5ac9210
+    REF 45f910b78c6605ebf5b53d3ec7cb00f2312fe417
+    SHA512 c05c83cc762f430c01e2aaf876aaac41a70b67ed8b91bc81102ad527c8921c5e75b41bab35bb8237dd5f53fecd7b8f31206865efffce2ea0a1aa9c87079fc643
     HEAD_REF main
 )
 

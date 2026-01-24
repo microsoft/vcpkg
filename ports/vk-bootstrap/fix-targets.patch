@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 43bc5cd..7d626fb 100644
+index 612c511..3bf918a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -137,7 +137,7 @@ if (VK_BOOTSTRAP_INSTALL)
+@@ -144,7 +144,7 @@ if (VK_BOOTSTRAP_INSTALL)
                  message(FATAL_ERROR "Unable to locate required dependency Vulkan::Headers!")
              endif()
          endif()

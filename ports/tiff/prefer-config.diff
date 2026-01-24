@@ -1,11 +1,11 @@
 diff --git a/cmake/LERCCodec.cmake b/cmake/LERCCodec.cmake
-index 54504ca..3e04997 100644
+index c21dad3d..3d06367f 100644
 --- a/cmake/LERCCodec.cmake
 +++ b/cmake/LERCCodec.cmake
-@@ -25,7 +25,10 @@
- 
+@@ -26,7 +26,10 @@
  # libLerc
  set(LERC_SUPPORT FALSE)
+ set(LERC_STATIC FALSE)
 -find_package(LERC)
 +find_package(LERC NAMES unofficial-lerc)
 +if(TARGET unofficial::Lerc::Lerc)
@@ -15,7 +15,7 @@ index 54504ca..3e04997 100644
  if (lerc AND LERC_FOUND AND ZIP_SUPPORT)
      set(LERC_SUPPORT TRUE)
 diff --git a/cmake/WebPCodec.cmake b/cmake/WebPCodec.cmake
-index 1d676a7..7776917 100644
+index 1d676a78..77769171 100644
 --- a/cmake/WebPCodec.cmake
 +++ b/cmake/WebPCodec.cmake
 @@ -26,7 +26,7 @@
@@ -28,7 +28,7 @@ index 1d676a7..7776917 100644
  option(webp "use libwebp (required for WEBP compression)" ${WebP_FOUND})
  
 diff --git a/cmake/ZSTDCodec.cmake b/cmake/ZSTDCodec.cmake
-index 3fac861..2957aa3 100644
+index 3fac861a..2957aa3a 100644
 --- a/cmake/ZSTDCodec.cmake
 +++ b/cmake/ZSTDCodec.cmake
 @@ -28,7 +28,7 @@
@@ -41,15 +41,15 @@ index 3fac861..2957aa3 100644
  if(ZSTD_FOUND)
      if(TARGET zstd::libzstd_shared)
 diff --git a/libtiff/CMakeLists.txt b/libtiff/CMakeLists.txt
-index a8aa0c3..d5b9b25 100755
+index 2d76d1ee..68502a35 100755
 --- a/libtiff/CMakeLists.txt
 +++ b/libtiff/CMakeLists.txt
-@@ -163,7 +163,7 @@ if(JBIG_SUPPORT)
+@@ -161,7 +161,7 @@ if(JBIG_SUPPORT)
  endif()
  if(LERC_SUPPORT)
    target_link_libraries(tiff PRIVATE LERC::LERC)
 -  if(LERC_VERSION_STRING VERSION_GREATER_EQUAL "4.0")
 +  if(1)
-     if(NOT BUILD_SHARED_LIBS)
-       set_target_properties(tiff PROPERTIES COMPILE_DEFINITIONS LERC_STATIC)
-     endif()
+     string(APPEND tiff_requires_private " Lerc")
+   else()
+     list(APPEND tiff_libs_private_list "${LERC_LIBRARY}")

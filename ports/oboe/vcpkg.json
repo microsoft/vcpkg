@@ -1,6 +1,6 @@
 {
   "name": "oboe",
-  "version": "1.8.0",
+  "version": "1.10.0",
   "description": "Oboe is a C++ library which makes it easy to build high-performance audio apps on Android",
   "homepage": "https://developer.android.com/games/sdk/oboe",
   "license": "Apache-2.0",

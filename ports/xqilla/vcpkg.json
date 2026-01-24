@@ -1,9 +1,9 @@
 {
   "name": "xqilla",
   "version": "2.3.4",
-  "port-version": 4,
+  "port-version": 5,
   "description": "XQuery and XPath 2 library",
-  "homepage": "http://xqilla.sourceforge.net/HomePage",
+  "homepage": "https://sourceforge.net/projects/xqilla/",
   "license": "Apache-2.0",
   "dependencies": [
     {
