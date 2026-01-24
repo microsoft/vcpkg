@@ -7398,7 +7398,7 @@
     },
     "osgearth": {
       "baseline": "3.7.2",
-      "port-version": 5
+      "port-version": 6
     },
     "osmanip": {
       "baseline": "4.6.1",
