@@ -1,7 +1,10 @@
 {
   "name": "ade",
   "version-string": "0.1.2e",
+  "port-version": 1,
   "description": "ADE Framework is a graph construction, manipulation, and processing framework. ADE Framework is suitable for organizing data flow processing and execution.",
+  "homepage": "https://github.com/opencv/ade",
+  "license": "Apache-2.0",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

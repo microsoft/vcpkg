@@ -1,0 +1,18 @@
+diff --git a/external/sha1/sha1.h b/external/sha1/sha1.h
+index 7354d13..93d717a 100644
+--- a/external/sha1/sha1.h
++++ b/external/sha1/sha1.h
+@@ -45,6 +45,13 @@ extern "C" {
+ #include <stdlib.h>
+ #include "../../src/stdint.hpp"
+ 
++/* Avoid collision with libssh et al. */
++#define sha1_ctxt   zmq_sha1_ctxt
++#define sha1_init   zmq_sha1_init
++#define sha1_pad    zmq_sha1_pad
++#define sha1_loop   zmq_sha1_loop
++#define sha1_result zmq_sha1_result
++
+ struct sha1_ctxt
+ {
+ 	union

@@ -1,10 +1,10 @@
-set(DIRECTXTEX_TAG mar2025)
+set(DIRECTXTEX_TAG oct2025)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
     REF ${DIRECTXTEX_TAG}
-    SHA512 9d9f57b80e3167229bf1e8e95568c8924771fd0ba769f2f1933d74b36d03f949e02506e68f43f834974982fb02d285c943c3eb6a71e17fd34c28b56d2381272f
+    SHA512 8adca6e50dc5da91d2be0c9a644a3372f0c134ec80d71260d72dca79b2422d5eccae844b1b5d0eb4f335548730eb3b1faad4ba7e228f865c7688b60915e70efc
     HEAD_REF main
 )
 
@@ -65,21 +65,21 @@ if("tools" IN_LIST FEATURES)
       TEXASSEMBLE_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texassemble.exe"
       FILENAME "texassemble-${DIRECTXTEX_TAG}.exe"
-      SHA512 1a03ccf6aaec391fd15a9c5308ce2fe30d672080694a5288f396fb077a8944d157c432a2eba1abfcf51f198a16ceb5abffd1064bb231a5c8824e223246a9e8fa
+      SHA512 d1e8f2959e9a53367a03ded17c49e8720dd8f62cfcde13feeff39ba9b68a5352488ac743c6208f4820b0a94605a8bdce7f2949705d0aba06fb298f93813c2e72
     )
 
     vcpkg_download_distfile(
       TEXCONV_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texconv.exe"
       FILENAME "texconv-${DIRECTXTEX_TAG}.exe"
-      SHA512 b3e91200c0ebc8395c43eeccb460a30fb024a91a1e82f27548827b3e63946b50014b4bc1a8fd0a5f05317e3be8b7e15d28767475a7d96d222e54af79843343db
+      SHA512 de5d4d237a17cac3a3c5c932dcca316e887f7d141353000b343ed7c48f1065bfd232c2f3e748f749b2b4bb1ccb7f731893e28b1227d6bf37ca1ef68c41b1bd00
     )
 
     vcpkg_download_distfile(
       TEXDIAG_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texdiag.exe"
       FILENAME "texdiag-${DIRECTXTEX_TAG}.exe"
-      SHA512 880ab7fd3b9823dbe3ad2253e9d52e7e9c051a6ab51f498f2197f3565dae66b9eb1d08c29f712f089e5d9227137326b200c7b81507267ae15064ea271017b4a1
+      SHA512 960aeb72e82d4c5fc6388e47ef220062a5e279574338798a32a7b4a3b0bc3bf362272ccd6f8ed6a7fb9674e9ee52f6e2faa022236e6e28dd852445c7b742fecf
     )
 
     file(INSTALL
@@ -98,21 +98,21 @@ if("tools" IN_LIST FEATURES)
       TEXASSEMBLE_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texassemble_arm64.exe"
       FILENAME "texassemble-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 28ecb38b112457c35e714c5662daf9e863d3d0228b97f12a8e0d92c7290a03a386066eb4b06d87d9d86e7be4ead96bc6d403f6959c19dff7cc8045bac79e69c9
+      SHA512 9724d9c0b27d4e7b438da99cf304324a94c232d410e18f26ba4dbd3e38495e11b4d03fd63c09c642107afa8529ebb366341e47da0f50fa55b1ec76927adce0ed
     )
 
     vcpkg_download_distfile(
       TEXCONV_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texconv_arm64.exe"
       FILENAME "texconv-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 27c2f65d15bf81b169380c056df2870c8a9f14d0ab5b74582b389b3daab5999ca35388a4713e47f8c73504c8216e29168a7e756b83046b80031b1ab41455eb04
+      SHA512 d4701b93bae60abb4ad364cde1ce3462c3c39298b1929f0fad188ccc2363b8d25d2f84fb67c259def32dfa2921bc92afae60480ea89c9602e318b91b5c6f3c93
     )
 
     vcpkg_download_distfile(
       TEXDIAG_EXE
       URLS "https://github.com/Microsoft/DirectXTex/releases/download/${DIRECTXTEX_TAG}/texdiag_arm64.exe"
       FILENAME "texdiag-${DIRECTXTEX_TAG}-arm64.exe"
-      SHA512 ed403c44f3b4fc23fcbe33c820f58ee2446bc8aa8247022be145ebf16c40123a58b9d8d86967572556a79d2910cdcdc751f1d181c70722af70e461c0b855a99e
+      SHA512 49134ba643f482b42fe3dd06cbf0b59c899f2d76094f9bea10096aecd70d2641ea06aa94513a7807ffb2ce14126f15bcbcbca98d19d0934e2f5f56ce1ee1197b
     )
 
     file(INSTALL

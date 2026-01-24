@@ -1,6 +1,6 @@
 {
   "name": "ruckig",
-  "version": "0.14.0",
+  "version": "0.15.3",
   "description": "Ruckig generates trajectories on-the-fly, allowing robots and machines to react instantaneously to sensor input.",
   "homepage": "https://ruckig.com/",
   "license": "MIT",
@@ -14,5 +14,17 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "cloud"
+  ],
+  "features": {
+    "cloud": {
+      "description": "Build cloud client to calculate Ruckig Pro trajectories remotely",
+      "dependencies": [
+        "cpp-httplib",
+        "nlohmann-json"
+      ]
+    }
+  }
 }

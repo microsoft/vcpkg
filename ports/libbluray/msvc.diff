@@ -1,0 +1,15 @@
+diff --git a/src/libbluray/bdnav/meta_parse.c b/src/libbluray/bdnav/meta_parse.c
+index d45be33c..20e1ec47 100644
+--- a/src/libbluray/bdnav/meta_parse.c
++++ b/src/libbluray/bdnav/meta_parse.c
+@@ -40,6 +40,10 @@
+ #include <strings.h>
+ #endif
+ 
++#ifdef _WIN32
++#define strncasecmp _strnicmp
++#endif
++
+ #ifdef HAVE_LIBXML2
+ #include <libxml/parser.h>
+ #include <libxml/xmlmemory.h>

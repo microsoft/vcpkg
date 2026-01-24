@@ -1,23 +1,23 @@
 diff --git a/meson.build b/meson.build
-index b1a110c..6a7d930 100644
+index a4730f0..32ec825 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -2074,12 +2074,11 @@ libsystemd_includes = [basic_includes, include_directories(
+@@ -2148,12 +2148,11 @@ libsystemd_includes = [basic_includes, include_directories(
  includes = [libsystemd_includes, include_directories('src/shared')]
  
  subdir('po')
 -subdir('catalog')
-+support_url=''
++support_url='https://github.com/microsoft/vcpkg/issues'
  subdir('src/fundamental')
  subdir('src/basic')
  subdir('src/libsystemd')
 -subdir('src/shared')
 -subdir('src/libudev')
-+subdir('src/systemd') # headers
++static_libudev='unused'
  
  libsystemd = shared_library(
          'systemd',
-@@ -2095,7 +2094,8 @@ libsystemd = shared_library(
+@@ -2169,7 +2168,8 @@ libsystemd = shared_library(
                          threads,
                          userspace],
          link_depends : libsystemd_sym,
@@ -27,7 +27,7 @@ index b1a110c..6a7d930 100644
          install_tag: 'libsystemd',
          install_dir : libdir)
  
-@@ -2130,6 +2130,8 @@ else
+@@ -2205,6 +2205,8 @@ else
          alias_target('libsystemd', libsystemd)
  endif
  
@@ -36,26 +36,20 @@ index b1a110c..6a7d930 100644
  libudev = shared_library(
          'udev',
          version : libudev_version,
-@@ -2141,7 +2143,8 @@ libudev = shared_library(
-         dependencies : [threads,
-                         userspace],
-         link_depends : libudev_sym,
--        install : true,
-+        build_by_default : static_libudev == 'false',
-+        install : static_libudev == 'false',
-         install_tag: 'libudev',
-         install_dir : libdir)
+@@ -2940,6 +2942,17 @@ custom_target(
+         install_dir : testdata_dir,
+         command : [meson_extract_unit_files, meson.project_build_root()])
  
-@@ -2905,6 +2908,13 @@ custom_target('installed-unit-files.txt',
-               install_dir : testdata_dir,
-               command : [meson_extract_unit_files, project_build_root])
- 
-+endif # false
-+static_libudev='unused'
-+bashcompletiondir='no'
-+zshcompletiondir='no'
-+want_html=false
-+want_man=false
++else
++  # headers
++  subdir('src/systemd')
++  # subdir man
++  want_html=false
++  want_man=false
++  # subdir shell-completion/*
++  bashcompletiondir='no'
++  zshcompletiondir='no'
++endif
 +
  #####################################################################
  

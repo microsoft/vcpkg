@@ -1,6 +1,6 @@
 {
   "name": "gul17",
-  "version": "25.4.1",
+  "version": "25.7.0",
   "description": [
     "General Utility Library for C++17.",
     "GUL17 contains often-used utility functions and types that form the foundation for other libraries and programs.",

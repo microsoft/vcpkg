@@ -1,12 +1,12 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "https://aomedia.googlesource.com/aom"
-    REF d6f30ae474dd6c358f26de0a0fc26a0d7340a84c
+    REF d772e334cc724105040382a977ebb10dfd393293
     HEAD_REF main
     PATCHES
         aom-rename-static.diff
         aom-uninitialized-pointer.diff
-        export-config.diff
+        aom-fix-nasm.diff # TODO: remove this patch after the next release
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -38,7 +38,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/AOM)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

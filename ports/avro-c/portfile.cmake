@@ -7,10 +7,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/avro
     REF "release-${VERSION}"
-    SHA512 8cc6ef3cf1e0a919118c8ba5817a1866dc4f891fa95873c0fe1b4b388858fbadee8ed50406fa0006882cab40807fcf00c5a2dcd500290f3868d9d06b287eacb6
+    SHA512 4e7fd7ebb41f6149a499d0d38babd99d07f936143b47a60f7c568a589fb0e6369301c7230bde518b554eaeaa9ded1ed1fae2661cbd5ebc49fb5f22d97c066f05
     HEAD_REF master
     PATCHES
         avro.patch          # Private vcpkg build fixes
+        bswap.patch
 )
 
 vcpkg_cmake_configure(

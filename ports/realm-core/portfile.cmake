@@ -2,11 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO realm/realm-core
     REF "v${VERSION}"
-    SHA512 41ccf3e53bb1ff6e16a2baf90203984424d3b754973374af4d3767f67227f1223b314921954826ab62d45965a78540b93fc92a0ababd464f19dbaec368175022
+    SHA512 b95fbccdddcad2a4ad68fe5fe5358a67f668bdd2cd4bef68f8fc74f9d11690c317156ba28942c4c9db446c796a0d760387c8154209f6039d92a880d7e64e3847
     HEAD_REF master
     PATCHES 
         UWP_index_set.patch
         fix-zlib.patch
+        cstdlib.diff
 )
 
 vcpkg_list(SET REALMCORE_CMAKE_OPTIONS)
@@ -37,7 +38,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "realm" CONFIG_PATH "share/cmake/Realm")
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/Realm")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"

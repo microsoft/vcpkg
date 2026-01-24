@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/knotifications
-    REF v5.98.0
-    SHA512 f7f492f6b5390f2cab2e946433165e058d6cb7f82e7ce2a4b931bd4b0e7f7d75fe0ffc431ae01a13a1c30475c4c7d8992343cce7d4b7eca0254b6e5ab5046237
+    REF "v${VERSION}"
+    SHA512 c4a918f58a252fbbe86af15fef177a459275537520f61d35b7dc4ac51a20c6f95302dd713eacf3b9d96a0fd8c9cdb21fff394bd152ae1f31162aeb9a5b0049ee
     HEAD_REF master
 )
 
@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Notifications CONFIG_PATH lib/cmake/KF5Notifications)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Notifications)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -29,4 +29,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

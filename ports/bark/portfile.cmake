@@ -3,7 +3,7 @@ vcpkg_from_github(
   REPO twig-energy/bark
   REF "${VERSION}"
   HEAD_REF main
-  SHA512 96fca5df5a3a0bc91d8b626f1538c517df778dc2a0cf29f1061ef041a270bb2f798525ad4c6a64fbaf7c5e0617475a0abf581eb3f15003e769adc317f1c9e746
+  SHA512 d6d23cb1bfe4010768bb3bd574db790992a0cef95477c4e56c0d4cb9da93fe0e59b0de54fbb60d4320ace2ab9d4e0ae1438c89e4f29cf3fc920e5afb0ba2df33
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)  

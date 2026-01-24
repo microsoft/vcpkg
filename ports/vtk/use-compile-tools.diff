@@ -1,0 +1,50 @@
+diff --git a/CMake/vtk-config.cmake.in b/CMake/vtk-config.cmake.in
+index 3018421d..a14976ae 100644
+--- a/CMake/vtk-config.cmake.in
++++ b/CMake/vtk-config.cmake.in
+@@ -1,3 +1,16 @@
++
++set(VTKCompileTools_DIR "@VTKCompileTools_DIR@" CACHE PATH "vcpkg")
++mark_as_advanced(VTKCompileTools_DIR)
++include(CMakeFindDependencyMacro)
++find_dependency(VTKCompileTools CONFIG)
++if(NOT TARGET VTK::WrapHierarchy)
++  add_executable(VTK::WrapHierarchy ALIAS VTKCompileTools::WrapHierarchy)
++  add_executable(VTK::WrapPython ALIAS VTKCompileTools::WrapPython)
++  add_executable(VTK::WrapPythonInit ALIAS VTKCompileTools::WrapPythonInit)
++  add_executable(VTK::ParseJava ALIAS VTKCompileTools::ParseJava)
++  add_executable(VTK::WrapJava ALIAS VTKCompileTools::WrapJava)
++endif()
++
+ #[==[.md
+ # vtk-config.cmake
+ 
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8df64eb1..67a948e4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -463,6 +463,9 @@ if (NOT DEFINED vtk_cmake_destination)
+     set(vtk_cmake_destination
+       "${CMAKE_INSTALL_LIBDIR}/cmake/vtkcompiletools${vtk_version_suffix}")
+     set(vtk_target_package PACKAGE "${vtk_install_export}")
++  else()
++    # Pull variables for wrapping command invocations into top-level scope
++    find_package(VTKCompileTools REQUIRED)
+   endif ()
+ endif ()
+ install(TARGETS vtkbuild EXPORT "${vtk_install_export}")
+diff --git a/Wrapping/Tools/CMakeLists.txt b/Wrapping/Tools/CMakeLists.txt
+index 05aa805f..dbec670a 100644
+--- a/Wrapping/Tools/CMakeLists.txt
++++ b/Wrapping/Tools/CMakeLists.txt
+@@ -49,6 +49,10 @@ vtk_module_add_module("${ns}::WrappingTools"
+   SOURCES ${sources}
+   HEADERS ${headers})
+ 
++if (NOT VTK_BUILD_COMPILE_TOOLS_ONLY)
++  return()
++endif()
++
+ if (NOT TARGET "${ns}::WrapHierarchy")
+   vtk_module_add_executable(WrapHierarchy
+     DEVELOPMENT

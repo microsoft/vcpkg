@@ -1,21 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index eae99d4..141bfe1 100644
+index 01b7df7..73e3599 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -197,6 +197,16 @@ else()
+@@ -181,6 +181,15 @@ else()
  endif()
  
  if(NOT BUILD_FRAMEWORK)
 +	foreach(lib IN LISTS CMAKE_CXX_IMPLICIT_LINK_LIBRARIES)
-+	    if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
-+	        continue()
-+	    elseif(EXISTS "${lib}")
-+	        string(APPEND PC_LIBS_PRIVATE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
-+	    else()
-+	        string(APPEND PC_LIBS_PRIVATE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
-+	    endif()
++		if(lib IN_LIST CMAKE_C_IMPLICIT_LINK_LIBRARIES)
++			continue()
++		elseif(EXISTS "${lib}")
++			string(APPEND PC_LIBS_PRIVATE " ${CMAKE_LINK_LIBRARY_FILE_FLAG}${lib}")
++		else()
++			string(APPEND PC_LIBS_PRIVATE " ${CMAKE_LINK_LIBRARY_FLAG}${lib}")
++		endif()
 +	endforeach()
-+	
- 	configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libchromaprint.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libchromaprint.pc)
- 	install(
-         FILES ${CMAKE_CURRENT_BINARY_DIR}/libchromaprint.pc
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libchromaprint.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libchromaprint.pc @ONLY)
+   install(
+     FILES ${CMAKE_CURRENT_BINARY_DIR}/libchromaprint.pc

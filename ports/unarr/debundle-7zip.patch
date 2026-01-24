@@ -1,0 +1,165 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f38b229..3d5c150 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,19 +52,6 @@ add_library(
+   # common/custalloc.c
+   common/stream.c
+   common/unarr.c
+-  lzmasdk/7zTypes.h
+-  lzmasdk/Compiler.h
+-  lzmasdk/CpuArch.h
+-  lzmasdk/Ppmd.h
+-  lzmasdk/Ppmd7.h
+-  lzmasdk/Ppmd8.h
+-  lzmasdk/Precomp.h
+-  lzmasdk/CpuArch.c
+-  lzmasdk/Ppmd7.c
+-  lzmasdk/Ppmd8.c
+-  lzmasdk/Ppmd7Dec.c
+-  lzmasdk/Ppmd7aDec.c
+-  lzmasdk/Ppmd8Dec.c
+   rar/lzss.h
+   rar/rar.h
+   rar/rarvm.h
+@@ -102,6 +89,12 @@ target_include_directories(
+ if(BUILD_SHARED_LIBS)
+   target_compile_definitions(unarr PUBLIC UNARR_IS_SHARED_LIBRARY)
+ endif()
++# Debundle 7zip
++find_package(7zip CONFIG REQUIRED)
++target_link_libraries(unarr PRIVATE 7zip::7zip)
++# 7zip upstream does not supply a .pc file. Add it to Libs.private.
++set(PROJECT_LIBS_PRIVATE "${PROJECT_LIBS_PRIVATE} -l7zip")
++set(UNARR_DEPENDS_7zip "find_dependency(7zip CONFIG)")
+ 
+ if(USE_SYSTEM_BZ2)
+   find_package(BZip2)
+@@ -115,7 +108,8 @@ if(BZIP2_FOUND)
+   endif()
+   target_compile_definitions(unarr PRIVATE -DHAVE_BZIP2)
+   # Bzip2 upstream does not supply a .pc file. Add it to Libs.private.
+-  set(PROJECT_LIBS_PRIVATE "-I${BZIP2_INCLUDE_DIRS} -l${BZIP2_LIBRARIES}")
++  set(PROJECT_CFLAGS "${PROJECT_CFLAGS} -I${BZIP2_INCLUDE_DIRS}")
++  set(PROJECT_LIBS_PRIVATE "${PROJECT_LIBS_PRIVATE} -l${BZIP2_LIBRARIES}")
+   set(UNARR_DEPENDS_BZip2 "find_dependency(BZip2)")
+ endif()
+ 
+@@ -154,28 +148,6 @@ if(ZLIB_FOUND)
+ endif()
+ 
+ if(ENABLE_7Z)
+-  target_sources(
+-    unarr
+-    PRIVATE lzmasdk/7z.h
+-            lzmasdk/7zArcIn.c
+-            lzmasdk/7zBuf.h
+-            lzmasdk/7zBuf.c
+-            lzmasdk/7zDec.c
+-            lzmasdk/7zStream.c
+-            lzmasdk/7zWindows.h
+-            lzmasdk/Bcj2.h
+-            lzmasdk/Bcj2.c
+-            lzmasdk/Bra.c
+-            lzmasdk/Bra.h
+-            lzmasdk/Bra86.c
+-            lzmasdk/7zCrc.h
+-            lzmasdk/Delta.h
+-            lzmasdk/Delta.c
+-            lzmasdk/Lzma2Dec.h
+-            lzmasdk/Lzma2Dec.c)
+-  if(LIBLZMA_FOUND) # TODO: Replace 7z lzma with system lzma
+-    target_sources(unarr PRIVATE lzmasdk/LzmaDec.h lzmasdk/LzmaDec.c)
+-  endif()
+   target_compile_definitions(unarr PRIVATE -DHAVE_7Z -DZ7_PPMD_SUPPORT)
+ endif()
+ 
+@@ -194,8 +166,7 @@ if(UNIX
+             -Werror-implicit-function-declaration
+             $<$<CONFIG:Release>:-fomit-frame-pointer>
+             $<$<C_COMPILER_ID:Clang,AppleClang>:
+-            -Wno-missing-field-initializers>
+-            -flto)
++            -Wno-missing-field-initializers>)
+   if(BUILD_FUZZER)
+     target_compile_options(unarr PUBLIC "${sanitize_opts}")
+     target_compile_definitions(
+@@ -218,7 +189,7 @@ if(UNIX
+ 
+   # Clang linker needs -flto too when doing lto
+   if("${CMAKE_C_COMPILER_ID}" MATCHES "Clang")
+-    set(linker_opts "${linker_opts} -flto")
++    set(linker_opts "${linker_opts}")
+   endif()
+ 
+   set_target_properties(unarr PROPERTIES LINK_FLAGS "${linker_opts}")
+diff --git a/_7z/_7z.h b/_7z/_7z.h
+index 7f207e1..f488e42 100644
+--- a/_7z/_7z.h
++++ b/_7z/_7z.h
+@@ -6,9 +6,9 @@
+ 
+ #include "../common/unarr-imp.h"
+ 
+-#include "../lzmasdk/7zTypes.h"
++#include <7zip/C/7zTypes.h>
+ #ifdef HAVE_7Z
+-#include "../lzmasdk/7z.h"
++#include <7zip/C/7z.h>
+ #endif
+ 
+ typedef struct ar_archive_7z_s ar_archive_7z;
+diff --git a/pkg-config.pc.cmake b/pkg-config.pc.cmake
+index 9055aef..a8581e0 100644
+--- a/pkg-config.pc.cmake
++++ b/pkg-config.pc.cmake
+@@ -5,7 +5,7 @@ libdir=@PROJECT_INSTALL_LIBDIR@
+ Name: @PROJECT_NAME@
+ Description: @PROJECT_DESCRIPTION@
+ Version: @PROJECT_VERSION@
+-Cflags: -I${includedir}
++Cflags: -I${includedir}@PROJECT_CFLAGS@
+ Requires.private: @PROJECT_REQUIRES_PRIVATE@
+ Libs: -L${libdir} -l@PROJECT_NAME@
+ Libs.private: @PROJECT_LIBS_PRIVATE@
+diff --git a/rar/rar.h b/rar/rar.h
+index a0a420a..b522a33 100644
+--- a/rar/rar.h
++++ b/rar/rar.h
+@@ -7,7 +7,7 @@
+ #include "../common/unarr-imp.h"
+ 
+ #include "lzss.h"
+-#include "../lzmasdk/Ppmd7.h"
++#include <7zip/C/Ppmd7.h>
+ #include <limits.h>
+ 
+ static inline size_t smin(size_t a, size_t b) { return a < b ? a : b; }
+diff --git a/unarr-config.cmake.in b/unarr-config.cmake.in
+index 1c95f9b..4d82965 100644
+--- a/unarr-config.cmake.in
++++ b/unarr-config.cmake.in
+@@ -5,6 +5,7 @@ include(CMakeFindDependencyMacro)
+ @UNARR_DEPENDS_BZip2@
+ @UNARR_DEPENDS_LibLZMA@
+ @UNARR_DEPENDS_ZLIB@
++@UNARR_DEPENDS_7zip@
+ 
+ if (NOT TARGET unarr::unarr)
+   include("${CMAKE_CURRENT_LIST_DIR}/unarr-targets.cmake")
+diff --git a/zip/zip.h b/zip/zip.h
+index b2ba34c..23da8d8 100644
+--- a/zip/zip.h
++++ b/zip/zip.h
+@@ -16,9 +16,9 @@
+ #ifdef HAVE_LIBLZMA
+ #include <lzma.h>
+ #else
+-#include "../lzmasdk/LzmaDec.h"
++#include <7zip/C/LzmaDec.h>
+ #endif
+-#include "../lzmasdk/Ppmd8.h"
++#include <7zip/C/Ppmd8.h>
+ 
+ typedef struct ar_archive_zip_s ar_archive_zip;
+ 

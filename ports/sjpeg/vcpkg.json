@@ -1,6 +1,6 @@
 {
   "name": "sjpeg",
-  "version-date": "2021-10-31",
+  "version-date": "2025-06-04",
   "description": "Simple library for encoding baseline JPEG files",
   "homepage": "https://github.com/webmproject/sjpeg",
   "license": "Apache-2.0",

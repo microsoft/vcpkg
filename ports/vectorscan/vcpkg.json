@@ -1,0 +1,41 @@
+{
+  "name": "vectorscan",
+  "version": "5.4.12",
+  "description": "A portable fork of the high-performance regular expression matching library",
+  "homepage": "https://vectorcamp.gr/project/vectorscan/",
+  "license": "BSD-3-Clause",
+  "supports": "!windows & !(x64 | x86) & !android",
+  "dependencies": [
+    "boost-array",
+    "boost-chrono",
+    "boost-config",
+    "boost-core",
+    "boost-crc",
+    "boost-detail",
+    "boost-dynamic-bitset",
+    "boost-functional",
+    "boost-graph",
+    "boost-icl",
+    "boost-multi-array",
+    "boost-ptr-container",
+    "boost-random",
+    "boost-regex",
+    "boost-system",
+    "boost-thread",
+    "boost-type-traits",
+    "boost-unordered",
+    "boost-utility",
+    "pcre",
+    "ragel",
+    "simde",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "dump": {
+      "description": "Dump code support"
+    }
+  }
+}

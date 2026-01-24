@@ -1,6 +1,6 @@
 {
   "name": "inja",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Inja - A Template Engine for Modern C++",
   "homepage": "https://github.com/pantor/inja",
   "license": "MIT",

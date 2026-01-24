@@ -10,11 +10,10 @@
       (Most often PowerShell needs to be updated)
 * [ ] Check for any other software for the Windows images we wish to update and make the edits to do
       so in `scripts/azure-pipelines/windows`
-* [ ] Check for any updates possible to `vcpkg-tools.json`. Note that PowerShell currently uses the
-    7.2.x series due to customer reported problems on older Windows with 7.3.x and later.
+* [ ] Check for any updates possible to `vcpkg-tools.json`.
 * [ ] Update the first line of android/Dockerfile with the current 'noble' image according to
     https://hub.docker.com/_/ubuntu
-* [ ] Update the first line of linux/Dockerfile with the current 'jammy' image according to
+* [ ] Update the first line of linux/Dockerfile with the current 'noble' image according to
     https://hub.docker.com/_/ubuntu
 * [ ] Run create-docker-images.ps1
 * [ ] Update android/azure-pipelines.yml and linux/azure-pipelines.yml to point to the new docker

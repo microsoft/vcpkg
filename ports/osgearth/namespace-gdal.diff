@@ -1,0 +1,39 @@
+diff --git a/src/osgEarth/GDAL.cpp b/src/osgEarth/GDAL.cpp
+index 9f1e7b67b..a9590a6be 100644
+--- a/src/osgEarth/GDAL.cpp
++++ b/src/osgEarth/GDAL.cpp
+@@ -49,8 +49,6 @@
+ #include <cpl_string.h>
+ #include <gdal_alg_priv.h>
+ 
+-using namespace osgEarth;
+-using namespace osgEarth::GDAL;
+ 
+ #undef LC
+ #define LC "[GDAL] "
+@@ -59,7 +57,7 @@ using namespace osgEarth::GDAL;
+ 
+ namespace osgEarth
+ {
+-    namespace GDAL
++    namespace
+     {
+         // From easyrgb.com
+         inline float Hue_2_RGB(float v1, float v2, float vH)
+@@ -417,7 +415,6 @@ namespace osgEarth
+             return (err == CE_None);
+         }
+     }
+-} // namespace osgEarth::GDAL
+ 
+ //...................................................................
+ 
+@@ -2244,6 +2241,8 @@ GDALElevationLayer::createHeightFieldImplementation(const TileKey& key, Progress
+     return GeoHeightField::INVALID;
+ }
+ 
++}  // namespace osgearth
++
+ //...................................................................
+ 
+ 

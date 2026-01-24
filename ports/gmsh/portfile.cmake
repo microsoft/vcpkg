@@ -1,13 +1,15 @@
-string(REPLACE "." "_" UNDERSCORES_VERSION "${VERSION}")
-
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.onelab.info
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO gmsh/gmsh
-    REF "${PORT}_${UNDERSCORES_VERSION}"
-    SHA512 af2574ec3aadfddeedf981faced20a6736be06fe30c7670b682837612ca5a42248444f7a782ca5e75556cb957b5cf4467d5e972ba3f60559cc719690e73f3dca
-    HEAD_REF master
-    PATCHES fix-install.patch
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://gmsh.info/src/gmsh-${VERSION}-source.tgz"
+    FILENAME "gmsh-${VERSION}-source.tgz"
+    SHA512 f757688ed08b0c37ad3ebcf98b7661c385a434f83672fcad9c7f406afecc00fb1df6ef955a7ac76e54662ef95bcf2ca8a5d133c02603122ba5507f2d5359674e
+)
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    PATCHES
+        installdirs.diff
+        linking-and-naming.diff
+        opencascade.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_LIB)
@@ -16,10 +18,9 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        opencascade ENABLE_OCC
-        opencascade ENABLE_OCC_CAF
-        opencascade ENABLE_OCC_TBB
         mpi         ENABLE_MPI
+        occ         ENABLE_OCC
+        occ         ENABLE_OCC_CAF
         zipper      ENABLE_ZIPPER
 )
 
@@ -32,10 +33,12 @@ vcpkg_cmake_configure(
         -DENABLE_BUILD_LIB=${BUILD_LIB}
         -DENABLE_BUILD_SHARED=${BUILD_SHARED}
         -DENABLE_MSVC_STATIC_RUNTIME=${STATIC_RUNTIME}
+        -DENABLE_OS_SPECIFIC_INSTALL=OFF
+        -DGMSH_PACKAGER=vcpkg
         -DGMSH_RELEASE=ON
         -DENABLE_PACKAGE_STRIP=ON
         -DENABLE_SYSTEM_CONTRIB=ON
-        # Not implement
+        # Not implemented
         -DENABLE_GRAPHICS=OFF # Requires mesh, post, plugins and onelab
         -DENABLE_POST=OFF
         -DENABLE_PLUGINS=OFF
@@ -105,11 +108,14 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 vcpkg_copy_tools(TOOL_NAMES gmsh AUTO_CLEAN)
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-gmsh")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

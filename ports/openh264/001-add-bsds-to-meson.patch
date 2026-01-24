@@ -1,0 +1,22 @@
+diff --git a/meson.build b/meson.build
+index 573f6c6..b9519b3 100644
+--- a/meson.build
++++ b/meson.build
+@@ -57,7 +57,7 @@ cpp_lib = '-lstdc++'
+ libm_dep = cpp.find_library('m', required : false)
+ deps += [libm_dep]
+ 
+-if ['linux', 'android', 'ios', 'darwin'].contains(system)
++if ['linux', 'android', 'ios', 'darwin', 'freebsd', 'netbsd', 'openbsd'].contains(system)
+   asm_format32 = 'elf'
+   asm_format64 = 'elf64'
+   if ['ios', 'darwin'].contains(system)
+@@ -109,7 +109,7 @@ if ['linux', 'android', 'ios', 'darwin'].contains(system)
+     error('FIXME: unhandled CPU family @0@ for @1@'.format(cpu_family, system))
+   endif
+ 
+-  if ['ios', 'darwin', 'android'].contains(system)
++  if ['ios', 'darwin', 'android', 'freebsd', 'openbsd'].contains(system)
+     cpp_lib = '-lc++'
+   endif
+ elif system == 'windows'

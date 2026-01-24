@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- CMakeLists.txt
++++ CMakeLists.txt
+@@ -65,7 +65,7 @@
+     set(QTANDROIDEXTRAS_LIBRARIES ${Qt5AndroidExtras_LIBRARIES})
+   endif()
+ 
+-  if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU)
++  if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU AND NOT EMSCRIPTEN)
+     find_package(Qt5 COMPONENTS DBus REQUIRED)
+     include_directories(${Qt5DBus_INCLUDE_DIRS})
+     set(QTDBUS_LIBRARIES ${Qt5DBus_LIBRARIES})
+@@ -95,7 +95,7 @@
+   set(QTKEYCHAIN_VERSION_INFIX 6)
+ 
+ 
+-  if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU)
++  if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU AND NOT EMSCRIPTEN)
+     find_package(Qt6 COMPONENTS DBus REQUIRED)
+     include_directories(${Qt6DBus_INCLUDE_DIRS})
+     set(QTDBUS_LIBRARIES ${Qt6DBus_LIBRARIES})
+@@ -168,7 +168,7 @@
+     list(APPEND qtkeychain_LIBRARIES ${BE_LIBRARY})
+ endif()
+ 
+-if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU)
++if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU AND NOT EMSCRIPTEN)
+     option(LIBSECRET_SUPPORT "Build with libsecret support" ON)
+ 
+     if(LIBSECRET_SUPPORT)
+@@ -305,7 +305,7 @@
+   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/Qt${QTKEYCHAIN_VERSION_INFIX}KeychainConfigVersion.cmake"
+   SOVERSION ${QTKEYCHAIN_VERSION})
+ 
+-if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU)
++if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT HAIKU AND NOT EMSCRIPTEN)
+     set(PRI_EXTRA_DEPS "dbus")
+ endif()
+ ecm_generate_pri_file(BASE_NAME Qt${QTKEYCHAIN_VERSION_INFIX}Keychain
+diff --git a/QtKeychainConfig.cmake.in b/QtKeychainConfig.cmake.in
+--- QtKeychainConfig.cmake.in
++++ QtKeychainConfig.cmake.in
+@@ -14,7 +14,7 @@
+ 
+ find_dependency(Qt@QTKEYCHAIN_VERSION_INFIX@Core)
+ 
+-if(UNIX AND NOT APPLE AND NOT ANDROID)
++if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+     find_dependency(Qt@QTKEYCHAIN_VERSION_INFIX@DBus)
+ endif()
+ 
+ 

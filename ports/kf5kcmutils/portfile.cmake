@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcmutils
-    REF v5.98.0
-    SHA512 959901d7ba447eff13e4c1341c5530fccecf42f7f5e4dc69bee669c9e22770f5af57ed2f08979aac5fd2e1015f2bbadf5d302d99e1e0031c20927d833e6a3cea
+    REF "v${VERSION}"
+    SHA512 f5a22a0e662f1f3874c50b19ff770f2fa4fed53163eb7b732c8b8529424222a1b5f6908cf712c8feb6bc4984c687c51ded2cd228b01f1732d2d2c7cfba7e8f99
     HEAD_REF master
-    PATCHES
-        0001-Fix-missing-kcmutils_proxy_model-export-in-static-bu.patch   # https://invent.kde.org/frameworks/kcmutils/-/merge_requests/104
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -19,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5KCMUtils CONFIG_PATH lib/cmake/KF5KCMUtils)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5KCMUtils)
 vcpkg_copy_pdbs()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
@@ -46,4 +44,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
 vcpkg_install_copyright(FILE_LIST ${LICENSE_FILES})
-

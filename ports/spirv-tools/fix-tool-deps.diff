@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75830b44..9c9e7ba8 100644
+index 1b69fbe8..9d9fab15 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -281,8 +281,13 @@ if(ENABLE_SPIRV_TOOLS_INSTALL)
+@@ -285,8 +285,13 @@ if(ENABLE_SPIRV_TOOLS_INSTALL)
    endif()
  
    macro(spvtools_generate_config_file TARGET)

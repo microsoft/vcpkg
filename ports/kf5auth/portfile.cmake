@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kauth
-    REF v5.98.0
-    SHA512 c9989057077f8da26e260e1aec7fc2cfe07db62835a51b254f92e63e0e5c1500aae95001592ccd98a06a0701cb93cf34006b306e1230f6a53c8f683b8131bc17
+    REF "v${VERSION}"
+    SHA512 438d599b2410c799bd4383013dd216221efb4579b19242453fa38497d738910550eda6707f74446193c89c1958abb2d88dce07f625550040b62444dea16d6cd6
     HEAD_REF master
-    PATCHES
-        0001-Config.cmake.in-declare-static-dependencies.patch
 )
 
 # Prevent KDEClangFormat from writing to source effectively blocking parallel configure
@@ -19,7 +17,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Auth CONFIG_PATH lib/cmake/KF5Auth)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5Auth)
 
 vcpkg_copy_pdbs()
 

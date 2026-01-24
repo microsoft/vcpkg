@@ -22,7 +22,7 @@ do
     elif [ "$var" = "-buildTests" ]; then
         echo "Warning: -buildTests no longer has any effect; ignored."
     elif [ "$var" = "-skipDependencyChecks" ]; then
-        vcpkgSkipDependencyChecks="OFF"
+        vcpkgSkipDependencyChecks="ON"
     elif [ "$var" = "-musl" ]; then
         vcpkgUseMuslC="ON"
     elif [ "$var" = "-help" -o "$var" = "--help" ]; then
@@ -70,7 +70,8 @@ fi
 vcpkgCheckRepoTool()
 {
     __tool=$1
-    if [ "$vcpkgSkipDependencyChecks" = "ON" ]; then
+    # Only perform dependency checks when they are not explicitly skipped.
+    if [ "$vcpkgSkipDependencyChecks" = "OFF" ]; then
         if ! command -v "$__tool" >/dev/null 2>&1 ; then
             echo "Could not find $__tool. Please install it (and other dependencies) with:"
             echo "On Debian and Ubuntu derivatives:"
@@ -86,6 +87,8 @@ vcpkgCheckRepoTool()
             echo "On Alpine:"
             echo "  apk add build-base cmake ninja zip unzip curl git"
             echo "  (and export VCPKG_FORCE_SYSTEM_BINARIES=1)"
+            echo "On Solaris and illumos distributions:"
+            echo "  pkg install web/curl compress/zip compress/unzip"
             exit 1
         fi
     fi
@@ -153,12 +156,19 @@ vcpkgDownloadFile()
     mv "$downloadPath.part" "$downloadPath"
 }
 
-vcpkgExtractTar()
+vcpkgExtractArchive()
 {
     archive=$1; toPath=$2
     rm -rf "$toPath" "$toPath.partial"
-    mkdir -p "$toPath.partial"
-    $(cd "$toPath.partial" && tar xzf "$archive")
+    case "$archive" in
+        *.tar.gz)
+            mkdir -p "$toPath.partial"
+            $(cd "$toPath.partial" && tar xzf "$archive")
+            ;;
+        *.zip)
+            unzip -qd "$toPath.partial" "$archive"
+            ;;
+    esac
     mv "$toPath.partial" "$toPath"
 }
 
@@ -179,15 +189,15 @@ if [ "$UNAME" = "Darwin" ]; then
     echo "Downloading vcpkg-macos..."
     vcpkgToolReleaseSha=$VCPKG_MACOS_SHA
     vcpkgToolName="vcpkg-macos"
-elif [ "$vcpkgUseMuslC" = "ON" ] && [ "$ARCH" = "x86_64" ]; then
+elif [ "$UNAME" = "Linux" ] && [ "$vcpkgUseMuslC" = "ON" ] && [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-muslc..."
     vcpkgToolReleaseSha=$VCPKG_MUSLC_SHA
     vcpkgToolName="vcpkg-muslc"
-elif [ "$ARCH" = "x86_64" ]; then
+elif [ "$UNAME" = "Linux" ] && [ "$ARCH" = "x86_64" ]; then
     echo "Downloading vcpkg-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_SHA
     vcpkgToolName="vcpkg-glibc"
-elif [ "$vcpkgUseMuslC" = "OFF" ] && { [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; }; then
+elif [ "$UNAME" = "Linux" ] && [ "$vcpkgUseMuslC" = "OFF" ] && { [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; }; then
     echo "Downloading vcpkg-arm64-glibc..."
     vcpkgToolReleaseSha=$VCPKG_GLIBC_ARM64_SHA
     vcpkgToolName="vcpkg-glibc-arm64"
@@ -201,25 +211,25 @@ fi
 if [ "$vcpkgDownloadTool" = "ON" ]; then
     vcpkgDownloadFile "https://github.com/microsoft/vcpkg-tool/releases/download/$VCPKG_TOOL_RELEASE_TAG/$vcpkgToolName" "$vcpkgRootDir/vcpkg" $vcpkgToolReleaseSha
 else
-    vcpkgToolReleaseTarball="$VCPKG_TOOL_RELEASE_TAG.tar.gz"
-    vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+    vcpkgToolReleaseArchive="$VCPKG_TOOL_RELEASE_TAG.zip"
+    vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseArchive"
     baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
     buildDir="$baseBuildDir/build"
-    tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
+    archivePath="$downloadsDir/$vcpkgToolReleaseArchive"
     srcBaseDir="$baseBuildDir/src"
     srcDir="$srcBaseDir/vcpkg-tool-$VCPKG_TOOL_RELEASE_TAG"
 
-    if [ -e "$tarballPath" ]; then
-        vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+    if [ -e "$archivePath" ]; then
+        vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$archivePath" "$vcpkgToolReleaseSha"
     else
         echo "Downloading vcpkg tool sources"
-        vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+        vcpkgDownloadFile "$vcpkgToolUrl" "$archivePath" "$vcpkgToolReleaseSha"
     fi
 
     echo "Building vcpkg-tool..."
     rm -rf "$baseBuildDir"
     mkdir -p "$buildDir"
-    vcpkgExtractTar "$tarballPath" "$srcBaseDir"
+    vcpkgExtractArchive "$archivePath" "$srcBaseDir"
     cmakeConfigOptions="-DCMAKE_BUILD_TYPE=Release -G 'Ninja' -DVCPKG_DEVELOPMENT_WARNINGS=OFF"
 
     if [ "${VCPKG_MAX_CONCURRENCY}" != "" ] ; then
