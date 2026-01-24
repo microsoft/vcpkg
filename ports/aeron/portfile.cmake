@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         patches/add-libuuid-vcpkg-support.patch
+        patches/fix-static-crt-linkage.patch
 )
 
 # Set archive option based on feature
@@ -19,13 +20,24 @@ else()
     set(BUILD_ARCHIVE OFF)
 endif()
 
+# Set CRT linkage for Windows static builds
+set(AERON_CMAKE_OPTIONS
+    -DAERON_INSTALL_TARGETS=ON
+    -DAERON_TESTS=OFF
+    -DAERON_BUILD_SAMPLES=OFF
+    -DBUILD_AERON_ARCHIVE_API=${BUILD_ARCHIVE}
+)
+
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND AERON_CMAKE_OPTIONS
+        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>
+        -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DAERON_INSTALL_TARGETS=ON
-        -DAERON_TESTS=OFF
-        -DAERON_BUILD_SAMPLES=OFF
-        -DBUILD_AERON_ARCHIVE_API=${BUILD_ARCHIVE}
+    OPTIONS ${AERON_CMAKE_OPTIONS}
 )
 
 vcpkg_cmake_install()
