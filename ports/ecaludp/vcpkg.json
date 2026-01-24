@@ -1,0 +1,13 @@
+{
+  "name": "ecaludp",
+  "version": "0.1.2",
+  "description": "UDP transport library for eCAL with fragmentation/reassembly support.",
+  "homepage": "https://github.com/eclipse-ecal/ecaludp",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "asio",
+    "recycle",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}
