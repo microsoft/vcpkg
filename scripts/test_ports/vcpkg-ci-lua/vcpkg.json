@@ -5,10 +5,7 @@
   "dependencies": [
     {
       "name": "lua",
-      "default-features": false,
-      "features": [
-        "tools"
-      ]
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
@@ -19,12 +16,21 @@
     {
       "$comment": "The platform expression is tuned for vcpkg CI.",
       "name": "run-programs",
-      "platform": "native | (!android & !arm64)"
+      "platform": "native | (!android & !uwp & !arm64)"
     }
   ],
   "features": {
     "run-programs": {
-      "description": "Run lua and user program"
+      "description": "Run lua and user program",
+      "dependencies": [
+        {
+          "name": "lua",
+          "default-features": false,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
     }
   }
 }
