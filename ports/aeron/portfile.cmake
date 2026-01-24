@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         patches/add-libuuid-vcpkg-support.patch
+        patches/fix-static-crt-linkage.patch
 )
 
 # Set archive option based on feature
@@ -30,6 +31,7 @@ set(AERON_CMAKE_OPTIONS
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND AERON_CMAKE_OPTIONS
         -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>
+        -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
     )
 endif()
 
