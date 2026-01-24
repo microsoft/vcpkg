@@ -1,6 +1,7 @@
 {
   "name": "lua",
   "version": "5.5.0",
+  "port-version": 1,
   "description": "A powerful, fast, lightweight, embeddable scripting language",
   "homepage": "https://www.lua.org",
   "license": null,
@@ -21,7 +22,13 @@
     },
     "tools": {
       "description": "Builds Lua compiler and interpreter",
-      "supports": "!ios"
+      "supports": "!ios",
+      "dependencies": [
+        {
+          "name": "readline-unix",
+          "platform": "!windows"
+        }
+      ]
     }
   }
 }
