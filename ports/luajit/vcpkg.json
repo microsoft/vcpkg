@@ -10,17 +10,17 @@
       "name": "luajit",
       "host": true,
       "features": [
-        "buildvm-64"
+        "buildvm-32"
       ],
-      "platform": "!native & (arm64 | x64) & (!windows | mingw)"
+      "platform": "!native & (arm32 | x86) & (!windows | mingw)"
     },
     {
       "name": "luajit",
       "host": true,
       "features": [
-        "buildvm-32"
+        "buildvm-64"
       ],
-      "platform": "!native & ((arm & !arm64) | x86) & (!windows | mingw)"
+      "platform": "!native & (arm64 | x64) & (!windows | mingw)"
     },
     {
       "name": "vcpkg-cmake",
