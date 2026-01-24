@@ -1,7 +1,6 @@
 {
   "name": "duckdb",
-  "version": "1.4.2",
-  "port-version": 1,
+  "version": "1.4.3",
   "description": "High-performance in-process analytical database system",
   "homepage": "https://duckdb.org",
   "license": null,

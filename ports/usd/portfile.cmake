@@ -20,7 +20,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 fbe1e632473883e47f4bfeb16cab314bbbe8a7b404a5c071ca613bbf288526e505edd7a5edfdd9f85dd16da6d0d91fa0d4f8c783882094d3691f77685817fea6
+    SHA512 7b78109055773e44af771e99b64ff6a1fcdc5c4984d6d62708491d14ab576344d432dac2377363cae89e47c1a1e55d016bcc7bde2c5c49d5b26550db5ac46304
     HEAD_REF release
     PATCHES
         003-fix-dep.patch
@@ -29,7 +29,6 @@ vcpkg_from_github(
         008-fix_clang8_compiler_error.patch
         009-vcpkg_install_folder_conventions.patch
         010-cmake_export_plugin_as_modules.patch
-        013-openimageio-3.patch
 )
 
 # Changes accompanying 003-fix-dep.patch

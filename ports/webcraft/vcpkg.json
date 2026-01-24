@@ -1,0 +1,22 @@
+{
+  "name": "webcraft",
+  "version": "1.0.3",
+  "description": "An async first C++ networking library leveraging powerful features of C++23 built for scale, speed, and ease.",
+  "homepage": "https://github.com/adityarao2005/WebCraft/",
+  "license": "MIT",
+  "supports": "!(uwp | android | emscripten)",
+  "dependencies": [
+    {
+      "name": "liburing",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

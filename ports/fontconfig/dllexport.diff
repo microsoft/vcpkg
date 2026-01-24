@@ -23,7 +23,7 @@ index 1ad1e58..1d9ac14 100644
 +    if host_machine.system() == 'windows'
 +        default_FcPublic = '__declspec(dllimport)'
 +    else
-+        default_FcPublic = '__attribute__((visibility(\"default\")))'
++        default_FcPublic = '__attribute__((visibility("default")))'
 +    endif
 +endif
 +fontconfig_h_conf.set('DEFAULT_FCPUBLIC', default_FcPublic)

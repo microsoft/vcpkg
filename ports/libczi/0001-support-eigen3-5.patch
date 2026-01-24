@@ -1,0 +1,13 @@
+diff --git a/Src/CMakeLists.txt b/Src/CMakeLists.txt
+index e0173eb..898c6ac 100644
+--- a/Src/CMakeLists.txt
++++ b/Src/CMakeLists.txt
+@@ -6,7 +6,7 @@ include(utilities)
+ include(CheckCSourceCompiles)
+ 
+ if (LIBCZI_BUILD_PREFER_EXTERNALPACKAGE_EIGEN3)
+- find_package (Eigen3 3.3 REQUIRED NO_MODULE)
++ find_package (Eigen3 REQUIRED NO_MODULE)
+ else()
+  include(ExternalEIGEN3)
+ endif()

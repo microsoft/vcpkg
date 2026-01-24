@@ -1,6 +1,7 @@
 {
   "name": "mdl-sdk",
-  "version": "2025",
+  "version": "2025.0.3",
+  "port-version": 1,
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "license": "BSD-3-Clause",
@@ -25,6 +26,15 @@
   "features": {
     "dds": {
       "description": "Build image plugin for DDS"
+    },
+    "df-vulkan": {
+      "description": "Build the MDL SDK df_vulkan example",
+      "dependencies": [
+        "glfw3",
+        "glslang",
+        "volk",
+        "vulkan-validationlayers"
+      ]
     },
     "openimageio": {
       "description": "Build image plugin for various image formats using OpenImageIO",

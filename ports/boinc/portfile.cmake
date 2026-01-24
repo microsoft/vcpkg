@@ -4,11 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BOINC/boinc
     REF "client_release/${MAJOR_MINOR}/${VERSION}"
-    SHA512 1cb7a4d5a411fe703137f5c8127e03ce70e01a9d1c9d23e19b9d4231c833fabad779cf52dc7b85500ff54121c4b5e900ea1634c312ee1d72cfdf4c2051703c38
+    SHA512 5d38adcaefc99bd79d54e7e47bcc38099844157802852b9de9eb910ce80e2f6d6b333b3ece3f6c619e3c66d9dda9a9c5a8290ce583f77e1727bd7064e81b11af
     HEAD_REF master
-    PATCHES
-        fix-android-build.patch
-        fix-mingw-build.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -41,6 +38,7 @@ endif()
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET}
         ${build_options}
 )
 
@@ -51,6 +49,7 @@ file(READ "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" BOINC_CONFIG)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/boinc/boinc-config.cmake" "
 include(CMakeFindDependencyMacro)
 find_dependency(OpenSSL)
+find_dependency(libzip)
 ${BOINC_CONFIG}
 ")
 

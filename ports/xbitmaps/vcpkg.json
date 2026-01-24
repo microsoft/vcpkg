@@ -1,6 +1,6 @@
 {
   "name": "xbitmaps",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "X BitMap (XBM) format bitmaps commonly used in X.Org applications",
   "homepage": "https://gitlab.freedesktop.org/xorg/data/bitmaps",
   "license": null,

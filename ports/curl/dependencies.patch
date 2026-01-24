@@ -1,169 +1,617 @@
+diff --git a/CMake/FindBrotli.cmake b/CMake/FindBrotli.cmake
+index 981b30cafd..e7bfbca0b2 100644
+--- a/CMake/FindBrotli.cmake
++++ b/CMake/FindBrotli.cmake
+@@ -50,6 +50,17 @@ if(_brotli_FOUND)
+   set(BROTLI_FOUND TRUE)
+   set(BROTLI_VERSION ${_brotli_libbrotlicommon_VERSION})
+   message(STATUS "Found Brotli (via pkg-config): ${_brotli_INCLUDE_DIRS} (found version \"${BROTLI_VERSION}\")")
++  find_package(_brotli_cmake NAMES unofficial-brotli)
++  if(TARGET unofficial::brotli::brotlidec AND NOT TARGET CURL::brotli)
++    add_library(CURL::brotli INTERFACE IMPORTED)
++    set_target_properties(CURL::brotli PROPERTIES
++      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_brotli_LINK_LIBRARIES}"
++      INTERFACE_LIBCURL_PC_MODULES "${_brotli_pc_requires}"
++      INTERFACE_LINK_LIBRARIES unofficial::brotli::brotlidec)
++  endif()
++elseif(1)
++  set(Brotli_FOUND FALSE)
++  set(BROTLI_FOUND FALSE)
+ else()
+   find_path(BROTLI_INCLUDE_DIR "brotli/decode.h")
+   find_library(BROTLICOMMON_LIBRARY NAMES "brotlicommon")
+diff --git a/CMake/FindCares.cmake b/CMake/FindCares.cmake
+index 4a20bc0af4..fcb113e0a7 100644
+--- a/CMake/FindCares.cmake
++++ b/CMake/FindCares.cmake
+@@ -48,6 +48,17 @@ if(_cares_FOUND)
+   set(CARES_FOUND TRUE)
+   set(CARES_VERSION ${_cares_VERSION})
+   message(STATUS "Found Cares (via pkg-config): ${_cares_INCLUDE_DIRS} (found version \"${CARES_VERSION}\")")
++  find_package(_cares_cmake NAMES c-ares)
++  if(TARGET c-ares::cares AND NOT TARGET CURL::cares)
++    add_library(CURL::cares INTERFACE IMPORTED)
++    set_target_properties(CURL::cares PROPERTIES
++      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_cares_LINK_LIBRARIES}"
++      INTERFACE_LIBCURL_PC_MODULES "${_cares_pc_requires}"
++      INTERFACE_LINK_LIBRARIES c-ares::cares)
++  endif()
++elseif(1)
++  set(Cares_FOUND FALSE)
++  set(CARES_FOUND FALSE)
+ else()
+   find_path(CARES_INCLUDE_DIR NAMES "ares.h")
+   find_library(CARES_LIBRARY NAMES ${CARES_NAMES} "cares")
+diff --git a/CMake/FindGSS.cmake b/CMake/FindGSS.cmake
+index 106c4c4edd..a027983929 100644
+--- a/CMake/FindGSS.cmake
++++ b/CMake/FindGSS.cmake
+@@ -269,7 +269,6 @@ if(GSS_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_gss_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_gss_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_gss_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_gss_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_gss_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_gss_LINK_LIBRARIES}")
+   endif()
+ endif()
 diff --git a/CMake/FindGnuTLS.cmake b/CMake/FindGnuTLS.cmake
-index 4de4f82eee..f47e049101 100644
+index fff57b2c29..7d81acd99a 100644
 --- a/CMake/FindGnuTLS.cmake
 +++ b/CMake/FindGnuTLS.cmake
-@@ -40,6 +40,7 @@
+@@ -36,6 +36,7 @@
  
- set(GNUTLS_PC_REQUIRES "gnutls")
+ set(_gnutls_pc_requires "gnutls")
  
 +unset(GNUTLS_LIBRARY CACHE) # from shiftmedia-libgnutls cmake wrapper
  if(CURL_USE_PKGCONFIG AND
     NOT DEFINED GNUTLS_INCLUDE_DIR AND
     NOT DEFINED GNUTLS_LIBRARY)
+@@ -90,7 +91,6 @@ if(GNUTLS_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_gnutls_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_gnutls_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_gnutls_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_gnutls_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_gnutls_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_gnutls_LINK_LIBRARIES}")
+   endif()
+ endif()
+diff --git a/CMake/FindLDAP.cmake b/CMake/FindLDAP.cmake
+index 2f5cc713c7..63c1b0800f 100644
+--- a/CMake/FindLDAP.cmake
++++ b/CMake/FindLDAP.cmake
+@@ -113,7 +113,6 @@ if(LDAP_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_ldap_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_ldap_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_ldap_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_ldap_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_ldap_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_ldap_LINK_LIBRARIES}")
+   endif()
+ endif()
+diff --git a/CMake/FindLibgsasl.cmake b/CMake/FindLibgsasl.cmake
+index 5ddf957d72..db462466e4 100644
+--- a/CMake/FindLibgsasl.cmake
++++ b/CMake/FindLibgsasl.cmake
+@@ -89,7 +89,6 @@ if(LIBGSASL_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_libgsasl_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_libgsasl_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_libgsasl_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_libgsasl_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_libgsasl_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_libgsasl_LINK_LIBRARIES}")
+   endif()
+ endif()
+diff --git a/CMake/FindLibidn2.cmake b/CMake/FindLibidn2.cmake
+index 336a7f7b40..b2f3eaf534 100644
+--- a/CMake/FindLibidn2.cmake
++++ b/CMake/FindLibidn2.cmake
+@@ -90,7 +90,6 @@ if(LIBIDN2_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_libidn2_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_libidn2_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_libidn2_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_libidn2_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_libidn2_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_libidn2_LINK_LIBRARIES}")
+   endif()
+ endif()
+diff --git a/CMake/FindLibpsl.cmake b/CMake/FindLibpsl.cmake
+index 9b1a0cdd97..a7fe288883 100644
+--- a/CMake/FindLibpsl.cmake
++++ b/CMake/FindLibpsl.cmake
+@@ -90,7 +90,6 @@ if(LIBPSL_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_libpsl_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_libpsl_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_libpsl_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_libpsl_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_libpsl_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_libpsl_LINK_LIBRARIES}")
+   endif()
+ endif()
+diff --git a/CMake/FindLibrtmp.cmake b/CMake/FindLibrtmp.cmake
+index 853ba63ad0..a9d24d9b3a 100644
+--- a/CMake/FindLibrtmp.cmake
++++ b/CMake/FindLibrtmp.cmake
+@@ -110,7 +110,6 @@ if(LIBRTMP_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_librtmp_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_librtmp_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_librtmp_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_librtmp_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_librtmp_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_librtmp_LINK_LIBRARIES}")
+   endif()
+ endif()
+diff --git a/CMake/FindLibssh2.cmake b/CMake/FindLibssh2.cmake
+index 330611bfe5..94b5567c0e 100644
+--- a/CMake/FindLibssh2.cmake
++++ b/CMake/FindLibssh2.cmake
+@@ -48,6 +48,17 @@ if(_libssh2_FOUND AND _libssh2_INCLUDE_DIRS)
+   set(LIBSSH2_FOUND TRUE)
+   set(LIBSSH2_VERSION ${_libssh2_VERSION})
+   message(STATUS "Found Libssh2 (via pkg-config): ${_libssh2_INCLUDE_DIRS} (found version \"${LIBSSH2_VERSION}\")")
++  find_package(_libssh2_cmake NAMES libssh2)
++  if(TARGET libssh2::libssh2 AND NOT TARGET CURL::libssh2)
++    add_library(CURL::libssh2 INTERFACE IMPORTED)
++    set_target_properties(CURL::libssh2 PROPERTIES
++      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_libssh2_LINK_LIBRARIES}"
++      INTERFACE_LIBCURL_PC_MODULES "${_libssh2_pc_requires}"
++      INTERFACE_LINK_LIBRARIES libssh2::libssh2)
++  endif()
++elseif(1)
++  set(Libssh2_FOUND FALSE)
++  set(LIBSSH2_FOUND FALSE)
+ else()
+   find_path(LIBSSH2_INCLUDE_DIR NAMES "libssh2.h")
+   find_library(LIBSSH2_LIBRARY NAMES "ssh2" "libssh2")
+diff --git a/CMake/FindMbedTLS.cmake b/CMake/FindMbedTLS.cmake
+index 97201ab2b3..794460b0af 100644
+--- a/CMake/FindMbedTLS.cmake
++++ b/CMake/FindMbedTLS.cmake
+@@ -58,6 +58,17 @@ if(_mbedtls_FOUND)
+   set(MBEDTLS_FOUND TRUE)
+   set(MBEDTLS_VERSION ${_mbedtls_mbedtls_VERSION})
+   message(STATUS "Found MbedTLS (via pkg-config): ${_mbedtls_INCLUDE_DIRS} (found version \"${MBEDTLS_VERSION}\")")
++  find_package(_mbedtls_cmake NAMES MbedTLS)
++  if(TARGET MbedTLS::mbedtls AND NOT TARGET CURL::mbedtls)
++    add_library(CURL::mbedtls INTERFACE IMPORTED)
++    set_target_properties(CURL::mbedtls PROPERTIES
++      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_mbedtls_LINK_LIBRARIES}"
++      INTERFACE_LIBCURL_PC_MODULES "${_mbedtls_pc_requires}"
++      INTERFACE_LINK_LIBRARIES MbedTLS::mbedtls MbedTLS::mbedx509 MbedTLS::mbedcrypto)
++  endif()
++elseif(1)
++  set(MbedTLS_FOUND FALSE)
++  set(MBEDTLS_FOUND FALSE)
+ else()
+   set(_mbedtls_pc_requires "")  # Depend on pkg-config only when found via pkg-config
+ 
+diff --git a/CMake/FindNGHTTP2.cmake b/CMake/FindNGHTTP2.cmake
+index 8304345a38..e66c3f40fa 100644
+--- a/CMake/FindNGHTTP2.cmake
++++ b/CMake/FindNGHTTP2.cmake
+@@ -89,7 +89,6 @@ if(NGHTTP2_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_nghttp2_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_nghttp2_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_nghttp2_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_nghttp2_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_nghttp2_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_nghttp2_LINK_LIBRARIES}")
+   endif()
+ endif()
+diff --git a/CMake/FindNGHTTP3.cmake b/CMake/FindNGHTTP3.cmake
+index 37ebfe1114..1aedcd983c 100644
+--- a/CMake/FindNGHTTP3.cmake
++++ b/CMake/FindNGHTTP3.cmake
+@@ -47,6 +47,16 @@ if(_nghttp3_FOUND)
+   set(NGHTTP3_FOUND TRUE)
+   set(NGHTTP3_VERSION ${_nghttp3_VERSION})
+   message(STATUS "Found NGHTTP3 (via pkg-config): ${_nghttp3_INCLUDE_DIRS} (found version \"${NGHTTP3_VERSION}\")")
++  find_package(_nghttp3_cmake NAMES nghttp3)
++  if((TARGET nghttp3::nghttp3 OR TARGET nghttp3::nghttp3_static) AND NOT TARGET CURL::nghttp3)
++    add_library(CURL::nghttp3 INTERFACE IMPORTED)
++    set_target_properties(CURL::nghttp3 PROPERTIES
++      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_nghttp3_LINK_LIBRARIES}"
++      INTERFACE_LIBCURL_PC_MODULES "${_nghttp3_pc_requires}"
++      INTERFACE_LINK_LIBRARIES $<IF:$<TARGET_EXISTS:nghttp3::nghttp3>,nghttp3::nghttp3,nghttp3::nghttp3_static>)
++  endif()
++elseif(1)
++  set(NGHTTP3_FOUND FALSE)
+ else()
+   find_path(NGHTTP3_INCLUDE_DIR NAMES "nghttp3/nghttp3.h")
+   find_library(NGHTTP3_LIBRARY NAMES "nghttp3")
+diff --git a/CMake/FindNGTCP2.cmake b/CMake/FindNGTCP2.cmake
+index 416ea459f6..13010958be 100644
+--- a/CMake/FindNGTCP2.cmake
++++ b/CMake/FindNGTCP2.cmake
+@@ -85,6 +85,24 @@ if(_ngtcp2_FOUND)
+   set(NGTCP2_FOUND TRUE)
+   set(NGTCP2_VERSION ${_ngtcp2_libngtcp2_VERSION})
+   message(STATUS "Found NGTCP2 (via pkg-config): ${_ngtcp2_INCLUDE_DIRS} (found version \"${NGTCP2_VERSION}\")")
++  find_package(_ngtcp2_cmake NAMES ngtcp2)
++  set(_ngtcp2_cmake_target ngtcp2::ngtcp2)
++  if(_ngtcp2_crypto_backend)
++    # ngtcp2::ngtcp2 is a public link library of the crypto backend.
++    set(_ngtcp2_cmake_target ngtcp2::ngtcp2_crypto_${_ngtcp2_crypto_backend})
++  endif()
++  if(TARGET ${_ngtcp2_cmake_target}_static)
++    string(APPEND _ngtcp2_cmake_target "_static")
++  endif()
++  if(TARGET ${_ngtcp2_cmake_target} AND NOT TARGET CURL::ngtcp2)
++    add_library(CURL::ngtcp2 INTERFACE IMPORTED)
++    set_target_properties(CURL::ngtcp2 PROPERTIES
++      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_ngtcp2_LINK_LIBRARIES}"
++      INTERFACE_LIBCURL_PC_MODULES "${_ngtcp2_pc_requires}"
++      INTERFACE_LINK_LIBRARIES ${_ngtcp2_cmake_target})
++  endif()
++elseif(0)
++  set(NGTCP2_FOUND FALSE)
+ else()
+   find_path(NGTCP2_INCLUDE_DIR NAMES "ngtcp2/ngtcp2.h")
+   find_library(NGTCP2_LIBRARY NAMES "ngtcp2")
+diff --git a/CMake/FindNettle.cmake b/CMake/FindNettle.cmake
+index d22865ffad..049265bc8b 100644
+--- a/CMake/FindNettle.cmake
++++ b/CMake/FindNettle.cmake
+@@ -95,7 +95,6 @@ if(NETTLE_FOUND)
+       INTERFACE_LIBCURL_PC_MODULES "${_nettle_pc_requires}"
+       INTERFACE_COMPILE_OPTIONS "${_nettle_CFLAGS}"
+       INTERFACE_INCLUDE_DIRECTORIES "${_nettle_INCLUDE_DIRS}"
+-      INTERFACE_LINK_DIRECTORIES "${_nettle_LIBRARY_DIRS}"
+-      INTERFACE_LINK_LIBRARIES "${_nettle_LIBRARIES}")
++      INTERFACE_LINK_LIBRARIES "${_nettle_LINK_LIBRARIES}")
+   endif()
+ endif()
+diff --git a/CMake/FindWolfSSL.cmake b/CMake/FindWolfSSL.cmake
+index 3a3c05f0fd..4c1b832898 100644
+--- a/CMake/FindWolfSSL.cmake
++++ b/CMake/FindWolfSSL.cmake
+@@ -57,6 +57,17 @@ if(_wolfssl_FOUND)
+   set(WOLFSSL_FOUND TRUE)
+   set(WOLFSSL_VERSION ${_wolfssl_VERSION})
+   message(STATUS "Found WolfSSL (via pkg-config): ${_wolfssl_INCLUDE_DIRS} (found version \"${WOLFSSL_VERSION}\")")
++  find_package(_wolfssl_cmake NAMES wolfssl)
++  if(TARGET wolfssl::wolfssl AND NOT TARGET CURL::wolfssl)
++    add_library(CURL::wolfssl INTERFACE IMPORTED)
++    set_target_properties(CURL::wolfssl PROPERTIES
++      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_wolfssl_LINK_LIBRARIES}"
++      INTERFACE_LIBCURL_PC_MODULES "${_wolfssl_pc_requires}"
++      INTERFACE_LINK_LIBRARIES wolfssl::wolfssl)
++  endif()
++elseif(1)
++  set(WolfSSL_FOUND FALSE)
++  set(WOLFSSL_FOUND FALSE)
+ else()
+   find_path(WOLFSSL_INCLUDE_DIR NAMES "wolfssl/ssl.h")
+   find_library(WOLFSSL_LIBRARY NAMES "wolfssl")
+diff --git a/CMake/FindZstd.cmake b/CMake/FindZstd.cmake
+index 954a827b6f..f3bf53dab5 100644
+--- a/CMake/FindZstd.cmake
++++ b/CMake/FindZstd.cmake
+@@ -57,6 +57,17 @@ if(_zstd_FOUND)
+   set(ZSTD_FOUND TRUE)
+   set(ZSTD_VERSION ${_zstd_VERSION})
+   message(STATUS "Found Zstd (via pkg-config): ${_zstd_INCLUDE_DIRS} (found version \"${ZSTD_VERSION}\")")
++  find_package(_zstd_cmake NAMES zstd)
++  if(TARGET zstd::libzstd AND NOT TARGET CURL::zstd)
++    add_library(CURL::zstd INTERFACE IMPORTED)
++    set_target_properties(CURL::zstd PROPERTIES
++      INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_zstd_LINK_LIBRARIES}"
++      INTERFACE_LIBCURL_PC_MODULES "${_zstd_pc_requires}"
++      INTERFACE_LINK_LIBRARIES zstd::libzstd)
++  endif()
++elseif(1)
++  set(Zstd_FOUND TRUE)
++  set(ZSTD_FOUND TRUE)
+ else()
+   find_path(ZSTD_INCLUDE_DIR NAMES "zstd.h")
+   find_library(ZSTD_LIBRARY NAMES "zstd")
+diff --git a/CMake/curl-config.in.cmake b/CMake/curl-config.in.cmake
+index 7f346c832c..083fddbc04 100644
+--- a/CMake/curl-config.in.cmake
++++ b/CMake/curl-config.in.cmake
+@@ -50,74 +50,50 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_MODULE_PATH})
+ set(_curl_libs "")
+ 
+ if("@HAVE_BROTLI@")
+-  find_dependency(Brotli)
+-  list(APPEND _curl_libs CURL::brotli)
++  find_dependency(unofficial-brotli CONFIG)
+ endif()
+ if("@USE_ARES@")
+-  find_dependency(Cares)
+-  list(APPEND _curl_libs CURL::cares)
++  find_dependency(c-ares CONFIG)
+ endif()
+ if("@HAVE_GSSAPI@")
+-  find_dependency(GSS)
+-  list(APPEND _curl_libs CURL::gss)
+ endif()
+ if("@USE_BACKTRACE@")
+   find_dependency(Libbacktrace)
+   list(APPEND _curl_libs CURL::libbacktrace)
+ endif()
+ if("@USE_GSASL@")
+-  find_dependency(Libgsasl)
+-  list(APPEND _curl_libs CURL::libgsasl)
+ endif()
+ if(NOT "@USE_WIN32_LDAP@" AND NOT "@CURL_DISABLE_LDAP@")
+-  find_dependency(LDAP)
+-  list(APPEND _curl_libs CURL::ldap)
+ endif()
+ if("@HAVE_LIBIDN2@")
+-  find_dependency(Libidn2)
+-  list(APPEND _curl_libs CURL::libidn2)
+ endif()
+ if("@USE_LIBPSL@")
+-  find_dependency(Libpsl)
+-  list(APPEND _curl_libs CURL::libpsl)
+ endif()
+ if("@USE_LIBRTMP@")
+-  find_dependency(Librtmp)
+-  list(APPEND _curl_libs CURL::librtmp)
+ endif()
+ if("@USE_LIBSSH@")
+   find_dependency(Libssh)
+   list(APPEND _curl_libs CURL::libssh)
+ endif()
+ if("@USE_LIBSSH2@")
+-  find_dependency(Libssh2)
+-  list(APPEND _curl_libs CURL::libssh2)
++  find_dependency(libssh2 CONFIG)
+ endif()
+ if("@USE_LIBUV@")
+   find_dependency(Libuv)
+   list(APPEND _curl_libs CURL::libuv)
+ endif()
+ if("@USE_MBEDTLS@")
+-  find_dependency(MbedTLS)
+-  list(APPEND _curl_libs CURL::mbedtls)
++  find_dependency(MbedTLS CONFIG)
+ endif()
+ if("@USE_NGHTTP2@")
+-  find_dependency(NGHTTP2)
+-  list(APPEND _curl_libs CURL::nghttp2)
+ endif()
+ if("@USE_NGHTTP3@")
+-  find_dependency(NGHTTP3)
+-  list(APPEND _curl_libs CURL::nghttp3)
++  find_dependency(nghttp3 CONFIG)
+ endif()
+ if("@USE_NGTCP2@")
+-  find_dependency(NGTCP2)
+-  list(APPEND _curl_libs CURL::ngtcp2)
++  find_dependency(ngtcp2 CONFIG)
+ endif()
+ if("@USE_GNUTLS@")
+-  find_dependency(GnuTLS)
+-  list(APPEND _curl_libs CURL::gnutls)
+-  find_dependency(Nettle)
+-  list(APPEND _curl_libs CURL::nettle)
+ endif()
+ if("@USE_QUICHE@")
+   find_dependency(Quiche)
+@@ -128,12 +104,10 @@ if("@USE_RUSTLS@")
+   list(APPEND _curl_libs CURL::rustls)
+ endif()
+ if("@USE_WOLFSSL@")
+-  find_dependency(WolfSSL)
+-  list(APPEND _curl_libs CURL::wolfssl)
++  find_dependency(wolfssl CONFIG)
+ endif()
+ if("@HAVE_ZSTD@")
+-  find_dependency(Zstd)
+-  list(APPEND _curl_libs CURL::zstd)
++  find_dependency(zstd CONFIG)
+ endif()
+ 
+ set(CMAKE_MODULE_PATH ${_curl_cmake_module_path_save})
+@@ -177,7 +151,11 @@ endif()
+ # For compatibility with CMake's FindCURL.cmake
+ set(CURL_VERSION_STRING "@CURLVERSION@")
+ set(CURL_LIBRARIES @PROJECT_NAME@::@LIB_NAME@)
+-set(CURL_LIBRARIES_PRIVATE "@LIBCURL_PC_LIBS_PRIVATE_LIST@")
++set(CURL_LIBRARIES_PRIVATE "")
++# @CMAKE_BUILD_TYPE@ usage requirements
++set(_z_vcpkg_CURL_CONFIG_LIBS             "@CURL_CONFIG_LIBS@")
++set(_z_vcpkg_LIBCURL_PC_LDFLAGS_PRIVATE   "@LIBCURL_PC_LDFLAGS_PRIVATE@")
++set(_z_vcpkg_LIBCURL_PC_LIBS_PRIVATE_LIST "@LIBCURL_PC_LIBS_PRIVATE_LIST@")
+ set_and_check(CURL_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+ 
+ set(CURL_SUPPORTED_PROTOCOLS "@CURL_SUPPORTED_PROTOCOLS_LIST@")
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4772a6219a..7befd05c34 100644
+index 43ec013508..0111a00bde 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -401,7 +401,7 @@ set(LIBCURL_PC_REQUIRES_PRIVATE "")
- if(ENABLE_ARES)
-   set(USE_ARES 1)
-   find_package(Cares REQUIRED)
--  list(APPEND CURL_LIBS ${CARES_LIBRARIES})
-+  list(APPEND CURL_LIBS ${CARES_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${CARES_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${CARES_PC_REQUIRES})
-   include_directories(SYSTEM ${CARES_INCLUDE_DIRS})
-@@ -855,7 +855,7 @@ if(CURL_USE_MBEDTLS)
+@@ -755,6 +755,12 @@ if(CURL_USE_OPENSSL)
+   # get our dependencies transitively.
+   list(APPEND CURL_LIBS OpenSSL::SSL OpenSSL::Crypto)
+   set_target_properties(OpenSSL::SSL PROPERTIES INTERFACE_LIBCURL_PC_MODULES "openssl")
++  find_package(PkgConfig QUIET)
++  pkg_check_modules(_openssl openssl REQUIRED)
++  set_target_properties(OpenSSL::SSL PROPERTIES INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_openssl_LINK_LIBRARIES}")
++  set_target_properties(OpenSSL::Crypto PROPERTIES INTERFACE_LIBCURL_PC_MODULES "libcrypto")
++  pkg_check_modules(_crypto libcrypto REQUIRED)
++  set_target_properties(OpenSSL::Crypto PROPERTIES INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_crypto_LINK_LIBRARIES}")
+ 
+   if(CURL_DEFAULT_SSL_BACKEND AND CURL_DEFAULT_SSL_BACKEND STREQUAL "openssl")
+     set(_valid_default_ssl_backend TRUE)
+@@ -895,6 +901,9 @@ if(ZLIB_FOUND)
+   # get our dependencies transitively.
+   list(APPEND CURL_LIBS ZLIB::ZLIB)
+   set_target_properties(ZLIB::ZLIB PROPERTIES INTERFACE_LIBCURL_PC_MODULES "zlib")
++  find_package(PkgConfig QUIET)
++  pkg_check_modules(_zlib zlib)
++  set_target_properties(ZLIB::ZLIB PROPERTIES INTERFACE_LIBCURL_PC_LINK_LIBRARIES "${_zlib_LINK_LIBRARIES}")
+ endif()
+ 
+ set(HAVE_BROTLI OFF)
+@@ -1802,9 +1811,7 @@ endif()
+ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+   foreach(_lib IN ITEMS OpenSSL::Crypto ZLIB::ZLIB)
+     if(TARGET "${_lib}")
+-      add_library(CURL::${_lib} INTERFACE IMPORTED)
+-      get_target_property(_libname "${_lib}" LOCATION)
+-      set_target_properties(${_lib} PROPERTIES INTERFACE_LINK_LIBRARIES "${_libname}")
++      list(REMOVE_ITEM CURL_LIBS ${_lib})
+       list(APPEND CURL_LIBS ${_lib})
+     endif()
+   endforeach()
+@@ -1815,6 +1822,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
    endif()
-   set(_ssl_enabled ON)
-   set(USE_MBEDTLS ON)
--  list(APPEND CURL_LIBS ${MBEDTLS_LIBRARIES})
-+  list(APPEND CURL_LIBS ${MBEDTLS_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${MBEDTLS_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${MBEDTLS_PC_REQUIRES})
-   include_directories(SYSTEM ${MBEDTLS_INCLUDE_DIRS})
-@@ -886,7 +886,7 @@ if(CURL_USE_WOLFSSL)
-   find_package(WolfSSL REQUIRED)
-   set(_ssl_enabled ON)
-   set(USE_WOLFSSL ON)
--  list(APPEND CURL_LIBS ${WOLFSSL_LIBRARIES})
-+  list(APPEND CURL_LIBS ${WOLFSSL_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${WOLFSSL_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${WOLFSSL_PC_REQUIRES})
-   include_directories(SYSTEM ${WOLFSSL_INCLUDE_DIRS})
-@@ -903,7 +903,7 @@ endif()
+ endif()
  
- if(CURL_USE_GNUTLS)
-   find_package(GnuTLS REQUIRED)
--  list(APPEND CURL_LIBS ${GNUTLS_LIBRARIES})
-+  list(APPEND CURL_LIBS ${GNUTLS_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${GNUTLS_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${GNUTLS_PC_REQUIRES})
-   include_directories(SYSTEM ${GNUTLS_INCLUDE_DIRS})
-@@ -915,7 +915,7 @@ if(CURL_USE_GNUTLS)
-   find_package(Nettle REQUIRED)
-   set(_ssl_enabled ON)
-   set(USE_GNUTLS ON)
--  list(APPEND CURL_LIBS ${NETTLE_LIBRARIES})
-+  list(APPEND CURL_LIBS ${NETTLE_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${NETTLE_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${NETTLE_PC_REQUIRES})
-   include_directories(SYSTEM ${NETTLE_INCLUDE_DIRS})
-@@ -995,7 +995,7 @@ set(HAVE_BROTLI OFF)
- curl_dependency_option(CURL_BROTLI Brotli "brotli")
- if(BROTLI_FOUND)
-   set(HAVE_BROTLI ON)
--  list(APPEND CURL_LIBS ${BROTLI_LIBRARIES})
-+  list(APPEND CURL_LIBS ${BROTLI_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${BROTLI_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${BROTLI_PC_REQUIRES})
-   include_directories(SYSTEM ${BROTLI_INCLUDE_DIRS})
-@@ -1010,7 +1010,7 @@ curl_dependency_option(CURL_ZSTD Zstd "zstd")
- if(ZSTD_FOUND)
-   if(ZSTD_VERSION VERSION_GREATER_EQUAL 1.0.0)
-     set(HAVE_ZSTD ON)
--    list(APPEND CURL_LIBS ${ZSTD_LIBRARIES})
-+    list(APPEND CURL_LIBS ${ZSTD_LINK_LIBRARIES})
-     list(APPEND CURL_LIBDIRS ${ZSTD_LIBRARY_DIRS})
-     list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${ZSTD_PC_REQUIRES})
-     include_directories(SYSTEM ${ZSTD_INCLUDE_DIRS})
-@@ -1141,7 +1141,7 @@ option(USE_NGHTTP2 "Use nghttp2 library" ON)
- if(USE_NGHTTP2)
-   find_package(NGHTTP2)
-   if(NGHTTP2_FOUND)
--    list(APPEND CURL_LIBS ${NGHTTP2_LIBRARIES})
-+    list(APPEND CURL_LIBS ${NGHTTP2_LINK_LIBRARIES})
-     list(APPEND CURL_LIBDIRS ${NGHTTP2_LIBRARY_DIRS})
-     list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${NGHTTP2_PC_REQUIRES})
-     include_directories(SYSTEM ${NGHTTP2_INCLUDE_DIRS})
-@@ -1184,7 +1184,7 @@ if(USE_NGTCP2)
-   else()
-     message(FATAL_ERROR "ngtcp2 requires a supported TLS-backend")
++# avoid downstream pkg-config requirement for CURL::dependency interface targets
++# changing CURL_LIBS before add_subdirectory(src)
++set(CURL_LIBS_RAW "${CURL_LIBS}")
++set(CURL_LIBS "")
++find_library(_libdl_absolute dl NO_CACHE)
++find_library(_libm_absolute m NO_CACHE)
++foreach(_lib IN LISTS CURL_LIBS_RAW)
++  if(NOT _lib MATCHES "CURL::")
++    list(APPEND CURL_LIBS ${_lib})
++    continue()
++  endif()
++  get_target_property(_modules "${_lib}" INTERFACE_LIBCURL_PC_MODULES)
++  if(NOT _modules)
++    list(APPEND CURL_LIBS ${_lib})
++    continue()
++  endif()
++  get_target_property(_pc_link_libs "${_lib}" INTERFACE_LIBCURL_PC_LINK_LIBRARIES)
++  get_target_property(_link_libs "${_lib}" INTERFACE_LINK_LIBRARIES)
++  if(_pc_link_libs AND NOT TARGET "${_link_libs}")
++    set(_link_libs "${_pc_link_libs}")
++  endif()
++  if(NOT _link_libs)
++    list(APPEND CURL_LIBS ${_lib})
++    continue()
++  endif()
++  list(APPEND CURL_LIBS $<BUILD_INTERFACE:${_lib}>)
++  foreach(_item IN LISTS _link_libs)
++    if(_item STREQUAL "${_libdl_absolute}")
++      set(_item dl)
++      list(REMOVE_ITEM CURL_LIBS $<INSTALL_INTERFACE:${_item}>)
++    elseif(_item STREQUAL "${_libm_absolute}")
++      set(_item m)
++      list(REMOVE_ITEM CURL_LIBS $<INSTALL_INTERFACE:${_item}>)
++    endif()
++    list(APPEND CURL_LIBS $<INSTALL_INTERFACE:${_item}>)
++  endforeach()
++endforeach()
++
+ if(CMAKE_C_COMPILER_ID STREQUAL "MSVC")  # MSVC but exclude clang-cl
+   set_property(DIRECTORY APPEND PROPERTY COMPILE_OPTIONS "-MP")  # Parallel compilation
+ endif()
+@@ -2107,7 +2152,7 @@ if(NOT CURL_DISABLE_INSTALL)
+   set(_explicit_libdirs "")
+   set(LIBCURL_PC_REQUIRES_PRIVATE "")
+   set(LIBCURL_PC_LIBS_PRIVATE_LIST "")
+-  foreach(_lib IN LISTS CURL_LIBS _custom_libs _implicit_libs)
++  foreach(_lib IN LISTS CURL_LIBS_RAW _custom_libs _implicit_libs)
+     if(TARGET "${_lib}")
+       set(_explicit_libs "")
+       get_target_property(_imported "${_lib}" IMPORTED)
+@@ -2141,8 +2186,15 @@ if(NOT CURL_DISABLE_INSTALL)
+       get_target_property(_modules "${_lib}" INTERFACE_LIBCURL_PC_MODULES)
+       if(_modules)
+         list(APPEND LIBCURL_PC_REQUIRES_PRIVATE "${_modules}")
++        get_target_property(_link_libs "${_lib}" INTERFACE_LIBCURL_PC_LINK_LIBRARIES)
++        if(_link_libs)
++          set(_explicit_libs "${_link_libs}")
++        endif()
+       endif()
+ 
++      set(LIBCURL_PC_LIBS_PRIVATE_NO_MODULES "${LIBCURL_PC_LIBS_PRIVATE}")
++      set(LIBCURL_PC_LIBS_PRIVATE "")
++      set(_original_lib "${_lib}")
+       foreach(_lib IN LISTS _explicit_libs)
+         if(_lib MATCHES "/")
+           # This gets a bit more complex, because we want to specify the
+@@ -2163,22 +2215,41 @@ if(NOT CURL_DISABLE_INSTALL)
+               list(APPEND _ldflags "-L${_libdir}")
+             endif()
+             string(REGEX REPLACE "^lib" "" _libname "${_libname}")
++            list(REMOVE_ITEM CURL_CONFIG_LIBS "-l${_libname}")
+             list(APPEND LIBCURL_PC_LIBS_PRIVATE "-l${_libname}")
++            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+             list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+           else()
+             list(APPEND LIBCURL_PC_LIBS_PRIVATE "${_lib}")
++            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+             list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+           endif()
++        elseif(_lib MATCHES "^-")  # '-framework <name>'
++          list(APPEND _ldflags "${_lib}")
++          list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
++          list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+         else()
++          list(REMOVE_ITEM CURL_CONFIG_LIBS "-l${_lib}")
+           list(APPEND LIBCURL_PC_LIBS_PRIVATE "-l${_lib}")
++          list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+           list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+         endif()
+       endforeach()
++      list(APPEND CURL_CONFIG_LIBS ${LIBCURL_PC_LIBS_PRIVATE})
++      if(NOT _modules)
++        list(APPEND LIBCURL_PC_LIBS_PRIVATE_NO_MODULES ${LIBCURL_PC_LIBS_PRIVATE})
++      endif()
++      set(LIBCURL_PC_LIBS_PRIVATE "${LIBCURL_PC_LIBS_PRIVATE_NO_MODULES}")
+     elseif(_lib MATCHES "^-")  # '-framework <name>'
+       list(APPEND _ldflags "${_lib}")
++      list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+       list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+     else()
++      list(REMOVE_ITEM CURL_CONFIG_LIBS "-l${_lib}")
++      list(APPEND CURL_CONFIG_LIBS "-l${_lib}")
++      list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE "-l${_lib}")
+       list(APPEND LIBCURL_PC_LIBS_PRIVATE "-l${_lib}")
++      list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+       list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
+     endif()
+   endforeach()
+@@ -2202,6 +2273,7 @@ if(NOT CURL_DISABLE_INSTALL)
+   if(LIBCURL_PC_LIBS_PRIVATE)
+     string(REPLACE ";" " " LIBCURL_PC_LIBS_PRIVATE "${LIBCURL_PC_LIBS_PRIVATE}")
    endif()
--  list(APPEND CURL_LIBS ${NGTCP2_LIBRARIES})
-+  list(APPEND CURL_LIBS ${NGTCP2_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${NGTCP2_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${NGTCP2_PC_REQUIRES})
-   include_directories(SYSTEM ${NGTCP2_INCLUDE_DIRS})
-@@ -1195,7 +1195,7 @@ if(USE_NGTCP2)
++  string(REPLACE ";" " " CURL_CONFIG_LIBS "${CURL_CONFIG_LIBS}")
+   if(_ldflags)
+     list(REMOVE_DUPLICATES _ldflags)
+     string(REPLACE ";" " " _ldflags "${_ldflags}")
+diff --git a/curl-config.in b/curl-config.in
+index a1c8185875..bb6e053d23 100644
+--- a/curl-config.in
++++ b/curl-config.in
+@@ -155,7 +155,7 @@ while test "$#" -gt 0; do
+       curllibdir=''
+     fi
+     if test '@ENABLE_SHARED@' = 'no'; then
+-      echo "${curllibdir}-lcurl @LIBCURL_PC_LIBS_PRIVATE@"
++      echo "${curllibdir}-lcurl @LIBCURL_PC_LDFLAGS_PRIVATE@ @CURL_CONFIG_LIBS@"
+     else
+       echo "${curllibdir}-lcurl"
+     fi
+@@ -167,7 +167,7 @@ while test "$#" -gt 0; do
  
-   find_package(NGHTTP3 REQUIRED)
-   set(USE_NGHTTP3 ON)
--  list(APPEND CURL_LIBS ${NGHTTP3_LIBRARIES})
-+  list(APPEND CURL_LIBS ${NGHTTP3_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${NGHTTP3_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${NGHTTP3_PC_REQUIRES})
-   include_directories(SYSTEM ${NGHTTP3_INCLUDE_DIRS})
-@@ -1279,7 +1279,7 @@ if(NOT CURL_DISABLE_LDAP)
-     find_package(LDAP)
-     if(LDAP_FOUND)
-       set(HAVE_LBER_H 1)
--      set(CURL_LIBS ${LDAP_LIBRARIES} ${CURL_LIBS})
-+      list(PREPEND CURL_LIBS ${LDAP_LINK_LIBRARIES})
-       list(APPEND CURL_LIBDIRS ${LDAP_LIBRARY_DIRS})
-       if(LDAP_PC_REQUIRES)
-         set(LIBCURL_PC_REQUIRES_PRIVATE ${LDAP_PC_REQUIRES} ${LIBCURL_PC_REQUIRES_PRIVATE})
-@@ -1356,7 +1356,7 @@ set(HAVE_LIBIDN2 OFF)
- if(USE_LIBIDN2 AND NOT USE_APPLE_IDN AND NOT USE_WIN32_IDN)
-   find_package(Libidn2)
-   if(LIBIDN2_FOUND)
--    set(CURL_LIBS ${LIBIDN2_LIBRARIES} ${CURL_LIBS})
-+    list(PREPEND CURL_LIBS ${LIBIDN2_LINK_LIBRARIES})
-     list(APPEND CURL_LIBDIRS ${LIBIDN2_LIBRARY_DIRS})
-     set(LIBCURL_PC_REQUIRES_PRIVATE ${LIBIDN2_PC_REQUIRES} ${LIBCURL_PC_REQUIRES_PRIVATE})
-     include_directories(SYSTEM ${LIBIDN2_INCLUDE_DIRS})
-@@ -1376,7 +1376,7 @@ set(USE_LIBPSL OFF)
- 
- if(CURL_USE_LIBPSL)
-   find_package(Libpsl REQUIRED)
--  list(APPEND CURL_LIBS ${LIBPSL_LIBRARIES})
-+  list(APPEND CURL_LIBS ${LIBPSL_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${LIBPSL_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${LIBPSL_PC_REQUIRES})
-   include_directories(SYSTEM ${LIBPSL_INCLUDE_DIRS})
-@@ -1395,7 +1395,7 @@ set(USE_LIBSSH2 OFF)
- if(CURL_USE_LIBSSH2)
-   find_package(Libssh2)
-   if(LIBSSH2_FOUND)
--    set(CURL_LIBS ${LIBSSH2_LIBRARIES} ${CURL_LIBS})  # keep it before TLS-crypto, compression
-+    list(PREPEND CURL_LIBS ${LIBSSH2_LINK_LIBRARIES}) # keep it before TLS-crypto, compression
-     list(APPEND CURL_LIBDIRS ${LIBSSH2_LIBRARY_DIRS})
-     set(LIBCURL_PC_REQUIRES_PRIVATE ${LIBSSH2_PC_REQUIRES} ${LIBCURL_PC_REQUIRES_PRIVATE})
-     include_directories(SYSTEM ${LIBSSH2_INCLUDE_DIRS})
-@@ -1427,7 +1427,7 @@ option(CURL_USE_GSASL "Use libgsasl" OFF)
- mark_as_advanced(CURL_USE_GSASL)
- if(CURL_USE_GSASL)
-   find_package(Libgsasl REQUIRED)
--  list(APPEND CURL_LIBS ${LIBGSASL_LIBRARIES})
-+  list(APPEND CURL_LIBS ${LIBGSASL_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${LIBGSASL_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${LIBGSASL_PC_REQUIRES})
-   include_directories(SYSTEM ${LIBGSASL_INCLUDE_DIRS})
-@@ -1446,7 +1446,7 @@ if(CURL_USE_GSSAPI)
- 
-   set(HAVE_GSSAPI ${GSS_FOUND})
-   if(GSS_FOUND)
--    list(APPEND CURL_LIBS ${GSS_LIBRARIES})
-+    list(APPEND CURL_LIBS ${_gss_LINK_LIBRARIES})
-     list(APPEND CURL_LIBDIRS ${GSS_LIBRARY_DIRS})
-     list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${GSS_PC_REQUIRES})
-     include_directories(SYSTEM ${GSS_INCLUDE_DIRS})
-@@ -1487,7 +1487,7 @@ endif()
- option(USE_LIBRTMP "Enable librtmp from rtmpdump" OFF)
- if(USE_LIBRTMP)
-   find_package(Librtmp REQUIRED)
--  list(APPEND CURL_LIBS ${LIBRTMP_LIBRARIES})
-+  list(APPEND CURL_LIBS ${LIBRTMP_LINK_LIBRARIES})
-   list(APPEND CURL_LIBDIRS ${LIBRTMP_LIBRARY_DIRS})
-   list(APPEND LIBCURL_PC_REQUIRES_PRIVATE ${LIBRTMP_PC_REQUIRES})
-   include_directories(SYSTEM ${LIBRTMP_INCLUDE_DIRS})
+   --static-libs)
+     if test '@ENABLE_STATIC@' != 'no'; then
+-      echo "@libdir@/libcurl.@libext@ @LIBCURL_PC_LDFLAGS_PRIVATE@ @LIBCURL_PC_LIBS_PRIVATE@"
++      echo "@libdir@/libcurl.@libext@ @LIBCURL_PC_LDFLAGS_PRIVATE@ @CURL_CONFIG_LIBS@"
+     else
+       echo 'curl was built with static libraries disabled' >&2
+       exit 1
+diff --git a/libcurl.pc.in b/libcurl.pc.in
+index c0ba5244a8..17b7db9220 100644
+--- a/libcurl.pc.in
++++ b/libcurl.pc.in
+@@ -33,9 +33,9 @@ Name: libcurl
+ URL: https://curl.se/
+ Description: Library to transfer files with HTTP, FTP, etc.
+ Version: @CURLVERSION@
+-Requires: @LIBCURL_PC_REQUIRES@
++Requires:
+ Requires.private: @LIBCURL_PC_REQUIRES_PRIVATE@
+-Libs: -L${libdir} -lcurl @LIBCURL_PC_LIBS@
++Libs: -L${libdir} -lcurl
+ Libs.private: @LIBCURL_PC_LDFLAGS_PRIVATE@ @LIBCURL_PC_LIBS_PRIVATE@
+-Cflags: -I${includedir} @LIBCURL_PC_CFLAGS@
++Cflags: -I${includedir}
+ Cflags.private: @LIBCURL_PC_CFLAGS_PRIVATE@

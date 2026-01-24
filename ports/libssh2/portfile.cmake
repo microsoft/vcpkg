@@ -5,6 +5,7 @@ vcpkg_from_github(
     SHA512 616efcd7f5c1fb1046104ebce70549e4756e2a55150efa2df5bb7123051d3bf336023cedcbfe932cd7c690a0b4d1f1a93c760ea39f1dba50c2b06d0945dca958
     HEAD_REF master
     PATCHES
+        cmake-config.diff
         pkgconfig.diff
 )
 
@@ -24,11 +25,11 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_DEBUG_LOGGING=OFF

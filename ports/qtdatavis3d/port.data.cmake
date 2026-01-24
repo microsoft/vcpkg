@@ -1,3 +1,3 @@
-set(qtdatavis3d_HASH "2d8042db3589d571d4851820791bb6dfd4f283baffd33f99ed322a471fdc319d64eeb3dac1e36bb2fdeb1957116edd23bbf6e3c51a8e041a00a9a1d13ca8a645")
-set(qtdatavis3d_URL "https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtdatavis3d-everywhere-src-6.9.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.9/6.9.2/submodules/qtdatavis3d-everywhere-src-6.9.2.tar.xz")
-set(qtdatavis3d_FILENAME "qtdatavis3d-everywhere-src-6.9.2.tar.xz")
+set(qtdatavis3d_HASH "b457bc768779e2dc7f3c4bd656c6254bf9a05869d20d2a26254678f9892de9c2c07cc2b660b9924684f2b38c8f21a3e30e89bcc86c660875fcbc46cdf3ba1b56")
+set(qtdatavis3d_URL "https://download.qt.io/archive/qt/6.10/6.10.0/submodules/qtdatavis3d-everywhere-src-6.10.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.0/submodules/qtdatavis3d-everywhere-src-6.10.0.tar.xz")
+set(qtdatavis3d_FILENAME "qtdatavis3d-everywhere-src-6.10.0.tar.xz")

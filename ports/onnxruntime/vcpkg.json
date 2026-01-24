@@ -1,0 +1,110 @@
+{
+  "name": "onnxruntime",
+  "version-semver": "1.23.2",
+  "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
+  "homepage": "https://github.com/microsoft/onnxruntime",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "abseil",
+      "version>=": "20250512.1"
+    },
+    {
+      "name": "boost-config",
+      "version>=": "1.82.0"
+    },
+    {
+      "name": "boost-mp11",
+      "version>=": "1.82.0"
+    },
+    "cpuinfo",
+    "cxxopts",
+    "date",
+    "dlpack",
+    "eigen3",
+    {
+      "name": "flatbuffers",
+      "host": true,
+      "version>=": "23.5.26"
+    },
+    {
+      "name": "flatbuffers",
+      "version>=": "23.5.26"
+    },
+    "ms-gsl",
+    "nlohmann-json",
+    {
+      "name": "onnx",
+      "version>=": "1.19.0"
+    },
+    "optional-lite",
+    {
+      "name": "protobuf",
+      "version>=": "3.21.12"
+    },
+    {
+      "name": "protobuf",
+      "host": true,
+      "version>=": "3.21.12"
+    },
+    "re2",
+    "safeint",
+    "utf8-range",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "wil",
+      "platform": "windows"
+    }
+  ],
+  "features": {
+    "cuda": {
+      "description": "Build with CUDA support",
+      "supports": "(x64 & windows & !static) | (x64 & linux)",
+      "dependencies": [
+        "cuda",
+        "cudnn",
+        "cudnn-frontend",
+        "nvidia-cutlass"
+      ]
+    },
+    "framework": {
+      "description": "Build a macOS/iOS framework, Objective-C library",
+      "supports": "osx | ios"
+    },
+    "openvino": {
+      "description": "Build with OpenVINO support",
+      "supports": "!(osx | ios | android | emscripten)",
+      "dependencies": [
+        {
+          "name": "openvino",
+          "default-features": false,
+          "features": [
+            "cpu",
+            "gpu",
+            "onnx"
+          ]
+        }
+      ]
+    },
+    "tensorrt": {
+      "description": "Build with TensorRT support",
+      "dependencies": [
+        {
+          "name": "onnxruntime",
+          "default-features": false,
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    }
+  }
+}

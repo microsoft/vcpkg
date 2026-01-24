@@ -8,6 +8,8 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "${VERSION}"
+    PATCHES
+        fix-new-delete-mismatch.patch
 )
 
 file(INSTALL "${SOURCE_PATH}/asio/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}/asio")
@@ -30,5 +32,7 @@ file(
     DESTINATION
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-asiosdk-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-asiosdk")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

@@ -1,15 +1,15 @@
 diff --git a/source/LibMultiSense/MultiSenseConfig.cmake.in b/source/LibMultiSense/MultiSenseConfig.cmake.in
-index cf98076..dee7a62 100644
+index dbc311d..02a3948 100644
 --- a/source/LibMultiSense/MultiSenseConfig.cmake.in
 +++ b/source/LibMultiSense/MultiSenseConfig.cmake.in
-@@ -2,6 +2,10 @@
- 
+@@ -3,8 +3,9 @@
  include(CMakeFindDependencyMacro)
  find_dependency(MultiSenseWire)
-+find_dependency(Threads)
-+if (@BUILD_JSON_SERIALIZATION@)
+ if (@BUILD_JSON_SERIALIZATION@)
+-    find_dependency(nlohmann_json 3.9 REQUIRED)
 +    find_dependency(nlohmann_json 3.9)
-+endif ()
+ endif ()
++find_dependency(Threads)
  
  include("${CMAKE_CURRENT_LIST_DIR}/MultiSenseTargets.cmake")
  

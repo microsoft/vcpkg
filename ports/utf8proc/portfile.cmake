@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JuliaLang/utf8proc
     REF v${VERSION}
-    SHA512 01796ffd1b253c4943af8c084f60b3fed3ef469a25f017fdb5cdb430fff901741dd06186c938c4559e9f03bbc376d3e90fcf36eba93f9c6febff3be9cc38fdae
+    SHA512 148701fce506d076f03497b6d085f1993eff743debad4a2f6d3cbac91e19a5c22d9938245bdb460c1b22b51842c7416c42124db7416c684ee63d622490baac0e
 )
 
 vcpkg_cmake_configure(

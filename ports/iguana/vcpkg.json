@@ -1,6 +1,6 @@
 {
   "name": "iguana",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Header-only C++ serialization library used by Cinatra.",
   "homepage": "https://github.com/qicosmos/iguana",
   "license": "Apache-2.0",

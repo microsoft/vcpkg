@@ -1,3 +1,3 @@
-set(qtshadertools_HASH "3f35146868d7908ca5144858275250f27ba56910103ea1f86797d3a12e6dd71870dea34d1959ba6d1b3a523a09814abc5a113d4f495dd06f072858602aaae29a")
-set(qtshadertools_URL "https://download.qt.io/archive/qt/6.9/6.9.2/submodules/qtshadertools-everywhere-src-6.9.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.9/6.9.2/submodules/qtshadertools-everywhere-src-6.9.2.tar.xz")
-set(qtshadertools_FILENAME "qtshadertools-everywhere-src-6.9.2.tar.xz")
+set(qtshadertools_HASH "3c1490e488f5f5608fecb2d4f0ba1255356b2d4d2aa1d5324469cac2bdea7e4f69794caeca170e663c75f0ae5c774abdda2857801cd5e561696a887efbdc84ac")
+set(qtshadertools_URL "https://download.qt.io/archive/qt/6.10/6.10.0/submodules/qtshadertools-everywhere-src-6.10.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.0/submodules/qtshadertools-everywhere-src-6.10.0.tar.xz")
+set(qtshadertools_FILENAME "qtshadertools-everywhere-src-6.10.0.tar.xz")

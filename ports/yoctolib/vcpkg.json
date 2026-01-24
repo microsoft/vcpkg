@@ -1,0 +1,22 @@
+{
+  "name": "yoctolib",
+  "version": "2.1.6320",
+  "description": "Official Yoctopuce Library for C++",
+  "homepage": "https://github.com/yoctopuce/yoctolib_cpp",
+  "license": null,
+  "supports": "!(uwp | android)",
+  "dependencies": [
+    {
+      "name": "libusb",
+      "platform": "!(windows | osx)"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

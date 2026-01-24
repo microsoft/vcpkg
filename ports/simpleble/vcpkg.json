@@ -1,10 +1,8 @@
 {
   "name": "simpleble",
-  "version": "0.8.1",
-  "port-version": 1,
+  "version": "0.10.4",
   "description": "The ultimate fully-fledged cross-platform library and bindings for Bluetooth Low Energy (BLE).",
   "homepage": "https://github.com/OpenBluetoothToolbox/SimpleBLE",
-  "license": "GPL-3.0",
   "supports": "!android & !uwp",
   "dependencies": [
     {

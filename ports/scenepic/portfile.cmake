@@ -7,8 +7,7 @@ vcpkg_from_github(
     SHA512 79c20697051ef7061a51cc73f232e5ba83f8bc5a62ee3b9a4d55182112b201c805c25461fcd6699cc6db70c4439b116d1d27e66cd4e431471438ac7968836eed
     HEAD_REF main
     PATCHES
-        "fix_dependencies.patch"
-        "fix-CMakeInstall.patch"
+        0001-fix-dependencies.patch
 )
 
 # Run npm install and npm run build on the cloned project    

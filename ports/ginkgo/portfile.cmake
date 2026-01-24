@@ -2,20 +2,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_download_distfile(
-    MSVC_CUDA_PATCH
-    URLS https://github.com/ginkgo-project/ginkgo/pull/1904.diff?full_index=1
-    FILENAME msvc_cuda.patch
-    SHA512 c8ed45f6775bdd42c4897720bf14488f9b01c5ea441153d15d380b63f1ae426c572eaff7a61349d1c2808314b6d68aa54e293b29a9414bbc2136e675f77b6705
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ginkgo-project/ginkgo
     REF "v${VERSION}"
-    SHA512 b48f47c593172cf3a28ca926cf8e8dd2d080a7e0c4d4344fe9c1b60e036431d5e5ed93e2f67f56fb979eb6f03dad3f273594ca86dd0f6ddadd3b2e0bc3abde53
+    SHA512 f151c99738847ae2e3fb42131c3d3a8c67d39fc985e1d294060134499d96bc802c10cb6c1388bca7acab16e546c2549221f2854e02277f913726a543139b143b
     HEAD_REF main
-    PATCHES ${MSVC_CUDA_PATCH}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

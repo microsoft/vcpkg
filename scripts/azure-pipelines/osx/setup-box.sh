@@ -10,7 +10,7 @@ sudo xcode-select -s /Applications/Xcode.app
 eval "$(/opt/homebrew/bin/brew shellenv)"
 brew install autoconf-archive autoconf automake azcopy azure-cli bison cmake gettext gfortran gnu-sed gperf gtk-doc libtool meson mono nasm ninja pkg-config powershell python-setuptools texinfo yasm
 mkdir ~/Data
-curl -s -o ~/Downloads/azure-agent.tar.gz https://download.agent.dev.azure.com/agent/4.264.2/vsts-agent-osx-arm64-4.264.2.tar.gz
+curl -s -o ~/Downloads/azure-agent.tar.gz https://download.agent.dev.azure.com/agent/4.266.2/vsts-agent-osx-arm64-4.266.2.tar.gz
 mkdir ~/myagent
 tar xf ~/Downloads/azure-agent.tar.gz -C ~/myagent
 rm ~/Downloads/azure-agent.tar.gz

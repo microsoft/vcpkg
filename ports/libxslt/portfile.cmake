@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
     REF "v${VERSION}"
-    SHA512 51d9e9586f78c5aa69ac67fac64b865625fefb16bf06f1f06dede0a57b3e382e78dea69145c7c0c59f06735b738bed209751e691dd9045c3cc33df096963f89d
+    SHA512 8b824fc1ecbcfbf6e3eb29e6fef30b7e20a19181869dd3f3b6cbbd6d796789b167d8ed76a6f727236f34ffaab0f8b2a531765fee63feb9ed61e689bc9e21c9dd
     HEAD_REF master
     PATCHES
         cxx-for-libxml2-icu.diff

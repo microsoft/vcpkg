@@ -1,15 +1,9 @@
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND PATCHES fix_libiconv.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kio
     REF "v${VERSION}"
-    SHA512 6ffb44963b266f806150bc3ff9a1c3cf13f2fe7b4bda57e27d9bd9b931bfd757d50ee29f4143f6d282a25f675c8024aff16dc2f91e00ec0c7663eb8effdfee30
+    SHA512 085eaf467cb70630b1a2fe5024bd45aebe47f15c397388ebd562d0c0fbfd6700c8cc50d2ec136988d9575173aa01a5a73a1550c1b7cbb93d6909941909a31db7
     HEAD_REF master
-    PATCHES
-        ${PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -38,7 +32,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME KF5KIO CONFIG_PATH lib/cmake/KF5KIO)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/KF5KIO)
 vcpkg_copy_pdbs()
 
 set(LIBEXEC_TOOLS kio_http_cache_cleaner kiod5 kioexec kioslave5)

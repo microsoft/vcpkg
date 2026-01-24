@@ -1,10 +1,9 @@
 {
   "name": "libmediainfo",
-  "version": "25.9",
+  "version": "25.10",
   "description": "Get most relevant technical and tag data from video and audio files",
   "homepage": "https://github.com/MediaArea/MediaInfoLib",
   "dependencies": [
-    "curl",
     "libzen",
     "tinyxml2",
     {
@@ -16,5 +15,16 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "curl": {
+      "description": "Use curl for network access",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        }
+      ]
+    }
+  }
 }

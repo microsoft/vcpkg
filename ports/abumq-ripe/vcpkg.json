@@ -1,6 +1,7 @@
 {
   "name": "abumq-ripe",
   "version": "4.2.2",
+  "port-version": 1,
   "description": "Lightweight cryptography library wrapper",
   "homepage": "https://github.com/abumq/ripe",
   "license": "Apache-2.0",
