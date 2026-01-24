@@ -7,7 +7,13 @@
   "dependencies": [
     "asio",
     "recycle",
-    "vcpkg-cmake",
-    "vcpkg-cmake-config"
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
