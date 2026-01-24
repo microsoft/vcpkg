@@ -15,11 +15,14 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DCMAKE_MACOSX_BUNDLE=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=1
         -DCMAKE_DISABLE_FIND_PACKAGE_KF5Kirigami2=1
         -DCMAKE_DISABLE_FIND_PACKAGE_KF5Syndication=1
         -DCMAKE_REQUIRE_FIND_PACKAGE_Qt5Quick=1
         ${options}
+    MAYBE_UNUSED_VARIABLES
+        CMAKE_MACOSX_BUNDLE
 )
 
 vcpkg_cmake_install()
