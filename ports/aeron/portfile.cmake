@@ -10,7 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         patches/add-libuuid-vcpkg-support.patch
-        patches/fix-static-crt-linkage.patch
 )
 
 # Set archive option based on feature
