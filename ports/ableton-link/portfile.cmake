@@ -75,11 +75,10 @@ install_test_executable("hut" "LinkHut")
 install_test_executable("hutsilent" "LinkHutSilent")
 
 # We must not correct the CMake include path before build
-vcpkg_apply_patches(
-    SOURCE_PATH "${SOURCE_PATH}"
-    PATCHES 
-        correct_cmake_include_directory.patch
-)
+file(READ "${SOURCE_PATH}/cmake_include/ConfigureAbletonLink.cmake" CONFIG_CONTENT)
+string(REPLACE "\${PATH_TO_LINK}/include/ableton/Link.hpp" "\${PATH_TO_LINK}/../../include/ableton/Link.hpp" CONFIG_CONTENT "${CONFIG_CONTENT}")
+string(REPLACE "\${PATH_TO_LINK}/include" "\${PATH_TO_LINK}/../../include/ableton" CONFIG_CONTENT "${CONFIG_CONTENT}")
+file(WRITE "${SOURCE_PATH}/cmake_include/ConfigureAbletonLink.cmake" "${CONFIG_CONTENT}")
 
 file(INSTALL "${SOURCE_PATH}/AbletonLinkConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/abletonlink")
 file(INSTALL "${SOURCE_PATH}/cmake_include/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/abletonlink/cmake_include/")
