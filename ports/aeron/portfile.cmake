@@ -28,7 +28,9 @@ set(AERON_CMAKE_OPTIONS
     -DBUILD_AERON_ARCHIVE_API=${BUILD_ARCHIVE}
 )
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+# Only set static CRT if triplet explicitly requests it (VCPKG_CRT_LINKAGE=static)
+# Otherwise, respect the triplet's CRT setting (dynamic/MD or static/MT)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND AERON_CMAKE_OPTIONS
         -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>
         -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
