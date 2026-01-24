@@ -1,0 +1,216 @@
+diff --git a/imgui-SFML.cpp b/imgui-SFML.cpp
+index 6641244..7bd812f 100644
+--- a/imgui-SFML.cpp
++++ b/imgui-SFML.cpp
+@@ -1,4 +1,5 @@
+ #include "imgui-SFML.h"
++#include <cstdint>
+ #include <imgui.h>
+ 
+ #include <SFML/Config.hpp>
+@@ -313,6 +314,7 @@ bool Init(sf::Window& window, const sf::Vector2f& displaySize, bool loadDefaultF
+     io.BackendFlags |= ImGuiBackendFlags_HasGamepad;
+     io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
+     io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
++    io.BackendFlags |= ImGuiBackendFlags_RendererHasTextures;
+     io.BackendPlatformName = "imgui_impl_sfml";
+ 
+     s_currWindowCtx->joystickId = getConnectedJoystickId();
+@@ -338,13 +340,6 @@ bool Init(sf::Window& window, const sf::Vector2f& displaySize, bool loadDefaultF
+     loadMouseCursor(ImGuiMouseCursor_ResizeNWSE, sf::Cursor::Type::SizeTopLeftBottomRight);
+     loadMouseCursor(ImGuiMouseCursor_Hand, sf::Cursor::Type::Hand);
+ 
+-    if (loadDefaultFont)
+-    {
+-        // this will load default font automatically
+-        // No need to call AddDefaultFont
+-        return UpdateFontTexture();
+-    }
+-
+     return true;
+ }
+ 
+@@ -589,6 +584,15 @@ void Shutdown(const sf::Window& window)
+ {
+     const bool needReplacement = (s_currWindowCtx->window->getNativeHandle() == window.getNativeHandle());
+ 
++    for (ImTextureData* tex : ImGui::GetPlatformIO().Textures)
++    {
++        if (tex->RefCount == 1)
++        {
++            tex->SetStatus(ImTextureStatus_WantDestroy);
++            UpdateFontTexture(tex);
++        }
++    }
++
+     // remove window's context
+     auto found = std::find_if(s_windowContexts.begin(),
+                               s_windowContexts.end(),
+@@ -619,37 +623,55 @@ void Shutdown(const sf::Window& window)
+ 
+ void Shutdown()
+ {
++    for (ImTextureData* tex : ImGui::GetPlatformIO().Textures)
++    {
++        if (tex->RefCount == 1)
++        {
++            tex->SetStatus(ImTextureStatus_WantDestroy);
++            UpdateFontTexture(tex);
++        }
++    }
+     s_currWindowCtx = nullptr;
+     ImGui::SetCurrentContext(nullptr);
+ 
+     s_windowContexts.clear();
+ }
+ 
+-bool UpdateFontTexture()
++void UpdateFontTexture(ImTextureData* tex)
+ {
+     assert(s_currWindowCtx);
+ 
+-    ImGuiIO&       io     = ImGui::GetIO();
+-    unsigned char* pixels = nullptr;
+-    int            width  = 0;
+-    int            height = 0;
+-
+-    io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
+-
+-    sf::Texture newTexture;
+-    if (!newTexture.resize(sf::Vector2u(sf::Vector2(width, height))))
++    if (tex->Status == ImTextureStatus_WantCreate)
+     {
+-        return false;
++        auto sfml_texture = std::make_unique<sf::Texture>();
++        [[maybe_unused]] auto res = sfml_texture->resize(sf::Vector2u(sf::Vector2(tex->Width, tex->Height)));
++        sfml_texture->update(reinterpret_cast<std::uint8_t*>(tex->GetPixels()));
++        ImTextureID id = convertGLTextureHandleToImTextureID(sfml_texture->getNativeHandle());
++        tex->SetTexID(id);
++        textureMap[id] = std::move(sfml_texture);
++        tex->SetStatus(ImTextureStatus_OK);
+     }
++    else if (tex->Status == ImTextureStatus_WantUpdates)
++    {
++        auto it = textureMap.find(tex->GetTexID());
++        if (it != textureMap.end()) {
++            for (ImTextureRect& r : tex->Updates)
++            {
++                it->second->update(
++                    reinterpret_cast<std::uint8_t*>(tex->GetPixelsAt(r.x, r.y)),
++                    sf::Vector2u(sf::Vector2(r.w, r.h)),
++                    sf::Vector2u(sf::Vector2(r.x, r.y)));
++                tex->SetStatus(ImTextureStatus_OK);
++            }
+ 
+-    newTexture.update(pixels);
+-
+-    ImTextureID texID = convertGLTextureHandleToImTextureID(newTexture.getNativeHandle());
+-    io.Fonts->SetTexID(texID);
+-
+-    s_currWindowCtx->fontTexture = std::move(newTexture);
+-
+-    return true;
++        }
++    }
++    else
++    {
++        tex->SetTexID(ImTextureID_Invalid);
++        tex->SetStatus(ImTextureStatus_Destroyed);
++        textureMap.erase(tex->GetTexID());
++    }
+ }
+ 
+ std::optional<sf::Texture>& GetFontTexture()
+@@ -776,7 +798,7 @@ void Image(const sf::Texture& texture, const sf::Vector2f& size, const sf::Color
+ {
+     ImTextureID textureID = convertGLTextureHandleToImTextureID(texture.getNativeHandle());
+ 
+-    ImGui::Image(textureID, toImVec2(size), ImVec2(0, 0), ImVec2(1, 1), toImColor(tintColor), toImColor(borderColor));
++    ImGui::ImageWithBg(textureID, toImVec2(size), ImVec2(0, 0), ImVec2(1, 1), toImColor(tintColor), toImColor(borderColor));
+ }
+ 
+ /////////////// Image Overloads for sf::RenderTexture
+@@ -789,7 +811,7 @@ void Image(const sf::RenderTexture& texture, const sf::Vector2f& size, const sf:
+ {
+     ImTextureID textureID = convertGLTextureHandleToImTextureID(texture.getTexture().getNativeHandle());
+ 
+-    ImGui::Image(textureID,
++    ImGui::ImageWithBg(textureID,
+                  toImVec2(size),
+                  ImVec2(0, 1),
+                  ImVec2(1, 0), // flipped vertically,
+@@ -810,7 +832,7 @@ void Image(const sf::Sprite& sprite, const sf::Color& tintColor, const sf::Color
+ void Image(const sf::Sprite& sprite, const sf::Vector2f& size, const sf::Color& tintColor, const sf::Color& borderColor)
+ {
+     auto [uv0, uv1, textureID] = getSpriteTextureData(sprite);
+-    ImGui::Image(textureID, toImVec2(size), uv0, uv1, toImColor(tintColor), toImColor(borderColor));
++    ImGui::ImageWithBg(textureID, toImVec2(size), uv0, uv1, toImColor(tintColor), toImColor(borderColor));
+ }
+ 
+ /////////////// Image Button Overloads for sf::Texture
+@@ -946,14 +968,11 @@ void SetupRenderState(ImDrawData* draw_data, int fb_width, int fb_height)
+ // Rendering callback
+ void RenderDrawLists(ImDrawData* draw_data)
+ {
+-    ImGui::GetDrawData();
+-    if (draw_data->CmdListsCount == 0)
+-    {
+-        return;
+-    }
+-
+-    const ImGuiIO& io = ImGui::GetIO();
+-    assert(io.Fonts->TexID != (ImTextureID) nullptr); // You forgot to create and set font texture
++    auto& io = ImGui::GetIO();
++    if (draw_data->Textures != nullptr)
++        for (ImTextureData* tex : *draw_data->Textures)
++            if (tex->Status != ImTextureStatus_OK)
++                ImGui::SFML::UpdateFontTexture(tex);
+ 
+     // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates !=
+     // framebuffer coordinates)
+@@ -1040,7 +1059,7 @@ void RenderDrawLists(ImDrawData* draw_data)
+                               (int)(clip_rect.w - clip_rect.y));
+ 
+                     // Bind texture, Draw
+-                    const GLuint textureHandle = convertImTextureIDToGLTextureHandle(pcmd->TextureId);
++                    const GLuint textureHandle = (GLuint)(intptr_t)pcmd->GetTexID();
+                     glBindTexture(GL_TEXTURE_2D, textureHandle);
+                     glDrawElements(GL_TRIANGLES,
+                                    (GLsizei)pcmd->ElemCount,
+diff --git a/imgui-SFML.h b/imgui-SFML.h
+index ee873f6..e0d15aa 100644
+--- a/imgui-SFML.h
++++ b/imgui-SFML.h
+@@ -6,10 +6,14 @@
+ #include <SFML/System/Time.hpp>
+ #include <SFML/System/Vector2.hpp>
+ #include <SFML/Window/Joystick.hpp>
++#include <SFML/Graphics/Texture.hpp>
+ 
+ #include <optional>
+ 
+ #include "imgui-SFML_export.h"
++#include "imgui.h"      // IMGUI_IMPL_API
++#include <unordered_map>
++#include <memory>
+ 
+ namespace sf
+ {
+@@ -26,6 +30,8 @@ namespace ImGui
+ {
+ namespace SFML
+ {
++    inline std::unordered_map<ImTextureID, std::unique_ptr<sf::Texture>> textureMap;
++
+ [[nodiscard]] IMGUI_SFML_API bool Init(sf::RenderWindow& window, bool loadDefaultFont = true);
+ [[nodiscard]] IMGUI_SFML_API bool Init(sf::Window& window, sf::RenderTarget& target, bool loadDefaultFont = true);
+ [[nodiscard]] IMGUI_SFML_API bool Init(sf::Window& window, const sf::Vector2f& displaySize, bool loadDefaultFont = true);
+@@ -45,7 +51,7 @@ IMGUI_SFML_API void Shutdown(const sf::Window& window);
+ // Shuts down all ImGui contexts
+ IMGUI_SFML_API void Shutdown();
+ 
+-[[nodiscard]] IMGUI_SFML_API bool UpdateFontTexture();
++IMGUI_SFML_API void UpdateFontTexture(ImTextureData* tex);
+ IMGUI_SFML_API std::optional<sf::Texture>& GetFontTexture();
+ 
+ // joystick functions
