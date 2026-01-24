@@ -9,13 +9,13 @@ vcpkg_from_github(
 # Check features for QtQuick and QtWidgets
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        qtquick     SPIX_BUILD_QTQUICK
         qtwidgets   SPIX_BUILD_QTWIDGETS
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSPIX_BUILD_QTQUICK=ON
         -DSPIX_BUILD_EXAMPLES=OFF
         -DSPIX_BUILD_TESTS=OFF
         -DSPIX_QT_MAJOR=6
