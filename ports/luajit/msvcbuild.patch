@@ -1,5 +1,5 @@
 diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
-index e0df88bc..45d1acca 100644
+index e0df88bc..0ccf4d04 100644
 --- a/src/msvcbuild.bat
 +++ b/src/msvcbuild.bat
 @@ -18,12 +18,14 @@
@@ -32,7 +32,17 @@ index e0df88bc..45d1acca 100644
  @if errorlevel 1 goto :BAD
  %LJLINK% /OUT:luajit.exe luajit.obj %LJLIBNAME%
  @if errorlevel 1 goto :BAD
-@@ -169,4 +171,5 @@ if exist luajit.exe.manifest^
+@@ -157,6 +159,9 @@ if exist luajit.exe.manifest^
+ @goto :END
+ :SETHOSTVARS
+ @if "%VSCMD_ARG_HOST_ARCH%_%VSCMD_ARG_TGT_ARCH%" equ "x64_arm64" (
++  @echo Temporarily configuring MSVC for x64 host tools while building for arm64
++  set _CL_=
++  set _LINK_=
+   call "%VSINSTALLDIR%Common7\Tools\VsDevCmd.bat" -arch=%VSCMD_ARG_HOST_ARCH% -no_logo
+   echo on
+ )
+@@ -169,4 +174,5 @@ if exist luajit.exe.manifest^
  @goto :END
  :FAIL
  @echo You must open a "Visual Studio Command Prompt" to run this script
