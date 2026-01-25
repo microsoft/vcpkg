@@ -1,8 +1,12 @@
+# mingw is not supported
 if(VCPKG_TARGET_IS_MINGW)
     vcpkg_fail_port_install(
         MESSAGE "net-snmp supports only the MSVC toolchain"
     )
 endif()
+
+# Check library linkage:
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/net-snmp/net-snmp/archive/refs/tags/v${VERSION}.tar.gz"
@@ -41,16 +45,8 @@ foreach(BUILD_TYPE ${BUILD_TYPES})
 
     set(BUILD_DIR "${SOURCE_PATH}/win32/")
     if(BUILD_TYPE STREQUAL "release")
-        #set(BUILD_DIR "${SOURCE_PATH}/win32-release")
-        #if(NOT EXISTS "${BUILD_DIR}")
-        #    file(COPY "${SOURCE_PATH}/win32/" DESTINATION "${BUILD_DIR}")
-        #endif()
         set(TARGET_DIR "${SOURCE_PATH}/release_install")
     else()
-        #set(BUILD_DIR "${SOURCE_PATH}/win32-debug")
-        #if(NOT EXISTS "${BUILD_DIR}")
-        #    file(COPY "${SOURCE_PATH}/win32/" DESTINATION "${BUILD_DIR}")
-        #endif()
         set(TARGET_DIR "${SOURCE_PATH}/debug_install")
     endif()
 
@@ -73,15 +69,9 @@ foreach(BUILD_TYPE ${BUILD_TYPES})
     )
 
     vcpkg_execute_build_process(
-        COMMAND nmake
+        COMMAND nmake all
         WORKING_DIRECTORY "${BUILD_DIR}"
         LOGNAME build-${TARGET_TRIPLET}
-    )
-
-    vcpkg_execute_build_process(
-        COMMAND nmake libs
-        WORKING_DIRECTORY "${BUILD_DIR}"
-        LOGNAME install-${TARGET_TRIPLET}
     )
 
     vcpkg_execute_build_process(

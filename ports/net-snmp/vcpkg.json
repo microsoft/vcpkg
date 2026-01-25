@@ -5,7 +5,7 @@
   "description": "A SNMP application library, tools and daemon",
   "homepage": "https://www.net-snmp.org/",
   "license": "BSD-4-Clause",
-  "supports": "windows & !mingw",
+  "supports": "windows & !mingw & !static",
   "features": {
     "ssl": {
       "description": "Build net-snmp with SSL support and activates SNMPv3",
