@@ -81,6 +81,7 @@ else()
     vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE)
     vcpkg_cmake_install()
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
     file(INSTALL
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
