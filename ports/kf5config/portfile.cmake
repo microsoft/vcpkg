@@ -6,14 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
-file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DBUILD_TESTING=OFF
-        -DKDE_INSTALL_LIBEXECDIR=bin
 )
 
 vcpkg_cmake_install()
@@ -25,22 +21,12 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    set(LIBEXEC_SUBFOLDER "kf5/")
-endif()
-
 vcpkg_copy_tools(
     TOOL_NAMES kconf_update kconfig_compiler_kf5
-    SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin/${LIBEXEC_SUBFOLDER}"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${LIBEXEC_SUBFOLDER}"
     AUTO_CLEAN
 )
 
 file(APPEND "${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf" "Data = ../../share")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

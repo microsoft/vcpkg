@@ -21,11 +21,17 @@ vcpkg_from_github(
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/zstd")
 
+set(SSE_FLAG OFF)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(SSE_FLAG ON)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DCMAKE_CXX_STANDARD=17
         -DBASISU_SYSTEM_ZSTD=ON
+        -DSSE=${SSE_FLAG}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

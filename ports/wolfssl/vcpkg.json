@@ -1,6 +1,7 @@
 {
   "name": "wolfssl",
   "version": "5.8.4",
+  "port-version": 1,
   "description": "TLS and Cryptographic library for many platforms",
   "homepage": "https://wolfssl.com",
   "license": "GPL-3.0-or-later",
@@ -22,6 +23,9 @@
   "features": {
     "asio": {
       "description": "Enable asio support"
+    },
+    "curve25519": {
+      "description": "Enables Curve25519 support"
     },
     "dtls": {
       "description": "DTLS support"

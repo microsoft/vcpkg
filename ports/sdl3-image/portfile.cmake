@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_image
     REF "release-${VERSION}"
-    SHA512 243fa6e9523f8ca5c40579d0ce20e86eb53c87b962e82a6696ad0a9541a68d7fe9730510067a5a181361a77cdca83fab373fd353722367f353e0cd2a614906f0
+    SHA512 3e98854f92b2fbb3489408b413ce2e0cfbb3e3eea58fa6e7037948a9fa7bf6bf5af38c4087285d4b7340b1115699c2c4b9626ce65a3e3b449bd5d4ec2078c957
     HEAD_REF main
     PATCHES
         dependencies.diff
@@ -44,7 +44,7 @@ else()
     vcpkg_cmake_config_fixup(PACKAGE_NAME SDL3_image CONFIG_PATH lib/cmake/SDL3_image)
 endif()
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/include"
 )

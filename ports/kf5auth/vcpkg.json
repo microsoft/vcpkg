@@ -1,8 +1,10 @@
 {
   "name": "kf5auth",
   "version": "5.116.0",
+  "port-version": 1,
   "description": "Execute actions as privileged user",
-  "homepage": "https://api.kde.org/kauth-index.html",
+  "homepage": "https://invent.kde.org/frameworks/kauth",
+  "documentation": "https://api.kde.org/kauth-index.html ",
   "supports": "!windows",
   "dependencies": [
     "ecm",

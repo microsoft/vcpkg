@@ -1,7 +1,7 @@
 {
   "name": "portaudio",
   "version": "19.7",
-  "port-version": 8,
+  "port-version": 9,
   "description": "PortAudio Portable Cross-platform Audio I/O API PortAudio is a free, cross-platform, open-source, audio I/O library.  It lets you write simple audio programs in 'C' or C++ that will compile and run on many platforms including Windows, Macintosh OS X, and Unix (OSS/ALSA). It is intended to promote the exchange of audio software between developers on different platforms. Many applications use PortAudio for Audio I/O.",
   "homepage": "https://www.portaudio.com",
   "license": "MIT",
@@ -19,5 +19,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "asio": {
+      "description": "Enable support for Steinberg Audio Stream Input/Output (ASIO)",
+      "dependencies": [
+        "asiosdk"
+      ]
+    }
+  }
 }

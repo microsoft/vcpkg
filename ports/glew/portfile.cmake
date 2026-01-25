@@ -16,13 +16,13 @@ vcpkg_extract_source_archive(
     SOURCE_BASE glew
     PATCHES
         fix-LNK2019.patch
+        trim-build.diff
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS options
-    FEATURES
-        egl     GLEW_EGL
-        x11     GLEW_X11
-)
+set(options "")
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND options "-DGLEW_X11=OFF")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build/cmake"
@@ -44,7 +44,7 @@ if(NOT VCPKG_BUILD_TYPE)
     if(VCPKG_TARGET_IS_WINDOWS)
         set(libname glew32)
     endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glew.pc" " -l${libname}" " -l${libname}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glew.pc" " -l${libname}" " -l${libname}d")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
