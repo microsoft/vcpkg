@@ -23,6 +23,8 @@ vcpkg_from_github(
     REF ${VERSION}
     SHA512 b138ac696eb8f4f4ac2b28708972fabec576b7958c5ce74a94068c3a4ec3b2648ca992b4646529eff076efbc7c66bb335d9d883ce245df0e949bad76eafac7ac
     HEAD_REF master
+    PATCHES
+        fix-x86-architecture.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake")
 file(RENAME "${CMAKE_SOURCE_PATH}" "${SOURCE_PATH}/cmake")
