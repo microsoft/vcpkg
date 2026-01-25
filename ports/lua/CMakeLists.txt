@@ -5,7 +5,6 @@
 # - Exceptions will be used instead of setjmp/longjmp
 # - The name mangling for functions will be C++ instead of C.
 #     - This is a source-incompatible change because extern "C" is chosen by the including application.
-# - The lua.hpp header will not be available.
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.18)
 
@@ -100,10 +99,7 @@ IF (NOT SKIP_INSTALL_HEADERS)
             src/lua.h
             src/luaconf.h
             src/lauxlib.h
+            src/lua.hpp
         DESTINATION include
     )
-    # If using C++, don't install extern "C" wrapper.
-    IF (NOT COMPILE_AS_CPP)
-        INSTALL(FILES src/lua.hpp DESTINATION include)
-    ENDIF ()
 ENDIF ()
