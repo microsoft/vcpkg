@@ -99,6 +99,18 @@ index 0000000..ac36178
 +    mark_as_advanced(TERMCOLOR_INCLUDE_DIRS)
 +  endif()
 +endif()
+diff --git a/ecal/core/src/defs.h.in b/ecal/core/src/defs.h.in
+index 5753014..31cdef8 100644
+--- a/ecal/core/src/defs.h.in
++++ b/ecal/core/src/defs.h.in
+@@ -37,6 +37,6 @@
+ #define ECAL_INSTALL_LIB_DIR     "@eCAL_install_lib_dir@"
+ #define ECAL_INSTALL_CONFIG_DIR  "@eCAL_install_config_dir@"
+ #define ECAL_INSTALL_INCLUDE_DIR "@eCAL_install_include_dir@"
+-#define ECAL_INSTALL_PREFIX      "@CMAKE_INSTALL_PREFIX@"
++#define ECAL_INSTALL_PREFIX      ""
+ 
+ #endif // defs_h_included
 diff --git a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
 index 4d44da2..90127b2 100644
 --- a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt

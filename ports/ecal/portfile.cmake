@@ -11,8 +11,6 @@ vcpkg_from_github(
     PATCHES
         0002-fix-build.patch
         0003-fix-dependencies.patch
-        # 0004-install-cmake-files-to-share.patch
-        # 0005-remove-install-prefix-macro-value.patch
         # 0006-use-find_dependency-in-cmake-config.patch
         # 0007-allow-static-build-of-core.patch
 )
@@ -54,6 +52,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
+vcpkg_copy_tools(TOOL_NAMES ecal_generate_config AUTO_CLEAN)
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME eCAL           CONFIG_PATH share/eCAL)
 vcpkg_cmake_config_fixup(PACKAGE_NAME CMakeFunctions CONFIG_PATH share/CMakeFunctions)
