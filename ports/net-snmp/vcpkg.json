@@ -1,0 +1,20 @@
+{
+  "name": "net-snmp",
+  "version": "5.9.5.2",
+  "port-version": 0,
+  "description": "A SNMP application library, tools and daemon",
+  "homepage": "https://www.net-snmp.org/",
+  "license": "BSD-4-Clause",
+  "supports": "windows",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows"
+    }
+  ]
+}
