@@ -1,6 +1,6 @@
 {
   "name": "sheenbidi",
-  "version-string": "2.9.0",
+  "version": "2.9.0",
   "description": "SheenBidi is a lightweight, fast and stable implementation of the Unicode Bidirectional Algorithm.",
   "homepage": "https://github.com/Tehreer/SheenBidi",
   "license": "Apache-2.0",
