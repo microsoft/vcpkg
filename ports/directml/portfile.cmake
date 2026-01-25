@@ -13,6 +13,7 @@ set(PACKAGE_NAME    "Microsoft.AI.DirectML")
 set(PACKAGE_VERSION "1.15.4")
 
 file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${PACKAGE_NAME}")
+file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
 vcpkg_execute_required_process(
     COMMAND "${NUGET}" install "${PACKAGE_NAME}" -Version "${PACKAGE_VERSION}" -Verbosity detailed
                 -OutputDirectory "${CURRENT_BUILDTREES_DIR}"
