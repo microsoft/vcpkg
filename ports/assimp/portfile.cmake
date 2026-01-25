@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO assimp/assimp
     REF "v${VERSION}"
-    SHA512 182c4ef0feca7c37d4c7d6fae801a77e6efd93d86ea4a3ff2f32fac98bd5f83c04df6e5a667036a070450f5811cd91a5d23bcd4d4a1d00ded3b1c5cc14bd0363
+    SHA512 f3639e3964ea8ef41ce684eb1b764ece79f64a15ecae068846c5bc0853780e39f600776027d8843e6a3f47988daf067a164161a58f76ec6de13027ae1e473bfb
     HEAD_REF master
     PATCHES
         build_fixes.patch

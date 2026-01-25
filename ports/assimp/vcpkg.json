@@ -1,6 +1,6 @@
 {
   "name": "assimp",
-  "version": "6.0.3",
+  "version": "6.0.4",
   "description": "The Open Asset import library",
   "homepage": "https://github.com/assimp/assimp",
   "license": "BSD-3-Clause",
