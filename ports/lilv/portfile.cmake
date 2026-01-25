@@ -29,7 +29,12 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES lv2apply lv2bench lv2info lv2ls AUTO_CLEAN)
+    if(VCPKG_TARGET_IS_OSX)
+        # Since 0.26.2 lv2bench only builds if the POSIX realtime scheduler 'sched.h' is available, which is not the case on macOS
+        vcpkg_copy_tools(TOOL_NAMES lv2apply lv2info lv2ls AUTO_CLEAN)
+    else()
+        vcpkg_copy_tools(TOOL_NAMES lv2apply lv2bench lv2info lv2ls AUTO_CLEAN)
+    endif()
 endif()
 
 file(REMOVE_RECURSE
