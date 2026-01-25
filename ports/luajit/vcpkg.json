@@ -1,12 +1,19 @@
 {
   "name": "luajit",
-  "version-date": "2023-01-04",
-  "port-version": 7,
+  "version-date": "2026-01-09",
   "description": "LuaJIT is a Just-In-Time (JIT) compiler for the Lua programming language.",
   "homepage": "https://github.com/LuaJIT/LuaJIT",
   "license": "MIT",
-  "supports": "!uwp & !(arm64 & windows)",
+  "supports": "!uwp",
   "dependencies": [
+    {
+      "name": "luajit",
+      "host": true,
+      "features": [
+        "buildvm-32"
+      ],
+      "platform": "!native & (arm32 | x86) & (!windows | mingw)"
+    },
     {
       "name": "luajit",
       "host": true,
@@ -14,14 +21,6 @@
         "buildvm-64"
       ],
       "platform": "!native & (arm64 | x64) & (!windows | mingw)"
-    },
-    {
-      "name": "luajit",
-      "host": true,
-      "features": [
-        "buildvm-32"
-      ],
-      "platform": "!native & ((arm & !arm64) | x86) & (!windows | mingw)"
     },
     {
       "name": "vcpkg-cmake",
@@ -39,7 +38,7 @@
   "features": {
     "buildvm-32": {
       "description": "Install host tools for 32 bit targets",
-      "supports": "native & ((arm & !arm64) | x86) & (!windows | mingw)"
+      "supports": "native & (arm32 | x86) & (!windows | mingw)"
     },
     "buildvm-64": {
       "description": "Install host tools for 64 bit targets",
