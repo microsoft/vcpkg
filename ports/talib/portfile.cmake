@@ -15,6 +15,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     # Debug build
     if (NOT VCPKG_BUILD_TYPE)
+        file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}d")
         vcpkg_execute_build_process(
             COMMAND nmake -f Makefile
             WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}d/win32/msvc"
@@ -44,6 +45,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     # Release build
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}r")
     vcpkg_execute_build_process(
         COMMAND nmake -f Makefile
         WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}r/win32/msvc"
