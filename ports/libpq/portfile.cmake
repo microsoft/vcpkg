@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
         unix/single-linkage.patch
         unix/no-server-tools.patch
         unix/mingw-install.patch
+        unix/mingw-static-importlib-fix.patch
         unix/python.patch
         windows/macro-def.patch
         windows/win_bison_flex.patch
