@@ -21,7 +21,8 @@
       "supports": "osx"
     },
     "hosting-examples": {
-      "description": "Build examples for VST3 host applications"
+      "description": "Build examples for VST3 host applications",
+      "supports": "!linux"
     },
     "plugin-examples": {
       "description": "Build examples for VST3 plugins"
