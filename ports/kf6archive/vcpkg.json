@@ -1,21 +1,17 @@
 {
   "name": "kf6archive",
   "version": "6.7.0",
+  "port-version": 1,
   "description": "File compression",
-  "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
+  "homepage": "https://invent.kde.org/frameworks/karchive",
+  "documentation": "https://api.kde.org/karchive-index.html",
   "license": "LGPL-2.0-or-later",
   "supports": "!xbox",
   "dependencies": [
-    "bzip2",
     "ecm",
-    "liblzma",
-    "openssl",
-    "qtbase",
     {
-      "name": "qttools",
-      "features": [
-        "linguist"
-      ]
+      "name": "qtbase",
+      "default-features": false
     },
     {
       "name": "vcpkg-cmake",
@@ -25,11 +21,7 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "zlib",
-    "zstd"
-  ],
-  "default-features": [
-    "bzip2"
+    "zlib"
   ],
   "features": {
     "bzip2": {
@@ -44,10 +36,16 @@
         "liblzma"
       ]
     },
-    "openssl": {
-      "description": "Support for compressed encrypted files and data streams",
+    "translations": {
+      "description": "Install translations",
       "dependencies": [
-        "openssl"
+        {
+          "name": "qttools",
+          "host": true,
+          "features": [
+            "linguist"
+          ]
+        }
       ]
     },
     "zstd": {

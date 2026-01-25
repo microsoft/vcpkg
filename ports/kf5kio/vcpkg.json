@@ -1,8 +1,10 @@
 {
   "name": "kf5kio",
   "version": "5.116.0",
+  "port-version": 1,
   "description": "Network transparent access to files and data",
-  "homepage": "https://api.kde.org/kio-index.html",
+  "homepage": "https://invent.kde.org/frameworks/kio",
+  "documentation": "https://api.kde.org/kio-index.html ",
   "license": null,
   "dependencies": [
     "ecm",
@@ -23,7 +25,10 @@
     "kf5config",
     "kf5configwidgets",
     "kf5coreaddons",
-    "kf5crash",
+    {
+      "name": "kf5crash",
+      "platform": "!android"
+    },
     {
       "name": "kf5dbusaddons",
       "platform": "!android"
@@ -35,26 +40,31 @@
     "kf5jobwidgets",
     "kf5service",
     "kf5solid",
-    "kf5textwidgets",
+    {
+      "name": "kf5textwidgets",
+      "platform": "!android"
+    },
     "kf5widgetsaddons",
     "kf5windowsystem",
-    "kf5xmlgui",
     {
-      "name": "libiconv",
-      "platform": "windows & static"
+      "name": "kf5xmlgui",
+      "platform": "!android"
     },
     {
       "name": "libmount",
       "platform": "linux"
     },
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     {
       "name": "qt5-macextras",
       "platform": "osx"
     },
     {
       "name": "qt5-x11extras",
-      "platform": "linux"
+      "platform": "!(android | ios | osx | windows)"
     },
     {
       "name": "vcpkg-cmake",
@@ -66,29 +76,30 @@
     }
   ],
   "features": {
+    "designer-plugin": {
+      "description": "Build plugin for Qt Designer"
+    },
     "kf5notifications": {
-      "description": "Required to have error notification support in kpac",
+      "description": "Error notification support in kpac",
+      "supports": "!(windows | android)",
       "dependencies": [
-        {
-          "name": "kf5kio",
-          "default-features": false,
-          "features": [
-            "unixkf5notifications"
-          ],
-          "platform": "!(windows | android)"
-        }
+        "kf5notifications"
       ]
     },
     "kf5wallet": {
-      "description": "Required to have permanent storage of passwords for kpasswdserver",
+      "description": "Safe desktop-wide storage for passwords",
+      "supports": "!android",
       "dependencies": [
         "kf5wallet"
       ]
     },
-    "unixkf5notifications": {
-      "description": "Required to have error notification support in kpac (windows only)",
+    "qml": {
+      "description": "Enable QML support",
       "dependencies": [
-        "kf5notifications"
+        {
+          "name": "qt5-declarative",
+          "default-features": false
+        }
       ]
     }
   }
