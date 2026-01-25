@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
     REF ${VERSION}
-    SHA512 2594db78d7b26388ea12c54fc9691010fb9620c33d45f6124bd3988ea2ff844a8474dcef7199d81c2cded283c09582dbff6f090907fd34d40a791c5b9fc26f91
+    SHA512 d9e51724249d720d76cf67b99d1f80d722e6bbef57ebf3cf4bf976e18901cd1bfe689db1eca615657cfea7727bb685ff7b3eebb1879a6174ed0ddfb89bfe2a8e
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
