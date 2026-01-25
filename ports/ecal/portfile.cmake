@@ -10,27 +10,12 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0002-fix-build.patch
-        # 0003-fix-dependencies.patch
+        0003-fix-dependencies.patch
         # 0004-install-cmake-files-to-share.patch
         # 0005-remove-install-prefix-macro-value.patch
         # 0006-use-find_dependency-in-cmake-config.patch
         # 0007-allow-static-build-of-core.patch
 )
-
-# ecaludp is a git submodule; pull it explicitly for vcpkg builds.
-set(ECALUDP_VERSION "0.1.2")
-vcpkg_download_distfile(ECALUDP_ARCHIVE
-    URLS "https://github.com/eclipse-ecal/ecaludp/archive/refs/tags/v${ECALUDP_VERSION}.tar.gz"
-    FILENAME "ecaludp-${ECALUDP_VERSION}.tar.gz"
-    SHA512 4f9d8c67777a63b569bd7069ca2a43eaaaa898a429c206bccfd5e90b10a733aa5f138be059cef2fcebda53987fdf0583b1d1859ecd154b9a48b5d39afd21c637
-)
-vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH ECALUDP_SOURCE_PATH
-    ARCHIVE "${ECALUDP_ARCHIVE}"
-    REF "v${ECALUDP_VERSION}"
-)
-file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty/ecaludp/ecaludp")
-file(COPY "${ECALUDP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/thirdparty/ecaludp/ecaludp")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -41,13 +26,12 @@ vcpkg_cmake_configure(
         -DECAL_USE_CAPNPROTO=OFF
         -DECAL_USE_FTXUI=OFF
         -DECAL_BUILD_DOCS=OFF
-        -DECAL_BUILD_APP_SDK=OFF
+        -DECAL_BUILD_APPS=OFF
         -DECAL_BUILD_SAMPLES=OFF
         -DECAL_BUILD_TIMEPLUGINS=OFF
         -DECAL_BUILD_PY_BINDING=OFF
         -DECAL_BUILD_CSHARP_BINDING=OFF
         -DECAL_BUILD_TESTS=OFF
-        -DECAL_INCLUDE_PY_SAMPLES=OFF
         -DECAL_INSTALL_SAMPLE_SOURCES=OFF
         -DECAL_USE_NPCAP=OFF
         -DECAL_THIRDPARTY_BUILD_CMAKE_FUNCTIONS=ON
@@ -68,7 +52,7 @@ vcpkg_cmake_configure(
         -DECAL_BUILD_VERSION="${VERSION}"
 )
 
-vcpkg_cmake_install()
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME eCAL           CONFIG_PATH share/eCAL)

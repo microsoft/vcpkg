@@ -7,6 +7,8 @@
   "supports": "!emscripten",
   "dependencies": [
     "asio",
+    "ecaludp",
+    "fineftp",
     {
       "name": "hdf5",
       "default-features": false
@@ -16,9 +18,10 @@
       "default-features": false
     },
     "recycle",
-    "simpleini",
+    "spdlog",
     "tclap",
     "tcp-pubsub",
+    "termcolor",
     {
       "name": "vcpkg-cmake",
       "host": true

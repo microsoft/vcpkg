@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8bc05ee..00ec3cc 100644
+index 8bc05ee..8da183a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -26,13 +26,16 @@ endif (POLICY CMP0077)
@@ -32,42 +32,88 @@ index 8bc05ee..00ec3cc 100644
  
  git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
  set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
-diff --git a/app/meas_cutter/CMakeLists.txt b/app/meas_cutter/CMakeLists.txt
-index 442c308..8105682 100644
---- a/app/meas_cutter/CMakeLists.txt
-+++ b/app/meas_cutter/CMakeLists.txt
-@@ -19,7 +19,6 @@
- project(meas_cutter)
- 
- find_package(Threads REQUIRED)
--find_package(tclap REQUIRED)
- find_package(yaml-cpp REQUIRED)
- 
- include(${ECAL_PROJECT_ROOT}/thirdparty/yaml-cpp/compatibility-yaml-cpp.cmake)
-diff --git a/ecal/core/CMakeLists.txt b/ecal/core/CMakeLists.txt
-index 17c32c6..582a39d 100644
---- a/ecal/core/CMakeLists.txt
-+++ b/ecal/core/CMakeLists.txt
-@@ -40,7 +40,8 @@ project(core VERSION ${eCAL_VERSION_STRING})
- 
- find_package(asio             REQUIRED)
- find_package(Threads          REQUIRED)
--find_package(ecaludp          REQUIRED)
+@@ -321,7 +326,7 @@ set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
+ set(eCAL_install_archive_dyn_dir   ${CMAKE_INSTALL_LIBDIR})
+ set(eCAL_install_bin_dir           ${CMAKE_INSTALL_BINDIR})
+ set(eCAL_install_config_dir        ${CMAKE_INSTALL_SYSCONFDIR}/ecal)
+-set(eCAL_install_cmake_dir         ${CMAKE_INSTALL_LIBDIR}/cmake/eCAL)
++set(eCAL_install_cmake_dir         share/eCAL)
+ set(eCAL_install_doc_dir           ${CMAKE_INSTALL_DOCDIR})
+ set(eCAL_install_include_dir       ${CMAKE_INSTALL_INCLUDEDIR})
+ set(eCAL_install_lib_dir           ${CMAKE_INSTALL_LIBDIR})
+diff --git a/cmake/Findtclap.cmake b/cmake/Findtclap.cmake
+new file mode 100644
+index 0000000..a0de08f
+--- /dev/null
++++ b/cmake/Findtclap.cmake
+@@ -0,0 +1,24 @@
++find_path(tclap_INCLUDE_DIR
++  NAMES tclap/Arg.h
++)
 +
-+include(${CMAKE_CURRENT_LIST_DIR}/../../thirdparty/ecaludp/build-ecaludp.cmake)
- 
- if (ECAL_CORE_CONFIGURATION)
-   find_package(yaml-cpp       REQUIRED)
-diff --git a/thirdparty/tclap/CMakeLists.txt b/thirdparty/tclap/CMakeLists.txt
-index 4423eb3..dbb0305 100644
---- a/thirdparty/tclap/CMakeLists.txt
-+++ b/thirdparty/tclap/CMakeLists.txt
-@@ -1,3 +1,5 @@
-+find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
++if(tclap_INCLUDE_DIR-NOTFOUND)
++  message(FATAL_ERROR "Could not find tclap library")
++  set(tclap_FOUND FALSE)
++else()
++  set(tclap_FOUND TRUE)
++endif()
 +
- add_library(tclap INTERFACE)
--target_include_directories(tclap INTERFACE ${CMAKE_CURRENT_LIST_DIR}/tclap/include)
--add_library(tclap::tclap ALIAS tclap)
-\ No newline at end of file
-+target_include_directories(tclap INTERFACE ${TCLAP_INCLUDE_DIRS})
-+add_library(tclap::tclap ALIAS tclap)
++if(tclap_FOUND)
++  include(FindPackageHandleStandardArgs)
++  find_package_handle_standard_args(tclap
++    REQUIRED_VARS tclap_INCLUDE_DIR)
++
++  if(NOT TARGET tclap::tclap)
++    set(tclap_INCLUDE_DIRS ${tclap_INCLUDE_DIR})
++    add_library(tclap::tclap INTERFACE IMPORTED)
++    set_target_properties(tclap::tclap PROPERTIES
++      INTERFACE_INCLUDE_DIRECTORIES ${tclap_INCLUDE_DIR})
++    mark_as_advanced(tclap_INCLUDE_DIRS)
++  endif()
++endif()
+diff --git a/cmake/Findtermcolor.cmake b/cmake/Findtermcolor.cmake
+new file mode 100644
+index 0000000..ac36178
+--- /dev/null
++++ b/cmake/Findtermcolor.cmake
+@@ -0,0 +1,22 @@
++find_path(TERMCOLOR_INCLUDE_DIR "termcolor/termcolor.hpp")
++
++if(TERMCOLOR_INCLUDE_DIR-NOTFOUND)
++  message(FATAL_ERROR "Could not find termcolor library")
++  set(TERMCOLOR_FOUND FALSE)
++else()
++  set(TERMCOLOR_FOUND TRUE)
++endif()
++
++if(TERMCOLOR_FOUND)
++  include(FindPackageHandleStandardArgs)
++  find_package_handle_standard_args(termcolor
++    REQUIRED_VARS TERMCOLOR_INCLUDE_DIR)
++
++  if(NOT TARGET termcolor::termcolor)
++    set(TERMCOLOR_INCLUDE_DIRS ${TERMCOLOR_INCLUDE_DIR})
++    add_library(termcolor::termcolor INTERFACE IMPORTED)
++    set_target_properties(termcolor::termcolor PROPERTIES
++      INTERFACE_INCLUDE_DIRECTORIES ${TERMCOLOR_INCLUDE_DIR})
++    mark_as_advanced(TERMCOLOR_INCLUDE_DIRS)
++  endif()
++endif()
+diff --git a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
+index 4d44da2..90127b2 100644
+--- a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
++++ b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
+@@ -5,12 +5,7 @@ include(cmake_functions.cmake)
+ project(CMakeFunctions VERSION 0.4.1)
+ 
+ include(GNUInstallDirs)
+-if (MSVC)
+-# Variable definitions
+-set(cmake_functions_install_cmake_dir   cmake)
+-else (MSVC)
+-set(cmake_functions_install_cmake_dir   "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}-${PROJECT_VERSION}")
+-endif (MSVC)
++set(cmake_functions_install_cmake_dir "share/${PROJECT_NAME}")
+ set(cmake_functions_config              ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Config.cmake)
+ set(cmake_functions_config_version      ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake)
+ 
