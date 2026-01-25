@@ -17,27 +17,27 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if (NOT VCPKG_BUILD_TYPE)
         vcpkg_execute_build_process(
             COMMAND nmake -f Makefile
-            WORKING_DIRECTORY "${SOURCE_PATH}/c/make/c${LFLAG}d/win32/msvc"
+            WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}d/win32/msvc"
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
 
         file(
-            INSTALL "${SOURCE_PATH}/c/lib/ta_abstract_c${LFLAG}d.lib"
+            INSTALL "${SOURCE_PATH}/lib/ta_abstract_c${LFLAG}d.lib"
             DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
             RENAME ta_abstract.lib
         )
         file(
-            INSTALL "${SOURCE_PATH}/c/lib/ta_libc_c${LFLAG}d.lib"
+            INSTALL "${SOURCE_PATH}/lib/ta_libc_c${LFLAG}d.lib"
             DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
             RENAME ta_libc.lib
         )
         file(
-            INSTALL "${SOURCE_PATH}/c/lib/ta_func_c${LFLAG}d.lib"
+            INSTALL "${SOURCE_PATH}/lib/ta_func_c${LFLAG}d.lib"
             DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
             RENAME ta_func.lib
         )
         file(
-            INSTALL "${SOURCE_PATH}/c/lib/ta_common_c${LFLAG}d.lib"
+            INSTALL "${SOURCE_PATH}/lib/ta_common_c${LFLAG}d.lib"
             DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
             RENAME ta_common.lib
         )
@@ -46,34 +46,34 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # Release build
     vcpkg_execute_build_process(
         COMMAND nmake -f Makefile
-        WORKING_DIRECTORY "${SOURCE_PATH}/c/make/c${LFLAG}r/win32/msvc"
+        WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}r/win32/msvc"
         LOGNAME build-${TARGET_TRIPLET}-rel
     )
 
     file(
-        INSTALL "${SOURCE_PATH}/c/lib/ta_abstract_c${LFLAG}r.lib"
+        INSTALL "${SOURCE_PATH}/lib/ta_abstract_c${LFLAG}r.lib"
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
         RENAME ta_abstract.lib
     )
     file(
-        INSTALL "${SOURCE_PATH}/c/lib/ta_libc_c${LFLAG}r.lib"
+        INSTALL "${SOURCE_PATH}/lib/ta_libc_c${LFLAG}r.lib"
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
         RENAME ta_libc.lib
     )
     file(
-        INSTALL "${SOURCE_PATH}/c/lib/ta_func_c${LFLAG}r.lib"
+        INSTALL "${SOURCE_PATH}/lib/ta_func_c${LFLAG}r.lib"
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
         RENAME ta_func.lib
     )
     file(
-        INSTALL "${SOURCE_PATH}/c/lib/ta_common_c${LFLAG}r.lib"
+        INSTALL "${SOURCE_PATH}/lib/ta_common_c${LFLAG}r.lib"
         DESTINATION ${CURRENT_PACKAGES_DIR}/lib
         RENAME ta_common.lib
     )
 
     # Include files
     file(
-        INSTALL "${SOURCE_PATH}/c/include"
+        INSTALL "${SOURCE_PATH}/include"
         DESTINATION ${CURRENT_PACKAGES_DIR}
         PATTERN Makefile.* EXCLUDE
     )
