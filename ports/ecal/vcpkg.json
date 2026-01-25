@@ -15,6 +15,7 @@
       "name": "protobuf",
       "default-features": false
     },
+    "recycle",
     "simpleini",
     "tclap",
     "tcp-pubsub",
