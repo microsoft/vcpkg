@@ -9052,6 +9052,10 @@
       "baseline": "2.4",
       "port-version": 0
     },
+    "sheenbidi": {
+      "baseline": "2.9.0",
+      "port-version": 0
+    },
     "shiftmedia-libgcrypt": {
       "baseline": "1.10.3-1",
       "port-version": 1
