@@ -13,6 +13,7 @@
     }
   ],
   "default-features": [
+    "cpp",
     {
       "$comment": "The platform expression is tuned for vcpkg CI.",
       "name": "run-programs",
@@ -20,6 +21,18 @@
     }
   ],
   "features": {
+    "cpp": {
+      "description": "Test the C++ library",
+      "dependencies": [
+        {
+          "name": "lua",
+          "default-features": false,
+          "features": [
+            "cpp"
+          ]
+        }
+      ]
+    },
     "run-programs": {
       "description": "Run lua and user program",
       "dependencies": [
