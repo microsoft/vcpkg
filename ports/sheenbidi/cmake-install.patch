@@ -1,12 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 114fab0..befe772 100644
+index 114fab0..14531e2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -266,7 +266,6 @@ include(GNUInstallDirs)
+@@ -266,8 +266,6 @@ include(GNUInstallDirs)
  install(
    TARGETS SheenBidi
    EXPORT SheenBidiTargets
 -  CONFIGURATIONS Release
-   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/SheenBidi"
+-  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/SheenBidi"
  )
  
+ set(ConfigPackageLocation "${CMAKE_INSTALL_LIBDIR}/cmake/SheenBidi")
