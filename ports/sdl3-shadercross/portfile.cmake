@@ -19,7 +19,11 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME "sdl3_shadercross" CONFIG_PATH "share/sdl3_shadercross/SDL3_shadercross")
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "sdl3_shadercross")
+else()
+    vcpkg_cmake_config_fixup(PACKAGE_NAME "sdl3_shadercross" CONFIG_PATH "share/sdl3_shadercross/SDL3_shadercross")
+endif()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
