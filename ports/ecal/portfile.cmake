@@ -11,8 +11,8 @@ vcpkg_from_github(
     PATCHES
         0002-fix-build.patch
         0003-fix-dependencies.patch
-        # 0006-use-find_dependency-in-cmake-config.patch
-        # 0007-allow-static-build-of-core.patch
+        0006-use-find_dependency-in-cmake-config.patch
+        0007-allow-static-build-of-core.patch
 )
 
 vcpkg_cmake_configure(
