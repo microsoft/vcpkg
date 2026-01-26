@@ -1,7 +1,7 @@
 {
   "name": "scotch",
   "version": "7.0.5",
-  "port-version": 1,
+  "port-version": 3,
   "description": "Scotch: a software package for graph and mesh/hypergraph partitioning, graph clustering, and sparse matrix ordering",
   "homepage": "https://gitlab.inria.fr/scotch/scotch",
   "license": null,
@@ -9,7 +9,10 @@
   "dependencies": [
     "bzip2",
     "liblzma",
-    "pthread",
+    {
+      "name": "pthreads4w",
+      "platform": "windows & !mingw"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
