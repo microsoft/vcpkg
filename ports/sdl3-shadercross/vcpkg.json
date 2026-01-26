@@ -8,7 +8,7 @@
   "dependencies": [
     {
       "name": "directx-dxc",
-      "version>=": "2025-02-20"
+      "version>=": "2025-05-30"
     },
     {
       "name": "sdl3",
@@ -16,11 +16,11 @@
       "features": [
         "vulkan"
       ],
-      "version>=": "3.2.8"
+      "version>=": "3.2.16"
     },
     {
       "name": "spirv-cross",
-      "version>=": "1.4.304.1"
+      "version>=": "1.4.309.0"
     },
     {
       "name": "vcpkg-cmake",
