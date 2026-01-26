@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 114fab0..80125c2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,6 +22,7 @@ option(ENABLE_ASAN "Enable address sanitizer" OFF)
+ option(ENABLE_UBSAN "Enable undefined behavior sanitizer" OFF)
+ 
+ include(CTest)
++include(GNUInstallDirs)
+ 
+ # C++ is only needed for tools
+ set(CMAKE_CXX_STANDARD 14)
+@@ -109,7 +110,7 @@ endif()
+ target_include_directories(SheenBidi
+   PUBLIC
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Headers>
+-    $<INSTALL_INTERFACE:include>
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+   PRIVATE
+     Source
+ )
+@@ -261,12 +262,9 @@ endif()
+ # Install Configuration
+ # ------------------------------------------------------------------------------
+ 
+-include(GNUInstallDirs)
+-
+ install(
+   TARGETS SheenBidi
+   EXPORT SheenBidiTargets
+-  CONFIGURATIONS Release
+   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/SheenBidi"
+ )
+ 
