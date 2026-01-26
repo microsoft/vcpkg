@@ -2573,7 +2573,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.9.11",
+      "baseline": "1.9.12",
       "port-version": 0
     },
     "dstorage": {
@@ -10017,7 +10017,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.5.24",
+      "baseline": "1.5.26",
       "port-version": 0
     },
     "tre": {
