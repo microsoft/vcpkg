@@ -1,6 +1,6 @@
 --- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
 +++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
-@@ -2319,6 +2319,13 @@ endif()
+@@ -2319,6 +2319,14 @@ endif()
  # mimalloc - Cross-platform high-performance allocator, from Microsoft
 
  if(ARROW_MIMALLOC)
