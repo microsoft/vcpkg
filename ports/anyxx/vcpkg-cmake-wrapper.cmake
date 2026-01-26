@@ -1,7 +1,0 @@
-add_library(anyxx::anyxx INTERFACE IMPORTED)
-
-set_target_properties(anyxx::anyxx PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
-    INTERFACE_COMPILE_OPTIONS "$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>"
-	INTERFACE_COMPILE_FEATURES cxx_std_23
-)
