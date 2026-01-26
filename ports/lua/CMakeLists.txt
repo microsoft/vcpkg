@@ -131,7 +131,7 @@ endif()
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file("${PROJECT_BINARY_DIR}/unofficial-lua-config-version.cmake"
     VERSION "${VERSION}"
-    COMPATIBILITY "SameMinorVersion"
+    COMPATIBILITY "SameMajorVersion"
 )
 install(FILES "${PROJECT_BINARY_DIR}/unofficial-lua-config-version.cmake"
     DESTINATION share/unofficial-lua
