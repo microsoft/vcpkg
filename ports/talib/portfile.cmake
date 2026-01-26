@@ -16,11 +16,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # Debug build
     if (NOT VCPKG_BUILD_TYPE)
         file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}d")
-        vcpkg_execute_build_process(
-            COMMAND nmake -f Makefile
-            WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}d/win32/msvc"
-            LOGNAME build-${TARGET_TRIPLET}-dbg
-        )
+        file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}d/gen_code")
+        set(TALIB_SUBDIRS ta_common ta_func ta_abstract ta_libc gen_code)
+        foreach(subdir IN LISTS TALIB_SUBDIRS)
+            vcpkg_execute_build_process(
+                COMMAND nmake /nologo -f Makefile
+                WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}d/win32/msvc/${subdir}"
+                LOGNAME build-${TARGET_TRIPLET}-dbg-${subdir}
+            )
+        endforeach()
 
         file(
             INSTALL "${SOURCE_PATH}/lib/ta_abstract_c${LFLAG}d.lib"
@@ -46,11 +50,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     # Release build
     file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}r")
-    vcpkg_execute_build_process(
-        COMMAND nmake -f Makefile
-        WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}r/win32/msvc"
-        LOGNAME build-${TARGET_TRIPLET}-rel
-    )
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/temp/c${LFLAG}r/gen_code")
+    set(TALIB_SUBDIRS ta_common ta_func ta_abstract ta_libc gen_code)
+    foreach(subdir IN LISTS TALIB_SUBDIRS)
+        vcpkg_execute_build_process(
+            COMMAND nmake /nologo -f Makefile
+            WORKING_DIRECTORY "${SOURCE_PATH}/make/c${LFLAG}r/win32/msvc/${subdir}"
+            LOGNAME build-${TARGET_TRIPLET}-rel-${subdir}
+        )
+    endforeach()
 
     file(
         INSTALL "${SOURCE_PATH}/lib/ta_abstract_c${LFLAG}r.lib"
@@ -78,6 +86,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
         INSTALL "${SOURCE_PATH}/include"
         DESTINATION ${CURRENT_PACKAGES_DIR}
         PATTERN Makefile.* EXCLUDE
+    )
+    file(
+        INSTALL "${SOURCE_PATH}/include/"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/include/ta-lib"
+        PATTERN Makefile.* EXCLUDE
+    )
+    file(INSTALL
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     )
 else()
     vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}"
