@@ -9,8 +9,8 @@ target_link_libraries(main PRIVATE ${LUA_LIBRARIES})
 install(TARGETS main RUNTIME DESTINATION bin/vcpkg-ci-lua)
 
 if("cpp" IN_LIST FEATURES)
-    find_package(unofficial-lua-cpp REQUIRED)
+    find_package(unofficial-lua REQUIRED)
 
     add_executable(main-cpp main.cpp)
-    target_link_libraries(main-cpp PRIVATE lua-cpp)
+    target_link_libraries(main-cpp PRIVATE unofficial::lua::lua-cpp)
 endif()

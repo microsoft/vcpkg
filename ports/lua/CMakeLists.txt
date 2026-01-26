@@ -63,9 +63,6 @@ install(TARGETS lua
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
-install(EXPORT unofficial-lua-config
-    DESTINATION share/unofficial-lua
-)
 
 # CXX library
 
@@ -95,14 +92,10 @@ if(COMPILE_AS_CPP)
     endif()
 
     install(TARGETS lua-cpp
-        EXPORT unofficial-lua-cpp-config
+        EXPORT unofficial-lua-config
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
-    )
-    # distinct from unofficial-lua-config (legacy choice)
-    install(EXPORT unofficial-lua-cpp-config
-        DESTINATION share/unofficial-lua-cpp
     )
 endif()
 
@@ -132,3 +125,18 @@ if(INSTALL_TOOLS)
         DESTINATION bin
     )
 endif()
+
+# unofficial config
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("${PROJECT_BINARY_DIR}/unofficial-lua-config-version.cmake"
+    VERSION "${VERSION}"
+    COMPATIBILITY "SameMinorVersion"
+)
+install(FILES "${PROJECT_BINARY_DIR}/unofficial-lua-config-version.cmake"
+    DESTINATION share/unofficial-lua
+)
+install(EXPORT unofficial-lua-config
+    NAMESPACE unofficial::lua::
+    DESTINATION share/unofficial-lua
+)
