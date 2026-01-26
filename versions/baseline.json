@@ -625,7 +625,7 @@
       "port-version": 0
     },
     "bark": {
-      "baseline": "0.4.0",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "barkeep": {
