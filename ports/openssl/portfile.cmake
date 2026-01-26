@@ -11,13 +11,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openssl/openssl
     REF "openssl-${VERSION}"
-    SHA512 0ffa32b60779709214ca3987838d0cd02f906d6f14772a32ef49e3f4854f8d2a287503ec742004ce7623afa9cf9ef2c8813d94a3c5b6c230ba150b0b4b4914d3
+    SHA512 3e1796708155454c118550ba0964b42c0c1055b651fec00cfb55038e8a8abbf5f85df02449e62b50b99d2a4a2f7b47862067f8a965e9c8a72f71dee0153672d9
     PATCHES
         cmake-config.patch
         command-line-length.patch
         script-prefix.patch
+        aes_cfb128_vaes_encdec_wrapper.diff # https://github.com/openssl/openssl/issues/28745
         windows/install-layout.patch
         windows/install-pdbs.patch
+        windows/install-programs.diff # https://github.com/openssl/openssl/issues/28744
         unix/android-cc.patch
         unix/move-openssldir.patch
         unix/no-empty-dirs.patch
@@ -30,6 +32,14 @@ vcpkg_list(SET CONFIGURE_OPTIONS
     no-tests
     no-docs
 )
+
+# https://github.com/openssl/openssl/blob/master/INSTALL.md#enable-ec_nistp_64_gcc_128
+vcpkg_cmake_get_vars(cmake_vars_file)
+include("${cmake_vars_file}")
+if(VCPKG_DETECTED_CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang|AppleClang)$"
+   AND VCPKG_TARGET_ARCHITECTURE MATCHES "^(x64|arm64|riscv64|ppc64le)$")
+    vcpkg_list(APPEND CONFIGURE_OPTIONS enable-ec_nistp_64_gcc_128)
+endif()
 
 set(INSTALL_FIPS "")
 if("fips" IN_LIST FEATURES)

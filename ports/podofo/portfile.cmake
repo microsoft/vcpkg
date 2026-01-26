@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO podofo/podofo
     REF "${VERSION}"
-    SHA512 ecb351c379791a012509b92e337763874154469460bf7ff2cca435f0c92d951f037adef79b74c7b01a65ef89513fe94939b52395aa79dca55fc9fb5d8419460b
+    SHA512 ddc33e1265eac4650c1cd4f8c04dabae206bd8ca3eadefa310cd87066ce5e262ee1a5dbf395797e01cb4de05e390db2f1d54dffa26e8659b084a57fac97de03b
     PATCHES
         dependencies.diff
 )

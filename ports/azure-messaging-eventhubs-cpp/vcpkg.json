@@ -5,6 +5,7 @@
   ],
   "name": "azure-messaging-eventhubs-cpp",
   "version-semver": "1.0.0-beta.10",
+  "port-version": 1,
   "description": [
     "Microsoft Azure Messaging Event Hubs SDK for C++",
     "This library provides Azure Messaging Event Hubs SDK."

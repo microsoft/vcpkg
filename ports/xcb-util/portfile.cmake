@@ -7,11 +7,12 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lib/libxcb-util
-    REF  acf790d7752f36e450d476ad79807d4012ec863b #v0.4.0
-    SHA512 d1ef49c1e16b7643a7afeca1495a96ab9ab9c537ea7669a13b3adda400a204626714afc8ed7fcc3d7532ebe1f89a3aa31e3ca0ee9617330d4df5b65b0c8e6dbc
+    REF  bffd8df1725c0fae9105a097e75b466e2f49d7bd #v0.4.1
+    SHA512 59ab4e34b44d720484b0d949bf26bac8ce56bf53f82d090b9229cda2f9c761cbad279774ab644a7a77b861674cdb173b7b597ae2b5860fbc9dfde8f5db3ab30e
     HEAD_REF master
-    PATCHES ssize.patch
-) 
+    PATCHES
+        ssize.patch
+)
 
 file(TOUCH "${SOURCE_PATH}/m4/dummy")
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -27,5 +28,5 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 endif()

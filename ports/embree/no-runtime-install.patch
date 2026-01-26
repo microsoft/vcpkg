@@ -1,0 +1,12 @@
+diff --git a/common/cmake/package.cmake b/common/cmake/package.cmake
+index daa4f49..7cd3775 100644
+--- a/common/cmake/package.cmake
++++ b/common/cmake/package.cmake
+@@ -119,6 +119,7 @@ ENDIF()
+ ##############################################################
+ 
+ IF (WIN32)
++ELSEIF (0)
+ 
+   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
+   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS TRUE)

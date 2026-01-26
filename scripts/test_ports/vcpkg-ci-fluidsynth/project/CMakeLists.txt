@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(fluidsynth-test C)
+project(fluidsynth-test LANGUAGES C CXX)
 
 find_package(FluidSynth CONFIG REQUIRED)
 
@@ -11,3 +11,4 @@ pkg_check_modules(fluidsynth_pc fluidsynth REQUIRED IMPORTED_TARGET)
 
 add_executable(main-pkconfig main.c)
 target_link_libraries(main-pkconfig PRIVATE PkgConfig::fluidsynth_pc)
+set_target_properties(main-pkconfig PROPERTIES LINKER_LANGUAGE CXX)

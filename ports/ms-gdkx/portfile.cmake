@@ -1,15 +1,22 @@
+# April 2025 or earlier
 cmake_path(SET GRDKLatest "$ENV{GRDKLatest}")
+cmake_path(SET GXDKLatest "$ENV{GXDKLatest}")
+
+# October 2025 or later
+cmake_path(SET GameDKCoreLatest "$ENV{GameDKCoreLatest}")
+cmake_path(SET GameDKXboxLatest "$ENV{GameDKXboxLatest}")
 
 find_path(GRDK_H
   NAMES grdk.h
   PATHS "${GRDKLatest}/gameKit/Include"
+        "${GameDKXboxLatest}/windows/include"
+        "${GameDKCoreLatest}/windows/include"
 )
-
-cmake_path(SET GXDKLatest "$ENV{GXDKLatest}")
 
 find_path(GXDK_H
   NAMES gxdk.h
   PATHS "${GXDKLatest}/gameKit/Include"
+        "${GameDKXboxLatest}/xbox/include"
 )
 
 if(NOT (GRDK_H AND GXDK_H))

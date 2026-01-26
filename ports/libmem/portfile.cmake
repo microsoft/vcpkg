@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rdbo/libmem
     REF "${VERSION}"
-    SHA512 fb953952c1d11d453ab290b0e3af38ebb24e81fcfeb62b0f8fb7a50e1de2304c2116278b8fefe885708d2705239be2c92bb592cbe912e5fcb0dbf83e5de529f4
+    SHA512 7b291fac0d12be6734cdf2be9705b787c0419aa45d3ce41a968f9e2a009eba739eadbf6ba1ea1663134b97eb20a97992af62fdb5157235d2b21ea76cc1f7f7fd
     HEAD_REF master
     PATCHES
         0001-CMakeLists.patch

@@ -1,6 +1,6 @@
 {
   "name": "faker-cxx",
-  "version": "4.0.1",
+  "version": "4.2.0",
   "description": "C++ Faker library for generating fake (but realistic) data.",
   "homepage": "https://cieslarmichal.github.io/faker-cxx/",
   "license": "MIT",

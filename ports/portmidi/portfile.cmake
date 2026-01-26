@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 00d7cec97b58c074d484793b6097f4e60d061a9d680940bbcdb6670b287b78dbc099af378fb2e066c61f1c26e5060ded9c8f78c80fc03518b33e43f830e34a27 
     HEAD_REF master
+    PATCHES    
+        "android-support.patch"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)

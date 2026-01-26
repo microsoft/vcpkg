@@ -1,0 +1,13 @@
+diff --git a/include/ShaderWriter/CompositeTypes/StructInstanceHelper.hpp b/include/ShaderWriter/CompositeTypes/StructInstanceHelper.hpp
+index 39bdee2..26a1e74 100644
+--- a/include/ShaderWriter/CompositeTypes/StructInstanceHelper.hpp
++++ b/include/ShaderWriter/CompositeTypes/StructInstanceHelper.hpp
+@@ -61,7 +61,7 @@ namespace sdw
+ 		{
+ 			static_assert( hasFieldByName< FieldNameT >() );
+ 			using FieldT = decltype( getFieldByName< FieldNameT >() );
+-			return FieldT::template get( *this );
++			return FieldT::get( *this );
+ 		}
+ 
+ 		static type::BaseStructPtr makeType( type::TypesCache & cache )

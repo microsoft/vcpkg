@@ -1,0 +1,7 @@
+{
+  "name": "picobench",
+  "version": "2.8.0",
+  "description": "A micro microbenchmarking library for C++11 in a single header file",
+  "homepage": "https://github.com/iboB/picobench",
+  "license": "MIT"
+}

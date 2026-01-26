@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 1dd91dea966e7da2d4077bb711f5936e30829a80b88ea77b987da57f15ae9566aa2eaf8bd1dcf099e73c2eb52b66654c6cb1f69c907c58f3d046e284e81d973c
+    SHA512 fef2d3a858472b717ed7c0df6ff1bc638daeb4f122ba9245b41f788b0c533ac9bd8f3411b475cc89e733236951b1478dd3f4f6768a8ebffa345e6e399a049460
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
@@ -114,13 +114,13 @@ if(cxx_link_libraries)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB pc_files 
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
+    file(GLOB pc_files
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc"
         "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"
     )
     foreach(pc_file IN LISTS pc_files)
         vcpkg_replace_string("${pc_file}"
-            "\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
+            "\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib"
             "-l\\1"
             REGEX
             IGNORE_UNCHANGED

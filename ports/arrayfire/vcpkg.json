@@ -1,7 +1,7 @@
 {
   "name": "arrayfire",
   "version-semver": "3.8.0",
-  "port-version": 8,
+  "port-version": 9,
   "description": "ArrayFire is a general-purpose library that simplifies the process of developing software that targets parallel and massively-parallel architectures including CPUs, GPUs, and other hardware acceleration devices.",
   "homepage": "https://github.com/arrayfire/arrayfire",
   "license": "BSD-3-Clause",

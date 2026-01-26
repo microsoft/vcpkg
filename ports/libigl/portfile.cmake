@@ -1,3 +1,18 @@
+# This triplet option enables building an actual binary library.
+# Despite the name (which follows upstream's choice), it respects
+# the triplet's library linkage for non-Windows targets.
+# Missing symbols - i.e. explicit template instantiations -
+# must be added to the implementation files (and upstreamed),
+# cf. https://libigl.github.io/static-library/
+if(NOT DEFINED LIBIGL_USE_STATIC_LIBRARY)
+    set(LIBIGL_USE_STATIC_LIBRARY OFF)
+endif()
+if(NOT LIBIGL_USE_STATIC_LIBRARY)
+    set(VCPKG_BUILD_TYPE release)  # header-only
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
@@ -6,67 +21,66 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         dependencies.patch
+        imgui-impl.diff
         install-extra-targets.patch
+        instantiations.diff # Fix size_t and ptrdiff_t issues in 32 bit builds (arm32, x86)
 )
-file(REMOVE
-    "${SOURCE_PATH}/cmake/find/FindGMP.cmake"
-    "${SOURCE_PATH}/cmake/find/FindMPFR.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/boost.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/catch2.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/cgal.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/eigen.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/embree.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/glad.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/glfw.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/gmp.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/gmp_mpfr.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/imgui.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/imguizmo.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/libigl_imgui_fonts.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/mpfr.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/stb.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/tinyxml2.cmake"
-    "${SOURCE_PATH}/cmake/recipes/external/spectra.cmake"
-)
+file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/recipes")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cgal            LIBIGL_COPYLEFT_CGAL
+        copyleft        LIBIGL_COPYLEFT_CORE
         embree          LIBIGL_EMBREE
         glfw            LIBIGL_GLFW
         imgui           LIBIGL_IMGUI
         opengl          LIBIGL_OPENGL
         xml             LIBIGL_XML
-        predicates      LIBIGL_PREDICATES
-        tetgen          LIBIGL_COPYLEFT_TETGEN
-        triangle        LIBIGL_RESTRICTED_TRIANGLE
 )
 
-set(VCPKG_BUILD_TYPE release) # header-only
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCMAKE_POLICY_DEFAULT_CMP0167=NEW # boost used by cgal
+        -DHUNTER_ENABLED=OFF
         -DLIBIGL_BUILD_TESTS=OFF
         -DLIBIGL_BUILD_TUTORIALS=OFF
         -DLIBIGL_INSTALL=ON
+        -DLIBIGL_USE_STATIC_LIBRARY=${LIBIGL_USE_STATIC_LIBRARY}
+        # cf. cmake/recipes/external/cgal.cmake
+        -DCGAL_CMAKE_EXACT_NT_BACKEND=BOOST_BACKEND
+        -DCGAL_DISABLE_GMP=ON
+        # Permissive modules
+        -DLIBIGL_PREDICATES=OFF
+        -DLIBIGL_SPECTRA=OFF
+        # Copyleft modules
+        -DLIBIGL_COPYLEFT_COMISO=OFF
+        -DLIBIGL_COPYLEFT_TETGEN=OFF
+        # Restricted modules
         -DLIBIGL_RESTRICTED_MATLAB=OFF
         -DLIBIGL_RESTRICTED_MOSEK=OFF
-        -DLIBIGL_USE_STATIC_LIBRARY=OFF
-        -DHUNTER_ENABLED=OFF
-        -DLIBIGL_SPECTRA=OFF
-        ${ADDITIONAL_OPTIONS}
+        -DLIBIGL_RESTRICTED_TRIANGLE=OFF
+    MAYBE_UNUSED_VARIABLES
+        CGAL_CMAKE_EXACT_NT_BACKEND
+        CGAL_DISABLE_GMP
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/igl)
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-
-if(NOT LIBIGL_COPYLEFT_CGAL)
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2")
+if(LIBIGL_USE_STATIC_LIBRARY)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 else()
-    vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2" "${SOURCE_PATH}/LICENSE.GPL" COMMENT "GPL for targets in \"igl_copyleft::\" namespace.")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 endif()
+
+set(comment "")
+if(LIBIGL_COPYLEFT_CORE)
+    set(comment "GPL-2.0 terms apply to include/igl/copyleft/marching_cubes_tables.h.")
+endif()
+vcpkg_install_copyright(COMMENT "${comment}" FILE_LIST "${SOURCE_PATH}/LICENSE.MPL2")

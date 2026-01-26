@@ -1,6 +1,6 @@
 {
   "name": "gtk3",
-  "version": "3.24.43",
+  "version": "3.24.51",
   "port-version": 1,
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
@@ -25,13 +25,13 @@
       "features": [
         "x11"
       ],
-      "platform": "linux"
+      "platform": "linux | freebsd | openbsd"
     },
-    "gdk-pixbuf",
     {
       "name": "gdk-pixbuf",
       "host": true
     },
+    "gdk-pixbuf",
     {
       "name": "gettext",
       "host": true,
@@ -47,10 +47,20 @@
       "host": true
     },
     "libepoxy",
+    "libxi",
+    "libxrandr",
     "pango",
     {
       "name": "vcpkg-tool-meson",
       "host": true
+    },
+    {
+      "name": "wayland",
+      "platform": "linux | freebsd | openbsd"
+    },
+    {
+      "name": "wayland-protocols",
+      "platform": "linux | freebsd | openbsd"
     }
   ],
   "features": {

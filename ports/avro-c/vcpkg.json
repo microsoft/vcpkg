@@ -1,6 +1,6 @@
 {
   "name": "avro-c",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "Apache Avro is a data serialization system",
   "homepage": "https://github.com/apache/avro",
   "license": "Apache-2.0",

@@ -117,7 +117,14 @@ function(third_party_from_pkgconfig gn_group)
             # At least icu must be newer than in Windows SDK
             foreach(name IN LISTS ldflags)
                 set(filepath NOTFOUND)
-                find_file(filepath NAMES "${name}" PATHS ${lib_dirs} NO_DEFAULT_PATH NO_CACHE)
+                
+                set(possible_names "${name}")
+                string(REGEX REPLACE "\\.lib$" ".dll.lib" dll_lib_name "${name}")
+                if(NOT dll_lib_name STREQUAL name)
+                    list(APPEND possible_names "${dll_lib_name}")
+                endif()
+                
+                find_file(filepath NAMES ${possible_names} PATHS ${lib_dirs} NO_DEFAULT_PATH NO_CACHE)
                 if(filepath)
                     list(APPEND libs_with_path "${filepath}")
                 else()

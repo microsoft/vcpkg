@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 31c8c09..135b35e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -232,6 +232,7 @@ endif()
+ if (NOT EMSCRIPTEN)
+     if (UNIX)
+         if (CMAKE_BUILD_TYPE STREQUAL Release)
++        elseif(0)
+             if (APPLE)
+                 add_custom_command(TARGET basisu POST_BUILD COMMAND strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu)
+ 				#message("strip command: strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu")
