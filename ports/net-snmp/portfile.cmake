@@ -1,7 +1,7 @@
-# mingw is not supported
-if(VCPKG_TARGET_IS_MINGW)
+# mingw is not supported and uwp
+if(VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
     vcpkg_fail_port_install(
-        MESSAGE "net-snmp supports only the MSVC toolchain"
+        MESSAGE "This port supports only desktop Windows with MSVC"
     )
 endif()
 
@@ -35,7 +35,7 @@ endif()
 
 foreach(BUILD_TYPE ${BUILD_TYPES})
 
-    set(SET NET_SNMP_FEATURE_LIST)
+    set(SET NET_SNMP_FEATURE_LIST "")
     list(APPEND NET_SNMP_FEATURE_LIST "--with-sdk")    
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         list(APPEND NET_SNMP_FEATURE_LIST "--linktype=static")    
