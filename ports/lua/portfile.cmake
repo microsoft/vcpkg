@@ -37,8 +37,8 @@ if("cpp" IN_LIST FEATURES)
     vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-lua-cpp CONFIG_PATH share/unofficial-lua-cpp)
 endif()
 
-if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES lua luac)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES lua luac  AUTO_CLEAN)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
