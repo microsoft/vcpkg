@@ -1,7 +1,7 @@
 {
   "name": "cfitsio",
   "version": "3.49",
-  "port-version": 6,
+  "port-version": 7,
   "description": "Library of C and Fortran subroutines for reading and writing data files in FITS (Flexible Image Transport System) data format",
   "homepage": "https://heasarc.gsfc.nasa.gov/fitsio/",
   "dependencies": [
@@ -26,8 +26,8 @@
       "description": "Thread-safe build (using pthreads)",
       "dependencies": [
         {
-          "name": "pthreads",
-          "platform": "windows"
+          "name": "pthreads4w",
+          "platform": "windows & !mingw"
         }
       ]
     }

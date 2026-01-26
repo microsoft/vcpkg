@@ -1,7 +1,7 @@
 {
   "name": "usbmuxd",
   "version-date": "2023-07-21",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A socket daemon to multiplex connections from and to iOS devices",
   "homepage": "http://www.libimobiledevice.org",
   "license": "LGPL-2.0-or-later",
@@ -12,7 +12,10 @@
     "libimobiledevice",
     "libimobiledevice-glue",
     "libusb",
-    "pthreads",
+    {
+      "name": "pthreads4w",
+      "platform": "windows & !mingw"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

@@ -1,13 +1,17 @@
 {
   "name": "libupnp",
   "version": "1.14.25",
+  "port-version": 1,
   "description": "libupnp: Build UPnP-compliant control points, devices, and bridges on several operating systems.",
   "homepage": "https://github.com/pupnp/pupnp/",
   "documentation": "https://github.com/pupnp/pupnp/",
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
-    "pthreads",
+    {
+      "name": "pthreads4w",
+      "platform": "windows & !mingw"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
