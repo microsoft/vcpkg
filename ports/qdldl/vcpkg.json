@@ -5,7 +5,6 @@
   "description": "A free LDL factorisation routine",
   "homepage": "https://osqp.org/",
   "license": "Apache-2.0",
-  "supports": "!android & !x86",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
