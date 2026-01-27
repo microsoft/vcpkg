@@ -1,0 +1,4 @@
+The stardots-sdk-cpp port provides the following CMake targets:
+
+    find_package(stardots-sdk-cpp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE stardots-sdk-cpp::stardots-sdk-cpp)
