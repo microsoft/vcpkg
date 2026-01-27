@@ -5,8 +5,8 @@ function(vcpkg_build_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL"
-        "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET"
-        "OPTIONS"
+        "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET;BUILD_MAKE_WORKING_DIRECTORY;INSTALL_MAKE_WORKING_DIRECTORY"
+        "OPTIONS;INSTALL_OPTIONS"
     )
 
     if(DEFINED arg_UNPARSED_ARGUMENTS)
@@ -50,8 +50,8 @@ function(vcpkg_build_make)
 
         string(REPLACE " " [[\ ]] vcpkg_package_prefix "${CURRENT_PACKAGES_DIR}")
         string(REGEX REPLACE [[([a-zA-Z]):/]] [[/\1/]] vcpkg_package_prefix "${vcpkg_package_prefix}")
-        vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
-        vcpkg_list(SET no_parallel_install_opts -j 1 --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
+        vcpkg_list(SET install_opts ${arg_INSTALL_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
+        vcpkg_list(SET no_parallel_install_opts ${arg_INSTALL_OPTIONS} -j 1 --trace -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${vcpkg_package_prefix})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
 
     else()
@@ -66,6 +66,16 @@ function(vcpkg_build_make)
         vcpkg_list(SET install_opts -j ${VCPKG_CONCURRENCY} -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
         vcpkg_list(SET no_parallel_install_opts -j 1 -f ${arg_MAKEFILE} ${arg_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
+
+    if (DEFINED arg_BUILD_MAKE_WORKING_DIRECTORY)
+        vcpkg_list(PREPEND make_opts "-C" "${arg_BUILD_MAKE_WORKING_DIRECTORY}")
+        vcpkg_list(PREPEND no_parallel_make_opts "-C" "${arg_BUILD_MAKE_WORKING_DIRECTORY}")
+    endif ()
+
+    if (DEFINED arg_INSTALL_MAKE_WORKING_DIRECTORY)
+        vcpkg_list(PREPEND install_opts "-C" "${arg_INSTALL_MAKE_WORKING_DIRECTORY}")
+        vcpkg_list(PREPEND no_parallel_install_opts "-C" "${arg_INSTALL_MAKE_WORKING_DIRECTORY}")
+    endif ()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
     vcpkg_backup_env_variables(VARS LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH CPPFLAGS CFLAGS CXXFLAGS RCFLAGS)
@@ -141,7 +151,7 @@ function(vcpkg_build_make)
                 )
             endif()
 
-            file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${short_buildtype}-out.log" logdata) 
+            file(READ "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${short_buildtype}-out.log" logdata)
             if(logdata MATCHES "Warning: linker path does not have real file for library")
                 message(FATAL_ERROR "libtool could not find a file being linked against!")
             endif()
