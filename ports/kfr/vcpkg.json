@@ -1,10 +1,10 @@
 {
   "name": "kfr",
-  "version-semver": "6.3.1",
+  "version-semver": "7.0.1",
   "description": "Fast, modern C++ DSP framework.",
   "homepage": "https://www.kfr.dev/",
   "license": null,
-  "supports": "!(arm64 & windows) & !xbox",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -16,6 +16,30 @@
     }
   ],
   "features": {
+    "alac": {
+      "description": "Enable ALAC audio module",
+      "dependencies": [
+        "alac",
+        {
+          "name": "kfr",
+          "features": [
+            "audio"
+          ]
+        }
+      ]
+    },
+    "audio": {
+      "description": "Enable Audio modules",
+      "dependencies": [
+        {
+          "name": "kfr",
+          "features": [
+            "dsp",
+            "io"
+          ]
+        }
+      ]
+    },
     "capi": {
       "description": "Enable C API build.",
       "dependencies": [
@@ -23,13 +47,48 @@
           "name": "kfr",
           "default-features": false,
           "features": [
-            "dft"
+            "audio",
+            "dft",
+            "dsp"
           ]
         }
       ]
     },
     "dft": {
       "description": "Enable DFT and related algorithms."
+    },
+    "dsp": {
+      "description": "Enable DSP modules",
+      "dependencies": [
+        "boost-math"
+      ]
+    },
+    "flac": {
+      "description": "Enable FLAC audio module",
+      "dependencies": [
+        {
+          "name": "kfr",
+          "features": [
+            "audio"
+          ]
+        },
+        "libflac"
+      ]
+    },
+    "io": {
+      "description": "Enable IO modules"
+    },
+    "ogg": {
+      "description": "Enable OGG audio module",
+      "dependencies": [
+        {
+          "name": "kfr",
+          "features": [
+            "audio"
+          ]
+        },
+        "libogg"
+      ]
     }
   }
 }
