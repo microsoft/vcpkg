@@ -2800,6 +2800,10 @@
       "baseline": "0.15.4",
       "port-version": 3
     },
+    "ethindp-prism": {
+      "baseline": "0.4.7",
+      "port-version": 0
+    },
     "etl": {
       "baseline": "20.45.0",
       "port-version": 0

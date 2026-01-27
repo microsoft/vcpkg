@@ -1661,3 +1661,6 @@ ms-gdkx:x64-windows-release=skip
 ms-gdkx:x64-windows-static-md=skip
 ms-gdkx:x64-windows-static=skip
 ms-gdkx:x64-windows=skip
+
+# ethindp-prism requires the following as speech-dispatcher is not yet installed on CI machines
+ethindp-prism[speech-dispatcher](linux) = feature-fails
