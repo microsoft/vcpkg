@@ -1,0 +1,92 @@
+diff --git a/cmake/functions.cmake b/cmake/functions.cmake
+index b94f4eb..56f4943 100644
+--- a/cmake/functions.cmake
++++ b/cmake/functions.cmake
+@@ -1,7 +1,5 @@
+ function(lazperf_add_library _target _type)
+     add_library(${_target} ${_type} ${ARGN})
+     lazperf_library_compile_settings(${_target} ${_type})
+-    if (${_type} STREQUAL "SHARED")
+-        lazperf_install_library(${_target})
+-    endif()
++    lazperf_install_library(${_target})
+ endfunction()
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index 60da7f3..728dff2 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -4,13 +4,9 @@ file(GLOB SRCS
+     lazperf/detail/*.cpp
+ )
+ 
+-set (LAZPERF_SHARED_LIB lazperf)
+-set (LAZPERF_STATIC_LIB lazperf_s)
++set (LAZPERF_LIB lazperf)
+ 
+-if (NOT EMSCRIPTEN)
+-    lazperf_add_library(${LAZPERF_SHARED_LIB} SHARED ${SRCS})
+-endif()
+-lazperf_add_library(${LAZPERF_STATIC_LIB} STATIC ${SRCS})
++lazperf_add_library(${LAZPERF_LIB} ${SRCS})
+ 
+ install(
+     FILES
+diff --git a/cpp/emscripten/CMakeLists.txt b/cpp/emscripten/CMakeLists.txt
+index 2ab5f1a..1d772c5 100755
+--- a/cpp/emscripten/CMakeLists.txt
++++ b/cpp/emscripten/CMakeLists.txt
+@@ -37,7 +37,7 @@ endif()
+ message("FLAGS: ${CMAKE_CXX_FLAGS}")
+ 
+ add_executable(laz-perf laz-perf.cpp)
+-target_link_libraries(laz-perf ${LAZPERF_STATIC_LIB})
++target_link_libraries(laz-perf ${LAZPERF_LIB})
+ 
+ if (WASM)
+   SET_TARGET_PROPERTIES(laz-perf PROPERTIES SUFFIX .js)
+diff --git a/cpp/examples/CMakeLists.txt b/cpp/examples/CMakeLists.txt
+index f422e39..5cb2578 100644
+--- a/cpp/examples/CMakeLists.txt
++++ b/cpp/examples/CMakeLists.txt
+@@ -5,7 +5,7 @@ target_include_directories(point10
+ )
+ target_link_libraries(point10
+     PRIVATE
+-        ${LAZPERF_STATIC_LIB}
++        ${LAZPERF_LIB}
+ )
+ lazperf_target_compile_settings(point10)
+ 
+@@ -16,7 +16,7 @@ target_include_directories(readlaz
+ )
+ target_link_libraries(readlaz
+     PRIVATE
+-        ${LAZPERF_STATIC_LIB}
++        ${LAZPERF_LIB}
+ )
+ lazperf_target_compile_settings(readlaz)
+ 
+diff --git a/cpp/test/CMakeLists.txt b/cpp/test/CMakeLists.txt
+index 0cdc1d8..6feba9b 100644
+--- a/cpp/test/CMakeLists.txt
++++ b/cpp/test/CMakeLists.txt
+@@ -4,7 +4,7 @@ set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+ 
+ macro(LAZPERF_ADD_TEST _name)
+   add_executable(${_name} ${_name}.cpp)
+-  target_link_libraries(${_name} gtest ${LAZPERF_STATIC_LIB})
++  target_link_libraries(${_name} gtest ${LAZPERF_LIB})
+   target_include_directories(${_name} PRIVATE ${GTEST_DIR}/include)
+   target_include_directories(${_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+   target_include_directories(${_name} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+diff --git a/cpp/tools/CMakeLists.txt b/cpp/tools/CMakeLists.txt
+index 2ffc81a..0910f94 100644
+--- a/cpp/tools/CMakeLists.txt
++++ b/cpp/tools/CMakeLists.txt
+@@ -3,5 +3,5 @@ add_executable(random random.cpp)
+ 
+ target_include_directories(random PRIVATE ../lazperf)
+ lazperf_target_compile_settings(random)
+-target_link_libraries(random PRIVATE ${LAZPERF_STATIC_LIB})
++target_link_libraries(random PRIVATE ${LAZPERF_LIB})
+ 
