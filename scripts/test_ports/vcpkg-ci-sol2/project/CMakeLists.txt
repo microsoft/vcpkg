@@ -1,13 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
 project(sol2-test C CXX)
 
+set(CMAKE_CXX_STANDARD 17)
+
+# Select a Lua implementation
+find_package(Lua REQUIRED)
+
 
 find_package(sol2 CONFIG REQUIRED)
 
 add_executable(main-cmake main.cpp)
 target_link_libraries(main-cmake PRIVATE sol2::sol2)
 
-find_package(Lua REQUIRED)
 target_link_libraries(sol2::sol2 INTERFACE ${LUA_LIBRARIES})
 
 
