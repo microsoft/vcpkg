@@ -27,18 +27,10 @@ index ac777bd..79a813c 100644
  list(POP_BACK CMAKE_MESSAGE_INDENT)
  
 diff --git a/algebra/builtin/CMakeLists.txt b/algebra/builtin/CMakeLists.txt
-index e542897..9ddd794 100644
+index e542897..1c23ab3 100644
 --- a/algebra/builtin/CMakeLists.txt
 +++ b/algebra/builtin/CMakeLists.txt
-@@ -26,7 +26,6 @@ target_include_directories(
-           ${CMAKE_CURRENT_SOURCE_DIR}
-           ${LIN_SYS_QDLDL_INC_PATHS} )
- 
--
- # Setup the file copying for the code generation target
- if( OSQP_CODEGEN )
-   set( EMBEDDED_LINALG
-@@ -42,9 +41,13 @@ if( OSQP_CODEGEN )
+@@ -42,9 +42,13 @@ if( OSQP_CODEGEN )
         ${OSQP_ALGEBRA_ROOT}/_common/kkt.c
         ${OSQP_ALGEBRA_ROOT}/_common/lin_sys/qdldl/qdldl_interface.h
         ${OSQP_ALGEBRA_ROOT}/_common/lin_sys/qdldl/qdldl_interface.c
@@ -46,7 +38,7 @@ index e542897..9ddd794 100644
 -       ${qdldl_SOURCE_DIR}/include/qdldl.h
 -       ${qdldl_BINARY_DIR}/include/qdldl_version.h )
 +  )
-+  find_package(qdldl CONFIG REQUIRED)
++  find_package(qdldl CONFIG REQUIRED GLOBAL)
 +  target_link_libraries(OSQPLIB PRIVATE $<IF:$<TARGET_EXISTS:qdldl::qdldl>,qdldl::qdldl,qdldl::qdldlstatic>)
 +  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/../../osqp-findAlgebraDependency.cmake" [[
 +include(CMakeFindDependencyMacro)
