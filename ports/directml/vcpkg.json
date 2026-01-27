@@ -8,5 +8,5 @@
   ],
   "homepage": "https://github.com/microsoft/DirectML",
   "license": "MIT",
-  "supports": "(windows & !static & !uwp) | (x64 & linux)"
+  "supports": "windows & !static & !uwp"
 }
