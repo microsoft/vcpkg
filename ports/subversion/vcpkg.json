@@ -1,6 +1,7 @@
 {
   "name": "subversion",
   "version-date": "2025-12-23",
+  "port-version": 1,
   "description": "Apache Subversion (SVN) - Enterprise-class centralized version control system",
   "homepage": "https://subversion.apache.org/",
   "license": "Apache-2.0",
