@@ -1,0 +1,5 @@
+fastdds_statistics_backend provides CMake targets:
+
+  find_package(fastdds_statistics_backend CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE fastdds_statistics_backend)
+    
