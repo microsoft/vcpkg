@@ -213,7 +213,7 @@
       "port-version": 0
     },
     "arcticdb-sparrow-extensions": {
-      "baseline": "0.2.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "arcus": {
