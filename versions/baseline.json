@@ -7418,7 +7418,7 @@
     },
     "osqp": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "osqp-eigen": {
       "baseline": "0.11.0",
