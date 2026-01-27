@@ -1,0 +1,14 @@
+{
+  "name": "libsocketcan",
+  "version-string": "0.0.12",
+  "description": "This library allows you to control some basic functions in SocketCAN from userspace.",
+  "homepage": "https://github.com/linux-can/libsocketcan",
+  "license": "LGPL-2.1-or-later",
+  "supports": "android | linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}
