@@ -4,10 +4,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO onnx/onnx
     REF "v${VERSION}"
-    SHA512 e6f7b5782a43a91783607549e4d0f0a9cbd46dfb67a602f81aaffc7bcdd8f450fe9c225f0bc314704f2923e396f0df5b03ea91af4a7887203c0b8372bc2749d0
+    SHA512 7b59ca1a42d3ca177a75e78d913c9fc4f6b80f167496b9416932289750f46c6999b02f4270fe7701917a494306bd84148f6d9d6cdaa0ca4f068d994ddd3076ab
     PATCHES
         fix-cmakelists.patch
-        fix-pr-7390.patch # part of https://github.com/onnx/onnx PR 7390
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_STATIC_RUNTIME)
