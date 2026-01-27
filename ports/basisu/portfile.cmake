@@ -18,6 +18,7 @@ vcpkg_from_github(
         export-cmake-config.diff
         skip-strip.diff
         devendor-zstd.diff
+		add_ctype.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/zstd")
 
