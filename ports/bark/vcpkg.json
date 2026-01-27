@@ -1,6 +1,6 @@
 {
   "name": "bark",
-  "version-semver": "0.4.0",
+  "version-semver": "0.5.0",
   "description": "A modern, low latency datadog client for C++",
   "homepage": "https://github.com/twig-energy/bark",
   "license": "MIT",
