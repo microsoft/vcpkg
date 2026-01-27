@@ -4,10 +4,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nibanks/msh3
     REF v${VERSION}
-    SHA512 0573647b2bea669b34343379319702513da884949b45b2e678aa6c9677ed8e5947ef85e6dcf47f5e5b798c9bfff62b41df53f65848a465b4b37596f5fefebbe6
+    SHA512 ac35ab8c5145b1285a23cf847d5ee2fef5c706c034d89877c09d0f4d8961cc08e7926fe2ba40698d42968635b002b3234906ece0d4866786febfe6d3ba95382d
     HEAD_REF main
-    PATCHES
-        dependencies_fix.patch
 )
 
 vcpkg_cmake_configure(
