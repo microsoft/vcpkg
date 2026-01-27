@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3ff2f74e..d70fc66e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -322,7 +322,7 @@ endif ()
+ 
+ 
+ # Set the installation directory to the build directory
+-set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
++# set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
+ 
+ # Add a child project: InspireFace Source
+ add_subdirectory(cpp/inspireface)
