@@ -1,6 +1,6 @@
 {
   "name": "lilv",
-  "version": "0.24.26",
+  "version": "0.26.2",
   "description": "Lilv is a C library for simple use of LV2 plugins in applications.",
   "homepage": "https://drobilla.net/software/lilv",
   "license": "ISC",
