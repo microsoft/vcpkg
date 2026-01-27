@@ -1,0 +1,48 @@
+diff --git a/src/refimpl/E57RefImplConfig.cmake b/src/refimpl/E57RefImplConfig.cmake
+index 8ba7356..210b254 100644
+--- a/src/refimpl/E57RefImplConfig.cmake
++++ b/src/refimpl/E57RefImplConfig.cmake
+@@ -88,6 +88,16 @@ MARK_AS_ADVANCED(
+     E57RefImpl_LIBRARY
+ )
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(Boost REQUIRED COMPONENTS filesystem system)
++find_dependency(XercesC REQUIRED)
++
++set(E57RefImpl_DEPENDENCIES
++    Boost::filesystem
++    Boost::system
++    XercesC::XercesC
++)
++
+ IF (E57RefImpl_LIBRARY_DEBUG AND E57RefImpl_LIBRARY_RELEASE)
+   # if the generator supports configuration types then set
+   # optimized and debug libraries, or if the CMAKE_BUILD_TYPE has a value
+@@ -99,22 +109,23 @@ IF (E57RefImpl_LIBRARY_DEBUG AND E57RefImpl_LIBRARY_RELEASE)
+     SET(E57RefImpl_LIBRARY ${E57RefImpl_LIBRARY_RELEASE} )
+   ENDIF()
+   # FIXME: This probably should be set for both cases
+-  SET(E57RefImpl_LIBRARIES optimized ${E57RefImpl_LIBRARY_RELEASE} debug ${E57RefImpl_LIBRARY_DEBUG})
++  SET(E57RefImpl_LIBRARIES optimized ${E57RefImpl_LIBRARY_RELEASE} ${E57RefImpl_DEPENDENCIES} debug ${E57RefImpl_LIBRARY_DEBUG} ${E57RefImpl_DEPENDENCIES})
+ ENDIF()
+ 
+ # if only the release version was found, set the debug variable also to the release version
+ IF (E57RefImpl_LIBRARY_RELEASE AND NOT E57RefImpl_LIBRARY_DEBUG)
+   SET(E57RefImpl_LIBRARY_DEBUG ${E57RefImpl_LIBRARY_RELEASE})
+   SET(E57RefImpl_LIBRARY       ${E57RefImpl_LIBRARY_RELEASE})
+-  SET(E57RefImpl_LIBRARIES     ${E57RefImpl_LIBRARY_RELEASE})
++  SET(E57RefImpl_LIBRARIES     ${E57RefImpl_LIBRARY_RELEASE} ${E57RefImpl_DEPENDENCIES})
+ ENDIF()
+ 
+ # if only the debug version was found, set the release variable also to the debug version
+ IF (E57RefImpl_LIBRARY_DEBUG AND NOT E57RefImpl_LIBRARY_RELEASE)
+   SET(E57RefImpl_LIBRARY_RELEASE ${E57RefImpl_LIBRARY_DEBUG})
+   SET(E57RefImpl_LIBRARY         ${E57RefImpl_LIBRARY_DEBUG})
+-  SET(E57RefImpl_LIBRARIES       ${E57RefImpl_LIBRARY_DEBUG})
++  SET(E57RefImpl_LIBRARIES       ${E57RefImpl_LIBRARY_DEBUG} ${E57RefImpl_DEPENDENCIES})
+ ENDIF()
++unset(E57RefImpl_DEPENDENCIES)
+ 
+ IF (E57RefImpl_LIBRARY)
+     set(E57RefImpl_LIBRARY ${E57RefImpl_LIBRARY} CACHE FILEPATH "The E57RefImpl library")
