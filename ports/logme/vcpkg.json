@@ -1,6 +1,7 @@
 {
   "name": "logme",
   "version": "2.4.1",
+  "port-version": 1,
   "description": "Cross-platform C/C++ logging framework: channels and routing, multiple backends, colored output, and runtime dynamic control.",
   "homepage": "https://github.com/efmsoft/logme",
   "license": "Apache-2.0",
@@ -11,10 +12,12 @@
   ],
   "features": {
     "examples": {
-      "description": "Build examples."
+      "description": "Build examples.",
+      "supports": "!uwp"
     },
     "tools": {
-      "description": "Build command-line tools."
+      "description": "Build command-line tools.",
+      "supports": "!uwp"
     }
   }
 }

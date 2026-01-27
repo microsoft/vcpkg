@@ -13,6 +13,13 @@ vcpkg_check_features(
     tools    LOGME_BUILD_TOOLS
 )
 
+if(VCPKG_TARGET_IS_UWP)
+  list(APPEND FEATURE_OPTIONS
+    -DLOGME_BUILD_EXAMPLES=OFF
+    -DLOGME_BUILD_TOOLS=OFF
+  )
+endif()
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(_logme_static_opt  ON)
   set(_logme_dynamic_opt OFF)
