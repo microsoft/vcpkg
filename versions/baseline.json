@@ -3837,7 +3837,7 @@
       "port-version": 0
     },
     "htscodecs": {
-      "baseline": "1.6.1",
+      "baseline": "1.6.5",
       "port-version": 0
     },
     "htslib": {
