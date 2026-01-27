@@ -20,26 +20,13 @@ else()
     set(BUILD_ARCHIVE OFF)
 endif()
 
-# Set CRT linkage for Windows static builds
-set(AERON_CMAKE_OPTIONS
-    -DAERON_INSTALL_TARGETS=ON
-    -DAERON_TESTS=OFF
-    -DAERON_BUILD_SAMPLES=OFF
-    -DBUILD_AERON_ARCHIVE_API=${BUILD_ARCHIVE}
-)
-
-# Only set static CRT if triplet explicitly requests it (VCPKG_CRT_LINKAGE=static)
-# Otherwise, respect the triplet's CRT setting (dynamic/MD or static/MT)
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
-    list(APPEND AERON_CMAKE_OPTIONS
-        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$$<$$<CONFIG:Debug>:Debug>
-        -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
-    )
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${AERON_CMAKE_OPTIONS}
+    OPTIONS
+        -DAERON_INSTALL_TARGETS=ON
+        -DAERON_TESTS=OFF
+        -DAERON_BUILD_SAMPLES=OFF
+        -DBUILD_AERON_ARCHIVE_API=${BUILD_ARCHIVE}
 )
 
 vcpkg_cmake_install()
