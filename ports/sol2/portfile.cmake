@@ -1,3 +1,5 @@
+set(VCPKG_BUILD_TYPE release) # header-only
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ThePhD/sol2
@@ -6,9 +8,9 @@ vcpkg_from_github(
     HEAD_REF develop
     PATCHES
         header-only.patch
+        lua-5.5.diff # variation of https://github.com/ThePhD/sol2/pull/1723
 )
 
-set(VCPKG_BUILD_TYPE release) # header-only
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/sol2)
