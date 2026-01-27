@@ -4437,7 +4437,7 @@
       "port-version": 7
     },
     "kissfft": {
-      "baseline": "131.1.0",
+      "baseline": "131.2.0",
       "port-version": 0
     },
     "kissnet": {
