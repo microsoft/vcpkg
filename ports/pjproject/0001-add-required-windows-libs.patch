@@ -1,0 +1,20 @@
+diff --git a/pjlib/include/pj/config.h b/pjlib/include/pj/config.h
+index 7e1a173..cbff60d 100644
+--- a/pjlib/include/pj/config.h
++++ b/pjlib/include/pj/config.h
+@@ -115,6 +115,15 @@
+ #   undef PJ_WIN32
+ #   define PJ_WIN32 1
+ #   include <pj/compat/os_win32.h>
++#ifdef _MSC_VER
++    #pragma comment(lib, "ws2_32.lib")
++    #pragma comment(lib, "setupapi.lib")
++    #pragma comment(lib, "version.lib")
++    #pragma comment(lib, "imm32.lib")
++    #pragma comment(lib, "bcrypt.lib")
++    #pragma comment(lib, "mfuuid.lib")
++#endif
++
+ 
+ #elif defined(PJ_LINUX) || defined(linux) || defined(__linux)
+     /*
