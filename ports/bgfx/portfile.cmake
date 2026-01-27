@@ -6,7 +6,7 @@ vcpkg_download_distfile(
   ARCHIVE_FILE
   URLS https://github.com/bkaradzic/bgfx.cmake/releases/download/v${VERSION}/bgfx.cmake.v${VERSION}.tar.gz
   FILENAME bgfx.cmake.v${VERSION}.tar.gz
-  SHA512 520c542b65e76e92eae818e32eeb62bb2347ac89a1e10fc07cd5059a3b8a9a543cadca87d451a3bc157c415f6183b1f0e5031248e38fae704b8efd54679d482b
+  SHA512 ff5caa1ccd35b527c80e625fa55dc6af18e7851a73b34a34caf481313c2b26ba3a8fec835852dd4f6646bf51e46de32ca40de53f73d0ccc01ee949b5bafacfd1
 )
 
 vcpkg_extract_source_archive(

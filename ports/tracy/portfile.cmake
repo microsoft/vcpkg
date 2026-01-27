@@ -1,24 +1,17 @@
-vcpkg_download_distfile(PATCH_MISSING_CHRONO_INCLUDE
-    URLS https://github.com/wolfpld/tracy/commit/50ff279aaddfd91dc3cdcfd5b7aec3978e63da25.diff?full_index=1
-    SHA512 f9594297ea68612b68bd631497cd312ea01b34280a0f098de0d2b99810149345251a8985a6430337d0b55d2f181ceac10d563b64cfe48f78959f79ec7a6ea3b5
-    FILENAME wolfpld-tracy-PR982.diff
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wolfpld/tracy
     REF "v${VERSION}"
-    SHA512 d3d99284e3c3172236c3f02b3bc52df111ef650fb8609e54fb3302ece28e55a06cd16713ed532f1e1aad66678ff09639dfc7e01a1e96880fb923b267a1b1b79b
+    SHA512 18c0c589a1d97d0760958c8ab00ba2135bc602fd359d48445b5d8ed76e5b08742d818bb8f835b599149030f455e553a92db86fb7bae049b47820e4401cf9f935
     HEAD_REF master
     PATCHES
         build-tools.patch
-		"${PATCH_MISSING_CHRONO_INCLUDE}"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         on-demand TRACY_ON_DEMAND
-        fibers	  TRACY_FIBERS
+        fibers    TRACY_FIBERS
         verbose   TRACY_VERBOSE
     INVERTED_FEATURES
         crash-handler TRACY_NO_CRASH_HANDLER
@@ -47,9 +40,36 @@ vcpkg_cmake_configure(
         DOWNLOAD_CAPSTONE
         LEGACY
 )
+
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup(PACKAGE_NAME Tracy)
+
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/tracy/tracy")
+    message(STATUS "Flattening include/tracy/tracy...")
+
+    file(GLOB INNER_FILES "${CURRENT_PACKAGES_DIR}/include/tracy/tracy/*")
+    file(COPY ${INNER_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/include/tracy")
+
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/tracy/tracy")
+endif()
+
+message(STATUS "Patching headers to fix relative includes...")
+file(GLOB_RECURSE TRACY_HEADERS "${CURRENT_PACKAGES_DIR}/include/tracy/*.hpp" "${CURRENT_PACKAGES_DIR}/include/tracy/*.h")
+
+foreach(HEADER ${TRACY_HEADERS})
+    file(READ "${HEADER}" _contents)
+
+    string(REPLACE "../common" "common" _contents "${_contents}")
+    string(REPLACE "../client" "client" _contents "${_contents}")
+    string(REPLACE "../libbacktrace" "libbacktrace" _contents "${_contents}")
+
+    file(WRITE "${HEADER}" "${_contents}")
+endforeach()
+
+vcpkg_cmake_config_fixup(
+    PACKAGE_NAME Tracy
+    CONFIG_PATH lib/cmake/Tracy
+)
 
 function(tracy_copy_tool tool_name tool_dir)
     vcpkg_copy_tools(
