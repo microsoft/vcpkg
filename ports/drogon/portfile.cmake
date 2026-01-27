@@ -8,6 +8,8 @@ vcpkg_from_github(
          0001-vcpkg.patch
          0002-drogon-config.patch
          0003-deps-redis.patch
+         0004-drogon-ctl.patch
+         0005-drogon-cross-compile.patch
 )
 
 set(DROGON_CTL_TOOL "")
