@@ -1,7 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6a9a694..fd3705e 100644
+index 6a9a694..82c3d01 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -73,7 +73,7 @@ target_include_directories(${PROJECT_NAME}
+          $<INSTALL_INTERFACE:include>)
+ 
+ target_link_libraries(${PROJECT_NAME}
+-  PUBLIC $<$<NOT:$<C_COMPILER_ID:MSVC>>:m>)
++  PUBLIC $<$<NOT:$<PLATFORM_ID:Windows>>:m>)
+ 
+ set_target_properties(${PROJECT_NAME} PROPERTIES
+   SOVERSION ${PROJECT_VERSION_MAJOR}
 @@ -163,11 +163,6 @@ target_compile_definitions(${PROJECT_NAME}
  target_compile_options(${PROJECT_NAME}
    PUBLIC $<$<AND:$<BOOL:${GPROF}>,$<BOOL:${HAVE_GPROF_SUPPORT}>>:-pg>)

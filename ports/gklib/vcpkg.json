@@ -1,6 +1,7 @@
 {
   "name": "gklib",
   "version-date": "2025-07-06",
+  "port-version": 1,
   "description": "General helper libraries for KarypisLab.",
   "homepage": "https://github.com/KarypisLab/GKlib/",
   "license": "Apache-2.0",
