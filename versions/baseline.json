@@ -7416,6 +7416,14 @@
       "baseline": "1.0.1",
       "port-version": 0
     },
+    "osqp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "osqp-eigen": {
+      "baseline": "0.11.0",
+      "port-version": 0
+    },
     "otl": {
       "baseline": "4.0.497",
       "port-version": 0
@@ -7939,6 +7947,10 @@
     "qcustomplot": {
       "baseline": "2.1.1",
       "port-version": 1
+    },
+    "qdldl": {
+      "baseline": "0.1.9",
+      "port-version": 0
     },
     "qgis-o2": {
       "baseline": "1.1",

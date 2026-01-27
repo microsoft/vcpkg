@@ -1,0 +1,229 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9ed43468..04470715 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,6 +29,8 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+   set(IS_MAC ON)
+ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+   set(IS_WINDOWS ON)
++elseif(${CMAKE_SYSTEM_NAME} STREQUAL "WindowsStore")
++  set(IS_WINDOWS ON)
+ endif()
+ 
+ # OSQP Versioning
+@@ -93,6 +95,7 @@ mark_as_advanced(OSQP_LIB_SUFFIX)
+ # Set the relevant boolean values for the algebra
+ if(${OSQP_ALGEBRA_BACKEND} STREQUAL "builtin")
+   set(OSQP_ALGEBRA_BUILTIN ON)
++  find_package(qdldl CONFIG REQUIRED)
+ elseif(${OSQP_ALGEBRA_BACKEND} STREQUAL "mkl")
+   set(OSQP_ALGEBRA_MKL ON)
+ elseif(${OSQP_ALGEBRA_BACKEND} STREQUAL "cuda")
+@@ -389,32 +392,32 @@ if(PYTHON OR R_LANG)
+ endif()
+ 
+ # ----------------------------------------------
+-# Static Library - osqpstatic
++# Static Library - osqp
+ # ----------------------------------------------
+ message( STATUS "Build static library: " ${OSQP_BUILD_STATIC_LIB} )
+ 
+ if( OSQP_BUILD_STATIC_LIB )
+-  add_library(osqpstatic STATIC
++  add_library(osqp STATIC
+               $<TARGET_OBJECTS:OSQPLIB>
+               "${CMAKE_CURRENT_SOURCE_DIR}/src/osqp_api.c")
+ 
+   # Append the algebra name to the library file if desired
+   if(OSQP_LIB_SUFFIX)
+-    set_target_properties(osqpstatic PROPERTIES OUTPUT_NAME "osqpstatic_${OSQP_LIB_SUFFIX}")
++    set_target_properties(osqp PROPERTIES OUTPUT_NAME "osqp_${OSQP_LIB_SUFFIX}")
+   else()
+-    set_target_properties(osqpstatic PROPERTIES OUTPUT_NAME "osqpstatic")
++    set_target_properties(osqp PROPERTIES OUTPUT_NAME "osqp")
+   endif()
+ 
+   # Link against the libraries for the algebras
+-  target_link_libraries(osqpstatic PUBLIC ${osqplib_link_libs})
++  target_link_libraries(osqp PUBLIC ${osqplib_link_libs})
+ 
+   if(OSQP_ALGEBRA_BUILTIN)
+     # Transitive dependency on OBJECT library does not work. See https://gitlab.kitware.com/cmake/cmake/-/issues/18682
+-    target_sources(osqpstatic PRIVATE $<TARGET_OBJECTS:qdldlobject>)
++    target_link_libraries(osqp PRIVATE qdldl::qdldl)
+   endif()
+-  target_include_directories(osqpstatic PRIVATE ${osqplib_includes})
++  target_include_directories(osqp PRIVATE ${osqplib_includes})
+   target_include_directories(
+-    osqpstatic PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/public;${CMAKE_CURRENT_BINARY_DIR}/include/public>"
++    osqp PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/public;${CMAKE_CURRENT_BINARY_DIR}/include/public>"
+                       "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/osqp>")
+ endif()
+ 
+@@ -429,7 +432,7 @@ if(OSQP_BUILD_SHARED_LIB)
+               "${CMAKE_CURRENT_SOURCE_DIR}/src/osqp_api.c")
+   if(OSQP_ALGEBRA_BUILTIN)
+     # Transitive dependency on OBJECT library does not work. See https://gitlab.kitware.com/cmake/cmake/-/issues/18682
+-    target_sources(osqp PRIVATE $<TARGET_OBJECTS:qdldlobject>)
++    target_link_libraries(osqp PRIVATE qdldl::qdldl)
+   endif()
+   target_include_directories(osqp PRIVATE ${osqplib_includes})
+   target_include_directories(osqp PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/public;${CMAKE_CURRENT_BINARY_DIR}/include/public>"
+@@ -461,7 +464,7 @@ if(OSQP_BUILD_DEMO_EXE)
+ 
+   add_executable(osqp_simple_demo
+                  ${OSQP_EXAMPLES_DIR}/osqp_simple_demo.c )
+-  target_link_libraries(osqp_simple_demo osqpstatic ${osqplib_link_libs})
++  target_link_libraries(osqp_simple_demo osqp ${osqplib_link_libs})
+ 
+   add_executable(osqp_demo
+                  ${OSQP_EXAMPLES_DIR}/osqp_demo.c
+@@ -475,11 +478,11 @@ if(OSQP_BUILD_DEMO_EXE)
+   target_include_directories(osqp_demo PRIVATE
+                               ${osqplib_includes}
+                               ${OSQP_EXAMPLES_DIR}/problems )
+-  target_link_libraries(osqp_demo osqpstatic ${osqplib_link_libs})
++  target_link_libraries(osqp_demo osqp ${osqplib_link_libs})
+ 
+   if(OSQP_CODEGEN)
+     add_executable(osqp_codegen_demo ${OSQP_EXAMPLES_DIR}/osqp_codegen_demo.c)
+-    target_link_libraries(osqp_codegen_demo osqpstatic)
++    target_link_libraries(osqp_codegen_demo osqp)
+   endif()
+ endif()
+ 
+@@ -496,20 +499,20 @@ install(FILES ${osqp_headers}
+ ############################################################
+ if(OSQP_BUILD_STATIC_LIB)
+   install(
+-    TARGETS osqpstatic
+-    EXPORT osqpstatic
++    TARGETS osqp
++    EXPORT osqp
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+ 
+   export(
+-    EXPORT osqpstatic
+-    FILE "${CMAKE_CURRENT_BINARY_DIR}/osqpstatic-targets.cmake"
++    EXPORT osqp
++    FILE "${CMAKE_CURRENT_BINARY_DIR}/osqp-targets.cmake"
+     NAMESPACE osqp::)
+ 
+   install(
+-    EXPORT osqpstatic
+-    FILE osqpstatic-targets.cmake
++    EXPORT osqp
++    FILE osqp-targets.cmake
+     NAMESPACE osqp::
+     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/osqp")
+ endif()
+diff --git a/algebra/_common/lin_sys/qdldl/qdldl.cmake b/algebra/_common/lin_sys/qdldl/qdldl.cmake
+index ac777bd0..2447fcff 100644
+--- a/algebra/_common/lin_sys/qdldl/qdldl.cmake
++++ b/algebra/_common/lin_sys/qdldl/qdldl.cmake
+@@ -1,14 +1,6 @@
+-include(FetchContent)
+-
+ message(STATUS "Fetching/configuring QDLDL solver")
+ list(APPEND CMAKE_MESSAGE_INDENT "  ")
+ 
+-FetchContent_Declare(
+-  qdldl
+-  GIT_REPOSITORY https://github.com/osqp/qdldl.git
+-  GIT_TAG v0.1.8
+-  )
+-
+ # Make QDLDL use the same types as OSQP
+ set(QDLDL_FLOAT ${OSQP_USE_FLOAT} CACHE BOOL "QDLDL Float type")
+ set(QDLDL_LONG ${OSQP_USE_LONG} CACHE BOOL "QDLDL Integer type")
+@@ -17,13 +9,8 @@ set(QDLDL_LONG ${OSQP_USE_LONG} CACHE BOOL "QDLDL Integer type")
+ set(QDLDL_BUILD_STATIC_LIB OFF CACHE BOOL "Build QDLDL static library")
+ set(QDLDL_BUILD_SHARED_LIB OFF CACHE BOOL "Build QDLDL shared library")
+ 
+-FetchContent_MakeAvailable(qdldl)
+-FetchContent_GetProperties(qdldl)
+-
+ list(POP_BACK CMAKE_MESSAGE_INDENT)
+ 
+-set_source_files_properties($<TARGET_OBJECTS:qdldlobject> PROPERTIES GENERATED 1)
+-
+ file(
+     GLOB
+     AMD_SRC_FILES
+diff --git a/algebra/builtin/CMakeLists.txt b/algebra/builtin/CMakeLists.txt
+index e5428973..e3e0a6e1 100644
+--- a/algebra/builtin/CMakeLists.txt
++++ b/algebra/builtin/CMakeLists.txt
+@@ -18,14 +18,16 @@ target_sources(
+           matrix.c
+           ${NON_EMBEDDED_SRC_FILES}
+           ${LIN_SYS_QDLDL_EMBEDDED_SRC_FILES}
+-          $<TARGET_OBJECTS:qdldlobject> )
++        )
+ 
+ target_include_directories(
+   OSQPLIB
+   PRIVATE ../_common
+           ${CMAKE_CURRENT_SOURCE_DIR}
+-          ${LIN_SYS_QDLDL_INC_PATHS} )
++          ${LIN_SYS_QDLDL_INC_PATHS}
++        )
+ 
++target_link_libraries(OSQPLIB PRIVATE qdldl::qdldl)
+ 
+ # Setup the file copying for the code generation target
+ if( OSQP_CODEGEN )
+@@ -42,9 +44,7 @@ if( OSQP_CODEGEN )
+        ${OSQP_ALGEBRA_ROOT}/_common/kkt.c
+        ${OSQP_ALGEBRA_ROOT}/_common/lin_sys/qdldl/qdldl_interface.h
+        ${OSQP_ALGEBRA_ROOT}/_common/lin_sys/qdldl/qdldl_interface.c
+-       ${qdldl_SOURCE_DIR}/src/qdldl.c
+-       ${qdldl_SOURCE_DIR}/include/qdldl.h
+-       ${qdldl_BINARY_DIR}/include/qdldl_version.h )
++     )
+ 
+   foreach( f ${EMBEDDED_LINALG} )
+     get_filename_component( fname ${f} NAME )
+@@ -74,3 +74,7 @@ if( OSQP_CODEGEN )
+   add_custom_target( copy_codegen_linalg DEPENDS ${EMBEDDED_BUILD_LINALG} "${EMBEDDED_BUILD_PRIVATE_INC_DIR}/qdldl_types.h" )
+   add_dependencies( copy_codegen_files copy_codegen_linalg )
+ endif()
++
++configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/findAlgebraDependency.cmake.in
++                ${CMAKE_CURRENT_BINARY_DIR}/../../osqp-findAlgebraDependency.cmake
++                @ONLY )
+diff --git a/algebra/builtin/findAlgebraDependency.cmake.in b/algebra/builtin/findAlgebraDependency.cmake.in
+new file mode 100644
+index 00000000..329a11a6
+--- /dev/null
++++ b/algebra/builtin/findAlgebraDependency.cmake.in
+@@ -0,0 +1,2 @@
++include(CMakeFindDependencyMacro)
++find_dependency( qdldl )
+diff --git a/configure/cmake/osqp-config.cmake.in b/configure/cmake/osqp-config.cmake.in
+index 77c25897..5aa6d272 100644
+--- a/configure/cmake/osqp-config.cmake.in
++++ b/configure/cmake/osqp-config.cmake.in
+@@ -15,17 +15,17 @@ if( ${OSQP_HAVE_STATIC_LIB} )
+         include( "${CMAKE_CURRENT_LIST_DIR}/osqp-findAlgebraDependency.cmake" )
+     endif()
+ 
+-    include( "${CMAKE_CURRENT_LIST_DIR}/osqpstatic-targets.cmake" )
++    include( "${CMAKE_CURRENT_LIST_DIR}/osqp-targets.cmake" )
+ 
+     # Modify the language to include CXX if CUDA is included,
+     # otherwise the linker stage will fail because CUDA uses some C++ elements.
+     get_property( interface_languages
+-                  TARGET osqp::osqpstatic
++                  TARGET osqp::osqp
+                   PROPERTY IMPORTED_LINK_INTERFACE_LANGUAGES_NOCONFIG)
+ 
+     foreach( LANG in ${interface_languages} )
+         if( ${LANG} STREQUAL "CUDA" )
+-            set_target_properties( osqp::osqpstatic PROPERTIES
++            set_target_properties( osqp::osqp PROPERTIES
+                                    IMPORTED_LINK_INTERFACE_LANGUAGES_NOCONFIG "${interface_languages};CXX" )
+         endif()
+     endforeach()
