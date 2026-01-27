@@ -1,0 +1,20 @@
+{
+  "name": "cppvrf",
+  "version": "1.1.0",
+  "description": "VRF implementation library in C++20",
+  "license": "MIT",
+  "homepage": "https://github.com/microsoft/cppvrf",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "supports": "static",
+  "features": {}
+}
