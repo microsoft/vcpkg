@@ -1,0 +1,38 @@
+diff --git a/core/iwasm/interpreter/wasm_mini_loader.c b/core/iwasm/interpreter/wasm_mini_loader.c
+index 1234567..abcdefg 100644
+--- a/core/iwasm/interpreter/wasm_mini_loader.c
++++ b/core/iwasm/interpreter/wasm_mini_loader.c
+@@ -841,11 +841,13 @@ load_table_list_elem_section(const uint8 *buf, const uint8 *buf_end,
+     CHECK_BUF(p, p_end, 1);
+     /* 0x70 or 0x6F */
+     declare_elem_type = read_uint8(p);
++#if WASM_ENABLE_REF_TYPES != 0
+     bh_assert(VALUE_TYPE_FUNCREF == declare_elem_type
+-#if WASM_ENABLE_REF_TYPES != 0
+-              || VALUE_TYPE_EXTERNREF == declare_elem_type
++              || VALUE_TYPE_EXTERNREF == declare_elem_type);
++#else
++    bh_assert(VALUE_TYPE_FUNCREF == declare_elem_type);
+ #endif
+-    );
++
+ 
+     /* the table flag can't exceed one byte, only check in debug build given
+      * the nature of mini-loader */
+@@ -989,11 +991,13 @@ load_table_list(const uint8 *buf, const uint8 *buf_end, WASMModule *module,
+     CHECK_BUF(p, p_end, 1);
+     /* 0x70 or 0x6F */
+     table->table_type.elem_type = read_uint8(p);
++#if WASM_ENABLE_REF_TYPES != 0
+     bh_assert((VALUE_TYPE_FUNCREF == table->table_type.elem_type)
+-#if WASM_ENABLE_REF_TYPES != 0
+-              || VALUE_TYPE_EXTERNREF == table->table_type.elem_type
++              || VALUE_TYPE_EXTERNREF == table->table_type.elem_type);
++#else
++    bh_assert(VALUE_TYPE_FUNCREF == table->table_type.elem_type);
+ #endif
+-    );
++
+ 
+     /* the table flag can't exceed one byte, only check in debug build given
+      * the nature of mini-loader */
