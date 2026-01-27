@@ -1,0 +1,2047 @@
+diff --git a/gusb/gusb-bos-descriptor.c b/gusb/gusb-bos-descriptor.c
+index 2e4134b..83da46d 100644
+--- a/gusb/gusb-bos-descriptor.c
++++ b/gusb/gusb-bos-descriptor.c
+@@ -24,8 +24,8 @@
+ struct _GUsbBosDescriptor {
+ 	GObject parent_instance;
+ 
+-	struct libusb_bos_dev_capability_descriptor bos_cap;
+ 	GBytes *extra;
++	struct libusb_bos_dev_capability_descriptor bos_cap;
+ };
+ 
+ G_DEFINE_TYPE(GUsbBosDescriptor, g_usb_bos_descriptor, G_TYPE_OBJECT)
+@@ -71,10 +71,18 @@ _g_usb_bos_descriptor_load(GUsbBosDescriptor *self, JsonObject *json_object, GEr
+ 	str = json_object_get_string_member_with_default(json_object, "ExtraData", NULL);
+ 	if (str != NULL) {
+ 		gsize bufsz = 0;
++#ifdef _MSC_VER
++		guchar *buf = g_base64_decode(str, &bufsz);
++		if (self->extra != NULL)
++			g_bytes_unref(self->extra);
++		self->extra = g_bytes_new_take(g_steal_pointer(&buf), bufsz);
++		g_free(buf);
++#else
+ 		g_autofree guchar *buf = g_base64_decode(str, &bufsz);
+ 		if (self->extra != NULL)
+ 			g_bytes_unref(self->extra);
+ 		self->extra = g_bytes_new_take(g_steal_pointer(&buf), bufsz);
++#endif
+ 	}
+ #else
+ 	g_set_error_literal(error,
+@@ -106,10 +114,18 @@ _g_usb_bos_descriptor_save(GUsbBosDescriptor *self, JsonBuilder *json_builder, G
+ 
+ 	/* extra data */
+ 	if (self->extra != NULL && g_bytes_get_size(self->extra) > 0) {
++#ifdef _MSC_VER
++		gchar *str = g_base64_encode(g_bytes_get_data(self->extra, NULL),
++							g_bytes_get_size(self->extra));
++		json_builder_set_member_name(json_builder, "ExtraData");
++		json_builder_add_string_value(json_builder, str);
++		g_free(str);
++#else
+ 		g_autofree gchar *str = g_base64_encode(g_bytes_get_data(self->extra, NULL),
+ 							g_bytes_get_size(self->extra));
+ 		json_builder_set_member_name(json_builder, "ExtraData");
+ 		json_builder_add_string_value(json_builder, str);
++#endif
+ 	}
+ 
+ 	/* success */
+diff --git a/gusb/gusb-bos-descriptor.h b/gusb/gusb-bos-descriptor.h
+index b230a7c..76cb6d6 100644
+--- a/gusb/gusb-bos-descriptor.h
++++ b/gusb/gusb-bos-descriptor.h
+@@ -7,6 +7,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <glib-object.h>
+ 
+ G_BEGIN_DECLS
+@@ -14,9 +24,9 @@ G_BEGIN_DECLS
+ #define G_USB_TYPE_BOS_DESCRIPTOR (g_usb_bos_descriptor_get_type())
+ G_DECLARE_FINAL_TYPE(GUsbBosDescriptor, g_usb_bos_descriptor, G_USB, BOS_DESCRIPTOR, GObject)
+ 
+-guint8
++G_USB_API guint8
+ g_usb_bos_descriptor_get_capability(GUsbBosDescriptor *self);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_bos_descriptor_get_extra(GUsbBosDescriptor *self);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-context.c b/gusb/gusb-context.c
+index eeac93e..614bf2f 100644
+--- a/gusb/gusb-context.c
++++ b/gusb/gusb-context.c
+@@ -315,8 +315,13 @@ g_usb_context_add_device(GUsbContext *self, struct libusb_device *dev)
+ 	const gchar *platform_id;
+ 	guint8 bus;
+ 	guint8 address;
++#ifndef _MSC_VER
+ 	g_autoptr(GError) error = NULL;
+ 	g_autoptr(GUsbDevice) device = NULL;
++#else
++	GError *error = NULL;
++	GUsbDevice *device = NULL;
++#endif
+ 
+ 	/* does any existing device exist */
+ 	bus = libusb_get_bus_number(dev);
+@@ -368,7 +373,11 @@ g_usb_context_remove_device(GUsbContext *self, struct libusb_device *dev)
+ 	const gchar *platform_id;
+ 	guint8 bus;
+ 	guint8 address;
++#ifndef _MSC_VER
+ 	g_autoptr(GUsbDevice) device = NULL;
++#else
++	GUsbDevice *device = NULL;
++#endif
+ 
+ 	/* does any existing device exist */
+ 	bus = libusb_get_bus_number(dev);
+@@ -438,10 +447,17 @@ g_usb_context_load_with_tag(GUsbContext *self,
+ {
+ 	GUsbContextPrivate *priv = GET_PRIVATE(self);
+ 	JsonArray *json_array;
++#ifndef _MSC_VER
+ 	g_autoptr(GPtrArray) devices_added =
+ 	    g_ptr_array_new_with_free_func((GDestroyNotify)g_object_unref);
+ 	g_autoptr(GPtrArray) devices_remove =
+ 	    g_ptr_array_new_with_free_func((GDestroyNotify)g_object_unref);
++#else
++	GPtrArray *devices_added =
++	    g_ptr_array_new_with_free_func((GDestroyNotify)g_object_unref);
++	GPtrArray *devices_remove =
++	    g_ptr_array_new_with_free_func((GDestroyNotify)g_object_unref);
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_CONTEXT(self), FALSE);
+ 	g_return_val_if_fail(json_object != NULL, FALSE);
+@@ -477,9 +493,15 @@ g_usb_context_load_with_tag(GUsbContext *self,
+ 	for (guint i = 0; i < json_array_get_length(json_array); i++) {
+ 		JsonNode *node_tmp = json_array_get_element(json_array, i);
+ 		JsonObject *obj_tmp = json_node_get_object(node_tmp);
++#ifndef _MSC_VER
+ 		g_autoptr(GUsbDevice) device_old = NULL;
+ 		g_autoptr(GUsbDevice) device_tmp =
+ 		    g_object_new(G_USB_TYPE_DEVICE, "context", self, NULL);
++#else
++		GUsbDevice *device_old = NULL;
++		GUsbDevice *device_tmp =
++		    g_object_new(G_USB_TYPE_DEVICE, "context", self, NULL);
++#endif
+ 		if (!_g_usb_device_load(device_tmp, obj_tmp, error))
+ 			return FALSE;
+ 		if (tag != NULL && !g_usb_device_has_tag(device_tmp, tag))
+@@ -492,7 +514,11 @@ g_usb_context_load_with_tag(GUsbContext *self,
+ 						      NULL);
+ 		if (device_old != NULL && g_date_time_equal(g_usb_device_get_created(device_old),
+ 							    g_usb_device_get_created(device_tmp))) {
++#ifndef _MSC_VER
+ 			g_autoptr(GPtrArray) events = g_usb_device_get_events(device_tmp);
++#else
++			GPtrArray *events = g_usb_device_get_events(device_tmp);
++#endif
+ 			g_usb_device_clear_events(device_old);
+ 			for (guint j = 0; j < events->len; j++) {
+ 				GUsbDeviceEvent *event = g_ptr_array_index(events, j);
+@@ -625,7 +651,11 @@ g_usb_context_idle_hotplug_cb(gpointer user_data)
+ {
+ 	GUsbContext *self = G_USB_CONTEXT(user_data);
+ 	GUsbContextPrivate *priv = GET_PRIVATE(self);
++#ifndef _MSC_VER
+ 	g_autoptr(GPtrArray) idle_events = NULL;
++#else
++	GPtrArray *idle_events = NULL;
++#endif
+ 
+ 	/* drain the idle events with the lock held */
+ 	g_mutex_lock(&priv->idle_events_mutex);
+@@ -663,9 +693,12 @@ g_usb_context_hotplug_cb(struct libusb_context *ctx,
+ 	GUsbContext *self = G_USB_CONTEXT(user_data);
+ 	GUsbContextIdleHelper *helper;
+ 	GUsbContextPrivate *priv = GET_PRIVATE(self);
++#ifndef _MSC_VER
+ 	g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&priv->idle_events_mutex);
+-
+ 	g_assert(locker != NULL);
++#else
++	g_mutex_lock(&priv->idle_events_mutex);
++#endif
+ 
+ 	/* libusb is returning devices but LIBUSB_HOTPLUG_ENUMERATE is not set! */
+ 	if (!priv->done_enumerate)
+@@ -680,6 +713,9 @@ g_usb_context_hotplug_cb(struct libusb_context *ctx,
+ 	if (priv->idle_events_id == 0)
+ 		priv->idle_events_id = g_idle_add(g_usb_context_idle_hotplug_cb, self);
+ 
++#ifdef _MSC_VER
++	g_mutex_unlock(&priv->idle_events_mutex);
++#endif
+ 	return 0;
+ }
+ 
+@@ -688,7 +724,11 @@ g_usb_context_rescan(GUsbContext *self)
+ {
+ 	GUsbContextPrivate *priv = GET_PRIVATE(self);
+ 	libusb_device **dev_list = NULL;
++#ifndef _MSC_VER
+ 	g_autoptr(GList) existing_devices = NULL;
++#else
++	GList *existing_devices = NULL;
++#endif
+ 
+ 	/* copy to a context so we can remove from the array */
+ 	for (guint i = 0; i < priv->devices->len; i++) {
+@@ -720,6 +760,10 @@ g_usb_context_rescan(GUsbContext *self)
+ 		g_usb_context_add_device(self, dev_list[i]);
+ 
+ 	libusb_free_device_list(dev_list, 1);
++#ifdef _MSC_VER
++	if (existing_devices != NULL)
++		g_list_free(existing_devices);
++#endif
+ }
+ 
+ static gboolean
+@@ -1185,8 +1229,13 @@ g_usb_context_load_usb_ids(GUsbContext *self, GError **error)
+ 	GUsbContextPrivate *priv = GET_PRIVATE(self);
+ 	guint16 pid;
+ 	guint16 vid = 0x0000;
++#ifdef _MSC_VER
++	gchar *data = NULL;
++	gchar **lines = NULL;
++#else
+ 	g_autofree gchar *data = NULL;
+ 	g_auto(GStrv) lines = NULL;
++#endif
+ 
+ 	/* already loaded */
+ 	if (g_hash_table_size(priv->dict_usb_ids) > 0)
+@@ -1233,6 +1282,12 @@ g_usb_context_load_usb_ids(GUsbContext *self, GError **error)
+ 		}
+ 	}
+ 
++#ifdef _MSC_VER
++	if (data != NULL)
++		g_free(data);
++	if (lines != NULL)
++		g_strfreev(lines);
++#endif
+ 	return TRUE;
+ }
+ 
+@@ -1253,7 +1308,11 @@ _g_usb_context_lookup_vendor(GUsbContext *self, guint16 vid, GError **error)
+ {
+ 	GUsbContextPrivate *priv = GET_PRIVATE(self);
+ 	const gchar *tmp;
++#ifndef _MSC_VER
+ 	g_autofree gchar *key = NULL;
++#else
++	gchar *key = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_CONTEXT(self), NULL);
+ 	g_return_val_if_fail(error == NULL || *error == NULL, NULL);
+@@ -1271,10 +1330,19 @@ _g_usb_context_lookup_vendor(GUsbContext *self, guint16 vid, GError **error)
+ 			    G_USB_CONTEXT_ERROR_INTERNAL,
+ 			    "failed to find vid %s",
+ 			    key);
++#ifdef _MSC_VER
++		if (key != NULL)
++			g_free(key);
++#endif
+ 		return NULL;
+ 	}
+ 
+-	return tmp;
++	const gchar *result = tmp;
++#ifdef _MSC_VER
++	if (key != NULL)
++		g_free(key);
++#endif
++	return result;
+ }
+ 
+ /**
+@@ -1295,7 +1363,11 @@ _g_usb_context_lookup_product(GUsbContext *self, guint16 vid, guint16 pid, GErro
+ {
+ 	GUsbContextPrivate *priv = GET_PRIVATE(self);
+ 	const gchar *tmp;
++#ifndef _MSC_VER
+ 	g_autofree gchar *key = NULL;
++#else
++	gchar *key = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_CONTEXT(self), NULL);
+ 	g_return_val_if_fail(error == NULL || *error == NULL, NULL);
+@@ -1313,10 +1385,19 @@ _g_usb_context_lookup_product(GUsbContext *self, guint16 vid, guint16 pid, GErro
+ 			    G_USB_CONTEXT_ERROR_INTERNAL,
+ 			    "failed to find vid %s",
+ 			    key);
++#ifdef _MSC_VER
++		if (key != NULL)
++			g_free(key);
++#endif
+ 		return NULL;
+ 	}
+ 
+-	return tmp;
++	const gchar *result = tmp;
++#ifdef _MSC_VER
++	if (key != NULL)
++		g_free(key);
++#endif
++	return result;
+ }
+ 
+ /**
+@@ -1375,7 +1456,11 @@ g_usb_context_wait_for_replug(GUsbContext *self,
+ {
+ 	GUsbContextPrivate *priv = GET_PRIVATE(self);
+ 	const gchar *platform_id;
++#ifndef _MSC_VER
+ 	g_autoptr(GUsbContextReplugHelper) replug_helper = NULL;
++#else
++	GUsbContextReplugHelper *replug_helper = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_CONTEXT(self), NULL);
+ 
+@@ -1403,9 +1488,16 @@ g_usb_context_wait_for_replug(GUsbContext *self,
+ 				    G_USB_CONTEXT_ERROR,
+ 				    G_USB_CONTEXT_ERROR_INTERNAL,
+ 				    "request timed out");
++#ifdef _MSC_VER
++		g_usb_context_replug_helper_free(replug_helper);
++#endif
+ 		return NULL;
+ 	}
+-	return g_object_ref(replug_helper->device);
++	GUsbDevice *result = g_object_ref(replug_helper->device);
++#ifdef _MSC_VER
++	g_usb_context_replug_helper_free(replug_helper);
++#endif
++	return result;
+ }
+ 
+ /**
+diff --git a/gusb/gusb-context.h b/gusb/gusb-context.h
+index b1d4d54..f296475 100644
+--- a/gusb/gusb-context.h
++++ b/gusb/gusb-context.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gusb/gusb-device.h>
+ #include <gusb/gusb-source.h>
+ 
+@@ -48,61 +58,61 @@ typedef enum {
+ 	G_USB_CONTEXT_FLAGS_LAST
+ } GUsbContextFlags;
+ 
+-GQuark
++G_USB_API GQuark
+ g_usb_context_error_quark(void);
+ 
+-GUsbContext *
++G_USB_API GUsbContext *
+ g_usb_context_new(GError **error);
+ 
+-void
++G_USB_API void
+ g_usb_context_set_flags(GUsbContext *self, GUsbContextFlags flags);
+-GUsbContextFlags
++G_USB_API GUsbContextFlags
+ g_usb_context_get_flags(GUsbContext *self);
+ 
+ G_DEPRECATED
+-GUsbSource *
++G_USB_API GUsbSource *
+ g_usb_context_get_source(GUsbContext *self, GMainContext *main_ctx);
+-GMainContext *
++G_USB_API GMainContext *
+ g_usb_context_get_main_context(GUsbContext *self);
+-void
++G_USB_API void
+ g_usb_context_set_main_context(GUsbContext *self, GMainContext *main_ctx);
+-guint
++G_USB_API guint
+ g_usb_context_get_hotplug_poll_interval(GUsbContext *self);
+-void
++G_USB_API void
+ g_usb_context_set_hotplug_poll_interval(GUsbContext *self, guint hotplug_poll_interval);
+ 
+-void
++G_USB_API void
+ g_usb_context_enumerate(GUsbContext *self);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_context_load(GUsbContext *self, JsonObject *json_object, GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_context_load_with_tag(GUsbContext *self,
+ 			    JsonObject *json_object,
+ 			    const gchar *tag,
+ 			    GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_context_save(GUsbContext *self, JsonBuilder *json_builder, GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_context_save_with_tag(GUsbContext *self,
+ 			    JsonBuilder *json_builder,
+ 			    const gchar *tag,
+ 			    GError **error);
+ 
+-void
++G_USB_API void
+ g_usb_context_set_debug(GUsbContext *self, GLogLevelFlags flags);
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_context_get_devices(GUsbContext *self);
+ 
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_context_find_by_bus_address(GUsbContext *self, guint8 bus, guint8 address, GError **error);
+ 
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_context_find_by_vid_pid(GUsbContext *self, guint16 vid, guint16 pid, GError **error);
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_context_find_by_platform_id(GUsbContext *self, const gchar *platform_id, GError **error);
+ 
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_context_wait_for_replug(GUsbContext *self,
+ 			      GUsbDevice *device,
+ 			      guint timeout_ms,
+diff --git a/gusb/gusb-device-event.c b/gusb/gusb-device-event.c
+index a991971..5eba948 100644
+--- a/gusb/gusb-device-event.c
++++ b/gusb/gusb-device-event.c
+@@ -69,8 +69,14 @@ _g_usb_device_event_load(GUsbDeviceEvent *self, JsonObject *json_object, GError
+ 	str = json_object_get_string_member_with_default(json_object, "Data", NULL);
+ 	if (str != NULL) {
+ 		gsize bufsz = 0;
++#ifdef _MSC_VER
++		guchar *buf = g_base64_decode(str, &bufsz);
++		self->bytes = g_bytes_new_take(g_steal_pointer(&buf), bufsz);
++		g_free(buf);
++#else
+ 		g_autofree guchar *buf = g_base64_decode(str, &bufsz);
+ 		self->bytes = g_bytes_new_take(g_steal_pointer(&buf), bufsz);
++#endif
+ 	}
+ #else
+ 	g_set_error_literal(error,
+@@ -107,10 +113,18 @@ _g_usb_device_event_save(GUsbDeviceEvent *self, JsonBuilder *json_builder, GErro
+ 		json_builder_add_int_value(json_builder, self->rc);
+ 	}
+ 	if (self->bytes != NULL) {
++#ifdef _MSC_VER
++		gchar *str = g_base64_encode(g_bytes_get_data(self->bytes, NULL),
++							g_bytes_get_size(self->bytes));
++		json_builder_set_member_name(json_builder, "Data");
++		json_builder_add_string_value(json_builder, str);
++		g_free(str);
++#else
+ 		g_autofree gchar *str = g_base64_encode(g_bytes_get_data(self->bytes, NULL),
+ 							g_bytes_get_size(self->bytes));
+ 		json_builder_set_member_name(json_builder, "Data");
+ 		json_builder_add_string_value(json_builder, str);
++#endif
+ 	}
+ 
+ 	/* success */
+diff --git a/gusb/gusb-device-event.h b/gusb/gusb-device-event.h
+index 73ba808..ee9a663 100644
+--- a/gusb/gusb-device-event.h
++++ b/gusb/gusb-device-event.h
+@@ -7,6 +7,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gio/gio.h>
+ 
+ G_BEGIN_DECLS
+@@ -14,15 +24,15 @@ G_BEGIN_DECLS
+ #define G_USB_TYPE_DEVICE_EVENT (g_usb_device_event_get_type())
+ G_DECLARE_FINAL_TYPE(GUsbDeviceEvent, g_usb_device_event, G_USB, DEVICE_EVENT, GObject)
+ 
+-const gchar *
++G_USB_API const gchar *
+ g_usb_device_event_get_id(GUsbDeviceEvent *self);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_device_event_get_bytes(GUsbDeviceEvent *self);
+-gint
++G_USB_API gint
+ g_usb_device_event_get_status(GUsbDeviceEvent *self);
+-gint
++G_USB_API gint
+ g_usb_device_event_get_rc(GUsbDeviceEvent *self);
+-void
++G_USB_API void
+ g_usb_device_event_set_bytes(GUsbDeviceEvent *self, GBytes *bytes);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-device-list.h b/gusb/gusb-device-list.h
+index d209e9c..facf6ce 100644
+--- a/gusb/gusb-device-list.h
++++ b/gusb/gusb-device-list.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gusb/gusb-context.h>
+ 
+ G_BEGIN_DECLS
+@@ -30,26 +40,26 @@ struct _GUsbDeviceListClass {
+ };
+ 
+ G_DEPRECATED_FOR(g_usb_context_new)
+-GUsbDeviceList *
++G_USB_API GUsbDeviceList *
+ g_usb_device_list_new(GUsbContext *context);
+ 
+ G_DEPRECATED
+-void
++G_USB_API void
+ g_usb_device_list_coldplug(GUsbDeviceList *self);
+ 
+ G_DEPRECATED_FOR(g_usb_context_get_devices)
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_list_get_devices(GUsbDeviceList *self);
+ 
+ G_DEPRECATED_FOR(g_usb_context_find_by_bus_address)
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_device_list_find_by_bus_address(GUsbDeviceList *self,
+ 				      guint8 bus,
+ 				      guint8 address,
+ 				      GError **error);
+ 
+ G_DEPRECATED_FOR(g_usb_context_find_by_vid_pid)
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_device_list_find_by_vid_pid(GUsbDeviceList *self, guint16 vid, guint16 pid, GError **error);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-device.c b/gusb/gusb-device.c
+index f36e91d..f0108d9 100644
+--- a/gusb/gusb-device.c
++++ b/gusb/gusb-device.c
+@@ -64,6 +64,11 @@ G_DEFINE_TYPE_EXTENDED(GUsbDevice,
+ 			   G_IMPLEMENT_INTERFACE(G_TYPE_INITABLE,
+ 						 g_usb_device_initable_iface_init));
+ 
++/* Force export of g_usb_device_get_type for Windows DLL */
++#if defined(_WIN32) || defined(__CYGWIN__)
++#pragma comment(linker, "/export:g_usb_device_get_type")
++#endif
++
+ #define GET_PRIVATE(o) (g_usb_device_get_instance_private(o))
+ 
+ /* clang-format off */
+@@ -251,7 +256,11 @@ _g_usb_device_load(GUsbDevice *self, JsonObject *json_object, GError **error)
+ 	}
+ 	tmp = json_object_get_string_member_with_default(json_object, "Created", NULL);
+ 	if (tmp != NULL) {
++#ifndef _MSC_VER
+ 		g_autoptr(GDateTime) created_new = g_date_time_new_from_iso8601(tmp, NULL);
++#else
++		GDateTime *created_new = g_date_time_new_from_iso8601(tmp, NULL);
++#endif
+ 		if (created_new == NULL) {
+ 			g_set_error(error,
+ 				    G_IO_ERROR,
+@@ -264,6 +273,9 @@ _g_usb_device_load(GUsbDevice *self, JsonObject *json_object, GError **error)
+ 			g_date_time_unref(priv->created);
+ 			priv->created = g_steal_pointer(&created_new);
+ 		}
++#ifdef _MSC_VER
++		g_date_time_unref(created_new);
++#endif
+ 	}
+ 	priv->desc.idVendor = json_object_get_int_member_with_default(json_object, "IdVendor", 0x0);
+ 	priv->desc.idProduct =
+@@ -296,11 +308,19 @@ _g_usb_device_load(GUsbDevice *self, JsonObject *json_object, GError **error)
+ 		for (guint i = 0; i < json_array_get_length(json_array); i++) {
+ 			JsonNode *node_tmp = json_array_get_element(json_array, i);
+ 			JsonObject *obj_tmp = json_node_get_object(node_tmp);
++#ifndef _MSC_VER
+ 			g_autoptr(GUsbBosDescriptor) bos_descriptor =
+ 			    g_object_new(G_USB_TYPE_BOS_DESCRIPTOR, NULL);
++#else
++			GUsbBosDescriptor *bos_descriptor =
++			    g_object_new(G_USB_TYPE_BOS_DESCRIPTOR, NULL);
++#endif
+ 			if (!_g_usb_bos_descriptor_load(bos_descriptor, obj_tmp, error))
+ 				return FALSE;
+ 			g_ptr_array_add(priv->bos_descriptors, g_object_ref(bos_descriptor));
++#ifdef _MSC_VER
++			g_object_unref(bos_descriptor);
++#endif
+ 		}
+ 	}
+ 
+@@ -310,11 +330,19 @@ _g_usb_device_load(GUsbDevice *self, JsonObject *json_object, GError **error)
+ 		for (guint i = 0; i < json_array_get_length(json_array); i++) {
+ 			JsonNode *node_tmp = json_array_get_element(json_array, i);
+ 			JsonObject *obj_tmp = json_node_get_object(node_tmp);
++#ifndef _MSC_VER
+ 			g_autoptr(GUsbInterface) interface =
+ 			    g_object_new(G_USB_TYPE_INTERFACE, NULL);
++#else
++			GUsbInterface *interface =
++			    g_object_new(G_USB_TYPE_INTERFACE, NULL);
++#endif
+ 			if (!_g_usb_interface_load(interface, obj_tmp, error))
+ 				return FALSE;
+ 			g_ptr_array_add(priv->interfaces, g_object_ref(interface));
++#ifdef _MSC_VER
++			g_object_unref(interface);
++#endif
+ 		}
+ 	}
+ 
+@@ -324,10 +352,17 @@ _g_usb_device_load(GUsbDevice *self, JsonObject *json_object, GError **error)
+ 		for (guint i = 0; i < json_array_get_length(json_array); i++) {
+ 			JsonNode *node_tmp = json_array_get_element(json_array, i);
+ 			JsonObject *obj_tmp = json_node_get_object(node_tmp);
++#ifndef _MSC_VER
+ 			g_autoptr(GUsbDeviceEvent) event = _g_usb_device_event_new(NULL);
++#else
++			GUsbDeviceEvent *event = _g_usb_device_event_new(NULL);
++#endif
+ 			if (!_g_usb_device_event_load(event, obj_tmp, error))
+ 				return FALSE;
+ 			g_ptr_array_add(priv->events, g_steal_pointer(&event));
++#ifdef _MSC_VER
++			g_object_unref(event);
++#endif
+ 		}
+ 	}
+ 
+@@ -353,10 +388,17 @@ gboolean
+ _g_usb_device_save(GUsbDevice *self, JsonBuilder *json_builder, GError **error)
+ {
+ 	GUsbDevicePrivate *priv = GET_PRIVATE(self);
++#ifndef _MSC_VER
+ 	g_autoptr(GPtrArray) bos_descriptors = NULL;
+ 	g_autoptr(GPtrArray) interfaces = NULL;
+ 	g_autoptr(GError) error_bos = NULL;
+ 	g_autoptr(GError) error_interfaces = NULL;
++#else
++	GPtrArray *bos_descriptors = NULL;
++	GPtrArray *interfaces = NULL;
++	GError *error_bos = NULL;
++	GError *error_interfaces = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_DEVICE(self), FALSE);
+ 	g_return_val_if_fail(json_builder != NULL, FALSE);
+@@ -372,9 +414,16 @@ _g_usb_device_save(GUsbDevice *self, JsonBuilder *json_builder, GError **error)
+ 	}
+ #if GLIB_CHECK_VERSION(2, 62, 0)
+ 	if (priv->created != NULL) {
++#ifdef _MSC_VER
++		gchar *str = g_date_time_format_iso8601(priv->created);
++		json_builder_set_member_name(json_builder, "Created");
++		json_builder_add_string_value(json_builder, str);
++		g_free(str);
++#else
+ 		g_autofree gchar *str = g_date_time_format_iso8601(priv->created);
+ 		json_builder_set_member_name(json_builder, "Created");
+ 		json_builder_add_string_value(json_builder, str);
++#endif
+ 	}
+ #endif
+ 	if (priv->tags->len > 0) {
+@@ -473,6 +522,16 @@ _g_usb_device_save(GUsbDevice *self, JsonBuilder *json_builder, GError **error)
+ 
+ 	/* success */
+ 	json_builder_end_object(json_builder);
++#ifdef _MSC_VER
++	if (bos_descriptors != NULL)
++		g_ptr_array_unref(bos_descriptors);
++	if (interfaces != NULL)
++		g_ptr_array_unref(interfaces);
++	if (error_bos != NULL)
++		g_error_free(error_bos);
++	if (error_interfaces != NULL)
++		g_error_free(error_interfaces);
++#endif
+ 	return TRUE;
+ }
+ 
+@@ -945,7 +1004,11 @@ g_usb_device_get_custom_index(GUsbDevice *self,
+ 	gint rc;
+ 	guint8 idx = 0x00;
+ 	struct libusb_config_descriptor *config;
++#ifndef _MSC_VER
+ 	g_autofree gchar *event_id = NULL;
++#else
++	gchar *event_id = NULL;
++#endif
+ 
+ 	/* build event key either for load or save */
+ 	if (priv->device == NULL ||
+@@ -1020,6 +1083,10 @@ g_usb_device_get_custom_index(GUsbDevice *self,
+ 	}
+ 
+ 	libusb_free_config_descriptor(config);
++#ifdef _MSC_VER
++	if (event_id != NULL)
++		g_free(event_id);
++#endif
+ 	return idx;
+ }
+ 
+@@ -1047,7 +1114,11 @@ g_usb_device_get_interface(GUsbDevice *self,
+ 			   guint8 protocol_id,
+ 			   GError **error)
+ {
++#ifndef _MSC_VER
+ 	g_autoptr(GPtrArray) interfaces = NULL;
++#else
++	GPtrArray *interfaces = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_DEVICE(self), NULL);
+ 	g_return_val_if_fail(error == NULL || *error == NULL, NULL);
+@@ -1076,6 +1147,10 @@ g_usb_device_get_interface(GUsbDevice *self,
+ 		    class_id,
+ 		    subclass_id,
+ 		    protocol_id);
++#ifdef _MSC_VER
++	if (interfaces != NULL)
++		g_ptr_array_unref(interfaces);
++#endif
+ 	return NULL;
+ }
+ 
+@@ -1210,7 +1285,11 @@ g_usb_device_invalidate(GUsbDevice *self)
+ GUsbBosDescriptor *
+ g_usb_device_get_bos_descriptor(GUsbDevice *self, guint8 capability, GError **error)
+ {
++#ifndef _MSC_VER
+ 	g_autoptr(GPtrArray) bos_descriptors = NULL;
++#else
++	GPtrArray *bos_descriptors = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_DEVICE(self), NULL);
+ 	g_return_val_if_fail(error == NULL || *error == NULL, NULL);
+@@ -1231,6 +1310,10 @@ g_usb_device_get_bos_descriptor(GUsbDevice *self, guint8 capability, GError **er
+ 		    G_USB_DEVICE_ERROR_NOT_SUPPORTED,
+ 		    "no BOS descriptor for capability 0x%02x",
+ 		    capability);
++#ifdef _MSC_VER
++	if (bos_descriptors != NULL)
++		g_ptr_array_unref(bos_descriptors);
++#endif
+ 	return NULL;
+ }
+ 
+@@ -1603,7 +1686,11 @@ g_usb_device_get_string_descriptor(GUsbDevice *self, guint8 desc_index, GError *
+ 	gint rc;
+ 	/* libusb_get_string_descriptor_ascii returns max 128 bytes */
+ 	unsigned char buf[128];
++#ifndef _MSC_VER
+ 	g_autofree gchar *event_id = NULL;
++#else
++	gchar *event_id = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_DEVICE(self), NULL);
+ 	g_return_val_if_fail(error == NULL || *error == NULL, NULL);
+@@ -1658,7 +1745,12 @@ g_usb_device_get_string_descriptor(GUsbDevice *self, guint8 desc_index, GError *
+ 		_g_usb_device_event_set_bytes_raw(event, buf, sizeof(buf));
+ 	}
+ 
+-	return g_strdup((const gchar *)buf);
++	gchar *result = g_strdup((const gchar *)buf);
++#ifdef _MSC_VER
++	if (event_id != NULL)
++		g_free(event_id);
++#endif
++	return result;
+ }
+ 
+ /**
+@@ -1685,8 +1777,13 @@ g_usb_device_get_string_descriptor_bytes_full(GUsbDevice *self,
+ 	GUsbDevicePrivate *priv = GET_PRIVATE(self);
+ 	GUsbDeviceEvent *event;
+ 	gint rc;
++#ifndef _MSC_VER
+ 	g_autofree guint8 *buf = g_malloc0(length);
+ 	g_autofree gchar *event_id = NULL;
++#else
++	guint8 *buf = g_malloc0(length);
++	gchar *event_id = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_DEVICE(self), NULL);
+ 	g_return_val_if_fail(error == NULL || *error == NULL, NULL);
+@@ -1746,7 +1843,14 @@ g_usb_device_get_string_descriptor_bytes_full(GUsbDevice *self,
+ 		_g_usb_device_event_set_bytes_raw(event, buf, rc);
+ 	}
+ 
+-	return g_bytes_new(buf, rc);
++	GBytes *result = g_bytes_new(buf, rc);
++#ifdef _MSC_VER
++	if (buf != NULL)
++		g_free(buf);
++	if (event_id != NULL)
++		g_free(event_id);
++#endif
++	return result;
+ }
+ 
+ /**
+@@ -2180,14 +2284,22 @@ g_usb_device_control_transfer_async(GUsbDevice *self,
+ 	guint8 request_type_raw = 0;
+ 	GError *error = NULL;
+ 	GUsbDeviceEvent *event = NULL;
++#ifndef _MSC_VER
+ 	g_autofree gchar *event_id = NULL;
++#else
++	gchar *event_id = NULL;
++#endif
+ 
+ 	g_return_if_fail(G_USB_IS_DEVICE(self));
+ 
+ 	/* build event key either for load or save */
+ 	if (priv->device == NULL ||
+ 	    g_usb_context_get_flags(priv->context) & G_USB_CONTEXT_FLAGS_SAVE_EVENTS) {
++#ifndef _MSC_VER
+ 		g_autofree gchar *data_base64 = g_base64_encode(data, length);
++#else
++		gchar *data_base64 = g_base64_encode(data, length);
++#endif
+ 		event_id = g_strdup_printf("ControlTransfer:"
+ 					   "Direction=0x%02x,"
+ 					   "RequestType=0x%02x,"
+@@ -2381,14 +2493,22 @@ g_usb_device_bulk_transfer_async(GUsbDevice *self,
+ 	gint rc;
+ 	GError *error = NULL;
+ 	GUsbDeviceEvent *event = NULL;
++#ifndef _MSC_VER
+ 	g_autofree gchar *event_id = NULL;
++#else
++	gchar *event_id = NULL;
++#endif
+ 
+ 	g_return_if_fail(G_USB_IS_DEVICE(self));
+ 
+ 	/* build event key either for load or save */
+ 	if (priv->device == NULL ||
+ 	    g_usb_context_get_flags(priv->context) & G_USB_CONTEXT_FLAGS_SAVE_EVENTS) {
++#ifndef _MSC_VER
+ 		g_autofree gchar *data_base64 = g_base64_encode(data, length);
++#else
++		gchar *data_base64 = g_base64_encode(data, length);
++#endif
+ 		event_id = g_strdup_printf("BulkTransfer:"
+ 					   "Endpoint=0x%02x,"
+ 					   "Data=%s,"
+@@ -2561,14 +2681,22 @@ g_usb_device_interrupt_transfer_async(GUsbDevice *self,
+ 	GError *error = NULL;
+ 	gint rc;
+ 	GUsbDeviceEvent *event = NULL;
++#ifndef _MSC_VER
+ 	g_autofree gchar *event_id = NULL;
++#else
++	gchar *event_id = NULL;
++#endif
+ 
+ 	g_return_if_fail(G_USB_IS_DEVICE(self));
+ 
+ 	/* build event key either for load or save */
+ 	if (priv->device == NULL ||
+ 	    g_usb_context_get_flags(priv->context) & G_USB_CONTEXT_FLAGS_SAVE_EVENTS) {
++#ifndef _MSC_VER
+ 		g_autofree gchar *data_base64 = g_base64_encode(data, length);
++#else
++		gchar *data_base64 = g_base64_encode(data, length);
++#endif
+ 		event_id = g_strdup_printf("InterruptTransfer:"
+ 					   "Endpoint=0x%02x,"
+ 					   "Data=%s,"
+@@ -2773,7 +2901,11 @@ g_usb_device_get_children(GUsbDevice *self)
+ {
+ 	GUsbDevicePrivate *priv = GET_PRIVATE(self);
+ 	GPtrArray *children;
++#ifndef _MSC_VER
+ 	g_autoptr(GPtrArray) devices = NULL;
++#else
++	GPtrArray *devices = NULL;
++#endif
+ 
+ 	/* find any devices that have @self as a parent */
+ 	children = g_ptr_array_new_with_free_func((GDestroyNotify)g_object_unref);
+@@ -2787,6 +2919,10 @@ g_usb_device_get_children(GUsbDevice *self)
+ 			g_ptr_array_add(children, g_object_ref(device_tmp));
+ 	}
+ 
++#ifdef _MSC_VER
++	if (devices != NULL)
++		g_ptr_array_unref(devices);
++#endif
+ 	return children;
+ }
+ 
+@@ -2984,7 +3120,11 @@ g_usb_device_get_configuration_index(GUsbDevice *self)
+ 	struct libusb_config_descriptor *config;
+ 	gint rc;
+ 	guint8 index;
++#ifndef _MSC_VER
+ 	g_autofree gchar *event_id = NULL;
++#else
++	gchar *event_id = NULL;
++#endif
+ 
+ 	g_return_val_if_fail(G_USB_IS_DEVICE(self), 0);
+ 
+@@ -2997,12 +3137,27 @@ g_usb_device_get_configuration_index(GUsbDevice *self)
+ 	if (priv->device == NULL) {
+ 		GBytes *bytes;
+ 		event = g_usb_device_load_event(self, event_id);
+-		if (event == NULL)
++		if (event == NULL) {
++#ifdef _MSC_VER
++			if (event_id != NULL)
++				g_free(event_id);
++#endif
+ 			return 0x0;
++		}
+ 		bytes = g_usb_device_event_get_bytes(event);
+-		if (bytes == NULL && g_bytes_get_size(bytes) != 1)
++		if (bytes == NULL && g_bytes_get_size(bytes) != 1) {
++#ifdef _MSC_VER
++			if (event_id != NULL)
++				g_free(event_id);
++#endif
+ 			return 0x0;
+-		return ((const guint8 *) g_bytes_get_data(bytes, NULL))[0];
++		}
++		guint8 result = ((const guint8 *) g_bytes_get_data(bytes, NULL))[0];
++#ifdef _MSC_VER
++		if (event_id != NULL)
++			g_free(event_id);
++#endif
++		return result;
+ 	}
+ 
+ 	rc = libusb_get_active_config_descriptor(priv->device, &config);
+diff --git a/gusb/gusb-device.h b/gusb/gusb-device.h
+index 32df1b2..4d7936b 100644
+--- a/gusb/gusb-device.h
++++ b/gusb/gusb-device.h
+@@ -8,12 +8,28 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gio/gio.h>
+ #include <gusb/gusb-bos-descriptor.h>
+ #include <gusb/gusb-interface.h>
+ #include <gusb/gusb-util.h>
+ #include <json-glib/json-glib.h>
+ 
++#ifdef _WIN32
++#ifdef interface
++#undef interface
++#endif
++#endif
++
+ G_BEGIN_DECLS
+ 
+ #define G_USB_TYPE_DEVICE  (g_usb_device_get_type())
+@@ -134,125 +150,125 @@ struct _GUsbDeviceClass {
+ 	gchar _gusb_reserved[64];
+ };
+ 
+-GQuark
++G_USB_API GQuark
+ g_usb_device_error_quark(void);
+ 
+-const gchar *
++G_USB_API const gchar *
+ g_usb_device_get_platform_id(GUsbDevice *self);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_is_emulated(GUsbDevice *self);
+-GDateTime *
++G_USB_API GDateTime *
+ g_usb_device_get_created(GUsbDevice *self);
+-GUsbDevice *
+-g_usb_device_get_parent(GUsbDevice *self);
+-GPtrArray *
++G_USB_API GUsbDevice *
++g_usb_device_get_parent(G_USB_API GUsbDevice *self);
++G_USB_API GPtrArray *
+ g_usb_device_get_children(GUsbDevice *self);
+ 
+-guint8
++G_USB_API guint8
+ g_usb_device_get_bus(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_address(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_port_number(GUsbDevice *self);
+ 
+-guint16
++G_USB_API guint16
+ g_usb_device_get_vid(GUsbDevice *self);
+-guint16
++G_USB_API guint16
+ g_usb_device_get_pid(GUsbDevice *self);
+-guint16
++G_USB_API guint16
+ g_usb_device_get_release(GUsbDevice *self);
+-guint16
++G_USB_API guint16
+ g_usb_device_get_spec(GUsbDevice *self);
+-const gchar *
++G_USB_API const gchar *
+ g_usb_device_get_vid_as_str(GUsbDevice *self);
+-const gchar *
++G_USB_API const gchar *
+ g_usb_device_get_pid_as_str(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_device_class(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_device_subclass(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_device_protocol(GUsbDevice *self);
+ 
+-void
++G_USB_API void
+ g_usb_device_add_tag(GUsbDevice *self, const gchar *tag);
+-void
++G_USB_API void
+ g_usb_device_remove_tag(GUsbDevice *self, const gchar *tag);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_has_tag(GUsbDevice *self, const gchar *tag);
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_get_tags(GUsbDevice *self);
+ 
+-guint8
++G_USB_API guint8
+ g_usb_device_get_configuration_index(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_manufacturer_index(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_product_index(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_serial_number_index(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_custom_index(GUsbDevice *self,
+ 			      guint8 class_id,
+ 			      guint8 subclass_id,
+ 			      guint8 protocol_id,
+ 			      GError **error);
+ 
+-GUsbInterface *
++G_USB_API GUsbInterface *
+ g_usb_device_get_interface(GUsbDevice *self,
+ 			   guint8 class_id,
+ 			   guint8 subclass_id,
+ 			   guint8 protocol_id,
+ 			   GError **error);
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_get_interfaces(GUsbDevice *self, GError **error);
+ 
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_get_events(GUsbDevice *self);
+-void
++G_USB_API void
+ g_usb_device_clear_events(GUsbDevice *self);
+ 
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_get_bos_descriptors(GUsbDevice *self, GError **error);
+-GUsbBosDescriptor *
++G_USB_API GUsbBosDescriptor *
+ g_usb_device_get_bos_descriptor(GUsbDevice *self, guint8 capability, GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_open(GUsbDevice *self, GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_close(GUsbDevice *self, GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_reset(GUsbDevice *self, GError **error);
+-void
++G_USB_API void
+ g_usb_device_invalidate(GUsbDevice *self);
+ 
+-gint
++G_USB_API gint
+ g_usb_device_get_configuration(GUsbDevice *self, GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_set_configuration(GUsbDevice *self, gint configuration, GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_claim_interface(GUsbDevice *self,
+ 			     gint interface,
+ 			     GUsbDeviceClaimInterfaceFlags flags,
+ 			     GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_release_interface(GUsbDevice *self,
+ 			       gint interface,
+ 			       GUsbDeviceClaimInterfaceFlags flags,
+ 			       GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_set_interface_alt(GUsbDevice *self, gint interface, guint8 alt, GError **error);
+ 
+-gchar *
++G_USB_API gchar *
+ g_usb_device_get_string_descriptor(GUsbDevice *self, guint8 desc_index, GError **error);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_device_get_string_descriptor_bytes(GUsbDevice *self,
+ 					 guint8 desc_index,
+ 					 guint16 langid,
+ 					 GError **error);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_device_get_string_descriptor_bytes_full(GUsbDevice *self,
+ 					      guint8 desc_index,
+ 					      guint16 langid,
+@@ -260,7 +276,7 @@ g_usb_device_get_string_descriptor_bytes_full(GUsbDevice *self,
+ 					      GError **error);
+ 
+ /* sync -- TODO: use GCancellable and GUsbSource */
+-gboolean
++G_USB_API gboolean
+ g_usb_device_control_transfer(GUsbDevice *self,
+ 			      GUsbDeviceDirection direction,
+ 			      GUsbDeviceRequestType request_type,
+@@ -275,7 +291,7 @@ g_usb_device_control_transfer(GUsbDevice *self,
+ 			      GCancellable *cancellable,
+ 			      GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_bulk_transfer(GUsbDevice *self,
+ 			   guint8 endpoint,
+ 			   guint8 *data,
+@@ -285,7 +301,7 @@ g_usb_device_bulk_transfer(GUsbDevice *self,
+ 			   GCancellable *cancellable,
+ 			   GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_interrupt_transfer(GUsbDevice *self,
+ 				guint8 endpoint,
+ 				guint8 *data,
+@@ -297,7 +313,7 @@ g_usb_device_interrupt_transfer(GUsbDevice *self,
+ 
+ /* async */
+ 
+-void
++G_USB_API void
+ g_usb_device_control_transfer_async(GUsbDevice *self,
+ 				    GUsbDeviceDirection direction,
+ 				    GUsbDeviceRequestType request_type,
+@@ -311,10 +327,10 @@ g_usb_device_control_transfer_async(GUsbDevice *self,
+ 				    GCancellable *cancellable,
+ 				    GAsyncReadyCallback callback,
+ 				    gpointer user_data);
+-gssize
++G_USB_API gssize
+ g_usb_device_control_transfer_finish(GUsbDevice *self, GAsyncResult *res, GError **error);
+ 
+-void
++G_USB_API void
+ g_usb_device_bulk_transfer_async(GUsbDevice *self,
+ 				 guint8 endpoint,
+ 				 guint8 *data,
+@@ -323,10 +339,10 @@ g_usb_device_bulk_transfer_async(GUsbDevice *self,
+ 				 GCancellable *cancellable,
+ 				 GAsyncReadyCallback callback,
+ 				 gpointer user_data);
+-gssize
++G_USB_API gssize
+ g_usb_device_bulk_transfer_finish(GUsbDevice *self, GAsyncResult *res, GError **error);
+ 
+-void
++G_USB_API void
+ g_usb_device_interrupt_transfer_async(GUsbDevice *self,
+ 				      guint8 endpoint,
+ 				      guint8 *data,
+@@ -335,7 +351,7 @@ g_usb_device_interrupt_transfer_async(GUsbDevice *self,
+ 				      GCancellable *cancellable,
+ 				      GAsyncReadyCallback callback,
+ 				      gpointer user_data);
+-gssize
++G_USB_API gssize
+ g_usb_device_interrupt_transfer_finish(GUsbDevice *self, GAsyncResult *res, GError **error);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-endpoint.c b/gusb/gusb-endpoint.c
+index 338fb57..e6ba771 100644
+--- a/gusb/gusb-endpoint.c
++++ b/gusb/gusb-endpoint.c
+@@ -81,10 +81,18 @@ _g_usb_endpoint_load(GUsbEndpoint *self, JsonObject *json_object, GError **error
+ 	str = json_object_get_string_member_with_default(json_object, "ExtraData", NULL);
+ 	if (str != NULL) {
+ 		gsize bufsz = 0;
++#ifdef _MSC_VER
++		guchar *buf = g_base64_decode(str, &bufsz);
++		if (self->extra != NULL)
++			g_bytes_unref(self->extra);
++		self->extra = g_bytes_new_take(g_steal_pointer(&buf), bufsz);
++		g_free(buf);
++#else
+ 		g_autofree guchar *buf = g_base64_decode(str, &bufsz);
+ 		if (self->extra != NULL)
+ 			g_bytes_unref(self->extra);
+ 		self->extra = g_bytes_new_take(g_steal_pointer(&buf), bufsz);
++#endif
+ 	}
+ #else
+ 	g_set_error_literal(error,
+@@ -137,10 +145,18 @@ _g_usb_endpoint_save(GUsbEndpoint *self, JsonBuilder *json_builder, GError **err
+ 
+ 	/* extra data */
+ 	if (self->extra != NULL && g_bytes_get_size(self->extra) > 0) {
++#ifdef _MSC_VER
++		gchar *str = g_base64_encode(g_bytes_get_data(self->extra, NULL),
++							g_bytes_get_size(self->extra));
++		json_builder_set_member_name(json_builder, "ExtraData");
++		json_builder_add_string_value(json_builder, str);
++		g_free(str);
++#else
+ 		g_autofree gchar *str = g_base64_encode(g_bytes_get_data(self->extra, NULL),
+ 							g_bytes_get_size(self->extra));
+ 		json_builder_set_member_name(json_builder, "ExtraData");
+ 		json_builder_add_string_value(json_builder, str);
++#endif
+ 	}
+ 
+ 	/* success */
+diff --git a/gusb/gusb-endpoint.h b/gusb/gusb-endpoint.h
+index c642d32..95ee5ae 100644
+--- a/gusb/gusb-endpoint.h
++++ b/gusb/gusb-endpoint.h
+@@ -7,6 +7,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gusb/gusb-device.h>
+ 
+ G_BEGIN_DECLS
+@@ -14,23 +24,23 @@ G_BEGIN_DECLS
+ #define G_USB_TYPE_ENDPOINT (g_usb_endpoint_get_type())
+ G_DECLARE_FINAL_TYPE(GUsbEndpoint, g_usb_endpoint, G_USB, ENDPOINT, GObject)
+ 
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_kind(GUsbEndpoint *self);
+-guint16
++G_USB_API guint16
+ g_usb_endpoint_get_maximum_packet_size(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_polling_interval(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_refresh(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_synch_address(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_address(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_number(GUsbEndpoint *self);
+-GUsbDeviceDirection
++G_USB_API GUsbDeviceDirection
+ g_usb_endpoint_get_direction(GUsbEndpoint *self);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_endpoint_get_extra(GUsbEndpoint *self);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-interface.c b/gusb/gusb-interface.c
+index e6cf84f..48a4604 100644
+--- a/gusb/gusb-interface.c
++++ b/gusb/gusb-interface.c
+@@ -94,10 +94,17 @@ _g_usb_interface_load(GUsbInterface *self, JsonObject *json_object, GError **err
+ 		for (guint i = 0; i < json_array_get_length(json_array); i++) {
+ 			JsonNode *node_tmp = json_array_get_element(json_array, i);
+ 			JsonObject *obj_tmp = json_node_get_object(node_tmp);
++#ifndef _MSC_VER
+ 			g_autoptr(GUsbEndpoint) endpoint = g_object_new(G_USB_TYPE_ENDPOINT, NULL);
++#else
++			GUsbEndpoint *endpoint = g_object_new(G_USB_TYPE_ENDPOINT, NULL);
++#endif
+ 			if (!_g_usb_endpoint_load(endpoint, obj_tmp, error))
+ 				return FALSE;
+ 			g_ptr_array_add(self->endpoints, g_object_ref(endpoint));
++#ifdef _MSC_VER
++			g_object_unref(endpoint);
++#endif
+ 		}
+ 	}
+ 
+@@ -105,10 +112,18 @@ _g_usb_interface_load(GUsbInterface *self, JsonObject *json_object, GError **err
+ 	str = json_object_get_string_member_with_default(json_object, "ExtraData", NULL);
+ 	if (str != NULL) {
+ 		gsize bufsz = 0;
++#ifdef _MSC_VER
++		guchar *buf = g_base64_decode(str, &bufsz);
++		if (self->extra != NULL)
++			g_bytes_unref(self->extra);
++		self->extra = g_bytes_new_take(g_steal_pointer(&buf), bufsz);
++		g_free(buf);
++#else
+ 		g_autofree guchar *buf = g_base64_decode(str, &bufsz);
+ 		if (self->extra != NULL)
+ 			g_bytes_unref(self->extra);
+ 		self->extra = g_bytes_new_take(g_steal_pointer(&buf), bufsz);
++#endif
+ 	}
+ #else
+ 	g_set_error_literal(error,
+@@ -180,10 +195,18 @@ _g_usb_interface_save(GUsbInterface *self, JsonBuilder *json_builder, GError **e
+ 
+ 	/* extra data */
+ 	if (self->extra != NULL && g_bytes_get_size(self->extra) > 0) {
++#ifdef _MSC_VER
++		gchar *str = g_base64_encode(g_bytes_get_data(self->extra, NULL),
++							g_bytes_get_size(self->extra));
++		json_builder_set_member_name(json_builder, "ExtraData");
++		json_builder_add_string_value(json_builder, str);
++		g_free(str);
++#else
+ 		g_autofree gchar *str = g_base64_encode(g_bytes_get_data(self->extra, NULL),
+ 							g_bytes_get_size(self->extra));
+ 		json_builder_set_member_name(json_builder, "ExtraData");
+ 		json_builder_add_string_value(json_builder, str);
++#endif
+ 	}
+ 
+ 	/* success */
+diff --git a/gusb/gusb-interface.h b/gusb/gusb-interface.h
+index 523e1dd..7bc657f 100644
+--- a/gusb/gusb-interface.h
++++ b/gusb/gusb-interface.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <glib-object.h>
+ 
+ G_BEGIN_DECLS
+@@ -15,25 +25,25 @@ G_BEGIN_DECLS
+ #define G_USB_TYPE_INTERFACE (g_usb_interface_get_type())
+ G_DECLARE_FINAL_TYPE(GUsbInterface, g_usb_interface, G_USB, INTERFACE, GObject)
+ 
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_length(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_kind(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_number(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_alternate(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_class(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_subclass(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_protocol(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_index(GUsbInterface *self);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_interface_get_extra(GUsbInterface *self);
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_interface_get_endpoints(GUsbInterface *self);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-source.h b/gusb/gusb-source.h
+index cd4bca0..abe59b5 100644
+--- a/gusb/gusb-source.h
++++ b/gusb/gusb-source.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <glib.h>
+ 
+ G_BEGIN_DECLS
+@@ -24,11 +34,11 @@ typedef struct _GUsbSource GUsbSource;
+ typedef enum { G_USB_SOURCE_ERROR_INTERNAL } GUsbSourceError;
+ 
+ G_DEPRECATED_FOR(g_usb_context_error_quark)
+-GQuark
++G_USB_API GQuark
+ g_usb_source_error_quark(void);
+ 
+ G_DEPRECATED
+-void
++G_USB_API void
+ g_usb_source_set_callback(GUsbSource *self, GSourceFunc func, gpointer data, GDestroyNotify notify);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-util.h b/gusb/gusb-util.h
+index ed26eb3..8eb2af3 100644
+--- a/gusb/gusb-util.h
++++ b/gusb/gusb-util.h
+@@ -7,11 +7,21 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <glib.h>
+ 
+ G_BEGIN_DECLS
+ 
+-const gchar *
++G_USB_API const gchar *
+ g_usb_strerror(gint error_code);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb.h b/gusb/gusb.h
+index 30bc511..84e1121 100644
+--- a/gusb/gusb.h
++++ b/gusb/gusb.h
+@@ -9,6 +9,16 @@
+ 
+ #define __GUSB_INSIDE__
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gusb/gusb-bos-descriptor.h>
+ #include <gusb/gusb-context.h>
+ #include <gusb/gusb-device-event.h>
+diff --git a/meson.build b/meson.build
+index 30b8fd0..32dad2e 100644
+--- a/meson.build
++++ b/meson.build
+@@ -140,7 +140,9 @@ configure_file(
+ root_incdir = include_directories('.')
+ 
+ subdir('gusb')
+-subdir('tools')
++if get_option('tools')
++  subdir('tools')
++endif
+ if get_option('docs')
+   subdir('docs')
+ endif
+diff --git a/meson_options.txt b/meson_options.txt
+index 5c956d0..792195a 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,4 +1,5 @@
+ option('tests', type : 'boolean', value : true, description : 'Build self tests')
++option('tools', type : 'boolean', value : true, description : 'Build tools')
+ option('vapi', type : 'boolean', value : true, description : 'Build VAPI')
+ option('usb_ids', type : 'string', value : '/usr/share/hwdata/usb.ids', description : 'Path to usb.ids file')
+ option('docs', type : 'boolean', value : true, description : 'Generate documentation')
+diff --git a/tools/gusb-main.c b/tools/gusb-main.c
+index 0d6a422..b424bf9 100644
+--- a/tools/gusb-main.c
++++ b/tools/gusb-main.c
+@@ -81,7 +81,11 @@ gusb_cmd_add(GPtrArray *array,
+ 	     const gchar *description,
+ 	     GUsbCmdPrivateCb callback)
+ {
++#ifdef _MSC_VER
++	gchar **names = g_strsplit(name, ",", -1);
++#else
+ 	g_auto(GStrv) names = g_strsplit(name, ",", -1);
++#endif
+ 	for (guint i = 0; names[i] != NULL; i++) {
+ 		GUsbCmdItem *item = g_slice_new0(GUsbCmdItem);
+ 		item->name = g_strdup(names[i]);
+@@ -94,6 +98,9 @@ gusb_cmd_add(GPtrArray *array,
+ 		item->callback = callback;
+ 		g_ptr_array_add(array, item);
+ 	}
++#ifdef _MSC_VER
++	g_strfreev(names);
++#endif
+ }
+ 
+ static gchar *
+@@ -101,7 +108,11 @@ gusb_cmd_get_descriptions(GPtrArray *array)
+ {
+ 	guint len;
+ 	guint max_len = 19;
++#ifndef _MSC_VER
+ 	g_autoptr(GString) string = NULL;
++#else
++	GString *string = NULL;
++#endif
+ 
+ 	/* print each command */
+ 	string = g_string_new("");
+@@ -121,35 +132,67 @@ gusb_cmd_get_descriptions(GPtrArray *array)
+ 	if (string->len > 0)
+ 		g_string_set_size(string, string->len - 1);
+ 
++#ifdef _MSC_VER
++	return g_string_free(string, FALSE);
++#else
+ 	return g_string_free(g_steal_pointer(&string), FALSE);
++#endif
+ }
+ 
+ static void
+ gusb_main_device_open(GUsbDevice *device)
+ {
+ 	guint8 idx;
++#ifndef _MSC_VER
+ 	g_autoptr(GError) error = NULL;
++#else
++	GError *error = NULL;
++#endif
+ 
+ 	/* open */
+ 	if (!g_usb_device_open(device, &error)) {
+ 		g_print("failed to open: %s\n", error->message);
++#ifdef _MSC_VER
++		if (error != NULL)
++			g_error_free(error);
++#endif
+ 		return;
+ 	}
+ 
+ 	/* print info we can only get whilst open */
+ 	idx = g_usb_device_get_product_index(device);
+ 	if (idx != 0x00) {
++#ifndef _MSC_VER
+ 		g_autofree gchar *product = g_usb_device_get_string_descriptor(device, idx, &error);
++#else
++		gchar *product = g_usb_device_get_string_descriptor(device, idx, &error);
++#endif
+ 		if (product == NULL) {
+ 			g_print("failed to get string desc: %s\n", error->message);
++#ifdef _MSC_VER
++			if (error != NULL)
++				g_error_free(error);
++#endif
+ 			return;
+ 		}
+ 		g_print("product: %s\n", product);
++#ifdef _MSC_VER
++		if (product != NULL)
++			g_free(product);
++#endif
+ 	}
+ 	if (!g_usb_device_close(device, &error)) {
+ 		g_print("failed to close: %s\n", error->message);
++#ifdef _MSC_VER
++		if (error != NULL)
++			g_error_free(error);
++#endif
+ 		return;
+ 	}
++#ifdef _MSC_VER
++	if (error != NULL)
++		g_error_free(error);
++#endif
+ }
+ 
+ static void
+@@ -185,9 +228,15 @@ gusb_cmd_show_cb(GNode *node, gpointer data)
+ {
+ 	GUsbDevice *device = G_USB_DEVICE(node->data);
+ 	const gchar *tmp;
++#ifndef _MSC_VER
+ 	g_autofree gchar *product = NULL;
+ 	g_autofree gchar *vendor = NULL;
+ 	g_autoptr(GString) str = NULL;
++#else
++	gchar *product = NULL;
++	gchar *vendor = NULL;
++	GString *str = NULL;
++#endif
+ 
+ 	if (device == NULL) {
+ 		g_print("Root Device\n");
+@@ -251,14 +300,27 @@ gusb_cmd_show_cb(GNode *node, gpointer data)
+ 
+ 	g_print("%s\n", str->str);
+ 	g_usb_device_close(device, NULL);
++#ifdef _MSC_VER
++	if (product != NULL)
++		g_free(product);
++	if (vendor != NULL)
++		g_free(vendor);
++	if (str != NULL)
++		g_string_free(str, TRUE);
++#endif
+ 	return FALSE;
+ }
+ 
+ static gboolean
+ gusb_cmd_show(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ {
++#ifndef _MSC_VER
+ 	g_autoptr(GNode) node = NULL;
+ 	g_autoptr(GPtrArray) devices = NULL;
++#else
++	GNode *node = NULL;
++	GPtrArray *devices = NULL;
++#endif
+ 
+ 	/* sort */
+ 	devices = g_usb_context_get_devices(priv->usb_ctx);
+@@ -281,20 +343,37 @@ gusb_cmd_show(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ 				    0,
+ 				    "no parent node for %s",
+ 				    g_usb_device_get_platform_id(device));
++#ifdef _MSC_VER
++			if (node != NULL)
++				g_node_destroy(node);
++			if (devices != NULL)
++				g_ptr_array_unref(devices);
++#endif
+ 			return FALSE;
+ 		}
+ 		g_node_append_data(n, device);
+ 	}
+ 
+ 	g_node_traverse(node, G_PRE_ORDER, G_TRAVERSE_ALL, -1, gusb_cmd_show_cb, priv);
++#ifdef _MSC_VER
++	if (node != NULL)
++		g_node_destroy(node);
++	if (devices != NULL)
++		g_ptr_array_unref(devices);
++#endif
+ 	return TRUE;
+ }
+ 
+ static gboolean
+ gusb_cmd_watch(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ {
++#ifndef _MSC_VER
+ 	g_autoptr(GMainLoop) loop = NULL;
+ 	g_autoptr(GPtrArray) devices = NULL;
++#else
++	GMainLoop *loop = NULL;
++	GPtrArray *devices = NULL;
++#endif
+ 
+ 	devices = g_usb_context_get_devices(priv->usb_ctx);
+ 	for (guint i = 0; i < devices->len; i++) {
+@@ -316,6 +395,12 @@ gusb_cmd_watch(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ 			 G_CALLBACK(gusb_device_list_removed_cb),
+ 			 priv);
+ 	g_main_loop_run(loop);
++#ifdef _MSC_VER
++	if (loop != NULL)
++		g_main_loop_unref(loop);
++	if (devices != NULL)
++		g_ptr_array_unref(devices);
++#endif
+ 	return TRUE;
+ }
+ 
+@@ -323,8 +408,13 @@ static gboolean
+ gusb_cmd_replug(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ {
+ 	guint16 vid, pid;
++#ifndef _MSC_VER
+ 	g_autoptr(GUsbDevice) device = NULL;
+ 	g_autoptr(GUsbDevice) device_new = NULL;
++#else
++	GUsbDevice *device = NULL;
++	GUsbDevice *device_new = NULL;
++#endif
+ 
+ 	/* check args */
+ 	if (g_strv_length(values) != 2) {
+@@ -351,7 +441,14 @@ gusb_cmd_replug(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ 
+ 	/* wait for replug */
+ 	device_new = g_usb_context_wait_for_replug(priv->usb_ctx, device, 5000, error);
+-	return device_new != NULL;
++	gboolean result = device_new != NULL;
++#ifdef _MSC_VER
++	if (device != NULL)
++		g_object_unref(device);
++	if (device_new != NULL)
++		g_object_unref(device_new);
++#endif
++	return result;
+ }
+ 
+ static gboolean
+@@ -359,7 +456,11 @@ gusb_cmd_load(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ {
+ 	JsonObject *json_obj;
+ 	JsonNode *json_node;
++#ifndef _MSC_VER
+ 	g_autoptr(JsonParser) parser = json_parser_new();
++#else
++	JsonParser *parser = json_parser_new();
++#endif
+ 
+ 	/* check args */
+ 	if (g_strv_length(values) != 1) {
+@@ -367,12 +468,21 @@ gusb_cmd_load(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ 				    G_IO_ERROR,
+ 				    G_IO_ERROR_INVALID_ARGUMENT,
+ 				    "no filename specified");
++#ifdef _MSC_VER
++		if (parser != NULL)
++			g_object_unref(parser);
++#endif
+ 		return FALSE;
+ 	}
+ 
+ 	/* parse */
+-	if (!json_parser_load_from_file(parser, values[0], error))
++	if (!json_parser_load_from_file(parser, values[0], error)) {
++#ifdef _MSC_VER
++		if (parser != NULL)
++			g_object_unref(parser);
++#endif
+ 		return FALSE;
++	}
+ 
+ 	/* sanity check */
+ 	json_node = json_parser_get_root(parser);
+@@ -381,28 +491,54 @@ gusb_cmd_load(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ 				    G_IO_ERROR,
+ 				    G_IO_ERROR_INVALID_DATA,
+ 				    "not a JSON object");
++#ifdef _MSC_VER
++		if (parser != NULL)
++			g_object_unref(parser);
++#endif
+ 		return FALSE;
+ 	}
+ 
+ 	/* not supplied */
+ 	json_obj = json_node_get_object(json_node);
+-	if (!g_usb_context_load(priv->usb_ctx, json_obj, error))
++	if (!g_usb_context_load(priv->usb_ctx, json_obj, error)) {
++#ifdef _MSC_VER
++		if (parser != NULL)
++			g_object_unref(parser);
++#endif
+ 		return FALSE;
++	}
+ 
+ 	/* success */
+-	return gusb_cmd_show(priv, NULL, error);
++	gboolean result = gusb_cmd_show(priv, NULL, error);
++#ifdef _MSC_VER
++	if (parser != NULL)
++		g_object_unref(parser);
++#endif
++	return result;
+ }
+ 
+ static gboolean
+ gusb_cmd_save(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ {
++#ifndef _MSC_VER
+ 	g_autofree gchar *data = NULL;
+ 	g_autoptr(JsonBuilder) json_builder = json_builder_new();
+ 	g_autoptr(JsonGenerator) json_generator = NULL;
+ 	g_autoptr(JsonNode) json_root = NULL;
+-
+-	if (!g_usb_context_save(priv->usb_ctx, json_builder, error))
++#else
++	gchar *data = NULL;
++	JsonBuilder *json_builder = json_builder_new();
++	JsonGenerator *json_generator = NULL;
++	JsonNode *json_root = NULL;
++#endif
++
++	if (!g_usb_context_save(priv->usb_ctx, json_builder, error)) {
++#ifdef _MSC_VER
++		if (json_builder != NULL)
++			g_object_unref(json_builder);
++#endif
+ 		return FALSE;
++	}
+ 
+ 	/* export as a string */
+ 	json_root = json_builder_get_root(json_builder);
+@@ -415,27 +551,59 @@ gusb_cmd_save(GUsbCmdPrivate *priv, gchar **values, GError **error)
+ 				    G_IO_ERROR,
+ 				    G_IO_ERROR_INVALID_DATA,
+ 				    "Failed to convert to JSON string");
++#ifdef _MSC_VER
++		if (json_generator != NULL)
++			g_object_unref(json_generator);
++		if (json_builder != NULL)
++			g_object_unref(json_builder);
++#endif
+ 		return FALSE;
+ 	}
+ 
+ 	/* save to file */
+-	if (g_strv_length(values) == 1)
+-		return g_file_set_contents(values[0], data, -1, error);
++	if (g_strv_length(values) == 1) {
++		gboolean result = g_file_set_contents(values[0], data, -1, error);
++#ifdef _MSC_VER
++		if (data != NULL)
++			g_free(data);
++		if (json_generator != NULL)
++			g_object_unref(json_generator);
++		if (json_builder != NULL)
++			g_object_unref(json_builder);
++#endif
++		return result;
++	}
+ 
+ 	/* just print */
+ 	g_print("%s\n", data);
++#ifdef _MSC_VER
++	if (data != NULL)
++		g_free(data);
++	if (json_generator != NULL)
++		g_object_unref(json_generator);
++	if (json_builder != NULL)
++		g_object_unref(json_builder);
++#endif
+ 	return TRUE;
+ }
+ 
+ static gboolean
+ gusb_cmd_run(GUsbCmdPrivate *priv, const gchar *command, gchar **values, GError **error)
+ {
++#ifndef _MSC_VER
+ 	g_autoptr(GString) string = g_string_new(NULL);
++#else
++	GString *string = g_string_new(NULL);
++#endif
+ 
+ 	/* find command */
+ 	for (guint i = 0; i < priv->cmd_array->len; i++) {
+ 		GUsbCmdItem *item = g_ptr_array_index(priv->cmd_array, i);
+ 		if (g_strcmp0(item->name, command) == 0) {
++#ifdef _MSC_VER
++			if (string != NULL)
++				g_string_free(string, TRUE);
++#endif
+ 			return item->callback(priv, values, error);
+ 		}
+ 	}
+@@ -447,6 +615,10 @@ gusb_cmd_run(GUsbCmdPrivate *priv, const gchar *command, gchar **values, GError
+ 		g_string_append_printf(string, " * %s\n", item->name);
+ 	}
+ 	g_set_error_literal(error, 1, 0, string->str);
++#ifdef _MSC_VER
++	if (string != NULL)
++		g_string_free(string, TRUE);
++#endif
+ 	return FALSE;
+ }
+ 
+@@ -469,10 +641,17 @@ main(int argc, char *argv[])
+ 	GUsbContextFlags context_flags = G_USB_CONTEXT_FLAGS_AUTO_OPEN_DEVICES;
+ 	gboolean verbose = FALSE;
+ 	gboolean save_events = FALSE;
++#ifndef _MSC_VER
+ 	g_autofree gchar *cmd_descriptions = NULL;
+ 	g_autofree gchar *options_help = NULL;
+ 	g_autoptr(GError) error = NULL;
+ 	g_autoptr(GUsbCmdPrivate) priv = NULL;
++#else
++	gchar *cmd_descriptions = NULL;
++	gchar *options_help = NULL;
++	GError *error = NULL;
++	GUsbCmdPrivate *priv = NULL;
++#endif
+ 
+ 	const GOptionEntry options[] = {{"verbose",
+ 					 'v',
+@@ -498,6 +677,12 @@ main(int argc, char *argv[])
+ 	g_option_context_add_main_entries(priv->context, options, NULL);
+ 	if (!g_option_context_parse(priv->context, &argc, &argv, &error)) {
+ 		g_printerr("Failed to parse arguments: %s\n", error->message);
++#ifdef _MSC_VER
++		if (error != NULL)
++			g_error_free(error);
++		if (priv != NULL)
++			gusb_cmd_private_free(priv);
++#endif
+ 		return 2;
+ 	}
+ 
+@@ -542,15 +727,33 @@ main(int argc, char *argv[])
+ 	if (argc < 2) {
+ 		options_help = g_option_context_get_help(priv->context, TRUE, NULL);
+ 		g_print("%s", options_help);
++#ifdef _MSC_VER
++		if (options_help != NULL)
++			g_free(options_help);
++		if (cmd_descriptions != NULL)
++			g_free(cmd_descriptions);
++		if (priv != NULL)
++			gusb_cmd_private_free(priv);
++#endif
+ 		return 1;
+ 	}
+ 
+ 	/* run the specified command */
+ 	if (!gusb_cmd_run(priv, argv[1], (gchar **)&argv[2], &error)) {
+ 		g_print("%s\n", error->message);
++#ifdef _MSC_VER
++		if (error != NULL)
++			g_error_free(error);
++		if (priv != NULL)
++			gusb_cmd_private_free(priv);
++#endif
+ 		return 1;
+ 	}
+ 
+ 	/* success */
++#ifdef _MSC_VER
++	if (priv != NULL)
++		gusb_cmd_private_free(priv);
++#endif
+ 	return 0;
+ }
