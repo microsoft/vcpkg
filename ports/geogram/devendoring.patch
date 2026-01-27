@@ -1,0 +1,24 @@
+diff --git a/src/lib/third_party/numerics/CMakeLists.txt b/src/lib/third_party/numerics/CMakeLists.txt
+index baef913..8f2d464 100644
+--- a/src/lib/third_party/numerics/CMakeLists.txt
++++ b/src/lib/third_party/numerics/CMakeLists.txt
+@@ -25,9 +25,9 @@ include_directories(${GEOGRAM_SOURCE_DIR}/src/lib/third_party/numerics/INCLUDE)
+ set(LAPACK_lapack_WORKS TRUE)
+ find_package(BLAS REQUIRED)
+ find_package(LAPACK REQUIRED)
++find_package(superlu REQUIRED)
+ aux_source_directories(SOURCES "Source Files" .)
+ aux_source_directories(SOURCES "Source Files\\LIBF2C" LIBF2C)
+-aux_source_directories(SOURCES "Source Files\\SUPERLU" SUPERLU)
+ aux_source_directories(SOURCES "Source Files\\ARPACK" ARPACK)
+ aux_source_directories(SOURCES "Source Files\\ARPACK_UTIL" ARPACK_UTIL)
+ 
+@@ -37,7 +37,7 @@ list(REMOVE_ITEM SOURCES "LIBF2C/system_.c")
+ 
+ add_library(geogram_num_3rdparty ${SOURCES})
+ 
+-target_link_libraries(geogram_num_3rdparty ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
++target_link_libraries(geogram_num_3rdparty ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} superlu::superlu)
+ if(UNIX)
+     target_link_libraries(geogram_num_3rdparty m)
+ endif()
