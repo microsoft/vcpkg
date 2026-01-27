@@ -1,0 +1,28 @@
+include("${CMAKE_CURRENT_LIST_DIR}/onnxruntime-cuda12-base-config.cmake")
+
+set_target_properties(onnxruntime-cuda12::onnxruntime PROPERTIES 
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libonnxruntime.so.@VERSION@"
+  IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libonnxruntime.so.@VERSION@"
+)
+
+foreach(provider shared cuda tensorrt)
+  import_providers(${provider})
+  set_target_properties(onnxruntime-cuda12::onnxruntime_providers_${provider} PROPERTIES 
+    IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libonnxruntime_providers_${provider}.so"
+    IMPORTED_LOCATION_DEBUG "${_IMPORT_PREFIX}/debug/lib/libonnxruntime_providers_${provider}.so"
+  )
+endforeach()
+
+list(APPEND _cmake_import_check_targets onnxruntime-cuda12::onnxruntime)
+list(APPEND _cmake_import_check_files_for_onnxruntime-cuda12::onnxruntime 
+  "${_IMPORT_PREFIX}/lib/libonnxruntime.so.@VERSION@"
+  "${_IMPORT_PREFIX}/debug/lib/libonnxruntime.so.@VERSION@"
+)
+
+foreach(provider shared cuda tensorrt)
+  list(APPEND _cmake_import_check_targets onnxruntime-cuda12::onnxruntime_providers_${provider})
+  list(APPEND _cmake_import_check_files_for_onnxruntime-cuda12::onnxruntime_providers_${provider} 
+    "${_IMPORT_PREFIX}/lib/libonnxruntime_providers_${provider}.so"
+    "${_IMPORT_PREFIX}/debug/lib/libonnxruntime_providers_${provider}.so"
+  )
+endforeach()
