@@ -541,6 +541,10 @@ openzl:x64-windows=fail
 orc:arm-neon-android=fail
 orc:arm64-android=fail
 orc:x64-android=fail
+# due to outdated compilers in android CI
+orefkov-simstr:arm-neon-android=fail
+orefkov-simstr:arm64-android=fail
+orefkov-simstr:x64-android=fail
 paho-mqtt:arm64-uwp=fail
 paho-mqtt:x64-uwp=fail
 paraview:arm64-windows-static-md=fail
