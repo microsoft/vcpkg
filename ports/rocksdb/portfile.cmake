@@ -2,13 +2,15 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
   REF "v${VERSION}"
-  SHA512 e4665fc0491978c71b0aa4a49dccaa342621de59272af4c4015c6f7425cd7985fa9de54cea8a2bd2f8d04538a5777a6caaf77371fef8e36cbbccc13b0c71315d
+  SHA512 6cbfd93db56299c15df4e9e79f77c1bdf779931869bc87b152d1528499e76bd6b536de85d74c52fe789e46d9f0a3e262a7789bb9e0bfae017f10d8cbd9c8ceaa
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch
     0002-fix-android.patch
     # TODO: This patch should be deleted after following PR will be merged. https://github.com/facebook/rocksdb/pull/13573
     0003-include_cstdint.patch
+    # TODO: This patch should be deleted on upstream next release. https://github.com/facebook/rocksdb/commit/1d18c4ed0177f184f228a7cdfb78eb85d0dab540
+    0004-support-apple.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)

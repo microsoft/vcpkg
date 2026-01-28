@@ -1,13 +1,16 @@
 {
   "name": "kf5jobwidgets",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Widgets for showing progress of asynchronous jobs",
-  "homepage": "https://api.kde.org/frameworks/kjobwidgets/html/index.html",
+  "homepage": "https://api.kde.org/kjobwidgets-index.html",
   "dependencies": [
     "ecm",
     "kf5coreaddons",
     "kf5widgetsaddons",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     {
       "name": "qt5-x11extras",
       "platform": "linux"

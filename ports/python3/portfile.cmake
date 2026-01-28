@@ -28,7 +28,6 @@ set(PATCHES
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
-    0012-force-disable-modules.patch
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
@@ -283,8 +282,12 @@ else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTORECONF
+        DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}
+            py_cv_module__curses=n/a
+            py_cv_module__curses_panel=n/a
+            py_cv_module__tkinter=n/a
         OPTIONS_DEBUG
             "--with-pydebug"
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"

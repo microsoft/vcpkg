@@ -1,6 +1,6 @@
 {
   "name": "sleepy-discord",
-  "version-date": "2025-02-08",
+  "version-date": "2025-12-18",
   "description": "C++ library for the Discord chat client",
   "homepage": "https://yourwaifu.dev/sleepy-discord/",
   "dependencies": [

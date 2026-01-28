@@ -1,6 +1,7 @@
 {
   "name": "scenepic",
   "version": "1.1.1",
+  "port-version": 1,
   "description": "A Powerful, easy to use, and portable visualization toolkit for mixed 3D and 2D content",
   "homepage": "https://microsoft.github.io/scenepic/",
   "license": "MIT",

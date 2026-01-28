@@ -17,12 +17,12 @@ INVERTED_FEATURES
     )
 
 if("assimp" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=system -DTEST_quick3d_assimp=ON -DHAVE_Assimp=ON)
+    list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=system -DTEST_quick3d_assimp=ON)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=no)
 endif()
 
-set(TOOL_NAMES balsam balsamui meshdebug shadergen instancer materialeditor shapegen)
+set(TOOL_NAMES balsam balsamui meshdebug shadergen instancer materialeditor shapegen lightmapviewer)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}

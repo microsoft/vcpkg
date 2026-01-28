@@ -1,9 +1,0 @@
-{
-  "name": "googleapis",
-  "version-string": "alias",
-  "port-version": 2,
-  "description": "Deprecated, use google-cloud-cpp instead.",
-  "dependencies": [
-    "google-cloud-cpp"
-  ]
-}

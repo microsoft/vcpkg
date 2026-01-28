@@ -1,6 +1,7 @@
 {
   "name": "blosc2",
-  "version": "2.21.3",
+  "version": "2.22.0",
+  "port-version": 1,
   "description": "A fast, compressed, persistent binary data store library for C.",
   "homepage": "https://github.com/Blosc/c-blosc2",
   "license": "BSD-3-Clause",

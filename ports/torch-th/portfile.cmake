@@ -12,6 +12,10 @@ vcpkg_from_github(
         fix-cmake4.patch # Note: The portfile currently deletes all cmake files
 )
 
+file(REMOVE "${SOURCE_PATH}/lib/TH/cmake/FindBLAS.cmake")
+file(REMOVE "${SOURCE_PATH}/lib/TH/cmake/FindLAPACK.cmake")
+file(REMOVE "${SOURCE_PATH}/lib/TH/cmake/FindMKL.cmake")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/lib/TH"
     OPTIONS

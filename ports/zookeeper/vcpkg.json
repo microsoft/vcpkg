@@ -1,6 +1,6 @@
 {
   "name": "zookeeper",
-  "version": "3.8.4",
+  "version": "3.8.5",
   "description": "ZooKeeper C bindings",
   "homepage": "https://github.com/apache/zookeeper",
   "license": "BSD-3-Clause",

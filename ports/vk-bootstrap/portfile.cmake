@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO charles-lunarg/vk-bootstrap
     REF "v${VERSION}"
-    SHA512 d55752fbaa84ecf8c674eb9c8639553db2631024797e62b807078c95601dd711263381443d52ddd2ef6635d61ffcacd39650aa638363cf1d124ff0a37010c2d9
+    SHA512 62ddd5b68835b11279b405052ef2b4d7090a21dbcaf177cc8f99c108c29ca0748f37fcbaee71ad3544038e6d190f3881a8bf8512791146988f067c5f4a5ae26a
     HEAD_REF master
     PATCHES
         fix-targets.patch

@@ -1,27 +1,30 @@
-set(extra_patches "")
-if (VCPKG_TARGET_IS_OSX)
-	list(APPEND extra_patches 005-do-not-pass-ld-e-macosx.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO LuaJIT/LuaJIT
-    REF d0e88930ddde28ff662503f9f20facf34f7265aa  #2023-01-04
-    SHA512 e4111b2d7eeb05676c62d69da13a380a51d98f082c0be575a414c09ee27ff17d101b5b4a95e1b8a1bad14d55a4d2b305718a11878fbf36e0d3d48e62ba03407f
+    REF 707c12bf00dafdfd3899b1a6c36435dbbf6c7022  # 2026-01-09
+    SHA512 c02b3600577936b9de04358fe03b3d995ee68e3416174c287022100aa0862b4e138c88e459b18a590dda7c08c1b6aded440bebfc80bbead2ae6b54cc4c82a2e9
     HEAD_REF master
     PATCHES
         msvcbuild.patch
         003-do-not-set-macosx-deployment-target.patch
-        ${extra_patches}
 )
 
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
 if(VCPKG_DETECTED_MSVC)
-    # Due to lack of better MSVC cross-build support, just always build the host
-    # minilua tool with the target toolchain. This will work for native builds and
-    # for targeting x86 from x64 hosts. (UWP and ARM64 is unsupported.)
+    set(VSCMD_ARG_TGT_ARCH "${VCPKG_TARGET_ARCHITECTURE}")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
+            set(host_arch $ENV{PROCESSOR_ARCHITEW6432})
+        else()
+            set(host_arch $ENV{PROCESSOR_ARCHITECTURE})
+        endif()
+        if(host_arch MATCHES "(amd|AMD)64")
+            set(ENV{VSCMD_ARG_HOST_ARCH} "x64")
+        endif()
+    endif()
+
     vcpkg_list(SET options)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND options "MSVCBUILD_OPTIONS=static")
@@ -43,12 +46,17 @@ if(VCPKG_DETECTED_MSVC)
     endif()
 
     vcpkg_copy_pdbs()
+
+    # jit including the specific vmdef.lua generated during the build
+    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/jit" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/luajit/lua")
+
 else()
     vcpkg_list(SET options)
     if(VCPKG_CROSSCOMPILING)
         list(APPEND options
             "LJARCH=${VCPKG_TARGET_ARCHITECTURE}"
             "BUILDVM_X=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/buildvm-${VCPKG_TARGET_ARCHITECTURE}${VCPKG_HOST_EXECUTABLE_SUFFIX}"
+            "HOST_LUA=${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}/minilua${VCPKG_HOST_EXECUTABLE_SUFFIX}"
         )
     endif()
 
@@ -102,10 +110,9 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/share/man"
 )
 
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/luajit-symlink" "${CURRENT_PACKAGES_DIR}/debug/bin/luajit-symlink")
 vcpkg_copy_tools(TOOL_NAMES luajit AUTO_CLEAN)
 
 vcpkg_fixup_pkgconfig()
-
-file(COPY "${SOURCE_PATH}/src/jit/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/luajit/jit")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYRIGHT")

@@ -1,6 +1,6 @@
 {
   "name": "bdwgc",
-  "version": "8.2.8",
+  "version": "8.2.10",
   "description": "The Boehm-Demers-Weiser conservative C/C++ Garbage Collector (libgc, bdwgc, boehm-gc)",
   "homepage": "https://www.hboehm.info/gc/",
   "license": "MIT",

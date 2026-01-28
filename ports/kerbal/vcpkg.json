@@ -1,9 +1,9 @@
 {
   "name": "kerbal",
-  "version": "2025.8.1",
+  "version": "2025.11.1",
   "description": "Kerbal C++ Template Library",
   "homepage": "https://github.com/WentsingNee/Kerbal",
-  "license": "LGPL-3.0",
+  "license": "LGPL-3.0-only",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

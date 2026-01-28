@@ -1,6 +1,6 @@
 {
   "name": "lua",
-  "version": "5.4.8",
+  "version": "5.5.0",
   "description": "A powerful, fast, lightweight, embeddable scripting language",
   "homepage": "https://www.lua.org",
   "license": null,

@@ -1,0 +1,14 @@
+diff --git a/src/tint/CMakeLists.txt b/src/tint/CMakeLists.txt
+index 84947a15ce..1ccf20e23c 100644
+--- a/src/tint/CMakeLists.txt
++++ b/src/tint/CMakeLists.txt
+@@ -741,3 +741,9 @@ if (TINT_ENABLE_INSTALL)
+       install(FILES ${TINT_ROOT_SOURCE_DIR}/${TINT_HEADER_FILE}  DESTINATION  ${CMAKE_INSTALL_INCLUDEDIR}/src/tint/${TINT_HEADER_DIR})
+   endforeach ()
+ endif()
++
++if(TINT_BUILD_CMD_TOOLS)
++  install(TARGETS tint_cmd_tint_cmd
++    RUNTIME DESTINATION bin
++    BUNDLE DESTINATION bin)
++endif()

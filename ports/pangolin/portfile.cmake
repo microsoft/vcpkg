@@ -1,9 +1,3 @@
-vcpkg_download_distfile(INITIALISE_PAD_PATCH
-    URLS https://github.com/stevenlovegrove/Pangolin/commit/0bb8f1b4969f248254e4c4051c053304f86e3c6a.patch?full_index=1
-    FILENAME pangolin-initialise-pad_.patch
-    SHA512 8e82791467f8947d2d31718c9e00ab1273804afccb8f6ba259ed5ee4c626f9354055ee92b38e72d6ffa9e88b1468683cdc159767fad74a52c6707939e2a5c300
-)
-
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
@@ -12,12 +6,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevenlovegrove/Pangolin
     REF "v${VERSION}"
-    SHA512 554a262bfba533926eb691cb41aa73d3b0af710fba324a877fddd9a7b7d89fb067cff04ee130c070c124740f0a84c42f83dfcc7da78ae6b5118e451d332fdc9b
+    SHA512 d303f0d9f02492e4fe0eb844db4fda563404ba73d1350a5b3ed45745c40022726b27cbd92cd1d0990186d1438ba0d2710fc614028b725f054486741ae30fd490
     HEAD_REF master
     PATCHES
         devendor-palsigslot.patch
-        "${INITIALISE_PAD_PATCH}"
-        avoid-vlas.diff # Adapted from https://github.com/stevenlovegrove/Pangolin/commit/b91d462442ab3b392ac62e76ac5eef243971a530.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

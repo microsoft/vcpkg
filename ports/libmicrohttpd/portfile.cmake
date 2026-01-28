@@ -1,9 +1,9 @@
 vcpkg_download_distfile(ARCHIVE
     URLS
-        "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
+        "https://ftpmirror.gnu.org/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
         "https://ftp.gnu.org/gnu/libmicrohttpd/libmicrohttpd-${VERSION}.tar.gz"
     FILENAME "libmicrohttpd-${VERSION}.tar.gz"
-    SHA512 c99b8b93cae5feee8debcc5667ee3ff043412a84b30696fe852e6c138f3c890bb43c8fcd7199f1d2f809d522fef159e83b607c743d6cf3401a57050fbdf9b5c1
+    SHA512 7092f307a00ba04b539be79a7c94ddf9b4b6e43343a66da49c6602fa860f77cf7f9017d7e40f9b7400d85a828a503248eb12dd121413aad68133003a20bb2c4a
 )
 
 vcpkg_extract_source_archive(
@@ -39,19 +39,20 @@ else()
         vcpkg_list(APPEND config_args "--disable-https")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
+        AUTORECONF
         OPTIONS
             --disable-doc
-            --disable-nls
             --disable-examples
             --disable-curl
+            --disable-tools
             ${config_args}
         OPTIONS_DEBUG --enable-asserts
         OPTIONS_RELEASE --disable-asserts
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

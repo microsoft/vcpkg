@@ -1,6 +1,6 @@
 {
   "name": "qt5-quickcontrols2",
-  "version": "5.15.17",
+  "version": "5.15.18",
   "description": "Qt Quick Controls provides a set of controls that can be used to build complete interfaces in Qt Quick.",
   "license": null,
   "dependencies": [

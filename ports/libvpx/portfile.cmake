@@ -235,7 +235,7 @@ else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
 
-    if (VCPKG_HOST_IS_OPENBSD OR VCPKG_HOST_IS_FREEBSD)
+    if (VCPKG_HOST_IS_BSD)
         set(MAKE_BINARY "gmake")
     else()
         set(MAKE_BINARY "make")

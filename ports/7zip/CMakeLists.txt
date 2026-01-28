@@ -412,7 +412,7 @@ endif()
 # CPP/7zip/Bundles/Format7zF/makefile[_gcc].mak
 # CPP/7zip/7zip[_gcc].mak
 
-target_compile_definitions(7zip PRIVATE Z7_EXTERNAL_CODECS)
+target_compile_definitions(7zip PRIVATE Z7_EXTERNAL_CODECS Z7_PPMD_SUPPORT)
 target_sources(7zip PRIVATE
     CPP/7zip/Archive/ArchiveExports.cpp
     CPP/7zip/Archive/DllExports2.cpp

@@ -20,7 +20,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PixarAnimationStudios/OpenUSD
     REF "v${USD_VERSION}"
-    SHA512 66bf75486f09dce7085c5c80cc3e005c02c1dfbbfbd02c8e2e8fd9498030ca49cd6bc0a9b9db930d0559c745cf77ebaf822018de4bf798cce84fdf0aa89f0d84
+    SHA512 7b78109055773e44af771e99b64ff6a1fcdc5c4984d6d62708491d14ab576344d432dac2377363cae89e47c1a1e55d016bcc7bde2c5c49d5b26550db5ac46304
     HEAD_REF release
     PATCHES
         003-fix-dep.patch
@@ -29,14 +29,11 @@ vcpkg_from_github(
         008-fix_clang8_compiler_error.patch
         009-vcpkg_install_folder_conventions.patch
         010-cmake_export_plugin_as_modules.patch
-        013-openimageio-3.patch
 )
 
 # Changes accompanying 003-fix-dep.patch
 file(REMOVE
     "${SOURCE_PATH}/cmake/modules/FindOpenColorIO.cmake"
-    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/spirv_reflect.cpp"
-    "${SOURCE_PATH}/pxr/imaging/hgiVulkan/spirv_reflect.h"
     "${SOURCE_PATH}/pxr/imaging/hgiVulkan/vk_mem_alloc.cpp"
     "${SOURCE_PATH}/pxr/imaging/hgiVulkan/vk_mem_alloc.h"
 )

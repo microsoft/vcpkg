@@ -1,0 +1,22 @@
+diff --git a/kde-modules/KDEInstallDirs5.cmake b/kde-modules/KDEInstallDirs5.cmake
+index 24308ad..c975b3c 100644
+--- a/kde-modules/KDEInstallDirs5.cmake
++++ b/kde-modules/KDEInstallDirs5.cmake
+@@ -273,7 +273,7 @@ if(KDE_INSTALL_USE_QT_SYS_PATHS)
+         "QtQuick2 imports"
+         QML_INSTALL_DIR)
+ else()
+-    set(_pluginsDirParent LIBDIR)
++    set(_pluginsDirParent "")
+     if (ANDROID)
+         set(_pluginsDirParent)
+         #androiddeployqt wants plugins right in the prefix
+@@ -286,7 +286,7 @@ else()
+         "QtQuick1 imports"
+         IMPORTS_INSTALL_DIR)
+ 
+-    _define_relative(QMLDIR LIBDIR "qml"
++    _define_relative(QMLDIR "" "qml"
+         "QtQuick2 imports"
+         QML_INSTALL_DIR)
+ endif()

@@ -1,15 +1,15 @@
 {
   "name": "libmicrohttpd",
-  "version": "1.0.1",
-  "port-version": 2,
+  "version": "1.0.2",
   "description": "GNU libmicrohttpd is a small C library that is supposed to make it easy to run an HTTP server as part of another application",
   "homepage": "https://www.gnu.org/software/libmicrohttpd/",
   "license": "LGPL-2.1-or-later",
-  "supports": "!((arm & windows) | uwp)",
+  "supports": "!(arm & windows) & !uwp",
   "dependencies": [
     {
-      "name": "gettext",
-      "platform": "!windows"
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows | mingw"
     },
     {
       "name": "vcpkg-msbuild",
