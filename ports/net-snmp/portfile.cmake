@@ -1,10 +1,3 @@
-# mingw is not supported and uwp
-if(VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
-    vcpkg_fail_port_install(
-        MESSAGE "This port supports only desktop Windows with MSVC"
-    )
-endif()
-
 # Check library linkage:
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
