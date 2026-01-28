@@ -4,7 +4,7 @@
   "description": "Modern fork of Apache ActiveMQ-CPP with CMake support and OpenSSL integration",
   "homepage": "https://github.com/blackb1rd/neoactivemq-cpp",
   "license": "Apache-2.0",
-  "supports": "!uwp",
+  "supports": "!uwp & !osx",
   "dependencies": [
     "asio",
     {
