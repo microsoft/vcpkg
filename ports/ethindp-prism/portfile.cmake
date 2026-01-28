@@ -6,8 +6,8 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO ethindp/prism
-  REF v0.4.7
-  SHA512 c357aa61d81d4bd39464bc30abc89a402f39d18d2c26c51c61e8da83e5b9596d21a0dcff3d85ef2c404b5b883fe0befc710a649990878fa7630e20d0a919a66b
+  REF v0.5.0
+  SHA512 a0c6b774ab4e87c2c2f2c556d78a40a45eaf52d7ddaab4cb7dbc50947e6919958977abdbfc37185263dbe6d3f3cce3a651d7927202596713e2de75c4a42d92a4
   HEAD_REF master
 )
 vcpkg_check_features(
