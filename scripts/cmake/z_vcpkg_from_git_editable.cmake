@@ -361,36 +361,20 @@ function(z_vcpkg_from_git_editable)
             "            ${CURRENT_BUILDTREES_DIR}/${clone_logname}-err.log")
     endif()
 
-    # Fetch all refs and tags (needed for tag-based REFs)
-    set(fetch_all_logname "git-fetch-all-${TARGET_TRIPLET}")
+    # Fetch branches, tags and FETCH_REF/REF
+    set(fetch_logname "git-fetch-${TARGET_TRIPLET}")
     vcpkg_execute_in_download_mode(
-        COMMAND "${GIT}" ${git_config_options} fetch --all --tags
+        COMMAND "${GIT}" ${git_config_options} fetch origin +refs/tags/*:refs/tags/* +refs/heads/*:refs/remotes/origin/* ${ref_to_fetch}
         WORKING_DIRECTORY "${editable_source_path}"
-        OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${fetch_all_logname}-out.log"
-        ERROR_FILE "${CURRENT_BUILDTREES_DIR}/${fetch_all_logname}-err.log"
-        RESULT_VARIABLE git_fetch_all_result
+        OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${fetch_logname}-out.log"
+        ERROR_FILE "${CURRENT_BUILDTREES_DIR}/${fetch_logname}-err.log"
+        RESULT_VARIABLE git_fetch_result
     )
-    if(NOT git_fetch_all_result EQUAL 0)
-        message(WARNING "Editable mode: git fetch --all --tags failed (continuing anyway)")
-    endif()
-
-    # Fetch the specific ref if FETCH_REF is different from REF
-    if(DEFINED arg_FETCH_REF)
-        message(STATUS "Editable mode: fetching ${arg_FETCH_REF}...")
-        set(fetch_ref_logname "git-fetch-ref-${TARGET_TRIPLET}")
-        vcpkg_execute_in_download_mode(
-            COMMAND "${GIT}" ${git_config_options} fetch origin "${arg_FETCH_REF}"
-            WORKING_DIRECTORY "${editable_source_path}"
-            OUTPUT_FILE "${CURRENT_BUILDTREES_DIR}/${fetch_ref_logname}-out.log"
-            ERROR_FILE "${CURRENT_BUILDTREES_DIR}/${fetch_ref_logname}-err.log"
-            RESULT_VARIABLE git_fetch_result
-        )
-        if(NOT git_fetch_result EQUAL 0)
-            z_vcpkg_editable_cleanup_on_failure("${editable_source_path}" "${meta_file_path}")
-            message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: git fetch '${arg_FETCH_REF}' failed\n"
-                "  See logs: ${CURRENT_BUILDTREES_DIR}/${fetch_ref_logname}-out.log\n"
-                "            ${CURRENT_BUILDTREES_DIR}/${fetch_ref_logname}-err.log")
-        endif()
+    if(NOT git_fetch_result EQUAL 0)
+        z_vcpkg_editable_cleanup_on_failure("${editable_source_path}" "${meta_file_path}")
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}: git fetch failed\n"
+            "  See logs: ${CURRENT_BUILDTREES_DIR}/${fetch_logname}-out.log\n"
+            "            ${CURRENT_BUILDTREES_DIR}/${fetch_logname}-err.log")
     endif()
 
     # Checkout specific ref - use --force to handle any file mode/line ending differences
