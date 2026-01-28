@@ -21,6 +21,17 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libaec/libaec-config.cmake"
     "if(libaec_USE_STATIC_LIBS)"
     "if(TARGET libaec::aec OR TARGET libaec::sz)\nelseif(\"${BUILD_STATIC}\") # forced by vcpkg"
 )
+# Compatibility with user's CMake < 3.18 (vcpkg claims support for >= 3.16):
+# Make imported targets global so that libaec-config.cmake can create ALIAS targets.
+file(READ "${CURRENT_PACKAGES_DIR}/share/libaec/libaec-targets.cmake" libaec_targets)
+string(REGEX REPLACE " (SHARED|STATIC) IMPORTED" " \\1 IMPORTED \${libaec_maybe_global}" libaec_targets "${libaec_targets}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/libaec/libaec-targets.cmake" "set(libaec_maybe_global \"\")
+if(CMAKE_VERSION VERSION_LESS 3.18)
+    set(libaec_maybe_global \"GLOBAL\")
+endif()
+${libaec_targets}
+"
+)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
