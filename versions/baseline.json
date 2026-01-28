@@ -6090,7 +6090,7 @@
     },
     "lua": {
       "baseline": "5.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lua-compat53": {
       "baseline": "0.10",
@@ -9406,7 +9406,7 @@
     },
     "sproto": {
       "baseline": "2024-07-08",
-      "port-version": 0
+      "port-version": 1
     },
     "sprout": {
       "baseline": "2019-06-20",
