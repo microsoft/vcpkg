@@ -17,9 +17,6 @@
     },
     "zlib"
   ],
-  "default-features": [
-    "ssl"
-  ],
   "features": {
     "ssl": {
       "description": "Enable SSL support via OpenSSL",
