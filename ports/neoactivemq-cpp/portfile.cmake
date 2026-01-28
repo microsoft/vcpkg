@@ -1,9 +1,3 @@
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "")
-    if(NOT DEFINED VCPKG_LIBRARY_LINKAGE)
-        set(VCPKG_LIBRARY_LINKAGE dynamic)
-    endif()
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO blackb1rd/neoactivemq-cpp
