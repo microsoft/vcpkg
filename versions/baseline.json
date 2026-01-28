@@ -222,7 +222,7 @@
     },
     "arcus": {
       "baseline": "4.10.0",
-      "port-version": 4
+      "port-version": 5
     },
     "arg-router": {
       "baseline": "1.4.0",
@@ -1470,7 +1470,7 @@
     },
     "braft": {
       "baseline": "2021-26-04",
-      "port-version": 5
+      "port-version": 6
     },
     "breakpad": {
       "baseline": "2024-02-16",
@@ -1486,7 +1486,7 @@
     },
     "brpc": {
       "baseline": "1.15.0",
-      "port-version": 0
+      "port-version": 1
     },
     "brunocodutra-metal": {
       "baseline": "2.1.4",
@@ -2686,7 +2686,7 @@
     },
     "ecal": {
       "baseline": "5.13.4",
-      "port-version": 0
+      "port-version": 1
     },
     "ecaludp": {
       "baseline": "0.1.2",
@@ -3238,7 +3238,7 @@
     },
     "gamenetworkingsockets": {
       "baseline": "1.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "gamma": {
       "baseline": "gamma-2018-01-27",
@@ -3521,8 +3521,8 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.71.0",
-      "port-version": 3
+      "baseline": "1.76.0",
+      "port-version": 0
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -3613,8 +3613,8 @@
       "port-version": 6
     },
     "gz-common": {
-      "baseline": "6.0.2",
-      "port-version": 2
+      "baseline": "6.1.0",
+      "port-version": 0
     },
     "gz-common5": {
       "baseline": "5.4.1",
@@ -3629,8 +3629,8 @@
       "port-version": 1
     },
     "gz-gui": {
-      "baseline": "9.0.0",
-      "port-version": 1
+      "baseline": "9.0.2",
+      "port-version": 0
     },
     "gz-gui7": {
       "baseline": "7.2.1",
@@ -3653,8 +3653,8 @@
       "port-version": 1
     },
     "gz-physics": {
-      "baseline": "8.0.0",
-      "port-version": 2
+      "baseline": "8.3.0",
+      "port-version": 0
     },
     "gz-physics6": {
       "baseline": "6.5.1",
@@ -3669,7 +3669,7 @@
       "port-version": 1
     },
     "gz-rendering": {
-      "baseline": "9.0.0",
+      "baseline": "9.5.0",
       "port-version": 0
     },
     "gz-rendering7": {
@@ -3677,7 +3677,7 @@
       "port-version": 2
     },
     "gz-sensors": {
-      "baseline": "9.0.0",
+      "baseline": "9.2.0",
       "port-version": 0
     },
     "gz-sensors7": {
@@ -3685,11 +3685,11 @@
       "port-version": 1
     },
     "gz-sim": {
-      "baseline": "9.0.0",
-      "port-version": 1
+      "baseline": "9.5.0",
+      "port-version": 0
     },
     "gz-tools": {
-      "baseline": "2.0.1",
+      "baseline": "2.0.3",
       "port-version": 0
     },
     "gz-tools2": {
@@ -7121,8 +7121,8 @@
       "port-version": 0
     },
     "ogre-next": {
-      "baseline": "2.3.3",
-      "port-version": 3
+      "baseline": "3.0.0",
+      "port-version": 0
     },
     "ois": {
       "baseline": "1.5.1",
@@ -7226,7 +7226,7 @@
     },
     "opencv3": {
       "baseline": "3.4.20",
-      "port-version": 1
+      "port-version": 2
     },
     "opencv4": {
       "baseline": "4.12.0",
@@ -7342,7 +7342,7 @@
     },
     "openvino": {
       "baseline": "2025.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openvpn3": {
       "baseline": "3.10",
@@ -7845,8 +7845,8 @@
       "port-version": 0
     },
     "protobuf": {
-      "baseline": "5.29.5",
-      "port-version": 3
+      "baseline": "6.33.4",
+      "port-version": 0
     },
     "protobuf-c": {
       "baseline": "1.5.2",
@@ -7909,7 +7909,7 @@
       "port-version": 1
     },
     "pulsar-client-cpp": {
-      "baseline": "3.8.0",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "pulseaudio": {
@@ -8917,8 +8917,8 @@
       "port-version": 0
     },
     "sdformat": {
-      "baseline": "15.1.1",
-      "port-version": 1
+      "baseline": "15.3.0",
+      "port-version": 0
     },
     "sdformat13": {
       "baseline": "13.6.0",
@@ -9473,8 +9473,8 @@
       "port-version": 0
     },
     "srpc": {
-      "baseline": "0.10.3",
-      "port-version": 1
+      "baseline": "0.10.4",
+      "port-version": 0
     },
     "sse2neon": {
       "baseline": "1.9.1",
@@ -10206,7 +10206,7 @@
     },
     "urdfdom": {
       "baseline": "3.1.1",
-      "port-version": 0
+      "port-version": 1
     },
     "urdfdom-headers": {
       "baseline": "1.1.1",
@@ -10237,7 +10237,7 @@
       "port-version": 4
     },
     "utf8-range": {
-      "baseline": "5.29.5",
+      "baseline": "6.33.4",
       "port-version": 0
     },
     "utf8h": {
@@ -10729,7 +10729,7 @@
       "port-version": 3
     },
     "workflow": {
-      "baseline": "0.11.8",
+      "baseline": "0.11.11",
       "port-version": 0
     },
     "wpilib": {

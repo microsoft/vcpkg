@@ -6,7 +6,7 @@ ignition_modular_library(
    NAME ${PACKAGE_NAME}
    REF ${PORT}${VERSION_MAJOR}_${VERSION}
    VERSION ${VERSION}
-   SHA512 8f62af3838e9189c3a93fea87991c390ddd4fa0d5c0ecb80f8347bfb2f5892ec73c4bca1ac05d083d2a5adcbbd698e76215d56498bd648834a46af7784e8ce57
+   SHA512 a3c8d28e552ae1f4d0fa1639638c862a09324dda484f95c9c6edf5a77eeb37528e84d53e22e59a6e27ab5229ea1fd94cf45ccfb6b53ac759aad12c40e4fe6bd9
    PATCHES
       dependencies.patch
 )
