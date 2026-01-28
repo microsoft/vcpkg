@@ -6,7 +6,7 @@ if(VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
 endif()
 
 # Check library linkage:
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/net-snmp/net-snmp/archive/refs/tags/v${VERSION}.tar.gz"
@@ -35,7 +35,7 @@ endif()
 
 foreach(BUILD_TYPE ${BUILD_TYPES})
 
-    set(SET NET_SNMP_FEATURE_LIST "")
+    set(NET_SNMP_FEATURE_LIST "")
     list(APPEND NET_SNMP_FEATURE_LIST "--with-sdk")    
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         list(APPEND NET_SNMP_FEATURE_LIST "--linktype=static")    
@@ -62,28 +62,21 @@ foreach(BUILD_TYPE ${BUILD_TYPES})
     list(JOIN NET_SNMP_FEATURE_LIST " " NET_SNMP_FEATURES)
     message(INFO " active features:${NET_SNMP_FEATURES}")
 
-    vcpkg_execute_build_process(
-        COMMAND ${PERL} Configure ${NET_SNMP_FEATURE_LIST}
-        WORKING_DIRECTORY "${BUILD_DIR}"
-        LOGNAME mwc-${TARGET_TRIPLET}
-    )
+    set(TARGETS "")
+    if ("tools" IN_LIST FEATURES) 
+        set(TARGETS all)
+    else()
+        set(TARGETS libs)
+    endif()
 
-    vcpkg_execute_build_process(
-        COMMAND nmake all
-        WORKING_DIRECTORY "${BUILD_DIR}"
-        LOGNAME build-${TARGET_TRIPLET}
-    )
-
-    vcpkg_execute_build_process(
-        COMMAND nmake install
-        WORKING_DIRECTORY "${BUILD_DIR}"
-        LOGNAME install-${TARGET_TRIPLET}
-    )
-
-    vcpkg_execute_build_process(
-        COMMAND nmake install_devel
-        WORKING_DIRECTORY "${BUILD_DIR}"
-        LOGNAME install-${TARGET_TRIPLET}
+    vcpkg_build_nmake(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH win32
+        PRERUN_SHELL "${PERL}" Configure ${NET_SNMP_FEATURE_LIST}
+        PROJECT_NAME "Makefile"
+        TARGET ${TARGETS} install
+        OPTIONS_RELEASE install_devel
+        LOGFILE_ROOT build-${BUILD_TYPE}
     )
 
     # remove not needed files
@@ -113,41 +106,35 @@ foreach(BUILD_TYPE ${BUILD_TYPES})
         file(COPY ${LIB_FILES} DESTINATION "${TARGET_DIR}/lib")
     endif()
 
-    
+    SET(DEST "")
+
+    file(REMOVE
+        "${TARGET_DIR}/include/net-snmp/net-snmp-config.h"
+        "${TARGET_DIR}/lib/netsnmp.exp"
+    )
 
     if(BUILD_TYPE STREQUAL "release")
-        file(REMOVE
-             "${TARGET_DIR}/include/net-snmp/net-snmp-config.h"
-             "${TARGET_DIR}/lib/netsnmp.exp"
-        )
-
-        file(INSTALL
-             "${TARGET_DIR}/"
-             DESTINATION
-             "${CURRENT_PACKAGES_DIR}"
-        )
-
-        vcpkg_copy_tools(
-            TOOL_NAMES encode_keychange snmpbulkget snmpbulkwalk snmpd snmpdelta snmpdf snmpget snmpgetnext snmpnetstat snmpset snmpstatus snmptable snmptest snmptranslate snmptrap snmptrapd snmpusm snmpvacm snmpwalk
-            AUTO_CLEAN
-        )
+        SET(DEST "${CURRENT_PACKAGES_DIR}")
     else()
+        SET(DEST "${CURRENT_PACKAGES_DIR}/debug")
         #remove header
         file(REMOVE_RECURSE 
              "${TARGET_DIR}/include"
              "${TARGET_DIR}/share"
-             "${TARGET_DIR}/lib/netsnmp.exp"
         )
+    endif()
 
-        file(INSTALL
-            "${TARGET_DIR}/"
-            DESTINATION
-            "${CURRENT_PACKAGES_DIR}/debug"
-        )
+    file(INSTALL
+        "${TARGET_DIR}/"
+        DESTINATION
+        "${DEST}"
+    )
+
+    if ("tools" IN_LIST FEATURES) 
         vcpkg_copy_tools(
             TOOL_NAMES encode_keychange snmpbulkget snmpbulkwalk snmpd snmpdelta snmpdf snmpget snmpgetnext snmpnetstat snmpset snmpstatus snmptable snmptest snmptranslate snmptrap snmptrapd snmpusm snmpvacm snmpwalk
-            SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/debug/tools"
+            SEARCH_DIR "${TARGET_DIR}/bin"
+            DESTINATION "${DEST}/tools"
             AUTO_CLEAN
         )
     endif()
