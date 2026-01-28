@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c36d29a2..437e5d73 100644
+index 0a3caa7e..212131b3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -14,6 +14,7 @@ option(BUILD_BROTLI "Build Brotli" ON)
@@ -11,14 +11,14 @@ index c36d29a2..437e5d73 100644
  include(CMakeDependentOption)
  CMAKE_DEPENDENT_OPTION(BUILD_POSTGRESQL "Build with postgresql support" ON "BUILD_ORM" OFF)
 diff --git a/drogon_ctl/CMakeLists.txt b/drogon_ctl/CMakeLists.txt
-index 04b790d3..854f7139 100755
+index f6b12bdd..33d65909 100755
 --- a/drogon_ctl/CMakeLists.txt
 +++ b/drogon_ctl/CMakeLists.txt
 @@ -43,7 +43,7 @@ foreach(cspFile ${SCP_LIST})
    get_filename_component(classname ${cspFile} NAME_WE)
    message(STATUS "view classname:" ${classname})
    add_custom_command(OUTPUT ${classname}.h ${classname}.cc
--                     COMMAND $<TARGET_FILE:_drogon_ctl>
+-                     COMMAND ${DROGON_CTL}
 +                     COMMAND $<IF:$<BOOL:${DROGON_CTL_TOOL}>,${DROGON_CTL_TOOL},$<TARGET_FILE:_drogon_ctl>>
                               ARGS
                               create
