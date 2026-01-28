@@ -4,7 +4,6 @@
   "description": "VRF implementation library in C++20",
   "homepage": "https://github.com/microsoft/cppvrf",
   "license": "MIT",
-  "supports": "static",
   "dependencies": [
     "openssl",
     {
