@@ -1,10 +1,10 @@
 {
   "name": "osqp",
   "version": "1.0.0",
+  "port-version": 1,
   "description": "The Operator Splitting QP Solver",
   "homepage": "https://osqp.org/",
   "license": "Apache-2.0",
-  "supports": "!android & !x86",
   "dependencies": [
     {
       "name": "qdldl",
