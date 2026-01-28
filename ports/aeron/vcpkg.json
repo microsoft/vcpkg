@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "aeron",
   "version": "1.50.0",
+  "port-version": 1,
   "description": "Efficient reliable UDP unicast, UDP multicast, and IPC message transport",
   "homepage": "https://github.com/aeron-io/aeron",
   "license": "Apache-2.0",

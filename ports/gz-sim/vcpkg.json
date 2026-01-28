@@ -1,7 +1,6 @@
 {
   "name": "gz-sim",
-  "version": "9.0.0",
-  "port-version": 1,
+  "version": "9.5.0",
   "description": "Gazebo Sim is an open source robotics simulator.",
   "homepage": "https://gazebosim.org/libs/sim",
   "license": "Apache-2.0",

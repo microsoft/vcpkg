@@ -1,7 +1,6 @@
 {
   "name": "mpg123",
-  "version": "1.32.9",
-  "port-version": 1,
+  "version": "1.33.4",
   "description": "mpg123 is a real time MPEG 1.0/2.0/2.5 audio player/decoder for layers 1, 2 and 3 (MPEG 1.0 layer 3 also known as MP3).",
   "homepage": "https://sourceforge.net/projects/mpg123/",
   "license": "LGPL-2.1-or-later",

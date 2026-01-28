@@ -341,7 +341,7 @@
       "version": "24.13.0",
       "executable": "node-v24.13.0-win-x64/node.exe",
       "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-win-x64.7z",
-      "sha512": "48a502b242f55ca7e05dcca49be64cfccc50be150227131e742a0b8bf9823b82cf71977d6e9d919ee05a84ed2985c7e670f3fb830e929b5fb16b6c2459d7e119",
+      "sha512": "bf5de907f21b1076ff0c87b199a6d1d6ed94e2bee8101e21b942121e589f49345d3d0667bc12ca10dc84d34e82b3dda194658b4872de8f038de261f2ad5544e6",
       "archive": "node-v24.13.0-win-x64.7z"
     },
     {
@@ -351,7 +351,7 @@
       "version": "24.13.0",
       "executable": "node-v24.13.0-win-arm64/node.exe",
       "url": "https://nodejs.org/dist/v24.13.0/node-v24.13.0-win-arm64.7z",
-      "sha512": "26c1b63d9e11c4b7c9d46101728ad5829fdfc7eee7ffe36fa7f8e3e3143ebce59a60baf8bc150869461ee7fcb96d1b815b2c89cc0df8d8b01b32bf4478f7f942",
+      "sha512": "0ddfd162be940b21eac08b35494540ca73f151828bf4dcc980bb984ee0181f1c9b889da030cf9cde6405191ded97bcd7a696d412c4988b0c1e108a0410cbe491",
       "archive": "node-v24.13.0-win-arm64.7z"
     },
     {

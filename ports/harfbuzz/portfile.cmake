@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 fef2d3a858472b717ed7c0df6ff1bc638daeb4f122ba9245b41f788b0c533ac9bd8f3411b475cc89e733236951b1478dd3f4f6768a8ebffa345e6e399a049460
+    SHA512 d2333fbc73f45db57a8b1d198d31de4b43e5819a578f52f4c5b99a01833b315e18090ee9d74052ff5a993827fadf99323d7bd9786bb826d0354b3a2a9de682f3
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
