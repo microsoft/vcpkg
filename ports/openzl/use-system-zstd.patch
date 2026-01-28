@@ -1,0 +1,38 @@
+diff --git a/build/cmake/openzl-config.cmake.in b/build/cmake/openzl-config.cmake.in
+index 60a354f..c5f3d96 100644
+--- a/build/cmake/openzl-config.cmake.in
++++ b/build/cmake/openzl-config.cmake.in
+@@ -21,6 +21,8 @@ set_and_check(OPENZL_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@")
+ # openzl's prefix directory in the OPENZL_PREFIX_DIR variable
+ set(OPENZL_PREFIX_DIR "${PACKAGE_PREFIX_DIR}")
+ 
++find_dependency(zstd CONFIG)
++
+ # Include the openzl-targets.cmake file, which is generated from our CMake rules
+ if (NOT TARGET OpenZL::openzl)
+   include("${OPENZL_CMAKE_DIR}/openzl-targets.cmake")
+diff --git a/build/cmake/openzl-deps.cmake b/build/cmake/openzl-deps.cmake
+index 59b691a..c16d969 100644
+--- a/build/cmake/openzl-deps.cmake
++++ b/build/cmake/openzl-deps.cmake
+@@ -40,7 +40,8 @@ endif()
+ message(STATUS "Attempting zstd dependency resolution...")
+ 
+-# Check if zstd is already available
+-check_zstd_available(ZSTD_AVAILABLE)
++find_package(zstd CONFIG REQUIRED)
++set(ZSTD_AVAILABLE TRUE)
++add_library(libzstd ALIAS zstd::libzstd)
+ if(ZSTD_AVAILABLE)
+     message(STATUS "zstd dependency already present")
+ else()
+--- a/build/cmake/openzl-deps.cmake
++++ b/build/cmake/openzl-deps.cmake
+@@ -91,7 +91,6 @@ endif()
+ set(ZSTD_BUILD_TESTS OFF CACHE BOOL "")
+ 
+ # Add zstd subdirectory directly instead of using FetchContent
+-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/deps/zstd/build/cmake" zstd_build)
+ # Note: find_package not needed when using add_subdirectory - targets are directly available
+ list(APPEND OPENZL_LINK_LIBRARIES libzstd)
+ 

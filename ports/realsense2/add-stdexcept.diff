@@ -22,3 +22,16 @@ index d22b142..68c62d5 100644
  
  
  namespace librealsense {
+
+diff --git a/third-party/rsutils/src/control-c-handler.cpp b/third-party/rsutils/src/control-c-handler.cpp
+index 7d73013ce..ff534155c 100644
+--- a/third-party/rsutils/src/control-c-handler.cpp
++++ b/third-party/rsutils/src/control-c-handler.cpp
+@@ -6,6 +6,7 @@
+ 
+ #include <signal.h>
+ #include <atomic>
++#include <stdexcept>
+ 
+ 
+ namespace rsutils {

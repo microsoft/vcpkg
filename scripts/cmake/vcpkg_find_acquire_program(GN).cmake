@@ -4,7 +4,7 @@ if(EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/gn/version.txt")
     file(READ "${CURRENT_HOST_INSTALLED_DIR}/share/gn/version.txt" program_version)
     set(paths_to_search "${CURRENT_HOST_INSTALLED_DIR}/tools/gn")
 else() # Old behavior
-    message("Consider adding vcpkg-tool-gn as a host dependency of this port or create an issue at https://github.com/microsoft/vcpkg/issues")
+    message(STATUS "Consider adding vcpkg-tool-gn as a host dependency of this port or create an issue at https://github.com/microsoft/vcpkg/issues")
     set(cipd_download_gn "https://chrome-infra-packages.appspot.com/dl/gn/gn")
     if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
         execute_process(COMMAND uname -m OUTPUT_VARIABLE HOST_ARCH OUTPUT_STRIP_TRAILING_WHITESPACE)

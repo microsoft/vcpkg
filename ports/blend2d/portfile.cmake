@@ -9,6 +9,8 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLEND2D_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  FEATURES
+    jit       BLEND2D_EXTERNAL_ASMJIT
   INVERTED_FEATURES
     jit        BLEND2D_NO_JIT
 )
@@ -18,7 +20,6 @@ vcpkg_cmake_configure(
     OPTIONS
         "-DBLEND2D_STATIC=${BLEND2D_STATIC}"
         "-DBLEND2D_NO_FUTEX=OFF"
-        "-DBLEND2D_EXTERNAL_ASMJIT=ON"
         ${FEATURE_OPTIONS}
 )
 

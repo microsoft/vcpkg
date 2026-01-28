@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/mqtt5
     REF boost-${VERSION}
-    SHA512 a7d512f715bea0b8efbceab85b3aeec28f2db340cee993c03fa81c34f0ab90c042a1c35f0e035c0e3a5eb57fe34559be3baaf049cda0d296131e092cfb63e360
+    SHA512 24c45ca98180ec79037aea0f50f4a747f2600718ebeb95dffc2d6c9eb0d070a28c388be208c78bc428d07f523250c65f0ee1c97b9895e535ec188f1a338987ea
     HEAD_REF master
 )
 

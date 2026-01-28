@@ -1,0 +1,58 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d143ecf..31c8c09 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -169,6 +169,10 @@ endif()
+ 
+ # Create the static library
+ add_library(basisu_encoder STATIC ${ENCODER_LIB_SRC_LIST})
++target_include_directories(basisu_encoder PUBLIC
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/transcoder>
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/encoder>
++    $<INSTALL_INTERFACE:include>)
+ 
+ # Create the basisu executable and link against the static library
+ add_executable(basisu basisu_tool.cpp)
+@@ -256,3 +260,31 @@ if (MSVC)
+         RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+     )	
+ endif()
++
++# Target Installation
++install(TARGETS basisu_encoder basisu EXPORT basisu-targets)
++install(DIRECTORY "./transcoder" DESTINATION "include/basisu/"
++    FILES_MATCHING PATTERN "*.h" PATTERN "*.inc"
++)
++install(DIRECTORY "./encoder" DESTINATION "include/basisu/"
++    FILES_MATCHING PATTERN "*.h"
++)
++
++# CMake Export
++include(CMakePackageConfigHelpers)
++include(GNUInstallDirs)
++configure_package_config_file(
++    ${PROJECT_SOURCE_DIR}/basisu-config.cmake.in
++    ${PROJECT_BINARY_DIR}/basisu-config.cmake
++    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/basisu)
++export(
++    TARGETS basisu_encoder basisu
++    NAMESPACE basisu::
++    FILE ${PROJECT_BINARY_DIR}/basisu-targets.cmake)
++install(
++    FILES ${PROJECT_BINARY_DIR}/basisu-config.cmake
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/basisu)
++install(
++    EXPORT basisu-targets
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/basisu
++    NAMESPACE basisu::)
+diff --git a/basisu-config.cmake.in b/basisu-config.cmake.in
+new file mode 100644
+index 0000000..15c0d7e
+--- /dev/null
++++ b/basisu-config.cmake.in
+@@ -0,0 +1,5 @@
++@PACKAGE_INIT@
++
++include("${CMAKE_CURRENT_LIST_DIR}/basisu-targets.cmake")
++
++check_required_components(basisu)

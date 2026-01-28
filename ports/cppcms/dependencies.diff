@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ce0d53..d2b91f5 100644
+index a9c601b..aa35908 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -268,8 +268,8 @@ check_cxx_source_compiles(
+@@ -246,8 +246,8 @@ check_cxx_source_compiles(
  	CPPCMS_HAVE_FSEEKI64
  )
  if(NOT DISABLE_GZIP)
@@ -11,9 +11,9 @@ index 5ce0d53..d2b91f5 100644
 +	find_package(ZLIB REQUIRED)
 +	set(ZLIB "${ZLIB_LIBRARIES}")
  	if(NOT ZLIB OR NOT ZLIB_INCLUDE_DIR)
- 		message(FATAL_ERROR "Can't fild zlib")
- 	endif()
-@@ -423,8 +423,8 @@ if(NOT DISABLE_GCRYPT)
+ 		set(DISABLE_GZIP ON)
+ 		message("Can't fild zlib - disabling compression support")
+@@ -403,8 +403,8 @@ if(NOT DISABLE_GCRYPT)
  endif()
  
  if(NOT DISABLE_OPENSSL)
@@ -25,10 +25,10 @@ index 5ce0d53..d2b91f5 100644
  
  if (OPENSSL_INCLUDE_DIR AND LIB_OPENSSL)
 diff --git a/booster/CMakeLists.txt b/booster/CMakeLists.txt
-index 4f81833..822c470 100644
+index 0687d1d..aeaaaa8 100644
 --- a/booster/CMakeLists.txt
 +++ b/booster/CMakeLists.txt
-@@ -123,6 +123,10 @@ endif()
+@@ -124,6 +124,10 @@ endif()
  
  if(NOT DISABLE_ICU_LOCALE)
  	message("-- Looking for ICU libraries")

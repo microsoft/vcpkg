@@ -1,12 +1,12 @@
 {
   "name": "bgfx",
-  "version": "1.129.8930-495",
-  "port-version": 1,
+  "version": "1.129.8940-496",
   "maintainers": "Sandy Carter <bwrsandman@users.noreply.github.com>",
   "description": "Cross-platform, graphics API agnostic, Bring Your Own Engine/Framework style rendering library.",
   "homepage": "https://bkaradzic.github.io/bgfx/overview.html",
   "documentation": "https://bkaradzic.github.io/bgfx",
   "license": "BSD-2-Clause AND CC0-1.0",
+  "supports": "!bsd",
   "dependencies": [
     "libsquish",
     "lodepng",

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Immediate-Mode-UI/Nuklear
     REF "${VERSION}"
-    SHA512 91ecd8237185d57ebdbae0f314cadcd88686a6aba76ad069e00f7fd35e770aa0f2f8fb62446b58b6fe6ca75522cdad6be2402bd7b469d21d7aa19f8ef31cc93b
+    SHA512 fc3613fc579825d22c103225bcca72d1e9fbb349fe06237e4d77652d7af3293e33e983be03dd4180c93c4c7602a2529c5c1edd87cde3d5efe09ec787818bac48
     HEAD_REF master
 )
 

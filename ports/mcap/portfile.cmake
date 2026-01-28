@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO foxglove/mcap
     REF "releases/cpp/v${VERSION}"
-    SHA512 99bfc99cd02fd946ac437a6bd2c71faec2083ccc1d81131e2978c72285d57b53f8c92a5d2b7cabef0c79056882aebfb1e2951479c47f5c7b99c44227c4b826e5
+    SHA512 846c21bbe4156f6b658825f5d6d9e39ad2d4206869701fe9469fed60ef9904c3ef6bf8f73bcb86ae46120189fcddda7f111674f04bca91a58bb7c6d574f4dc64
     HEAD_REF main
 )
 

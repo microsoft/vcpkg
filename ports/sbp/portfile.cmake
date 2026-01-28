@@ -8,15 +8,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO swift-nav/libsbp
     REF "v${VERSION}"
-    SHA512 9894f212631bc884ff1a586332bd7a11741a4331a90da4909badd382deb08d415ddf2d38b3cee35a6a0bb66f3308f0db072bbc6b9165da704b51637b4825fd58
+    SHA512 2dc626cc1667da271bca565f499471de0ec0d533694ffee1c72f25f8ba4a8944294cea67b8a35b48da80c66da623e23bc92a0a7478a6882b72485761fca36417
     HEAD_REF master
+    PATCHES
+        0000-install-include-directory.patch
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH CMAKE_EXTRA_MODS
     REPO swift-nav/cmake
-    REF 65c9a396568701c382ca5a5515e6bb598f7d61b2
-    SHA512 e8b1b1e48c7f6d71b156668ba6e0c0898d6a9b6c9e86bc63cb2b5a4cffa844a0a9a175699db8417bcb70bc4c6b278d32327f5c709e7db7b69ab2a81e7c398b23
+    REF d5558e3ad3c2cdabfb1ba31d20ea4defce570a95
+    SHA512 50c49b808b774c3fec1dd4488713f8fde423fda1d7e34a9ea8ecabc738d19f31ce8d52928c9d8012921d69130526ebd327635b1d4ca43f1b452066191c8756b7
     HEAD_REF master
 )
 
@@ -40,6 +42,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH share/libsbp/cmake PACKAGE_NAME libsbp)
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO acoustid/chromaprint
     REF "v${VERSION}"
-    SHA512 ea16e4d2b879c15b1d9b9ec93878da8b893f1834c70942663e1d2d106c2e0a661094fe2dd3bae7a6c2a1f9d5d8fab5e0b0ba493561090cf57b2228606fad1e66
+    SHA512 c556b3e9b67affaabadadaabc0a26fbbf32f89e271cde0843057166d0b02f054cbe44a6707c6c8cc9eb70d808821295ce4ea526a293f345e0b98af035a24234b
     HEAD_REF master
     PATCHES
         pkgconfig-dependencies.diff
@@ -16,6 +16,7 @@ vcpkg_cmake_configure(
         -DBUILD_TESTS=OFF
 )
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME Chromaprint CONFIG_PATH "lib/cmake/Chromaprint")
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

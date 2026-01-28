@@ -1,0 +1,24 @@
+{
+  "name": "qzxing",
+  "version": "3.3.0",
+  "description": "Qt/QML wrapper library for the ZXing library. 1D/2D barcode image processing library.",
+  "homepage": "https://github.com/ftylitak/qzxing",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

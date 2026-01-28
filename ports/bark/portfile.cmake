@@ -3,11 +3,11 @@ vcpkg_from_github(
   REPO twig-energy/bark
   REF "${VERSION}"
   HEAD_REF main
-  SHA512 b247305144da5a6a95896915e022c4fc589e49bfae32951008e7c36e11769e35da68c8c9c5eed69fa7265b9af7658e251663f08f346f993613ae59961578efc3
+  SHA512 d63957b37c4ac81058c2368d8c64a7d9d83a054b7d78045b8962b98ac47b17980199d868029d762d24f6d13c687c57b92cb6de9c556943fa0403351409fb9702
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)  
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)  
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_cmake_configure(
@@ -24,6 +24,6 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}") 
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

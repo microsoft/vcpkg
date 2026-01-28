@@ -27,6 +27,9 @@ set(${PORT}_PATCHES
         moltenvk.patch
         xcodebuild-not-installed.patch
         fix-libresolv-test.patch
+        2d4915.diff
+        framework.patch
+        use_inotify_on_freebsd.patch
 )
  
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
@@ -62,10 +65,10 @@ endif()
 # (using QT_FEATURE_X overrides Qts condition check for the feature.)
 # Theoretically there is a feature for every widget to enable/disable it but that is way to much for vcpkg
 
-set(input_vars doubleconversion freetype harfbuzz libb2 jpeg libmd4c png sql-sqlite)
-set(INPUT_OPTIONS)
+set(input_vars doubleconversion freetype harfbuzz libb2 jpeg md4c png sql-sqlite)
+set(INPUT_OPTIONS "")
 foreach(_input IN LISTS input_vars)
-    if(_input MATCHES "(png|jpeg)" )
+    if(_input MATCHES "(png|jpeg|md4c)" )
         list(APPEND INPUT_OPTIONS -DINPUT_lib${_input}:STRING=)
     elseif(_input MATCHES "(sql-sqlite)") # Not yet used by the cmake build
     else()
@@ -75,8 +78,8 @@ foreach(_input IN LISTS input_vars)
         string(APPEND INPUT_OPTIONS system)
     elseif(_input STREQUAL "libb2" AND NOT VCPKG_TARGET_IS_WINDOWS)
         string(APPEND INPUT_OPTIONS system)
-    elseif(_input STREQUAL "libmd4c")
-        string(APPEND INPUT_OPTIONS qt) # libmd4c is not yet in VCPKG (but required by qtdeclarative)
+    elseif(_input STREQUAL "md4c") # required by qtdeclarative
+        string(APPEND INPUT_OPTIONS system)
     else()
         string(APPEND INPUT_OPTIONS no)
     endif()
@@ -142,6 +145,7 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapBacktrace:BOOL=ON)
+list(APPEND FEATURE_CORE_OPTIONS -DFEATURE_pkg_config:BOOL=ON)
 #list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapAtomic:BOOL=ON) # Cannot be disabled on x64 platforms
 #list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_WrapRt:BOOL=ON) # Cannot be disabled on osx
 
@@ -182,9 +186,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "jpeg"                FEATURE_jpeg
     "png"                 FEATURE_png
     "opengl"              FEATURE_opengl
+    "sessionmanager"      FEATURE_sessionmanager
     "xlib"                FEATURE_xlib
     "xkb"                 FEATURE_xkbcommon
     "xcb"                 FEATURE_xcb
+    "xcb-sm"              FEATURE_xcb_sm
     "xcb-xlib"            FEATURE_xcb_xlib
     "xkbcommon-x11"       FEATURE_xkbcommon_x11
     "xrender"             FEATURE_xrender # requires FEATURE_xcb_native_painting; otherwise disabled. 
@@ -198,6 +204,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"harfbuzz"            CMAKE_REQUIRE_FIND_PACKAGE_WrapSystemHarfbuzz
     #"jpeg"                CMAKE_REQUIRE_FIND_PACKAGE_JPEG
     #"png"                 CMAKE_REQUIRE_FIND_PACKAGE_PNG
+    "wayland"             FEATURE_wayland
     #"xlib"                CMAKE_REQUIRE_FIND_PACKAGE_X11
     #"xkb"                 CMAKE_REQUIRE_FIND_PACKAGE_XKB
     #"xcb"                 CMAKE_REQUIRE_FIND_PACKAGE_XCB
@@ -215,6 +222,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
     "jpeg"                CMAKE_DISABLE_FIND_PACKAGE_JPEG
     #"png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG # Unable to disable if Freetype requires it
+    "wayland"             CMAKE_DISABLE_FIND_PACKAGE_Wayland
     "xlib"                CMAKE_DISABLE_FIND_PACKAGE_X11
     "xkb"                 CMAKE_DISABLE_FIND_PACKAGE_XKB
     "xcb"                 CMAKE_DISABLE_FIND_PACKAGE_XCB
@@ -319,12 +327,12 @@ set(TOOL_NAMES
         androiddeployqt6
         syncqt
         tracepointgen
+        qtwaylandscanner
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
-                        #--trace-expand
                         ${FEATURE_OPTIONS}
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}
@@ -562,8 +570,17 @@ if(EXISTS "${configfile}")
 endif()
 
 if(VCPKG_CROSSCOMPILING)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake" "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}")
+    set(dep_file "${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake")
+    file(READ "${dep_file}" dep_contents)
+    string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}" dep_contents "${dep_contents}")
+    
+    file(WRITE "${dep_file}"
+      "set(QT_HOST_PATH \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
+set(QT_HOST_PATH_CMAKE_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
+${dep_contents} \
+    ")
 endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Config.cmake" "{Qt6HostInfo_DIR}/.." "{Qt6HostInfo_DIR}/../..")
 
 function(remove_original_cmake_path file)
     file(READ "${file}" _contents)

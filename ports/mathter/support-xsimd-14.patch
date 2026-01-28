@@ -1,0 +1,26 @@
+diff --git a/MathterConfig.cmake.in b/MathterConfig.cmake.in
+index 1e294ee..ee0580c 100644
+--- a/MathterConfig.cmake.in
++++ b/MathterConfig.cmake.in
+@@ -7,7 +7,7 @@ set_and_check(Mathter_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+
+ include(CMakeFindDependencyMacro)
+ if (${MATHTER_ENABLE_SIMD})
+-	find_dependency(xsimd 13)
++	find_dependency(xsimd)
+ endif()
+
+ include("${CMAKE_CURRENT_LIST_DIR}/MathterTargets.cmake")
+diff --git a/include/Mathter/CMakeLists.txt b/include/Mathter/CMakeLists.txt
+index a34f8ff..7ee4d43 100644
+--- a/include/Mathter/CMakeLists.txt
++++ b/include/Mathter/CMakeLists.txt
+@@ -88,7 +88,7 @@ endif()
+
+ if (${MATHTER_ENABLE_SIMD})
+ 	message("Vectorization: ON (using XSimd).")
+-	find_package(xsimd 13 REQUIRED)
++	find_package(xsimd REQUIRED)
+ 	target_link_libraries(Mathter INTERFACE xsimd)
+ 	target_compile_definitions(Mathter INTERFACE MATHTER_ENABLE_SIMD=1)
+ else()

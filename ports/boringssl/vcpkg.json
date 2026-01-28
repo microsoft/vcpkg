@@ -1,7 +1,6 @@
 {
   "name": "boringssl",
-  "version-date": "2024-09-13",
-  "port-version": 1,
+  "version-date": "2025-08-18",
   "description": "BoringSSL is a fork of OpenSSL developed by Google",
   "homepage": "https://boringssl.googlesource.com/boringssl",
   "license": "Apache-2.0",

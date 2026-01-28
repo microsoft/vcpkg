@@ -1,7 +1,7 @@
 {
   "name": "rapidxml",
   "version": "1.13",
-  "port-version": 8,
+  "port-version": 9,
   "description": "RapidXml is an attempt to create the fastest XML parser possible, while retaining useability, portability and reasonable W3C compatibility.",
-  "homepage": "https://sourceforge.net/projects/rapidxml"
+  "homepage": "https://rapidxml.sourceforge.net"
 }

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tessil/sparse-map
-    REF d71e6fd75f4970f07f4f1fe67438055be70d0945 # v0.6.2
-    SHA512 ad270be66b3d5f96cb0305f0e086807aee1c909dd022c19ca99e5f7a72d5116f2ecb4b67fcb80e8bdb4f98925387d95bdc0bcc450a10b97c61f9b92c681f95b5
+    REF v${VERSION}
+    SHA512 dee8090d8e8d797e0a535d331e49ef48838b038af8fecbc982852ec559aaffd65e12c9efc5ebb6d74bf5f46e7f9df2c1680998909ef7a9062b0954cfabd02706
 )
 
 vcpkg_cmake_configure(
@@ -10,6 +10,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "share/cmake/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 

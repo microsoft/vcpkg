@@ -132,9 +132,6 @@ APT_PACKAGES="$APT_PACKAGES libxdamage-dev libselinux1-dev"
 ## required by at-spi2-atk
 APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
-## required by bond
-APT_PACKAGES="$APT_PACKAGES haskell-stack"
-
 ## required by boringssl
 APT_PACKAGES="$APT_PACKAGES golang-go"
 
@@ -173,7 +170,7 @@ APT_PACKAGES="$APT_PACKAGES powershell azcopy azure-cli"
 if [[ $(grep microsoft /proc/version) ]]; then
 echo "Skipping install of ADO prerequisites on WSL."
 else
-APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70 debsums liblttng-ust1"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu74 debsums liblttng-ust1"
 fi
 
 apt-get --no-install-recommends -y install $APT_PACKAGES

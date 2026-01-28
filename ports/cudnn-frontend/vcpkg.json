@@ -1,6 +1,6 @@
 {
   "name": "cudnn-frontend",
-  "version-semver": "1.14.0",
+  "version-semver": "1.15.0",
   "description": "cudnn_frontend provides a c++ wrapper for the cudnn backend API and samples on how to use it",
   "homepage": "https://github.com/NVIDIA/cudnn-frontend",
   "license": "MIT",

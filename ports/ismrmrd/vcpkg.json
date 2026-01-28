@@ -1,13 +1,11 @@
 {
   "name": "ismrmrd",
-  "version": "1.14.1",
-  "port-version": 1,
+  "version": "1.14.3",
   "description": "ISMRM Raw Data Format",
   "homepage": "https://github.com/ismrmrd/ismrmrd",
   "license": "BSD-3-Clause",
-  "supports": "!(x86 | arm | wasm32)",
+  "supports": "!(x86 | wasm32)",
   "dependencies": [
-    "hdf5",
     "pugixml",
     {
       "name": "vcpkg-cmake",
@@ -17,5 +15,13 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "hdf5": {
+      "description": "Build with support for reading and writing datasets to HDF5 files",
+      "dependencies": [
+        "hdf5"
+      ]
+    }
+  }
 }
