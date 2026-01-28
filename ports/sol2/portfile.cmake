@@ -9,13 +9,12 @@ vcpkg_from_github(
     PATCHES
         header-only.patch
         lua-5.5.diff # variation of https://github.com/ThePhD/sol2/pull/1723
+        pkgconfig.diff
 )
 
 vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/sol2)
 vcpkg_fixup_pkgconfig()
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
