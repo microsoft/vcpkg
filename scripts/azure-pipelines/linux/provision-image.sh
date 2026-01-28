@@ -166,6 +166,9 @@ APT_PACKAGES="$APT_PACKAGES cuda-cccl-12-9 cuda-compat-12-9 cuda-compiler-12-9 c
 ## PowerShell + Azure
 APT_PACKAGES="$APT_PACKAGES powershell azcopy azure-cli"
 
+## Required for speech-dispatcher feature for ethindp-prism
+APT_PACKAGES="$APT_PACKAGES libspeechd-dev"
+
 ## Additionally required/installed by Azure DevOps Scale Set Agents, skip on WSL
 if [[ $(grep microsoft /proc/version) ]]; then
 echo "Skipping install of ADO prerequisites on WSL."
