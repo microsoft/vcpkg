@@ -637,8 +637,8 @@
       "port-version": 0
     },
     "basisu": {
-      "baseline": "1.60",
-      "port-version": 3
+      "baseline": "2.0.2",
+      "port-version": 0
     },
     "bbalouki-itch": {
       "baseline": "1.1.0",
