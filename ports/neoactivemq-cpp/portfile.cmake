@@ -11,11 +11,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ssl     AMQCPP_USE_SSL
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BUILD_SHARED ON)
-else()
-    set(BUILD_SHARED OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" AMQCPP_SHARED_LIB)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -23,7 +19,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DAMQCPP_BUILD_EXAMPLES=OFF
         -DWITH_TESTS=OFF
-        -DAMQCPP_SHARED_LIB=${BUILD_SHARED}
+        -DAMQCPP_SHARED_LIB=${AMQCPP_SHARED_LIB}
     MAYBE_UNUSED_VARIABLES
         AMQCPP_USE_SSL
 )
@@ -32,11 +28,8 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/neoactivemq-cpp)
 vcpkg_copy_pdbs()
 
-# Remove duplicate headers from debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Install usage file
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
