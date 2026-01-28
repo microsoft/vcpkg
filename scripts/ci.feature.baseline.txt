@@ -183,7 +183,6 @@ nana:x64-linux=fail
 nana:x64-osx=fail
 nana:x64-uwp=fail
 netcdf-cxx4:x64-windows-static-md=fail
-neoactivemq-cpp:x64-uwp=fail
 ngspice:x64-windows-static=fail
 octave(osx)=fail  # blas must select openblas instead of Accelerate
 ode:arm64-windows=fail
