@@ -7500,6 +7500,10 @@
       "baseline": "1.5.3",
       "port-version": 0
     },
+    "patternia": {
+      "baseline": "0.6.3",
+      "port-version": 0
+    },
     "pbc": {
       "baseline": "0.5.14",
       "port-version": 9
