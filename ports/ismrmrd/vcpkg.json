@@ -1,6 +1,6 @@
 {
   "name": "ismrmrd",
-  "version": "1.14.3",
+  "version": "1.15.0",
   "description": "ISMRM Raw Data Format",
   "homepage": "https://github.com/ismrmrd/ismrmrd",
   "license": "BSD-3-Clause",
