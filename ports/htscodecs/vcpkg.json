@@ -1,6 +1,6 @@
 {
   "name": "htscodecs",
-  "version": "1.6.1",
+  "version": "1.6.5",
   "description": "Custom compression for CRAM and others.",
   "homepage": "https://github.com/samtools/htscodecs",
   "license": "MIT",
