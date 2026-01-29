@@ -1,27 +1,22 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-vcpkg_find_acquire_program(NUGET)
 
 # DirectML provides DirectML.Debug.dll. They will be installed with release DLLs
 set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
-set(ENV{NUGET_PACKAGES} "${BUILDTREES_DIR}/nuget")
-
 # see https://www.nuget.org/packages/Microsoft.AI.DirectML/
 # see https://github.com/microsoft/DirectML/blob/master/Releases.md
-set(PACKAGE_NAME    "Microsoft.AI.DirectML")
-set(PACKAGE_VERSION "1.15.4")
-
-file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${PACKAGE_NAME}")
-file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
-vcpkg_execute_required_process(
-    COMMAND "${NUGET}" install "${PACKAGE_NAME}" -Version "${PACKAGE_VERSION}" -Verbosity detailed
-                -OutputDirectory "${CURRENT_BUILDTREES_DIR}"
-    WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
-    LOGNAME install-nuget
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.nuget.org/api/v2/package/Microsoft.AI.DirectML/${VERSION}"
+         "https://globalcdn.nuget.org/packages/microsoft.ai.directml.${VERSION}.nupkg"
+    FILENAME "Microsoft.AI.DirectML-${VERSION}.zip"
+    SHA512 fde767f56904abc90fd53f65d8729c918ab7f6e3c5e1ecdd479908fc02b4535cf2b0860f7ab2acb9b731d6cb809b72c3d5d4d02853fb8f5ea022a47bc44ef285
+)
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
+    NO_REMOVE_ONE_LEVEL
 )
 
-get_filename_component(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${PACKAGE_NAME}.${PACKAGE_VERSION}" ABSOLUTE)
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
         set(TRIPLE "x64-win")
