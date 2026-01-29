@@ -3,10 +3,9 @@
   "version-semver": "1.15.4",
   "description": [
     "DirectML is a high-performance, hardware-accelerated DirectX 12 library for machine learning.",
-    "DirectML provides GPU acceleration for common machine learning tasks across a broad range of supported hardware and drivers, ",
-    "including all DirectX 12-capable GPUs from vendors such as AMD, Intel, NVIDIA, and Qualcomm."
+    "DirectML provides GPU acceleration for common machine learning tasks across a broad range of supported hardware and drivers, including all DirectX 12-capable GPUs from vendors such as AMD, Intel, NVIDIA, and Qualcomm."
   ],
   "homepage": "https://github.com/microsoft/DirectML",
   "license": "MIT",
-  "supports": "windows & !static & !uwp"
+  "supports": "((windows & !uwp) | (x64 & linux)) & !(static & staticcrt)"
 }
