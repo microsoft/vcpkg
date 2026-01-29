@@ -79,31 +79,23 @@ file(REMOVE_RECURSE
     "${TARGET_DIR_DEBUG}/snmp"
 )
 
-file(GLOB LIB_CANDIDATES "${TARGET_DIR}/lib/release/*")
-set(LIB_FILES)
-foreach(_f IN LISTS LIB_CANDIDATES)
-    if(NOT IS_DIRECTORY "${_f}")
-        list(APPEND LIB_FILES "${_f}")
-    endif()
-endforeach()
+file(GLOB LIB_FILES
+    LIST_DIRECTORIES false
+    "${TARGET_DIR}/lib/release/*")
+
 if(LIB_FILES)
     file(MAKE_DIRECTORY "${TARGET_DIR}/lib")
     file(COPY ${LIB_FILES} DESTINATION "${TARGET_DIR}/lib")
 endif()
 
-file(GLOB LIB_CANDIDATES_DEBUG "${TARGET_DIR_DEBUG}/lib/debug/*")
-set(LIB_FILES_DEBUG "")
-foreach(_f IN LISTS LIB_CANDIDATES_DEBUG)
-    if(NOT IS_DIRECTORY "${_f}")
-        list(APPEND LIB_FILES_DEBUG "${_f}")
-    endif()
-endforeach()
+file(GLOB LIB_FILES_DEBUG
+     LIST_DIRECTORIES false
+     "${TARGET_DIR_DEBUG}/lib/debug/*")
+
 if(LIB_FILES_DEBUG)
     file(MAKE_DIRECTORY "${TARGET_DIR_DEBUG}/lib")
     file(COPY ${LIB_FILES_DEBUG} DESTINATION "${TARGET_DIR_DEBUG}/lib")
 endif()
-
-SET(DEST "")
 
 file(REMOVE
     "${TARGET_DIR}/include/net-snmp/net-snmp-config.h"
