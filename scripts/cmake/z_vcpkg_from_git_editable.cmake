@@ -309,7 +309,7 @@ function(z_vcpkg_from_git_editable)
 
         # Export HEAD version if using head
         if(using_head_version)
-            set(rev_parse_logname "git-rev-parse-${TARGET_TRIPLET}")
+            set(rev_parse_logname "git-rev-parse-${source_name}-${TARGET_TRIPLET}")
             vcpkg_execute_in_download_mode(
                 COMMAND "${GIT}" rev-parse HEAD
                 WORKING_DIRECTORY "${editable_source_path}"
@@ -346,7 +346,7 @@ function(z_vcpkg_from_git_editable)
 
     # Full clone (not shallow, not single-branch) to enable proper git workflow
     message(STATUS "Editable mode: cloning ${arg_URL} to ${editable_source_path}")
-    set(clone_logname "git-clone-${TARGET_TRIPLET}")
+    set(clone_logname "git-clone-${source_name}-${TARGET_TRIPLET}")
     vcpkg_execute_in_download_mode(
         COMMAND "${GIT}" ${git_config_options} clone "${clone_url}" "${editable_source_path}"
         WORKING_DIRECTORY "${_VCPKG_EDITABLE_SOURCES_PATH}"
@@ -362,7 +362,7 @@ function(z_vcpkg_from_git_editable)
     endif()
 
     # Fetch branches, tags and FETCH_REF/REF
-    set(fetch_logname "git-fetch-${TARGET_TRIPLET}")
+    set(fetch_logname "git-fetch-${source_name}-${TARGET_TRIPLET}")
     vcpkg_execute_in_download_mode(
         COMMAND "${GIT}" ${git_config_options} fetch origin +refs/tags/*:refs/tags/* +refs/heads/*:refs/remotes/origin/* ${ref_to_fetch}
         WORKING_DIRECTORY "${editable_source_path}"
@@ -378,7 +378,7 @@ function(z_vcpkg_from_git_editable)
     endif()
 
     # Checkout specific ref - use --force to handle any file mode/line ending differences
-    set(checkout_logname "git-checkout-${TARGET_TRIPLET}")
+    set(checkout_logname "git-checkout-${source_name}-${TARGET_TRIPLET}")
     vcpkg_execute_in_download_mode(
         COMMAND "${GIT}" ${git_config_options} checkout --force "${ref_to_use}"
         WORKING_DIRECTORY "${editable_source_path}"
@@ -416,7 +416,7 @@ function(z_vcpkg_from_git_editable)
         endif()
 
         message(STATUS "Editable mode: setting up Git LFS...")
-        set(lfs_install_logname "git-lfs-install-${TARGET_TRIPLET}")
+        set(lfs_install_logname "git-lfs-install-${source_name}-${TARGET_TRIPLET}")
         vcpkg_execute_in_download_mode(
             COMMAND "${GIT}" lfs install --local --force
             WORKING_DIRECTORY "${editable_source_path}"
@@ -432,7 +432,7 @@ function(z_vcpkg_from_git_editable)
         endif()
 
         message(STATUS "Editable mode: fetching LFS objects from ${lfs_url}...")
-        set(lfs_fetch_logname "git-lfs-fetch-${TARGET_TRIPLET}")
+        set(lfs_fetch_logname "git-lfs-fetch-${source_name}-${TARGET_TRIPLET}")
         vcpkg_execute_in_download_mode(
             COMMAND "${GIT}" lfs fetch "${lfs_url}" "${ref_to_use}"
             WORKING_DIRECTORY "${editable_source_path}"
@@ -447,7 +447,7 @@ function(z_vcpkg_from_git_editable)
                 "            ${CURRENT_BUILDTREES_DIR}/${lfs_fetch_logname}-err.log")
         endif()
 
-        set(lfs_checkout_logname "git-lfs-checkout-${TARGET_TRIPLET}")
+        set(lfs_checkout_logname "git-lfs-checkout-${source_name}-${TARGET_TRIPLET}")
         vcpkg_execute_in_download_mode(
             COMMAND "${GIT}" lfs checkout
             WORKING_DIRECTORY "${editable_source_path}"
@@ -497,7 +497,7 @@ function(z_vcpkg_from_git_editable)
         )
 
         # Stage and commit the patch changes
-        set(add_logname "git-add-patch-${patch_num}-${TARGET_TRIPLET}")
+        set(add_logname "git-add-patch-${patch_num}-${source_name}-${TARGET_TRIPLET}")
         vcpkg_execute_in_download_mode(
             COMMAND "${GIT}" ${git_config_options} add -A
             WORKING_DIRECTORY "${editable_source_path}"
@@ -514,7 +514,7 @@ function(z_vcpkg_from_git_editable)
 
         # Extract patch filename for commit message
         get_filename_component(patch_name "${patch}" NAME)
-        set(commit_logname "git-commit-patch-${patch_num}-${TARGET_TRIPLET}")
+        set(commit_logname "git-commit-patch-${patch_num}-${source_name}-${TARGET_TRIPLET}")
         vcpkg_execute_in_download_mode(
             COMMAND "${GIT}" ${git_config_options} commit -m "Apply vcpkg patch: ${patch_name}"
             WORKING_DIRECTORY "${editable_source_path}"

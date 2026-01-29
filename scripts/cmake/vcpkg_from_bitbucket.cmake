@@ -33,7 +33,7 @@ function(vcpkg_from_bitbucket)
     set(org_name "${CMAKE_MATCH_1}")
     set(repo_name "${CMAKE_MATCH_2}")
 
-    # Handle editable mode - use git clone instead of tarball
+    # Editable mode: delegate to consolidated helper
     if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
         include("${SCRIPTS}/cmake/z_vcpkg_from_git_editable.cmake")
         set(_editable_args

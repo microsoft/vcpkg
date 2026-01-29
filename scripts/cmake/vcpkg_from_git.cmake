@@ -12,6 +12,22 @@ function(vcpkg_from_git)
         message(WARNING "The TAG argument to vcpkg_from_git has been deprecated and has no effect.")
     endif()
 
+    if(NOT DEFINED arg_OUT_SOURCE_PATH)
+        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified")
+    endif()
+    if(NOT DEFINED arg_URL)
+        message(FATAL_ERROR "URL must be specified")
+    endif()
+    if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
+        message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified")
+    endif()
+    if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
+        message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
+    endif()
+    if(DEFINED arg_LFS AND arg_LFS STREQUAL "")
+        set(arg_LFS "${arg_URL}")
+    endif()
+
     # Editable mode: delegate to consolidated helper
     if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
         # Build optional parameters
@@ -32,31 +48,15 @@ function(vcpkg_from_git)
         include("${SCRIPTS}/cmake/z_vcpkg_from_git_editable.cmake")
         z_vcpkg_from_git_editable(
             URL "${arg_URL}"
-            OUT_SOURCE_PATH "${arg_OUT_SOURCE_PATH}"
+            OUT_SOURCE_PATH _editable_source_path
             PATCHES ${arg_PATCHES}
             ${_editable_extra_args}
         )
-        set("${arg_OUT_SOURCE_PATH}" "${${arg_OUT_SOURCE_PATH}}" PARENT_SCOPE)
+        set("${arg_OUT_SOURCE_PATH}" "${_editable_source_path}" PARENT_SCOPE)
         if(DEFINED VCPKG_HEAD_VERSION)
             set(VCPKG_HEAD_VERSION "${VCPKG_HEAD_VERSION}" PARENT_SCOPE)
         endif()
         return()
-    endif()
-
-    if(NOT DEFINED arg_OUT_SOURCE_PATH)
-        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified")
-    endif()
-    if(NOT DEFINED arg_URL)
-        message(FATAL_ERROR "URL must be specified")
-    endif()
-    if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
-        message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified")
-    endif()
-    if(DEFINED arg_FETCH_REF AND NOT DEFINED arg_REF)
-        message(FATAL_ERROR "REF must be specified if FETCH_REF is specified")
-    endif()
-    if(DEFINED arg_LFS AND arg_LFS STREQUAL "")
-        set(arg_LFS "${arg_URL}")
     endif()
 
     vcpkg_list(SET git_fetch_shallow_param --depth 1)
