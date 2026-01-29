@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-name-conflict.diff
-        fix-stringop-truncation-compiler-warning.patch
+        disable-werror.patch
 )
 
 vcpkg_cmake_configure(
