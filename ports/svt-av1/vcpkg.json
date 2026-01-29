@@ -1,6 +1,6 @@
 {
   "name": "svt-av1",
-  "version-semver": "4.0.0",
+  "version-semver": "4.0.1",
   "description": "AV1 software video encoder library",
   "homepage": "https://gitlab.com/AOMediaCodec/SVT-AV1",
   "license": "BSD-3-Clause",

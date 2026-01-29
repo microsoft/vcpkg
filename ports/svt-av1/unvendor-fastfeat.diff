@@ -1,37 +1,37 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 58afd52..9f333ef 100644
+index 4edfad6..976305c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -719,4 +719,3 @@ if(BUILD_TESTING)
      add_subdirectory(third_party/googletest)
  endif()
-
+ 
 -add_subdirectory(third_party/fastfeat)
 diff --git a/Source/Lib/CMakeLists.txt b/Source/Lib/CMakeLists.txt
-index ff0116b..8abed8b 100644
+index 6a2c57d..0df3012 100644
 --- a/Source/Lib/CMakeLists.txt
 +++ b/Source/Lib/CMakeLists.txt
-@@ -30,7 +30,7 @@ endif()
+@@ -24,7 +24,7 @@ endif()
  include_directories(${PROJECT_SOURCE_DIR}/Source/API/
      ${PROJECT_SOURCE_DIR}/Source/Lib/Codec/
      ${PROJECT_SOURCE_DIR}/Source/Lib/C_DEFAULT/
 -    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
 +)
-
+ 
  add_library(SvtAv1Enc)
  # Required for cmake to be able to tell Xcode how to link all of the object files
-@@ -81,7 +81,6 @@ endif()
-
+@@ -75,7 +75,6 @@ endif()
+ 
  # Encoder Lib Source Files
  target_sources(SvtAv1Enc PRIVATE
 -    $<TARGET_OBJECTS:FASTFEAT>
      $<TARGET_OBJECTS:GLOBALS>
      $<TARGET_OBJECTS:CODEC>
      $<TARGET_OBJECTS:C_DEFAULT>)
-@@ -122,6 +121,14 @@ else()
+@@ -115,6 +114,13 @@ if(BUILD_SHARED_LIBS)
+ else()
      set(SVT_AV1_TARGET SVT-AV1-static)
  endif()
-
 +find_library(FASTFEAT REQUIRED
 +    NAMES fastfeat
 +    PATHS "${FASTFEAT_LIB_DIR}"
@@ -39,12 +39,11 @@ index ff0116b..8abed8b 100644
 +)
 +list(APPEND PLATFORM_LIBS ${FASTFEAT})
 +set(LIBS_PRIVATE "${LIBS_PRIVATE} -lfastfeat")
-+
- set_target_properties(SvtAv1Enc PROPERTIES VERSION ${ENC_VERSION})
- set_target_properties(SvtAv1Enc PROPERTIES SOVERSION ${ENC_VERSION_MAJOR})
- set_target_properties(SvtAv1Enc PROPERTIES C_VISIBILITY_PRESET hidden)
+ 
+ set_target_properties(SvtAv1Enc PROPERTIES VERSION ${PROJECT_VERSION})
+ set_target_properties(SvtAv1Enc PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 diff --git a/Source/Lib/Codec/CMakeLists.txt b/Source/Lib/Codec/CMakeLists.txt
-index 0fe036f..5e2c595 100644
+index 0fe036f..9ca2a7c 100644
 --- a/Source/Lib/Codec/CMakeLists.txt
 +++ b/Source/Lib/Codec/CMakeLists.txt
 @@ -39,7 +39,7 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
@@ -71,27 +70,26 @@ index 0fe036f..5e2c595 100644
 -    ${PROJECT_SOURCE_DIR}/third_party/fastfeat/)
 +)
  endif ()
-
+ 
  set(all_files
-@@ -292,3 +292,4 @@ set(all_files
+@@ -295,3 +295,4 @@ set(all_files
          )
-
+ 
  add_library(CODEC OBJECT ${all_files})
 +target_include_directories(CODEC PRIVATE "${FASTFEAT_INCLUDE_DIR}")
 diff --git a/Source/Lib/Codec/corner_detect.c b/Source/Lib/Codec/corner_detect.c
-index 793919b..7c7b25d 100644
+index 793919b..ca7e853 100644
 --- a/Source/Lib/Codec/corner_detect.c
 +++ b/Source/Lib/Codec/corner_detect.c
-@@ -18,8 +18,7 @@
+@@ -18,7 +18,7 @@
  #define FAST_BARRIER 18
  int svt_av1_fast_corner_detect(unsigned char *buf, int width, int height, int stride, int *points, int max_points) {
      int       num_points;
 -    xy *const frm_corners_xy = svt_aom_fast9_detect_nonmax(buf, width, height, stride, FAST_BARRIER, &num_points);
--    num_points               = (num_points <= max_points ? num_points : max_points);
-+    xy *const frm_corners_xy = fast9_detect_nonmax(buf, width, height, stride, FAST_BARRIER, &num_points);    num_points               = (num_points <= max_points ? num_points : max_points);
++    xy *const frm_corners_xy = fast9_detect_nonmax(buf, width, height, stride, FAST_BARRIER, &num_points);
+     num_points               = (num_points <= max_points ? num_points : max_points);
      if (num_points > 0 && frm_corners_xy) {
          svt_memcpy(points, frm_corners_xy, sizeof(*frm_corners_xy) * num_points);
-         free(frm_corners_xy);
 diff --git a/Source/Lib/Globals/CMakeLists.txt b/Source/Lib/Globals/CMakeLists.txt
 index 5d1c2da..854cace 100644
 --- a/Source/Lib/Globals/CMakeLists.txt
@@ -102,5 +100,5 @@ index 5d1c2da..854cace 100644
          ${PROJECT_SOURCE_DIR}/Source/Lib/C_DEFAULT/
 -        ${PROJECT_SOURCE_DIR}/third_party/fastfeat/
          )
-
+ 
  if(NOT COMPILE_C_ONLY AND HAVE_X86_PLATFORM)
