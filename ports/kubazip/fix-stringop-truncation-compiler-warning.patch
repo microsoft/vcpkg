@@ -1,14 +1,16 @@
 diff --git a/src/zip.c b/src/zip.c
-index d42a76d..bd34465 100644
+index d42a76d..7b730d8 100644
 --- a/src/zip.c
 +++ b/src/zip.c
-@@ -188,6 +188,9 @@ static int zip_mkpath(char *path, size_t pos) {
+@@ -188,7 +188,10 @@ static int zip_mkpath(char *path, size_t pos) {
    struct MZ_FILE_STAT_STRUCT st;
  
    memset(npath, 0, MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE + 1);
+-  strncpy(npath, path, len);
 +  if (len > MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE) {
 +    len = MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE;
 +  }
-   strncpy(npath, path, len);
++  memcpy(npath, path, len);
  
    if (MZ_FILE_STAT(npath, &st) < 0) {
+     return ZIP_ENOFILE;
