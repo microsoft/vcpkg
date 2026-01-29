@@ -29,6 +29,7 @@ vcpkg_cmake_configure(
         -DOMATH_BUILD_TESTS=OFF
         -DOMATH_BUILD_BENCHMARK=OFF
         -DOMATH_BUILD_EXAMPLES=OFF
+        -DOMATH_ENABLE_FORCE_INLINE=OFF
 )
 
 vcpkg_cmake_install()
