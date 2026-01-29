@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ismrmrd/ismrmrd
     REF "v${VERSION}"
-    SHA512 1e91b78f49c6df0e09d7d6e92f21ad26ed68bcb17cce9d5ae6233d567d16d93e4007a5a76c1b0797581bed68b60ec70a886843d355a1dc98b98dd515f0c177e0
+    SHA512 1cf7295c672b84c7ab182bdd57902572b44830e0429bfbf62a57097ee01e086e6a53b23545444ddd741f25ac19195269c2fba65a3222fa1acdc2b90e57e1ecc0
     HEAD_REF master
     PATCHES
         win32_runtime_fix.patch
