@@ -4680,6 +4680,10 @@
       "baseline": "1.4.0",
       "port-version": 0
     },
+    "libbsd": {
+      "baseline": "0.12.2",
+      "port-version": 0
+    },
     "libbson": {
       "baseline": "1.30.6",
       "port-version": 0
