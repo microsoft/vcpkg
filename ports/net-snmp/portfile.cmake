@@ -97,8 +97,15 @@ if(LIB_FILES_DEBUG)
     file(COPY ${LIB_FILES_DEBUG} DESTINATION "${TARGET_DIR_DEBUG}/lib")
 endif()
 
+# Path to the generated header
+set(GENERATED_HEADER "${TARGET_DIR}/include/net-snmp/net-snmp-config.h")
+
+# Replace INSTALL_BASE with a relative path
+file(READ "${GENERATED_HEADER}" HEADER_CONTENTS)
+string(REPLACE "#define INSTALL_BASE \"${TARGET_DIR}\"" "#define INSTALL_BASE /../../" HEADER_CONTENTS "${HEADER_CONTENTS}")
+file(WRITE "${GENERATED_HEADER}" "${HEADER_CONTENTS}")
+
 file(REMOVE
-    "${TARGET_DIR}/include/net-snmp/net-snmp-config.h"
     "${TARGET_DIR}/lib/netsnmp.exp"
 )
 
