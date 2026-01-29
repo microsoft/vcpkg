@@ -28,27 +28,42 @@ endif()
 set(TARGET_DIR "${CURRENT_PACKAGES_DIR}")
 set(TARGET_DIR_DEBUG "${CURRENT_PACKAGES_DIR}/debug")
 
-if("ssl" IN_LIST FEATURES)
-    list(APPEND NET_SNMP_FEATURE_LIST "--with-ssl")    
-    list(APPEND NET_SNMP_FEATURE_LIST "--with-sslincdir=${CURRENT_INSTALLED_DIR}/include")    
-    list(APPEND NET_SNMP_FEATURE_LIST "--with-ssllibdir=${CURRENT_INSTALLED_DIR}/lib")    
-endif()
+set(NET_SNMP_SSL "")
+set(NET_SNMP_SSL_DEBUG "")
 
-list(JOIN NET_SNMP_FEATURE_LIST " " NET_SNMP_FEATURES)
-message(INFO " active features:${NET_SNMP_FEATURES}")
+if("ssl" IN_LIST FEATURES)
+    set(NET_SNMP_SSL "--with-ssl --with-sslincdir=${CURRENT_INSTALLED_DIR}/include --with-ssllibdir=${CURRENT_INSTALLED_DIR}/lib")
+    set(NET_SNMP_SSL_DEBUG "--with-ssl --with-sslincdir=${CURRENT_INSTALLED_DIR}/debug/include --with-ssllibdir=${CURRENT_INSTALLED_DIR}/debug/lib")
+endif()
 
 set(TARGETS "")
 if ("tools" IN_LIST FEATURES) 
     set(TARGETS all)
 else()
-    set(TARGETS libs)
+    set(TARGETS libs) 
+endif()
+
+
+set(_prerun_release "")
+set(_prerun_debug "")
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    set(_prerun_release
+        "${PERL}" Configure ${NET_SNMP_FEATURE_LIST} ${NET_SNMP_SSL} --config=release --prefix=${TARGET_DIR}
+    )
+endif()
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(_prerun_debug
+        "${PERL}" Configure ${NET_SNMP_FEATURE_LIST} ${NET_SNMP_SSL_DEBUG} --config=debug --prefix=${TARGET_DIR_DEBUG}
+    )
 endif()
 
 vcpkg_build_nmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH win32
-    PRERUN_SHELL_RELEASE "${PERL}" Configure ${NET_SNMP_FEATURE_LIST} --config=release --prefix=${TARGET_DIR}
-    PRERUN_SHELL_DEBUG "${PERL}" Configure ${NET_SNMP_FEATURE_LIST} --config=debug --prefix=${TARGET_DIR_DEBUG}
+    PRERUN_SHELL_RELEASE ${_prerun_release}
+    PRERUN_SHELL_DEBUG   ${_prerun_debug}
     PROJECT_NAME "Makefile"
     TARGET ${TARGETS} install install_devel
     LOGFILE_ROOT build-net-snmp
@@ -126,6 +141,10 @@ file(INSTALL
     "${CURRENT_PACKAGES_DIR}/debug"
 )
 
+if(VCPKG_BUILD_TYPE STREQUAL "release")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+endif()
+
 if ("tools" IN_LIST FEATURES) 
     vcpkg_copy_tools(
         TOOL_NAMES encode_keychange snmpbulkget snmpbulkwalk snmpd snmpdelta snmpdf snmpget snmpgetnext snmpnetstat snmpset snmpstatus snmptable snmptest snmptranslate snmptrap snmptrapd snmpusm snmpvacm snmpwalk
@@ -134,7 +153,6 @@ if ("tools" IN_LIST FEATURES)
         AUTO_CLEAN
     )
 endif()
-
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
