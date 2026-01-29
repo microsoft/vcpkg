@@ -1,0 +1,15 @@
+diff --git a/src/zip.c b/src/zip.c
+index d42a76d..578ab4d 100644
+--- a/src/zip.c
++++ b/src/zip.c
+@@ -188,7 +188,10 @@ static int zip_mkpath(char *path, size_t pos) {
+   struct MZ_FILE_STAT_STRUCT st;
+ 
+   memset(npath, 0, MZ_ZIP_MAX_ARCHIVE_FILENAME_SIZE + 1);
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wstringop-truncation"
+   strncpy(npath, path, len);
++#pragma GCC diagnostic pop
+ 
+   if (MZ_FILE_STAT(npath, &st) < 0) {
+     return ZIP_ENOFILE;

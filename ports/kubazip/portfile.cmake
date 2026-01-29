@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-name-conflict.diff
+        suppress-gcc-warning.patch
 )
 
 vcpkg_cmake_configure(
