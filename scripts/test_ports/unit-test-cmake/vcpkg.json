@@ -17,7 +17,8 @@
     "list",
     "merge-libs",
     "minimum-required",
-    "setup-pkgconfig-path"
+    "setup-pkgconfig-path",
+    "pkg-config-path"
   ],
   "features": {
     "backup-restore-env-vars": {
