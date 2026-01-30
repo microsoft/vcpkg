@@ -1,0 +1,13 @@
+diff --git a/src/core/kmountpoint.cpp b/src/core/kmountpoint.cpp
+index dac7a68aa..7d760158a 100644
+--- a/src/core/kmountpoint.cpp
++++ b/src/core/kmountpoint.cpp
+@@ -47,7 +47,7 @@ static const Qt::CaseSensitivity cs = Qt::CaseSensitive;
+ 
+ // Linux
+ #if HAVE_LIB_MOUNT
+-#include <libmount/libmount.h>
++#include <libmount.h>
+ #endif
+ 
+ static bool isNetfs(const QString &mountType)
