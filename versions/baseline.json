@@ -5701,7 +5701,7 @@
       "port-version": 0
     },
     "liburcu": {
-      "baseline": "0.15.2",
+      "baseline": "0.15.6",
       "port-version": 0
     },
     "liburing": {
