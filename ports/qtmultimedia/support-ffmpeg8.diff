@@ -1,0 +1,28 @@
+diff --git a/src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp b/src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp
+index 05f853c..f9c5d43 100644
+--- a/src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp
++++ b/src/plugins/multimedia/ffmpeg/recordingengine/qffmpegencoderoptions.cpp
+@@ -314,7 +314,11 @@ static void apply_mediacodec(const QMediaEncoderSettings &settings, AVCodecConte
+     case QMediaFormat::VideoCodec::H264: {
+         const char *levels[] = { "2.2", "3.2", "4.2", "5.2", "6.2" };
+         av_dict_set(opts, "level", levels[settings.quality()], 1);
++#ifdef AV_PROFILE_H264_HIGH
++        codec->profile = AV_PROFILE_H264_HIGH;
++#else
+         codec->profile = FF_PROFILE_H264_HIGH;
++#endif
+         break;
+     }
+     case QMediaFormat::VideoCodec::H265: {
+@@ -326,7 +330,11 @@ static void apply_mediacodec(const QMediaEncoderSettings &settings, AVCodecConte
+             av_dict_set(opts, "level", levels[settings.quality()], 1);
+         }
+ 
++#ifdef AV_PROFILE_HEVC_MAIN
++        codec->profile = AV_PROFILE_HEVC_MAIN;
++#else
+         codec->profile = FF_PROFILE_HEVC_MAIN;
++#endif
+         break;
+     }
+     default:
