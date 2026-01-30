@@ -5141,7 +5141,7 @@
       "port-version": 0
     },
     "liblttng-ust": {
-      "baseline": "2.14.0-rc1",
+      "baseline": "2.14.0",
       "port-version": 0
     },
     "liblzf": {
