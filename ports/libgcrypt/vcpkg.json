@@ -1,6 +1,6 @@
 {
   "name": "libgcrypt",
-  "version": "1.11.2",
+  "version": "1.12.0",
   "description": "A general purpose cryptographic library",
   "homepage": "https://gnupg.org/software/libgcrypt/index.html",
   "license": null,
