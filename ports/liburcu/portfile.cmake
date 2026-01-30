@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO urcu/userspace-rcu
     REF "v${VERSION}"
-    SHA512 838a52fee5a566928766bf897c22be152f351f14928258ab42cdff5f48b621428872e3eb290ef16b10b92cb10fc3e767b35aa534f84893c9a61e471c8ecceb62
+    SHA512 40649c19af80da95d4463600ae06295505ed1865dbcffce7ff201de5ec025a57530ee745184151296669cc64e99aaef16958452e6dbab7b8a655b2e911dafd72
     HEAD_REF master
-    PATCHES
-        fix-assert-include.patch
 )
 
 vcpkg_make_configure(
