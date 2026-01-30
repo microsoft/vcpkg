@@ -7997,7 +7997,7 @@
       "port-version": 0
     },
     "qpdf": {
-      "baseline": "12.3.1",
+      "baseline": "12.3.2",
       "port-version": 0
     },
     "qpid-proton": {
