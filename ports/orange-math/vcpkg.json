@@ -24,6 +24,9 @@
       "dependencies": [
         "imgui"
       ]
+    },
+    "inline" : {
+      "description": "Omath will define some methods as inline"
     }
   }
 }
