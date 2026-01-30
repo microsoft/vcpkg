@@ -1,7 +1,7 @@
 {
   "name": "kf5kio",
   "version": "5.116.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Network transparent access to files and data",
   "homepage": "https://invent.kde.org/frameworks/kio",
   "documentation": "https://api.kde.org/kio-index.html ",

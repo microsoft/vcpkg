@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 085eaf467cb70630b1a2fe5024bd45aebe47f15c397388ebd562d0c0fbfd6700c8cc50d2ec136988d9575173aa01a5a73a1550c1b7cbb93d6909941909a31db7
     HEAD_REF master
+    PATCHES
+        libmount.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
