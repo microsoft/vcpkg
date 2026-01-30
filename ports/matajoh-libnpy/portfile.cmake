@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO matajoh/libnpy
     REF "v${VERSION}"
-    SHA512 88b39e5018fbe2ef8b8a40b01fb85beb5e9a25dccff6199924d6eb072f49972501c33a68e6af3e67bba34ae546c632176f86db7cc530e8314666cfee13297907
+    SHA512 808e76d341ca4abc88b9cd8d354ce9e77799c1d8d20654d2a38aa9ffca8ffbb8e64de5100c815a23f8db9432ad3e9d411af08d30fdce87f474740460080f4781
     HEAD_REF main
     PATCHES
         fix-install.patch
@@ -25,13 +25,12 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "cmake" PACKAGE_NAME "npy")
+vcpkg_cmake_config_fixup(CONFIG_PATH "npy/cmake" PACKAGE_NAME "npy")
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/CHANGELOG.md")
-file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/README.md")
-file(RENAME "${CURRENT_PACKAGES_DIR}/CHANGELOG.md" "${CURRENT_PACKAGES_DIR}/share/npy/CHANGELOG.md")
-file(RENAME "${CURRENT_PACKAGES_DIR}/README.md" "${CURRENT_PACKAGES_DIR}/share/npy/README.md")
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/npy"
+    "${CURRENT_PACKAGES_DIR}/npy"
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
