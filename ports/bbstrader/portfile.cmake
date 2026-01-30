@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bbalouki/bbstrader
     REF "v${VERSION}"
-    SHA512 8f1e4c72f875b77b53df3ce3c62659a304442716bd412ee7bccc443317cbe1380c221a6ef896323a71d3ae0f5f8c393d8ccb7f19f474edd8aa2f1168149d95d7
+    SHA512 cdb6233bccd3dc2651a5862e4ed77479fae5ded68c6ae3414c603ee8d7263e00a79a2b71bdea75c6e597ec07cae8eaa4a2833e18ce112d695fbcac1c053bdae5
     HEAD_REF main
 )
 
@@ -19,7 +19,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME "bbstrader"
     CONFIG_PATH "lib/cmake/bbstrader"
-   
+
 )
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
