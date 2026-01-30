@@ -7,17 +7,20 @@ vcpkg_from_gitlab(
     HEAD_REF master
 )
 
-# Fix: force shared library linkage on macOS if requested
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(MESON_LIB_TYPE "shared")
-else()
-    set(MESON_LIB_TYPE "static")
+# Fix: force shared library linkage ONLY on macOS to solve build issues
+set(ADDITIONAL_OPTIONS "")
+if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        list(APPEND ADDITIONAL_OPTIONS "-Ddefault_library=shared")
+    else()
+        list(APPEND ADDITIONAL_OPTIONS "-Ddefault_library=static")
+    endif()
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -Ddefault_library=${MESON_LIB_TYPE}
+        ${ADDITIONAL_OPTIONS}
 )
 
 vcpkg_install_meson()
