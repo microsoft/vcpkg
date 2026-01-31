@@ -36,8 +36,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME MagnumExtras CONFIG_PATH share/cmake/MagnumExtras)
-
 # Messages to the user
 if(WITH_UI)
     message(WARNING "It is recommended to install one of magnum-plugins[freetypefont,harfbuzzfont,stbtruetypefont] to have the UI library working out of the box")
