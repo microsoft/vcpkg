@@ -26,6 +26,7 @@ if(NOT EXISTS "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium/BUILD.gn")
             fix-std-20.patch
             ndk-toolchain.diff
             fix-lib-name-conflict-1.patch
+            fix-msvc-autofind-build-tools.patch
     )
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
     file(RENAME "${mini_chromium}" "${SOURCE_PATH}/third_party/mini_chromium/mini_chromium")
