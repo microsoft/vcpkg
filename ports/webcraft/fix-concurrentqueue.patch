@@ -1,26 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 619e8f2..be8a743 100644
+index 619e8f2..f3f325a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -23,12 +23,17 @@ endif()
- file(GLOB_RECURSE WebCraft_SOURCES CONFIGURE_DEPENDS src/webcraft/*.cpp)
- add_library(WebCraft STATIC ${WebCraft_SOURCES})
+@@ -30,6 +30,11 @@ target_include_directories(WebCraft PUBLIC
  
-+find_package(concurrentqueue REQUIRED)
+ target_link_libraries(WebCraft PUBLIC ${WEBCRAFT_PLATFORM_LIBS})
+ 
++if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
++    find_package(concurrentqueue REQUIRED)
++    target_link_libraries(WebCraft PUBLIC concurrentqueue::concurrentqueue)
++endif()
 +
- target_include_directories(WebCraft PUBLIC 
-     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-     $<INSTALL_INTERFACE:include>
- )
- 
--target_link_libraries(WebCraft PUBLIC ${WEBCRAFT_PLATFORM_LIBS})
-+target_link_libraries(WebCraft PUBLIC
-+    ${WEBCRAFT_PLATFORM_LIBS} 
-+    concurrentqueue::concurrentqueue
-+)
- 
  # --- 3. Install Rules ---
  
+ # A. Install the Library and Headers
 diff --git a/src/webcraft/runtime.provider.cpp b/src/webcraft/runtime.provider.cpp
 index 0e1300e..8edfe75 100644
 --- a/src/webcraft/runtime.provider.cpp
