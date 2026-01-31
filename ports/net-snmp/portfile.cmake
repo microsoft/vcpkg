@@ -32,8 +32,8 @@ set(NET_SNMP_SSL "")
 set(NET_SNMP_SSL_DEBUG "")
 
 if("ssl" IN_LIST FEATURES)
-    set(NET_SNMP_SSL "--with-ssl --with-sslincdir=${CURRENT_INSTALLED_DIR}/include --with-ssllibdir=${CURRENT_INSTALLED_DIR}/lib")
-    set(NET_SNMP_SSL_DEBUG "--with-ssl --with-sslincdir=${CURRENT_INSTALLED_DIR}/debug/include --with-ssllibdir=${CURRENT_INSTALLED_DIR}/debug/lib")
+    set(APPEND NET_SNMP_SSL "--with-ssl" "--with-sslincdir=${CURRENT_INSTALLED_DIR}/include" "--with-ssllibdir=${CURRENT_INSTALLED_DIR}/lib")
+    set(APPEND NET_SNMP_SSL_DEBUG "--with-ssl" "--with-sslincdir=${CURRENT_INSTALLED_DIR}/include" "--with-ssllibdir=${CURRENT_INSTALLED_DIR}/debug/lib")
 endif()
 
 set(TARGETS "")
@@ -44,30 +44,24 @@ else()
 endif()
 
 
-set(_prerun_release "")
-set(_prerun_debug "")
-
-if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    set(_prerun_release
-        "${PERL}" Configure ${NET_SNMP_FEATURE_LIST} ${NET_SNMP_SSL} --config=release --prefix=${TARGET_DIR}
-    )
-endif()
-
-if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    set(_prerun_debug
-        "${PERL}" Configure ${NET_SNMP_FEATURE_LIST} ${NET_SNMP_SSL_DEBUG} --config=debug --prefix=${TARGET_DIR_DEBUG}
-    )
-endif()
-
 vcpkg_build_nmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PROJECT_SUBPATH win32
-    PRERUN_SHELL_RELEASE ${_prerun_release}
-    PRERUN_SHELL_DEBUG   ${_prerun_debug}
+    PRERUN_SHELL_RELEASE "${PERL}" Configure 
+        ${NET_SNMP_FEATURE_LIST}
+        ${NET_SNMP_SSL}
+        --config=release
+        "--prefix=${CURRENT_PACKAGES_DIR}"
+    PRERUN_SHELL_DEBUG "${PERL}" Configure
+        ${NET_SNMP_FEATURE_LIST}
+        ${NET_SNMP_SSL_DEBUG}
+        --config=debug
+        "--prefix=${CURRENT_PACKAGES_DIR}/debug"
     PROJECT_NAME "Makefile"
     TARGET ${TARGETS} install install_devel
     LOGFILE_ROOT build-net-snmp
 )
+
 
 # remove not needed files
 file(REMOVE
@@ -93,6 +87,13 @@ file(REMOVE_RECURSE
     "${TARGET_DIR_DEBUG}/temp"
     "${TARGET_DIR_DEBUG}/snmp"
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if (TARGETS STREQUAL "libs  " AND EXISTS "${TARGET_DIR}/bin")
+        file(REMOVE_RECURSE "${TARGET_DIR}/bin")
+        file(REMOVE_RECURSE "${TARGET_DIR_DEBUG}/bin")
+    endif()
+endif()
 
 file(GLOB LIB_FILES
     LIST_DIRECTORIES false
