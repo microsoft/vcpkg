@@ -34,8 +34,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME MagnumIntegration CONFIG_PATH share/cmake/MagnumIntegration)
-
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
