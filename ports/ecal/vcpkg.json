@@ -4,7 +4,7 @@
   "description": "eCAL - enhanced Communication Abstraction Layer",
   "homepage": "https://eclipse-ecal.github.io/ecal/",
   "license": "Apache-2.0",
-  "supports": "!emscripten",
+  "supports": "!emscripten & !uwp & !android",
   "dependencies": [
     "asio",
     "ecaludp",
