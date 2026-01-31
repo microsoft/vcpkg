@@ -42,4 +42,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/benchmark/internal")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/catch2/generators/internal")
 
 file(WRITE "${CURRENT_PACKAGES_DIR}/include/catch.hpp" "#include <catch2/catch_all.hpp>")
+vcpkg_copy_pdbs()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
