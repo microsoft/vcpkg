@@ -4029,7 +4029,7 @@
       "port-version": 0
     },
     "intx": {
-      "baseline": "0.14.0",
+      "baseline": "0.15.0",
       "port-version": 0
     },
     "iowa-hills-dsp": {
