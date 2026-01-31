@@ -2,20 +2,28 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vanillapdf/vanillapdf
     REF "v${VERSION}"
-    SHA512 f15d9a290de0eebac9073503ac555cbf389484aa3ff6385697ba879c336ed9cd4277af180f9d842b5bd8cca69bf6ef4dcfbedba07a6a76014e3974fe09fc6190
-    PATCHES
-        disable-autosubscribe.diff
+    SHA512 7e8e555901ea8c60d0bbd69933b284b88930c8bff771363d83228302832f43e3ae560f9666b1410ce388e60285c4a41b297a2d99fa465cbe23b406afd0647612
+    HEAD_REF main
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tests        VANILLAPDF_ENABLE_TESTS
+        benchmarks   VANILLAPDF_ENABLE_BENCHMARK
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-      -DVANILLAPDF_STANDALONE=OFF
-      -DVANILLAPDF_ENABLE_TESTS=OFF
-      -DVANILLAPDF_ENABLE_BENCHMARK=OFF
+      -DVANILLAPDF_INTERNAL_VCPKG=OFF
+      ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
+
+# Ensure debug symbols are copied for proper installation
+vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME "vanillapdf"
