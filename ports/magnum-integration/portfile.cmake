@@ -8,27 +8,31 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
+if(VCPKG_USE_HEAD_VERSION)
+    set(_OPTION_PREFIX MAGNUM_)
+else()
+    set(_OPTION_PREFIX )
+endif()
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        bullet WITH_BULLET
-        eigen  WITH_EIGEN
-        glm    WITH_GLM
-        imgui  WITH_IMGUI
+        bullet ${_OPTION_PREFIX}WITH_BULLET
+        eigen  ${_OPTION_PREFIX}WITH_EIGEN
+        glm    ${_OPTION_PREFIX}WITH_GLM
+        imgui  ${_OPTION_PREFIX}WITH_IMGUI
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DBUILD_STATIC=${BUILD_STATIC}
+        -D${_OPTION_PREFIX}BUILD_STATIC=${BUILD_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(PACKAGE_NAME MagnumIntegration CONFIG_PATH share/cmake/MagnumIntegration)
 
 # Debug includes and share are the same as release
 file(REMOVE_RECURSE

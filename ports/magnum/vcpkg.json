@@ -1,7 +1,7 @@
 {
   "name": "magnum",
   "version-string": "2020.06",
-  "port-version": 20,
+  "port-version": 21,
   "description": "C++11/C++14 graphics middleware for games and data visualization",
   "homepage": "https://magnum.graphics/",
   "license": null,
@@ -183,6 +183,10 @@
         }
       ]
     },
+    "emscriptenapplication": {
+      "description": "EmscriptenApplication library",
+      "supports": "emscripten"
+    },
     "fontconverter": {
       "description": "magnum-fontconverter utility",
       "supports": "!ios & !android",
@@ -217,13 +221,14 @@
     },
     "glfwapplication": {
       "description": "GlfwApplication library",
+      "supports": "!ios & !android & !emscripten & !uwp",
       "dependencies": [
         "glfw3"
       ]
     },
     "glxcontext": {
       "description": "GlxContext library",
-      "supports": "!windows & !osx",
+      "supports": "!windows & !osx & !ios & !android & !emscripten",
       "dependencies": [
         {
           "name": "magnum",
@@ -280,6 +285,18 @@
           "default-features": false,
           "features": [
             "tgaimageconverter"
+          ]
+        }
+      ]
+    },
+    "materialtools": {
+      "description": "MaterialTools library",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
           ]
         }
       ]
@@ -361,6 +378,18 @@
     },
     "scenegraph": {
       "description": "SceneGraph library"
+    },
+    "scenetools": {
+      "description": "SceneTools library",
+      "dependencies": [
+        {
+          "name": "magnum",
+          "default-features": false,
+          "features": [
+            "trade"
+          ]
+        }
+      ]
     },
     "sdl2application": {
       "description": "Sdl2Application library",
@@ -532,7 +561,7 @@
     },
     "windowlessglxapplication": {
       "description": "WindowlessGlxApplication library",
-      "supports": "!windows & !osx & !ios",
+      "supports": "!windows & !osx & !ios & !android & !emscripten",
       "dependencies": [
         {
           "name": "magnum",
