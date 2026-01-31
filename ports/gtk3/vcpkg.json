@@ -1,7 +1,7 @@
 {
   "name": "gtk3",
   "version": "3.24.51",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
   "license": null,
@@ -53,13 +53,11 @@
     {
       "name": "vcpkg-tool-meson",
       "host": true
-    },
+    }
+  ],
+  "default-features": [
     {
       "name": "wayland",
-      "platform": "linux | freebsd | openbsd"
-    },
-    {
-      "name": "wayland-protocols",
       "platform": "linux | freebsd | openbsd"
     }
   ],
@@ -90,6 +88,14 @@
             "introspection"
           ]
         }
+      ]
+    },
+    "wayland": {
+      "description": "Build with Wayland support",
+      "supports": "linux | freebsd | openbsd",
+      "dependencies": [
+        "wayland",
+        "wayland-protocols"
       ]
     }
   }

@@ -38,7 +38,7 @@ else()
     list(APPEND OPTIONS_RELEASE -Dintrospection=false)
 endif()
 
-if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD)
+if("wayland" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dwayland_backend=true)
 else()
     list(APPEND OPTIONS -Dwayland_backend=false)
