@@ -3550,7 +3550,7 @@
     },
     "gstreamer": {
       "baseline": "1.26.5",
-      "port-version": 0
+      "port-version": 1
     },
     "gtest": {
       "baseline": "1.17.0",
@@ -3562,7 +3562,7 @@
     },
     "gtk3": {
       "baseline": "3.24.51",
-      "port-version": 1
+      "port-version": 2
     },
     "gtkmm": {
       "baseline": "4.14.0",
