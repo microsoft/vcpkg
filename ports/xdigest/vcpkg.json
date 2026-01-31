@@ -1,0 +1,26 @@
+{
+  "name": "xdigest",
+  "version": "0.2.1",
+  "description": "Extremely fast digest algorithms packaged into a lightweight library.",
+  "homepage": "https://github.com/rinrab/xdigest",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "asm"
+  ],
+  "features": {
+    "asm": {
+      "description": "Assembly-backed implementation for maximum performance.",
+      "supports": "!(windows & arm) & !android"
+    }
+  }
+}
