@@ -1,5 +1,3 @@
-# Check library linkage:
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/net-snmp/net-snmp/archive/refs/tags/v${VERSION}.tar.gz"
@@ -89,7 +87,7 @@ file(REMOVE_RECURSE
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if (TARGETS STREQUAL "libs  " AND EXISTS "${TARGET_DIR}/bin")
+    if (TARGETS STREQUAL "libs" AND EXISTS "${TARGET_DIR}/bin")
         file(REMOVE_RECURSE "${TARGET_DIR}/bin")
         file(REMOVE_RECURSE "${TARGET_DIR_DEBUG}/bin")
     endif()
