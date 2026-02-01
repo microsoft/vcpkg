@@ -12,13 +12,13 @@ vcpkg_from_github(
 file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
 file(REMOVE_RECURSE ${unused})
 
-if(EXISTS "${SOURCE_PATH}/sdk/identity/azure-identity")
-  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/identity/_")
+if(EXISTS "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration")
+  file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/appconfiguration/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/_")
 
-  file(RENAME "${SOURCE_PATH}/sdk/identity/azure-identity" "${SOURCE_PATH}/sdk/identity/_")
-  file(RENAME "${SOURCE_PATH}/sdk/identity" "${SOURCE_PATH}/sdk/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration/azure-data-appconfiguration" "${SOURCE_PATH}/sdk/appconfiguration/_")
+  file(RENAME "${SOURCE_PATH}/sdk/appconfiguration" "${SOURCE_PATH}/sdk/_")
   file(RENAME "${SOURCE_PATH}/sdk" "${SOURCE_PATH}/_")
 endif()
 
