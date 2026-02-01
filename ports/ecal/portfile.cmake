@@ -54,8 +54,11 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
-if (NOT CMAKE_CROSSCOMPILING)
-    vcpkg_copy_tools(TOOL_NAMES ecal_generate_config AUTO_CLEAN)
+set(_ecal_tool "${CURRENT_PACKAGES_DIR}/bin/ecal_generate_config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+if(EXISTS "${_ecal_tool}")
+  vcpkg_copy_tools(TOOL_NAMES ecal_generate_config AUTO_CLEAN)
+else()
+  message(STATUS "ecal_generate_config not found; skip vcpkg_copy_tools")
 endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME eCAL           CONFIG_PATH share/eCAL)
