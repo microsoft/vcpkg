@@ -2189,7 +2189,7 @@
       "port-version": 0
     },
     "cryptopp-modern": {
-      "baseline": "2025.12.0",
+      "baseline": "2026.2.0",
       "port-version": 0
     },
     "cserialport": {
