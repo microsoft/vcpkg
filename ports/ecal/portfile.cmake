@@ -53,7 +53,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
-vcpkg_copy_tools(TOOL_NAMES ecal_generate_config AUTO_CLEAN)
+
+if (NOT VCPKG_CROSSCOMPILING)
+    vcpkg_copy_tools(TOOL_NAMES ecal_generate_config AUTO_CLEAN)
+endif()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME eCAL           CONFIG_PATH share/eCAL)
 vcpkg_cmake_config_fixup(PACKAGE_NAME CMakeFunctions CONFIG_PATH share/CMakeFunctions)
