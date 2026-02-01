@@ -54,7 +54,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
-if (NOT VCPKG_CROSSCOMPILING)
+if (NOT CMAKE_CROSSCOMPILING)
     vcpkg_copy_tools(TOOL_NAMES ecal_generate_config AUTO_CLEAN)
 endif()
 
@@ -64,9 +64,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME CMakeFunctions CONFIG_PATH share/CMakeFunc
 # Remove extra debug files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
-endif()
 
 # global ini files not strictly required
 if (VCPKG_TARGET_IS_WINDOWS)
