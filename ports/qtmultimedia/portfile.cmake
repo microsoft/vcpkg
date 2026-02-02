@@ -27,10 +27,7 @@ if("gstreamer" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='yes'")
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
-    list(APPEND unused INPUT_gstreamer_gl INPUT_gstreamer_photography)
 endif()
-list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_gl='no'")
-list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_photography='no'")
 
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
