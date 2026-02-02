@@ -14,6 +14,8 @@ get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY)
 vcpkg_add_to_path("${BISON_DIR}")
 vcpkg_add_to_path("${FLEX_DIR}")
 
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
 set(MATIEC_BUILD_SHARED OFF)
 set(MATIEC_BUILD_STATIC OFF)
 
@@ -48,6 +50,18 @@ file(INSTALL "${SOURCE_PATH}/src/lib/"
     PATTERN "*.txt"
     PATTERN "*.h"
 )
+
+file(GLOB_RECURSE MATIEC_EMPTY_DIRS LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/*")
+list(SORT MATIEC_EMPTY_DIRS DESCENDING)
+foreach(MATIEC_EMPTY_DIR IN LISTS MATIEC_EMPTY_DIRS)
+    if(IS_DIRECTORY "${MATIEC_EMPTY_DIR}")
+        file(GLOB MATIEC_EMPTY_DIR_ENTRIES "${MATIEC_EMPTY_DIR}/*")
+        list(LENGTH MATIEC_EMPTY_DIR_ENTRIES MATIEC_EMPTY_DIR_ENTRIES_LEN)
+        if(MATIEC_EMPTY_DIR_ENTRIES_LEN EQUAL 0)
+            file(REMOVE_RECURSE "${MATIEC_EMPTY_DIR}")
+        endif()
+    endif()
+endforeach()
 
 vcpkg_install_copyright(FILE_LIST
     "${SOURCE_PATH}/COPYING"
