@@ -1,8 +1,8 @@
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-set(pc_file_release "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unit-test-cmake.pc")
+file(MAKE_DIRECTORY "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+set(pc_file_release "${CURRENT_INSTALLED_DIR}/lib/pkgconfig/unit-test-cmake.pc")
 if(NOT VCPKG_BUILD_TYPE)
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-    set(pc_file_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/unit-test-cmake.pc")
+    file(MAKE_DIRECTORY "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
+    set(pc_file_debug "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig/unit-test-cmake.pc")
 endif()
 set(reload_pc_strings 0)
 
