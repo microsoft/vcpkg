@@ -26,4 +26,3 @@ endif()
 
 unset(_cppwinrt_root)
 unset(_cppwinrt_exe)
-
