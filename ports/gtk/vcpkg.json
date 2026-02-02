@@ -1,7 +1,6 @@
 {
   "name": "gtk",
-  "version": "4.16.3",
-  "port-version": 4,
+  "version": "4.21.4",
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
   "license": "LGPL-2.0-only",
@@ -22,6 +21,10 @@
         "x11"
       ],
       "platform": "linux"
+    },
+    {
+      "name": "directx-headers",
+      "platform": "windows & !arm32 & !xbox"
     },
     "gdk-pixbuf",
     {
@@ -46,6 +49,7 @@
       ]
     },
     "libepoxy",
+    "librsvg",
     "pango",
     {
       "name": "sassc",
