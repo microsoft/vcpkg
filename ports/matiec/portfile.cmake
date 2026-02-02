@@ -45,11 +45,15 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/lib")
 file(INSTALL "${SOURCE_PATH}/src/lib/"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/lib"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/iec-lib"
     FILES_MATCHING
     PATTERN "*.txt"
     PATTERN "*.h"
 )
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING"
+    "${SOURCE_PATH}/src/lib/COPYING.LESSER"
+)
