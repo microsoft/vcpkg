@@ -28,16 +28,25 @@ function(unit_test_pkgconfig_check_find build_types)
     endif()
 
     foreach(build_type IN LISTS build_types)
-        cmake_pkg_config(IMPORT unit-test-cmake)
-        if (NOT ${PKGCONFIG_unit-test-cmake_FOUND})
-            set_has_error()
-            return()
+        if(CMAKE_VERSION GREATER_EQUAL "4.2.3")
+            cmake_pkg_config(IMPORT unit-test-cmake)
+            if (NOT ${PKGCONFIG_unit-test-cmake_FOUND})
+                set_has_error()
+                return()
+            endif()
+        else()
+            cmake_pkg_config(EXTRACT unit-test-cmake)
+            if (NOT "${CMAKE_PKG_CONFIG_NAME}" STREQUAL "unit-test-cmake")
+                set_has_error()
+                return()
+            endif()
         endif()
     endforeach()
 endfunction()
 
 # line continuations
 write_pkgconfig([[
+Name: unit-test-cmake
 Libs: -L"${prefix}/lib" \
       -l"aaa"
 ]])
