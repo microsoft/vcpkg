@@ -1,11 +1,15 @@
 {
   "name": "webcraft",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "An async first C++ networking library leveraging powerful features of C++23 built for scale, speed, and ease.",
   "homepage": "https://github.com/adityarao2005/WebCraft/",
   "license": "MIT",
   "supports": "!(uwp | android | emscripten)",
   "dependencies": [
+    {
+      "name": "concurrentqueue",
+      "platform": "linux"
+    },
     {
       "name": "liburing",
       "platform": "linux"
