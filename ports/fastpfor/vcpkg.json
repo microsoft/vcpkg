@@ -6,6 +6,10 @@
   "license": "Apache-2.0",
   "supports": "x64 | x86",
   "dependencies": [
+    {
+      "name": "simde",
+      "platform": "arm64 | arm"
+    },
     "snappy",
     {
       "name": "vcpkg-cmake",

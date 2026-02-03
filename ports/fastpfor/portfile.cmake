@@ -6,6 +6,14 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 63eae397540e901e6b60420a92a165bbc16f35d97238221dac5d9d8819f40886a12edc17087d0aa2eeef706b8f411d1d19b77d6833d8bf34ad8340fa59f4cccf
     HEAD_REF master
+    PATCHES
+        remove-cpm.patch
+)
+
+file(REMOVE
+    ${SOURCE_PATH}/cmake_modules/CPM.cmake
+    ${SOURCE_PATH}/cmake_modules/Findsnappy.cmake
+    ${SOURCE_PATH}/cmake_modules/simde.cmake
 )
 
 vcpkg_cmake_configure(
@@ -15,7 +23,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/FastPFOR" PACKAGE_NAME "FastPFOR")
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/FastPFOR")
 
 vcpkg_fixup_pkgconfig()
 
