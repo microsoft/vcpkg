@@ -1,0 +1,13 @@
+diff --git a/build/win_helper.py b/build/win_helper.py
+index be977c8..829343a 100644
+--- a/build/win_helper.py
++++ b/build/win_helper.py
+@@ -186,7 +186,7 @@ class WinTool(object):
+           'Microsoft Visual Studio', 'Installer', 'vswhere.exe')
+       if os.path.exists(vswhere_path):
+         installation_path = subprocess.check_output(
+-            [vswhere_path, '-latest', '-property', 'installationPath']).strip()
++            [vswhere_path, '-products', '*', '-latest', '-property', 'installationPath']).strip()
+         if installation_path:
+           return (installation_path.decode("utf-8"),
+                   os.path.join('VC', 'Auxiliary', 'Build', 'vcvarsall.bat'))
