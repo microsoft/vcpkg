@@ -1,10 +1,11 @@
 diff --git a/src/zip.cpp b/src/zip.cpp
-index b4d1046..7ca4106 100644
+index b4d1046..d68807f 100644
 --- a/src/zip.cpp
 +++ b/src/zip.cpp
-@@ -1,8 +1,14 @@
--#include "zip.h"
+@@ -1,8 +1,13 @@
+ #include "zip.h"
 -#include "miniz/miniz.h"
++#include <miniz/miniz.h>
 +#include <algorithm>
  #include <cassert>
  #include <cstdint>
@@ -13,9 +14,6 @@ index b4d1046..7ca4106 100644
 +#include <string>
 +#include <vector>
 +#include <sstream>
-+
-+#include "zip.h"
-+#include "miniz/miniz.h"
-
+ 
  namespace {
  const size_t CHUNK = 1024 * 1024;
