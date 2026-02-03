@@ -5038,7 +5038,7 @@
     },
     "libice": {
       "baseline": "1.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "libiconv": {
       "baseline": "1.18",
