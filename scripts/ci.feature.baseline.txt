@@ -342,6 +342,7 @@ gz-gui7(android | arm) = cascade
 gz-physics6(arm|android) = cascade
 gz-rendering7(arm|android) = cascade
 gz-sensors7(arm | android) = cascade
+gz-sim:x64-linux=skip # many parallel links cause memory exhaustion on our 128GB of RAM lab VMs
 hareflow:x64-windows-static = cascade
 hdf5[parallel](android) = cascade
 hdf5[parallel](arm64 & windows) = cascade
