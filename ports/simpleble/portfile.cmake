@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO OpenBluetoothToolbox/SimpleBLE
     HEAD_REF main
     REF "v${VERSION}"
-    SHA512 076490b660629cc947446d11c42a0bb7811b5a3fad6b41eb3e9b9dfb5108b436d9688e36fb1b716fde0c07f8a2c004962bf1657c9a395891095a9343031d73fb
+    SHA512 37f68433dbceaf8d05ddf0d07573a812d50b470c53611d9efb732778bf30a5f6ca4d2e8d1b4bfab7c9b41abe012fe37c16b8ed6ded4d77a858b15fe0b62285fc
     PATCHES
         use-std-localtime.patch
 )

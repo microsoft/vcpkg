@@ -9169,7 +9169,7 @@
       "port-version": 0
     },
     "simpleble": {
-      "baseline": "0.10.4",
+      "baseline": "0.11.0",
       "port-version": 0
     },
     "simpleini": {
