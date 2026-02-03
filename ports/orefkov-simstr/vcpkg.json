@@ -1,6 +1,6 @@
 {
   "name": "orefkov-simstr",
-  "version-semver": "1.6.0",
+  "version-semver": "1.6.2",
   "description": "Yet another C++ strings library implementation",
   "homepage": "https://github.com/orefkov/simstr",
   "license": "MIT",
