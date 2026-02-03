@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO blackb1rd/neoactivemq-cpp
     REF "v${VERSION}"
-    SHA512 db1eb2aa5bdfbc42c92dec9536e36503ca93d6e2d5f9002bba49f7f873ce75c21c5ea5bd7c58950d27d3be7cf54383b61117492cdbf2c6c543cfa47be40ca1cd
+    SHA512 6de73236e382cf7e154972b85aef0197e234279451c46657c018fd41b5e9b834753ed51392d14bb8ec94e4ccccf06efef217b090fa3f3e0bbd595239c28fe29c
     HEAD_REF main
 )
 
@@ -18,8 +18,9 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DAMQCPP_BUILD_EXAMPLES=OFF
-        -DWITH_TESTS=OFF
+        -DAMQCPP_BUILD_TESTS=OFF
         -DAMQCPP_SHARED_LIB=${AMQCPP_SHARED_LIB}
+        -DAMQCPP_DISABLE_CCACHE=ON
 )
 
 vcpkg_cmake_install()
