@@ -8984,6 +8984,10 @@
       "baseline": "3.4.0",
       "port-version": 0
     },
+    "sdl3-shadercross": {
+      "baseline": "3.0.0-preview1",
+      "port-version": 0
+    },
     "sdl3-ttf": {
       "baseline": "3.2.2",
       "port-version": 1
