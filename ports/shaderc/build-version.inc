@@ -1,1 +1,1 @@
-"shaderc v2023.8 v2023.8\n"
+"shaderc v2026.1 v2026.1\n"
