@@ -1,3 +1,6 @@
+# This port is not tested in vcpkg's curated registry due to excessive memory consumption
+# that cause reliability problems for other customers.
+# It must be checked manually after updates.
 string(REGEX MATCH "^[0-9]+" VERSION_MAJOR ${VERSION})
 set(PACKAGE_NAME gazebo)
 
