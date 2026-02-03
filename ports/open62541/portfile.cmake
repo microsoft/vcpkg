@@ -8,7 +8,6 @@ vcpkg_from_github(
 
 # disable docs
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
 
 # do not enable LTO by default
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)" "")
