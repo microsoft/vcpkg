@@ -10833,7 +10833,7 @@
       "port-version": 1
     },
     "xdigest": {
-      "baseline": "0.2.1",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "xerces-c": {
