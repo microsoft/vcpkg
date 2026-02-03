@@ -13,7 +13,7 @@ vcpkg_from_github(
         cmake-config-export.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/build-version.inc" DESTINATION "${SOURCE_PATH}/glslc/src")
+configure_file(${CMAKE_CURRENT_LIST_DIR}/build-version.inc ${SOURCE_PATH}/glslc/src/build-version.inc)
 
 set(OPTIONS "")
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
