@@ -1,6 +1,6 @@
 {
   "name": "matajoh-libnpy",
-  "version": "1.5.3",
+  "version": "2.0.0",
   "description": "Multi-platform C++ library for reading and writing NPY and NPZ files, with an additional .NET interface",
   "homepage": "https://github.com/matajoh/libnpy",
   "license": "MIT",
