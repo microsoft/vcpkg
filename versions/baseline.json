@@ -5893,7 +5893,7 @@
       "port-version": 0
     },
     "libxrandr": {
-      "baseline": "1.5.4",
+      "baseline": "1.5.5",
       "port-version": 0
     },
     "libxrender": {
