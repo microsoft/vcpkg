@@ -1,7 +1,7 @@
 {
   "name": "neoactivemq-cpp",
   "version": "1.1.5",
-  "port-version": 1,
+  "port-version": 0,
   "description": "Modern fork of Apache ActiveMQ-CPP with CMake support and OpenSSL integration",
   "homepage": "https://github.com/blackb1rd/neoactivemq-cpp",
   "license": "Apache-2.0",
