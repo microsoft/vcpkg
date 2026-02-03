@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rinrab/xdigest
     REF "${VERSION}"
-    SHA512 0b5a6c2dae2e7fbd1b731ef6237ef8fd8bc437f12067cec8d12fb47c8f09df2879d10cad8a1a9c5c9a9885b9d046d19174b0333cf3ea81e8073eb1fac50014a9
+    SHA512 9bb3ceaca9a3cf35b5dd562589158dc50ad3692c3d17d4b39e1f4a36a00861e30913de5ae3052836deb3ef76a45ad69c7822e2fb14a27c6d73dfcd6115a76d15
     HEAD_REF trunk
 )
 
