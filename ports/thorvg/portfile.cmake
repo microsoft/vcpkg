@@ -27,6 +27,7 @@ vcpkg_configure_meson(
         -Dsimd=false # The reason for setting 'Dsimd=false' was that the creator said a false setting was necessary
         -Dbindings=capi
         -Dtests=false
+        -Dstrip=false
         -Dextra=['']
     OPTIONS_DEBUG
         -Dlog=true
