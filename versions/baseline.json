@@ -3690,7 +3690,7 @@
     },
     "gz-sim": {
       "baseline": "9.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "gz-tools": {
       "baseline": "2.0.3",

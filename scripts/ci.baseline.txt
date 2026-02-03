@@ -280,6 +280,7 @@ gsoap:x64-windows-static-md=skip
 gsoap:x64-windows-static=skip
 gsoap:x64-windows=skip
 gsoap:x86-windows=skip
+gz-sim:x64-linux=skip # many parallel links cause memory exhaustion on our 128GB of RAM lab VMs
 gz-tools:arm-neon-android=fail
 gz-tools:arm64-android=fail
 gz-tools:x64-android=fail

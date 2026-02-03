@@ -568,6 +568,7 @@ gz-rendering7:x64-uwp = cascade
 gz-rendering7(arm|android) = cascade
 gz-sensors7:x64-uwp = cascade
 gz-sensors7(arm | android) = cascade
+gz-sim:x64-linux=skip # many parallel links cause memory exhaustion on our 128GB of RAM lab VMs
 gz-transport12:x64-uwp = cascade
 h5py-lzf:arm64-uwp = cascade
 h5py-lzf:x64-uwp = cascade
