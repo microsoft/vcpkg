@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES 
         enable-runtimelibrary-toggle.patch
         fix-static-include-files.patch
+        subdirs.diff
         vcpkg-cross-builds.diff
 )
 
