@@ -27,6 +27,7 @@
   "features": {
     "ctl": {
       "description": "Build drogon_ctl tool.",
+      "supports": "native",
       "dependencies": [
         {
           "name": "drogon",

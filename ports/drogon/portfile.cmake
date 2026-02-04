@@ -24,10 +24,6 @@ vcpkg_check_features(
         yaml     BUILD_YAML_CONFIG
 )
 
-if(VCPKG_CROSSCOMPILING)
-    list(APPEND ADDITIONAL_OPTIONS "-DHOST_DROGON_CTL=${CURRENT_HOST_INSTALLED_DIR}/tools/drogon/drogon_ctl${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -35,7 +31,6 @@ vcpkg_cmake_configure(
         -DBUILD_EXAMPLES=OFF
         -DUSE_SUBMODULE=OFF
         ${FEATURE_OPTIONS}
-        ${ADDITIONAL_OPTIONS}
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
