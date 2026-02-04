@@ -4,7 +4,7 @@
   "description": "A port of Microsoft XNA in C++",
   "homepage": "https://github.com/borgesdan/xnpp",
   "license": "MIT",
-  "supports": ""windows & !uwp"",
+  "supports": "windows & !uwp",
   "dependencies": [
     {
       "name": "directxtk",
