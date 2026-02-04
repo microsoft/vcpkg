@@ -12,15 +12,14 @@ vcpkg_cmake_configure(
         -DXNPP_BUILD_APP=OFF
 )
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "xnpp is supported only on Windows.")
-endif()
-
-
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
     CONFIG_PATH lib/cmake/Xnpp
+)
+
+vcpkg_install_copyright(
+    FILE_LIST "${SOURCE_PATH}/LICENSE.md"
 )
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
