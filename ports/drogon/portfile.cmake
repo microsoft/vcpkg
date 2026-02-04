@@ -1,6 +1,6 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO an-tao/drogon
+    REPO drogonframework/drogon
     REF "v${VERSION}"
     SHA512 a3a4de363ffb21066ae4ab629c5b33287ef14ca085052568b005102679d724795e45edaca223f2bb0d6b22edd4d4a2400ffeec445182faf23a2b2c2e77338337
     HEAD_REF master
