@@ -3,11 +3,17 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "geos-${VERSION}.tar.bz2"
     SHA512 8ffaa3f49a8365db693ac948e9d66cf55321eb12151734c7da2775070b7804ffa607de2474b7019d6ea2a99d5e037fb1e8561bf9025e65ddd4bd1ba049382b28
 )
+vcpkg_download_distfile(msvc_2017_patch
+    URLS https://github.com/libgeos/geos/commit/46e9f158073ebf0d4ec8b7dde37c155d097bc0d7.diff?full_index=1
+    SHA512 9fa1ccc4c66e8268c59bcac218015c2b10ee594bece837e6d0fc78fe700233abd1b2df7aa396c00786ffb170fbfbb0ab530f5007ba10376a2366ee3472d8b02a
+    FILENAME geos-${VERSION}-msvc-2017.diff
+)
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     SOURCE_BASE "v${VERSION}"
     PATCHES
         fix-exported-config.patch
+        "${msvc_2017_patch}"
 )
 
 vcpkg_cmake_configure(

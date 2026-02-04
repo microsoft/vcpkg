@@ -103,7 +103,7 @@
         {
           "$package": "GnuTLS",
           "name": "libgnutls",
-          "platform": "!windows | mingw"
+          "platform": "!android & (!windows | mingw)"
         },
         {
           "$package": "Iconv",

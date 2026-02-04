@@ -6,8 +6,8 @@ index fb4f527..751df4b 100644
  	test/thrash_threads6 \
  	test/thrash_threads7
  
--all: lib-static lib-shared $(BUILT_PROGRAMS) plugins $(BUILT_TEST_PROGRAMS) \
-+all: lib-static lib-shared $(BUILT_PROGRAMS) plugins \
-      htslib_static.mk htslib-uninstalled.pc
+ all: lib-static lib-shared $(BUILT_PROGRAMS) plugins \
+-	$(BUILT_TEST_PROGRAMS) htslib_static.mk htslib-uninstalled.pc
++	htslib_static.mk htslib-uninstalled.pc
  
- ALL_CPPFLAGS = -I. $(CPPFLAGS)
+ # Report compiler and version

@@ -1,16 +1,16 @@
 diff --git a/src/osgEarthDrivers/CMakeLists.txt b/src/osgEarthDrivers/CMakeLists.txt
-index 79acbe9c4..89e28b141 100644
+index dd54d0ae8..37b2fbd83 100644
 --- a/src/osgEarthDrivers/CMakeLists.txt
 +++ b/src/osgEarthDrivers/CMakeLists.txt
-@@ -31,7 +31,6 @@ add_subdirectory(earth)
+@@ -19,7 +19,6 @@ add_subdirectory(earth)
  add_subdirectory(engine_rex)
  add_subdirectory(featurefilter_intersect)
  add_subdirectory(featurefilter_join)
 -add_subdirectory(gltf)
  add_subdirectory(kml)
- add_subdirectory(mapinspector)
- add_subdirectory(monitor)
-@@ -61,5 +60,4 @@ endif()
+ add_subdirectory(script_engine_duktape)
+ add_subdirectory(sky_gl)
+@@ -45,5 +44,4 @@ add_subdirectory(cache_rocksdb)
  
  IF(NOT APPLE AND NOT ANDROID)
      add_subdirectory(fastdxt)

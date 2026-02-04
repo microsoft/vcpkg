@@ -1,10 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kkos/oniguruma
-    REF v6.9.7.1
-    SHA512 CE22050E04E51843E894D2D534D062FDD23CC2BAAC9BA43DA1843EC928F6CE5ED3D4407FE945F4D34ADADF3167DFD943CD81AE4556F7C5EC51E7331C35EAD479
+    REF "v${VERSION}"
+    SHA512 7c89247d8504c635687dc61b39b39b5afefa4851b24409a8eab31273f1cbc88f3db89095ae4b135bd034147d2616c2e18fc74887300b89532eedeab75677f437
     HEAD_REF master
-    PATCHES fix-uwp.patch
+    PATCHES 
+        fix-uwp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,10 +32,14 @@ vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/share"
-)
+vcpkg_fixup_pkgconfig()
+
+# Note that onig-config is a shell script, not CMake configs, so
+# vcpkg_cmake_config_fixup would be inappropriate
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/onig-config")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/onig-config")
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/onig-config")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/oniguruma.h"
@@ -51,4 +56,10 @@ endif()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-vcpkg_fixup_pkgconfig()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include/")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()

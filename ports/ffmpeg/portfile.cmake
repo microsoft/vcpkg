@@ -151,9 +151,16 @@ if(VCPKG_DETECTED_CMAKE_STRIP)
 endif()
 
 if(VCPKG_HOST_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake1.16)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES automake)
     set(SHELL "${MSYS_ROOT}/usr/bin/bash.exe")
-    list(APPEND prog_env "${MSYS_ROOT}/usr/bin" "${MSYS_ROOT}/usr/share/automake-1.16")
+    vcpkg_execute_required_process(
+        COMMAND "${SHELL}" -c "'/usr/bin/automake' --print-lib"
+        OUTPUT_VARIABLE automake_lib
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        WORKING_DIRECTORY "${MSYS_ROOT}"
+        LOGNAME automake-print-lib
+    )
+    list(APPEND prog_env "${MSYS_ROOT}/usr/bin" "${MSYS_ROOT}${automake_lib}")
 else()
     find_program(SHELL bash)
 endif()

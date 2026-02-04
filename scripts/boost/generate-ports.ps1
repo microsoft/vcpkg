@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.85.0",
+    $version = "1.86.0",
 # 1: boost-cmake/ref_sha.cmake needs manual updating
 # 2: This script treats support statements as platform expressions. This is incorrect
 #    in a few cases e.g. boost-parameter-python not depending on boost-python for uwp since
@@ -26,41 +26,8 @@ if ($null -eq $vcpkg) {
 $semverVersion = ($version -replace "(\d+(\.\d+){1,3}).*", "`$1")
 
 # Clear this array when moving to a new boost version
-$defaultPortVersion = 1
+$defaultPortVersion = 0
 $portVersions = @{
-    'boost-asio'            = 2
-    'boost-beast'           = 2
-    'boost-bimap'           = 2
-    'boost-build'           = 2
-    'boost-cmake'           = 2
-    'boost-cobalt'          = 2
-    'boost-compat'          = 2
-    'boost-core'            = 2
-    'boost-describe'        = 2
-    'boost-filesystem'      = 2
-    'boost-geometry'        = 2
-    'boost-intrusive'       = 2
-    'boost-json'            = 2
-    'boost-locale'          = 2
-    'boost-log'             = 2
-    'boost-math'            = 2
-    'boost-mpi'             = 2
-    'boost-msm'             = 2
-    'boost-multi-index'     = 2
-    'boost-multiprecision'  = 2
-    'boost-mysql'           = 2
-    'boost-nowide'          = 2
-    'boost-outcome'         = 2
-    'boost-pfr'             = 2
-    'boost-process'         = 2
-    'boost-program-options' = 2
-    'boost-python'          = 2
-    'boost-redis'           = 2
-    'boost-stacktrace'      = 4
-    'boost-timer'           = 2
-    'boost-unordered'       = 2
-    'boost-variant2'        = 2
-    'boost-wave'            = 2
 }
 
 function Get-PortVersion {
@@ -167,7 +134,7 @@ $portData = @{
             }
         }
     };
-    "boost-process"          = @{ "supports" = "!emscripten" };
+    "boost-process"          = @{ "supports" = "!uwp & !emscripten & !android" };
     "boost-python"           = @{ "supports" = "!uwp & !emscripten & !ios & !android"; "dependencies" = @("python3");};
     "boost-random"           = @{ "supports" = "!uwp" };
     "boost-regex"            = @{
@@ -212,6 +179,27 @@ function GeneratePortName() {
         [string]$Library
     )
     "boost-" + ($Library -replace "_", "-")
+}
+
+function GetPortHomepage() {
+    param (
+        [string]$Library
+    )
+
+    $specicalHomepagePaths = @{
+        "interval"           = "numeric/interval";
+        "numeric_conversion" = "numeric/conversion";
+        "odeint"             = "numeric/odeint";
+        "ublas"              = "numeric/ublas";
+    }
+
+    if ($specicalHomepagePaths.ContainsKey($Library)) {
+        $homepagePath = $specicalHomepagePaths[$Library]
+    } else {
+        $homepagePath = $Library
+    }
+
+    "https://www.boost.org/libs/" + $homepagePath
 }
 
 function GeneratePortDependency() {
@@ -350,13 +338,14 @@ function GeneratePort() {
     )
 
     $portName = GeneratePortName $Library
+    $homepage = GetPortHomepage  $Library
 
     New-Item -ItemType "Directory" "$portsDir/$portName" -erroraction SilentlyContinue | out-null
 
     # Generate vcpkg.json
     GeneratePortManifest `
         -PortName $portName `
-        -Homepage "https://www.boost.org/libs/$Library" `
+        -Homepage $homepage `
         -Description "Boost $Library module" `
         -License "BSL-1.0" `
         -Dependencies $Dependencies
@@ -634,6 +623,12 @@ foreach ($library in $libraries) {
         $deps = @($deps | Where-Object {
                 -not (
                 ($library -eq 'gil' -and $_ -eq 'filesystem') # PR #20575
+                )
+            }
+        )
+        $deps = @($deps | Where-Object {
+                -not (
+                ($library -eq 'mysql' -and $_ -eq 'pfr')
                 )
             }
         )

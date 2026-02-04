@@ -1,0 +1,26 @@
+From 75409d8ec67146e0c245316cb564aed5ffda5041 Mon Sep 17 00:00:00 2001
+From: Ryan Zoeller <ryan.zoeller@aliaro.com>
+Date: Fri, 30 Aug 2024 10:51:27 -0500
+Subject: [PATCH] condition_variable: fix wait_until predicate evaluation
+
+Signed-off-by: Ryan Zoeller <ryan.zoeller@aliaro.com>
+---
+ src/rtpi/condition_variable.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/rtpi/condition_variable.hpp b/src/rtpi/condition_variable.hpp
+index 9041ab7..6fd82d8 100644
+--- a/src/rtpi/condition_variable.hpp
++++ b/src/rtpi/condition_variable.hpp
+@@ -185,7 +185,7 @@ class condition_variable {
+ 		   const std::chrono::time_point<Clock, Duration> &timeout_time,
+ 		   Predicate stop_waiting)
+ 	{
+-		while (!stop_waiting) {
++		while (!stop_waiting()) {
+ 			if (wait_until(lock, timeout_time) ==
+ 			    cv_status::timeout)
+ 				return stop_waiting();
+-- 
+2.43.5
+

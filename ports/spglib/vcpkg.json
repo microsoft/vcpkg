@@ -1,6 +1,6 @@
 {
   "name": "spglib",
-  "version-semver": "2.4.0",
+  "version-semver": "2.5.0",
   "description": "C library for finding and handling crystal symmetries",
   "homepage": "https://spglib.readthedocs.io/en/latest/",
   "license": "BSD-3-Clause",
