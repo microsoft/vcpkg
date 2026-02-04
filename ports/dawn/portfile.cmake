@@ -2,7 +2,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
         FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
-        SHA512 B54650FE7B4D8653DAB70E892DEADA5C7DDC9EF0D5655EED67FD5A70913643B6CA2BD5A52A961EC975E5559D8683974DEE3B73FC1228F6D62159B781A0056CDA
+        SHA512 f6f683c913d9a4e66ffcf85fe3a352d2175aba060bf036cf504e0494edcaaa27bd288cf37b9a584a9fc383b832fe2cad42a7644fecf73356dec4999f3656bcb5
     )
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -10,17 +10,28 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
         PATCHES
             000-fix-emdawnwebgpu.patch
     )
-    set(VCPKG_BUILD_TYPE release)
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
     file(INSTALL "${SOURCE_PATH}/webgpu/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
     file(INSTALL "${SOURCE_PATH}/webgpu_cpp/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
     file(INSTALL "${SOURCE_PATH}/webgpu/src" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" PATTERN "LICENSE" EXCLUDE)
     file(INSTALL "${SOURCE_PATH}/emdawnwebgpu.port.py" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+    # pkgconf for emdawnwebgpu, make sure these lines come before `set(VCPKG_BUILD_TYPE release)`
     set(DAWN_PKGCONFIG_CFLAGS "--use-port=\${prefix}/share/${PORT}/emdawnwebgpu.port.py")
     set(DAWN_PKGCONFIG_LIBS "--use-port=\${prefix}/share/${PORT}/emdawnwebgpu.port.py")
     set(DAWN_PKGCONFIG_REQUIRES "")
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
+    endif()
     vcpkg_fixup_pkgconfig()
+
+    # cmake config for emdawnwebgpu
+    set(VCPKG_BUILD_TYPE release)
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
     vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/webgpu/src/LICENSE" "${SOURCE_PATH}/webgpu_cpp/LICENSE")
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     return()
@@ -30,7 +41,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
     REF "v${VERSION}"
-    SHA512 7F0DF70609FEC78E9D94E36D0DB549D0B759B993D172BC61B233D80EB295060813D7A532496591E60A44B182EBD3CB89CBACB3254CCD0C1695351DD839D8ABBA
+    SHA512 ac54f478b77fcdd0a7f0e52a2b398e1d6902e1cae16621f0dd02c084b44939f2d40c2193c3147c6276f11a1efeaa563cb0920eea9a0de3a7e8072ea6fa630b66
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
@@ -119,10 +130,6 @@ else()
     set(DAWN_BUILD_MONOLITHIC_LIBRARY "SHARED")
 endif()
 
-# DAWN_BUILD_MONOLITHIC_LIBRARY SHARED/STATIC requires BUILD_SHARED_LIBS=OFF
-set(VCPKG_LIBRARY_LINKAGE_BACKUP ${VCPKG_LIBRARY_LINKAGE})
-set(VCPKG_LIBRARY_LINKAGE static)
-
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -142,9 +149,14 @@ if(DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
 	set(DAWN_USE_BUILT_DXC ON)
 endif()
 
+# DAWN_BUILD_MONOLITHIC_LIBRARY SHARED/STATIC requires BUILD_SHARED_LIBS=OFF
+set(VCPKG_LIBRARY_LINKAGE_BACKUP ${VCPKG_LIBRARY_LINKAGE})
+set(VCPKG_LIBRARY_LINKAGE static)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DPython3_EXECUTABLE="${PYTHON3}"
         -DDAWN_BUILD_MONOLITHIC_LIBRARY=${DAWN_BUILD_MONOLITHIC_LIBRARY}
         -DDAWN_ENABLE_INSTALL=ON
@@ -154,25 +166,19 @@ vcpkg_cmake_configure(
         -DDAWN_BUILD_TESTS=OFF
         -DTINT_BUILD_TESTS=OFF
         -DTINT_ENABLE_INSTALL=OFF
-        -DTINT_BUILD_CMD_TOOLS=${TINT_BUILD_CMD_TOOLS}
 		-DTINT_BUILD_WGSL_READER=ON
 		-DTINT_BUILD_WGSL_WRITER=ON
 		-DTINT_BUILD_SPV_READER=OFF
 		-DTINT_BUILD_SPV_WRITER=OFF
         -DDAWN_ENABLE_NULL=ON
-        -DDAWN_ENABLE_D3D11=${DAWN_ENABLE_D3D11}
-        -DDAWN_ENABLE_D3D12=${DAWN_ENABLE_D3D12}
-        -DDAWN_ENABLE_DESKTOP_GL=${DAWN_ENABLE_DESKTOP_GL}
-        -DDAWN_ENABLE_OPENGLES=${DAWN_ENABLE_OPENGLES}
-        -DDAWN_ENABLE_METAL=${DAWN_ENABLE_METAL}
-        -DDAWN_ENABLE_VULKAN=${DAWN_ENABLE_VULKAN}
-        -DDAWN_USE_WAYLAND=${DAWN_USE_WAYLAND}
-        -DDAWN_USE_X11=${DAWN_USE_X11}
 		-DDAWN_USE_BUILT_DXC=${DAWN_USE_BUILT_DXC}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Dawn)
+
+# Restore the original library linkage
+set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
 
 list(APPEND DAWN_ABSL_REQUIRES
     absl_flat_hash_set
@@ -180,7 +186,6 @@ list(APPEND DAWN_ABSL_REQUIRES
     absl_inlined_vector
     absl_no_destructor
     absl_overload
-    absl_str_format_internal
     absl_strings
     absl_span
     absl_string_view
@@ -215,9 +220,6 @@ vcpkg_fixup_pkgconfig()
 if(TINT_BUILD_CMD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES tint AUTO_CLEAN)
 endif()
-
-# Restore the original library linkage
-set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
