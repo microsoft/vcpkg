@@ -4469,7 +4469,7 @@
       "port-version": 1
     },
     "knncolle": {
-      "baseline": "3.0.2",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "knncolle-annoy": {
