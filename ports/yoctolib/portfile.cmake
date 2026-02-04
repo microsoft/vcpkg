@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 ed405d77c05288e123851a79e86beaf9778cce487c5d5d4a556f47b3a690517e71b004e5b3e0ae5532cb24ed46a1c04ce4f18c34cccf475fc1ca45a331808c43
     HEAD_REF master
+    PATCHES
+        001-cmake_config.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
