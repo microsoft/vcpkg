@@ -47,6 +47,8 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES oapv_app_dec oapv_app_enc AUTO_CLEAN)
 endif()
