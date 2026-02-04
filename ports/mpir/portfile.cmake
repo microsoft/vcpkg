@@ -11,7 +11,7 @@ vcpkg_from_github(
     PATCHES 
         enable-runtimelibrary-toggle.patch
         fix-static-include-files.patch
-        vcpkg-cross-build.diff
+        vcpkg-cross-builds.diff
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
