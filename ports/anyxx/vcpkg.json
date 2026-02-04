@@ -1,7 +1,7 @@
 {
   "name": "anyxx",
-  "version": "0.4.1",
-  "description": "any++ / header only C++ vocabulary for programming on a large scale",
+  "version": "0.5.0",
+  "description": "any++ / Any++ : How to trait any virtual, static or variant?",
   "homepage": "https://github.com/bitfactory-software/anyxx",
   "license": "MIT",
   "dependencies": [
