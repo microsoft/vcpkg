@@ -21,7 +21,6 @@
     "spdlog",
     "tclap",
     "tcp-pubsub",
-    "termcolor",
     {
       "name": "vcpkg-cmake",
       "host": true

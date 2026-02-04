@@ -1,14 +1,8 @@
 diff --git a/cmake/eCALConfig.cmake.in b/cmake/eCALConfig.cmake.in
-index f285f5e..e8cfb76 100644
+index f285f5e..c91f741 100644
 --- a/cmake/eCALConfig.cmake.in
 +++ b/cmake/eCALConfig.cmake.in
-@@ -25,17 +25,20 @@ set(eCAL_VERSION_MAJOR  @eCAL_VERSION_MAJOR@)
- set(eCAL_VERSION_MINOR  @eCAL_VERSION_MINOR@)
- set(eCAL_VERSION_PATCH  @eCAL_VERSION_PATCH@)
- set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
-+set(eCAL_IS_SHARED @BUILD_SHARED_LIBS@)
- 
- # eCAL is provided only with Release and Debug Version, thus map the other configs to Release build.
+@@ -30,12 +30,14 @@ set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
  set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release "")
  set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release "")
  
@@ -22,14 +16,14 @@ index f285f5e..e8cfb76 100644
 +find_dependency(Protobuf CONFIG)
 +
 +# Ensure transitive dependencies are present for static builds
-+if(NOT eCAL_IS_SHARED)
++if(NOT @BUILD_SHARED_LIBS@)
 +  find_dependency(asio)
 +  find_dependency(tcp_pubsub)
 +  find_dependency(HDF5)
  endif()
  
  include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_add_functions.cmake")
-@@ -50,6 +53,6 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
+@@ -50,6 +52,6 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
  #  list(APPEND CMAKE_PREFIX_PATH "${PACKAGE_PREFIX_DIR}/../../../../cmake")
  #endif()
  

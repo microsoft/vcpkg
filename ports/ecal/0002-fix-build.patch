@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8bc05ee..8da183a 100644
+index 8bc05ee..c44b9fa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,13 +26,16 @@ endif (POLICY CMP0077)
+@@ -26,13 +26,17 @@ endif (POLICY CMP0077)
  
  list(APPEND CMAKE_MODULE_PATH
    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
@@ -18,10 +18,11 @@ index 8bc05ee..8da183a 100644
 +include(${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmakefunctions/build-cmakefunctions.cmake)
 +set(CMakeFunctions_FOUND TRUE)
 +
++find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
  # --------------------------------------------------------
  # set msvc specific options
  # --------------------------------------------------------
-@@ -289,7 +292,9 @@ if(MSVC)
+@@ -289,7 +293,9 @@ if(MSVC)
    endif()
  endif()
  
@@ -32,7 +33,7 @@ index 8bc05ee..8da183a 100644
  
  git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
  set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
-@@ -321,7 +326,7 @@ set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
+@@ -321,7 +327,7 @@ set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
  set(eCAL_install_archive_dyn_dir   ${CMAKE_INSTALL_LIBDIR})
  set(eCAL_install_bin_dir           ${CMAKE_INSTALL_BINDIR})
  set(eCAL_install_config_dir        ${CMAKE_INSTALL_SYSCONFDIR}/ecal)
@@ -41,64 +42,74 @@ index 8bc05ee..8da183a 100644
  set(eCAL_install_doc_dir           ${CMAKE_INSTALL_DOCDIR})
  set(eCAL_install_include_dir       ${CMAKE_INSTALL_INCLUDEDIR})
  set(eCAL_install_lib_dir           ${CMAKE_INSTALL_LIBDIR})
-diff --git a/cmake/Findtclap.cmake b/cmake/Findtclap.cmake
-new file mode 100644
-index 0000000..a0de08f
---- /dev/null
-+++ b/cmake/Findtclap.cmake
-@@ -0,0 +1,24 @@
-+find_path(tclap_INCLUDE_DIR
-+  NAMES tclap/Arg.h
-+)
-+
-+if(tclap_INCLUDE_DIR-NOTFOUND)
-+  message(FATAL_ERROR "Could not find tclap library")
-+  set(tclap_FOUND FALSE)
-+else()
-+  set(tclap_FOUND TRUE)
-+endif()
-+
-+if(tclap_FOUND)
-+  include(FindPackageHandleStandardArgs)
-+  find_package_handle_standard_args(tclap
-+    REQUIRED_VARS tclap_INCLUDE_DIR)
-+
-+  if(NOT TARGET tclap::tclap)
-+    set(tclap_INCLUDE_DIRS ${tclap_INCLUDE_DIR})
-+    add_library(tclap::tclap INTERFACE IMPORTED)
-+    set_target_properties(tclap::tclap PROPERTIES
-+      INTERFACE_INCLUDE_DIRECTORIES ${tclap_INCLUDE_DIR})
-+    mark_as_advanced(tclap_INCLUDE_DIRS)
-+  endif()
-+endif()
-diff --git a/cmake/Findtermcolor.cmake b/cmake/Findtermcolor.cmake
-new file mode 100644
-index 0000000..ac36178
---- /dev/null
-+++ b/cmake/Findtermcolor.cmake
-@@ -0,0 +1,22 @@
-+find_path(TERMCOLOR_INCLUDE_DIR "termcolor/termcolor.hpp")
-+
-+if(TERMCOLOR_INCLUDE_DIR-NOTFOUND)
-+  message(FATAL_ERROR "Could not find termcolor library")
-+  set(TERMCOLOR_FOUND FALSE)
-+else()
-+  set(TERMCOLOR_FOUND TRUE)
-+endif()
-+
-+if(TERMCOLOR_FOUND)
-+  include(FindPackageHandleStandardArgs)
-+  find_package_handle_standard_args(termcolor
-+    REQUIRED_VARS TERMCOLOR_INCLUDE_DIR)
-+
-+  if(NOT TARGET termcolor::termcolor)
-+    set(TERMCOLOR_INCLUDE_DIRS ${TERMCOLOR_INCLUDE_DIR})
-+    add_library(termcolor::termcolor INTERFACE IMPORTED)
-+    set_target_properties(termcolor::termcolor PROPERTIES
-+      INTERFACE_INCLUDE_DIRECTORIES ${TERMCOLOR_INCLUDE_DIR})
-+    mark_as_advanced(TERMCOLOR_INCLUDE_DIRS)
-+  endif()
-+endif()
+diff --git a/ecal/core/CMakeLists.txt b/ecal/core/CMakeLists.txt
+index 17c32c6..d9b9e0e 100644
+--- a/ecal/core/CMakeLists.txt
++++ b/ecal/core/CMakeLists.txt
+@@ -49,7 +49,7 @@ if (ECAL_CORE_CONFIGURATION)
+ endif()
+ 
+ if (ECAL_CORE_COMMAND_LINE)
+-  find_package(tclap          REQUIRED)
++  # find_package(tclap          REQUIRED)
+ endif()
+ 
+ if (ECAL_CORE_TRANSPORT_TCP)
+@@ -622,7 +622,7 @@ set(ecal_generated_sources
+     ${CMAKE_CURRENT_BINARY_DIR}/src/git_version.h
+ )
+ 
+-ecal_add_shared_library(${TARGET_NAME}
++ecal_add_library(${TARGET_NAME}
+     ${ecal_sources}
+     ${ecal_generated_sources}
+ )
+@@ -642,13 +642,13 @@ target_compile_definitions(${TARGET_NAME}
+     ASIO_STANDALONE
+     ASIO_DISABLE_VISIBILITY
+   PRIVATE
+-    ECAL_CORE_EXPORTS
++    $<$<BOOL:${BUILD_SHARED_LIBS}>:ECAL_CORE_EXPORTS>
+     $<$<BOOL:${ECAL_HAS_CLOCKLOCK_MUTEX}>:ECAL_HAS_CLOCKLOCK_MUTEX>
+     $<$<BOOL:${ECAL_HAS_ROBUST_MUTEX}>:ECAL_HAS_ROBUST_MUTEX>
+     $<$<BOOL:${ECAL_USE_CLOCKLOCK_MUTEX}>:ECAL_USE_CLOCKLOCK_MUTEX>
+     ECAL_NO_DEPRECATION_WARNINGS
+   INTERFACE
+-    ECAL_CORE_IMPORTS
++    $<$<BOOL:${BUILD_SHARED_LIBS}>:ECAL_CORE_IMPORTS>
+ )
+ 
+ set_target_properties(${TARGET_NAME}
+@@ -692,15 +692,15 @@ endif()
+ if(ECAL_CORE_COMMAND_LINE)
+   target_link_libraries(${TARGET_NAME}
+     PRIVATE
+-      tclap::tclap
++      #tclap::tclap
+   )
++  target_include_directories(${TARGET_NAME} PRIVATE ${TCLAP_INCLUDE_DIRS})
+ endif()
+ 
+ if(ECAL_CORE_SERVICE)
+-  target_link_libraries(${TARGET_NAME}
+-    PRIVATE
+-      ecal_service
+-  )
++  # fix install(EXPORT "eCALCoreTargets" ...) includes target "core" which requires target "ecal_service" that is not in any export set
++  target_sources(${TARGET_NAME} PRIVATE $<TARGET_OBJECTS:ecal_service>)
++  target_include_directories(${TARGET_NAME} PRIVATE $<TARGET_PROPERTY:ecal_service,INTERFACE_INCLUDE_DIRECTORIES>)
+ endif()
+ 
+ if(ECAL_CORE_TRANSPORT_TCP)
+@@ -748,7 +748,7 @@ target_compile_features(${TARGET_NAME} PUBLIC cxx_std_14)
+ 
+ set_property(TARGET ${TARGET_NAME}   PROPERTY FOLDER core)
+ 
+-ecal_install_shared_library(${TARGET_NAME})
++ecal_install_library(${TARGET_NAME})
+ 
+ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0") 
+   source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES 
 diff --git a/ecal/core/src/defs.h.in b/ecal/core/src/defs.h.in
 index 5753014..31cdef8 100644
 --- a/ecal/core/src/defs.h.in
@@ -111,6 +122,44 @@ index 5753014..31cdef8 100644
 +#define ECAL_INSTALL_PREFIX      ""
  
  #endif // defs_h_included
+diff --git a/lang/c/core/CMakeLists.txt b/lang/c/core/CMakeLists.txt
+index 2559348..c586711 100644
+--- a/lang/c/core/CMakeLists.txt
++++ b/lang/c/core/CMakeLists.txt
+@@ -102,7 +102,7 @@ set(ecal_c_sources
+     ${ecal_header_cimpl}
+ )
+ 
+-ecal_add_shared_library(${PROJECT_NAME}
++ecal_add_library(${PROJECT_NAME}
+     ${ecal_c_sources}
+ )
+ 
+diff --git a/lib/CustomTclap/CMakeLists.txt b/lib/CustomTclap/CMakeLists.txt
+index daaae09..e0938f8 100644
+--- a/lib/CustomTclap/CMakeLists.txt
++++ b/lib/CustomTclap/CMakeLists.txt
+@@ -20,7 +20,7 @@ project(CustomTclap)
+ 
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+-find_package(tclap REQUIRED)
++# find_package(tclap REQUIRED)
+ 
+ set(include_files
+   include/custom_tclap/advanced_tclap_output.h
+@@ -46,9 +46,9 @@ ecal_add_static_library(${PROJECT_NAME}
+ 
+ target_link_libraries(${PROJECT_NAME}
+ 	PUBLIC 
+-	    tclap::tclap
++	    # tclap::tclap
+ )
+-
++target_include_directories(${PROJECT_NAME} PUBLIC ${TCLAP_INCLUDE_DIRS})
+ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
+ 
+ target_include_directories(${PROJECT_NAME}
 diff --git a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt b/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt
 index 4d44da2..90127b2 100644
 --- a/thirdparty/cmakefunctions/cmake_functions/CMakeLists.txt

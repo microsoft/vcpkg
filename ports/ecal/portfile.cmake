@@ -12,7 +12,7 @@ vcpkg_from_github(
         0002-fix-build.patch
         0003-fix-dependencies.patch
         0006-use-find_dependency-in-cmake-config.patch
-        0007-allow-static-build-of-core.patch
+        #0007-allow-static-build-of-core.patch
         0009-protobuf-6.patch
 )
 
