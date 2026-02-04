@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AOMediaCodec/SVT-AV1
     REF "v${VERSION}"
-    SHA512 4301e923965e3bff30a0fd2f74ae023d19260f91c2361d48ea7bc1718f501dcca73fa17cb8795b23392ca1bfbe1f4d55edcbb5ce06a2fa9e41da36c5166f527d
+    SHA512 0a96e46aa602a223dcb3419232e04757b933f0da73ad22232bc8cc2e13ab5ad41c6abe16252b4a7626af3478ed85f9759b601d8ff3ef63fa545dd64a006e0d23
     PATCHES
         no-force-llvm.diff
         no-safestringlib.diff
