@@ -99,13 +99,13 @@ checkout_in_path(
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-headers/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers"
-    "b824a462d4256d720bebb40e78b9eb8f78bbb305"
+    "04f10f650d514df88b76d25e83db360142c7b174"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-tools/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools"
-    "f410b3c178740f9f5bd28d5b22a71d4bc10acd49"
+    "d4671f690ac42f196795272114daadc5088967ce"
     PATCHES
         # Dawn sets SPIRV_WERROR to OFF when building SPIRV-Tools, but https://github.com/KhronosGroup/SPIRV-Tools/commit/337fdb6a284fe7f7e374a14271f8e20e579f3263 ignores that CMake variable and forces /WX
         006-msvc-spirv-tools-disable-warnaserror.patch
@@ -114,7 +114,7 @@ checkout_in_path(
 checkout_in_path(
     "${SOURCE_PATH}/third_party/webgpu-headers/src"
     "https://chromium.googlesource.com/external/github.com/webgpu-native/webgpu-headers"
-    "12c1d34e7464cac58cc41a24aeee1d48a2f21b74"
+    "0bfcdc4f487023d85e33597de0a94fc523e30fca"
 )
 
 vcpkg_find_acquire_program(PYTHON3)
