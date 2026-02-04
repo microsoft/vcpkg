@@ -1,0 +1,258 @@
+diff --git a/contrib/ecalproto/include/ecal/protobuf/ecal_proto_hlp.h b/contrib/ecalproto/include/ecal/protobuf/ecal_proto_hlp.h
+index f36195022..3c3772dc4 100644
+--- a/contrib/ecalproto/include/ecal/protobuf/ecal_proto_hlp.h
++++ b/contrib/ecalproto/include/ecal/protobuf/ecal_proto_hlp.h
+@@ -41,7 +41,7 @@ namespace eCAL
+ {
+ namespace protobuf
+ {
+-  inline std::string CreateCompleteMessageName(const std::string& name_, const std::string& prefix_)
++  inline std::string CreateCompleteMessageName(absl::string_view name_, const std::string& prefix_)
+   {
+     std::string message_name;
+     if (!prefix_.empty())
+@@ -58,7 +58,7 @@ namespace protobuf
+     return element_.substr(0, element_.find('.'));
+   }
+ 
+-  inline bool HasFile(const google::protobuf::FileDescriptorSet& fset_, const std::string& fname_)
++  inline bool HasFile(const google::protobuf::FileDescriptorSet& fset_, absl::string_view fname_)
+   {
+     for (auto findex = 0; findex < fset_.file_size(); ++findex)
+     {
+@@ -140,18 +140,16 @@ namespace protobuf
+ 
+   inline std::string GetProtoMessageTypeName(const google::protobuf::Message& msg_)
+   {
+-    return(std::string("proto:") + msg_.GetTypeName());
++    return(std::string("proto:") + std::string(msg_.GetTypeName()));
+   }
+ 
+   inline std::vector<std::string> GetProtoMessageFieldNames(const std::vector<const google::protobuf::FieldDescriptor*>& fields_)
+   {
+     std::vector<std::string> names_vec;
+-    std::transform(fields_.begin(), fields_.end(), std::back_inserter(names_vec), 
+-      [](const google::protobuf::FieldDescriptor* field) 
++    for (const google::protobuf::FieldDescriptor* field : fields_)
+     {
+-      return field->name();
++      names_vec.emplace_back(field->name());
+     }
+-    );
+     return names_vec;
+   }
+ 
+@@ -162,7 +160,7 @@ namespace protobuf
+     for (int i = 0; i < count; ++i)
+     {
+       auto field = descriptor->field(i);
+-      names_vec.push_back(field->name());
++      names_vec.emplace_back(field->name());
+     }
+     return names_vec;
+   }
+diff --git a/contrib/ecalproto/src/ecal_proto_decoder.cpp b/contrib/ecalproto/src/ecal_proto_decoder.cpp
+index 786ec7885..1e5ad490a 100644
+--- a/contrib/ecalproto/src/ecal_proto_decoder.cpp
++++ b/contrib/ecalproto/src/ecal_proto_decoder.cpp
+@@ -48,11 +48,11 @@ namespace protobuf
+ 
+     if (!is_Array_)
+     {
+-      visitor->ScalarMessageStart({ name_, prefix_, (int)index_, msg_.GetTypeName()}, GetProtoMessageFieldNames(descriptor));
++      visitor->ScalarMessageStart({ name_, prefix_, (int)index_, std::string(msg_.GetTypeName())}, GetProtoMessageFieldNames(descriptor));
+     }
+     else
+     {
+-      visitor->ArrayMessageStart({ name_, prefix_, (int)index_, msg_.GetTypeName()}, GetProtoMessageFieldNames(descriptor));
++      visitor->ArrayMessageStart({ name_, prefix_, (int)index_, std::string(msg_.GetTypeName())}, GetProtoMessageFieldNames(descriptor));
+     }
+ 
+     std::string complete_message_name = CreateCompleteMessageName(name_, prefix_);
+@@ -73,7 +73,7 @@ namespace protobuf
+         {
+           accept_complete_array = visitor->AcceptMessage(child_message_name + "[*]");
+           fsize = ref_ptr->FieldSize(msg_, field);
+-          visitor->ArrayStart({ field->name(), complete_message_name, field->number(), field->type_name() }, field->type(), fsize);
++          visitor->ArrayStart({ std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name()) }, field->type(), fsize);
+         }
+ 
+         const google::protobuf::FieldDescriptor::CppType fdt = field->cpp_type();
+@@ -82,7 +82,7 @@ namespace protobuf
+         case google::protobuf::FieldDescriptor::CPPTYPE_INT32:      // TYPE_INT32, TYPE_SINT32, TYPE_SFIXED32
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) +"]"))
+@@ -94,13 +94,13 @@ namespace protobuf
+           }
+           else
+           {
+-            visitor->ScalarValueIntegral({ field->name(), complete_message_name, field->number(), field->type_name() }, ref_ptr->GetInt32(msg_, field));
++            visitor->ScalarValueIntegral({ std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name()) }, ref_ptr->GetInt32(msg_, field));
+           }
+           break;
+         case google::protobuf::FieldDescriptor::CPPTYPE_UINT32:     // TYPE_UINT32, TYPE_FIXED32
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) + "]"))
+@@ -112,13 +112,13 @@ namespace protobuf
+           }
+           else
+           {
+-            visitor->ScalarValueIntegral({field->name(), complete_message_name, field->number(), field->type_name()}, ref_ptr->GetUInt32(msg_, field));
++            visitor->ScalarValueIntegral({std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name())}, ref_ptr->GetUInt32(msg_, field));
+           }
+           break;
+         case google::protobuf::FieldDescriptor::CPPTYPE_INT64:      // TYPE_INT64, TYPE_SINT64, TYPE_SFIXED64
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) + "]"))
+@@ -130,13 +130,13 @@ namespace protobuf
+           }
+           else
+           {
+-            visitor->ScalarValueIntegral({field->name(), complete_message_name, field->number(), field->type_name() }, ref_ptr->GetInt64(msg_, field));
++            visitor->ScalarValueIntegral({std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name()) }, ref_ptr->GetInt64(msg_, field));
+           }
+           break;
+         case google::protobuf::FieldDescriptor::CPPTYPE_UINT64:     // TYPE_UINT64, TYPE_FIXED64
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) + "]"))
+@@ -148,13 +148,13 @@ namespace protobuf
+           }
+           else
+           {
+-            visitor->ScalarValueIntegral({field->name(), complete_message_name, field->number(), field->type_name() }, ref_ptr->GetUInt64(msg_, field));
++            visitor->ScalarValueIntegral({std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name()) }, ref_ptr->GetUInt64(msg_, field));
+           }
+           break;
+         case google::protobuf::FieldDescriptor::CPPTYPE_FLOAT:      // TYPE_FLOAT
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) + "]"))
+@@ -166,13 +166,13 @@ namespace protobuf
+           }
+           else
+           {
+-            visitor->ScalarValueIntegral({field->name(), complete_message_name, field->number(), field->type_name() }, ref_ptr->GetFloat(msg_, field));
++            visitor->ScalarValueIntegral({std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name()) }, ref_ptr->GetFloat(msg_, field));
+           }
+           break;
+         case google::protobuf::FieldDescriptor::CPPTYPE_DOUBLE:     // TYPE_DOUBLE
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) + "]"))
+@@ -184,13 +184,13 @@ namespace protobuf
+           }
+           else
+           {
+-            visitor->ScalarValueIntegral({field->name(), complete_message_name, field->number(), field->type_name() }, ref_ptr->GetDouble(msg_, field));
++            visitor->ScalarValueIntegral({std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name()) }, ref_ptr->GetDouble(msg_, field));
+           }
+           break;
+         case google::protobuf::FieldDescriptor::CPPTYPE_BOOL:       // TYPE_BOOL
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) + "]"))
+@@ -202,31 +202,31 @@ namespace protobuf
+           }
+           else
+           {
+-            visitor->ScalarValueIntegral({field->name(), complete_message_name, field->number() , field->type_name()}, ref_ptr->GetBool(msg_, field));
++            visitor->ScalarValueIntegral({std::string(field->name()), complete_message_name, field->number() , std::string(field->type_name())}, ref_ptr->GetBool(msg_, field));
+           }
+           break;
+         case google::protobuf::FieldDescriptor::CPPTYPE_ENUM:       // TYPE_ENUM
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) + "]"))
+               {
+                 info.id = fnum;
+-                visitor->ArrayValueEnum(info, ref_ptr->GetRepeatedEnum(msg_, field, fnum)->number(), ref_ptr->GetRepeatedEnum(msg_, field, fnum)->name());
++                visitor->ArrayValueEnum(info, ref_ptr->GetRepeatedEnum(msg_, field, fnum)->number(), std::string(ref_ptr->GetRepeatedEnum(msg_, field, fnum)->name()));
+               }
+             }
+           }
+           else
+           {
+-            visitor->ScalarValueEnum({field->name(), complete_message_name, field->number(), field->type_name() }, ref_ptr->GetEnum(msg_, field)->number(), ref_ptr->GetEnum(msg_, field)->name());
++            visitor->ScalarValueEnum({std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name()) }, ref_ptr->GetEnum(msg_, field)->number(), std::string(ref_ptr->GetEnum(msg_, field)->name()));
+           }
+           break;
+         case google::protobuf::FieldDescriptor::CPPTYPE_STRING:     // TYPE_STRING, TYPE_BYTES
+           if (field->is_repeated())
+           {
+-            MessageInfo info{field->name(), complete_message_name, 0, field->type_name()};
++            MessageInfo info{std::string(field->name()), complete_message_name, 0, std::string(field->type_name())};
+             for (int fnum = 0; fnum < fsize; ++fnum)
+             {
+               if (accept_complete_array || visitor->AcceptMessage(child_message_name + "[" + std::to_string(fnum) + "]"))
+@@ -247,11 +247,11 @@ namespace protobuf
+           {
+             if (field->type() == google::protobuf::FieldDescriptor::TYPE_STRING)
+             {
+-              visitor->ScalarValueString({field->name(), complete_message_name, field->number(), field->type_name()}, ref_ptr->GetString(msg_, field));
++              visitor->ScalarValueString({std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name())}, ref_ptr->GetString(msg_, field));
+             }
+             else // TYPE_BYTES
+             {
+-              visitor->ScalarValueBytes({field->name(), complete_message_name, field->number(), field->type_name() }, ref_ptr->GetString(msg_, field));
++              visitor->ScalarValueBytes({std::string(field->name()), complete_message_name, field->number(), std::string(field->type_name()) }, ref_ptr->GetString(msg_, field));
+             }
+           }
+           break;
+@@ -285,7 +285,7 @@ namespace protobuf
+             msg.GetReflection()->ListFields(msg, &msg_fields);
+ 
+             if (prefix_.find(field->name()) == std::string::npos || !msg_fields.empty())
+-              ProcProtoMsg(msg, field->name(), complete_message_name, false, field->number());
++              ProcProtoMsg(msg, std::string(field->name()), complete_message_name, false, field->number());
+           }
+         }
+         break;
+diff --git a/ecal/core/src/pubsub/ecal_proto_dyn_json_sub.cpp b/ecal/core/src/pubsub/ecal_proto_dyn_json_sub.cpp
+index 0797a0b98..071414fa4 100644
+--- a/ecal/core/src/pubsub/ecal_proto_dyn_json_sub.cpp
++++ b/ecal/core/src/pubsub/ecal_proto_dyn_json_sub.cpp
+@@ -158,7 +158,7 @@ namespace eCAL
+         if (msg_callback)
+         {
+ 
+-          google::protobuf::util::JsonOptions options;
++          google::protobuf::util::JsonPrintOptions options;
+ #if GOOGLE_PROTOBUF_VERSION >= 5026000
+         options.always_print_fields_with_no_presence = true;
+ #else

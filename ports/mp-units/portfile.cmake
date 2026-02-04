@@ -4,9 +4,9 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mpusz/units
+    REPO mpusz/mp-units
     REF "v${VERSION}"
-    SHA512 8db6a1e50d8088907e3cb0b2f849df6b63522598d8f381586e14917a7d5488f14df9d95d3ba9c2da5dde44b62bacf5a7fde75fed39149e6db0bc026961d03533
+    SHA512 949aa8e7382dc91cfc30dc3f3617b10fcd1ff7d30ba70bfe29ddcdad0309c12e08b74d0fe86686cd56579ca6ebbaa20cc5a5dede206dd9a977a6b9759495052d
     PATCHES
       config.patch
 )

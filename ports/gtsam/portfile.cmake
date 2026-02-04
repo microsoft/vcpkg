@@ -3,10 +3,11 @@ vcpkg_from_github(
     REPO borglab/gtsam
     REF ${VERSION}
     SHA512 c0e5de8d86ea8241b49449bd291999ec0d6530bc9943b213e7c650b0ab29894ab53636bd1a0ed82d9d9d148dfc399ebff28e108b060d2d2176b584823bd722cd
-    HEAD_REF develop    
+    HEAD_REF develop
     PATCHES
         build-fixes.patch
         path-fixes.patch
+        eigen3-fixes.patch
 )
 
 vcpkg_cmake_configure(
@@ -21,7 +22,7 @@ vcpkg_cmake_configure(
         -DGTSAM_USE_SYSTEM_METIS=ON
         -DGTSAM_INSTALL_CPPUNITLITE=OFF
         -DGTSAM_BUILD_TYPE_POSTFIXES=OFF
-        -DCMAKE_CXX_STANDARD=11 # Boost v1.84.0 libraries require C++11
+        -DCMAKE_CXX_STANDARD=14 # Boost-math require C++14
 )
 
 vcpkg_cmake_install()

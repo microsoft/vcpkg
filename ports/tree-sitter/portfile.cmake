@@ -1,30 +1,24 @@
-vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO tree-sitter/tree-sitter
-  REF ccd6bf554d922596ce905730d98a77af368bba5c #v0.20.6
-  SHA512 ab7eeecafc9d7d17093e25479903fa8c77a84ce4c3a41d737d49bcf9348ab6cc55cf3d6cce0229781292c2b05342fbf45641e40545ea3fde09e441e02f2cdb83
-  HEAD_REF master
-  PATCHES pkgconfig.patch
-)
-
-# currently not supported upstream
 if(VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}/lib")
-
-vcpkg_cmake_configure(
-  SOURCE_PATH "${SOURCE_PATH}/lib"
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO tree-sitter/tree-sitter
+    REF "v${VERSION}"
+    SHA512 c8ffa86caf5841208dd2c987c6437111c7514635ebc76e910deb38ba64252caa99ae8453f1acd8af8e167cc2c7fe7194d481cd53533802601b331c60d20f2a49
+    HEAD_REF master
+    PATCHES
+        unofficial-cmake.diff
 )
 
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+)
 vcpkg_cmake_install()
-
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-tree-sitter")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_fixup_pkgconfig()
-
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

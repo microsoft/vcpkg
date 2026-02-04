@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d0e35b6..6633a9e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -232,9 +232,9 @@ endif(CCTAG_WITH_CUDA)
+ find_package(OpenCV REQUIRED core videoio imgproc imgcodecs)
+ 
+ # FIND Eigen
+-set(CCTAG_EIGEN_REQUIRED_VERSION 3.3.4)
++set(CCTAG_EIGEN_REQUIRED_VERSION 3.3.4...5)
+ if(MSVC AND CCTAG_WITH_CUDA)
+-  set(CCTAG_EIGEN_REQUIRED_VERSION 3.3.9)
++  set(CCTAG_EIGEN_REQUIRED_VERSION 3.3.9...5)
+   message(WARNING "Building CCTag with Cuda support under windows requires Eigen >= ${CCTAG_EIGEN_REQUIRED_VERSION}")
+ endif()
+ find_package(Eigen3 ${CCTAG_EIGEN_REQUIRED_VERSION} REQUIRED)

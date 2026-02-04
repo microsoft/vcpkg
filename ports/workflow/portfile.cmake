@@ -2,8 +2,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
-        REF "v${VERSION}-win"
-        SHA512 c34518ca35f19ab5539ea82cc73ecbc9828413530cec8dbbe56b17517ec6b7b0326a29e5b343b950afe128829c8e23e75d19494e17f7be4fce9edb524c44ee56
+        REF "v0.11.8-win"
+        SHA512 4d33904742c41b9cc5efb38a0950dd1f1ef5a0aacab1d3c1fda899244af5b63e734c74dcb5a231623518880b90fa1db5280bf03c4186e94d293fcd2ad6286929
         HEAD_REF windows
     )
 else()
@@ -11,7 +11,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO sogou/workflow
         REF "v${VERSION}"
-        SHA512 25258e9dc161c5b30395caa3525a4ba5de5763cad5761cbdc8bb23d2468eb624ec49455a5c9ab628c219d7436f707da0138229c5fa82bcfccc24a485649acb56
+        SHA512 78996029efd23ca7843f4089d801729174bf8e6bcb1babbe6f557db0c0b4094069dce38328332ddcddffec6710e77cfd03110264d0c670b8cd42b23dda5061ed
         HEAD_REF master
     )
 endif()
@@ -35,4 +35,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version": "6.7.3",
+  "version": "6.10.0",
   "description": "A cross-platform application and UI framework.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -29,7 +29,14 @@
         "textcodec"
       ]
     },
-    "qtapplicationmanager",
+    {
+      "name": "qtapplicationmanager",
+      "features": [
+        "installer",
+        "package-server"
+      ],
+      "platform": "android | ios | linux | osx | qnx | (windows & !uwp & (arm64 | x64))"
+    },
     {
       "name": "qtbase",
       "default-features": false
@@ -86,7 +93,10 @@
       "name": "qtmultimedia",
       "default-features": false,
       "features": [
-        "gstreamer"
+        {
+          "name": "gstreamer",
+          "platform": "linux"
+        }
       ],
       "platform": "!windows"
     },
@@ -159,13 +169,17 @@
     },
     {
       "name": "qtwebengine",
+      "default-features": false
+    },
+    {
+      "name": "qtwebengine",
       "default-features": false,
       "features": [
         "geolocation",
         "spellchecker",
         "webchannel"
       ],
-      "platform": "!static & !(windows & arm)"
+      "platform": "(linux | osx | (windows & x64)) & !static"
     },
     {
       "name": "qtwebsockets",
@@ -176,7 +190,8 @@
     },
     {
       "name": "qtwebview",
-      "default-features": false
+      "default-features": false,
+      "platform": "x64 | arm64"
     },
     {
       "name": "qtwebview",
@@ -200,6 +215,13 @@
             "qml"
           ],
           "platform": "windows"
+        },
+        {
+          "name": "qtquick3d",
+          "features": [
+            "openxr"
+          ],
+          "platform": "!uwp"
         },
         {
           "name": "qtwayland",

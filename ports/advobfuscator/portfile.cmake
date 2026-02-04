@@ -1,14 +1,21 @@
-# Download the code from GitHub
 vcpkg_from_github(
-  OUT_SOURCE_PATH SOURCE_PATH
-  REPO andrivet/ADVobfuscator
-  REF 1852a0eb75b03ab3139af7f938dfb617c292c600
-  SHA512 1bca72b21a3cbf9d8db21fb21d112dd4ca83cac695abfb8fc3d8065245a0cc84cb9e41eb9ff81481e8e0a9d214ff6f5c9aec5d1ba8a9d4387b08dd895ecf1cd5
-  HEAD_REF master
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO andrivet/ADVobfuscator
+    REF "v${VERSION}"
+    SHA512 da8396304e45be018e878ef09e063f4f21383d0093973eaa5abaf5c6f0e391cb69b5d71b0c08cd88c732cf038d0395e876e5933f1e1cd369e6b4ac9df0139814
+    HEAD_REF main
 )
 
-# Install the header only source files to the right location
-file(INSTALL ${SOURCE_PATH}/Lib DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS 
+        -DBUILD_TESTING=OFF
+        -DBUILD_EXAMPLES=OFF
+)
 
-# The README.md conains the LICENSE details
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

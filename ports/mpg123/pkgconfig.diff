@@ -1,0 +1,14 @@
+diff --git a/ports/cmake/src/libsyn123/CMakeLists.txt b/ports/cmake/src/libsyn123/CMakeLists.txt
+index 22051ab..70d5be3 100644
+--- a/ports/cmake/src/libsyn123/CMakeLists.txt
++++ b/ports/cmake/src/libsyn123/CMakeLists.txt
+@@ -22,6 +22,9 @@ target_include_directories(${TARGET} INTERFACE
+ if(HAVE_M)
+     string(APPEND LIBSYN123_LIBS " -lm")
+ endif()
++if(WANT_WIN32_UNICODE)
++    string(APPEND LIBSYN123_LIBS " -lshlwapi")
++endif()
+ set(LIBSYN123_LIBS "${LIBSYN123_LIBS}" PARENT_SCOPE)
+ target_link_libraries(${TARGET} PRIVATE
+     $<$<BOOL:${HAVE_M}>:m>)

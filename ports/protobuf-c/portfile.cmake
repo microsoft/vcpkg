@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protobuf-c/protobuf-c
     REF v${VERSION}
-    SHA512 4c540ca58b65e59aaf7149124d915f106e91fc79d60c6ef80b62faf288843250375e13f8773fd24f2ff27485dc2d2e597f0a95e39c186a30069eb470abd28ae7
+    SHA512 c95ec5fa4d3531fb83c9db95968e62a60c5e16cb10fb390067eca35ccb9e0c65c1e667bbdc9b7aa3b8f6cf012b09a189d6833534d2a28e390f01ae0d12052a47
     HEAD_REF master
     PATCHES
         fix-crt-linkage.patch

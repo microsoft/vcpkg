@@ -1,6 +1,6 @@
 {
   "name": "libopenmpt",
-  "version": "0.7.10",
+  "version": "0.7.13",
   "description": "A cross-platform C++ and C library to decode tracked music files (modules) into a raw PCM audio stream.",
   "homepage": "https://openmpt.org/",
   "license": "BSD-3-Clause",

@@ -2,10 +2,13 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
   REF "v${VERSION}"
-  SHA512 025fed24e4edf1043943d300e737f3a0fbf95edafc76a36806e8f13af95b6aa4971a277420922e6a0687a976328fac1db90e7cb5b3d4b741c2b156276cffdcbd
+  SHA512 73751e946e47deec7c3df8b77a22ddadb51434474ca0587c1deab36cb4ddfe00736f6402b747508debd36db0727989bc72330f96b3f1a54f09dcc72ecc03e83f
   HEAD_REF main
   PATCHES
     0001-fix-dependencies.patch
+    0002-fix-android.patch
+    # TODO: This patch should be deleted after following PR will be merged. https://github.com/facebook/rocksdb/pull/13573
+    0003-include_cstdint.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)

@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-tdlib",
+  "version-string": "ci",
+  "description": "Validates tdlib",
+  "dependencies": [
+    "tdlib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

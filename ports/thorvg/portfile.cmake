@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
     REF "v${VERSION}"
-    SHA512 1f92ac37d537399cc0792f36d92c6ddfd0c0c036072f1058d8805690f5eaf2f3d7b02e6b35eacf3e3db607e321ccae30defc0f69d9775cfcd55259d7a22e6820
+    SHA512 40f13106f4baa4553c7e696479738b94c316c237717871b45c2f6250f00793ae3f16fe769fd3ece1ee80f66b1a8bd1ab0cc58bc2db39673b3572ce45143f1240
     HEAD_REF master
 )
 
@@ -27,7 +27,6 @@ vcpkg_configure_meson(
         -Dsimd=false # The reason for setting 'Dsimd=false' was that the creator said a false setting was necessary
         -Dbindings=capi
         -Dtests=false
-        -Dexamples=false
         -Dstrip=false
         -Dextra=['']
     OPTIONS_DEBUG
@@ -40,10 +39,9 @@ vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES svg2tvg svg2png lottie2gif AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES tvg-svg2png tvg-lottie2gif AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

@@ -26,17 +26,20 @@ endif()
 
 file(GLOB BASIC_USAGE_ENVIRONMENT_SRCS BasicUsageEnvironment/*.c BasicUsageEnvironment/*.cpp)
 add_library(BasicUsageEnvironment ${BASIC_USAGE_ENVIRONMENT_SRCS})
+target_include_directories(BasicUsageEnvironment PUBLIC $<INSTALL_INTERFACE:include>)
 
 file(GLOB GROUPSOCK_SRCS groupsock/*.c groupsock/*.cpp)
 add_library(groupsock ${GROUPSOCK_SRCS})
+target_include_directories(groupsock PUBLIC $<INSTALL_INTERFACE:include>)
 
 file(GLOB LIVEMEDIA_SRCS liveMedia/*.c liveMedia/*.cpp)
 add_library(liveMedia ${LIVEMEDIA_SRCS})
 find_package(OpenSSL REQUIRED)
-target_include_directories(liveMedia PRIVATE "${OPENSSL_INCLUDE_DIR}")
+target_include_directories(liveMedia PRIVATE "${OPENSSL_INCLUDE_DIR}" PUBLIC $<INSTALL_INTERFACE:include>)
 
 file(GLOB USAGE_ENVIRONMENT_SRCS UsageEnvironment/*.c UsageEnvironment/*.cpp)
 add_library(UsageEnvironment ${USAGE_ENVIRONMENT_SRCS})
+target_include_directories(UsageEnvironment PUBLIC $<INSTALL_INTERFACE:include>)
 
 file(WRITE "${CMAKE_BINARY_DIR}/unofficial-live555-config.cmake"
 [[

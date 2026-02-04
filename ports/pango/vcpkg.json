@@ -1,6 +1,6 @@
 {
   "name": "pango",
-  "version": "1.54.0",
+  "version": "1.57.0",
   "description": "Text and font handling library.",
   "homepage": "https://ftp.gnome.org/pub/GNOME/sources/pango/",
   "license": "LGPL-2.0-or-later",
@@ -15,7 +15,15 @@
     "fontconfig",
     "freetype",
     "fribidi",
-    "gettext",
+    {
+      "name": "gettext",
+      "host": true,
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    "gettext-libintl",
     "glib",
     {
       "name": "glib",
@@ -36,10 +44,13 @@
   ],
   "features": {
     "introspection": {
-      "description": "build with introspection",
+      "description": "Build with introspection",
+      "supports": "!static",
       "dependencies": [
+        "gobject-introspection",
         {
           "name": "harfbuzz",
+          "default-features": false,
           "features": [
             "introspection"
           ]

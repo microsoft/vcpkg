@@ -1,6 +1,6 @@
 {
   "name": "rsig",
-  "version-semver": "0.1.1",
+  "version-semver": "0.2.0",
   "description": "rioki's signal library",
   "homepage": "https://github.com/rioki/rsig",
   "license": "MIT"

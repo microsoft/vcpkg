@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
     REF "vulkan-sdk-${VERSION}"
-    SHA512 62f0a6034bd016aedfb8975bbd3bb134ef928bd6bafbb61d9f73c46760019597b9841b80243c86e5e5e0576824cd20255067e447590eb0d2d51593439152215e
+    SHA512 57c394422d73655559a9a9ba72d96cf376269547824a827023b9626fa8d63ab8df7bb1391dbc56d2b566decde592717d525c68633791105f8b82ed70624f241f
     PATCHES
         cmake-config-dir.diff
         spirv-tools-shared.diff
@@ -43,10 +43,7 @@ if("tools" IN_LIST FEATURES)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/spirv-lesspipe.sh" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/spirv-lesspipe.sh")
     file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/spirv-lesspipe.sh")
-    set(tools spirv-as spirv-cfg spirv-dis spirv-link spirv-lint spirv-opt spirv-val)
-    if(NOT VCPKG_TARGET_IS_IOS)
-        list(APPEND tools spirv-reduce)
-    endif()
+    set(tools spirv-as spirv-cfg spirv-diff spirv-dis spirv-link spirv-lint spirv-objdump spirv-opt spirv-reduce spirv-val)
     vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 endif()
 

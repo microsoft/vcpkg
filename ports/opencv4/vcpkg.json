@@ -1,11 +1,16 @@
 {
   "name": "opencv4",
-  "version": "4.8.0",
-  "port-version": 22,
-  "description": "computer vision library",
-  "homepage": "https://github.com/opencv/opencv",
-  "license": "Apache-2.0",
+  "version": "4.12.0",
+  "port-version": 1,
+  "description": "Open Source Computer Vision Library",
+  "homepage": "https://opencv.org/",
+  "documentation": "https://docs.opencv.org/4.12.0/",
+  "license": null,
   "dependencies": [
+    {
+      "name": "cpu-features",
+      "platform": "android"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -21,7 +26,41 @@
     "zlib"
   ],
   "default-features": [
-    "default-features"
+    "calib3d",
+    {
+      "name": "directml",
+      "platform": "windows & !uwp & !mingw"
+    },
+    "dnn",
+    {
+      "name": "dshow",
+      "platform": "windows & !uwp"
+    },
+    "fs",
+    {
+      "name": "gapi",
+      "platform": "!uwp"
+    },
+    {
+      "name": "gtk",
+      "platform": "linux"
+    },
+    "highgui",
+    "intrinsics",
+    "jpeg",
+    {
+      "name": "msmf",
+      "platform": "windows & !uwp & !mingw"
+    },
+    "png",
+    "quirc",
+    "thread",
+    "tiff",
+    "webp",
+    {
+      "name": "win32ui",
+      "platform": "windows & !uwp"
+    }
   ],
   "features": {
     "ade": {
@@ -30,16 +69,30 @@
         "ade"
       ]
     },
+    "aravis": {
+      "description": "aravis",
+      "dependencies": [
+        {
+          "name": "aravis",
+          "default-features": false
+        }
+      ]
+    },
+    "calib3d": {
+      "description": "calib3d module"
+    },
+    "carotene": {
+      "description": "carotene module"
+    },
     "contrib": {
       "description": "opencv_contrib module",
       "dependencies": [
         {
-          "name": "hdf5",
-          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
-        },
-        {
-          "name": "tesseract",
-          "platform": "!uwp & !(windows & (arm | arm64)) & !ios"
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "calib3d"
+          ]
         }
       ]
     },
@@ -75,30 +128,9 @@
         "libdc1394"
       ]
     },
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "dnn",
-            "jpeg",
-            "png",
-            "quirc",
-            "tiff",
-            "webp"
-          ]
-        },
-        {
-          "name": "opencv4",
-          "default-features": false,
-          "features": [
-            "gtk"
-          ],
-          "platform": "linux"
-        }
-      ]
+    "directml": {
+      "description": "Build with DirectML support",
+      "supports": "windows & !uwp & !mingw"
     },
     "dnn": {
       "description": "Enable dnn module",
@@ -108,6 +140,14 @@
           "name": "flatbuffers",
           "host": true,
           "default-features": false
+        },
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "intrinsics"
+          ],
+          "platform": "arm64"
         },
         "protobuf"
       ]
@@ -124,6 +164,10 @@
           ]
         }
       ]
+    },
+    "dshow": {
+      "description": "Enable DirectShow",
+      "supports": "windows & !uwp"
     },
     "eigen": {
       "description": "Eigen support for opencv",
@@ -158,6 +202,13 @@
           "default-features": false
         }
       ]
+    },
+    "fs": {
+      "description": "Enable filesystem support"
+    },
+    "gapi": {
+      "description": "Enable gapi module",
+      "supports": "!uwp"
     },
     "gdcm": {
       "description": "GDCM support for opencv",
@@ -203,14 +254,28 @@
         }
       ]
     },
-    "ipp": {
-      "description": "Enable Intel Integrated Performance Primitives"
-    },
-    "jasper": {
-      "description": "JPEG 2000 support for opencv (deprecated)",
+    "hdf": {
+      "description": "Enable Hierarchical Data Format (hdf) I/O",
       "dependencies": [
-        "jasper"
+        "hdf5",
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        }
       ]
+    },
+    "highgui": {
+      "description": "highgui module"
+    },
+    "intrinsics": {
+      "description": "Enable intrinsics"
+    },
+    "ipp": {
+      "description": "Enable Intel Integrated Performance Primitives",
+      "supports": "(osx & x64) | (windows & (x64 | x86)) | (linux & (x64 | x86))"
     },
     "jpeg": {
       "description": "JPEG support for opencv",
@@ -218,15 +283,24 @@
         "libjpeg-turbo"
       ]
     },
-    "lapack": {
-      "description": "LAPACK support for opencv",
+    "jpegxl": {
+      "description": "JPEGXL support for opencv",
       "dependencies": [
-        "blas",
-        "lapack"
+        "libjxl"
       ]
+    },
+    "msmf": {
+      "description": "Microsoft Media Foundation support for opencv",
+      "supports": "windows & !uwp & !mingw"
     },
     "nonfree": {
       "description": "allow nonfree and unredistributable libraries"
+    },
+    "opencl": {
+      "description": "Enable opencl support",
+      "dependencies": [
+        "opencl"
+      ]
     },
     "openexr": {
       "description": "OpenEXR support for opencv",
@@ -236,6 +310,7 @@
     },
     "opengl": {
       "description": "opengl support for opencv",
+      "supports": "!osx",
       "dependencies": [
         "opengl"
       ]
@@ -247,7 +322,8 @@
       ]
     },
     "openmp": {
-      "description": "Enable openmp support for opencv"
+      "description": "Enable OpenMP support",
+      "supports": "!osx"
     },
     "openvino": {
       "description": "OpenVINO support for OpenCV DNN",
@@ -281,6 +357,7 @@
     },
     "ovis": {
       "description": "opencv_ovis module",
+      "supports": "!(windows & static)",
       "dependencies": [
         "ogre",
         {
@@ -301,7 +378,13 @@
     "python": {
       "description": "Python wrapper support for opencv",
       "dependencies": [
-        "python3"
+        {
+          "name": "python3",
+          "default-features": false,
+          "features": [
+            "extensions"
+          ]
+        }
       ]
     },
     "qt": {
@@ -320,10 +403,35 @@
         }
       ]
     },
+    "quality": {
+      "description": "Build opencv_quality module",
+      "supports": "!uwp",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        }
+      ]
+    },
     "quirc": {
       "description": "Enable QR code module",
       "dependencies": [
         "quirc"
+      ]
+    },
+    "rgbd": {
+      "description": "Build opencv_rgbd module",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        }
       ]
     },
     "sfm": {
@@ -350,9 +458,26 @@
     },
     "tbb": {
       "description": "Enable Intel Threading Building Blocks",
+      "supports": "!static",
       "dependencies": [
         "tbb"
       ]
+    },
+    "text": {
+      "description": "Enable Scene Text Detection and Recognition",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "contrib"
+          ]
+        },
+        "tesseract"
+      ]
+    },
+    "thread": {
+      "description": "Enable thread support"
     },
     "tiff": {
       "description": "TIFF support for opencv",
@@ -387,7 +512,8 @@
           "features": [
             "dnn"
           ]
-        }
+        },
+        "vulkan-headers"
       ]
     },
     "webp": {
@@ -395,6 +521,10 @@
       "dependencies": [
         "libwebp"
       ]
+    },
+    "win32ui": {
+      "description": "Enable win32ui",
+      "supports": "windows & !uwp"
     },
     "world": {
       "description": "Compile to a single package support for opencv"

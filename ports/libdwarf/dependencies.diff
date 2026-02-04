@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c53fda5..a6dabe6 100644
+index 133523b4..0c754c6d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -186,7 +186,7 @@ endif()
- if (ENABLE_DECOMPRESSION)
+@@ -188,7 +188,7 @@ if (ENABLE_DECOMPRESSION)
+   #message(STATUS "In ENABLE_DECOMPRESSION setup: TRUE")
    # Zlib and ZSTD need to be found otherwise disable it
    if(NOT TARGET ZLIB::ZLIB)
 -    find_package(ZLIB)
@@ -11,12 +11,12 @@ index c53fda5..a6dabe6 100644
    else()
      # Presumably in this case, the target has been found externally but set this flag just in case
      set(ZLIB_FOUND TRUE)
-@@ -201,7 +201,7 @@ if (ENABLE_DECOMPRESSION)
+@@ -203,7 +203,7 @@ if (ENABLE_DECOMPRESSION)
        TARGET ZSTD::ZSTD
      )
    )
 -    find_package(zstd)
-+    find_package(zstd CONFIG REQUIRED)
++  find_package(zstd CONFIG REQUIRED)
    else()
      # Presumably in this case, the target has been found externally but set this flag just in case
      set(zstd_FOUND TRUE)

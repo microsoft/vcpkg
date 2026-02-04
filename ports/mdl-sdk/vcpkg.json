@@ -1,24 +1,19 @@
 {
   "name": "mdl-sdk",
-  "version": "2021.1.2",
-  "port-version": 5,
+  "version": "2025.0.3",
+  "port-version": 1,
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
   "license": "BSD-3-Clause",
-  "supports": "!arm & !x86 & !staticcrt",
+  "supports": "!x86 & !(windows & (arm | uwp)) & !(osx & arm) & !android",
   "dependencies": [
     "boost-algorithm",
-    "boost-any",
-    "boost-bind",
     "boost-core",
-    "boost-function",
+    "boost-dynamic-bitset",
     "boost-functional",
-    "boost-smart-ptr",
+    "boost-intrusive",
     "boost-tokenizer",
     "boost-unordered",
-    "boost-uuid",
-    "freeimage",
-    "opengl",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -32,10 +27,26 @@
     "dds": {
       "description": "Build image plugin for DDS"
     },
-    "freeimage": {
-      "description": "Build image plugin for various image formats using Freeimage",
+    "df-vulkan": {
+      "description": "Build the MDL SDK df_vulkan example",
       "dependencies": [
-        "freeimage"
+        "glfw3",
+        "glslang",
+        "volk",
+        "vulkan-validationlayers"
+      ]
+    },
+    "openimageio": {
+      "description": "Build image plugin for various image formats using OpenImageIO",
+      "dependencies": [
+        {
+          "name": "openimageio",
+          "features": [
+            "gif",
+            "openjpeg",
+            "webp"
+          ]
+        }
       ]
     }
   }

@@ -30,7 +30,7 @@
       "features": [
         "dawn"
       ],
-      "platform": "linux | (windows & !uwp)"
+      "platform": "!android & !uwp"
     },
     {
       "name": "skia",

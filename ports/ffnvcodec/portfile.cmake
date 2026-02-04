@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FFmpeg/nv-codec-headers
     REF "n${VERSION}"
-    SHA512 dd2f1c7ff54890016ab17500449620cdf3690aa1d34dec78f1b27bdc0d51ec1335a66fda5942ddb43e1a1310de95874aef5232a1e676c21882fae08472d17808
+    SHA512 103381914daf92ae11a409b2c9d0a9036bd40e3f7f244fa05202ed19c863f0630818c72e09e829b336754d727672b75d2789978a5875b355c3bc107fa9ca3ec6
     HEAD_REF master
 )
 
@@ -11,7 +11,7 @@ vcpkg_from_github(
 # ====================================================
 
 # Windows
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_HOST_IS_WINDOWS)
     set(BUILD_SCRIPT ${CMAKE_CURRENT_LIST_DIR}\\build.sh)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make pkg-config)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
@@ -28,8 +28,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}
         LOGNAME build-${TARGET_TRIPLET}
     )
-    
-    file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+
+    if(NOT VCPKG_BUILD_TYPE)
+      file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    endif()
 
 # Linux, etc.
 else()
@@ -47,11 +49,13 @@ else()
     # FFmpeg uses pkgconfig to find ffnvcodec.pc, so install it where 
     # FFMpeg's call to pkgconfig expects to find it.
     file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-    file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    if(NOT VCPKG_BUILD_TYPE)
+      file(INSTALL "${SOURCE_PATH}/ffnvcodec.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+    endif()
 endif()
 
 vcpkg_fixup_pkgconfig()
 
 # Install the files to their default vcpkg locations
 file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
-file(INSTALL "${CURRENT_PORT_DIR}/copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${CURRENT_PORT_DIR}/copyright")

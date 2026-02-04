@@ -2,14 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeGLUTProject/freeglut
     REF "v${VERSION}"
-    SHA512 4bb6d6c086bac7a9c0ec78062dce58987555785abe6375f462ee249f65210a964a28fb10ba7ee8a42d7fafb00eb8d196eb403d65d255f02f88467369c187228b
+    SHA512 5e891e838a11ffbd5c2aea1f39004be6a0ccc1da11d661a37302c316734e0986ed86622f174ae91f40572ce9d0fbe9c43e0976ee8636f2de25aa8e1ecf256785
     HEAD_REF master
     PATCHES
         android.patch
-        gles.patch # amends https://github.com/freeglut/freeglut/commit/093a5a46
         x11-dependencies-export.patch
         fix-debug-macro.patch
-        no_x64_enforcement.patch
         windows-output-name.patch
 )
 
@@ -61,8 +59,9 @@ endif()
 
 # Clean
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/glut")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

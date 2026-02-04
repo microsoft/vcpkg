@@ -1,6 +1,7 @@
 {
   "name": "vcpkg-ci-openimageio",
   "version-string": "ci",
+  "port-version": 1,
   "description": "OpenImageIO testing within CI.",
   "license": "MIT",
   "dependencies": [
@@ -27,15 +28,17 @@
             "ffmpeg",
             "freetype",
             "gif",
+            "libheif",
             "libraw",
             "opencolorio",
             "opencv",
             "openjpeg",
             {
               "name": "pybind11",
-              "platform": "!(windows & static)"
+              "platform": "!(windows & static) & !uwp & !mingw"
             },
             "tools",
+            "viewer",
             "webp"
           ]
         }

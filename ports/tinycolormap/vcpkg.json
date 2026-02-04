@@ -1,0 +1,17 @@
+{
+  "name": "tinycolormap",
+  "version": "0.8.0",
+  "description": "A header-only, single-file library for colormaps written in C++11.",
+  "homepage": "https://github.com/yuki-koyama/tinycolormap",
+  "license": "MIT AND Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

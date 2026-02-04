@@ -1,7 +1,6 @@
 {
   "name": "wayland-protocols",
-  "version": "1.31",
-  "port-version": 1,
+  "version": "1.43",
   "description": "wayland-protocols contains Wayland protocols that add functionality not available in the Wayland core protocol.",
   "homepage": "https://wayland.freedesktop.org",
   "license": "MIT",
@@ -16,7 +15,18 @@
       ],
       "dependencies": [
         {
+          "name": "vcpkg-tool-meson",
+          "host": true
+        },
+        {
           "name": "wayland",
+          "features": [
+            "force-build"
+          ]
+        },
+        {
+          "name": "wayland",
+          "host": true,
           "features": [
             "force-build"
           ]

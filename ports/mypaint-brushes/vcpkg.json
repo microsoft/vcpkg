@@ -1,0 +1,13 @@
+{
+  "name": "mypaint-brushes",
+  "version": "2.0.2",
+  "description": "Data package. Brushes used by MyPaint and other software using libmypaint.",
+  "homepage": "https://github.com/mypaint/mypaint-brushes",
+  "license": "CC0-1.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

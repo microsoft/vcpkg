@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 108f3c3..e8973a2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,6 +24,7 @@ cpp_library_set_version()
+ # Create the main library target first
+ add_library(stlab)
+ add_library(stlab::stlab ALIAS stlab)
++target_compile_features(stlab PRIVATE cxx_std_20)
+ 
+ ########################################################
+ 

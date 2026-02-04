@@ -2,16 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO anrieff/libcpuid
     REF "v${VERSION}"
-    SHA512 855dab45ec12b817fb18948442cebc22abaf915a7230e3d1a3f0e2fc7d0e3fe4a39e7c5744be1f4c7e3cb7b082012e6b0b0677a967beba5d404c6c48467eedce
+    SHA512 6b642418bef40848fa0b61a6798c90121e1d31dceee815946bde621e01f50a8353d4cd22bce864af080e4342e036bab9bfe1f61f99083620885f9e252ce11895
     HEAD_REF master
     PATCHES
         fix-build.patch
+        fix-LNK2019.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DENABLE_DOCS=OFF
+        -DLIBCPUID_ENABLE_DOCS=OFF
 )
 
 vcpkg_cmake_install()

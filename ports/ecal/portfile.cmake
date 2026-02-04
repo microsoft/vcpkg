@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-ecal/ecal
-    REF v${VERSION}
-    SHA512 fde579c21ef31f5cd7902129d5d00717ddab1105d58cc5b352c374c14cbd2f61297a788d3ac5fa548946035b1759130857561f830a36e546e2a6ca88dbf63854 
+    REF "v${VERSION}"
+    SHA512 ae34bfc4aa021ab049758373dbac90dfcee34e92f94590813797d88b854420f9e4419f35fbd0db41c7b8aedbfcd24e46dd385f3017a7e0c1a04ee6863c4f948a 
     HEAD_REF master
     PATCHES
         0001-disable-app-plugins.patch
@@ -17,6 +17,7 @@ vcpkg_from_github(
         0006-use-find_dependency-in-cmake-config.patch
         0007-allow-static-build-of-core.patch
         0008-protobuf-linkage.patch
+        0009-protobuf-6.patch
 )
 
 vcpkg_cmake_configure(
@@ -67,9 +68,9 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # global ini files not strictly required
 if (VCPKG_TARGET_IS_WINDOWS)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cfg" "${CURRENT_PACKAGES_DIR}/debug/cfg")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/cfg" "${CURRENT_PACKAGES_DIR}/debug/cfg")
 else()
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc" "${CURRENT_PACKAGES_DIR}/debug/etc")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/etc" "${CURRENT_PACKAGES_DIR}/debug/etc")
 endif()
 
 # Install copyright and usage

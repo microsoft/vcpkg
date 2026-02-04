@@ -1,0 +1,44 @@
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index b276769..548a306 100644
+--- a/CMakeFilters.cmake
++++ b/CMakeFilters.cmake
+@@ -161,7 +161,7 @@ if (HDF5_ENABLE_ZLIB_SUPPORT)
+         endif ()
+         set (H5_ZLIB_INCLUDE_DIR_GEN ${ZLIB_INCLUDE_DIR})
+         set (H5_ZLIB_INCLUDE_DIRS ${H5_ZLIB_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIR})
+-        if (NOT WIN32) #windows has a list of names
++        if (0)
+           # The FindZLIB.cmake module does not set an OUTPUT_NAME
+           # on the target. The target returned is: ZLIB::ZLIB
+           get_filename_component (libname ${ZLIB_LIBRARIES} NAME_WLE)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index bbdf92a..c36d5c2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1450,9 +1450,26 @@ foreach (lib ${LINK_LIBS})
+   endif ()
+ endforeach ()
+ 
++if(UNIX AND H5_HAVE_PARALLEL)
++    foreach(_lib IN LISTS ${MPI_C_LIBRARIES})
++        string(REPLACE " -l${_lib} " " " _PKG_CONFIG_LIBS_PRIVATE " ${_PKG_CONFIG_LIBS_PRIVATE} ")
++    endforeach()
++    string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " ompi-c")
++endif()
++
+ # The settings for the compression libs depends on if they have pkconfig support
+ # Assuming they don't
+ foreach (libs ${LINK_COMP_LIBS})
++  if(libs STREQUAL ZLIB::ZLIB)
++    string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " zlib")
++    continue()
++  elseif(libs STREQUAL "libaec::sz")
++    string(APPEND _PKG_CONFIG_LIBS_PRIVATE " ${libaec_LIBRARY}")
++    continue()
++  elseif(libs STREQUAL "libaec::aec")
++    string(APPEND _PKG_CONFIG_LIBS_PRIVATE " ${SZIP_LIBRARY}")
++    continue()
++  endif()
+   get_target_property (libname ${libs} OUTPUT_NAME)
+   set (_PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE} -l${libname}")
+ endforeach ()

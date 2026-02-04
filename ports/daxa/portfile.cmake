@@ -2,10 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ipotrick/Daxa
     REF ${VERSION}
-    SHA512 53e31bd89170ee18f404ae778c6fd0d5a1cefa2faf9f28e98d793c79dddeb03acda5525c98b875e45024de5db9c5e9cd9216042978c3a107587fefb6343db1e0
+    SHA512 2cdb653be68e9c70fd023d1d3c450830b9fb9fcd3d7257e85715390f422501ae17633b01fdc1b9da7b9563ace1c4b524f8b69e5a24636b387b7960b52906ed94
     HEAD_REF master
     PATCHES
-        fix-std-sort.patch #https://github.com/Ipotrick/Daxa/pull/96
+        daxa_swp_current_cpu_timeline_value.patch # fix std::max(long long int, long int), as int64_t is long int on some platforms
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

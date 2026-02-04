@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/odeint
     REF boost-${VERSION}
-    SHA512 7e15d0eb8566a35e2d9968c779750a9135d43d9a3523789d9c2ba977c4d1dac1afbc3c62fb2d1efc8ab60d4b58f0b6c07fa03719d62acee76a7376726ecf26c6
+    SHA512 b773aa434c2a055395460a510fde346fff35d28ce3985b15d60478ab98ea10f08845e502c7b7d2fb14aef31efb310cd35327f8eedd938c20c20fa5e53d9547ff
     HEAD_REF master
     PATCHES
         opt-mpi.diff

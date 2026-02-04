@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DNKpp/mimicpp
     REF "v${VERSION}"
-    SHA512 a1c9496c28ad7940a91e6491d9a5992533c72fe3dcd19a3397ae40bc0de363bc796db1168a3caf66c8fc6718a100ab83cb0458e2b68e564efd2cf146db45b221
+    SHA512 823d8b00b48fb42c358888583e3c841eac1f0c6cb1775ecfe1e1cf009b3361406b4af329e356a4ff686e07311486a0738509c620ceb2ec6641937d32455f6560
     HEAD_REF main
 )
 
@@ -19,7 +19,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/mimipp/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH cmake/mimicpp)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 

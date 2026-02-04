@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/libgeotiff
     REF  ${VERSION}
-    SHA512 4cbe221ae72e1ebe8e0cf7036c2bca019633f82cab125dd5b78e524e80d2c05cbfced89f5dc35c7d6d8d1253cc0aaad751150353f773813a037d53ddaa3427f7
+    SHA512 03468e8eeaf97d82798bf341cf2e27753eb47af985fb08fc6176be799bd0e1e879c6d1701577f7568f269cbef0bb0a20ae460bb943f847daf49aa54601441683
     HEAD_REF master
     PATCHES
         cmakelists.patch

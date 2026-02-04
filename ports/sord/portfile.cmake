@@ -2,24 +2,19 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO drobilla/sord
-    REF v0.16.4
-    SHA512 cad8f8fd07afb5075938fce247d95f9d666f61f4d913ff0c3fde335384177de066a5c0f2620c76e098178aeded0412b3e76ef63a1ae65aba7eb99e3e8ce15896
+    REF "v${VERSION}"
+    SHA512 dec91f193ae6e97453cf6a33fab396eebb4f68014c57c150813f1b93e61157ba32f13ac00e026186639a9c4f7fdfbd58e9e5353f8cee14c0dbe3d19cdde7c22e
     HEAD_REF master
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
-vcpkg_cmake_configure(
+vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=1
 )
 
-vcpkg_cmake_install()
+vcpkg_install_meson()
 
 vcpkg_copy_pdbs()
-vcpkg_cmake_config_fixup()
-file(
-    INSTALL "${SOURCE_PATH}/COPYING"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+vcpkg_copy_tools(TOOL_NAMES sordi sord_validate AUTO_CLEAN)
+vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

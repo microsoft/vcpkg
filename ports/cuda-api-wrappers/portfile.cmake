@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eyalroz/cuda-api-wrappers
     REF "v${VERSION}"
-    SHA512 5281557d05faa95f25a509a03d331ecf60b881cfbe0d80f560a9a1be1957d5b3b7a9afa99e1ffb35175f30b357fea3103058665f56bcecea55df9efa23179619
+    SHA512 5d42cebdc1361e525fc93ea71df6b126f9ce79b2aad3af60e1e59caa8185e3e06997452c588505a294200917c84840f33324bcea8c11ee911b5fd5b11a6b1f9d
     HEAD_REF master
 )
 

@@ -1,0 +1,4 @@
+lloyal-ai-inlined-vector provides CMake targets:
+
+  find_package(inlined-vector CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE inlined-vector::inlined-vector)

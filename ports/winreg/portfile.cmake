@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GiovanniDicanio/WinReg
     REF "v${VERSION}"
-    SHA512 a242be16e7acf435ccd83f2becdcf8d07a63daae3801f92a7bfab8c13cd120a7eb83e30150c9eb8d0ef2fad56ea070e1a3a47da372ab600c7b6f586b30ce41fc
+    SHA512 2c1f43a57d42628fbf3e5b5e268fd9248cbeaef47500e1a580a44634b9fbc38622d0adb89f454abba602c50d334323512458c6d860b9818c39a65a3fb7d1e48b
     HEAD_REF master
 )
 

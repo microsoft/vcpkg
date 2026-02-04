@@ -1,12 +1,15 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+# EASTL uses leading zeros in tags (e.g., 3.27.01), but vcpkg drops them in versions
+string(REGEX REPLACE "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$" "\\1.\\2.0\\3" EASTL_REF "${VERSION}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EASTL
-    REF "${VERSION}"
-    SHA512 412f894a1d1d0fdcc8f5ae130e977872a8ff243691cf9dfc76a520389f514739511afca63e1aeaaf127132f5dfc3dd482af3e5f80844b5d6d33eae1c68628267
+    REF "${EASTL_REF}"
+    SHA512 08ac403fceb032cc8622e3f15eef0b00246b8abb2daceb8fabd66d23408c738e82126a4b5187201ec7f6606df46cca1fcda1ec646cfe18ec8e9e081a057101e3
     HEAD_REF master
-    PATCHES 
+    PATCHES
         0001-fix-cmake-install.patch
         0002-fix-error-C2338.patch
 )

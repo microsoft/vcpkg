@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO agl-alexglopez/str_view
     REF "v${VERSION}"
-    SHA512 97db5e5729fe3cfff9aa9ed6db5f8494847bd11a964d9c0b946cc57c3cdad400b12ad0a6e00133e952164349616ef0f017d537cbc568cd8ee975add68c3f1ee6
+    SHA512 83dac4970561ad08b9e0230e21778162b208ea3a074ecb6f5cee467146f4baf326b764d010ed4231b43052fd569f2bd48802acda4acee28fb1fee7673b96dbf8
     HEAD_REF main
 )
 

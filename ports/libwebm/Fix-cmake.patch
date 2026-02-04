@@ -1,13 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 85b2603..ebb3333 100644
+index 19852cd..8d803cf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -5,9 +5,11 @@
- #  tree. An additional intellectual property rights grant can be found
- #  in the file PATENTS.  All contributing project authors may
- #  be found in the AUTHORS file in the root of the source tree.
--cmake_minimum_required(VERSION 3.2)
-+cmake_minimum_required(VERSION 3.5)
+@@ -8,6 +8,8 @@
+ cmake_minimum_required(VERSION 3.16)
  project(LIBWEBM CXX)
  
 +set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)

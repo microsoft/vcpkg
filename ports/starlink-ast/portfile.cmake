@@ -5,7 +5,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Starlink/ast/releases/download/v${VERSION}/ast-${VERSION}.tar.gz"
     FILENAME "starlink-ast-${VERSION}.tar.gz"
-    SHA512 b559535496b88b33845bd3732bb6ee80572dc0d8d963173e0199d44be09add244244d9aab90642de84c65714bca6c73b5bdc3b3290a55f171e6f3ce7643250f5
+    SHA512 44f837a17eaf2d959bde49982927f09bcd527ce9cb1418df5b2ef1e10b85387b40aa3099be08102f7fdfa6037ec95d3d49158c96a94b0a8b9e0495b3b9d40bf6
 )
 
 vcpkg_extract_source_archive(
@@ -13,6 +13,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         cminpack.diff
+        install-errors.diff
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/cminpack")
 

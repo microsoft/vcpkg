@@ -4,38 +4,35 @@ vcpkg_download_distfile(tarball
         "https://mirrors.dotsrc.org/gcrypt/libgcrypt/libgcrypt-${VERSION}.tar.bz2"
         "https://www.mirrorservice.org/sites/ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-${VERSION}.tar.bz2"
     FILENAME "libgcrypt-${VERSION}.tar.bz2"
-    SHA512 3a850baddfe8ffe8b3e96dc54af3fbb9e1dab204db1f06b9b90b8fbbfb7fb7276260cd1e61ba4dde5a662a2385385007478834e62e95f785d2e3d32652adb29e
+    SHA512 9421461297bd79b14f94d1ab275c3ed93b5d433531915c5cc7a718a94d32978a46feccb7a33fe63a60780ff00d465fbe1fe9ada5c250cf6d10a525c246c63d1c
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${tarball}"
     PATCHES
         cross-tools.patch
-        upstream-fa21ddc1.patch
 )
 
 if(VCPKG_CROSSCOMPILING)
     set(ENV{HOST_TOOLS_PREFIX} "${CURRENT_HOST_INSTALLED_DIR}/manual-tools/${PORT}")
 endif()
 
-vcpkg_list(APPEND VCPKG_CMAKE_CONFIGURE_OPTIONS "-DVCPKG_LANGUAGES=ASM;C")
-vcpkg_cmake_get_vars(cmake_vars_file)
-include("${cmake_vars_file}")
-
-vcpkg_configure_make(
-    AUTOCONFIG
+set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/libgpg-error/aclocal/\"")
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    AUTORECONF
+    LANGUAGES C ASM
     OPTIONS
         --disable-doc
-        "AS=${VCPKG_DETECTED_CMAKE_ASM_COMPILER}"
-        "GPG_ERROR_CONFIG=no"
     OPTIONS_RELEASE
+        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config gpg-error"
         "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
     OPTIONS_DEBUG
+        "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config gpg-error"
         "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
 )
 
-vcpkg_install_make(OPTIONS "CCAS=${VCPKG_DETECTED_CMAKE_ASM_COMPILER}")
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig() 
 vcpkg_copy_pdbs()
 

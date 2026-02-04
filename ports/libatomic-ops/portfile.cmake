@@ -1,14 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ivmai/libatomic_ops
+    REPO bdwgc/libatomic_ops
     REF "v${VERSION}"
-    SHA512 6b0ab1c01600346413184f66eaff1f707d1bc46fad9fd52ac855f2c66a55097dfad620c68b898459527142c1eb7ba50fde34498f962f24cec83268500c5bcccb
+    SHA512 3980e52faaef12fe5794389a88c985124b408e7c2051aae5966939ee1577cd0b7a9e807a373791086f38fb82a7dc2bd062ebbe8efc1124383060f78625fb99cc
     HEAD_REF master
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DBUILD_TESTING=OFF
         -Denable_docs=OFF
     OPTIONS_DEBUG
         -Dinstall_headers=OFF

@@ -1,8 +1,10 @@
 {
   "name": "kf5kcmutils",
-  "version": "5.98.0",
+  "version": "5.116.0",
+  "port-version": 1,
   "description": "Utilities for KDE System Settings modules",
-  "homepage": "https://api.kde.org/frameworks/kcmutils/html/index.html",
+  "homepage": "https://invent.kde.org/frameworks/kcmutils",
+  "documentation": "https://api.kde.org/kcmutils-index.html",
   "dependencies": [
     "ecm",
     {
@@ -20,7 +22,10 @@
     "kf5itemviews",
     "kf5service",
     "kf5xmlgui",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",

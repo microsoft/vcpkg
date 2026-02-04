@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO eclipse/paho.mqtt.cpp
   REF "v${VERSION}"
-  SHA512 bc965ce85e723fad06865bb8b7c6d0d2f48b08fee8074d7c5099d1648cd0579e0e52cea2f1c0ac2fe751970ac22c7f29df0c3eae8ee6357a13c901aaeff35c62
+  SHA512 1d14627a3f9f3fb8d0c49a72dda849909eb2dd85c151e912225aec99c0806b05ef5edf871be2f202077ff2465f89eefb0a791de265523c1aeb24e86debc1ade3
   HEAD_REF master
 )
 

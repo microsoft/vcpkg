@@ -3,9 +3,7 @@ vcpkg_from_github(
     REPO baylej/tmx
     REF "tmx_${VERSION}"
     HEAD_REF master
-    SHA512 9e79b47aa60215c9f2fcc3edf67f680deb25b5d0a841af7a6e6e34b31f3efb4d394b7ab6f577d8a0e299023e09c792089e4ecf185b21ae1a78ef1806f3a07316
-    PATCHES
-        libxml2.patch
+    SHA512 3f91faa711ad35ba0a46ae7a6e15f11928340e2d05c1202ef05cd8e9e08ce62d4ef6ef7bd743ca18fed3cab12af3201090bf556a2929ece3f010112728351577
 )
 
 vcpkg_cmake_configure(

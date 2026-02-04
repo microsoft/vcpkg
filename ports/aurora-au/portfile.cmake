@@ -4,13 +4,16 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aurora-opensource/au
     REF "${VERSION}"
-    SHA512 4aa3282f6b76fbadd04ca572734f72c86b1b0b4e85fc21a03d1ab00b83d3aea319ab2dac3934361b5f6fa7c4a0dccece94fe0a57f3d73d208315b51b1950e374
+    SHA512 675487ecaba256caa085f309a266e822356cdb286a242a2103d008cacc908409e053b296ad6b4c750657ed17a2b2712f6171fac41c74c2fbfb9db034479abaf1
     HEAD_REF main
-    PATCHES 
-        disable-googletest.patch
 )
 
-vcpkg_cmake_configure(SOURCE_PATH "${SOURCE_PATH}")
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DAU_EXCLUDE_GTEST_DEPENDENCY=1
+    )
+
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(

@@ -1,6 +1,7 @@
 {
   "name": "opus",
   "version": "1.5.2",
+  "port-version": 1,
   "description": "Totally open, royalty-free, highly versatile audio codec",
   "homepage": "https://github.com/xiph/opus",
   "license": "BSD-3-Clause",

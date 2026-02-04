@@ -1,3 +1,5 @@
+macro(deferred_tests)
+
 find_package(PkgConfig REQUIRED)
 
 # Legacy variables
@@ -21,27 +23,45 @@ find_library(mimalloc_lib NAMES ${names} PATHS "${MIMALLOC_LIBRARY_DIR}" NO_DEFA
 
 pkg_check_modules(PC_MIMALLOC mimalloc IMPORTED_TARGET REQUIRED)
 
-if(EXPECTED_FAILURE_DUE_TO_CXX_LINKAGE_OF_MIMALLOC)
 add_executable(pkgconfig-override $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,main-override.c,main-override-static.c>)
 target_link_libraries(pkgconfig-override PRIVATE PkgConfig::PC_MIMALLOC)
+
+if(BUILD_SHARED_LIBS OR NOT WIN32)
+    add_executable(pkgconfig-override-cxx main-override.cpp)
+    target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC)
 endif()
 
-add_executable(pkgconfig-override-cxx main-override.cpp)
-target_link_libraries(pkgconfig-override-cxx PRIVATE PkgConfig::PC_MIMALLOC Threads::Threads)
+# overriding allocation in a DLL that is compiled independent of mimalloc
+# https://github.com/microsoft/mimalloc/blob/dev/readme.md#dynamic-override-on-windows
+
+if(BUILD_SHARED_LIBS AND WIN32 AND "override" IN_LIST FEATURES)
+    add_library(mimalloc-test-override-dep SHARED main-override-dep.cpp)
+    target_link_libraries(dynamic-override-cxx PRIVATE mimalloc-test-override-dep)
+    target_link_libraries(pkgconfig-override-cxx PRIVATE mimalloc-test-override-dep)
+endif()
 
 # Runtime
 
 if(NOT CMAKE_CROSSCOMPILING)
-    if(BUILD_SHARED_LIBS)
-        add_custom_target(run-dynamic-override ALL COMMAND $<TARGET_NAME:dynamic-override>)
-        add_custom_target(run-dynamic-override-cxx ALL COMMAND $<TARGET_NAME:dynamic-override-cxx>)
-    else()
-        add_custom_target(run-static-override ALL COMMAND $<TARGET_NAME:static-override>)
-        add_custom_target(run-static-override-cxx ALL COMMAND $<TARGET_NAME:static-override-cxx>)
-    endif()
-    add_custom_target(run-pkgconfig-override-cxx ALL COMMAND $<TARGET_NAME:pkgconfig-override-cxx>)
+    get_directory_property(targets BUILDSYSTEM_TARGETS)
+    set(expected_fails test-wrong)
+    list(REMOVE_ITEM targets ${expected_fails})
+    foreach(target IN LISTS targets)
+        get_target_property(type ${target} TYPE)
+        if(type STREQUAL "EXECUTABLE")
+            add_custom_target(run-${target} ALL COMMAND ${target})
+        endif()       
+    endforeach()
 endif()
 
 # Deployment
 
-install(TARGETS pkgconfig-override-cxx)
+if(TARGET pkgconfig-override-cxx)
+    install(TARGETS pkgconfig-override-cxx)
+else()
+    install(CODE [[ # placeholder # ]])
+endif()
+
+endmacro()
+
+cmake_language(DEFER CALL deferred_tests)

@@ -8,11 +8,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wjakob/nanobind
     REF "v${VERSION}"
-    SHA512 40311f6416b9fdce764bf80baf156b42e1f00e03f3427b9f9db401fa4eeeb9db83b79c04ebefec2f6ed185419d1b22065f8f12eba3ad57056d2e0f825444b785
+    SHA512 332960486a63803beb1764ae8399c618fa4c8b9224efe685d5e281582f78667fe2607708645ea011eef5ac81b7e31c7f21d7f753a670be9ed557bcada8d53b96
     HEAD_REF master
-    PATCHES
-        find_dependency_python.patch
-        move_include_dir.patch
 )
 
 vcpkg_cmake_configure(

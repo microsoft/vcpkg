@@ -1,0 +1,51 @@
+diff --git a/src/s2/util/math/exactfloat/exactfloat.cc b/src/s2/util/math/exactfloat/exactfloat.cc
+index bd807e2..27aee43 100644
+--- a/src/s2/util/math/exactfloat/exactfloat.cc
++++ b/src/s2/util/math/exactfloat/exactfloat.cc
+@@ -151,8 +151,8 @@ ExactFloat::ExactFloat(double v) {
+     // by the number of mantissa bits in a double (53, including the leading
+     // "1") then the result is always an integer.
+     int exp;
+-    double f = frexp(fabs(v), &exp);
+-    uint64_t m = static_cast<uint64_t>(ldexp(f, kDoubleMantissaBits));
++    double f = std::frexp(std::fabs(v), &exp);
++    uint64_t m = static_cast<uint64_t>(std::ldexp(f, kDoubleMantissaBits));
+     BN_ext_set_uint64(bn_.get(), m);
+     bn_exp_ = exp - kDoubleMantissaBits;
+     Canonicalize();
+@@ -163,7 +163,7 @@ ExactFloat::ExactFloat(int v) {
+   sign_ = (v >= 0) ? 1 : -1;
+   // Note that this works even for INT_MIN because the parameter type for
+   // BN_set_word() is unsigned.
+-  ABSL_CHECK(BN_set_word(bn_.get(), abs(v)));
++  ABSL_CHECK(BN_set_word(bn_.get(), std::abs(v)));
+   bn_exp_ = 0;
+   Canonicalize();
+ }
+@@ -239,7 +239,7 @@ ExactFloat::operator double() const {
+ double ExactFloat::ToDoubleHelper() const {
+   ABSL_DCHECK_LE(BN_num_bits(bn_.get()), kDoubleMantissaBits);
+   if (!isnormal(*this)) {
+-    if (is_zero()) return copysign(0, sign_);
++    if (is_zero()) return std::copysign(0, sign_);
+     if (isinf(*this)) {
+       return std::copysign(std::numeric_limits<double>::infinity(), sign_);
+     }
+@@ -248,7 +248,7 @@ double ExactFloat::ToDoubleHelper() const {
+   uint64_t d_mantissa = BN_ext_get_uint64(bn_.get());
+   // We rely on ldexp() to handle overflow and underflow.  (It will return a
+   // signed zero or infinity if the result is too small or too large.)
+-  return sign_ * ldexp(static_cast<double>(d_mantissa), bn_exp_);
++  return sign_ * std::ldexp(static_cast<double>(d_mantissa), bn_exp_);
+ }
+ 
+ ExactFloat ExactFloat::RoundToMaxPrec(int max_prec, RoundingMode mode) const {
+@@ -336,7 +336,7 @@ int ExactFloat::NumSignificantDigitsForPrec(int prec) {
+   //
+   // Since either of these bounds can be too large by 0, 1, or 2 digits, we
+   // stick with the simpler first bound.
+-  return static_cast<int>(1 + ceil(prec * (M_LN2 / M_LN10)));
++  return static_cast<int>(1 + std::ceil(prec * (M_LN2 / M_LN10)));
+ }
+ 
+ // Numbers are always formatted with at least this many significant digits.

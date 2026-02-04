@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 5b5766d279d92659fd8e6d5d5aac8be7328a8eae7412085c96e7059ecc560f596bf55ff0a8df6d671de5169d2a80694a6bdd6561dbe9bbb4c3df56b687c50039
+    SHA512 83e8d9c877a7e1c253efb94953758dde141ef23f74c727294c3a9af60db02401e1aef92368908b297bad1fc005d155e6c63bd726ccc48ea831f46cc5c1915633
     HEAD_REF master
     PATCHES
         embed-debug-info.patch
@@ -10,9 +10,7 @@ vcpkg_from_github(
         verbose-install.patch
         configure-zlib.patch
         fix_android.patch
-        libcxx-winpthread-fixes.patch
-        fix-cmake-usage.patch
-        add-include-string.patch
+        fix-x86-msvc-amalgamation.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
@@ -79,19 +77,13 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_list(APPEND configure_arguments --os=windows)
 
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        vcpkg_list(APPEND configure_arguments --cc=msvc)
+    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER MATCHES "clang-cl(\.exe)?$")
+        vcpkg_list(APPEND configure_arguments "--cc=clangcl")
+    elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        vcpkg_list(APPEND configure_arguments "--cc=msvc")
     endif()
 
-    # When compiling with Clang, -mrdrand is required to enable the RDRAND intrinsics. Botan will
-    # check for RDRAND at runtime before trying to use it, so we should be safe to specify this
-    # without triggering illegal instruction faults on older CPUs.
-    if(VCPKG_DETECTED_CMAKE_CXX_COMPILER MATCHES "clang-cl(\.exe)?$")
-        vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS} -mrdrnd")
-    else()
-        # ...otherwise just forward the detected CXXFLAGS.
-        vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
-    endif()
+    vcpkg_list(APPEND configure_arguments "--extra-cxxflags=${VCPKG_DETECTED_CMAKE_CXX_FLAGS}")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         vcpkg_list(APPEND configure_arguments --enable-shared-library --disable-static-library)
@@ -196,10 +188,5 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/include/botan-3"
 )
-
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_PREFIX R\"(${CURRENT_PACKAGES_DIR})\"" "")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}\\lib)\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "#define BOTAN_INSTALL_LIB_DIR R\"(${CURRENT_PACKAGES_DIR}/lib)\"" "" IGNORE_UNCHANGED)
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/botan/build.h" "--prefix=${CURRENT_PACKAGES_DIR}" "")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license.txt")

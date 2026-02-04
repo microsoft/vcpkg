@@ -6,8 +6,8 @@ endif()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION 4adfde891e20cf33d73429b6922c9785f78522aa)
-set(SCITER_SHA 598ea85e6927d46f5ccd043be15d9cd4933af229eef1522e6c9663837e59cc8f7af76a738d3e9047e7eadbd420e1929bd17e7df3fa9ed40902cf6865c824fc46)
+set(SCITER_REVISION 48d4680f01482539281ec7b51d80c4c3608cfe49)
+set(SCITER_SHA 407bc9674c8f387980ea496d5946b853d126874a7f11545030ea2e15eb801655023fc95d231e63e020cd4bdd0b28b71522c4d0503129be958f1e8fabfa7dbf3a)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -57,15 +57,14 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${SCITER_TOOLS})
 
-    if ("windowless" IN_LIST FEATURES)
-        set(SCITER_BIN ${SOURCE_PATH}/bin.lite/linux/x64)
-    endif()
-
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 
 elseif(VCPKG_TARGET_IS_OSX)
     set(SCITER_BIN ${SOURCE_PATH}/bin/macosx)
@@ -80,6 +79,18 @@ elseif(VCPKG_TARGET_IS_OSX)
 
     execute_process(COMMAND sh -c "chmod +x usciterjs.app/Contents/MacOS/usciterjs" WORKING_DIRECTORY ${SCITER_TOOLS})
     execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY ${SCITER_TOOLS})
+
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+
+    if ("webview" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 
     file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -98,8 +109,16 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SCITER_BIN}/window-mixin.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${SCITER_TOOLS})
 
-    if ("windowless" IN_LIST FEATURES)
-        set(SCITER_BIN ${SOURCE_PATH}/bin.lite/windows/${SCITER_ARCH})
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+
+    if ("webview" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)

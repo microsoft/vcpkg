@@ -5,56 +5,52 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  HDFGroup/hdf5
     REF "${hdf5_ref}"
-    SHA512 77849b644f5312eae5a3f2fe45666d9df95cc21b092207dae01ca7d019e428255d75fe0c27538e4101eabf2030927a73ceaec8e1471c72b51fed5370810f9a35
+    SHA512 609e129f78c6777a0e64694de8ec638326a616ff9cbd916f310dc6f78435ef67194c5ab59faedda09c85c045c15ebe2ec4ce04fa905d5f74801600e067c27fcc
     HEAD_REF develop
     PATCHES
-        hdf5_config.patch
-        szip.patch
-	add-_Float16-type-on-aarch64.patch
+        default-plugin-dir.diff # avoid absolute path
+        libaec-config.diff
+        pkgconfig.patch
+        win-compile-flags.diff
 )
 
-set(ALLOW_UNSUPPORTED OFF)
-if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
-    message(WARNING "Feature 'Parallel' and 'cpp' are mutually exclusive, enabling option ALLOW_UNSUPPORTED automatically to enable them both.")
-    set(ALLOW_UNSUPPORTED ON)
-endif()
-
-if ("threadsafe" IN_LIST FEATURES AND
-    ("parallel" IN_LIST FEATURES
-     OR "fortran" IN_LIST FEATURES
-     OR "cpp" IN_LIST FEATURES)
-     )
-    message(WARNING "Feture 'threadsafe' and other features are mutually exclusive, enable feature ALLOW_UNSUPPORTED automatically to enable them both.")
-    set(ALLOW_UNSUPPORTED ON)
-endif()
-
-if ("fortran" IN_LIST FEATURES)
-    message(WARNING "Feature 'fortran' is not yet officially supported within VCPKG. Build will most likly fail if ninja 1.10 and a Fortran compiler are not available.")
-endif()
+set(HDF5_ALLOW_UNSUPPORTED OFF)
+set(unsupported_with_parallel cpp)
+set(unsupported_with_threadsafe parallel fortran cpp hl)
+foreach(feature IN ITEMS parallel threadsafe)
+    if(NOT feature IN_LIST FEATURES)
+        continue()
+    endif()
+    foreach(other IN LISTS unsupported_with_${feature})
+        if(other IN_LIST FEATURES)
+            message(WARNING "Features '${feature}' and '${other}' are mutually exclusive. Implicitly enabling option HDF5_ALLOW_UNSUPPORTED to unlock the build with both.")
+            set(HDF5_ALLOW_UNSUPPORTED ON)
+        endif()
+    endforeach()
+endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        parallel     HDF5_ENABLE_PARALLEL
-        tools        HDF5_BUILD_TOOLS
-        tools        HDF5_BUILD_HL_GIF_TOOLS
         cpp          HDF5_BUILD_CPP_LIB
+        fortran      HDF5_BUILD_FORTRAN
+        hl           HDF5_BUILD_HL_LIB
+        map          HDF5_ENABLE_MAP_API
+        mirror       HDF5_ENABLE_MIRROR_VFD
+        parallel     HDF5_ENABLE_PARALLEL
         szip         HDF5_ENABLE_SZIP_SUPPORT
         szip         HDF5_ENABLE_SZIP_ENCODING
-        zlib         HDF5_ENABLE_Z_LIB_SUPPORT
-        fortran      HDF5_BUILD_FORTRAN
         threadsafe   HDF5_ENABLE_THREADSAFE
-        utils        HDF5_BUILD_UTILS
-        map          HDF5_ENABLE_MAP_API
+        tools        HDF5_BUILD_TOOLS
+        tools        HDF5_BUILD_UTILS
+        zlib         HDF5_ENABLE_ZLIB_SUPPORT
 )
 
-if("tools" IN_LIST FEATURES AND VCPKG_CRT_LINKAGE STREQUAL "static")
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
-if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND FEATURE_OPTIONS
-                    -DBUILD_STATIC_LIBS=OFF
-                    -DONLY_SHARED_LIBS=ON)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_LIBS=OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -63,26 +59,18 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTING=OFF
+        -DHDF5_ALLOW_EXTERNAL_SUPPORT=NO
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share/hdf5
         -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
         -DHDF5_MSVC_NAMING_CONVENTION=OFF
-        -DALLOW_UNSUPPORTED=${ALLOW_UNSUPPORTED}
-        -DCMAKE_DISABLE_FIND_PACKAGE_libaec=ON
-    OPTIONS_RELEASE
-        -DCMAKE_DEBUG_POSTFIX= # For lib name in pkgconfig files
+        -DHDF5_ALLOW_UNSUPPORTED=${HDF5_ALLOW_UNSUPPORTED}
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
-
-set(debug_suffix debug)
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(debug_suffix D)
-endif()
-
 vcpkg_fixup_pkgconfig()
 
 file(GLOB pc_files "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc")
@@ -95,62 +83,60 @@ foreach(file IN LISTS pc_files)
     endif()
 endforeach()
 
-file(READ "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" contents)
-string(REPLACE [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
-               [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]]
-               contents ${contents}
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake"
+    [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/bin"]]
+    [[${HDF5_PACKAGE_NAME}_TOOLS_DIR "${PACKAGE_PREFIX_DIR}/tools/hdf5"]]
 )
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake" ${contents})
+if("parallel" IN_LIST FEATURES AND NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/hdf5/hdf5-config.cmake"
+        [[..HDF5_PACKAGE_NAME._MPI_C_LIBRARIES    "..VCPKG_IMPORT_PREFIX.(/lib/[^"]*)"]]
+        [[${HDF5_PACKAGE_NAME}_MPI_C_LIBRARIES    optimized "${VCPKG_IMPORT_PREFIX}\1" debug "${VCPKG_IMPORT_PREFIX}/debug\1"]]
+        REGEX
+    )
+endif()
 
 set(HDF5_TOOLS "")
 if("tools" IN_LIST FEATURES)
-    list(APPEND HDF5_TOOLS h5copy h5diff h5dump h5ls h5stat gif2h5 h52gif h5clear h5debug
-        h5format_convert h5jam h5unjam h5mkgrp h5repack h5repart h5watch h5import h5delete
-	h5perf_serial
+    list(APPEND HDF5_TOOLS
+        h5perf_serial
+        h5clear h5copy
+        h5debug h5delete h5diff h5dump
+        h5format_convert
+        h5import
+        h5jam
+        h5ls
+        h5mkgrp
+        h5repack h5repart
+        h5stat
+        h5unjam
     )
 
-    if("parallel" IN_LIST FEATURES)
-        list(APPEND HDF5_TOOLS ph5diff)
+    if ("hl" IN_LIST FEATURES)
+        list(APPEND HDF5_TOOLS h5watch)
     endif()
 
-
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND HDF5_TOOLS h5cc h5hlcc)
-        if("cpp" IN_LIST FEATURES)
-            list(APPEND HDF5_TOOLS h5c++ h5hlc++)
-        endif()
+    if ("mirror" IN_LIST FEATURES)
+        list(APPEND HDF5_TOOLS mirror_server mirror_server_stop)
     endif()
 
     if("parallel" IN_LIST FEATURES)
-        list(APPEND HDF5_TOOLS h5perf )
-        if(NOT VCPKG_TARGET_IS_WINDOWS)
-            list(APPEND HDF5_TOOLS h5pcc)
-        endif()
+        list(APPEND HDF5_TOOLS ph5diff h5perf)
     endif()
-endif()
-
-if ("utils" IN_LIST FEATURES)
-    list(APPEND HDF5_TOOLS mirror_server mirror_server_stop)
 endif()
 
 if(HDF5_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES ${HDF5_TOOLS} AUTO_CLEAN)
-    foreach(tool h5cc h5pcc h5hlcc)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}")
-            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${tool}" "${CURRENT_INSTALLED_DIR}" "$(dirname \"$0\")/../.." IGNORE_UNCHANGED)
-        endif()
-    endforeach()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/h5fuse.sh")
-      file(RENAME "${CURRENT_PACKAGES_DIR}/bin/h5fuse.sh" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/h5fuse.sh")
-      file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/h5fuse.sh")
+endif()
+foreach(script IN ITEMS h5cc h5c++ h5hlcc h5hlc++ h5pcc h5fuse.sh)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${script}")
+        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}" "${CURRENT_INSTALLED_DIR}" "$(dirname \"$0\")/../.." IGNORE_UNCHANGED)
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
     endif()
-endif()
+endforeach()
+vcpkg_clean_executables_in_bin(FILE_NAMES none)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
-# Clean up
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -163,4 +149,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/H5public.h" "#define H5public_H" "#define H5public_H\n#ifndef H5_BUILT_AS_DYNAMIC_LIB\n#define H5_BUILT_AS_DYNAMIC_LIB\n#endif\n")
 endif()
 
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/${PORT}/data/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")

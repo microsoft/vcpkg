@@ -1,0 +1,49 @@
+{
+  "name": "ripper37-libbase",
+  "version": "1.1.2",
+  "description": "Standalone reimplementation of //base module from Chromium",
+  "homepage": "https://github.com/RippeR37/libbase",
+  "documentation": "https://ripper37.github.io/libbase",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "glog",
+      "features": [
+        "customprefix"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "net",
+    {
+      "name": "win",
+      "platform": "windows"
+    }
+  ],
+  "features": {
+    "net": {
+      "description": "Networking module",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "win": {
+      "description": "Integration module for WinAPI",
+      "supports": "windows"
+    },
+    "wx": {
+      "description": "Integration module for wxWidgets",
+      "dependencies": [
+        "wxwidgets"
+      ]
+    }
+  }
+}

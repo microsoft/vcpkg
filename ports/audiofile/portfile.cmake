@@ -1,13 +1,12 @@
 # header-only library
+set(VCPKG_BUILD_TYPE release)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO adamstark/AudioFile
     REF "${VERSION}"
-    SHA512 b0612e6d6c440e52a168f27410d6ac14f7fcef2ba183e8a80e03f924e6fc778c01e4f46b40cab10dd73c48f8f10dc4112c58f602728fdeec0bc3e143852fc95e
+    SHA512 16a6879e8d91612980c8c2e86995de876a0868e051a47e4eaae7c8dea67327e008463b93e2536368e0f169329b7626b380d74eb369bef526dbc50a793f8cab92
     HEAD_REF master
-    PATCHES
-        fix-cmakeLists.patch
 )
 
 vcpkg_cmake_configure(
@@ -19,8 +18,9 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME AudioFile)
+vcpkg_cmake_config_fixup(PACKAGE_NAME AudioFile CONFIG_PATH lib/cmake/AudioFile)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

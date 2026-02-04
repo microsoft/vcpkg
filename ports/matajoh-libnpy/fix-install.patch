@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b7fd3aa..2168632 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -68,7 +68,7 @@ endif()
+ 
+ target_include_directories(npy
+   PUBLIC
+-    $<INSTALL_INTERFACE:build/native/include>
++    $<INSTALL_INTERFACE:include>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   PRIVATE
+     ${CMAKE_CURRENT_SOURCE_DIR}/src

@@ -3,15 +3,17 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpputest/cpputest
-    REF 4699da9942a1bdcc33e2a8c8a48e863b0f18188e
-    SHA512 6f588691f1b4092b3be8167ab09f3a4a64c34715ac9397210724121d161024a43b12a88198b02b0cc8da7d72406670daaf375bb64cc4cf92c8bd2479e7a881bc
+    REF "v${VERSION}"
+    SHA512 5f7d6f9e34a462b35a0161a7486fd56074f5b07f92d029a3c57741c72df7bbc6ea4f98b1e57e9c500ad6d57c303d222afe523d59ec943f4461f67ce5be74dd77
     HEAD_REF master
-    PATCHES
-        fix-arm-build-error.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        -DTESTS=OFF
+        -DTESTS_DETALED=OFF
+        -DTESTS_BUILD_DISCOVER=OFF
 )
 
 vcpkg_cmake_install()

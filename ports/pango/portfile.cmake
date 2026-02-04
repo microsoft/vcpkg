@@ -1,47 +1,47 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/pango
-    REF "${VERSION}"
-    SHA512 1c5f5f2de778b2ca157a4f3eb8bbbba1a79f5f9d60aac678e9c213005f1d8bedfc027ee5c1cebb07dc0eb8c308c38c37beb05293ef2cbe4ac9a0b481176934bb
-    HEAD_REF master
-) 
-
+string(REGEX MATCH "^([0-9]*[.][0-9]*)" VERSION_MAJOR_MINOR "${VERSION}")
+vcpkg_download_distfile(SOURCE_ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/pango/${VERSION_MAJOR_MINOR}/pango-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "pango-${VERSION}.tar.xz"
+    SHA512 e3d251e0c2d5cb7f2e9d26e675aa2fae0c3cedce9e73b77f92a4abbeff55eaa819811e4c064ca036d3964a3ee4592f596ebfa7c0a760189b9d8c38a5f3a4ea3a
+)
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${SOURCE_ARCHIVE}"
+    PATCHES
+        relax-gi-requirement.diff
+)
 
 if("introspection" IN_LIST FEATURES)
-    list(APPEND OPTIONS_DEBUG -Dintrospection=disabled)
     list(APPEND OPTIONS_RELEASE -Dintrospection=enabled)
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
 else()
-    list(APPEND OPTIONS -Dintrospection=disabled)
-endif()
-
-if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(GIR_TOOL_DIR ${CURRENT_INSTALLED_DIR})
-else()
-    set(GIR_TOOL_DIR ${CURRENT_HOST_INSTALLED_DIR})
+    list(APPEND OPTIONS_RELEASE -Dintrospection=disabled)
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -Ddocumentation=false
+        -Dman-pages=false
+        -Dbuild-testsuite=false
+        -Dbuild-examples=false
         -Dfontconfig=enabled # Build with FontConfig support.
         -Dsysprof=disabled # include tracing support for sysprof
         -Dlibthai=disabled # Build with libthai support
         -Dcairo=enabled # Build with cairo support
         -Dxft=disabled # Build with xft support
         -Dfreetype=enabled # Build with freetype support
-        -Dgtk_doc=false #Build API reference for Pango using GTK-Doc
         ${OPTIONS}
-    OPTIONS_DEBUG
-        ${OPTIONS_DEBUG}
     OPTIONS_RELEASE
         ${OPTIONS_RELEASE}
+    OPTIONS_DEBUG
+        -Dintrospection=disabled
     ADDITIONAL_BINARIES
         "glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'"
         "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
-        "g-ir-compiler='${CURRENT_HOST_INSTALLED_DIR}/tools/gobject-introspection/g-ir-compiler${VCPKG_HOST_EXECUTABLE_SUFFIX}'"
-        "g-ir-scanner='${GIR_TOOL_DIR}/tools/gobject-introspection/g-ir-scanner'"
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 
 vcpkg_install_meson(ADD_BIN_TO_PATH)

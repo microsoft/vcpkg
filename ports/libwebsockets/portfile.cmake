@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO warmcat/libwebsockets
-    REF 4415e84c095857629863804e941b9e1c2e9347ef # v4.3.3
-    SHA512 11aed4ce06af0ef94ce3eaaf32cc2b5735be140dfcda1768cc8ccb0ed97c7bc7bdbb1b2718c6d6ef6a9058de208ba94cae85eedc1c597656300a4181060e31ff 
+    REF "v${VERSION}"
+    SHA512 8427ade9325051b486321b9d0b07b136428ed28f34972a3cc0b0440a9f1efab7b34ee82b6b778eb39669dea08d47976eef04a99f8e15ba03cb6b3c1dc28cb9f9
     HEAD_REF master
     PATCHES
         fix-dependency-libuv.patch
@@ -12,6 +12,7 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LWS_WITH_SHARED)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
 ## All LWS options could be possible features:
 # #
@@ -141,6 +142,7 @@ vcpkg_cmake_configure(
         ${EXTRA_ARGS}
         -DLWS_WITH_STATIC=${LWS_WITH_STATIC}
         -DLWS_WITH_SHARED=${LWS_WITH_SHARED}
+        -DLWS_MSVC_STATIC_RUNTIME=${STATIC_CRT}
         -DLWS_WITH_GENCRYPTO=ON
         -DLWS_WITH_TLS=ON
         -DLWS_WITH_BUNDLED_ZLIB=OFF

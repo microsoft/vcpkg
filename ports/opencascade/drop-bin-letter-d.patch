@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d2c4e570..8eac318c 100644
+index d051f5ccce..91517a5936 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -244,7 +244,6 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}" CACHE INTERNAL "" FORCE)
+@@ -317,7 +317,6 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}" CACHE INTERNAL "" FORCE)
  
  set (BIN_LETTER "")
  if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
@@ -10,7 +10,7 @@ index d2c4e570..8eac318c 100644
  elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
    set (BIN_LETTER "i")
  endif()
-@@ -917,6 +916,7 @@ if (WIN32)
+@@ -1002,6 +1001,7 @@ if (WIN32)
    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE        "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bini")
    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG          "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bind")
@@ -19,10 +19,10 @@ index d2c4e570..8eac318c 100644
  
  string(TIMESTAMP CURRENT_TIME "%H:%M:%S")
 diff --git a/adm/cmake/occt_macros.cmake b/adm/cmake/occt_macros.cmake
-index 9fd3ec4c..dc9ff18b 100644
+index 92a8db33dc..3d4c95b584 100644
 --- a/adm/cmake/occt_macros.cmake
 +++ b/adm/cmake/occt_macros.cmake
-@@ -609,7 +609,7 @@ macro (OCCT_INSERT_CODE_FOR_TARGET)
+@@ -779,7 +779,7 @@ macro (OCCT_INSERT_CODE_FOR_TARGET)
    elseif (\"\${CMAKE_INSTALL_CONFIG_NAME}\" MATCHES \"^([Rr][Ee][Ll][Ww][Ii][Tt][Hh][Dd][Ee][Bb][Ii][Nn][Ff][Oo])$\")
      set (OCCT_INSTALL_BIN_LETTER \"i\")
    elseif (\"\${CMAKE_INSTALL_CONFIG_NAME}\" MATCHES \"^([Dd][Ee][Bb][Uu][Gg])$\")
