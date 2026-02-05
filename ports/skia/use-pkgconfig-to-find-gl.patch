@@ -1,8 +1,8 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index ce41442..9a90d00 100644
+index 37cfe09694..def43b13f1 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -1007,7 +1007,9 @@ optional("gpu") {
+@@ -993,7 +993,9 @@ optional("gpu") {
          "src/gpu/ganesh/gl/glx/GrGLMakeGLXInterface.cpp",
          "src/gpu/ganesh/gl/glx/GrGLMakeNativeInterface_glx.cpp",
        ]

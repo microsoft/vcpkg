@@ -21,7 +21,7 @@ index dedc68fa4a..d748247c19 100644
        "../..:skia",
        "../skunicode",
 diff --git a/modules/skparagraph/include/FontCollection.h b/modules/skparagraph/include/FontCollection.h
-index a6b36efabe..5c210c5ae5 100644
+index 7611e7e194..9db3407ecd 100644
 --- a/modules/skparagraph/include/FontCollection.h
 +++ b/modules/skparagraph/include/FontCollection.h
 @@ -8,6 +8,7 @@
@@ -42,7 +42,7 @@ index a6b36efabe..5c210c5ae5 100644
      FontCollection();
  
 diff --git a/modules/skparagraph/include/ParagraphBuilder.h b/modules/skparagraph/include/ParagraphBuilder.h
-index feac5622bb..8b1576fdfc 100644
+index c8189cc446..5a01557949 100644
 --- a/modules/skparagraph/include/ParagraphBuilder.h
 +++ b/modules/skparagraph/include/ParagraphBuilder.h
 @@ -7,6 +7,7 @@
@@ -125,33 +125,6 @@ index 24b1fc679b..d08a9b5142 100644
  
      SkScalar fFontSize = 14.0;
      SkFont::Edging fEdging = SkFont::Edging::kAntiAlias;
-diff --git a/modules/skparagraph/include/skparagraph_export.h b/modules/skparagraph/include/skparagraph_export.h
-new file mode 100644
-index 0000000000..a19b83df57
---- /dev/null
-+++ b/modules/skparagraph/include/skparagraph_export.h
-@@ -0,0 +1,21 @@
-+#pragma once
-+
-+#if !defined(SKPARAGRAPH_IMPLEMENTATION)
-+    #define SKPARAGRAPH_IMPLEMENTATION 0
-+#endif
-+
-+#if !defined(SKPARAGRAPH_API)
-+    #if defined(SKPARAGRAPH_DLL)
-+        #if defined(_MSC_VER)
-+            #if SKPARAGRAPH_IMPLEMENTATION
-+                #define SKPARAGRAPH_API __declspec(dllexport)
-+            #else
-+                #define SKPARAGRAPH_API __declspec(dllimport)
-+            #endif
-+        #else
-+            #define SKPARAGRAPH_API __attribute__((visibility("default")))
-+        #endif
-+    #else
-+        #define SKPARAGRAPH_API
-+    #endif
-+#endif
 diff --git a/modules/skparagraph/src/TextStyle.cpp b/modules/skparagraph/src/TextStyle.cpp
 index 26a7a9eb59..3e6881bde3 100644
 --- a/modules/skparagraph/src/TextStyle.cpp

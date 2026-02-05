@@ -1,5 +1,5 @@
 diff --git a/gn/toolchain/BUILD.gn b/gn/toolchain/BUILD.gn
-index 8eace39..67d7b00 100644
+index 8eace3949b..67d7b00096 100644
 --- a/gn/toolchain/BUILD.gn
 +++ b/gn/toolchain/BUILD.gn
 @@ -305,7 +305,7 @@ template("gcc_like_toolchain") {
