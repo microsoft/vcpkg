@@ -2933,7 +2933,7 @@
       "port-version": 0
     },
     "faudio": {
-      "baseline": "26.1",
+      "baseline": "26.2",
       "port-version": 0
     },
     "fawdlstty-libfv": {
