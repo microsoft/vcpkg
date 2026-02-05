@@ -20,12 +20,20 @@ set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
 
 # Head only features
 if(NOT VCPKG_USE_HEAD_VERSION)
-    foreach(_feature anyshaderconverter shadertools shaderconverter vk-info)
+    set(head_only anyshaderconverter materialtools shadertools shaderconverter scenetools vk-info)
+    foreach(_feature ${head_only})
         if("${_feature}" IN_LIST FEATURES)
-            message(FATAL_ERROR "Features anyshaderconverter, shadertools, shaderconverter and vk-info are not avaliable when building non-head version.")
+            list(JOIN head_only ", " features_list)
+            message(FATAL_ERROR "Features ${features_list} are not avaliable when building non-head version.")
         endif()
     endforeach()
-    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES anyshaderconverter shadertools shaderconverter vk-info)
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES ${head_only})
+endif()
+
+if(VCPKG_USE_HEAD_VERSION)
+    set(_OPTION_PREFIX MAGNUM_)
+else()
+    set(_OPTION_PREFIX )
 endif()
 
 set(_COMPONENTS "")
@@ -37,7 +45,7 @@ foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
 
     # Final feature is empty, ignore it
     if(_feature)
-        list(APPEND _COMPONENTS ${_feature} WITH_${_FEATURE})
+        list(APPEND _COMPONENTS ${_feature} ${_OPTION_PREFIX}WITH_${_FEATURE})
     endif()
 endforeach()
 
@@ -47,13 +55,22 @@ if(VCPKG_CROSSCOMPILING)
     set(CORRADE_RC_EXECUTABLE "-DCORRADE_RC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/corrade/corrade-rc${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
+# Magnum defaults to ES2 / WebGL1 on OpenGL ES / WebGL builds, use ES3 / WebGL2
+# as it's widely supported nowadays
+if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_EMSCRIPTEN)
+    set(ENABLE_ES3_ON_NON_DESKTOP -D${_OPTION_PREFIX}TARGET_GLES2=OFF)
+else()
+    set(ENABLE_ES3_ON_NON_DESKTOP )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
         ${CORRADE_RC_EXECUTABLE}
-        -DBUILD_STATIC=${BUILD_STATIC}
-        -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
+        ${ENABLE_ES3_ON_NON_DESKTOP}
+        -D${_OPTION_PREFIX}BUILD_STATIC=${BUILD_STATIC}
+        -D${_OPTION_PREFIX}BUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
         -DMAGNUM_PLUGINS_RELEASE_DIR=${CURRENT_INSTALLED_DIR}/bin/magnum
 )
@@ -89,24 +106,24 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Special handling for plugins.
 #
-# For static plugins, in order to make MSBuild auto-linking magic work, where 
-# the linker implicitly takes everything from the root lib/ folder, the 
+# For static plugins, in order to make MSBuild auto-linking magic work, where
+# the linker implicitly takes everything from the root lib/ folder, the
 # static libraries have to be moved out of lib/magnum/blah/ directly to lib/.
 # Possibly would be enough to do this just for Windows, doing it also on other
 # platforms for consistency.
 #
-# For dynamic plugins, auto-linking is not desirable as those are meant to be 
-# loaded dynamically at runtime instead. In order to prevent that, on Windows 
-# the *.lib files corresponding to the plugin *.dlls are removed. However, we 
-# cannot remove the *.lib files entirely here, as plugins from magnum-plugins 
-# are linked to them on Windows (e.g. AssimpImporter depends on 
-# AnyImageImporter). Thus the Any* plugin lib files are kept, but also not 
-# moved to the root lib/ folder, to prevent autolinking. A consequence of the 
+# For dynamic plugins, auto-linking is not desirable as those are meant to be
+# loaded dynamically at runtime instead. In order to prevent that, on Windows
+# the *.lib files corresponding to the plugin *.dlls are removed. However, we
+# cannot remove the *.lib files entirely here, as plugins from magnum-plugins
+# are linked to them on Windows (e.g. AssimpImporter depends on
+# AnyImageImporter). Thus the Any* plugin lib files are kept, but also not
+# moved to the root lib/ folder, to prevent autolinking. A consequence of the
 # *.lib file removal is that downstream projects can't implement Magnum plugins
-# that would depend on (and thus link to) these, but that's considered a very 
+# that would depend on (and thus link to) these, but that's considered a very
 # rare use case and so it's fine.
 #
-# See https://github.com/microsoft/vcpkg/pull/1235#issuecomment-308805989 for 
+# See https://github.com/microsoft/vcpkg/pull/1235#issuecomment-308805989 for
 # futher info.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
@@ -144,7 +161,7 @@ else()
         if(LIB_TO_REMOVE_DBG)
             file(REMOVE ${LIB_TO_REMOVE_DBG})
         endif()
-        
+
         # remove maybe empty dirs
         foreach(subdir "fonts" "importers" "fontconverters" "imageconverters" "audioimporters")
             file(GLOB maybe_empty "${CURRENT_PACKAGES_DIR}/lib/magnum/${subdir}/*")
@@ -159,7 +176,7 @@ else()
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/magnum")
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/${debug_dir}")
         endif()
-        
+
     endif()
 
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/magnum")
