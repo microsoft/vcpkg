@@ -4445,7 +4445,7 @@
       "port-version": 0
     },
     "krb5": {
-      "baseline": "1.22.1",
+      "baseline": "1.22.2",
       "port-version": 0
     },
     "ktx": {
