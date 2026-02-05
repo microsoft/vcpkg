@@ -3761,7 +3761,7 @@
       "port-version": 0
     },
     "highs": {
-      "baseline": "1.12.0",
+      "baseline": "1.13.0",
       "port-version": 0
     },
     "highway": {
