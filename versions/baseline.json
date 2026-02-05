@@ -5813,7 +5813,7 @@
       "port-version": 0
     },
     "libxmlb": {
-      "baseline": "0.3.24",
+      "baseline": "0.3.25",
       "port-version": 0
     },
     "libxmlmm": {
