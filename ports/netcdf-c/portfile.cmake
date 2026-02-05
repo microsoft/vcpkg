@@ -1,3 +1,9 @@
+vcpkg_download_distfile(WINDOWS_STAT_PATCH
+    URLS https://github.com/Unidata/netcdf-c/commit/02ba4e90a8b7683277e353c92a6b1627bb8e3dfd.patch?full_index=1
+    FILENAME windows-stat-02ba4e90a8b7683277e353c92a6b1627bb8e3dfd.patch
+    SHA512 a4b74b3f93c12696aaeb500ed27e65676f06cc14f0e1cd43664af344ce5b294409e26d68190a1c6ce9050f231902901d7afba2a5718b9759beaf069cb3d91bf0
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
@@ -12,6 +18,7 @@ vcpkg_from_github(
         plugin-install-dir.diff
         fstat.patch
         backport-d7895f6.diff  # cf. https://github.com/Unidata/netcdf-c/pull/3237
+        "${WINDOWS_STAT_PATCH}"
 )
 file(GLOB_RECURSE modules "${SOURCE_PATH}/cmake/modules/Find*.cmake")
 set(vendored_bzip2 blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c bzlib.h bzlib_private.h)
