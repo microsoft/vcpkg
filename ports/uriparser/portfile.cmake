@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
-    REF uriparser-${VERSION}
-    SHA512 0ab98e3172d9767ec0a62018c70190efb5aec813c310e7305fb4ffeb187976734d35ba2f83f6ea0b3f390f13740491d9538e5960b93ca1bbb848a1fe41c559a3
+    REF "uriparser-${VERSION}"
+    SHA512 17526795bf78211ecff2b6b6f632c168ba33ed7763c5ad94fcc5bdff19542025be8a7079701e261d8992fff9077f59448fb9b8983cfab38d972228b7e353c9cd
     HEAD_REF master
 )
 
@@ -12,16 +12,14 @@ else()
     set(URIPARSER_BUILD_TOOLS OFF)
 endif()
 
-# On Android, we need to set C standard to C99 (headers on ndk uses `inline`)
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_C_STANDARD 90)" "set(CMAKE_C_STANDARD 99)")
-endif()
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" URIPARSER_CRT_LINKAGE)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DURIPARSER_BUILD_DOCS=OFF
         -DURIPARSER_BUILD_TESTS=OFF
+        -DURIPARSER_MSVC_STATIC_CRT=${URIPARSER_CRT_LINKAGE}
     OPTIONS_DEBUG
         -DURIPARSER_BUILD_TOOLS=OFF
     OPTIONS_RELEASE
@@ -39,7 +37,7 @@ if(URIPARSER_BUILD_TOOLS)
     )
 endif()
 
-set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
+set(_package_version_re "#[ ]*define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
 file(STRINGS
 	"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/UriConfig.h"
     _package_version_define REGEX "${_package_version_re}"
