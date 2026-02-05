@@ -1,10 +1,10 @@
 {
   "name": "cpp-httplib",
   "version": "0.30.2",
+  "port-version": 1,
   "description": "A single file C++11 header-only HTTP/HTTPS server and client library",
   "homepage": "https://github.com/yhirose/cpp-httplib",
   "license": "MIT",
-  "supports": "!x86 & !arm32",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
