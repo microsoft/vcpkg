@@ -5873,7 +5873,7 @@
       "port-version": 0
     },
     "libxxf86vm": {
-      "baseline": "1.1.6",
+      "baseline": "1.1.7",
       "port-version": 0
     },
     "libyaml": {
