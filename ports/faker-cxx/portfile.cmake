@@ -2,14 +2,14 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cieslarmichal/faker-cxx
     REF "v${VERSION}"
-    SHA512 10030b2e17e851a1fd36206f125d8b34093b5de0b14b6538fb3006ac45b0f35841cbfd9afb788e357384a332f2445daaa84e96bb3f643f6aa7acc0a23687e018
+    SHA512 610933b09e5f77c0bb07f25e24a783b1d28f6c7183b24d93a54cf32275cac100248e8488b8b0768300f3b7c34fd653ba74c398e917925a20ce209e3dac97b814
     HEAD_REF main
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DBUILD_TESTING=OFF
+        -DFAKER_BUILD_TESTING=OFF
 )
 vcpkg_cmake_install()
 
