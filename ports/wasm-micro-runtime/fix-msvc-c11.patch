@@ -1,0 +1,23 @@
+diff --git a/core/shared/platform/include/platform_wasi_types.h b/core/shared/platform/include/platform_wasi_types.h
+index 56ea7514e..37b0da695 100644
+--- a/core/shared/platform/include/platform_wasi_types.h
++++ b/core/shared/platform/include/platform_wasi_types.h
+@@ -29,11 +29,17 @@
+ #endif /* _Alignof */
+ 
+ extern "C" {
++#else
++#ifdef _MSC_VER
++#ifndef _Alignof
++#define _Alignof(type) __alignof(type)
++#endif /* _Alignof */
++#endif /* _MSC_VER */
+ #endif
+ 
+ /* There is no need to check the WASI layout if we're using uvwasi or libc-wasi
+  * is not enabled at all. */
+-#if WASM_ENABLE_UVWASI != 0 || WASM_ENABLE_LIBC_WASI == 0
++#if defined(_MSC_VER) || WASM_ENABLE_UVWASI != 0 || WASM_ENABLE_LIBC_WASI == 0
+ #define assert_wasi_layout(expr, message) /* nothing */
+ #else
+ #define assert_wasi_layout(expr, message) _Static_assert(expr, message)
