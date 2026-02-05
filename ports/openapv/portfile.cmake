@@ -23,29 +23,13 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DOAPV_BUILD_STATIC_LIB=${OAPV_BUILD_STATIC}
         -DOAPV_BUILD_SHARED_LIB=${OAPV_BUILD_SHARED}
+        -DOAPV_APP_STATIC_BUILD=${OAPV_BUILD_STATIC}
 )
 
 vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH share/oapv)
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/oapv")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/oapv/oapv-config.cmake" "
-include(CMakeFindDependencyMacro)
-if(NOT TARGET oapv)
-    add_library(oapv UNKNOWN IMPORTED)
-    set_target_properties(oapv PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES \"\${CMAKE_CURRENT_LIST_DIR}/../../include/oapv\"
-    )
-    if(EXISTS \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/oapv/liboapv.a\")
-        set_target_properties(oapv PROPERTIES IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/oapv/liboapv.a\")
-    elseif(EXISTS \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/liboapv.dylib\")
-        set_target_properties(oapv PROPERTIES IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/liboapv.dylib\")
-    elseif(EXISTS \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/liboapv.so\")
-         set_target_properties(oapv PROPERTIES IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/../../lib/liboapv.so\")
-    endif()
-endif()
-")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
