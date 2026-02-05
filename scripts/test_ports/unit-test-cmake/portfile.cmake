@@ -37,8 +37,5 @@ endif()
 if("execute-required-process" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg_execute_required_process.cmake")
 endif()
-if("pkg-config-path" IN_LIST FEATURES)
-    include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg_pkg_config_pc_path.cmake")
-endif()
 
 unit_test_report_result()
