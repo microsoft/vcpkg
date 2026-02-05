@@ -8,11 +8,5 @@
     "jsoncpp",
     "vcpkg-cmake",
     "vcpkg-cmake-config"
-  ],
-  "features": {
-    "tools": {
-      "description": "Build command-line tools.",
-      "supports": "!uwp"
-    }
-  }
+  ]
 }
