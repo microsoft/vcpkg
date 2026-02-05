@@ -4421,7 +4421,7 @@
       "port-version": 0
     },
     "knncolle-annoy": {
-      "baseline": "0.2.1",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "knncolle-hnsw": {
