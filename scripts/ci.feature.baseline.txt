@@ -164,6 +164,7 @@ moos-essential:arm64-windows=fail
 moos-essential:x64-windows-static-md=fail
 moos-essential:x64-windows=fail
 moos-essential:x86-windows=fail
+mpir:x64-android=fail
 msquic(android)=fail
 nana:x64-linux=fail
 nana:x64-uwp=fail
