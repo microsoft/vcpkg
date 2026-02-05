@@ -34,17 +34,13 @@ else()
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        set(lib_suffix "a")
+        set(lib_suffix "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
         vcpkg_build_make(
             BUILD_TARGET build
             OPTIONS "CFLAGS_OPT_LEVEL="
         )
     else()
-        if(VCPKG_TARGET_IS_OSX)
-            set(lib_suffix "dylib")
-        else()
-            set(lib_suffix "so")
-        endif()
+        set(lib_suffix "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
         vcpkg_build_make(
             BUILD_TARGET build_shared
             OPTIONS "CFLAGS_OPT_LEVEL="
@@ -52,12 +48,12 @@ else()
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libpg_query.${lib_suffix}"
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libpg_query${lib_suffix}"
             DESTINATION "${CURRENT_PACKAGES_DIR}/lib"
         )
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libpg_query.${lib_suffix}"
+        file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libpg_query${lib_suffix}"
             DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib"
         )
     endif()
