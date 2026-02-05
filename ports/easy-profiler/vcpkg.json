@@ -1,9 +1,9 @@
 {
-  "name": "easyprofiler",
+  "name": "easy-profiler",
   "version": "2.1.0",
   "description": "Lightweight profiler library for c++",
   "homepage": "https://github.com/yse/easy_profiler",
-  "license": "MIT",
+  "license": "MIT OR Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     {
