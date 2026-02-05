@@ -6,18 +6,13 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-vcpkg_check_features(
-  OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    examples LOGME_BUILD_EXAMPLES
-    tools    LOGME_BUILD_TOOLS
-)
+set(_logme_build_tools OFF)
+if("tools" IN_LIST FEATURES)
+  set(_logme_build_tools ON)
+endif()
 
-if(VCPKG_TARGET_IS_UWP)
-  list(APPEND FEATURE_OPTIONS
-    -DLOGME_BUILD_EXAMPLES=OFF
-    -DLOGME_BUILD_TOOLS=OFF
-  )
+if(VCPKG_TARGET_IS_UWP AND _logme_build_tools)
+  message(FATAL_ERROR "Feature 'tools' is not supported for UWP.")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -34,21 +29,30 @@ vcpkg_cmake_configure(
     -DLOGME_BUILD_STATIC=${_logme_static_opt}
     -DLOGME_BUILD_DYNAMIC=${_logme_dynamic_opt}
     -DLOGME_BUILD_TESTS=OFF
+    -DLOGME_BUILD_EXAMPLES=OFF
+    -DLOGME_BUILD_TOOLS=${_logme_build_tools}
     -DUSE_JSONCPP=ON
-    ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(
-  PACKAGE_NAME logme
-  CONFIG_PATH lib/cmake/logme
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/logme)
+
+if(_logme_build_tools)
+  # Upstream currently does not install the tool target.
+  # Install the built binaries manually so vcpkg_copy_tools can pick them up.
+  file(INSTALL
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/logmectl.exe"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/bin"
+  )
+  file(INSTALL
+    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/logmectl.exe"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin"
+  )
+
+  vcpkg_copy_tools(TOOL_NAMES logmectl AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

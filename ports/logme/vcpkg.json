@@ -10,10 +10,6 @@
     "vcpkg-cmake-config"
   ],
   "features": {
-    "examples": {
-      "description": "Build examples.",
-      "supports": "!uwp"
-    },
     "tools": {
       "description": "Build command-line tools.",
       "supports": "!uwp"
