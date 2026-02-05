@@ -5201,7 +5201,7 @@
       "port-version": 2
     },
     "libmysofa": {
-      "baseline": "1.3.3",
+      "baseline": "1.3.4",
       "port-version": 0
     },
     "libmysql": {
