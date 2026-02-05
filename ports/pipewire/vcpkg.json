@@ -1,6 +1,6 @@
 {
   "name": "pipewire",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "description": "Low-latency audio/video router and processor. This port only builds the client library, not the server.",
   "homepage": "https://pipewire.org",
   "license": "MIT",
