@@ -23,6 +23,10 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     set(OPTIONS --disable-silent-rules --enable-gmpcompat --enable-cxx ${SHARED_STATIC})
 
+    if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        vcpkg_list(APPEND OPTIONS "--host=x86-linux")
+    endif()
+
     string(APPEND VCPKG_C_FLAGS " -Wno-implicit-function-declaration")
     string(APPEND VCPKG_CXX_FLAGS " -Wno-implicit-function-declaration")
 
