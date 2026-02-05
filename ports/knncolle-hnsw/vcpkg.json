@@ -1,6 +1,6 @@
 {
   "name": "knncolle-hnsw",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "knncolle bindings for HNSW search ",
   "homepage": "https://github.com/knncolle/knncolle_hnsw",
   "license": "MIT",
