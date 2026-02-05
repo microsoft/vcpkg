@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.2.1.0
     SHA512 6489242a971d27e5a23fab1544beea7770812157919ddf9d15bfdc7f6de0514c458e7d43c7c65ae6036138b8cc7d3bdc2e85bf08aefa0c9dac3a7fac33545512
     HEAD_REF main
+    PATCHES
+        enable-msvc.patch
 )
 
 vcpkg_check_features(

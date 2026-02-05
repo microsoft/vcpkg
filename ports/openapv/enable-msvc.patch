@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0000000..1111111 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -43,7 +43,15 @@ endif()
+ 
+ # Set compiler flags and options.
+ if(MSVC)
+-  message("Not supported yet!")
++    if(NOT CMAKE_BUILD_TYPE)
++        set(CMAKE_BUILD_TYPE "Release")
++    endif()
++    
++    add_compile_options(/W3 /wd4996)
++    if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
++        add_compile_options(/O2)
++    endif()
++    
+ elseif(UNIX OR MINGW)
+     if(ENABLE_COVERAGE)
+         set(CMAKE_BUILD_TYPE "Debug")
