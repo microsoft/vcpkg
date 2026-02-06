@@ -1,6 +1,7 @@
 {
   "name": "openapv",
   "version": "0.2.1.0",
+  "supports": "!x86",
   "description": "Open Advanced Professional Video (APV) codec implementation.",
   "homepage": "https://github.com/AcademySoftwareFoundation/openapv",
   "license": "BSD-3-Clause",
