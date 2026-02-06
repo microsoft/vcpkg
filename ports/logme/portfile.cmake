@@ -6,13 +6,8 @@ vcpkg_from_github(
   HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-  set(_logme_static_opt  ON)
-  set(_logme_dynamic_opt OFF)
-else()
-  set(_logme_static_opt  OFF)
-  set(_logme_dynamic_opt ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}"  "static" _logme_static_opt)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}"  "dynamic" _logme_dynamic_opt)
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
