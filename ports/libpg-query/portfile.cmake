@@ -35,17 +35,16 @@ else()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(lib_suffix "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
-        vcpkg_build_make(
-            BUILD_TARGET build
-            OPTIONS "CFLAGS_OPT_LEVEL="
-        )
+        set(make_target "build")
     else()
         set(lib_suffix "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
-        vcpkg_build_make(
-            BUILD_TARGET build_shared
-            OPTIONS "CFLAGS_OPT_LEVEL="
-        )
+        set(make_target "build_shared")
     endif()
+
+    vcpkg_build_make(
+        BUILD_TARGET "${make_target}"
+        OPTIONS "CFLAGS_OPT_LEVEL="
+    )
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libpg_query${lib_suffix}"
