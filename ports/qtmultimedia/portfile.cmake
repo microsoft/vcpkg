@@ -27,30 +27,13 @@ if("gstreamer" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='yes'")
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
-    list(APPEND unused INPUT_gstreamer_gl INPUT_gstreamer_photography)
 endif()
-list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_gl='no'")
-list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer_photography='no'")
 
 if("ffmpeg" IN_LIST FEATURES)
     # Note: Requires pulsadio on linux and wmfsdk on windows
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='yes'")
-    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_ANDROID)
-        list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
-    else()
-        list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='yes'")
-    endif()
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_ffmpeg='no'")
-    list(APPEND FEATURE_OPTIONS "-DINPUT_pulseaudio='no'")
-endif()
-
-# alsa is not ready
-if(NOT "ffmpeg" IN_LIST FEATURES AND NOT "gstreamer" IN_LIST FEATURES AND VCPKG_TARGET_IS_LINUX)
-  #list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=ON") # alsa is experimental so don't activate it (also missing the dep on it.)
-  message(FATAL_ERROR "You need to activate at least one backend.")
-else()
-  list(APPEND FEATURE_OPTIONS "-DFEATURE_alsa=OFF")
 endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

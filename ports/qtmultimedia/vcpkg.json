@@ -19,13 +19,18 @@
     {
       "name": "qtshadertools",
       "default-features": false
+    },
+    {
+      "name": "pipewire",
+      "platform": "linux"
+    },
+    {
+      "name": "pulseaudio",
+      "platform": "linux"
     }
   ],
   "default-features": [
-    {
-      "name": "gstreamer",
-      "platform": "linux"
-    },
+    "ffmpeg",
     "widgets"
   ],
   "features": {
@@ -42,10 +47,6 @@
             "swresample",
             "swscale"
           ]
-        },
-        {
-          "name": "pulseaudio",
-          "platform": "linux"
         },
         {
           "name": "qtdeclarative",
