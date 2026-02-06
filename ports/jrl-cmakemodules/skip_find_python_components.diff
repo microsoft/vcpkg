@@ -1,0 +1,32 @@
+Index: python.cmake
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+diff --git a/python.cmake b/python.cmake
+--- a/python.cmake	(revision 0e356df8e6c596496639120c37807c402f799f82)
++++ b/python.cmake	(date 1767080322182)
+@@ -176,11 +176,18 @@
+         set(Python_NumPy_INCLUDE_DIR ${NUMPY_INCLUDE_DIRS})
+       endif()
+
+-      find_package(
+-        "Python${_PYTHON_VERSION_MAJOR}"
+-        REQUIRED
+-        COMPONENTS ${PYTHON_COMPONENTS}
+-      )
++      if (JRL_SKIP_FIND_PYTHON_COMPONENTS)
++        find_package(
++                "Python${_PYTHON_VERSION_MAJOR}"
++                REQUIRED
++        )
++      else ()
++        find_package(
++                "Python${_PYTHON_VERSION_MAJOR}"
++                REQUIRED
++                COMPONENTS ${PYTHON_COMPONENTS}
++        )
++      endif ()
+     else()
+       # No hint was provided. We can then check for first Python 2, then Python
+       # 3

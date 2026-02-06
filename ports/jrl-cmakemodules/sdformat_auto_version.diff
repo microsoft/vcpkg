@@ -1,0 +1,59 @@
+Index: sdformat.cmake
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>GBK
+===================================================================
+diff --git a/sdformat.cmake b/sdformat.cmake
+--- a/sdformat.cmake	(revision 0e356df8e6c596496639120c37807c402f799f82)
++++ b/sdformat.cmake	(date 1766815170376)
+@@ -11,15 +11,41 @@
+ # FATAL_ERROR is generated.
+ #
+ macro(SEARCH_FOR_SDFORMAT)
+-  set(
+-    SDF_VERSIONS
+-    "14"
+-    "13"
+-    "12"
+-    "11"
+-    "10"
+-    "9"
+-  )
++  set(SDF_VERSIONS "")
++  set(_sdf_found_versions "")
++
++  foreach(_prefix IN LISTS CMAKE_PREFIX_PATH)
++    file(
++            GLOB
++            _sdf_configs
++            "${_prefix}/share/sdformat*/sdformat*-config.cmake"
++    )
++    foreach(_cfg IN LISTS _sdf_configs)
++      get_filename_component(_dir "${_cfg}" DIRECTORY)
++      get_filename_component(_pkg "${_dir}" NAME)
++      string(REGEX MATCH "^sdformat([0-9]+)$" _match "${_pkg}")
++      if(_match)
++        list(APPEND _sdf_found_versions "${CMAKE_MATCH_1}")
++      endif()
++    endforeach()
++  endforeach()
++
++  if(_sdf_found_versions)
++    list(REMOVE_DUPLICATES _sdf_found_versions)
++    list(SORT _sdf_found_versions COMPARE NATURAL ORDER DESCENDING)
++    list(GET _sdf_found_versions 0 _latest_sdf_version)
++    set(SDF_VERSIONS "${_latest_sdf_version}")
++  else ()
++    set(
++            SDF_VERSIONS
++            "14"
++            "13"
++            "12"
++            "11"
++            "10"
++            "9"
++    )
++  endif()
+   list(APPEND SDF_VERSIONS "")
+   set(P_REQUIRED False)
+   set(variadic_args ${ARGN})
