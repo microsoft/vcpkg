@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO neosapience/typecast-sdk
     REF "v${VERSION}"
-    SHA512 70e568d4eaaae55737f4358dfea2c63c7ce6afeb00a37180cb125e2da96ba9e881bf229fe872d2b9f38caadee3bb23a0abdc63df19ee6dc603f4e4beea362170
+    SHA512 327c92a7d3f557b1dbad55f0016d263079802afb6d30cdafc7b781e72fedbf93cb7bc3c1d7b13d319480060cd565628387df243939334fb450940b835bce369b
     HEAD_REF main
 )
 
