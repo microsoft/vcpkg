@@ -1,4 +1,6 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,8 +8,8 @@ vcpkg_from_github(
     REF 2af598f04ab508f9231d6e26f0f82f5a57561413
     SHA512 a42138cb5906d8f6cbdab32fad042f626bacb62450839f66d6b27831fcd5bd93039f68423c82d460cf1147ce82908c04595442f90be3bf67e2066547d0fe0291
     HEAD_REF master
-    PATCHES
-        avoid_msvc_internal_STRINGIZE.patch
+    # PATCHES
+    #     avoid_msvc_internal_STRINGIZE.patch
 )
 
 set(BUILDTREE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
@@ -35,42 +37,60 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         endif()
     endforeach()
 else()
-    if(VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
-        set(CHAKRACORE_TARGET_ARCH amd64)
-    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-        set(CHAKRACORE_TARGET_ARCH x86)
+    if(VCPKG_TARGET_IS_OSX)
+        list(APPEND FEATURE_OPTIONS -DDISABLE_JIT=ON)
+        message(WARNING "${PORT} requires Clang from the system package manager")
     endif()
-	
+    
     if (VCPKG_TARGET_IS_LINUX)
         message(WARNING "${PORT} requires Clang from the system package manager, this can be installed on Ubuntu systems via sudo apt install clang")
     endif()
-
-	file(MAKE_DIRECTORY "${BUILDTREE_PATH}-dbg")
-    if(NOT DEFINED VCPKG_BUILD_TYPE)
-        list(APPEND configs "debug")
-        execute_process(
-            COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "--debug" "-j=${VCPKG_CONCURRENCY}"
-            WORKING_DIRECTORY "${SOURCE_PATH}"
-	
-            OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
-            ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
-            RESULT_VARIABLE CHAKRA_BUILD_SH_RES
-            ECHO_OUTPUT_VARIABLE
-            ECHO_ERROR_VARIABLE
-        )
+    
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        list(APPEND FEATURE_OPTIONS -DSTATIC_LIBRARY=ON)
+    else()
+        list(APPEND FEATURE_OPTIONS -DSTATIC_LIBRARY=OFF)
     endif()
-	
-    file(MAKE_DIRECTORY "${BUILDTREE_PATH}-rel")
-    list(APPEND configs "release")
-    execute_process(
-        COMMAND bash "build.sh" "--arch=${CHAKRACORE_TARGET_ARCH}" "-j=${VCPKG_CONCURRENCY}"
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        OUTPUT_VARIABLE CHAKRA_BUILD_SH_OUT
-        ERROR_VARIABLE CHAKRA_BUILD_SH_ERR
-        RESULT_VARIABLE CHAKRA_BUILD_SH_RES
-        ECHO_OUTPUT_VARIABLE
-        ECHO_ERROR_VARIABLE
+    
+    vcpkg_cmake_configure(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS ${FEATURE_OPTIONS}
     )
+    
+    vcpkg_cmake_build()
+    
+    # Manual installation since ChakraCore doesn't have install target
+    file(GLOB_RECURSE RELEASE_LIBS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/lib/libChakraCore*")
+    foreach(lib ${RELEASE_LIBS})
+        get_filename_component(lib_name ${lib} NAME)
+        if(lib_name MATCHES "\\.(dylib|so)$")
+            file(INSTALL ${lib} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        elseif(lib_name MATCHES "\\.a$")
+            file(INSTALL ${lib} DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        endif()
+    endforeach()
+    
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB_RECURSE DEBUG_LIBS "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/lib/libChakraCore*")
+        foreach(lib ${DEBUG_LIBS})
+            get_filename_component(lib_name ${lib} NAME)
+            if(lib_name MATCHES "\\.(dylib|so)$")
+                file(INSTALL ${lib} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+            elseif(lib_name MATCHES "\\.a$")
+                file(INSTALL ${lib} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+            endif()
+        endforeach()
+    endif()
+    
+    # Copy ch binary if it exists
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(CH_BINARY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/ch/ch")
+        if(EXISTS "${CH_BINARY}")
+            file(INSTALL "${CH_BINARY}"
+                 DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}"
+                 FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+        endif()
+    endif()
 endif()
 
 file(INSTALL
@@ -87,27 +107,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         DESTINATION "${CURRENT_PACKAGES_DIR}/include"
     )
 else()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-		file(INSTALL "${SOURCE_PATH}/out/Debug/libChakraCore.so" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-	    file(INSTALL "${SOURCE_PATH}/out/Release/libChakraCore.so" DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    else()
-		file(INSTALL "${SOURCE_PATH}/out/Debug/lib/libChakraCoreStatic.a" DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-	    file(INSTALL "${SOURCE_PATH}/out/Release/lib/libChakraCoreStatic.a"	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    endif()
-
-    set(out_dir_release "${SOURCE_PATH}/out/Release")
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(INSTALL
-            "${out_dir_release}/ch"
-            DESTINATION "${CURRENT_PACKAGES_DIR}/tools/chakracore"
-        )
-        vcpkg_copy_tools(TOOL_NAMES ch
-            SEARCH_DIR "${out_dir_release}"
-        )
-    endif()
-
-
+    # vcpkg_cmake handles file fixup automatically
 endif()
 
 file(INSTALL
