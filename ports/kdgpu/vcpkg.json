@@ -1,0 +1,65 @@
+{
+  "name": "kdgpu",
+  "version": "0.10.0",
+  "description": "KDGPU Library - C++ Vulkan wrapper for GPU programming",
+  "homepage": "https://github.com/KDAB/kdgpu",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "glslang",
+      "host": true,
+      "features": [
+        "tools"
+      ]
+    },
+    "kdutils",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "vulkan-sdk-components"
+  ],
+  "features": {
+    "hlsl": {
+      "description": "Enable HLSL shader support",
+      "supports": "(windows & !arm32 & !uwp & !xbox) | (linux & x64)",
+      "dependencies": [
+        {
+          "name": "directx-dxc",
+          "host": true
+        }
+      ]
+    },
+    "kdgpuexample": {
+      "description": "Enable KDGpuExample",
+      "dependencies": [
+        "glm",
+        {
+          "name": "imgui",
+          "features": [
+            "vulkan-binding"
+          ]
+        }
+      ]
+    },
+    "kdgpukdgui": {
+      "description": "Enable KDGui integration"
+    },
+    "kdgpuutils": {
+      "description": "Enable KDGpuUtils"
+    },
+    "openxr": {
+      "description": "Enable OpenXR support for VR/AR",
+      "dependencies": [
+        "kdbindings",
+        "openxr-loader"
+      ]
+    }
+  }
+}
