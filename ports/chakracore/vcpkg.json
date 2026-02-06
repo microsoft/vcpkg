@@ -7,6 +7,10 @@
   "supports": "!uwp & (osx | linux | !static)",
   "dependencies": [
     {
+      "name": "icu",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
@@ -21,10 +25,6 @@
         "pkg-config"
       ],
       "platform": "windows"
-    },
-    {
-      "name": "icu",
-      "platform": "linux"
     }
   ]
 }
