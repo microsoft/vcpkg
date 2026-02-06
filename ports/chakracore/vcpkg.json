@@ -21,6 +21,10 @@
         "pkg-config"
       ],
       "platform": "windows"
+    },
+    {
+      "name": "icu",
+      "platform": "linux"
     }
   ]
 }
