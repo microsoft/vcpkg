@@ -27,9 +27,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         )
     endif()
 else()
-    vcpkg_configure_make(
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
+
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        SKIP_CONFIGURE
         COPY_SOURCE
     )
 
@@ -41,8 +42,8 @@ else()
         set(make_target "build_shared")
     endif()
 
-    vcpkg_build_make(
-        BUILD_TARGET "${make_target}"
+    vcpkg_make_install(
+        TARGETS "${make_target}"
         OPTIONS "CFLAGS_OPT_LEVEL="
     )
 
