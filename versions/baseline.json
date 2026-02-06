@@ -661,7 +661,7 @@
       "port-version": 0
     },
     "bdwgc": {
-      "baseline": "8.2.10",
+      "baseline": "8.2.12",
       "port-version": 0
     },
     "behaviortree-cpp": {
