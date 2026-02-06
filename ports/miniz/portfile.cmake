@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO richgel999/miniz
-    REF c883286f1a6443720e7705450f59e579a4bbb8e2
-    SHA512 56f8ad02ba695bcc469f0711423f7027faeb49515aac6ecd7bc4f86d6f40f6816f2c2fc893ec39379e39abfb7a2dbe2c53da38202f04a22e357eb0e5f6f375ff
+    REF "${VERSION}"
+    SHA512 b2116d01161e6ba978541da3b1040338158a2da0d4559ae2817c1bd19a56472476b6984d438e7b8451aa0142d0405858342d719a76bd3bd6fd2df3ff6edc0700
     HEAD_REF master
 )
 
@@ -17,10 +17,13 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_copy_pdbs(BUILD_PATHS "${CURRENT_PACKAGES_DIR}/bin/*.dll")
+vcpkg_copy_pdbs()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/miniz)
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
