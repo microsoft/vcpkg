@@ -42,6 +42,7 @@ else()
     
     if (VCPKG_TARGET_IS_LINUX)
         message(WARNING "${PORT} requires Clang from the system package manager, this can be installed on Ubuntu systems via sudo apt install clang")
+        list(APPEND FEATURE_OPTIONS -DICU_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/include)
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
