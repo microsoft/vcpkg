@@ -1,6 +1,6 @@
 {
   "name": "orange-math",
-  "version": "4.6.1",
+  "version": "4.7.0",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "Zlib",
@@ -24,6 +24,9 @@
       "dependencies": [
         "imgui"
       ]
+    },
+    "inline": {
+      "description": "Omath will define some methods as inline"
     }
   }
 }

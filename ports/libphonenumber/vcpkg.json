@@ -1,6 +1,6 @@
 {
   "name": "libphonenumber",
-  "version": "9.0.21",
+  "version": "9.0.23",
   "description": "Google's common Java, C++ and JavaScript library for parsing, formatting, and validating international phone numbers.",
   "homepage": "https://github.com/google/libphonenumber",
   "license": "Apache-2.0",

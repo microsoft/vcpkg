@@ -4,17 +4,20 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     return()
 endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libice
-    REF "libICE-${VERSION}"
-    SHA512  0892ee9210302e787297763bcf0c7788bcd5f5572d5fd86472e8104dc291e7e190effc0100bbca98c6b048b445bd9e8bdf490287e1dbf2a64693aa1895950610
-    HEAD_REF master
+vcpkg_download_distfile(
+    LIBICE_ARCHIVE
+    URLS "https://www.x.org/releases/individual/lib/libICE-${VERSION}.tar.xz"
+    FILENAME "libICE-${VERSION}.tar.xz"
+    SHA512 340f51ffa1f14ed442ab8bcea92dd63df147c48242e232e818cafe02f43de7ab6e99c5430b9cb8d0dc661295239d2b3f6bdb6a092ce51a98afa06235257e9b1f
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBICE_ARCHIVE}"
     PATCHES
         fix_build.patch
         replace_macros.patch
-) 
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 

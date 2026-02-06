@@ -1,6 +1,6 @@
 {
   "name": "morcules-swiftnet",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "SwiftNet is a C networking library built using pcap, providing a clean and readable API.",
   "homepage": "https://github.com/morcules/SwiftNet",
   "license": "Apache-2.0",

@@ -1,6 +1,7 @@
 {
   "name": "gz-gui",
   "version": "9.0.2",
+  "port-version": 1,
   "description": "Gazebo GUI builds on top of Qt to provide widgets which are useful when developing robotics applications, such as a 3D view, plots, dashboard, etc, and can be used together in a convenient unified interface.",
   "homepage": "https://gazebosim.org/libs/gui",
   "license": "Apache-2.0",

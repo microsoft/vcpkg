@@ -2,12 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yoctopuce/yoctolib_cpp
     REF "v${VERSION}"
-    SHA512 c57baae00289dc2bbcabe278d9ff5667077bd3b93fadd20fd9de4428050af0bb6a659849b52e5c93b3e51c6d71764839c0d299e775d4133f85fa31990242077e
+    SHA512 ed405d77c05288e123851a79e86beaf9778cce487c5d5d4a556f47b3a690517e71b004e5b3e0ae5532cb24ed46a1c04ce4f18c34cccf475fc1ca45a331808c43
     HEAD_REF master
     PATCHES
         001-cmake_config.patch
-        002-add_missing_win32_bcrypt_linkage.patch
-        003-fix_win32_shared_build.patch
 )
 
 if(VCPKG_TARGET_IS_LINUX)
@@ -24,7 +22,7 @@ vcpkg_cmake_configure(
 )
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-yoctolib)
+vcpkg_cmake_config_fixup(PACKAGE_NAME yoctolib)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
