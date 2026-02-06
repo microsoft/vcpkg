@@ -1,20 +1,19 @@
 # It installs only shared libs, regardless build type.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
-    SHA512 7a6f4c48ea57c7cd1946bd33c9fdacfbb4a5ed9c02034f3cd483099539d6bcd5448144fe13f66815cdd51a693ccb317872accf1b150730404fb2d618222a78ca
+    SHA512 cc63f7ed35e904e32390b6858777dad2d109256d52ec905873b5f049cda0ebc1902e966afa4d68882fda9a505c9d607176a04cc1112ae5237a1685e8da2bb4de
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-build.patch
-        fix_vulkan_enabled.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
