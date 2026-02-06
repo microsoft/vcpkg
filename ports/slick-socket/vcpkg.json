@@ -15,6 +15,9 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "wepoll"
+    {
+      "name": "wepoll",
+      "platform": "windows"
+    }
   ]
 }
