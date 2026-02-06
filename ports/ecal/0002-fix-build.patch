@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8bc05ee..c44b9fa 100644
+index 8bc05ee..bd3b2b8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,13 +26,17 @@ endif (POLICY CMP0077)
+@@ -26,13 +26,16 @@ endif (POLICY CMP0077)
  
  list(APPEND CMAKE_MODULE_PATH
    ${CMAKE_CURRENT_SOURCE_DIR}/cmake
@@ -16,24 +16,21 @@ index 8bc05ee..c44b9fa 100644
  set(ECAL_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
  
 +include(${CMAKE_CURRENT_LIST_DIR}/thirdparty/cmakefunctions/build-cmakefunctions.cmake)
-+set(CMakeFunctions_FOUND TRUE)
 +
 +find_path(TCLAP_INCLUDE_DIRS "tclap/Arg.h")
  # --------------------------------------------------------
  # set msvc specific options
  # --------------------------------------------------------
-@@ -289,7 +293,9 @@ if(MSVC)
+@@ -289,8 +292,6 @@ if(MSVC)
    endif()
  endif()
  
 -find_package(CMakeFunctions REQUIRED)
-+if(NOT CMakeFunctions_FOUND)
-+  find_package(CMakeFunctions REQUIRED)
-+endif()
- 
+-
  git_revision_information(DEFAULT ${ECAL_BUILD_VERSION})
  set(eCAL_VERSION_MAJOR  ${GIT_REVISION_MAJOR})
-@@ -321,7 +327,7 @@ set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
+ set(eCAL_VERSION_MINOR  ${GIT_REVISION_MINOR})
+@@ -321,7 +322,7 @@ set(eCAL_install_archive_dir       ${CMAKE_INSTALL_LIBDIR})
  set(eCAL_install_archive_dyn_dir   ${CMAKE_INSTALL_LIBDIR})
  set(eCAL_install_bin_dir           ${CMAKE_INSTALL_BINDIR})
  set(eCAL_install_config_dir        ${CMAKE_INSTALL_SYSCONFDIR}/ecal)

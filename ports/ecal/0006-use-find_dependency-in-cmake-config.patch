@@ -1,8 +1,8 @@
 diff --git a/cmake/eCALConfig.cmake.in b/cmake/eCALConfig.cmake.in
-index f285f5e..c91f741 100644
+index f285f5e..d10bbf9 100644
 --- a/cmake/eCALConfig.cmake.in
 +++ b/cmake/eCALConfig.cmake.in
-@@ -30,12 +30,14 @@ set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
+@@ -30,13 +30,8 @@ set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
  set(CMAKE_MAP_IMPORTED_CONFIG_MINSIZEREL Release "")
  set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release "")
  
@@ -12,23 +12,18 @@ index f285f5e..c91f741 100644
 -if(NOT Protobuf_FOUND)
 -  # Search for Protobuf using Module mode (with no Config mode fallback)
 -  find_package(Protobuf MODULE REQUIRED)
+-endif()
 +include(CMakeFindDependencyMacro)
 +find_dependency(Protobuf CONFIG)
-+
-+# Ensure transitive dependencies are present for static builds
-+if(NOT @BUILD_SHARED_LIBS@)
-+  find_dependency(asio)
-+  find_dependency(tcp_pubsub)
-+  find_dependency(HDF5)
- endif()
  
  include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_add_functions.cmake")
-@@ -50,6 +52,6 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
+ include("@PACKAGE_eCAL_install_cmake_dir@/helper_functions/ecal_helper_functions.cmake")
+@@ -50,6 +45,6 @@ include("@PACKAGE_eCAL_install_cmake_dir@/eCALTargets.cmake")
  #  list(APPEND CMAKE_PREFIX_PATH "${PACKAGE_PREFIX_DIR}/../../../../cmake")
  #endif()
  
 -find_package(CMakeFunctions REQUIRED)
-+find_dependency(CMakeFunctions CONFIG)
++# find_dependency(CMakeFunctions CONFIG)
  
 -find_package(Threads REQUIRED)
 +find_dependency(Threads)
