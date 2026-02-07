@@ -1,11 +1,10 @@
 {
-  "name": "workflow",
-  "version": "0.11.11",
-  "port-version": 1,
-  "description": "C++ Parallel Computing and Asynchronous Networking Engine",
+  "name": "workflow-win",
+  "version": "2026-01-09",
+  "description": "C++ Parallel Computing and Asynchronous Networking Engine (Windows version)",
   "homepage": "https://github.com/sogou/workflow",
   "license": "Apache-2.0",
-  "supports": "!windows | mingw",
+  "supports": "windows & !mingw",
   "dependencies": [
     "openssl",
     {

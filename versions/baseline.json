@@ -4218,7 +4218,7 @@
     },
     "kedixa-coke": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kenlm": {
       "baseline": "20230531",
@@ -9442,7 +9442,7 @@
     },
     "srpc": {
       "baseline": "0.10.4",
-      "port-version": 0
+      "port-version": 1
     },
     "sse2neon": {
       "baseline": "1.9.1",
@@ -10698,6 +10698,10 @@
     },
     "workflow": {
       "baseline": "0.11.11",
+      "port-version": 1
+    },
+    "workflow-win": {
+      "baseline": "2026-01-09",
       "port-version": 0
     },
     "wpilib": {
