@@ -1,6 +1,6 @@
 {
   "name": "xdigest",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Extremely fast digest algorithms packaged into a lightweight library.",
   "homepage": "https://github.com/rinrab/xdigest",
   "license": "Apache-2.0",
