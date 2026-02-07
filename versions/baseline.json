@@ -4957,8 +4957,8 @@
       "port-version": 5
     },
     "libharu": {
-      "baseline": "2.4.4",
-      "port-version": 1
+      "baseline": "2.4.5",
+      "port-version": 0
     },
     "libhat": {
       "baseline": "0.9.0",

@@ -1,10 +1,8 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libharu/libharu
-    REF v${VERSION}
-    SHA512 422210b09f89643cb25808559aeea109db5cce8a71c779d51f87222cdd50434f4f0f92322ebe429fca8f85ad73592bcabb14c3e36cd0bea19b6ec4c729220522
+    REF "v${VERSION}"
+    SHA512 677523f927ecc925d95c91ebb1cb3d1146c2ffc86031c6fc05fc038893fd38babde2abf16683e0b76d1e2b8554c64bf2278649a0f70b08a0f187c2135fc14220
     HEAD_REF master
     PATCHES
         fix-include-path.patch
@@ -62,4 +60,4 @@ endif()
 
 vcpkg_copy_pdbs()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
