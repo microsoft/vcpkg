@@ -6326,7 +6326,7 @@
     },
     "metis": {
       "baseline": "2025-07-04",
-      "port-version": 0
+      "port-version": 1
     },
     "metrohash": {
       "baseline": "1.1.3",
