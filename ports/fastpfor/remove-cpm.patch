@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c32c332..fcb9324 100644
+index c32c332..a72eada 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -13,7 +13,6 @@ set(CMAKE_C_STANDARD_REQUIRED True)
@@ -18,7 +18,7 @@ index c32c332..fcb9324 100644
          MESSAGE(STATUS "USING SIMDE FOR SIMD OPERATIONS")
      else ()
          MESSAGE(STATUS "SIMDE and SSE 4.2 support not detected")
-@@ -112,10 +110,11 @@ add_executable(csv2maropu src/csv2maropu.cpp)
+@@ -112,10 +110,9 @@ add_executable(csv2maropu src/csv2maropu.cpp)
  target_link_libraries(csv2maropu PRIVATE FastPFOR)
  
  if (SUPPORT_NEON)
@@ -27,14 +27,12 @@ index c32c332..fcb9324 100644
 -    target_link_libraries(partitionbylength PUBLIC simde)
 -    target_link_libraries(csv2maropu PUBLIC simde)
 +    find_path(SIMDE_INCLUDE_DIRS "simde/arm/neon.h")
-+    target_include_directories(FastPFOR PRIVATE ${SIMDE_INCLUDE_DIRS})
-+    target_include_directories(gapstats PRIVATE ${SIMDE_INCLUDE_DIRS})
-+    target_include_directories(partitionbylength PRIVATE ${SIMDE_INCLUDE_DIRS})
-+    target_include_directories(csv2maropu PRIVATE ${SIMDE_INCLUDE_DIRS})
++    target_include_directories(FastPFOR PUBLIC ${SIMDE_INCLUDE_DIRS})
++    target_compile_definitions(FastPFOR PUBLIC SIMDE_ENABLE_NATIVE_ALIASES)
  else()
      message(STATUS "SIMDE not used")
  endif()
-@@ -128,21 +127,21 @@ if( SUPPORT_SSE42 )
+@@ -128,21 +125,21 @@ if( SUPPORT_SSE42 )
      target_link_libraries(benchbitpacking FastPFOR)
  endif()
  
