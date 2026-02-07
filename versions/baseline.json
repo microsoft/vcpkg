@@ -9772,6 +9772,10 @@
       "baseline": "2.1.0",
       "port-version": 0
     },
+    "terrakuh-base64": {
+      "baseline": "2026-02-06",
+      "port-version": 0
+    },
     "tesseract": {
       "baseline": "5.5.2",
       "port-version": 0
