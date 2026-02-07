@@ -1,5 +1,5 @@
 diff --git a/Release/include/pplx/threadpool.h b/Release/include/pplx/threadpool.h
-index b297ff6..56ea475 100644
+index b297ff6b..56ea4751 100644
 --- a/Release/include/pplx/threadpool.h
 +++ b/Release/include/pplx/threadpool.h
 @@ -69,15 +69,15 @@ public:
@@ -22,7 +22,7 @@ index b297ff6..56ea475 100644
  
  } // namespace crossplat
 diff --git a/Release/src/http/client/http_client_asio.cpp b/Release/src/http/client/http_client_asio.cpp
-index 07bb488..f9c7c51 100644
+index 07bb4885..f9c7c51d 100644
 --- a/Release/src/http/client/http_client_asio.cpp
 +++ b/Release/src/http/client/http_client_asio.cpp
 @@ -146,9 +146,9 @@ class asio_connection
@@ -234,7 +234,7 @@ index 07bb488..f9c7c51 100644
                  // The existing handler was canceled so schedule a new one.
                  assert(m_state == started);
 diff --git a/Release/src/http/client/x509_cert_utilities.cpp b/Release/src/http/client/x509_cert_utilities.cpp
-index 67fc5ac..7239f97 100644
+index 67fc5ac4..7239f978 100644
 --- a/Release/src/http/client/x509_cert_utilities.cpp
 +++ b/Release/src/http/client/x509_cert_utilities.cpp
 @@ -95,7 +95,7 @@ bool verify_cert_chain_platform_specific(boost::asio::ssl::verify_context& verif
@@ -247,7 +247,7 @@ index 67fc5ac..7239f97 100644
      }
  #endif
 diff --git a/Release/src/http/listener/http_server_asio.cpp b/Release/src/http/listener/http_server_asio.cpp
-index e83b9ff..14aadfb 100644
+index e83b9ff5..14aadfb4 100644
 --- a/Release/src/http/listener/http_server_asio.cpp
 +++ b/Release/src/http/listener/http_server_asio.cpp
 @@ -520,17 +520,14 @@ void hostport_listener::start()
@@ -318,7 +318,7 @@ index e83b9ff..14aadfb 100644
              size_t actualSize = 0;
              try
 diff --git a/Release/src/pplx/pplxlinux.cpp b/Release/src/pplx/pplxlinux.cpp
-index 630a9e4..65625b6 100644
+index 630a9e47..65625b6f 100644
 --- a/Release/src/pplx/pplxlinux.cpp
 +++ b/Release/src/pplx/pplxlinux.cpp
 @@ -35,7 +35,7 @@ _PPLXIMP void YieldExecution() { std::this_thread::yield(); }
@@ -331,7 +331,7 @@ index 630a9e4..65625b6 100644
  
  } // namespace details
 diff --git a/Release/src/pplx/threadpool.cpp b/Release/src/pplx/threadpool.cpp
-index ba38a1a..e12e48d 100644
+index ba38a1a1..e12e48d8 100644
 --- a/Release/src/pplx/threadpool.cpp
 +++ b/Release/src/pplx/threadpool.cpp
 @@ -37,7 +37,7 @@ static void abort_if_no_jvm()
@@ -353,7 +353,7 @@ index ba38a1a..e12e48d 100644
  
  #if defined(_WIN32)
 diff --git a/Release/src/websockets/client/ws_client_wspp.cpp b/Release/src/websockets/client/ws_client_wspp.cpp
-index d7c31c4..8dfa815 100644
+index d7c31c40..8dfa8156 100644
 --- a/Release/src/websockets/client/ws_client_wspp.cpp
 +++ b/Release/src/websockets/client/ws_client_wspp.cpp
 @@ -225,7 +225,7 @@ public:
@@ -365,3 +365,16 @@ index d7c31c4..8dfa815 100644
                      return rfc2818(preverified, verifyCtx);
                  });
  
+diff --git a/Release/tests/functional/pplx/pplx_test/pplx_op_test.cpp b/Release/tests/functional/pplx/pplx_test/pplx_op_test.cpp
+index 82b10a7b..584b0dee 100644
+--- a/Release/tests/functional/pplx/pplx_test/pplx_op_test.cpp
++++ b/Release/tests/functional/pplx/pplx_test/pplx_op_test.cpp
+@@ -57,7 +57,7 @@ class pplx_dflt_scheduler : public pplx::scheduler_interface
+     virtual void schedule(pplx::TaskProc_t proc, void* param)
+     {
+         pplx::details::atomic_increment(s_flag);
+-        m_pool->service().post([=]() -> void { proc(param); });
++        boost::asio::post(m_pool->service(), [=]() -> void { proc(param); });
+     }
+ 
+ public:
