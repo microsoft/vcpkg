@@ -13,14 +13,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "default-features": [
-    "asm"
-  ],
-  "features": {
-    "asm": {
-      "description": "Assembly-backed implementation for maximum performance.",
-      "supports": "!(windows & arm) & !android"
-    }
-  }
+  ]
 }

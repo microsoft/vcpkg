@@ -6,22 +6,34 @@ vcpkg_from_github(
     HEAD_REF trunk
 )
 
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        asm USE_ASM
-)
-
-if (VCPKG_TARGET_IS_WINDOWS AND USE_ASM)
-    vcpkg_find_acquire_program(NASM)
-    list(APPEND OPTIONS "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
+if (VCPKG_TARGET_IS_WINDOWS)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR
+        VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        vcpkg_find_acquire_program(NASM)
+        list(APPEND OPTIONS "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
+        set(USE_ASM ON)
+    else()
+        set(USE_ASM OFF)
+    endif()
+elseif (VCPKG_TARGET_IS_LINUX)
+    if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm64" OR 
+        VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR
+        VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
+        set(USE_ASM ON)
+    else()
+        set(USE_ASM OFF)
+    endif()
+elseif (VCPKG_TARGET_IS_OSX)
+    set(USE_ASM ON)
+else()
+    set(USE_ASM OFF)
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_TESTS=OFF
-        ${FEATURE_OPTIONS}
+        -DUSE_ASM=${USE_ASM}
         ${OPTIONS}
 )
 vcpkg_cmake_install()
