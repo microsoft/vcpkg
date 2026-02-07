@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF 792ee7660cbb14f1b3f9f77a6f919aeed4ec1fc2
     SHA512 6845a8d3aae758ab7115b01cd14a607c56662dc0361076724697ee847412ac3291fc2148f4610ac55d58d09d832620029fcfb21bdb73f17f143e6647612e48c7
     HEAD_REF master
+    PATCHES
+        use-find-package-icu.patch
 )
 
 set(BUILDTREE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}")
@@ -42,7 +44,6 @@ else()
     
     if (VCPKG_TARGET_IS_LINUX)
         message(WARNING "${PORT} requires Clang from the system package manager, this can be installed on Ubuntu systems via sudo apt install clang")
-        list(APPEND FEATURE_OPTIONS -DICU_INCLUDE_PATH=${CURRENT_INSTALLED_DIR}/include)
     endif()
     
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
