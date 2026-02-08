@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "coro-http",
+  "version": "1.0.0",
+  "description": "A modern C++20 HTTP/HTTPS client library based on ASIO with coroutine-based async/await support",
+  "homepage": "https://github.com/harvestsure/coro-http",
+  "documentation": "https://github.com/harvestsure/coro-http#readme",
+  "license": "MIT",
+  "maintainers": "Harvest Sure <harvestsure@gmail.com>",
+  "dependencies": [
+    "asio",
+    "openssl",
+    "zlib"
+  ]
+}
