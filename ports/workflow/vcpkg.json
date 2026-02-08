@@ -5,7 +5,7 @@
   "description": "C++ Parallel Computing and Asynchronous Networking Engine",
   "homepage": "https://github.com/sogou/workflow",
   "license": "Apache-2.0",
-  "supports": "!windows | mingw",
+  "supports": "!windows",
   "dependencies": [
     "openssl",
     {
