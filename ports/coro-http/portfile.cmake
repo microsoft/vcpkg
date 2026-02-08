@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harvestsure/coro-http
     REF "v${VERSION}"
-    SHA512 072951e3fe1f609df470ffc69e0746a3d70c11dbff7dfecd9d06344df3bf4be5a756c764358ed2e5df13a31fd0278ecf95cd00ee972f53928a7529062310f42e
+    SHA512 1f48fac6e6d66ad00cc89fa7518bb8e34b69fa5bdd522c46e60708868beac67f04037ec6fb39e17f58b153f884182b40433ee52fa22d1f3a0be3e5d2daa6ccaa
     HEAD_REF main
 )
 
