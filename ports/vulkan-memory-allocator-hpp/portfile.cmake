@@ -1,6 +1,6 @@
 
-# The git tag is in the format "v3.3.0+2". So do some regex magic for the git ref.
-string(REGEX REPLACE "^([0-9.]+)\$" "\\1\+2" git_ref "${VERSION}")
+# The git tag is in the format "v3.3.0+2".
+set(git_ref "${VERSION}+2")
 message(STATUS "Using git ref v${git_ref} for version ${VERSION}")
 
 vcpkg_from_github(
