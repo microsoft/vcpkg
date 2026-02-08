@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove-cpm.patch
+        fix-arm-checker.patch
 )
 
 file(REMOVE
