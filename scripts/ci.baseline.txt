@@ -619,9 +619,6 @@ winpcap:x86-windows=skip
 wordnet:arm-neon-android=fail
 wordnet:arm64-android=fail
 wordnet:x64-android=fail
-workflow:arm-neon-android=fail
-workflow:arm64-android=fail
-workflow:x64-android=fail
 # ignore `wpilib` build errors until upgrade to a new release version
 wpilib:arm-neon-android=fail # requires full c++20 support
 wpilib:arm64-android=fail # requires full c++20 support
