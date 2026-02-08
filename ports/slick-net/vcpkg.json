@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "slick-net",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A modern C++20 networking library providing HTTP/HTTPS client, WebSocket/WebSocket Secure client, and HTTP streaming support built on Boost.Beast and Boost.Asio",
   "homepage": "https://github.com/SlickQuant/slick-net",
   "license": "MIT",
