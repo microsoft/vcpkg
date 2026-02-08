@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7c2d5b3..6fa1f8d 100644
+index 7c2d5b3..32a2f40 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -13,11 +13,9 @@ endif ()
@@ -39,18 +39,22 @@ index 7c2d5b3..6fa1f8d 100644
  endif()
  
  include_directories(
-@@ -59,8 +66,8 @@ if (WIN32)
+@@ -57,11 +64,10 @@ include_directories(
+ 
+ if (WIN32)
  	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   /MP /wd4200")
- 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /wd4200 /Zc:__cplusplus /std:c++14")
- else ()
+-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /wd4200 /Zc:__cplusplus /std:c++14")
+-else ()
 -	set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -Wall -fPIC -pipe -std=gnu90")
 -	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -pipe -std=c++14 -fno-exceptions")
-+	set(CMAKE_C_STANDARD 90)
-+	set(CMAKE_CXX_STANDARD 17)
++	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /wd4200 /Zc:__cplusplus")
  endif ()
++set(CMAKE_C_STANDARD 90)
++set(CMAKE_CXX_STANDARD 17)
  
  add_subdirectory(generator)
-@@ -108,6 +115,8 @@ if (WIN32)
+ 
+@@ -108,6 +114,8 @@ if (WIN32)
  		strncasecmp=_strnicmp
  	)
  
@@ -59,7 +63,7 @@ index 7c2d5b3..6fa1f8d 100644
  	install(
  		TARGETS ${PROJECT_NAME}
  		ARCHIVE
-@@ -118,7 +127,7 @@ if (WIN32)
+@@ -118,7 +126,7 @@ if (WIN32)
  else ()
  	set(STATIC_LIB_NAME ${PROJECT_NAME}-static)
  	set(SHARED_LIB_NAME ${PROJECT_NAME}-shared)
@@ -68,7 +72,7 @@ index 7c2d5b3..6fa1f8d 100644
  	link_directories(${OPENSSL_LINK_DIR} ${WORKFLOW_LIB_DIR} ${Protobuf_LIB_DIR})
  
  	add_library(
-@@ -143,8 +152,18 @@ else ()
+@@ -143,8 +151,18 @@ else ()
  		$<TARGET_OBJECTS:http>
  	)
  
@@ -88,7 +92,7 @@ index 7c2d5b3..6fa1f8d 100644
  							  OpenSSL::SSL
  							  OpenSSL::Crypto
  							  pthread
-@@ -161,17 +180,22 @@ else ()
+@@ -161,17 +179,22 @@ else ()
  	add_dependencies(${STATIC_LIB_NAME} LINK_HEADERS)
  	add_dependencies(${SHARED_LIB_NAME} LINK_HEADERS)
  
