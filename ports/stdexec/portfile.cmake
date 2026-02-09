@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         fix-version.patch
+        fix-clangd-helper-file-basedir.patch
 )
 
 vcpkg_from_github(
