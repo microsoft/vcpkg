@@ -1,6 +1,6 @@
 {
   "name": "libupnp",
-  "version": "1.14.25",
+  "version": "1.14.29",
   "description": "libupnp: Build UPnP-compliant control points, devices, and bridges on several operating systems.",
   "homepage": "https://github.com/pupnp/pupnp/",
   "documentation": "https://github.com/pupnp/pupnp/",
