@@ -1,9 +1,9 @@
 {
   "name": "opendnp3",
-  "version": "3.1.1",
-  "port-version": 1,
+  "version": "3.1.2",
   "description": "DNP3 (IEEE-1815) protocol stack. Modern C++ with bindings for .NET and Java.",
   "homepage": "https://github.com/dnp3/opendnp3/",
+  "license": "Apache-2.0",
   "supports": "!uwp",
   "dependencies": [
     "asio",

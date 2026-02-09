@@ -1,15 +1,32 @@
+set(PATCHES
+    fix-dependencies.patch
+    fix-static-ffmpeg.patch
+    imath-version-guard.patch
+    fix-openimageio_include_dir.patch
+    fix-openexr-target-missing.patch
+)
+
+if(VCPKG_TARGET_IS_OSX)
+    execute_process(COMMAND xcrun --show-sdk-version
+            OUTPUT_VARIABLE OSX_SDK_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+    # macOS 26 Tahoe has removed AGL APIs https://bugreports.qt.io/browse/QTBUG-137687
+    #
+    # macOS 26.2 fails to query this with the following error, so we conservatively apply the patch in that case
+    # xcodebuild: error: SDK "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk" cannot be located.
+    # xcrun: error: unable to lookup item 'SDKVersion' in SDK '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
+    if(NOT OSX_SDK_VERSION OR OSX_SDK_VERSION VERSION_GREATER_EQUAL 26)
+        list(APPEND PATCHES remove-agl-framework.patch)
+    endif()
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/OpenImageIO
     REF "v${VERSION}"
     SHA512 cee6ddfbd825022a45a46b041c894a18718a474a32da8715fe08f918c7387505e81f3220c0ad79d3ec160b9c224bdeafbbb8a2b67a47cd845dca492582607c22
     HEAD_REF master
-    PATCHES
-        fix-dependencies.patch
-        fix-static-ffmpeg.patch
-        imath-version-guard.patch
-        fix-openimageio_include_dir.patch
-        fix-openexr-target-missing.patch
+    PATCHES ${PATCHES}
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")

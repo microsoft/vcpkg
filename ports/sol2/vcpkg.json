@@ -1,6 +1,7 @@
 {
   "name": "sol2",
   "version": "3.5.0",
+  "port-version": 1,
   "description": "Sol3 (sol2 v3.0) - a C++ <-> Lua API wrapper with advanced features and top notch performance",
   "homepage": "https://github.com/ThePhD/sol2",
   "license": "MIT",

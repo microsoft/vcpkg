@@ -1,0 +1,13 @@
+diff --git a/Sources/yapi/yproto.h b/Sources/yapi/yproto.h
+index ff25fb1b..95eddec6 100644
+--- a/Sources/yapi/yproto.h
++++ b/Sources/yapi/yproto.h
+@@ -165,7 +165,7 @@ typedef struct {
+ /*****************************************************************************
+   LINUX SPECIFIC HEADER
+  ****************************************************************************/
+-#include <libusb-1.0/libusb.h>
++#include <libusb.h>
+ #endif
+ 
+ /*****************************************************************************

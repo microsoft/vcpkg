@@ -1,22 +1,11 @@
 {
   "name": "avro-cpp",
-  "version": "1.12.0",
-  "port-version": 2,
+  "version": "1.12.1",
   "description": "Apache Avro is a data serialization system",
   "homepage": "https://github.com/apache/avro",
   "license": "Apache-2.0",
+  "supports": "!uwp",
   "dependencies": [
-    "boost-algorithm",
-    "boost-any",
-    "boost-crc",
-    "boost-filesystem",
-    "boost-format",
-    "boost-iostreams",
-    "boost-lexical-cast",
-    "boost-math",
-    "boost-program-options",
-    "boost-random",
-    "boost-tuple",
     "fmt",
     {
       "name": "vcpkg-cmake",
@@ -34,6 +23,9 @@
       "dependencies": [
         "snappy"
       ]
+    },
+    "tools": {
+      "description": "Build extra executables"
     }
   }
 }

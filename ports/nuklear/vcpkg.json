@@ -1,6 +1,6 @@
 {
   "name": "nuklear",
-  "version": "4.12.7",
+  "version": "4.12.8",
   "description": "This is a minimal state immediate mode graphical user interface toolkit written in ANSI C and licensed under public domain",
   "homepage": "https://github.com/Immediate-Mode-UI/Nuklear",
   "license": "Unlicense OR MIT",

@@ -1,6 +1,6 @@
 {
   "name": "datraw",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "C++ reimplementation of VIS's datraw library.",
   "homepage": "https://github.com/UniStuttgart-VISUS/datraw",
   "license": "MIT"

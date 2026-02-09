@@ -1,8 +1,9 @@
 {
   "name": "kaitai-struct-cpp-stl-runtime",
   "version": "0.11",
+  "port-version": 1,
   "description": "Kaitai Struct is a declarative language used for describe various binary data structures, laid out in files or in memory. This library implements Kaitai Struct API for C++ using STL",
-  "homepage": "http://kaitai.io/",
+  "homepage": "https://kaitai.io",
   "documentation": "https://doc.kaitai.io/lang_cpp_stl.html",
   "license": "MIT",
   "dependencies": [

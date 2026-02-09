@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/pulsar-client-cpp
     REF "v${VERSION}"
-    SHA512 28c828529cc59ace8b9da97a724191a3314c5cfc36a9cf9a91b25b99b70ca2875bc9f8780f26770dc426a2641ad465bb2a47ba501921442fd712fa76edcbc5aa
+    SHA512 f0f8bdf3b28860e4a896e9a25df2135e8b83b910964a05b0d03e09b2b9294d6930efcfb67c211a9ee153ddac61ae3948300aa55488248dafa68ffd04854576db
     HEAD_REF main
     PATCHES
         disable-warnings.patch

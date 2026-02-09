@@ -41,7 +41,11 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     set(CMAKE_CROSSCOMPILING ON CACHE STRING "")
 
     # Add the Microsoft GDK if present
-    if (DEFINED ENV{GRDKLatest})
+    if (DEFINED ENV{GameDKCoreLatest})
+        # October 2025 or later
+        # No windows paths should be used for console targets.
+    elseif (DEFINED ENV{GRDKLatest})
+        # April 2025 or earlier
         cmake_path(SET _vcpkg_grdk "$ENV{GRDKLatest}")
 
         list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_grdk}/gameKit/Include")
@@ -53,7 +57,27 @@ if(NOT _VCPKG_WINDOWS_TOOLCHAIN)
     endif()
 
     # Add the Microsoft GDK Xbox Extensions if present
-    if (DEFINED ENV{GXDKLatest})
+    if (DEFINED ENV{GameDKXboxLatest})
+        # October 2025 or later
+        cmake_path(SET _vcpkg_gxdk "$ENV{GameDKXboxLatest}")
+
+        if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+            list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/xbox/include/gen9" "${_vcpkg_gxdk}/xbox/include")
+            include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/xbox/include/gen9" "${_vcpkg_gxdk}/xbox/include")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/xbox/include/gen9;${_vcpkg_gxdk}/xbox/include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
+
+            link_directories(BEFORE "${_vcpkg_gxdk}/xbox/lib/gen9" "${_vcpkg_gxdk}/xbox/lib/x64")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/xbox/lib/gen9;${_vcpkg_gxdk}/xbox/lib/x64" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+        elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+            list(APPEND CMAKE_REQUIRED_INCLUDES "${_vcpkg_gxdk}/xbox/include/gen8" "${_vcpkg_gxdk}/xbox/include")
+            include_directories(BEFORE SYSTEM "${_vcpkg_gxdk}/xbox/include/gen8" "${_vcpkg_gxdk}/xbox/include")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/xbox/include/gen8;${_vcpkg_gxdk}/xbox/include" TO_NATIVE_PATH_LIST _vcpkg_inc NORMALIZE)
+
+            link_directories(BEFORE "${_vcpkg_gxdk}/xbox/lib/gen8" "${_vcpkg_gxdk}/xbox/lib/x64")
+            cmake_path(CONVERT "${_vcpkg_gxdk}/xbox/lib/gen8;${_vcpkg_gxdk}/xbox/lib/x64" TO_NATIVE_PATH_LIST _vcpkg_lib NORMALIZE)
+        endif()
+    elseif (DEFINED ENV{GXDKLatest})
+        # April 2025 or earlier
         cmake_path(SET _vcpkg_gxdk "$ENV{GXDKLatest}")
 
         if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")

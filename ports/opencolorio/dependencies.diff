@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3feba7e..b4c2d47 100755
+index 7689975..2a559ff 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -518,7 +518,7 @@ install(
+@@ -517,7 +517,7 @@ install(
      FILE ${OCIO_TARGETS_EXPORT_NAME}
  )
  
@@ -12,7 +12,7 @@ index 3feba7e..b4c2d47 100755
      install(FILES
          ${CMAKE_CURRENT_LIST_DIR}/share/cmake/macros/VersionUtils.cmake
 diff --git a/share/cmake/modules/FindExtPackages.cmake b/share/cmake/modules/FindExtPackages.cmake
-index aa2550a..3c968f7 100644
+index 9bf17cf..8376ac5 100644
 --- a/share/cmake/modules/FindExtPackages.cmake
 +++ b/share/cmake/modules/FindExtPackages.cmake
 @@ -55,6 +55,7 @@ message(STATUS "Checking for mandatory dependencies...")
@@ -20,61 +20,59 @@ index aa2550a..3c968f7 100644
  # https://github.com/libexpat/libexpat
  ocio_handle_dependency(  expat REQUIRED ALLOW_INSTALL
 +                         CONFIG
-                          MIN_VERSION 2.4.1
-                          RECOMMENDED_VERSION 2.5.0
-                          RECOMMENDED_VERSION_REASON "CVE fixes and fix issue with symbol leakage when built as a static library")
+                          MIN_VERSION 2.6.0
+                          RECOMMENDED_VERSION 2.7.2
+                          RECOMMENDED_VERSION_REASON "CVE fixes and Latest version tested with OCIO")
 @@ -62,6 +63,7 @@ ocio_handle_dependency(  expat REQUIRED ALLOW_INSTALL
  # yaml-cpp
  # https://github.com/jbeder/yaml-cpp
  ocio_handle_dependency(  yaml-cpp REQUIRED ALLOW_INSTALL
 +                         CONFIG
-                          MIN_VERSION 0.6.3
-                          RECOMMENDED_VERSION 0.7.0
+                          MIN_VERSION 0.8.0
+                          RECOMMENDED_VERSION 0.8.0
                           RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
 @@ -69,13 +71,13 @@ ocio_handle_dependency(  yaml-cpp REQUIRED ALLOW_INSTALL
  # pystring
  # https://github.com/imageworks/pystring
  ocio_handle_dependency(  pystring REQUIRED ALLOW_INSTALL
 -                         MIN_VERSION 1.1.3
--                         RECOMMENDED_VERSION 1.1.3
+-                         RECOMMENDED_VERSION 1.1.4
 +                         CONFIG
                           RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
  
- # Imath (>=3.1)
+ # Imath
  # https://github.com/AcademySoftwareFoundation/Imath
  ocio_handle_dependency(  Imath REQUIRED ALLOW_INSTALL
 +                         CONFIG
                           MIN_VERSION 3.1.1
-                          RECOMMENDED_VERSION 3.1.12
+                          RECOMMENDED_VERSION 3.2.1
                           RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
-@@ -111,7 +113,8 @@ ocio_handle_dependency(  ZLIB REQUIRED ALLOW_INSTALL
+@@ -111,6 +113,7 @@ ocio_handle_dependency(  ZLIB REQUIRED ALLOW_INSTALL
  # minizip-ng
  # https://github.com/zlib-ng/minizip-ng
  ocio_handle_dependency(  minizip-ng REQUIRED ALLOW_INSTALL
--                         MIN_VERSION 3.0.6
 +                         CONFIG
-+                         MIN_VERSION 4
-                          RECOMMENDED_VERSION 3.0.7
+                          MIN_VERSION 4.0.0
+                          RECOMMENDED_VERSION 4.0.10
                           RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
- 
 @@ -132,8 +135,7 @@ if(OCIO_BUILD_APPS)
      # lcms2
      # https://github.com/mm2/Little-CMS
      ocio_handle_dependency(  lcms2 REQUIRED ALLOW_INSTALL
 -                             MIN_VERSION 2.2
--                             RECOMMENDED_VERSION 2.2
+-                             RECOMMENDED_VERSION 2.17
 +                             CONFIG
                               RECOMMENDED_VERSION_REASON "Latest version tested with OCIO")
  endif()
  
-@@ -259,6 +261,7 @@ if(OCIO_BUILD_APPS)
-         ###############################################################################
-         # Calling find_package in CONFIG mode using PREFER_CONFIG option.
-         ocio_handle_dependency(  OpenEXR PREFER_CONFIG ALLOW_INSTALL
+@@ -218,6 +220,7 @@ if((OCIO_BUILD_APPS AND OCIO_USE_OIIO_FOR_APPS) OR OCIO_BUILD_TESTS)
+         # Calling find_package in CONFIG mode using PREFER_CONFIG option as OIIO support
+         # config file since 2.1+ and OCIO minimum version is over that.
+         ocio_handle_dependency(  OpenImageIO PREFER_CONFIG
 +                                 CONFIG
-                                  MIN_VERSION ${OpenEXR_MININUM_VERSION}
-                                  RECOMMENDED_VERSION 3.1.5
-                                  RECOMMENDED_VERSION_REASON "Latest version tested with OCIO"
+                                  MIN_VERSION ${OIIO_VERSION}
+                                  RECOMMENDED_VERSION ${OIIO_RECOMMENDED_VERSION}
+                                  PROMOTE_TARGET OpenImageIO::OpenImageIO)
 diff --git a/src/cmake/Config.cmake.in b/src/cmake/Config.cmake.in
 index 4e2367b..fc0e483 100644
 --- a/src/cmake/Config.cmake.in

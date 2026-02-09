@@ -15,9 +15,10 @@ vcpkg_extract_source_archive(
 )
 
 file(COPY
+        "${CMAKE_CURRENT_LIST_DIR}/configure.ac"
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_common.cmake"
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_configure.cmake"
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_install.cmake"
-        "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make_common.cmake"
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake"
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg_scripts.cmake"
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"

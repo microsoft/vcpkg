@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chfast/intx
     REF "v${VERSION}"
-    SHA512 e1126f79cda6455aae4c04bed8deb91be4f47a6ab545a50b840f9f4df5e2d0c36be4e35e5576767b971903522ea8e37490db78efe08a85dbaadf2a396196fba6
+    SHA512 8d3ab7f8492bc409f075118ed2a85b2efffe1ab9eaf36d93c5532f30d5e80b6eadbd3d5f5dd1e8dc5760f45b0236c633afdc492ad125ffdf9dcdea1ba9c382d9
     HEAD_REF master
 )
 

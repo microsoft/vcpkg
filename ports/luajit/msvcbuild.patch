@@ -1,29 +1,48 @@
 diff --git a/src/msvcbuild.bat b/src/msvcbuild.bat
-index aab4ef1..e92c486 100644
+index e0df88bc..0ccf4d04 100644
 --- a/src/msvcbuild.bat
 +++ b/src/msvcbuild.bat
-@@ -79,10 +79,9 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
- @set LJCOMPILE=%LJCOMPILE% /Zi %DEBUGCFLAGS%
- @set LJLINK=%LJLINK% /opt:ref /opt:icf /incremental:no
- :NODEBUG
--@set LJLINK=%LJLINK% /%BUILDTYPE%
- @if "%1"=="amalg" goto :AMALGDLL
- @if "%1"=="static" goto :STATIC
--%LJCOMPILE% /MD /DLUA_BUILD_AS_DLL lj_*.c lib_*.c
-+%LJCOMPILE%     /DLUA_BUILD_AS_DLL lj_*.c lib_*.c /Fdlua51.pdb
- @if errorlevel 1 goto :BAD
- %LJLINK% /DLL /out:%LJDLLNAME% lj_*.obj lib_*.obj
- @if errorlevel 1 goto :BAD
-@@ -102,7 +101,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
+@@ -18,12 +18,14 @@
+ @rem Add more debug flags here, e.g. DEBUGCFLAGS=/DLUA_USE_ASSERT
+ @set DEBUGCFLAGS=
+ @set LJCOMPILE=cl /nologo /c /O2 /W3 /D_CRT_SECURE_NO_DEPRECATE /D_CRT_STDIO_INLINE=__declspec(dllexport)__inline
+-@set LJDYNBUILD=/DLUA_BUILD_AS_DLL /MD
+-@set LJDYNBUILD_DEBUG=/DLUA_BUILD_AS_DLL /MDd
+-@set LJCOMPILETARGET=/Zi
+-@set LJLINKTYPE=/DEBUG /RELEASE
+-@set LJLINKTYPE_DEBUG=/DEBUG
+-@set LJLINKTARGET=/OPT:REF /OPT:ICF /INCREMENTAL:NO
++@rem vvv vcpkg flags via env
++@set LJDYNBUILD=/DLUA_BUILD_AS_DLL
++@set LJDYNBUILD_DEBUG=/DLUA_BUILD_AS_DLL
++@set LJCOMPILETARGET=
++@set LJLINKTYPE=
++@set LJLINKTYPE_DEBUG=
++@set LJLINKTARGET=
++@rem ^^^ vcpkg flags via env
+ @set LJLINK=link /nologo
+ @set LJMT=mt /nologo
+ @set LJLIB=lib /nologo /nodefaultlib
+@@ -141,7 +143,7 @@ buildvm -m folddef -o lj_folddef.h lj_opt_fold.c
  if exist %LJDLLNAME%.manifest^
    %LJMT% -manifest %LJDLLNAME%.manifest -outputresource:%LJDLLNAME%;2
  
 -%LJCOMPILE% luajit.c
 +%LJCOMPILE% luajit.c /Fdluajit.pdb
  @if errorlevel 1 goto :BAD
- %LJLINK% /out:luajit.exe luajit.obj %LJLIBNAME%
+ %LJLINK% /OUT:luajit.exe luajit.obj %LJLIBNAME%
  @if errorlevel 1 goto :BAD
-@@ -124,4 +123,5 @@ if exist luajit.exe.manifest^
+@@ -157,6 +159,9 @@ if exist luajit.exe.manifest^
+ @goto :END
+ :SETHOSTVARS
+ @if "%VSCMD_ARG_HOST_ARCH%_%VSCMD_ARG_TGT_ARCH%" equ "x64_arm64" (
++  @echo Temporarily configuring MSVC for x64 host tools while building for arm64
++  set _CL_=
++  set _LINK_=
+   call "%VSINSTALLDIR%Common7\Tools\VsDevCmd.bat" -arch=%VSCMD_ARG_HOST_ARCH% -no_logo
+   echo on
+ )
+@@ -169,4 +174,5 @@ if exist luajit.exe.manifest^
  @goto :END
  :FAIL
  @echo You must open a "Visual Studio Command Prompt" to run this script

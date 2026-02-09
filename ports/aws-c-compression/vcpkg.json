@@ -1,6 +1,6 @@
 {
   "name": "aws-c-compression",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "C99 implementation of huffman encoding/decoding",
   "homepage": "https://github.com/awslabs/aws-c-compression",
   "license": "Apache-2.0",

@@ -1,7 +1,6 @@
 {
   "name": "vulkan-loader",
-  "version": "1.4.309.0",
-  "port-version": 2,
+  "version": "1.4.335.0",
   "description": "Vulkan Development Tools",
   "homepage": "https://github.com/KhronosGroup/Vulkan-Loader",
   "license": null,
@@ -19,7 +18,10 @@
   ],
   "features": {
     "directfb": {
-      "description": "Build DirectFB WSI support"
+      "description": "Build DirectFB WSI support",
+      "dependencies": [
+        "directfb2"
+      ]
     },
     "wayland": {
       "description": "Build Wayland WSI support"

@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f5302cb..74b0306 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,6 +38,7 @@ option(SF2_SUPPORT "Enable SF2 support and float DCF" TRUE)
+ option(ZLIB_SUPPORT "Enable XMF ZLIB Unpacker support" TRUE)
+ option(EAS_WT_SYNTH "Enable WaveTable Synth" TRUE)
+ option(EAS_FM_SYNTH "Enable FM Synth" FALSE)
++option(INSTALL_DEPENDENCIES "Deploy dependency libraries" FALSE)
+ 
+ if (NOT (EAS_WT_SYNTH OR EAS_FM_SYNTH OR EAS_HYBRID_SYNTH))
+     message(FATAL_ERROR "At least one synthesizer type must be enabled: EAS_WT_SYNTH, EAS_FM_SYNTH, EAS_HYBRID_SYNTH.")
+@@ -490,7 +491,7 @@ if (BUILD_APPLICATION)
+     add_subdirectory(example)
+ endif()
+ 
+-if (CMAKE_SYSTEM_NAME MATCHES "Windows")
++if (INSTALL_DEPENDENCIES)
+     message(STATUS "DEPENDENCY_DIRS: ${DEPENDENCY_DIRS}")
+     install(RUNTIME_DEPENDENCY_SET sonivox-dependencies
+         COMPONENT sonivox_runtime

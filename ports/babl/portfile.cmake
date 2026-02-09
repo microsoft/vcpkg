@@ -3,19 +3,21 @@ string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gimp.org/pub/babl/${VERSION_MAJOR_MINOR}/babl-${VERSION}.tar.xz"
     FILENAME "babl-${VERSION}.tar.xz"
-    SHA512 ff410c9839f4fe4d6afd4dec7e4d02af34b1c8a4edbc05483784ed82f91045b1102414fc1c58357866044b7f1ab499eda24fe744f5dd692af5804020c76b2382
+    SHA512 061b8d62a618129c9f08fc04ca1e86145873cf15fcde643be60b52393316275ca6d98bb44ac86b7b26264bc3a9b2fd54db39d78b2b56fe069daf678b28ded59f
 )
 
 vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
+    PATCHES
+        remove-consistency-check.patch
 )
 
 set(feature_options "")
 if("cmyk-icc" IN_LIST FEATURES)
-    list(APPEND feature_options "-Dwith-lcms=true")
+    list(APPEND feature_options "-Dwith-lcms=enabled")
 else()
-    list(APPEND feature_options "-Dwith-lcms=false")
+    list(APPEND feature_options "-Dwith-lcms=disabled")
 endif()
 
 if("introspection" IN_LIST FEATURES)

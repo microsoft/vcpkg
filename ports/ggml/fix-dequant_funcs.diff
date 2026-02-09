@@ -1,0 +1,19 @@
+diff --git a/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl b/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl
+index 09676a6..021bc66 100644
+--- a/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl
++++ b/src/ggml-vulkan/vulkan-shaders/dequant_funcs.glsl
+@@ -454,8 +454,12 @@ vec2 get_dm(uint ib, uint a_offset) {
+ 
+ #if defined(DATA_A_IQ1_M)
+ vec2 get_dm(uint ib, uint a_offset) {
+-    const uint16_t[4] scales = data_a[a_offset + ib].scales;
+-    const u16vec4 s = u16vec4(scales[0], scales[1], scales[2], scales[3]) >> 12;
++    const u16vec4 s = u16vec4(
++        data_a[a_offset + ib].scales[0],
++        data_a[a_offset + ib].scales[1],
++        data_a[a_offset + ib].scales[2],
++        data_a[a_offset + ib].scales[3]
++    ) >> 12;
+     const float d = float(unpackHalf2x16(s.x | (s.y << 4) | (s.z << 8) | (s.w << 12)).x);
+     return vec2(d, 0);
+ }

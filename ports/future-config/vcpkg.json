@@ -1,6 +1,6 @@
 {
   "name": "future-config",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "C++ implementation of the Future Config configuration system",
   "homepage": "https://github.com/F-I-D-O/Future-Config",
   "license": "LGPL-3.0-or-later",

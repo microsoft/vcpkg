@@ -1,9 +1,10 @@
 {
   "name": "popsift",
-  "version": "0.9",
-  "port-version": 6,
+  "version": "0.10.0",
   "description": "PopSift is an implementation of the SIFT algorithm in CUDA.",
   "homepage": "https://github.com/alicevision/popsift",
+  "documentation": "https://popsift.readthedocs.io/",
+  "license": "MPL-2.0",
   "supports": "!(uwp | arm | arm64 | android | x86)",
   "dependencies": [
     "cuda",

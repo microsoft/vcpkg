@@ -1,5 +1,10 @@
-Use this package via the module FindLua that comes with CMake. To use in your CMakeLists.txt:
+lua provides CMake integration for the C library:
 
-    find_package(Lua REQUIRED)
-    target_include_directories(main PRIVATE ${LUA_INCLUDE_DIR})
-    target_link_libraries(main PRIVATE ${LUA_LIBRARIES})
+  find_package(Lua REQUIRED)
+  target_include_directories(main PRIVATE ${LUA_INCLUDE_DIR})
+  target_link_libraries(main PRIVATE ${LUA_LIBRARIES})
+
+lua[cpp] provides a C++ library with exception handling:
+
+  find_package(unofficial-lua)
+  target_link_libraries(main PRIVATE unofficial::lua::lua-cpp)

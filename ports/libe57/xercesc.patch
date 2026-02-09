@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cfd9574..a28be3e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -99,23 +99,13 @@ Please set the BOOST_ROOT to point to the boost distribution files."
+ )
+ endif(NOT Boost_FOUND)
+ 
+-find_package(Xerces)
+-if (NOT Xerces_FOUND)
+-    set(XERCES_ROOT CACHE PATH "Location of the xerces library")
+-    message(FATAL_ERROR
+-"Unable to find xerces library.
+-Please set the the XERCES_ROOT to point to the root of the xerces directory."
+-)
+-endif (NOT Xerces_FOUND)
++find_package(XercesC REQUIRED)
+ 
+-set(XML_LIBRARIES ${Xerces_LIBRARY})
+-set(XML_INCLUDE_DIRS ${Xerces_INCLUDE_DIR})
++set(XML_LIBRARIES XercesC::XercesC)
++set(XML_INCLUDE_DIRS "")
+ 
+ if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+     add_definitions(-DLINUX)
+-    find_package(ICU REQUIRED)
+-    set(XML_LIBRARIES ${XML_LIBRARIES} ${ICU_LIBRARIES})
+-    set(XML_INCLUDE_DIRS ${XML_INCLUDE_DIRS} ${ICU_INCLUDE_DIRS})
+ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+     add_definitions(-DWINDOWS)
+ endif()

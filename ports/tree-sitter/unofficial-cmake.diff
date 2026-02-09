@@ -1,8 +1,17 @@
-diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
-index 4b44cc1..1b99f08 100644
---- a/lib/CMakeLists.txt
-+++ b/lib/CMakeLists.txt
-@@ -92,4 +92,12 @@ install(FILES include/tree_sitter/api.h
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 893a4d8..ab94312 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,7 +19,7 @@ endif()
+ 
+ add_library(tree-sitter ${TS_SOURCE_FILES})
+ 
+-target_include_directories(tree-sitter PRIVATE lib/src lib/src/wasm PUBLIC lib/include)
++target_include_directories(tree-sitter PRIVATE lib/src lib/src/wasm PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/include>)
+ 
+ if(MSVC)
+   target_compile_options(tree-sitter PRIVATE
+@@ -92,4 +92,12 @@ install(FILES lib/include/tree_sitter/api.h
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/tree-sitter.pc"
          DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
  install(TARGETS tree-sitter

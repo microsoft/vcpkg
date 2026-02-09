@@ -1,10 +1,9 @@
 {
   "name": "orange-math",
-  "version": "3.8.1",
+  "version": "4.7.0",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
   "license": "Zlib",
-  "supports": "windows | linux",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -25,6 +24,9 @@
       "dependencies": [
         "imgui"
       ]
+    },
+    "inline": {
+      "description": "Omath will define some methods as inline"
     }
   }
 }

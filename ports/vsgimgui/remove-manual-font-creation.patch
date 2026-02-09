@@ -1,5 +1,5 @@
 diff --git a/include/vsgImGui/RenderImGui.h b/include/vsgImGui/RenderImGui.h
-index e8186c6..8059d75 100644
+index 656d0b1..73c661d 100644
 --- a/include/vsgImGui/RenderImGui.h
 +++ b/include/vsgImGui/RenderImGui.h
 @@ -86,7 +86,6 @@ namespace vsgImGui
@@ -9,12 +9,12 @@ index e8186c6..8059d75 100644
 -        void _uploadFonts();
      };
  
- } // namespace vsgImGui
+     // temporary workaround for Dear ImGui's nonexistent sRGB awareness
 diff --git a/src/vsgImGui/RenderImGui.cpp b/src/vsgImGui/RenderImGui.cpp
-index 306030b..d662531 100644
+index fd70a6f..c8b6e7b 100644
 --- a/src/vsgImGui/RenderImGui.cpp
 +++ b/src/vsgImGui/RenderImGui.cpp
-@@ -60,7 +60,6 @@ namespace vsgImGui
+@@ -71,7 +71,6 @@ namespace vsgImGui
  RenderImGui::RenderImGui(const vsg::ref_ptr<vsg::Window>& window, bool useClearAttachments)
  {
      _init(window, useClearAttachments);
@@ -22,7 +22,7 @@ index 306030b..d662531 100644
  }
  
  RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
-@@ -69,7 +68,6 @@ RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
+@@ -80,7 +79,6 @@ RenderImGui::RenderImGui(vsg::ref_ptr<vsg::Device> device, uint32_t queueFamily,
                           VkExtent2D imageSize, bool useClearAttachments)
  {
      _init(device, queueFamily, renderPass, minImageCount, imageCount, imageSize, useClearAttachments);
@@ -30,7 +30,7 @@ index 306030b..d662531 100644
  }
  
  RenderImGui::~RenderImGui()
-@@ -184,11 +182,6 @@ void RenderImGui::_init(
+@@ -217,11 +215,6 @@ void RenderImGui::_init(
      }
  }
  

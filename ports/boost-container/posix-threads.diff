@@ -1,11 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 01e97c5..faf17d4 100644
+index d08ad7f..7f56398 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -15,6 +15,16 @@ add_library(boost_container
-   src/synchronized_pool_resource.cpp
-   src/unsynchronized_pool_resource.cpp
- )
+@@ -24,6 +24,16 @@ else()
+   set(_populate PUBLIC)
+ endif()
+ 
 +if(NOT WIN32)
 +  set(THREADS_PREFER_PTHREAD_FLAG 1)
 +  find_package(Threads REQUIRED)
