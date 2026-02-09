@@ -87,6 +87,17 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 vcpkg_copy_pdbs()
 
+# Convert absolute paths to relative paths
+file(GLOB MSQUIC_CMAKE_FILES "${CURRENT_PACKAGES_DIR}/share/msquic/*.cmake")
+foreach(MSQUIC_CMAKE_FILE ${MSQUIC_CMAKE_FILES})
+    file(READ "${MSQUIC_CMAKE_FILE}" MSQUIC_CMAKE_CONTENT)
+    string(REGEX REPLACE
+        "/[^;\"]*buildtrees/msquic/([^;\"]*)"
+        "\${_IMPORT_PREFIX}/../../buildtrees/msquic/\\1"
+        MSQUIC_CMAKE_CONTENT "${MSQUIC_CMAKE_CONTENT}")
+    file(WRITE "${MSQUIC_CMAKE_FILE}" "${MSQUIC_CMAKE_CONTENT}")
+endforeach()
+
 set(platform "")
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(platform "CX_PLATFORM_DARWIN")
