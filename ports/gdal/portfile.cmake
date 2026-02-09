@@ -52,6 +52,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         png              GDAL_USE_PNG
         poppler          GDAL_USE_POPPLER
         postgresql       GDAL_USE_POSTGRESQL
+        python           BUILD_PYTHON_BINDINGS
         qhull            GDAL_USE_QHULL
         #core             GDAL_USE_SHAPELIB  # https://github.com/OSGeo/gdal/issues/5711, https://github.com/microsoft/vcpkg/issues/16041
         core             GDAL_USE_SHAPELIB_INTERNAL
@@ -74,6 +75,17 @@ if(VCPKG_TARGET_IS_ANDROID AND ANDROID_PLATFORM VERSION_LESS 24 AND (VCPKG_TARGE
     list(APPEND FEATURE_OPTIONS -DBUILD_WITHOUT_64BIT_OFFSET=ON)
 endif()
 
+if("python" IN_LIST FEATURES)
+    include("${CURRENT_PORT_DIR}/../../get_python_packages.cmake")
+    z_vcpkg_get_gdal_python(PYTHON3)
+    vcpkg_find_acquire_program(SWIG)
+    list(APPEND FEATURE_OPTIONS
+        "-DPython_EXECUTABLE=${PYTHON3}"
+        "-DSWIG_EXECUTABLE:PATH=${SWIG}"
+    )
+    set(ENV{GDAL_PYTHON_BINDINGS_WITHOUT_NUMPY} 1)
+endif()
+
 string(REPLACE "dynamic" "" qhull_target "Qhull::qhull${VCPKG_LIBRARY_LINKAGE}_r")
 
 vcpkg_cmake_configure(
@@ -82,12 +94,10 @@ vcpkg_cmake_configure(
         -DVCPKG_HOST_TRIPLET=${HOST_TRIPLET} # for host pkgconf in PATH
         ${FEATURE_OPTIONS}
         -DBUILD_DOCS=OFF
-        -DBUILD_PYTHON_BINDINGS=OFF
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_CSharp=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
@@ -119,7 +129,23 @@ get_filename_component(vcpkg_host_prefix \"\${CMAKE_CURRENT_LIST_DIR}/../../../$
 list(APPEND CMAKE_PROGRAM_PATH \"\${vcpkg_host_prefix}/tools/pkgconf\")"
 )
 
-if (BUILD_APPS)
+if(BUILD_PYTHON_BINDINGS)
+    file(GLOB command_scripts RELATIVE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/bin/*.bat")
+    file(GLOB python_scripts RELATIVE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/bin/*.py")
+    list(TRANSFORM python_scripts REPLACE "[.]py\$" "" OUTPUT_VARIABLE shell_scripts)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    foreach(script IN LISTS command_scripts python_scripts shell_scripts)
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${script}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${script}")
+    endforeach()
+    # No hardcoded paths to build-time venv.
+    # User must set PATH to include host triplet python (venv) with numpy.
+    foreach(script IN LISTS python_scripts shell_scripts)
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/${script}" "^#![^\n]*" "#!/usr/bin/env python3" REGEX)
+    endforeach()
+endif()
+
+if(BUILD_APPS)
     vcpkg_copy_tools(
         TOOL_NAMES
             gdal

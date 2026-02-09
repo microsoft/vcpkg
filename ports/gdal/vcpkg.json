@@ -1,6 +1,7 @@
 {
   "name": "gdal",
   "version-semver": "3.12.1",
+  "port-version": 1,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
   "homepage": "https://gdal.org",
   "license": null,
@@ -284,6 +285,28 @@
       "description": "Enable PostgreSQL support",
       "dependencies": [
         "libpq"
+      ]
+    },
+    "python": {
+      "description": "Build python bindings",
+      "supports": "!static",
+      "dependencies": [
+        {
+          "name": "python3",
+          "host": true,
+          "default-features": false
+        },
+        {
+          "name": "python3",
+          "default-features": false,
+          "features": [
+            "extensions"
+          ]
+        },
+        {
+          "name": "vcpkg-get-python-packages",
+          "host": true
+        }
       ]
     },
     "qhull": {
