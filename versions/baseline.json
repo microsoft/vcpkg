@@ -9029,7 +9029,7 @@
       "port-version": 0
     },
     "shader-slang": {
-      "baseline": "2025.22.1",
+      "baseline": "2026.2",
       "port-version": 0
     },
     "shaderc": {
