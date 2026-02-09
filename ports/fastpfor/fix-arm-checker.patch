@@ -16,3 +16,68 @@ index 8072ae8..9d05bcc 100644
      set(SUPPORT_NEON ON)
  endif ()
 \ No newline at end of file
+diff --git a/headers/common.h b/headers/common.h
+index b1c97b5..bbb937f 100644
+--- a/headers/common.h
++++ b/headers/common.h
+@@ -12,7 +12,7 @@
+ #include <fcntl.h>
+ #if defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+ #include <immintrin.h>
+-#elif defined(__GNUC__) && defined(__aarch64__)
++#elif defined(__GNUC__) && (defined(__aarch64__) || defined(__arm__))
+ #include <simde/x86/sse4.1.h>
+ #endif
+ 
+@@ -52,7 +52,7 @@
+ 
+ #if (defined(_M_IX86) || defined(_M_AMD64))
+ #include <intrin.h>
+-#elif defined(_M_ARM64)
++#elif defined(_M_ARM64) || defined(_M_ARM)
+ #include <simde/x86/sse4.1.h>
+ #endif
+ 
+diff --git a/src/streamvbyte.c b/src/streamvbyte.c
+index 1f9dc6b..37a6442 100644
+--- a/src/streamvbyte.c
++++ b/src/streamvbyte.c
+@@ -9,7 +9,7 @@
+     /* Microsoft C/C++-compatible compiler */
+     #if (defined(_M_IX86) || defined(_M_AMD64))
+     #include <intrin.h>
+-    #elif defined(_M_ARM64)
++    #elif defined(_M_ARM64) || defined(_M_ARM)
+     #include <simde/x86/sse4.1.h>
+     #endif
+ 
+@@ -19,7 +19,7 @@
+ #elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+     /* GCC-compatible compiler, targeting x86/x86-64 */
+     #include <x86intrin.h>
+-#elif defined(__aarch64__)
++#elif defined(__aarch64__) || defined (__arm__)
+     /* GCC-compatible compiler, targeting ARM with NEON */
+     #include <simde/x86/sse4.1.h>
+ #elif defined(__GNUC__) && defined(__IWMMXT__)
+diff --git a/src/varintdecode.c b/src/varintdecode.c
+index 7807e12..c77f117 100644
+--- a/src/varintdecode.c
++++ b/src/varintdecode.c
+@@ -7,14 +7,14 @@
+      /* Microsoft C/C++-compatible compiler */
+     #if (defined(_M_IX86) || defined(_M_AMD64))
+     #include <intrin.h>
+-    #elif defined(_M_ARM64)
++    #elif defined(_M_ARM64) || defined(_M_ARM)
+     #include <simde/x86/sse4.1.h>
+     #endif
+ #elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+     /* GCC-compatible compiler, targeting x86/x86-64 */
+     #include <x86intrin.h>
+ 
+-#elif defined(__aarch64__)
++#elif defined(__aarch64__) || defined (__arm__)
+     /* GCC-compatible compiler, targeting ARM with NEON */
+     #include <simde/x86/sse4.1.h>
+ #elif defined(__GNUC__) && defined(__IWMMXT__)
