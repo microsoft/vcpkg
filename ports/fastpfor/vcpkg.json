@@ -4,6 +4,7 @@
   "description": "Fast integer compression",
   "homepage": "https://github.com/fast-pack/FastPFOR",
   "license": "Apache-2.0",
+  "supports": "!(arm & !arm64)",
   "dependencies": [
     {
       "name": "simde",
