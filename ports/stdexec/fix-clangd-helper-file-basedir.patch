@@ -1,8 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bd79a62..d090c51 100644
+index bd79a62..53071b7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -277,7 +277,7 @@ if (STDEXEC_IS_TOP_LEVEL)
+@@ -273,11 +273,11 @@ target_compile_options(stdexec_executable_flags INTERFACE
+                        -include stdexec/__detail/__force_include.hpp>
+                        )
+ 
+-if (STDEXEC_IS_TOP_LEVEL)
++if (0)
    # Integrate with LLVM/clang tooling
    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clangd_compile_info.cmake)
    add_executable(_clangd_helper_file
