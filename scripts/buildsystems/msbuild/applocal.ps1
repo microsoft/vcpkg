@@ -98,7 +98,8 @@ function resolve([string]$targetBinary) {
     } elseif (Get-Command "llvm-objdump" -ErrorAction SilentlyContinue) {
         $a = $(llvm-objdump -p $targetBinary| ? { $_ -match "^ {4}DLL Name: .*\.dll" } | % { $_ -replace "^ {4}DLL Name: ","" })
     } elseif (Get-Command "objdump" -ErrorAction SilentlyContinue) {
-        $a = $(objdump -p $targetBinary| ? { $_ -match "^\tDLL Name: .*\.dll" } | % { $_ -replace "^\tDLL Name: ","" })
+        # Match both tab and space-based formatting (GNU objdump uses tab, BSD/macOS objdump uses spaces)
+        $a = $(objdump -p $targetBinary| ? { $_ -match "^[\t ]+DLL Name: .*\.dll" } | % { $_ -replace "^[\t ]+DLL Name: ","" })
     } else {
         Write-Error "Neither dumpbin, llvm-objdump nor objdump could be found. Can not take care of dll dependencies."
     }
