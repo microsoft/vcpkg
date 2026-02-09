@@ -1,0 +1,19 @@
+{
+  "name": "vcpkg-ci-sol2",
+  "version-string": "ci",
+  "description": "Validate port sol2",
+  "dependencies": [
+    {
+      "name": "lua",
+      "default-features": false
+    },
+    {
+      "name": "sol2",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

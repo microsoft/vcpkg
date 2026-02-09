@@ -17,6 +17,7 @@ vcpkg_from_github(
         0040-ffmpeg-add-av_stream_get_first_dts-for-chromium.patch # Do not remove this patch. It is required by chromium
         0044-fix-vulkan-debug-callback-abi.patch
         0045-use-prebuilt-bin2c.patch
+        0046-fix-msvc-detection.patch
 )
 
 if(SOURCE_PATH MATCHES " ")
@@ -420,12 +421,16 @@ else()
     set(WITH_OPENMPT OFF)
 endif()
 
+set(WITH_OPENSSL OFF)
+set(WITH_SCHANNEL OFF)
 if("openssl" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-openssl")
+    set(WITH_OPENSSL ON)
 else()
     set(OPTIONS "${OPTIONS} --disable-openssl")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
         string(APPEND OPTIONS " --enable-schannel")
+        set(WITH_SCHANNEL ON)
     endif()
 endif()
 

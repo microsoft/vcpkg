@@ -1,6 +1,6 @@
 {
   "name": "osp-collection",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "maintainers": "Saad Shams",
   "description": "A C library providing data structures for efficient collection management.",
   "homepage": "https://github.com/open-source-patterns/collection",

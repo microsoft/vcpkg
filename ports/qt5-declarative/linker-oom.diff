@@ -1,0 +1,14 @@
+diff --git a/tools/tools.pro b/tools/tools.pro
+index 2e04f933..319faeae 100644
+--- a/tools/tools.pro
++++ b/tools/tools.pro
+@@ -1,6 +1,9 @@
+ TEMPLATE = subdirs
+ QT_FOR_CONFIG += qml-private
+ 
++# Reduce memory pressure during linking
++CONFIG += ordered
++
+ qtConfig(qml-devtools) {
+     SUBDIRS += \
+         qmllint \

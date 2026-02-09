@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO baylej/tmx
     REF "tmx_${VERSION}"
     HEAD_REF master
-    SHA512 302e55c6d78947dbac1470855331fb238e2ac681f10414aef1e3dad5c1128b66aeb2fef0c4cb2d03360b5e5b327e46c9e5d7dc5bf15d411c9fa3cf7dd4351b4f
+    SHA512 3f91faa711ad35ba0a46ae7a6e15f11928340e2d05c1202ef05cd8e9e08ce62d4ef6ef7bd743ca18fed3cab12af3201090bf556a2929ece3f010112728351577
 )
 
 vcpkg_cmake_configure(

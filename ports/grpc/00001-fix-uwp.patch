@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fa5b2a0..45d6b78 100644
+index bc86c00463..e675fb3e5e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -284,6 +284,9 @@ if(UNIX)
+@@ -292,6 +292,9 @@ if(UNIX)
  endif()
  if(WIN32)
    set(_gRPC_PLATFORM_WINDOWS ON)
@@ -12,7 +12,7 @@ index fa5b2a0..45d6b78 100644
  endif()
  
  if (APPLE AND NOT DEFINED CMAKE_CXX_STANDARD)
-@@ -314,6 +317,9 @@ if(MSVC)
+@@ -322,6 +325,9 @@ if(MSVC)
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4267")
    # TODO(jtattermusch): needed to build boringssl with VS2017, revisit later
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4987 /wd4774 /wd4819 /wd4996 /wd4619")
@@ -22,7 +22,7 @@ index fa5b2a0..45d6b78 100644
    # Silences thousands of trucation warnings
    set(_gRPC_C_CXX_FLAGS "${_gRPC_C_CXX_FLAGS} /wd4503")
    # Tell MSVC to build grpc using utf-8
-@@ -546,6 +552,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
+@@ -563,6 +569,10 @@ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
  #     ``.proto`` files
  #
  function(protobuf_generate_grpc_cpp)
@@ -33,7 +33,7 @@ index fa5b2a0..45d6b78 100644
    if(NOT ARGN)
      message(SEND_ERROR "Error: PROTOBUF_GENERATE_GRPC_CPP() called without any proto files")
      return()
-@@ -668,6 +678,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
+@@ -685,6 +695,7 @@ if (gRPC_BUILD_GRPC_RUBY_PLUGIN)
    list(APPEND _gRPC_PLUGIN_LIST grpc_ruby_plugin)
  endif ()
  
@@ -41,7 +41,7 @@ index fa5b2a0..45d6b78 100644
  add_custom_target(plugins
    DEPENDS ${_gRPC_PLUGIN_LIST}
  )
-@@ -683,6 +694,7 @@ add_custom_target(tools_cxx
+@@ -700,6 +711,7 @@ add_custom_target(tools_cxx
  add_custom_target(tools
    DEPENDS tools_c tools_cxx)
  
@@ -49,11 +49,11 @@ index fa5b2a0..45d6b78 100644
  protobuf_generate_grpc_cpp_with_import_path_correction(
    src/core/ext/transport/chaotic_good/chaotic_good_frame.proto src/core/ext/transport/chaotic_good/chaotic_good_frame.proto
  )
-diff --git a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
-index 462ba6b..06e1a0c 100644
---- a/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
-+++ b/src/core/lib/security/credentials/alts/check_gcp_environment_windows.cc
-@@ -38,6 +38,7 @@ bool check_bios_data(const char*) { return false; }
+diff --git a/src/core/credentials/transport/alts/check_gcp_environment_windows.cc b/src/core/credentials/transport/alts/check_gcp_environment_windows.cc
+index dfbd5ec396..3b08ef0692 100644
+--- a/src/core/credentials/transport/alts/check_gcp_environment_windows.cc
++++ b/src/core/credentials/transport/alts/check_gcp_environment_windows.cc
+@@ -40,6 +40,7 @@ bool check_bios_data(const char*) { return false; }
  bool check_windows_registry_product_name(HKEY root_key,
                                           const char* reg_key_path,
                                           const char* reg_key_name) {
@@ -61,7 +61,7 @@ index 462ba6b..06e1a0c 100644
    const size_t kProductNameBufferSize = 256;
    char const expected_substr[] = "Google";
  
-@@ -70,6 +71,9 @@ bool check_windows_registry_product_name(HKEY root_key,
+@@ -72,6 +73,9 @@ bool check_windows_registry_product_name(HKEY root_key,
    }
  
    return strstr(buffer, expected_substr) != nullptr;

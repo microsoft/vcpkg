@@ -1,6 +1,6 @@
 {
   "name": "cpp-lazy",
-  "version": "9.0.0",
+  "version": "9.0.1",
   "description": "C++11 (and onwards) library for lazy evaluation ",
   "homepage": "https://github.com/Kaaserne/cpp-lazy",
   "license": "MIT",

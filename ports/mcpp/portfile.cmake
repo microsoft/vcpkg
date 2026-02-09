@@ -2,7 +2,7 @@ vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO zeroc-ice/mcpp
 	REF "v${VERSION}"
-	SHA512 27f7be060e5c9ee4e87c44c99d2dd22c8b2454cb0776f7daef1b6eade2b016af1481d0b96a428ac4cce2152242b3c51bd2e144da0018989650a96e60c5d82a0f
+	SHA512 06a2ccf461c09aec6916e623a1ae59da7db1509a0ba5ceedcfeec2d32a71986bd8ce249cbf99232eaa8f347ee035dd5da5868e7d96ab7ae6270ebdac1b06b498
 	HEAD_REF master
 )
 
@@ -13,10 +13,10 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 file(
-	INSTALL 
+	INSTALL
 		"${SOURCE_PATH}/mcpp_lib.h"
 		"${SOURCE_PATH}/mcpp_out.h"
-	DESTINATION 
+	DESTINATION
 		"${CURRENT_PACKAGES_DIR}/include"
 )
 

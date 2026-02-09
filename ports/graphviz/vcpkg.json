@@ -1,6 +1,6 @@
 {
   "name": "graphviz",
-  "version-semver": "14.1.1",
+  "version-semver": "14.1.2",
   "description": "Graph Visualization Tools",
   "homepage": "https://graphviz.org/",
   "license": "EPL-1.0",
