@@ -138,9 +138,9 @@ lapack-reference:x64-windows-static-md=skip
 lapack-reference:x64-windows-static=skip
 #openblas:arm64-osx=skip
 #openblas:x64-osx=skip
+openblas:arm64-linux=fail
 openblas:x64-windows-static-md=pass
 openblas:x64-windows-static=pass
-openblas:arm64-linux=fail
 # </BLAS+LAPACK>
 ################################################################
 blitz:x64-android=fail
@@ -681,8 +681,8 @@ offscale-libetcd-cpp:x64-uwp=fail
 ogdf:arm64-linux=fail
 ogre-next:arm-neon-android=fail # std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
 ogre-next:arm64-android=fail
-ogre-next:x64-android=fail
 ogre-next:arm64-linux=fail
+ogre-next:x64-android=fail
 ois:x64-android=fail
 omniorb:arm-neon-android=fail
 omniorb:arm64-android=fail
