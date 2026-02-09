@@ -1,5 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnu.org/gnu/osip/libosip2-${VERSION}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/osip/libosip2-${VERSION}.tar.gz"
+    URLS
+        "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/osip/libosip2-${VERSION}.tar.gz"
+        "https://ftp.gnu.org/gnu/osip/libosip2-${VERSION}.tar.gz"
     FILENAME "libosip2-${VERSION}.tar.gz"
     SHA512 cd9db7a736cca90c6862b84c4941ef025f5affab8af9bbc02ce0dd3310a2c555e0922c1bfa72d8ac08791fa1441bbcc30b627d52ca8b51f3471573a10ac82a00
 )

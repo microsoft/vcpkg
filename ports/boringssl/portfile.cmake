@@ -17,14 +17,20 @@ vcpkg_add_to_path("${GO_EXE_PATH}")
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/boringssl
-  REF 0.20240913.0
-  SHA512 bfb36d7d0a90bbede3f77967525cd9377e7488114c3d0fb576015d0361e7f4460801aab8ef8a470908541bc9d7f76cdbdd823af4fd6aaebb4cac711ee5b5b9fa
+  REF 0.20250818.0
+  SHA512 49404ac5a5fd0fd4254f24b586e5d6ae139df48b9163f865a1a16a7e6c27b9a9373863ffc89b5b3be20bbe01cce788cc146c887692be332ae4f522482862ccac
   HEAD_REF master
   PATCHES
     0001-static-gtest.patch
     0002-remove-WX-Werror.patch
     0003-fix-shared-symbol-visibility.patch
 )
+
+set(BORINGSSL_OPTIONS)
+if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  # MSVC armasm64 expects MASM syntax; BoringSSL uses GNU asm on arm64, so force the C fallback.
+  list(APPEND BORINGSSL_OPTIONS "-DOPENSSL_NO_ASM=ON")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
   # the FindOpenSSL.cmake script differentiates debug and release binaries using this suffix.
@@ -33,6 +39,8 @@ endif()
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    ${BORINGSSL_OPTIONS}
   OPTIONS_DEBUG
     ${CMAKE_CONFIGURE_OPTIONS_DEBUG}
 )

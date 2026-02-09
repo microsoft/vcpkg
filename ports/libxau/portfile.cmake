@@ -4,13 +4,15 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
 else()
 
 vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
+    GITLAB_URL "https://gitlab.freedesktop.org/xorg"
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxau
-    REF d9443b2c57b512cfb250b35707378654d86c7dea # 1.0.9 
-    SHA512  d46d2be838b8ea7116ee0e312adafa80f6551762b5f7b5e503bd40e74fc0b43b45255e8135d03f831d5c483b98aac992fcd91a7e22119261e76778571a72ef07
+    REPO "lib/libxau"
+    REF "libXau-${VERSION}"
+    SHA512 d76ea5a7d5f70159b3d40242cee66b4a763b98ce57b0b5660ce47cac9bc240d51fb20eec969f8fffdfd79fa46ec8e1b9bf2aa4ca9d39d1f45d515e75afb23a7d
     HEAD_REF master
-) 
+    PATCHES
+        fix-configure-ac.patch
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -27,5 +29,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 endif()

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/ncnn
     REF "${VERSION}"
-    SHA512 decc841dc353bf0ff6f33456741547f0afaa8ed9d381ca3546b319dcd1c6db8ed4d35e001cd7adcea68970ebe2f14cbacf3053a23e37991c7466bc7060490286
+    SHA512 bb20d8ece3dcddf49530e1ca44eaad1045702b5fb7a7c9cfd6754eb158c7349bba7d63a3ef1e1a4a6e30ed59622367b802f98bf8343bd30ff0cb6def734757c4
     HEAD_REF master
 )
 

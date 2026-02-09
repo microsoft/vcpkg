@@ -18,6 +18,7 @@ vcpkg_from_github(
         "${GCC_11_PATCH}"
         fix-glog.patch
         protobuf.patch
+        protobuf-6.patch
 )
 
 vcpkg_cmake_configure(

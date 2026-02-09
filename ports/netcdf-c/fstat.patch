@@ -1,0 +1,13 @@
+diff --git a/config.h.cmake.in b/config.h.cmake.in
+index 26a5b4773b..1a569ab8a3 100644
+--- a/config.h.cmake.in
++++ b/config.h.cmake.in
+@@ -46,7 +46,7 @@ are set when opening a binary file on Windows. */
+    #define read _read
+    #define lseek _lseeki64
+ 
+-   #ifndef __clang__
++   #if 0
+    #define fstat _fstat64
+    #endif
+ 

@@ -8,6 +8,7 @@ vcpkg_from_github(
         cmake.patch
         Fix-BuildDLL.patch
         abs-arm.patch
+        fix-cmake-4.diff # https://github.com/clMathLibraries/clBLAS/pull/364
 )
 
 # v2.12 has a very old FindOpenCL.cmake using OPENCL_ vs. OpenCL_ var names

@@ -1,3 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 12db977..78e373f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,12 +6,6 @@ string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
+ 
+ set(ROOT_DIR "${PROJECT_SOURCE_DIR}")
+ 
+-if (MSVC)
+-  add_compile_options("/std:c++17")
+-else()
+-  add_compile_options(-std=c++17)
+-endif()
+-
+ if(CMAKE_GNU_COMPILER_ID OR CMAKE_Clang_COMPILER_ID)
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-format-security -Wno-format-truncation")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-format-security -Wno-format-truncation -std=c++17")
+diff --git a/cmake/macros.cmake b/cmake/macros.cmake
+index cd23260..a687a61 100644
+--- a/cmake/macros.cmake
++++ b/cmake/macros.cmake
+@@ -64,7 +64,7 @@ macro(LASZIP_ADD_LIBRARY _name)
+         CLEAN_DIRECT_OUTPUT 1
+         FOLDER Libraries
+     )
+-    set_property(TARGET ${_name} PROPERTY CXX_STANDARD 11)
++    set_property(TARGET ${_name} PROPERTY CXX_STANDARD 17)
+ 
+     install(TARGETS ${_name}
+         EXPORT LASZIPTargets
 diff --git a/cmake/unix_compiler_options.cmake b/cmake/unix_compiler_options.cmake
 index 0a6550f..65a9f4c 100644
 --- a/cmake/unix_compiler_options.cmake

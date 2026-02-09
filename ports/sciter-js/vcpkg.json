@@ -1,7 +1,15 @@
 {
   "name": "sciter-js",
-  "version": "6.0.1.3",
+  "version": "6.0.3.5",
   "description": "Sciter.JS - Sciter but with QuickJS on board instead of TIScript. Sciter is an embeddable HTML/CSS/scripting engine.",
   "homepage": "https://gitlab.com/sciter-engine/sciter-js-sdk",
-  "supports": "!uwp & !arm & !static"
+  "supports": "!uwp & !arm & !static & !android & !freebsd & !openbsd & !netbsd",
+  "features": {
+    "sqlite": {
+      "description": "Add sciter-sqlite support"
+    },
+    "webview": {
+      "description": "Add sciter-webview support"
+    }
+  }
 }

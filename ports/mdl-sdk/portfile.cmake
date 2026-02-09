@@ -1,3 +1,4 @@
+
 # Clang
 #
 # The MDL SDK includes a vendored copy of a specific LLVM version, to generate
@@ -73,12 +74,15 @@ endif()
 # Required for plugins.
 set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
 
+# The libraries are supposed to be loaded at runtime, not linked.
+set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/MDL-SDK
-    REF "${VERSION}"
-    SHA512 4b53c9aba2f1fd6658ad6c017fd1643be0f60dc9beedaadd95a5dc417133440ee164f5e8e563f9dfaeb93749e0cf623e2e1b4a9ec3d5a939d0990de5e01a6464
-    HEAD_REF release/2024.1
+    REF 2c125342d99fed865807474afdec49c8362152e5
+    SHA512 42543777bf99179e3c5055038c36471b5e2fa7b52a377dd9c097031e03ebc92d99e05d79a76a19c65ecd625ba1670af2ea8f67f270ad059a97ac9d7f992b795b
+    HEAD_REF master
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -86,6 +90,8 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dds           MDL_BUILD_DDS_PLUGIN
+        df-vulkan     MDL_BUILD_SDK_EXAMPLES
+        df-vulkan     MDL_ENABLE_VULKAN_EXAMPLES
         openimageio   MDL_BUILD_OPENIMAGEIO_PLUGIN
 )
 
@@ -102,10 +108,13 @@ vcpkg_cmake_configure(
     OPTIONS
         -DMDL_LOG_DEPENDENCIES:BOOL=ON
         -DMDL_BUILD_SDK:BOOL=ON
-        -DMDL_BUILD_SDK_EXAMPLES:BOOL=OFF
         -DMDL_BUILD_CORE_EXAMPLES:BOOL=OFF
         -DMDL_BUILD_DOCUMENTATION:BOOL=OFF
         -DMDL_BUILD_ARNOLD_PLUGIN:BOOL=OFF
+        -DMDL_ENABLE_CUDA_EXAMPLES:BOOL=OFF
+        -DMDL_ENABLE_D3D12_EXAMPLES:BOOL=OFF
+        -DMDL_ENABLE_OPENGL_EXAMPLES:BOOL=OFF
+        -DMDL_ENABLE_QT_EXAMPLES:BOOL=OFF
         -DMDL_ENABLE_UNIT_TESTS:BOOL=OFF
         -DMDL_ENABLE_PYTHON_BINDINGS:BOOL=OFF
         -DMDL_TREAT_RUNTIME_DEPS_AS_BUILD_DEPS:BOOL=OFF
@@ -124,18 +133,37 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
+if (MDL_ENABLE_VULKAN_EXAMPLES)
+    # Install df_vulkan binary into tools/mdl-sdk
+    vcpkg_copy_tools(
+        TOOL_NAMES df_vulkan
+        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/examples/mdl_sdk/df_vulkan"
+        AUTO_CLEAN
+    )
+    # Install df_vulkan shaders into share/mdl-sdk/examples/mdl_sdk/df_vulkan
+    file(COPY
+        "${CURRENT_PACKAGES_DIR}/examples/mdl_sdk/df_vulkan"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/examples/mdl_sdk")
+    # Install general example resources into share/mdl-sdk/examples/mdl
+    file(COPY
+        "${CURRENT_PACKAGES_DIR}/examples/mdl"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/examples")
+endif()
+
 vcpkg_cmake_config_fixup(PACKAGE_NAME "mdl")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/examples"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/doc"
+    "${CURRENT_PACKAGES_DIR}/examples"
 )
 
-# install usage file
+# Install usage file
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-# merge all license files into copyright
+# Merge all license files into copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(READ "${SOURCE_PATH}/LICENSE_IMAGES.md" _images)
 file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "\n\n${_images}")

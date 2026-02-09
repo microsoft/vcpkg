@@ -114,13 +114,20 @@
         {
           "$package": "LibXml2",
           "name": "libxml2",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "icu"
+          ]
         },
         {
           "$package": "LibXslt",
           "name": "libxslt",
           "default-features": false,
           "platform": "!uwp & !mingw"
+        },
+        {
+          "$package": "Lua",
+          "name": "lua"
         },
         {
           "$package": "Curses",
@@ -139,7 +146,10 @@
         {
           "$package": "SQLite3",
           "name": "sqlite3",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "unicode"
+          ]
         },
         {
           "$package": "TIFF",

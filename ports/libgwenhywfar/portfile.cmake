@@ -1,13 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.aquamaniac.de/rdm/attachments/download/529/gwenhywfar-5.12.0.tar.gz"
+    URLS "https://www.aquamaniac.de/rdm/attachments/download/630/gwenhywfar-5.14.1.tar.gz"
     FILENAME "gwenhywfar-${VERSION}.tar.gz"
-    SHA512 0075eb626f0022ecd4ffdd59de7f0817d2def685e1d2cfbca9a32faa4b8d4d213bea631f24c5385da0b8c7743fd6d1887a46f08afa371195d911409ec7655791
-)
-
-vcpkg_download_distfile(osx_patch
-    URLS "https://www.aquamaniac.de/rdm/projects/gwenhywfar/repository/revisions/55d4b7b526df30e4003c92e2f504f480c01021f0/diff?format=diff"
-    FILENAME "gwenhywfar-5.12.0-55d4b7b.diff"
-    SHA512 87fa9ff3e9027c5a6839f800990b420a824efbd115ed67eeaef3c909b14c59c0b9bae41c539d400166862c0353ad730313ee4f9366928c333883d41429912731
+    SHA512 770a9f3aba84440526229375000b02cb938d2ccd4c75c25503e322ee717f3b738d2bdf17a1dff7f0486b37a60b0038406d336a3167c932a6336abc14d1bea6f0
 )
 
 vcpkg_extract_source_archive(
@@ -16,9 +10,9 @@ vcpkg_extract_source_archive(
     SOURCE_BASE "${VERSION}"
     PATCHES
         control-openssl.diff
+        fd_set-android.diff
         pkgconfig.diff
         static-link-order.diff
-        ${osx_patch}
 )
 
 vcpkg_list(SET options)
@@ -50,16 +44,16 @@ vcpkg_make_configure(
         --disable-nls
         ${options}
     OPTIONS_RELEASE
-        "--with-qt5-qmake=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/qmake"
-        "--with-qt5-moc=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/moc"
-        "--with-qt5-uic=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/uic"
+        "QMAKE=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/qmake"
+        "QT_MOC=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/moc"
+        "QT_UIC=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/bin/uic"
         "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config gpg-error"
         "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/bin/gpgrt-config"
         "LIBGCRYPT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgcrypt/bin/libgcrypt-config"
     OPTIONS_DEBUG
-        "--with-qt5-qmake=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/qmake"
-        "--with-qt5-moc=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/moc"
-        "--with-qt5-uic=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/uic"
+        "QMAKE=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/qmake"
+        "QT_MOC=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/moc"
+        "QT_UIC=${CURRENT_HOST_INSTALLED_DIR}/tools/qt5/debug/bin/uic"
         "GPG_ERROR_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config gpg-error"
         "GPGRT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgpg-error/debug/bin/gpgrt-config"
         "LIBGCRYPT_CONFIG=${CURRENT_INSTALLED_DIR}/tools/libgcrypt/debug/bin/libgcrypt-config"

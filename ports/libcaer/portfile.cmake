@@ -3,10 +3,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dv/libcaer
     REF "${VERSION}"
-    SHA512 29f8ac47f97a7640d8102eb5c693259da7506d918975be0f3e4e970ab7135dfff67f1c48dd17240462bf846bf31745d518a421229b8c453b29410ea26e489aa3
+    SHA512 651e7e92730be6e10e1efab9c11a111e99b338a29239a79d61169c8130c4149eda99a624205db36c4a21da023ff1525f31c4175947f72c78bc2a8b40c9d2c2ab
     HEAD_REF master
-    PATCHES
-        fix-libusb.diff
 )
 
 find_program(PKGCONFIG NAMES pkgconf PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/pkgconf" NO_DEFAULT_PATH REQUIRED)
@@ -25,6 +23,7 @@ vcpkg_cmake_configure(
         -DBUILD_CONFIG_VCPKG=ON
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
+
 vcpkg_cmake_install()
 
 vcpkg_fixup_pkgconfig()

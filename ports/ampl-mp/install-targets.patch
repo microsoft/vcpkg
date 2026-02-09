@@ -1,23 +1,42 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d4c6762..c7b15b6 100644
+index e367344..9338151 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -197,7 +197,7 @@ function (add_mp_library name)
+@@ -264,7 +264,7 @@ function (add_mp_library name)
    target_compile_definitions(${name}
      PUBLIC ${add_mp_library_COMPILE_DEFINITIONS})
    target_include_directories(${name}
 -    PUBLIC ${add_mp_library_INCLUDE_DIRECTORIES})
 +    PUBLIC $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/${add_mp_library_INCLUDE_DIRECTORIES}> $<INSTALL_INTERFACE:include>)
+   set_property(TARGET ${name}  PROPERTY CXX_STANDARD 17)
    if (add_mp_library_DEPENDS)
      add_dependencies(${name} ${add_mp_library_DEPENDS})
-   endif ()
-@@ -363,6 +363,7 @@ if(BUILD_TESTING)
- endif()
+@@ -444,7 +444,7 @@ if (NOT SKIP_BUILD_MP)
+   ${MP_ALL_HEADERS}
+ 		${MP_SOURCES} ${MP_FLAT_SOURCES} ${MP_EXPR_INFO_FILE}
+ 		COMPILE_DEFINITIONS MP_DATE=${MP_DATE} MP_SYSINFO="${MP_SYSINFO}"
+-		INCLUDE_DIRECTORIES src include OBJECT_LIBRARIES format)
++		INCLUDE_DIRECTORIES $<BUILD_INTERFACE:src> include OBJECT_LIBRARIES format)
+ 	set_target_properties(mp PROPERTIES
+ 		VERSION ${MP_VERSION} SOVERSION ${MP_VERSION_MAJOR})
  
- install(DIRECTORY include/mp DESTINATION include)
--install(TARGETS mp DESTINATION lib RUNTIME DESTINATION bin)
-+install(TARGETS mp EXPORT unofficial-mp-targets DESTINATION lib RUNTIME DESTINATION bin)
- install(FILES LICENSE.rst DESTINATION share/mp)
-+include(0007-unofficial-export.cmake)
- install(TARGETS gen-expr-info RUNTIME DESTINATION bin)
-\ No newline at end of file
+@@ -487,7 +487,7 @@ if (NOT SKIP_BUILD_MP)
+ 	# Link with librt for clock_gettime (Linux on i386).
+ 	find_library(RT_LIBRARY rt)
+ 	if (RT_LIBRARY)
+-		target_link_libraries(mp ${RT_LIBRARY})
++		target_link_libraries(mp rt)
+ 	endif ()
+ 
+ 	# Check if variadic templates are working and not affected by GCC bug 39653:
+@@ -503,8 +503,9 @@ if (NOT SKIP_BUILD_MP)
+ 	add_subdirectory(solvers)
+ 
+ 	install(DIRECTORY include/mp DESTINATION include)
+-	install(TARGETS mp DESTINATION lib RUNTIME DESTINATION bin)
++	install(TARGETS mp EXPORT unofficial-mp-targets DESTINATION lib RUNTIME DESTINATION bin)
+ 	install(FILES LICENSE.rst DESTINATION share/mp)
++  include(0007-unofficial-export.cmake)
+   install(TARGETS gen-expr-info RUNTIME DESTINATION bin)
+ endif()   ## NOT SKIP_BUILD_MP
+ 

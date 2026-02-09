@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 39d3d8f6..6169be39 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -185,24 +185,8 @@ if(WEBP_ENABLE_WUNUSED_RESULT)
+ endif()
+ 
+ # ##############################################################################
+-# Android only.
+-if(ANDROID)
+-  include_directories(${ANDROID_NDK}/sources/android/cpufeatures)
+-  add_library(cpufeatures-webp STATIC
+-              ${ANDROID_NDK}/sources/android/cpufeatures/cpu-features.c)
+-  list(APPEND INSTALLED_LIBRARIES cpufeatures-webp)
+-  target_link_libraries(cpufeatures-webp dl)
+-  set(SHARPYUV_DEP_LIBRARIES ${SHARPYUV_DEP_LIBRARIES} cpufeatures-webp)
+-  set(WEBP_DEP_LIBRARIES ${WEBP_DEP_LIBRARIES} cpufeatures-webp)
+-  set(cpufeatures_include_dir ${ANDROID_NDK}/sources/android/cpufeatures)
+-  set(SHARPYUV_DEP_INCLUDE_DIRS ${SHARPYUV_DEP_INCLUDE_DIRS}
+-                                ${cpufeatures_include_dir})
+-  set(WEBP_DEP_INCLUDE_DIRS ${WEBP_DEP_INCLUDE_DIRS} ${cpufeatures_include_dir})
+-  add_definitions(-DHAVE_CPU_FEATURES_H=1)
+-  set(HAVE_CPU_FEATURES_H 1)
+-else()
+-  set(HAVE_CPU_FEATURES_H 0)
+-endif()
++# To streamline dependency management, remove usage of the NDK-bundled cpufeatures.
++set(HAVE_CPU_FEATURES_H 0)
+ 
+ function(configure_pkg_config FILE)
+   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/${FILE}.in"

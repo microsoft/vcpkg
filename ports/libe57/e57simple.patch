@@ -1,0 +1,15 @@
+diff --git a/include/E57Simple.h b/include/E57Simple.h
+index 6686523..5751921 100644
+--- a/include/E57Simple.h
++++ b/include/E57Simple.h
+@@ -57,6 +57,10 @@
+ #include "E57Foundation.h"
+ #endif
+ 
++#ifdef WIN32
++#include <windows.h>
++#endif
++
+ using namespace std;
+ using namespace boost;
+ 

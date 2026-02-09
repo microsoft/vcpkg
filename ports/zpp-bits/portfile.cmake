@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eyalz800/zpp_bits
     REF "v${VERSION}"
-    SHA512 db3e036a1452b551155ee204ce7e3e6b6a7ab7116142fe434004cdb8d4c910afc9aaed4c3d1d4c831e0c4183a5d9a989d3e538b496d4ef68d1a15684f347c645
+    SHA512 faa96f9702a96fae10ba9dec01d0eda0e708a8bda2ee9febbcca89dfe78cf4947edbff941fe51c5529ad4c76a344ea187069ba3ed79daa36140cf39acfb522b8
     HEAD_REF master
 )
 

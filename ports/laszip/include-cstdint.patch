@@ -1,0 +1,12 @@
+diff --git a/src/mydefs.cpp b/src/mydefs.cpp
+index ab9f3bf..722272d 100644
+--- a/src/mydefs.cpp
++++ b/src/mydefs.cpp
+@@ -37,6 +37,7 @@
+ #include <cmath>
+ #include <cstdarg>
+ #include <cstring>
++#include <cstdint>
+ #include <filesystem>
+ #include <string>
+ #include <stdio.h>

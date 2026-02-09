@@ -1,6 +1,6 @@
 {
   "name": "libjuice",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "The library is a simplified implementation of the Interactive Connectivity Establishment (ICE) protocol in C for POSIX platforms (including Linux and Apple macOS) and Microsoft Windows.",
   "homepage": "https://github.com/paullouisageneau/libjuice",
   "license": "LGPL-2.1-only",

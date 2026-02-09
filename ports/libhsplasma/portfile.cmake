@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO H-uru/libhsplasma
     REF "${REF_DOT_VERSION_DATE}"
-    SHA512 2edf124fe583e053c078f58d94110ed2285e1f02a34cc7607dfc79f8ab587e173e5782af5d4e2846613d7d6b3e1a27a319fdf138c7546c1c6257b5c8422c2f5a
+    SHA512 bf882347b8272a06335776454c339ccb36edcc4068978c2675700cf124f319eccc23a739427a3e2f57e1f27c3f4c5281db9ce5a914de78e97704f8b94af61d8e
     HEAD_REF master
 )
 
@@ -20,6 +20,10 @@ vcpkg_cmake_configure(
         -DENABLE_PHYSX=OFF
         -DENABLE_PYTHON=OFF
         -DENABLE_TOOLS=OFF
+
+        # Catch2 test discovery has some odd interactions with PATH, which
+        # appear to still be unresolved.  For simplicity, just skip tests.
+        -DENABLE_TESTS=OFF
 )
 
 vcpkg_cmake_install()

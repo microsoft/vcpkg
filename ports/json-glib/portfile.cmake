@@ -1,9 +1,11 @@
 string(REGEX MATCH [[^[1-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 
 vcpkg_download_distfile(ARCHIVE
-    URLS https://download.gnome.org/sources/json-glib/${VERSION_MAJOR_MINOR}/json-glib-${VERSION}.tar.xz
-    FILENAME "json-glib-${VERSION}.tar.xz"
-    SHA512 e1c0e33b17333cf94beb381f505c1819090a11b616dcc23a883f231029dff277c2482823278cbf7b8a07e237d45cbfc7b05f132e1234beff609a739fd5704c6e
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 f4ba8660b586a4e738803e4dbfdfcd34fa7ceba9189e7bf3f2b50e21f4d4886f99535ceb3453c89b1d1ae8d96bf4168a135b73b7e1a2dbc46b19e9b710ad56a1
 )
 
 vcpkg_extract_source_archive(

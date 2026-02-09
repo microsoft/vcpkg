@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 697205a571bb3d52d83598e8511e2e21e7cd15630aac32d8deb4354e462efda6a5ce46510cf4a1c18365dffe935cf2e4f1fda65d1779f17c9bb60c503315bf5c
+    SHA512 d2333fbc73f45db57a8b1d198d31de4b43e5819a578f52f4c5b99a01833b315e18090ee9d74052ff5a993827fadf99323d7bd9786bb826d0354b3a2a9de682f3
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
-        fix-build-ffmpeg-failed.patch
 )
 
 if("icu" IN_LIST FEATURES)
@@ -115,13 +114,13 @@ if(cxx_link_libraries)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB pc_files 
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc" 
+    file(GLOB pc_files
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/*.pc"
         "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/*.pc"
     )
     foreach(pc_file IN LISTS pc_files)
         vcpkg_replace_string("${pc_file}"
-            "\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib" 
+            "\\$\\{prefix\}\\/lib\\/([a-zA-Z0-9\-]*)\\.lib"
             "-l\\1"
             REGEX
             IGNORE_UNCHANGED
@@ -136,7 +135,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure hb-info)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()

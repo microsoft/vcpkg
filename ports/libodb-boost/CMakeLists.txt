@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(libodb-boost VERSION 2.4.0 LANGUAGES CXX)
 find_package(odb 2.4.0 REQUIRED COMPONENTS libodb)
-configure_file(config.unix.h.in
-    ${CMAKE_CURRENT_SOURCE_DIR}/odb/boost/details/config.h COPYONLY)
 
 # FIXME: should we require boost? which packages?
 # find_package(PostgreSQL REQUIRED)

@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.apache.org/dist/logging/log4cxx/${VERSION}/apache-log4cxx-${VERSION}.tar.gz"
     FILENAME "apache-log4cxx-${VERSION}.tar.gz"
-    SHA512 625495e8399a49ac84707a7213980f6d0776cdeab142d3c3e0805258a533e3bbc50b8d429c623642b481367705a086855135faa398f9ed63a24dea751607dc6f
+    SHA512 6ee406314bd7ab02a46c98cc8a0d5ad5aec8928a23716a81a152775ca315cd3b950d600b2e221d5b4a88416ae9bbda1215fae43626107feea4df2f3e074303ad
 )
 
 vcpkg_extract_source_archive(
@@ -12,6 +12,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         qt        LOG4CXX_QT_SUPPORT
         fmt       ENABLE_FMT_LAYOUT
+        fmt       ENABLE_FMT_ASYNC
+        fmt       VCPKG_LOCK_FIND_PACKAGE_fmt
+        mprfa     LOG4CXX_MULTIPROCESS_ROLLING_FILE_APPENDER
 )
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -19,6 +22,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DLOG4CXX_INSTALL_PDB=OFF # Installing pdbs failed on debug static. So, disable it and let vcpkg_copy_pdbs() do it
         -DBUILD_TESTING=OFF
+        -DVCPKG_LOCK_FIND_PACKAGE_fmt=${VCPKG_LOCK_FIND_PACKAGE_fmt}
 )
 
 vcpkg_cmake_install()

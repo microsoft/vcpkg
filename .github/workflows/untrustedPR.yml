@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # fetch-depth 50 tries to ensure we capture the whole history of the branch
           fetch-depth: 50
@@ -59,7 +59,7 @@ jobs:
           git reset HEAD~ --mixed
 
       - name: Generate Reply
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { promises: fs } = require('fs')

@@ -1,0 +1,31 @@
+diff --git a/src/refimpl/E57RefImplConfig.cmake b/src/refimpl/E57RefImplConfig.cmake
+index 8ba7356..84a8453 100644
+--- a/src/refimpl/E57RefImplConfig.cmake
++++ b/src/refimpl/E57RefImplConfig.cmake
+@@ -116,6 +116,17 @@ IF (E57RefImpl_LIBRARY_DEBUG AND NOT E57RefImpl_LIBRARY_RELEASE)
+   SET(E57RefImpl_LIBRARIES       ${E57RefImpl_LIBRARY_DEBUG})
+ ENDIF()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(Boost COMPONENTS crc smart_ptr uuid)
++find_dependency(XercesC)
++
++list(APPEND E57RefImpl_LIBRARIES
++    Boost::crc
++    Boost::smart_ptr
++    Boost::uuid
++    XercesC::XercesC
++)
++
+ IF (E57RefImpl_LIBRARY)
+     set(E57RefImpl_LIBRARY ${E57RefImpl_LIBRARY} CACHE FILEPATH "The E57RefImpl library")
+     # Remove superfluous "debug" / "optimized" keywords from
+@@ -134,7 +145,7 @@ ELSE(E57RefImpl_LIBRARY)
+ ENDIF(E57RefImpl_LIBRARY)
+ 
+ IF (E57RefImpl_FOUND)
+-    SET(E57RefImpl_INCLUDE_DIRS ${E57RefImpl_INCLUDE_DIR} "E57RefImpl include directory")
++    SET(E57RefImpl_INCLUDE_DIRS ${E57RefImpl_INCLUDE_DIR})
+ ENDIF()
+ 
+ 

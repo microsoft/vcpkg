@@ -1,0 +1,13 @@
+diff --git a/include/license++/license.h b/include/license++/license.h
+index eab392d..67b405e 100644
+--- a/include/license++/license.h
++++ b/include/license++/license.h
+@@ -9,7 +9,7 @@
+ 
+ #ifndef LICENSEPP_License_h
+ #define LICENSEPP_License_h
+-
++#include <stdint.h>
+ #include <string>
+ 
+ namespace licensepp {

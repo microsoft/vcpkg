@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lttng/lttng-ust
     REF "v${VERSION}"
-    SHA512 4b41e4b80465f1e94178054430246b552f6b04e65682b1c943ac2e33d5e2c6eb24707fdaec8165855fd0f11ebc60a3afa9117fbaddd2d634d03cc76e74ee6381
+    SHA512 543c76bebc7a93368f14d427a545ecb455eba7fd4bf037a96109414362033ebae247684f2c83ef8588a12ca759fdf970f930dfdf640b4bd6a41514b40ea78b86
     HEAD_REF master
 )
 
@@ -15,7 +15,6 @@ vcpkg_make_configure(
         --disable-man-pages
         --disable-examples
         --disable-numa
-
 )
 
 vcpkg_make_install()

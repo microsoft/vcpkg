@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 904cfb1..13f11cb 100644
+index 9754d35..2b53eb0 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -61,6 +61,8 @@ set_cache(BUILD "" STRING
+@@ -112,6 +112,8 @@ set_cache(BUILD "" STRING
  if (BUILD)
    if (BUILD STREQUAL all)
      set(MP_MODULES all)
@@ -11,7 +11,7 @@ index 904cfb1..13f11cb 100644
    else ()
      string(REGEX MATCHALL "[^,]+" MP_MODULES "${BUILD}")
    endif ()
-@@ -200,7 +202,7 @@ function (add_mp_library name)
+@@ -268,7 +270,7 @@ function (add_mp_library name)
      add_dependencies(${name} ${add_mp_library_DEPENDS})
    endif ()
    # Add library linked with dynamic runtime.
@@ -20,23 +20,3 @@ index 904cfb1..13f11cb 100644
      add_library(${name}-dynrt ${libtype} EXCLUDE_FROM_ALL
        ${add_mp_library_UNPARSED_ARGUMENTS} ${dynrt-objects})
      target_compile_options(${name}-dynrt PUBLIC /MD$<$<CONFIG:Debug>:d>)
-@@ -308,16 +310,17 @@ if (RT_LIBRARY)
-   target_link_libraries(mp ${RT_LIBRARY})
- endif ()
- 
-+if (MP_VARIADIC_TEMPLATES)
- # Check if variadic templates are working and not affected by GCC bug 39653:
- # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=39653
- check_cxx_source_compiles("
-   template <class T, class ...Types>
-   struct S { typedef typename S<Types...>::type type; };
-   int main() {}" MP_VARIADIC_TEMPLATES)
--
--if (MP_VARIADIC_TEMPLATES)
-+  if (MP_VARIADIC_TEMPLATES)
-   add_executable(nl-example src/nl-example.cc)
-   target_link_libraries(nl-example mp)
-+  endif()
- endif ()
- 
- add_subdirectory(doc)

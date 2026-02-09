@@ -1,8 +1,8 @@
 diff --git a/gtk/meson.build b/gtk/meson.build
-index 79f4f0d..33a7723 100644
+index ea866d8..0d312f3 100644
 --- a/gtk/meson.build
 +++ b/gtk/meson.build
-@@ -1074,6 +1074,7 @@ gtk_query_settings = executable(
+@@ -1102,6 +1102,7 @@ gtk_query_settings = executable(
    'gtk-query-settings.c',
    c_args: gtk_cargs,
    dependencies: libgtk_dep,
@@ -10,7 +10,7 @@ index 79f4f0d..33a7723 100644
    install: true
  )
  gtk_tools += gtk_query_settings
-@@ -1083,6 +1084,7 @@ gtk_builder_tool = executable(
+@@ -1111,6 +1112,7 @@ gtk_builder_tool = executable(
    'gtk-builder-tool.c',
    c_args: gtk_cargs,
    dependencies: libgtk_dep,
@@ -18,7 +18,7 @@ index 79f4f0d..33a7723 100644
    install: true
  )
  gtk_tools += gtk_builder_tool
-@@ -1115,6 +1117,7 @@ gtk_update_icon_cache = executable(
+@@ -1143,6 +1145,7 @@ gtk_update_icon_cache = executable(
    extra_update_icon_cache_objs,
    c_args: gtk_cargs,
    dependencies: libgtk_dep,
@@ -26,7 +26,7 @@ index 79f4f0d..33a7723 100644
    install: true
  )
  gtk_tools += gtk_update_icon_cache
-@@ -1125,6 +1128,7 @@ gtk_query_immodules = executable(
+@@ -1153,6 +1156,7 @@ gtk_query_immodules = executable(
    'gtkutils.c',
    c_args: gtk_cargs,
    dependencies: libgtk_dep,
@@ -34,7 +34,7 @@ index 79f4f0d..33a7723 100644
    install: true
  )
  gtk_tools += gtk_query_immodules
-@@ -1134,6 +1138,7 @@ gtk_encode_symbolic_svg = executable(
+@@ -1162,6 +1166,7 @@ gtk_encode_symbolic_svg = executable(
    'encodesymbolic.c',
    c_args: gtk_cargs,
    dependencies: libgtk_dep,
@@ -42,7 +42,7 @@ index 79f4f0d..33a7723 100644
    install: true
  )
  gtk_tools += gtk_encode_symbolic_svg
-@@ -1143,6 +1148,7 @@ gtk_launch = executable(
+@@ -1171,6 +1176,7 @@ gtk_launch = executable(
    'gtk-launch.c',
    c_args: gtk_cargs,
    dependencies: libgtk_dep,
@@ -51,12 +51,12 @@ index 79f4f0d..33a7723 100644
  )
  gtk_tools += gtk_launch
 diff --git a/meson.build b/meson.build
-index 287f0cb..d35106f 100644
+index dd6b888..e60ad30 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -1,4 +1,4 @@
--project('gtk+', 'c',
-+project('gtk+', 'c', 'cpp',
-   version: '3.24.43',
+-project('gtk', 'c',
++project('gtk', 'c', 'cpp',
+   version: '3.24.51',
    default_options: [
      'buildtype=debugoptimized',

@@ -1,0 +1,23 @@
+{
+  "name": "libhat",
+  "version": "0.9.0",
+  "description": "A high-performance, modern, C++20 library designed around game hacking.",
+  "homepage": "https://github.com/BasedInc/libhat",
+  "license": "MIT",
+  "supports": "windows | linux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "hint": {
+      "description": "Enables support for the x86_64 scan hint, requires a small (2KB) data table"
+    }
+  }
+}

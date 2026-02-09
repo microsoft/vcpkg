@@ -1,0 +1,24 @@
+diff --git a/src/liolib.c b/src/liolib.c
+index 57615e6..70e5899 100644
+--- a/src/liolib.c
++++ b/src/liolib.c
+@@ -23,6 +23,9 @@
+ #include "lualib.h"
+ #include "llimits.h"
+ 
++#if defined(_WIN32)
++#include <winapifamily.h>
++#endif
+ 
+ /*
+ ** Change this macro to accept other modes for 'fopen' besides
+@@ -58,7 +61,8 @@ static int l_checkmode (const char *mode) {
+ #define l_popen(L,c,m)		(fflush(NULL), popen(c,m))
+ #define l_pclose(L,file)	(pclose(file))
+ 
+-#elif defined(LUA_USE_WINDOWS)	/* }{ */
++#elif defined(LUA_USE_WINDOWS)	/* }{ */ \
++      && !(defined(WINAPI_FAMILY_PARTITION) && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP))
+ 
+ #define l_popen(L,c,m)		(_popen(c,m))
+ #define l_pclose(L,file)	(_pclose(file))

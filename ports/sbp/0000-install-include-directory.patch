@@ -1,0 +1,13 @@
+diff --git a/c/src/CMakeLists.txt b/c/src/CMakeLists.txt
+index dc59feffa..93d6c8dc7 100644
+--- a/c/src/CMakeLists.txt
++++ b/c/src/CMakeLists.txt
+@@ -53,7 +53,7 @@ target_include_directories(sbp
+   PUBLIC
+     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_LIBDIR}>
++    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+   PRIVATE
+     ${CMAKE_CURRENT_SOURCE_DIR}/include
+ )

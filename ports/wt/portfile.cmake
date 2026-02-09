@@ -2,14 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emweb/wt
     REF "${VERSION}"
-    SHA512 e266e8333823a2960fe47645386dea6a9638a83caa4fdeee83af6bffd3e99ee43eb94d9c7afab6e4811a1c25d58df2f4c4f108308ba7f67e4359ed89f69ffd42
+    SHA512 c8df813b137206de83edc97d8c0e91707c963256e7da73fd14612787a6069db17ff431d4637147fefe04d0d3600fa836bacd3d2027d36ca669e5a05662548e05
     HEAD_REF master
     PATCHES
         0005-XML_file_path.patch
         0006-GraphicsMagick.patch
+        0007-fix-haru.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
+
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS
@@ -74,7 +78,7 @@ vcpkg_cmake_configure(
         # see https://redmine.webtoolkit.eu/issues/9646
         -DWTHTTP_CONFIGURATION=
         -DCONFIGURATION=
-        
+
         "-DUSERLIB_PREFIX=${CURRENT_INSTALLED_DIR}"
     MAYBE_UNUSED_VARIABLES
         USE_SYSTEM_SQLITE3
