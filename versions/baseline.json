@@ -6045,7 +6045,7 @@
       "port-version": 0
     },
     "ltla-sanisizer": {
-      "baseline": "0.1.6",
+      "baseline": "0.2.0",
       "port-version": 0
     },
     "ltla-subpar": {
