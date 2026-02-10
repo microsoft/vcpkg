@@ -1,0 +1,64 @@
+diff --git a/cmake/imgui-loader.patch b/cmake/imgui-loader.patch
+index 145fa755..71e5d6cb 100644
+--- a/cmake/imgui-loader.patch
++++ b/cmake/imgui-loader.patch
+@@ -1,16 +1,16 @@
+-diff --git i/backends/imgui_impl_opengl3_loader.h w/backends/imgui_impl_opengl3_loader.h
+-index 4ca0536..a1ff572 100644
+---- i/backends/imgui_impl_opengl3_loader.h
+-+++ w/backends/imgui_impl_opengl3_loader.h
+-@@ -180,6 +180,7 @@ typedef khronos_uint8_t GLubyte;
+- #define GL_VERSION                        0x1F02
++diff --git a/backends/imgui_impl_opengl3_loader.h b/backends/imgui_impl_opengl3_loader.h
++index 2c80cc598..1177da586 100644
++--- a/backends/imgui_impl_opengl3_loader.h
+++++ b/backends/imgui_impl_opengl3_loader.h
++@@ -182,6 +182,7 @@ typedef khronos_uint8_t GLubyte;
+  #define GL_EXTENSIONS                     0x1F03
++ #define GL_NEAREST                        0x2600
+  #define GL_LINEAR                         0x2601
+ +#define GL_LINEAR_MIPMAP_LINEAR           0x2703
+  #define GL_TEXTURE_MAG_FILTER             0x2800
+  #define GL_TEXTURE_MIN_FILTER             0x2801
+  #define GL_TEXTURE_WRAP_S                 0x2802
+-@@ -244,8 +245,10 @@ GLAPI void APIENTRY glGenTextures (GLsizei n, GLuint *textures);
++@@ -246,8 +247,10 @@ GLAPI void APIENTRY glGenTextures (GLsizei n, GLuint *textures);
+  #define GL_TEXTURE0                       0x84C0
+  #define GL_ACTIVE_TEXTURE                 0x84E0
+  typedef void (APIENTRYP PFNGLACTIVETEXTUREPROC) (GLenum texture);
+@@ -21,7 +21,7 @@ index 4ca0536..a1ff572 100644
+  #endif
+  #endif /* GL_VERSION_1_3 */
+  #ifndef GL_VERSION_1_4
+-@@ -481,7 +484,7 @@ GL3W_API GL3WglProc imgl3wGetProcAddress(const char *proc);
++@@ -490,7 +493,7 @@ GL3W_API GL3WglProc imgl3wGetProcAddress(const char *proc);
+  
+  /* gl3w internal state */
+  union ImGL3WProcs {
+@@ -30,7 +30,7 @@ index 4ca0536..a1ff572 100644
+      struct {
+          PFNGLACTIVETEXTUREPROC            ActiveTexture;
+          PFNGLATTACHSHADERPROC             AttachShader;
+-@@ -497,6 +500,7 @@ union ImGL3WProcs {
++@@ -506,6 +509,7 @@ union ImGL3WProcs {
+          PFNGLCLEARPROC                    Clear;
+          PFNGLCLEARCOLORPROC               ClearColor;
+          PFNGLCOMPILESHADERPROC            CompileShader;
+@@ -38,7 +38,7 @@ index 4ca0536..a1ff572 100644
+          PFNGLCREATEPROGRAMPROC            CreateProgram;
+          PFNGLCREATESHADERPROC             CreateShader;
+          PFNGLDELETEBUFFERSPROC            DeleteBuffers;
+-@@ -563,6 +567,7 @@ GL3W_API extern union ImGL3WProcs imgl3wProcs;
++@@ -575,6 +579,7 @@ GL3W_API extern union ImGL3WProcs imgl3wProcs;
+  #define glClear                           imgl3wProcs.gl.Clear
+  #define glClearColor                      imgl3wProcs.gl.ClearColor
+  #define glCompileShader                   imgl3wProcs.gl.CompileShader
+@@ -46,7 +46,7 @@ index 4ca0536..a1ff572 100644
+  #define glCreateProgram                   imgl3wProcs.gl.CreateProgram
+  #define glCreateShader                    imgl3wProcs.gl.CreateShader
+  #define glDeleteBuffers                   imgl3wProcs.gl.DeleteBuffers
+-@@ -859,6 +864,7 @@ static const char *proc_names[] = {
++@@ -883,6 +888,7 @@ static const char *proc_names[] = {
+      "glClear",
+      "glClearColor",
+      "glCompileShader",
