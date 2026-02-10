@@ -1,6 +1,6 @@
 {
   "name": "arcticdb-sparrow-extensions",
-  "version": "0.2.0",
+  "version": "1.1.0",
   "description": "Apache Arrow canonical extensions for Sparrow",
   "homepage": "https://github.com/QuantStack/sparrow-extensions",
   "license": "Apache-2.0",
