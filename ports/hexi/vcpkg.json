@@ -1,6 +1,6 @@
 {
   "name": "hexi",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "Header-only, lightweight C++ library for binary streaming & serialization.",
   "homepage": "https://github.com/EmberEmu/Hexi",
   "license": "MIT OR Apache-2.0"
