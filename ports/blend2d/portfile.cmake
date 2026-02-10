@@ -31,11 +31,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blend2d/api.h"
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blend2d/core/api.h"
         "#if !defined(BL_STATIC)"
         "#if 0"
     )
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blend2d-debug.h"
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/blend2d/blend2d-debug.h"
         "#if defined(BL_STATIC)"
         "#if 1"
     )
