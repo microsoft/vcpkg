@@ -11,3 +11,20 @@ index 822e281..1f0fef2 100644
  {
  	ListNode *node;
  	int count;
+diff --git a/upnp/src/inc/miniserver.h b/upnp/src/inc/miniserver.h
+index c28382d..e902b37 100644
+--- a/upnp/src/inc/miniserver.h
++++ b/upnp/src/inc/miniserver.h
+@@ -148,12 +148,6 @@ int StartMiniServer(
+  */
+ int StopMiniServer(void);
+ 
+-/*!
+- * \brief Shutdown all active socket connections to interrupt blocking
+- * operations.
+- */
+-void shutdown_all_active_connections(void);
+-
+ #ifdef __cplusplus
+ } /* extern C */
+ #endif
