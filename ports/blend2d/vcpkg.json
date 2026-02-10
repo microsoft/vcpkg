@@ -1,6 +1,6 @@
 {
   "name": "blend2d",
-  "version-date": "2025-03-08",
+  "version-date": "2025-11-29",
   "port-version": 1,
   "description": "2D Vector Graphics Engine Powered by a JIT Compiler",
   "homepage": "https://github.com/blend2d/blend2d",
