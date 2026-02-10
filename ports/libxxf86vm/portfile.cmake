@@ -8,7 +8,7 @@ vcpkg_download_distfile(
     LIBXXF86VM_ARCHIVE
     URLS "https://www.x.org/releases/individual/lib/libXxf86vm-${VERSION}.tar.xz"
     FILENAME "libXxf86vm-${VERSION}.tar.xz"
-    SHA512 7fb3ac4302eea43b70d5106f6c7a113e28e2807da22d2bb7f040e0c4afd322cad4b7f258a5bd6da3940b6b6b39065e1acb218a6dc0ba06b9dd86ea3849231266
+    SHA512 d1051c9698a884d86e5beb00d5ee148d2b5ded7fd05168861f722b89643ad9b7f7d220f0cbb64b290a69faf9a6630181533aaddb01c9c68b46f1e5625030f094
 )
 
 vcpkg_extract_source_archive(
