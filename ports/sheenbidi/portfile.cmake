@@ -2,14 +2,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tehreer/SheenBidi
     REF "v${VERSION}"
-    SHA512 9efd97b3c212350debaf3e0f3cf022f6b4c93e3de80a77ed92ddf34a2da23c1ddeb3dc5d90b357bd7f3cb3c8c8780c045b7c897836d771bdc96e35d2b9b1935b
-    PATCHES
-        cmake-install.patch
+    SHA512 67c8ef7bea9fc677fbb83601403b40bcc274842597df53a699fd5758f4f170ac5d1fc9a719d590da25f6a72769fe59a2a1cf57e54f0ef6859561bfb77c0c72c4
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "text-api" SB_CONFIG_EXPERIMENTAL_TEXT_API
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DSB_CONFIG_UNITY=ON
 )
 
