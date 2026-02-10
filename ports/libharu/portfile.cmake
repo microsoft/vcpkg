@@ -1,29 +1,23 @@
-vcpkg_minimum_required(VERSION 2022-10-12) # for ${VERSION}
+vcpkg_download_distfile(
+    PR351
+    URLS "https://github.com/libharu/libharu/commit/4c87178a92097d59ecb9a3271341df4944b52225.patch?full_index=1"
+    FILENAME "pr351.patch"
+    SHA512 43049c3db9ab52f4550dd71218f0115c5f039caaf82e19671e295bb0e12ae6f9750cd18a944bf88819f7fc67cfecdbc8425eff1e387b2a6935847b5810d8c048
+)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libharu/libharu
-    REF v${VERSION}
-    SHA512 422210b09f89643cb25808559aeea109db5cce8a71c779d51f87222cdd50434f4f0f92322ebe429fca8f85ad73592bcabb14c3e36cd0bea19b6ec4c729220522
+    REF "v${VERSION}"
+    SHA512 677523f927ecc925d95c91ebb1cb3d1146c2ffc86031c6fc05fc038893fd38babde2abf16683e0b76d1e2b8554c64bf2278649a0f70b08a0f187c2135fc14220
     HEAD_REF master
     PATCHES
-        fix-include-path.patch
         export-targets.patch
+        "${PR351}"
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(VCPKG_BUILD_SHARED_LIBS ON)
-  set(VCPKG_BUILD_STATIC_LIBS OFF)
-else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
-  set(VCPKG_BUILD_STATIC_LIBS ON)
-endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DLIBHPDF_STATIC=${VCPKG_BUILD_STATIC_LIBS}
-        -DLIBHPDF_SHARED=${VCPKG_BUILD_SHARED_LIBS}
 )
 
 vcpkg_cmake_install()
@@ -32,34 +26,13 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-libharu)
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/README.md"
-    "${CURRENT_PACKAGES_DIR}/debug/CHANGES"
-    "${CURRENT_PACKAGES_DIR}/debug/INSTALL"
-    "${CURRENT_PACKAGES_DIR}/README.md"
-    "${CURRENT_PACKAGES_DIR}/CHANGES"
-    "${CURRENT_PACKAGES_DIR}/INSTALL"
+    "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/share/libharu/bindings"
+    "${CURRENT_PACKAGES_DIR}/share/libharu/README.md"
+    "${CURRENT_PACKAGES_DIR}/share/libharu/CHANGES"
+    "${CURRENT_PACKAGES_DIR}/share/libharu/INSTALL"
 )
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf.h" _contents)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
-    else()
-        string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
-    endif()
-    file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf.h" "${_contents}")
-    
-    file(READ "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" _contents)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        string(REPLACE "#ifdef HPDF_DLL\n" "#if 1\n" _contents "${_contents}")
-    else()
-        string(REPLACE "#ifdef HPDF_DLL\n" "#if 0\n" _contents "${_contents}")
-    endif()
-    file(WRITE "${CURRENT_PACKAGES_DIR}/include/hpdf_types.h" "${_contents}")
-endif()
 
 vcpkg_copy_pdbs()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
