@@ -3049,8 +3049,8 @@
       "port-version": 0
     },
     "flatbuffers": {
-      "baseline": "25.9.23",
-      "port-version": 1
+      "baseline": "25.12.19",
+      "port-version": 0
     },
     "flatbush": {
       "baseline": "1.3.2",
