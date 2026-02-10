@@ -1,5 +1,5 @@
 {
-  "name": "typecast-c",
+  "name": "typecast-ai",
   "version": "1.0.1",
   "description": "Text-to-Speech API client library for Typecast AI. Pure C with optional C++ wrapper.",
   "homepage": "https://github.com/neosapience/typecast-sdk",
