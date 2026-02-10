@@ -6,18 +6,4 @@ index 35f992f..8cfc83e 100644
  #include <traits.hpp>
 +#include <fmt/format.h>
 +#include <fmt/ranges.h>
- 
-@@ -33,3 +35,2 @@
- using common::loggerFactory;
--using fmt::format;
- using opencl::getActiveDeviceId;
-@@ -65,3 +66,3 @@
-             build_error +=
--                format("OpenCL Device: {}\n\tOptions: {}\n\tLog:\n{}\n",
-+                fmt::format("OpenCL Device: {}\n\tOptions: {}\n\tLog:\n{}\n",
-                        device.getInfo<CL_DEVICE_NAME>(),
-@@ -71,3 +72,3 @@
-     } catch (const cl::Error &e) {
--        build_error = format("Failed to fetch build log: {}", e.what());
-+        build_error = fmt::format("Failed to fetch build log: {}", e.what());
-     }
+
