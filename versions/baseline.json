@@ -485,7 +485,7 @@
       "port-version": 0
     },
     "aws-checksums": {
-      "baseline": "0.2.8",
+      "baseline": "0.2.9",
       "port-version": 0
     },
     "aws-crt-cpp": {
