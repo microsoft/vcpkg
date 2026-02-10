@@ -1,6 +1,6 @@
 {
   "name": "z3",
-  "version": "4.15.4",
+  "version": "4.15.7",
   "description": "Z3 is a theorem prover from Microsoft Research",
   "homepage": "https://github.com/Z3Prover/z3",
   "license": "MIT",
