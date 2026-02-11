@@ -66,9 +66,7 @@
           "name": "expat",
           "default-features": false
         },
-        {
-          "name": "libb2"
-        },
+        "libb2",
         {
           "name": "libffi",
           "default-features": false
