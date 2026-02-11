@@ -82,3 +82,6 @@ RUN echo "Build date: ${BUILD_DATE}" && \
         gnupg \
         python3-pip && \
     rm -rf /var/lib/apt/lists/*
+
+RUN update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-12 100 && \
+    update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-12 100
