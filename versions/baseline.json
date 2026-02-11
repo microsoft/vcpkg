@@ -10820,6 +10820,10 @@
       "baseline": "0.4.2",
       "port-version": 1
     },
+    "xdigest": {
+      "baseline": "0.4.0",
+      "port-version": 0
+    },
     "xerces-c": {
       "baseline": "3.3.0",
       "port-version": 0
