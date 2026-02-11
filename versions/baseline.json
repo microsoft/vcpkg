@@ -1730,7 +1730,7 @@
     },
     "chromaprint": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "chronoengine": {
       "baseline": "8.0.0",
@@ -3082,7 +3082,7 @@
     },
     "fluidsynth": {
       "baseline": "2.5.2",
-      "port-version": 0
+      "port-version": 1
     },
     "flux": {
       "baseline": "0.4.0",
@@ -3562,7 +3562,7 @@
     },
     "gstreamer": {
       "baseline": "1.26.5",
-      "port-version": 0
+      "port-version": 1
     },
     "gtest": {
       "baseline": "1.17.0",
@@ -3574,7 +3574,7 @@
     },
     "gtk3": {
       "baseline": "3.24.51",
-      "port-version": 2
+      "port-version": 3
     },
     "gtkmm": {
       "baseline": "4.14.0",
