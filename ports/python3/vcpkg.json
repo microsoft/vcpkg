@@ -67,8 +67,7 @@
           "default-features": false
         },
         {
-          "name": "libb2",
-          "default-features": false
+          "name": "libb2"
         },
         {
           "name": "libffi",
