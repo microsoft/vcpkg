@@ -22,6 +22,7 @@ file(RENAME "${MAPNIK_VECTOR_TILE_SOURCE_PATH}" "${SOURCE_PATH}/deps/mapbox/mapn
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        "avif"                      USE_AVIF
         "jpeg"                      USE_JPEG
         "png"                       USE_PNG
         "tiff"                      USE_TIFF

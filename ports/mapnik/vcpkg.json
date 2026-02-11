@@ -32,6 +32,7 @@
     },
     "boost-spirit",
     "boost-system",
+    "boost-url",
     {
       "name": "freetype",
       "features": [
@@ -77,6 +78,12 @@
     "webp"
   ],
   "features": {
+    "avif": {
+      "description": "add avif support",
+      "dependencies": [
+        "libavif"
+      ]
+    },
     "cairo": {
       "description": "Cairo renderer",
       "dependencies": [
