@@ -1,11 +1,19 @@
 {
   "name": "qtmultimedia",
   "version": "6.10.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Qt Multimedia is an add-on module that provides a rich set of QML types and C++ classes to handle multimedia content.",
   "homepage": "https://www.qt.io/",
   "license": null,
   "dependencies": [
+    {
+      "name": "pipewire",
+      "platform": "linux"
+    },
+    {
+      "name": "pulseaudio",
+      "platform": "linux"
+    },
     {
       "name": "qtbase",
       "default-features": false,
@@ -19,14 +27,6 @@
     {
       "name": "qtshadertools",
       "default-features": false
-    },
-    {
-      "name": "pipewire",
-      "platform": "linux"
-    },
-    {
-      "name": "pulseaudio",
-      "platform": "linux"
     }
   ],
   "default-features": [
