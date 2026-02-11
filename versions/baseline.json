@@ -8385,8 +8385,8 @@
       "port-version": 9
     },
     "quickjs-ng": {
-      "baseline": "0.11.0",
-      "port-version": 2
+      "baseline": "0.12.0",
+      "port-version": 0
     },
     "quill": {
       "baseline": "11.0.2",
