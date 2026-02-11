@@ -1801,7 +1801,7 @@
       "port-version": 2
     },
     "cleishm-frequency-cpp": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "cleishm-thermo-cpp": {
