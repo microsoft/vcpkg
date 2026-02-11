@@ -5801,7 +5801,7 @@
       "port-version": 0
     },
     "libxinerama": {
-      "baseline": "1.1.4",
+      "baseline": "1.1.6",
       "port-version": 0
     },
     "libxkbcommon": {
