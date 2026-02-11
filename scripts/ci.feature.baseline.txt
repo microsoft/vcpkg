@@ -641,7 +641,6 @@ adios2[cuda]:x64-windows-static = feature-fails # try_run() invoked in cross-com
 adios2[mpi]:x86-windows = feature-fails
 adios2[python] = feature-fails # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
 adios2[zfp](android | (arm & windows)) = feature-fails # try_run() invoked in cross-compiling mode
-arrayfire[opencl](windows) = feature-fails # build errror: See https://github.com/microsoft/vcpkg/issues/33464
 ashes[core](windows) = combination-fails # CMake Error: INSTALL(EXPORT) given unknown export "AshesRenderers". One render backend must be selected
 awlib[graphics](osx) = feature-fails # Broken code. See https://github.com/microsoft/vcpkg/issues/39849
 cgns[core,fortran,hdf5,legacy,lfs,mpi,tests](osx | linux) = combination-fails # ["fortran","hdf5","mpi"]: Could NOT find MPI (missing: MPI_Fortran_FOUND) (found version "3.1")

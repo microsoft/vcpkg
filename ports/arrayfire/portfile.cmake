@@ -23,6 +23,7 @@ vcpkg_from_github(
     Fix-constexpr-error-with-vs2019-with-half.patch
     fix-dependency-clfft.patch
     fix-miss-header-file.patch
+    fix-fmt-error.patch
     remove-cl2hpp-download.diff
     "${CUDA_PATCHES}"
 )
