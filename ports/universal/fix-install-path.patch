@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1234567..890abcd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -658,7 +658,7 @@ install(FILES
+     DESTINATION ${config_install_dir} COMPONENT cmake)
+ 
+ # Install headers
+-install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/${project_library_target_name}
++install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/sw/${project_library_target_name}
+         DESTINATION ${include_install_dir})
+ 
+ if(UNIVERSAL_BUILD_ALL)
