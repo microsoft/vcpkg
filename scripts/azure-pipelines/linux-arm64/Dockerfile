@@ -15,8 +15,8 @@ RUN echo "Build date: ${BUILD_DATE}" && \
     apt-get install --no-install-recommends -y \
         powershell \
         build-essential \
-        gcc-aarch64-linux-gnu \
-        g++-aarch64-linux-gnu \
+        gcc-12-aarch64-linux-gnu \
+        g++-12-aarch64-linux-gnu \
         cmake \
         autoconf \
         autoconf-archive \
