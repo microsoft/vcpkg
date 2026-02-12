@@ -1,0 +1,4 @@
+fast-obj provides CMake targets:
+
+find_package(fast-obj CONFIG REQUIRED)
+target_link_libraries(main PRIVATE fast-obj::fast-obj)
