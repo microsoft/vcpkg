@@ -668,7 +668,7 @@ septag-sx:x64-android=fail
 sfgui:arm-neon-android=fail
 sfgui:arm64-android=fail
 sfgui:x64-android=fail
-sfml:arm64-linux-fail
+sfml:arm64-linux=fail
 shaderwriter:arm64-linux=fail
 simbody:arm64-windows-static-md=fail
 simbody:arm64-windows=fail
