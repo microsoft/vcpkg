@@ -1,5 +1,5 @@
 diff --git a/cmake/eCALConfig.cmake.in b/cmake/eCALConfig.cmake.in
-index f285f5e..d10bbf9 100644
+index f285f5e..7411247 100644
 --- a/cmake/eCALConfig.cmake.in
 +++ b/cmake/eCALConfig.cmake.in
 @@ -30,13 +30,8 @@ set(eCAL_VERSION_STRING @eCAL_VERSION_STRING@)
@@ -23,7 +23,7 @@ index f285f5e..d10bbf9 100644
  #endif()
  
 -find_package(CMakeFunctions REQUIRED)
-+# find_dependency(CMakeFunctions CONFIG)
++find_dependency(CMakeFunctions CONFIG)
  
 -find_package(Threads REQUIRED)
 +find_dependency(Threads)
