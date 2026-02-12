@@ -115,7 +115,7 @@ function(z_vcpkg_fixup_rpath_in_dir)
             )
 
             execute_process(
-                COMMAND "${PATCHELF}" --set-rpath "${new_rpath}" "${elf_file}"
+                COMMAND "${PATCHELF}" --add-rpath "${new_rpath}" "${elf_file}"
                 OUTPUT_QUIET
                 ERROR_VARIABLE set_rpath_error
             )
