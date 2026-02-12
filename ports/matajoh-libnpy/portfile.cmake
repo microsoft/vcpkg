@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO matajoh/libnpy
     REF "v${VERSION}"
-    SHA512 808e76d341ca4abc88b9cd8d354ce9e77799c1d8d20654d2a38aa9ffca8ffbb8e64de5100c815a23f8db9432ad3e9d411af08d30fdce87f474740460080f4781
+    SHA512 6fece3d931f0beba2f5bd7563c24f451f8480a479081b319182d514a50dffc2224e23b76f8e6f35b51847adb214b900e4eb5f5a4d4de429cae196d5e49573486
     HEAD_REF main
     PATCHES
         fix-install.patch
