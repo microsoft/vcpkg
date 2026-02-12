@@ -5929,7 +5929,7 @@
       "port-version": 0
     },
     "lilv": {
-      "baseline": "0.26.2",
+      "baseline": "0.26.4",
       "port-version": 0
     },
     "linalg": {
@@ -9293,7 +9293,7 @@
       "port-version": 4
     },
     "sord": {
-      "baseline": "0.16.20",
+      "baseline": "0.16.22",
       "port-version": 0
     },
     "soundtouch": {
@@ -9445,7 +9445,7 @@
       "port-version": 0
     },
     "sratom": {
-      "baseline": "0.6.20",
+      "baseline": "0.6.22",
       "port-version": 0
     },
     "srell": {
