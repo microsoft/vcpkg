@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20250404
+FROM ubuntu:noble-20251013
 
 ARG BUILD_DATE
 ENV DEBIAN_FRONTEND=noninteractive
