@@ -30,6 +30,7 @@ RUN echo "Build date: ${BUILD_DATE}" && \
         libnuma1 \
         libnuma-dev \
         libudev-dev \
+        libtirpc-dev \
         libx11-dev \
         libxcursor-dev \
         libxtst-dev \
