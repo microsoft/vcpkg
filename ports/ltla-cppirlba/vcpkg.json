@@ -1,13 +1,13 @@
 {
   "name": "ltla-cppirlba",
-  "version": "2.0.2",
-  "port-version": 1,
+  "version": "3.0.1",
   "description": "A C++ port of the IRLBA algorithm, based on the C code in the R package.",
   "homepage": "https://github.com/LTLA/CppIrlba",
   "license": "MIT",
   "dependencies": [
     "eigen3",
     "ltla-aarand",
+    "ltla-sanisizer",
     "ltla-subpar",
     {
       "name": "vcpkg-cmake",

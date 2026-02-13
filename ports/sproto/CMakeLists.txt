@@ -3,7 +3,7 @@ project(sproto C)
 
 set(CMAKE_C_STANDARD 99)
 
-find_package(unofficial-lua CONFIG REQUIRED)
+find_package(Lua REQUIRED)
 
 add_library(sproto sproto.c lsproto.c)
 
@@ -17,7 +17,7 @@ else()
     target_compile_definitions(sproto PUBLIC SPROTO_STATIC)
 endif()
 
-target_link_libraries(sproto PRIVATE lua)
+target_link_libraries(sproto PRIVATE ${LUA_LIBRARIES})
 
 target_include_directories(sproto PRIVATE ${LUA_INCLUDE_DIR})
 

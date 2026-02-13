@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52c3654..8e19f11 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -565,24 +565,6 @@ if(ZLIB AND NOT TARGET ZLIB::ZLIB)
+   find_package(ZLIB 1.2.3)
+ endif()
+ 
+-if (PYTHON_BUILD_SETUP OR CMAKE_INSTALL_DOCDIR STREQUAL "" OR NOT BUILD_CXX)
+-  install(FILES
+-      README.md
+-      LICENSE.txt
+-      THIRD_PARTY_NOTICES.md
+-      DESTINATION .)
+-else()
+-  install(FILES
+-      README.md
+-      LICENSE.txt
+-      AUTHORS
+-      CITATION.cff
+-      CODE_OF_CONDUCT.md
+-      CONTRIBUTING.md
+-      FEATURES.md
+-      DESTINATION ${CMAKE_INSTALL_DOCDIR})
+-endif()
+-
+ # Set default generator based on platform
+ if(WIN32)
+     set(CPACK_GENERATOR "ZIP")
+diff --git a/highs/CMakeLists.txt b/highs/CMakeLists.txt
+index c30823a..78a324f 100644
+--- a/highs/CMakeLists.txt
++++ b/highs/CMakeLists.txt
+@@ -94,9 +94,9 @@ if(NOT FAST_BUILD)
+   endif()
+ 
+   install(TARGETS libhighs EXPORT highs-targets
+-    LIBRARY
+-    ARCHIVE
+-    RUNTIME
++    LIBRARY ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME ${CMAKE_INSTALL_BINDIR}
+     INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/highs)
+ 
+   # Add library targets to the build-tree export set

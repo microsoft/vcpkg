@@ -1,8 +1,10 @@
 {
   "name": "kf5plotting",
   "version": "5.116.0",
+  "port-version": 1,
   "description": "Lightweight plotting framework",
-  "homepage": "https://api.kde.org/kplotting-index.html",
+  "homepage": "https://invent.kde.org/frameworks/kplotting",
+  "documentation": "https://api.kde.org/kplotting-index.html",
   "dependencies": [
     "ecm",
     {

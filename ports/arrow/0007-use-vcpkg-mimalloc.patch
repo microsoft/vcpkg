@@ -1,0 +1,17 @@
+--- a/cpp/cmake_modules/ThirdpartyToolchain.cmake
++++ b/cpp/cmake_modules/ThirdpartyToolchain.cmake
+@@ -2319,6 +2319,14 @@ endif()
+ # mimalloc - Cross-platform high-performance allocator, from Microsoft
+
+ if(ARROW_MIMALLOC)
++  find_package(mimalloc REQUIRED CONFIG)
++  if(TARGET mimalloc-static)
++    add_library(mimalloc::mimalloc ALIAS mimalloc-static)
++  else()
++    add_library(mimalloc::mimalloc ALIAS mimalloc)
++  endif()
++endif()
++if(0)
+   if(NOT ARROW_ENABLE_THREADING)
+     message(FATAL_ERROR "Can't use mimalloc with ARROW_ENABLE_THREADING=OFF")
+   endif()

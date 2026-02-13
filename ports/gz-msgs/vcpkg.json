@@ -1,6 +1,7 @@
 {
   "name": "gz-msgs",
   "version": "11.1.0",
+  "port-version": 1,
   "description": "Protobuf messages and functions for robot applications",
   "license": "Apache-2.0",
   "supports": "!uwp",

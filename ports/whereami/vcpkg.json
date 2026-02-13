@@ -1,0 +1,17 @@
+{
+  "name": "whereami",
+  "version-date": "2024-08-26",
+  "description": "A drop-in two files library to locate the current executable and the current module on the file system.",
+  "homepage": "https://github.com/gpakosz/whereami",
+  "license": "MIT OR WTFPL",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

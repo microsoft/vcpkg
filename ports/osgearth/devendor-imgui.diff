@@ -1,0 +1,84 @@
+diff --git a/src/osgEarthImGui/CMakeLists.txt b/src/osgEarthImGui/CMakeLists.txt
+index c2f8d0bfe..0fed4c4ee 100644
+--- a/src/osgEarthImGui/CMakeLists.txt
++++ b/src/osgEarthImGui/CMakeLists.txt
+@@ -2,6 +2,7 @@
+ # osgEarth ImGui NodeKit
+ #
+ find_package(GLEW REQUIRED)
++find_package(imgui CONFIG REQUIRED)
+ 
+ set(OSGEARTH_HAVE_IMGUI_NODEKIT ON PARENT_SCOPE) # for BuildConfig
+ 
+@@ -11,8 +12,13 @@ set(LIB_NAME osgEarthImGui)
+ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+ 
+ # embedded ImGui source code:
+-set(IMGUI_HEADERS imgui.h imgui_internal.h imgui_impl_opengl3.h imconfig.h imnodes.h)
+-set(IMGUI_SOURCES imgui.cpp imgui_demo.cpp imgui_draw.cpp imgui_tables.cpp imgui_widgets.cpp imgui_impl_opengl3.cpp imnodes.cpp)
++set(IMGUI_HEADERS imnodes.h)
++set(IMGUI_SOURCES imnodes.cpp)
++file(REMOVE
++    ${CMAKE_CURRENT_LIST_DIR}/imgui.h
++    ${CMAKE_CURRENT_LIST_DIR}/imgui_internal.h
++    ${CMAKE_CURRENT_LIST_DIR}/imgui_impl_opengl3.h
++    ${CMAKE_CURRENT_LIST_DIR}/imgui_impl_opengl3_loader.h)
+ 
+ set(STOCK_PANELS
+     AnnotationsGUI
+@@ -60,5 +66,5 @@ add_osgearth_library(
+     TARGET ${LIB_NAME}
+     SOURCES ${LIB_SOURCES} ${IMGUI_SOURCES}
+     PUBLIC_HEADERS ${LIB_HEADERS} ${IMGUI_HEADERS} ${STOCK_PANELS}
+-    LIBRARIES PUBLIC GLEW::GLEW OpenGL::GL
++    LIBRARIES PUBLIC GLEW::GLEW OpenGL::GL imgui::imgui
+     FOLDER "NodeKits")
+diff --git a/src/osgEarthImGui/Common b/src/osgEarthImGui/Common
+index c8053f3ed..8e6e16fa0 100644
+--- a/src/osgEarthImGui/Common
++++ b/src/osgEarthImGui/Common
+@@ -16,6 +16,6 @@
+ 
+ #ifndef IMGUI_VERSION
+ #include <GL/glew.h>
+-#include <osgEarthImGui/imgui.h>
++#include <imgui.h>
+ #include <osgEarthImGui/imnodes.h>
+ #endif
+diff --git a/src/osgEarthImGui/ImGuiEventHandler.cpp b/src/osgEarthImGui/ImGuiEventHandler.cpp
+index 9de806fc6..a1995de33 100644
+--- a/src/osgEarthImGui/ImGuiEventHandler.cpp
++++ b/src/osgEarthImGui/ImGuiEventHandler.cpp
+@@ -17,8 +17,8 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>
+  */
+ #include "ImGuiEventHandler"
+-#include "imgui_internal.h"
+-#include "imgui_impl_opengl3.h"
++#include <imgui_internal.h>
++#include <imgui_impl_opengl3.h>
+ #include <osgEarth/GLUtils>
+ 
+ using namespace osgEarth;
+@@ -174,7 +174,7 @@ void ImGuiEventHandler::render(osg::RenderInfo& ri)
+         constexpr ImGuiDockNodeFlags dockspace_flags =
+             ImGuiDockNodeFlags_NoDockingInCentralNode | ImGuiDockNodeFlags_PassthruCentralNode;
+ 
+-        auto dockSpaceId = ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), dockspace_flags);
++        auto dockSpaceId = ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), dockspace_flags);
+ 
+         glDisable(GL_MULTISAMPLE);
+ 
+diff --git a/src/osgEarthImGui/ImGuiPanel b/src/osgEarthImGui/ImGuiPanel
+index 60a368065..f9c2c5416 100644
+--- a/src/osgEarthImGui/ImGuiPanel
++++ b/src/osgEarthImGui/ImGuiPanel
+@@ -422,7 +422,7 @@ namespace ImGuiEx
+         if (textureObject)
+         {
+             bool flip = (texture->getImage() && texture->getImage()->getOrigin() == osg::Image::TOP_LEFT);
+-            ImGui::Image((void*)(intptr_t)textureObject->_id, ImVec2(w, h), ImVec2(0, flip ? 0 : 1), ImVec2(1, flip ? 1 : 0), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 0, 1));
++            ImGui::Image((ImGuiID)textureObject->_id, ImVec2(w, h), ImVec2(0, flip ? 0 : 1), ImVec2(1, flip ? 1 : 0), ImVec4(1, 1, 1, 1), ImVec4(1, 1, 0, 1));
+         }
+     }
+ 

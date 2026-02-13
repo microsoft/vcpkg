@@ -1,6 +1,6 @@
 {
   "name": "nanoarrow",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Helpers for Arrow C Data & Arrow C Stream interfaces",
   "homepage": "https://arrow.apache.org/nanoarrow",
   "license": "Apache-2.0",
