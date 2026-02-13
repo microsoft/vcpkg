@@ -7982,7 +7982,7 @@
     },
     "qpid-proton": {
       "baseline": "0.40.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qpoases": {
       "baseline": "3.2.2",
