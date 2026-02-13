@@ -181,7 +181,7 @@
       "port-version": 1
     },
     "apache-datasketches": {
-      "baseline": "5.1.0",
+      "baseline": "5.2.0",
       "port-version": 0
     },
     "approval-tests-cpp": {
