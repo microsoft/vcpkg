@@ -1,11 +1,11 @@
-string(REGEX MATCH "^[1-9]+" VERSION_MAJOR ${VERSION})
+string(REGEX MATCH "^[1-9]+" VERSION_MAJOR "${VERSION}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO gazebosim/${PORT}
-    REF ${PORT}${VERSION_MAJOR}_${VERSION}
-    SHA512 9738057cf85d81213f3eb2cce83d3ea18df53e228f477f8360682396acd7c4c72d4a16d55ec00dddded3553354a1b1792d7f525ec5ce4357649c11aca1a53038
-    HEAD_REF sdf${VERSION_MAJOR}
+    REPO "gazebosim/${PORT}"
+    REF "${PORT}${VERSION_MAJOR}_${VERSION}"
+    SHA512 d7dc09f9b3eb1e99a7b0533c9f3db4c76afdaceb48ded06f1f08834417b5ccb5e213a99c5664c0c5c4cce5c38f7f84ebcf54d70eac13139190684a3893f588a8
+    HEAD_REF "sdf${VERSION_MAJOR}"
     PATCHES
         no-absolute.patch
         cmake-config.patch
