@@ -6,23 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_IS_EMSCRIPTEN)
-    # libraqm tests fail to build on emscripten. See https://github.com/microsoft/vcpkg/issues/49390 for more information
-    option(BUILD_TESTS OFF)
-else()
-    option(BUILD_TESTS ON)
-endif()
-
-if(BUILD_TESTS)
-    list(APPEND configure_options "-Dtests=true")
-else()
-    list(APPEND configure_options "-Dtests=false")
-endif()
-
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${configure_options}
+        -Dtests=false
 )
 
 vcpkg_install_meson()
