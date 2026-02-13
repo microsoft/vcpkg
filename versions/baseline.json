@@ -446,7 +446,7 @@
     },
     "avro-cpp": {
       "baseline": "1.12.1",
-      "port-version": 0
+      "port-version": 1
     },
     "awlib": {
       "baseline": "2024-04-06",
