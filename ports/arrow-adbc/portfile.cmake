@@ -1,9 +1,12 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/arrow-adbc
-    REF apache-arrow-adbc-${VERSION}
-    SHA512 59cccbeeefa295d69cacfa8851b621376106aca57ebd94291523fcca314c0bd10c1d296801d1eacce9edddd46a8c87deaf3d8367e32ba5fd5b322b34c6af8625
-    HEAD_REF main
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/arrow/apache-arrow-adbc-${VERSION}/apache-arrow-adbc-${VERSION}.tar.gz"
+    FILENAME "apache-arrow-adbc-${VERSION}.tar.gz"
+    SHA512 86bc77b5e1fba2a8616614e9f7077e2e966165e28ff6fd4c7e96f4538ce3ac7f705da2e528515384870565ebbd0ec8ce27d45234446d2985d357111a25e51d13
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix_static_build.patch
         fix_windows_build.patch
