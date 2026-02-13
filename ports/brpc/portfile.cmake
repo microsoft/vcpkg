@@ -5,12 +5,15 @@ vcpkg_download_distfile(
     FILENAME 8d87814330d9ebbfe5b95774fdb71056fcb3170c.patch
 )
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/brpc
-    REF "${VERSION}"
-    SHA512 93366c2b073de8a1af5ededa9ef5a6803ccd393bbb5fe1f9872c230e4997995759517fa4dd1a51ffd120a5c9040dcb00b1c580c5ccf032dd70561c0c3283f990
-    HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/brpc/${VERSION}/apache-brpc-${VERSION}-src.tar.gz"
+    FILENAME "apache-brpc-${VERSION}-src.tar.gz"
+    SHA512 cf7e252b2132f134bc881aa3fa2faef274811900a1cfb72c48f1488b40fa1d3214b2ba1def0681a7b177f6e87b4534b9a15337f90f9119e6a483f71cdd6cd826
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix-build.patch
         fix-warnings.patch
