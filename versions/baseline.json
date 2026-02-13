@@ -10826,7 +10826,7 @@
     },
     "xerces-c": {
       "baseline": "3.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "xeus": {
       "baseline": "0.24.3",
