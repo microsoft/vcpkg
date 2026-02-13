@@ -221,11 +221,11 @@
       "port-version": 2
     },
     "arcticdb-sparrow": {
-      "baseline": "2.2.1",
+      "baseline": "2.3.0",
       "port-version": 0
     },
     "arcticdb-sparrow-extensions": {
-      "baseline": "1.1.0",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "arcus": {
