@@ -6065,7 +6065,7 @@
       "port-version": 1
     },
     "lua-compat53": {
-      "baseline": "0.10",
+      "baseline": "0.14.4",
       "port-version": 0
     },
     "luabridge": {
