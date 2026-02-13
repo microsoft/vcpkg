@@ -7886,7 +7886,7 @@
     },
     "pulsar-client-cpp": {
       "baseline": "4.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "pulseaudio": {
       "baseline": "17.0",
