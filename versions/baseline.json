@@ -6761,8 +6761,8 @@
       "port-version": 0
     },
     "nanovg": {
-      "baseline": "2019-08-30",
-      "port-version": 6
+      "baseline": "2023-08-26",
+      "port-version": 0
     },
     "nativefiledialog-extended": {
       "baseline": "1.3.0",
