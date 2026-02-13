@@ -1,0 +1,14 @@
+diff --git a/src/vulkan/meson.build b/src/vulkan/meson.build
+index d22883ce..6279da5f 100644
+--- a/src/vulkan/meson.build
++++ b/src/vulkan/meson.build
+@@ -1,7 +1,8 @@
+ vulkan_build = get_option('vulkan')
+ vulkan_link = get_option('vk-proc-addr')
+ vulkan_loader = dependency('vulkan', required: false)
+-vulkan_headers = vulkan_loader.partial_dependency(includes: true, compile_args: true)
++vulkan_headers_inc = meson.get_external_property('vulkan_headers_inc', [])
++vulkan_headers = declare_dependency(include_directories: vulkan_headers_inc)
+ registry_xml = get_option('vulkan-registry')
+ 
+ # Prefer our Vulkan headers for portability

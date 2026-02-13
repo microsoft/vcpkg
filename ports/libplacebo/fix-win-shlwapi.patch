@@ -1,0 +1,13 @@
+diff --git a/src/meson.build b/src/meson.build
+index ea5d9b4c..a9f0b4a2 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -7,7 +7,7 @@ conf_internal.set('PL_HAVE_DBGHELP', dbghelp)
+ conf_internal.set('PL_HAVE_UNWIND', unwind.found())
+ conf_internal.set('PL_HAVE_EXECINFO', has_execinfo)
+ if dbghelp
+-  build_deps += cc.find_library('shlwapi', required: true)
++  build_deps += cc.find_library('shlwapi', required: not meson.get_external_property('no_static_windows_libs', false))
+ elif unwind.found()
+   build_deps += [unwind, cc.find_library('dl', required : false)]
+ elif has_execinfo
