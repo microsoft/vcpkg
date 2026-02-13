@@ -49,5 +49,6 @@
         "sqlite3"
       ]
     }
-  }
+  },
+  "port-version": 1
 }
