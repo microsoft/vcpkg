@@ -8,7 +8,6 @@
     "boost-coroutine2",
     "cppzmq",
     "flatbuffers",
-    "foonathan-lexy",
     "minitrace",
     "tinyxml2",
     {
