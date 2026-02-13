@@ -50,7 +50,7 @@ vcpkg_cmake_configure(
         -DECAL_BUILD_VERSION="${VERSION}"
 )
 
-vcpkg_cmake_install(ADD_BIN_TO_PATH)
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 set(_ecal_tool "${CURRENT_PACKAGES_DIR}/bin/ecal_generate_config${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
