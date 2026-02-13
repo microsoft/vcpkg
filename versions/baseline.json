@@ -1984,7 +1984,7 @@
       "baseline": "0.3.0",
       "port-version": 0
     },
-    "coro-http": {
+    "coro-http-client": {
       "baseline": "1.0.0",
       "port-version": 0
     },
