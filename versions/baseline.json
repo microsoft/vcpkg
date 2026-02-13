@@ -7361,7 +7361,7 @@
       "port-version": 0
     },
     "orefkov-simstr": {
-      "baseline": "1.6.6",
+      "baseline": "1.6.7",
       "port-version": 0
     },
     "ormpp": {
