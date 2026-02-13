@@ -182,7 +182,7 @@
     },
     "apache-datasketches": {
       "baseline": "5.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "approval-tests-cpp": {
       "baseline": "10.13.0",
