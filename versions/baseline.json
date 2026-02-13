@@ -6241,7 +6241,7 @@
       "port-version": 0
     },
     "matajoh-libnpy": {
-      "baseline": "2.0.0",
+      "baseline": "2.1.0",
       "port-version": 0
     },
     "matchit": {
