@@ -5,8 +5,7 @@ vcpkg_from_github(
     SHA512 a1a9a1f2f649c0bfdb2e141445a376f9a325a6102fa647c4b20dad0de7c2a782c265ac0a7addd4bb5a75e16347f6b7d5ce091df265bcd45cc626db237db81ec5
     HEAD_REF master
     PATCHES
-        fix-x86_build.patch
-        remove-source-charset.diff
+        remove-source-charset.diff # because vcpkg's default toolchain uses /utf-8 which is incompatible with /source-charset
         fix-dependencies.patch
 )
 
