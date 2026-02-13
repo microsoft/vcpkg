@@ -26,6 +26,21 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ADBC_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ADBC_BUILD_STATIC)
 
+set(ADBC_NEEDS_GO OFF)
+if("flightsql" IN_LIST FEATURES OR "snowflake" IN_LIST FEATURES OR "bigquery" IN_LIST FEATURES)
+    set(ADBC_NEEDS_GO ON)
+endif()
+
+if(ADBC_NEEDS_GO)
+    vcpkg_find_acquire_program(GO)
+    get_filename_component(GO_EXE_PATH "${GO}" DIRECTORY)
+    vcpkg_add_to_path("${GO_EXE_PATH}")
+    # Ensure GOMODCACHE is writable (needed in containerized CI environments)
+    if(NOT DEFINED ENV{GOMODCACHE})
+        set(ENV{GOMODCACHE} "${CURRENT_BUILDTREES_DIR}/go-cache")
+    endif()
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/c
     OPTIONS
