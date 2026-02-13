@@ -17,6 +17,6 @@ index d22883ce..52e47b2c 100644
      tests += 'vulkan.c'
    endif
 -else
-+elif vulkan_headers.found()
++elif false
    sources += 'vulkan/stubs.c'
  endif
