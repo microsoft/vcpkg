@@ -10453,7 +10453,7 @@
       "port-version": 0
     },
     "vmprotect-sdk": {
-      "baseline": "3.10.3",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "volk": {
