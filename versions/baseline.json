@@ -1644,10 +1644,6 @@
       "baseline": "2.5",
       "port-version": 13
     },
-    "cconfig": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "cctag": {
       "baseline": "1.0.4",
       "port-version": 1
