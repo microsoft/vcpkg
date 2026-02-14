@@ -3,8 +3,8 @@
   "version": "3.10.3",
   "description": "VMProtect SDK",
   "homepage": "https://vmpsoft.com",
-  "supports": "windows | linux | osx | android",
   "license": "Zlib",
+  "supports": "windows | linux | osx | android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
