@@ -4,7 +4,7 @@
   "description": "VMProtect SDK",
   "homepage": "https://vmpsoft.com",
   "license": "Zlib",
-  "supports": "windows | linux | osx | android",
+  "supports": "windows | linux | osx | android & !(static & staticcrt)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
