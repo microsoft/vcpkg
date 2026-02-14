@@ -1,0 +1,13 @@
+{
+    "name": "vcpkg-ci-vmprotect-sdk",
+    "version-string": "ci",
+    "description": "Testing packages which provide vmprotect-sdk",
+    "license": null,
+    "dependencies": [
+    "vmprotect-sdk",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
