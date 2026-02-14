@@ -11068,6 +11068,10 @@
       "baseline": "0.1.2",
       "port-version": 0
     },
+    "zxc": {
+      "baseline": "0.7.3",
+      "port-version": 0
+    },
     "zycore": {
       "baseline": "1.5.2",
       "port-version": 0
