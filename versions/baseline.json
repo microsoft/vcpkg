@@ -8504,6 +8504,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "reactivelitepp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "reactiveplusplus": {
       "baseline": "2.2.3",
       "port-version": 0
