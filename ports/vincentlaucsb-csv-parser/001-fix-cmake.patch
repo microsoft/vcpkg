@@ -52,11 +52,11 @@ index 1b920b1..c56a142 100644
  if (CSV_DEVELOPER)
      # Allow for performance profiling
 diff --git a/include/internal/CMakeLists.txt b/include/internal/CMakeLists.txt
-index 4cbf58c..e9e65f8 100644
+index 7da751c..45b1bb8 100644
 --- a/include/internal/CMakeLists.txt
 +++ b/include/internal/CMakeLists.txt
-@@ -23,6 +23,9 @@ target_sources(csv
- 		"data_type.hpp"
+@@ -26,6 +26,9 @@ target_sources(csv
+ 		thread_safe_deque.hpp
  		)
  
 -set_target_properties(csv PROPERTIES LINKER_LANGUAGE CXX)
