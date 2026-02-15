@@ -4605,8 +4605,8 @@
       "port-version": 0
     },
     "libalkimia": {
-      "baseline": "8.1.72",
-      "port-version": 1
+      "baseline": "8.1.90",
+      "port-version": 0
     },
     "libao": {
       "baseline": "1.2.2",
