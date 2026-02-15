@@ -1,0 +1,8 @@
+reactivelitepp provides CMake targets:
+
+    find_package(ReactiveLitepp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE ReactiveLitepp::ReactiveLitepp)
+
+reactivelitepp is a header-only library for reactive programming in C++20.
+
+For examples, see: https://github.com/herve-er/ReactiveLitepp
