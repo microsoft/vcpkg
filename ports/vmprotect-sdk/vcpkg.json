@@ -1,6 +1,6 @@
 {
   "name": "vmprotect-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Unofficial VMProtect SDK package port for C/C++ development.",
   "homepage": "https://vmpsoft.com",
   "license": "Zlib",
