@@ -2776,6 +2776,10 @@
       "baseline": "4.4.0",
       "port-version": 0
     },
+    "embree3": {
+      "baseline": "3.13.5",
+      "port-version": 4
+    },
     "enchantum": {
       "baseline": "0.3.0",
       "port-version": 0
