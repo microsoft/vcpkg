@@ -48,6 +48,7 @@
     },
     "webengine": {
       "description": "Enables JavaScript support for parsing feature-rich websites",
+      "supports": "!static",
       "dependencies": [
         "qt5-webengine"
       ]
