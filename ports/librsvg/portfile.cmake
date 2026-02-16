@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         fix-libxml2-2.13.5.patch
         meson-pkgconfig-and-def-file.patch
+        export-set-stylesheet.patch
 )
 
 vcpkg_configure_meson(

@@ -7,14 +7,13 @@ vcpkg_download_distfile(ARCHIVE
         "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
         "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
     FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
-    SHA512 7a6f4c48ea57c7cd1946bd33c9fdacfbb4a5ed9c02034f3cd483099539d6bcd5448144fe13f66815cdd51a693ccb317872accf1b150730404fb2d618222a78ca
+    SHA512 862b24ce781f19a347c590e9817503420f5cd0e0776be968c15c92577969534f2753a98acde5f842f65030c56f90fcdde3bb9b40f413c3f6cdd5b493b4e5c95f
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-build.patch
-        fix_vulkan_enabled.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)

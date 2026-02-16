@@ -1,0 +1,12 @@
+diff --git a/rsvg.symbols b/rsvg.symbols
+index d224c5646..bff5db35d 100644
+--- a/rsvg.symbols
++++ b/rsvg.symbols
+@@ -21,6 +21,7 @@ rsvg_handle_set_base_gfile
+ rsvg_handle_set_base_uri
+ rsvg_handle_set_dpi
+ rsvg_handle_set_dpi_x_y
++rsvg_handle_set_stylesheet
+ rsvg_handle_write
+ rsvg_set_default_dpi
+ rsvg_set_default_dpi_x_y
