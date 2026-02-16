@@ -1,0 +1,17 @@
+{
+  "name": "xatlas",
+  "version-date": "2022-07-22",
+  "description": "Mesh parameterization / UV unwrapping library",
+  "homepage": "https://github.com/jpcy/xatlas",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
