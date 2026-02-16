@@ -7,12 +7,15 @@ vcpkg_from_github(
         disable-autosubscribe.diff
 )
 
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" VANILLAPDF_USE_STATIC_CRT)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
       -DVANILLAPDF_INTERNAL_VCPKG=OFF
       -DVANILLAPDF_ENABLE_TESTS=OFF
       -DVANILLAPDF_ENABLE_BENCHMARK=OFF
+      -DVANILLAPDF_USE_STATIC_CRT=${VANILLAPDF_USE_STATIC_CRT}
 )
 
 vcpkg_cmake_install()
