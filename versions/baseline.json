@@ -10296,6 +10296,10 @@
       "baseline": "0.1.1-prerelease",
       "port-version": 0
     },
+    "vbs-enclave-tooling-sdk": {
+      "baseline": "0.1.2.1-prerelease",
+      "port-version": 0
+    },
     "vc": {
       "baseline": "1.4.5",
       "port-version": 0
