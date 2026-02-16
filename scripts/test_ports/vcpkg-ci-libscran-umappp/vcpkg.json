@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-libscran-umappp",
+  "version-string": "ci",
+  "description": "Validates libscran-umappp",
+  "dependencies": [
+    "libscran-umappp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
