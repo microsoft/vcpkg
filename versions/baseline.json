@@ -9177,7 +9177,7 @@
       "port-version": 0
     },
     "slick-net": {
-      "baseline": "1.2.4",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "slick-object-pool": {
