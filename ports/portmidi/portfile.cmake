@@ -2,10 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PortMidi/portmidi
     REF "v${VERSION}"
-    SHA512 00d7cec97b58c074d484793b6097f4e60d061a9d680940bbcdb6670b287b78dbc099af378fb2e066c61f1c26e5060ded9c8f78c80fc03518b33e43f830e34a27 
+    SHA512 d66e9587324da729f3f97037decc8dbd436f86aa346969e4f9189f74a8f60451a92db4c5a5f551064cf794e872c174ebe731bcb2aaf6554f00dacc5b3b8209be 
     HEAD_REF master
-    PATCHES    
-        "android-support.patch"
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)

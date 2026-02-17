@@ -1,0 +1,25 @@
+diff --git a/Makefile.am b/Makefile.am
+index cb3adbe..dd17d48 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -62,6 +62,5 @@ ChangeLog:
+ 
+ dist-hook: ChangeLog INSTALL
+ 
+-ACLOCAL_AMFLAGS = -I m4
+ 
+-EXTRA_DIST = meson.build meson_options.txt
+\ No newline at end of file
++EXTRA_DIST = meson.build meson_options.txt
+diff --git a/configure.ac b/configure.ac
+index e1182b6..97b9d41 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -26,7 +26,6 @@ AC_INIT([libXau], [1.0.12],
+ 	[https://gitlab.freedesktop.org/xorg/lib/libxau/-/issues], [libXau])
+ AC_CONFIG_SRCDIR([Makefile.am])
+ AC_CONFIG_HEADERS([config.h])
+-AC_CONFIG_MACRO_DIRS([m4])
+ AC_USE_SYSTEM_EXTENSIONS
+ 
+ # Initialize Automake

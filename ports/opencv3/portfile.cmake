@@ -22,6 +22,8 @@ vcpkg_from_github(
       0015-fix-supportqnx.patch
       0017-enable-gtk.patch
       0019-enable-pkgconf.patch
+      0021-protobuf-6.patch # 1db93911aeb65599f22db47d5d39f75bc94a821d
+      0022-include-thread.patch
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -136,6 +138,7 @@ if("contrib" IN_LIST FEATURES)
       0007-contrib-fix-hdf5.patch
       0013-contrib-fix-tesseract.patch
       0016-contrib-fix-freetype.patch
+      0020-contrib-add-cassert.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 

@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kaitai-io/kaitai_struct_cpp_stl_runtime
-    REF ${VERSION}
+    REF "${VERSION}"
     SHA512 fd537c5d45d4c53de54c31b9286ff1100f74d62458fa2bbfd0d10d9cfedeb638e20c8d89a683b934310244de1de1093dbf79a06ac56a4918032ee31f0b49cbd7
     HEAD_REF master
     PATCHES
@@ -24,4 +24,4 @@ vcpkg_cmake_install()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

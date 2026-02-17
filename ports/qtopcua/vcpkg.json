@@ -1,6 +1,6 @@
 {
   "name": "qtopcua",
-  "version": "6.9.3",
+  "version": "6.10.0",
   "description": "The Qt OPC UA module implements a Qt API to interact with OPC UA on top of a 3rd party OPC UA stack.",
   "homepage": "https://www.qt.io/",
   "license": null,
@@ -62,9 +62,6 @@
           "default-features": false
         }
       ]
-    },
-    "uacpp": {
-      "description": "Unified Automation C++ SDK"
     }
   }
 }

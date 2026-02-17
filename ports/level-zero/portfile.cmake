@@ -1,18 +1,22 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/level-zero
     REF "v${VERSION}"
-    SHA512 d3c07c870e8629303f86154dc48a433e46921f5dd1851b76cd8c9f3047d1704c5e873e8b25209a4879cc4601cd84d1ab9c6ce48a5f33249dbfc956795e6efa42
+    SHA512 fa0c9154563982a9b6bff684ce37fb29ed817e52c686081eb0da62b9630defc6006475c17d7823108023a7d50b73762875664e0a5d73c9749b11c52f4782fac6
     HEAD_REF master
     PATCHES spdlog_include.patch
 )
+
+vcpkg_list(SET options)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_list(APPEND options "-DBUILD_STATIC=1")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DSYSTEM_SPDLOG=ON
+        ${options}
 )
 
 vcpkg_cmake_install()
@@ -22,3 +26,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+

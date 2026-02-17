@@ -1,7 +1,6 @@
 {
   "name": "mathter",
-  "version": "2.0.0",
-  "port-version": 1,
+  "version": "2.0.1",
   "description": "A flexible and fast matrix, transform, and geometry library.",
   "homepage": "https://github.com/petiaccja/Mathter",
   "license": "MIT",

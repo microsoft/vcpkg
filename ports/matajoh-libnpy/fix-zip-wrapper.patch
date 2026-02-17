@@ -1,24 +1,19 @@
 diff --git a/src/zip.cpp b/src/zip.cpp
-index 1269704..f7f5cb9 100644
+index b4d1046..d68807f 100644
 --- a/src/zip.cpp
 +++ b/src/zip.cpp
-@@ -1,10 +1,18 @@
+@@ -1,8 +1,13 @@
+ #include "zip.h"
 -#include "miniz/miniz.h"
++#include <miniz/miniz.h>
 +#include <algorithm>
-+#include <cstdint>
+ #include <cassert>
+ #include <cstdint>
+ #include <stdexcept>
 +#include <memory>
-+#include <sstream>
 +#include <string>
 +#include <vector>
-+
- #include <cassert>
- #include <stdexcept>
++#include <sstream>
  
- #include "npy/core.h"
- #include "zip.h"
- 
-+#include <miniz/miniz.h>
-+
  namespace {
  const size_t CHUNK = 1024 * 1024;
- const int WINDOW_BITS = -15;

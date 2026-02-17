@@ -1,34 +1,19 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" RAQM_VERSION "${VERSION}")
-set(RAQM_VERSION_MAJOR ${CMAKE_MATCH_1})
-set(RAQM_VERSION_MINOR ${CMAKE_MATCH_2})
-set(RAQM_VERSION_MICRO ${CMAKE_MATCH_3})
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO HOST-Oman/libraqm
-    REF v${RAQM_VERSION_MAJOR}.${RAQM_VERSION_MINOR}.${RAQM_VERSION_MICRO}
-    SHA512 ba0b16ac2240580c3091ff8b673c10345b94c54dff7e102b893855e3d33a1396c681025d3326e53f5ebcde97ceef6ab4dfd9366d0864b422e578d38146692b62
+    REF v${VERSION}
+    SHA512 5b32753b000fa30fe6bb997b8719328c13d68e0ed74207436eff6f1d2932e02c53df424dbf9721cedb308efd355e00036dcfb2d26d7fd89f545273f0e3c24d72
     HEAD_REF master
 )
 
-file(COPY "${CURRENT_PORT_DIR}/FindFribidi.cmake" DESTINATION "${SOURCE_PATH}")
-file(COPY "${CURRENT_PORT_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
-
-vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DCURRENT_PACKAGES_DIR=${CURRENT_PACKAGES_DIR}
-        -DRAQM_VERSION_MAJOR=${RAQM_VERSION_MAJOR}
-        -DRAQM_VERSION_MINOR=${RAQM_VERSION_MINOR}
-        -DRAQM_VERSION_MICRO=${RAQM_VERSION_MICRO}
+        -Dtests=false
 )
 
-vcpkg_cmake_install()
-
+vcpkg_install_meson()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
-

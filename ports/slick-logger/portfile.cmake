@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO SlickQuant/slick_logger
+    REPO SlickQuant/slick-logger
     REF "v${VERSION}"
-    SHA512 5b5a39ec7d56847906eccce951e7fd656217fe66d26671141edd44e8966108fb5d1185449ea553b3aa843b51898a68ab553e5ad52e1433bc43e9069dc6773f1c
+    SHA512 7b54bd76e510eadc26b10c7811c0062fcb28f95e11a8d2c8fa9e95e6af07fcab15abe4182e67be20cfc547712b4ce26f826b9a22cc2b9fc25b662ef8fb43a653
     HEAD_REF main
     PATCHES
       slick-queue.patch
@@ -19,8 +19,8 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(
-    PACKAGE_NAME slick_logger
-    CONFIG_PATH lib/cmake/slick_logger
+    PACKAGE_NAME slick-logger
+    CONFIG_PATH lib/cmake/slick-logger
 )
 
 # Header-only library - remove lib directory

@@ -1,6 +1,6 @@
 {
   "name": "aws-c-auth",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "C99 library implementation of AWS client-side authentication: standard credentials providers and signing.",
   "homepage": "https://github.com/awslabs/aws-c-auth",
   "license": "Apache-2.0",

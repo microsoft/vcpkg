@@ -1,0 +1,222 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 920e4c3..5f7e936 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,8 +87,8 @@ if(OpenMVS_USE_OPENMP)
+ 		#https://github.com/Kitware/CMake/blob/42212f7539040139ecec092547b7d58ef12a4d72/Modules/FindOpenMP.cmake#L252
+ 		if (CMAKE_CXX_COMPILER_ID MATCHES "AppleClang" AND (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7.0"))
+ 			SET(OpenMP_LIBS ${OpenMP_libomp_LIBRARY})
+-			LIST(APPEND OpenMVS_EXTRA_LIBS ${OpenMP_LIBS})
+ 		endif()
++		LIST(APPEND OpenMVS_EXTRA_LIBS OpenMP::OpenMP_CXX)
+ 	else()
+ 		MESSAGE("-- Can't find OpenMP. Continuing without it.")
+ 	endif()
+@@ -109,7 +109,10 @@ if(OpenMVS_USE_OPENGL)
+ endif()
+ 
+ if(OpenMVS_USE_CUDA)
+-	FIND_PACKAGE(CUDA)
++	FIND_PACKAGE(CUDAToolkit REQUIRED)
++	set(CUDA_FOUND 1)
++	set(CUDA_INCLUDE_DIRS "${CUDAToolkit_INCLUDE_DIRS}")
++	set(CUDA_CUDA_LIBRARY CUDA::cuda_driver)
+ 	if(CUDA_FOUND)
+ 		ENABLE_LANGUAGE(CUDA)
+ 		# CUDA-11.x can not be compiled using C++14 standard on Windows
+@@ -190,15 +193,10 @@ if(OpenMVS_USE_PYTHON)
+ 	endif()
+ endif()
+ 
+-FIND_PACKAGE(Boost REQUIRED COMPONENTS iostreams program_options system serialization OPTIONAL_COMPONENTS ${Boost_EXTRA_COMPONENTS})
++FIND_PACKAGE(Boost REQUIRED COMPONENTS assert graph iostreams pool serialization throw_exception OPTIONAL_COMPONENTS ${Boost_EXTRA_COMPONENTS})
+ if(Boost_FOUND)
+ 	LIST(APPEND OpenMVS_EXTRA_INCLUDES ${Boost_INCLUDE_DIRS})
+-	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+-	ADD_DEFINITIONS(${Boost_DEFINITIONS})
+-	LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+ 	if(NOT MSVC AND DEFINED CMAKE_TOOLCHAIN_FILE)
+-		# work around this missing library link in vcpkg
+-		LIST(APPEND Boost_LIBRARIES zstd)
+ 	endif()
+ 	SET(_USE_BOOST TRUE)
+ 	if(OpenMVS_USE_PYTHON AND Boost_${Boost_EXTRA_COMPONENTS}_FOUND)
+@@ -206,11 +204,9 @@ if(Boost_FOUND)
+ 	endif()
+ endif()
+ 
+-FIND_PACKAGE(Eigen3 3.4 REQUIRED)
++FIND_PACKAGE(Eigen3 3.4...5 CONFIG REQUIRED)
++set(EIGEN3_FOUND 1)
+ if(EIGEN3_FOUND)
+-	LIST(APPEND OpenMVS_EXTRA_INCLUDES ${EIGEN3_INCLUDE_DIR})
+-	INCLUDE_DIRECTORIES(${EIGEN3_INCLUDE_DIR})
+-	ADD_DEFINITIONS(${EIGEN3_DEFINITIONS})
+ 	SET(_USE_EIGEN TRUE)
+ 	MESSAGE(STATUS "Eigen ${EIGEN3_VERSION} found (include: ${EIGEN3_INCLUDE_DIR})")
+ endif()
+@@ -282,11 +278,11 @@ INCLUDE(CMakePackageConfigHelpers)
+ write_basic_package_version_file("${PROJECT_BINARY_DIR}/OpenMVSConfigVersion.cmake"
+ 	VERSION ${OpenMVS_VERSION}
+ 	COMPATIBILITY AnyNewerVersion)
+-SET(INSTALL_INCLUDE_DIR_IN ${INSTALL_INCLUDE_DIR_PREFIX} ${OpenMVS_EXTRA_INCLUDES})
+-SET(INSTALL_CMAKE_DIR_IN ${INSTALL_CMAKE_DIR_PREFIX})
++SET(INSTALL_INCLUDE_DIR_IN "${CMAKE_INSTALL_PREFIX}/${INSTALL_INCLUDE_DIR}" ${OpenMVS_EXTRA_INCLUDES})
++SET(INSTALL_CMAKE_DIR_IN "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
+ configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/build/Templates/OpenMVSConfig.cmake.in"
+ 	"${PROJECT_BINARY_DIR}/OpenMVSConfig.cmake"
+-	INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
++	INSTALL_DESTINATION "${INSTALL_CMAKE_DIR}"
+ 	NO_SET_AND_CHECK_MACRO)
+ # Install the OpenMVSConfig.cmake and OpenMVSConfigVersion.cmake
+ INSTALL(FILES
+diff --git a/apps/CMakeLists.txt b/apps/CMakeLists.txt
+index 3bb00c6..e54c840 100644
+--- a/apps/CMakeLists.txt
++++ b/apps/CMakeLists.txt
+@@ -1,3 +1,5 @@
++find_package(Boost COMPONENTS program_options)
++list(APPEND OpenMVS_EXTRA_LIBS Boost::program_options)
+ # Add applications
+ ADD_SUBDIRECTORY(InterfaceCOLMAP)
+ ADD_SUBDIRECTORY(InterfaceMetashape)
+diff --git a/build/Templates/OpenMVSConfig.cmake.in b/build/Templates/OpenMVSConfig.cmake.in
+index 9747b3e..514f5a0 100644
+--- a/build/Templates/OpenMVSConfig.cmake.in
++++ b/build/Templates/OpenMVSConfig.cmake.in
+@@ -15,8 +15,27 @@ set(OpenMVS_INCLUDE_DIRS "@INSTALL_INCLUDE_DIR_IN@")
+ 
+ set(OpenMVS_DEFINITIONS "@OpenMVS_DEFINITIONS@")
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(Boost COMPONENTS iostreams pool serialization throw_exception)
++find_dependency(Eigen3 CONFIG)
++find_dependency(OpenCV)
++find_dependency(CGAL)
++if("@OpenMVS_USE_CERES@")
++    find_dependency(Ceres)
++endif()
++if("@OpenMVS_USE_CUDA@")
++    find_dependency(CUDAToolkit)
++    list(APPEND OpenMVS_INCLUDE_DIRS ${CUDAToolkit_INCLUDE_DIRS})
++endif()
++if("@OpenMVS_USE_OPENGL@")
++    find_dependency(OpenGL)
++endif()
++if("@OpenMVS_USE_OPENMP@")
++    find_dependency(OpenMP COMPONENTS CXX)
++endif()
++
+ # These are IMPORTED targets created by OpenMVSTargets.cmake
+-set(OpenMVS_LIBRARIES MVS)
++set(OpenMVS_LIBRARIES OpenMVS::MVS)
+ set(OpenMVS_BINARIES InterfaceCOLMAP DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/OpenMVSTargets.cmake")
+diff --git a/build/Utils.cmake b/build/Utils.cmake
+index 86d3430..b69fe50 100644
+--- a/build/Utils.cmake
++++ b/build/Utils.cmake
+@@ -119,6 +119,7 @@ macro(GetOperatingSystemArchitectureBitness)
+ 	# Detect GNU version:
+ 	set(CMAKE_FLG_GCC_VERSION_NUM 0)
+ 	if(CMAKE_COMPILER_IS_GNUCXX)
++	  if(0) # informational, breaking for Android
+ 		execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version
+ 					  OUTPUT_VARIABLE CMAKE_FLG_GCC_VERSION_FULL
+ 					  OUTPUT_STRIP_TRAILING_WHITESPACE)
+@@ -144,6 +145,7 @@ macro(GetOperatingSystemArchitectureBitness)
+ 		set(CMAKE_FLG_GCC_VERSION ${CMAKE_FLG_GCC_VERSION_MAJOR}${CMAKE_FLG_GCC_VERSION_MINOR})
+ 		math(EXPR CMAKE_FLG_GCC_VERSION_NUM "${CMAKE_FLG_GCC_VERSION_MAJOR}*100 + ${CMAKE_FLG_GCC_VERSION_MINOR}")
+ 		message(STATUS "Detected version of GNU GCC: ${CMAKE_FLG_GCC_VERSION} (${CMAKE_FLG_GCC_VERSION_NUM})")
++	  endif()
+ 
+ 		if(WIN32)
+ 			execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpmachine
+@@ -174,6 +176,7 @@ macro(ComposePackageLibSuffix)
+ 	set(PACKAGE_LIB_SUFFIX_DBG "")
+ 	set(PACKAGE_LIB_SUFFIX_REL "")
+ 	if(MSVC)
++	elseif(0) # do not use subdirs per vc version/config
+ 		if("${MSVC_VERSION}" STRGREATER "1929")
+ 			set(PACKAGE_LIB_SUFFIX "/vc17")
+ 		elseif("${MSVC_VERSION}" STRGREATER "1916")
+@@ -422,6 +425,7 @@ macro(optimize_default_compiler_settings)
+ 		endif()
+ 	else()
+ 		list(FIND CMAKE_CXX_COMPILE_FEATURES "cxx_std_20" CXX_STD_INDEX)
++		set(CXX_STD_INDEX -1) # std::shared_ptr<>::unique() in libs/Common/FastDelegateCPP11.h
+ 		if(${CXX_STD_INDEX} GREATER -1)
+ 			set(CMAKE_CXX_STANDARD 20)
+ 		else()
+@@ -624,7 +628,7 @@ macro(optimize_default_compiler_settings)
+ 
+ 	  if(NOT MSVC64)
+ 		# 64-bit MSVC compiler uses SSE/SSE2 by default
+-		if(ENABLE_SSE)
++		if(ENABLE_SSE AND NOT ENABLE_SSE2)
+ 		  set(BUILD_EXTRA_FLAGS "${BUILD_EXTRA_FLAGS} /arch:SSE")
+ 		endif()
+ 		if(ENABLE_SSE2)
+@@ -819,6 +823,7 @@ macro(ConfigLibrary)
+ 	set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+ 	# Make relative paths absolute (needed later on)
+ 	foreach(p LIB BIN INCLUDE CMAKE)
++		break() # keep relative paths
+ 		set(var INSTALL_${p}_DIR)
+ 		set(varp INSTALL_${p}_DIR_PREFIX)
+ 		if(IS_ABSOLUTE "${${varp}}")
+@@ -847,6 +852,10 @@ function(cxx_library_with_type name folder type cxx_flags)
+   if(BUILD_SHARED_LIBS OR PARTIAL_BUILD_SHARED_LIBS)
+     set_target_properties("${name}" PROPERTIES POSITION_INDEPENDENT_CODE ON)
+   endif()
++  set(ambiguous_names Common IO Math)
++  if(name IN_LIST ambiguous_names)
++    set_target_properties("${name}" PROPERTIES OUTPUT_NAME "MVS_${name}")
++  endif()
+ endfunction()
+ 
+ # cxx_executable_with_flags(name cxx_flags libs srcs...)
+diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
+index 18899af..258ada0 100644
+--- a/libs/Common/CMakeLists.txt
++++ b/libs/Common/CMakeLists.txt
+@@ -12,7 +12,18 @@ IF(CMAKE_VERSION VERSION_GREATER_EQUAL 3.16.0)
+ endif()
+ 
+ # Link its dependencies
+-TARGET_LINK_LIBRARIES(Common ${Boost_LIBRARIES} ${OpenCV_LIBS})
++TARGET_LINK_LIBRARIES(Common
++	$<BUILD_INTERFACE:Boost::assert>
++	Boost::iostreams
++	Boost::pool
++	Boost::serialization
++	Boost::throw_exception
++	${OpenCV_LIBS}
++	Eigen3::Eigen
++)
++if(BUILD_EXTRA_FLAGS MATCHES "/Zc:__cplusplus")
++	target_compile_options(Common PUBLIC "$<$<CXX_COMPILER_ID:MSVC>:-Zc:__cplusplus>")
++endif()
+ 
+ # Install
+ SET_TARGET_PROPERTIES(Common PROPERTIES
+diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
+index 8533865..2a13923 100644
+--- a/libs/MVS/CMakeLists.txt
++++ b/libs/MVS/CMakeLists.txt
+@@ -48,7 +48,13 @@ endif()
+ if(_USE_CUDA)
+ 	SET_TARGET_PROPERTIES(MVS PROPERTIES CUDA_ARCHITECTURES "50;72;75")
+ endif()
+-TARGET_LINK_LIBRARIES(MVS PRIVATE Common Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
++TARGET_LINK_LIBRARIES(MVS PRIVATE        Math IO CGAL::CGAL ${CERES_LIBRARIES} ${CUDA_CUDA_LIBRARY})
++TARGET_LINK_LIBRARIES(MVS PUBLIC Common)
++TARGET_LINK_LIBRARIES(MVS PRIVATE $<BUILD_INTERFACE:Boost::graph>)
++if(OpenMVS_USE_OPENMP)
++	target_link_libraries(MVS PRIVATE "$<INSTALL_INTERFACE:OpenMP::OpenMP_CXX>")
++endif()
++TARGET_INCLUDE_DIRECTORIES(MVS PUBLIC "$<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>")
+ 
+ if(OpenMVS_USE_PYTHON)
+ 	# Create the Python wrapper

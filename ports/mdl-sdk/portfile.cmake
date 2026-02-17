@@ -1,3 +1,4 @@
+
 # Clang
 #
 # The MDL SDK includes a vendored copy of a specific LLVM version, to generate
@@ -89,6 +90,8 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         dds           MDL_BUILD_DDS_PLUGIN
+        df-vulkan     MDL_BUILD_SDK_EXAMPLES
+        df-vulkan     MDL_ENABLE_VULKAN_EXAMPLES
         openimageio   MDL_BUILD_OPENIMAGEIO_PLUGIN
 )
 
@@ -105,10 +108,13 @@ vcpkg_cmake_configure(
     OPTIONS
         -DMDL_LOG_DEPENDENCIES:BOOL=ON
         -DMDL_BUILD_SDK:BOOL=ON
-        -DMDL_BUILD_SDK_EXAMPLES:BOOL=OFF
         -DMDL_BUILD_CORE_EXAMPLES:BOOL=OFF
         -DMDL_BUILD_DOCUMENTATION:BOOL=OFF
         -DMDL_BUILD_ARNOLD_PLUGIN:BOOL=OFF
+        -DMDL_ENABLE_CUDA_EXAMPLES:BOOL=OFF
+        -DMDL_ENABLE_D3D12_EXAMPLES:BOOL=OFF
+        -DMDL_ENABLE_OPENGL_EXAMPLES:BOOL=OFF
+        -DMDL_ENABLE_QT_EXAMPLES:BOOL=OFF
         -DMDL_ENABLE_UNIT_TESTS:BOOL=OFF
         -DMDL_ENABLE_PYTHON_BINDINGS:BOOL=OFF
         -DMDL_TREAT_RUNTIME_DEPS_AS_BUILD_DEPS:BOOL=OFF
@@ -127,18 +133,37 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
+if (MDL_ENABLE_VULKAN_EXAMPLES)
+    # Install df_vulkan binary into tools/mdl-sdk
+    vcpkg_copy_tools(
+        TOOL_NAMES df_vulkan
+        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/examples/mdl_sdk/df_vulkan"
+        AUTO_CLEAN
+    )
+    # Install df_vulkan shaders into share/mdl-sdk/examples/mdl_sdk/df_vulkan
+    file(COPY
+        "${CURRENT_PACKAGES_DIR}/examples/mdl_sdk/df_vulkan"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/examples/mdl_sdk")
+    # Install general example resources into share/mdl-sdk/examples/mdl
+    file(COPY
+        "${CURRENT_PACKAGES_DIR}/examples/mdl"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/examples")
+endif()
+
 vcpkg_cmake_config_fixup(PACKAGE_NAME "mdl")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/doc"
+    "${CURRENT_PACKAGES_DIR}/debug/examples"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/doc"
+    "${CURRENT_PACKAGES_DIR}/examples"
 )
 
-# install usage file
+# Install usage file
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-# merge all license files into copyright
+# Merge all license files into copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(READ "${SOURCE_PATH}/LICENSE_IMAGES.md" _images)
 file(APPEND "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "\n\n${_images}")

@@ -1,6 +1,6 @@
 {
   "name": "faiss",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "description": "Faiss is a library for efficient similarity search and clustering of dense vectors.",
   "homepage": "https://faiss.ai/",
   "license": "MIT",

@@ -1,6 +1,6 @@
 {
   "name": "qtpositioning",
-  "version": "6.9.3",
+  "version": "6.10.0",
   "description": "The Qt Positioning API provides positioning information via QML and C++ interfaces.",
   "homepage": "https://www.qt.io/",
   "license": null,

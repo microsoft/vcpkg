@@ -15,20 +15,29 @@ vcpkg_extract_source_archive(
         msvc_def.patch
 )
 
+if("introspection" IN_LIST FEATURES)
+    list(APPEND feature_options "-Dintrospection=true")
+    vcpkg_get_gobject_introspection_programs(PYTHON3 GIR_COMPILER GIR_SCANNER)
+else()
+    list(APPEND feature_options "-Dintrospection=false")
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -Dintrospection=false
+        ${feature_options}
         -Dvapi=false
         -Dgtk_doc=false
         -Dpython3=false
         -Dtests=false
         -Dtools=false
     ADDITIONAL_BINARIES
-        glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+        "glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'"
+        "g-ir-compiler='${GIR_COMPILER}'"
+        "g-ir-scanner='${GIR_SCANNER}'"
 )
 
-vcpkg_install_meson()
+vcpkg_install_meson(ADD_BIN_TO_PATH)
 
 vcpkg_copy_pdbs()
 
