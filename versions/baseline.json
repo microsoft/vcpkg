@@ -9141,7 +9141,7 @@
       "port-version": 0
     },
     "simsimd": {
-      "baseline": "6.5.12",
+      "baseline": "6.5.13",
       "port-version": 0
     },
     "sintra": {
