@@ -7602,7 +7602,7 @@
     },
     "pixman": {
       "baseline": "0.46.4",
-      "port-version": 0
+      "port-version": 1
     },
     "pkgconf": {
       "baseline": "2.5.1",
