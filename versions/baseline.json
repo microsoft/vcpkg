@@ -1853,7 +1853,7 @@
       "port-version": 0
     },
     "cmark": {
-      "baseline": "0.31.1",
+      "baseline": "0.31.2",
       "port-version": 0
     },
     "cmark-gfm": {
