@@ -1,0 +1,31 @@
+diff --git a/src/avutils.h b/src/avutils.h
+index ad8ca49..178e8d5 100644
+--- a/src/avutils.h
++++ b/src/avutils.h
+@@ -510,10 +510,10 @@ T guessValue(const T& value, L list)
+         return value;
+ 
+     T best = value;
+-    T bestDistance = std::numeric_limits<T>::max();
++    T bestDistance = (std::numeric_limits<T>::max)();
+ 
+     for (auto&& cur : list) {
+-        auto const distance = std::max(cur, value) - std::min(cur, value);
++        auto const distance = (std::max)(cur, value) - (std::min)(cur, value);
+         if (distance < bestDistance) {
+             bestDistance = distance;
+             best = cur;
+@@ -565,11 +565,11 @@ T guessValue(const T& value, const L * list, C endListComparator)
+         return value;
+ 
+     T best = value;
+-    T bestDistance = std::numeric_limits<T>::max();
++    T bestDistance = (std::numeric_limits<T>::max)();
+ 
+     for (const L * ptr = list; !endListComparator(*ptr); ++ptr) {
+         auto const cur = *ptr;
+-        auto const distance = std::max(cur, value) - std::min(cur, value);
++        auto const distance = (std::max)(cur, value) - (std::min)(cur, value);
+         if (distance < bestDistance) {
+             bestDistance = distance;
+             best = cur;
