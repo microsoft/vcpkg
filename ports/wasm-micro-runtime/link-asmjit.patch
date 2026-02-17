@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1234567..abcdefg 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -163,6 +163,11 @@ target_link_libraries (vmlib PUBLIC ${LLVM_AVAILABLE_LIBS} ${UV_A_LIBS} -lm -ld
+ if (WAMR_BUILD_WASM_CACHE EQUAL 1)
+   target_link_libraries(vmlib INTERFACE boringssl_crypto)
+ endif ()
++
++if (WAMR_BUILD_FAST_JIT EQUAL 1)
++  find_package(asmjit CONFIG REQUIRED)
++  target_link_libraries(vmlib PRIVATE asmjit::asmjit)
++endif ()
+ 
+ if (MINGW)
+   target_link_libraries(vmlib INTERFACE -lWs2_32 -lwsock32)
