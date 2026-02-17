@@ -1,6 +1,6 @@
 {
   "name": "patternia",
-  "version": "0.7.1",
+  "version": "0.7.3",
   "description": "Providing pattern matching for modern c++.",
   "homepage": "https://github.com/sentomk/patternia",
   "license": "MIT",
