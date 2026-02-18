@@ -3,8 +3,8 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pipewire/pipewire
     REF "${VERSION}"
-    SHA512 15d5383b307c6a33e221a1f3b13e1a6b182e1826f419420654e25c5db2daf3793b094f816604bda9fa03abe6dff66c12dad98637edab67ca5966bbb8c57ea4ad
-    HEAD_REF master # branch name
+    SHA512 aa5a01fe812bfb439147885fdef89edfcd9f97943eb3fb209b698896d0092a9bdba02de3df4c39d14f5c1792b69927c36eb7af134e9a85e7a794bcbf9def3986
+    HEAD_REF master
 )
 
 vcpkg_configure_meson(

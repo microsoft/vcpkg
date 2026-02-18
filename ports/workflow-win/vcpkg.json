@@ -1,0 +1,19 @@
+{
+  "name": "workflow-win",
+  "version": "2026-01-09",
+  "description": "C++ Parallel Computing and Asynchronous Networking Engine (Windows version)",
+  "homepage": "https://github.com/sogou/workflow",
+  "license": "Apache-2.0",
+  "supports": "windows & !mingw",
+  "dependencies": [
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

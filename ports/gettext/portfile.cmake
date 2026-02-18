@@ -30,6 +30,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         parallel-gettext-tools.patch
         config-step-order.patch
         0001-xgettext-Fix-some-test-failures-on-MSVC.patch
+        env.patch # https://cgit.git.savannah.gnu.org/cgit/gnulib.git/commit/lib/localtime.c?id=92cdf62b56462b914193c7770440e505a37c2526
 )
 
 set(subdirs "")

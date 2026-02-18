@@ -94,9 +94,9 @@
       "arch": "arm64",
       "version": "2.7.4",
       "executable": "clangarm64/bin/git.exe",
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/PortableGit-2.52.0-arm64.7z.exe",
-      "sha512": "3727c345f18888300f1a99d45c6464ccb17e39b2377c3747bc44deee2c7c4b7a5e942b92a2887f850fe198f5d5358df0b93b788a38abcce928885f38429cf11d",
-      "archive": "PortableGit-2.52.0-arm64.7z.exe"
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.1/PortableGit-2.53.0-arm64.7z.exe",
+      "sha512": "7972b3a274c0d6a73e64da6bfe58e051969de0ec4dc49fa7bcd2717c74e113e32fba1482606f8209c38989e00b7fb81caceb0cf5ef8a2d7167b57b460a549bab",
+      "archive": "PortableGit-2.53.0-arm64.7z.exe"
     },
     {
       "name": "git",
@@ -104,9 +104,9 @@
       "arch": "amd64",
       "version": "2.7.4",
       "executable": "mingw64/bin/git.exe",
-      "url": "https://github.com/git-for-windows/git/releases/download/v2.52.0.windows.1/PortableGit-2.52.0-64-bit.7z.exe",
-      "sha512": "b56f64b17954a060beb775c26ae03cbd165878b504b4c91ae5102fc84079fb3f8c2fa9886337c594ea905dad48a854eb1497849dab837d6a877b5b4f73b9b31e",
-      "archive": "PortableGit-2.52.0-64-bit.7z.exe"
+      "url": "https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.1/PortableGit-2.53.0-64-bit.7z.exe",
+      "sha512": "6659b3cfc0da33b29f5384f088c66763cc36f542da5731a3164425f538611922188bde26a6c6360bfe15a47c0d0ec336fee6b1412851cc2bde92e2d9d913467a",
+      "archive": "PortableGit-2.53.0-64-bit.7z.exe"
     },
     {
       "name": "git",
@@ -333,6 +333,56 @@
       "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-arm64.zip",
       "sha512": "5cdc32ecfe5a9fee17194c136a076876e6ebf255004e8890535beefbbaa0d38867712a7a65fc33717fc2a599a1c8a070d8c947d773289e4e0cfa8e4c9927501f",
       "archive": "PowerShell-7.5.4-win-arm64.zip"
+    },
+    {
+      "name": "powershell-core",
+      "os": "windows",
+      "arch":"x86",
+      "version": "7.5.4",
+      "executable": "pwsh.exe",
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/PowerShell-7.5.4-win-x86.zip",
+      "sha512": "221ddfc685ccb497d26fbdbc6a2d198460e082934a683cade961057282616b85a1f1e9e91e9e01e4a0b36fb3c523fd9983884c62f5c917ea70fd2dd9dfa4a85e",
+      "archive": "PowerShell-7.5.4-win-x86.zip"
+    },
+    {
+      "name": "powershell-core",
+      "os": "linux",
+      "arch":"x64",
+      "version": "7.5.4",
+      "executable": "pwsh",
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-linux-x64.tar.gz",
+      "sha512": "6ff028cee3b23c71136de736ae5a93beb7b625215db3398b034fbdb0dd7b034ebf53da32cc47880982f7506054514e9af3cc5defcb4d69a7dd4a08a766469f0b",
+      "archive": "powershell-7.5.4-linux-x64.tar.gz"
+    },
+    {
+      "name": "powershell-core",
+      "os": "linux",
+      "arch":"arm64",
+      "version": "7.5.4",
+      "executable": "pwsh",
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-linux-arm64.tar.gz",
+      "sha512": "ef721f209842f13a560a21373744ab953ee8af41a60a0ed2f434131f85f4cd1b11565e3615df538a7d78cb5dd2096e9e2ccb42f4ffda79208c80f5206bb40cad",
+      "archive": "powershell-7.5.4-linux-arm64.tar.gz"
+    },
+    {
+      "name": "powershell-core",
+      "os": "osx",
+      "arch":"x64",
+      "version": "7.5.4",
+      "executable": "pwsh",
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-osx-x64.tar.gz",
+      "sha512": "350fef6fe9f18a7d85a5ea09374eb64c6198d389a24080984c0909601490decf21b0ec65b74248ad56c22bfea95bc745a7c9d1edd20bdeb276a905278a09c2c0",
+      "archive": "powershell-7.5.4-osx-x64.tar.gz"
+    },
+    {
+      "name": "powershell-core",
+      "os": "osx",
+      "arch":"arm64",
+      "version": "7.5.4",
+      "executable": "pwsh",
+      "url": "https://github.com/PowerShell/PowerShell/releases/download/v7.5.4/powershell-7.5.4-osx-arm64.tar.gz",
+      "sha512": "c93ffabdd01fa967bce32201dd9053409967d784f6bea6ce8edd19fb02ecaab15ad697518ff2202f19ee2c62781e17eb8b52bd970498554f931b0f23eb3226dc",
+      "archive": "powershell-7.5.4-osx-arm64.tar.gz"
     },
     {
       "name": "node",

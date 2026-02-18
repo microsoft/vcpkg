@@ -1,22 +1,8 @@
-diff --git a/build/cmake/libmongoc-static-1.0-config.cmake.in b/build/cmake/libmongoc-static-1.0-config.cmake.in
-index bec3163..a32d5f3 100644
---- a/build/cmake/libmongoc-static-1.0-config.cmake.in
-+++ b/build/cmake/libmongoc-static-1.0-config.cmake.in
-@@ -24,6 +24,9 @@ set (MONGOC_STATIC_VERSION_FULL @libmongoc_VERSION_FULL@)
- 
- include(CMakeFindDependencyMacro)
- find_dependency (mongoc-1.0)
-+if("@ENABLE_SNAPPY@" STREQUAL "ON")
-+    find_dependency(Snappy CONFIG)
-+endif()
- 
- set(MONGOC_STATIC_LIBRARY mongo::mongoc_static)
- set(MONGOC_STATIC_LIBRARIES mongo::mongoc_static)
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 0a18f5a..5346a9d 100644
+index 9b2c2f845d..9cb6397d2e 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -50,7 +50,7 @@ endif ()
+@@ -52,7 +52,7 @@ endif ()
  set (ZLIB_INCLUDE_DIRS "")
  if (ENABLE_ZLIB MATCHES "SYSTEM|AUTO")
     message (STATUS "Searching for zlib CMake packages")
@@ -25,13 +11,13 @@ index 0a18f5a..5346a9d 100644
     if (ZLIB_FOUND)
        message (STATUS "   zlib found version \"${ZLIB_VERSION_STRING}\"")
        message (STATUS "   zlib include path \"${ZLIB_INCLUDE_DIRS}\"")
-@@ -468,10 +468,10 @@ else ()
+@@ -460,10 +460,10 @@ else ()
  endif ()
  
  # Sets SNAPPY_LIBRARIES and SNAPPY_INCLUDE_DIRS.
 -include (FindSnappy)
 -if (SNAPPY_INCLUDE_DIRS)
-+if(ENABLE_SNAPPY)
++if (ENABLE_SNAPPY)
 +   find_package(Snappy CONFIG REQUIRED)
 +   set(SNAPPY_LIBRARIES Snappy::snappy)
     set (MONGOC_ENABLE_COMPRESSION 1)
@@ -39,7 +25,7 @@ index 0a18f5a..5346a9d 100644
  endif ()
  
  mongo_bool01 (MONGOC_ENABLE_SHM_COUNTERS ENABLE_SHM_COUNTERS)
-@@ -759,7 +759,7 @@ set (STATIC_LIBRARIES
+@@ -780,7 +780,7 @@ set (STATIC_LIBRARIES
  )
  
  # utf8proc configuration
@@ -48,51 +34,50 @@ index 0a18f5a..5346a9d 100644
  set(UTF8PROC_INCLUDE_DIRS, "")
  if (USE_BUNDLED_UTF8PROC)
     set (
-@@ -955,7 +955,7 @@ if (MONGOC_ENABLE_STATIC_BUILD)
-    set_target_properties (mongoc_static PROPERTIES
-       VERSION 0.0.0
-       OUTPUT_NAME "${MONGOC_OUTPUT_BASENAME}-static-${MONGOC_API_VERSION}"
--      pkg_config_REQUIRES "libbson-static-1.0"
-+      pkg_config_REQUIRES "libbson-static-1.0 libutf8proc"
+@@ -913,7 +913,7 @@ if (ENABLE_SHARED)
+       OUTPUT_NAME "${MONGOC_OUTPUT_BASENAME}${PROJECT_VERSION_MAJOR}"
+       VERSION "${PROJECT_VERSION}"
+       SOVERSION "${PROJECT_VERSION_MAJOR}"
+-      pkg_config_REQUIRES "bson${PROJECT_VERSION_MAJOR}"
++      pkg_config_REQUIRES "bson${PROJECT_VERSION_MAJOR} libutf8proc"
        )
-    if(MONGOC_ENABLE_STATIC_INSTALL)
-       mongo_generate_pkg_config (mongoc_static FILENAME libmongoc-static-${MONGOC_API_VERSION}.pc INSTALL)
-diff --git a/src/libmongoc/src/mongoc-config.cmake b/src/libmongoc/src/mongoc-config.cmake
-index 31e6cbc..cdbb756 100644
---- a/src/libmongoc/src/mongoc-config.cmake
-+++ b/src/libmongoc/src/mongoc-config.cmake
-@@ -1,5 +1,8 @@
- include(CMakeFindDependencyMacro)
- find_dependency(bson-1.0 @libmongoc_VERSION@)
+    mongo_generate_pkg_config(mongoc_shared INSTALL RENAME mongoc${PROJECT_VERSION_MAJOR}.pc)
+ 
+diff --git a/src/libmongoc/etc/mongocConfig.cmake.in b/src/libmongoc/etc/mongocConfig.cmake.in
+index 14d7e4c7ed..1597473cee 100644
+--- a/src/libmongoc/etc/mongocConfig.cmake.in
++++ b/src/libmongoc/etc/mongocConfig.cmake.in
+@@ -48,6 +48,9 @@ include(CMakeFindDependencyMacro)
+ get_filename_component(__parent_dir "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
+ # Also import the `bson` package, to ensure its targets are also available
+ find_dependency(bson "${__mongoc_package_version}" HINTS ${__parent_dir})
 +if("@ENABLE_SNAPPY@")
 +    find_dependency(Snappy CONFIG)
 +endif()
  
- # If we need to import a TLS package for our imported targets, do that now:
- set(MONGOC_TLS_BACKEND [[@TLS_BACKEND@]])
-@@ -13,8 +16,6 @@ if(_tls_package)
-   set(CMAKE_MODULE_PATH "${_prev_path}")
- endif()
- 
--include("${CMAKE_CURRENT_LIST_DIR}/mongoc-targets.cmake")
--
- unset(_required)
- unset(_quiet)
- if(${CMAKE_FIND_PACKAGE_NAME}_FIND_REQUIRED)
-@@ -29,9 +30,8 @@ if(NOT _mongoc_built_with_bundled_utf8proc AND NOT TARGET PkgConfig::PC_UTF8PROC
-   # libmongoc was compiled against an external utf8proc and links against a
-   # FindPkgConfig-generated IMPORTED target. Find that package and generate that
-   # imported target here:
--  find_dependency(PkgConfig)
--  pkg_check_modules(PC_UTF8PROC ${_required} ${_quiet} libutf8proc IMPORTED_TARGET GLOBAL)
+ # QUIET arg for finding dependencies:
+ unset(__quiet)
+@@ -60,16 +63,8 @@ if(NOT __mongoc_uses_bundled_utf8proc AND NOT TARGET PkgConfig::PC_UTF8PROC)
+     # libmongoc was compiled against an external utf8proc and links against a
+     # FindPkgConfig-generated IMPORTED target. Find that package and generate that
+     # imported target here:
+-    find_dependency(PkgConfig)
+-    pkg_check_modules(PC_UTF8PROC ${__quiet} libutf8proc IMPORTED_TARGET GLOBAL)
+-    if(NOT PC_UTF8PROC_FOUND)
+-        # Handle if it wasn't found (find_dependency would usually do this for us,
+-        # but pkg_check_modules() does not)
+-        set(mongoc_FOUND FALSE)
+-        set(mongoc_NOT_FOUND_MESSAGE "We were unable to find the required libutf8proc package with pkg-config")
+-        return()
+-    endif()
  endif()
 +find_dependency(unofficial-utf8proc CONFIG)
  
- # Find dependencies for SASL
- set(_sasl_backend [[@SASL_BACKEND@]])
-@@ -43,3 +43,5 @@ if(_sasl_backend STREQUAL "Cyrus")
-   find_dependency(SASL2 2.0)
-   set(CMAKE_MODULE_PATH "${_prev_path}")
+ # If we need to import a TLS package for our imported targets, do that now:
+ if(__mongoc_tls_package)
+@@ -110,3 +105,5 @@ if(NOT TARGET mongoc::mongoc)  # Don't redefine the target if we were already in
+     add_library(mongoc::mongoc IMPORTED INTERFACE)
+     set_property(TARGET mongoc::mongoc APPEND PROPERTY INTERFACE_LINK_LIBRARIES mongoc::${__type})
  endif()
 +
 +include("${CMAKE_CURRENT_LIST_DIR}/mongoc-targets.cmake")

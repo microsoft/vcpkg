@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bbalouki/bbstrader
     REF "v${VERSION}"
-    SHA512 cdb6233bccd3dc2651a5862e4ed77479fae5ded68c6ae3414c603ee8d7263e00a79a2b71bdea75c6e597ec07cae8eaa4a2833e18ce112d695fbcac1c053bdae5
+    SHA512 d2aee48361c5986054bd077d68235ed167eeb1be3568b3e6afcb58d40485cc7788e35256e819a1d39ae8400b17b29c4f940100fb5a704547cb1d6a99e13d314f
     HEAD_REF main
 )
 

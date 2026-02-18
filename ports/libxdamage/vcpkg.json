@@ -1,11 +1,10 @@
 {
   "name": "libxdamage",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "description": "X Damage Extension library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxdamage",
   "license": null,
   "dependencies": [
-    "bzip2",
     "libx11",
     "libxfixes",
     "xorg-macros",

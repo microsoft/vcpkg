@@ -1,11 +1,10 @@
 {
   "name": "libxxf86vm",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Xlib-based library for the XFree86-VidMode X extension",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxxf86vm",
   "license": null,
   "dependencies": [
-    "bzip2",
     "libxext",
     "xorg-macros",
     "xproto"

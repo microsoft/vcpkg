@@ -1,7 +1,7 @@
 {
   "name": "python3",
   "version": "3.12.9",
-  "port-version": 8,
+  "port-version": 9,
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -66,6 +66,7 @@
           "name": "expat",
           "default-features": false
         },
+        "libb2",
         {
           "name": "libffi",
           "default-features": false

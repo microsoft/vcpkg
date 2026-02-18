@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mongodb/mongo-c-driver
     REF "${VERSION}"
-    SHA512 2f751bf33410f084e083fc73d8ebb138e40c956e9bccb2ca460d33ab5e6b75793e1910defb1d5faad849a9668e0afc5024179ad323beacd75a12538f2abda270
+    SHA512 1f1346a52db7241af832d7d5db107512a73af75546818e6600e420505f48c613b08cc332e76337670fe4b19ca057a2b04385b05279e76385adcf42276190123a
     HEAD_REF master
     PATCHES
         disable-dynamic-when-static.patch
@@ -71,25 +71,20 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 if("snappy" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libmongoc-static-1.0.pc" " -lSnappy::snappy" "")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libmongoc-static-1.0.pc" "Requires: " "Requires: snappy ")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mongoc2-static.pc" " -lSnappy::snappy" "")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/mongoc2-static.pc" "Requires: " "Requires: snappy ")
     if(NOT VCPKG_BUILD_TYPE)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libmongoc-static-1.0.pc" " -lSnappy::snappy" "")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libmongoc-static-1.0.pc" "Requires: " "Requires: snappy ")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mongoc2-static.pc" " -lSnappy::snappy" "")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/mongoc2-static.pc" "Requires: " "Requires: snappy ")
     endif()
 endif()
 vcpkg_fixup_pkgconfig()
 
-# deprecated
-vcpkg_cmake_config_fixup(PACKAGE_NAME libmongoc-1.0 CONFIG_PATH "lib/cmake/libmongoc-1.0" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_cmake_config_fixup(PACKAGE_NAME "mongoc-${VERSION}" CONFIG_PATH "lib/cmake/mongoc-${VERSION}")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME libmongoc-static-1.0 CONFIG_PATH "lib/cmake/libmongoc-static-1.0" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mongoc/mongoc-macros.h"
         "#define MONGOC_MACROS_H" "#define MONGOC_MACROS_H\n#ifndef MONGOC_STATIC\n#define MONGOC_STATIC\n#endif")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/libmongoc-1.0/libmongoc-1.0-config.cmake" "mongoc_shared" "mongoc_static")
 endif()
-# recommended
-vcpkg_cmake_config_fixup(PACKAGE_NAME mongoc-1.0 CONFIG_PATH "lib/cmake/mongoc-1.0")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
