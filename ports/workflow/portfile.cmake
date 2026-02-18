@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sogou/workflow
     REF "v${VERSION}"
-    SHA512 78996029efd23ca7843f4089d801729174bf8e6bcb1babbe6f557db0c0b4094069dce38328332ddcddffec6710e77cfd03110264d0c670b8cd42b23dda5061ed
+    SHA512 ed38ce31c39d5f51497379f4184c7890d30b1e683973cd363f7921e628cf1d731bbbbe77f8cece1195cea2199e64d503ea4ed2bfb350d09fc22c862abd497577
     HEAD_REF master
+    PATCHES
+        cmake.diff
 )
 
 vcpkg_cmake_configure(

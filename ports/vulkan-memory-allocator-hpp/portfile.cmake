@@ -1,14 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO YaaZ/VulkanMemoryAllocator-Hpp
-    REF "v${VERSION}"
-    SHA512 95f5a8930431c18683d7e768ce1363b4edcb2fa7ca527054c77dbc8b34355308f621eed8cd018a574a928ac93e8689d4a8991802e3d601f5c0d1204a9155aee6
+    REF "v${VERSION}+2"
+    SHA512 72fccbba9ad422baa0f9e9389a72ccf4aa760ea1f15ecdf6d08604d60c25969938a300db6350363841ba66a40ca7804265477faeb601e142de9d7211da08ada2
     HEAD_REF master
 )
 
 file(COPY "${SOURCE_PATH}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
-
-file(COPY "${SOURCE_PATH}/src/vk_mem_alloc.cppm" DESTINATION "${CURRENT_PACKAGES_DIR}/include/${PORT}")
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-vulkan-memory-allocator-hpp-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}")
 

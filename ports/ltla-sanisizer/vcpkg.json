@@ -1,6 +1,6 @@
 {
   "name": "ltla-sanisizer",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Library that provides a few methods for sanitizing size values so that any overflow results in an error",
   "homepage": "https://github.com/LTLA/sanisizer",
   "license": "MIT",
