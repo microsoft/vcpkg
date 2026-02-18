@@ -10920,6 +10920,10 @@
       "baseline": "0.9.0",
       "port-version": 0
     },
+    "yaml-schema-cpp": {
+      "baseline": "2025-11-10",
+      "port-version": 0
+    },
     "yandex-disk-cpp-client": {
       "baseline": "1.0.3",
       "port-version": 0
