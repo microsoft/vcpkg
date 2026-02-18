@@ -8,4 +8,4 @@ vcpkg_from_github(
 file(INSTALL ${SOURCE_PATH}/tinyformat.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
 
 file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-configure_file(${CURRENT_PORT_DIR}/copyright ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
