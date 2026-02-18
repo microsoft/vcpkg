@@ -5,7 +5,6 @@ vcpkg_from_github(
     HEAD_REF master
     SHA512 54a9637608c3acefbbf1bd46e66b6368cc01759e2db2e6a8ae6c2c6ea95c8d7c457e940b60526128627d05ffe079ec64e60fe518beb8874825e126f0a23c6e79
     PATCHES
-        fix-carray.diff
         libmariadb.diff
         mingw.diff
         install.diff
