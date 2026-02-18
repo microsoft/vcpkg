@@ -1,12 +1,17 @@
 {
   "name": "ereignis",
-  "version": "4.3",
+  "version": "6.3.0",
   "description": "A thread-safe C++17 Event Library",
   "homepage": "https://github.com/Curve/ereignis",
   "license": "MIT",
   "dependencies": [
+    "curve-coco",
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]
