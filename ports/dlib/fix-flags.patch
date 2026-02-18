@@ -1,0 +1,78 @@
+diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
+index e220e337..eb41b38b 100644
+--- a/dlib/CMakeLists.txt
++++ b/dlib/CMakeLists.txt
+@@ -289,8 +289,8 @@ if (NOT TARGET dlib)
+ 
+    set(dlib_needed_public_libraries)
+    set(dlib_needed_public_includes)
+-   set(dlib_needed_public_cflags)
+-   set(dlib_needed_public_ldflags)
++   set(dlib_needed_private_cflags)
++   set(dlib_needed_private_ldflags)
+    set(dlib_needed_private_libraries)
+    set(dlib_needed_private_includes)
+    set(pkg_config_dlib_requires_private "")
+@@ -587,8 +587,8 @@ if (NOT TARGET dlib)
+          if (JXL_FOUND)
+             list (APPEND dlib_needed_private_includes ${JXL_INCLUDE_DIRS})
+             list (APPEND dlib_needed_private_libraries ${JXL_LIBRARIES})
+-            list (APPEND dlib_needed_public_cflags ${JXL_CFLAGS})
+-            list (APPEND dlib_needed_public_ldflags ${JXL_LDFLAGS})
++            list (APPEND dlib_needed_private_cflags ${JXL_CFLAGS})
++            list (APPEND dlib_needed_private_ldflags ${JXL_LDFLAGS})
+             set(source_files ${source_files}
+                image_loader/jxl_loader.cpp
+                image_saver/save_jxl.cpp
+@@ -877,8 +877,8 @@ if (NOT TARGET dlib)
+          if (FFMPEG_FOUND)
+             list (APPEND dlib_needed_public_includes ${FFMPEG_INCLUDE_DIRS})
+             list (APPEND dlib_needed_public_libraries ${FFMPEG_LINK_LIBRARIES})
+-            list (APPEND dlib_needed_public_cflags ${FFMPEG_CFLAGS})
+-            list (APPEND dlib_needed_public_ldflags ${FFMPEG_LDFLAGS})
++            list (APPEND dlib_needed_private_cflags ${FFMPEG_CFLAGS})
++            list (APPEND dlib_needed_private_ldflags ${FFMPEG_LDFLAGS})
+             enable_preprocessor_switch(DLIB_USE_FFMPEG)
+          else()
+             set(DLIB_USE_FFMPEG OFF CACHE BOOL ${DLIB_USE_FFMPEG_STR} FORCE )
+@@ -905,9 +905,9 @@ if (NOT TARGET dlib)
+       PUBLIC ${dlib_needed_public_includes}
+       PRIVATE ${dlib_needed_private_includes}
+       )
+-   target_link_libraries(dlib PUBLIC ${dlib_needed_public_libraries} ${dlib_needed_public_ldflags})
+-   target_link_libraries(dlib PRIVATE ${dlib_needed_private_libraries})
+-   target_compile_options(dlib PUBLIC ${dlib_needed_public_cflags})
++   target_link_libraries(dlib PUBLIC ${dlib_needed_public_libraries})
++   target_link_libraries(dlib PRIVATE ${dlib_needed_private_libraries} ${dlib_needed_private_ldflags})
++   target_compile_options(dlib PRIVATE ${dlib_needed_private_cflags})
+    if (DLIB_IN_PROJECT_BUILD)
+       target_compile_options(dlib PUBLIC ${active_preprocessor_switches})
+    else()
+@@ -938,13 +938,7 @@ if (NOT TARGET dlib)
+    endif()
+ 
+    target_compile_features(dlib PUBLIC cxx_std_14)
+-   if((MSVC AND CMAKE_VERSION VERSION_LESS 3.11))
+-      target_compile_options(dlib PUBLIC ${active_compile_opts})
+-      target_compile_options(dlib PRIVATE ${active_compile_opts_private})
+-   else()
+-      target_compile_options(dlib PUBLIC $<$<COMPILE_LANGUAGE:CXX>:${active_compile_opts}>)
+-      target_compile_options(dlib PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${active_compile_opts_private}>)
+-   endif()
++   target_compile_options(dlib PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${active_compile_opts}>)
+ 
+    # Install the library
+    if (NOT DLIB_IN_PROJECT_BUILD)
+diff --git a/dlib/cmake_utils/set_compiler_specific_options.cmake b/dlib/cmake_utils/set_compiler_specific_options.cmake
+index 6e2682da..07fff950 100644
+--- a/dlib/cmake_utils/set_compiler_specific_options.cmake
++++ b/dlib/cmake_utils/set_compiler_specific_options.cmake
+@@ -108,7 +108,7 @@ if (MSVC)
+    # Build dlib with all cores.  Don't propagate the setting to client programs
+    # though since they might compile large translation units that use too much
+    # RAM.
+-   list(APPEND active_compile_opts_private "/MP")
++   list(APPEND active_compile_opts "/MP")
+ 
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 3.3) 
+       # Clang can compile all Dlib's code at Windows platform. Tested with Clang 5
