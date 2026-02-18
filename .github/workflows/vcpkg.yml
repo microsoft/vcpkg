@@ -1,0 +1,146 @@
+name: vcpkg
+on:
+  pull_request:
+
+# Every time you make a push to your PR, it cancel immediately the previous checks,
+# and start a new one. The other runner will be available more quickly to your PR.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: microsoft/vcpkg != ${{ github.repository }}
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:      
+          - os: ubuntu-latest
+            triplet: x64-linux-dynamic
+            binary_cache: /home/runner/.cache/vcpkg/archives
+            bootstrap: bootstrap-vcpkg.sh
+    steps:
+      - name: echo repo
+        shell: bash
+        run: |
+          echo ${{ github.repository }}
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Restore cache dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: ${{ matrix.binary_cache }}
+          key: ${{ matrix.os }}
+          restore-keys: ${{ matrix.os }}
+
+      - name: Setup msbuild
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+          toolset: 14.40
+
+      - name: cl version
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: cl
+
+      - name: Install Linux vcpkg dependencies
+        if: runner.os == 'Linux'
+        shell: bash
+        run: >
+          sudo apt-get update
+
+          sudo apt-get install 
+          autoconf
+          automake
+          autoconf-archive
+          libltdl-dev
+          libxmu-dev
+          libxi-dev
+          libgl-dev
+          libxtst-dev
+          '^libxcb.*-dev' 
+          libx11-xcb-dev
+          libgl1-mesa-dev
+          libxrender-dev
+          libxi-dev
+          libxkbcommon-dev
+          libxkbcommon-x11-dev
+          libxrandr-dev
+          xsltproc
+          gdb
+      - name: Install macOS vcpkg dependencies
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          brew install autoconf automake autoconf-archive libtool
+      - name: "bootstrap vcpkg"
+        shell: bash
+        run: |
+          ./${{ matrix.bootstrap }}
+      - name: "Install dependencies"
+        shell: bash
+        run: >
+          ./vcpkg x-set-installed --triplet ${{ matrix.triplet }} --host-triplet ${{ matrix.triplet }} --x-install-root=installed
+          poppler-data
+          appstream
+          poppler[glib]
+          tiff
+          pango[introspection]
+          mypaint-brushes
+          libxml2
+          libmypaint
+          lcms
+          json-glib
+          harfbuzz
+          gtk3[introspection]
+          glib-networking[openssl]
+          gexiv2[introspection]
+          gegl[introspection,cairo]
+          gdk-pixbuf[introspection,others]
+          freetype
+          fontconfig
+          exiv2
+          cairo
+          babl[introspection]
+          gobject-introspection[cairo]
+          librsvg
+          libarchive
+          gettext
+
+      - name: copy files for hash
+        shell: bash
+        run: |
+          echo $VCPKG_INSTALLATION_ROOT
+          mkdir -p vcpkg-info
+          find installed -type f -name 'vcpkg_abi_info.txt' | \
+          while read filepath; do
+            triplet=$(echo "$filepath" | awk -F/ '{print $(NF-3)}')
+            port=$(echo "$filepath" | awk -F/ '{print $(NF-1)}')
+            cp "$filepath" "vcpkg-info/${triplet}_${port}.txt"
+          done
+      - name: Save cache dependencies
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ matrix.binary_cache }}
+          key: ${{ matrix.os }}-${{ hashFiles('vcpkg-info/*') }}
+
+      - name: "logs"
+        shell: bash
+        run: |
+          # ls installed/${{ matrix.triplet }}/tools/
+          # ls installed/${{ matrix.triplet }}/tools/gtk3/
+          # ls installed/${{ matrix.triplet }}/tools/gdk-pixbuf/
+          # installed/${{ matrix.triplet }}/tools/gtk3/gtk-encode-symbolic-svg --help
+          # installed/${{ matrix.triplet }}/tools/gdk-pixbuf/gdk-pixbuf-query-loaders
+          # installed/${{ matrix.triplet }}/tools/gdk-pixbuf/gdk-pixbuf-query-loaders --update-cache
+
+      - name: "Install gimp"
+        shell: bash
+        run: >
+          ./vcpkg x-set-installed --triplet ${{ matrix.triplet }} --host-triplet ${{ matrix.triplet }} --x-install-root=installed
+          gimp
