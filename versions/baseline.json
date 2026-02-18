@@ -7356,6 +7356,10 @@
       "baseline": "4.8.0",
       "port-version": 0
     },
+    "orange-vmprotect-sdk": {
+      "baseline": "1.0.2",
+      "port-version": 0
+    },
     "orc": {
       "baseline": "2.2.2",
       "port-version": 0
@@ -10450,10 +10454,6 @@
     },
     "vmaware-vm-detection": {
       "baseline": "2.6.0",
-      "port-version": 0
-    },
-    "vmprotect-sdk": {
-      "baseline": "1.0.2",
       "port-version": 0
     },
     "volk": {
