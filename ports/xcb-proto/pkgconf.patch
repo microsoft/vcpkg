@@ -1,0 +1,12 @@
+diff --git a/Makefile.am b/Makefile.am
+index 8b57a83..0312e7a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,6 +1,6 @@
+ SUBDIRS = src xcbgen
+ 
+-pkgconfigdir = $(datarootdir)/pkgconfig
++pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = xcb-proto.pc
+ 
+ EXTRA_DIST=doc xcb-proto.pc.in autogen.sh README.md
