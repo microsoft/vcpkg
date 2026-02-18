@@ -1,0 +1,2 @@
+  find_package(neoactivemq-cpp CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE neoactivemq-cpp::neoactivemq-cpp)
