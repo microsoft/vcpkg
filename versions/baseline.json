@@ -10209,7 +10209,7 @@
       "port-version": 0
     },
     "usearch": {
-      "baseline": "2.23.0",
+      "baseline": "2.24.0",
       "port-version": 0
     },
     "usockets": {
