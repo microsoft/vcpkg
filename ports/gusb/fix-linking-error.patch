@@ -1,0 +1,689 @@
+diff --git a/gusb/gusb-bos-descriptor.h b/gusb/gusb-bos-descriptor.h
+index b230a7c..76cb6d6 100644
+--- a/gusb/gusb-bos-descriptor.h
++++ b/gusb/gusb-bos-descriptor.h
+@@ -7,6 +7,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <glib-object.h>
+ 
+ G_BEGIN_DECLS
+@@ -14,9 +24,9 @@ G_BEGIN_DECLS
+ #define G_USB_TYPE_BOS_DESCRIPTOR (g_usb_bos_descriptor_get_type())
+ G_DECLARE_FINAL_TYPE(GUsbBosDescriptor, g_usb_bos_descriptor, G_USB, BOS_DESCRIPTOR, GObject)
+ 
+-guint8
++G_USB_API guint8
+ g_usb_bos_descriptor_get_capability(GUsbBosDescriptor *self);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_bos_descriptor_get_extra(GUsbBosDescriptor *self);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-context.h b/gusb/gusb-context.h
+index b1d4d54..f296475 100644
+--- a/gusb/gusb-context.h
++++ b/gusb/gusb-context.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gusb/gusb-device.h>
+ #include <gusb/gusb-source.h>
+ 
+@@ -48,61 +58,61 @@ typedef enum {
+ 	G_USB_CONTEXT_FLAGS_LAST
+ } GUsbContextFlags;
+ 
+-GQuark
++G_USB_API GQuark
+ g_usb_context_error_quark(void);
+ 
+-GUsbContext *
++G_USB_API GUsbContext *
+ g_usb_context_new(GError **error);
+ 
+-void
++G_USB_API void
+ g_usb_context_set_flags(GUsbContext *self, GUsbContextFlags flags);
+-GUsbContextFlags
++G_USB_API GUsbContextFlags
+ g_usb_context_get_flags(GUsbContext *self);
+ 
+ G_DEPRECATED
+-GUsbSource *
++G_USB_API GUsbSource *
+ g_usb_context_get_source(GUsbContext *self, GMainContext *main_ctx);
+-GMainContext *
++G_USB_API GMainContext *
+ g_usb_context_get_main_context(GUsbContext *self);
+-void
++G_USB_API void
+ g_usb_context_set_main_context(GUsbContext *self, GMainContext *main_ctx);
+-guint
++G_USB_API guint
+ g_usb_context_get_hotplug_poll_interval(GUsbContext *self);
+-void
++G_USB_API void
+ g_usb_context_set_hotplug_poll_interval(GUsbContext *self, guint hotplug_poll_interval);
+ 
+-void
++G_USB_API void
+ g_usb_context_enumerate(GUsbContext *self);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_context_load(GUsbContext *self, JsonObject *json_object, GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_context_load_with_tag(GUsbContext *self,
+ 			    JsonObject *json_object,
+ 			    const gchar *tag,
+ 			    GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_context_save(GUsbContext *self, JsonBuilder *json_builder, GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_context_save_with_tag(GUsbContext *self,
+ 			    JsonBuilder *json_builder,
+ 			    const gchar *tag,
+ 			    GError **error);
+ 
+-void
++G_USB_API void
+ g_usb_context_set_debug(GUsbContext *self, GLogLevelFlags flags);
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_context_get_devices(GUsbContext *self);
+ 
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_context_find_by_bus_address(GUsbContext *self, guint8 bus, guint8 address, GError **error);
+ 
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_context_find_by_vid_pid(GUsbContext *self, guint16 vid, guint16 pid, GError **error);
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_context_find_by_platform_id(GUsbContext *self, const gchar *platform_id, GError **error);
+ 
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_context_wait_for_replug(GUsbContext *self,
+ 			      GUsbDevice *device,
+ 			      guint timeout_ms,
+diff --git a/gusb/gusb-device-event.h b/gusb/gusb-device-event.h
+index 73ba808..ee9a663 100644
+--- a/gusb/gusb-device-event.h
++++ b/gusb/gusb-device-event.h
+@@ -7,6 +7,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gio/gio.h>
+ 
+ G_BEGIN_DECLS
+@@ -14,15 +24,15 @@ G_BEGIN_DECLS
+ #define G_USB_TYPE_DEVICE_EVENT (g_usb_device_event_get_type())
+ G_DECLARE_FINAL_TYPE(GUsbDeviceEvent, g_usb_device_event, G_USB, DEVICE_EVENT, GObject)
+ 
+-const gchar *
++G_USB_API const gchar *
+ g_usb_device_event_get_id(GUsbDeviceEvent *self);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_device_event_get_bytes(GUsbDeviceEvent *self);
+-gint
++G_USB_API gint
+ g_usb_device_event_get_status(GUsbDeviceEvent *self);
+-gint
++G_USB_API gint
+ g_usb_device_event_get_rc(GUsbDeviceEvent *self);
+-void
++G_USB_API void
+ g_usb_device_event_set_bytes(GUsbDeviceEvent *self, GBytes *bytes);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-device-list.h b/gusb/gusb-device-list.h
+index d209e9c..facf6ce 100644
+--- a/gusb/gusb-device-list.h
++++ b/gusb/gusb-device-list.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gusb/gusb-context.h>
+ 
+ G_BEGIN_DECLS
+@@ -30,26 +40,26 @@ struct _GUsbDeviceListClass {
+ };
+ 
+ G_DEPRECATED_FOR(g_usb_context_new)
+-GUsbDeviceList *
++G_USB_API GUsbDeviceList *
+ g_usb_device_list_new(GUsbContext *context);
+ 
+ G_DEPRECATED
+-void
++G_USB_API void
+ g_usb_device_list_coldplug(GUsbDeviceList *self);
+ 
+ G_DEPRECATED_FOR(g_usb_context_get_devices)
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_list_get_devices(GUsbDeviceList *self);
+ 
+ G_DEPRECATED_FOR(g_usb_context_find_by_bus_address)
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_device_list_find_by_bus_address(GUsbDeviceList *self,
+ 				      guint8 bus,
+ 				      guint8 address,
+ 				      GError **error);
+ 
+ G_DEPRECATED_FOR(g_usb_context_find_by_vid_pid)
+-GUsbDevice *
++G_USB_API GUsbDevice *
+ g_usb_device_list_find_by_vid_pid(GUsbDeviceList *self, guint16 vid, guint16 pid, GError **error);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-device.h b/gusb/gusb-device.h
+index 32df1b2..ef1bc9c 100644
+--- a/gusb/gusb-device.h
++++ b/gusb/gusb-device.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gio/gio.h>
+ #include <gusb/gusb-bos-descriptor.h>
+ #include <gusb/gusb-interface.h>
+@@ -134,125 +144,125 @@ struct _GUsbDeviceClass {
+ 	gchar _gusb_reserved[64];
+ };
+ 
+-GQuark
++G_USB_API GQuark
+ g_usb_device_error_quark(void);
+ 
+-const gchar *
++G_USB_API const gchar *
+ g_usb_device_get_platform_id(GUsbDevice *self);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_is_emulated(GUsbDevice *self);
+-GDateTime *
++G_USB_API GDateTime *
+ g_usb_device_get_created(GUsbDevice *self);
+-GUsbDevice *
+-g_usb_device_get_parent(GUsbDevice *self);
+-GPtrArray *
++G_USB_API GUsbDevice *
++g_usb_device_get_parent(G_USB_API GUsbDevice *self);
++G_USB_API GPtrArray *
+ g_usb_device_get_children(GUsbDevice *self);
+ 
+-guint8
++G_USB_API guint8
+ g_usb_device_get_bus(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_address(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_port_number(GUsbDevice *self);
+ 
+-guint16
++G_USB_API guint16
+ g_usb_device_get_vid(GUsbDevice *self);
+-guint16
++G_USB_API guint16
+ g_usb_device_get_pid(GUsbDevice *self);
+-guint16
++G_USB_API guint16
+ g_usb_device_get_release(GUsbDevice *self);
+-guint16
++G_USB_API guint16
+ g_usb_device_get_spec(GUsbDevice *self);
+-const gchar *
++G_USB_API const gchar *
+ g_usb_device_get_vid_as_str(GUsbDevice *self);
+-const gchar *
++G_USB_API const gchar *
+ g_usb_device_get_pid_as_str(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_device_class(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_device_subclass(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_device_protocol(GUsbDevice *self);
+ 
+-void
++G_USB_API void
+ g_usb_device_add_tag(GUsbDevice *self, const gchar *tag);
+-void
++G_USB_API void
+ g_usb_device_remove_tag(GUsbDevice *self, const gchar *tag);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_has_tag(GUsbDevice *self, const gchar *tag);
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_get_tags(GUsbDevice *self);
+ 
+-guint8
++G_USB_API guint8
+ g_usb_device_get_configuration_index(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_manufacturer_index(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_product_index(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_serial_number_index(GUsbDevice *self);
+-guint8
++G_USB_API guint8
+ g_usb_device_get_custom_index(GUsbDevice *self,
+ 			      guint8 class_id,
+ 			      guint8 subclass_id,
+ 			      guint8 protocol_id,
+ 			      GError **error);
+ 
+-GUsbInterface *
++G_USB_API GUsbInterface *
+ g_usb_device_get_interface(GUsbDevice *self,
+ 			   guint8 class_id,
+ 			   guint8 subclass_id,
+ 			   guint8 protocol_id,
+ 			   GError **error);
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_get_interfaces(GUsbDevice *self, GError **error);
+ 
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_get_events(GUsbDevice *self);
+-void
++G_USB_API void
+ g_usb_device_clear_events(GUsbDevice *self);
+ 
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_device_get_bos_descriptors(GUsbDevice *self, GError **error);
+-GUsbBosDescriptor *
++G_USB_API GUsbBosDescriptor *
+ g_usb_device_get_bos_descriptor(GUsbDevice *self, guint8 capability, GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_open(GUsbDevice *self, GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_close(GUsbDevice *self, GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_reset(GUsbDevice *self, GError **error);
+-void
++G_USB_API void
+ g_usb_device_invalidate(GUsbDevice *self);
+ 
+-gint
++G_USB_API gint
+ g_usb_device_get_configuration(GUsbDevice *self, GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_set_configuration(GUsbDevice *self, gint configuration, GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_claim_interface(GUsbDevice *self,
+ 			     gint interface,
+ 			     GUsbDeviceClaimInterfaceFlags flags,
+ 			     GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_release_interface(GUsbDevice *self,
+ 			       gint interface,
+ 			       GUsbDeviceClaimInterfaceFlags flags,
+ 			       GError **error);
+-gboolean
++G_USB_API gboolean
+ g_usb_device_set_interface_alt(GUsbDevice *self, gint interface, guint8 alt, GError **error);
+ 
+-gchar *
++G_USB_API gchar *
+ g_usb_device_get_string_descriptor(GUsbDevice *self, guint8 desc_index, GError **error);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_device_get_string_descriptor_bytes(GUsbDevice *self,
+ 					 guint8 desc_index,
+ 					 guint16 langid,
+ 					 GError **error);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_device_get_string_descriptor_bytes_full(GUsbDevice *self,
+ 					      guint8 desc_index,
+ 					      guint16 langid,
+@@ -260,7 +270,7 @@ g_usb_device_get_string_descriptor_bytes_full(GUsbDevice *self,
+ 					      GError **error);
+ 
+ /* sync -- TODO: use GCancellable and GUsbSource */
+-gboolean
++G_USB_API gboolean
+ g_usb_device_control_transfer(GUsbDevice *self,
+ 			      GUsbDeviceDirection direction,
+ 			      GUsbDeviceRequestType request_type,
+@@ -275,7 +285,7 @@ g_usb_device_control_transfer(GUsbDevice *self,
+ 			      GCancellable *cancellable,
+ 			      GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_bulk_transfer(GUsbDevice *self,
+ 			   guint8 endpoint,
+ 			   guint8 *data,
+@@ -285,7 +295,7 @@ g_usb_device_bulk_transfer(GUsbDevice *self,
+ 			   GCancellable *cancellable,
+ 			   GError **error);
+ 
+-gboolean
++G_USB_API gboolean
+ g_usb_device_interrupt_transfer(GUsbDevice *self,
+ 				guint8 endpoint,
+ 				guint8 *data,
+@@ -297,7 +307,7 @@ g_usb_device_interrupt_transfer(GUsbDevice *self,
+ 
+ /* async */
+ 
+-void
++G_USB_API void
+ g_usb_device_control_transfer_async(GUsbDevice *self,
+ 				    GUsbDeviceDirection direction,
+ 				    GUsbDeviceRequestType request_type,
+@@ -311,10 +321,10 @@ g_usb_device_control_transfer_async(GUsbDevice *self,
+ 				    GCancellable *cancellable,
+ 				    GAsyncReadyCallback callback,
+ 				    gpointer user_data);
+-gssize
++G_USB_API gssize
+ g_usb_device_control_transfer_finish(GUsbDevice *self, GAsyncResult *res, GError **error);
+ 
+-void
++G_USB_API void
+ g_usb_device_bulk_transfer_async(GUsbDevice *self,
+ 				 guint8 endpoint,
+ 				 guint8 *data,
+@@ -323,10 +333,10 @@ g_usb_device_bulk_transfer_async(GUsbDevice *self,
+ 				 GCancellable *cancellable,
+ 				 GAsyncReadyCallback callback,
+ 				 gpointer user_data);
+-gssize
++G_USB_API gssize
+ g_usb_device_bulk_transfer_finish(GUsbDevice *self, GAsyncResult *res, GError **error);
+ 
+-void
++G_USB_API void
+ g_usb_device_interrupt_transfer_async(GUsbDevice *self,
+ 				      guint8 endpoint,
+ 				      guint8 *data,
+@@ -335,7 +345,7 @@ g_usb_device_interrupt_transfer_async(GUsbDevice *self,
+ 				      GCancellable *cancellable,
+ 				      GAsyncReadyCallback callback,
+ 				      gpointer user_data);
+-gssize
++G_USB_API gssize
+ g_usb_device_interrupt_transfer_finish(GUsbDevice *self, GAsyncResult *res, GError **error);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-endpoint.h b/gusb/gusb-endpoint.h
+index c642d32..95ee5ae 100644
+--- a/gusb/gusb-endpoint.h
++++ b/gusb/gusb-endpoint.h
+@@ -7,6 +7,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gusb/gusb-device.h>
+ 
+ G_BEGIN_DECLS
+@@ -14,23 +24,23 @@ G_BEGIN_DECLS
+ #define G_USB_TYPE_ENDPOINT (g_usb_endpoint_get_type())
+ G_DECLARE_FINAL_TYPE(GUsbEndpoint, g_usb_endpoint, G_USB, ENDPOINT, GObject)
+ 
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_kind(GUsbEndpoint *self);
+-guint16
++G_USB_API guint16
+ g_usb_endpoint_get_maximum_packet_size(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_polling_interval(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_refresh(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_synch_address(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_address(GUsbEndpoint *self);
+-guint8
++G_USB_API guint8
+ g_usb_endpoint_get_number(GUsbEndpoint *self);
+-GUsbDeviceDirection
++G_USB_API GUsbDeviceDirection
+ g_usb_endpoint_get_direction(GUsbEndpoint *self);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_endpoint_get_extra(GUsbEndpoint *self);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-interface.h b/gusb/gusb-interface.h
+index 523e1dd..7bc657f 100644
+--- a/gusb/gusb-interface.h
++++ b/gusb/gusb-interface.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <glib-object.h>
+ 
+ G_BEGIN_DECLS
+@@ -15,25 +25,25 @@ G_BEGIN_DECLS
+ #define G_USB_TYPE_INTERFACE (g_usb_interface_get_type())
+ G_DECLARE_FINAL_TYPE(GUsbInterface, g_usb_interface, G_USB, INTERFACE, GObject)
+ 
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_length(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_kind(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_number(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_alternate(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_class(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_subclass(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_protocol(GUsbInterface *self);
+-guint8
++G_USB_API guint8
+ g_usb_interface_get_index(GUsbInterface *self);
+-GBytes *
++G_USB_API GBytes *
+ g_usb_interface_get_extra(GUsbInterface *self);
+-GPtrArray *
++G_USB_API GPtrArray *
+ g_usb_interface_get_endpoints(GUsbInterface *self);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-source.h b/gusb/gusb-source.h
+index cd4bca0..abe59b5 100644
+--- a/gusb/gusb-source.h
++++ b/gusb/gusb-source.h
+@@ -8,6 +8,16 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <glib.h>
+ 
+ G_BEGIN_DECLS
+@@ -24,11 +34,11 @@ typedef struct _GUsbSource GUsbSource;
+ typedef enum { G_USB_SOURCE_ERROR_INTERNAL } GUsbSourceError;
+ 
+ G_DEPRECATED_FOR(g_usb_context_error_quark)
+-GQuark
++G_USB_API GQuark
+ g_usb_source_error_quark(void);
+ 
+ G_DEPRECATED
+-void
++G_USB_API void
+ g_usb_source_set_callback(GUsbSource *self, GSourceFunc func, gpointer data, GDestroyNotify notify);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb-util.h b/gusb/gusb-util.h
+index ed26eb3..8eb2af3 100644
+--- a/gusb/gusb-util.h
++++ b/gusb/gusb-util.h
+@@ -7,11 +7,21 @@
+ 
+ #pragma once
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <glib.h>
+ 
+ G_BEGIN_DECLS
+ 
+-const gchar *
++G_USB_API const gchar *
+ g_usb_strerror(gint error_code);
+ 
+ G_END_DECLS
+diff --git a/gusb/gusb.h b/gusb/gusb.h
+index 30bc511..84e1121 100644
+--- a/gusb/gusb.h
++++ b/gusb/gusb.h
+@@ -9,6 +9,16 @@
+ 
+ #define __GUSB_INSIDE__
+ 
++#if defined(_WIN32) || defined(__CYGWIN__)
++# if defined(GUSB_COMPILATION)
++#  define G_USB_API __declspec(dllexport)
++# else
++#  define G_USB_API __declspec(dllimport)
++# endif
++#else
++# define G_USB_API
++#endif
++
+ #include <gusb/gusb-bos-descriptor.h>
+ #include <gusb/gusb-context.h>
+ #include <gusb/gusb-device-event.h>
