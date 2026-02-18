@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/ncnn
     REF "${VERSION}"
-    SHA512 bb20d8ece3dcddf49530e1ca44eaad1045702b5fb7a7c9cfd6754eb158c7349bba7d63a3ef1e1a4a6e30ed59622367b802f98bf8343bd30ff0cb6def734757c4
+    SHA512 53de1d8c7b6ea3bdc01eeb1c742fecbf53ba1ec975087814197a270c8a2c104c3f48c81849631ca4460f9d875c45bba7e5e52ff572d0a86131c792867ee0a1f3
     HEAD_REF master
 )
 
@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
         -DNCNN_BUILD_EXAMPLES=OFF
         -DNCNN_BUILD_BENCHMARK=OFF
         -DNCNN_SHARED_LIB=${BUILD_SHARED}
+        --trace-expand
 )
 
 vcpkg_cmake_install()
