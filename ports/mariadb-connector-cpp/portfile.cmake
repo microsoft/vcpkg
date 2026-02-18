@@ -1,3 +1,4 @@
+set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-cpp
