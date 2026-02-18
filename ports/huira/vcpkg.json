@@ -1,0 +1,41 @@
+{
+  "name": "huira",
+  "version": "0.8.0",
+  "description": "A ray tracing library for space engineering and planetary science.",
+  "homepage": "https://github.com/YOUR_ORG/huira",
+  "license": "MIT",
+  "dependencies": [
+    "assimp",
+    "cfitsio",
+    "cspice",
+    "curl",
+    {
+      "name": "embree",
+      "default-features": false,
+      "features": [
+        "geometry-instance",
+        "geometry-triangle",
+        "tasking-tbb"
+      ]
+    },
+    "fftw3",
+    {
+      "name": "gdal",
+      "default-features": false
+    },
+    "glm",
+    "indicators",
+    "libjpeg-turbo",
+    "libpng",
+    "tbb",
+    "tiff",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

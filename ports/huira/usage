@@ -1,0 +1,17 @@
+huira provides CMake integration targets and CLI tools.
+
+--- CMake library usage ---
+
+  find_package(huira CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE huira::huira)
+
+--- CLI tools ---
+
+The following tools are installed to tools/huira/ and can be added to your
+PATH with:
+
+  vcpkg integrate install   # or use the CMAKE_PREFIX_PATH approach
+
+Run `vcpkg x-add-path` or invoke them directly at:
+
+  <vcpkg-root>/installed/<triplet>/tools/huira/<tool-name>
