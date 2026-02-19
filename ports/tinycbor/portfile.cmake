@@ -33,7 +33,7 @@ if ("tools" IN_LIST FEATURES)
             json2cbor
         AUTO_CLEAN
     )
-    if (NOT WIN32)
+    if (NOT VCPKG_TARGET_IS_WINDOWS)
         vcpkg_copy_tools(
             TOOL_NAMES
                 cbordump
