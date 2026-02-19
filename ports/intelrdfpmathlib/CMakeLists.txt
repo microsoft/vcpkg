@@ -259,9 +259,8 @@ else()
 endif()
 
 include_directories(
-  $<BUILD_INTERFACE:.>
-  $<BUILD_INTERFACE:src>
-  $<BUILD_INTERFACE:float128>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/float128>
   $<INSTALL_INTERFACE:include>)
 
 add_library(intel_decimal128 ${intelrdfpmathlib_SOURCES})
