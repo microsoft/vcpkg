@@ -1,0 +1,17 @@
+diff --git a/tools/json2cbor/CMakeLists.txt b/tools/json2cbor/CMakeLists.txt
+index 41892a3..0c687ca 100644
+--- a/tools/json2cbor/CMakeLists.txt
++++ b/tools/json2cbor/CMakeLists.txt
+@@ -1,9 +1,9 @@
+ # Copyright (C) 2025 Intel Corporation
+ # SPDX-License-Identifier: MIT
+ include(FindPkgConfig)
+-pkg_check_modules(LIBCJSON libcjson)
++pkg_check_modules(LIBCJSON IMPORTED_TARGET libcjson)
+ if(LIBCJSON_FOUND)
+   tinycbor_add_executable(json2cbor json2cbor.c)
+-  target_include_directories(json2cbor SYSTEM PUBLIC ${LIBCJSON_INCLUDE_DIRS})
+-  target_link_libraries(json2cbor ${LIBCJSON_LIBRARIES})
++  target_link_libraries(json2cbor PkgConfig::LIBCJSON)
++  install(TARGETS json2cbor DESTINATION bin)
+ endif()

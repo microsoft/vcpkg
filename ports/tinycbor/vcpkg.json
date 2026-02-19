@@ -1,6 +1,6 @@
 {
   "name": "tinycbor",
-  "version-semver": "0.6.1",
+  "version": "7.0",
   "description": "Concise Binary Object Representation (CBOR) Library",
   "homepage": "https://github.com/intel/tinycbor",
   "license": "MIT",
@@ -8,6 +8,18 @@
     {
       "name": "vcpkg-cmake",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Compile the TinyCBOR tools",
+      "dependencies": [
+        "cjson"
+      ]
+    }
+  }
 }
