@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 046316b4297460bffca09c890ecad17ea39d8b3db92ff445d03b547dd551663d37e40f38bce8ae11e2994374ff01e622b408da27aa8e40f4140185ee8f001a60
+    SHA512 c726ced2d3e6ebd3ddcd0b13c255bb43fae8c12d2aec15e9ef992b0bc7099996c02cd284ccaaa7b5fac3f23f280b098063dd60f521d97a68dc183ab192fcccdb
     HEAD_REF develop
     PATCHES
         disable-testing.diff
@@ -42,6 +42,11 @@ if(VCPKG_TARGET_IS_EMSCRIPTEN)
         -DEMSCRIPTEN_SYSTEM_PROCESSOR=riscv64
         -DTARGET=RISCV64_GENERIC
     )
+endif()
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
+    # Android ndk doesn't support AVX512
+    list(APPEND OPTIONS -DNO_AVX512=ON)
 endif()
 
 vcpkg_cmake_configure(
