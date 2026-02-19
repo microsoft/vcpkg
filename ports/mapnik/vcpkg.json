@@ -1,24 +1,27 @@
 {
   "name": "mapnik",
-  "version": "4.0.7",
+  "version": "4.2.1",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "license": "LGPL-2.1-only",
   "supports": "!xbox",
   "dependencies": [
     "boost-assign",
+    "boost-beast",
     "boost-bimap",
     "boost-filesystem",
     "boost-format",
     "boost-geometry",
     "boost-gil",
     "boost-interprocess",
+    "boost-json",
     {
       "name": "boost-locale",
       "features": [
         "icu"
       ]
     },
+    "boost-lockfree",
     "boost-msm",
     "boost-property-tree",
     {
@@ -29,6 +32,7 @@
     },
     "boost-spirit",
     "boost-system",
+    "boost-url",
     {
       "name": "freetype",
       "features": [
@@ -74,6 +78,12 @@
     "webp"
   ],
   "features": {
+    "avif": {
+      "description": "add avif support",
+      "dependencies": [
+        "libavif"
+      ]
+    },
     "cairo": {
       "description": "Cairo renderer",
       "dependencies": [
@@ -92,6 +102,12 @@
     },
     "input-gdal": {
       "description": "GDAL input plugin",
+      "dependencies": [
+        "gdal"
+      ]
+    },
+    "input-gdal-ogr": {
+      "description": "GDAL+OGR input plugin",
       "dependencies": [
         "gdal"
       ]
@@ -119,6 +135,12 @@
     },
     "input-postgis": {
       "description": "POSTGIS input plugin",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "input-postgis-pgraster": {
+      "description": "POSTGIS+PGRASTER input plugin",
       "dependencies": [
         "libpq"
       ]
