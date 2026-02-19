@@ -661,7 +661,7 @@
       "port-version": 4
     },
     "bddisasm": {
-      "baseline": "3.0.0",
+      "baseline": "3.0.1",
       "port-version": 0
     },
     "bde": {
