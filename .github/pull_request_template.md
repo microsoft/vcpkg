@@ -21,7 +21,7 @@ END OF PORT UPDATE CHECKLIST (delete this line) -->
     - [ ] The project is in Repology: https://repology.org/<PORT NAME>/versions
     - [ ] The project is amongst the first web search results for "<PORT NAME>" or "<PORT NAME> C++". Include a screenshot of the search engine results in the PR.
     - [ ] The port name follows the 'GitHubOrg-GitHubRepo' form or equivalent `Owner-Project` form.
-- [ ] Optional dependencies are resolved in exactly one way. For example, if the component is built with CMake, all `find_package` calls are REQUIRED, are satisfied by `vcpkg.json`'s declared dependencies, or controlled with [CMAKE_DISABLE_FIND_PACKAGE_Xxx](https://cmake.org/cmake/help/latest/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) or [VCPKG_LOCK_FIND_PACKAGE](https://learn.microsoft.com/vcpkg/users/buildsystems/cmake-integration#vcpkg_lock_find_package_pkg).
+- [ ] Optional dependencies of the build are all controlled by the port. A dependency is controlled if it is declared an unconditional dependency in `vcpkg.json`, or explicitly disabled through patches or build system arguments such as [CMAKE_DISABLE_FIND_PACKAGE_Xxx](https://cmake.org/cmake/help/latest/variable/CMAKE_DISABLE_FIND_PACKAGE_PackageName.html) or [VCPKG_LOCK_FIND_PACKAGE](https://learn.microsoft.com/vcpkg/users/buildsystems/cmake-integration#vcpkg_lock_find_package_pkg)
 - [ ] The versioning scheme in `vcpkg.json` matches what upstream says.
 - [ ] The license declaration in `vcpkg.json` matches what upstream says.
 - [ ] The installed as the "copyright" file matches what upstream says.
