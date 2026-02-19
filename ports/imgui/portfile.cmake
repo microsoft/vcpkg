@@ -5,7 +5,7 @@ if ("docking-experimental" IN_LIST FEATURES)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}-docking"
-        SHA512 3a019533e638b2023e0c71d0455561ee9d589ff33b677c8135345e85c28edb7b83580271d49a787e0e838fd6217d1625baad65e6559ae7faec53f3a309917ecd 
+        SHA512 1f90a04676241c6167b442c917677596df5d9a4fd1d4f3db66e7050ba4fef206d905c854dbd73081ffa6949b1dff5509f81b95576a7302613a8c5440c3f1eb7f 
         HEAD_REF docking
     )
 else()
@@ -13,7 +13,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}"
-        SHA512 c9393bd9f6b49b036ad6ab3ba4d972876c6f60ce7f5c13a7a56ff11b3559ea3211b0caa03eed10b4f4fbe9c371e14f7f24866bd476652f543f3ed3aa878ea930
+        SHA512 3f5cb5045227d24209edebdfc1c0b64eacf0779fe0bd25fc4594d5d626e8b11f97bd18d3bf8f89b287f0ed421995bf191b170217758d9efb8fec821ada4ba6b9
         HEAD_REF master
     )
 endif()
@@ -52,8 +52,7 @@ if ("libigl-imgui" IN_LIST FEATURES)
         URLS
             https://raw.githubusercontent.com/libigl/libigl-imgui/c3efb9b62780f55f9bba34561f79a3087e057fc0/imgui_fonts_droid_sans.h
         FILENAME "imgui_fonts_droid_sans.h"
-        SHA512
-            abe9250c9a5989e0a3f2285bbcc83696ff8e38c1f5657c358e6fe616ff792d3c6e5ff2fa23c2eeae7d7b307392e0dc798a95d14f6d10f8e9bfbd7768d36d8b31
+        SHA512 abe9250c9a5989e0a3f2285bbcc83696ff8e38c1f5657c358e6fe616ff792d3c6e5ff2fa23c2eeae7d7b307392e0dc798a95d14f6d10f8e9bfbd7768d36d8b31
     )
 
     file(INSTALL "${IMGUI_FONTS_DROID_SANS_H}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
@@ -64,7 +63,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 44d6fd1c26c9c2cb3fcbd1560dba8e056f84dc170051dcb8db5d642945fb26475006a8166486f7f62e900a97d65f2f98d364ac06c121a57309b3229cc41556a4
+        SHA512 f1f1dbeb03238c2ee4adc26caa3b90b0c3732852585128440419e1f2c78efdd9613f5b5872cf708afb06d5375ac3b0f53327c4731c91a9106a146d8c4a33e3a9
         HEAD_REF master
     )
 
