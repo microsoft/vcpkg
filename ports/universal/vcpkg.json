@@ -1,6 +1,6 @@
 {
   "name": "universal",
-  "version": "3.96.0",
+  "version": "3.96",
   "description": "Large collection of number systems providing custom arithmetic for mixed-precision algorithm",
   "homepage": "https://github.com/stillwater-sc/universal",
   "license": "MIT",

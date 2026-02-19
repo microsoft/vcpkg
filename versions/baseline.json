@@ -10165,7 +10165,7 @@
       "port-version": 6
     },
     "universal": {
-      "baseline": "3.96.0",
+      "baseline": "3.96",
       "port-version": 0
     },
     "unixodbc": {
