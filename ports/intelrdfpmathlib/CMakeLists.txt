@@ -258,8 +258,11 @@ else()
   add_compile_options(-Defi2=1 -DEFI2=1)
 endif()
 
-
-include_directories(. src float128)
+include_directories(
+  $<BUILD_INTERFACE:.>
+  $<BUILD_INTERFACE:src>
+  $<BUILD_INTERFACE:float128>
+  $<INSTALL_INTERFACE:include>)
 
 add_library(intel_decimal128 ${intelrdfpmathlib_SOURCES})
 
