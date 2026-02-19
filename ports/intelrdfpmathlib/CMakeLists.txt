@@ -278,12 +278,19 @@ else()
 endif()
 
 install(
-  TARGETS  intel_decimal128
+  TARGETS intel_decimal128
+  EXPORT unofficial-intelrdfpmathlib-config
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
 
+install(
+  EXPORT unofficial-intelrdfpmathlib-config
+  NAMESPACE unofficial::intel::
+  DESTINATION share/unofficial-intelrdfpmathlib
+)
+
 if(NOT DISABLE_INSTALL_HEADERS)
-  install(FILES src/dfp754.h DESTINATION include)
+  install(FILES src/dfp754.h src/bid_conf.h src/bid_functions.h DESTINATION include)
 endif()
