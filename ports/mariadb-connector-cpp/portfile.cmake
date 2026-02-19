@@ -1,4 +1,4 @@
-set(VCPKG_POLICY_SKIP_CRT_LINKAGE_CHECK enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mariadb-corporation/mariadb-connector-cpp
@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-	-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL
+	-DCMAKE_MSVC_RUNTIME_LIBRARY=${VCPKG_CRT_LINKAGE}
         -DINSTALL_LIBDIR=lib
         -DUSE_SYSTEM_INSTALLED_LIB=ON
         -DWITH_MSI=OFF
