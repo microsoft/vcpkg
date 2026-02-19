@@ -7,7 +7,7 @@
 int main()
 {
     unsigned int flags = 0;
-    BID_UINT128 x = bid128_from_string("1.25673", &flags);
+    BID_UINT128 x = bid128_from_string(const_cast<char*>("1.25673"), &flags);
     BID_UINT128 y = bid128_from_int32(5);
     auto result = bid128_add(x, y, &flags);
 }
