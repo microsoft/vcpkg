@@ -1,13 +1,37 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1234567..890abcd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -658,7 +658,7 @@ install(FILES
+@@ -559,19 +559,11 @@
+ 
+ # Set up install directories. INCLUDE_INSTALL_DIR and
+ # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
+-if(WIN32)
+-    set(include_install_dir Include)
+-    set(include_install_dir_full Include)
+-    set(config_install_dir CMake)
+-elseif(UNIX)
+-    set(include_install_dir include)
+-    set(include_install_dir_postfix "${project_library_target_name}")
+-    set(include_install_dir_full    "${include_install_dir}/${include_install_dir_postfix}")
++set(include_install_dir include)
++set(include_install_dir_postfix "${project_library_target_name}")
++set(include_install_dir_full    "${include_install_dir}/${include_install_dir_postfix}")
+ 
+-    set(config_install_dir share/${PACKAGE_NAME})
+-else()
+-    message(FATAL_ERROR "Not supported system type. Options: UNIX or WIN32.")
+-endif()
++set(config_install_dir CMake)
+ 
+ #####  Gather git repo related information
+ # Get the current working branch
+@@ -658,7 +650,8 @@
      DESTINATION ${config_install_dir} COMPONENT cmake)
  
  # Install headers
 -install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/${project_library_target_name}
+-        DESTINATION ${include_install_dir})
 +install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/sw/${project_library_target_name}
-         DESTINATION ${include_install_dir})
++        DESTINATION ${include_install_dir}
++        FILES_MATCHING PATTERN "*.hpp")
  
  if(UNIVERSAL_BUILD_ALL)

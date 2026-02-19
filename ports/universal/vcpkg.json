@@ -1,7 +1,7 @@
 {
   "name": "universal",
-  "version": "3.96.0",
-  "description": "Large collection of number systems providing custom arithmetic for mixed-precision algorithm",
+  "version": "3.96",
+  "description": "A header-only C++ library for plug-in replacement number systems for native types",
   "homepage": "https://github.com/stillwater-sc/universal",
   "license": "MIT",
   "dependencies": [
