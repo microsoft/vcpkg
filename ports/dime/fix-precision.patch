@@ -1,0 +1,16 @@
+diff --git a/include/dime/Basic.h b/include/dime/Basic.h
+index dd6789e..0fe76ed 100644
+--- a/include/dime/Basic.h
++++ b/include/dime/Basic.h
+@@ -42,8 +42,8 @@
+ 
+ // we prefer to use floats to save mem. Applications needing
+ // scientific calculations should typedef this to double
+-typedef float dxfdouble;
+-// typedef double dxfdouble;
++// typedef float dxfdouble;
++typedef long double dxfdouble;
+
+ #include <float.h>
+ 
+
