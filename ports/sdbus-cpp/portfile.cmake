@@ -1,4 +1,4 @@
-message(WARNING "You will need to install sytemd dependencies to build sdbus-cpp:\nsudo apt install libsystemd-dev\n")
+message(WARNING "You will need to install systemd dependencies to build sdbus-cpp:\nsudo apt install libsystemd-dev\n")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
