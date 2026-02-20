@@ -7080,6 +7080,10 @@
       "baseline": "1.10.0",
       "port-version": 0
     },
+    "odbccpp": {
+      "baseline": "1.2",
+      "port-version": 0
+    },
     "ode": {
       "baseline": "0.16.6",
       "port-version": 0
