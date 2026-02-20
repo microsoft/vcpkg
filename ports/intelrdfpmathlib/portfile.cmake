@@ -11,7 +11,7 @@ vcpkg_extract_source_archive(
     ARCHIVE ${ARCHIVE}
     PATCHES
         missing-includes.patch
-        fix-wchar.patch
+        fix-types.patch
 )
 
 set(LIB_SOURCE_PATH "${SOURCE_PATH}/LIBRARY")
