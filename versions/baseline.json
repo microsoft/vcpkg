@@ -2488,6 +2488,10 @@
       "baseline": "7.3.0",
       "port-version": 0
     },
+    "dime": {
+      "baseline": "2025-04-01",
+      "port-version": 0
+    },
     "dingo": {
       "baseline": "0.2.0",
       "port-version": 0
