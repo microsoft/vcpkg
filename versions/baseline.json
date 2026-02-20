@@ -2418,7 +2418,7 @@
     },
     "dbus": {
       "baseline": "1.16.2",
-      "port-version": 2
+      "port-version": 3
     },
     "dbus-cxx": {
       "baseline": "2.6.0",
