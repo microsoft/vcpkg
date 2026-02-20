@@ -1,7 +1,3 @@
-# portfile.cmake for huira
-#
-# vcpkg install huira
-
 set(VCPKG_BUILD_TYPE release) # Only headers and tools
 
 vcpkg_from_github(
