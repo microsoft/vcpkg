@@ -82,3 +82,20 @@ index 60a368065..f9c2c5416 100644
          }
      }
  
+diff --git a/src/osgEarthImGui/imnodes.cpp b/src/osgEarthImGui/imnodes.cpp
+index 123456789..987654321 100644
+--- a/src/osgEarthImGui/imnodes.cpp
++++ b/src/osgEarthImGui/imnodes.cpp
+@@ -348,10 +348,10 @@ void ImDrawListSplitterGrowChannels(ImDrawListSplitter& splitter, ImDrawList* d
+             IM_PLACEMENT_NEW(&channel) ImDrawChannel();
+         }
+ 
+         {
+             ImDrawCmd draw_cmd;
+             draw_cmd.ClipRect = draw_list->_ClipRectStack.back();
+-            draw_cmd.TextureId = draw_list->_TextureIdStack.back();
++            draw_cmd.TexRef = draw_list->_TextureStack.back();
+             channel._CmdBuffer.push_back(draw_cmd);
+         }
+     }
+
