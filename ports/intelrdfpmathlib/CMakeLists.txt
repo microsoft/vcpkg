@@ -293,7 +293,7 @@ install(
 
 install(
   EXPORT unofficial-intelrdfpmathlib-config
-  NAMESPACE unofficial::intel::
+  NAMESPACE unofficial::intelrdfpmathlib::
   DESTINATION share/unofficial-intelrdfpmathlib
 )
 
