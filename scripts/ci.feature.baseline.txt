@@ -197,7 +197,6 @@ libosip2:arm64-linux=fail
 libplist:x64-windows-static=fail
 libressl:arm64-linux=skip
 libsodium:arm64-linux=fail
-libsystemd:arm64-linux=fail
 libtar:arm64-linux=fail
 libtomcrypt(arm & windows)=fail
 libusb:arm64-linux=fail
