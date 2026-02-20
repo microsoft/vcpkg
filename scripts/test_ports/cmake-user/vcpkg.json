@@ -82,7 +82,7 @@
         {
           "$package": "LAPACK",
           "name": "lapack",
-          "platform": "!android & !(uwp & arm)"
+          "platform": "!android & !(uwp & arm) & !(linux & arm)"
         },
         {
           "$package": "GnuTLS",
