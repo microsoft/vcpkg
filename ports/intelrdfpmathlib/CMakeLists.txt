@@ -260,6 +260,8 @@ endif()
 
 add_library(intel_decimal128 ${intelrdfpmathlib_SOURCES})
 
+set_target_properties(intel_decimal128 PROPERTIES EXPORT_NAME decimal128)
+
 target_include_directories(
   intel_decimal128
   PUBLIC
