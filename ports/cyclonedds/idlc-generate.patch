@@ -1,8 +1,8 @@
 diff --git a/cmake/Modules/Generate.cmake b/cmake/Modules/Generate.cmake
-index 0ed67d63..9037fe05 100644
+index 3bc3a15..e67cac1 100644
 --- a/cmake/Modules/Generate.cmake
 +++ b/cmake/Modules/Generate.cmake
-@@ -157,11 +157,25 @@ function(IDLC_GENERATE_GENERIC)
+@@ -219,11 +219,25 @@ function(IDLC_GENERATE_GENERIC)
      endforeach()
  
      list(APPEND _outputs ${_file_outputs})
