@@ -7149,7 +7149,7 @@
       "port-version": 0
     },
     "open62541pp": {
-      "baseline": "0.20.0",
+      "baseline": "0.21.0",
       "port-version": 0
     },
     "openal-soft": {
@@ -7481,7 +7481,7 @@
       "port-version": 0
     },
     "patternia": {
-      "baseline": "0.7.3",
+      "baseline": "0.7.5",
       "port-version": 0
     },
     "pbc": {
@@ -9121,7 +9121,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "4.2.4",
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "simdutf": {
@@ -9149,7 +9149,7 @@
       "port-version": 0
     },
     "simsimd": {
-      "baseline": "6.0.0",
+      "baseline": "6.5.13",
       "port-version": 0
     },
     "sintra": {
@@ -10969,7 +10969,7 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.15.8",
+      "baseline": "4.16.0",
       "port-version": 0
     },
     "z4kn4fein-semver": {
