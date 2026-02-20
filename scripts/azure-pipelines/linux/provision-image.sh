@@ -163,6 +163,11 @@ APT_PACKAGES="$APT_PACKAGES cuda-cccl-12-9 cuda-compat-12-9 cuda-compiler-12-9 c
   libcusparse-dev-12-9 libnccl-dev libnpp-dev-12-9 libnvfatbin-dev-12-9 libnvjitlink-dev-12-9 \
   libnvjpeg-dev-12-9"
 
+## required by fltk
+APT_PACKAGES="$APT_PACKAGES libasound2-dev libglu1-mesa-dev libwayland-dev \
+    wayland-protocols libdbus-1-dev libxkbcommon-dev libegl-dev libopengl-dev \
+    libpango1.0-dev libgtk-3-dev"
+
 ## PowerShell + Azure
 APT_PACKAGES="$APT_PACKAGES powershell azcopy azure-cli"
 
