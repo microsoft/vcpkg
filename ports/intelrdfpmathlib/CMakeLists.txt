@@ -262,10 +262,10 @@ add_library(intel_decimal128 ${intelrdfpmathlib_SOURCES})
 
 target_include_directories(
   intel_decimal128
-  PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/float128>
   PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/float128>
     $<INSTALL_INTERFACE:include>
 )
 
