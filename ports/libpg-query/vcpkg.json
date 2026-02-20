@@ -6,9 +6,11 @@
   "license": "BSD-3-Clause",
   "supports": "!android",
   "dependencies": [
+    "protobuf-c",
     {
       "name": "vcpkg-make",
       "host": true
-    }
+    },
+    "xxhash"
   ]
 }
