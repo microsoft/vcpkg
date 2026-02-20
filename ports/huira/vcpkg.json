@@ -27,7 +27,8 @@
   ],
   "features": {
     "tools": {
-      "description": "Build huira applications",
+      "description": "Build huira command line tools",
+      "supports": "!android & !uwp & !xbox",
       "dependencies": [
         {
           "name": "curl",
