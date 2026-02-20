@@ -1,5 +1,5 @@
 diff --git a/LIBRARY/src/bid_functions.h b/LIBRARY/src/bid_functions.h
-index a2d0cd7..8411c44 100644
+index a2d0cd7..15b3f98 100644
 --- a/LIBRARY/src/bid_functions.h
 +++ b/LIBRARY/src/bid_functions.h
 @@ -42,7 +42,7 @@
@@ -7,7 +7,7 @@ index a2d0cd7..8411c44 100644
  
  // Fix system header issue on Sun solaris and define required type by ourselves
 -#if !defined(_WCHAR_T) && !defined(_WCHAR_T_DEFINED) && !defined(__QNX__)
-+#if !defined(__cplusplus) && !defined(_WCHAR_T) && !defined(_WCHAR_T_DEFINED) && !defined(__WCHAR_TYPE__) && !defined(__QNX__)
++#if !defined(__cplusplus) && !defined(_WCHAR_T) && !defined(_WCHAR_T_DEFINED) && !defined(__QNX__)
  typedef int   wchar_t;
  #endif
  
