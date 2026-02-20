@@ -3,4 +3,4 @@ project(decimal128test)
 
 find_package(unofficial-intelrdfpmathlib CONFIG REQUIRED)
 add_executable(main main.cpp)
-target_link_libraries(main PRIVATE unofficial::intel::intel_decimal128)
+target_link_libraries(main PRIVATE unofficial::intelrdfpmathlib::decimal128)
