@@ -1,0 +1,41 @@
+{
+  "name": "huira",
+  "version": "0.8.0",
+  "description": "A ray tracing library for space engineering and planetary science.",
+  "homepage": "https://github.com/YOUR_ORG/huira",
+  "license": "MIT",
+  "supports": "!android & !uwp & !xbox",
+  "dependencies": [
+    "assimp",
+    "cfitsio",
+    "cspice",
+    "glm",
+    "libjpeg-turbo",
+    "libpng",
+    "tbb",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build huira command line tools",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        },
+        "indicators"
+      ]
+    }
+  }
+}
