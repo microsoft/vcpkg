@@ -1,0 +1,10 @@
+iceoryx2 provides CMake targets:
+
+    find_package(iceoryx2-c CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE iceoryx2-c::static-lib>)
+
+    find_package(iceoryx2-bb-cxx CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE iceoryx2-bb-cxx::iceoryx2-bb-cxx)
+
+    find_package(iceoryx2-cxx CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE iceoryx2-cxx::static-lib-cxx)
