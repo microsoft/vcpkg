@@ -3990,7 +3990,7 @@
     },
     "intelrdfpmathlib": {
       "baseline": "20U2",
-      "port-version": 6
+      "port-version": 7
     },
     "intrusive-shared-ptr": {
       "baseline": "1.9",
