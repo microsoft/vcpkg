@@ -2,6 +2,8 @@
 #
 # vcpkg install huira
 
+set(VCPKG_BUILD_TYPE release) # Only headers and tools
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO huira-render/huira
@@ -10,29 +12,23 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-set(VCPKG_BUILD_TYPE release)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools HUIRA_APPS
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DHUIRA_APPS=ON          # build CLI tools → installed to tools/huira/
-        -DHUIRA_TESTS=OFF        # never build tests in a port
+        -DHUIRA_TESTS=OFF
 )
 
 vcpkg_cmake_install()
 
-# Relocate CLI tools from bin/ to the vcpkg-conventional tools directory.
-# List every executable your project installs.
-set(HUIRA_TOOLS
-    huira
-)
-
-# vcpkg_copy_tools also registers the tools so vcpkg add-path knows about them.
-vcpkg_copy_tools(
-    TOOL_NAMES ${HUIRA_TOOLS}
-    AUTO_CLEAN
-)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES huira AUTO_CLEAN)
+endif()
 
 # Fix up the installed CMake config so that paths are relocatable.
 vcpkg_cmake_config_fixup(
@@ -50,8 +46,5 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/bin"
 )
 
-# Install usage file
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-
-# Install the license. Adjust the filename to match your project.
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

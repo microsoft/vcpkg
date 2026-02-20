@@ -8,27 +8,14 @@
     "assimp",
     "cfitsio",
     "cspice",
-    "curl",
-    {
-      "name": "embree",
-      "default-features": false,
-      "features": [
-        "geometry-instance",
-        "geometry-triangle",
-        "tasking-tbb"
-      ]
-    },
-    "fftw3",
-    {
-      "name": "gdal",
-      "default-features": false
-    },
     "glm",
-    "indicators",
     "libjpeg-turbo",
     "libpng",
     "tbb",
-    "tiff",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -37,5 +24,17 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Build huira applications",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        },
+        "indicators"
+      ]
+    }
+  }
 }
