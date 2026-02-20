@@ -4,6 +4,7 @@
   "description": "A ray tracing library for space engineering and planetary science.",
   "homepage": "https://github.com/YOUR_ORG/huira",
   "license": "MIT",
+  "supports": "!android & !uwp & !xbox",
   "dependencies": [
     "assimp",
     "cfitsio",
@@ -28,7 +29,6 @@
   "features": {
     "tools": {
       "description": "Build huira command line tools",
-      "supports": "!android & !uwp & !xbox",
       "dependencies": [
         {
           "name": "curl",
