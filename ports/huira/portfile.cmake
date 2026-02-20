@@ -18,7 +18,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DHUIRA_APPS=ON          # build CLI tools → installed to tools/huira/
         -DHUIRA_TESTS=OFF        # never build tests in a port
-        -DBUILD_SHARED_LIBS=OFF  # vcpkg prefers static by default; flip if needed
 )
 
 vcpkg_cmake_install()
