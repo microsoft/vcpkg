@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         enable-msvc.patch
+        fix-pkgconfig-windows.patch
 )
 
 vcpkg_check_features(
