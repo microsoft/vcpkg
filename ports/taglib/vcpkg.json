@@ -1,6 +1,6 @@
 {
   "name": "taglib",
-  "version": "2.1.1",
+  "version": "2.2",
   "description": "TagLib Audio Meta-Data Library",
   "homepage": "https://taglib.org/",
   "license": "LGPL-2.1-only OR MPL-1.1",
