@@ -2,15 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
     REF v${VERSION}
-    SHA512 521e29921d7aed6ee9766a1781c28071447ec0046f02a23376798ac35c18feba37cc0f4c217df41abb1c4470b7bf7aae26cf88da0ec8136f64a969be9ff56426
+    SHA512 57aee7431049cebc10720e94310e2268da7bafa4535ef0971ea032b4a4f4d3b5656e220d895c5eb03805966a02a85a5e0538e72027d33a427cc7b6ca1a203c4a
     HEAD_REF master
-    PATCHES
-      android.patch
 )
 
 # disable docs
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "add_subdirectory(doc)" "")
-vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "include(linting_target)" "")
 
 # do not enable LTO by default
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)" "")
