@@ -1,10 +1,10 @@
 {
   "name": "minifb",
-  "version-date": "2023-09-21",
+  "version": "0.9.2",
   "description": "MiniFB (Mini FrameBuffer) is a small cross platform library that makes it easy to render (32-bit) pixels in a window.",
   "homepage": "https://github.com/emoon/minifb",
   "license": "MIT",
-  "supports": "!uwp",
+  "supports": "!uwp & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
