@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v${VERSION}
     SHA512 d3ce347a4085a582a8b11e5a7beb24c6d26185225a1acc62deebd3b1713dd456492c9c9d0827647723284f951366cf6f6a269e7ce1e50fe45f4702005f0d4254
     HEAD_REF master
+    PATCHES
+        0001-objc-only-on-apple.patch
 )
 
 vcpkg_cmake_configure(
