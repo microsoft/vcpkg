@@ -1,6 +1,7 @@
 {
   "name": "openldap",
   "version": "2.6.10",
+  "port-version": 1,
   "description": "OpenLDAP Software is an open source implementation of the Lightweight Directory Access Protocol.",
   "homepage": "https://www.openldap.org/software/",
   "license": "OLDAP-2.8",

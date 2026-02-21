@@ -1,0 +1,13 @@
+diff --git a/include/vulkan/vulkan_video.cppm b/include/vulkan/vulkan_video.cppm
+index bcf3e54..a530816 100644
+--- a/include/vulkan/vulkan_video.cppm
++++ b/include/vulkan/vulkan_video.cppm
+@@ -21,7 +21,7 @@ VULKAN_HPP_COMPILE_WARNING( VULKAN_HPP_CXX_MODULE_EXPERIMENTAL_WARNING )
+ 
+ #include <vulkan/vulkan_video.hpp>
+ 
+-export module vulkan_hpp:video;
++export module vulkan:video;
+ 
+ export namespace VULKAN_HPP_NAMESPACE::VULKAN_HPP_VIDEO_NAMESPACE
+ {
