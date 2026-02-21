@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BinomialLLC/basis_universal
     REF "${git_ref}"
-    SHA512 5dec1498ba61ca117d554a26463272d0b12547f8bd92fb5e60a37d4bc004c802535ca719a3c8d2968ab0dc8aeeb40760e3598897c87e62aa5f1ab3b5e882e66c
+    SHA512 92f5883333cd76219a5a69141b020faf0285453f98abcaa56f3d57eed36b2c21e9f22d1d265347d48c53f89f02bc2a5881e5df783a97898ec9434c2384ad23e6
     HEAD_REF master
     PATCHES
         export-cmake-config.diff
