@@ -1,0 +1,112 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b80f74acbc..47aff80f70 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -10,9 +10,13 @@ endif()
+ 
+ cmake_minimum_required(VERSION 3.30...3.31)
+ include(CheckCXXCompilerFlag)
++include(GNUInstallDirs)
+ 
+ project(bungee VERSION ${BUNGEE_VERSION})
+ set(CMAKE_CXX_STANDARD 20)
++find_package(cxxopts CONFIG REQUIRED)
++find_package(Eigen3 CONFIG REQUIRED)
++find_package(pffft CONFIG REQUIRED)
+ 
+ if (WIN32)
+   set(BUNGEE_EXPORT "__declspec(dllexport)")
+@@ -28,7 +32,7 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
+ else()
+   add_library(bungee_library STATIC ${BUNGEE_LIBRARY_HEADERS} ${BUNGEE_SOURCE_FILES})
+ endif()  
+-target_include_directories(bungee_library PRIVATE  submodules/eigen submodules .)
++target_include_directories(bungee_library PRIVATE .)
+ target_compile_definitions(bungee_library PRIVATE
+   BUNGEE_VISIBILITY=${BUNGEE_EXPORT}
+   BUNGEE_SELF_TEST=${BUNGEE_SELF_TEST}
+@@ -38,27 +42,22 @@ target_compile_definitions(bungee_library PRIVATE
+ )
+ set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp PROPERTIES COMPILE_DEFINITIONS BUNGEE_VERSION=\"${BUNGEE_VERSION}\")
+ target_compile_options(bungee_library PRIVATE $<$<CXX_COMPILER_ID:GNU,Clang>:-fwrapv>)
+-target_link_libraries(bungee_library PRIVATE pffft)
++target_link_libraries(bungee_library PRIVATE pffft::pffft Eigen3::Eigen)
+ if (ANDROID)
+   target_link_libraries(bungee_library PRIVATE log)
+ endif()
+ set_target_properties(bungee_library PROPERTIES OUTPUT_NAME bungee)
+ 
+-# Bungee command-line executable target: "bungee_executable"
+-add_executable(bungee_executable cmd/main.cpp)
+-target_include_directories(bungee_executable PRIVATE submodules/cxxopts/include .)
+-target_link_libraries(bungee_executable PRIVATE bungee_library)
+-set_target_properties(bungee_executable PROPERTIES 
+-  OUTPUT_NAME bungee
+-  INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${CMAKE_INSTALL_PREFIX}"
+-)
+-
+-# PFFFT as a static library
+-add_library(pffft EXCLUDE_FROM_ALL STATIC
+-  submodules/pffft/pffft.c
+-  submodules/pffft/fftpack.c
+-)
+-target_compile_options(pffft PRIVATE -ffast-math -fno-finite-math-only -fno-exceptions)
++if (BUNGEE_BUILD_SHARED_LIBRARY)
++  # Bungee command-line executable target: "bungee_executable"
++  add_executable(bungee_executable cmd/main.cpp)
++  target_include_directories(bungee_executable PRIVATE .)
++  target_link_libraries(bungee_executable PRIVATE bungee_library cxxopts::cxxopts)
++  set_target_properties(bungee_executable PROPERTIES 
++    OUTPUT_NAME bungee
++    INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${CMAKE_INSTALL_PREFIX}"
++  )
++endif()
+ 
+ # Installation
+ if (BUNGEE_BUILD_SHARED_LIBRARY)
+@@ -76,34 +75,20 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
+       MACOSX_PACKAGE_LOCATION Headers/bungee
+     )
+   endif()
+-  install(FILES 
+-    ${BUNGEE_LIBRARY_HEADERS}
+-    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/bungee
+-  )
+-  install(TARGETS bungee_library bungee_executable
+-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
+-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
+-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
+-    BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
+-    FRAMEWORK DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
+-  )
+   install(FILES 
+     cmd/main.cpp  
+-    submodules/cxxopts/include/cxxopts.hpp
+     DESTINATION ${CMAKE_INSTALL_PREFIX}/sample
+   )
+-
+-get_property(BUNGEE_LIBRARY_OUTPUT_NAME TARGET bungee_library PROPERTY OUTPUT_NAME)
+-
+-if (APPLE)
+-  set(PKGCONFIG_LINK_PATH -F)
+-  set(PKGCONFIG_LINK_FLAG "-framework ")
+-else()
+-  set(PKGCONFIG_LINK_PATH -L)
+-  set(PKGCONFIG_LINK_FLAG "-I")
+ endif()
+-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libbungee.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc @ONLY)
+ 
+-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}/pkgconfig)
+-
+-endif()
++install(FILES 
++  ${BUNGEE_LIBRARY_HEADERS}
++  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/bungee
++)
++install(TARGETS bungee_library
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR}
++  FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
++)
