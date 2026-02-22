@@ -10,7 +10,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_TESTS=OFF
-        ${OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
