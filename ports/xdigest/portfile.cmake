@@ -6,10 +6,16 @@ vcpkg_from_github(
     HEAD_REF trunk
 )
 
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(NASM)
+    list(APPEND OPTIONS "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
+else()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_TESTS=OFF
+        ${OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
