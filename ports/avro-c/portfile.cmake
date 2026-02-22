@@ -3,12 +3,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/avro
-    REF "release-${VERSION}"
-    SHA512 4e7fd7ebb41f6149a499d0d38babd99d07f936143b47a60f7c568a589fb0e6369301c7230bde518b554eaeaa9ded1ed1fae2661cbd5ebc49fb5f22d97c066f05
-    HEAD_REF master
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/avro/avro-${VERSION}/avro-src-${VERSION}.tar.gz"
+    FILENAME "avro-src-${VERSION}.tar.gz"
+    SHA512 0d86bfece0f12f8bc424e27e71e3e6b828c4280fa1a6d7dc7e0d58bff2351f2c1fd3ccb98c1291dfc6c67d9cb5a0bdb7bb9f36ba5bd6b26fa9545f358db42663
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         avro.patch          # Private vcpkg build fixes
         bswap.patch

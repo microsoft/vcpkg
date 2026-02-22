@@ -1,7 +1,7 @@
 {
   "name": "netcdf-c",
   "version": "4.9.3",
-  "port-version": 2,
+  "port-version": 3,
   "description": "A set of self-describing, machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.",
   "homepage": "https://github.com/Unidata/netcdf-c",
   "license": null,

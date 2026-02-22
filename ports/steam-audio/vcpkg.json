@@ -1,6 +1,6 @@
 {
   "name": "steam-audio",
-  "version": "4.7.0",
+  "version": "4.8.1",
   "description": "Valve's steam audio library",
   "homepage": "https://github.com/ValveSoftware/steam-audio",
   "license": "Apache-2.0",

@@ -1,13 +1,13 @@
 diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
-index e3eaca4..ef3644b 100644
+index 47bb0bd72f..ea76b75425 100644
 --- a/src/libbson/CMakeLists.txt
 +++ b/src/libbson/CMakeLists.txt
-@@ -302,7 +302,7 @@ endif () # ENABLE_EXAMPLES
- # 8888888 888  888  88888P'  "Y888 "Y888888 888 888
+@@ -300,7 +300,7 @@ endif () # ENABLE_EXAMPLES
  
- set (BSON_HEADER_INSTALL_DIR
--   "${CMAKE_INSTALL_INCLUDEDIR}/libbson-${BSON_API_VERSION}"
-+   "${CMAKE_INSTALL_INCLUDEDIR}"
- )
- function(install_export_target target)
-    # Tell pkg-config where the headers are going:
+ # Infix directory for all libbson headers.
+ if(NOT DEFINED BSON_INSTALL_INCLUDEDIR)
+-   set(BSON_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/bson-${PROJECT_VERSION}")
++   set(BSON_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}")
+ endif()
+ # Infix directory for all libbson CMake package files
+ if(NOT DEFINED BSON_INSTALL_CMAKEDIR)

@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     ARCHIVE_PATH
     URLS "https://archive.apache.org/dist/arrow/arrow-${VERSION}/apache-arrow-${VERSION}.tar.gz"
     FILENAME apache-arrow-${VERSION}.tar.gz
-    SHA512 89da6de7eb2513c797d6671e1addf40b8b156215b481cf2511fa69faa16547c52d8220727626eeda499e4384d276e03880cd920aaab41c3d15106743d51a90a6
+    SHA512 c687e50dfcdbf7e0e39710224360d35d9aa734452b3a47adc8c101f3019b6b4116310c05b9f3cd0a5ed4ad9b7bd8fb88edb70e79b3cbd413a57e5e35e4554a6c
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH
@@ -12,7 +12,7 @@ vcpkg_extract_source_archive(
         0003-android-musl.patch
         0004-android-datetime.patch
         0005-cmake-msvcruntime.patch
-        0006-pcg-msvc-arm64.patch
+        0007-use-vcpkg-mimalloc.patch
 )
 
 # Check cpp/cmake_modules/DefineOptions.cmake for option dependencies -

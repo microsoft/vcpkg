@@ -1,10 +1,13 @@
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/arrow-nanoarrow
-    REF "2cfba631b40886f1418a463f3b7c4552c8ae0dc7"
-    SHA512 9892e7e06be4c53ba884b50e0c4efbe7bccca229060e8ee534999c3a31cf74f1e3f2ec8ad778cc3b50e8834b8f11ac52b86e68c4e28365dae581917aded7ca6f
-    HEAD_REF main
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/arrow/apache-arrow-nanoarrow-${VERSION}/apache-arrow-nanoarrow-${VERSION}.tar.gz"
+    FILENAME "apache-arrow-nanoarrow-${VERSION}.tar.gz"
+    SHA512 98f9f4c8dada0175e39e02d2baa01d0f63ad94636925cd289cbffa423de26bf0ede437aaa1ec10ff91e7d375e72cfddd950d040602520ab7891ab4c6337ce4f7
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty")

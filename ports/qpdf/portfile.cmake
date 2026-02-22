@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO qpdf/qpdf
-    REF v${VERSION}
-    SHA512 19e848295b95863d378955ff6606af37209e2b1698f1b641b820beec122f2eefb6dee28b466c29bcef52c0fb591be739bf016b3497a1fa189bedea6695d1f6f8
+    REF "v${VERSION}"
+    SHA512 1aa9f11dc561e2ddf95a3052f6224269ab73cf1dddc5fefcc4e021351da3472819ed5979fe2073501a04f25a2fcbb126726437dbe8793d89d3f27739d599e6f6
     PATCHES
         cmake-library-only.patch
 )

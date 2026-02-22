@@ -1,7 +1,6 @@
 {
   "name": "lexilla",
-  "version": "5.4.5",
-  "port-version": 1,
+  "version": "5.4.6",
   "description": "Lexilla is a free library of language lexers that can be used with the Scintilla editing component. It comes with complete source code and a license that permits use in any free project or commercial product.",
   "homepage": "https://www.scintilla.org/Lexilla.html",
   "supports": "windows & !uwp & !mingw",

@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libscran/umappp
     REF "v${VERSION}"
-    SHA512 cb934d4989c63485d457423419dc749b5d775f800d8a0bee65566b5f5def00ce1720eb583cb1e5bd277bc04b9cd0f31a4b1b2cd65f50ac2564a1970b00e42d16
+    SHA512 c187ccd520d5304726ea75a38a040a37bb46e04bb5b51bf3deb0abb11fb2b97dac577057c1673af196ddb6f9eec2f1d8a944a58a108db7fe871dc14bfeb8fb61
     HEAD_REF master
+    PATCHES
+        0001-fix-eigen3-dependency.patch
 )
 
 set(VCPKG_BUILD_TYPE "release") # header-only port

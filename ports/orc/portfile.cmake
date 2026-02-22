@@ -1,11 +1,14 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/orc
-    REF "v${VERSION}"
-    SHA512 43353b3c2ac752b388518de017ae9363f45088b9abe995ec0d740575c2b8514b14e0aca36454aab7cbb9d8adf7c93be188317a5997d8931b8ecf9f0a81a59553
-    HEAD_REF main
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/orc/orc-${VERSION}/orc-${VERSION}.tar.gz"
+    FILENAME "orc-${VERSION}.tar.gz"
+    SHA512 6be97bf80ca89765bfecdb7d24b7f2967af79f2cbf659ce835ab9345e2a356400942143f4c6b3c25e6ded1f5df811bd6be6d1005e8b99716d842b43072f61786
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         external-project.diff
         tools-build.diff

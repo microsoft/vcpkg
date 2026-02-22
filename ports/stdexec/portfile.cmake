@@ -1,13 +1,15 @@
-set(VCPKG_BUILD_TYPE release) # header-only
-
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/stdexec
-    REF 089c4613385f808c3b39c4f4915f658157013a36
-    SHA512 a9c1d4009b71bfc280801814272319312b8edcd3106c5fd8fdab6fc2eb2c64be4a01374026de02129389e4d2280599b14a3c037566a1bbefcd6b48c5052d583b
+    REF 8cfc3f1983d3521b341864074123281011f998c1
+    SHA512 6f06efe9f5d8178980982d984e1d4f386a702dd55e1b745d34cee614d323b6b16386106b9c7d88cf71432ac72f46dec2dec70ca29e1098e4806f5e7982e16018
     HEAD_REF main
     PATCHES
         fix-version.patch
+        fix-clangd-helper-file-basedir.patch
 )
 
 vcpkg_from_github(
@@ -72,6 +74,7 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/stdexec)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

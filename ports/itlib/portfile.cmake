@@ -3,7 +3,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO iboB/itlib
   REF "v${VERSION}"
-  SHA512 9995b083cedde1883acd0f60cb6463dc1af21c0dde0b0c588db9ae311a8929c15c7d1c1853ab15ac79d77035ce3cef568eac1a0358b16b2015acf638c2281054
+  SHA512 30137dffdbb9f708ca8e04c0d04e7af7f4d640cd9cd72ee99a40ca81d3f243c5bc1574aa4ab3cdb6eee8b1f11ada5787ac66aa08cc30e9de0d569d6d43d4cfd4
   HEAD_REF master
 )
 

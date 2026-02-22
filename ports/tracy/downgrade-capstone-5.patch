@@ -1,0 +1,92 @@
+diff --git a/profiler/src/profiler/TracySourceView.cpp b/profiler/src/profiler/TracySourceView.cpp
+index c79948b8..2795bf92 100644
+--- a/profiler/src/profiler/TracySourceView.cpp
++++ b/profiler/src/profiler/TracySourceView.cpp
+@@ -4,7 +4,7 @@
+ #include <sstream>
+ #include <stdio.h>
+ 
+-#include <capstone.h>
++#include <capstone/capstone.h>
+ 
+ #include "imgui.h"
+ #include "TracyCharUtil.hpp"
+@@ -713,7 +713,7 @@ bool SourceView::Disassemble( uint64_t symAddr, const Worker& worker )
+         rval = cs_open( CS_ARCH_ARM, CS_MODE_ARM, &handle );
+         break;
+     case CpuArchArm64:
+-        rval = cs_open( CS_ARCH_AARCH64, CS_MODE_ARM, &handle );
++        rval = cs_open( CS_ARCH_ARM64, CS_MODE_ARM, &handle );
+         break;
+     default:
+         assert( false );
+@@ -778,9 +778,9 @@ bool SourceView::Disassemble( uint64_t symAddr, const Worker& worker )
+                     }
+                     break;
+                 case CpuArchArm64:
+-                    if( detail.aarch64.op_count == 1 && detail.aarch64.operands[0].type == AARCH64_OP_IMM )
++                    if( detail.arm64.op_count == 1 && detail.arm64.operands[0].type == ARM64_OP_IMM )
+                     {
+-                        jumpAddr = (uint64_t)detail.aarch64.operands[0].imm;
++                        jumpAddr = (uint64_t)detail.arm64.operands[0].imm;
+                     }
+                     break;
+                 default:
+@@ -865,18 +865,18 @@ bool SourceView::Disassemble( uint64_t symAddr, const Worker& worker )
+                 }
+                 break;
+             case CpuArchArm64:
+-                for( uint8_t i=0; i<detail.aarch64.op_count; i++ )
++                for( uint8_t i=0; i<detail.arm64.op_count; i++ )
+                 {
+                     uint8_t type = 0;
+-                    switch( detail.aarch64.operands[i].type )
++                    switch( detail.arm64.operands[i].type )
+                     {
+-                    case AARCH64_OP_IMM:
++                    case ARM64_OP_IMM:
+                         type = 0;
+                         break;
+-                    case AARCH64_OP_REG:
++                    case ARM64_OP_REG:
+                         type = 1;
+                         break;
+-                    case AARCH64_OP_MEM:
++                    case ARM64_OP_MEM:
+                         type = 2;
+                         break;
+                     default:
+diff --git a/server/TracyWorker.cpp b/server/TracyWorker.cpp
+index d94a1ab5..437f4a78 100644
+--- a/server/TracyWorker.cpp
++++ b/server/TracyWorker.cpp
+@@ -21,7 +21,7 @@
+ #include <inttypes.h>
+ #include <sys/stat.h>
+ 
+-#include <capstone.h>
++#include <capstone/capstone.h>
+ 
+ #define ZDICT_STATIC_LINKING_ONLY
+ #include <zdict.h>
+@@ -3912,7 +3912,7 @@ void Worker::AddSymbolCode( uint64_t ptr, const char* data, size_t sz )
+         rval = cs_open( CS_ARCH_ARM, CS_MODE_ARM, &handle );
+         break;
+     case CpuArchArm64:
+-        rval = cs_open( CS_ARCH_AARCH64, CS_MODE_ARM, &handle );
++        rval = cs_open( CS_ARCH_ARM64, CS_MODE_ARM, &handle );
+         break;
+     default:
+         assert( false );
+@@ -3952,9 +3952,9 @@ void Worker::AddSymbolCode( uint64_t ptr, const char* data, size_t sz )
+                         }
+                         break;
+                     case CpuArchArm64:
+-                        if( detail.aarch64.op_count == 1 && detail.aarch64.operands[0].type == AARCH64_OP_IMM )
++                        if( detail.arm64.op_count == 1 && detail.arm64.operands[0].type == ARM64_OP_IMM )
+                         {
+-                            callAddr = (uint64_t)detail.aarch64.operands[0].imm;
++                            callAddr = (uint64_t)detail.arm64.operands[0].imm;
+                         }
+                         break;
+                     default:

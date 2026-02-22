@@ -1,6 +1,6 @@
 {
   "name": "behaviortree-cpp",
-  "version": "4.8.4",
+  "version": "4.9.0",
   "description": "Behavior Trees Library in C++.",
   "homepage": "https://www.behaviortree.dev",
   "supports": "!uwp",
@@ -8,7 +8,6 @@
     "boost-coroutine2",
     "cppzmq",
     "flatbuffers",
-    "foonathan-lexy",
     "minitrace",
     "tinyxml2",
     {
