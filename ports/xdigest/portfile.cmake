@@ -9,7 +9,7 @@ vcpkg_from_github(
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(NASM)
     list(APPEND OPTIONS "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
-else()
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
