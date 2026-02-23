@@ -3930,7 +3930,7 @@
     },
     "imguizmo": {
       "baseline": "2024-05-29",
-      "port-version": 1
+      "port-version": 2
     },
     "immer": {
       "baseline": "0.9.1",
