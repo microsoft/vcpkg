@@ -25,7 +25,7 @@ index b80f74acbc..47aff80f70 100644
  target_compile_definitions(bungee_library PRIVATE
    BUNGEE_VISIBILITY=${BUNGEE_EXPORT}
    BUNGEE_SELF_TEST=${BUNGEE_SELF_TEST}
-@@ -38,27 +42,22 @@ target_compile_definitions(bungee_library PRIVATE
+@@ -38,27 +42,12 @@ target_compile_definitions(bungee_library PRIVATE
  )
  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp PROPERTIES COMPILE_DEFINITIONS BUNGEE_VERSION=\"${BUNGEE_VERSION}\")
  target_compile_options(bungee_library PRIVATE $<$<CXX_COMPILER_ID:GNU,Clang>:-fwrapv>)
@@ -51,16 +51,6 @@ index b80f74acbc..47aff80f70 100644
 -  submodules/pffft/fftpack.c
 -)
 -target_compile_options(pffft PRIVATE -ffast-math -fno-finite-math-only -fno-exceptions)
-+if (BUNGEE_BUILD_SHARED_LIBRARY)
-+  # Bungee command-line executable target: "bungee_executable"
-+  add_executable(bungee_executable cmd/main.cpp)
-+  target_include_directories(bungee_executable PRIVATE .)
-+  target_link_libraries(bungee_executable PRIVATE bungee_library cxxopts::cxxopts)
-+  set_target_properties(bungee_executable PROPERTIES 
-+    OUTPUT_NAME bungee
-+    INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${CMAKE_INSTALL_PREFIX}"
-+  )
-+endif()
  
  # Installation
  if (BUNGEE_BUILD_SHARED_LIBRARY)
