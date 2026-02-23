@@ -5017,7 +5017,7 @@
       "port-version": 0
     },
     "libid3tag": {
-      "baseline": "0.16.3",
+      "baseline": "0.16.4",
       "port-version": 0
     },
     "libideviceactivation": {
