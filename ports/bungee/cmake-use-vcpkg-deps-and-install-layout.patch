@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b80f74acbc..47aff80f70 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -10,9 +10,13 @@ endif()
+@@ -10,9 +10,12 @@ endif()
  
  cmake_minimum_required(VERSION 3.30...3.31)
  include(CheckCXXCompilerFlag)
@@ -10,7 +10,6 @@ index b80f74acbc..47aff80f70 100644
  
  project(bungee VERSION ${BUNGEE_VERSION})
  set(CMAKE_CXX_STANDARD 20)
-+find_package(cxxopts CONFIG REQUIRED)
 +find_package(Eigen3 CONFIG REQUIRED)
 +find_package(pffft CONFIG REQUIRED)
  
