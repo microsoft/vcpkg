@@ -1,0 +1,14 @@
+diff --git "a/Plugins/CMakeLists.txt" "b/Plugins/CMakeLists.txt"
+index 6c5e96c6..2ea4ad23 100644
+--- "a/Plugins/CMakeLists.txt"
++++ "b/Plugins/CMakeLists.txt"
+@@ -5,4 +5,8 @@ if(Qt5Core_FOUND)
+     endif()
+ endif()
+ 
+-add_subdirectory(wbp)
++if (USING_VCPKG)
++    message(STATUS "VCPKG is enabled disable the webp plugin")
++else()
++    add_subdirectory(wbp)
++endif()
