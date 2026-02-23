@@ -1,7 +1,6 @@
 {
   "name": "asio",
   "version": "1.32.0",
-  "port-version": 1,
   "description": "Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.",
   "homepage": "https://think-async.com/Asio/",
   "documentation": "https://think-async.com/Asio/Documentation.html",
@@ -33,17 +32,6 @@
       "description": "Boost.Regex (optional) if you use any of the read_until() or async_read_until() overloads that take a boost::regex parameter.",
       "dependencies": [
         "boost-regex"
-      ]
-    },
-    "wolfssl": {
-      "description": "WolfSSL (optional) if you use Asio's SSL support.",
-      "dependencies": [
-        {
-          "name": "wolfssl",
-          "features": [
-            "asio"
-          ]
-        }
       ]
     }
   }
