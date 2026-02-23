@@ -54,7 +54,7 @@ index b80f74acbc..47aff80f70 100644
  
  # Installation
  if (BUNGEE_BUILD_SHARED_LIBRARY)
-@@ -76,34 +75,20 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
+@@ -76,34 +75,33 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
        MACOSX_PACKAGE_LOCATION Headers/bungee
      )
    endif()
@@ -100,3 +100,16 @@ index b80f74acbc..47aff80f70 100644
 +  BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR}
 +  FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +)
++
++get_property(BUNGEE_LIBRARY_OUTPUT_NAME TARGET bungee_library PROPERTY OUTPUT_NAME)
++
++if (APPLE)
++  set(PKGCONFIG_LINK_PATH -F)
++  set(PKGCONFIG_LINK_FLAG "-framework ")
++else()
++  set(PKGCONFIG_LINK_PATH -L)
++  set(PKGCONFIG_LINK_FLAG "-I")
++endif()
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libbungee.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc @ONLY)
++
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
