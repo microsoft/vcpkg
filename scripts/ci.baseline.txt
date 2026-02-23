@@ -43,6 +43,9 @@ apsi:arm-neon-android=fail
 apsi:x64-android=fail
 arpack-ng:x64-windows-static-md=fail
 arpack-ng:x64-windows-static=fail
+arcticdb-sparrow:arm-neon-android=fail # https://github.com/man-group/sparrow/issues/653
+arcticdb-sparrow:arm64-android=fail
+arcticdb-sparrow:x64-android=fail
 # Broken with CUDA 12; needs update to 3.8.3 and https://github.com/arrayfire/arrayfire/issues/3349 fixed
 arrayfire:x64-linux=fail
 azure-storage-cpp:arm64-osx=fail
