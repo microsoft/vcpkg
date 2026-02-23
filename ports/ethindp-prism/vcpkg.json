@@ -1,9 +1,9 @@
 {
   "name": "ethindp-prism",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "The Platform-agnostic Reader Interface for Speech and Messages",
   "license": "MPL-2.0",
-  "supports": "!uwp & !(static & staticcrt)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
