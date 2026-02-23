@@ -5,7 +5,7 @@ if ("docking-experimental" IN_LIST FEATURES)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}-docking"
-        SHA512 4618b8bd6e65ac27cd7cecb3469d135622279d83f8a580c028231578f7023c4465911c5878ee7e40c2f6dda606aef86f27c3cecfb7bc9a6022bd1d89eed17c29
+        SHA512 14cf795a95deb8f3ba45c2eed3c26584b713c0cf17e01939a372c033c344ba78ddfa4d0d63619243b639779aa1eacf452771d1b6a1d9b80d13f8cc4d0b9d8e6d
         HEAD_REF docking
     )
 else()
@@ -13,7 +13,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ocornut/imgui
         REF "v${VERSION}"
-        SHA512 382b862a285464bd311c79a0ff07885e42300d79704bb65cd1cbbf35cef63f7f50784ed23f7479e4490bbaae0d23ea1b2b067a3571e0b442d390824f9611bd59
+        SHA512 1742eaa4811fc63f4ed3804ecd6970cbc0a960c85014903e302ab082ccf7ff7488d534bd4cb7a6d7c2a71824cb80d6c9923ea5a4951190941121cf1b05e3df9d
         HEAD_REF master
     )
 endif()
@@ -65,7 +65,7 @@ if ("test-engine" IN_LIST FEATURES)
         OUT_SOURCE_PATH TEST_ENGINE_SOURCE_PATH
         REPO ocornut/imgui_test_engine
         REF "v${VERSION}"
-        SHA512 7acaffb9bb9f5ae0171d5de78a310d167b01c40722f8cceb8e34a85abecda92a8e5481d6110301654afaa6f4eb0406c19e7049f33d446774c32dc181e9255a64
+        SHA512 f125ed5e8345fa9c7e9761ad738c68e2b51bd7cfe338dbb1bb4235d65f9430dc1555beb1f12409941ad5f1c8580409b11bd52db3b159a3d08a61000507900104
         HEAD_REF master
     )
 
