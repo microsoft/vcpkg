@@ -8,15 +8,15 @@ index b0ac35c53c..d212320065 100644
  #include <cstdlib>
 -#include <unistd.h>
 +#if defined(_WIN32)
-+#include<io.h>
-+#include<process.h>
++#include <io.h>
++#include <process.h>
 +#ifndef STDERR_FILENO
 +#define STDERR_FILENO 2
 +#endif
 +#define getpid _getpid
 +#define write _write
 +#else
-+#include<unistd.h>
++#include <unistd.h>
 +#endif
  #include <array>
  
