@@ -9881,7 +9881,7 @@
       "port-version": 3
     },
     "tinycbor": {
-      "baseline": "0.6.1",
+      "baseline": "7.0",
       "port-version": 0
     },
     "tinycolormap": {
