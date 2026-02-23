@@ -1,0 +1,24 @@
+microlog provides CMake targets:
+
+    find_package(microlog CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE microlog::microlog)
+
+The library compiles ulog.c into your project at build time.
+Optional compile definitions (pass via target_compile_definitions):
+
+    ULOG_BUILD_COLOR=1                  # ANSI color output
+    ULOG_BUILD_TIME=1                   # timestamp in each log line
+    ULOG_BUILD_SOURCE_LOCATION=0        # disable file:line prefix (default: 1)
+    ULOG_BUILD_LEVEL_SHORT=1            # short level tags: D/I/W/E (default: DEBUG/INFO/…)
+    ULOG_BUILD_PREFIX_SIZE=64           # enable custom per-output prefix (bytes; 0=off)
+    ULOG_BUILD_EXTRA_OUTPUTS=4          # number of extra output handlers (0=off)
+    ULOG_BUILD_WARN_NOT_ENABLED=0       # suppress stub warnings for disabled features (default: 1)
+    ULOG_BUILD_TOPICS_MODE=             # enable topics
+        ULOG_BUILD_TOPICS_MODE_OFF/ ULOG_BUILD_TOPICS_MODE_STATIC / ULOG_BUILD_TOPICS_MODE_DYNAMIC
+    ULOG_BUILD_TOPICS_STATIC_NUM=8      # number of static topics (requires TOPICS_MODE=STATIC)
+    ULOG_BUILD_DYNAMIC_CONFIG=1         # runtime feature toggle API (overrides other flags)
+    ULOG_BUILD_DISABLED=1               # replace all log calls with ((void)0) no-ops
+    ULOG_BUILD_CONFIG_HEADER_ENABLED=1  # load settings from ulog_config.h instead of defines
+
+# Full documentation: https://github.com/an-dr/microlog
+# Check optional library extentions here: https://github.com/an-dr/microlog/tree/main/extensions
