@@ -6836,6 +6836,10 @@
       "baseline": "1.0.3.18",
       "port-version": 0
     },
+    "net-snmp": {
+      "baseline": "5.9.5.2",
+      "port-version": 0
+    },
     "netcdf-c": {
       "baseline": "4.9.3",
       "port-version": 3
