@@ -3922,7 +3922,7 @@
     },
     "imgui-node-editor": {
       "baseline": "0.9.3",
-      "port-version": 2
+      "port-version": 3
     },
     "imgui-sfml": {
       "baseline": "3.0",
