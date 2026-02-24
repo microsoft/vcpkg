@@ -6,7 +6,6 @@ vcpkg_from_github(
     REF refs/tags/release/v${VERSION}
     SHA512 725332e20aace7215c3cb7a4973e6fe72e6ed80c451c513c4caade0f8e5a276e0725733637fe30c6e3312a68fba3dcdad50ab2f17f52d4120dbecef970fa4e70
     PATCHES
-        fix-usage.patch
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LLHTTP_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LLHTTP_BUILD_SHARED)
