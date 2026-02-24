@@ -10,15 +10,15 @@
     "fast-float",
     "libzip",
     {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
     {
       "name": "vcpkg-cmake-config",
-      "host": true
-    },
-    {
-      "name": "pkgconf",
       "host": true
     },
     "zlib"
