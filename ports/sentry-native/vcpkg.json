@@ -1,11 +1,16 @@
 {
   "name": "sentry-native",
   "version": "0.13.0",
+  "port-version": 1,
   "description": "Sentry SDK for C, C++ and native applications.",
   "homepage": "https://sentry.io/",
   "license": "MIT",
   "supports": "osx | linux | (!arm & !uwp)",
   "dependencies": [
+    {
+      "name": "libunwind",
+      "platform": "linux"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
