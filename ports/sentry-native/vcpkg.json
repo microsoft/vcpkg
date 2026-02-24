@@ -8,16 +8,16 @@
   "supports": "osx | linux | (!arm & !uwp)",
   "dependencies": [
     {
+      "name": "libunwind",
+      "platform": "linux"
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "libunwind",
-      "platform": "linux"
     }
   ],
   "default-features": [
