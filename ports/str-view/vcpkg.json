@@ -1,6 +1,6 @@
 {
   "name": "str-view",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A simple, robust, and convenient library for read-only string handling in C.",
   "homepage": "https://github.com/agl-alexglopez/str_view",
   "license": "MIT",
