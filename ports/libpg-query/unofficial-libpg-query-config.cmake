@@ -15,10 +15,8 @@ if(NOT TARGET unofficial::libpg-query::libpg-query)
 
     set_property(TARGET unofficial::libpg-query::libpg-query APPEND PROPERTY
         INTERFACE_LINK_LIBRARIES
-            "$<$<CONFIG:Debug>:${PROTOBUF_C_LIBRARY_DEBUG}>"
-            "$<$<NOT:$<CONFIG:Debug>>:${PROTOBUF_C_LIBRARY_RELEASE}>"
-            "$<$<CONFIG:Debug>:${XXHASH_LIBRARY_DEBUG}>"
-            "$<$<NOT:$<CONFIG:Debug>>:${XXHASH_LIBRARY_RELEASE}>"
+            protobuf-c::protobuf-c
+            xxHash::xxhash
     )
 
     find_library(LIBPG_QUERY_LIBRARY_RELEASE NAMES pg_query
