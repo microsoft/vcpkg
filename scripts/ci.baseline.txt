@@ -265,9 +265,6 @@ iceoryx:x64-android=fail
 imgui-sfml:arm-neon-android=fail
 imgui-sfml:arm64-android=fail
 imgui-sfml:x64-android=fail
-intelrdfpmathlib:arm-neon-android=fail
-intelrdfpmathlib:arm64-android=fail
-intelrdfpmathlib:x64-android=fail
 isal:x64-android=fail
 # Failing on try_run() in cross builds
 itk:arm-neon-android=fail
