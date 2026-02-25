@@ -14,18 +14,6 @@ if(NOT TARGET unofficial::libpg-query::libpg-query)
         INTERFACE_LINK_LIBRARIES "protobuf-c::protobuf-c;xxHash::xxhash"
     )
 
-    find_library(LIBPG_QUERY_LIBRARY_RELEASE NAMES pg_query
-        PATHS "${_IMPORT_PREFIX}"
-        PATH_SUFFIXES lib
-        NO_DEFAULT_PATH
-    )
-    if(LIBPG_QUERY_LIBRARY_RELEASE)
-        set_property(TARGET unofficial::libpg-query::libpg-query APPEND PROPERTY IMPORTED_CONFIGURATIONS Release)
-        set_target_properties(unofficial::libpg-query::libpg-query PROPERTIES
-            IMPORTED_LOCATION_RELEASE "${LIBPG_QUERY_LIBRARY_RELEASE}"
-        )
-    endif()
-
     find_library(LIBPG_QUERY_LIBRARY_DEBUG NAMES pg_query
         PATHS "${_IMPORT_PREFIX}/debug"
         PATH_SUFFIXES lib
@@ -35,6 +23,18 @@ if(NOT TARGET unofficial::libpg-query::libpg-query)
         set_property(TARGET unofficial::libpg-query::libpg-query APPEND PROPERTY IMPORTED_CONFIGURATIONS Debug)
         set_target_properties(unofficial::libpg-query::libpg-query PROPERTIES
             IMPORTED_LOCATION_DEBUG "${LIBPG_QUERY_LIBRARY_DEBUG}"
+        )
+    endif()
+
+    find_library(LIBPG_QUERY_LIBRARY_RELEASE NAMES pg_query
+        PATHS "${_IMPORT_PREFIX}"
+        PATH_SUFFIXES lib
+        NO_DEFAULT_PATH
+    )
+    if(LIBPG_QUERY_LIBRARY_RELEASE)
+        set_property(TARGET unofficial::libpg-query::libpg-query APPEND PROPERTY IMPORTED_CONFIGURATIONS Release)
+        set_target_properties(unofficial::libpg-query::libpg-query PROPERTIES
+            IMPORTED_LOCATION_RELEASE "${LIBPG_QUERY_LIBRARY_RELEASE}"
         )
     endif()
 
