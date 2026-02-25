@@ -1,6 +1,6 @@
 {
   "name": "odbccpp",
-  "version": "1.2",
+  "version": "1.4",
   "description": "An object-oriented C++ wrapper of the ODBC API from SAP",
   "homepage": "https://github.com/SAP/odbc-cpp-wrapper",
   "license": "Apache-2.0",
