@@ -5,6 +5,7 @@ vcpkg_from_github(
         SHA512 acfd0e4862248c475c674f7ee7855f809965a854e62ea0cd847008be7a9ca3c5a03ac87cac889f036555229762405094ca9811817dd45dbdaae941b5b41ae356
         PATCHES
             fix-lib3mf-config-root.patch
+            fix-dependency-resolution-required.patch
     )
 
 set(_lib3mf_build_shared OFF)
