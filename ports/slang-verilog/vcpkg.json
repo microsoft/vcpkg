@@ -1,5 +1,5 @@
 {
-  "name": "slang",
+  "name": "slang-verilog",
   "version": "10.0",
   "description": "SystemVerilog compiler and language services",
   "homepage": "https://github.com/MikePopoloski/slang",
