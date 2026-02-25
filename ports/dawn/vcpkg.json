@@ -1,7 +1,6 @@
 {
   "name": "dawn",
-  "version": "20251202.213730",
-  "port-version": 2,
+  "version": "20260201.182244",
   "description": "Dawn is an open-source and cross-platform implementation of the WebGPU standard.",
   "homepage": "https://dawn.googlesource.com/dawn",
   "license": "BSD-3-Clause",

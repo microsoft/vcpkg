@@ -3,11 +3,10 @@ include("${CMAKE_CURRENT_LIST_DIR}/skia-functions.cmake")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/skia
-    REF "ee20d565acb08dece4a32e3f209cdd41119015ca"
-    SHA512 AFA54CB14B76E9B2F40498C5DAF93CEC951D12D7F3487DEBA6F8F94A66D046A5625561E1CCD65F2E9EF5E2FC1A3158C3DA4FB9658BCF268248A34C49DEA90D3A
+    REF "2ab8add5be2c46eb6238f4c217f6d6dbc9bccd23"
+    SHA512 c86873a4deb83b25805fd5c0a4ea10706ba454ee82901d7eae936287d8aa5758b8de5a2241d56ebd5f7053b0d2df23b21cbe9b9a6bba3cdd47ccf033114bde79
     PATCHES
         # disable-dev-test.patch
-        skia-include-string.patch
         bentleyottmann-build.patch
         graphite.patch
         vulkan-headers.patch
@@ -19,7 +18,6 @@ vcpkg_from_github(
         allow-disabling-lib-dl.patch
         always-build-pathops.patch
         skstrendswith-dllexport.patch
-        skpath-enable-edit-methods.patch # See SkPath section in https://github.com/google/skia/blob/chrome/m143/RELEASE_NOTES.md
         dawn.patch
         skcms-dllexport.patch
 )
@@ -67,12 +65,12 @@ declare_external_from_git(spirv-cross
 )
 declare_external_from_git(spirv-headers
     URL "https://github.com/KhronosGroup/SPIRV-Headers.git"
-    REF "b824a462d4256d720bebb40e78b9eb8f78bbb305"
+    REF "babee77020ff82b571d723ce2c0262e2ec0ee3f1"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(spirv-tools
     URL "https://github.com/KhronosGroup/SPIRV-Tools.git"
-    REF "f410b3c178740f9f5bd28d5b22a71d4bc10acd49"
+    REF "65b2ace21293057714b7fa1e87bd764d3dcef305"
     LICENSE_FILE LICENSE
 )
 declare_external_from_git(wuffs
