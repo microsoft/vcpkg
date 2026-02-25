@@ -1,17 +1,14 @@
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO 3MFConsortium/lib3mf
-        REF "v${VERSION}"
-        SHA512 acfd0e4862248c475c674f7ee7855f809965a854e62ea0cd847008be7a9ca3c5a03ac87cac889f036555229762405094ca9811817dd45dbdaae941b5b41ae356
-        PATCHES
-            fix-lib3mf-config-root.patch
-            fix-dependency-resolution-required.patch
-    )
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO 3MFConsortium/lib3mf
+    REF "v${VERSION}"
+    SHA512 acfd0e4862248c475c674f7ee7855f809965a854e62ea0cd847008be7a9ca3c5a03ac87cac889f036555229762405094ca9811817dd45dbdaae941b5b41ae356
+    PATCHES
+        fix-lib3mf-config-root.patch
+        fix-dependency-resolution-required.patch
+)
 
-set(_lib3mf_build_shared OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(_lib3mf_build_shared ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" _lib3mf_build_shared)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
