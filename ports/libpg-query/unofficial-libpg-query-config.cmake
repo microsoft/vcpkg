@@ -11,12 +11,7 @@ if(NOT TARGET unofficial::libpg-query::libpg-query)
     add_library(unofficial::libpg-query::libpg-query UNKNOWN IMPORTED)
     set_target_properties(unofficial::libpg-query::libpg-query PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
-    )
-
-    set_property(TARGET unofficial::libpg-query::libpg-query APPEND PROPERTY
-        INTERFACE_LINK_LIBRARIES
-            protobuf-c::protobuf-c
-            xxHash::xxhash
+        INTERFACE_LINK_LIBRARIES "protobuf-c::protobuf-c;xxHash::xxhash"
     )
 
     find_library(LIBPG_QUERY_LIBRARY_RELEASE NAMES pg_query
