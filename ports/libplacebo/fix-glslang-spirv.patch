@@ -1,0 +1,57 @@
+diff --git a/src/glsl/meson.build b/src/glsl/meson.build
+index b1f4c8d0..f2789264 100644
+--- a/src/glsl/meson.build
++++ b/src/glsl/meson.build
+@@ -29,8 +29,16 @@ if glslang_req.auto() and shaderc.found()
+ 
+ elif not glslang_req.disabled()
+ 
++  lib_dirs = ''
++  cmake_prefix_path = get_option('cmake_prefix_path')
++  if cmake_prefix_path.length() > 0
++    lib_dirs = cmake_prefix_path[0] / 'lib'
++  else
++    error('cmake_prefix_path is empty')
++  endif
++
+   glslang_deps = [
+-    cxx.find_library('glslang-default-resource-limits', required: false)
++    cxx.find_library('glslang-default-resource-limits', required: false, dirs: lib_dirs)
+   ]
+ 
+   # meson doesn't respect generator expressions in INTERFACE_LINK_LIBRARIES
+@@ -44,7 +52,7 @@ elif not glslang_req.disabled()
+     static   = arg[0]
+     required = arg[1]
+ 
+-    spirv = cxx.find_library('SPIRV', required: required, static: static)
++    spirv = cxx.find_library('SPIRV', required: false, static: static, dirs: lib_dirs)
+ 
+     if not spirv.found()
+       continue
+@@ -54,18 +62,18 @@ elif not glslang_req.disabled()
+ 
+     # Glslang 15.0.0 moved some code around, add also linking to glslang, while
+     # this is not needed for older versions, it will still work.
+-    glslang_deps += cxx.find_library('glslang', required: required, static: static)
++    glslang_deps += cxx.find_library('glslang', required: required, static: static, dirs: lib_dirs)
+ 
+     if static
+       glslang_deps += [
+         # Always required for static linking
+-        cxx.find_library('MachineIndependent', required: false, static: true),
+-        cxx.find_library('OSDependent',        required: false, static: true),
+-        cxx.find_library('OGLCompiler',        required: false, static: true),
+-        cxx.find_library('GenericCodeGen',     required: false, static: true),
++        cxx.find_library('MachineIndependent', required: false, static: true, dirs: lib_dirs),
++        cxx.find_library('OSDependent',        required: false, static: true, dirs: lib_dirs),
++        cxx.find_library('OGLCompiler',        required: false, static: true, dirs: lib_dirs),
++        cxx.find_library('GenericCodeGen',     required: false, static: true, dirs: lib_dirs),
+         # SPIRV-Tools are required only if optimizer is enabled in glslang build
+-        cxx.find_library('SPIRV-Tools',        required: false, static: true),
+-        cxx.find_library('SPIRV-Tools-opt',    required: false, static: true),
++        cxx.find_library('SPIRV-Tools',        required: false, static: true, dirs: lib_dirs),
++        cxx.find_library('SPIRV-Tools-opt',    required: false, static: true, dirs: lib_dirs),
+       ]
+     endif
+ 

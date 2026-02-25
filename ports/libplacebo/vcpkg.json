@@ -1,0 +1,93 @@
+{
+  "name": "libplacebo",
+  "version": "7.351.0",
+  "description": "A library of GPU-accelerated image/video processing primitives",
+  "homepage": "https://code.videolan.org/videolan/libplacebo",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    "fast-float",
+    {
+      "name": "python3",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "d3d11",
+      "platform": "windows | uwp | xbox"
+    },
+    "lcms",
+    {
+      "name": "opengl",
+      "platform": "!uwp & !xbox"
+    },
+    "shaderc",
+    {
+      "name": "vulkan",
+      "platform": "!uwp & !xbox"
+    },
+    "xxhash"
+  ],
+  "features": {
+    "d3d11": {
+      "description": "Direct3D 11 based renderer",
+      "supports": "windows | uwp | xbox",
+      "dependencies": [
+        "spirv-cross"
+      ]
+    },
+    "glslang": {
+      "description": "glslang SPIR-V compiler",
+      "dependencies": [
+        "glslang",
+        "spirv-cross",
+        "spirv-tools"
+      ]
+    },
+    "lcms": {
+      "description": "LittleCMS 2 support",
+      "dependencies": [
+        "lcms"
+      ]
+    },
+    "opengl": {
+      "description": "OpenGL-based renderer",
+      "supports": "!uwp & !xbox",
+      "dependencies": [
+        "glad"
+      ]
+    },
+    "shaderc": {
+      "description": "libshaderc SPIR-V compiler",
+      "dependencies": [
+        "shaderc"
+      ]
+    },
+    "vulkan": {
+      "description": "Vulkan-based renderer",
+      "supports": "!uwp & !xbox",
+      "dependencies": [
+        "vulkan-headers"
+      ]
+    },
+    "xxhash": {
+      "description": "Use libxxhash as a faster replacement for internal siphash",
+      "dependencies": [
+        "xxhash"
+      ]
+    }
+  }
+}

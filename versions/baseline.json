@@ -5340,6 +5340,10 @@
       "baseline": "9.0.24",
       "port-version": 0
     },
+    "libplacebo": {
+      "baseline": "7.351.0",
+      "port-version": 0
+    },
     "libplist": {
       "baseline": "2.7.0",
       "port-version": 0
