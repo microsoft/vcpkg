@@ -6,7 +6,8 @@ if(NOT TARGET unofficial::libpg-query::libpg-query)
     get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
     get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
     get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
-
+set(LIBPG_QUERY_PROTO_FILE "${_IMPORT_PREFIX}/share/libpg-query/pg_query.proto"
+    CACHE FILEPATH "Path to the libpg-query protobuf schema file")
     add_library(unofficial::libpg-query::libpg-query UNKNOWN IMPORTED)
     set_target_properties(unofficial::libpg-query::libpg-query PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
