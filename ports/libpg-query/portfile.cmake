@@ -64,7 +64,7 @@ endif()
 file(INSTALL "${SOURCE_PATH}/pg_query.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${SOURCE_PATH}/postgres_deparse.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(INSTALL "${SOURCE_PATH}/protobuf/pg_query.pb-c.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/protobuf")
-file(INSTALL "${SOURCE_PATH}/protobuf/pg_query.proto" DESTINATION "${CURRENT_PACKAGES_DIR}/include/pg_query")
+file(INSTALL "${SOURCE_PATH}/protobuf/pg_query.proto" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-libpg-query-config.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}"
     RENAME "unofficial-${PORT}-config.cmake"
