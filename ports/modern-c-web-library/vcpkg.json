@@ -4,7 +4,7 @@
   "description": "Pure C web framework: HTTP server (threaded & async), WebSocket (RFC 6455), middleware, compression, caching, JSON parser. Zero external dependencies.",
   "homepage": "https://github.com/kamrankhan78694/modern-c-web-library",
   "license": "MIT",
-  "supports": "!uwp",
+  "supports": "!uwp & !windows & !android",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
