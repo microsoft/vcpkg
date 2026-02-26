@@ -21,7 +21,6 @@ vcpkg_cmake_configure(
         -DBUNGEE_INSTALL_FRAMEWORK=OFF
         -DBUNGEE_VERSION=${VERSION}
         -DBUNGEE_PRESET=
-        ${BUNGEE_MSVC_PDB_OPTIONS}
 )
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
