@@ -53,7 +53,7 @@ index b80f74acbc..47aff80f70 100644
  
  # Installation
  if (BUNGEE_BUILD_SHARED_LIBRARY)
-@@ -76,34 +75,33 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
+@@ -76,34 +75,29 @@ if (BUNGEE_BUILD_SHARED_LIBRARY)
        MACOSX_PACKAGE_LOCATION Headers/bungee
      )
    endif()
@@ -68,11 +68,11 @@ index b80f74acbc..47aff80f70 100644
 -    BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
 -    FRAMEWORK DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}
 -  )
-   install(FILES 
-     cmd/main.cpp  
+-  install(FILES 
+-    cmd/main.cpp  
 -    submodules/cxxopts/include/cxxopts.hpp
-     DESTINATION ${CMAKE_INSTALL_PREFIX}/sample
-   )
+-     DESTINATION ${CMAKE_INSTALL_PREFIX}/sample
+-  )
 -
 -get_property(BUNGEE_LIBRARY_OUTPUT_NAME TARGET bungee_library PROPERTY OUTPUT_NAME)
 -
