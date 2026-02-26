@@ -1,0 +1,61 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Define the GetGlobalProperties task for retrieving the Global Properties from the current MSBuild engine.
+
+  The task has a single output parameter - GlobalPropertyNames - which is a semi-colon delimited list of the global
+  properties of the current MSBuild engine. -->
+  <UsingTask TaskName="GetGlobalProperties" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <GlobalPropertyNames ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="Microsoft.Build.Tasks.Core" />
+      <Code Type="Class" Language="cs">
+        <![CDATA[
+        #nullable enable
+
+        using System;
+        using System.Collections.Generic;
+        using Microsoft.Build.Framework;
+        using Microsoft.Build.Utilities;
+
+        /// <summary>
+        /// An MSBuild task that retrieves the MSBuild Global Properties.
+        /// </summary>
+        public class GetGlobalProperties : Task
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="GetGlobalProperties"/> class.
+            /// </summary>
+            public GetGlobalProperties()
+            {
+            }
+
+            /// <summary>
+            /// Executes the build task.
+            /// </summary>
+            /// <returns>True.</returns>
+            public override bool Execute()
+            {
+                IReadOnlyDictionary<string,string>? globalProperties = this.BuildEngine6?.GetGlobalProperties();
+                if (globalProperties is null)
+                {
+                    Log.LogError("Unable to retrieve GlobalProperties");
+                    return false;
+                }
+
+                this.GlobalPropertyNames = string.Join(";", globalProperties.Keys);
+                return true;
+            }
+
+            /// <summary>
+            /// Gets or sets the GlobalPropertyNames parameter.
+            /// </summary>
+            [Required]
+            [Output]
+            public string GlobalPropertyNames { get; private set; } = string.Empty;
+        }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+</Project>
