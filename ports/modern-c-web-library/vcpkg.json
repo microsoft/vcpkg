@@ -1,7 +1,7 @@
 {
   "name": "modern-c-web-library",
-  "version-string": "0.3.0",
-  "description": "Pure C web backend library: HTTP server (threaded & async), router, WebSocket (RFC6455), JSON parser.",
+  "version": "1.0.0",
+  "description": "Pure C web framework: HTTP server (threaded & async), WebSocket (RFC 6455), middleware, compression, caching, JSON parser. Zero external dependencies.",
   "homepage": "https://github.com/kamrankhan78694/modern-c-web-library",
   "license": "MIT",
   "supports": "!(uwp)",
