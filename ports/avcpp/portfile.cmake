@@ -7,11 +7,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO h4tr3d/avcpp
     REF "v${VERSION}"
-    SHA512 a0f4a6577ab9586cd9f8b5bc4ea4329a74857918099473fb366d57dc01d90be6653f81e0a4dd83cb1b35370c99bb34313f2d015d27fac26689feff97a97ff18b
+    SHA512 f23102b3404aad89fe0bf1b7b19c72b09771c55c58043954999afbead7b2e68a4cd807073596c5d39b328fb17c69d23f9e64f86e8092a1b059c05bb6c2df82a7
     HEAD_REF master
     PATCHES
         0002-av_init_packet_deprecation.patch
-        0003-fix-minmax.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" AVCPP_ENABLE_STATIC)
