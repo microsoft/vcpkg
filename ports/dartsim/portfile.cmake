@@ -16,6 +16,7 @@ vcpkg_from_github(
         0004-pkgconfig.patch
         0005-add-cassert.patch
         0006-support-eigen3-5.patch
+        0007-fix-imgui.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/dart/external/imgui")
 
