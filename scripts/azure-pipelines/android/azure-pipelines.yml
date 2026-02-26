@@ -25,10 +25,8 @@ jobs:
     value: /mnt/vcpkg-ci
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
-  - name: ANDROID_NDK_HOME
-    value: /android-ndk-r28c
   - name: ANDROID_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-01-20'
+    value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-02-10'
   - name: LINUX_DOCKER_IMAGE
     value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20'
   steps:
@@ -93,7 +91,6 @@ jobs:
         --mount type=bind,source=$(WORKING_ROOT)/failure-logs,target=/vcpkg/failure-logs \
         --mount type=bind,source=/mnt/vcpkg-ci,target=/mnt/vcpkg-ci \
         --env X_VCPKG_ASSET_SOURCES="x-azurl,https://vcpkgassetcachewus.blob.core.windows.net/cache,$assetSas,readwrite" \
-        --env ANDROID_NDK_HOME="${{ variables.ANDROID_NDK_HOME }}" \
         --workdir /vcpkg \
         ${{ variables.ANDROID_DOCKER_IMAGE }} \
         pwsh \

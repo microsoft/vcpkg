@@ -1,0 +1,46 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2d646e7..53b4371 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -615,15 +615,9 @@ endif()
+ 
+ if(SENTRY_WITH_LIBUNWIND)
+ 	if(LINUX)
+-		# Use vendored libunwind
+-		add_subdirectory(vendor/libunwind)
+-		target_link_libraries(sentry PRIVATE unwind)
+-		if(NOT SENTRY_BUILD_SHARED_LIBS)
+-			sentry_install(TARGETS unwind EXPORT sentry
+-				LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-				ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+-			)
+-		endif()
++		find_package(PkgConfig REQUIRED)
++		pkg_check_modules(LIBUNWIND REQUIRED IMPORTED_TARGET libunwind)
++		target_link_libraries(sentry PRIVATE PkgConfig::LIBUNWIND)
+ 	endif()
+ endif()
+ 
+diff --git a/sentry-config.cmake.in b/sentry-config.cmake.in
+index c575372..54cbeb1 100644
+--- a/sentry-config.cmake.in
++++ b/sentry-config.cmake.in
+@@ -8,6 +8,7 @@ set(SENTRY_LINK_PTHREAD @SENTRY_LINK_PTHREAD@)
+ set(SENTRY_TRANSPORT_COMPRESSION @SENTRY_TRANSPORT_COMPRESSION@)
+ set(SENTRY_BREAKPAD_SYSTEM @SENTRY_BREAKPAD_SYSTEM@)
+ set(CRASHPAD_ZLIB_SYSTEM @CRASHPAD_ZLIB_SYSTEM@)
++set(SENTRY_WITH_LIBUNWIND @SENTRY_WITH_LIBUNWIND@)
+ 
+ if(NOT SENTRY_BUILD_SHARED_LIBS)
+ 	if(SENTRY_TRANSPORT_COMPRESSION OR CRASHPAD_ZLIB_SYSTEM)
+@@ -17,6 +18,10 @@ if(NOT SENTRY_BUILD_SHARED_LIBS)
+ 		find_dependency(PkgConfig)
+ 		pkg_check_modules(BREAKPAD REQUIRED IMPORTED_TARGET breakpad-client)
+ 	endif()
++	if(SENTRY_WITH_LIBUNWIND)
++		find_dependency(PkgConfig)
++		pkg_check_modules(LIBUNWIND REQUIRED IMPORTED_TARGET libunwind)
++	endif()
+ 	if(SENTRY_TRANSPORT STREQUAL "curl")
+ 		find_dependency(CURL)
+ 	endif()
