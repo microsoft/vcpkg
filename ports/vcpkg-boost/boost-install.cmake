@@ -7,12 +7,7 @@ function(boost_configure_and_install)
   string(REPLACE "boost_" "" boost_lib_name "${boost_lib_name}")
   set(boost_lib_name_config "${boost_lib_name}")
 
-  set(headers_only OFF)
-  if(NOT EXISTS "${arg_SOURCE_PATH}/src" OR Z_VCPKG_BOOST_FORCE_HEADER_ONLY) # regex|system|math are header only and only install libs due to compat
-    set(headers_only ON)
-    set(VCPKG_BUILD_TYPE release)
-  endif()
-
+  # Compute boost_lib_path and finalize boost_lib_name early (needed for headers_only check)
   set(boost_lib_path "libs/${boost_lib_name}")
   if(boost_lib_name MATCHES "numeric")
     string(REPLACE "numeric_" "numeric/" boost_lib_path "${boost_lib_path}")
@@ -21,6 +16,16 @@ function(boost_configure_and_install)
     set(boost_lib_name_config "numeric_${boost_lib_name}")
     set(boost_lib_path "libs/numeric/${boost_lib_name}")
     set(boost_lib_name "numeric/${boost_lib_name}")
+  endif()
+
+  # Check if this library has compiled sources
+  # Standard layout: sources in src/ (after initial vcpkg_from_github extracts)
+  # Editable layout: sources in libs/{lib}/src (moved by previous run)
+  set(headers_only OFF)
+  if(NOT (EXISTS "${arg_SOURCE_PATH}/src" OR EXISTS "${arg_SOURCE_PATH}/${boost_lib_path}/src") 
+      OR Z_VCPKG_BOOST_FORCE_HEADER_ONLY)
+    set(headers_only ON)
+    set(VCPKG_BUILD_TYPE release)
   endif()
 
   if(NOT EXISTS "${arg_SOURCE_PATH}/libs") # Check for --editable workflow

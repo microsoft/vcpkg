@@ -25,6 +25,36 @@ function(vcpkg_from_gitlab)
         message(WARNING "vcpkg_from_gitlab was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
+    # Editable mode: delegate to consolidated helper
+    if(_VCPKG_EDITABLE AND DEFINED _VCPKG_EDITABLE_SOURCES_PATH)
+        set(_git_url "${arg_GITLAB_URL}/${arg_REPO}.git")
+
+        # Build optional parameters
+        set(_editable_extra_args "")
+        if(DEFINED arg_REF)
+            list(APPEND _editable_extra_args REF "${arg_REF}")
+        endif()
+        if(DEFINED arg_HEAD_REF)
+            list(APPEND _editable_extra_args HEAD_REF "${arg_HEAD_REF}")
+        endif()
+        if(DEFINED arg_AUTHORIZATION_TOKEN)
+            list(APPEND _editable_extra_args AUTHORIZATION_TOKEN "${arg_AUTHORIZATION_TOKEN}")
+        endif()
+
+        include("${SCRIPTS}/cmake/z_vcpkg_from_git_editable.cmake")
+        z_vcpkg_from_git_editable(
+            URL "${_git_url}"
+            OUT_SOURCE_PATH "${arg_OUT_SOURCE_PATH}"
+            PATCHES ${arg_PATCHES}
+            ${_editable_extra_args}
+        )
+        set("${arg_OUT_SOURCE_PATH}" "${${arg_OUT_SOURCE_PATH}}" PARENT_SCOPE)
+        if(DEFINED VCPKG_HEAD_VERSION)
+            set(VCPKG_HEAD_VERSION "${VCPKG_HEAD_VERSION}" PARENT_SCOPE)
+        endif()
+        return()
+    endif()
+
     if(NOT DEFINED arg_GITLAB_URL)
         message(FATAL_ERROR "GITLAB_URL must be specified.")
     endif()
