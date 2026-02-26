@@ -1,0 +1,12 @@
+{
+  "name": "vcpkg-ci-half",
+  "version-string": "ci",
+  "description": "Validation port",
+  "dependencies": [
+    "half",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
