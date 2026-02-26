@@ -12,6 +12,7 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
+vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_cmake_configure(
 	SOURCE_PATH "${SOURCE_PATH}"
@@ -21,6 +22,7 @@ vcpkg_cmake_configure(
 	    -Duse_sys_sqlite3=ON
 	    -DFLEX_EXECUTABLE=${FLEX}
 	    -DBISON_EXECUTABLE=${BISON}
+	    -DPython_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_cmake_install()
