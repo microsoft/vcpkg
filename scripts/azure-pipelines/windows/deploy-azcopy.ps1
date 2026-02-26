@@ -10,11 +10,11 @@ if (Test-Path "$PSScriptRoot/utility-prefix.ps1") {
 [string]$AzCopyUrl
 if ([string]::IsNullOrEmpty($SasToken)) {
   Write-Host 'Downloading from the Internet'
-  $AzCopyUrl = 'https://github.com/Azure/azure-storage-azcopy/releases/download/v10.31.1/azcopy_windows_amd64_10.31.1.zip'
+  $AzCopyUrl = 'https://github.com/Azure/azure-storage-azcopy/releases/download/v10.32.0/azcopy_windows_amd64_10.32.0.zip'
 } else {
   Write-Host 'Downloading from vcpkgimageminting using SAS token'
   $SasToken = $SasToken.Replace('"', '')
-  $AzCopyUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/azcopy_windows_amd64_10.31.1.zip?$SasToken"
+  $AzCopyUrl = "https://vcpkgimageminting.blob.core.windows.net/assets/azcopy_windows_amd64_10.32.0.zip?$SasToken"
 }
 
 mkdir -Force "C:\AzCopy10"
