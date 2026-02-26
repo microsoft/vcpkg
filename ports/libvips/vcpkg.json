@@ -1,17 +1,16 @@
 {
   "name": "libvips",
   "version": "8.18.0",
-  "port-version": 0,
   "description": "libvips is a demand-driven, horizontally threaded image processing library.",
   "homepage": "https://github.com/libvips/libvips",
   "license": "LGPL-2.1-or-later",
   "dependencies": [
+    "expat",
+    "glib",
     {
       "name": "vcpkg-tool-meson",
       "host": true
-    },
-    "glib",
-    "expat"
+    }
   ],
   "features": {
     "exif": {
