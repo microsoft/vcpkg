@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "slick-logger",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "A high-performance, cross-platform header-only logging library for C++20 using a multi-producer, multi-consumer ring buffer with multi-sink support and log rotation capabilities",
   "homepage": "https://github.com/SlickQuant/slick-logger",
   "license": "MIT",

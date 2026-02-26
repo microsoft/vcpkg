@@ -1,6 +1,6 @@
 {
   "name": "ecm",
-  "version": "6.22.0",
+  "version": "6.23.0",
   "description": "Extra CMake Modules (ECM), extra modules and scripts for CMake",
   "homepage": "https://invent.kde.org/frameworks/extra-cmake-modules",
   "documentation": "https://api.kde.org/ecm/",

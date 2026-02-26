@@ -2,35 +2,31 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxv
-    REF ef2a282876acc2316d338f8b66344ad5a2947057 # 1.0.11
-    SHA512  0c97de51c22791cd6ea351f3b0ab8261b68d1283bcdc1784f9cc601fe54ef0c43f668e5bb9d8929c3ff8828f14fa48a8653566742d6a93455fe908d026517839
-    HEAD_REF master
-) 
+vcpkg_download_distfile(
+    LIBXV_ARCHIVE
+    URLS "https://www.x.org/releases/individual/lib/libXv-${VERSION}.tar.xz"
+    FILENAME "libXv-${VERSION}.tar.xz"
+    SHA512 80d7a11e6415fbe0fc50c3c2a1abf8f0f2ec38446c9c8d88ff48875cd94b8949cb1028f2ab37476c4b25cbd7eac34dde9132dd998c4e04ea576b95ae411ba946
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXV_ARCHIVE}"
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
-
-if (VCPKG_CROSSCOMPILING)
-    list(APPEND OPTIONS --enable-malloc0returnsnull)
-endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG
-    OPTIONS ${OPTIONS}
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

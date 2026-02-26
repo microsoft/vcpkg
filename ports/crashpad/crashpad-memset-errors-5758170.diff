@@ -1,0 +1,45 @@
+From 575817027d03ecce3c5d9ee0991a04e00babae3b Mon Sep 17 00:00:00 2001
+From: Victor Hugo Vianna Silva <victorvianna@google.com>
+Date: Wed, 17 Dec 2025 22:33:24 +0000
+Subject: [PATCH] Fix C++23 build errors in crashpad
+
+Bug: 388070065
+Change-Id: Iaa150463bcae34db0f3ea022cd25df3035112704
+Reviewed-on: https://chromium-review.googlesource.com/c/crashpad/crashpad/+/7270947
+Reviewed-by: Joshua Peraza <jperaza@chromium.org>
+Commit-Queue: Victor Vianna <victorvianna@google.com>
+---
+
+diff --git a/util/linux/socket_test.cc b/util/linux/socket_test.cc
+index 3e84aaa..8e75318 100644
+--- a/util/linux/socket_test.cc
++++ b/util/linux/socket_test.cc
+@@ -124,7 +124,7 @@
+   for (size_t index = 0; index < UnixCredentialSocket::kMaxSendRecvMsgFDs;
+        ++index) {
+     recv_fds[index].reset();
+-    char c;
++    char c = 0;
+     EXPECT_EQ(
+         HANDLE_EINTR(send(send_fds[index].get(), &c, sizeof(c), MSG_NOSIGNAL)),
+         -1);
+diff --git a/util/linux/thread_info.cc b/util/linux/thread_info.cc
+index 77ffb06..4cff830 100644
+--- a/util/linux/thread_info.cc
++++ b/util/linux/thread_info.cc
+@@ -19,13 +19,13 @@
+ namespace crashpad {
+ 
+ ThreadContext::ThreadContext() {
+-  memset(this, 0, sizeof(*this));
++  memset(static_cast<void*>(this), 0, sizeof(*this));
+ }
+ 
+ ThreadContext::~ThreadContext() {}
+ 
+ FloatContext::FloatContext() {
+-  memset(this, 0, sizeof(*this));
++  memset(static_cast<void*>(this), 0, sizeof(*this));
+ }
+ 
+ FloatContext::~FloatContext() {}

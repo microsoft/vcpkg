@@ -33,3 +33,16 @@ index e09e533..123b888 100644
  extern float step_size_inverse[8];
  
  
+diff --git a/subprojects/gstreamer/plugins/elements/gstqueue.c b/subprojects/gstreamer/plugins/elements/gstqueue.c
+index 8a654cc..3f98a9d 100644
+--- a/subprojects/gstreamer/plugins/elements/gstqueue.c
++++ b/subprojects/gstreamer/plugins/elements/gstqueue.c
+@@ -127,7 +127,7 @@ enum
+   PROP_LAST
+ };
+ 
+-GParamSpec *properties[PROP_LAST];
++static GParamSpec *properties[PROP_LAST];
+ 
+ /* default property values */
+ #define DEFAULT_MAX_SIZE_BUFFERS  200   /* 200 buffers */

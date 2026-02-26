@@ -4,7 +4,7 @@ index 6cbc9ee..b5f3d7a 100644
 +++ b/CMakeLists.txt
 @@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 20)
  # Options:
- option(BUILD_SLICK_QUEUE_TESTS "Build tests" ON)
+ option(BUILD_SLICK_QUEUE_TESTS "Build tests" ${PROJECT_IS_TOP_LEVEL})
  
 -find_package(slick-shm CONFIG QUIET)
 +find_package(slick-shm CONFIG REQUIRED)

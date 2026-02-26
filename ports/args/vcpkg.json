@@ -1,6 +1,6 @@
 {
   "name": "args",
-  "version": "6.4.7",
+  "version": "6.4.8",
   "description": "A simple header-only C++ argument parser library.",
   "homepage": "https://github.com/Taywee/args",
   "license": "MIT",

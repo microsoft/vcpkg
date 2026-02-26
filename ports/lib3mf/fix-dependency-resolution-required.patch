@@ -1,0 +1,40 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -267,16 +267,8 @@
+       set(_lib3mf_external_link_visibility PUBLIC)
+     endif()
+ 
+-    find_package(libzip CONFIG QUIET)
+-    if (TARGET libzip::zip)
+-      target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} libzip::zip)
+-    else()
+-      find_package(PkgConfig REQUIRED)
+-      pkg_check_modules(LIBZIP REQUIRED libzip)
+-      target_include_directories(${PROJECT_NAME} PRIVATE ${LIBZIP_INCLUDE_DIRS})
+-      target_link_directories(${PROJECT_NAME} PRIVATE ${LIBZIP_LIBRARY_DIRS})
+-      target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} ${LIBZIP_LIBRARIES})
+-    endif()
++    find_package(libzip CONFIG REQUIRED)
++    target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} libzip::zip)
+ 
+     unset(_lib3mf_external_link_visibility)
+ endif()
+@@ -296,16 +288,8 @@
+       set(_lib3mf_external_link_visibility PUBLIC)
+     endif()
+ 
+-    find_package(ZLIB QUIET)
+-    if (TARGET ZLIB::ZLIB)
+-      target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} ZLIB::ZLIB)
+-    else()
+-      find_package(PkgConfig REQUIRED)
+-      pkg_check_modules(ZLIB REQUIRED zlib)
+-      target_include_directories(${PROJECT_NAME} PRIVATE ${ZLIB_INCLUDE_DIRS})
+-      target_link_directories(${PROJECT_NAME} PRIVATE ${ZLIB_LIBRARY_DIRS})
+-      target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} ${ZLIB_LIBRARIES})
+-    endif()
++    find_package(ZLIB REQUIRED)
++    target_link_libraries(${PROJECT_NAME} ${_lib3mf_external_link_visibility} ZLIB::ZLIB)
+ 
+     unset(_lib3mf_external_link_visibility)
+ endif()
