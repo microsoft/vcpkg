@@ -10360,6 +10360,10 @@
       "baseline": "2025-05-19",
       "port-version": 0
     },
+    "vcpkg-rust": {
+      "baseline": "1.68.2",
+      "port-version": 0
+    },
     "vcpkg-tool-bazel": {
       "baseline": "5.2.0",
       "port-version": 0
