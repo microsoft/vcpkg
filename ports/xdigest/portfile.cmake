@@ -2,38 +2,19 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO rinrab/xdigest
     REF "${VERSION}"
-    SHA512 2a98b29ceaf1d17e9251c1486d03a2d3db133a29fede730ebdf1cb84987aa50781e56ce1db2d795f6dff84b755720b91aa866da662699d34d8a9d140adc8d04e
+    SHA512 c147ce258418dd07048781b81795a90a2b23b03c2eee940dc0e84a9972289c5888c5ff4b1b243571db15447df74ab1856c3a6d694eebb4f986cca7fe3af3da47
     HEAD_REF trunk
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR
-        VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        vcpkg_find_acquire_program(NASM)
-        list(APPEND OPTIONS "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
-        set(USE_ASM ON)
-    else()
-        set(USE_ASM OFF)
-    endif()
-elseif (VCPKG_TARGET_IS_LINUX)
-    if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm64" OR 
-        VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR
-        VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-        set(USE_ASM ON)
-    else()
-        set(USE_ASM OFF)
-    endif()
-elseif (VCPKG_TARGET_IS_OSX)
-    set(USE_ASM ON)
-else()
-    set(USE_ASM OFF)
+    vcpkg_find_acquire_program(NASM)
+    list(APPEND OPTIONS "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
 endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_TESTS=OFF
-        -DUSE_ASM=${USE_ASM}
         ${OPTIONS}
 )
 vcpkg_cmake_install()
