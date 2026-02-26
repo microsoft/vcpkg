@@ -1,15 +1,37 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 671f79d..8eabae4 100644
+index 61a3ccb..108f3c3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -15,8 +15,8 @@ include(cmake/CPM.cmake)
+@@ -9,8 +9,7 @@ include(cmake/CPM.cmake)
+ #     NAME cpp-library
+ #     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../cpp-library"
+ # )
+-CPMAddPackage("gh:stlab/cpp-library@5.2.0")
+-include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
++include(cmake/cpp-library/cpp-library.cmake)
  
+ # Enable dependency tracking BEFORE project()
+ cpp_library_enable_dependency_tracking()
+@@ -147,11 +146,11 @@ add_subdirectory(src)
+ # Dependencies (added after project() for dependency tracking)
  
- # Add stlab-copy-on-write as a dependency
--CPMAddPackage("gh:stlab/copy-on-write@1.0.3")
--target_link_libraries(stlab INTERFACE stlab::copy-on-write)
+ # https://github.com/stlab/stlab-copy-on-write
+-CPMAddPackage("gh:stlab/stlab-copy-on-write@1.1.0")
 +find_package(stlab-copy-on-write CONFIG REQUIRED)
-+target_link_libraries(stlab PUBLIC stlab::copy-on-write)
+ target_link_libraries(stlab INTERFACE $<BUILD_INTERFACE:stlab::copy-on-write>)
  
+ # https://github.com/stlab/stlab-enum-ops
+-CPMAddPackage("gh:stlab/stlab-enum-ops@1.2.0")
++find_package(stlab-enum-ops CONFIG REQUIRED)
+ target_link_libraries(stlab INTERFACE $<BUILD_INTERFACE:stlab::enum-ops>)
+ 
+ # System dependencies
+@@ -183,7 +182,7 @@ endif()
  ########################################################
- # clangd
+ # Installation Support (using cpp-library dependency auto-discovery)
+ if(PROJECT_IS_TOP_LEVEL)
+-  include("${cpp-library_SOURCE_DIR}/cmake/cpp-library-install.cmake")
++  include("cmake/cpp-library/cmake/cpp-library-install.cmake")
+   
+   # Use cpp-library's install function for automatic dependency discovery
+   # No manual dependency mappings needed - cpp-library auto-discovers via dependency provider

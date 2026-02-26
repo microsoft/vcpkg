@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO SlickQuant/slick_object_pool
+    REPO SlickQuant/slick-object-pool
     REF "v${VERSION}"
-    SHA512 fa1aac51f829b92ae297f0e4bc469af374e80c464d1e644139482782fa95ada99fd4e5b77b2fab6741c851afa612364a1d908eeb27a611c043720a3c47e1a986
+    SHA512 932eb5fe590c624b5dca477d874a1eb7822b2528bdb684f151d325b6808866baafa3010a3925ab0e2f4c7374f09163ac205065959a445dd5ef6f15546c433fb4
     HEAD_REF main
 )
 
@@ -14,7 +14,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/slick_object_pool)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/slick-object-pool)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")

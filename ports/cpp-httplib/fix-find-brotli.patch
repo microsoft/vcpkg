@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7566dcd..7687c8b 100644
+index b0f8f45..a5b6084 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -178,10 +178,10 @@ endif()
@@ -15,9 +15,9 @@ index 7566dcd..7687c8b 100644
  	set(HTTPLIB_IS_USING_BROTLI ${Brotli_FOUND})
  endif()
  
-@@ -280,9 +280,9 @@ target_link_libraries(${PROJECT_NAME} ${_INTERFACE_OR_PUBLIC}
+@@ -282,9 +282,9 @@ target_link_libraries(${PROJECT_NAME} ${_INTERFACE_OR_PUBLIC}
  		# Needed for non-blocking getaddrinfo on MacOS
- 		"$<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${HTTPLIB_USE_NON_BLOCKING_GETADDRINFO}>>:-framework CFNetwork>"
+ 		"$<$<AND:$<PLATFORM_ID:Darwin>,$<BOOL:${HTTPLIB_USE_NON_BLOCKING_GETADDRINFO}>>:-framework CFNetwork -framework CoreFoundation>"
  		# Can't put multiple targets in a single generator expression or it bugs out.
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::common>
 -		$<$<BOOL:${HTTPLIB_IS_USING_BROTLI}>:Brotli::encoder>
@@ -28,7 +28,7 @@ index 7566dcd..7687c8b 100644
  		$<$<BOOL:${HTTPLIB_IS_USING_ZLIB}>:ZLIB::ZLIB>
  		$<$<BOOL:${HTTPLIB_IS_USING_ZSTD}>:zstd::libzstd>
  		$<$<BOOL:${HTTPLIB_IS_USING_OPENSSL}>:OpenSSL::SSL>
-@@ -341,9 +341,6 @@ if(HTTPLIB_INSTALL)
+@@ -343,9 +343,6 @@ if(HTTPLIB_INSTALL)
  	install(FILES
  		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
  		"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"

@@ -1,11 +1,10 @@
 {
   "name": "libxpresent",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Xlib-based library for the X Present Extension",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxpresent",
   "license": null,
   "dependencies": [
-    "bzip2",
     "libx11",
     "libxext",
     "libxfixes",

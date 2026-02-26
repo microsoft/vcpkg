@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO adityarao2005/WebCraft
     REF v${VERSION}
-    SHA512 1c0c5de6a6a42b9a6366a633c6dd00008fc1c631da6cda146ae952c499b8a11028af0f8dad2a1c6c3a51119a6bec44ad5087b6128c015910957c661ea52bee7c
+    SHA512 d598d6303fefa1b18e7effb57da99e353a898817bde917588d103aabe0662eea07a3647dc9338c3cd6ba2d048423b7640cbb396f5fd42dd4f7997136b4bcb236
     HEAD_REF main
+    PATCHES
+        fix-concurrentqueue.patch
 )
 
 if (VCPKG_TARGET_IS_LINUX)
@@ -26,6 +28,11 @@ vcpkg_cmake_config_fixup(
 	CONFIG_PATH share/WebCraft
 )
 
+file(REMOVE
+    "${CURRENT_PACKAGES_DIR}/include/webcraft/async/README.md"
+    "${CURRENT_PACKAGES_DIR}/include/webcraft/async/asyncruntime.drawio.svg"
+    "${CURRENT_PACKAGES_DIR}/include/webcraft/async/io/README.md"
+)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

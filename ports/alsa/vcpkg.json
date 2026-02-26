@@ -1,7 +1,6 @@
 {
   "name": "alsa",
-  "version": "1.2.14",
-  "port-version": 1,
+  "version": "1.2.15.3",
   "description": "The Advanced Linux Sound Architecture (ALSA) - library",
   "homepage": "https://www.alsa-project.org/",
   "license": "LGPL-2.1-or-later",

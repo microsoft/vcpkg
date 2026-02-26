@@ -21,10 +21,7 @@
     }
   ],
   "default-features": [
-    {
-      "name": "gstreamer",
-      "platform": "linux"
-    },
+    "ffmpeg",
     "widgets"
   ],
   "features": {
@@ -43,10 +40,6 @@
           ]
         },
         {
-          "name": "pulseaudio",
-          "platform": "linux"
-        },
-        {
           "name": "qtdeclarative",
           "default-features": false
         },
@@ -57,7 +50,8 @@
             "qml"
           ],
           "platform": "linux"
-        }
+        },
+        "signalsmith-stretch"
       ]
     },
     "gstreamer": {

@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 eb26e6b9b51eabeb84ab82035097579dcdc5f44cc1d50ae85303bbab8fcc2a3da0749cef4e15bf09adb62a4783446bb8b661666db52517b2e98543177f662eb5
     HEAD_REF main
+    PATCHES
+        356.patch # https://patch-diff.githubusercontent.com/raw/microsoft/cppgraphqlgen/pull/356.patch
 )
 
 vcpkg_check_features(

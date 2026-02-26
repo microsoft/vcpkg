@@ -1,15 +1,1 @@
-set(program_name git)
-if(CMAKE_HOST_WIN32)
-    set(base_version 2.50.1)
-    set(program_version 2.50.1)
-    set(tool_subdirectory "git-${program_version}-1-windows")
-    set(download_urls "https://github.com/git-for-windows/git/releases/download/v${base_version}.windows.1/PortableGit-${program_version}-32-bit.7z.exe")
-    set(download_filename "PortableGit-${program_version}-32-bit.7z.exe")
-    set(download_sha512 42ed5df38c8cc9a07add601df166cfcb5755b11d179b11b900216dcd2a9499fec5ef74018fb000c93274f612c1c9b711adf0db8e5e642aa94567a0654d1f29b6)
-    set(paths_to_search
-        "${DOWNLOADS}/tools/${tool_subdirectory}/mingw32/bin"
-        "${DOWNLOADS}/tools/git/${tool_subdirectory}/mingw32/bin")
-else()
-    set(brew_package_name "git")
-    set(apt_package_name "git")
-endif()
+z_use_vcpkg_fetch(GIT)

@@ -1,6 +1,6 @@
 {
   "name": "libcoap",
-  "version": "4.3.5",
+  "version-string": "4.3.5a",
   "description": "libcoap — A C implementation of the Constrained Application Protocol (RFC 7252)",
   "homepage": "https://libcoap.net/",
   "license": "BSD-2-Clause",

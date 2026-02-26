@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/cutlass
     REF "v${VERSION}"
-    SHA512 eebeda9c72671521377bc7baef2eef4fc429de46bc43e22f31c6a605ebda501dc0223e53ff1ec6590d9c3b2855462b04ddc07a5f2871c6be64d54bbe9fd18061
+    SHA512 2383901c0118db4d93c6b0618cd2585bf5fc3558ae47801e13bc1916ab1fc106cf2627bd6b8c654334c013a2b45eea9450feadf42156cf23237a0b0d1045395a
     HEAD_REF main
     PATCHES
         fix-cudnn-path.patch

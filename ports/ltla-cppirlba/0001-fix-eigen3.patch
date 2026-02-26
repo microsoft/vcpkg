@@ -1,26 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7e6a031..b6638b3 100644
+index d96d6d7..ca9b4e5 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -22,7 +22,7 @@ option(IRLBA_FETCH_EXTERN "Automatically fetch CppIrlba's dependencies." ON)
  if(IRLBA_FETCH_EXTERN)
      add_subdirectory(extern)
  else()
--    find_package(Eigen3 3.4.0 CONFIG REQUIRED)
+-    find_package(Eigen3 5.0.0 CONFIG REQUIRED)
 +    find_package(Eigen3 CONFIG REQUIRED)
      find_package(ltla_aarand 1.0.0 CONFIG REQUIRED)
      find_package(ltla_subpar 0.3.1 CONFIG REQUIRED)
- endif()
+     find_package(ltla_sanisizer 0.1.0 CONFIG REQUIRED)
 diff --git a/cmake/Config.cmake.in b/cmake/Config.cmake.in
-index 91c05e8..5c796f4 100644
+index dad2907..72ea776 100644
 --- a/cmake/Config.cmake.in
 +++ b/cmake/Config.cmake.in
 @@ -1,7 +1,7 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
--find_dependency(Eigen3 3.4.0 CONFIG REQUIRED)
+-find_dependency(Eigen3 5.0.0 CONFIG REQUIRED)
 +find_dependency(Eigen3 CONFIG REQUIRED)
  find_dependency(ltla_aarand 1.0.0 CONFIG REQUIRED)
  find_dependency(ltla_subpar 0.3.1 CONFIG REQUIRED)
- 
+ find_dependency(ltla_sanisizer 0.1.0 CONFIG REQUIRED)

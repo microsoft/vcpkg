@@ -1,0 +1,37 @@
+diff --git a/sdk/attestation/azure-security-attestation/src/private/crypto/inc/crypto.hpp b/sdk/attestation/azure-security-attestation/src/private/crypto/inc/crypto.hpp
+index 9a98f204e..7da309db5 100644
+--- a/sdk/attestation/azure-security-attestation/src/private/crypto/inc/crypto.hpp
++++ b/sdk/attestation/azure-security-attestation/src/private/crypto/inc/crypto.hpp
+@@ -2,6 +2,8 @@
+ // SPDX-License-Identifier: MIT
+ 
+ #pragma once
++
++#include <cstdint>
+ #include <ctime>
+ #include <memory>
+ #include <string>
+@@ -39,17 +41,18 @@ namespace Azure { namespace Security { namespace Attestation { namespace _detail
+        * @return false The signature did not match the payload.
+        */
+       virtual bool VerifySignature(
+-          std::vector<uint8_t> const& payload,
+-          std::vector<uint8_t> const& signature) const = 0;
++          std::vector<std::uint8_t> const& payload,
++          std::vector<std::uint8_t> const& signature) const = 0;
+       /**
+        * @brief Signs a buffer with an Asymmetric private key. Only valid for private asymmetric
+        * keys.
+        *
+        * @param bufferToSign The buffer to be signed.
+-       * @return std::vector<uint8_t> Returns the signature of that buffer, signed with the private
+-       * key.
++       * @return std::vector<std::uint8_t> Returns the signature of that buffer, signed with the
++       * private key.
+        */
+-      virtual std::vector<uint8_t> SignBuffer(std::vector<uint8_t> const& bufferToSign) const = 0;
++      virtual std::vector<std::uint8_t> SignBuffer(
++          std::vector<std::uint8_t> const& bufferToSign) const = 0;
+       /**
+        * @brief Exports the current asymmetric key as a private key (only valid for private
+        * asymmetric keys)

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xproperty
     REF ${VERSION}
-    SHA512 e070427d75e5f1b7edab67599c9e61eb375b68e683db864ec1758d331bb0fcf8d20051831f69a36db5a2e9efc6eb2822f62f8cc1ed563d728a534c1cbec40d77
+    SHA512 5c7332b3f27ee8d81ca7cefc0666a4f8a4eb71697efe22da3fa6176d45b7ba26b09dd3b5b30b68d13c4b4fa4090ebecb73528ebceec4b699a7ad2d3e66bef745
     HEAD_REF master
     PATCHES
         fix-target.patch

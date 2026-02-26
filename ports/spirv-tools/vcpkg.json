@@ -1,6 +1,6 @@
 {
   "name": "spirv-tools",
-  "version": "1.4.328.0",
+  "version": "1.4.335.0",
   "description": "API and commands for processing SPIR-V modules",
   "homepage": "https://github.com/KhronosGroup/SPIRV-Tools",
   "license": "Apache-2.0",

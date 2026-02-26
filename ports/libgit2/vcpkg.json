@@ -51,6 +51,9 @@
       "description": "SSL support (sectransp)",
       "supports": "osx"
     },
+    "sha256": {
+      "description": "[experimental] SHA256 OID support"
+    },
     "ssh": {
       "description": "SSH support via libssh2",
       "dependencies": [

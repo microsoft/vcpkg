@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7ca2d6f..f317c4d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -226,6 +226,9 @@ configure_file(
+ include(GNUInstallDirs)
+ set(DJINTEROP_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}/djinterop")
+ 
++find_package(date CONFIG REQUIRED)
++find_path(SQLITE_MODERN_CPP_INCLUDE_DIRS "sqlite_modern_cpp.h")
++
+ target_include_directories(
+         DjInterop PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+@@ -234,13 +237,13 @@ target_include_directories(
+ target_include_directories(
+         DjInterop PRIVATE SYSTEM
+         ${ZLIB_INCLUDE_DIRS}
+-        ext/sqlite_modern_cpp
+-        ext/date)
++        ${SQLITE_MODERN_CPP_INCLUDE_DIRS})
+ 
+ target_link_libraries(
+     DjInterop PUBLIC
+-    ${ZLIB_LIBRARIES})
+-
++    ${ZLIB_LIBRARIES}
++    PRIVATE
++    date::date)
+ 
+ if(SYSTEM_SQLITE)
+     # Search for system installation of SQLite and use that.
+diff --git a/src/djinterop/util/chrono.cpp b/src/djinterop/util/chrono.cpp
+index 0d551dd..475aece 100644
+--- a/src/djinterop/util/chrono.cpp
++++ b/src/djinterop/util/chrono.cpp
+@@ -22,7 +22,7 @@
+ #include <stdexcept>
+ #include <string>
+ 
+-#include <date.h>
++#include <date/date.h>
+ 
+ namespace djinterop::util
+ {

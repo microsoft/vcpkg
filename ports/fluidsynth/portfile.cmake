@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 5c376d9bf6388f04e5d48375a70682f9d7edcd65809383afc0190c77140b086492abc17a8d3a2aa07e59dde681ab17a919e9b8b7e174a91a2951c30b262c10e4
     HEAD_REF master
-    PATCHES fix-gcem.patch
+    PATCHES
+        fix-gcem.patch
+        cxx-linkage-pkgconfig.diff
 )
 # Do not use or install FindSndFileLegacy.cmake and its deps
 file(REMOVE

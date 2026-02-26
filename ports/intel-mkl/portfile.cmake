@@ -128,6 +128,9 @@ vcpkg_execute_required_process(
 set(mkl_dir "${extract_1_dir}/_installdir/mkl/${mkl_short_version}")
 file(COPY "${mkl_dir}/include/" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(COPY "${mkl_dir}/${package_libdir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  file(COPY "${mkl_dir}/${runtime_dir}/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/")
+endif()
 
 file(COPY_FILE "${mkl_dir}/lib/pkgconfig/${main_pc_file}" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}" "\${exec_prefix}/${package_libdir}" "\${exec_prefix}/lib/" IGNORE_UNCHANGED)
@@ -135,6 +138,9 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}" "\$
 set(compiler_dir "${extract_1_dir}/_installdir/compiler/${mkl_short_version}")
 if(threading STREQUAL "intel_thread")
   file(COPY "${compiler_dir}/lib/" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/")
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    file(COPY "${compiler_dir}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/bin/")
+  endif()
   file(COPY_FILE "${compiler_dir}/lib/pkgconfig/openmp.pc" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libiomp5.pc")
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/${main_pc_file}" "openmp" "libiomp5")
 endif()
@@ -171,11 +177,9 @@ endif()
 file(COPY "${mkl_dir}/lib/cmake/" DESTINATION "${CURRENT_PACKAGES_DIR}/share/")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "MKL_CMAKE_PATH}/../../../" "MKL_CMAKE_PATH}/../../")
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "redist/\${MKL_ARCH}" "bin")
-if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "define_param(MKL_LINK DEFAULT_MKL_LINK MKL_LINK_LIST)" 
-[[define_param(MKL_LINK DEFAULT_MKL_LINK MKL_LINK_LIST)
- set(MKL_LINK "static")
-]])
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "set(DEFAULT_MKL_LINK dynamic)" "set(DEFAULT_MKL_LINK static)")
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/mkl/MKLConfig.cmake" "set(LIB_EXT \".so\")" "set(LIB_EXT \".a\")")
 endif()
 #TODO: Hardcode settings from portfile in config.cmake
 #TODO: Give lapack/blas information about the correct BLA_VENDOR depending on settings. 
@@ -187,6 +191,8 @@ vcpkg_install_copyright(FILE_LIST "${package_path}/licenses/license.htm")
 file(REMOVE_RECURSE
     "${extract_0_dir}"
     "${extract_1_dir}"
+    "${CURRENT_PACKAGES_DIR}/bin/compiler"
+    "${CURRENT_PACKAGES_DIR}/lib/cmake"
 )
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

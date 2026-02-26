@@ -44,12 +44,6 @@ jobs:
 
 - template: windows/azure-pipelines.yml
   parameters:
-    jobName: x64_uwp
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-
-- template: windows/azure-pipelines.yml
-  parameters:
     jobName: arm64_windows
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
@@ -57,12 +51,6 @@ jobs:
 - template: windows/azure-pipelines.yml
   parameters:
     jobName: arm64_windows_static_md
-    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
-    tripletPattern: ${{ parameters.tripletPattern }}
-
-- template: windows/azure-pipelines.yml
-  parameters:
-    jobName: arm64_uwp
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
     tripletPattern: ${{ parameters.tripletPattern }}
 

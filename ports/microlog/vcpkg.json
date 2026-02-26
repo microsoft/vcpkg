@@ -1,0 +1,17 @@
+{
+  "name": "microlog",
+  "version": "7.0.2",
+  "description": "Extensible and configurable logging library for embedded and desktop applications with multi-output and logging topics",
+  "homepage": "https://github.com/an-dr/microlog",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

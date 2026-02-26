@@ -1,7 +1,6 @@
 {
   "name": "stlab",
-  "version": "2.0.2",
-  "port-version": 2,
+  "version": "2.2.0",
   "description": [
     "stlab is the ongoing work of what was Adobe Software Technology Lab.",
     "The Concurrency library provides futures and channels, high level constructs for implementing algorithms that eases the use of multiple CPU cores while minimizing contention. This library solves several problems of the C++11 and C++17 TS futures."
@@ -10,6 +9,7 @@
   "license": "BSL-1.0",
   "dependencies": [
     "stlab-copy-on-write",
+    "stlab-enum-ops",
     {
       "name": "vcpkg-cmake",
       "host": true

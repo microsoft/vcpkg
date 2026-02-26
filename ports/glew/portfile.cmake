@@ -7,7 +7,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/nigels-com/glew/releases/download/glew-${VERSION}/glew-${VERSION}.tgz"
     FILENAME "glew-${VERSION}.tgz"
-    SHA512 a452874b7e7e5a359593fcd93475cf2c7a484f649947308f8611461df58772e060fe5a305434c22cc2411e34a20775379fcae735477f6ef056b31730ae87426e
+    SHA512 cb4caecf32ec0f180c2691dc7769ffc99571c64f259a2663a2b80e788f1c2fd5362c59e0caaeefed6fb78a4070366d244666a657358049b09071b59fae2377e0
 )
 
 vcpkg_extract_source_archive(
@@ -16,13 +16,13 @@ vcpkg_extract_source_archive(
     SOURCE_BASE glew
     PATCHES
         fix-LNK2019.patch
+        trim-build.diff
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS options
-    FEATURES
-        egl     GLEW_EGL
-        x11     GLEW_X11
-)
+set(options "")
+if(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND options "-DGLEW_X11=OFF")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/build/cmake"
@@ -44,7 +44,7 @@ if(NOT VCPKG_BUILD_TYPE)
     if(VCPKG_TARGET_IS_WINDOWS)
         set(libname glew32)
     endif()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glew.pc" " -l${libname}" " -l${libname}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glew.pc" " -l${libname}" " -l${libname}d")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

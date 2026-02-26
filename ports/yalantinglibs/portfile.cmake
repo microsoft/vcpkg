@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alibaba/yalantinglibs
     REF "${VERSION}"
-    SHA512 f739c0747d84d6fcbb5a94f8491c29d941e992ea7306aa4b9d2cec459f3e4466e63eb86536ac03fbf5e106541535fadbdfe03795de3ece067a297a4381adef89
+    SHA512 4431c4fea7af80b81b35989879d47ad09abca31789f8e5bc77aae85824b1bd7c6d3de57c5421820670cbdd2313dbc9ea56ad8bf3f4dc8751d51d9ce7212985b0
     HEAD_REF main
     PATCHES
         use-external-libs.patch

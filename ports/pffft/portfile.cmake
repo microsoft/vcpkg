@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jpommier/pffft
-    REF ed78751d751e51bbd94c41d24f748b400f272d69
-    SHA512 44f65c7f7e5b71f549dca2e03d58b1fd64e698858f79e4c2833a9ae3dff8a835cf9d5e14be2341c6370f800012cb69b05b9226d6918b12e67f7f7e81ed8e9ad4
+    REF "v${VERSION}"
+    SHA512 074c7a60ee99acddc6e04c7653b9585c6a306b4a1f05a553191021ae1916fff31cc1291ff24fd53cc1988b26142b704f9319df636af1f99a5df0099d5157eba0
     HEAD_REF master
     PATCHES
         fix-invalid-command.patch
