@@ -1,0 +1,20 @@
+modern-c-web-library provides the following libraries:
+
+    weblib (static library)
+    weblib_shared (shared library)
+
+To use in your CMakeLists.txt:
+
+    # Find the library (installed by vcpkg)
+    find_library(WEBLIB_LIBRARY NAMES weblib)
+    find_path(WEBLIB_INCLUDE_DIR weblib.h)
+    
+    # Link to your target
+    target_include_directories(main PRIVATE ${WEBLIB_INCLUDE_DIR})
+    target_link_libraries(main PRIVATE ${WEBLIB_LIBRARY})
+
+On Unix platforms (Linux, macOS), also link pthread:
+
+    if(UNIX)
+        target_link_libraries(main PRIVATE pthread)
+    endif()
