@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 74740ce..2f2809e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -154,9 +154,12 @@ set(stdexec_export_targets)
+ 
+ # Define the main library
+ add_library(stdexec INTERFACE)
+-
++option (ASIOEXEC_USES_BOOST "asioexec use boost.asio" ON)
++configure_file(include/asioexec/asio_config.hpp.in include/asioexec/asio_config.hpp)
+ file(GLOB_RECURSE exec_headers CONFIGURE_DEPENDS include/exec/*.hpp)
+ file(GLOB_RECURSE stdexec_headers CONFIGURE_DEPENDS include/stdexec/*.hpp)
++file(GLOB_RECURSE asioexec_headers CONFIGURE_DEPENDS ${PROJECT_BINARY_DIR}/include/asioexec/*.hpp)
++
+ target_sources(stdexec
+ PUBLIC
+   FILE_SET headers
+@@ -172,6 +175,14 @@ PUBLIC
+   BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/include
+   FILES
+     ${CMAKE_CURRENT_BINARY_DIR}/include/stdexec_version_config.hpp
++
++  FILE_SET asioheaders
++  TYPE HEADERS
++  BASE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/include
++  FILES
++   ${asioexec_headers}
++
++
+ )
+ list(APPEND stdexec_export_targets stdexec)
+ 
+@@ -477,7 +488,9 @@ install(TARGETS stdexec system_context
+ 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 	FILE_SET headers
+-	FILE_SET version_config)
++	FILE_SET version_config
++  FILE_SET asioheaders
++  )
+ 
+ ##############################################################################
+ # Install exports ------------------------------------------------------------

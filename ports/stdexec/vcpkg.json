@@ -5,6 +5,7 @@
   "homepage": "https://github.com/NVIDIA/stdexec",
   "license": "Apache-2.0",
   "dependencies": [
+    "boost-asio",
     {
       "name": "vcpkg-cmake",
       "host": true

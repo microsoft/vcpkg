@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         fix-version.patch
         fix-clangd-helper-file-basedir.patch
+        fix-asioexec-headers.patch
 )
 
 vcpkg_from_github(
