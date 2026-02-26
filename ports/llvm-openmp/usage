@@ -1,0 +1,6 @@
+The llvm-openmp port exports an unofficial CMake config file:
+
+    find_package(unofficial-llvm-openmp REQUIRED CONFIG)
+    target_link_libraries(my_target PRIVATE omp)
+
+Consider using the `openmp` port instead, which uses llvm-openmp automatically for Clang and AppleClang.
