@@ -1,0 +1,10 @@
+modern-c-web-library provides CMake targets:
+
+    find_package(weblib CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE weblib::weblib)
+
+On Unix platforms (Linux, macOS), also link pthread:
+
+    if(UNIX)
+        target_link_libraries(main PRIVATE pthread)
+    endif()
