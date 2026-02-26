@@ -1,0 +1,8 @@
+{
+  "name": "onnxruntime-cuda12",
+  "version": "1.17.3",
+  "description": "onnxruntime (GPU with cuda12)",
+  "homepage": "https://github.com/microsoft/onnxruntime",
+  "license": "MIT",
+  "supports": "(windows | linux) & x64 & !staticcrt & !uwp & !mingw"
+}
