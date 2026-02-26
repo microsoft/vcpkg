@@ -15,8 +15,6 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup()
-
 vcpkg_copy_pdbs()
 
 # Remove debug include directory to satisfy policy (headers identical)
