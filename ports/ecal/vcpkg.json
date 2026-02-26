@@ -8,7 +8,6 @@
   "dependencies": [
     "asio",
     "ecaludp",
-    "fineftp",
     {
       "name": "hdf5",
       "default-features": false
