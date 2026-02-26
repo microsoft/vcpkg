@@ -25,20 +25,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-set(DOXY_TOOLS "doxygen")
-if("app" IN_LIST FEATURES)
-  list(APPEND DOXY_TOOLS "doxyapp")
-endif()
-if("parse" IN_LIST FEATURES)
-  list(APPEND DOXY_TOOLS "doxyparse")
-endif()
-if("search" IN_LIST FEATURES)
-  list(APPEND DOXY_TOOLS "doxysearch")
-endif()
-if("wizard" IN_LIST FEATURES)
-  list(APPEND DOXY_TOOLS "doxywizard")
-endif()
-vcpkg_copy_tools(TOOL_NAMES ${DOXY_TOOLS} AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES doxygen AUTO_CLEAN)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

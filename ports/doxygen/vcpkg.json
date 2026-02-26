@@ -5,9 +5,6 @@
   "license": "GPL-2.0-only",
   "dependencies": [
     "fmt",
-    "ghc-filesystem",
-    "libiconv",
-    "lodepng",
     "spdlog",
     "sqlite3",
     {
