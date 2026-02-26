@@ -6,6 +6,10 @@
   "homepage": "https://github.com/libvips/libvips",
   "license": "LGPL-2.1-or-later",
   "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    },
     "glib",
     "expat"
   ],
