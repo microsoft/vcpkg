@@ -1,9 +1,12 @@
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO apache/arrow-adbc
-    REF apache-arrow-adbc-${VERSION}
-    SHA512 59cccbeeefa295d69cacfa8851b621376106aca57ebd94291523fcca314c0bd10c1d296801d1eacce9edddd46a8c87deaf3d8367e32ba5fd5b322b34c6af8625
-    HEAD_REF main
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://archive.apache.org/dist/arrow/apache-arrow-adbc-${VERSION}/apache-arrow-adbc-${VERSION}.tar.gz"
+    FILENAME "apache-arrow-adbc-${VERSION}.tar.gz"
+    SHA512 86bc77b5e1fba2a8616614e9f7077e2e966165e28ff6fd4c7e96f4538ce3ac7f705da2e528515384870565ebbd0ec8ce27d45234446d2985d357111a25e51d13
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         fix_static_build.patch
         fix_windows_build.patch
@@ -22,6 +25,21 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ADBC_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ADBC_BUILD_STATIC)
+
+set(ADBC_NEEDS_GO OFF)
+if("flightsql" IN_LIST FEATURES OR "snowflake" IN_LIST FEATURES OR "bigquery" IN_LIST FEATURES)
+    set(ADBC_NEEDS_GO ON)
+endif()
+
+if(ADBC_NEEDS_GO)
+    vcpkg_find_acquire_program(GO)
+    get_filename_component(GO_EXE_PATH "${GO}" DIRECTORY)
+    vcpkg_add_to_path("${GO_EXE_PATH}")
+    # Ensure GOMODCACHE is writable (needed in containerized CI environments)
+    if(NOT DEFINED ENV{GOMODCACHE})
+        set(ENV{GOMODCACHE} "${CURRENT_BUILDTREES_DIR}/go-cache")
+    endif()
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/c
