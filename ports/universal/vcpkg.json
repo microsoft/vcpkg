@@ -1,0 +1,17 @@
+{
+  "name": "universal",
+  "version": "3.96",
+  "description": "A header-only C++ library for plug-in replacement number systems for native types",
+  "homepage": "https://github.com/stillwater-sc/universal",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

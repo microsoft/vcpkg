@@ -10176,6 +10176,10 @@
       "baseline": "2.0.0",
       "port-version": 6
     },
+    "universal": {
+      "baseline": "3.96",
+      "port-version": 0
+    },
     "unixodbc": {
       "baseline": "2.3.14",
       "port-version": 0
