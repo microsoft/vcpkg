@@ -31,3 +31,6 @@ file(REMOVE_RECURSE
 # Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+# Allow DLLs in lib (lib/lua specifically)
+set(VCPKG_POLICY_ALLOW_DLLS_IN_LIB enabled)
