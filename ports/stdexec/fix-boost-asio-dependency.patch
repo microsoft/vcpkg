@@ -1,0 +1,21 @@
+diff --git a/cmake/Modules/ConfigureASIO.cmake b/cmake/Modules/ConfigureASIO.cmake
+index 210e583..ea64555 100644
+--- a/cmake/Modules/ConfigureASIO.cmake
++++ b/cmake/Modules/ConfigureASIO.cmake
+@@ -26,10 +26,12 @@ if(STDEXEC_ENABLE_ASIO)
+   if(${STDEXEC_ASIO_USES_BOOST})
+     set(BOOST_INCLUDE_LIBRARIES asio system)
+     set(BOOST_VERSION 1.86.0)
+-    rapids_cpm_find(Boost ${BOOST_VERSION}
+-      CPM_ARGS
+-        URL https://github.com/boostorg/boost/releases/download/boost-${BOOST_VERSION}/boost-${BOOST_VERSION}-cmake.tar.xz
+-        OPTIONS "BOOST_SKIP_INSTALL_RULES OFF"
++    rapids_find_package(
++      Boost REQUIRED
++      COMPONENTS system asio
++      GLOBAL_TARGETS Boost::system Boost::asio
++      BUILD_EXPORT_SET stdexec-exports
++      INSTALL_EXPORT_SET stdexec-exports
+     )
+ 
+     add_library(asioexec INTERFACE)
