@@ -3184,6 +3184,10 @@
       "baseline": "2.0.0",
       "port-version": 1
     },
+    "frei0r": {
+      "baseline": "2.5.4",
+      "port-version": 0
+    },
     "fribidi": {
       "baseline": "1.0.16",
       "port-version": 0
