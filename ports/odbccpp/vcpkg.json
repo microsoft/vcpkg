@@ -1,20 +1,17 @@
 {
   "name": "odbccpp",
-  "version": "1.4",
+  "version": "1.5",
   "description": "An object-oriented C++ wrapper of the ODBC API from SAP",
   "homepage": "https://github.com/SAP/odbc-cpp-wrapper",
   "license": "Apache-2.0",
+  "supports": "!uwp & !android",
   "dependencies": [
     {
       "name": "unixodbc",
-      "platform": "linux | osx"
+      "platform": "!windows"
     },
     {
       "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

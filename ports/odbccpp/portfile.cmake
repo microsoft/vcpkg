@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SAP/odbc-cpp-wrapper
     REF "v${VERSION}"
-    SHA512 8e79536bc24bd4f59ddc9554824df255fabb7ca651839ff2c90f8a352f61da99beb1df5042c2785d86a3294bcf8c0a93064ed89a62400063755cb5a7df47ca58
+    SHA512 1c72fd203021104b37bd01b0db67cff587ca4f03f19dbd8a026fda4437a6d89fed168feb3d3788287df60d5e3cd3450797cd97153826e069fb3d242e7f136f74
     HEAD_REF master
     PATCHES
         use-vcpkg-unixodbc.patch

@@ -1,5 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6861360..8d8e62a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,7 +4,17 @@ SET(CMAKE_CXX_STANDARD 11)
@@ -21,23 +19,9 @@ index 6861360..8d8e62a 100644
  FIND_PACKAGE(Doxygen)
  FIND_PACKAGE(GTest)
  
-diff --git a/src/odbc/CMakeLists.txt b/src/odbc/CMakeLists.txt
-index 3bff9c4..dce9e3b 100644
 --- a/src/odbc/CMakeLists.txt
 +++ b/src/odbc/CMakeLists.txt
-@@ -57,9 +57,9 @@ TARGET_COMPILE_DEFINITIONS(odbccpp_static
-         ODBC_STATIC
- )
- 
--TARGET_LINK_LIBRARIES(odbccpp_static
-+TARGET_LINK_LIBRARIES(odbccpp_static
-     PUBLIC
--        ODBC::ODBC
-+        ${ODBC_TARGET}
- )
- 
- SET_PROPERTY(TARGET odbccpp_static PROPERTY POSITION_INDEPENDENT_CODE ON)
-@@ -76,7 +76,7 @@ TARGET_COMPILE_DEFINITIONS(odbccpp
+@@ -51,7 +51,7 @@ ADD_LIBRARY(odbccpp ${odbccpp_sources})
  
  TARGET_LINK_LIBRARIES(odbccpp
      PUBLIC
@@ -45,4 +29,4 @@ index 3bff9c4..dce9e3b 100644
 +        ${ODBC_TARGET}
  )
  
- SET_PROPERTY(TARGET odbccpp PROPERTY public_headers ${public_headers})
+ IF(BUILD_SHARED_LIBS)
