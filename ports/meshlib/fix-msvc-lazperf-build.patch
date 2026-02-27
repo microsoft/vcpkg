@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea44ef0..8600c40 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -208,6 +208,10 @@ ENDIF()
+ # MRMesh library is always built
+ add_subdirectory(${PROJECT_SOURCE_DIR}/MRPch ./MRPch)
+ add_subdirectory(${PROJECT_SOURCE_DIR}/MRMesh ./MRMesh)
++
++IF(MESHLIB_BUILD_EXTRA_IO_FORMATS)
++  add_subdirectory(${PROJECT_SOURCE_DIR}/laz-perf)
++ENDIF()
+
+ IF(MESHLIB_BUILD_EXTRA_IO_FORMATS)
+   add_subdirectory(${PROJECT_SOURCE_DIR}/MRIOExtras ./MRIOExtras)
+@@ -274,6 +278,5 @@ IF(MESHLIB_PYTHON_SUPPORT)
+ ENDIF()
+
+ IF(MSVC)
+-  add_subdirectory(${PROJECT_SOURCE_DIR}/laz-perf)
+   add_subdirectory(${PROJECT_SOURCE_DIR}/OpenCTM)
+ ENDIF()
+diff --git a/source/laz-perf/CMakeLists.txt b/source/laz-perf/CMakeLists.txt
+index 3cb0485..7a4a398 100644
+--- a/source/laz-perf/CMakeLists.txt
++++ b/source/laz-perf/CMakeLists.txt
+@@ -1,7 +1,9 @@
+ # This file exists so we can disable some warnings in Lazperf.
+ # If we were to `add_subdirectory` it directly from `MeshLib/CMakeLists.txt`, we would have to modify the global CXX flags, which is uncool.
+
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4245 /wd4456 /wd4458 /wd5051")
++if(MSVC)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4245 /wd4456 /wd4458 /wd5051")
++endif()
+ set(WITH_TESTS OFF CACHE BOOL "Choose if LAZPERF unit tests should be built")
+ set(WITH_TOOLS OFF CACHE BOOL "Choose if LAZPERF tools should be built")
+ add_subdirectory(${MESHLIB_THIRDPARTY_DIR}/laz-perf ./laz-perf)

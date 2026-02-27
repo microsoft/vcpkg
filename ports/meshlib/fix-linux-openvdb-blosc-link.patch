@@ -1,0 +1,17 @@
+diff --git a/source/MRVoxels/CMakeLists.txt b/source/MRVoxels/CMakeLists.txt
+index 8b4df1f..d302e41 100644
+--- a/source/MRVoxels/CMakeLists.txt
++++ b/source/MRVoxels/CMakeLists.txt
+@@ -32,9 +32,10 @@ target_link_libraries(${PROJECT_NAME}
+       OpenVDB::openvdb
+ )
+ # required for static linking
+-IF(EMSCRIPTEN)
+-  target_link_libraries(${PROJECT_NAME} PRIVATE blosc)
++IF(EMSCRIPTEN OR UNIX)
++  find_package(blosc CONFIG REQUIRED)
++  target_link_libraries(${PROJECT_NAME} PRIVATE blosc_static)
+ ENDIF()
+
+ IF(NOT MRVOXELS_NO_DICOM)
+   find_package(GDCM CONFIG REQUIRED)

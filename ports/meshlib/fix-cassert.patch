@@ -1,0 +1,13 @@
+diff --git a/source/MRMesh/MRBestFitPolynomial.cpp b/source/MRMesh/MRBestFitPolynomial.cpp
+--- a/source/MRMesh/MRBestFitPolynomial.cpp
++++ b/source/MRMesh/MRBestFitPolynomial.cpp
+@@ -1,8 +1,9 @@
+ #include "MRBestFitPolynomial.h"
+ #include "MRGTest.h"
+
+ #include <MRPch/MREigenCore.h>
+ #include <Eigen/LU>
+
++#include <cassert>
+ #include <cmath>
+ #include <complex>

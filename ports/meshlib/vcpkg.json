@@ -1,0 +1,37 @@
+{
+  "name": "meshlib",
+  "version": "3.1.1.92",
+  "description": "Mesh processing library",
+  "homepage": "https://meshlib.io/",
+  "license": null,
+  "dependencies": [
+    "blosc",
+    "boost",
+    "eigen3",
+    "fmt",
+    "freetype",
+    "gdcm",
+    "jsoncpp",
+    "libe57format",
+    "libharu",
+    "libzip",
+    "mbedtls",
+    "opencascade",
+    "openvdb",
+    "parallel-hashmap",
+    "spdlog",
+    "tbb",
+    "tiff",
+    "tinygltf",
+    "tinyxml2",
+    "tl-expected",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
