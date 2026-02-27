@@ -1,0 +1,40 @@
+From f6a0073a51324209035ab0632272c970cdfbfe5b Mon Sep 17 00:00:00 2001
+From: Bruno S Marques <brunosmarques1995@hotmail.com>
+Date: Wed, 11 Feb 2026 11:09:47 -0300
+Subject: [PATCH] Fix operator overload attribute syntax in GraphQLParse.h
+
+to fix identifier '_graphql' preceded by whitespace in a literal operator declaration is deprecated [-Wdeprecated-literal-operator]
+   53 | [[nodiscard("unnecessary parse")]] GRAPHQLPEG_EXPORT peg::ast operator"" _graphql(
+      |                                                               ~~~~~~~~~~~^~~~~~~~
+      |                                                               operator""_graphql
+---
+ include/graphqlservice/GraphQLParse.h | 2 +-
+ src/SyntaxTree.cpp                    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/graphqlservice/GraphQLParse.h b/include/graphqlservice/GraphQLParse.h
+index e983b224..627446dc 100644
+--- a/include/graphqlservice/GraphQLParse.h
++++ b/include/graphqlservice/GraphQLParse.h
+@@ -50,7 +50,7 @@ constexpr size_t c_defaultDepthLimit = 25;
+ 
+ } // namespace peg
+ 
+-[[nodiscard("unnecessary parse")]] GRAPHQLPEG_EXPORT peg::ast operator"" _graphql(
++[[nodiscard("unnecessary parse")]] GRAPHQLPEG_EXPORT peg::ast operator""_graphql(
+ 	const char* text, size_t size);
+ 
+ } // namespace graphql
+diff --git a/src/SyntaxTree.cpp b/src/SyntaxTree.cpp
+index 60743538..524067ec 100644
+--- a/src/SyntaxTree.cpp
++++ b/src/SyntaxTree.cpp
+@@ -1148,7 +1148,7 @@ ast parseFile(std::string_view filename, size_t depthLimit)
+ 
+ } // namespace peg
+ 
+-peg::ast operator"" _graphql(const char* text, size_t size)
++peg::ast operator""_graphql(const char* text, size_t size)
+ {
+ 	peg::ast result { std::make_shared<peg::ast_input>(
+ 						  peg::ast_input { peg::ast_string_view { { text, size } } }),
