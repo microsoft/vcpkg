@@ -6,6 +6,14 @@
   "license": null,
   "dependencies": [
     {
+      "name": "pipewire",
+      "platform": "linux"
+    },
+    {
+      "name": "pulseaudio",
+      "platform": "linux"
+    },
+    {
       "name": "qtbase",
       "default-features": false,
       "features": [
