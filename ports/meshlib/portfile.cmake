@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-e57format.patch
         fix-exported-include-dirs.patch
         fix-jpeg-link.patch
+        disable-test.patch
 )
 
 vcpkg_from_github(
@@ -28,12 +29,14 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBUILD_TESTING=OFF
+        -DMR_CXX_STANDARD=20
         -DMESHLIB_PYTHON_SUPPORT=OFF
         -DMESHLIB_BUILD_MRCUDA=OFF
         -DMESHLIB_BUILD_MESHVIEWER=OFF
         -DMESHLIB_BUILD_MRVIEWER=OFF
         -DMESHLIB_BUILD_PYTHON_MODULES=OFF
         -DMESHLIB_USE_VCPKG=ON
+        -DMRMESH_NO_GTEST=ON
         -DMRIOEXTRAS_NO_CTM=ON # API compatibility issue with openctm
 
 )
