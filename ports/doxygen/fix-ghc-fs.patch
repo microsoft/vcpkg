@@ -1,0 +1,39 @@
+diff --git a/src/dir.cpp b/src/dir.cpp
+index d4fc3291b..5610d005d 100644
+--- a/src/dir.cpp
++++ b/src/dir.cpp
+@@ -15,7 +15,7 @@
+ 
+ #define NOMINMAX
+ #define WIN32_LEAN_AND_MEAN
+-#include "filesystem.hpp"
++#include "ghc/filesystem.hpp"
+ #include "dir.h"
+ 
+ #include <utility>
+diff --git a/src/fileinfo.cpp b/src/fileinfo.cpp
+index c52daa728..06da90ab2 100644
+--- a/src/fileinfo.cpp
++++ b/src/fileinfo.cpp
+@@ -15,7 +15,7 @@
+ 
+ #define NOMINMAX
+ #define WIN32_LEAN_AND_MEAN // optional
+-#include "filesystem.hpp"
++#include "ghc/filesystem.hpp"
+ #include "fileinfo.h"
+ 
+ namespace fs = ghc::filesystem;
+diff --git a/src/portable.cpp b/src/portable.cpp
+index 3a289b5ec..fb4b14e45 100644
+--- a/src/portable.cpp
++++ b/src/portable.cpp
+@@ -642,7 +642,7 @@ size_t Portable::recodeUtf8StringToW(const QCString &inputStr,uint16_t **outBuf)
+ // We need to do this part last as including filesystem.hpp earlier
+ // causes the code above to fail to compile on Windows.
+ 
+-#include "filesystem.hpp"
++#include "ghc/filesystem.hpp"
+ 
+ namespace fs = ghc::filesystem;
+ 

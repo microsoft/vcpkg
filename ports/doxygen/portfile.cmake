@@ -8,7 +8,18 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-sqlite3-link.patch
+	remove-deps-testing.patch
+	use-ext-deps.patch
+	fix-ghc-fs.patch
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps/TinyDeflate")
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps/filesystem")
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps/liblodepng")
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps/spdlog")
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps/sqlite3")
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps/iconv_winbuild")
+file(REMOVE_RECURSE "${SOURCE_PATH}/deps/fmt")
 
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)

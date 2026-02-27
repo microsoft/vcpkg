@@ -1,0 +1,36 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ef0dac53f..9de1a8c70 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1,11 +1,8 @@
+ # vim:ts=4:sw=4:expandtab:autoindent:
+ 
+ include_directories(
+-    ${PROJECT_SOURCE_DIR}/deps/TinyDeflate
+-    ${PROJECT_SOURCE_DIR}/deps/filesystem
+-    ${PROJECT_SOURCE_DIR}/deps/libmd5
+-    ${PROJECT_SOURCE_DIR}/deps/liblodepng
+     ${PROJECT_SOURCE_DIR}/deps/libmscgen
++    ${PROJECT_SOURCE_DIR}/deps/libmd5
+     ${PROJECT_SOURCE_DIR}/libversion
+     ${PROJECT_SOURCE_DIR}/libxml
+     ${PROJECT_SOURCE_DIR}/vhdlparser
+@@ -343,6 +340,18 @@ add_executable(doxygen
+     ${PROJECT_SOURCE_DIR}/templates/icon/doxygen.rc
+ )
+ 
++find_package(ghc_filesystem CONFIG REQUIRED)
++link_libraries(doxygen PRIVATE ghcFilesystem::ghc_filesystem)
++
++find_package(Iconv REQUIRED)
++link_libraries(doxygen PRIVATE Iconv::Iconv)
++
++find_package(lodepng-c CONFIG REQUIRED)
++link_libraries(doxygen PRIVATE lodepng-c)
++
++find_path(TINYDEFLATE_INCLUDE_DIRS "gunzip.hh")
++include_directories(doxygen PRIVATE ${TINYDEFLATE_INCLUDE_DIRS})
++
+ # enable to monitor compilation times
+ #set_property(TARGET doxymain PROPERTY RULE_LAUNCH_COMPILE "${CMAKE_COMMAND} -E time")
+ 

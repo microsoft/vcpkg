@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6468e292d..72e05d9a4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -163,15 +163,6 @@ endif()
+ 
+ if(WIN32)
+   if(MSVC)
+-    if(NOT ICONV_DIR)
+-      if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+-        list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/deps/iconv_winbuild/include" "${PROJECT_SOURCE_DIR}/deps/iconv_winbuild/x64")
+-      elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+-        list(APPEND CMAKE_PREFIX_PATH "${PROJECT_SOURCE_DIR}/deps/iconv_winbuild/include" "${PROJECT_SOURCE_DIR}/deps/iconv_winbuild/x86")
+-      endif()
+-    else()
+-      list(APPEND CMAKE_PREFIX_PATH ${ICONV_DIR})
+-    endif()
+     set(CMAKE_REQUIRED_DEFINITIONS "-DLIBICONV_STATIC")
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj") # needed for language.cpp on 64bit
+     add_definitions(-DLIBICONV_STATIC -D_CRT_SECURE_NO_WARNINGS)
+@@ -306,7 +297,6 @@ include(cmake/CompilerWarnings.cmake)
+ include(cmake/Coverage.cmake)
+ include(cmake/WindowsEncoding.cmake)
+ 
+-add_subdirectory(deps)
+ add_subdirectory(libversion)
+ add_subdirectory(libxml)
+ add_subdirectory(vhdlparser)
+@@ -337,8 +327,5 @@ if(GENERATEDS_FOUND)
+ endif()
+ add_subdirectory(addon)
+ 
+-enable_testing()
+-add_subdirectory(testing)
+-
+ include(cmake/packaging.cmake) # set CPACK_xxxx properties
+ include(CPack)

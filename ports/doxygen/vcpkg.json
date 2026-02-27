@@ -10,7 +10,11 @@
     {
       "name": "vcpkg-cmake",
       "host": true
-    }
+    },
+    "libiconv",
+    "ghc-filesystem",
+    "tinydeflate",
+    "lodepng"
   ],
   "features": {
     "app": {
