@@ -8593,7 +8593,7 @@
       "port-version": 0
     },
     "rerun-sdk": {
-      "baseline": "0.29.2",
+      "baseline": "0.30.0",
       "port-version": 0
     },
     "rest-rpc": {
