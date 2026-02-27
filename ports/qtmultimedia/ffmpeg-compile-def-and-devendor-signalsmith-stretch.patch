@@ -2,6 +2,21 @@ diff --git a/src/plugins/multimedia/ffmpeg/CMakeLists.txt b/src/plugins/multimed
 index 77c459a..af5229e 100644
 --- a/src/plugins/multimedia/ffmpeg/CMakeLists.txt
 +++ b/src/plugins/multimedia/ffmpeg/CMakeLists.txt
+@@ -85,11 +85,9 @@ qt_internal_add_module(FFmpegMediaPluginImplPrivate
+         # compiled with different compiler options:
+         # not used because `__NO_INLINE__' not defined [-Werror=invalid-pch]
+         playbackengine/qffmpegaudioframeconverter.cpp
+-
+-    SYSTEM_INCLUDE_DIRECTORIES
+-        ../../../3rdparty/signalsmith-stretch/
+-    ATTRIBUTION_FILE_DIR_PATHS
+-        ../../../3rdparty/signalsmith-stretch
++
++    SYSTEM_INCLUDE_DIRECTORIES
++        "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/signalsmith-stretch"
+ )
+ 
+ if (LINUX OR ANDROID)
 @@ -285,7 +285,7 @@ else()
      # applications need to link against the ffmpeg libs via qt_add_ios_ffmpeg_libraries
      foreach(ffmpeg_lib IN LISTS ffmpeg_libs)

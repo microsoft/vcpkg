@@ -1,0 +1,42 @@
+{
+  "name": "huira",
+  "version": "0.8.2",
+  "description": "A library for space rendering, LiDAR simulation, and solar radiation pressure modeling.",
+  "homepage": "https://github.com/huira-render/huira",
+  "documentation": "https://docs.huira.space",
+  "license": "MIT",
+  "supports": "!android & !uwp & !xbox",
+  "dependencies": [
+    "assimp",
+    "cfitsio",
+    "cspice",
+    "glm",
+    "libjpeg-turbo",
+    "libpng",
+    "tbb",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "tools": {
+      "description": "Build huira command line tools",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false
+        },
+        "indicators"
+      ]
+    }
+  }
+}
