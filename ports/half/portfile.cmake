@@ -5,6 +5,8 @@ vcpkg_from_sourceforge(
     FILENAME "half-${VERSION}.zip"
     NO_REMOVE_ONE_LEVEL
     SHA512 946b1663a736eb486f670ba9dfcc56b43b9e7fb195988174b7dd004bdd2e23aba7a395b8867b4f58c97e73a50edf845b703b8cfc35708a562e6a9d7e1b4f4204
+    PATCHES
+        literal_operator.diff
 )
 
 file(GLOB HEADER_FILES "${SOURCE_PATH}/include/*.hpp")
