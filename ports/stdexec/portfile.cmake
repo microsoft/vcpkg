@@ -12,12 +12,14 @@ vcpkg_from_github(
         fix-clangd-helper-file-basedir.patch
         fix-boost-asio-dependency.patch
         fix-tbb-dependency.patch
+        fix-taskflow-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        asio STDEXEC_ENABLE_ASIO
-        tbb  STDEXEC_ENABLE_TBB
+        asio     STDEXEC_ENABLE_ASIO
+        tbb      STDEXEC_ENABLE_TBB
+        taskflow STDEXEC_ENABLE_TASKFLOW
 )
 
 vcpkg_from_github(

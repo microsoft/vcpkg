@@ -22,6 +22,12 @@
         "boost-system"
       ]
     },
+    "taskflow": {
+      "description": "stdexec enable taskflow",
+      "dependencies": [
+        "taskflow"
+      ]
+    },
     "tbb": {
       "description": "stdexec enable tbb",
       "dependencies": [
