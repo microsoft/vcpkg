@@ -11,11 +11,13 @@ vcpkg_from_github(
         fix-version.patch
         fix-clangd-helper-file-basedir.patch
         fix-boost-asio-dependency.patch
+        fix-tbb-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         asio STDEXEC_ENABLE_ASIO
+        tbb  STDEXEC_ENABLE_TBB
 )
 
 vcpkg_from_github(

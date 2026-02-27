@@ -21,6 +21,12 @@
         "boost-asio",
         "boost-system"
       ]
+    },
+    "tbb": {
+      "description": "stdexec enable tbb",
+      "dependencies": [
+        "tbb"
+      ]
     }
   }
 }
