@@ -3,13 +3,14 @@ vcpkg_from_github(
     REPO MeshInspector/MeshLib
     REF v${VERSION}
     SHA512 ec4eb605c3fb1dcddc6d2219baa6eb9402bf57b1840d601bcc92b82b9b48a4d8bd8221b2589cc0677eef9185977a0afdde1464d74dccd964c4ff2dc5a1742be9
+    HEAD_REF master
     PATCHES
         fix-msvc-lazperf-build.patch
         fix-linux-openvdb-blosc-link.patch
         fix-cassert.patch
         fix-e57format.patch
         fix-exported-include-dirs.patch
-    HEAD_REF master
+        fix-jpeg-link.patch
 )
 
 vcpkg_from_github(
