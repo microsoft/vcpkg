@@ -15,6 +15,8 @@ vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/tclap")
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 file(COPY "${SOURCE_PATH}/include/tclap" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.h")
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
