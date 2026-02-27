@@ -10,7 +10,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	FEATURES
 	cuda Viskores_ENABLE_CUDA
         kokkos Viskores_ENABLE_KOKKOS
-        openmp Viskores_ENABLE_OPENMP
         tbb Viskores_ENABLE_TBB
         rendering Viskores_ENABLE_RENDERING
         double     Viskores_USE_DOUBLE_PRECISION
@@ -27,6 +26,7 @@ vcpkg_cmake_configure(
 	-DViskores_ENABLE_TUTORIALS=ON
 	-DViskores_ENABLE_TESTING=OFF
 	-DViskores_ENABLE_TESTING_LIBRARY=OFF
+	-DViskores_ENABLE_OPENMP=OFF
 )
 
 vcpkg_cmake_install()
@@ -36,5 +36,6 @@ vcpkg_cmake_config_fixup(PACKAGE_NAME viskores-1.1)
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")

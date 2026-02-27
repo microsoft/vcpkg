@@ -25,14 +25,14 @@
     "kokkos": {
       "description": "Enable Kokkos support"
     },
-    "openmp": {
-      "description": "Enable OpenMP support"
-    },
     "rendering": {
       "description": "Enable rendering library"
     },
     "tbb": {
-      "description": "Enable TBB support"
+      "description": "Enable TBB support",
+      "dependencies": [
+        "tbb"
+      ]
     }
   }
 }
