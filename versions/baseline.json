@@ -9366,7 +9366,7 @@
     },
     "spine-runtimes": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "spirit-po": {
       "baseline": "1.1.2",

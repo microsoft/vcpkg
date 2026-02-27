@@ -42,7 +42,7 @@ index 906f7b0..c5e1f18 100644
 \ No newline at end of file
 +target_include_directories(spine-c PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/spine-c/include>)
 +install(TARGETS spine-c DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+install(FILES ${INCLUDES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/spine)
++install(FILES ${INCLUDES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/spine-c/spine)
 \ No newline at end of file
 diff --git a/spine-cpp/CMakeLists.txt b/spine-cpp/CMakeLists.txt
 index e008c33..805aba8 100644
@@ -58,7 +58,7 @@ index e008c33..805aba8 100644
 \ No newline at end of file
 +target_include_directories(spine-cpp PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/spine-cpp/include>)
 +install(TARGETS spine-cpp DESTINATION ${CMAKE_INSTALL_LIBDIR})
-+install(FILES ${INCLUDES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/spine)
++install(FILES ${INCLUDES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/spine-cpp/spine)
 \ No newline at end of file
 diff --git a/spine-sfml/c/CMakeLists.txt b/spine-sfml/c/CMakeLists.txt
 index 68dcc75..2ccfb2d 100644
