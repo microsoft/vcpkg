@@ -1,19 +1,5 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cdf73fa..9fea965 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -30,9 +30,6 @@ set(CMAKE_RELWITHDEBINFO_POSTFIX   reldbg)
- # Add main tcp_pubsub library
- add_subdirectory(tcp_pubsub)
- 
--# Recycle dependency. It's header only and not in the API, so we add it with EXCLUDE_FOR_ALL, so it won't be installed
--add_subdirectory(thirdparty/recycle EXCLUDE_FROM_ALL)
--
- # Generic samples
- if (TCP_PUBSUB_BUILD_SAMPLES)
-     add_subdirectory(samples/performance_publisher)
 diff --git a/tcp_pubsub/CMakeLists.txt b/tcp_pubsub/CMakeLists.txt
-index d2a5777..772319a 100644
+index 2ef4582..ea6857a 100644
 --- a/tcp_pubsub/CMakeLists.txt
 +++ b/tcp_pubsub/CMakeLists.txt
 @@ -10,8 +10,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -35,7 +21,7 @@ index d2a5777..772319a 100644
  )
  
  target_compile_definitions(${PROJECT_NAME}
-@@ -100,6 +99,7 @@ target_include_directories(${PROJECT_NAME}
+@@ -110,6 +109,7 @@ target_include_directories(${PROJECT_NAME}
      $<INSTALL_INTERFACE:include>
    PRIVATE
      src/
@@ -43,8 +29,4 @@ index d2a5777..772319a 100644
  )
  
  set_target_properties(${PROJECT_NAME} PROPERTIES
-@@ -177,4 +177,3 @@ install(
-   DESTINATION ${TCP_PUBSUB_INSTALL_CMAKE_DIR}
-   COMPONENT tcp_pubsub_dev
- )
--
+ 

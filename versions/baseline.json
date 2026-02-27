@@ -2697,8 +2697,8 @@
       "port-version": 1
     },
     "ecal": {
-      "baseline": "5.13.4",
-      "port-version": 1
+      "baseline": "6.0.1",
+      "port-version": 0
     },
     "ecaludp": {
       "baseline": "0.1.2",
@@ -9761,7 +9761,7 @@
       "port-version": 0
     },
     "tcp-pubsub": {
-      "baseline": "1.0.3",
+      "baseline": "2.0.1",
       "port-version": 0
     },
     "tdlib": {
