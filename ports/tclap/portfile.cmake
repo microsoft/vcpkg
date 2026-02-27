@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO DAarno/tclap
     REF "${VERSION}"
     SHA512 e698e5a973f48cafce03f2b9dd41b9f507a7a728fbd35050b4aaedc80b39ff898bb7ca515f8a054f39b5277d29c430e238015ed4fd97ae2f40c194269036a83c
+    PATCHES
+        disable-test.patch 
 )
 
 vcpkg_cmake_configure(
