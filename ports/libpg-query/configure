@@ -1,0 +1,4 @@
+#!/bin/sh
+# Intentionally empty: libpg_query has no configure script; vcpkg_make_configure expects one.
+
+exit 0

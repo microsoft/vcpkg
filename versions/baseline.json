@@ -5336,6 +5336,10 @@
       "baseline": "2021-11-14",
       "port-version": 2
     },
+    "libpg-query": {
+      "baseline": "17-6.2.1",
+      "port-version": 0
+    },
     "libphonenumber": {
       "baseline": "9.0.25",
       "port-version": 0
