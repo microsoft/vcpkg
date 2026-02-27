@@ -6,11 +6,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 file(WRITE "${SOURCE_PATH}/CMakeLists.txt" [=[
 cmake_minimum_required(VERSION 3.10)
 project(xatlas LANGUAGES CXX)
-
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON) 
 
 add_library(xatlas source/xatlas/xatlas.cpp)
 add_library(xatlas::xatlas ALIAS xatlas)
