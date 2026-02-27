@@ -20,6 +20,8 @@ vcpkg_from_github(
     REF 05ea01542e5c4417c05e7222f920e06276c79324
     SHA512 de933635f31fb726b359e1058e3666006b236acc0fa5fc20049288fd19446d6f482b34f926a398cb1760e6cae9a6cbd52c2a2dd6bbf3717145f49e3d04404c0a
     HEAD_REF master
+    PATCHES
+        lazperf-cpp17.patch
 )
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty/laz-perf")
 file(COPY "${LAZ_PERF_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/thirdparty/laz-perf")
