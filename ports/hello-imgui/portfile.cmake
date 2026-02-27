@@ -4,13 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthom/hello_imgui
     REF "v${VERSION}"
-    SHA512 b44741e27278974f6a545a3143abd18027d98503cc912085e08528c467197fb208d2d4876e483f74e518f3dfc14d12c3579e379b9939dc364a1fff4ee98bb8f5
+    SHA512 a81faf70a564147cf9c4587de54e46965b744ce93afadf7c9ce8a4868a9a584eea0c8f8df0c7f701e0404b4984f95ecfa3f5aa36a94ef2a84eaadbcc1e80c9b7
     HEAD_REF master
     PATCHES
         cmake-config.diff
         imgui-test-engine.diff
-        # PR has been merged into https://github.com/pthom/hello_imgui/pull/142. This patch should not be needed in the next release.
-        support-imgui-1_91_9.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/external/imgui"

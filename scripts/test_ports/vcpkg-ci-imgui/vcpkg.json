@@ -1,7 +1,7 @@
 {
   "name": "vcpkg-ci-imgui",
-  "version-date": "2024-05-17",
-  "description": "Force test-engine feature of imgui within vcpkg CI",
+  "version-string": "ci",
+  "description": "Port to validate imgui features within CI",
   "homepage": "https://github.com/microsoft/vcpkg",
   "license": "MIT",
   "dependencies": [
@@ -10,6 +10,17 @@
       "features": [
         "test-engine"
       ]
+    },
+    {
+      "name": "imgui",
+      "features": [
+        "glfw-binding",
+        "webgpu-binding"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }
