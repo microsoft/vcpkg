@@ -1,0 +1,72 @@
+{
+  "name": "libvips",
+  "version": "8.18.0",
+  "description": "libvips is a demand-driven, horizontally threaded image processing library.",
+  "homepage": "https://github.com/libvips/libvips",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    "expat",
+    "glib",
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "features": {
+    "exif": {
+      "description": "Build with exif support.",
+      "dependencies": [
+        "libexif"
+      ]
+    },
+    "fontconfig": {
+      "description": "Build with fontconfig support.",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "jpeg": {
+      "description": "Build with jpeg support.",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "lcms": {
+      "description": "Build with lcms support.",
+      "dependencies": [
+        "lcms"
+      ]
+    },
+    "pangocairo": {
+      "description": "Build with pangocairo support.",
+      "dependencies": [
+        "cairo",
+        "pango"
+      ]
+    },
+    "png": {
+      "description": "Build with png support.",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "rsvg": {
+      "description": "Build with rsvg support.",
+      "dependencies": [
+        "librsvg"
+      ]
+    },
+    "tiff": {
+      "description": "Build with tiff support.",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "zlib": {
+      "description": "Build with zlib support.",
+      "dependencies": [
+        "zlib-ng"
+      ]
+    }
+  }
+}
