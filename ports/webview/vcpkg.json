@@ -1,0 +1,17 @@
+{
+  "name": "webview",
+  "version": "0.12.0",
+  "description": "A tiny cross-platform webview library for C/C++ to build modern cross-platform GUIs",
+  "homepage": "https://github.com/webview/webview",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "webview2",
+      "platform": "windows"
+    }
+  ]
+}
