@@ -2560,6 +2560,10 @@
       "baseline": "3.4.0",
       "port-version": 0
     },
+    "doxygen": {
+      "baseline": "1.16.1",
+      "port-version": 0
+    },
     "dp-thread-pool": {
       "baseline": "0.7.0",
       "port-version": 1
@@ -9899,6 +9903,10 @@
     "tinycthread": {
       "baseline": "2019-08-06",
       "port-version": 3
+    },
+    "tinydeflate": {
+      "baseline": "2024-08-09",
+      "port-version": 0
     },
     "tinydir": {
       "baseline": "1.2.6",

@@ -1,0 +1,68 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6468e292d..d25791192 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -83,7 +83,7 @@ if(use_sys_spdlog)
+   find_package(spdlog CONFIG REQUIRED)
+ endif()
+ if(use_sys_sqlite3)
+-  find_package(SQLite3 REQUIRED)
++  find_package(unofficial-sqlite3 CONFIG REQUIRED)
+ endif()
+ 
+ if(NOT DEFINED MACOS_VERSION_MIN) # to allow overruling with -DMACOS_VERSION_MIN
+diff --git a/addon/doxyapp/CMakeLists.txt b/addon/doxyapp/CMakeLists.txt
+index 2f901d41a..176f084ef 100644
+--- a/addon/doxyapp/CMakeLists.txt
++++ b/addon/doxyapp/CMakeLists.txt
+@@ -39,7 +39,7 @@ endif()
+ target_link_libraries(doxyapp
+ doxymain
+ md5
+-sqlite3
++unofficial::sqlite3::sqlite3
+ xml
+ lodepng
+ mscgen
+@@ -48,7 +48,6 @@ doxycfg
+ vhdlparser
+ ${Iconv_LIBRARIES}
+ ${CMAKE_THREAD_LIBS_INIT}
+-${SQLITE3_LIBRARIES}
+ ${EXTRA_LIBS}
+ ${CLANG_LIBS}
+ ${COVERAGE_LINKER_FLAGS}
+diff --git a/addon/doxyparse/CMakeLists.txt b/addon/doxyparse/CMakeLists.txt
+index be86b2dc9..8b85160de 100644
+--- a/addon/doxyparse/CMakeLists.txt
++++ b/addon/doxyparse/CMakeLists.txt
+@@ -28,7 +28,7 @@ endif()
+ target_link_libraries(doxyparse
+ doxymain
+ md5
+-sqlite3
++unofficial::sqlite3::sqlite3
+ xml
+ lodepng
+ mscgen
+@@ -37,7 +37,6 @@ doxycfg
+ vhdlparser
+ ${Iconv_LIBRARIES}
+ ${CMAKE_THREAD_LIBS_INIT}
+-${SQLITE3_LIBRARIES}
+ ${EXTRA_LIBS}
+ ${CLANG_LIBS}
+ ${COVERAGE_LINKER_FLAGS}
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index ef0dac53f..d3727dd5f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -388,7 +388,7 @@ target_link_libraries(doxygen PRIVATE
+     doxymain
+     doxycfg
+     md5
+-    sqlite3
++    unofficial::sqlite3::sqlite3
+     lodepng
+     mscgen
+     xml

@@ -1,0 +1,33 @@
+{
+  "name": "doxygen",
+  "version-semver": "1.16.1",
+  "description": "Documentation generator from code",
+  "license": "GPL-2.0-only",
+  "dependencies": [
+    "fmt",
+    "spdlog",
+    "sqlite3",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    "libiconv",
+    "ghc-filesystem",
+    "tinydeflate",
+    "lodepng"
+  ],
+  "features": {
+    "app": {
+      "description": "Build the doxyapp package"
+    },
+    "parse": {
+      "description": "Build the doxyparse package"
+    },
+    "search": {
+      "description": "Build the doxysearch package"
+    },
+    "wizard": {
+      "description": "Build the doxywizard package"
+    }
+  }
+}
