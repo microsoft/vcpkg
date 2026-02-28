@@ -1,14 +1,13 @@
-string(REPLACE "." "_" curl_version "curl-${VERSION}")
+string(REPLACE "." "_" curl_version "rc-${VERSION}-3")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 1dca42354d29b9326a3e9be34c74433c3a7364318d69519e2f5b9a164e81db739d3ef1eed79e3313296fe72af73281e0fc61e57a21e9dede1ef240c8fa6af4fe
+    SHA512 6e7f0f2a1a206f03c1203353fcb2e886acd4c492a63c5800b0dffdb037512793b1d2f315e7640a100d5052464cd7456be7add3d934258e7b58ba238b7315782e
     HEAD_REF master
     PATCHES
         dependencies.patch
-        winsock.diff
 )
 # The on-the-fly tarballs do not carry the details of release tarballs.
 vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[-DEV"]] [["]])
