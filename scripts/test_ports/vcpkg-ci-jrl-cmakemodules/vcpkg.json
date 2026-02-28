@@ -1,0 +1,35 @@
+{
+  "name": "vcpkg-ci-jrl-cmakemodules",
+  "version-string": "ci",
+  "description": "Port to force features of jrl-cmakemodules within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    "jrl-cmakemodules",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "sdformat"
+  ],
+  "features": {
+    "sdformat": {
+      "description": "Test for search_for_sdformat in jrl-cmakemodules",
+      "dependencies": [
+        "sdformat"
+      ]
+    },
+    "numpy": {
+      "description": "Test for search numpy from python",
+      "dependencies": [
+        "python3",
+        {
+          "name": "vcpkg-get-python-packages",
+          "host": true
+        }
+      ]
+    }
+  }
+}

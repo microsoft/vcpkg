@@ -1,0 +1,41 @@
+The package jrl-cmakemodules provides a collection of CMake macros
+used to manage projects in the jrl-umi3218 ecosystem.
+
+It is primarily intended for internal use by libraries such as
+eigenpy, coal and pinocchio.
+
+This package relies on several non-standard and non-modern CMake
+patterns. As a result, it is generally **not recommended** to use
+jrl-cmakemodules directly in new projects unless you know exactly
+what you are doing.
+
+Due to these design choices, jrl-cmakemodules **must be located and
+initialized before the main `project()` call** when used with vcpkg.
+In particular, it is strongly recommended to define the cmake variable
+
+    jrl-cmakemodules_ROOT
+
+So that `find_package(jrl-cmakemodules CONFIG REQUIRED)`
+can succeed before `project()` is invoked.
+
+A minimal working example is shown below.
+
+    cmake_minimum_required(VERSION 3.22)
+
+    # 1. MANDATORY: Define metadata required by jrl-cmakemodules
+    set(PROJECT_NAME MyProject)
+    set(PROJECT_DESCRIPTION "Description of the project")
+    set(PROJECT_URL "https://github.com/user/project")
+
+    # 2. Find the jrl-cmakemodules
+    find_package(jrl-cmakemodules CONFIG REQUIRED)
+
+    # 3. Include the base infrastructure
+    include(${jrl-cmakemodules_DIR}/base.cmake)
+
+    # 4. Setup project arguments (Version, Policies, etc.)
+    compute_project_args(PROJECT_ARGS LANGUAGES CXX)
+    project(${PROJECT_NAME} ${PROJECT_ARGS})
+
+    # 5. (Optional) Link to the target if you need its include directories
+    target_link_libraries(main PRIVATE jrl-cmakemodules::jrl-cmakemodules)
