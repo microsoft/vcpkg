@@ -106,22 +106,38 @@ jobs:
     inputs:
       targetType: inline
       script: |
+        $ErrorActionPreference = 'Continue'
         cd scripts/azure-pipelines/owners-db
         npm ci -s
-        if ($env:BUILD_REASON -eq 'PullRequest') {
+        $prHashesPath = "$env:BUILD_ARTIFACTSTAGINGDIRECTORY/pr-hashes.json"
+        $success = $false
+        if ($env:BUILD_REASON -eq 'PullRequest' -and (Test-Path -Path $prHashesPath)) {
           Write-Host 'Running file_script_from_cache for PR'
           $blob = "https://vcpkgbinarycachewus.blob.core.windows.net/cache?$env:BCACHE_SAS_TOKEN"
-          npx --yes ts-node ./file_script_from_cache.ts --pr-hashes "$env:BUILD_ARTIFACTSTAGINGDIRECTORY/pr-hashes.json" --blob-base-url "$blob" --target-branch "origin/master" --out-dir ../../list_files
-        } else {
+          Write-Host "pr-hashes.json path: $prHashesPath"
+          & npx --yes ts-node ./file_script_from_cache.ts --pr-hashes "$prHashesPath" --blob-base-url "$blob" --target-branch "origin/master" --out-dir ../../list_files 2>&1
+          if ($LASTEXITCODE -eq 0) {
+            $success = $true
+          } else {
+            Write-Host "file_script_from_cache failed with exit code $LASTEXITCODE"
+            Write-Host "Falling back to file_script"
+          }
+        }
+        if (-not $success) {
           Write-Host 'Running file_script for CI'
-          npx --yes ts-node ./file_script.ts --info-dir D:\installed\vcpkg\info\ --out-dir ../../list_files
+          & npx --yes ts-node ./file_script.ts --info-dir D:\installed\vcpkg\info\ --out-dir ../../list_files 2>&1
+        }
+        if (Test-Path -Path ../../list_files) {
+          Write-Host '##vso[task.setvariable variable=LIST_FILES_CREATED]True'
+        } else {
+          Write-Host '##vso[task.setvariable variable=LIST_FILES_CREATED]False'
         }
       pwsh: true
     env:
       BCACHE_SAS_TOKEN: $(BCACHE_SAS_TOKEN)
   - task: PublishPipelineArtifact@1
     displayName: "Publish Artifact: file lists for ${{ replace(parameters.jobName, '_', '-') }}"
-    condition: always()
+    condition: and(always(), eq(variables['LIST_FILES_CREATED'], 'True'))
     inputs:
       targetPath: scripts/list_files
       artifact: "file lists for ${{ replace(parameters.jobName, '_', '-') }}"
