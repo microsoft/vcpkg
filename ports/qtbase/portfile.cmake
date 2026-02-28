@@ -27,7 +27,6 @@ set(${PORT}_PATCHES
         moltenvk.patch
         xcodebuild-not-installed.patch
         fix-libresolv-test.patch
-        2d4915.diff
         framework.patch
         use_inotify_on_freebsd.patch
 )
