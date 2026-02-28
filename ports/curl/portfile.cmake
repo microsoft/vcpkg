@@ -1,10 +1,10 @@
-string(REPLACE "." "_" curl_version "rc-${VERSION}-2")
+string(REPLACE "." "_" curl_version "rc-${VERSION}-3")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 56c8a195fac684fc4143ca2281f01e778bf804fb368ef1b9d1780f15da62858593a52ca2971d06f100f07e35ee6bcb5d2dd98605fa6878674e883a9ccfa7a815
+    SHA512 6e7f0f2a1a206f03c1203353fcb2e886acd4c492a63c5800b0dffdb037512793b1d2f315e7640a100d5052464cd7456be7add3d934258e7b58ba238b7315782e
     HEAD_REF master
     PATCHES
         dependencies.patch
