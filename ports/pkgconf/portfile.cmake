@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
 #        001-unveil-fixes.patch # https://github.com/pkgconf/pkgconf/pull/430
+        install.diff
 )
 
 vcpkg_configure_meson(
@@ -99,6 +100,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/pkgconf/libpkgconf/libpkgconf-api.h" "#if defined(PKGCONFIG_IS_STATIC)" "#if 1")
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES bomtool pkgconf spdxtool AUTO_CLEAN)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
