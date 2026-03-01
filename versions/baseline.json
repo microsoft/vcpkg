@@ -5465,7 +5465,7 @@
       "port-version": 0
     },
     "libscran-umappp": {
-      "baseline": "3.2.0",
+      "baseline": "3.2.1",
       "port-version": 0
     },
     "libsecret": {
@@ -6065,7 +6065,7 @@
       "port-version": 0
     },
     "ltla-subpar": {
-      "baseline": "0.4.1",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "lua": {
