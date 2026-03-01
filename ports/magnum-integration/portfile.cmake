@@ -17,10 +17,10 @@ endif()
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        bullet ${_OPTION_PREFIX}WITH_BULLET
-        eigen  ${_OPTION_PREFIX}WITH_EIGEN
-        glm    ${_OPTION_PREFIX}WITH_GLM
-        imgui  ${_OPTION_PREFIX}WITH_IMGUI
+        bullet ${_OPTION_PREFIX}WITH_BULLETINTEGRATION
+        eigen  ${_OPTION_PREFIX}WITH_EIGENINTEGRATION
+        glm    ${_OPTION_PREFIX}WITH_GLMINTEGRATION
+        imgui  ${_OPTION_PREFIX}WITH_IMGUIINTEGRATION
 )
 
 vcpkg_cmake_configure(
