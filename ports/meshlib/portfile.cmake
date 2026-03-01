@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-exported-include-dirs.patch
         fix-jpeg-link.patch
         disable-test.patch
+        disable-openctm.patch
 )
 
 vcpkg_from_github(
