@@ -1,0 +1,64 @@
+diff --git a/source/MRMesh/CMakeLists.txt b/source/MRMesh/CMakeLists.txt
+--- a/source/MRMesh/CMakeLists.txt
++++ b/source/MRMesh/CMakeLists.txt
+@@ -66,6 +66,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE libzip::zip)
+ # TODO: CMake config
+ target_include_directories(${PROJECT_NAME}
+   PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
++    $<INSTALL_INTERFACE:${MR_INCLUDE_DIR}>
+     $<BUILD_INTERFACE:${MESHLIB_THIRDPARTY_DIR}/parallel-hashmap>
+ )
+
+ IF(APPLE)
+   # for Boost.Stacktrace
+   target_compile_definitions(${PROJECT_NAME} PUBLIC _GNU_SOURCE)
+diff --git a/source/MRIOExtras/CMakeLists.txt b/source/MRIOExtras/CMakeLists.txt
+--- a/source/MRIOExtras/CMakeLists.txt
++++ b/source/MRIOExtras/CMakeLists.txt
+@@ -24,6 +24,12 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
+ 
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h)
+ 
++target_include_directories(${PROJECT_NAME}
++  PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
++    $<INSTALL_INTERFACE:${MR_INCLUDE_DIR}>
++ )
++
+ target_link_libraries(${PROJECT_NAME}
+   PUBLIC
+     MRMesh
+diff --git a/source/MRVoxels/CMakeLists.txt b/source/MRVoxels/CMakeLists.txt
+--- a/source/MRVoxels/CMakeLists.txt
++++ b/source/MRVoxels/CMakeLists.txt
+@@ -25,6 +25,12 @@ target_link_libraries(${PROJECT_NAME}
+   PUBLIC
+     MRMesh
+     OpenVDB::openvdb
+ )
++
++target_include_directories(${PROJECT_NAME}
++  PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
++    $<INSTALL_INTERFACE:${MR_INCLUDE_DIR}>
++)
+ # required for static linking
+ IF(EMSCRIPTEN OR UNIX)
+diff --git a/source/MRSymbolMesh/CMakeLists.txt b/source/MRSymbolMesh/CMakeLists.txt
+--- a/source/MRSymbolMesh/CMakeLists.txt
++++ b/source/MRSymbolMesh/CMakeLists.txt
+@@ -15,6 +15,12 @@ target_link_libraries(${PROJECT_NAME}
+     MRMesh
+   PRIVATE
+     Freetype::Freetype
+ )
++
++target_include_directories(${PROJECT_NAME}
++  PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
++    $<INSTALL_INTERFACE:${MR_INCLUDE_DIR}>
++ )
+ 
+ install(
+   TARGETS ${PROJECT_NAME}

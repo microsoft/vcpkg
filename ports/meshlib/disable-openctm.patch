@@ -1,0 +1,12 @@
+diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
+index e4734cf..4aca508 100644
+--- a/thirdparty/CMakeLists.txt
++++ b/thirdparty/CMakeLists.txt
+@@ -83,7 +83,6 @@ IF(NOT APPLE AND NOT MR_EMSCRIPTEN)
+   ENDIF()
+ ENDIF()
+ 
+-add_subdirectory(./OpenCTM-git ./OpenCTM)
+ 
+ option(PHMAP_INSTALL "" ON)
+ add_subdirectory(./parallel-hashmap)
