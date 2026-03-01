@@ -1,6 +1,7 @@
 {
   "name": "mbedtls",
   "version": "3.6.4",
+  "port-version": 1,
   "description": "An open source, portable, easy to use, readable and flexible SSL library",
   "homepage": "https://www.trustedfirmware.org/projects/mbed-tls/",
   "license": "Apache-2.0 OR GPL-2.0-or-later",
@@ -16,13 +17,7 @@
   ],
   "features": {
     "pthreads": {
-      "description": "Multi-threading support",
-      "dependencies": [
-        {
-          "name": "pthreads",
-          "platform": "windows"
-        }
-      ]
+      "description": "Multi-threading support"
     }
   }
 }

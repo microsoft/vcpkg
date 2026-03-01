@@ -1,0 +1,14 @@
+{
+  "name": "pthreads4w",
+  "version": "3.0.0",
+  "description": "Meta-package that provides PThreads4W on Windows, or assumes presence of system pthreads on POSIX systems.",
+  "homepage": "https://sourceforge.net/projects/pthreads4w/",
+  "license": "Apache-2.0",
+  "supports": "windows & !mingw",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
