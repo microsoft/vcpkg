@@ -1,0 +1,32 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,7 +4,17 @@ SET(CMAKE_CXX_STANDARD 11)
+ 
+ PROJECT(odbccpp)
+ 
+-FIND_PACKAGE(ODBC REQUIRED)
++IF(UNIX)
++    FIND_PACKAGE(unixodbc CONFIG)
++    IF(unixodbc_FOUND)
++        SET(ODBC_TARGET UNIX::odbc)
++    ENDIF()
++ENDIF()
++IF(NOT ODBC_TARGET)
++    FIND_PACKAGE(ODBC REQUIRED)
++    SET(ODBC_TARGET ODBC::ODBC)
++ENDIF()
++
+ FIND_PACKAGE(Doxygen)
+ FIND_PACKAGE(GTest)
+ 
+--- a/src/odbc/CMakeLists.txt
++++ b/src/odbc/CMakeLists.txt
+@@ -51,7 +51,7 @@ ADD_LIBRARY(odbccpp ${odbccpp_sources})
+ 
+ TARGET_LINK_LIBRARIES(odbccpp
+     PUBLIC
+-        ODBC::ODBC
++        ${ODBC_TARGET}
+ )
+ 
+ IF(BUILD_SHARED_LIBS)
