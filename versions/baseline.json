@@ -5725,7 +5725,7 @@
       "port-version": 1
     },
     "libvhdi": {
-      "baseline": "20231127",
+      "baseline": "20251119",
       "port-version": 0
     },
     "libvmaf": {
