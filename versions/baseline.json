@@ -2365,7 +2365,7 @@
       "port-version": 6
     },
     "dataframe": {
-      "baseline": "3.7.0",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "date": {
