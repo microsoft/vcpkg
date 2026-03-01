@@ -1,0 +1,13 @@
+diff --git a/CMake/AbseilHelpers.cmake b/CMake/AbseilHelpers.cmake
+index 61e1ae4..4ed5485 100644
+--- a/CMake/AbseilHelpers.cmake
++++ b/CMake/AbseilHelpers.cmake
+@@ -152,7 +152,7 @@ function(absl_cc_library)
+   endif()
+ 
+   # Generate a pkg-config file for every library:
+-  if(ABSL_ENABLE_INSTALL)
++  if(0)
+     if(absl_VERSION)
+       set(PC_VERSION "${absl_VERSION}")
+     else()
