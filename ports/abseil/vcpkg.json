@@ -18,4 +18,13 @@
       "host": true
     }
   ]
+  "features": {
+    "test-helpers": {
+      "description": "Build Abseil's test helpers",
+      "dependencies": [
+        "abseil",
+        "gtest"
+      ]
+    }
+  }
 }
