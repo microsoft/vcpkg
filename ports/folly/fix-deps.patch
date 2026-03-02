@@ -162,6 +162,30 @@ index 1c41750..6ab485c 100644
  endif()
  if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
    list(APPEND FOLLY_LINK_LIBRARIES "execinfo")
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49dd964..b84f338 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -273,7 +273,8 @@ folly_resolve_deferred_dependencies()
+ # This points to the SSL test certificates used by TestSSLServer and related tests
+ if(TARGET folly_testing_test_util)
+   target_compile_definitions(folly_testing_test_util INTERFACE
+-    FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs"
++    $<BUILD_INTERFACE:FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs">
++    $<INSTALL_INTERFACE:FOLLY_CERTS_DIR="share/folly/">
+   )
+ endif()
+ 
+@@ -285,7 +286,8 @@ add_library(folly_test_util
+   ${FOLLY_DIR}/json/JsonTestUtil.cpp
+ )
+ target_compile_definitions(folly_test_util PUBLIC
+-  FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs"
++  $<BUILD_INTERFACE:FOLLY_CERTS_DIR="${FOLLY_DIR}/io/async/test/certs">
++  $<INSTALL_INTERFACE:FOLLY_CERTS_DIR="share/folly">
+ )
+ set_property(TARGET folly_test_util PROPERTY VERSION ${PACKAGE_VERSION})
+ target_link_libraries(folly_test_util
 diff --git a/folly/io/async/AsyncIO.cpp b/folly/io/async/AsyncIO.cpp
 index 2760e0f..a51c16c 100644
 --- a/folly/io/async/AsyncIO.cpp
