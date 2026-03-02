@@ -1,14 +1,16 @@
 diff --git a/source/MRIOExtras/CMakeLists.txt b/source/MRIOExtras/CMakeLists.txt
-index ff8f459..f772ea5 100644
+index 4ee8a4e..3d447b7 100644
 --- a/source/MRIOExtras/CMakeLists.txt
 +++ b/source/MRIOExtras/CMakeLists.txt
-@@ -43,7 +43,8 @@ IF(NOT MRIOEXTRAS_NO_CTM)
+@@ -44,9 +44,10 @@ IF(NOT MRIOEXTRAS_NO_CTM)
  ENDIF()
-
+ 
  IF(NOT MRIOEXTRAS_NO_E57)
--  target_link_libraries(${PROJECT_NAME} PRIVATE E57Format)
 +  find_package(E57Format CONFIG REQUIRED)
-+  target_link_libraries(${PROJECT_NAME} PRIVATE E57Format)
-
-   IF(MSVC AND DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
+   target_link_libraries(${PROJECT_NAME} PRIVATE E57Format)
+ 
+-  IF(MSVC AND DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
++  IF(MSVC AND DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET AND BUILD_SHARED_LIBS)
      file(GLOB XERCES_DLL_RELEASE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/xerces-c_3_*.dll")
+     file(GLOB XERCES_DLL_DEBUG "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin/xerces-c_3_*.dll")
+ 
