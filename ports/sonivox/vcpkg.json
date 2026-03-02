@@ -1,10 +1,9 @@
 {
   "name": "sonivox",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Software MIDI synthesizer evolved from the AOSP 'platform_external_sonivox' project to use it outside of Android. Uses embedded samples allowing also SF2 and DLS files. Plays MID, XMF, and RMI files.",
   "homepage": "https://github.com/EmbeddedSynth/sonivox",
   "license": "Apache-2.0",
-  "supports": "!x86",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

@@ -13,6 +13,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         tools BUILD_TOOLS
 )
 
+if("tools" IN_LIST FEATURES)
+    set(XZ_SANDBOX "auto")
+else()
+    set(XZ_SANDBOX "no")
+endif()
+
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
     set(WASM_OPTIONS -DCMAKE_C_BYTE_ORDER=LITTLE_ENDIAN -DCMAKE_CXX_BYTE_ORDER=LITTLE_ENDIAN)
 endif()
@@ -28,6 +34,7 @@ vcpkg_cmake_configure(
         -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=   # using flags from (vcpkg) toolchain
         -DENABLE_NLS=OFF # nls is not supported by this port, yet
         -DXZ_NLS=OFF
+        -DXZ_SANDBOX:STRING=${XZ_SANDBOX}
     MAYBE_UNUSED_VARIABLES
         CMAKE_MSVC_DEBUG_INFORMATION_FORMAT
         CREATE_XZ_SYMLINKS
