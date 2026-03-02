@@ -1,6 +1,6 @@
 {
   "name": "libscran-umappp",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "UMAP C++ implementation",
   "homepage": "https://github.com/libscran/umappp",
   "license": "BSD-2-Clause",

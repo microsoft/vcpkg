@@ -1,6 +1,6 @@
 {
   "name": "libmaxminddb",
-  "version": "1.12.2",
+  "version": "1.13.2",
   "description": "C library for the MaxMind DB file format",
   "homepage": "https://github.com/maxmind/libmaxminddb",
   "license": "Apache-2.0",

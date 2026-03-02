@@ -28,6 +28,8 @@ endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND FEATURE_OPTIONS -with-yielding_select=yes)
+elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
+    vcpkg_list(APPEND FEATURE_OPTIONS --with-yielding_select=no)
 endif()
 
 # Disable build environment details in binaries
