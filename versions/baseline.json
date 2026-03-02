@@ -453,7 +453,7 @@
       "port-version": 2
     },
     "aws-c-auth": {
-      "baseline": "0.9.6",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "aws-c-cal": {
@@ -497,7 +497,7 @@
       "port-version": 0
     },
     "aws-crt-cpp": {
-      "baseline": "0.37.2",
+      "baseline": "0.37.3",
       "port-version": 0
     },
     "aws-lambda-cpp": {
