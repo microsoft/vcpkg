@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/Vulkan-Headers
     REF "vulkan-sdk-${VERSION}"
-    SHA512 1ec6aabf2267137dfe661fdc36bc25cc44b7c3ac3c6f0bbd8a1a1f5da30619e244ebfb905620c30002b914525d37ac7933f5a7dfd10117888f66d7c1b129612f
+    SHA512 aa6d517304663c55c67bdd8578518a399a1188c6c3a92fac4ee29738f96f6a66b61ebc9c606c20d52f5cbb47976757bfcab35576eca7c839dfda1cdd65074c29
     HEAD_REF main
-    PATCHES fix-vulkan-video-module-name.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port
