@@ -5,7 +5,6 @@ vcpkg_from_github(
     SHA512 4783697ada2102082e37fbb581d75fc04f89c71228771927ce1f63bbe05b24d632e574dec1aeae5a9e027996e30962852615a3c60d566404da7ddfabde53f87c
     HEAD_REF main
     PATCHES
-#        cross-build.patch
         devendoring.patch
         use-cxx-20.patch
 )
