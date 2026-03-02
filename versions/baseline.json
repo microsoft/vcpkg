@@ -61,7 +61,7 @@
       "port-version": 0
     },
     "aeron": {
-      "baseline": "1.50.1",
+      "baseline": "1.50.2",
       "port-version": 0
     },
     "air-ctl": {
