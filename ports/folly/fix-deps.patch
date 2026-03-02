@@ -162,31 +162,6 @@ index 1c41750..6ab485c 100644
  endif()
  if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
    list(APPEND FOLLY_LINK_LIBRARIES "execinfo")
-diff --git a/folly/CMakeLists.txt b/folly/CMakeLists.txt
-index 6a70572..bf58186 100644
---- a/folly/CMakeLists.txt
-+++ b/folly/CMakeLists.txt
-@@ -1430,7 +1430,7 @@ add_subdirectory(ssl)
- add_subdirectory(stats)
- add_subdirectory(synchronization)
- add_subdirectory(system)
--add_subdirectory(testing)
-+# add_subdirectory(testing)
- add_subdirectory(tracing)
- 
- # Resolve deferred dependencies now that all targets exist
-diff --git a/folly/detail/CMakeLists.txt b/folly/detail/CMakeLists.txt
-index 521983f..5912ccd 100644
---- a/folly/detail/CMakeLists.txt
-+++ b/folly/detail/CMakeLists.txt
-@@ -178,7 +178,6 @@ folly_add_library(
-   DEPS
-     folly_conv
-     folly_system_pid
--    folly_testing_test_util
-   EXTERNAL_DEPS
-     Boost::regex
- )
 diff --git a/folly/io/async/AsyncIO.cpp b/folly/io/async/AsyncIO.cpp
 index 2760e0f..a51c16c 100644
 --- a/folly/io/async/AsyncIO.cpp
