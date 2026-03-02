@@ -1,0 +1,4 @@
+openmvs provides CMake targets:
+
+  find_package(OpenMVS CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE OpenMVS::MVS)

@@ -1,0 +1,6 @@
+{
+  "name": "plf-indiesort",
+  "version": "1.4.4",
+  "description": "A sort wrapper enabling both use of random-access sorting on non-random access containers, and increased performance for the sorting of large types.",
+  "homepage": "https://plflib.org/indiesort.htm"
+}

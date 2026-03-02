@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 3d33a7b9be130cf5427a2760cb190fee2abf7b1cb9bdd7aa61b3a82e27e36792db8b2bbae940bd1a14a3a122a71685281229646e7e8eb779c1200be5fec2d2f2
+    SHA512 "cc52f70be7ce34989be4fbdf172ed90b65978986de2e8b97c77d3a04bfc4fa79738b15a7adb71c1fa980e1f1ab8336022594a1032e91d9102bcb66d36ced62a9"
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -103,6 +103,8 @@ vcpkg_cmake_configure(
         -DWITH_VERBOSE_WINPR_ASSERT=OFF
     MAYBE_UNUSED_VARIABLES
         MSVC_RUNTIME
+        USE_UNWIND
+        VCPKG_LOCK_FIND_PACKAGE_X11
         WITH_CLIENT_WINDOWS
 )
 

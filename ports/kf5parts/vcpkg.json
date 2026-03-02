@@ -1,9 +1,8 @@
 {
   "name": "kf5parts",
-  "version": "5.98.0",
-  "port-version": 1,
+  "version": "5.116.0",
   "description": "Plugin framework for user interface component",
-  "homepage": "https://api.kde.org/frameworks/kparts/html/index.html",
+  "homepage": "https://api.kde.org/kparts-index.html",
   "license": "LGPL-2.0-or-later",
   "dependencies": [
     "ecm",
@@ -24,7 +23,10 @@
     "kf5textwidgets",
     "kf5widgetsaddons",
     "kf5xmlgui",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     {
       "name": "vcpkg-cmake",
       "host": true

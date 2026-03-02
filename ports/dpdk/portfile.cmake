@@ -1,3 +1,9 @@
+# Some dll doesn't export any symbols.
+# https://doc.dpdk.org/guides-25.07/windows_gsg/intro.html#limitations
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 if(VCPKG_TARGET_IS_LINUX AND VCPKG_HOST_IS_LINUX)
   execute_process(
     COMMAND uname --kernel-release
@@ -28,7 +34,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO DPDK/dpdk
   REF "v${VERSION}"
-  SHA512 0d0ee4eb70e8021882a1d6548cf757972388c0a561ee71bb0e4b330be61f1463f4eaec55202d7a35eef8b392ecf0b3888713692ba8cd88f850e7b9072504733e
+  SHA512 21b1fd1b87797a61c3480e9b049a38ea5be2fb174b8d1d397db25a0d6c04281f1951e402276299fd605763ef6aa867f1285b2321f03214aa6122553cfb53771e
   HEAD_REF main
   PATCHES
       0001-enable-either-static-or-shared-build.patch
@@ -36,7 +42,7 @@ vcpkg_from_github(
       0003-remove-examples-src-from-datadir.patch
       0004-stop-building-apps.patch
       0005-no-absolute-driver-path.patch
-      rename-sched.h.diff
+      0006-rename-sched.h.patch
 )
 
 macro(append_bool_option feature_name option_name)
@@ -50,7 +56,6 @@ endmacro()
 set(DPDK_OPTIONS "")
 set(DPDK_OPTIONS_RELEASE "")
 append_bool_option("docs" "enable_docs")
-append_bool_option("kmods" "enable_kmods")
 append_bool_option("tests" "tests")
 append_bool_option("trace" "enable_trace_fp")
 
@@ -100,3 +105,39 @@ endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share" "${CURRENT_PACKAGES_DIR}/share/doc")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/license/README")
+
+# Move dll driver to bin directory.
+file(GLOB PMD_DIRS "${CURRENT_PACKAGES_DIR}/lib/dpdk/pmds-*")
+foreach(PMD_DIR ${PMD_DIRS})
+  get_filename_component(DIR_NAME ${PMD_DIR} NAME)
+  file(GLOB DLLS "${PMD_DIR}/*.dll")
+  if(DLLS)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin/dpdk/${DIR_NAME}")
+    file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin/dpdk/${DIR_NAME}")
+    file(REMOVE ${DLLS})
+  endif()
+endforeach()
+if(NOT VCPKG_BUILD_TYPE)
+  file(GLOB PMD_DIRS_DEBUG "${CURRENT_PACKAGES_DIR}/debug/lib/dpdk/pmds-*")
+  foreach(PMD_DIR ${PMD_DIRS_DEBUG})
+    get_filename_component(DIR_NAME ${PMD_DIR} NAME)
+    file(GLOB DLLS "${PMD_DIR}/*.dll" "${PMD_DIR}/*.pdb")
+    if(DLLS)
+      file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin/dpdk/${DIR_NAME}")
+      file(COPY ${DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin/dpdk/${DIR_NAME}")
+      file(REMOVE ${DLLS})
+    endif()
+  endforeach()
+endif()
+
+# pkg_check_modules doesn't support -l:lib syntax
+# https://gitlab.kitware.com/cmake/cmake/-/issues/27452
+if (VCPKG_TARGET_IS_WINDOWS)
+  set(PREFIX_LIB "")
+else()
+  set(PREFIX_LIB "lib")
+endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libdpdk.pc" "-l:lib" "-l${PREFIX_LIB}")
+if(NOT VCPKG_BUILD_TYPE)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libdpdk.pc" "-l:lib" "-l${PREFIX_LIB}")
+endif()

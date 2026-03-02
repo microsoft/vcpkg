@@ -2,8 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/cutlass
     REF "v${VERSION}"
-    SHA512 16ef4f68d819f50f4e3f250ddf41fc19105fa1155a86fc42970be0f84e32129cfb05f2730466e9491e84ca5faed595b3e5fbeee7c48a27da812e1927f842623e
+    SHA512 2383901c0118db4d93c6b0618cd2585bf5fc3558ae47801e13bc1916ab1fc106cf2627bd6b8c654334c013a2b45eea9450feadf42156cf23237a0b0d1045395a
     HEAD_REF main
+    PATCHES
+        fix-cudnn-path.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -15,6 +17,11 @@ list(APPEND FEATURE_OPTIONS
     "-DCMAKE_CUDA_COMPILER=${NVCC}"
     "-DCUDAToolkit_ROOT=${cuda_toolkit_root}"
 )
+
+list(APPEND CMAKE_MODULE_PATH "${CURRENT_INSTALLED_DIR}/share/cudnn")
+find_package(CUDNN REQUIRED)
+get_filename_component(CUDNN_LIBRARY_DIR "${CUDNN_LIBRARIES}" DIRECTORY)
+set(ENV{CUDNN_PATH} "${CUDNN_LIBRARY_DIR};${CUDNN_INCLUDE_DIRS}")
 
 
 vcpkg_cmake_configure(

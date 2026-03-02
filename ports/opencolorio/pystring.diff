@@ -1,5 +1,5 @@
 diff --git a/src/OpenColorIO/Config.cpp b/src/OpenColorIO/Config.cpp
-index a4cf7c5..db52ddb 100644
+index 7072c50..e2908b6 100644
 --- a/src/OpenColorIO/Config.cpp
 +++ b/src/OpenColorIO/Config.cpp
 @@ -12,7 +12,7 @@
@@ -12,7 +12,7 @@ index a4cf7c5..db52ddb 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/ConfigUtils.cpp b/src/OpenColorIO/ConfigUtils.cpp
-index 0b45b04..0868b01 100644
+index 9a5ecfc..d07ef7d 100644
 --- a/src/OpenColorIO/ConfigUtils.cpp
 +++ b/src/OpenColorIO/ConfigUtils.cpp
 @@ -1,7 +1,7 @@
@@ -25,7 +25,7 @@ index 0b45b04..0868b01 100644
  #include "ConfigUtils.h"
  #include "MathUtils.h"
 diff --git a/src/OpenColorIO/Context.cpp b/src/OpenColorIO/Context.cpp
-index 3a1294b..02f0e3e 100644
+index b7e71ae..a5a9627 100644
 --- a/src/OpenColorIO/Context.cpp
 +++ b/src/OpenColorIO/Context.cpp
 @@ -7,7 +7,7 @@
@@ -38,7 +38,7 @@ index 3a1294b..02f0e3e 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/OCIOYaml.cpp b/src/OpenColorIO/OCIOYaml.cpp
-index b1cee18..c7d530b 100644
+index c936157..21e3e0c 100644
 --- a/src/OpenColorIO/OCIOYaml.cpp
 +++ b/src/OpenColorIO/OCIOYaml.cpp
 @@ -4,7 +4,7 @@
@@ -64,7 +64,7 @@ index 982fce6..43cb147 100644
  #include <OpenColorIO/OpenColorIO.h>
  
 diff --git a/src/OpenColorIO/Op.cpp b/src/OpenColorIO/Op.cpp
-index 81dfe98..125910d 100755
+index 7e95bae..c6c1993 100755
 --- a/src/OpenColorIO/Op.cpp
 +++ b/src/OpenColorIO/Op.cpp
 @@ -4,7 +4,7 @@
@@ -89,8 +89,47 @@ index 3a68d36..ea6c036 100644
  
  #include <OpenColorIO/OpenColorIO.h>
  
+diff --git a/src/OpenColorIO/apphelpers/mergeconfigs/MergeConfigsHelpers.cpp b/src/OpenColorIO/apphelpers/mergeconfigs/MergeConfigsHelpers.cpp
+index ab74ed9..1692451 100644
+--- a/src/OpenColorIO/apphelpers/mergeconfigs/MergeConfigsHelpers.cpp
++++ b/src/OpenColorIO/apphelpers/mergeconfigs/MergeConfigsHelpers.cpp
+@@ -8,7 +8,7 @@
+ #include <sstream>
+ #include <vector>
+ 
+-#include <pystring.h>
++#include <pystring/pystring.h>
+ 
+ #include <OpenColorIO/OpenColorIO.h>
+ 
+diff --git a/src/OpenColorIO/apphelpers/mergeconfigs/OCIOMYaml.cpp b/src/OpenColorIO/apphelpers/mergeconfigs/OCIOMYaml.cpp
+index 3afddf3..8be58de 100644
+--- a/src/OpenColorIO/apphelpers/mergeconfigs/OCIOMYaml.cpp
++++ b/src/OpenColorIO/apphelpers/mergeconfigs/OCIOMYaml.cpp
+@@ -5,7 +5,7 @@
+ #include <unordered_set>
+ #include <iostream>
+ 
+-#include <pystring.h>
++#include <pystring/pystring.h>
+ 
+ #include <OpenColorIO/OpenColorIO.h>
+ 
+diff --git a/src/OpenColorIO/apphelpers/mergeconfigs/SectionMerger.cpp b/src/OpenColorIO/apphelpers/mergeconfigs/SectionMerger.cpp
+index 33c41f2..a98c66b 100644
+--- a/src/OpenColorIO/apphelpers/mergeconfigs/SectionMerger.cpp
++++ b/src/OpenColorIO/apphelpers/mergeconfigs/SectionMerger.cpp
+@@ -8,7 +8,7 @@
+ #include <sstream>
+ #include <vector>
+ 
+-#include <pystring.h>
++#include <pystring/pystring.h>
+ 
+ #include <OpenColorIO/OpenColorIO.h>
+ 
 diff --git a/src/OpenColorIO/fileformats/FileFormatCTF.cpp b/src/OpenColorIO/fileformats/FileFormatCTF.cpp
-index c9ada57..e440819 100644
+index b1f0393..9efb98f 100644
 --- a/src/OpenColorIO/fileformats/FileFormatCTF.cpp
 +++ b/src/OpenColorIO/fileformats/FileFormatCTF.cpp
 @@ -6,7 +6,7 @@
@@ -154,3 +193,16 @@ index 33da5f3..7609dda 100755
  
  #include <OpenColorIO/OpenColorIO.h>
  
+diff --git a/src/apps/ociomergeconfigs/main.cpp b/src/apps/ociomergeconfigs/main.cpp
+index 7069e15..3e5deb8 100644
+--- a/src/apps/ociomergeconfigs/main.cpp
++++ b/src/apps/ociomergeconfigs/main.cpp
+@@ -5,7 +5,7 @@
+ #include <fstream>
+ #include <vector>
+ 
+-#include <pystring.h>
++#include <pystring/pystring.h>
+ 
+ #include <OpenColorIO/OpenColorIO.h>
+ #include "utils/StringUtils.h"

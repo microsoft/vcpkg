@@ -1,0 +1,11 @@
+set(VCPKG_BUILD_TYPE release)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO c42f/tinyformat
+    REF v2.3.0
+    SHA512 3e40f60e98985e0d09d24279719594fbc6cdcd7b455f244898c949de57b8e77ed684814f7ade82787f6cc04cbdcf0daf7f4be42c4bf55c6b6f016964c58e085e
+    )
+
+file(INSTALL ${SOURCE_PATH}/tinyformat.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+
+file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -1,6 +1,6 @@
 {
   "name": "spirv-headers",
-  "version": "1.4.328.0",
+  "version": "1.4.335.0",
   "description": "Machine-readable files for the SPIR-V Registry",
   "homepage": "https://github.com/KhronosGroup/SPIRV-Headers",
   "dependencies": [

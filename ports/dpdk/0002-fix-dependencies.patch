@@ -2,12 +2,12 @@ diff --git a/config/meson.build b/config/meson.build
 index 34b85f10b5..5ed4625d9e 100644
 --- a/config/meson.build
 +++ b/config/meson.build
-@@ -236,12 +236,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
+@@ -238,12 +238,10 @@ if meson.is_cross_build() and not meson.get_external_property('numa', true)
      find_libnuma = false
  endif
  if find_libnuma
 -    numa_dep = cc.find_library('numa', required: false)
--    if numa_dep.found() and cc.has_header('numaif.h')
+-    if numa_dep.found() and cc.has_header('numaif.h') and cc.links(min_c_code, dependencies: numa_dep)
 +    numa_dep = dependency('numa', method: 'pkg-config', required: false)
 +    if numa_dep.found()
          dpdk_conf.set10('RTE_HAS_LIBNUMA', true)
@@ -39,4 +39,4 @@ index 51bcf17244..1099a0232f 100644
 +    ext_deps += numa_dep
      dpdk_conf.set10('RTE_LIBRTE_VHOST_NUMA', true)
  endif
- if (toolchain == 'gcc' and cc.version().version_compare('>=8.3.0'))
+ dpdk_conf.set('RTE_LIBRTE_VHOST_POSTCOPY', cc.has_header('linux/userfaultfd.h'))

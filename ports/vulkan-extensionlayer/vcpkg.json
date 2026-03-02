@@ -1,6 +1,6 @@
 {
   "name": "vulkan-extensionlayer",
-  "version": "1.4.328.0",
+  "version": "1.4.335.0",
   "description": "Layer providing Vulkan features when native support is unavailable",
   "homepage": "https://github.com/KhronosGroup/Vulkan-ExtensionLayer",
   "license": "Apache-2.0",

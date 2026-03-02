@@ -1,0 +1,24 @@
+diff --git a/libs/Common/Log.cpp b/libs/Common/Log.cpp
+index da19bd1..d92ae9b 100644
+--- a/libs/Common/Log.cpp
++++ b/libs/Common/Log.cpp
+@@ -417,7 +417,9 @@ void LogConsole::Open()
+ {
+ 	if (IsOpen())
+ 		return;
++	#ifndef _USE_COSOLEFILEHANDLES
+ 	++m_fileIn;
++	#endif
+ 	// register with our log system
+ 	GET_LOG().RegisterListener(DELEGATEBINDCLASS(Log::ClbkRecordMsg, &LogConsole::Record, this));
+ }
+@@ -428,7 +430,9 @@ void LogConsole::Close()
+ 		return;
+ 	// unregister with our log system
+ 	GET_LOG().UnregisterListener(DELEGATEBINDCLASS(Log::ClbkRecordMsg, &LogConsole::Record, this));
++	#ifndef _USE_COSOLEFILEHANDLES
+ 	--m_fileIn;
++	#endif
+ }
+ 
+ void LogConsole::Record(const String& msg)

@@ -1,18 +1,11 @@
-vcpkg_download_distfile(PATCH_BLAKE3_PR_482
-    URLS https://github.com/BLAKE3-team/BLAKE3/commit/cd6e3e4dd9a9518be45ef742606462ddfb0f3cfd.patch
-    SHA512 a2e6179f577d4b4b3aa83d2f44e2d2a346808fc130f262047e749ee50126970fae1b1d5edf910dae664b65871fadf05cdc2b80c0a8e520807340cf404756ffc5
-    FILENAME cd6e3e4dd9a9518be45ef742606462ddfb0f3cfd.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BLAKE3-team/BLAKE3
     REF "${VERSION}"
-    SHA512 5832d15373a0ec224e3c8dc86e1540e9246efbdf8db88fc2cce8924552f632532d9b74eeb15e1d31e3f13676656b5230d009151b4c57eb9d84224a9e385ba839
+    SHA512 d0861c3c0294d84a46a3760e5e51734f4040036aa74d72d32242adb9311c0f85f580c17fbee9ca17dc2b3818ff68048b3156a19b8d11fe5c459c5e9266709fb9
     HEAD_REF main
     PATCHES
         fix-windows-arm-build-error.patch
-        "${PATCH_BLAKE3_PR_482}"
 )
 
 vcpkg_check_features(

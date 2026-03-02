@@ -6,47 +6,27 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        "disable-nagles"      TGBOT_DISABLE_NAGLES_ALGORITHM
-        "expand-read"         TGBOT_CHANGE_READ_BUFFER_SIZE
-        "expand-socket"       TGBOT_CHANGE_SOCKET_BUFFER_SIZE
-)
-
-if(TGBOT_DISABLE_NAGLES_ALGORITHM)
-    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-        [[add_library(${PROJECT_NAME} ${SRC_LIST})]]
-        [[add_library(${PROJECT_NAME} ${SRC_LIST})
-target_compile_definitions(${PROJECT_NAME} PRIVATE TGBOT_DISABLE_NAGLES_ALGORITHM)]])
-endif()
-
-if(TGBOT_CHANGE_READ_BUFFER_SIZE)
-    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-        [[add_library(${PROJECT_NAME} ${SRC_LIST})]]
-        [[add_library(${PROJECT_NAME} ${SRC_LIST})
-target_compile_definitions(${PROJECT_NAME} PRIVATE TGBOT_CHANGE_READ_BUFFER_SIZE)]])
-endif()
-
-if(TGBOT_CHANGE_SOCKET_BUFFER_SIZE)
-    vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt"
-        [[add_library(${PROJECT_NAME} ${SRC_LIST})]]
-        [[add_library(${PROJECT_NAME} ${SRC_LIST})
-target_compile_definitions(${PROJECT_NAME} PRIVATE TGBOT_CHANGE_SOCKET_BUFFER_SIZE)]])
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DENABLE_TESTS=OFF
         -DBUILD_DOCUMENTATION=OFF
+        "-DCMAKE_PROJECT_INCLUDE=${CURRENT_PORT_DIR}/cmake-project-include.cmake"
+        "-DFEATURES=${FEATURES}"
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TgBot")
 vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/TgBot")
+
+file(READ "${CURRENT_PACKAGES_DIR}/share/tgbot-cpp/TgBotConfig.cmake" tgbot_config)
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/tgbot-cpp/TgBotConfig.cmake" "
+include(CMakeFindDependencyMacro)
+find_dependency(Boost COMPONENTS system)
+find_dependency(CURL)
+${tgbot_config}
+")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

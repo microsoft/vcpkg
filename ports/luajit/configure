@@ -7,6 +7,7 @@ LUAJIT_BUILDMODE=
 LUAJIT_BUILDVM_X=
 LUAJIT_DASM_ARCHS=
 LUAJIT_PREFIX=
+LUAJIT_HOST_LUA=
 for OPTION; do
     case "${OPTION}" in
 	--prefix=*)
@@ -21,6 +22,9 @@ for OPTION; do
 	DASM_ARCHS=*)
 		LUAJIT_DASM_ARCHS="${OPTION#DASM_ARCHS=}"
 		;;
+	HOST_LUA=*)
+		LUAJIT_HOST_LUA="${OPTION#HOST_LUA=}"
+		;;
 	LJARCH=*)
 		LJARCH="${OPTION#LJARCH=}"
 		;;
@@ -33,6 +37,7 @@ COMMON_OPTIONS += 'E=@:' 'Q='
 COMMON_OPTIONS += 'BUILDMODE=${LUAJIT_BUILDMODE}'
 COMMON_OPTIONS += 'PREFIX=${LUAJIT_PREFIX}'
 COMMON_OPTIONS += 'INSTALL_TNAME=luajit'
+COMMON_OPTIONS += 'INSTALL_TSYMNAME=luajit-symlink'
 
 BUILD_OPTIONS += 'CC=${CC}'
 BUILD_OPTIONS += 'CCDEBUG='
@@ -49,6 +54,7 @@ else
 BUILD_OPTIONS += 'HOST_CC=:'
 BUILD_OPTIONS += 'BUILDVM_T='
 BUILD_OPTIONS += 'BUILDVM_X=${LUAJIT_BUILDVM_X}'
+BUILD_OPTIONS += 'HOST_LUA=${LUAJIT_HOST_LUA}'
 endif
 
 # used by src/Makefile, best effort from manual '<CC> [-m32] -E src/lj_arch.h -dM'
@@ -78,9 +84,12 @@ all:
 
 install:
 	\$(MAKE) install \$(COMMON_OPTIONS)
+ifeq (${LJARCH},)
+	mkdir -p "\$\${DESTDIR}\$(BUILDVM_PREFIX)"
+	install -m 0755 "src/host/minilua\$(EXECUTABLE_SUFFIX)" "\$\${DESTDIR}\$(BUILDVM_PREFIX)/minilua\$(EXECUTABLE_SUFFIX)"
 	for DA in \$(DASM_ARCHS); do \\
-		mkdir -p "\$\${DESTDIR}\$(BUILDVM_PREFIX)"; \\
 		install -m 0755 "src/host/buildvm-\$\$DA\$(EXECUTABLE_SUFFIX)" "\$\${DESTDIR}\$(BUILDVM_PREFIX)/buildvm-\$\$DA\$(EXECUTABLE_SUFFIX)" || exit 1 ; \\
 	done
+endif
 
 END_MAKEFILE
