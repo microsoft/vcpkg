@@ -6585,7 +6585,7 @@
       "port-version": 0
     },
     "mqtt-cpp": {
-      "baseline": "13.2.2",
+      "baseline": "13.2.3",
       "port-version": 0
     },
     "ms-gdk": {
