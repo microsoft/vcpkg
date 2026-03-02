@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         003-force-cxx-17.patch
+        fix-heterogeneous_lookup_testing-target.patch
 )
 
 
