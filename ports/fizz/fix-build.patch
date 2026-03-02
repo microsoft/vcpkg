@@ -1,22 +1,31 @@
 diff --git a/fizz/CMakeLists.txt b/fizz/CMakeLists.txt
-index cb536415..81824a45 100644
+index 0e853fe..3ae823a 100644
 --- a/fizz/CMakeLists.txt
 +++ b/fizz/CMakeLists.txt
-@@ -50,7 +50,7 @@ find_package(folly CONFIG REQUIRED)
+@@ -53,24 +53,28 @@ find_package(folly CONFIG REQUIRED)
  find_package(fmt CONFIG REQUIRED)
  
  find_package(OpenSSL REQUIRED)
 -find_package(Glog REQUIRED)
 +find_package(glog CONFIG REQUIRED)
  find_package(Threads REQUIRED)
- find_package(Zstd REQUIRED)
+-find_package(Zstd REQUIRED)
++find_package(zstd CONFIG REQUIRED)
++if(TARGET zstd::libzstd_shared)
++  list(APPEND FIZZ_LINK_LIBRARIES zstd::libzstd_shared)
++elseif(TARGET zstd::libzstd_static)
++  list(APPEND FIZZ_LINK_LIBRARIES zstd::libzstd_static)
++endif()
  if (UNIX AND NOT APPLE)
-@@ -59,43 +59,23 @@ endif()
+   find_package(Librt)
+ endif()
  
  include(CheckAtomic)
  
 -find_package(Sodium REQUIRED)
+-set(FIZZ_HAVE_SODIUM ${Sodium_FOUND})
 +find_package(unofficial-sodium CONFIG REQUIRED)
++set(FIZZ_HAVE_SODIUM 1)
  
  SET(FIZZ_SHINY_DEPENDENCIES "")
  SET(FIZZ_LINK_LIBRARIES "")
@@ -24,27 +33,12 @@ index cb536415..81824a45 100644
  
 -find_package(gflags CONFIG QUIET)
 -if (gflags_FOUND)
--  message(STATUS "Found gflags from package config")
--  if (TARGET gflags-shared)
--    list(APPEND FIZZ_SHINY_DEPENDENCIES gflags-shared)
--  elseif (TARGET gflags)
--    list(APPEND FIZZ_SHINY_DEPENDENCIES gflags)
--  else()
--    message(FATAL_ERROR "Unable to determine the target name for the GFlags package.")
--  endif()
--  list(APPEND CMAKE_REQUIRED_LIBRARIES ${GFLAGS_LIBRARIES})
--  list(APPEND CMAKE_REQUIRED_INCLUDES ${GFLAGS_INCLUDE_DIR})
--else()
--  find_package(Gflags REQUIRED MODULE)
--  list(APPEND FIZZ_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
--  list(APPEND FIZZ_INCLUDE_DIRECTORIES ${LIBGFLAGS_INCLUDE_DIR})
--  list(APPEND CMAKE_REQUIRED_LIBRARIES ${LIBGFLAGS_LIBRARY})
--  list(APPEND CMAKE_REQUIRED_INCLUDES ${LIBGFLAGS_INCLUDE_DIR})
-+find_package(zstd CONFIG REQUIRED)
-+if(TARGET zstd::libzstd_shared)
-+  list(APPEND FIZZ_LINK_LIBRARIES zstd::libzstd_shared)
-+elseif(TARGET zstd::libzstd_static)
-+  list(APPEND FIZZ_LINK_LIBRARIES zstd::libzstd_static)
++if (0)
+   message(STATUS "Found gflags from package config")
+   if (TARGET gflags-shared)
+     list(APPEND FIZZ_SHINY_DEPENDENCIES gflags-shared)
+@@ -89,13 +93,14 @@ else()
+   list(APPEND CMAKE_REQUIRED_INCLUDES ${LIBGFLAGS_INCLUDE_DIR})
  endif()
  
 +find_package(gflags CONFIG REQUIRED)
@@ -52,18 +46,16 @@ index cb536415..81824a45 100644
  
 -find_package(Libevent CONFIG QUIET)
 -if(TARGET event)
--  message(STATUS "Found libevent from package config")
--  list(APPEND FIZZ_SHINY_DEPENDENCIES event)
--else()
--  find_package(Libevent MODULE REQUIRED)
--  list(APPEND FIZZ_LINK_LIBRARIES ${LIBEVENT_LIB})
--  list(APPEND FIZZ_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
--endif()
 +find_package(Libevent CONFIG REQUIRED)
- 
- find_package(liboqs 0.11.0 CONFIG)
- if (liboqs_FOUND)
-@@ -193,28 +173,24 @@ target_include_directories(
++if(0)
+   message(STATUS "Found libevent from package config")
+   list(APPEND FIZZ_SHINY_DEPENDENCIES event)
+-else()
++elseif(0)
+   find_package(Libevent MODULE REQUIRED)
+   list(APPEND FIZZ_LINK_LIBRARIES ${LIBEVENT_LIB})
+   list(APPEND FIZZ_INCLUDE_DIRECTORIES ${LIBEVENT_INCLUDE_DIR})
+@@ -199,28 +204,24 @@ target_include_directories(
      $<BUILD_INTERFACE:${FIZZ_BASE_DIR}>
      $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/generated>
      $<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>
@@ -99,7 +91,7 @@ index cb536415..81824a45 100644
      ${CMAKE_DL_LIBS}
      ${LIBRT_LIBRARIES})
  
-@@ -279,8 +255,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
+@@ -285,8 +286,7 @@ ENDIF(CMAKE_CROSSCOMPILING)
  SET(FIZZ_TEST_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
  
  if(BUILD_TESTS)
@@ -109,7 +101,7 @@ index cb536415..81824a45 100644
  endif()
  
  add_library(fizz_test_support
-@@ -317,14 +292,12 @@ macro(add_gtest test_source test_name)
+@@ -323,14 +323,12 @@ macro(add_gtest test_source test_name)
    add_executable(${test_name} ${test_source} test/CMakeTestMain.cpp)
  
    set_property(TARGET ${test_name} PROPERTY ENABLE_EXPORTS true)
@@ -127,10 +119,10 @@ index cb536415..81824a45 100644
    if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
      # GMOCK_MOCK_METHOD() will complain otherwise
 diff --git a/fizz/cmake/fizz-config.cmake.in b/fizz/cmake/fizz-config.cmake.in
-index 9d07110a..a47bb998 100644
+index 07b4d01..3004ad2 100644
 --- a/fizz/cmake/fizz-config.cmake.in
 +++ b/fizz/cmake/fizz-config.cmake.in
-@@ -31,9 +31,18 @@ set(FIZZ_LIBRARIES fizz::fizz)
+@@ -32,9 +32,18 @@ set(FIZZ_LIBRARIES fizz::fizz)
  
  include(CMakeFindDependencyMacro)
  
