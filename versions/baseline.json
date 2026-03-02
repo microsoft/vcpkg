@@ -2213,7 +2213,7 @@
       "port-version": 1
     },
     "cryptopp": {
-      "baseline": "2025-12-01",
+      "baseline": "2026-03-02",
       "port-version": 0
     },
     "cserialport": {
