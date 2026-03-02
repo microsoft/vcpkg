@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-jpeg-link.patch
         disable-test.patch
         disable-openctm.patch
+        disable-warning-as-error.patch
 )
 
 vcpkg_from_github(
