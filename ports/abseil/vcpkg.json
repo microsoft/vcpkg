@@ -17,13 +17,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "test-helpers": {
-      "description": "Build Abseil's test helpers",
-      "dependencies": [
-        "gtest"
-      ]
-    }
-  }
+  ]
 }

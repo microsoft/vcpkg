@@ -10,13 +10,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         003-force-cxx-17.patch
-        004-not-generate-pcfile.patch
 )
 
-set(ABSL_TEST_HELPERS_OPTIONS "")
-if("test-helpers" IN_LIST FEATURES)
-    set(ABSL_TEST_HELPERS_OPTIONS "-DABSL_BUILD_TEST_HELPERS=ON" "-DABSL_USE_EXTERNAL_GOOGLETEST=ON" "-DABSL_FIND_GOOGLETEST=ON")
-endif()
 
 set(ABSL_STATIC_RUNTIME_OPTION "")
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -36,12 +31,13 @@ if(VCPKG_TARGET_IS_MINGW)
         vcpkg_list(APPEND ABSL_MINGW_OPTIONS "-DABSL_BUILD_MONOLITHIC_SHARED_LIBS=ON")
     endif()
 endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DABSL_PROPAGATE_CXX_STD=ON
+        -DABSL_BUILD_TESTING=OFF 
+        -DABSL_BUILD_TEST_HELPERS=OFF
         ${ABSL_TEST_HELPERS_OPTIONS}
         ${ABSL_STATIC_RUNTIME_OPTION}
         ${ABSL_MINGW_OPTIONS}
@@ -50,6 +46,13 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME absl CONFIG_PATH lib/cmake/absl)
 
+if(VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_OSX)
+    file(APPEND "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/absl_time.pc" "Libs.private: -framework CoreFoundation\n")
+    if(NOT VCPKG_BUILD_TYPE)
+        file(APPEND "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/absl_time.pc" "Libs.private: -framework CoreFoundation\n")
+    endif()
+endif()
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
