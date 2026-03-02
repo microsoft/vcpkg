@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
-index 957ae5c..e0c7adf 100644
+index 5fc83ac..7efb0fc 100644
 --- a/CMake/folly-config.cmake.in
 +++ b/CMake/folly-config.cmake.in
-@@ -29,10 +29,31 @@ endif()
+@@ -34,10 +34,31 @@ endif()
  set(FOLLY_LIBRARIES Folly::folly)
  
  # Find folly's dependencies
@@ -51,7 +51,7 @@ index 1da1cc1..701ec99 100644
  #include <TargetConditionals.h> // @manual
  #endif
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 5fd558d..6f5deb5 100644
+index 1c41750..6ab485c 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
 @@ -57,14 +57,17 @@ find_package(Boost 1.69.0 REQUIRED
@@ -76,7 +76,7 @@ index 5fd558d..6f5deb5 100644
  set(FOLLY_HAVE_LIBGFLAGS ${LIBGFLAGS_FOUND})
  if(LIBGFLAGS_FOUND)
    list(APPEND FOLLY_LINK_LIBRARIES ${LIBGFLAGS_LIBRARY})
-@@ -73,16 +76,22 @@ if(LIBGFLAGS_FOUND)
+@@ -73,7 +76,8 @@ if(LIBGFLAGS_FOUND)
    set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
  endif()
  
@@ -84,8 +84,11 @@ index 5fd558d..6f5deb5 100644
 +find_package(GLOG NAMES glog REQUIRED)
 +set(GLOG_LIBRARY glog::glog)
  set(FOLLY_HAVE_LIBGLOG ${GLOG_FOUND})
- list(APPEND FOLLY_LINK_LIBRARIES ${GLOG_LIBRARY})
+ list(APPEND FOLLY_LINK_LIBRARIES glog::glog)
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${GLOG_INCLUDE_DIR})
+@@ -83,11 +87,16 @@ if (EXISTS "${GLOG_INCLUDE_DIR}/glog/export.h")
+   list(APPEND FOLLY_CXX_FLAGS -DGLOG_USE_GLOG_EXPORT)
+ endif()
  
 -find_package(LibEvent MODULE REQUIRED)
 +find_package(LIBEVENT NAMES Libevent REQUIRED)
@@ -101,7 +104,7 @@ index 5fd558d..6f5deb5 100644
  set(FOLLY_HAVE_LIBZ ${ZLIB_FOUND})
  if (ZLIB_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${ZLIB_INCLUDE_DIRS})
-@@ -115,21 +124,24 @@ if (LIBLZMA_FOUND)
+@@ -120,21 +129,24 @@ if (LIBLZMA_FOUND)
    list(APPEND FOLLY_LINK_LIBRARIES ${LIBLZMA_LIBRARIES})
  endif()
  
@@ -129,7 +132,7 @@ index 5fd558d..6f5deb5 100644
  set(FOLLY_HAVE_LIBSNAPPY ${SNAPPY_FOUND})
  if (SNAPPY_FOUND)
    list(APPEND FOLLY_INCLUDE_DIRECTORIES ${SNAPPY_INCLUDE_DIR})
-@@ -145,14 +157,19 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
+@@ -150,14 +162,19 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBIBERTY_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBIBERTY_INCLUDE_DIRS})
  
  find_package(LibAIO)
@@ -150,7 +153,7 @@ index 5fd558d..6f5deb5 100644
  list(APPEND FOLLY_LINK_LIBRARIES ${LIBSODIUM_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBSODIUM_INCLUDE_DIRS})
  
-@@ -169,6 +186,8 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
+@@ -174,6 +191,8 @@ list(APPEND FOLLY_LINK_LIBRARIES ${LIBUNWIND_LIBRARIES})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${LIBUNWIND_INCLUDE_DIRS})
  if (LIBUNWIND_FOUND)
    set(FOLLY_HAVE_LIBUNWIND ON)
@@ -160,10 +163,10 @@ index 5fd558d..6f5deb5 100644
  if (CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
    list(APPEND FOLLY_LINK_LIBRARIES "execinfo")
 diff --git a/folly/CMakeLists.txt b/folly/CMakeLists.txt
-index 75b2569..7bc37d6 100644
+index 6a70572..bf58186 100644
 --- a/folly/CMakeLists.txt
 +++ b/folly/CMakeLists.txt
-@@ -1455,7 +1455,7 @@ add_subdirectory(ssl)
+@@ -1430,7 +1430,7 @@ add_subdirectory(ssl)
  add_subdirectory(stats)
  add_subdirectory(synchronization)
  add_subdirectory(system)
@@ -173,10 +176,10 @@ index 75b2569..7bc37d6 100644
  
  # Resolve deferred dependencies now that all targets exist
 diff --git a/folly/detail/CMakeLists.txt b/folly/detail/CMakeLists.txt
-index 99df6a3..6bb3cf4 100644
+index 521983f..5912ccd 100644
 --- a/folly/detail/CMakeLists.txt
 +++ b/folly/detail/CMakeLists.txt
-@@ -159,7 +159,6 @@ folly_add_library(
+@@ -178,7 +178,6 @@ folly_add_library(
    DEPS
      folly_conv
      folly_system_pid
@@ -198,12 +201,12 @@ index 2760e0f..a51c16c 100644
  // debugging helpers
  namespace {
 diff --git a/folly/io/async/AsyncIO.h b/folly/io/async/AsyncIO.h
-index b1a6f52..ba84609 100644
+index 36c6df2..02ff518 100644
 --- a/folly/io/async/AsyncIO.h
 +++ b/folly/io/async/AsyncIO.h
 @@ -18,7 +18,7 @@
  
- #include <folly/experimental/io/AsyncBase.h>
+ #include <folly/io/async/AsyncBase.h>
  
 -#if __has_include(<libaio.h>)
 +#if FOLLY_HAS_LIBAIO
@@ -223,7 +226,7 @@ index 8e81aaa..c7f4a67 100644
 -#define FOLLY_HAS_LIBURING 0
  #endif
 diff --git a/folly/io/async/SimpleAsyncIO.cpp b/folly/io/async/SimpleAsyncIO.cpp
-index 5da138a..5b9f5ee 100644
+index cceb964..9f97e36 100644
 --- a/folly/io/async/SimpleAsyncIO.cpp
 +++ b/folly/io/async/SimpleAsyncIO.cpp
 @@ -25,7 +25,7 @@
