@@ -1,0 +1,50 @@
+diff --git a/cachelib/CMakeLists.txt b/cachelib/CMakeLists.txt
+index bfe055f..183053c 100644
+--- a/cachelib/CMakeLists.txt
++++ b/cachelib/CMakeLists.txt
+@@ -317,7 +317,7 @@ add_subdirectory (allocator)
+ add_subdirectory (datatype)
+ add_subdirectory (compact_cache)
+ add_subdirectory (benchmarks)
+-add_subdirectory (cachebench)
++#add_subdirectory (cachebench)
+ 
+ # Install the source header files
+ install(
+@@ -333,7 +333,7 @@ install(
+   PATTERN "external" EXCLUDE
+   PATTERN "tests" EXCLUDE
+   PATTERN "benchmarks" EXCLUDE
+-  PATTERN "cachebench" EXCLUDE
++  #PATTERN "cachebench" EXCLUDE
+   PATTERN "scripts" EXCLUDE
+   PATTERN "cmake" EXCLUDE
+ )
+@@ -368,12 +368,12 @@ install(
+   FILES ${CMAKE_CURRENT_BINARY_DIR}/cachelib-config.cmake
+   DESTINATION ${CMAKE_INSTALL_DIR}
+ )
+-
++#if(0)
+ install(
+   DIRECTORY ${CACHELIB_HOME}/cachebench/test_configs/
+   DESTINATION ${CONFIGS_INSTALL_DIR}
+ )
+-
++#endif()
+ add_library(cachelib INTERFACE)
+ target_link_libraries(cachelib INTERFACE
+      cachelib_common
+diff --git a/cachelib/navy/block_cache/FixedSizeIndex.h b/cachelib/navy/block_cache/FixedSizeIndex.h
+index 0f9c2d9..68ce95c 100644
+--- a/cachelib/navy/block_cache/FixedSizeIndex.h
++++ b/cachelib/navy/block_cache/FixedSizeIndex.h
+@@ -466,7 +466,7 @@ class FixedSizeIndex : public Index {
+       XLOGF(ERR,
+             "Adding Key hash {}, bid {} to CombinedEntryBlock failed, "
+             "status={}",
+-            key.value(), curBid, status);
++            key.value(), curBid, static_cast<uint8_t>(status));
+       // We will continue by discarding currently stored entry
+       return {};
+     }
