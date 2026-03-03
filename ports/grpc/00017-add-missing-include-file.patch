@@ -24,3 +24,16 @@ index 64bbb63..dc3c9b0 100644
  #include "absl/strings/string_view.h"
  #include "google/protobuf/any.upb.h"
  #include "google/protobuf/duration.upb.h"
+diff --git a/src/core/util/glob.cc b/src/core/util/glob.cc
+index 1b1c16e..d13138d 100644
+--- a/src/core/util/glob.cc
++++ b/src/core/util/glob.cc
+@@ -13,7 +13,7 @@
+ // limitations under the License.
+ 
+ #include "absl/strings/string_view.h"
+-
++#include <algorithm>
+ namespace grpc_core {
+ 
+ namespace {
