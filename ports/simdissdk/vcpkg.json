@@ -1,19 +1,11 @@
 {
   "name": "simdissdk",
-  "version": "2025-4-30",
+  "version-semver": "1.24.0-2025.12.19",
   "description": "simdissdk - The SIMDIS Software Development Kit (SDK) is an open source C++ framework providing functionality to create 3D scenes consisting of objects, whose position and state change with time, that are placed relative to a geographic map.",
   "homepage": "https://github.com/USNavalResearchLaboratory/simdissdk",
-  "license": "LGPL-3.0-or-later",
+  "license": null,
   "supports": "!(arm | x86 | wasm32 | xbox)",
   "dependencies": [
-    "osg-qt",
-    {
-      "name": "osgearth",
-      "default-features": false,
-      "features": [
-        "controls"
-      ]
-    },
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -24,23 +16,83 @@
     }
   ],
   "default-features": [
+    "entt",
     "simdata",
     "simqt",
     "simutil",
-    "simvis"
+    "simvis",
+    "wbp"
   ],
   "features": {
+    "entt": {
+      "description": "Enable EnTT support in simData for optimized performance",
+      "dependencies": [
+        "entt"
+      ]
+    },
+    "osg-qt": {
+      "description": "Enable osgQt integration",
+      "dependencies": [
+        "osg-qt"
+      ]
+    },
+    "qt5": {
+      "description": "Use Qt5 for simQt",
+      "dependencies": [
+        "qt5-base"
+      ]
+    },
+    "qt6": {
+      "description": "Use Qt6 for simQt",
+      "dependencies": [
+        "qtbase"
+      ]
+    },
     "simdata": {
-      "description": "Build SIMDATA library"
+      "description": "Build simData library"
     },
     "simqt": {
-      "description": "Build SIMQT library"
+      "description": "Build simQt library",
+      "dependencies": [
+        "osg-qt"
+      ]
     },
     "simutil": {
-      "description": "Build SIMUTIL library"
+      "description": "Build simUtil library",
+      "dependencies": [
+        {
+          "name": "simdissdk",
+          "default-features": false,
+          "features": [
+            "simvis"
+          ]
+        }
+      ]
     },
     "simvis": {
-      "description": "Build SIMVIS library"
+      "description": "Build simVis library",
+      "dependencies": [
+        {
+          "name": "osgearth",
+          "default-features": false,
+          "features": [
+            "controls"
+          ]
+        },
+        {
+          "name": "simdissdk",
+          "default-features": false,
+          "features": [
+            "simdata"
+          ]
+        }
+      ]
+    },
+    "wbp": {
+      "description": "Build .wbp OSG plugin around osgEarth .webp plugin",
+      "dependencies": [
+        "osgearth"
+      ]
     }
   }
 }

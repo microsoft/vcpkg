@@ -6,9 +6,6 @@ simdissdk provides CMake targets:
     find_package(simData CONFIG REQUIRED)
     target_link_libraries(main PRIVATE VSI::simData)
 
-    find_package(simDataProto CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE VSI::simDataProto)
-
     find_package(simNotify CONFIG REQUIRED)
     target_link_libraries(main PRIVATE VSI::simNotify)
 
@@ -20,5 +17,3 @@ simdissdk provides CMake targets:
 
     find_package(simVis CONFIG REQUIRED)
     target_link_libraries(main PRIVATE VSI::simVis)
-
-    or you can use the example: ExternalSdkProject

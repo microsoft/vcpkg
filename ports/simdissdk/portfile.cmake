@@ -2,16 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO USNavalResearchLaboratory/simdissdk
     HEAD_REF main
-    REF "34fad5a"
-    SHA512 494df2ee327036f5858fcc8a0bdc23c70951bd33a77e2e3a7691fce19e261a415d2cdeff7ca270d991a028ce5b864290d80ffd23a659dc64fd61c570bc1c8158
+    REF "11a9530"
+    SHA512 9aa2a3e107939bac4a64bea18103d9cd3cd2dd5ac4cfe1699ba0a5b89b4672a00bc8884ea67cb448059762b12ff34f3793d843634ea39fe4810e9e0af08cd69c
     PATCHES
-        add-using-vcpkg-option.patch
-        change-install-dir.patch
-        disable-find-and-change-import.patch
-        change-osgqt-to-osgQOpenGL.patch
-        disable-add-executable.patch
-        disable-plugin-webp.patch
 )
+
+# Moving up from vcpkg/ports/simdissdk/ to the project root
+#get_filename_component(SOURCE_PATH "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -19,16 +16,32 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         simvis      BUILD_SIMVIS
         simutil     BUILD_SIMUTIL
         simqt       BUILD_SIMQT
+        wbp         ENABLE_WBP_PLUGIN
 )
 
+# If the 'entt' feature was NOT enabled, we tell CMake to hide EnTT
+if("entt" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_EnTT=OFF")
+else()
+    list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_EnTT=ON")
+endif()
+
+# If the 'osg-qt' feature was NOT enabled, we tell CMake to hide it
+if("osg-qt" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_DISABLE_FIND_PACKAGE_osgQOpenGL-qt5=OFF"
+        "-DCMAKE_DISABLE_FIND_PACKAGE_osgQOpenGL-qt6=OFF"
+    )
+else()
+    list(APPEND FEATURE_OPTIONS
+        "-DCMAKE_DISABLE_FIND_PACKAGE_osgQOpenGL-qt5=ON"
+        "-DCMAKE_DISABLE_FIND_PACKAGE_osgQOpenGL-qt6=ON"
+    )
+endif()
+
+set(_SDK_SHARED ON)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(SIMNOTIFY_SHARED OFF)
-    set(SIMCORE_SHARED OFF)
-    set(SIMDATA_SHARED OFF)
-    set(SIMDATAPROTO_SHARED OFF)
-    set(SIMVIS_SHARED OFF)
-    set(SIMUTIL_SHARED OFF)
-    set(SIMQT_SHARED OFF)
+    set(_SDK_SHARED OFF)
 endif()
 
 vcpkg_cmake_configure(
@@ -37,8 +50,18 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DINSTALL_THIRDPARTY_LIBRARIES=OFF
         -DBUILD_SDK_EXAMPLES=OFF
+        -DENABLE_QTDESIGNER_WIDGETS=OFF
+        -DSIMNOTIFY_SHARED=${_SDK_SHARED}
+        -DSIMCORE_SHARED=${_SDK_SHARED}
+        -DSIMDATA_SHARED=${_SDK_SHARED}
+        -DSIMVIS_SHARED=${_SDK_SHARED}
+        -DSIMUTIL_SHARED=${_SDK_SHARED}
+        -DSIMQT_SHARED=${_SDK_SHARED}
     OPTIONS_DEBUG
     MAYBE_UNUSED_VARIABLES
+        CMAKE_DISABLE_FIND_PACKAGE_osgQOpenGL-qt5
+        CMAKE_DISABLE_FIND_PACKAGE_osgQOpenGL-qt6
+        CMAKE_DISABLE_FIND_PACKAGE_EnTT
 )
 
 vcpkg_cmake_install()
@@ -52,11 +75,6 @@ if(BUILD_SIMDATA)
 vcpkg_cmake_config_fixup(
     PACKAGE_NAME simData 
     CONFIG_PATH lib/cmake/simData 
-    DO_NOT_DELETE_PARENT_CONFIG_PATH
-)
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME simDataProto 
-    CONFIG_PATH lib/cmake/simDataProto 
     DO_NOT_DELETE_PARENT_CONFIG_PATH
 )
 endif()
@@ -98,14 +116,10 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/doc")
-#file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/ExternalSdkProject")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/doc/SDKFooter.html")
 
-#set(VCPKG_POLICY_SKIP_ABSOLUTE_PATHS_CHECK enabled)
-#set(VCPKG_POLICY_SKIP_MISPLACED_CMAKE_FILES_CHECK enabled)
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.txt")
-
-file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${SOURCE_PATH}")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/usage" "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" COPYONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/INSTALL.md")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/LICENSE.txt")
@@ -113,10 +127,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/README.md")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/INSTALL.md")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/LICENSE.txt")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/README.md")
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/sdk23-simCore.dll")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/sdk23-simNotify.dll")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/sdk23-simCore.dll")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/sdk23-simNotify.dll")
-endif()
