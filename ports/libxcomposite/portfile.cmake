@@ -1,16 +1,20 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxcomposite
-    REF fd7d02cc014ac9bf5bb7e68b66102ea36a76a59a # 0.4.5
-    SHA512  68ee9d61d364816bf190db010f624312e9daf8d6b411dc209486ac0c7d92b3c75ca5a2650bc085b0c444bec1adfefca593e1d9e6fda4ba12ab5f12ebe7fd6ade
-    HEAD_REF master
-) 
+vcpkg_download_distfile(
+    LIBXCOMPOSITE_ARCHIVE
+    URLS "https://www.x.org/releases/individual/lib/libXcomposite-${VERSION}.tar.xz"
+    FILENAME "libXcomposite-${VERSION}.tar.xz"
+    SHA512 24a03e3242f22b113aa6a3f9341858c072730f0f0073a1a7b9d36b982cd5b77223151aad32b61d1a38bbcb9f8ffedaf67b882dcb95f197d80ece9dbc99332c36
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXCOMPOSITE_ARCHIVE}"
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -22,9 +26,6 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

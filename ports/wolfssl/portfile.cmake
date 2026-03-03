@@ -25,6 +25,12 @@ else()
     set(ENABLE_QUIC no)
 endif()
 
+if ("curve25519" IN_LIST FEATURES)
+    set(ENABLE_CURVE25519 yes)
+else()
+    set(ENABLE_CURVE25519 no)
+endif()
+
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
@@ -57,6 +63,7 @@ vcpkg_cmake_configure(
       -DWOLFSSL_DTLS_CID=${ENABLE_DTLS}
       -DWOLFSSL_QUIC=${ENABLE_QUIC}
       -DWOLFSSL_SESSION_TICKET=${ENABLE_QUIC}
+      -DWOLFSSL_CURVE25519=${ENABLE_CURVE25519}
     OPTIONS_RELEASE
       -DCMAKE_C_FLAGS=${VCPKG_COMBINED_C_FLAGS_RELEASE}
     OPTIONS_DEBUG

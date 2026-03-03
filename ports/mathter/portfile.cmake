@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO petiaccja/Mathter
     REF "v${VERSION}"
-    SHA512 da4fc266a8e3bdbe388e85e5f65e7a8b54fe65264175f5348f1fbb1a5bfbcf1b2ddf4ffaecd4a1f0ac22e78fdc665a52f4929a872592ce20ce69112187d6a6e0
+    SHA512 f03578f816703c436baa052fe074a9c752b94b24ffece97a43148c9b8a680b4f89f513b79c58e9e68f9e76720d237b1eae91ea19405ff522a7e374282f4a7828
     HEAD_REF master
     PATCHES
         support-xsimd-14.patch

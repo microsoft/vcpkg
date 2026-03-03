@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b3f172b..1172c6e 100644
+index 1bf58ae..d4419df 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -66,41 +66,41 @@ add_library(Luau.VM.Internals INTERFACE)
@@ -54,8 +54,8 @@ index b3f172b..1172c6e 100644
  target_link_libraries(Luau.Require PUBLIC Luau.Config Luau.VM)
  
  target_include_directories(isocline PUBLIC extern/isocline/include)
-@@ -184,22 +184,6 @@ if(MSVC AND LUAU_BUILD_CLI)
-     set_target_properties(Luau.Repl.CLI PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
+@@ -189,22 +189,6 @@ if(MSVC AND LUAU_BUILD_TESTS)
+     set_target_properties(Luau.CLI.Test PROPERTIES LINK_FLAGS_DEBUG /STACK:2097152)
  endif()
  
 -# embed .natvis inside the library debug information
@@ -77,7 +77,7 @@ index b3f172b..1172c6e 100644
  # On Windows and Android threads are provided, on Linux/Mac/iOS we use pthreads
  add_library(osthreads INTERFACE)
  if(CMAKE_SYSTEM_NAME MATCHES "Linux|Darwin|iOS")
-@@ -292,3 +276,56 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.V
+@@ -297,3 +281,56 @@ foreach(LIB Luau.Ast Luau.Compiler Luau.Config Luau.Analysis Luau.CodeGen Luau.V
          endif()
      endif()
  endforeach()

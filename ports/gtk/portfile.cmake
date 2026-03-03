@@ -1,13 +1,17 @@
 # It installs only shared libs, regardless build type.
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org/
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/gtk
-    REF ${VERSION}
-    SHA512 2e2d3135ebf8cb176a4e5e6f1faa26ae9ea5c3e2441e2c820372a76b78e641f207257600d6a207aa05883e04f29fac1452673bffa0395789b8e482cc6b204673
-    HEAD_REF master # branch name
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 7a6f4c48ea57c7cd1946bd33c9fdacfbb4a5ed9c02034f3cd483099539d6bcd5448144fe13f66815cdd51a693ccb317872accf1b150730404fb2d618222a78ca
+)
+
+vcpkg_extract_source_archive(SOURCE_PATH
+    ARCHIVE "${ARCHIVE}"
     PATCHES
         0001-build.patch
         fix_vulkan_enabled.patch

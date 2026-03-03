@@ -1,6 +1,6 @@
 {
   "name": "flecs",
-  "version": "4.1.2",
+  "version": "4.1.4",
   "description": "A fast entity component system (ECS) for C & C++",
   "homepage": "https://github.com/SanderMertens/flecs",
   "documentation": "https://www.flecs.dev/flecs/",

@@ -1,16 +1,20 @@
 if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     message(STATUS "Utils and libraries provided by '${PORT}' should be provided by your system! Install the required packages or force vcpkg libraries by setting X_VCPKG_FORCE_VCPKG_X_LIBRARIES in your triplet!")
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-else()
+    return()
+endif()
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxft
-    REF 98b121f22c3477b508dd17aa5db99f2ebf36ade4 # 2.3.4
-    SHA512  336d80b96b607b3f694a8dac1e2c3cb7f22640ee6f2eeb9d6f8b7b0ddabc3fe9a096f0108595657ddff2f5b2b720a12d8954497067b1339878e786f7470c5617
-    HEAD_REF master
-) 
+vcpkg_download_distfile(
+    LIBXFT_ARCHIVE
+    URLS "https://www.x.org/releases/individual/lib/libXft-${VERSION}.tar.xz"
+    FILENAME "libXft-${VERSION}.tar.xz"
+    SHA512 493e4475c0eeab04a510819446eaa871ba9e1695e42d05bb7791d2ed59f7faff31e910dae95efa4b0ac4a7a2da38614b5740a4ca9388134bea80d348e9ad57e5
+)
+
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXFT_ARCHIVE}"
+)
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
@@ -22,9 +26,6 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-# Handle copyright
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-endif()
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

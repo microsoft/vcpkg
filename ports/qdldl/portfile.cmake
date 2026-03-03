@@ -1,0 +1,24 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO "osqp/qdldl"
+    REF "v${VERSION}"
+    SHA512 67722bb872cbafe61bdbe4a582cc7e4ebc729a1eca933cc8b758e9a9a5648903ee6ac147c14b33a136c11a647f39ea42cfe3c71147366ed294258b5b66d7d1da
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" QDLDL_BUILD_STATIC_LIB)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" QDLDL_BUILD_SHARED_LIB)
+
+vcpkg_cmake_configure(
+  SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    -DQDLDL_BUILD_SHARED_LIB=${QDLDL_BUILD_SHARED_LIB}
+    -DQDLDL_BUILD_STATIC_LIB=${QDLDL_BUILD_STATIC_LIB}
+    -DQDLDL_BUILD_DEMO_EXE=OFF
+)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/qdldl")
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+file(COPY "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

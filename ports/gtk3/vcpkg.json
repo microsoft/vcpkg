@@ -1,7 +1,7 @@
 {
   "name": "gtk3",
-  "version": "3.24.43",
-  "port-version": 2,
+  "version": "3.24.51",
+  "port-version": 3,
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
   "license": null,
@@ -25,13 +25,13 @@
       "features": [
         "x11"
       ],
-      "platform": "linux"
+      "platform": "linux | freebsd | openbsd"
     },
-    "gdk-pixbuf",
     {
       "name": "gdk-pixbuf",
       "host": true
     },
+    "gdk-pixbuf",
     {
       "name": "gettext",
       "host": true,
@@ -82,6 +82,14 @@
             "introspection"
           ]
         }
+      ]
+    },
+    "wayland": {
+      "description": "Build with Wayland support",
+      "supports": "linux | freebsd | openbsd",
+      "dependencies": [
+        "wayland",
+        "wayland-protocols"
       ]
     }
   }

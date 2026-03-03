@@ -1,6 +1,6 @@
 {
   "name": "libressl",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": [
     "LibreSSL is a TLS/crypto stack.",
     "It was forked from OpenSSL in 2014 by the OpenBSD project, with goals of modernizing the codebase, improving security, and applying best practice development processes.",

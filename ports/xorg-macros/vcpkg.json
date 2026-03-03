@@ -1,7 +1,6 @@
 {
   "name": "xorg-macros",
-  "version": "1.19.3",
-  "port-version": 1,
+  "version": "1.20.2",
   "description": "X.org macros utilities.",
   "homepage": "https://xcb.freedesktop.org/",
   "license": null,

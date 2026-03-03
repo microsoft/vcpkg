@@ -1,0 +1,80 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3bc511e..86a903c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -477,15 +477,9 @@ endif(MSVC)
+ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${g2o_CXX_FLAGS}")
+ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${g2o_C_FLAGS}")
+ 
+-# Find Eigen3. If it defines the target, this is used. If not,
+-# fall back to the using the module form.
++# Find Eigen3
+ # See https://eigen.tuxfamily.org/dox/TopicCMakeGuide.html for details
+-find_package(Eigen3 3.3 REQUIRED)
+-if (TARGET Eigen3::Eigen)
+-  set(G2O_EIGEN3_EIGEN_TARGET Eigen3::Eigen)
+-else()
+-  include_directories(${EIGEN3_INCLUDE_DIR})
+-endif ()
++find_package(Eigen3 REQUIRED NO_MODULE)
+ 
+ # Generate config.h
+ set(G2O_OPENGL_FOUND ${OPENGL_FOUND})
+diff --git a/benchmarks/CMakeLists.txt b/benchmarks/CMakeLists.txt
+index 89a2612..acda5b9 100644
+--- a/benchmarks/CMakeLists.txt
++++ b/benchmarks/CMakeLists.txt
+@@ -4,4 +4,4 @@ target_include_directories(benchmark_jacobian_timing PUBLIC
+   "$<BUILD_INTERFACE:${g2o_SOURCE_DIR};${PROJECT_BINARY_DIR}>"
+ )
+ 
+-target_link_libraries(benchmark_jacobian_timing benchmark::benchmark ${G2O_EIGEN3_EIGEN_TARGET})
++target_link_libraries(benchmark_jacobian_timing benchmark::benchmark Eigen3::Eigen)
+diff --git a/g2o/core/CMakeLists.txt b/g2o/core/CMakeLists.txt
+index 21901c2..da0d2a9 100644
+--- a/g2o/core/CMakeLists.txt
++++ b/g2o/core/CMakeLists.txt
+@@ -50,7 +50,7 @@ set_target_properties(core PROPERTIES OUTPUT_NAME ${LIB_PREFIX}core)
+ set_target_properties(core PROPERTIES
+   VERSION ${G2O_LIB_VERSION}
+   SOVERSION ${G2O_LIB_SOVERSION})
+-target_link_libraries(core PUBLIC stuff ${G2O_EIGEN3_EIGEN_TARGET})
++target_link_libraries(core PUBLIC stuff Eigen3::Eigen)
+ target_link_libraries(core PUBLIC g2o_ceres_ad)
+ target_compile_features(core PUBLIC cxx_std_17)
+ 
+diff --git a/g2o/solvers/csparse/CMakeLists.txt b/g2o/solvers/csparse/CMakeLists.txt
+index e3a3980..3539711 100644
+--- a/g2o/solvers/csparse/CMakeLists.txt
++++ b/g2o/solvers/csparse/CMakeLists.txt
+@@ -19,7 +19,7 @@ target_include_directories(csparse_extension PUBLIC
+   ${CSPARSE_INCLUDE_DIR}
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+   $<INSTALL_INTERFACE:include/g2o/solvers/csparse>)
+-target_link_libraries(csparse_extension PUBLIC stuff ${CSPARSE_LIBRARY} ${G2O_EIGEN3_EIGEN_TARGET})
++target_link_libraries(csparse_extension PUBLIC stuff ${CSPARSE_LIBRARY} Eigen3::Eigen)
+ 
+ add_library(solver_csparse ${G2O_LIB_TYPE}
+   solver_csparse.cpp
+diff --git a/g2o/stuff/CMakeLists.txt b/g2o/stuff/CMakeLists.txt
+index 6334468..04d0255 100644
+--- a/g2o/stuff/CMakeLists.txt
++++ b/g2o/stuff/CMakeLists.txt
+@@ -28,7 +28,7 @@ set_target_properties(stuff PROPERTIES
+   VERSION ${G2O_LIB_VERSION}
+   SOVERSION ${G2O_LIB_SOVERSION})
+ target_compile_features(stuff PUBLIC cxx_std_17)
+-target_link_libraries(stuff PUBLIC ${G2O_EIGEN3_EIGEN_TARGET})
++target_link_libraries(stuff PUBLIC Eigen3::Eigen)
+ 
+ if (APPLE)
+   set_target_properties(stuff PROPERTIES INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+@@ -64,7 +64,7 @@ if(OPENGL_FOUND AND G2O_HAVE_OPENGL)
+     $<INSTALL_INTERFACE:include/g2o/stuff>
+   )
+ 
+-  target_link_libraries(opengl_helper PUBLIC ${G2O_OPENGL_TARGET} ${G2O_EIGEN3_EIGEN_TARGET})
++  target_link_libraries(opengl_helper PUBLIC ${G2O_OPENGL_TARGET} Eigen3::Eigen)
+   target_compile_features(opengl_helper PUBLIC cxx_std_17)
+   set_target_properties(opengl_helper PROPERTIES OUTPUT_NAME "${LIB_PREFIX}opengl_helper")
+   set_target_properties(opengl_helper PROPERTIES

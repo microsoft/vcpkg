@@ -1,0 +1,32 @@
+{
+  "name": "frei0r",
+  "version": "2.5.4",
+  "description": "A large collection of free and portable video plugins",
+  "homepage": "https://frei0r.dyne.org/",
+  "license": "GPL-2.0",
+  "supports": "!(static & windows)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "cairo": {
+      "description": "Enable plugins dependent upon Cairo",
+      "supports": "!arm & !static",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false
+        }
+      ]
+    },
+    "opencv": {
+      "description": "Enable plugins dependent upon OpenCV",
+      "dependencies": [
+        "opencv"
+      ]
+    }
+  }
+}

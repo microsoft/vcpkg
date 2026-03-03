@@ -52,11 +52,9 @@ if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND VCPKG_DETECTED_CMAKE_
     set(ENV{CFLAGS} "$ENV{CFLAGS} -std=c17")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    CONFIGURE_ENVIRONMENT_VARIABLES CFLAGS
-    DETERMINE_BUILD_TRIPLET
-    NO_ADDITIONAL_PATHS
+    DEFAULT_OPTIONS_EXCLUDE "^--docdir"
     OPTIONS
         ${OPTIONS}
         --disable-db-install
@@ -71,7 +69,7 @@ vcpkg_configure_make(
         --without-tests
         --with-pkg-config-libdir=libdir
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 # Prefer local files over search path
@@ -79,6 +77,14 @@ file(GLOB headers "${CURRENT_PACKAGES_DIR}/include/ncursesw/*.h")
 foreach(file IN LISTS headers)
     vcpkg_replace_string("${file}" [[#include <ncursesw/([^>]*)>]] [[#include "\1"]] REGEX IGNORE_UNCHANGED)
 endforeach()
+
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/bin/ncursesw6-config"  "${CURRENT_INSTALLED_DIR}" "\${prefix}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/bin/ncursesw6-config"  "\nprefix=\"\${prefix}\"" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../.. && pwd -P)]=])
+if(NOT VCPKG_BUILD_TYPE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/debug/bin/ncursesw6-config"  "${CURRENT_INSTALLED_DIR}" "\${prefix}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/debug/bin/ncursesw6-config"  "\nprefix=\"\${prefix}/debug\"" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../../../.. && pwd -P)/debug]=])
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/ncurses/debug/bin/ncursesw6-config"  "\${prefix}/share" "\${prefix}/../share")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")

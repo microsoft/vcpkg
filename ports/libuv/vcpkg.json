@@ -1,6 +1,6 @@
 {
   "name": "libuv",
-  "version-semver": "1.51.0",
+  "version-semver": "1.52.0",
   "description": "libuv is a multi-platform support library with a focus on asynchronous I/O.",
   "homepage": "https://github.com/libuv/libuv",
   "license": "BSD-3-Clause",

@@ -1,9 +1,10 @@
 set(VCPKG_BUILD_TYPE release) # header-only
 
 vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
-    REPO dtschump/CImg
-    REF "v.${VERSION}"
-    SHA512 2d192f3403b76dae2932209dae34b4b7d1f9ee260bbfbc7a9b32b159596505a528f7308001ae2632f3c3fd42722fd524ab0a5e7636df68e0eaa60a21a7c9ea48
+    REPO GreycLab/CImg
+    # Using commit id becuase upstream likes to change tags
+    REF adc0075060e600f79bff9a6455daf53ff5968905
+    SHA512 59b7388238d73e7c56a029bc7f372085f9e2a167ff138f0f2671ad59d3c988ca512e0b3df4892688b665baff3f327da429e94d60e0ee75c29b8367f7f3537de1
     HEAD_REF master
 )
 

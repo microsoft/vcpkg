@@ -1,8 +1,8 @@
 diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
-index c5fff1a..03a86ca 100644
+index 199f4809..beae8345 100644
 --- a/test/CMakeLists.txt
 +++ b/test/CMakeLists.txt
-@@ -20,6 +20,7 @@ find_package(mimalloc 2.2 CONFIG REQUIRED)
+@@ -20,6 +20,7 @@ find_package(mimalloc CONFIG REQUIRED)
  message(STATUS "Found mimalloc installed at: ${MIMALLOC_LIBRARY_DIR} (${MIMALLOC_VERSION_DIR})")
  
  
@@ -17,7 +17,7 @@ index c5fff1a..03a86ca 100644
 +endif()
  
  
-+if(0)
++if(MIMALLOC_OBJECT_DIR)
  # overriding with a static object file works reliable as the symbols in the
  # object file have priority over those in library files
  add_executable(static-override-obj main-override.c ${MIMALLOC_OBJECT_DIR}/mimalloc${CMAKE_C_OUTPUT_EXTENSION})

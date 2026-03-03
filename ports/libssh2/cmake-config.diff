@@ -1,0 +1,27 @@
+diff --git a/cmake/libssh2-config.cmake.in b/cmake/libssh2-config.cmake.in
+index edc86d7..fd53d55 100644
+--- a/cmake/libssh2-config.cmake.in
++++ b/cmake/libssh2-config.cmake.in
+@@ -22,10 +22,22 @@ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
+ 
+ # Alias for either shared or static library
+ if(NOT TARGET @PROJECT_NAME@::@LIB_NAME@)
++ if(CMAKE_VERSION VERSION_LESS "3.18.0")
++  # cannot add alias to non-global imported library
++  add_library(@PROJECT_NAME@::@LIB_NAME@ INTERFACE IMPORTED)
++  set_target_properties(@PROJECT_NAME@::@LIB_NAME@ PROPERTIES INTERFACE_LINK_LIBRARIES @PROJECT_NAME@::@LIB_SELECTED@)
++ else()
+   add_library(@PROJECT_NAME@::@LIB_NAME@ ALIAS @PROJECT_NAME@::@LIB_SELECTED@)
++ endif()
+ endif()
+ 
+ # Compatibility alias
+ if(NOT TARGET Libssh2::@LIB_NAME@)
++ if(CMAKE_VERSION VERSION_LESS "3.18.0")
++  # cannot add alias to non-global imported library
++  add_library(Libssh2::@LIB_NAME@ INTERFACE IMPORTED)
++  set_target_properties(Libssh2::@LIB_NAME@ PROPERTIES INTERFACE_LINK_LIBRARIES @PROJECT_NAME@::@LIB_SELECTED@)
++ else()
+   add_library(Libssh2::@LIB_NAME@ ALIAS @PROJECT_NAME@::@LIB_SELECTED@)
++ endif()
+ endif()

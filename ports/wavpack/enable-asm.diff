@@ -1,12 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 03472d7..daca809 100644
+index 0b5d26d..422d55e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,6 +1,6 @@
  cmake_minimum_required(VERSION 3.2...3.10)
  
--project(WavPack VERSION 5.8.1)
-+project(WavPack VERSION 5.8.1 LANGUAGES C CXX ASM)
+-project(WavPack VERSION 5.9.0)
++project(WavPack VERSION 5.9.0 LANGUAGES C CXX ASM)
  
  file(READ "${CMAKE_CURRENT_SOURCE_DIR}/configure.ac" CONFIGURE_AC)
  string(REGEX MATCH "LT_CURRENT=([0-9]+)" LT_CURRENT "${CONFIGURE_AC}")

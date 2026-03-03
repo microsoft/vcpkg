@@ -1,0 +1,64 @@
+diff --git a/src/Makefile.shlib b/src/Makefile.shlib
+index f94d59d..77aa6bf 100644
+--- a/src/Makefile.shlib
++++ b/src/Makefile.shlib
+@@ -216,8 +216,10 @@ ifeq ($(PORTNAME), win32)
+   ifdef SO_MAJOR_VERSION
+     shlib		= lib$(NAME)$(DLSUFFIX)
+   endif
++ifneq ($(LIBPQ_LIBRARY_TYPE), static)
+   haslibarule   = yes
+ endif
++endif
+ 
+ 
+ # If the shared library doesn't have an export file, mark all symbols not
+@@ -323,8 +325,10 @@ else
+ # Win32 case
+ 
+ # See notes in src/backend/parser/Makefile about the following two rules
++ifneq ($(LIBPQ_LIBRARY_TYPE), static)
+ $(stlib): $(shlib)
+ 	touch $@
++endif
+ 
+ # XXX A backend that loads a module linked with libgcc_s_dw2-1.dll will exit
+ # uncleanly, hence -static-libgcc.  (Last verified with MinGW-w64 compilers
+
+diff --git a/src/makefiles/Makefile.win32 b/src/makefiles/Makefile.win32:
+index dc1aafa..1ab97a8 100644
+--- a/src/makefiles/Makefile.win32
++++ b/src/makefiles/Makefile.win32
+@@ -22,21 +22,32 @@ endif
+ endif
+ endif
+ 
++ifeq (,$(filter static,$(LIBPQ_LIBRARY_TYPE)))
+ ifneq (,$(findstring src/common,$(subdir)))
+ override CPPFLAGS+= -DBUILDING_DLL
+ endif
++endif
++
+ 
++ifeq (,$(filter static,$(LIBPQ_LIBRARY_TYPE)))
+ ifneq (,$(findstring src/port,$(subdir)))
+ override CPPFLAGS+= -DBUILDING_DLL
+ endif
++endif
++
+ 
++ifeq (,$(filter static,$(LIBPQ_LIBRARY_TYPE)))
+ ifneq (,$(findstring timezone,$(subdir)))
+ override CPPFLAGS+= -DBUILDING_DLL
+ endif
++endif
++
+ 
++ifeq (,$(filter static,$(LIBPQ_LIBRARY_TYPE)))
+ ifneq (,$(findstring ecpg/ecpglib,$(subdir)))
+ override CPPFLAGS+= -DBUILDING_DLL
+ endif
++endif
+ 
+ # required by Python headers
+ ifneq (,$(findstring src/pl/plpython,$(subdir)))

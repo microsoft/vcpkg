@@ -2,13 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openzim/libzim
     REF "${VERSION}"
-    SHA512 de1588addec8b2398912a99cc5b46c1fa156d1ce01d2db1544b40c966bf305d859a52b51b8532d74cdba3c4e3392a3f4be68f4e8ac93392c56c3a24fa6b135c8
+    SHA512 acf11e4fe980adc1c0be760dab4d0f5a8d3da20579d918f627d439acc3266f12bae3f033c2f3f98009f6e1a20fc35190ca625b46fc581cb801594a8943e83d9d
     HEAD_REF main
     PATCHES
         cross-builds.diff
         dllexport.diff
         subdirs.diff
-        remove-sortpp-pass.diff # https://github.com/openzim/libzim/pull/1017
 )
 
 set(EXTRA_OPTIONS "")

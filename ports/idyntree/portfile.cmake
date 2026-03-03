@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO robotology/idyntree
     REF "v${VERSION}"
-    SHA512 f74548a4b8ff7ab3d4033b95cd31553afbafe9473e6e4f7d6a44f2043eed742b45b2122ebbf155304bfab0d6ad2d2d93dc77d288a540534747751820f31a10e5
+    SHA512 bfcdddebb2ae3d5b9e75cea799d4dfb6ad745d26eb220419c9795c30397ee400dce7669546fe78aadbab49e29be48b3ecece7bb972c1032d04f6b621a1d5bcf0
     HEAD_REF master
 )
 

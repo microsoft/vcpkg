@@ -1,0 +1,42 @@
+diff --git a/include/sol/compatibility/compat-5.3.h b/include/sol/compatibility/compat-5.3.h
+index 8d32d2d7..bd9dad99 100644
+--- a/include/sol/compatibility/compat-5.3.h
++++ b/include/sol/compatibility/compat-5.3.h
+@@ -405,7 +405,7 @@ COMPAT53_API void luaL_requiref(lua_State *L, const char *modname,
+ 
+ 
+ /* other Lua versions */
+-#if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 501 || LUA_VERSION_NUM > 504
++#if !defined(LUA_VERSION_NUM) || LUA_VERSION_NUM < 501 || LUA_VERSION_NUM > 505
+ 
+ #  error "unsupported Lua version (i.e. not Lua 5.1, 5.2, 5.3, or 5.4)"
+
+diff --git a/include/sol/compatibility/compat-5.4.h b/include/sol/compatibility/compat-5.4.h
+index ae747c64..b5238579 100644
+--- a/include/sol/compatibility/compat-5.4.h
++++ b/include/sol/compatibility/compat-5.4.h
+@@ -17,7 +17,7 @@ extern "C" {
+ }
+ #endif
+ 
+-#if defined(LUA_VERSION_NUM) && LUA_VERSION_NUM == 504
++#if defined(LUA_VERSION_NUM) && (LUA_VERSION_NUM == 504 || LUA_VERSION_NUM == 505)
+ 
+ #if !defined(LUA_ERRGCMM)
+ /* So Lua 5.4 actually removes this, which breaks sol2...
+diff --git a/include/sol/state.hpp b/include/sol/state.hpp
+index ed2412ed..b05e9741 100644
+--- a/include/sol/state.hpp
++++ b/include/sol/state.hpp
+@@ -39,7 +39,11 @@ namespace sol {
+ 		}
+ 
+ 		state(lua_CFunction panic, lua_Alloc alfunc, void* alpointer = nullptr)
++#if LUA_VERSION_NUM < 505
+ 		: unique_base(lua_newstate(alfunc, alpointer)), state_view(unique_base::get()) {
++#else
++		: unique_base(lua_newstate(alfunc, alpointer, 0)), state_view(unique_base::get()) {
++#endif
+ 			set_default_state(unique_base::get(), panic);
+ 		}
+ 

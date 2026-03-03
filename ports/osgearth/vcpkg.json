@@ -1,7 +1,7 @@
 {
   "name": "osgearth",
   "version": "3.7.2",
-  "port-version": 4,
+  "port-version": 5,
   "description": "osgEarth - 3D Maps for OpenSceneGraph / C++14",
   "homepage": "https://github.com/gwaldron/osgearth",
   "license": "LGPL-3.0-or-later",
@@ -11,6 +11,13 @@
     "draco",
     "geos",
     "glew",
+    {
+      "name": "imgui",
+      "features": [
+        "docking-experimental",
+        "opengl3-binding"
+      ]
+    },
     "libwebp",
     "opengl",
     {

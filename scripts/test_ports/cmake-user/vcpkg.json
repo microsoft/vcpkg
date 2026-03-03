@@ -126,6 +126,10 @@
           "platform": "!uwp & !mingw"
         },
         {
+          "$package": "Lua",
+          "name": "lua"
+        },
+        {
           "$package": "Curses",
           "name": "ncurses",
           "platform": "!windows | mingw"

@@ -1,6 +1,6 @@
 {
   "name": "qtwayland",
-  "version": "6.9.3",
+  "version": "6.10.0",
   "description": "A toolbox for making Qt based Wayland compositors",
   "homepage": "https://www.qt.io/",
   "license": null,

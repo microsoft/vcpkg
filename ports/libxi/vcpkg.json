@@ -1,6 +1,6 @@
 {
   "name": "libxi",
-  "version": "1.8",
+  "version": "1.8.2",
   "description": "Xlib library for the X Input Extension",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxi",
   "license": null,

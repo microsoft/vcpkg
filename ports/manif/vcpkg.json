@@ -1,6 +1,7 @@
 {
   "name": "manif",
   "version": "0.0.5",
+  "port-version": 1,
   "description": "A small C++11 header-only library for Lie theory.",
   "homepage": "https://github.com/artivis/manif",
   "documentation": "https://artivis.github.io/manif/",

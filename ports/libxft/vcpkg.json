@@ -1,11 +1,10 @@
 {
   "name": "libxft",
-  "version": "2.3.4",
+  "version": "2.3.9",
   "description": "X FreeType library",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxft",
   "license": null,
   "dependencies": [
-    "bzip2",
     "fontconfig",
     "freetype",
     "libx11",
