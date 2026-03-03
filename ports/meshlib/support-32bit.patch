@@ -1,0 +1,14 @@
+diff --git a/source/MRMesh/MRId.h b/source/MRMesh/MRId.h
+index b3c0747..7677742 100644
+--- a/source/MRMesh/MRId.h
++++ b/source/MRMesh/MRId.h
+@@ -91,7 +91,9 @@ public:
+     constexpr Id( UndirectedEdgeId u ) noexcept : id_( (ValueType)u << 1 ) { assert( u.valid() ); }
+     explicit constexpr Id( ValueType i ) noexcept : id_( i ) { }
+     explicit constexpr Id( unsigned int i ) noexcept : id_( i ) { }
++#if __SIZE_MAX__ != __UINT32_MAX__
+     explicit constexpr Id( size_t i ) noexcept : id_( ValueType( i ) ) { }
++#endif
+     constexpr operator ValueType() const { return id_; }
+     constexpr bool valid() const { return id_ >= 0; }
+     explicit constexpr operator bool() const { return id_ >= 0; }
