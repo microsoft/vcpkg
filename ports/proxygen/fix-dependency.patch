@@ -91,7 +91,7 @@ index bf1c508..18cb343 100644
  # discussed on D24686032.
  #
 -# find_dependency(Zstd)
-+find_dependency(Zstd CONFIG)
++find_dependency(zstd CONFIG)
  find_dependency(ZLIB)
  find_dependency(OpenSSL)
  find_dependency(Threads)
