@@ -21,6 +21,7 @@ vcpkg_extract_source_archive(
         "02-gen-debug-info-for-release.patch"
         "03-use-debug-crt-for-debug.patch" # See https://learn.microsoft.com/dotnet/api/microsoft.visualstudio.vcprojectengine.runtimelibraryoption
         include-dirs.diff
+        macos-cross-compile.patch
 )
 file(GLOB devendor "${SOURCE_PATH}/nss/lib/sqlite/*.?" "${SOURCE_PATH}/nss/lib/zlib/*.?")
 file(REMOVE ${devendor})

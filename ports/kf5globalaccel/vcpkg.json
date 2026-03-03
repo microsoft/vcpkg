@@ -1,8 +1,8 @@
 {
   "name": "kf5globalaccel",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "lobal desktop keyboard shortcuts",
-  "homepage": "https://api.kde.org/frameworks/kglobalaccel/html/index.html",
+  "homepage": "https://api.kde.org/kglobalaccel-index.html",
   "supports": "!windows",
   "dependencies": [
     "ecm",
@@ -11,7 +11,10 @@
     "kf5crash",
     "kf5dbusaddons",
     "kf5windowsystem",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "qt5-x11extras",

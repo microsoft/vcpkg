@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 619e8f2..f3f325a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -30,6 +30,11 @@ target_include_directories(WebCraft PUBLIC
+
+ target_link_libraries(WebCraft PUBLIC ${WEBCRAFT_PLATFORM_LIBS})
+
++if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
++    find_package(concurrentqueue REQUIRED)
++    target_link_libraries(WebCraft PRIVATE concurrentqueue::concurrentqueue)
++endif()
++
+ # --- 3. Install Rules ---
+
+ # A. Install the Library and Headers
+diff --git a/src/webcraft/runtime.provider.cpp b/src/webcraft/runtime.provider.cpp
+index 0e1300e..8edfe75 100644
+--- a/src/webcraft/runtime.provider.cpp
++++ b/src/webcraft/runtime.provider.cpp
+@@ -47,7 +47,7 @@ void webcraft::async::detail::initialize_runtime() noexcept
+ // to avoid collision with concurrentqueue's BLOCK_SIZE constant
+ #pragma push_macro("BLOCK_SIZE")
+ #undef BLOCK_SIZE
+-#include <concurrentqueue/concurrentqueue.h>
++#include <moodycamel/concurrentqueue.h>
+ #pragma pop_macro("BLOCK_SIZE")
+
+ #include <liburing.h>

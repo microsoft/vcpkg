@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
     REF "${VERSION}"
-    SHA512 91918fe0d6a2f74fa0faf9141a341a18d123684ceef0ec6a18d4b82fd47f13a939c2dd01c511d83567d1397e7344bd323f921ee5a1095cc61542a97b01ae9301
+    SHA512 d95bf0689fb2862ad5ea9e902b73724098d911d9c312aa69157bec9de77f32e4d5ac7dfa105d844110cc66dbdb0336056ba7f96781fcbc848b72fd0661604d50
     HEAD_REF master
     PATCHES
         add-options-for-docs-headers.patch

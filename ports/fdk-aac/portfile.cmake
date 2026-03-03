@@ -7,8 +7,8 @@ set(legal_notes "NOTICE")
 if(HE_AAC)
     vcpkg_from_github(
         REPO mstorsjo/fdk-aac
-        REF v2.0.2
-        SHA512 616207e85035d1659a2b7808ca6ec02ef53c1c4b39eb280fe861f82a4cf548e5db2ac381c496bad37dfc2b8c6677fe704d9fd8449e43d1f93d3e636239e0191b
+        REF "v${VERSION}"
+        SHA512 f8ea7abe83e6e138dac4a06f195bdf870bca93137bdaea6f5d85f266f3659b4a1b54da3b4c02a1eba3a134d9d19dcf89908cfbed4bbcab8550e114e84c333779
         HEAD_REF master
         OUT_SOURCE_PATH SOURCE_PATH
         PATCHES
@@ -19,12 +19,13 @@ else()
     vcpkg_from_gitlab(
         GITLAB_URL https://gitlab.freedesktop.org/
         REPO wtaymans/fdk-aac-stripped
-        REF 529b87452cd33d45e1d0a5066d20b64f10b38845 # corresponds to v2.0.2 tag in mstorsjo/fdk-aac GitHub repository
-        HEAD_REF stripped4
-        SHA512 0c37f8fd1bd0e817d2b3970138bef5b2a7a3150ab1a772273c8f5cba09be04afa2f31780f0ea063dd786a71844aa4cb5821349a4bcc5ebe70e827c3561eda2a9
+        REF 9896ddc0d08bb3f764f01d5e372bec1c068ad8f5 # corresponds to v2.0.3 tag in mstorsjo/fdk-aac GitHub repository
+        HEAD_REF stripped5
+        SHA512 af19608d54a32a153f8b11f7a92d6c41f0eab890426fa03aad0a68961402ebc6a85f97fae2d64bdfa25c3ba4553eaafab78abfbaf8542291c48bbba9333d8e9b
         OUT_SOURCE_PATH SOURCE_PATH
         PATCHES
             cxx-linkage-pkgconfig.patch
+            cmake_fix.patch # Some files were removed in 2fc6d97f7881816969caab88015688ecb0cea7d0, but CMakeFile adjustment was incomplete
     )
 endif()
 

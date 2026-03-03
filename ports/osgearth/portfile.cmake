@@ -14,6 +14,7 @@ vcpkg_from_github(
     PATCHES
         "${gdal_3_11_diff}"
         namespace-gdal.diff
+		devendor-imgui.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)

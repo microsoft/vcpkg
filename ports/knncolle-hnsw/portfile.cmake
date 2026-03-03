@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO knncolle/knncolle_hnsw
     REF "v${VERSION}"
-    SHA512 efedafc580aed0d0d33533aefa0183b1442e3496b18c7cfbdebce22555c3bbf8c4fdb83fc2db2a0ce50055a50ff402c41f93482121f06c04f09a03365b0cda31
+    SHA512 b75fdc19862d53023119b9464cd2361bd70a17b1f27e899c5f3277431d55c9f7d18a749381b10f0841deebc35d51cea0f95e579b19c671b31eb3588bbd02de1e
     HEAD_REF master
 )
 

@@ -1,0 +1,17 @@
+diff --git a/third_party/CMakeLists.txt b/third_party/CMakeLists.txt
+index f7812f211e..d58d6648c1 100644
+--- a/third_party/CMakeLists.txt
++++ b/third_party/CMakeLists.txt
+@@ -120,6 +120,12 @@ if (EMSCRIPTEN)
+     return()
+ endif()
+ 
++if(NOT TARGET glslang AND (TINT_BUILD_GLSL_WRITER OR TINT_BUILD_GLSL_VALIDATOR) AND TINT_BUILD_CMD_TOOLS)
++    find_package(glslang CONFIG REQUIRED GLOBAL)
++    add_library(glslang ALIAS glslang::glslang)
++    add_library(glslang-default-resource-limits ALIAS glslang::glslang-default-resource-limits)
++endif()
++
+ # Force ENABLE_RTTI in spirv-tools and glslang.
+ set(ENABLE_RTTI ${DAWN_ENABLE_RTTI} CACHE BOOL "" FORCE)
+ 

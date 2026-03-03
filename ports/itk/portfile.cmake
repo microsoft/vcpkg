@@ -14,7 +14,7 @@ vcpkg_from_github(
         When updating the ITK version and SHA512, remember to update the remote module versions below.
         Try `vcpkg install itk[core,cuda,rtk] --only-downloads` for suggestions and verification.
     #]]
-    SHA512 426d7e9974951d3e48de3a38e02e4c4fab3b60657d4bac47642cab40b4a47bf5d7dbbead4d0761a89374c05ad55f50be8af70293f63d2516f4a98edce8634d51
+    SHA512 225de9963e8eaf93ac32ca4a75c4e7aa887c8e926483c5aca0a4c77ef0e6cc6db4561f96a9ec3b936524ea698702705e8dc2c4a2e6a155733a12c0b3098ae11c
     HEAD_REF master
     PATCHES
         dependencies.diff

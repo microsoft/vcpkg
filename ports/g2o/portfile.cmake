@@ -1,5 +1,3 @@
-string(REPLACE "-" "" GIT_TAG "${VERSION}_git")
-
 vcpkg_download_distfile(FIX_UPSTREAM_37d17a9
     URLS https://github.com/RainerKuemmerle/g2o/commit/37d17a94594648acf9cce85e8483c0405c510f0d.patch?full_index=1
     SHA512 dc333fa43770fbdfc98592b4beb0ff03fdb033990b7054ae65953bad31899d11053fe08977526d70fa7fdf299ad0d2368ed79f29b9db847fdca3ff4e3d0415d9
@@ -12,17 +10,19 @@ vcpkg_download_distfile(FIX_UPSTREAM_100af05
     FILENAME g2o-100af05931ae3497f39ab42cbeba240f50cc7b66.patch
 )
 
+string(REPLACE "-" "" GIT_TAG "${VERSION}_git")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO RainerKuemmerle/g2o
-    REF eec325a1da1273e87bc97887d49e70570f28570c
-    SHA512 22d3d546fbc92bff4767b66dcc9a001b5ed0cac0787874dda8712140aa03004b0312f702ea7d61c5fdcfa0bb00654c873f8b99899cd9e2b89667d8d99667d5cd
+    REF "${GIT_TAG}"
+    SHA512 575e97a54f87a4df239b2137c58ebb7025dfa78f6046808d155bec978f8ef88b2e4e6ef53401941fdb30cf88916c4eacb43512d615c5f8d30301cd176c53b05e
     HEAD_REF master
     PATCHES
-        dependencies.diff
-        fix-absolute.patch
+        0001-dependencies.patch
+        0002-fix-absolute.patch
         "${FIX_UPSTREAM_37d17a9}"
         "${FIX_UPSTREAM_100af05}"
+        0003-support-eigen3-5.patch
 )
 file(REMOVE
     "${SOURCE_PATH}/cmake_modules/FindBLAS.cmake"

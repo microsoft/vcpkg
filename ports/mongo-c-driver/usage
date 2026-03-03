@@ -1,4 +1,4 @@
 mongo-c-driver provides CMake targets:
 
-  find_package(mongoc-1.0 CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mongo::mongoc_shared>,mongo::mongoc_shared,mongo::mongoc_static>)
+  find_package(mongoc CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:mongo::shared>,mongo::shared,mongo::static>)

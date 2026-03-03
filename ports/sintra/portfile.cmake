@@ -1,0 +1,10 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO imakris/sintra
+    REF "v${VERSION}"
+    SHA512 d13c520b03e78684b5a3fc843193b26c8e4cebbb7d21567c9a5a6929ceaed2a48b3b225cf30bb31ebc5d97d42d71a4e6b41a7b07813ab75b704036b036d021ed
+    HEAD_REF master
+)
+
+file(INSTALL "${SOURCE_PATH}/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")

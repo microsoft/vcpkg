@@ -1,0 +1,45 @@
+diff --git a/src/corelib/thread/qsemaphore.cpp b/src/corelib/thread/qsemaphore.cpp
+index 0de30d3b9f9d..a308c4419e22 100644
+--- a/src/corelib/thread/qsemaphore.cpp
++++ b/src/corelib/thread/qsemaphore.cpp
+@@ -12,6 +12,9 @@
+ #include "qwaitcondition_p.h"
+ 
+ #include <chrono>
++#if !QT_CONFIG(thread)
++#include <limits>
++#endif
+ 
+ QT_BEGIN_NAMESPACE
+ 
+@@ -684,7 +687,7 @@ bool QSemaphore::tryAcquire(int n, QDeadlineTimer timer)
+ // the calling thread (which is the only thread in the no-thread
+ // configuraton)
+ 
+-QSemaphore::QSemaphore(int n)
++QSemaphore::QSemaphore(int)
+ {
+ 
+ }
+@@ -704,6 +707,21 @@ void QSemaphore::release(int)
+ 
+ }
+ 
++int QSemaphore::available() const
++{
++    return std::numeric_limits<int>::max();
++}
++
++bool QSemaphore::tryAcquire(int)
++{
++    return true;
++}
++
++bool QSemaphore::tryAcquire(int, QDeadlineTimer)
++{
++    return true;
++}
++
+ #endif
+ 
+ QT_END_NAMESPACE

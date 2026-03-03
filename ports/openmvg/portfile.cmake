@@ -11,10 +11,9 @@ vcpkg_from_github(
     REF 01193a245ee3c36458e650b1cf4402caad8983ef  # v2.1
     SHA512 ee98ca26426e7129917c920cd59817cb5d4faf1f5aa12f4085f9ac431875e9ec23ffee7792d65286bad4b922c474c56d5c2f2008b38fddf1ede096644f13ad47
     PATCHES
-        build_fixes.patch
-        0001-eigen_3.4.0.patch
-        fast-c-language.diff
-        no-absolute-paths.patch
+        0001-fix-build.patch
+        0002-fast-c-language.patch
+        0003-no-absolute-paths.patch
 )
 file(REMOVE_RECURSE 
     "${SOURCE_PATH}/src/cmakeFindModules/FindEigen.cmake"

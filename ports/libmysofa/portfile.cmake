@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hoene/libmysofa
     REF "v${VERSION}"
-    SHA512 83800ce29ae5c98f302ca574fd9a28de4ec0f85f5bc217c5497b690f12abdf72809e60e36412d6457181303ba7d082cb050050cd1164e7cfc9446e8e0783dda0
+    SHA512 58bd056678503491292a8a9b6b3f43451995a2c0a16735e4ae474d2d3e49bd7b3d6ef3dbfd0ce78e30d9f70887dd9cac60a8fae05ece0c167414f8ac4d3d5514
     HEAD_REF main
     PATCHES
       use-vcpkg-zlib.patch

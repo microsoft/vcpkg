@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 9e188c992caa7f7ff030789f7926007d2272f51b4c3aa7fc94f58f6823810bde71ce149990c78eee47f26471df2a7b87d4fc25881c339ed2026b1e59052bce39
+    SHA512 f5da0573118330ecef40d0cbb0a4a01c03a0c0e376624108ed9abe8769cdf68d8c61868d771ab65dd1666690d2a363e1dd1cd5cca408eb8ac9b9b613caa4af40
     HEAD_REF main
     PATCHES
         fix-freebsd.patch
@@ -54,6 +54,7 @@ vcpkg_cmake_configure(
         -DSDL_LIBC=ON
         -DSDL_TEST_LIBRARY=OFF
         -DSDL_TESTS=OFF
+        -DSDL_X11_XSCRNSAVER=OFF
         -DSDL_INSTALL_CMAKEDIR_ROOT=share/${PORT}
         # Specifying the revision skips the need to use git to determine a version
         -DSDL_REVISION=vcpkg

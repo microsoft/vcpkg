@@ -1,6 +1,6 @@
 {
   "name": "libmysofa",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Reader for AES SOFA files to get better HRTFs (Head-Relative Transfer Functions)",
   "homepage": "https://github.com/hoene/libmysofa",
   "license": "BSD-3-Clause",
