@@ -1,6 +1,6 @@
 {
   "name": "uniconv",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "description": "A high-performance C++ character encoding conversion library with modern C++17 interface",
   "homepage": "https://github.com/hesphoros/UniConv",
   "documentation": "https://github.com/hesphoros/UniConv/blob/main/README.MD",
