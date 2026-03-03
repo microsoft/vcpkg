@@ -61,6 +61,45 @@ index 75494ab..90f6595 100644
    list(APPEND CMAKE_REQUIRED_LIBRARIES ${GFLAGS_LIBRARIES})
    list(APPEND CMAKE_REQUIRED_INCLUDES ${GFLAGS_INCLUDE_DIR})
  else()
+diff --git a/cmake/proxygen-config.cmake.in b/cmake/proxygen-config.cmake.in
+index bf1c508..18cb343 100644
+--- a/cmake/proxygen-config.cmake.in
++++ b/cmake/proxygen-config.cmake.in
+@@ -17,22 +17,26 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(Glog)
+-find_dependency(fmt)
+-find_dependency(folly)
+-find_dependency(wangle)
+-find_dependency(mvfst)
+-find_dependency(Fizz)
++find_dependency(glog CONFIG)
++find_dependency(fmt CONFIG)
++find_dependency(folly CONFIG)
++find_dependency(wangle CONFIG)
++find_dependency(mvfst CONFIG)
++find_dependency(fizz CONFIG)
++set(z_vcpkg_proxygen_gflags_backup ${GFLAGS_USE_TARGET_NAMESPACE})
++set(GFLAGS_USE_TARGET_NAMESPACE ON)
++find_dependency(gflags CONFIG)
++set(GFLAGS_USE_TARGET_NAMESPACE ${z_vcpkg_proxygen_gflags_backup})
+ # For now, anything that depends on Proxygen has to copy its FindZstd.cmake
+ # and issue a `find_package(Zstd)`.  Uncommenting this won't work because
+ # this Zstd module exposes a library called `zstd`.  The right fix is
+ # discussed on D24686032.
+ #
+-# find_dependency(Zstd)
++find_dependency(Zstd CONFIG)
+ find_dependency(ZLIB)
+ find_dependency(OpenSSL)
+ find_dependency(Threads)
+-find_dependency(c-ares REQUIRED)
++find_dependency(c-ares CONFIG)
+ 
+ if(NOT TARGET proxygen::proxygen)
+     include("${CMAKE_CURRENT_LIST_DIR}/proxygen-targets.cmake")
 diff --git a/proxygen/lib/dns/CMakeLists.txt b/proxygen/lib/dns/CMakeLists.txt
 index 527b5a4..6e640a3 100644
 --- a/proxygen/lib/dns/CMakeLists.txt
