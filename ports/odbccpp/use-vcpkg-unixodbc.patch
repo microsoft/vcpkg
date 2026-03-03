@@ -6,9 +6,9 @@
  
 -FIND_PACKAGE(ODBC REQUIRED)
 +IF(UNIX)
-+    FIND_PACKAGE(unixodbc CONFIG)
++    FIND_PACKAGE(unofficial-unixodbc CONFIG)
 +    IF(unixodbc_FOUND)
-+        SET(ODBC_TARGET UNIX::odbc)
++        SET(ODBC_TARGET unofficial::unixodbc::unixodbc)
 +    ENDIF()
 +ENDIF()
 +IF(NOT ODBC_TARGET)

@@ -11,11 +11,13 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DGTEST_FOUND=OFF
-        -DDOXYGEN_FOUND=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_GTest=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_cmake_install()
+
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
