@@ -62,7 +62,7 @@ vcpkg_make_configure(
         --without-tack
         --without-tests
         --with-pkg-config-libdir=libdir
-	CFLAGS=-std=c17
+        CFLAGS=-std=c17
 )
 vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
@@ -88,3 +88,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
+
