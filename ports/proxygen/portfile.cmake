@@ -20,13 +20,12 @@ vcpkg_cmake_configure(
         "-DPROXYGEN_PYTHON=${PYTHON3}"
         -DVCPKG_LOCK_FIND_PACKAGE_gflags=ON
         -DCMAKE_INSTALL_DIR=share/proxygen
+        -DBUILD_SAMPLES=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup()
-
-vcpkg_copy_tools(TOOL_NAMES hq proxygen_curl proxygen_echo proxygen_h3datagram_client proxygen_httperf2 proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
