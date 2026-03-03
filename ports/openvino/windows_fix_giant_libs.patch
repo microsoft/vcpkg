@@ -1,0 +1,59 @@
+diff --git a/src/plugins/intel_gpu/CMakeLists.txt b/src/plugins/intel_gpu/CMakeLists.txt
+index 427460fb59..818047190a 100644
+--- a/src/plugins/intel_gpu/CMakeLists.txt
++++ b/src/plugins/intel_gpu/CMakeLists.txt
+@@ -72,7 +72,7 @@ ov_add_plugin(NAME ${TARGET_NAME}
+ target_compile_options(${TARGET_NAME} PRIVATE
+     $<$<CONFIG:Release>:$<IF:$<CXX_COMPILER_ID:MSVC>,/Os,-Os>>)
+ 
+-target_link_libraries(${TARGET_NAME} PRIVATE openvino_intel_gpu_graph openvino::pugixml)
++target_link_libraries(${TARGET_NAME} PRIVATE openvino_intel_gpu_graph openvino_intel_gpu_graph_impls openvino::pugixml)
+ 
+ target_include_directories(${TARGET_NAME} PRIVATE
+         ${CMAKE_CURRENT_SOURCE_DIR}/include/)
+diff --git a/src/plugins/intel_gpu/src/graph/CMakeLists.txt b/src/plugins/intel_gpu/src/graph/CMakeLists.txt
+index 7538f01b3b..576c3fae29 100644
+--- a/src/plugins/intel_gpu/src/graph/CMakeLists.txt
++++ b/src/plugins/intel_gpu/src/graph/CMakeLists.txt
+@@ -116,8 +116,6 @@ ov_add_target(
+     ROOT ${CMAKE_CURRENT_SOURCE_DIR}
+     EXCLUDED_SOURCE_PATHS
+         ${EXCLUDE_PATHS}
+-    OBJECT_FILES
+-        ${OBJ_FILES}
+     INCLUDES
+         PUBLIC
+             ${COMMON_INCLUDE_DIRS}
+@@ -139,3 +137,20 @@ ov_set_threading_interface_for(${TARGET_NAME})
+ set_target_properties(${TARGET_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELEASE ${ENABLE_LTO})
+ 
+ ov_install_static_lib(${TARGET_NAME} ${OV_CPACK_COMP_CORE})
++
++
++# Link all object files from ./impls/* into a different library to avoid giant files
++
++add_library(${TARGET_NAME}_impls STATIC ${OBJ_FILES})
++
++target_link_libraries(${TARGET_NAME}_impls PUBLIC ${COMMON_LINK_LIBRARIES} ${EXTRA_LINK_LIBRARIES} openvino::reference)
++
++add_dependencies(${TARGET_NAME}_impls run_codegen_test)
++
++target_compile_options(${TARGET_NAME}_impls PRIVATE ${COMMON_COMPILE_OPTIONS})
++
++ov_set_threading_interface_for(${TARGET_NAME}_impls)
++
++set_target_properties(${TARGET_NAME}_impls PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELEASE ${ENABLE_LTO})
++
++ov_install_static_lib(${TARGET_NAME}_impls ${OV_CPACK_COMP_CORE})
+diff --git a/src/plugins/intel_gpu/tests/unit/CMakeLists.txt b/src/plugins/intel_gpu/tests/unit/CMakeLists.txt
+index 09f95d298a..3b3685875b 100644
+--- a/src/plugins/intel_gpu/tests/unit/CMakeLists.txt
++++ b/src/plugins/intel_gpu/tests/unit/CMakeLists.txt
+@@ -69,6 +69,7 @@ endif()
+ set_target_properties(${TARGET_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELEASE ${ENABLE_LTO})
+ 
+ target_link_libraries(${TARGET_NAME} PRIVATE openvino_intel_gpu_graph
++                                             openvino_intel_gpu_graph_impls
+                                              OpenCL::OpenCL
+                                              gtest
+                                              gtest_main
