@@ -83,6 +83,8 @@ vcpkg_from_github(
     REF 2025.0.5
     SHA512 aa7c41c51195630c0cd7c119d448c1aea69b5110fd4f065617d7452061c21b341831d3afc21d4d03656633b495ec213fbf86730b1815715792dfba264ec3cf1d
     HEAD_REF master
+	PATCHES
+	    fix_find_materialx.diff
 )
 
 vcpkg_find_acquire_program(PYTHON3)
