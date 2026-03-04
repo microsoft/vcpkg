@@ -6980,10 +6980,6 @@
       "baseline": "2019-08-10",
       "port-version": 3
     },
-    "ntf-core": {
-      "baseline": "2.5.4",
-      "port-version": 0
-    },
     "nu-book-zxing-cpp": {
       "baseline": "2.3.0",
       "port-version": 0
@@ -8683,10 +8679,6 @@
     "rmlui": {
       "baseline": "6.2",
       "port-version": 0
-    },
-    "rmqcpp": {
-      "baseline": "1.0.0",
-      "port-version": 2
     },
     "rnnoise": {
       "baseline": "0.2",

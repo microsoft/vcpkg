@@ -1,9 +1,0 @@
-The package ntf-core provides the CMake targets:
-
-    # Blocking and non-blocking sockets for network programming
-    find_package(nts CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE nts)
-
-    # Asynchronous sockets, timers, event loops, and thread pools for network programming
-    find_package(ntc CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE ntc)
