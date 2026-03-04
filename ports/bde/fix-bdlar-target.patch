@@ -1,12 +1,11 @@
-diff --git a/groups/bdl/CMakeLists.txt b/groups/bdl/CMakeLists.txt
-index 4f23715..8ac3e5b 100644
---- a/groups/bdl/CMakeLists.txt
-+++ b/groups/bdl/CMakeLists.txt
-@@ -26,6 +26,7 @@ target_compile_options(bdlde-iface
- if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-     target_compile_options(bdlf INTERFACE /bigobj)
-     target_compile_options(bdlcc INTERFACE /bigobj)
-+    target_compile_options(bdlar PRIVATE  /bigobj)
-     target_link_libraries(bdlb-iface PRIVATE bcrypt)
- endif()
- 
+diff --git a/groups/CMakeLists.txt b/groups/CMakeLists.txt
+index 7ee0b81..5346c7b 100644
+--- a/groups/CMakeLists.txt
++++ b/groups/CMakeLists.txt
+@@ -1,3 +1,6 @@
++if(MSVC)
++    add_compile_options(/bigobj)
++endif()
+ add_subdirectory(bsl)
+ add_subdirectory(bdl)
+ add_subdirectory(bal)
