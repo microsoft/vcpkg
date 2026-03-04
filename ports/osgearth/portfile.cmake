@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pelicanmapping/osgearth
-    REF "osgearth-${VERSION}"
-    SHA512 a7463b8f6f37aeb7d9fcf97afb108a2e3adbd511e5b5444db3c0a656102bd3b6dd697b8bb803e2b169adb3802d7e07c22756f116a057ec58cfebc46ec3a50ef8
+    REF aff9d5974cfdb3d994b25c12dea61bbe76373158
+    SHA512 2e7aacbbe228dbecf4f01cfef915a410ccdcd1fe22a4836956aa5629f60540ad5a71aac970431f93c01d8eed38659eb432eeba6110773f6a9df1d169a1e7bba3
     HEAD_REF master
 )
 
