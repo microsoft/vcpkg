@@ -9,6 +9,10 @@ parameters:
     default: 'use default'
   - name: jobName
     type: string
+  - name: linuxDockerImage
+    displayName: 'Linux Docker Image to use for the build'
+    type: string
+    default: ''
   - name: tripletPattern
     displayName: 'Enable the triplets which contain this substring'
     type: string
@@ -28,7 +32,7 @@ jobs:
   - name: ANDROID_DOCKER_IMAGE
     value: 'vcpkgandroidwus.azurecr.io/vcpkg-android:2026-02-10'
   - name: LINUX_DOCKER_IMAGE
-    value: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20'
+    value: ${{ parameters.linuxDockerImage }}
   steps:
     # Note: /mnt is the Azure machines' temporary disk.
   - bash: |
