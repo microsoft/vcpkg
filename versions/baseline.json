@@ -5642,7 +5642,7 @@
     },
     "libu2f-server": {
       "baseline": "1.1.0",
-      "port-version": 5
+      "port-version": 6
     },
     "libudfread": {
       "baseline": "1.2.0",
