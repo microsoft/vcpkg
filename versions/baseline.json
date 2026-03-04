@@ -7641,7 +7641,7 @@
       "port-version": 0
     },
     "plf-colony": {
-      "baseline": "7.6.1",
+      "baseline": "7.6.10",
       "port-version": 0
     },
     "plf-hive": {
