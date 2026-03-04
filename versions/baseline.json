@@ -9940,6 +9940,10 @@
       "baseline": "2.9.7",
       "port-version": 0
     },
+    "tinygnn": {
+      "baseline": "0.1.4",
+      "port-version": 0
+    },
     "tinynpy": {
       "baseline": "1.1",
       "port-version": 0
