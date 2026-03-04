@@ -22,6 +22,7 @@
   "features": {
     "sodium": {
       "description": "Use libsodium for enhanced security",
+      "supports": "!windows",
       "dependencies": [
         "libsodium"
       ]
