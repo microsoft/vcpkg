@@ -1,8 +1,3 @@
-set(PATCHES fix_install_path.patch)
-if("sodium" IN_LIST FEATURES)
-    list(APPEND PATCHES fix-sodium-dep.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nats-io/nats.c
@@ -10,7 +5,8 @@ vcpkg_from_github(
     SHA512 d1243cd3ea2bc4cffb50b12acb745a3b573eacdc30457dc59ae33def0217ec090df6c706c67cba4ee75ade6db5adf3742affed771aeb77305048a18d8bbac695
     HEAD_REF main
     PATCHES
-        ${PATCHES}
+        fix-sodium-dep.patch
+        fix_install_path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
