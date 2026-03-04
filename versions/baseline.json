@@ -7937,8 +7937,8 @@
       "port-version": 7
     },
     "python3": {
-      "baseline": "3.12.9",
-      "port-version": 9
+      "baseline": "3.12.13",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.7",
