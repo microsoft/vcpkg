@@ -30,7 +30,6 @@ vcpkg_cmake_configure(
     OPTIONS
         ${FEATURE_OPTIONS}
         ${OPTIONS}
-        -DNATS_BUILD_TLS_USE_OPENSSL_1_1_API=ON
         -DNATS_BUILD_EXAMPLES=OFF
 )
 
