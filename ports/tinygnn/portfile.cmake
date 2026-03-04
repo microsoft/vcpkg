@@ -1,6 +1,6 @@
 # ============================================================================
 #  TinyGNN vcpkg port  —  portfile.cmake
-#  v0.1.4  SHA512 computed from https://github.com/AnubhavChoudheries/TinyGNN/archive/v0.1.4.tar.gz
+#  v0.1.4  SHA512 computed from https://github.com/AnubhavChoudhery/TinyGNN/archive/refs/tags/v0.1.4.tar.gz
 # ============================================================================
 
 # TinyGNN does not annotate public symbols with __declspec(dllexport), so a
