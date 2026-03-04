@@ -6429,7 +6429,7 @@
       "port-version": 0
     },
     "miniaudio": {
-      "baseline": "0.11.24",
+      "baseline": "0.11.25",
       "port-version": 0
     },
     "minifb": {
