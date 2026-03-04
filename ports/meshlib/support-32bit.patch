@@ -1,5 +1,5 @@
 diff --git a/source/MRMesh/MRId.h b/source/MRMesh/MRId.h
-index b3c0747..7677742 100644
+index b3c0747..b02ad32 100644
 --- a/source/MRMesh/MRId.h
 +++ b/source/MRMesh/MRId.h
 @@ -91,7 +91,9 @@ public:
@@ -12,3 +12,23 @@ index b3c0747..7677742 100644
      constexpr operator ValueType() const { return id_; }
      constexpr bool valid() const { return id_ >= 0; }
      explicit constexpr operator bool() const { return id_ >= 0; }
+@@ -181,15 +183,19 @@ template <typename T>
+ inline constexpr Id<T> operator + ( Id<T> id, int a )          { return Id<T>{ id.get() + a }; }
+ template <typename T>
+ inline constexpr Id<T> operator + ( Id<T> id, unsigned int a ) { return Id<T>{ id.get() + a }; }
++#if __SIZE_MAX__ != __UINT32_MAX__
+ template <typename T>
+ inline constexpr Id<T> operator + ( Id<T> id, size_t a )       { return Id<T>{ id.get() + a }; }
++#endif
+ 
+ template <typename T>
+ inline constexpr Id<T> operator - ( Id<T> id, int a )          { return Id<T>{ id.get() - a }; }
+ template <typename T>
+ inline constexpr Id<T> operator - ( Id<T> id, unsigned int a ) { return Id<T>{ id.get() - a }; }
++#if __SIZE_MAX__ != __UINT32_MAX__
+ template <typename T>
+ inline constexpr Id<T> operator - ( Id<T> id, size_t a )       { return Id<T>{ id.get() - a }; }
++#endif
+ 
+ inline constexpr FaceId operator ""_f( unsigned long long i ) noexcept { return FaceId{ (int)i }; }
+ inline constexpr VertId operator ""_v( unsigned long long i ) noexcept { return VertId{ (int)i }; }
