@@ -10506,7 +10506,7 @@
     },
     "vsgimgui": {
       "baseline": "0.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "vsgqt": {
       "baseline": "0.4.0",
