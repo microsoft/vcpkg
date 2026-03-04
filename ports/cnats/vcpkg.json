@@ -21,7 +21,7 @@
   ],
   "features": {
     "sodium": {
-      "description": "Use libsodium for enhanced security",
+      "description": "Use libsodium for improved NKey signing performance",
       "supports": "!windows",
       "dependencies": [
         "libsodium"
