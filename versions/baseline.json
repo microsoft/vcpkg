@@ -9129,7 +9129,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "6.2.158",
+      "baseline": "6.2.159",
       "port-version": 0
     },
     "simde": {
