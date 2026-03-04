@@ -10,6 +10,7 @@
       "features": [
         "dds",
         "df-vulkan",
+        "materialx",
         "openimageio"
       ]
     },
