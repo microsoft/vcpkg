@@ -50,7 +50,7 @@ if("tools" IN_LIST FEATURES)
         endif()
     endif()
     vcpkg_copy_tools(TOOL_NAMES osgearth_3pv osgearth_atlas osgearth_bakefeaturetiles osgearth_boundarygen
-        osgearth_clamp osgearth_tfs osgearth-server osgearth_conv osgearth_imgui osgearth_version osgearth_viewer
+        osgearth_clamp osgearth_tfs osgearth_server osgearth_conv osgearth_imgui osgearth_version osgearth_viewer
         AUTO_CLEAN
     )
     if(OSGEARTH_BUILD_LEGACY_CONTROLS_API)
