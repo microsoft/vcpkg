@@ -7653,7 +7653,7 @@
       "port-version": 0
     },
     "plf-list": {
-      "baseline": "2.7.24",
+      "baseline": "2.8.0",
       "port-version": 0
     },
     "plf-nanotimer": {
