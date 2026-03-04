@@ -25,6 +25,7 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 f9d7433fc3a7ebf1e2a1fddab850b6f10f7ced78aec0e1f1e86c152187fcf2434846102cfb95621e95a22d8977f5d8af46deeef0400b8debba3511c6e6552882
     HEAD_REF main
+    PATCHES fix-bdlar-target.patch
 )
 
 vcpkg_cmake_configure(
