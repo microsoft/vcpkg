@@ -23,6 +23,9 @@
     "expat",
     {
       "name": "gtk3",
+      "features": [
+        "wayland"
+      ],
       "platform": "!windows & !osx & !ios"
     },
     {
