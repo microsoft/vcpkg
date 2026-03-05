@@ -1,5 +1,5 @@
 {
-  "name": "tinygnn",
+  "name": "jbac-tinygnn",
   "version": "0.1.4",
   "description": "Zero-dependency C++17 GNN inference engine with fused AVX2+OpenMP kernels for GCN, GraphSAGE, and GAT.",
   "homepage": "https://github.com/AnubhavChoudhery/TinyGNN",
@@ -14,5 +14,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "openmp": {
+      "description": "Enable OpenMP parallelization"
+    }
+  }
 }

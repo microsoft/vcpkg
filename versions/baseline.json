@@ -4068,6 +4068,10 @@
       "baseline": "4.2.8",
       "port-version": 0
     },
+    "jbac-tinygnn": {
+      "baseline": "0.1.4",
+      "port-version": 0
+    },
     "jbcoe-value-types": {
       "baseline": "1.0.1",
       "port-version": 0
@@ -9938,10 +9942,6 @@
     },
     "tinygltf": {
       "baseline": "2.9.7",
-      "port-version": 0
-    },
-    "tinygnn": {
-      "baseline": "0.1.4",
       "port-version": 0
     },
     "tinynpy": {

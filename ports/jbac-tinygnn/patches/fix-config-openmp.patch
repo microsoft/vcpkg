@@ -1,0 +1,8 @@
+*** Begin Patch
+*** Update File: cmake/tinygnn-config.cmake.in
+@@
+-  find_dependency(OpenMP)
++  if(@OpenMP_CXX_FOUND@)
++    find_dependency(OpenMP)
++  endif()
+*** End Patch

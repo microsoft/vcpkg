@@ -1,4 +1,0 @@
-tinygnn provides CMake integration targets.
-
-  find_package(tinygnn CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE tinygnn::tinygnn_core)
