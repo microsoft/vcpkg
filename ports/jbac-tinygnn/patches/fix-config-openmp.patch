@@ -1,6 +1,6 @@
 --- a/cmake/tinygnn-config.cmake.in
 +++ b/cmake/tinygnn-config.cmake.in
-@@ -1,7 +1,9 @@
+@@ -1,6 +1,8 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
