@@ -1008,7 +1008,6 @@ openmama:x64-windows-static=cascade
 openmesh:arm64-windows=fail
 openmpi:arm-neon-android=fail
 openmpi:arm64-android=fail
-openmpi:arm64-linux=fail
 openmpi:x64-android=fail
 openmvg:arm64-linux=cascade
 openmvg[core](arm & windows)=combination-fails # nmmintrin.h(17): fatal error C1189: #error:  This header is specific to X86, X64, ARM64, and ARM64EC targets. See https://github.com/microsoft/vcpkg/issues/33746
