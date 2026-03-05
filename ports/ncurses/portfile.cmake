@@ -48,11 +48,7 @@ include("${cmake_vars_file}")
 
 # There are compilation errors on gcc 15. adding `-std=c17` to CFLAGS for workaround.
 # ref: https://gitlab.archlinux.org/archlinux/packaging/packages/ncurses/-/issues/3
-if(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND VCPKG_DETECTED_CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 15)
-    list(APPEND OPTIONS
-        CFLAGS=-std=c17
-    )
-endif()
+list(APPEND OPTIONS "CFLAGS=\$CFLAGS -std=c17")
 
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
