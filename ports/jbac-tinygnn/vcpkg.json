@@ -4,7 +4,7 @@
   "description": "Zero-dependency C++17 GNN inference engine with fused AVX2+OpenMP kernels for GCN, GraphSAGE, and GAT.",
   "homepage": "https://github.com/AnubhavChoudhery/TinyGNN",
   "license": "MIT",
-  "supports": "!uwp & !arm & !arm64",
+  "supports": "windows & x64 & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
