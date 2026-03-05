@@ -16,9 +16,6 @@
       "host": true
     }
   ],
-  "default-features": [
-    "sodium"
-  ],
   "features": {
     "sodium": {
       "description": "Use libsodium for improved NKey signing performance",
