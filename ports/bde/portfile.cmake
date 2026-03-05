@@ -25,7 +25,7 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 f9d7433fc3a7ebf1e2a1fddab850b6f10f7ced78aec0e1f1e86c152187fcf2434846102cfb95621e95a22d8977f5d8af46deeef0400b8debba3511c6e6552882
     HEAD_REF main
-    PATCHES fix-bdlar-target.patch
+    PATCHES fix-bdlar-target.patch use-vcpkg-pcre2.patch
 )
 
 vcpkg_cmake_configure(
@@ -36,6 +36,7 @@ vcpkg_cmake_configure(
         -DCMAKE_CXX_STANDARD_REQUIRED=ON
         -DCMAKE_CXX_EXTENSIONS=OFF
         -DBBS_BUILD_SYSTEM=1
+        -DBDE_USE_EXTERNAL_PCRE2=1
         "-DBdeBuildSystem_DIR:PATH=${TOOLS_PATH}/BdeBuildSystem"
     OPTIONS_RELEASE
         -DBDE_BUILD_TARGET_OPT=1
@@ -49,7 +50,7 @@ vcpkg_cmake_build()
 # Install release
 vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-list(APPEND SUBPACKAGES "inteldfp" "pcre2" "s_baltst" "bsl" "bbryu" "bdl" "bbl" "bal")
+list(APPEND SUBPACKAGES "inteldfp" "s_baltst" "bsl" "bbryu" "bdl" "bbl" "bal")
 include(GNUInstallDirs) # needed for CMAKE_INSTALL_LIBDIR
 foreach(subpackage IN LISTS SUBPACKAGES)
     vcpkg_cmake_config_fixup(PACKAGE_NAME ${subpackage} CONFIG_PATH /${CMAKE_INSTALL_LIBDIR}/cmake/${subpackage} DO_NOT_DELETE_PARENT_CONFIG_PATH)
