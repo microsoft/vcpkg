@@ -9,9 +9,16 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 9fa6fc5d57efc898433791d579296659511147b30454215b553b7a9ef52697dff4eb33e8e1db29f4087c698d648e20801e8d063f63f06926e61ce80a78152229
     HEAD_REF main
-    PATCHES
-        patches/fix-config-openmp.patch
 )
+
+# Gate the OpenMP find_dependency in the installed config so consumers without
+# OpenMP don't get a hard failure when they import tinygnn.
+file(READ "${SOURCE_PATH}/cmake/tinygnn-config.cmake.in" _tinygnn_config)
+string(REPLACE
+    "find_dependency(OpenMP)"
+    "if(@OpenMP_CXX_FOUND@)\n  find_dependency(OpenMP)\nendif()"
+    _tinygnn_config "${_tinygnn_config}")
+file(WRITE "${SOURCE_PATH}/cmake/tinygnn-config.cmake.in" "${_tinygnn_config}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
