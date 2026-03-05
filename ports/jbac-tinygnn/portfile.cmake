@@ -10,7 +10,7 @@ vcpkg_from_github(
     SHA512 9fa6fc5d57efc898433791d579296659511147b30454215b553b7a9ef52697dff4eb33e8e1db29f4087c698d648e20801e8d063f63f06926e61ce80a78152229
     HEAD_REF main
     PATCHES
-        fix-config-openmp.patch
+        patches/fix-config-openmp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
