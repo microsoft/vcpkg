@@ -1,5 +1,5 @@
 {
-  "name": "uniconv",
+  "name": "hesphoros-uniconv",
   "version": "3.3.2",
   "description": "A high-performance C++ character encoding conversion library with modern C++17 interface",
   "homepage": "https://github.com/hesphoros/UniConv",
