@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 77259f2211aa27c70c4930795ab6a7f7a0eade6fa8cda9b38caafdb3fa8081dba7c6bb5c2fa75adbdb224e4d84c80c48f19eef463500cd58316aa55183e6d660
     HEAD_REF master
     PATCHES
-        windows_fix_giant_libs.patch
+        msvc_debug_info_only_in_pdb.patch
         onednn_gpu_includes.patch
         protobuf-6.patch
         npu_deps.patch
