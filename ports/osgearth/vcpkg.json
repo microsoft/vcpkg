@@ -4,7 +4,7 @@
   "description": "osgEarth - 3D Maps for OpenSceneGraph",
   "homepage": "https://github.com/pelicanmapping/osgearth",
   "license": "MIT",
-  "supports": "!(arm32 | x86 | wasm32 | xbox | android) & !(windows & arm64)",
+  "supports": "!(arm32 | arm64 | x86 | wasm32)",
   "dependencies": [
     {
       "name": "aws-sdk-cpp",
