@@ -1,8 +1,0 @@
---- a/cmake/tinygnn-config.cmake.in
-+++ b/cmake/tinygnn-config.cmake.in
-@@ -3,2 +3,4 @@
- include(CMakeFindDependencyMacro)
--find_dependency(OpenMP)
-+if(@OpenMP_CXX_FOUND@)
-+  find_dependency(OpenMP)
-+endif()
