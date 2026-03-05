@@ -2393,8 +2393,8 @@
       "port-version": 0
     },
     "dawn": {
-      "baseline": "20251202.213730",
-      "port-version": 2
+      "baseline": "20260219.200501",
+      "port-version": 0
     },
     "daxa": {
       "baseline": "3.3.1",
@@ -6617,7 +6617,7 @@
       "port-version": 0
     },
     "msdfgen": {
-      "baseline": "1.13",
+      "baseline": "1.13+new-skia-api",
       "port-version": 0
     },
     "msgpack": {
@@ -9185,7 +9185,7 @@
       "port-version": 0
     },
     "skia": {
-      "baseline": "144",
+      "baseline": "146",
       "port-version": 0
     },
     "skyr-url": {

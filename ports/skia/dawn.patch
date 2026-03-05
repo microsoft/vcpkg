@@ -1,5 +1,5 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index b45e6e6f05..bff5f26669 100644
+index 4250e045d0..e26e7be3a7 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
 @@ -15,7 +15,6 @@ if (defined(skia_settings)) {
