@@ -2,11 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openvinotoolkit/openvino
     REF "${VERSION}"
-    SHA512 97241f147c4e74054b787b1bb694ab1051df661ae049e75d0ffa54cec71325155e2a54ded777f09709f7e6a7ff740c7e69d2f3bd73320f1711330d07e427922b
+    SHA512 77259f2211aa27c70c4930795ab6a7f7a0eade6fa8cda9b38caafdb3fa8081dba7c6bb5c2fa75adbdb224e4d84c80c48f19eef463500cd58316aa55183e6d660
     HEAD_REF master
     PATCHES
+        windows_fix_giant_libs.patch
         onednn_gpu_includes.patch
         protobuf-6.patch
+        npu_deps.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,8 +37,8 @@ if(ENABLE_INTEL_GPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO oneapi-src/oneDNN
-        REF 8edf6bb60fdaa2769f3cebf44bd2ee94da00744c
-        SHA512 4e413c93306d81b0c4823789990f9a99ce96cd7a523db9a347e399db0cdf0af3eb4aef449bc5821fe9023ae22655677b2be7897b9c4bfb974d11aab17b017d20
+        REF v3.11
+        SHA512 de60ecd881b97e9942441e0eb5c53e2caa2a0a1a1c78ab9211ab103244b66b62c0f3dfa5b322bb2c39dfe13f85a9aebf82b899dde1ccdc01ba8ff9deed832787
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_gpu/thirdparty/onednn_gpu")
 
@@ -49,8 +51,8 @@ if(ENABLE_INTEL_CPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO openvinotoolkit/oneDNN
-        REF 3d7a6f1d068d8ae08f189aa4baa93d177bc07507
-        SHA512 f5de57f7a8972b4c3aefe359beeb51bd9a5cde6bbc6316891f73148555ef9f299145449faf7d761a8e801fb8ddee68b4455d2b9486067915fe7f445f6b099d6c
+        REF c6b79c1207bd5f20b9395536dab1d71a47cfcb1d
+        SHA512 2ed3444c60771229f051688964ee51b7cd229f75dfdbc6e59390d64223bb5d98074dd30cd4cd2458725bfba147bdf985bcc1d7ba8291f097ff4f291859b35ce3
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/onednn")
 
@@ -78,16 +80,16 @@ if(ENABLE_INTEL_CPU)
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/ComputeLibrary
-            REF v25.03
-            SHA512 a7c9f8138631aabe24cfe68021d3cdaf6716b69dbcf183694217ca87720efd399f5d809f9fd4522a435a6a991855bcf40d5c6fa6189d77ee8ca5caa1f9ade95c
+            REF v52.6.0
+            SHA512 b7f0c5b33466a064e87fbc549fbb78f49c03ef10d50d5e84a9e8dca66094e469cff5d6c5ec01e26873e957e74e8b8a8472c369ab8aeea74c7c36ad0dfe1ad152
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/ComputeLibrary")
 
         vcpkg_from_github(
             OUT_SOURCE_PATH DEP_SOURCE_PATH
             REPO ARM-software/kleidiai
-            REF eaf63a6ae9a903fb4fa8a4d004a974995011f444
-            SHA512 2eed2183927037ab3841daeae2a0df3dfaa680ae4dea5db98247d6d7dd3f897d5109929098eb1b08e3a0797ddc03013acdb449642435df12a11cffbe4f5d2674
+            REF v1.19.0
+            SHA512 46de1f0cdd04ce1e8de5d1bdb2499d07eb377e616eb3a8596fbcd296b7887e413be5470f383b5790cef73dc370bead3db36ef2ed116513b95924ae71d87ef123
         )
         file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_cpu/thirdparty/kleidiai")
     endif()
@@ -101,8 +103,8 @@ if(ENABLE_INTEL_NPU)
     vcpkg_from_github(
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         REPO intel/level-zero-npu-extensions
-        REF f8bba8915e0a5fe8317f7aa48007ecc5a8c179ca
-        SHA512 a93b907159c67fe76634869d71c5434756f32d6e6e81ae86cdc517499576dc5691221dde7821bbaf9d39bf3cd62066a032fd30be26e7662f2b78b046c0ddd2f6
+        REF 8404c63a88d182726038d2b07c219731dada9c21
+        SHA512 701c3dbb3fc016a5b2fd70b68375a8191013299b8824bdd2a2830efd69cadc3d4b104b6479c37a46164d1a1a9781e8cc50eebb96c0ada64743e5e2b9456bb1af
     )
     file(COPY "${DEP_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/src/plugins/intel_npu/thirdparty/level-zero-ext")
 endif()
@@ -115,7 +117,7 @@ if(ENABLE_OV_TF_FRONTEND)
     list(APPEND FEATURE_OPTIONS "-DENABLE_SYSTEM_SNAPPY=ON")
 endif()
 
-if(ENABLE_OV_TF_LITE_FRONTEND)
+if(ENABLE_OV_TF_LITE_FRONTEND OR ENABLE_INTEL_NPU)
     list(APPEND FEATURE_OPTIONS "-DENABLE_SYSTEM_FLATBUFFERS=ON")
 endif()
 
@@ -132,7 +134,6 @@ vcpkg_cmake_configure(
         "-DCMAKE_DISABLE_FIND_PACKAGE_OpenCV=ON"
         "-DCPACK_GENERATOR=VCPKG"
         "-DENABLE_CLANG_FORMAT=OFF"
-        "-DENABLE_CPPLINT=OFF"
         "-DENABLE_JS=OFF"
         "-DENABLE_NCC_STYLE=OFF"
         "-DENABLE_PYTHON=OFF"
@@ -141,6 +142,7 @@ vcpkg_cmake_configure(
         "-DENABLE_SYSTEM_TBB=ON"
         "-DENABLE_TBBBIND_2_5=OFF"
         "-DENABLE_TEMPLATE=OFF"
+        "-DENABLE_PROFILING_ITT=OFF"
         "-DENABLE_OV_JAX_FRONTEND=OFF"
         "-DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}"
 )
