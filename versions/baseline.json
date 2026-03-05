@@ -5757,7 +5757,7 @@
       "port-version": 2
     },
     "libwebsockets": {
-      "baseline": "4.5.2",
+      "baseline": "4.5.3",
       "port-version": 0
     },
     "libx11": {
