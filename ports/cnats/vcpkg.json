@@ -28,7 +28,7 @@
       ]
     },
     "streaming": {
-      "description": "Include NATS Streaming APIs in the NATS library",
+      "description": "Include deprecated NATS Streaming (STAN) APIs in the NATS library",
       "supports": "!windows",
       "dependencies": [
         "protobuf-c"
