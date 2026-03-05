@@ -39,3 +39,8 @@ jobs:
         cd ../linux
         docker buildx build . -t vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20 --build-arg BUILD_DATE=$BuildDate --ulimit nofile=1024:1024
         docker push vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20
+        cd ../linux-arm64
+        docker buildx build . -t vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10 --build-arg BUILD_DATE=$BuildDate --ulimit nofile=1024:1024
+        docker push vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10
+        oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10
+        
