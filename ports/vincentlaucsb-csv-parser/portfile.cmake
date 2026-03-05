@@ -4,12 +4,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vincentlaucsb/csv-parser
     REF "${VERSION}"
-    SHA512 72f67ebe33af9d5e986650c7de3a4b1e9fce50c9dcd51d7c840b6bf3c355f4c17395046183131c1263bc45506092a22801e5a47dee810ac7e591416a4802814a
+    SHA512 908dd610ae3362aac1b3947892583f5aeea55a71b9d66798e4353a17fcb74ccd79de7513d94508a07876685318e2b6ba974af2aed39ea6fda09b306a353fb5a9
     HEAD_REF master
     PATCHES
         001-fix-cmake.patch
         002-fix-include.patch
-		003-disable-coverage.patch
 )
 
 vcpkg_cmake_configure(
@@ -17,6 +16,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DBUILD_PYTHON=OFF
         -DCSV_BUILD_PROGRAMS=OFF
+        -DENABLE_CODE_COVERAGE=OFF
     MAYBE_UNUSED_VARIABLES
         BUILD_PYTHON
 )

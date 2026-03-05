@@ -4,13 +4,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO huira-render/huira
     REF "v${VERSION}"
-    SHA512 7f46d1c514a4a7ba5981dd2224ff4b01b3dc8f30903cf91f3bde25135d338dd7ac375d68eb75502d26264f7c6e54195c6126487cfc51c0a7c87f7c53d49df30f
+    SHA512 acbe259332e59eadf84f588a8e9bc5c5c717469fec2be5098ffeecaa6f5c2557dc3c0ad2d968c2803e289b75714fc7a87021b6960be5b321ce1dfd9f029db3fe
     HEAD_REF main
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tools HUIRA_APPS
+        tools HUIRA_TOOLS
 )
 
 vcpkg_cmake_configure(

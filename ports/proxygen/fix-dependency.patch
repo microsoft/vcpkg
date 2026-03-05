@@ -1,45 +1,81 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dde1bcd..f72165b 100644
+index 75494ab..90f6595 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -71,11 +71,11 @@ endif()
+@@ -75,26 +75,26 @@ endif()
  #
  # IMPORTANT: If you change this, make the analogous update in:
  #   cmake/proxygen-config.cmake.in
 -find_package(fmt REQUIRED)
--find_package(folly REQUIRED)
--find_package(wangle REQUIRED)
--find_package(mvfst REQUIRED)
--find_package(Zstd REQUIRED)
 +find_package(fmt CONFIG REQUIRED)
-+find_package(folly CONFIG REQUIRED)
-+find_package(wangle CONFIG REQUIRED)
-+find_package(mvfst CONFIG REQUIRED)
+ # If deps are being built from source (FetchContent), skip find_package
+ if (NOT DEFINED folly_SOURCE_DIR)
+-  find_package(folly REQUIRED)
++  find_package(folly CONFIG REQUIRED)
+ endif()
+ if (NOT DEFINED fizz_SOURCE_DIR)
+-  find_package(fizz REQUIRED)
++  find_package(fizz CONFIG REQUIRED)
+ endif()
+ if (NOT DEFINED wangle_SOURCE_DIR)
+-  find_package(wangle REQUIRED)
++  find_package(wangle CONFIG REQUIRED)
+ endif()
+ if (NOT DEFINED mvfst_SOURCE_DIR)
+-  find_package(mvfst REQUIRED)
++  find_package(mvfst CONFIG REQUIRED)
+ endif()
+-find_package(Zstd REQUIRED)
 +find_package(zstd CONFIG REQUIRED)
  find_package(ZLIB REQUIRED)
  find_package(OpenSSL REQUIRED)
  find_package(Threads)
-@@ -130,6 +130,7 @@ SET(GFLAG_DEPENDENCIES "")
+-find_package(Cares REQUIRED)
+-find_package(Glog REQUIRED)
++find_package(c-ares REQUIRED)
++find_package(glog CONFIG REQUIRED)
+ 
+ # Propagate glog's required compile definition to all proxygen targets.
+ # glog 0.7+ requires GLOG_USE_GLOG_EXPORT but since glog::glog is linked
+@@ -143,10 +143,14 @@ SET(GFLAG_DEPENDENCIES "")
  SET(PROXYGEN_EXTRA_LINK_LIBRARIES "")
  SET(PROXYGEN_EXTRA_INCLUDE_DIRECTORIES "")
  
+-find_package(gflags CONFIG QUIET)
 +set(GFLAGS_USE_TARGET_NAMESPACE ON)
- find_package(gflags CONFIG QUIET)
++find_package(gflags CONFIG REQUIRED)
++set(GFLAGS_LIBRARIES gflags::gflags)
  if (gflags_FOUND)
    message("module path: ${CMAKE_MODULE_PATH}")
+   message(STATUS "Found gflags from package config")
++  list(APPEND GFLAG_DEPENDENCIES gflags::gflags)
++if(0)
+   if (TARGET gflags-shared)
+     list(APPEND GFLAG_DEPENDENCIES gflags-shared)
+   elseif (TARGET gflags)
+@@ -155,6 +159,7 @@ if (gflags_FOUND)
+     message(FATAL_ERROR
+             "Unable to determine the target name for the GFlags package.")
+   endif()
++endif()
+   list(APPEND CMAKE_REQUIRED_LIBRARIES ${GFLAGS_LIBRARIES})
+   list(APPEND CMAKE_REQUIRED_INCLUDES ${GFLAGS_INCLUDE_DIR})
+ else()
 diff --git a/cmake/proxygen-config.cmake.in b/cmake/proxygen-config.cmake.in
-index 6849b0a..1d2cad2 100644
+index bf1c508..18cb343 100644
 --- a/cmake/proxygen-config.cmake.in
 +++ b/cmake/proxygen-config.cmake.in
-@@ -17,17 +17,21 @@
+@@ -17,22 +17,26 @@
  @PACKAGE_INIT@
  
  include(CMakeFindDependencyMacro)
+-find_dependency(Glog)
 -find_dependency(fmt)
 -find_dependency(folly)
 -find_dependency(wangle)
 -find_dependency(mvfst)
 -find_dependency(Fizz)
++find_dependency(glog CONFIG)
 +find_dependency(fmt CONFIG)
 +find_dependency(folly CONFIG)
 +find_dependency(wangle CONFIG)
@@ -59,20 +95,30 @@ index 6849b0a..1d2cad2 100644
  find_dependency(ZLIB)
  find_dependency(OpenSSL)
  find_dependency(Threads)
-diff --git a/proxygen/lib/CMakeLists.txt b/proxygen/lib/CMakeLists.txt
-index 74a0284..71039e7 100644
---- a/proxygen/lib/CMakeLists.txt
-+++ b/proxygen/lib/CMakeLists.txt
-@@ -250,10 +250,10 @@ target_link_libraries(
-     Folly::folly
-     fizz::fizz
-     wangle::wangle
--    zstd
-+    zstd::libzstd
-     Boost::boost
-     Boost::iostreams
--    -lz
-+    ZLIB::ZLIB
-     ${HTTP3_DEPEND_LIBS}
+-find_dependency(c-ares REQUIRED)
++find_dependency(c-ares CONFIG)
+ 
+ if(NOT TARGET proxygen::proxygen)
+     include("${CMAKE_CURRENT_LIST_DIR}/proxygen-targets.cmake")
+diff --git a/proxygen/lib/dns/CMakeLists.txt b/proxygen/lib/dns/CMakeLists.txt
+index 527b5a4..6e640a3 100644
+--- a/proxygen/lib/dns/CMakeLists.txt
++++ b/proxygen/lib/dns/CMakeLists.txt
+@@ -61,7 +61,7 @@ proxygen_add_library(proxygen_dns_cares_dns
+     proxygen_utils_time_util
+     Folly::folly_conv
+     Folly::folly_portability_sockets
+-    cares
++    c-ares::cares
+     glog::glog
+   EXPORTED_DEPS
+     proxygen_dns_dns_base
+@@ -69,7 +69,7 @@ proxygen_add_library(proxygen_dns_cares_dns
+     Folly::folly_io_async_async_base
+     Folly::folly_network_address
+     Folly::folly_portability_windows
+-    cares
++    c-ares::cares
  )
  
+ proxygen_add_library(proxygen_dns_future_dns

@@ -3,7 +3,7 @@ set(LIB_FILENAME libvhdi-alpha-${VERSION}.tar.gz)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libyal/libvhdi/releases/download/${VERSION}/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 5eddbb2ea5800f4427a9763b904b74d1b4a876844f0fb00a8e758c73424171ff7b52a821b1618ea575e9553e6ab357ce80884fab8503dcfc36343a32f80ecd02
+    SHA512 982ce91da22f174285aab00c26c4b26375f4d87afb08551a9c5a4d678e15010f066c624e1a0db87ae62a26d30d692a7f1c883dcbe748ebc3cf0e5817dbaa467f
 )
 
 vcpkg_extract_source_archive(
