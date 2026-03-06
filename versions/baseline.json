@@ -2321,11 +2321,11 @@
       "port-version": 1
     },
     "cyclonedds": {
-      "baseline": "0.10.5",
+      "baseline": "11.0.0",
       "port-version": 0
     },
     "cyclonedds-cxx": {
-      "baseline": "0.10.5",
+      "baseline": "11.0.0",
       "port-version": 0
     },
     "cyrus-sasl": {
