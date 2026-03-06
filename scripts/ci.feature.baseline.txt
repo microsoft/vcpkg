@@ -475,7 +475,6 @@ harfbuzz[introspection]:arm64-windows=skip # needs arm64 host
 hdf5[core,fortran,parallel](linux | osx)=options # Fortran disabled in port openmpi
 hdf5[fortran]:arm64-linux=feature-fails
 hdf5[fortran](android | windows)=feature-fails # No fortran compiler
-hdf5[parallel]:arm64-linux=cascade
 hdf5[parallel](android)=cascade
 hdf5[parallel](arm64 & windows)=cascade
 hdf5[threadsafe](android)=feature-fails # pthread_setcancelstate
