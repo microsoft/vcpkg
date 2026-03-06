@@ -1,0 +1,19 @@
+diff --git a/source/MRIOExtras/CMakeLists.txt b/source/MRIOExtras/CMakeLists.txt
+index 5079163..81f7742 100644
+--- a/source/MRIOExtras/CMakeLists.txt
++++ b/source/MRIOExtras/CMakeLists.txt
+@@ -79,12 +79,8 @@ IF(NOT MRIOEXTRAS_NO_E57)
+ ENDIF()
+ 
+ IF(NOT MRIOEXTRAS_NO_JPEG)
+-  IF(APPLE)
+-    target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${HOMEBREW_PREFIX}/opt/jpeg-turbo/include>) # @todo
+-    target_link_libraries(${PROJECT_NAME} PRIVATE ${HOMEBREW_PREFIX}/opt/jpeg-turbo/lib/libturbojpeg.dylib)
+-  ELSE()
+-    target_link_libraries(${PROJECT_NAME} PRIVATE turbojpeg)
+-  ENDIF()
++  find_package(libjpeg-turbo CONFIG REQUIRED)
++  target_link_libraries(${PROJECT_NAME} PRIVATE $<IF:$<TARGET_EXISTS:libjpeg-turbo::turbojpeg>,libjpeg-turbo::turbojpeg,libjpeg-turbo::turbojpeg-static>)
+ ENDIF()
+ 
+ IF(NOT MRIOEXTRAS_NO_LAS)

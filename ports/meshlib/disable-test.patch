@@ -1,0 +1,12 @@
+diff --git a/source/MRPch/MRPch.h b/source/MRPch/MRPch.h
+index 794d984..57502c6 100644
+--- a/source/MRPch/MRPch.h
++++ b/source/MRPch/MRPch.h
+@@ -43,7 +43,6 @@
+ #include <fmt/chrono.h>
+ #endif
+ 
+-#include <gtest/gtest.h>
+ 
+ #ifdef _WIN32
+ #pragma warning(push)
