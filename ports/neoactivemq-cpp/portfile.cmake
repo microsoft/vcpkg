@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO blackb1rd/neoactivemq-cpp
     REF "v${VERSION}"
-    SHA512 e623cb0c749923b257aa4a413cfc8f0cfa424465d2cdb3da8d5afafd5bbc55e0150ef46aa0707fdc5ec5cbb979f47dfbae8cc589161fe8c6438a3f64cbe9486f
+    SHA512 d52def3683a2c2ab442103e0334cfa9d446ddc3b7117d5e85148e74b2d3c9e3ccb7347a6631b71a9e296069f65c776b53f301d3de8607e9a56f9d7cdc1f22a5a
     HEAD_REF main
 )
 
