@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ashvardanian/SimSIMD
     REF "v${VERSION}"
-    SHA512 4774141df1f70e455ca09b2b9d3adffe6b8b9fbecd3ae28c65170fd006ff38622b1fd8b3716012d883a9cf8625e1bfbf5209c35a0b2f6ee39a9feb442582635c
+    SHA512 90a5263cc71f8cacd7d3039b6ea2bb42ac06192a1106e37e6e7e03a390436d692dc75bb3ecf83d0e4134e548dd5c736db75459a2ec2f20f36f1de894353ece82
     HEAD_REF main
     PATCHES
         export-target.patch
