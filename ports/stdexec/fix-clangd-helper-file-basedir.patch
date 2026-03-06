@@ -1,17 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8409707..97a9942 100644
+index 78ae71f..3b37aff 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -273,7 +273,7 @@ target_compile_options(stdexec_executable_flags INTERFACE
-                        -include stdexec/__detail/__force_include.hpp>
-                        )
+@@ -477,7 +477,7 @@ if(STDEXEC_BUILD_EXAMPLES)
+     add_subdirectory(examples)
+ endif()
  
 -if (STDEXEC_IS_TOP_LEVEL)
 +if (0)
    # Integrate with LLVM/clang tooling
    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/clangd_compile_info.cmake)
-   add_executable(_clangd_helper_file
-@@ -473,6 +473,9 @@ include(CPack)
+   add_executable(_clangd_helper_file include/._clangd_helper_file.cpp)
+@@ -497,6 +497,9 @@ include(CPack)
  
  install(TARGETS stdexec system_context
  	EXPORT stdexec-exports

@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hellobertrand/zxc
     REF v${VERSION}
-    SHA512 012cc905268b1eaf04adff5615e796b2d130a5c4d6b7cb356195b0e94a34a3e7ad360d56bb8debdfdb8001a0321d77b5b499611463ec21047ca74f25ae022459
+    SHA512 98b3a90428fb28ff46d32b46593c72316dff56932ebec75e8f75ddec29dce151d2abac8c035cdd1bfa10b7a316d4bdde32d653f3ffacdda225961dad9687df2e
     HEAD_REF main
 )
 

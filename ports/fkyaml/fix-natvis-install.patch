@@ -1,0 +1,30 @@
+ CMakeLists.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9c2b923..7e7d447 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,11 +79,12 @@ target_include_directories(
+ if(MSVC)
+   set(FK_YAML_INSTALL_NATVIS ON)
+   set(FK_YAML_NATVIS_FILE ${FK_YAML_TARGET_NAME}.natvis)
++  set(FK_YAML_NATVIS_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
+   target_sources(
+     ${FK_YAML_TARGET_NAME}
+     INTERFACE
+       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${FK_YAML_NATVIS_FILE}>
+-      $<INSTALL_INTERFACE:${FK_YAML_NATVIS_FILE}>
++      $<INSTALL_INTERFACE:${FK_YAML_NATVIS_INSTALL_DIR}/${FK_YAML_NATVIS_FILE}>
+ )
+ endif()
+ 
+@@ -171,7 +172,7 @@ if(FK_YAML_INSTALL)
+   if(FK_YAML_INSTALL_NATVIS)
+     install(
+       FILES ${FK_YAML_NATVIS_FILE}
+-      DESTINATION .
++      DESTINATION "${FK_YAML_NATVIS_INSTALL_DIR}"
+     )
+   endif()
+ 
