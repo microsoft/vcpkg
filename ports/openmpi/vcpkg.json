@@ -6,6 +6,10 @@
   "supports": "!windows",
   "dependencies": [
     {
+      "name": "pkgconf",
+      "host": true
+    },
+    {
       "name": "vcpkg-make",
       "host": true
     },
