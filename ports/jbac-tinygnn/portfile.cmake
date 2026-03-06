@@ -9,20 +9,13 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 9fa6fc5d57efc898433791d579296659511147b30454215b553b7a9ef52697dff4eb33e8e1db29f4087c698d648e20801e8d063f63f06926e61ce80a78152229
     HEAD_REF main
+    PATCHES
+        patches/fix-config-openmp.patch
 )
-
-file(READ "${SOURCE_PATH}/cmake/tinygnn-config.cmake.in" _tinygnn_config)
-string(REPLACE
-    "find_dependency(OpenMP)"
-    "if(@OpenMP_CXX_FOUND@)\n  find_dependency(OpenMP)\nendif()"
-    _tinygnn_config "${_tinygnn_config}")
-file(WRITE "${SOURCE_PATH}/cmake/tinygnn-config.cmake.in" "${_tinygnn_config}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        openmp CMAKE_REQUIRE_FIND_PACKAGE_OpenMP
-    INVERTED_FEATURES
-        openmp CMAKE_DISABLE_FIND_PACKAGE_OpenMP
+        openmp VCPKG_LOCK_FIND_PACKAGE_OpenMP
 )
 
 vcpkg_cmake_configure(
@@ -36,7 +29,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME tinygnn CONFIG_PATH share/tinygnn)
+vcpkg_cmake_config_fixup(PACKAGE_NAME tinygnn)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
