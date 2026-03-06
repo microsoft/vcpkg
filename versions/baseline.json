@@ -1524,6 +1524,10 @@
       "baseline": "3.25",
       "port-version": 3
     },
+    "bungee": {
+      "baseline": "2.4.15",
+      "port-version": 0
+    },
     "bustache": {
       "baseline": "1.1.0",
       "port-version": 2
