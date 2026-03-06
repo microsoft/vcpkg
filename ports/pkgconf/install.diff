@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index c4b68688..da5f0a79 100644
+--- a/meson.build
++++ b/meson.build
+@@ -199,7 +199,7 @@ test_runner_exe = executable('test-runner',
+   link_with : libpkgconf,
+   c_args : build_static,
+   include_directories : cli_include,
+-  install : true)
++  install : false)
+ 
+ fixtures_dir = '@0@/tests'.format(meson.current_source_dir())
+ test_suites = [
