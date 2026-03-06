@@ -5,7 +5,7 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 
 # Acquire BDE Tools and add them to PATH
-set (BDE_TOOLS_VER 4.36.0.0)
+set (BDE_TOOLS_VER "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
