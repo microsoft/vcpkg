@@ -3,7 +3,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/vcpkg_make.cmake")
 
 function(vcpkg_make_configure)
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "AUTORECONF;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_TRANSFORMATIONS"
+        "AUTORECONF;NO_CONFIGURE;COPY_SOURCE;DISABLE_MSVC_WRAPPERS;DISABLE_CPPFLAGS;DISABLE_DEFAULT_OPTIONS;DISABLE_MSVC_TRANSFORMATIONS"
         "SOURCE_PATH;DEFAULT_OPTIONS_EXCLUDE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;PRE_CONFIGURE_CMAKE_COMMANDS;LANGUAGES"
     )
@@ -12,6 +12,10 @@ function(vcpkg_make_configure)
 
     if(arg_DISABLE_DEFAULT_OPTIONS AND arg_DEFAULT_OPTIONS_EXCLUDE)
         message(FATAL_ERROR "DISABLE_DEFAULT_OPTIONS cannot be used together with DEFAULT_OPTIONS_EXCLUDE.")
+    endif()
+
+    if(arg_NO_CONFIGURE AND arg_AUTORECONF)
+        message(FATAL_ERROR "NO_CONFIGURE cannot be used together with AUTORECONF.")
     endif()
 
     # Can be set in the triplet to append options for configure
@@ -97,38 +101,42 @@ function(vcpkg_make_configure)
             set(relative_build_path ".")
         endif()
 
-        z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}" BUILD_TRIPLET "${BUILD_TRIPLET}")
+        if(arg_NO_CONFIGURE)
+            z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}")
+        else()
+            z_vcpkg_make_prepare_programs(configure_env ${prepare_flags_opts} CONFIG "${configup}" BUILD_TRIPLET "${BUILD_TRIPLET}")
 
-        set(opts "")
-        if(NOT arg_DISABLE_DEFAULT_OPTIONS)
-            z_vcpkg_make_default_path_and_configure_options(opts CONFIG "${configup}"
-                EXCLUDE_FILTER "${arg_DEFAULT_OPTIONS_EXCLUDE}"
-            )
+            set(opts "")
+            if(NOT arg_DISABLE_DEFAULT_OPTIONS)
+                z_vcpkg_make_default_path_and_configure_options(opts CONFIG "${configup}"
+                    EXCLUDE_FILTER "${arg_DEFAULT_OPTIONS_EXCLUDE}"
+                )
+            endif()
+
+            set(configure_path_from_wd "./${relative_build_path}/configure")
+
+            foreach(cmd IN LISTS arg_PRE_CONFIGURE_CMAKE_COMMANDS)
+                cmake_language(CALL ${cmd} ${configup})
+            endforeach()
+
+            vcpkg_make_run_configure(SHELL
+                                        "${shell_cmd}"
+                                     CONFIG
+                                        "${configup}"
+                                     CONFIGURE_ENV
+                                        "${configure_env}"
+                                     CONFIGURE_PATH
+                                        "${configure_path_from_wd}"
+                                     OPTIONS
+                                        ${BUILD_TRIPLET}
+                                        ${arg_OPTIONS}
+                                        ${opts}
+                                        ${arg_OPTIONS_${configup}}
+                                     WORKING_DIRECTORY
+                                        "${target_dir}"
+                                     ${extra_configure_opts}
+                                    )
         endif()
-
-        set(configure_path_from_wd "./${relative_build_path}/configure")
-
-        foreach(cmd IN LISTS arg_PRE_CONFIGURE_CMAKE_COMMANDS)
-            cmake_language(CALL ${cmd} ${configup})
-        endforeach()
-
-        vcpkg_make_run_configure(SHELL
-                                    "${shell_cmd}"
-                                 CONFIG
-                                    "${configup}"
-                                 CONFIGURE_ENV
-                                    "${configure_env}"
-                                 CONFIGURE_PATH
-                                    "${configure_path_from_wd}"
-                                 OPTIONS 
-                                    ${BUILD_TRIPLET}
-                                    ${arg_OPTIONS}
-                                    ${opts}
-                                    ${arg_OPTIONS_${configup}}
-                                 WORKING_DIRECTORY 
-                                    "${target_dir}" 
-                                 ${extra_configure_opts}
-                                )
     endforeach()
 
     # Restore environment
