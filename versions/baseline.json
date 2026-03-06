@@ -390,7 +390,7 @@
     },
     "atomic-queue": {
       "baseline": "1.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "attr": {
       "baseline": "2.5.2",
