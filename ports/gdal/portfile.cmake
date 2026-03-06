@@ -7,10 +7,12 @@ vcpkg_from_github(
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        iconv.diff
         libkml.patch
         sqlite3.diff
         target-is-valid.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/packages/FindIconv.cmake")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
