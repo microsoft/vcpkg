@@ -5,7 +5,7 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 
 # Acquire BDE Tools and add them to PATH
-set (BDE_TOOLS_VER 4.36.0.0)
+set (BDE_TOOLS_VER "${VERSION}")
 vcpkg_from_github(
     OUT_SOURCE_PATH TOOLS_PATH
     REPO "bloomberg/bde-tools"
@@ -25,7 +25,7 @@ vcpkg_from_github(
     REF "${VERSION}"
     SHA512 f9d7433fc3a7ebf1e2a1fddab850b6f10f7ced78aec0e1f1e86c152187fcf2434846102cfb95621e95a22d8977f5d8af46deeef0400b8debba3511c6e6552882
     HEAD_REF main
-    PATCHES fix-bdlar-target.patch use-vcpkg-pcre2.patch
+    PATCHES use-vcpkg-pcre2.patch
 )
 
 vcpkg_cmake_configure(
