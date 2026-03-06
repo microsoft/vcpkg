@@ -1,0 +1,67 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c9dc427..456c99b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,11 @@ OPTION( ATOMIC_QUEUE_BUILD_EXAMPLES
+     OFF
+ )
+ 
++OPTION( ATOMIC_QUEUE_ENABLE_INSTALL
++    "If the install target should be enabled."
++    OFF
++)
++
+ if ( PROJECT_IS_TOP_LEVEL )
+     set(CMAKE_CXX_STANDARD 14)
+     set(CMAKE_CXX_STANDARD_REQUIRED)
+@@ -26,5 +31,3 @@ endif()
+ if ( ATOMIC_QUEUE_BUILD_TESTS OR ATOMIC_QUEUE_BUILD_EXAMPLES)
+     add_subdirectory( src )
+ endif()
+-
+-add_library(max0x7ba::atomic_queue ALIAS atomic_queue)
+\ No newline at end of file
+diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
+index 7ca376d..504d3cf 100644
+--- a/include/CMakeLists.txt
++++ b/include/CMakeLists.txt
+@@ -1,17 +1,25 @@
+ CMAKE_MINIMUM_REQUIRED( VERSION 3.25 )
+ 
+-add_library(
+-    atomic_queue
+-    INTERFACE
+-    ${CMAKE_CURRENT_SOURCE_DIR}/atomic_queue/atomic_queue.h
+-    ${CMAKE_CURRENT_SOURCE_DIR}/atomic_queue/atomic_queue_mutex.h
+-    ${CMAKE_CURRENT_SOURCE_DIR}/atomic_queue/barrier.h
+-    ${CMAKE_CURRENT_SOURCE_DIR}/atomic_queue/defs.h
+-    ${CMAKE_CURRENT_SOURCE_DIR}/atomic_queue/spinlock.h
++include(GNUInstallDirs)
++
++add_library(atomic_queue INTERFACE)
++target_include_directories(atomic_queue INTERFACE
++    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>"
++    "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+ )
+ 
+-target_include_directories(
+-    atomic_queue
+-    INTERFACE
+-    ${CMAKE_CURRENT_SOURCE_DIR}
+-)
+\ No newline at end of file
++add_library(max0x7ba::atomic_queue ALIAS atomic_queue)
++
++if ( ATOMIC_QUEUE_ENABLE_INSTALL )
++    install(TARGETS atomic_queue EXPORT atomic_queue)
++    install(
++        DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/atomic_queue"
++        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++    )
++    install(
++        EXPORT atomic_queue
++        FILE atomic_queue-config.cmake
++        DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/atomic_queue"
++        NAMESPACE max0x7ba::
++    )
++endif ()
