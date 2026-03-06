@@ -3738,7 +3738,7 @@
     },
     "hdf5": {
       "baseline": "2.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hdr-histogram": {
       "baseline": "0.11.9",
