@@ -1,0 +1,30 @@
+diff --git a/upnp/src/genlib/miniserver/miniserver.c b/upnp/src/genlib/miniserver/miniserver.c
+index 822e281..1f0fef2 100644
+--- a/upnp/src/genlib/miniserver/miniserver.c
++++ b/upnp/src/genlib/miniserver/miniserver.c
+@@ -458,7 +458,7 @@ static void remove_active_connection(SOCKET sock)
+ /*!
+  * \brief Shutdown all active socket connections
+  */
+-void shutdown_all_active_connections(void)
++static void shutdown_all_active_connections(void)
+ {
+ 	ListNode *node;
+ 	int count;
+diff --git a/upnp/src/inc/miniserver.h b/upnp/src/inc/miniserver.h
+index c28382d..e902b37 100644
+--- a/upnp/src/inc/miniserver.h
++++ b/upnp/src/inc/miniserver.h
+@@ -148,12 +148,6 @@ int StartMiniServer(
+  */
+ int StopMiniServer(void);
+ 
+-/*!
+- * \brief Shutdown all active socket connections to interrupt blocking
+- * operations.
+- */
+-void shutdown_all_active_connections(void);
+-
+ #ifdef __cplusplus
+ } /* extern C */
+ #endif
