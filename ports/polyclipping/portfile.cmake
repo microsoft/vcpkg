@@ -12,8 +12,9 @@ vcpkg_from_sourceforge(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/cpp"
+    OPTIONS
+    -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT="Embedded"
 )
-
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
