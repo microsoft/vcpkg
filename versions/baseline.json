@@ -3290,7 +3290,7 @@
     },
     "gdal": {
       "baseline": "3.12.2",
-      "port-version": 0
+      "port-version": 1
     },
     "gdbm": {
       "baseline": "1.24",
@@ -3738,7 +3738,7 @@
     },
     "hdf5": {
       "baseline": "2.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hdr-histogram": {
       "baseline": "0.11.9",
@@ -6582,7 +6582,7 @@
     },
     "mpi": {
       "baseline": "1",
-      "port-version": 5
+      "port-version": 6
     },
     "mpir": {
       "baseline": "3.0.0",
@@ -7285,8 +7285,8 @@
       "port-version": 0
     },
     "openmpi": {
-      "baseline": "4.1.7",
-      "port-version": 1
+      "baseline": "4.1.8",
+      "port-version": 0
     },
     "openmvg": {
       "baseline": "2.1",
