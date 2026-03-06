@@ -8,6 +8,7 @@
   "license": "Apache-2.0",
   "supports": "!android & !(arm64 & windows) & !uwp",
   "dependencies": [
+    "pcre2",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -15,10 +16,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "pcre2",
-      "host": false
     }
   ]
 }

@@ -1,15 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 07c22f5e6..277b2379c 100644
+index 07c22f5e6..b3f677e06 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -9,6 +9,12 @@ if(NOT BBS_BUILD_SYSTEM)
+@@ -9,6 +9,16 @@ if(NOT BBS_BUILD_SYSTEM)
      bbs_build_tests_with_all()
  endif()
  
 +if (BDE_USE_EXTERNAL_PCRE2)
 +    set(PCRE2_USE_STATIC_LIBS ON)
 +    find_package(pcre2 CONFIG REQUIRED)
-+    add_library(pcre2 ALIAS pcre2::pcre2-8-static)
++    if (MSVC)
++        add_library(pcre2 ALIAS pcre2::pcre2-8)
++    else()
++        add_library(pcre2 ALIAS pcre2::pcre2-8-static)
++    endif()
 +endif()
 +
  add_subdirectory(thirdparty)
