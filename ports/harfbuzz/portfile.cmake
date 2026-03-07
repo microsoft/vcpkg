@@ -1,11 +1,18 @@
+vcpkg_download_distfile(ANDROID_LOCALECONV_L_PATCH
+    URLS https://github.com/harfbuzz/harfbuzz/commit/ef8f53fd64eebca831548c3a3d92932746970b16.patch?full_index=1
+    FILENAME harfbuzz-fix-android-localeconv-l.patch
+    SHA512 2c27889d0ec4cd8698c08ff27d650751ba4f6fa1eece08c280ee03d06e426addea459930c2ac956224c25a3bdbcd5ab841a61ec505e0015d92c5176ab50d5ec0
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 d2333fbc73f45db57a8b1d198d31de4b43e5819a578f52f4c5b99a01833b315e18090ee9d74052ff5a993827fadf99323d7bd9786bb826d0354b3a2a9de682f3
+    SHA512 0d4bedae16b0cbccccd5dae3e51cb3252271615e335cf515ab67bfc911404c21dda1b61e470cf23b8fdbcd1c8de8e8272541c8b195c159632f07347a399f18f6
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
+        ${ANDROID_LOCALECONV_L_PATCH}
 )
 
 if("icu" IN_LIST FEATURES)
@@ -135,7 +142,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info hb-vector)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()
