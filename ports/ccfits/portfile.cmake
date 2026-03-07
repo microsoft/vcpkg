@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://heasarc.gsfc.nasa.gov/fitsio/CCfits-2.5/CCfits-2.5.tar.gz"
-    FILENAME "CCfits-2.5.tar.gz"
-    SHA512 63ab4d153063960510cf60651d5c832824cf85f937f84adc5390c7c2fb46eb8e9f5d8cda2554d79d24c7a4f1b6cf0b7a6e20958fb69920b65d7c362c0a5f26b5
+    URLS "https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/ccfits/v${VERSION}/CCfits-${VERSION}.tar.gz"
+    FILENAME "CCfits-${VERSION}.tar.gz"
+    SHA512 5cb802f41cf0695d0e49924ee163151ee657b93158246766d04c192518c7bed30383405d87b5fb312f5f44af26d5ede3104fab90d93cc232e950f8ae66050fde
 )
 
 vcpkg_extract_source_archive(
@@ -9,13 +9,11 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
     PATCHES
         dll_exports.patch
-        fix-dependency.patch
+#        fix-dependency.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DCMAKE_CXX_STANDARD=11 # 17 removes std::binary_function
 )
 
 vcpkg_cmake_install()

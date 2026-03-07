@@ -10,8 +10,8 @@ index e21f3db..3e97c83 100644
 +#include "ccfits_export.h"
  
  namespace CCfits {
-   class FITSBase;
-@@ -665,7 +667,7 @@ do this either).
+   class PHDU;
+@@ -625,7 +627,7 @@ do this either).
  
  
  
@@ -24,7 +24,7 @@ diff --git a/HDU.h b/HDU.h
 index 07f68e7..047e731 100644
 --- a/HDU.h
 +++ b/HDU.h
-@@ -568,7 +568,7 @@ and return its value.
+@@ -683,7 +683,7 @@ namespace CCfits {
  
  
  
@@ -37,7 +37,7 @@ diff --git a/Table.h b/Table.h
 index a0c1afe..9a8a5db 100644
 --- a/Table.h
 +++ b/Table.h
-@@ -268,7 +268,7 @@ namespace CCfits {
+@@ -279,7 +279,7 @@ namespace CCfits {
  
  
  
@@ -176,19 +176,6 @@ index d09438a..a62b8a6 100644
  
    extern  char BSCALE[7];
    extern  char BZERO[6];
-diff --git a/FITSBase.h b/FITSBase.h
-index 996fdae..0c985f9 100644
---- a/FITSBase.h
-+++ b/FITSBase.h
-@@ -30,7 +30,7 @@ namespace CCfits {
- 
- 
- 
--  class FITSBase 
-+  class CCFITS_EXPORT FITSBase 
-   {
- 
-     public:
 diff --git a/Keyword.h b/Keyword.h
 index 816c119..b6df1f1 100644
 --- a/Keyword.h
@@ -334,7 +321,6 @@ index 0000000..a2540a6 100644
 +#endif
 +
 +#endif
-\ No newline at end of file
 diff --git a/FITSUtil.h b/FITSUtil.h
 index 762d430..e2eee33 100644
 --- a/FITSUtil.h
@@ -369,8 +355,8 @@ index 762d430..e2eee33 100644
  
    };
  
--  struct MatchStem : public std::binary_function<string,string,bool>
-+  struct CCFITS_EXPORT MatchStem : public std::binary_function<string,string,bool>
+-  struct MatchStem
++  struct CCFITS_EXPORT MatchStem
    {
            bool operator()(const string& left, const string& right) const;
    };
@@ -409,12 +395,12 @@ diff --git a/CCfits b/CCfits
 index e9848c9..f30c9ad 100644
 --- a/CCfits
 +++ b/CCfits
-@@ -2,20 +2,20 @@
- #ifndef CCFITS
- #define CCFITS  20031208
+@@ -4,21 +4,21 @@
+ 
+ #ifndef CCFITSCOOKBOOK_BUILD
  
 -#include <CCfits/CCfits.h>
-+#include <CCfits.h>
++#include "CCfits.h"
  
 -#include <CCfits/FITS.h>
 -#include <CCfits/BinTable.h>
@@ -428,28 +414,30 @@ index e9848c9..f30c9ad 100644
 -#include <CCfits/FitsError.h>
 -#include <CCfits/FITSUtilT.h>
 -#include <CCfits/PHDUT.h>
-+#include <FITS.h>
-+#include <BinTable.h>
-+#include <AsciiTable.h>
-+#include <ColumnVectorData.h>
-+#include <ColumnData.h>
-+#include <ColumnT.h>
-+#include <ExtHDUT.h>
-+#include <KeywordT.h>
-+#include <KeyData.h>
-+#include <FitsError.h>
-+#include <FITSUtilT.h>
-+#include <PHDUT.h>
+-#include <CCfits/GroupTable.h>
++#include "FITS.h"
++#include "BinTable.h"
++#include "AsciiTable.h"
++#include "ColumnVectorData.h"
++#include "ColumnData.h"
++#include "ColumnT.h"
++#include "ExtHDUT.h"
++#include "KeywordT.h"
++#include "KeyData.h"
++#include "FitsError.h"
++#include "FITSUtilT.h"
++#include "PHDUT.h"
++#include "GroupTable.h"
  
- 
- #endif
+ #else
+ #include <CCfits.h>
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b958fc7..0b1fb4e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -30,6 +30,11 @@ IF (BUILD_SHARED_LIBS)
-   SET (LIB_TYPE SHARED)
- ENDIF (BUILD_SHARED_LIBS)
+@@ -24,6 +24,11 @@ ENDIF (BUILD_SHARED_LIBS)
+ # Source code:
+ #==============================================================================
  
 +
 +IF (NOT BUILD_SHARED_LIBS)
@@ -458,12 +446,4 @@ index b958fc7..0b1fb4e 100644
 +
  FILE(GLOB H_FILES "*.h")
  SET(H_FILES ${H_FILES} CCfits)
- 
-@@ -55,6 +60,7 @@ SET(SRC_FILES
- )
- 
- ADD_LIBRARY(${LIB_NAME} ${LIB_TYPE} ${H_FILES} ${SRC_FILES})
-+
- TARGET_LINK_LIBRARIES(${LIB_NAME} ${CFITSIO_LIBRARY}
- )
  
