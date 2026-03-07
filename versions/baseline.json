@@ -2528,6 +2528,10 @@
       "baseline": "2020-01-29",
       "port-version": 3
     },
+    "disjoint-interval-set": {
+      "baseline": "1.1.4",
+      "port-version": 0
+    },
     "distorm": {
       "baseline": "3.5.2b",
       "port-version": 0
@@ -4775,6 +4779,10 @@
     "libdicom": {
       "baseline": "1.2.0",
       "port-version": 1
+    },
+    "libdis": {
+      "baseline": "1.1.4",
+      "port-version": 0
     },
     "libdisasm": {
       "baseline": "0.23",
