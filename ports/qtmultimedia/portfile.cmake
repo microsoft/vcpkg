@@ -26,6 +26,7 @@ INVERTED_FEATURES
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
     #"mmrenderer"    CMAKE_DISABLE_FIND_PACKAGE_MMRenderer # OS = QNX ?
     #"mmrenderer"    CMAKE_DISABLE_FIND_PACKAGE_MMRendererCore
+)
 
 list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
 
