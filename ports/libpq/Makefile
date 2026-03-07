@@ -24,9 +24,7 @@ all:
 	$(MAKE) -C src/interfaces/ecpg/ecpglib
 	$(MAKE) -C src/interfaces/ecpg/compatlib
 ifeq ($(LIBPQ_LIBRARY_TYPE), static)
-	cp -f src/common/libpgcommon_shlib.a src/common/libpgcommon.a
-	$(AR) $(AROPT) src/common/libpgcommon.a src/common/fe_memutils.o src/common/logging.o
-	cp -f src/port/libpgport_shlib.a src/port/libpgport.a
+	$(AR) $(AROPT) src/interfaces/libpq/libpq.a src/common/encnames_shlib.o
 endif
 ifeq ($(LIBPQ_ENABLE_TOOLS), yes)
 	$(MAKE) -C src/interfaces/ecpg/preproc
