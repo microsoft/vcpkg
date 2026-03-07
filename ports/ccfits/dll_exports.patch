@@ -6,7 +6,7 @@ index e21f3db..3e97c83 100644
  #include "HDUCreator.h"
  // FitsError
  #include "FitsError.h"
-+//DLL Exporting
++// DLL Exporting
 +#include "ccfits_export.h"
  
  namespace CCfits {
@@ -391,59 +391,18 @@ index d878a26..b2c0c70 100644
    {
  
      public:
-diff --git a/CCfits b/CCfits
-index e9848c9..f30c9ad 100644
---- a/CCfits
-+++ b/CCfits
-@@ -4,21 +4,21 @@
- 
- #ifndef CCFITSCOOKBOOK_BUILD
- 
--#include <CCfits/CCfits.h>
-+#include "CCfits.h"
- 
--#include <CCfits/FITS.h>
--#include <CCfits/BinTable.h>
--#include <CCfits/AsciiTable.h>
--#include <CCfits/ColumnVectorData.h>
--#include <CCfits/ColumnData.h>
--#include <CCfits/ColumnT.h>
--#include <CCfits/ExtHDUT.h>
--#include <CCfits/KeywordT.h>
--#include <CCfits/KeyData.h>
--#include <CCfits/FitsError.h>
--#include <CCfits/FITSUtilT.h>
--#include <CCfits/PHDUT.h>
--#include <CCfits/GroupTable.h>
-+#include "FITS.h"
-+#include "BinTable.h"
-+#include "AsciiTable.h"
-+#include "ColumnVectorData.h"
-+#include "ColumnData.h"
-+#include "ColumnT.h"
-+#include "ExtHDUT.h"
-+#include "KeywordT.h"
-+#include "KeyData.h"
-+#include "FitsError.h"
-+#include "FITSUtilT.h"
-+#include "PHDUT.h"
-+#include "GroupTable.h"
- 
- #else
- #include <CCfits.h>
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b958fc7..0b1fb4e 100644
+index 6716c5b..455f27d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -24,6 +24,11 @@ ENDIF (BUILD_SHARED_LIBS)
- # Source code:
- #==============================================================================
- 
-+
-+IF (NOT BUILD_SHARED_LIBS)
-+    ADD_DEFINITIONS(-DCCFITS_STATIC_DEFINE)
-+ENDIF()
-+
- FILE(GLOB H_FILES "*.h")
- SET(H_FILES ${H_FILES} CCfits)
+@@ -90,9 +90,7 @@ SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES
+ IF (MSVC)
+    ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE)
+    IF (BUILD_SHARED_LIBS)
+-      # MSVC shared is broken; better fix would be to "hide all symbols
+-      # for all compilers", and export public symbols with a macro.
+-      SET_PROPERTY(TARGET ${LIB_NAME} PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
++      ADD_DEFINITIONS(-DCCFITS_STATIC_DEFINE)
+    ENDIF (BUILD_SHARED_LIBS)
+ ENDIF(MSVC)
  

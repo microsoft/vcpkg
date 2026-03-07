@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8cfb85b..4a40605 100755
+index 8cfb85b..7dd1253 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -76,14 +76,19 @@ ENDIF(BUILD_SHARED_LIBS)
@@ -79,6 +79,18 @@ index 8cfb85b..4a40605 100755
  
  #==============================================================================
  
+@@ -326,9 +330,10 @@ install(EXPORT cfitsioTargets
+   DESTINATION
+     ${ConfigPackageLocation}
+ )
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake/cfitsioConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/cfitsioConfig.cmake" @ONLY)
+ install(
+   FILES
+-    cmake/cfitsioConfig.cmake
++    "${CMAKE_CURRENT_BINARY_DIR}/cfitsioConfig.cmake"
+     "${CMAKE_CURRENT_BINARY_DIR}/cfitsio/cfitsioConfigVersion.cmake"
+   DESTINATION
+     ${ConfigPackageLocation}
 diff --git a/cfitsio.pc.cmake b/cfitsio.pc.cmake
 index 949b80e..3dce033 100644
 --- a/cfitsio.pc.cmake

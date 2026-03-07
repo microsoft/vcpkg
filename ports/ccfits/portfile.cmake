@@ -8,36 +8,16 @@ vcpkg_extract_source_archive(
     SOURCE_PATH
     ARCHIVE "${ARCHIVE}"
     PATCHES
+        dependencies.diff
         dll_exports.patch
-#        fix-dependency.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
 )
-
 vcpkg_cmake_install()
+vcpkg_copy_pdbs()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/bin")
-    file(RENAME "${CURRENT_PACKAGES_DIR}/lib/CCfits.dll" "${CURRENT_PACKAGES_DIR}/bin/CCfits.dll")
-    if(NOT VCPKG_BUILD_TYPE)
-        file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/CCfits.dll" "${CURRENT_PACKAGES_DIR}/debug/bin/CCfits.dll")
-    endif()
-endif()
-
-# Remove duplicate include files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
-# Patch installed headers to look in the correct subdirectory
-file(GLOB HEADERS "${CURRENT_PACKAGES_DIR}/include/CCfits/*")
-foreach(HEADER IN LISTS HEADERS)
-    vcpkg_replace_string("${HEADER}" "\"fitsio.h\"" "\"cfitsio/fitsio.h\"" IGNORE_UNCHANGED)
-endforeach()
-
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CCfits/CCfits.h
-    "#include \"longnam.h\"" "#include \"cfitsio/longnam.h\""
-)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/License.txt")
