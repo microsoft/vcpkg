@@ -2,7 +2,7 @@ vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
          "https://www.mirrorservice.org/sites/ftp.postgresql.org/source/v${VERSION}/postgresql-${VERSION}.tar.bz2"
     FILENAME "postgresql-${VERSION}.tar.bz2"
-    SHA512 23a3d983c5be49c3daabbbde35db2920bd2e2ba8d9baba805e7908da1f43153ff438c76c253ea8ee8ac6f8a9313fbf0348a1e9b45ef530c5e156fee0daceb814
+    SHA512 fdbe6d726f46738cf14acab96e5c05f7d65aefe78563281b416bb14a27c7c42e4df921e26b32816a5030ddbe506b95767e2c74a35afc589916504df38d1cb11c
 )
 
 vcpkg_extract_source_archive(
@@ -16,12 +16,9 @@ vcpkg_extract_source_archive(
         unix/mingw-install.patch
         unix/mingw-static-importlib-fix.patch
         unix/python.patch
-        windows/macro-def.patch
-        windows/win_bison_flex.patch
-        windows/msbuild.patch
+        windows/macro-def.patch        
         windows/spin_delay.patch
         windows/tcl-9.0-alpha.patch
-        android/unversioned_so.patch
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
@@ -107,6 +104,9 @@ else()
     if(VCPKG_DETECTED_CMAKE_OSX_SYSROOT)
         list(APPEND BUILD_OPTS "PG_SYSROOT=${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
     endif()
+    if(VCPKG_TARGET_IS_OSX)
+          set(ENV{LDFLAGS} "$ENV{LDFLAGS} -headerpad_max_install_names")
+      endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
