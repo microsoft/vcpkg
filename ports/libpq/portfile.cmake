@@ -16,7 +16,7 @@ vcpkg_extract_source_archive(
         unix/mingw-install.patch
         unix/mingw-static-importlib-fix.patch
         unix/python.patch
-        windows/macro-def.patch        
+        windows/macro-def.patch
         windows/spin_delay.patch
         windows/tcl-9.0-alpha.patch
 )
