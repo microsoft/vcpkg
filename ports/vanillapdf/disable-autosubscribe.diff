@@ -1,8 +1,8 @@
 diff --git a/src/vanillapdf/utils/util.h b/src/vanillapdf/utils/util.h
-index 086dc66..57e23ef 100644
+index aae1052..d695e49 100644
 --- a/src/vanillapdf/utils/util.h
 +++ b/src/vanillapdf/utils/util.h
-@@ -49,6 +49,7 @@ private:
+@@ -50,6 +50,7 @@ private:
      ScopeGuardFactory();
  };
  
@@ -10,9 +10,9 @@ index 086dc66..57e23ef 100644
  // The AutoSubscribe concept is something I was thinking about for a long time.
  // Unfortunately I am still not able to create a working POC, however I want to keep the code.
  // In case I will be thinking about such functionality in the future, this could be the starting point.
-@@ -95,6 +96,7 @@ private:
+@@ -102,6 +103,7 @@ private:
      T _observable;
-     U* _observer;
+     U* _observer = nullptr;
  };
 +#endif
  

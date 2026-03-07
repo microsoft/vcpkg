@@ -16,6 +16,7 @@ vcpkg_from_github(
         00006-utf8-range.patch
         00015-disable-download-archive.patch
         00016-fix-plugin-targets.patch
+        00017-add-missing-include-file.patch
 )
 file(REMOVE_RECURSE
     "${SOURCE_PATH}/third_party/abseil-cpp"

@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 59e3eab590..59404a561d 100644
+index 596f55d5f2..3ded3daa67 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -466,6 +466,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
+@@ -471,6 +471,11 @@ set(TINT_SPIRV_TOOLS_DIR   ${DAWN_SPIRV_TOOLS_DIR})
  ################################################################################
  # Run on all subdirectories
  ################################################################################
@@ -60,10 +60,10 @@ index 8bfeda55bc..a0f9858530 100644
 +
  include ("${CMAKE_CURRENT_LIST_DIR}/DawnTargets.cmake")
 diff --git a/src/dawn/native/CMakeLists.txt b/src/dawn/native/CMakeLists.txt
-index 0c5dc4dbba..bf518be937 100644
+index c96d5a24d9..472a86d29f 100644
 --- a/src/dawn/native/CMakeLists.txt
 +++ b/src/dawn/native/CMakeLists.txt
-@@ -651,11 +651,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
+@@ -650,11 +650,17 @@ if ((DAWN_ENABLE_OPENGL OR DAWN_ENABLE_VULKAN) AND DAWN_ENABLE_SPIRV_VALIDATION)
  endif()
  
  if (DAWN_ENABLE_OPENGL)

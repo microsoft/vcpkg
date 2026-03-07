@@ -1,20 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 79f7074..775b565 100644
+index d9aa76e..cee1d90 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -25,7 +25,7 @@ if(UNIX AND NOT APPLE)
-   option(CLIP_X11_WITH_PNG "Compile with libpng to support copy/paste image in png format" on)
- endif()
- 
--add_library(clip clip.cpp)
-+add_library(clip STATIC clip.cpp)
- 
- if(CLIP_ENABLE_IMAGE)
-   target_sources(clip PRIVATE image.cpp)
-@@ -109,6 +109,8 @@ endif()
+@@ -132,6 +132,8 @@ endif()
  if(CLIP_INSTALL)
    include(GNUInstallDirs)
- 
+
 +  target_include_directories(clip PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 +
    install(

@@ -6,6 +6,14 @@ parameters:
     displayName: 'Custom SHA of vcpkg-tool to use rather than bootstrap'
     type: string
     default:  'use default'
+  - name: x64LinuxDockerImage
+    displayName: 'Linux Docker Image to use for the x64 Linux build'
+    type: string
+    default: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20'
+  - name: arm64LinuxDockerImage
+    displayName: 'Linux Docker Image to use for the arm64 Linux build'
+    type: string
+    default: 'vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10'
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring (^ matches begin, $ matches end)'
     type: string
@@ -64,22 +72,33 @@ jobs:
   parameters:
     jobName: x64_linux
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.x64LinuxDockerImage }}
+    tripletPattern: ${{ parameters.tripletPattern }}
+
+- template: linux/azure-pipelines.yml
+  parameters:
+    jobName: arm64_linux
+    vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.arm64LinuxDockerImage }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: arm_neon_android
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.x64LinuxDockerImage }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: x64_android
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.x64LinuxDockerImage }}
     tripletPattern: ${{ parameters.tripletPattern }}
 
 - template: android/azure-pipelines.yml
   parameters:
     jobName: arm64_android
     vcpkgToolSha: ${{ parameters.vcpkgToolSha }}
+    linuxDockerImage: ${{ parameters.x64LinuxDockerImage }}
     tripletPattern: ${{ parameters.tripletPattern }}

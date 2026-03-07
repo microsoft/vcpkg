@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://gmsh.info/src/gmsh-${VERSION}-source.tgz"
     FILENAME "gmsh-${VERSION}-source.tgz"
-    SHA512 f757688ed08b0c37ad3ebcf98b7661c385a434f83672fcad9c7f406afecc00fb1df6ef955a7ac76e54662ef95bcf2ca8a5d133c02603122ba5507f2d5359674e
+    SHA512 dc3ba00c2788d95f30d0cedac490b72cdf6805ef67d81f8636e4ff45510640991cc85e950b3953335f1ba73f9458b980949469844f65d6d5fb09b51936ddef12
 )
 vcpkg_extract_source_archive(
     SOURCE_PATH

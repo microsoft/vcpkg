@@ -1,7 +1,6 @@
 {
   "name": "vanillapdf",
-  "version": "2.1.0",
-  "port-version": 1,
+  "version": "2.2.1",
   "description": "Vanilla.PDF is a cross-platform SDK for creating and modifying PDF documents.",
   "homepage": "https://github.com/vanillapdf/vanillapdf",
   "documentation": "https://vanillapdf.github.io/vanillapdf",

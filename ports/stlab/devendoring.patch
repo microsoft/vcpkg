@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 61a3ccb..108f3c3 100644
+index 42d624a..887cc0d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -9,8 +9,7 @@ include(cmake/CPM.cmake)
@@ -12,7 +12,7 @@ index 61a3ccb..108f3c3 100644
  
  # Enable dependency tracking BEFORE project()
  cpp_library_enable_dependency_tracking()
-@@ -147,11 +146,11 @@ add_subdirectory(src)
+@@ -159,11 +158,11 @@ add_subdirectory(src)
  # Dependencies (added after project() for dependency tracking)
  
  # https://github.com/stlab/stlab-copy-on-write
@@ -26,7 +26,7 @@ index 61a3ccb..108f3c3 100644
  target_link_libraries(stlab INTERFACE $<BUILD_INTERFACE:stlab::enum-ops>)
  
  # System dependencies
-@@ -183,7 +182,7 @@ endif()
+@@ -196,7 +195,7 @@ endif()
  ########################################################
  # Installation Support (using cpp-library dependency auto-discovery)
  if(PROJECT_IS_TOP_LEVEL)

@@ -7,6 +7,7 @@ vcpkg_from_git(
     PATCHES
         fix-linux.patch
         fix-lib-name-conflict.patch
+        crashpad-memset-errors-5758170.diff # https://chromium-review.googlesource.com/c/crashpad/crashpad/+/7270947
 )
 
 vcpkg_find_acquire_program(PYTHON3)

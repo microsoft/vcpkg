@@ -1,0 +1,31 @@
+diff --git a/include/half.hpp b/include/half.hpp
+index cb658f2..5c054c6 100644
+--- a/include/half.hpp
++++ b/include/half.hpp
+@@ -442,7 +442,7 @@ namespace half_float
+ 	/// ~~~~
+ 	namespace literal
+ 	{
+-		half operator "" _h(long double);
++		half operator ""_h(long double);
+ 	}
+ #endif
+ 
+@@ -2261,7 +2261,7 @@ namespace half_float
+ 		friend struct std::hash<half>;
+ 	#endif
+ 	#if HALF_ENABLE_CPP11_USER_LITERALS
+-		friend half literal::operator "" _h(long double);
++		friend half literal::operator ""_h(long double);
+ 	#endif
+ 	#endif
+ 	};
+@@ -2276,7 +2276,7 @@ namespace half_float
+ 		/// \param value literal value
+ 		/// \return half with of given value (possibly rounded)
+ 		/// \exception FE_OVERFLOW, ...UNDERFLOW, ...INEXACT according to rounding
+-		inline half operator "" _h(long double value) { return half(detail::binary, detail::float2half<half::round_style>(value)); }
++		inline half operator ""_h(long double value) { return half(detail::binary, detail::float2half<half::round_style>(value)); }
+ 	}
+ #endif
+ 

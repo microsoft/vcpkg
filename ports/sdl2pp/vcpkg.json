@@ -1,9 +1,8 @@
 {
   "name": "sdl2pp",
-  "version": "0.16.1",
-  "port-version": 12,
+  "version": "0.18.1",
   "description": "C++11 bindings/wrapper for SDL2",
-  "homepage": "https://sdl2pp.amdmi3.ru",
+  "homepage": "https://github.com/libSDL2pp/libSDL2pp",
   "license": "Zlib",
   "dependencies": [
     {
@@ -12,6 +11,10 @@
     },
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ],

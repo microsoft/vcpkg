@@ -1,11 +1,14 @@
 {
   "name": "libdjinterop",
   "version": "0.27.0",
+  "port-version": 1,
   "description": "C++ library for access to DJ record libraries. Currently only supports Denon Engine Prime databases",
   "homepage": "https://github.com/xsco/libdjinterop",
   "license": "LGPL-3.0-or-later",
   "supports": "!xbox",
   "dependencies": [
+    "date",
+    "sqlite-modern-cpp",
     "sqlite3",
     {
       "name": "vcpkg-cmake",

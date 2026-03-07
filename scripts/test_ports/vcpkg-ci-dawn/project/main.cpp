@@ -36,11 +36,11 @@
 
 wgpu::Instance create_instance() {
     wgpu::InstanceDescriptor instance_desc;
-    std::vector<wgpu::InstanceFeatureName> required_features = {
+    wgpu::InstanceFeatureName required_features[] = {
         wgpu::InstanceFeatureName::TimedWaitAny,
     };
-    instance_desc.requiredFeatureCount = required_features.size();
-    instance_desc.requiredFeatures = required_features.data();
+    instance_desc.requiredFeatureCount = std::size(required_features);
+    instance_desc.requiredFeatures = required_features;
     return wgpu::CreateInstance(&instance_desc);
 }
 
@@ -59,8 +59,8 @@ wgpu::Adapter request_adapter(const wgpu::Instance &instance, const wgpu::Surfac
                    message.data);
             adapter = std::move(adapter_ret);
         });
-    ASSERT(instance.WaitAny(adapter_future, wgpu::kLimitU64Undefined) == wgpu::WaitStatus::Success,
-           "Failed to wait for adapter request");
+    auto wait_status = instance.WaitAny(adapter_future, wgpu::kLimitU64Undefined);
+    ASSERT(wait_status == wgpu::WaitStatus::Success, "Failed to wait for adapter request");
 
     return adapter;
 }
@@ -104,8 +104,8 @@ wgpu::Device request_device(const wgpu::Instance &instance, const wgpu::Adapter 
                    message.data);
             device = std::move(device_ret);
         });
-    ASSERT(instance.WaitAny(device_future, wgpu::kLimitU64Undefined) == wgpu::WaitStatus::Success,
-           "Failed to wait for device request");
+    auto wait_status = instance.WaitAny(device_future, wgpu::kLimitU64Undefined);
+    ASSERT(wait_status == wgpu::WaitStatus::Success, "Failed to wait for device request");
 
     return device;
 }
@@ -136,13 +136,12 @@ struct AppState {
     wgpu::Device device;
     wgpu::Queue queue;
     wgpu::SurfaceConfiguration surface_config;
-    int surface_width = 0;
-    int surface_height = 0;
 };
 
 int main() {
     glfwSetErrorCallback(glfw_error_callback);
-    ASSERT(glfwInit(), "GLFW init failed");
+    auto glfw_inited = glfwInit();
+    ASSERT(glfw_inited, "GLFW init failed");
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     auto *window = glfwCreateWindow(1024, 1024, "vcpkg-ci-dawn", nullptr, nullptr);
 
@@ -155,15 +154,16 @@ int main() {
 
     wgpu::SurfaceCapabilities surface_capabilities;
     state.surface.GetCapabilities(state.adapter, &surface_capabilities);
-    glfwGetFramebufferSize(window, &state.surface_width, &state.surface_height);
+    int surface_width, surface_height;
+    glfwGetFramebufferSize(window, &surface_width, &surface_height);
 
     state.surface_config.device = state.device;
     state.surface_config.usage = wgpu::TextureUsage::RenderAttachment;
     state.surface_config.format = surface_capabilities.formats[0];
     state.surface_config.presentMode = surface_capabilities.presentModes[0];
     state.surface_config.alphaMode = surface_capabilities.alphaModes[0];
-    state.surface_config.width = state.surface_width;
-    state.surface_config.height = state.surface_height;
+    state.surface_config.width = surface_width;
+    state.surface_config.height = surface_height;
     state.surface.Configure(&state.surface_config);
 
     glfwSetWindowUserPointer(window, &state);
@@ -175,8 +175,6 @@ int main() {
     });
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow *window, int width, int height) {
         auto &state = *static_cast<AppState *>(glfwGetWindowUserPointer(window));
-        state.surface_width = width;
-        state.surface_height = height;
         state.surface_config.width = width;
         state.surface_config.height = height;
         state.surface.Configure(&state.surface_config);
@@ -380,7 +378,8 @@ fn fs_main(input: FragmentInput) -> FragmentOutput {
         state.queue.Submit(1, &command_buffer);
 
 #if !defined(__EMSCRIPTEN__)
-        ASSERT(state.surface.Present(), "Failed to present the surface");
+        auto present_status = state.surface.Present();
+        ASSERT(present_status, "Failed to present the surface");
         state.device.Tick();
 #endif
     }

@@ -1,6 +1,11 @@
 {
   "versions": [
     {
+      "git-tree": "40c00ae04d26998b11cefa6667445a036536fd27",
+      "version": "1.13+new-skia-api",
+      "port-version": 0
+    },
+    {
       "git-tree": "c8017057d0cedef357157a7d38e14c05d419dd3f",
       "version": "1.13",
       "port-version": 0

@@ -1,0 +1,38 @@
+diff --git a/cmake/Modules/ConfigureTaskflow.cmake b/cmake/Modules/ConfigureTaskflow.cmake
+index 35cc9ba..1f22b8f 100644
+--- a/cmake/Modules/ConfigureTaskflow.cmake
++++ b/cmake/Modules/ConfigureTaskflow.cmake
+@@ -1,11 +1,11 @@
+ option(STDEXEC_ENABLE_TASKFLOW "Enable TaskFlow targets" OFF)
+ 
+ if(STDEXEC_ENABLE_TASKFLOW)
+-  rapids_cpm_find(Taskflow 3.7.0
+-  CPM_ARGS
+-    GITHUB_REPOSITORY taskflow/taskflow
+-    GIT_TAG v3.7.0
+-    OPTIONS "TF_BUILD_TESTS OFF"
++  rapids_find_package(
++    Taskflow REQUIRED
++    GLOBAL_TARGETS Taskflow::Taskflow
++    BUILD_EXPORT_SET stdexec-exports
++    INSTALL_EXPORT_SET stdexec-exports
+   )
+   file(GLOB_RECURSE taskflowexec_headers CONFIGURE_DEPENDS include/exec/taskflow/*.hpp)
+   add_library(taskflowexec INTERFACE ${taskflowexec_headers})
+@@ -26,10 +26,15 @@ if(STDEXEC_ENABLE_TASKFLOW)
+   target_compile_definitions(taskflowexec INTERFACE STDEXEC_ENABLE_TASKFLOW)
+ 
+   target_link_libraries(stdexec INTERFACE
+-    Taskflow
++    Taskflow::Taskflow
+   )
+ 
+   target_link_libraries(taskflowexec INTERFACE
+     STDEXEC::stdexec
+   )
++
++  install(TARGETS taskflowexec
++    EXPORT stdexec-exports
++    FILE_SET headers
++  )
+ endif()

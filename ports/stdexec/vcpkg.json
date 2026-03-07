@@ -1,6 +1,6 @@
 {
   "name": "stdexec",
-  "version-date": "2026-01-23",
+  "version-date": "2026-02-26",
   "description": "stdexec is an experimental reference implementation of the Senders model of asynchronous programming proposed by P2300 - std::execution for adoption into the C++ Standard.",
   "homepage": "https://github.com/NVIDIA/stdexec",
   "license": "Apache-2.0",
@@ -13,5 +13,26 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "asio": {
+      "description": "stdexec enable asio",
+      "dependencies": [
+        "boost-asio",
+        "boost-system"
+      ]
+    },
+    "taskflow": {
+      "description": "stdexec enable taskflow",
+      "dependencies": [
+        "taskflow"
+      ]
+    },
+    "tbb": {
+      "description": "stdexec enable tbb",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
 }

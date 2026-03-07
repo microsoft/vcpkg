@@ -1,11 +1,12 @@
 {
   "name": "libgossip",
-  "version": "1.1.2.0",
+  "version": "1.2.1.2",
   "description": "A C++17 implementation of the Gossip protocol, designed for decentralized distributed systems.",
   "homepage": "https://github.com/caomengxuan666/libgossip",
   "license": "MIT",
   "dependencies": [
     "asio",
+    "nlohmann-json",
     {
       "name": "vcpkg-cmake",
       "host": true

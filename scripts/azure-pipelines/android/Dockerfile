@@ -1,14 +1,14 @@
 # syntax=docker/dockerfile:1.4
 # DisableDockerDetector "Used to build the container deployed to Azure Container Registry"
-FROM ubuntu:noble-20251013
+FROM ubuntu:noble-20260113
 
 ADD https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb /packages-microsoft-prod.deb
-ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.14+7/OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
-ADD https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip /sdk-commandlinetools-linux-10406996_latest.zip
-ADD https://dl.google.com/android/repository/build-tools_r34-linux.zip /build-tools_r34-linux.zip
-ADD https://dl.google.com/android/repository/platform-34-ext7_r03.zip /platform-34-ext7_r03.zip
-ADD https://dl.google.com/android/repository/platform-tools_r35.0.1-linux.zip /platform-tools_r35.0.1-linux.zip
-ADD https://dl.google.com/android/repository/android-ndk-r28c-linux.zip /android-ndk-r28c-linux.zip
+ADD https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.18+8/OpenJDK17U-jdk_x64_linux_hotspot_17.0.18_8.tar.gz /OpenJDK17U-jdk_x64_linux_hotspot_17.0.18_8.tar.gz
+ADD https://dl.google.com/android/repository/commandlinetools-linux-14742923_latest.zip /commandlinetools-linux-14742923_latest.zip
+ADD https://dl.google.com/android/repository/build-tools_r36.1_linux.zip /build-tools_r36.1_linux.zip
+ADD https://dl.google.com/android/repository/platform-36_r01.zip /platform-36_r01.zip
+ADD https://dl.google.com/android/repository/platform-tools_r36.0.2-linux.zip /platform-tools_r36.0.2-linux.zip
+ADD https://dl.google.com/android/repository/android-ndk-r29-linux.zip /android-ndk-r29-linux.zip
 
 # Add apt packages
 
@@ -70,39 +70,39 @@ apt-get -y dist-upgrade
 apt-get -y --no-install-recommends install $APT_PACKAGES
 
 # OpenJDK
-tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
-rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.14_7.tar.gz
+tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.18_8.tar.gz
+rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.18_8.tar.gz
 
 # Android SDK
-unzip -q sdk-commandlinetools-linux-10406996_latest.zip -d android-sdk
-rm sdk-commandlinetools-linux-10406996_latest.zip
+unzip -q commandlinetools-linux-14742923_latest.zip -d android-sdk
+rm commandlinetools-linux-14742923_latest.zip
 
-unzip -q build-tools_r34-linux.zip -d android-sdk/build-tools
-mv android-sdk/build-tools/android-14 android-sdk/build-tools/34.0.0
-rm build-tools_r34-linux.zip
+unzip -q build-tools_r36.1_linux.zip -d android-sdk/build-tools
+mv android-sdk/build-tools/android-16 android-sdk/build-tools/36.1.0
+rm build-tools_r36.1_linux.zip
 
-unzip -q platform-34-ext7_r03.zip -d android-sdk/platforms
-rm platform-34-ext7_r03.zip
+unzip -q platform-36_r01.zip -d android-sdk/platforms
+rm platform-36_r01.zip
 find android-sdk/platforms -type d -exec chmod o+rx '{}' ';'
 find android-sdk/platforms -type f -exec chmod o+r '{}' ';'
 
-unzip -q platform-tools_r35.0.1-linux.zip -d android-sdk
-rm platform-tools_r35.0.1-linux.zip
+unzip -q platform-tools_r36.0.2-linux.zip -d android-sdk
+rm platform-tools_r36.0.2-linux.zip
 
 # JRE for sdk setup
-export JAVA_HOME=/jdk-17.0.14+7
+export JAVA_HOME=/jdk-17.0.18+8
 yes | /android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=/android-sdk --licenses
 
 # Android NDK
-unzip -q /android-ndk-r28c-linux.zip
-rm -f android-ndk-r28c-linux.zip
+unzip -q /android-ndk-r29-linux.zip
+rm -f android-ndk-r29-linux.zip
 
 END_OF_SCRIPT
 
-ENV JAVA_HOME="/jdk-17.0.14+7"
+ENV JAVA_HOME="/jdk-17.0.18+8"
 
 ENV ANDROID_HOME="/android-sdk"
 
-ENV ANDROID_NDK_HOME="/android-ndk-r28c"
+ENV ANDROID_NDK_HOME="/android-ndk-r29"
 
 WORKDIR /vcpkg

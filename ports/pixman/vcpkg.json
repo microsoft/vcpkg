@@ -1,11 +1,16 @@
 {
   "name": "pixman",
   "version": "0.46.4",
+  "port-version": 1,
   "description": "Pixman is a low-level software library for pixel manipulation, providing features such as image compositing and trapezoid rasterization.",
   "homepage": "https://www.cairographics.org/releases",
   "license": "MIT AND BSD-2-Clause",
   "dependencies": [
     "libpng",
+    {
+      "name": "pthreads",
+      "platform": "windows & !mingw"
+    },
     {
       "name": "vcpkg-tool-meson",
       "host": true

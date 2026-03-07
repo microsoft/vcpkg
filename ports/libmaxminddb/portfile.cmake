@@ -4,8 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO maxmind/libmaxminddb
     REF "${VERSION}"
-    SHA512 b5fe1eeffca697a7163fd3e66ae489eb144f5c35e601fcd29b37ec7996f7a485da6cd06431e452050731e09e889e96bc58e32b06c40fbef30f7e79781e492d85
+    SHA512 1ff3f22d40f9486089c598c0b57989879c006240f6782fe3ecd35f8bd0474323359f5ebafc000d046ec8d475da28411e632b7004bd6b3101ca2e4fed76f55af3
     HEAD_REF main
+    PATCHES
+        fix-link-thread.patch
 )
 
 vcpkg_cmake_configure(

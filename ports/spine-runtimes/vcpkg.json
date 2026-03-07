@@ -1,6 +1,7 @@
 {
   "name": "spine-runtimes",
   "version": "4.1.0",
+  "port-version": 1,
   "description": "2D skeletal animation runtimes for Spine",
   "homepage": "https://github.com/EsotericSoftware/spine-runtimes",
   "license": null,

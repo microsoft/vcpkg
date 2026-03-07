@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO team-charls/charls
     REF "${VERSION}"
-    SHA512 4f1b587f008956ab6fb9d2473c37a7b1a842633113245be7f8bb29b8c64304a6d580a29fcfca97ba1ac75adedbaf89e29adc4ac9e4117e1af1aa5949dbd34df9
+    SHA512 b266b3f56f099419e75b301607db36475ffd4a76142431c74f94c60d2d2f1b1f278625dfd141bf986dcc60d5be4ec86f0ddc7cadd2eafaa7db201f9c0796bfda
     HEAD_REF master
 )
 

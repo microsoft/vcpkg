@@ -17,7 +17,6 @@
         "highgui",
         "intrinsics",
         "jpeg",
-        "jpegxl",
         "nonfree",
         "openjpeg",
         "png",
@@ -67,6 +66,14 @@
         "win32ui"
       ],
       "platform": "windows & !uwp"
+    },
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "jpegxl"
+      ],
+      "platform": "!(android & arm32)"
     },
     {
       "name": "opencv",

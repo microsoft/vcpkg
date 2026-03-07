@@ -3,7 +3,7 @@ vcpkg_from_github(
     REPO TileDB-Inc/TileDB
     REF "${VERSION}"
     HEAD_REF main
-    SHA512 fdf8b41ec3b412874dbed4d8420a95821accf31a627f0746ca81656a98e60326aa479ffe7c8561b11c6fd7bc78dcaa8e9750bb2fcc94f92319c73379160caed9
+    SHA512 ad869a984c5244bc1657ae7cac86c68693659831caa3998b07a64ec5207fc0c351c15b3519ead9ebb94e2c4255eb1a0e91233f11e2f37c332ddff30adccd50d1
     PATCHES
         rm-cpp17-pmr.patch
 )

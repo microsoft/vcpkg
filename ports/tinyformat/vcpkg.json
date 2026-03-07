@@ -1,0 +1,7 @@
+{
+  "name": "tinyformat",
+  "version-semver": "2.3.0",
+  "description": "A minimal type safe printf() replacement",
+  "homepage": "https://github.com/c42f/tinyformat",
+  "license": "BSL-1.0"
+}

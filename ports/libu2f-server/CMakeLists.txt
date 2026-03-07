@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
 project(libu2f-server C)
 
@@ -25,7 +25,7 @@ install(TARGETS libu2f-server
 INSTALL(FILES ${LIBU2F_SERVER_HEADERS} DESTINATION "include/libu2f-server")
 
 install(EXPORT libu2f-serverConfig
-  FILE libu2f-serverConfig.cmake
-  NAMESPACE libu2f-server::
-  DESTINATION "share/libu2f-server"
+    FILE libu2f-serverConfig.cmake
+    NAMESPACE libu2f-server::
+    DESTINATION "share/libu2f-server"
 )

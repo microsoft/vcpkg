@@ -21,7 +21,7 @@ index dedc68fa4a..d748247c19 100644
        "../..:skia",
        "../skunicode",
 diff --git a/modules/skparagraph/include/FontCollection.h b/modules/skparagraph/include/FontCollection.h
-index a6b36efabe..5c210c5ae5 100644
+index 7611e7e194..9db3407ecd 100644
 --- a/modules/skparagraph/include/FontCollection.h
 +++ b/modules/skparagraph/include/FontCollection.h
 @@ -8,6 +8,7 @@
@@ -42,7 +42,7 @@ index a6b36efabe..5c210c5ae5 100644
      FontCollection();
  
 diff --git a/modules/skparagraph/include/ParagraphBuilder.h b/modules/skparagraph/include/ParagraphBuilder.h
-index feac5622bb..8b1576fdfc 100644
+index c8189cc446..5a01557949 100644
 --- a/modules/skparagraph/include/ParagraphBuilder.h
 +++ b/modules/skparagraph/include/ParagraphBuilder.h
 @@ -7,6 +7,7 @@

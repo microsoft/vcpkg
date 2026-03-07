@@ -1,0 +1,43 @@
+diff --git a/cmake/find/find_materialx.cmake b/cmake/find/find_materialx.cmake
+--- a/cmake/find/find_materialx.cmake
++++ b/cmake/find/find_materialx.cmake
+@@ -29,6 +29,15 @@
+     set(_MX_LIBS ${_MX_LIBS} PARENT_SCOPE)
+ endfunction()
+ 
++# Try IMPLIB first for DLLs on DLL platforms. Otherwise, use LOCATION.
++function(GET_IMPLIB_OR_LOCATION_PROPERTY LIB_NAME _CONFIG)
++    get_target_property(_TMP ${LIB_NAME} IMPORTED_IMPLIB_${_CONFIG})
++    if(NOT _TMP)
++        get_target_property(_TMP ${LIB_NAME} IMPORTED_LOCATION_${_CONFIG})
++    endif()
++    set(${LIB_NAME}_${_CONFIG} ${_TMP} PARENT_SCOPE)
++endfunction()
++
+ function(FIND_MATERIALX)
+ 
+     set(MATERIALX_DIR "NOT-SPECIFIED" CACHE PATH "Path to a downloaded and extracted MaterialX pre-built package.")
+@@ -66,14 +75,15 @@
+         # collect information required for the build from imported targets
+         get_target_property(_MX_INCLUDE MaterialXCore INTERFACE_INCLUDE_DIRECTORIES)
+ 
+-        get_target_property(MaterialXCore_DEBUG MaterialXCore IMPORTED_LOCATION_DEBUG)
+-        get_target_property(MaterialXCore_RELEASE MaterialXCore IMPORTED_LOCATION_RELEASE)
+-        get_target_property(MaterialXFormat_DEBUG MaterialXFormat IMPORTED_LOCATION_DEBUG)
+-        get_target_property(MaterialXFormat_RELEASE MaterialXFormat IMPORTED_LOCATION_RELEASE)
+-        get_target_property(MaterialXGenShader_DEBUG MaterialXGenShader IMPORTED_LOCATION_DEBUG)
+-        get_target_property(MaterialXGenShader_RELEASE MaterialXGenShader IMPORTED_LOCATION_RELEASE)
+-        get_target_property(MaterialXGenMdl_DEBUG MaterialXGenMdl IMPORTED_LOCATION_DEBUG)
+-        get_target_property(MaterialXGenMdl_RELEASE MaterialXGenMdl IMPORTED_LOCATION_RELEASE)
++        # need CMake >= 3.28.0 on non-DLL platforms
++        get_implib_or_location_property(MaterialXCore DEBUG)
++        get_implib_or_location_property(MaterialXCore RELEASE)
++        get_implib_or_location_property(MaterialXFormat DEBUG)
++        get_implib_or_location_property(MaterialXFormat RELEASE)
++        get_implib_or_location_property(MaterialXGenShader DEBUG)
++        get_implib_or_location_property(MaterialXGenShader RELEASE)
++        get_implib_or_location_property(MaterialXGenMdl DEBUG)
++        get_implib_or_location_property(MaterialXGenMdl RELEASE)
+ 
+         set(_MX_LIBS
+             $<IF:$<CONFIG:Debug>,${MaterialXGenMdl_DEBUG},${MaterialXGenMdl_RELEASE}>

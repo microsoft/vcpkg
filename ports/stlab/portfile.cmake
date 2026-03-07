@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stlab/libraries
     REF "v${VERSION}"
-    SHA512 b37466fa43c0a6834f8929a77cdd8d1a2230665b28be7032451fe2d3563dc2a5d475e4bd272808f652a6633f02794b82c7b135ffd1c5c064cea78b615e223d84
+    SHA512 4783697ada2102082e37fbb581d75fc04f89c71228771927ce1f63bbe05b24d632e574dec1aeae5a9e027996e30962852615a3c60d566404da7ddfabde53f87c
     HEAD_REF main
     PATCHES
-        cross-build.patch
         devendoring.patch
         use-cxx-20.patch
 )

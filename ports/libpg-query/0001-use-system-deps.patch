@@ -1,0 +1,50 @@
+--- a/Makefile
++++ b/Makefile
+@@ -31,10 +31,11 @@
+ 	SOFLAG = -soname
+ endif
+ 
+-SRC_FILES := $(wildcard src/*.c src/postgres/*.c) vendor/protobuf-c/protobuf-c.c vendor/xxhash/xxhash.c protobuf/pg_query.pb-c.c
++SRC_FILES := $(wildcard src/*.c src/postgres/*.c) protobuf/pg_query.pb-c.c
++LIBS += -lprotobuf-c -lxxhash
+ OBJ_FILES := $(SRC_FILES:.c=.o)
+ 
+-override CFLAGS += -g -I. -I./vendor -I./src/include -I./src/postgres/include -Wall -Wno-unused-function -Wno-unused-value -Wno-unused-variable -fno-strict-aliasing -fwrapv -fPIC
++override CFLAGS += -g -I. -I./src/include -I./src/postgres/include -Wall -Wno-unused-function -Wno-unused-value -Wno-unused-variable -fno-strict-aliasing -fwrapv -fPIC
+ 
+ ifeq ($(OS),Windows_NT)
+ override CFLAGS += -I./src/postgres/include/port/win32
+@@ -43,7 +44,7 @@
+ 
+ override PG_CONFIGURE_FLAGS += -q --without-readline --without-zlib --without-icu
+ 
+-override TEST_CFLAGS += -g -I. -I./vendor -Wall
++override TEST_CFLAGS += -g -I. -Wall
+ override TEST_LDFLAGS += -pthread
+ 
+ CFLAGS_OPT_LEVEL = -O3
+--- a/Makefile.msvc
++++ b/Makefile.msvc
+@@ -3,9 +3,9 @@
+ TARGET = pg_query
+ ARLIB = $(TARGET).lib
+ 
+-SRC_FILES = src/*.c src/postgres/*.c vendor/protobuf-c/protobuf-c.c vendor/xxhash/xxhash.c protobuf/pg_query.pb-c.c
++SRC_FILES = src/*.c src/postgres/*.c protobuf/pg_query.pb-c.c
+ 
+-CFLAGS = -I. -I./vendor -I./src/postgres/include -I./src/include -I./src/postgres/include/port/win32 -I./src/postgres/include/port/win32_msvc
++CFLAGS = -I. -I./src/postgres/include -I./src/include -I./src/postgres/include/port/win32 -I./src/postgres/include/port/win32_msvc
+ 
+ RM = del
+ 
+--- a/src/pg_query_fingerprint.c
++++ b/src/pg_query_fingerprint.c
+@@ -5,7 +5,7 @@
+ #include "pg_query_fingerprint.h"
+ 
+ #include "postgres.h"
+-#include "xxhash/xxhash.h"
++#include <xxhash.h>
+ #include "lib/ilist.h"
+ 
+ #include "parser/parser.h"

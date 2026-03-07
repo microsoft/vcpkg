@@ -1,0 +1,1054 @@
+This patch fixes illegal instruction faults on some CPU models, see the
+following upstream bug for context:
+
+https://github.com/randombit/botan/issues/5260
+
+The patch contains the following commits backported to Botan 3.10:
+
+8d560d3  Add missing BOTAN_FN_ISA_SIMD annotations
+aff0275  Add missing FN_ISA annotations to SIMD_4x64
+c5aaf01  Don't use ISA flags during compilation anymore
+d9e5c84  Add missing ISA annotations to SIMD_2x64
+4a0cad9  Add explicit SIMD instruction requirements for simd_4x32
+
+diff -ru botan.orig/configure.py botan/configure.py
+--- botan.orig/configure.py	2026-02-15 10:13:09.356704027 +0000
++++ botan/configure.py	2026-02-15 10:13:54.132569066 +0000
+@@ -1378,32 +1378,6 @@
+ 
+         return None
+ 
+-    def get_isa_specific_flags(self, isas, arch, options):
+-        flags = set()
+-
+-        def simd32_impl():
+-            for simd_isa in ['ssse3', 'altivec', 'neon']:
+-                if simd_isa in arch.isa_extensions and \
+-                   (simd_isa, arch.basename) not in options.disable_intrinsics and \
+-                   self.isa_flags_for(simd_isa, arch.basename):
+-                    return simd_isa
+-            return None
+-
+-        for isa in isas:
+-
+-            if isa == 'simd':
+-                isa = simd32_impl()
+-
+-                if isa is None:
+-                    continue
+-
+-            flagset = self.isa_flags_for(isa, arch.basename)
+-            if flagset is None:
+-                raise UserError('Compiler %s does not support %s' % (self.basename, isa))
+-            flags.add(flagset)
+-
+-        return " ".join(sorted(flags))
+-
+     def gen_lib_flags(self, options, variables):
+         """
+         Return any flags specific to building the library
+@@ -1975,7 +1949,7 @@
+         name = name.replace('.cpp', obj_suffix)
+         yield normalize_source_path(os.path.join(obj_dir, name))
+ 
+-def generate_build_info(build_paths, modules, cc, arch, osinfo, options):
++def generate_build_info(build_paths, modules, osinfo, options):
+     # first create a map of src_file->owning module
+ 
+     module_that_owns = {}
+@@ -1984,27 +1958,12 @@
+         for src in mod.sources():
+             module_that_owns[src] = mod
+ 
+-    def _isa_specific_flags(src):
+-        if os.path.basename(src) == 'test_simd.cpp':
+-            return cc.get_isa_specific_flags(['simd'], arch, options)
+-
+-        if src in module_that_owns:
+-            module = module_that_owns[src]
+-            isas = module.isas_needed(arch.basename)
+-            if 'simd_4x32' in module.dependencies(osinfo, arch):
+-                isas.append('simd')
+-
+-            return cc.get_isa_specific_flags(isas, arch, options)
+-
+-        return ''
+-
+     def _build_info(sources, objects, target_type):
+         output = []
+         for (obj_file, src) in zip(objects, sources):
+             info = {
+                 'src': src,
+                 'obj': obj_file,
+-                'isa_flags': _isa_specific_flags(src)
+                 }
+ 
+             if target_type in ['fuzzer', 'examples']:
+@@ -2024,8 +1983,6 @@
+ 
+     targets = ['lib', 'cli', 'test', 'fuzzer', 'examples']
+ 
+-    out['isa_build_info'] = []
+-
+     fuzzer_bin = []
+     example_bin = []
+ 
+@@ -2044,10 +2001,6 @@
+             objects = list(yield_objectfile_list(src_list, src_dir, osinfo.obj_suffix, options))
+             build_info = _build_info(src_list, objects, t)
+ 
+-            for b in build_info:
+-                if b['isa_flags'] != '':
+-                    out['isa_build_info'].append(b)
+-
+             if t == 'fuzzer':
+                 fuzzer_bin = [b['exe'] for b in build_info]
+             elif t == 'examples':
+@@ -3493,7 +3446,7 @@
+     logging.info('Auto-detected compiler arch %s', cc_output)
+     return cc_output
+ 
+-def do_io_for_build(cc, arch, osinfo, using_mods, info_modules, build_paths, source_paths, template_vars, options):
++def do_io_for_build(osinfo, using_mods, info_modules, build_paths, source_paths, template_vars, options):
+     try:
+         robust_rmtree(build_paths.build_dir)
+     except OSError as ex:
+@@ -3573,7 +3526,7 @@
+         if options.build_shared_lib:
+             logging.warning('Unless you are building a DLL or .so from the amalgamation, use --disable-shared as well')
+ 
+-    template_vars.update(generate_build_info(build_paths, using_mods, cc, arch, osinfo, options))
++    template_vars.update(generate_build_info(build_paths, using_mods, osinfo, options))
+ 
+     with open(os.path.join(build_paths.build_dir, 'build_config.json'), 'w', encoding='utf8') as f:
+         json.dump(template_vars, f, sort_keys=True, indent=2)
+@@ -3763,7 +3716,7 @@
+     template_vars = create_template_vars(source_paths, build_paths, options, using_mods, not_using_mods, cc, arch, osinfo)
+ 
+     # Now we start writing to disk
+-    do_io_for_build(cc, arch, osinfo, using_mods, info_modules, build_paths, source_paths, template_vars, options)
++    do_io_for_build(osinfo, using_mods, info_modules, build_paths, source_paths, template_vars, options)
+ 
+     return 0
+ 
+diff -ru botan.orig/src/build-data/compile_commands.json.in botan/src/build-data/compile_commands.json.in
+--- botan.orig/src/build-data/compile_commands.json.in	2026-02-15 10:13:09.360704013 +0000
++++ botan/src/build-data/compile_commands.json.in	2026-02-15 10:13:54.132569066 +0000
+@@ -1,28 +1,28 @@
+ [
+ %{for lib_build_info}
+     { "directory": "%{abs_root_dir}",
+-      "command": "%{cxx} %{lib_flags} %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} -DBOTAN_IS_BEING_BUILT %{cc_warning_flags} %{isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
++      "command": "%{cxx} %{lib_flags} %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} -DBOTAN_IS_BEING_BUILT %{cc_warning_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
+       "file": "%{src}"
+     },
+ %{endfor}
+ 
+ %{for test_build_info}
+     { "directory": "%{abs_root_dir}",
+-      "command": "%{cxx}  %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} -DBOTAN_IS_BEING_BUILT %{cc_warning_flags} %{isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
++      "command": "%{cxx}  %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} -DBOTAN_IS_BEING_BUILT %{cc_warning_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
+       "file": "%{src}"
+     },
+ %{endfor}
+ 
+ %{for examples_build_info}
+     { "directory": "%{abs_root_dir}",
+-      "command": "%{cxx}  %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} %{cc_warning_flags} %{isa_flags} %{public_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
++      "command": "%{cxx}  %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} %{cc_warning_flags} %{public_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
+       "file": "%{src}"
+     },
+ %{endfor}
+ 
+ %{for fuzzer_build_info}
+     { "directory": "%{abs_root_dir}",
+-      "command": "%{cxx}  %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} -DBOTAN_IS_BEING_BUILT %{cc_warning_flags} %{isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
++      "command": "%{cxx}  %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} -DBOTAN_IS_BEING_BUILT %{cc_warning_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
+       "file": "%{src}"
+     },
+ %{endfor}
+@@ -37,7 +37,7 @@
+ 
+ %{for cli_build_info}
+     { "directory": "%{abs_root_dir}",
+-      "command": "%{cxx}  %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} -DBOTAN_IS_BEING_BUILT %{cc_warning_flags} %{isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
++      "command": "%{cxx}  %{cc_sysroot} %{cxx_abi_flags} %{cc_lang_flags} %{os_feature_macros} %{cc_compile_flags} -DBOTAN_IS_BEING_BUILT %{cc_warning_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}%{obj}",
+       "file": "%{src}"
+     }%{omitlast ,}
+ %{endfor}
+diff -ru botan.orig/src/build-data/makefile.in botan/src/build-data/makefile.in
+--- botan.orig/src/build-data/makefile.in	2026-02-15 10:13:27.148650401 +0000
++++ botan/src/build-data/makefile.in	2026-02-15 10:13:54.132569066 +0000
+@@ -151,22 +151,22 @@
+ 
+ %{for lib_build_info}
+ %{obj}: %{src}
+-	$(CXX) $(LIB_FLAGS) $(BUILD_FLAGS) -DBOTAN_IS_BEING_BUILT %{isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
++	$(CXX) $(LIB_FLAGS) $(BUILD_FLAGS) -DBOTAN_IS_BEING_BUILT %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
+ %{endfor}
+ 
+ %{for cli_build_info}
+ %{obj}: %{src}
+-	$(CXX) $(BUILD_FLAGS) -DBOTAN_IS_BEING_BUILT %{isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
++	$(CXX) $(BUILD_FLAGS) -DBOTAN_IS_BEING_BUILT %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
+ %{endfor}
+ 
+ %{for test_build_info}
+ %{obj}: %{src}
+-	$(CXX) $(BUILD_FLAGS) -DBOTAN_IS_BEING_BUILT %{isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
++	$(CXX) $(BUILD_FLAGS) -DBOTAN_IS_BEING_BUILT %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
+ %{endfor}
+ 
+ %{for fuzzer_build_info}
+ %{obj}: %{src}
+-	$(CXX) $(BUILD_FLAGS) -DBOTAN_IS_BEING_BUILT %{isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
++	$(CXX) $(BUILD_FLAGS) -DBOTAN_IS_BEING_BUILT %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
+ 
+ %{exe}: %{obj} $(LIBRARIES)
+ 	$(EXE_LINK_CMD) $(ABI_FLAGS) %{obj} $(BUILD_DIR_LINK_PATH) $(LANG_EXE_FLAGS) $(LDFLAGS) $(EXE_LINKS_TO) %{fuzzer_lib} %{output_to_exe}$@
+@@ -174,7 +174,7 @@
+ 
+ %{for examples_build_info}
+ %{obj}: %{src}
+-	$(CXX) $(BUILD_FLAGS) %{isa_flags} %{public_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
++	$(CXX) $(BUILD_FLAGS) %{public_include_flags} %{external_include_flags} %{dash_c} %{src} %{dash_o}$@
+ 
+ %{exe}: %{obj} $(LIBRARIES)
+ 	$(EXE_LINK_CMD) $(ABI_FLAGS) %{obj} $(BUILD_DIR_LINK_PATH) $(LANG_EXE_FLAGS) $(LDFLAGS) $(EXE_LINKS_TO) %{fuzzer_lib} %{output_to_exe}$@
+diff -ru botan.orig/src/build-data/ninja.in botan/src/build-data/ninja.in
+--- botan.orig/src/build-data/ninja.in	2026-02-15 10:13:09.360704013 +0000
++++ botan/src/build-data/ninja.in	2026-02-15 10:13:54.132569066 +0000
+@@ -28,7 +28,7 @@
+ %{if ninja_header_deps_style}
+   deps = %{ninja_header_deps_style}
+ %{endif}
+-  command = %{cxx} %{lib_flags} ${ABI_FLAGS} ${LANG_FLAGS} ${CXXFLAGS} -DBOTAN_IS_BEING_BUILT ${WARN_FLAGS} ${isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{header_deps_flag} %{header_deps_out|concat: $out.d} %{dash_c} $in %{dash_o}$out
++  command = %{cxx} %{lib_flags} ${ABI_FLAGS} ${LANG_FLAGS} ${CXXFLAGS} -DBOTAN_IS_BEING_BUILT ${WARN_FLAGS} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{header_deps_flag} %{header_deps_out|concat: $out.d} %{dash_c} $in %{dash_o}$out
+ 
+ rule compile_exe
+ %{if header_deps_out}
+@@ -37,7 +37,7 @@
+ %{if ninja_header_deps_style}
+   deps = %{ninja_header_deps_style}
+ %{endif}
+-  command = %{cxx} ${ABI_FLAGS} ${LANG_FLAGS} ${CXXFLAGS} -DBOTAN_IS_BEING_BUILT ${WARN_FLAGS} ${isa_flags} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{header_deps_flag} %{header_deps_out|concat: $out.d} %{dash_c} $in %{dash_o}$out
++  command = %{cxx} ${ABI_FLAGS} ${LANG_FLAGS} ${CXXFLAGS} -DBOTAN_IS_BEING_BUILT ${WARN_FLAGS} %{public_include_flags} %{internal_include_flags} %{external_include_flags} %{header_deps_flag} %{header_deps_out|concat: $out.d} %{dash_c} $in %{dash_o}$out
+ 
+ rule compile_example_exe
+ %{if header_deps_out}
+@@ -46,7 +46,7 @@
+ %{if ninja_header_deps_style}
+   deps = %{ninja_header_deps_style}
+ %{endif}
+-  command = %{cxx} ${ABI_FLAGS} ${LANG_FLAGS} ${CXXFLAGS} ${WARN_FLAGS} ${isa_flags} %{public_include_flags} %{external_include_flags} %{header_deps_flag} %{header_deps_out|concat: $out.d} %{dash_c} $in %{dash_o}$out
++  command = %{cxx} ${ABI_FLAGS} ${LANG_FLAGS} ${CXXFLAGS} ${WARN_FLAGS} %{public_include_flags} %{external_include_flags} %{header_deps_flag} %{header_deps_out|concat: $out.d} %{dash_c} $in %{dash_o}$out
+ 
+ # The primary target
+ build all: phony %{all_targets}
+@@ -212,7 +212,6 @@
+ 
+ %{for lib_build_info}
+ build %{obj}: compile_lib %{src}
+-  isa_flags = %{isa_flags}
+ %{endfor}
+ 
+ %{for cli_build_info}
+diff -ru botan.orig/src/lib/block/aes/aes_ni/aes_ni.cpp botan/src/lib/block/aes/aes_ni/aes_ni.cpp
+--- botan.orig/src/lib/block/aes/aes_ni/aes_ni.cpp	2026-02-15 10:13:09.368703990 +0000
++++ botan/src/lib/block/aes/aes_ni/aes_ni.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -68,7 +68,8 @@
+    return _mm_xor_si128(key, key_with_rcon);
+ }
+ 
+-BOTAN_FORCE_INLINE void keyxor(SIMD_4x32 K, SIMD_4x32& B0, SIMD_4x32& B1, SIMD_4x32& B2, SIMD_4x32& B3) {
++BOTAN_FORCE_INLINE BOTAN_FN_ISA_AESNI void keyxor(
++   SIMD_4x32 K, SIMD_4x32& B0, SIMD_4x32& B1, SIMD_4x32& B2, SIMD_4x32& B3) {
+    B0 ^= K;
+    B1 ^= K;
+    B2 ^= K;
+diff -ru botan.orig/src/lib/block/aes/aes_vperm/aes_vperm.cpp botan/src/lib/block/aes/aes_vperm/aes_vperm.cpp
+--- botan.orig/src/lib/block/aes/aes_vperm/aes_vperm.cpp	2026-02-15 10:13:09.368703990 +0000
++++ botan/src/lib/block/aes/aes_vperm/aes_vperm.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -110,11 +110,11 @@
+ 
+ const SIMD_4x32 lo_nibs_mask = SIMD_4x32::splat_u8(0x0F);
+ 
+-inline SIMD_4x32 low_nibs(SIMD_4x32 x) {
++inline SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 low_nibs(SIMD_4x32 x) {
+    return lo_nibs_mask & x;
+ }
+ 
+-inline SIMD_4x32 high_nibs(SIMD_4x32 x) {
++inline SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 high_nibs(SIMD_4x32 x) {
+    return (x.shr<4>() & lo_nibs_mask);
+ }
+ 
+@@ -273,7 +273,7 @@
+ 
+ }  // namespace
+ 
+-void AES_128::vperm_encrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
++void BOTAN_FN_ISA_SIMD_4X32 AES_128::vperm_encrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
+    const SIMD_4x32 K[11] = {
+       SIMD_4x32::load_le(&m_EK[4 * 0]),
+       SIMD_4x32::load_le(&m_EK[4 * 1]),
+@@ -291,7 +291,7 @@
+    return vperm_encrypt_blocks(in, out, blocks, K, 10);
+ }
+ 
+-void AES_128::vperm_decrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
++void BOTAN_FN_ISA_SIMD_4X32 AES_128::vperm_decrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
+    const SIMD_4x32 K[11] = {
+       SIMD_4x32::load_le(&m_DK[4 * 0]),
+       SIMD_4x32::load_le(&m_DK[4 * 1]),
+@@ -309,7 +309,7 @@
+    return vperm_decrypt_blocks(in, out, blocks, K, 10);
+ }
+ 
+-void AES_192::vperm_encrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
++void BOTAN_FN_ISA_SIMD_4X32 AES_192::vperm_encrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
+    const SIMD_4x32 K[13] = {
+       SIMD_4x32::load_le(&m_EK[4 * 0]),
+       SIMD_4x32::load_le(&m_EK[4 * 1]),
+@@ -329,7 +329,7 @@
+    return vperm_encrypt_blocks(in, out, blocks, K, 12);
+ }
+ 
+-void AES_192::vperm_decrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
++void BOTAN_FN_ISA_SIMD_4X32 AES_192::vperm_decrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
+    const SIMD_4x32 K[13] = {
+       SIMD_4x32::load_le(&m_DK[4 * 0]),
+       SIMD_4x32::load_le(&m_DK[4 * 1]),
+@@ -349,7 +349,7 @@
+    return vperm_decrypt_blocks(in, out, blocks, K, 12);
+ }
+ 
+-void AES_256::vperm_encrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
++void BOTAN_FN_ISA_SIMD_4X32 AES_256::vperm_encrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
+    const SIMD_4x32 K[15] = {
+       SIMD_4x32::load_le(&m_EK[4 * 0]),
+       SIMD_4x32::load_le(&m_EK[4 * 1]),
+@@ -371,7 +371,7 @@
+    return vperm_encrypt_blocks(in, out, blocks, K, 14);
+ }
+ 
+-void AES_256::vperm_decrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
++void BOTAN_FN_ISA_SIMD_4X32 AES_256::vperm_decrypt_n(const uint8_t in[], uint8_t out[], size_t blocks) const {
+    const SIMD_4x32 K[15] = {
+       SIMD_4x32::load_le(&m_DK[4 * 0]),
+       SIMD_4x32::load_le(&m_DK[4 * 1]),
+@@ -492,7 +492,7 @@
+ 
+ // NOLINTBEGIN(readability-container-data-pointer)
+ 
+-void AES_128::vperm_key_schedule(const uint8_t keyb[], size_t /*unused*/) {
++void BOTAN_FN_ISA_SIMD_4X32 AES_128::vperm_key_schedule(const uint8_t keyb[], size_t /*unused*/) {
+    m_EK.resize(11 * 4);
+    m_DK.resize(11 * 4);
+ 
+@@ -516,7 +516,7 @@
+    aes_schedule_mangle_last_dec(key).store_le(&m_DK[0]);
+ }
+ 
+-void AES_192::vperm_key_schedule(const uint8_t keyb[], size_t /*unused*/) {
++void BOTAN_FN_ISA_SIMD_4X32 AES_192::vperm_key_schedule(const uint8_t keyb[], size_t /*unused*/) {
+    m_EK.resize(13 * 4);
+    m_DK.resize(13 * 4);
+ 
+@@ -559,7 +559,7 @@
+    }
+ }
+ 
+-void AES_256::vperm_key_schedule(const uint8_t keyb[], size_t /*unused*/) {
++void BOTAN_FN_ISA_SIMD_4X32 AES_256::vperm_key_schedule(const uint8_t keyb[], size_t /*unused*/) {
+    m_EK.resize(15 * 4);
+    m_DK.resize(15 * 4);
+ 
+diff -ru botan.orig/src/lib/block/aes/aes_vperm/info.txt botan/src/lib/block/aes/aes_vperm/info.txt
+--- botan.orig/src/lib/block/aes/aes_vperm/info.txt	2026-02-15 10:13:09.368703990 +0000
++++ botan/src/lib/block/aes/aes_vperm/info.txt	2026-02-15 10:13:54.132569066 +0000
+@@ -8,11 +8,8 @@
+ </module_info>
+ 
+ <isa>
+-x86_32:sse2
+-x86_64:sse2
+ x86_32:ssse3
+ x86_64:ssse3
+-x32:sse2
+ x32:ssse3
+ arm32:neon
+ arm64:neon
+diff -ru botan.orig/src/lib/block/noekeon/noekeon_simd/info.txt botan/src/lib/block/noekeon/noekeon_simd/info.txt
+--- botan.orig/src/lib/block/noekeon/noekeon_simd/info.txt	2026-02-15 10:13:09.368703990 +0000
++++ botan/src/lib/block/noekeon/noekeon_simd/info.txt	2026-02-15 10:13:54.132569066 +0000
+@@ -11,3 +11,14 @@
+ cpuid
+ simd_4x32
+ </requires>
++
++<isa>
++x86_32:ssse3
++x86_64:ssse3
++x32:ssse3
++arm32:neon
++arm64:neon
++ppc32:altivec
++ppc64:altivec
++loongarch64:lsx
++</isa>
+diff -ru botan.orig/src/lib/block/noekeon/noekeon_simd/noekeon_simd.cpp botan/src/lib/block/noekeon/noekeon_simd/noekeon_simd.cpp
+--- botan.orig/src/lib/block/noekeon/noekeon_simd/noekeon_simd.cpp	2026-02-15 10:13:09.368703990 +0000
++++ botan/src/lib/block/noekeon/noekeon_simd/noekeon_simd.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -16,14 +16,14 @@
+ /*
+ * Noekeon's Theta Operation
+ */
+-inline void theta(SIMD_4x32& A0,
+-                  SIMD_4x32& A1,
+-                  SIMD_4x32& A2,
+-                  SIMD_4x32& A3,
+-                  const SIMD_4x32& K0,
+-                  const SIMD_4x32& K1,
+-                  const SIMD_4x32& K2,
+-                  const SIMD_4x32& K3) {
++inline void BOTAN_FN_ISA_SIMD_4X32 theta(SIMD_4x32& A0,
++                                         SIMD_4x32& A1,
++                                         SIMD_4x32& A2,
++                                         SIMD_4x32& A3,
++                                         const SIMD_4x32& K0,
++                                         const SIMD_4x32& K1,
++                                         const SIMD_4x32& K2,
++                                         const SIMD_4x32& K3) {
+    SIMD_4x32 T = A0 ^ A2;
+    T ^= T.rotl<8>() ^ T.rotr<8>();
+    A1 ^= T;
+@@ -43,7 +43,7 @@
+ /*
+ * Noekeon's Gamma S-Box Layer
+ */
+-inline void gamma(SIMD_4x32& A0, SIMD_4x32& A1, SIMD_4x32& A2, SIMD_4x32& A3) {
++inline void BOTAN_FN_ISA_SIMD_4X32 gamma(SIMD_4x32& A0, SIMD_4x32& A1, SIMD_4x32& A2, SIMD_4x32& A3) {
+    A1 ^= ~(A2 | A3);
+    A0 ^= A2 & A1;
+ 
+@@ -62,7 +62,7 @@
+ /*
+ * Noekeon Encryption
+ */
+-void Noekeon::simd_encrypt_4(const uint8_t in[], uint8_t out[]) const {
++void BOTAN_FN_ISA_SIMD_4X32 Noekeon::simd_encrypt_4(const uint8_t in[], uint8_t out[]) const {
+    const SIMD_4x32 K0 = SIMD_4x32::splat(m_EK[0]);
+    const SIMD_4x32 K1 = SIMD_4x32::splat(m_EK[1]);
+    const SIMD_4x32 K2 = SIMD_4x32::splat(m_EK[2]);
+@@ -105,7 +105,7 @@
+ /*
+ * Noekeon Encryption
+ */
+-void Noekeon::simd_decrypt_4(const uint8_t in[], uint8_t out[]) const {
++void BOTAN_FN_ISA_SIMD_4X32 Noekeon::simd_decrypt_4(const uint8_t in[], uint8_t out[]) const {
+    const SIMD_4x32 K0 = SIMD_4x32::splat(m_DK[0]);
+    const SIMD_4x32 K1 = SIMD_4x32::splat(m_DK[1]);
+    const SIMD_4x32 K2 = SIMD_4x32::splat(m_DK[2]);
+diff -ru botan.orig/src/lib/block/serpent/serpent_fn.h botan/src/lib/block/serpent/serpent_fn.h
+--- botan.orig/src/lib/block/serpent/serpent_fn.h	2026-02-15 10:13:09.372703977 +0000
++++ botan/src/lib/block/serpent/serpent_fn.h	2026-02-15 10:13:54.132569066 +0000
+@@ -67,7 +67,7 @@
+       explicit Key_Inserter(const uint32_t* RK) : m_RK(RK) {}
+ 
+       template <BitsliceT T>
+-      inline void operator()(size_t R, T& B0, T& B1, T& B2, T& B3) const {
++      BOTAN_FORCE_INLINE void operator()(size_t R, T& B0, T& B1, T& B2, T& B3) const {
+          B0 ^= m_RK[4 * R];
+          B1 ^= m_RK[4 * R + 1];
+          B2 ^= m_RK[4 * R + 2];
+diff -ru botan.orig/src/lib/block/serpent/serpent_simd/info.txt botan/src/lib/block/serpent/serpent_simd/info.txt
+--- botan.orig/src/lib/block/serpent/serpent_simd/info.txt	2026-02-15 10:13:09.372703977 +0000
++++ botan/src/lib/block/serpent/serpent_simd/info.txt	2026-02-15 10:13:54.132569066 +0000
+@@ -11,3 +11,14 @@
+ cpuid
+ simd_4x32
+ </requires>
++
++<isa>
++x86_32:ssse3
++x86_64:ssse3
++x32:ssse3
++arm32:neon
++arm64:neon
++ppc32:altivec
++ppc64:altivec
++loongarch64:lsx
++</isa>
+diff -ru botan.orig/src/lib/block/serpent/serpent_simd/serpent_simd.cpp botan/src/lib/block/serpent/serpent_simd/serpent_simd.cpp
+--- botan.orig/src/lib/block/serpent/serpent_simd/serpent_simd.cpp	2026-02-15 10:13:09.372703977 +0000
++++ botan/src/lib/block/serpent/serpent_simd/serpent_simd.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -15,7 +15,7 @@
+ /*
+ * SIMD Serpent Encryption of 4 blocks in parallel
+ */
+-void Serpent::simd_encrypt_4(const uint8_t in[64], uint8_t out[64]) const {
++void BOTAN_FN_ISA_SIMD_4X32 Serpent::simd_encrypt_4(const uint8_t in[64], uint8_t out[64]) const {
+    using namespace Botan::Serpent_F;
+ 
+    SIMD_4x32 B0 = SIMD_4x32::load_le(in);
+@@ -138,7 +138,7 @@
+ /*
+ * SIMD Serpent Decryption of 4 blocks in parallel
+ */
+-void Serpent::simd_decrypt_4(const uint8_t in[64], uint8_t out[64]) const {
++void BOTAN_FN_ISA_SIMD_4X32 Serpent::simd_decrypt_4(const uint8_t in[64], uint8_t out[64]) const {
+    using namespace Botan::Serpent_F;
+ 
+    SIMD_4x32 B0 = SIMD_4x32::load_le(in);
+diff -ru botan.orig/src/lib/block/shacal2/shacal2_simd/info.txt botan/src/lib/block/shacal2/shacal2_simd/info.txt
+--- botan.orig/src/lib/block/shacal2/shacal2_simd/info.txt	2026-02-15 10:13:09.372703977 +0000
++++ botan/src/lib/block/shacal2/shacal2_simd/info.txt	2026-02-15 10:13:54.132569066 +0000
+@@ -11,3 +11,14 @@
+ cpuid
+ simd_4x32
+ </requires>
++
++<isa>
++x86_32:ssse3
++x86_64:ssse3
++x32:ssse3
++arm32:neon
++arm64:neon
++ppc32:altivec
++ppc64:altivec
++loongarch64:lsx
++</isa>
+diff -ru botan.orig/src/lib/block/shacal2/shacal2_simd/shacal2_simd.cpp botan/src/lib/block/shacal2/shacal2_simd/shacal2_simd.cpp
+--- botan.orig/src/lib/block/shacal2/shacal2_simd/shacal2_simd.cpp	2026-02-15 10:13:09.372703977 +0000
++++ botan/src/lib/block/shacal2/shacal2_simd/shacal2_simd.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -13,29 +13,29 @@
+ 
+ namespace {
+ 
+-inline void SHACAL2_Fwd(const SIMD_4x32& A,
+-                        const SIMD_4x32& B,
+-                        const SIMD_4x32& C,
+-                        SIMD_4x32& D,
+-                        const SIMD_4x32& E,
+-                        const SIMD_4x32& F,
+-                        const SIMD_4x32& G,
+-                        SIMD_4x32& H,
+-                        uint32_t RK) {
++inline void BOTAN_FN_ISA_SIMD_4X32 SHACAL2_Fwd(const SIMD_4x32& A,
++                                               const SIMD_4x32& B,
++                                               const SIMD_4x32& C,
++                                               SIMD_4x32& D,
++                                               const SIMD_4x32& E,
++                                               const SIMD_4x32& F,
++                                               const SIMD_4x32& G,
++                                               SIMD_4x32& H,
++                                               uint32_t RK) {
+    H += E.sigma1() + SIMD_4x32::choose(E, F, G) + SIMD_4x32::splat(RK);
+    D += H;
+    H += A.sigma0() + SIMD_4x32::majority(A, B, C);
+ }
+ 
+-inline void SHACAL2_Rev(const SIMD_4x32& A,
+-                        const SIMD_4x32& B,
+-                        const SIMD_4x32& C,
+-                        SIMD_4x32& D,
+-                        const SIMD_4x32& E,
+-                        const SIMD_4x32& F,
+-                        const SIMD_4x32& G,
+-                        SIMD_4x32& H,
+-                        uint32_t RK) {
++inline void BOTAN_FN_ISA_SIMD_4X32 SHACAL2_Rev(const SIMD_4x32& A,
++                                               const SIMD_4x32& B,
++                                               const SIMD_4x32& C,
++                                               SIMD_4x32& D,
++                                               const SIMD_4x32& E,
++                                               const SIMD_4x32& F,
++                                               const SIMD_4x32& G,
++                                               SIMD_4x32& H,
++                                               uint32_t RK) {
+    H -= A.sigma0() + SIMD_4x32::majority(A, B, C);
+    D -= H;
+    H -= E.sigma1() + SIMD_4x32::choose(E, F, G) + SIMD_4x32::splat(RK);
+@@ -43,7 +43,7 @@
+ 
+ }  // namespace
+ 
+-void SHACAL2::simd_encrypt_4(const uint8_t in[], uint8_t out[]) const {
++void BOTAN_FN_ISA_SIMD_4X32 SHACAL2::simd_encrypt_4(const uint8_t in[], uint8_t out[]) const {
+    SIMD_4x32 A = SIMD_4x32::load_be(in);
+    SIMD_4x32 E = SIMD_4x32::load_be(in + 16);
+    SIMD_4x32 B = SIMD_4x32::load_be(in + 32);
+@@ -82,7 +82,7 @@
+    H.store_be(out + 112);
+ }
+ 
+-void SHACAL2::simd_decrypt_4(const uint8_t in[], uint8_t out[]) const {
++void BOTAN_FN_ISA_SIMD_4X32 SHACAL2::simd_decrypt_4(const uint8_t in[], uint8_t out[]) const {
+    SIMD_4x32 A = SIMD_4x32::load_be(in);
+    SIMD_4x32 E = SIMD_4x32::load_be(in + 16);
+    SIMD_4x32 B = SIMD_4x32::load_be(in + 32);
+diff -ru botan.orig/src/lib/entropy/rdseed/rdseed.cpp botan/src/lib/entropy/rdseed/rdseed.cpp
+--- botan.orig/src/lib/entropy/rdseed/rdseed.cpp	2026-02-15 10:13:09.372703977 +0000
++++ botan/src/lib/entropy/rdseed/rdseed.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -21,7 +21,7 @@
+ 
+ namespace {
+ 
+-BOTAN_FUNC_ISA("rdseed") bool read_rdseed(secure_vector<uint32_t>& seed) {
++BOTAN_FUNC_ISA("rdseed,sse2") bool read_rdseed(secure_vector<uint32_t>& seed) {
+    /*
+    * RDSEED is not guaranteed to generate an output within any specific number
+    * of attempts. However in testing on a Skylake system, with all hyperthreads
+diff -ru botan.orig/src/lib/hash/sha1/sha1_simd/info.txt botan/src/lib/hash/sha1/sha1_simd/info.txt
+--- botan.orig/src/lib/hash/sha1/sha1_simd/info.txt	2026-02-15 10:13:09.376703967 +0000
++++ botan/src/lib/hash/sha1/sha1_simd/info.txt	2026-02-15 10:13:54.132569066 +0000
+@@ -8,11 +8,8 @@
+ </module_info>
+ 
+ <isa>
+-x86_32:sse2
+-x86_64:sse2
+ x86_32:ssse3
+ x86_64:ssse3
+-x32:sse2
+ x32:ssse3
+ arm32:neon
+ arm64:neon
+diff -ru botan.orig/src/lib/hash/sha1/sha1_simd/sha1_simd.cpp botan/src/lib/hash/sha1/sha1_simd/sha1_simd.cpp
+--- botan.orig/src/lib/hash/sha1/sha1_simd/sha1_simd.cpp	2026-02-15 10:13:09.376703967 +0000
++++ botan/src/lib/hash/sha1/sha1_simd/sha1_simd.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -43,7 +43,10 @@
+ and on output:
+ W0 = W[t]..W[t+3]
+ */
+-BOTAN_FORCE_INLINE SIMD_4x32 sha1_simd_next_w(SIMD_4x32& XW0, SIMD_4x32 XW1, SIMD_4x32 XW2, SIMD_4x32 XW3) {
++BOTAN_FORCE_INLINE SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 sha1_simd_next_w(SIMD_4x32& XW0,
++                                                                     SIMD_4x32 XW1,
++                                                                     SIMD_4x32 XW2,
++                                                                     SIMD_4x32 XW3) {
+    SIMD_4x32 T0 = XW0;                  // W[t-16..t-13]
+    T0 ^= SIMD_4x32::alignr8(XW1, XW0);  // W[t-14..t-11]
+    T0 ^= XW2;                           // W[t-8..t-5]
+diff -ru botan.orig/src/lib/hash/sha2_32/sha2_32_simd/info.txt botan/src/lib/hash/sha2_32/sha2_32_simd/info.txt
+--- botan.orig/src/lib/hash/sha2_32/sha2_32_simd/info.txt	2026-02-15 10:13:09.376703967 +0000
++++ botan/src/lib/hash/sha2_32/sha2_32_simd/info.txt	2026-02-15 10:13:54.132569066 +0000
+@@ -30,6 +30,17 @@
+ #loongson64
+ </arch>
+ 
++<isa>
++x86_32:ssse3
++x86_64:ssse3
++x32:ssse3
++arm32:neon
++arm64:neon
++ppc32:altivec
++ppc64:altivec
++loongarch64:lsx
++</isa>
++
+ <requires>
+ cpuid
+ simd_4x32
+diff -ru botan.orig/src/lib/misc/zfec/zfec_sse2/zfec_sse2.cpp botan/src/lib/misc/zfec/zfec_sse2/zfec_sse2.cpp
+--- botan.orig/src/lib/misc/zfec/zfec_sse2/zfec_sse2.cpp	2026-02-15 10:13:09.380703953 +0000
++++ botan/src/lib/misc/zfec/zfec_sse2/zfec_sse2.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -16,11 +16,11 @@
+ 
+ // NOLINTBEGIN(portability-simd-intrinsics)
+ 
+-inline SIMD_4x32 rshift_1_u8(SIMD_4x32 v) {
++inline SIMD_4x32 BOTAN_FN_ISA_SSE2 rshift_1_u8(SIMD_4x32 v) {
+    return SIMD_4x32(_mm_add_epi8(v.raw(), v.raw()));
+ }
+ 
+-inline SIMD_4x32 high_bit_set_u8(SIMD_4x32 v) {
++inline SIMD_4x32 BOTAN_FN_ISA_SSE2 high_bit_set_u8(SIMD_4x32 v) {
+    return SIMD_4x32(_mm_cmpgt_epi8(_mm_setzero_si128(), v.raw()));
+ }
+ 
+diff -ru botan.orig/src/lib/misc/zfec/zfec_vperm/info.txt botan/src/lib/misc/zfec/zfec_vperm/info.txt
+--- botan.orig/src/lib/misc/zfec/zfec_vperm/info.txt	2026-02-15 10:13:09.380703953 +0000
++++ botan/src/lib/misc/zfec/zfec_vperm/info.txt	2026-02-15 10:13:54.132569066 +0000
+@@ -8,8 +8,6 @@
+ </module_info>
+ 
+ <isa>
+-x86_32:sse2
+-x86_64:sse2
+ x86_32:ssse3
+ x86_64:ssse3
+ arm32:neon
+diff -ru botan.orig/src/lib/pbkdf/argon2/argon2_ssse3/argon2_ssse3.cpp botan/src/lib/pbkdf/argon2/argon2_ssse3/argon2_ssse3.cpp
+--- botan.orig/src/lib/pbkdf/argon2/argon2_ssse3/argon2_ssse3.cpp	2026-02-15 10:13:09.384703943 +0000
++++ botan/src/lib/pbkdf/argon2/argon2_ssse3/argon2_ssse3.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -13,14 +13,14 @@
+ 
+ namespace {
+ 
+-BOTAN_FORCE_INLINE void blamka_G(SIMD_2x64& A0,
+-                                 SIMD_2x64& A1,
+-                                 SIMD_2x64& B0,
+-                                 SIMD_2x64& B1,
+-                                 SIMD_2x64& C0,
+-                                 SIMD_2x64& C1,
+-                                 SIMD_2x64& D0,
+-                                 SIMD_2x64& D1) {
++BOTAN_FORCE_INLINE BOTAN_FN_ISA_SIMD_2X64 void blamka_G(SIMD_2x64& A0,
++                                                        SIMD_2x64& A1,
++                                                        SIMD_2x64& B0,
++                                                        SIMD_2x64& B1,
++                                                        SIMD_2x64& C0,
++                                                        SIMD_2x64& C1,
++                                                        SIMD_2x64& D0,
++                                                        SIMD_2x64& D1) {
+    A0 += B0 + SIMD_2x64::mul2_32(A0, B0);
+    A1 += B1 + SIMD_2x64::mul2_32(A1, B1);
+    D0 ^= A0;
+@@ -50,14 +50,14 @@
+    B1 = B1.rotr<63>();
+ }
+ 
+-BOTAN_FORCE_INLINE void blamka_R(SIMD_2x64& A0,
+-                                 SIMD_2x64& A1,
+-                                 SIMD_2x64& B0,
+-                                 SIMD_2x64& B1,
+-                                 SIMD_2x64& C0,
+-                                 SIMD_2x64& C1,
+-                                 SIMD_2x64& D0,
+-                                 SIMD_2x64& D1) {
++BOTAN_FORCE_INLINE BOTAN_FN_ISA_SIMD_2X64 void blamka_R(SIMD_2x64& A0,
++                                                        SIMD_2x64& A1,
++                                                        SIMD_2x64& B0,
++                                                        SIMD_2x64& B1,
++                                                        SIMD_2x64& C0,
++                                                        SIMD_2x64& C1,
++                                                        SIMD_2x64& D0,
++                                                        SIMD_2x64& D1) {
+    blamka_G(A0, A1, B0, B1, C0, C1, D0, D1);
+ 
+    SIMD_2x64::twist(B0, B1, C0, C1, D0, D1);
+@@ -67,7 +67,7 @@
+ 
+ }  // namespace
+ 
+-void Argon2::blamka_ssse3(uint64_t N[128], uint64_t T[128]) {
++void BOTAN_FN_ISA_SIMD_2X64 Argon2::blamka_ssse3(uint64_t N[128], uint64_t T[128]) {
+    for(size_t i = 0; i != 8; ++i) {
+       SIMD_2x64 Tv[8];
+       for(size_t j = 0; j != 4; ++j) {
+diff -ru botan.orig/src/lib/stream/chacha/chacha_simd32/chacha_simd32.cpp botan/src/lib/stream/chacha/chacha_simd32/chacha_simd32.cpp
+--- botan.orig/src/lib/stream/chacha/chacha_simd32/chacha_simd32.cpp	2026-02-15 10:13:09.400703894 +0000
++++ botan/src/lib/stream/chacha/chacha_simd32/chacha_simd32.cpp	2026-02-15 10:13:54.132569066 +0000
+@@ -12,7 +12,7 @@
+ namespace Botan {
+ 
+ //static
+-void ChaCha::chacha_simd32_x4(uint8_t output[64 * 4], uint32_t state[16], size_t rounds) {
++void BOTAN_FN_ISA_SIMD_4X32 ChaCha::chacha_simd32_x4(uint8_t output[64 * 4], uint32_t state[16], size_t rounds) {
+    BOTAN_ASSERT(rounds % 2 == 0, "Valid rounds");
+    const SIMD_4x32 CTR0 = SIMD_4x32(0, 1, 2, 3);
+ 
+diff -ru botan.orig/src/lib/stream/chacha/chacha_simd32/info.txt botan/src/lib/stream/chacha/chacha_simd32/info.txt
+--- botan.orig/src/lib/stream/chacha/chacha_simd32/info.txt	2026-02-15 10:13:09.400703894 +0000
++++ botan/src/lib/stream/chacha/chacha_simd32/info.txt	2026-02-15 10:13:54.132569066 +0000
+@@ -11,3 +11,14 @@
+ simd_4x32
+ cpuid
+ </requires>
++
++<isa>
++x86_32:ssse3
++x86_64:ssse3
++x32:ssse3
++arm32:neon
++arm64:neon
++ppc32:altivec
++ppc64:altivec
++loongarch64:lsx
++</isa>
+diff -ru botan.orig/src/lib/utils/simd/simd_2x64/simd_2x64.h botan/src/lib/utils/simd/simd_2x64/simd_2x64.h
+--- botan.orig/src/lib/utils/simd/simd_2x64/simd_2x64.h	2026-02-15 10:13:09.412703857 +0000
++++ botan/src/lib/utils/simd/simd_2x64/simd_2x64.h	2026-02-15 10:13:54.132569066 +0000
+@@ -35,28 +35,28 @@
+       // zero initialized
+       SIMD_2x64() : m_simd(_mm_setzero_si128()) {}
+ 
+-      static SIMD_2x64 load_le(const void* in) {
++      static SIMD_2x64 BOTAN_FN_ISA_SIMD_2X64 load_le(const void* in) {
+          return SIMD_2x64(_mm_loadu_si128(reinterpret_cast<const __m128i*>(in)));
+       }
+ 
+-      static SIMD_2x64 load_be(const void* in) { return SIMD_2x64::load_le(in).bswap(); }
++      static SIMD_2x64 BOTAN_FN_ISA_SIMD_2X64 load_be(const void* in) { return SIMD_2x64::load_le(in).bswap(); }
+ 
+       SIMD_2x64 BOTAN_FN_ISA_SIMD_2X64 bswap() const {
+          const auto idx = _mm_set_epi8(8, 9, 10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 4, 5, 6, 7);
+          return SIMD_2x64(_mm_shuffle_epi8(m_simd, idx));
+       }
+ 
+-      void store_le(uint64_t out[2]) const { this->store_le(reinterpret_cast<uint8_t*>(out)); }
++      void BOTAN_FN_ISA_SIMD_2X64 store_le(uint64_t out[2]) const { this->store_le(reinterpret_cast<uint8_t*>(out)); }
+ 
+-      void store_le(uint8_t out[]) const { _mm_storeu_si128(reinterpret_cast<__m128i*>(out), m_simd); }
++      void BOTAN_FN_ISA_SIMD_2X64 store_le(uint8_t out[]) const { _mm_storeu_si128(reinterpret_cast<__m128i*>(out), m_simd); }
+ 
+-      SIMD_2x64 operator+(const SIMD_2x64& other) const {
++      SIMD_2x64 BOTAN_FN_ISA_SIMD_2X64 operator+(const SIMD_2x64& other) const {
+          SIMD_2x64 retval(*this);
+          retval += other;
+          return retval;
+       }
+ 
+-      SIMD_2x64 operator^(const SIMD_2x64& other) const {
++      SIMD_2x64 BOTAN_FN_ISA_SIMD_2X64 operator^(const SIMD_2x64& other) const {
+          SIMD_2x64 retval(*this);
+          retval ^= other;
+          return retval;
+@@ -89,7 +89,7 @@
+       }
+ 
+       template <size_t ROT>
+-      SIMD_2x64 rotl() const {
++      SIMD_2x64 BOTAN_FN_ISA_SIMD_2X64 rotl() const {
+          return this->rotr<64 - ROT>();
+       }
+ 
+@@ -103,7 +103,8 @@
+       }
+ 
+       // Argon2 specific operation
+-      static void twist(SIMD_2x64& B0, SIMD_2x64& B1, SIMD_2x64& C0, SIMD_2x64& C1, SIMD_2x64& D0, SIMD_2x64& D1) {
++      static void BOTAN_FN_ISA_SIMD_2X64
++      twist(SIMD_2x64& B0, SIMD_2x64& B1, SIMD_2x64& C0, SIMD_2x64& C1, SIMD_2x64& D0, SIMD_2x64& D1) {
+          auto T0 = SIMD_2x64::alignr8(B1, B0);
+          auto T1 = SIMD_2x64::alignr8(B0, B1);
+          B0 = T0;
+@@ -120,7 +121,8 @@
+       }
+ 
+       // Argon2 specific operation
+-      static void untwist(SIMD_2x64& B0, SIMD_2x64& B1, SIMD_2x64& C0, SIMD_2x64& C1, SIMD_2x64& D0, SIMD_2x64& D1) {
++      static void BOTAN_FN_ISA_SIMD_2X64
++      untwist(SIMD_2x64& B0, SIMD_2x64& B1, SIMD_2x64& C0, SIMD_2x64& C1, SIMD_2x64& D0, SIMD_2x64& D1) {
+          auto T0 = SIMD_2x64::alignr8(B0, B1);
+          auto T1 = SIMD_2x64::alignr8(B1, B0);
+          B0 = T0;
+@@ -142,7 +144,7 @@
+          return SIMD_2x64(_mm_add_epi64(m, m));
+       }
+ 
+-      explicit SIMD_2x64(__m128i x) : m_simd(x) {}
++      explicit BOTAN_FN_ISA_SIMD_2X64 SIMD_2x64(__m128i x) : m_simd(x) {}
+ 
+    private:
+       __m128i m_simd;
+diff -ru botan.orig/src/lib/utils/simd/simd_4x32/simd_4x32.h botan/src/lib/utils/simd/simd_4x32/simd_4x32.h
+--- botan.orig/src/lib/utils/simd/simd_4x32/simd_4x32.h	2026-02-15 10:13:09.412703857 +0000
++++ botan/src/lib/utils/simd/simd_4x32/simd_4x32.h	2026-02-15 10:13:54.132569066 +0000
+@@ -193,15 +193,25 @@
+ #endif
+       }
+ 
+-      static SIMD_4x32 load_le(std::span<const uint8_t, 16> in) { return SIMD_4x32::load_le(in.data()); }
++      static SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 load_le(std::span<const uint8_t, 16> in) {
++         return SIMD_4x32::load_le(in.data());
++      }
+ 
+-      static SIMD_4x32 load_be(std::span<const uint8_t, 16> in) { return SIMD_4x32::load_be(in.data()); }
++      static SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 load_be(std::span<const uint8_t, 16> in) {
++         return SIMD_4x32::load_be(in.data());
++      }
+ 
+-      void store_le(uint32_t out[4]) const noexcept { this->store_le(reinterpret_cast<uint8_t*>(out)); }
++      void BOTAN_FN_ISA_SIMD_4X32 store_le(uint32_t out[4]) const noexcept {
++         this->store_le(reinterpret_cast<uint8_t*>(out));
++      }
+ 
+-      void store_be(uint32_t out[4]) const noexcept { this->store_be(reinterpret_cast<uint8_t*>(out)); }
++      void BOTAN_FN_ISA_SIMD_4X32 store_be(uint32_t out[4]) const noexcept {
++         this->store_be(reinterpret_cast<uint8_t*>(out));
++      }
+ 
+-      void store_le(uint64_t out[2]) const noexcept { this->store_le(reinterpret_cast<uint8_t*>(out)); }
++      void BOTAN_FN_ISA_SIMD_4X32 store_le(uint64_t out[2]) const noexcept {
++         this->store_le(reinterpret_cast<uint8_t*>(out));
++      }
+ 
+       /**
+       * Load a SIMD register with little-endian convention
+@@ -263,14 +273,14 @@
+ #endif
+       }
+ 
+-      void store_be(std::span<uint8_t, 16> out) const { this->store_be(out.data()); }
++      void BOTAN_FN_ISA_SIMD_4X32 store_be(std::span<uint8_t, 16> out) const { this->store_be(out.data()); }
+ 
+-      void store_le(std::span<uint8_t, 16> out) const { this->store_le(out.data()); }
++      void BOTAN_FN_ISA_SIMD_4X32 store_le(std::span<uint8_t, 16> out) const { this->store_le(out.data()); }
+ 
+       /*
+       * This is used for SHA-2/SHACAL2
+       */
+-      SIMD_4x32 sigma0() const noexcept {
++      SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 sigma0() const noexcept {
+ #if BOTAN_COMPILER_HAS_BUILTIN(__builtin_crypto_vshasigmaw) && defined(_ARCH_PWR8)
+          return SIMD_4x32(__builtin_crypto_vshasigmaw(raw(), 1, 0));
+ #else
+@@ -284,7 +294,7 @@
+       /*
+       * This is used for SHA-2/SHACAL2
+       */
+-      SIMD_4x32 sigma1() const noexcept {
++      SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 sigma1() const noexcept {
+ #if BOTAN_COMPILER_HAS_BUILTIN(__builtin_crypto_vshasigmaw) && defined(_ARCH_PWR8)
+          return SIMD_4x32(__builtin_crypto_vshasigmaw(raw(), 1, 0xF));
+ #else
+@@ -346,14 +356,14 @@
+       * Right rotation by a compile time constant
+       */
+       template <size_t ROT>
+-      SIMD_4x32 rotr() const noexcept {
++      SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 rotr() const noexcept {
+          return this->rotl<32 - ROT>();
+       }
+ 
+       /**
+       * Add elements of a SIMD vector
+       */
+-      SIMD_4x32 operator+(const SIMD_4x32& other) const noexcept {
++      SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 operator+(const SIMD_4x32& other) const noexcept {
+          SIMD_4x32 retval(*this);
+          retval += other;
+          return retval;
+@@ -362,7 +372,7 @@
+       /**
+       * Subtract elements of a SIMD vector
+       */
+-      SIMD_4x32 operator-(const SIMD_4x32& other) const noexcept {
++      SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 operator-(const SIMD_4x32& other) const noexcept {
+          SIMD_4x32 retval(*this);
+          retval -= other;
+          return retval;
+@@ -371,7 +381,7 @@
+       /**
+       * XOR elements of a SIMD vector
+       */
+-      SIMD_4x32 operator^(const SIMD_4x32& other) const noexcept {
++      SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 operator^(const SIMD_4x32& other) const noexcept {
+          SIMD_4x32 retval(*this);
+          retval ^= other;
+          return retval;
+@@ -380,7 +390,7 @@
+       /**
+       * Binary OR elements of a SIMD vector
+       */
+-      SIMD_4x32 operator|(const SIMD_4x32& other) const noexcept {
++      SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 operator|(const SIMD_4x32& other) const noexcept {
+          SIMD_4x32 retval(*this);
+          retval |= other;
+          return retval;
+@@ -389,7 +399,7 @@
+       /**
+       * Binary AND elements of a SIMD vector
+       */
+-      SIMD_4x32 operator&(const SIMD_4x32& other) const noexcept {
++      SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 operator&(const SIMD_4x32& other) const noexcept {
+          SIMD_4x32 retval(*this);
+          retval &= other;
+          return retval;
+@@ -431,7 +441,7 @@
+ #endif
+       }
+ 
+-      void operator^=(uint32_t other) noexcept { *this ^= SIMD_4x32::splat(other); }
++      void BOTAN_FN_ISA_SIMD_4X32 operator^=(uint32_t other) noexcept { *this ^= SIMD_4x32::splat(other); }
+ 
+       void operator|=(const SIMD_4x32& other) noexcept {
+ #if defined(BOTAN_SIMD_USE_SSSE3)
+@@ -652,7 +662,9 @@
+ #endif
+       }
+ 
+-      static inline SIMD_4x32 choose(const SIMD_4x32& mask, const SIMD_4x32& a, const SIMD_4x32& b) noexcept {
++      static inline SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 choose(const SIMD_4x32& mask,
++                                                            const SIMD_4x32& a,
++                                                            const SIMD_4x32& b) noexcept {
+ #if defined(BOTAN_SIMD_USE_ALTIVEC)
+          return SIMD_4x32(vec_sel(b.raw(), a.raw(), mask.raw()));
+ #elif defined(BOTAN_SIMD_USE_NEON)
+@@ -664,7 +676,9 @@
+ #endif
+       }
+ 
+-      static inline SIMD_4x32 majority(const SIMD_4x32& x, const SIMD_4x32& y, const SIMD_4x32& z) noexcept {
++      static inline SIMD_4x32 BOTAN_FN_ISA_SIMD_4X32 majority(const SIMD_4x32& x,
++                                                              const SIMD_4x32& y,
++                                                              const SIMD_4x32& z) noexcept {
+          return SIMD_4x32::choose(x ^ y, z, y);
+       }
+ 
+@@ -767,7 +781,7 @@
+ 
+       native_simd_type raw() const noexcept { return m_simd; }
+ 
+-      explicit SIMD_4x32(native_simd_type x) noexcept : m_simd(x) {}
++      explicit BOTAN_FN_ISA_SIMD_4X32 SIMD_4x32(native_simd_type x) noexcept : m_simd(x) {}
+ 
+    private:
+       native_simd_type m_simd;
+diff -ru botan.orig/src/lib/utils/simd/simd_4x64/simd_4x64.h botan/src/lib/utils/simd/simd_4x64/simd_4x64.h
+--- botan.orig/src/lib/utils/simd/simd_4x64/simd_4x64.h	2026-02-15 10:13:09.412703857 +0000
++++ botan/src/lib/utils/simd/simd_4x64/simd_4x64.h	2026-02-15 10:13:54.132569066 +0000
+@@ -56,7 +56,7 @@
+          return SIMD_4x64(_mm256_shuffle_epi8(m_simd, idx));
+       }
+ 
+-      void store_le(uint64_t out[4]) const { this->store_le(reinterpret_cast<uint8_t*>(out)); }
++      void BOTAN_FN_ISA_SIMD_4X64 store_le(uint64_t out[4]) const { this->store_le(reinterpret_cast<uint8_t*>(out)); }
+ 
+       BOTAN_FN_ISA_SIMD_4X64 void store_le(uint8_t out[]) const {
+          _mm256_storeu_si256(reinterpret_cast<__m256i*>(out), m_simd);
+@@ -66,13 +66,13 @@
+          _mm256_storeu2_m128i(reinterpret_cast<__m128i*>(outh), reinterpret_cast<__m128i*>(outl), m_simd);
+       }
+ 
+-      SIMD_4x64 operator+(const SIMD_4x64& other) const {
++      SIMD_4x64 BOTAN_FN_ISA_SIMD_4X64 operator+(const SIMD_4x64& other) const {
+          SIMD_4x64 retval(*this);
+          retval += other;
+          return retval;
+       }
+ 
+-      SIMD_4x64 operator^(const SIMD_4x64& other) const {
++      SIMD_4x64 BOTAN_FN_ISA_SIMD_4X64 operator^(const SIMD_4x64& other) const {
+          SIMD_4x64 retval(*this);
+          retval ^= other;
+          return retval;
+@@ -121,7 +121,7 @@
+       }
+ 
+       template <size_t ROT>
+-      SIMD_4x64 rotl() const {
++      SIMD_4x64 BOTAN_FN_ISA_SIMD_4X64 rotl() const {
+          return this->rotr<64 - ROT>();
+       }
+ 
+@@ -146,14 +146,14 @@
+       }
+ 
+       // Argon2 specific
+-      static void twist(SIMD_4x64& B, SIMD_4x64& C, SIMD_4x64& D) {
++      static void BOTAN_FN_ISA_SIMD_4X64 twist(SIMD_4x64& B, SIMD_4x64& C, SIMD_4x64& D) {
+          B = SIMD_4x64::permute_4x64<0b00'11'10'01>(B);
+          C = SIMD_4x64::permute_4x64<0b01'00'11'10>(C);
+          D = SIMD_4x64::permute_4x64<0b10'01'00'11>(D);
+       }
+ 
+       // Argon2 specific
+-      static void untwist(SIMD_4x64& B, SIMD_4x64& C, SIMD_4x64& D) {
++      static void BOTAN_FN_ISA_SIMD_4X64 untwist(SIMD_4x64& B, SIMD_4x64& C, SIMD_4x64& D) {
+          B = SIMD_4x64::permute_4x64<0b10'01'00'11>(B);
+          C = SIMD_4x64::permute_4x64<0b01'00'11'10>(C);
+          D = SIMD_4x64::permute_4x64<0b00'11'10'01>(D);

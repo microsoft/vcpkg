@@ -1,6 +1,6 @@
 {
   "name": "mcap",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "MCAP is a modular, performant, and serialization-agnostic container file format, useful for pub/sub and robotics applications.",
   "homepage": "https://mcap.dev/",
   "documentation": "https://mcap.dev/",

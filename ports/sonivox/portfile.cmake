@@ -2,9 +2,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EmbeddedSynth/sonivox
     REF "v${VERSION}"
-    SHA512 d9f8fb18f151ef3ba2352bcd66a97bc71056aab8ab9f78a061ffa475f68a80ede3c2c0deb374ad21eb2c1cb1d7521c3d7f8eeda72640e11f71c3526b275f5468
+    SHA512 85ce90ceb23aa0f372f4103881fb12385d9e27f9c58f6a37f6150d65dfc17e86a200d565b5036ad2374d6e3f9acc70136d99033caee6f350a4c250d15755fcbf
     HEAD_REF master
-	PATCHES "option-install-dependencies.patch"
 )
 
 vcpkg_cmake_configure(

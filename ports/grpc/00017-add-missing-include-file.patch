@@ -1,0 +1,39 @@
+diff --git a/include/grpc/event_engine/memory_request.h b/include/grpc/event_engine/memory_request.h
+index 76bcbb2..f5c3d89 100644
+--- a/include/grpc/event_engine/memory_request.h
++++ b/include/grpc/event_engine/memory_request.h
+@@ -16,7 +16,7 @@
+ 
+ #include <grpc/support/port_platform.h>
+ #include <stddef.h>
+-
++#include <string>
+ #include "absl/strings/string_view.h"
+ 
+ namespace grpc_event_engine {
+diff --git a/src/core/channelz/v2tov1/property_list.cc b/src/core/channelz/v2tov1/property_list.cc
+index 64bbb63..dc3c9b0 100644
+--- a/src/core/channelz/v2tov1/property_list.cc
++++ b/src/core/channelz/v2tov1/property_list.cc
+@@ -17,7 +17,7 @@
+ #include <cstdint>
+ #include <optional>
+ #include <string>
+-
++#include <limits>
+ #include "absl/strings/string_view.h"
+ #include "google/protobuf/any.upb.h"
+ #include "google/protobuf/duration.upb.h"
+diff --git a/src/core/util/glob.cc b/src/core/util/glob.cc
+index 1b1c16e..d13138d 100644
+--- a/src/core/util/glob.cc
++++ b/src/core/util/glob.cc
+@@ -13,7 +13,7 @@
+ // limitations under the License.
+ 
+ #include "absl/strings/string_view.h"
+-
++#include <algorithm>
+ namespace grpc_core {
+ 
+ namespace {

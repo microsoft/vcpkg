@@ -11,6 +11,7 @@ vcpkg_from_github(
         configure-zlib.patch
         fix_android.patch
         fix-x86-msvc-amalgamation.patch
+        botan-3.10-illegal-instruction.patch
 )
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/configure" DESTINATION "${SOURCE_PATH}")
 
