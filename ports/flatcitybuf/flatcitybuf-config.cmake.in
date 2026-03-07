@@ -1,0 +1,56 @@
+cmake_minimum_required(VERSION 3.16)
+
+# FlatCityBuf C++ Bindings CMake integration
+# This package wraps a Rust-compiled static library with a CXX bridge.
+# The CXX bridge source (lib.rs.cc) MUST be compiled together with your target.
+
+include(CMakeFindDependencyMacro)
+
+if(APPLE)
+    # macOS system frameworks required by the Rust runtime
+elseif(UNIX)
+    find_dependency(OpenSSL REQUIRED)
+endif()
+
+# ── Imported target: flatcitybuf::flatcitybuf ──────────────────────────────────
+if(NOT TARGET flatcitybuf::flatcitybuf)
+    add_library(flatcitybuf::flatcitybuf STATIC IMPORTED)
+
+    get_filename_component(_FCB_PREFIX "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)  # share/flatcitybuf -> share
+    get_filename_component(_FCB_PREFIX "${_FCB_PREFIX}" DIRECTORY)             # share -> root
+
+    set(_FCB_INCLUDE_DIR "${_FCB_PREFIX}/include/flatcitybuf")
+
+    # CXX bridge source that consumers must compile alongside their own code
+    set(FLATCITYBUF_CXX_BRIDGE_SOURCE "${_FCB_PREFIX}/share/flatcitybuf/lib.rs.cc"
+        CACHE FILEPATH "Path to the FlatCityBuf CXX bridge source (lib.rs.cc). Must be compiled with your target.")
+
+    set_target_properties(flatcitybuf::flatcitybuf PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES "${_FCB_INCLUDE_DIR}"
+    )
+
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set_target_properties(flatcitybuf::flatcitybuf PROPERTIES
+            IMPORTED_LOCATION "${_FCB_PREFIX}/debug/lib/${CMAKE_STATIC_LIBRARY_PREFIX}fcb_cpp${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        )
+    else()
+        set_target_properties(flatcitybuf::flatcitybuf PROPERTIES
+            IMPORTED_LOCATION "${_FCB_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}fcb_cpp${CMAKE_STATIC_LIBRARY_SUFFIX}"
+        )
+    endif()
+
+    # Platform-specific linker dependencies of the Rust core
+    if(APPLE)
+        set_target_properties(flatcitybuf::flatcitybuf PROPERTIES
+            INTERFACE_LINK_LIBRARIES "-framework Security;-framework CoreFoundation;-framework SystemConfiguration"
+        )
+    elseif(WIN32)
+        set_target_properties(flatcitybuf::flatcitybuf PROPERTIES
+            INTERFACE_LINK_LIBRARIES "ws2_32;userenv;bcrypt;ntdll"
+        )
+    elseif(UNIX)
+        set_target_properties(flatcitybuf::flatcitybuf PROPERTIES
+            INTERFACE_LINK_LIBRARIES "OpenSSL::SSL;OpenSSL::Crypto;pthread;dl;m"
+        )
+    endif()
+endif()

@@ -1,0 +1,14 @@
+{
+  "name": "flatcitybuf",
+  "version": "0.7.4",
+  "description": "C++ bindings for FlatCityBuf – a fast, FlatBuffers-based encoding of CityJSON. Provides a pre-built static library (Rust core) with CXX bridge headers and a high-level C++17 API.",
+  "homepage": "https://github.com/cityjson/flatcitybuf",
+  "license": "MIT",
+  "supports": "(linux & (x64 | arm64)) | (osx & (x64 | arm64)) | (windows & x64)",
+  "dependencies": [
+    {
+      "name": "openssl",
+      "platform": "linux"
+    }
+  ]
+}
