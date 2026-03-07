@@ -395,13 +395,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 6716c5b..455f27d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -90,9 +90,7 @@ SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES
+@@ -90,9 +90,8 @@ SET_TARGET_PROPERTIES(${LIB_NAME} PROPERTIES
  IF (MSVC)
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE)
     IF (BUILD_SHARED_LIBS)
 -      # MSVC shared is broken; better fix would be to "hide all symbols
 -      # for all compilers", and export public symbols with a macro.
 -      SET_PROPERTY(TARGET ${LIB_NAME} PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS ON)
++   ELSE()
 +      ADD_DEFINITIONS(-DCCFITS_STATIC_DEFINE)
     ENDIF (BUILD_SHARED_LIBS)
  ENDIF(MSVC)

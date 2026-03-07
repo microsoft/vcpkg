@@ -169,7 +169,6 @@ cairo[x11]:arm64-linux=feature-fails
 cairo[x11](android | osx)=skip # No x11 on osx
 calceph:arm64-linux=fail
 ccd:arm64-linux=fail
-ccfits:arm64-linux=cascade
 cctag:x64-windows-static-md=fail
 cctag[cuda]:arm64-linux=feature-fails
 cctag[cuda]:x64-linux=feature-fails
