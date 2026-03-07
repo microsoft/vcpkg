@@ -1,6 +1,6 @@
 {
   "name": "fltk",
-  "version": "1.3.11",
+  "version": "1.4.2",
   "description": "FLTK (pronounced fulltick) is a cross-platform C++ GUI toolkit for UNIX/Linux (X11), Microsoft Windows, and MacOS X. FLTK provides modern GUI functionality without the bloat and supports 3D graphics via OpenGL and its built-in GLUT emulation.",
   "homepage": "https://www.fltk.org/",
   "license": null,
@@ -39,6 +39,23 @@
       "description": "OpenGL support",
       "dependencies": [
         "opengl"
+      ]
+    },
+    "python": {
+      "description": "Enable Python bindings",
+      "dependencies": [
+        "python3",
+        {
+          "name": "python3",
+          "host": true
+        }
+      ]
+    },
+    "x11": {
+      "description": "Build with X11 autolaunch support",
+      "supports": "!windows",
+      "dependencies": [
+        "libx11"
       ]
     }
   }
