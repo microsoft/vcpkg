@@ -34,7 +34,7 @@ endif
 .PHONY: install-stlib
 install-stlib:
 	$(MAKE) -C src/common install -o all
-	rm -f '$(DESTDIR)$(libdir)/libpgcommon_shlib.a'
+	mv -f '$(DESTDIR)$(libdir)/libpgcommon_shlib.a' '$(DESTDIR)$(libdir)/libpgcommon.a'
 	$(MAKE) -C src/port install -o all
 	rm -f '$(DESTDIR)$(libdir)/libpgport_shlib.a'
 
