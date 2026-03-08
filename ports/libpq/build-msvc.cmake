@@ -54,17 +54,21 @@ subdir('scripts')
         "postgres_inc_d += 'src/include/port/win32_msvc'"
         "postgres_inc_d += 'src/include/port/win32_msvc'\n  postgres_inc_d += get_option('extra_include_dirs') # vcpkg: moved here for correct priority")
 
-    # Prevent pg_getopt.h from including getopt-win32's <getopt.h> via
-    # extra_include_dirs. That header renames optarg -> optarg_a via macros and
-    # declares them with __declspec(dllimport), causing linker errors against
-    # the static libpgport.a which defines plain optarg. PostgreSQL always uses
-    # its own getopt on Windows (always_replace_getopt = true), so the external
-    # header is unnecessary. Skipping the include makes pg_getopt.h fall through
-    # to its own plain extern declarations instead.
-    vcpkg_replace_string("${source_path}/src/include/pg_getopt.h"
-        "#ifdef HAVE_GETOPT_H" "#if defined(HAVE_GETOPT_H) && !defined(WIN32)")
-    vcpkg_replace_string("${source_path}/src/include/pg_getopt.h"
-        "#ifndef HAVE_GETOPT_H" "#if !defined(HAVE_GETOPT_H) || defined(WIN32)")
+    # Prevent meson from detecting getopt-win32's <getopt.h> via extra_include_dirs.
+    # That header renames optarg -> optarg_a via macros and declares them with
+    # __declspec(dllimport), causing linker errors against the static libpgport.a
+    # which defines plain optarg. It also provides struct option, which prevents
+    # PostgreSQL's own getopt_long.h from defining it. PostgreSQL always uses its
+    # own getopt on Windows (always_replace_getopt = true), so the external header
+    # is unnecessary. Removing it from header_checks means:
+    #   - HAVE_GETOPT_H is not set -> pg_getopt.h uses plain extern declarations
+    #   - HAVE_STRUCT_OPTION is not set -> getopt_long.h provides struct option
+    vcpkg_replace_string("${source_path}/meson.build"
+        "'getopt.h'," "# 'getopt.h', # vcpkg: skip to avoid getopt-win32 header pollution")
+    # The struct option check references cdata.get('HAVE_GETOPT_H') which would
+    # fail if the key doesn't exist. Provide a default value of 0.
+    vcpkg_replace_string("${source_path}/meson.build"
+        "cdata.get('HAVE_GETOPT_H')" "cdata.get('HAVE_GETOPT_H', 0)")
 
     # Define generated_backend_sources (normally set in backend/meson.build,
     # referenced in conflict-checking code)
@@ -111,11 +115,19 @@ subdir('scripts')
     vcpkg_list(SET MESON_OPTIONS_RELEASE)
     vcpkg_list(SET MESON_OPTIONS_DEBUG)
     if("python" IN_LIST FEATURES)
-        # Use the vcpkg python3 interpreter (which has matching dev libraries)
-        # instead of the standalone tools Python (which has no SDK).
-        string(REPLACE [[\]] [[/]] VCPKG_PYTHON3_PATH "${CURRENT_INSTALLED_DIR}/tools/python3/python.exe")
-        list(APPEND MESON_OPTIONS_RELEASE -Dplpython=enabled "-DPYTHON=${VCPKG_PYTHON3_PATH}")
-        list(APPEND MESON_OPTIONS_DEBUG -Dplpython=disabled)
+        if(VCPKG_CROSSCOMPILING)
+            # plpython can't be configured when cross-compiling because meson
+            # needs to run the Python interpreter at configure time, but the
+            # target binary won't execute on the build host.
+            message(STATUS "Disabling plpython for cross-compilation build")
+            list(APPEND MESON_OPTIONS -Dplpython=disabled)
+        else()
+            # Use the vcpkg python3 interpreter (which has matching dev libraries)
+            # instead of the standalone tools Python (which has no SDK).
+            string(REPLACE [[\]] [[/]] VCPKG_PYTHON3_PATH "${CURRENT_INSTALLED_DIR}/tools/python3/python.exe")
+            list(APPEND MESON_OPTIONS_RELEASE -Dplpython=enabled "-DPYTHON=${VCPKG_PYTHON3_PATH}")
+            list(APPEND MESON_OPTIONS_DEBUG -Dplpython=disabled)
+        endif()
     endif()
     if("tcl" IN_LIST FEATURES)
         list(APPEND MESON_OPTIONS -Dpltcl=enabled -Dtcl_version=tcl90)
