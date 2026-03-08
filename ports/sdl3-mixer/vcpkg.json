@@ -1,11 +1,10 @@
 {
   "name": "sdl3-mixer",
-  "version": "3.0.0-f9566f4",
+  "version": "3.1.2-prerelease",
   "description": "Multi-channel audio mixer library for SDL.",
   "homepage": "https://github.com/libsdl-org/SDL_mixer",
   "license": "Zlib",
   "dependencies": [
-    "libvorbis",
     {
       "name": "sdl3",
       "default-features": false
@@ -17,8 +16,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "wavpack"
+    }
   ],
   "features": {
     "fluidsynth": {
@@ -33,10 +31,15 @@
         "libflac"
       ]
     },
-    "libmodplug": {
-      "description": "Use libmodplug to play MOD audio format.",
+    "libvorbis": {
+      "description": "Use libvorbis to play Vorbis audio format.",
       "dependencies": [
-        "libmodplug",
+        "libvorbis"
+      ]
+    },
+    "libxmp": {
+      "description": "Use libxmp to open MOD files.",
+      "dependencies": [
         "libxmp"
       ]
     },
@@ -50,6 +53,12 @@
       "description": "Use opusfile to play Opus audio format.",
       "dependencies": [
         "opusfile"
+      ]
+    },
+    "wavpack": {
+      "description": "Use wavpack to play WAV audio format.",
+      "dependencies": [
+        "wavpack"
       ]
     }
   }

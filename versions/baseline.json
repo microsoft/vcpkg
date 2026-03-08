@@ -8976,12 +8976,12 @@
       "baseline": "3.4.0",
       "port-version": 0
     },
-    "sdl3-shadercross": {
-      "baseline": "3.0.0-preview1",
+    "sdl3-mixer": {
+      "baseline": "3.1.2-prerelease",
       "port-version": 0
     },
-    "sdl3-mixer": {
-      "baseline": "3.0.0-f9566f4",
+    "sdl3-shadercross": {
+      "baseline": "3.0.0-preview1",
       "port-version": 0
     },
     "sdl3-ttf": {
