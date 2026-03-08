@@ -22,59 +22,16 @@ subdir('psql')
 subdir('scripts')
 ]=])
 
-    # Main meson.build: skip contrib, tests, docs, and all post-build
-    # test/install infrastructure. Commenting out individual subdir() calls is
-    # insufficient because the test infrastructure section references many
-    # variables defined in those subdirs (pg_regress, regress_module, docs, etc.).
-    # Instead, truncate everything from the "all targets" section onward.
-    vcpkg_replace_string("${source_path}/meson.build"
-        "subdir('contrib')" "# subdir('contrib') # vcpkg: skip")
-    vcpkg_replace_string("${source_path}/meson.build"
-        "subdir('src/test')" "# subdir('src/test') # vcpkg: skip")
-    vcpkg_replace_string("${source_path}/meson.build"
-        "subdir('src/interfaces/ecpg/test')" "# subdir('src/interfaces/ecpg/test') # vcpkg: skip")
-    vcpkg_replace_string("${source_path}/meson.build"
-        "subdir('doc/src/sgml')" "# subdir('doc/src/sgml') # vcpkg: skip")
-
     # Truncate meson.build before the test/pseudo-target sections that reference
-    # variables from skipped subdirs (pg_regress, regress_module, docs, etc.)
+    # variables from skipped subdirs (pg_regress, regress_module, docs, etc.).
+    # The subdirs themselves are already commented out by windows/meson-vcpkg.patch,
+    # but the test infrastructure section still references variables from them.
     file(READ "${source_path}/meson.build" meson_content)
     string(FIND "${meson_content}" "# all targets that require building code" truncate_pos)
     if(NOT truncate_pos EQUAL -1)
         string(SUBSTRING "${meson_content}" 0 ${truncate_pos} meson_content)
         file(WRITE "${source_path}/meson.build" "${meson_content}")
     endif()
-
-    # Move extra_include_dirs after platform-specific includes so that
-    # PostgreSQL's own headers (e.g. port/win32_msvc/dirent.h) take priority
-    # over any conflicting headers from vcpkg dependencies.
-    vcpkg_replace_string("${source_path}/meson.build"
-        "postgres_inc_d += get_option('extra_include_dirs')" "# postgres_inc_d += get_option('extra_include_dirs') # vcpkg: moved below")
-    vcpkg_replace_string("${source_path}/meson.build"
-        "postgres_inc_d += 'src/include/port/win32_msvc'"
-        "postgres_inc_d += 'src/include/port/win32_msvc'\n  postgres_inc_d += get_option('extra_include_dirs') # vcpkg: moved here for correct priority")
-
-    # Prevent meson from detecting getopt-win32's <getopt.h> via extra_include_dirs.
-    # That header renames optarg -> optarg_a via macros and declares them with
-    # __declspec(dllimport), causing linker errors against the static libpgport.a
-    # which defines plain optarg. It also provides struct option, which prevents
-    # PostgreSQL's own getopt_long.h from defining it. PostgreSQL always uses its
-    # own getopt on Windows (always_replace_getopt = true), so the external header
-    # is unnecessary. Removing it from header_checks means:
-    #   - HAVE_GETOPT_H is not set -> pg_getopt.h uses plain extern declarations
-    #   - HAVE_STRUCT_OPTION is not set -> getopt_long.h provides struct option
-    vcpkg_replace_string("${source_path}/meson.build"
-        "'getopt.h'," "# 'getopt.h', # vcpkg: skip to avoid getopt-win32 header pollution")
-    # The struct option check references cdata.get('HAVE_GETOPT_H') which would
-    # fail if the key doesn't exist. Provide a default value of 0.
-    vcpkg_replace_string("${source_path}/meson.build"
-        "cdata.get('HAVE_GETOPT_H')" "cdata.get('HAVE_GETOPT_H', 0)")
-
-    # Define generated_backend_sources (normally set in backend/meson.build,
-    # referenced in conflict-checking code)
-    vcpkg_replace_string("${source_path}/meson.build"
-        "generated_backend_headers = []"
-        "generated_backend_headers = []\ngenerated_backend_sources = []")
 
     # For static builds, remove __declspec(dllimport) from installed headers
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -137,13 +94,27 @@ subdir('scripts')
     endif()
     if("tcl" IN_LIST FEATURES)
         list(APPEND MESON_OPTIONS -Dpltcl=enabled)
-        # Tcl library naming on Windows: tcl90 (shared), tcl90s (static).
-        # vcpkg separates debug/release via directory (lib/ vs debug/lib/)
-        # rather than filename suffixes.
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            list(APPEND MESON_OPTIONS -Dtcl_version=tcl90s)
+        # Find the actual Tcl library names since the tcl port uses
+        # Tcl-specific naming conventions (tcl90, tcl90s, tcl90g, tcl90sg).
+        find_library(TCL_LIBRARY_RELEASE
+            NAMES tcl90 tcl90s
+            PATHS "${CURRENT_INSTALLED_DIR}/lib"
+            NO_DEFAULT_PATH)
+        find_library(TCL_LIBRARY_DEBUG
+            NAMES tcl90g tcl90sg tcl90 tcl90s
+            PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
+            NO_DEFAULT_PATH)
+        if(TCL_LIBRARY_RELEASE)
+            get_filename_component(_tcl_rel_name "${TCL_LIBRARY_RELEASE}" NAME_WE)
+            list(APPEND MESON_OPTIONS_RELEASE "-Dtcl_version=${_tcl_rel_name}")
         else()
-            list(APPEND MESON_OPTIONS -Dtcl_version=tcl90)
+            list(APPEND MESON_OPTIONS_RELEASE -Dtcl_version=tcl90)
+        endif()
+        if(TCL_LIBRARY_DEBUG)
+            get_filename_component(_tcl_dbg_name "${TCL_LIBRARY_DEBUG}" NAME_WE)
+            list(APPEND MESON_OPTIONS_DEBUG "-Dtcl_version=${_tcl_dbg_name}")
+        else()
+            list(APPEND MESON_OPTIONS_DEBUG -Dtcl_version=tcl90)
         endif()
     endif()
 

@@ -19,6 +19,8 @@ vcpkg_extract_source_archive(
         windows/macro-def.patch
         windows/spin_delay.patch
         windows/tcl-9.0-alpha.patch
+        windows/meson-vcpkg.patch
+        windows/getopt.patch
 )
 
 file(GLOB _py3_include_path "${CURRENT_HOST_INSTALLED_DIR}/include/python3*")
