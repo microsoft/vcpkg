@@ -14,7 +14,6 @@ vcpkg_from_github(
         disable-test.patch
         disable-openctm.patch
         disable-warning-as-error.patch
-        support-32bit.patch
         fix-iosfwd.patch
 )
 
