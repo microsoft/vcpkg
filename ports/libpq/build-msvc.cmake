@@ -160,12 +160,17 @@ subdir('scripts')
     )
 
     # Extra include/lib dirs for vcpkg dependencies (only if they exist;
-    # with no optional deps installed, CURRENT_INSTALLED_DIR may lack these)
+    # with no optional deps installed, CURRENT_INSTALLED_DIR may lack these).
+    # Debug and release use different lib dirs (debug libs have different
+    # suffixes, e.g. tcl90g.lib vs tcl90.lib).
     if(EXISTS "${CURRENT_INSTALLED_DIR}/include")
         list(APPEND MESON_OPTIONS "-Dextra_include_dirs=['${CURRENT_INSTALLED_DIR}/include']")
     endif()
     if(EXISTS "${CURRENT_INSTALLED_DIR}/lib")
-        list(APPEND MESON_OPTIONS "-Dextra_lib_dirs=['${CURRENT_INSTALLED_DIR}/lib']")
+        list(APPEND MESON_OPTIONS_RELEASE "-Dextra_lib_dirs=['${CURRENT_INSTALLED_DIR}/lib']")
+    endif()
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/debug/lib")
+        list(APPEND MESON_OPTIONS_DEBUG "-Dextra_lib_dirs=['${CURRENT_INSTALLED_DIR}/debug/lib']")
     endif()
 
     vcpkg_configure_meson(
