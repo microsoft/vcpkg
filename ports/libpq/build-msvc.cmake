@@ -54,14 +54,17 @@ subdir('scripts')
         "postgres_inc_d += 'src/include/port/win32_msvc'"
         "postgres_inc_d += 'src/include/port/win32_msvc'\n  postgres_inc_d += get_option('extra_include_dirs') # vcpkg: moved here for correct priority")
 
-    # Prevent meson from detecting getopt-win32's getopt.h via extra_include_dirs.
-    # PostgreSQL always uses its own getopt on Windows (always_replace_getopt = true),
-    # but if HAVE_GETOPT_H is set, pg_getopt.h will #include <getopt.h> which picks
-    # up getopt-win32's header. That header renames optarg -> optarg_a via macros and
-    # declares them with __declspec(dllimport), causing linker errors against the
-    # static libpgport.a which defines plain optarg.
-    vcpkg_replace_string("${source_path}/meson.build"
-        "'getopt.h'," "# 'getopt.h', # vcpkg: skip to avoid getopt-win32 header pollution")
+    # Prevent pg_getopt.h from including getopt-win32's <getopt.h> via
+    # extra_include_dirs. That header renames optarg -> optarg_a via macros and
+    # declares them with __declspec(dllimport), causing linker errors against
+    # the static libpgport.a which defines plain optarg. PostgreSQL always uses
+    # its own getopt on Windows (always_replace_getopt = true), so the external
+    # header is unnecessary. Skipping the include makes pg_getopt.h fall through
+    # to its own plain extern declarations instead.
+    vcpkg_replace_string("${source_path}/src/include/pg_getopt.h"
+        "#ifdef HAVE_GETOPT_H" "#if defined(HAVE_GETOPT_H) && !defined(WIN32)")
+    vcpkg_replace_string("${source_path}/src/include/pg_getopt.h"
+        "#ifndef HAVE_GETOPT_H" "#if !defined(HAVE_GETOPT_H) || defined(WIN32)")
 
     # Define generated_backend_sources (normally set in backend/meson.build,
     # referenced in conflict-checking code)
