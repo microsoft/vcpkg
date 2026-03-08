@@ -559,6 +559,7 @@ orc:arm64-android=fail
 orc:arm64-linux=fail
 orc:x64-android=fail
 orefkov-simstr:arm64-linux=fail
+osg:arm64-linux=fail
 paraview:arm64-windows-static-md=fail
 paraview:arm64-windows=fail
 pcapplusplus:arm64-linux=fail
