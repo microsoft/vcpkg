@@ -1,14 +1,8 @@
-vcpkg_download_distfile(ANDROID_LOCALECONV_L_PATCH
-    URLS https://github.com/harfbuzz/harfbuzz/commit/ef8f53fd64eebca831548c3a3d92932746970b16.patch?full_index=1
-    FILENAME harfbuzz-fix-android-localeconv-l.patch
-    SHA512 2c27889d0ec4cd8698c08ff27d650751ba4f6fa1eece08c280ee03d06e426addea459930c2ac956224c25a3bdbcd5ab841a61ec505e0015d92c5176ab50d5ec0
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 0d4bedae16b0cbccccd5dae3e51cb3252271615e335cf515ab67bfc911404c21dda1b61e470cf23b8fdbcd1c8de8e8272541c8b195c159632f07347a399f18f6
+    SHA512 27ef2976b89b50af8501b7dd51f9bc39b86da12a03da80d30644e202d3c23820f0c40adcab42537955cd7094356ead091c275c58251c308e598dd6c461083250
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
