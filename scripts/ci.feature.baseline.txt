@@ -382,7 +382,6 @@ gapp:arm64-osx=fail # requires c++20
 gapp(android)=fail # requires c++20
 gdal[arrow,parquet](!(arm64 | x64))=cascade
 gdal[aws-ec2-windows](!windows)=cascade
-gdal[cfitsio]:arm64-linux=cascade
 gdal[iconv]:arm64-linux=feature-fails
 gdal[libxml2]:arm64-linux=feature-fails
 gdbm[readline]:arm64-linux=feature-fails
