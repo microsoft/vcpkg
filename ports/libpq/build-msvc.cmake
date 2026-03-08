@@ -120,11 +120,14 @@ subdir('scripts')
         "perl = ['${PERL_PATH}']"
     )
 
-    # Extra include/lib dirs for vcpkg dependencies
-    list(APPEND MESON_OPTIONS
-        "-Dextra_include_dirs=['${CURRENT_INSTALLED_DIR}/include']"
-        "-Dextra_lib_dirs=['${CURRENT_INSTALLED_DIR}/lib']"
-    )
+    # Extra include/lib dirs for vcpkg dependencies (only if they exist;
+    # with no optional deps installed, CURRENT_INSTALLED_DIR may lack these)
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/include")
+        list(APPEND MESON_OPTIONS "-Dextra_include_dirs=['${CURRENT_INSTALLED_DIR}/include']")
+    endif()
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib")
+        list(APPEND MESON_OPTIONS "-Dextra_lib_dirs=['${CURRENT_INSTALLED_DIR}/lib']")
+    endif()
 
     vcpkg_configure_meson(
         SOURCE_PATH "${source_path}"
