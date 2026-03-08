@@ -94,28 +94,38 @@ subdir('scripts')
     endif()
     if("tcl" IN_LIST FEATURES)
         list(APPEND MESON_OPTIONS -Dpltcl=enabled)
-        # Find the actual Tcl library names since the tcl port uses
-        # Tcl-specific naming conventions (tcl90, tcl90s, tcl90g, tcl90sg).
-        find_library(TCL_LIBRARY_RELEASE
-            NAMES tcl90 tcl90s
-            PATHS "${CURRENT_INSTALLED_DIR}/lib"
-            NO_DEFAULT_PATH)
-        find_library(TCL_LIBRARY_DEBUG
-            NAMES tcl90g tcl90sg tcl90 tcl90s
-            PATHS "${CURRENT_INSTALLED_DIR}/debug/lib"
-            NO_DEFAULT_PATH)
-        if(TCL_LIBRARY_RELEASE)
-            get_filename_component(_tcl_rel_name "${TCL_LIBRARY_RELEASE}" NAME_WE)
-            list(APPEND MESON_OPTIONS_RELEASE "-Dtcl_version=${_tcl_rel_name}")
+        # The vcpkg tcl port doesn't generate pkg-config files on Windows,
+        # so meson's dependency('tcl90') fails. Its fallback cc.find_library()
+        # also fails because meson's link-test probe doesn't work reliably
+        # with vcpkg's directory layout. Generate .pc files so meson can
+        # find Tcl through its preferred pkg-config path.
+        # Tcl naming: tcl90 (dynamic), tcl90s (static), +g suffix for debug.
+        set(_tcl_pc_name "tcl90")
+        # Determine the release library name
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            set(_tcl_rel_libname "tcl90s")
         else()
-            list(APPEND MESON_OPTIONS_RELEASE -Dtcl_version=tcl90)
+            set(_tcl_rel_libname "tcl90")
         endif()
-        if(TCL_LIBRARY_DEBUG)
-            get_filename_component(_tcl_dbg_name "${TCL_LIBRARY_DEBUG}" NAME_WE)
-            list(APPEND MESON_OPTIONS_DEBUG "-Dtcl_version=${_tcl_dbg_name}")
+        # Generate release .pc file
+        set(_tcl_pc_dir "${CURRENT_INSTALLED_DIR}/lib/pkgconfig")
+        file(MAKE_DIRECTORY "${_tcl_pc_dir}")
+        file(WRITE "${_tcl_pc_dir}/${_tcl_pc_name}.pc"
+"prefix=${CURRENT_INSTALLED_DIR}\nlibdir=\${prefix}/lib\nincludedir=\${prefix}/include\n\nName: ${_tcl_pc_name}\nDescription: Tcl scripting language\nVersion: 9.0\nLibs: -L\${libdir} -l${_tcl_rel_libname}\nCflags: -I\${includedir}\n")
+        # Determine the debug library name
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            set(_tcl_dbg_libname "tcl90sg")
         else()
-            list(APPEND MESON_OPTIONS_DEBUG -Dtcl_version=tcl90)
+            set(_tcl_dbg_libname "tcl90g")
         endif()
+        # Generate debug .pc file
+        if(NOT VCPKG_BUILD_TYPE)
+            set(_tcl_pc_dbg_dir "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig")
+            file(MAKE_DIRECTORY "${_tcl_pc_dbg_dir}")
+            file(WRITE "${_tcl_pc_dbg_dir}/${_tcl_pc_name}.pc"
+"prefix=${CURRENT_INSTALLED_DIR}/debug\nlibdir=\${prefix}/lib\nincludedir=${CURRENT_INSTALLED_DIR}/include\n\nName: ${_tcl_pc_name}\nDescription: Tcl scripting language\nVersion: 9.0\nLibs: -L\${libdir} -l${_tcl_dbg_libname}\nCflags: -I\${includedir}\n")
+        endif()
+        list(APPEND MESON_OPTIONS "-Dtcl_version=${_tcl_pc_name}")
     endif()
 
     # Provide paths to required tools
