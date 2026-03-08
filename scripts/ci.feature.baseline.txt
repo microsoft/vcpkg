@@ -478,7 +478,6 @@ hdf5[parallel]:arm64-linux=cascade
 hdf5[parallel](android)=cascade
 hdf5[parallel](arm64 & windows)=cascade
 hdf5[threadsafe](android)=feature-fails # pthread_setcancelstate
-healpix:arm64-linux=cascade
 hello-imgui[experimental-dx11-binding](!windows | uwp)=cascade
 hello-imgui[experimental-dx12-binding](x86 | !windows | uwp)=cascade
 hello-imgui[freetype-lunasvg]=skip # see https://github.com/microsoft/vcpkg/issues/44212
