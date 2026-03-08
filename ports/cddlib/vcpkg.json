@@ -1,6 +1,6 @@
 {
   "name": "cddlib",
-  "version-string": "0.94m",
+  "version-string": "0.94n",
   "description": "C implementation of the Double Description Method",
   "homepage": "https://github.com/cddlib/cddlib",
   "license": "GPL-2.0-or-later",

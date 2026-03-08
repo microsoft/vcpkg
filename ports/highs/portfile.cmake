@@ -2,13 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ERGO-Code/HiGHS
     REF "v${VERSION}"
-    SHA512 a4c3827e76f264c7fd155ce945d35b421027bf668cdee16088b7217e616f0bef739bd9ecf61db7b77b52c8af56ab0429f9aff5baf4e0fa36dbc2d7682ef4b21f
+    SHA512 e5547c16bd9dc0eb0465322e11195e7d67205b43ea9e830bcd6d272dacb4edbe4c98f852e4833bb3b37771146654e495be464af0887e1da227e439ca2d7b496e
     HEAD_REF master
+    PATCHES
+        fix-install-dirs.patch
 )
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS 
+    OPTIONS
         -DFAST_BUILD=ON
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF

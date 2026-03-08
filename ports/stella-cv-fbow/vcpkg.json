@@ -1,0 +1,25 @@
+{
+  "name": "stella-cv-fbow",
+  "version": "0.0.1",
+  "port-version": 1,
+  "description": "This is a modified version of the original Fast Bag of Words by @rmsalinas.",
+  "homepage": "https://github.com/stella-cv/FBoW",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "highgui"
+      ]
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "rp-ntuples",
+  "version": "0.1.4",
+  "description": "A C++ ntuple library for structured data storage and processing",
+  "homepage": "https://github.com/RPeschke/ntuples",
+  "license": "MIT",
+  "dependencies": [
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "hlslpp",
-  "version": "3.6",
+  "version": "3.8",
   "description": "Math library using HLSL syntax with multiplatform SIMD support.",
   "homepage": "https://github.com/redorav/hlslpp",
   "license": "MIT",

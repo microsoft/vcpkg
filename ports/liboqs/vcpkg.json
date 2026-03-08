@@ -1,6 +1,6 @@
 {
   "name": "liboqs",
-  "version": "0.12.0",
+  "version": "0.15.0",
   "description": "open source C library for quantum-safe cryptographic algorithms.",
   "homepage": "https://openquantumsafe.org/",
   "license": "MIT",

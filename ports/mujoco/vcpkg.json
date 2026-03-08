@@ -1,6 +1,6 @@
 {
   "name": "mujoco",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Multi-Joint dynamics with Contact.",
   "homepage": "https://mujoco.org",
   "license": "Apache-2.0",
@@ -16,9 +16,9 @@
     "lodepng",
     "marchingcubecpp",
     "qhull",
-    "sdflib",
     "tinyobjloader",
     "tinyxml2",
+    "trianglemeshdistance",
     {
       "name": "vcpkg-cmake",
       "host": true

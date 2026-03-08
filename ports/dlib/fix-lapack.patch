@@ -1,0 +1,98 @@
+diff --git a/dlib/CMakeLists.txt b/dlib/CMakeLists.txt
+index 5a3135b3b8..0ce2996f9a 100644
+--- a/dlib/CMakeLists.txt
++++ b/dlib/CMakeLists.txt
+@@ -612,18 +612,10 @@ if (NOT TARGET dlib)
+          # Try to find BLAS, LAPACK and MKL
+          include(cmake_utils/find_blas.cmake)
+ 
+-         if (DLIB_USE_BLAS)
+-            if (blas_found)
+-               list (APPEND dlib_needed_public_libraries ${blas_libraries})
+-            else()
+-               set(DLIB_USE_BLAS OFF CACHE STRING ${DLIB_USE_BLAS_STR} FORCE )
+-               toggle_preprocessor_switch(DLIB_USE_BLAS)
+-            endif()
+-         endif()
+-
+          if (DLIB_USE_LAPACK)
+             if (lapack_found)
+                list (APPEND dlib_needed_public_libraries ${lapack_libraries})
++               string(APPEND pkg_config_dlib_requires_private " lapack")
+                if (lapack_with_underscore)
+                   set(LAPACK_FORCE_UNDERSCORE 1)
+                   enable_preprocessor_switch(LAPACK_FORCE_UNDERSCORE)
+@@ -637,6 +629,16 @@ if (NOT TARGET dlib)
+             endif()
+          endif()
+ 
++         if (DLIB_USE_BLAS)
++            if (blas_found)
++               list (APPEND dlib_needed_public_libraries ${blas_libraries})
++               string(APPEND pkg_config_dlib_requires_private " blas")
++            else()
++               set(DLIB_USE_BLAS OFF CACHE STRING ${DLIB_USE_BLAS_STR} FORCE )
++               toggle_preprocessor_switch(DLIB_USE_BLAS)
++            endif()
++         endif()
++
+          if (DLIB_USE_MKL_FFT)
+             if (found_intel_mkl AND found_intel_mkl_headers)
+                list (APPEND dlib_needed_public_includes ${mkl_include_dir})
+diff --git a/dlib/cmake_utils/dlibConfig.cmake.in b/dlib/cmake_utils/dlibConfig.cmake.in
+index cc7b4a21d7..918707a418 100644
+--- a/dlib/cmake_utils/dlibConfig.cmake.in
++++ b/dlib/cmake_utils/dlibConfig.cmake.in
+@@ -38,6 +38,8 @@ endif()
+ if("@DLIB_LINK_WITH_SQLITE3@")
+    find_dependency(unofficial-sqlite3 CONFIG)
+ endif()
++find_dependency(BLAS)
++find_dependency(LAPACK)
+ 
+ set(dlib_LIBRARIES dlib::dlib)
+ set(dlib_LIBS      dlib::dlib)
+diff --git a/dlib/cmake_utils/find_blas.cmake b/dlib/cmake_utils/find_blas.cmake
+index 21edbdbe42..92858951d8 100644
+--- a/dlib/cmake_utils/find_blas.cmake
++++ b/dlib/cmake_utils/find_blas.cmake
+@@ -32,7 +32,7 @@ SET(lapack_without_underscore 0)
+ message(STATUS "Searching for BLAS and LAPACK")
+ INCLUDE(CheckFunctionExists)
+ 
+-if (UNIX OR MINGW)
++if (0)
+    message(STATUS "Searching for BLAS and LAPACK")
+ 
+    if (BUILDING_MATLAB_MEX_FILE)
+@@ -296,7 +296,7 @@ if (UNIX OR MINGW)
+ 
+ 
+ 
+-elseif(WIN32 AND NOT MINGW)
++elseif(0)
+    message(STATUS "Searching for BLAS and LAPACK")
+ 
+    include(CheckTypeSize)
+@@ -435,19 +435,18 @@ endif()
+ if (NOT blas_found)
+    find_package(BLAS QUIET)
+    if (${BLAS_FOUND})
+-      set(blas_libraries ${BLAS_LIBRARIES})      
++      set(blas_libraries BLAS::BLAS)
+       set(blas_found 1)
+       if (NOT lapack_found)
+          find_package(LAPACK QUIET)
+          if (${LAPACK_FOUND})
+-            set(lapack_libraries ${LAPACK_LIBRARIES})
++            set(lapack_libraries LAPACK::LAPACK)
+             set(lapack_found 1)
+          endif()
+       endif()
+    endif()
+ endif()
+ 
+-
+ # If using lapack, determine whether to mangle functions
+ if (lapack_found)
+    include(CheckFortranFunctionExists)

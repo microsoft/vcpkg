@@ -1,0 +1,13 @@
+diff --git a/src/impl_swapchain.cpp b/src/impl_swapchain.cpp
+index dfbdebc5..e190490b 100644
+--- a/src/impl_swapchain.cpp
++++ b/src/impl_swapchain.cpp
+@@ -238,7 +238,7 @@ auto daxa_swp_gpu_timeline_semaphore(daxa_Swapchain self) -> daxa_TimelineSemaph
+ 
+ auto daxa_swp_current_cpu_timeline_value(daxa_Swapchain self) -> u64
+ {
+-    return static_cast<u64>(std::max(0ll, self->cpu_frame_timeline));
++    return static_cast<u64>(std::max(int64_t{0}, self->cpu_frame_timeline));
+ }
+ 
+ auto daxa_swp_info(daxa_Swapchain self) -> daxa_SwapchainInfo const *

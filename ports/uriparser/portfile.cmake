@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
-    REF uriparser-${VERSION}
-    SHA512 4222e6d7dcdb525514ca8f42e5a9b314e0f09102ef2e72131702b6297d7cb9f509f757b9bec64c4ef88146667a60b992ff71e3c1fea50a82e45c3a14b8992326
+    REF "uriparser-${VERSION}"
+    SHA512 17526795bf78211ecff2b6b6f632c168ba33ed7763c5ad94fcc5bdff19542025be8a7079701e261d8992fff9077f59448fb9b8983cfab38d972228b7e353c9cd
     HEAD_REF master
 )
 
@@ -12,11 +12,14 @@ else()
     set(URIPARSER_BUILD_TOOLS OFF)
 endif()
 
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" URIPARSER_CRT_LINKAGE)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DURIPARSER_BUILD_DOCS=OFF
         -DURIPARSER_BUILD_TESTS=OFF
+        -DURIPARSER_MSVC_STATIC_CRT=${URIPARSER_CRT_LINKAGE}
     OPTIONS_DEBUG
         -DURIPARSER_BUILD_TOOLS=OFF
     OPTIONS_RELEASE
@@ -34,7 +37,7 @@ if(URIPARSER_BUILD_TOOLS)
     )
 endif()
 
-set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
+set(_package_version_re "#[ ]*define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
 file(STRINGS
 	"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/UriConfig.h"
     _package_version_define REGEX "${_package_version_re}"
@@ -53,7 +56,12 @@ endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST
+    "${SOURCE_PATH}/COPYING.Apache-2.0"
+    "${SOURCE_PATH}/COPYING.BSD-3-Clause"
+    "${SOURCE_PATH}/COPYING.LGPL-2.1"
+)
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_fixup_pkgconfig()

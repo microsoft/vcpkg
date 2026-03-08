@@ -1,7 +1,7 @@
 {
   "name": "restc-cpp",
   "version-semver": "1.0.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Modern C++ REST Client library",
   "homepage": "https://github.com/jgaa/restc-cpp",
   "license": "MIT",
@@ -14,7 +14,6 @@
     "boost-filesystem",
     "boost-log",
     "boost-program-options",
-    "boost-system",
     "boost-uuid",
     "rapidjson",
     {

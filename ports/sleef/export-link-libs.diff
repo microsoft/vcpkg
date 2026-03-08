@@ -1,0 +1,99 @@
+diff --git a/Configure.cmake b/Configure.cmake
+index e23f577..c7b5023 100644
+--- a/Configure.cmake
++++ b/Configure.cmake
+@@ -55,9 +55,15 @@ endif()
+ find_library(LIB_MPFR mpfr)
+ if(SLEEF_BUILD_WITH_LIBM)
+   find_library(LIBM m)
++  if(LIBM)
++    set(LIBM "m" CACHE INTERNAL "")
++  endif()
+ endif()
+ find_library(LIBGMP gmp)
+ find_library(LIBRT rt)
++if(LIBRT)
++  set(LIBRT "rt" CACHE INTERNAL "")
++endif()
+ 
+ find_library(LIBFFTW3 fftw3)
+ find_library(LIBFFTW3F fftw3f)
+diff --git a/sleefConfig.cmake b/sleefConfig.cmake
+index 6e423f2..4d415ab 100644
+--- a/sleefConfig.cmake
++++ b/sleefConfig.cmake
+@@ -1 +1,5 @@
++if("@COMPILER_SUPPORTS_OPENMP@")
++    include(CMakeFindDependencyMacro)
++    find_dependency(OpenMP)
++endif()
+ include("${CMAKE_CURRENT_LIST_DIR}/sleefTargets.cmake")
+diff --git a/src/dft/CMakeLists.txt b/src/dft/CMakeLists.txt
+index 15bee24..526c4f8 100644
+--- a/src/dft/CMakeLists.txt
++++ b/src/dft/CMakeLists.txt
+@@ -216,8 +216,8 @@ endif()
+ 
+ # Compiler properties
+ 
+-set(CMAKE_C_FLAGS "${ORG_CMAKE_C_FLAGS} ${DFT_C_FLAGS} ${OpenMP_C_FLAGS}")
+-set(CMAKE_CXX_FLAGS "${ORG_CMAKE_C_FLAGS} ${DFT_C_FLAGS} ${OpenMP_C_FLAGS}")
++set(CMAKE_C_FLAGS "${ORG_CMAKE_C_FLAGS} ${DFT_C_FLAGS}")
++set(CMAKE_CXX_FLAGS "${ORG_CMAKE_C_FLAGS} ${DFT_C_FLAGS}")
+ 
+ if(MSVC)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+@@ -414,7 +414,7 @@ endforeach()
+ # Target libdft
+ 
+ add_library(${TARGET_LIBDFT} $<TARGET_OBJECTS:dftcommon_obj> $<TARGET_OBJECTS:dft_obj> ${UNROLL_OBJECTS})
+-target_link_libraries(${TARGET_LIBDFT} ${TARGET_LIBSLEEF} ${LIBM})
++target_link_libraries(${TARGET_LIBDFT} PRIVATE ${TARGET_LIBSLEEF} OpenMP::OpenMP_C ${LIBM})
+ 
+ set_target_properties(${TARGET_LIBDFT} PROPERTIES
+   VERSION ${SLEEF_VERSION}
+diff --git a/src/libm/CMakeLists.txt b/src/libm/CMakeLists.txt
+index 8969ba2..25aef5b 100644
+--- a/src/libm/CMakeLists.txt
++++ b/src/libm/CMakeLists.txt
+@@ -682,7 +682,8 @@ endif(SLEEF_BUILD_INLINE_HEADERS)
+ # use some of the math functions used in the scalar code (for example
+ # sqrt).
+ if(LIBM AND NOT COMPILER_SUPPORTS_BUILTIN_MATH)
+-  target_link_libraries(${TARGET_LIBSLEEF} ${LIBM})
++  target_link_libraries(${TARGET_LIBSLEEF} PRIVATE ${LIBM})
++  string(APPEND PC_LIBS_PRIVATE " -lm")
+ endif()
+ 
+ target_sources(${TARGET_LIBSLEEF} PRIVATE $<TARGET_OBJECTS:${TARGET_LIBCOMMON_OBJ}>)
+@@ -907,7 +908,7 @@ if(ENABLE_GNUABI)
+ # libm to use some of the math functions used in the scalar code (for
+ # example sqrt).
+ if(LIBM AND NOT COMPILER_SUPPORTS_BUILTIN_MATH)
+-  target_link_libraries(${TARGET_LIBSLEEFGNUABI} ${LIBM})
++  target_link_libraries(${TARGET_LIBSLEEFGNUABI} PRIVATE ${LIBM})
+ endif()
+ endif(ENABLE_GNUABI)
+ 
+diff --git a/src/libm/sleef.pc.in b/src/libm/sleef.pc.in
+index f73bc14..b36ccad 100644
+--- a/src/libm/sleef.pc.in
++++ b/src/libm/sleef.pc.in
+@@ -7,3 +7,4 @@ Description: SIMD Library for Evaluating Elementary Functions, vectorized libm a
+ Version: @SLEEF_VERSION_MAJOR@.@SLEEF_VERSION_MINOR@.@SLEEF_VERSION_PATCH@
+ Cflags: -I${includedir}
+ Libs: -L${libdir} -lsleef
++Libs.private: @PC_LIBS_PRIVATE@
+diff --git a/src/quad/CMakeLists.txt b/src/quad/CMakeLists.txt
+index 8e4e261..cda4799 100644
+--- a/src/quad/CMakeLists.txt
++++ b/src/quad/CMakeLists.txt
+@@ -226,7 +226,7 @@ set_target_properties(sleefquad PROPERTIES
+ set_target_properties(sleefquad PROPERTIES ${COMMON_TARGET_PROPERTIES})
+ 
+ if(LIBM AND ((NOT COMPILER_SUPPORTS_BUILTIN_MATH) OR (SLEEF_ARCH_32BIT AND SLEEF_ARCH_X86)))
+-  target_link_libraries(sleefquad ${LIBM})
++  target_link_libraries(sleefquad PRIVATE ${LIBM})
+ endif()
+ 
+ # --------------------------------------------------------------------

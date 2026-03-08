@@ -12,6 +12,9 @@ vcpkg_from_github(
       set_version.patch
 )
 
+file(GLOB_RECURSE unused "${SOURCE_PATH}/cgmanifest.json")
+file(REMOVE_RECURSE ${unused})
+
 if(EXISTS "${SOURCE_PATH}/sdk/eventhubs/azure-messaging-eventhubs-checkpointstore-blob")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/eventhubs/_")
   file(REMOVE_RECURSE "${SOURCE_PATH}/sdk/_")

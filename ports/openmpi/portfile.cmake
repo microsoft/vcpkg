@@ -23,6 +23,10 @@ vcpkg_add_to_path(${PERL_PATH})
 # VCPKG_CONFIGURE_MAKE_OPTIONS overwrites vcpkg_configure_make overwrites OPTIONS.
 vcpkg_list(PREPEND VCPKG_CONFIGURE_MAKE_OPTIONS_DEBUG [[--datadir=\${prefix}/../tools/openmpi/debug/share]])
 vcpkg_list(PREPEND VCPKG_CONFIGURE_MAKE_OPTIONS_RELEASE [[--datadir=\${prefix}/tools/openmpi/share]])
+if(VCPKG_TARGET_IS_OSX)
+    # This ensures that vcpkg-fixup-macho-rpath succeeds
+    string(APPEND VCPKG_LINKER_FLAGS " -headerpad_max_install_names")
+endif()
 
 vcpkg_configure_make(
         COPY_SOURCE

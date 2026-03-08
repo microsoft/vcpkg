@@ -1,6 +1,6 @@
 {
   "name": "open62541",
-  "version": "1.4.12",
+  "version": "1.4.14",
   "description": "open62541 is an open source C (C99) implementation of OPC UA licensed under the Mozilla Public License v2.0.",
   "homepage": "https://open62541.org",
   "license": "MPL-2.0",

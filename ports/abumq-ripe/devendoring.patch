@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4500382..e1a2c95 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,8 +36,6 @@ if (APPLE)
+     endif()
+ endif()
+ 
+-list (APPEND CMAKE_CXX_FLAGS "  ")
+-
+ if (dll)
+     add_definitions (-DRIPE_DLL)
+ endif()
+@@ -48,9 +46,8 @@ endif()
+ 
+ # Check for cryptopp (static)
+ set(CryptoPP_USE_STATIC_LIBS ON)
+-find_package(CryptoPP REQUIRED)
+-message ("-- Crypto++ binary: " ${CRYPTOPP_LIBRARY})
+-include_directories (${CRYPTOPP_INCLUDE_DIRS})
++find_package(CRYPTOPP NAMES cryptopp CONFIG REQUIRED)
++set(CRYPTOPP_LIBRARIES cryptopp::cryptopp)
+
+ find_package(ZLIB REQUIRED)
+ if (ZLIB_FOUND)
+@@ -92,7 +89,7 @@ set_target_properties(ripe PROPERTIES
+ )
+ 
+ target_link_libraries(ripe
+-    ${CRYPTOPP_LIBRARIES}
++    cryptopp::cryptopp
+     ${ZLIB_LIBRARIES}
+ )
+ 
+@@ -107,7 +104,7 @@ install (FILES include/Ripe.h DESTINATION "include")
+ 
+ add_executable (ripe-bin src/ripe.cc lib/Ripe.cc)
+ #target_link_libraries (ripe-bin ripe)
+-target_link_libraries (ripe-bin ${CRYPTOPP_LIBRARIES} ${ZLIB_LIBRARIES})
++target_link_libraries (ripe-bin cryptopp::cryptopp ${ZLIB_LIBRARIES})
+ 
+ set_target_properties (ripe-bin PROPERTIES
+     OUTPUT_NAME "ripe"

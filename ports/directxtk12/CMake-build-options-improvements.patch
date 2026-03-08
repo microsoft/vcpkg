@@ -1,0 +1,152 @@
+---
+ CMakeLists.txt    | 55 ++++++++++++++++++++++++++++-------------------
+ CMakePresets.json |  3 +++
+ 2 files changed, 36 insertions(+), 22 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8a353f8..0b62d4d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,24 +59,38 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+ 
+ if(XBOX_CONSOLE_TARGET STREQUAL "scarlett")
+   set(BUILD_GAMEINPUT ON)
+-  set(BUILD_SCARLETT_SHADERS ON)
++  set(BUILD_WGI OFF)
++  set(BUILD_XINPUT OFF)
+   set(BUILD_XAUDIO_REDIST OFF)
++  set(BUILD_SCARLETT_SHADERS ON)
+ elseif(XBOX_CONSOLE_TARGET STREQUAL "xboxone")
+   set(BUILD_GAMEINPUT ON)
+-  set(BUILD_XBOXONE_SHADERS ON)
++  set(BUILD_WGI OFF)
++  set(BUILD_XINPUT OFF)
+   set(BUILD_XAUDIO_REDIST OFF)
++  set(BUILD_XBOXONE_SHADERS ON)
+ elseif(XBOX_CONSOLE_TARGET STREQUAL "durango")
+   set(BUILD_GAMEINPUT OFF)
+   set(BUILD_WGI OFF)
+   set(BUILD_XINPUT OFF)
++  set(BUILD_XAUDIO_WIN10 ON)
++  set(BUILD_XAUDIO_REDIST OFF)
+   set(BUILD_XBOXONE_SHADERS ON)
+   set(BUILD_DXIL_SHADERS OFF)
+-  set(BUILD_XAUDIO_WIN10 OFF)
+-  set(BUILD_XAUDIO_WIN8 ON)
+ elseif(WINDOWS_STORE)
+   set(BUILD_GAMEINPUT OFF)
+   set(BUILD_WGI ON)
++  set(BUILD_XINPUT OFF)
++  set(BUILD_XAUDIO_WIN10 ON)
+   set(BUILD_XAUDIO_REDIST OFF)
++elseif(MINGW)
++  set(BUILD_WGI OFF)
++  set(BUILD_XAUDIO_WIN10 OFF)
++  if (NOT BUILD_GAMEINPUT)
++    set(BUILD_XINPUT ON)
++  endif()
++elseif(WIN32 AND (NOT BUILD_GAMEINPUT) AND (NOT BUILD_XINPUT))
++  set(BUILD_WGI ON)
+ endif()
+ 
+ include(GNUInstallDirs)
+@@ -164,18 +178,12 @@ set(SHADER_SOURCES
+ # These source files are identical in both DX11 and DX12 version.
+ if(NOT BUILD_MIXED_DX11)
+     set(LIBRARY_HEADERS ${LIBRARY_HEADERS}
+-      Inc/GamePad.h
+-      Inc/Keyboard.h
+-      Inc/Mouse.h
+       Inc/SimpleMath.h
+       Inc/SimpleMath.inl)
+ 
+     set(LIBRARY_SOURCES ${LIBRARY_SOURCES}
+       Src/BinaryReader.cpp
+-      Src/GamePad.cpp
+       Src/Geometry.cpp
+-      Src/Keyboard.cpp
+-      Src/Mouse.cpp
+       Src/SimpleMath.cpp)
+ endif()
+ 
+@@ -211,13 +219,19 @@ if(DEFINED XBOX_CONSOLE_TARGET)
+       Src/XboxDDSTextureLoader.cpp)
+ endif()
+ 
+-if(MINGW)
+-  set(BUILD_XAUDIO_WIN10 OFF)
++if(BUILD_XINPUT OR BUILD_WGI OR BUILD_GAMEINPUT)
++  set(LIBRARY_HEADERS ${LIBRARY_HEADERS}
++      Inc/GamePad.h
++      Inc/Keyboard.h
++      Inc/Mouse.h)
++
++  set(LIBRARY_SOURCES ${LIBRARY_SOURCES}
++      Src/GamePad.cpp
++      Src/Keyboard.cpp
++      Src/Mouse.cpp)
+ endif()
+ 
+-if(WINDOWS_STORE
+-   OR BUILD_XAUDIO_WIN10 OR BUILD_XAUDIO_WIN8
+-   OR BUILD_XAUDIO_REDIST)
++if(BUILD_XAUDIO_WIN10 OR BUILD_XAUDIO_REDIST)
+     set(LIBRARY_HEADERS ${LIBRARY_HEADERS}
+         Inc/Audio.h)
+ 
+@@ -319,7 +333,7 @@ if(WIN32 AND BUILD_SHARED_LIBS)
+     target_link_libraries(${PROJECT_NAME} PRIVATE d3d12.lib)
+   endif()
+ 
+-  if(MINGW)
++  if(MINGW AND BUILD_XINPUT)
+     target_link_libraries(${PROJECT_NAME} PRIVATE xinput1_4.lib)
+   endif()
+ else()
+@@ -342,9 +356,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
+ 
+ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+ 
+-if(WINDOWS_STORE
+-   OR BUILD_XAUDIO_WIN10 OR BUILD_XAUDIO_WIN8
+-   OR BUILD_XAUDIO_REDIST)
++if(BUILD_XAUDIO_WIN10 OR BUILD_XAUDIO_REDIST)
+     target_include_directories(${PROJECT_NAME} PRIVATE Audio)
+ endif()
+ 
+@@ -371,8 +383,7 @@ if(directx-headers_FOUND)
+     target_compile_definitions(${PROJECT_NAME} PRIVATE USING_DIRECTX_HEADERS)
+ endif()
+ 
+-if(BUILD_XAUDIO_REDIST
+-   AND (NOT BUILD_XAUDIO_WIN10) AND (NOT BUILD_XAUDIO_WIN8) AND (NOT WINDOWS_STORE))
++if(BUILD_XAUDIO_REDIST AND (NOT BUILD_XAUDIO_WIN10))
+     message(STATUS "Using XAudio2Redist for DirectX Tool Kit for Audio.")
+     find_package(xaudio2redist CONFIG REQUIRED)
+     target_link_libraries(${PROJECT_NAME} PUBLIC Microsoft::XAudio2Redist)
+@@ -532,7 +543,7 @@ if(WIN32)
+ 
+     target_compile_definitions(${PROJECT_NAME} PRIVATE _WIN32_WINNT=${WINVER})
+ 
+-    if(WINDOWS_STORE OR BUILD_XAUDIO_WIN10)
++    if(BUILD_XAUDIO_WIN10)
+       message(STATUS "Using DirectX Tool Kit for Audio on XAudio 2.9 (Windows 10/Windows 11).")
+     endif()
+ 
+diff --git a/CMakePresets.json b/CMakePresets.json
+index eed1f1b..b7ab045 100644
+--- a/CMakePresets.json
++++ b/CMakePresets.json
+@@ -381,6 +381,9 @@
+     { "name": "x86-Debug-MinGW"  , "description": "MinG-W32 (Debug)", "inherits": [ "base", "x86", "Debug", "GNUC", "VCPKG", "XAudio2Redist", "MinGW32" ] },
+     { "name": "x86-Release-MinGW", "description": "MinG-W32 (Release)", "inherits": [ "base", "x86", "Release", "GNUC", "VCPKG", "XAudio2Redist", "MinGW32" ] },
+ 
++    { "name": "x64-Debug-MinGW-GI"  , "description": "MinG-W64 (Debug) using GameInput", "inherits": [ "base", "x64", "Debug", "GNUC", "VCPKG", "XAudio2Redist", "MinGW64" ], "cacheVariables": { "BUILD_GAMEINPUT": "true" }  },
++    { "name": "x64-Release-MinGW-GI", "description": "MinG-W64 (Release) using GameInput", "inherits": [ "base", "x64", "Release", "GNUC", "VCPKG", "XAudio2Redist", "MinGW64" ], "cacheVariables": { "BUILD_GAMEINPUT": "true" }  },
++
+     { "name": "x64-Debug-ICC"     , "description": "Intel Classic Compiler (Debug) for Windows 10", "inherits": [ "base", "x64", "Debug", "Intel" ] },
+     { "name": "x64-Release-ICC"   , "description": "Intel Classic Compiler (Release) for Windows 10", "inherits": [ "base", "x64", "Release", "Intel" ] },
+ 
+-- 
+2.51.2.windows.1
+

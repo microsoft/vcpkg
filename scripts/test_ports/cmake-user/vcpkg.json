@@ -82,7 +82,7 @@
         {
           "$package": "LAPACK",
           "name": "lapack",
-          "platform": "!android & !(uwp & arm)"
+          "platform": "!android & !(uwp & arm) & !(linux & arm)"
         },
         {
           "$package": "GnuTLS",
@@ -124,6 +124,10 @@
           "name": "libxslt",
           "default-features": false,
           "platform": "!uwp & !mingw"
+        },
+        {
+          "$package": "Lua",
+          "name": "lua"
         },
         {
           "$package": "Curses",

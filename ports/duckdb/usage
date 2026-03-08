@@ -1,4 +1,4 @@
-The package DuckDB provides CMake targets:
+duckdb provides CMake targets:
 
-    find_package(DuckDB CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:duckdb>,duckdb,duckdb_static>)
+  find_package(DuckDB CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE $<IF:$<TARGET_EXISTS:duckdb>,duckdb,duckdb_static>)

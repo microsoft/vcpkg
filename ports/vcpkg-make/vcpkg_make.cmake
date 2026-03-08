@@ -75,20 +75,72 @@ function(vcpkg_run_shell_as_build)
 endfunction()
 
 function(vcpkg_run_autoreconf shell_cmd work_dir)
+    find_program(ACLOCAL NAMES aclocal)
     find_program(AUTORECONF NAMES autoreconf)
+    find_program(LIBTOOLIZE NAMES libtoolize glibtoolize)
+
+    set(missing "")
     if(NOT AUTORECONF)
+        list(APPEND missing "autoconf")
+    endif()
+    if(NOT ACLOCAL)
+        list(APPEND missing "automake")
+    else()
+        set(aclocal_check_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-aclocal")
+        file(REMOVE_RECURSE "${aclocal_check_dir}")
+        file(MAKE_DIRECTORY "${aclocal_check_dir}")
+        file(COPY_FILE "${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-make/configure.ac" "${aclocal_check_dir}/configure.ac")
+        vcpkg_run_shell(
+            SHELL ${shell_cmd}
+            COMMAND "${ACLOCAL}" --dry-run
+            WORKING_DIRECTORY "${aclocal_check_dir}"
+            LOGNAME "aclocal-${TARGET_TRIPLET}"
+        )
+        file(STRINGS "${CURRENT_BUILDTREES_DIR}/aclocal-${TARGET_TRIPLET}-err.log" autoconf_archive REGEX "autoconf-archive")
+        if(autoconf_archive MATCHES "missing")
+            string(APPEND missing "autoconf-archive")
+        endif()
+    endif()
+    if(NOT LIBTOOLIZE)
+        list(APPEND missing "libtool")
+    endif()
+    if(missing)
         message(FATAL_ERROR "${PORT} currently requires the following programs from the system package manager:
-        autoconf automake autoconf-archive
+    autoconf autoconf-archive automake libtoolize
+
     On Debian and Ubuntu derivatives:
-        sudo apt-get install autoconf automake autoconf-archive
+        sudo apt install autoconf autoconf-archive automake libtool
     On recent Red Hat and Fedora derivatives:
-        sudo dnf install autoconf automake autoconf-archive
+        sudo dnf install autoconf autoconf-archive automake libtool
     On Arch Linux and derivatives:
-        sudo pacman -S autoconf automake autoconf-archive
+        sudo pacman -S autoconf autoconf-archive automake libtool
     On Alpine:
-        apk add autoconf automake autoconf-archive
+        apk add autoconf autoconf-archive automake libtool
     On macOS:
-        brew install autoconf automake autoconf-archive\n")
+        brew install autoconf autoconf-archive automake libtool\n")
+    endif()
+    if(EXISTS "${work_dir}/configure.ac")
+        # Modeled after autoreconf's tracing behavior.
+        file(READ "${work_dir}/configure.ac" configure_ac)
+        find_program(AUTOPOINT NAMES autopoint)
+        if(configure_ac MATCHES "AM_GNU_GETTEXT" AND NOT AUTOPOINT AND "$ENV{AUTOPOINT}" STREQUAL "")
+            message(STATUS "${PORT} depends on gettext infrastructure.")
+            message(STATUS "'set(ENV{AUTOPOINT} true)' might disable this dependency.")
+        endif()
+        find_program(GTKDOCIZE NAMES gtkdocize)
+        if(configure_ac MATCHES "GTK_DOC_CHECK" AND NOT GTKDOCIZE AND "$ENV{GTKDOCIZE}" STREQUAL "")
+            message(STATUS "${PORT} depends on gtk-doc infrastructure.")
+            message(STATUS "'set(ENV{GTKDOCIZE} true)' might disable this dependency.")
+        endif()
+        file(STRINGS "${CURRENT_BUILDTREES_DIR}/aclocal-${TARGET_TRIPLET}-err.log" libltdl REGEX "libltdl")
+        if(configure_ac MATCHES "LT_CONFIG_LTDL_DIR|LT_SYS_SYMBOL_USCORE" AND libltdl MATCHES "missing")
+            message(FATAL_ERROR "${PORT} depends on ltdl development files from the system package manager:
+        
+    On Debian and Ubuntu derivatives:
+        sudo apt install libltdl-dev
+    On recent Red Hat and Fedora derivatives:
+        sudo dnf install libtool-ltdl-devel\n")
+        endif()
     endif()
     message(STATUS "Generating configure for ${TARGET_TRIPLET}")
     vcpkg_run_shell(

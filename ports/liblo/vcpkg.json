@@ -1,6 +1,6 @@
 {
   "name": "liblo",
-  "version": "0.32",
+  "version": "0.34",
   "description": "liblo is an implementation of the Open Sound Control protocol for POSIX systems",
   "homepage": "https://github.com/radarsat1/liblo",
   "dependencies": [

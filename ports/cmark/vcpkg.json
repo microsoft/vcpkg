@@ -1,6 +1,6 @@
 {
   "name": "cmark",
-  "version-semver": "0.31.1",
+  "version-semver": "0.31.2",
   "description": "CommonMark parsing and rendering library",
   "homepage": "https://github.com/commonmark/cmark",
   "license": "BSD-2-Clause",

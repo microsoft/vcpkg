@@ -1,16 +1,16 @@
 vcpkg_download_distfile(archive
-    URLS "http://www.atnf.csiro.au/people/mcalabre/WCS/wcslib-${VERSION}.tar.bz2"
+    URLS "https://www.atnf.csiro.au/computing/software/wcs/wcslib-releases/wcslib-${VERSION}.tar.bz2"
     FILENAME "wcslib-${VERSION}.tar.bz2"
-    SHA512 1989f8f5788fd6d9fa102b771ad7db188b0899f716e11360516c96742f81f50755881279f90fce388451e8857f24003c85751f06aea83377e04bb5230523469f
+    SHA512 f63fe02d89b9296f2502dfb2e3715a0c20c1393d057396af9db7e0c240a6585faacb43c12c5e9456dc5e4ccec009b9d0a2534262515f5c83f11644fabe3d5a7f
 )
 
 vcpkg_extract_source_archive(
-    src
+    SOURCE_PATH
     ARCHIVE "${archive}"
 )
 
 vcpkg_configure_make(
-    SOURCE_PATH ${src}
+    SOURCE_PATH "${SOURCE_PATH}"
     COPY_SOURCE
     OPTIONS
         --disable-flex
@@ -20,7 +20,7 @@ vcpkg_configure_make(
 
 vcpkg_install_make(MAKEFILE GNUmakefile)
 vcpkg_fixup_pkgconfig()
-vcpkg_install_copyright(FILE_LIST "${src}/COPYING")
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

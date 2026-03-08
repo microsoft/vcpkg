@@ -1,7 +1,6 @@
 {
   "name": "aravis",
-  "version": "0.8.34",
-  "port-version": 1,
+  "version": "0.8.35",
   "description": " A vision library for genicam based cameras.",
   "homepage": "https://github.com/AravisProject/aravis",
   "license": "LGPL-2.0-or-later",

@@ -1,0 +1,14 @@
+diff --git a/tools/lottietoqml/CMakeLists.txt b/tools/lottietoqml/CMakeLists.txt
+index 293290a6e5..eb8e7bb057 100644
+--- a/tools/lottietoqml/CMakeLists.txt	
++++ b/tools/lottietoqml/CMakeLists.txt
+@@ -5,8 +5,7 @@
+ ## lottietoqml Tool:
+ #####################################################################
+ 
+-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS QuickVectorImageGeneratorPrivate)
+-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS QuickVectorImageGeneratorPrivate)
++find_package(Qt6 REQUIRED COMPONENTS QuickVectorImageGeneratorPrivate)
+ 
+ qt_get_tool_target_name(target_name lottietoqml)
+ qt_internal_add_tool(${target_name}

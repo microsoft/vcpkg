@@ -1,0 +1,43 @@
+commit d3856e94deb950ad6ae08049ca0b8758ab027f33
+Author: Rene Meusel <rene.meusel@rohde-schwarz.com>
+Date:   Thu Jan 8 10:14:28 2026 +0100
+
+    FIX: build failure on MSVC x86 due to fault constraint
+    
+    Frankly, I'm not sure why this shows up on x86 MSVC only but
+    relaxing this constraint is consistent with the calling function
+    and also makes sense semantically.
+
+diff --git a/src/lib/utils/bitvector/bitvector.h b/src/lib/utils/bitvector/bitvector.h
+index 4551dceb8..8ae6aaa4b 100644
+--- a/src/lib/utils/bitvector/bitvector.h
++++ b/src/lib/utils/bitvector/bitvector.h
+@@ -1184,7 +1184,7 @@ class bitvector_base final {
+ 
+          private:
+             template <std::unsigned_integral... BlockTs>
+-               requires(all_same_v<BlockTs...>)
++               requires(all_same_v<std::remove_cv_t<BlockTs>...>)
+             constexpr static auto apply(FnT fn, size_type bits, BlockTs... blocks) {
+                if constexpr(needs_mask) {
+                   return fn(blocks..., make_mask<detail::first_t<BlockTs...>>(bits));
+
+commit 1e83c70ceb13cf5b712ecd1da3c5c1ad41d83151
+Author: Rene Meusel <rene.meusel@rohde-schwarz.com>
+Date:   Thu Jan 8 10:51:29 2026 +0100
+
+    FIX: implicit conversion warning on MSVC x86
+
+diff --git a/src/examples/hash.cpp b/src/examples/hash.cpp
+index e886220ac..fa720d89c 100644
+--- a/src/examples/hash.cpp
++++ b/src/examples/hash.cpp
+@@ -12,7 +12,7 @@ int main() {
+    while(std::cin.good()) {
+       // read STDIN to buffer
+       std::cin.read(reinterpret_cast<char*>(buf.data()), static_cast<std::streamsize>(buf.size()));
+-      size_t readcount = std::cin.gcount();
++      const auto readcount = static_cast<size_t>(std::cin.gcount());
+       // update hash computations with read data
+       hash1->update(std::span{buf}.first(readcount));
+       hash2->update(std::span{buf}.first(readcount));

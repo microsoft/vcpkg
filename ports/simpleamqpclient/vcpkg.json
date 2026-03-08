@@ -1,0 +1,43 @@
+{
+  "name": "simpleamqpclient",
+  "version": "2.5.1",
+  "description": "Simple C++ Interface to rabbitmq-c",
+  "homepage": "https://github.com/alanxz/SimpleAmqpClient",
+  "license": "MIT",
+  "supports": "!static",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-chrono",
+    "boost-foreach",
+    "boost-lexical-cast",
+    "boost-optional",
+    "boost-smart-ptr",
+    "boost-variant",
+    {
+      "name": "librabbitmq",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "ssl": {
+      "description": "Enable SSL support",
+      "dependencies": [
+        {
+          "name": "librabbitmq",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    }
+  }
+}

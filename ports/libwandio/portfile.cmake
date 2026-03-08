@@ -9,18 +9,25 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wanduow/wandio
-    REF 012b646e7ba7ab191a5a2206488adfac493fcdc6
-    SHA512 e94a82038902c34933c4256f8bd4d7ef3f2cf32fea46f8e31a25df34cc90d3a275ff56d3bc9892aca0c85e6d875e696f96a836cc1444fe165db8364331e6e77d
+    REF ${VERSION}
+    SHA512 931bdfe91c8923de52217873d5a12568bcac97b2ab7e4e50f48cd9999d7b3887175885c3f56250b0cd822584bbf4a9262b017ab57ed599ddd288abda1fad9885
     HEAD_REF master
     PATCHES configure.lib.patch # This is how configure.ac files with dependencies get fixed. 
             configure.patch
             ${PATCHES}
 )
 
+if (VCPKG_TARGET_IS_ANDROID)
+    list(APPEND OPTIONS ac_cv_func_malloc_0_nonnull=yes)
+    list(APPEND OPTIONS ac_cv_func_realloc_0_nonnull=yes)
+endif()
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     COPY_SOURCE
+    OPTIONS
+        ${OPTIONS}
 )
 vcpkg_install_make()
 

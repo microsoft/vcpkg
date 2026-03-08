@@ -8,10 +8,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
     REF "${VERSION}"
-    SHA512 4937b63a27818cdb5087091b2d78837f7f385fd6b4d3e3fcaf4d9ad2944fed4a00020dcacb33e9c2fd4b0f9d9851fb4051ed3da86f606aca5167357262a73e89
+    SHA512 d95bf0689fb2862ad5ea9e902b73724098d911d9c312aa69157bec9de77f32e4d5ac7dfa105d844110cc66dbdb0336056ba7f96781fcbc848b72fd0661604d50
     HEAD_REF master
     PATCHES
-        add-options-for-exes-docs-headers.patch
+        add-options-for-docs-headers.patch
         # workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
 )
@@ -39,7 +39,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         jpeg7 WITH_JPEG7
         jpeg8 WITH_JPEG8
-        tools ENABLE_EXECUTABLES
+        tools WITH_TOOLS
 )
 
 vcpkg_cmake_configure(
@@ -47,13 +47,9 @@ vcpkg_cmake_configure(
     OPTIONS
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
-        -DINSTALL_DOCS=OFF
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
-    OPTIONS_DEBUG
-        -DENABLE_EXECUTABLES=OFF
-        -DINSTALL_HEADERS=OFF
     MAYBE_UNUSED_VARIABLES
         WITH_CRT_DLL
 )
@@ -61,7 +57,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-if(ENABLE_EXECUTABLES)
+if(WITH_TOOLS)
     vcpkg_copy_tools(
         TOOL_NAMES cjpeg djpeg jpegtran rdjpgcom wrjpgcom
         AUTO_CLEAN

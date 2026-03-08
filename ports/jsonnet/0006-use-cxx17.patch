@@ -1,8 +1,8 @@
 diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
-index e8a0efa..5dfd2e4 100644
+index 8116ac3..25cebd0 100644
 --- a/core/CMakeLists.txt
 +++ b/core/CMakeLists.txt
-@@ -34,6 +34,7 @@ if (BUILD_SHARED_BINARIES)
+@@ -36,6 +36,7 @@ if (BUILD_SHARED_BINARIES)
  add_library(libjsonnet ${LIBJSONNET_HEADERS} ${LIBJSONNET_SOURCE})
  add_dependencies(libjsonnet stdlib)
  target_link_libraries(libjsonnet nlohmann_json::nlohmann_json ryml)
@@ -10,7 +10,7 @@ index e8a0efa..5dfd2e4 100644
  
  file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/../include/libjsonnet.h JSONNET_VERSION_DEF
       REGEX "[#]define[ \t]+LIB_JSONNET_VERSION[ \t]+")
-@@ -60,6 +61,7 @@ if (BUILD_STATIC_LIBS)
+@@ -63,6 +64,7 @@ if (BUILD_STATIC_LIBS)
      add_library(libjsonnet_static STATIC ${LIBJSONNET_SOURCE})
      add_dependencies(libjsonnet_static stdlib)
      target_link_libraries(libjsonnet_static nlohmann_json::nlohmann_json ryml)

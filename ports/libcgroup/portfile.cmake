@@ -1,17 +1,9 @@
-vcpkg_download_distfile(PATCH_FIX_SYSTEMD_HEADER_INSTALLATION
-    URLS https://github.com/t43rr7/libcgroup/commit/592dcdcf243576bd2517d3da9bc18990de08e37e.patch?full_index=1
-    SHA512 0977e0b32119d1938ce2af6687ff31f6349aa6189307041d1249967e688ed9d84bc133ef270eb3d474a81644dd2152213c8605c6bd9a585c880fef0e026170fa
-    FILENAME 0000-fix-systemd-header-installation.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libcgroup/libcgroup
-    SHA512 29fb7f5c795080cafc27ab99f2f3d7683933515840226564e047605e41a76f7ca31b48c8c9e8e1963eb808e3fc82206ea6ad550c80dcfb745b5cb7425e2875a9
+    SHA512 53a1362de915a4d57573342234d72d8fe2d91a5df9e06835594235bca29027c10a1f0b232449aa75e1ee77bfd426e9bb11ea38ef001e1f541379d3eb07f94771
     REF "v${VERSION}"
     HEAD_REF master
-    PATCHES
-        "${PATCH_FIX_SYSTEMD_HEADER_INSTALLATION}"
 )
 
 message(STATUS "${PORT} currently requires the following libraries from the system package manager:\n"

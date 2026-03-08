@@ -1,0 +1,64 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a1617d0..1bbcafb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -125,6 +125,7 @@ set_target_properties (OpenCL PROPERTIES VERSION 1\.0\.0 SOVERSION "1")
+ 
+ if (WIN32)
+     target_link_libraries (OpenCL PRIVATE cfgmgr32.lib runtimeobject.lib)
++    string(APPEND OPENCL_LIBS_PRIVATE_PC " -lcfgmgr32 -lruntimeobject")
+ 
+     # Generate a DLL without a "lib" prefix for mingw.
+     if (MINGW OR MSYS OR CYGWIN)
+@@ -133,6 +134,7 @@ if (WIN32)
+     endif()
+ else()
+     target_link_libraries (OpenCL PRIVATE ${CMAKE_THREAD_LIBS_INIT})
++    string(APPEND OPENCL_LIBS_PRIVATE_PC " ${CMAKE_THREAD_LIBS_INIT}")
+     if (NOT APPLE)
+         set_target_properties (OpenCL PROPERTIES LINK_FLAGS "-Wl,--version-script -Wl,${CMAKE_CURRENT_SOURCE_DIR}/loader/linux/icd_exports.map")
+         if (OPENCL_ICD_LOADER_PIC)
+@@ -174,6 +176,9 @@ target_include_directories (OpenCL
+     loader
+ )
+ target_link_libraries (OpenCL PUBLIC ${CMAKE_DL_LIBS})
++if(CMAKE_DL_LIBS STREQUAL "dl")
++  string(APPEND OPENCL_LIBS_PRIVATE_PC " -ldl")
++endif()
+ 
+ if (ENABLE_OPENCL_LAYERINFO)
+ 
+@@ -294,3 +299,4 @@ install (TARGETS OpenCL
+       DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT dev
+     NAMELINK_ONLY)
++install_opencl_pc()
+diff --git a/OpenCL.pc.in b/OpenCL.pc.in
+index ef35333..b86da22 100644
+--- a/OpenCL.pc.in
++++ b/OpenCL.pc.in
+@@ -7,3 +7,4 @@ Description: Khronos OpenCL ICD Loader
+ Requires: OpenCL-Headers
+ Version: 3.0
+ Libs: -L${libdir} -lOpenCL
++Libs.private:@OPENCL_LIBS_PRIVATE_PC@
+diff --git a/cmake/Package.cmake b/cmake/Package.cmake
+index adfa505..e1d0e1f 100644
+--- a/cmake/Package.cmake
++++ b/cmake/Package.cmake
+@@ -12,6 +12,7 @@ join_paths(OPENCL_LIBDIR_PC "\${exec_prefix}" "${CMAKE_INSTALL_LIBDIR}")
+ set(pkg_config_location ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ set(PKGCONFIG_PREFIX "${CMAKE_INSTALL_PREFIX}")
+ 
++function(install_opencl_pc)
+ # Configure and install OpenCL.pc for installing the project
+ configure_file(
+   OpenCL.pc.in
+@@ -34,6 +35,7 @@ install(
+   DESTINATION ${pkg_config_location}
+   COMPONENT dev
+   EXCLUDE_FROM_ALL)
++endfunction()
+ 
+ set(CPACK_DEBIAN_PACKAGE_DEBUG ON)
+ 

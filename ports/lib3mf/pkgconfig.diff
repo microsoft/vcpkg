@@ -1,0 +1,12 @@
+diff --git a/lib3mf.pc.in b/lib3mf.pc.in
+index bb8030a..0117dd6 100644
+--- a/lib3mf.pc.in
++++ b/lib3mf.pc.in
+@@ -8,5 +8,6 @@ Description: @PROJECT_DESCRIPTION@
+ Version: @PROJECT_VERSION@
+ 
+ Requires:
+-Libs: -L${libdir} -l3mf -lzip -lz
++Requires.private: libzip zlib
++Libs: -L${libdir} -l3mf
+ Cflags: -I${includedir}

@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1ca26e3..7d3442c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1104,7 +1104,8 @@ if(NOT MSVC)
+ else()
+   # Define export functions for AOTI.
+   add_compile_definitions(EXPORT_AOTI_FUNCTIONS)
+-
++  # needed for vulkan compile
++  add_compile_definitions(_USE_MATH_DEFINES) # math.h macros like M_PI, M_SQRT2, M_2_SQRTPI, etc.
+   # skip unwanted includes from windows.h
+   add_compile_definitions(WIN32_LEAN_AND_MEAN)
+   # Windows SDK broke compatibility since version 25131, but introduced this
+diff --git a/aten/src/ATen/native/vulkan/api/Allocator.h b/aten/src/ATen/native/vulkan/api/Allocator.h
+index a89c333..a9a41ef 100644
+--- a/aten/src/ATen/native/vulkan/api/Allocator.h
++++ b/aten/src/ATen/native/vulkan/api/Allocator.h
+@@ -50,7 +50,11 @@
+ #pragma clang diagnostic ignored "-Winconsistent-missing-destructor-override"
+ #endif /* __clang__ */
+ 
+-#include <include/vk_mem_alloc.h>
++#if __has_include(<vma/vk_mem_alloc.h>)
++#include <vma/vk_mem_alloc.h>
++#else
++#include <vk_mem_alloc.h>
++#endif
+ 
+ #ifdef __clang__
+ #pragma clang diagnostic pop
+diff --git a/aten/src/ATen/native/vulkan/api/QueryPool.cpp b/aten/src/ATen/native/vulkan/api/QueryPool.cpp
+index 9c0c7fb..ae4a81f 100644
+--- a/aten/src/ATen/native/vulkan/api/QueryPool.cpp
++++ b/aten/src/ATen/native/vulkan/api/QueryPool.cpp
+@@ -9,6 +9,7 @@
+ #include <iomanip>
+ #include <iostream>
+ #include <utility>
++#include <algorithm>
+ 
+ namespace at {
+ namespace native {

@@ -6,14 +6,17 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/cpuinfo
-    REF 5e63739504f0f8e18e941bd63b2d6d42536c7d90
-    SHA512 6a61f4574661a55771c2ec31bb0919a51d0bd8c770477b254a5c14dc5323716af275c7fe3abc5aa96720d7cc929559ca66f614265d3940e076b8db2fa15c8e36
+    REF 877328f188a3c7d1fa855871a278eb48d530c4c0
+    SHA512 b6d5a9ce9996eee3b2f09f39115f7ae178fe4d4814cc35b049a59d04a82228e268aa52d073c307ccb56a427428622940e1c77f004c99851dfca0d3a5d803658b
     HEAD_REF master
+    PATCHES
+        add-clog-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         tools CPUINFO_BUILD_TOOLS
+        clog CPUINFO_BUILD_CLOG
 )
 
 set(LINK_OPTIONS "")
@@ -37,10 +40,13 @@ vcpkg_cmake_configure(
         -DCPUINFO_BUILD_UNIT_TESTS=OFF
         -DCPUINFO_BUILD_MOCK_TESTS=OFF
         -DCPUINFO_BUILD_BENCHMARKS=OFF
+        -DCLOG_BUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DCPUINFO_LOG_LEVEL=debug
     OPTIONS_RELEASE
         -DCPUINFO_LOG_LEVEL=default
+    MAYBE_UNUSED_VARIABLES
+        CLOG_BUILD_TESTS
 )
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()

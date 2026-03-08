@@ -1,0 +1,81 @@
+{
+  "name": "vcpkg-ci-openmvs",
+  "version-string": "ci",
+  "description": "Port to validate openmvs",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "openmvs",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "ceres",
+      "platform": "osx"
+    },
+    {
+      "name": "cuda",
+      "platform": "x64 & windows & !staticcrt"
+    },
+    {
+      "name": "opengl",
+      "platform": "x64 & !android"
+    },
+    {
+      "name": "openmp",
+      "platform": "linux"
+    }
+  ],
+  "features": {
+    "ceres": {
+      "description": "CERES support for openmvs",
+      "dependencies": [
+        {
+          "name": "openmvs",
+          "features": [
+            "ceres"
+          ]
+        }
+      ]
+    },
+    "cuda": {
+      "description": "CUDA support for openmvs",
+      "dependencies": [
+        {
+          "name": "openmvs",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "opengl": {
+      "description": "OpenGL support for openmvs",
+      "dependencies": [
+        {
+          "name": "openmvs",
+          "features": [
+            "opengl"
+          ]
+        }
+      ]
+    },
+    "openmp": {
+      "description": "OpenMP support for openmvs",
+      "dependencies": [
+        {
+          "name": "openmvs",
+          "features": [
+            "openmp"
+          ]
+        }
+      ]
+    }
+  }
+}

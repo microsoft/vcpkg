@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f02cba9..0c8f8ce 100644
+index 3ebf359..8562715 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -14,6 +14,7 @@ option(BUILD_STATIC_LIBS "Build a static libjsonnet." ON)
+@@ -13,6 +13,7 @@ option(BUILD_STATIC_LIBS "Build a static libjsonnet." ON)
  option(BUILD_SHARED_BINARIES "Link binaries to the shared libjsonnet instead of the static one." OFF)
  option(USE_SYSTEM_GTEST "Use system-provided gtest library" OFF)
  option(USE_SYSTEM_JSON "Use the system-provided json library" OFF)

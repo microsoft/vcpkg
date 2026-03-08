@@ -3,10 +3,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     REPO pixman/pixman
     REF "pixman-${VERSION}"
-    SHA512 a878d866fbd4d609fabac6a5acac4d0a5ffd0226d926c09d3557261b770f1ad85b2f2d90a48b7621ad20654e52ecccbca9f1a57a36bd5e58ecbe59cca9e3f25d
+    SHA512 f0abfef9bfd2d1c51995e1f4ffac0cedcd8e55dc2c404a5456f7673e837dd171613a8d4132744b10f0d3f7ec36726dc73f72c8cd109d954e904142d147b431b3
     PATCHES
         no-host-cpu-checks.patch
-        missing_intrin_include.patch
 )
 
 set(x86_architectures x86 x64)

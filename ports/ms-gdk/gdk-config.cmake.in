@@ -1,0 +1,112 @@
+﻿get_filename_component(_msgdk_root "${CMAKE_CURRENT_LIST_DIR}" PATH)
+get_filename_component(_msgdk_root "${_msgdk_root}" PATH)
+
+# GameRuntime Library
+add_library(Xbox::GameRuntime STATIC IMPORTED)
+set_target_properties(Xbox::GameRuntime PROPERTIES
+    IMPORTED_LOCATION "${_msgdk_root}/lib/xgameruntime.lib"
+    MAP_IMPORTED_CONFIG_MINSIZEREL ""
+    MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+    INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include"
+    INTERFACE_COMPILE_FEATURES "cxx_std_11"
+    IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
+
+if (EXISTS "${_msgdk_root}/lib/XCurl.lib")
+    # XCurl
+    add_library(Xbox::XCurl SHARED IMPORTED)
+    set_target_properties(Xbox::XCurl PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/XCurl.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/XCurl.lib"
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include")
+
+    # Xbox.Services.API.C (requires XCurl)
+    add_library(Xbox::XSAPI STATIC IMPORTED)
+    set_target_properties(Xbox::XSAPI PROPERTIES
+        IMPORTED_LOCATION_RELEASE "${_msgdk_root}/lib/Microsoft.Xbox.Services.@EXT_TOOLSET@.C.lib"
+        IMPORTED_LOCATION_DEBUG "${_msgdk_root}/debug/lib/Microsoft.Xbox.Services.@EXT_TOOLSET@.C.Debug.lib"
+        IMPORTED_CONFIGURATIONS "RELEASE;DEBUG"
+        MAP_IMPORTED_CONFIG_MINSIZEREL Release
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include"
+        IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
+
+    # Xbox::HTTPClient
+    add_library(Xbox::HTTPClient SHARED IMPORTED)
+    set_target_properties(Xbox::HTTPClient PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/libHttpClient.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/libHttpClient.lib"
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include")
+
+    target_link_libraries(Xbox::XSAPI INTERFACE Xbox::HTTPClient Xbox::XCurl appnotify.lib winhttp.lib crypt32.lib)
+
+    # GameChat2
+    add_library(Xbox::GameChat2 SHARED IMPORTED)
+    set_target_properties(Xbox::GameChat2 PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/GameChat2.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/GameChat2.lib"
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include")
+endif()
+
+if (@BUILD_PLAYFAB_SERVICES@ AND (EXISTS "${_msgdk_root}/lib/PlayFabCore.lib"))
+    # PlayFab Multiplayer (requires XCurl)
+    add_library(Xbox::PlayFabMultiplayer SHARED IMPORTED)
+    set_target_properties(Xbox::PlayFabMultiplayer PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/PlayFabMultiplayer.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/PlayFabMultiplayer.lib"
+        IMPORTED_LINK_DEPENDENT_LIBRARIES Xbox::XCurl
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include")
+
+    target_link_libraries(Xbox::PlayFabMultiplayer INTERFACE Xbox::XCurl)
+
+    # PlayFab Services (requires XCurl)
+    add_library(Xbox::PlayFabServices SHARED IMPORTED)
+    set_target_properties(Xbox::PlayFabServices PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/PlayFabServices.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/PlayFabServices.lib"
+        IMPORTED_LINK_DEPENDENT_LIBRARIES Xbox::XCurl
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include"
+        IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
+
+    add_library(Xbox::PlayFabCore SHARED IMPORTED)
+    set_target_properties(Xbox::PlayFabCore PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/PlayFabCore.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/PlayFabCore.lib"
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        IMPORTED_LINK_INTERFACE_LANGUAGES "CXX")
+
+    target_link_libraries(Xbox::PlayFabServices INTERFACE Xbox::PlayFabCore Xbox::XCurl)
+
+    # PlayFab Party
+    add_library(Xbox::PlayFabParty SHARED IMPORTED)
+    set_target_properties(Xbox::PlayFabParty PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/Party.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/Party.lib"
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include")
+
+    # PlayFab Party Xbox LIVE (requires PlayFab Party)
+    add_library(Xbox::PlayFabPartyLIVE SHARED IMPORTED)
+    set_target_properties(Xbox::PlayFabPartyLIVE PROPERTIES
+        IMPORTED_LOCATION "${_msgdk_root}/bin/PartyXboxLive.dll"
+        IMPORTED_IMPLIB "${_msgdk_root}/lib/PartyXboxLive.lib"
+        IMPORTED_LINK_DEPENDENT_LIBRARIES Xbox::PlayFabParty
+        MAP_IMPORTED_CONFIG_MINSIZEREL ""
+        MAP_IMPORTED_CONFIG_RELWITHDEBINFO ""
+        INTERFACE_INCLUDE_DIRECTORIES "${_msgdk_root}/include")
+
+    target_link_libraries(Xbox::PlayFabPartyLIVE INTERFACE Xbox::PlayFabParty)
+endif()
+
+unset(_msgdk_root)

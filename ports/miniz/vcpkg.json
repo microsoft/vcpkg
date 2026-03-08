@@ -1,6 +1,6 @@
 {
   "name": "miniz",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Single C source file zlib-replacement library",
   "homepage": "https://github.com/richgel999/miniz",
   "license": "MIT",

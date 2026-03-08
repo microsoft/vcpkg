@@ -5,14 +5,15 @@ vcpkg_from_github(
     SHA512 9ebe7f63b907607ea5762e56a884be62630efaca3f45d9ba9ad85ca1818d60d09864422bd075c2653aea1a14609fe9ad6520297aee5a00e07fa88df45872cef9
     HEAD_REF master
     PATCHES
-        doxygen.patch
-        find-tbb.patch
-        disable-werror.patch
+        0001-doxygen.patch
+        0002-find-tbb.patch
+        0003-disable-werror.patch
+        0004-support-eigen3-5.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-   FEATURES
-   nlopt PAGMO_WITH_NLOPT
+    FEATURES
+        nlopt PAGMO_WITH_NLOPT
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAGMO_BUILD_STATIC_LIBRARY)
 vcpkg_cmake_configure(

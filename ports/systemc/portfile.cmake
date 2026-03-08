@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO accellera-official/systemc
     REF "${VERSION}"
-    SHA512 baeadd0318b9ab47fc559a2ab6bd880ac506ac5d858cdcf081a7544ca01688f2e798549655ff7546d02feba120c084951f834b69678a0bb984299bff25a4e21b
+    SHA512 50ebda68ef253a4ddbbafaabf2f1351a31c43e92198e161e19b63165426357b20f137c8b4b03b9f6ebfd56b2170d8ab2b256392e21e9e4ad9a4e7aa65a262d7d
     HEAD_REF main
     PATCHES
         install.patch

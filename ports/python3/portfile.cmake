@@ -28,7 +28,6 @@ set(PATCHES
     0005-dont-copy-vcruntime.patch
     0008-python.pc.patch
     0010-dont-skip-rpath.patch
-    0012-force-disable-modules.patch
     0015-dont-use-WINDOWS-def.patch
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
@@ -249,7 +248,7 @@ else()
         "--with-system-expat"
         "--disable-test-modules"
     )
-    if(VCPKG_TARGET_IS_OSX)
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_BSD)
         list(APPEND OPTIONS "LIBS=-liconv -lintl")
     endif()
 
@@ -283,8 +282,12 @@ else()
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTORECONF
+        DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}
+            py_cv_module__curses=n/a
+            py_cv_module__curses_panel=n/a
+            py_cv_module__tkinter=n/a
         OPTIONS_DEBUG
             "--with-pydebug"
             "vcpkg_rpath=${CURRENT_INSTALLED_DIR}/debug/lib"
@@ -350,7 +353,7 @@ string(REPLACE "@PYTHON_VERSION_MINOR@" "${PYTHON_VERSION_MINOR}" usage_extra "$
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}\n${usage_extra}")
 
 function(_generate_finder)
-    cmake_parse_arguments(PythonFinder "NO_OVERRIDE" "DIRECTORY;PREFIX" "" ${ARGN})
+    cmake_parse_arguments(PythonFinder "NO_OVERRIDE;SUPPORTS_ARTIFACTS_PREFIX" "DIRECTORY;PREFIX" "" ${ARGN})
     configure_file(
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
         "${CURRENT_PACKAGES_DIR}/share/${PythonFinder_DIRECTORY}/vcpkg-cmake-wrapper.cmake"
@@ -359,8 +362,8 @@ function(_generate_finder)
 endfunction()
 
 message(STATUS "Installing cmake wrappers")
-_generate_finder(DIRECTORY "python" PREFIX "Python")
-_generate_finder(DIRECTORY "python3" PREFIX "Python3")
+_generate_finder(DIRECTORY "python" PREFIX "Python" SUPPORTS_ARTIFACTS_PREFIX)
+_generate_finder(DIRECTORY "python3" PREFIX "Python3" SUPPORTS_ARTIFACTS_PREFIX)
 _generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)

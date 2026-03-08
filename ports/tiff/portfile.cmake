@@ -3,7 +3,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtiff/libtiff
     REF "v${VERSION}"
-    SHA512 924bcd0fe19c03f65ffc068719371ab582057bf95c3847efd3bd03eaff1eb409ec3f22c9d373fafd9f993dd031a161850f0db082cb7068195c7c5c564fa222fc
+    SHA512 dcdabe2598db33a973d06f0009dd528aa1f38813bd6015e2595097b838a42240f9ccbe7524b5235ea2f4207a10d5d706339c7a6f4772b531e00a20281a00f67b
     HEAD_REF master
     PATCHES
         FindCMath.patch
@@ -12,7 +12,7 @@ vcpkg_from_gitlab(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        cxx     cxx
+        cxx     tiff-cxx
         jpeg    jpeg
         jpeg    CMAKE_REQUIRE_FIND_PACKAGE_JPEG
         libdeflate libdeflate
