@@ -109,6 +109,12 @@ subdir('scripts')
     endif()
     if("nls" IN_LIST FEATURES)
         list(APPEND MESON_OPTIONS -Dnls=enabled)
+        # Static intl depends on iconv, but PostgreSQL's meson build uses
+        # cc.find_library('intl') which doesn't resolve transitive deps.
+        # Patch to also link iconv when intl is found.
+        vcpkg_replace_string("${source_path}/meson.build"
+            "i18n = import('i18n')"
+            "iconv_dep = cc.find_library('iconv', required: false, dirs: test_lib_d)\n    if iconv_dep.found()\n      libintl = declare_dependency(dependencies: [libintl, iconv_dep])\n    endif\n    i18n = import('i18n')")
     endif()
     # plpython requires matching debug/release Python libraries.
     # vcpkg's Python is release-only, so only enable for release builds.
@@ -130,7 +136,16 @@ subdir('scripts')
         endif()
     endif()
     if("tcl" IN_LIST FEATURES)
-        list(APPEND MESON_OPTIONS -Dpltcl=enabled -Dtcl_version=tcl90)
+        list(APPEND MESON_OPTIONS -Dpltcl=enabled)
+        # Tcl library naming on Windows: tcl90 (release shared), tcl90g (debug shared),
+        # tcl90s (release static), tcl90sg (debug static)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+            list(APPEND MESON_OPTIONS_RELEASE -Dtcl_version=tcl90s)
+            list(APPEND MESON_OPTIONS_DEBUG -Dtcl_version=tcl90sg)
+        else()
+            list(APPEND MESON_OPTIONS_RELEASE -Dtcl_version=tcl90)
+            list(APPEND MESON_OPTIONS_DEBUG -Dtcl_version=tcl90g)
+        endif()
     endif()
 
     # Provide paths to required tools

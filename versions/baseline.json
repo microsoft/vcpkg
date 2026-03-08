@@ -5374,7 +5374,7 @@
     },
     "libpq": {
       "baseline": "18.3",
-      "port-version": 9
+      "port-version": 10
     },
     "libpqxx": {
       "baseline": "7.10.5",
