@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL_mixer
-    REF "f9566f4dd643cd5dd6e136e4779fe49fa8c4e3d7"
+    REF "prerelease-3.1.2"
     HEAD_REF main
-    SHA512 b96783ce8898d3144af65a075bafe97b0438d015f071175ec21bc2b95ba6a1df88ec19e7155d0900a772aac94df488969af041fc8a6892c9ea85aaee67def1bf
+    SHA512 3059ccf7d69861cec325a7d52fcfae7ac7760d4d97236ee4252d0587c0638df8e1d4a22d537e56438fc48668a4ac368c1db3599493821a5267d98d22e7449c18
 )
 
 vcpkg_check_features(
@@ -13,13 +13,13 @@ vcpkg_check_features(
         fluidsynth SDLMIXER_MIDI_FLUIDSYNTH
         libflac SDLMIXER_FLAC
         libflac SDLMIXER_FLAC_LIBFLAC
-        libmodplug SDLMIXER_MOD
-        libmodplug SDLMIXER_MOD_MODPLUG
+        libxmp SDLMIXER_MOD
+        libxmp SDLMIXER_MOD_XMP
         mpg123 SDLMIXER_MP3
         mpg123 SDLMIXER_MP3_MPG123
         opusfile SDLMIXER_OPUS
-    MAYBE_UNUSED_VARIABLES
-        SDLMIXER_MP3_DRMP3
+        libvorbis SDLMIXER_VORBIS_VORBISFILE
+        wavpack SDLMIXER_WAVPACK
 )
 
 if("fluidsynth" IN_LIST FEATURES)
@@ -35,13 +35,10 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         ${EXTRA_OPTIONS}
         -DSDLMIXER_VENDORED=OFF
-        -DSDLMIXER_SAMPLES=OFF
         -DSDLMIXER_DEPS_SHARED=OFF
         -DSDLMIXER_OPUS_SHARED=OFF
         -DSDLMIXER_VORBIS_VORBISFILE_SHARED=OFF
-        -DSDLMIXER_VORBIS="VORBISFILE"
         -DSDLMIXER_FLAC_DRFLAC=OFF
-        -DSDLMIXER_MIDI_NATIVE=OFF
         -DSDLMIXER_MIDI_TIMIDITY=OFF
         -DSDLMIXER_MP3_DRMP3=OFF
         -DSDLMIXER_MOD_XMP_SHARED=${BUILD_SHARED}
