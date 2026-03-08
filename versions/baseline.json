@@ -5492,6 +5492,10 @@
       "baseline": "0.1.0",
       "port-version": 0
     },
+    "libsharp": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "libshout": {
       "baseline": "2.4.6",
       "port-version": 0
