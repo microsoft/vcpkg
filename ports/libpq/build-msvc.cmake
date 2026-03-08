@@ -137,14 +137,13 @@ subdir('scripts')
     endif()
     if("tcl" IN_LIST FEATURES)
         list(APPEND MESON_OPTIONS -Dpltcl=enabled)
-        # Tcl library naming on Windows: tcl90 (release shared), tcl90g (debug shared),
-        # tcl90s (release static), tcl90sg (debug static)
+        # Tcl library naming on Windows: tcl90 (shared), tcl90s (static).
+        # vcpkg separates debug/release via directory (lib/ vs debug/lib/)
+        # rather than filename suffixes.
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-            list(APPEND MESON_OPTIONS_RELEASE -Dtcl_version=tcl90s)
-            list(APPEND MESON_OPTIONS_DEBUG -Dtcl_version=tcl90sg)
+            list(APPEND MESON_OPTIONS -Dtcl_version=tcl90s)
         else()
-            list(APPEND MESON_OPTIONS_RELEASE -Dtcl_version=tcl90)
-            list(APPEND MESON_OPTIONS_DEBUG -Dtcl_version=tcl90g)
+            list(APPEND MESON_OPTIONS -Dtcl_version=tcl90)
         endif()
     endif()
 
