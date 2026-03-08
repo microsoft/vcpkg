@@ -8,6 +8,11 @@
   "dependencies": [
     "libyaml",
     {
+      "name": "qtapplicationmanager",
+      "host": true,
+      "default-features": false
+    },
+    {
       "name": "qtbase",
       "default-features": false,
       "features": [
