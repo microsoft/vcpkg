@@ -45,40 +45,8 @@ foreach(program_name IN LISTS required_programs)
 endforeach()
 
 if(VCPKG_DETECTED_MSVC)
-    if("xml" IN_LIST FEATURES)
-        x_vcpkg_pkgconfig_get_modules(
-            PREFIX PC_LIBXML2
-            MODULES --msvc-syntax libxml-2.0
-            LIBS
-        )
-        separate_arguments(LIBXML2_LIBS_DEBUG NATIVE_COMMAND "${PC_LIBXML2_LIBS_DEBUG}")
-        separate_arguments(LIBXML2_LIBS_RELEASE NATIVE_COMMAND "${PC_LIBXML2_LIBS_RELEASE}")
-    endif()
-    if("xslt" IN_LIST FEATURES)
-        x_vcpkg_pkgconfig_get_modules(
-            PREFIX PC_LIBXSLT
-            MODULES --msvc-syntax libxslt
-            LIBS
-        )
-        separate_arguments(LIBXSLT_LIBS_DEBUG NATIVE_COMMAND "${PC_LIBXSLT_LIBS_DEBUG}")
-        separate_arguments(LIBXSLT_LIBS_RELEASE NATIVE_COMMAND "${PC_LIBXSLT_LIBS_RELEASE}")
-    endif()
-
     include("${CMAKE_CURRENT_LIST_DIR}/build-msvc.cmake")
-    if(NOT VCPKG_BUILD_TYPE)
-        build_msvc(DEBUG "${SOURCE_PATH}")
-    endif()
-    build_msvc(RELEASE "${SOURCE_PATH}")
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    endif()
-
-    if(HAS_TOOLS)
-        vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-    else()
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools")
-    endif()
+    build_msvc("${SOURCE_PATH}")
 else()
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/Makefile" DESTINATION "${SOURCE_PATH}")
 
