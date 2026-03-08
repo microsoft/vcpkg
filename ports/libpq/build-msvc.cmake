@@ -54,6 +54,15 @@ subdir('scripts')
         "postgres_inc_d += 'src/include/port/win32_msvc'"
         "postgres_inc_d += 'src/include/port/win32_msvc'\n  postgres_inc_d += get_option('extra_include_dirs') # vcpkg: moved here for correct priority")
 
+    # Prevent meson from detecting getopt-win32's getopt.h via extra_include_dirs.
+    # PostgreSQL always uses its own getopt on Windows (always_replace_getopt = true),
+    # but if HAVE_GETOPT_H is set, pg_getopt.h will #include <getopt.h> which picks
+    # up getopt-win32's header. That header renames optarg -> optarg_a via macros and
+    # declares them with __declspec(dllimport), causing linker errors against the
+    # static libpgport.a which defines plain optarg.
+    vcpkg_replace_string("${source_path}/meson.build"
+        "'getopt.h'," "# 'getopt.h', # vcpkg: skip to avoid getopt-win32 header pollution")
+
     # Define generated_backend_sources (normally set in backend/meson.build,
     # referenced in conflict-checking code)
     vcpkg_replace_string("${source_path}/meson.build"
