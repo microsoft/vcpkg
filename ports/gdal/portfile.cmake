@@ -12,7 +12,7 @@ vcpkg_from_github(
         sqlite3.diff
         target-is-valid.patch
 )
-file(REMOVE "${SOURCE_PATH}/cmake/packages/FindIconv.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 
