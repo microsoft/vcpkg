@@ -4,7 +4,7 @@
   "description": "Mesh processing library",
   "homepage": "https://meshlib.io/",
   "license": null,
-  "supports": "!(android & arm32)",
+  "supports": "!(x86 | arm32)",
   "dependencies": [
     "blosc",
     "boost",

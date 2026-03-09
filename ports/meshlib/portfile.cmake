@@ -15,6 +15,7 @@ vcpkg_from_github(
         disable-openctm.patch
         disable-warning-as-error.patch
         fix-iosfwd.patch
+        fix-iterator_debug_level.patch
 )
 
 vcpkg_from_github(
