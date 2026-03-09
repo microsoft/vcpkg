@@ -1,6 +1,6 @@
 {
   "name": "sdl3-mixer",
-  "version": "3.1.2-prerelease",
+  "version": "3.2.0",
   "description": "An audio mixer that supports various file formats for Simple Directmedia Layer.",
   "homepage": "https://github.com/libsdl-org/SDL_mixer",
   "license": "Zlib",
