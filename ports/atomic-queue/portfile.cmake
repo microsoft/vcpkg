@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         001_install.patch
+        002_fix_nil_conflict.patch
 )
 
 set(VCPKG_BUILD_TYPE release) # header-only port

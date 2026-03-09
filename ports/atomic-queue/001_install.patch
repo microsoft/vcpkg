@@ -22,7 +22,7 @@ index c9dc427..456c99b 100644
 -add_library(max0x7ba::atomic_queue ALIAS atomic_queue)
 \ No newline at end of file
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index 7ca376d..504d3cf 100644
+index 7ca376d..4d44523 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
 @@ -1,17 +1,25 @@
@@ -50,7 +50,7 @@ index 7ca376d..504d3cf 100644
 -    ${CMAKE_CURRENT_SOURCE_DIR}
 -)
 \ No newline at end of file
-+add_library(max0x7ba::atomic_queue ALIAS atomic_queue)
++add_library(atomic_queue::atomic_queue ALIAS atomic_queue)
 +
 +if ( ATOMIC_QUEUE_ENABLE_INSTALL )
 +    install(TARGETS atomic_queue EXPORT atomic_queue)
@@ -62,6 +62,6 @@ index 7ca376d..504d3cf 100644
 +        EXPORT atomic_queue
 +        FILE atomic_queue-config.cmake
 +        DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/atomic_queue"
-+        NAMESPACE max0x7ba::
++        NAMESPACE atomic_queue::
 +    )
 +endif ()
