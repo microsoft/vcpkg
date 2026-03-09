@@ -91,7 +91,7 @@
     },
     "opengl2-binding": {
       "description": "Make available OpenGL (legacy) binding",
-      "supports": "!uwp"
+      "supports": "!(uwp | android)"
     },
     "opengl3-binding": {
       "description": "Make available OpenGL3/ES/ES2 (modern) binding"
