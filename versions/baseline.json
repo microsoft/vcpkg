@@ -9745,8 +9745,8 @@
       "port-version": 0
     },
     "taocpp-json": {
-      "baseline": "2020-09-14",
-      "port-version": 4
+      "baseline": "1.0.0-beta.14",
+      "port-version": 0
     },
     "tap-windows6": {
       "baseline": "9.21.2-0e30f5c",
