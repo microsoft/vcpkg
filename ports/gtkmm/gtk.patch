@@ -1,0 +1,17 @@
+diff --git a/untracked/gtk/gtkmm/iconpaintable.h b/untracked/gtk/gtkmm/iconpaintable.h
+index b659ed22..c4c56600 100644
+--- "a/untracked/gtk/gtkmm/iconpaintable.h"	
++++ "b/untracked/gtk/gtkmm/iconpaintable.h"
+@@ -29,11 +29,10 @@
+ #include <glibmm/object.h>
+ #include <gdkmm/paintable.h>
+ #include <giomm/file.h>
++#include <gtk/gtk.h>
+ 
+ 
+ #ifndef DOXYGEN_SHOULD_SKIP_THIS
+-using GtkIconPaintable = struct _GtkIconPaintable;
+-using GtkIconPaintableClass = struct _GtkIconPaintableClass;
+ #endif /* DOXYGEN_SHOULD_SKIP_THIS */
+ 
+ 
