@@ -39,6 +39,16 @@ subdir('scripts')
             "__declspec (dllimport)" "")
     endif()
 
+    # The meson build compiles the static pgcommon with -DUSE_PRIVATE_ENCODING_FUNCS,
+    # which renames pg_char_to_encoding -> pg_char_to_encoding_private. But libpq
+    # (compiled as FRONTEND without that flag) calls the non-private names, causing
+    # unresolved symbols for consumers. The autoconf Makefile works around this by
+    # installing pgcommon_shlib (non-private names) as pgcommon. Since we don't build
+    # the server backend, there's no symbol conflict risk, so just remove the flag.
+    vcpkg_replace_string("${source_path}/src/common/meson.build"
+        "'c_args': ['-DUSE_PRIVATE_ENCODING_FUNCS'],"
+        "# 'c_args': ['-DUSE_PRIVATE_ENCODING_FUNCS'], # vcpkg: use non-private names")
+
     # Map vcpkg features to meson options
     vcpkg_list(SET MESON_OPTIONS)
 
@@ -167,19 +177,16 @@ subdir('scripts')
     )
     vcpkg_install_meson()
 
-    # The meson build installs pgcommon with -DUSE_PRIVATE_ENCODING_FUNCS,
-    # which renames pg_char_to_encoding -> pg_char_to_encoding_private.
-    # Consumers linking static pq.lib need the non-private names.
-    # Replace pgcommon with pgcommon_shlib (compiled without the flag),
-    # mirroring the autoconf Makefile: mv libpgcommon_shlib.a libpgcommon.a
-    foreach(dir IN ITEMS "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
-        if(EXISTS "${dir}/libpgcommon_shlib.lib")
-            file(REMOVE "${dir}/libpgcommon.lib")
-            file(RENAME "${dir}/libpgcommon_shlib.lib" "${dir}/libpgcommon.lib")
-        endif()
-        # Clean up _shlib variants that consumers don't need
-        file(REMOVE "${dir}/libpgport_shlib.lib")
-    endforeach()
+    # Remove _shlib variants of pgcommon/pgport that consumers don't need
+    file(GLOB _shlib_libs
+        "${CURRENT_PACKAGES_DIR}/lib/*pgcommon_shlib*"
+        "${CURRENT_PACKAGES_DIR}/lib/*pgport_shlib*"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/*pgcommon_shlib*"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/*pgport_shlib*"
+    )
+    if(_shlib_libs)
+        file(REMOVE ${_shlib_libs})
+    endif()
 
     # Remove server-related installed files we don't need
     file(REMOVE_RECURSE
