@@ -167,6 +167,20 @@ subdir('scripts')
     )
     vcpkg_install_meson()
 
+    # The meson build installs pgcommon with -DUSE_PRIVATE_ENCODING_FUNCS,
+    # which renames pg_char_to_encoding -> pg_char_to_encoding_private.
+    # Consumers linking static pq.lib need the non-private names.
+    # Replace pgcommon with pgcommon_shlib (compiled without the flag),
+    # mirroring the autoconf Makefile: mv libpgcommon_shlib.a libpgcommon.a
+    foreach(dir IN ITEMS "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
+        if(EXISTS "${dir}/libpgcommon_shlib.lib")
+            file(REMOVE "${dir}/libpgcommon.lib")
+            file(RENAME "${dir}/libpgcommon_shlib.lib" "${dir}/libpgcommon.lib")
+        endif()
+        # Clean up _shlib variants that consumers don't need
+        file(REMOVE "${dir}/libpgport_shlib.lib")
+    endforeach()
+
     # Remove server-related installed files we don't need
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/lib/postgresql"
