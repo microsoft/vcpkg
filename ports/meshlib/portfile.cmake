@@ -16,6 +16,7 @@ vcpkg_from_github(
         disable-warning-as-error.patch
         fix-iosfwd.patch
         fix-iterator_debug_level.patch
+        fix-tinyxml2-link.patch
 )
 
 vcpkg_from_github(
