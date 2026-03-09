@@ -17,9 +17,9 @@ diff --git a/source/MRIOExtras/CMakeLists.txt b/source/MRIOExtras/CMakeLists.txt
 --- a/source/MRIOExtras/CMakeLists.txt
 +++ b/source/MRIOExtras/CMakeLists.txt
 @@ -24,6 +24,12 @@ add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
- 
+
  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h)
- 
+
 +target_include_directories(${PROJECT_NAME}
 +  PUBLIC
 +    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
@@ -44,7 +44,7 @@ diff --git a/source/MRVoxels/CMakeLists.txt b/source/MRVoxels/CMakeLists.txt
 +    $<INSTALL_INTERFACE:${MR_INCLUDE_DIR}>
 +)
  # required for static linking
- IF(EMSCRIPTEN OR UNIX)
+ find_package(blosc CONFIG REQUIRED)
 diff --git a/source/MRSymbolMesh/CMakeLists.txt b/source/MRSymbolMesh/CMakeLists.txt
 --- a/source/MRSymbolMesh/CMakeLists.txt
 +++ b/source/MRSymbolMesh/CMakeLists.txt
@@ -59,6 +59,6 @@ diff --git a/source/MRSymbolMesh/CMakeLists.txt b/source/MRSymbolMesh/CMakeLists
 +    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
 +    $<INSTALL_INTERFACE:${MR_INCLUDE_DIR}>
 + )
- 
+
  install(
    TARGETS ${PROJECT_NAME}

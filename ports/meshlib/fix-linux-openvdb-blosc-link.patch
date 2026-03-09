@@ -8,8 +8,8 @@ index 8b4df1f..d302e41 100644
  # required for static linking
 -IF(EMSCRIPTEN)
 -  target_link_libraries(${PROJECT_NAME} PRIVATE blosc)
-+IF(EMSCRIPTEN OR UNIX)
-+  find_package(blosc CONFIG REQUIRED)
++find_package(blosc CONFIG REQUIRED)
++IF(OpenVDB_USES_BLOSC AND TARGET blosc_static)
 +  target_link_libraries(${PROJECT_NAME} PRIVATE blosc_static)
  ENDIF()
 
