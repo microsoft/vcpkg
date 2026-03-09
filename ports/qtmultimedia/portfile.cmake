@@ -13,8 +13,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "qml"           CMAKE_REQUIRE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_REQUIRE_FIND_PACKAGE_Qt6Widgets
-    "pipewire"      CMAKE_REQUIRE_FIND_PACKAGE_PipeWire
-    "pulseaudio"    CMAKE_REQUIRE_FIND_PACKAGE_WrapPulseAudio
 INVERTED_FEATURES
     "qml"           CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
     "widgets"       CMAKE_DISABLE_FIND_PACKAGE_Qt6Widgets
