@@ -1,34 +1,27 @@
 {
   "name": "osgearth",
-  "version": "3.7.2",
-  "port-version": 5,
-  "description": "osgEarth - 3D Maps for OpenSceneGraph / C++14",
-  "homepage": "https://github.com/gwaldron/osgearth",
-  "license": "LGPL-3.0-or-later",
-  "supports": "!(arm32 | x86 | wasm32 | xbox) & !(windows & arm64)",
+  "version": "3.8",
+  "description": "osgEarth - 3D Maps for OpenSceneGraph",
+  "homepage": "https://github.com/pelicanmapping/osgearth",
+  "license": "MIT",
+  "supports": "!(arm | x86 | wasm32 | android)",
   "dependencies": [
+    {
+      "name": "aws-sdk-cpp",
+      "features": [
+        "s3"
+      ]
+    },
     "blend2d",
     "draco",
+    "gdal",
     "geos",
-    "glew",
-    {
-      "name": "imgui",
-      "features": [
-        "docking-experimental",
-        "opengl3-binding"
-      ]
-    },
     "libwebp",
+    "meshoptimizer",
     "opengl",
-    {
-      "name": "osg",
-      "default-features": false,
-      "features": [
-        "plugins"
-      ]
-    },
+    "osg",
     "protobuf",
-    "pthreads",
+    "spdlog",
     "sqlite3",
     {
       "name": "vcpkg-cmake",
