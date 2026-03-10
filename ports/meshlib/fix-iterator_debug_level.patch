@@ -2,13 +2,12 @@ diff --git a/cmake/Modules/CompilerOptions.cmake b/cmake/Modules/CompilerOptions
 index 0817b2b..d1137e4 100644
 --- a/cmake/Modules/CompilerOptions.cmake
 +++ b/cmake/Modules/CompilerOptions.cmake
-@@ -114,7 +114,8 @@ ENDIF()
- 
+@@ -114,7 +114,7 @@ ENDIF()
+
  IF(MSVC)
    add_definitions(-DUNICODE -D_UNICODE)
 -  add_definitions(-D_ITERATOR_DEBUG_LEVEL=0)
-+  add_definitions(-D_ITERATOR_DEBUG_LEVEL=$<IF:$<CONFIG:Debug>,2,0>)
 +  add_definitions(-DMR_ITERATOR_DEBUG_LEVEL=$<IF:$<CONFIG:Debug>,2,0>)
  ENDIF()
- 
+
  IF(NOT MSVC)
