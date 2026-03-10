@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependencies.patch
         find_blas.patch
+        fix-lapack.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/dlib/external")

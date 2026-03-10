@@ -1,0 +1,26 @@
+diff --git a/src/nuke/txReader/CMakeLists.txt b/src/nuke/txReader/CMakeLists.txt
+index 6f81e2600..d575a2b4b 100644
+--- a/src/nuke/txReader/CMakeLists.txt
++++ b/src/nuke/txReader/CMakeLists.txt
+@@ -21,7 +21,7 @@ elseif (APPLE)
+     set_target_properties (txReader PROPERTIES
+         PREFIX ""
+         COMPILE_OPTIONS -arch x86_64
+-        LINK_FLAGS "-arch x86_64 -bundle -framework QuartzCore -framework IOKit -framework CoreFoundation -framework Carbon -framework ApplicationServices -framework OpenGL -framework AGL")
++        LINK_FLAGS "-arch x86_64 -bundle -framework QuartzCore -framework IOKit -framework CoreFoundation -framework Carbon -framework ApplicationServices -framework OpenGL")
+ else ()
+     target_compile_definitions (txReader PRIVATE USE_GLEW)
+     set_target_properties (txReader PROPERTIES
+diff --git a/src/nuke/txWriter/CMakeLists.txt b/src/nuke/txWriter/CMakeLists.txt
+index eb090af64..a34d6e6dd 100644
+--- a/src/nuke/txWriter/CMakeLists.txt
++++ b/src/nuke/txWriter/CMakeLists.txt
+@@ -20,7 +20,7 @@ elseif (APPLE)
+     set_target_properties (txWriter PROPERTIES
+         PREFIX ""
+         COMPILE_OPTIONS -arch x86_64
+-        LINK_FLAGS "-arch x86_64 -bundle -framework QuartzCore -framework IOKit -framework CoreFoundation -framework Carbon -framework ApplicationServices -framework OpenGL -framework AGL")
++        LINK_FLAGS "-arch x86_64 -bundle -framework QuartzCore -framework IOKit -framework CoreFoundation -framework Carbon -framework ApplicationServices -framework OpenGL")
+         # N.B. After CMake 3.13, use LINK_OPTIONS (list, not string)
+ else ()
+     target_compile_definitions (txWriter PRIVATE USE_GLEW)

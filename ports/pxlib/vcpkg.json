@@ -1,0 +1,17 @@
+{
+  "name": "pxlib",
+  "version-date": "2025-12-16",
+  "description": "Library to read and write Paradox files",
+  "homepage": "https://github.com/steinm/pxlib",
+  "license": "GPL-2.0-only",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

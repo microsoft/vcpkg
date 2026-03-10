@@ -1,10 +1,14 @@
 {
   "name": "kf5holidays",
-  "version": "5.98.0",
+  "version": "5.116.0",
   "description": "Holiday calculation library",
+  "homepage": "https://api.kde.org/kholidays-index.html",
   "dependencies": [
     "ecm",
-    "qt5-base",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
     "qt5-tools",
     {
       "name": "vcpkg-cmake",

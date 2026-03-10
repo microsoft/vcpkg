@@ -9,6 +9,7 @@ vcpkg_from_github(
         exclude-testerutil.diff
         export-link-libs.diff
         sleefdft.pc.diff
+        seh-cpu-ext.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS options

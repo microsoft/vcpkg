@@ -1,12 +1,16 @@
 {
   "name": "eraser",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "A C++20 type-erasure library that supports user defined interfaces",
   "homepage": "https://github.com/Curve/eraser",
   "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
       "host": true
     }
   ]

@@ -1,0 +1,78 @@
+{
+  "name": "embree",
+  "version": "4.4.0",
+  "description": "High Performance Ray Tracing Kernels.",
+  "homepage": "https://github.com/RenderKit/embree",
+  "license": null,
+  "supports": "linux | osx | (windows & !uwp & !arm)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "filter-function",
+    "geometry-curve",
+    "geometry-grid",
+    "geometry-instance",
+    "geometry-point",
+    "geometry-quad",
+    "geometry-subdivision",
+    "geometry-triangle",
+    "geometry-user",
+    "ray-packets",
+    "tasking-tbb"
+  ],
+  "features": {
+    "backface-culling": {
+      "description": "Enables backface culling."
+    },
+    "compact-polys": {
+      "description": "Enables double indexed poly layout."
+    },
+    "filter-function": {
+      "description": "Enables filter functions."
+    },
+    "geometry-curve": {
+      "description": "Enables support for curve geometries."
+    },
+    "geometry-grid": {
+      "description": "Enables support for grid geometries."
+    },
+    "geometry-instance": {
+      "description": "Enables support for instances."
+    },
+    "geometry-point": {
+      "description": "Enables support for point geometries."
+    },
+    "geometry-quad": {
+      "description": "Enables support for quad geometries."
+    },
+    "geometry-subdivision": {
+      "description": "Enables support for subdiv geometries."
+    },
+    "geometry-triangle": {
+      "description": "Enables support for triangle geometries."
+    },
+    "geometry-user": {
+      "description": "Enables support for user geometries."
+    },
+    "ray-mask": {
+      "description": "Enables ray mask support."
+    },
+    "ray-packets": {
+      "description": "Enabled support for ray packets."
+    },
+    "tasking-tbb": {
+      "description": "Use oneTBB as task system.",
+      "dependencies": [
+        "tbb"
+      ]
+    }
+  }
+}

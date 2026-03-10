@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bitdefender/bddisasm
     REF "v${VERSION}"
-    SHA512 5c1b8b8b9a29db76ce6197674e662fdc526e89372a84f7fac8e74cf4cc53bfab8d55c096cdb3f344fcfaa6a4d54a5bef79e8f1cf9131e497636072523b2cf3ec
+    SHA512 a0a3fab35acacd7a6cfc96fed867a7c242ecdfe75867c3dcbf66fc9747452f09cc44c5a5038fe15d146eb597c1712f59b89b86961a48f738483794fde9ec0ecc
     HEAD_REF master
 )
 

@@ -1,8 +1,8 @@
 diff --git a/cmake/macros/Private.cmake b/cmake/macros/Private.cmake
-index 48fe107dd..79fdad022 100644
+index b90b743de3..0acc15a450 100644
 --- a/cmake/macros/Private.cmake
 +++ b/cmake/macros/Private.cmake
-@@ -1185,8 +1185,10 @@ function(_pxr_library NAME)
+@@ -1149,8 +1149,10 @@ function(_pxr_library NAME)
              # XXX --- Why this difference?
              _get_install_dir("plugin/usd" pluginInstallPrefix)
          endif()
@@ -14,7 +14,7 @@ index 48fe107dd..79fdad022 100644
      endif()
      if(args_SUBDIR)
          set(pluginInstallPrefix "${pluginInstallPrefix}/${args_SUBDIR}")
-@@ -1266,17 +1268,25 @@ function(_pxr_library NAME)
+@@ -1230,17 +1232,25 @@ function(_pxr_library NAME)
      # Where do we install library to?
      _get_install_dir("include" headerInstallDir)
      _get_install_dir("include/${PXR_PREFIX}/${NAME}" headerInstallPrefix)
@@ -41,7 +41,7 @@ index 48fe107dd..79fdad022 100644
      endif()
      # Return libInstallPrefix to caller.
      if(args_LIB_INSTALL_PREFIX_RESULT)
-@@ -1408,8 +1418,8 @@ function(_pxr_library NAME)
+@@ -1372,8 +1382,8 @@ function(_pxr_library NAME)
      # The former is for helper libraries for a third party application and
      # the latter for core USD libraries.
      _pxr_init_rpath(rpath "${libInstallPrefix}")
@@ -52,7 +52,7 @@ index 48fe107dd..79fdad022 100644
      _pxr_install_rpath(rpath ${NAME})
  
      #
-@@ -1450,14 +1460,14 @@ function(_pxr_library NAME)
+@@ -1421,14 +1431,14 @@ function(_pxr_library NAME)
          if(isPlugin)
              install(
                  TARGETS ${NAME}
@@ -71,7 +71,7 @@ index 48fe107dd..79fdad022 100644
                      OPTIONAL
                  )
              endif()
-@@ -1482,7 +1492,7 @@ function(_pxr_library NAME)
+@@ -1453,7 +1463,7 @@ function(_pxr_library NAME)
                  TARGETS ${NAME}
                  EXPORT pxrTargets
                  LIBRARY DESTINATION ${libInstallPrefix}

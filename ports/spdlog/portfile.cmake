@@ -2,14 +2,18 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
     REF "v${VERSION}"
-    SHA512 21c35f4091850ea3a0cd6a24867e06e943df70d76cd5a7ec0b15a33e0e9e0cc3584ed7930e1ac6f347e7e06f0e002d0e759884eaf05310014e24ea0e0419fcc4
+    SHA512 8df117055d19ff21c9c9951881c7bdf27cc0866ea3a4aa0614b2c3939cedceab94ac9abaa63dc4312b51562b27d708cb2f014c68c603fd1c1051d3ed5c1c3087
     HEAD_REF v1.x
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         benchmark SPDLOG_BUILD_BENCH
+        fmt       SPDLOG_FMT_EXTERNAL
         wchar     SPDLOG_WCHAR_SUPPORT
+    INVERTED_FEATURES
+        fmt       SPDLOG_USE_STD_FORMAT
+        tz-offset SPDLOG_NO_TZ_OFFSET
 )
 
 # SPDLOG_WCHAR_FILENAMES can only be configured in triplet file since it is an alternative (not additive)
@@ -26,7 +30,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
         -DSPDLOG_WCHAR_FILENAMES=${SPDLOG_WCHAR_FILENAMES}
@@ -43,10 +46,18 @@ if(NOT VCPKG_BUILD_TYPE)
 endif()
 
 # add support for integration other than cmake
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
-    "// #define SPDLOG_FMT_EXTERNAL"
-    "#ifndef SPDLOG_FMT_EXTERNAL\n#define SPDLOG_FMT_EXTERNAL\n#endif"
-)
+if(SPDLOG_FMT_EXTERNAL)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
+        "// #define SPDLOG_FMT_EXTERNAL"
+        "#ifndef SPDLOG_FMT_EXTERNAL\n#define SPDLOG_FMT_EXTERNAL\n#endif"
+    )
+endif()
+if(SPDLOG_USE_STD_FORMAT)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
+        "// #define SPDLOG_USE_STD_FORMAT"
+	"#ifndef SPDLOG_USE_STD_FORMAT\n#define SPDLOG_USE_STD_FORMAT\n#endif"
+    )
+endif()
 if(SPDLOG_WCHAR_SUPPORT)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/tweakme.h
         "// #define SPDLOG_WCHAR_TO_UTF8_SUPPORT"

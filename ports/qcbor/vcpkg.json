@@ -1,6 +1,6 @@
 {
   "name": "qcbor",
-  "version": "1.5.3",
+  "version": "1.6",
   "description": "Comprehensive, powerful, commercial-quality CBOR encoder/ decoder that is still suited for small devices.",
   "homepage": "https://github.com/laurencelundblade/QCBOR",
   "license": "BSD-3-Clause",

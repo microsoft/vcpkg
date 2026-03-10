@@ -23,7 +23,7 @@ vcpkg_cmake_install()
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_cmake_config_fixup(CONFIG_PATH cmake)
 else ()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake)
+    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FTGL)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

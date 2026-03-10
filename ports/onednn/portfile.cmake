@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneDNN
     REF "v${VERSION}"
-    SHA512 2a7505cd06a379a2050f99fac990dcaa65a80b8bd864b00712304379383ac02603cec1d956c5178b5c1dc075fdcf52b3043acf766c2d8a714ac2b927b7dc5e06
+    SHA512 de60ecd881b97e9942441e0eb5c53e2caa2a0a1a1c78ab9211ab103244b66b62c0f3dfa5b322bb2c39dfe13f85a9aebf82b899dde1ccdc01ba8ff9deed832787
     HEAD_REF master
 )
 
@@ -12,10 +12,11 @@ endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS ${DNNL_OPTIONS}
+    OPTIONS
         -DDNNL_BUILD_DOC=OFF
         -DDNNL_BUILD_EXAMPLES=OFF
         -DDNNL_BUILD_TESTS=OFF
+        ${DNNL_OPTIONS}
 )
 vcpkg_cmake_install()
 

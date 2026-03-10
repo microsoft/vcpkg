@@ -6,8 +6,8 @@ endif()
 
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-set(SCITER_REVISION 1a35354adaef9a9940ceac7c209f2aa8157c7fb0)
-set(SCITER_SHA 9d7bc33a5aefb6759ca380cc690ea8a92fe707846045ab5f4d3fd178d4b5c2a43de1a1be8fad97e1c3b4f2c763b5f95f8089a9006de706fa87ef8b1930eb7ad3)
+set(SCITER_REVISION 5fe93fb3a354e522cf0a86ea2628accbe2f50655)
+set(SCITER_SHA 8af99827f9c1f905bee5b56063ff525b2296d72fd837f486545924eea57468d3a53fdd40d64526935627cc2e31a65d3e197507fdeb7c4f732b7860109ace03a8)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
     set(SCITER_ARCH x64)
@@ -60,8 +60,11 @@ if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter-gtk.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.so DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 
 elseif(VCPKG_TARGET_IS_OSX)
     set(SCITER_BIN ${SOURCE_PATH}/bin/macosx)
@@ -76,6 +79,18 @@ elseif(VCPKG_TARGET_IS_OSX)
 
     execute_process(COMMAND sh -c "chmod +x usciterjs.app/Contents/MacOS/usciterjs" WORKING_DIRECTORY ${SCITER_TOOLS})
     execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY ${SCITER_TOOLS})
+
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+
+    if ("webview" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 
     file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
@@ -93,6 +108,18 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(INSTALL ${SCITER_BIN}/inspector.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/window-mixin.exe DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${SCITER_TOOLS})
+
+    if ("sqlite" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-sqlite.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
+
+    if ("webview" IN_LIST FEATURES)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${SCITER_TOOLS})
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        file(INSTALL ${SCITER_BIN}/sciter-webview.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     file(INSTALL ${SCITER_BIN}/sciter.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)

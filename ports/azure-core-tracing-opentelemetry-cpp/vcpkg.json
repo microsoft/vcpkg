@@ -5,7 +5,7 @@
   ],
   "name": "azure-core-tracing-opentelemetry-cpp",
   "version-semver": "1.0.0-beta.4",
-  "port-version": 5,
+  "port-version": 6,
   "description": [
     "Microsoft Azure Core Tracing OpenTelemetry SDK for C++",
     "This library provides support for modern Azure SDK client libraries written in C++ to leverage OpenTelemetry APIs."

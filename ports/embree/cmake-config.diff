@@ -1,0 +1,38 @@
+diff --git a/common/cmake/embree-config.cmake b/common/cmake/embree-config.cmake
+index c0009fd..e80df05 100644
+--- a/common/cmake/embree-config.cmake
++++ b/common/cmake/embree-config.cmake
+@@ -5,7 +5,7 @@ SET(EMBREE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/@EMBREE_RELATIVE_ROOT_DIR@")
+ GET_FILENAME_COMPONENT(EMBREE_ROOT_DIR "${EMBREE_ROOT_DIR}" ABSOLUTE)
+ 
+ SET(EMBREE_INCLUDE_DIRS "${EMBREE_ROOT_DIR}/@CMAKE_INSTALL_INCLUDEDIR@")
+-SET(EMBREE_LIBRARY "${EMBREE_ROOT_DIR}/@CMAKE_INSTALL_LIBDIR@/@EMBREE_LIBRARY_FULLNAME@")
++SET(EMBREE_LIBRARY "unofficial::embree::embree") # Improve diagnostics with namespaced target
+ SET(EMBREE_LIBRARIES ${EMBREE_LIBRARY})
+ 
+ SET(EMBREE_VERSION @EMBREE_VERSION@)
+@@ -104,6 +104,10 @@ IF (EMBREE_SYCL_SUPPORT)
+ ENDIF()
+ 
+ INCLUDE("${EMBREE_ROOT_DIR}/@EMBREE_CMAKEEXPORT_DIR@/embree-targets.cmake")
++if(NOT TARGET unofficial::embree::embree)
++  add_library(unofficial::embree::embree INTERFACE IMPORTED)
++  target_link_libraries(unofficial::embree::embree INTERFACE embree)
++endif()
+ 
+ 
+ SET(EMBREE_TESTING_ONLY_SYCL_TESTS @EMBREE_TESTING_ONLY_SYCL_TESTS@)
+diff --git a/common/cmake/package.cmake b/common/cmake/package.cmake
+index 7cd3775..3fe79bb 100644
+--- a/common/cmake/package.cmake
++++ b/common/cmake/package.cmake
+@@ -218,6 +218,9 @@ ELSE()
+   FILE(RELATIVE_PATH EMBREE_RELATIVE_ROOT_DIR "/${EMBREE_CMAKECONFIG_DIR}" "/")
+ ENDIF()
+ #ENDIF()
++SET(EMBREE_CMAKECONFIG_DIR "share/embree")
++SET(EMBREE_CMAKEEXPORT_DIR "share/embree")
++SET(EMBREE_RELATIVE_ROOT_DIR "../../")
+ 
+ CONFIGURE_FILE(common/cmake/embree-config.cmake embree-config-install.cmake @ONLY)
+ CONFIGURE_FILE(common/cmake/embree-config-version.cmake embree-config-version.cmake @ONLY)

@@ -1,6 +1,6 @@
 {
   "name": "xtensor-blas",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "description": "BLAS extension to xtensor",
   "homepage": "https://github.com/xtensor-stack/xtensor-blas",
   "dependencies": [

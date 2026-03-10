@@ -4,12 +4,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 9530537a2e9b1e22fa75f3816a122f34b46348e462e74bae2eb3aaa8927de44ac1dd4ce9517f38937d32de4add3151071cc01bdd5554a2000aa9f4db18c0de9b
+    SHA512 1dca42354d29b9326a3e9be34c74433c3a7364318d69519e2f5b9a164e81db739d3ef1eed79e3313296fe72af73281e0fc61e57a21e9dede1ef240c8fa6af4fe
     HEAD_REF master
     PATCHES
         dependencies.patch
-        pkgconfig-curl-config.patch
+        winsock.diff
 )
+# The on-the-fly tarballs do not carry the details of release tarballs.
+vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[-DEV"]] [["]])
+vcpkg_replace_string("${SOURCE_PATH}/include/curl/curlver.h" [[LIBCURL_TIMESTAMP "[unreleased]"]] [[LIBCURL_TIMESTAMP "[vcpkg]"]])
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -141,11 +144,6 @@ endif()
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(READ "${SOURCE_PATH}/lib/krb5.c" krb5_c)
-string(REGEX REPLACE "#i.*" "" krb5_c "${krb5_c}")
-set(krb5_copyright "${CURRENT_BUILDTREES_DIR}/krb5.c Notice")
-file(WRITE "${krb5_copyright}" "${krb5_c}")
-
 file(READ "${SOURCE_PATH}/lib/curlx/inet_ntop.c" inet_ntop_c)
 string(REGEX REPLACE "#i.*" "" inet_ntop_c "${inet_ntop_c}")
 set(inet_ntop_copyright "${CURRENT_BUILDTREES_DIR}/inet_ntop.c and inet_pton.c Notice")
@@ -154,6 +152,5 @@ file(WRITE "${inet_ntop_copyright}" "${inet_ntop_c}")
 vcpkg_install_copyright(
     FILE_LIST
         "${SOURCE_PATH}/COPYING"
-        "${krb5_copyright}"
         "${inet_ntop_copyright}"
 )

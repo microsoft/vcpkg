@@ -1,7 +1,6 @@
 {
   "name": "python3",
-  "version": "3.12.9",
-  "port-version": 3,
+  "version": "3.12.13",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -67,6 +66,11 @@
           "default-features": false
         },
         {
+          "name": "libb2",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        {
           "name": "libffi",
           "default-features": false
         },
@@ -90,8 +94,11 @@
       ]
     },
     "readline": {
-      "description": "Build with readline. Requires system readline to be installed",
-      "supports": "!windows"
+      "description": "Build with readline.",
+      "supports": "!windows",
+      "dependencies": [
+        "readline"
+      ]
     }
   }
 }

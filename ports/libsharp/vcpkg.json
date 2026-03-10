@@ -1,0 +1,14 @@
+{
+  "name": "libsharp",
+  "version": "1.0.0",
+  "description": "Library for fast spherical harmonic transforms, see http://arxiv.org/abs/1303.4945",
+  "homepage": "https://healpix.sourceforge.io/",
+  "license": null,
+  "supports": "!windows | mingw",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

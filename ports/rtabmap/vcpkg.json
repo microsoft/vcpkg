@@ -1,11 +1,11 @@
 {
   "name": "rtabmap",
-  "version": "0.21.4.1",
-  "port-version": 7,
+  "version": "0.23.2",
   "description": "Real-Time Appearance-Based Mapping",
   "homepage": "https://introlab.github.io/rtabmap/",
   "license": null,
   "dependencies": [
+    "boost-crc",
     "ceres",
     "g2o",
     {

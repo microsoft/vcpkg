@@ -8,13 +8,6 @@ vcpkg_from_github(
         pkgconfig.diff
 )
 
-message(
-"numactl currently requires the following libraries from the system package manager:
-    autoconf libtool
-These can be installed on Ubuntu systems via
-    sudo apt install autoconf libtool"
-)
-
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTORECONF

@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2bb396ba..25d3557b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -364,7 +364,7 @@ if ( WIN32 )
+   endif  ( MINGW )
+ endif ( WIN32 )
+ 
+-find_package ( GCEM REQUIRED )
++find_package ( gcem CONFIG REQUIRED )
+ 
+ set ( LIBFLUID_LIBS ${MATH_LIBRARY} )
+ if (NOT ((CMAKE_SYSTEM_NAME MATCHES "SunOS") OR (osal STREQUAL "embedded")))
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index cc43d691..3021d54f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -295,7 +295,7 @@ target_include_directories ( libfluidsynth-OBJ PRIVATE
+     ${FluidSynth_SOURCE_DIR}/src/sfloader
+     ${FluidSynth_SOURCE_DIR}/src/bindings
+     ${FluidSynth_SOURCE_DIR}/include
+-    ${GCEM_INCLUDE_DIR}
++    ${gcem_INCLUDE_DIRS}
+ )
+ 
+ if ( LIBFLUID_CPPFLAGS )

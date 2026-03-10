@@ -1,14 +1,13 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libvpx
     REF "v${VERSION}"
-    SHA512 824fe8719e4115ec359ae0642f5e1cea051d458f09eb8c24d60858cf082f66e411215e23228173ab154044bafbdfbb2d93b589bb726f55b233939b91f928aae0
+    SHA512 07f5e352411d6c0be331706d1835ac89bafbeddcbbac5542b473323766e9e974f4f68b33590f2aa50a7d8d69468a642b508cbb0a7c49a82c9933b07820f9c9d9
     HEAD_REF master
     PATCHES
         0003-add-uwp-v142-and-v143-support.patch
         0004-remove-library-suffixes.patch
+        0005-dont-expect-gnu-diff.patch
 )
 
 if(CMAKE_HOST_WIN32)
@@ -158,6 +157,8 @@ else()
         set(LIBVPX_TARGET_ARCH "armv7")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
         set(LIBVPX_TARGET_ARCH "arm64")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL riscv64)
+        set(LIBVPX_TARGET_ARCH "riscv64")
     else()
         message(FATAL_ERROR "libvpx does not support architecture ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
@@ -186,7 +187,12 @@ else()
             set(LIBVPX_TARGET "x86_64-win64-gcc")
         endif()
     elseif(VCPKG_TARGET_IS_LINUX)
-        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
+        # RISCV64 use target generic-gnu
+        if(LIBVPX_TARGET_ARCH STREQUAL "riscv64")
+            set(LIBVPX_TARGET "generic-gnu")
+        else()
+            set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
+        endif()
     elseif(VCPKG_TARGET_IS_ANDROID)
         set(LIBVPX_TARGET "generic-gnu")
         # Settings
@@ -227,7 +233,7 @@ else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
 
-    if (VCPKG_HOST_IS_OPENBSD OR VCPKG_HOST_IS_FREEBSD)
+    if (VCPKG_HOST_IS_BSD)
         set(MAKE_BINARY "gmake")
     else()
         set(MAKE_BINARY "make")

@@ -5,7 +5,7 @@
   ],
   "name": "azure-security-keyvault-administration-cpp",
   "version-semver": "4.0.0-beta.5",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "Microsoft Azure Key Vault Administration SDK for C++",
     "This library provides Azure Key Vault Administration SDK."

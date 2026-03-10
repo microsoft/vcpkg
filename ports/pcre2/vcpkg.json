@@ -1,6 +1,6 @@
 {
   "name": "pcre2",
-  "version": "10.46",
+  "version": "10.47",
   "description": "Regular Expression pattern matching using the same syntax and semantics as Perl 5.",
   "homepage": "https://github.com/PCRE2Project/pcre2",
   "license": "BSD-3-Clause",

@@ -15,7 +15,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alsa-project/alsa-lib
     REF "v${VERSION}"
-    SHA512 c28e9fbd2cdf8f6482ed8fb1d48235441e6de9939406b7e1d2b595a9c6587c39e408dd892bca55af0e8e892b30622d89e796fbff2c0bde67f730a34be2017aa1
+    SHA512 0b8a7d83a0bbce2153475923dff0fe47ed946a8adf2022f5f99c027465bd1c04a4eb06861c72bd88943b1af9b46b7967f8417f14c0261623e130ebde4e833e5d
     HEAD_REF master
     PATCHES
         fix-plugin-dir.patch
@@ -52,7 +52,7 @@ vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(REMOVE_RECURSE 
+file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
     "${CURRENT_PACKAGES_DIR}/debug/tools/alsa/debug"

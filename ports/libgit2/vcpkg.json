@@ -1,6 +1,6 @@
 {
   "name": "libgit2",
-  "version-semver": "1.9.1",
+  "version-semver": "1.9.2",
   "description": "A C library implementing the Git core methods with a solid API",
   "homepage": "https://github.com/libgit2/libgit2",
   "license": null,
@@ -50,6 +50,9 @@
     "sectransp": {
       "description": "SSL support (sectransp)",
       "supports": "osx"
+    },
+    "sha256": {
+      "description": "[experimental] SHA256 OID support"
     },
     "ssh": {
       "description": "SSH support via libssh2",

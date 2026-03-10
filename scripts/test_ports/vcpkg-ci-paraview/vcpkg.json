@@ -10,17 +10,7 @@
       "default-features": false,
       "features": [
         "tools"
-      ],
-      "platform": "x86 & windows"
-    },
-    {
-      "name": "paraview",
-      "default-features": false,
-      "features": [
-        "tools",
-        "vtkm"
-      ],
-      "platform": "!(x86 & windows)"
+      ]
     },
     {
       "name": "paraview",
@@ -36,7 +26,8 @@
       "default-features": false,
       "features": [
         "gdal",
-        "utf8"
+        "utf8",
+        "vtkm"
       ],
       "platform": "!x86"
     },

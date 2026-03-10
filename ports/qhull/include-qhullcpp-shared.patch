@@ -2,6 +2,11 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index f50b187..30109b3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -71,3 +71,3 @@ cmake_minimum_required(VERSION 3.0)
+ project(qhull)
+-cmake_minimum_required(VERSION 3.0)
++cmake_minimum_required(VERSION 3.5..4.0)
+ 
 @@ -344,7 +344,7 @@ set(qhull_SHAREDP qhull_p)  # libqhull and qhull_p are deprecated, use qhull_r i
  
  set(qhull_TARGETS_APPLICATIONS qhull rbox qconvex qdelaunay qvoronoi qhalf)

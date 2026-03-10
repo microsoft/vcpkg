@@ -1,0 +1,37 @@
+diff --git a/src/core/matcher-factory.cpp b/src/core/matcher-factory.cpp
+index ea94209..580af62 100644
+--- a/src/core/matcher-factory.cpp
++++ b/src/core/matcher-factory.cpp
+@@ -6,6 +6,7 @@
+ #include "stream-interface.h"
+ 
+ #include <src/sync.h>
++#include <stdexcept>
+ 
+ 
+ namespace librealsense {
+diff --git a/src/core/options-registry.cpp b/src/core/options-registry.cpp
+index d22b142..68c62d5 100644
+--- a/src/core/options-registry.cpp
++++ b/src/core/options-registry.cpp
+@@ -7,6 +7,7 @@
+ #include <vector>
+ #include <mutex>
+ #include <map>
++#include <stdexcept>
+ 
+ 
+ namespace librealsense {
+
+diff --git a/third-party/rsutils/src/control-c-handler.cpp b/third-party/rsutils/src/control-c-handler.cpp
+index 7d73013ce..ff534155c 100644
+--- a/third-party/rsutils/src/control-c-handler.cpp
++++ b/third-party/rsutils/src/control-c-handler.cpp
+@@ -6,6 +6,7 @@
+ 
+ #include <signal.h>
+ #include <atomic>
++#include <stdexcept>
+ 
+ 
+ namespace rsutils {

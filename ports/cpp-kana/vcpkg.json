@@ -1,6 +1,6 @@
 {
   "name": "cpp-kana",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A lightweight library for converting Japanese kana to romaji and vice versa.",
   "homepage": "https://github.com/wolfgitpr/cpp-kana",
   "license": "Apache-2.0",

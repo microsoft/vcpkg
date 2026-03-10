@@ -7,7 +7,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Add apt repos
 
-# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "20.04") and format to "2004"
+# Detect Ubuntu VERSION_ID from /etc/os-release (e.g., "24.04") and format to "2404"
 UBUNTU_VERSION_ID=$(. /etc/os-release && echo "$VERSION_ID")
 NVIDIA_REPO_VERSION=$(echo "$UBUNTU_VERSION_ID" | sed 's/\.//')
 
@@ -132,9 +132,6 @@ APT_PACKAGES="$APT_PACKAGES libxdamage-dev libselinux1-dev"
 ## required by at-spi2-atk
 APT_PACKAGES="$APT_PACKAGES libxtst-dev"
 
-## required by bond
-APT_PACKAGES="$APT_PACKAGES haskell-stack"
-
 ## required by boringssl
 APT_PACKAGES="$APT_PACKAGES golang-go"
 
@@ -143,6 +140,9 @@ APT_PACKAGES="$APT_PACKAGES wayland-protocols"
 
 ## required by robotraconteur
 APT_PACKAGES="$APT_PACKAGES libbluetooth-dev"
+
+## required by libmysql
+APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
 
 ## CUDA
 # The intent is to install everything that does not require an actual GPU, driver, or GUI.
@@ -166,11 +166,14 @@ APT_PACKAGES="$APT_PACKAGES cuda-cccl-12-9 cuda-compat-12-9 cuda-compiler-12-9 c
 ## PowerShell + Azure
 APT_PACKAGES="$APT_PACKAGES powershell azcopy azure-cli"
 
+## Required for speech-dispatcher feature for ethindp-prism
+APT_PACKAGES="$APT_PACKAGES libspeechd-dev"
+
 ## Additionally required/installed by Azure DevOps Scale Set Agents, skip on WSL
 if [[ $(grep microsoft /proc/version) ]]; then
 echo "Skipping install of ADO prerequisites on WSL."
 else
-APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu70 debsums liblttng-ust1"
+APT_PACKAGES="$APT_PACKAGES libkrb5-3 zlib1g libicu74 debsums liblttng-ust1"
 fi
 
 apt-get --no-install-recommends -y install $APT_PACKAGES

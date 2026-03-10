@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 84a9bd58e9992d2d447788727228410184ef31e881026aee1f48766ed8b25039ab1b09afe95c97b66d3a0751bab524dc9bb57ab2c78af53632b52ec8dcd6f4ad
+    SHA512 a16036d4bb4c96bad75830be9a882329a7968621e24a3e28fae1908c2b2ea8e5779df98beaf2ad045f2671cb2688f6592450f9546903662c08cbf5c606a7ceaf
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
@@ -24,6 +24,7 @@ vcpkg_replace_string("${SOURCE_PATH}/ogr/ogrsf_frmts/flatgeobuf/flatbuffers/base
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         arrow            GDAL_USE_ARROW
+        arrow-adbc       GDAL_USE_ADBCDRIVERMANAGER
         archive          GDAL_USE_ARCHIVE
         cfitsio          GDAL_USE_CFITSIO
         curl             GDAL_USE_CURL

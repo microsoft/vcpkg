@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  sandialabs/verdict
-    REF fb582cf4fc04ecbd2bf423554325bda01231227a
-    SHA512 137a386a6c11bf2738d752f995a8cf66661efedab72980a787893f8594066197dd8a966ed906d0d8b95cb05a2ec1b8e95906bb9214cf05604058719798ce7dbd
+    REF ${VERSION}
+    SHA512 e4a38fabcb7b56cbc50b59ee2d97c8a4cc3a2afea6ec22860005b77b79536a8dae16acef48197ae881f5b6dbd20495c16ba5b3eadd57d7d478482e5734a98b1d
     HEAD_REF master
     PATCHES include.patch
             fix_osx.patch

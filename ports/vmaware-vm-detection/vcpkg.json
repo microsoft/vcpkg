@@ -1,6 +1,6 @@
 {
   "name": "vmaware-vm-detection",
-  "version": "2.2.0",
+  "version": "2.6.0",
   "description": "VM detection library",
   "homepage": "https://github.com/kernelwernel/VMAware",
   "license": "MIT"

@@ -1,7 +1,5 @@
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
-message(STATUS "${PORT} requires libltdl-dev from the system package manager (example: \"sudo apt install libltdl-dev\")")
-
 vcpkg_find_acquire_program(PERL)
 set(ENV{PERL} "${PERL}")
 
@@ -12,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO besser82/libxcrypt
     REF "v${VERSION}"
-    SHA512 05b0288ca1f1371674516df2e6cc9034f34057bb86a4b1702577dcf1eb7ce4730fad3e660d69123f108aec1f1ab8a0f84aec50ada012fe523e94d10e2303835e
+    SHA512 00ea73f2546ddbc191e30be4db897fffb5c9da1be03781c3b3b00514c621ec0d10cee7bbfc2a53a0d79ded62e372d6b7ad93289e5f44475ddfc43816b1a31651
 )
 
 vcpkg_make_configure(

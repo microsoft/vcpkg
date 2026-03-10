@@ -1,7 +1,6 @@
 {
   "name": "json-schema-validator",
-  "version": "2.3.0",
-  "port-version": 2,
+  "version": "2.4.0",
   "description": "C++ library for validating JSON documents based on a JSON Schema. This validator is based on the nlohmann-json library.",
   "homepage": "https://github.com/pboettch/json-schema-validator",
   "license": "MIT",

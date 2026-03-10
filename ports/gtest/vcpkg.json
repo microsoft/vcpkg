@@ -1,7 +1,7 @@
 {
   "name": "gtest",
   "version-semver": "1.17.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Google Testing and Mocking Framework",
   "homepage": "https://github.com/google/googletest",
   "license": "BSD-3-Clause",
@@ -14,10 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "cxx17": {
-      "description": "Enable compiler C++17."
-    }
-  }
+  ]
 }

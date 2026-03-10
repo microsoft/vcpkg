@@ -1,6 +1,6 @@
 {
   "name": "marzbanpp",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "marzbanpp is the C++ library for interaction with Marzban through its REST API.",
   "homepage": "https://github.com/andrascii/marzbanpp",
   "license": "MIT",

@@ -1,0 +1,18 @@
+diff --git a/cmake_modules/environment.cmake b/cmake_modules/environment.cmake
+index 8072ae8..9d05bcc 100644
+--- a/cmake_modules/environment.cmake
++++ b/cmake_modules/environment.cmake
+@@ -1,10 +1,10 @@
+ include(CheckCXXCompilerFlag)
+
+-if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "arm" OR CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
++if (CMAKE_SYSTEM_PROCESSOR MATCHES "[Aa][Rr][Mm]64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "[Aa][Rr][Mm]" OR CMAKE_SYSTEM_PROCESSOR MATCHES "[Aa][Rr][Cc][Hh]64")
+     set(SUPPORT_NEON ON)
+ endif ()
+
+ # Check if the Visual Studio build is targeting ARM
+-if (CMAKE_GENERATOR_PLATFORM MATCHES "ARM64" OR CMAKE_GENERATOR_PLATFORM MATCHES "ARM")
++if (CMAKE_GENERATOR_PLATFORM MATCHES "[Aa][Rr][Mm]64" OR CMAKE_GENERATOR_PLATFORM MATCHES "[Aa][Rr][Mm]")
+     set(SUPPORT_NEON ON)
+ endif ()
+\ No newline at end of file
