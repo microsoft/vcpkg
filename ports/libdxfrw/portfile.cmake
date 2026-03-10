@@ -23,8 +23,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 if("dwg2dxf" IN_LIST FEATURES)
-vcpkg_copy_tools(TOOL_NAMES dwg2dxf)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
+    vcpkg_copy_tools(TOOL_NAMES dwg2dxf AUTO_CLEAN)
 endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/libdxfrw")
