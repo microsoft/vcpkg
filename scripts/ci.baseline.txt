@@ -96,7 +96,6 @@ cairo:arm64-linux=fail
 calceph:arm64-linux=fail
 ccd:arm64-linux=fail
 cctag:x64-windows-static-md=fail
-cfitsio:arm64-linux=fail
 chakracore:arm64-linux=skip
 chakracore:x64-linux=skip
 chmlib:arm64-linux=fail
