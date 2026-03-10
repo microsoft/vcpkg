@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 92d7466ed9146badcd4fb44c82d1dd8302b3c7db
     SHA512 2c65780dc378221489d860a4c13799e57c1d4375ac1df187a55e675d9a509896f300980b0f75d0d8dda837a6e335c19f8c23131577b962e92e04140e903e50ac
     HEAD_REF master
+    PATCHES
+        fix-indentation-err.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
