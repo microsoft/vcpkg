@@ -1,3 +1,10 @@
+file(GLOB pc_files "${VCPKG_INSTALLED_DIR}/lib/pkgconfig/*pc")
+foreach(file IN LISTS pc_files)
+    file(READ "${file}" pc_data)
+    cmake_path(GET file FILENAME file)
+    message(STATUS "${file} --\n\n${pc_data}\n")
+endforeach()
+
 # only executables
 set(VCPKG_BUILD_TYPE release)
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
