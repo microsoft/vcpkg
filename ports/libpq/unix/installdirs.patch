@@ -1,51 +1,52 @@
 diff --git a/src/Makefile.global.in b/src/Makefile.global.in
 --- a/src/Makefile.global.in
 +++ b/src/Makefile.global.in
-@@ -113,42 +113,22 @@
- datadir := @datadir@
--ifeq "$(findstring pgsql, $(datadir))" ""
--ifeq "$(findstring postgres, $(datadir))" ""
--override datadir := $(datadir)/postgresql
--endif
--endif
-+datadir := $(datadir)/postgresql
+@@ -113,42 +113,42 @@ bindir := @bindir@
  
- sysconfdir := @sysconfdir@
--ifeq "$(findstring pgsql, $(sysconfdir))" ""
--ifeq "$(findstring postgres, $(sysconfdir))" ""
--override sysconfdir := $(sysconfdir)/postgresql
--endif
--endif
-+sysconfdir := $(sysconfdir)/postgresql
+-datadir := @datadir@
++datadir := @datadir@/postgresql
+ ifeq "$(findstring pgsql, $(datadir))" ""
+ ifeq "$(findstring postgres, $(datadir))" ""
+ override datadir := $(datadir)/postgresql
+ endif
+ endif
+ 
+-sysconfdir := @sysconfdir@
++sysconfdir := @sysconfdir@/postgresql
+ ifeq "$(findstring pgsql, $(sysconfdir))" ""
+ ifeq "$(findstring postgres, $(sysconfdir))" ""
+ override sysconfdir := $(sysconfdir)/postgresql
+ endif
+ endif
  
  libdir := @libdir@
  
- pkglibdir = $(libdir)
--ifeq "$(findstring pgsql, $(pkglibdir))" ""
--ifeq "$(findstring postgres, $(pkglibdir))" ""
--override pkglibdir := $(pkglibdir)/postgresql
--endif
--endif
+-pkglibdir = $(libdir)
 +pkglibdir = $(libdir)/postgresql
+ ifeq "$(findstring pgsql, $(pkglibdir))" ""
+ ifeq "$(findstring postgres, $(pkglibdir))" ""
+ override pkglibdir := $(pkglibdir)/postgresql
+ endif
+ endif
  
  includedir := @includedir@
  
- pkgincludedir = $(includedir)
--ifeq "$(findstring pgsql, $(pkgincludedir))" ""
--ifeq "$(findstring postgres, $(pkgincludedir))" ""
--override pkgincludedir := $(pkgincludedir)/postgresql
--endif
--endif
+-pkgincludedir = $(includedir)
 +pkgincludedir = $(includedir)/postgresql
+ ifeq "$(findstring pgsql, $(pkgincludedir))" ""
+ ifeq "$(findstring postgres, $(pkgincludedir))" ""
+ override pkgincludedir := $(pkgincludedir)/postgresql
+ endif
+ endif
  
  mandir := @mandir@
  
- docdir := @docdir@
--ifeq "$(findstring pgsql, $(docdir))" ""
--ifeq "$(findstring postgres, $(docdir))" ""
--override docdir := $(docdir)/postgresql
--endif
--endif
-+docdir := $(docdir)/postgresql
+-docdir := @docdir@
++docdir := @docdir@/postgresql
+ ifeq "$(findstring pgsql, $(docdir))" ""
+ ifeq "$(findstring postgres, $(docdir))" ""
+ override docdir := $(docdir)/postgresql
+ endif
+ endif
  
  htmldir := @htmldir@

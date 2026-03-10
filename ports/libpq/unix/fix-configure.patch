@@ -28,13 +28,11 @@ diff --git a/configure.ac b/configure.ac
 @@ -1394,5 +1396,9 @@ fi
    AC_DEFINE(OPENSSL_API_COMPAT, [0x10101000L],
              [Define to the OpenSSL API version in use. This avoids deprecation warnings from newer OpenSSL versions.])
--  AC_CHECK_LIB(crypto, CRYPTO_new_ex_data, [], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
--  AC_CHECK_LIB(ssl,    SSL_new, [], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
 +  PKG_CHECK_MODULES([CRYPTO_new_ex_data], [libcrypto], [LIBS="$CRYPTO_new_ex_data_LIBS $LIBS"], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
 +  PKG_CHECK_MODULES([SSL_new], [libssl], [LIBS="$SSL_new_LIBS $LIBS"], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
 +  if false ; then
-+  AC_CHECK_LIB(crypto, CRYPTO_new_ex_data, [], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
-+  AC_CHECK_LIB(ssl,    SSL_new, [], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
+   AC_CHECK_LIB(crypto, CRYPTO_new_ex_data, [], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
+   AC_CHECK_LIB(ssl,    SSL_new, [], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
 +  fi
    # Functions introduced in OpenSSL 1.1.1.
 @@ -1415,3 +1421,4 @@ fi
