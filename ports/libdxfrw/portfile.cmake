@@ -17,7 +17,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DLIBDXFRW_BUILD_DOC=OFF
-	${FEATURE_OPTIONS}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
