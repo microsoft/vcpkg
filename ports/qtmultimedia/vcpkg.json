@@ -47,6 +47,13 @@
           ]
         },
         {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "thread"
+          ]
+        },
+        {
           "name": "qtdeclarative",
           "default-features": false
         },
@@ -54,6 +61,7 @@
           "name": "qtmultimedia",
           "default-features": false,
           "features": [
+            "pulseaudio",
             "qml"
           ],
           "platform": "linux"
