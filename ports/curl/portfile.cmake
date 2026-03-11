@@ -87,6 +87,7 @@ vcpkg_cmake_configure(
         -DSHARE_LIB_OBJECT=OFF
         -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
+        --trace-expand
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
 )
@@ -153,3 +154,4 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/COPYING"
         "${inet_ntop_copyright}"
 )
+message(FATAL_ERROR STOP)
