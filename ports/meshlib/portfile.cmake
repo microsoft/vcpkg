@@ -43,7 +43,7 @@ vcpkg_cmake_configure(
         -DMESHLIB_BUILD_MESHVIEWER=OFF
         -DMESHLIB_BUILD_MRVIEWER=OFF
         -DMESHLIB_BUILD_PYTHON_MODULES=OFF
-        -DMESHLIB_USE_VCPKG=ON
+        -DMESHLIB_USE_VCPKG=OFF
         -DMRMESH_NO_GTEST=ON
         -DMRIOEXTRAS_NO_CTM=ON # API compatibility issue with openctm
 
