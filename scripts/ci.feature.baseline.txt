@@ -510,7 +510,6 @@ igraph[openmp]:arm64-osx=feature-fails # openmp setup needed
 ijg-libjpeg:arm64-linux=skip
 imcce-openfa:arm64-linux=fail
 imgui[allegro5-binding]:arm64-linux=cascade
-imgui[allegro5-binding]:arm64-windows=cascade
 imgui[glfw-binding]:arm64-linux=cascade
 imgui[glut-binding]:arm64-linux=cascade
 imgui[sdl3-binding]:arm64-linux=cascade

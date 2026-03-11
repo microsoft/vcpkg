@@ -12,6 +12,13 @@
       ]
     },
     {
+      "name":"glfw3",
+      "features": [
+        "wayland"
+      ],
+      "platform": "linux"
+    },
+    {
       "name": "imgui",
       "features": [
         "glfw-binding",

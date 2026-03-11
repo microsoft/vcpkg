@@ -4,8 +4,8 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.92.5
-    SHA512 382b862a285464bd311c79a0ff07885e42300d79704bb65cd1cbbf35cef63f7f50784ed23f7479e4490bbaae0d23ea1b2b067a3571e0b442d390824f9611bd59
+    REF v1.92.6
+    SHA512 1742eaa4811fc63f4ed3804ecd6970cbc0a960c85014903e302ab082ccf7ff7488d534bd4cb7a6d7c2a71824cb80d6c9923ea5a4951190941121cf1b05e3df9d
     HEAD_REF master
     PATCHES
         # use find_package(imgui) instead of source file list
