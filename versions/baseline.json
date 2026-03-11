@@ -3297,7 +3297,7 @@
       "port-version": 1
     },
     "gdcm": {
-      "baseline": "3.0.24",
+      "baseline": "3.2.2",
       "port-version": 0
     },
     "gdk-pixbuf": {
