@@ -13,14 +13,10 @@ vcpkg_cmake_configure(
     OPTIONS
         -DWITH_TESTS=OFF
 )
-
 vcpkg_cmake_install()
-
 vcpkg_copy_pdbs()
-
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LAZPERF PACKAGE_NAME lazperf)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/LAZPERF)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
