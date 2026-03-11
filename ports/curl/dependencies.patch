@@ -419,7 +419,7 @@ index f4e17d29b3..45947ec6c9 100644
  
  set(CURL_SUPPORTED_PROTOCOLS "@CURL_SUPPORTED_PROTOCOLS_LIST@")
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 154ba5ef8f..6f6907f565 100644
+index 154ba5ef8f..316ad603a9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1853,6 +1853,44 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
@@ -492,10 +492,13 @@ index 154ba5ef8f..6f6907f565 100644
        foreach(_lib IN LISTS _explicit_libs)
          if(_lib MATCHES "/")
            # This gets a bit more complex, because we want to specify the
-@@ -2206,22 +2251,41 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2205,23 +2250,44 @@ if(NOT CURL_DISABLE_INSTALL)
+             if(_libdir_index LESS 0)
                list(APPEND _ldflags "-L${_libdir}")
              endif()
++            if(CMAKE_STATIC_LIBRARY_PREFIX STREQUAL "lib")
              string(REGEX REPLACE "^lib" "" _libname "${_libname}")
++            endif()
 +            list(REMOVE_ITEM CURL_CONFIG_LIBS "-l${_libname}")
              list(APPEND LIBCURL_PC_LIBS_PRIVATE "-l${_libname}")
 +            list(REMOVE_ITEM LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
@@ -534,7 +537,7 @@ index 154ba5ef8f..6f6907f565 100644
        list(APPEND LIBCURL_PC_LIBS_PRIVATE_LIST "${_lib}")
      endif()
    endforeach()
-@@ -2245,6 +2309,7 @@ if(NOT CURL_DISABLE_INSTALL)
+@@ -2245,6 +2311,7 @@ if(NOT CURL_DISABLE_INSTALL)
    if(LIBCURL_PC_LIBS_PRIVATE)
      string(REPLACE ";" " " LIBCURL_PC_LIBS_PRIVATE "${LIBCURL_PC_LIBS_PRIVATE}")
    endif()

@@ -154,4 +154,3 @@ vcpkg_install_copyright(
         "${SOURCE_PATH}/COPYING"
         "${inet_ntop_copyright}"
 )
-message(FATAL_ERROR STOP)
