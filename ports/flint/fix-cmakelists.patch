@@ -1,12 +1,20 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2616d06..4be28ac 100644
+index 8d959fbf7..38754c8ac 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -34,10 +34,11 @@ find_package(MPFR REQUIRED)
+@@ -32,6 +32,7 @@ project(flint
+   HOMEPAGE_URL https://flintlib.org/
+   LANGUAGES C CXX)
+ 
++set(CMAKE_CURRENT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+ file(READ "${CMAKE_CURRENT_SOURCE_DIR}/configure.ac" CONFIGURE_CONTENTS)
+ foreach(version in MAJOR MINOR PATCH)
+   # Set soname version for the library
+@@ -115,10 +116,11 @@ find_package(mpfr ${MPFR_MIN_VERSION} REQUIRED)
  if (WITH_NTL)
      find_package(NTL REQUIRED)
  endif()
--find_package(PythonInterp REQUIRED)
+-find_package(Python REQUIRED)
  
 +if(WITH_CBLAS)
  find_package(CBLAS)
@@ -15,12 +23,3 @@ index 2616d06..4be28ac 100644
  
  if(CMAKE_BUILD_TYPE STREQUAL Debug)
    set(FLINT_WANT_ASSERT ON)
-@@ -47,6 +48,8 @@ endif()
- 
- if(MSVC)
-     find_package(PThreads REQUIRED)
-+    set(PThreads_LIBRARIES ${PThreads4W_LIBRARY})
-+    set(PThreads_INCLUDE_DIRS ${PThreads4W_INCLUDE_DIR})
-     set(FLINT_USES_PTHREAD ON CACHE BOOL "Use POSIX Threads.")
- else()
-     option(CMAKE_THREAD_PREFER_PTHREAD "Prefer pthreads" yes)
