@@ -17,6 +17,7 @@ vcpkg_from_github(
         fix-iosfwd.patch
         fix-iterator_debug_level.patch
         fix-tinyxml2-link.patch
+        fix-install-dirs.patch
 )
 
 vcpkg_from_github(
