@@ -1,10 +1,10 @@
-string(REPLACE "." "_" curl_version "rc-${VERSION}-3")
+string(REPLACE "." "_" curl_version "18e8c9f4557614782ed4dc332fe290eb164cc573")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
     REF ${curl_version}
-    SHA512 6e7f0f2a1a206f03c1203353fcb2e886acd4c492a63c5800b0dffdb037512793b1d2f315e7640a100d5052464cd7456be7add3d934258e7b58ba238b7315782e
+    SHA512 a078489043f2f3a8b9233a406e0a2a7bbcfa56b5b7ead002fbb70bd68efe02b598cd0166ab70c446a1ec75ee46bd5e39be746ab39ef49fc8c6f8a09316e8b64a
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -87,7 +87,6 @@ vcpkg_cmake_configure(
         -DSHARE_LIB_OBJECT=OFF
         -DCURL_USE_PKGCONFIG=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-        --trace-expand
     MAYBE_UNUSED_VARIABLES
         PKG_CONFIG_EXECUTABLE
 )
