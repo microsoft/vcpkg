@@ -1,10 +1,14 @@
 {
   "name": "docraft",
-  "version-string": "v1.0.0-beta",
-  "license": "Apache-2.0",
+  "version-string": "v1.0.0-beta.1",
   "description": "Docraft is a self-contained C++ library for generating professionally rendered PDF documents — without external tools, command-line utilities, or runtime dependencies beyond your own application",
   "homepage": "https://cadons.github.io/Docraft/",
+  "license": "Apache-2.0",
   "dependencies": [
+    "gtest",
+    "libharu",
+    "nlohmann-json",
+    "pugixml",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -12,10 +16,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "libharu",
-    "nlohmann-json",
-    "pugixml",
-    "gtest"
+    }
   ]
 }
