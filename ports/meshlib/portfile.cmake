@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-iterator_debug_level.patch
         fix-tinyxml2-link.patch
         fix-install-dirs.patch
+        devendoring-parallel-hashmap.patch
 )
 
 vcpkg_from_github(
