@@ -505,7 +505,7 @@
       "port-version": 0
     },
     "aws-sdk-cpp": {
-      "baseline": "1.11.760",
+      "baseline": "1.11.766",
       "port-version": 0
     },
     "ayush272002-dotenv": {
@@ -1870,7 +1870,7 @@
     },
     "cnats": {
       "baseline": "3.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "cnl": {
       "baseline": "1.1.7",
@@ -2017,7 +2017,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.37.0",
+      "baseline": "0.37.1",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -2909,7 +2909,7 @@
       "port-version": 0
     },
     "fast-float": {
-      "baseline": "8.2.3",
+      "baseline": "8.2.4",
       "port-version": 0
     },
     "fast-obj": {
@@ -3301,7 +3301,7 @@
       "port-version": 1
     },
     "gdcm": {
-      "baseline": "3.0.24",
+      "baseline": "3.2.2",
       "port-version": 0
     },
     "gdk-pixbuf": {
@@ -3593,8 +3593,8 @@
       "port-version": 3
     },
     "gtkmm": {
-      "baseline": "4.14.0",
-      "port-version": 1
+      "baseline": "4.20.0",
+      "port-version": 0
     },
     "gtl": {
       "baseline": "1.2.0",
@@ -4597,8 +4597,8 @@
       "port-version": 0
     },
     "libadwaita": {
-      "baseline": "1.3.2",
-      "port-version": 3
+      "baseline": "1.8.4",
+      "port-version": 0
     },
     "libaec": {
       "baseline": "1.1.6",
@@ -4818,6 +4818,10 @@
     },
     "libdwarf": {
       "baseline": "2.3.1",
+      "port-version": 0
+    },
+    "libdxfrw": {
+      "baseline": "2025-09-25",
       "port-version": 0
     },
     "libe57": {
@@ -5689,7 +5693,7 @@
       "port-version": 0
     },
     "libupnp": {
-      "baseline": "1.14.25",
+      "baseline": "1.18.2",
       "port-version": 0
     },
     "liburcu": {
@@ -6673,7 +6677,7 @@
       "port-version": 0
     },
     "mujoco": {
-      "baseline": "3.4.0",
+      "baseline": "3.5.0",
       "port-version": 0
     },
     "mujs": {
@@ -7513,7 +7517,7 @@
       "port-version": 0
     },
     "patternia": {
-      "baseline": "0.8.3",
+      "baseline": "0.8.5",
       "port-version": 0
     },
     "pbc": {
@@ -8709,7 +8713,7 @@
       "port-version": 0
     },
     "roaring": {
-      "baseline": "4.6.0",
+      "baseline": "4.6.1",
       "port-version": 0
     },
     "robin-hood-hashing": {
@@ -9753,8 +9757,8 @@
       "port-version": 0
     },
     "taocpp-json": {
-      "baseline": "2020-09-14",
-      "port-version": 4
+      "baseline": "1.0.0-beta.14",
+      "port-version": 0
     },
     "tap-windows6": {
       "baseline": "9.21.2-0e30f5c",
@@ -10245,7 +10249,7 @@
       "port-version": 1
     },
     "usd": {
-      "baseline": "25.11",
+      "baseline": "26.3",
       "port-version": 0
     },
     "usearch": {
