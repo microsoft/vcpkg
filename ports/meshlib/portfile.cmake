@@ -11,7 +11,6 @@ vcpkg_from_github(
         fix-e57format.patch
         fix-exported-include-dirs.patch
         fix-jpeg-link.patch
-        disable-test.patch
         disable-openctm.patch
         disable-warning-as-error.patch
         fix-iosfwd.patch
