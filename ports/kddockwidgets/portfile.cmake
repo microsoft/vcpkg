@@ -15,7 +15,7 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDAB/KDDockWidgets
-    REF "v${VERSION}" 
+    REF "v${VERSION}"
     SHA512 1e220c5cf608c5bb9242b530eb1e45a15dae462b126c12d253483a1213e72374baa75943d8734c5dc79e34b03b480d1a87cd59cb945996abc0ab20b5d649a5cb
     HEAD_REF master
 )
