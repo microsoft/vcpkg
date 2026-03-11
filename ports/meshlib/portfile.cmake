@@ -32,6 +32,9 @@ vcpkg_from_github(
 file(REMOVE_RECURSE "${SOURCE_PATH}/thirdparty/laz-perf")
 file(COPY "${LAZ_PERF_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/thirdparty/laz-perf")
 
+vcpkg_find_acquire_program(PKGCONFIG)
+set(ENV{PKG_CONFIG} "${PKGCONFIG}")
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
