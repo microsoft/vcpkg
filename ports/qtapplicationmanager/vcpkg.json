@@ -8,11 +8,6 @@
   "dependencies": [
     "libyaml",
     {
-      "name": "qtapplicationmanager",
-      "host": true,
-      "default-features": false
-    },
-    {
       "name": "qtbase",
       "default-features": false,
       "features": [
@@ -65,6 +60,14 @@
           "default-features": false,
           "features": [
             "installer"
+          ]
+        },
+        {
+          "name": "qtapplicationmanager",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "package-server"
           ]
         },
         "qthttpserver"
