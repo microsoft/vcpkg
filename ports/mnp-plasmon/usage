@@ -2,7 +2,7 @@ mnp-plasmon provides C library for metallic nanoparticle optical response calcul
 
 CMake usage:
     find_package(mnp_plasmon CONFIG REQUIRED)
-    target_link_libraries(your_app PRIVATE mnp_plasmon)
+    target_link_libraries(your_app PRIVATE mnp_plasmon::mnp_plasmon)
 
 C usage example:
     #include "mnp_plasmon.h"

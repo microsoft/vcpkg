@@ -2,7 +2,7 @@ mnp-plasmon-cxx provides modern C++17 library for metallic nanoparticle optical 
 
 CMake usage:
     find_package(mnp_plasmon_cxx CONFIG REQUIRED)
-    target_link_libraries(your_app PRIVATE mnp_plasmon_cxx)
+    target_link_libraries(your_app PRIVATE mnp_plasmon_cxx::mnp_plasmon_cxx)
 
 C++ usage example:
     #include "mnp_plasmon.hpp"

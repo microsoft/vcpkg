@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO galihru/mnpbem
-    REF v0.1.0
-    SHA512 3e84ae0a02a15bcff737184608cf934614c8a1a4c9d03929e75693bf043128884e9343884e44d0487f843d3a9ef8a560bc248c6cd752490cccae0a58780c6512
+    REF v0.1.1
+    SHA512 197a78cb30297d0f29ab414ad5a9547aeccb9f86bb0e874659bc0dcec9bccee4366ca62cccdfef1af8044c3a159e404dec1fa5029553124953a68f96cb400122
     HEAD_REF main
 )
 
@@ -12,7 +12,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/mnp_plasmon")
+
 vcpkg_copy_pdbs()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/c-mnp-plasmon/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
