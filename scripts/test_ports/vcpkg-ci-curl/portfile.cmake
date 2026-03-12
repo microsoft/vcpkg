@@ -5,8 +5,6 @@ set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${CURRENT_PORT_DIR}/project"
-    OPTIONS
-        --trace-expand
     OPTIONS_RELEASE
         "-DCURL_CONFIG=${CURRENT_INSTALLED_DIR}/tools/curl/bin/curl-config"
     OPTIONS_DEBUG
