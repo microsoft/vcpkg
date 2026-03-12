@@ -28,7 +28,10 @@
     "libflac": {
       "description": "Use libflac to play FLAC audio format.",
       "dependencies": [
-        "libflac"
+        {
+          "name": "libflac",
+          "default-features": false
+        }
       ]
     },
     "libvorbis": {
@@ -40,7 +43,10 @@
     "libxmp": {
       "description": "Use libxmp to open MOD files.",
       "dependencies": [
-        "libxmp"
+        {
+          "name": "libxmp",
+          "default-features": false
+        }
       ]
     },
     "mpg123": {
