@@ -5,7 +5,10 @@
   "homepage": "https://github.com/hellobertrand/zxc",
   "license": "BSD-3-Clause AND MIT",
   "dependencies": [
-    "rapidhash",
+    {
+      "name": "rapidhash",
+      "version>=": "3"
+    },
     {
       "name": "vcpkg-cmake",
       "host": true
