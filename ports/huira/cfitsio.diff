@@ -9,35 +9,29 @@ index 674050c..88d58b5 100644
 -        "${CMAKE_SOURCE_DIR}/cmake/find/FindCFITSIO.cmake"
          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/huira)
 diff --git a/cmake/huira-setup.cmake b/cmake/huira-setup.cmake
-index a32a388..ee886aa 100644
+index a348c7d..f2f6a65 100644
 --- a/cmake/huira-setup.cmake
 +++ b/cmake/huira-setup.cmake
-@@ -36,10 +36,11 @@ find_package(TBB CONFIG REQUIRED)
+@@ -23,8 +23,9 @@ target_compile_definitions(huira INTERFACE
+ # Find dependencies (in order):
+ find_package(assimp CONFIG REQUIRED)
  
- find_package(JPEG REQUIRED)
- find_package(PNG REQUIRED)
 -find_package(CFITSIO REQUIRED)
+-if(WIN32 AND TARGET CFITSIO::CFITSIO)
 +find_package(CFITSIO NAMES cfitsio REQUIRED)
 +add_library(CFITSIO::CFITSIO ALIAS CFITSIO::cfitsio)
- # Conda-forge's cfitsio includes 'm' in its link interface, which doesn't
- # exist on Windows (math functions are in the CRT). Remove it.
--if(WIN32 AND TARGET CFITSIO::CFITSIO)
 +if(0)
+     # Conda-forge's cfitsio includes 'm' in its link interface, which doesn't
+     # exist on Windows (math functions are in the CRT). Remove it.
      get_target_property(_cfitsio_libs CFITSIO::CFITSIO INTERFACE_LINK_LIBRARIES)
-     if(_cfitsio_libs)
-         list(REMOVE_ITEM _cfitsio_libs "m")
 diff --git a/cmake/huiraConfig.cmake.in b/cmake/huiraConfig.cmake.in
-index f4f6876..4201ea0 100644
+index 4aad10a..81d5acb 100644
 --- a/cmake/huiraConfig.cmake.in
 +++ b/cmake/huiraConfig.cmake.in
-@@ -21,10 +21,10 @@ find_dependency(TBB CONFIG)
+@@ -9,7 +9,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ find_dependency(assimp CONFIG)
  
- find_dependency(JPEG)
- find_dependency(PNG)
--find_package(CFITSIO REQUIRED)
-+find_dependency(cfitsio REQUIRED)
- # Conda-forge's cfitsio includes 'm' in its link interface, which doesn't
- # exist on Windows (math functions are in the CRT). Remove it.
+ find_dependency(CFITSIO)
 -if(WIN32 AND TARGET CFITSIO::CFITSIO)
 +if(0)
      get_target_property(_cfitsio_libs CFITSIO::CFITSIO INTERFACE_LINK_LIBRARIES)

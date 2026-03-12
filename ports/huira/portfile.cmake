@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO huira-render/huira
     REF "v${VERSION}"
-    SHA512 acbe259332e59eadf84f588a8e9bc5c5c717469fec2be5098ffeecaa6f5c2557dc3c0ad2d968c2803e289b75714fc7a87021b6960be5b321ce1dfd9f029db3fe
+    SHA512 971d8e5d1c7ae899fc5e76ba14dc5ae4224dda7fc1110f1a93b55b99929453a671a4415214d44874a74f413668c8b422b4abad1b499454c08101604a4328206e
     HEAD_REF main
     PATCHES
         cfitsio.diff
