@@ -5,7 +5,6 @@
   "homepage": "https://cadons.github.io/Docraft/",
   "license": "Apache-2.0",
   "dependencies": [
-    "gtest",
     "libharu",
     "nlohmann-json",
     "pugixml",
