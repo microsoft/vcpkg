@@ -276,6 +276,7 @@ dcmtk(android)=fail # try_run
 dimcli(windows & static)=fail # VS2019 version 16.9.4's project system changes where PDBs are placed in a way that breaks the upstream build script of this port. See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
 directfb2:arm64-linux=fail
 directxtex[core,dx11,dx12,openexr,spectre,tools]:arm64-windows-static-md=combination-fails # error LNK2047: module contains C++ EH or complex EH metadata but was not compiled with /guard:ehcont
+directxtex[tools]:x86-windows=feature-fails
 discord-game-sdk:x64-windows-static-md=fail
 discord-game-sdk:x64-windows-static=fail
 dlib:arm64-linux=cascade
