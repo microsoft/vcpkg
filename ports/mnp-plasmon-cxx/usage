@@ -1,0 +1,33 @@
+mnp-plasmon-cxx provides modern C++17 library for metallic nanoparticle optical response calculations.
+
+CMake usage:
+    find_package(mnp_plasmon_cxx CONFIG REQUIRED)
+    target_link_libraries(your_app PRIVATE mnp_plasmon_cxx)
+
+C++ usage example:
+    #include "mnp_plasmon.hpp"
+    #include <iostream>
+    
+    using namespace mnp;
+    
+    SphereResponse response = MnpPlasmon::simulate_sphere_response(
+        "Au",      // material (Au, Ag, Al)
+        550.0,     // wavelength in nm
+        20.0,      // radius in nm
+        1.33       // medium refractive index (water)
+    );
+    
+    MnpPlasmon::print_response(response);
+    
+    std::cout << "Extinction: " << response.c_ext << " nm²\n";
+
+Features:
+    - Modern C++17 with std::complex<double>
+    - Object-oriented design
+    - STL containers and algorithms
+    - Professional error handling
+    - Drude model for metallic dielectric function
+    - Rayleigh polarizability calculations
+    - Optical cross-sections (extinction, scattering, absorption)
+    - Material database (Au, Ag, Al)
+    - No external dependencies

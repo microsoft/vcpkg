@@ -1,0 +1,26 @@
+mnp-plasmon provides C library for metallic nanoparticle optical response calculations.
+
+CMake usage:
+    find_package(mnp_plasmon CONFIG REQUIRED)
+    target_link_libraries(your_app PRIVATE mnp_plasmon)
+
+C usage example:
+    #include "mnp_plasmon.h"
+    
+    sphere_response_t response = mnp_simulate_sphere_response(
+        "Au",      // material (Au, Ag, Al)
+        550.0,     // wavelength in nm
+        20.0,      // radius in nm
+        1.33       // medium refractive index (water)
+    );
+    
+    mnp_print_response(&response);
+    printf("Extinction cross-section: %.6e nm²\n", response.c_ext);
+
+Features:
+    - Drude model for metallic dielectric function
+    - Rayleigh polarizability calculations
+    - Optical cross-sections (extinction, scattering, absorption)
+    - Material database (Au, Ag, Al)
+    - MSVC/GCC compatible
+    - No external dependencies
