@@ -2553,7 +2553,7 @@
       "port-version": 1
     },
     "docraft": {
-      "baseline": "v1.0.0-beta.1",
+      "baseline": "v1.0.0.beta.2",
       "port-version": 0
     },
     "doctest": {
