@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO galihru/mnpbem
-    REF v0.1.1
-    SHA512 197a78cb30297d0f29ab414ad5a9547aeccb9f86bb0e874659bc0dcec9bccee4366ca62cccdfef1af8044c3a159e404dec1fa5029553124953a68f96cb400122
+    REF v0.1.2
+    SHA512 ca6af486799cc9b9d8f0d96ab43e65daf3f3dc5d172687092bca94575c573b80ef10b897724c69d2fcc45a7b7f29d0d9d515a7a24c82f71addd4a2c80a908f68
     HEAD_REF main
 )
 

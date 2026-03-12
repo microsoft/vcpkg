@@ -1,6 +1,6 @@
 {
   "name": "mnp-plasmon",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Efficient C library for calculating optical response of metallic nanoparticles using Drude model and Rayleigh approximation",
   "homepage": "https://github.com/galihru/mnpbem",
   "documentation": "https://github.com/galihru/mnpbem/tree/main/c-mnp-plasmon",
