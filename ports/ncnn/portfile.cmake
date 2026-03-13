@@ -22,6 +22,7 @@ vcpkg_cmake_configure(
         -DNCNN_BUILD_EXAMPLES=OFF
         -DNCNN_BUILD_BENCHMARK=OFF
         -DNCNN_SHARED_LIB=${BUILD_SHARED}
+        -DNCNN_VERSION=${VERSION}
 )
 
 vcpkg_cmake_install()
