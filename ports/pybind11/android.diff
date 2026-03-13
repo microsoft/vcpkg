@@ -1,16 +1,16 @@
 diff --git a/tools/pybind11NewTools.cmake b/tools/pybind11NewTools.cmake
-index e881ca7..c012e2d 100644
+index 5ab3142..de0e63b 100644
 --- a/tools/pybind11NewTools.cmake
 +++ b/tools/pybind11NewTools.cmake
-@@ -248,10 +248,7 @@ if(TARGET ${_Python}::Module)
-   # files.
-   get_target_property(module_target_type ${_Python}::Module TYPE)
-   if(ANDROID AND module_target_type STREQUAL INTERFACE_LIBRARY)
--    set_property(
--      TARGET ${_Python}::Module
--      APPEND
--      PROPERTY INTERFACE_LINK_LIBRARIES "${${_Python}_LIBRARIES}")
-+    target_link_libraries(${_Python}::Module INTERFACE ${${_Python}_LIBRARIES})
-   endif()
+@@ -245,10 +245,7 @@ if(TARGET ${_Python}::Module)
+     APPEND
+     PROPERTY INTERFACE_LINK_LIBRARIES ${_Python}::Module)
+ else()
+-  set_property(
+-    TARGET pybind11::module
+-    APPEND
+-    PROPERTY INTERFACE_LINK_LIBRARIES pybind11::python_link_helper)
++  target_link_libraries(${_Python}::Module INTERFACE ${${_Python}_LIBRARIES})
+ endif()
  
-   set_property(
+ # WITHOUT_SOABI and WITH_SOABI will disable the custom extension handling used by pybind11.
