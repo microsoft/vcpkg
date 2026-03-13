@@ -80,9 +80,11 @@ set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIA/MDL-SDK
-    REF 2c125342d99fed865807474afdec49c8362152e5
-    SHA512 42543777bf99179e3c5055038c36471b5e2fa7b52a377dd9c097031e03ebc92d99e05d79a76a19c65ecd625ba1670af2ea8f67f270ad059a97ac9d7f992b795b
+    REF 2025.0.5
+    SHA512 aa7c41c51195630c0cd7c119d448c1aea69b5110fd4f065617d7452061c21b341831d3afc21d4d03656633b495ec213fbf86730b1815715792dfba264ec3cf1d
     HEAD_REF master
+	PATCHES
+	    fix_find_materialx.diff
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -92,6 +94,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dds           MDL_BUILD_DDS_PLUGIN
         df-vulkan     MDL_BUILD_SDK_EXAMPLES
         df-vulkan     MDL_ENABLE_VULKAN_EXAMPLES
+        materialx     MDL_ENABLE_MATERIALX
         openimageio   MDL_BUILD_OPENIMAGEIO_PLUGIN
 )
 

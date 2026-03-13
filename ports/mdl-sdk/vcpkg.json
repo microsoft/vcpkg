@@ -1,6 +1,6 @@
 {
   "name": "mdl-sdk",
-  "version": "2025.0.3",
+  "version": "2025.0.5",
   "port-version": 1,
   "description": "NVIDIA Material Definition Language SDK",
   "homepage": "https://github.com/NVIDIA/MDL-SDK",
@@ -34,6 +34,17 @@
         "glslang",
         "volk",
         "vulkan-validationlayers"
+      ]
+    },
+    "materialx": {
+      "description": "Enables MaterialX support",
+      "dependencies": [
+        {
+          "name": "materialx",
+          "features": [
+            "mdl-generator"
+          ]
+        }
       ]
     },
     "openimageio": {
