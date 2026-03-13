@@ -9,6 +9,12 @@ set(COINUTILS_SOURCE_PATH "${SOURCE_PATH}/CoinUtils")
 
 vcpkg_replace_string(
     "${COINUTILS_SOURCE_PATH}/Makefile.in"
+    "PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir)"
+    "PKG_CONFIG_PATH=$(DESTDIR)$(pkgconfiglibdir)"
+)
+
+vcpkg_replace_string(
+    "${COINUTILS_SOURCE_PATH}/Makefile.in"
     "\"$(PKG_CONFIG)\" --libs coinutils > $(addlibsdir)/coinutils_addlibs.txt"
     "\"$(PKG_CONFIG)\" --libs coinutils > \"$(addlibsdir)/coinutils_addlibs.txt\""
 )
