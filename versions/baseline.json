@@ -5985,7 +5985,7 @@
       "port-version": 0
     },
     "livepp": {
-      "baseline": "2.11.1",
+      "baseline": "2.11.2",
       "port-version": 0
     },
     "llama-cpp": {
