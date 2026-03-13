@@ -35,8 +35,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/include/coin/ClpModel.hpp")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/coin/ClpModel.hpp" "\"glpk.h\"" "\"../glpk.h\"")
-endif()
-
 file(INSTALL "${CLP_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
