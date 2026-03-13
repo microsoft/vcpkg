@@ -1,14 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/CoinUtils
-    REF 014be1f1724c074401d9d9c27bcce35baa9dca45 # I don't trust the release tags. They seem to point to a different fork with an outdates file structure?
-    SHA512 c5b706ca070b9f0997f9cdf532eb97c4d6ef6c6219d5d247c486048daf94a31151711ad96a32a0f0e701024d7759f07abc867591249d6c19b2b1c153257b794a
-    PATCHES coinutils.patch coinutils2.patch
+    REF releases/2.11.13
+    SHA512 4f31a22bb70c51d2a607dd685b9e804a5718d1ab67993dff86da25f4f6fe2e4173810522252703a439a0e1e7828b8ad42c5ca5ef97030d1760453f8f3155b7f5
 )
 
-file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SOURCE_PATH}")
+set(COINUTILS_SOURCE_PATH "${SOURCE_PATH}/CoinUtils")
 
-set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${COINUTILS_SOURCE_PATH}")
+
+set(ENV{ACLOCAL} "aclocal -I \"${COINUTILS_SOURCE_PATH}/BuildTools\"")
 
 #--enable-msvc
 set(options "")
@@ -19,11 +20,10 @@ else()
 endif()
 
 vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    SOURCE_PATH "${COINUTILS_SOURCE_PATH}"
+    NO_ADDITIONAL_PATHS
     OPTIONS
         ${options}
-        --with-lapack
         --without-netlib
         --without-sample
         --without-asl
@@ -40,8 +40,12 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/coin-or/CoinMpsIO.hpp" "\"glpk.h\"" "\"../glpk.h\"")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/coin/CoinMpsIO.hpp")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/coin/CoinMpsIO.hpp" "\"glpk.h\"" "\"../glpk.h\"")
+endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/coinutils" RENAME copyright)
+file(INSTALL "${COINUTILS_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/coinutils" RENAME copyright)
 
-file(COPY "${SOURCE_PATH}/m4" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+if(EXISTS "${COINUTILS_SOURCE_PATH}/m4")
+    file(COPY "${COINUTILS_SOURCE_PATH}/m4" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()

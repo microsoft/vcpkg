@@ -1,18 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/Osi
-    REF 2420bb864d039a03e11c579b0c9087adbdaa26db
-    SHA512 27d501cb513a0570ad83247b6a8e7fc69cdbcd2cbec6c11aea0b5982627e76efa7ea6403e6d97419f6c984553434f088a748a7d8d54c1bf73cdbdfd5bef1f2b0
-    PATCHES glpk.patch
+    REF releases/0.108.12
+    SHA512 9f8f9da4d6e309530219d1b077a08d0f7e24f2bc36286667a412967f4f54d2df66b7dd7322328ed821ff1ab5211efc8eafaf29ef78293a7f8e6fab7cca09f870
 )
 
-file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SOURCE_PATH}")
+set(OSI_SOURCE_PATH "${SOURCE_PATH}/Osi")
 
-set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${OSI_SOURCE_PATH}")
+
+set(ENV{ACLOCAL} "aclocal -I \"${OSI_SOURCE_PATH}/BuildTools\"")
 
 vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    SOURCE_PATH "${OSI_SOURCE_PATH}"
+    NO_ADDITIONAL_PATHS
     OPTIONS
         --with-glpk
         --with-lapack
@@ -34,4 +35,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${OSI_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

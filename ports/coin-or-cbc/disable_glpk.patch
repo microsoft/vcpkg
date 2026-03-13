@@ -1,14 +1,14 @@
-diff --git a/src/CbcSolver.cpp b/src/CbcSolver.cpp
-index 93da884..1c9d463 100644
---- a/src/CbcSolver.cpp
-+++ b/src/CbcSolver.cpp
-@@ -32,6 +32,9 @@
- void CbcCrashHandler(int sig);
- #endif
+diff --git a/Cbc/src/CbcSolver.cpp b/Cbc/src/CbcSolver.cpp
+--- a/Cbc/src/CbcSolver.cpp
++++ b/Cbc/src/CbcSolver.cpp
+@@ -61,6 +61,9 @@
+ #define CLP_QUOTE(s) CLP_STRING(s)
+ #define CLP_STRING(s) #s
  
+ #include "CbcSolverHeuristics.hpp"
 +// glpk currently not supported
-+#undef COINUTILS_HAS_GLPK
++#undef COIN_HAS_GLPK
 +
- #ifdef COINUTILS_HAS_GLPK
+ #ifdef COIN_HAS_GLPK
  #include "glpk.h"
- #endif
+ extern glp_tran *cbc_glp_tran;

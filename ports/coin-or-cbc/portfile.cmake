@@ -1,19 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/Cbc
-    REF ca088df34881ef0d58124e53b3d70bfa73e92713
-    SHA512 9df1242910a42a9b942fd25dbf8a80b6278d75641c93e1218b39695224cf88bdf9d1a2d27e637ebb068b1e8733267a0f16c69b4db9a480e3f6b9cd732afb2d7a
+    REF releases/2.10.13
+    SHA512 31a35e4b30181892c34065606b036702cfa5f9ba31589aa092a2da7293ba1c528ead3fa9aa9752470103b4cbe3609ef6fa1b89b1890534f1be10ad2bb60ac6e9
     PATCHES
-        pkgconf_win.patch
         disable_glpk.patch
 )
+
+set(CBC_SOURCE_PATH "${SOURCE_PATH}/Cbc")
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SOURCE_PATH}")
 
 set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
 
 vcpkg_make_configure(
-    SOURCE_PATH "${SOURCE_PATH}"
+    SOURCE_PATH "${CBC_SOURCE_PATH}"
+    DEFAULT_OPTIONS_EXCLUDE "(--docdir=.*|--datarootdir=.*)"
     OPTIONS
         --with-coinutils
         --with-clp
@@ -34,4 +36,4 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+vcpkg_install_copyright(FILE_LIST "${CBC_SOURCE_PATH}/LICENSE")

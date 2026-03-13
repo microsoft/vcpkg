@@ -1,18 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO coin-or/Clp
-    REF 5315ef2e93f5f532a600e16ab604ac439a416e59
-    SHA512 78dc8f562e7c1bff3e86c81eda4eda9780a4075921bcdd2338191f37820699baee94eec86b6f63b1b27e5bca7346a2611d669a7cdf3e47e1c032b072ca10bdab
-    PATCHES dep.patch
+    REF releases/1.17.11
+    SHA512 212b5a928db66130d7c844c01e40bbecc4f9267944137ec9cfd3efb089f2c91c2113a0a593d4cf66ab3957df8c4cf6a701e10b33a637a7568deaef2253a746d9
 )
 
-file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SOURCE_PATH}")
+set(CLP_SOURCE_PATH "${SOURCE_PATH}/Clp")
 
-set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${CLP_SOURCE_PATH}")
+
+set(ENV{ACLOCAL} "aclocal -I \"${CLP_SOURCE_PATH}/BuildTools\"")
 
 vcpkg_configure_make(
-    SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    SOURCE_PATH "${CLP_SOURCE_PATH}"
+    NO_ADDITIONAL_PATHS
     OPTIONS
       --with-coinutils
       --with-glpk
@@ -34,6 +35,8 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/coin-or/ClpModel.hpp" "\"glpk.h\"" "\"../glpk.h\"")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/include/coin/ClpModel.hpp")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/coin/ClpModel.hpp" "\"glpk.h\"" "\"../glpk.h\"")
+endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${CLP_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
