@@ -1,0 +1,74 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 556a4ab..7e23e7c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,25 +1,54 @@
+-# The contents of this file have been placed into the public domain; see the
+-# file COPYING for more details.
++cmake_minimum_required (VERSION 3.18)
+ 
+-cmake_minimum_required (VERSION 2.6)
+-project (CppOtp)
++project (
++  cpptotp
++  LANGUAGES C CXX
++  VERSION 2013.11.19
++)
+ 
+-# activate C++11 mode
+-if(CMAKE_COMPILER_IS_GNUCXX)
+-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+-endif(CMAKE_COMPILER_IS_GNUCXX)
++add_library(cpptotp STATIC)
+ 
+-# the static library
+-add_library(cppotp STATIC
++target_sources(cpptotp PRIVATE
+ 	src/libcppotp/bytes.cpp
+ 	src/libcppotp/otp.cpp
+ 	src/libcppotp/sha1.cpp
+ )
+ 
+-# the binary
+-add_executable(gauche
+-	src/gauche.cpp
++set(CPPTOTP_HEADERS
++	src/libcppotp/bytes.h
++	src/libcppotp/otp.h
++	src/libcppotp/sha1.h
++)
++
++set_property(TARGET cpptotp PROPERTY CXX_STANDARD 11)
++target_include_directories(cpptotp PRIVATE src)
++add_library(cpptotp::cpptotp ALIAS cpptotp)
++
++install(TARGETS cpptotp
++  EXPORT cpptotp-targets
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++  INCLUDES DESTINATION include
+ )
+-target_link_libraries(gauche
+-	cppotp
++
++install(FILES ${CPPTOTP_HEADERS} DESTINATION "include/cpptotp")
++
++include(CMakePackageConfigHelpers)
++
++configure_package_config_file(
++  "${CMAKE_CURRENT_SOURCE_DIR}/cpptotp-config.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/cpptotp-config.cmake"
++  INSTALL_DESTINATION "share/cpptotp"
++)
++
++install(FILES
++  "${CMAKE_CURRENT_BINARY_DIR}/cpptotp-config.cmake"
++  DESTINATION "share/cpptotp"
++)
++
++install(
++  EXPORT cpptotp-targets
++  DESTINATION "share/cpptotp"
++  NAMESPACE cpptotp::
+ )
