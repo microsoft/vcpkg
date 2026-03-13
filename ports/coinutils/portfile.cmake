@@ -13,12 +13,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir)"
         "PKG_CONFIG_PATH=$(DESTDIR)$(pkgconfiglibdir)"
     )
-
-    vcpkg_replace_string(
-        "${COINUTILS_SOURCE_PATH}/Makefile.in"
-        "\"$(PKG_CONFIG)\" --libs coinutils > $(addlibsdir)/coinutils_addlibs.txt"
-        "\"$(PKG_CONFIG)\" --libs coinutils > \"$(addlibsdir)/coinutils_addlibs.txt\""
-    )
 endif()
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${COINUTILS_SOURCE_PATH}")
