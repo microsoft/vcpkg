@@ -25,14 +25,16 @@ index a348c7d..f2f6a65 100644
      # exist on Windows (math functions are in the CRT). Remove it.
      get_target_property(_cfitsio_libs CFITSIO::CFITSIO INTERFACE_LINK_LIBRARIES)
 diff --git a/cmake/huiraConfig.cmake.in b/cmake/huiraConfig.cmake.in
-index 4aad10a..81d5acb 100644
+index 4aad10a..7be4b6f 100644
 --- a/cmake/huiraConfig.cmake.in
 +++ b/cmake/huiraConfig.cmake.in
-@@ -9,7 +9,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+@@ -8,8 +8,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ # Find dependencies (in order):
  find_dependency(assimp CONFIG)
  
- find_dependency(CFITSIO)
+-find_dependency(CFITSIO)
 -if(WIN32 AND TARGET CFITSIO::CFITSIO)
++find_dependency(cfitsio CONFIG)
 +if(0)
      get_target_property(_cfitsio_libs CFITSIO::CFITSIO INTERFACE_LINK_LIBRARIES)
      if(_cfitsio_libs)
