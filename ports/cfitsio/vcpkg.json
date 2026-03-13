@@ -1,7 +1,6 @@
 {
   "name": "cfitsio",
-  "version": "3.49",
-  "port-version": 6,
+  "version": "4.6.3",
   "description": "Library of C and Fortran subroutines for reading and writing data files in FITS (Flexible Image Transport System) data format",
   "homepage": "https://heasarc.gsfc.nasa.gov/fitsio/",
   "dependencies": [
@@ -16,8 +15,14 @@
     "zlib"
   ],
   "features": {
+    "bzip2": {
+      "description": "Bzip2 compression",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
     "curl": {
-      "description": "UseCurl",
+      "description": "Network file access",
       "dependencies": [
         "curl"
       ]
@@ -30,6 +35,9 @@
           "platform": "windows"
         }
       ]
+    },
+    "tools": {
+      "description": "Build utility programs"
     }
   }
 }
