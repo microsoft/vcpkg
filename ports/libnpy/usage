@@ -1,0 +1,4 @@
+The package libnpy provides CMake targets:
+
+    find_package(npy CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE npy::npy)
