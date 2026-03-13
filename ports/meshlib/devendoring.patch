@@ -1,0 +1,124 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a1e9a49..e9751cb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -210,6 +210,10 @@ ENDIF()
+ add_subdirectory(${PROJECT_SOURCE_DIR}/MRPch ./MRPch)
+ add_subdirectory(${PROJECT_SOURCE_DIR}/MRMesh ./MRMesh)
+ 
++IF(MESHLIB_BUILD_EXTRA_IO_FORMATS)
++  add_subdirectory(${PROJECT_SOURCE_DIR}/laz-perf)
++ENDIF()
++
+ IF(MESHLIB_BUILD_EXTRA_IO_FORMATS)
+   add_subdirectory(${PROJECT_SOURCE_DIR}/MRIOExtras ./MRIOExtras)
+ ENDIF()
+@@ -274,8 +278,6 @@ IF(MESHLIB_PYTHON_SUPPORT)
+ ENDIF()
+ 
+ IF(MSVC)
+-  add_subdirectory(${PROJECT_SOURCE_DIR}/laz-perf)
+-  add_subdirectory(${PROJECT_SOURCE_DIR}/OpenCTM)
+ ENDIF()
+ 
+ IF(NOT MR_EMSCRIPTEN)
+diff --git a/source/MRIOExtras/CMakeLists.txt b/source/MRIOExtras/CMakeLists.txt
+index 4ee8a4e..00c2936 100644
+--- a/source/MRIOExtras/CMakeLists.txt
++++ b/source/MRIOExtras/CMakeLists.txt
+@@ -33,7 +33,8 @@ target_link_libraries(${PROJECT_NAME}
+ )
+ 
+ IF(NOT MRIOEXTRAS_NO_XML)
+-  target_link_libraries(${PROJECT_NAME} PRIVATE tinyxml2)
++  find_package(tinyxml2 CONFIG REQUIRED)
++  target_link_libraries(${PROJECT_NAME} PRIVATE tinyxml2::tinyxml2)
+ ENDIF()
+ 
+ IF(NOT MRIOEXTRAS_NO_CTM)
+@@ -44,9 +45,10 @@ IF(NOT MRIOEXTRAS_NO_CTM)
+ ENDIF()
+ 
+ IF(NOT MRIOEXTRAS_NO_E57)
++  find_package(E57Format CONFIG REQUIRED)
+   target_link_libraries(${PROJECT_NAME} PRIVATE E57Format)
+ 
+-  IF(MSVC AND DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
++  IF(MSVC AND DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET AND BUILD_SHARED_LIBS)
+     file(GLOB XERCES_DLL_RELEASE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/xerces-c_3_*.dll")
+     file(GLOB XERCES_DLL_DEBUG "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin/xerces-c_3_*.dll")
+ 
+@@ -72,12 +74,8 @@ IF(NOT MRIOEXTRAS_NO_E57)
+ ENDIF()
+ 
+ IF(NOT MRIOEXTRAS_NO_JPEG)
+-  IF(APPLE)
+-    target_include_directories(${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${HOMEBREW_PREFIX}/opt/jpeg-turbo/include>) # @todo
+-    target_link_libraries(${PROJECT_NAME} PRIVATE ${HOMEBREW_PREFIX}/opt/jpeg-turbo/lib/libturbojpeg.dylib)
+-  ELSE()
+-    target_link_libraries(${PROJECT_NAME} PRIVATE turbojpeg)
+-  ENDIF()
++  find_package(libjpeg-turbo CONFIG REQUIRED)
++  target_link_libraries(${PROJECT_NAME} PRIVATE $<IF:$<TARGET_EXISTS:libjpeg-turbo::turbojpeg>,libjpeg-turbo::turbojpeg,libjpeg-turbo::turbojpeg-static>)
+ ENDIF()
+ 
+ IF(NOT MRIOEXTRAS_NO_LAS)
+diff --git a/source/MRVoxels/CMakeLists.txt b/source/MRVoxels/CMakeLists.txt
+index 104edb9..c4f1cf1 100644
+--- a/source/MRVoxels/CMakeLists.txt
++++ b/source/MRVoxels/CMakeLists.txt
+@@ -32,8 +32,9 @@ target_link_libraries(${PROJECT_NAME}
+     OpenVDB::openvdb
+ )
+ # required for static linking
+-IF(EMSCRIPTEN)
+-  target_link_libraries(${PROJECT_NAME} PRIVATE blosc)
++find_package(blosc CONFIG REQUIRED)
++IF(OpenVDB_USES_BLOSC AND TARGET blosc_static)
++  target_link_libraries(${PROJECT_NAME} PRIVATE blosc_static)
+ ENDIF()
+ 
+ IF(NOT MRVOXELS_NO_DICOM)
+diff --git a/source/laz-perf/CMakeLists.txt b/source/laz-perf/CMakeLists.txt
+index d5ccfd4..ec7475f 100644
+--- a/source/laz-perf/CMakeLists.txt
++++ b/source/laz-perf/CMakeLists.txt
+@@ -1,7 +1,9 @@
+ # This file exists so we can disable some warnings in Lazperf.
+ # If we were to `add_subdirectory` it directly from `MeshLib/CMakeLists.txt`, we would have to modify the global CXX flags, which is uncool.
+ 
+-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4245 /wd4456 /wd4458 /wd5051")
++if(MSVC)
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4245 /wd4456 /wd4458 /wd5051")
++endif()
+ set(WITH_TESTS OFF CACHE BOOL "Choose if LAZPERF unit tests should be built")
+ set(WITH_TOOLS OFF CACHE BOOL "Choose if LAZPERF tools should be built")
+ add_subdirectory(${MESHLIB_THIRDPARTY_DIR}/laz-perf ./laz-perf)
+diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
+index e4734cf..e1e89bd 100644
+--- a/thirdparty/CMakeLists.txt
++++ b/thirdparty/CMakeLists.txt
+@@ -83,10 +83,8 @@ IF(NOT APPLE AND NOT MR_EMSCRIPTEN)
+   ENDIF()
+ ENDIF()
+ 
+-add_subdirectory(./OpenCTM-git ./OpenCTM)
+-
+-option(PHMAP_INSTALL "" ON)
+-add_subdirectory(./parallel-hashmap)
++find_path(PARALLEL_HASHMAP_INCLUDE_DIRS "parallel_hashmap/btree.h")
++include_directories(${PARALLEL_HASHMAP_INCLUDE_DIRS})
+ 
+ IF(EMSCRIPTEN)
+   add_subdirectory(./expected ./expected)
+@@ -162,8 +160,8 @@ IF(NOT MR_EMSCRIPTEN)
+   add_subdirectory(./mrbind-pybind11)
+ ENDIF()
+ 
+-set(TINYGLTF_INSTALL ON)
+-add_subdirectory(./tinygltf)
++find_path(TINYGLTF_INCLUDE_DIRS "tiny_gltf.h")
++include_directories(${TINYGLTF_INCLUDE_DIRS})
+ 
+ set(WITH_TESTS OFF CACHE BOOL "")
+ set(WITH_EMBIND OFF CACHE BOOL "")
