@@ -52,10 +52,6 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/include/coin/CoinMpsIO.hpp")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/coin/CoinMpsIO.hpp" "\"glpk.h\"" "\"../glpk.h\"")
-endif()
-
 file(INSTALL "${COINUTILS_SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/coinutils" RENAME copyright)
 
 if(EXISTS "${COINUTILS_SOURCE_PATH}/m4")
