@@ -1,0 +1,47 @@
+diff -Naur webview-0.12.0.orig/cmake/modules/FindMSWebView2.cmake webview-0.12.0/cmake/modules/FindMSWebView2.cmake
+--- webview-0.12.0.orig/cmake/modules/FindMSWebView2.cmake	2024-09-11 19:21:07.000000000 +0300
++++ webview-0.12.0/cmake/modules/FindMSWebView2.cmake	2026-02-12 22:50:33.603749400 +0300
+@@ -1,11 +1,4 @@
+-if(DEFINED MSWebView2_ROOT)
+-    find_path(MSWebView2_INCLUDE_DIR WebView2.h
+-        PATHS
+-            "${MSWebView2_ROOT}/build/native"
+-            "${MSWebView2_ROOT}"
+-        PATH_SUFFIXES include
+-        NO_CMAKE_FIND_ROOT_PATH)
+-endif()
++find_path(MSWebView2_INCLUDE_DIR WebView2.h)
+ 
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(MSWebView2 REQUIRED_VARS MSWebView2_INCLUDE_DIR)
+diff -Naur webview-0.12.0.orig/cmake/webview.cmake webview-0.12.0/cmake/webview.cmake
+--- webview-0.12.0.orig/cmake/webview.cmake	2024-09-11 19:21:07.000000000 +0300
++++ webview-0.12.0/cmake/webview.cmake	2026-02-12 22:50:16.042742400 +0300
+@@ -71,10 +71,6 @@
+         list(APPEND WEBVIEW_DEPENDENCIES PkgConfig::WEBVIEW_WEBKITGTK PkgConfig::WEBVIEW_GTK dl)
+     elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+         if(WEBVIEW_USE_BUILTIN_MSWEBVIEW2)
+-            find_package(MSWebView2 QUIET)
+-            if(NOT MSWebView2_FOUND)
+-                webview_fetch_mswebview2(${WEBVIEW_MSWEBVIEW2_VERSION})
+-            endif()
+             find_package(MSWebView2 REQUIRED)
+             if(MSWebView2_FOUND)
+                 list(APPEND WEBVIEW_DEPENDENCIES MSWebView2::headers)
+@@ -83,16 +79,3 @@
+         list(APPEND WEBVIEW_DEPENDENCIES advapi32 ole32 shell32 shlwapi user32 version)
+     endif()
+ endmacro()
+-
+-function(webview_fetch_mswebview2 VERSION)
+-    if(NOT COMMAND FetchContent_Declare)
+-        include(FetchContent)
+-    endif()
+-    set(FC_NAME microsoft_web_webview2)
+-    FetchContent_Declare(${FC_NAME}
+-        URL "https://www.nuget.org/api/v2/package/Microsoft.Web.WebView2/${VERSION}"
+-        CONFIGURE_COMMAND "")
+-    FetchContent_MakeAvailable(${FC_NAME})
+-    set(MSWebView2_ROOT "${${FC_NAME}_SOURCE_DIR}")
+-    set(MSWebView2_ROOT "${MSWebView2_ROOT}" PARENT_SCOPE)
+-endfunction()
