@@ -7,6 +7,20 @@ vcpkg_from_github(
 
 set(OSI_SOURCE_PATH "${SOURCE_PATH}/Osi")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string(
+        "${OSI_SOURCE_PATH}/Makefile.in"
+        "PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir)"
+        "PKG_CONFIG_PATH=$(DESTDIR)$(pkgconfiglibdir)"
+    )
+
+    vcpkg_replace_string(
+        "${OSI_SOURCE_PATH}/Makefile.in"
+        "$(PKG_CONFIG) --libs osi > $(addlibsdir)/osi_addlibs.txt"
+        "$(PKG_CONFIG) --libs osi > \"$(addlibsdir)/osi_addlibs.txt\""
+    )
+endif()
+
 file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${OSI_SOURCE_PATH}")
 
 set(ENV{ACLOCAL} "aclocal -I \"${OSI_SOURCE_PATH}/BuildTools\"")
