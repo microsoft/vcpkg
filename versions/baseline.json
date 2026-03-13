@@ -6806,7 +6806,7 @@
     },
     "ncnn": {
       "baseline": "20250916",
-      "port-version": 0
+      "port-version": 1
     },
     "ncurses": {
       "baseline": "6.5",
