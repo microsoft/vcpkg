@@ -6656,6 +6656,10 @@
       "baseline": "10.1.12498.52",
       "port-version": 0
     },
+    "msolve": {
+      "baseline": "0.9.4",
+      "port-version": 0
+    },
     "msquic": {
       "baseline": "2.4.8",
       "port-version": 1
