@@ -40,10 +40,10 @@ index 556a4ab..7e23e7c 100644
 +
 +set_property(TARGET cpptotp PROPERTY CXX_STANDARD 11)
 +target_include_directories(cpptotp PRIVATE src)
-+add_library(cpptotp::cpptotp ALIAS cpptotp)
++add_library(unofficial::cpptotp::cpptotp ALIAS cpptotp)
 +
 +install(TARGETS cpptotp
-+  EXPORT cpptotp-targets
++  EXPORT unofficial-cpptotp-targets
 +  RUNTIME DESTINATION bin
 +  LIBRARY DESTINATION lib
 +  ARCHIVE DESTINATION lib
@@ -57,18 +57,18 @@ index 556a4ab..7e23e7c 100644
 +include(CMakePackageConfigHelpers)
 +
 +configure_package_config_file(
-+  "${CMAKE_CURRENT_SOURCE_DIR}/cpptotp-config.cmake.in"
-+  "${CMAKE_CURRENT_BINARY_DIR}/cpptotp-config.cmake"
-+  INSTALL_DESTINATION "share/cpptotp"
++  "${CMAKE_CURRENT_SOURCE_DIR}/unofficial-cpptotp-config.cmake.in"
++  "${CMAKE_CURRENT_BINARY_DIR}/unofficial-cpptotp-config.cmake"
++  INSTALL_DESTINATION "share/unofficial-cpptotp"
 +)
 +
 +install(FILES
-+  "${CMAKE_CURRENT_BINARY_DIR}/cpptotp-config.cmake"
-+  DESTINATION "share/cpptotp"
++  "${CMAKE_CURRENT_BINARY_DIR}/unofficial-cpptotp-config.cmake"
++  DESTINATION "share/unofficial-cpptotp"
 +)
 +
 +install(
-+  EXPORT cpptotp-targets
-+  DESTINATION "share/cpptotp"
-+  NAMESPACE cpptotp::
++  EXPORT unofficial-cpptotp-targets
++  DESTINATION "share/unofficial-cpptotp"
++  NAMESPACE unofficial::cpptotp::
  )

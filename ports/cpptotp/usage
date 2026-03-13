@@ -1,4 +1,4 @@
 The package cpptotp provides CMake targets:
 
-    find_package(cpptotp REQUIRED)
-    target_link_libraries(main PRIVATE cpptotp::cpptotp)
+    find_package(unofficial-cpptotp CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::cpptotp::cpptotp)

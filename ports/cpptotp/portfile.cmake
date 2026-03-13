@@ -6,7 +6,7 @@ vcpkg_from_github(
     PATCHES fix-cmake-for-vcpkg.patch
 )
 
-file(COPY "${CMAKE_CURRENT_LIST_DIR}/cpptotp-config.cmake.in" DESTINATION "${SOURCE_PATH}")
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/unofficial-cpptotp-config.cmake.in" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -15,7 +15,7 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
-vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-cpptotp)
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
