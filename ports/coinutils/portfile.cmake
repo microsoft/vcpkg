@@ -7,6 +7,12 @@ vcpkg_from_github(
 
 set(COINUTILS_SOURCE_PATH "${SOURCE_PATH}/CoinUtils")
 
+vcpkg_replace_string(
+    "${COINUTILS_SOURCE_PATH}/Makefile.in"
+    "\"$(PKG_CONFIG)\" --libs coinutils > $(addlibsdir)/coinutils_addlibs.txt"
+    "\"$(PKG_CONFIG)\" --libs coinutils > \"$(addlibsdir)/coinutils_addlibs.txt\""
+)
+
 file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${COINUTILS_SOURCE_PATH}")
 
 set(ENV{ACLOCAL} "aclocal -I \"${COINUTILS_SOURCE_PATH}/BuildTools\"")
