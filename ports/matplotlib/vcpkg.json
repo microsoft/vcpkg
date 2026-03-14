@@ -1,0 +1,24 @@
+{
+  "name": "matplotlib",
+  "version": "3.10.1",
+  "description": "Comprehensive library for creating static, animated, and interactive visualizations in Python",
+  "homepage": "https://matplotlib.org/",
+  "license": "PSF-2.0",
+  "supports": "native",
+  "dependencies": [
+    "freetype",
+    "pybind11",
+    {
+      "name": "python3",
+      "default-features": false,
+      "features": [
+        "extensions"
+      ]
+    },
+    "qhull",
+    {
+      "name": "vcpkg-get-python-packages",
+      "host": true
+    }
+  ]
+}

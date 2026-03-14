@@ -1,0 +1,4 @@
+matplotlib is a Python package. It can be used after installing by importing in Python:
+
+    import matplotlib
+    import matplotlib.pyplot as plt
