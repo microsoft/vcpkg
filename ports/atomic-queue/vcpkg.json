@@ -1,7 +1,17 @@
 {
   "name": "atomic-queue",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Minimalistic header-only thread-safe ultra-low-latency multiple-producer-multiple-consumer lockless queues based on circular buffer with std::atomic.",
   "homepage": "https://github.com/max0x7ba/atomic_queue",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
