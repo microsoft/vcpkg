@@ -1474,7 +1474,7 @@
     },
     "braft": {
       "baseline": "2021-26-04",
-      "port-version": 6
+      "port-version": 7
     },
     "breakpad": {
       "baseline": "2024-02-16",
