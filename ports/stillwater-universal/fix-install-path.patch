@@ -1,6 +1,19 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -559,19 +559,11 @@
+@@ -25,11 +25,11 @@
+ if(NOT DEFINED UNIVERSAL_VERSION_PATCH)
+   set(UNIVERSAL_VERSION_PATCH 1)
+ endif()
+-project(universal 
++project(stillwater-universal 
+ 	DESCRIPTION "A header only C++ library for plug-in replacement number systems for native types"
+ 	VERSION "${UNIVERSAL_VERSION_MAJOR}.${UNIVERSAL_VERSION_MINOR}.${UNIVERSAL_VERSION_PATCH}" 
+ 	LANGUAGES C CXX ASM
+ 	HOMEPAGE_URL "https://github.com/stillwater-sc/universal")
+ 
+ # universal is a header-only library
+ add_library(${PROJECT_NAME} INTERFACE)
+@@ -559,19 +559,10 @@
  
  # Set up install directories. INCLUDE_INSTALL_DIR and
  # CMAKECONFIG_INSTALL_DIR must not be absolute paths.
@@ -12,25 +25,25 @@
 -    set(include_install_dir include)
 -    set(include_install_dir_postfix "${project_library_target_name}")
 -    set(include_install_dir_full    "${include_install_dir}/${include_install_dir_postfix}")
-+set(include_install_dir include)
-+set(include_install_dir_postfix "${project_library_target_name}")
-+set(include_install_dir_full    "${include_install_dir}/${include_install_dir_postfix}")
- 
+-
 -    set(config_install_dir share/${PACKAGE_NAME})
 -else()
 -    message(FATAL_ERROR "Not supported system type. Options: UNIX or WIN32.")
 -endif()
++set(include_install_dir include)
++set(include_install_dir_full "${include_install_dir}")
++
 +set(config_install_dir CMake)
  
  #####  Gather git repo related information
  # Get the current working branch
-@@ -658,7 +650,8 @@
+@@ -658,7 +648,8 @@
      DESTINATION ${config_install_dir} COMPONENT cmake)
  
  # Install headers
 -install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/${project_library_target_name}
 -        DESTINATION ${include_install_dir})
-+install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/sw/${project_library_target_name}
++install(DIRECTORY   ${PROJECT_SOURCE_DIR}/include/sw/universal
 +        DESTINATION ${include_install_dir}
 +        FILES_MATCHING PATTERN "*.hpp")
  

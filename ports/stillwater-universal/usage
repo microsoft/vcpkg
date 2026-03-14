@@ -1,0 +1,5 @@
+The package stillwater-universal provides CMake targets:
+
+    find_package(stillwater-universal CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE stillwater-universal::stillwater-universal)
+
