@@ -1,0 +1,44 @@
+diff --git a/src/tds/CMakeLists.txt b/src/tds/CMakeLists.txt
+index dbfb71b..d39274c 100644
+--- a/src/tds/CMakeLists.txt
++++ b/src/tds/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-#add_subdirectory(unittests)
++#add_subdirectory(unittests)
+ 
+ if(PERL_FOUND AND NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tds_willconvert.h")
+ 	if (NOT GPERF)
+@@ -65,11 +65,9 @@ if (NOT WIN32)
+ 	set_target_properties(tds PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ endif()
+ 
+-if(WIN32)
+ INSTALL(TARGETS tds
+ 	PUBLIC_HEADER DESTINATION include
+ 		RUNTIME DESTINATION bin
+ 		LIBRARY DESTINATION lib
+ 		ARCHIVE DESTINATION lib
+ 	)
+-endif(WIN32)
+diff --git a/src/utils/CMakeLists.txt b/src/utils/CMakeLists.txt
+index e5d7786..f759f04 100644
+--- a/src/utils/CMakeLists.txt
++++ b/src/utils/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-#add_subdirectory(unittests)
++#add_subdirectory(unittests)
+ 
+ if(WIN32)
+ 	set(add_SRCS md5.c)
+@@ -22,11 +22,9 @@ if (NOT WIN32)
+ 	set_target_properties(tdsutils PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ endif()
+ 
+-if(WIN32)
+ INSTALL(TARGETS tdsutils
+ 	PUBLIC_HEADER DESTINATION include
+ 		RUNTIME DESTINATION bin
+ 		LIBRARY DESTINATION lib
+ 		ARCHIVE DESTINATION lib
+ 	)
+-endif(WIN32)

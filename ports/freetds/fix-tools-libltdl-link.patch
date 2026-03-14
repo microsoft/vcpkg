@@ -1,0 +1,17 @@
+diff --git a/src/odbc/CMakeLists.txt b/src/odbc/CMakeLists.txt
+index d9a27ce..8f1dc0f 100644
+--- a/src/odbc/CMakeLists.txt
++++ b/src/odbc/CMakeLists.txt
+@@ -38,6 +38,11 @@ target_include_directories(tdsodbc PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")
+ add_dependencies(tdsodbc odbc_exports_h encodings_h)
+ target_compile_definitions(tdsodbc PUBLIC DLL_EXPORT=1)
+ # TODO libiconv, odbcinstlib and other dynamics
+ target_link_libraries(tdsodbc tds replacements tdsutils ${libs} ${lib_NETWORK} ${lib_BASE})
++
++if(NOT WIN32)
++	# libtdsodbc uses libltdl symbols (lt_dl*) at runtime on non-Windows.
++	target_link_libraries(tdsodbc ltdl)
++endif()
+ 
+ if(MINGW OR CYGWIN)
+ 	set_target_properties(tdsodbc PROPERTIES LINK_FLAGS "--static -Wl,--kill-at -Wl,--enable-stdcall-fixup")

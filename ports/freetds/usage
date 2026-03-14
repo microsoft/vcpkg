@@ -1,0 +1,9 @@
+The package freetds provides CMake targets:
+
+    find_package(unofficial-freetds CONFIG REQUIRED)
+
+    # DB-Library (sybdb)
+    target_link_libraries(main PRIVATE unofficial::freetds::sybdb)
+
+    # CT-Library
+    target_link_libraries(main PRIVATE unofficial::freetds::ct)
