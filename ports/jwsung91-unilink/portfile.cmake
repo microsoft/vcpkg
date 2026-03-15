@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jwsung91/unilink
     REF v${VERSION}
-    SHA512 922a3029a4fdde4c9da895b06b56cea2d2b8002825b1c8514fb0d39d61e52dad9ba2ef1cf6a4f8ee99d82d652ad0f0d6146edb8adaa60362cc18e67d41e2040f
+    SHA512 e653eddf9a4623fa4cacbbb924a5b2cf5fc01177e246a29833eda70d1ae62b3e784a7c8ac912185c70c767dd238aa4445b050b15c8fc2b4a356e92927453efc0
     PATCHES
         include-cstdint.patch
 )
