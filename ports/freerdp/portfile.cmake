@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
     REF "${VERSION}"
-    SHA512 "cc52f70be7ce34989be4fbdf172ed90b65978986de2e8b97c77d3a04bfc4fa79738b15a7adb71c1fa980e1f1ab8336022594a1032e91d9102bcb66d36ced62a9"
+    SHA512 15895ce80a7e8fc0300d1129d2f4092162cbfee92efba26d7e570197bfb37821d9e92b835ca1589a1b876df3246d3eba9a2225e1c63519fb9fc4d93a8f3e5e88
     HEAD_REF master
     PATCHES
         dependencies.patch
@@ -124,7 +124,6 @@ if("server" IN_LIST FEATURES)
         vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/FreeRDP-Shadow3 PACKAGE_NAME freerdp-shadow3 DO_NOT_DELETE_PARENT_CONFIG_PATH)
         list(APPEND tools freerdp-shadow-cli)
     endif()
-    vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/rdtk0 PACKAGE_NAME rdtk0 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endif()
 if("winpr-tools" IN_LIST FEATURES)
     list(APPEND tools winpr-hash winpr-makecert)
@@ -142,9 +141,6 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/winpr3/winpr/build-config.
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # They build static with dllexport, so it must be used with dllexport. Proper fix needs invasive patching.
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/freerdp3/freerdp/api.h" "#ifdef FREERDP_EXPORTS" "#if 1")
-    if(WITH_SERVER)
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/rdtk0/rdtk/api.h" "#ifdef RDTK_EXPORTS" "#if 1")
-    endif()
 endif()
 
 file(GLOB cmakefiles  "${CURRENT_PACKAGES_DIR}/include/*/CMakeFiles")

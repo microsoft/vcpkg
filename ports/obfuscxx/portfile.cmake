@@ -1,11 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nevergiveupcpp/obfuscxx
-    REF v1.0.0
-	SHA512 78d252714ef84b4897d587842d49af252b33cdd14feff3c1ed57012ab7d0a04b51f301b9b6bb89a2ad5b2089081d3671365ed6bc84f10afbe6d28280b5bea2a7
+    REF v${VERSION}
+	SHA512 78f12676dce516847650fd06a4f5e745cb02c0877285ec135890c295978726741ba658e4bf543779384b6fa88bd1003b4be3f8290f69dd5cb554da715e6e4972
 )
 
-file(INSTALL "${SOURCE_PATH}/include/obfuscxx/"
-     DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+vcpkg_cmake_configure(
+	SOURCE_PATH "${SOURCE_PATH}"
+)
+
+vcpkg_cmake_install()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/obfuscxx)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
