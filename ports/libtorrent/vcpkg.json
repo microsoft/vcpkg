@@ -32,21 +32,12 @@
       "host": true
     }
   ],
-  "default-features": [
-    "iconv"
-  ],
   "features": {
     "deprfun": {
       "description": "build with deprecated functions enabled"
     },
     "examples": {
       "description": "build the examples in the examples directory"
-    },
-    "iconv": {
-      "description": "build with libiconv",
-      "dependencies": [
-        "libiconv"
-      ]
     },
     "python": {
       "description": "build the python bindings in bindings/python directory",

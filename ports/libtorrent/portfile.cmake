@@ -13,7 +13,6 @@ vcpkg_check_features(
     FEATURES
         deprfun     deprecated-functions
         examples    build_examples
-        iconv       iconv
         python      python-bindings
         test        build_tests
         tools       build_tools
@@ -33,6 +32,8 @@ vcpkg_from_github(
         REF "v${VERSION}"
         SHA512 5d737dbc25f335f5dc207647155289177ded51051f6338629680efc766825a52ec952092a1b0297121bfc201d4508be3cb427e24b18a18649435377dcfeb086b
         HEAD_REF RC_2_0
+        PATCHES
+            fix-python-path.patch
 )
 
 vcpkg_from_github(
