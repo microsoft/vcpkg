@@ -2,7 +2,7 @@ string(REGEX MATCH "^([0-9]*[.][0-9]*)" GTKMM_MAJOR_MINOR "${VERSION}")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/gtkmm/${GTKMM_MAJOR_MINOR}/gtkmm-${VERSION}.tar.xz"
     FILENAME "gtkmm-${VERSION}.tar.xz"
-    SHA512 c65bfa6dc0788cdd698c25e3b29861cb47aa0cd9c8bd3632005958ecd5a8d92802fc8ecaf498bcfc281a9b4035e751eeb6c05fa351f4b14c063870218127dabd
+    SHA512 b0c4b77249dcf2d917919d43b04e41b819507ab34366aa4bbffd53bbe5edbb195081d69ae4996a116573a5d4e6d2affbbbc62d4ff986dcbf95045c5d64284d7f
 )
 
 vcpkg_extract_source_archive(

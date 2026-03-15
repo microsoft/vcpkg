@@ -9,9 +9,11 @@ vcpkg_from_github(
     PATCHES
         fix-vec2-math-operators.patch
         remove-getkeyindex.patch # GetKeyIndex() is a no-op since 1.87; see https://github.com/ocornut/imgui/issues/5979#issuecomment-1345349492
+        fix-imgui-v1.92.5.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+file(REMOVE_RECURSE "${SOURCE_PATH}/external/imgui")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
