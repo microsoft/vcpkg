@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emoon/minifb
-    REF 2ce2449b1bc8d7c6d20c31b86244f1e540f2e788 # 2023-09-21
-    SHA512 cbadc06df99f833fedcd9eb9d5afab4572272a9dfd0f4084a2b79a64dc98f19bcddbb6f43992b16f005d26054c454e3cfc34e3e210cdd93ad1adb89e19463a4d
+    REF v${VERSION}
+    SHA512 bbd46be1ea58454c3d87eca6d035824f6d3c38e137d49ddb7b69cb9c44054c1f1d659e7f95bded825f66034f6e2e85a6b76c0e8c95158dec8d7dccad52c5fb41
     HEAD_REF master
 )
 
