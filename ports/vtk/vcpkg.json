@@ -1,7 +1,6 @@
 {
   "name": "vtk",
   "version-semver": "9.6.0",
-  "port-version": 7,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
@@ -11,7 +10,6 @@
     "expat",
     "exprtk",
     "fast-float",
-    "scnlib",
     "fmt",
     {
       "name": "freetype",
@@ -43,6 +41,7 @@
     "nlohmann-json",
     "pegtl",
     "pugixml",
+    "scnlib",
     {
       "name": "tiff",
       "default-features": false
