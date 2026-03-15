@@ -37,7 +37,16 @@
  
  #####  Gather git repo related information
  # Get the current working branch
-@@ -658,7 +648,8 @@
+@@ -629,7 +620,7 @@
+ 
+ include(CMakePackageConfigHelpers)
+ configure_package_config_file(
+-    "${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake/Templates/${cmake_conf_file}.in"
++    "${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake/Templates/universal-config.cmake.in"
+     "${CMAKE_CURRENT_BINARY_DIR}/${cmake_conf_file}"
+     PATH_VARS include_install_dir_full
+     INSTALL_DESTINATION ${config_install_dir})
+@@ -658,7 +649,8 @@
      DESTINATION ${config_install_dir} COMPONENT cmake)
  
  # Install headers
