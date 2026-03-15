@@ -24,7 +24,7 @@ index b80f74acbc..47aff80f70 100644
  target_compile_definitions(bungee_library PRIVATE
    BUNGEE_VISIBILITY=${BUNGEE_EXPORT}
    BUNGEE_SELF_TEST=${BUNGEE_SELF_TEST}
-@@ -38,27 +42,12 @@ target_compile_definitions(bungee_library PRIVATE
+@@ -38,27 +42,13 @@ target_compile_definitions(bungee_library PRIVATE
  )
  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp PROPERTIES COMPILE_DEFINITIONS BUNGEE_VERSION=\"${BUNGEE_VERSION}\")
  target_compile_options(bungee_library PRIVATE $<$<CXX_COMPILER_ID:GNU,Clang>:-fwrapv>)
@@ -34,6 +34,7 @@ index b80f74acbc..47aff80f70 100644
    target_link_libraries(bungee_library PRIVATE log)
  endif()
  set_target_properties(bungee_library PROPERTIES OUTPUT_NAME bungee)
++set_target_properties(bungee_library PROPERTIES EXPORT_NAME bungee)
  
 -# Bungee command-line executable target: "bungee_executable"
 -add_executable(bungee_executable cmd/main.cpp)
@@ -88,12 +89,12 @@ index b80f74acbc..47aff80f70 100644
 -install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libbungee.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/${BUNGEE_PRESET}/pkgconfig)
 -
 -endif()
-+install(FILES 
++install(FILES
 +  ${BUNGEE_LIBRARY_HEADERS}
-+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/bungee
++  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bungee
 +)
 +install(TARGETS bungee_library
-+  EXPORT bungeeTargets
++  EXPORT unofficial-bungee-targets
 +  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -101,9 +102,9 @@ index b80f74acbc..47aff80f70 100644
 +)
 +
 +install(
-+    EXPORT bungeeTargets
-+    NAMESPACE unofficial::
-+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bungee
++    EXPORT unofficial-bungee-targets
++    NAMESPACE unofficial::bungee::
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-bungee
 +)
 +
 +get_property(BUNGEE_LIBRARY_OUTPUT_NAME TARGET bungee_library PROPERTY OUTPUT_NAME)

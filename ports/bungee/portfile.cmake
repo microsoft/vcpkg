@@ -23,7 +23,13 @@ vcpkg_cmake_configure(
         -DBUNGEE_PRESET=
 )
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/bungee)
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/unofficial-bungee-config.cmake"
+     DESTINATION "${CURRENT_PACKAGES_DIR}/lib/cmake/unofficial-bungee")
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+vcpkg_cmake_config_fixup(PACKAGE_NAME unofficial-bungee CONFIG_PATH lib/cmake/unofficial-bungee)
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
