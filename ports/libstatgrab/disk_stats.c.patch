@@ -2,6 +2,24 @@ diff --git a/src/libstatgrab/disk_stats.c b/src/libstatgrab/disk_stats.c
 index 62c0fde..d4ce894 100644
 --- a/src/libstatgrab/disk_stats.c
 +++ b/src/libstatgrab/disk_stats.c
+@@ -34,7 +34,7 @@
+ 
+ #ifdef SOLARIS
+ #define VALID_FS_TYPES {"ufs", "tmpfs", "vxfs", "nfs", "zfs", "lofs"}
+-#elif defined(LINUX)
++#elif defined(LINUX) || defined(__ANDROID__)
+ #define VALID_FS_TYPES {"adfs", "affs", "befs", "bfs", "btrfs", "cifs", \
+ 			"efs", "ext2", "ext3", "ext4", "vxfs", "hfs", \
+ 			"hfsplus", "hpfs", "jffs", "jffs2", "jfs", "minix", \
+@@ -459,7 +459,7 @@
+ #define CUR_VALID_FS sys_fs_types[i]
+ #define CAN_SHRINK_VALID_FS
+ 
+-#elif defined(LINUX)
++#elif defined(LINUX) || defined(__ANDROID__)
+ 
+ #undef FILL_VALID_FS
+ 
 @@ -1034,7 +1034,7 @@ sg_get_fs_list_int(sg_vector **fs_stats_vector_ptr) {
  		    ( ( upderr = sg_update_string( &fs_ptr[num_fs].mnt_point, SG_FS_MOUNTP ) ) != SG_ERROR_NONE ) ) {
  			RETURN_FROM_PREVIOUS_ERROR( "disk", upderr );
