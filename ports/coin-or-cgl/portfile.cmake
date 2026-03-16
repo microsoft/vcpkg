@@ -20,6 +20,7 @@ endif()
 
 vcpkg_configure_make(
     SOURCE_PATH "${CGL_SOURCE_PATH}"
+    AUTOCONFIG
     NO_ADDITIONAL_PATHS
     OPTIONS
       --with-coinutils

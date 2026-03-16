@@ -23,6 +23,7 @@ endif()
 
 vcpkg_make_configure(
     SOURCE_PATH "${CBC_SOURCE_PATH}"
+    AUTOCONFIG
     DEFAULT_OPTIONS_EXCLUDE "(--docdir=.*|--datarootdir=.*)"
     OPTIONS
         --with-coinutils

@@ -13,11 +13,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir)"
         "PKG_CONFIG_PATH=$(DESTDIR)$(pkgconfiglibdir)"
     )
-    # Avoid GCC-specific autoconf probes that assume a GNU compiler when
-    # running configure under MSYS with MSVC. Preseed autoconf cache to
-    # prevent detection paths that emit 'choke me' probes and fail on cl.exe.
-    set(ENV{ac_cv_c_compiler_gnu} "no")
-    set(ENV{ac_cv_cxx_compiler_gnu} "no")
 endif()
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${OSI_SOURCE_PATH}")
@@ -26,6 +21,7 @@ set(ENV{ACLOCAL} "aclocal -I \"${OSI_SOURCE_PATH}/BuildTools\"")
 
 vcpkg_configure_make(
     SOURCE_PATH "${OSI_SOURCE_PATH}"
+    AUTOCONFIG
     NO_ADDITIONAL_PATHS
     OPTIONS
         --with-glpk
