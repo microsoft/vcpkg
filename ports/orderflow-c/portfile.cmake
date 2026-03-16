@@ -6,7 +6,56 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-find_program(CARGO NAMES cargo REQUIRED)
+set(RUSTUP_HOME "${CURRENT_BUILDTREES_DIR}/rustup-home")
+set(CARGO_HOME "${CURRENT_BUILDTREES_DIR}/cargo-home")
+file(MAKE_DIRECTORY "${RUSTUP_HOME}" "${CARGO_HOME}")
+set(ENV{RUSTUP_HOME} "${RUSTUP_HOME}")
+set(ENV{CARGO_HOME} "${CARGO_HOME}")
+
+if(VCPKG_HOST_IS_WINDOWS)
+    set(RUSTUP_INIT_URL "https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe")
+    set(RUSTUP_INIT_SHA512 "20c8eeecb2bbd7132b418b415d860d1df4ae8711a303de66f15a050d0c58db7d7868ac8f0389fb03d1078688173de94bcd13e07377e971caa1b6cfde9c50d75e")
+    set(RUSTUP_INIT_FILENAME "rustup-init-x86_64-pc-windows-msvc.exe")
+    set(CARGO "${CARGO_HOME}/bin/cargo.exe")
+elseif(VCPKG_HOST_IS_OSX)
+    set(RUSTUP_INIT_URL "https://static.rust-lang.org/rustup/dist/x86_64-apple-darwin/rustup-init")
+    set(RUSTUP_INIT_SHA512 "14c0d8491cae3b556978ec7c93886db943eccf0f65e24187478308b42aaea3174821c65be0ae8a50b1c70b5ea54a8c009d4af248a07a127bb45ea531a7602b0c")
+    set(RUSTUP_INIT_FILENAME "rustup-init-x86_64-apple-darwin")
+    set(CARGO "${CARGO_HOME}/bin/cargo")
+elseif(VCPKG_HOST_IS_LINUX)
+    set(RUSTUP_INIT_URL "https://static.rust-lang.org/rustup/dist/x86_64-unknown-linux-gnu/rustup-init")
+    set(RUSTUP_INIT_SHA512 "245e554e5203df236a4794e595f647bb9019b8664efb1ba1c7faef8f362f9dcc31c7b1475d54e75425962341180612db32ee94cc45256977ea631d75628f43db")
+    set(RUSTUP_INIT_FILENAME "rustup-init-x86_64-unknown-linux-gnu")
+    set(CARGO "${CARGO_HOME}/bin/cargo")
+else()
+    message(FATAL_ERROR "Unsupported host platform for Rust toolchain bootstrap")
+endif()
+
+if(NOT EXISTS "${CARGO}")
+    vcpkg_download_distfile(RUSTUP_INIT_PATH
+        URLS "${RUSTUP_INIT_URL}"
+        SHA512 "${RUSTUP_INIT_SHA512}"
+        FILENAME "${RUSTUP_INIT_FILENAME}"
+    )
+
+    if(VCPKG_HOST_IS_WINDOWS)
+        set(RUSTUP_INIT_CMD "${RUSTUP_INIT_PATH}")
+    else()
+        file(CHMOD "${RUSTUP_INIT_PATH}"
+            PERMISSIONS
+                OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                GROUP_READ GROUP_EXECUTE
+                WORLD_READ WORLD_EXECUTE
+        )
+        set(RUSTUP_INIT_CMD "${RUSTUP_INIT_PATH}")
+    endif()
+
+    vcpkg_execute_required_process(
+        COMMAND "${RUSTUP_INIT_CMD}" -y --profile minimal --default-toolchain 1.85.0 --no-modify-path
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        LOGNAME "rustup-init-${TARGET_TRIPLET}"
+    )
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(RUST_TARGET "x86_64-pc-windows-msvc")
