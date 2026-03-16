@@ -27,6 +27,16 @@ else()
     list(APPEND options "--without-glpk")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Some upstream autoreconf runs for CoinUtils trigger macros that
+    # expect C++ to be set as the current language. Running autoreconf
+    # can fail in our MSYS image. Fall back to seeding autoconf cache on
+    # Windows so configure avoids GCC-specific probes that later fail
+    # against cl.exe.
+    set(ENV{ac_cv_c_compiler_gnu} "no")
+    set(ENV{ac_cv_cxx_compiler_gnu} "no")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${COINUTILS_SOURCE_PATH}"
     NO_ADDITIONAL_PATHS
@@ -44,16 +54,6 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    # Some upstream autoreconf runs for CoinUtils trigger macros that
-    # expect C++ to be set as the current language. Running autoreconf
-    # can fail in our MSYS image. Fall back to seeding autoconf cache on
-    # Windows so configure avoids GCC-specific probes that later fail
-    # against cl.exe.
-    set(ENV{ac_cv_c_compiler_gnu} "no")
-    set(ENV{ac_cv_cxx_compiler_gnu} "no")
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
