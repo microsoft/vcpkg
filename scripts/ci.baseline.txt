@@ -324,6 +324,7 @@ libaiff:x64-linux=fail
 libcamera:arm64-linux=fail
 libcanberra:arm-neon-android=fail
 libcanberra:arm64-android=fail
+libcanberra:arm64-linux=fail
 libcanberra:x64-android=fail
 libcpplocate:arm-neon-android=fail
 libcpplocate:arm64-android=fail

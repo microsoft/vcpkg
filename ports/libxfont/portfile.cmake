@@ -20,16 +20,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(APPEND VCPKG_CXX_FLAGS " /D_WILLWINSOCK_") # /showIncludes are not passed on so I cannot figure out which header is responsible for this
     string(APPEND VCPKG_C_FLAGS " /D_WILLWINSOCK_")
 endif()
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS ${OPTIONS}
       --with-bzip2=yes
     OPTIONS_DEBUG ${DEPS_DEBUG}
     OPTIONS_RELEASE ${DEPS_RELEASE}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 if(VCPKG_TARGET_IS_WINDOWS)
     set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xfont2.pc")
     file(READ "${_file}" _contents)

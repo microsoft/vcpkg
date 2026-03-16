@@ -31,16 +31,16 @@ vcpkg_from_gitlab(
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ac_cv_path_PYTHON='${PYTHON3}'
         am_cv_python_pyexecdir=\\\${prefix}/${PYTHON3_SITE}
         am_cv_python_pythondir=\\\${prefix}/${PYTHON3_SITE}
         )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

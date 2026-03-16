@@ -32,9 +32,9 @@ if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 set(ENV{GTKDOCIZE} true) # true, the program
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         --disable-doc
         --disable-gtk-doc
@@ -43,7 +43,7 @@ vcpkg_configure_make(
         "YACC=${BISON}"
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE
