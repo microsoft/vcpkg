@@ -1,6 +1,6 @@
 {
   "name": "huira",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A library for space rendering, LiDAR simulation, and solar radiation pressure modeling.",
   "homepage": "https://github.com/huira-render/huira",
   "documentation": "https://docs.huira.space",
