@@ -4,23 +4,16 @@ if(NOT X_VCPKG_FORCE_VCPKG_X_LIBRARIES AND NOT VCPKG_TARGET_IS_WINDOWS)
     return()
 endif()
 
-set(PATCHES "")
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(PATCHES symbol_visibility.patch)
-    list(APPEND VCPKG_C_FLAGS "/DXKBFILE_BUILD")
-    list(APPEND VCPKG_CXX_FLAGS "/DXKBFILE_BUILD")
-endif()
+vcpkg_download_distfile(
+    LIBXKBFILE_ARCHIVE
+    URLS "https://www.x.org/releases/individual/lib/libxkbfile-${VERSION}.tar.xz"
+    FILENAME "libxkbfile-${VERSION}.tar.xz"
+    SHA512 772035b6bc1d692e8141e095fc2a8cf2ba7daed1d7148def862103160e0d7706f46865367befbbe4c777e7311b224d2cd4474f399d747b122dd395deac3e7cb7
+)
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.freedesktop.org/xorg
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO lib/libxkbfile
-    REF  "libxkbfile-${VERSION}"
-    SHA512 e4b0fc6d9525669fe85cd8ebb096ce4a9355de00e7356dbe6c3cb194f6aa2449ef345811ce4934bb8c09edb94eee08227f7f20ee1df4a8a49697a3dc85cd704e
-    HEAD_REF master
-    PATCHES
-        fix_u_char.patch
-        ${PATCHES}
+vcpkg_extract_source_archive(
+    SOURCE_PATH
+    ARCHIVE "${LIBXKBFILE_ARCHIVE}"
 )
 
 vcpkg_configure_meson(
