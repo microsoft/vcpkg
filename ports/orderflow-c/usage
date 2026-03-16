@@ -1,0 +1,16 @@
+orderflow-c provides the C ABI runtime library and header.
+
+Installed files:
+  include/orderflow.h
+  lib/libof_ffi_c.* (or Windows equivalent)
+
+pkg-config:
+  pkg-config --cflags --libs orderflow
+
+Manual compile example:
+  cc app.c -o app $(pkg-config --cflags --libs orderflow)
+
+If using dynamic linkage, ensure the runtime loader can find the shared library:
+  Linux:   LD_LIBRARY_PATH
+  macOS:   DYLD_LIBRARY_PATH
+  Windows: PATH
