@@ -3,6 +3,7 @@
   "version": "2.10.1",
   "description": "Library for nonlinear local and global optimization, for functions with and without gradient information.",
   "homepage": "https://github.com/stevengj/nlopt",
+  "license": "MIT",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -12,5 +13,11 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "luksan": {
+      "description": "Enable Luksan algorithms (LGPL)",
+      "license": "LGPL-2.1-or-later"
+    }
+  }
 }
