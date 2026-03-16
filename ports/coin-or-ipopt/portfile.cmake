@@ -13,6 +13,13 @@ file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${SO
 
 set(ENV{ACLOCAL} "aclocal -I \"${SOURCE_PATH}/BuildTools\"")
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Avoid GNU-specific autoconf checks on Windows/MSVC by predefining
+    # autoconf cache variables so configure won't try GCC-only probes.
+    set(ENV{ac_cv_c_compiler_gnu} "no")
+    set(ENV{ac_cv_cxx_compiler_gnu} "no")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${SOURCE_PATH}"
     AUTOCONFIG

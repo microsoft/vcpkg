@@ -13,6 +13,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "PKG_CONFIG_PATH=@COIN_PKG_CONFIG_PATH@:$(DESTDIR)$(pkgconfiglibdir)"
         "PKG_CONFIG_PATH=$(DESTDIR)$(pkgconfiglibdir)"
     )
+    # Prevent autoconf from performing GCC-specific probes when running
+    # under MSYS with MSVC. Seed autoconf cache to avoid 'choke me' test
+    # code paths that don't compile with cl.exe.
+    set(ENV{ac_cv_c_compiler_gnu} "no")
+    set(ENV{ac_cv_cxx_compiler_gnu} "no")
 endif()
 
 file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${COINUTILS_SOURCE_PATH}")

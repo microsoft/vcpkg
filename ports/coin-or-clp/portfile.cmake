@@ -11,6 +11,15 @@ file(COPY "${CURRENT_INSTALLED_DIR}/share/coin-or-buildtools/" DESTINATION "${CL
 
 set(ENV{ACLOCAL} "aclocal -I \"${CLP_SOURCE_PATH}/BuildTools\"")
 
+# When building on Windows under MSYS with MSVC, avoid GCC-specific
+# autoconf probe paths by presetting the autoconf cache to indicate the
+# compiler is not GNU. This prevents conftest probes that embed
+# 'choke me' and fail with cl.exe.
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ENV{ac_cv_c_compiler_gnu} "no")
+    set(ENV{ac_cv_cxx_compiler_gnu} "no")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH "${CLP_SOURCE_PATH}"
     NO_ADDITIONAL_PATHS
