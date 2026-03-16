@@ -9392,7 +9392,11 @@
       "baseline": "2025-01-23",
       "port-version": 0
     },
-    "spine-runtimes": {
+    "spine-c": {
+      "baseline": "4.2.20260227",
+      "port-version": 0
+    },
+    "spine-cpp": {
       "baseline": "4.2.20260227",
       "port-version": 0
     },
