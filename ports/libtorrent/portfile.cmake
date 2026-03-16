@@ -1,8 +1,4 @@
 if(VCPKG_TARGET_IS_WINDOWS)
-    # Building python bindings is currently broken on Windows
-    if("python" IN_LIST FEATURES)
-        message(FATAL_ERROR "The python feature is currently broken on Windows")
-    endif()
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
         set(_static_runtime ON)
     endif()

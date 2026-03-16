@@ -41,6 +41,7 @@
     },
     "python": {
       "description": "build the python bindings in bindings/python directory",
+      "supports": "!windows",
       "dependencies": [
         "boost-python"
       ]
