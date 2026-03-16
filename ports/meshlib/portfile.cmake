@@ -29,6 +29,9 @@ file(COPY "${LAZ_PERF_SOURCE_PATH}/" DESTINATION "${SOURCE_PATH}/thirdparty/laz-
 vcpkg_find_acquire_program(PKGCONFIG)
 set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
+# meshlib supports only dynamic linking
+set(VCPKG_LIBRARY_LINKAGE dynamic)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
@@ -59,9 +62,4 @@ vcpkg_copy_tools(
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/debug/include"
 )
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin"
-                        "${CURRENT_PACKAGES_DIR}/bin"
-    )
-endif()
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
