@@ -1,0 +1,13 @@
+diff --git a/tests/testlib/opt.c b/tests/testlib/opt.c
+index 311eb1a..d761f8c 100644
+--- a/tests/testlib/opt.c
++++ b/tests/testlib/opt.c
+@@ -25,6 +25,8 @@
+ #include <tools.h>
+ #include "testlib.h"
+ 
++extern char *optarg;
++
+ int
+ get_params(struct opt_def *opt_defs, int argc, char **argv) {
+ 	char optlst[256] = { '\0' };
