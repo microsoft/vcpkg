@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bitfactory-software/anyxx
     REF "${VERSION}"
-    SHA512 8ec870b6d7ed65de4d41bd3daa4ae6d1f030f685d017c5f23cdeb7fed4a54a5296288d41a0d3cfc7c916e59d5c5886b403304885c40cc72d6b68d7aacb82b6e1
+    SHA512 d09c9a32508afca23c95498af8c95cb98854ac677a2affd10450b2f1a944a49f5dd79c258963828cc56817e91d4e98240ca319638cf1f2ddea771e6068400db7
     HEAD_REF master
 )
 
