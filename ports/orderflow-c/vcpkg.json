@@ -1,6 +1,7 @@
 {
   "name": "orderflow-c",
   "version-semver": "0.1.1",
+  "port-version": 1,
   "description": "Orderflow C ABI runtime library (header + native lib)",
   "homepage": "https://github.com/gregorian-09/orderflow",
   "license": "MIT",
