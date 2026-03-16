@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DHUIRA_NATIVE_ARCH=OFF
         -DHUIRA_TESTS=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON
 )
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()

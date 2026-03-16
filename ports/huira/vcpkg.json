@@ -20,6 +20,7 @@
         "tasking-tbb"
       ]
     },
+    "fftw3",
     "glm",
     "libjpeg-turbo",
     "libpng",
