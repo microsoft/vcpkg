@@ -53,6 +53,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS none # only using the script-mode side-
     INVERTED_FEATURES
         json1               SQLITE_OMIT_JSON
 )
+# Fix: propagate -lm to pkg-config Libs for static builds with math/fts5
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(SQLITE_OS_WIN "1")
