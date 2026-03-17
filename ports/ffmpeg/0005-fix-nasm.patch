@@ -1,5 +1,5 @@
 diff --git a/libavcodec/x86/apv_dsp.asm b/libavcodec/x86/apv_dsp.asm
-index 60e0f03..12668d3 100644
+index e2f30ff..3befc7c 100644
 --- a/libavcodec/x86/apv_dsp.asm
 +++ b/libavcodec/x86/apv_dsp.asm
 @@ -18,7 +18,10 @@
@@ -78,12 +78,12 @@ index d51c507..1f16ba2 100644
  SECTION_RODATA 64
  
 diff --git a/libavcodec/x86/vvc/mc.asm b/libavcodec/x86/vvc/mc.asm
-index 30aa97c..3975f98 100644
+index 4f078ea..5cf095b 100644
 --- a/libavcodec/x86/vvc/mc.asm
 +++ b/libavcodec/x86/vvc/mc.asm
 @@ -31,7 +31,9 @@
  
- SECTION_RODATA 32
+ SECTION_RODATA
  
 -%if ARCH_X86_64
 +%ifn ARCH_X86_64
