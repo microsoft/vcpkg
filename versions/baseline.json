@@ -4177,7 +4177,7 @@
       "port-version": 0
     },
     "jwt-cpp": {
-      "baseline": "0.7.1",
+      "baseline": "0.7.2",
       "port-version": 0
     },
     "jxrlib": {
