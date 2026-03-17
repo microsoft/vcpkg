@@ -18,9 +18,9 @@ if(SQLite3_FOUND)
         endif()
         list(APPEND z_vcpkg_sqlite3_libraries ${CMAKE_DL_LIBS})
         list(APPEND z_vcpkg_sqlite3_link_libs ${CMAKE_DL_LIBS})
-        # Since sqlite3 3.49.0, math functions are always compiled in.
-        find_library(z_vcpkg_sqlite3_have_libm m)
-        if(z_vcpkg_sqlite3_have_libm)
+        # find_library may fail in cross-compilation; -lm is always
+        # available on non-Windows so link it unconditionally.
+        if("@SQLITE_ENABLE_FTS5@" OR "@SQLITE_ENABLE_MATH_FUNCTIONS@")
             list(APPEND z_vcpkg_sqlite3_libraries m)
             list(APPEND z_vcpkg_sqlite3_link_libs $<LINK_ONLY:m>)
         endif()
