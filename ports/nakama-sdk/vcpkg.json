@@ -8,10 +8,6 @@
     "protobuf",
     "rapidjson"
   ],
-  "default-features": [
-    "curl",
-    "wslay"
-  ],
   "features": {
     "curl": {
       "description": "Use CURL for HTTP and websocket IO",

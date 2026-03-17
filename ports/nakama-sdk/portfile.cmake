@@ -6,10 +6,6 @@ vcpkg_from_github(
     REF v2.9.0
     SHA512 e69cb549d3c451d9e6f16dfc3afc1ed1f1a4d45a92d9967b5090c748dc59a66de51ea27b01d9734718f59887cf7fa2b5c3edb75392e60dd84efe64e45fe1fc76
     HEAD_REF main
-)
-
-vcpkg_apply_patches(
-    SOURCE_PATH "${SOURCE_PATH}"
     PATCHES "${CMAKE_CURRENT_LIST_DIR}/patches/001-use-vcpkg-toolchain.patch"
 )
 
