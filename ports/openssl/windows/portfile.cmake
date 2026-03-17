@@ -73,7 +73,7 @@ cmake_path(NATIVE_PATH VCPKG_DETECTED_CMAKE_LINKER NORMALIZE ld)
 
 # We can't set openssldir because that would leak build machine information into the built binaries,
 # and introduce vulnerabilities where OpenSSL would search those locations at runtime, potentially
-# unexpectedly loading code from there. For example CVE-2019-12572 and CVE-2026-FIXME FIXME FIXME
+# unexpectedly loading code from there. For example CVE-2019-12572
 #
 # Put the built bits in subdirectories with DESTDIR then move them where they go after the fact
 # instead.
