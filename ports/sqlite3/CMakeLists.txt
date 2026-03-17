@@ -37,12 +37,11 @@ if (NOT WIN32)
         string(APPEND PKGCONFIG_LIBS_PRIVATE " -l${LIB}")
     endforeach()
 
-    if(SQLITE_ENABLE_FTS5 OR SQLITE_ENABLE_MATH_FUNCTIONS)
-        find_library(HAVE_LIBM m)
-        if(HAVE_LIBM)
-            target_link_libraries(sqlite3 PRIVATE m)
-            string(APPEND PKGCONFIG_LIBS_PRIVATE " -lm")
-        endif()
+    # Since sqlite3 3.49.0, math functions are always compiled in.
+    find_library(HAVE_LIBM m)
+    if(HAVE_LIBM)
+        target_link_libraries(sqlite3 PRIVATE m)
+        string(APPEND PKGCONFIG_LIBS_PRIVATE " -lm")
     endif()
 endif()
 
