@@ -196,6 +196,9 @@ foreach(out_var IN ITEMS NSPR_LIBS_RELEASE NSPR_LIBS_DEBUG SQLITE_LIBS_RELEASE S
             list(APPEND ${out_var} "${item}")
         endif()
     endforeach()
+    # Convert CMake list (semicolons) to space-separated string so the
+    # entire value stays as one token inside "-Dxxx_libs=..." arguments.
+    list(JOIN ${out_var} " " ${out_var})
 endforeach()
 
 # configuring and building in an autotools-like environment, but using gyp-next and ninja
