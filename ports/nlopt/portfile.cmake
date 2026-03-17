@@ -10,10 +10,19 @@ vcpkg_check_features(
     FEATURES
         luksan NLOPT_LUKSAN
 )
+
+# ONLY arm64-osx CI fail in Qt AutoMoc with "No buffer space available" when
+# MAY too many compiler processes are spawned at once. Cap concurrency on this
+# target to improve reliability.
+if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND VCPKG_CONCURRENCY GREATER 2)
+    set(VCPKG_CONCURRENCY 2)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DNLOPT_JAVA=OFF
         -DNLOPT_FORTRAN=OFF
         -DNLOPT_GUILE=OFF
         -DNLOPT_MATLAB=OFF
