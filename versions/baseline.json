@@ -6340,6 +6340,10 @@
       "baseline": "0.6.0",
       "port-version": 0
     },
+    "measflow": {
+      "baseline": "0.3.1",
+      "port-version": 0
+    },
     "mecab": {
       "baseline": "2019-09-25",
       "port-version": 6
