@@ -188,14 +188,15 @@ foreach(out_var IN ITEMS NSPR_LIBS_RELEASE NSPR_LIBS_DEBUG SQLITE_LIBS_RELEASE S
                 cygpath_u(dir "${dir}")
             endif()
             if(VCPKG_DETECTED_MSVC)
-                string(APPEND ${out_var} "-LIBPATH:${dir}")
+                string(APPEND ${out_var} " -LIBPATH:${dir}")
             else()
-                string(APPEND ${out_var} "-L${dir}")
+                string(APPEND ${out_var} " -L${dir}")
             endif()
         elseif(item MATCHES "^-l(.*)")
-            string(APPEND ${out_var} "${item}")
+            string(APPEND ${out_var} " ${item}")
         endif()
     endforeach()
+    string(STRIP "${${out_var}}" ${out_var})
 endforeach()
 
 # configuring and building in an autotools-like environment, but using gyp-next and ninja
