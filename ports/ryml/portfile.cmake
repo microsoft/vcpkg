@@ -7,7 +7,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 425d98e5d74c2628b8e91f6bc5e02439765669ee3e4bf783f550b1221dc80453efcd382f92ac423883d53b8fac0536610a11a3d7e248eb62981b118dce9a89b8
     HEAD_REF master
-    PATCHES cmake-fix.patch
+    PATCHES
+        cmake-fix.patch
+        fix-param-name.patch
 )
 
 set(CM_COMMIT_HASH fe41e86552046c3df9ba73a40bf3d755df028c1e)
