@@ -32,7 +32,6 @@ set(PATCHES
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
     0019-fix-ssl-linkage.patch
-    0020-Py_NO_LINK_LIB.patch # Remove in 3.14 https://github.com/python/cpython/pull/19740
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -61,7 +60,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${VERSION}
-    SHA512 39298ac5ee6e751264b196710dff998e4ba530f5ed0cb9ec143c138faf00e32356ff387f71287840e7d0acef855cabd75d71d3d636c23807659e79b1643d891c
+    SHA512 f3d478049271a6eb731cef952fea841465afe97ff3267c816c0d3dad93fd55deecdab30c469a05b713f6f7ca3ef8117bd34a342a11c72bc457425d7844e1b636
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -93,6 +92,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(PYTHON_HAS_EXTENSIONS)
         find_library(BZ2_RELEASE NAMES bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(BZ2_DEBUG NAMES bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(MPDEC_RELEASE NAMES mpdec libmpdec PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(MPDEC_DEBUG NAMES mpdec libmpdec PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_RELEASE NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_DEBUG NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(EXPAT_RELEASE NAMES libexpat libexpatMD libexpatMT PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -106,8 +107,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         separate_arguments(SQLITE3_LIBRARIES_RELEASE UNIX_COMMAND "${PC_SQLITE3_LIBRARIES_RELEASE}")
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SSL_DEBUG NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE3_LIBRARIES_RELEASE}")
-        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE3_LIBRARIES_DEBUG}")
+        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${MPDEC_RELEASE};${SQLITE3_LIBRARIES_RELEASE}")
+        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${MPDEC_DEBUG};${SQLITE3_LIBRARIES_DEBUG}")
     else()
         message(STATUS "WARNING: Extensions have been disabled. No C extension modules will be available.")
     endif()
@@ -246,6 +247,7 @@ else()
         "--without-ensurepip"
         "--with-suffix="
         "--with-system-expat"
+        "--with-system-libmpdec"
         "--disable-test-modules"
     )
     if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_BSD)

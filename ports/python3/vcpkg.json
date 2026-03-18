@@ -1,6 +1,6 @@
 {
   "name": "python3",
-  "version": "3.12.13",
+  "version": "3.14.3",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -59,6 +59,10 @@
       "dependencies": [
         {
           "name": "bzip2",
+          "default-features": false
+        },
+        {
+          "name": "mpdecimal",
           "default-features": false
         },
         {

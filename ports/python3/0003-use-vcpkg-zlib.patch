@@ -10,30 +10,56 @@ messages.
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index dbe236829a..5f30a35eb3 100644
+index b911c93..ce14107 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
-@@ -540,8 +540,10 @@
-     <ClCompile Include="..\Python\deepfreeze\deepfreeze.c" />
-     <!-- END deepfreeze -->
+@@ -104,7 +104,7 @@
+       <AdditionalIncludeDirectories Condition="$(IncludeExternals)">$(zlibNgDir);$(GeneratedZlibNgDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <AdditionalIncludeDirectories Condition="'$(UseJIT)' == 'true'">$(GeneratedJitStencilsDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_BUILD_CORE_BUILTIN;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";ZLIB_COMPAT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="'$(UseJIT)' == 'true'">_Py_JIT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="'$(UseTIER2)' != '' and '$(UseTIER2)' != '0'">_Py_TIER2=$(UseTIER2);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="'$(UseTailCallInterp)' == 'true'">Py_TAIL_CALL_INTERP=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+@@ -113,7 +113,7 @@
+     </ClCompile>
+     <Link>
+       <AdditionalDependencies>version.lib;ws2_32.lib;pathcch.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+-      <AdditionalDependencies Condition="$(IncludeExternals)">zlib-ng$(PyDebugExt).lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies Condition="false">zlib-ng$(PyDebugExt).lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+@@ -672,9 +672,12 @@
+     <ClCompile Include="..\Python\tracemalloc.c" />
+     <ClCompile Include="..\Python\uniqueid.c" />
    </ItemGroup>
 -  <ItemGroup Condition="$(IncludeExternals)">
 +  <ItemGroup>
      <ClCompile Include="..\Modules\zlibmodule.c" />
-+  </ItemGroup>
+   </ItemGroup>
 +  <ItemGroup Condition="false">
-     <ClCompile Include="$(zlibDir)\adler32.c" />
-     <ClCompile Include="$(zlibDir)\compress.c" />
-     <ClCompile Include="$(zlibDir)\crc32.c" />
-@@ -593,7 +595,7 @@
-   <Target Name="_WarnAboutToolset" BeforeTargets="PrepareForBuild" Condition="$(PlatformToolset) != 'v140' and $(PlatformToolset) != 'v141' and $(PlatformToolset) != 'v142' and $(PlatformToolset) != 'v143'">
++    <!-- bundled zlib-ng disabled: using vcpkg zlib -->
++  </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\PC\dl_nt.c" />
+   </ItemGroup>
+@@ -682,7 +685,7 @@
+     <ResourceCompile Include="..\PC\python_nt.rc" />
+   </ItemGroup>
+   <ItemGroup>
+-    <ProjectReference Include="zlib-ng.vcxproj" Condition="$(IncludeExternals)">
++    <ProjectReference Include="zlib-ng.vcxproj" Condition="false">
+       <Project>{fb91c8b2-6fbc-3a01-b644-1637111f902d}</Project>
+       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+     </ProjectReference>
+@@ -719,7 +722,7 @@
+   <Target Name="_WarnAboutToolset" BeforeTargets="PrepareForBuild" Condition="$(PlatformToolset) != 'v141' and $(PlatformToolset) != 'v142' and $(PlatformToolset) != 'v143'">
      <Warning Text="Toolset $(PlatformToolset) is not used for official builds. Your build may have errors or incompatibilities." />
    </Target>
 -  <Target Name="_WarnAboutZlib" BeforeTargets="PrepareForBuild" Condition="!$(IncludeExternals)">
 +  <Target Name="_WarnAboutZlib" BeforeTargets="PrepareForBuild" Condition="false">
-     <Warning Text="Not including zlib is not a supported configuration." />
+     <Warning Text="Not including zlib or zlib-ng is not a supported configuration." />
    </Target>
- 
--- 
-2.28.0.windows.1
 
