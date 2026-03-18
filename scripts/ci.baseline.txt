@@ -637,7 +637,6 @@ spaceland:arm64-android=fail
 spaceland:arm64-windows-static-md=fail
 spaceland:arm64-windows=fail
 spaceland:x64-android=fail
-spatialite-tools:arm64-linux=fail
 spscqueue:arm-neon-android=fail
 spscqueue:arm64-android=fail
 spscqueue:x64-android=fail
