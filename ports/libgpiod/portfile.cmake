@@ -33,8 +33,8 @@ else()
   set(USE_CXX_BINDINGS no)
 endif()
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
@@ -44,7 +44,7 @@ vcpkg_configure_make(
         --enable-bindings-python=no
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 

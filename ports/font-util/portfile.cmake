@@ -22,12 +22,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND VCPKG_CXX_FLAGS " /DNEED_BASENAME")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

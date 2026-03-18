@@ -42,8 +42,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
 
 else()
-    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}")
-    vcpkg_install_make()
+    vcpkg_make_configure(SOURCE_PATH "${SOURCE_PATH}")
+    vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

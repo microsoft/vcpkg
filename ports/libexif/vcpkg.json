@@ -1,6 +1,7 @@
 {
   "name": "libexif",
   "version": "0.6.25",
+  "port-version": 1,
   "description": "a library for parsing, editing, and saving EXIF data",
   "homepage": "https://libexif.github.io/",
   "license": "LGPL-2.1-or-later",
@@ -12,7 +13,7 @@
       "host": true
     },
     {
-      "name": "vcpkg-cmake",
+      "name": "vcpkg-make",
       "host": true
     }
   ],
