@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/shapelib/shapelib-${VERSION}.zip"
     FILENAME "shapelib-${VERSION}.zip"
-    SHA512 4f9c33cfce823ad019291eeb6103fdb9495f87a83667a99862544f65dec554975ab5663b37dc6c09eb329a5b73c46ee854b443f17cdc51e7d97ad35558511dc5
+    SHA512 ab3ad775b7f520bc82777c589326e81d5ed94c0661e4573fc3f5095073cb4705a634b07b93295439cf2a107240fb7613c99d32fce5f613f360a9e51c9547cd83
 )
 
 vcpkg_extract_source_archive(
