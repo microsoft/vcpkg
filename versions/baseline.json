@@ -9392,9 +9392,13 @@
       "baseline": "2025-01-23",
       "port-version": 0
     },
-    "spine-runtimes": {
-      "baseline": "4.1.0",
-      "port-version": 1
+    "spine-c": {
+      "baseline": "4.2.20260227",
+      "port-version": 0
+    },
+    "spine-cpp": {
+      "baseline": "4.2.20260227",
+      "port-version": 0
     },
     "spirit-po": {
       "baseline": "1.1.2",
