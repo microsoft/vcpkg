@@ -1,13 +1,16 @@
 diff --git a/src/c4/yml/common.cpp b/src/c4/yml/common.cpp
-index bd03026..c0f6c14 100644
+index bd03026..9ac62fc 100644
 --- a/src/c4/yml/common.cpp
 +++ b/src/c4/yml/common.cpp
-@@ -133,7 +133,7 @@ Callbacks::Callbacks(void *user_data, pfn_allocate alloc_, pfn_free free_, pfn_e
+@@ -133,9 +133,9 @@ Callbacks::Callbacks(void *user_data, pfn_allocate alloc_, pfn_free free_, pfn_e
      #else
      m_allocate(alloc_),
      m_free(free_),
 -    m_error_basic(error_),
 +    m_error_basic(error_basic_),
      m_error_parse(nullptr),
-     m_error_visit(nullptr),
+-    m_error_visit(nullptr),
++    m_error_visit(nullptr)
      #endif
+ {
+ }
