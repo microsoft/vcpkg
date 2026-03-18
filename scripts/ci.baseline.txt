@@ -497,7 +497,6 @@ nrf-ble-driver:arm64-android=fail
 nrf-ble-driver:arm64-linux=fail
 nrf-ble-driver:x64-android=fail
 nss:arm64-linux=fail
-octave:arm64-osx=fail
 ogdf:arm64-linux=fail
 ogre-next:arm-neon-android=fail # std::string issue, https://github.com/microsoft/vcpkg/pull/41293#issuecomment-2942853561
 ogre-next:arm64-android=fail
