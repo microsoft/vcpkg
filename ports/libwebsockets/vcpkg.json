@@ -7,12 +7,19 @@
   "supports": "!uwp",
   "dependencies": [
     {
+      "name": "libuv",
+      "platform": "!emscripten"
+    },
+    "openssl",
+    "pthreads",
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zlib"
   ]
 }
