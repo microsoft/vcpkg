@@ -63,7 +63,9 @@ if(NOT SQLITE3_SKIP_TOOLS)
         target_compile_definitions(sqlite3-bin PRIVATE SQLITE_HAVE_ZLIB)
     endif()
 
-    target_link_libraries(sqlite3-bin PRIVATE m)
+    if(NOT WIN32)
+        target_link_libraries(sqlite3-bin PRIVATE m)
+    endif()
 
     install(TARGETS sqlite3-bin
       RUNTIME DESTINATION bin
