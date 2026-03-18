@@ -4000,6 +4000,10 @@
       "baseline": "2025.2.0",
       "port-version": 1
     },
+    "intelliversex-cpp": {
+      "baseline": "1.5.0",
+      "port-version": 0
+    },
     "intelrdfpmathlib": {
       "baseline": "20U2",
       "port-version": 7
