@@ -1,17 +1,11 @@
 {
   "name": "libwebsockets",
-  "version-semver": "4.5.4",
+  "version-semver": "4.5.7",
   "description": "Libwebsockets is a lightweight pure C library built to use minimal CPU and memory resources, and provide fast throughput in both directions as client or server.",
   "homepage": "https://libwebsockets.org/",
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
-    {
-      "name": "libuv",
-      "platform": "!emscripten"
-    },
-    "openssl",
-    "pthreads",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -19,7 +13,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "zlib"
+    }
   ]
 }
