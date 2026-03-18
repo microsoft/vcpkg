@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 27ef2976b89b50af8501b7dd51f9bc39b86da12a03da80d30644e202d3c23820f0c40adcab42537955cd7094356ead091c275c58251c308e598dd6c461083250
+    SHA512 eaff97de783d332501eb3db681a0ae973589883b8d5e5111aeb2b788ddba4a2398efd503e4d6f4af0484047a330f0c5f2c85832093d5a6c5e13f03174a5f7fd6
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
@@ -54,6 +54,12 @@ else()
 endif()
 if("gdi" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # enable gdi helpers and uniscribe shaper backend (windows only)
+endif()
+if("png" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dpng=enabled)
+endif()
+if("zlib" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dzlib=enabled)
 endif()
 
 if("introspection" IN_LIST FEATURES)
