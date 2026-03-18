@@ -3,42 +3,54 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO madler/zlib
     REF v${VERSION}
-    SHA512 8c9642495bafd6fad4ab9fb67f09b268c69ff9af0f4f20cf15dfc18852ff1f312bd8ca41de761b3f8d8e90e77d79f2ccacd3d4c5b19e475ecf09d021fdfe9088
+    SHA512 16fea4df307a68cf0035858abe2fd550250618a97590e202037acd18a666f57afc10f8836cbbd472d54a0e76539d0e558cb26f059d53de52ff90634bbf4f47d4
     HEAD_REF master
     PATCHES
         0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch
-        0002-build-static-or-shared-not-both.patch
-        0003-android-and-mingw-fixes.patch
 )
 
-# This is generated during the cmake build
-file(REMOVE "${SOURCE_PATH}/zconf.h")
+set(CMAKE_CONFIGURE_OPTIONS
+    -DZLIB_BUILD_TESTING=OFF
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND CMAKE_CONFIGURE_OPTIONS
+        -DZLIB_BUILD_SHARED=OFF
+        -DZLIB_BUILD_STATIC=ON
+    )
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND CMAKE_CONFIGURE_OPTIONS
+        -DZLIB_BUILD_SHARED=ON
+        -DZLIB_BUILD_STATIC=OFF
+    )
+else()
+    message(FATAL_ERROR "Unknown VCPKG_LIBRARY_LINKAGE='${VCPKG_LIBRARY_LINKAGE}'")
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DSKIP_INSTALL_FILES=ON
-        -DZLIB_BUILD_EXAMPLES=OFF
-    OPTIONS_DEBUG
-        -DSKIP_INSTALL_HEADERS=ON
+        ${CMAKE_CONFIGURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
 # Install the pkgconfig file
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/zlib.pc" "-lz" "-lzlib")
-    endif()
-    file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/zlib.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" "-lz" "-lzlibd")
+        vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" "-lz" "-lzd")
     endif()
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
 endif()
+
+file(COPY "${CURRENT_PACKAGES_DIR}/lib/cmake/zlib" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+file(COPY "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/zlib" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
