@@ -5769,7 +5769,7 @@
       "port-version": 2
     },
     "libwebsockets": {
-      "baseline": "4.5.4",
+      "baseline": "4.5.7",
       "port-version": 0
     },
     "libx11": {
