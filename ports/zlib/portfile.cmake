@@ -13,18 +13,24 @@ set(CMAKE_CONFIGURE_OPTIONS
     -DZLIB_BUILD_TESTING=OFF
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND CMAKE_CONFIGURE_OPTIONS
-        -DZLIB_BUILD_SHARED=OFF
-        -DZLIB_BUILD_STATIC=ON
-    )
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic" OR VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     list(APPEND CMAKE_CONFIGURE_OPTIONS
         -DZLIB_BUILD_SHARED=ON
-        -DZLIB_BUILD_STATIC=OFF
     )
 else()
-    message(FATAL_ERROR "Unknown VCPKG_LIBRARY_LINKAGE='${VCPKG_LIBRARY_LINKAGE}'")
+    list(APPEND CMAKE_CONFIGURE_OPTIONS
+        -DZLIB_BUILD_SHARED=OFF
+    )
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static" OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND CMAKE_CONFIGURE_OPTIONS
+        -DZLIB_BUILD_STATIC=ON
+    )
+else()
+    list(APPEND CMAKE_CONFIGURE_OPTIONS
+        -DZLIB_BUILD_STATIC=OFF
+    )
 endif()
 
 vcpkg_cmake_configure(
@@ -34,6 +40,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
+
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 # Install the pkgconfig file
@@ -43,6 +50,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     )
     file(COPY ${RELEASE_CMAKE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/zlib.pc" "-lz" "-lzs")
+    endif()
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -54,7 +65,10 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(COPY ${DEBUG_CMAKE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
-    if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" "/include" "/../include")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" "-lz" "-lzsd")
+    else()
         vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" "-lz" "-lzd")
     endif()
     file(COPY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
