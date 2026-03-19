@@ -1,12 +1,17 @@
 {
   "name": "htslib",
   "version": "1.23.1",
+  "port-version": 1,
   "description": "C library for high-throughput sequencing data formats",
   "homepage": "https://github.com/samtools/htslib",
   "license": "MIT",
   "supports": "!windows",
   "dependencies": [
     "htscodecs",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "zlib"
   ],
   "features": {

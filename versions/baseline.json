@@ -3834,7 +3834,7 @@
     },
     "htslib": {
       "baseline": "1.23.1",
-      "port-version": 0
+      "port-version": 1
     },
     "http-parser": {
       "baseline": "2.9.4",

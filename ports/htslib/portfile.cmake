@@ -31,8 +31,8 @@ else()
     list(APPEND FEATURE_OPTIONS "--without-libdeflate")
 endif()
 
-vcpkg_configure_make(
-    AUTOCONFIG
+vcpkg_make_configure(
+    AUTORECONF
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         --with-external-htscodecs
@@ -43,7 +43,7 @@ vcpkg_configure_make(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_make(
+vcpkg_make_install(
     INSTALL_TARGET install-${VCPKG_LIBRARY_LINKAGE}
 )
 
