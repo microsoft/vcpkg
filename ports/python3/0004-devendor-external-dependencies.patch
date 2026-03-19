@@ -147,10 +147,9 @@ index dc9161a..5e2d504 100644
      <ClCompile Include="..\Modules\expat\xmlrole.c" />
      <ClCompile Include="..\Modules\expat\xmltok.c" />
 diff --git a/PCbuild/_zstd.vcxproj b/PCbuild/_zstd.vcxproj
-index 6b8c727..0000000 100644
 --- a/PCbuild/_zstd.vcxproj
 +++ b/PCbuild/_zstd.vcxproj
-@@ -92,17 +92,24 @@
+@@ -91,18 +91,25 @@
    <PropertyGroup Label="UserMacros" />
    <PropertyGroup>
      <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
