@@ -199,14 +199,14 @@ vcpkg_make_configure(
         "-Dsqlite_include_dirs=${SQLITE_INCLUDE_DIRS}"
         "-Dzlib_include_dirs=${ZLIB_INCLUDE_DIRS}"
     OPTIONS_DEBUG
-        "-Dnspr_libs=${NSPR_LIBS_DEBUG}"
-        "-Dsqlite_libs=${SQLITE_LIBS_DEBUG}"
-        "-Dzlib_libs=${ZLIB_LIBS_DEBUG}"
+        "-Dnspr_libs=${PC_NSPR_LIBS_DEBUG}"
+        "-Dsqlite_libs=${PC_SQLITE_LIBS_DEBUG}"
+        "-Dzlib_libs=${PC_ZLIB_LIBS_DEBUG}"
     OPTIONS_RELEASE
         --opt
-        "-Dnspr_libs=${NSPR_LIBS_RELEASE}"
-        "-Dsqlite_libs=${SQLITE_LIBS_RELEASE}"
-        "-Dzlib_libs=${ZLIB_LIBS_RELEASE}"
+        "-Dnspr_libs=${PC_NSPR_LIBS_RELEASE}"
+        "-Dsqlite_libs=${PC_SQLITE_LIBS_RELEASE}"
+        "-Dzlib_libs=${PC_ZLIB_LIBS_RELEASE}"
 )
 
 if(NOT VCPKG_BUILD_TYPE)
