@@ -2552,6 +2552,10 @@
       "baseline": "2022-03-15",
       "port-version": 1
     },
+    "docraft": {
+      "baseline": "v1.0.0-beta.3",
+      "port-version": 0
+    },
     "doctest": {
       "baseline": "2.4.12",
       "port-version": 0
