@@ -103,6 +103,9 @@
       "dependencies": [
         "readline"
       ]
+    },
+    "freethreaded": {
+      "description": "Build free-threaded Python (no GIL). Produces binaries with a 't' ABI suffix."
     }
   }
 }
