@@ -172,9 +172,9 @@ endif()
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/fltk")
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/qt5/bin")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
     --disable-docs
     --disable-java
@@ -215,7 +215,7 @@ vcpkg_configure_make(
     --with-umfpack=${UMFPACK_OPTION}
     --with-z # yes
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

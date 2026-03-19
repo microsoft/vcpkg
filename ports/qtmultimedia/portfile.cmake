@@ -18,15 +18,37 @@ INVERTED_FEATURES
     "widgets"       CMAKE_DISABLE_FIND_PACKAGE_Qt6Widgets
     "gstreamer"     CMAKE_DISABLE_FIND_PACKAGE_GStreamer
     "ffmpeg"        CMAKE_DISABLE_FIND_PACKAGE_FFmpeg
+    "pipewire"      CMAKE_DISABLE_FIND_PACKAGE_PipeWire
+    "pulseaudio"    CMAKE_DISABLE_FIND_PACKAGE_WrapPulseAudio
     # Features not yet added in the manifest:
     "vaapi"         CMAKE_DISABLE_FIND_PACKAGE_VAAPI # not in vpckg
+    #"mmrenderer"    CMAKE_DISABLE_FIND_PACKAGE_MMRenderer # OS = QNX ?
+    #"mmrenderer"    CMAKE_DISABLE_FIND_PACKAGE_MMRendererCore
 )
+
+list(APPEND FEATURE_OPTIONS "-DCMAKE_DISABLE_FIND_PACKAGE_ALSA=ON")
+
+# Force all gstreamer extra features to off to not poison the cache
+# since enabling them is done depening on how gstreamer was built
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_gl=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_gl_wayland=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_gl_egl=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_gl_x11=OFF")
+list(APPEND FEATURE_OPTIONS "-DFEATURE_gstreamer_photography=OFF")
 
 set(unused "")
 if("gstreamer" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='yes'")
 else()
     list(APPEND FEATURE_OPTIONS "-DINPUT_gstreamer='no'")
+endif()
+
+if("pipewire" IN_LIST FEATURES)
+    # This also requires QT_FEATURE_library from qtbase but
+    # that is not exposed by vcpkg via a feature
+    list(APPEND FEATURE_OPTIONS "-DINPUT_pipewire='yes'")
+else()
+    list(APPEND FEATURE_OPTIONS "-DINPUT_pipewire='no'")
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)

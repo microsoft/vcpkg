@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c4f91bb..c29c411 100644
+index c4f91bb..a808ebd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -96,6 +96,10 @@ message("Initial BASISU_OPENCL=${BASISU_OPENCL}")
@@ -58,20 +58,20 @@ index 15c0d7e..7acd627 100644
  
  check_required_components(basisu)
 diff --git a/encoder/basisu_astc_ldr_encode.cpp b/encoder/basisu_astc_ldr_encode.cpp
-index 1710b1b..0739464 100644
+index 302cb2e..239fe54 100644
 --- a/encoder/basisu_astc_ldr_encode.cpp
 +++ b/encoder/basisu_astc_ldr_encode.cpp
-@@ -18,7 +18,7 @@
- #include "3rdparty/android_astc_decomp.h"
- #include <queue>
+@@ -27,7 +27,7 @@
+ #endif
  
+ #if BASISD_SUPPORT_KTX2_ZSTD
 -#include "../zstd/zstd.h"
 +#include <zstd.h>
+ #endif
  
  namespace basisu {
- namespace astc_ldr {
 diff --git a/encoder/basisu_comp.cpp b/encoder/basisu_comp.cpp
-index 617ff30..f2fb95b 100644
+index acbedc3..633c0fc 100644
 --- a/encoder/basisu_comp.cpp
 +++ b/encoder/basisu_comp.cpp
 @@ -34,7 +34,7 @@
@@ -84,7 +84,7 @@ index 617ff30..f2fb95b 100644
  
  // Set to 1 to disable the mipPadding alignment workaround (which only seems to be needed when no key-values are written at all)
 diff --git a/transcoder/basisu_transcoder.cpp b/transcoder/basisu_transcoder.cpp
-index 347a024..521af5c 100644
+index f2fa623..2a97d8d 100644
 --- a/transcoder/basisu_transcoder.cpp
 +++ b/transcoder/basisu_transcoder.cpp
 @@ -174,7 +174,7 @@
