@@ -50,7 +50,6 @@
             /// <summary>
             /// Gets or sets the GlobalPropertyNames parameter.
             /// </summary>
-            [Required]
             [Output]
             public string GlobalPropertyNames { get; private set; } = string.Empty;
         }

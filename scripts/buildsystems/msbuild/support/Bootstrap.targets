@@ -13,12 +13,12 @@
           Outputs="$(_ZVcpkgExecutable)"
           >
     <GetGlobalProperties>
-      <Output TaskParameter="GlobalPropertyNames" PropertyName="GlobalPropertyNames" />
+      <Output TaskParameter="GlobalPropertyNames" PropertyName="_ZVcpkgGlobalPropertyNames" />
     </GetGlobalProperties>
     <MSBuild BuildInParallel="true"
              Projects="$(MSBuildThisFileDirectory)\BootstrapImplementation.targets"
              Targets="VcpkgBootstrapImplementation"
-             RemoveProperties="$(GlobalPropertyNames)"
+             RemoveProperties="$(_ZVcpkgGlobalPropertyNames)"
              Properties="_ZVcpkgRoot=$(_ZVcpkgRoot)"
              />
   </Target>
