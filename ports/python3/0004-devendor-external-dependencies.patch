@@ -146,3 +146,44 @@ index dc9161a..5e2d504 100644
      <ClCompile Include="..\Modules\expat\xmlparse.c" />
      <ClCompile Include="..\Modules\expat\xmlrole.c" />
      <ClCompile Include="..\Modules\expat\xmltok.c" />
+diff --git a/PCbuild/_zstd.vcxproj b/PCbuild/_zstd.vcxproj
+index 6b8c727..0000000 100644
+--- a/PCbuild/_zstd.vcxproj
++++ b/PCbuild/_zstd.vcxproj
+@@ -92,17 +92,24 @@
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+   </PropertyGroup>
+-  <ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="false">
+     <ClCompile>
+       <PreprocessorDefinitions>WIN32;ZSTD_MULTITHREAD=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <AdditionalIncludeDirectories>$(zstdDir)lib\;$(zstdDir)lib\common;$(zstdDir)lib\compress;$(zstdDir)lib\decompress;$(zstdDir)lib\dictBuilder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ClCompile>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup>
++    <ClCompile>
++      <PreprocessorDefinitions>WIN32;ZSTD_MULTITHREAD=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++    </ClCompile>
++  </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_zstd\_zstdmodule.c" />
+     <ClCompile Include="..\Modules\_zstd\compressor.c" />
+     <ClCompile Include="..\Modules\_zstd\decompressor.c" />
+     <ClCompile Include="..\Modules\_zstd\zstddict.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="$(zstdDir)lib\common\debug.c" />
+     <ClCompile Include="$(zstdDir)lib\common\entropy_common.c" />
+     <ClCompile Include="$(zstdDir)lib\common\error_private.c" />
+@@ -137,7 +144,9 @@
+   <ItemGroup>
+     <ClInclude Include="..\Modules\_zstd\_zstdmodule.h" />
+     <ClInclude Include="..\Modules\_zstd\buffer.h" />
+     <ClInclude Include="..\Modules\_zstd\zstddict.h" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="$(zstdDir)lib\common\bitstream.h" />
+     <ClInclude Include="$(zstdDir)lib\common\error_private.h" />
+     <ClInclude Include="$(zstdDir)lib\common\fse.h" />

@@ -20,10 +20,10 @@
 
       <!-- Extension modules -->
       <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Release|true'">
-        ${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${MPDEC_RELEASE};${SQLITE_RELEASE};%(AdditionalDependencies)
+        ${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${MPDEC_RELEASE};${ZSTD_RELEASE};${SQLITE_RELEASE};%(AdditionalDependencies)
       </AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Debug|true'">
-        ${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${MPDEC_DEBUG};${SQLITE_DEBUG};%(AdditionalDependencies)
+        ${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${MPDEC_DEBUG};${ZSTD_DEBUG};${SQLITE_DEBUG};%(AdditionalDependencies)
       </AdditionalDependencies>
     </Link>
 
@@ -42,10 +42,10 @@
 
       <!-- Extension modules -->
       <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Release|true'">
-        ${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${MPDEC_RELEASE};${SQLITE_RELEASE};%(AdditionalDependencies)
+        ${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${MPDEC_RELEASE};${ZSTD_RELEASE};${SQLITE_RELEASE};%(AdditionalDependencies)
       </AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)|$(IncludeExtensions)' == 'Debug|true'">
-        ${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${MPDEC_DEBUG};${SQLITE_DEBUG};%(AdditionalDependencies)
+        ${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${MPDEC_DEBUG};${ZSTD_DEBUG};${SQLITE_DEBUG};%(AdditionalDependencies)
       </AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>

@@ -6,8 +6,8 @@ Subject: [PATCH 5/6] only build required projects
 strips out tests and unsupported externals (eg tkinter).
 ---
  PCbuild/_ssl.vcxproj |  2 +-
- PCbuild/pcbuild.proj | 14 +++++++-------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ PCbuild/pcbuild.proj | 12 ++++++------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/PCbuild/_ssl.vcxproj b/PCbuild/_ssl.vcxproj
 index ce21f99..d1529dd 100644
@@ -39,8 +39,7 @@ index 7a5327b..d774ca3 100644
      <ExtensionModules Include="_asyncio;_decimal;_elementtree;_multiprocessing;_overlapped;pyexpat;_queue;_remote_debugging;select;unicodedata;winsound;_uuid;_wmi;_zoneinfo" />
      <ExtensionModules Include="_ctypes" Condition="$(IncludeCTypes)" />
      <!-- Extension modules that require external sources -->
--    <ExternalModules Include="_bz2;_lzma;_sqlite3;_zstd" />
-+    <ExternalModules Include="_bz2;_lzma;_sqlite3" />
+     <ExternalModules Include="_bz2;_lzma;_sqlite3;_zstd" />
      <!-- venv launchers -->
 -    <Projects Include="venvlauncher.vcxproj;venvwlauncher.vcxproj" />
 -    <!-- _ssl will build _socket as well, which may cause conflicts in parallel builds -->

@@ -62,10 +62,6 @@
           "default-features": false
         },
         {
-          "name": "mpdecimal",
-          "default-features": false
-        },
-        {
           "name": "expat",
           "default-features": false
         },
@@ -83,6 +79,10 @@
           "default-features": false
         },
         {
+          "name": "mpdecimal",
+          "default-features": false
+        },
+        {
           "name": "openssl",
           "default-features": false
         },
@@ -94,8 +94,15 @@
           "name": "vcpkg-pkgconfig-get-modules",
           "host": true,
           "platform": "windows & !mingw"
+        },
+        {
+          "name": "zstd",
+          "default-features": false
         }
       ]
+    },
+    "freethreaded": {
+      "description": "Build free-threaded Python (no GIL). Produces binaries with a 't' ABI suffix."
     },
     "readline": {
       "description": "Build with readline.",
@@ -103,9 +110,6 @@
       "dependencies": [
         "readline"
       ]
-    },
-    "freethreaded": {
-      "description": "Build free-threaded Python (no GIL). Produces binaries with a 't' ABI suffix."
     }
   }
 }
