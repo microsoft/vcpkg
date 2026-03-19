@@ -199,7 +199,6 @@ fluidlite:x64-windows-static-md=skip
 fluidlite:x64-windows-static=skip
 fluidlite:x64-windows=skip
 fluidlite:x86-windows=skip
-folly:arm64-linux=fail
 freeglut:arm-neon-android=fail # unsupported option '-mfloat-abi=', ALooper_pollAll no longer available
 freeglut:arm64-android=fail
 freeglut:arm64-linux=fail
