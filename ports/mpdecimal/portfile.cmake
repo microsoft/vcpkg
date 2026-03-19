@@ -44,9 +44,10 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         PROJECT_SUBPATH "libmpdec"
         PROJECT_NAME "Makefile.vc"
         CL_LANGUAGE C
+        TARGET "${BUILD_TARGET}"
+        PRERUN_SHELL "${CMAKE_COMMAND}" -E touch Makefile
         OPTIONS
             "MACHINE=${NMAKE_MACHINE}"
-            "${BUILD_TARGET}"
         OPTIONS_RELEASE
             "OPT=${CRT_REL} /O2 /GS /EHsc /DNDEBUG"
             "OPT_SHARED=${CRT_REL} /O2 /GS /EHsc /DNDEBUG"
