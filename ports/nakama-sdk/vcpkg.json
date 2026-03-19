@@ -1,0 +1,35 @@
+{
+  "name": "nakama-sdk",
+  "version": "2.9.0",
+  "description": "Nakama C/C++ client SDK (Heroic Labs) for game backend and realtime",
+  "homepage": "https://github.com/heroiclabs/nakama-cpp",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "protobuf",
+    "rapidjson"
+  ],
+  "features": {
+    "curl": {
+      "description": "Use CURL for HTTP and websocket IO",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "ssl"
+          ]
+        }
+      ]
+    },
+    "logs": {
+      "description": "Enable log output"
+    },
+    "wslay": {
+      "description": "Websockets via wslay",
+      "supports": "osx | linux | (windows & !static)",
+      "dependencies": [
+        "wslay"
+      ]
+    }
+  }
+}

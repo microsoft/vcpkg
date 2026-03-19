@@ -1,0 +1,14 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -76,7 +76,11 @@ set(NAKAMA_SDK_DEPS)
+ cmake_policy(SET CMP0012 NEW)
+ 
+ ## force so that gradle doesn't stomp vcpkg toolchain with the android toolchain
+-set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/submodules/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE FILEPATH "Vcpkg toolchain file" FORCE)
++## When building as a vcpkg port, do not override the toolchain (vcpkg sets it).
++if(NOT CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg")
++  set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_LIST_DIR}/submodules/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE FILEPATH "Vcpkg toolchain file" FORCE)
++endif()
+ 
+ include("cmake/triplets/${VCPKG_TARGET_TRIPLET}.cmake" OPTIONAL)
+ include("submodules/devkits/cmake/platform-${VCPKG_TARGET_TRIPLET}.cmake" OPTIONAL)

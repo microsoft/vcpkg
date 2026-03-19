@@ -4000,6 +4000,10 @@
       "baseline": "2025.2.0",
       "port-version": 1
     },
+    "intelliversex-cpp": {
+      "baseline": "1.5.0",
+      "port-version": 0
+    },
     "intelrdfpmathlib": {
       "baseline": "20U2",
       "port-version": 7
@@ -6722,6 +6726,10 @@
     },
     "mzying2001-sw": {
       "baseline": "0.1.0",
+      "port-version": 0
+    },
+    "nakama-sdk": {
+      "baseline": "2.9.0",
       "port-version": 0
     },
     "nameof": {
