@@ -1,0 +1,13 @@
+diff --git a/libsrc/mmapio.c b/libsrc/mmapio.c
+index 98b9ddb..8a27946 100644
+--- a/libsrc/mmapio.c
++++ b/libsrc/mmapio.c
+@@ -44,7 +44,7 @@
+ 
+ #ifdef HAVE_MREMAP
+   /* This is conditionalized by __USE_GNU ; why? */
+-  extern void *mremap(void*,size_t,size_t,int);
++  extern void *mremap(void*,size_t,size_t,int,...);
+ # ifndef MREMAP_MAYMOVE
+ #   define MREMAP_MAYMOVE 1
+ # endif

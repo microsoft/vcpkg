@@ -1,6 +1,6 @@
 {
   "name": "fxaudio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An easy to use audio processing library",
   "homepage": "https://github.com/EnzoMassyle/AudioFX",
   "license": "MIT",

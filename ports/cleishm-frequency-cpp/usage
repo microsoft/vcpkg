@@ -1,0 +1,4 @@
+The package frequency is a header-only library and can be used from CMake via:
+
+    find_package(frequency CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE freq::frequency)

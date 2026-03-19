@@ -6,7 +6,13 @@ else()
     list(APPEND CORE_OPTIONS -no-d3d12)
 endif()
 
-qt_submodule_installation(OUT_SOURCE_PATH SOURCE_PATH BUILD_OPTIONS ${CORE_OPTIONS})
+qt_submodule_installation(
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES
+        linker-oom.diff
+    BUILD_OPTIONS
+        ${CORE_OPTIONS}
+)
 
 if(NOT QT_UPDATE_VERSION)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/qt5/QtQml/${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER}/QtQml/private/qqmljsparser_p.h" "${SOURCE_PATH}" "")

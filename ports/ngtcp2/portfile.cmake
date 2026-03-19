@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngtcp2/ngtcp2
     REF "v${VERSION}"
-    SHA512 cd2936c9552d2014b9843f4007f9ca780c3c89038420ea9a1bdb301c3bb6704a0963e1ed79fc6c39f0a04fe5442ba7b26be0eca9bbd0092dd820c239b26cf627
+    SHA512 3115773b80fda6b6c3d4ad6a5132015dfdfa863da8826db835a8cc478270886f89345d4bdb951abc373acc79b984592880ed174e5799fd77706f70298d07ce0e
     HEAD_REF main
 )
 
@@ -36,5 +36,12 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ngtcp2/ngtcp2.h"
+        "#ifdef NGTCP2_STATICLIB"
+        "#if 1"
+    )
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

@@ -1,10 +1,10 @@
 {
   "name": "orange-math",
-  "version": "3.0.3",
+  "version": "5.0.0",
   "description": "General purpose math library",
   "homepage": "https://github.com/orange-cpp/omath",
+  "documentation": "https://libomath.org",
   "license": "Zlib",
-  "supports": "windows | linux",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -17,13 +17,17 @@
   ],
   "features": {
     "avx2": {
-      "description": "Omath will use AVX2 to boost performance"
+      "description": "Omath will use AVX2 to boost performance",
+      "supports": "!arm"
     },
     "imgui": {
       "description": "Omath will define method to convert omath types to imgui types",
       "dependencies": [
         "imgui"
       ]
+    },
+    "inline": {
+      "description": "Omath will define some methods as inline"
     }
   }
 }

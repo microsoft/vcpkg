@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lief-project/LIEF
     REF ${VERSION}
-    SHA512 776d26bc5d8ec7bca823d1c0fc821b0efc2411976901e1fca0ffecbc64591798e9e21a483c1637e9877bdd921dc463ffaef4eeb6a76d9dd8463c97c5f50834d4
+    SHA512 bd2561c96e85c78835f1c60309a2a57fb526d4828dbd9f3367193bb8605f5c7c4b3f0c995eabf38df3e43586527547cc92700dbe58b46862d52effabf0c41bac
     HEAD_REF master
     PATCHES
         fix-cmakelists.patch
@@ -21,10 +21,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "logging-debug"  LIEF_LOGGING_DEBUG     # Enable debug logging
 
         "use-ccache"     LIEF_USE_CCACHE        # Use ccache to speed up compilation
-
-        "elf"            LIEF_ELF               # Build LIEF with ELF module
-        "pe"             LIEF_PE                # Build LIEF with PE  module
-        "macho"          LIEF_MACHO             # Build LIEF with MachO module
 
         "oat"            LIEF_OAT               # Build LIEF with OAT module
         "dex"            LIEF_DEX               # Build LIEF with DEX module
@@ -48,6 +44,11 @@ vcpkg_cmake_configure(
         -DLIEF_OPT_EXTERNAL_EXPECTED=ON
         -DLIEF_DISABLE_FROZEN=OFF
         -DLIEF_DISABLE_EXCEPTIONS=OFF
+
+        # https://github.com/lief-project/LIEF/blob/0.16.6/src/paging.cpp requires ELF/PE/MACHO in any case
+        -DLIEF_ELF=ON
+        -DLIEF_PE=ON
+        -DLIEF_MACHO=ON
 
         "-DLIEF_EXTERNAL_SPAN_DIR=${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tcb"
 )

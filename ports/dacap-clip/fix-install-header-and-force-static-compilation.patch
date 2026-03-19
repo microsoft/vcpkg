@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d9aa76e..cee1d90 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -132,6 +132,8 @@ endif()
+ if(CLIP_INSTALL)
+   include(GNUInstallDirs)
+
++  target_include_directories(clip PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++
+   install(
+     FILES clip.h
+     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}

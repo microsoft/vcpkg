@@ -156,6 +156,14 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
             OUTPUT_STRIP_TRAILING_WHITESPACE
             COMMAND_ERROR_IS_FATAL ANY)
 
+        if(CMAKE_HOST_SOLARIS)
+            execute_process(
+                COMMAND isainfo -k
+                OUTPUT_VARIABLE MACHINE
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                COMMAND_ERROR_IS_FATAL ANY)
+        endif()
+
         # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
@@ -174,9 +182,15 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         elseif(MACHINE MATCHES "i386")
             set(build_cpu_fam x86)
             set(build_cpu i386)
+        elseif(MACHINE MATCHES "riscv64")
+            set(build_cpu_fam riscv64)
+            set(build_cpu riscv64)
         elseif(MACHINE MATCHES "loongarch64")
             set(build_cpu_fam loongarch64)
             set(build_cpu loongarch64)
+        elseif(MACHINE MATCHES "ppc64|powerpc64")
+            set(build_cpu_fam powerpc64)
+            set(build_cpu powerpc64)
         else()
             # https://github.com/mesonbuild/meson/blob/master/docs/markdown/Reference-tables.md#cpu-families
             if(NOT DEFINED VCPKG_MESON_CROSS_FILE OR NOT DEFINED VCPKG_MESON_NATIVE_FILE)
@@ -222,6 +236,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
         set(host_cpu_fam x86)
         set(host_cpu i686)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "riscv64")
+        set(host_cpu_fam riscv64)
+        set(host_cpu riscv64)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
         set(host_cpu_fam aarch64)
         set(host_cpu armv8)
@@ -231,6 +248,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "loongarch64")
         set(host_cpu_fam loongarch64)
         set(host_cpu loongarch64)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "ppc64|powerpc64")
+        set(host_cpu_fam powerpc64)
+        set(host_cpu powerpc64)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "wasm32")
         set(host_cpu_fam wasm32)
         set(host_cpu wasm32)
@@ -241,7 +261,7 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
         set(host_unkown TRUE)
     endif()
 
-    set(host "[host_machine]\n") # host=target in vcpkg. 
+    set(host "[host_machine]\n") # host=target in vcpkg.
     string(APPEND host "endian = 'little'\n")
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_MINGW OR VCPKG_TARGET_IS_UWP)
         set(meson_system_name "windows")
@@ -256,7 +276,9 @@ function(z_vcpkg_get_build_and_host_system build_system host_system is_cross) #h
     endif()
 
     if(NOT build_cpu_fam MATCHES "${host_cpu_fam}"
-       OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP
+       OR VCPKG_TARGET_IS_ANDROID
+       OR (VCPKG_TARGET_IS_APPLE AND NOT VCPKG_TARGET_IS_OSX)
+       OR VCPKG_TARGET_IS_UWP
        OR (VCPKG_TARGET_IS_MINGW AND NOT CMAKE_HOST_WIN32))
         set(${is_cross} TRUE PARENT_SCOPE)
     endif()

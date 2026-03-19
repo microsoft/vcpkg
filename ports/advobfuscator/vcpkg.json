@@ -1,8 +1,17 @@
 {
   "name": "advobfuscator",
-  "version-date": "2020-06-26",
-  "description": "Obfuscation library based on C++11/14 and metaprogramming",
+  "version": "2.1.1",
+  "description": "Obfuscation library based on C++20 and metaprogramming",
+  "homepage": "https://github.com/andrivet/ADVobfuscator",
+  "license": "BSD-3-Clause-Clear",
   "dependencies": [
-    "boost-msm"
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }

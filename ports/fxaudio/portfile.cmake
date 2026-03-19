@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EnzoMassyle/AudioFX
     REF ${VERSION}
-    SHA512 406f346e580a8c0df6a0aa2f38b99b0e58920b05bea97b5dd625b077ef8cc48bbbadeeee1f76cc986dedbbe5eca07e20ba6ade61f6e0a880e071f0fae7afd020
+    SHA512 fca56da7b4579dafd02138817e1b1d6cceb1f6d210f414afb042d8d720e9d611f7a4c110b7edb36b07e6ef0e7b1f412888c0c8e42c35f66db09cde23882aeb6b
     HEAD_REF main
 )
 

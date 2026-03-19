@@ -1,6 +1,7 @@
 {
   "name": "g3log",
   "version": "2.6",
+  "port-version": 1,
   "description": "Asynchronous logger with Dynamic Sinks",
   "homepage": "https://github.com/KjellKod/g3log",
   "license": "Unlicense",
@@ -14,5 +15,10 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "dynamic-logging": {
+      "description": "Enable dynamic logging levels"
+    }
+  }
 }

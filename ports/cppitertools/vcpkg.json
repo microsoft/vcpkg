@@ -1,6 +1,6 @@
 {
   "name": "cppitertools",
-  "version": "2.2",
+  "version": "2.3",
   "description": "Range-based for loop add-ons inspired by the Python builtins and itertools library",
   "homepage": "https://github.com/ryanhaining/cppitertools",
   "license": "BSD-2-Clause",

@@ -1,15 +1,18 @@
 {
   "name": "libosmscout",
   "version": "1.1.1",
-  "port-version": 7,
+  "port-version": 8,
   "description": "libosmscout offers applications simple, high-level interfaces for offline location and POI lokup, rendering and routing functionalities based on OpenStreetMap (OSM) data.",
   "homepage": "https://libosmscout.sourceforge.net/",
   "documentation": "https://libosmscout.sourceforge.net/documentation/",
-  "supports": "!uwp & !(windows & arm) & !android & !(windows & static) & !wasm32 & !emscripten",
+  "supports": "!uwp",
   "dependencies": [
     "libiconv",
     "liblzma",
-    "libxml2",
+    {
+      "name": "libxml2",
+      "default-features": false
+    },
     "protobuf",
     {
       "name": "vcpkg-cmake",
@@ -25,9 +28,18 @@
     "cairo": {
       "description": "Cairo backend renderer",
       "dependencies": [
-        "cairo",
-        "freetype",
-        "harfbuzz",
+        {
+          "name": "cairo",
+          "default-features": false
+        },
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        },
         "libpng",
         "pango"
       ]
@@ -50,10 +62,19 @@
     "svg": {
       "description": "SVG backend renderer",
       "dependencies": [
-        "freetype",
-        "harfbuzz",
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        {
+          "name": "harfbuzz",
+          "default-features": false
+        },
         "pango"
       ]
+    },
+    "tools": {
+      "description": "Install tools"
     }
   }
 }

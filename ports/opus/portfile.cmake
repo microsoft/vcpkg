@@ -12,6 +12,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         avx2 AVX2_SUPPORTED
 )
 
+set(STACK_PROTECTOR ON)
 set(ADDITIONAL_OPUS_OPTIONS "")
 if(VCPKG_TARGET_IS_MINGW)
     set(STACK_PROTECTOR OFF)
@@ -27,8 +28,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     endif()
 elseif(VCPKG_TARGET_IS_EMSCRIPTEN)
     set(STACK_PROTECTOR OFF)
-else()
-    set(STACK_PROTECTOR ON)
 endif()
 
 vcpkg_cmake_configure(

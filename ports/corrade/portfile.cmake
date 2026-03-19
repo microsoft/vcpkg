@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-vs2019.patch
         build-corrade-rc-always.patch
         clang-16.patch
+        missing-headers.diff
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

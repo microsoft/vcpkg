@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Tencent/ncnn
     REF "${VERSION}"
-    SHA512 decc841dc353bf0ff6f33456741547f0afaa8ed9d381ca3546b319dcd1c6db8ed4d35e001cd7adcea68970ebe2f14cbacf3053a23e37991c7466bc7060490286
+    SHA512 53de1d8c7b6ea3bdc01eeb1c742fecbf53ba1ec975087814197a270c8a2c104c3f48c81849631ca4460f9d875c45bba7e5e52ff572d0a86131c792867ee0a1f3
     HEAD_REF master
 )
 
@@ -14,6 +14,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         vulkan NCNN_SYSTEM_GLSLANG
 )
 
+if(vulkan IN_LIST FEATURES AND VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS -DNCNN_SIMPLEVK=OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -22,6 +26,7 @@ vcpkg_cmake_configure(
         -DNCNN_BUILD_EXAMPLES=OFF
         -DNCNN_BUILD_BENCHMARK=OFF
         -DNCNN_SHARED_LIB=${BUILD_SHARED}
+        -DNCNN_VERSION=${VERSION}
 )
 
 vcpkg_cmake_install()

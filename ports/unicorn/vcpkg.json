@@ -1,6 +1,6 @@
 {
   "name": "unicorn",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Unicorn is a lightweight multi-platform, multi-architecture CPU emulator framework",
   "homepage": "https://github.com/unicorn-engine/unicorn",
   "license": "GPL-2.0-only",

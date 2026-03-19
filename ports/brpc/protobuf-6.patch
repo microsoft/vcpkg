@@ -1,0 +1,668 @@
+diff --git a/src/brpc/amf.cpp b/src/brpc/amf.cpp
+index 023eaa9b..bc90797e 100644
+--- a/src/brpc/amf.cpp
++++ b/src/brpc/amf.cpp
+@@ -1000,7 +1000,7 @@ void WriteAMFObject(const google::protobuf::Message& message,
+                 continue;
+             }
+         }
+-        const std::string& name = field->name();
++        const auto name = field->name();
+         if (name.size() >= 65536u) {
+             LOG(ERROR) << "name is too long!";
+             return stream->set_bad();
+diff --git a/src/brpc/builtin/protobufs_service.cpp b/src/brpc/builtin/protobufs_service.cpp
+index 2344e461..4f24cf48 100644
+--- a/src/brpc/builtin/protobufs_service.cpp
++++ b/src/brpc/builtin/protobufs_service.cpp
+@@ -42,7 +42,7 @@ int ProtobufsService::Init() {
+         }
+         const google::protobuf::ServiceDescriptor* d =
+             iter->second.service->GetDescriptor();
+-        _map[d->full_name()] = d->DebugString();
++        _map[std::string(d->full_name())] = d->DebugString();
+         const int method_count = d->method_count();
+         for (int j = 0; j < method_count; ++j) {
+             const google::protobuf::MethodDescriptor* md = d->method(j);
+@@ -53,13 +53,13 @@ int ProtobufsService::Init() {
+     while (!stack.empty()) {
+         const google::protobuf::Descriptor* d = stack.back();
+         stack.pop_back();
+-        _map[d->full_name()] = d->DebugString();
++        _map[std::string(d->full_name())] = d->DebugString();
+         for (int i = 0; i < d->field_count(); ++i) {
+             const google::protobuf::FieldDescriptor* f = d->field(i);
+             if (f->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE ||
+                 f->type() == google::protobuf::FieldDescriptor::TYPE_GROUP) {
+                 const google::protobuf::Descriptor* sub_d = f->message_type();
+-                if (sub_d != d && _map.find(sub_d->full_name()) == _map.end()) {
++                if (sub_d != d && _map.find(std::string(sub_d->full_name())) == _map.end()) {
+                     stack.push_back(sub_d);
+                 }
+             }
+diff --git a/src/brpc/channel.cpp b/src/brpc/channel.cpp
+index 0252e97d..e5f7bf48 100644
+--- a/src/brpc/channel.cpp
++++ b/src/brpc/channel.cpp
+@@ -493,10 +493,12 @@ void Channel::CallMethod(const google::protobuf::MethodDescriptor* method,
+     if (cntl->_sender == NULL && IsTraceable(Span::tls_parent())) {
+         const int64_t start_send_us = butil::cpuwide_time_us();
+         const std::string* method_name = NULL;
++        std::string full_name;
+         if (_get_method_name) {
+             method_name = &_get_method_name(method, cntl);
+         } else if (method) {
+-            method_name = &method->full_name();
++            full_name.assign(method->full_name());
++            method_name = &full_name;
+         } else {
+             const static std::string NULL_METHOD_STR = "null-method";
+             method_name = &NULL_METHOD_STR;
+diff --git a/src/brpc/nshead_pb_service_adaptor.cpp b/src/brpc/nshead_pb_service_adaptor.cpp
+index ed3552f5..5fe74173 100644
+--- a/src/brpc/nshead_pb_service_adaptor.cpp
++++ b/src/brpc/nshead_pb_service_adaptor.cpp
+@@ -126,7 +126,7 @@ void NsheadPbServiceAdaptor::ProcessNsheadRequest(
+         google::protobuf::Service* svc = sp->service;
+         const google::protobuf::MethodDescriptor* method = sp->method;
+         ControllerPrivateAccessor(controller).set_method(method);
+-        done->SetMethodName(method->full_name());
++        done->SetMethodName(std::string(method->full_name()));
+         pbdone->pbreq.reset(svc->GetRequestPrototype(method).New());
+         pbdone->pbres.reset(svc->GetResponsePrototype(method).New());
+ 
+diff --git a/src/brpc/policy/baidu_rpc_protocol.cpp b/src/brpc/policy/baidu_rpc_protocol.cpp
+index 5adf77b2..7e83fcdc 100644
+--- a/src/brpc/policy/baidu_rpc_protocol.cpp
++++ b/src/brpc/policy/baidu_rpc_protocol.cpp
+@@ -233,7 +233,7 @@ static bool SerializeResponse(const google::protobuf::Message& res,
+         cntl.SetFailed(ERESPONSE,
+                        "Fail to serialize response=%s, "
+                        "ContentType=%s, CompressType=%s, ChecksumType=%s",
+-                       res.GetDescriptor()->full_name().c_str(),
++                       res.GetDescriptor()->full_name().data(),
+                        ContentTypeToCStr(content_type),
+                        CompressTypeToCStr(compress_type),
+                        ChecksumTypeToCStr(checksum_type));
+@@ -775,7 +775,7 @@ void ProcessRpcRequest(InputMessageBase* msg_base) {
+                     cntl->SetFailed(
+                         ELIMIT,
+                         "Rejected by %s's ConcurrencyLimiter, concurrency=%d",
+-                        mp->method->full_name().c_str(), rejected_cc);
++                        mp->method->full_name().data(), rejected_cc);
+                     break;
+                 }
+             }
+@@ -784,7 +784,7 @@ void ProcessRpcRequest(InputMessageBase* msg_base) {
+             accessor.set_method(method);
+ 
+             if (span) {
+-                span->ResetServerSpanName(method->full_name());
++                span->ResetServerSpanName(std::string(method->full_name()));
+             }
+ 
+             if (!server->AcceptRequest(cntl.get())) {
+@@ -812,7 +812,7 @@ void ProcessRpcRequest(InputMessageBase* msg_base) {
+                     EREQUEST,
+                     "Fail to parse request=%s, ContentType=%s, "
+                     "CompressType=%s, ChecksumType=%s, request_size=%d",
+-                    messages->Request()->GetDescriptor()->full_name().c_str(),
++                    messages->Request()->GetDescriptor()->full_name().data(),
+                     ContentTypeToCStr(content_type),
+                     CompressTypeToCStr(compress_type),
+                     ChecksumTypeToCStr(checksum_type), req_size);
+@@ -996,7 +996,7 @@ void ProcessRpcResponse(InputMessageBase* msg_base) {
+                     EREQUEST,
+                     "Fail to parse response=%s, ContentType=%s, "
+                     "CompressType=%s, ChecksumType=%s, request_size=%d",
+-                    cntl->response()->GetDescriptor()->full_name().c_str(),
++                    cntl->response()->GetDescriptor()->full_name().data(),
+                     ContentTypeToCStr(content_type),
+                     CompressTypeToCStr(compress_type),
+                     ChecksumTypeToCStr(checksum_type), res_size);
+@@ -1033,7 +1033,7 @@ void SerializeRpcRequest(butil::IOBuf* request_buf, Controller* cntl,
+             EREQUEST,
+             "Fail to compress request=%s, "
+             "ContentType=%s, CompressType=%s, ChecksumType=%s",
+-            request->GetDescriptor()->full_name().c_str(),
++            request->GetDescriptor()->full_name().data(),
+             ContentTypeToCStr(content_type), CompressTypeToCStr(compress_type),
+             ChecksumTypeToCStr(checksum_type));
+     }
+diff --git a/src/brpc/policy/http_rpc_protocol.cpp b/src/brpc/policy/http_rpc_protocol.cpp
+index 872c2897..88eee74a 100644
+--- a/src/brpc/policy/http_rpc_protocol.cpp
++++ b/src/brpc/policy/http_rpc_protocol.cpp
+@@ -284,7 +284,7 @@ static bool JsonToProtoMessage(const butil::IOBuf& body,
+     bool ok = json2pb::JsonToProtoMessage(&wrapper, message, options, &error);
+     if (!ok) {
+         cntl->SetFailed(error_code, "Fail to parse http json body as %s: %s",
+-                        message->GetDescriptor()->full_name().c_str(),
++                        message->GetDescriptor()->full_name().data(),
+                         error.c_str());
+     }
+     return ok;
+@@ -305,7 +305,7 @@ static bool ProtoMessageToJson(const google::protobuf::Message& message,
+     bool ok = json2pb::ProtoMessageToJson(message, wrapper, options, &error);
+     if (!ok) {
+         cntl->SetFailed(error_code, "Fail to convert %s to json: %s",
+-                        message.GetDescriptor()->full_name().c_str(),
++                        message.GetDescriptor()->full_name().data(),
+                         error.c_str());
+     }
+     return ok;
+@@ -321,7 +321,7 @@ static bool ProtoJsonToProtoMessage(const butil::IOBuf& body,
+     bool ok = json2pb::ProtoJsonToProtoMessage(&wrapper, message, options, &error);
+     if (!ok) {
+         cntl->SetFailed(error_code, "Fail to parse http proto-json body as %s: %s",
+-                        message->GetDescriptor()->full_name().c_str(),
++                        message->GetDescriptor()->full_name().data(),
+                         error.c_str());
+     }
+     return ok;
+@@ -337,7 +337,7 @@ static bool ProtoMessageToProtoJson(const google::protobuf::Message& message,
+     bool ok = json2pb::ProtoMessageToProtoJson(message, wrapper, options, &error);
+     if (!ok) {
+         cntl->SetFailed(error_code, "Fail to convert %s to proto-json: %s",
+-                        message.GetDescriptor()->full_name().c_str(), error.c_str());
++                        message.GetDescriptor()->full_name().data(), error.c_str());
+     }
+     return ok;
+ }
+@@ -527,13 +527,13 @@ void ProcessHttpResponse(InputMessageBase* msg) {
+         if (content_type == HTTP_CONTENT_PROTO) {
+             if (!ParsePbFromIOBuf(cntl->response(), res_body)) {
+                 cntl->SetFailed(ERESPONSE, "Fail to parse content as %s",
+-                                cntl->response()->GetDescriptor()->full_name().c_str());
++                                cntl->response()->GetDescriptor()->full_name().data());
+                 break;
+             }
+         } else if (content_type == HTTP_CONTENT_PROTO_TEXT) {
+             if (!ParsePbTextFromIOBuf(cntl->response(), res_body)) {
+                 cntl->SetFailed(ERESPONSE, "Fail to parse proto-text content as %s",
+-                                cntl->response()->GetDescriptor()->full_name().c_str());
++                                cntl->response()->GetDescriptor()->full_name().data());
+                 break;
+             }
+         } else if (content_type == HTTP_CONTENT_JSON) {
+@@ -612,13 +612,13 @@ void SerializeHttpRequest(butil::IOBuf* /*not used*/,
+             if (!pbreq->SerializeToZeroCopyStream(&wrapper)) {
+                 cntl->request_attachment().clear();
+                 return cntl->SetFailed(EREQUEST, "Fail to serialize %s",
+-                                       pbreq->GetTypeName().c_str());
++                                       pbreq->GetTypeName().data());
+             }
+         } else if (content_type == HTTP_CONTENT_PROTO_TEXT) {
+             if (!google::protobuf::TextFormat::Print(*pbreq, &wrapper)) {
+                 cntl->request_attachment().clear();
+                 return cntl->SetFailed(EREQUEST, "Fail to print %s as proto-text",
+-                                       pbreq->GetTypeName().c_str());
++                                       pbreq->GetTypeName().data());
+             }
+         } else if (content_type == HTTP_CONTENT_PROTO_JSON) {
+             if (!ProtoMessageToProtoJson(*pbreq, &wrapper, cntl, EREQUEST)) {
+@@ -880,11 +880,11 @@ HttpResponseSender::~HttpResponseSender() {
+         butil::IOBufAsZeroCopyOutputStream wrapper(&cntl->response_attachment());
+         if (content_type == HTTP_CONTENT_PROTO) {
+             if (!res->SerializeToZeroCopyStream(&wrapper)) {
+-                cntl->SetFailed(ERESPONSE, "Fail to serialize %s", res->GetTypeName().c_str());
++                cntl->SetFailed(ERESPONSE, "Fail to serialize %s", res->GetTypeName().data());
+             }
+         } else if (content_type == HTTP_CONTENT_PROTO_TEXT) {
+             if (!google::protobuf::TextFormat::Print(*res, &wrapper)) {
+-                cntl->SetFailed(ERESPONSE, "Fail to print %s as proto-text", res->GetTypeName().c_str());
++                cntl->SetFailed(ERESPONSE, "Fail to print %s as proto-text", res->GetTypeName().data());
+             }
+         } else if (content_type == HTTP_CONTENT_PROTO_JSON) {
+             ProtoMessageToProtoJson(*res, &wrapper, cntl, ERESPONSE);
+@@ -1535,7 +1535,7 @@ void ProcessHttpRequest(InputMessageBase *msg) {
+         cntl->request_attachment().swap(req_body);
+         google::protobuf::Closure* done = new HttpResponseSenderAsDone(&resp_sender);
+         if (span) {
+-            span->ResetServerSpanName(md->full_name());
++            span->ResetServerSpanName(std::string(md->full_name()));
+             span->set_start_callback_us(butil::cpuwide_time_us());
+             span->AsParent();
+         }
+@@ -1570,13 +1570,13 @@ void ProcessHttpRequest(InputMessageBase *msg) {
+         int rejected_cc = 0;
+         if (!method_status->OnRequested(&rejected_cc)) {
+             cntl->SetFailed(ELIMIT, "Rejected by %s's ConcurrencyLimiter, concurrency=%d",
+-                            mp->method->full_name().c_str(), rejected_cc);
++                            mp->method->full_name().data(), rejected_cc);
+             return;
+         }
+     }
+     
+     if (span) {
+-        span->ResetServerSpanName(mp->method->full_name());
++        span->ResetServerSpanName(std::string(mp->method->full_name()));
+     }
+     // NOTE: accesses to builtin services are not counted as part of
+     // concurrency, therefore are not limited by ServerOptions.max_concurrency.
+@@ -1632,7 +1632,7 @@ void ProcessHttpRequest(InputMessageBase *msg) {
+             if (!req->IsInitialized()) {
+                 cntl->SetFailed(EREQUEST, "%s needs to be created from a"
+                                 " non-empty json, it has required fields.",
+-                                req->GetDescriptor()->full_name().c_str());
++                                req->GetDescriptor()->full_name().data());
+                 return;
+             } // else all fields of the request are optional.
+         } else {
+@@ -1677,13 +1677,13 @@ void ProcessHttpRequest(InputMessageBase *msg) {
+             if (content_type == HTTP_CONTENT_PROTO) {
+                 if (!ParsePbFromIOBuf(req, req_body)) {
+                     cntl->SetFailed(EREQUEST, "Fail to parse http body as %s",
+-                                    req->GetDescriptor()->full_name().c_str());
++                                    req->GetDescriptor()->full_name().data());
+                     return;
+                 }
+             } else if (content_type == HTTP_CONTENT_PROTO_TEXT) {
+                 if (!ParsePbTextFromIOBuf(req, req_body)) {
+                     cntl->SetFailed(EREQUEST, "Fail to parse http proto-text body as %s",
+-                                    req->GetDescriptor()->full_name().c_str());
++                                    req->GetDescriptor()->full_name().data());
+                     return;
+                 }
+             } else if (content_type == HTTP_CONTENT_PROTO_JSON) {
+diff --git a/src/brpc/policy/hulu_pbrpc_protocol.cpp b/src/brpc/policy/hulu_pbrpc_protocol.cpp
+index 02ec8efc..46b501df 100644
+--- a/src/brpc/policy/hulu_pbrpc_protocol.cpp
++++ b/src/brpc/policy/hulu_pbrpc_protocol.cpp
+@@ -473,7 +473,7 @@ void ProcessHuluRequest(InputMessageBase* msg_base) {
+             int rejected_cc = 0;
+             if (!method_status->OnRequested(&rejected_cc)) {
+                 cntl->SetFailed(ELIMIT, "Rejected by %s's ConcurrencyLimiter, concurrency=%d",
+-                                sp->method->full_name().c_str(), rejected_cc);
++                                sp->method->full_name().data(), rejected_cc);
+                 break;
+             }
+         }
+@@ -487,7 +487,7 @@ void ProcessHuluRequest(InputMessageBase* msg_base) {
+         }
+ 
+         if (span) {
+-            span->ResetServerSpanName(method->full_name());
++            span->ResetServerSpanName(std::string(method->full_name()));
+         }
+         const int reqsize = msg->payload.length();
+         butil::IOBuf req_buf;
+diff --git a/src/brpc/policy/mongo_protocol.cpp b/src/brpc/policy/mongo_protocol.cpp
+index 82bb3e0b..45ab7076 100644
+--- a/src/brpc/policy/mongo_protocol.cpp
++++ b/src/brpc/policy/mongo_protocol.cpp
+@@ -249,7 +249,7 @@ void ProcessMongoRequest(InputMessageBase* msg_base) {
+             if (!method_status->OnRequested(&rejected_cc)) {
+                 mongo_done->cntl.SetFailed(
+                     ELIMIT, "Rejected by %s's ConcurrencyLimiter, concurrency=%d",
+-                    mp->method->full_name().c_str(), rejected_cc);
++                    mp->method->full_name().data(), rejected_cc);
+                 break;
+             }
+         }
+diff --git a/src/brpc/policy/nshead_mcpack_protocol.cpp b/src/brpc/policy/nshead_mcpack_protocol.cpp
+index 40d38836..9bb7ea2b 100644
+--- a/src/brpc/policy/nshead_mcpack_protocol.cpp
++++ b/src/brpc/policy/nshead_mcpack_protocol.cpp
+@@ -49,7 +49,7 @@ void NsheadMcpackAdaptor::ParseNsheadMeta(
+     const google::protobuf::ServiceDescriptor* sd = service->GetDescriptor();
+     if (sd->method_count() == 0) {
+         cntl->SetFailed(ENOMETHOD, "No method in service=%s",
+-                        sd->full_name().c_str());
++                        sd->full_name().data());
+         return;
+     }
+     const google::protobuf::MethodDescriptor* method = sd->method(0);
+@@ -59,7 +59,7 @@ void NsheadMcpackAdaptor::ParseNsheadMeta(
+ void NsheadMcpackAdaptor::ParseRequestFromIOBuf(
+     const NsheadMeta&, const NsheadMessage& raw_req,
+     Controller* cntl, google::protobuf::Message* pb_req) const {
+-    const std::string& msg_name = pb_req->GetDescriptor()->full_name();
++    const auto msg_name = std::string(pb_req->GetDescriptor()->full_name());
+     mcpack2pb::MessageHandler handler = mcpack2pb::find_message_handler(msg_name);
+     if (!handler.parse_from_iobuf(pb_req, raw_req.body)) {
+         cntl->SetFailed(EREQUEST, "Fail to parse request message, "
+@@ -86,7 +86,7 @@ void NsheadMcpackAdaptor::SerializeResponseToIOBuf(
+         return;
+     }
+ 
+-    const std::string& msg_name = pb_res->GetDescriptor()->full_name();
++    const auto msg_name = std::string(pb_res->GetDescriptor()->full_name());
+     mcpack2pb::MessageHandler handler = mcpack2pb::find_message_handler(msg_name);
+     if (!handler.serialize_to_iobuf(*pb_res, &raw_res->body,
+                                    ::mcpack2pb::FORMAT_MCPACK_V2)) {
+@@ -124,7 +124,7 @@ void ProcessNsheadMcpackResponse(InputMessageBase* msg_base) {
+         // silently ignore response.
+         return;
+     }
+-    const std::string& msg_name = res->GetDescriptor()->full_name();
++    const auto msg_name = std::string(res->GetDescriptor()->full_name());
+     mcpack2pb::MessageHandler handler = mcpack2pb::find_message_handler(msg_name);
+     if (!handler.parse_from_iobuf(res, msg->payload)) {
+         return cntl->CloseConnection("Fail to parse response message");
+@@ -143,7 +143,7 @@ void SerializeNsheadMcpackRequest(butil::IOBuf* buf, Controller* cntl,
+                         "nshead_mcpack protocol doesn't support compression");
+         return;
+     }
+-    const std::string& msg_name = pb_req->GetDescriptor()->full_name();
++    const auto msg_name = std::string(pb_req->GetDescriptor()->full_name());
+     mcpack2pb::MessageHandler handler = mcpack2pb::find_message_handler(msg_name);
+     if (!handler.serialize_to_iobuf(*pb_req, buf, ::mcpack2pb::FORMAT_MCPACK_V2)) {
+         cntl->SetFailed(EREQUEST, "Fail to serialize %s", msg_name.c_str());
+diff --git a/src/brpc/policy/sofa_pbrpc_protocol.cpp b/src/brpc/policy/sofa_pbrpc_protocol.cpp
+index 9ee772dc..4bcfa939 100644
+--- a/src/brpc/policy/sofa_pbrpc_protocol.cpp
++++ b/src/brpc/policy/sofa_pbrpc_protocol.cpp
+@@ -424,7 +424,7 @@ void ProcessSofaRequest(InputMessageBase* msg_base) {
+             int rejected_cc = 0;
+             if (!method_status->OnRequested(&rejected_cc)) {
+                 cntl->SetFailed(ELIMIT, "Rejected by %s's ConcurrencyLimiter, concurrency=%d",
+-                                sp->method->full_name().c_str(), rejected_cc);
++                                sp->method->full_name().data(), rejected_cc);
+                 break;
+             }
+         }
+@@ -437,7 +437,7 @@ void ProcessSofaRequest(InputMessageBase* msg_base) {
+         }
+ 
+         if (span) {
+-            span->ResetServerSpanName(method->full_name());
++            span->ResetServerSpanName(std::string(method->full_name()));
+         }
+         req.reset(svc->GetRequestPrototype(method).New());
+         if (!ParseFromCompressedData(msg->payload, req.get(), req_cmp_type)) {
+diff --git a/src/brpc/policy/ubrpc2pb_protocol.cpp b/src/brpc/policy/ubrpc2pb_protocol.cpp
+index 312ec5d9..92db57e1 100644
+--- a/src/brpc/policy/ubrpc2pb_protocol.cpp
++++ b/src/brpc/policy/ubrpc2pb_protocol.cpp
+@@ -169,7 +169,7 @@ void UbrpcAdaptor::ParseNsheadMeta(
+ void UbrpcAdaptor::ParseRequestFromIOBuf(
+     const NsheadMeta&, const NsheadMessage& raw_req,
+     Controller* cntl, google::protobuf::Message* pb_req) const {
+-    const std::string& msg_name = pb_req->GetDescriptor()->full_name();
++    const auto msg_name = std::string(pb_req->GetDescriptor()->full_name());
+     mcpack2pb::MessageHandler handler = mcpack2pb::find_message_handler(msg_name);
+     if (handler.parse_body == NULL) {
+         return cntl->SetFailed(EREQUEST, "Fail to find parser of %s",
+@@ -227,7 +227,7 @@ void UbrpcAdaptor::SerializeResponseToIOBuf(
+     //     return AppendError(meta, cntl, raw_res->body);
+     // }
+ 
+-    const std::string& msg_name = pb_res->GetDescriptor()->full_name();
++    const auto msg_name = std::string(pb_res->GetDescriptor()->full_name());
+     mcpack2pb::MessageHandler handler = mcpack2pb::find_message_handler(msg_name);
+     if (handler.serialize_body == NULL) {
+         cntl->SetFailed(ERESPONSE, "Fail to find serializer of %s",
+@@ -279,7 +279,7 @@ static void ParseResponse(Controller* cntl, butil::IOBuf& buf,
+         // silently ignore response.
+         return;
+     }
+-    const std::string& msg_name = res->GetDescriptor()->full_name();
++    const auto msg_name = std::string(res->GetDescriptor()->full_name());
+     mcpack2pb::MessageHandler handler = mcpack2pb::find_message_handler(msg_name);
+     if (handler.parse_body == NULL) {
+         return cntl->SetFailed(ERESPONSE, "Fail to find parser of %s",
+@@ -480,7 +480,7 @@ static void SerializeUbrpcRequest(butil::IOBuf* buf, Controller* cntl,
+     if (cntl->method() == NULL) {
+         return cntl->SetFailed(ENOMETHOD, "method is NULL");
+     }
+-    const std::string& msg_name = request->GetDescriptor()->full_name();
++    const auto msg_name = std::string(request->GetDescriptor()->full_name());
+     mcpack2pb::MessageHandler handler = mcpack2pb::find_message_handler(msg_name);
+     if (handler.serialize_body == NULL) {
+         return cntl->SetFailed(EREQUEST, "Fail to find serializer of %s",
+@@ -500,9 +500,9 @@ static void SerializeUbrpcRequest(butil::IOBuf* buf, Controller* cntl,
+         sr.begin_mcpack_array("content", mcpack2pb::FIELD_OBJECT);
+         sr.begin_object();
+         {
+-            sr.add_string("service_name", cntl->method()->service()->name());
++            sr.add_string("service_name", std::string(cntl->method()->service()->name()));
+             sr.add_int64("id", cntl->call_id().value);
+-            sr.add_string("method", cntl->method()->name());
++            sr.add_string("method", std::string(cntl->method()->name()));
+             sr.begin_object("params");
+             const char* const request_name = cntl->idl_names().request_name;
+             if (request_name != NULL && *request_name) {
+diff --git a/src/brpc/server.cpp b/src/brpc/server.cpp
+index cd83053a..0df5a774 100644
+--- a/src/brpc/server.cpp
++++ b/src/brpc/server.cpp
+@@ -413,7 +413,9 @@ void* Server::UpdateDerivedVars(void* arg) {
+ 
+ const std::string& Server::ServiceProperty::service_name() const {
+     if (service) {
+-        return service->GetDescriptor()->full_name();
++        static std::string full_name;
++        full_name.assign(service->GetDescriptor()->full_name());
++        return full_name;
+     } else if (restful_map) {
+         return restful_map->service_name();
+     }
+@@ -1438,7 +1440,7 @@ int Server::AddServiceInternal(google::protobuf::Service* service,
+         mp.service = service;
+         mp.method = md;
+         mp.status = new MethodStatus;
+-        _method_map[md->full_name()] = mp;
++        _method_map[std::string(md->full_name())] = mp;
+         if (is_idl_support && sd->name() != sd->full_name()/*has ns*/) {
+             MethodProperty mp2 = mp;
+             mp2.own_method_status = false;
+@@ -1461,8 +1463,8 @@ int Server::AddServiceInternal(google::protobuf::Service* service,
+ 
+     const ServiceProperty ss = {
+         is_builtin_service, svc_opt.ownership, service, NULL };
+-    _fullname_service_map[sd->full_name()] = ss;
+-    _service_map[sd->name()] = ss;
++    _fullname_service_map[std::string(sd->full_name())] = ss;
++    _service_map[std::string(sd->name())] = ss;
+     if (is_builtin_service) {
+         ++_builtin_service_count;
+     } else {
+@@ -1504,7 +1506,7 @@ int Server::AddServiceInternal(google::protobuf::Service* service,
+         // handling is not affected.
+         for (size_t i = 0; i < mappings.size(); ++i) {
+             const std::string full_method_name =
+-                sd->full_name() + "." + mappings[i].method_name;
++                std::string(sd->full_name()) + "." + mappings[i].method_name;
+             MethodProperty* mp = _method_map.seek(full_method_name);
+             if (mp == NULL) {
+                 LOG(ERROR) << "Unknown method=`" << full_method_name << '\'';
+@@ -1731,7 +1733,7 @@ int Server::RemoveService(google::protobuf::Service* service) {
+     const google::protobuf::ServiceDescriptor* sd = service->GetDescriptor();
+     ServiceProperty* ss = _fullname_service_map.seek(sd->full_name());
+     if (ss == NULL) {
+-        RPC_VLOG << "Fail to find service=" << sd->full_name().c_str();
++        RPC_VLOG << "Fail to find service=" << sd->full_name().data();
+         return -1;
+     }
+     RemoveMethodsOf(service);
+diff --git a/src/json2pb/json_to_pb.cpp b/src/json2pb/json_to_pb.cpp
+index e758bdb3..46d1f924 100644
+--- a/src/json2pb/json_to_pb.cpp
++++ b/src/json2pb/json_to_pb.cpp
+@@ -54,7 +54,7 @@
+         }                                                               \
+         butil::string_appendf(perr, fmt, ##__VA_ARGS__);                \
+         if ((pb) != nullptr) {                                            \
+-            butil::string_appendf(perr, " [%s]", (pb)->GetDescriptor()->name().c_str());  \
++            butil::string_appendf(perr, " [%s]", (pb)->GetDescriptor()->name().data());  \
+         }                                                               \
+     } else { }
+ 
+@@ -126,7 +126,7 @@ inline bool value_invalid(const google::protobuf::FieldDescriptor* field, const
+         string_append_value(value, err);
+         butil::string_appendf(err, "' for %sfield `%s' which SHOULD be %s",
+                        optional ? "optional " : "",
+-                       field->full_name().c_str(), type);
++                       field->full_name().data(), type);
+     }
+     if (!optional) {
+         return false;                                           
+@@ -324,7 +324,7 @@ static bool JsonValueToProtoField(const BUTIL_RAPIDJSON_NAMESPACE::Value& value,
+                                   int depth) {
+     if (value.IsNull()) {
+         if (field->is_required()) {
+-            J2PERROR(err, "Missing required field: %s", field->full_name().c_str());
++            J2PERROR(err, "Missing required field: %s", field->full_name().data());
+             return false;
+         }
+         return true;
+@@ -333,7 +333,7 @@ static bool JsonValueToProtoField(const BUTIL_RAPIDJSON_NAMESPACE::Value& value,
+     if (field->is_repeated()) {
+         if (!value.IsArray()) {
+             J2PERROR(err, "Invalid value for repeated field: %s",
+-                     field->full_name().c_str());
++                     field->full_name().data());
+             return false;
+         }
+     } 
+@@ -506,7 +506,7 @@ bool JsonMapToProtoMap(const BUTIL_RAPIDJSON_NAMESPACE::Value& value,
+                        int depth) {
+     if (!value.IsObject()) {
+         J2PERROR(err, "Non-object value for map field: %s",
+-                 map_desc->full_name().c_str());
++                 map_desc->full_name().data());
+         return false;
+     }
+ 
+@@ -584,7 +584,7 @@ bool JsonValueToProtoMessage(const BUTIL_RAPIDJSON_NAMESPACE::Value& json_value,
+     for (size_t i = 0; i < fields.size(); ++i) {
+         const google::protobuf::FieldDescriptor* field = fields[i];
+         
+-        const std::string& orig_name = field->name();
++        const auto orig_name = std::string(field->name());
+         bool res = decode_name(orig_name, field_name_str_temp); 
+         const std::string& field_name_str = (res ? field_name_str_temp : orig_name);
+ 
+@@ -593,7 +593,7 @@ bool JsonValueToProtoMessage(const BUTIL_RAPIDJSON_NAMESPACE::Value& json_value,
+                 json_value.FindMember(field_name_str.data());
+         if (member == json_value.MemberEnd()) {
+             if (field->is_required()) {
+-                J2PERROR(err, "Missing required field: %s", field->full_name().c_str());
++                J2PERROR(err, "Missing required field: %s", field->full_name().data());
+                 return false;
+             }
+             continue; 
+@@ -604,7 +604,7 @@ bool JsonValueToProtoMessage(const BUTIL_RAPIDJSON_NAMESPACE::Value& json_value,
+                 json_value.FindMember(field_name_str.data());
+         if (member == NULL) {
+             if (field->is_required()) {
+-                J2PERROR(err, "Missing required field: %s", field->full_name().c_str());
++                J2PERROR(err, "Missing required field: %s", field->full_name().data());
+                 return false;
+             }
+             continue; 
+diff --git a/src/json2pb/pb_to_json.cpp b/src/json2pb/pb_to_json.cpp
+index f2322267..e0b95b3d 100644
+--- a/src/json2pb/pb_to_json.cpp
++++ b/src/json2pb/pb_to_json.cpp
+@@ -172,7 +172,7 @@ bool PbToJsonConverter::Convert(const google::protobuf::Message& message, Handle
+         if (!field->is_repeated() && !reflection->HasField(message, field)) {
+             // Field that has not been set
+             if (field->is_required()) {
+-                _error = "Missing required field: " + field->full_name();
++                _error = "Missing required field: " + std::string(field->full_name());
+                 return false;
+             }
+             // Whether dumps default fields
+@@ -186,7 +186,7 @@ bool PbToJsonConverter::Convert(const google::protobuf::Message& message, Handle
+             continue;
+         }
+ 
+-        const std::string& orig_name = field->name();
++        const auto orig_name = std::string(field->name());
+         bool decoded = decode_name(orig_name, field_name_str); 
+         const std::string& name = decoded ? field_name_str : orig_name;
+         handler.Key(name.data(), name.size(), false);
+@@ -205,7 +205,7 @@ bool PbToJsonConverter::Convert(const google::protobuf::Message& message, Handle
+ 
+         // Write a json object corresponding to hold protobuf map
+         // such as {"key": value, ...}
+-        const std::string& orig_name = map_desc->name();
++        const auto orig_name = std::string(map_desc->name());
+         bool decoded = decode_name(orig_name, field_name_str);
+         const std::string& name = decoded ? field_name_str : orig_name;
+         handler.Key(name.data(), name.size(), false);
+@@ -306,7 +306,7 @@ bool PbToJsonConverter::_PbFieldToJson(
+             handler.StartArray();
+             if (_option.enum_option == OUTPUT_ENUM_BY_NAME) {
+                 for (int index = 0; index < field_size; ++index) { 
+-                    const std::string& enum_name = reflection->GetRepeatedEnum(
++                    const auto enum_name = reflection->GetRepeatedEnum(
+                         message, field, index)->name();
+                     handler.String(enum_name.data(), enum_name.size(), false);
+                 }
+@@ -320,7 +320,7 @@ bool PbToJsonConverter::_PbFieldToJson(
+             
+         } else {
+             if (_option.enum_option == OUTPUT_ENUM_BY_NAME) {
+-                const std::string& enum_name =
++                const auto enum_name =
+                         reflection->GetEnum(message, field)->name();
+                 handler.String(enum_name.data(), enum_name.size(), false);
+             } else {
+diff --git a/src/json2pb/pb_to_json.h b/src/json2pb/pb_to_json.h
+index 8de63517..8407c477 100644
+--- a/src/json2pb/pb_to_json.h
++++ b/src/json2pb/pb_to_json.h
+@@ -93,7 +93,7 @@ bool ProtoMessageToJson(const google::protobuf::Message& message,
+                         std::string* error = NULL);
+ 
+ // See <google/protobuf/util/json_util.h> for details.
+-using Pb2ProtoJsonOptions = google::protobuf::util::JsonOptions;
++using Pb2ProtoJsonOptions = google::protobuf::util::JsonPrintOptions;
+ 
+ #if GOOGLE_PROTOBUF_VERSION >= 5026002
+ #define AlwaysPrintPrimitiveFields(options) options.always_print_fields_with_no_presence
+diff --git a/src/json2pb/protobuf_map.cpp b/src/json2pb/protobuf_map.cpp
+index f552bf62..4b290007 100644
+--- a/src/json2pb/protobuf_map.cpp
++++ b/src/json2pb/protobuf_map.cpp
+@@ -38,12 +38,12 @@ bool IsProtobufMap(const FieldDescriptor* field) {
+     if (NULL == key_desc
+         || key_desc->is_repeated()
+         || key_desc->cpp_type() != FieldDescriptor::CPPTYPE_STRING
+-        || strcmp(KEY_NAME, key_desc->name().c_str()) != 0) {
++        || strcmp(KEY_NAME, key_desc->name().data()) != 0) {
+         return false;
+     }
+     const FieldDescriptor* value_desc = entry_desc->field(VALUE_INDEX);
+     if (NULL == value_desc
+-        || strcmp(VALUE_NAME, value_desc->name().c_str()) != 0) {
++        || strcmp(VALUE_NAME, value_desc->name().data()) != 0) {
+         return false;
+     }
+     return true;
+diff --git a/src/json2pb/protobuf_type_resolver.h b/src/json2pb/protobuf_type_resolver.h
+index a73a4231..2445b9ec 100644
+--- a/src/json2pb/protobuf_type_resolver.h
++++ b/src/json2pb/protobuf_type_resolver.h
+@@ -32,7 +32,7 @@ namespace json2pb {
+ 
+ inline std::string GetTypeUrl(const google::protobuf::Message& message) {
+     return butil::string_printf(PROTOBUF_TYPE_URL_PREFIX"/%s",
+-                                message.GetDescriptor()->full_name().c_str());
++                                message.GetDescriptor()->full_name().data());
+ }
+ 
+ // unique_ptr deleter for TypeResolver only deletes the object
+diff --git a/src/mcpack2pb/generator.cpp b/src/mcpack2pb/generator.cpp
+index 0fb78936..4f0dd1e9 100644
+--- a/src/mcpack2pb/generator.cpp
++++ b/src/mcpack2pb/generator.cpp
+@@ -1391,13 +1391,13 @@ bool McpackToProtobuf::Generate(const google::protobuf::FileDescriptor* file,
+         if (!generate_parsing(d, ref_msgs, ref_maps, gimpl_printer)) {
+             ::butil::string_printf(
+                 error, "Fail to generate parsing code for %s",
+-                d->full_name().c_str());
++                d->full_name().data());
+             return false;
+         }
+         if (!generate_serializing(d, ref_msgs, ref_maps, gimpl_printer)) {
+             ::butil::string_printf(
+                 error, "Fail to generate serializing code for %s",
+-                d->full_name().c_str());
++                d->full_name().data());
+             return false;
+         }
+         std::string var_name = mcpack2pb::to_var_name(d->full_name());

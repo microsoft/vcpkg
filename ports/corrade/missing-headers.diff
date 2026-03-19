@@ -1,0 +1,69 @@
+diff --git a/src/Corrade/PluginManager/AbstractManager.h b/src/Corrade/PluginManager/AbstractManager.h
+index c8ef531..3d2e3dd 100644
+--- a/src/Corrade/PluginManager/AbstractManager.h
++++ b/src/Corrade/PluginManager/AbstractManager.h
+@@ -29,6 +29,10 @@
+  * @brief Class @ref Corrade::PluginManager::AbstractManager, macro @ref CORRADE_PLUGIN_VERSION, @ref CORRADE_PLUGIN_REGISTER()
+  */
+ 
++#include <string>
++#include <vector>
++#include <utility>
++
+ #include "Corrade/Containers/EnumSet.h"
+ #include "Corrade/Containers/Pointer.h"
+ #include "Corrade/PluginManager/PluginManager.h"
+diff --git a/src/Corrade/PluginManager/AbstractPlugin.h b/src/Corrade/PluginManager/AbstractPlugin.h
+index b22deee..4f5738f 100644
+--- a/src/Corrade/PluginManager/AbstractPlugin.h
++++ b/src/Corrade/PluginManager/AbstractPlugin.h
+@@ -29,6 +29,10 @@
+  * @brief Class @ref Corrade::PluginManager::AbstractPlugin
+  */
+ 
++#include <string>
++#include <vector>
++#include <utility>
++
+ #include "Corrade/Containers/Pointer.h"
+ #include "Corrade/PluginManager/PluginManager.h"
+ #include "Corrade/PluginManager/visibility.h"
+diff --git a/src/Corrade/Utility/Arguments.h b/src/Corrade/Utility/Arguments.h
+index 84d856d..ea801be 100644
+--- a/src/Corrade/Utility/Arguments.h
++++ b/src/Corrade/Utility/Arguments.h
+@@ -31,6 +31,7 @@
+ 
+ #include <string>
+ #include <utility>
++#include <vector>
+ 
+ #include "Corrade/Containers/Array.h"
+ #include "Corrade/Utility/ConfigurationValue.h"
+diff --git a/src/Corrade/Utility/Directory.h b/src/Corrade/Utility/Directory.h
+index 21c1e1a..8d9bde6 100644
+--- a/src/Corrade/Utility/Directory.h
++++ b/src/Corrade/Utility/Directory.h
+@@ -30,6 +30,9 @@
+  */
+ 
+ #include <initializer_list>
++#include <string>
++#include <utility>
++#include <vector>
+ 
+ #include "Corrade/Containers/Containers.h"
+ #include "Corrade/Containers/EnumSet.h"
+diff --git a/src/Corrade/Utility/Resource.h b/src/Corrade/Utility/Resource.h
+index e08c03d..6ce48b0 100644
+--- a/src/Corrade/Utility/Resource.h
++++ b/src/Corrade/Utility/Resource.h
+@@ -30,6 +30,8 @@
+  */
+ 
+ #include <utility>
++#include <string>
++#include <vector>
+ 
+ #include "Corrade/Containers/ArrayView.h"
+ #include "Corrade/Utility/StlForwardString.h"

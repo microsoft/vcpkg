@@ -1,7 +1,6 @@
 {
   "name": "brotli",
-  "version": "1.1.0",
-  "port-version": 1,
+  "version": "1.2.0",
   "description": "a generic-purpose lossless compression algorithm that compresses data using a combination of a modern variant of the LZ77 algorithm, Huffman coding and 2nd order context modeling.",
   "homepage": "https://github.com/google/brotli",
   "license": "MIT",

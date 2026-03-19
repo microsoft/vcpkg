@@ -67,6 +67,9 @@ else()
 
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            --disable-pulseaudio
+            --disable-video-directfb
     )
 
     vcpkg_install_make()

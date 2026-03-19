@@ -26,7 +26,7 @@ function(qt_download_submodule_impl)
         # qtinterfaceframework is not available in the release, so we fall back to a `git clone`.
         vcpkg_from_git(
             OUT_SOURCE_PATH SOURCE_PATH
-            URL "https://code.qt.io/qt/${_qarg_SUBMODULE}.git"
+            URL "${${_qarg_SUBMODULE}_URL}"
             REF "${${_qarg_SUBMODULE}_REF}"
             PATCHES ${_qarg_PATCHES}
         )
@@ -70,10 +70,9 @@ function(qt_download_submodule_impl)
             set(sha512 SHA512 "${${_qarg_SUBMODULE}_HASH}")
         endif()
 
-        qt_get_url_filename("${_qarg_SUBMODULE}" urls filename)
         vcpkg_download_distfile(archive
-            URLS ${urls}
-            FILENAME "${filename}"
+            URLS ${${_qarg_SUBMODULE}_URL}
+            FILENAME ${${_qarg_SUBMODULE}_FILENAME}
             ${sha512}
         )
         vcpkg_extract_source_archive(
@@ -177,6 +176,7 @@ function(qt_cmake_configure)
             -DINSTALL_PLUGINSDIR:STRING=${qt_plugindir}
             -DINSTALL_QMLDIR:STRING=${qt_qmldir}
             ${_qarg_OPTIONS}
+            "-DQT_TOOLCHAIN_RELOCATABLE_INSTALL_PREFIX:STRING=${CURRENT_INSTALLED_DIR}"
         OPTIONS_RELEASE
             ${_qarg_OPTIONS_RELEASE}
             -DINSTALL_DOCDIR:STRING=doc/${QT6_DIRECTORY_PREFIX}
@@ -205,6 +205,7 @@ function(qt_cmake_configure)
             QT_SYNCQT
             QT_NO_FORCE_SET_CMAKE_BUILD_TYPE
             QT_FORCE_WARN_APPLE_SDK_AND_XCODE_CHECK
+            QT_TOOLCHAIN_RELOCATABLE_INSTALL_PREFIX
             ${_qarg_OPTIONS_MAYBE_UNUSED}
             INPUT_bundled_xcb_xinput
             INPUT_freetype

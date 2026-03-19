@@ -1,3 +1,9 @@
+vcpkg_download_distfile(REMOVE_LTO_PATCH
+    URLS https://github.com/jupyter-xeus/xeus/commit/2dcccb574713f81b7d69baed2bd543bf6798f671.diff?full_index=1
+    FILENAME xeus-remove-lto-2dcccb574713f81b7d69baed2bd543bf6798f671.diff
+    SHA512 e0ae94825cb606dcd250394aee5c88e23bd5440a38c9f4cd8059590ec01dc1ec751ab0bb413788439dfbbfb2c28c68a82cb56efa11d05c3a2d63d420876e1e0b
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xeus
@@ -6,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         Fix-Compile-nlohmann-json.patch
+        "${REMOVE_LTO_PATCH}"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)

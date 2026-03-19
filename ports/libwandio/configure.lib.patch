@@ -1,13 +1,12 @@
 diff --git a/configure.ac b/configure.ac
-index 4579fbb3d..f6be008c8 100644
---- a/configure.ac	
+index 428e66a..21e39db 100644
+--- a/configure.ac
 +++ b/configure.ac
-@@ -112,10 +112,11 @@ AC_HEADER_STDC
+@@ -110,10 +110,10 @@ AC_CHECK_SIZEOF([long int])
  AC_CHECK_HEADERS(stddef.h inttypes.h sys/prctl.h)
  
  # Checks for various "optional" libraries
 -AC_CHECK_LIB(pthread, pthread_create, have_pthread=1, have_pthread=0)
-+# AC_CHECK_LIB(pthread, pthread_create, have_pthread=1, have_pthread=0)
 +AC_SEARCH_LIBS(pthread_create, [pthreadGC pthreadVC pthread], have_pthread=1, have_pthread=0)
  
  if test "$have_pthread" = 1; then
@@ -16,13 +15,12 @@ index 4579fbb3d..f6be008c8 100644
  	AC_DEFINE(HAVE_LIBPTHREAD, 1, [Set to 1 if pthreads are supported])
  fi
  
-@@ -128,12 +129,13 @@ AC_ARG_WITH([bzip2],
+@@ -126,12 +126,12 @@ AC_ARG_WITH([bzip2],
  
  AS_IF([test "x$with_bzip2" != "xno"],
  	[
 -	AC_CHECK_LIB(bz2, BZ2_bzDecompressInit, have_bzip=yes, have_bzip=no)
 +	AC_SEARCH_LIBS(BZ2_bzDecompressInit, [bz2 bz2d bzip2 bzip2d], have_bzip=yes, have_bzip=no)
-+	# AC_CHECK_LIB(bz2, BZ2_bzDecompressInit, have_bzip=yes, have_bzip=no)
  	], [have_bzip=no])
  
  AS_IF([test "x$have_bzip" = "xyes"], [
@@ -33,13 +31,12 @@ index 4579fbb3d..f6be008c8 100644
  	fi
  	with_bzip2=yes
  	AC_DEFINE(HAVE_LIBBZ2, 1, "Compiled with bzip2 support")],
-@@ -149,12 +151,13 @@ AC_ARG_WITH([zlib],
+@@ -147,12 +147,12 @@ AC_ARG_WITH([zlib],
  
  AS_IF([test "x$with_zlib" != "xno"],
  	[
 -	AC_CHECK_LIB(z, deflate, have_zlib=yes, have_zlib=no)
 +	AC_SEARCH_LIBS(deflate, [z zlib zlibd zd], have_zlib=yes, have_zlib=no)
-+	# AC_CHECK_LIB(z, deflate, have_zlib=yes, have_zlib=no)
  	], [have_zlib=no])
  
  AS_IF([test "x$have_zlib" = "xyes"], [
@@ -50,13 +47,12 @@ index 4579fbb3d..f6be008c8 100644
  	fi
  	AC_DEFINE(HAVE_LIBZ, 1, "Compiled with zlib support")
  	with_zlib=yes],
-@@ -193,12 +196,13 @@ AC_ARG_WITH([lzma],
+@@ -191,12 +191,12 @@ AC_ARG_WITH([lzma],
  
  AS_IF([test "x$with_lzma" != "xno"],
  	[
 -	AC_CHECK_HEADER(lzma.h, have_lzma=yes, have_lzma=no)
-+	# AC_CHECK_HEADER(lzma.h, have_lzma=yes, have_lzma=no)
-+    AC_SEARCH_LIBS(lzma_free, [lzma], have_lzma=yes, have_lzma=no)
++	AC_SEARCH_LIBS(lzma_free, [lzma], have_lzma=yes, have_lzma=no)
  	], [have_lzma=no])
  
  AS_IF([test "x$have_lzma" = "xyes"], [
@@ -67,14 +63,13 @@ index 4579fbb3d..f6be008c8 100644
  	fi
  	AC_DEFINE(HAVE_LIBLZMA, 1, "Compiled with lzma support")
  	with_lzma=yes],
-@@ -259,25 +264,28 @@ AC_ARG_WITH([lz4],
+@@ -257,25 +257,25 @@ AC_ARG_WITH([lz4],
  
  AS_IF([test "x$with_lz4" != "xno"],
          [
 -        AC_CHECK_LIB(lz4, LZ4F_createDecompressionContext, have_lz4f=yes, have_lz4f=no)
 +        AC_SEARCH_LIBS(LZ4F_createDecompressionContext, [lz4 lz4d], have_lz4f=yes, have_lz4f=no)
-+        # AC_CHECK_LIB(lz4, LZ4F_createDecompressionContext, have_lz4f=yes, have_lz4f=no)
-         ], [have_zstd=no])
+         ], [have_lz4f=no])
  
  AS_IF([test "x$have_lz4f" = "xyes"], [
 -        if test "$ac_cv_lib_lz4_code" != "none required"; then
@@ -84,8 +79,7 @@ index 4579fbb3d..f6be008c8 100644
          fi
          AC_DEFINE(HAVE_LIBLZ4F, 1, "Compiled with lz4 frame support")
 -        AC_CHECK_LIB(lz4, LZ4F_getVersion, have_lz4_173=yes, have_lz4_173=no)
-+        AC_SEARCH_LIBS(LZ4F_getVersion, [lz4 lz4d], have_lz4_173=yes, have_lz4_173=no)
-+        # AC_CHECK_LIB(lz4, LZ4F_getVersion, have_lz4_173=yes, have_lz4_173=no)
++				AC_SEARCH_LIBS(LZ4F_getVersion, [lz4 lz4d], have_lz4_173=yes, have_lz4_173=no)
          if test "x$have_lz4_173" = "xyes"; then
                  AC_DEFINE(HAVE_LIBLZ4_MOVABLE, 1, "If defined then liblz4 does NOT have the ERROR_srcPtr_wrong bug")
          fi
@@ -94,7 +88,6 @@ index 4579fbb3d..f6be008c8 100644
              AC_DEFINE(HAVE_LIBLZ4F, 0, "Compiled with lz4 frame support")
 -            AC_CHECK_LIB(lz4, LZ4_decompress_safe_continue, have_lz4s=yes, have_lz4s=no)
 +            AC_SEARCH_LIBS(LZ4_decompress_safe_continue, [lz4 lz4d],  have_lz4s=yes, have_lz4s=no)
-+            # AC_CHECK_LIB(lz4, LZ4_decompress_safe_continue, have_lz4s=yes, have_lz4s=no)
              AS_IF([test "x$have_lz4s" = "xyes"], [
 -                if test "$ac_cv_lib_lz4_code" != "none required"; then
 -                    LIBWANDIO_LIBS="$LIBWANDIO_LIBS -llz4"

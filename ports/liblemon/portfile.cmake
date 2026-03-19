@@ -14,6 +14,7 @@ vcpkg_extract_source_archive(
     SOURCE_BASE "${VERSION}"
     PATCHES
         fix-cmake.patch
+        fix-cmake4.patch
 )
 
 vcpkg_cmake_configure(

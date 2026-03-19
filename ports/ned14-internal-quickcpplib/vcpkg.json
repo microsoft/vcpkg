@@ -1,7 +1,6 @@
 {
   "name": "ned14-internal-quickcpplib",
-  "version-date": "2023-11-22",
-  "port-version": 1,
+  "version-date": "2025-12-16",
   "maintainers": [
     "Niall Douglas <s_github@nedprod.com>",
     "Henrik Gaßmann <henrik@gassmann.onl>"

@@ -2,7 +2,7 @@ vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO eclipse/paho.mqtt.c
   REF "v${VERSION}"
-  SHA512 5576ac3531a5c707f92a02cbfb9d60710b42acd99f57bcde311aa224780267a5152e8b92a6b077afab4780ee236d5e0c2a0b8986453439bce4323758b3d4385b
+  SHA512 a69cb4fdd9c56d7ed7b2275610b680bd9830d9e5b5d5151edf30db052da234b0ccce93e6b9e687be3f515699b79721d9282b5a77bf7a00e1719e5264e0ad9a4a
   HEAD_REF master
   PATCHES
     fix-unresolvedsymbol-arm.patch

@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jrouwe/JoltPhysics
     REF "v${VERSION}"
-    SHA512 cc6f9cbae1e867fcc2da31bd266fcadb3ef1913cb8a3e468d455612a2c9e55d036ec7a926d7fdd8adf3958da11e5cab368107dd4fc68b01106b4910cd58e1d39
+    SHA512 1bdf5e8a3c5d405808c2250f307a31c4a6180af5e911a8dd1560f065a84ee1500cf8a539ea0af466f484ef46f6ac34886edcdb3b5157e4dbad0db886e442087c
     HEAD_REF master
 )
 

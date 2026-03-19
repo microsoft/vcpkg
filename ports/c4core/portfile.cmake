@@ -5,20 +5,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO biojppm/c4core
     REF "v${VERSION}"
-    SHA512 027312776141bb93ba96a37190d2ed28a16985390d28dcdec69db1bca198d786633b30ffc66c11c7a05518a7c1d11cd310f650a112f436da4cfd099f03b74691
+    SHA512 990925e9f70796a7395dde6ccf3a3e361169a418a04ea14d406b41b6ac5e56d92e513aaf77c90638db06d6970007a15218b221d87bd7cbe7ee8f0e0b5a299397
     HEAD_REF master
     PATCHES
         disable-cpack.patch
 )
 
-set(CM_COMMIT_HASH b8e95acb1bdd564e47ac57d903a483604d90cbfa)
+set(CM_COMMIT_HASH 469017f6ddab72e860aa80221736c00d3dae0587)
 
 # Get cmake scripts for c4core
 vcpkg_download_distfile(
     CMAKE_ARCHIVE
     URLS "https://github.com/biojppm/cmake/archive/${CM_COMMIT_HASH}.zip"
     FILENAME "cmake-${CM_COMMIT_HASH}.zip"
-    SHA512 662c750279f4f1068bda60e999c54148e75f7a0daaf69e0540023770ef9008bab3d3acd41e06a193e5a095c614ccbdaa1c75fd4157cf03995dbbae6a6a24b445
+    SHA512 858200265b335297fefacf23780d2db596f09fe71dd04088ec34fa29d6d962dc04ece3429108ad3332289cbf41da2cae6991ac6211ff12f6c796ca4e25b7ceef
 )
 
 vcpkg_extract_source_archive(
@@ -40,7 +40,7 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    SOURCE_PATH_DEBUGBREAK  
+    SOURCE_PATH_DEBUGBREAK
     ARCHIVE ${DEBUGBREAK_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )
@@ -58,7 +58,7 @@ vcpkg_download_distfile(
 )
 
 vcpkg_extract_source_archive(
-    SOURCE_PATH_FAST_FLOAT 
+    SOURCE_PATH_FAST_FLOAT
     ARCHIVE ${FAST_FLOAT_ARCHIVE}
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/deps"
 )

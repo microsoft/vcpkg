@@ -1,4 +1,11 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
+vcpkg_download_distfile(curl_8_16_patch
+    URLS https://github.com/Kitware/CMake/commit/c8143074cf3954b1e169904eb9d843cfbe14acc3.diff?full_index=1
+    FILENAME Kitware-CMake-curl_8_16.diff
+    SHA512 25b448798a314705982d957f18cddc6ca235ef8283ed6d32bab0aa949cee518a273dec79dfd48bbe24bbf1781c098a1c3e892134c3aa69efcfec410b9f4d7b6f
+)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.kitware.com/
     OUT_SOURCE_PATH SOURCE_PATH
@@ -8,6 +15,7 @@ vcpkg_from_gitlab(
     HEAD_REF master
     PATCHES
         fix-dependency-libuv.patch
+        "${curl_8_16_patch}"
 )
 set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -27,14 +35,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
 endif()
 
+if(NOT (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm" AND VCPKG_TARGET_IS_LINUX))
+    list(APPEND OPTIONS
+        -DBUILD_QtDialog=ON # Just to test Qt with CMake
+        -DCMake_QT_MAJOR_VERSION:STRING=6
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DCMAKE_USE_SYSTEM_LIBRARIES=ON
-        -DBUILD_QtDialog=ON # Just to test Qt with CMake
-        -DCMake_QT_MAJOR_VERSION:STRING=6
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)
@@ -52,7 +65,7 @@ else()
     set(tool_names cmake cmake-gui ctest cpack)
     if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND tool_names cmcldeps)
-    else()
+    elseif(NOT VCPKG_TARGET_IS_ANDROID)
         list(APPEND tool_names ccmake)
     endif()
     vcpkg_copy_tools(TOOL_NAMES ${tool_names} AUTO_CLEAN)
