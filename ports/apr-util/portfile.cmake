@@ -83,7 +83,7 @@ else()
         message(STATUS "Configuring apr-util")
     endif()
 
-    vcpkg_configure_make(
+    vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS
             "--prefix=${CURRENT_INSTALLED_DIR}"
@@ -95,7 +95,7 @@ else()
             "${CONFIGURE_PARAMETER_3}"
     )
 
-    vcpkg_install_make()
+    vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/bin/apu-1-config" "${CURRENT_INSTALLED_DIR}" "`dirname $0`/../../..")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/apr-util/bin/apu-1-config" "${CURRENT_BUILDTREES_DIR}" "not/existing")

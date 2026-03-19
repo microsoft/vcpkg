@@ -1,6 +1,7 @@
 {
   "name": "apr-util",
   "version": "1.6.3",
+  "port-version": 1,
   "description": "Apache Portable Runtime (APR) project  mission is to create and maintain software libraries that provide a predictable and consistent interface to underlying platform-specific implementation",
   "homepage": "https://apr.apache.org/",
   "license": "Apache-2.0",
@@ -11,6 +12,11 @@
       "name": "vcpkg-cmake",
       "host": true,
       "platform": "windows"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows"
     }
   ],
   "features": {
