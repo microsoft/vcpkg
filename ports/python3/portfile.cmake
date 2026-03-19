@@ -299,7 +299,6 @@ else()
 
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTORECONF
         DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}
