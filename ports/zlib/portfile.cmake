@@ -9,34 +9,15 @@ vcpkg_from_github(
         0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch
 )
 
-set(CMAKE_CONFIGURE_OPTIONS
-    -DZLIB_BUILD_TESTING=OFF
-)
-
-if(VCPKG_CRT_LINKAGE STREQUAL "dynamic" OR VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    list(APPEND CMAKE_CONFIGURE_OPTIONS
-        -DZLIB_BUILD_SHARED=ON
-    )
-else()
-    list(APPEND CMAKE_CONFIGURE_OPTIONS
-        -DZLIB_BUILD_SHARED=OFF
-    )
-endif()
-
-if(VCPKG_CRT_LINKAGE STREQUAL "static" OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND CMAKE_CONFIGURE_OPTIONS
-        -DZLIB_BUILD_STATIC=ON
-    )
-else()
-    list(APPEND CMAKE_CONFIGURE_OPTIONS
-        -DZLIB_BUILD_STATIC=OFF
-    )
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ZLIB_BUILD_SHARED)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ZLIB_BUILD_STATIC)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${CMAKE_CONFIGURE_OPTIONS}
+        -DZLIB_BUILD_TESTING=OFF
+        -DZLIB_BUILD_SHARED=${ZLIB_BUILD_SHARED}
+        -DZLIB_BUILD_STATIC=${ZLIB_BUILD_STATIC}
 )
 
 vcpkg_cmake_install()
@@ -51,7 +32,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(COPY ${RELEASE_CMAKE_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/zlib.pc" "-lz" "-lzs")
     endif()
 endif()
@@ -66,7 +47,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
 
     vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" "/include" "/../include")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS)
         vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" "-lz" "-lzsd")
     else()
         vcpkg_replace_string("${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/zlib.pc" "-lz" "-lzd")
