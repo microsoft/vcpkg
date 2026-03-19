@@ -44,8 +44,8 @@ index ee74214..efc610c 100644
    <ItemDefinitionGroup>
      <ClCompile>
 -      <PreprocessorDefinitions>BUILD_LIBMPDEC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <AdditionalIncludeDirectories>..\Modules\_decimal;..\Modules\_decimal\windows;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PreprocessorDefinitions>MPDECIMAL_DLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <AdditionalIncludeDirectories>..\Modules\_decimal;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 +    </ClCompile>
 +  </ItemDefinitionGroup>
 +  <ItemDefinitionGroup Condition="false">
