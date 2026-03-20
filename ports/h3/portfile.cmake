@@ -16,6 +16,10 @@ vcpkg_cmake_configure(
         -DBUILD_FILTERS=OFF
         -DBUILD_GENERATORS=OFF
         -DBUILD_TESTING=OFF
+
+        -DENABLE_DOCS=OFF
+        -DENABLE_FORMAT=OFF
+        -DENABLE_LINTING=OFF
 )
 
 vcpkg_cmake_install()

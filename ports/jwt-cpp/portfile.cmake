@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Thalhammer/jwt-cpp
     REF "v${VERSION}"
-    SHA512 1d52816e4d04a50c57e3655e1ebd0fa4e54d03aef49950b800c9c43715cdaceec7a572a02ffff5d358d5f8cde242112da06804fc7a53bc154b3860cf133716a0
+    SHA512 9a2725228565d671e065a4647dad38f36251a4ee07c796cac35252557134a20c2dc260f62c011438c7fbde57f5c511bb0096569512c0aebdae048c7a626805b7
     HEAD_REF master
     PATCHES
         picojson_from_vcpkg.patch

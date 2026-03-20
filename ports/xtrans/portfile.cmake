@@ -17,12 +17,12 @@ vcpkg_from_gitlab(
 )
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
+    AUTORECONF
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/xorg")
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/${PORT}")
