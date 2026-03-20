@@ -156,7 +156,6 @@ endif()
 
 file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/certs/.keep")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/private/.keep")
-file(TOUCH "${CURRENT_PACKAGES_DIR}/etc/ssl/misc/.keep")
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/etc"
