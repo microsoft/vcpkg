@@ -7002,7 +7002,7 @@
     },
     "nss": {
       "baseline": "3.113.1",
-      "port-version": 1
+      "port-version": 2
     },
     "nsync": {
       "baseline": "1.30.0",
@@ -9002,7 +9002,7 @@
     },
     "sdl3-mixer": {
       "baseline": "3.2.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl3-shadercross": {
       "baseline": "3.0.0-preview1",
@@ -9482,7 +9482,7 @@
     },
     "sqlite3": {
       "baseline": "3.52.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.3.3",
