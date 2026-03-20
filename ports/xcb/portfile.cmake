@@ -44,13 +44,13 @@ else()
     set(ENV{PYTHONPATH} "${CURRENT_INSTALLED_DIR}/tools/python3/site-packages/")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS ${OPTIONS}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 
 set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/xcb.pc")
 if(EXISTS "${pcfile}")
