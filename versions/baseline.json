@@ -1981,8 +1981,8 @@
       "port-version": 0
     },
     "coolprop": {
-      "baseline": "6.4.3",
-      "port-version": 3
+      "baseline": "7.2.0",
+      "port-version": 0
     },
     "copypp": {
       "baseline": "0.3.0",
