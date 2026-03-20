@@ -1,0 +1,15 @@
+quran provides CMake integration:
+
+  find_package(quran CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE quran::quran)
+
+Then in your C or C++ source:
+
+  #include <quran.h>
+
+  int main(void) {
+      quran_init();
+      const QuranVerse *v = quran_get_ayah(1, 1);
+      printf("%s\n", v->english);
+      quran_cleanup();
+  }
