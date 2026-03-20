@@ -1,0 +1,13 @@
+diff --git a/src/utils.c b/src/utils.c
+index 2ad33d5..385f010 100644
+--- a/src/utils.c
++++ b/src/utils.c
+@@ -340,7 +340,7 @@ void top_k(float *a, int n, int k, int *index)
+ 
+ void log_backtrace()
+ {
+-#ifndef WIN32
++#if !defined(WIN32) && !defined(__ANDROID__)
+     void * buffer[50];
+     int count = backtrace(buffer, sizeof(buffer));
+     char **symbols = backtrace_symbols(buffer, count);

@@ -1,0 +1,13 @@
+diff --git a/faiss/gpu/impl/PQCodeDistances-inl.cuh b/faiss/gpu/impl/PQCodeDistances-inl.cuh
+index e2e66f3..309187e 100644
+--- a/faiss/gpu/impl/PQCodeDistances-inl.cuh
++++ b/faiss/gpu/impl/PQCodeDistances-inl.cuh
+@@ -544,7 +544,7 @@ void runPQCodeDistancesMM(
+ 
+         // View output as (q * c)(sub q * code), and add centroid norm to
+         // each row
+-        auto outDistancesCodeViewCols = outCodeDistancesView.view<2>(
++        auto outDistancesCodeViewCols = outCodeDistancesView.template view<2>(
+                 {coarseIndices.getSize(0) * coarseIndices.getSize(1),
+                  outCodeDistances.getSize(2) * outCodeDistances.getSize(3)});
+ 

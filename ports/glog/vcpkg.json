@@ -1,6 +1,7 @@
 {
   "name": "glog",
   "version": "0.7.1",
+  "port-version": 1,
   "description": "C++ implementation of the Google logging module",
   "homepage": "https://github.com/google/glog",
   "license": "BSD-3-Clause",

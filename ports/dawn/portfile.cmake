@@ -2,7 +2,7 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/google/dawn/releases/download/v${VERSION}/emdawnwebgpu_pkg-v${VERSION}.zip"
         FILENAME "emdawnwebgpu_pkg-v${VERSION}.zip"
-        SHA512 a0544b3bf2d81abee91fb43901d384b021005d4158b43fec996977607f08852b211940a3ca71d37ac8bda52821c361bbaa93d0e4e63f72ff186863ef48a6a3d0
+        SHA512 67f64ae3263e2111ca5d71b0ea69f0fbf42a0a7cd40ada66c3975e031f9af07411e1390a8b52fec08d563a99612ca6a3b3f75115191253d41fca18b8f3494f9c
     )
     vcpkg_extract_source_archive(
         SOURCE_PATH
@@ -11,16 +11,22 @@ if (VCPKG_TARGET_IS_EMSCRIPTEN)
             000-fix-emdawnwebgpu.patch
     )
     set(VCPKG_BUILD_TYPE release)
-    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     file(INSTALL "${SOURCE_PATH}/webgpu/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
     file(INSTALL "${SOURCE_PATH}/webgpu_cpp/include" DESTINATION "${CURRENT_PACKAGES_DIR}")
     file(INSTALL "${SOURCE_PATH}/webgpu/src" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" PATTERN "LICENSE" EXCLUDE)
     file(INSTALL "${SOURCE_PATH}/emdawnwebgpu.port.py" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+    # cmake config file
+    file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/DawnConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    vcpkg_cmake_config_fixup()
+
+    # pkgconfig file
     set(DAWN_PKGCONFIG_CFLAGS "--use-port=\${prefix}/share/${PORT}/emdawnwebgpu.port.py")
     set(DAWN_PKGCONFIG_LIBS "--use-port=\${prefix}/share/${PORT}/emdawnwebgpu.port.py")
     set(DAWN_PKGCONFIG_REQUIRES "")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/unofficial_webgpu_dawn.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/unofficial_webgpu_dawn.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
+
     vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/webgpu/src/LICENSE" "${SOURCE_PATH}/webgpu_cpp/LICENSE")
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
     return()
@@ -30,7 +36,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/dawn
     REF "v${VERSION}"
-    SHA512 6962d1526ac88d4e00d236b4ae86bd885d67f493d6b7342117e3b658fa6f37bf6d6b8617af4d74ef0bf9e3e95cf91aed567fb0f90bf836ad132dff4a304525f8
+    SHA512 c4d0f19b6ebffd1dd2ac46397ccbffeb60970c3aeb98063aed79fd51de1577c83d3c50e54c86b6ec3bb3cf429629deedebfbafac12d57eda41d6592114b6172a
     HEAD_REF master
     PATCHES
         001-fix-windows-build.patch
@@ -38,7 +44,14 @@ vcpkg_from_github(
         003-fix-d3d11.patch
         004-deps.patch
         005-bsd-support.patch
-        006-fix-x11-include-dirs.patch
+        # https://github.com/google/dawn/commit/fa4a364b9ff215f9fe95823ec89ccc922cf7b254 added a tint writer for the null backend.
+        # When building dawn[core] which only enables dawns null backend and tints null writer, src/dawn/native/ShaderModule.cpp failed to compile
+        # as it was expecting a transitive include of tint::Bindings from a shader language writer.
+        007-fix-tint-null-only-writer.patch
+        008-wrong-dxcapi-include.patch
+        009-fix-tint-install.patch
+        010-fix-glslang.patch
+		011-fix-dxc.patch
 )
 
 # vcpkg_find_acquire_program(PYTHON3)
@@ -51,6 +64,7 @@ vcpkg_from_github(
 #
 
 function(checkout_in_path PATH URL REF)
+    cmake_parse_arguments(EXTERNAL "" "" "PATCHES" ${ARGN})
     if(EXISTS "${PATH}")
         file(GLOB_RECURSE subdirectory_children "${CURRENT_PACKAGES_DIR}/include/${directory_child}/*")
         if(NOT "${subdirectory_children}" STREQUAL "")
@@ -64,6 +78,7 @@ function(checkout_in_path PATH URL REF)
         OUT_SOURCE_PATH DEP_SOURCE_PATH
         URL "${URL}"
         REF "${REF}"
+        PATCHES ${EXTERNAL_PATCHES}
     )
     file(RENAME "${DEP_SOURCE_PATH}" "${PATH}")
     file(REMOVE_RECURSE "${DEP_SOURCE_PATH}")
@@ -72,25 +87,34 @@ endfunction()
 checkout_in_path(
     "${SOURCE_PATH}/third_party/jinja2"
     "https://chromium.googlesource.com/chromium/src/third_party/jinja2"
-    "e2d024354e11cc6b041b0cff032d73f0c7e43a07"
+    "c3027d884967773057bf74b957e3fea87e5df4d7"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/markupsafe"
     "https://chromium.googlesource.com/chromium/src/third_party/markupsafe"
-    "0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794"
+    "4256084ae14175d38a3ff7d739dca83ae49ccec6"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-headers/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Headers"
-    "a8637796c28386c3cf3b4e8107020fbb52c46f3f"
+    "f88a2d766840fc825af1fc065977953ba1fa4a91"
 )
 
 checkout_in_path(
     "${SOURCE_PATH}/third_party/spirv-tools/src"
     "https://chromium.googlesource.com/external/github.com/KhronosGroup/SPIRV-Tools"
-    "f386417185be0601894b20d9ad000aceb73d898b"
+    "4972c69eb50255b314fc0925ca757c4417e6b6c0"
+    PATCHES
+        # Dawn sets SPIRV_WERROR to OFF when building SPIRV-Tools, but https://github.com/KhronosGroup/SPIRV-Tools/commit/337fdb6a284fe7f7e374a14271f8e20e579f3263 ignores that CMake variable and forces /WX
+        006-msvc-spirv-tools-disable-warnaserror.patch
+)
+
+checkout_in_path(
+    "${SOURCE_PATH}/third_party/webgpu-headers/src"
+    "https://chromium.googlesource.com/external/github.com/webgpu-native/webgpu-headers"
+    "b2b04dde36a941434c88ccff7a730d7e464d638c"
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -101,47 +125,33 @@ else()
     set(DAWN_BUILD_MONOLITHIC_LIBRARY "SHARED")
 endif()
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        d3d11   DAWN_ENABLE_D3D11
+        d3d12   DAWN_ENABLE_D3D12
+        gl      DAWN_ENABLE_DESKTOP_GL
+        gles    DAWN_ENABLE_OPENGLES
+        metal   DAWN_ENABLE_METAL
+        vulkan  DAWN_ENABLE_VULKAN
+        wayland DAWN_USE_WAYLAND
+        x11     DAWN_USE_X11
+        tint    TINT_BUILD_CMD_TOOLS
+)
+
+set(DAWN_USE_BUILT_DXC OFF)
+if(DAWN_ENABLE_D3D11 OR DAWN_ENABLE_D3D12)
+	set(DAWN_USE_BUILT_DXC ON)
+endif()
+
 # DAWN_BUILD_MONOLITHIC_LIBRARY SHARED/STATIC requires BUILD_SHARED_LIBS=OFF
 set(VCPKG_LIBRARY_LINKAGE_BACKUP ${VCPKG_LIBRARY_LINKAGE})
 set(VCPKG_LIBRARY_LINKAGE static)
 
-set(DAWN_ENABLE_NULL ON)
-set(DAWN_ENABLE_D3D11 OFF)
-if("d3d11" IN_LIST FEATURES)
-    set(DAWN_ENABLE_D3D11 ON)
-endif()
-set(DAWN_ENABLE_D3D12 OFF)
-if("d3d12" IN_LIST FEATURES)
-    set(DAWN_ENABLE_D3D12 ON)
-endif()
-set(DAWN_ENABLE_DESKTOP_GL OFF)
-if("gl" IN_LIST FEATURES)
-    set(DAWN_ENABLE_DESKTOP_GL ON)
-endif()
-set(DAWN_ENABLE_OPENGLES OFF)
-if("gles" IN_LIST FEATURES)
-    set(DAWN_ENABLE_OPENGLES ON)
-endif()
-set(DAWN_ENABLE_METAL OFF)
-if("metal" IN_LIST FEATURES)
-    set(DAWN_ENABLE_METAL ON)
-endif()
-set(DAWN_ENABLE_VULKAN OFF)
-if("vulkan" IN_LIST FEATURES)
-    set(DAWN_ENABLE_VULKAN ON)
-endif()
-set(DAWN_USE_WAYLAND OFF)
-if("wayland" IN_LIST FEATURES)
-    set(DAWN_USE_WAYLAND ON)
-endif()
-set(DAWN_USE_X11 OFF)
-if("x11" IN_LIST FEATURES)
-    set(DAWN_USE_X11 ON)
-endif()
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DPython3_EXECUTABLE="${PYTHON3}"
         -DDAWN_BUILD_MONOLITHIC_LIBRARY=${DAWN_BUILD_MONOLITHIC_LIBRARY}
         -DDAWN_ENABLE_INSTALL=ON
@@ -151,20 +161,19 @@ vcpkg_cmake_configure(
         -DDAWN_BUILD_TESTS=OFF
         -DTINT_BUILD_TESTS=OFF
         -DTINT_ENABLE_INSTALL=OFF
-        -DTINT_BUILD_CMD_TOOLS=OFF
-        -DDAWN_ENABLE_NULL=${DAWN_ENABLE_NULL}
-        -DDAWN_ENABLE_D3D11=${DAWN_ENABLE_D3D11}
-        -DDAWN_ENABLE_D3D12=${DAWN_ENABLE_D3D12}
-        -DDAWN_ENABLE_DESKTOP_GL=${DAWN_ENABLE_DESKTOP_GL}
-        -DDAWN_ENABLE_OPENGLES=${DAWN_ENABLE_OPENGLES}
-        -DDAWN_ENABLE_METAL=${DAWN_ENABLE_METAL}
-        -DDAWN_ENABLE_VULKAN=${DAWN_ENABLE_VULKAN}
-        -DDAWN_USE_WAYLAND=${DAWN_USE_WAYLAND}
-        -DDAWN_USE_X11=${DAWN_USE_X11}
+		-DTINT_BUILD_WGSL_READER=ON
+		-DTINT_BUILD_WGSL_WRITER=ON
+		-DTINT_BUILD_SPV_READER=OFF
+		-DTINT_BUILD_SPV_WRITER=OFF
+        -DDAWN_ENABLE_NULL=ON
+		-DDAWN_USE_BUILT_DXC=${DAWN_USE_BUILT_DXC}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Dawn)
+
+# Restore the original library linkage
+set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
 
 list(APPEND DAWN_ABSL_REQUIRES
     absl_flat_hash_set
@@ -172,7 +181,6 @@ list(APPEND DAWN_ABSL_REQUIRES
     absl_inlined_vector
     absl_no_destructor
     absl_overload
-    absl_str_format_internal
     absl_strings
     absl_span
     absl_string_view
@@ -204,8 +212,9 @@ if (EXISTS "${CURRENT_PACKAGES_DIR}/lib")
 endif()
 vcpkg_fixup_pkgconfig()
 
-# Restore the original library linkage
-set(VCPKG_LIBRARY_LINKAGE ${VCPKG_LIBRARY_LINKAGE_BACKUP})
+if(TINT_BUILD_CMD_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES tint AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

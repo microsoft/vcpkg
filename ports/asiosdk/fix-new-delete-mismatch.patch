@@ -1,0 +1,13 @@
+diff --git a/host/pc/asiolist.cpp b/host/pc/asiolist.cpp
+index 320a98a..4bdc789 100644
+--- a/host/pc/asiolist.cpp
++++ b/host/pc/asiolist.cpp
+@@ -154,7 +154,7 @@ static void deleteDrvStruct (LPASIODRVSTRUCT lpdrv)
+ 			iasio = (IASIO *)lpdrv->asiodrv;
+ 			iasio->Release();
+ 		}
+-		delete lpdrv;
++		delete[] lpdrv;
+ 	}
+ }
+ 

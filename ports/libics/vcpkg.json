@@ -1,6 +1,6 @@
 {
   "name": "libics",
-  "version": "1.6.8",
+  "version": "1.7.0",
   "description": "Reference library for ICS (Image Cytometry Standard), an open standard for writing images of any dimensionality and data type to file, together with associated information regarding the recording equipment or recorded subject.",
   "homepage": "https://github.com/svi-opensource/libics",
   "dependencies": [

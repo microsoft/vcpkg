@@ -1,7 +1,6 @@
 {
   "name": "libxcvt",
-  "version": "0.1.2",
-  "port-version": 1,
+  "version": "0.1.3",
   "description": "A library providing a standalone version of the X server implementation of the VESA CVT standard timing modelines generator.",
   "homepage": "https://gitlab.freedesktop.org/xorg/lib/libxcvt",
   "license": null,

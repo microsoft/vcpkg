@@ -2,14 +2,15 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alpaka-group/alpaka
     REF ${VERSION}
-    SHA512 ef161c43cafaa4e6cfa8944855dbdafe260d97b23e9275716608301ffffc0f088a3f8bf2f01dc34c38639cf40fe4266e4f48126684ba824a6db6ef3c13fd873f
+    SHA512 ea1a99ee5d59effc91208f63e6d7b76af2070c58ecfb611d39ac653e770b9c947122ea6e45acdd898bc53a19f273839426c2e14b32483b5605162b92f4a4c044
     HEAD_REF develop
 )
 set(VCPKG_BUILD_TYPE release)
 
 vcpkg_cmake_configure(
-    SOURCE_PATH "${SOURCE_PATH}")
-    
+    SOURCE_PATH "${SOURCE_PATH}"
+)
+
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/alpaka")

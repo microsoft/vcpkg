@@ -1,12 +1,15 @@
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.gnome.org
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO GNOME/glib-networking
-    REF "${VERSION}"
-    SHA512 "35b6b05afab29da4f4d54f559ded3cc6a16376f188afdb72689b7d9bcba71b9963317bcbd1101327137ae31ee51e25438f9bfa267e23d6076706a64c3594cbb5"
-    HEAD_REF main
+
+string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR "${VERSION}")
+vcpkg_download_distfile(ARCHIVE
+    URLS
+        "https://download.gnome.org/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+        "https://www.mirrorservice.org/sites/ftp.gnome.org/pub/GNOME/sources/${PORT}/${VERSION_MAJOR_MINOR}/${PORT}-${VERSION}.tar.xz"
+    FILENAME "GNOME-${PORT}-${VERSION}.tar.xz"
+    SHA512 0f1b3807635fcae143ad1a89731a8f7e1b6f4b8f6cc2dd1b7b5eea3d77c796ee5a55ea330901bfd22927d07795f39450d30f0f1029595761e659f96a8415c263
 )
+
+vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
 
 vcpkg_list(SET FEATURE_OPTIONS)
 if (gnutls IN_LIST FEATURES)

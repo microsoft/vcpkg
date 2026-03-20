@@ -1,0 +1,27 @@
+diff --git a/ecaludp/CMakeLists.txt b/ecaludp/CMakeLists.txt
+index c6fc47a..df7073d 100644
+--- a/ecaludp/CMakeLists.txt
++++ b/ecaludp/CMakeLists.txt
+@@ -26,7 +26,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+ 
+ find_package(asio    REQUIRED)
+-find_package(recycle REQUIRED)
++
++find_path(RECYCLE_INCLUDE_DIRS "recycle/no_locking_policy.hpp")
+ 
+ message(STATUS "ECALUDP_ENABLE_NPCAP: ${ECALUDP_ENABLE_NPCAP}")
+ if(ECALUDP_ENABLE_NPCAP)
+@@ -99,11 +100,11 @@ target_link_libraries(${PROJECT_NAME}
+     PRIVATE
+         # Link header-only libs (recycle) as described in this workaround:
+         # https://gitlab.kitware.com/cmake/cmake/-/issues/15415#note_633938
+-        $<BUILD_INTERFACE:steinwurf::recycle>
+         $<$<BOOL:${WIN32}>:ws2_32>
+         $<$<BOOL:${WIN32}>:wsock32>
+         $<$<BOOL:${ECALUDP_ENABLE_NPCAP}>:udpcap::udpcap>
+ )
++target_include_directories(${PROJECT_NAME} PRIVATE ${RECYCLE_INCLUDE_DIRS})
+ 
+ target_compile_definitions(${PROJECT_NAME}
+     PRIVATE

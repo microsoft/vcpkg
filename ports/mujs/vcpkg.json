@@ -1,8 +1,8 @@
 {
   "name": "mujs",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "description": "An embeddable Javascript interpreter in C",
-  "homepage": "https://github.com/ccxvii/mujs",
+  "homepage": "https://codeberg.org/ccxvii/mujs",
   "license": "ISC",
   "dependencies": [
     {

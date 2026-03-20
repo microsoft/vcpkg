@@ -1,0 +1,4 @@
+anyxx provides CMake targets:
+
+  find_package(anyxx CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE bit_factory::anyxx)

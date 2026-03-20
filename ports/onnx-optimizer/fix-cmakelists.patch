@@ -2,17 +2,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 0063385..f1522bc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -10,6 +10,15 @@ project(onnx_optimizer C CXX)
+@@ -10,6 +10,10 @@ project(onnx_optimizer C CXX)
  
  set(CMAKE_CXX_STANDARD 17)
  
-+# Add MSVC RunTime Flag
 +function(add_msvc_runtime_flag lib)
-+  if(${ONNX_USE_MSVC_STATIC_RUNTIME})
-+    target_compile_options(${lib} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/MT> $<$<CONFIG:Debug>:/MTd>)    
-+  else()
-+    target_compile_options(${lib} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/MD> $<$<CONFIG:Debug>:/MDd>)
-+  endif()
++    # Dummy function to mock embedded ONNX project build. Let CMake decide /MT, /MD, /MTd, /MDd, etc.
 +endfunction()
 +
  set(CMAKE_POSITION_INDEPENDENT_CODE ON)

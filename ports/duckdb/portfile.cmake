@@ -2,7 +2,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 4965071888bfd791ddc81ed9eb53cedcd0248b159e6db3492bf5d17557b0f7516aed0840408ff46a06e9a0989a42d7b2a7452fdaf619c8ca44de43e5d1c338b8
+        SHA512 2287ff1af67808e495ca4da527bd54e9c9f2044ed1bb4749cdaeee7993a7b0edca73cccd476a607442a4bf313b43e2358bf6ca28035e2dbe52b16847f6e5b30a
         HEAD_REF main
     PATCHES
         library-linkage.diff
@@ -22,8 +22,8 @@ if("excel" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_EXCEL_SOURCE_PATH
         REPO duckdb/duckdb-excel
-        REF 8504be9ec8183e4082141f9359b53a64d3a440b7
-        SHA512 295bfe67c2902c09b584bee623dee7db69aad272a00e6bd4038ec65e2d8a977d1ace7261af8f67863c2fae709acc414e290e40f0bad43bae679c0a8639a0d6b5
+        REF 9421a2d75bd7544336caa73e5f9e6063cc7f6992
+        SHA512 0532844ba531d70e78c499ce7caefd772da4b013459676da1b552b20c3ac674af979b1958d84566147580cd39cf97ba4fefc010bcfb5fcb70628deaf2e95dbb0
         HEAD_REF main
         PATCHES
             library-linkage-excel.diff
@@ -41,8 +41,8 @@ if("httpfs" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_HTTPFS_SOURCE_PATH
         REPO duckdb/duckdb_httpfs
-        REF 0989823e43554e8a00b31959a853e29ab9bd07f9
-        SHA512 71461d522aa5338df81931f937ed538b453b274d22e91ad7e0f1a92e4437a29cc869a0f5be3bd5a9abf0045dfd4681a787923ee32374be471483909c0a60a21f
+        REF 8ff2283fb14b443e673c58e2e9621e3c3215d794
+        SHA512 df2a61667b1fcf0e7a1d455a1805231c61362a135e7a93079b47032246b502b48aafcbae4aeee7b29145c25e3b98afa5ef6e3076ffcb71562acfbae6e2fbc087
         HEAD_REF main
         PATCHES
             library-linkage-httpfs.diff
@@ -51,7 +51,7 @@ if("httpfs" IN_LIST FEATURES)
     file(WRITE "${SOURCE_PATH}/.github/config/extensions/httpfs.cmake" "
 duckdb_extension_load(httpfs
     SOURCE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}\"
-    INCLUDE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}/extension/httpfs/include\"
+    INCLUDE_DIR \"${DUCKDB_HTTPFS_SOURCE_PATH}/src/include\"
 )
 ")
 endif()
@@ -60,8 +60,8 @@ if("iceberg" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_ICEBERG_SOURCE_PATH
         REPO duckdb/duckdb-iceberg
-        REF 6b636bff44aeeccf6f6d5b54de6edf280274beea
-        SHA512 f8ce593117dd5423fd5445b6fa6c1f3b11ee7c8a2fdb988c3c0208a59d5ed980b941116866f7cb1d0597662e98c03687da071cbc5617c71086eb112621e31748
+        REF 6cec0127c340bc7e83c7e6b2390e27cb555a9d0a
+        SHA512 d49f7e9f0492111ac81f0c34db84ca675c6a39fb66f257d080953a53922243d6cff09ee1c1dbb0f5fefc911b936ed8b03df2b30431cd6e2319c4cbefcf8690b6
         HEAD_REF main
     )
     list(APPEND extension_dirs "${DUCKDB_ICEBERG_SOURCE_PATH}")
@@ -116,6 +116,7 @@ vcpkg_cmake_configure(
             "-DBUILD_EXTENSIONS=${BUILD_EXTENSIONS}"
             -DBUILD_SHELL=FALSE
             -DBUILD_UNITTESTS=OFF
+            -DCMAKE_CXX_STANDARD=17
             -DCMAKE_JOB_POOL_LINK=console # Serialize linking to avoid OOM
             -DENABLE_EXTENSION_AUTOINSTALL=1
             -DENABLE_EXTENSION_AUTOLOADING=1
@@ -157,7 +158,7 @@ foreach(maybe_directory IN LISTS extension_dirs third_party_files)
 endforeach()
 vcpkg_install_copyright(
     COMMENT [[
-Duckdb contains copyies of many third-party packages which are subject to
+Duckdb contains copies of many third-party packages which are subject to
 separate license terms.
 ]]
     FILE_LIST

@@ -1,8 +1,8 @@
 diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 6e295d68fb..54ab225ba7 100644
+index 9b2c2f845d..e4357d98a2 100644
 --- a/src/libmongoc/CMakeLists.txt
 +++ b/src/libmongoc/CMakeLists.txt
-@@ -474,7 +474,7 @@ if (NOT WIN32)
+@@ -449,7 +449,7 @@ if (NOT WIN32)
     mongoc_get_accept_args (MONGOC_SOCKET_ARG2 MONGOC_SOCKET_ARG3)
  endif ()
  

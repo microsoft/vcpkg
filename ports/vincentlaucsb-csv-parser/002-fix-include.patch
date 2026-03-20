@@ -1,8 +1,8 @@
 diff --git a/include/internal/basic_csv_parser.hpp b/include/internal/basic_csv_parser.hpp
-index d76b2d9..8dd0110 100644
+index 16c8666..7b4221e 100644
 --- a/include/internal/basic_csv_parser.hpp
 +++ b/include/internal/basic_csv_parser.hpp
-@@ -15,7 +15,7 @@
+@@ -12,7 +12,7 @@
  #include <thread>
  #include <vector>
  
@@ -12,29 +12,23 @@ index d76b2d9..8dd0110 100644
  #include "common.hpp"
  #include "csv_format.hpp"
 diff --git a/include/internal/common.hpp b/include/internal/common.hpp
-index c132bfb..dff4d03 100644
+index 7f8d737..f0ead1a 100644
 --- a/include/internal/common.hpp
 +++ b/include/internal/common.hpp
-@@ -28,12 +28,12 @@
- #pragma once
- #include <type_traits>
- 
+@@ -92,7 +92,7 @@ namespace csv {
+       */
+     using string_view = std::string_view;
+ #else
 -#include "../external/string_view.hpp"
 +#include "nonstd/string_view.hpp"
- 
-   // If there is another version of Hedley, then the newer one 
-   // takes precedence.
-   // See: https://github.com/nemequ/hedley
--#include "../external/hedley.h"
-+#include "hedley.h"
- 
- namespace csv {
- #ifdef _MSC_VER
+      /** @typedef string_view
+       *  The string_view class used by this library.
+       */
 diff --git a/include/internal/csv_reader.hpp b/include/internal/csv_reader.hpp
-index 1cdf6e0..3077395 100644
+index 02e9164..2e93f12 100644
 --- a/include/internal/csv_reader.hpp
 +++ b/include/internal/csv_reader.hpp
-@@ -15,7 +15,7 @@
+@@ -16,7 +16,7 @@
  #include <string>
  #include <vector>
  

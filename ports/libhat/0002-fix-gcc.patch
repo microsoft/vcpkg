@@ -1,9 +1,9 @@
 diff --git a/include/libhat/compressed_pair.hpp b/include/libhat/compressed_pair.hpp
-index 7bf839a..1b2be6c 100644
+index 39cb8ea..341f9e3 100644
 --- a/include/libhat/compressed_pair.hpp
 +++ b/include/libhat/compressed_pair.hpp
-@@ -4,6 +4,7 @@
-     #include <tuple>
+@@ -5,6 +5,7 @@
+     #include <utility>
  #endif
  
 +#include <cstddef>
@@ -11,10 +11,15 @@ index 7bf839a..1b2be6c 100644
  #include "type_traits.hpp"
  
 diff --git a/include/libhat/strconv.hpp b/include/libhat/strconv.hpp
-index f23d096..ad527fb 100644
+index bbd786f..ad527fb 100644
 --- a/include/libhat/strconv.hpp
 +++ b/include/libhat/strconv.hpp
-@@ -5,6 +5,7 @@
+@@ -1,11 +1,11 @@
+ #pragma once
+ 
+ #ifndef LIBHAT_MODULE
+-    #include <cstdint>
+     #include <string_view>
      #include <type_traits>
  #endif
  

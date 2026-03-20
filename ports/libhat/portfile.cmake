@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BasedInc/libhat
     REF "v${VERSION}"
-    SHA512 07bdca0a84fc48d6c3d941136459d73e7c4f09c398c5a787e307dd01ee0124fc56d2ba827e49b342611b754816408d21109c6f17bede62dcc231a1a2e3c1d225
+    SHA512 68ce4d66f92553eb0f3e0f26c0274bc048d735936a68abf2fcb2ce7766dcdab73fb5dc0d8bbf249e5b36bd7a2eb2db06878eaffcd16d4bcac839953506704c8d
     HEAD_REF master
     PATCHES
         0001-CMakeLists.patch

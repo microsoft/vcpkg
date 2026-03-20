@@ -1,9 +1,9 @@
 diff --git a/pffft.c b/pffft.c
-index d12f572..7cc0546 100644
+index ad905fd..df6ed31 100644
 --- a/pffft.c
 +++ b/pffft.c
-@@ -173,7 +173,11 @@ typedef float32x4_t v4sf;
- #  define VALIGNED(ptr) ((((long long)(ptr)) & 0x3) == 0)
+@@ -192,7 +192,11 @@ typedef float32x4_t v4sf;
+ #  define VALIGNED(ptr) ((((size_t)(ptr)) & 0x3) == 0)
  #else
  #  if !defined(PFFFT_SIMD_DISABLE)
 -#    warning "building with simd disabled !\n";

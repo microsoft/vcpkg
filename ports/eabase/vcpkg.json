@@ -1,8 +1,9 @@
 {
   "name": "eabase",
-  "version-date": "2024-08-18",
+  "version-date": "2025-08-01",
   "description": "Electronic Arts Base. EABase is a small set of header files that define platform-independent data types and macros.",
   "homepage": "https://github.com/electronicarts/EABase",
+  "license": "BSD-3-Clause",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

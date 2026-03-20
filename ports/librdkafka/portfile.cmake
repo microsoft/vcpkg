@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO confluentinc/librdkafka
     REF "v${VERSION}"
-    SHA512 2fe6754e7d2a846f24be39d11bbfbdcc694873e7b9e6fabbe34d150bdd1aef3778360f5c5ae3973374e9e73a6e542468fa58d28aa1fac3289d4dacfdca1c1c1c
+    SHA512 136d305bf8416f229af2d84154e19bbf59bfdb57a02c12ee39fa7078c986154debdcf5cdae2f32b2b2f4b3f081e99a67c9de96b47248e1ce761590a8dfc69530
     HEAD_REF master
     PATCHES
         lz4.patch

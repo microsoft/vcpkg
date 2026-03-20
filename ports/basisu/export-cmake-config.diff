@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d143ecf..31c8c09 100644
+index c3f8e28..77bfe37 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -169,6 +169,10 @@ endif()
+@@ -295,6 +295,10 @@ endif()
  
  # Create the static library
  add_library(basisu_encoder STATIC ${ENCODER_LIB_SRC_LIST})
@@ -13,11 +13,18 @@ index d143ecf..31c8c09 100644
  
  # Create the basisu executable and link against the static library
  add_executable(basisu basisu_tool.cpp)
-@@ -256,3 +260,31 @@ if (MSVC)
-         RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-     )	
+@@ -445,6 +449,7 @@ endif()
+ if (NOT EMSCRIPTEN)
+     if (UNIX AND NOT BASISU_BUILD_WASM)
+         if (CMAKE_BUILD_TYPE STREQUAL Release)
++        elseif(0)
+             if (APPLE)
+                 add_custom_command(TARGET basisu POST_BUILD COMMAND strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu)
+                 #message("strip command: strip -X -x ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/basisu")
+@@ -496,6 +501,34 @@ if (MSVC)
+     endif()
  endif()
-+
+ 
 +# Target Installation
 +install(TARGETS basisu_encoder basisu EXPORT basisu-targets)
 +install(DIRECTORY "./transcoder" DESTINATION "include/basisu/"
@@ -45,6 +52,10 @@ index d143ecf..31c8c09 100644
 +    EXPORT basisu-targets
 +    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/basisu
 +    NAMESPACE basisu::)
++
+ # ------------------------------------------------------------
+ # Build WASM WASI executables (single or multi-threaded)
+ # ------------------------------------------------------------
 diff --git a/basisu-config.cmake.in b/basisu-config.cmake.in
 new file mode 100644
 index 0000000..15c0d7e

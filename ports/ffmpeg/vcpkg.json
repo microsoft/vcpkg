@@ -1,6 +1,6 @@
 {
   "name": "ffmpeg",
-  "version": "7.1.2",
+  "version": "8.0.1",
   "port-version": 2,
   "description": [
     "A library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.",
@@ -9,6 +9,10 @@
   "homepage": "https://ffmpeg.org",
   "license": null,
   "dependencies": [
+    {
+      "name": "ffmpeg-bin2c",
+      "host": true
+    },
     {
       "name": "vcpkg-cmake-get-vars",
       "host": true
@@ -214,8 +218,7 @@
           "default-features": false,
           "features": [
             "all",
-            "gpl",
-            "postproc"
+            "gpl"
           ]
         },
         {
@@ -531,7 +534,7 @@
       ]
     },
     "openssl": {
-      "description": "Needed for https support if gnutls, libtls or mbedtls is not used",
+      "description": "Use OpenSSL for TLS support",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -549,8 +552,14 @@
         "opus"
       ]
     },
-    "postproc": {
-      "description": "Build the postproc library",
+    "qsv": {
+      "description": "Intel QSV Codec",
+      "dependencies": [
+        "mfx-dispatch"
+      ]
+    },
+    "rubberband": {
+      "description": "Enable rubberband support",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -558,13 +567,8 @@
           "features": [
             "gpl"
           ]
-        }
-      ]
-    },
-    "qsv": {
-      "description": "Intel QSV Codec",
-      "dependencies": [
-        "mfx-dispatch"
+        },
+        "rubberband"
       ]
     },
     "sdl2": {
@@ -729,6 +733,12 @@
       "description": "zlib support",
       "dependencies": [
         "zlib"
+      ]
+    },
+    "zmq": {
+      "description": "Enable ZeroMQ support",
+      "dependencies": [
+        "zeromq"
       ]
     }
   }
