@@ -8,6 +8,7 @@ vcpkg_from_github(
         0001-dependency-and-targets.patch
         0003-suppress-fmt-warning.patch
         disable-werror.diff
+        mingw-fix.patch
 )
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/0002-unofficial-export.cmake" DESTINATION "${SOURCE_PATH}/sdk/")
 
