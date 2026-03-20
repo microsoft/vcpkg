@@ -1,6 +1,7 @@
 {
   "name": "kdgpu",
   "version": "0.10.0",
+  "port-version": 1,
   "description": "KDGPU Library - C++ Vulkan wrapper for GPU programming",
   "homepage": "https://github.com/KDAB/kdgpu",
   "license": "MIT",

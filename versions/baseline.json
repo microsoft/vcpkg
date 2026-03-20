@@ -4218,7 +4218,7 @@
     },
     "kdgpu": {
       "baseline": "0.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kdiagram": {
       "baseline": "2.8.0",
