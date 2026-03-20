@@ -1,0 +1,29 @@
+--- a/build/CompilerAndLinker.cmake
++++ b/build/CompilerAndLinker.cmake
+@@ -33,6 +33,8 @@
+ elseif(NOT (DEFINED DIRECTX_ARCH))
+     if(CMAKE_SYSTEM_PROCESSOR MATCHES "[Aa][Rr][Mm]64|aarch64|arm64")
+         set(DIRECTX_ARCH arm64)
++    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "[Pp][Pp][Cc]64|powerpc64|powerpc64le")
++        set(DIRECTX_ARCH powerpc64)
+     else()
+         set(DIRECTX_ARCH x64)
+     endif()
+@@ -41,6 +43,8 @@
+ #--- Determines host architecture
+ if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "[Aa][Rr][Mm]64|aarch64|arm64")
+     set(DIRECTX_HOST_ARCH arm64)
++elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "[Pp][Pp][Cc]64|powerpc64|powerpc64le")
++    set(DIRECTX_HOST_ARCH powerpc64)
+ else()
+     set(DIRECTX_HOST_ARCH x64)
+ endif()
+@@ -85,6 +89,8 @@
+     list(APPEND COMPILER_SWITCHES $<IF:$<CXX_COMPILER_ID:MSVC>,/favor:AMD64 /arch:AVX2,-march=znver2>)
+ elseif(XBOX_CONSOLE_TARGET MATCHES "xboxone|durango")
+     list(APPEND COMPILER_SWITCHES  $<IF:$<CXX_COMPILER_ID:MSVC>,/favor:AMD64 /arch:AVX,-march=btver2>)
++elseif(${DIRECTX_ARCH} MATCHES "^powerpc64")
++    list(APPEND COMPILER_SWITCHES -m64 -mcpu=power9 -maltivec -fsigned-char -DNO_WARN_X86_INTRINSICS)
+ elseif(NOT (${DIRECTX_ARCH} MATCHES "^arm"))
+     if((${DIRECTX_ARCH} STREQUAL "x86") OR (CMAKE_SIZEOF_VOID_P EQUAL 4))
+         set(ARCH_SSE2 $<$<CXX_COMPILER_ID:MSVC,Intel>:/arch:SSE2> $<$<NOT:$<CXX_COMPILER_ID:MSVC,Intel>>:-msse2>)

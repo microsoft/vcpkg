@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF ${DIRECTXTEX_TAG}
     SHA512 8adca6e50dc5da91d2be0c9a644a3372f0c134ec80d71260d72dca79b2422d5eccae844b1b5d0eb4f335548730eb3b1faad4ba7e228f865c7688b60915e70efc
     HEAD_REF main
+    PATCHES
+        no-sse.patch
 )
 
 vcpkg_check_features(
