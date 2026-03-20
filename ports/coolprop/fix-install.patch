@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0fa3a454..56a2c8fb 100644
+index 0fa3a454..1a34674b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -301,9 +301,6 @@ list(REMOVE_ITEM APP_SOURCES
@@ -34,7 +34,15 @@ index 0fa3a454..56a2c8fb 100644
  list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
  list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
  
-@@ -596,11 +593,12 @@ if(COOLPROP_OBJECT_LIBRARY
+@@ -362,6 +359,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+                       "${CMAKE_CURRENT_SOURCE_DIR}/dev/cmake/Modules/")
+ 
+ message(STATUS "Looking for Python")
++find_program(Python_EXECUTABLE NAMES python3 python REQUIRED)
+ find_package(Python REQUIRED COMPONENTS Interpreter)
+ set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
+ 
+@@ -596,11 +594,12 @@ if(COOLPROP_OBJECT_LIBRARY
      endif(MSVC)
      install(
        TARGETS ${LIB_NAME}
@@ -50,7 +58,7 @@ index 0fa3a454..56a2c8fb 100644
    elseif(COOLPROP_SHARED_LIBRARY)
      list(APPEND APP_SOURCES
           "${CMAKE_CURRENT_SOURCE_DIR}/${COOLPROP_LIBRARY_SOURCE}")
-@@ -615,10 +613,12 @@ if(COOLPROP_OBJECT_LIBRARY
+@@ -615,10 +614,12 @@ if(COOLPROP_OBJECT_LIBRARY
  	
      install(
        TARGETS ${LIB_NAME}
@@ -65,7 +73,7 @@ index 0fa3a454..56a2c8fb 100644
      set_property(
        TARGET ${LIB_NAME}
        APPEND_STRING
-@@ -960,7 +960,9 @@ if(COOLPROP_EES_MODULE)
+@@ -960,7 +961,9 @@ if(COOLPROP_EES_MODULE)
      VERBATIM)
    # install the generated library and the other files
    install(TARGETS COOLPROP_EES

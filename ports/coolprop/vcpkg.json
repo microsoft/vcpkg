@@ -9,7 +9,6 @@
     "fmt",
     "if97",
     "msgpack",
-    "python3",
     "rapidjson",
     "refprop-headers",
     {
