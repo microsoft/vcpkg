@@ -157,10 +157,11 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     endif()
 endif()
 
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_NSPR MODULES nspr CFLAGS LIBS USE_MSVC_SYNTAX_ON_WINDOWS)
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE MODULES sqlite3 CFLAGS LIBS USE_MSVC_SYNTAX_ON_WINDOWS)
-x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib CFLAGS LIBS USE_MSVC_SYNTAX_ON_WINDOWS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_NSPR MODULES nspr CFLAGS LIBS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_SQLITE MODULES sqlite3 CFLAGS LIBS)
+x_vcpkg_pkgconfig_get_modules(PREFIX PC_ZLIB MODULES zlib CFLAGS LIBS)
 # Produce absolute include dirs and library dirs filepaths.
+# Manually managing MSVC syntax because gyp converts foo.lib as if it were a relative path.
 foreach(key IN ITEMS NSPR_CFLAGS_RELEASE SQLITE_CFLAGS_RELEASE ZLIB_CFLAGS_RELEASE)
     separate_arguments(cflags UNIX_COMMAND "${PC_${key}}")
     string(REPLACE "CFLAGS_RELEASE" "INCLUDE_DIRS" out_var "${key}")
@@ -177,7 +178,29 @@ foreach(key IN ITEMS NSPR_CFLAGS_RELEASE SQLITE_CFLAGS_RELEASE ZLIB_CFLAGS_RELEA
     endforeach()
     list(JOIN ${key}_INCLUDE_DIRS ":" ${key}_INCLUDE_DIRS)
 endforeach()
-
+foreach(out_var IN ITEMS NSPR_LIBS_RELEASE NSPR_LIBS_DEBUG SQLITE_LIBS_RELEASE SQLITE_LIBS_DEBUG ZLIB_LIBS_RELEASE ZLIB_LIBS_DEBUG)
+    separate_arguments(libs UNIX_COMMAND "${PC_${out_var}}")
+    set(${out_var} "")
+    foreach(item IN LISTS libs)
+        if(item MATCHES "^-L(.*)")
+            cmake_path(SET dir NORMALIZE "${CMAKE_MATCH_1}")
+            if(CMAKE_HOST_WIN32)
+                cygpath_u(dir "${dir}")
+            endif()
+            if(VCPKG_DETECTED_MSVC)
+                string(APPEND ${out_var} "-LIBPATH:${dir}")
+                string(APPEND ${out_var} " -LIBPATH:${dir}")
+            else()
+                string(APPEND ${out_var} "-L${dir}")
+                string(APPEND ${out_var} " -L${dir}")
+            endif()
+        elseif(item MATCHES "^-l(.*)")
+            string(APPEND ${out_var} "${item}")
+            string(APPEND ${out_var} " ${item}")
+        endif()
+    endforeach()
+    string(STRIP "${${out_var}}" ${out_var})
+endforeach()
 # configuring and building in an autotools-like environment, but using gyp-next and ninja
 vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -199,14 +222,14 @@ vcpkg_make_configure(
         "-Dsqlite_include_dirs=${SQLITE_INCLUDE_DIRS}"
         "-Dzlib_include_dirs=${ZLIB_INCLUDE_DIRS}"
     OPTIONS_DEBUG
-        "-Dnspr_libs=${PC_NSPR_LIBS_DEBUG}"
-        "-Dsqlite_libs=${PC_SQLITE_LIBS_DEBUG}"
-        "-Dzlib_libs=${PC_ZLIB_LIBS_DEBUG}"
+        "-Dnspr_libs=${NSPR_LIBS_DEBUG}"
+        "-Dsqlite_libs=${SQLITE_LIBS_DEBUG}"
+        "-Dzlib_libs=${ZLIB_LIBS_DEBUG}"
     OPTIONS_RELEASE
         --opt
-        "-Dnspr_libs=${PC_NSPR_LIBS_RELEASE}"
-        "-Dsqlite_libs=${PC_SQLITE_LIBS_RELEASE}"
-        "-Dzlib_libs=${PC_ZLIB_LIBS_RELEASE}"
+        "-Dnspr_libs=${NSPR_LIBS_RELEASE}"
+        "-Dsqlite_libs=${SQLITE_LIBS_RELEASE}"
+        "-Dzlib_libs=${ZLIB_LIBS_RELEASE}"
 )
 
 if(NOT VCPKG_BUILD_TYPE)
