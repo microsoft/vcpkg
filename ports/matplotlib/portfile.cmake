@@ -48,7 +48,7 @@ vcpkg_execute_required_process(
         --no-build-isolation
         --no-deps
         --config-settings=setup-args=-Dsystem-freetype=true
-        --config-settings=setup-args=-Dsystem-qhull=true
+        --config-settings=setup-args=-Dsystem-qhull=false
         "${SOURCE_PATH}"
         "--target=${CURRENT_PACKAGES_DIR}/${PYTHON3_SITE}"
     WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
