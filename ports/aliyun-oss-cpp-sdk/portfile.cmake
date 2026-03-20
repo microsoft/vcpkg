@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-dependency-and-targets.patch
         0003-suppress-fmt-warning.patch
+        0004-target-platform.patch
         disable-werror.diff
         mingw-fix.patch
 )

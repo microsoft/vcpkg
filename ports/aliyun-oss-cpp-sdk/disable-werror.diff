@@ -1,13 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 01177b3..43c5f45 100644
+index 5439a4b..22d7d9e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -116,6 +116,8 @@ else()
+@@ -110,6 +110,7 @@ else()
  	endif()
  endif()
  
 +list(REMOVE_ITEM SDK_COMPILER_FLAGS "-Werror")
-+
  
  if (BUILD_SHARED_LIBS)
  	set(STATIC_LIB_SUFFIX "-static")

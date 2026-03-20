@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 01177b3..5439a4b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,26 +34,20 @@ option(ENABLE_COVERAGE "Flag to enable/disable building code with -fprofile-arcs
+ option(ENABLE_RTTI "Flag to enable/disable building code with RTTI information" ON)
+ 
+ #Platform
+-if (CMAKE_CROSSCOMPILING)
+-	if (${CMAKE_SYSTEM_NAME} STREQUAL "Android")
+-		set(PLATFORM_ANDROID 1)
+-		set(TARGET_OS "ANDROID")
+-	else()
+-		message(FATAL_ERROR "Do not support target platform")
+-	endif()
++if(CMAKE_SYSTEM_NAME STREQUAL "Android")
++	set(PLATFORM_ANDROID 1)
++	set(TARGET_OS "ANDROID")
++elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
++	set(PLATFORM_APPLE 1)
++	set(TARGET_OS "APPLE")
++elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
++	set(PLATFORM_LINUX 1)
++	set(TARGET_OS "LINUX")
++elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
++	set(PLATFORM_WINDOWS 1)
++	set(TARGET_OS "WINDOWS")
+ else()
+-	if(CMAKE_HOST_APPLE)
+-		set(PLATFORM_APPLE 1)
+-		set(TARGET_OS "APPLE")
+-	elseif(CMAKE_HOST_UNIX)
+-		set(PLATFORM_LINUX 1)
+-		set(TARGET_OS "LINUX")
+-	elseif(CMAKE_HOST_WIN32)
+-		set(PLATFORM_WINDOWS 1)
+-		set(TARGET_OS "WINDOWS")
+-	else()
+-		message(FATAL_ERROR "Do not support unknown host OS")
+-	endif()
++	message(FATAL_ERROR "Do not support target platform: ${CMAKE_SYSTEM_NAME}")
+ endif()
+ 
+ message(STATUS "TARGET_OS: ${TARGET_OS}")
