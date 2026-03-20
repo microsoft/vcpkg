@@ -3,17 +3,24 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/CoolProp
     REF "v${VERSION}"
-    SHA512 ccd868cb297d86f054318acec4c3bf9f8ec07b54c320d5e887853c4190adefbd3b2d188e7453896656b5ad0e81b32d133fd0ce67bf58e647d58c96918bc993eb
+    SHA512 8cc3a62d345914e95c34ba6cf2fdf93a8fb15618f7702b973203e2e974abe99d1c12dade2197327c291a790b0e961afdc28d085cf318507f5a5b346b78a26407
     HEAD_REF master
     PATCHES
-        fmt-fix.patch
-        fix-builderror.patch
-        fix-dependency.patch
         fix-install.patch
 )
 vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "CACHE LIST" "CACHE STRING")
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/externals")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/Catch2")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/Eigen")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/ExcelAddinInstaller")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/FindMathematica")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/fmtlib")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/IF97")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/msgpack-c")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/multicomplex")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/pybind11")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/rapidjson")
+file(REMOVE_RECURSE "${SOURCE_PATH}/externals/REFPROP-headers")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/IF97.h" DESTINATION "${SOURCE_PATH}/externals/IF97")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/REFPROP_lib.h" DESTINATION "${SOURCE_PATH}/externals/REFPROP-headers/")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/rapidjson" DESTINATION "${SOURCE_PATH}/externals/rapidjson/include")

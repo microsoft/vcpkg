@@ -1,8 +1,40 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 619dfeb..f856613 100644
+index 0fa3a454..56a2c8fb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -543,21 +543,24 @@ if(COOLPROP_OBJECT_LIBRARY
+@@ -301,9 +301,6 @@ list(REMOVE_ITEM APP_SOURCES
+ list(REMOVE_ITEM APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/CoolPropLib.cpp")
+ 
+ set(APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
+-list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/Eigen")
+-list(APPEND APP_INCLUDE_DIRS
+-     "${CMAKE_CURRENT_SOURCE_DIR}/externals/msgpack-c/include")
+ list(APPEND APP_INCLUDE_DIRS
+      "${CMAKE_CURRENT_SOURCE_DIR}/externals/miniz-3.0.2")
+      list(APPEND APP_INCLUDE_DIRS
+@@ -314,16 +311,16 @@ list(APPEND APP_INCLUDE_DIRS
+      "${CMAKE_CURRENT_SOURCE_DIR}/dev")
+ list(APPEND APP_INCLUDE_DIRS
+      "${CMAKE_CURRENT_SOURCE_DIR}/boost_CoolProp")
+-list(APPEND APP_INCLUDE_DIRS
+-     "${CMAKE_CURRENT_SOURCE_DIR}/externals/fmtlib/include")
+-list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/fmtlib"
+-)# should be deprecated
+ 
+ if (MSVC)
+   # fmtlib requires that the utf-8 support be compiled in
+   # TODO: add the fmt target from fmtlib directly which does this 
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8 -D_CRT_SECURE_NO_WARNINGS")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /MP /utf-8 -D_CRT_SECURE_NO_WARNINGS")
+ endif()
++find_package(Eigen3 CONFIG REQUIRED)
++find_package(msgpack-cxx CONFIG REQUIRED)
++find_package(fmt CONFIG REQUIRED)
++link_libraries(Eigen3::Eigen msgpack-cxx fmt::fmt)
+ list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
+ 
+@@ -596,11 +593,12 @@ if(COOLPROP_OBJECT_LIBRARY
      endif(MSVC)
      install(
        TARGETS ${LIB_NAME}
@@ -18,10 +50,11 @@ index 619dfeb..f856613 100644
    elseif(COOLPROP_SHARED_LIBRARY)
      list(APPEND APP_SOURCES
           "${CMAKE_CURRENT_SOURCE_DIR}/${COOLPROP_LIBRARY_SOURCE}")
-     add_library(${LIB_NAME} SHARED ${APP_SOURCES} ${COOLPROP_LIBRARY_EXPORTS})
+@@ -615,10 +613,12 @@ if(COOLPROP_OBJECT_LIBRARY
+ 	
      install(
        TARGETS ${LIB_NAME}
--      DESTINATION shared_library/${CMAKE_SYSTEM_NAME}/${BITNESS}bit${CONVENTION}
+-      DESTINATION ${OUTPUT_FOLDER}
 +      RUNTIME DESTINATION bin
 +      LIBRARY DESTINATION lib
 +      ARCHIVE DESTINATION lib
@@ -32,7 +65,7 @@ index 619dfeb..f856613 100644
      set_property(
        TARGET ${LIB_NAME}
        APPEND_STRING
-@@ -889,7 +892,9 @@ if(COOLPROP_EES_MODULE)
+@@ -960,7 +960,9 @@ if(COOLPROP_EES_MODULE)
      VERBATIM)
    # install the generated library and the other files
    install(TARGETS COOLPROP_EES
