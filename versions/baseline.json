@@ -8452,6 +8452,10 @@
       "baseline": "1.2",
       "port-version": 0
     },
+    "quran": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "qwt": {
       "baseline": "6.3.0",
       "port-version": 1
