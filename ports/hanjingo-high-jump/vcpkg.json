@@ -17,58 +17,39 @@
     }
   ],
   "default-features": [
-    "ai",
-    "algo",
-    "base",
-    "compress",
-    "crypto",
-    "db",
-    "encoding",
-    "hardware",
-    "io",
-    "log",
-    "math",
-    "misc",
-    "net",
-    "os",
-    "sync",
-    "testing",
-    "time",
-    "types",
-    "util"
+    "base"
   ],
   "features": {
     "ai": {
       "description": "Enable ai module support",
       "dependencies": [
-        "libqrencode"
+        "libqrencode",
+        "quirc"
       ]
     },
     "algo": {
       "description": "Enable algo module support",
       "dependencies": [
         "behaviortree-cpp",
+        "bext-sml",
+        "boost-algorithm",
         "boost-multi-index",
         "boost-uuid"
       ]
     },
     "base": {
-      "description": "Base dependencies (testing, benchmarking, formatting)",
+      "description": "Base dependencies (required)",
       "dependencies": [
-        "benchmark",
-        "bext-sml",
-        "boost-filesystem",
-        "boost-stacktrace",
-        "fmt",
-        "gtest",
+        "abseil",
         "libiconv",
-        "nlohmann-json"
+        "libnice"
       ]
     },
     "compress": {
       "description": "Enable compress module support",
       "dependencies": [
-        "zlib"
+        "zlib",
+        "zstd"
       ]
     },
     "crypto": {
@@ -89,8 +70,11 @@
     "encoding": {
       "description": "Enable encoding module support",
       "dependencies": [
+        "boost-filesystem",
         "boost-property-tree",
         "flatbuffers",
+        "fmt",
+        "nlohmann-json",
         "protobuf",
         "pugixml",
         "yaml-cpp"
@@ -106,7 +90,8 @@
     "io": {
       "description": "Enable I/O module support",
       "dependencies": [
-        "boost-circular-buffer"
+        "boost-circular-buffer",
+        "boost-filesystem"
       ]
     },
     "log": {
@@ -118,6 +103,7 @@
     "math": {
       "description": "Enable math module support",
       "dependencies": [
+        "boost-math",
         "eigen3"
       ]
     },
@@ -133,6 +119,7 @@
       "dependencies": [
         "boost-asio",
         "boost-beast",
+        "boost-stacktrace",
         "concurrentqueue",
         "cpp-httplib",
         "zeromq"
@@ -157,7 +144,10 @@
       "description": "Enable testing module support",
       "dependencies": [
         "benchmark",
+        "bext-sml",
+        "boost-stacktrace",
         "breakpad",
+        "fmt",
         "gtest",
         "opentelemetry-cpp"
       ]
@@ -181,7 +171,8 @@
     "util": {
       "description": "Enable util module support",
       "dependencies": [
-        "jwt-cpp"
+        "jwt-cpp",
+        "nlohmann-json"
       ]
     }
   }
