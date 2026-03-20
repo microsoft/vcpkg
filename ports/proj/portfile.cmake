@@ -5,9 +5,8 @@ vcpkg_from_github(
     SHA512 87070e95be1ddaf816d712ab64b0a3834bb61d7a8be0e578a38f5e3346ec4ebdaf901da4bbd325174fb2379ead97a9fe042ac658ca5a1e096c15db0e9f37c8c7
     HEAD_REF master
     PATCHES
-        fix-proj4-targets-cmake.patch
+        pkgconfig.diff
         remove_toolset_restriction.patch
-        sqlite.diff
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -44,10 +43,6 @@ vcpkg_copy_pdbs()
 vcpkg_cmake_config_fixup(PACKAGE_NAME proj4 CONFIG_PATH lib/cmake/proj4 DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/proj)
 vcpkg_fixup_pkgconfig()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/proj.pc" " -lproj" " -lproj_d")
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # Enforce consistency with src/lib_proj.cmake build time configuration.
