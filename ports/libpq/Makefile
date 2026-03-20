@@ -23,6 +23,9 @@ all:
 	$(MAKE) -C src/interfaces/ecpg/pgtypeslib
 	$(MAKE) -C src/interfaces/ecpg/ecpglib
 	$(MAKE) -C src/interfaces/ecpg/compatlib
+ifeq ($(LIBPQ_LIBRARY_TYPE), static)
+	$(AR) $(AROPT) src/interfaces/libpq/libpq.a src/common/encnames_shlib.o
+endif
 ifeq ($(LIBPQ_ENABLE_TOOLS), yes)
 	$(MAKE) -C src/interfaces/ecpg/preproc
 	$(MAKE) -C src/fe_utils
@@ -34,7 +37,7 @@ endif
 .PHONY: install-stlib
 install-stlib:
 	$(MAKE) -C src/common install -o all
-	rm -f '$(DESTDIR)$(libdir)/libpgcommon_shlib.a'
+	mv -f '$(DESTDIR)$(libdir)/libpgcommon_shlib.a' '$(DESTDIR)$(libdir)/libpgcommon.a'
 	$(MAKE) -C src/port install -o all
 	rm -f '$(DESTDIR)$(libdir)/libpgport_shlib.a'
 
