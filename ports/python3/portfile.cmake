@@ -7,6 +7,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_CRT_LINKAGE STREQUAL "stat
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
+# Save the original triplet linkage before vcpkg_check_linkage may override it.
+set(VCPKG_DEPS_LINKAGE "${VCPKG_LIBRARY_LINKAGE}")
+
 if("extensions" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -38,6 +41,7 @@ set(PATCHES
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
     0019-fix-ssl-linkage.patch
+    0020-fix-venvlauncher-charset.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -206,6 +210,28 @@ if(VCPKG_TARGET_IS_WINDOWS)
         FILES_MATCHING PATTERN *.h
     )
     file(COPY "${SOURCE_PATH}/Lib" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+
+    # Python 3.14's venv module looks for venvlauncher[t].exe in Lib/venv/scripts/nt/
+    # (not the PCbuild output dir). Copy the built launchers there.
+    set(VENV_SCRIPTS_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib/venv/scripts/nt")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB_RECURSE VENV_LAUNCHERS_RELEASE
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/*/venvlauncher*.exe"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/*/venvwlauncher*.exe"
+        )
+        if(VENV_LAUNCHERS_RELEASE)
+            file(COPY ${VENV_LAUNCHERS_RELEASE} DESTINATION "${VENV_SCRIPTS_DIR}")
+        endif()
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB_RECURSE VENV_LAUNCHERS_DEBUG
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/PCbuild/*/venvlauncher*.exe"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/PCbuild/*/venvwlauncher*.exe"
+        )
+        if(VENV_LAUNCHERS_DEBUG)
+            file(COPY ${VENV_LAUNCHERS_DEBUG} DESTINATION "${VENV_SCRIPTS_DIR}")
+        endif()
+    endif()
 
     # Remove any extension libraries and other unversioned binaries that could conflict with the python2 port.
     # You don't need to link against these anyway.

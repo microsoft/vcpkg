@@ -41,23 +41,13 @@ index 7a5327b..d774ca3 100644
      <!-- Extension modules that require external sources -->
      <ExternalModules Include="_bz2;_lzma;_sqlite3;_zstd" />
      <!-- venv launchers -->
--    <Projects Include="venvlauncher.vcxproj;venvwlauncher.vcxproj" />
+     <Projects Include="venvlauncher.vcxproj;venvwlauncher.vcxproj" />
 -    <!-- _ssl will build _socket as well, which may cause conflicts in parallel builds -->
 -    <ExtensionModules Include="_socket" Condition="!$(IncludeSSL) or !$(IncludeExternals)" />
 -    <ExternalModules Include="_ssl;_hashlib" Condition="$(IncludeSSL)" />
-+    <Projects Include="venvlauncher.vcxproj;venvwlauncher.vcxproj" Condition="false" />
 +    <!-- _ssl will NOT build _socket as well -->
 +    <ExtensionModules Include="_socket" Condition="true" />
 +    <ExternalModules Include="_ssl;_hashlib" Condition="true" />
      <ExternalModules Include="_tkinter" Condition="$(IncludeTkinter)" />
      <ExtensionModules Include="@(ExternalModules->'%(Identity)')" Condition="$(IncludeExternals)" />
      <Projects Include="@(ExtensionModules->'%(Identity).vcxproj')" Condition="$(IncludeExtensions)" />
-@@ -93,7 +93,7 @@
-     <Projects2 Include="python.vcxproj;pythonw.vcxproj" />
-     <Projects2 Include="python_uwp.vcxproj;pythonw_uwp.vcxproj" Condition="$(IncludeUwp)" />
-     <!-- venv[w]launcher.exe -->
--    <Projects2 Include="venvlauncher.vcxproj;venvwlauncher.vcxproj" />
-+    <Projects2 Include="venvlauncher.vcxproj;venvwlauncher.vcxproj" Condition="false" />
-   </ItemGroup>
-
-   <Target Name="Build">

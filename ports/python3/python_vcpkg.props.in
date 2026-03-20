@@ -4,7 +4,8 @@
     <CLCompile>
       <!-- Use vcpkg ports instead of vendored externals -->
       <PreprocessorDefinitions>_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="${VCPKG_LIBRARY_LINKAGE} == 'static'">XML_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="${VCPKG_DEPS_LINKAGE} == 'static'">XML_STATIC;LZMA_API_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="${VCPKG_DEPS_LINKAGE} == 'dynamic'">MPDECIMAL_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>
         %(AdditionalIncludeDirectories);${CURRENT_INSTALLED_DIR}/include
       </AdditionalIncludeDirectories>
