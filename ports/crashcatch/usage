@@ -1,0 +1,15 @@
+CrashCatch is a header-only library with CMake integration.
+
+In your CMakeLists.txt:
+
+    find_package(CrashCatch CONFIG REQUIRED)
+    target_link_libraries(my_target PRIVATE CrashCatch::CrashCatch)
+
+Then in your code:
+
+    #include <CrashCatch.hpp>
+
+    int main() {
+        CrashCatch::enable();
+        // your application code
+    }
