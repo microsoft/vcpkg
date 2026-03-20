@@ -1,10 +1,7 @@
 {
   "name": "hanjingo-high-jump",
   "version": "1.0.4",
-  "maintainers": [
-    "hanjingo",
-    "hehehunanchina@live.com"
-  ],
+  "maintainers": "hanjingo <hehehunanchina@live.com>",
   "description": "Modern C++ library framework implemented by C++17. High-jump(hj) is a comprehensive C++ library providing utilities for algorithms, compression, cryptography, databases, encoding, hardware, I/O, logging, math, networking, OS operations, synchronization, testing, time handling, types, and more.",
   "homepage": "https://github.com/hanjingo/high-jump",
   "license": "GPL-3.0-only",
@@ -18,5 +15,174 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "default-features": [
+    "ai",
+    "algo",
+    "base",
+    "compress",
+    "crypto",
+    "db",
+    "encoding",
+    "hardware",
+    "io",
+    "log",
+    "math",
+    "misc",
+    "net",
+    "os",
+    "sync",
+    "testing",
+    "time",
+    "types",
+    "util"
+  ],
+  "features": {
+    "ai": {
+      "description": "Enable ai module support",
+      "dependencies": [
+        "libqrencode"
+      ]
+    },
+    "algo": {
+      "description": "Enable algo module support",
+      "dependencies": [
+        "behaviortree-cpp",
+        "boost-multi-index",
+        "boost-uuid"
+      ]
+    },
+    "base": {
+      "description": "Base dependencies (testing, benchmarking, formatting)",
+      "dependencies": [
+        "benchmark",
+        "bext-sml",
+        "boost-filesystem",
+        "boost-stacktrace",
+        "fmt",
+        "gtest",
+        "libiconv",
+        "nlohmann-json"
+      ]
+    },
+    "compress": {
+      "description": "Enable compress module support",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "crypto": {
+      "description": "Enable crypto module support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "db": {
+      "description": "Enable db module support",
+      "dependencies": [
+        "clickhouse-cpp",
+        "hiredis",
+        "libpqxx",
+        "sqlite3"
+      ]
+    },
+    "encoding": {
+      "description": "Enable encoding module support",
+      "dependencies": [
+        "boost-property-tree",
+        "flatbuffers",
+        "protobuf",
+        "pugixml",
+        "yaml-cpp"
+      ]
+    },
+    "hardware": {
+      "description": "Enable hardware module support",
+      "dependencies": [
+        "hidapi",
+        "opencl"
+      ]
+    },
+    "io": {
+      "description": "Enable I/O module support",
+      "dependencies": [
+        "boost-circular-buffer"
+      ]
+    },
+    "log": {
+      "description": "Enable log module support",
+      "dependencies": [
+        "spdlog"
+      ]
+    },
+    "math": {
+      "description": "Enable math module support",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "misc": {
+      "description": "Enable misc module support",
+      "dependencies": [
+        "hffix",
+        "libharu"
+      ]
+    },
+    "net": {
+      "description": "Enable net module support",
+      "dependencies": [
+        "boost-asio",
+        "boost-beast",
+        "concurrentqueue",
+        "cpp-httplib",
+        "zeromq"
+      ]
+    },
+    "os": {
+      "description": "Enable os module support",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "sync": {
+      "description": "Enable sync module support",
+      "dependencies": [
+        "boost-interprocess",
+        "boost-process",
+        "boost-thread",
+        "tbb"
+      ]
+    },
+    "testing": {
+      "description": "Enable testing module support",
+      "dependencies": [
+        "benchmark",
+        "breakpad",
+        "gtest",
+        "opentelemetry-cpp"
+      ]
+    },
+    "time": {
+      "description": "Enable time module support",
+      "dependencies": [
+        "boost-timer"
+      ]
+    },
+    "types": {
+      "description": "Enable types module support",
+      "dependencies": [
+        "boost-any",
+        "boost-leaf",
+        "boost-optional",
+        "boost-serialization",
+        "boost-variant"
+      ]
+    },
+    "util": {
+      "description": "Enable util module support",
+      "dependencies": [
+        "jwt-cpp"
+      ]
+    }
+  }
 }
