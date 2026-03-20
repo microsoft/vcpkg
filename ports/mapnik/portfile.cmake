@@ -4,12 +4,25 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
     REF v${VERSION}
-    SHA512 ac3cda35240eca404fedc77e6c36d9b3d0596a077857fb7c41e8d4d5dce2a292f425ce0c134ac6e8577b50c6a126ba56e5de1103e63c752ebe9f6fa3db62dd3d
+    SHA512 395306fd0f306b3e1e7da777354dfde18abe7f964aacd5169116af60b516f31ab1574600eec5755c8cd8dff97c14e2fdf1dcd3882749bfeeb2b04523842639d9
     HEAD_REF master
 )
 
+vcpkg_from_github(
+    OUT_SOURCE_PATH MAPNIK_VECTOR_TILE_SOURCE_PATH
+    REPO mapnik/mapnik-vector-tile
+    REF 5a0cfbb6b909ae945f4a9e40777772a2b1c8fe9b
+    SHA512 c637f323daadb4af9071e2b88cb9d14a4b21568e19081687da204eb342efa09c67148ddcbf0d6c9ddc419049a7a2436b3b812603a3d9a3bb7ed390c81f6484f2
+    HEAD_REF master
+    PATCHES
+        fix-duplicate-symbols.patch
+)
+
+file(RENAME "${MAPNIK_VECTOR_TILE_SOURCE_PATH}" "${SOURCE_PATH}/deps/mapbox/mapnik-vector-tile")
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        "avif"                      USE_AVIF
         "jpeg"                      USE_JPEG
         "png"                       USE_PNG
         "tiff"                      USE_TIFF
@@ -21,11 +34,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         "svg-renderer"              USE_SVG_RENDERER
         "input-csv"                 USE_PLUGIN_INPUT_CSV
         "input-gdal"                USE_PLUGIN_INPUT_GDAL
+        "input-gdal-ogr"            USE_PLUGIN_INPUT_GDAL_OGR
         "input-geobuf"              USE_PLUGIN_INPUT_GEOBUF
         "input-geojson"             USE_PLUGIN_INPUT_GEOJSON
         "input-ogr"                 USE_PLUGIN_INPUT_OGR
         "input-pgraster"            USE_PLUGIN_INPUT_PGRASTER
         "input-postgis"             USE_PLUGIN_INPUT_POSTGIS
+        "input-postgis-pgraster"    USE_PLUGIN_INPUT_POSTGIS_PGRASTER
         "input-raster"              USE_PLUGIN_INPUT_RASTER
         "input-shape"               USE_PLUGIN_INPUT_SHAPE
         "input-sqlite"              USE_PLUGIN_INPUT_SQLITE
@@ -49,7 +64,7 @@ vcpkg_find_acquire_program(PKGCONFIG)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS   
+    OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_SHARED_CRT=${BUILD_SHARED_CRT}
         -DINSTALL_DEPENDENCIES=OFF
