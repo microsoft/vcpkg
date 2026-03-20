@@ -7032,6 +7032,10 @@
       "baseline": "2.16.0",
       "port-version": 0
     },
+    "numkong": {
+      "baseline": "7.0.0",
+      "port-version": 0
+    },
     "nuraft": {
       "baseline": "3.0.0",
       "port-version": 0
