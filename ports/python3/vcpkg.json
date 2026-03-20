@@ -1,6 +1,6 @@
 {
   "name": "python3",
-  "version": "3.12.13",
+  "version": "3.14.3",
   "description": "The Python programming language",
   "homepage": "https://github.com/python/cpython",
   "license": "Python-2.0",
@@ -79,6 +79,10 @@
           "default-features": false
         },
         {
+          "name": "mpdecimal",
+          "default-features": false
+        },
+        {
           "name": "openssl",
           "default-features": false
         },
@@ -90,8 +94,15 @@
           "name": "vcpkg-pkgconfig-get-modules",
           "host": true,
           "platform": "windows & !mingw"
+        },
+        {
+          "name": "zstd",
+          "default-features": false
         }
       ]
+    },
+    "freethreaded": {
+      "description": "Build free-threaded Python (no GIL). Produces binaries with a 't' ABI suffix."
     },
     "readline": {
       "description": "Build with readline.",

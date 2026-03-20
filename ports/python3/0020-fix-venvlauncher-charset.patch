@@ -1,0 +1,46 @@
+diff --git a/PCbuild/venvlauncher.vcxproj b/PCbuild/venvlauncher.vcxproj
+--- a/PCbuild/venvlauncher.vcxproj
++++ b/PCbuild/venvlauncher.vcxproj
+@@ -88,7 +88,11 @@
+   <ImportGroup Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="pyproject.props" />
+   </ImportGroup>
++  <!-- Disable LTCG: anonymous LTCG objects cannot be resolved by non-LTCG CRT startup stubs -->
++  <PropertyGroup>
++    <WholeProgramOptimization>false</WholeProgramOptimization>
++  </PropertyGroup>
+   <PropertyGroup Label="UserMacros" />
+   <ItemDefinitionGroup>
+     <ClCompile>
+@@ -101,6 +105,7 @@
+     <Link>
+       <AdditionalDependencies>pathcch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <SubSystem>Console</SubSystem>
++      <EntryPointSymbol>wWinMainCRTStartup</EntryPointSymbol>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+diff --git a/PCbuild/venvwlauncher.vcxproj b/PCbuild/venvwlauncher.vcxproj
+--- a/PCbuild/venvwlauncher.vcxproj
++++ b/PCbuild/venvwlauncher.vcxproj
+@@ -88,7 +88,11 @@
+   <ImportGroup Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="pyproject.props" />
+   </ImportGroup>
++  <!-- Disable LTCG: anonymous LTCG objects cannot be resolved by non-LTCG CRT startup stubs -->
++  <PropertyGroup>
++    <WholeProgramOptimization>false</WholeProgramOptimization>
++  </PropertyGroup>
+   <PropertyGroup Label="UserMacros" />
+   <ItemDefinitionGroup>
+     <ClCompile>
+@@ -101,6 +105,7 @@
+     <Link>
+       <AdditionalDependencies>pathcch.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <SubSystem>Windows</SubSystem>
++      <EntryPointSymbol>wWinMainCRTStartup</EntryPointSymbol>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
