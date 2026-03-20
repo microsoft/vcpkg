@@ -56,5 +56,11 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/zconf.h" "ifdef ZLIB_DLL" "if 1")
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/ZLIBConfig.cmake" "set(_ZLIB_supported_components \"shared\" \"static\")" "set(_ZLIB_supported_components \"static\")")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/${PORT}/ZLIBConfig.cmake" "set(_ZLIB_supported_components \"shared\" \"static\")" "set(_ZLIB_supported_components \"shared\")")
+endif()
+
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
