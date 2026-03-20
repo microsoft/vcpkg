@@ -61,6 +61,22 @@ index 1924233..17a0ce4 100644
  
  SECTION_RODATA 64
  
+diff --git a/libavcodec/x86/vp9itxfm_avx2.asm b/libavcodec/x86/vp9itxfm_avx2.asm
+index c5ee242..5fe077f 100644
+--- a/libavcodec/x86/vp9itxfm_avx2.asm
++++ b/libavcodec/x86/vp9itxfm_avx2.asm
+@@ -22,7 +22,10 @@
+ 
+ %include "libavutil/x86/x86util.asm"
+ 
+-%if ARCH_X86_64 && HAVE_AVX2_EXTERNAL
++%ifn ARCH_X86_64 && HAVE_AVX2_EXTERNAL
++SECTION .rdata
++vp9itxfm_avx2_placeholder: times 4 db 0
++%else
+ 
+ SECTION_RODATA 16
+ 
 diff --git a/libavcodec/x86/vp9itxfm_avx512.asm b/libavcodec/x86/vp9itxfm_avx512.asm
 index d51c507..1f16ba2 100644
 --- a/libavcodec/x86/vp9itxfm_avx512.asm
