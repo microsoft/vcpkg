@@ -1,0 +1,39 @@
+diff --git a/src/libstatgrab/globals.c b/src/libstatgrab/globals.c
+index 3c48370..4018d57 100644
+--- a/src/libstatgrab/globals.c
++++ b/src/libstatgrab/globals.c
+@@ -81,6 +81,7 @@ static DWORD glob_tls_idx = TLS_OUT_OF_INDEXES;
+ #  error unsupport thread library
+ # endif
+ 
++static unsigned initialized = 0;
+ # if defined(HAVE_PTHREAD)
+ struct sg_named_mutex {
+ 	const char *name;
+@@ -94,7 +95,6 @@ static struct sg_named_mutex glob_lock = { "statgrab", PTHREAD_MUTEX_INITIALIZER
+ #  endif
+ static struct sg_named_mutex *required_locks = NULL;
+ static size_t num_required_locks = 0;
+-static unsigned initialized = 0;
+ 
+ static int
+ cmp_named_locks( const void *va, const void *vb ) {
+@@ -224,8 +224,8 @@ static void
+ sg_destroy_main_globals(void)
+ {
+ #if defined(ENABLE_THREADS)
+-# if defined(HAVE_PTHREAD)
+ 	char *glob_buf;
++# if defined(HAVE_PTHREAD)
+ 	while( NULL != ( glob_buf = pthread_getspecific(glob_key) ) )
+ 		sg_destroy_globals(glob_buf);
+ # elif defined(WIN32)
+@@ -507,7 +507,7 @@ sg_comp_get_tls(unsigned id) {
+ # elif defined(WIN32)
+ 	glob_buf = TlsGetValue(glob_tls_idx);
+ 	if((NULL == glob_buf) && (ERROR_SUCCESS != GetLastError())){
+-		RETURN_WITH_SET_ERROR("globals", SG_ERROR_MEMSTATUS, NULL);
++		SET_ERROR("globals", SG_ERROR_MEMSTATUS, NULL); return NULL;
+ 	}
+ # endif
+ #endif

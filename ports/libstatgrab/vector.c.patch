@@ -1,0 +1,23 @@
+diff --git a/src/libstatgrab/vector.c b/src/libstatgrab/vector.c
+index e4b07a9..0c83ba6 100644
+--- a/src/libstatgrab/vector.c
++++ b/src/libstatgrab/vector.c
+@@ -344,7 +344,8 @@ sg_vector_compute_diff(sg_vector **dest_vector_ptr, const sg_vector *cur_vector,
+ 		    ( SG_ERROR_NONE == sg_prove_vector(last_vector) ) &&
+ 		    ( SG_ERROR_NONE == sg_prove_vector_compat(cur_vector, last_vector ) ) ) {
+ 			size_t i, item_size = last_vector->info.item_size;
+-			unsigned matched[(cur_vector->used_count / (8 * sizeof(unsigned))) + 1];
++			// unsigned matched[(cur_vector->used_count / (8 * sizeof(unsigned))) + 1];
++			unsigned *matched = calloc((cur_vector->used_count / (8 * sizeof(unsigned))) + 1, sizeof(unsigned));
+ 
+ 			char *diff = VECTOR_DATA(*dest_vector_ptr);
+ 			char const *last = VECTOR_DATA_CONST(last_vector);
+@@ -367,7 +368,7 @@ sg_vector_compute_diff(sg_vector **dest_vector_ptr, const sg_vector *cur_vector,
+ 					/* We have lost an item since last time - skip */
+ 				}
+ 			}
+-
++			free(matched);
+ 			/* XXX append the items lost since last run? */
+ 		}
+ 	}
