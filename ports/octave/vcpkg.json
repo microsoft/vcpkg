@@ -1,18 +1,25 @@
 {
   "name": "octave",
   "version": "10.2.0",
-  "port-version": 2,
+  "port-version": 3,
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
   "documentation": "https://docs.octave.org/latest/",
   "license": "GPL-3.0-or-later",
   "supports": "!windows | mingw",
   "dependencies": [
-    "blas",
+    {
+      "name": "blas",
+      "platform": "!osx"
+    },
     "fftw3",
     "glpk",
     "lapack",
     "libsndfile",
+    {
+      "name": "openblas",
+      "platform": "osx"
+    },
     "opengl",
     "pcre2",
     "readline",

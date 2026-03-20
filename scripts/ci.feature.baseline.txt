@@ -868,7 +868,6 @@ nvtt[cuda]:arm64-osx=cascade
 nvtt[cuda]:x86-windows=cascade
 nvtt[cuda](x64 & (linux | windows))=feature-fails  # nvtt getting dated wrt cuda
 octave:arm64-linux=cascade
-octave:arm64-osx=fail  # blas must select openblas instead of Accelerate
 octave(android)=skip
 ode:arm64-windows=fail
 ogdf:arm64-linux=fail
