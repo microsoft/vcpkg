@@ -1,5 +1,5 @@
 diff --git a/libde265/CMakeLists.txt b/libde265/CMakeLists.txt
-index 7d9723d..d090e31 100644
+index 4a65924..02a90de 100644
 --- a/libde265/CMakeLists.txt
 +++ b/libde265/CMakeLists.txt
 @@ -105,7 +105,7 @@ if(HAVE_ARM)
@@ -9,5 +9,5 @@ index 7d9723d..d090e31 100644
 -target_include_directories(de265 PRIVATE ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 +target_include_directories(de265 PRIVATE $<BUILD_INTERFACE:${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}> PUBLIC $<INSTALL_INTERFACE:include>)
  
- write_basic_package_version_file(libde265ConfigVersion.cmake COMPATIBILITY ExactVersion)
+ write_basic_package_version_file(libde265-config-version.cmake COMPATIBILITY ExactVersion)
  
