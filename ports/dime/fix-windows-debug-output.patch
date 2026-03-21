@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 36b9731..0000000 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,17 +57,18 @@
+   set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose type of build, options are Debug, Release, RelWithDebInfo, MinSizeRel." FORCE)
+ endif()
+ # Set common output directories for all targets built.
+-# First for the generic no-config case (e.g. with mingw)
+-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+-# Second, for multi-config builds (e.g. msvc)
+-foreach (_config ${CMAKE_CONFIGURATION_TYPES})
+-  string(TOUPPER ${_config} _config)
+-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${_config} "${CMAKE_BINARY_DIR}/lib")
+-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${_config} "${CMAKE_BINARY_DIR}/lib")
+-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${_config} "${CMAKE_BINARY_DIR}/bin")
+-endforeach()
++if(CMAKE_CONFIGURATION_TYPES)
++  foreach (_config ${CMAKE_CONFIGURATION_TYPES})
++    string(TOUPPER ${_config} _config_upper)
++    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${_config_upper} "${CMAKE_BINARY_DIR}/lib/${_config}")
++    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${_config_upper} "${CMAKE_BINARY_DIR}/lib/${_config}")
++    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${_config_upper} "${CMAKE_BINARY_DIR}/bin/${_config}")
++  endforeach()
++else()
++  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
++  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
++  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
++endif()
+ 
+ check_symbol_exists(isinf math.h HAVE_ISINF)
+ check_symbol_exists(isnan math.h HAVE_ISNAN)
