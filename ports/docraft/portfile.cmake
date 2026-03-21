@@ -9,7 +9,7 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-    -DBUILD_TESTS=OFF
+        -DBUILD_TESTS=OFF
 )
 
 vcpkg_cmake_install()
@@ -17,7 +17,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_copy_tools(TOOL_NAMES docraft_tool AUTO_CLEAN)
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME docraft)
+vcpkg_cmake_config_fixup()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
