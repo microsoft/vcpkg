@@ -1,0 +1,24 @@
+diff --git a/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/factory.hpp b/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/factory.hpp
+index a89a1eb..e2c02df 100644
+--- a/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/factory.hpp
++++ b/ThirdParty/diy2/vtkdiy2/include/vtkdiy2/factory.hpp
+@@ -35,7 +35,7 @@ class Factory
+                 };
+                 return true;
+             }
+-            static volatile bool registered;
++            inline static volatile bool registered = Registrar::registerT();
+ 
+             std::string id() const override     { return typeid(T).name(); }
+ 
+@@ -75,10 +75,6 @@ class Factory
+         }
+ };
+ 
+-template <class Base, class... Args>
+-template <class T>
+-volatile bool Factory<Base, Args...>::Registrar<T>::registered = Factory<Base, Args...>::Registrar<T>::registerT();
+-
+ }
+ 
+ #endif

@@ -1,7 +1,6 @@
 {
   "name": "vtk",
-  "version-semver": "9.3.0-pv5.12.1",
-  "port-version": 15,
+  "version-semver": "9.6.0",
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
@@ -19,13 +18,11 @@
         "zlib"
       ]
     },
-    "gl2ps",
     "glew",
     {
       "name": "hdf5",
       "default-features": false,
       "features": [
-        "hl",
         "zlib"
       ]
     },
@@ -44,6 +41,7 @@
     "nlohmann-json",
     "pegtl",
     "pugixml",
+    "scnlib",
     {
       "name": "tiff",
       "default-features": false
@@ -58,18 +56,10 @@
       "host": true
     },
     "verdict",
-    {
-      "name": "vtk-compile-tools",
-      "host": true
-    },
     "zlib"
   ],
   "default-features": [
     "cgns",
-    {
-      "name": "fontconfig",
-      "platform": "android | linux"
-    },
     "libharu",
     "libtheora",
     "netcdf",
@@ -81,23 +71,13 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
-        {
-          "name": "ffmpeg",
-          "default-features": false,
-          "features": [
-            "avcodec",
-            "avformat",
-            "swresample",
-            "swscale"
-          ]
-        },
+        "ffmpeg",
         "libmysql",
         {
           "name": "vtk",
           "default-features": false,
           "features": [
             "cgns",
-            "fontconfig",
             "gdal",
             "geojson",
             "libharu",
@@ -146,15 +126,6 @@
         "cuda"
       ]
     },
-    "debugleaks": {
-      "description": "Enables vtk debug leaks detection"
-    },
-    "fontconfig": {
-      "description": "Enables fontconfig for rendering",
-      "dependencies": [
-        "fontconfig"
-      ]
-    },
     "gdal": {
       "description": "Support GDAL compilation",
       "dependencies": [
@@ -198,6 +169,7 @@
           "name": "hdf5",
           "default-features": false,
           "features": [
+            "hl",
             "parallel"
           ]
         },
@@ -231,15 +203,18 @@
       "dependencies": [
         {
           "name": "netcdf-c",
-          "default-features": false,
-          "features": [
-            "netcdf-4"
-          ]
+          "default-features": false
         }
       ]
     },
     "opengl": {
-      "description": "All opengl related modules"
+      "description": "All opengl related modules",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false
+        }
+      ]
     },
     "openmp": {
       "description": "Use openmp multithreading parallel implementation"
@@ -260,17 +235,16 @@
           "name": "vtk",
           "default-features": false,
           "features": [
-            "libtheora",
-            "netcdf",
-            "qt",
-            "seacas"
+            "qt"
           ]
         },
         {
           "name": "vtk",
           "default-features": false,
           "features": [
-            "atlmfc"
+            "atlmfc",
+            "libtheora",
+            "seacas"
           ],
           "platform": "windows"
         }
@@ -282,6 +256,13 @@
         {
           "name": "proj",
           "default-features": false
+        },
+        {
+          "name": "vtk",
+          "default-features": false,
+          "features": [
+            "sql"
+          ]
         }
       ]
     },
@@ -344,7 +325,13 @@
       ]
     },
     "utf8": {
-      "description": "Enables vtk reader/writer with utf-8 path support"
+      "description": "Enables vtk reader/writer with utf-8 path support",
+      "dependencies": [
+        {
+          "name": "vtk",
+          "default-features": false
+        }
+      ]
     },
     "vtkm": {
       "description": "Build with vtk-m accelerator and module.",
