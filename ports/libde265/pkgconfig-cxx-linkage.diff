@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4da9921..14cef0d 100644
+index 684aa1a..a12fae2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,13 +44,16 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-   add_definitions(-Wall)
+@@ -119,13 +119,16 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+   add_definitions(-Wall -Werror=return-type -Werror=unused-result -Werror=reorder)
  endif()
  
 -include(CheckCXXSymbolExists)
@@ -24,5 +24,5 @@ index 4da9921..14cef0d 100644
 +  endif()
 +endforeach()
  
+ 
  option(BUILD_SHARED_LIBS "Build shared library" ON)
- if(NOT BUILD_SHARED_LIBS)
