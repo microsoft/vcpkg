@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 27ef2976b89b50af8501b7dd51f9bc39b86da12a03da80d30644e202d3c23820f0c40adcab42537955cd7094356ead091c275c58251c308e598dd6c461083250
+    SHA512 faae57215cb53c44720c2fdb5999efd9931a6e9d8024afee51e1f93c63ff738df1c469e52fc1b0912980eb0478fe6ad147c8c6632080969144f173f914686e65
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
@@ -54,6 +54,12 @@ else()
 endif()
 if("gdi" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # enable gdi helpers and uniscribe shaper backend (windows only)
+endif()
+if("png" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dpng=enabled)
+endif()
+if("zlib" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dzlib=enabled)
 endif()
 
 if("introspection" IN_LIST FEATURES)
@@ -136,7 +142,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info hb-vector)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info hb-vector hb-raster)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()
