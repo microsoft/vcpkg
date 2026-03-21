@@ -5649,7 +5649,7 @@
       "port-version": 0
     },
     "libtorrent": {
-      "baseline": "2.0.11",
+      "baseline": "2.0.12",
       "port-version": 0
     },
     "libtracepoint": {
