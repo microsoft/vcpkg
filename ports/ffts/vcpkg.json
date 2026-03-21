@@ -8,7 +8,7 @@
   ],
   "homepage": "https://github.com/linkotec/ffts",
   "license": "BSD-3-Clause",
-  "platform": "!(windows & x86)",
+  "supports": "!(windows & x86)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
