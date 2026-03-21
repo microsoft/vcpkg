@@ -1,0 +1,4 @@
+yubico-piv-tool provides CMake targets:
+
+    find_package(unofficial-libykpiv CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE unofficial::libykpiv::ykpiv)
