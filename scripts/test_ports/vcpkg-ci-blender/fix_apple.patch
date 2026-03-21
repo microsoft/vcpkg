@@ -1,0 +1,81 @@
+diff --git a/build_files/cmake/platform/platform_apple.cmake b/build_files/cmake/platform/platform_apple.cmake
+index 763d32e9..6b957da8 100644
+--- a/build_files/cmake/platform/platform_apple.cmake
++++ b/build_files/cmake/platform/platform_apple.cmake
+@@ -26,7 +26,7 @@ endfunction()
+ # Find system provided libraries.
+ 
+ # Find system ZLIB, not the pre-compiled one supplied with OpenCollada.
+-set(ZLIB_ROOT /usr)
++# set(ZLIB_ROOT /usr)
+ find_package(ZLIB REQUIRED)
+ find_package(BZip2 REQUIRED)
+ list(APPEND ZLIB_LIBRARIES ${BZIP2_LIBRARIES})
+@@ -54,6 +54,7 @@ if(NOT DEFINED LIBDIR)
+     set(LIBDIR ${CMAKE_SOURCE_DIR}/lib/macos_${CMAKE_OSX_ARCHITECTURES})
+   endif()
+ endif()
++if(0)
+ if(NOT EXISTS "${LIBDIR}/.git")
+   message(FATAL_ERROR "Mac OSX requires pre-compiled libs at: '${LIBDIR}'")
+ endif()
+@@ -61,6 +62,7 @@ if(FIRST_RUN)
+   message(STATUS "Using pre-compiled LIBDIR: ${LIBDIR}")
+ endif()
+ 
++endif()
+ # Avoid searching for headers since this would otherwise override our lib
+ # directory as well as PYTHON_ROOT_DIR.
+ set(CMAKE_FIND_FRAMEWORK NEVER)
+@@ -146,10 +148,13 @@ endif()
+ 
+ # FreeType compiled with Brotli compression for woff2.
+ find_package(Freetype REQUIRED)
++find_package(Brotli REQUIRED)
++if(0)
+ set(BROTLI_LIBRARIES
+   ${LIBDIR}/brotli/lib/libbrotlicommon-static.a
+   ${LIBDIR}/brotli/lib/libbrotlidec-static.a
+ )
++endif()
+ 
+ if(WITH_HARFBUZZ)
+   find_package(Harfbuzz)
+@@ -232,16 +237,16 @@ if(WITH_SDL)
+   endif()
+ endif()
+ 
+-set(EPOXY_ROOT_DIR ${LIBDIR}/epoxy)
++set(EPOXY_ROOT_DIR ${CURRENT_INSTALLED_DIR})
+ find_package(Epoxy REQUIRED)
+ 
+-set(PNG_ROOT ${LIBDIR}/png)
++# set(PNG_ROOT ${LIBDIR}/png)
+ find_package(PNG REQUIRED)
+ 
+-set(JPEG_ROOT ${LIBDIR}/jpeg)
++# set(JPEG_ROOT ${LIBDIR}/jpeg)
+ find_package(JPEG REQUIRED)
+ 
+-set(TIFF_ROOT ${LIBDIR}/tiff)
++# set(TIFF_ROOT ${LIBDIR}/tiff)
+ find_package(TIFF REQUIRED)
+ 
+ if(WITH_IMAGE_WEBP)
+@@ -292,6 +297,7 @@ if(WITH_PUGIXML)
+   find_package(PugiXML REQUIRED)
+ endif()
+ 
++set(OPENCOLORIO_ROOT_DIR ${CURRENT_INSTALLED_DIR})
+ find_package(OpenImageIO REQUIRED)
+ add_bundled_libraries(openimageio/lib)
+ 
+@@ -391,7 +397,7 @@ if(WITH_CYCLES AND WITH_CYCLES_PATH_GUIDING)
+   endif()
+ endif()
+ 
+-set(ZSTD_ROOT_DIR ${LIBDIR}/zstd)
++set(ZSTD_ROOT_DIR ${CURRENT_INSTALLED_DIR})
+ find_package(Zstd REQUIRED)
+ 
+ if(EXISTS ${LIBDIR})

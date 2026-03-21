@@ -1,0 +1,153 @@
+diff --git a/build_files/cmake/Modules/FindOpenImageIO.cmake b/build_files/cmake/Modules/FindOpenImageIO.cmake
+index ac74db02..639df8a7 100644
+--- a/build_files/cmake/Modules/FindOpenImageIO.cmake
++++ b/build_files/cmake/Modules/FindOpenImageIO.cmake
+@@ -18,6 +18,13 @@
+ #  OPENIMAGEIO_LIBRARY, where to find the OpenImageIO library.
+ 
+ # If `OPENIMAGEIO_ROOT_DIR` was defined in the environment, use it.
++find_package(OpenImageIO CONFIG REQUIRED)
++set(OPENIMAGEIO_TOOL OpenImageIO::oiiotool)
++set(OPENIMAGEIO_LIBRARIES OpenImageIO::OpenImageIO OpenImageIO::OpenImageIO_Util)
++set(OPENIMAGEIO_INCLUDE_DIRS ${OpenImageIO_INCLUDE_DIR})
++set(OPENIMAGEIO_FOUND TRUE)
++set(OPENIMAGEIO_PUGIXML_FOUND TRUE)
++if(0)
+ if(DEFINED OPENIMAGEIO_ROOT_DIR)
+   # Pass.
+ elseif(DEFINED ENV{OPENIMAGEIO_ROOT_DIR})
+@@ -111,6 +118,7 @@ else()
+   set(OPENIMAGEIO_PUGIXML_FOUND FALSE)
+ endif()
+ 
++endif()
+ mark_as_advanced(
+   OPENIMAGEIO_INCLUDE_DIR
+   OPENIMAGEIO_LIBRARY
+diff --git a/build_files/cmake/Modules/FindOpenEXR.cmake b/build_files/cmake/Modules/FindOpenEXR.cmake
+index 462c1623..a34f47ff 100644
+--- a/build_files/cmake/Modules/FindOpenEXR.cmake
++++ b/build_files/cmake/Modules/FindOpenEXR.cmake
+@@ -23,6 +23,12 @@
+ #  OPENEXR_LIBRARY, where to find the OpenEXR library.
+ 
+ # If `OPENEXR_ROOT_DIR` was defined in the environment, use it.
++find_package(OpenEXR CONFIG REQUIRED)
++set(OPENEXR_FOUND TRUE)
++set(OPENEXR_INCLUDE_DIRS ${OpenEXR_INCLUDE_DIRS})
++set(OPENEXR_LIBRARIES OpenEXR::OpenEXR)
++set(IMATH_INCLUDE_DIRS ${OpenEXR_INCLUDE_DIRS})
++if(0)
+ if(DEFINED OPENEXR_ROOT_DIR)
+   # Pass.
+ elseif(DEFINED ENV{OPENEXR_ROOT_DIR})
+@@ -204,6 +210,7 @@ if(OPENEXR_FOUND)
+     ${IMATH_INCLUDE_DIR})
+ endif()
+ 
++endif()
+ mark_as_advanced(
+   OPENEXR_INCLUDE_DIR
+   OPENEXR_VERSION
+diff --git a/build_files/cmake/Modules/FindZstd.cmake b/build_files/cmake/Modules/FindZstd.cmake
+index 0da9da91..1d004cd6 100644
+--- a/build_files/cmake/Modules/FindZstd.cmake
++++ b/build_files/cmake/Modules/FindZstd.cmake
+@@ -16,6 +16,11 @@
+ #  ZSTD_LIBRARY, where to find the Zstd library.
+ 
+ # If `ZSTD_ROOT_DIR` was defined in the environment, use it.
++find_package(zstd CONFIG REQUIRED)
++set(ZSTD_FOUND TRUE)
++set(ZSTD_LIBRARIES zstd::libzstd)
++set(ZSTD_INCLUDE_DIRS ${ZSTD_ROOT_DIR}/include)
++if(0)
+ if(DEFINED ZSTD_ROOT_DIR)
+   # Pass.
+ elseif(DEFINED ENV{ZSTD_ROOT_DIR})
+@@ -57,6 +62,7 @@ if(ZSTD_FOUND)
+   set(ZSTD_INCLUDE_DIRS ${ZSTD_INCLUDE_DIR})
+ endif()
+ 
++endif()
+ mark_as_advanced(
+   ZSTD_INCLUDE_DIR
+   ZSTD_LIBRARY
+diff --git a/build_files/cmake/Modules/FindOpenColorIO.cmake b/build_files/cmake/Modules/FindOpenColorIO.cmake
+index 75b6bc0b..91a2481f 100644
+--- a/build_files/cmake/Modules/FindOpenColorIO.cmake
++++ b/build_files/cmake/Modules/FindOpenColorIO.cmake
+@@ -16,6 +16,11 @@
+ #  OPENCOLORIO_LIBRARY, where to find the OpenColorIO library.
+ 
+ # If `OPENCOLORIO_ROOT_DIR` was defined in the environment, use it.
++find_package(OpenColorIO CONFIG REQUIRED)
++set(OPENCOLORIO_FOUND TRUE)
++set(OPENCOLORIO_LIBRARIES yaml-cpp::yaml-cpp OpenColorIO::OpenColorIO)
++set(OPENCOLORIO_INCLUDE_DIRS ${OpenColorIO_INCLUDE_DIRS})
++if(0)
+ if(DEFINED OPENCOLORIO_ROOT_DIR)
+   # Pass.
+ elseif(DEFINED ENV{OPENCOLORIO_ROOT_DIR})
+@@ -74,6 +79,7 @@ if(OPENCOLORIO_FOUND)
+   set(OPENCOLORIO_INCLUDE_DIRS ${OPENCOLORIO_INCLUDE_DIR})
+ endif()
+ 
++endif()
+ mark_as_advanced(
+   OPENCOLORIO_INCLUDE_DIR
+   OPENCOLORIO_LIBRARY
+diff --git a/build_files/cmake/Modules/FindBrotli.cmake b/build_files/cmake/Modules/FindBrotli.cmake
+index e3328fff..b5c65d03 100644
+--- a/build_files/cmake/Modules/FindBrotli.cmake
++++ b/build_files/cmake/Modules/FindBrotli.cmake
+@@ -13,6 +13,11 @@
+ #
+ 
+ # If `BROTLI_ROOT_DIR` was defined in the environment, use it.
++find_package(unofficial-brotli CONFIG REQUIRED)
++set(BROTLI_FOUND TRUE)
++set(BROTLI_LIBRARIES unofficial::brotli::brotlidec)
++set(BROTLI_INCLUDE_DIRS ${unofficial-brotli_INCLUDE_DIRS})
++if(0)
+ if(DEFINED BROTLI_ROOT_DIR)
+   # Pass.
+ elseif(DEFINED ENV{BROTLI_ROOT_DIR})
+@@ -74,6 +79,7 @@ else()
+   endif()
+ endif()
+ 
++endif()
+ mark_as_advanced(
+   BROTLI_INCLUDE_DIR
+   BROTLI_LIBRARY_COMMON
+diff --git a/build_files/cmake/Modules/FindEpoxy.cmake b/build_files/cmake/Modules/FindEpoxy.cmake
+index f154b613..fdc1176a 100644
+--- a/build_files/cmake/Modules/FindEpoxy.cmake
++++ b/build_files/cmake/Modules/FindEpoxy.cmake
+@@ -10,6 +10,17 @@
+ #  Epoxy_FOUND, If false, do not try to use epoxy.
+ 
+ # If `EPOXY_ROOT_DIR` was defined in the environment, use it.
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(epoxy REQUIRED IMPORTED_TARGET epoxy)
++set(Epoxy_FOUND TRUE)
++set(Epoxy_LIBRARY PkgConfig::epoxy)
++set(Epoxy_LIBRARIES PkgConfig::epoxy)
++set(Epoxy_INCLUDE_DIRS ${epoxy_INCLUDE_DIRS})
++set(Epoxy_INCLUDE_DIR ${epoxy_INCLUDE_DIRS})
++message(STATUS "epoxy_LIBRARIES: ${epoxy_STATIC_LIBRARIES}")
++message(STATUS "epoxy_LINK_LIBRARIES: ${epoxy_STATIC_LINK_LIBRARIES}")
++ 
++if(0)
+ if(DEFINED EPOXY_ROOT_DIR)
+   # Pass.
+ elseif(DEFINED ENV{EPOXY_ROOT_DIR})
+@@ -47,6 +58,7 @@ if(Epoxy_FOUND)
+   set(Epoxy_LIBRARIES ${Epoxy_LIBRARY})
+ endif()
+ 
++endif()
+ mark_as_advanced(
+   Epoxy_INCLUDE_DIR
+   Epoxy_LIBRARY
