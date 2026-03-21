@@ -1,0 +1,15 @@
+diff --git a/intern/ghost/intern/GHOST_ContextWGL.cc b/intern/ghost/intern/GHOST_ContextWGL.cc
+index 2b832100..e9eefde4 100644
+--- a/intern/ghost/intern/GHOST_ContextWGL.cc
++++ b/intern/ghost/intern/GHOST_ContextWGL.cc
+@@ -629,8 +629,9 @@ GHOST_TSuccess GHOST_ContextWGL::initializeDrawingContext()
+      * Then use brute force. */
+     glEnable(GL_POINT_SPRITE);
+   }
+-
++#ifdef WITH_OPENGL_BACKEND
+   initClearGL();
++#endif
+   ::SwapBuffers(m_hDC);
+ 
+ #ifndef NDEBUG
