@@ -169,6 +169,7 @@
           "name": "hdf5",
           "default-features": false,
           "features": [
+            "hl",
             "parallel"
           ]
         },
