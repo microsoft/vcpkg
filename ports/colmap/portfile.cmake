@@ -1,15 +1,14 @@
 # Update both, literally.
-set(COLMAP_REF 3.12.6 "4d5b60e19ad268072adaf1267d21fa38a9a828ca")
+set(COLMAP_REF 4.0.2 "d927f7e518fc20afa33390712c4cc20d85b730b8")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO colmap/colmap
     REF "${VERSION}"
-    SHA512 718e4542a128fbe39dd36a5e2e6d013c201ef7e23d0f6f38acc10aa5f505185389d8c9b8a75f02846cac4fd426adb75250cc32d32d427496b275ad4632a05ddb
+    SHA512 b83956a5d60aa298b5c520f949a9fa6e15f715c3e5f34d3d9bd56fabfedd2cb19045bc799b09c33ae21abf2b81c9b3d2d0d0674580def4963a4966a8286cb0a1
     HEAD_REF main
     PATCHES
         no-glu.diff
-        add-missing-cassert.patch
 )
 
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
@@ -34,6 +33,7 @@ endforeach()
 set(CUDA_ENABLED OFF)
 set(GUI_ENABLED OFF)
 set(CGAL_ENABLED OFF)
+set(ONNX_ENABLED OFF)
 set(OPENMP_ENABLED ON)
 
 if("cuda" IN_LIST FEATURES)
@@ -54,6 +54,10 @@ if("cgal" IN_LIST FEATURES)
     set(CGAL_ENABLED ON)
 endif()
 
+if("onnx" IN_LIST FEATURES)
+    set(ONNX_ENABLED ON)
+endif()
+
 if (VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
     set(OPENMP_ENABLED OFF)
 endif()
@@ -72,6 +76,8 @@ vcpkg_cmake_configure(
         -DTESTS_ENABLED=OFF
         -DFETCH_POSELIB=OFF
         -DFETCH_FAISS=OFF
+        -DONNX_ENABLED=${ONNX_ENABLED}
+        -DFETCH_ONNX=OFF
 )
 
 vcpkg_cmake_install()

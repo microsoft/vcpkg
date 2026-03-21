@@ -1,7 +1,6 @@
 {
   "name": "colmap",
-  "version": "3.12.6",
-  "port-version": 1,
+  "version": "4.0.2",
   "description": "COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline with a graphical and command-line interface. It offers a wide range of features for reconstruction of ordered and unordered image collections. The software is licensed under the new BSD license.",
   "homepage": "https://colmap.github.io/",
   "license": "BSD-3-Clause",
@@ -22,16 +21,12 @@
     },
     "eigen3",
     "faiss",
-    "freeimage",
-    "gflags",
     "glog",
-    {
-      "name": "jasper",
-      "default-features": false
-    },
     "metis",
+    "openimageio",
     "poselib",
     "sqlite3",
+    "suitesparse-cholmod",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -42,7 +37,9 @@
     }
   ],
   "default-features": [
-    "gui"
+    "gui",
+    "onnx",
+    "cgal"
   ],
   "features": {
     "cgal": {
@@ -70,6 +67,12 @@
       "dependencies": [
         "glew",
         "qt5-base"
+      ]
+    },
+    "onnx": {
+      "description": "Build with ONNX Runtime support.",
+      "dependencies": [
+        "onnxruntime"
       ]
     }
   }
