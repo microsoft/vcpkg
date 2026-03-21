@@ -142,7 +142,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info hb-vector)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info hb-vector hb-raster)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()
