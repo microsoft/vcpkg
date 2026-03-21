@@ -1,0 +1,169 @@
+diff --git a/source/MRMesh/MRAffineXf.h b/source/MRMesh/MRAffineXf.h
+index b2b1209..d4ced0c 100644
+--- a/source/MRMesh/MRAffineXf.h
++++ b/source/MRMesh/MRAffineXf.h
+@@ -2,7 +2,7 @@
+ 
+ #include "MRMacros.h"
+ #include "MRMeshFwd.h"
+-#include <iosfwd>
++#include <iostream>
+ #include <type_traits>
+ 
+ #if MR_COMPILING_ANY_BINDINGS
+diff --git a/source/MRMesh/MRBitSet.h b/source/MRMesh/MRBitSet.h
+index 246eddb..08a9a84 100644
+--- a/source/MRMesh/MRBitSet.h
++++ b/source/MRMesh/MRBitSet.h
+@@ -6,7 +6,7 @@
+ #include "MRVector.h"
+ #include "MRPch/MRBindingMacros.h"
+ #include <functional>
+-#include <iosfwd>
++#include <iostream>
+ #include <iterator>
+ 
+ namespace MR
+diff --git a/source/MRMesh/MRBox.h b/source/MRMesh/MRBox.h
+index 9f728b7..d4efa96 100644
+--- a/source/MRMesh/MRBox.h
++++ b/source/MRMesh/MRBox.h
+@@ -6,7 +6,7 @@
+ #include "MRVectorTraits.h"
+ #include <algorithm>
+ #include <cassert>
+-#include <iosfwd>
++#include <iostream>
+ #include <limits>
+ #include <type_traits>
+ 
+diff --git a/source/MRMesh/MRLine.h b/source/MRMesh/MRLine.h
+index 318009c..89feab0 100644
+--- a/source/MRMesh/MRLine.h
++++ b/source/MRMesh/MRLine.h
+@@ -1,7 +1,7 @@
+ #pragma once
+ 
+ #include "MRAffineXf.h"
+-#include <iosfwd>
++#include <iostream>
+ 
+ namespace MR
+ {
+diff --git a/source/MRMesh/MRMatrix2.h b/source/MRMesh/MRMatrix2.h
+index cd0ffba..157eca3 100644
+--- a/source/MRMesh/MRMatrix2.h
++++ b/source/MRMesh/MRMatrix2.h
+@@ -3,7 +3,7 @@
+ #include "MRVector2.h"
+ #include "MRConstants.h"
+ 
+-#include <iosfwd>
++#include <iostream>
+ 
+ namespace MR
+ {
+diff --git a/source/MRMesh/MRMatrix3.h b/source/MRMesh/MRMatrix3.h
+index 2af8726..ff144cb 100644
+--- a/source/MRMesh/MRMatrix3.h
++++ b/source/MRMesh/MRMatrix3.h
+@@ -3,7 +3,7 @@
+ #include "MRMacros.h"
+ #include "MRVector3.h"
+ #include "MRConstants.h"
+-#include <iosfwd>
++#include <iostream>
+ 
+ namespace MR
+ {
+diff --git a/source/MRMesh/MRMatrix4.h b/source/MRMesh/MRMatrix4.h
+index 1ca164d..d619681 100644
+--- a/source/MRMesh/MRMatrix4.h
++++ b/source/MRMesh/MRMatrix4.h
+@@ -3,7 +3,7 @@
+ #include "MRMacros.h"
+ #include "MRVector4.h"
+ #include <cassert>
+-#include <iosfwd>
++#include <iostream>
+ #include <limits>
+ 
+ namespace MR
+diff --git a/source/MRMesh/MRPlane3.h b/source/MRMesh/MRPlane3.h
+index 339c591..9bff269 100644
+--- a/source/MRMesh/MRPlane3.h
++++ b/source/MRMesh/MRPlane3.h
+@@ -2,7 +2,7 @@
+ 
+ #include "MRVector3.h"
+ 
+-#include <iosfwd>
++#include <iostream>
+ #if MR_HAS_REQUIRES
+ #include "MRVectorTraits.h"
+ #include <concepts>
+diff --git a/source/MRMesh/MRPointOnFace.h b/source/MRMesh/MRPointOnFace.h
+index 597e773..bf9b397 100644
+--- a/source/MRMesh/MRPointOnFace.h
++++ b/source/MRMesh/MRPointOnFace.h
+@@ -3,7 +3,7 @@
+ #include "MRVector3.h"
+ #include "MRId.h"
+ 
+-#include <iosfwd>
++#include <iostream>
+ 
+ namespace MR
+ {
+diff --git a/source/MRMesh/MRTriPoint.h b/source/MRMesh/MRTriPoint.h
+index b3dd964..3bb261f 100644
+--- a/source/MRMesh/MRTriPoint.h
++++ b/source/MRMesh/MRTriPoint.h
+@@ -3,7 +3,7 @@
+ #include "MRVector3.h"
+ #include "MRSegmPoint.h"
+ #include "MRMesh/MRMacros.h"
+-#include <iosfwd>
++#include <iostream>
+ 
+ namespace MR
+ {
+diff --git a/source/MRMesh/MRVector2.h b/source/MRMesh/MRVector2.h
+index df7f1ac..aefa6a3 100644
+--- a/source/MRMesh/MRVector2.h
++++ b/source/MRMesh/MRVector2.h
+@@ -7,7 +7,7 @@
+ #include <algorithm>
+ #include <cmath>
+ #include <cstring>
+-#include <iosfwd>
++#include <iostream>
+ #include <utility>
+ 
+ namespace MR
+diff --git a/source/MRMesh/MRVector3.h b/source/MRMesh/MRVector3.h
+index 75b9b48..0456fae 100644
+--- a/source/MRMesh/MRVector3.h
++++ b/source/MRMesh/MRVector3.h
+@@ -8,7 +8,7 @@
+ #include <algorithm>
+ #include <cmath>
+ #include <cstring>
+-#include <iosfwd>
++#include <iostream>
+ #include <utility>
+ #if MR_HAS_REQUIRES
+ #include <concepts>
+diff --git a/source/MRMesh/MRVector4.h b/source/MRMesh/MRVector4.h
+index 135d932..3604646 100644
+--- a/source/MRMesh/MRVector4.h
++++ b/source/MRMesh/MRVector4.h
+@@ -1,7 +1,7 @@
+ #pragma once
+ 
+ #include <cmath>
+-#include <iosfwd>
++#include <iostream>
+ #include <type_traits>
+ #include "MRPch/MRBindingMacros.h"
+ #include "MRMesh/MRMacros.h"
