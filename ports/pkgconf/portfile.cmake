@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pkgconf/pkgconf
-    REF 7daa214747963679c1ea071aa7760569b388d027
-    SHA512 0534b2416e15388aa4c7735bd294f0e14aa503732fe6ffbffc0471d9c01c00300cc77d3cc93b6755d682f63988743ccc5e64157da4666622fc779fdf2a197619
+    REF bb65885f63723a2c97d976529f5e0081d80ce7ce
+    SHA512 bb8d371dd7035829436851c270f637c1e9b030e4a9e300b24d451981e2c6bdead06f5ba8da882a329be1b4c551591389d9147950ae6ee9c13e651f45080606a2
     HEAD_REF master
-    PATCHES
-#        001-unveil-fixes.patch # https://github.com/pkgconf/pkgconf/pull/430
-#        install.diff
 )
 
 vcpkg_configure_meson(
