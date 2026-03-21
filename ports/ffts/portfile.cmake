@@ -19,6 +19,7 @@ vcpkg_cmake_configure(
         -DENABLE_SHARED=${ENABLE_SHARED}
         -DENABLE_STATIC=${ENABLE_STATIC}
 )
+vcpkg_fixup_pkgconfig()
 vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
