@@ -37,9 +37,9 @@
     }
   ],
   "default-features": [
+    "cgal",
     "gui",
-    "onnx",
-    "cgal"
+    "onnx"
   ],
   "features": {
     "cgal": {
