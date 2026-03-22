@@ -38,8 +38,7 @@
   ],
   "default-features": [
     "cgal",
-    "gui",
-    "onnx"
+    "gui"
   ],
   "features": {
     "cgal": {
@@ -70,7 +69,10 @@
       ]
     },
     "onnx": {
-      "description": "Build with ONNX Runtime support."
+      "description": "Build with ONNX Runtime support.",
+      "dependencies": [
+        "onnxruntime"
+      ]
     }
   }
 }
