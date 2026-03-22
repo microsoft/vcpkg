@@ -1,10 +1,12 @@
 {
   "name": "vtk",
   "version-semver": "9.6.0",
+  "port-version": 1,
   "description": "Software system for 3D computer graphics, image processing, and visualization",
   "homepage": "https://github.com/Kitware/VTK",
   "license": null,
   "dependencies": [
+    "boost-assign",
     "double-conversion",
     "eigen3",
     "expat",
@@ -42,7 +44,6 @@
     "pegtl",
     "pugixml",
     "scnlib",
-    "boost-assign",
     {
       "name": "tiff",
       "default-features": false
@@ -72,15 +73,15 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
-        "ffmpeg",
-        "libmysql",
         "alembic",
+        "ffmpeg",
         "fontconfig",
-        "pdal",
-        "openvdb",
+        "libarchive",
+        "libmysql",
         "onnxruntime",
         "openslide",
-        "libarchive",
+        "openvdb",
+        "pdal",
         "tbb",
         {
           "name": "vtk",
@@ -232,8 +233,8 @@
       "description": "OpenVR functionality for VTK",
       "dependencies": [
         "openvr",
-        "sdl2",
-        "openxr-loader"
+        "openxr-loader",
+        "sdl2"
       ]
     },
     "paraview": {
@@ -346,11 +347,11 @@
     "vtkm": {
       "description": "Build with vtk-m accelerator and module.",
       "dependencies": [
+        "tbb",
         {
           "name": "vtk-m",
           "default-features": false
-        },
-        "tbb"
+        }
       ]
     }
   }
