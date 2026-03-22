@@ -37,6 +37,10 @@ vcpkg_replace_string("${SOURCE_PATH}/Filters/ONNX/CMakeLists.txt"
     "vtk_module_find_package(PRIVATE_IF_SHARED\n  PACKAGE onnxruntime)"
     "find_package(Eigen3 CONFIG REQUIRED)\n\nvtk_module_find_package(PRIVATE_IF_SHARED\n  PACKAGE onnxruntime)"
 )
+vcpkg_replace_string("${SOURCE_PATH}/Filters/ONNX/CMakeLists.txt"
+    "vtk_module_find_package(PRIVATE_IF_SHARED\n  PACKAGE onnxruntime)\n\nset(classes"
+1    "vtk_module_find_package(PRIVATE_IF_SHARED\n  PACKAGE onnxruntime)\n\nfind_path(ONNXRUNTIME_CXX_API_INCLUDE_DIR\n  NAMES onnxruntime_cxx_api.h\n  PATH_SUFFIXES onnxruntime\n)\nif(ONNXRUNTIME_CXX_API_INCLUDE_DIR)\n  include_directories(\"\\${ONNXRUNTIME_CXX_API_INCLUDE_DIR}\")\nendif()\n\nset(classes"
+)
 
 # defines comparison_fn_t in stdlib.h; bundled h5hut redefines it.
 vcpkg_replace_string("${SOURCE_PATH}/ThirdParty/h5hut/vtkh5hut/src/h5core/private/h5t_io.h"
