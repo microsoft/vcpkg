@@ -1,0 +1,74 @@
+diff --git a/build_files/cmake/platform/platform_win32.cmake b/build_files/cmake/platform/platform_win32.cmake
+index ae75fcd2..5320ee3b 100644
+--- a/build_files/cmake/platform/platform_win32.cmake
++++ b/build_files/cmake/platform/platform_win32.cmake
+@@ -349,12 +349,14 @@ else()
+     message(STATUS "Using pre-compiled LIBDIR: ${LIBDIR}")
+   endif()
+ endif()
++if(0)
+ if(NOT EXISTS "${LIBDIR}/.git")
+   message(FATAL_ERROR
+     "\n\nWindows requires pre-compiled libs at: '${LIBDIR}'. "
+     "Please run `make update` in the blender source folder to obtain them."
+   )
+ endif()
++endif()
+ 
+ include(platform_old_libs_update)
+ 
+@@ -397,11 +399,13 @@ if(WITH_PUGIXML)
+   set(PUGIXML_INCLUDE_DIR ${LIBDIR}/pugixml/include)
+ endif()
+ 
++if(0)
+ set(ZLIB_INCLUDE_DIRS ${LIBDIR}/zlib/include)
+ set(ZLIB_LIBRARIES ${LIBDIR}/zlib/lib/libz_st.lib)
+ set(ZLIB_INCLUDE_DIR ${LIBDIR}/zlib/include)
+ set(ZLIB_LIBRARY ${LIBDIR}/zlib/lib/libz_st.lib)
+ set(ZLIB_DIR ${LIBDIR}/zlib)
++endif()
+ 
+ windows_find_package(ZLIB) # We want to find before finding things that depend on it like PNG.
+ windows_find_package(PNG)
+@@ -422,13 +426,19 @@ if(NOT JPEG_FOUND)
+   set(JPEG_LIBRARIES ${LIBDIR}/jpeg/lib/libjpeg.lib)
+ endif()
+ 
+-set(EPOXY_ROOT_DIR ${LIBDIR}/epoxy)
++# set(EPOXY_ROOT_DIR ${LIBDIR}/epoxy)
+ windows_find_package(Epoxy REQUIRED)
++if(0)
+ if(NOT EPOXY_FOUND)
+   set(Epoxy_INCLUDE_DIRS ${LIBDIR}/epoxy/include)
+   set(Epoxy_LIBRARIES ${LIBDIR}/epoxy/lib/epoxy.lib)
+ endif()
++endif()
+ 
++find_package(PThreads4W REQUIRED)
++set(PTHREADS_INCLUDE_DIRS ${PThreads4W_INCLUDE_DIR})
++set(PTHREADS_LIBRARIES PThreads4W::PThreads4W)
++if(0)
+ set(PTHREADS_INCLUDE_DIRS ${LIBDIR}/pthreads/include)
+ set(PTHREADS_LIBRARIES ${LIBDIR}/pthreads/lib/pthreadVC3.lib)
+ 
+@@ -444,6 +454,7 @@ set(BROTLI_LIBRARIES
+   ${LIBDIR}/brotli/lib/brotlidec-static.lib
+   ${LIBDIR}/brotli/lib/brotlicommon-static.lib
+ )
++endif()
+ 
+ windows_find_package(Freetype REQUIRED)
+ 
+@@ -1337,8 +1348,11 @@ if(WITH_CYCLES AND WITH_CYCLES_PATH_GUIDING)
+   endif()
+ endif()
+ 
++find_package(Zstd REQUIRED)
++if(0)
+ set(ZSTD_INCLUDE_DIRS ${LIBDIR}/zstd/include)
+ set(ZSTD_LIBRARIES ${LIBDIR}/zstd/lib/zstd_static.lib)
++endif()
+ 
+ if(WITH_CYCLES AND (WITH_CYCLES_DEVICE_ONEAPI OR (WITH_CYCLES_EMBREE AND EMBREE_SYCL_SUPPORT)))
+   set(LEVEL_ZERO_ROOT_DIR ${LIBDIR}/level_zero)
