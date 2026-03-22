@@ -1,0 +1,22 @@
+{
+  "name": "ffts",
+  "version-date": "2019-03-19",
+  "description": [
+    "FFTS (\"The Fastest Fourier Transform in the South\") is a high-performance, open-source discrete Fourier transform library designed for speed.",
+    "During initialization the transform parameters, such as sign and direction, are fixed, allowing sequencing and data access information to be precomputed and specialized machine code to be generated.",
+    "The resulting code may be executed any number of times on different input data."
+  ],
+  "homepage": "https://github.com/linkotec/ffts",
+  "license": "BSD-3-Clause",
+  "supports": "!osx",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
