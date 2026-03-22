@@ -1,4 +1,5 @@
 @PACKAGE_INIT@
+
 include(CMakeFindDependencyMacro)
 
 find_path(FFTS_INCLUDE_DIR NAMES ffts.h

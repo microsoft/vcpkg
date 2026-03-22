@@ -26,10 +26,9 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 configure_package_config_file(
     "${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in"
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/unofficial-${PORT}-config.cmake"
+    "${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT}/unofficial-${PORT}-config.cmake"
     INSTALL_DESTINATION "share/${PORT}"
 )
-#vcpkg_cmake_config_fixup(PACKAGE_NAME "unofficial-ffts")
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
