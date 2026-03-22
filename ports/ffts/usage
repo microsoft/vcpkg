@@ -1,4 +1,4 @@
 ffts provides CMake targets:
     
-  find_package(FFTS CONFIG REQUIRED)
-  target_link_libraries(main PRIVATE FFTS::ffts)
+  find_package(unofficial-ffts CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE unofficial::ffts::ffts)

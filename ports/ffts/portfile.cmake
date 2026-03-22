@@ -12,14 +12,29 @@ vcpkg_from_github(
         remove-static-suffix.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
+vcpkg_list(SET options)
+
+if (${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
+    vcpkg_list(APPEND options -DENABLE_SHARED=ON -DENABLE_STATIC=OFF)
+else()
+    vcpkg_list(APPEND options -DENABLE_SHARED=OFF -DENABLE_STATIC=ON)
+endif()
+
+if (${VCPKG_TARGET_IS_WINDOWS} AND ${VCPKG_TARGET_ARCHITECTURE} STREQUAL "x86")
+    vcpkg_list(APPEND options -DDISABLE_DYNAMIC_CODE=ON)
+else()
+    vcpkg_list(APPEND options -DDISABLE_DYNAMIC_CODE=OFF)
+endif()
+
+if (${VCPKG_TARGET_IS_ANDROID})
+    vcpkg_list(APPEND options -DENABLE_NEON=ON)
+else()
+    vcpkg_list(APPEND options -DENABLE_NEON=OFF)
+endif()
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS
-        -DENABLE_SHARED=${ENABLE_SHARED}
-        -DENABLE_STATIC=${ENABLE_STATIC}
+    OPTIONS ${options}
 )
 
 vcpkg_cmake_install()
