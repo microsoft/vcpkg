@@ -1,8 +1,9 @@
 @PACKAGE_INIT@
-
 include(CMakeFindDependencyMacro)
 
-find_path(FFTS_INCLUDE_DIR NAMES ffts.h)
+find_path(FFTS_INCLUDE_DIR NAMES ffts.h
+    PATHS "${PACKAGE_PREFIX_DIR}/include"
+    NO_DEFAULT_PATH)
 find_library(FFTS_LIBRARY_RELEASE NAMES ffts PATHS "${PACKAGE_PREFIX_DIR}/lib" NO_DEFAULT_PATH)
 find_library(FFTS_LIBRARY_DEBUG NAMES ffts PATHS "${PACKAGE_PREFIX_DIR}/debug/lib" NO_DEFAULT_PATH)
 
@@ -11,10 +12,12 @@ if(NOT TARGET unofficial::ffts::ffts)
     set_target_properties(unofficial::ffts::ffts PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${FFTS_INCLUDE_DIR}"
     )
+
     if(FFTS_LIBRARY_RELEASE)
         set_property(TARGET unofficial::ffts::ffts APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
         set_target_properties(unofficial::ffts::ffts PROPERTIES IMPORTED_LOCATION_RELEASE "${FFTS_LIBRARY_RELEASE}")
     endif()
+
     if(FFTS_LIBRARY_DEBUG)
         set_property(TARGET unofficial::ffts::ffts APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
         set_target_properties(unofficial::ffts::ffts PROPERTIES IMPORTED_LOCATION_DEBUG "${FFTS_LIBRARY_DEBUG}")
