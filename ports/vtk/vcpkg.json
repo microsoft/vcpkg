@@ -42,6 +42,7 @@
     "pegtl",
     "pugixml",
     "scnlib",
+    "boost-assign",
     {
       "name": "tiff",
       "default-features": false
@@ -73,6 +74,14 @@
       "dependencies": [
         "ffmpeg",
         "libmysql",
+        "alembic",
+        "fontconfig",
+        "pdal",
+        "openvdb",
+        "onnxruntime",
+        "openslide",
+        "libarchive",
+        "tbb",
         {
           "name": "vtk",
           "default-features": false,
@@ -223,7 +232,8 @@
       "description": "OpenVR functionality for VTK",
       "dependencies": [
         "openvr",
-        "sdl2"
+        "sdl2",
+        "openxr-loader"
       ]
     },
     "paraview": {
@@ -339,7 +349,8 @@
         {
           "name": "vtk-m",
           "default-features": false
-        }
+        },
+        "tbb"
       ]
     }
   }

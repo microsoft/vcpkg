@@ -267,7 +267,17 @@ vcpkg_cmake_configure(
         -DVTK_USE_EXTERNAL:BOOL=ON
         -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
         -DVTK_MODULE_USE_EXTERNAL_VTK_token:BOOL=OFF # Not yet in VCPKG
+        -DVTK_MODULE_USE_EXTERNAL_VTK_vtkviskores=OFF
+        -DVTK_ENABLE_OSPRAY=OFF # OSPRay is not yet in vcpkg
+        -DVTK_ENABLE_VISRTX=OFF # VisRTX is not yet in vcpkg
         -DVTK_MODULE_USE_EXTERNAL_VTK_ioss:BOOL=OFF
+        -DVTK_MODULE_ENABLE_VTK_IOUSD=NO # USD is not yet in vcpkg
+        -DVTK_MODULE_ENABLE_VTK_IOODBC=NO
+        -DVTK_MODULE_ENABLE_VTK_IOMySQL=NO
+        -DVTK_MODULE_ENABLE_VTK_IOLAS=NO
+        -DVTK_MODULE_ENABLE_VTK_IOADIOS2=NO
+        -DVTK_MODULE_ENABLE_VTK_fides=NO
+        -DTBB_VERSION_MAJOR=2022# VTK needs this to enable TBB support, but it doesn't actually use the version number for anything else.
         #-DVTK_MODULE_ENABLE_VTK_jsoncpp=YES
         ${ADDITIONAL_OPTIONS}
         -DVTK_DEBUG_MODULE_ALL=ON
