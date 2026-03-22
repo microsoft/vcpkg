@@ -14,19 +14,19 @@ vcpkg_from_github(
 
 vcpkg_list(SET options)
 
-if ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic")
+if (${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
     vcpkg_list(APPEND options -DENABLE_SHARED=ON -DENABLE_STATIC=OFF)
 else()
     vcpkg_list(APPEND options -DENABLE_SHARED=OFF -DENABLE_STATIC=ON)
 endif()
 
-if (${VCPKG_TARGET_IS_WINDOWS} AND ("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86"))
+if (VCPKG_TARGET_IS_WINDOWS AND (${VCPKG_TARGET_ARCHITECTURE} STREQUAL "x86"))
     vcpkg_list(APPEND options -DDISABLE_DYNAMIC_CODE=ON)
 else()
     vcpkg_list(APPEND options -DDISABLE_DYNAMIC_CODE=OFF)
 endif()
 
-if (${VCPKG_TARGET_IS_ANDROID})
+if (VCPKG_TARGET_IS_ANDROID)
     vcpkg_list(APPEND options -DENABLE_NEON=ON)
 else()
     vcpkg_list(APPEND options -DENABLE_NEON=OFF)
