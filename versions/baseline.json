@@ -2321,7 +2321,7 @@
       "port-version": 1
     },
     "cyclonedds": {
-      "baseline": "11.0.0",
+      "baseline": "11.0.1",
       "port-version": 0
     },
     "cyclonedds-cxx": {
