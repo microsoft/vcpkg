@@ -70,10 +70,7 @@
       ]
     },
     "onnx": {
-      "description": "Build with ONNX Runtime support.",
-      "dependencies": [
-        "onnxruntime"
-      ]
+      "description": "Build with ONNX Runtime support."
     }
   }
 }

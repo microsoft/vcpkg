@@ -77,7 +77,8 @@ vcpkg_cmake_configure(
         -DFETCH_POSELIB=OFF
         -DFETCH_FAISS=OFF
         -DONNX_ENABLED=${ONNX_ENABLED}
-        -DFETCH_ONNX=OFF
+        # Use FetchContent instead of vcpkg's onnxruntime, which fails to build on x64-linux/x64-windows.
+        -DFETCH_ONNX=${ONNX_ENABLED}
 )
 
 vcpkg_cmake_install()
