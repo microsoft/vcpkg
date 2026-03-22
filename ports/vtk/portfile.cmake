@@ -32,6 +32,26 @@ vcpkg_from_github(
 #Overwrite outdated modules if they have not been patched:
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 
+# Ensure Eigen3::Eigen exists before importing onnxruntime in Filters/ONNX.
+vcpkg_replace_string("${SOURCE_PATH}/Filters/ONNX/CMakeLists.txt"
+    "vtk_module_find_package(PRIVATE_IF_SHARED\n  PACKAGE onnxruntime)"
+    "find_package(Eigen3 CONFIG REQUIRED)\n\nvtk_module_find_package(PRIVATE_IF_SHARED\n  PACKAGE onnxruntime)"
+)
+
+# defines comparison_fn_t in stdlib.h; bundled h5hut redefines it.
+vcpkg_replace_string("${SOURCE_PATH}/ThirdParty/h5hut/vtkh5hut/src/h5core/private/h5t_io.h"
+    "} comparison_fn_t;"
+    "} h5t_comparison_fn_t;"
+)
+vcpkg_replace_string("${SOURCE_PATH}/ThirdParty/h5hut/vtkh5hut/src/h5core/private/h5t_io.h"
+    " comparison_fn_t compare);"
+    " h5t_comparison_fn_t compare);"
+)
+vcpkg_replace_string("${SOURCE_PATH}/ThirdParty/h5hut/vtkh5hut/src/h5core/h5t_io.c"
+    "\tcomparison_fn_t compare"
+    "\th5t_comparison_fn_t compare"
+)
+
 # =============================================================================
 
 if(HDF5_WITH_PARALLEL AND NOT "mpi" IN_LIST FEATURES)
@@ -126,12 +146,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS PACKAGE_FEATURE_OPTIONS
    "proj" CMAKE_REQUIRE_FIND_PACKAGE_PROJ
    "netcdf" CMAKE_REQUIRE_FIND_PACKAGE_NetCDF
    INVERTED_FEATURES
-   "libtheora" CMAKE_DISABLE_FIND_PACKAGE_THEORA
-   "libharu" CMAKE_DISABLE_FIND_PACKAGE_LibHaru
    "cgns" CMAKE_DISABLE_FIND_PACKAGE_CGNS
    "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASIoss
    "seacas" CMAKE_DISABLE_FIND_PACKAGE_SEACASExodus
-   "sql" CMAKE_DISABLE_FIND_PACKAGE_SQLite3
    "proj" CMAKE_DISABLE_FIND_PACKAGE_PROJ
    "netcdf" CMAKE_DISABLE_FIND_PACKAGE_NetCDF
 )
@@ -229,6 +246,12 @@ if("openmp" IN_LIST FEATURES)
 	list(APPEND ADDITIONAL_OPTIONS
 	    -DVTK_SMP_IMPLEMENTATION_TYPE=OpenMP
 	)
+endif()
+
+if(VCPKG_TARGET_IS_OSX)# VTK's OpenXR module is not supported on macOS, and it doesn't have a proper check for this in the CMakeLists, so we have to disable it manually.
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_ENABLE_VTK_RenderingOpenXR=DONT_WANT
+    )
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
