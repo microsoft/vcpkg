@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-cyclonedds/cyclonedds-cxx
     REF "${VERSION}"
-    SHA512 62e1467030386f990562944cbf1a41b1a43b3d67dddc7828894b2823f7e35f68cdc0ecc967f0957d5fbbbe5eef666f3363a2d4d6b96177f8ab2504874c42e23f
+    SHA512 d933ccdb5c455f7ba5bd8e5e66195fbcc9a58d6486bad7384a02ecd1622d322453cbd9dbecabaed734d65b6f88856df7fd501d391cc108337f575bb43af90aa6
     HEAD_REF master
 )
 
