@@ -2,10 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse-cyclonedds/cyclonedds
     REF "${VERSION}"
-    SHA512 de63a7207c36ff1b185b1a108d697d37675078ac15c34a940429b619b048593056dd8c4c920fb708235b972f94536452973eb40a8e66da1d57cb9b9b03005f30
+    SHA512 030e4d71bdb477fb615fcdb463d75acf1332f356c506abaeb30eac704282a869dc6e29c1b82971fe2474b0fd90d35cfac14dbd7452638d30d2b755838477879e
     HEAD_REF master
     PATCHES
-        enable-security.patch
         idlc-generate.patch
 )
 
