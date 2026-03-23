@@ -8,7 +8,9 @@
     "eigen3",
     "fmt",
     "if97",
+    "miniz",
     "msgpack",
+    "nlohmann-json",
     "rapidjson",
     "refprop-headers",
     {

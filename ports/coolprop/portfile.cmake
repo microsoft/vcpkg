@@ -14,8 +14,6 @@ vcpkg_replace_string("${SOURCE_PATH}/CMakeLists.txt" "CACHE LIST" "CACHE STRING"
 file(GLOB externals "${SOURCE_PATH}/externals/*")
 list(FILTER externals EXCLUDE REGEX "/externals/[.]")
 list(FILTER externals EXCLUDE REGEX "/externals/incbin$")
-list(FILTER externals EXCLUDE REGEX "/externals/miniz-3\\.0\\.2$")
-list(FILTER externals EXCLUDE REGEX "/externals/nlohmann-json$")
 file(REMOVE_RECURSE ${externals})
 file(COPY "${CURRENT_INSTALLED_DIR}/include/IF97.h" DESTINATION "${SOURCE_PATH}/externals/IF97")
 file(COPY "${CURRENT_INSTALLED_DIR}/include/REFPROP_lib.h" DESTINATION "${SOURCE_PATH}/externals/REFPROP-headers/")
