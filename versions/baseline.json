@@ -10558,7 +10558,7 @@
     },
     "vtk": {
       "baseline": "9.6.0",
-      "port-version": 2
+      "port-version": 8
     },
     "vtk-compile-tools": {
       "baseline": "9.3.0-pv5.12.1",
