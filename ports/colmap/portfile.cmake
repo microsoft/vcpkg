@@ -67,7 +67,6 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         # colmap does not export any symbols for shared libraries on Windows.
-        -DBUILD_SHARED_LIBS=OFF
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
         -DGUI_ENABLED=${GUI_ENABLED}
