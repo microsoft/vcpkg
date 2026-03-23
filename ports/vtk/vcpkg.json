@@ -88,6 +88,13 @@
         "openvdb",
         "pdal",
         "tbb",
+        "openslide",
+        "cairo",
+        "gdk-pixbuf",
+        "glib",
+        "libdicom",
+        "openjpeg",
+        "zstd",
         {
           "name": "vtk",
           "default-features": false,
