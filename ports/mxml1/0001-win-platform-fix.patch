@@ -1,5 +1,5 @@
 diff --git a/Makefile.in b/Makefile.in
-index 5df074e..3904eb5 100644
+index 5df074e..04cd097 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -13,6 +13,8 @@
@@ -65,6 +65,26 @@ index 5df074e..3904eb5 100644
  #
  # libmxml.so.1.6
  #
+diff --git a/config.h.in b/config.h.in
+index f9be47f..02bf249 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -12,7 +12,8 @@
+ /*
+  * Include necessary headers...
+  */
+-
++#ifndef CONFIG_H
++#  define CONFIG_H
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -97,3 +98,4 @@ extern int	_mxml_snprintf(char *, size_t, const char *, ...);
+ extern int	_mxml_vsnprintf(char *, size_t, const char *, va_list);
+ #    define vsnprintf _mxml_vsnprintf
+ #  endif /* !HAVE_VSNPRINTF */
++#endif /* CONFIG_H */
+\ No newline at end of file
 diff --git a/configure.ac b/configure.ac
 index 5b7ec04..7d09a87 100644
 --- a/configure.ac
@@ -180,11 +200,14 @@ index 80fa28b..14b83b9 100644
  /*
   * Private structures...
 diff --git a/testmxml.c b/testmxml.c
-index 271c6f1..1d9218f 100644
+index 271c6f1..b36362b 100644
 --- a/testmxml.c
 +++ b/testmxml.c
-@@ -20,9 +20,6 @@
- 
+@@ -17,12 +17,8 @@
+ /*
+  * Include necessary headers...
+  */
+-
  #include "config.h"
  #include "mxml-private.h"
 -#ifndef _WIN32
@@ -193,6 +216,25 @@ index 271c6f1..1d9218f 100644
  #include <fcntl.h>
  #ifndef O_BINARY
  #  define O_BINARY 0
+diff --git a/vcnet/config.h b/vcnet/config.h
+index bf9207c..17ca9be 100644
+--- a/vcnet/config.h
++++ b/vcnet/config.h
+@@ -23,7 +23,8 @@
+  * Then Microsoft decided that they should ignore this in VC2008 and use
+  * yet another define (_CRT_SECURE_NO_WARNINGS) instead...
+  */
+-
++#ifndef CONFIG_H
++#define CONFIG_H
+ #define _CRT_SECURE_NO_DEPRECATE
+ #define _CRT_SECURE_NO_WARNINGS
+ 
+@@ -135,3 +136,4 @@ extern int	_mxml_snprintf(char *, size_t, const char *, ...);
+ extern int	_mxml_vsnprintf(char *, size_t, const char *, va_list);
+ #    define vsnprintf _mxml_vsnprintf
+ #  endif /* !HAVE_VSNPRINTF */
++#endif /* CONFIG_H */
 diff --git a/vcnet/mxml.sln b/vcnet/mxml.sln
 index e4cd658..95ddba5 100644
 --- a/vcnet/mxml.sln
@@ -666,3 +708,22 @@ index 7b4ed79..c796b50 100644
    <ItemGroup>
      <ClCompile Include="..\testmxml.c" />
    </ItemGroup>
+diff --git a/xcode/config.h b/xcode/config.h
+index 4cb3556..cc485fe 100644
+--- a/xcode/config.h
++++ b/xcode/config.h
+@@ -12,7 +12,8 @@
+ /*
+  * Include necessary headers...
+  */
+-
++#ifndef CONFIG_H
++#define CONFIG_H
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -72,3 +73,4 @@
+ 
+ extern char	*_mxml_strdupf(const char *, ...);
+ extern char	*_mxml_vstrdupf(const char *, va_list);
++#endif /* CONFIG_H */
