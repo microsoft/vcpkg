@@ -41,21 +41,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(MXML_SHARED_OPT --disable-shared)
-    else()
-        set(MXML_SHARED_OPT --enable-shared)
     endif()
     vcpkg_replace_string("${SOURCE_PATH}/Makefile.in"
         "ALLTARGETS	=	$(LIBMXML) testmxml"
-        "ALLTARGETS = $(LIBMXML)"
+        "ALLTARGETS =   $(LIBMXML)"
     )#remove test target
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
         OPTIONS
         ${MXML_SHARED_OPT}
+        "--prefix=${CURRENT_PACKAGES_DIR}"
     )
     vcpkg_make_install()
-    file(INSTALL "${SOURCE_PATH}/mxml.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     vcpkg_fixup_pkgconfig()
 endif()
 
