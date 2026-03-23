@@ -90,7 +90,6 @@
         "onnxruntime",
         "openjpeg",
         "openslide",
-        "openslide",
         "openvdb",
         "pdal",
         "tbb",
