@@ -1,0 +1,17 @@
+{
+  "name": "clix",
+  "version-semver": "0.1.0",
+  "description": "A modern header-only C++ CLI toolkit with nested commands, validation, config files, env support, and shell completion.",
+  "homepage": "https://github.com/kkokotero/clix",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+clix provides CMake package config files.
+
+Use it from CMake like this:
+
+    find_package(clix CONFIG REQUIRED)
+    target_link_libraries(your_target PRIVATE clix::clix)
