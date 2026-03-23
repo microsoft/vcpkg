@@ -3313,8 +3313,8 @@
       "port-version": 6
     },
     "gegl": {
-      "baseline": "0.4.66",
-      "port-version": 1
+      "baseline": "0.4.68",
+      "port-version": 0
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
