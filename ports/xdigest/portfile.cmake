@@ -7,8 +7,12 @@ vcpkg_from_github(
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(NASM)
-    list(APPEND OPTIONS "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        list(APPEND OPTIONS "-DENABLE_ASM=OFF")
+    else()
+        vcpkg_find_acquire_program(NASM)
+        list(APPEND OPTIONS "-DCMAKE_ASM_NASM_COMPILER=${NASM}")
+    endif()
 endif()
 
 vcpkg_cmake_configure(
