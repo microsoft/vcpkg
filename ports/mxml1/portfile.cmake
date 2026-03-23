@@ -18,20 +18,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(MXML_VCNET_PROJECT "vcnet/mxmlstat.vcxproj")
     else()
         set(MXML_VCNET_PROJECT "vcnet/mxml1.vcxproj")
+        vcpkg_replace_string("${SOURCE_PATH}/${MXML_VCNET_PROJECT}"
+            "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+            "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+        )
+        vcpkg_replace_string("${SOURCE_PATH}/${MXML_VCNET_PROJECT}"
+            "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
+            "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+        )
+        vcpkg_replace_string("${SOURCE_PATH}/${MXML_VCNET_PROJECT}"
+            "<MinimalRebuild>true</MinimalRebuild>"
+            "<MinimalRebuild>false</MinimalRebuild>"
+        )
     endif()
-
-    vcpkg_replace_string("${SOURCE_PATH}/${MXML_VCNET_PROJECT}"
-      "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
-      "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
-    )
-    vcpkg_replace_string("${SOURCE_PATH}/${MXML_VCNET_PROJECT}"
-      "<DebugInformationFormat>EditAndContinue</DebugInformationFormat>"
-      "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
-    )
-    vcpkg_replace_string("${SOURCE_PATH}/${MXML_VCNET_PROJECT}"
-        "<MinimalRebuild>true</MinimalRebuild>"
-        "<MinimalRebuild>false</MinimalRebuild>"
-    )
 
     vcpkg_msbuild_install(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -45,7 +44,10 @@ else()
     else()
         set(MXML_SHARED_OPT --enable-shared)
     endif()
-
+    vcpkg_replace_string("${SOURCE_PATH}/Makefile.in"
+        "ALLTARGETS	=	$(LIBMXML) testmxml"
+        "ALLTARGETS = $(LIBMXML)"
+    )
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
