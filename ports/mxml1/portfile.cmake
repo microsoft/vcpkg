@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 43e6a92806d9c3f5db39fbf960c15ebfa6d92ef98274b7ce39b57724d6c26ad4362d6d8f3c1023efda92e6a815df068e5038a0cd479562b6be9dbdda8e827a41
     HEAD_REF master
     PATCHES
-    0001-win-platform-fix.patch # Issue347
+    0001-win-platform-fix.patch # Issue#347 Pull request #352
 )
 
 if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -39,8 +39,8 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
     file(INSTALL "${SOURCE_PATH}/mxml.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 else()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        set(MXML_SHARED_OPT --disable-shared)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        set(MXML_SHARED_OPT --enable-shared  --disable-static)
     endif()
     vcpkg_replace_string("${SOURCE_PATH}/Makefile.in"
         "ALLTARGETS	=	$(LIBMXML) testmxml"

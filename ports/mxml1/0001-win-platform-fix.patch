@@ -1,3 +1,85 @@
+diff --git a/Makefile.in b/Makefile.in
+index 5df074e..3904eb5 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -13,6 +13,8 @@
+ # Compiler tools definitions...
+ #
+ 
++.POSIX:
++
+ AR		=	@AR@
+ ARFLAGS		=	@ARFLAGS@
+ ARCHFLAGS	=	@ARCHFLAGS@
+@@ -27,7 +29,7 @@ INSTALL		=	@INSTALL@
+ LIBMXML		=	@LIBMXML@
+ LIBS		=	@LIBS@
+ LN		=	@LN@ -s
+-MKDIR		=	@MKDIR@
++MKDIR		= 	@MKDIR@ -p
+ OPTIM		=	@OPTIM@
+ RANLIB		=	@RANLIB@
+ RM		=	@RM@ -f
+@@ -47,7 +49,7 @@ includedir	=	@includedir@
+ libdir		=	@libdir@
+ mandir		=	@mandir@
+ docdir		=	@docdir@
+-BUILDROOT	=	$(DSTROOT)
++BUILDROOT	= 	$(DSTROOT)$(DESTDIR)
+ 
+ 
+ #
+@@ -56,7 +58,7 @@ BUILDROOT	=	$(DSTROOT)
+ 
+ INSTALL_BIN	=	$(INSTALL) -m 755
+ INSTALL_DATA	=	$(INSTALL) -m 644
+-INSTALL_DIR	=	$(INSTALL) -d
++INSTALL_DIR	= 	$(INSTALL) -d -m 755
+ INSTALL_LIB	=	$(INSTALL) -m 755
+ INSTALL_MAN	=	$(INSTALL) -m 644
+ INSTALL_SCRIPT	=	$(INSTALL) -m 755
+@@ -132,6 +134,8 @@ distclean:	clean
+ # Install everything...
+ #
+ 
++.NOTPARALLEL: install install-$(LIBMXML) install-libmxml.a
++
+ install:	$(TARGETS) install-$(LIBMXML) install-libmxml.a
+ 	echo Installing documentation in $(BUILDROOT)$(docdir)...
+ 	$(INSTALL_DIR) $(BUILDROOT)$(docdir)
+@@ -266,6 +270,17 @@ mxml1.dll:	$(LIBOBJS)
+ 	$(DSO) $(DSOFLAGS) $(LDFLAGS) -o $@ $(LIBOBJS) $(LIBS)
+ 
+ 
++# Install / uninstall mxml1.dll
++install-$(LIBMXML): $(LIBMXML)
++	echo Installing $(LIBMXML) to $(BUILDROOT)$(bindir)...
++	$(INSTALL_DIR) $(BUILDROOT)$(bindir)
++	$(INSTALL_BIN) $(LIBMXML) $(BUILDROOT)$(bindir)
++
++uninstall-$(LIBMXML):
++	echo Uninstalling $(LIBMXML) from $(BUILDROOT)$(bindir)...
++	$(RM) $(BUILDROOT)$(bindir)/$(LIBMXML)
++
++
+ #
+ # libmxml.so.1.6
+ #
+diff --git a/configure.ac b/configure.ac
+index 5b7ec04..7d09a87 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -41,8 +41,8 @@ AC_CONFIG_HEADERS([config.h])
+ 
+ dnl Version number...
+ VERSION="AC_PACKAGE_VERSION"
+-AC_SUBST(VERSION)
+-AC_DEFINE_UNQUOTED(MXML_VERSION, "Mini-XML v$VERSION")
++AC_SUBST([VERSION])
++AC_DEFINE_UNQUOTED([MXML_VERSION], "Mini-XML v$VERSION", [Version number])
+ 
+ 
+ dnl Clear default debugging options and set normal optimization by
 diff --git a/mxml-file.c b/mxml-file.c
 index 07bdc24..ccd40ac 100644
 --- a/mxml-file.c
