@@ -250,16 +250,17 @@
           "name": "vtk",
           "default-features": false,
           "features": [
-            "qt"
+            "libtheora",
+            "netcdf",
+            "qt",
+            "seacas"
           ]
         },
         {
           "name": "vtk",
           "default-features": false,
           "features": [
-            "atlmfc",
-            "libtheora",
-            "seacas"
+            "atlmfc"
           ],
           "platform": "windows"
         }
