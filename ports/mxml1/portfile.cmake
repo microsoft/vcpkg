@@ -47,7 +47,7 @@ else()
     vcpkg_replace_string("${SOURCE_PATH}/Makefile.in"
         "ALLTARGETS	=	$(LIBMXML) testmxml"
         "ALLTARGETS = $(LIBMXML)"
-    )
+    )#remove test target
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         COPY_SOURCE
