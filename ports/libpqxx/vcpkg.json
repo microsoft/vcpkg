@@ -1,6 +1,6 @@
 {
   "name": "libpqxx",
-  "version": "7.10.5",
+  "version": "8.0.0",
   "description": [
     "The official* C++ client API for PostgreSQL.",
     "*) NB https://pqxx.org/libpqxx/faq/"
