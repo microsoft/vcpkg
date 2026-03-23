@@ -1,0 +1,586 @@
+diff --git a/mxml-file.c b/mxml-file.c
+index 07bdc24..ccd40ac 100644
+--- a/mxml-file.c
++++ b/mxml-file.c
+@@ -13,9 +13,6 @@
+  * Include necessary headers...
+  */
+ 
+-#ifndef _WIN32
+-#  include <unistd.h>
+-#endif /* !_WIN32 */
+ #include "mxml-private.h"
+ 
+ 
+diff --git a/mxml-private.h b/mxml-private.h
+index 80fa28b..14b83b9 100644
+--- a/mxml-private.h
++++ b/mxml-private.h
+@@ -1,24 +1,62 @@
+-/*
+- * Private definitions for Mini-XML, a small XML file parsing library.
+- *
+- * https://www.msweet.org/mxml
+- *
+- * Copyright © 2003-2019 by Michael R Sweet.
+- *
+- * Licensed under Apache License v2.0.  See the file "LICENSE" for more
+- * information.
+- */
+-
+-#ifndef _mxml_private_h_
+-#  define _mxml_private_h_
++//
++// Private definitions for Mini-XML, a small XML file parsing library.
++//
++// https://www.msweet.org/mxml
++//
++// Copyright © 2003-2026 by Michael R Sweet.
++//
++// Licensed under Apache License v2.0.  See the file "LICENSE" for more
++// information.
++//
++
++#ifndef MXML_PRIVATE_H
++#  define MXML_PRIVATE_H
++#  include "config.h"
+ 
+-/*
+- * Include necessary headers...
+- */
++#  if _WIN32
++//
++// Beginning with VC2005, Microsoft breaks ISO C and POSIX conformance
++// by deprecating a number of functions in the name of security, even
++// when many of the affected functions are otherwise completely secure.
++// The _CRT_SECURE_NO_DEPRECATE definition ensures that we won't get
++// warnings from their use...
++//
++// Then Microsoft decided that they should ignore this in VC2008 and use
++// yet another define (_CRT_SECURE_NO_WARNINGS) instead...
++//
++#    define _CRT_SECURE_NO_DEPRECATE
++#    define _CRT_SECURE_NO_WARNINGS
++#  endif // _WIN32
+ 
+-#  include "config.h"
+ #  include "mxml.h"
+-
++#  include <stdarg.h>
++#  include <locale.h>
++
++#  if _WIN32
++//
++// Microsoft also renames the POSIX functions to _name, and introduces
++// a broken compatibility layer using the original names.  As a result,
++// random crashes can occur when, for example, strdup() allocates memory
++// from a different heap than used by malloc() and free().
++//
++// To avoid moronic problems like this, we #define the POSIX function
++// names to the corresponding non-standard Microsoft names.
++//
++#    include <io.h>
++#    define close	_close
++#    define open	_open
++#    define read	_read
++#    define snprintf 	_snprintf
++#    define strdup	_strdup
++#    define vsnprintf 	_vsnprintf
++#    define write	_write
++
++#  else
++//
++// Linux/macOS/Unix are POSIX...
++//
++#    include <unistd.h>
++#  endif // _WIN32
+ 
+ /*
+  * Private structures...
+diff --git a/testmxml.c b/testmxml.c
+index 271c6f1..1d9218f 100644
+--- a/testmxml.c
++++ b/testmxml.c
+@@ -20,9 +20,6 @@
+ 
+ #include "config.h"
+ #include "mxml-private.h"
+-#ifndef _WIN32
+-#  include <unistd.h>
+-#endif /* !_WIN32 */
+ #include <fcntl.h>
+ #ifndef O_BINARY
+ #  define O_BINARY 0
+diff --git a/vcnet/mxml.sln b/vcnet/mxml.sln
+index e4cd658..95ddba5 100644
+--- a/vcnet/mxml.sln
++++ b/vcnet/mxml.sln
+@@ -13,20 +13,34 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mxmlstat", "mxmlstat.vcxpro
+ EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
++		Debug|ARM64 = Debug|ARM64
+ 		Debug|x64 = Debug|x64
++		Release|ARM64 = Release|ARM64
+ 		Release|x64 = Release|x64
+ 	EndGlobalSection
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
++		{E5AA9476-9751-4654-8109-B1A2112D5E73}.Debug|ARM64.ActiveCfg = Debug|ARM64
++		{E5AA9476-9751-4654-8109-B1A2112D5E73}.Debug|ARM64.Build.0 = Debug|ARM64
+ 		{E5AA9476-9751-4654-8109-B1A2112D5E73}.Debug|x64.ActiveCfg = Debug|Win32
+ 		{E5AA9476-9751-4654-8109-B1A2112D5E73}.Debug|x64.Build.0 = Debug|Win32
++		{E5AA9476-9751-4654-8109-B1A2112D5E73}.Release|ARM64.ActiveCfg = Release|ARM64
++		{E5AA9476-9751-4654-8109-B1A2112D5E73}.Release|ARM64.Build.0 = Release|ARM64
+ 		{E5AA9476-9751-4654-8109-B1A2112D5E73}.Release|x64.ActiveCfg = Debug|x64
+ 		{E5AA9476-9751-4654-8109-B1A2112D5E73}.Release|x64.Build.0 = Debug|x64
++		{75CAC6C4-A6BC-4935-A3C9-8F0AE0744227}.Debug|ARM64.ActiveCfg = Debug|ARM64
++		{75CAC6C4-A6BC-4935-A3C9-8F0AE0744227}.Debug|ARM64.Build.0 = Debug|ARM64
+ 		{75CAC6C4-A6BC-4935-A3C9-8F0AE0744227}.Debug|x64.ActiveCfg = Debug|Win32
+ 		{75CAC6C4-A6BC-4935-A3C9-8F0AE0744227}.Debug|x64.Build.0 = Debug|Win32
++		{75CAC6C4-A6BC-4935-A3C9-8F0AE0744227}.Release|ARM64.ActiveCfg = Release|ARM64
++		{75CAC6C4-A6BC-4935-A3C9-8F0AE0744227}.Release|ARM64.Build.0 = Release|ARM64
+ 		{75CAC6C4-A6BC-4935-A3C9-8F0AE0744227}.Release|x64.ActiveCfg = Debug|x64
+ 		{75CAC6C4-A6BC-4935-A3C9-8F0AE0744227}.Release|x64.Build.0 = Debug|x64
++		{CDEEBB3C-D45B-4CC5-BE9B-0BD415A27958}.Debug|ARM64.ActiveCfg = Debug|ARM64
++		{CDEEBB3C-D45B-4CC5-BE9B-0BD415A27958}.Debug|ARM64.Build.0 = Debug|ARM64
+ 		{CDEEBB3C-D45B-4CC5-BE9B-0BD415A27958}.Debug|x64.ActiveCfg = Debug|Win32
+ 		{CDEEBB3C-D45B-4CC5-BE9B-0BD415A27958}.Debug|x64.Build.0 = Debug|Win32
++		{CDEEBB3C-D45B-4CC5-BE9B-0BD415A27958}.Release|ARM64.ActiveCfg = Release|ARM64
++		{CDEEBB3C-D45B-4CC5-BE9B-0BD415A27958}.Release|ARM64.Build.0 = Release|ARM64
+ 		{CDEEBB3C-D45B-4CC5-BE9B-0BD415A27958}.Release|x64.ActiveCfg = Debug|x64
+ 		{CDEEBB3C-D45B-4CC5-BE9B-0BD415A27958}.Release|x64.Build.0 = Debug|x64
+ 	EndGlobalSection
+diff --git a/vcnet/mxml1.vcxproj b/vcnet/mxml1.vcxproj
+index 3369f13..6156a81 100644
+--- a/vcnet/mxml1.vcxproj
++++ b/vcnet/mxml1.vcxproj
+@@ -5,6 +5,10 @@
+       <Configuration>Debug</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug|ARM64">
++      <Configuration>Debug</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug|x64">
+       <Configuration>Debug</Configuration>
+       <Platform>x64</Platform>
+@@ -13,6 +17,10 @@
+       <Configuration>Release</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|ARM64">
++      <Configuration>Release</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|x64">
+       <Configuration>Release</Configuration>
+       <Platform>x64</Platform>
+@@ -39,11 +47,21 @@
+     <PlatformToolset>v142</PlatformToolset>
+     <CharacterSet>MultiByte</CharacterSet>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
++    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <PlatformToolset>v142</PlatformToolset>
++    <CharacterSet>MultiByte</CharacterSet>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>DynamicLibrary</ConfigurationType>
+     <PlatformToolset>v142</PlatformToolset>
+     <CharacterSet>MultiByte</CharacterSet>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
++    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <PlatformToolset>v142</PlatformToolset>
++    <CharacterSet>MultiByte</CharacterSet>
++  </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+   </ImportGroup>
+@@ -59,10 +77,18 @@
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++  </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>15.0.27924.0</_ProjectFileVersion>
+@@ -82,11 +108,21 @@
+     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+     <LinkIncremental>true</LinkIncremental>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
++    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
++    <LinkIncremental>true</LinkIncremental>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+     <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+     <LinkIncremental>false</LinkIncremental>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
++    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
++    <LinkIncremental>false</LinkIncremental>
++  </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <ClCompile>
+       <Optimization>Disabled</Optimization>
+@@ -189,6 +225,58 @@
+       <TargetMachine>MachineX64</TargetMachine>
+     </Link>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <Midl>
++      <TargetEnvironment>ARM64</TargetEnvironment>
++    </Midl>
++    <ClCompile>
++      <Optimization>Disabled</Optimization>
++      <AdditionalIncludeDirectories>..\vcnet;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MXML1_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <MinimalRebuild>true</MinimalRebuild>
++      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <PrecompiledHeader />
++      <WarningLevel>Level1</WarningLevel>
++      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
++    </ClCompile>
++    <Link>
++      <OutputFile>$(Platform)\$(Configuration)\$(ProductName)\mxml1.dll</OutputFile>
++      <IgnoreSpecificDefaultLibraries>oldnames.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
++      <ModuleDefinitionFile>.\mxml1.def</ModuleDefinitionFile>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++      <ProgramDatabaseFile>$(OutDir)mxml1.pdb</ProgramDatabaseFile>
++      <SubSystem>Windows</SubSystem>
++      <DataExecutionPrevention />
++      <ImportLibrary>$(Configuration)\$(Platform)\$(ProductName)\mxml1.lib</ImportLibrary>
++      <TargetMachine>MachineARM64</TargetMachine>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <Midl>
++      <TargetEnvironment>ARM64</TargetEnvironment>
++    </Midl>
++    <ClCompile>
++      <AdditionalIncludeDirectories>..\vcnet;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MXML1_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <PrecompiledHeader />
++      <WarningLevel>Level1</WarningLevel>
++      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
++    </ClCompile>
++    <Link>
++      <OutputFile>$(Platform)\$(Configuration)\$(ProductName)\mxml1.dll</OutputFile>
++      <IgnoreSpecificDefaultLibraries>oldnames.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
++      <ModuleDefinitionFile>.\mxml1.def</ModuleDefinitionFile>
++      <GenerateDebugInformation>false</GenerateDebugInformation>
++      <SubSystem>Windows</SubSystem>
++      <OptimizeReferences>true</OptimizeReferences>
++      <EnableCOMDATFolding>true</EnableCOMDATFolding>
++      <DataExecutionPrevention />
++      <ImportLibrary>$(Configuration)\$(Platform)\$(ProductName)\mxml1.lib</ImportLibrary>
++      <TargetMachine>MachineARM64</TargetMachine>
++    </Link>
++  </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\mxml-attr.c" />
+     <ClCompile Include="..\mxml-entity.c" />
+diff --git a/vcnet/mxmlstat.vcxproj b/vcnet/mxmlstat.vcxproj
+index 5891e89..812c8a9 100644
+--- a/vcnet/mxmlstat.vcxproj
++++ b/vcnet/mxmlstat.vcxproj
+@@ -5,10 +5,18 @@
+       <Configuration>Debug</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug|ARM64">
++      <Configuration>Debug</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|Win32">
+       <Configuration>Release</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|ARM64">
++      <Configuration>Release</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug|x64">
+       <Configuration>Debug</Configuration>
+       <Platform>x64</Platform>
+@@ -61,6 +69,12 @@
+     <PlatformToolset>v142</PlatformToolset>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>true</UseDebugLibraries>
++    <PlatformToolset>v142</PlatformToolset>
++    <CharacterSet>Unicode</CharacterSet>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+@@ -68,6 +82,13 @@
+     <WholeProgramOptimization>true</WholeProgramOptimization>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
++    <ConfigurationType>StaticLibrary</ConfigurationType>
++    <UseDebugLibraries>false</UseDebugLibraries>
++    <PlatformToolset>v142</PlatformToolset>
++    <WholeProgramOptimization>true</WholeProgramOptimization>
++    <CharacterSet>Unicode</CharacterSet>
++  </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+   </ImportGroup>
+@@ -82,9 +103,15 @@
+   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
++  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++  </ImportGroup>
+   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+   </ImportGroup>
++  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++  </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <LinkIncremental>true</LinkIncremental>
+@@ -96,6 +123,11 @@
+     <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <LinkIncremental>true</LinkIncremental>
++    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
++    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <LinkIncremental>false</LinkIncremental>
+     <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+@@ -106,6 +138,11 @@
+     <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <LinkIncremental>false</LinkIncremental>
++    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
++    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
++  </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <ClCompile>
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+@@ -138,6 +175,22 @@
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+     </Link>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <ClCompile>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <WarningLevel>Level3</WarningLevel>
++      <Optimization>Disabled</Optimization>
++      <SDLCheck>true</SDLCheck>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <ConformanceMode>true</ConformanceMode>
++      <AdditionalIncludeDirectories>..\vcnet;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PrecompiledHeaderFile />
++    </ClCompile>
++    <Link>
++      <SubSystem>Windows</SubSystem>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++    </Link>
++  </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <ClCompile>
+       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+@@ -178,6 +231,26 @@
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+     </Link>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <ClCompile>
++      <PrecompiledHeader>NotUsing</PrecompiledHeader>
++      <WarningLevel>Level3</WarningLevel>
++      <Optimization>MaxSpeed</Optimization>
++      <FunctionLevelLinking>true</FunctionLevelLinking>
++      <IntrinsicFunctions>true</IntrinsicFunctions>
++      <SDLCheck>true</SDLCheck>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <ConformanceMode>true</ConformanceMode>
++      <AdditionalIncludeDirectories>..\vcnet;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PrecompiledHeaderFile />
++    </ClCompile>
++    <Link>
++      <SubSystem>Windows</SubSystem>
++      <EnableCOMDATFolding>true</EnableCOMDATFolding>
++      <OptimizeReferences>true</OptimizeReferences>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++    </Link>
++  </ItemDefinitionGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+diff --git a/vcnet/testmxml.vcxproj b/vcnet/testmxml.vcxproj
+index 7b4ed79..c796b50 100644
+--- a/vcnet/testmxml.vcxproj
++++ b/vcnet/testmxml.vcxproj
+@@ -5,6 +5,10 @@
+       <Configuration>Debug</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Debug|ARM64">
++      <Configuration>Debug</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Debug|x64">
+       <Configuration>Debug</Configuration>
+       <Platform>x64</Platform>
+@@ -13,6 +17,10 @@
+       <Configuration>Release</Configuration>
+       <Platform>Win32</Platform>
+     </ProjectConfiguration>
++    <ProjectConfiguration Include="Release|ARM64">
++      <Configuration>Release</Configuration>
++      <Platform>ARM64</Platform>
++    </ProjectConfiguration>
+     <ProjectConfiguration Include="Release|x64">
+       <Configuration>Release</Configuration>
+       <Platform>x64</Platform>
+@@ -39,11 +47,21 @@
+     <PlatformToolset>v142</PlatformToolset>
+     <CharacterSet>MultiByte</CharacterSet>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
++    <ConfigurationType>Application</ConfigurationType>
++    <PlatformToolset>v142</PlatformToolset>
++    <CharacterSet>MultiByte</CharacterSet>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+     <PlatformToolset>v142</PlatformToolset>
+     <CharacterSet>MultiByte</CharacterSet>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
++    <ConfigurationType>Application</ConfigurationType>
++    <PlatformToolset>v142</PlatformToolset>
++    <CharacterSet>MultiByte</CharacterSet>
++  </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+   <ImportGroup Label="ExtensionSettings">
+   </ImportGroup>
+@@ -59,10 +77,18 @@
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++  </ImportGroup>
+   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+   </ImportGroup>
++  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
++    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
++    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
++  </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>15.0.27924.0</_ProjectFileVersion>
+@@ -82,11 +108,21 @@
+     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+     <LinkIncremental>true</LinkIncremental>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
++    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
++    <LinkIncremental>true</LinkIncremental>
++  </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+     <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+     <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+     <LinkIncremental>false</LinkIncremental>
+   </PropertyGroup>
++  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <OutDir>$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
++    <IntDir>$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
++    <LinkIncremental>false</LinkIncremental>
++  </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <ClCompile>
+       <Optimization>Disabled</Optimization>
+@@ -185,6 +221,56 @@
+       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
++    <Midl>
++      <TargetEnvironment>ARM64</TargetEnvironment>
++    </Midl>
++    <ClCompile>
++      <Optimization>Disabled</Optimization>
++      <AdditionalIncludeDirectories>../vcnet;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <MinimalRebuild>true</MinimalRebuild>
++      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
++      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <PrecompiledHeader />
++      <WarningLevel>Level3</WarningLevel>
++      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
++    </ClCompile>
++    <Link>
++      <OutputFile>$(Platform)\$(Configuration)\$(ProductName)\testmxml.exe</OutputFile>
++      <IgnoreSpecificDefaultLibraries>oldnames.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++      <ProgramDatabaseFile>$(OutDir)testmxml.pdb</ProgramDatabaseFile>
++      <SubSystem>Console</SubSystem>
++      <DataExecutionPrevention />
++      <TargetMachine>MachineARM64</TargetMachine>
++      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Link>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
++    <Midl>
++      <TargetEnvironment>ARM64</TargetEnvironment>
++    </Midl>
++    <ClCompile>
++      <AdditionalIncludeDirectories>../vcnet;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <PrecompiledHeader />
++      <WarningLevel>Level3</WarningLevel>
++      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
++    </ClCompile>
++    <Link>
++      <OutputFile>$(Platform)\$(Configuration)\$(ProductName)\testmxml.exe</OutputFile>
++      <IgnoreSpecificDefaultLibraries>oldnames.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
++      <GenerateDebugInformation>true</GenerateDebugInformation>
++      <SubSystem>Console</SubSystem>
++      <OptimizeReferences>true</OptimizeReferences>
++      <EnableCOMDATFolding>true</EnableCOMDATFolding>
++      <DataExecutionPrevention />
++      <TargetMachine>MachineARM64</TargetMachine>
++      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
++    </Link>
++  </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\testmxml.c" />
+   </ItemGroup>
