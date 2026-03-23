@@ -15,9 +15,9 @@ message(STATUS "${PORT} currently requires the following libraries from the syst
 
 file(TOUCH "${SOURCE_PATH}/README")
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         --with-python3=no
         --with-golang=no
@@ -26,7 +26,7 @@ vcpkg_configure_make(
         --disable-zos-remote
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

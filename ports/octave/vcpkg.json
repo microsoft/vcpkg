@@ -1,7 +1,7 @@
 {
   "name": "octave",
   "version": "10.2.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "High-level interpreted language, primarily intended for numerical computations.",
   "homepage": "https://octave.org/",
   "documentation": "https://docs.octave.org/latest/",
@@ -16,6 +16,10 @@
     "opengl",
     "pcre2",
     "readline",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "zlib"
   ],
   "features": {

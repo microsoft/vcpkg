@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         default-plugin-dir.diff # avoid absolute path
         libaec-config.diff
+        mpi-flags.diff
         pkgconfig.patch
         win-compile-flags.diff
 )

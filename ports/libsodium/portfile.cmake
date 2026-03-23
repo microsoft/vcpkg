@@ -56,12 +56,12 @@ else()
         list(APPEND OPTIONS --disable-pie)
     endif()
 
-    vcpkg_configure_make(
-        AUTOCONFIG
+    vcpkg_make_configure(
+        AUTORECONF
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
     )
-    vcpkg_install_make()
+    vcpkg_make_install()
 
     file(REMOVE_RECURSE
         "${CURRENT_PACKAGES_DIR}/debug/include"
