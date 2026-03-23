@@ -1,0 +1,32 @@
+diff --git a/proj.pc.in b/proj.pc.in
+index c829f078..4c5df1e1 100644
+--- a/proj.pc.in
++++ b/proj.pc.in
+@@ -8,7 +8,7 @@ Name: PROJ
+ Description: Coordinate transformation software library
+ Requires:
+ Version: @VERSION@
+-Libs: -L${libdir} -l@PROJ_OUTPUT_NAME@
++Libs: -L${libdir} -l@PROJ_LINK_LIB_NAME@
+ Libs.private: @EXTRA_LIBS@
+ Requires.private: @EXTRA_REQUIRES@
+ Cflags: -I${includedir}
+diff --git a/src/lib_proj.cmake b/src/lib_proj.cmake
+index cfde386a..07700dde 100644
+--- a/src/lib_proj.cmake
++++ b/src/lib_proj.cmake
+@@ -533,8 +533,14 @@ if(WIN32)
+         endif()
+         set(PROJ_OUTPUT_NAME "proj_${PROJ_VERSION_MAJOR}" CACHE STRING "Name of the PROJ library")
+     endif()
++    if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT MINGW)
++        set(PROJ_LINK_LIB_NAME "proj_d" CACHE INTERNAL "Name of the PROJ link library")
++    else()
++        set(PROJ_LINK_LIB_NAME "proj" CACHE INTERNAL "Name of the PROJ link library")
++    endif()
+ else()
+     set(PROJ_OUTPUT_NAME "proj" CACHE STRING "Name of the PROJ library")
++    set(PROJ_LINK_LIB_NAME "${PROJ_OUTPUT_NAME}" CACHE INTERNAL "Name of the PROJ link library")
+ endif()
+ 
+ set_target_properties(proj PROPERTIES OUTPUT_NAME ${PROJ_OUTPUT_NAME})

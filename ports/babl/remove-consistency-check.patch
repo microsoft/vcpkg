@@ -1,13 +1,13 @@
 diff --git a/meson.build b/meson.build
-index 8206d36..095e024 100644
+index e5f9523..f974871 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -578,7 +578,7 @@ if build_docs
+@@ -574,7 +574,7 @@ if build_docs
  endif
  subdir('bin')
  
--if not platform_win32 and not platform_osx
+-if not platform_osx and host_cpu_family != 'x86'
 +if false
-   # Verify .def files for Windows.
-   # Ironically we only check this on non-Windows platform, since the
-   # script expects .so libraries, and I'm not sure that the `nm` tool is
+   # Verify .def files for Windows linking.
+   # We check this on non-Windows platform  on CI, and on Windows itself.
+   custom_target('check-def-files',
