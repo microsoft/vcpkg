@@ -55,6 +55,7 @@ else()
         ${MXML_SHARED_OPT}
     )
     vcpkg_make_install()
+    file(INSTALL "${SOURCE_PATH}/mxml.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
     vcpkg_fixup_pkgconfig()
 endif()
 
