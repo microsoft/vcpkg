@@ -235,6 +235,15 @@ if ("all" IN_LIST FEATURES)
             "vtk_module_find_package(PRIVATE_IF_SHARED\n  PACKAGE onnxruntime)"
             "find_package(Eigen3 CONFIG REQUIRED)\n\nvtk_module_find_package(PRIVATE_IF_SHARED\n  PACKAGE onnxruntime)"
     )
+    #fix the same issue in the header file, which is required to avoid build errors when building with onnx module enabled.
+    vcpkg_replace_string("${SOURCE_PATH}/Filters/ONNX/Private/vtkONNXInferenceInternals.h"
+            "<onnxruntime_cxx_api.h>"
+            "<onnxruntime/onnxruntime_cxx_api.h>"
+    )
+    vcpkg_replace_string("${SOURCE_PATH}/Filters/ONNX/vtkONNXInference.cxx"
+            "<onnxruntime_cxx_api.h>"
+            "<onnxruntime/onnxruntime_cxx_api.h>"
+    )
 endif ()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         FEATURES
