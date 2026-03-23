@@ -38,8 +38,8 @@ function(download_distfile var url sha512)
 endfunction()
 
 download_distfile(gyp_next
-    "https://files.pythonhosted.org/packages/37/3e/d920a254ad927c942a541388c84dd1af0db1af6f6c2b96e99d9ec3f3a148/gyp_next-0.20.2-py3-none-any.whl"
-    53feff516d0de8738910e04e4e5664af27947c0a2bca856c290f9082d18678b03e917403e2c842edb62b6dd5412c625f34edb52d6d9b295c07ef34b3c18981f8
+	"https://files.pythonhosted.org/packages/23/50/1a4ef667f785f1dcb15a25d87739e26176a8ae5423b35f0bce6adbc5aad6/gyp_next-0.21.1-py3-none-any.whl"
+    02BA5E1A422C5F69A21AE4E7DF06F9BFDF4E876C5C1E0093ECD2DC0BA41F3D1272F907B7911C014FBFA941AE4634FBCCE62E3CE9269EBEF21BF35BE8645D49EF
 )
 download_distfile(packaging
     "https://files.pythonhosted.org/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl"
@@ -149,9 +149,14 @@ if(CMAKE_HOST_WIN32 AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
             message(STATUS "MSVS catalog_productLineVersion: ${msvs_version}")
-            if(NOT msvs_version MATCHES "^20..e?\$")
+            if((NOT msvs_version MATCHES "^20..e?\$") AND (NOT msvs_version MATCHES "^18$")) #MSVC from 2026 is version 18 
                 message(FATAL_ERROR "Failed to determine MSVS version for ${VCPKG_DETECTED_CMAKE_C_COMPILER}.")
             endif()
+			
+			if(msvs_version MATCHES "^18$") #MSVC from 2026 is version 18, microsoft changed that but gyp needs 2026
+				set(msvs_version "2026")
+			endif()
+			
             set(ENV{GYP_MSVS_VERSION} "${msvs_version}")
         endif()
     endif()
