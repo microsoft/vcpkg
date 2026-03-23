@@ -218,12 +218,7 @@
       ]
     },
     "opengl": {
-      "description": "All opengl related modules",
-      "dependencies": [
-        {
-          "name": "vtk",
-          "default-features": false
-        }
+      "description": "All opengl related modules"
       ]
     },
     "openmp": {
