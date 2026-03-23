@@ -79,22 +79,21 @@
       "description": "Build all vtk modules",
       "dependencies": [
         "alembic",
+        "cairo",
         "ffmpeg",
         "fontconfig",
+        "gdk-pixbuf",
+        "glib",
         "libarchive",
+        "libdicom",
         "libmysql",
         "onnxruntime",
+        "openjpeg",
+        "openslide",
         "openslide",
         "openvdb",
         "pdal",
         "tbb",
-        "openslide",
-        "cairo",
-        "gdk-pixbuf",
-        "glib",
-        "libdicom",
-        "openjpeg",
-        "zstd",
         {
           "name": "vtk",
           "default-features": false,
@@ -121,7 +120,8 @@
             "utf8"
           ],
           "platform": "windows"
-        }
+        },
+        "zstd"
       ]
     },
     "atlmfc": {
