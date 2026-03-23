@@ -51,7 +51,6 @@ else()
         COPY_SOURCE
         OPTIONS
         ${MXML_SHARED_OPT}
-        "--prefix=${CURRENT_PACKAGES_DIR}"
     )
     vcpkg_make_install()
     vcpkg_fixup_pkgconfig()
