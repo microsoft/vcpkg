@@ -10800,6 +10800,10 @@
       "baseline": "0.4.0",
       "port-version": 0
     },
+    "wslay": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "wt": {
       "baseline": "4.12.6",
       "port-version": 0

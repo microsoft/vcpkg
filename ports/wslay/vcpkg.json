@@ -1,0 +1,17 @@
+{
+  "name": "wslay",
+  "version": "1.1.1",
+  "description": "WebSocket library (RFC6455) with C API",
+  "homepage": "https://tatsuhiro-t.github.io/wslay/",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
