@@ -405,8 +405,8 @@
       "port-version": 0
     },
     "audit": {
-      "baseline": "4.1.3",
-      "port-version": 1
+      "baseline": "4.1.4",
+      "port-version": 0
     },
     "aurora": {
       "baseline": "2017-06-21-c75699d2a8caa726260c29b6d7a0fd35f8f28933",
