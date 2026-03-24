@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMathLib/OpenBLAS
     REF "v${VERSION}"
-    SHA512 703b84c476c148a0922a04b1c33c9c4c452f478d608d93e59204b8f0f2c516344301ff0a4dbb3750a2449db0d28cc2df001c295898e859b41ecb8381f9c2eab8
+    SHA512 5aac0c41a78bca872439bcde67445dd12de27d9efd0d9db51e6e3a31dfa2d0f6a6c5ee1c1de2bf7ad2f89082259e67f27ddaeafb0553bb5f2ca9a90c8a3dde29
     HEAD_REF develop
     PATCHES
         disable-testing.diff
