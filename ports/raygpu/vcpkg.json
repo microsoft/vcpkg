@@ -1,0 +1,42 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "raygpu",
+  "version-string": "0.1",
+  "description": "A fast and simple Graphics Library written in C99, targeting Vulkan, Metal, DirectX and WebGPU",
+  "homepage": "https://github.com/manuel5975p/raygpu",
+  "license": "Zlib",
+  "supports": "!(uwp | xbox)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "sdl3": {
+      "description": "Enable windowing with SDL3",
+      "dependencies": [
+        "sdl3"
+      ]
+    },
+    "glfw": {
+      "description": "Enable windowing with GLFW",
+      "dependencies": [
+        "glfw3"
+      ]
+    },
+    "vulkan-backend": {
+      "description": "Enable the Vulkan Backend",
+      "dependencies": [
+        "vulkan"
+      ]
+    },
+    "wgpu-backend": {
+      "description": "Enable the WebGPU backend"
+    }
+  }
+}
