@@ -42,6 +42,10 @@ else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(MXML_SHARED_OPT --enable-shared  --disable-static)
     endif()
+    vcpkg_replace_string("${SOURCE_PATH}/Makefile.in"
+        "ALLTARGETS	=	$(LIBMXML) testmxml"
+        "ALLTARGETS =   $(LIBMXML)"
+    )#only build library, not testmxml
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTORECONF
