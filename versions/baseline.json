@@ -11020,6 +11020,10 @@
       "baseline": "1.6.0",
       "port-version": 0
     },
+    "yubico-piv-tool": {
+      "baseline": "2.7.3",
+      "port-version": 0
+    },
     "yyjson": {
       "baseline": "0.12.0",
       "port-version": 0
