@@ -48,7 +48,6 @@ else()
     )#only build library, not testmxml
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTORECONF
         COPY_SOURCE
         OPTIONS
         ${MXML_SHARED_OPT}
