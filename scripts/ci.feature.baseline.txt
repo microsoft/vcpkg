@@ -1038,7 +1038,6 @@ openzl:x64-windows-release=fail
 openzl:x64-windows-static-md=fail
 openzl:x64-windows-static=fail
 openzl:x64-windows=fail
-orange-math:arm64-linux=fail
 orc:arm64-linux=fail
 orc(android)=fail  # try_run for time_t properties
 orefkov-simstr:arm64-linux=fail
