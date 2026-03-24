@@ -1,4 +1,4 @@
-# nakama-sdk: Heroic Labs Nakama C/C++ client (https://github.com/heroiclabs/nakama-cpp)
+# Nakama C/C++ client (Heroic Labs): https://github.com/heroiclabs/nakama-cpp
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -6,14 +6,15 @@ vcpkg_from_github(
     REF v2.9.0
     SHA512 e69cb549d3c451d9e6f16dfc3afc1ed1f1a4d45a92d9967b5090c748dc59a66de51ea27b01d9734718f59887cf7fa2b5c3edb75392e60dd84efe64e45fe1fc76
     HEAD_REF main
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/patches/001-use-vcpkg-toolchain.patch"
+    PATCHES
+        patches/001-use-vcpkg-toolchain.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        curl   WITH_HTTP_CURL
-        wslay  WITH_WS_WSLAY
-        logs   LOGS_ENABLED
+        curl  WITH_HTTP_CURL
+        wslay WITH_WS_WSLAY
+        logs  LOGS_ENABLED
 )
 
 set(EXTRA_OPTS "")
