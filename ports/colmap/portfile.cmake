@@ -11,6 +11,8 @@ vcpkg_from_github(
         no-glu.diff
 )
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 if (NOT TRIPLET_SYSTEM_ARCH STREQUAL "x64" AND ("cuda" IN_LIST FEATURES OR "cuda-redist" IN_LIST FEATURES))
     message(FATAL_ERROR "Feature cuda and cuda-redist require x64 triplet.")
 endif()
@@ -66,7 +68,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        # colmap does not export any symbols for shared libraries on Windows.
         -DCUDA_ENABLED=${CUDA_ENABLED}
         -DCMAKE_CUDA_ARCHITECTURES=${CUDA_ARCHITECTURES}
         -DGUI_ENABLED=${GUI_ENABLED}
