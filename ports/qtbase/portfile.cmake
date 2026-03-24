@@ -24,9 +24,9 @@ set(${PORT}_PATCHES
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
         moltenvk.patch
-        xcodebuild-not-installed.patch
+        #xcodebuild-not-installed.patch
         fix-libresolv-test.patch
-        framework.patch
+        #framework.patch
         use_inotify_on_freebsd.patch
 )
  
@@ -326,6 +326,8 @@ set(TOOL_NAMES
         syncqt
         tracepointgen
         qtwaylandscanner
+        wasmdeployqt
+        wasmdeployqt6
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -573,11 +575,11 @@ if(VCPKG_CROSSCOMPILING)
     file(READ "${dep_file}" dep_contents)
     string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}" dep_contents "${dep_contents}")
     
-    file(WRITE "${dep_file}"
-      "set(QT_HOST_PATH \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
-set(QT_HOST_PATH_CMAKE_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
-${dep_contents} \
-    ")
+#    file(WRITE "${dep_file}"
+#      "set(QT_HOST_PATH \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
+#set(QT_HOST_PATH_CMAKE_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
+#${dep_contents} \
+#    ")
 endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Config.cmake" "{Qt6HostInfo_DIR}/.." "{Qt6HostInfo_DIR}/../..")
 

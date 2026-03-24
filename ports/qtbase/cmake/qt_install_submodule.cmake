@@ -184,6 +184,7 @@ function(qt_cmake_configure)
             -DINSTALL_DESCRIPTIONSDIR:STRING=share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=share/Qt6/mkspecs
             -DINSTALL_TRANSLATIONSDIR:STRING=translations/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_CMAKEDIR:STRING=share/cmake
         OPTIONS_DEBUG
             # -DFEATURE_debug:BOOL=ON only needed by qtbase and auto detected?
             -DINSTALL_DOCDIR:STRING=../doc/${QT6_DIRECTORY_PREFIX}
@@ -191,6 +192,7 @@ function(qt_cmake_configure)
             -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_DESCRIPTIONSDIR:STRING=../share/Qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=../share/Qt6/mkspecs
+            -DINSTALL_CMAKEDIR:STRING=share/cmake
             ${_qarg_OPTIONS_DEBUG}
         MAYBE_UNUSED_VARIABLES
             INSTALL_BINDIR
@@ -328,9 +330,8 @@ function(qt_fixup_and_cleanup)
             endif()
         endforeach()
     endif()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
+    file(REMOVE_RECURSE
                         "${CURRENT_PACKAGES_DIR}/debug/share"
-                        "${CURRENT_PACKAGES_DIR}/lib/cmake/"
                         "${CURRENT_PACKAGES_DIR}/debug/include"
                         )
 
