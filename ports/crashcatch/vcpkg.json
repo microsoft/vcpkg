@@ -3,5 +3,15 @@
   "version": "1.4.0",
   "description": "A cross-platform, single-header C++ crash-reporting library for modern C++ applications.",
   "homepage": "https://github.com/keithpotz/CrashCatch",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
