@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO linux-audit/audit-userspace
-    SHA512 4ebdfaebb89440bd76d1f715aa9f2f261b453f51c66ae9c4c7ad650cd361268fe2415c33fe7913ec4986d98ccbd457e15734d0aae606b5dccf316b66276a13cb
+    SHA512 e5493f434dddbded65f33bfd56981036af6975c192289a05378d773ce914ab3ffe6b7071cae03e8f69da4e33246a38608d848f64d01647f2572a7eb6651f3ba0
     REF "v${VERSION}"
     HEAD_REF master
 )
