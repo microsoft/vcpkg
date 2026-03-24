@@ -23,7 +23,6 @@ set(${PORT}_PATCHES
         fix_deploy_windows.patch
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
-        fix-missing-include.patch
         moltenvk.patch
         xcodebuild-not-installed.patch
         fix-libresolv-test.patch
@@ -393,6 +392,7 @@ list(APPEND other_files
                 ensure_pro_file.cmake
                 qt-android-runner.py
                 qt-cmake-private-install.cmake
+                qt_cyclonedx_generator.py
                 qt-testrunner.py
                 qt-wasmtestrunner.py
                 sanitizer-testrunner.py
