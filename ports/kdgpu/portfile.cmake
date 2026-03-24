@@ -35,7 +35,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # Fix up optional components only if they exist
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/KDGpuUtils")
-    vcpkg_cmake_config_fixup(PACKAGE_NAME kdgputuils CONFIG_PATH lib/cmake/KDGpuUtils DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_cmake_config_fixup(PACKAGE_NAME kdgpuutils CONFIG_PATH lib/cmake/KDGpuUtils DO_NOT_DELETE_PARENT_CONFIG_PATH)
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/KDGpuKDGui")
     vcpkg_cmake_config_fixup(PACKAGE_NAME kdgpukdgui CONFIG_PATH lib/cmake/KDGpuKDGui DO_NOT_DELETE_PARENT_CONFIG_PATH)
