@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ximion/appstream
     REF "v${VERSION}"
-    SHA512 80f3b7b9279152ce271bab61e97a41268d5dc5d977dc9488fc187df90077ac1a81169201d3d1a7a5578d36e962321035bfe34106486c2ac3d684621b40338de6
+    SHA512 2e673af579107603458cf09086ffc8cb488aa4ab24d248c7774b8b6d8e690aac49b2c5ddda56533b179e017f54fa4598ebae5bb7cb3073b3f03149700a7db9ac
     HEAD_REF main
     PATCHES
       remove-uneeded-directories.patch
