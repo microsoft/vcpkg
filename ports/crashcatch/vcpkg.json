@@ -1,6 +1,7 @@
 {
   "name": "crashcatch",
   "version": "1.4.0",
+  "port-version": 1,
   "description": "A cross-platform, single-header C++ crash-reporting library for modern C++ applications.",
   "homepage": "https://github.com/keithpotz/CrashCatch",
   "license": "MIT",
