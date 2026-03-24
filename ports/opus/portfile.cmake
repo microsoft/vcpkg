@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 b9a504f8576c977df57caee808412ab95e7424e9a64e3dd4045f05616c3ed58706bc3549195b61e25721e299547509d15206d246d96f1a307b82562b703b412c
     HEAD_REF main
-    PATCHES fix-pkgconfig-version.patch
+    PATCHES 
+      fix-pkgconfig-version.patch
+      fix-neon-detection.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
