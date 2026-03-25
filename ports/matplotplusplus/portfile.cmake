@@ -10,7 +10,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alandefreitas/matplotplusplus
     REF "v${VERSION}"
-    SHA512 8ecb13fa206ff6762dec74c4de0778bf275e1ebf11ec1b48e8c0e544cf2990220e1be2b3bc9c658f06cb6714c9cc103fa81f10c079a32128218ebdaf265514d5
+    SHA512 2557c6b34476a48faad08cc02db3e59899c092b4304331ccb93fea9181cbd1003b74ee8aa2bb7a21e2e0604389fae31e8d3e8a66609a9a4c4bdb3c5f4b0bfb62
     HEAD_REF master
     PATCHES
                 fix-dependencies.patch
