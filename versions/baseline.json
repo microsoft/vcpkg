@@ -4560,6 +4560,10 @@
       "baseline": "2019-08-06",
       "port-version": 3
     },
+    "kwindowsystem": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kwsys": {
       "baseline": "2021-08-06",
       "port-version": 1
