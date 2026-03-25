@@ -1881,7 +1881,7 @@
       "port-version": 0
     },
     "coin": {
-      "baseline": "4.0.6",
+      "baseline": "4.0.8",
       "port-version": 0
     },
     "coin-or-buildtools": {
