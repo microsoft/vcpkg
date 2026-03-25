@@ -33,11 +33,26 @@
     }
   ],
   "features": {
+    "cesium": {
+      "description": "Build the Cesium nodekit (osgEarthCesium)"
+    },
     "controls": {
       "description": "Support for the old Controls API (superceded by imgui)"
     },
+    "geocoder": {
+      "description": "Enable the geocoder (GDAL/OGR must be built with geocoder support)"
+    },
+    "procedural": {
+      "description": "Build the procedural terrain nodekit (osgEarthProcedural)"
+    },
+    "silverlining": {
+      "description": "Build support for SunDog SilverLining SDK"
+    },
     "tools": {
       "description": "Build command-line tools"
+    },
+    "triton": {
+      "description": "Build support for SunDog Triton SDK"
     }
   }
 }
