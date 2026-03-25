@@ -4248,6 +4248,10 @@
       "baseline": "1.7",
       "port-version": 0
     },
+    "kcrash": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kdalgorithms": {
       "baseline": "1.4",
       "port-version": 0
