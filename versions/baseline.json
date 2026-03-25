@@ -10032,6 +10032,10 @@
       "baseline": "0.2.5",
       "port-version": 4
     },
+    "threadweaver": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "thrift": {
       "baseline": "0.23.0",
       "port-version": 0
