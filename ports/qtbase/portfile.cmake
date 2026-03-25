@@ -574,12 +574,7 @@ if(VCPKG_CROSSCOMPILING)
     set(dep_file "${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake")
     file(READ "${dep_file}" dep_contents)
     string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}" dep_contents "${dep_contents}")
-    
-#    file(WRITE "${dep_file}"
-#      "set(QT_HOST_PATH \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
-#set(QT_HOST_PATH_CMAKE_DIR \"\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}\" CACHE STRING \"\" FORCE)\n \
-#${dep_contents} \
-#    ")
+    file(WRITE "${dep_file}" "${dep_contents}")
 endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Config.cmake" "{Qt6HostInfo_DIR}/.." "{Qt6HostInfo_DIR}/../..")
 
