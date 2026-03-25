@@ -1,0 +1,12 @@
+diff --git a/src/designer/CMakeLists.txt b/src/designer/CMakeLists.txt
+index 1111111..2222222 100644
+--- a/src/designer/CMakeLists.txt
++++ b/src/designer/CMakeLists.txt
+@@ -22,3 +22,7 @@ ecm_add_qtdesignerplugin(kitemviewswidgets
+     INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
+     COMPONENT Devel
+ )
++
++if(MSVC AND NOT BUILD_SHARED_LIBS)
++    target_link_options(kitemviewswidgets PRIVATE /FORCE:MULTIPLE)
++endif()
