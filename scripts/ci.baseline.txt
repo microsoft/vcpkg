@@ -122,7 +122,6 @@ cmake:arm64-linux=fail
 coin:arm64-linux=fail
 coin-or-ipopt:x64-windows-static-md=fail
 coin-or-ipopt:x64-windows-static=fail
-coolprop:arm64-linux=fail
 coroutine:arm-neon-android=fail
 coroutine:arm64-android=fail
 coroutine:arm64-osx=fail
