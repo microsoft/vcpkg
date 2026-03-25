@@ -1,0 +1,13 @@
+diff --git a/src/tools/solid-hardware/CMakeLists.txt b/src/tools/solid-hardware/CMakeLists.txt
+--- a/src/tools/solid-hardware/CMakeLists.txt
++++ b/src/tools/solid-hardware/CMakeLists.txt
+@@ -1,6 +1,9 @@
+ add_executable(solid-hardware6 solid-hardware.cpp)
+ ecm_mark_nongui_executable(solid-hardware6)
+ target_link_libraries(solid-hardware6 PUBLIC KF6::Solid)
++if(MSVC AND NOT BUILD_SHARED_LIBS)
++    target_link_options(solid-hardware6 PRIVATE /FORCE:MULTIPLE)
++endif()
+ if (HAVE_DBUS)
+   target_link_libraries(solid-hardware6 PRIVATE Qt6::DBus)
+ endif()

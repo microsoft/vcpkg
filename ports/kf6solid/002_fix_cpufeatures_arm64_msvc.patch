@@ -1,0 +1,12 @@
+diff --git a/src/solid/devices/backends/shared/cpufeatures.cpp b/src/solid/devices/backends/shared/cpufeatures.cpp
+--- a/src/solid/devices/backends/shared/cpufeatures.cpp
++++ b/src/solid/devices/backends/shared/cpufeatures.cpp
+@@ -178,7 +178,7 @@
+         features = 0x2;
+     }
+ #endif // __i386__ || __x86_64__
+-#elif defined(_MSC_VER)
++#elif defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64))
+     int array[4], ft = 1;
+     __cpuid(array, ft);
+ 
