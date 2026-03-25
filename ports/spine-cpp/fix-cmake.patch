@@ -1,8 +1,17 @@
 diff --git a/spine-cpp/CMakeLists.txt b/spine-cpp/CMakeLists.txt
-index 9829b42cd..372d58d15 100644
+index 9829b42cd..8a18803dc 100644
 --- a/spine-cpp/CMakeLists.txt
 +++ b/spine-cpp/CMakeLists.txt
-@@ -14,8 +14,8 @@ add_library(spine-cpp-lite STATIC ${SOURCES} ${INCLUDES} spine-cpp-lite/spine-cp
+@@ -10,12 +10,17 @@ file(GLOB SOURCES "spine-cpp/src/**/*.cpp")
+ add_library(spine-cpp STATIC ${SOURCES} ${INCLUDES})
+ target_include_directories(spine-cpp PUBLIC spine-cpp/include)
+ 
++option(SPINE_USE_STD_FUNCTION "Use std::function listeners" OFF)
++if(SPINE_USE_STD_FUNCTION)
++    target_compile_definitions(spine-cpp PUBLIC SPINE_USE_STD_FUNCTION)
++endif()
++
+ add_library(spine-cpp-lite STATIC ${SOURCES} ${INCLUDES} spine-cpp-lite/spine-cpp-lite.cpp)
  target_include_directories(spine-cpp-lite PUBLIC spine-cpp/include spine-cpp-lite)
  
  # Install target

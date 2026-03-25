@@ -1,6 +1,7 @@
 {
   "name": "spine-cpp",
   "version": "4.2.20260227",
+  "port-version": 1,
   "description": "2D skeletal animation runtimes for Spine",
   "homepage": "https://github.com/EsotericSoftware/spine-runtimes",
   "license": null,
@@ -9,5 +10,10 @@
       "name": "vcpkg-cmake",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "use-std-function": {
+      "description": "Use std::function listeners"
+    }
+  }
 }

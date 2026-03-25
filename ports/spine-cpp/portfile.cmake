@@ -10,10 +10,16 @@ vcpkg_from_github(
         fix-cmake.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        use-std-function SPINE_USE_STD_FUNCTION
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/spine-cpp"
     OPTIONS
         -DSPINE_SET_COMPILER_FLAGS=OFF
+        ${FEATURE_OPTIONS}
 )
 vcpkg_cmake_install()
 
