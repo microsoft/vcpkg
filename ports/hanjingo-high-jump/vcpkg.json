@@ -1,6 +1,7 @@
 {
   "name": "hanjingo-high-jump",
   "version": "1.0.4",
+  "port-version": 1,
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
@@ -11,51 +12,14 @@
   "supports": "!uwp",
   "dependencies": [
     "abseil",
-    "behaviortree-cpp",
-    "benchmark",
     "bext-sml",
-    "boost-algorithm",
-    "boost-asio",
-    "boost-beast",
-    "boost-circular-buffer",
     "boost-filesystem",
-    "boost-interprocess",
-    "boost-leaf",
-    "boost-math",
-    "boost-multi-index",
-    "boost-process",
-    "boost-program-options",
-    "boost-property-tree",
     "boost-stacktrace",
-    "boost-thread",
-    "boost-uuid",
-    "breakpad",
-    "clickhouse-cpp",
     "concurrentqueue",
-    "cpp-httplib",
-    "eigen3",
-    "flatbuffers",
     "fmt",
-    "gtest",
-    "hffix",
-    "hidapi",
-    "hiredis",
-    "jwt-cpp",
-    "libharu",
     "libiconv",
     "libnice",
-    "libpqxx",
-    "libqrencode",
     "nlohmann-json",
-    "opencl",
-    "openssl",
-    "opentelemetry-cpp",
-    "protobuf",
-    "pugixml",
-    "quirc",
-    "spdlog",
-    "sqlite3",
-    "tbb",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -63,10 +27,144 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    }
+  ],
+  "features": {
+    "ai": {
+      "description": "Enable ai module support",
+      "dependencies": [
+        "libqrencode",
+        "quirc"
+      ]
     },
-    "yaml-cpp",
-    "zeromq",
-    "zlib",
-    "zstd"
-  ]
+    "algo": {
+      "description": "Enable algo module support",
+      "dependencies": [
+        "behaviortree-cpp",
+        "boost-algorithm",
+        "boost-multi-index",
+        "boost-uuid"
+      ]
+    },
+    "compress": {
+      "description": "Enable compress module support",
+      "dependencies": [
+        "zlib",
+        "zstd"
+      ]
+    },
+    "crypto": {
+      "description": "Enable crypto module support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "db": {
+      "description": "Enable db module support",
+      "dependencies": [
+        "clickhouse-cpp",
+        "hiredis",
+        "libpqxx",
+        "sqlite3"
+      ]
+    },
+    "encoding": {
+      "description": "Enable encoding module support",
+      "dependencies": [
+        "boost-property-tree",
+        "flatbuffers",
+        "protobuf",
+        "pugixml",
+        "yaml-cpp"
+      ]
+    },
+    "hardware": {
+      "description": "Enable hardware module support",
+      "dependencies": [
+        "hidapi",
+        "opencl"
+      ]
+    },
+    "io": {
+      "description": "Enable I/O module support",
+      "dependencies": [
+        "boost-circular-buffer"
+      ]
+    },
+    "log": {
+      "description": "Enable log module support",
+      "dependencies": [
+        "spdlog"
+      ]
+    },
+    "math": {
+      "description": "Enable math module support",
+      "dependencies": [
+        "boost-math",
+        "eigen3"
+      ]
+    },
+    "misc": {
+      "description": "Enable misc module support",
+      "dependencies": [
+        "hffix",
+        "libharu"
+      ]
+    },
+    "net": {
+      "description": "Enable net module support",
+      "dependencies": [
+        "boost-asio",
+        "boost-beast",
+        "cpp-httplib",
+        "zeromq"
+      ]
+    },
+    "os": {
+      "description": "Enable os module support",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "sync": {
+      "description": "Enable sync module support",
+      "dependencies": [
+        "boost-interprocess",
+        "boost-process",
+        "boost-thread",
+        "tbb"
+      ]
+    },
+    "testing": {
+      "description": "Enable testing module support",
+      "dependencies": [
+        "benchmark",
+        "breakpad",
+        "gtest",
+        "opentelemetry-cpp"
+      ]
+    },
+    "time": {
+      "description": "Enable time module support",
+      "dependencies": [
+        "boost-timer"
+      ]
+    },
+    "types": {
+      "description": "Enable types module support",
+      "dependencies": [
+        "boost-any",
+        "boost-leaf",
+        "boost-optional",
+        "boost-serialization",
+        "boost-variant"
+      ]
+    },
+    "util": {
+      "description": "Enable util module support",
+      "dependencies": [
+        "jwt-cpp"
+      ]
+    }
+  }
 }
