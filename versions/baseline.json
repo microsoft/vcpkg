@@ -217,7 +217,7 @@
       "port-version": 0
     },
     "arcticdb-sparrow": {
-      "baseline": "2.3.0",
+      "baseline": "2.3.1",
       "port-version": 0
     },
     "arcticdb-sparrow-extensions": {
@@ -801,7 +801,7 @@
       "port-version": 0
     },
     "boinc": {
-      "baseline": "8.2.8",
+      "baseline": "8.2.9",
       "port-version": 0
     },
     "boolinq": {
@@ -1981,8 +1981,8 @@
       "port-version": 0
     },
     "coolprop": {
-      "baseline": "6.4.3",
-      "port-version": 3
+      "baseline": "7.2.0",
+      "port-version": 0
     },
     "copypp": {
       "baseline": "0.3.0",
@@ -2017,7 +2017,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.38.0",
+      "baseline": "0.39.0",
       "port-version": 0
     },
     "cpp-ipc": {
@@ -3925,7 +3925,7 @@
       "port-version": 0
     },
     "imageinfo": {
-      "baseline": "2024-12-02",
+      "baseline": "2026-03-19",
       "port-version": 0
     },
     "imath": {
@@ -3998,7 +3998,7 @@
     },
     "inja": {
       "baseline": "3.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "intel-ipsec": {
       "baseline": "1.1",
@@ -5389,8 +5389,8 @@
       "port-version": 18
     },
     "libpq": {
-      "baseline": "16.9",
-      "port-version": 3
+      "baseline": "18.3",
+      "port-version": 0
     },
     "libpqxx": {
       "baseline": "8.0.0",
@@ -7341,7 +7341,7 @@
       "port-version": 3
     },
     "opentelemetry-cpp": {
-      "baseline": "1.25.0",
+      "baseline": "1.26.0",
       "port-version": 0
     },
     "opentelemetry-cpp-contrib-version": {
@@ -7401,7 +7401,7 @@
       "port-version": 1
     },
     "orange-math": {
-      "baseline": "5.0.0",
+      "baseline": "5.1.0",
       "port-version": 0
     },
     "orange-vmprotect-sdk": {
@@ -9977,7 +9977,7 @@
       "port-version": 0
     },
     "tinygltf": {
-      "baseline": "2.9.7",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "tinynpy": {
