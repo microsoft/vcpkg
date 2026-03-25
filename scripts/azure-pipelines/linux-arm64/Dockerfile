@@ -15,8 +15,9 @@ RUN echo "Build date: ${BUILD_DATE}" && \
     apt-get install --no-install-recommends -y \
         powershell \
         build-essential \
-        gcc-12-aarch64-linux-gnu \
-        g++-12-aarch64-linux-gnu \
+        gcc-13-aarch64-linux-gnu \
+        g++-13-aarch64-linux-gnu \
+        gfortran-13-aarch64-linux-gnu \
         cmake \
         autoconf \
         autoconf-archive \
@@ -84,5 +85,6 @@ RUN echo "Build date: ${BUILD_DATE}" && \
         python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
-RUN update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-12 100 && \
-    update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-12 100
+RUN update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-13 100 && \
+    update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-13 100 && \
+    update-alternatives --install /usr/bin/aarch64-linux-gnu-gfortran aarch64-linux-gnu-gfortran /usr/bin/aarch64-linux-gnu-gfortran-13 100

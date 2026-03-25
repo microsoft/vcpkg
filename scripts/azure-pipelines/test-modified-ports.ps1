@@ -144,6 +144,7 @@ if ($Triplet -eq 'x64-windows-release') {
 $failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 $failureLogsArg = "--failure-logs=$failureLogs"
 $knownFailuresFromArgs = @()
+$featureTestExitCode = 0
 if ($testFeatures) {
     & $vcpkgExe x-ci-clean @commonArgs
     $lastLastExitCode = $LASTEXITCODE
@@ -165,10 +166,14 @@ if ($testFeatures) {
     {
         Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$false"
         Write-Host "##vso[task.logissue type=error]vcpkg feature testing failed; this is usually a bug in one of the features in the port(s) edited in this pull request. See https://github.com/microsoft/vcpkg/discussions/31357 for how to access AZP failure logs."
-        exit $lastLastExitCode
+        # Do not exit early: continue so that 'vcpkg ci' still runs and writes pr-hashes.json,
+        # which is required for the 'Build a file list' step to succeed.
+        $featureTestExitCode = $lastLastExitCode
     }
-
-    $knownFailuresFromArgs += "--known-failures-from=$knownFailingAbisFile"
+    else
+    {
+        $knownFailuresFromArgs += "--known-failures-from=$knownFailingAbisFile"
+    }
 }
 
 $ciBaselineFile = "$PSScriptRoot/../ci.baseline.txt"
@@ -276,4 +281,8 @@ if ($lastLastExitCode -ne 0)
     }
 }
 
+# If x-test-features failed earlier, make sure we exit non-zero even if vcpkg ci succeeded.
+if ($featureTestExitCode -ne 0) {
+    exit $featureTestExitCode
+}
 exit $lastLastExitCode
