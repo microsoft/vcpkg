@@ -4520,6 +4520,10 @@
       "baseline": "5.116.0",
       "port-version": 0
     },
+    "kf6-solid": {
+      "baseline": "6.25.0",
+      "port-version": 0
+    },
     "kfr": {
       "baseline": "6.3.1",
       "port-version": 0
