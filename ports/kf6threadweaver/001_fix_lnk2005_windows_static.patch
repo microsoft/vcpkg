@@ -1,0 +1,10 @@
+diff --git a/examples/ThumbNailer/CMakeLists.txt b/examples/ThumbNailer/CMakeLists.txt
+--- a/examples/ThumbNailer/CMakeLists.txt
++++ b/examples/ThumbNailer/CMakeLists.txt
+@@ -20,3 +20,6 @@
+     ${UI_FILES}
+ )
+ target_link_libraries(ThreadWeaver_ThumbNailer KF6::ThreadWeaver Qt6::Test Qt6::Widgets)
++if(MSVC AND NOT BUILD_SHARED_LIBS)
++    target_link_options(ThreadWeaver_ThumbNailer PRIVATE /FORCE:MULTIPLE)
++endif()
