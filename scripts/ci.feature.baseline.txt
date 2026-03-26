@@ -140,7 +140,6 @@ awlib[graphics]:arm64-osx=feature-fails # Broken code. See https://github.com/mi
 azure-kinect-sensor-sdk:arm64-linux=cascade
 azure-storage-cpp:arm64-linux=fail
 babl[introspection]:arm64-linux=cascade
-bbstrader:arm64-linux=cascade
 bddisasm:arm64-linux=fail
 bext-text:arm64-linux=cascade
 bgfx:arm64-linux=fail
