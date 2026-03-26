@@ -8537,8 +8537,8 @@
       "port-version": 1
     },
     "raylib-cpp": {
-      "baseline": "5.5.0",
-      "port-version": 1
+      "baseline": "5.5.1",
+      "port-version": 0
     },
     "rbdl": {
       "baseline": "3.3.1",
