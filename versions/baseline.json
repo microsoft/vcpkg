@@ -8493,7 +8493,7 @@
       "port-version": 0
     },
     "rapidcsv": {
-      "baseline": "8.90",
+      "baseline": "8.92",
       "port-version": 0
     },
     "rapidfuzz": {
