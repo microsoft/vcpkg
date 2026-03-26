@@ -2990,7 +2990,7 @@
     },
     "ffmpeg": {
       "baseline": "8.1",
-      "port-version": 0
+      "port-version": 1
     },
     "ffmpeg-bin2c": {
       "baseline": "8.1",
