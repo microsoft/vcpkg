@@ -216,7 +216,6 @@ coinutils:arm64-linux=cascade
 colmap:arm64-linux=cascade
 colmap[cuda,cuda-redist]:x64-linux=feature-fails
 colmap[cuda,cuda-redist](arm64 & osx)=cascade
-coolprop:arm64-linux=fail
 coroutine:arm64-osx=fail # requires c++20
 cppadcodegen:arm64-linux=fail
 cppcoro(linux | osx)=fail
