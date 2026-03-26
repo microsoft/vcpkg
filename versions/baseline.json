@@ -5813,7 +5813,7 @@
       "port-version": 1
     },
     "libxdf": {
-      "baseline": "0.99.9",
+      "baseline": "0.99.10",
       "port-version": 0
     },
     "libxdiff": {
