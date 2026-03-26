@@ -9284,6 +9284,10 @@
       "baseline": "1.2.5",
       "port-version": 0
     },
+    "snmalloc": {
+      "baseline": "0.7.4",
+      "port-version": 0
+    },
     "snowhouse": {
       "baseline": "5.0.0",
       "port-version": 2
