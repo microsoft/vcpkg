@@ -1,7 +1,6 @@
 {
   "name": "pulsar-client-cpp",
-  "version": "4.0.0",
-  "port-version": 1,
+  "version": "4.0.1",
   "description": "The Apache Pulsar C++ library",
   "homepage": "https://github.com/apache/pulsar-client-cpp",
   "license": "Apache-2.0",
@@ -25,7 +24,7 @@
     "openssl",
     {
       "name": "protobuf",
-      "version>=": "3.21.12"
+      "version>=": "4.0.1"
     },
     "snappy",
     {
