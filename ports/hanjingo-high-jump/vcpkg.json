@@ -1,6 +1,7 @@
 {
   "name": "hanjingo-high-jump",
   "version": "1.0.4",
+  "port-version": 1,
   "maintainers": [
     "hanjingo",
     "hehehunanchina@live.com"
@@ -10,6 +11,15 @@
   "license": "GPL-3.0-only",
   "supports": "!uwp",
   "dependencies": [
+    "abseil",
+    "bext-sml",
+    "boost-filesystem",
+    "boost-stacktrace",
+    "concurrentqueue",
+    "fmt",
+    "libiconv",
+    "libnice",
+    "nlohmann-json",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,5 +28,151 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "ai": {
+      "description": "Enable ai module support",
+      "dependencies": [
+        "libqrencode",
+        "quirc"
+      ]
+    },
+    "algo": {
+      "description": "Enable algo module support",
+      "dependencies": [
+        "behaviortree-cpp",
+        "boost-algorithm",
+        "boost-multi-index",
+        "boost-uuid"
+      ]
+    },
+    "compress": {
+      "description": "Enable compress module support",
+      "dependencies": [
+        "zlib",
+        "zstd"
+      ]
+    },
+    "crypto": {
+      "description": "Enable crypto module support",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "db": {
+      "description": "Enable db module support",
+      "dependencies": [
+        "clickhouse-cpp",
+        "hiredis",
+        "libpqxx",
+        "sqlite3"
+      ]
+    },
+    "encoding": {
+      "description": "Enable encoding module support",
+      "dependencies": [
+        "boost-property-tree",
+        "flatbuffers",
+        "protobuf",
+        "pugixml",
+        "yaml-cpp"
+      ]
+    },
+    "hardware": {
+      "description": "Enable hardware module support",
+      "dependencies": [
+        "hidapi",
+        "opencl"
+      ]
+    },
+    "io": {
+      "description": "Enable I/O module support",
+      "dependencies": [
+        "boost-circular-buffer"
+      ]
+    },
+    "log": {
+      "description": "Enable log module support",
+      "dependencies": [
+        "spdlog"
+      ]
+    },
+    "math": {
+      "description": "Enable math module support",
+      "dependencies": [
+        "boost-math",
+        "eigen3"
+      ]
+    },
+    "misc": {
+      "description": "Enable misc module support",
+      "dependencies": [
+        "hffix",
+        "libharu"
+      ]
+    },
+    "net": {
+      "description": "Enable net module support",
+      "dependencies": [
+        "boost-asio",
+        "boost-beast",
+        "cpp-httplib",
+        "zeromq"
+      ]
+    },
+    "os": {
+      "description": "Enable os module support",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "sync": {
+      "description": "Enable sync module support",
+      "dependencies": [
+        "boost-interprocess",
+        "boost-process",
+        "boost-thread",
+        "tbb"
+      ]
+    },
+    "testing": {
+      "description": "Enable testing module support",
+      "dependencies": [
+        "benchmark",
+        "breakpad",
+        "gtest",
+        {
+          "name": "opentelemetry-cpp",
+          "host": true,
+          "default-features": false,
+          "features": [
+            "otlp-file",
+            "otlp-http"
+          ]
+        }
+      ]
+    },
+    "time": {
+      "description": "Enable time module support",
+      "dependencies": [
+        "boost-timer"
+      ]
+    },
+    "types": {
+      "description": "Enable types module support",
+      "dependencies": [
+        "boost-any",
+        "boost-leaf",
+        "boost-optional",
+        "boost-serialization",
+        "boost-variant"
+      ]
+    },
+    "util": {
+      "description": "Enable util module support",
+      "dependencies": [
+        "jwt-cpp"
+      ]
+    }
+  }
 }
