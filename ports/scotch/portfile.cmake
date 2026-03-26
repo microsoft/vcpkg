@@ -6,7 +6,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO scotch/scotch
     REF "v${VERSION}"
-    SHA512 9566ca800fd47df63844df6ff8b0fbbe8efbdea549914dfe9bf00d3d104a8c5631cfbef69e2677de68dcdb93addaeed158e6f6a373b5afe8cec82ac358946b65
+    SHA512 37a1b57c705b24d25080d00173055ed1b50eabe03808741ec8b48bea82ccf256a80961e22e1081387854aa7665786906f24815f242c3c8e8551a70bc4c21f27c
     HEAD_REF master
     PATCHES fix-build.patch
 )
