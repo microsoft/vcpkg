@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openturns/openturns
     REF v${VERSION}
-    SHA512 d73c294ce8fafb99da0769791cee09a6da76d3839489dd32227a7569c1fbbfc06c2a918d3951ea5b9d7a7efb1f30d11e04a52bb8d906e37411bc372235a9832b
+    SHA512 b838988d8ee0fcfb7ae54207bc48f403a3f6aa912ea9675becf0f96bd34dca81555538281944916aa91c104b24e3973389e964320a9cb2ef512f5bf33c8d9d64
     HEAD_REF master
     PATCHES
         dependencies.diff
