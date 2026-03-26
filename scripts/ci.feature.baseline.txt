@@ -187,6 +187,7 @@ chartdir=skip # chartdir does not offer stable download URLs
 chmlib:arm64-linux=fail
 chronoengine:arm64-linux=fail
 clamav:arm64-windows=fail
+clapack:arm64-linux=fail # needs target configuration data
 clapack(android)=fail # needs target configuration data
 clblas:arm-neon-android=fail
 clblas:arm64-android=fail
