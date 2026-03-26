@@ -57,11 +57,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  set(TOOL_NAMES 
         assistant
         designer
+        lcheck
         lconvert
         linguist
         lprodump
         lrelease-pro
         lrelease
+        ltext2id
         lupdate-pro
         lupdate
         pixeltool
