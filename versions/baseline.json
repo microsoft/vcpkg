@@ -8417,7 +8417,7 @@
       "port-version": 0
     },
     "quantlib": {
-      "baseline": "1.40",
+      "baseline": "1.41",
       "port-version": 0
     },
     "quarter": {
