@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO f3d-app/f3d
     REF v${VERSION}
-    SHA512 ac3f9edca7c870f56603165a6035da36486f05dc8367ba9147f687f6de2f4c9dfb94077f6041f41dd689e03c0387f9fab62c69f995a4e18016d623844e83bb6b
+    SHA512 43d341427df2de42df87518c76fa3bea35a3617938bf67dd2c27830ec48cc41e1b5c3b269d0dda88ffddb5f178acc3244fc0026ec7f68259eb2850969efbbb3c
     HEAD_REF master
     PATCHES
         fix-install.patch
