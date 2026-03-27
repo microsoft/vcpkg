@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index XXXXXXX..YYYYYYY 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -28,6 +28,10 @@ if(MSVC)
+ endif()
+ 
+ # Include options before anything else
++
++# Disable clang-tidy for package builds
++set(CLANG_TIDY_EXE "")
++
+ include(cmake/Options.cmake)
+ 
+ # Set default build type if not specified (single-config generators)
+@@ -40,7 +44,7 @@ include(cmake/Dependencies.cmake)
+ 
+ # Enable clang-tidy during build if available
+ find_program(CLANG_TIDY_EXE NAMES clang-tidy)
+-if(CLANG_TIDY_EXE)
++if(FALSE)  # Disabled for vcpkg package
+     message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+     # Note: --exclude-header-filter requires clang-tidy 18+
+     # We use --header-filter to only analyze project headers

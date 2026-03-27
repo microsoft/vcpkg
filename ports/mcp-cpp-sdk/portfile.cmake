@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF "v${VERSION}"
     SHA512 5d2687384a951c50b9873e8e0b9fcd4110a5dc0f76b581f2cd95dbac2a4e68ca66289b4d1e82d8b52ad0eed6893d5d729517f8f4aa40e61755dcdf8bcb003a3d
     HEAD_REF main
+    PATCHES disable-clang-tidy.patch
 )
 
 vcpkg_cmake_configure(
@@ -15,7 +16,6 @@ vcpkg_cmake_configure(
     OPTIONS
         -DMCP_SDK_BUILD_TESTS=OFF
         -DMCP_SDK_BUILD_EXAMPLES=OFF
-        -DCMAKE_CXX_CLANG_TIDY=
 )
 
 vcpkg_cmake_install()
