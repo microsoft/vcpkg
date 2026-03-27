@@ -3301,8 +3301,8 @@
       "port-version": 0
     },
     "gdbm": {
-      "baseline": "1.24",
-      "port-version": 1
+      "baseline": "1.26",
+      "port-version": 0
     },
     "gdcm": {
       "baseline": "3.2.2",
