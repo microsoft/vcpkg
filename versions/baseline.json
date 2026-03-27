@@ -4514,7 +4514,7 @@
     },
     "lapack": {
       "baseline": "2023-06-10",
-      "port-version": 3
+      "port-version": 4
     },
     "lapack-reference": {
       "baseline": "3.12.1",
