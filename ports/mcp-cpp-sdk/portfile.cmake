@@ -26,8 +26,5 @@ vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mcp/sdk/version.hpp" "MCP_SDK_STATIC_LIB" "MCP_SHARED_LIB")
-endif()
 
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
