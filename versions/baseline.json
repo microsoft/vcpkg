@@ -3409,7 +3409,7 @@
       "port-version": 0
     },
     "glaze": {
-      "baseline": "7.2.1",
+      "baseline": "7.2.2",
       "port-version": 0
     },
     "glbinding": {
