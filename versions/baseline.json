@@ -9133,7 +9133,7 @@
       "port-version": 1
     },
     "si": {
-      "baseline": "2.5.1",
+      "baseline": "2.5.3",
       "port-version": 0
     },
     "sigmatch": {
