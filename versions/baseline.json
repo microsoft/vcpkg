@@ -2713,7 +2713,7 @@
       "port-version": 0
     },
     "ecm": {
-      "baseline": "6.23.0",
+      "baseline": "6.24.0",
       "port-version": 0
     },
     "ecos": {
