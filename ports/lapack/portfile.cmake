@@ -1,10 +1,6 @@
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(BLA_STATIC ON)
-else()
-    set(BLA_STATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLA_STATIC)
 
 # See explanation of which lapack implementation is chosen in portfile.cmake in the blas port
 
