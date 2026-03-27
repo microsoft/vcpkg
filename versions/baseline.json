@@ -2929,7 +2929,7 @@
       "port-version": 1
     },
     "fastdds": {
-      "baseline": "3.4.1",
+      "baseline": "3.4.2",
       "port-version": 0
     },
     "fastfeat": {
