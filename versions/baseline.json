@@ -2769,8 +2769,8 @@
       "port-version": 1
     },
     "elfutils": {
-      "baseline": "0.193",
-      "port-version": 1
+      "baseline": "0.194",
+      "port-version": 0
     },
     "eljonny-testcpp": {
       "baseline": "0.3.0-beta.4",
