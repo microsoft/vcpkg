@@ -4,8 +4,8 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/fbgemm
-    REF 73a64e75ff31be7ece6f68929ee5682b0bf9eb10
-    SHA512 2757d986a977d14bd32d482452627b55aae216f77a262b2b1b88a643a2977c6c27c5a99ee91b7a7bdbb66248239ecc1a57d1953251049d787317b6355369af26
+    REF "v${VERSION}"
+    SHA512 c10c6839bff2a37374646559310e39f0c68fb5a5e72211f85dbd1984de2aad7c38fb161b1f56bc7c549080fd2140bf682e5acbf7c9f78c7c073dd8e66d5f5a92
     PATCHES
         fix-cmakelists.patch
 )
