@@ -1,3 +1,3 @@
-set(qttranslations_HASH "d3037fab8f08b34f2c110f82bc6fb098a61fb804cba6d6767da61c95709ff8fd70ac7948d35f0dc6a0806d6d6a2a64ef0f3194f3d26b6777d561637af01ce15d")
-set(qttranslations_URL "https://download.qt.io/archive/qt/6.10/6.10.0/submodules/qttranslations-everywhere-src-6.10.0.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.0/submodules/qttranslations-everywhere-src-6.10.0.tar.xz")
-set(qttranslations_FILENAME "qttranslations-everywhere-src-6.10.0.tar.xz")
+set(qttranslations_HASH "f6665728b341dc105c98854241dcd07c75014685a07c9a852f5e062186ef4440bd0da8e87208ffeba266f7c1ab8dcb2e676f88094153cec3aa785ecd06aa8758")
+set(qttranslations_URL "https://download.qt.io/archive/qt/6.10/6.10.2/submodules/qttranslations-everywhere-src-6.10.2.tar.xz;https://mirrors.ocf.berkeley.edu/qt/archive/qt/6.10/6.10.2/submodules/qttranslations-everywhere-src-6.10.2.tar.xz")
+set(qttranslations_FILENAME "qttranslations-everywhere-src-6.10.2.tar.xz")

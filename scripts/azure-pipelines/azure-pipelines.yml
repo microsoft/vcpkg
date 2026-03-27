@@ -13,7 +13,7 @@ parameters:
   - name: arm64LinuxDockerImage
     displayName: 'Linux Docker Image to use for the arm64 Linux build'
     type: string
-    default: 'vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10'
+    default: 'vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-03-18'
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring (^ matches begin, $ matches end)'
     type: string
