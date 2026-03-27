@@ -14,11 +14,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-
-vcpkg_cmake_config_fixup(
-    PACKAGE_NAME CrashCatch
-    CONFIG_PATH lib/cmake/CrashCatch
-)
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/CrashCatch")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
