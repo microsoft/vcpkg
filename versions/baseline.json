@@ -6328,6 +6328,10 @@
       "baseline": "0.23.93",
       "port-version": 0
     },
+    "mcp-cpp-sdk": {
+      "baseline": "0.1.0",
+      "port-version": 0
+    },
     "mcpp": {
       "baseline": "2.7.2.20",
       "port-version": 0
