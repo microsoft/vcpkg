@@ -1,6 +1,4 @@
-CrashCatch is a header-only library with CMake integration.
+CrashCatch provides CMake targets:
 
-In your CMakeLists.txt:
-
-    find_package(CrashCatch CONFIG REQUIRED)
-    target_link_libraries(my_target PRIVATE CrashCatch::CrashCatch)
+  find_package(CrashCatch CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE CrashCatch::CrashCatch)
