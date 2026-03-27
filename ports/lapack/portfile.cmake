@@ -27,7 +27,7 @@ elseif(VCPKG_TARGET_IS_UWP
     # Use clapack
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/wrapper/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" COPYONLY)
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/FindLAPACK.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/FindLAPACK.cmake" COPYONLY)
-    set(pc_libs "-L${libdir} -llapack")
+    set(pc_libs "-L\${libdir} -llapack")
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         string(APPEND pc_libs " -llibf2c")
     else()
