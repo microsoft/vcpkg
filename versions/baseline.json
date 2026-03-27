@@ -2981,8 +2981,8 @@
       "port-version": 0
     },
     "fdlibm": {
-      "baseline": "5.3",
-      "port-version": 7
+      "baseline": "5.3.1",
+      "port-version": 0
     },
     "fenster": {
       "baseline": "2024-08-19",
