@@ -14,7 +14,7 @@ duplicate symbols in downstream projects.
  5 files changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/PCbuild/_bz2.vcxproj b/PCbuild/_bz2.vcxproj
-index 3fe95fbf83..6b12e8818e 100644
+index e0dc6ec..6f0570d 100644
 --- a/PCbuild/_bz2.vcxproj
 +++ b/PCbuild/_bz2.vcxproj
 @@ -101,6 +101,8 @@
@@ -35,8 +35,55 @@ index 3fe95fbf83..6b12e8818e 100644
      <ClInclude Include="$(bz2Dir)\bzlib.h" />
      <ClInclude Include="$(bz2Dir)\bzlib_private.h" />
    </ItemGroup>
+diff --git a/PCbuild/_decimal.vcxproj b/PCbuild/_decimal.vcxproj
+index ee74214..efc610c 100644
+--- a/PCbuild/_decimal.vcxproj
++++ b/PCbuild/_decimal.vcxproj
+@@ -93,15 +93,21 @@
+   </PropertyGroup>
+   <ItemDefinitionGroup>
+     <ClCompile>
+-      <PreprocessorDefinitions>BUILD_LIBMPDEC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <AdditionalIncludeDirectories>..\Modules\_decimal;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++    </ClCompile>
++  </ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="false">
++    <ClCompile>
++      <PreprocessorDefinitions>BUILD_LIBMPDEC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="'$(Platform)' == 'Win32'">CONFIG_32;PPRO;MASM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="'$(Platform)'=='ARM'">CONFIG_32;ANSI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="'$(Platform)'=='ARM64'">CONFIG_64;ANSI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <PreprocessorDefinitions Condition="'$(Platform)' == 'x64'">CONFIG_64;MASM;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <AdditionalIncludeDirectories>..\Modules\_decimal;..\Modules\_decimal\windows;$(mpdecimalDir)\libmpdec;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
++      <AdditionalIncludeDirectories>$(mpdecimalDir)\libmpdec;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ClCompile>
+   </ItemDefinitionGroup>
+-  <ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="$(mpdecimalDir)\libmpdec\basearith.h" />
+     <ClInclude Include="$(mpdecimalDir)\libmpdec\bits.h" />
+     <ClInclude Include="$(mpdecimalDir)\libmpdec\constants.h" />
+@@ -125,6 +131,8 @@
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_decimal\_decimal.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="$(mpdecimalDir)\libmpdec\basearith.c" />
+     <ClCompile Include="$(mpdecimalDir)\libmpdec\constants.c" />
+     <ClCompile Include="$(mpdecimalDir)\libmpdec\context.c" />
+@@ -140,7 +148,7 @@
+     <ClCompile Include="$(mpdecimalDir)\libmpdec\sixstep.c" />
+     <ClCompile Include="$(mpdecimalDir)\libmpdec\transpose.c" />
+   </ItemGroup>
+-  <ItemGroup>
++  <ItemGroup Condition="false">
+     <CustomBuild Include="$(mpdecimalDir)\libmpdec\vcdiv64.asm">
+       <ExcludedFromBuild Condition="'$(Platform)'=='Win32'">true</ExcludedFromBuild>
+       <ExcludedFromBuild Condition="'$(Platform)'=='ARM'">true</ExcludedFromBuild>
 diff --git a/PCbuild/_lzma.vcxproj b/PCbuild/_lzma.vcxproj
-index fe076a6fc5..70cc61dd95 100644
+index 40107d4..222fcae 100644
 --- a/PCbuild/_lzma.vcxproj
 +++ b/PCbuild/_lzma.vcxproj
 @@ -94,10 +94,9 @@
@@ -61,7 +108,7 @@ index fe076a6fc5..70cc61dd95 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/_sqlite3.vcxproj b/PCbuild/_sqlite3.vcxproj
-index 7e0062692b..6fb3279a20 100644
+index 9ae0a0f..564d742 100644
 --- a/PCbuild/_sqlite3.vcxproj
 +++ b/PCbuild/_sqlite3.vcxproj
 @@ -127,7 +127,7 @@
@@ -74,7 +121,7 @@ index 7e0062692b..6fb3279a20 100644
        <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
      </ProjectReference>
 diff --git a/PCbuild/pyexpat.vcxproj b/PCbuild/pyexpat.vcxproj
-index b2d9f5d57d..4efb826a05 100644
+index dc9161a..5e2d504 100644
 --- a/PCbuild/pyexpat.vcxproj
 +++ b/PCbuild/pyexpat.vcxproj
 @@ -89,17 +89,19 @@
@@ -99,6 +146,43 @@ index b2d9f5d57d..4efb826a05 100644
      <ClCompile Include="..\Modules\expat\xmlparse.c" />
      <ClCompile Include="..\Modules\expat\xmlrole.c" />
      <ClCompile Include="..\Modules\expat\xmltok.c" />
--- 
-2.28.0.windows.1
-
+diff --git a/PCbuild/_zstd.vcxproj b/PCbuild/_zstd.vcxproj
+--- a/PCbuild/_zstd.vcxproj
++++ b/PCbuild/_zstd.vcxproj
+@@ -91,18 +91,25 @@
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup>
+     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+   </PropertyGroup>
+-  <ItemDefinitionGroup>
++  <ItemDefinitionGroup Condition="false">
+     <ClCompile>
+       <PreprocessorDefinitions>WIN32;ZSTD_MULTITHREAD=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <AdditionalIncludeDirectories>$(zstdDir)lib\;$(zstdDir)lib\common;$(zstdDir)lib\compress;$(zstdDir)lib\decompress;$(zstdDir)lib\dictBuilder;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+     </ClCompile>
+   </ItemDefinitionGroup>
++  <ItemDefinitionGroup>
++    <ClCompile>
++      <PreprocessorDefinitions>WIN32;ZSTD_MULTITHREAD=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
++    </ClCompile>
++  </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\Modules\_zstd\_zstdmodule.c" />
+     <ClCompile Include="..\Modules\_zstd\compressor.c" />
+     <ClCompile Include="..\Modules\_zstd\decompressor.c" />
+     <ClCompile Include="..\Modules\_zstd\zstddict.c" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClCompile Include="$(zstdDir)lib\common\debug.c" />
+     <ClCompile Include="$(zstdDir)lib\common\entropy_common.c" />
+     <ClCompile Include="$(zstdDir)lib\common\error_private.c" />
+@@ -137,7 +144,9 @@
+   <ItemGroup>
+     <ClInclude Include="..\Modules\_zstd\_zstdmodule.h" />
+     <ClInclude Include="..\Modules\_zstd\buffer.h" />
+     <ClInclude Include="..\Modules\_zstd\zstddict.h" />
++  </ItemGroup>
++  <ItemGroup Condition="false">
+     <ClInclude Include="$(zstdDir)lib\common\bitstream.h" />
+     <ClInclude Include="$(zstdDir)lib\common\error_private.h" />
+     <ClInclude Include="$(zstdDir)lib\common\fse.h" />

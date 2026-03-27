@@ -43,7 +43,7 @@ if(_PythonFinder_WantLibs)
         _${_PythonFinder_PREFIX}_INCLUDE_DIR
         NAMES "Python.h"
         PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
-        PATH_SUFFIXES "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
+        PATH_SUFFIXES "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@@PYTHON_ABI_THREAD@"
         NO_DEFAULT_PATH
     )
 
@@ -52,16 +52,16 @@ if(_PythonFinder_WantLibs)
     find_library(
         _${_PythonFinder_PREFIX}_LIBRARY_RELEASE
         NAMES
-        "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@"
-        "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
+        "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@@PYTHON_ABI_THREAD@"
+        "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@@PYTHON_ABI_THREAD@"
         PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib"
         NO_DEFAULT_PATH
     )
     find_library(
         _${_PythonFinder_PREFIX}_LIBRARY_DEBUG
         NAMES
-        "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@_d"
-        "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@d"
+        "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@@PYTHON_ABI_THREAD@_d"
+        "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@@PYTHON_ABI_THREAD@d"
         PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib"
         NO_DEFAULT_PATH
     )
@@ -69,7 +69,7 @@ if(_PythonFinder_WantLibs)
     if(_PythonFinder_WantInterp)
         find_program(
             ${_PythonFinder_PREFIX}_EXECUTABLE
-            NAMES "python" "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
+            NAMES "python" "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@@PYTHON_ABI_THREAD@"
             PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3"
             NO_DEFAULT_PATH
         )

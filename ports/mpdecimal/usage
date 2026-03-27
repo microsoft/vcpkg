@@ -1,0 +1,11 @@
+mpdecimal provides the libmpdec library for arbitrary precision decimal arithmetic.
+
+On Windows, link manually:
+    find_library(MPDEC_LIB NAMES libmpdec mpdec PATHS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH)
+    target_link_libraries(main PRIVATE "${MPDEC_LIB}")
+    target_include_directories(main PRIVATE "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include")
+
+On non-Windows, use pkg-config:
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(MPDEC REQUIRED IMPORTED_TARGET libmpdec)
+    target_link_libraries(main PRIVATE PkgConfig::MPDEC)

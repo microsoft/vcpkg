@@ -7,6 +7,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_CRT_LINKAGE STREQUAL "stat
     set(VCPKG_LIBRARY_LINKAGE static)
 endif()
 
+# Save the original triplet linkage before vcpkg_check_linkage may override it.
+set(VCPKG_DEPS_LINKAGE "${VCPKG_LIBRARY_LINKAGE}")
+
 if("extensions" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS)
         vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -14,6 +17,12 @@ if("extensions" IN_LIST FEATURES)
     set(PYTHON_HAS_EXTENSIONS ON)
 else()
     set(PYTHON_HAS_EXTENSIONS OFF)
+endif()
+
+if("freethreaded" IN_LIST FEATURES)
+    set(PYTHON_ABI_THREAD "t")
+else()
+    set(PYTHON_ABI_THREAD "")
 endif()
 
 string(REGEX MATCH "^([0-9]+)\\.([0-9]+)\\.([0-9]+)" PYTHON_VERSION "${VERSION}")
@@ -32,7 +41,7 @@ set(PATCHES
     0016-undup-ffi-symbols.patch # Required for lld-link.
     0018-fix-sysconfig-include.patch
     0019-fix-ssl-linkage.patch
-    0020-Py_NO_LINK_LIB.patch # Remove in 3.14 https://github.com/python/cpython/pull/19740
+    0020-fix-venvlauncher-charset.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -61,7 +70,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${VERSION}
-    SHA512 39298ac5ee6e751264b196710dff998e4ba530f5ed0cb9ec143c138faf00e32356ff387f71287840e7d0acef855cabd75d71d3d636c23807659e79b1643d891c
+    SHA512 f3d478049271a6eb731cef952fea841465afe97ff3267c816c0d3dad93fd55deecdab30c469a05b713f6f7ca3ef8117bd34a342a11c72bc457425d7844e1b636
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -83,7 +92,7 @@ function(make_python_pkgconfig)
     configure_file("${SOURCE_PATH}/Misc/${arg_FILE}.in" ${out_full_path} @ONLY)
 
     file(READ ${out_full_path} pkgconfig_file)
-    string(REPLACE "-lpython${VERSION}" "-lpython${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}" pkgconfig_file "${pkgconfig_file}")
+    string(REPLACE "-lpython${VERSION}${ABIFLAGS}" "-lpython${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}${ABIFLAGS}" pkgconfig_file "${pkgconfig_file}")
     file(WRITE ${out_full_path} "${pkgconfig_file}")
 endfunction()
 
@@ -93,6 +102,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(PYTHON_HAS_EXTENSIONS)
         find_library(BZ2_RELEASE NAMES bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(BZ2_DEBUG NAMES bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(MPDEC_RELEASE NAMES mpdec libmpdec PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(MPDEC_DEBUG NAMES mpdec libmpdec PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+        find_library(ZSTD_RELEASE NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+        find_library(ZSTD_DEBUG NAMES zstd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_RELEASE NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(CRYPTO_DEBUG NAMES libcrypto PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
         find_library(EXPAT_RELEASE NAMES libexpat libexpatMD libexpatMT PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -106,8 +119,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         separate_arguments(SQLITE3_LIBRARIES_RELEASE UNIX_COMMAND "${PC_SQLITE3_LIBRARIES_RELEASE}")
         find_library(SSL_RELEASE NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
         find_library(SSL_DEBUG NAMES libssl PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${SQLITE3_LIBRARIES_RELEASE}")
-        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${SQLITE3_LIBRARIES_DEBUG}")
+        list(APPEND add_libs_rel "${BZ2_RELEASE};${EXPAT_RELEASE};${FFI_RELEASE};${LZMA_RELEASE};${MPDEC_RELEASE};${ZSTD_RELEASE};${SQLITE3_LIBRARIES_RELEASE}")
+        list(APPEND add_libs_dbg "${BZ2_DEBUG};${EXPAT_DEBUG};${FFI_DEBUG};${LZMA_DEBUG};${MPDEC_DEBUG};${ZSTD_DEBUG};${SQLITE3_LIBRARIES_DEBUG}")
     else()
         message(STATUS "WARNING: Extensions have been disabled. No C extension modules will be available.")
     endif()
@@ -153,6 +166,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     else()
         list(APPEND OPTIONS "/p:_VcpkgPythonLinkage=StaticLibrary")
     endif()
+    if("freethreaded" IN_LIST FEATURES)
+        list(APPEND OPTIONS "/p:DisableGil=true")
+    endif()
 
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -183,17 +199,39 @@ if(VCPKG_TARGET_IS_WINDOWS)
         file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         file(COPY ${PYTHON_EXTENSIONS_RELEASE} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
         vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs")
-        file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll")
+        file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/DLLs/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}.dll")
 
         file(GLOB_RECURSE PYTHON_EXTENSIONS_DEBUG "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/*.pyd")
         file(COPY ${PYTHON_EXTENSIONS_DEBUG} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 
     file(COPY "${SOURCE_PATH}/Include/" "${SOURCE_PATH}/PC/pyconfig.h"
-        DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}"
         FILES_MATCHING PATTERN *.h
     )
     file(COPY "${SOURCE_PATH}/Lib" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+
+    # Python 3.14's venv module looks for venvlauncher[t].exe in Lib/venv/scripts/nt/
+    # (not the PCbuild output dir). Copy the built launchers there.
+    set(VENV_SCRIPTS_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/Lib/venv/scripts/nt")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(GLOB_RECURSE VENV_LAUNCHERS_RELEASE
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/*/venvlauncher*.exe"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/PCbuild/*/venvwlauncher*.exe"
+        )
+        if(VENV_LAUNCHERS_RELEASE)
+            file(COPY ${VENV_LAUNCHERS_RELEASE} DESTINATION "${VENV_SCRIPTS_DIR}")
+        endif()
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(GLOB_RECURSE VENV_LAUNCHERS_DEBUG
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/PCbuild/*/venvlauncher*.exe"
+            "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/PCbuild/*/venvwlauncher*.exe"
+        )
+        if(VENV_LAUNCHERS_DEBUG)
+            file(COPY ${VENV_LAUNCHERS_DEBUG} DESTINATION "${VENV_SCRIPTS_DIR}")
+        endif()
+    endif()
 
     # Remove any extension libraries and other unversioned binaries that could conflict with the python2 port.
     # You don't need to link against these anyway.
@@ -201,23 +239,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "${CURRENT_PACKAGES_DIR}/lib/*.lib"
         "${CURRENT_PACKAGES_DIR}/debug/lib/*.lib"
     )
-    list(FILTER PYTHON_LIBS EXCLUDE REGEX [[python[0-9]*(_d)?\.lib$]])
+    list(FILTER PYTHON_LIBS EXCLUDE REGEX [[python[0-9]*(t)?(_d)?\.lib$]])
     file(GLOB PYTHON_INSTALLERS "${CURRENT_PACKAGES_DIR}/tools/${PORT}/wininst-*.exe")
     file(REMOVE ${PYTHON_LIBS} ${PYTHON_INSTALLERS})
 
     # pkg-config files
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         make_python_pkgconfig(FILE python.pc INSTALL_ROOT ${CURRENT_PACKAGES_DIR}
-            EXEC_PREFIX "\${prefix}/tools/${PORT}" INCLUDEDIR [[${prefix}/include]] ABIFLAGS "")
+            EXEC_PREFIX "\${prefix}/tools/${PORT}" INCLUDEDIR [[${prefix}/include]] ABIFLAGS "${PYTHON_ABI_THREAD}")
         make_python_pkgconfig(FILE python-embed.pc INSTALL_ROOT ${CURRENT_PACKAGES_DIR}
-            EXEC_PREFIX "\${prefix}/tools/${PORT}" INCLUDEDIR [[${prefix}/include]] ABIFLAGS "")
+            EXEC_PREFIX "\${prefix}/tools/${PORT}" INCLUDEDIR [[${prefix}/include]] ABIFLAGS "${PYTHON_ABI_THREAD}")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         make_python_pkgconfig(FILE python.pc INSTALL_ROOT "${CURRENT_PACKAGES_DIR}/debug"
-            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
+            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "${PYTHON_ABI_THREAD}_d")
         make_python_pkgconfig(FILE python-embed.pc INSTALL_ROOT "${CURRENT_PACKAGES_DIR}/debug"
-            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "_d")
+            EXEC_PREFIX "\${prefix}/../tools/${PORT}" INCLUDEDIR [[${prefix}/../include]] ABIFLAGS "${PYTHON_ABI_THREAD}_d")
     endif()
 
     vcpkg_fixup_pkgconfig()
@@ -246,6 +284,7 @@ else()
         "--without-ensurepip"
         "--with-suffix="
         "--with-system-expat"
+        "--with-system-libmpdec"
         "--disable-test-modules"
     )
     if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_BSD)
@@ -256,6 +295,10 @@ else()
         list(APPEND OPTIONS "--with-readline")
     else()
         list(APPEND OPTIONS "--without-readline")
+    endif()
+
+    if("freethreaded" IN_LIST FEATURES)
+        list(APPEND OPTIONS "--disable-gil")
     endif()
 
     if(VCPKG_TARGET_IS_ANDROID)
@@ -282,7 +325,6 @@ else()
 
     vcpkg_make_configure(
         SOURCE_PATH "${SOURCE_PATH}"
-        AUTORECONF
         DEFAULT_OPTIONS_EXCLUDE "^--(disable|enable)-static"
         OPTIONS
             ${OPTIONS}
@@ -301,8 +343,8 @@ else()
 
     # Makefiles, c files, __pycache__, and other junk.
     file(GLOB PYTHON_LIB_DIRS LIST_DIRECTORIES true
-        "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/*"
-        "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/*")
+        "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}/*"
+        "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}/*")
     list(FILTER PYTHON_LIB_DIRS INCLUDE REGEX [[config-[0-9].*.*]])
     file(REMOVE_RECURSE ${PYTHON_LIB_DIRS})
 
@@ -310,7 +352,7 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}d")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}d")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/${PORT}/man1")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
@@ -318,8 +360,8 @@ else()
     vcpkg_fixup_pkgconfig()
 
     # Perform some post-build checks on modules
-    file(GLOB python_libs_dynload_debug LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/lib-dynload/*.so*")
-    file(GLOB python_libs_dynload_release LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/lib-dynload/*.so*")
+    file(GLOB python_libs_dynload_debug LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}/lib-dynload/*.so*")
+    file(GLOB python_libs_dynload_release LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}/lib-dynload/*.so*")
     set(python_libs_dynload_failed_debug ${python_libs_dynload_debug})
     set(python_libs_dynload_failed_release ${python_libs_dynload_release})
     list(FILTER python_libs_dynload_failed_debug INCLUDE REGEX ".*_failed\.so.*")
@@ -351,6 +393,7 @@ else()
     file(READ "${CMAKE_CURRENT_LIST_DIR}/usage.unix" usage_extra)
 endif()
 string(REPLACE "@PYTHON_VERSION_MINOR@" "${PYTHON_VERSION_MINOR}" usage_extra "${usage_extra}")
+string(REPLACE "@PYTHON_ABI_THREAD@" "${PYTHON_ABI_THREAD}" usage_extra "${usage_extra}")
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/usage" "${usage}\n${usage_extra}")
 
 function(_generate_finder)
@@ -376,14 +419,14 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     endfunction()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
+        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}/_sysconfigdata*")
         list(POP_FRONT python_config_files python_config_file)
         vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))\n")
         replace_dirs_in_config_file("${python_config_file}")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/_sysconfigdata*")
+        file(GLOB python_config_files "${CURRENT_PACKAGES_DIR}/debug/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}/_sysconfigdata*")
         list(POP_FRONT python_config_files python_config_file)
         vcpkg_replace_string("${python_config_file}" "# system configuration generated and used by the sysconfig module" "# system configuration generated and used by the sysconfig module\nimport os\n_base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))\n")
         replace_dirs_in_config_file("${python_config_file}")
@@ -391,7 +434,7 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-  file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
+  file(COPY_FILE "${CURRENT_PACKAGES_DIR}/tools/python3/python3.${PYTHON_VERSION_MINOR}${PYTHON_ABI_THREAD}" "${CURRENT_PACKAGES_DIR}/tools/python3/python3")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
