@@ -15,6 +15,7 @@ vcpkg_cmake_configure(
     OPTIONS
         -DMCP_SDK_BUILD_TESTS=OFF
         -DMCP_SDK_BUILD_EXAMPLES=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_clang-tidy=ON
 )
 
 vcpkg_cmake_install()
