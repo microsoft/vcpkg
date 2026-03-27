@@ -25,14 +25,17 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
 elseif(VCPKG_TARGET_IS_UWP
         OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
         OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT VCPKG_TARGET_IS_MINGW))
+    # Use clapack
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/wrapper/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" COPYONLY)
     configure_file("${CURRENT_INSTALLED_DIR}/share/clapack/FindLAPACK.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/FindLAPACK.cmake" COPYONLY)
     set(libs "-llapack -llibf2c")
+    set(requires "blas")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/lapack.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/lapack.pc" @ONLY)
     if(NOT VCPKG_BUILD_TYPE)
         configure_file("${CMAKE_CURRENT_LIST_DIR}/lapack.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/lapack.pc" @ONLY)
     endif()
 else()
+    # Use lapack-reference
     configure_file("${CURRENT_INSTALLED_DIR}/share/lapack-reference/wrapper/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/vcpkg-cmake-wrapper.cmake" COPYONLY)
     configure_file("${CURRENT_INSTALLED_DIR}/share/lapack-reference/FindLAPACK.cmake" "${CURRENT_PACKAGES_DIR}/share/lapack/FindLAPACK.cmake" COPYONLY)
     set(requires "lapack-reference")
