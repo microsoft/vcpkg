@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
     REF "${VERSION}"
-    SHA512 f5012885d6b6844a9cf5ed92ad5468b8757db33dfe1364bfb232fff928e06c550c7eb4557f45186a8ac4d18b178df9be267681abab4a6de40823b574afbe9960
+    SHA512 daeed3943d9fc2ecdb090f77f634f2b14ccffa4dcc9c2588489f4c3a52bca7da33def1b157a4e31cf732a8b52b4f83ecbf4de6cf3ec17c317ec9be1a1112bc63
     HEAD_REF master
     PATCHES 
         003-force-cxx-17.patch
