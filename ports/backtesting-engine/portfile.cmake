@@ -38,6 +38,10 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/BacktestingEngine PACKAGE_NAME BacktestingEngine)
+
+# Installed CMake config references tools/${PORT}/ (post-fixup); copy from bin so imported targets resolve.
+vcpkg_copy_tools(TOOL_NAMES backtest_engine backtest_server AUTO_CLEAN)
+
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
