@@ -1,7 +1,6 @@
 {
   "name": "json-spirit",
-  "version": "4.1.0",
-  "port-version": 5,
+  "version": "4.0.8",
   "description": "A C++ JSON parser/generator implemented with Boost Spirit",
   "dependencies": [
     "boost-config",
