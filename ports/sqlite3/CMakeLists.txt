@@ -38,8 +38,11 @@ if (NOT WIN32)
     endforeach()
 
     if(SQLITE_ENABLE_FTS5 OR SQLITE_ENABLE_MATH_FUNCTIONS)
-        target_link_libraries(sqlite3 PRIVATE m)
-        string(APPEND PKGCONFIG_LIBS_PRIVATE " -lm")
+        find_library(HAVE_LIBM m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES} ${CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES})
+        if(HAVE_LIBM)
+            target_link_libraries(sqlite3 PRIVATE m)
+            string(APPEND PKGCONFIG_LIBS_PRIVATE " -lm")
+        endif()
     endif()
 endif()
 
@@ -63,7 +66,8 @@ if(NOT SQLITE3_SKIP_TOOLS)
         target_compile_definitions(sqlite3-bin PRIVATE SQLITE_HAVE_ZLIB)
     endif()
 
-    if(NOT WIN32)
+    find_library(HAVE_LIBM m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES} ${CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES})
+    if(HAVE_LIBM)
         target_link_libraries(sqlite3-bin PRIVATE m)
     endif()
 
