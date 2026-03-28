@@ -1,0 +1,17 @@
+{
+  "name": "pgvector",
+  "version": "0.3.0",
+  "description": "pgvector support for C++",
+  "homepage": "https://github.com/pgvector/pgvector-cpp",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
