@@ -1,6 +1,0 @@
-diff --git a/cpp-backtesting-engine/CMakeLists.txt b/cpp-backtesting-engine/CMakeLists.txt
---- a/cpp-backtesting-engine/CMakeLists.txt
-+++ b/cpp-backtesting-engine/CMakeLists.txt
-@@ -22 +22 @@
--if(APPLE)
-+if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)

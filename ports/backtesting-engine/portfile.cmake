@@ -8,21 +8,12 @@ vcpkg_from_github(
 
 set(PROJECT_SUBDIR "${SOURCE_PATH}/cpp-backtesting-engine")
 
-# Make the build toolchain-friendly for vcpkg:
-# - Upstream uses `-march=native`, which fails on some compilers/arch settings (ex: x64-osx build on non-native host)
-# - Upstream also hardcodes Homebrew paths on macOS; in vcpkg builds we must not mix those libs.
-set(_be_cmake_file "${PROJECT_SUBDIR}/CMakeLists.txt")
-if(EXISTS "${_be_cmake_file}")
-    file(READ "${_be_cmake_file}" _be_cmake_contents)
-
-    # Remove `-march=native` occurrences (leave other optimization flags intact).
-    string(REPLACE "-march=native" "" _be_cmake_contents "${_be_cmake_contents}")
-
-    # Avoid Homebrew prefix overrides when building under vcpkg.
-    string(REPLACE "if(APPLE)" "if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)" _be_cmake_contents "${_be_cmake_contents}")
-
-    file(WRITE "${_be_cmake_file}" "${_be_cmake_contents}")
-endif()
+# Upstream v1.0.1 uses pkg-config for curl/yaml-cpp. This port vendors a CMake 3.20+
+# find_package-based CMakeLists (see cmake/CMakeLists.txt) so vcpkg dependencies work.
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/cmake/CMakeLists.txt"
+    DESTINATION "${PROJECT_SUBDIR}"
+    FILE_PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+)
 
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/usage")
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage"
@@ -34,6 +25,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${PROJECT_SUBDIR}"
     OPTIONS
         -DBACKTESTINGENGINE_BUILD_EXAMPLES=OFF
+        -DBACKTESTINGENGINE_ENABLE_TALIB=OFF
 )
 
 vcpkg_cmake_install()
@@ -51,4 +43,3 @@ if(EXISTS "${PROJECT_SUBDIR}/LICENSE")
 elseif(EXISTS "${SOURCE_PATH}/LICENSE")
     vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 endif()
-
