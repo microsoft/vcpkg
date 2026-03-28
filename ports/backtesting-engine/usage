@@ -1,0 +1,9 @@
+backtesting-engine provides CMake targets:
+
+    find_package(BacktestingEngine CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE BacktestingEngine::backtesting_engine_shared)
+
+Notes:
+- The shared library exports a C API header at: c_api/backtest_c.h
+- TA-Lib remains optional. Builds work without it; some indicators are gated.
+

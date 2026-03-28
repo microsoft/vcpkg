@@ -1,0 +1,12 @@
+diff --git a/cpp-backtesting-engine/CMakeLists.txt b/cpp-backtesting-engine/CMakeLists.txt
+--- a/cpp-backtesting-engine/CMakeLists.txt
++++ b/cpp-backtesting-engine/CMakeLists.txt
+@@ -171,1 +171,1 @@
+-    -Wall -Wextra -O3 -march=native -fPIC
++    -Wall -Wextra -O3 -fPIC
+@@ -189,1 +189,1 @@
+-    -Wall -Wextra -O3 -march=native -fPIC
++    -Wall -Wextra -O3 -fPIC
+@@ -213,1 +213,1 @@
+-    -Wall -Wextra -O3 -march=native -fPIC
++    -Wall -Wextra -O3 -fPIC
