@@ -10,6 +10,7 @@ vcpkg_from_github(
         exclude-tests.patch
         fix-install.patch
         remove-static-suffix.patch
+        fix-cache-flush-on-android.patch
 )
 
 vcpkg_list(SET options)
@@ -26,11 +27,7 @@ else()
     vcpkg_list(APPEND options -DDISABLE_DYNAMIC_CODE=OFF)
 endif()
 
-if (VCPKG_TARGET_IS_ANDROID)
-    vcpkg_list(APPEND options -DENABLE_NEON=ON)
-else()
-    vcpkg_list(APPEND options -DENABLE_NEON=OFF)
-endif()
+vcpkg_list(APPEND options -DENABLE_NEON=OFF)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"

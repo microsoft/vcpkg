@@ -3001,7 +3001,7 @@
       "port-version": 0
     },
     "ffts": {
-      "baseline": "2019-03-19",
+      "baseline": "0.9.0",
       "port-version": 0
     },
     "fftw3": {
