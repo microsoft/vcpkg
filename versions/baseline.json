@@ -3413,8 +3413,8 @@
       "port-version": 0
     },
     "glbinding": {
-      "baseline": "3.1.0",
-      "port-version": 4
+      "baseline": "3.5.0",
+      "port-version": 0
     },
     "glew": {
       "baseline": "2.3.1",
