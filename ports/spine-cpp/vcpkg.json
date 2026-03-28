@@ -14,10 +14,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "use-std-function": {
-      "description": "Use std::function listeners"
-    }
-  }
+  ]
 }
