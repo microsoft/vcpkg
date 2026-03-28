@@ -583,7 +583,6 @@ kfr[capi](windows)=feature-fails # feature emits DLL even when built static
 kissfft[openmp]:arm64-osx=feature-fails # No openmp on osx
 kissfft[tools]:arm64-linux=feature-fails
 krb5:arm64-linux=fail
-lapack:arm64-linux=cascade
 lapack-reference:arm64-linux=fail
 lapack-reference:arm64-windows=cascade
 lapack-reference[blas-select,cblas,noblas]=options # Cannot built feature 'cblas' together with feature 'noblas'. cblas requires blas.
