@@ -1,19 +1,15 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index XXXXXXX..YYYYYYY 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -28,6 +28,10 @@ if(MSVC)
- endif()
- 
+--- CMakeLists.txt.orig	2026-03-28 17:13:44.772019600 +0700
++++ CMakeLists.txt	2026-03-28 17:14:00.233211400 +0700
+@@ -22,6 +22,8 @@
  # Include options before anything else
-+
-+# Disable clang-tidy for package builds
-+set(CLANG_TIDY_EXE "")
-+
  include(cmake/Options.cmake)
  
++# Disable clang-tidy for package builds
++set(CLANG_TIDY_EXE "")
  # Set default build type if not specified (single-config generators)
-@@ -40,7 +44,7 @@ include(cmake/Dependencies.cmake)
+ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
+@@ -33,7 +35,7 @@
  
  # Enable clang-tidy during build if available
  find_program(CLANG_TIDY_EXE NAMES clang-tidy)

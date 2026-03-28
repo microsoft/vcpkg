@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO itcv-GmbH/cpp-mcp-sdk
     REF "v${VERSION}"
-    SHA512 5d2687384a951c50b9873e8e0b9fcd4110a5dc0f76b581f2cd95dbac2a4e68ca66289b4d1e82d8b52ad0eed6893d5d729517f8f4aa40e61755dcdf8bcb003a3d
+    SHA512 ea32ed4199431ad639c14ccb786c19e47ade33fceb61af72b5693121ed8aa2af4276ba4faf7348a5e72dbeab84751b1099ea3eeeb6dc8088d0395bd4248f4a63
     HEAD_REF main
     PATCHES disable-clang-tidy.patch
 )

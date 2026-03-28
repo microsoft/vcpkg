@@ -1,6 +1,6 @@
 {
   "name": "mcp-cpp-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Model Context Protocol SDK for C++ - Build production-ready MCP servers and clients with complete protocol support including Streamable HTTP transport and OAuth-based authorization",
   "homepage": "https://github.com/itcv-GmbH/cpp-mcp-sdk",
   "license": "MIT",
