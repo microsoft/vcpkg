@@ -765,7 +765,6 @@ magnum-integration:arm64-linux=cascade
 magnum-plugins:arm64-linux=cascade
 magnum-plugins[cgltfimporter,glslangshaderconverter,ktximageconverter,ktximporter,openexrimageconverter,openexrimporter,spirvtoolsshaderconverter,stbdxtimageconverter]=skip # only available in head build
 magnum-plugins[meshoptimizersceneconverter](!(linux&arm64))=feature-fails # see https://github.com/microsoft/vcpkg/issues/31112
-manifold:arm64-linux=cascade
 mapnik[iewer]:arm64-linux=cascade
 mapnik[input-gdal]:arm64-linux=cascade
 mapnik[input-ogr]:arm64-linux=cascade
