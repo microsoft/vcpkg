@@ -5,7 +5,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Ableton/link
     REF "Link-${VERSION}"
-    SHA512 21ab3f47b1b2a7961cae238ca846adf0190341e8379a33938824acc49d3b95d8823b61bc321b1dfcbb3864f740425ac81d8c5c581e882394e1edac230f4c34e4
+    SHA512 b59ae5a49b577a1adf67773aac334048aa9370cc98bc17ed44d1bee5bee1d3363d7f6484a809d872d62febaa7cc4e630cb611b6f6a68b2f0ba92c8c77675c712
     HEAD_REF master
     PATCHES
         replace_local_asiostandalone_by_vcpkg_asio.patch
