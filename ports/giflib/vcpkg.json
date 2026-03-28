@@ -1,7 +1,6 @@
 {
   "name": "giflib",
-  "version": "5.2.2",
-  "port-version": 2,
+  "version": "version",
   "description": "A library for reading and writing gif images.",
   "homepage": "https://sourceforge.net/projects/giflib/",
   "license": "MIT",
