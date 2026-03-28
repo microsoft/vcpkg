@@ -1,6 +1,6 @@
 {
   "name": "jkqtplotter",
-  "version-date": "4.0.3",
+  "version": "4.0.3",
   "description": "A Qt Plotting Library",
   "license": null,
   "dependencies": [
