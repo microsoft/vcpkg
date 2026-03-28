@@ -4237,8 +4237,8 @@
       "port-version": 1
     },
     "kdstatemachineeditor": {
-      "baseline": "2.0.0",
-      "port-version": 2
+      "baseline": "2.3.1",
+      "port-version": 0
     },
     "kdutils": {
       "baseline": "0.1.13",
@@ -4424,23 +4424,7 @@
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6i18n": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6globalaccel": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6itemmodels": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6dbusaddons": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6coreaddons": {
+    "kf6breezeicons": {
       "baseline": "6.23.0",
       "port-version": 0
     },
@@ -4448,7 +4432,23 @@
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6breezeicons": {
+    "kf6coreaddons": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6dbusaddons": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6globalaccel": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6i18n": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6itemmodels": {
       "baseline": "6.23.0",
       "port-version": 0
     },
