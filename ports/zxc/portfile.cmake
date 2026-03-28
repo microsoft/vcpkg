@@ -9,12 +9,18 @@ vcpkg_from_github(
 # Remove vendored rapidhash to use the rapidhash port instead
 file(REMOVE "${SOURCE_PATH}/src/lib/vendors/rapidhash.h")
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        util ZXC_BUILD_CLI
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DZXC_NATIVE_ARCH=OFF
         -DZXC_ENABLE_LTO=OFF
-        -DZXC_BUILD_CLI=OFF
         -DZXC_BUILD_TESTS=OFF
 )
 
@@ -27,5 +33,13 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
+
+if ("util" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            zxc
+        AUTO_CLEAN
+    )
+endif()
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
