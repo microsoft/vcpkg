@@ -3429,7 +3429,7 @@
       "port-version": 2
     },
     "glib": {
-      "baseline": "2.86.4",
+      "baseline": "2.88.0",
       "port-version": 0
     },
     "glib-networking": {
