@@ -2017,7 +2017,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.39.0",
+      "baseline": "0.40.0",
       "port-version": 0
     },
     "cpp-ipc": {
