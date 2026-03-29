@@ -1551,3 +1551,5 @@ zookeeper:x64-windows-static-md=fail
 zookeeper:x64-windows-static=fail
 zookeeper:x64-windows=fail
 zookeeper:x86-windows=fail
+jbac-tinygnn[openmp]:arm64-osx=feature-fails
+jbac-tinygnn[openmp]:x64-osx=feature-fails
