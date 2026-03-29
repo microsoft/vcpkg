@@ -78,8 +78,8 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
-        "anari",
         "alembic",
+        "anari",
         "cairo",
         "ffmpeg",
         "fontconfig",
