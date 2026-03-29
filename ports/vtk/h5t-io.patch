@@ -1,0 +1,82 @@
+diff --git a/ThirdParty/h5hut/vtkh5hut/src/h5core/private/h5t_io.h b/ThirdParty/h5hut/vtkh5hut/src/h5core/private/h5t_io.h
+index f5b0928927..73dae8cd8f 100644
+--- a/ThirdParty/h5hut/vtkh5hut/src/h5core/private/h5t_io.h
++++ b/ThirdParty/h5hut/vtkh5hut/src/h5core/private/h5t_io.h
+@@ -15,7 +15,7 @@
+ 
+ struct h5t_read_methods {
+        h5_err_t (*init_loc_elems_struct)(h5t_mesh_t* const,
+-                                         const h5_glb_elem_t*cosnt,
++                                         const h5_glb_elem_t* const,
+                                          const h5_loc_idx_t,
+                                          const h5_loc_idx_t,
+                                          const h5_uint32_t,
+@@ -23,8 +23,8 @@ struct h5t_read_methods {
+        h5_err_t (*init_elem_flags)(h5t_mesh_t* const, h5_loc_idx_t, h5_loc_idx_t);
+        h5_err_t (*init_map_elem_g2l)(h5t_mesh_t* const, h5_glb_elem_t*
+                                      const, const h5_loc_idx_t);
+-       h5_err_t (*init_glb_elems_struct)(h5t_mesh_t* const, const h5_glb_elem_t*const);
+-       h5_err_t (*init_glb_elems_struct_chk)(h5t_mesh_t* const, const h5_glb_elem_t*const, h5_chk_idx_t* ,int);
++       h5_err_t (*init_glb_elems_struct)(h5t_mesh_t* const, const h5_glb_elem_t* const);
++       h5_err_t (*init_glb_elems_struct_chk)(h5t_mesh_t* const, const h5_glb_elem_t* const, h5_chk_idx_t*, int);
+ };
+ 
+ extern struct h5t_read_methods h5tpriv_read_trim_methods;
+@@ -98,7 +98,6 @@ h5tpriv_init_glb_elems_struct_chk (
+        return m->methods->read->init_glb_elems_struct_chk (m, glb_elems, list, num_items);
+ }
+ 
+-
+ h5_err_t
+ h5tpriv_get_list_of_chunks_to_write (
+                h5t_mesh_t* const m,
+@@ -119,14 +118,15 @@ h5priv_find_proc_to_write (
+                h5_loc_idx_t elem_idx
+                );
+ 
+-// TODO move this to appropriate place
++/* Renamed from comparison_fn_t to h5t_comparison_fn_t to avoid conflict
++   with glibc's comparison_fn_t typedef in <stdlib.h> */
+ typedef struct {
+        int (*compare) (const void *p_a, const void *p_b);
+-} comparison_fn_t;
++} h5t_comparison_fn_t;
+ 
+ void * linsearch (const void *key, void *array, size_t count, size_t size,
+- comparison_fn_t compare);
+-
++ h5t_comparison_fn_t compare);
++ 
+ unsigned int
+ hidxmap_compute_hval (
+         const void* __item
+@@ -138,4 +138,4 @@ hidxmap_cmp (
+         const void* __b
+         );
+ 
+-#endif
++#endif
+diff --git a/ThirdParty/h5hut/vtkh5hut/src/h5core/h5t_io.c b/ThirdParty/h5hut/vtkh5hut/src/h5core/h5t_io.c
+index 57d2969558..405b54194f 100644
+--- a/ThirdParty/h5hut/vtkh5hut/src/h5core/h5t_io.c
++++ b/ThirdParty/h5hut/vtkh5hut/src/h5core/h5t_io.c
+@@ -257,15 +257,14 @@ linsearch (
+        void *array,
+        size_t count,
+        size_t size,
+-       comparison_fn_t compare
++       h5t_comparison_fn_t compare
+        ) {
+        void* pointer = array;
+        for (int i = 0; i < count; i++) {
+-               if (compare.compare(key,pointer) == 0) {
++               if (compare.compare(key, pointer) == 0) {
+                        return pointer;
+-                       break;
+                }
+-               pointer = (char*)pointer + size;
++               pointer = (char*)pointer + size;
+        }
+        return NULL;
+ }
+ 

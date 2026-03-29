@@ -78,6 +78,7 @@
     "all": {
       "description": "Build all vtk modules",
       "dependencies": [
+        "anari",
         "alembic",
         "cairo",
         "ffmpeg",
@@ -91,6 +92,7 @@
         "openjpeg",
         "openslide",
         "openvdb",
+        "openxr-loader",
         "pdal",
         "tbb",
         {

@@ -26,6 +26,7 @@ vcpkg_from_github(
         remove-prefix-changes.patch
         cell-attribute-fix.patch
         vtk-diy2-factory.patch
+        h5t-io.patch
 )
 
 # Overwrite outdated modules if they have not been patched:
