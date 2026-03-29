@@ -5,7 +5,7 @@
  
  include(CMakeFindDependencyMacro)
 -find_dependency(OpenMP)
-+if(@OpenMP_CXX_FOUND@)
++if("@VCPKG_LOCK_FIND_PACKAGE_OpenMP@")
 +  find_dependency(OpenMP)
 +endif()
  

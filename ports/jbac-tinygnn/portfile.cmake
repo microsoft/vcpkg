@@ -1,7 +1,9 @@
 # TinyGNN does not annotate public symbols with __declspec(dllexport), so a
 # shared-library build on Windows produces DLLs with zero exports.
 # Force static linkage to avoid that and to keep the install layout simple.
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -24,7 +26,6 @@ vcpkg_cmake_configure(
         ${FEATURE_OPTIONS}
         -DTINYGNN_BUILD_TESTS=OFF
         -DTINYGNN_BUILD_BENCHMARKS=OFF
-        -DBUILD_SHARED_LIBS=OFF
 )
 
 vcpkg_cmake_install()
