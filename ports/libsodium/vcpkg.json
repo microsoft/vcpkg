@@ -1,10 +1,16 @@
 {
   "name": "libsodium",
   "version": "1.0.21",
+  "port-version": 1,
   "description": "A modern and easy-to-use crypto library",
   "homepage": "https://libsodium.org/",
   "license": "ISC",
   "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows | mingw"
+    },
     {
       "name": "vcpkg-msbuild",
       "host": true,

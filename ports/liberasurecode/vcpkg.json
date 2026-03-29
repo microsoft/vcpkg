@@ -1,11 +1,16 @@
 {
   "name": "liberasurecode",
   "version": "1.7.1",
+  "port-version": 1,
   "description": "Erasure Code API library written in C with pluggable Erasure Code backends. Mirror of code maintained at opendev.org.",
   "homepage": "https://github.com/openstack/liberasurecode",
   "license": "BSD-2-Clause",
   "supports": "!android & !windows",
   "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    },
     "zlib"
   ]
 }

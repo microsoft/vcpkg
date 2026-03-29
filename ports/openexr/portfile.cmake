@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openexr
     REF "v${VERSION}"
-    SHA512 1683d55fd59cc90ce4ebadf66ba6a178e7ceb347fbce753d054fdf1ee3e0c734cff674d2ebc1316853ca01c99d73b1b04b9483cbee364af1aa6238c9c3becc54
+    SHA512 f81fcda206d9a7f602eb3a189369aa28ea4a1e2ad001dadc890c4e918f0db153626ed3e15c267007fabd16b6ccc234aa5b55376b40e65a98588a26f39dc9749a
     HEAD_REF main
 )
 

@@ -1,10 +1,10 @@
 {
   "name": "flint",
-  "version-semver": "2.9.0",
-  "port-version": 1,
+  "version-semver": "3.4.0",
   "description": "Fast Library for Number Theory",
   "homepage": "https://www.flintlib.org/",
-  "supports": "!uwp",
+  "license": "GPL-3.0-only",
+  "supports": "!uwp & (!windows | x64)",
   "dependencies": [
     "gettimeofday",
     "gmp",
@@ -15,7 +15,18 @@
     },
     {
       "name": "vcpkg-cmake",
-      "host": true
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true,
+      "platform": "windows"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows"
     }
   ]
 }
