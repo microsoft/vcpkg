@@ -870,7 +870,6 @@ ngtcp2[gnutls]:arm64-windows=cascade
 nifticlib:arm64-linux=fail
 nrf-ble-driver:arm64-linux=fail
 nss:x64-windows-static=cascade
-numcpp[python]:arm64-linux=cascade
 nvidia-cutlass:arm64-linux=cascade
 nvtt[cuda]:arm64-osx=cascade
 nvtt[cuda]:x86-windows=cascade
