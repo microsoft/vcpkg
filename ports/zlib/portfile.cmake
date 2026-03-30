@@ -10,10 +10,8 @@ vcpkg_from_github(
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        -DSKIP_INSTALL_FILES=ON
-        -DZLIB_BUILD_EXAMPLES=OFF
+        -DZLIB_BUILD_TESTING=OFF
     OPTIONS_DEBUG
-        -DSKIP_INSTALL_HEADERS=ON
 )
 
 vcpkg_cmake_install()
