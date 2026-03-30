@@ -1,0 +1,15 @@
+diff --git a/spine-cpp/CMakeLists.txt b/spine-cpp/CMakeLists.txt
+index 9829b42cd..372d58d15 100644
+--- a/spine-cpp/CMakeLists.txt
++++ b/spine-cpp/CMakeLists.txt
+@@ -14,8 +14,8 @@ add_library(spine-cpp-lite STATIC ${SOURCES} ${INCLUDES} spine-cpp-lite/spine-cp
+ target_include_directories(spine-cpp-lite PUBLIC spine-cpp/include spine-cpp-lite)
+ 
+ # Install target
+-install(TARGETS spine-cpp EXPORT spine-cpp_TARGETS DESTINATION dist/lib)
+-install(FILES ${INCLUDES} DESTINATION dist/include)
++install(TARGETS spine-cpp EXPORT spine-cpp_TARGETS DESTINATION lib)
++install(FILES ${INCLUDES} DESTINATION include/spine-cpp/spine)
+ 
+ # Export target
+ export(

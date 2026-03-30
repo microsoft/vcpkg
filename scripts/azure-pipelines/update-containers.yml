@@ -32,6 +32,7 @@ jobs:
         # to the SHA to which the tag points, not the tag itself.
         oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-android:2026-02-10 || echo "WARNING: Failed to attach lifecycle metadata to vcpkg-android:2026-01-20"
         oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20 || echo "WARNING: Failed to attach lifecycle metadata to vcpkg-linux:2026-01-20"
+        oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10 || echo "WARNING: Failed to attach lifecycle metadata to vcpkg-arm64-linux:2026-02-10"
         cd scripts/azure-pipelines/android
         # to explain the ulimit thing, see https://github.com/docker/buildx/issues/379
         docker buildx build . -t vcpkgandroidwus.azurecr.io/vcpkg-android:2026-02-10 --build-arg BUILD_DATE=$BuildDate --ulimit nofile=1024:1024
@@ -40,7 +41,6 @@ jobs:
         docker buildx build . -t vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20 --build-arg BUILD_DATE=$BuildDate --ulimit nofile=1024:1024
         docker push vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20
         cd ../linux-arm64
-        docker buildx build . -t vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10 --build-arg BUILD_DATE=$BuildDate --ulimit nofile=1024:1024
-        docker push vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10
-        oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$EndDate" vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-02-10
+        docker buildx build . -t vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-03-18 --build-arg BUILD_DATE=$BuildDate --ulimit nofile=1024:1024
+        docker push vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-03-18
         
