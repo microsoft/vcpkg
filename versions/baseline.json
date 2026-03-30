@@ -3009,7 +3009,7 @@
       "port-version": 2
     },
     "fineftp": {
-      "baseline": "1.5.1",
+      "baseline": "1.6.0",
       "port-version": 0
     },
     "fins": {
