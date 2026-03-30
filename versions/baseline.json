@@ -2465,7 +2465,7 @@
       "port-version": 0
     },
     "dingo": {
-      "baseline": "0.1.0",
+      "baseline": "0.1.2",
       "port-version": 0
     },
     "directfb2": {
