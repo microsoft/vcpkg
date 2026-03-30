@@ -6473,7 +6473,7 @@
       "port-version": 0
     },
     "mimicpp": {
-      "baseline": "9.2.1",
+      "baseline": "9.3.0",
       "port-version": 0
     },
     "minc": {
