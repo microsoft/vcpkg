@@ -1,18 +1,27 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index aab0263..ff2578d 100644
+index dfbc4a2..92c84aa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -546,7 +546,7 @@ if (NK_BUILD_SHARED)
+@@ -225,7 +225,7 @@ target_sources(numkong INTERFACE ${NK_SOURCES})
+ target_include_directories(numkong INTERFACE "${PROJECT_SOURCE_DIR}/include")
+ 
+ # Enable Clang C modules for incremental compilation
+-if (CMAKE_C_COMPILER_ID MATCHES "Clang")
++if (FALSE)
+     target_compile_options(
+         numkong INTERFACE $<$<COMPILE_LANGUAGE:C>:-fmodules> $<$<COMPILE_LANGUAGE:C>:-fimplicit-module-maps>
+                           $<$<COMPILE_LANGUAGE:C>:-fmodules-cache-path=${CMAKE_BINARY_DIR}/module-cache>
+@@ -606,7 +606,7 @@ if (NK_BUILD_SHARED)
          endif ()
      else ()
          add_library(nk_shared SHARED ${NK_SOURCES})
 -        target_include_directories(nk_shared PUBLIC "${PROJECT_SOURCE_DIR}/include")
 +        target_include_directories(nk_shared PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
          set_target_properties(nk_shared PROPERTIES OUTPUT_NAME numkong)
-
+ 
          # Hide all symbols by default; only NK_DYNAMIC-annotated API functions are exported.
-@@ -697,15 +697,21 @@ if (NK_BUILD_SHARED)
-
+@@ -658,15 +658,21 @@ if (NK_BUILD_SHARED)
+ 
      install(
          TARGETS nk_shared
 -        ARCHIVE
@@ -35,11 +44,11 @@ index aab0263..ff2578d 100644
 +        DESTINATION share/unofficial-numkong
      )
  endif ()
-
-@@ -731,5 +737,4 @@ if (NK_BUILD_SHARED_TEST)
+ 
+@@ -692,5 +698,4 @@ if (NK_BUILD_SHARED_TEST)
      add_test(NAME nk_shared_test COMMAND nk_shared_test)
  endif ()
-
+ 
 -install(DIRECTORY include/ DESTINATION include)
 -install(DIRECTORY c/ DESTINATION share/doc/${PROJECT_NAME}/src)
 +install(DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN *.h)
