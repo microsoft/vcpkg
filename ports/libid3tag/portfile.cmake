@@ -1,7 +1,7 @@
 vcpkg_download_distfile(
     ARCHIVE URLS "https://codeberg.org/tenacityteam/libid3tag/archive/${VERSION}.tar.gz"
     FILENAME "${VERSION}.tar.gz"
-    SHA512 d49bc637899e4251ed66b5b56aa4c910dcdecd6b03ed197866d74175fc4eadff40f40f336606b23e2505b0e11834c4212a1314feeeaa2c0e9713051fdb56cb45
+    SHA512 056b7e00c62d14fc09980d4309422c822ad485cca3876cbb76017fef89aaf79ecfb42f2683521ff6d19f172ff1b7435dbd7307449559099ad31e0058415918ec
 )
 
 vcpkg_extract_source_archive(SOURCE_PATH ARCHIVE "${ARCHIVE}")
