@@ -1,0 +1,42 @@
+{
+  "name": "regimeflow",
+  "version": "1.0.1",
+  "description": "Regime-aware C++ backtesting and research libraries",
+  "homepage": "https://github.com/gregorian-09/regime-flow",
+  "license": "MIT",
+  "default-features": [
+    "curl",
+    "openssl"
+  ],
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "boost-system"
+  ],
+  "features": {
+    "curl": {
+      "description": "Enable HTTP-backed data and broker integrations that use libcurl.",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "openssl": {
+      "description": "Enable TLS and secure WebSocket support.",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "postgres": {
+      "description": "Enable PostgreSQL-backed data access helpers.",
+      "dependencies": [
+        "libpq"
+      ]
+    }
+  }
+}

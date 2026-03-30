@@ -1,0 +1,20 @@
+The package `regimeflow` provides the installed RegimeFlow C++ headers and
+imported CMake targets.
+
+Usage:
+  find_package(RegimeFlow CONFIG REQUIRED)
+  target_link_libraries(your_target PRIVATE
+      RegimeFlow::regimeflow_engine
+      RegimeFlow::regimeflow_strategy)
+
+Core imported targets:
+  RegimeFlow::regimeflow_common
+  RegimeFlow::regimeflow_data
+  RegimeFlow::regimeflow_engine
+  RegimeFlow::regimeflow_execution
+  RegimeFlow::regimeflow_metrics
+  RegimeFlow::regimeflow_plugins
+  RegimeFlow::regimeflow_regime
+  RegimeFlow::regimeflow_risk
+  RegimeFlow::regimeflow_strategy
+  RegimeFlow::regimeflow_walkforward
