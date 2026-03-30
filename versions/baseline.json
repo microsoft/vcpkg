@@ -4424,23 +4424,7 @@
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6i18n": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6globalaccel": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6itemmodels": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6dbusaddons": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6coreaddons": {
+    "kf6breezeicons": {
       "baseline": "6.23.0",
       "port-version": 0
     },
@@ -4448,7 +4432,23 @@
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6breezeicons": {
+    "kf6coreaddons": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6dbusaddons": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6globalaccel": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6i18n": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6itemmodels": {
       "baseline": "6.23.0",
       "port-version": 0
     },
@@ -5077,8 +5077,8 @@
       "port-version": 1
     },
     "libidn2": {
-      "baseline": "2.3.7",
-      "port-version": 3
+      "baseline": "2.3.8",
+      "port-version": 0
     },
     "libigl": {
       "baseline": "2.6.0",
