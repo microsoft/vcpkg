@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Aksh13673/Zenith
     REF v1.0.0
-    SHA512 0  ]
+    SHA512 0 # <--- This will cause a failure. See below how to fix it.
     HEAD_REF main
 )
 
