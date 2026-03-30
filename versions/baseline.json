@@ -4753,7 +4753,7 @@
       "port-version": 0
     },
     "libcoro": {
-      "baseline": "0.15.0",
+      "baseline": "0.16.0",
       "port-version": 0
     },
     "libcorrect": {
