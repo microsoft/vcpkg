@@ -4917,8 +4917,8 @@
       "port-version": 1
     },
     "libfabric": {
-      "baseline": "1.22.0",
-      "port-version": 1
+      "baseline": "2.5.0",
+      "port-version": 0
     },
     "libffi": {
       "baseline": "3.5.2",
