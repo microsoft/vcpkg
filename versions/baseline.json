@@ -11118,7 +11118,7 @@
     },
     "zookeeper": {
       "baseline": "3.8.5",
-      "port-version": 0
+      "port-version": 1
     },
     "zopfli": {
       "baseline": "1.0.3",
