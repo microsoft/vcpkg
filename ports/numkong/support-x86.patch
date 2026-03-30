@@ -1,0 +1,13 @@
+diff --git a/include/numkong/types.h b/include/numkong/types.h
+index 1dccc95..a83d341 100644
+--- a/include/numkong/types.h
++++ b/include/numkong/types.h
+@@ -139,7 +139,7 @@
+ // Compiling for x86: NK_TARGET_X86_
+ // https://www.intel.com/content/www/us/en/docs/dpcpp-cpp-compiler/developer-guide-reference/2024-2/additional-predefined-macros.html
+ #if !defined(NK_TARGET_X86_)
+-#if defined(__x86_64__) || defined(_M_X64)
++#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
+ #define NK_TARGET_X86_ 1
+ #else
+ #define NK_TARGET_X86_ 0
