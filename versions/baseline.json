@@ -9454,7 +9454,7 @@
     },
     "spine-cpp": {
       "baseline": "4.2.20260227",
-      "port-version": 0
+      "port-version": 1
     },
     "spirit-po": {
       "baseline": "1.1.2",
