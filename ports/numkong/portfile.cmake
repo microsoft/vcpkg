@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         export-target.patch
-        support-x86.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
