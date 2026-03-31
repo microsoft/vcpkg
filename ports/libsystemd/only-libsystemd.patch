@@ -1,23 +1,32 @@
 diff --git a/meson.build b/meson.build
-index a4730f0..32ec825 100644
+index 3672005d75..64e601cad2 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -2148,12 +2148,11 @@ libsystemd_includes = [basic_includes, include_directories(
- includes = [libsystemd_includes, include_directories('src/shared')]
+@@ -2087,17 +2087,19 @@ libsystemd_includes = [basic_includes, include_directories(
+         'src/libsystemd/sd-resolve',
+         'src/libsystemd/sd-varlink')]
+ 
+-includes = [libsystemd_includes, include_directories('src/shared')]
++includes = [libsystemd_includes]
  
  subdir('po')
 -subdir('catalog')
 +support_url='https://github.com/microsoft/vcpkg/issues'
+ subdir('src/include')
+ subdir('src/libc')
  subdir('src/fundamental')
  subdir('src/basic')
  subdir('src/libsystemd')
 -subdir('src/shared')
 -subdir('src/libudev')
 +static_libudev='unused'
++libudev_h_path = 'no'
++bashcompletiondir = 'no'
++zshcompletiondir = 'no'
  
  libsystemd = shared_library(
          'systemd',
-@@ -2169,7 +2168,8 @@ libsystemd = shared_library(
+@@ -2115,7 +2117,8 @@ libsystemd = shared_library(
                          threads,
                          userspace],
          link_depends : libsystemd_sym,
@@ -27,30 +36,105 @@ index a4730f0..32ec825 100644
          install_tag: 'libsystemd',
          install_dir : libdir)
  
-@@ -2205,6 +2205,8 @@ else
+@@ -2148,6 +2151,7 @@ else
          alias_target('libsystemd', libsystemd)
  endif
  
 +if false
-+
  libudev = shared_library(
          'udev',
          version : libudev_version,
-@@ -2940,6 +2942,17 @@ custom_target(
-         install_dir : testdata_dir,
-         command : [meson_extract_unit_files, meson.project_build_root()])
- 
-+else
-+  # headers
-+  subdir('src/systemd')
-+  # subdir man
-+  want_html=false
-+  want_man=false
-+  # subdir shell-completion/*
-+  bashcompletiondir='no'
-+  zshcompletiondir='no'
+@@ -2189,6 +2193,7 @@ if static_libudev != 'false'
+ else
+         alias_target('libudev', libudev)
+ endif
 +endif
-+
+ 
  #####################################################################
  
- alt_time_epoch = run_command('date', '-Is', '-u', '-d', '@@0@'.format(time_epoch),
+@@ -2213,6 +2218,7 @@ endif
+ 
+ #####################################################################
+ 
++if want_tests != 'false'
+ executable_template = {
+         'include_directories' : includes,
+         'link_with' : libshared,
+@@ -2319,9 +2325,11 @@ module_additional_kwargs = {
+         'link_args' : ['-shared'],
+         'dependencies' : userspace,
+ }
++endif
+ 
+ #####################################################################
+ 
++if false
+ # systemd-analyze requires 'libcore'
+ subdir('src/core')
+ # systemd-networkd requires 'libsystemd_network'
+@@ -2437,9 +2445,11 @@ subdir('src/vmspawn')
+ subdir('src/volatile-root')
+ subdir('src/vpick')
+ subdir('src/xdg-autostart-generator')
++endif
+ 
+ subdir('src/systemd')
+ 
++if false
+ subdir('src/test')
+ subdir('src/fuzz')
+ subdir('src/ukify/test')  # needs to be last for test_env variable
+@@ -2448,9 +2458,11 @@ subdir('test/fuzz')
+ subdir('mime')
+ 
+ alias_target('devel', libsystemd_pc, libudev_pc, systemd_pc, udev_pc)
++endif
+ 
+ #####################################################################
+ 
++if want_tests != 'false'
+ foreach test : simple_tests
+         executables += test_template + { 'sources' : [test] }
+ endforeach
+@@ -2638,6 +2650,7 @@ alias_target('fuzzers', fuzzer_exes)
+ #####################################################################
+ 
+ test_dlopen = executables_by_name.get('test-dlopen')
++endif
+ 
+ nss_targets = []
+ pam_targets = []
+@@ -2782,6 +2795,7 @@ endif
+ 
+ ############################################################
+ 
++if false
+ subdir('rules.d')
+ subdir('test')
+ 
+@@ -2800,6 +2814,9 @@ subdir('sysctl.d')
+ subdir('sysusers.d')
+ subdir('tmpfiles.d')
+ subdir('units')
++endif
++want_man = false
++want_html = false
+ 
+ install_subdir('factory/etc',
+                install_dir : factorydir)
+@@ -2958,6 +2975,7 @@ foreach name, exe : executables_by_name
+         symbol_analysis_exes += exe
+ endforeach
+ 
++if false
+ test(
+         'libshared-unused-symbols',
+         find_unused_library_symbols_py,
+@@ -3005,6 +3023,7 @@ alias_target('udev', buildable_rules, udev_targets, udev_units)
+ if conf.get('ENABLE_HWDB') == 1
+         alias_target('hwdb', auto_suspend_rules, executables_by_name.get('systemd-hwdb'), hwdb_units)
+ endif
++endif
+ 
+ alt_time_epoch = run_command('date', '-Is', '-u', '-d', f'@@time_epoch@', check : false)
+ if alt_time_epoch.returncode() != 0
