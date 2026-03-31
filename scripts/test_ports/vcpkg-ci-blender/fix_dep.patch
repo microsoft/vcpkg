@@ -125,7 +125,7 @@ diff --git a/build_files/cmake/Modules/FindEpoxy.cmake b/build_files/cmake/Modul
 index f154b613..fdc1176a 100644
 --- a/build_files/cmake/Modules/FindEpoxy.cmake
 +++ b/build_files/cmake/Modules/FindEpoxy.cmake
-@@ -10,6 +10,17 @@
+@@ -10,6 +10,15 @@
  #  Epoxy_FOUND, If false, do not try to use epoxy.
  
  # If `EPOXY_ROOT_DIR` was defined in the environment, use it.
@@ -136,14 +136,12 @@ index f154b613..fdc1176a 100644
 +set(Epoxy_LIBRARIES PkgConfig::epoxy)
 +set(Epoxy_INCLUDE_DIRS ${epoxy_INCLUDE_DIRS})
 +set(Epoxy_INCLUDE_DIR ${epoxy_INCLUDE_DIRS})
-+message(STATUS "epoxy_LIBRARIES: ${epoxy_STATIC_LIBRARIES}")
-+message(STATUS "epoxy_LINK_LIBRARIES: ${epoxy_STATIC_LINK_LIBRARIES}")
 + 
 +if(0)
  if(DEFINED EPOXY_ROOT_DIR)
    # Pass.
  elseif(DEFINED ENV{EPOXY_ROOT_DIR})
-@@ -47,6 +58,7 @@ if(Epoxy_FOUND)
+@@ -47,6 +56,7 @@ if(Epoxy_FOUND)
    set(Epoxy_LIBRARIES ${Epoxy_LIBRARY})
  endif()
  
