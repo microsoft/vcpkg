@@ -2362,7 +2362,7 @@
     },
     "darknet": {
       "baseline": "2025-10-24",
-      "port-version": 0
+      "port-version": 1
     },
     "darts-clone": {
       "baseline": "1767ab87cffe",

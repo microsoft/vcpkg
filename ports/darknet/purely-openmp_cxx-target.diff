@@ -2,7 +2,7 @@ diff --git a/CM_dependencies.cmake b/CM_dependencies.cmake
 index 1462d195..e26dc7d1 100644
 --- a/CM_dependencies.cmake
 +++ b/CM_dependencies.cmake
-@@ -239,6 +239,7 @@ LIST (APPEND DARKNET_LINK_LIBS ${OpenCV_LIBS})
+@@ -239,22 +239,18 @@ LIST (APPEND DARKNET_LINK_LIBS ${OpenCV_LIBS})
  # ============
  # == OpenMP ==
  # ============
@@ -10,7 +10,9 @@ index 1462d195..e26dc7d1 100644
  FIND_PACKAGE (OpenMP QUIET) # optional
  IF (NOT OPENMP_FOUND)
  	MESSAGE (WARNING "OpenMP not found. Building Darknet without support for OpenMP.")
-@@ -248,15 +249,7 @@ ELSEIF (DARKNET_USE_ROCM)
+ ELSEIF (DARKNET_USE_ROCM)
+ 	# TODO: This needs to be fixed.  What are we missing during the link process to make this work with clang++?
+ 	MESSAGE (WARNING "Skipping OpenMP due to ROCm.")
  ELSE ()
  	MESSAGE (STATUS "Found OpenMP ${OpenMP_VERSION}")
  	ADD_COMPILE_DEFINITIONS (DARKNET_OPENMP)
@@ -24,6 +26,7 @@ index 1462d195..e26dc7d1 100644
 -		ADD_COMPILE_OPTIONS (${OpenMP_CXX_FLAGS})
 -	ENDIF()
 +	LIST (APPEND DARKNET_LINK_LIBS OpenMP::OpenMP_CXX)
++	IF (WIN32)
++		ADD_COMPILE_OPTIONS (/openmp:experimental)
++	ENDIF()
  ENDIF ()
- 
- 
