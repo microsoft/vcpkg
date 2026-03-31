@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-dr/microlog
-    REF "v7.0.2"
-    SHA512 0a5714ed47724fde3784a8857a3ffcec41edcb22898ed178af0f37ccf86c3256275adb308d5ac393e01fcd10e7c0b3b597fc1dd91050d7ca5daebac6cf25983b
+    REF "v7.0.3"
+    SHA512 6fab03d198917f39ba9a7bb44976d2367238e620adcd3864b4b541a08afdf2622b6654a2dbfd18422180fdd5811740b7c2d177d6a388a5e89ecac12e62452f71
 )
 
 vcpkg_cmake_configure(
