@@ -30,6 +30,7 @@ vcpkg_from_github(
       0021-fix-qt-gen-def.patch
       0022-android-use-vcpkg-cpu-features.patch
       0023-ffmpeg8-support.patch
+      0024-openvino-const-tensor-data.patch
       "${PATCH1_FILE}"
 )
 # Disallow accidental build of vendored copies
@@ -502,21 +503,7 @@ endif()
 
 file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVConfig.cmake" OPENCV_CONFIG)
 file(READ "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVModules.cmake" OPENCV_MODULES)
-set(OPENCV_FEATURE_EIGEN FALSE)
-if("eigen" IN_LIST FEATURES)
-  set(OPENCV_FEATURE_EIGEN TRUE)
-endif()
-set(OPENCV_FEATURE_TEXT FALSE)
-if("text" IN_LIST FEATURES)
-  set(OPENCV_FEATURE_TEXT TRUE)
-endif()
 set(OPENCV_DEPS_FILE_CONTENTS "include(CMakeFindDependencyMacro)
-message(STATUS \"opencv4-import: entering OpenCV dependency helper for \${CMAKE_CURRENT_LIST_FILE}\")
-message(STATUS \"opencv4-import: OpenCV_DIR=\${OpenCV_DIR}\")
-message(STATUS \"opencv4-import: OpenCV_FIND_COMPONENTS=\${OpenCV_FIND_COMPONENTS}\")
-message(STATUS \"opencv4-import: FEATURES=${FEATURES}\")
-message(STATUS \"opencv4-import: feature eigen enabled=${OPENCV_FEATURE_EIGEN}\")
-message(STATUS \"opencv4-import: feature text enabled=${OPENCV_FEATURE_TEXT}\")
 if(${BUILD_opencv_dnn} AND NOT TARGET libprotobuf)  #Check if the CMake target libprotobuf is already defined
   find_dependency(Protobuf CONFIG REQUIRED)
   if(TARGET protobuf::libprotobuf)
@@ -545,7 +532,7 @@ if("dnn" IN_LIST FEATURES)
   string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(flatbuffers CONFIG)")
 endif()
 if("eigen" IN_LIST FEATURES)
-  string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(Eigen3 CONFIG)\nif(NOT TARGET Eigen3::Eigen)\n  if(DEFINED EIGEN3_INCLUDE_DIR)\n    add_library(Eigen3::Eigen INTERFACE IMPORTED)\n    set_target_properties(Eigen3::Eigen PROPERTIES INTERFACE_INCLUDE_DIRECTORIES \"\${EIGEN3_INCLUDE_DIR}\")\n  elseif(DEFINED EIGEN3_INCLUDE_DIRS)\n    add_library(Eigen3::Eigen INTERFACE IMPORTED)\n    set_target_properties(Eigen3::Eigen PROPERTIES INTERFACE_INCLUDE_DIRECTORIES \"\${EIGEN3_INCLUDE_DIRS}\")\n  endif()\nendif()\nif(TARGET Eigen3::Eigen)\n  message(STATUS \"opencv4-import: after find_dependency(Eigen3 CONFIG), target exists=TRUE\")\nelse()\n  message(STATUS \"opencv4-import: after find_dependency(Eigen3 CONFIG), target exists=FALSE\")\nendif()")
+  string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(Eigen3 CONFIG)\nif(NOT TARGET Eigen3::Eigen)\n  if(DEFINED EIGEN3_INCLUDE_DIR)\n    add_library(Eigen3::Eigen INTERFACE IMPORTED)\n    set_target_properties(Eigen3::Eigen PROPERTIES INTERFACE_INCLUDE_DIRECTORIES \"\${EIGEN3_INCLUDE_DIR}\")\n  elseif(DEFINED EIGEN3_INCLUDE_DIRS)\n    add_library(Eigen3::Eigen INTERFACE IMPORTED)\n    set_target_properties(Eigen3::Eigen PROPERTIES INTERFACE_INCLUDE_DIRECTORIES \"\${EIGEN3_INCLUDE_DIRS}\")\n  endif()\nendif()")
 endif()
 if("ffmpeg" IN_LIST FEATURES)
   string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(FFMPEG)")
@@ -603,7 +590,7 @@ if("tbb" IN_LIST FEATURES)
   string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(TBB)")
 endif()
 if("text" IN_LIST FEATURES)
-  string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(Tesseract)\nif(NOT TARGET Tesseract::libtesseract)\n  if(DEFINED Tesseract_LIBRARIES)\n    add_library(Tesseract::libtesseract INTERFACE IMPORTED)\n    set_target_properties(Tesseract::libtesseract PROPERTIES\n      INTERFACE_LINK_LIBRARIES \"\${Tesseract_LIBRARIES}\"\n    )\n    if(DEFINED Tesseract_INCLUDE_DIRS)\n      set_target_properties(Tesseract::libtesseract PROPERTIES INTERFACE_INCLUDE_DIRECTORIES \"\${Tesseract_INCLUDE_DIRS}\")\n    elseif(DEFINED Tesseract_INCLUDE_DIR)\n      set_target_properties(Tesseract::libtesseract PROPERTIES INTERFACE_INCLUDE_DIRECTORIES \"\${Tesseract_INCLUDE_DIR}\")\n    endif()\n  endif()\nendif()\nif(TARGET Tesseract::libtesseract)\n  message(STATUS \"opencv4-import: after find_dependency(Tesseract), target exists=TRUE\")\nelse()\n  message(STATUS \"opencv4-import: after find_dependency(Tesseract), target exists=FALSE\")\nendif()")
+  string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(Tesseract)\nif(NOT TARGET Tesseract::libtesseract)\n  if(DEFINED Tesseract_LIBRARIES)\n    add_library(Tesseract::libtesseract INTERFACE IMPORTED)\n    set_target_properties(Tesseract::libtesseract PROPERTIES\n      INTERFACE_LINK_LIBRARIES \"\${Tesseract_LIBRARIES}\"\n    )\n    if(DEFINED Tesseract_INCLUDE_DIRS)\n      set_target_properties(Tesseract::libtesseract PROPERTIES INTERFACE_INCLUDE_DIRECTORIES \"\${Tesseract_INCLUDE_DIRS}\")\n    elseif(DEFINED Tesseract_INCLUDE_DIR)\n      set_target_properties(Tesseract::libtesseract PROPERTIES INTERFACE_INCLUDE_DIRECTORIES \"\${Tesseract_INCLUDE_DIR}\")\n    endif()\n  endif()\nendif()")
 endif()
 if("tiff" IN_LIST FEATURES)
   string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(TIFF)")
@@ -615,18 +602,10 @@ if("vulkan" IN_LIST FEATURES)
   string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nfind_dependency(VulkanHeaders CONFIG)")
 endif()
 
-if("eigen" IN_LIST FEATURES)
-  string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nif(TARGET Eigen3::Eigen)\n  message(STATUS \"opencv4-import: before OpenCVModules Eigen3 target exists=TRUE\")\nelse()\n  message(STATUS \"opencv4-import: before OpenCVModules Eigen3 target exists=FALSE\")\nendif()")
-endif()
-if("text" IN_LIST FEATURES)
-  string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nif(TARGET Tesseract::libtesseract)\n  message(STATUS \"opencv4-import: before OpenCVModules Tesseract target exists=TRUE\")\nelse()\n  message(STATUS \"opencv4-import: before OpenCVModules Tesseract target exists=FALSE\")\nendif()")
-endif()
-string(APPEND OPENCV_DEPS_FILE_CONTENTS "\nif(TARGET libprotobuf)\n  message(STATUS \"opencv4-import: before OpenCVModules libprotobuf target exists=TRUE\")\nelse()\n  message(STATUS \"opencv4-import: before OpenCVModules libprotobuf target exists=FALSE\")\nendif()")
-
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencv4/OpenCVDependencies-vcpkg.cmake" "${OPENCV_DEPS_FILE_CONTENTS}")
 set(OPENCV_CONFIG "include(\"\${CMAKE_CURRENT_LIST_DIR}/OpenCVDependencies-vcpkg.cmake\")\n${OPENCV_CONFIG}")
 string(REPLACE "include(\"\${CMAKE_CURRENT_LIST_DIR}/OpenCVModules\${OpenCV_MODULES_SUFFIX}.cmake\")"
-               "message(STATUS \"opencv4-import: including OpenCVModules from \${CMAKE_CURRENT_LIST_DIR}/OpenCVModules\${OpenCV_MODULES_SUFFIX}.cmake\")\ninclude(\"\${CMAKE_CURRENT_LIST_DIR}/OpenCVModules\${OpenCV_MODULES_SUFFIX}.cmake\")"
+               "include(\"\${CMAKE_CURRENT_LIST_DIR}/OpenCVModules\${OpenCV_MODULES_SUFFIX}.cmake\")"
                OPENCV_CONFIG "${OPENCV_CONFIG}")
 
 if("openmp" IN_LIST FEATURES)

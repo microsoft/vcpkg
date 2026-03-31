@@ -27,6 +27,6 @@ index 1462d195..e26dc7d1 100644
 -	ENDIF()
 +	LIST (APPEND DARKNET_LINK_LIBS OpenMP::OpenMP_CXX)
 +	IF (WIN32)
-+		ADD_COMPILE_OPTIONS (/openmp:experimental)
++		ADD_COMPILE_OPTIONS ($<$<COMPILE_LANGUAGE:CXX>:/openmp:experimental>)
 +	ENDIF()
  ENDIF ()

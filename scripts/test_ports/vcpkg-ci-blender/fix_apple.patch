@@ -2,12 +2,11 @@ diff --git a/build_files/cmake/platform/platform_apple.cmake b/build_files/cmake
 index 763d32e9..6b957da8 100644
 --- a/build_files/cmake/platform/platform_apple.cmake
 +++ b/build_files/cmake/platform/platform_apple.cmake
-@@ -26,7 +26,7 @@ endfunction()
+@@ -26,7 +26,6 @@ endfunction()
  # Find system provided libraries.
  
  # Find system ZLIB, not the pre-compiled one supplied with OpenCollada.
 -set(ZLIB_ROOT /usr)
-+# set(ZLIB_ROOT /usr)
  find_package(ZLIB REQUIRED)
  find_package(BZip2 REQUIRED)
  list(APPEND ZLIB_LIBRARIES ${BZIP2_LIBRARIES})
