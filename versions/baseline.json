@@ -5169,7 +5169,7 @@
       "port-version": 0
     },
     "liblttng-ust": {
-      "baseline": "2.14.0",
+      "baseline": "2.15.0",
       "port-version": 0
     },
     "liblzf": {
