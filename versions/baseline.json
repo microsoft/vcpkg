@@ -8893,7 +8893,7 @@
       "port-version": 0
     },
     "safeint": {
-      "baseline": "3.0.28",
+      "baseline": "3.0.28a",
       "port-version": 0
     },
     "safetyhook": {
