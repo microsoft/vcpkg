@@ -1,6 +1,6 @@
 {
   "name": "dispenso",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A high-performance C++ library for parallel programming with thread pools, parallel for loops, futures, task graphs, and concurrent containers",
   "homepage": "https://github.com/facebookincubator/dispenso",
   "license": "MIT",
