@@ -174,7 +174,6 @@ ecal:x64-android=fail
 ethindp-prism:arm64-linux=fail
 faad2:arm64-linux=fail
 faiss:arm64-osx=fail # No openmp on default osx toolchain
-faker-cxx:arm64-linux=fail
 fltk:arm-neon-android=fail
 fltk:arm64-android=fail
 fltk:arm64-linux=fail
