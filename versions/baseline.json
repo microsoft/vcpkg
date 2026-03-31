@@ -1793,7 +1793,7 @@
       "port-version": 8
     },
     "clblast": {
-      "baseline": "1.6.3",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "cld3": {
