@@ -2,7 +2,7 @@
 
 include(CMakeFindDependencyMacro)
 
-find_path(FFTS_INCLUDE_DIR NAMES linkotec-ffts/ffts.h
+find_path(FFTS_INCLUDE_DIR NAMES ffts/ffts.h
     PATHS "${PACKAGE_PREFIX_DIR}/include"
     NO_DEFAULT_PATH)
 find_library(FFTS_LIBRARY_RELEASE NAMES ffts PATHS "${PACKAGE_PREFIX_DIR}/lib" NO_DEFAULT_PATH)
