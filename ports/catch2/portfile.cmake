@@ -14,7 +14,7 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS OPTIONS
     FEATURES
-        thread-safe-assertions CATCH_CONFIG_EXPERIMENTAL_THREAD_SAFE_ASSERTIONS
+        thread-safe-assertions CATCH_CONFIG_THREAD_SAFE_ASSERTIONS
 )
 
 vcpkg_cmake_configure(
