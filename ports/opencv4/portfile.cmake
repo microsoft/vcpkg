@@ -31,6 +31,7 @@ vcpkg_from_github(
       0022-android-use-vcpkg-cpu-features.patch
       0023-ffmpeg8-support.patch
       0024-openvino-const-tensor-data.patch
+      0025-fix-cuda-host-std-flag-forwarding.patch
       "${PATCH1_FILE}"
 )
 # Disallow accidental build of vendored copies

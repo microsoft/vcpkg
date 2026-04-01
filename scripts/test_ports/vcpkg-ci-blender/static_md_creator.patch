@@ -1,7 +1,8 @@
 diff --git a/source/creator/CMakeLists.txt b/source/creator/CMakeLists.txt
+index 81daefab..a5d309be 100644
 --- a/source/creator/CMakeLists.txt
 +++ b/source/creator/CMakeLists.txt
-@@ -17,6 +17,14 @@ set(LIB
+@@ -24,6 +24,14 @@ set(LIB
    PRIVATE bf::dependencies::optional::opencolorio
  )
  
@@ -16,9 +17,7 @@ diff --git a/source/creator/CMakeLists.txt b/source/creator/CMakeLists.txt
  if(HAVE_FEENABLEEXCEPT)
    add_definitions(-DHAVE_FEENABLEEXCEPT)
  endif()
-@@ -409,13 +417,15 @@ elseif(WIN32)
-     set(TARGETDIR_VER ${CMAKE_INSTALL_PREFIX_WITH_CONFIG}/bpy/${BLENDER_VERSION})
-     # Important the DLL's are next to `__init__.pyd` otherwise it won't load.
+@@ -405,10 +413,12 @@ elseif(WIN32)
      set(TARGETDIR_LIB ${CMAKE_INSTALL_PREFIX_WITH_CONFIG}/bpy)
      set(TARGETDIR_EXE ${CMAKE_INSTALL_PREFIX_WITH_CONFIG}/bpy)
    else()
@@ -35,12 +34,10 @@ diff --git a/source/creator/CMakeLists.txt b/source/creator/CMakeLists.txt
    endif()
    set(TARGETDIR_SITE_PACKAGES "${TARGETDIR_VER}/python/lib/site-packages")
  elseif(APPLE)
-   if(WITH_PYTHON_MODULE)
-@@ -598,17 +610,21 @@ if(WIN32)
-       FILES ${LIBDIR}/opencolorio/bin/opencolorio_d_2_3.dll
+@@ -599,16 +609,20 @@ if(WIN32)
        DEBUG
      )
--  endif()
+   endif()
 -  install(
 -    DIRECTORY ${LIBDIR}/opencolorio/lib/site-packages-debug/PyOpenColorIO
 -    DESTINATION ${TARGETDIR_SITE_PACKAGES}
@@ -51,7 +48,6 @@ diff --git a/source/creator/CMakeLists.txt b/source/creator/CMakeLists.txt
 -    DESTINATION ${TARGETDIR_SITE_PACKAGES}
 -    CONFIGURATIONS Release;RelWithDebInfo;MinSizeRel
 -  )
-+  endif()
 +  if(EXISTS ${LIBDIR}/opencolorio/lib/site-packages-debug/PyOpenColorIO)
 +    install(
 +      DIRECTORY ${LIBDIR}/opencolorio/lib/site-packages-debug/PyOpenColorIO
@@ -69,19 +65,19 @@ diff --git a/source/creator/CMakeLists.txt b/source/creator/CMakeLists.txt
    if(EXISTS ${LIBDIR}/OpenImageDenoise/bin/openimagedenoise.dll) # 4.0
      windows_install_shared_manifest(
        FILES
-@@ -2040,12 +2056,12 @@ if(WIN32 AND NOT WITH_PYTHON_MODULE)
-  install(
-    TARGETS blender blender-launcher
-    COMPONENT Blender
+@@ -2026,13 +2040,13 @@ if(WIN32 AND NOT WITH_PYTHON_MODULE)
+   install(
+     TARGETS blender blender-launcher
+     COMPONENT Blender
 -    DESTINATION "."
 +    DESTINATION ${TARGETDIR_EXE}
-  )
-  if(WITH_CPU_CHECK)
-    install(
-      TARGETS blender_cpu_check
-      COMPONENT Blender
+   )
+   if(WITH_CPU_CHECK)
+     install(
+       TARGETS blender_cpu_check
+       COMPONENT Blender
 -      DESTINATION "."
 +      DESTINATION ${TARGETDIR_EXE}
-    )
-  endif()
-  set_target_properties(
+     )
+   endif()
+   set_target_properties(

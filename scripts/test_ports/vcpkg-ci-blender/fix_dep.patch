@@ -136,7 +136,7 @@ index f154b613..fdc1176a 100644
 +set(Epoxy_LIBRARIES PkgConfig::epoxy)
 +set(Epoxy_INCLUDE_DIRS ${epoxy_INCLUDE_DIRS})
 +set(Epoxy_INCLUDE_DIR ${epoxy_INCLUDE_DIRS})
-+ 
++
 +if(0)
  if(DEFINED EPOXY_ROOT_DIR)
    # Pass.
