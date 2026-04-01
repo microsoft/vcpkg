@@ -10168,6 +10168,10 @@
       "baseline": "1.1.0",
       "port-version": 0
     },
+    "trieste": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "triton": {
       "baseline": "2025-02-15",
       "port-version": 0
