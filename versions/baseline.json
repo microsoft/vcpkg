@@ -2489,7 +2489,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "2025-10-27",
+      "baseline": "2026-03-31",
       "port-version": 0
     },
     "directxsdk": {
@@ -2497,15 +2497,15 @@
       "port-version": 8
     },
     "directxtex": {
-      "baseline": "2025-10-27",
+      "baseline": "2026-03-31",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "2025-10-27",
+      "baseline": "2026-03-31",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "2025-10-27",
+      "baseline": "2026-03-31",
       "port-version": 0
     },
     "dirent": {
