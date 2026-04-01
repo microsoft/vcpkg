@@ -6957,7 +6957,7 @@
       "port-version": 0
     },
     "ngtcp2": {
-      "baseline": "1.21.0",
+      "baseline": "1.22.0",
       "port-version": 0
     },
     "nifly": {
