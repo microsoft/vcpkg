@@ -1,6 +1,6 @@
 {
   "name": "gdcm",
-  "version": "3.2.2",
+  "version": "3.2.5",
   "description": "Grassroots DICOM library",
   "homepage": "https://github.com/malaterre/GDCM",
   "license": null,

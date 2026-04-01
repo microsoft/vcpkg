@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneDNN
     REF "v${VERSION}"
-    SHA512 de60ecd881b97e9942441e0eb5c53e2caa2a0a1a1c78ab9211ab103244b66b62c0f3dfa5b322bb2c39dfe13f85a9aebf82b899dde1ccdc01ba8ff9deed832787
+    SHA512 4b7d1da7a1f3ffcdf83916f0133a741a25e1cd27a7acdc33c833f50d646931b1b666820836d3d77df0ab4e043ae18004630a62e4b7f0862b06cea8c19b68bcf6
     HEAD_REF master
 )
 
