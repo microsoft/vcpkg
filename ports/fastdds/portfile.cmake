@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-deps.patch
         pdb-file.patch
+        disable-test.patch
 )
 
 set(extra_opts "")
