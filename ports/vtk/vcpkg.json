@@ -80,11 +80,8 @@
       "dependencies": [
         "alembic",
         "anari",
-        "cairo",
         "ffmpeg",
         "fontconfig",
-        "gdk-pixbuf",
-        "glib",
         "libarchive",
         "libdicom",
         "libmysql",
