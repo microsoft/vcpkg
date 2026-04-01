@@ -3,7 +3,7 @@
   "version": "3.8",
   "description": "osgEarth - 3D Maps for OpenSceneGraph",
   "homepage": "https://github.com/pelicanmapping/osgearth",
-  "license": "MIT",
+  "license": "LGPL-3.0-or-later",
   "supports": "!(arm | x86 | wasm32 | android)",
   "dependencies": [
     {
