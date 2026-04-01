@@ -437,6 +437,76 @@
       "archive": "node-v24.14.1-darwin-arm64.tar.gz"
     },
     {
+      "name": "dotnet",
+      "os": "windows",
+      "arch": "x64",
+      "version": "10.0.201",
+      "executable": "dotnet.exe",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.201/dotnet-sdk-10.0.201-win-x64.zip",
+      "sha512": "15f511296c0ea28a61bafcc2efbc66cd4d22d15a2db44597b9b2254a9eafb57047bbe2feca8106a17ba7ae8af19a3a6847a375b6740e0bf6ab0874ade8af0bca",
+      "archive": "dotnet-sdk-10.0.201-win-x64.zip"
+    },
+    {
+      "name": "dotnet",
+      "os": "windows",
+      "arch": "arm64",
+      "version": "10.0.201",
+      "executable": "dotnet.exe",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.201/dotnet-sdk-10.0.201-win-arm64.zip",
+      "sha512": "c67ee373177cd428311106f645c590e97e8456b1cb4e9581658264d523f965d19819d5100f46854a7176398fbf88d5e03e8c290b3390f17f2ba84768450bac5f",
+      "archive": "dotnet-sdk-10.0.201-win-arm64.zip"
+    },
+    {
+      "name": "dotnet",
+      "os": "windows",
+      "arch": "x86",
+      "version": "10.0.201",
+      "executable": "dotnet.exe",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.201/dotnet-sdk-10.0.201-win-x86.zip",
+      "sha512": "cae1b34b79c30e3934639a64cfb6fa8afb0eec2cb30ada9b73e36741cdb84a28a6e9ed83477d3470f55136b7a640f7297685ac36f26802a77b5951fcc6800d85",
+      "archive": "dotnet-sdk-10.0.201-win-x86.zip"
+    },
+    {
+      "name": "dotnet",
+      "os": "linux",
+      "arch": "x64",
+      "version": "10.0.201",
+      "executable": "dotnet",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.201/dotnet-sdk-10.0.201-linux-x64.tar.gz",
+      "sha512": "a33354e3291aa21ea5e1983733f001d45264c31ee3c0dc4a85509d4cb6d4896cfec57fd2143a7b54c93bc42b328e059b16802b4085257a367ef2652f1c8fa424",
+      "archive": "dotnet-sdk-10.0.201-linux-x64.tar.gz"
+    },
+    {
+      "name": "dotnet",
+      "os": "linux",
+      "arch": "arm64",
+      "version": "10.0.201",
+      "executable": "dotnet",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.201/dotnet-sdk-10.0.201-linux-arm64.tar.gz",
+      "sha512": "98015bc0decaa0aba0cd61a82d5b9e2df882c1406dcd5574de639cbd2e0764066dc5488dde8f704351c5420ae730a2a39f7b7e789f280f1fb42b90871dda3ecb",
+      "archive": "dotnet-sdk-10.0.201-linux-arm64.tar.gz"
+    },
+    {
+      "name": "dotnet",
+      "os": "osx",
+      "arch": "x64",
+      "version": "10.0.201",
+      "executable": "dotnet",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.201/dotnet-sdk-10.0.201-osx-x64.tar.gz",
+      "sha512": "1ba9743383f7dd966e4186eed7f836a617a7ffcbc3155951ea14728754aea3c3a0fdb5328db28df8ceef2d8aa25e6f3d7b3be74cabfbac28deffa998ed5caa57",
+      "archive": "dotnet-sdk-10.0.201-osx-x64.tar.gz"
+    },
+    {
+      "name": "dotnet",
+      "os": "osx",
+      "arch": "arm64",
+      "version": "10.0.201",
+      "executable": "dotnet",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.201/dotnet-sdk-10.0.201-osx-arm64.tar.gz",
+      "sha512": "e5f11184cbde97e69ba903ca67e4e9ed2deddbc712d3f57304048d16d23838ef3cd51838619ab4f5021fe942d97074175edb7f90d41f60ea15bfb3b83c00ac6e",
+      "archive": "dotnet-sdk-10.0.201-osx-arm64.tar.gz"
+    },
+    {
       "name": "azcopy",
       "os": "linux",
       "arch": "amd64",
