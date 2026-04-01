@@ -787,7 +787,6 @@ vcpkg-ci-blas:x64-windows-static-md=pass # openblas
 vcpkg-ci-blas:x64-windows-static=pass # openblas
 vcpkg-ci-blas:x64-windows=pass # openblas
 vcpkg-ci-blas:x86-windows=pass # openblas
-vcpkg-ci-blender:arm64-osx=pass
 vcpkg-ci-blender:x64-linux=pass
 vcpkg-ci-blender:x64-windows-static-md=pass
 vcpkg-ci-boost:arm-neon-android=pass

@@ -11,3 +11,38 @@ index dc3ba3c..d62735d 100644
  }
  
  void infEngineBlobsToMats(const ov::TensorVector& blobs,
+diff --git a/modules/gapi/src/backends/ov/govbackend.cpp b/modules/gapi/src/backends/ov/govbackend.cpp
+--- a/modules/gapi/src/backends/ov/govbackend.cpp
++++ b/modules/gapi/src/backends/ov/govbackend.cpp
+@@ -90,7 +90,7 @@ static ov::element::Type toOV(int depth) {
+         case CV_16F: return ov::element::f16;
+         default: GAPI_Error("OV Backend: Unsupported data type");
+     }
+-    return ov::element::undefined;
++    return ov::element::dynamic;
+ }
+ 
+ static ov::preprocess::ResizeAlgorithm toOVInterp(int interpolation) {
+@@ -145,7 +145,7 @@ static void copyFromOV(const ov::Tensor &tensor, cv::Mat &mat) {
+         cv::gimpl::convertInt64ToInt32(tensor.data<int64_t>(),
+                                        mat.ptr<int>(),
+                                        total);
+-    } else {
++    } else {
+-        std::copy_n(reinterpret_cast<uint8_t*>(tensor.data()),
++        std::copy_n(reinterpret_cast<const uint8_t*>(tensor.data()),
+                     tensor.get_byte_size(),
+                     mat.ptr<uint8_t>());
+     }
+diff --git a/modules/gapi/test/infer/gapi_infer_ov_tests.cpp b/modules/gapi/test/infer/gapi_infer_ov_tests.cpp
+--- a/modules/gapi/test/infer/gapi_infer_ov_tests.cpp
++++ b/modules/gapi/test/infer/gapi_infer_ov_tests.cpp
+@@ -829,7 +829,7 @@ static ov::element::Type toOV(int depth) {
+     case CV_16F: return ov::element::f16;
+     default: GAPI_Error("OV Backend: Unsupported data type");
+     }
+-    return ov::element::undefined;
++    return ov::element::dynamic;
+ }
+ 
+ struct TestMeanScaleOV : public ::testing::TestWithParam<int>{
