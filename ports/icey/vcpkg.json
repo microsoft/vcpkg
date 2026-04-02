@@ -1,0 +1,47 @@
+{
+  "name": "icey",
+  "version": "2.4.0",
+  "maintainers": "0state OSS <oss@0state.com>",
+  "description": "C++20 media stack and libwebrtc alternative for real-time video, signalling, TURN, and media servers",
+  "homepage": "https://0state.com/icey/",
+  "documentation": "https://0state.com/icey/docs",
+  "license": "LGPL-2.1-or-later",
+  "dependencies": [
+    "libuv",
+    "llhttp",
+    "minizip",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "ffmpeg": {
+      "description": "Enable FFmpeg-backed codecs and capture in icey::av",
+      "dependencies": [
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "avutil",
+            "swscale"
+          ]
+        }
+      ]
+    },
+    "opencv": {
+      "description": "Enable OpenCV integration in icey::av",
+      "dependencies": [
+        "opencv"
+      ]
+    }
+  }
+}

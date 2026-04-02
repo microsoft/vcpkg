@@ -3884,6 +3884,10 @@
       "baseline": "2.0.6",
       "port-version": 1
     },
+    "icey": {
+      "baseline": "2.4.0",
+      "port-version": 0
+    },
     "icu": {
       "baseline": "78.2",
       "port-version": 0
