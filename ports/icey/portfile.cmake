@@ -10,6 +10,7 @@ else()
         HEAD_REF main
         PATCHES
             fix-avio-write-const.patch
+            fix-ffmpeg-library-dirs.patch
             fix-libuv-targets.patch
             fix-packetfactory-copy.patch
             fix-template-export.patch
