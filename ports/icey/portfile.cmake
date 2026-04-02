@@ -11,6 +11,7 @@ else()
         PATCHES
             fix-libuv-targets.patch
             fix-packetfactory-copy.patch
+            fix-template-export.patch
     )
 endif()
 
