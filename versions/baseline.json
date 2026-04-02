@@ -2176,6 +2176,10 @@
       "baseline": "2020-04-26",
       "port-version": 2
     },
+    "crashcatch": {
+      "baseline": "1.4.0",
+      "port-version": 0
+    },
     "crashpad": {
       "baseline": "2024-04-11",
       "port-version": 10
