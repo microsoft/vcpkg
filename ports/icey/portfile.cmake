@@ -9,6 +9,7 @@ else()
         SHA512 496f3682ebbdaf4ebdba06d5b81fa7bbcbb4f45b97a270edbc7c0c34eccb00a8bd62cbc7f9c434bb816ac5245eaa0590ad10011a19704ffdb6e6ef75dd006637
         HEAD_REF main
         PATCHES
+            fix-avio-write-const.patch
             fix-libuv-targets.patch
             fix-packetfactory-copy.patch
             fix-template-export.patch
