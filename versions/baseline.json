@@ -217,7 +217,7 @@
       "port-version": 0
     },
     "arcticdb-sparrow": {
-      "baseline": "2.3.1",
+      "baseline": "2.4.0",
       "port-version": 0
     },
     "arcticdb-sparrow-extensions": {
