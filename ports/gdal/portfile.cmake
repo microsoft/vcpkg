@@ -11,6 +11,7 @@ vcpkg_from_github(
         libkml.patch
         sqlite3.diff
         target-is-valid.patch
+        pkgconfig.diff
 )
 file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 # `vcpkg clean` stumbles over one subdir
@@ -90,6 +91,7 @@ vcpkg_cmake_configure(
         -DCMAKE_DISABLE_FIND_PACKAGE_Java=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_JNI=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_SWIG=ON
+        -DGDAL_SPLIT_EXPORTED_LIBS=ON
         -DGDAL_USE_INTERNAL_LIBS=OFF
         -DGDAL_USE_EXTERNAL_LIBS=OFF
         -DGDAL_BUILD_OPTIONAL_DRIVERS=ON
