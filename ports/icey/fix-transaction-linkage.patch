@@ -1,0 +1,22 @@
+--- a/src/crypto/include/icy/crypto/hmac.h
++++ b/src/crypto/include/icy/crypto/hmac.h
+@@ -30,7 +30,7 @@ namespace crypto {
+ /// @param input Data to authenticate.
+ /// @param key   Secret key used for the HMAC computation.
+ /// @return 20-byte raw binary HMAC-SHA1 digest.
+-[[nodiscard]] std::string computeHMAC(std::string_view input, std::string_view key);
++[[nodiscard]] Crypto_API std::string computeHMAC(std::string_view input, std::string_view key);
+ 
+ 
+ } // namespace crypto
+--- a/src/net/include/icy/net/transaction.h
++++ b/src/net/include/icy/net/transaction.h
+@@ -24,7 +24,7 @@ namespace net {
+ 
+ /// Request/response helper for packet types emitted from a socket.
+ template <class PacketT>
+-class Net_API Transaction : public PacketTransaction<PacketT>
++class Transaction : public PacketTransaction<PacketT>
+     , public PacketSocketEmitter
+ {
+ public:
