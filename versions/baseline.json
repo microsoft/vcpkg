@@ -2833,7 +2833,7 @@
       "port-version": 3
     },
     "ethindp-prism": {
-      "baseline": "0.7.1",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "etl": {
