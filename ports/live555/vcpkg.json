@@ -1,9 +1,9 @@
 {
   "name": "live555",
-  "version-date": "2026-03-23",
+  "version-date": "2026-04-01",
   "description": "A complete RTSP server application",
   "homepage": "http://www.live555.com/liveMedia",
-  "license": "GPL-3.0-or-later",
+  "license": "LGPL-3.0-only",
   "supports": "!xbox",
   "dependencies": [
     "openssl",
