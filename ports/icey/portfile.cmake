@@ -13,6 +13,7 @@ else()
             fix-packetfactory-copy.patch
             fix-template-export.patch
             fix-transaction-linkage.patch
+            fix-timeout-export.patch
     )
 endif()
 
