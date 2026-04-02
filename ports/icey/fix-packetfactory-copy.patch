@@ -1,0 +1,13 @@
+--- a/src/base/include/icy/packetfactory.h
++++ b/src/base/include/icy/packetfactory.h
+@@ -96,6 +96,10 @@
+ {
+ public:
+     PacketFactory() = default;
++    PacketFactory(const PacketFactory&) = delete;
++    PacketFactory& operator=(const PacketFactory&) = delete;
++    PacketFactory(PacketFactory&&) = default;
++    PacketFactory& operator=(PacketFactory&&) = default;
+     virtual ~PacketFactory() = default;
+ 
+     /// Registers a `PacketCreationStrategy<PacketT>` at the given priority.

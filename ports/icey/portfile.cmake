@@ -10,6 +10,7 @@ else()
         HEAD_REF main
         PATCHES
             fix-libuv-targets.patch
+            fix-packetfactory-copy.patch
     )
 endif()
 
