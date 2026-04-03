@@ -1,0 +1,6 @@
+sablib provides CMake targets:
+
+    find_package(sablib CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE sablib::sablib)
+
+sablib depends on Eigen3, which will be automatically provided by vcpkg.
