@@ -9269,7 +9269,7 @@
       "port-version": 0
     },
     "slick-logger": {
-      "baseline": "1.0.7",
+      "baseline": "1.0.8",
       "port-version": 0
     },
     "slick-net": {
