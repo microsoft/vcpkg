@@ -2,20 +2,13 @@
 # hence they don't have import libs
 set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
 
-vcpkg_download_distfile(FIX_UPSTREAM_PR_252
-    URLS https://github.com/dyne/frei0r/pull/252.patch?full_index=1
-    SHA512 bdf8c6e64d73495a843c76d08204217002f1108363674633a70574ba05f0f33efafc567b73f604c7c76fd9a9614a64ccadd62c3709454b52efbb8b8d61055532
-    FILENAME fix-sleid0r-symbol-export.patch
-)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dyne/frei0r
     REF "v${VERSION}"
-    SHA512 81831ede1d76d0ad8811f6b8116eb71a74e5af47a3249954f2c6f327e71e618d92c31f19566963bd9952363b22c5a6606df3ef8592f97c3bb1cd8ed9abe94c14
+    SHA512 323028431039a14947234ec2ce969d2fd3121fda47d3ac57e7cfb9ddc12c4c6545824e8fed0efb6860beb14983fd3a1879a85879aed4a6655d9608ea6a85f971
     HEAD_REF master
     PATCHES
-        "${FIX_UPSTREAM_PR_252}"
         install-dlls-to-bin.diff
 )
 
