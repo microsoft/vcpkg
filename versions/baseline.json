@@ -9201,7 +9201,7 @@
       "port-version": 1
     },
     "simd": {
-      "baseline": "6.2.159",
+      "baseline": "7.0.160",
       "port-version": 0
     },
     "simde": {
