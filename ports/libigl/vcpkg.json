@@ -38,7 +38,7 @@
     },
     "copyleft": {
       "description": "Build copyleft core module",
-      "license": "MPL-2.0 AND GPL-2.0"
+      "license": "MPL-2.0 AND GPL-2.0-only"
     },
     "embree": {
       "description": "Build with embree",
