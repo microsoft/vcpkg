@@ -5086,7 +5086,7 @@
     },
     "libigl": {
       "baseline": "2.6.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libilbc": {
       "baseline": "3.0.4",
