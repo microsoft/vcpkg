@@ -5,6 +5,8 @@
 # As such getting the correct dependency information relevant for vcpkg requires a manual search/check
 set(QT_IS_LATEST ON)
 
+message(STATUS "CURRENT_HOST_INSTALLED_DIR:${CURRENT_HOST_INSTALLED_DIR}")
+
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
@@ -98,6 +100,7 @@ FEATURES
     "network"             FEATURE_network
     "sql"                 FEATURE_sql
     "widgets"             FEATURE_widgets
+    "windeployqt"         FEATURE_windeployqt
     #"xml"                 FEATURE_xml  # Required to build moc
     "testlib"             FEATURE_testlib
     "zstd"                CMAKE_REQUIRE_FIND_PACKAGE_zstd

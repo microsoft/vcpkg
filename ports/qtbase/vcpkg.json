@@ -581,6 +581,18 @@
         }
       ]
     },
+    "windeployqt": {
+      "description": "Qt Windows Deployment Tool",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        }
+      ]
+    },
     "xcb": {
       "description": "XCB",
       "dependencies": [
