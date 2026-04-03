@@ -1,0 +1,13 @@
+{
+  "name": "maxflow",
+  "version": "2020-11-09",
+  "description": "An implementation of the maxflow algorithm.",
+  "homepage": "https://github.com/gerddie/maxflow",
+  "license": "GPL-3.0-or-later",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
