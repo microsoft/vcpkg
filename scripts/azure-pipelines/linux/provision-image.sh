@@ -146,22 +146,29 @@ APT_PACKAGES="$APT_PACKAGES libtirpc-dev"
 
 ## CUDA
 # The intent is to install everything that does not require an actual GPU, driver, or GUI.
-# Intentionally omitted: cuda-demo-suite-12-9 cuda-documentation-12-9 cuda-driver-*
-#                        cuda-gdb-12-9 cuda-gdb-src-12-9 cuda-nsight-* cuda-nvdisasm
+# Intentionally omitted: cuda-demo-suite-13-2 cuda-documentation-13-2 cuda-driver-*
+#                        cuda-gdb-13-2 cuda-gdb-src-13-2 cuda-nsight-* cuda-nvdisasm
 #                        cuda-nvprof cuda-nvprune cuda-profiler-api* cuda-sandbox-*
-#                        cuda-visual-tools-12-9 nvidia-gds-12-9 cuda-nvvp-12-9
-#                        cuda-toolkit-12-9 cuda-tools-12-9 cuda-command-line-tools-12-9
-#                        cuda-runtime-12-9
+#                        cuda-visual-tools-13-2 nvidia-gds-13-2 cuda-nvvp-13-2
+#                        cuda-toolkit-13-2 cuda-tools-13-2 cuda-command-line-tools-13-2
+#                        cuda-runtime-13-2
 #                        All libraries for which there is a -dev suffix included here
-# cudnn9-jit-cuda-12-9 : Depends: libcudnn9-jit-dev-cuda-12 (= 9.12.0.46-1) but it is not installable
-APT_PACKAGES="$APT_PACKAGES cuda-cccl-12-9 cuda-compat-12-9 cuda-compiler-12-9 cuda-crt-12-9 \
-  cuda-cudart-dev-12-9 cuda-cuobjdump-12-9 cuda-cupti-dev-12-9 cuda-cuxxfilt-12-9 \
-  cuda-driver-dev-12-9 cuda-libraries-dev-12-9 cuda-minimal-build-12-9 cuda-nvcc-12-9 \
-  cuda-nvml-dev-12-9 cuda-nvrtc-dev-12-9 cuda-nvtx-12-9 cuda-nvvm-12-9 cuda-opencl-dev-12-9 \
-  cuda-sanitizer-12-9 cuda-toolkit-12-9-config-common cudnn9-cuda-12-9 gds-tools-12-9 \
-  libcublas-12-9 libcudnn9-dev-cuda-12 libcufft-dev-12-9 libcurand-dev-12-9 libcusolver-dev-12-9 \
-  libcusparse-dev-12-9 libnccl-dev libnpp-dev-12-9 libnvfatbin-dev-12-9 libnvjitlink-dev-12-9 \
-  libnvjpeg-dev-12-9"
+# cudnn9-jit-cuda-13 : cudnn9-jit appears to conflict with cudnn9-dev packages:
+# root@c47a4cc2ea72:/# apt install cudnn9-jit-cuda-13
+# The following additional packages will be installed:
+#   cudnn9-jit-cuda-13-2 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+# The following packages will be REMOVED:
+#   cudnn9-cuda-13 cudnn9-cuda-13-2 libcudnn9-cuda-13 libcudnn9-dev-cuda-13 libcudnn9-static-cuda-13
+# The following NEW packages will be installed:
+#   cudnn9-jit-cuda-13 cudnn9-jit-cuda-13-2 libcudnn9-jit-cuda-13 libcudnn9-jit-dev-cuda-13
+APT_PACKAGES="$APT_PACKAGES cuda-cccl-13-2 cuda-compat-13-2 cuda-compiler-13-2 cuda-crt-13-2 \
+  cuda-cudart-dev-13-2 cuda-cuobjdump-13-2 cuda-cupti-dev-13-2 cuda-cuxxfilt-13-2 \
+  cuda-driver-dev-13-2 cuda-libraries-dev-13-2 cuda-minimal-build-13-2 cuda-nvcc-13-2 \
+  cuda-nvml-dev-13-2 cuda-nvrtc-dev-13-2 cuda-nvtx-13-2 libnvvm-13-2 cuda-opencl-dev-13-2 \
+  cuda-sanitizer-13-2 cuda-toolkit-13-2-config-common cudnn9-cuda-13 gds-tools-13-2 \
+  libcublas-13-2 libcudnn9-dev-cuda-13 libcufft-dev-13-2 libcurand-dev-13-2 libcusolver-dev-13-2 \
+  libcusparse-dev-13-2 libnccl-dev libnpp-dev-13-2 libnvfatbin-dev-13-2 libnvjitlink-dev-13-2 \
+  libnvjpeg-dev-13-2"
 
 ## PowerShell + Azure
 APT_PACKAGES="$APT_PACKAGES powershell azcopy azure-cli"

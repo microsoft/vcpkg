@@ -9,11 +9,11 @@ parameters:
   - name: x64LinuxDockerImage
     displayName: 'Linux Docker Image to use for the x64 Linux build'
     type: string
-    default: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-01-20'
+    default: 'vcpkgandroidwus.azurecr.io/vcpkg-linux:2026-04-03'
   - name: arm64LinuxDockerImage
     displayName: 'Linux Docker Image to use for the arm64 Linux build'
     type: string
-    default: 'vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-03-18'
+    default: 'vcpkgandroidwus.azurecr.io/vcpkg-arm64-linux:2026-04-03'
   - name: tripletPattern
     displayName: 'Enable triplets which contain this substring (^ matches begin, $ matches end)'
     type: string
