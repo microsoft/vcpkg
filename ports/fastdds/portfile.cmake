@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-deps.patch
         pdb-file.patch
         disable-test.patch
+        disable-werror.patch
 )
 
 set(extra_opts "")
@@ -67,7 +68,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL}")
     endforeach()
 
-    # adjust paths in batch filesrm 
+    # adjust paths in batch files
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/fastdds" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/tools/${PORT}/ros-discovery" "$dir/../tools/fastdds/fastdds.py" "$dir/../fastdds/fastdds.py")
 endif()
