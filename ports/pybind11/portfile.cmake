@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pybind/pybind11
     REF "v${VERSION}"
-    SHA512 19bee2c76320e25202ee078b5680ff8a7acfb33494dec29dad984ab04de8bcb01340d9fec37c8cc5ac9015dfc367e60312dcd8506e66ce8f0af4c49db562ddef
+    SHA512 d6846dc88234a355f9ff312cfd0ecb8d3c7bb0e446ea5fcfc931ed7f18d56206e2b02662cdbd8d8d940a9f67b195dabfa13585f4bb1d57cb1af8a9c39a447a79
     HEAD_REF master
     PATCHES
         android.diff
