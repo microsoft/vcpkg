@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
     REF "${VERSION}"
-    SHA512 75de822e7cbd095d4ad45bb5c92a8d65240ca63a567b6417b7776dfd7a33c15305168c75cd9ac1b1aa39e9f7ad586d571841dea5e684eb527269f123bf15fcd9
+    SHA512 fe9197d11e1252829548fb5e015874d72bcd5894f9217b76ab509b9ece44d01efa0bfe5306d5aebd8f7feb97abd32970406ab2cd6f0af866aefa557f762afea4
     HEAD_REF master
     PATCHES
         pkgconfig.patch
@@ -140,6 +140,13 @@ else()
     elseif(VCPKG_DETECTED_CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         vcpkg_list(APPEND configure_arguments --cc=clang)
     endif()
+
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_list(APPEND configure_arguments --build-targets=shared,cli)
+    else()
+        vcpkg_list(APPEND configure_arguments --build-targets=static,cli)
+    endif()
+
     # botan's install.py doesn't handle DESTDIR on windows host,
     # so we must avoid the standard '--prefix' and 'DESTDIR' install.
     vcpkg_configure_make(
