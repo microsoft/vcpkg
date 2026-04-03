@@ -1,16 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 044996e1b..829a92e8b 100644
+index 044996e1b..f97b7a293 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -491,6 +491,14 @@ if(ONNX_INSTALL)
            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
            FILES_MATCHING
            PATTERN "*.h")
-+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/onnx
++  install(DIRECTORY ${ONNX_ROOT}/onnx
 +          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 +          FILES_MATCHING
 +          PATTERN "*.proto")
-+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/onnx
++  install(DIRECTORY ${ONNX_ROOT}/onnx
 +          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 +          FILES_MATCHING
 +          PATTERN "*.proto3")
