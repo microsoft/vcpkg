@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/vslavik/winsparkle/releases/download/v${VERSION}/WinSparkle-${VERSION}.zip"
     FILENAME "winsparkle-v${VERSION}.zip"
-    SHA512 0775e6f5ccafa542ac12c5dd0ea5ae8d8feb9e6b72f738a732b351519c1a9dd810e17db58a8a44a005704bf4a7ffee1719517c48a12637c4420a8ee928cf2fdf
+    SHA512 73ea15e81a6bffd5268674f633f0aa55660764c8b8f35b7fac073e5f82c85b4e888172b3dfd9c3e71341bd23e5314539dd0f47360f89473f94b39f2352910012
 )
 
 vcpkg_extract_source_archive(
