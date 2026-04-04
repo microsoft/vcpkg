@@ -518,13 +518,6 @@ if(EXISTS "${target_qt_conf}")
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6AndroidMacros.cmake"
-        [[ set(cmake_dir "${prefix_path}/${${export_namespace_upper}_INSTALL_LIBS}/cmake")]]
-        [[ set(cmake_dir "${prefix_path}/share")]]
-    )
-endif()
-
 if(VCPKG_TARGET_IS_EMSCRIPTEN)
   vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6Core/Qt6WasmMacros.cmake" "_qt_test_emscripten_version()" "") # this is missing a include(QtPublicWasmToolchainHelpers)
 endif()
