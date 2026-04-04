@@ -583,6 +583,7 @@
     },
     "windeployqt": {
       "description": "Qt Windows Deployment Tool",
+      "supports": "windows",
       "dependencies": [
         {
           "name": "qtbase",
