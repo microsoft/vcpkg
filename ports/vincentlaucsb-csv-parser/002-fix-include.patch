@@ -1,5 +1,5 @@
 diff --git a/include/internal/basic_csv_parser.hpp b/include/internal/basic_csv_parser.hpp
-index 16c8666..7b4221e 100644
+index 6e1efb0..fac6ebf 100644
 --- a/include/internal/basic_csv_parser.hpp
 +++ b/include/internal/basic_csv_parser.hpp
 @@ -12,7 +12,7 @@
@@ -12,20 +12,32 @@ index 16c8666..7b4221e 100644
  #include "common.hpp"
  #include "csv_format.hpp"
 diff --git a/include/internal/common.hpp b/include/internal/common.hpp
-index 7f8d737..f0ead1a 100644
+index f7668d8..dc42f63 100644
 --- a/include/internal/common.hpp
 +++ b/include/internal/common.hpp
-@@ -92,7 +92,7 @@ namespace csv {
-       */
-     using string_view = std::string_view;
- #else
+@@ -86,10 +86,8 @@
+ #endif
+ 
+ // Include string_view BEFORE csv namespace to avoid namespace pollution issues
+-#ifdef CSV_HAS_CXX17
++#if 1
+ #include <string_view>
+-#else
 -#include "../external/string_view.hpp"
-+#include "nonstd/string_view.hpp"
+ #endif
+ 
+ namespace csv {
+@@ -111,7 +109,7 @@ namespace csv {
+ 
+ #define STATIC_ASSERT(x) static_assert(x, "Assertion failed")
+ 
+-#ifdef CSV_HAS_CXX17
++#if 1
       /** @typedef string_view
        *  The string_view class used by this library.
        */
 diff --git a/include/internal/csv_reader.hpp b/include/internal/csv_reader.hpp
-index 02e9164..2e93f12 100644
+index 7e66666..1382cfb 100644
 --- a/include/internal/csv_reader.hpp
 +++ b/include/internal/csv_reader.hpp
 @@ -16,7 +16,7 @@
