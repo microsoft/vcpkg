@@ -715,6 +715,7 @@ libtorch:arm64-linux=cascade
 libtorch:x86-windows=cascade
 libtorch[dist](!x64 | !linux) = cascade
 libtorch(arm & windows)=cascade
+libtorrent[python]:arm64-linux=cascade
 libui:arm64-linux=cascade
 libusb[udev]:arm64-linux=feature-fails
 libuvc:arm64-linux=cascade
