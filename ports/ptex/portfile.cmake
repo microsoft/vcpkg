@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wdas/ptex
     REF "v${VERSION}"
-    SHA512 8c9d1e2b26f74ea988f4df6f4a6b342a152a8068ff7f85eacdfbab9f516d2ab15282f16326e9527d0f842f4eb8e16858eb57c19b8bbee153f1ab074175571025
+    SHA512 26265899d3bb47eca67052d69b08efb89a01cf06a01a4aabdd8118e0497aac87319317450719ac56ea676bbb2ea771bd9b8fe73bc41caa8a2a6818cbc3d83bea
     HEAD_REF master
     PATCHES
         fix-build.patch
