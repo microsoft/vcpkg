@@ -1465,8 +1465,8 @@
       "port-version": 0
     },
     "botan": {
-      "baseline": "3.10.0",
-      "port-version": 1
+      "baseline": "3.11.1",
+      "port-version": 0
     },
     "box2d": {
       "baseline": "3.1.1",
