@@ -1,16 +1,14 @@
 string(REGEX MATCH [[^[0-9][0-9]*\.[1-9][0-9]*]] VERSION_MAJOR_MINOR ${VERSION})
 
-vcpkg_download_distfile(ARCHIVE
-    URLS https://download.gimp.org/pub/gegl/${VERSION_MAJOR_MINOR}/gegl-${VERSION}.tar.xz
-    FILENAME "gegl-${VERSION}.tar.xz"
-    SHA512 9f47480dc2fad58c052aa3df3ac914d500614e7acb0dc46677bea4228350a00a0fe38b5b0572303251210e3e544b5b7cb51415476586630df4da8f4b7c6486d8
-)
-
-vcpkg_extract_source_archive(
-    SOURCE_PATH
-    ARCHIVE "${ARCHIVE}"
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH SOURCE_PATH
+    GITLAB_URL https://gitlab.gnome.org/
+    REPO GNOME/gegl
+    REF bf52f2e6daa3c0c3ed9e45f2aa6e70109144e030
+    SHA512 15cbfeb3574fd404f609527939567ce0a3fb7efd50426bed4c7d7077b2cef54d4ec9840cad7c2b3098bea79f43682695830e37b6bf21f11d8752bf85800dfa33
     PATCHES
         disable_tests.patch
+        use-plugins-dir.patch
         remove_execinfo_support.patch
         remove-consistency-check.patch
 )
@@ -68,6 +66,11 @@ vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_tools(
+    TOOL_NAMES gegl gegl-imgcmp
+    AUTO_CLEAN
+)
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")
 
