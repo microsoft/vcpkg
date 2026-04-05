@@ -27,6 +27,12 @@ file(REMOVE_RECURSE "${SOURCE_PATH}/contrib/zlib")
 set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
 
+if("draco" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DASSIMP_BUILD_DRACO=ON)
+else()
+    list(APPEND FEATURE_OPTIONS -DASSIMP_BUILD_DRACO=OFF)
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
@@ -37,6 +43,7 @@ vcpkg_cmake_configure(
         -DASSIMP_WARNINGS_AS_ERRORS=OFF
         -DASSIMP_IGNORE_GIT_HASH=ON
         -DASSIMP_INSTALL_PDB=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
@@ -71,7 +78,11 @@ if(ASSIMP_DBG)
 endif()
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
-    set(assimp_PC_REQUIRES "draco polyclipping pugixml minizip")
+    if("draco" IN_LIST FEATURES)
+        set(assimp_PC_REQUIRES "draco polyclipping pugixml minizip")
+    else()
+        set(assimp_PC_REQUIRES "polyclipping pugixml minizip")
+    endif()
     set(assimp_LIBS_REQUIRES "-lpoly2tri")
 
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "Libs:" "Requires.private: ${assimp_PC_REQUIRES}\nLibs:")
