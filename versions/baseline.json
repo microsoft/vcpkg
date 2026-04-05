@@ -3326,7 +3326,7 @@
     },
     "gegl": {
       "baseline": "0.4.70",
-      "port-version": 0
+      "port-version": 1
     },
     "gemmlowp": {
       "baseline": "2021-09-28",
@@ -4154,7 +4154,7 @@
     },
     "json-glib": {
       "baseline": "1.10.8",
-      "port-version": 0
+      "port-version": 1
     },
     "json-rpc-cxx": {
       "baseline": "0.3.2",
