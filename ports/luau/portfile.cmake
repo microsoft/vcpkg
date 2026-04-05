@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         cmake-config-export.patch
+        fix-unittest.patch
 )
 
 vcpkg_check_features(
