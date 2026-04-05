@@ -1,0 +1,33 @@
+{
+  "name": "usbipdcpp",
+  "version": "1.0.1",
+  "description": "A C++ library for creating usbip servers",
+  "homepage": "https://github.com/yunsmall/usbipdcpp",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "asio",
+    "spdlog",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "busywait": {
+      "description": "Enable busy-wait mode for lower latency"
+    },
+    "libusb": {
+      "description": "Build libusb-based server components for physical USB device forwarding",
+      "dependencies": [
+        "libusb"
+      ]
+    },
+    "virtual-device": {
+      "description": "Build virtual device components for creating software-emulated USB devices"
+    }
+  }
+}
