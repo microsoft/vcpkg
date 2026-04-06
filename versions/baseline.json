@@ -1,5 +1,9 @@
 {
   "default": {
+    "tinyusdz": {
+      "baseline": "v0.9.1",
+      "port-version": 0
+    },
     "3fd": {
       "baseline": "2.6.3",
       "port-version": 5
