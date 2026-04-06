@@ -1964,6 +1964,10 @@
       "baseline": "1.0.2",
       "port-version": 0
     },
+    "consteig": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "constexpr": {
       "baseline": "1.0",
       "port-version": 3
