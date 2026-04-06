@@ -391,8 +391,8 @@ function(vcpkg_configure_make)
         endif()
     endif()
 
-    # Linux - cross-compiling support
-    if(VCPKG_TARGET_IS_LINUX)
+    # Linux / BSD / Solaris - cross-compiling support
+    if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_BSD OR VCPKG_TARGET_IS_SOLARIS)
         if (requires_autoconfig AND NOT arg_BUILD_TRIPLET OR arg_DETERMINE_BUILD_TRIPLET)
             # The regex below takes the prefix from the resulting CMAKE_C_COMPILER variable eg. arm-linux-gnueabihf-gcc
             # set in the common toolchains/linux.cmake

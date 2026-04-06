@@ -21,6 +21,7 @@ vcpkg_extract_source_archive(SOURCE_PATH
         0001-build.patch
         cairo-cpp-linkage.patch
         egl-conditional.diff # https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9067
+        avoid-multiple-definition.diff
 )
 
 vcpkg_find_acquire_program(PKGCONFIG)
@@ -38,11 +39,16 @@ else()
     list(APPEND OPTIONS_RELEASE -Dintrospection=false)
 endif()
 
+if("wayland" IN_LIST FEATURES)
+    list(APPEND OPTIONS -Dwayland_backend=true)
+else()
+    list(APPEND OPTIONS -Dwayland_backend=false)
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
-        -Dwayland_backend=false
         -Ddemos=false
         -Dexamples=false
         -Dtests=false

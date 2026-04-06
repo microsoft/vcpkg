@@ -1,6 +1,6 @@
 {
   "name": "libbluray",
-  "version-semver": "1.4.0",
+  "version-semver": "1.4.1",
   "description": "Library to access Blu-Ray disks",
   "homepage": "https://www.videolan.org/developers/libbluray.html",
   "license": "LGPL-2.1-or-later",

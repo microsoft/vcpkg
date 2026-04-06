@@ -1,6 +1,6 @@
 {
   "name": "nghttp3",
-  "version": "1.14.0",
+  "version": "1.15.0",
   "description": "Implementation of RFC 9114 HTTP/3 mapping over QUIC and RFC 9204 QPACK in C",
   "homepage": "https://github.com/ngtcp2/nghttp3",
   "license": "MIT",

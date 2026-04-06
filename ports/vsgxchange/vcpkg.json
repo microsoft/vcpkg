@@ -1,6 +1,7 @@
 {
   "name": "vsgxchange",
   "version": "1.1.9",
+  "port-version": 1,
   "description": "Utility library for converting 3rd party images, models and fonts formats to/from VulkanSceneGraph.",
   "homepage": "https://github.com/vsg-dev/vsgXchange",
   "license": "MIT",
@@ -46,6 +47,17 @@
         {
           "name": "gdal",
           "default-features": false
+        }
+      ]
+    },
+    "ktx": {
+      "description": "Enable support for reading KTX and KTX2 files",
+      "dependencies": [
+        {
+          "name": "ktx",
+          "features": [
+            "vulkan"
+          ]
         }
       ]
     },

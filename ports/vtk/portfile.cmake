@@ -15,6 +15,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         ffmpeg.diff
+        ffmpeg-8.diff # c2bd786 + b8da15a + 492a5cd
         FindLZMA.patch
         FindLZ4.patch
         libproj.patch

@@ -6,10 +6,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aeron-io/aeron
     REF "${VERSION}"
-    SHA512 6302b235285d897bb58d388c1883145c486f931575174b68161e67a04ae2efb48993d8045855d6e04ba378fdb58050c5339561c85fffb6b222abaa1952103d37
+    SHA512 aacd14611acfff3f4890541fbd1f3cdb8b396d86a4e9fb2eb1f4f1a72c9fbe546d2b479ee86b4fe5900b5f3acf6e29d9916364efbe98255baa9cd6c429b057cb
     HEAD_REF master
     PATCHES
         patches/add-libuuid-vcpkg-support.patch
+        patches/fix-static-crt-linkage.patch
 )
 
 # Set archive option based on feature

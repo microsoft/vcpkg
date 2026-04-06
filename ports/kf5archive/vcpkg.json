@@ -1,8 +1,10 @@
 {
   "name": "kf5archive",
   "version": "5.116.0",
+  "port-version": 1,
   "description": "File compression",
-  "homepage": "https://api.kde.org/karchive-index.html",
+  "homepage": "https://invent.kde.org/frameworks/karchive",
+  "documentation": "https://api.kde.org/karchive-index.html ",
   "license": "LGPL-2.0-or-later",
   "supports": "!xbox",
   "dependencies": [

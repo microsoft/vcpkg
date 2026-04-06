@@ -1,6 +1,6 @@
 {
   "name": "matio",
-  "version": "1.5.29",
+  "version": "1.5.30",
   "description": "MATLAB MAT File I/O Library",
   "homepage": "https://github.com/tbeu/matio",
   "license": "BSD-2-Clause",

@@ -1,8 +1,8 @@
 diff --git a/include/internal/basic_csv_parser.hpp b/include/internal/basic_csv_parser.hpp
-index d76b2d9..8dd0110 100644
+index 6e1efb0..fac6ebf 100644
 --- a/include/internal/basic_csv_parser.hpp
 +++ b/include/internal/basic_csv_parser.hpp
-@@ -15,7 +15,7 @@
+@@ -12,7 +12,7 @@
  #include <thread>
  #include <vector>
  
@@ -12,29 +12,35 @@ index d76b2d9..8dd0110 100644
  #include "common.hpp"
  #include "csv_format.hpp"
 diff --git a/include/internal/common.hpp b/include/internal/common.hpp
-index c132bfb..dff4d03 100644
+index f7668d8..dc42f63 100644
 --- a/include/internal/common.hpp
 +++ b/include/internal/common.hpp
-@@ -28,12 +28,12 @@
- #pragma once
- #include <type_traits>
+@@ -86,10 +86,8 @@
+ #endif
  
+ // Include string_view BEFORE csv namespace to avoid namespace pollution issues
+-#ifdef CSV_HAS_CXX17
++#if 1
+ #include <string_view>
+-#else
 -#include "../external/string_view.hpp"
-+#include "nonstd/string_view.hpp"
- 
-   // If there is another version of Hedley, then the newer one 
-   // takes precedence.
-   // See: https://github.com/nemequ/hedley
--#include "../external/hedley.h"
-+#include "hedley.h"
+ #endif
  
  namespace csv {
- #ifdef _MSC_VER
+@@ -111,7 +109,7 @@ namespace csv {
+ 
+ #define STATIC_ASSERT(x) static_assert(x, "Assertion failed")
+ 
+-#ifdef CSV_HAS_CXX17
++#if 1
+      /** @typedef string_view
+       *  The string_view class used by this library.
+       */
 diff --git a/include/internal/csv_reader.hpp b/include/internal/csv_reader.hpp
-index 1cdf6e0..3077395 100644
+index 7e66666..1382cfb 100644
 --- a/include/internal/csv_reader.hpp
 +++ b/include/internal/csv_reader.hpp
-@@ -15,7 +15,7 @@
+@@ -16,7 +16,7 @@
  #include <string>
  #include <vector>
  

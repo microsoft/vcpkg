@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1234567..abcdefg 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -178,10 +178,6 @@ elseif (MSVC)
+     endif ()
+
+     add_compile_options(/Oy-)
+-    add_compile_options($<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>:/MD>)
+-    add_compile_options($<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>:/MDd>)
+     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/MP>)
+     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/wd4251>)
+-    add_compile_options($<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>:/MD>)
+-    add_compile_options($<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>:/MDd>)
+     add_compile_options($<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>:/Od>)
+     add_compile_options($<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>:/Zi>)

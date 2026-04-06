@@ -2,7 +2,7 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO duckdb/duckdb
         REF v${VERSION}
-        SHA512 058218e4551867dc231cae682e835fb76b2d02b655f889753fde6745b9895b81a7161c7eb3104c9f9e8a7a33fed460fc0028d0b94a1e36834100aa597b97a877
+        SHA512 2287ff1af67808e495ca4da527bd54e9c9f2044ed1bb4749cdaeee7993a7b0edca73cccd476a607442a4bf313b43e2358bf6ca28035e2dbe52b16847f6e5b30a
         HEAD_REF main
     PATCHES
         library-linkage.diff
@@ -22,8 +22,8 @@ if("excel" IN_LIST FEATURES)
     vcpkg_from_github(
         OUT_SOURCE_PATH DUCKDB_EXCEL_SOURCE_PATH
         REPO duckdb/duckdb-excel
-        REF 8504be9ec8183e4082141f9359b53a64d3a440b7
-        SHA512 295bfe67c2902c09b584bee623dee7db69aad272a00e6bd4038ec65e2d8a977d1ace7261af8f67863c2fae709acc414e290e40f0bad43bae679c0a8639a0d6b5
+        REF 9421a2d75bd7544336caa73e5f9e6063cc7f6992
+        SHA512 0532844ba531d70e78c499ce7caefd772da4b013459676da1b552b20c3ac674af979b1958d84566147580cd39cf97ba4fefc010bcfb5fcb70628deaf2e95dbb0
         HEAD_REF main
         PATCHES
             library-linkage-excel.diff

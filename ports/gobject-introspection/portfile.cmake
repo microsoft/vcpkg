@@ -13,6 +13,8 @@ vcpkg_extract_source_archive(
     PATCHES
         0001-g-ir-tool-template.in.patch
         gir-scanner-runtime.diff
+        # https://gitlab.gnome.org/GNOME/gobject-introspection/-/issues/575
+        setuptools-compat.patch
 )
 
 include("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake")

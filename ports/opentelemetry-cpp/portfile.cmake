@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-telemetry/opentelemetry-cpp
     REF "v${VERSION}"
-    SHA512 bde103a04ef70a1dccd247f5ab4bca4fff23d081d1ae758286fb1a62409310a399dd90ae29f188e552fb96112c95f501dac5fafab4edc1df924ca43f21d0f150
+    SHA512 4f8a19a486620b9daeb110da09b5d412ef8372d152a8c8d6242e9af39e4acfd12599e85d7038dd0bd74238c9a54f85ca3acd04cec252573d5c134674a7198170
     HEAD_REF main
     PATCHES
         fix-target_link.patch
@@ -49,10 +49,10 @@ list(APPEND FEATURE_OPTIONS -DCMAKE_CXX_STANDARD=14)
 set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "OFF")
 
 if(WITH_GENEVA OR WITH_USER_EVENTS)
-    # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo, 
+    # Geneva and user events exporters from opentelemetry-cpp-contrib are tightly coupled with opentelemetry-cpp repo,
     # so they should be ported as a feature under opentelemetry-cpp.
     clone_opentelemetry_cpp_contrib(CONTRIB_SOURCE_PATH)
-    
+
     if(WITH_GENEVA)
         set(OPENTELEMETRY_CPP_EXTERNAL_COMPONENTS "${CONTRIB_SOURCE_PATH}/exporters/geneva")
         if(VCPKG_TARGET_IS_WINDOWS)

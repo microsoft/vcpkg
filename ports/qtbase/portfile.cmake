@@ -23,11 +23,9 @@ set(${PORT}_PATCHES
         fix_deploy_windows.patch
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
-        fix-missing-include.patch
         moltenvk.patch
         xcodebuild-not-installed.patch
         fix-libresolv-test.patch
-        2d4915.diff
         framework.patch
         use_inotify_on_freebsd.patch
 )
@@ -394,6 +392,7 @@ list(APPEND other_files
                 ensure_pro_file.cmake
                 qt-android-runner.py
                 qt-cmake-private-install.cmake
+                qt_cyclonedx_generator.py
                 qt-testrunner.py
                 qt-wasmtestrunner.py
                 sanitizer-testrunner.py
@@ -434,7 +433,7 @@ endforeach()
 set(qttoolchain "${CURRENT_PACKAGES_DIR}/share/Qt6/qt.toolchain.cmake")
 file(READ "${qttoolchain}" toolchain_contents)
 string(REGEX REPLACE "set\\\(__qt_initially_configured_toolchain_file [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
-string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__qt_chainload_toolchain_file \"\${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}\n\")" toolchain_contents "${toolchain_contents}")
+string(REGEX REPLACE "set\\\(__qt_chainload_toolchain_file [^\\\n]+\\\n" "set(__qt_chainload_toolchain_file \"\${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}\")\n" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(VCPKG_CHAINLOAD_TOOLCHAIN_FILE [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_c_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")
 string(REGEX REPLACE "set\\\(__qt_initial_cxx_compiler [^\\\n]+\\\n" "" toolchain_contents "${toolchain_contents}")

@@ -2,10 +2,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
     REF ${VERSION}
-    SHA512 b8f0acf2d25abd64881b4dcef52d0a2d43eefd9ead6833878b5183f38bcac8659b9c6c26358dd0624b4f6633da4c3a536f60bcf8b471d451a518dec45fd44f7a
+    SHA512 27ef2976b89b50af8501b7dd51f9bc39b86da12a03da80d30644e202d3c23820f0c40adcab42537955cd7094356ead091c275c58251c308e598dd6c461083250
     HEAD_REF master
     PATCHES
         fix-win32-build.patch
+        ${ANDROID_LOCALECONV_L_PATCH}
 )
 
 if("icu" IN_LIST FEATURES)
@@ -135,7 +136,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
 
 vcpkg_list(SET TOOL_NAMES)
 if("glib" IN_LIST FEATURES)
-    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info)
+    vcpkg_list(APPEND TOOL_NAMES hb-subset hb-shape hb-info hb-vector)
     if("cairo" IN_LIST FEATURES)
         vcpkg_list(APPEND TOOL_NAMES hb-view)
     endif()

@@ -315,4 +315,27 @@
       <ReferenceCopyLocalPaths Include="@(VcpkgAppLocalDLLs)" />
     </ItemGroup>
   </Target>
+
+  <!--
+    When the link step is skipped (incremental build, exe up-to-date),
+    AppLocalFromInstalled doesn't run, so DLLs it previously copied aren't
+    registered in FileWrites. MSBuild's IncrementalClean then treats them as
+    orphan outputs and deletes them. This target re-registers those DLLs so
+    IncrementalClean leaves them alone.
+  -->
+  <Target Name="AppLocalFromInstalledPreserve"
+          AfterTargets="CopyFilesToOutputDirectory"
+          BeforeTargets="_CleanGetCurrentAndPriorFileWrites"
+          Condition="'$(_ZVcpkgClassicOrManifest)' == 'true'
+                     and '$(VcpkgApplocalDeps)' == 'true'
+                     and '$(LinkSkippedExecution)' == 'true'
+                     and '@(Link)' != ''">
+    <ReadLinesFromFile File="$(IntDir)vcpkg.applocal.log"
+                       Condition="Exists('$(IntDir)vcpkg.applocal.log')">
+      <Output TaskParameter="Lines" ItemName="_ZVcpkgPreservedAppLocalDLLs" />
+    </ReadLinesFromFile>
+    <ItemGroup>
+      <FileWrites Include="@(_ZVcpkgPreservedAppLocalDLLs -> '$(OutDir)%(Filename)%(Extension)')" />
+    </ItemGroup>
+  </Target>
 </Project>

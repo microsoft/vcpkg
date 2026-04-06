@@ -1,6 +1,7 @@
 {
   "name": "kf5solid",
   "version": "5.116.0",
+  "port-version": 1,
   "description": "Desktop hardware abstraction",
   "homepage": "https://api.kde.org/solid-index.html",
   "dependencies": [

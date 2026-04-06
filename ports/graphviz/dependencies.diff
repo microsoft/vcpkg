@@ -115,7 +115,7 @@ diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
 index 65a357678..e656b1228 100644
 --- a/lib/CMakeLists.txt
 +++ b/lib/CMakeLists.txt
-@@ -53,3 +53,6 @@ if(BUILD_SHARED_LIBS)
+@@ -59,3 +59,6 @@ if(BUILD_SHARED_LIBS)
      DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
    )
  endif()
@@ -137,7 +137,7 @@ diff --git a/lib/common/CMakeLists.txt b/lib/common/CMakeLists.txt
 index 3b0e469f4..265de0354 100644
 --- a/lib/common/CMakeLists.txt
 +++ b/lib/common/CMakeLists.txt
-@@ -137,6 +137,9 @@ if(EXPAT_FOUND)
+@@ -136,6 +136,9 @@ if(EXPAT_FOUND)
      ${EXPAT_LIBRARIES}
    )
  endif()
@@ -147,7 +147,7 @@ index 3b0e469f4..265de0354 100644
  
  # Specify headers to be installed
  install(
-@@ -149,3 +152,5 @@ install(
+@@ -148,3 +151,5 @@ install(
      usershape.h
    DESTINATION ${HEADER_INSTALL_DIR}
  )
@@ -157,7 +157,7 @@ diff --git a/lib/gvc/CMakeLists.txt b/lib/gvc/CMakeLists.txt
 index 11dba53f3..1d54de861 100644
 --- a/lib/gvc/CMakeLists.txt
 +++ b/lib/gvc/CMakeLists.txt
-@@ -68,12 +68,17 @@ if(LTDL_FOUND)
+@@ -70,12 +70,17 @@ if(LTDL_FOUND)
    target_include_directories(gvc SYSTEM PRIVATE ${LTDL_INCLUDE_DIRS})
    if(NOT WIN32 OR MINGW)
      target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
@@ -175,8 +175,8 @@ index 11dba53f3..1d54de861 100644
  endif()
  
  if(with_ortho)
-@@ -159,3 +164,6 @@ if(BUILD_SHARED_LIBS)
-     DESTINATION ${LIBRARY_INSTALL_DIR}/cmake/graphviz
+@@ -152,3 +157,6 @@ if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
+     DESTINATION ${BINARY_INSTALL_DIR}
    )
  endif()
 +
