@@ -1341,7 +1341,6 @@ sdl2-net:arm64-linux=cascade
 sdl2-ttf:arm64-linux=cascade
 sdl2pp:arm64-linux=cascade
 sdl3[dbus]:arm64-linux=cascade
-sdl3-image:arm64-linux=cascade
 sdl3-shadercross((!windows | arm32 | uwp | xbox) & (!linux | !x64))=cascade
 sdl3-ttf:arm64-linux=cascade
 seacas[mpi]:arm64-linux=cascade
