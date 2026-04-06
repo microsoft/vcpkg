@@ -77,10 +77,9 @@ if(ASSIMP_DBG)
 endif()
 
 if("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "static")
+    set(assimp_PC_REQUIRES "draco polyclipping pugixml minizip")
     if("draco" IN_LIST FEATURES)
-        set(assimp_PC_REQUIRES "draco polyclipping pugixml minizip")
-    else()
-        set(assimp_PC_REQUIRES "polyclipping pugixml minizip")
+        string(APPEND assimp_PC_REQUIRES " draco")
     endif()
     set(assimp_LIBS_REQUIRES "-lpoly2tri")
 
