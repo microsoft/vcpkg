@@ -62,6 +62,33 @@ endif()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/dlib)
 
+# Workaround: The fix-dependencies and fix-lapack patches insert find_dependency
+# calls for BLAS/LAPACK AFTER the include of the targets file (dlib.cmake) in
+# dlibConfig.cmake. CMake fails because LAPACK::LAPACK and BLAS::BLAS are
+# referenced in dlib.cmake before they are defined.
+# Fix: remove the misplaced calls and inject explicit find_package calls (which
+# go through the vcpkg cmake wrappers) before the targets include block.
+set(_dlib_config_file "${CURRENT_PACKAGES_DIR}/share/${PORT}/dlibConfig.cmake")
+file(READ "${_dlib_config_file}" _dlib_config_contents)
+# Remove original misplaced find_dependency calls
+string(REPLACE "find_dependency(BLAS)
+find_dependency(LAPACK)" "# BLAS/LAPACK: moved before targets include" _dlib_config_contents "${_dlib_config_contents}")
+# Insert find_package calls before the targets file include
+string(REPLACE "# Our library dependencies (contains definitions for IMPORTED targets)" [[
+find_package(BLAS)
+if(NOT TARGET BLAS::BLAS AND BLAS_FOUND AND BLAS_LIBRARIES)
+    add_library(BLAS::BLAS INTERFACE IMPORTED)
+    set_target_properties(BLAS::BLAS PROPERTIES INTERFACE_LINK_LIBRARIES "${BLAS_LIBRARIES}")
+endif()
+find_package(LAPACK)
+if(NOT TARGET LAPACK::LAPACK AND LAPACK_FOUND AND LAPACK_LIBRARIES)
+    add_library(LAPACK::LAPACK INTERFACE IMPORTED)
+    set_target_properties(LAPACK::LAPACK PROPERTIES INTERFACE_LINK_LIBRARIES "${LAPACK_LIBRARIES}")
+endif()
+
+# Our library dependencies (contains definitions for IMPORTED targets)]] _dlib_config_contents "${_dlib_config_contents}")
+file(WRITE "${_dlib_config_file}" "${_dlib_config_contents}")
+
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
