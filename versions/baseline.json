@@ -334,7 +334,7 @@
     },
     "assimp": {
       "baseline": "6.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "astr": {
       "baseline": "0.3.1",
