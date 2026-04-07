@@ -6,11 +6,11 @@
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
-    "flatbuffers",
     {
       "name": "arcticdb-sparrow",
-      "version>=": "2.4.0#0"
+      "version>=": "2.4.0"
     },
+    "flatbuffers",
     {
       "name": "vcpkg-cmake",
       "host": true
