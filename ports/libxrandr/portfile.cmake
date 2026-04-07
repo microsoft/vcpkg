@@ -8,7 +8,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO "lib/libxrandr"
     REF "libXrandr-${VERSION}"
-    SHA512 50b92b5c62ced66418381d816f6b61d9d3eb7e7b2794f7b2c58b263875ff6001a57e1750e32b9317a0d5e3e311bf0657156dfe5b4875d863499583b25b700b68
+    SHA512 32983bbc173923f016bed8b6920319a6df6583d1a1cb37013e54413244b46501828c9b3136dd37bf46fd95d889045c1e68868f6a9e692356f54bc5db221005f3
     HEAD_REF master
     PATCHES
         fix-configure.patch
@@ -20,13 +20,13 @@ if (VCPKG_CROSSCOMPILING)
     list(APPEND OPTIONS --enable-malloc0returnsnull)
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS ${OPTIONS}
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -55,7 +55,7 @@ function(vcpkg_from_git)
 
         if(DEFINED arg_FETCH_REF)
             set(ref_to_fetch "${arg_FETCH_REF}")
-            vcpkg_list(SET git_fetch_shallow_param --unshallow)
+            vcpkg_list(SET git_fetch_shallow_param)
         else()
             set(ref_to_fetch "${arg_REF}")
         endif()

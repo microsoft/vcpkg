@@ -1,6 +1,6 @@
 {
   "name": "knncolle-annoy",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "knncolle bindings for Annoy search ",
   "homepage": "https://github.com/knncolle/knncolle_annoy",
   "license": "MIT",

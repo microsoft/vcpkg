@@ -1,6 +1,6 @@
 {
   "name": "gz-utils",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Ignition Utils, a component of Ignition Robotics, provides general purpose classes and functions designed for robotic applications.",
   "homepage": "https://gazebosim.org",
   "license": "Apache-2.0",

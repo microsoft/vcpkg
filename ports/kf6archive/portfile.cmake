@@ -2,13 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/karchive
     REF "v${VERSION}"
-    SHA512 f87fd53ba029b05d3c233ea8d8a9dbb7b2aba2aec55a38b26cfd0f6e1c49d8c1297c06d634175ccc5bbbce00261a3387a2da3c705011e9cbae538eae2723fef3
+    SHA512 d3516e17a98cfa40ce3f863dc2b209361435de5c76a42423ac2518602ca71b54ac3294ebaa93d38c904b3a0b968fab52e754c32c9c70c938d310e3d5acb50229
     HEAD_REF master
     PATCHES
         zstd.diff
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS options
+# Prevent KDEClangFormat from writing to source effectively blocking parallel configure
+file(WRITE "${SOURCE_PATH}/.clang-format" "DisableFormat: true\nSortIncludes: false\n")
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         bzip2           WITH_BZIP2
         bzip2           VCPKG_LOCK_FIND_PACKAGE_BZip2
@@ -23,9 +27,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS options
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
-        ${options}
         -DBUILD_TESTING=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=1
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

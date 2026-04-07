@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libsdl-org/SDL
     REF "release-${VERSION}"
-    SHA512 be5b01dc101bf9fb54f332eb494222829af2dbae39f69c37df82ecb0351aa9c88f399d64766d3b3c3091031681bb232416f6959e57cb607928efa16906928f27
+    SHA512 aba2caa42db3f7e423e3d0b584bd446e273394b37b3595565a374fbe2fbdee4f9cb74b4585e8577c707ea01dab2ccb09861e61b263be56b5012b20abf045c826
     HEAD_REF main
     PATCHES
         fix-freebsd.patch
@@ -15,6 +15,7 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         alsa     SDL_ALSA
+        dbus     SDL_DBUS
         ibus     SDL_IBUS
         vulkan   SDL_VULKAN
         wayland  SDL_WAYLAND

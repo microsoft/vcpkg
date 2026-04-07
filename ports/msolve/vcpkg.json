@@ -1,0 +1,17 @@
+{
+  "name": "msolve",
+  "version": "0.9.4",
+  "description": "Computer algebra algorithms for solving polynomial systems",
+  "homepage": "https://msolve.lip6.fr/",
+  "license": "GPL-2.0-only",
+  "supports": "!windows",
+  "dependencies": [
+    "flint",
+    "gmp",
+    "mpfr",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

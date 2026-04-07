@@ -1,10 +1,11 @@
 {
   "name": "knncolle",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "Collection of KNN algorithms in C++ ",
   "homepage": "https://github.com/knncolle/knncolle",
   "license": "MIT",
   "dependencies": [
+    "ltla-sanisizer",
     "ltla-subpar",
     {
       "name": "vcpkg-cmake",

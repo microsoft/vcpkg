@@ -2,11 +2,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO malaterre/GDCM
     REF "v${VERSION}"
-    SHA512 2fe28444cee171a536d63f26c1ad7308a03b946e79dc8b7d648b5c7e6f4a8f52c0c32ec9cf463d95b876db31becc81541638b97fc7f15b79ae04de5988d6941e
+    SHA512 c1e9b8266484085c3775ef77d6b09fd60054ee36bbdc7d56c144bfa0ed2fe66136b3fc423cab26e9a148eccbdc97f1d03ae1d1b158b3a6555f1a703f7824135e
     HEAD_REF master
     PATCHES
         copyright.diff
-        include-no-namespace.diff
         no-absolute-paths.diff
         prefer-config.diff
 )

@@ -2,15 +2,17 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
     REF "v${VERSION}"
-    SHA512 088bff580287dca4ce9a1d97c11008e30394fab42a7ec697a79a02214837c4b8a1dc4541bf47d1fe7a987db4369a8894eab4e76a7cd82b371db54d71b678881e
+    SHA512 48b74e9446e48e3a16e0c5cdf6ee137aeb343fe431951fc635debe45ed6ac575d25ed453e50832ff7ced00d1c2f6fb716f55272fe347f53647aae4a721cf02f1
     HEAD_REF master
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        iconv.diff
         libkml.patch
         sqlite3.diff
         target-is-valid.patch
 )
+file(REMOVE "${SOURCE_PATH}/cmake/modules/packages/FindIconv.cmake")
 # `vcpkg clean` stumbles over one subdir
 file(REMOVE_RECURSE "${SOURCE_PATH}/autotest")
 

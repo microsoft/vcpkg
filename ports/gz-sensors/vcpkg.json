@@ -1,6 +1,7 @@
 {
   "name": "gz-sensors",
   "version": "9.2.0",
+  "port-version": 1,
   "description": "Component of Gazebo, provides numerous sensor models designed to generate realistic data from simulation environments.",
   "homepage": "https://gazebosim.org/libs/sensors",
   "license": "Apache-2.0",

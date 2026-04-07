@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
     REF "${REF}"
-    SHA512 34400f7dff0151a38c5ff7d73b65b57c7fdf648cf407ed94beddf2d11511b650c4ea16e417a15ebe1707456e7279210e929cc97a0caf7a1ff45bf1d07275e815
+    SHA512 6e415ff26657514bbdc3cb2f091db52dba9e81e2afad931603e83beb25f002b3202c64e09c9ba93260d34ff38336fa4ec3166639410af2acf5c2d60d8ab98e04
     HEAD_REF master
 )
 
@@ -34,7 +34,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/doc")
 
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h" "defined(_MSC_EXTENSIONS)" "defined(_WIN32)")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h" "defined(_MSC_VER)" "defined(_WIN32)")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/expat_external.h" "! defined(XML_STATIC)" "0")
 endif()

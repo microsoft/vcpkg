@@ -25,13 +25,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${cppflags}
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
