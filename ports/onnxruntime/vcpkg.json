@@ -1,6 +1,6 @@
 {
   "name": "onnxruntime",
-  "version-semver": "1.23.2",
+  "version-semver": "1.24.4",
   "description": "ONNX Runtime: cross-platform, high performance ML inferencing and training accelerator",
   "homepage": "https://github.com/microsoft/onnxruntime",
   "license": "MIT",
@@ -105,6 +105,28 @@
           ]
         }
       ]
+    },
+    "coreml": {
+      "description": "Build CoreML support",
+      "supports": "osx | ios"
+    },
+    "winml": {
+      "description": "Build WinML support",
+      "supports": "windows"
+    },
+    "directml": {
+      "description": "Build DirectML support",
+      "supports": "windows"
+    },
+    "xnnpack": {
+      "description": "Build xnnpack support",
+      "dependencies": [
+        "xnnpack"
+      ]
+    },
+    "kleidiai": {
+      "description": "Build kleidiai support",
+      "dependencies": ["kleidiai"]
     }
   }
 }
