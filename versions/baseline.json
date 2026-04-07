@@ -10120,6 +10120,10 @@
       "baseline": "2024-09-10",
       "port-version": 0
     },
+    "tofupilot": {
+      "baseline": "2.0.0",
+      "port-version": 0
+    },
     "toml11": {
       "baseline": "4.4.0",
       "port-version": 0
