@@ -1,0 +1,13 @@
+{
+  "name": "vcpkg-ci-duktape",
+  "version-date": "2026-04-07",
+  "description": "Validates duktape",
+  "license": null,
+  "dependencies": [
+    "duktape",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}
