@@ -5,6 +5,7 @@
   "homepage": "https://github.com/LTLA/subpar",
   "license": "MIT",
   "dependencies": [
+    "ltla-sanisizer",
     {
       "name": "vcpkg-cmake",
       "host": true
