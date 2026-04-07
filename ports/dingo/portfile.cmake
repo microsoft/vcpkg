@@ -4,7 +4,7 @@ vcpkg_from_github(
     REPO romanpauk/dingo
     REF "v${VERSION}"
     HEAD_REF master
-    SHA512 9fb6cf64b1a9ee99404d69d9756530c9ffc591116579469ad39b5fa458a127628899bcac4e99a9bedaf7cae6c19c1a0e5816043868e9daf6d60858a1c2e17c0b
+    SHA512 d40def7e3f28675dd399703f0f5890822503e5b8dcfcd96628010dc9854b61dbac9e3cb863740a40744abca0eae3ad69c21b3c17202c5d68cc17a22faab9830c
 )
 
 vcpkg_cmake_configure(
