@@ -1,0 +1,91 @@
+{
+  "name": "openmvs",
+  "version": "2.3.0",
+  "description": "OpenMVS: open Multi-View Stereo reconstruction library",
+  "homepage": "https://cdcseacave.github.io/",
+  "license": "AGPL-3.0-only",
+  "supports": "!xbox",
+  "dependencies": [
+    "boost-assert",
+    "boost-graph",
+    "boost-iostreams",
+    "boost-pool",
+    "boost-serialization",
+    "boost-system",
+    "boost-throw-exception",
+    {
+      "name": "cgal",
+      "default-features": false
+    },
+    "eigen3",
+    "libjpeg-turbo",
+    "libpng",
+    "nlohmann-json",
+    {
+      "name": "opencv",
+      "default-features": false,
+      "features": [
+        "highgui"
+      ]
+    },
+    {
+      "name": "tiff",
+      "default-features": false
+    },
+    "tinygltf",
+    "tinyxml2",
+    "vcglib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "ceres": {
+      "description": "CERES support for openmvs",
+      "dependencies": [
+        "ceres"
+      ]
+    },
+    "cuda": {
+      "description": "CUDA support for openmvs",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "opengl": {
+      "description": "OpenGL support for openmvs",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "openmp": {
+      "description": "OpenMP support for openmvs"
+    },
+    "tools": {
+      "description": "Install tools",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "viewer": {
+      "description": "Install Viewer tool",
+      "dependencies": [
+        "glew",
+        "glfw3",
+        {
+          "name": "openmvs",
+          "features": [
+            "opengl",
+            "tools"
+          ]
+        }
+      ]
+    }
+  }
+}

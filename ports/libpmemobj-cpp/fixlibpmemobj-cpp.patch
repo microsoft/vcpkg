@@ -1,0 +1,17 @@
+diff --git a/benchmarks/CMakeLists.txt b/benchmarks/CMakeLists.txt
+index bb29b8d..839a77f 100644
+--- a/benchmarks/CMakeLists.txt
++++ b/benchmarks/CMakeLists.txt
+@@ -27,6 +27,12 @@ function(add_benchmark name)
+ 	prepend(srcs ${CMAKE_CURRENT_SOURCE_DIR} ${srcs})
+ 	add_executable(benchmark-${name} ${srcs})
+ 	target_link_libraries(benchmark-${name} ${LIBPMEMOBJ_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
++	install(
++	TARGETS benchmark-${name}
++	RUNTIME DESTINATION tools
++	LIBRARY DESTINATION lib
++	ARCHIVE DESTINATION lib
++	)
+ endfunction()
+ 
+ add_check_whitespace(benchmarks-cmake ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt)

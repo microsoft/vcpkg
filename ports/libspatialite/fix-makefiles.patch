@@ -1,0 +1,43 @@
+diff --git a/makefile.vc b/makefile.vc
+index 9ae0b83..2a80b03 100644
+--- a/makefile.vc
++++ b/makefile.vc
+@@ -100,7 +100,8 @@ CFLAGS = /nologo -I.\src\headers -I.\src\topology \
+ 
+ default:	all
+ 
+-all: spatialite.lib spatialite_i.lib
++WANT_LIB = spatialite.lib
++all: $(WANT_LIB)
+ #$(EXIF_LOADER_EXE)
+ 
+ spatialite.lib:	$(LIBOBJ)
+@@ -112,10 +113,7 @@ $(SPATIALITE_DLL):	spatialite_i.lib
+ spatialite_i.lib:     $(LIBOBJ)
+ 	link /dll /out:$(SPATIALITE_DLL) \
+ 		/implib:spatialite_i.lib $(LIBOBJ) \
+-		C:\OSGeo4W\lib\proj_i.lib C:\OSGeo4W\lib\geos_c.lib \
+-		C:\OSGeo4w\lib\freexl_i.lib C:\OSGeo4w\lib\iconv.lib \
+-		C:\OSGeo4W\lib\sqlite3_i.lib C:\OSGeo4W\lib\zlib.lib \
+-		C:\OSGeo4W\lib\libxml2.lib C:\OSGeo4W\lib\librttopo.lib
++		$(LIBS)
+ 	if exist $(SPATIALITE_DLL).manifest mt -manifest \
+ 		$(SPATIALITE_DLL).manifest -outputresource:$(SPATIALITE_DLL);2
+ 		
+@@ -146,12 +144,14 @@ clean:
+ 
+ install: all
+ 	-mkdir $(INSTDIR)
+-	-mkdir $(INSTDIR)\bin
+ 	-mkdir $(INSTDIR)\lib
+ 	-mkdir $(INSTDIR)\include
+ 	-mkdir $(INSTDIR)\include\spatialite
++!IF "$(WANT_LIB)" == "spatialite_i.lib"
++	-mkdir $(INSTDIR)\bin
+ 	copy *.dll $(INSTDIR)\bin
+-	copy *.lib $(INSTDIR)\lib
++!ENDIF
++	copy /Y $(WANT_LIB) $(INSTDIR)\lib\spatialite.lib
+ 	copy src\headers\spatialite.h $(INSTDIR)\include
+ 	copy src\headers\spatialite\*.h $(INSTDIR)\include\spatialite
+ 	

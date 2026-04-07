@@ -1,0 +1,31 @@
+diff --git a/gettext-tools/misc/autopoint.in b/gettext-tools/misc/autopoint.in
+index 3a24eee5d..56b36d5ff 100644
+--- a/gettext-tools/misc/autopoint.in
++++ b/gettext-tools/misc/autopoint.in
+@@ -27,8 +27,9 @@ archive_version=@ARCHIVE_VERSION@
+ 
+ # Set variables
+ # - gettext_datadir     directory where the data files are stored.
+-prefix="@prefix@"
+-datarootdir="@datarootdir@"
++
++prefix="$(dirname "$0")/../../../"
++datarootdir="${prefix}/share/gettext"
+ : ${gettext_datadir="@datadir@/gettext"}
+ : ${AUTOM4TE=autom4te}
+ 
+diff --git a/gettext-tools/misc/gettextize.in b/gettext-tools/misc/gettextize.in
+index c78c308bf..175ad57e7 100644
+--- a/gettext-tools/misc/gettextize.in
++++ b/gettext-tools/misc/gettextize.in
+@@ -27,8 +27,8 @@ archive_version=@ARCHIVE_VERSION@
+ 
+ # Set variables
+ # - gettext_datadir     directory where the data files are stored.
+-prefix="@prefix@"
+-datarootdir="@datarootdir@"
++prefix="$(dirname "$0")/../../../"
++datarootdir="${prefix}/share/gettext"
+ : ${gettext_datadir="@datadir@/gettext"}
+ : ${AUTOM4TE=autom4te}
+ 

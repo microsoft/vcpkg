@@ -1,0 +1,7 @@
+{
+  "name": "cpp-peglib",
+  "version": "1.10.2",
+  "description": "A single file C++ header-only PEG (Parsing Expression Grammars) library",
+  "homepage": "https://github.com/yhirose/cpp-peglib",
+  "license": "MIT"
+}

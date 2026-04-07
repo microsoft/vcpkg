@@ -1,0 +1,35 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO LLNL/sundials
+    REF "v${VERSION}"
+    SHA512 b6d15f68f25c5326bd42abb5e3652cc98e83d2eb31b213c9144b46c5b93fd123be5972e9d36217fdd09a0002dee3f78e530c21eda85f3b4d1d8d93b007546ea0
+    HEAD_REF master
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SUN_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SUN_BUILD_SHARED)
+
+if(VCPKG_TARGET_IS_ANDROID)
+    set(POSIX_TIMERS "-DSUNDIALS_POSIX_TIMERS=TRUE")
+endif()
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${POSIX_TIMERS}
+        -D_BUILD_EXAMPLES=OFF
+        -DSUNDIALS_TEST_UNITTESTS=OFF
+        -DBUILD_STATIC_LIBS=${SUN_BUILD_STATIC}
+        -DBUILD_SHARED_LIBS=${SUN_BUILD_SHARED}
+)
+
+vcpkg_cmake_install()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/LICENSE")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/LICENSE")
+
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/${PORT}")

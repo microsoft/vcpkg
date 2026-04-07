@@ -1,0 +1,18 @@
+{
+  "name": "cserialport",
+  "version": "4.3.3",
+  "description": "C++ lightweight cross-platform serial port library and protocol parsing, also support C, C#, Java, Python, Node.js, Electron, Rust etc.",
+  "homepage": "https://github.com/itas109/CSerialPort",
+  "license": "LGPL-3.0-only WITH LGPL-3.0-linking-exception",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

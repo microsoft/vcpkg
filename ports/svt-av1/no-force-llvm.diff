@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57100575..65b5b775 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -200,7 +200,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_OUTPUT_DIRECTORY})
+ set(REQUIRES_PRIVATE "")
+ 
+ #Clang support, required to build static with LTO
+-if(CMAKE_C_COMPILER_ID MATCHES "Clang" AND UNIX AND NOT APPLE)
++if(FALSE)
+     find_program(LLVM_LD_EXE llvm-ld)
+     find_program(LLVM_AR_EXE llvm-ar)
+     find_program(LLVM_RANLIB_EXE llvm-ranlib)

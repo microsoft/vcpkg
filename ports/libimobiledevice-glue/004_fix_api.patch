@@ -1,0 +1,20 @@
+diff --git a/src/common.h b/src/common.h
+index bd22e3d..144a799 100644
+--- a/src/common.h
++++ b/src/common.h
+@@ -25,14 +25,10 @@
+ #include <config.h>
+ #endif
+ 
+-#ifdef WIN32
+-#define LIBIMOBILEDEVICE_GLUE_API __declspec( dllexport )
+-#else
+-#ifdef HAVE_FVISIBILITY
++#if !defined(_WIN32) && !defined(LIBIMOBILEDEVICEGLUE_STATIC)
+ #define LIBIMOBILEDEVICE_GLUE_API __attribute__((visibility("default")))
+ #else
+ #define LIBIMOBILEDEVICE_GLUE_API
+ #endif
+-#endif
+ 
+ #endif

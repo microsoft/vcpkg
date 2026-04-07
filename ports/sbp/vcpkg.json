@@ -1,0 +1,19 @@
+{
+  "name": "sbp",
+  "version-semver": "6.3.2",
+  "description": "Swift Navigation Binary Protocol (SBP) is a binary protocol for communicating GNSS data used by Piksi devices.",
+  "homepage": "https://github.com/swift-nav/libsbp",
+  "documentation": "https://swift-nav.github.io/libsbp",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+diff --git a/iceoryx_hoofs/CMakeLists.txt b/iceoryx_hoofs/CMakeLists.txt
+index a8238ff..9741fd3 100644
+--- a/iceoryx_hoofs/CMakeLists.txt
++++ b/iceoryx_hoofs/CMakeLists.txt
+@@ -217,7 +217,9 @@ target_link_libraries(iceoryx_hoofs
+ )
+ 
+ if(LINUX)
+-    target_link_libraries(iceoryx_hoofs PRIVATE acl atomic ${CODE_COVERAGE_LIBS})
++    find_package(PkgConfig REQUIRED)
++    pkg_check_modules(ACL REQUIRED IMPORTED_TARGET libacl)
++    target_link_libraries(iceoryx_hoofs PUBLIC PkgConfig::ACL PRIVATE atomic ${CODE_COVERAGE_LIBS})
+ endif()
+ 
+ target_compile_options(iceoryx_hoofs PRIVATE ${ICEORYX_WARNINGS} ${ICEORYX_SANITIZER_FLAGS})
+diff --git a/iceoryx_hoofs/cmake/Config.cmake.in b/iceoryx_hoofs/cmake/Config.cmake.in
+index c03b3b5..731c636 100644
+--- a/iceoryx_hoofs/cmake/Config.cmake.in
++++ b/iceoryx_hoofs/cmake/Config.cmake.in
+@@ -17,6 +17,10 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
++if(LINUX)
++    find_dependency(PkgConfig)
++    pkg_check_modules(ACL REQUIRED libacl IMPORTED_TARGET)
++endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/@TARGETS_EXPORT_NAME@.cmake")
+ list(APPEND CMAKE_MODULE_PATH "@CMAKE_INSTALL_PREFIX@/@DESTINATION_CONFIGDIR@")

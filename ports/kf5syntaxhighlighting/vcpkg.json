@@ -1,0 +1,23 @@
+{
+  "name": "kf5syntaxhighlighting",
+  "version": "5.116.0",
+  "description": "Syntax highlighting engine for Kate syntax definitions",
+  "homepage": "https://api.kde.org/ksyntaxhighlighting-index.html",
+  "dependencies": [
+    "ecm",
+    {
+      "name": "qt5-base",
+      "default-features": false
+    },
+    "qt5-tools",
+    "qt5-xmlpatterns",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

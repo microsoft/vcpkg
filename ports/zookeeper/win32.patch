@@ -1,0 +1,28 @@
+diff --git a/zookeeper-client/zookeeper-client-c/src/zk_log.c b/zookeeper-client/zookeeper-client-c/src/zk_log.c
+index 79ebd61..2f9d018 100644
+--- a/zookeeper-client/zookeeper-client-c/src/zk_log.c
++++ b/zookeeper-client/zookeeper-client-c/src/zk_log.c
+@@ -108,7 +108,11 @@ static const char* time_now(char* now_str){
+     gettimeofday(&tv,0);
+ 
+     now = tv.tv_sec;
++#ifdef WIN32
++    localtime_s(&lt, &now);
++#else
+     localtime_r(&now, &lt);
++#endif
+ 
+     // clone the format used by logback ISO8601DateFormat
+     // specifically: "yyyy-MM-dd HH:mm:ss,SSS"
+diff --git a/zookeeper-client/zookeeper-client-c/src/zookeeper.c b/zookeeper-client/zookeeper-client-c/src/zookeeper.c
+index 74b0471..e9cd44b 100644
+--- a/zookeeper-client/zookeeper-client-c/src/zookeeper.c
++++ b/zookeeper-client/zookeeper-client-c/src/zookeeper.c
+@@ -100,6 +100,7 @@
+ #define EAI_ADDRFAMILY WSAEINVAL /* is this still needed? */
+ #define EHOSTDOWN EPIPE
+ #define ESTALE ENODEV
++#define strtok_r strtok_s
+ #endif
+ 
+ #define IF_DEBUG(x) if(logLevel==ZOO_LOG_LEVEL_DEBUG) {x;}

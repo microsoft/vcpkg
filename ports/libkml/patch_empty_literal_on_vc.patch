@@ -1,0 +1,13 @@
+diff --git a/src/kml/base/file_win32.cc b/src/kml/base/file_win32.cc
+index c46e099..28ccb36 100644
+--- a/src/kml/base/file_win32.cc
++++ b/src/kml/base/file_win32.cc
+@@ -42,7 +42,7 @@ namespace kmlbase {
+ // Internal to the win32 file class. We need a conversion from string to
+ // LPCWSTR.
+ static std::wstring Str2Wstr(const string& str) {
+-  std::wstring wstr(str.length(), L'');
++  std::wstring wstr(str.length(), L' ');
+   std::copy(str.begin(), str.end(), wstr.begin());
+   return wstr;
+ }

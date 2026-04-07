@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 588a2ce..bbb647c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1557,6 +1557,7 @@ endif()
+ # in the libdir.
+ ##
+ if(MSVC)
++elseif(0)
+   foreach(CPP ${CMAKE_PREFIX_PATH})
+     file(GLOB COPY_FILES ${CPP}/lib/*.lib)
+   endforeach()

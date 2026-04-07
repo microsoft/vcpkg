@@ -1,0 +1,14 @@
+{
+  "name": "bxzstr",
+  "version": "1.2.3",
+  "description": "A C++ header-only ZLib/libBZ2/libLZMA/Zstandard wrapper.",
+  "homepage": "https://github.com/tmaklin/bxzstr",
+  "license": "MPL-2.0",
+  "supports": "!xbox",
+  "dependencies": [
+    "bzip2",
+    "liblzma",
+    "zlib",
+    "zstd"
+  ]
+}

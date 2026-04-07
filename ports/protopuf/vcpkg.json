@@ -1,0 +1,17 @@
+{
+  "name": "protopuf",
+  "version": "3.1.0",
+  "description": "A little, highly templated, and protobuf-compatible serialization/deserialization library written in C++20",
+  "homepage": "https://github.com/PragmaTwice/protopuf",
+  "license": "Apache-2.0",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "opengl-registry",
+  "version-date": "2026-01-26",
+  "description": "OpenGL, OpenGL ES, and OpenGL ES-SC API and Extension Registry",
+  "homepage": "https://github.com/KhronosGroup/OpenGL-Registry",
+  "supports": "!xbox",
+  "dependencies": [
+    "egl-registry"
+  ]
+}

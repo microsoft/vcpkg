@@ -1,0 +1,9 @@
+The package qhull provides CMake targets:
+
+    # Reentrant C API
+    find_package(Qhull CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Qhull::qhull_r)
+
+    # C++ API
+    find_package(Qhull CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Qhull::qhullcpp)

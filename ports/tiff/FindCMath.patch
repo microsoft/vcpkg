@@ -1,0 +1,33 @@
+diff --git a/cmake/FindCMath.cmake b/cmake/FindCMath.cmake
+index ad92218..9c8247f 100644
+--- a/cmake/FindCMath.cmake
++++ b/cmake/FindCMath.cmake
+@@ -31,6 +31,15 @@ include(CheckSymbolExists)
+ include(CheckLibraryExists)
+ 
+ check_symbol_exists(pow "math.h" CMath_HAVE_LIBC_POW)
++set(CMAKE_FIND_LIBRARY_SUFFIXES_SAVE "${CMAKE_FIND_LIBRARY_SUFFIXES}")
++if(VCPKG_CRT_LINKAGE STREQUAL "static")
++    list(PREPEND CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_STATIC_LIBRARY_SUFFIX}")
++endif()
++find_library(CMath_LIBRARY_PATH m PATHS ${CMAKE_C_IMPLICIT_LINK_DIRECTORIES})
++if(CMath_LIBRARY_PATH)
++    set(CMath_LIBRARY m CACHE STRING "Math link library")
++endif()
++set(CMAKE_FIND_LIBRARY_SUFFIXES "${CMAKE_FIND_LIBRARY_SUFFIXES_SAVE}")
+ find_library(CMath_LIBRARY NAMES m)
+ 
+ if(NOT CMath_HAVE_LIBC_POW)
+@@ -61,7 +70,11 @@ if(CMath_FOUND)
+     endif()
+ 
+     if(NOT TARGET CMath::CMath)
+-        if(CMath_LIBRARIES)
++        if(CMath_LIBRARIES STREQUAL "m")
++            add_library(CMath::CMath INTERFACE IMPORTED)
++            set_target_properties(CMath::CMath PROPERTIES
++                  INTERFACE_LINK_LIBRARIES m)
++        elseif(CMath_LIBRARIES)
+             add_library(CMath::CMath UNKNOWN IMPORTED)
+             set_target_properties(CMath::CMath PROPERTIES
+                   IMPORTED_LOCATION "${CMath_LIBRARY}")

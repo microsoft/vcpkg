@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b7d6ee8..8cf6c4d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -45,6 +45,8 @@ ENDIF()
+ 
+ ADD_LIBRARY(hiredis ${hiredis_sources})
+ ADD_LIBRARY(hiredis::hiredis ALIAS hiredis)
++ADD_LIBRARY(hiredis_static STATIC ${hiredis_sources})
++SET_TARGET_PROPERTIES(hiredis_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
+ set(hiredis_export_name hiredis CACHE STRING "Name of the exported target")
+ set_target_properties(hiredis PROPERTIES EXPORT_NAME ${hiredis_export_name})
+ 
+@@ -156,6 +158,8 @@ IF(ENABLE_SSL)
+         ssl.c)
+     ADD_LIBRARY(hiredis_ssl ${hiredis_ssl_sources})
+     ADD_LIBRARY(hiredis::hiredis_ssl ALIAS hiredis_ssl)
++    ADD_LIBRARY(hiredis_ssl_static STATIC ${hiredis_ssl_sources})
++    SET_TARGET_PROPERTIES(hiredis_ssl_static PROPERTIES EXCLUDE_FROM_ALL TRUE)
+ 
+     IF (APPLE AND BUILD_SHARED_LIBS)
+         SET_PROPERTY(TARGET hiredis_ssl PROPERTY LINK_FLAGS "-Wl,-undefined -Wl,dynamic_lookup")

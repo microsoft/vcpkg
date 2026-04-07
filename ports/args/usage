@@ -1,0 +1,4 @@
+args provides CMake targets:
+
+    find_package(args CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE taywee::args)

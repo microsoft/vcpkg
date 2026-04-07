@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cbf9341..2e854f2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -279,7 +279,8 @@ target_include_directories(${redwg} PRIVATE
+     ${CMAKE_CURRENT_SOURCE_DIR}/src
+     ${CMAKE_CURRENT_BINARY_DIR}/src)
+ target_include_directories(${redwg} PUBLIC
+-  ${CMAKE_CURRENT_SOURCE_DIR}/include)
++  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++  $<INSTALL_INTERFACE:include>)
+ 
+ link_libraries(${redwg} ${LIBS} ${CMAKE_THREAD_LIBS_INIT})
+ 
+@@ -390,6 +391,7 @@ add_custom_target(
+   DEPENDS ${SRCS}
+   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+ 
++if(0)
+ if(MSVC)
+   install(TARGETS ${redwg} RUNTIME PUBLIC_HEADER
+           DESTINATION libredwg-${PACKAGE_VERSION})
+@@ -411,6 +413,22 @@ else()
+   endif()
+ endif()
+ install(TARGETS RUNTIME)
++endif()
++
++include(GNUInstallDirs)
++install(
++    TARGETS ${redwg}
++    EXPORT libredwg-core
++    COMPONENT libredwg
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    PUBLIC_HEADER DESTINATION include/libredwg)
++if(NOT LIBREDWG_LIBONLY)
++  install(TARGETS ${executables_TARGETS}
++          DESTINATION "${CMAKE_INSTALL_BINDIR}")
++endif()
++install(EXPORT libredwg-core FILE unofficial-libredwg-config.cmake NAMESPACE unofficial::libredwg:: DESTINATION share/unofficial-libredwg)
+ 
+ if(WIN32)
+   add_custom_target(dist

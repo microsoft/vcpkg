@@ -1,0 +1,93 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+    if(WIN32)
+        find_dependency(unofficial-tre)
+    endif()
+
+    if(@has_zlib@)
+        find_dependency(ZLIB)
+    endif()
+
+    if(@has_bzip2@)
+        find_dependency(BZip2)
+    endif()
+
+    if(@has_lzma@)
+        find_dependency(LibLZMA)
+    endif()
+
+    if(@has_zstd@)
+        find_dependency(zstd)
+    endif()
+endif()
+
+# Compute the installation prefix relative to this file.
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+if(_IMPORT_PREFIX STREQUAL "/")
+    set(_IMPORT_PREFIX "")
+endif()
+
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+    add_library(unofficial::libmagic::libmagic STATIC IMPORTED)
+else()
+    add_library(unofficial::libmagic::libmagic SHARED IMPORTED)
+endif()
+
+set_target_properties(unofficial::libmagic::libmagic PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+)
+
+if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+    set_target_properties(unofficial::libmagic::libmagic PROPERTIES
+        INTERFACE_LINK_LIBRARIES
+            "\$<LINK_ONLY:$<$<BOOL:${WIN32}>:unofficial::tre::tre;shlwapi>>"
+            "\$<LINK_ONLY:$<@has_zlib@:ZLIB::ZLIB>>"
+            "\$<LINK_ONLY:$<@has_bzip2@:BZip2::BZip2>>"
+            "\$<LINK_ONLY:$<@has_lzma@:LibLZMA::LibLZMA>>"
+            "\$<LINK_ONLY:$<@has_zstd@:zstd::libzstd>"
+    )
+endif()
+
+macro(add_library_config config prefix)
+    set_property(TARGET unofficial::libmagic::libmagic APPEND PROPERTY IMPORTED_CONFIGURATIONS ${config})
+    if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
+        set_target_properties(unofficial::libmagic::libmagic PROPERTIES
+            IMPORTED_LOCATION_${config} "${_IMPORT_PREFIX}/${prefix}lib/@VCPKG_TARGET_STATIC_LIBRARY_PREFIX@magic@VCPKG_TARGET_STATIC_LIBRARY_SUFFIX@"
+            IMPORTED_LINK_INTERFACE_LANGUAGES_${config} "C"
+        )
+    else()
+        if(WIN32)
+            set(library_dir "${_IMPORT_PREFIX}/${prefix}bin/")
+            set(soversion_suffix "-1")
+            set_target_properties(unofficial::libmagic::libmagic PROPERTIES
+                IMPORTED_IMPLIB_${config} "${_IMPORT_PREFIX}/${prefix}/lib/@VCPKG_TARGET_IMPORT_LIBRARY_PREFIX@magic@VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX@"
+            )
+        else()
+            set(library_dir "${_IMPORT_PREFIX}/${prefix}lib/")
+        endif()
+        set_target_properties(unofficial::libmagic::libmagic PROPERTIES
+            IMPORTED_LOCATION_${config} "${library_dir}@VCPKG_TARGET_SHARED_LIBRARY_PREFIX@magic${soversion_suffix}@VCPKG_TARGET_SHARED_LIBRARY_SUFFIX@"
+        )
+        unset(soversion_suffix)
+        unset(library_dir)
+    endif()
+endmacro()
+
+if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL "debug")
+    add_library_config(DEBUG "debug/")
+endif()
+
+if("@VCPKG_BUILD_TYPE@" STREQUAL "" OR "@VCPKG_BUILD_TYPE@" STREQUAL "release")
+    add_library_config(RELEASE "")
+endif()
+
+set_and_check(unofficial-libmagic_DICTIONARY "${_IMPORT_PREFIX}/share/libmagic/misc/magic.mgc")
+
+unset(_IMPORT_PREFIX)
+
+check_required_components(unofficial-libmagic)

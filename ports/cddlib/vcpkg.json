@@ -1,0 +1,15 @@
+{
+  "name": "cddlib",
+  "version-string": "0.94n",
+  "port-version": 1,
+  "description": "C implementation of the Double Description Method",
+  "homepage": "https://github.com/cddlib/cddlib",
+  "license": "GPL-2.0-or-later",
+  "dependencies": [
+    "gmp",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

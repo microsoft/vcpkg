@@ -1,0 +1,16 @@
+diff --git a/include/asiochan/channel.hpp b/include/asiochan/channel.hpp
+index 4ffd88c..1af7547 100644
+--- a/include/asiochan/channel.hpp
++++ b/include/asiochan/channel.hpp
+@@ -55,6 +55,11 @@ namespace asiochan
+             return *shared_state_;
+         }
+ 
++        [[nodiscard]] auto shared_state() const noexcept -> const shared_state_type&
++        {
++            return *shared_state_;
++        }
++
+         [[nodiscard]] friend auto operator==(
+             channel_base const& lhs,
+             channel_base const& rhs) noexcept -> bool

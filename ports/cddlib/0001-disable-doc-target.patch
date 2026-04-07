@@ -1,0 +1,12 @@
+diff --git a/Makefile.am b/Makefile.am
+index e08cd91..bcde34b 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,5 +1,5 @@
+ # Directories where we can build something.
+-SUBDIRS          = doc lib-src src
++SUBDIRS          = lib-src src
+ 
+ # Install the examples into /usr/share/doc/cddlib/examples*
+ nobase_doc_DATA = $(srcdir)/examples/* $(srcdir)/examples-ine/* $(srcdir)/examples-ine3d/* $(srcdir)/examples-ext/*
+

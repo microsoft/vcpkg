@@ -1,0 +1,16 @@
+{
+  "name": "winpty",
+  "version": "0.4.3",
+  "description": "winpty is a Windows software package providing an interface similar to a Unix pty-master for communicating with Windows console programs",
+  "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

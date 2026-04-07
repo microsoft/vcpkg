@@ -1,0 +1,41 @@
+diff --git a/cmake/paths.cmk b/cmake/paths.cmk
+index 593ebc1..bbf8754 100644
+--- a/cmake/paths.cmk
++++ b/cmake/paths.cmk
+@@ -1,4 +1,4 @@
+-if(WIN32 AND NOT MINGW)
++if(0)
+   set(CMAKE_INSTALL_PREFIX ""               CACHE PATH "Install prefix")
+   set(BIN_INSTALL_DIR      .                CACHE PATH "Binary install dir")
+   set(LIB_INSTALL_DIR      .                CACHE PATH "Library install dir")
+diff --git a/libproxy/cmake/devfiles.cmk b/libproxy/cmake/devfiles.cmk
+index 0301dce..0eb5f83 100644
+--- a/libproxy/cmake/devfiles.cmk
++++ b/libproxy/cmake/devfiles.cmk
+@@ -1,4 +1,4 @@
+-if(NOT WIN32 OR MINGW)
++if(1)
+   # PkgConfig file
+   set (PKGCONFIG_PREFIX ${CMAKE_INSTALL_PREFIX})
+   
+diff --git a/libproxy/cmake/libproxy.cmk b/libproxy/cmake/libproxy.cmk
+index de68e5c..9356486 100644
+--- a/libproxy/cmake/libproxy.cmk
++++ b/libproxy/cmake/libproxy.cmk
+@@ -24,5 +24,5 @@ set_target_properties(libproxy PROPERTIES LINK_INTERFACE_LIBRARIES "")
+ if(NOT APPLE)
+   set_target_properties(libproxy PROPERTIES LINK_FLAGS "-Wl,--version-script,${CMAKE_CURRENT_SOURCE_DIR}/libproxy.map")
+ endif()
+-install(TARGETS libproxy DESTINATION ${LIB_INSTALL_DIR})
++install(TARGETS libproxy RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+ install(FILES   proxy.h  DESTINATION ${INCLUDE_INSTALL_DIR})
+diff --git a/libproxy/cmake/pkgconfig.cmk b/libproxy/cmake/pkgconfig.cmk
+index 89bfc62..ffa0897 100644
+--- a/libproxy/cmake/pkgconfig.cmk
++++ b/libproxy/cmake/pkgconfig.cmk
+@@ -1,4 +1,4 @@
+-if(NOT WIN32 AND NOT APPLE)
++if(NOT WIN32)
+   find_package(PkgConfig)
+
+   # Define our magical px_check_modules function

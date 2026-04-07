@@ -1,0 +1,17 @@
+{
+  "name": "json-c",
+  "version": "0.18-20240915",
+  "description": "A JSON implementation in C",
+  "homepage": "https://github.com/json-c/json-c",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

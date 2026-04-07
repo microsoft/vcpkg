@@ -1,0 +1,43 @@
+diff --git a/include/foonathan/memory/memory_arena.hpp b/include/foonathan/memory/memory_arena.hpp
+index 30ddd68..be2de58 100644
+--- a/include/foonathan/memory/memory_arena.hpp
++++ b/include/foonathan/memory/memory_arena.hpp
+@@ -656,32 +656,32 @@ namespace foonathan
+             /// \returns The number of bytes `value` is in the given unit.
+             /// \ingroup core
+             /// @{
+-            constexpr std::size_t operator"" _KiB(unsigned long long value) noexcept
++            constexpr std::size_t operator""_KiB(unsigned long long value) noexcept
+             {
+                 return std::size_t(value * 1024);
+             }
+ 
+-            constexpr std::size_t operator"" _KB(unsigned long long value) noexcept
++            constexpr std::size_t operator""_KB(unsigned long long value) noexcept
+             {
+                 return std::size_t(value * 1000);
+             }
+ 
+-            constexpr std::size_t operator"" _MiB(unsigned long long value) noexcept
++            constexpr std::size_t operator""_MiB(unsigned long long value) noexcept
+             {
+                 return std::size_t(value * 1024 * 1024);
+             }
+ 
+-            constexpr std::size_t operator"" _MB(unsigned long long value) noexcept
++            constexpr std::size_t operator""_MB(unsigned long long value) noexcept
+             {
+                 return std::size_t(value * 1000 * 1000);
+             }
+ 
+-            constexpr std::size_t operator"" _GiB(unsigned long long value) noexcept
++            constexpr std::size_t operator""_GiB(unsigned long long value) noexcept
+             {
+                 return std::size_t(value * 1024 * 1024 * 1024);
+             }
+ 
+-            constexpr std::size_t operator"" _GB(unsigned long long value) noexcept
++            constexpr std::size_t operator""_GB(unsigned long long value) noexcept
+             {
+                 return std::size_t(value * 1000 * 1000 * 1000);
+             }

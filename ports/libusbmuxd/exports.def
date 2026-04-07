@@ -1,0 +1,21 @@
+EXPORTS
+    usbmuxd_events_subscribe
+    usbmuxd_events_unsubscribe
+    usbmuxd_subscribe
+    usbmuxd_unsubscribe
+    usbmuxd_get_device_list
+    usbmuxd_device_list_free
+    usbmuxd_get_device_by_udid
+    usbmuxd_get_device
+    usbmuxd_connect
+    usbmuxd_disconnect
+    usbmuxd_send
+    usbmuxd_recv_timeout
+    usbmuxd_recv
+    usbmuxd_read_buid
+    usbmuxd_read_pair_record
+    usbmuxd_save_pair_record_with_device_id
+    usbmuxd_save_pair_record
+    usbmuxd_delete_pair_record
+    libusbmuxd_set_use_inotify
+    libusbmuxd_set_debug_level

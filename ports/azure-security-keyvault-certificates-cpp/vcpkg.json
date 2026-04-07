@@ -1,0 +1,30 @@
+{
+  "$comment": [
+    "NOTE: All changes made to this file will get overwritten by the next port release.",
+    "Please contribute your changes to https://github.com/Azure/azure-sdk-for-cpp."
+  ],
+  "name": "azure-security-keyvault-certificates-cpp",
+  "version-semver": "4.2.1",
+  "port-version": 4,
+  "description": [
+    "Microsoft Azure Key Vault Certificates SDK for C++",
+    "This library provides Azure Key Vault Certificates SDK."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/main/sdk/keyvault/azure-security-keyvault-certificates",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "azure-core-cpp",
+      "default-features": false,
+      "version>=": "1.9.0"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+--- a/include/public/sercomm/dev.h
++++ b/include/public/sercomm/dev.h
+@@ -137,6 +137,6 @@ SER_EXPORT void ser_dev_monitor_stop(ser_dev_mon_t *mon);
+ 
+ /** @} */
+ 
+-SER_BEGIN_DECL
++SER_END_DECL
+ 
+ #endif

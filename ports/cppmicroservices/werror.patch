@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 267b82e..87cfb37 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -552,7 +552,7 @@ else()
+     usFunctionCheckCompilerFlags(-fstack-protector-all US_CXX_FLAGS)
+   endif()
+ 
+-  foreach(_cxxflag  -Werror -Wall -Wextra -Wpointer-arith -Winvalid-pch -Wcast-align
++  foreach(_cxxflag  -Wall -Wextra -Wpointer-arith -Winvalid-pch -Wcast-align
+           -Wwrite-strings -Woverloaded-virtual -Wnon-virtual-dtor -Wold-style-cast
+           -Wstrict-null-sentinel -Wsign-promo -fdiagnostics-show-option )
+     usFunctionCheckCompilerFlags(${_cxxflag} US_CXX_FLAGS)

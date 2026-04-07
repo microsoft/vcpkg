@@ -1,0 +1,52 @@
+{
+  "name": "graphviz",
+  "version-semver": "14.1.2",
+  "description": "Graph Visualization Tools",
+  "homepage": "https://graphviz.org/",
+  "license": "EPL-1.0",
+  "dependencies": [
+    {
+      "name": "cairo",
+      "default-features": false
+    },
+    "expat",
+    "gdk-pixbuf",
+    {
+      "name": "getopt-win32",
+      "platform": "windows & !mingw"
+    },
+    "gts",
+    {
+      "name": "libgd",
+      "default-features": false,
+      "features": [
+        "fontconfig",
+        "freetype",
+        "jpeg",
+        "png",
+        "tiff"
+      ]
+    },
+    {
+      "name": "libltdl",
+      "platform": "!windows | mingw"
+    },
+    "librsvg",
+    "libwebp",
+    "pango",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "tools": {
+      "description": "Install graphviz executables"
+    }
+  }
+}

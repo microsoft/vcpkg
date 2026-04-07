@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49be67d..ef69fa6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,6 +66,7 @@ check_prototype_definition (cosl "long double cosl( long double arg )" "0" math.
+ check_prototype_definition (sinl "long double sinl( long double arg )" "0" math.h HAVE_DECL_SINL)
+ check_prototype_definition (memalign "void *memalign(size_t alignment, size_t size)" "0" malloc.h HAVE_DECL_MEMALIGN)
+ check_prototype_definition (posix_memalign "int posix_memalign(void **memptr, size_t alignment, size_t size)" "0" stdlib.h HAVE_DECL_POSIX_MEMALIGN)
++check_prototype_definition (_aligned_malloc "void* __cdecl _aligned_malloc(size_t _Size, size_t _Alignment)" "0" malloc.h HAVE_DECL_ALIGNED_MALLOC)
+ 
+ include (CheckSymbolExists)
+ check_symbol_exists (clock_gettime time.h HAVE_CLOCK_GETTIME)
+@@ -75,6 +76,7 @@ check_symbol_exists (drand48 stdlib.h HAVE_DRAND48)
+ check_symbol_exists (srand48 stdlib.h HAVE_SRAND48)
+ check_symbol_exists (memalign malloc.h HAVE_MEMALIGN)
+ check_symbol_exists (posix_memalign stdlib.h HAVE_POSIX_MEMALIGN)
++check_symbol_exists (_aligned_malloc malloc.h HAVE_ALIGNED_MALLOC)
+ check_symbol_exists (mach_absolute_time mach/mach_time.h HAVE_MACH_ABSOLUTE_TIME)
+ check_symbol_exists (alloca alloca.h HAVE_ALLOCA)
+ if (NOT HAVE_ALLOCA)
+@@ -131,6 +133,7 @@ endif ()
+ 
+ include (CheckCCompilerFlag)
+ 
++#All those checks fail due to linkage errors so we directly set HAVE_<ARCH> in the PORTFILE! We assume the user knows what (s)he is doing!
+ if (ENABLE_SSE)
+   foreach (FLAG "-msse" "/arch:SSE")
+     unset (HAVE_SSE CACHE)
+@@ -180,8 +183,9 @@ if (ENABLE_AVX2)
+ endif ()
+ 
+ # AVX2 codelets require FMA support as well
++# AVX2 implicitly includes FMA using Visual Studio (also definition __FMA__ is not set)
+ if (ENABLE_AVX2)
+-  foreach (FLAG "-mfma" "/arch:FMA")
++  foreach (FLAG "-mfma" "/arch:AVX2")
+     unset (HAVE_FMA CACHE)
+     unset (HAVE_FMA)
+     check_c_compiler_flag (${FLAG} HAVE_FMA)

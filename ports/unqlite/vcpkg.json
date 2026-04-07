@@ -1,0 +1,18 @@
+{
+  "name": "unqlite",
+  "version-date": "2025-04-29",
+  "description": "An embedded NoSQL, transactional database engine",
+  "homepage": "https://unqlite.symisc.net/",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "features": {
+    "threads": {
+      "description": "Compile with thread safety support"
+    }
+  }
+}

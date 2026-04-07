@@ -1,0 +1,13 @@
+{
+  "name": "tinycthread",
+  "version-date": "2019-08-06",
+  "port-version": 3,
+  "description": "Small, portable implementation of the C11 threads API",
+  "homepage": "https://tinycthread.github.io/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

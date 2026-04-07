@@ -1,0 +1,13 @@
+diff --git a/cmake/FindOpenCL.cmake b/cmake/FindOpenCL.cmake
+index 485e55e..1c98b91 100644
+--- a/cmake/FindOpenCL.cmake
++++ b/cmake/FindOpenCL.cmake
+@@ -177,7 +177,7 @@ if(_OPENCL_CPP_INCLUDE_DIRS)
+     
+     if(EXISTS "${OPENCL_INCLUDE_DIRS}/CL/cl.h")
+     
+-        file(STRINGS "${OPENCL_INCLUDE_DIRS}/CL/cl.h" LINES REGEX "^#define CL_VERSION_.*$")
++        file(STRINGS "${OPENCL_INCLUDE_DIRS}/CL/cl.h" LINES REGEX "^#define CL_VERSION_[0-9]+_[0-9]+.*$")
+ 
+         foreach(LINE ${LINES})
+         

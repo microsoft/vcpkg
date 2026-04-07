@@ -1,0 +1,725 @@
+diff --git a/packetNtx/Dll/Project/Packet.dsp b/packetNtx/Dll/Project/Packet.dsp
+index 6e69440..fc520ce 100644
+--- a/packetNtx/Dll/Project/Packet.dsp
++++ b/packetNtx/Dll/Project/Packet.dsp
+@@ -55,8 +55,8 @@ RSC=rc.exe
+ # PROP Intermediate_Dir "Release"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
+-# ADD CPP /nologo /MT /W3 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_WANPACKET_API" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W3 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /YX /FD /c
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "NDEBUG"
+@@ -87,8 +87,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Debug"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
+-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_WANPACKET_API" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /YX /FD /c
+ # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "_DEBUG"
+@@ -120,8 +120,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "NT4_Debug"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../common" /D "WIN32" /D "_WINDOWS" /YX /FD /c
+-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../common" /D "WIN32" /D "_WINDOWS" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /YX /FD /c
+ # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "_DEBUG" /D "_WINNT4" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "_DEBUG"
+@@ -154,8 +154,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "NT4_Release"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /I "../../../common" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /YX /FD /c
+-# ADD CPP /nologo /MT /W3 /GX /Zi /O2 /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W3 /GX /O2 /I "../../../common" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W3 /GX /Zi /O2 /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /YX /FD /c
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "NDEBUG" /D "_WINNT4" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "NDEBUG"
+@@ -187,8 +187,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Debug_LOG_TO_FILE"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../common" /I "../../../dag/include" /I "../../../dag/drv/windows" /D "WIN32" /D "_WINDOWS" /D "HAVE_DAG_API" /YX /FD /c
+-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "HAVE_AIRPCAP_API" /D "_DEBUG_TO_FILE" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /FR /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../common" /I "../../../dag/include" /I "../../../dag/drv/windows" /D "WIN32" /D "_WINDOWS" /D "HAVE_DAG_API" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "_DEBUG_TO_FILE" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /FR /YX /FD /c
+ # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "_DEBUG"
+@@ -221,8 +221,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Release_LOG_TO_FILE"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /I "../../../common" /I "../../../dag/include" /I "../../../dag/drv/windows" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_DAG_API" /YX /FD /c
+-# ADD CPP /nologo /MT /W4 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "HAVE_AIRPCAP_API" /D "_DEBUG_TO_FILE" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /FR /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W3 /GX /O2 /I "../../../common" /I "../../../dag/include" /I "../../../dag/drv/windows" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_DAG_API" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W4 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "_DEBUG_TO_FILE" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /FR /YX /FD /c
+ # SUBTRACT CPP /u
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+@@ -255,8 +255,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "NT4_Debug_LOG_TO_FILE"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../common" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /YX /FD /c
+-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /D "_DEBUG_TO_FILE" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../common" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /D "_DEBUG_TO_FILE" /YX /FD /c
+ # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "_DEBUG" /D "_WINNT4" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "_DEBUG"
+@@ -289,8 +289,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "NT4_Release_LOG_TO_FILE"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /I "../../../common" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /YX /FD /c
+-# ADD CPP /nologo /MT /W3 /GX /Zi /O2 /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /D "_DEBUG_TO_FILE" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W3 /GX /O2 /I "../../../common" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W3 /GX /Zi /O2 /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_WINNT4" /D "_DEBUG_TO_FILE" /YX /FD /c
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "NDEBUG" /D "_WINNT4" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "NDEBUG"
+@@ -323,8 +323,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Debug_No_AirPcap"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../z1211u/airpcap/" /D "WIN32" /D "_WINDOWS" /D "HAVE_AIRPCAP_API" /YX /FD /c
+-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../z1211u/airpcap/" /D "WIN32" /D "_WINDOWS" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /YX /FD /c
+ # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "_DEBUG"
+@@ -357,8 +357,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Release_No_AirPcap"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../z1211u/airpcap/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_AIRPCAP_API" /YX /FD /c
+-# ADD CPP /nologo /MT /W3 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W3 /GX /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../z1211u/airpcap/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W3 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /YX /FD /c
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "NDEBUG"
+@@ -390,8 +390,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Debug_No_NpfIm"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /D "_DBG" /YX /FD /c
+-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /I "../../../../NpfIm_DevPack" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /D "_DBG" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /I "../../../../NpfIm_DevPack" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
+ # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "_DEBUG"
+@@ -424,8 +424,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Release_No_NpfIm"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
+-# ADD CPP /nologo /MT /W3 /GX /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /I "../../../../NpfIm_DevPack" /D "NDEBUG" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W3 /GX /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W3 /GX /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /I "../../../../NpfIm_DevPack" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "NDEBUG"
+@@ -457,8 +457,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Debug_Vista"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
+-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /YX /FD /c
+ # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "_DEBUG"
+@@ -491,8 +491,8 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Release_Vista"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W3 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
+-# ADD CPP /nologo /MT /W3 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "HAVE_AIRPCAP_API" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W3 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W3 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /YX /FD /c
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD BASE RSC /l 0x410 /d "NDEBUG"
+@@ -525,9 +525,9 @@ PostBuild_Cmds=copy                    $(OutDir)\packet.lib                    .
+ # PROP Intermediate_Dir "Release_Vista_LOG_TO_FILE"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W4 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "HAVE_AIRPCAP_API" /D "_DEBUG_TO_FILE" /D "WIN32" /D "_WINDOWS" /D "HAVE_WANPACKET_API" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /FR /YX /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W4 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "_DEBUG_TO_FILE" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /D "HAVE_NPFIM_API" /FR /YX /FD /c
+ # SUBTRACT BASE CPP /u
+-# ADD CPP /nologo /MT /W4 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "HAVE_AIRPCAP_API" /D "_DEBUG_TO_FILE" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /FR /YX /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W4 /GX /Zi /O2 /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../common" /I "../../../../Airpcap_Devpack/include/" /D "NDEBUG" /D "_DEBUG_TO_FILE" /D "WIN32" /D "_WINDOWS" /D "HAVE_IPHELPER_API" /FR /YX /FD /c
+ # SUBTRACT CPP /u
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+ # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
+diff --git a/packetNtx/Dll/Project/Packet.vcproj b/packetNtx/Dll/Project/Packet.vcproj
+index 8be719e..e16afe2 100644
+--- a/packetNtx/Dll/Project/Packet.vcproj
++++ b/packetNtx/Dll/Project/Packet.vcproj
+@@ -22,7 +22,7 @@
+ 			Name="Debug|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -44,7 +44,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_AIRPCAP_API;HAVE_AIRPCAP_API;HAVE_WANPACKET_API;HAVE_IPHELPER_API"
++				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_IPHELPER_API"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -64,7 +64,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib setupapi.lib ws2_32.lib iphlpapi.lib"
++				AdditionalDependencies="version.lib setupapi.lib ws2_32.lib iphlpapi.lib"
+ 				LinkIncremental="2"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -100,7 +100,7 @@
+ 			Name="Debug|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -123,7 +123,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_AIRPCAP_API;HAVE_WANPACKET_API;HAVE_IPHELPER_API"
++				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_IPHELPER_API"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -143,7 +143,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib setupapi.lib ws2_32.lib iphlpapi.lib"
++				AdditionalDependencies="version.lib setupapi.lib ws2_32.lib iphlpapi.lib"
+ 				LinkIncremental="2"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -179,7 +179,7 @@
+ 			Name="Release|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -201,7 +201,7 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_AIRPCAP_API;HAVE_WANPACKET_API;HAVE_IPHELPER_API"
++				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_IPHELPER_API"
+ 				RuntimeLibrary="0"
+ 				UsePrecompiledHeader="0"
+ 				WarningLevel="4"
+@@ -219,7 +219,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib setupapi.lib ws2_32.lib iphlpapi.lib"
++				AdditionalDependencies="version.lib setupapi.lib ws2_32.lib iphlpapi.lib"
+ 				LinkIncremental="1"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -257,7 +257,7 @@
+ 			Name="Release|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -280,7 +280,7 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; ;HAVE_AIRPCAP_API;HAVE_WANPACKET_API;HAVE_IPHELPER_API"
++				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; ;HAVE_IPHELPER_API"
+ 				RuntimeLibrary="0"
+ 				UsePrecompiledHeader="0"
+ 				WarningLevel="4"
+@@ -298,7 +298,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib setupapi.lib ws2_32.lib iphlpapi.lib"
++				AdditionalDependencies="version.lib setupapi.lib ws2_32.lib iphlpapi.lib"
+ 				LinkIncremental="1"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -336,7 +336,7 @@
+ 			Name="Debug NT4|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -415,7 +415,7 @@
+ 			Name="Debug NT4|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -458,7 +458,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib"
++				AdditionalDependencies="version.lib"
+ 				LinkIncremental="2"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -494,7 +494,7 @@
+ 			Name="Release NT4|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -573,7 +573,7 @@
+ 			Name="Release NT4|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -614,7 +614,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib"
++				AdditionalDependencies="version.lib"
+ 				LinkIncremental="1"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -652,7 +652,7 @@
+ 			Name="Debug No NetMon|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -674,7 +674,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_AIRPCAP_API;HAVE_IPHELPER_API"
++				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_IPHELPER_API"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -731,7 +731,7 @@
+ 			Name="Debug No NetMon|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			>
+ 			<Tool
+@@ -754,7 +754,7 @@
+ 				Name="VCCLCompilerTool"
+ 				Optimization="0"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_AIRPCAP_API;HAVE_IPHELPER_API"
++				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;HAVE_IPHELPER_API"
+ 				MinimalRebuild="true"
+ 				BasicRuntimeChecks="3"
+ 				RuntimeLibrary="1"
+@@ -811,7 +811,7 @@
+ 			Name="Release No NetMon|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -833,7 +833,7 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_AIRPCAP_API;HAVE_IPHELPER_API"
++				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_IPHELPER_API"
+ 				RuntimeLibrary="0"
+ 				UsePrecompiledHeader="0"
+ 				WarningLevel="4"
+@@ -890,7 +890,7 @@
+ 			Name="Release No NetMon|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -913,7 +913,7 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; ;HAVE_AIRPCAP_API;HAVE_IPHELPER_API"
++				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; ;HAVE_IPHELPER_API"
+ 				RuntimeLibrary="0"
+ 				UsePrecompiledHeader="0"
+ 				WarningLevel="4"
+@@ -932,7 +932,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib setupapi.lib ws2_32.lib iphlpapi.lib"
++				AdditionalDependencies="version.lib setupapi.lib ws2_32.lib iphlpapi.lib"
+ 				LinkIncremental="1"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -970,7 +970,7 @@
+ 			Name="Release LOG_TO_FILE|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -992,7 +992,7 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_AIRPCAP_API;HAVE_WANPACKET_API;HAVE_IPHELPER_API;_DEBUG_TO_FILE"
++				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_IPHELPER_API;_DEBUG_TO_FILE"
+ 				RuntimeLibrary="0"
+ 				UsePrecompiledHeader="0"
+ 				WarningLevel="4"
+@@ -1010,7 +1010,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib setupapi.lib ws2_32.lib iphlpapi.lib"
++				AdditionalDependencies="version.lib setupapi.lib ws2_32.lib iphlpapi.lib"
+ 				LinkIncremental="1"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -1048,7 +1048,7 @@
+ 			Name="Release LOG_TO_FILE|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -1071,7 +1071,7 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; ;HAVE_AIRPCAP_API;HAVE_WANPACKET_API;HAVE_IPHELPER_API;_DEBUG_TO_FILE"
++				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; ;HAVE_IPHELPER_API;_DEBUG_TO_FILE"
+ 				RuntimeLibrary="0"
+ 				UsePrecompiledHeader="0"
+ 				WarningLevel="4"
+@@ -1089,7 +1089,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib setupapi.lib ws2_32.lib iphlpapi.lib"
++				AdditionalDependencies="version.lib setupapi.lib ws2_32.lib iphlpapi.lib"
+ 				LinkIncremental="1"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -1127,7 +1127,7 @@
+ 			Name="Release No NetMon LOG_TO_FILE|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -1149,7 +1149,7 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_AIRPCAP_API;HAVE_IPHELPER_API;_DEBUG_TO_FILE"
++				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;HAVE_IPHELPER_API;_DEBUG_TO_FILE"
+ 				RuntimeLibrary="0"
+ 				UsePrecompiledHeader="0"
+ 				WarningLevel="4"
+@@ -1206,7 +1206,7 @@
+ 			Name="Release No NetMon LOG_TO_FILE|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -1229,7 +1229,7 @@
+ 			<Tool
+ 				Name="VCCLCompilerTool"
+ 				AdditionalIncludeDirectories="..\..\..\Common;..\..\driver;..\..\..\..\AirPcap_devpack\include"
+-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; ;HAVE_AIRPCAP_API;HAVE_IPHELPER_API;_DEBUG_TO_FILE"
++				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS; ;HAVE_IPHELPER_API;_DEBUG_TO_FILE"
+ 				RuntimeLibrary="0"
+ 				UsePrecompiledHeader="0"
+ 				WarningLevel="4"
+@@ -1248,7 +1248,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib setupapi.lib ws2_32.lib iphlpapi.lib"
++				AdditionalDependencies="version.lib setupapi.lib ws2_32.lib iphlpapi.lib"
+ 				LinkIncremental="1"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -1286,7 +1286,7 @@
+ 			Name="Release NT4 LOG_TO_FILE|Win32"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x86"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -1365,7 +1365,7 @@
+ 			Name="Release NT4 LOG_TO_FILE|x64"
+ 			OutputDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+ 			IntermediateDirectory="$(ProjectDir)\$(ConfigurationName)\x64"
+-			ConfigurationType="2"
++			ConfigurationType="@LIBRARY_LINKAGE@"
+ 			CharacterSet="1"
+ 			WholeProgramOptimization="1"
+ 			>
+@@ -1406,7 +1406,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="version.lib npptools.lib"
++				AdditionalDependencies="version.lib"
+ 				LinkIncremental="1"
+ 				ModuleDefinitionFile="..\packet.def"
+ 				GenerateDebugInformation="true"
+@@ -1462,82 +1462,6 @@
+ 				>
+ 			</File>
+ 			<File
+-				RelativePath="..\WanPacket\WanPacket.cpp"
+-				>
+-				<FileConfiguration
+-					Name="Debug NT4|Win32"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-				<FileConfiguration
+-					Name="Release NT4|Win32"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-				<FileConfiguration
+-					Name="Debug No NetMon|Win32"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-				<FileConfiguration
+-					Name="Debug No NetMon|x64"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-				<FileConfiguration
+-					Name="Release No NetMon|Win32"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-				<FileConfiguration
+-					Name="Release No NetMon|x64"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-				<FileConfiguration
+-					Name="Release No NetMon LOG_TO_FILE|Win32"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-				<FileConfiguration
+-					Name="Release No NetMon LOG_TO_FILE|x64"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-				<FileConfiguration
+-					Name="Release NT4 LOG_TO_FILE|Win32"
+-					ExcludedFromBuild="true"
+-					>
+-					<Tool
+-						Name="VCCLCompilerTool"
+-					/>
+-				</FileConfiguration>
+-			</File>
+-			<File
+ 				RelativePath="..\..\driver\win_bpf_filter.c"
+ 				>
+ 				<FileConfiguration
+diff --git a/packetNtx/Dll/WanPacket/WanPacket.dsp b/packetNtx/Dll/WanPacket/WanPacket.dsp
+index 9ac30be..ed68158 100644
+--- a/packetNtx/Dll/WanPacket/WanPacket.dsp
++++ b/packetNtx/Dll/WanPacket/WanPacket.dsp
+@@ -42,8 +42,8 @@ RSC=rc.exe
+ # PROP Intermediate_Dir "Release"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "WANPACKET_EXPORTS" /Yu"stdafx.h" /FD /c
+-# ADD CPP /nologo /MT /W3 /GX /Zi /O2 /I "..\..\..\Common" /I "..\..\driver" /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../../z1211u/airpcap/" /D "NDEBUG" /D "_MBCS" /D "_USRDLL" /D "WANPACKET_EXPORTS" /D "WIN32" /D "_WINDOWS" /D "HAVE_DAG_API" /D "__NPF_x86__" /FD /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@ /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "WANPACKET_EXPORTS" /Yu"stdafx.h" /FD /c
++# ADD CPP /nologo /@CRT_LINKAGE@ /W3 /GX /Zi /O2 /I "..\..\..\Common" /I "..\..\driver" /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../../z1211u/airpcap/" /D "NDEBUG" /D "_MBCS" /D "_USRDLL" /D "WANPACKET_EXPORTS" /D "WIN32" /D "_WINDOWS" /D "HAVE_DAG_API" /D "__NPF_x86__" /FD /c
+ # SUBTRACT CPP /YX /Yc /Yu
+ # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+ # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+@@ -54,7 +54,7 @@ BSC32=bscmake.exe
+ # ADD BSC32 /nologo
+ LINK32=link.exe
+ # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
+-# ADD LINK32 npptools.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /libpath:"..\..\WanPacket\Release\\" /opt:ref
++# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /libpath:"..\..\WanPacket\Release\\" /opt:ref
+ # SUBTRACT LINK32 /pdb:none
+ 
+ !ELSEIF  "$(CFG)" == "WanPacket - Win32 Debug"
+@@ -70,8 +70,8 @@ LINK32=link.exe
+ # PROP Intermediate_Dir "Debug"
+ # PROP Ignore_Export_Lib 0
+ # PROP Target_Dir ""
+-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "WANPACKET_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
+-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "..\..\..\Common" /I "..\..\driver" /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../../z1211u/airpcap/" /D "_DEBUG" /D "_MBCS" /D "_USRDLL" /D "WANPACKET_EXPORTS" /D "WIN32" /D "_WINDOWS" /D "HAVE_DAG_API" /D "__NPF_x86__" /FD /GZ /c
++# ADD BASE CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "WANPACKET_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
++# ADD CPP /nologo /@CRT_LINKAGE@d /W3 /Gm /GX /ZI /Od /I "..\..\..\Common" /I "..\..\driver" /I "../../../dag/include" /I "../../../dag/drv/windows" /I "../../../../z1211u/airpcap/" /D "_DEBUG" /D "_MBCS" /D "_USRDLL" /D "WANPACKET_EXPORTS" /D "WIN32" /D "_WINDOWS" /D "HAVE_DAG_API" /D "__NPF_x86__" /FD /GZ /c
+ # SUBTRACT CPP /YX /Yc /Yu
+ # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+ # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+@@ -82,7 +82,7 @@ BSC32=bscmake.exe
+ # ADD BSC32 /nologo
+ LINK32=link.exe
+ # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
+-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib npptools.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
++# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
+ 
+ !ENDIF 
+ 
+@@ -131,10 +131,6 @@ SOURCE=.\version.rc
+ # End Source File
+ # Begin Source File
+ 
+-SOURCE=.\WanPacket.cpp
+-# End Source File
+-# Begin Source File
+-
+ SOURCE=..\..\driver\win_bpf_filter.c
+ # End Source File
+ # End Group
+diff --git a/packetNtx/Dll/WanPacket/version.rc b/packetNtx/Dll/WanPacket/version.rc
+index 056db10..fc9b0ee 100644
+--- a/packetNtx/Dll/WanPacket/version.rc
++++ b/packetNtx/Dll/WanPacket/version.rc
+@@ -6,7 +6,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "afxres.h"
++#include "winres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+@@ -34,7 +34,7 @@ END
+ 
+ 2 TEXTINCLUDE 
+ BEGIN
+-    "#include ""afxres.h""\r\n"
++    "#include ""winres.h""\r\n"
+     "\0"
+ END
+ 
+diff --git a/packetNtx/Dll/version.rc b/packetNtx/Dll/version.rc
+index 056db10..fc9b0ee 100644
+--- a/packetNtx/Dll/version.rc
++++ b/packetNtx/Dll/version.rc
+@@ -6,7 +6,7 @@
+ //
+ // Generated from the TEXTINCLUDE 2 resource.
+ //
+-#include "afxres.h"
++#include "winres.h"
+ 
+ /////////////////////////////////////////////////////////////////////////////
+ #undef APSTUDIO_READONLY_SYMBOLS
+@@ -34,7 +34,7 @@ END
+ 
+ 2 TEXTINCLUDE 
+ BEGIN
+-    "#include ""afxres.h""\r\n"
++    "#include ""winres.h""\r\n"
+     "\0"
+ END
+ 

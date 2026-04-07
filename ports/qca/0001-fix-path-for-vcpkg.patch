@@ -1,0 +1,72 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 1f84c2c9e..f72ee9d8d 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -58,6 +58,7 @@ set(QCA_SUFFIX "qt5")
+ if(NOT BUILD_SHARED_LIBS OR QT_IS_STATIC)
+   set(STATIC_PLUGINS ON)
+   add_definitions(-DQT_STATICPLUGIN)
++  add_definitions(-DQCA_STATIC)
+   set(PLUGIN_TYPE "STATIC")
+ else()
+   set(PLUGIN_TYPE "MODULE")
+@@ -266,10 +267,17 @@ if(DEVELOPER_MODE)
+   add_definitions(-DDEVELOPER_MODE)
+ 
+ # To prefer plugins from build tree when run qca from build tree
+-  file(WRITE ${CMAKE_BINARY_DIR}/bin/qt.conf
+-"[Paths]
+-Plugins=${CMAKE_BINARY_DIR}/lib/${QCA_LIB_NAME}
+-")
++  if(NOT BUILD_SHARED_LIBS OR QT_IS_STATIC)
++      file(WRITE ${CMAKE_BINARY_DIR}/bin/qt.conf
++    "[Paths]
++    Plugins=${CMAKE_BINARY_DIR}/lib/${QCA_LIB_NAME}
++    ")
++  else()
++      file(WRITE ${CMAKE_BINARY_DIR}/bin/qt.conf
++    "[Paths]
++    Plugins=${CMAKE_BINARY_DIR}/bin/${QCA_LIB_NAME}
++    ")
++  endif()
+ endif()
+ 
+ if (APPLE)
+@@ -309,7 +317,7 @@ else()
+   set( qca_CERTSTORE "${CMAKE_CURRENT_SOURCE_DIR}/certs/rootcerts.pem")
+   # note that INSTALL_FILES targets are relative to the current installation prefix...
+   if(NOT DEVELOPER_MODE)
+-    install(FILES "${qca_CERTSTORE}" DESTINATION "${QCA_PREFIX_INSTALL_DIR}/certs")
++    install(FILES "${qca_CERTSTORE}" DESTINATION "${QCA_PREFIX_INSTALL_DIR}/share/qca/certs")
+   endif()
+ endif()
+ message(STATUS "certstore path: " ${qca_CERTSTORE})
+@@ -390,10 +398,10 @@ endif()
+ include(CMakePackageConfigHelpers)
+ configure_package_config_file(
+   "${CMAKE_CURRENT_SOURCE_DIR}/QcaConfig.cmake.in"
+-  "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
+-  INSTALL_DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE}
++  "${CMAKE_BINARY_DIR}/share/qca/cmake/${QCA_CONFIG_NAME_BASE}Config.cmake"
++  INSTALL_DESTINATION ${CMAKE_BINARY_DIR}/share/qca/cmake
+ )
+-write_basic_config_version_file("${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake" VERSION ${QCA_LIB_VERSION_STRING} COMPATIBILITY AnyNewerVersion)
++write_basic_config_version_file("${CMAKE_BINARY_DIR}/share/qca/cmake/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake" VERSION ${QCA_LIB_VERSION_STRING} COMPATIBILITY AnyNewerVersion)
+ 
+ if(NOT DEVELOPER_MODE)
+ 
+@@ -461,10 +469,10 @@ if(NOT DEVELOPER_MODE)
+     endif()
+   endif()
+ 
+-  install(EXPORT ${QCA_CONFIG_NAME_BASE}Targets DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE} FILE ${QCA_CONFIG_NAME_BASE}Targets.cmake)
++  install(EXPORT ${QCA_CONFIG_NAME_BASE}Targets DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/qca/cmake FILE ${QCA_CONFIG_NAME_BASE}Targets.cmake)
+   install(FILES
+-    "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}Config.cmake"
+-    "${CMAKE_CURRENT_BINARY_DIR}/lib/cmake/${QCA_CONFIG_NAME_BASE}/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake"
+-    DESTINATION ${QCA_LIBRARY_INSTALL_DIR}/cmake/${QCA_CONFIG_NAME_BASE}
++    "${CMAKE_BINARY_DIR}/share/qca/cmake/${QCA_CONFIG_NAME_BASE}Config.cmake"
++    "${CMAKE_BINARY_DIR}/share/qca/cmake/${QCA_CONFIG_NAME_BASE}ConfigVersion.cmake"
++    DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/qca/cmake
+     )
+ endif()

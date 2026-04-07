@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9396130..11ef59d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -122,7 +122,7 @@ else()
+ endif()
+ 
+ 
+-if(ANDROID AND CMAKE_SYSTEM_VERSION VERSION_LESS 24 AND (CMAKE_SYSTEM_PROCESSOR MATCHES "i686" OR CMAKE_SYSTEM_PROCESSOR MATCHES "armv7-a"))
++if(ANDROID AND ANDROID_NATIVE_API_LEVEL VERSION_LESS "24" AND (CMAKE_SYSTEM_PROCESSOR MATCHES "i686" OR CMAKE_SYSTEM_PROCESSOR MATCHES "armv7-a"))
+     # fseeko/ftello may link, but it's not usable before Android API 24 on 32-bit Android
+     # https://android.googlesource.com/platform/bionic/+/main/docs/32-bit-abi.md
+     message(STATUS "Disabling fseeko/ftello for 32-bit Android before API 24")

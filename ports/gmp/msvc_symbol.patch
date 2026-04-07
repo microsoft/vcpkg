@@ -1,0 +1,28 @@
+diff --git a/configure.ac b/configure.ac
+index cafdb3c..3c3e3c8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -2702,9 +2702,7 @@ Use "--disable-static --enable-shared" to build just a DLL.])
+     # __isascii, but for some reason not the plain isascii.
+     #
+     if test "$enable_shared" = yes; then
+-      GMP_LDFLAGS="$GMP_LDFLAGS -no-undefined -Wl,--export-all-symbols"
+-      LIBGMP_LDFLAGS="$LIBGMP_LDFLAGS -Wl,--output-def,.libs/libgmp-3.dll.def"
+-      LIBGMPXX_LDFLAGS="$LIBGMP_LDFLAGS -Wl,--output-def,.libs/libgmpxx-3.dll.def"
++      GMP_LDFLAGS="$GMP_LDFLAGS -no-undefined"
+       LIBGMP_DLL=1
+     fi
+     ;;
+diff --git a/gmp-h.in b/gmp-h.in
+index 3d449d4..18a03b7 100644
+--- a/gmp-h.in
++++ b/gmp-h.in
+@@ -398,7 +398,7 @@ typedef __mpq_struct *mpq_ptr;
+ 
+ /* Microsoft's C compiler accepts __inline */
+ #ifdef _MSC_VER
+-#define __GMP_EXTERN_INLINE  __inline
++#define __GMP_EXTERN_INLINE  static __inline
+ #endif
+ 
+ /* Recent enough Sun C compilers want "inline" */

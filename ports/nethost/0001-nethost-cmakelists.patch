@@ -1,0 +1,82 @@
+diff --git a/src/native/corehost/nethost/CMakeLists.txt b/src/native/corehost/nethost/CMakeLists.txt
+index 5ae3f76e8fe..9c0209ba9bc 100644
+--- a/src/native/corehost/nethost/CMakeLists.txt
++++ b/src/native/corehost/nethost/CMakeLists.txt
+@@ -1,11 +1,14 @@
+ # Licensed to the .NET Foundation under one or more agreements.
+ # The .NET Foundation licenses this file to you under the MIT license.
+ 
++cmake_minimum_required (VERSION 3.14.5)
+ project(nethost)
+ 
+ set(DOTNET_PROJECT_NAME "nethost")
+ 
+ # Include directories
++include(../../../../eng/native/configurepaths.cmake)
++include("${CLR_ENG_NATIVE_DIR}/configurecompiler.cmake")
+ include_directories(../fxr)
+ 
+ # CMake does not recommend using globbing since it messes with the freshness checks
+@@ -19,12 +22,23 @@ if(CLR_CMAKE_TARGET_WIN32)
+         Exports.def)
+ endif()
+ 
++if(BUILD_SHARED_LIBS)
+ include(../lib.cmake)
++set(targets nethost)
++else()
++include(../hostmisc/hostmisc.cmake)
+ include(../lib_static.cmake)
++add_library(nethost INTERFACE)
++target_link_libraries(nethost INTERFACE libnethost)
++set(targets libnethost nethost)
++target_include_directories(libnethost INTERFACE $<INSTALL_INTERFACE:include>)
++endif()
++target_include_directories(nethost INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ add_definitions(-DFEATURE_LIBHOST=1)
+ add_definitions(-DNETHOST_EXPORT)
+ 
++if(NOT BUILD_SHARED_LIBS)
+ # Copy static lib PDB to the project output directory
+ if (WIN32)
+     set_target_properties(libnethost PROPERTIES
+@@ -32,12 +46,17 @@ if (WIN32)
+         COMPILE_PDB_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}"
+     )
+ endif(WIN32)
++endif()
+ 
+-install(FILES ../coreclr_delegates.h DESTINATION corehost)
+-install(FILES ../hostfxr.h DESTINATION corehost)
+-install(FILES nethost.h DESTINATION corehost)
+-install_with_stripped_symbols(nethost TARGETS corehost)
++set(NETHOST_HEADERS nethost.h ../coreclr_delegates.h ../hostfxr.h)
++install(FILES ${NETHOST_HEADERS} DESTINATION include)
++install(TARGETS ${targets} EXPORT unofficial-nethost-config
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++    RUNTIME DESTINATION bin
++)
+ 
++if(NOT BUILD_SHARED_LIBS)
+ if (MSVC)
+     # We ship libnethost.lib as a static library for external consumption, so
+     # LTCG must be disabled to ensure that non-MSVC toolchains can work with it.
+@@ -47,10 +66,10 @@ if (MSVC)
+     string(REPLACE "/LTCG" "" CMAKE_STATIC_LINKER_FLAGS_RELEASE ${CMAKE_STATIC_LINKER_FLAGS_RELEASE})
+     string(REPLACE "/LTCG" "" CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO ${CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO})
+ endif()
++endif()
+ 
+-# Only Windows creates a symbols file for static libs.
+-if (WIN32)
+-    install_with_stripped_symbols(libnethost TARGETS corehost)
+-else()
+-    install(TARGETS libnethost DESTINATION corehost)
+-endif(WIN32)
++install(EXPORT unofficial-nethost-config
++    DESTINATION share/unofficial-nethost
++    FILE unofficial-nethost-config.cmake
++    NAMESPACE unofficial::nethost::
++)

@@ -1,0 +1,34 @@
+diff --git a/PCbuild/_freeze_module.vcxproj b/PCbuild/_freeze_module.vcxproj
+index 7d3423251f..7f607742fe 100644
+--- a/PCbuild/_freeze_module.vcxproj
++++ b/PCbuild/_freeze_module.vcxproj
+@@ -366,7 +366,7 @@
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+   <Target Name="_RebuildGetPath" AfterTargets="_RebuildFrozen" Condition="$(Configuration) != 'PGUpdate'">
+-    <Exec Command='"$(TargetPath)" "%(GetPath.ModName)" "%(GetPath.FullPath)" "%(GetPath.IntFile)"' />
++    <Exec Command='"$(OutDir)$(TargetName)$(TargetExt)" "%(GetPath.ModName)" "%(GetPath.FullPath)" "%(GetPath.IntFile)"' />
+ 
+     <Copy SourceFiles="%(GetPath.IntFile)"
+           DestinationFiles="%(GetPath.OutFile)"
+@@ -378,7 +378,7 @@
+              Condition="'@(_UpdatedGetPath)' != ''" Importance="high" />
+   </Target>
+   <Target Name="_RebuildFrozen" AfterTargets="AfterBuild" Condition="$(Configuration) != 'PGUpdate'">
+-    <Exec Command='"$(TargetPath)" "%(None.ModName)" "%(None.FullPath)" "%(None.IntFile)"' />
++    <Exec Command='"$(OutDir)$(TargetName)$(TargetExt)" "%(None.ModName)" "%(None.FullPath)" "%(None.IntFile)"' />
+ 
+     <Copy SourceFiles="%(None.IntFile)"
+           DestinationFiles="%(None.OutFile)"
+diff --git a/PCbuild/pcbuild.proj b/PCbuild/pcbuild.proj
+index c49a8533ad..b1cdf7c8d7 100644
+--- a/PCbuild/pcbuild.proj
++++ b/PCbuild/pcbuild.proj
+@@ -14,6 +14,6 @@
+   <ItemDefinitionGroup>
+     <FreezeProjects>
+-      <Platform>$(PreferredToolArchitecture)</Platform>
++      <Platform>$(Platform)</Platform>
+       <Configuration>$(Configuration)</Configuration>
+       <Configuration Condition="$(Configuration) == 'PGInstrument'">Release</Configuration>
+       <Properties></Properties>

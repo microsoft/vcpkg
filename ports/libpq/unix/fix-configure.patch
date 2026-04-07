@@ -1,0 +1,61 @@
+diff --git a/configure.ac b/configure.ac
+--- a/configure.ac
++++ b/configure.ac
+@@ -20,7 +20,8 @@ AC_INIT([PostgreSQL], [18.3], [pgsql-bugs@lists.postgresql.org], [], [https://ww
+
+-m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_fatal([Autoconf version 2.69 is required.
+-Untested combinations of 'autoconf' and PostgreSQL versions are not
+-recommended.  You can remove the check from 'configure.ac' but it is then
+-your responsibility whether the result works or not.])])
++cross_compiling=yes # Avoid conftest loading shared objects
++m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.69], [], [m4_warn([unsupported],[Autoconf version 2.69 is required.
++Untested combinations of 'autoconf' and PostgreSQL versions are not
++recommended.  You can remove the check from 'configure.ac' but it is then
++your responsibility whether the result works or not.])])
+ AC_COPYRIGHT([Copyright (c) 1996-2025, PostgreSQL Global Development Group])
+ AC_CONFIG_SRCDIR([src/backend/access/common/heaptuple.c])
+@@ -1347,3 +1348,4 @@ AC_SEARCH_LIBS(pthread_barrier_wait, pthread)
+ if test "$with_readline" = yes; then
+-  PGAC_CHECK_READLINE
++  PKG_CHECK_MODULES([READLINE], [readline], [HAVE_LIBREADLINE=1], [pgac_cv_check_readline=no])
++  LIBS="$READLINE_LIBS $LIBS"
+   if test x"$pgac_cv_check_readline" = x"no"; then
+@@ -1357,3 +1359,3 @@ fi
+ if test "$with_zlib" = yes; then
+-  AC_CHECK_LIB(z, inflate, [],
++  PKG_CHECK_MODULES([ZLIB], [zlib], [LIBS="$ZLIB_LIBS $LIBS"],
+                [AC_MSG_ERROR([zlib library not found
+@@ -1394,5 +1396,9 @@ fi
+   AC_DEFINE(OPENSSL_API_COMPAT, [0x10101000L],
+             [Define to the OpenSSL API version in use. This avoids deprecation warnings from newer OpenSSL versions.])
++  PKG_CHECK_MODULES([CRYPTO_new_ex_data], [libcrypto], [LIBS="$CRYPTO_new_ex_data_LIBS $LIBS"], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
++  PKG_CHECK_MODULES([SSL_new], [libssl], [LIBS="$SSL_new_LIBS $LIBS"], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
++  if false ; then
+   AC_CHECK_LIB(crypto, CRYPTO_new_ex_data, [], [AC_MSG_ERROR([library 'crypto' is required for OpenSSL])])
+   AC_CHECK_LIB(ssl,    SSL_new, [], [AC_MSG_ERROR([library 'ssl' is required for OpenSSL])])
++  fi
+   # Functions introduced in OpenSSL 1.1.1.
+@@ -1415,3 +1421,4 @@ fi
+ if test "$with_libxml" = yes ; then
+-  AC_CHECK_LIB(xml2, xmlSaveToBuffer, [], [AC_MSG_ERROR([library 'xml2' (version >= 2.6.23) is required for XML support])])
++  PKG_CHECK_MODULES([LIBXML2], [libxml-2.0 >= 2.6.23], [AC_DEFINE(HAVE_LIBXML2,1,[Define to 1 if with xml2])], [AC_MSG_ERROR([library 'xml2' (version >= 2.6.23) is required for XML support])])
++  LIBS="$LIBXML2_LIBS $LIBS"
+ fi
+@@ -1419,3 +1426,4 @@ fi
+ if test "$with_libxslt" = yes ; then
+-  AC_CHECK_LIB(xslt, xsltCleanupGlobals, [], [AC_MSG_ERROR([library 'xslt' is required for XSLT support])])
++  PKG_CHECK_MODULES([LIBXSLT], [libxslt], [AC_DEFINE(HAVE_LIBXSLT,1,[Define to 1 if with xslt])], [AC_MSG_ERROR([library 'xslt' is required for XSLT support])])
++  LIBS="$LIBXSLT_LIBS $LIBS"
+ fi
+@@ -1430,3 +1438,4 @@ fi
+ if test "$with_lz4" = yes ; then
+-  AC_CHECK_LIB(lz4, LZ4_compress_default, [], [AC_MSG_ERROR([library 'lz4' is required for LZ4 support])])
++  PKG_CHECK_MODULES([LZ4], [liblz4], [AC_DEFINE(HAVE_LIBLZ4,1,[Define to 1 if with lz4])], [AC_MSG_ERROR([library 'lz4' is required for LZ4 support])])
++  LIBS="$LZ4_LIBS $LIBS"
+ fi
+@@ -1434,3 +1443,4 @@ fi
+ if test "$with_zstd" = yes ; then
+-  AC_CHECK_LIB(zstd, ZSTD_compress, [], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
++  PKG_CHECK_MODULES([ZSTD], [libzstd], [AC_DEFINE(HAVE_LIBZSTD,1,[Define to 1 if with zstd])], [AC_MSG_ERROR([library 'zstd' is required for ZSTD support])])
++  LIBS="$ZSTD_LIBS $LIBS"
+ fi

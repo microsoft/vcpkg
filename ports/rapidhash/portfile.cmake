@@ -1,0 +1,11 @@
+vcpkg_from_github(
+  OUT_SOURCE_PATH SOURCE_PATH
+  REPO Nicoshev/rapidhash
+  REF bc4b4baa48a15ff52ff4725e1ccdcda62815221c # tag rapidhash_v3
+  SHA512 470e6c3749ae4648aadd81ce0f1acf3d02595b73a804483eb7f5ab03144639618d6d30dc67eb5a132d99bde82c307ad2bf71570d27e15e577efa2f16489b3103
+  HEAD_REF master
+)
+
+file(COPY "${SOURCE_PATH}/rapidhash.h" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

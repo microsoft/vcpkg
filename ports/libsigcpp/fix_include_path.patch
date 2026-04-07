@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3828a13..bc0a854 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,7 +87,7 @@ endif()
+ install (FILES
+ 			"${CMAKE_CURRENT_BINARY_DIR}/sigc++config.h"
+ 		DESTINATION
+-			"${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}-${SIGCXX_API_VERSION}/include")
++			"${CMAKE_INSTALL_PREFIX}/include")
+ 
+ install (FILES 
+ 			"${CMAKE_CURRENT_BINARY_DIR}/sigc++-${SIGCXX_API_VERSION}.pc"
+@@ -105,7 +105,7 @@ add_subdirectory (sigc++)
+ 
+ set (PROJECT_CMAKE_NAME		"${PROJECT_NAME}-3")
+ set (VERSION_CONFIG     	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_CMAKE_NAME}ConfigVersion.cmake")
+-set (LIBSIGCXX_INCLUDE_DIR	"${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME}-${SIGCXX_API_VERSION}/include")
++set (LIBSIGCXX_INCLUDE_DIR	"${CMAKE_INSTALL_PREFIX}/include")
+ set (PROJECT_CONFIG     	"${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_CMAKE_NAME}Config.cmake")
+ set (CONFIG_INSTALL_DIR 	"lib/cmake/${PROJECT_CMAKE_NAME}")
+ set (TARGETS_EXPORT_NAME    "${PROJECT_CMAKE_NAME}Targets")
+diff --git a/sigc++.pc.in b/sigc++.pc.in
+index e162f2f..7e9b298 100644
+--- a/sigc++.pc.in
++++ b/sigc++.pc.in
+@@ -15,4 +15,4 @@ Description: Typesafe signal and callback system for C++
+ Version: @PACKAGE_VERSION@
+ URL: https://libsigcplusplus.github.io/libsigcplusplus/
+ Libs: -L${libdir} -lsigc-@SIGCXX_API_VERSION@
+-Cflags: -I${includedir}/sigc++-@SIGCXX_API_VERSION@ -I${libdir}/sigc++-@SIGCXX_API_VERSION@/include @MSVC_STATIC_CXXFLAG@
++Cflags: -I${includedir} @MSVC_STATIC_CXXFLAG@
+diff --git a/sigc++/CMakeLists.txt b/sigc++/CMakeLists.txt
+index 8480a5e..b51b023 100644
+--- a/sigc++/CMakeLists.txt
++++ b/sigc++/CMakeLists.txt
+@@ -30,7 +30,7 @@ set_property (TARGET ${SIGCPP_LIB_NAME} PROPERTY VERSION ${PACKAGE_VERSION})
+ set_property(TARGET ${SIGCPP_LIB_NAME}  PROPERTY SOVERSION ${LIBSIGCPP_SOVERSION})
+ target_compile_definitions( ${SIGCPP_LIB_NAME} PRIVATE -DSIGC_BUILD )
+ 
+-set (INCLUDE_INSTALL_DIR "include/${PROJECT_NAME}-${SIGCXX_API_VERSION}")
++set (INCLUDE_INSTALL_DIR "include/")
+ 
+ install (
+ 	DIRECTORY "${PROJECT_SOURCE_DIR}"

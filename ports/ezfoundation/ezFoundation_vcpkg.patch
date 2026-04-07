@@ -1,0 +1,185 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a04be90..f853a0c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,9 @@
+ cmake_minimum_required(VERSION 3.19)
+ 
++if(CMAKE_BUILD_TYPE STREQUAL Release)
++    set(CMAKE_BUILD_TYPE "Shipping" CACHE STRING "Release overridden with Shipping" FORCE)
++endif()
++
+ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+ 	message(FATAL_ERROR "In-source builds are not supported. Please choose a different binary directory.")
+ 	return()
+diff --git a/Code/Engine/CMakeLists.txt b/Code/Engine/CMakeLists.txt
+index fb4bef4..ccda93d 100644
+--- a/Code/Engine/CMakeLists.txt
++++ b/Code/Engine/CMakeLists.txt
+@@ -20,5 +20,3 @@ execute_process(
+ 	OUTPUT_VARIABLE EZ_GIT_BRANCH_NAME
+ 	OUTPUT_STRIP_TRAILING_WHITESPACE
+ 	)
+-
+-configure_file("${CMAKE_CURRENT_LIST_DIR}/ezBuildInfo.h.in" "${CMAKE_CURRENT_LIST_DIR}/ezBuildInfo.h" NEWLINE_STYLE LF)
+\ No newline at end of file
+diff --git a/Code/Engine/Foundation/Basics/Assert.cpp b/Code/Engine/Foundation/Basics/Assert.cpp
+index 7a55afc..778fadd 100644
+--- a/Code/Engine/Foundation/Basics/Assert.cpp
++++ b/Code/Engine/Foundation/Basics/Assert.cpp
+@@ -66,16 +66,6 @@ bool ezDefaultAssertHandler(const char* szSourceFile, ezUInt32 uiLine, const cha
+ 
+ #if EZ_ENABLED(EZ_PLATFORM_WINDOWS)
+ 
+-    // make sure the cursor is definitely shown, since the user must be able to click buttons
+-#  if EZ_ENABLED(EZ_PLATFORM_WINDOWS_UWP)
+-    // Todo: Use modern Windows API to show cursor in current window.
+-    // http://stackoverflow.com/questions/37956628/change-mouse-pointer-in-uwp-app
+-#  else
+-  ezInt32 iHideCursor = 1;
+-  while (ShowCursor(true) < 0)
+-    ++iHideCursor;
+-#  endif
+-
+ #  if EZ_ENABLED(EZ_COMPILE_FOR_DEBUG)
+ 
+   ezInt32 iRes = _CrtDbgReport(_CRT_ASSERT, szSourceFile, uiLine, nullptr, "'%s'\nFunction: %s\nMessage: %s", szExpression, szFunction, szAssertMsg);
+@@ -83,24 +73,9 @@ bool ezDefaultAssertHandler(const char* szSourceFile, ezUInt32 uiLine, const cha
+   // currently we will ALWAYS trigger the breakpoint / crash (except for when the user presses 'ignore')
+   if (iRes == 0)
+   {
+-    // when the user ignores the assert, restore the cursor show/hide state to the previous count
+-#    if EZ_ENABLED(EZ_PLATFORM_WINDOWS_UWP)
+-    // Todo: Use modern Windows API to restore cursor.
+-#    else
+-    for (ezInt32 i = 0; i < iHideCursor; ++i)
+-      ShowCursor(false);
+-#    endif
+-
+     return false;
+   }
+ 
+-#  else
+-
+-
+-#    if EZ_ENABLED(EZ_PLATFORM_WINDOWS_DESKTOP)
+-  MessageBoxA(nullptr, szTemp, "Assertion", MB_ICONERROR);
+-#    endif
+-
+ #  endif
+ 
+ #endif
+diff --git a/Code/Engine/Foundation/Logging/Implementation/Log.cpp b/Code/Engine/Foundation/Logging/Implementation/Log.cpp
+index 1a0d2ed..afcde54 100644
+--- a/Code/Engine/Foundation/Logging/Implementation/Log.cpp
++++ b/Code/Engine/Foundation/Logging/Implementation/Log.cpp
+@@ -260,12 +260,7 @@ void ezLog::OsMessageBox(const ezFormatString& text)
+     title = ezApplication::GetApplicationInstance()->GetApplicationName();
+   }
+ 
+-#if EZ_ENABLED(EZ_PLATFORM_WINDOWS_DESKTOP)
+-  MessageBoxW(nullptr, ezStringWChar(display).GetData(), ezStringWChar(title), MB_OK);
+-#else
+   ezLog::Print(display);
+-  EZ_ASSERT_NOT_IMPLEMENTED;
+-#endif
+ }
+ 
+ void ezLog::GenerateFormattedTimestamp(TimestampMode mode, ezStringBuilder& sTimestampOut)
+diff --git a/Code/Engine/Foundation/Math/Implementation/Math_inl.h b/Code/Engine/Foundation/Math/Implementation/Math_inl.h
+index 1a2962e..9b31f01 100644
+--- a/Code/Engine/Foundation/Math/Implementation/Math_inl.h
++++ b/Code/Engine/Foundation/Math/Implementation/Math_inl.h
+@@ -80,6 +80,7 @@ namespace ezMath
+ #endif
+   }
+ 
++#if EZ_ENABLED(EZ_PLATFORM_64BIT)
+   EZ_ALWAYS_INLINE ezUInt32 FirstBitLow(ezUInt64 value)
+   {
+     EZ_ASSERT_DEBUG(value != 0, "FirstBitLow is undefined for 0");
+@@ -95,6 +96,7 @@ namespace ezMath
+     return 0;
+ #endif
+   }
++#endif
+ 
+   EZ_ALWAYS_INLINE ezUInt32 FirstBitHigh(ezUInt32 value)
+   {
+@@ -112,6 +114,7 @@ namespace ezMath
+ #endif
+   }
+ 
++#if EZ_ENABLED(EZ_PLATFORM_64BIT)
+   EZ_ALWAYS_INLINE ezUInt32 FirstBitHigh(ezUInt64 value)
+   {
+     EZ_ASSERT_DEBUG(value != 0, "FirstBitHigh is undefined for 0");
+@@ -127,6 +130,7 @@ namespace ezMath
+     return 0;
+ #endif
+   }
++#endif
+ 
+   EZ_ALWAYS_INLINE ezUInt32 CountTrailingZeros(ezUInt32 bitmask) { return (bitmask == 0) ? 32 : FirstBitLow(bitmask); }
+ 
+diff --git a/Code/Engine/Foundation/Memory/Implementation/AllocatorBase_inl.h b/Code/Engine/Foundation/Memory/Implementation/AllocatorBase_inl.h
+index fb839b3..21e2ec1 100644
+--- a/Code/Engine/Foundation/Memory/Implementation/AllocatorBase_inl.h
++++ b/Code/Engine/Foundation/Memory/Implementation/AllocatorBase_inl.h
+@@ -60,7 +60,11 @@ namespace ezInternal
+   template <typename T>
+   EZ_FORCE_INLINE T* CreateRawBuffer(ezAllocatorBase* pAllocator, size_t uiCount)
+   {
++#if EZ_ENABLED(EZ_PLATFORM_64BIT)
+     ezUInt64 safeAllocationSize = ezMath::SafeMultiply64(uiCount, sizeof(T));
++#else
++    ezUInt32 safeAllocationSize = ezMath::SafeMultiply32(uiCount, sizeof(T));
++#endif
+     return static_cast<T*>(pAllocator->Allocate(safeAllocationSize, EZ_ALIGNMENT_OF(T)));
+   }
+ 
+diff --git a/Code/Engine/Foundation/System/Implementation/Win/StackTracer_win.h b/Code/Engine/Foundation/System/Implementation/Win/StackTracer_win.h
+index 54939fb..15f928a 100644
+--- a/Code/Engine/Foundation/System/Implementation/Win/StackTracer_win.h
++++ b/Code/Engine/Foundation/System/Implementation/Win/StackTracer_win.h
+@@ -229,11 +229,23 @@ ezUInt32 ezStackTracer::GetStackTrace(ezArrayPtr<void*>& trace, void* pContext)
+     frame.AddrFrame.Offset = context.Rbp;
+     frame.AddrStack.Offset = context.Rsp;
+     machine_type = IMAGE_FILE_MACHINE_AMD64;
+-#else
++#elif defined(_M_IX86)
+     frame.AddrPC.Offset = context.Eip;
+     frame.AddrFrame.Offset = context.Ebp;
+     frame.AddrStack.Offset = context.Esp;
+     machine_type = IMAGE_FILE_MACHINE_I386;
++#elif defined(_M_ARM64)
++    frame.AddrPC.Offset = context.Pc;
++    frame.AddrFrame.Offset = context.Fp;
++    frame.AddrStack.Offset = context.Sp;
++    machine_type = IMAGE_FILE_MACHINE_ARM64;
++#elif defined(_M_ARM)
++    frame.AddrPC.Offset = context.Pc;
++    frame.AddrFrame.Offset = context.R11;
++    frame.AddrStack.Offset = context.Sp;
++    machine_type = IMAGE_FILE_MACHINE_ARM;
++#else
++    #error Unknown architecture
+ #endif
+     for (ezInt32 i = 0; i < (ezInt32)trace.GetCount(); i++)
+     {
+diff --git b/Code/Engine/ezBuildInfo.h b/Code/Engine/ezBuildInfo.h
+new file mode 100644
+index 0000000..763271c
+--- /dev/null
++++ b/Code/Engine/ezBuildInfo.h
+@@ -0,0 +1,10 @@
++//
++// This file is auto-generated by CMake.
++//
++
++#pragma once
++
++#define EZ_GIT_COMMIT_HASH_SHORT 
++#define EZ_GIT_COMMIT_HASH_LONG 
++#define EZ_GIT_BRANCH_NAME ""
++

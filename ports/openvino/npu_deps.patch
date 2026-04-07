@@ -1,0 +1,44 @@
+diff --git a/cmake/features.cmake b/cmake/features.cmake
+index 098f5b752b..bd55827203 100644
+--- a/cmake/features.cmake
++++ b/cmake/features.cmake
+@@ -190,7 +190,7 @@ ov_dependent_option (ENABLE_SYSTEM_TBB  "Enables use of system TBB" ${ENABLE_SYS
+ ov_option (ENABLE_SYSTEM_PUGIXML "Enables use of system PugiXML" OFF)
+ # the option is on by default, because we use only flatc compiler and don't use any libraries
+ ov_dependent_option(ENABLE_SYSTEM_FLATBUFFERS "Enables use of system flatbuffers" ${ENABLE_SYSTEM_FLATBUFFERS_DEFAULT}
+-    "ENABLE_OV_TF_LITE_FRONTEND" OFF)
++    "ENABLE_OV_TF_LITE_FRONTEND OR ENABLE_INTEL_NPU" OFF)
+ ov_dependent_option (ENABLE_SYSTEM_OPENCL "Enables use of system OpenCL" ${ENABLE_SYSTEM_LIBS_DEFAULT}
+     "ENABLE_INTEL_GPU" OFF)
+ # the option is turned off by default, because we compile our own static version of protobuf
+diff --git a/src/plugins/intel_npu/cmake/download_compiler_libs.cmake b/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
+index 89009aa84e..69824f6986 100644
+--- a/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
++++ b/src/plugins/intel_npu/cmake/download_compiler_libs.cmake
+@@ -104,7 +104,7 @@ if(ENABLE_INTEL_NPU_COMPILER)
+         set(NPU_COMPILER_LIB_DESTINATION "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
+     endif()
+     if(WIN32)
+-        set(PLUGIN_COMPILER_LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/temp/plugin_compiler_lib/win")
++        set(PLUGIN_COMPILER_LIBS_DIR "${CMAKE_CURRENT_BINARY_DIR}/temp/plugin_compiler_lib/win")
+         set(PLUGIN_COMPILER_LIBS_URL "https://storage.openvinotoolkit.org/dependencies/thirdparty/windows/npu_compiler_vcl_windows_2022-7_5_0-a1ae54e9.zip")
+         set(PLUGIN_COMPILER_LIBS_ZIP "${PLUGIN_COMPILER_LIBS_DIR}/npu_compiler_vcl_windows_2022-${PLUGIN_COMPILER_VERSION}-a1ae54e9.zip")
+         set(PLUGIN_COMPILER_LIBS_DIR_UNZIPPED "${PLUGIN_COMPILER_LIBS_DIR}/npu_compiler_vcl_windows_2022-${PLUGIN_COMPILER_VERSION}-a1ae54e9")
+@@ -131,7 +131,7 @@ if(ENABLE_INTEL_NPU_COMPILER)
+             if(OS_NAME STREQUAL "Ubuntu")
+                 if(OS_VERSION STREQUAL "22.04")
+                     # Ubuntu 22.04-specific settings or actions
+-                    set(PLUGIN_COMPILER_LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/temp/compiler_libs/ubuntu22.04")
++                    set(PLUGIN_COMPILER_LIBS_DIR "${CMAKE_CURRENT_BINARY_DIR}/temp/compiler_libs/ubuntu22.04")
+                     set(PLUGIN_COMPILER_LIBS_URL "https://storage.openvinotoolkit.org/dependencies/thirdparty/linux/npu_compiler_vcl_ubuntu_22_04-7_5_0-a1ae54e9.tar.gz")
+                     set(PLUGIN_COMPILER_LIBS_TAR "${PLUGIN_COMPILER_LIBS_DIR}/npu_compiler_vcl_ubuntu_22_04-${PLUGIN_COMPILER_VERSION}-a1ae54e9.tar.gz")
+                     set(PLUGIN_COMPILER_LIBS_DIR_EXTRACTED "${PLUGIN_COMPILER_LIBS_DIR}/npu_compiler_vcl_ubuntu_22_04-${PLUGIN_COMPILER_VERSION}-a1ae54e9")
+@@ -149,7 +149,7 @@ if(ENABLE_INTEL_NPU_COMPILER)
+                     message(STATUS "Copying prebuilt Plugin compiler libraries libopenvino_intel_npu_compiler.so to ${NPU_COMPILER_LIB_DESTINATION} for Ubuntu 22.04")
+                 elseif(OS_VERSION STREQUAL "24.04")
+                     message(STATUS "This is Ubuntu 24.04")
+-                    set(PLUGIN_COMPILER_LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/temp/compiler_libs/ubuntu24.04")
++                    set(PLUGIN_COMPILER_LIBS_DIR "${CMAKE_CURRENT_BINARY_DIR}/temp/compiler_libs/ubuntu24.04")
+                     set(PLUGIN_COMPILER_LIBS_URL "https://storage.openvinotoolkit.org/dependencies/thirdparty/linux/npu_compiler_vcl_ubuntu_24_04-7_5_0-a1ae54e9.tar.gz")
+                     set(PLUGIN_COMPILER_LIBS_TAR "${PLUGIN_COMPILER_LIBS_DIR}/npu_compiler_vcl_ubuntu_24_04-${PLUGIN_COMPILER_VERSION}-a1ae54e9.tar.gz")
+                     set(PLUGIN_COMPILER_LIBS_DIR_EXTRACTED "${PLUGIN_COMPILER_LIBS_DIR}/npu_compiler_vcl_ubuntu_24_04-${PLUGIN_COMPILER_VERSION}-a1ae54e9")

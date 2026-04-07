@@ -1,0 +1,318 @@
+diff --git a/tensorflow/core/platform/macros.h b/tensorflow/core/platform/macros.h
+--- a/tensorflow/core/platform/macros.h
++++ b/tensorflow/core/platform/macros.h
+@@ -57,16 +57,7 @@
+ #define TF_SCANF_ATTRIBUTE(string_index, first_to_check)
+ #endif
+ 
+-// Control visibility outside .so
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_EXPORT __declspec(dllexport)
+-#else
+-#define TF_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
++#define TF_EXPORT
+ 
+ #ifdef __has_builtin
+ #define TF_HAS_BUILTIN(x) __has_builtin(x)
+
+diff --git a/tensorflow/c/c_api.h b/tensorflow/c/c_api.h
+--- a/tensorflow/c/c_api.h
++++ b/tensorflow/c/c_api.h
+@@ -71,24 +71,7 @@
+ //   and the API just provides high level controls over the number of
+ //   devices of each type.
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/c_api_experimental.h b/tensorflow/c/c_api_experimental.h
+--- a/tensorflow/c/c_api_experimental.h
++++ b/tensorflow/c/c_api_experimental.h
+@@ -28,24 +28,7 @@
+ // The API here is subject to changes in the future.
+ // --------------------------------------------------------------------------
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.$a
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/c_api_macros.h b/tensorflow/c/c_api_macros.h
+--- a/tensorflow/c/c_api_macros.h
++++ b/tensorflow/c/c_api_macros.h
+@@ -16,17 +16,5 @@
+ #ifndef TENSORFLOW_C_C_API_MACROS_H_
+ #define TENSORFLOW_C_C_API_MACROS_H_
+ 
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+
+diff --git a/tensorflow/c/kernels.h b/tensorflow/c/kernels.h
+--- a/tensorflow/c/kernels.h
++++ b/tensorflow/c/kernels.h
+@@ -24,24 +24,7 @@
+ #include "tensorflow/c/tf_status.h"
+ #include "tensorflow/c/tf_tensor.h"
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/kernels_experimental.h b/tensorflow/c/kernels_experimental.h
+--- a/tensorflow/c/kernels_experimental.h
++++ b/tensorflow/c/kernels_experimental.h
+@@ -25,24 +25,7 @@
+ // The API here is subject to changes in the future.
+ // --------------------------------------------------------------------------
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/ops.h b/tensorflow/c/ops.h
+--- a/tensorflow/c/ops.h
++++ b/tensorflow/c/ops.h
+@@ -76,19 +76,7 @@
+ #include "tensorflow/c/tf_datatype.h"
+ #include "tensorflow/c/tf_status.h"
+ 
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/tf_datatype.h b/tensorflow/c/tf_datatype.h
+--- a/tensorflow/c/tf_datatype.h
++++ b/tensorflow/c/tf_datatype.h
+@@ -18,24 +18,7 @@
+ 
+ #include <stddef.h>
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/tf_status.h b/tensorflow/c/tf_status.h
+--- a/tensorflow/c/tf_status.h
++++ b/tensorflow/c/tf_status.h
+@@ -16,19 +16,7 @@
+ #ifndef TENSORFLOW_C_TF_STATUS_H_
+ #define TENSORFLOW_C_TF_STATUS_H_
+ 
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/tf_tensor.h b/tensorflow/c/tf_tensor.h
+--- a/tensorflow/c/tf_tensor.h
++++ b/tensorflow/c/tf_tensor.h
+@@ -23,24 +23,7 @@
+ #include "tensorflow/c/tf_datatype.h"
+ #include "tensorflow/c/tf_status.h"
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/tf_tstring.h b/tensorflow/c/tf_tstring.h
+--- a/tensorflow/c/tf_tstring.h
++++ b/tensorflow/c/tf_tstring.h
+@@ -18,19 +18,7 @@
+ #include "tensorflow/c/tf_tensor.h"
+ #include "tensorflow/core/platform/ctstring.h"
+ 
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {
+
+diff --git a/tensorflow/c/eager/c_api.h b/tensorflow/c/eager/c_api.h
+--- a/tensorflow/c/eager/c_api.h
++++ b/tensorflow/c/eager/c_api.h
+@@ -22,24 +22,7 @@
+ 
+ #include "tensorflow/c/c_api.h"
+ 
+-// Macro to control visibility of exported symbols in the shared library (.so,
+-// .dylib, .dll).
+-// This duplicates the TF_EXPORT macro definition in
+-// tensorflow/core/platform/macros.h in order to keep this .h file independent
+-// of any other includes.$a
+-#ifdef SWIG
+ #define TF_CAPI_EXPORT
+-#else
+-#if defined(_WIN32)
+-#ifdef TF_COMPILE_LIBRARY
+-#define TF_CAPI_EXPORT __declspec(dllexport)
+-#else
+-#define TF_CAPI_EXPORT __declspec(dllimport)
+-#endif  // TF_COMPILE_LIBRARY
+-#else
+-#define TF_CAPI_EXPORT __attribute__((visibility("default")))
+-#endif  // _WIN32
+-#endif  // SWIG
+ 
+ #ifdef __cplusplus
+ extern "C" {

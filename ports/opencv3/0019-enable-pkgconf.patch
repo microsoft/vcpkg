@@ -1,0 +1,10 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -618,6 +618,7 @@ ocv_cmake_hook(POST_COMPILER_OPTIONS)
+ # ----------------------------------------------------------------------------
+ #       CHECK FOR SYSTEM LIBRARIES, OPTIONS, ETC..
+ # ----------------------------------------------------------------------------
++find_package(PkgConfig REQUIRED)
+ if(UNIX)
+   if(NOT APPLE_FRAMEWORK OR OPENCV_ENABLE_PKG_CONFIG)
+     if(CMAKE_CROSSCOMPILING AND NOT DEFINED ENV{PKG_CONFIG_LIBDIR} AND NOT DEFINED ENV{PKG_CONFIG_SYSROOT_DIR}

@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b952d7bf..9196ebe4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -425,7 +425,7 @@ set_target_properties(
+     MACHO_CURRENT_VERSION "${LIBXML_MACHO_COMPAT}.${LIBXML_MICRO_VERSION}"
+ )
+ 
+-if(MSVC)
++if(0)
+     if(BUILD_SHARED_LIBS)
+         set_target_properties(
+             LibXml2
+@@ -634,7 +634,11 @@ list(JOIN XML_PRIVATE_LIBS " " XML_PRIVATE_LIBS)
+ 
+ set(XML_INCLUDEDIR "-I\${includedir}/libxml2")
+ set(XML_LIBDIR "-L\${libdir}")
++if(NOT MSVC)
+ set(XML_LIBS "-lxml2")
++else()
++set(XML_LIBS "-llibxml2")
++endif()
+ 
+ if(BUILD_SHARED_LIBS)
+     set(XML_PC_PRIVATE ".private")
+@@ -669,7 +673,7 @@ set(includedir "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
+ configure_file(libxml-2.0.pc.in libxml-2.0.pc @ONLY)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml-2.0.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig COMPONENT development)
+ 
+-if(WIN32)
++if(1)
+     set(prefix "\$(cd \"\$(dirname \"\$0\")\"; pwd -P)/..")
+ endif()
+ configure_file(xml2-config.in xml2-config @ONLY)

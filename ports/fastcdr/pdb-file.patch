@@ -1,0 +1,13 @@
+diff --git a/src/cpp/CMakeLists.txt b/src/cpp/CMakeLists.txt
+index 7ac643b..a70750d 100644
+--- a/src/cpp/CMakeLists.txt
++++ b/src/cpp/CMakeLists.txt
+@@ -158,7 +158,7 @@ if(MSVC OR MSVC_IDE)
+     endif()
+ 
+     # install symbols if any
+-    if(PDB_FILE)
++    if(PDB_FILE AND BUILD_SHARED_LIBS)
+         install(FILES ${PDB_FILE}
+             DESTINATION ${LIB_INSTALL_DIR}
+             COMPONENT symbols

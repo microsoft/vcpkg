@@ -1,0 +1,40 @@
+diff --git a/tools/hscheck/CMakeLists.txt b/tools/hscheck/CMakeLists.txt
+index 2ae0613..3a47776 100644
+--- a/tools/hscheck/CMakeLists.txt
++++ b/tools/hscheck/CMakeLists.txt
+@@ -11,7 +11,7 @@ if (BUILD_CHIMERA)
+     add_definitions(-DHS_HYBRID)
+     add_executable(hscheck ${hscheck_SOURCES})
+     if(NOT WIN32)
+-        target_link_libraries(hscheck hs chimera ${PCRE_LDFLAGS} expressionutil pthread)
++        target_link_libraries(hscheck hs chimera ${PCRE_LDFLAGS} expressionutil Threads::Threads)
+     else()
+         target_link_libraries(hscheck hs chimera pcre expressionutil)
+     endif()
+@@ -22,7 +22,7 @@ else()
+         add_executable(hscheck ${hscheck_SOURCES})
+     endif()
+     if(NOT WIN32)
+-        target_link_libraries(hscheck hs expressionutil pthread)
++        target_link_libraries(hscheck hs expressionutil Threads::Threads)
+     else()
+         target_link_libraries(hscheck hs expressionutil)
+     endif()
+diff --git a/tools/hscollider/CMakeLists.txt b/tools/hscollider/CMakeLists.txt
+index a4d71b2..ca9fa0c 100644
+--- a/tools/hscollider/CMakeLists.txt
++++ b/tools/hscollider/CMakeLists.txt
+@@ -68,11 +68,11 @@ add_dependencies(hscollider ragel_ColliderCorporaParser)
+ if(NOT WIN32)
+     if (BUILD_CHIMERA)
+         target_link_libraries(hscollider hs chimera ${PCRE_LDFLAGS} databaseutil
+-            expressionutil corpusomatic crosscompileutil pthread
++            expressionutil corpusomatic crosscompileutil Threads::Threads
+         "${BACKTRACE_LDFLAGS}")
+     else()
+         target_link_libraries(hscollider hs ${PCRE_LDFLAGS} databaseutil
+-            expressionutil corpusomatic crosscompileutil pthread
++            expressionutil corpusomatic crosscompileutil Threads::Threads
+         "${BACKTRACE_LDFLAGS}")
+     endif()
+ 

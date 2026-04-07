@@ -1,0 +1,42 @@
+{
+  "name": "gamedev-framework",
+  "version-semver": "1.2.0",
+  "maintainers": [
+    "Julien Bernard <julien.bernard@univ-fcomte.fr>",
+    "Arthur Hugeat <hugeat.arthur@gmail.com>"
+  ],
+  "description": "gamedev-framework is a framework to build 2D games in C++17",
+  "homepage": "https://gamedevframework.github.io/",
+  "license": "Zlib",
+  "supports": "!arm & !android",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-container",
+    "boost-filesystem",
+    "boost-heap",
+    "freetype",
+    "pugixml",
+    {
+      "name": "sdl2",
+      "default-features": false,
+      "features": [
+        "x11"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "sdl2",
+      "platform": "!linux"
+    },
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

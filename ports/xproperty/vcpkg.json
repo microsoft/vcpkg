@@ -1,0 +1,17 @@
+{
+  "name": "xproperty",
+  "version": "0.13.0",
+  "description": "Traitlets-like C++ properties and implementation of the observer pattern",
+  "homepage": "https://github.com/jupyter-xeus/xproperty",
+  "dependencies": [
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

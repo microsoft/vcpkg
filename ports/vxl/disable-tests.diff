@@ -1,0 +1,15 @@
+diff --git a/core/CMakeLists.txt b/core/CMakeLists.txt
+index 581d00b..336f170 100644
+--- a/core/CMakeLists.txt
++++ b/core/CMakeLists.txt
+@@ -135,7 +135,9 @@ else()
+ endif ()
+ 
+ # common test executable
+-add_subdirectory(testlib)
++if(BUILD_TESTING)
++  add_subdirectory(testlib)
++endif()
+ 
+ # Tests that check and output the vxl configuration
+ # NOTE: some external projects remove the tests directory (aka ITK)

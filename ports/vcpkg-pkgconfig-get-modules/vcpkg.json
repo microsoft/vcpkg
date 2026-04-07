@@ -1,0 +1,10 @@
+{
+  "name": "vcpkg-pkgconfig-get-modules",
+  "version-date": "2024-04-03",
+  "documentation": "https://learn.microsoft.com/vcpkg/maintainers/functions/vcpkg_pkgconfig_get_modules",
+  "license": "MIT",
+  "supports": "native",
+  "dependencies": [
+    "pkgconf"
+  ]
+}

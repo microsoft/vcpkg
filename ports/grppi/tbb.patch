@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09f1f9b..d58b972 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -53,15 +53,10 @@ endif()
+ include_directories("${CMAKE_SOURCE_DIR}/include")
+ 
+ # TBB Library
+-find_package( TBB ) 
+-if( TBB_FOUND )
+-  option(GRPPI_TBB_ENABLE "Require TBB library" ON)
+-  message(STATUS "TBB found")
+-else( TBB_FOUND )
+-  option(GRPPI_TBB_ENABLE "Require TBB library" OFF )
+-  set(GRPPI_TBB_ENABLE OFF CACHE BOOL "Require TBB library" FORCE)
+-  message(STATUS "TBB not found")
+-endif( TBB_FOUND )
++option(GRPPI_TBB_ENABLE "Enable TBB backend" OFF)
++if(GRPPI_TBB_ENABLE)
++  find_package(TBB CONFIG REQUIRED)
++endif()
+ 
+ message( STATUS "TBB: " ${GRPPI_TBB_ENABLE} )
+ if( GRPPI_TBB_ENABLE )

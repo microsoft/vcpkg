@@ -1,0 +1,27 @@
+diff --git a/include/paradox.h.in b/include/paradox.h.in
+index 3e63fa3..ec2237b 100644
+--- a/include/paradox.h.in
++++ b/include/paradox.h.in
+@@ -1,6 +1,11 @@
+ #ifndef __PARADOX_H__
+ #define __PARADOX_H__
+ 
++#ifdef __cplusplus
++extern "C"
++{
++#endif
++
+ #define PX_USE_RECODE @PX_HAVE_RECODE@
+ #define PX_USE_ICONV @PX_HAVE_ICONV@
+ 
+@@ -557,6 +562,10 @@ PX_date2string(pxdoc_t *pxdoc, long value, const char *format);
+ PXLIB_API char * PXLIB_CALL
+ PX_strdup(pxdoc_t *pxdoc, const char *str);
+ 
++#ifdef __cplusplus
++}
++#endif
++
+ #endif
+ 
+ /*

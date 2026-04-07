@@ -1,0 +1,39 @@
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index 92b32da..8dac984 100644
+--- a/PCbuild/pythoncore.vcxproj
++++ b/PCbuild/pythoncore.vcxproj
+@@ -41,7 +41,7 @@
+   <Import Project="python.props" />
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Label="Configuration">
+-    <ConfigurationType>DynamicLibrary</ConfigurationType>
++    <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseOfMfc>false</UseOfMfc>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+@@ -70,12 +70,24 @@
+     <ClCompile>
+       <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
+       <AdditionalIncludeDirectories>$(PySourcePath)Python;$(PySourcePath)Modules\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+-      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_ENABLE_SHARED;_CRT_SECURE_NO_WARNINGS;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_NO_ENABLE_SHARED;_CRT_SECURE_NO_WARNINGS;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <BaseAddress>0x1e000000</BaseAddress>
+     </Link>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGInstrument|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='PGUpdate|Win32'">MachineX86</TargetMachine>
++    </Lib>
++    <Lib>
++      <TargetMachine Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MachineX86</TargetMachine>
++    </Lib>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClInclude Include="..\Include\abstract.h" />

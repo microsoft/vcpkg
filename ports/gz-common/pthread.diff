@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9c5f952..d44132e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,6 +37,10 @@ endif()
+ #============================================================================
+ message(STATUS "\n\n-- ====== Finding Dependencies ======")
+ 
++gz_find_package(Threads REQUIRED IGNORE_PKGCONFIG)
++add_library(pthread ALIAS Threads::Threads)
++list(APPEND PROJECT_PKGCONFIG_LIBS_PRIVATE "${CMAKE_THREAD_LIBS_INIT}")
++
+ #--------------------------------------
+ # Find gz-math
+ gz_find_package(gz-math8 REQUIRED_BY geospatial graphics events)

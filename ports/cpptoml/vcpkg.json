@@ -1,0 +1,17 @@
+{
+  "name": "cpptoml",
+  "version": "0.1.2",
+  "description": "A header-only library for parsing TOML configuration files.",
+  "homepage": "https://github.com/chadaustin/cpptoml",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

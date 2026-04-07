@@ -1,0 +1,109 @@
+diff --git a/include/fcgi_stdio.h b/include/fcgi_stdio.h
+index 6d242f36f..ec57131ce 100644
+--- a/include/fcgi_stdio.h
++++ b/include/fcgi_stdio.h
+@@ -23,14 +23,6 @@
+ extern "C" {
+ #endif
+ 
+-#ifndef DLLAPI
+-#if defined (_WIN32) && defined (_MSC_VER)
+-#define DLLAPI __declspec(dllimport)
+-#else
+-#define DLLAPI
+-#endif
+-#endif
+-
+ /*
+  * Wrapper type for FILE
+  */
+diff --git a/include/fcgiapp.h b/include/fcgiapp.h
+index 8cadde16d..9b034def3 100644
+--- a/include/fcgiapp.h
++++ b/include/fcgiapp.h
+@@ -23,11 +23,19 @@
+ #endif
+ 
+ #ifndef DLLAPI
+-#if defined (_WIN32) && defined (_MSC_VER)
+-#define DLLAPI __declspec(dllimport)
+-#else
+-#define DLLAPI
+-#endif
++# if defined (_WIN32) && defined (_MSC_VER)
++#  if defined(DLL_EXPORT) && defined(LIBFCGI_BUILD)
++#   define DLLAPI __declspec(dllexport)
++#  else
++#   ifdef LIBFCGI_DLL_IMPORT
++#     define DLLAPI extern __declspec(dllimport)
++#    else
++#     define DLLAPI
++#    endif
++#  endif
++# else
++#  define DLLAPI
++# endif
+ #endif
+ 
+ #if defined (c_plusplus) || defined (__cplusplus)
+diff --git a/include/fcgio.h b/include/fcgio.h
+index ce8b930a8..81981974a 100644
+--- a/include/fcgio.h
++++ b/include/fcgio.h
+@@ -34,14 +34,6 @@
+ 
+ #include "fcgiapp.h"
+ 
+-#ifndef DLLAPI
+-#if defined (_WIN32) && defined (_MSC_VER)
+-#define DLLAPI __declspec(dllimport)
+-#else
+-#define DLLAPI
+-#endif
+-#endif
+-
+ #if ! HAVE_STREAMBUF_CHAR_TYPE
+ typedef char char_type;
+ #endif
+diff --git a/include/fcgios.h b/include/fcgios.h
+index 206973137..7a2f5333a 100644
+--- a/include/fcgios.h
++++ b/include/fcgios.h
+@@ -50,11 +50,19 @@ extern "C" {
+ #endif /* !_WIN32 */
+ 
+ #ifndef DLLAPI
+-#if defined (_WIN32) && defined (_MSC_VER)
+-#define DLLAPI __declspec(dllimport)
+-#else
+-#define DLLAPI
+-#endif
++# if defined (_WIN32) && defined (_MSC_VER)
++#  if defined(DLL_EXPORT) && defined(LIBFCGI_BUILD)
++#   define DLLAPI __declspec(dllexport)
++#  else
++#   ifdef LIBFCGI_DLL_IMPORT
++#     define DLLAPI extern __declspec(dllimport)
++#    else
++#     define DLLAPI
++#    endif
++#  endif
++# else
++#  define DLLAPI
++# endif
+ #endif
+ 
+ 
+diff --git a/libfcgi/Makefile.am b/libfcgi/Makefile.am
+index 42d507253..26f06f550 100644
+--- a/libfcgi/Makefile.am
++++ b/libfcgi/Makefile.am
+@@ -1,7 +1,7 @@
+ # $Id: Makefile.am,v 1.9 2001/12/22 03:16:20 robs Exp $
+ 
+ INCLUDEDIR  = ../include
+-AM_CPPFLAGS = -I$(top_srcdir)/include -W -Wall -pedantic -Wno-unused-parameter
++AM_CPPFLAGS = -I$(top_srcdir)/include -DLIBFCGI_BUILD
+ 
+ INCLUDE_FILES = $(INCLUDEDIR)/fastcgi.h     \
+                 $(INCLUDEDIR)/fcgiapp.h     \

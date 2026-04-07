@@ -1,0 +1,10 @@
+{
+  "name": "kf5diagram",
+  "version-string": "deprecated",
+  "description": "Powerful libraries (KChart, KGantt) for creating business diagrams",
+  "homepage": "https://invent.kde.org/graphics/kdiagram",
+  "license": "LGPL-2.0-or-later",
+  "dependencies": [
+    "kdiagram"
+  ]
+}

@@ -1,0 +1,23 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e8de0c7e4..064c18eab 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -173,6 +173,7 @@ install(TARGETS libz3
+   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" # On Windows this installs ``libz3.lib`` which CMake calls the "corresponding import library". Do we want this installed?
+   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" # For Windows. DLLs are runtime targets for CMake
++  BUNDLE  DESTINATION "${CMAKE_INSTALL_BINDIR}" # For MACOSX.
+   PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+ )
+ 
+diff --git a/src/shell/CMakeLists.txt b/src/shell/CMakeLists.txt
+index 278246341..b6cd2f1c1 100644
+--- a/src/shell/CMakeLists.txt
++++ b/src/shell/CMakeLists.txt
+@@ -44,5 +44,5 @@ target_link_libraries(shell PRIVATE ${Z3_DEPENDENT_LIBS})
+ z3_add_component_dependencies_to_target(shell ${shell_expanded_deps})
+ z3_append_linker_flag_list_to_target(shell ${Z3_DEPENDENT_EXTRA_CXX_LINK_FLAGS})
+ install(TARGETS shell
+-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++  RUNTIME DESTINATION tools/z3
+ )

@@ -1,0 +1,16 @@
+{
+  "name": "neon2sse",
+  "version-date": "2025-10-23",
+  "description": "The platform independent header allowing to compile any C/C++ code containing ARM NEON intrinsic functions for x86 target systems using SIMD up to AVX2 intrinsic functions",
+  "homepage": "https://github.com/intel/ARM_NEON_2_x86_SSE",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

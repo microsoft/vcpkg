@@ -1,0 +1,7 @@
+{
+  "name": "srell",
+  "version-string": "3.010",
+  "description": "SRELL (std::regex-like library) is a regular expression template library for C++.",
+  "homepage": "https://www.akenotsuki.com/misc/srell/en/",
+  "license": "BSD-2-Clause"
+}

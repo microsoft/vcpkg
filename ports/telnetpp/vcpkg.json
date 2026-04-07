@@ -1,0 +1,37 @@
+{
+  "name": "telnetpp",
+  "version": "4.0.0",
+  "description": "A C++ library for interacting with Telnet streams",
+  "homepage": "https://github.com/KazDragon/telnetpp",
+  "documentation": "https://kazdragon.github.io/telnetpp/",
+  "license": "MIT",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-algorithm",
+    "boost-container",
+    "boost-exception",
+    "boost-range",
+    "boost-scope-exit",
+    "boost-signals2",
+    "boost-variant",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "zlib"
+  ],
+  "features": {
+    "zlib": {
+      "description": "Zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

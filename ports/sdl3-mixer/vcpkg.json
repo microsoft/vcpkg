@@ -1,0 +1,72 @@
+{
+  "name": "sdl3-mixer",
+  "version": "3.2.0",
+  "port-version": 1,
+  "description": "An audio mixer that supports various file formats for Simple Directmedia Layer.",
+  "homepage": "https://github.com/libsdl-org/SDL_mixer",
+  "license": "Zlib",
+  "dependencies": [
+    {
+      "name": "sdl3",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "fluidsynth": {
+      "description": "Use FluidSynth to play MIDI audio format.",
+      "dependencies": [
+        "fluidsynth"
+      ]
+    },
+    "libflac": {
+      "description": "Use libflac to play FLAC audio format.",
+      "dependencies": [
+        {
+          "name": "libflac",
+          "default-features": false
+        }
+      ]
+    },
+    "libvorbis": {
+      "description": "Use libvorbis to play Vorbis audio format.",
+      "dependencies": [
+        "libvorbis"
+      ]
+    },
+    "libxmp": {
+      "description": "Use libxmp to open MOD files.",
+      "dependencies": [
+        {
+          "name": "libxmp",
+          "default-features": false
+        }
+      ]
+    },
+    "mpg123": {
+      "description": "Use mpg123 to play MP3 audio format.",
+      "dependencies": [
+        "mpg123"
+      ]
+    },
+    "opusfile": {
+      "description": "Use opusfile to play Opus audio format.",
+      "dependencies": [
+        "opusfile"
+      ]
+    },
+    "wavpack": {
+      "description": "Use wavpack to play WAV audio format.",
+      "dependencies": [
+        "wavpack"
+      ]
+    }
+  }
+}

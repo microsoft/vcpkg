@@ -1,0 +1,26 @@
+From 8d67288a3dde7e535ff747715f96f98282a3bf67 Mon Sep 17 00:00:00 2001
+From: Matthias Kuhn <matthias@opengis.ch>
+Date: Fri, 3 Dec 2021 15:17:25 +0100
+Subject: [PATCH] Ifdef codecs
+
+---
+ cmake/modules/QcaMacro.cmake  | 9 ---------
+ plugins/qca-ossl/qca-ossl.cpp | 6 ++++++
+ 2 files changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/cmake/modules/QcaMacro.cmake b/cmake/modules/QcaMacro.cmake
+index 80af6e84..ba86310d 100644
+--- a/cmake/modules/QcaMacro.cmake
++++ b/cmake/modules/QcaMacro.cmake
+@@ -65,10 +65,6 @@ macro(add_qca_test TARGET DESCRIPTION)
+ endmacro(add_qca_test)
+ 
+ macro(install_pdb TARGET INSTALL_PATH)
+-  if(MSVC)
+-    install(FILES $<TARGET_PDB_FILE:${TARGET}> DESTINATION ${INSTALL_PATH} CONFIGURATIONS Debug)
+-    install(FILES $<TARGET_PDB_FILE:${TARGET}> DESTINATION ${INSTALL_PATH} CONFIGURATIONS RelWithDebInfo)
+-  endif()
+ endmacro(install_pdb)
+ 
+ macro(normalize_path PATH)
+

@@ -1,0 +1,11 @@
+spix provides CMake targets:
+
+    find_package(Spix CONFIG REQUIRED)
+
+For test of QtQuick/QML based applications:
+
+    target_link_libraries(main PRIVATE Spix::QtQuick)
+
+For test of QWidget based applications (requires qtwidgets feature enabled):
+
+    target_link_libraries(main PRIVATE Spix::QtWidgets)

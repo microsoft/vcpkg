@@ -1,0 +1,14 @@
+{
+  "name": "nanovg",
+  "version-date": "2023-08-26",
+  "description": "NanoVG is small antialiased vector graphics rendering library for OpenGL.",
+  "homepage": "https://github.com/memononen/nanovg",
+  "supports": "!uwp",
+  "dependencies": [
+    "stb",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

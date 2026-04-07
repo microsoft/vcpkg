@@ -1,0 +1,52 @@
+diff --git a/cmake/FindCImg.cmake b/cmake/FindCImg.cmake
+index 38a929e7a..3e8424a9f 100644
+--- a/cmake/FindCImg.cmake
++++ b/cmake/FindCImg.cmake
+@@ -83,10 +83,10 @@ if (CIMG_FOUND)
+             endif (X11_Xrandr_FOUND)
+             
+     ### PThread is required when using X11 display engine ###
+-            find_package (PTHREAD QUIET)
+-            if (PTHREAD_FOUND)
+-                set (CIMG_INCLUDE_DIRS ${CIMG_INCLUDE_DIRS} ${PTHREAD_INCLUDE_DIRS})
+-                set (CIMG_LIBRARIES ${CIMG_LIBRARIES} ${PTHREAD_LIBRARIES})
++            find_package (Threads QUIET)
++            if (Threads_FOUND)
++                set (CIMG_INCLUDE_DIRS ${CIMG_INCLUDE_DIRS})
++                set (CIMG_LIBRARIES ${CIMG_LIBRARIES} Threads::Threads)
+                 message(STATUS "FindCImg.cmake: pthread found")
+             else (PTHREAD_FOUND)
+                 message(STATUS "!!! FindCIMG.cmake !!! pthread NOT found. pthread required by cimg for running X11.")
+@@ -100,15 +100,15 @@ if (CIMG_FOUND)
+         endif (X11_FOUND)
+     else (UNIX OR APPLE)
+         if (WIN32)
+-            find_package(GDI QUIET)
+-            if (GDI_FOUND)
+-                set (CIMG_LIBRARIES ${CIMG_LIBRARIES} ${GDI_LIBRARIES})
++          find_library(GDI_LIBRARY gdi32)
++            if (GDI_LIBRARY)
++                set (CIMG_LIBRARIES ${CIMG_LIBRARIES} ${GDI_LIBRARY})
+                 message(STATUS "FindCImg.cmake: GDI found")
+-            else (GDI_FOUND)
++            else (GDI_LIBRARY)
+                 message(STATUS "!!! FindCIMG.cmake !!! GDI NOT found.")
+                 message(WARNING "FindCImg.cmake: display disabled")
+                 set (CIMG_DEFINITIONS ${CIMG_DEFINITIONS} -Dcimg_display=0)
+-            endif (GDI_FOUND)
++            endif (GDI_LIBRARY)
+         endif (WIN32)
+     endif (UNIX OR APPLE)
+ 
+diff --git a/cmake/jkqtplotter_deployqt.cmake b/cmake/jkqtplotter_deployqt.cmake
+index 5a8574591..5dbc8a51d 100644
+--- a/cmake/jkqtplotter_deployqt.cmake
++++ b/cmake/jkqtplotter_deployqt.cmake
+@@ -1,6 +1,6 @@
+ function(jkqtplotter_deployqt TARGET_NAME)
+     #use windeploy
+-    if (WIN32)
++    if (WIN32 AND 0)
+         # install system runtime lib
+         include( InstallRequiredSystemLibraries )
+         if( CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS )

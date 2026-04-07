@@ -1,0 +1,21 @@
+diff --git a/src/mp-unitsConfig.cmake.in b/src/mp-unitsConfig.cmake.in
+index 1f4f268..f94f05d 100644
+--- a/src/mp-unitsConfig.cmake.in
++++ b/src/mp-unitsConfig.cmake.in
+@@ -27,14 +27,10 @@ set(MP_UNITS_API_STD_FORMAT @MP_UNITS_API_STD_FORMAT@)
+ set(MP_UNITS_API_CONTRACTS @MP_UNITS_API_CONTRACTS@)
+ 
+ if(NOT MP_UNITS_API_FREESTANDING AND NOT MP_UNITS_API_STD_FORMAT)
+-    find_dependency(fmt)
++    find_dependency(fmt CONFIG)
+ endif()
+ 
+-if(MP_UNITS_API_CONTRACTS STREQUAL "GSL-LITE")
+-    find_dependency(gsl-lite)
+-elseif(MP_UNITS_API_CONTRACTS STREQUAL "MS-GSL")
+-    find_dependency(Microsoft.GSL)
+-endif()
++find_dependency(gsl-lite CONFIG)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/mp-unitsTargets.cmake")
+ 

@@ -1,0 +1,17 @@
+{
+  "name": "ghc-filesystem",
+  "version": "1.5.14",
+  "description": "An implementation of C++17 std::filesystem for C++11/C++14/C++17/C++20 on Windows, macOS, Linux and FreeBSD",
+  "homepage": "https://github.com/gulrak/filesystem",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

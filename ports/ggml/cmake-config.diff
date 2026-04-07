@@ -1,0 +1,21 @@
+diff --git a/cmake/ggml-config.cmake.in b/cmake/ggml-config.cmake.in
+index fe34cda4..723acac4 100644
+--- a/cmake/ggml-config.cmake.in
++++ b/cmake/ggml-config.cmake.in
+@@ -98,7 +98,7 @@ if (NOT GGML_SHARED_LIB)
+ endif()
+ 
+ set_and_check(GGML_INCLUDE_DIR "@PACKAGE_GGML_INCLUDE_INSTALL_DIR@")
+-set_and_check(GGML_LIB_DIR "@PACKAGE_GGML_LIB_INSTALL_DIR@")
++#set_and_check(GGML_LIB_DIR "@PACKAGE_GGML_LIB_INSTALL_DIR@")
+ #set_and_check(GGML_BIN_DIR "@PACKAGE_GGML_BIN_INSTALL_DIR@")
+ 
+ if(NOT TARGET ggml::ggml)
+@@ -112,6 +112,7 @@ if(NOT TARGET ggml::ggml)
+     add_library(ggml::ggml UNKNOWN IMPORTED)
+     set_target_properties(ggml::ggml
+         PROPERTIES
++            INTERFACE_INCLUDE_DIRECTORIES "${GGML_INCLUDE_DIR}"
+             IMPORTED_LOCATION "${GGML_LIBRARY}")
+ 
+     find_library(GGML_BASE_LIBRARY ggml-base

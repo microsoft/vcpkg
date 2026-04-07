@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 757b4ed..7dfd6e3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -295,6 +295,7 @@ endif(NOT ENABLE_DYNDRIVERS AND ANY_QT_DEVICE AND PLPLOT_USE_QT5)
+ 
+ configure_library_build(plplot "" "${plplot_LIB_SRCS}" "${libplplot_LINK_LIBRARIES}" "${LIB_INSTALL_RPATH}")
+ add_dependencies(${WRITEABLE_TARGET}plplot plhershey-unicode.h_built)
++target_include_directories(${WRITEABLE_TARGET}plplot INTERFACE $<INSTALL_INTERFACE:include>)
+ 
+ if(NOT ENABLE_DYNDRIVERS AND (PLD_wxwidgets OR PLD_wxpng))
+   set_property(TARGET ${WRITEABLE_TARGET}plplot

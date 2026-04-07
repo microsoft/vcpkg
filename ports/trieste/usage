@@ -1,0 +1,9 @@
+trieste provides CMake targets:
+
+    find_package(trieste CONFIG REQUIRED)
+    target_link_libraries(<your-target> PRIVATE trieste::trieste)
+
+When installed with the "parsers" feature (vcpkg install trieste[parsers]):
+
+    target_link_libraries(<your-target> PRIVATE trieste::json)
+    target_link_libraries(<your-target> PRIVATE trieste::yaml)

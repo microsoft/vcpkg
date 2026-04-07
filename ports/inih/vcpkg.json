@@ -1,0 +1,21 @@
+{
+  "name": "inih",
+  "version": "62",
+  "description": "Simple .INI file parser",
+  "homepage": "https://github.com/benhoyt/inih",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    {
+      "name": "vcpkg-tool-meson",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "cpp"
+  ],
+  "features": {
+    "cpp": {
+      "description": "Build the C++ library"
+    }
+  }
+}

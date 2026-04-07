@@ -1,0 +1,13 @@
+{
+  "name": "yato",
+  "version-date": "2022-03-06",
+  "description": "Modern C++14 containers and utilities, actors system, typesafe config",
+  "license": "Apache-2.0",
+  "supports": "!(windows & arm)",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

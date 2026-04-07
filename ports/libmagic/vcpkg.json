@@ -1,0 +1,52 @@
+{
+  "name": "libmagic",
+  "version": "5.46",
+  "port-version": 2,
+  "description": "This library can be used to classify files according to magic number tests.",
+  "homepage": "https://github.com/file/file",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    {
+      "name": "dirent",
+      "platform": "windows"
+    },
+    {
+      "name": "getopt",
+      "platform": "windows"
+    },
+    {
+      "name": "libmagic",
+      "host": true
+    },
+    {
+      "name": "tre",
+      "platform": "windows | mingw"
+    }
+  ],
+  "features": {
+    "bzip2": {
+      "description": "Enable bzip2 support",
+      "dependencies": [
+        "bzip2"
+      ]
+    },
+    "lzma": {
+      "description": "Enable lzma support",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "zlib": {
+      "description": "Enable zlib support",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "zstd": {
+      "description": "Enable zstd support",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}

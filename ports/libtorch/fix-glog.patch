@@ -1,0 +1,42 @@
+diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
+index c463658..a523040 100644
+--- a/c10/util/Logging.cpp
++++ b/c10/util/Logging.cpp
+@@ -362,7 +362,7 @@ void UpdateLoggingLevelsFromFlags() {
+ 
+ void ShowLogInfoToStderr() {
+   FLAGS_logtostderr = 1;
+-  FLAGS_minloglevel = std::min(FLAGS_minloglevel, google::GLOG_INFO);
++  FLAGS_minloglevel = std::min<int>(FLAGS_minloglevel, google::GLOG_INFO);
+ }
+ } // namespace c10
+ 
+diff --git a/c10/util/Logging.cpp b/c10/util/Logging.cpp
+index a523040..04375b6 100644
+--- a/c10/util/Logging.cpp
++++ b/c10/util/Logging.cpp
+@@ -295,23 +295,13 @@ C10_DEFINE_int(
+     google::GLOG_WARNING,
+     "The minimum log level that caffe2 will output.");
+ 
+-// Google glog's api does not have an external function that allows one to check
+-// if glog is initialized or not. It does have an internal function - so we are
+-// declaring it here. This is a hack but has been used by a bunch of others too
+-// (e.g. Torch).
+-namespace google {
+-namespace glog_internal_namespace_ {
+-bool IsGoogleLoggingInitialized();
+-} // namespace glog_internal_namespace_
+-} // namespace google
+-
+ namespace c10 {
+ namespace {
+ 
+ void initGoogleLogging(char const* name) {
+ #if !defined(_MSC_VER)
+   // This trick can only be used on UNIX platforms
+-  if (!::google::glog_internal_namespace_::IsGoogleLoggingInitialized())
++  if (!::google::IsGoogleLoggingInitialized())
+ #endif
+   {
+     ::google::InitGoogleLogging(name);

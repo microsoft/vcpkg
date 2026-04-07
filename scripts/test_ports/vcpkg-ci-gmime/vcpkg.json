@@ -1,0 +1,31 @@
+{
+  "name": "vcpkg-ci-gmime",
+  "version-string": "ci",
+  "description": "Validates gmime",
+  "dependencies": [
+    "gmime",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
+  "default-features": [
+    {
+      "name": "crypto",
+      "platform": "!windows | mingw"
+    }
+  ],
+  "features": {
+    "crypto": {
+      "description": "gmime[crypo]",
+      "dependencies": [
+        {
+          "name": "gmime",
+          "features": [
+            "crypto"
+          ]
+        }
+      ]
+    }
+  }
+}

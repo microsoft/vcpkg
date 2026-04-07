@@ -1,0 +1,18 @@
+{
+  "name": "vcpkg-ci-matio",
+  "version-string": "ci",
+  "description": "Port to validate matio",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    "eigen3",
+    {
+      "name": "matio",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

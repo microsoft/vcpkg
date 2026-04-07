@@ -1,0 +1,31 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 06f9e50a..281e1f04 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -94,6 +94,8 @@ if(BUILD_SHARED_LIBS)
+   add_library(stxxl SHARED ${LIBSTXXL_SOURCES})
+   set_target_properties(stxxl PROPERTIES OUTPUT_NAME "${STXXL_LIBNAME}")
+   set_target_properties(stxxl PROPERTIES VERSION "${STXXL_VERSION_STRING}")
++  target_include_directories(stxxl PUBLIC $<INSTALL_INTERFACE:include>)
++
+   install(TARGETS stxxl
+     EXPORT stxxl-targets
+     ARCHIVE DESTINATION ${INSTALL_LIB_DIR}
+@@ -104,6 +106,8 @@ if(BUILD_SHARED_LIBS)
+     add_library(stxxl_static STATIC ${LIBSTXXL_SOURCES})
+     set_target_properties(stxxl_static PROPERTIES OUTPUT_NAME "${STXXL_LIBNAME}")
+     set_target_properties(stxxl_static PROPERTIES VERSION "${STXXL_VERSION_STRING}")
++    target_include_directories(stxxl_static PUBLIC $<INSTALL_INTERFACE:include>)
++
+     install(TARGETS stxxl_static
+       EXPORT stxxl-targets
+       ARCHIVE DESTINATION ${INSTALL_LIB_DIR})
+@@ -122,6 +126,8 @@ else()
+   add_library(stxxl STATIC ${LIBSTXXL_SOURCES})
+   set_target_properties(stxxl PROPERTIES OUTPUT_NAME "${STXXL_LIBNAME}")
+   set_target_properties(stxxl PROPERTIES VERSION "${STXXL_VERSION_STRING}")
++  target_include_directories(stxxl PUBLIC $<INSTALL_INTERFACE:include>)
++
+   install(TARGETS stxxl
+     EXPORT stxxl-targets
+     ARCHIVE DESTINATION ${INSTALL_LIB_DIR}

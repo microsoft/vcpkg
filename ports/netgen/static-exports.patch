@@ -1,0 +1,38 @@
+diff --git a/libsrc/core/ngcore_api.hpp b/libsrc/core/ngcore_api.hpp
+index e66e9b8..4ecaa05 100644
+--- a/libsrc/core/ngcore_api.hpp	
++++ b/libsrc/core/ngcore_api.hpp
+@@ -35,8 +35,13 @@
+ 
+ 
+ #ifdef WIN32
++#if !defined(NGSTATIC_BUILD)
+         #define NGCORE_API_EXPORT __declspec(dllexport)
+         #define NGCORE_API_IMPORT __declspec(dllimport)
++#else
++        #define NGCORE_API_EXPORT
++        #define NGCORE_API_IMPORT
++#endif
+ #else
+         #define NGCORE_API_EXPORT __attribute__((visibility("default")))
+         #define NGCORE_API_IMPORT __attribute__((visibility("default")))
+diff --git a/nglib/nglib.h b/nglib/nglib.h
+index f8c745a..e4587d2 100644
+--- a/nglib/nglib.h	
++++ b/nglib/nglib.h
+@@ -26,11 +26,15 @@
+ // Philippose - 14.02.2009
+ // Modifications for creating a DLL in Windows
+ #ifdef WIN32
++ #if defined(NGSTATIC_BUILD)
++   #define NGLIB_API
++ #else
+    #ifdef nglib_EXPORTS
+       #define NGLIB_API   __declspec(dllexport)
+    #else
+       #define NGLIB_API   __declspec(dllimport)
+    #endif
++  #endif
+ #else
+   #define NGLIB_API __attribute__((visibility("default")))
+ #endif

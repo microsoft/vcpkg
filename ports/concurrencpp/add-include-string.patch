@@ -1,0 +1,12 @@
+diff --git a/include/concurrencpp/threads/thread.h b/include/concurrencpp/threads/thread.h
+index 82ca58b..ecdaa27 100644
+--- a/include/concurrencpp/threads/thread.h
++++ b/include/concurrencpp/threads/thread.h
+@@ -4,6 +4,7 @@
+ #include "concurrencpp/platform_defs.h"
+ 
+ #include <functional>
++#include <string>
+ #include <string_view>
+ #include <thread>
+ 

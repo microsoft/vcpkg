@@ -1,0 +1,45 @@
+From a512d312db5604efe803a6fe088e7d582e04533f Mon Sep 17 00:00:00 2001
+From: Amin Yahyaabadi <aminyahyaabadi74@gmail.com>
+Date: Wed, 26 Oct 2022 18:21:29 -0700
+Subject: [PATCH] fix: do not force export the symbols when building statically
+
+---
+ CMakeLists.txt | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8802fb8..87cda90 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -16,8 +16,10 @@ endif ()
+ ## Main library build
+ ##
+ 
+-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+-set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
++if (BUILD_SHARED_LIBS)
++    set(CMAKE_CXX_VISIBILITY_PRESET hidden)
++    set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
++endif()
+ 
+ add_library(tinyxml2 tinyxml2.cpp tinyxml2.h)
+ add_library(tinyxml2::tinyxml2 ALIAS tinyxml2)
+@@ -36,11 +38,14 @@ target_compile_definitions(
+ set_target_properties(
+     tinyxml2
+     PROPERTIES
+-    DEFINE_SYMBOL "TINYXML2_EXPORT"
+     VERSION "${tinyxml2_VERSION}"
+     SOVERSION "${tinyxml2_VERSION_MAJOR}"
+ )
+ 
++if(BUILD_SHARED_LIBS)
++    target_compile_definitions(tinyxml2 PRIVATE "TINYXML2_EXPORT")
++endif()
++
+ if (tinyxml2_BUILD_TESTING)
+     add_executable(xmltest xmltest.cpp)
+     target_link_libraries(xmltest PRIVATE tinyxml2::tinyxml2)
+-- 
+2.37.3.windows.1
+

@@ -1,0 +1,31 @@
+{
+  "name": "vcpkg-ci-freerdp",
+  "version-string": "ci",
+  "description": "Force non-default features of freerdp within vcpkg CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "dependencies": [
+    {
+      "name": "freerdp",
+      "features": [
+        "client",
+        "ffmpeg"
+      ]
+    },
+    {
+      "name": "freerdp",
+      "features": [
+        "x11"
+      ],
+      "platform": "linux"
+    },
+    {
+      "name": "freerdp",
+      "features": [
+        "server",
+        "urbdrc",
+        "winpr-tools"
+      ],
+      "platform": "!android & !ios & !uwp"
+    }
+  ]
+}

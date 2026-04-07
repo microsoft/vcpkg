@@ -1,0 +1,35 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 876e29f..998d86c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -78,6 +78,8 @@ install(EXPORT spzTargets
+   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/spz"
+ )
+ 
++if(BUILD_TOOLS)
++
+ # CLI Tools
+ add_executable(ply_to_spz cli_tools/src/ply_to_spz.cpp)
+ target_link_libraries(ply_to_spz PRIVATE spz)
+@@ -95,6 +97,21 @@ install(TARGETS ply_to_spz spz_to_ply spz_info
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+ )
+ 
++set_target_properties(ply_to_spz PROPERTIES
++  CXX_STANDARD 17
++  CXX_STANDARD_REQUIRED ON
++)
++set_target_properties(spz_to_ply PROPERTIES
++  CXX_STANDARD 17
++  CXX_STANDARD_REQUIRED ON
++)
++set_target_properties(spz_info PROPERTIES
++  CXX_STANDARD 17
++  CXX_STANDARD_REQUIRED ON
++)
++
++endif()
++
+ # --- Python Bindings Option ---
+ option(BUILD_PYTHON_BINDINGS "Build Python bindings using nanobind" OFF)
+ 

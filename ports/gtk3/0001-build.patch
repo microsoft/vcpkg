@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 397ea07..dd6b888 100644
+--- a/meson.build
++++ b/meson.build
+@@ -997,7 +997,7 @@ subdir('docs/reference')
+ 
+ install_data('m4macros/gtk-3.0.m4', install_dir: join_paths(get_option('datadir'), 'aclocal'))
+ 
+-if not meson.is_cross_build()
++if false
+   gnome.post_install(
+     glib_compile_schemas: true,
+     gio_querymodules: gio_module_dirs,

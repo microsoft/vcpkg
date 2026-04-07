@@ -1,0 +1,40 @@
+diff --git a/Source/FreeImage/PluginJPEG.cpp b/Source/FreeImage/PluginJPEG.cpp
+index 8db177d..efa2c4e 100644
+--- a/Source/FreeImage/PluginJPEG.cpp
++++ b/Source/FreeImage/PluginJPEG.cpp
+@@ -503,7 +503,7 @@ marker_is_icc(jpeg_saved_marker_ptr marker) {
+   return FALSE.  You might want to issue an error message instead.
+ */
+ static BOOL 
+-jpeg_read_icc_profile(j_decompress_ptr cinfo, JOCTET **icc_data_ptr, unsigned *icc_data_len) {
++jpeg_read_icc_profile_(j_decompress_ptr cinfo, JOCTET **icc_data_ptr, unsigned *icc_data_len) {
+ 	jpeg_saved_marker_ptr marker;
+ 	int num_markers = 0;
+ 	int seq_no;
+@@ -745,7 +745,7 @@ read_markers(j_decompress_ptr cinfo, FIBITMAP *dib) {
+ 	BYTE *icc_profile = NULL;
+ 	unsigned icc_length = 0;
+ 
+-	if( jpeg_read_icc_profile(cinfo, &icc_profile, &icc_length) ) {
++	if( jpeg_read_icc_profile_(cinfo, &icc_profile, &icc_length) ) {
+ 		// copy ICC profile data
+ 		FreeImage_CreateICCProfile(dib, icc_profile, icc_length);
+ 		// clean up
+@@ -785,7 +785,7 @@ jpeg_write_comment(j_compress_ptr cinfo, FIBITMAP *dib) {
+ 	Write JPEG_APP2 marker (ICC profile)
+ */
+ static BOOL 
+-jpeg_write_icc_profile(j_compress_ptr cinfo, FIBITMAP *dib) {
++jpeg_write_icc_profile_(j_compress_ptr cinfo, FIBITMAP *dib) {
+     // marker identifying string "ICC_PROFILE" (null-terminated)
+ 	BYTE icc_signature[12] = { 0x49, 0x43, 0x43, 0x5F, 0x50, 0x52, 0x4F, 0x46, 0x49, 0x4C, 0x45, 0x00 };
+ 
+@@ -1038,7 +1038,7 @@ write_markers(j_compress_ptr cinfo, FIBITMAP *dib) {
+ 	jpeg_write_comment(cinfo, dib);
+ 
+ 	// write ICC profile
+-	jpeg_write_icc_profile(cinfo, dib);
++	jpeg_write_icc_profile_(cinfo, dib);
+ 
+ 	// write IPTC profile
+ 	jpeg_write_iptc_profile(cinfo, dib);

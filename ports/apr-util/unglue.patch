@@ -1,0 +1,17 @@
+diff --git a/include/apu_version.h b/include/apu_version.h
+index e4fb2e64e..c6addf142 100644
+--- a/include/apu_version.h	
++++ b/include/apu_version.h
+@@ -98,9 +98,9 @@
+ 
+ /** An alternative formatted string of APR's version */
+ /* macro for Win32 .rc files using numeric csv representation */
+-#define APU_VERSION_STRING_CSV APU_MAJOR_VERSION ##, \
+-                             ##APU_MINOR_VERSION ##, \
+-                             ##APU_PATCH_VERSION
++#define APU_VERSION_STRING_CSV APU_MAJOR_VERSION , \
++                               APU_MINOR_VERSION , \
++                               APU_PATCH_VERSION
+ 
+ 
+ #ifndef APU_VERSION_ONLY

@@ -1,0 +1,14 @@
+{
+  "name": "gperf",
+  "version": "3.3",
+  "description": "GNU perfect hash function generator",
+  "homepage": "https://www.gnu.org/software/gperf/",
+  "license": "GPL-3.0-or-later",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

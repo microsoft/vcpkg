@@ -1,0 +1,4 @@
+The package s2geometry provides CMake targets:
+
+    find_package(s2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE s2::s2)

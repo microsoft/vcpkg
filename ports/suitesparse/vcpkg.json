@@ -1,0 +1,102 @@
+{
+  "$comment": "Use scripts/update_suitesparse.py to update all SuiteSparse ports",
+  "name": "suitesparse",
+  "version-semver": "7.8.3",
+  "description": "A suite of sparse matrix algorithms",
+  "homepage": "https://people.engr.tamu.edu/davis/suitesparse.html",
+  "license": null,
+  "dependencies": [
+    "suitesparse-amd",
+    "suitesparse-btf",
+    "suitesparse-camd",
+    "suitesparse-ccolamd",
+    "suitesparse-cholmod",
+    "suitesparse-colamd",
+    "suitesparse-config",
+    "suitesparse-cxsparse",
+    "suitesparse-graphblas",
+    "suitesparse-klu",
+    "suitesparse-lagraph",
+    "suitesparse-ldl",
+    "suitesparse-spex"
+  ],
+  "features": {
+    "cuda": {
+      "description": "Enable CUDA support for the current compute architecture of this machine",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "cuda"
+          ]
+        },
+        {
+          "name": "suitesparse-spqr",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "gpl": {
+      "description": "Enable GPL-licensed packages",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "matrixops",
+            "modify",
+            "supernodal"
+          ]
+        },
+        "suitesparse-mongoose",
+        "suitesparse-paru",
+        "suitesparse-rbio",
+        "suitesparse-spqr",
+        "suitesparse-umfpack"
+      ]
+    },
+    "openmp": {
+      "description": "Enable OpenMP support for SuiteSparse libraries",
+      "dependencies": [
+        {
+          "name": "suitesparse-cholmod",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
+          "name": "suitesparse-config",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
+          "name": "suitesparse-graphblas",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
+          "name": "suitesparse-lagraph",
+          "features": [
+            "openmp"
+          ]
+        },
+        {
+          "name": "suitesparse-paru",
+          "features": [
+            "openmp"
+          ],
+          "platform": "!windows"
+        },
+        {
+          "name": "suitesparse-spex",
+          "features": [
+            "openmp"
+          ]
+        }
+      ]
+    }
+  }
+}

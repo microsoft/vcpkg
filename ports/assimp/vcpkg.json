@@ -1,0 +1,35 @@
+{
+  "name": "assimp",
+  "version": "6.0.4",
+  "port-version": 1,
+  "description": "The Open Asset import library",
+  "homepage": "https://github.com/assimp/assimp",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "jhasse-poly2tri",
+    "kubazip",
+    "minizip",
+    "polyclipping",
+    "pugixml",
+    "rapidjson",
+    "stb",
+    "utfcpp",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "features": {
+    "draco": {
+      "description": "Enable Draco compressed mesh support",
+      "dependencies": [
+        "draco"
+      ]
+    }
+  }
+}

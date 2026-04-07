@@ -1,0 +1,13 @@
+{
+  "name": "mhook",
+  "version": "2.5.1",
+  "port-version": 3,
+  "description": "A Windows API hooking library.",
+  "supports": "windows & !uwp & !arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

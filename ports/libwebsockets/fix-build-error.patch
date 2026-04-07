@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision b0a749c8e7a8294b68581ce4feac0e55045eb00b)
++++ b/CMakeLists.txt	(date 1669850509296)
+@@ -494,6 +494,11 @@
+ set(LWS_EXT_PTHREAD_INCLUDE_DIR CACHE PATH "Path to an external pthreads include directory")
+ set(LWS_EXT_PTHREAD_LIBRARIES CACHE PATH "Path to an external pthreads library")
+ 
++if(WIN32)
++    find_package(pthreads_windows REQUIRED)
++    set(LWS_EXT_PTHREAD_INCLUDE_DIR ${PThreads4W_INCLUDE_DIR})
++    set(LWS_EXT_PTHREAD_LIBRARIES ${PThreads4W_LIBRARY})
++endif()
+ 
+ if (LWS_WITH_HTTP_STREAM_COMPRESSION)
+ 	set(LWS_WITH_ZLIB 1)
+@@ -850,7 +855,7 @@
+ 	# Turn off pointless microsoft security warnings.
+ 	add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE)
+ 	# Fail the build if any warnings
+-	add_compile_options(/W3 /WX)
++	add_compile_options(/W3 /WX /wd4142 /wd4267 /wd4996)
+ 	# Unbreak MSVC broken preprocessor __VA_ARGS__ behaviour
+ 	if (MSVC_VERSION GREATER 1925)
+ 		add_compile_options(/Zc:preprocessor /wd5105)

@@ -1,0 +1,27 @@
+diff --git a/CMakeModules/ForgeConfig.cmake.in b/CMakeModules/ForgeConfig.cmake.in
+index 6fb18ac..5a3b000 100644
+--- a/CMakeModules/ForgeConfig.cmake.in
++++ b/CMakeModules/ForgeConfig.cmake.in
+@@ -83,3 +83,22 @@ if ((TARGET Forge::forge AND Forge_BINARY_EXISTS) OR TARGET forge)
+ else ()
+     set(Forge_FOUND OFF)
+ endif ()
++
++if(Forge_FOUND)
++    # Check for dependencies when Forge binary and cmake files are found
++    include(CMakeFindDependencyMacro)
++
++    find_dependency(glad CONFIG)
++    find_dependency(glfw3 CONFIG)
++    find_dependency(freetype CONFIG)
++    find_dependency(freeimage CONFIG)
++    find_dependency(OpenGL)
++
++    if(NOT WIN32)
++        find_package(PkgConfig REQUIRED)
++        pkg_check_modules(fontconfig REQUIRED)
++        if(NOT fontconfig_FOUND)
++            message(FATAL_ERROR "Please install Fontconfig dependency")
++        endif()
++    endif()
++endif()

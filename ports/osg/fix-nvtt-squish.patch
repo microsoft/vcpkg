@@ -1,0 +1,22 @@
+diff --git a/CMakeModules/FindNVTT.cmake b/CMakeModules/FindNVTT.cmake
+index d0e7414..f6fb761 100644
+--- a/CMakeModules/FindNVTT.cmake
++++ b/CMakeModules/FindNVTT.cmake
+@@ -120,7 +120,7 @@ FIND_LIBRARY(NVTHREAD_LIBRARY_DEBUG
+ 
+ # SQUISH
+ FIND_LIBRARY(NVSQUISH_LIBRARY_RELEASE
+-  NAMES squish
++  NAMES nvsquish NAMES_PER_DIR
+   PATHS
+   /usr/local
+   /usr
+@@ -129,7 +129,7 @@ FIND_LIBRARY(NVSQUISH_LIBRARY_RELEASE
+   PATH_SUFFIXES lib64 lib lib/shared lib/static lib64/static
+ )
+ FIND_LIBRARY(NVSQUISH_LIBRARY_DEBUG
+-  NAMES squish_d
++  NAMES nvsquish_d NAMES_PER_DIR
+   PATHS
+   /usr/local
+   /usr

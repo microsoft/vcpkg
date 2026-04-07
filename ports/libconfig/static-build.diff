@@ -1,0 +1,38 @@
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 0f2f550..4003e6c 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -49,7 +49,6 @@ set(libinc_cpp
+     libconfig.hh)
+ 
+ set(libsrc_cpp
+-    ${libsrc}
+     libconfigcpp.cc)
+ 
+ if(MSVC)
+@@ -92,11 +91,13 @@ endif()
+ 
+ if(BUILD_SHARED_LIBS)
+     if(BUILD_CXX)
++      target_sources(${libname}++ PRIVATE ${libsrc})
+       target_compile_definitions(${libname}++ PRIVATE LIBCONFIG_STATIC)
+     endif()
+ else()
+     target_compile_definitions(${libname} PUBLIC LIBCONFIG_STATIC)
+     if(BUILD_CXX)
++      target_link_libraries(${libname}++ PRIVATE ${libname})
+       target_compile_definitions(${libname}++ PUBLIC LIBCONFIG_STATIC LIBCONFIGXX_STATIC)
+     endif()
+ endif()
+@@ -154,9 +155,9 @@ if(MSVC)
+ endif()
+ 
+ if(WIN32)
+-    target_link_libraries(${libname} shlwapi)
++    target_link_libraries(${libname} PRIVATE shlwapi)
+     if(BUILD_CXX)
+-      target_link_libraries(${libname}++ shlwapi)
++      target_link_libraries(${libname}++ PRIVATE shlwapi)
+     endif()
+ endif()
+ 

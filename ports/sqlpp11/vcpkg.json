@@ -1,0 +1,44 @@
+{
+  "name": "sqlpp11",
+  "version": "0.65",
+  "description": "A type safe embedded domain specific language for SQL queries and results in C++.",
+  "homepage": "https://github.com/rbock/sqlpp11",
+  "license": "BSD-2-Clause",
+  "dependencies": [
+    "date",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "mariadb": {
+      "description": "Use MariaDB connector",
+      "dependencies": [
+        "libmariadb"
+      ]
+    },
+    "mysql": {
+      "description": "Use MySQL connector",
+      "dependencies": [
+        "libmysql"
+      ]
+    },
+    "postgresql": {
+      "description": "Use PostgreSQL connector",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "sqlite3": {
+      "description": "Use SQLite3 connector",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}

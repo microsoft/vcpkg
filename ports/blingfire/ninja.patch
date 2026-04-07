@@ -1,0 +1,9 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 818a3da..e8b3bed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -19,3 +19,3 @@ IF (WIN32 AND MSVC)
+   set (CMAKE_CXX_FLAGS " -DNDEBUG")
+-  add_compile_options("/O2" "/W4" "/GS" "/Gy" "/guard:cf" "/Gm-" "/Zc:inline" "/fp:precise" "/GF" "/EHsc" "/ZH:SHA_256")
++  add_compile_options("/W4" "/GS" "/Gy" "/guard:cf" "/Gm-" "/Zc:inline" "/fp:precise" "/GF" "/EHsc" "/ZH:SHA_256")
+   add_compile_options("$<$<CONFIG:Debug>:/Od>")

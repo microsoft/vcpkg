@@ -1,0 +1,29 @@
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index a183836..e9deef5 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -113,12 +115,19 @@ configure_file("${_ROOT}/mkdio.h.in"
+
+ include_directories("${_ROOT}")
+
+-add_executable(mktags
+-    "${_ROOT}/mktags.c")
+
+-add_custom_command(OUTPUT "${_ROOT}/blocktags"
+-    COMMAND mktags > blocktags
+-    WORKING_DIRECTORY "${_ROOT}")
++if(NOT GENERATE_BLOCKTAGS)
++    message(STATUS "Not generating blocktags")
++else()
++    message(STATUS "Using mktags to generate blocktags")
++
++    add_executable(mktags
++        "${_ROOT}/mktags.c")
++
++    add_custom_command(OUTPUT "${_ROOT}/blocktags"
++        COMMAND mktags > blocktags
++        WORKING_DIRECTORY "${_ROOT}")
++endif()
+
+ add_library(libmarkdown
+     "${_ROOT}/mkdio.c"

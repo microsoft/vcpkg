@@ -1,0 +1,16 @@
+{
+  "name": "systemc",
+  "version": "3.0.2",
+  "description": "A set of C++ classes and macros which provide an event-driven simulation kernel in C++",
+  "homepage": "https://systemc.org/overview/systemc/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

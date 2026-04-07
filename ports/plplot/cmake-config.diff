@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e29c43d..7063e4c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -308,7 +308,8 @@ endif(USE_DLL_SUBDIRECTORY)
+ # Prior to processing directories must initialize exports of installed targets.
+ 
+ # Install CMake package config file which handles all those exports.
+-install(FILES plplotConfig.cmake DESTINATION ${LIB_DIR}/cmake/plplot)
++configure_file("${PROJECT_SOURCE_DIR}/plplotConfig.cmake" "${PROJECT_BINARY_DIR}/plplotConfig.cmake" @ONLY)
++install(FILES "${PROJECT_BINARY_DIR}/plplotConfig.cmake" DESTINATION ${LIB_DIR}/cmake/plplot)
+ 
+ # Initialize the plplot_exports.cmake file which is appended to by CMake logic
+ # to install and export targets that is indirectly executed by the add_subdirectory commands below.
+diff --git a/plplotConfig.cmake b/plplotConfig.cmake
+index 677faec..fe6d2ca 100644
+--- a/plplotConfig.cmake
++++ b/plplotConfig.cmake
+@@ -1,3 +1,10 @@
++if(NOT "@BUILD_SHARED_LIBS@")
++  include(CMakeFindDependencyMacro)
++  if("@ENABLE_wxwidgets@")
++    find_dependency(wxWidgets)
++  endif()
++endif()
++
+ if(ANY_QT_DEVICE AND PLPLOT_USE_QT5)
+   # Find Qt5 components that we need to link applications against
+   # the plplot library (if ENABLE_DYNDRIVERS is false) and which we

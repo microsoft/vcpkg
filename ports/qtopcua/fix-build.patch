@@ -1,0 +1,16 @@
+diff --git a/src/plugins/opcua/open62541/qopen62541.h b/src/plugins/opcua/open62541/qopen62541.h
+index a4f63df..877888b 100644
+--- a/src/plugins/opcua/open62541/qopen62541.h
++++ b/src/plugins/opcua/open62541/qopen62541.h
+@@ -18,7 +18,10 @@
+ #pragma clang diagnostic ignored "-Wunused-parameter"
+ #endif
+ 
+-#include <open62541.h>
++#include <open62541/client.h>
++#include <open62541/client_config_default.h>
++#include <open62541/client_subscriptions.h>
++#include <open62541/server.h>
+ 
+ #if defined(_MSC_VER)
+ #pragma warning(pop)

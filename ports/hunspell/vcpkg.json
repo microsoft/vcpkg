@@ -1,0 +1,32 @@
+{
+  "name": "hunspell",
+  "version": "1.7.2",
+  "port-version": 1,
+  "description": "The most popular spellchecking library.",
+  "homepage": "https://github.com/hunspell/hunspell",
+  "license": "MPL-1.1 OR LGPL-2.1-or-later OR GPL-2.0-or-later",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "libiconv"
+  ],
+  "features": {
+    "nls": {
+      "description": "Enable native language support",
+      "supports": "!windows | mingw",
+      "dependencies": [
+        "gettext",
+        {
+          "name": "gettext",
+          "host": true,
+          "features": [
+            "tools"
+          ]
+        }
+      ]
+    },
+    "tools": {
+      "description": "Build hunspell tools",
+      "supports": "!windows | mingw"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+diff --git a/Tools/EditorFramework/ComponentFactory.cpp b/Tools/EditorFramework/ComponentFactory.cpp
+index 3311936..701af6d 100644
+--- a/Tools/EditorFramework/ComponentFactory.cpp
++++ b/Tools/EditorFramework/ComponentFactory.cpp
+@@ -46,7 +46,7 @@ namespace tools
+ 		FACTORY_ITEM(FocusInfoControl)
+ 		FACTORY_ITEM(DataListBaseControl)
+ 		FACTORY_ITEM(ColourPanel)
+-		FACTORY_ITEM(BackgroundControl)
++//		FACTORY_ITEM(BackgroundControl)
+ 		FACTORY_ITEM(TextureBrowseControl)
+ 		FACTORY_ITEM(TextFieldControl)
+ 		FACTORY_ITEM(SettingsWindow)

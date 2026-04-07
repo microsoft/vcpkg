@@ -1,0 +1,93 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0fa3a454..e1c23875 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -282,9 +282,6 @@ set(COOLPROP_ENABLED_BACKENDS
+ # Get everything in the src/ directory (always), but not recursive
+ file(GLOB APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+ 
+-# Add the miniz source file
+-list(APPEND APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/externals/miniz-3.0.2/miniz.c")
+-
+ # For each enabled backend, grab its files
+ foreach(backend ${COOLPROP_ENABLED_BACKENDS})
+   file(GLOB_RECURSE BACKEND_SOURCES
+@@ -301,29 +298,24 @@ list(REMOVE_ITEM APP_SOURCES
+ list(REMOVE_ITEM APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/CoolPropLib.cpp")
+ 
+ set(APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
+-list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/Eigen")
+-list(APPEND APP_INCLUDE_DIRS
+-     "${CMAKE_CURRENT_SOURCE_DIR}/externals/msgpack-c/include")
+-list(APPEND APP_INCLUDE_DIRS
+-     "${CMAKE_CURRENT_SOURCE_DIR}/externals/miniz-3.0.2")
+-     list(APPEND APP_INCLUDE_DIRS
+-     "${CMAKE_CURRENT_SOURCE_DIR}/externals/nlohmann-json")
+ list(APPEND APP_INCLUDE_DIRS
+      "${CMAKE_CURRENT_SOURCE_DIR}/externals/incbin")
+ list(APPEND APP_INCLUDE_DIRS
+      "${CMAKE_CURRENT_SOURCE_DIR}/dev")
+ list(APPEND APP_INCLUDE_DIRS
+      "${CMAKE_CURRENT_SOURCE_DIR}/boost_CoolProp")
+-list(APPEND APP_INCLUDE_DIRS
+-     "${CMAKE_CURRENT_SOURCE_DIR}/externals/fmtlib/include")
+-list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/fmtlib"
+-)# should be deprecated
+ 
+ if (MSVC)
+   # fmtlib requires that the utf-8 support be compiled in
+   # TODO: add the fmt target from fmtlib directly which does this 
+-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8 -D_CRT_SECURE_NO_WARNINGS")
++  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /MP /utf-8 -D_CRT_SECURE_NO_WARNINGS")
+ endif()
++find_package(Eigen3 CONFIG REQUIRED)
++find_package(fmt CONFIG REQUIRED)
++find_package(miniz CONFIG REQUIRED)
++find_package(msgpack-cxx CONFIG REQUIRED)
++find_package(nlohmann_json CONFIG REQUIRED)
++link_libraries(Eigen3::Eigen fmt::fmt miniz::miniz msgpack-cxx nlohmann_json::nlohmann_json)
+ list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ list(APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
+ 
+@@ -596,11 +588,12 @@ if(COOLPROP_OBJECT_LIBRARY
+     endif(MSVC)
+     install(
+       TARGETS ${LIB_NAME}
+-      DESTINATION
+-        static_library/${CMAKE_SYSTEM_NAME}/${BITNESS}bit_${CMAKE_CXX_COMPILER_ID}_${CMAKE_CXX_COMPILER_VERSION}
++      RUNTIME DESTINATION bin
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib
+     )
+     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${COOLPROP_LIBRARY_HEADER}
+-            DESTINATION static_library)
++            DESTINATION include)
+   elseif(COOLPROP_SHARED_LIBRARY)
+     list(APPEND APP_SOURCES
+          "${CMAKE_CURRENT_SOURCE_DIR}/${COOLPROP_LIBRARY_SOURCE}")
+@@ -615,10 +608,12 @@ if(COOLPROP_OBJECT_LIBRARY
+ 	
+     install(
+       TARGETS ${LIB_NAME}
+-      DESTINATION ${OUTPUT_FOLDER}
++      RUNTIME DESTINATION bin
++      LIBRARY DESTINATION lib
++      ARCHIVE DESTINATION lib
+     )
+     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/${COOLPROP_LIBRARY_HEADER}
+-            DESTINATION shared_library)
++            DESTINATION include)
+     set_property(
+       TARGET ${LIB_NAME}
+       APPEND_STRING
+@@ -960,7 +955,9 @@ if(COOLPROP_EES_MODULE)
+     VERBATIM)
+   # install the generated library and the other files
+   install(TARGETS COOLPROP_EES
+-          DESTINATION "${CMAKE_INSTALL_PREFIX}/EES/${CMAKE_SYSTEM_NAME}")
++          RUNTIME DESTINATION bin
++          LIBRARY DESTINATION lib
++          ARCHIVE DESTINATION lib)
+   install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/EES/CoolProp.htm"
+           DESTINATION "${CMAKE_INSTALL_PREFIX}/EES/${CMAKE_SYSTEM_NAME}")
+   install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/EES/CoolProp.LIB"

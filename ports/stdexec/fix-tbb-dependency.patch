@@ -1,0 +1,21 @@
+diff --git a/cmake/Modules/ConfigureTBB.cmake b/cmake/Modules/ConfigureTBB.cmake
+index d553739..6b39e24 100644
+--- a/cmake/Modules/ConfigureTBB.cmake
++++ b/cmake/Modules/ConfigureTBB.cmake
+@@ -1,12 +1,14 @@
+ option(STDEXEC_ENABLE_TBB "Enable TBB targets" OFF)
+ 
+ include(CheckIncludeFileCXX)
++if (STDEXEC_ENABLE_TBB)
+ rapids_find_package(
+-  TBB QUIET
+-  COMPONENTS tbb
++  TBB REQUIRED
++  GLOBAL_TARGETS TBB::tbb
+   BUILD_EXPORT_SET stdexec-exports
+   INSTALL_EXPORT_SET stdexec-exports
+ )
++endif()
+ 
+ # If TBB is available and the stdlib is libstdc++, then a #include of <execution> will
+ # pull in TBB headers, creating a link-time dependency on TBB.

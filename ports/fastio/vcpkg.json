@@ -1,0 +1,13 @@
+{
+  "name": "fastio",
+  "version-date": "2024-12-05",
+  "description": "fast_io is an extremely fast C++20 input/output library aiming to replace <iostream> and <cstdio>. It supports networking, NT apis, pipe, filesystem, winrt hstring, Qt, OpenSSL, cryptography. It is freestanding and it works on any platform, including dos, win95, wasm, linux kernel, windows kernel or your own operating system kernel. It has no dependencies.",
+  "homepage": "https://github.com/cppfastio/fast_io",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

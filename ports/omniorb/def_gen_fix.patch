@@ -1,0 +1,18 @@
+diff --git a/mk/win32.mk b/mk/win32.mk
+index fc179563e..15903919a 100644
+--- a/mk/win32.mk
++++ b/mk/win32.mk
+@@ -264,12 +264,12 @@ endef
+ define MakeCXXExportSymbolDefinitionFile
+ symrefdir=$${debug:+debug}; \
+ symreflib=$(SharedLibrarySymbolRefLibraryTemplate); \
+ if [ ! -f $$symreflib ]; then echo "Cannot find reference static library $$symreflib"; return 1; fi;  \
+ set -x; \
+ echo "LIBRARY $$dllbase" > $$defname; \
+ echo "VERSION $$version" >> $$defname; \
+ echo "EXPORTS" >> $$defname; \
+-DUMPBIN.EXE /SYMBOLS $$symreflib | \
++DUMPBIN.EXE $$symreflib -SYMBOLS | \
+ egrep '^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +\(\) +External +\| +\?[^ ]*|^[^ ]+ +[^ ]+ +SECT[^ ]+ +[^ ]+ +External +\| +\?[^?][^ ]*'|\
+ egrep -v 'deleting destructor[^(]+\(unsigned int\)' | \
+ egrep -v 'anonymous namespace' | \

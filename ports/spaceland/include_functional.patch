@@ -1,0 +1,24 @@
+diff --git a/src/sl/connectivity.hpp b/src/sl/connectivity.hpp
+index 1942c6c..1b66b9d 100644
+--- a/src/sl/connectivity.hpp
++++ b/src/sl/connectivity.hpp
+@@ -26,6 +26,7 @@
+ #include <sl/operators.hpp>
+ #include <sl/hash.hpp>
+ #include <cassert>
++#include <functional>
+ 
+ namespace sl {
+ 
+diff --git a/src/sl/hash.hpp b/src/sl/hash.hpp
+index 3093a13..5f5b144 100644
+--- a/src/sl/hash.hpp
++++ b/src/sl/hash.hpp
+@@ -24,6 +24,7 @@
+ #define SL_HASH_HPP
+ 
+ #include <sl/utility.hpp>
++#include <functional>
+ 
+ namespace sl {
+ 

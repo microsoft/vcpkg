@@ -1,0 +1,16 @@
+{
+  "name": "flux",
+  "version": "0.4.0",
+  "description": "Experimental C++20 library that provides a broadly equivalent feature set to C++20 Ranges, but uses a slightly different model based around cursors rather than iterators. Safer, easier, more efficient, compatible.",
+  "homepage": "https://github.com/tcbrindle/flux",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

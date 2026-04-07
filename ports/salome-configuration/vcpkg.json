@@ -1,0 +1,16 @@
+{
+  "name": "salome-configuration",
+  "version": "9.10.0",
+  "port-version": 2,
+  "description": "Configuration files and other utilities for SALOME platform",
+  "homepage": "https://www.salome-platform.org",
+  "license": "LGPL-2.1-or-later",
+  "supports": "windows | linux",
+  "dependencies": [
+    {
+      "$comment": "This is a dummy dependency to inject SALOME_USE_MPI depending on HDF5_WITH_PARALLEL",
+      "name": "hdf5",
+      "default-features": false
+    }
+  ]
+}

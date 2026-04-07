@@ -1,0 +1,7 @@
+{
+  "name": "wincrypt",
+  "version": "0.0",
+  "port-version": 4,
+  "description": "Windows Cryptography.",
+  "supports": "windows"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "modp-base64",
+  "version-date": "2020-09-26",
+  "port-version": 2,
+  "description": "High performance base64 encoder/decoder",
+  "homepage": "https://github.com/client9/stringencoders",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

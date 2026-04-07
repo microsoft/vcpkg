@@ -1,0 +1,19 @@
+{
+  "name": "netcdf-cxx4",
+  "version": "4.3.1",
+  "port-version": 5,
+  "description": "a set of machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.",
+  "homepage": "https://github.com/Unidata/netcdf-cxx4",
+  "dependencies": [
+    "hdf5",
+    "netcdf-c",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

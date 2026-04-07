@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1d5710f..42ee3c9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -318,7 +318,9 @@ endif()
+ # so for an iOS build it'll use the path from the Device plaform, which is an error on Simulator.
+ # Just use -lz and let Xcode figure it out
+ # Emscripten does provide Zlib, but it doesn't work with find_package and is handled specially
++find_package(ZLIB REQUIRED) # vcpkg zlib, everwhere
+ if(NOT APPLE AND NOT EMSCRIPTEN AND NOT TARGET ZLIB::ZLIB)
++elseif(0)
+     if(WIN32 OR (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND REALM_LINUX_TOOLCHAIN))
+         find_package(ZLIB)
+         if (NOT ZLIB_FOUND)
+diff --git a/tools/cmake/RealmConfig.cmake.in b/tools/cmake/RealmConfig.cmake.in
+index e418c86..32af2c0 100644
+--- a/tools/cmake/RealmConfig.cmake.in
++++ b/tools/cmake/RealmConfig.cmake.in
+@@ -21,7 +21,9 @@ find_dependency(Threads)
+ # Don't use find_library(ZLIB) on Apple platforms - it hardcodes the path per platform,
+ # so for an iOS build it'll use the path from the Device plaform, which is an error on Simulator.
+ # Just use -lz and let Xcode figure it out
++find_dependency(ZLIB)
+ if(TARGET Realm::Sync AND NOT APPLE AND NOT TARGET ZLIB::ZLIB)
++elseif(0)
+     if(WIN32 OR (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND REALM_LINUX_TOOLCHAIN))
+         find_package(ZLIB)
+         if (NOT ZLIB_FOUND)

@@ -1,0 +1,12 @@
+diff --git a/mecab/src/dictionary.h b/mecab/src/dictionary.h
+index 7046023..32ad358 100644
+--- a/mecab/src/dictionary.h
++++ b/mecab/src/dictionary.h
+@@ -10,6 +10,7 @@
+ #include "mmap.h"
+ #include "darts.h"
+ #include "char_property.h"
++#include <functional>
+ 
+ namespace MeCab {
+ 

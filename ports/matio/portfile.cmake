@@ -1,0 +1,55 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO tbeu/matio
+    REF "v${VERSION}"
+    SHA512 22fbc6d9013d0897daaff53bdeddfe224eeea55f5b4991aca655b62a3e6287b654e2bd79fa2a11f1009ca63d36c898ecbdc9a32ae91489a246c823fc89fc8ecc
+    HEAD_REF master
+    PATCHES
+        cmake-config.diff
+)
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        extended-sparse MATIO_EXTENDED_SPARSE
+        mat73           MATIO_WITH_HDF5
+        mat73           MATIO_MAT73
+        mat73           VCPKG_LOCK_FIND_PACKAGE_HDF5
+        zlib            MATIO_WITH_ZLIB
+        zlib            VCPKG_LOCK_FIND_PACKAGE_ZLIB
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DMATIO_BUILD_TESTING=OFF
+        -DMATIO_PIC=OFF  # Flags provided by the toolchain
+        -DMATIO_SHARED=${BUILD_SHARED}
+        -DMATIO_USE_CONAN=OFF
+    MAYBE_UNUSED_VARIABLES
+        VCPKG_LOCK_FIND_PACKAGE_HDF5
+        VCPKG_LOCK_FIND_PACKAGE_ZLIB
+)
+vcpkg_cmake_install()
+vcpkg_copy_pdbs()
+vcpkg_cmake_config_fixup()
+
+set(prefix "${CURRENT_INSTALLED_DIR}")
+set(exec_prefix [[${prefix}]])
+set(libdir [[${prefix}/lib]])
+set(includedir [[${prefix}/include]])
+configure_file("${SOURCE_PATH}/matio.pc.in" "${SOURCE_PATH}/matio.pc" @ONLY)
+file(INSTALL "${SOURCE_PATH}/matio.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+if(NOT VCPKG_BUILD_TYPE)
+    set(includedir [[${prefix}/../include]])
+    file(INSTALL "${SOURCE_PATH}/matio.pc" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
+endif()
+vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_tools(TOOL_NAMES matdump AUTO_CLEAN)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING")

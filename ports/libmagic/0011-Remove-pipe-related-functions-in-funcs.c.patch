@@ -1,0 +1,30 @@
+From 15b0f505ff9eefd41b74ffdd4230355e933263ca Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Sun, 9 May 2021 17:45:50 +0700
+Subject: [PATCH 11/14] Remove pipe related functions in funcs.c
+
+---
+ src/funcs.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/funcs.c b/src/funcs.c
+index b926625..b585486 100644
+--- a/src/funcs.c
++++ b/src/funcs.c
+@@ -888,5 +888,6 @@
+ }
+ 
++#ifndef _WIN32
+ file_protected int
+ file_pipe_closexec(int *fds)
+ {
+@@ -914,5 +915,6 @@
+ #endif
+ }
++#endif
+ 
+ file_protected char *
+ file_strtrim(char *str)
+-- 
+2.29.2.windows.2
+

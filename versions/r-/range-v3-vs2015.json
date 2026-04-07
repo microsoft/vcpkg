@@ -1,0 +1,29 @@
+{
+  "versions": [
+    {
+      "git-tree": "835ff46e7392da24a81e2d4784959154ab930f51",
+      "version": "20151130-vcpkg5",
+      "port-version": 4
+    },
+    {
+      "git-tree": "ad11ff1674f1db018ff9b5001fea3c95ef62cc16",
+      "version": "20151130-vcpkg5",
+      "port-version": 3
+    },
+    {
+      "git-tree": "0f067993520ed7aa3241b7af46d6e3b9120b9950",
+      "version": "20151130-vcpkg5",
+      "port-version": 2
+    },
+    {
+      "git-tree": "7323da8a61ce8b5fc2e0cb3a59cff779c484e4e0",
+      "version-string": "20151130-vcpkg5",
+      "port-version": 1
+    },
+    {
+      "git-tree": "b135e301521d603130d2c80a01b39fbbce826518",
+      "version-string": "20151130-vcpkg5",
+      "port-version": 0
+    }
+  ]
+}

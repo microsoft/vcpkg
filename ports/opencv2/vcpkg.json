@@ -1,0 +1,100 @@
+{
+  "name": "opencv2",
+  "version": "2.4.13.7",
+  "port-version": 25,
+  "description": "Open Source Computer Vision Library",
+  "homepage": "https://github.com/opencv/opencv",
+  "license": "BSD-3-Clause",
+  "supports": "!uwp & !(arm & windows) & !android",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "eigen",
+    "jpeg",
+    {
+      "name": "msmf",
+      "platform": "windows & !mingw"
+    },
+    "png",
+    "tiff"
+  ],
+  "features": {
+    "dc1394": {
+      "description": "Dc1394 support for opencv",
+      "dependencies": [
+        "libdc1394"
+      ]
+    },
+    "eigen": {
+      "description": "Eigen support for opencv",
+      "dependencies": [
+        "eigen3"
+      ]
+    },
+    "jasper": {
+      "description": "JPEG 2000 support for opencv",
+      "dependencies": [
+        "jasper"
+      ]
+    },
+    "jpeg": {
+      "description": "JPEG support for opencv",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "msmf": {
+      "description": "Microsoft Media Foundation support for opencv",
+      "supports": "windows & !mingw"
+    },
+    "openexr": {
+      "description": "OpenEXR support for opencv",
+      "dependencies": [
+        "imath",
+        "openexr"
+      ]
+    },
+    "opengl": {
+      "description": "opengl support for opencv",
+      "dependencies": [
+        "opengl"
+      ]
+    },
+    "png": {
+      "description": "PNG support for opencv",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "qt": {
+      "description": "Qt GUI support for opencv",
+      "dependencies": [
+        {
+          "name": "qt5-base",
+          "default-features": false
+        }
+      ]
+    },
+    "tiff": {
+      "description": "TIFF support for opencv",
+      "dependencies": [
+        {
+          "name": "tiff",
+          "default-features": false
+        }
+      ]
+    },
+    "world": {
+      "description": "Compile to a single package support for opencv"
+    }
+  }
+}

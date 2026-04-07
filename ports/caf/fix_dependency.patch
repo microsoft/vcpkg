@@ -1,0 +1,11 @@
+diff --git a/cmake/CAFConfig.cmake.in b/cmake/CAFConfig.cmake.in
+index 1a2348c..6c0d0b2 100644
+--- a/cmake/CAFConfig.cmake.in
++++ b/cmake/CAFConfig.cmake.in
+@@ -5,5 +5,6 @@ include(CMakeFindDependencyMacro)
+ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+ find_dependency(Threads)
++find_dependency(OpenSSL REQUIRED)
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/CAFTargets.cmake")

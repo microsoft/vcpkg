@@ -1,0 +1,22 @@
+{
+  "name": "libqcow",
+  "version": "20221124",
+  "port-version": 1,
+  "description": "Library and tools to access the QEMU Copy-On-Write (QCOW) image format.",
+  "homepage": "https://github.com/libyal/libqcow",
+  "license": "LGPL-3.0-or-later",
+  "supports": "!uwp & !xbox",
+  "dependencies": [
+    "gettext",
+    "openssl",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

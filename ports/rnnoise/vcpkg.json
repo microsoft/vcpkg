@@ -1,0 +1,13 @@
+{
+  "name": "rnnoise",
+  "version": "0.2",
+  "description": "Recurrent neural network for audio noise reduction",
+  "license": "BSD-3-Clause AND CC0-1.0",
+  "supports": "!windows & !arm",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
+  ]
+}

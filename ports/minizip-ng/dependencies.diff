@@ -1,0 +1,69 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c684e3e..c3b6fff 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -254,7 +254,7 @@ if(MZ_BZIP2)
+         list(APPEND MINIZIP_LIB ${BZIP2_LIBRARIES})
+         list(APPEND MINIZIP_LBD ${BZIP2_LIBRARY_DIRS})
+ 
+-        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -lbz2")
++        set(PC_PRIVATE_DEPS "${PC_PRIVATE_DEPS} bzip2")
+     elseif(MZ_FETCH_LIBS)
+         clone_repo(bzip2 https://sourceware.org/git/bzip2.git master)
+ 
+@@ -298,7 +298,6 @@ if(MZ_LZMA)
+     if(NOT MZ_FORCE_FETCH_LIBS)
+         find_package(PkgConfig QUIET)
+         if(PKGCONFIG_FOUND)
+-            pkg_check_modules(LIBLZMA liblzma)
+         endif()
+         if(NOT LIBLZMA_FOUND)
+             find_package(LibLZMA QUIET)
+@@ -313,7 +312,7 @@ if(MZ_LZMA)
+         list(APPEND MINIZIP_LIB ${LIBLZMA_LIBRARIES})
+         list(APPEND MINIZIP_LBD ${LIBLZMA_LIBRARY_DIRS})
+ 
+-        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -llzma")
++        set(PC_PRIVATE_DEPS "${PC_PRIVATE_DEPS} liblzma")
+     elseif(MZ_FETCH_LIBS)
+         set(BUILD_TESTING OFF CACHE BOOL "Build lzma tests" FORCE)
+ 
+@@ -344,10 +343,9 @@ if(MZ_ZSTD)
+     if(NOT MZ_FORCE_FETCH_LIBS)
+         find_package(PkgConfig QUIET)
+         if(PKGCONFIG_FOUND)
+-            pkg_check_modules(ZSTD libzstd)
+         endif()
+         if(NOT ZSTD_FOUND)
+-            find_package(ZSTD QUIET)
++            find_package(ZSTD NAMES zstd REQUIRED)
+             if(ZSTD_FOUND)
+                 if(TARGET zstd::libzstd_static)
+                     list(APPEND ZSTD_LIBRARIES zstd::libzstd_static)
+@@ -365,7 +363,7 @@ if(MZ_ZSTD)
+         list(APPEND MINIZIP_LIB ${ZSTD_LIBRARIES})
+         list(APPEND MINIZIP_LBD ${ZSTD_LIBRARY_DIRS})
+ 
+-        set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -lzstd")
++        set(PC_PRIVATE_DEPS "${PC_PRIVATE_DEPS} libzstd")
+     elseif(MZ_FETCH_LIBS)
+         set(ZSTD_BUILD_PROGRAMS OFF CACHE BOOL "Build zstd programs")
+ 
+@@ -405,7 +403,6 @@ if(MZ_OPENSSL)
+     # Check to see if openssl installation is present
+     find_package(PkgConfig)
+     if(PKGCONFIG_FOUND)
+-        pkg_check_modules(OPENSSL openssl)
+     endif()
+     if(NOT OPENSSL_FOUND)
+         find_package(OpenSSL)
+@@ -426,8 +423,8 @@ if(MZ_OPENSSL)
+         endif()
+ 
+         foreach(i ${OPENSSL_LIBRARIES})
+-            set(PC_PRIVATE_LIBS "${PC_PRIVATE_LIBS} -l${i}")
+         endforeach()
++        set(PC_PRIVATE_DEPS "${PC_PRIVATE_DEPS} openssl")
+     else()
+         message(STATUS "OpenSSL library not found")
+ 

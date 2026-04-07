@@ -1,0 +1,24 @@
+diff --git a/src/hello_imgui_test_engine_integration/hello_imgui_test_engine_cmake.cmake b/src/hello_imgui_test_engine_integration/hello_imgui_test_engine_cmake.cmake
+index fda2d91..44c76a3 100644
+--- a/src/hello_imgui_test_engine_integration/hello_imgui_test_engine_cmake.cmake
++++ b/src/hello_imgui_test_engine_integration/hello_imgui_test_engine_cmake.cmake
+@@ -147,9 +147,6 @@ endfunction()
+ 
+ # Public API for this module
+ function(add_imgui_test_engine)
+-    _fetch_imgui_test_engine_if_needed()
+-    _add_imgui_test_engine_lib()
+-    _configure_imgui_with_test_engine()
+     _add_hello_imgui_test_engine_integration()
+     # _add_imgui_test_engine_app_minimal_example()
+ endfunction()
+diff --git a/src/hello_imgui_test_engine_integration/test_engine_integration.cpp b/src/hello_imgui_test_engine_integration/test_engine_integration.cpp
+index 9f5bb59..2be0fa1 100644
+--- a/src/hello_imgui_test_engine_integration/test_engine_integration.cpp
++++ b/src/hello_imgui_test_engine_integration/test_engine_integration.cpp
+@@ -1,4 +1,4 @@
+-#include "imgui_test_engine/imgui_te_engine.h"
++#include <imgui_te_engine.h>
+ #include "hello_imgui/runner_params.h"
+ #include "hello_imgui/internal/functional_utils.h"
+ #include "hello_imgui/internal/backend_impls/opengl_setup_helper/opengl_screenshot.h"

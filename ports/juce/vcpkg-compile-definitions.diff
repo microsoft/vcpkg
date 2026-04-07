@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 76209f5..69dc639 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -167,6 +167,7 @@ install(FILES "${JUCE_BINARY_DIR}/JUCEConfigVersion.cmake"
+               "${JUCE_CMAKE_UTILS_DIR}/JUCECheckAtomic.cmake"
+               "${JUCE_CMAKE_UTILS_DIR}/JUCEHelperTargets.cmake"
+               "${JUCE_CMAKE_UTILS_DIR}/JUCEModuleSupport.cmake"
++              "${JUCE_CMAKE_UTILS_DIR}/vcpkg-compile-definitions.cmake"
+               "${JUCE_CMAKE_UTILS_DIR}/JUCEUtils.cmake"
+               "${JUCE_CMAKE_UTILS_DIR}/JuceLV2Defines.h.in"
+               "${JUCE_CMAKE_UTILS_DIR}/LaunchScreen.storyboard"
+diff --git a/extras/Build/CMake/JUCEModuleSupport.cmake b/extras/Build/CMake/JUCEModuleSupport.cmake
+index 2dd2ecf..635c50e 100644
+--- a/extras/Build/CMake/JUCEModuleSupport.cmake
++++ b/extras/Build/CMake/JUCEModuleSupport.cmake
+@@ -96,8 +96,10 @@ endif()
+ 
+ # ==================================================================================================
+ 
++include("${CMAKE_CURRENT_LIST_DIR}/vcpkg-compile-definitions.cmake")
+ function(_juce_add_interface_library target)
+     add_library(${target} INTERFACE)
++    vcpkg_juce_add_compile_definitions(${target})
+     target_sources(${target} INTERFACE ${ARGN})
+ endfunction()
+ 

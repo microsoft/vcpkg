@@ -1,0 +1,4 @@
+The package pthreads provides CMake targets:
+
+    find_package(PThreads4W REQUIRED)
+    target_link_libraries(main PRIVATE PThreads4W::PThreads4W)

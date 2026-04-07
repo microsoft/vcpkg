@@ -1,0 +1,13 @@
+diff --git a/cmake/templates/DrogonConfig.cmake.in b/cmake/templates/DrogonConfig.cmake.in
+index a21122a..6367259 100644
+--- a/cmake/templates/DrogonConfig.cmake.in
++++ b/cmake/templates/DrogonConfig.cmake.in
+@@ -19,7 +19,7 @@ find_dependency(UUID REQUIRED)
+ endif(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD" AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD" AND NOT WIN32)
+ find_dependency(ZLIB REQUIRED)
+ if(@pg_FOUND@)
+-find_dependency(pg)
++find_dependency(PostgreSQL)
+ endif()
+ if(@SQLite3_FOUND@)
+ find_dependency(SQLite3)

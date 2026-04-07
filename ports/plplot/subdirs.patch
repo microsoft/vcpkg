@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e29c43d..03f05f0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -347,12 +347,6 @@ add_subdirectory(src)
+ add_subdirectory(data)
+ add_subdirectory(bindings)
+ add_subdirectory(drivers)
+-add_subdirectory(utils)
+-add_subdirectory(plplot_test)
+-add_subdirectory(examples)
+-add_subdirectory(scripts)
+-add_subdirectory(doc)
+-add_subdirectory(www)
+ add_subdirectory(pkgcfg)
+ summary()
+ 

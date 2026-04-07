@@ -1,0 +1,25 @@
+diff --git a/libsrc/stlgeom/stltopology.hpp b/libsrc/stlgeom/stltopology.hpp
+index 2a3822f70..a14dc5bda 100644
+--- a/libsrc/stlgeom/stltopology.hpp
++++ b/libsrc/stlgeom/stltopology.hpp
+@@ -350,7 +350,7 @@ public:
+   int GetNP() const { return points.Size(); }
+   int AddPoint(const Point<3> & p) { points.Append(p); return points.Size(); }
+   const Point<3> & GetPoint(STLPointId nr) const { return points[nr]; } // .Get(nr); }
++  DLL_HEADER int GetPointNum (const Point<3> & p);
+-  int GetPointNum (const Point<3> & p);
+   void SetPoint(STLPointId nr, const Point<3> & p) { points[nr] = p; } // { points.Elem(nr) = p; }
+   auto & GetPoints() const { return points; }
+ 
+diff --git a/nglib/nglib.cpp b/nglib/nglib.cpp
+index ee25f3814..c8fe35cb2 100644
+--- a/nglib/nglib.cpp
++++ b/nglib/nglib.cpp
+@@ -619,6 +619,7 @@ namespace nglib
+          }
+          */
+          geo->AddEdges(readedges);
++         readedges.SetSize(0);
+       }
+ 
+       if (geo->GetStatus() == STLTopology::STL_GOOD || geo->GetStatus() == STLTopology::STL_WARNING) return NG_OK;

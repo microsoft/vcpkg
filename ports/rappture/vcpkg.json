@@ -1,0 +1,19 @@
+{
+  "name": "rappture",
+  "version": "1.9",
+  "port-version": 4,
+  "description": "Rappture is a toolkit supporting Rapid application infrastructure, making it quick and easy to develop powerful scientific applications.",
+  "license": null,
+  "dependencies": [
+    "expat",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib"
+  ]
+}

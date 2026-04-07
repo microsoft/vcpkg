@@ -1,0 +1,4 @@
+cista provides CMake targets:
+
+    find_package(cista CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE cista::cista)

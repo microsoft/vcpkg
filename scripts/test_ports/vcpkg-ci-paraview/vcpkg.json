@@ -1,0 +1,43 @@
+{
+  "name": "vcpkg-ci-paraview",
+  "version-date": "2022-12-01",
+  "description": "Port to force features of certain ports within CI",
+  "homepage": "https://github.com/microsoft/vcpkg",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "paraview",
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
+    },
+    {
+      "name": "paraview",
+      "default-features": false,
+      "features": [
+        "mpi",
+        "python"
+      ],
+      "platform": "!(windows & static) & !x86"
+    },
+    {
+      "name": "vtk",
+      "default-features": false,
+      "features": [
+        "gdal",
+        "utf8",
+        "vtkm"
+      ],
+      "platform": "!x86"
+    },
+    {
+      "name": "vtk",
+      "default-features": false,
+      "features": [
+        "openvr"
+      ],
+      "platform": "!osx & !(windows & staticcrt)"
+    }
+  ]
+}

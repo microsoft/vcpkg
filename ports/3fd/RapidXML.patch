@@ -1,0 +1,10 @@
+--- a/3FD/xml.h
++++ b/3FD/xml.h
+@@ -4,6 +4,6 @@
+ #include "exceptions.h"
+ #include "utils.h"
+-#include <rapidxml.hpp>
++#include <rapidxml/rapidxml.hpp>
+ 
+ #include <array>
+ #include <algorithm>

@@ -1,0 +1,23 @@
+diff --git a/src/Resample.h b/src/Resample.h
+index 2d40eb91a1..b729ab9df0 100644
+--- a/src/Resample.h
++++ b/src/Resample.h
+@@ -154,11 +154,17 @@ struct RatioState<true>
+ 	}
+ };
+ 
++#if defined(_MSC_VER)
++#define BUNGEE_NOINLINE __declspec(noinline)
++#else
++#define BUNGEE_NOINLINE __attribute__((noinline))
++#endif
++
+ template <class Interpolation, class Mode>
+ struct Loop
+ {
+ 	template <bool ratioIsConstant>
+-	static __attribute__((noinline)) void run(RatioState<ratioIsConstant> &ratioState, Internal &internal, External external) // const & ext
++	static BUNGEE_NOINLINE void run(RatioState<ratioIsConstant> &ratioState, Internal &internal, External external) // const & ext
+ 	{
+ 		const Assert::FloatingPointExceptions floatingPointExceptions(FE_INEXACT | FE_UNDERFLOW);
+ 

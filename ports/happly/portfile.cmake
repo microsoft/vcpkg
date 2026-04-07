@@ -1,0 +1,13 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO nmwsharp/happly
+    REF v${VERSION}
+    SHA512 18dfcfebf3a374fae170c992c9e9a7409c12b41c092a3d261d37fdfcd1198060c1c2fe2a13820036b5d3b76dfa206b3f995e105313dc2da2f98fc53cc3781653
+    HEAD_REF master
+)
+
+file(
+    COPY ${SOURCE_PATH}/happly.h
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

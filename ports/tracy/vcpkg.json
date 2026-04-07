@@ -1,0 +1,98 @@
+{
+  "name": "tracy",
+  "version": "0.13.1",
+  "description": "A real time, nanosecond resolution, remote telemetry, hybrid frame and sampling profiler for games and other applications.",
+  "homepage": "https://github.com/wolfpld/tracy",
+  "license": "BSD-3-Clause",
+  "supports": "!(windows & (arm | uwp))",
+  "dependencies": [
+    {
+      "name": "pthreads",
+      "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "crash-handler"
+  ],
+  "features": {
+    "cli-tools": {
+      "description": "Build Tracy command-line tools: `capture`, `csvexport`, `import-chrome`, `import-fuchsia` and `update`",
+      "supports": "!(windows & x86)",
+      "dependencies": [
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        },
+        {
+          "name": "dbus",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        "nlohmann-json",
+        "ppqsort",
+        "zstd"
+      ]
+    },
+    "crash-handler": {
+      "description": "Enable crash handler"
+    },
+    "fibers": {
+      "description": "Enable fibers support"
+    },
+    "gui-tools": {
+      "description": "Build Tracy GUI tool: `profiler` (aka `Tracy` executable)",
+      "supports": "!(windows & x86)",
+      "dependencies": [
+        "aklomp-base64",
+        {
+          "name": "capstone",
+          "features": [
+            "arm",
+            "arm64",
+            "x86"
+          ]
+        },
+        "curl",
+        {
+          "name": "dbus",
+          "default-features": false,
+          "platform": "!windows"
+        },
+        "freetype",
+        "glfw3",
+        "md4c",
+        "nativefiledialog-extended",
+        "nlohmann-json",
+        "ppqsort",
+        "pugixml",
+        "tidy-html5",
+        {
+          "name": "usearch",
+          "features": [
+            "fp16"
+          ]
+        },
+        "zstd"
+      ]
+    },
+    "on-demand": {
+      "description": "Enable on-demand profiling"
+    },
+    "verbose": {
+      "description": "Enables verbose logging",
+      "supports": "!android"
+    }
+  }
+}

@@ -1,0 +1,4 @@
+hlslpp provides a CMake package:
+
+  find_package(unofficial-hlslpp CONFIG REQUIRED)
+  target_link_libraries(main PUBLIC unofficial::hlslpp::hlslpp)

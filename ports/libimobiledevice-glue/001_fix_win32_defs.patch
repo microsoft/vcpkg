@@ -1,0 +1,57 @@
+diff --git a/include/libimobiledevice-glue/socket.h b/include/libimobiledevice-glue/socket.h
+index 53f58b8..f3cc6c6 100644
+--- a/include/libimobiledevice-glue/socket.h
++++ b/include/libimobiledevice-glue/socket.h
+@@ -32,7 +32,7 @@ enum fd_mode {
+ };
+ typedef enum fd_mode fd_mode;
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ #include <winsock2.h>
+ #define SHUT_RD SD_READ
+ #define SHUT_WR SD_WRITE
+@@ -41,7 +41,7 @@ typedef enum fd_mode fd_mode;
+ #include <sys/socket.h>
+ #endif
+ 
+-#ifndef WIN32
++#ifndef _WIN32
+ int socket_create_unix(const char *filename);
+ int socket_connect_unix(const char *filename);
+ #endif
+diff --git a/include/libimobiledevice-glue/thread.h b/include/libimobiledevice-glue/thread.h
+index 2aadc6e..b5c2ac1 100644
+--- a/include/libimobiledevice-glue/thread.h
++++ b/include/libimobiledevice-glue/thread.h
+@@ -24,7 +24,7 @@
+ 
+ #include <stddef.h>
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ #include <windows.h>
+ typedef HANDLE THREAD_T;
+ typedef CRITICAL_SECTION mutex_t;
+@@ -61,7 +61,7 @@ int thread_alive(THREAD_T thread);
+ 
+ int thread_cancel(THREAD_T thread);
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ #undef HAVE_THREAD_CLEANUP
+ #else
+ #ifdef HAVE_PTHREAD_CANCEL
+diff --git a/include/libimobiledevice-glue/utils.h b/include/libimobiledevice-glue/utils.h
+index 1a21871..2421270 100644
+--- a/include/libimobiledevice-glue/utils.h
++++ b/include/libimobiledevice-glue/utils.h
+@@ -29,7 +29,7 @@
+ #include <config.h>
+ #endif
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ #include <windows.h>
+ #endif
+ 

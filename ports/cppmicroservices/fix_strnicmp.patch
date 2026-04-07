@@ -1,0 +1,13 @@
+diff --git a/framework/src/util/PropsCheck.h b/framework/src/util/PropsCheck.h
+index 26acd33..930a328 100644
+--- a/framework/src/util/PropsCheck.h
++++ b/framework/src/util/PropsCheck.h
+@@ -47,7 +47,7 @@
+ 
+ #ifdef US_PLATFORM_WINDOWS
+ #    include <string.h>
+-#    define ci_compare strnicmp
++#    define ci_compare _strnicmp
+ #else
+ #    include <strings.h>
+ #    define ci_compare strncasecmp

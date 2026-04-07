@@ -1,0 +1,22 @@
+diff --git a/src/libirecovery.c b/src/libirecovery.c
+index 6e7647b..45ff6f2 100644
+--- a/src/libirecovery.c
++++ b/src/libirecovery.c
+@@ -470,6 +470,8 @@ static void _irecv_deinit(void)
+ static thread_once_t init_once = THREAD_ONCE_INIT;
+ static thread_once_t deinit_once = THREAD_ONCE_INIT;
+ 
++#ifndef IRECV_STATIC  // disable dll constructor
++
+ #ifndef HAVE_ATTRIBUTE_CONSTRUCTOR
+   #if defined(__llvm__) || defined(__GNUC__)
+     #define HAVE_ATTRIBUTE_CONSTRUCTOR
+@@ -505,6 +507,8 @@ BOOL WINAPI DllMain(HINSTANCE hModule, DWORD dwReason, LPVOID lpReserved)
+ #warning No compiler support for constructor/destructor attributes, some features might not be available.
+ #endif
+ 
++#endif  // disable dll constructor
++
+ #ifdef HAVE_IOKIT
+ static int iokit_get_string_descriptor_ascii(irecv_client_t client, uint8_t desc_index, unsigned char * buffer, int size)
+ {

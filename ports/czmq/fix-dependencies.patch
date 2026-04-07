@@ -1,0 +1,17 @@
+diff --git a/builds/cmake/Config.cmake.in b/builds/cmake/Config.cmake.in
+index 9c15f36a..5afff016 100644
+--- a/builds/cmake/Config.cmake.in
++++ b/builds/cmake/Config.cmake.in
+@@ -1,4 +1,12 @@
+ @PACKAGE_INIT@
+ 
++include(CMakeFindDependencyMacro)
++
++find_dependency(ZeroMQ)
++
++if ("@CZMQ_WITH_LIBCURL@" AND "@LIBCURL_FOUND@")
++    find_dependency(CURL)
++endif ()
++
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+ check_required_components("@PROJECT_NAME@")

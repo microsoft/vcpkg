@@ -1,0 +1,12 @@
+# header-only library
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ferd36/quaternions
+    REF 68fc6c7fb392b1a920779d80bb75879263329ff5
+    SHA512 b7b934a493645e9c9ec04d581d2e5af57298325086919c20fbaa13df264c16cb5a0e380042cf5a0cfddbf142c82e5da63b84e8f2bc90615b1eccad83a1c9df88
+    HEAD_REF master
+)
+
+file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

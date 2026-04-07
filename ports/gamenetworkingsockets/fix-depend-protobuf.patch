@@ -1,0 +1,12 @@
+diff --git a/cmake/GameNetworkingSocketsConfig.cmake.in b/cmake/GameNetworkingSocketsConfig.cmake.in
+index 1a27988..5076a6e 100644
+--- a/cmake/GameNetworkingSocketsConfig.cmake.in
++++ b/cmake/GameNetworkingSocketsConfig.cmake.in
+@@ -3,6 +3,7 @@
+ include(CMakeFindDependencyMacro)
+ 
+ find_dependency(Threads)
++find_dependency(Protobuf)
+ 
+ if(@USE_CRYPTO@ STREQUAL "OpenSSL")
+     find_dependency(OpenSSL)

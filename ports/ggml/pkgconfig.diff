@@ -1,0 +1,216 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 56420587..98422c5c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -328,7 +328,7 @@ if (GGML_STANDALONE)
+         @ONLY)
+ 
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ggml.pc
+-        DESTINATION share/pkgconfig)
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ endif()
+ 
+ #
+@@ -349,6 +349,7 @@ set(variable_set_statements
+ set(GGML_SHARED_LIB ${BUILD_SHARED_LIBS})
+ 
+ get_cmake_property(all_variables VARIABLES)
++list(FILTER all_variables EXCLUDE REGEX "^GGML_PKGCONFIG")
+ foreach(variable_name IN LISTS all_variables)
+     if(variable_name MATCHES "^GGML_")
+         string(REPLACE ";" "\\;"
+diff --git a/ggml.pc.in b/ggml.pc.in
+index 3e0291e0..a7627339 100644
+--- a/ggml.pc.in
++++ b/ggml.pc.in
+@@ -6,5 +6,7 @@ libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+ Name: ggml
+ Description: The GGML Tensor Library for Machine Learning
+ Version: @GGML_VERSION@
+-Cflags: -I${includedir}
+-Libs: -L${libdir} -lggml
++Cflags: -I${includedir} @GGML_PKGCONFIG_CFLAGS@
++Libs: -L${libdir} -lggml @GGML_PKGCONFIG_LIBS_BACKEND@ -lggml-base
++Libs.private: @GGML_PKGCONFIG_LIBS_PRIVATE@
++Requires.private: @GGML_PKGCONFIG_REQUIRES_PRIVATE@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index c8f3d859..d7c15992 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -186,6 +186,10 @@ endif()
+ 
+ # ggml
+ 
++set(GGML_PKGCONFIG_CFLAGS "")
++set(GGML_PKGCONFIG_LIBS_BACKEND "")
++set(GGML_PKGCONFIG_LIBS_PRIVATE "")
++
+ if (GGML_BACKEND_DL AND NOT BUILD_SHARED_LIBS)
+     message(FATAL_ERROR "GGML_BACKEND_DL requires BUILD_SHARED_LIBS")
+ endif()
+@@ -228,6 +232,7 @@ target_link_libraries(ggml PUBLIC ggml-base)
+ 
+ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+     target_link_libraries(ggml PRIVATE dl)
++    string(APPEND GGML_PKGCONFIG_LIBS_PRIVATE " -ldl")
+ endif()
+ 
+ function(ggml_add_backend_library backend)
+@@ -272,12 +277,20 @@ function(ggml_add_backend backend)
+     string(TOUPPER "GGML_${backend}" backend_id)
+     if (${backend_id})
+         string(TOLOWER "ggml-${backend}" backend_target)
++        if (NOT GGML_BACKEND_DL)
++            # Mirrors ggml_add_backend_library but avoids cmake scoping 
++            set(GGML_PKGCONFIG_LIBS_BACKEND "${GGML_PKGCONFIG_LIBS_BACKEND} -l${backend_target}")
++        endif()
+         add_subdirectory(${backend_target})
+         message(STATUS "Including ${backend} backend")
+         if (NOT GGML_BACKEND_DL)
+             string(TOUPPER "GGML_USE_${backend}" backend_use)
+             target_compile_definitions(ggml PUBLIC ${backend_use})
++            set(GGML_PKGCONFIG_CFLAGS "${GGML_PKGCONFIG_CFLAGS} -D${backend_use}" PARENT_SCOPE)
+         endif()
++        set(GGML_PKGCONFIG_LIBS_BACKEND "${GGML_PKGCONFIG_LIBS_BACKEND}" PARENT_SCOPE)
++        set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE}" PARENT_SCOPE)
++        set(GGML_PKGCONFIG_REQUIRES_PRIVATE "${GGML_PKGCONFIG_REQUIRES_PRIVATE}" PARENT_SCOPE)
+     endif()
+ endfunction()
+ 
+@@ -399,11 +412,15 @@ find_library(MATH_LIBRARY m)
+ if (MATH_LIBRARY)
+     if (NOT WIN32 OR NOT DEFINED ENV{ONEAPI_ROOT})
+         target_link_libraries(ggml-base PRIVATE m)
++        string(APPEND GGML_PKGCONFIG_LIBS_PRIVATE " -lm")
+     endif()
+ endif()
+ 
+ if (CMAKE_SYSTEM_NAME MATCHES "Android")
+     target_link_libraries(ggml-base PRIVATE dl)
++    if(NOT GGML_PKGCONFIG_LIBS_PRIVATE MATCHES " -ldl")
++        string(APPEND GGML_PKGCONFIG_LIBS_PRIVATE " -ldl")
++    endif()
+ endif()
+ 
+ if(CMAKE_SYSTEM_NAME MATCHES "visionOS")
+@@ -416,4 +433,10 @@ if (BUILD_SHARED_LIBS)
+         target_compile_definitions(${target} PRIVATE GGML_BUILD)
+         target_compile_definitions(${target} PUBLIC  GGML_SHARED)
+     endforeach()
++    string(APPEND GGML_PKGCONFIG_CFLAGS " -DGGML_SHARED -DGGML_BACKEND_SHARED")
+ endif()
++
++set(GGML_PKGCONFIG_CFLAGS "${GGML_PKGCONFIG_CFLAGS}" PARENT_SCOPE)
++set(GGML_PKGCONFIG_LIBS_BACKEND "${GGML_PKGCONFIG_LIBS_BACKEND}" PARENT_SCOPE)
++set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE}" PARENT_SCOPE)
++set(GGML_PKGCONFIG_REQUIRES_PRIVATE "${GGML_PKGCONFIG_REQUIRES_PRIVATE}" PARENT_SCOPE)
+diff --git a/src/ggml-blas/CMakeLists.txt b/src/ggml-blas/CMakeLists.txt
+index 60ce4b1e..058f65cd 100644
+--- a/src/ggml-blas/CMakeLists.txt
++++ b/src/ggml-blas/CMakeLists.txt
+@@ -79,6 +79,7 @@ if (BLAS_FOUND)
+     endif()
+ 
+     target_link_libraries     (ggml-blas PRIVATE ${BLAS_LIBRARIES})
++    set(GGML_PKGCONFIG_REQUIRES_PRIVATE "${GGML_PKGCONFIG_REQUIRES_PRIVATE} cblas" PARENT_SCOPE)
+     target_include_directories(ggml-blas PRIVATE ${BLAS_INCLUDE_DIRS})
+ else()
+     message(FATAL_ERROR "BLAS not found, please refer to "
+diff --git a/src/ggml-cpu/CMakeLists.txt b/src/ggml-cpu/CMakeLists.txt
+index 42041b71..b17aca1a 100644
+--- a/src/ggml-cpu/CMakeLists.txt
++++ b/src/ggml-cpu/CMakeLists.txt
+@@ -52,6 +52,9 @@ function(ggml_add_cpu_backend_variant_impl tag_name)
+     target_compile_features(${GGML_CPU_NAME} PRIVATE c_std_11 cxx_std_17)
+     target_include_directories(${GGML_CPU_NAME} PRIVATE . ggml-cpu)
+ 
++    set(libs_private "")
++    set(pkgconfig_cflags "")
++
+     if (APPLE AND GGML_ACCELERATE)
+         find_library(ACCELERATE_FRAMEWORK Accelerate)
+         if (ACCELERATE_FRAMEWORK)
+@@ -62,6 +65,7 @@ function(ggml_add_cpu_backend_variant_impl tag_name)
+             target_compile_definitions(${GGML_CPU_NAME} PRIVATE ACCELERATE_LAPACK_ILP64)
+ 
+             target_link_libraries(${GGML_CPU_NAME} PRIVATE ${ACCELERATE_FRAMEWORK})
++            string(APPEND libs_private " -framework Accelerate")
+         else()
+             message(WARNING "Accelerate framework not found")
+         endif()
+@@ -74,6 +78,18 @@ function(ggml_add_cpu_backend_variant_impl tag_name)
+             target_compile_definitions(${GGML_CPU_NAME} PRIVATE GGML_USE_OPENMP)
+ 
+             target_link_libraries(${GGML_CPU_NAME} PRIVATE OpenMP::OpenMP_C OpenMP::OpenMP_CXX)
++            set(items "")
++            foreach(lib IN LISTS OpenMP_CXX_LIB_NAMES OpenMP_C_LIB_NAMES)
++                list(REMOVE_ITEM items " -l${lib}")
++                list(APPEND items " -l${lib}")
++            endforeach()
++            string(APPEND libs_private ${items})
++            set(items "")
++            foreach(flag IN LISTS OpenMP_CXX_FLAGS OpenMP_C_FLAGS)
++                list(REMOVE_ITEM items " ${flag}")
++                list(APPEND items " ${flag}")
++            endforeach()
++            string(APPEND pkgconfig_cflags ${items})
+         else()
+             set(GGML_OPENMP_ENABLED "OFF" CACHE INTERNAL "")
+             message(WARNING "OpenMP not found")
+@@ -96,8 +112,12 @@ function(ggml_add_cpu_backend_variant_impl tag_name)
+         target_compile_definitions(${GGML_CPU_NAME} PRIVATE GGML_USE_CPU_HBM)
+ 
+         target_link_libraries(${GGML_CPU_NAME} PUBLIC memkind)
++        string(APPEND libs_private " -lmemkind")
+     endif()
+ 
++    set(GGML_PKGCONFIG_CFLAGS "${GGML_PKGCONFIG_CFLAGS}${pkgconfig_cflags}" PARENT_SCOPE)
++    set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE}${libs_private}" PARENT_SCOPE)
++
+     if (GGML_SYSTEM_ARCH STREQUAL "ARM")
+         message(STATUS "ARM detected")
+         list(APPEND GGML_CPU_SOURCES
+diff --git a/src/ggml-metal/CMakeLists.txt b/src/ggml-metal/CMakeLists.txt
+index 63418fe1..138996a1 100644
+--- a/src/ggml-metal/CMakeLists.txt
++++ b/src/ggml-metal/CMakeLists.txt
+@@ -19,6 +19,11 @@ target_link_libraries(ggml-metal PRIVATE
+                       ${METALKIT_FRAMEWORK}
+                       )
+ 
++set(GGML_PKGCONFIG_LIBS_PRIVATE
++    "${GGML_PKGCONFIG_LIBS_PRIVATE} -framework Foundation -framework Metal -framework MetalKit"
++    PARENT_SCOPE
++)
++
+ if (GGML_METAL_NDEBUG)
+     add_compile_definitions(GGML_METAL_NDEBUG)
+ endif()
+diff --git a/src/ggml-opencl/CMakeLists.txt b/src/ggml-opencl/CMakeLists.txt
+index 7e6c8438..de676a79 100644
+--- a/src/ggml-opencl/CMakeLists.txt
++++ b/src/ggml-opencl/CMakeLists.txt
+@@ -7,6 +7,7 @@ ggml_add_backend_library(${TARGET_NAME}
+                          ggml-opencl.cpp
+                          ../../include/ggml-opencl.h)
+ target_link_libraries(${TARGET_NAME} PRIVATE ${OpenCL_LIBRARIES})
++set(GGML_PKGCONFIG_REQUIRES_PRIVATE "${GGML_PKGCONFIG_REQUIRES_PRIVATE} OpenCL" PARENT_SCOPE)
+ target_include_directories(${TARGET_NAME} PRIVATE ${OpenCL_INCLUDE_DIRS})
+ 
+ if (GGML_OPENCL_PROFILING)
+diff --git a/src/ggml-vulkan/CMakeLists.txt b/src/ggml-vulkan/CMakeLists.txt
+index b97e7bf9..ec194126 100644
+--- a/src/ggml-vulkan/CMakeLists.txt
++++ b/src/ggml-vulkan/CMakeLists.txt
+@@ -77,6 +77,11 @@ if (Vulkan_FOUND)
+     )
+ 
+     target_link_libraries(ggml-vulkan PRIVATE Vulkan::Vulkan)
++    if(ANDROID)
++        set(GGML_PKGCONFIG_LIBS_PRIVATE "${GGML_PKGCONFIG_LIBS_PRIVATE} -lvulkan" PARENT_SCOPE)
++    else()
++        set(GGML_PKGCONFIG_REQUIRES_PRIVATE "${GGML_PKGCONFIG_REQUIRES_PRIVATE} vulkan" PARENT_SCOPE)
++    endif()
+     target_include_directories(ggml-vulkan PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+ 
+     # Workaround to the "can't dereference invalidated vector iterator" bug in clang-cl debug build

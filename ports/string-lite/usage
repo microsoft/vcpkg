@@ -1,0 +1,4 @@
+string-lite provides CMake targets:
+
+  find_package(string-lite CONFIG REQUIRED)
+  target_link_libraries(main PRIVATE string-lite::string-lite)

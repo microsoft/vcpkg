@@ -1,0 +1,19 @@
+{
+  "name": "metis",
+  "version-date": "2025-07-04",
+  "port-version": 1,
+  "description": "Serial Graph Partitioning and Fill-reducing Matrix Ordering",
+  "homepage": "https://github.com/KarypisLab/METIS",
+  "license": "Apache-2.0",
+  "dependencies": [
+    "gklib",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

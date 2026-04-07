@@ -1,0 +1,7 @@
+{
+  "name": "krabsetw",
+  "version": "4.3.2",
+  "description": "krabsetw is a header-only C++ library that simplifies interacting with ETW.",
+  "homepage": "https://github.com/microsoft/krabsetw",
+  "supports": "windows & !uwp"
+}

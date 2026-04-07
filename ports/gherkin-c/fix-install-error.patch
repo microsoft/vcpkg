@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3227bf5..74b9ffb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -131,7 +131,3 @@ install(
+ #    NAMESPACE "${namespace}"
+ #    DESTINATION "${config_install_dir}")
+ 
+-add_custom_target(install_${PROJECT_NAME}
+-        $(MAKE) install
+-        DEPENDS gherkin
+-        COMMENT "Installing ${PROJECT_NAME}")

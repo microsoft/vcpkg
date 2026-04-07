@@ -1,0 +1,46 @@
+{
+  "name": "vxl",
+  "version": "3.5.0",
+  "description": "A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding.",
+  "homepage": "https://vxl.github.io/",
+  "license": null,
+  "supports": "!uwp",
+  "dependencies": [
+    "libgeotiff",
+    "libjpeg-turbo",
+    "libpng",
+    "polyclipping",
+    {
+      "name": "tiff",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "core-imaging": {
+      "description": "core-imaging support for vxl"
+    },
+    "openjpeg": {
+      "description": [
+        "OpenJPEG support",
+        "This feature uses vendored copy of openjpeg 1.2.0 and cannot be used together with port 'openjpeg'."
+      ],
+      "license": "BSD-2-Clause",
+      "dependencies": [
+        {
+          "name": "vxl",
+          "features": [
+            "core-imaging"
+          ]
+        }
+      ]
+    }
+  }
+}

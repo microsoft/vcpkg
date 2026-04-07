@@ -1,0 +1,19 @@
+{
+  "name": "d3d12-memory-allocator",
+  "version": "3.0.1",
+  "description": "Easy to integrate D3d12 memory allocation library from GPUOpen",
+  "homepage": "https://gpuopen.com/d3d12-memory-allocator/",
+  "license": "MIT",
+  "supports": "windows",
+  "dependencies": [
+    "directx-headers",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

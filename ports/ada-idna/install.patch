@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a3abd0f..c37c36b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -12,6 +12,10 @@ include(GNUInstallDirs)
+ include(CTest)
+ include(cmake/idna-flags.cmake)
+ 
++if(ADA_USE_SIMDUTF)
++  find_package(simdutf CONFIG REQUIRED)
++endif()
++
+ add_subdirectory(src)
+ 
+ option(ADA_USE_SIMDUTF "Whether to use SIMDUTF for unicode transcoding" OFF)
+@@ -20,16 +24,6 @@ if(ADA_IDNA_BENCHMARKS OR BUILD_TESTING)
+   include(cmake/CPM.cmake)
+ endif()
+ 
+-if(ADA_USE_SIMDUTF)
+-  include(cmake/CPM.cmake)
+-  CPMAddPackage(
+-    NAME simdutf
+-    GITHUB_REPOSITORY simdutf/simdutf
+-    VERSION 7.0.0
+-    OPTIONS "SIMDUTF_TESTS OFF"
+-  )
+-endif()
+-
+ if (ADA_IDNA_BENCHMARKS)
+   message(STATUS "Ada benchmarks enabled.")
+   CPMAddPackage(
+@@ -63,8 +57,6 @@ else()
+   endif()
+ endif(BUILD_TESTING)
+ 
+-add_subdirectory(singleheader)
+-
+ add_library(ada-idna::ada-idna ALIAS ada-idna)
+ 
+ set_target_properties(
+@@ -95,3 +87,8 @@ install(
+   ARCHIVE COMPONENT ada-idna_development
+   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+ )
++
++install(EXPORT ada-idna_targets
++    FILE unofficial-ada-idna-config.cmake
++    NAMESPACE unofficial::ada-idna::
++    DESTINATION share/unofficial-ada-idna)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e48bcda..3e7ba16 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -12,7 +12,7 @@ target_include_directories(ada-idna PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SO
+ target_include_directories(ada-idna PUBLIC "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>")
+ 
+ if(ADA_USE_SIMDUTF)
+-  target_link_libraries(ada-idna PRIVATE simdutf)
++  target_link_libraries(ada-idna PRIVATE simdutf::simdutf)
+   target_compile_definitions(ada-idna PRIVATE ADA_USE_SIMDUTF)
+ endif()
+ 

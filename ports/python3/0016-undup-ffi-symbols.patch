@@ -1,0 +1,14 @@
+diff --git a/Modules/_ctypes/malloc_closure.c b/Modules/_ctypes/malloc_closure.c
+index 788bae6a9..3938f79db 100644
+--- a/Modules/_ctypes/malloc_closure.c
++++ b/Modules/_ctypes/malloc_closure.c
+@@ -11,6 +11,9 @@
+ #endif
+ #include "ctypes.h"
+ 
++#undef Py_ffi_closure_alloc
++#undef Py_ffi_closure_free
++
+ /* BLOCKSIZE can be adjusted.  Larger blocksize will take a larger memory
+    overhead, but allocate less blocks from the system.  It may be that some
+    systems have a limit of how many mmap'd blocks can be open.

@@ -1,0 +1,14 @@
+{
+  "name": "clockutils",
+  "version": "1.1.1",
+  "port-version": 4,
+  "description": "A lightweight c++ library for commonly needed tasks. Optimized for simplicity and speed.",
+  "homepage": "https://github.com/ClockworkOrigins/clockUtils",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ]
+}

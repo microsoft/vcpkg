@@ -1,0 +1,56 @@
+diff --git a/gdk/win32/gdkglcontext-win32.c b/gdk/win32/gdkglcontext-win32.c
+index b1cbfa2c047dac8a73002120ffe4130f557cf82f..0021f8cdb5000d2ae0b70a22f6539c47e79a5e9d 100644
+--- a/gdk/win32/gdkglcontext-win32.c
++++ b/gdk/win32/gdkglcontext-win32.c
+@@ -833,7 +833,7 @@ gdk_win32_gl_context_realize_wgl (GdkGLContext  *context,
+   return TRUE;
+ }
+ 
+-static gboolean
++gboolean
+ gdk_win32_display_is_wgl_context_current (GdkDisplay   *display,
+                                           GdkGLContext *context)
+ {
+@@ -1313,7 +1313,8 @@ gdk_win32_window_invalidate_egl_framebuffer (GdkWindow *window)
+     }
+ }
+ 
+-static gboolean
++#ifdef GDK_WIN32_ENABLE_EGL
++gboolean
+ gdk_win32_display_is_egl_context_current (GdkDisplay   *display,
+                                           GdkGLContext *context)
+ {
+@@ -1321,6 +1322,9 @@ gdk_win32_display_is_egl_context_current (GdkDisplay   *display,
+ 
+   return context_egl->egl_context == eglGetCurrentContext ();
+ }
++#else
++#define gdk_win32_display_is_egl_context_current(disp,ctx) FALSE
++#endif
+ 
+ static gboolean
+ gdk_win32_display_make_egl_context_current (GdkDisplay   *display,
+diff --git a/gdk/win32/gdkglcontext-win32.h b/gdk/win32/gdkglcontext-win32.h
+index 793a3ef4ffaa1fa2ba3d46b5a0ecfdf2ccb576fa..69d5d63166287360115aeec5cafbce264653f04c 100644
+--- a/gdk/win32/gdkglcontext-win32.h
++++ b/gdk/win32/gdkglcontext-win32.h
+@@ -61,6 +61,18 @@ gboolean
+ gdk_win32_display_is_gl_context_current     (GdkDisplay     *display,
+                                              GdkGLContext   *context);
+ 
++gboolean
++gdk_win32_display_is_wgl_context_current    (GdkDisplay     *display,
++                                             GdkGLContext   *context);
++
++#ifdef GDK_WIN32_ENABLE_EGL
++gboolean
++gdk_win32_display_is_egl_context_current    (GdkDisplay     *display,
++                                             GdkGLContext   *context);
++#else
++#define gdk_win32_display_is_egl_context_current(disp,ctx) FALSE
++#endif
++
+ gboolean
+ gdk_win32_display_make_gl_context_current   (GdkDisplay     *display,
+                                              GdkGLContext   *context);
