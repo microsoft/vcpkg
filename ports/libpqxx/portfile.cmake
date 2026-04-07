@@ -6,9 +6,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DPython3_EXECUTABLE="${PYTHON3}"
         -DSKIP_BUILD_TEST=ON
 )
 
