@@ -89,6 +89,7 @@
     },
     "kleidiai": {
       "description": "Build kleidiai support",
+      "supports": "arm64",
       "dependencies": [
         "kleidiai"
       ]
