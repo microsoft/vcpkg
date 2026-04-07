@@ -1,4 +1,4 @@
-#include "duk_bridge.h"
+#include "duktape.h"
 #include <cassert>
 #include <iostream>
 
