@@ -65,6 +65,10 @@
     }
   ],
   "features": {
+    "coreml": {
+      "description": "Build CoreML support",
+      "supports": "osx | ios"
+    },
     "cuda": {
       "description": "Build with CUDA support",
       "supports": "(x64 & windows & !static) | (x64 & linux)",
@@ -75,9 +79,19 @@
         "nvidia-cutlass"
       ]
     },
+    "directml": {
+      "description": "Build DirectML support",
+      "supports": "windows"
+    },
     "framework": {
       "description": "Build a macOS/iOS framework, Objective-C library",
       "supports": "osx | ios"
+    },
+    "kleidiai": {
+      "description": "Build kleidiai support",
+      "dependencies": [
+        "kleidiai"
+      ]
     },
     "openvino": {
       "description": "Build with OpenVINO support",
@@ -106,16 +120,8 @@
         }
       ]
     },
-    "coreml": {
-      "description": "Build CoreML support",
-      "supports": "osx | ios"
-    },
     "winml": {
       "description": "Build WinML support",
-      "supports": "windows"
-    },
-    "directml": {
-      "description": "Build DirectML support",
       "supports": "windows"
     },
     "xnnpack": {
@@ -123,10 +129,6 @@
       "dependencies": [
         "xnnpack"
       ]
-    },
-    "kleidiai": {
-      "description": "Build kleidiai support",
-      "dependencies": ["kleidiai"]
     }
   }
 }
