@@ -9432,6 +9432,10 @@
       "baseline": "0.11.0",
       "port-version": 0
     },
+    "sparrow-ipc": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "sparsehash": {
       "baseline": "2.0.4",
       "port-version": 2
