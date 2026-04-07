@@ -7,6 +7,7 @@
   "supports": "!uwp",
   "dependencies": [
     "arcticdb-sparrow",
+    "flatbuffers",
     {
       "name": "vcpkg-cmake",
       "host": true
