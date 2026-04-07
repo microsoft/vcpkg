@@ -11,6 +11,7 @@
       "version>=": "2.4.0"
     },
     "flatbuffers",
+    "lz4",
     {
       "name": "vcpkg-cmake",
       "host": true
@@ -18,6 +19,7 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    }
+    },
+    "zstd"
   ]
 }
