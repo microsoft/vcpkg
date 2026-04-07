@@ -1,21 +1,21 @@
 diff --git a/include/internal/basic_csv_parser.hpp b/include/internal/basic_csv_parser.hpp
-index 6e1efb0..fac6ebf 100644
+index f8b598e..1d352d4 100644
 --- a/include/internal/basic_csv_parser.hpp
 +++ b/include/internal/basic_csv_parser.hpp
 @@ -12,7 +12,7 @@
- #include <thread>
  #include <vector>
  
+ #if !defined(__EMSCRIPTEN__)
 -#include "../external/mio.hpp"
 +#include "mio/mmap.hpp"
+ #endif
  #include "col_names.hpp"
  #include "common.hpp"
- #include "csv_format.hpp"
 diff --git a/include/internal/common.hpp b/include/internal/common.hpp
-index f7668d8..dc42f63 100644
+index 62f27d5..16ad9f4 100644
 --- a/include/internal/common.hpp
 +++ b/include/internal/common.hpp
-@@ -86,10 +86,8 @@
+@@ -97,10 +97,8 @@
  #endif
  
  // Include string_view BEFORE csv namespace to avoid namespace pollution issues
@@ -27,7 +27,7 @@ index f7668d8..dc42f63 100644
  #endif
  
  namespace csv {
-@@ -111,7 +109,7 @@ namespace csv {
+@@ -122,7 +120,7 @@ namespace csv {
  
  #define STATIC_ASSERT(x) static_assert(x, "Assertion failed")
  
@@ -36,16 +36,3 @@ index f7668d8..dc42f63 100644
       /** @typedef string_view
        *  The string_view class used by this library.
        */
-diff --git a/include/internal/csv_reader.hpp b/include/internal/csv_reader.hpp
-index 7e66666..1382cfb 100644
---- a/include/internal/csv_reader.hpp
-+++ b/include/internal/csv_reader.hpp
-@@ -16,7 +16,7 @@
- #include <string>
- #include <vector>
- 
--#include "../external/mio.hpp"
-+#include "mio/mmap.hpp"
- #include "basic_csv_parser.hpp"
- #include "common.hpp"
- #include "data_type.hpp"

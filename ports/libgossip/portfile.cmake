@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO caomengxuan666/libgossip
     REF "v${VERSION}"
-    SHA512 ae765138fac7077af09ce8ca769b5bf1bd6ca0a81e17cc4b397436309152fd8678f29ce699fc6534d56c5bead980b8b7cf0fbb7df528ef805c51d3210ab1eb24
+    SHA512 9e1237aa6d354922cc876177788699cb92e1d220afde241e22afcaf4ec5cd91b5a22f5b55f0c350f77585cabb7284b1d978921b9c854dc62a76cb240976317c2
     HEAD_REF main
     PATCHES
         fix-dependencies.patch
