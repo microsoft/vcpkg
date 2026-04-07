@@ -2,7 +2,7 @@
   "name": "sparrow-ipc",
   "version": "1.0.0",
   "description": "C++20 idiomatic APIs for the Apache Arrow Serialization and Interprocess Communication (IPC)",
-  "homepage": "https://github.com/man-group/sparrow",
+  "homepage": "https://github.com/sparrow-org/sparrow-ipc",
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
