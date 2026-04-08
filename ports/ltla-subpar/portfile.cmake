@@ -11,6 +11,7 @@ set(VCPKG_BUILD_TYPE "release") # header-only port
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
+        -DSUBPAR_FETCH_EXTERN=OFF
         -DSUBPAR_TESTS=OFF
 )
 
