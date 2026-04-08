@@ -56,6 +56,10 @@
     {
       "name": "vcpkg-tool-meson",
       "host": true
+    },
+    {
+      "name": "wayland-protocols",
+      "platform": "linux"
     }
   ],
   "features": {
