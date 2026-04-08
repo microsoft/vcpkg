@@ -13,7 +13,7 @@ target_link_libraries(vcpkg_ci_duktape PRIVATE unofficial::duktape::duktape)
 ################################################################################
 #                                Use pkg-config                                #
 ################################################################################
-find_package(PkgConfig)
+find_package(PkgConfig REQUIRED)
 pkg_check_modules(duktape REQUIRED IMPORTED_TARGET duktape)
 add_executable(vcpkg_ci_duktape_pc main.cpp)
 target_link_libraries(vcpkg_ci_duktape_pc PRIVATE PkgConfig::duktape)

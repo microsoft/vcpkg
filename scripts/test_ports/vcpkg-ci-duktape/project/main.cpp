@@ -1,4 +1,4 @@
-#include "duktape.h"
+#include <duktape.h>
 #include <cassert>
 #include <iostream>
 
