@@ -4424,19 +4424,7 @@
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6breezeicons": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6codecs": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6coreaddons": {
-      "baseline": "6.23.0",
-      "port-version": 0
-    },
-    "kf6dbusaddons": {
+    "kf6i18n": {
       "baseline": "6.23.0",
       "port-version": 0
     },
@@ -4444,11 +4432,23 @@
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6i18n": {
+    "kf6itemmodels": {
       "baseline": "6.23.0",
       "port-version": 0
     },
-    "kf6itemmodels": {
+    "kf6dbusaddons": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6coreaddons": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6codecs": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
+    "kf6breezeicons": {
       "baseline": "6.23.0",
       "port-version": 0
     },
@@ -7154,10 +7154,6 @@
     },
     "octomap": {
       "baseline": "1.10.0",
-      "port-version": 0
-    },
-    "odbccpp": {
-      "baseline": "1.6",
       "port-version": 0
     },
     "ode": {
