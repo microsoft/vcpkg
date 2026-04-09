@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9d5adce..b85cea0 100644
+index 9d5adce..eff939d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -9,7 +9,7 @@ index 9d5adce..b85cea0 100644
  # Add the header files to the project
  set(header_files 
  	"${include_dir}/wincpp/process.hpp"
-@@ -36,14 +36,13 @@ set(header_files
+@@ -36,21 +36,21 @@ set(header_files
  
  # Add the library to the project
  add_library(_wincpp_core INTERFACE)
@@ -26,7 +26,17 @@ index 9d5adce..b85cea0 100644
  )
  
  # Add the library to the project
-@@ -89,3 +88,24 @@ target_sources(wincpp PRIVATE
+-add_library(wincpp STATIC)
++add_library(wincpp)
++set_target_properties(wincpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+ 
+ # Link the library to the core
+-target_link_libraries(wincpp INTERFACE _wincpp_core)
++target_link_libraries(wincpp PUBLIC _wincpp_core)
+ 
+ # Add the source files to the project
+ target_sources(wincpp PRIVATE 	
+@@ -89,3 +89,38 @@ target_sources(wincpp PRIVATE
  
  # Add the include directory to the project
  target_include_directories(wincpp PRIVATE ${include_dir})
@@ -36,21 +46,35 @@ index 9d5adce..b85cea0 100644
 +    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/wincpp"
++    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 +)
 +
 +install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/../include/wincpp" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 +
 +include(CMakePackageConfigHelpers)
-+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake" VERSION 1.5.3.6 COMPATIBILITY AnyNewerVersion)
-+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake" "include(\${CMAKE_CURRENT_LIST_DIR}/wincppTargets.cmake)\n")
-+install(FILES
-+	    "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake"
-+	        "${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake"
-+		DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/wincpp
++write_basic_package_version_file(
++    "${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake" 
++    VERSION 1.5.3.6 
++    COMPATIBILITY AnyNewerVersion
 +)
 +
-+install(EXPORT wincpp-export FILE wincppTargets.cmake NAMESPACE wincpp:: DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/wincpp)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake" 
++    "include(\${CMAKE_CURRENT_LIST_DIR}/wincppTargets.cmake)\n"
++)
++
++set(wincpp_CONFFILE_DEST "${CMAKE_INSTALL_DATAROOTDIR}/wincpp")
++
++install(FILES
++    "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake"
++    "${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake"
++    DESTINATION ${wincpp_CONFFILE_DEST}
++)
++
++install(EXPORT wincpp-export 
++    FILE wincppTargets.cmake 
++    NAMESPACE wincpp:: 
++    DESTINATION ${wincpp_CONFFILE_DEST}
++)
 diff --git a/src/memory_factory.cpp b/src/memory_factory.cpp
 index 50cd83d..360bfce 100644
 --- a/src/memory_factory.cpp
