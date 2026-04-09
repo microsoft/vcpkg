@@ -2,31 +2,7 @@ diff --git a/tools/src/CMakeLists.txt b/tools/src/CMakeLists.txt
 index 81e2da6..f785c51 100644
 --- a/tools/src/CMakeLists.txt
 +++ b/tools/src/CMakeLists.txt
-@@ -49,7 +49,6 @@ target_link_libraries (orc-contents
- 
- add_executable (orc-scan
-   FileScan.cc
--  ToolsHelper.cc
-   )
- 
- target_link_libraries (orc-scan
-@@ -58,7 +57,6 @@ target_link_libraries (orc-scan
- 
- add_executable (orc-metadata
-   FileMetadata.cc
--  ToolsHelper.cc
-   )
- 
- target_link_libraries (orc-metadata
-@@ -76,7 +74,6 @@ target_link_libraries (orc-statistics
- 
- add_executable (orc-memory
-   FileMemory.cc
--  ToolsHelper.cc
-   )
- 
- target_link_libraries (orc-memory
-@@ -98,6 +95,14 @@ add_executable (csv-import
+@@ -98,6 +98,14 @@ add_executable (csv-import
  target_link_libraries (csv-import
    orc-tools-common
    )
@@ -38,6 +14,6 @@ index 81e2da6..f785c51 100644
 +  find_library(GETTIMEOFDAY_LIBRARY gettimeofday PATH_SUFFIXES manual-link REQUIRED)
 +  target_link_libraries(csv-import "${GETTIMEOFDAY_LIBRARY}")
 +endif()
- 
+
  set(CPP_TOOL_NAMES
    orc-contents
