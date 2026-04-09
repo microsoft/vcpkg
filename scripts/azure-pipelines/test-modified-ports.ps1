@@ -96,7 +96,6 @@ if (!(Test-Path $env:AZCOPY_LOG_LOCATION))
     New-Item -ItemType Directory -Path $env:AZCOPY_LOG_LOCATION | Out-Null
 }
 Write-Host "AzCopy logs location: $env:AZCOPY_LOG_LOCATION"
-Write-Host "##vso[task.setvariable variable=AZCOPY_LOGS_EMPTY]$true"
 
 $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
@@ -160,8 +159,6 @@ if ($testFeatures) {
     $failingAbiLogArg = "--failing-abi-log=$knownFailingAbisFile"
     & $vcpkgExe x-test-features --for-merge-with origin/master $tripletArg $failureLogsArg $ciBaselineArg $failingAbiLogArg $ciFeatureBaselineArg @commonArgs @cachingArgs
     $lastLastExitCode = $LASTEXITCODE
-    $azcopyLogsEmpty = ((Get-ChildItem $env:AZCOPY_LOG_LOCATION).Count -eq 0)
-    Write-Host "##vso[task.setvariable variable=AZCOPY_LOGS_EMPTY]$azcopyLogsEmpty"
     if ($lastLastExitCode -ne 0)
     {
         Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$false"
@@ -265,8 +262,6 @@ $prHashesFile = Join-Path $ArtifactStagingDirectory "pr-hashes.json"
 $lastLastExitCode = $LASTEXITCODE
 $failureLogsEmpty = (-Not (Test-Path $failureLogs) -Or ((Get-ChildItem $failureLogs).Count -eq 0))
 Write-Host "##vso[task.setvariable variable=FAILURE_LOGS_EMPTY]$failureLogsEmpty"
-$azcopyLogsEmpty = ((Get-ChildItem $env:AZCOPY_LOG_LOCATION).Count -eq 0)
-Write-Host "##vso[task.setvariable variable=AZCOPY_LOGS_EMPTY]$azcopyLogsEmpty"
 Write-Host "##vso[task.setvariable variable=XML_RESULTS_FILE]$xunitFile"
 
 if ($lastLastExitCode -ne 0)
