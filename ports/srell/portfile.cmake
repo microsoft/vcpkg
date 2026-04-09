@@ -1,10 +1,10 @@
-set(VERSION 3_010)
+string(REPLACE "." "_" VERSION ${VERSION})
 
 vcpkg_download_distfile(
 	ARCHIVE
-	URLS "https://www.akenotsuki.com/misc/srell/srell${VERSION}.zip"
+	URLS "https://www.akenotsuki.com/misc/srell/releases/srell${VERSION}.zip"
 	FILENAME "srell${VERSION}.zip"
-	SHA512 5F2762A98E1B68C3A4FA79051AE2CBEFD23CEDF1CE833FA1EB812D3F1112734018AF36AA9D9A50E2DC40C87A7FAAF46AF0B8F4161481994DC5E19F44301E867D
+	SHA512 02d8292212ad570cc5fd37820c47097bef025b3f896a536ce9de2d3bd07bf961e6ab58d80caa216e40eaf0d75862f617010bae8bca7d2f424a81c832c8874697
 )
 
 vcpkg_extract_source_archive(
@@ -15,8 +15,8 @@ vcpkg_extract_source_archive(
 
 file(INSTALL
 	"${SOURCE_PATH}/srell.hpp"
-	"${SOURCE_PATH}/srell_ucfdata2.hpp"
-	"${SOURCE_PATH}/srell_updata.hpp"
+	"${SOURCE_PATH}/srell_ucfdata2.h"
+	"${SOURCE_PATH}/srell_updata3.h"
 	DESTINATION "${CURRENT_PACKAGES_DIR}/include"
 )
 
