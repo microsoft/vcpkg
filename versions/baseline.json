@@ -3377,8 +3377,8 @@
       "port-version": 6
     },
     "gexiv2": {
-      "baseline": "0.14.3",
-      "port-version": 3
+      "baseline": "0.14.6",
+      "port-version": 0
     },
     "gflags": {
       "baseline": "2.3.0",
