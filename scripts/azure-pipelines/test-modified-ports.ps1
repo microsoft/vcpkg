@@ -57,7 +57,7 @@ Param(
     $BinarySourceStub = $null,
     [String]$BuildReason = $null,
     [switch]$NoParentHashes = $false,
-    [switch]$AllowUnexpectedPassing = $false
+    [switch]$ForceAllowUnexpectedPassing = $false
 )
 
 function Add-ToolchainToTestCMake {
@@ -119,6 +119,7 @@ if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
         Write-Host 'Build reason was Pull Request, using binary caching in read write mode, testing features, skipping failures.'
         $skipFailuresArgs = @('--skip-failures')
         $testFeatures = $true
+        $ForceAllowUnexpectedPassing = $true
     }
     else {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
@@ -239,7 +240,7 @@ if (($BuildReason -eq 'PullRequest') -and -not $NoParentHashes)
 }
 
 $allowUnexpectedPassingArgs = @()
-if ($AllowUnexpectedPassing) {
+if ($ForceAllowUnexpectedPassing) {
     $allowUnexpectedPassingArgs = @('--allow-unexpected-passing')
 }
 
