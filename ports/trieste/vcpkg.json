@@ -1,6 +1,7 @@
 {
   "name": "trieste",
   "version": "1.0.0",
+  "port-version": 1,
   "description": "A header-only C++20 term rewriting system for rapidly prototyping programming languages",
   "homepage": "https://github.com/microsoft/Trieste",
   "license": "MIT",

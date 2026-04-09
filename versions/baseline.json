@@ -10190,7 +10190,7 @@
     },
     "trieste": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "triton": {
       "baseline": "2025-02-15",

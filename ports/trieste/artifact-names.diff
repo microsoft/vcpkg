@@ -1,0 +1,24 @@
+diff --git a/parsers/json/CMakeLists.txt b/parsers/json/CMakeLists.txt
+index ac253e1..a596443 100644
+--- a/parsers/json/CMakeLists.txt
++++ b/parsers/json/CMakeLists.txt
+@@ -11,6 +11,7 @@ else()
+   add_library(json STATIC ${SOURCES})
+ endif()
+ enable_warnings(json)
++set_target_properties(json PROPERTIES OUTPUT_NAME trieste-json)
+ 
+ add_library(trieste::json ALIAS json)
+ 
+diff --git a/parsers/yaml/CMakeLists.txt b/parsers/yaml/CMakeLists.txt
+index 075ed2d..e07feba 100644
+--- a/parsers/yaml/CMakeLists.txt
++++ b/parsers/yaml/CMakeLists.txt
+@@ -13,6 +13,7 @@ else()
+   add_library(yaml STATIC ${SOURCES})
+ endif()
+ enable_warnings(yaml)
++set_target_properties(yaml PROPERTIES OUTPUT_NAME trieste-yaml)
+ 
+ add_library(trieste::yaml ALIAS yaml)
+ 
