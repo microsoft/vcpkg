@@ -6101,8 +6101,8 @@
       "port-version": 0
     },
     "log4cxx": {
-      "baseline": "1.6.1",
-      "port-version": 1
+      "baseline": "1.7.0",
+      "port-version": 0
     },
     "logme": {
       "baseline": "2.4.14",
