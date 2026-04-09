@@ -1,15 +1,18 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9d5adce..97ae430 100644
+index 9d5adce..aab5840 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -36,7 +36,6 @@ set(header_files
+@@ -36,9 +36,8 @@ set(header_files
  
  # Add the library to the project
  add_library(_wincpp_core INTERFACE)
 -
  # Add the include directory to the project
- target_sources(_wincpp_core INTERFACE ${header_files})
+-target_sources(_wincpp_core INTERFACE ${header_files})
++target_sources(_wincpp_core INTERFACE $<BUILD_INTERFACE:${header_files}>)
  
+ # Add the include directories
+ target_include_directories(_wincpp_core SYSTEM INTERFACE 
 @@ -89,3 +88,25 @@ target_sources(wincpp PRIVATE
  
  # Add the include directory to the project
