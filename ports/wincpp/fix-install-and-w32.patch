@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9d5adce..aab5840 100644
+index 9d5adce..0a9218d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -36,9 +36,8 @@ set(header_files
@@ -35,7 +35,7 @@ index 9d5adce..aab5840 100644
 +install(FILES
 +	    "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake"
 +	        "${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake"
-+		    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp
++		DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/wincpp
 +)
 +
 +install(EXPORT wincpp-export FILE wincppTargets.cmake NAMESPACE wincpp:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp)
