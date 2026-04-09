@@ -5645,7 +5645,7 @@
       "port-version": 2
     },
     "libstemmer": {
-      "baseline": "2021.2.2.0",
+      "baseline": "2025.3.0.1",
       "port-version": 0
     },
     "libstk": {
