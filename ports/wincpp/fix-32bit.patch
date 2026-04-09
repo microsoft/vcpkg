@@ -1,0 +1,32 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 38768ee..9df2a8a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -89,6 +89,7 @@ target_sources(wincpp PRIVATE
+ # Add the include directory to the project
+ target_include_directories(wincpp PRIVATE ${include_dir})
+ 
++include(GNUInstallDirs)
+ # Install wincpp library
+ install(TARGETS wincpp EXPORT wincpp
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+diff --git a/src/memory_factory.cpp b/src/memory_factory.cpp
+index 50cd83d..360bfce 100644
+--- a/src/memory_factory.cpp
++++ b/src/memory_factory.cpp
+@@ -24,7 +24,7 @@ namespace wincpp
+             }
+             case wincpp::memory_type::remote_t:
+             {
+-                std::size_t read;
++                SIZE_T read;
+ 
+                 if ( !ReadProcessMemory( p->handle->native, reinterpret_cast< void* >( address ), buffer, size, &read ) || read != size )
+                     return false;
+@@ -201,4 +201,4 @@ namespace wincpp
+ 
+         return nullptr;
+     }
+-}  // namespace wincpp
+\ No newline at end of file
++}  // namespace wincpp

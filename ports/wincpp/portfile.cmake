@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF main
     PATCHES
         add-install.patch
+	fix-32bit.patch
 )
 
 vcpkg_cmake_configure(
