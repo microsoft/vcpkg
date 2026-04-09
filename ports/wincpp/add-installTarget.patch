@@ -1,7 +1,16 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9df2a8a..b26af43 100644
+index 9df2a8a..e8e4d77 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
+@@ -91,7 +91,7 @@ target_include_directories(wincpp PRIVATE ${include_dir})
+ 
+ include(GNUInstallDirs)
+ # Install wincpp library
+-install(TARGETS wincpp EXPORT wincpp
++install(TARGETS wincpp EXPORT wincpp-export
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 @@ -99,3 +99,14 @@ install(TARGETS wincpp EXPORT wincpp
  )
  
@@ -16,4 +25,4 @@ index 9df2a8a..b26af43 100644
 +		    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp
 +)
 +
-+install(EXPORT wincppTargets FILE wincppTargets.cmake NAMESPACE wincpp:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp)
++install(EXPORT wincpp-export FILE wincppTargets.cmake NAMESPACE wincpp:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp)
