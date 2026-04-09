@@ -1390,7 +1390,6 @@ sqlitecpp[sqlcipher]:x64-linux=cascade
 sqlitecpp[sqlcipher]:x64-windows-static-md=cascade
 sqlitecpp[sqlcipher]:x64-windows-static=cascade
 sqlpp11[core,mariadb,mysql]=options # can not select mariadb and mysql at the same time
-sqlpp11[mysql]:x86-windows=cascade
 sqlpp11-connector-mysql[core,mariadb,mysql]=options # can not select mariadb and mysql at the same time
 sqlpp11-connector-mysql[mysql]:arm64-windows=cascade
 sqlpp11-connector-mysql[mysql]:x64-windows-static-md=cascade
