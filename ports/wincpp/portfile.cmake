@@ -5,9 +5,7 @@ vcpkg_from_github(
     SHA512 43674f7e899ce1d4088ad76f4f224c8202aa6af508211cbbae69366ca6467cf61520e0c65d852d0ad805045e9b3d69d414b6ba434d4c8b64becac120d28df294
     HEAD_REF main
     PATCHES
-        add-install.patch
-	fix-32bit.patch
-	add-installTarget.patch
+        fix-install-and-w32.patch
 )
 
 vcpkg_cmake_configure(

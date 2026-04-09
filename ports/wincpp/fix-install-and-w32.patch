@@ -1,0 +1,58 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9d5adce..97ae430 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -36,7 +36,6 @@ set(header_files
+ 
+ # Add the library to the project
+ add_library(_wincpp_core INTERFACE)
+-
+ # Add the include directory to the project
+ target_sources(_wincpp_core INTERFACE ${header_files})
+ 
+@@ -89,3 +88,25 @@ target_sources(wincpp PRIVATE
+ 
+ # Add the include directory to the project
+ target_include_directories(wincpp PRIVATE ${include_dir})
++
++include(GNUInstallDirs)
++# Install wincpp library
++install(TARGETS wincpp _wincpp_core EXPORT wincpp-export
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++)
++
++install(FILES ${header_files} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake" VERSION 1.5.3.6 COMPATIBILITY AnyNewerVersion)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake" "include(\${CMAKE_CURRENT_LIST_DIR}/wincppTargets.cmake)\n")
++install(FILES
++	    "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake"
++	        "${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake"
++		    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp
++)
++
++install(EXPORT wincpp-export FILE wincppTargets.cmake NAMESPACE wincpp:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp)
+diff --git a/src/memory_factory.cpp b/src/memory_factory.cpp
+index 50cd83d..360bfce 100644
+--- a/src/memory_factory.cpp
++++ b/src/memory_factory.cpp
+@@ -24,7 +24,7 @@ namespace wincpp
+             }
+             case wincpp::memory_type::remote_t:
+             {
+-                std::size_t read;
++                SIZE_T read;
+ 
+                 if ( !ReadProcessMemory( p->handle->native, reinterpret_cast< void* >( address ), buffer, size, &read ) || read != size )
+                     return false;
+@@ -201,4 +201,4 @@ namespace wincpp
+ 
+         return nullptr;
+     }
+-}  // namespace wincpp
+\ No newline at end of file
++}  // namespace wincpp
