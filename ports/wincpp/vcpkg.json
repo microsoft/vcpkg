@@ -3,6 +3,7 @@
   "version": "1.5.3.6",
   "description": "A fully featured Win32 wrapper written in modern C++",
   "license": "MIT",
+  "supports": "windows",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
