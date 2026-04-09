@@ -1,0 +1,27 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9d5adce..9df2a8a 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -36,7 +36,6 @@ set(header_files
+ 
+ # Add the library to the project
+ add_library(_wincpp_core INTERFACE)
+-
+ # Add the include directory to the project
+ target_sources(_wincpp_core INTERFACE ${header_files})
+ 
+@@ -89,3 +88,14 @@ target_sources(wincpp PRIVATE
+ 
+ # Add the include directory to the project
+ target_include_directories(wincpp PRIVATE ${include_dir})
++
++include(GNUInstallDirs)
++# Install wincpp library
++install(TARGETS wincpp EXPORT wincpp
++    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++)
++
++install(FILES ${header_files} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

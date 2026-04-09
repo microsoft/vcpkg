@@ -10776,6 +10776,10 @@
       "baseline": "0.4.6",
       "port-version": 1
     },
+    "wincpp": {
+      "baseline": "1.5.3.6",
+      "port-version": 0
+    },
     "wincrypt": {
       "baseline": "0.0",
       "port-version": 4
