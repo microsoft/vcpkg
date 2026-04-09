@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
     PATCHES
         fix-library-install-path.patch
         fix-pkgconfig.patch
+        support-arm64-win.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
