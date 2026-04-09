@@ -1,0 +1,19 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9df2a8a..b26af43 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -99,3 +99,14 @@ install(TARGETS wincpp EXPORT wincpp
+ )
+ 
+ install(FILES ${header_files} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake" VERSION 1.5.3.6 COMPATIBILITY AnyNewerVersion)
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake" "include(\${CMAKE_CURRENT_LIST_DIR}/wincppTargets.cmake)\n")
++install(FILES
++	    "${CMAKE_CURRENT_BINARY_DIR}/wincppConfig.cmake"
++	        "${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake"
++		    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp
++)
++
++install(EXPORT wincppTargets FILE wincppTargets.cmake NAMESPACE wincpp:: DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wincpp)

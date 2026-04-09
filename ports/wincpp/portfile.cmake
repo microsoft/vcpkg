@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         add-install.patch
 	fix-32bit.patch
+	add-installTarget.patch
 )
 
 vcpkg_cmake_configure(
