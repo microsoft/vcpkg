@@ -76,7 +76,7 @@ index 9d5adce..eff939d 100644
 +    DESTINATION ${wincpp_CONFFILE_DEST}
 +)
 diff --git a/src/memory_factory.cpp b/src/memory_factory.cpp
-index 50cd83d..360bfce 100644
+index 50cd83d..82c1474 100644
 --- a/src/memory_factory.cpp
 +++ b/src/memory_factory.cpp
 @@ -24,7 +24,7 @@ namespace wincpp
@@ -88,6 +88,15 @@ index 50cd83d..360bfce 100644
  
                  if ( !ReadProcessMemory( p->handle->native, reinterpret_cast< void* >( address ), buffer, size, &read ) || read != size )
                      return false;
+@@ -61,7 +61,7 @@ namespace wincpp
+             }
+             case wincpp::memory_type::remote_t:
+             {
+-                std::size_t written;
++                SIZE_T written;
+ 
+                 WriteProcessMemory( p->handle->native, reinterpret_cast< void* >( address ), buffer, size, &written );
+                 return written;
 @@ -201,4 +201,4 @@ namespace wincpp
  
          return nullptr;
