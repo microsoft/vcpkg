@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9d5adce..73a6d95 100644
+index 9d5adce..b85cea0 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -39,7 +39,7 @@ index 9d5adce..73a6d95 100644
 +    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/wincpp"
 +)
 +
-+install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/../include" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/wincpp")
++install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/../include/wincpp" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 +
 +include(CMakePackageConfigHelpers)
 +write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake" VERSION 1.5.3.6 COMPATIBILITY AnyNewerVersion)
