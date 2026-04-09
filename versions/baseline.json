@@ -8801,7 +8801,7 @@
       "port-version": 1
     },
     "rocksdb": {
-      "baseline": "10.10.1",
+      "baseline": "11.0.4",
       "port-version": 0
     },
     "rp-ntuples": {
