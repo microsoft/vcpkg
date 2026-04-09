@@ -1,8 +1,15 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9d5adce..d1bf50d 100644
+index 9d5adce..dd627a6 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -36,9 +36,8 @@ set(header_files
+@@ -1,5 +1,5 @@
+ cmake_path(SET include_dir "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+-
++include(GNUInstallDirs)
+ # Add the header files to the project
+ set(header_files 
+ 	"${include_dir}/wincpp/process.hpp"
+@@ -36,14 +36,13 @@ set(header_files
  
  # Add the library to the project
  add_library(_wincpp_core INTERFACE)
@@ -13,21 +20,26 @@ index 9d5adce..d1bf50d 100644
  
  # Add the include directories
  target_include_directories(_wincpp_core SYSTEM INTERFACE 
-@@ -89,3 +88,25 @@ target_sources(wincpp PRIVATE
+ 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
+-	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/wincpp>
+ )
+ 
+ # Add the library to the project
+@@ -89,3 +88,24 @@ target_sources(wincpp PRIVATE
  
  # Add the include directory to the project
  target_include_directories(wincpp PRIVATE ${include_dir})
 +
-+include(GNUInstallDirs)
 +# Install wincpp library
 +install(TARGETS wincpp _wincpp_core EXPORT wincpp-export
 +    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 +    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
++    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/wincpp"
 +)
 +
-+install(FILES ${header_files} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
++install(FILES ${header_files} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/wincpp")
 +
 +include(CMakePackageConfigHelpers)
 +write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/wincppConfigVersion.cmake" VERSION 1.5.3.6 COMPATIBILITY AnyNewerVersion)
