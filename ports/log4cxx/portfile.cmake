@@ -11,6 +11,7 @@ vcpkg_extract_source_archive(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         qt        LOG4CXX_QT_SUPPORT
+        qt6       LOG4CXX_QT_SUPPORT
         fmt       ENABLE_FMT_LAYOUT
         fmt       ENABLE_FMT_ASYNC
         fmt       VCPKG_LOCK_FIND_PACKAGE_fmt
