@@ -1,0 +1,35 @@
+diff --git a/icey.cmake b/icey.cmake
+index 816f1c3..f472b9d 100644
+--- a/icey.cmake
++++ b/icey.cmake
+@@ -195,6 +195,7 @@ else()
+     pkg_check_modules(LIBUV QUIET IMPORTED_TARGET GLOBAL libuv)
+   endif()
+   find_package(llhttp CONFIG QUIET)
++  find_package(nlohmann_json CONFIG REQUIRED)
+   find_package(ZLIB REQUIRED)
+   if(NOT TARGET llhttp_static
+      AND NOT TARGET llhttp::llhttp_static
+diff --git a/src/json/CMakeLists.txt b/src/json/CMakeLists.txt
+index 8983ef5..976899e 100644
+--- a/src/json/CMakeLists.txt
++++ b/src/json/CMakeLists.txt
+@@ -1,6 +1,12 @@
+-icy_add_module(json
+-  DEPENDS base
+-  PRETTY_NAME JSON
+-)
+-# nlohmann/json.hpp is vendored in include/nlohmann/ (MIT licensed, single-header)
+-# so no external dependency is needed - icy_add_module already adds our include dir.
++if(USE_SYSTEM_DEPS)
++  icy_add_module(json
++    DEPENDS base
++    PACKAGES nlohmann_json::nlohmann_json
++    PRETTY_NAME JSON
++  )
++else()
++  icy_add_module(json
++    DEPENDS base
++    PRETTY_NAME JSON
++  )
++endif()

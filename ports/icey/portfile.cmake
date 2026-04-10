@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nilstate/icey
-    REF "2.4.2"
-    SHA512 1b56b3c9f082d4d35f9150c75c1c23972c696f853f3f0627787f33882e07c44de843b3896dc4a54f04cefd20dd7b4a6f64a52c5cdabc11d98b5be57c17193dfb
+    REF 6692243b82e687279ed40f6df54ab93d8964b6a1 # 2.4.2
+    SHA512 c1956e7035c2f4aef8cd1005fc8f6373d4b90c4409bd1dd104b5f9f415f9e347da7b1c530ac8f1192f7953a076ec21f0a8aed9618e236324e0c5154f12e79dce
     HEAD_REF main
+    PATCHES
+        001-devendor-nlohmann-json.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -11,6 +13,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ffmpeg   WITH_FFMPEG
         opencv   WITH_OPENCV
 )
+
+file(REMOVE_RECURSE "${SOURCE_PATH}/src/json/include/nlohmann")
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
