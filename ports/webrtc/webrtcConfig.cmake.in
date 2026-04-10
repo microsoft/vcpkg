@@ -1,0 +1,70 @@
+include(CMakeFindDependencyMacro)
+
+find_dependency(absl CONFIG REQUIRED)
+find_dependency(AOM CONFIG REQUIRED)
+find_dependency(libyuv CONFIG REQUIRED)
+find_dependency(unofficial-libvpx CONFIG REQUIRED)
+find_dependency(Opus CONFIG REQUIRED)
+find_dependency(OpenSSL CONFIG REQUIRED)
+find_dependency(libSRTP CONFIG REQUIRED)
+find_dependency(jsoncpp CONFIG REQUIRED)
+find_dependency(pffft CONFIG REQUIRED)
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    find_dependency(Threads)
+endif()
+
+get_filename_component(_webrtc_prefix "${CMAKE_CURRENT_LIST_DIR}/../.." ABSOLUTE)
+include("${CMAKE_CURRENT_LIST_DIR}/webrtc-absl-targets.cmake")
+
+set(_webrtc_transitive_archives
+    ${WEBRTC_ABSL_STATIC_ARCHIVES}
+    AOM::aom
+    yuv
+    unofficial::libvpx::libvpx
+    Opus::opus
+    JsonCpp::JsonCpp
+    pffft::pffft
+    libSRTP::srtp2
+    OpenSSL::SSL
+)
+set(_webrtc_link_group_linux
+    "$<LINK_GROUP:RESCAN,webrtc::webrtc,${_webrtc_transitive_archives}>"
+)
+set(_webrtc_link_group_other
+    "webrtc::webrtc;${_webrtc_transitive_archives}"
+)
+set(_webrtc_imported_location_debug "${_webrtc_prefix}/debug/lib/libwebrtc.a")
+set(_webrtc_imported_location_release "${_webrtc_prefix}/lib/libwebrtc.a")
+set(_webrtc_interface_link_libraries
+    "Threads::Threads;${WEBRTC_ABSL_IMPORTED_TARGETS};$<$<PLATFORM_ID:Linux>:${_webrtc_link_group_linux}>;$<$<NOT:$<PLATFORM_ID:Linux>>:${_webrtc_link_group_other}>"
+)
+set(_webrtc_windows_system_libraries
+    ws2_32
+    winmm
+    iphlpapi
+    msdmo
+    dmoguids
+    wmcodecdspuuid
+)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(_webrtc_imported_location_debug "${_webrtc_prefix}/debug/lib/webrtc.lib")
+    set(_webrtc_imported_location_release "${_webrtc_prefix}/lib/webrtc.lib")
+    set(_webrtc_interface_link_libraries
+        "${WEBRTC_ABSL_IMPORTED_TARGETS};${_webrtc_transitive_archives};${_webrtc_windows_system_libraries}"
+    )
+endif()
+
+if(NOT TARGET webrtc::webrtc)
+    add_library(webrtc::webrtc STATIC IMPORTED)
+    set_target_properties(webrtc::webrtc PROPERTIES
+        IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
+        IMPORTED_LOCATION_DEBUG "${_webrtc_imported_location_debug}"
+        IMPORTED_LOCATION_RELEASE "${_webrtc_imported_location_release}"
+        INTERFACE_INCLUDE_DIRECTORIES "${_webrtc_prefix}/include"
+        INTERFACE_LINK_LIBRARIES "${_webrtc_interface_link_libraries}"
+        INTERFACE_LINK_OPTIONS "$<$<PLATFORM_ID:Linux>:-fuse-ld=lld>;$<$<PLATFORM_ID:Darwin>:SHELL:-framework AudioToolbox;SHELL:-framework CoreAudio;SHELL:-framework CoreFoundation;SHELL:-framework Foundation;SHELL:-framework AppKit;SHELL:-framework ApplicationServices>"
+        INTERFACE_COMPILE_DEFINITIONS
+            "CHROMIUM;DYNAMIC_ANNOTATIONS_ENABLED=1;LIBYUV_DISABLE_SVE;LIBYUV_DISABLE_SME;LIBYUV_DISABLE_LSX;LIBYUV_DISABLE_LASX;PROTOBUF_ENABLE_DEBUG_LOGGING_MAY_LEAK_PII=0;RTC_DAV1D_IN_INTERNAL_DECODER_FACTORY;RTC_ENABLE_VP9;WEBRTC_DEPRECATE_PLAN_B;WEBRTC_ENCODER_PSNR_STATS;WEBRTC_HAVE_SCTP;WEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE;WEBRTC_NON_STATIC_TRACE_EVENT_HANDLERS=0;WEBRTC_STRICT_FIELD_TRIALS=0;$<$<PLATFORM_ID:Linux>:@WEBRTC_LINUX_INTERFACE_DEFINITIONS@>;$<$<PLATFORM_ID:Darwin>:WEBRTC_MAC;WEBRTC_POSIX>;$<$<PLATFORM_ID:Windows>:NOMINMAX;UNICODE;WIN32;WIN32_LEAN_AND_MEAN;WEBRTC_WIN>"
+    )
+endif()

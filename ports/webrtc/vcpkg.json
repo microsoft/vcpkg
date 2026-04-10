@@ -1,0 +1,40 @@
+{
+  "name": "webrtc",
+  "version-date": "2026-03-17",
+  "description": "WebRTC real-time communication library",
+  "homepage": "https://webrtc.googlesource.com/src",
+  "license": "BSD-3-Clause",
+  "supports": "(linux & (arm64 | x64)) | (osx & (arm64 | x64)) | (windows & (arm64 | x86 | x64))",
+  "dependencies": [
+    "abseil",
+    "aom",
+    "jsoncpp",
+    {
+      "name": "libsrtp",
+      "features": [
+        "openssl"
+      ]
+    },
+    "libvpx",
+    "libyuv",
+    "openssl",
+    "opus",
+    "pffft",
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-gn",
+      "host": true
+    },
+    {
+      "name": "vcpkg-tool-ninja",
+      "host": true
+    },
+    {
+      "name": "yasm",
+      "host": true
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+diff --git a/src/vec_neon.h b/src/vec_neon.h
+index bca7425547..456275f3b3 100644
+--- a/src/vec_neon.h
++++ b/src/vec_neon.h
+@@ -402,12 +402,12 @@ static inline void cgemv8x4(float *_out, const opus_int8 *w, const float *scale,
+       for (;j<cols-4;j+=8)
+       {
+          int8x16_t vw0, vw1, vw2, vw3, vx0, vx1;
+-         vx0 = (int8x16_t)vld1q_dup_s32((int*)(void*)&x[j]);
++         vx0 = vreinterpretq_s8_s32(vld1q_dup_s32((const int32_t*)(const void*)&x[j]));
+          vw0 = vld1q_s8(w);
+          vw1 = vld1q_s8(&w[16]);
+          acc0 = vdotprod(acc0, vw0, vx0);
+          acc1 = vdotprod(acc1, vw1, vx0);
+-         vx1 = (int8x16_t)vld1q_dup_s32((int*)(void*)&x[j+4]);
++         vx1 = vreinterpretq_s8_s32(vld1q_dup_s32((const int32_t*)(const void*)&x[j+4]));
+          vw2 = vld1q_s8(&w[32]);
+          vw3 = vld1q_s8(&w[48]);
+          acc2 = vdotprod(acc2, vw2, vx1);
+@@ -419,7 +419,7 @@ static inline void cgemv8x4(float *_out, const opus_int8 *w, const float *scale,
+       for (;j<cols;j+=4)
+       {
+          int8x16_t vw0, vw1, vx;
+-         vx = (int8x16_t)vld1q_dup_s32((int*)(void*)&x[j]);
++         vx = vreinterpretq_s8_s32(vld1q_dup_s32((const int32_t*)(const void*)&x[j]));
+          vw0 = vld1q_s8(w);
+          vw1 = vld1q_s8(&w[16]);
+          acc0 = vdotprod(acc0, vw0, vx);
+@@ -457,7 +457,7 @@ static inline void sparse_cgemv8x4(float *_out, const opus_int8 *w, const int *
+          int pos;
+          pos = (*idx++);
+          int8x16_t vw0, vw1, vx;
+-         vx = (int8x16_t)vld1q_dup_s32((int*)(void*)&x[pos]);
++         vx = vreinterpretq_s8_s32(vld1q_dup_s32((const int32_t*)(const void*)&x[pos]));
+          vw0 = vld1q_s8(w);
+          vw1 = vld1q_s8(&w[16]);
+          acc0 = vdotprod(acc0, vw0, vx);
