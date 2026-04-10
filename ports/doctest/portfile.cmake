@@ -3,7 +3,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO doctest/doctest
     REF "v${VERSION}"
-    SHA512 d55aae632e6d66add7b65d0e97bde5063cdae7512836f278613af35957c62dbc6b0b0febbe2eb1eddd334a7a5343faca7357a2eeebbf1428cafffeb5d18e610c
+    SHA512 6a1b44707cc409e106d02c1efa8d28b0c86e26dfa4c0fc6f7050b0cfd9b02859fbd502c067dcc88e70ee23b7adb35869f0555deebd8615c5342eb87c0f271fac
     HEAD_REF master
 )
 

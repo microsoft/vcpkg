@@ -36,9 +36,9 @@ else()
     list(APPEND options "--enable-nls=no")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${options}
         --enable-debuginfod=no
@@ -48,7 +48,7 @@ vcpkg_configure_make(
         --with-zstd
 )
 
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE

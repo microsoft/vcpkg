@@ -61,8 +61,10 @@
           "default-features": false
         },
         {
+          "$comment": "CMake 3.22 for (transitive) FindMPI looking at pkg-config",
           "$package": "GDAL",
           "name": "gdal",
+          "$since": "3.22",
           "default-features": false,
           "platform": "!uwp"
         },
@@ -82,7 +84,7 @@
         {
           "$package": "LAPACK",
           "name": "lapack",
-          "platform": "!android & !(uwp & arm)"
+          "platform": "!android & !(uwp & arm) & !(linux & arm)"
         },
         {
           "$package": "GnuTLS",

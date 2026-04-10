@@ -1,0 +1,27 @@
+diff --git a/cmake/config.in b/cmake/config.in
+index f2524e4..6054b6d 100644
+--- a/cmake/config.in
++++ b/cmake/config.in
+@@ -19,9 +19,6 @@
+ /* Define to 1 if you have the `gmtime_r' function. */
+ #cmakedefine HAVE_GMTIME_R @HAVE_GMTIME_R@
+ 
+-/* Define to 1 if you have the <limits.h> header file. */
+-#cmakedefine HAVE_LIMITS_H @HAVE_LIMITS_H@
+-
+ /* Define to 1 if you have the <pcap/pcap.h> header file. */
+ #cmakedefine HAVE_PCAP_PCAP_H @HAVE_PCAP_PCAP_H@
+ 
+diff --git a/cmake/options.h.in b/cmake/options.h.in
+index 7446b1b..615cc9b 100644
+--- a/cmake/options.h.in
++++ b/cmake/options.h.in
+@@ -122,6 +122,8 @@ extern "C" {
+ #cmakedefine HAVE_KEYING_MATERIAL
+ #undef HAVE_LIBOQS
+ #cmakedefine HAVE_LIBOQS
++#undef HAVE_LIMITS_H
++#cmakedefine HAVE_LIMITS_H @HAVE_LIMITS_H@
+ #undef HAVE_MAX_FRAGMENT
+ #cmakedefine HAVE_MAX_FRAGMENT
+ #undef HAVE_OCSP

@@ -22,15 +22,15 @@ if(VCPKG_CROSSCOMPILING AND VCPKG_TARGET_IS_ANDROID)
                     "HOST_MTP_HOTPLUG=${CURRENT_HOST_INSTALLED_DIR}/tools/libmtp/bin/mtp-hotplug${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 endif()
 
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
+    AUTORECONF
     OPTIONS
         ${cross_flags}
         --disable-mtpz
         --disable-doxygen
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 

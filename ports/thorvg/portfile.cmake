@@ -2,15 +2,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thorvg/thorvg
     REF "v${VERSION}"
-    SHA512 4d4863aabb69b23741241ef030af22f029bd44aa3983800436d5b6740bcd94be38b70fe28131e8945d1e39ae104396effb30a85ce6f7a698252c9ba079e84f3a
+    SHA512 566892fe58e8f8314bc55bfc83a9a8294dfdb82a293313bf8670aa202186b6f0561c1cc5db145d36add50933b689c6a2ea0b62d92d0906409d63e49b189c8791
     HEAD_REF master
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND BUILD_OPTIONS -Dstatic=true)
-else()
-    list(APPEND BUILD_OPTIONS -Dstatic=false)
-endif()
 
 if ("tools" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -Dtools=all)
@@ -21,10 +15,11 @@ vcpkg_configure_meson(
     OPTIONS
         ${BUILD_OPTIONS}
         # see ${SOURCE_PATH}/meson_options.txt
+        -Dstatic=true # Use static modules
         -Dengines=['sw']
         -Dloaders=all
         -Dsavers=all
-        -Dsimd=false # The reason for setting 'Dsimd=false' was that the creator said a false setting was necessary
+        -Dsimd=true
         -Dbindings=capi
         -Dtests=false
         -Dstrip=false
@@ -37,6 +32,12 @@ vcpkg_configure_meson(
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/thorvg-1/thorvg.h" "#ifndef TVG_STATIC" "#if 0")
+else()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/thorvg-1/thorvg.h" "#ifndef TVG_STATIC" "#if 1")
+endif()
 
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES tvg-svg2png tvg-lottie2gif AUTO_CLEAN)

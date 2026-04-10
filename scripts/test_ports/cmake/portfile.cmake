@@ -35,14 +35,19 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(VCPKG_C_FLAGS "/D_CRT_DECLARE_NONSTDC_NAMES ${VCPKG_C_FLAGS}")
 endif()
 
+if(NOT (VCPKG_TARGET_ARCHITECTURE MATCHES "^arm" AND VCPKG_TARGET_IS_LINUX))
+    list(APPEND OPTIONS
+        -DBUILD_QtDialog=ON # Just to test Qt with CMake
+        -DCMake_QT_MAJOR_VERSION:STRING=6
+    )
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         ${OPTIONS}
         -DBUILD_TESTING=OFF
         -DCMAKE_USE_SYSTEM_LIBRARIES=ON
-        -DBUILD_QtDialog=ON # Just to test Qt with CMake
-        -DCMake_QT_MAJOR_VERSION:STRING=6
 )
 
 vcpkg_cmake_install(ADD_BIN_TO_PATH)

@@ -1,0 +1,14 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e90a030..e749954 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -426,9 +426,6 @@ add_subdirectory(thirdparty/optionparser)
+ ###############################################################################
+ # Testing options
+ ###############################################################################
+-enable_testing()
+-include(CTest)
+-add_subdirectory(test)
+ 
+ ###############################################################################
+ # Examples

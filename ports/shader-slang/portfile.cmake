@@ -18,13 +18,13 @@ if(key STREQUAL "windows-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64.zip"
-		SHA512 0db74f56c22ea630951aeb93a7f7be2be664de856e42dddf27fcc4f1f0dd05b2b8a4954193db6afb14e16933055b49c0cf478d9f658ce12231b8de3b5ba9882b
+		SHA512 405513d2f6f63d39024ffb9545c94c87210f1c9eea2340a9526355d785a628343d8c6ea5e2878ff1e65cde3a697505be3c8002f310e9a6b9d1b1a1af67bcb2fe
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-x86_64-debug-info.zip"
 		FILENAME "slang-${VERSION}-windows-x86_64-debug-info.zip"
-		SHA512 20e64e07a8c294c1760d7f04a00ff762cbe0775fef2642b712f96210fa73e449e6bce8bae6d805f164cf6cd1ae819067b385153ae4ce9f0700277d68253c3139
+		SHA512 26f9107701cd62b1a4a1f3b3950579acc7d940014a415bedef5d6762f7c06fa97d74e6a5cec3406a3db55d089e22daf7f605a4c1cfbdda527f44ae7aa627e1ff
 	)
 endif()
 if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -32,13 +32,13 @@ if(key STREQUAL "windows-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64.zip"
-		SHA512 17f15a6cb4df4de401b1fe09e8e2c383b82969759c9ada6713e075b5324ac7b160a01100ba99a609d0d6692bcdb0ba1cdd38e69ffa6d6000239fdfc20dd54cf1
+		SHA512 fed6f430e1ebf333c5d37f776139b86f9dca704fcbd82209934fb7377eda60f305680bdc63182cb57cee93c939a5a45ef9660293e0708513ddc734574b166bf6
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-windows-aarch64-debug-info.zip"
 		FILENAME "slang-${VERSION}-windows-aarch64-debug-info.zip"
-		SHA512 9410a86b7d5f3f1c78a0a7eaf940ad64089a98ecd37f8081122700f5184c1ef3caac977b3b68462c8e7091f371036ac3fb81124476fff5e0292762d8b286f525
+		SHA512 cda710961ddd2a095485e42053c50270536f66da4fa1059dd7bff558a0f72ddd6937dca6538be46231ea4ceb3db66a8c68e619be0d51dbf79e0521ba8ae7c5fd
 	)
 endif()
 if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -46,13 +46,13 @@ if(key STREQUAL "macosx-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64.zip"
-		SHA512 74cd08bdc354f9a249c528fa9bbbded0b46378a742d759cb9e9ba06a66f0254a35cc55d4217138d4bd02bbc28dd40fbe245f5b0033b2d01b9166b1a0c821d64a
+		SHA512 6cf0b908ecdc97df31382a4c0acb7e556bfdd11a1bd243446f3f59c4bb552ccb4924a357cb495f7d565c725f5c41f46c53ab7ca3a9f92192673a36c52df4523a
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-x86_64-debug-info.zip"
 		FILENAME "slang-${VERSION}-macos-x86_64-debug-info.zip"
-		SHA512 6a588116efe1824a6628bbda3a8f4f16838f051880e7720d3557205d0107f16bdce0b2931d1ba4bf5cd0b0d8c9368faad31039e923f50d323503e0045817aa13
+		SHA512 6ea7b284295092ccf11c9bf35127ad26158b8d7f94543ca0bed7abd3ad842f3e27bf465e3e7a7c0fc81250ceed3e57724dad318bd3c5d499a228405c7e11474b
 	)
 endif()
 if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -60,13 +60,13 @@ if(key STREQUAL "macosx-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64.zip"
-		SHA512 6686b18ce91c602695f4c106af6bb879022e2db5981d271f2dd6beeb3116145c3b303f6e282f91b1ca464660d972c0faf2cacdc04944cd3e7ac28b676cf35a57
+		SHA512 b28841b4fed7d6c3c5f4e0739bf9b84ae1460d3f90cf382d10d1280b4b713c602aac224a2b845bfaea9667e822f278480c049d0ac464e1986a363bf3a87e8835
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-macos-aarch64-debug-info.zip"
 		FILENAME "slang-${VERSION}-macos-aarch64-debug-info.zip"
-		SHA512 11ac6656ee67db27daf1f9df5ff7a42e85bb6df96d0a0be73d4ebb773e84d1651897f0af02b9df624219a50d2e70ece6e533eae568ca76fa31e1e84ec0519a2f
+		SHA512 03ebee5caab30f2637b7569903ade3ee0c9e4d2384edf62b13a43f3f3021ecd956f71a524a03a4cda27fe81f6ac135529b977049dab15fa94cc35eb69d9c5d06
 	)
 endif()
 if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -74,13 +74,13 @@ if(key STREQUAL "linux-x64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64.zip"
-		SHA512 ef207aaf686e3cc787a922d78f0db662d22fdc955ea60762bd9bca2aebd5792945d238548729e0557a2d94e2179bc8455cc749412634928e06f39c6c7bd31b68
+		SHA512 11d3327ced3f18aacd94e062acb23848e5aca4c52f80306133ecf09f4a49a75659266475a19fc5efb81b90889d6c82d18d53367338e714f5c66accbe089f9498
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-x86_64-debug-info.zip"
 		FILENAME "slang-${VERSION}-linux-x86_64-debug-info.zip"
-		SHA512 b732de40679f1360b77cc5a4b53d6dbd21876e4867e7009f8ba49887a30c49db9724582b81784e1d1344276ab56a751e1bdefdf9bc37beac5915fa3a7a0f63af
+		SHA512 d64a157737583e3a49978f44c31e48a56e5730b51a2dacbd3646703d76df52e37b57a2d1c70244e3d94d1858fad3cb892117d014bfb6d0247c983007d09b6f6b
 	)
 endif()
 if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
@@ -88,13 +88,13 @@ if(key STREQUAL "linux-arm64" OR VCPKG_SHADER_SLANG_UPDATE)
 		ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64.zip"
-		SHA512 304b0ff00179d22da6a01fff530f32c93e387aa434e155eeae4c16feae82dca5c0090d8e1bbf140face2d0e8a72b36dab54ea9cfbc67223535f1396bd5b24374
+		SHA512 e019d73f5a0273863e33ebd9e0d90c90728162f5639177556888d576f162efe9d3b0b897c58a22bc93b53b381646b7725362dceeb89df89fd16c1ea0d23267a0
 	)
 	vcpkg_download_distfile(
 		DEBUG_INFO_ARCHIVE
 		URLS "https://github.com/shader-slang/slang/releases/download/v${VERSION}/slang-${VERSION}-linux-aarch64-debug-info.zip"
 		FILENAME "slang-${VERSION}-linux-aarch64-debug-info.zip"
-		SHA512 18e08225f383c67ed8f7a39b3693ab1fe335ba84fec886e3d9c3702908470549d3f0f2b525e031a3e316df7281c1fefc267bce7a4f1bf4dcff244305a929cb89
+		SHA512 5d690bf3d258e9135191d4e5fffc6d4557419d304215b08f078c4d53e208725d4d5cde1baddb66a5af308be80f5cc41d1c200ab63557a2b3c15e312869b6e229
 	)
 endif()
 if(NOT ARCHIVE)

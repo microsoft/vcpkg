@@ -1,6 +1,6 @@
 {
   "name": "libfabric",
-  "version-semver": "1.22.0",
+  "version-semver": "2.5.0",
   "description": "Libfabric, aka Open Fabrics Interfaces (OFI), defines a communication API for high-performance parallel and distributed applications.",
   "homepage": "https://ofiwg.github.io/libfabric/",
   "license": "BSD-2-Clause OR GPL-2.0-only",
@@ -9,6 +9,11 @@
     {
       "name": "networkdirect-sdk",
       "platform": "windows"
+    },
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows"
     },
     {
       "name": "vcpkg-msbuild",
