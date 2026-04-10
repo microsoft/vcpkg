@@ -104,7 +104,7 @@ function(vcpkg_from_git)
 
             vcpkg_execute_required_process(
                 ALLOW_IN_DOWNLOAD_MODE
-                COMMAND "${GIT}" lfs install --local --force
+                COMMAND "${GIT}" lfs install --local --force --skip-repo
                 WORKING_DIRECTORY "${git_working_directory}"
                 LOGNAME "git-lfs-install-${TARGET_TRIPLET}"
             )
