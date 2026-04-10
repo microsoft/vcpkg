@@ -254,7 +254,6 @@ daxa:arm64-linux=fail
 dbghelp=skip # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbow2:arm64-linux=cascade
 dbow3:arm64-linux=cascade
-dbus:arm64-linux=fail
 dbus[x11]:arm64-osx=skip # No x11 on osx
 dbus-cxx[qt6]:arm64-linux=cascade
 dcmtk:arm64-linux=fail
