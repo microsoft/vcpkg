@@ -24,6 +24,23 @@ vcpkg_cmake_configure(
 vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/SoundTouch)
+file(GLOB _targets_files
+        "${CURRENT_PACKAGES_DIR}/share/soundtouch/*Targets.cmake"
+)
+
+foreach(_file IN LISTS _targets_files)
+  file(READ "${_file}" _content)
+
+  # 直接重写 include（更安全）
+  string(REGEX REPLACE
+          "INTERFACE_INCLUDE_DIRECTORIES \"[^\"]*\""
+          "INTERFACE_INCLUDE_DIRECTORIES \"\${_IMPORT_PREFIX}/include\""
+          _content
+          "${_content}"
+  )
+
+  file(WRITE "${_file}" "${_content}")
+endforeach()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
