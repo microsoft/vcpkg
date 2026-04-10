@@ -960,7 +960,6 @@ opencv4[vulkan]:arm64-linux=cascade
 opencv4[world]:arm64-linux=cascade
 openimageio[jpegxl]:arm-neon-android=cascade
 openimageio[opencv]:arm64-linux=cascade
-openimageio[pybind11]:arm64-linux=cascade
 openimageio[qt]:arm64-linux=cascade
 openimageio[viewer]:arm64-linux=cascade
 openjpeg[tools]=skip # fails and is deprecated
