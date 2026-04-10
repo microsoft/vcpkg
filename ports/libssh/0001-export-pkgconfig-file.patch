@@ -50,7 +50,7 @@ index 970db5e..df65d5d 100644
  Libs: -L${libdir} -lssh
  Cflags: -I${includedir}
  Requires.private: @LIBSSH_PC_REQUIRES_PRIVATE@
-+Lib.private: @LIBSSH_PC_LIBS_PRIVATE@
++Libs.private: @LIBSSH_PC_LIBS_PRIVATE@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index a46f585..691df37 100644
 --- a/src/CMakeLists.txt
