@@ -372,6 +372,7 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
         "rtc_include_dav1d_in_internal_decoder_factory=false"
         "rtc_use_pipewire=false"
         "rtc_use_x11=false"
+        "use_glib=false"
         "enable_rust=false"
         "enable_rust_cxx=false"
         "rtc_use_h264=false"
@@ -438,7 +439,7 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
     endif()
 endforeach()
 
-set(WEBRTC_LINUX_INTERFACE_DEFINITIONS "USE_AURA=1;USE_GLIB=1;USE_OZONE=1;USE_UDEV;WEBRTC_LINUX;WEBRTC_POSIX")
+set(WEBRTC_LINUX_INTERFACE_DEFINITIONS "USE_AURA=1;USE_OZONE=1;USE_UDEV;WEBRTC_LINUX;WEBRTC_POSIX")
 if(VCPKG_TARGET_IS_LINUX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     string(PREPEND WEBRTC_LINUX_INTERFACE_DEFINITIONS "LIBYUV_DISABLE_NEON;WEBRTC_ENABLE_AVX2;")
 endif()
