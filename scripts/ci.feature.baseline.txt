@@ -79,7 +79,6 @@ adios2[python](!(arm64&linux))=feature-fails # Could NOT find Python (missing: P
 adios2[zfp](android | (arm & windows))=feature-fails # try_run() invoked in cross-compiling mode
 aeron[archive]=skip # archive feature requires Java for SBE code generation
 aliyun-oss-c-sdk:arm64-windows=cascade
-aliyun-oss-cpp-sdk:arm64-linux=fail
 allegro5:arm64-linux=cascade
 allegro5:arm64-windows=fail # Fails with "fatal error LNK1322: cannot avoid potential ARM hazard" even with /Gy
 ampl-asl:arm64-linux=fail

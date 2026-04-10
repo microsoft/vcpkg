@@ -36,7 +36,6 @@
 ##
 
 # Add new items alphabetically
-aliyun-oss-cpp-sdk:arm64-linux=fail
 ampl-asl:arm64-linux=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
