@@ -3400,6 +3400,10 @@
       "baseline": "6.1.2",
       "port-version": 0
     },
+    "gimp": {
+      "baseline": "3.2.2",
+      "port-version": 0
+    },
     "ginkgo": {
       "baseline": "1.11.0",
       "port-version": 0
