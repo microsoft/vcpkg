@@ -14,8 +14,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opencv   WITH_OPENCV
 )
 
-file(REMOVE_RECURSE "${SOURCE_PATH}/src/json/include/nlohmann")
-
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
