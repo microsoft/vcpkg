@@ -7096,6 +7096,10 @@
       "baseline": "4.3.5",
       "port-version": 0
     },
+    "nvrhi": {
+      "baseline": "2026-02-26",
+      "port-version": 0
+    },
     "nvtt": {
       "baseline": "2.1.2",
       "port-version": 9
