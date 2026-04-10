@@ -113,10 +113,12 @@ file(COPY "${SOURCE_PATH}/third_party/rnnoise/modeldata/src/rnnoise_data.h" DEST
 vcpkg_find_acquire_program(PYTHON3)
 vcpkg_replace_string("${SOURCE_PATH}/.gn" "script_executable = \"python3\"" "script_executable = \"${PYTHON3}\"")
 file(WRITE "${SOURCE_PATH}/build/config/gclient_args.gni" "# Generated for local vcpkg webrtc port\ngenerate_location_tags = true\n")
-if(WEBRTC_TARGET_IS_WINDOWS)
+if(WEBRTC_TARGET_IS_WINDOWS OR WEBRTC_TARGET_IS_LINUX)
     set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
-    file(MAKE_DIRECTORY "${SOURCE_PATH}/build/util")
-    file(WRITE "${SOURCE_PATH}/build/util/LASTCHANGE.committime" "0\n")
+    if(WEBRTC_TARGET_IS_WINDOWS)
+        file(MAKE_DIRECTORY "${SOURCE_PATH}/build/util")
+        file(WRITE "${SOURCE_PATH}/build/util/LASTCHANGE.committime" "0\n")
+    endif()
     file(MAKE_DIRECTORY "${SOURCE_PATH}/third_party/compiler-rt")
     file(WRITE "${SOURCE_PATH}/third_party/compiler-rt/BUILD.gn" "group(\"atomic\") {}\n")
 endif()
@@ -192,62 +194,6 @@ function(setup_webrtc_windows_toolchain build_config)
     endif()
 endfunction()
 
-function(setup_webrtc_host_llvm)
-    foreach(LLVM_TOOL IN ITEMS clang clang++ llvm-ar llvm-nm llvm-readelf ld.lld llvm-symbolizer)
-        find_program(WEBRTC_${LLVM_TOOL}_PROGRAM NAMES "${LLVM_TOOL}")
-        if(NOT WEBRTC_${LLVM_TOOL}_PROGRAM)
-            message(FATAL_ERROR "Required host LLVM tool '${LLVM_TOOL}' was not found in PATH.")
-        endif()
-    endforeach()
-
-    execute_process(
-        COMMAND "${WEBRTC_clang_PROGRAM}" -print-resource-dir
-        OUTPUT_VARIABLE HOST_CLANG_RESOURCE_DIR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        RESULT_VARIABLE HOST_CLANG_RESOURCE_DIR_RESULT
-    )
-    if(NOT HOST_CLANG_RESOURCE_DIR_RESULT EQUAL 0 OR HOST_CLANG_RESOURCE_DIR STREQUAL "")
-        message(FATAL_ERROR "Failed to query clang resource dir from '${WEBRTC_clang_PROGRAM}'.")
-    endif()
-
-    get_filename_component(HOST_CLANG_VERSION "${HOST_CLANG_RESOURCE_DIR}" NAME)
-    if(HOST_CLANG_VERSION STREQUAL "")
-        message(FATAL_ERROR "Failed to derive clang version from resource dir '${HOST_CLANG_RESOURCE_DIR}'.")
-    endif()
-
-    file(GLOB_RECURSE HOST_COMPILER_RT_CANDIDATES LIST_DIRECTORIES false "${HOST_CLANG_RESOURCE_DIR}/lib/libclang_rt.builtins*.a")
-    list(LENGTH HOST_COMPILER_RT_CANDIDATES HOST_COMPILER_RT_COUNT)
-    if(HOST_COMPILER_RT_COUNT EQUAL 0)
-        message(FATAL_ERROR "Could not find host libclang_rt.builtins.a under '${HOST_CLANG_RESOURCE_DIR}/lib'.")
-    endif()
-
-    list(GET HOST_COMPILER_RT_CANDIDATES 0 HOST_COMPILER_RT_SOURCE)
-
-    if(VCPKG_TARGET_IS_LINUX)
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-            set(HOST_COMPILER_RT_RELATIVE_PATH "x86_64-unknown-linux-gnu/libclang_rt.builtins.a")
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-            set(HOST_COMPILER_RT_RELATIVE_PATH "aarch64-unknown-linux-gnu/libclang_rt.builtins.a")
-        else()
-            message(FATAL_ERROR "Unsupported Linux architecture '${VCPKG_TARGET_ARCHITECTURE}' for compiler-rt staging.")
-        endif()
-    else()
-        file(RELATIVE_PATH HOST_COMPILER_RT_RELATIVE_PATH "${HOST_CLANG_RESOURCE_DIR}/lib" "${HOST_COMPILER_RT_SOURCE}")
-    endif()
-
-    set(LLVM_HOST_ROOT "${CURRENT_BUILDTREES_DIR}/llvm-host" PARENT_SCOPE)
-    set(LLVM_HOST_BIN_DIR "${CURRENT_BUILDTREES_DIR}/llvm-host/bin" PARENT_SCOPE)
-    set(LLVM_HOST_RESOURCE_DIR "${CURRENT_BUILDTREES_DIR}/llvm-host/lib/clang/${HOST_CLANG_VERSION}" PARENT_SCOPE)
-    set(LLVM_HOST_LIB_DIR "${CURRENT_BUILDTREES_DIR}/llvm-host/lib/clang/${HOST_CLANG_VERSION}/lib" PARENT_SCOPE)
-    set(HOST_CLANG_VERSION "${HOST_CLANG_VERSION}" PARENT_SCOPE)
-    set(HOST_CLANG_RESOURCE_DIR "${HOST_CLANG_RESOURCE_DIR}" PARENT_SCOPE)
-    set(HOST_COMPILER_RT_SOURCE "${HOST_COMPILER_RT_SOURCE}" PARENT_SCOPE)
-    set(HOST_COMPILER_RT_RELATIVE_PATH "${HOST_COMPILER_RT_RELATIVE_PATH}" PARENT_SCOPE)
-    foreach(LLVM_TOOL IN ITEMS clang clang++ llvm-ar llvm-nm llvm-readelf ld.lld llvm-symbolizer)
-        set(WEBRTC_${LLVM_TOOL}_PROGRAM "${WEBRTC_${LLVM_TOOL}_PROGRAM}" PARENT_SCOPE)
-    endforeach()
-endfunction()
-
 function(setup_webrtc_host_xcode_toolchain)
     find_program(XCRUN NAMES xcrun REQUIRED)
     foreach(XCODE_TOOL IN ITEMS clang clang++ ar nm strip install_name_tool libtool)
@@ -301,19 +247,7 @@ endfunction()
 
 set(GN "${CURRENT_HOST_INSTALLED_DIR}/tools/gn/gn${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 set(NINJA "${CURRENT_HOST_INSTALLED_DIR}/tools/ninja/ninja${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-if(WEBRTC_TARGET_IS_LINUX)
-    setup_webrtc_host_llvm()
-    file(MAKE_DIRECTORY "${LLVM_HOST_BIN_DIR}" "${LLVM_HOST_RESOURCE_DIR}" "${LLVM_HOST_LIB_DIR}")
-
-    foreach(LLVM_TOOL IN ITEMS clang clang++ llvm-ar llvm-nm llvm-readelf ld.lld llvm-symbolizer)
-        file(CREATE_LINK "${WEBRTC_${LLVM_TOOL}_PROGRAM}" "${LLVM_HOST_BIN_DIR}/${LLVM_TOOL}" SYMBOLIC)
-    endforeach()
-
-    file(CREATE_LINK "${HOST_CLANG_RESOURCE_DIR}/include" "${LLVM_HOST_RESOURCE_DIR}/include" SYMBOLIC)
-    get_filename_component(WEBRTC_HOST_COMPILER_RT_DEST_DIR "${LLVM_HOST_LIB_DIR}/${HOST_COMPILER_RT_RELATIVE_PATH}" DIRECTORY)
-    file(MAKE_DIRECTORY "${WEBRTC_HOST_COMPILER_RT_DEST_DIR}")
-    file(CREATE_LINK "${HOST_COMPILER_RT_SOURCE}" "${LLVM_HOST_LIB_DIR}/${HOST_COMPILER_RT_RELATIVE_PATH}" SYMBOLIC)
-elseif(WEBRTC_TARGET_IS_MACOS)
+if(WEBRTC_TARGET_IS_MACOS)
     setup_webrtc_host_xcode_toolchain()
     file(MAKE_DIRECTORY "${XCODE_HOST_BIN_DIR}" "${XCODE_HOST_LIB_CLANG_DIR}")
     file(REMOVE
@@ -407,7 +341,6 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
     generate_external_dep("${SOURCE_PATH}" "nasm" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}" TOOL_PATH "${WEBRTC_YASM_PROGRAM}")
 
     set(WEBRTC_GN_ARGS
-        "is_clang=true"
         "clang_use_chrome_plugins=false"
         "init_stack_vars=false"
         "use_sysroot=false"
@@ -444,10 +377,9 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
         list(APPEND WEBRTC_GN_ARGS
             "target_os=\"linux\""
             "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\""
-            "custom_toolchain=\"//build/toolchain/linux:clang_${VCPKG_TARGET_ARCHITECTURE}\""
-            "clang_base_path=\"${LLVM_HOST_ROOT}\""
-            "clang_version=\"${HOST_CLANG_VERSION}\""
-            "use_llvm_libatomic=false"
+            "custom_toolchain=\"//build/toolchain/linux:${VCPKG_TARGET_ARCHITECTURE}\""
+            "is_clang=false"
+            "use_lld=false"
         )
     elseif(WEBRTC_TARGET_IS_MACOS)
         list(APPEND WEBRTC_GN_ARGS
@@ -455,6 +387,7 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
             "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\""
             "custom_toolchain=\"//build/toolchain/mac:clang_${VCPKG_TARGET_ARCHITECTURE}\""
             "host_toolchain=\"//build/toolchain/mac:clang_${VCPKG_TARGET_ARCHITECTURE}\""
+            "is_clang=true"
             "clang_base_path=\"${WEBRTC_CLANG_BASE_PATH}\""
             "clang_version=\"${WEBRTC_CLANG_VERSION}\""
             "mac_sdk_path=\"${WEBRTC_MAC_SDK_PATH}\""
