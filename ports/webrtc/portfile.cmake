@@ -27,6 +27,7 @@ set(WEBRTC_PATCHES
     webrtc-0008-fix-audio-device-core-win-goto-scope.patch
     webrtc-0009-fix-avx2-intrinsics-for-msvc.patch
     webrtc-0010-disable-arm-denormal-disabler-for-msvc.patch
+    webrtc-0011-make-linux-audio-backends-optional.patch
 )
 
 set(BUILD_PATCHES
@@ -332,6 +333,8 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
     generate_external_dep("${SOURCE_PATH}" "libaom" "${CURRENT_INSTALLED_DIR}/include" "${LIBAOM_LIB_ROOT}" "${BUILD_CONFIG}")
     generate_external_dep("${SOURCE_PATH}" "jsoncpp" "${CURRENT_INSTALLED_DIR}/include" "${JSONCPP_LIB_ROOT}" "${BUILD_CONFIG}")
     generate_external_dep("${SOURCE_PATH}" "pffft" "${CURRENT_INSTALLED_DIR}/include" "${PFFFT_LIB_ROOT}" "${BUILD_CONFIG}")
+    generate_external_dep("${SOURCE_PATH}" "alsa" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
+    generate_external_dep("${SOURCE_PATH}" "pulseaudio" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
     generate_external_dep("${SOURCE_PATH}" "rnnoise" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
     generate_external_dep("${SOURCE_PATH}" "dav1d" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
     generate_external_dep("${SOURCE_PATH}" "llvm-libc" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
@@ -374,6 +377,16 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
         "rtc_use_h264=false"
     )
     if(WEBRTC_TARGET_IS_LINUX)
+        if("alsa" IN_LIST FEATURES)
+            list(APPEND WEBRTC_GN_ARGS "rtc_include_alsa_audio=true")
+        else()
+            list(APPEND WEBRTC_GN_ARGS "rtc_include_alsa_audio=false")
+        endif()
+        if("pulseaudio" IN_LIST FEATURES)
+            list(APPEND WEBRTC_GN_ARGS "rtc_include_pulse_audio=true")
+        else()
+            list(APPEND WEBRTC_GN_ARGS "rtc_include_pulse_audio=false")
+        endif()
         list(APPEND WEBRTC_GN_ARGS
             "target_os=\"linux\""
             "target_cpu=\"${VCPKG_TARGET_ARCHITECTURE}\""

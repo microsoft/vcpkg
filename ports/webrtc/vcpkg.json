@@ -36,5 +36,25 @@
       "name": "yasm",
       "host": true
     }
-  ]
+  ],
+  "features": {
+    "alsa": {
+      "description": "Enable ALSA Linux audio backend",
+      "dependencies": [
+        {
+          "name": "alsa",
+          "platform": "linux"
+        }
+      ]
+    },
+    "pulseaudio": {
+      "description": "Enable PulseAudio Linux audio backend",
+      "dependencies": [
+        {
+          "name": "pulseaudio",
+          "platform": "linux"
+        }
+      ]
+    }
+  }
 }

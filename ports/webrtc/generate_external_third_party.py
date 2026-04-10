@@ -582,6 +582,18 @@ def make_trivial_group_build_gn(*group_names: str) -> str:
                        for group_name in group_names) + "\n"
 
 
+def make_config_only_build_gn(config_name: str,
+                              include_dirs: list[str]) -> str:
+    include_lines = "\n".join(f'    "{include_dir}",'
+                              for include_dir in include_dirs)
+    return f"""config("{config_name}") {{
+  include_dirs = [
+{include_lines}
+  ]
+}}
+"""
+
+
 def make_linked_source_set_build_gn(
     target_name: str,
     include_dirs: list[str],
@@ -857,6 +869,22 @@ source_set("libsrtp") {
             ),
             "src/pffft.h":
             make_header_forwarder("pffft/pffft.h"),
+        },
+    },
+    "alsa": {
+        "relative_root": "third_party/alsa",
+        "dirs": [],
+        "files": {
+            "BUILD.gn": make_config_only_build_gn("headers",
+                                                  ["{include_root}"]),
+        },
+    },
+    "pulseaudio": {
+        "relative_root": "third_party/pulseaudio",
+        "dirs": [],
+        "files": {
+            "BUILD.gn": make_config_only_build_gn("headers",
+                                                  ["{include_root}"]),
         },
     },
     "rnnoise": {
