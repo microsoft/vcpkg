@@ -37,6 +37,7 @@
 
 # Add new items alphabetically
 aliyun-oss-cpp-sdk:arm64-linux=fail
+allegro5:arm64-linux=fail # No cross x11
 ampl-asl:arm64-linux=fail
 apr:arm-neon-android=fail
 apr:arm64-android=fail
@@ -413,6 +414,7 @@ llvm:arm64-android=fail
 llvm:arm64-linux=fail
 llvm:x64-android=fail
 loguru:arm64-linux=fail
+magnum:arm64-linux=fail
 marzbanpp:arm64-linux=fail
 mathgl:arm64-linux=fail
 mchehab-zbar:arm-neon-android=fail
