@@ -277,6 +277,20 @@ function(qt_fixup_and_cleanup)
             message(STATUS "WARNING: Qt component ${_comp} not found/built!")
         endif()
     endforeach()
+    # Fix QT6_INSTALL_CMAKEDIR in QtInstallPaths.cmake.
+    # The build system sets INSTALL_CMAKEDIR=share/cmake which propagates to QT6_INSTALL_CMAKEDIR,
+    # but vcpkg's Qt layout places cmake config files at share/Qt6/ (parent: share/).
+    # Qt6AndroidMacros.cmake uses QT6_INSTALL_CMAKEDIR to locate QtInstallPaths.cmake via:
+    #   include("${prefix}/${QT6_INSTALL_CMAKEDIR}/Qt6/QtInstallPaths.cmake")
+    # so the value must be "share" (not "share/cmake") to resolve share/Qt6/QtInstallPaths.cmake.
+    set(_qtinstallpaths "${CURRENT_PACKAGES_DIR}/share/Qt6/QtInstallPaths.cmake")
+    if(EXISTS "${_qtinstallpaths}")
+        vcpkg_replace_string("${_qtinstallpaths}"
+            [[set(QT6_INSTALL_CMAKEDIR "share/cmake")]]
+            [[set(QT6_INSTALL_CMAKEDIR "share")]])
+    endif()
+    unset(_qtinstallpaths)
+
     #fix debug plugin paths (should probably be fixed in vcpkg_cmake_config_fixup)
     file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets-debug.cmake")
     debug_message("DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")

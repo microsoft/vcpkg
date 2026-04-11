@@ -24,6 +24,8 @@ set(${PORT}_PATCHES
         fix-link-lib-discovery.patch
         macdeployqt-symlinks.patch
         moltenvk.patch
+        fix-ioring-32bit.patch
+        fix-wayland-opengl-guard.patch
         #xcodebuild-not-installed.patch
         fix-libresolv-test.patch
         #framework.patch
