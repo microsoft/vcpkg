@@ -580,6 +580,7 @@ rendergraph:arm64-linux=fail
 restbed:arm-neon-android=fail
 restbed:arm64-android=fail
 restbed:arm64-linux=fail
+restbed:x64-linux=fail # requires c++23
 rmqcpp:arm64-linux=fail
 rmqcpp:arm64-osx=fail
 rmqcpp:x64-linux=fail

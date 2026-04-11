@@ -1290,6 +1290,7 @@ realsense2:arm64-linux=cascade
 reflectcpp[bson]:arm64-linux=feature-fails
 rendergraph:arm64-linux=fail
 restbed:arm64-linux=fail
+restbed:x64-linux=fail # requires c++23
 restc-cpp:arm64-windows=cascade
 rioki-glow:arm64-linux=cascade
 ripper37-libbase[wx]:arm64-linux=cascade
