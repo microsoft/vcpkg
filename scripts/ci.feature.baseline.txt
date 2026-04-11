@@ -1242,7 +1242,6 @@ qtbase[vulkan]:arm64-osx=skip # no MoltenVK on macOS
 qtbase[wayland]:arm64-linux=feature-fails
 qtbase[wayland]:arm64-osx=skip # no Wayland on macOS
 qtbase[wayland](android)=skip # no Wayland on android
-qtbase[windeployqt]:arm64-windows=cascade # cross-compilation requires host Qt6::windeployqt
 qtbase[xcb]:arm64-linux=feature-fails
 qtbase[xcb-sm]:arm64-linux=feature-fails
 qtbase[xcb-xlib]:arm64-linux=feature-fails
