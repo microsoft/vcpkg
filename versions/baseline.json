@@ -3322,7 +3322,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.44.6",
-      "port-version": 0
+      "port-version": 1
     },
     "gegl": {
       "baseline": "0.4.70",
