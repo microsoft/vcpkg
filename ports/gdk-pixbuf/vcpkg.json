@@ -1,6 +1,7 @@
 {
   "name": "gdk-pixbuf",
   "version": "2.44.6",
+  "port-version": 1,
   "description": "Image loading library.",
   "homepage": "https://gitlab.gnome.org/GNOME/gdk-pixbuf",
   "license": "LGPL-2.1-or-later",
@@ -19,6 +20,11 @@
     {
       "name": "glib",
       "host": true
+    },
+    {
+      "name": "vcpkg-cmake-get-vars",
+      "host": true,
+      "platform": "android"
     },
     {
       "name": "vcpkg-tool-meson",
