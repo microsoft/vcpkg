@@ -1,5 +1,5 @@
 diff --git a/CMake/GeneratePkgConfig.cmake b/CMake/GeneratePkgConfig.cmake
-index 3d3fa01d1f69..50443347930a 100644
+index 3d3fa01d1f69..499b1c86be93 100644
 --- a/CMake/GeneratePkgConfig.cmake
 +++ b/CMake/GeneratePkgConfig.cmake
 @@ -8,12 +8,13 @@ function(get_relative_link OUTPUT PATH)
@@ -12,7 +12,7 @@ index 3d3fa01d1f69..50443347930a 100644
 -      get_filename_component(FULL_NAME "${PATH}" NAME)
 -      set(${OUTPUT} "-L\"${DIRECTORY_NAME}\" -l:${FULL_NAME}" PARENT_SCOPE)
 +    get_filename_component(FULL_NAME "${PATH}" NAME)
-+    string(REGEX REPLACE "^lib(.+)\\.[^.]+$" "\\1" LIB_NAME "${FULL_NAME}")
++    string(REGEX REPLACE "^lib([^.]+).*$" "\\1" LIB_NAME "${FULL_NAME}")
 +    # If the regex didn't match (no lib prefix), fall back to name without extension
 +    if ("${LIB_NAME}" STREQUAL "${FULL_NAME}")
 +      set(LIB_NAME "${NAME}")
@@ -74,25 +74,34 @@ index 3d3fa01d1f69..50443347930a 100644
          list(APPEND LIBS "${LINK}")
        endif()
      endif()
-@@ -77,6 +113,17 @@ function(generate_pkgconfig TARGET DESCRIPTION)
+@@ -77,6 +113,26 @@ function(generate_pkgconfig TARGET DESCRIPTION)
    endif()
  
    file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig")
 +
++  get_target_property(TARGET_OUTPUT_NAME "${TARGET}" OUTPUT_NAME)
++  if ("${TARGET_OUTPUT_NAME}" STREQUAL "TARGET_OUTPUT_NAME-NOTFOUND")
++    set(TARGET_OUTPUT_NAME "${TARGET}")
++  endif()
++
 +  if ("${LIBRARY_TYPE}" STREQUAL "INTERFACE_LIBRARY")
 +    set(LIBS_LINE "")
 +    foreach (ILIB ${INTERFACE_LIBS})
-+      set(LIBS_LINE "${LIBS_LINE} -l${ILIB}")
++      get_target_property(ILIB_OUTPUT_NAME "${ILIB}" OUTPUT_NAME)
++      if ("${ILIB_OUTPUT_NAME}" STREQUAL "ILIB_OUTPUT_NAME-NOTFOUND")
++        set(ILIB_OUTPUT_NAME "${ILIB}")
++      endif()
++      set(LIBS_LINE "${LIBS_LINE} -l${ILIB_OUTPUT_NAME}")
 +    endforeach()
 +    set(LIBS_LINE "Libs: -L\"${PKGCONFIG_LIBDIR}\"${LIBS_LINE}")
 +  else()
-+    set(LIBS_LINE "Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET}")
++    set(LIBS_LINE "Libs: -L\"${PKGCONFIG_LIBDIR}\" -l${TARGET_OUTPUT_NAME}")
 +  endif()
 +
    file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/${TARGET}.pc" CONTENT
  "prefix=${PREFIX}
  
-@@ -85,14 +132,12 @@ Description: ${DESCRIPTION}
+@@ -85,14 +141,12 @@ Description: ${DESCRIPTION}
  Version: ${PROJECT_VERSION}
  
  CFlags: -I\"${PKGCONFIG_INCLUDEDIR}\"
