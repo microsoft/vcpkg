@@ -1,6 +1,7 @@
 {
   "name": "imgui",
   "version": "1.92.7",
+  "port-version": 1,
   "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
   "homepage": "https://github.com/ocornut/imgui",
   "license": "MIT",
@@ -133,9 +134,15 @@
       ]
     },
     "vulkan-binding": {
-      "description": "Make available Vulkan binding",
+      "description": "Make available Vulkan binding (links vulkan-loader)",
       "dependencies": [
         "vulkan"
+      ]
+    },
+    "vulkan-headers-binding": {
+      "description": "Make available Vulkan binding using headers-only dispatch (no vulkan-loader linkage, requires ImGui_ImplVulkan_LoadFunctions)",
+      "dependencies": [
+        "vulkan-headers"
       ]
     },
     "wchar32": {

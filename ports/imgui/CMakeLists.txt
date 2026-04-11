@@ -113,10 +113,23 @@ if(IMGUI_BUILD_SDL3_RENDERER_BINDING)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp)
 endif()
 
+if(IMGUI_BUILD_VULKAN_BINDING AND IMGUI_BUILD_VULKAN_HEADERS_BINDING)
+    message(FATAL_ERROR "imgui: vulkan-binding and vulkan-headers-binding are mutually exclusive")
+endif()
+
 if(IMGUI_BUILD_VULKAN_BINDING)
     find_package(Vulkan REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC Vulkan::Vulkan)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp)
+endif()
+
+if(IMGUI_BUILD_VULKAN_HEADERS_BINDING)
+    find_package(VulkanHeaders CONFIG)
+    target_link_libraries(${PROJECT_NAME} PUBLIC Vulkan::Headers)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_IMPL_VULKAN_NO_PROTOTYPES)
+    if (NOT IMGUI_BUILD_VULKAN_BINDING)
+        target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp)
+    endif()
 endif()
 
 if(IMGUI_BUILD_WIN32_BINDING)
@@ -275,6 +288,10 @@ if(NOT IMGUI_SKIP_HEADERS)
 
     if(IMGUI_BUILD_VULKAN_BINDING)
         install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_vulkan.h DESTINATION include)
+    endif()
+
+    if(IMGUI_BUILD_VULKAN_HEADERS_BINDING)
+	install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_vulkan.h DESTINATION include)
     endif()
 
     if(IMGUI_BUILD_WIN32_BINDING)
