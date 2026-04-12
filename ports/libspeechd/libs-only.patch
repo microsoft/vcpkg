@@ -1,5 +1,5 @@
 diff --git a/Makefile.am b/Makefile.am
-index 480eb50e..50372851 100644
+index 480eb50e..3dbf458b 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -22,7 +22,11 @@ pkgconfig_DATA = speech-dispatcher.pc
@@ -10,7 +10,7 @@ index 480eb50e..50372851 100644
 +SUBDIRS= include src
 +else
  SUBDIRS= include locale src config po
-+fi
++endif
  
  if ENABLE_DOC
  SUBDIRS += doc
@@ -80,3 +80,19 @@ index bd18fdbe..ae63d347 100644
  
  PKG_CHECK_MODULES([LIBSYSTEMD], [libsystemd], [have_libsystemd=yes], [:])
  
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 2a9659c0..20f61525 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -17,7 +17,11 @@
+ 
+ ## Process this file with automake to produce Makefile.in
+ 
++if LIBS_ONLY
++SUBDIRS=api
++else
+ SUBDIRS=common server audio modules api clients tests
++endif
+ 
+ 
+ -include $(top_srcdir)/git.mk
