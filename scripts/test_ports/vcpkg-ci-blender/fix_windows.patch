@@ -72,3 +72,25 @@ index ae75fcd2..96600f7f 100644
  
  if(WITH_CYCLES AND (WITH_CYCLES_DEVICE_ONEAPI OR (WITH_CYCLES_EMBREE AND EMBREE_SYCL_SUPPORT)))
    set(LEVEL_ZERO_ROOT_DIR ${LIBDIR}/level_zero)
+@@ -1380,10 +1394,20 @@ endif()
+ get_filename_component(_msvc_path ${CMAKE_C_COMPILER} DIRECTORY)
+ # Environment variables to run precompiled executables that needed libraries.
+ list(JOIN PLATFORM_BUNDLED_LIBRARY_DIRS ";" _library_paths)
+-set(PLATFORM_ENV_BUILD_DIRS "${_msvc_path}\;${LIBDIR}/epoxy/bin\;${LIBDIR}/tbb/bin\;${LIBDIR}/OpenImageIO/bin\;${LIBDIR}/boost/lib\;${LIBDIR}/openexr/bin\;${LIBDIR}/imath/bin\;${LIBDIR}/shaderc/bin\;${LIBDIR}/opencolorio/bin\;${PATH}")
++set(_vcpkg_runtime_dirs "")
++if(DEFINED CURRENT_INSTALLED_DIR)
++  list(APPEND _vcpkg_runtime_dirs
++    "${CURRENT_INSTALLED_DIR}/debug/bin"
++    "${CURRENT_INSTALLED_DIR}/bin"
++  )
++endif()
++list(JOIN _vcpkg_runtime_dirs "\;" _vcpkg_runtime_path)
++set(PLATFORM_ENV_BUILD_DIRS "${_msvc_path}\;${LIBDIR}/epoxy/bin\;${LIBDIR}/tbb/bin\;${LIBDIR}/OpenImageIO/bin\;${LIBDIR}/boost/lib\;${LIBDIR}/openexr/bin\;${LIBDIR}/imath/bin\;${LIBDIR}/shaderc/bin\;${LIBDIR}/opencolorio/bin\;${_vcpkg_runtime_path}\;${PATH}")
+ set(PLATFORM_ENV_BUILD "PATH=${PLATFORM_ENV_BUILD_DIRS}")
+ # Install needs the additional folders from PLATFORM_ENV_BUILD_DIRS as well, as tools like:
+ # `idiff` and `abcls` use the release mode dlls.
+ set(PLATFORM_ENV_INSTALL "PATH=${CMAKE_INSTALL_PREFIX_WITH_CONFIG}/blender.shared/\;${PLATFORM_ENV_BUILD_DIRS}\;$ENV{PATH}")
++unset(_vcpkg_runtime_path)
++unset(_vcpkg_runtime_dirs)
+ unset(_library_paths)
+ unset(_msvc_path)

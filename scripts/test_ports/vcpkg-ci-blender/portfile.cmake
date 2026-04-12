@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix_dep.patch
         fix_apple.patch
         fix_windows.patch
+        dynamic-internal-libs.patch
         gl.patch
         static_md_macros.patch
         static_md_creator.patch
@@ -142,7 +143,7 @@ vcpkg_cmake_configure(
         -DWITH_SYSTEM_GLOG=OFF
         -DWITH_FREESTYLE=OFF
         -DWITH_LIBS_PRECOMPILED=OFF
-        -DWITH_STATIC_LIBS=ON
+        -DWITH_STATIC_LIBS=OFF
         -DWITH_INPUT_IME=OFF
         -DWITH_INPUT_NDOF=OFF
         -DWITH_INSTALL_PORTABLE=OFF

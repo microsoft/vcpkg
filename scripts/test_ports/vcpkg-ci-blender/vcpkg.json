@@ -4,7 +4,7 @@
   "description": "3D creation suite",
   "homepage": "https://www.blender.org/",
   "license": "GPL-1.0-or-later",
-  "supports": "static & !android & !arm",
+  "supports": "x64 & windows",
   "dependencies": [
     "bzip2",
     "freetype",
