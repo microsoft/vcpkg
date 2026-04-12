@@ -2,7 +2,7 @@ diff --git a/src/plugins/platforms/wayland/hardwareintegration/qwaylandclientbuf
 index 1234567..abcdefg 100644
 --- a/src/plugins/platforms/wayland/hardwareintegration/qwaylandclientbufferintegration_p.h
 +++ b/src/plugins/platforms/wayland/hardwareintegration/qwaylandclientbufferintegration_p.h
-@@ -53,8 +53,8 @@ public:
+@@ -53,7 +53,9 @@ public:
      virtual QWaylandWindow *createEglWindow(QWindow *window) = 0;
 -    virtual QPlatformOpenGLContext *createPlatformOpenGLContext(const QSurfaceFormat &glFormat, QPlatformOpenGLContext *share) const = 0;
 -    virtual bool canCreatePlatformOffscreenSurface() const { return false; }
@@ -14,7 +14,7 @@ index 1234567..abcdefg 100644
      virtual QOpenGLContext *createOpenGLContext(EGLContext context, EGLDisplay contextDisplay, QOpenGLContext *shareContext) const = 0;
      virtual QPlatformOffscreenSurface *createPlatformOffscreenSurface(QOffscreenSurface *surface) const { Q_UNUSED(surface); return nullptr; }
  #endif
-@@ -63,7 +65,9 @@ public:
+@@ -63,4 +65,6 @@ public:
      };
      virtual void *nativeResource(NativeResource /*resource*/) { return nullptr; }
 -    virtual void *nativeResourceForContext(NativeResource /*resource*/, QPlatformOpenGLContext */*context*/) { return nullptr; }

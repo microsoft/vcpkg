@@ -2,7 +2,7 @@ diff --git a/src/corelib/configure.cmake b/src/corelib/configure.cmake
 index 1234567..abcdefg 100644
 --- a/src/corelib/configure.cmake
 +++ b/src/corelib/configure.cmake
-@@ -830,7 +830,7 @@ qt_feature("windows-ioring" PRIVATE
+@@ -830,6 +830,6 @@ qt_feature("windows-ioring" PRIVATE
      LABEL "Windows I/O Ring"
      AUTODETECT WIN32
 -    CONDITION TEST_windows_ioring
