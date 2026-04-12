@@ -1,5 +1,4 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg-cmake-get-vars/vcpkg-port-config.cmake")
 
 set(WEBRTC_TARGET_IS_LINUX FALSE)
 set(WEBRTC_TARGET_IS_MACOS FALSE)
