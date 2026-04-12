@@ -4,6 +4,7 @@
   "description": "Modern C++20/C++26 high-performance web framework based on Boost.Asio/Beast",
   "homepage": "https://github.com/Hical61/Hical",
   "license": "MIT",
+  "supports": "!uwp & !xbox & !android & !emscripten",
   "dependencies": [
     { "name": "boost-asio" },
     { "name": "boost-beast" },
