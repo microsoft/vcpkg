@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=@libdir@
+includedir=@includedir@
+apiversion=0.0
+
+Name: ctx
+Description: ctx vector graphics - wasm target
+Version: @version@
+Libs: -Wl,--lto-O3
+Cflags: -I${includedir} -DCTX_IMPLEMENTATION -flto -O3 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS=_main,_free,_calloc,_malloc
