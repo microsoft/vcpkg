@@ -1,0 +1,25 @@
+diff --git a/src/multimedia/windows/qwindows_propertystore.cpp b/src/multimedia/windows/qwindows_propertystore.cpp
+index 1234567..abcdef0 100644
+--- a/src/multimedia/windows/qwindows_propertystore.cpp
++++ b/src/multimedia/windows/qwindows_propertystore.cpp
+@@ -71,10 +71,19 @@ template <typename T>
+ struct first_arg_is_ptr;
+ 
+ // Function type
+ template <typename Result, typename Arg, typename... Args>
+ struct first_arg_is_ptr<Result (*)(Arg, Args...)> : std::bool_constant<std::is_pointer_v<Arg>>
+ {
+ };
+ 
++// On MSVC x86, __stdcall is a distinct calling convention from __cdecl.
++// The specialization above only matches __cdecl function pointers, so we need
++// an additional specialization for __stdcall (used by Win32 API functions like
++// PropVariantToGUID on 32-bit Windows).
++#if defined(_MSC_VER) && defined(_M_IX86)
++template <typename Result, typename Arg, typename... Args>
++struct first_arg_is_ptr<Result (__stdcall *)(Arg, Args...)> : std::bool_constant<std::is_pointer_v<Arg>>
++{
++};
++#endif
++
+ auto wrapPropVariantArg(const PROPVARIANT &arg)

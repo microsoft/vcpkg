@@ -570,6 +570,10 @@ if(VCPKG_CROSSCOMPILING)
     set(dep_file "${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Dependencies.cmake")
     file(READ "${dep_file}" dep_contents)
     string(REPLACE "${CURRENT_HOST_INSTALLED_DIR}" "\${CMAKE_CURRENT_LIST_DIR}/../../../${HOST_TRIPLET}" dep_contents "${dep_contents}")
+    string(REPLACE
+        "    set(__qt_platform_requires_host_info_package FALSE)"
+        "    set(__qt_platform_requires_host_info_package TRUE)"
+        dep_contents "${dep_contents}")
     file(WRITE "${dep_file}" "${dep_contents}")
 endif()
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/Qt6Config.cmake" "{Qt6HostInfo_DIR}/.." "{Qt6HostInfo_DIR}/../..")
@@ -594,15 +598,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
   # this is required to avoid ownership troubles in downstream qt modules
   set(qtbase_owned_dlls
         double-conversion.dll
-        icudt74.dll
-        icuin74.dll
-        icuuc74.dll
+        md4c.dll
         libcrypto-3-${VCPKG_TARGET_ARCHITECTURE}.dll
         libcrypto-3.dll # for x86
         pcre2-16.dll
         zlib1.dll
         zstd.dll
   )
+  # Dynamically find ICU DLLs (the version number tracks the ICU dependency, e.g. icudt78.dll for ICU 78)
+  file(GLOB _qt_icu_dt_dlls "${CURRENT_INSTALLED_DIR}/bin/icudt*.dll")
+  foreach(_icu_dll IN LISTS _qt_icu_dt_dlls)
+    get_filename_component(_icu_name "${_icu_dll}" NAME)
+    string(REGEX REPLACE "^icudt([0-9]+)\\.dll$" "\\1" _icu_ver "${_icu_name}")
+    list(APPEND qtbase_owned_dlls "icudt${_icu_ver}.dll" "icuin${_icu_ver}.dll" "icuuc${_icu_ver}.dll")
+  endforeach()
   if("dbus" IN_LIST FEATURES)
     list(APPEND qtbase_owned_dlls dbus-1-3.dll)
   endif()

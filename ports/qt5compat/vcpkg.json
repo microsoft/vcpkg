@@ -43,6 +43,7 @@
     },
     "iconv": {
       "description": "Provides internationalization on Unix.",
+      "supports": "!windows & !osx & !android",
       "dependencies": [
         "libiconv",
         {

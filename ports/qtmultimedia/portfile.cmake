@@ -6,6 +6,7 @@ set(${PORT}_PATCHES
     remove-static-ssl-stub.patch
     #ffmpeg-compile-def-and-devendor-signalsmith-stretch.patch
     ffmpeg.patch
+    fix-msvc-x86-propvariant.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
