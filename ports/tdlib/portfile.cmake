@@ -6,78 +6,83 @@ vcpkg_from_github(
     SHA512 91967a24eee9f1491b780ce72a1323aa99e228c10ecd588979e325d57417c6897eeebf375c609c99b2fd0d6137bcb950628a30f5cfc2e6838fb14d2803d02b7a
     PATCHES
         fix-pc.patch
+        fix-cross-compile.patch
 )
 
 vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 
-# When cross-compiling (e.g. x64-android from x64-linux), TDLib's build system
-# refuses to build any of its host-native code-generator executables
-# (generate_mime_types_gperf, generate_common, generate_mtproto, generate_json,
-# tl-parser) because CMAKE_CROSSCOMPILING is TRUE for the target build.
-#
-# Those generators write their output directly back into the source tree:
-#   tdutils/generate/auto/  – MIME-type ↔ extension lookup tables (.cpp)
-#   td/generate/auto/td/    – TL API bindings (.cpp / .h)
-#
-# Without the generated files the cross-compile fails immediately with
-# "no such file or directory" for the missing .cpp sources.
-#
-# TDLib documents a two-step cross-compilation workflow:
-#   1. Native build: cmake --build . --target prepare_cross_compiling
-#      → generates all auto/*.cpp and auto/*.h into the source tree
-#   2. Cross build: regular cmake configure + install
-#
-# Both the MIME-type files and the TL API files are covered by the
-# prepare_cross_compiling target, so this single native step is sufficient.
+# When cross-compiling, run the generator executables that were installed by
+# the host build of tdlib[tools] (declared as a host:true dependency in
+# vcpkg.json).  Running them directly avoids a cmake sub-invocation and
+# therefore sidesteps the Windows ARM64 problem where a cmake subprocess
+# inherits the vcvarsall cross-compiler and produces the wrong architecture.
 if(VCPKG_CROSSCOMPILING)
-    message(STATUS "[tdlib] Cross-compiling detected – running native source-generation step")
+    set(_tools "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
+    set(_exe   "${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+    set(_gperf "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf/gperf${_exe}")
 
-    # vcpkg manages its own ninja binary; it is not on the system PATH.
-    # Acquire it so we can pass CMAKE_MAKE_PROGRAM explicitly below.
-    vcpkg_find_acquire_program(NINJA)
+    # ── MIME type sources ────────────────────────────────────────────────────
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/tdutils/generate/auto")
 
-    set(_tdlib_gen_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-native-gen")
-    file(MAKE_DIRECTORY "${_tdlib_gen_dir}")
-
-    # Configure a plain (non-cross) build whose only job is to materialise
-    # all generated sources.  No toolchain file → CMake picks up the host
-    # system compiler (gcc/clang).  CMAKE_MAKE_PROGRAM is given explicitly
-    # because the vcpkg ninja is not on PATH.
     vcpkg_execute_required_process(
-        COMMAND "${CMAKE_COMMAND}"
-            "-S${SOURCE_PATH}"
-            "-B${_tdlib_gen_dir}"
-            "-GNinja"
-            "-DCMAKE_MAKE_PROGRAM=${NINJA}"
-            "-DCMAKE_BUILD_TYPE=Release"
-            "-DTDUTILS_MIME_TYPE=ON"
-            "-DTDUTILS_USE_EXTERNAL_DEPENDENCIES=OFF"
-            "-DTD_GENERATE_SOURCE_FILES=ON"
-            "-DTD_ENABLE_JNI=OFF"
-            "-DTD_ENABLE_DOTNET=OFF"
-            "-DTD_E2E_ONLY=OFF"
-            "-DTD_INSTALL_SHARED_LIBRARIES=OFF"
-            "-DTD_INSTALL_STATIC_LIBRARIES=OFF"
-            "-DBUILD_TESTING=OFF"
-        WORKING_DIRECTORY "${_tdlib_gen_dir}"
-        LOGNAME "configure-native-gen-${TARGET_TRIPLET}"
+        COMMAND "${_tools}/generate_mime_types_gperf${_exe}"
+                "${SOURCE_PATH}/tdutils/generate/mime_types.txt"
+                "${SOURCE_PATH}/tdutils/generate/auto/mime_type_to_extension.gperf"
+                "${SOURCE_PATH}/tdutils/generate/auto/extension_to_mime_type.gperf"
+        WORKING_DIRECTORY "${SOURCE_PATH}/tdutils/generate"
+        LOGNAME "tdlib-gen-mime-gperf-${TARGET_TRIPLET}"
+    )
+    vcpkg_execute_required_process(
+        COMMAND "${_gperf}" -m100
+                "--output-file=auto/mime_type_to_extension.cpp"
+                "auto/mime_type_to_extension.gperf"
+        WORKING_DIRECTORY "${SOURCE_PATH}/tdutils/generate"
+        LOGNAME "tdlib-gen-mime-to-ext-${TARGET_TRIPLET}"
+    )
+    vcpkg_execute_required_process(
+        COMMAND "${_gperf}" -m100
+                "--output-file=auto/extension_to_mime_type.cpp"
+                "auto/extension_to_mime_type.gperf"
+        WORKING_DIRECTORY "${SOURCE_PATH}/tdutils/generate"
+        LOGNAME "tdlib-gen-ext-to-mime-${TARGET_TRIPLET}"
     )
 
-    # prepare_cross_compiling depends on tdmime_auto, tl_generate_mtproto,
-    # tl_generate_common and tl_generate_json – building it materialises every
-    # auto-generated .cpp / .h file that the cross-compile build needs.
-    vcpkg_execute_required_process(
-        COMMAND "${CMAKE_COMMAND}" --build "${_tdlib_gen_dir}"
-                --target prepare_cross_compiling
-        WORKING_DIRECTORY "${_tdlib_gen_dir}"
-        LOGNAME "build-native-gen-${TARGET_TRIPLET}"
-    )
+    # ── TL schema → .tlo → generated C++ API sources ─────────────────────────
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/td/generate/auto/tlo")
+    foreach(_scheme IN ITEMS mtproto_api secret_api e2e_api td_api telegram_api)
+        vcpkg_execute_required_process(
+            COMMAND "${_tools}/tl-parser${_exe}"
+                    -e "auto/tlo/${_scheme}.tlo" "scheme/${_scheme}.tl"
+            WORKING_DIRECTORY "${SOURCE_PATH}/td/generate"
+            LOGNAME "tdlib-gen-tlo-${_scheme}-${TARGET_TRIPLET}"
+        )
+    endforeach()
 
-    unset(_tdlib_gen_dir)
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/td/generate/auto/td/telegram")
+    file(MAKE_DIRECTORY "${SOURCE_PATH}/td/generate/auto/td/mtproto")
+    foreach(_gen IN ITEMS generate_mtproto generate_common generate_json)
+        vcpkg_execute_required_process(
+            COMMAND "${_tools}/${_gen}${_exe}"
+            WORKING_DIRECTORY "${SOURCE_PATH}/td/generate/auto"
+            LOGNAME "tdlib-${_gen}-${TARGET_TRIPLET}"
+        )
+    endforeach()
+
+    unset(_tools _exe _gperf)
+endif()
+
+# The "tools" feature installs the source-generator executables so that
+# cross-compile builds of this port can find them in tools/tdlib/.
+# It is requested via the host:true dependency in vcpkg.json, so vcpkg
+# always builds tdlib[tools]:host-triplet before any cross-compile target.
+if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
+    set(_tdlib_install_gen ON)
+else()
+    set(_tdlib_install_gen OFF)
 endif()
 
 vcpkg_cmake_configure(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS
         -DTD_INSTALL_SHARED_LIBRARIES=OFF
         -DTD_INSTALL_STATIC_LIBRARIES=ON
@@ -87,15 +92,29 @@ vcpkg_cmake_configure(
         -DTD_E2E_ONLY=OFF
         -DTD_ENABLE_LTO=${CMAKE_HOST_WIN32}
         -DTD_ENABLE_MULTI_PROCESSOR_COMPILATION=${VCPKG_DETECTED_MSVC}
+        -DTD_INSTALL_HOST_GENERATORS=${_tdlib_install_gen}
         -DBUILD_TESTING=OFF
     MAYBE_UNUSED_VARIABLES
         TD_ENABLE_MULTI_PROCESSOR_COMPILATION
+        TD_INSTALL_HOST_GENERATORS
 )
 
 vcpkg_cmake_install()
 vcpkg_fixup_pkgconfig()
 vcpkg_cmake_config_fixup(CONFIG_PATH "lib/cmake/Td")
 vcpkg_copy_pdbs()
+
+if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
+    vcpkg_copy_tools(
+        TOOL_NAMES
+            tl-parser
+            generate_mtproto
+            generate_common
+            generate_json
+            generate_mime_types_gperf
+        AUTO_CLEAN
+    )
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE_1_0.txt")

@@ -10,6 +10,12 @@
       "name": "gperf",
       "host": true
     },
+    {
+      "name": "tdlib",
+      "host": true,
+      "features": [ "tools" ],
+      "default-features": false
+    },
     "openssl",
     {
       "name": "vcpkg-cmake",
@@ -20,5 +26,10 @@
       "host": true
     },
     "zlib"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Install source-generator executables (tl-parser, generate_mtproto, etc.) required for cross-compilation"
+    }
+  }
 }
