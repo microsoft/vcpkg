@@ -1,0 +1,46 @@
+diff --git a/examples/codeeditor/CMakeLists.txt b/examples/codeeditor/CMakeLists.txt
+--- a/examples/codeeditor/CMakeLists.txt
++++ b/examples/codeeditor/CMakeLists.txt
+@@ -1,4 +1,7 @@
+ if(TARGET Qt6::Widgets)
+     add_executable(codeeditor codeeditor.cpp main.cpp)
+     target_link_libraries(codeeditor Qt6::Widgets KF6SyntaxHighlighting)
++    if(MSVC AND NOT BUILD_SHARED_LIBS)
++        target_link_options(codeeditor PRIVATE /FORCE:MULTIPLE)
++    endif()
+ endif()
+diff --git a/examples/codepdfprinter/CMakeLists.txt b/examples/codepdfprinter/CMakeLists.txt
+--- a/examples/codepdfprinter/CMakeLists.txt
++++ b/examples/codepdfprinter/CMakeLists.txt
+@@ -1,4 +1,7 @@
+ if(TARGET Qt6::Widgets AND TARGET Qt6::PrintSupport)
+     add_executable(codepdfprinter codepdfprinter.cpp main.cpp)
+     target_link_libraries(codepdfprinter Qt6::Widgets Qt6::PrintSupport KF6SyntaxHighlighting)
++    if(MSVC AND NOT BUILD_SHARED_LIBS)
++        target_link_options(codepdfprinter PRIVATE /FORCE:MULTIPLE)
++    endif()
+ endif()
+diff --git a/src/cli/CMakeLists.txt b/src/cli/CMakeLists.txt
+--- a/src/cli/CMakeLists.txt
++++ b/src/cli/CMakeLists.txt
+@@ -2,4 +2,8 @@
+ ecm_mark_nongui_executable(ksyntaxhighlighter6)
+ target_link_libraries(ksyntaxhighlighter6 KF6SyntaxHighlighting)
+ 
++if(MSVC AND NOT BUILD_SHARED_LIBS)
++    target_link_options(ksyntaxhighlighter6 PRIVATE /FORCE:MULTIPLE)
++endif()
++
+ install(TARGETS ksyntaxhighlighter6 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+diff --git a/src/indexer/CMakeLists.txt b/src/indexer/CMakeLists.txt
+--- a/src/indexer/CMakeLists.txt
++++ b/src/indexer/CMakeLists.txt
+@@ -33,4 +33,8 @@
+     else()
+         target_link_libraries(katehighlightingindexer Qt6::Core)
+     endif()
++
++    if(MSVC AND NOT BUILD_SHARED_LIBS)
++        target_link_options(katehighlightingindexer PRIVATE /FORCE:MULTIPLE)
++    endif()
+ endif()
