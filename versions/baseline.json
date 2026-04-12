@@ -4472,6 +4472,10 @@
       "baseline": "6.23.0",
       "port-version": 0
     },
+    "kf6solid": {
+      "baseline": "6.23.0",
+      "port-version": 0
+    },
     "kfr": {
       "baseline": "6.3.1",
       "port-version": 0
