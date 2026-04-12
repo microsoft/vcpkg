@@ -10,13 +10,15 @@
       "name": "gperf",
       "host": true
     },
+    "openssl",
     {
       "name": "tdlib",
       "host": true,
-      "features": [ "tools" ],
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "tools"
+      ]
     },
-    "openssl",
     {
       "name": "vcpkg-cmake",
       "host": true
