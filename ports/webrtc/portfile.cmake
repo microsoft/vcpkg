@@ -30,7 +30,6 @@ set(WEBRTC_PATCHES
 set(BUILD_PATCHES
     build-0001-drop-module-deps-from-toolchain-invocations.patch
     build-0002-fix-apple-arflags-usage.patch
-    build-0003-disable-fno-lifetime-dse.patch
     build-0004-disable-sanitize-c-array-bounds.patch
     build-0005-disable-sanitize-return.patch
     build-0006-skip-local-vs-debugger-copy.patch
@@ -253,6 +252,92 @@ function(setup_webrtc_host_xcode_toolchain)
     set(WEBRTC_MAC_SDK_PATH "${WEBRTC_MAC_SDK_PATH}" PARENT_SCOPE)
 endfunction()
 
+function(probe_webrtc_compiler_flag out_var compiler_path flag)
+    set(options)
+    set(oneValueArgs COMPILER_TARGET)
+    cmake_parse_arguments(PARSE_ARGV 3 ARG "${options}" "${oneValueArgs}" "")
+
+    set(test_source "${CURRENT_BUILDTREES_DIR}/webrtc-flag-probe.cc")
+    set(test_object "${CURRENT_BUILDTREES_DIR}/webrtc-flag-probe.o")
+    file(WRITE "${test_source}" "int main() { return 0; }\n")
+
+    set(probe_command "${compiler_path}")
+    if(DEFINED ARG_COMPILER_TARGET AND NOT ARG_COMPILER_TARGET STREQUAL "")
+        list(APPEND probe_command "--target=${ARG_COMPILER_TARGET}")
+    endif()
+    list(APPEND probe_command "${flag}" -c "${test_source}" -o "${test_object}")
+
+    execute_process(
+        COMMAND ${probe_command}
+        RESULT_VARIABLE probe_result
+        OUTPUT_QUIET
+        ERROR_QUIET
+    )
+
+    file(REMOVE "${test_source}" "${test_object}")
+    if(probe_result EQUAL 0)
+        set(${out_var} TRUE PARENT_SCOPE)
+    else()
+        set(${out_var} FALSE PARENT_SCOPE)
+    endif()
+endfunction()
+
+function(adjust_webrtc_lifetime_dse_flag source_path)
+    if(WEBRTC_TARGET_IS_WINDOWS)
+        return()
+    endif()
+
+    set(compiler_target "")
+    if(WEBRTC_TARGET_IS_MACOS)
+        set(cxx_compiler "${WEBRTC_clang++_PROGRAM}")
+    elseif(WEBRTC_TARGET_IS_LINUX)
+        vcpkg_cmake_get_vars(cmake_vars_file)
+        include("${cmake_vars_file}")
+        set(cxx_compiler "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+        if(DEFINED VCPKG_DETECTED_CMAKE_CXX_COMPILER_TARGET)
+            set(compiler_target "${VCPKG_DETECTED_CMAKE_CXX_COMPILER_TARGET}")
+        endif()
+    else()
+        return()
+    endif()
+
+    # Chromium added -fno-lifetime-dse in February 2026 after Android test
+    # failures following a Clang roll, then kept it because the benefits did
+    # not appear to outweigh the risks:
+    # https://chromium.googlesource.com/chromium/src/build/config/+/729af572f0a301b757f1040b6aad6773cd928bd3
+    # https://chromium.googlesource.com/chromium/src/build/config/+/94c49aa3b3d8aadcd37d195fd0c0069829b856eb
+    # Keep upstream behavior when the target compiler accepts the flag, but
+    # strip the block for unsupported non-Windows compilers.
+    probe_webrtc_compiler_flag(
+        compiler_supports_fno_lifetime_dse
+        "${cxx_compiler}"
+        "-fno-lifetime-dse"
+        COMPILER_TARGET "${compiler_target}"
+    )
+    if(compiler_supports_fno_lifetime_dse)
+        return()
+    endif()
+
+    set(lifetime_dse_block [=[    # The performance improvement does not seem worth the risk. See
+    # https://crbug.com/484082200 for background and https://crrev.com/c/7593035
+    # for discussion.
+    if (!is_wasm) {
+      cflags += [ "-fno-lifetime-dse" ]
+    }
+
+]=])
+
+    set(compiler_build_gn "${source_path}/build/config/compiler/BUILD.gn")
+    file(READ "${compiler_build_gn}" compiler_build_gn_contents)
+    string(FIND "${compiler_build_gn_contents}" "${lifetime_dse_block}" lifetime_dse_pos)
+    if(lifetime_dse_pos EQUAL -1)
+        message(FATAL_ERROR "Expected upstream -fno-lifetime-dse block was not found in '${compiler_build_gn}'.")
+    endif()
+
+    string(REPLACE "${lifetime_dse_block}" "" compiler_build_gn_contents "${compiler_build_gn_contents}")
+    file(WRITE "${compiler_build_gn}" "${compiler_build_gn_contents}")
+endfunction()
+
 set(GN "${CURRENT_HOST_INSTALLED_DIR}/tools/gn/gn${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 set(NINJA "${CURRENT_HOST_INSTALLED_DIR}/tools/ninja/ninja${VCPKG_HOST_EXECUTABLE_SUFFIX}")
 if(WEBRTC_TARGET_IS_MACOS)
@@ -300,6 +385,8 @@ endif()
 
 vcpkg_find_acquire_program(NASM)
 set(WEBRTC_NASM_PROGRAM "${NASM}")
+
+adjust_webrtc_lifetime_dse_flag("${SOURCE_PATH}")
 
 if(NOT EXISTS "${GN}")
     message(FATAL_ERROR "Missing bundled GN binary: ${GN}")
