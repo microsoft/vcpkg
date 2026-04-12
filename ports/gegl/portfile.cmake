@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     SHA512 15cbfeb3574fd404f609527939567ce0a3fb7efd50426bed4c7d7077b2cef54d4ec9840cad7c2b3098bea79f43682695830e37b6bf21f11d8752bf85800dfa33
     PATCHES
         disable_tests.patch
+        fix-ctx-msvc.patch
         use-plugins-dir.patch
         remove_execinfo_support.patch
         remove-consistency-check.patch
