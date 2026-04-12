@@ -28,10 +28,10 @@ set(_webrtc_transitive_archives
     OpenSSL::SSL
 )
 set(_webrtc_link_group_linux
-    "$<LINK_GROUP:RESCAN,webrtc::webrtc,${_webrtc_transitive_archives}>"
+    "$<LINK_GROUP:RESCAN,unofficial::webrtc::webrtc,${_webrtc_transitive_archives}>"
 )
 set(_webrtc_link_group_other
-    "webrtc::webrtc;${_webrtc_transitive_archives}"
+    "unofficial::webrtc::webrtc;${_webrtc_transitive_archives}"
 )
 set(_webrtc_imported_location_debug "${_webrtc_prefix}/debug/lib/libwebrtc.a")
 set(_webrtc_imported_location_release "${_webrtc_prefix}/lib/libwebrtc.a")
@@ -55,9 +55,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     )
 endif()
 
-if(NOT TARGET webrtc::webrtc)
-    add_library(webrtc::webrtc STATIC IMPORTED)
-    set_target_properties(webrtc::webrtc PROPERTIES
+if(NOT TARGET unofficial::webrtc::webrtc)
+    add_library(unofficial::webrtc::webrtc STATIC IMPORTED)
+    set_target_properties(unofficial::webrtc::webrtc PROPERTIES
         IMPORTED_CONFIGURATIONS "DEBUG;RELEASE"
         IMPORTED_LOCATION_DEBUG "${_webrtc_imported_location_debug}"
         IMPORTED_LOCATION_RELEASE "${_webrtc_imported_location_release}"

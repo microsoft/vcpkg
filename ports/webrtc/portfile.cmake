@@ -475,10 +475,10 @@ endforeach()
 file(REMOVE "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg_abi_info.txt")
 
 configure_file(
-    "${CMAKE_CURRENT_LIST_DIR}/webrtcConfig.cmake.in"
-    "${CURRENT_PACKAGES_DIR}/share/${PORT}/webrtcConfig.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/unofficial-webrtcConfig.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/unofficial-webrtc/unofficial-webrtcConfig.cmake"
     @ONLY
 )
-file(INSTALL "${WEBRTC_ABSL_EXPORTS}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${WEBRTC_ABSL_EXPORTS}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/unofficial-webrtc")
 
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
