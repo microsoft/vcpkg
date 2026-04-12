@@ -1,0 +1,11 @@
+{
+  "name": "libspeechd",
+  "version": "0.12.1",
+  "description": "Client library for Speech Dispatcher",
+  "homepage": "https://github.com/brailcom/speechd",
+  "license": "LGPL-2.1-or-later",
+  "supports": "!windows & !uwp & !xbox",
+  "dependencies": [
+    "glib"
+  ]
+}

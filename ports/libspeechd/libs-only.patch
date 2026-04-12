@@ -1,0 +1,102 @@
+diff --git a/Makefile.am b/Makefile.am
+index 480eb50e..3dbf458b 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -22,7 +22,11 @@ pkgconfig_DATA = speech-dispatcher.pc
+ 
+ BUILT_SOURCES = $(top_srcdir)/.version
+ 
++if LIBS_ONLY
++SUBDIRS= include src
++else
+ SUBDIRS= include locale src config po
++endif
+ 
+ if ENABLE_DOC
+ SUBDIRS += doc
+diff --git a/configure.ac b/configure.ac
+index ce54f941..f8f3e92d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -43,12 +43,25 @@ LT_PREREQ([2.2])
+ LT_INIT([dlopen])
+ AC_CONFIG_SRCDIR([src/server/speechd.c])
+ AC_CONFIG_HEADERS([config.h])
++AC_ARG_ENABLE([libs-only], [AS_HELP_STRING([--enable-libs-only], [build only the client library])], [], [enable_libs_only=no])
++AM_CONDITIONAL([LIBS_ONLY], [test "$enable_libs_only" = "yes"])
++if test "$enable_libs_only" = "yes"; then
++	with_espeak=no with_espeak_ng=no with_flite=no with_ibmtts=no
++	with_voxin=no with_ivona=no with_pico=no with_baratinoo=no
++	with_kali=no with_piper=no
++	with_pulse=no with_alsa=no with_oss=no with_nas=no
++	with_libao=no with_pipewire=no
++	enable_python=no enable_doc=no
++	with_systemdsystemunitdir=no with_systemduserunitdir=no
++	fi
++if test "$enable_libs_only" != "yes"; then
+ AM_GNU_GETTEXT_VERSION([0.19.8])
+ AM_GNU_GETTEXT([external])
+ if test "$ac_cv_path_MSGFMT" = ":"
+ then
+ 	AC_MSG_FAILURE([msgfmt missing from the gettext package])
+ fi
++fi
+ 
+ # Split version number
+ [MAJOR_VERSION]=MAJOR_VERSION
+@@ -76,11 +89,11 @@ AC_SEARCH_LIBS([sqrt], [m], [],
+ AC_SEARCH_LIBS([pthread_create], [pthread], [],
+ 	[AC_MSG_FAILURE([Threads library missing])])
+ AC_CHECK_DECL([pthread_setname_np], AC_CHECK_FUNCS([pthread_setname_np]), , [#include <pthread.h>])
++if test "$enable_libs_only" != "yes"; then
+ AC_ARG_ENABLE([ltdl],
+ 	[AS_HELP_STRING([--disable-ltdl], [do not use ltdl for modules])],
+ 	[],
+ 	[enable_ltdl=check])
+-
+ if test x$enable_ltdl != xno;
+ then
+ 	AC_SEARCH_LIBS([lt_dlopen], [ltdl], [use_ltdl=yes], [use_ltdl=no])
+@@ -100,7 +113,7 @@ then
+ 	AC_SEARCH_LIBS([dlopen], [dl], [],
+ 		[AC_MSG_FAILURE([dlopen missing])])
+ fi
+-
++fi
+ if test x$enable_shared = xyes;
+ then
+ 	default_shim=shim
+@@ -120,7 +133,7 @@ AM_CONDITIONAL(DARWIN_HOST, test "$darwin_host" = yes)
+ PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.36])
+ AC_SUBST([GLIB_CFLAGS])
+ AC_SUBST([GLIB_LIBS])
+-
++if test "$enable_libs_only" != "yes"; then
+ PKG_CHECK_MODULES([GTHREAD], [gthread-2.0])
+ AC_SUBST([GTHREAD_CFLAGS])
+ AC_SUBST([GTHREAD_LIBS])
+@@ -136,7 +149,7 @@ AC_SUBST([DOTCONF_LIBS])
+ PKG_CHECK_MODULES([SNDFILE], [sndfile >= 1.0.2])
+ AC_SUBST([SNDFILE_CFLAGS])
+ AC_SUBST([SNDFILE_LIBS])
+-
++fi
+ PKG_CHECK_MODULES([LIBSYSTEMD], [libsystemd], [have_libsystemd=yes], [:])
+ 
+ # Checks for header files.
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 2a9659c0..20f61525 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -17,7 +17,11 @@
+ 
+ ## Process this file with automake to produce Makefile.in
+ 
++if LIBS_ONLY
++SUBDIRS=api
++else
+ SUBDIRS=common server audio modules api clients tests
++endif
+ 
+ 
+ -include $(top_srcdir)/git.mk
