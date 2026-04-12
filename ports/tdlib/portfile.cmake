@@ -68,7 +68,9 @@ if(VCPKG_CROSSCOMPILING)
         )
     endforeach()
 
-    unset(_tools _exe _gperf)
+    unset(_tools)
+    unset(_exe)
+    unset(_gperf)
 endif()
 
 # The "tools" feature installs the source-generator executables so that
