@@ -14,8 +14,6 @@ else()
     message(FATAL_ERROR "webrtc currently supports only x64-linux, arm64-linux, arm64-osx, x64-osx, arm64-windows, x86-windows, and x64-windows.")
 endif()
 
-include("${CMAKE_CURRENT_LIST_DIR}/source-manifest.cmake")
-
 set(WEBRTC_PATCHES
     webrtc-0001-disable-perfetto-when-off.patch
     webrtc-0002-export-enable-media-with-defaults.patch
@@ -45,6 +43,9 @@ set(RNNOISE_PATCHES
     rnnoise-0001-fix-neon-reinterpret-for-msvc.patch
 )
 
+include("${CMAKE_CURRENT_LIST_DIR}/webrtc-functions.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/source-manifest.cmake")
+
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL "${WEBRTC_SOURCE_URL}"
@@ -52,40 +53,7 @@ vcpkg_from_git(
     PATCHES ${WEBRTC_PATCHES}
 )
 
-function(fetch_webrtc_repo source_path repo_spec)
-    string(REPLACE "|" ";" REPO_FIELDS "${repo_spec}")
-    list(LENGTH REPO_FIELDS REPO_FIELD_COUNT)
-    if(NOT REPO_FIELD_COUNT EQUAL 3)
-        message(FATAL_ERROR "Malformed WebRTC source repo spec: '${repo_spec}'")
-    endif()
-    list(GET REPO_FIELDS 0 REPO_DESTINATION)
-    list(GET REPO_FIELDS 1 REPO_URL)
-    list(GET REPO_FIELDS 2 REPO_REF)
-
-    set(REPO_PATCHES)
-    if(REPO_DESTINATION STREQUAL "build")
-        set(REPO_PATCHES ${BUILD_PATCHES})
-    elseif(REPO_DESTINATION STREQUAL "third_party/rnnoise")
-        set(REPO_PATCHES ${RNNOISE_PATCHES})
-    endif()
-
-    vcpkg_from_git(
-        OUT_SOURCE_PATH REPO_SOURCE_PATH
-        URL "${REPO_URL}"
-        REF "${REPO_REF}"
-        PATCHES ${REPO_PATCHES}
-    )
-
-    set(REPO_TARGET_PATH "${source_path}/${REPO_DESTINATION}")
-    get_filename_component(REPO_TARGET_PARENT "${REPO_TARGET_PATH}" DIRECTORY)
-    file(MAKE_DIRECTORY "${REPO_TARGET_PARENT}")
-    file(REMOVE_RECURSE "${REPO_TARGET_PATH}")
-    file(RENAME "${REPO_SOURCE_PATH}" "${REPO_TARGET_PATH}")
-endfunction()
-
-foreach(WEBRTC_REPO_SPEC IN LISTS WEBRTC_SOURCE_REPOS)
-    fetch_webrtc_repo("${SOURCE_PATH}" "${WEBRTC_REPO_SPEC}")
-endforeach()
+fetch_declared_webrtc_repos("${SOURCE_PATH}")
 
 if(WEBRTC_TARGET_IS_WINDOWS AND VCPKG_CRT_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string(
@@ -310,9 +278,7 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
         setup_webrtc_windows_toolchain("${BUILD_CONFIG}")
     endif()
 
-    generate_external_dep("${SOURCE_PATH}" "third_party_root" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "testing" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "tools" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
+    generate_declared_webrtc_externals("${SOURCE_PATH}" "${BUILD_CONFIG}" pre_absl)
     file(REMOVE_RECURSE "${SOURCE_PATH}/third_party/abseil-cpp")
     vcpkg_execute_required_process(
         COMMAND
@@ -326,22 +292,7 @@ foreach(BUILD_CONFIG IN ITEMS debug release)
         WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME "generate-${TARGET_TRIPLET}-external-absl-${BUILD_CONFIG}"
     )
-    generate_external_dep("${SOURCE_PATH}" "libsrtp" "${CURRENT_INSTALLED_DIR}/include" "${LIBSRTP_LIB_ROOT}" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "libyuv" "${CURRENT_INSTALLED_DIR}/include" "${LIBYUV_LIB_ROOT}" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "libvpx" "${CURRENT_INSTALLED_DIR}/include" "${LIBVPX_LIB_ROOT}" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "opus" "${CURRENT_INSTALLED_DIR}/include" "${OPUS_LIB_ROOT}" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "libaom" "${CURRENT_INSTALLED_DIR}/include" "${LIBAOM_LIB_ROOT}" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "jsoncpp" "${CURRENT_INSTALLED_DIR}/include" "${JSONCPP_LIB_ROOT}" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "pffft" "${CURRENT_INSTALLED_DIR}/include" "${PFFFT_LIB_ROOT}" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "alsa" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "pulseaudio" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "rnnoise" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "dav1d" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "llvm-libc" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "protobuf" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "googletest" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "catapult" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}")
-    generate_external_dep("${SOURCE_PATH}" "nasm" "${CURRENT_INSTALLED_DIR}/include" "${CURRENT_INSTALLED_DIR}/lib" "${BUILD_CONFIG}" TOOL_PATH "${WEBRTC_YASM_PROGRAM}")
+    generate_declared_webrtc_externals("${SOURCE_PATH}" "${BUILD_CONFIG}" post_absl)
 
     set(WEBRTC_GN_ARGS
         "clang_use_chrome_plugins=false"
