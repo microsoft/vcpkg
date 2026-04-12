@@ -9,6 +9,8 @@
     { "name": "boost-beast" },
     { "name": "boost-system" },
     { "name": "boost-json" },
-    "openssl"
+    "openssl",
+    { "name": "vcpkg-cmake", "host": true },
+    { "name": "vcpkg-cmake-config", "host": true }
   ]
 }
