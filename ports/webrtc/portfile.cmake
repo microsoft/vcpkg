@@ -472,12 +472,12 @@ elseif(VCPKG_TARGET_IS_OSX)
         WEBRTC_POSIX
     )
     list(APPEND WEBRTC_INTERFACE_LINK_OPTIONS
-        SHELL:-framework AudioToolbox
-        SHELL:-framework CoreAudio
-        SHELL:-framework CoreFoundation
-        SHELL:-framework Foundation
-        SHELL:-framework AppKit
-        SHELL:-framework ApplicationServices
+        "SHELL:-framework AudioToolbox"
+        "SHELL:-framework CoreAudio"
+        "SHELL:-framework CoreFoundation"
+        "SHELL:-framework Foundation"
+        "SHELL:-framework AppKit"
+        "SHELL:-framework ApplicationServices"
     )
 elseif(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND WEBRTC_INTERFACE_COMPILE_DEFINITIONS
