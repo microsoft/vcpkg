@@ -1400,7 +1400,6 @@ supernovas:arm64-linux=fail
 supernovas[solsys-calceph]:arm64-linux=cascade
 symengine[llvm]:arm64-linux=cascade
 symengine[llvm]:arm64-windows=cascade
-tdlib:arm64-linux=fail
 tdscpp:arm64-linux=fail
 telnetpp(android)=fail
 tensorflow-cc(windows)=fail # tensorflow does not support VS2022
