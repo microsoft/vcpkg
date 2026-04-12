@@ -157,7 +157,7 @@ template("nasm_assemble") {
       }
     }
 
-    outputs = [ "$target_out_dir/$source_set_name/{{source_name_part}}.o" ]
+    outputs = [ "$target_out_dir/$source_set_name/{{source_name_part}}.${asm_obj_extension}" ]
     args += [
       "-MD",
       rebase_path(outputs[0] + ".d", root_build_dir),
