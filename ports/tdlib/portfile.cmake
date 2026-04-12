@@ -32,17 +32,23 @@ vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/gperf")
 if(VCPKG_CROSSCOMPILING)
     message(STATUS "[tdlib] Cross-compiling detected – running native source-generation step")
 
+    # vcpkg manages its own ninja binary; it is not on the system PATH.
+    # Acquire it so we can pass CMAKE_MAKE_PROGRAM explicitly below.
+    vcpkg_find_acquire_program(NINJA)
+
     set(_tdlib_gen_dir "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-native-gen")
     file(MAKE_DIRECTORY "${_tdlib_gen_dir}")
 
     # Configure a plain (non-cross) build whose only job is to materialise
-    # all generated sources.  We intentionally pass no toolchain file so CMake
-    # picks up the host system compiler.
+    # all generated sources.  No toolchain file → CMake picks up the host
+    # system compiler (gcc/clang).  CMAKE_MAKE_PROGRAM is given explicitly
+    # because the vcpkg ninja is not on PATH.
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}"
             "-S${SOURCE_PATH}"
             "-B${_tdlib_gen_dir}"
             "-GNinja"
+            "-DCMAKE_MAKE_PROGRAM=${NINJA}"
             "-DCMAKE_BUILD_TYPE=Release"
             "-DTDUTILS_MIME_TYPE=ON"
             "-DTDUTILS_USE_EXTERNAL_DEPENDENCIES=OFF"
