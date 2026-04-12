@@ -258,9 +258,9 @@ PY
     file(CREATE_LINK "${HOST_CLANG_RESOURCE_DIR}" "${XCODE_HOST_LIB_CLANG_DIR}/${WEBRTC_CLANG_VERSION}" SYMBOLIC)
 endif()
 
-find_program(WEBRTC_YASM_PROGRAM NAMES yasm PATHS "${CURRENT_HOST_INSTALLED_DIR}/tools/yasm" NO_DEFAULT_PATH)
-if(NOT WEBRTC_YASM_PROGRAM)
-    message(FATAL_ERROR "Required host yasm tool was not found under '${CURRENT_HOST_INSTALLED_DIR}/tools/yasm'.")
+find_program(WEBRTC_NASM_PROGRAM NAMES nasm)
+if(NOT WEBRTC_NASM_PROGRAM)
+    message(FATAL_ERROR "Required host nasm tool was not found in PATH.")
 endif()
 
 if(NOT EXISTS "${GN}")

@@ -31,10 +31,6 @@
     {
       "name": "vcpkg-tool-ninja",
       "host": true
-    },
-    {
-      "name": "yasm",
-      "host": true
     }
   ],
   "features": {
