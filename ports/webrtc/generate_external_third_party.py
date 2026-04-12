@@ -109,11 +109,9 @@ template("nasm_assemble") {
   action_name = "${target_name}_action"
   source_set_name = target_name
 
-  compiled_action_foreach(action_name) {
+  action_foreach(action_name) {
     # Only the source set can depend on this.
     visibility = [ ":$source_set_name" ]
-
-    tool = "//third_party/nasm"
 
     forward_variables_from(invoker,
                            [
@@ -131,6 +129,8 @@ template("nasm_assemble") {
         "//third_party/instrumented_libs:msan_runtime_libs($host_toolchain)",
       ]
     }
+
+    script = "{tool_path}"
 
     args = _nasm_flags
     if (defined(invoker.nasm_flags)) {
@@ -331,128 +331,7 @@ static OPUS_INLINE void opus_free(void* ptr) {
 #endif
 """
 
-NASM_BUILD_GN = """import("//build/config/compiler/compiler.gni")
-
-if (current_toolchain == host_toolchain) {
-  executable("nasm") {
-    sources = [ "nasm_wrapper.cc" ]
-    configs -= [ "//build/config/compiler:chromium_code" ]
-    configs += [ "//build/config/compiler:no_chromium_code" ]
-  }
-}
-"""
-
-NASM_WRAPPER_CC = """#include <stdio.h>
-#include <vector>
-
-#if defined(_WIN32)
-#include <cstring>
-#include <string>
-#include <windows.h>
-
-namespace {
-
-std::string quote_arg(const char* arg) {
-  if (arg == nullptr) {
-    return "\"\"";
-  }
-
-  std::string result;
-  const bool needs_quotes = *arg == '\\0' || strpbrk(arg, " \\t\\n\\v\\\"") != nullptr;
-  if (!needs_quotes) {
-    return arg;
-  }
-
-  result.push_back('"');
-  int backslashes = 0;
-  for (const char* current = arg; *current != '\\0'; ++current) {
-    if (*current == '\\\\') {
-      ++backslashes;
-      continue;
-    }
-    if (*current == '"') {
-      result.append(static_cast<size_t>(backslashes * 2 + 1), '\\\\');
-      result.push_back('"');
-      backslashes = 0;
-      continue;
-    }
-    result.append(static_cast<size_t>(backslashes), '\\\\');
-    backslashes = 0;
-    result.push_back(*current);
-  }
-  result.append(static_cast<size_t>(backslashes * 2), '\\\\');
-  result.push_back('"');
-  return result;
-}
-
-}  // namespace
-
-int main(int argc, char** argv) {
-  std::vector<std::string> quoted_args;
-  quoted_args.reserve(static_cast<size_t>(argc));
-  quoted_args.emplace_back(quote_arg("{tool_path}"));
-  for (int i = 1; i < argc; ++i) {
-    quoted_args.emplace_back(quote_arg(argv[i]));
-  }
-
-  std::string command_line;
-  for (size_t i = 0; i < quoted_args.size(); ++i) {
-    if (i != 0) {
-      command_line.push_back(' ');
-    }
-    command_line += quoted_args[i];
-  }
-
-  STARTUPINFOA startup_info = {};
-  startup_info.cb = sizeof(startup_info);
-  PROCESS_INFORMATION process_info = {};
-  std::vector<char> mutable_command_line(command_line.begin(), command_line.end());
-  mutable_command_line.push_back('\\0');
-
-  const BOOL created = CreateProcessA(
-      "{tool_path}",
-      mutable_command_line.data(),
-      nullptr,
-      nullptr,
-      TRUE,
-      0,
-      nullptr,
-      nullptr,
-      &startup_info,
-      &process_info);
-  if (!created) {
-    fprintf(stderr, "failed to exec %s: %lu\\n", "{tool_path}", GetLastError());
-    return 127;
-  }
-
-  WaitForSingleObject(process_info.hProcess, INFINITE);
-  DWORD exit_code = 127;
-  if (!GetExitCodeProcess(process_info.hProcess, &exit_code)) {
-    fprintf(stderr, "failed to query exit code for %s: %lu\\n", "{tool_path}", GetLastError());
-  }
-  CloseHandle(process_info.hThread);
-  CloseHandle(process_info.hProcess);
-  return static_cast<int>(exit_code);
-}
-#else
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-
-int main(int argc, char** argv) {
-  std::vector<char*> args;
-  args.reserve(static_cast<size_t>(argc) + 1);
-  args.push_back(const_cast<char*>("{tool_path}"));
-  for (int i = 1; i < argc; ++i) {
-    args.push_back(argv[i]);
-  }
-  args.push_back(nullptr);
-  execv(args[0], args.data());
-  fprintf(stderr, "failed to exec %s: %s\\n", args[0], strerror(errno));
-  return 127;
-}
-#endif
-"""
+NASM_BUILD_GN = ""
 
 GOOGLETEST_GTEST_SPI_H = """#pragma once
 #define EXPECT_FATAL_FAILURE(statement, substring) do { statement; } while (0)
@@ -1114,7 +993,6 @@ group("convert_chart_json") {
         "files": {
             "BUILD.gn": NASM_BUILD_GN,
             "nasm_assemble.gni": NASM_ASSEMBLE_GNI,
-            "nasm_wrapper.cc": NASM_WRAPPER_CC,
         },
     },
 }

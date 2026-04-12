@@ -298,10 +298,8 @@ PY
     file(CREATE_LINK "${HOST_CLANG_RESOURCE_DIR}" "${XCODE_HOST_LIB_CLANG_DIR}/${WEBRTC_CLANG_VERSION}" SYMBOLIC)
 endif()
 
-find_program(WEBRTC_NASM_PROGRAM NAMES nasm)
-if(NOT WEBRTC_NASM_PROGRAM)
-    message(FATAL_ERROR "Required host nasm tool was not found in PATH.")
-endif()
+vcpkg_find_acquire_program(NASM)
+set(WEBRTC_NASM_PROGRAM "${NASM}")
 
 if(NOT EXISTS "${GN}")
     message(FATAL_ERROR "Missing bundled GN binary: ${GN}")

@@ -130,11 +130,29 @@ class GenerateExternalThirdPartyTest(unittest.TestCase):
                 spec,
             )
 
-            wrapper = next(item for item in plan.files
-                           if item.relative_path == "nasm_wrapper.cc")
-            self.assertIn('args.push_back(const_cast<char*>("/tool/nasm"));',
-                          wrapper.content)
-            self.assertIn('CreateProcessA(', wrapper.content)
+            build_gn = next(item for item in plan.files
+                            if item.relative_path == "nasm_assemble.gni")
+            self.assertIn('script = "/tool/nasm"', build_gn.content)
+            self.assertIn('action_foreach(action_name) {', build_gn.content)
+            self.assertNotIn('compiled_action_foreach(action_name)', build_gn.content)
+
+    def test_build_generation_plan_renders_windows_tool_path(self) -> None:
+        with tempfile.TemporaryDirectory() as tempdir:
+            source_root = pathlib.Path(tempdir)
+            spec = MODULE.resolve_spec("nasm")
+
+            plan = MODULE.build_generation_plan(
+                source_root,
+                "/test/include",
+                "/test/lib",
+                "/tool/nasm.exe",
+                spec,
+            )
+
+            build_gn = next(item for item in plan.files
+                            if item.relative_path == "nasm_assemble.gni")
+            self.assertIn('script = "/tool/nasm.exe"', build_gn.content)
+            self.assertNotIn('compiled_action_foreach(action_name)', build_gn.content)
 
     def test_build_generation_plan_preserves_root_flag(self) -> None:
         with tempfile.TemporaryDirectory() as tempdir:
@@ -215,10 +233,9 @@ class GenerateExternalThirdPartyTest(unittest.TestCase):
                 "/tool/nasm",
             )
 
-            wrapper = (source_root / "third_party" / "nasm" /
-                       "nasm_wrapper.cc").read_text()
-            self.assertIn('args.push_back(const_cast<char*>("/tool/nasm"));',
-                          wrapper)
+            dep_root = source_root / "third_party" / "nasm"
+            self.assertIn('script = "/tool/nasm"',
+                          (dep_root / "nasm_assemble.gni").read_text())
 
     def test_write_tree_generates_libsrtp_with_substitution(self) -> None:
         with tempfile.TemporaryDirectory() as tempdir:
@@ -259,12 +276,11 @@ class GenerateExternalThirdPartyTest(unittest.TestCase):
             MODULE.write_tree(source_root, "nasm", "/test/include",
                               "/test/lib", "/tool/nasm")
 
-            wrapper = (source_root / "third_party" / "nasm" /
-                       "nasm_wrapper.cc").read_text()
-            self.assertIn('args.push_back(const_cast<char*>("/tool/nasm"));',
-                          wrapper)
-            self.assertIn('execv(args[0], args.data());', wrapper)
-            self.assertIn('CreateProcessA(', wrapper)
+            dep_root = source_root / "third_party" / "nasm"
+            assemble_gni = (dep_root / "nasm_assemble.gni").read_text()
+            self.assertIn('script = "/tool/nasm"', assemble_gni)
+            self.assertNotIn('compiled_action_foreach(action_name)', assemble_gni)
+            self.assertEqual("", (dep_root / "BUILD.gn").read_text())
 
     def test_write_tree_generates_nested_testing_tree(self) -> None:
         with tempfile.TemporaryDirectory() as tempdir:
