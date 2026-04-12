@@ -1,0 +1,95 @@
+diff --git a/tdutils/generate/CMakeLists.txt b/tdutils/generate/CMakeLists.txt
+--- a/tdutils/generate/CMakeLists.txt
++++ b/tdutils/generate/CMakeLists.txt
+@@ -1,6 +1,14 @@
+ if ((CMAKE_MAJOR_VERSION LESS 3) OR (CMAKE_VERSION VERSION_LESS "3.10"))
+   message(FATAL_ERROR "CMake >= 3.10 is required")
+ endif()
+
++# Allow this directory to be used as a standalone project by ExternalProject_Add
++# during cross-compilation so we can build the host-native generator executable.
++# TD_MIME_HOST_BUILD is set only by the ExternalProject invocation below.
++if (TD_MIME_HOST_BUILD)
++  project(TdMimeHostGen CXX)
++  set(TDUTILS_MIME_TYPE ON)
++endif()
++
+ # Generates files for MIME type <-> extension conversions
+ # DEPENDS ON: gperf grep
+@@ -59,4 +67,63 @@
+     COMMAND ${EXTENSION_TO_MIME_TYPE_CMD}
+     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/auto/extension_to_mime_type.gperf
+   )
+-endif()
++else()
++  # -------------------------------------------------------------------------
++  # Cross-compilation: build generate_mime_types_gperf for the host system
++  # using an ExternalProject so it can be executed during the cross-compile
++  # build to drive gperf and produce the .cpp files.
++  # -------------------------------------------------------------------------
++  include(ExternalProject)
++
++  find_program(GPERF_EXECUTABLE gperf REQUIRED
++    DOC "gperf executable (host tool) for MIME-type hash generation")
++
++  set(_mime_host_dir "${CMAKE_CURRENT_BINARY_DIR}/mime_host_gen")
++  set(_mime_host_exe "${_mime_host_dir}/generate_mime_types_gperf")
++
++  # Build only the generator; reset cross-compile settings so CMake picks
++  # up the host system compiler from PATH.
++  ExternalProject_Add(generate_mime_types_gperf_host
++    SOURCE_DIR  "${CMAKE_CURRENT_SOURCE_DIR}"
++    BINARY_DIR  "${_mime_host_dir}"
++    CMAKE_ARGS
++      "-DTD_MIME_HOST_BUILD=ON"
++      "-DCMAKE_BUILD_TYPE=Release"
++      "-DCMAKE_TOOLCHAIN_FILE="
++      "-DCMAKE_SYSTEM_NAME=${CMAKE_HOST_SYSTEM_NAME}"
++    BUILD_COMMAND   "${CMAKE_COMMAND}" --build "${_mime_host_dir}"
++                    --target generate_mime_types_gperf
++    INSTALL_COMMAND ""
++    BUILD_BYPRODUCTS "${_mime_host_exe}"
++  )
++
++  set(GPERF_FILES
++    ${CMAKE_CURRENT_SOURCE_DIR}/auto/mime_type_to_extension.gperf
++    ${CMAKE_CURRENT_SOURCE_DIR}/auto/extension_to_mime_type.gperf
++  )
++
++  add_custom_command(
++    OUTPUT  ${GPERF_FILES}
++    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
++    COMMAND "${_mime_host_exe}" mime_types.txt ${GPERF_FILES}
++    DEPENDS generate_mime_types_gperf_host
++  )
++
++  add_custom_command(
++    OUTPUT  "${CMAKE_CURRENT_SOURCE_DIR}/auto/mime_type_to_extension.cpp"
++    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
++    COMMAND "${GPERF_EXECUTABLE}" -m100
++            --output-file=auto/mime_type_to_extension.cpp
++            auto/mime_type_to_extension.gperf
++    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/auto/mime_type_to_extension.gperf"
++  )
++
++  add_custom_command(
++    OUTPUT  "${CMAKE_CURRENT_SOURCE_DIR}/auto/extension_to_mime_type.cpp"
++    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
++    COMMAND "${GPERF_EXECUTABLE}" -m100
++            --output-file=auto/extension_to_mime_type.cpp
++            auto/extension_to_mime_type.gperf
++    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/auto/extension_to_mime_type.gperf"
++  )
++endif()
+diff --git a/tdutils/CMakeLists.txt b/tdutils/CMakeLists.txt
+--- a/tdutils/CMakeLists.txt
++++ b/tdutils/CMakeLists.txt
+@@ -354,5 +354,7 @@
+ add_library(tdutils STATIC ${TDUTILS_SOURCE})
+
+-if (NOT CMAKE_CROSSCOMPILING AND TDUTILS_MIME_TYPE)
++# The MIME type .cpp files are now generated even when cross-compiling (via
++# ExternalProject in the generate sub-directory), so always add the dependency.
++if (TDUTILS_MIME_TYPE)
+   add_dependencies(tdutils tdmime_auto)
+ endif()
