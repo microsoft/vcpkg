@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-gdal-target-interfaces.patch
         iconv.diff
         libkml.patch
+        poppler-2604.patch #https://github.com/OSGeo/gdal/pull/14243
         sqlite3.diff
         target-is-valid.patch
 )

@@ -1,0 +1,68 @@
+From 0ad9529d5fd5e03880147221d56bfee08383d7dc Mon Sep 17 00:00:00 2001
+From: Even Rouault <even.rouault@spatialys.com>
+Date: Sat, 28 Mar 2026 18:28:51 +0100
+Subject: [PATCH] Fix build against Poppler 26.03.90 (future 26.04.00)
+
+---
+ frmts/pdf/CMakeLists.txt |  6 +++---
+ frmts/pdf/pdfobject.cpp  | 21 +++++++++++++++++++--
+ 2 files changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/frmts/pdf/CMakeLists.txt b/frmts/pdf/CMakeLists.txt
+index 905b80161f15..34e8925db8be 100644
+--- a/frmts/pdf/CMakeLists.txt
++++ b/frmts/pdf/CMakeLists.txt
+@@ -67,11 +67,11 @@ if (GDAL_USE_POPPLER)
+   if ("${Poppler_VERSION_MINOR}" MATCHES "0?[0-9]+")
+     string(REGEX REPLACE "0?([0-9]+)" "\\1" Poppler_VERSION_MINOR ${Poppler_VERSION_MINOR})
+   endif ()
+-  # POPPLER_24_05_OR_LATER used transiently (by fuzzers/build.sh) until 24.05 is actually released
+-  if (Poppler_VERSION_STRING VERSION_GREATER_EQUAL "24.05" OR POPPLER_24_05_OR_LATER)
++  if (Poppler_VERSION_STRING VERSION_GREATER_EQUAL "24.05")
+     target_compile_features(gdal_PDF PRIVATE cxx_std_20)
+   endif ()
+-  target_compile_definitions(gdal_PDF PRIVATE -DHAVE_POPPLER -DPOPPLER_MAJOR_VERSION=${Poppler_VERSION_MAJOR}
++  target_compile_definitions(gdal_PDF PRIVATE -DHAVE_POPPLER
++                                              -DPOPPLER_MAJOR_VERSION=${Poppler_VERSION_MAJOR}
+                                               -DPOPPLER_MINOR_VERSION=${Poppler_VERSION_MINOR})
+ endif ()
+ if (GDAL_USE_PODOFO)
+diff --git a/frmts/pdf/pdfobject.cpp b/frmts/pdf/pdfobject.cpp
+index 3a5b53da9248..76d56b11f57a 100644
+--- a/frmts/pdf/pdfobject.cpp
++++ b/frmts/pdf/pdfobject.cpp
+@@ -20,6 +20,7 @@
+ #include "gdal_pdf.h"
+ 
+ #include <limits>
++#include <type_traits>
+ #include <vector>
+ #include "pdfobject.h"
+ 
+@@ -1122,8 +1123,24 @@ const std::string &GDALPDFObjectPoppler::GetString()
+ {
+     if (GetType() == PDFObjectType_String)
+     {
+-        const GooString *gooString = m_poConst->getString();
+-        const std::string &osStdStr = gooString->toStr();
++        const std::string &osStdStr = *(
++            [](auto &&obj) -> const std::string *
++            {
++                if constexpr (std::is_same_v<decltype(obj),
++                                             const std::string &>)
++                {
++                    // Since Poppler 26.04
++                    return &obj;
++                }
++                else
++                {
++                    static_assert(
++                        std::is_same_v<decltype(obj), const GooString *&&>);
++                    static_assert(std::is_same_v<decltype(obj->toStr()),
++                                                 const std::string &>);
++                    return &(obj->toStr());
++                }
++            }(m_poConst->getString()));
+         const bool bLEUnicodeMarker =
+             osStdStr.size() >= 2 && static_cast<uint8_t>(osStdStr[0]) == 0xFE &&
+             static_cast<uint8_t>(osStdStr[1]) == 0xFF;
