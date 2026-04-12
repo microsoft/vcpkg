@@ -1,45 +1,381 @@
+diff --git a/config/meson.build b/config/meson.build
+index ab19c38..b6203b5 100644
+--- a/config/meson.build
++++ b/config/meson.build
+@@ -1,3 +1,4 @@
++subdir_done()
+ install_data(
+   'install-sh', 'missing',
+   install_dir: dir_pgxs / 'config'
 diff --git a/meson.build b/meson.build
+index 052e8c8..510146b 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -83,7 +83,7 @@ endif
- ###############################################################
- 
- postgres_inc_d = ['src/include']
--postgres_inc_d += get_option('extra_include_dirs')
-+# postgres_inc_d += get_option('extra_include_dirs') # vcpkg: moved below
- 
- postgres_lib_d = get_option('extra_lib_dirs')
- 
-@@ -316,6 +316,7 @@ elif host_system == 'windows'
-   postgres_inc_d += 'src/include/port/win32'
-   if cc.get_id() == 'msvc'
-     postgres_inc_d += 'src/include/port/win32_msvc'
-+    postgres_inc_d += get_option('extra_include_dirs') # vcpkg: moved here for correct priority
+@@ -3023,7 +3023,14 @@ if not nlsopt.disabled()
    endif
  
-   windows = import('windows')
-@@ -3218,6 +3219,7 @@ endif
- generated_headers = []
- # headers that the backend build depends on
- generated_backend_headers = []
-+generated_backend_sources = []
- # configure_files() output, needs a way of converting to file names
- configure_files = []
+   if libintl.found()
++    if build_system == 'windows'
++      iconv_dep = cc.find_library('iconv', required: false, dirs: test_lib_d)
++      if iconv_dep.found()
++        libintl = declare_dependency(dependencies: [libintl, iconv_dep])
++      endif
++    endif
+     i18n = import('i18n')
++
+     cdata.set('ENABLE_NLS', 1)
+   endif
+ endif
+@@ -3293,6 +3300,12 @@ frontend_shlib_code = declare_dependency(
+   dependencies: [shlib_code, os_deps, libintl],
+ )
  
-@@ -3372,12 +3374,12 @@ test_install_libs = []
++if get_option('default_library') == 'shared'
++  frontend_lib_code = frontend_shlib_code
++else
++  frontend_lib_code = frontend_stlib_code
++endif
++
+ # For frontend code that doesn't use fe_utils - this mainly exists for libpq's
+ # tests, which are defined before fe_utils is defined, as fe_utils depends on
+ # libpq.
+@@ -3326,7 +3339,7 @@ subdir('src/interfaces/libpq-oauth')
+ # for frontend binaries
+ frontend_code = declare_dependency(
+   include_directories: [postgres_inc],
+-  link_with: [fe_utils, common_static, pgport_static],
++  link_with: [fe_utils, common_default, pgport_default],
+   sources: generated_headers,
+   dependencies: [os_deps, libintl],
+ )
+@@ -3375,6 +3388,10 @@ test_install_libs = []
  
  subdir('src')
  
--subdir('contrib')
-+# subdir('contrib') # vcpkg: skip
++contrib_data_dir = dir_data_extension
++
++if false # skip for vcpkg port libpq
++
+ subdir('contrib')
  
--subdir('src/test')
--subdir('src/interfaces/ecpg/test')
-+# subdir('src/test') # vcpkg: skip
-+# subdir('src/interfaces/ecpg/test') # vcpkg: skip
+ subdir('src/test')
+@@ -3918,6 +3935,7 @@ if not meson.is_subproject()
+   endif
+ endif
  
--subdir('doc/src/sgml')
-+# subdir('doc/src/sgml') # vcpkg: skip
++endif # skip for vcpkg port libpq
  
- generated_sources_ac += {'': ['GNUmakefile']}
  
+ ###############################################################
+diff --git a/meson_options.txt b/meson_options.txt
+index 06bf562..5505bfd 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,3 +1,6 @@
++option('tools', type: 'feature', value: 'disabled',
++  description: 'Enable tool executables')
++
+ # Copyright (c) 2022-2025, PostgreSQL Global Development Group
+ 
+ # Data layout influencing options
+diff --git a/src/backend/meson.build b/src/backend/meson.build
+index 2b0db21..75d8f68 100644
+--- a/src/backend/meson.build
++++ b/src/backend/meson.build
+@@ -40,6 +40,8 @@ subdir('po', if_found: libintl)
+ backend_link_args = []
+ backend_link_depends = []
+ 
++subdir_done()
++if false # vcpkg_abi_info
+ 
+ # On windows when compiling with msvc we need to make postgres export all its
+ # symbols so that extension libraries can use them. For that we need to scan
+@@ -140,6 +142,8 @@ postgres = executable('postgres',
+ 
+ backend_targets += postgres
+ 
++endif # vcpkg
++
+ pg_mod_c_args = cflags_mod
+ pg_mod_cpp_args = cxxflags_mod
+ pg_mod_link_args = ldflags_sl + ldflags_mod
+@@ -187,6 +191,7 @@ pg_test_mod_args = pg_mod_args + {
+ }
+ 
+ 
++subdir_done()
+ 
+ # Shared modules that, on some system, link against the server binary. Only
+ # enter these after we defined the server build.
+diff --git a/src/bin/initdb/meson.build b/src/bin/initdb/meson.build
+index 06958e3..a25abd1 100644
+--- a/src/bin/initdb/meson.build
++++ b/src/bin/initdb/meson.build
+@@ -20,7 +20,7 @@ initdb = executable('initdb',
+   # from libpq, else we have risks of version skew if we run with a libpq
+   # shared library from a different PG version.  Define
+   # USE_PRIVATE_ENCODING_FUNCS to ensure that that happens.
+-  c_args: ['-DUSE_PRIVATE_ENCODING_FUNCS'],
++  # But vcpkg cannot build the libs with this definition.
+   dependencies: [frontend_code, libpq, icu, icu_i18n],
+   kwargs: default_bin_args,
+ )
+diff --git a/src/bin/meson.build b/src/bin/meson.build
+index b33cb6c..e69ddb3 100644
+--- a/src/bin/meson.build
++++ b/src/bin/meson.build
+@@ -1,23 +1,11 @@
+ # Copyright (c) 2022-2025, PostgreSQL Global Development Group
+ 
+-subdir('initdb')
+ subdir('pg_amcheck')
+-subdir('pg_archivecleanup')
+ subdir('pg_basebackup')
+-subdir('pg_checksums')
+ subdir('pg_combinebackup')
+ subdir('pg_config')
+-subdir('pg_controldata')
+-subdir('pg_ctl')
+ subdir('pg_dump')
+-subdir('pg_resetwal')
+-subdir('pg_rewind')
+-subdir('pg_test_fsync')
+-subdir('pg_test_timing')
+-subdir('pg_upgrade')
+ subdir('pg_verifybackup')
+-subdir('pg_waldump')
+-subdir('pg_walsummary')
+ subdir('pgbench')
+ subdir('pgevent')
+ subdir('psql')
+diff --git a/src/bin/pg_combinebackup/meson.build b/src/bin/pg_combinebackup/meson.build
+index bbc4c57..9ea8597 100644
+--- a/src/bin/pg_combinebackup/meson.build
++++ b/src/bin/pg_combinebackup/meson.build
+@@ -17,7 +17,7 @@ endif
+ 
+ pg_combinebackup = executable('pg_combinebackup',
+   pg_combinebackup_sources,
+-  dependencies: [frontend_code],
++  dependencies: [frontend_code, libpq],
+   kwargs: default_bin_args,
+ )
+ bin_targets += pg_combinebackup
+diff --git a/src/common/meson.build b/src/common/meson.build
+index 1540ba6..6af6617 100644
+--- a/src/common/meson.build
++++ b/src/common/meson.build
+@@ -113,10 +113,12 @@ common_sources_frontend_shlib += files(
+   'sprompt.c',
+ )
+ 
+-common_sources_excluded_shlib = files(
++common_sources_frontend_shlib += files(
+   'fe_memutils.c',
+   'logging.c',
+ )
++common_sources_excluded_shlib = files(
++)
+ 
+ common_sources_frontend_static = [
+   common_sources_frontend_shlib,
+@@ -144,7 +146,7 @@ pgcommon_variants = {
+     'dependencies': [frontend_common_code],
+     # Files in libpgcommon.a should use/export the "xxx_private" versions
+     # of pg_char_to_encoding() and friends.
+-    'c_args': ['-DUSE_PRIVATE_ENCODING_FUNCS'],
++    # But vcpkg's static library linkage must not add the private suffix
+   },
+   '_shlib': default_lib_args + {
+     'pic': true,
+@@ -159,6 +161,19 @@ pgcommon_variants = {
+ 
+ foreach name, opts : pgcommon_variants
+ 
++  if name == '_srv'
++    pgcommon += {name: disabler()}
++    continue
++  endif
++  if name == '' and get_option('default_library') == 'shared'
++    pgcommon += {name: disabler()}
++    continue
++  endif
++  if name == '_shlib' and get_option('default_library') == 'static'
++    pgcommon += {name: disabler()}
++    continue
++  endif
++
+   # Build internal static libraries for sets of files that need to be built
+   # with different cflags
+   cflag_libs = []
+@@ -195,6 +210,7 @@ foreach name, opts : pgcommon_variants
+       }
+     )
+   pgcommon += {name: lib}
++  common_default = lib
+ endforeach
+ 
+ common_srv = pgcommon['_srv']
+diff --git a/src/interfaces/ecpg/compatlib/meson.build b/src/interfaces/ecpg/compatlib/meson.build
+index 56e0a21..e3c8675 100644
+--- a/src/interfaces/ecpg/compatlib/meson.build
++++ b/src/interfaces/ecpg/compatlib/meson.build
+@@ -41,11 +41,17 @@ ecpg_compat_so = shared_library('libecpg_compat',
+ )
+ ecpg_targets += ecpg_compat_so
+ 
++if get_option('default_library') == 'shared'
++  ecpg_compat_libraries = ecpg_compat_so
++else
++  ecpg_compat_libraries = ecpg_compat_st
++endif
++
+ pkgconfig.generate(
+   name: 'libecpg_compat',
+   description: 'PostgreSQL libecpg_compat library',
+   url: pg_url,
+-  libraries: ecpg_compat_so,
+-  libraries_private: [frontend_stlib_code, thread_dep],
++  libraries: ecpg_compat_libraries,
++  libraries_private: [frontend_lib_code, thread_dep],
+   requires_private: ['libecpg', 'libpgtypes'],
+ )
+diff --git a/src/interfaces/ecpg/ecpglib/meson.build b/src/interfaces/ecpg/ecpglib/meson.build
+index 8f478c6..fbae057 100644
+--- a/src/interfaces/ecpg/ecpglib/meson.build
++++ b/src/interfaces/ecpg/ecpglib/meson.build
+@@ -52,12 +52,18 @@ ecpglib_so = shared_library('libecpg',
+ )
+ ecpg_targets += ecpglib_so
+ 
++if get_option('default_library') == 'shared'
++  ecpglib_libraries = ecpglib_so
++else
++  ecpglib_libraries = ecpglib_st
++endif
++
+ pkgconfig.generate(
+   name: 'libecpg',
+   description: 'PostgreSQL libecpg library',
+   url: pg_url,
+-  libraries: ecpglib_so,
+-  libraries_private: [frontend_stlib_code, thread_dep],
++  libraries: ecpglib_libraries,
++  libraries_private: [frontend_lib_code, thread_dep],
+   requires_private: ['libpgtypes', 'libpq'],
+ )
+ 
+diff --git a/src/interfaces/ecpg/pgtypeslib/meson.build b/src/interfaces/ecpg/pgtypeslib/meson.build
+index 02301ec..e695b98 100644
+--- a/src/interfaces/ecpg/pgtypeslib/meson.build
++++ b/src/interfaces/ecpg/pgtypeslib/meson.build
+@@ -46,10 +46,16 @@ ecpg_pgtypes_so = shared_library('libpgtypes',
+ )
+ ecpg_targets += ecpg_pgtypes_so
+ 
++if get_option('default_library') == 'shared'
++  ecpg_pgtypes_libraries = ecpg_pgtypes_so
++else
++  ecpg_pgtypes_libraries = ecpg_pgtypes_st
++endif
++
+ pkgconfig.generate(
+   name: 'libpgtypes',
+   description: 'PostgreSQL libpgtypes library',
+   url: pg_url,
+-  libraries: ecpg_pgtypes_so,
+-  libraries_private: [frontend_stlib_code],
++  libraries: ecpg_pgtypes_libraries,
++  libraries_private: [frontend_lib_code],
+ )
+diff --git a/src/interfaces/libpq/meson.build b/src/interfaces/libpq/meson.build
+index a74e885..7354286 100644
+--- a/src/interfaces/libpq/meson.build
++++ b/src/interfaces/libpq/meson.build
+@@ -60,7 +60,7 @@ libpq_so_c_args = ['-DUSE_DYNAMIC_OAUTH']
+ libpq_st = static_library('libpq',
+   libpq_sources,
+   include_directories: [libpq_inc],
+-  c_args: libpq_c_args,
++  c_args: libpq_c_args + ['-DFRONTEND'],
+   c_pch: pch_postgres_fe_h,
+   dependencies: [frontend_stlib_code, libpq_deps],
+   kwargs: default_lib_args,
+@@ -80,13 +80,19 @@ libpq_so = shared_library('libpq',
+   kwargs: default_lib_args,
+ )
+ 
++if get_option('default_library') == 'shared'
++  libpq_link_with = [libpq_so]
++else
++  libpq_link_with = [libpq_st]
++endif
++
+ libpq = declare_dependency(
+-  link_with: [libpq_so],
++  link_with: libpq_link_with,
+   include_directories: [include_directories('.')]
+ )
+ 
+ private_deps = [
+-  frontend_stlib_code,
++  frontend_lib_code,
+   libpq_deps,
+ ]
+ 
+diff --git a/src/meson.build b/src/meson.build
+index f098f9f..28eb09c 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -3,12 +3,18 @@
+ # libraries that other subsystems might depend upon first, in their respective
+ # dependency order
+ 
++subdir('interfaces')
++if not get_option('tools').disabled()
++
+ subdir('timezone')
+ 
+ subdir('backend')
+ 
+ subdir('bin')
+ 
++endif
++subdir_done()
++
+ subdir('pl')
+ 
+ subdir('interfaces')
+diff --git a/src/port/meson.build b/src/port/meson.build
+index fc7b059..3b8cf40 100644
+--- a/src/port/meson.build
++++ b/src/port/meson.build
+@@ -167,6 +167,19 @@ pgport_variants = {
+ 
+ foreach name, opts : pgport_variants
+ 
++  if name == '_srv'
++    pgport += {name: disabler()}
++    continue
++  endif
++  if name == '' and get_option('default_library') == 'shared'
++    pgport += {name: disabler()}
++    continue
++  endif
++  if name == '_shlib' and get_option('default_library') == 'static'
++    pgport += {name: disabler()}
++    continue
++  endif
++
+   # Build internal static libraries for sets of files that need to be built
+   # with different cflags
+   cflag_libs = []
+@@ -196,6 +209,7 @@ foreach name, opts : pgport_variants
+       }
+     )
+   pgport += {name: lib}
++  pgport_default = lib
+ endforeach
+ 
+ pgport_srv = pgport['_srv']

@@ -36,17 +36,66 @@ endif()
 vcpkg_cmake_get_vars(cmake_vars_file)
 include("${cmake_vars_file}")
 
-set(required_programs BISON FLEX)
-if(VCPKG_DETECTED_MSVC OR NOT VCPKG_HOST_IS_WINDOWS)
-    list(APPEND required_programs PERL)
-endif()
-foreach(program_name IN LISTS required_programs)
-    vcpkg_find_acquire_program(${program_name})
-    get_filename_component(program_dir ${${program_name}} DIRECTORY)
-    vcpkg_add_to_path(PREPEND "${program_dir}")
-endforeach()
+vcpkg_find_acquire_program(BISON)
+vcpkg_find_acquire_program(FLEX)
+vcpkg_find_acquire_program(PERL)
 
-if(VCPKG_DETECTED_MSVC)
+if(SCRIPT_MESON)
+    vcpkg_list(SET MESON_OPTIONS_RELEASE)
+    vcpkg_list(SET MESON_OPTIONS)
+    foreach(option IN ITEMS icu lz4 zlib zstd)
+        if(option IN_LIST FEATURES)
+            list(APPEND MESON_OPTIONS -D${option}=enabled)
+        endif()
+    endforeach()
+
+    if("openssl" IN_LIST FEATURES)
+        list(APPEND MESON_OPTIONS -Dssl=openssl)
+    else()
+        list(APPEND MESON_OPTIONS -Dssl=none)
+    endif()
+
+    if("nls" IN_LIST FEATURES)
+        list(APPEND MESON_OPTIONS -Dnls=enabled)
+    endif()
+
+    if("client" IN_LIST FEATURES)
+        list(APPEND MESON_OPTIONS_RELEASE -Dtools=enabled)
+    endif()
+
+    vcpkg_configure_meson(
+        SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            -Dauto_features=disabled
+            ${MESON_OPTIONS}
+        OPTIONS_RELEASE
+            ${MESON_OPTIONS_RELEASE}
+        ADDITIONAL_BINARIES
+            "bison = ['${BISON}']"
+            "flex = ['${FLEX}']"
+            "perl = ['${PERL}']"
+    )
+    vcpkg_install_meson()
+    vcpkg_copy_tools(TOOL_NAMES ecpg AUTO_CLEAN)
+    if("client" IN_LIST FEATURES)
+        vcpkg_copy_tools(
+            TOOL_NAMES
+                clusterdb createdb createuser
+                dropdb dropuser
+                pg_amcheck
+                pg_basebackup pgbench
+                pg_combinebackup pg_config pg_createsubscriber
+                pg_dump pg_dumpall
+                pg_isready
+                pg_receivewal pg_recvlogical pg_restore
+                pg_verifybackup
+                psql
+                reindexdb
+                vacuumdb
+            AUTO_CLEAN
+        )
+    endif()
+elseif(0)
     include("${CMAKE_CURRENT_LIST_DIR}/build-msvc.cmake")
     build_msvc("${SOURCE_PATH}")
 else()
