@@ -1,6 +1,7 @@
 {
   "name": "gtk3",
   "version": "3.24.52",
+  "port-version": 1,
   "description": "Portable library for creating graphical user interfaces.",
   "homepage": "https://www.gtk.org/",
   "license": null,
@@ -46,8 +47,14 @@
       "host": true
     },
     "libepoxy",
-    "libxi",
-    "libxrandr",
+    {
+      "name": "libxi",
+      "platform": "!windows & !osx"
+    },
+    {
+      "name": "libxrandr",
+      "platform": "!windows & !osx"
+    },
     "pango",
     {
       "name": "vcpkg-tool-meson",

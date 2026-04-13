@@ -3321,8 +3321,8 @@
       "port-version": 0
     },
     "gdk-pixbuf": {
-      "baseline": "2.42.12",
-      "port-version": 6
+      "baseline": "2.44.6",
+      "port-version": 1
     },
     "gegl": {
       "baseline": "0.4.70",
@@ -3441,7 +3441,7 @@
       "port-version": 2
     },
     "glib": {
-      "baseline": "2.86.5",
+      "baseline": "2.88.0",
       "port-version": 0
     },
     "glib-networking": {
@@ -3606,7 +3606,7 @@
     },
     "gtk3": {
       "baseline": "3.24.52",
-      "port-version": 0
+      "port-version": 1
     },
     "gtkmm": {
       "baseline": "4.22.0",
@@ -3894,7 +3894,7 @@
     },
     "icey": {
       "baseline": "2.4.2",
-      "port-version": 0
+      "port-version": 1
     },
     "icu": {
       "baseline": "78.2",
@@ -5425,7 +5425,7 @@
       "port-version": 1
     },
     "libpng": {
-      "baseline": "1.6.56",
+      "baseline": "1.6.57",
       "port-version": 0
     },
     "libpopcnt": {
@@ -5637,7 +5637,7 @@
       "port-version": 0
     },
     "libssh": {
-      "baseline": "0.11.3",
+      "baseline": "0.12.0",
       "port-version": 0
     },
     "libssh2": {
@@ -6165,7 +6165,7 @@
       "port-version": 0
     },
     "luajit": {
-      "baseline": "2026-03-27",
+      "baseline": "2026-03-30",
       "port-version": 0
     },
     "luasec": {
@@ -7341,8 +7341,8 @@
       "port-version": 4
     },
     "openimageio": {
-      "baseline": "3.0.9.1",
-      "port-version": 3
+      "baseline": "3.1.12.0",
+      "port-version": 0
     },
     "openjpeg": {
       "baseline": "2.5.4",
@@ -7389,8 +7389,8 @@
       "port-version": 4
     },
     "openssl": {
-      "baseline": "3.6.1",
-      "port-version": 3
+      "baseline": "3.6.2",
+      "port-version": 0
     },
     "opensubdiv": {
       "baseline": "3.5.0",
@@ -7585,7 +7585,7 @@
       "port-version": 0
     },
     "patternia": {
-      "baseline": "0.9.1",
+      "baseline": "0.9.2",
       "port-version": 0
     },
     "pbc": {
@@ -7909,7 +7909,7 @@
       "port-version": 0
     },
     "proj": {
-      "baseline": "9.8.0",
+      "baseline": "9.8.1",
       "port-version": 0
     },
     "projectm": {
@@ -8693,7 +8693,7 @@
       "port-version": 0
     },
     "rerun-sdk": {
-      "baseline": "0.31.1",
+      "baseline": "0.31.2",
       "port-version": 0
     },
     "rest-rpc": {
@@ -8701,8 +8701,8 @@
       "port-version": 1
     },
     "restbed": {
-      "baseline": "4.8",
-      "port-version": 3
+      "baseline": "5.0.0",
+      "port-version": 0
     },
     "restc-cpp": {
       "baseline": "1.0.0",
@@ -9101,7 +9101,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.13.5",
+      "baseline": "0.13.6",
       "port-version": 0
     },
     "septag-dmon": {
@@ -9113,8 +9113,8 @@
       "port-version": 5
     },
     "seqan": {
-      "baseline": "2.4.0",
-      "port-version": 3
+      "baseline": "2.5.3",
+      "port-version": 0
     },
     "serd": {
       "baseline": "0.32.8",
@@ -9553,7 +9553,7 @@
       "port-version": 0
     },
     "sqlpp11": {
-      "baseline": "0.65",
+      "baseline": "0.66",
       "port-version": 0
     },
     "sqlpp11-connector-mysql": {
@@ -9573,7 +9573,7 @@
       "port-version": 0
     },
     "srell": {
-      "baseline": "3.010",
+      "baseline": "2026.01",
       "port-version": 0
     },
     "srpc": {
