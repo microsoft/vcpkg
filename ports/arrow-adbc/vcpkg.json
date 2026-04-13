@@ -1,18 +1,10 @@
 {
   "name": "arrow-adbc",
-  "version": "16",
+  "version": "22",
   "description": "Apache Arrow ADBC: Database Connectivity API for Arrow-based data systems",
   "homepage": "https://arrow.apache.org/adbc/",
   "license": "Apache-2.0",
   "dependencies": [
-    {
-      "name": "arrow",
-      "default-features": false,
-      "features": [
-        "dataset",
-        "parquet"
-      ]
-    },
     "fmt",
     "nanoarrow",
     {
