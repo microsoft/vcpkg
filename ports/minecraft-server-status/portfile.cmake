@@ -2,6 +2,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(VCPKG_BUILD_TYPE release)
 
+set(VCPKG_POLICY_SKIP_DEBUG_BUILD enabled)
+set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Arp1it/Minecraft_Server_Status_CPP
