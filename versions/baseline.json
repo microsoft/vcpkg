@@ -6105,7 +6105,7 @@
       "port-version": 0
     },
     "logme": {
-      "baseline": "2.4.14",
+      "baseline": "2.4.15",
       "port-version": 0
     },
     "loguru": {
