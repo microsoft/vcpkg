@@ -3310,7 +3310,7 @@
     },
     "gdal": {
       "baseline": "3.12.3",
-      "port-version": 0
+      "port-version": 1
     },
     "gdbm": {
       "baseline": "1.24",
@@ -7841,7 +7841,7 @@
       "port-version": 0
     },
     "poppler": {
-      "baseline": "25.7.0",
+      "baseline": "26.4.0",
       "port-version": 0
     },
     "poppler-data": {
