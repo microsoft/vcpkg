@@ -240,15 +240,6 @@
       "sha512": "9b025da7830a875195c3f7232497b76adb78650fb5c9c7cd279d0938e3c496ed699cd763501c8f28ba5b9fcfe689aa21bea098f801204c5cbdbfd38dbd27b72f"
     },
     {
-      "name": "7zip_msi",
-      "os": "windows",
-      "version": "26.00",
-      "executable": "Files/7-Zip/7z.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600-x64.msi",
-      "sha512": "a8556706f2ab18953c4f22497d593a4c85f73d49c450c3dafbf827ce313219c7d247ffa6c5b3764075f6cac096490935e9c6ed8449f50c935d396353b84358db",
-      "archive": "7z2600-x64.msi"
-    },
-    {
       "name": "7zip",
       "os": "windows",
       "arch": "amd64",
