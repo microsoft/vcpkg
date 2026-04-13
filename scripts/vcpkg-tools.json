@@ -251,11 +251,22 @@
     {
       "name": "7zip",
       "os": "windows",
+      "arch": "amd64",
       "version": "26.00",
       "executable": "7z.exe",
-      "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600.exe",
-      "sha512": "9dcbb5d370f6270e0f4a383b5ee7452024f5283e52f838938a7bcca110b5647ffdb2c549677a70b23fea21a349ea4ad1898e6bc976afc3e7e49b4755b6b27150",
-      "archive": "7z2600.7z.exe"
+      "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600-x64.exe",
+      "sha512": "d50e76ca3299fa131156d758ba54079ee347fea30708d0dbcba40d72f307f4d16446ea13041549cb78aabd032fb5dd048d3bbf192821ad9ce89eea5d96581001",
+      "archive": "7z2600-x64.7z.exe"
+    },
+    {
+      "name": "7zip",
+      "os": "windows",
+      "arch": "arm64",
+      "version": "26.00",
+      "executable": "7z.exe",
+      "url": "https://github.com/ip7z/7zip/releases/download/26.00/7z2600-arm64.exe",
+      "sha512": "1d691c8350ba55ced6f5f5ddbb90895593d083d5609a7b8932d1ae12db8a7eb7581c3705a35d562d94068622dc6a8a3d4034f0757da5abc51d162efc9101b2f8",
+      "archive": "7z2600-arm64.7z.exe"
     },
     {
       "name": "7zr",
