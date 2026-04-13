@@ -4681,7 +4681,7 @@
       "port-version": 6
     },
     "libarchive": {
-      "baseline": "3.8.6",
+      "baseline": "3.8.7",
       "port-version": 0
     },
     "libaribcaption": {
