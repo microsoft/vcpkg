@@ -1,0 +1,20 @@
+{
+  "name": "minecraft-server-status",
+  "version": "1.0.0",
+  "description": "A C++ library to fetch Minecraft server status",
+  "homepage": "https://github.com/Arp1it/Minecraft_Server_Status_CPP",
+  "license": "MIT",
+  "dependencies": [
+    "cpr",
+    "fmt",
+    "nlohmann-json",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

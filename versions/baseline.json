@@ -6496,6 +6496,10 @@
       "baseline": "2.4.6",
       "port-version": 0
     },
+    "minecraft-server-status": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "minhook": {
       "baseline": "1.3.4",
       "port-version": 0
