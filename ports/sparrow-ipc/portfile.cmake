@@ -10,11 +10,7 @@ vcpkg_from_github(
     HEAD_REF main
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(SPARROW_IPC_BUILD_SHARED ON)
-else()
-    set(SPARROW_IPC_BBUILD_SHARED OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPARROW_IPC_BUILD_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -24,7 +20,7 @@ vcpkg_cmake_configure(
 )
 
 vcpkg_cmake_install()
-vcpkg_cmake_config_fixup(PACKAGE_NAME sparrow-ipc CONFIG_PATH share/cmake/sparrow-ipc)
+vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/sparrow-ipc)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

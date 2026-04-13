@@ -7,8 +7,7 @@
   "supports": "!uwp",
   "dependencies": [
     {
-      "name": "arcticdb-sparrow",
-      "version>=": "2.4.0"
+      "name": "arcticdb-sparrow"
     },
     "flatbuffers",
     "lz4",
