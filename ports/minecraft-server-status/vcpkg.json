@@ -4,6 +4,8 @@
   "description": "A C++ library to fetch Minecraft server status",
   "homepage": "https://github.com/Arp1it/Minecraft_Server_Status_CPP",
   "license": "MIT",
+  "default-features": [],
+  "features": {},
   "dependencies": [
     "cpr",
     "fmt",
