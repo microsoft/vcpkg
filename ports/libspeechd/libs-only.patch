@@ -15,13 +15,18 @@ index 480eb50e..3dbf458b 100644
  if ENABLE_DOC
  SUBDIRS += doc
 diff --git a/configure.ac b/configure.ac
-index bd18fdbe..ae63d347 100644
+index bd18fdbe..ef4da8e6 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -43,12 +43,28 @@ LT_PREREQ([2.2])
+@@ -43,11 +43,16 @@ LT_PREREQ([2.2])
  LT_INIT([dlopen])
  AC_CONFIG_SRCDIR([src/server/speechd.c])
  AC_CONFIG_HEADERS([config.h])
+-AM_GNU_GETTEXT_VERSION([0.19.8])
+-AM_GNU_GETTEXT([external])
+-if test "$ac_cv_path_MSGFMT" = ":"
+-then
+-	AC_MSG_FAILURE([msgfmt missing from the gettext package])
 +AC_ARG_ENABLE([libs-only], [AS_HELP_STRING([--enable-libs-only], [build only the client library])], [], [enable_libs_only=no])
 +AM_CONDITIONAL([LIBS_ONLY], [test "$enable_libs_only" = "yes"])
 +if test "$enable_libs_only" = "yes"; then
@@ -32,22 +37,10 @@ index bd18fdbe..ae63d347 100644
 +	with_libao=no with_pipewire=no
 +	enable_python=no enable_doc=no
 +	with_systemdsystemunitdir=no with_systemduserunitdir=no
-+fi
-+m4_ifdef([AM_GNU_GETTEXT_VERSION], [AM_GNU_GETTEXT_VERSION([0.19.8])])
-+m4_ifdef([AM_GNU_GETTEXT], [
-+if test "$enable_libs_only" != "yes"; then
- AM_GNU_GETTEXT_VERSION([0.19.8])
- AM_GNU_GETTEXT([external])
- if test "$ac_cv_path_MSGFMT" = ":"
- then
- 	AC_MSG_FAILURE([msgfmt missing from the gettext package])
  fi
-+fi
-+])
  
  # Split version number
- [MAJOR_VERSION]=MAJOR_VERSION
-@@ -75,6 +91,7 @@ AC_SEARCH_LIBS([sqrt], [m], [],
+@@ -75,6 +80,7 @@ AC_SEARCH_LIBS([sqrt], [m], [],
  	[AC_MSG_FAILURE([Math library missing])])
  AC_SEARCH_LIBS([pthread_create], [pthread], [],
  	[AC_MSG_FAILURE([Threads library missing])])
@@ -55,7 +48,7 @@ index bd18fdbe..ae63d347 100644
  AC_ARG_ENABLE([ltdl],
  	[AS_HELP_STRING([--disable-ltdl], [do not use ltdl for modules])],
  	[],
-@@ -99,6 +116,7 @@ then
+@@ -99,6 +105,7 @@ then
  	AC_SEARCH_LIBS([dlopen], [dl], [],
  		[AC_MSG_FAILURE([dlopen missing])])
  fi
@@ -63,7 +56,7 @@ index bd18fdbe..ae63d347 100644
  
  if test x$enable_shared = xyes;
  then
-@@ -119,7 +137,7 @@ AM_CONDITIONAL(DARWIN_HOST, test "$darwin_host" = yes)
+@@ -119,7 +126,7 @@ AM_CONDITIONAL(DARWIN_HOST, test "$darwin_host" = yes)
  PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.36])
  AC_SUBST([GLIB_CFLAGS])
  AC_SUBST([GLIB_LIBS])
@@ -72,7 +65,7 @@ index bd18fdbe..ae63d347 100644
  PKG_CHECK_MODULES([GTHREAD], [gthread-2.0])
  AC_SUBST([GTHREAD_CFLAGS])
  AC_SUBST([GTHREAD_LIBS])
-@@ -135,6 +153,7 @@ AC_SUBST([DOTCONF_LIBS])
+@@ -135,6 +142,7 @@ AC_SUBST([DOTCONF_LIBS])
  PKG_CHECK_MODULES([SNDFILE], [sndfile >= 1.0.2])
  AC_SUBST([SNDFILE_CFLAGS])
  AC_SUBST([SNDFILE_LIBS])
