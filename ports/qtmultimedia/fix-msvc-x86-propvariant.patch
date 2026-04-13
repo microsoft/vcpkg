@@ -2,7 +2,8 @@ diff --git a/src/multimedia/windows/qwindows_propertystore.cpp b/src/multimedia/
 index 1234567..abcdef0 100644
 --- a/src/multimedia/windows/qwindows_propertystore.cpp
 +++ b/src/multimedia/windows/qwindows_propertystore.cpp
-@@ -71,10 +71,19 @@ template <typename T>
+@@ -71,10 +71,21 @@ template <typename T>
+ template <typename T>
  struct first_arg_is_ptr;
  
  // Function type
