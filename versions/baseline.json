@@ -9261,7 +9261,7 @@
       "port-version": 1
     },
     "sintra": {
-      "baseline": "1.0.3",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "sjpeg": {
