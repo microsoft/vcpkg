@@ -1,3 +1,50 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1299,7 +1299,7 @@
+   target_link_libraries(tdapi PUBLIC ${JAVA_JVM_LIBRARY})
+ endif()
+
+-if (NOT CMAKE_CROSSCOMPILING)
++if (NOT CMAKE_CROSSCOMPILING AND TD_GENERATE_SOURCE_FILES)
+   add_dependencies(tdapi tl_generate_common)
+ endif()
+
+@@ -1314,7 +1314,7 @@
+     target_link_libraries(tdmtproto PRIVATE ws2_32 Mswsock Crypt32)
+   endif()
+ endif()
+-if (NOT CMAKE_CROSSCOMPILING)
++if (NOT CMAKE_CROSSCOMPILING AND TD_GENERATE_SOURCE_FILES)
+   add_dependencies(tdmtproto tl_generate_mtproto)
+ endif()
+
+@@ -1340,7 +1340,7 @@
+   set(TD_CORE_PART_TARGETS)
+ endif()
+
+-if (NOT CMAKE_CROSSCOMPILING)
++if (NOT CMAKE_CROSSCOMPILING AND TD_GENERATE_SOURCE_FILES)
+   add_dependencies(tdcore tl_generate_common)
+   if (TD_ENABLE_JNI)
+     add_dependencies(tdcore td_generate_java_api)
+@@ -1383,14 +1383,14 @@
+ add_library(tdc STATIC EXCLUDE_FROM_ALL ${TL_C_SCHEME_SOURCE} td/telegram/td_c_client.cpp td/telegram/td_c_client.h)
+ target_include_directories(tdc PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${TL_TD_AUTO_INCLUDE_DIR}>)
+ target_link_libraries(tdc PRIVATE tdclient tdutils)
+-if (NOT CMAKE_CROSSCOMPILING)
++if (NOT CMAKE_CROSSCOMPILING AND TD_GENERATE_SOURCE_FILES)
+   add_dependencies(tdc tl_generate_c)
+ endif()
+
+ add_library(tdjson_private STATIC ${TL_TD_JSON_SOURCE} td/telegram/ClientJson.cpp td/telegram/ClientJson.h)
+ target_include_directories(tdjson_private PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${TL_TD_AUTO_INCLUDE_DIR}>)
+ target_link_libraries(tdjson_private PUBLIC tdclient tdutils)
+-if (NOT CMAKE_CROSSCOMPILING)
++if (NOT CMAKE_CROSSCOMPILING AND TD_GENERATE_SOURCE_FILES)
+   add_dependencies(tdjson_private tl_generate_common tl_generate_json)
+ endif()
+
 diff --git a/td/generate/CMakeLists.txt b/td/generate/CMakeLists.txt
 --- a/td/generate/CMakeLists.txt
 +++ b/td/generate/CMakeLists.txt
