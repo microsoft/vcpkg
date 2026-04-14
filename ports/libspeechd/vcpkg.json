@@ -6,6 +6,10 @@
   "license": "LGPL-2.1-or-later",
   "supports": "!windows & !uwp & !xbox & !android & !osx & !ios & !mingw & !emscripten",
   "dependencies": [
-    "glib"
+    "glib",
+    {
+      "name": "vcpkg-make",
+      "host": true
+    }
   ]
 }

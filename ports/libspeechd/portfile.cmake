@@ -8,10 +8,9 @@ vcpkg_from_github(
         libs-only.patch
 )
 set(ENV{AUTOPOINT} true)
-vcpkg_configure_make(
+vcpkg_make_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    AUTOCONFIG
-    DETERMINE_BUILD_TRIPLET
+    AUTORECONF
     OPTIONS
         --enable-libs-only
         --disable-python
@@ -19,7 +18,7 @@ vcpkg_configure_make(
         --without-systemdsystemunitdir
         --without-systemduserunitdir
 )
-vcpkg_install_make()
+vcpkg_make_install()
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/include"
