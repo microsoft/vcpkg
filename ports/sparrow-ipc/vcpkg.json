@@ -6,9 +6,7 @@
   "license": "BSD-3-Clause",
   "supports": "!uwp",
   "dependencies": [
-    {
-      "name": "arcticdb-sparrow"
-    },
+    "arcticdb-sparrow",
     "flatbuffers",
     "lz4",
     {
