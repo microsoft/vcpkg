@@ -8,7 +8,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO intel/gmmlib
     REF "intel-gmmlib-${VERSION}"
-    SHA512 c54581e4927bfedd7cb4084111cce69c9ee14f0047f6d16d26358e9d41feb8d28d5158f7fbdfbe4980dae904e7c2065deed19fd2f91e32b49fd7b984d47c0f44
+    SHA512 63e676291f137880e2b4bd2091c3055a6ec2b0bb62ebd47a96c0a462e8434d1321563c4e2f0d2e40d79383a23ef0bb8ceb0f0f89a8ae94feb409440e43149e6e
     HEAD_REF master
 )
 

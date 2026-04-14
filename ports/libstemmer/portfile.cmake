@@ -4,7 +4,7 @@ string(SUBSTRING "${VERSION}" 5 -1 VERSION)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://snowballstem.org/dist/libstemmer_c-${VERSION}.tar.gz"
     FILENAME "libstemmer_c-${VERSION}.tar.gz"
-    SHA512 a61a06a046a6a5e9ada12310653c71afb27b5833fa9e21992ba4bdf615255de991352186a8736d0156ed754248a0ffb7b7712e8d5ea16f75174d1c8ddd37ba4a
+    SHA512 6b76a94fd5bdb557c041c937bdfc1887927346a87c987fe3b964a7286e176543b578729e9d7ed97b521faee0d8b484df1aa9be23522b191a87f3a65dc12c5f15
 )
 
 vcpkg_extract_source_archive(
