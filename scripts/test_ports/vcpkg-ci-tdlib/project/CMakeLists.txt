@@ -12,13 +12,13 @@ add_executable(main main.cpp)
 if (TARGET Td::tdjson_static)
     target_link_libraries(main PRIVATE Td::tdjson_static)
 else()
-    target_link_libraries(main PRIVATE Td::TdJson)
+    target_link_libraries(main PRIVATE Td::tdjson)
 endif()
 
 find_package(PkgConfig REQUIRED)
 
-pkg_check_modules(tdjson IMPORTED_TARGET tdjson)
 pkg_check_modules(tdjson_static IMPORTED_TARGET tdjson_static)
+pkg_check_modules(tdjson IMPORTED_TARGET tdjson)
 
 add_executable(main2 main.cpp)
 
