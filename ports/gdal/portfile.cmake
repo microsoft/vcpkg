@@ -1,3 +1,9 @@
+vcpkg_download_distfile(FIX_UPSTREAM_0ad9529
+    URLS https://github.com/OSGeo/gdal/commit/0ad9529d5fd5e03880147221d56bfee08383d7dc.patch?full_index=1
+    SHA512 0a022e350d9a1a4f0a218bbfbc09dca2e521e42e0af57f8e4797c74b9d96d777f73807b86fa04606c7d2d67e5a75fc0975d9948e2d5e0fdb1ce5a9ea587119c3
+    FILENAME gdal-0ad9529d5fd5e03880147221d56bfee08383d7dc.patch
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/gdal
@@ -7,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         find-link-libraries.patch
         fix-gdal-target-interfaces.patch
+        "${FIX_UPSTREAM_0ad9529}"
         iconv.diff
         libkml.patch
         sqlite3.diff
